@@ -481,6 +481,15 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 @media (max-width:519px) and (orientation:portrait){ /* phones: the whole key art across the top, so the squad and the Pale sit above the form, not behind it */
   .titleart .art svg{top:-44px;left:0;width:100vw;height:auto;transform:none;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
   .titleart::after{background:linear-gradient(0deg,rgba(4,4,8,.6),rgba(4,4,8,0) 70%)}}
+.worldmap{display:block;width:100%;height:auto;border-radius:8px;margin:8px 0 6px;border:1px solid rgba(201,151,63,.3)}
+.meetl li{margin:6px 0}
+.jbook{margin:0 0 2px;font-family:var(--label);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass2);opacity:.85}
+.chcard .bridge{font-family:var(--label);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:#cdbf9f;margin:6px 0 4px;opacity:.85}
+.narr .echo{border-left:2px solid rgba(201,151,63,.55);padding-left:10px;font-style:italic;color:#d8cbb0}
+.bookdeeds summary small{font-size:.8rem;opacity:.75;margin-left:6px}
+.bookdeeds .route{margin-top:8px}
+.jh small{font-size:.75rem;opacity:.7;margin-left:6px;letter-spacing:.05em}
+.fallen li span{opacity:.75} .fallen li em{display:block;font-size:.82rem;opacity:.65}
 .title .iosnote{margin:10px 0 0;padding:8px 10px;border-left:2px solid rgba(201,151,63,.6);background:rgba(20,15,10,.6)}
 .title .series{font-family:var(--display);font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;color:#cdbf9f;opacity:.85;margin:6px 0 4px;text-shadow:0 2px 6px #000}
 .tpatch{width:64px;margin:0 0 -4px -6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}

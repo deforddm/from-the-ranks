@@ -194,7 +194,7 @@ AB.b2_lance = {name:'Lance Held Short', desc:()=>`An enemy up to 2 tiles off: 1d
 /* how far Book Two goes, for the title: counted from the chapters actually registered */
 const dgChCount = () => Object.keys(BOOK === 'dg' ? CHAPTERS : BOOKSNAP.dg.ch).length;
 const dgProgress = () => { const n = dgChCount(); return n >= 7 ? 'All seven chapters.' : n === 1 ? 'Chapter One so far.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n]} chapters so far.`; };
-Object.defineProperty(BOOKS.dg, 'blurb', {get(){ return 'Seven Cities, beside Deadhouse Gates. A new squad of the Seventh on the Chain of Dogs, from the fall of Hissar toward Aren. Plays on its own. ' + dgProgress(); }});
+Object.defineProperty(BOOKS.dg, 'blurb', {get(){ return 'Seven Cities, a few months after the Fete and an ocean west of Darujhistan, beside Deadhouse Gates. A new squad of the Seventh on the Chain of Dogs, from the fall of Hissar toward Aren. Plays on its own. ' + dgProgress(); }});
 
 /* ---- fouled warrens (v4.1): in Book Two a spell that costs strain can sputter for half its effect, the warren giving back mud.
    10% in Chapter 2, rising 5% a chapter to 35% by Chapter 7. Wickan spirit-craft (a.spirit) and Elder tricks (a.elder) never sputter.
