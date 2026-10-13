@@ -1,0 +1,132 @@
+/* ============ title / intro ============ */
+/* installing the game as an app on a PC. Chrome and Edge offer it with beforeinstallprompt, which is held here and fired from our own
+   button (the title offers it once in a while; Settings always has it). Safari on a Mac has File > Add to Dock and no event, so it gets
+   the directions. Firefox on a PC can't install web apps, so it gets nothing. Never offered inside the installed app itself. */
+const INSTKEY = 'from-the-ranks-install';
+let installEvt = null;
+const asApp = () => { try { return window.matchMedia('(display-mode: standalone), (display-mode: window-controls-overlay), (display-mode: minimal-ui)').matches || navigator.standalone === true; } catch(e) { return false; } };
+const macSafari = () => { const u = navigator.userAgent; return /Macintosh/.test(u) && /Version\/(1[7-9]|[2-9]\d)\b.*Safari\//.test(u) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(u) && !('ontouchend' in document); };
+const installWay = () => asApp() ? '' : installEvt ? 'prompt' : macSafari() ? 'dock' : '';
+function installLater(way){ let v = ''; try { v = localStorage.getItem(INSTKEY) || ''; } catch(e) { return true; }
+  if (way === 'dock' && v === 'dock-seen') return true; // Safari's directions, once; Settings keeps them after that
+  const m = /^later:(\d+)$/.exec(v); return !!m && Date.now() - +m[1] < 14 * 864e5; } // Chrome only asks while the app isn't installed, so an old 'installed' mark means nothing here
+const installMark = v => { try { localStorage.setItem(INSTKEY, v === 'later' ? 'later:' + Date.now() : v); } catch(e) {} };
+window.addEventListener('beforeinstallprompt', e => { if (FINE()) e.preventDefault(); installEvt = e; offerInstall(); }); // a phone keeps its own install banner
+window.addEventListener('appinstalled', () => { installEvt = null; installMark('installed'); const o = $('#instOffer'); if (o) o.remove(); });
+async function runInstall(){ const ev = installEvt; if (!ev) return false; installEvt = null; try { ev.prompt(); const r = await ev.userChoice; installMark(r && r.outcome === 'accepted' ? 'installed' : 'later'); return r && r.outcome === 'accepted'; } catch(e) { return false; } }
+/* the title's offer, on a PC only, and not again for two weeks after "Not now" */
+function offerInstall(){
+  const slot = $('#instSlot'); if (!slot || view !== 'title' || !FINE()) return;
+  const way = installWay(); if (!way || installLater(way)) { slot.innerHTML = ''; return; }
+  slot.innerHTML = way === 'prompt'
+    ? `<div class="inst" id="instOffer"><div><b>Play it as a desktop app</b><small>Its own window with no browser bars, and a shortcut on your desktop and taskbar. Your sergeants come with it.</small></div><div class="row"><button class="btn primary" id="bInst">Install</button><button class="btn" id="bInstNo">Not now</button></div></div>`
+    : `<div class="inst" id="instOffer"><div><b>Play it as a Mac app</b><small>In Safari's menu bar: File › Add to Dock. The Dock app keeps its own saves, so copy your sergeant's save code first (Squad › Save) and load it there.</small></div><div class="row"><button class="btn" id="bInstNo">Got it</button></div></div>`;
+  if ($('#bInst')) $('#bInst').onclick = async () => { AUDIO.play('click'); const ok = await runInstall();
+    slot.innerHTML = ok ? `<p class="fine inst-ok">Installed. It opens in its own window from your desktop, taskbar or Start menu; this tab can close.</p>` : ''; };
+  $('#bInstNo').onclick = () => { AUDIO.play('click'); installMark(way === 'dock' ? 'dock-seen' : 'later'); slot.innerHTML = ''; };
+}
+/* the title: the sergeants saved on this device, last played first; tap one to play. The name prompt only shows for a new sergeant. */
+const agoText = t => { if (!t) return ''; const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(t).setHours(0,0,0,0)) / 864e5);
+  return d <= 0 ? 'today' : d === 1 ? 'yesterday' : d < 7 ? `${d} days ago` : new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'}); };
+const bookCh = (b, n) => ((b || 'gotm') === BOOK ? CHAPTERS : (BOOKSNAP[b] || BOOKSNAP.gotm).ch)[n];
+const chLabel = e => (e.book && BOOKS[e.book] ? `Book ${BOOKS[e.book].word} · ` : '') + (e.done ? 'Finished' : e.ch === 0 ? (e.book ? 'Starting out' : 'The prologue') : `Chapter ${bookCh(e.book, e.ch) ? bookCh(e.book, e.ch).number : e.ch}`) + (e.diff && DIFFS[e.diff] ? ` (${DIFFS[e.diff].name})` : '');
+/* Book One sergeants who have finished the book: Book Two can bring their road along (47: dgImport) */
+/* the title wears the book played last (the roster's first row), Book One on a new device */
+const titleBookOf = list => { const b = list[0] && list[0].book; return b && BOOKS[b] ? b : 'gotm'; };
+function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
+  if (ARTON()) { const el = $('.titleart'); if (el && el.dataset.book !== b) { el.dataset.book = b; el.innerHTML = art(B.titleArt || 'title/key'); } }
+  else { const old = $('#titlecv'); if (old && old.dataset.book !== b) { const cv = document.createElement('canvas'); cv.id = 'titlecv'; cv.setAttribute('aria-hidden', 'true'); cv.dataset.book = b; old.replaceWith(cv); startTitleBackdrop(cv, b); } }
+  const tp = $('#tPatch'); if (tp && tp.dataset.book !== b) { tp.dataset.book = b; tp.innerHTML = art(B.patch || 'insignia/patch', 'tpatch'); }
+  const tn = $('#tName'); if (tn) tn.innerHTML = `${B.h1[0]}<span>${B.h1[1]}</span>`;
+  const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
+const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
+function showTitle(fresh){
+  if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
+  const list = roster().list, form = fresh || !list.length, tb = titleBookOf(list), TB = BOOKS[tb];
+  const rows = list.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button></div>`).join('');
+  const taken = n => list.find(e => sameName(e.name, n));
+  toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
+    <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
+    <p class="tag" id="tTag">${TB.tag}</p>
+    ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
+    <div class="field" id="impField" ${tb === 'dg' && finishedGotm().length ? '' : 'hidden'}><label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${finishedGotm().map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('')}</select><small class="fine">Only a finished Book One counts. What the Fourth did after the Fete can matter late in this book.</small></div>
+    <div class="field"><label for="nm">${list.length ? 'Your new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
+    <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
+    <p class="fine tmsg" id="nmMsg" role="status"></p>
+    <div class="tbtns"><button class="btn primary" id="bNew">Begin</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
+      <div class="row2">${list.length ? '<button class="btn" id="bBack">Back to your sergeants</button>' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
+    : `<div class="roster"><div class="rh">${list.length > 1 ? 'Sergeants on this device' : 'Your sergeant'}</div>${rows}</div>
+    <div class="tbtns"><button class="btn" id="bNewSgt">New sergeant</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
+      <div class="row2"><button class="btn" id="bImp">Load a save code</button><button class="btn" id="bDeeds">Deeds</button></div></div>`}
+    <div id="instSlot"></div>
+    <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. Book One, Ashes of the Pale, beside Gardens of the Moon: the prologue and all seven chapters. Book Two, The Chain of Dogs, beside Deadhouse Gates: ${typeof dgChCount === 'function' && dgChCount() >= 7 ? 'all seven chapters' : typeof dgChCount === 'function' && dgChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][dgChCount()] : 'Chapter One'}. Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
+  if (!ARTON()) startTitleBackdrop($('#titlecv'), tb); else titleAnim = null;
+  $('#bSet').onclick = () => { AUDIO.play('click'); openSettings(); };
+  $('#bVer').onclick = () => { AUDIO.play('click'); openNotes(null); };
+  if ($('#bFullT')) $('#bFullT').onclick = () => { AUDIO.play('click'); toggleFull(); };
+  if ($('#bImp')) $('#bImp').onclick = () => { AUDIO.play('click'); openModal('save'); };
+  if (form) {
+    const msg = t => { $('#nmMsg').textContent = t; }, b = $('#bNew'), nm = $('#nm');
+    // a name already on the roster asks twice: the second tap starts that sergeant over
+    b.onclick = () => { AUDIO.play('click'); const n = nm.value.trim().replace(/\s+/g, ' ');
+      if (!n) { msg('Give your sergeant a name.'); nm.focus(); return; }
+      const t = taken(n);
+      if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
+      if (book === 'dg') { S = newStateDG(n, $('#impSel') ? $('#impSel').value : ''); S.diff = diff; save(); return startChapter(1); }
+      S = newState(n); S.diff = diff; save(); showIntro(); };
+    let diff = 'soldier', book = tb;
+    document.querySelectorAll('[data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('[data-book]').forEach(y => y.classList.toggle('on', y === x));
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); $('#impField').hidden = book !== 'dg' || !finishedGotm().length; });
+    document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
+    nm.oninput = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); b.textContent = 'Begin'; msg(''); } };
+    nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
+    if ($('#bBack')) $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
+    if (fresh) nm.focus();
+  } else {
+    $('#bNewSgt').onclick = () => { AUDIO.play('click'); showTitle(true); };
+    $('#bDeeds').onclick = () => { AUDIO.play('click'); openModal('deeds'); };
+    document.querySelectorAll('.sgtrow .load').forEach(el => el.onclick = () => { AUDIO.play('click'); const s = loadSlot(el.dataset.id);
+      if (!s) { dropSlot(el.dataset.id); return showTitle(); } S = s; resume(); });
+    // erasing a sergeant asks twice: the first tap says who goes
+    document.querySelectorAll('.sgtrow .del').forEach(el => el.onclick = () => { AUDIO.play('click'); const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id);
+      if (el.dataset.arm) { dropSlot(el.dataset.id); return showTitle(); }
+      el.dataset.arm = 1; el.classList.add('warn'); ld.classList.add('warn'); const was = ld.innerHTML; ld.innerHTML = `<b>${tapWord('Tap')} × again to erase Sergeant ${esc(e.name)}</b><small>Their save on this device is gone for good. A save code brings them back.</small>`; ld.disabled = true;
+      setTimeout(() => { if (el.isConnected) { delete el.dataset.arm; el.classList.remove('warn'); ld.classList.remove('warn'); ld.innerHTML = was; ld.disabled = false; } }, 4000); });
+  }
+  maybeNotes(list.length > 0); offerInstall();
+}
+function showIntro(){
+  view = 'intro'; S.scene = 'intro'; save(); titleAnim = null; AUDIO.setScene('explore');
+  toTop(); $('#app').innerHTML = `<header class="hud"><div><div class="loc">The Pale</div><div class="sub">Genabackis · three days after</div></div><div class="hudr">${hudButtons()}</div></header>
+  ${artPlate(0, 'The Second Army lies in pits on the hillside. Nobody talks about whose sorcery fell on whom.')}
+  <div class="narr">
+    <p>Three days ago the Moon's Spawn drifted away from the Pale, leaving behind a city that had surrendered and an army that hadn't survived the surrender. What's left of the Second Army lies in pits on the hillside. The cadre of mages is down to a handful. Onearm's Host holds the ruins, counts its dead, and doesn't talk about whose sorcery fell on whom.</p>
+    <p>You are Sergeant ${esc(S.name)}, Fourth Squad, Seventh Company marines. Your squad came through the siege with all five of you still breathing, which in this army makes you either lucky or suspicious.</p>
+    <p>This morning a runner found you with a message from the cadre. It said: <em>my tent, now.</em></p>
+  </div>
+  <div class="row"><button class="btn primary" id="bGo">Answer the summons</button><button class="btn" id="bSq">Meet the squad</button></div>`;
+  G.sceneKind = 'camp';
+  $('#bGo').onclick = () => { AUDIO.play('click'); $('#bGo').disabled = true; talk('intro_tat'); };
+  $('#bSq').onclick = () => { AUDIO.play('click'); openChars(0); };
+  bindHud();
+}
+function drawCamp(cv, t, night){ // intro backdrop: the pits and the camp under a bruised sky
+  const {ctx, W, H} = sceneFit(cv);
+  const sky = ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0, night ? '#04040a' : '#08070b'); sky.addColorStop(.6, night ? '#0e0b12' : '#1c1414'); sky.addColorStop(1,'#0a0807'); ctx.fillStyle = sky; ctx.fillRect(0,0,W,H);
+  if (night) { ctx.fillStyle = 'rgba(220,220,240,.5)'; for (let i=0;i<40;i++) ctx.fillRect(hash(i,21)*W, hash(i,22)*H*.5, 1, 1); glow(ctx, W*.2, H*.25, W*.25, '#9a86e0', .08 + Math.sin(t/900)*.03); }
+  glow(ctx, W*.8, H*.62, W*.5, '#e8923a', (night ? .3 : .22) + Math.sin(t/140)*.03);
+  ctx.fillStyle = '#0b0908'; ctx.fillRect(0, H*.62, W, H);
+  for (let i=0;i<7;i++){ const x = W*.08 + i*W*.12, y = H*.66 + hash(i,2)*H*.2; ell(ctx, x, y, 30, 8, '#060504'); ctx.fillStyle = 'rgba(200,190,170,.35)'; for (let j=0;j<4;j++) ctx.fillRect(x - 20 + hash(i,j)*40, y - 3 + hash(j,i)*5, 2, 2); }
+  for (let i=0;i<4;i++){ const x = W*.6 + i*W*.1, y = H*.6; poly(ctx, [[x-24,y+12],[x,y-24],[x+24,y+12]], i%2 ? '#2a2016' : '#3a2c1c'); poly(ctx, [[x,y-24],[x+24,y+12],[x+8,y+12]], '#1a1410'); }
+  const fl = .8 + Math.sin(t/120)*.15; ell(ctx, W*.75, H*.7, 6*fl, 3, '#ffb060'); glow(ctx, W*.75, H*.7, 40, '#ffb060', .4*fl);
+  if (night && S && S.f && S.f.c1_hounds && S.chapter === 1) for (let i=0;i<3;i++){ // after the Hounds: the cadre row still burning, over on the left
+    const x = W*(.2 + i*.13), f2 = .7 + Math.sin(t/(90 + i*17) + i)*.3; glow(ctx, x, H*.58, W*.14, '#ff7a2a', .32*f2);
+    poly(ctx, [[x - W*.03, H*.62],[x - W*.008 + Math.sin(t/80 + i)*3, H*.5 - H*.06*f2],[x + W*.03, H*.62]], 'rgba(255,150,60,.72)'); poly(ctx, [[x - W*.015, H*.62],[x + Math.sin(t/70 + i)*2, H*.55 - H*.03*f2],[x + W*.015, H*.62]], 'rgba(255,220,140,.8)'); }
+  // the gravedigger back at his pits, then the squad walking in to the lamplight: the rest behind, Brisk, and the sergeant in the lead
+  if (!S || !S.chapter) drawFigure(ctx, 'garrow', W*.07, H*.72, 1.7, t, {still:true});
+  const col = marchOrder(sceneSquad()), n = col.length, x0 = W*.66, st = Math.min(42, (x0 - 34)/Math.max(1, n - 1));
+  col.forEach((id, i) => { const back = n - 1 - i; drawFigure(ctx, id, x0 - back*st, H*.86 - (back ? 2 + (back % 2)*2 : 0), 2.4, t, {phase:i}); });
+  ctx.fillStyle = 'rgba(200,190,175,.3)'; for (let i=0;i<30;i++) ctx.fillRect(hash(i,9)*W + Math.sin(t/1400 + i)*5, (hash(i,10)*H + t*.03) % H, 1.5, 1.5);
+  const v = ctx.createRadialGradient(W/2, H/2, H*.3, W/2, H/2, W*.7); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,.8)'); ctx.fillStyle = v; ctx.fillRect(0,0,W,H);
+}
+
