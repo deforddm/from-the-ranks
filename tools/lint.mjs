@@ -177,6 +177,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     if (!['weapon', 'armour', 'trinket'].includes(it.slot)) err(`item ${iid}: bad slot ${it.slot}`);
     (it.who || []).forEach(w => { if (!TPL[w]) err(`item ${iid}: who ${w} unknown`); });
     if (!it.line) warn(`item ${iid}: no description line`);
+    if (typeof ART !== 'undefined' && !ART['item/' + iid]) err(`item ${iid}: no artwork (the standard: every item has a picture; Book Two's are drawn in tools/art_dg_items.py)`);
   }
   for (const [cid, c] of Object.entries(CARDS)) { if (!c.fx && cid !== 'herald') warn(`card ${cid}: no fx text`); }
   // absent squadmates still named in the text: for each node, drop one squadmate (dead after Ch6's alley, or Ellis gone/never recruited) and look for their name

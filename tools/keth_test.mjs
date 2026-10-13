@@ -96,10 +96,11 @@ await page.waitForTimeout(600);
 const fight2 = await ev(() => { const o = {}, k = B.units.find(u => u.id === 'warlock'), f = B.units.filter(u => u.side === 'e')[0], h = B.units.find(u => u.id === 'haddat'); o.dmg = window._hp0 - f.hp;
   o.held = f.hp <= 0 || (f.earthUntil > B.round - 1 && f.slowTurn); h.x = 4; h.y = 6; h.hp = h.maxhp; o.noWhole = !AB.b2_bargain.tiles(k).includes(h);
   h.hp = 3; h.bleed = 2; o.handTile = AB.b2_bargain.tiles(k).includes(h); const e = foes().find(x => x.hp > 0); e.x = 4; e.y = 4; e.hp = e.maxhp = 200; foes().filter(x => x !== e).forEach((x, i) => { x.x = 7; x.y = i; });
-  window._b = {h0:h.hp, e0:e.hp}; AB.b2_bargain.run(k, h.x, h.y); o.healed = h.hp - 3; o.bleed = h.bleed === 0; o.left = AB.b2_bargain.ok(k); return o; });
+  window._rec = {gave:0}; const _hu = hurt; hurt = function(u, n, c){ if (u === e && window._rec.open) window._rec.gave += n; return _hu(u, n, c); }; window._hu = _hu; // count only the ground's blow, not Hackle's
+  const _l = later; later = (fn, ms) => _l(() => { window._rec.open = true; try { fn(); } finally { window._rec.open = false; } }, ms); AB.b2_bargain.run(k, h.x, h.y); later = _l; o.healed = h.hp - 3; window._rec.healed = o.healed; o.bleed = h.bleed === 0; o.left = AB.b2_bargain.ok(k); return o; });
 await page.waitForTimeout(700);
 const fight3 = await ev(() => { const o = {}, k = B.units.find(u => u.id === 'warlock'), e = foes().find(x => x.maxhp === 200), h = B.units.find(u => u.id === 'haddat');
-  o.gave = 200 - e.hp; o.healed = h.hp - 3;
+  o.gave = window._rec.gave; o.healed = window._rec.healed; hurt = window._hu;
   S.picks.warlock = ['crowcall', 'deepground']; const u2 = mkParty('warlock', 0, 0); o.crow = u2.ab.includes('b2_crow'); k.x = 3; k.y = 7; const far = foes().find(x => x.hp > 0); if (far) { far.x = 3; far.y = 2; o.reach5 = AB.b2_teeth.tiles(k).includes(far); } else o.reach5 = true;
   B = null; return o; });
 ok(fight.ab === 'b2_teeth,b2_bargain,salve' && !fight.strain && fight.spirit, 'in a fight: the Land\'s Teeth, the Grandmother\'s Hand, a salve; no strain, spirit-craft');
