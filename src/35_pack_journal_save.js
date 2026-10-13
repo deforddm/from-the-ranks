@@ -172,6 +172,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['5.0.2', ['On an iPhone or iPad, a fresh From the Ranks says how to bring sergeants from Ashes of the Pale: copy the save code on the Ashes title, then Load a save code here. iPhone home-screen apps keep their saves apart, so the automatic copy can\'t reach them.']],
   ['5.0.1', ['The squad patches carry a flame now, stitched in thread: Pale burning on the Fourth\'s, Hissar on the Third\'s. It replaces the thin red arc, and the same flame is on the app icon.']],
   ['5.0.0', ['Ashes of the Pale is now From the Ranks: one game for the whole series, told by ordinary soldiers. Book One keeps the name Ashes of the Pale; Book Two is The Chain of Dogs. New books will come here.', 'Your sergeants, settings and deeds came with you from Ashes of the Pale. From here on, play on in From the Ranks; Ashes of the Pale stays as it is, Book One only.', 'The title wears the series name above the book\'s own name and patch.']],
   ['4.8.1', ['Each book has its own shoulder patch on the title. Book Two\'s is the Third Squad\'s: III over a Crow Clan feather, the Chain\'s links above and five strokes for five soldiers, on sun-faded cloth.']],

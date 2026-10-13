@@ -31,6 +31,9 @@ const agoText = t => { if (!t) return ''; const d = Math.floor((new Date().setHo
 const bookCh = (b, n) => ((b || 'gotm') === BOOK ? CHAPTERS : (BOOKSNAP[b] || BOOKSNAP.gotm).ch)[n];
 const chLabel = e => (e.book && BOOKS[e.book] ? `Book ${BOOKS[e.book].word} · ` : '') + (e.done ? 'Finished' : e.ch === 0 ? (e.book ? 'Starting out' : 'The prologue') : `Chapter ${bookCh(e.book, e.ch) ? bookCh(e.book, e.ch).number : e.ch}`) + (e.diff && DIFFS[e.diff] ? ` (${DIFFS[e.diff].name})` : '');
 /* Book One sergeants who have finished the book: Book Two can bring their road along (47: dgImport) */
+/* iPhone and iPad keep each home-screen app's saves apart, so sergeants from Ashes of the Pale come across by save code (Ashes 4.9.2 offers
+   one for each sergeant on its title). A fresh From the Ranks on an iPhone says so. */
+const IOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 /* the title wears the book played last (the roster's first row), Book One on a new device */
 const titleBookOf = list => { const b = list[0] && list[0].book; return b && BOOKS[b] ? b : 'gotm'; };
 function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
@@ -52,6 +55,7 @@ function showTitle(fresh){
     <div class="field" id="impField" ${tb === 'dg' && finishedGotm().length ? '' : 'hidden'}><label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${finishedGotm().map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('')}</select><small class="fine">Only a finished Book One counts. What the Fourth did after the Fete can matter late in this book.</small></div>
     <div class="field"><label for="nm">${list.length ? 'Your new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
+    ${!list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : ''}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
     <div class="tbtns"><button class="btn primary" id="bNew">Begin</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
       <div class="row2">${list.length ? '<button class="btn" id="bBack">Back to your sergeants</button>' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
