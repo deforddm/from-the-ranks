@@ -489,7 +489,7 @@ let VISREADER = null;
 const visReader = () => (VISREADER && S && S.book && S.book !== 'gotm' ? VISREADER() : null) || {id:'tuft', name:'Tuft', he:false};
 /* the reader's name in the middle of a sentence ("the old Kanese"); and the node a reading's card screen comes back to: c4_card in Book One, b2_c4_card in Book Two */
 const visMid = () => { const r = visReader(); return r.mid || r.name; };
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : 'c') + (S ? S.chapter : 0) + '_card';
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;

@@ -14,7 +14,7 @@ const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between ---- */
 function worldSVG(){
-  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, and the sea lane from Genabaris to Aren">
+  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, and the road from Pale to Coral">
   <rect width="640" height="300" fill="#1c1610"/>
   <rect width="640" height="300" fill="#16304a" opacity=".35"/>
   <path d="M20 40 C80 20 170 30 230 60 C260 80 270 120 250 160 C240 200 200 240 150 262 C110 280 60 270 34 240 C10 210 8 150 14 100 Z" fill="#3a2e1e" stroke="#7a6640" stroke-width="1.5"/>
@@ -30,6 +30,8 @@ function worldSVG(){
     <circle cx="232" cy="78" r="4" fill="#c9973f"/><text x="150" y="70">Hissar</text>
     <circle cx="150" cy="240" r="4" fill="#e8c073"/><text x="42" y="268">Aren · Book Two</text>
     <path d="M232 78 C220 120 196 170 150 240" fill="none" stroke="#c94a20" stroke-width="2" opacity=".85"/><text x="200" y="196" fill="#e89a6a" font-size="11">the Chain</text>
+    <path d="M480 110 C520 120 548 140 560 160 C572 182 584 196 598 206" fill="none" stroke="#bcd4ee" stroke-width="2" opacity=".85"/><circle cx="560" cy="160" r="3.5" fill="#8fa8c0"/><text x="566" y="156" font-size="11">Capustan</text>
+    <circle cx="598" cy="206" r="4" fill="#bcd4ee"/><text x="618" y="196" text-anchor="end" font-size="11">Coral · Book Three</text>
   </g>
   <text x="620" y="292" text-anchor="end" font-family="Alegreya Sans, sans-serif" font-style="italic" font-size="10" fill="#a89a82">a sketch, not to scale</text>
   </svg>`;
@@ -41,6 +43,7 @@ function whereBooksMeetHTML(open){
       <li><b>Book Two, The Chain of Dogs,</b> begins a few months later and an ocean away. Seven Cities lies west of Genabackis across the Meningalle Ocean, weeks by ship from Genabaris. Hissar burns, and the Chain walks through the hot months that follow.</li>
       <li>While the Chain walks, Onearm's Host, proclaimed outlaw, is on Genabackis with Caladan Brood. The two stories run side by side, and only a little word passes between them.</li>
       <li>Ships out of Genabaris put in at Aren. That is how word crosses, and sometimes people.</li>
+      <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
     </ul></details>`;
 }
 
@@ -117,7 +120,8 @@ function bookDeedsHTML(b, all){
       ['The roof run', d('roofsUnseen') ? `Across unseen${d('roofsUnseen') > 1 ? ` (${d('roofsUnseen')} times)` : ''}` : d('roofSeen') ? `Seen ${d('roofSeen')} time${d('roofSeen') === 1 ? '' : 's'}; never across unseen` : 'Not yet'],
       ['Masks at the Fete', best ? `${best} of 5 named${d('masksAll') ? ', all five at least once' : ''}` : 'Not yet']];
     extra = `<h4 class="jh">At the tables</h4><div class="kv">${tables.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
-  else { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
+  else if (b === 'moi') extra = typeof b3DeedsExtra === 'function' ? b3DeedsExtra(mine) : ''; // Book Three's Alliance (60)
+  else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
       ['Water, at its lowest now', lowest == null ? '–' : `${lowest} skin${lowest === 1 ? '' : 's'}`], ['Came with the Fourth\'s road', mine.filter(({s}) => s.imported).length || 'None yet']];

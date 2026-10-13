@@ -43,6 +43,12 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
   const tn = $('#tName'); if (tn) tn.innerHTML = `${B.h1[0]}<span>${B.h1[1]}</span>`;
   const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
+/* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
+const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : [];
+const impShow = b => impList(b).length > 0;
+function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+  return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
+    : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
 function showTitle(fresh){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
   const list = roster().list, form = fresh || !list.length, tb = titleBookOf(list), TB = BOOKS[tb];
@@ -52,7 +58,7 @@ function showTitle(fresh){
     <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
     ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
-    <div class="field" id="impField" ${tb === 'dg' && finishedGotm().length ? '' : 'hidden'}><label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${finishedGotm().map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('')}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small></div>
+    <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm">${list.length ? 'Your new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
     ${!list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : ''}
@@ -63,7 +69,7 @@ function showTitle(fresh){
     <div class="tbtns"><button class="btn" id="bNewSgt">New sergeant</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
       <div class="row2"><button class="btn" id="bImp">Load a save code</button><button class="btn" id="bDeeds">Deeds</button></div></div>`}
     <div id="instSlot"></div>
-    <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. Book One, Ashes of the Pale, beside Gardens of the Moon: the prologue and all seven chapters. Book Two, The Chain of Dogs, beside Deadhouse Gates: ${typeof dgChCount === 'function' && dgChCount() >= 7 ? 'all seven chapters' : typeof dgChCount === 'function' && dgChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][dgChCount()] : 'Chapter One'}. Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
+    <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. Book One, Ashes of the Pale, beside Gardens of the Moon: the prologue and all seven chapters. Book Two, The Chain of Dogs, beside Deadhouse Gates: ${typeof dgChCount === 'function' && dgChCount() >= 7 ? 'all seven chapters' : typeof dgChCount === 'function' && dgChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][dgChCount()] : 'Chapter One'}. Book Three, The Fair Exchange, beside Memories of Ice: ${typeof b3ChCount !== 'function' || !b3ChCount() ? 'its chapters are being written' : b3ChCount() >= 7 ? 'all seven chapters' : b3ChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][b3ChCount()] : 'Chapter One'}. Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
   if (!ARTON()) startTitleBackdrop($('#titlecv'), tb); else titleAnim = null;
   $('#bSet').onclick = () => { AUDIO.play('click'); openSettings(); };
   $('#bVer').onclick = () => { AUDIO.play('click'); openNotes(null); };
@@ -74,17 +80,26 @@ function showTitle(fresh){
     // a name already on the roster asks twice: the second tap starts that sergeant over
     b.onclick = () => { AUDIO.play('click'); const n = nm.value.trim().replace(/\s+/g, ' ');
       if (!n) { msg('Give your sergeant a name.'); nm.focus(); return; }
-      const t = taken(n);
+      const imp = $('#impSel') && !$('#impField').hidden ? $('#impSel').value : '';
+      if (book === 'moi' && typeof b3ChCount === 'function' && !b3ChCount()) { msg('Book Three is still being written. Its chapters are on the way.'); return; }
+      const t = book === 'moi' && imp ? list.find(e => e.book === 'moi' && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
-      if (book === 'dg') { S = newStateDG(n, $('#impSel') ? $('#impSel').value : ''); S.diff = diff; save(); return startChapter(1); }
+      if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
+      if (book === 'moi') { S = newStateMOI(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
       S = newState(n); S.diff = diff; save(); showIntro(); };
     let diff = 'soldier', book = tb;
     document.querySelectorAll('[data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('[data-book]').forEach(y => y.classList.toggle('on', y === x));
-      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); $('#impField').hidden = book !== 'dg' || !finishedGotm().length; });
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); bindImp(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); b.textContent = 'Begin'; msg(''); } };
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
-    if ($('#impSel')) $('#impSel').onchange = () => { $('#impDesc').innerHTML = $('#impSel').value ? impDesc($('#impSel').value) : 'A fresh start: the Fourth is only a rumour here.'; };
+    /* picking a Book One sergeant for Book Three fills and locks the name (a fresh start unlocks it) */
+    const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
+    function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
+      sel.onchange = () => { const v = sel.value;
+        if (book === 'moi') { $('#impDesc').innerHTML = typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
+    bindImp();
     if ($('#bBack')) $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh) nm.focus();
   } else {

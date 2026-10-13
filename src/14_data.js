@@ -174,8 +174,11 @@ const BOOKS = {
     blurb:'Genabackis, beside Gardens of the Moon. The Fourth Squad under Onearm\'s Host, from the Pale to the Fete in Darujhistan. The prologue and seven chapters.'},
   dg:{id:'dg', n:2, word:'Two', title:'Deadhouse Gates', name:'The Chain of Dogs', h1:['The Chain', 'of Dogs'], squad:'Third Squad', unit:'the squad', tag:'Hissar burns. Coltaine\'s Seventh turns for Aren with forty thousand refugees at its back. Five soldiers walk the Chain.', titleArt:'title/dg', titleScene:'chain', patch:'insignia/dg',
     blurb:'Seven Cities, a few months after the Fete and an ocean west of Darujhistan, beside Deadhouse Gates. A new squad of the Seventh on the Chain of Dogs, from the fall of Hissar toward Aren. Plays on its own. Seven chapters.'},
+  /* v6.0: Book Three. The Fourth again, on the road south with Onearm's Host and Brood. Its blurb and title art are filled in by 60_book3.js */
+  moi:{id:'moi', n:3, word:'Three', title:'Memories of Ice', name:'The Fair Exchange', h1:['The Fair', 'Exchange'], squad:'Fourth Squad', unit:'the Fourth', tag:'Outlawed, the Empress says, the Host marches beside the enemy it fought for ten years. Five marines go south with it, into a country that has eaten itself.', titleArt:'title/moi', titleScene:'moi', patch:'insignia/patch',
+    blurb:'Genabackis, the spring after the Fete, beside Memories of Ice.'},
 };
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}};
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){

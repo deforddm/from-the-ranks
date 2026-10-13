@@ -3,8 +3,9 @@
 // walking to NPCs and trigger tiles, and fighting battles with the enemy AI on the squad's side.
 // Usage: node tools/play.mjs [runs=3] [--cheat] [--from=N] [--shots=dir] [--quiet] [--wide] [--book=dg]
 //   --book=dg   pick Book Two (Deadhouse Gates) on the new-sergeant form; the run ends at its last written chapter's end screen
+//   --book=moi  pick Book Three (Memories of Ice) the same way; with no Book Three chapter written yet the run is skipped cleanly (exit 0)
 //   --cheat     win every battle instantly (flow testing only)
-//   --from=N    start from a synthetic save at the start of chapter N (with --book=dg, Book Two's chapter N: SYNTH_DG)
+//   --from=N    start from a synthetic save at the start of chapter N (with --book=dg, Book Two's chapter N: SYNTH_DG; with --book=moi, SYNTH_MOI)
 //   --shots=dir screenshot on every new view/area and on any problem
 //   --wide      play in a 1366x768 window (the wide, PC layout) instead of a phone
 // Exit code 1 if any run hit a page error, a stuck state, or failed to reach the end.
@@ -31,7 +32,7 @@ const BOT = () => {
     sig() { return [$('#mg').hidden ? '' : (($('#mgPanel') || {}).textContent || ''), view, S && S.node, S && S.area, S && S.pos && S.pos.x, S && S.pos && S.pos.y, B && B.round, B && B.idx, B && B.units.map(u => u.hp + ':' + u.x + u.y).join(''), !$('#sheet').hidden, ($('#sheet').textContent || '').length, !$('#modal').hidden, S && S.finPage].join('|'); },
     tick() {
       const sh = $('#sheet'), m = $('#modal');
-      if (!$('#mg').hidden) { const bs = [...$('#mg').querySelectorAll('[data-bot]:not([disabled])')], stay = bs.filter(b => b.id !== 'mgLeave'); if (!stay.length && !$('#chCheck')) return 'mg-wait'; const pool = stay.length && Math.random() < .95 ? stay : bs; if (pool.length) { pool[Math.floor(Math.random() * pool.length)].click(); return 'mg'; } return 'mg-wait'; } // a game at the table: mostly play it out, now and then walk away
+      if (!$('#mg').hidden) { const bs = [...$('#mg').querySelectorAll('[data-bot]:not([disabled])')], stay = bs.filter(b => b.id !== 'mgLeave'); if (!stay.length && !$('#chCheck')) { this.mgWait = (this.mgWait || 0) + 1; const lv = $('#mgLeave'); if (this.mgWait > 120 && lv && !lv.disabled) { this.mgWait = 0; this.ev('mg: nothing left it can play (no stake it can afford), left the table'); lv.click(); return 'mg-leave'; } return 'mg-wait'; } this.mgWait = 0; const pool = stay.length && Math.random() < .95 ? stay : bs; if (pool.length) { pool[Math.floor(Math.random() * pool.length)].click(); return 'mg'; } return 'mg-wait'; } // a game at the table: mostly play it out, now and then walk away
       if (!$('#chars').hidden) { closeChars(); return 'chars'; }
       if (!$('#settings').hidden) { $('#settings').hidden = true; return 'settings'; }
       if (!m.hidden) {
@@ -147,14 +148,37 @@ const SYNTH_DG = (n) => {
   save(); startChapter(n);
 };
 
-let bad = 0;
+// Book Three (--book=moi --from=N): a synthetic save at the start of Book Three's chapter N, with earlier chapters' keys (S.f.b3_cN_key)
+// drawn at random, level about N+1, trust 6, dread 3, the Domin's warrens from Chapter 3, Sohra with the squad from Chapter 2 and
+// Dannet waiting from Chapter 4; now and then a Book One import with a squadmate lost
+const SYNTH_MOI = (n) => {
+  const pick = a => a[Math.floor(Math.random() * a.length)], coin = () => Math.random() < .5;
+  setBook('moi'); S = newStateMOI('Hask'); S.lvl = Math.min(8, n + 1); S.xp = LEVELS[S.lvl - 1];
+  if (coin()) { const dead = pick(['brisk', 'kettle', 'tuft', 'ohl']); S.squad = S.squad.filter(k => k !== dead);
+    S.imported = {from:'Kell', sid:'synth', road:'outlaw', lvl:8, dead:[dead], f:{c7_tav:'alive', c7_letter:'brisk', c7_debt:pick(['paid', 'spent', 'owed']), c6_key:pick(['bridgeburners', 'cellars', 'alley']), list:212}}; }
+  const keys = (typeof B3KEYS !== 'undefined' && B3KEYS) || {}; // a chapter may publish its key values as B3KEYS[n] = ['a', 'b']
+  S.chapters = {}; for (let i = 1; i < n; i++) { const v = pick(keys[i] || ['a', 'b']); S.f[`b3_c${i}_key`] = v; S.chapters[i] = v; }
+  S.ally = {trust:6, dread:3};
+  if (n >= 3) S.f.b3_domin = 1;
+  if (n >= 2) { S.f.b3_sohraDone = 1; if (!S.squad.includes('sohra')) S.squad.push('sohra'); }
+  if (n >= 4) { S.f.b3_dannetDone = 2; if (S.squad.length < 6) { S.f.b3_dannetDone = 1; S.squad.push('greysword'); } }
+  migrate(S); Object.keys(S.loy).forEach(k => { S.loy[k] = Math.floor(Math.random() * 5) - 1; });
+  S.inv = {sharper:2, burner:1, cusser:1, salve:2, smoker:1}; S.silver = 20;
+  S.picksDue = []; if (S.lvl >= 3) S.squad.forEach(id => { const o = PICKS[3][id]; S.picks[id] ??= []; if (o) S.picks[id].push(o[0][0]); });
+  if (S.lvl >= 5) S.squad.forEach(id => S.picks[id].push('iron')); if (S.lvl >= 7) S.squad.forEach(id => S.picks[id].push('keen'));
+  save(); startChapter(n);
+};
+
+let bad = 0, skipped = 0;
 async function run(i) {
   const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768 } : { fast: true });
   page.on('console', m => { if (m.type() === 'warning' && /finale|backdrop leave|unknown/i.test(m.text())) errs.push('warn: ' + m.text()); });
   await page.evaluate(BOT);
   if (cheat) await page.evaluate(() => { __bot.cheat = true; });
   if (book !== 'gotm') await page.evaluate(b => { __bot.book = b; }, book);
-  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : SYNTH, from);
+  if (book === 'moi' && !(await page.evaluate(() => Object.keys((BOOKSNAP.moi && BOOKSNAP.moi.ch) || {}).length))) { // nothing to play yet
+    console.log(`run ${i}: SKIP (Book Three has no chapter registered yet)`); skipped++; await ctx.close(); return; }
+  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : SYNTH, from);
   const t0 = Date.now();
   let last = '', same = 0, status = '', ticks = 0, chapterSeen = -1, areaSeen = '', viewSeen = '', errShot = 0;
   const problems = [];
@@ -189,4 +213,5 @@ const par = Math.min(runs, 4);
 let next = 0;
 await Promise.all(Array.from({ length: par }, async () => { while (next < runs) { const i = next++; await run(i); } }));
 await browser.close(); srv.kill();
+if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book Three has no chapters yet.`);
 process.exit(bad ? 1 : 0);

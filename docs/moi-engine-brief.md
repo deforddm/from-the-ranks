@@ -5,7 +5,7 @@ Tue Oct 13, 2026. The work order for Book Three's engine (`src/60_book3.js`, `sr
 ## The book
 
 - **Book Three, *The Fair Exchange*, beside *Memories of Ice*.** Book id **`moi`**, `n:3`, `word:'Three'`, `title:'Memories of Ice'`, `name:'The Fair Exchange'`, `h1:['The Fair', 'Exchange']`, `squad:'Fourth Squad'`, `unit:'the Fourth'`.
-- **Tag (the flavor line, shown under the name on the title):** "The Host is outlawed, and marches beside the enemy it fought for ten years. Five marines go south with it, into a country that has eaten itself."
+- **Tag (the flavor line, shown under the name on the title):** "Outlawed, the Empress says, the Host marches beside the enemy it fought for ten years. Five marines go south with it, into a country that has eaten itself."
 - **Blurb:** "Genabackis, the spring after the Fete, beside Memories of Ice. The Fourth Squad again, with Onearm's Host and Caladan Brood's army, from the parley at Pale to Coral. Plays on its own; a finished Book One on the outlaw road can carry its Fourth across." + progress ("Chapter One so far." … "All seven chapters.") computed from registered chapters, like `dgProgress`.
 - `titleArt:'title/moi'`, `titleScene:'moi'` (the classic canvas backdrop), `patch:'insignia/patch'` — **the Fourth's own round IV patch returns exactly as it is** (rule in `docs/patches.md`: "If the Fourth return, their round IV patch returns as it is"). Add one line to `docs/patches.md` saying Book Three uses it.
 - Quick Ben's line at Coral is the title: "High Fist, it is a fair exchange." (never quote it before Chapter 7).

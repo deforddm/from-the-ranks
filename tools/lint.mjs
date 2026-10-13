@@ -61,7 +61,27 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     S.card = null;
     return S;
   }
-  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : mk(ch, v);
+  // Book Three (Memories of Ice): ids carry b3_ and are checked under Book Three states (S.book 'moi', the Fourth, a recruit or not, S.ally)
+  const isMOI = id => /^b3_/.test(id);
+  const chOfMOI = id => { const m = /^b3_c(\d)_/.exec(id); return m ? +m[1] : 1 + (seed % 7); };
+  function mkMOI(v, ch = 1) {
+    S = newStateMOI('Hask'); S.chapter = ch; S.scene = 'talk';
+    S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
+    if (v % 5 === 3) S.squad = S.squad.filter(x => x !== 'tuft' && x !== 'ohl'); // text must hold up if a squadmate is missing (an import's dead)
+    if (v % 7 === 4) S.squad = S.squad.filter(x => x !== 'brisk' && x !== 'kettle');
+    if (v % 2 === 0 && TPL.sohra) S.squad.push('sohra'); else if (v % 4 === 1 && TPL.greysword) S.squad.push('greysword'); // one recruit at a time, or neither
+    if (v % 6 === 5) S.imported = { from: 'Kell', sid: 'lint', road: 'outlaw', lvl: 8, dead: ['vell'], f: { c7_letter: 'brisk', c7_debt: 'owed', c5_cusserUsed: 1, list: 214 } };
+    migrate(S);
+    S.chapters = {}; S.ally = { trust: Math.floor(rng() * 13), dread: v % 6 === 0 ? 11 : Math.floor(rng() * 13) };
+    S.inv = { sharper: v % 4, burner: v % 3, cusser: v % 2, salve: 2, smoker: v % 3 };
+    const setF = f => { if (objFlags.includes(f)) S.f[f] = f === 'lastFallen' ? [] : {}; else S.f[f] = flagVals[f] ? flagVals[f][Math.floor(rng() * flagVals[f].length)] : (rng() < .15 ? 2 : 1); };
+    if (v === 1) flags.forEach(f => objFlags.includes(f) ? setF(f) : S.f[f] = (flagVals[f] && flagVals[f][0]) || 1);
+    else if (v > 1) flags.forEach(f => { if (rng() < 0.35) setF(f); });
+    Object.keys(S.loy).forEach(k => { S.loy[k] = (v % 7) - 3; });
+    S.card = v % 3 === 0 ? null : (typeof B3CARDS !== 'undefined' ? Object.keys(B3CARDS)[v % Object.keys(B3CARDS).length] : null);
+    return S;
+  }
+  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : isMOI(id) ? mkMOI(v, chOfMOI(id)) : mk(ch, v);
   function mk(ch, v) {
     S = newState('Hask'); S.chapter = ch; S.scene = 'talk';
     S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
@@ -169,7 +189,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     b.foes.forEach(f => chkFoe(f, 'start'));
     (b.waves || []).forEach(w => w.foes.forEach(f => chkFoe(f, 'wave' + w.round)));
     (b.allies || []).forEach(f => { if (!FOES[f[0]]) err(`battle ${bid}: ally ${f[0]} missing`); });
-    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style)) warn(`battle ${bid}: style ${b.style}`);
+    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style) && !/^b3/.test(b.style)) warn(`battle ${bid}: style ${b.style}`);
   }
   // items, cards
   const itemIds = Object.keys(ITEMS);
@@ -224,6 +244,40 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
       if (C.endScene && !SCENES[C.endScene] && v === 0) err(`dg chapter ${n}: endScene ${C.endScene} unknown`);
       if (C.intro && C.intro.scene && !SCENES[C.intro.scene] && v === 0) err(`dg chapter ${n}: intro.scene ${C.intro.scene} unknown`);
     }
+  }
+  // Book Three: the same check for the Fourth and its recruits
+  for (const id of ids.filter(isMOI)) {
+    for (const x of ['brisk', 'kettle', 'tuft', 'ohl', 'sohra', 'greysword']) {
+      if (!TPL[x]) continue; const nm = TPL[x].name, re = new RegExp('\\b' + nm + '\\b');
+      for (let v = 0; v < 8; v++) {
+        mkMOI(v, chOfMOI(id)); S.squad = S.squad.filter(q => q !== x);
+        let n; try { n = DLG[id](); } catch (e) { continue; }
+        const vis = (n.ch || []).filter(c => { try { return !c.req || c.req(); } catch (e) { return false; } });
+        const text = [n.txt || '', ...vis.map(c => c.t)].join(' '); const mm = re.exec(text);
+        if (mm) { const k = id + ' · ' + nm; if (!absent[k]) absent[k] = '…' + text.slice(Math.max(0, mm.index - 90), mm.index + 60).replace(/\s+/g, ' ') + '…'; break; }
+      }
+    }
+  }
+  // Book Three's chapters: the end screen and the journal, under Book Three states
+  for (const [n, CH] of Object.entries((BOOKSNAP.moi && BOOKSNAP.moi.ch) || {})) {
+    for (let v = 0; v < VAR; v++) { mkMOI(v, +n);
+      const C = CHAPTERS[n] && CHAPTERS[n].book === 'moi' ? CHAPTERS[n] : CH;
+      for (const k of ['extras', 'journal', 'endCap']) { if (!C[k]) { if (k !== 'endCap' && v === 0) warn(`moi chapter ${n}: no ${k}`); continue; }
+        let r; try { r = C[k](); } catch (e) { err(`moi chapter ${n}: ${k}() throws ${e.message} (variant ${v})`); continue; }
+        const txt = Array.isArray(r) ? r.filter(Boolean).join(' | ') : String(r); if (bad.test(txt)) { err(`moi chapter ${n}: ${k}() leaks (variant ${v}): ${txt.slice(0, 160)}`); } }
+      if (C.end) Object.entries(C.end).forEach(([k, e]) => { if (!Array.isArray(e) || e.length < 2) err(`moi chapter ${n}: end.${k} is not [title, text]`); });
+      if (C.endScene && !SCENES[C.endScene] && v === 0) err(`moi chapter ${n}: endScene ${C.endScene} unknown`);
+      if (C.intro && C.intro.scene && !SCENES[C.intro.scene] && v === 0) err(`moi chapter ${n}: intro.scene ${C.intro.scene} unknown`);
+    }
+  }
+  // Book Three's engine text: every Fourth and recruit template field, the deck lines and the glossary, under Book Three states
+  for (let v = 0; v < VAR; v++) { mkMOI(v, 1 + (v % 7));
+    for (const id of ['sgt', 'brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell', 'sohra', 'greysword']) { const t = TPL[id]; if (!t) continue;
+      for (const k of ['epithet', 'service', 'bio', 'bio2', 'quest']) { let x; try { x = t[k]; } catch (e) { err(`moi TPL.${id}.${k} throws ${e.message}`); continue; } if (typeof x === 'string' && bad.test(fmt(x))) err(`moi TPL.${id}.${k} leaks (variant ${v}): ${x.slice(0, 120)}`); } }
+    if (typeof B3SAY !== 'undefined') Object.keys(B3SAY).forEach(c => { try { const x = b3CardSay(c); if (bad.test(fmt(x))) err(`moi card ${c} leaks (variant ${v})`); } catch (e) { err(`moi card ${c} throws ${e.message}`); } });
+    if (typeof B3DECK !== 'undefined') Object.keys(B3DECK).forEach(n => { try { const o = b3DeckOffer(+n), c = b3DeckCard(+n); [o.txt, c.txt, c.after].forEach(x => { if (bad.test(fmt(x))) err(`moi deck ${n} leaks (variant ${v}): ${String(x).slice(0, 120)}`); }); if (o.scene && !SCENES[o.scene]) err(`moi deck ${n}: unknown scene ${o.scene}`); } catch (e) { err(`moi deck ${n} throws ${e.message}`); } });
+    (GLOSSX.moi || []).forEach(g => { try { if (g[3]) g[3](); } catch (e) { err(`moi glossary ${g[1]} throws ${e.message}`); } });
+    try { const h = allyHTML('The road'); if (bad.test(h.replace(/<[^>]+>/g, ' '))) err('moi allyHTML leaks'); } catch (e) { err('moi allyHTML throws ' + e.message); }
   }
   newState('Hask'); // back to Book One for whatever follows
   const orphans = ids.filter(id => !refd.has(id));

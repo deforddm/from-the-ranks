@@ -4,6 +4,7 @@
 import { server, browser as launch, openGame } from './page.mjs';
 const srv = await server(); const br = await launch();
 const { page, errors } = await openGame(br, srv.url, {});
+const BOOKS_N = await page.evaluate(() => Object.fromEntries(Object.keys(BOOKS).map(k => [k, 1]))); // v6.0: a section per book on the shelf (three now)
 const bad = [], ok = m => console.log('  ok  ' + m), no = m => { bad.push(m); console.log('  FAIL ' + m); };
 const r = await page.evaluate(async () => {
   const out = {};
@@ -32,7 +33,7 @@ r.imported === 'empire' ? ok('the road is carried in') : no('imported: ' + r.imp
 /Book Two · The Chain of Dogs/.test(r.head) ? ok('the journal names its book') : no('head: ' + r.head.slice(0, 80));
 r.heading === 'Third Squad' && r.heading1 === 'Fourth Squad' ? ok('each book names its own squad') : no(`headings: ${r.heading} / ${r.heading1}`);
 r.meet ? ok('where the books meet, with the map') : no('no books-meet panel');
-r.deedsBooks.length === 2 && /Book One/.test(r.deedsBooks[0]) && /4 sergeants, 4 finished/.test(r.deedsBooks[0]) && /Book Two/.test(r.deedsBooks[1]) ? ok('Deeds by book, each counting its own sergeants') : no('deeds: ' + r.deedsBooks.join(' | '));
+r.deedsBooks.length === Object.keys(BOOKS_N).length && /Book One/.test(r.deedsBooks[0]) && /4 sergeants, 4 finished/.test(r.deedsBooks[0]) && /Book Two/.test(r.deedsBooks[1]) ? ok('Deeds by book, each counting its own sergeants') : no('deeds: ' + r.deedsBooks.join(' | '));
 r.roadOne === '1 of ' + r.roadOne.split(' of ')[1] ? ok('Book One\'s road counts only Book One endings') : no('road one: ' + r.roadOne);
 Object.values(r.echoes).every(t => /the Fourth/.test(t)) && new Set(Object.values(r.echoes)).size === 4 ? ok('every road has its own word on the Chapter Two card') : no('echoes: ' + JSON.stringify(r.echoes));
 r.noEcho ? ok('no echo without a Book One road') : no('echo shown on a fresh start');

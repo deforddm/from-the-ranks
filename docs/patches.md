@@ -18,9 +18,11 @@ The patches are a matched set, so these rules hold for every book.
 |---|---|---|---|---|---|
 | One, Ashes of the Pale | The Fourth, Seventh Company marines | Round | Dark brown, gold stitching | (none beyond the numeral) | Top, above IV |
 | Two, The Chain of Dogs | The Third, Hissar garrison, Seventh Army | Heater shield | Sun-faded ochre, sand stitching, scorch mark lower right | Crow Clan feather behind III; chain links across the top | Bottom, below the tally |
+| Three, The Fair Exchange | The Fourth again | Round (Book One's patch, unchanged) | Dark brown, gold stitching | (none beyond the numeral) | Top, above IV |
 
 ## Looking ahead
 - **Book Three can bring the Fourth's patch back** (David, 2026-10-12): if the Fourth return, their round IV patch returns as it is, as a homecoming.
+- **Book Three, The Fair Exchange (v6.0), wears the Fourth's round IV patch exactly as it is** (`BOOKS.moi.patch = 'insignia/patch'`): the Fourth came back, so their patch did.
 - A new squad gets a new number, shape, cloth and symbol, and keeps the shared four.
 
 ## Where they live
