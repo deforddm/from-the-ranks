@@ -458,7 +458,7 @@ SCENEX.b2_hissar_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = R
     for (let i=0;i<18;i++){ const k = ((t*mo/(9000 + c*1300) + i/18) % 1), r = 7 + k*34, sx = bx + k*k*70 + Math.sin(t*mo/2000 + i*1.7)*(3 + k*6); glow(ctx, sx, by - k*hz*1.1, r*1.3, '#1e0e0a', .5*(1 - k*.6)); glow(ctx, sx - r*.3, by - k*hz*1.1 + r*.3, r*.8, '#8a3418', .2*(1 - k)); }
     glow(ctx, bx, by, 30, '#ff7a30', .18*fl); }
   for (let i=0;i<26;i++){ const k = ((t*mo/(5000 + hash(i,7)*4000) + hash(i,8)) % 1), ex = W*(.15 + hash(i,9)*.75) + k*40 + Math.sin(t/600 + i)*5, ey = hz - k*hz*.9; ctx.fillStyle = `rgba(255,${150 + Math.round(hash(i,10)*80)},70,${(1 - k)*.85})`; ctx.fillRect(ex, ey, 1.4, 1.4); } // embers going up
-  const sq = sceneSquad(); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(28, W*.5/sq.length), H*.93 - (i%2)*2, 1.6, t, {phase:i, dir:1}));
+  const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(28, W*.5/sq.length), H*.93 - (i%2)*2, 1.6, t, {phase:i, dir:1}));
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.25, H*.9, W*.35, '#ff6e28', .08*fl); ctx.globalCompositeOperation = 'source-over'; // the city's light on their backs and faces
   vign(ctx, W, H, .78, .5); };
 
@@ -483,7 +483,7 @@ SCENEX.b2_coltaine_tent = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, ax, ly + 20, W*.62, '#e8923a', .28*fl); glow(ctx, ax, ly + 2, 30, '#ffc070', .5*fl); ctx.globalCompositeOperation = 'source-over';
   ctx.fillStyle = '#2a2016'; ctx.fillRect(ax - 5, ly - 6, 10, 2); ctx.fillRect(ax - 4, ly - 4, 8, 12); ctx.fillStyle = `rgba(255,${200 + Math.round(fl*20)},130,${.8*fl})`; ctx.fillRect(ax - 2.6, ly - 2, 5.2, 8); ctx.fillStyle = '#2a2016'; ctx.fillRect(ax - .5, ly - 4, 1, 12);
   drawFigure(ctx, 'coltaine', W*.4, H*.9, 2.6, t, {still:true, dir:1}); drawFigure(ctx, 'duiker', W*.2, H*.94, 2.3, t, {still:true, dir:1, phase:2});
-  const sq = sceneSquad().slice(0, 3); sq.forEach((id, i) => drawFigure(ctx, id, W - 26 - (sq.length - 1 - i)*Math.min(30, W*.09), H*.97, 2.2, t, {phase:i, dir:-1}));
+  const sq = sceneSquad().slice(0, 3); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W - 26 - (sq.length - 1 - i)*Math.min(30, W*.09), H*.97, 2.2, t, {phase:i, dir:-1}));
   ctx.fillStyle = 'rgba(210,190,160,.3)'; for (let i=0;i<16;i++){ const y = (hash(i,10)*H + t*.01*mo*(1 + hash(i,11))) % H, xx = ax + (hash(i,9) - .5)*W*.5 + Math.sin(t/1400 + i)*6; ctx.globalAlpha = clamp(1 - Math.hypot(xx - ax, y - ly)/(W*.3), 0, 1); ctx.fillRect(xx, y, 1.3, 1.3); } ctx.globalAlpha = 1; // dust in the lamplight
   vign(ctx, W, H, .82, .5); };
 
@@ -565,5 +565,5 @@ SCENEX.b2_basin = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
   }), 0, 0, W, H);
   for (let i=0;i<4;i++){ const k = ((t*mo/9000 + i/4) % 1); ell(ctx, W*(.3 + i*.18) + k*20, H*.44 - 6 - k*14, 20 + k*24, 3 + k*4, `rgba(200,150,130,${.14*Math.sin(k*Math.PI)})`); } // the army's dust
   ctx.fillStyle = 'rgba(220,200,190,.18)'; for (let i=0;i<12;i++){ const k = ((t*mo/7000 + hash(i,3)) % 1); ell(ctx, hash(i,4)*W + k*40, H*(.6 + hash(i,5)*.3), 20, 2, `rgba(220,200,190,${.08*Math.sin(k*Math.PI)})`); } // ground mist, burning off
-  const sq = sceneSquad(); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
+  const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
   vign(ctx, W, H, .7, .5); };

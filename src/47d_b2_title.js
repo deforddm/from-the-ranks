@@ -59,8 +59,8 @@ function startTitleChain(cv){
       ctx.beginPath(); ctx.moveTo(x - 9*s, y - 3*s - wy); ctx.quadraticCurveTo(x - 4*s, y - 6*s - wy, x, y); ctx.quadraticCurveTo(x + 4*s, y - 6*s - wy, x + 9*s, y - 3*s - wy); ctx.quadraticCurveTo(x + 4*s, y - 2*s, x, y + 1.6*s); ctx.quadraticCurveTo(x - 4*s, y - 2*s, x - 9*s, y - 3*s - wy); ctx.fill(); }); // crows over the Wickans
     if (W > H*.9) { // a landscape screen has room for the squad on its ridge; on a phone held upright the menus sit there
       ell(ctx, W*.8, H*.79, W*.26, H*.05, 'rgba(201,138,82,.08)'); // haze behind the squad
-      const fs = H*.085/32; ctx.save(); ctx.filter = 'brightness(.42) sepia(.35)'; ['tangle','sgt_dg','haddat','marrow','hackle','sathi'].forEach((id, i) => { if (FIGX[id]) drawFigure(ctx, id, W*(.74 + i*.04), H*.835 + Math.sin(i*1.7)*2, id === 'hackle' ? fs*.8 : fs, t, {phase:i}); }); ctx.restore(); // the squad, watching the column go by below
-      glow(ctx, W*.86, H*.75, H*.04, '#f0a24a', .3*fl); } // Marrow's lamp
+      const fs = H*.085/32; ctx.save(); ctx.filter = 'brightness(.42) sepia(.35)'; ['tangle','haddat','marrow','hackle','sathi','sgt_dg'].forEach((id, i) => { if (FIGX[id]) drawFigure(ctx, id, W*(.74 + i*.04), H*.835 + Math.sin(i*1.7)*2, id === 'hackle' ? fs*.8 : fs, t, {phase:i}); }); ctx.restore(); // the squad, watching the column go by below
+      glow(ctx, W*.82, H*.75, H*.04, '#f0a24a', .3*fl); } // Marrow's lamp
     ctx.fillStyle = 'rgba(216,184,144,.3)'; dust.forEach(d => { if (mo) { d.x -= d.v*dt*1.4; d.y += d.v*dt*.4; if (d.x < 0) d.x = 1; if (d.y > 1) d.y = 0; } ctx.fillRect(d.x*W, d.y*H, d.s, d.s); }); // blowing dust
     const lv = ctx.createLinearGradient(0, 0, W, 0); lv.addColorStop(0, 'rgba(0,0,0,.7)'); lv.addColorStop(.45, 'rgba(0,0,0,.12)'); lv.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = lv; ctx.fillRect(0, 0, W, H);
     const v = ctx.createRadialGradient(W/2, H*.5, H*.25, W/2, H*.5, H*.95); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.6)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);

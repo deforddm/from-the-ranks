@@ -271,5 +271,5 @@ SCENEX.b2_kherahn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   [[W*.74, H*.8, 0], [W*.84, H*.78, 1], [W*.94, H*.81, 2]].forEach(([ex, ey, i]) => drawFigure(ctx, 'kherahn', ex, ey, 2.2, t, {still:true, dir:-1, phase:i*1.4 + .3}));
   drawFigure(ctx, 'coltaine', W*.3, H*.8, 2.3, t, {still:true, dir:1});
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.66, 30, '#ff8a40', .1*fl); glow(ctx, W*.8, H*.66, W*.16, '#ff8a40', .1*fl); ctx.globalCompositeOperation = 'source-over'; // the firelight on their faces
-  const sq = sceneSquad().slice(0, 4); sq.forEach((id, i) => drawFigure(ctx, id, 12 + i*Math.min(22, W*.055), H*.99 - (i%2)*2, 1.8, t, {phase:i, dir:1}));
+  const sq = sceneSquad().slice(0, 4); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, 12 + i*Math.min(22, W*.055), H*.99 - (i%2)*2, 1.8, t, {phase:i, dir:1}));
   vign(ctx, W, H, .82, .5); };

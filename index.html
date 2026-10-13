@@ -616,7 +616,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '5.3.0';
+const VERSION = '5.3.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3010,6 +3010,10 @@ function sceneLayer(key, W, H, paint){ const dpr = Math.min(2, window.devicePixe
 const sceneSquad = () => (typeof SQUAD === 'function' && S ? SQUAD() : PORDER);
 /* a column walking right, drawn left to right: the rest behind, then Brisk, then the sergeant in the lead */
 const marchOrder = sq => { const lead = ['brisk','sgt'].filter(id => sq.includes(id)); return [...sq.filter(id => !lead.includes(id)), ...lead]; };
+/* a line of the squad in story art, the sergeant always in front: facing right (dir 1) the sergeant is the rightmost, facing left the
+   leftmost; and the sergeant is drawn last, so nobody stands across them. place(id, i) draws one, i counting from the left. */
+function squadLine(sq, dir, place){ const o = dir < 0 ? marchOrder(sq).slice().reverse() : marchOrder(sq);
+  o.map((id, i) => [id, i]).sort((a, b) => (a[0] === 'sgt') - (b[0] === 'sgt')).forEach(([id, i]) => place(id, i)); }
 /* the sapper tunnels under the Pale: timber frames going back into the dark, a lantern on the nearest, rubble; or, deeper, Kurald Galain seeping in */
 function paintTunnel(x, W, H, dark, barrow = false){ // barrow: a Rhivi barrow on the plain, dry-laid stone instead of timber shoring
   const vx = W*.56, vy = H*.42, N = 7, fr = i => { const k = Math.pow(.64, i); return {l:vx - W*.66*k, r:vx + W*.66*k, t:vy - H*.6*k, b:vy + H*.66*k, k}; };
@@ -3045,7 +3049,8 @@ function drawScene(cv, kind, t){
   if (dark) { const p = (Math.sin(t/900) + 1)/2; glow(ctx, vx, vy, W*.3, '#9a86e0', .16 + p*.1); for (let i=0;i<9;i++){ const k = ((t/(5200 + i*300)*mo + hash(i,3)) % 1); ell(ctx, lerp(vx, hash(i,4)*W, k), lerp(vy + H*.1, H*.84, k), 16 + k*50, 4 + k*9, `rgba(70,55,120,${.12*Math.sin(k*Math.PI)})`); } }
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly + 10, W*.5, '#e8923a', (dark ? .16 : .26)*fl); glow(ctx, lx, ly + 8, 26, '#ffc070', .5*fl); ctx.globalCompositeOperation = 'source-over';
   ctx.strokeStyle = '#1a140e'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(lx, ly - 8); ctx.lineTo(lx, ly + 1); ctx.stroke(); ctx.fillStyle = '#2a2016'; ctx.fillRect(lx - 4, ly + 1, 8, 11); ctx.fillStyle = `rgba(255,${200 + Math.round(fl*20)},130,${.75*fl})`; ctx.fillRect(lx - 2.6, ly + 3, 5.2, 7); ctx.fillStyle = '#2a2016'; ctx.fillRect(lx - 5, ly, 10, 1.6);
-  const sq = sceneSquad(), n = sq.length; sq.forEach((id, i) => drawFigure(ctx, id, W*.5 + (i - (n - 1)/2)*Math.min(44, W*.8/n), H*.95 - (i%2)*4, 1.9, t, {phase:i, dir: i < n/2 ? 1 : -1}));
+  const rest = sceneSquad().filter(id => id !== 'sgt'), mid = Math.floor(rest.length/2), sq = [...rest.slice(0, mid), 'sgt', ...rest.slice(mid)], n = sq.length; // the sergeant in the middle, at the front of the ring
+  sq.map((id, i) => [id, i]).sort((a, b) => (a[0] === 'sgt') - (b[0] === 'sgt')).forEach(([id, i]) => drawFigure(ctx, id, W*.5 + (i - (n - 1)/2)*Math.min(44, W*.8/n), H*.95 - (id === 'sgt' ? -3 : (i%2)*4), 1.9, t, {phase:i, dir: id === 'sgt' ? (i < n/2 ? 1 : -1) : i < n/2 ? 1 : -1}));
   ctx.fillStyle = 'rgba(210,190,160,.3)'; for (let i=0;i<22;i++){ const y = (hash(i,10)*H + t*.012*mo*(1 + hash(i,11))) % H, xx = lx + (hash(i,9) - .5)*W*.6 + Math.sin(t/1400 + i)*6; ctx.globalAlpha = clamp(1 - Math.hypot(xx - lx, y - ly)/(W*.35), 0, 1); ctx.fillRect(xx, y, 1.4, 1.4); } ctx.globalAlpha = 1; // dust in the lantern light
   vign(ctx, W, H, .8, .5);
 }
@@ -3066,7 +3071,7 @@ function drawInterior(cv, kind, t){
     ctx.save(); ctx.translate(W*.87, H*.66); ctx.fillStyle = '#4a3a2c'; ctx.fillRect(-5, -16, 10, 14); ell(ctx, 0, -20, 5, 5, '#8a6a52'); ctx.fillStyle = '#0a0808'; ctx.fillRect(-2, -21, 1.5, 1.5); ctx.fillRect(1, -21, 1.5, 1.5); ctx.strokeStyle = 'rgba(200,180,220,.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-4, -30); ctx.lineTo(-3, -16); ctx.moveTo(4, -30); ctx.lineTo(3, -16); ctx.stroke(); ctx.restore();
     glow(ctx, W*.87, H*.6, W*.12, '#9a86e0', .1 + Math.sin(t/500)*.05);
     drawFigure(ctx, 'tat', W*.15, H*.9, 2.6, t, {still:true, dir:1});
-    SQUAD().slice(0,3).forEach((id, i) => drawFigure(ctx, id, W*.4 + i*40, H*.95, 2.2, t, {phase:i, dir:-1}));
+    squadLine(SQUAD().slice(0,3), -1, (id, i) => drawFigure(ctx, id, W*.4 + i*40, H*.95, 2.2, t, {phase:i, dir:-1}));
   } else {
     // the Bridgeburners' fire: a ring of figures, most of them not looking at you
     const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#04040a'); g.addColorStop(1,'#0a0807'); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
@@ -3076,7 +3081,7 @@ function drawInterior(cv, kind, t){
     poly(ctx, [[W*.5-12, H*.78],[W*.5+12, H*.78],[W*.5 + Math.sin(t/90)*5, H*.78 - 34*fl]], '#ffb35a'); poly(ctx, [[W*.5-6, H*.78],[W*.5+6, H*.78],[W*.5 + Math.sin(t/70)*3, H*.78 - 18*fl]], '#fff1c2');
     for (let i=0;i<8;i++){ const yy = H*.7 - ((t/10 + i*30) % (H*.5)); ctx.fillStyle = `rgba(255,${140 + R(60)},40,${(1 - (H*.7 - yy)/(H*.5))*.8})`; ctx.fillRect(W*.5 + Math.sin(t/300 + i)*20, yy, 2, 2); }
     [['wj', W*.62, H*.86, 1], ['qb', W*.75, H*.8, -1], ['kalam', W*.86, H*.9, -1], ['garrow', W*.3, H*.66, 1], ['pell', W*.68, H*.62, -1]].forEach(([k,x,y,d], i) => drawFigure(ctx, k, x, y, k === 'garrow' || k === 'pell' ? 1.8 : 2.4, t, {still:true, dir:d, phase:i}));
-    SQUAD().slice(0,3).forEach((id, i) => drawFigure(ctx, id, W*.12 + i*36, H*.96, 2.2, t, {phase:i, dir:1}));
+    squadLine(SQUAD().slice(0,3), 1, (id, i) => drawFigure(ctx, id, W*.12 + i*36, H*.96, 2.2, t, {phase:i, dir:1}));
   }
   const v = ctx.createRadialGradient(W/2, H*.6, H*.25, W/2, H*.6, W*.7); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,.85)'); ctx.fillStyle = v; ctx.fillRect(0,0,W,H);
 }
@@ -3137,7 +3142,7 @@ function drawCity(cv, kind, t){
     // tables and candles
     [[W*.5, H*.66],[W*.28, H*.8]].forEach(([x,y]) => { ell(ctx, x, y, 44, 12, '#2e2014'); ctx.fillStyle = '#1c130b'; ctx.fillRect(x-4, y, 8, 20); ell(ctx, x+18, y-6, 2, 5, '#e8d8a8'); glow(ctx, x+18, y-10, 40, '#ffb060', .3*fl); });
     [['kruppe', W*.42, H*.9, 1], ['crokus', W*.56, H*.84, -1], ['murillio', W*.66, H*.92, -1], ['coll', W*.16, H*.72, 1]].forEach(([k,x,y,d], i) => drawFigure(ctx, k, x, y, 2.3, t, {still:true, dir:d, phase:i}));
-    { const q3 = squad.slice(0,3), st = Math.min(30, W*.085); q3.forEach((id, i) => drawFigure(ctx, id, W - 22 - (q3.length - 1 - i)*st, H*.98, 2.1, t, {phase:i, dir:-1})); }
+    { const q3 = squad.slice(0,3), st = Math.min(30, W*.085); squadLine(q3, -1, (id, i) => drawFigure(ctx, id, W - 22 - (q3.length - 1 - i)*st, H*.98, 2.1, t, {phase:i, dir:-1})); }
   } else if (kind === 'cellar') {
     const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0a0908'); g.addColorStop(1,'#14100d'); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
     ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = 1; for (let r=0;r<12;r++) for (let c=0;c<14;c++){ ctx.strokeRect(c*W/14 + (r%2)*W/28, r*H/12, W/14, H/12); } // cut stone
@@ -3368,7 +3373,7 @@ function drawEstate(cv, kind, t){
     const qx = W*.2, qy = H*.9, cols = ['#e8c073','#9a86e0','#6aa8ff','#e0574a','#7fb394','#f0f0f0','#c05a8a'];
     cols.forEach((c, i) => { const a = t/600 + i*.9; glow(ctx, qx + Math.cos(a)*22, qy - 40 + Math.sin(a*1.3)*16, 26, c, .22); ctx.strokeStyle = rgba(c, .6); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(qx, qy - 30); ctx.quadraticCurveTo(qx + Math.cos(a)*30, qy - 50 + Math.sin(a)*20, qx + Math.cos(a + 1)*40, qy - 70 + Math.sin(a*.7)*20); ctx.stroke(); });
     drawFigure(ctx, 'qb', qx, qy, 2.4, t, {still:true, dir:1});
-    squad.forEach((id, i) => drawFigure(ctx, id, W - 22 - (squad.length - 1 - i)*Math.min(26, W*.4/squad.length), H*.99, 2, t, {phase:i, dir:-1}));
+    squadLine(squad, -1, (id, i) => drawFigure(ctx, id, W - 22 - (squad.length - 1 - i)*Math.min(26, W*.4/squad.length), H*.99, 2, t, {phase:i, dir:-1}));
     for (let i=0;i<40;i++){ const y = ((hash(i,51)*H) + t*(.01 + hash(i,52)*.015)) % H, x = (hash(i,53)*W + t*.02*(hash(i,54) + .3)) % W; ctx.fillStyle = 'rgba(225,242,255,.6)'; ctx.fillRect(x, y, 1.6, 1.6); }
     ctx.fillStyle = 'rgba(120,170,220,.08)'; ctx.fillRect(0,0,W,H); vign(ctx, W, H, .85);
   } else if (kind === 'dragon_sky') {
@@ -5727,6 +5732,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['5.3.1', ['The sergeant is always at the front in story art: at the leading end of the squad\'s line whichever way it faces, in the middle of a ring, and never with a squadmate standing across them.']],
   ['5.3.0', ['Water is the money on the Chain. Traders walk in the column and sell for skins: a camp follower on the Sekala, a Kanese tinker at the P\'atha, a noble\'s man behind the carriages, the Trygalle Trade Guild on the Nenoth, a Khundryl horse-trader at Sanimon. The HUD and the pack count water, not silver.', 'Twenty new pieces of kit for Book Two: a weapon or armour in every chapter, made for this squad. Heavy armour is a real choice: the best protection on the Chain, and an oven at noon unless you drank first, or wear a desert robe over it. And five with their own effects: a Semk god-fetish, a plank of the Silanda that bites back, a cold iron knife from the Jaghut tower, a Trygalle skin that holds more than it should, and the robe. Something to find in Aren, too.', 'Five games at the fires: the Water-Seller\'s Measure (pour between skins until one holds exactly the measure), Hackle\'s Herd (bring the stragglers in before the dust), Ask the Ground (answer the ground back, light for light, with Nil or Keth), the Trygalle Haggle (talk a shareholder down before her patience runs out) and Khundryl Knucklebones (toss, scoop, catch, for skins). The Deeds page keeps them under At the fires.']],
   ['5.2.1', ['Keth\'s second spirit-craft is new: the Old Woman\'s Bargain takes a wound out of a squadmate and gives it to the ground, and the ground gives it to the nearest enemy, the same number, no roll. It replaces the Grandmother\'s Hand, which did the same job as Marrow\'s Stanch.']],
   ['5.2.0', ['Book Two has a second recruit: Keth, a young Wickan warlock of the Foolish Dog with his great-grandmother inside him, who talks. Meet him on the west bank of the Sekala, the same day as Ramin. His spirit-craft never sputters: the Land\'s Teeth bites and holds an enemy by the feet, and the Grandmother\'s Hand keeps a squadmate standing at 1 when a blow should drop them.', 'One recruit walks with the squad at a time, as before, but now either can be asked back. Whoever is not with the squad waits at their own people\'s fire on each chapter\'s map, from the Sekala to the Geleen and again at Balahn. Their kit and their loyalty are kept for them.', 'Keth has his own scenes in every chapter after the Sekala, his own choice at the split, and his own page at the end of the book.', 'Hackle has a voice: he barks when he bites, yelps when he is hit, whines when he goes down, growls at an ambush, and makes the sounds the story says he makes.']],
@@ -20565,7 +20571,7 @@ SCENEX.b2_hissar_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = R
     for (let i=0;i<18;i++){ const k = ((t*mo/(9000 + c*1300) + i/18) % 1), r = 7 + k*34, sx = bx + k*k*70 + Math.sin(t*mo/2000 + i*1.7)*(3 + k*6); glow(ctx, sx, by - k*hz*1.1, r*1.3, '#1e0e0a', .5*(1 - k*.6)); glow(ctx, sx - r*.3, by - k*hz*1.1 + r*.3, r*.8, '#8a3418', .2*(1 - k)); }
     glow(ctx, bx, by, 30, '#ff7a30', .18*fl); }
   for (let i=0;i<26;i++){ const k = ((t*mo/(5000 + hash(i,7)*4000) + hash(i,8)) % 1), ex = W*(.15 + hash(i,9)*.75) + k*40 + Math.sin(t/600 + i)*5, ey = hz - k*hz*.9; ctx.fillStyle = `rgba(255,${150 + Math.round(hash(i,10)*80)},70,${(1 - k)*.85})`; ctx.fillRect(ex, ey, 1.4, 1.4); } // embers going up
-  const sq = sceneSquad(); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(28, W*.5/sq.length), H*.93 - (i%2)*2, 1.6, t, {phase:i, dir:1}));
+  const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(28, W*.5/sq.length), H*.93 - (i%2)*2, 1.6, t, {phase:i, dir:1}));
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.25, H*.9, W*.35, '#ff6e28', .08*fl); ctx.globalCompositeOperation = 'source-over'; // the city's light on their backs and faces
   vign(ctx, W, H, .78, .5); };
 
@@ -20590,7 +20596,7 @@ SCENEX.b2_coltaine_tent = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, ax, ly + 20, W*.62, '#e8923a', .28*fl); glow(ctx, ax, ly + 2, 30, '#ffc070', .5*fl); ctx.globalCompositeOperation = 'source-over';
   ctx.fillStyle = '#2a2016'; ctx.fillRect(ax - 5, ly - 6, 10, 2); ctx.fillRect(ax - 4, ly - 4, 8, 12); ctx.fillStyle = `rgba(255,${200 + Math.round(fl*20)},130,${.8*fl})`; ctx.fillRect(ax - 2.6, ly - 2, 5.2, 8); ctx.fillStyle = '#2a2016'; ctx.fillRect(ax - .5, ly - 4, 1, 12);
   drawFigure(ctx, 'coltaine', W*.4, H*.9, 2.6, t, {still:true, dir:1}); drawFigure(ctx, 'duiker', W*.2, H*.94, 2.3, t, {still:true, dir:1, phase:2});
-  const sq = sceneSquad().slice(0, 3); sq.forEach((id, i) => drawFigure(ctx, id, W - 26 - (sq.length - 1 - i)*Math.min(30, W*.09), H*.97, 2.2, t, {phase:i, dir:-1}));
+  const sq = sceneSquad().slice(0, 3); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W - 26 - (sq.length - 1 - i)*Math.min(30, W*.09), H*.97, 2.2, t, {phase:i, dir:-1}));
   ctx.fillStyle = 'rgba(210,190,160,.3)'; for (let i=0;i<16;i++){ const y = (hash(i,10)*H + t*.01*mo*(1 + hash(i,11))) % H, xx = ax + (hash(i,9) - .5)*W*.5 + Math.sin(t/1400 + i)*6; ctx.globalAlpha = clamp(1 - Math.hypot(xx - ax, y - ly)/(W*.3), 0, 1); ctx.fillRect(xx, y, 1.3, 1.3); } ctx.globalAlpha = 1; // dust in the lamplight
   vign(ctx, W, H, .82, .5); };
 
@@ -20672,7 +20678,7 @@ SCENEX.b2_basin = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
   }), 0, 0, W, H);
   for (let i=0;i<4;i++){ const k = ((t*mo/9000 + i/4) % 1); ell(ctx, W*(.3 + i*.18) + k*20, H*.44 - 6 - k*14, 20 + k*24, 3 + k*4, `rgba(200,150,130,${.14*Math.sin(k*Math.PI)})`); } // the army's dust
   ctx.fillStyle = 'rgba(220,200,190,.18)'; for (let i=0;i<12;i++){ const k = ((t*mo/7000 + hash(i,3)) % 1); ell(ctx, hash(i,4)*W + k*40, H*(.6 + hash(i,5)*.3), 20, 2, `rgba(220,200,190,${.08*Math.sin(k*Math.PI)})`); } // ground mist, burning off
-  const sq = sceneSquad(); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
+  const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
   vign(ctx, W, H, .7, .5); };
 
 /* ============ Book Two: the Deck of Dragons on the Chain ============
@@ -20915,8 +20921,8 @@ function startTitleChain(cv){
       ctx.beginPath(); ctx.moveTo(x - 9*s, y - 3*s - wy); ctx.quadraticCurveTo(x - 4*s, y - 6*s - wy, x, y); ctx.quadraticCurveTo(x + 4*s, y - 6*s - wy, x + 9*s, y - 3*s - wy); ctx.quadraticCurveTo(x + 4*s, y - 2*s, x, y + 1.6*s); ctx.quadraticCurveTo(x - 4*s, y - 2*s, x - 9*s, y - 3*s - wy); ctx.fill(); }); // crows over the Wickans
     if (W > H*.9) { // a landscape screen has room for the squad on its ridge; on a phone held upright the menus sit there
       ell(ctx, W*.8, H*.79, W*.26, H*.05, 'rgba(201,138,82,.08)'); // haze behind the squad
-      const fs = H*.085/32; ctx.save(); ctx.filter = 'brightness(.42) sepia(.35)'; ['tangle','sgt_dg','haddat','marrow','hackle','sathi'].forEach((id, i) => { if (FIGX[id]) drawFigure(ctx, id, W*(.74 + i*.04), H*.835 + Math.sin(i*1.7)*2, id === 'hackle' ? fs*.8 : fs, t, {phase:i}); }); ctx.restore(); // the squad, watching the column go by below
-      glow(ctx, W*.86, H*.75, H*.04, '#f0a24a', .3*fl); } // Marrow's lamp
+      const fs = H*.085/32; ctx.save(); ctx.filter = 'brightness(.42) sepia(.35)'; ['tangle','haddat','marrow','hackle','sathi','sgt_dg'].forEach((id, i) => { if (FIGX[id]) drawFigure(ctx, id, W*(.74 + i*.04), H*.835 + Math.sin(i*1.7)*2, id === 'hackle' ? fs*.8 : fs, t, {phase:i}); }); ctx.restore(); // the squad, watching the column go by below
+      glow(ctx, W*.82, H*.75, H*.04, '#f0a24a', .3*fl); } // Marrow's lamp
     ctx.fillStyle = 'rgba(216,184,144,.3)'; dust.forEach(d => { if (mo) { d.x -= d.v*dt*1.4; d.y += d.v*dt*.4; if (d.x < 0) d.x = 1; if (d.y > 1) d.y = 0; } ctx.fillRect(d.x*W, d.y*H, d.s, d.s); }); // blowing dust
     const lv = ctx.createLinearGradient(0, 0, W, 0); lv.addColorStop(0, 'rgba(0,0,0,.7)'); lv.addColorStop(.45, 'rgba(0,0,0,.12)'); lv.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = lv; ctx.fillRect(0, 0, W, H);
     const v = ctx.createRadialGradient(W/2, H*.5, H*.25, W/2, H*.5, H*.95); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.6)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
@@ -28534,7 +28540,7 @@ SCENEX.b2_kherahn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   [[W*.74, H*.8, 0], [W*.84, H*.78, 1], [W*.94, H*.81, 2]].forEach(([ex, ey, i]) => drawFigure(ctx, 'kherahn', ex, ey, 2.2, t, {still:true, dir:-1, phase:i*1.4 + .3}));
   drawFigure(ctx, 'coltaine', W*.3, H*.8, 2.3, t, {still:true, dir:1});
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.66, 30, '#ff8a40', .1*fl); glow(ctx, W*.8, H*.66, W*.16, '#ff8a40', .1*fl); ctx.globalCompositeOperation = 'source-over'; // the firelight on their faces
-  const sq = sceneSquad().slice(0, 4); sq.forEach((id, i) => drawFigure(ctx, id, 12 + i*Math.min(22, W*.055), H*.99 - (i%2)*2, 1.8, t, {phase:i, dir:1}));
+  const sq = sceneSquad().slice(0, 4); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, 12 + i*Math.min(22, W*.055), H*.99 - (i%2)*2, 1.8, t, {phase:i, dir:1}));
   vign(ctx, W, H, .82, .5); };
 
 /* ============ Book Two, Chapter 7: Aren Way, and the end of Book Two ============ */
