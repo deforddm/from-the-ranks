@@ -16,7 +16,7 @@
 
 /* ---------------- Keth ---------------- */
 Object.assign(TPL, {
-  warlock:{name:'Keth', role:'Warlock · Foolish Dog Clan', sig:'K', col:'#a9b8cc', hp:14, ac:12, atk:3, dmg:[1,6,1], rng:1, mv:5, init:2, st:{might:0, wits:2, guile:2}, ab:['b2_teeth', 'b2_hand', 'salve'],
+  warlock:{name:'Keth', role:'Warlock · Foolish Dog Clan', sig:'K', col:'#a9b8cc', hp:14, ac:12, atk:3, dmg:[1,6,1], rng:1, mv:5, init:2, st:{might:0, wits:2, guile:2}, ab:['b2_teeth', 'b2_bargain', 'salve'],
     epithet:'"I am not the old one. I only carry her."', origin:'The Wickan plains, Foolish Dog Clan', age:15, service:'Two summers with Coltaine, one of them as a warlock, badly',
     height:'Thin as a tent-pole, and growing out of every sleeve he owns.',
     weapon:'A bone-handled knife he is not much good with, and a rattle of dog\'s teeth he is', armour:'Hide, fringed and much too big, a Foolish Dog coat gone from red to the colour of the Odhan, and ochre across the eyes',
@@ -48,25 +48,22 @@ Object.assign(AB, {
       blog(`${u.name} shakes the rattle of dog's teeth at the ground under ${t.name} and asks it, in Foolish Dog, the way you would ask a strange dog.`);
       const r = attack(u, t, {dmg:[1, 8, 2 + lvDmg()], verb:'calls the ground up under'});
       later(() => { if (!B) return; if (r.hit) hold(t); if (has(u.id, 'deepground')) foes().filter(f => f !== t && cheb(f, t) <= 1).forEach(hold); updBattleUI(); }, pace(260)); }},
-  /* the Grandmother's Hand: two fingers on a squadmate, and an old woman's word; the next blow that would put them down leaves them at 1 */
-  b2_hand:{name:'The Grandmother\'s Hand', spirit:true, desc:()=>`Keth or a squadmate within 4: for ${2 + lvAt(5)} rounds, the next blow that would put them down leaves them standing at 1. It shakes off a daze, too. ${lvAt(6) ? 'Twice a fight.' : 'Once a fight (twice from level 6).'} Spirit-craft: it never sputters.`,
-    ok:()=>(B.used.b2_hand || 0) < 1 + lvAt(6), tiles:u=>party().filter(p => p.hp > 0 && cheb(u, p) <= 4 && sees(u, p)),
-    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b2_hand = (B.used.b2_hand || 0) + 1; t.handUntil = B.round + 2 + lvAt(5);
-      if (t.stun) { t.stun = false; float(t, 'steadied', '#9fe0b8'); } AUDIO.play('heal'); float(t, 'held', '#c8d8b8'); sparks(t.x, t.y, 12, '#c8d8b8', .4);
-      blog(t === u ? `${u.name} puts two fingers on his own breastbone, and says, in an old woman's voice: <em>Not yet.</em>` : `${u.name} puts two fingers on ${t.name}'s back, and an old woman's voice says, out of a boy's mouth: <em>This one is not yours yet.</em>`); }},
+  /* the Old Woman's Bargain: she takes a wound out of a squadmate and gives it to the ground, and the ground gives it to whoever is
+     standing on it nearest. A heal that is also a blow: the same number, out of one and into the other, no roll */
+  b2_bargain:{name:'The Old Woman\'s Bargain', spirit:true, desc:()=>`Keth or a hurt squadmate within 4: the old woman takes a wound out of them and gives it to the ground. They heal 2d6+${2 + lvB()}, and the nearest enemy within 3 of them takes the same, no roll, as the ground gives it on. It stops bleeding, too. ${lvAt(6) ? 'Twice a fight.' : 'Once a fight (twice from level 6).'} Grows with the squad's level. Spirit-craft: it never sputters.`,
+    ok:()=>(B.used.b2_bargain || 0) < 1 + lvAt(6), tiles:u=>party().filter(p => p.hp > 0 && p.hp < p.maxhp && cheb(u, p) <= 4 && sees(u, p)),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b2_bargain = (B.used.b2_bargain || 0) + 1;
+      const n = Math.min(roll(2, 6, 2 + lvB()), t.maxhp - t.hp), e = foes().filter(f => f.hp > 0 && cheb(f, t) <= 3).sort((a, b) => cheb(a, t) - cheb(b, t) || a.hp - b.hp)[0];
+      AUDIO.play('heal'); heal(t, n); t.bleed = 0; sparks(t.x, t.y, 12, '#c8d8b8', .4);
+      blog(`${u.name} puts two fingers on ${t === u ? 'his own breastbone' : t.name + '\'s back'}, and an old woman's voice says, out of a boy's mouth: <em>Give it here. I know someone who wants it.</em>`);
+      if (e && n > 0) { later(() => { if (!B || e.hp <= 0) return; B.fx.push({kind:'bolt', from:{x:t.x, y:t.y}, to:{x:e.x, y:e.y}, col:'#8aa86a', t:performance.now(), dur:320, wob:true}); AUDIO.play('step');
+          blog(`The ground under ${e.name} opens its mouth and gives it the wound: ${n} damage.`); hurt(e, n); sparks(e.x, e.y, 10, '#6a7a4a', .5); updBattleUI(); }, pace(320)); }
+      else blog(`There is nobody near enough to give it to. The ground keeps it.`); }},
   b2_crow:{name:'The Old Woman\'s Crows', spirit:true, desc:()=>`Once a fight: a crow-spirit settles over the eyes of an enemy within 5. For its next ${2 + lvAt(6)} turns half the blows that would land go into the dark. Spirit-craft: it never sputters.`,
     ok:()=>!B.used.b2_crow, tiles:u=>foes().filter(f => cheb(u, f) <= 5 && sees(u, f)),
     run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b2_crow = 1; AUDIO.play('shadow'); t.blindTurns = 2 + lvAt(6); float(t, 'crow-blind', '#8a96b0'); sparks(t.x, t.y, 14, '#4a5068', .5);
       blog(`Something with wings comes down out of nowhere onto ${t.name}'s head, and is not there, and is. ${u.name}'s grandmother laughs, out of his mouth.`); }},
 });
-/* the Hand holds: a blow that would drop them leaves them at 1 (Marrow's Stanch, borrowed for the moment: hurt() already knows how) */
-{ const _hurt = hurt;
-  hurt = function(u, n, crit){
-    if (!u || !B || !(u.handUntil >= B.round) || u.side !== 'p' || u.hp <= 0 || u.stanch) return _hurt(u, n, crit);
-    const before = u.hp, k = !u.ally && DIFF().dmg !== 1 ? Math.max(1, Math.round(n * DIFF().dmg)) : n;
-    u.stanch = {hp:1, name:'The old woman in Keth'};
-    try { _hurt(u, n, crit); } finally { delete u.stanch; }
-    if (before - k < 1 && u.hp >= 1) u.handUntil = -1; }; } // spent: it holds once
 { const _mkParty = mkParty;
   mkParty = function(id, x, y){ const u = _mkParty(id, x, y); if (id === 'warlock' && has('warlock', 'crowcall') && !u.ab.includes('b2_crow')) u.ab.splice(u.ab.length - 1, 0, 'b2_crow'); return u; }; }
 
@@ -159,7 +156,7 @@ He winces, as if somebody had kicked him under a table. "Sorry. She does that."
 
 The old woman, out of his mouth: "A little. He says a little."
 
-"She was a witch of the Foolish Dog for sixty years," he says, "and she has been in me for two, and she would like everyone to know which of those was worse." He looks at the squad, one at a time, the way a dog-boy looks at a new herd. "I can ask the ground for things. Small things. It does not always answer. I can keep somebody standing who ought to fall down, once, if she is in a good mood." A pause. "She is never in a good mood."`,
+"She was a witch of the Foolish Dog for sixty years," he says, "and she has been in me for two, and she would like everyone to know which of those was worse." He looks at the squad, one at a time, the way a dog-boy looks at a new herd. "I can ask the ground for things. Small things. It does not always answer. She can take a wound out of one of you and give it to somebody who deserves it more. She likes that one. She calls it a bargain." A pause. "Nobody has ever got the better of her in one."`,
     ch:[{t:b2In('redblade') ? '"Walk with us, Keth. Ramin goes back to his file."' : '"Third Squad. If you want it."', go:'b2_keth_yes'},
         {t:'"Not now. Walk near us. We may need you."', go:'b2_keth_later'},
         {t:'"No. Go back to Sormo."', go:'b2_keth_no'}]}),

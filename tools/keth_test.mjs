@@ -1,6 +1,6 @@
 // v5.2 (Book Two): Keth, the Foolish Dog's warlock, the second recruit. Met on the west bank with Ramin; one recruit at a time, and
 // either one asked back at a fire on each chapter's map (the other goes back to their people, kit remembered); the swap closes at the
-// Geleen's partings and in sight of Aren. His spirit-craft (the Land's Teeth, the Grandmother's Hand, the two talents) works and costs no
+// Geleen's partings and in sight of Aren. His spirit-craft (the Land's Teeth, the Old Woman's Bargain, the two talents) works and costs no
 // strain; he chooses at the split and can fall at the Barrow; he goes to the Wickan children in Aren; the end of the book has his page.
 // And Hackle's voice: bark, yelp, whine, a growl at an ambush, and the sounds the story says he makes (never a "does not growl").
 // Usage: node tools/keth_test.mjs   (build first; exit 1 on a failure or a page error)
@@ -20,7 +20,7 @@ const who = await ev(() => { const c = document.createElement('canvas'); c.width
   try { x.save(); x.translate(60, 140); POR.warlock(x); x.restore(); } catch (e) { por = e.message; }
   try { drawFigure(x, 'warlock', 60, 120, 2, 1000, {}); } catch (e) { fig = e.message; }
   const t = TPL.warlock; return {name:t.name, ab:t.ab.join(','), por, fig, quest:t.quest, picks:PICKS[3].warlock.map(p => p[0]).join(','), patron:!!PATRONS.warlock, he:B2FIN.he('warlock'), fin:B2CH7.finale.ids().includes('warlock'), split:B2_SPLIT.includes('warlock')}; });
-ok(who.name === 'Keth' && who.ab === 'b2_teeth,b2_hand,salve', `Keth: ${who.ab}`);
+ok(who.name === 'Keth' && who.ab === 'b2_teeth,b2_bargain,salve', `Keth: ${who.ab}`);
 ok(who.por === true && who.fig === true, `his portrait and his figure draw (${who.por}, ${who.fig})`);
 ok(who.picks === 'crowcall,deepground' && who.patron && who.he && !bad.test(who.quest), 'his talents, his god, his pronoun, his quest');
 ok(who.fin && who.split, 'he is in the split and on the last page');
@@ -88,21 +88,25 @@ ok(!talks.length, `every new talk reads clean in six squads${talks.length ? ': '
 // ---- in a fight: spirit-craft, no strain, never sputters ----
 await fresh({ch:5, lvl:6, add:['warlock']});
 const fight = await ev(() => { const o = {}; startBattle('b2_spring', {}); const k = B.units.find(u => u.id === 'warlock'), f = foes()[0], h = B.units.find(u => u.id === 'haddat');
-  o.ab = k.ab.join(','); o.strain = !!(AB.b2_teeth.strain || AB.b2_hand.strain); o.spirit = AB.b2_teeth.spirit && AB.b2_hand.spirit;
+  o.ab = k.ab.join(','); o.strain = !!(AB.b2_teeth.strain || AB.b2_bargain.strain); o.spirit = AB.b2_teeth.spirit && AB.b2_bargain.spirit;
   k.x = 3; k.y = 6; f.x = 3; f.y = 3; f.ac = -50; B.cur = k; o.tile = AB.b2_teeth.tiles(k).includes(f);
   window._hp0 = f.hp; AB.b2_teeth.run(k, f.x, f.y); o.cd = k.cdTeeth > B.round;
   return o; });
 await page.waitForTimeout(600);
 const fight2 = await ev(() => { const o = {}, k = B.units.find(u => u.id === 'warlock'), f = B.units.filter(u => u.side === 'e')[0], h = B.units.find(u => u.id === 'haddat'); o.dmg = window._hp0 - f.hp;
-  o.held = f.hp <= 0 || (f.earthUntil > B.round - 1 && f.slowTurn); h.x = 4; h.y = 6; o.handTile = AB.b2_hand.tiles(k).includes(h);
-  AB.b2_hand.run(k, h.x, h.y); o.until = h.handUntil > B.round; o.left = AB.b2_hand.ok(k); h.hp = 5; hurt(h, 40); o.stood = h.hp === 1; o.spent = h.handUntil === -1; hurt(h, 40); o.down = h.hp === 0;
+  o.held = f.hp <= 0 || (f.earthUntil > B.round - 1 && f.slowTurn); h.x = 4; h.y = 6; h.hp = h.maxhp; o.noWhole = !AB.b2_bargain.tiles(k).includes(h);
+  h.hp = 3; h.bleed = 2; o.handTile = AB.b2_bargain.tiles(k).includes(h); const e = foes().find(x => x.hp > 0); e.x = 4; e.y = 4; e.hp = e.maxhp = 200; foes().filter(x => x !== e).forEach((x, i) => { x.x = 7; x.y = i; });
+  window._b = {h0:h.hp, e0:e.hp}; AB.b2_bargain.run(k, h.x, h.y); o.healed = h.hp - 3; o.bleed = h.bleed === 0; o.left = AB.b2_bargain.ok(k); return o; });
+await page.waitForTimeout(700);
+const fight3 = await ev(() => { const o = {}, k = B.units.find(u => u.id === 'warlock'), e = foes().find(x => x.maxhp === 200), h = B.units.find(u => u.id === 'haddat');
+  o.gave = 200 - e.hp; o.healed = h.hp - 3;
   S.picks.warlock = ['crowcall', 'deepground']; const u2 = mkParty('warlock', 0, 0); o.crow = u2.ab.includes('b2_crow'); k.x = 3; k.y = 7; const far = foes().find(x => x.hp > 0); if (far) { far.x = 3; far.y = 2; o.reach5 = AB.b2_teeth.tiles(k).includes(far); } else o.reach5 = true;
   B = null; return o; });
-ok(fight.ab === 'b2_teeth,b2_hand,salve' && !fight.strain && fight.spirit, 'in a fight: the Land\'s Teeth, the Grandmother\'s Hand, a salve; no strain, spirit-craft');
+ok(fight.ab === 'b2_teeth,b2_bargain,salve' && !fight.strain && fight.spirit, 'in a fight: the Land\'s Teeth, the Grandmother\'s Hand, a salve; no strain, spirit-craft');
 ok(fight.tile && fight.cd && fight2.dmg > 0 && fight2.held, `the Land's Teeth bites (${fight2.dmg}) and holds by the feet, then waits a round`);
-ok(fight2.handTile && fight2.until && fight2.left, 'the Grandmother\'s Hand on a squadmate within 4; twice a fight from level 6');
-ok(fight2.stood && fight2.spent && fight2.down, 'a blow that would drop them leaves them at 1, once; the next one drops them');
-ok(fight2.crow && fight2.reach5, 'the talents: the Old Woman\'s Crows; Deep Ground reaches 5');
+ok(fight2.noWhole && fight2.handTile && fight2.left, 'the Old Woman\'s Bargain on a hurt squadmate within 4 (not a whole one); twice a fight from level 6');
+ok(fight3.healed > 0 && fight3.gave === fight3.healed && fight2.bleed, `the wound comes out of the squadmate (+${fight3.healed}) and goes into the nearest enemy (−${fight3.gave}), and stops the bleeding`);
+ok(fight3.crow && fight3.reach5, 'the talents: the Old Woman\'s Crows; Deep Ground reaches 5');
 
 // ---- the split, the Barrow, the night after, the last page ----
 await fresh({ch:6, lvl:7, add:['warlock'], f:{b2_c4_key:'keep', b2_silverDone:1}});
