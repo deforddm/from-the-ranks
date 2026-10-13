@@ -207,7 +207,7 @@ const B2_HEALS = ['mend', 'wash', 'stanch', 'argument'];
     const u = B && B.cur, a = AB[k];
     if (!S || S.book !== 'dg' || !u || !a || !a.strain || a.elder || a.spirit || u.side !== 'p' || u.ally) return _useAb(k, x, y);
     const heal = B2_HEALS.includes(k);
-    if (R(100) >= Math.round(b2Sputter() * 100)) { if (heal && u.id === 'marrow') S.f.b2_knots = (S.f.b2_knots || 0) + 1; return _useAb(k, x, y); }
+    if (R(100) >= Math.round(b2Sputter() * 100) || (typeof b2Steady === 'function' && b2Steady(u))) { if (heal && u.id === 'marrow') S.f.b2_knots = (S.f.b2_knots || 0) + 1; return _useAb(k, x, y); }
     if (heal && u.id === 'marrow') S.f.b2_sputters = (S.f.b2_sputters || 0) + 1;
     blog(`<em>${u.name} reaches into the warren. ${b2Mud()}</em> Half effect.`); float(u, 'sputters', '#a08a5a'); tally('sputters');
     const w0 = B.warren || {}, down = B.units.filter(p => p.side === 'p' && p.hp <= 0);
@@ -278,7 +278,7 @@ const b2Wounded = id => !!(S && S.book === 'dg' && S.f && S.f.b2_woundWho === id
    b2Drink(id, true) is the free version, for a squad whose water was already given out to it.
    S.f.b2_dry: the squad gave its water to the column, so it cannot drink, and starts a heat fight parched (−3 health).
    A squadmate marked u.cooled (the Tower's Breath, Chapter 5) has shed the heat for the rest of the fight. */
-const B2_HEAVY = id => ['haddat', 'redblade'].includes(id) || Object.values(((S && S.gear) || {})[id] || {}).some(g => ITEMS[g] && ITEMS[g].heavy);
+const B2_HEAVY = id => (['haddat', 'redblade'].includes(id) || Object.values(((S && S.gear) || {})[id] || {}).some(g => ITEMS[g] && ITEMS[g].heavy)) && !Object.values(((S && S.gear) || {})[id] || {}).includes('b2_robe'); // a desert robe over it keeps the sun off (58)
 function b2Drink(id, free){ if (!S || S.f.b2_dry) return false;
   if (!free && !b2Measure('drink')) { if (chainW() <= 0) return false; chain(-1, 0, 'A skin before the fight'); }
   S.f.b2_drank = id; return true; }

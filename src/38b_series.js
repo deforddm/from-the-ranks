@@ -121,7 +121,13 @@ function bookDeedsHTML(b, all){
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
       ['Water, at its lowest now', lowest == null ? '–' : `${lowest} skin${lowest === 1 ? '' : 's'}`], ['Came with the Fourth\'s road', mine.filter(({s}) => s.imported).length || 'None yet']];
-    extra = `<h4 class="jh">The Chain</h4><div class="kv">${rows2.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
+    const herd = Math.max(0, ...mine.map(({s}) => (s.f && s.f.b2_herd) || 0)), meas = Math.max(0, ...mine.map(({s}) => ((s.f && s.f.b2_measures) || []).length));
+    const fires = [['The Water-Seller\'s Measure', meas ? `${meas} of 3 measured${d('b2MeasurePar') ? `, ${d('b2MeasurePar')} in as few pours as the water-sellers` : ''}` : 'Not yet'],
+      ['Hackle\'s herd', d('b2Herd') ? `${herd} of 7 brought in${d('b2HerdAll') ? ', all seven at least once' : ''}` : 'Not yet'],
+      ['Ask the Ground', d('b2Ground') ? `It answered${d('b2Ground') > 1 ? ` ${d('b2Ground')} times` : ''}` : d('b2GroundLost') ? 'It went quiet' : 'Not yet'],
+      ['The Trygalle haggle', d('b2HaggleSaved') ? `${d('b2HaggleSaved')} skin${d('b2HaggleSaved') === 1 ? '' : 's'} saved` : d('b2HaggleLost') ? 'She said no' : 'Not yet'],
+      ['Khundryl knucklebones', d('b2JacksWon') || d('b2JacksLost') ? `${d('b2JacksWon')} won, ${d('b2JacksLost')} lost` : 'Not yet']];
+    extra = `<h4 class="jh">The Chain</h4><div class="kv">${rows2.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div><h4 class="jh">At the fires</h4><div class="kv">${fires.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
   const open = (S ? bookOf(S) : BOOK) === b;
   return `<details class="gloss bookdeeds"${open ? ' open' : ''}><summary>Book ${B.word} · ${esc(B.name || B.title)} <small>${mine.length} sergeant${mine.length === 1 ? '' : 's'}${done ? `, ${done} finished` : ''}</small></summary>
     <div class="route"><canvas data-route="${b}"></canvas></div><ol class="deeds-road">${rows}</ol>${extra}</details>`;

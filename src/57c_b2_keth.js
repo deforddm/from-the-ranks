@@ -90,7 +90,7 @@ function b2SwapIn(id){ if (!TPL[id] || b2In(id)) return;
 const B2_POSTS = [[3, 'b2_east', [6, 6], [4, 6], [8, 6]], [4, 'b2_carriages', [9, 9], [7, 7], [11, 8]], [5, 'b2_vforest', [13, 8], [11, 7], [13, 6]],
   [6, 'b2_hills', [13, 8], [11, 7], [13, 6]], [7, 'b2_balahn', [13, 7], [11, 8], [13, 5]]];
 const B2_KETHTALK = {b2_east:'b2_keth3', b2_carriages:'b2_keth4', b2_vforest:'b2_keth5', b2_hills:'b2_keth6', b2_balahn:'b2_keth7'};
-const b2ChOf = n => ({2:B2CH2, 3:B2CH3, 4:B2CH4, 5:B2CH5, 6:B2CH6, 7:B2CH7})[n];
+const b2ChOf = n => ({1:B2CH1, 2:B2CH2, 3:B2CH3, 4:B2CH4, 5:B2CH5, 6:B2CH6, 7:B2CH7})[n];
 const b2Area = (n, id) => (b2ChOf(n).areas || []).find(a => a.id === id);
 B2_POSTS.forEach(([n, aid, talkAt, rAt, kAt]) => { const A = b2Area(n, aid); if (!A) return; const node = B2_KETHTALK[aid], flag = node + 'Done';
   A.npcs.push({id:'keth_' + aid, name:'Keth', kind:'warlock', x:talkAt[0], y:talkAt[1], node:()=>node, show:()=>b2In('warlock'), fresh:()=>b2In('warlock') && !S.f[flag]},

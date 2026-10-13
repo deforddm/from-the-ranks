@@ -131,6 +131,9 @@ const AUDIO = (() => {
     yelp(){ const t = now(), p = rnd(-.25, .25); tone(rnd(950, 1080), {t, type:'sawtooth', a:.004, d:.17, v:.13, slide:500, filt:{type:'bandpass', f:1400, q:2}, pan:p}); noise({t, a:.002, d:.07, v:.1, f:2200, q:2, pan:p}); },
     whine(){ const t = now(); tone(700, {t, type:'triangle', a:.08, d:.5, v:.09, slide:900, vib:28, filt:{f:1900}}); tone(900, {t:t + .5, type:'triangle', a:.04, d:.7, v:.08, slide:520, vib:34, filt:{f:1700}}); tone(1800, {t, type:'sine', a:.1, d:.9, v:.02, slide:1100}); },
     snarl(){ const t = now(); tone(118, {t, type:'sawtooth', a:.12, d:.9, v:.2, slide:96, filt:{f:480, pk:950, e:420, q:4}, am:[36, .55]}); tone(236, {t, type:'sawtooth', a:.14, d:.7, v:.05, slide:190, filt:{f:900, q:5}, am:[41, .5]}); noise({t, a:.08, d:.8, v:.13, f:720, q:1.5, wet:sfxWet}); },
+    /* Book Two's games: water running from one skin to another; and the four voices under the ground (a pentatonic, low and old) */
+    pour(){ const t = now(); noise({t, a:.08, d:.45, v:.16, f:900, slide:1500, q:3, type:'bandpass', buf:'p'}); for (let i = 0; i < 6; i++) tone(rnd(700, 1300), {t:t + rnd(.05, .45), type:'sine', a:.005, d:.06, v:.03, slide:rnd(400, 600)}); },
+    stone(k = 0){ const t = now(), fr = [196, 233.1, 293.7, 349.2][k % 4]; tone(fr, {t, type:'triangle', a:.02, d:.9, v:.16, wet:sfxWet}); tone(fr * 2, {t, type:'sine', a:.03, d:.6, v:.04, wet:sfxWet}); tone(fr / 2, {t, type:'sine', a:.05, d:1.1, v:.08}); },
     howl(){ const t = now(); tone(390, {t, type:'triangle', a:.35, d:.9, v:.11, slide:640, vib:22, filt:{f:2000}, wet:sfxWet}); tone(640, {t:t + 1.1, type:'triangle', a:.06, d:1.5, v:.1, slide:330, vib:30, filt:{f:1800}, wet:sfxWet}); tone(1280, {t:t + .4, type:'sine', a:.4, d:1.6, v:.025, slide:700, wet:sfxWet}); },
   };
   function play(k, ...a){
