@@ -429,3 +429,6 @@ if (typeof document !== 'undefined' && document.head && !document.getElementById
   MUNI.cusser[2] = () => b3On() ? `The big one. Fired from the cradle under a crossbow, never thrown by anyone who wants to keep the arm.${b3In('kettle') ? ' Kettle has a cusser she calls Maud, and says so to anyone who stands too close to the satchel.' : ''}` : (typeof _mc === 'function' ? _mc() : _mc); }
 
 /* Book Three's chapters register in start() (90), after Book Two's: registerChapter(n, B3CHn, 'moi') */
+
+/* each chapter publishes its key values here (B3KEYS[n] = ['x','y']): tools/play.mjs --from=N builds earlier chapters' keys from it */
+const B3KEYS = {1:['mhybe','crate'], 2:['herd','wagons'], 3:['field','camps'], 4:['share','hold'], 5:['brood','quiet'], 6:['quorl','maurik'], 7:['host','daru','standdown']};

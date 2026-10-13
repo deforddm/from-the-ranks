@@ -32598,6 +32598,9 @@ if (typeof document !== 'undefined' && document.head && !document.getElementById
 
 /* Book Three's chapters register in start() (90), after Book Two's: registerChapter(n, B3CHn, 'moi') */
 
+/* each chapter publishes its key values here (B3KEYS[n] = ['x','y']): tools/play.mjs --from=N builds earlier chapters' keys from it */
+const B3KEYS = {1:['mhybe','crate'], 2:['herd','wagons'], 3:['field','camps'], 4:['share','hold'], 5:['brood','quiet'], 6:['quorl','maurik'], 7:['host','daru','standdown']};
+
 /* ============ Book Three's title: the Fourth on a frost-bitten ridge, looking south (v6.0) ============
    The painted title (ART 'title/moi', drawn by Claude for this game: the five on the ridge at the last of dusk, the Host's square camp and
    Brood's sprawl with the column between them, the Rhivi herds, a line of quorls going south, the Domin's wrong cold light over the far
