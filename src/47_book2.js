@@ -263,11 +263,11 @@ const b2Wounded = id => !!(S && S.book === 'dg' && S.f && S.f.b2_woundWho === id
     if (w) blog(`<em>${w.name} fights with the Vathar arrow-wound bound tight under the kit: −${B2_WOUND} health until Aren.</em>`);
     return r; }; }
 /* after a Book Two fight: how many rounds it took (S.f.b2_lastRounds), and, for a fight marked hurtMost, which squadmate came out of it worst
-   (S.f.b2_hurtMost: lowest health for their size; never the sergeant, never the Red Blade, whom the company keeps) */
+   (S.f.b2_hurtMost: lowest health for their size; never the sergeant, never the Red Blade, whom the company keeps, never Keth, whom the clans keep) */
 { const _win = win;
   win = function(){
     if (S && S.book === 'dg' && B && B.def) { S.f.b2_lastRounds = B.round;
-      if (B.def.hurtMost) { const c = B.units.filter(u => u.side === 'p' && !u.ally && b2Mate(u.id) && u.id !== 'redblade' && S.squad.includes(u.id)).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp);
+      if (B.def.hurtMost) { const c = B.units.filter(u => u.side === 'p' && !u.ally && b2Mate(u.id) && u.id !== 'redblade' && u.id !== 'warlock' && S.squad.includes(u.id)).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp);
         if (c.length) S.f.b2_hurtMost = c[0].id; } }
     return _win(); }; }
 
@@ -349,7 +349,7 @@ function b2LastStandEnd(){ if (!Array.isArray(S.f.b2_wallSquad)) return false; c
    Iron and Keen if the squad is that far on. S.f.b2_oldHand = their id. */
 const b2OldHandPick = () => { const h = dgOldHands(), i = S && S.imported; if (!h.length) return null;
   return h.slice().sort((a, b) => ((i.loy || {})[b] || 0) - ((i.loy || {})[a] || 0))[0]; };
-function b2OldHand(id){ if (!TPL[id] || S.squad.includes(id) || S.squad.includes('redblade')) return false;
+function b2OldHand(id){ if (!TPL[id] || S.squad.includes(id) || ['redblade', 'warlock'].some(k => S.squad.includes(k))) return false;
   recruit(id); S.f.b2_oldHand = id; S.picks[id] ??= [];
   if (S.lvl >= 5 && !S.picks[id].includes('iron')) S.picks[id].push('iron'); if (S.lvl >= 7 && !S.picks[id].includes('keen')) S.picks[id].push('keen');
   save(); return true; }

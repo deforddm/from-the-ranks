@@ -9,9 +9,9 @@
 /* a squadmate's name from a flag that holds an id, or a plain fallback */
 const b2Nm = (k, d) => b2Mate(S.f[k]) ? NAME(S.f[k]) : d;
 /* he or she, for a squadmate named by id */
-const b2He = id => ['tangle', 'redblade'].includes(id) ? 'he' : 'she', b2His = id => ['tangle', 'redblade'].includes(id) ? 'his' : 'her', b2Him = id => ['tangle', 'redblade'].includes(id) ? 'him' : 'her';
+const b2He = id => ['tangle', 'redblade', 'warlock'].includes(id) ? 'he' : 'she', b2His = id => ['tangle', 'redblade', 'warlock'].includes(id) ? 'his' : 'her', b2Him = id => ['tangle', 'redblade', 'warlock'].includes(id) ? 'him' : 'her';
 /* who the Silanda could take: the squad's hurt, never the sergeant, never the Red Blade (the company carries its own) */
-const b2Cands = () => SQUAD().filter(id => b2Mate(id) && id !== 'redblade');
+const b2Cands = () => SQUAD().filter(id => b2Mate(id) && id !== 'redblade' && id !== 'warlock');
 const b2Worst = () => { const c = b2Cands(), h = S.f.b2_hurtMost; return c.includes(h) ? h : c[0] || null; };
 /* the squad's own people, for a line */
 const b2Ours4 = () => S.f.b2_key === 'daughters' ? B2.elder : S.f.b2_yedda ? B2.widow : null;

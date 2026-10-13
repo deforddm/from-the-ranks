@@ -1017,7 +1017,7 @@ Up on the ship's rail, a sergeant you have never met is watching, ${esc(from)}, 
 
 ${NAME(id)} looks past you at the north wall, where the Guard's lanterns are. "We heard what's on the road," ${['ohl', 'vell'].includes(id) ? 'he' : 'she'} says. "We heard you're short." A pause. "The ship's going nowhere. ${esc(from)} says the Fourth can spare one for a night on a wall, if the Seventh wants one." Another pause. "${esc(from)} says the Fourth can't, really. ${esc(from)} says it anyway."`,
       ch: !id ? [{t:'On.', go:()=>startExplore()}] : [
-        {t:'"The Seventh would be glad of you."', req:()=>!b2In('redblade'), fx:()=>{ b2OldHand(id); }, go:'b2_oldhand_yes'},
+        {t:'"The Seventh would be glad of you."', req:()=>!b2In('redblade') && !b2In('warlock'), fx:()=>{ b2OldHand(id); }, go:'b2_oldhand_yes'},
         {t:'"Go back to your squad. Hold on to them."', fx:()=>{ S.f.b2_oldHandNo = 1; }, go:'b2_oldhand_no'}]}; },
   b2_oldhand_yes:()=>{ const id = b2OH(), O = (id && B2_OH7[id]) || {join:''};
     return {sp:id ? NAME(id) : 'The Fourth', txt:`${O.join}
@@ -1199,7 +1199,7 @@ ${b2In('haddat') ? 'Haddat looks at the gate a long time. "My country," she says
 
 Aren Way goes away north between the barrows, empty now. Dom's army has drawn off; it does not need the road. The shapes along it are gone, or going. The crows are going about their business. And on the barrow nearest the walls, just out of bowshot, where the Seventh stopped, there is nothing at all: a mound, grass, the marks of a great many feet, and a cross with nothing on it.
 
-You count them. You have always counted them. ${b2Gate7()} of the stretch, who came in at the gate. ${SQUAD().filter(id => id !== 'sgt').length ? `${b2And(SQUAD().filter(id => id !== 'sgt'))}, beside you.` : 'Nobody beside you, now.'}${fell.length ? ` ${b2And(fell)}, on the barrow.` : ''}${S.f.b2_raminGone ? ' Ramin, given back.' : ''} The Fist. The historian. Bult and List and Lull, and a dog called Bent.
+You count them. You have always counted them. ${b2Gate7()} of the stretch, who came in at the gate. ${SQUAD().filter(id => id !== 'sgt').length ? `${b2And(SQUAD().filter(id => id !== 'sgt'))}, beside you.` : 'Nobody beside you, now.'}${fell.length ? ` ${b2And(fell)}, on the barrow.` : ''}${S.f.b2_raminGone ? ' Ramin, given back.' : ''}${S.f.b2_kethGone ? ' Keth, with the children.' : ''} The Fist. The historian. Bult and List and Lull, and a dog called Bent.
 
 Then you go down, and ${k === 'guard' ? 'put on the Guard\'s sash' : k === 'wickans' ? 'go to the horse lines' : 'pack for the landward gate'}, and it is over.`,
       ch:[{t:'The end of the road.', go:()=>chapterEnd(7, S.f.b2_c7_key || 'guard')}]}; },
@@ -1210,7 +1210,7 @@ const B2FIN = {};
 B2FIN.KEYS = ['guard', 'wickans', 'desert'];
 B2FIN.key = k => B2FIN.KEYS.includes(k) ? k : B2FIN.KEYS.includes(S.f.b2_c7_key) ? S.f.b2_c7_key : 'guard';
 B2FIN.join = ps => ps.filter(p => p && String(p).trim()).join('\n\n');
-B2FIN.he = id => ['tangle', 'redblade', 'ohl', 'vell'].includes(id);
+B2FIN.he = id => ['tangle', 'redblade', 'warlock', 'ohl', 'vell'].includes(id);
 B2FIN.P = id => B2FIN.he(id) ? {she:'he', She:'He', her:'him', hers:'his'} : {she:'she', She:'She', her:'her', hers:'her'};
 B2FIN.n = () => S.f.b2_gateCount || 0;
 B2FIN.mates = () => SQUAD().filter(id => id !== 'sgt');
@@ -1285,7 +1285,8 @@ B2FIN.gone = (id, key) => {
       sathi:['The crows', `Sathi saw the crows come down over the Barrow, and laughed, because she had said so in Hissar, and was right. ${S.f.b2_hackleBack ? 'Hackle came home along Aren Way at dusk to the bone whistle, on three legs, and sleeps across your feet now.' : 'Nobody saw where Hackle went. Wickan dogs know their way.'} Somewhere a clan has one rider fewer, and laughs about it at the fire, which is Wickan manners.`],
       tangle:['Four notes', `Tangle hummed four notes in Bungle's ditch at the foot of the Barrow, and stopped on the fourth. ${S.f.b2_satchel6 === 'went' ? 'The satchel went with him, to the bottom.' : 'The satchel stayed with you. You count it at every halt, out loud, so it knows somebody is still counting.'} ${S.kit.includes('b2_bead') ? 'You have his prayer bead. You remembered a prayer for him. It had a good tune.' : ''}`],
       marrow:['The last knot', `Marrow sat down on the Barrow, behind the shields, and reached into the warren one more time, and it was clean all the way down. She tied the knot in the strap of her kit. ${S.kit.includes('b2_knotstring') ? `You have the string. ${S.f.b2_stringCounted ? 'You counted it out loud on Aren\'s quay, the way she asked.' : 'You count it, some nights.'}` : ''}`],
-      redblade:['Kept', `Ramin held a street's width of the Barrow on foot, in his red scale, the only red on the mound. ${S.f.b2_raminMsg ? `His commander has the message, word for word: *not given back; kept*.${S.f.b2_sashGiven ? ' And the sash, folded, for the horse he never had.' : ''}` : 'Nobody told his commander. You meant to.'}`]}[id] || ['The Barrow', `${NAME(id)} stayed with the Fist and fell at the Barrow.`];
+      redblade:['Kept', `Ramin held a street's width of the Barrow on foot, in his red scale, the only red on the mound. ${S.f.b2_raminMsg ? `His commander has the message, word for word: *not given back; kept*.${S.f.b2_sashGiven ? ' And the sash, folded, for the horse he never had.' : ''}` : 'Nobody told his commander. You meant to.'}`],
+      warlock:['Two voices', `Keth stayed on the Barrow with the Fist, and the grandmother with him, and when the crows came down the two of them were arguing about it in one mouth, and then they were laughing. ${S.kit.includes('b2_dogtooth') ? 'You have the tooth of his first dog. You have not given it to Hackle. You will, when he is old.' : 'Nobody has the tooth of his first dog. He took it with him.'} The Foolish Dog will not say his name now. They laugh instead, at the fire, a breath late, the way he did.`]}[id] || ['The Barrow', `${NAME(id)} stayed with the Fist and fell at the Barrow.`];
     return {title:T[0], txt:B2FIN.join([T[1], why, `${P.She} died on Aren Way, in sight of the walls, with the Seventh. The squad carried the name the rest of the way.`])};
   }
   if (id === 'redblade' && S.f.b2_raminGone) return {label:'Given back', title:'With the Red Blades', txt:B2FIN.join([
@@ -1296,7 +1297,7 @@ B2FIN.gone = (id, key) => {
 };
 
 B2FIN.sgt = key => {
-  const f = S.f, n = B2FIN.n(), keeps = ['b2_bluethread', 'b2_whistle', 'b2_bead', 'b2_knotstring', 'b2_sash'].filter(k => S.kit.includes(k) && ITEMS[k]).map(k => ITEMS[k].name.toLowerCase());
+  const f = S.f, n = B2FIN.n(), keeps = ['b2_bluethread', 'b2_whistle', 'b2_bead', 'b2_knotstring', 'b2_sash', 'b2_dogtooth'].filter(k => S.kit.includes(k) && ITEMS[k]).map(k => ITEMS[k].name.toLowerCase());
   return {title:f.b2_key === 'daughters' ? 'The promise' : 'The herd', txt:B2FIN.join([
     key === 'guard' ? `You wear the Aren Guard's sash, and then the Fourteenth's badge, and stand on the beach at Aren while an army is made out of the leavings of a summer, and are asked, over and over, by men who were not there, what the Chain of Dogs was like. You tell them. They do not believe it.` :
     key === 'wickans' ? `You ride beside the Wickan children, not behind, the way Bult would have liked, and learn to sit a horse at last because there is no other way to keep up, and the children laugh at you for it, the funeral laugh, which is how you know you are theirs.` :
@@ -1317,7 +1318,7 @@ B2FIN.coda = key => {
 };
 
 B2CH7.finale = {
-  ids:()=>['haddat', 'sathi', 'tangle', 'marrow', 'redblade'],
+  ids:()=>['haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock'],
   labels:{epi:'Epilogue', squad:'The squad', fallen:'The fallen', away:'Gone their own way', sgtRole:'Sergeant · Third Squad, the Seventh Army', road:'The squad\'s road', prologue:false,
     list:()=>['The stretch', `${b2Gate7()} came in at the gate`], noDead:'None of the squad. Every one of them walked into Aren.', paper:false,
     endline:'The End of Book Two: <em>Deadhouse Gates</em>',

@@ -620,7 +620,7 @@ ${b2In('marrow') ? `Marrow does not tie a knot. She doesn't untie one, either. S
 "Healer," the grandmother says. Not to you. ${b2In('marrow') ? 'To Marrow, who is already sitting down beside her.' : 'To the dark, to anyone. There is no healer in the squad tonight.'}
 
 ${b2In('marrow') ? `Marrow puts two fingers on the girl's neck and closes her eyes, and you can see her reach: a stillness, a listening, as if for footsteps a long way off. Her mouth tightens. "Thick tonight," she says. "Thick and wrong. Like wading in a ditch somebody's already drowned in." She doesn't open her eyes. "Sit with me, child. This is going to take the night."` : ''}`,
-    ch:[{t:'Marrow reaches into Denul for the girl.', check:['wits',14], req:()=>b2In('marrow'), not:['sgt','haddat','sathi','tangle','redblade'],
+    ch:[{t:'Marrow reaches into Denul for the girl.', check:['wits',14], req:()=>b2In('marrow'), not:['sgt','haddat','sathi','tangle','redblade','warlock'],
           edges:id=>[S.f.b2_roadGave && ['the stretch had a mouthful tonight', 1], chainW() <= 0 && ['no water to cool her with', -2]],
           go:'b2_fever_held', fail:'b2_fever_lost'},
         {t:'Sit with her. Wet cloth, shade, a mouthful of water.', tag:'1 water', req:()=>!b2In('marrow') && chainW() > 0, fx:()=>{ chain(-1, 0, 'Water for a fevered girl'); S.f.b2_fever = R(2) ? 'held' : 'lost'; if (S.f.b2_fever === 'lost') chain(0, -1, 'A girl from the potters\' street'); }, go:'b2_fever_sat'},

@@ -116,7 +116,10 @@ const SYNTH_DG = (n) => {
   const keys = {1:['b2_key', ['daughters', 'carts']], 2:['b2_c2_key', ['spring', 'water']], 3:['b2_c3_key', ['bait', 'pull']], 4:['b2_c4_key', ['silanda', 'keep']], 5:['b2_c5_key', ['squad', 'column']], 6:['b2_c6_key', ['whole', 'some', 'many']]};
   S.chapters = {}; for (let i = 1; i < n; i++) { const [f, v] = keys[i]; S.f[f] = pick(v); S.chapters[i] = S.f[f]; }
   const f = S.f;
-  if (n > 2 && coin()) { f.b2_raminDone = 1; S.squad.push('redblade'); S.loy.redblade = 0; } else if (n > 2) f.b2_raminDone = 0;
+  if (n > 2) { const r = Math.random(); // one recruit at a time (v5.2): Ramin, Keth, or neither; the other walks near, or was sent away
+    if (r < .4) { f.b2_raminDone = 1; S.squad.push('redblade'); S.loy.redblade = 0; f.b2_kethDone = pick([0, 2]); }
+    else if (r < .8) { f.b2_kethDone = 1; S.squad.push('warlock'); S.loy.warlock = 0; f.b2_raminDone = pick([0, 2]); }
+    else { f.b2_raminDone = 0; f.b2_kethDone = pick([0, 2]); } }
   if (n > 1) { f.b2_ilharHeard = 1; f.b2_prisonerFate = pick(['free', 'column', 'wickans']); f.b2_yedda = coin() ? 1 : 0; f.b2_bungle5 = pick(['gave', 'kept', 'met']); }
   if (n > 3) { f.b2_sathiTeeth = coin() ? 1 : 0; if (f.b2_c3_key === 'bait') f.b2_weaselHonour = 1; else f.b2_sathiShamed = 1; f.b2_duikerTold3 = coin() ? 1 : 0; }
   if (n > 4) { f.b2_ilharSeen = 1; f.b2_ilharSign = pick(['silent', 'named']); f.b2_robe = pick(['mincer', 'squad', 'none']); f.b2_marrowEnd = pick(['on', 'stopped']); if (f.b2_marrowEnd === 'on') f.b2_warrenFloor = 1; f.b2_sathiLaugh = coin() ? 1 : 0;
@@ -129,11 +132,11 @@ const SYNTH_DG = (n) => {
   if (n > 6) { // the split on the Geleen, as Chapter 6 leaves it: nobody, everybody (sometimes the sergeant alone), or a random few stay with the Fist (47)
     Object.assign(f, {b2_listWar:1, b2_bottleThrown:1, b2_duiker11:1, b2_kherahn:1, b2_geleen:1, b2_retreat:1, b2_retreatLost:3, b2_silverDone:1, b2_warchief:1, b2_sathiClan:pick(['yes', 'no'])});
     if (coin()) f.b2_paid = 5; if (S.squad.includes('haddat')) f.b2_ilhar = pick(['came', 'parted', 'fell', 'lost']);
-    const here = ['haddat', 'sathi', 'tangle', 'marrow', 'redblade'].filter(k => S.squad.includes(k)), r = Math.random();
+    const here = ['haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock'].filter(k => S.squad.includes(k)), r = Math.random();
     const stay = r < .25 ? [] : r < .4 ? here.slice() : here.filter(() => coin());
     f.b2_split = {}; f.b2_splitHow = {}; here.forEach(k => { f.b2_split[k] = stay.includes(k) ? 'stay' : 'go'; f.b2_splitHow[k] = pick(['own', 'asked', 'talked']); });
     if (stay.includes('tangle')) { f.b2_satchel6 = pick(['went', 'left']); if (f.b2_satchel6 === 'went') { f.b2_stayInv = {}; ['sharper', 'burner', 'cusser', 'smoker'].forEach(m => { f.b2_stayInv[m] = S.inv[m]; S.inv[m] = 0; }); } }
-    stay.forEach(k => b2StayBehind(k)); stay.forEach(k => gain({haddat:'b2_bluethread', sathi:'b2_whistle', tangle:'b2_bead', marrow:'b2_knotstring', redblade:'b2_sash'}[k]));
+    stay.forEach(k => b2StayBehind(k)); stay.forEach(k => gain({haddat:'b2_bluethread', sathi:'b2_whistle', tangle:'b2_bead', marrow:'b2_knotstring', redblade:'b2_sash', warlock:'b2_dogtooth'}[k]));
     f.b2_stayCount = stay.length; f.b2_c6_key = !stay.length ? 'whole' : stay.length >= 2 && stay.length * 2 >= here.length ? 'many' : 'some'; S.chapters[6] = f.b2_c6_key;
     if (coin()) { const all = ['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'], mates = all.filter(() => coin()); if (!mates.length) mates.push(pick(all));
       S.imported = {from:'Kell', sid:'synth', road:'empire', lvl:8, follow:{}, mates, dead:[], loy:Object.fromEntries(mates.map(k => [k, Math.floor(Math.random() * 7) - 3]))}; }

@@ -122,6 +122,16 @@ const AUDIO = (() => {
     lose(){ const t = now(); [0, 1, 5].forEach(d => { tone(f(d, 0), {t, type:'sawtooth', a:.4, d:3, v:.11, filt:{f:500}, to:busMus, wet:musSend}); tone(f(d, 1), {t, type:'sawtooth', a:.5, d:2.6, v:.04, filt:{f:900}, to:busMus, wet:musSend}); }); },
     dice(ok){ const t = now(); noise({t, d:.06, v:.3, f:2300, q:2}); noise({t:t + .08, d:.06, v:.25, f:2000, q:2}); tone(ok ? f(7, 2) : f(1, 1), {t:t + .2, type:'triangle', a:.02, d:.5, v:.12}); },
     growl(){ const t = now(); tone(78, {t, type:'sawtooth', a:.18, d:1.3, v:.3, slide:52, filt:{f:300, pk:750, e:260, q:3}, am:[27, .45]}); tone(156, {t, type:'sawtooth', a:.2, d:1.1, v:.07, slide:104, filt:{f:600, q:4}, am:[31, .4]}); noise({t, a:.12, d:1.2, v:.2, f:380, q:1.2, buf:'b', wet:sfxWet}); },
+    /* Hackle, the Weasel Clan's cattle-dog (Book Two): a bark is a pitched burst through a mouth-shaped band, falling; n of them, quick */
+    bark(n = 2){ const t0 = now(), p = rnd(-.25, .25), m = rnd(.92, 1.08);
+      for (let i = 0; i < n; i++) { const t = t0 + i * rnd(.17, .23), k = i ? rnd(.94, 1) : 1;
+        tone(rnd(360, 400) * m * k, {t, type:'sawtooth', a:.006, d:.12, v:.24, slide:200 * m, filt:{type:'bandpass', f:800, pk:1500, e:650, q:2.2}, pan:p, wet:sfxWet});
+        tone(rnd(180, 200) * m * k, {t, type:'square', a:.005, d:.09, v:.09, slide:120, filt:{f:650}, pan:p});
+        noise({t, a:.003, d:.08, v:.2, f:1250 * m, q:1.3, pan:p}); } },
+    yelp(){ const t = now(), p = rnd(-.25, .25); tone(rnd(950, 1080), {t, type:'sawtooth', a:.004, d:.17, v:.13, slide:500, filt:{type:'bandpass', f:1400, q:2}, pan:p}); noise({t, a:.002, d:.07, v:.1, f:2200, q:2, pan:p}); },
+    whine(){ const t = now(); tone(700, {t, type:'triangle', a:.08, d:.5, v:.09, slide:900, vib:28, filt:{f:1900}}); tone(900, {t:t + .5, type:'triangle', a:.04, d:.7, v:.08, slide:520, vib:34, filt:{f:1700}}); tone(1800, {t, type:'sine', a:.1, d:.9, v:.02, slide:1100}); },
+    snarl(){ const t = now(); tone(118, {t, type:'sawtooth', a:.12, d:.9, v:.2, slide:96, filt:{f:480, pk:950, e:420, q:4}, am:[36, .55]}); tone(236, {t, type:'sawtooth', a:.14, d:.7, v:.05, slide:190, filt:{f:900, q:5}, am:[41, .5]}); noise({t, a:.08, d:.8, v:.13, f:720, q:1.5, wet:sfxWet}); },
+    howl(){ const t = now(); tone(390, {t, type:'triangle', a:.35, d:.9, v:.11, slide:640, vib:22, filt:{f:2000}, wet:sfxWet}); tone(640, {t:t + 1.1, type:'triangle', a:.06, d:1.5, v:.1, slide:330, vib:30, filt:{f:1800}, wet:sfxWet}); tone(1280, {t:t + .4, type:'sine', a:.4, d:1.6, v:.025, slide:700, wet:sfxWet}); },
   };
   function play(k, ...a){
     const fn = SFX[k];

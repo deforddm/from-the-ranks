@@ -10,9 +10,9 @@ const res = await page.evaluate(() => {
   for (const [book, CHS] of [['gotm', BOOK === 'gotm' ? CHAPTERS : BOOKSNAP.gotm.ch], ['dg', BOOKSNAP.dg.ch]])
     for (const CH of Object.values(CHS)) (CH.areas || (CH.area ? [CH.area] : [])).forEach(a => { areaBook[a.id] = book; });
   const real = drawFigure;
-  for (const [aid, book] of Object.entries(areaBook)) {
+  for (const [aid, book, rec] of Object.entries(areaBook).flatMap(([aid, book]) => book === 'dg' ? [[aid, book, 'redblade'], [aid, book, 'warlock']] : [[aid, book]])) {
     const a = AREAS[aid]; if (!a) continue;
-    if (book === 'dg') { S = newStateDG('Hask'); if (TPL.redblade) S.squad.push('redblade'); } else { S = newState('Hask'); S.squad = [...PORDER, 'ellis']; }
+    if (book === 'dg') { S = newStateDG('Hask'); if (TPL[rec]) S.squad.push(rec); } else { S = newState('Hask'); S.squad = [...PORDER, 'ellis']; } // Book Two: with each recruit in turn (v5.2)
     migrate(S); S.area = aid; S.pos = {...a.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:a.start.x+dx, y:a.start.y+dy})); S.scene = 'explore';
     a.npcs.forEach(n => { n.show = n.show; });
     // make every squadmate NPC visible, whatever its gate
@@ -25,7 +25,7 @@ const res = await page.evaluate(() => {
     const npcKinds = new Set(a.npcs.filter(n => mates.has(n.kind)).map(n => n.kind));
     const trail = drawn.filter(d => d.sc < T_SC() * .9).map(d => d.kind);
     checked++;
-    for (const k of npcKinds) { hidden++; if (trail.includes(k)) bad.push(`${aid}: ${k} is on the map and in the line`); }
+    for (const k of npcKinds) { hidden++; if (trail.includes(k)) bad.push(`${aid}${rec ? ' (' + rec + ')' : ''}: ${k} is on the map and in the line`); }
     const want = Math.min(S.trail.length, S.squad.slice(1).filter(k => !npcKinds.has(k)).length);
     if (trail.length !== want) bad.push(`${aid}: ${trail.length} in the line, wanted ${want}`);
   }

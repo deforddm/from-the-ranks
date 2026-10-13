@@ -50,6 +50,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     if (v % 5 === 3) S.squad = S.squad.filter(x => x !== 'sathi' && x !== 'marrow'); // text must hold up if a squadmate is missing
     if (v % 7 === 4) S.squad = S.squad.filter(x => x !== 'haddat' && x !== 'tangle');
     if (v % 2 === 0 && TPL.redblade) S.squad.push('redblade'); // the Red Blade recruit (Chapter 2 on): text must hold up with him and without him
+    else if (v % 4 === 1 && TPL.warlock) S.squad.push('warlock'); // or Keth, the other recruit (v5.2): one of them at a time, or neither
     migrate(S);
     S.chapters = {}; S.chain = { water: v % 6 === 0 ? 0 : Math.floor(rng() * 13), column: Math.floor(rng() * 40) };
     S.inv = { sharper: v % 4, burner: v % 3, cusser: v % 2, salve: 2, smoker: v % 3 };
@@ -200,7 +201,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
   }
   // Book Two: the same check for its own squad (each squadmate dropped in turn, the Red Blade recruit included)
   for (const id of ids.filter(isDG)) {
-    for (const x of ['haddat', 'sathi', 'tangle', 'marrow', 'redblade']) {
+    for (const x of ['haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock']) {
       if (!TPL[x]) continue; const nm = TPL[x].name, re = new RegExp('\\b' + nm + '\\b');
       for (let v = 0; v < 8; v++) {
         mkDG(v); S.squad = S.squad.filter(q => q !== x);
