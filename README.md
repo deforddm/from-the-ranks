@@ -57,6 +57,7 @@ Chapters are content modules (`src/40_chapter1.js`, …) registered at boot; eac
 
 Newest first.
 
+- v6.1.0 — Book Three's Fourth are veterans: every Book Three game starts at level 8 and can grow to 15 (levels 9–15 add damage, armour, a stronger role Measure, longer-reaching spells and veteran picks at 9, 11, 13 and 15, two of them new: Stout and Edge). A Book One squad brought across keeps the gear it wears, its unworn kit, its talents and picks, and the tricks its soldiers carry. Every Book Three fight retuned for the new curve. Books One and Two still stop at level 8. New tools/b3carry_test.mjs.
 - v6.0.0 — Book Three, *The Fair Exchange*, beside *Memories of Ice*: all seven chapters (the Parley, the Rhivi Plain, Capustan, the Prisoners, South of the Catlin, the Night Lift, Coral) and the finale. The Fourth return with their IV patch; Sohra and Dannet can join; the Alliance's trust and dread; poisoned warrens; Treach answers for the sergeant; a Deck reading, a trick, new kit with artwork and a vision in every chapter; a Book One sergeant on the outlaw road can bring their squad. New tools/moi_test.mjs and tools/b3visions_test.mjs.
 - v4.7.6 — A squadmate shown on the map to talk to is not also drawn in the party line; the line closes up. New tools/trail_test.mjs checks every area of both books.
 - v4.7.5 — Every onward step from a map can be declined ("Not yet."), in both books, and a squadmate mentions anyone still waiting to talk. New tools/onward_test.mjs audits it.

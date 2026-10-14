@@ -120,7 +120,8 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   orb:{name:'Orb',house:'Unaligned',hue:'#bdb3a3',txt:'A grey sphere hanging in the dark, with a point of light in it that isn\'t the lamp\'s.',fx:'None. It refuses her.'},
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
-const LEVELS = [0,100,250,450,700,1000,1400,1900]; // levels 1..8
+const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210]; // levels 1..15 (Books One and Two stop at 8; Book Three runs 8..15)
+const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'moi') ? 15 : 8;
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -155,7 +156,7 @@ const CHAPTERS = {}; // n -> chapter module (CH1, CH2, ...), registered at boot
 const ITEMS = {};     // gear items, merged from chapters
 /* the Measure each soldier's role grows: +1 to the first at level 4, +1 to the second at level 8 (15: lvStat) */
 const STATUP = {sgt:['wits','might'], brisk:['might','wits'], kettle:['wits','might'], tuft:['guile','wits'], ohl:['wits','might'], ellis:['guile','wits'], vell:['guile','might']};
-/* ability picks: level 3 = a named talent per squadmate; levels 5 and 7 = veteran picks shared by all */
+/* ability picks: level 3 = a named talent per squadmate; levels 5, 7 (and in Book Three 9, 11, 13, 15) = veteran picks shared by all */
 const PICKS = {
   3:{ sgt:[['discipline','Marine Discipline','Every squadmate wears +1 armour. Eleven years of telling people where to stand.'],['sappers_eye','Sapper\'s Eye','The squad rolls +2 initiative, and the sergeant\'s free swings hit +2.']],
       brisk:[['shieldwall','Shield Wall','Squadmates standing next to Brisk get +2 armour.'],['holdline','Hold the Line','Brisk\'s free swings are unlimited and hit +2.']],
@@ -164,7 +165,7 @@ const PICKS = {
       ohl:[['triage','Field Triage','Mend heals +3 and reaches 4 tiles.'],['argument','Argument with Hood','Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3.']],
       ellis:[['quickshot','Quick Shot','Once a fight: two arrows at one target within reach.'],['ghost','Ghost Step','Enemies take −2 to hit Ellis. Six years of not being where the sentry looked.']],
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). Nobody gets a free swing.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
-  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.']],
+  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.']],
 };
 /* v4.0 books. Each book has its own chapters 1..7 (and its own end lines and teasers); the globals CHAPTERS, CHEND and CHTEASE
    always hold the book being played, swapped by setBook() (15). Areas, fights, foes, nodes and scenes are shared by id, so a

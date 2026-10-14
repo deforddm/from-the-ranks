@@ -71,7 +71,7 @@ const listCount = () => 211 + (S.f.c2_key === 'light' ? 1 : 0) + (S.f.c4_key ===
 const has = (id, k) => (S.picks[id] || []).includes(k);
 /* stat with gear and veteran picks folded in */
 /* the role's Measure, grown at levels 4 and 8 */
-const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0); };
+const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
 function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
 function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name}.`, 'good'); AUDIO.play('coin');
   // auto-equip into an empty slot, on whoever it suits best (31c)
@@ -113,19 +113,19 @@ const loyLabel = n => (['Resentful','Wary','Uneasy','Steady','Warm','Loyal','Dev
 function loy(id, n){ S.loy[id] = Math.max(-3, Math.min(3, S.loy[id] + n)); notes.push({t:`${NAME(id)} ${n > 0 ? 'approves' : 'disapproves'}.`, c:n > 0 ? 'good' : 'bad'}); }
 function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
-  S.xp += n; const before = S.lvl; let l = 1; while (l < LEVELS.length && S.xp >= LEVELS[l]) l++; S.lvl = l;
+  S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15].includes(k)) S.picksDue.push(k); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
    Levels 4 and 8: +1 armour. And the squad's own hands get better at it: the heals and Rally grow with lvB() (31). */
 const lvB = () => Math.max(0, ((S && S.lvl) || 1) - 1);
-const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7].filter(k => l >= k).length;
-const lvAc = (l = (S && S.lvl) || 1) => [4,8].filter(k => l >= k).length;
+const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13].filter(k => l >= k).length; // 10 and 13: Book Three's veterans
+const lvAc = (l = (S && S.lvl) || 1) => [4,8,12].filter(k => l >= k).length;
 /* tiers for the rest of the skills and spells: reach, duration, how hard a boss must roll to shrug it off. lvT: +1 at levels 4 and 7; lvAt(n): from level n */
-const lvT = (l = (S && S.lvl) || 1) => [4,7].filter(k => l >= k).length;
+const lvT = (l = (S && S.lvl) || 1) => [4,7,11,14].filter(k => l >= k).length;
 const lvAt = n => ((S && S.lvl) || 1) >= n ? 1 : 0;
-function lvlNote(){ const l = S.lvl, extra = {3:'+1 damage on every blow', 4:'+1 armour, +1 to the Measure each soldier\'s role leans on, a longer reach and a bigger strain limit for the spells', 5:'+1 damage on every blow, longer Veils and darks, and one more use of every chapter trick', 6:'Rally twice a fight, and the talents get sharper', 7:'+1 damage on every blow, and the spells reach further and hold longer', 8:'+1 armour, and +1 to each soldier\'s second Measure'}[l];
+function lvlNote(){ const l = S.lvl, extra = {3:'+1 damage on every blow', 4:'+1 armour, +1 to the Measure each soldier\'s role leans on, a longer reach and a bigger strain limit for the spells', 5:'+1 damage on every blow, longer Veils and darks, and one more use of every chapter trick', 6:'Rally twice a fight, and the talents get sharper', 7:'+1 damage on every blow, and the spells reach further and hold longer', 8:'+1 armour, and +1 to each soldier\'s second Measure', 9:'a veteran pick for everyone', 10:'+1 damage on every blow', 11:'a veteran pick, and the spells reach further, hold longer and strain less', 12:'+1 armour, and +1 more to the Measure each soldier\'s role leans on', 13:'+1 damage on every blow, and a veteran pick', 14:'the spells reach further again, and a bigger strain limit', 15:'a last veteran pick: the most anyone in the Fourth has ever been'}[l];
   return `The squad reaches level ${l}: +4 health and +1 to hit for everyone${extra ? `, and ${extra}` : ''}. Every skill and spell grows with it.`; }
 

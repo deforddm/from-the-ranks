@@ -188,6 +188,13 @@ Object.assign(FOES, {
 });
 const B3_AID = ['b3_rhivi_rider', 'b3_barghast', 'b3_andii', 'b3_greysword', 'b3_moranth'];
 const B3_AID_WHO = {b3_rhivi_rider:'the Rhivi', b3_barghast:'the Barghast', b3_andii:'the Tiste Andii', b3_greysword:'the Grey Swords', b3_moranth:'the Black Moranth'};
+/* v6.1: Book Three's squad is six levels above the curve its fights were first tuned on (8..15 against 2..8). Its enemies carry that gap:
+   harder to hit, harder hitting, more of them to cut through. Per chapter, from tools/balance.mjs against the old curve's numbers. */
+const B3GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3:{ac:5, atk:4, hp:1.55, dmg:4}, 4:{ac:6, atk:4, hp:1.5, dmg:5},
+  5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}}; // tuned Oct 13, 2026: smart-play health lost within a few points of the old curve, chapter by chapter
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b3On()) return u; const g = B3GAP[clamp(S.chapter || 1, 1, 7)]; if (!g) return u;
+    u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk; u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp)); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg]; return u; }; }
 { const _mkAlly = mkAlly;
   mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y); if (B3_AID.includes(k)) { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); } return u; }; }
 const b3AidList = d => !d || !d.aid ? [] : Array.isArray(d.aid) ? d.aid : [d.aid];
@@ -276,7 +283,23 @@ function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
   const keep = {}; B3_KEEP.forEach(k => { if (f[k] != null) keep[k] = f[k]; });
   keep.list = 211 + (f.c2_key === 'light' ? 1 : 0) + (f.c4_key === 'aside' ? 1 : 0) + Object.keys(dead).length + (f.listAdds || 0);
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
-  return {from:o.name, sid:id, road:'outlaw', lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), f:keep}; }
+  /* v6.1: the transfer brings what the Fourth carried: the gear each of them wears and the unworn kit, their talents and veteran picks, and every
+     trick held by someone who comes across (charges full again). Gear and tricks of the dead and of anyone who stayed behind stay behind. */
+  const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
+  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
+  const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
+  const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
+  return {from:o.name, sid:id, road:'outlaw', lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), f:keep, gear, picks, kit, tricks}; }
+/* v6.1: Book Three's Fourth are veterans: every game starts at level 8 (the cap is 15 in Book Three), with the picks a level-8 squad has made.
+   The level-3 talent and the veteran picks at 5 and 7 are chosen on the first talk (openPicks), unless a transfer already made them. */
+const B3_START_LVL = 8;
+const B3_VET_LVLS = [5,7,9,11,13,15];
+function b3PicksDue(s){ const due = [];
+  if (s.squad.some(k => PICKS[3][k] && !(s.picks[k] || []).some(p => PICKS[3][k].some(o => o[0] === p)))) due.push(3);
+  B3_VET_LVLS.filter(l => s.lvl >= l).forEach((l, i) => { if (s.squad.some(k => ((s.picks[k] || []).filter(p => PICKS.vet.some(v => v[0] === p))).length <= i)) due.push(l); });
+  return due; }
 function newStateMOI(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b3Import(importId) : null;
@@ -284,11 +307,19 @@ function newStateMOI(name, importId, sid){
     inv:{sharper:2, burner:1, cusser:1, salve:2, smoker:1}, loy:{brisk:0, kettle:0, tuft:0, ohl:0}, f:{}, pos:{x:5, y:8},
     trail:[{x:4, y:8}, {x:6, y:8}, {x:4, y:9}, {x:5, y:9}], log:[], ending:null, battle:null, bopt:null,
     squad:[...MOI_PORDER], chapter:0, chapters:{}, area:'pale', ally:{trust:5, dread:1}};
+  s.lvl = B3_START_LVL; s.xp = LEVELS[B3_START_LVL - 1];
   if (imp) { s.imported = {from:imp.from, sid:imp.sid, road:'outlaw', lvl:imp.lvl, dead:imp.dead, f:imp.f};
     s.squad = ['sgt', ...imp.mates]; s.loy = Object.assign({}, imp.loy);
+    s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks;
     if (imp.f.sgtScar) s.f.sgtScar = 1; } // the alley scar comes with the sergeant (the portrait reads S.f.sgtScar)
-  return migrate(s);
+  migrate(s); s.picksDue = b3PicksDue(s);
+  return s;
 }
+/* v6.1: a recruit who joins a veteran squad brings her own veteran picks for the levels already passed (in order) */
+{ const _recruit = recruit;
+  recruit = function(id){ const was = S && S.squad && S.squad.includes(id); _recruit(id);
+    if (b3On() && !was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
+      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);

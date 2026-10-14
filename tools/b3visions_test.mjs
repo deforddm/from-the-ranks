@@ -20,7 +20,7 @@ const setup = (ch, rid) => ev(([ch, rid]) => {
   document.querySelectorAll('#modal,#chars,#settings,#cardfx').forEach(e => e.hidden = true);
   setBook('moi'); S = newStateMOI('Hask'); S.chapter = ch; S.picksDue = []; S.seenVisions = []; S.tuftVisions = []; notes = [];
   if (rid !== 'tuft') S.squad = S.squad.filter(k => k !== 'tuft');
-  if (rid === 'sohra') b3Join('sohra');
+  if (rid === 'sohra') { b3Join('sohra'); S.picksDue = []; }
   save(); startExplore(CHAPTERS[ch].area.id);
   return visReader().id;
 }, [ch, rid]);

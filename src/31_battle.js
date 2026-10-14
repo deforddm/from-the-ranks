@@ -71,11 +71,11 @@ function mkParty(id, x, y){
   // gear
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
   // veteran picks and talents
-  if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1;
+  if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
 }

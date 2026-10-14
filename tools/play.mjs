@@ -153,7 +153,7 @@ const SYNTH_DG = (n) => {
 // Dannet waiting from Chapter 4; now and then a Book One import with a squadmate lost
 const SYNTH_MOI = (n) => {
   const pick = a => a[Math.floor(Math.random() * a.length)], coin = () => Math.random() < .5;
-  setBook('moi'); S = newStateMOI('Hask'); S.lvl = Math.min(8, n + 1); S.xp = LEVELS[S.lvl - 1];
+  setBook('moi'); S = newStateMOI('Hask'); S.lvl = Math.min(15, n + 7); /* v6.1: Book Three runs 8..15 */ S.xp = LEVELS[S.lvl - 1];
   if (coin()) { const dead = pick(['brisk', 'kettle', 'tuft', 'ohl']); S.squad = S.squad.filter(k => k !== dead);
     S.imported = {from:'Kell', sid:'synth', road:'outlaw', lvl:8, dead:[dead], f:{c7_tav:'alive', c7_letter:'brisk', c7_debt:pick(['paid', 'spent', 'owed']), c6_key:pick(['bridgeburners', 'cellars', 'alley']), list:212}}; }
   const keys = (typeof B3KEYS !== 'undefined' && B3KEYS) || {}; // a chapter may publish its key values as B3KEYS[n] = ['a', 'b']
@@ -165,7 +165,7 @@ const SYNTH_MOI = (n) => {
   migrate(S); Object.keys(S.loy).forEach(k => { S.loy[k] = Math.floor(Math.random() * 5) - 1; });
   S.inv = {sharper:2, burner:1, cusser:1, salve:2, smoker:1}; S.silver = 20;
   S.picksDue = []; if (S.lvl >= 3) S.squad.forEach(id => { const o = PICKS[3][id]; S.picks[id] ??= []; if (o) S.picks[id].push(o[0][0]); });
-  if (S.lvl >= 5) S.squad.forEach(id => S.picks[id].push('iron')); if (S.lvl >= 7) S.squad.forEach(id => S.picks[id].push('keen'));
+  [5,7,9,11,13,15].filter(l => S.lvl >= l).forEach((l, i) => S.squad.forEach(id => { const v = PICKS.vet[i]; if (v && !S.picks[id].includes(v[0])) S.picks[id].push(v[0]); }));
   save(); startChapter(n);
 };
 

@@ -616,7 +616,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.0.0';
+const VERSION = '6.1.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1168,7 +1168,8 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   orb:{name:'Orb',house:'Unaligned',hue:'#bdb3a3',txt:'A grey sphere hanging in the dark, with a point of light in it that isn\'t the lamp\'s.',fx:'None. It refuses her.'},
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
-const LEVELS = [0,100,250,450,700,1000,1400,1900]; // levels 1..8
+const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210]; // levels 1..15 (Books One and Two stop at 8; Book Three runs 8..15)
+const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'moi') ? 15 : 8;
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -1203,7 +1204,7 @@ const CHAPTERS = {}; // n -> chapter module (CH1, CH2, ...), registered at boot
 const ITEMS = {};     // gear items, merged from chapters
 /* the Measure each soldier's role grows: +1 to the first at level 4, +1 to the second at level 8 (15: lvStat) */
 const STATUP = {sgt:['wits','might'], brisk:['might','wits'], kettle:['wits','might'], tuft:['guile','wits'], ohl:['wits','might'], ellis:['guile','wits'], vell:['guile','might']};
-/* ability picks: level 3 = a named talent per squadmate; levels 5 and 7 = veteran picks shared by all */
+/* ability picks: level 3 = a named talent per squadmate; levels 5, 7 (and in Book Three 9, 11, 13, 15) = veteran picks shared by all */
 const PICKS = {
   3:{ sgt:[['discipline','Marine Discipline','Every squadmate wears +1 armour. Eleven years of telling people where to stand.'],['sappers_eye','Sapper\'s Eye','The squad rolls +2 initiative, and the sergeant\'s free swings hit +2.']],
       brisk:[['shieldwall','Shield Wall','Squadmates standing next to Brisk get +2 armour.'],['holdline','Hold the Line','Brisk\'s free swings are unlimited and hit +2.']],
@@ -1212,7 +1213,7 @@ const PICKS = {
       ohl:[['triage','Field Triage','Mend heals +3 and reaches 4 tiles.'],['argument','Argument with Hood','Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3.']],
       ellis:[['quickshot','Quick Shot','Once a fight: two arrows at one target within reach.'],['ghost','Ghost Step','Enemies take −2 to hit Ellis. Six years of not being where the sentry looked.']],
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). Nobody gets a free swing.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
-  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.']],
+  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.']],
 };
 /* v4.0 books. Each book has its own chapters 1..7 (and its own end lines and teasers); the globals CHAPTERS, CHEND and CHTEASE
    always hold the book being played, swapped by setBook() (15). Areas, fights, foes, nodes and scenes are shared by id, so a
@@ -1360,7 +1361,7 @@ const listCount = () => 211 + (S.f.c2_key === 'light' ? 1 : 0) + (S.f.c4_key ===
 const has = (id, k) => (S.picks[id] || []).includes(k);
 /* stat with gear and veteran picks folded in */
 /* the role's Measure, grown at levels 4 and 8 */
-const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0); };
+const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
 function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
 function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name}.`, 'good'); AUDIO.play('coin');
   // auto-equip into an empty slot, on whoever it suits best (31c)
@@ -1402,20 +1403,20 @@ const loyLabel = n => (['Resentful','Wary','Uneasy','Steady','Warm','Loyal','Dev
 function loy(id, n){ S.loy[id] = Math.max(-3, Math.min(3, S.loy[id] + n)); notes.push({t:`${NAME(id)} ${n > 0 ? 'approves' : 'disapproves'}.`, c:n > 0 ? 'good' : 'bad'}); }
 function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
-  S.xp += n; const before = S.lvl; let l = 1; while (l < LEVELS.length && S.xp >= LEVELS[l]) l++; S.lvl = l;
+  S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15].includes(k)) S.picksDue.push(k); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
    Levels 4 and 8: +1 armour. And the squad's own hands get better at it: the heals and Rally grow with lvB() (31). */
 const lvB = () => Math.max(0, ((S && S.lvl) || 1) - 1);
-const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7].filter(k => l >= k).length;
-const lvAc = (l = (S && S.lvl) || 1) => [4,8].filter(k => l >= k).length;
+const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13].filter(k => l >= k).length; // 10 and 13: Book Three's veterans
+const lvAc = (l = (S && S.lvl) || 1) => [4,8,12].filter(k => l >= k).length;
 /* tiers for the rest of the skills and spells: reach, duration, how hard a boss must roll to shrug it off. lvT: +1 at levels 4 and 7; lvAt(n): from level n */
-const lvT = (l = (S && S.lvl) || 1) => [4,7].filter(k => l >= k).length;
+const lvT = (l = (S && S.lvl) || 1) => [4,7,11,14].filter(k => l >= k).length;
 const lvAt = n => ((S && S.lvl) || 1) >= n ? 1 : 0;
-function lvlNote(){ const l = S.lvl, extra = {3:'+1 damage on every blow', 4:'+1 armour, +1 to the Measure each soldier\'s role leans on, a longer reach and a bigger strain limit for the spells', 5:'+1 damage on every blow, longer Veils and darks, and one more use of every chapter trick', 6:'Rally twice a fight, and the talents get sharper', 7:'+1 damage on every blow, and the spells reach further and hold longer', 8:'+1 armour, and +1 to each soldier\'s second Measure'}[l];
+function lvlNote(){ const l = S.lvl, extra = {3:'+1 damage on every blow', 4:'+1 armour, +1 to the Measure each soldier\'s role leans on, a longer reach and a bigger strain limit for the spells', 5:'+1 damage on every blow, longer Veils and darks, and one more use of every chapter trick', 6:'Rally twice a fight, and the talents get sharper', 7:'+1 damage on every blow, and the spells reach further and hold longer', 8:'+1 armour, and +1 to each soldier\'s second Measure', 9:'a veteran pick for everyone', 10:'+1 damage on every blow', 11:'a veteran pick, and the spells reach further, hold longer and strain less', 12:'+1 armour, and +1 more to the Measure each soldier\'s role leans on', 13:'+1 damage on every blow, and a veteran pick', 14:'the spells reach further again, and a bigger strain limit', 15:'a last veteran pick: the most anyone in the Fourth has ever been'}[l];
   return `The squad reaches level ${l}: +4 health and +1 to hit for everyone${extra ? `, and ${extra}` : ''}. Every skill and spell grows with it.`; }
 
 
@@ -4453,11 +4454,11 @@ function mkParty(id, x, y){
   // gear
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
   // veteran picks and talents
-  if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1;
+  if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
 }
@@ -5521,7 +5522,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const id = SQ[charIdx], c = TPL[id], L = S.lvl - 1, m = $('#chars'); m.hidden = false;
   const gearOf = Object.values(S.gear[id] || {}).map(g => ITEMS[g]).filter(Boolean);
   const sum = k => gearOf.reduce((a,it) => a + (it[k] || 0), 0);
-  const hp = c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0), ac = c.ac + sum('ac') + lvAc(), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
+  const hp = c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
   const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
   const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && (!it.who || it.who.includes(id)));
@@ -5536,7 +5537,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const banter = c.banter ? c.banter[loyN <= -1 ? 0 : loyN >= 2 ? 2 : 1] : null;
   const rel = c.rel ? Object.entries(c.rel).filter(([k]) => SQ.includes(k)).map(([k,v]) => `<li><b>${TPL[k].name}.</b> ${v}</li>`).join('') : SQ.slice(1).map(k => `<li><b>${TPL[k].name}.</b> ${loyLabel(S.loy[k])}.</li>`).join('');
   const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${S.lvl/8*100}%"></i></div><span>${S.lvl}</span></div></div></div>
-    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(d => `${d[0]}d${d[1]}${d[2] + lvDmg() ? '+' + (d[2] + lvDmg()) : ''}`)(gb.dmg || c.dmg)}${lvDmg() ? ` <span class="gbon">level +${lvDmg()}</span>` : ''}${gb.dmg ? ' <span class="gbon">weapon</span>' : ''}</span><span>Reach</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
+    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(d => `${d[0]}d${d[1]}${d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0)) ? '+' + (d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0))) : ''}`)(gb.dmg || c.dmg)}${(lvDmg() + (has(id,'edge') ? 1 : 0)) ? ` <span class="gbon">level +${(lvDmg() + (has(id,'edge') ? 1 : 0))}</span>` : ''}${gb.dmg ? ' <span class="gbon">weapon</span>' : ''}</span><span>Reach</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
     <div class="sec"><h4>Field rules</h4><p class="fine">Flanking: +2 to hit when an ally stands next to the target on the far side, melee or ranged. Stepping out of a tile next to an enemy gives that enemy one free swing a turn, wherever you step to. Once you have moved and then acted, your movement for the turn is spent. The squad can move through its own people, but not stop on them. End a turn without acting and you are Steady: +2 to your next attack or save. A ranged squadmate who has not fired yet this fight is Posted up: the first enemy to step into their reach takes a free shot. Gold numbers are what gear adds.</p></div>
     <div class="sec"><h4>Abilities</h4><div class="abl">${abil}</div></div>
     ${talents.length ? `<div class="sec"><h4>Learned</h4><div class="abl">${talents.map(o => `<div><b>${o[1]}</b><span>${o[2]}</span></div>`).join('')}</div></div>` : ''}
@@ -5620,7 +5621,7 @@ function openModal(tab){
   const tabs = S ? ['pack','journal','save','deeds'] : ['save','deeds']; routeAnim = null;
   const body = {
     pack:()=>`<div class="kv">${S.book === 'dg' ? `<span>Water</span><span>${chainW()} skin${chainW() === 1 ? '' : 's'}</span>` : `<span>Silver</span><span>${S.silver}</span>`}<span>${zoomArt('munitions/sharper', 'ico', 'Sharpers', true)}</span><span>${S.inv.sharper}</span><span>${zoomArt('munitions/burner', 'ico', 'Burners', true)}</span><span>${S.inv.burner}</span><span>${zoomArt('munitions/cusser', 'ico', 'Cussers', true)}</span><span>${S.inv.cusser}</span>${S.inv.smoker > 0 || S.f.gotSmokers ? `<span>${zoomArt('munitions/smoker', 'ico', 'Smokers', true)}</span><span>${S.inv.smoker}</span>` : ''}<span>${zoomArt('munitions/salve', 'ico', 'Healing salves', true)}</span><span>${S.inv.salve}</span>
-      <span>Squad level</span><span>${S.lvl} (${S.xp}/${LEVELS[S.lvl] ?? '—'} xp)</span>${S.card ? `<span>Deck reading</span><span>${CARDS[S.card].name}</span>` : ''}</div>
+      <span>Squad level</span><span>${S.lvl} (${S.xp}/${S.lvl < lvCap() ? LEVELS[S.lvl] : '—'} xp)</span>${S.card ? `<span>Deck reading</span><span>${CARDS[S.card].name}</span>` : ''}</div>
       ${S.card ? `<div class="cardinline" style="margin-top:12px"><canvas id="icard" width="240" height="360"></canvas></div><p class="fine" style="text-align:center">${CARDS[S.card].fx}</p>` : ''}
       ${S.wounds ? `<h4 class="jh">Wounds carried (Bridgeburner)</h4><div class="kv wounds">${SQUAD().map(id => woundOf(id) == null ? '' : `<span>${esc(NAME(id))}</span><span>${woundOf(id)} / ${S.wounds[id + '_max'] || '?'} health ${S.inv.salve > 0 && woundOf(id) < (S.wounds[id + '_max'] || 0) ? `<button class="btn sm" data-salve="${id}">Salve +8</button>` : ''}</span>`).join('')}</div><p class="fine">Wounds close when the squad rests: at the start of a chapter, or where the story lets them sleep.</p>` : ''}
       <p class="fine" style="margin-top:10px">Moranth munitions hit everything in the blast, your own squad included. Warren magic builds strain; past ${strMax()}, the caster pays in blood (the limit grows at levels 4 and 7).</p>`,
@@ -32356,6 +32357,13 @@ Object.assign(FOES, {
 });
 const B3_AID = ['b3_rhivi_rider', 'b3_barghast', 'b3_andii', 'b3_greysword', 'b3_moranth'];
 const B3_AID_WHO = {b3_rhivi_rider:'the Rhivi', b3_barghast:'the Barghast', b3_andii:'the Tiste Andii', b3_greysword:'the Grey Swords', b3_moranth:'the Black Moranth'};
+/* v6.1: Book Three's squad is six levels above the curve its fights were first tuned on (8..15 against 2..8). Its enemies carry that gap:
+   harder to hit, harder hitting, more of them to cut through. Per chapter, from tools/balance.mjs against the old curve's numbers. */
+const B3GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3:{ac:5, atk:4, hp:1.55, dmg:4}, 4:{ac:6, atk:4, hp:1.5, dmg:5},
+  5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}}; // tuned Oct 13, 2026: smart-play health lost within a few points of the old curve, chapter by chapter
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b3On()) return u; const g = B3GAP[clamp(S.chapter || 1, 1, 7)]; if (!g) return u;
+    u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk; u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp)); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg]; return u; }; }
 { const _mkAlly = mkAlly;
   mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y); if (B3_AID.includes(k)) { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); } return u; }; }
 const b3AidList = d => !d || !d.aid ? [] : Array.isArray(d.aid) ? d.aid : [d.aid];
@@ -32444,7 +32452,23 @@ function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
   const keep = {}; B3_KEEP.forEach(k => { if (f[k] != null) keep[k] = f[k]; });
   keep.list = 211 + (f.c2_key === 'light' ? 1 : 0) + (f.c4_key === 'aside' ? 1 : 0) + Object.keys(dead).length + (f.listAdds || 0);
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
-  return {from:o.name, sid:id, road:'outlaw', lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), f:keep}; }
+  /* v6.1: the transfer brings what the Fourth carried: the gear each of them wears and the unworn kit, their talents and veteran picks, and every
+     trick held by someone who comes across (charges full again). Gear and tricks of the dead and of anyone who stayed behind stay behind. */
+  const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
+  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
+  const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
+  const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
+  return {from:o.name, sid:id, road:'outlaw', lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), f:keep, gear, picks, kit, tricks}; }
+/* v6.1: Book Three's Fourth are veterans: every game starts at level 8 (the cap is 15 in Book Three), with the picks a level-8 squad has made.
+   The level-3 talent and the veteran picks at 5 and 7 are chosen on the first talk (openPicks), unless a transfer already made them. */
+const B3_START_LVL = 8;
+const B3_VET_LVLS = [5,7,9,11,13,15];
+function b3PicksDue(s){ const due = [];
+  if (s.squad.some(k => PICKS[3][k] && !(s.picks[k] || []).some(p => PICKS[3][k].some(o => o[0] === p)))) due.push(3);
+  B3_VET_LVLS.filter(l => s.lvl >= l).forEach((l, i) => { if (s.squad.some(k => ((s.picks[k] || []).filter(p => PICKS.vet.some(v => v[0] === p))).length <= i)) due.push(l); });
+  return due; }
 function newStateMOI(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b3Import(importId) : null;
@@ -32452,11 +32476,19 @@ function newStateMOI(name, importId, sid){
     inv:{sharper:2, burner:1, cusser:1, salve:2, smoker:1}, loy:{brisk:0, kettle:0, tuft:0, ohl:0}, f:{}, pos:{x:5, y:8},
     trail:[{x:4, y:8}, {x:6, y:8}, {x:4, y:9}, {x:5, y:9}], log:[], ending:null, battle:null, bopt:null,
     squad:[...MOI_PORDER], chapter:0, chapters:{}, area:'pale', ally:{trust:5, dread:1}};
+  s.lvl = B3_START_LVL; s.xp = LEVELS[B3_START_LVL - 1];
   if (imp) { s.imported = {from:imp.from, sid:imp.sid, road:'outlaw', lvl:imp.lvl, dead:imp.dead, f:imp.f};
     s.squad = ['sgt', ...imp.mates]; s.loy = Object.assign({}, imp.loy);
+    s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks;
     if (imp.f.sgtScar) s.f.sgtScar = 1; } // the alley scar comes with the sergeant (the portrait reads S.f.sgtScar)
-  return migrate(s);
+  migrate(s); s.picksDue = b3PicksDue(s);
+  return s;
 }
+/* v6.1: a recruit who joins a veteran squad brings her own veteran picks for the levels already passed (in order) */
+{ const _recruit = recruit;
+  recruit = function(id){ const was = S && S.squad && S.squad.includes(id); _recruit(id);
+    if (b3On() && !was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
+      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);
