@@ -285,7 +285,9 @@ Object.assign(B2CH5.dlg, {
 "There is something cold asleep in this forest," he says. "Older than her. Much older. She will not go near the tower. She says it is rude to wake the old." A pause. "She is a hundred and four."
 
 He sits up. "But there is water. Under the roots, there. The ground knows where. It is not sure it wants to tell a Foolish Dog, in a forest that is not ours." He holds the rattle of teeth loosely, the way you hold out a hand to a dog you do not know. "I could ask it."`,
-    ch:[{t:'"Ask it."', check:['wits', 13, 'warlock'], go:'b2_keth5_ok', fail:'b2_keth5_no'}, {t:'"Leave it sleeping. We\'ll manage."', go:()=>startExplore()}]}),
+    ch:[{t:'"Ask it."', check:['wits', 13, 'warlock'],
+          near:{t:()=>`Yes, but something older than the ground turned over in its sleep while he asked, and the cold of it went up through his palms: Keth starts the next fight ${bruiseN()} health down.`, fx:()=>bruise('warlock', bruiseN())},
+          go:'b2_keth5_ok', fail:'b2_keth5_no'}, {t:'"Leave it sleeping. We\'ll manage."', go:()=>startExplore()}]}),
   b2_keth5_ok:()=>({sp:'Keth', fx:()=>{ if (!S.f.b2_keth5) { S.f.b2_keth5 = 'water'; chain(2, 0, 'A seep under the roots, where the ground showed Keth'); } }, txt:
 `He puts the rattle down and his palms flat, and asks, in Foolish Dog, slowly, for a long time. Then he gets up and walks twenty paces into the trees and kicks at the leaf-litter between two roots, and it is dark, and then it is wet, and then it is a seep, cold, clean, filling a hollow the size of a helm.
 

@@ -549,6 +549,7 @@ The nearest rider is four carts away.`,
     ch: S.f.b2_ilhar || !b2In('haddat') ? [{t:'Leave it.', go:()=>startExplore()}] : [
       {t:'"Go, Haddat. We\'re with you."', check:['guile',14,'haddat'], fx:()=>{ S.f.b2_ilharTry = 1; },
         edges:id=>[['she has the Khundryl grandmothers\' words', 2], S.f.b2_ilharLook && ['the sergeant said they would look together', 1], b2Hurt() === 'haddat' && ['the Vathar wound', -1]],
+        near:{t:()=>`Yes, but Haddat got between them by going under the pony's nose, and a Khundryl pony does not care whose sister you are: it kicked her on the way past: ${bruiseN()} health down for Haddat at the start of the next fight.`, fx:()=>bruise('haddat', bruiseN())},
         go:'b2_ilhar_reach', fail:'b2_ilhar_late'},
       {t:'"Haddat. Hold. They are our allies today, and he is theirs."', go:'b2_ilhar_hold'}]}),
 
@@ -599,6 +600,7 @@ Haddat says nothing for a long time. Then she looks at you.
     ch:[{t:'"Give him back his water, Haddat."', req:()=>S.f.b2_ilharSkin === 'kept' && !S.f.b2_ilharGave, fx:()=>{ S.f.b2_ilharGave = 1; }, go:'b2_ilhar_water'},
         {t:'"Ask him to come with us. The column is his too."', check:['guile',15,'haddat'], fx:()=>{ S.f.b2_ilharAsked = 1; },
           edges:id=>[S.f.b2_ilharGave && ['she gave him back his water', 3], S.f.b2_prisonerFate === 'free' && ['a tanners\' boy told him the Malazans gave water', 2], S.f.b2_ilharSign === 'named' && ['she said his name at the Vathar', 1], S.f.b2_c5_key === 'column' && ['the stretch drank first on the Nenoth', 1]],
+          near:{t:()=>`Yes, but he makes her ask it twice, out loud, with the Khundryl riding by and the Seventh watching from its line, and it takes the last of what she had in her today: Haddat −1 on her next check.`, fx:()=>b2NearRattle('haddat')},
           go:'b2_ilhar_came', fail:'b2_ilhar_parts'},
         {t:'"Say goodbye to him, Haddat. Let him go."', go:'b2_ilhar_parts'}]}),
 
@@ -612,6 +614,8 @@ He looks at the skin, at the mark on the neck of it. He takes it. Then he laughs
 "It did," he says. "It did need it. You're a liar, sister. You always were a terrible liar."`,
     ch:[{t:'"Ask him now, Haddat."', check:['guile',15,'haddat'], fx:()=>{ S.f.b2_ilharAsked = 1; },
           edges:id=>[['she gave him back his water', 3], S.f.b2_prisonerFate === 'free' && ['a tanners\' boy told him the Malazans gave water', 2], S.f.b2_ilharSign === 'named' && ['she said his name at the Vathar', 1], S.f.b2_c5_key === 'column' && ['the stretch drank first on the Nenoth', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the Khundryl rider comes back along the row to see what became of his prisoner, and one of Dom's carters does not walk off with the Malazans for nothing: a skin of the squad's water goes over his saddle: −1 water.` : `Yes, but the Khundryl rider comes back along the row for his price, and the squad has no water to pay it with; Haddat argues him down in the grandmothers' words, and it costs her: Haddat −1 on her next check.`,
+            fx:()=>b2NearWater('haddat')},
           go:'b2_ilhar_came', fail:'b2_ilhar_parts'},
         {t:'"Now say goodbye."', go:'b2_ilhar_parts'}]}),
 
@@ -748,7 +752,8 @@ function b2PartCh(id, o){ const lean = b2Lean(id), stay = lean === 'stay';
   return [
     {t:stay ? o.letStay : o.letGo, fx:()=>{ b2Choose(id, stay, 'own'); loy(id, 1); }, go:stay ? o.stayNode : o.goNode},
     {t:stay ? o.askGo : o.askStay, tag:'they trust you', req:()=>(S.loy[id] || 0) >= 2, fx:()=>{ b2Choose(id, !stay, 'asked'); }, go:stay ? o.goNode : o.stayNode},
-    {t:stay ? o.argGo : o.argStay, check:['guile', 15, 'sgt'], edges:()=>b2Sway(id, stay ? o.edgesGo : o.edgesStay), go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
+    {t:stay ? o.argGo : o.argStay, check:['guile', 15, 'sgt'], edges:()=>b2Sway(id, stay ? o.edgesGo : o.edgesStay),
+      near:{t:()=>`Yes, but ${NAME(id)} gives way the way a soldier gives way to an order, and you both know that is what it was: −1 loyalty with ${NAME(id)}.`, fx:()=>{ S.loy ??= {}; S.loy[id] = Math.max(-3, (S.loy[id] || 0) - 1); }}, go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
 const b2Settle = (id, stay) => { if (!b2Said(id)) b2Choose(id, stay, (b2Lean(id) === 'stay') === stay ? 'own' : 'talked'); };
 
 Object.assign(B2CH6.dlg, {
@@ -795,6 +800,8 @@ The elders do not get up. They do not even look round. The old woman goes on thi
     ch:[{t:'Meet them in the grass.', go:()=>startBattle('b2_silver', {})},
         {t:'Sathi and Hackle out into the grass first, the Weasel way.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows long grass', 2], id === 'haddat' && ['mail', -1], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the man in the grass had a knife out already, and it opened ${NAME(ROLL().who || 'sathi')}'s forearm on his way down; it closes, but it takes a salve to close it: one salve used.` : `Yes, but the man in the grass had a knife out already, and it opened ${NAME(ROLL().who || 'sathi')}'s forearm on his way down, and there is no salve left to close it: ${bruiseN()} health down at the start of the fight.`,
+            fx:()=>{ const w = ROLL().who || 'sathi', r = ROLL(); if ((S.inv.salve || 0) > 0) { S.inv.salve--; r.nearPaid = 1; } else { r.nearPaid = 0; bruise(w, bruiseN()); } }},
           go:'b2_silver_quiet', fail:'b2_silver_loud'}]}),
   b2_silver_quiet:()=>({sp:'The long grass', txt:`${by({sathi:'Sathi goes into the grass with the dog and the grass closes behind them. A breath. Out in the dusk somebody sits down suddenly, and the grass round him thrashes once, and is still.', _:'{who} goes out into the grass with Sathi and the dog. A breath. Out in the dusk somebody sits down suddenly, and does not get up.'})}`, ch:[{t:'Now.', go:()=>startBattle('b2_silver', {surprise:'p'})}]}),
   b2_silver_loud:()=>({sp:'The long grass', txt:`A bird goes up out of the grass under somebody's boot, shrieking, and every wrapped head out there comes round at once.`, ch:[{t:'At them.', go:()=>startBattle('b2_silver', {})}]}),
@@ -864,7 +871,9 @@ ${S.f.b2_jarboy ? `${B2_BOY} is among them, from the Wickan wagons, asking each 
 
 "The Fist says the young go," he says. "With the warlocks. She is young." ${S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? `He looks at her a while. "She is also a Weasel. ${S.f.b2_sathiRode ? 'She turned the herd on the Nenoth. ' : ''}${S.f.b2_weaselHonour ? 'She held at the Shallows. ' : ''}${S.f.b2_sathiLaugh ? 'She laughed at the Foolish Dog\'s song. ' : ''}If she rides with the clan tonight, the clan will not send her away." He shrugs. "I do not tell her. I tell you. You are her sergeant."` : `He does not look at her. "If she stays, she stays on foot, with your Malazans. The clan does not take her. I do not tell her. I tell you."`}`,
     ch: !b2In('sathi') ? [{t:'On.', go:()=>startExplore()}] : S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? [{t:'On.', fx:()=>{ S.f.b2_sathiClan = 'yes'; }, go:()=>startExplore()}] : [
-      {t:'"She rode with my squad from Hissar, Captain. Take her, if she stays."', check:['guile', 15, 'sgt'], edges:()=>[S.f.b2_sathiPromise && ['you gave her your word', 2], S.f.b2_sathiTeeth && ['her teeth are filed', 1], ['the captain has watched her all the way', 1]], go:'b2_weaselcap6_yes', fail:'b2_weaselcap6_no'},
+      {t:'"She rode with my squad from Hissar, Captain. Take her, if she stays."', check:['guile', 15, 'sgt'], edges:()=>[S.f.b2_sathiPromise && ['you gave her your word', 2], S.f.b2_sathiTeeth && ['her teeth are filed', 1], ['the captain has watched her all the way', 1]],
+        near:{t:()=>ROLL().nearPaid ? `Yes, but a Weasel does not give anything for nothing, even a place in the clan: before he goes on he holds out his hand, and a skin of the squad's water goes to his horse: −1 water.` : `Yes, but a Weasel does not give anything for nothing, and the squad has no water to pay him; he takes it out of ${NAME(ROLL().who || 'sgt')} in the Weasel way instead, with a long look and a laugh: −1 on the next check.`,
+          fx:()=>b2NearWater(ROLL().who || 'sgt')}, go:'b2_weaselcap6_yes', fail:'b2_weaselcap6_no'},
       {t:'"Then she goes with the children."', fx:()=>{ S.f.b2_sathiClan = 'no'; }, go:()=>startExplore()}]}),
   b2_weaselcap6_yes:()=>({sp:'The Weasel captain', fx:()=>{ S.f.b2_sathiClan = 'yes'; }, txt:`He hears you out. Then he looks at Sathi, for the first time in a long time, a long look. "If she stays," he says, "she rides with the clan." He goes on down the line. He does not tell her. He was never going to.`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_weaselcap6_no:()=>({sp:'The Weasel captain', fx:()=>{ S.f.b2_sathiClan = 'no'; }, txt:`He hears you out, and shakes his head, once. "The Fist says the young go," he says. "I do not argue with the Fist on the last night." He goes on down the line.`, ch:[{t:'On.', go:()=>startExplore()}]}),

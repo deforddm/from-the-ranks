@@ -346,6 +346,7 @@ The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, a
     ch:[{t:'Into them.', go:()=>startBattle('b2_mounds', {})},
         {t:'Sathi and Hackle along the back of the mounds first.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows how to be quiet', 2], id === 'redblade' && ['spurs', -2], id === 'haddat' && ['mail', -1]],
+          near:{t:()=>`Yes, but the quick way round the ring goes over the top of a mound, not round it, and something under there noticed ${NAME(ROLL().who || 'sathi')} go by: they come down the far side cold to the fingertips and very quiet: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sathi')},
           go:'b2_mounds_quiet', fail:'b2_mounds_loud'},
         {t:'Tangle\'s sharper into the hollow first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; },
           go:()=>startBattle('b2_mounds', {pre:'Tangle hums four notes, stops, and rolls a sharper down the inside of the ring, away from the two tied by the mound. It goes off among the bundles with a crack the forest swallows whole.'})}]}),

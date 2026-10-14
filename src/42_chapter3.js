@@ -356,8 +356,12 @@ ${SQUAD().includes('kettle') ? `Kettle is already at the counter. She has picked
           {t:`Hood's Repellent, ${pr(12)} silver`, req:()=>!has('hoodrep') && S.silver >= pr(12), fx:()=>{ S.silver -= pr(12); S.f.c3_brackVisit=1; tally('brackBought'); gain('hoodrep'); }, go:'c3_brack_hood'},
           {t:`A Genuine Shard of Moon's Spawn, ${pr(3)} silver`, req:()=>!has('spawnshard') && S.silver >= pr(3), fx:()=>{ S.silver -= pr(3); S.f.c3_brackVisit=1; tally('brackBought'); gain('spawnshard'); }, go:'c3_brack_shard'},
           {t:`A Map to the Hoard of the Tyrant, ${pr(2)} silver`, req:()=>!has('tyrantmap') && S.silver >= pr(2), fx:()=>{ S.silver -= pr(2); S.f.c3_brackVisit=1; tally('brackBought'); gain('tyrantmap'); }, go:'c3_brack_map'},
-          {t:'Haggle.', check:['guile', 13], req:()=>!S.f.c3_brackHaggled, fx:()=>{ S.f.c3_brackHaggled=1; }, go:'c3_brack_haggle_ok', fail:'c3_brack_haggle_bad'},
-          {t:'Let Kettle look at his "Moranth" powders.', check:['wits', 12, 'kettle'], req:()=>SQUAD().includes('kettle') && !S.f.c3_brackKettleTried, fx:()=>{ S.f.c3_brackKettleTried=1; }, go:'c3_brack_kettle_ok', fail:'c3_brack_kettle_bad'},
+          {t:'Haggle.', check:['guile', 13], req:()=>!S.f.c3_brackHaggled, fx:()=>{ S.f.c3_brackHaggled=1; },
+            near:{t:()=>ROLL().paid ? 'Yes, but the discount comes with a condition: two silver on the counter first, "to seal the friendship", which he pockets without counting: −2 silver.' : `Yes, but he makes you listen to the whole history of the Hoard of the Tyrant before he'll say "two off", and ${NAME(ROLL().who || 'sgt')} comes away from it dazed: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (S.silver >= 2) { S.silver -= 2; r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'sgt'] = 1; } }},
+            go:'c3_brack_haggle_ok', fail:'c3_brack_haggle_bad'},
+          {t:'Let Kettle look at his "Moranth" powders.', check:['wits', 12, 'kettle'], req:()=>SQUAD().includes('kettle') && !S.f.c3_brackKettleTried, fx:()=>{ S.f.c3_brackKettleTried=1; },
+            near:{t:()=>`Yes, but ${NAME(ROLL().who || 'kettle')} sniffs the red one a little too hard to be sure, and is sure, and is still sneezing pepper an hour later: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'kettle'] = 1; }},
+            go:'c3_brack_kettle_ok', fail:'c3_brack_kettle_bad'},
           {t:'Ask about the deck of cards in the window.', req:()=>!S.f.c3_brackDeck, fx:()=>{ S.f.c3_brackDeck=1; }, go:'c3_brack_deck'},
           {t:'"Good luck with the Council, Doctor."'}]}; },
     c3_brack_coin:()=>({sp:'Doctor Brack', txt:
@@ -1241,6 +1245,7 @@ ${SQUAD().includes('kettle') ? `Kettle, very low: "He's been *practising* that."
           {t:'Pay him. Ten silver, and never met.', tag:'10 silver', req:()=>S.silver>=10, fx:()=>{ S.silver-=10; AUDIO.play('coin'); }, go:'c3_cousins_paid'},
           {t:'Walk up to the big one. Make him want to go home.', check:['might',15],
             edges:id => [id === 'brisk' && ['heavy infantry', 2], id === 'kettle' && S.inv.cusser > 0 && ['a cusser, held up to his lantern', 2]],
+            near:{t:()=>`Yes, but one of the cousins on the bend lets a sling-stone go as they leave, for the family's honour, and it finds ${NAME(ROLL().who || 'sgt')}: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'c3_cousins_faced', fail:'c3_cousins_fail'}]}),
     c3_cousins_paid:()=>({sp:'The dogleg in the alley', fx:()=>{ S.f.c3_cousins='paid'; if (SQUAD().includes('kettle')) loy('kettle',-1); }, txt:
 `He counts it. He counts it twice, the way everyone in this country counts the Fourth: arrives at ten, and checks it. Then it goes inside his shirt, and he picks up his lantern, and his bucket, and says, "Never met," and goes off down the dogleg toward the Gadrobi with his cousins behind him in a line, like ducklings that have been in a great many fights.

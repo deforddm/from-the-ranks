@@ -29,6 +29,30 @@ const d = await ev(() => { const node = DLG.b2_spring_wait();
   const c = node && node.ch.find(x => x.check); return c ? {has:!!(c.near && c.near.fx), t:typeof c.near.t} : {err:'node not found'}; });
 ok(d.has, `Dryj Spring's gully check carries its own "yes, but" (${JSON.stringify(d)})`);
 
+// every check on a choice carries its own "yes, but" (v6.2.0), except tricks, which never have one
+{ const fs = await import('fs'); const missing = [];
+  for (const f of fs.readdirSync('src').filter(f => f.endsWith('.js') && !f.startsWith('16'))) { const s = fs.readFileSync('src/' + f, 'utf8'); let i = -1;
+    while ((i = s.indexOf('check:[', i + 1)) >= 0) { const st = s.lastIndexOf('{t:', i); if (st < 0) continue; let d = 0, j = st;
+      for (; j < s.length; j++) { if (s[j] === '{') d++; else if (s[j] === '}' && --d === 0) break; }
+      const body = s.slice(st, j); if (!/near:|trick:/.test(body) && !/near:\s*\w+\.\w*[Nn]ear/.test(body)) missing.push(f + ':' + (s.slice(0, i).split('\n').length)); } }
+  const known = ['43_chapter4.js:5', '43_chapter4.js:11', '46_chapter7.js:90']; // helpers whose near: sits beside the check, outside a {t:} choice
+  const left = missing.filter(m => !known.includes(m));
+  ok(!left.length, `every check has its own "yes, but" (${left.length ? left.join(', ') : 'all'})`); }
+
+// run every choice's own "yes, but" once, in its own book, and check it says something and throws nothing
+const run = await ev(() => { const out = {n:0, bad:[]};
+  const books = [['newState', k => !/^b[23]_/.test(k)], ['newStateDG', k => /^b2_/.test(k)], ['newStateMOI', k => /^b3_/.test(k)]];
+  for (const [mk, mine] of books) for (const k of Object.keys(DLG).filter(mine)) {
+    S = window[mk]('Test'); S.silver = 10; S.inv.salve = 2; S.inv.sharper = 2; S.inv.smoker = 2; S.inv.burner = 2; let node; try { node = DLG[k](); } catch(e) { continue; }
+    for (const c of (node && node.ch) || []) { if (!c || !c.check || !c.near || !(c.near.fx || c.near.t)) continue;
+      const who = (typeof checkers === 'function' && checkers(c)[0]) || 'sgt', before = document.querySelectorAll('.note').length;
+      try { const box = []; const realNote = note; window.note = (t, cls) => box.push(t);
+        settleRoll({who, stat:c.check[0], tier:'near', ok:true, pass:true, margin:-1, nat:9}, c); window.note = realNote; out.n++;
+        if (!box.some(t => /\S/.test(t || ''))) out.bad.push(k + ': no text'); }
+      catch(e) { window.note = window.note; out.bad.push(k + ': ' + e.message); } } }
+  return out; });
+ok(run.n >= 90 && !run.bad.length, `${run.n} scene costs paid without error, each with its text (${run.bad.slice(0, 6).join(' | ')})`);
+
 ok(!errors.length, `no page errors (${errors.slice(0, 3).join(' | ')})`);
 await br.close(); srv.kill();
 process.exit(fail || errors.length ? 1 : 0);

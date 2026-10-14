@@ -538,6 +538,7 @@ Your stretch is the last of the column. Everything between the riders and the pe
         go:()=>startBattle('b2_runway', {pre:'Tangle lobs a smoker into the road behind the last cart, and the paving goes white from barrow to barrow, and the riders in it are shooting at nothing.'})},
       {t:'Sathi and Hackle up the barrow, the Weasel way, round behind them.', check:['guile', 15], req:()=>b2In('sathi'),
         edges:id=>[id === 'sathi' && ['Hackle knows a barrow-side', 2], id === 'haddat' && ['mail', -1], id === 'redblade' && ['spurs', -2]],
+        near:{t:()=>`Yes, but the far side of the barrow is steeper than the near, and ${NAME(ROLL().who || 'sathi')} comes down it faster than meant and meets the paving with a shoulder: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
         go:'b2_wstone_quiet', fail:'b2_wstone_loud'}]}),
   b2_wstone_quiet:()=>({sp:'Aren Way', txt:`${by({sathi:'Sathi goes up the side of the barrow on her belly with the dog, and over the top, and the first rider who comes round the foot of it never sees what pulls him down.', _:'{who} goes up the barrow with Sathi and the dog, and over, and the first rider round the foot of it never sees them.'})}`, ch:[{t:'Now.', go:()=>startBattle('b2_runway', {surprise:'p'})}]}),
   b2_wstone_loud:()=>({sp:'Aren Way', txt:`A stone goes rolling down the barrow-side under somebody's foot, and every rider at the foot of it looks up at once.`, ch:[{t:'At them.', go:()=>startBattle('b2_runway', {})}]}),
@@ -841,6 +842,7 @@ When ${B2.younger} sees you she fills the cup and holds it out. "The first one's
 `Your people, in a square by the harbour, sleeping on paving stones in a city, under the Aren Guard's lanterns, with the sea making a noise at the end of the street that most of them have never heard before.`,
     ch:[{t:'Help him look. Read him the slates.', check:['wits', 15], req:()=>!!S.f.b2_jarboy && !S.f.b2_girlsTried, fx:()=>{ S.f.b2_girlsTried = 1; },
           edges:id=>[id === 'haddat' && ['she reads the quarter\'s hand', 2], S.f.b2_youngest && ['the Crow girl said the children came in together', 1], S.f.b2_kenebHelp && ['Keneb', 1]],
+          near:{t:()=>`Yes, but the names are on the third slate, and ${NAME(ROLL().who || 'sgt')} reads the first two aloud to the end before getting there, every name on them, the living and the long lists of the dead: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sgt')},
           go:'b2_girls_found', fail:'b2_girls_not'},
         {t:'On.', go:()=>startExplore()}]}),
   b2_girls_found:()=>({sp:B2_BOY, fx:()=>{ S.f.b2_girlsFound = 1; chain(0, 2, `${B2.elder} and ${B2.younger}`); if (b2In('haddat')) loy('haddat', 1); }, txt:

@@ -394,6 +394,7 @@ The warden is behind the grille now, on the top step, with the key on a cord rou
 Water. The squad has ${numw(chainW())} skin${chainW() === 1 ? '' : 's'}. Down there is more than a squad could carry in a year.`,
       ch:[{t:'Haddat talks to the warden, in the quarter\'s Hissari.', check:['guile',13], req:()=>b2In('haddat'), not:['sgt','sathi','tangle','marrow'],
             edges:id=>[S.f.b2_ressan && ['he knows Ressan\'s soldier', 1], S.f.b2_ilharDoor === 'taken' && ['a green cloth in her shield grip', -1]],
+            near:{t:()=>ROLL().paid ? 'Yes, but the warden wants the quarter\'s due first, the old way: there are families hiding on his stair, and one of the squad\'s own skins goes down the steps to them before he lifts the cord: −1 water.' : `Yes, but the warden makes ${NAME(ROLL().who || 'haddat')} swear it in the quarter\'s oath, every word of it, with the street burning, and it costs: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (chainW() > 0) { S.chain.water--; updChain(); r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'haddat'] = 1; } }},
             go:'b2_cistern_talk', fail:'b2_cistern_thieves'},
           {t:'Tangle looks at the hinges.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, go:'b2_cistern_blow'},
           {t:'Leave the old man his grille.', go:()=>startExplore()}]},
@@ -453,6 +454,7 @@ ${b2In('haddat') ? `"They're marking the garrison's people," Haddat says. "The o
           {t:'Tangle rolls a sharper down the lane ahead of you.', tag:'uses 1 sharper', req:()=>S.inv.sharper > 0 && b2In('tangle'), fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_street', {pre:`Tangle hums four notes, stops, and bowls a sharper down the lane underarm, the way a boy rolls a ball. It goes off against the far wall.`})},
           {t:'Sathi and Hackle go round by the roofs.', check:['guile',14], req:()=>b2In('sathi'),
             edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'haddat' && ['she knows these roofs', 1]],
+            near:{t:()=>`Yes, but the dyer's roof is rotten, and ${NAME(ROLL().who || 'sathi')} goes through it to the thigh without a sound, and comes out of it bleeding: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
             go:'b2_lane_round', fail:'b2_lane_seen'},
           {t:'Not yet.'}]},
     b2_lane_round:()=>({sp:'The south lane', fx:()=>{ S.f.b2_laneRound = ROLL().who || 'sgt'; }, txt:
@@ -796,6 +798,7 @@ ${b2In('sathi') ? `Sathi answers. They talk fast for a while, and the outrider l
       ch:[{t:'Read the wash before they come.', check:['wits',12],
             edges:id=>[id === 'sathi' && ['Sathi reads ground from a saddle', 2], id === 'tangle' && ['a sapper looks at a ditch and sees a trench', 1]],
             clean:{t:'There\'s a place at the lip where a charge would have to bunch. Tangle has already seen it.', fx:()=>{ S.f.b2_washBunch = 1; }},
+            near:{t:()=>`Yes, but the bank by the dead tree goes out from under ${NAME(ROLL().who || 'sgt')}, who slides the whole of it to the bottom of the wash on the stones: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b2_outrider_read', fail:'b2_outrider_miss'},
           {t:'"Tell her we\'ll hold it."', fx:()=>{ S.f.b2_washRead = 0; }, go:()=>startExplore()}]}),
     b2_outrider_read:()=>({sp:'The dry wash', fx:()=>{ S.f.b2_washRead = 1; }, txt:

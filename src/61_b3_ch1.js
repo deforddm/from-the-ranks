@@ -625,6 +625,7 @@ Behind him the youngest of them, a long boy with his first torc still bright, wa
       ch:[{t:'Put a shield on the line.', check:['might',14],
             edges:id=>[id === 'brisk' && ['six years heavy infantry, and the line is the only thing she has ever loved', 2], id === 'sgt' && ['a shield picked up at Nathilog and never put down', 1], id === 'ohl' && ['an old man, and he knows it', -2], id === 'tuft' && ['she is half his weight', -2], id === 'kettle' && ['she would rather blow the line up', -1]],
             clean:{t:'Clean over, and Sarhul sits down hard in the dirt, laughing.', fx:()=>{ S.f.b3_c1_ilgresClean = 1; }},
+            near:{t:()=>`Yes, but Sarhul doesn't go quietly: the rim of his torc catches ${NAME(ROLL().who || 'sgt')} over the eye on the way down, and it bleeds the way brows do: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c1_ilgres_win', fail:'b3_c1_ilgres_lost'},
           {t:'"Not today, Sarhul."', fx:()=>{ S.f.b3_c1_ilgresDeclined = 1; }, go:'b3_c1_ilgres_no'}]}),
     b3_c1_ilgres_no:()=>({sp:'Sarhul', txt:

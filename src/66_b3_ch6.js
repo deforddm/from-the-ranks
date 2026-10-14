@@ -27,6 +27,9 @@ const c6Dust = () => `four thousand making the dust of ten`;
 const c6Told = () => (S && S.f && S.f.b3_c6_ask) || '';
 /* Kallor is "the tall man in the fur-collared cloak" until the squad has heard him named (Ch1 sets b3_kallor) */
 const c6Kallor = (cap) => S && S.f && S.f.b3_kallor ? 'Kallor' : (cap ? 'The' : 'the') + ' tall man in the fur-collared cloak';
+/* a "yes, but" that moves the Alliance's dread quietly (the cost text names it, so no second note): returns how far it actually rose */
+const c6Dread = n => { S.ally ??= {trust:5, dread:1}; if (S.card === 'b3c_obelisk') n = Math.max(0, n - 1); const d0 = S.ally.dread; S.ally.dread = clamp(d0 + n, 0, ALLY_MAX); const d = S.ally.dread - d0; if (d > 0) tally('dreadUp', d); updChain(); S.f.b3_c6_nearDread = d; return d; };
+const c6DreadTxt = () => S.f.b3_c6_nearDread ? `dread +${S.f.b3_c6_nearDread}` : 'the Obelisk takes it, and dread holds';
 
 /* ---- the battle ground: Book Three's battle maps mark low cover 't' and pits/deep water 'o' (31's rule); these draw them in this chapter's ground ---- */
 TILEX.b3_c6_campb = (ctx, ch, x, y, T, dark) => TILEX.b3camp_night && TILEX.b3camp_night(ctx, ch === 't' ? 'W' : ch === 'o' ? 'r' : ch, x, y, T, true);
@@ -551,6 +554,8 @@ If one of them gets home, the Seer knows by morning.${b3In('greysword') ? `
     ch:[{t:'"Take them. Quietly."', go:()=>startBattle('b3_c6_field', {})},
         {t:'Kettle\'s sharper, into the middle of them.', tag:'uses 1 sharper · loud', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c6_loud = 1; ally(-1, 0, 'A sharper on the lift field, heard two miles off'); }, go:()=>startBattle('b3_c6_field', {pre:true})},
         {t:'Round by the ditch, and take them from behind.', check:['guile', 14],
+          near:{t:()=>S.f.b3_c6_nearSmoke ? `Yes, but the ditch is a foot deep in cold water, and ${NAME(ROLL().who || 'sgt')} goes along it flat, with the munitions bag underneath. One of Kettle's smokers comes out of it a lump of wet clay. One smoker gone.` : `Yes, but the ditch is a foot deep in cold water, and ${NAME(ROLL().who || 'sgt')} comes up out of it shaking so hard the hand will not stay still: −1 on the next check.`,
+            fx:()=>{ S.f.b3_c6_nearSmoke = 0; if (S.inv.smoker > 0) { S.inv.smoker--; S.f.b3_c6_nearSmoke = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['the plains way: low, and downwind', 2], id === 'greysword' && ['she knows how Beklites walk a picket', 1], id === 'brisk' && ['heavy kit, and a shield', -1]],
           go:'b3_c6_field_round', fail:'b3_c6_field_seen'}]}),
   b3_c6_field_round:()=>({sp:'The lift field · the south rise', txt:
@@ -758,6 +763,8 @@ Near dawn the rider's hand comes up, flat, and the quorl drops. Ahead, on a ledg
 The Moranth looks back at you over its shoulder. It is asking.`,
     ch:[{t:'Kettle\'s sharper, off the harness, into their fire.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_landing', {pre:true})},
         {t:'Set us down beyond the crag. We go in on foot.', check:['guile', 14],
+          near:{t:()=>S.f.b3_c6_nearSharp ? `Yes, but a sharper works loose from a harness strap as the quorls lift away, and goes down the mountain into the snow, and does not go off, and is not coming back. One sharper gone.` : `Yes, but ${NAME(ROLL().who || 'sgt')} comes round the rock with frozen hands from the flight, and has to watch them to make them close: −1 on the next check.`,
+            fx:()=>{ S.f.b3_c6_nearSharp = 0; if (S.inv.sharper > 0) { S.inv.sharper--; S.f.b3_c6_nearSharp = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['she can come down on a herd without it lifting its head', 1], id === 'greysword' && ['Pannion pickets: she has watched them from a wall', 1], id === 'ohl' && ['his knees, on a mountain, in the dark', -1]],
           go:'b3_c6_q_foot', fail:'b3_c6_q_seen'},
         {t:'Straight down on them.', go:()=>startBattle('b3_c6_landing', {})}]}),
@@ -952,6 +959,7 @@ It is a carrion bird. It is a carrion bird the size of a small cart, bare-headed
 ${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}."` : `Do not look at its eyes.`}`,
     ch:[{t:'Kettle\'s sharper, under the first of them.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_condors', {pre:true})},
         {t:'Smother the fires. Make them come down to the quorls in the dark.', check:['wits', 14],
+          near:{t:()=>`Yes, but the last fire is the slowest, and ${NAME(ROLL().who || 'sgt')} is still kicking earth over it when the first bird turns its head and looks straight down into the trench. Everyone saw those eyes, and everyone will see them again tonight: ${c6DreadTxt()}.`, fx:()=>{ c6Dread(1); }},
           edges:id=>[id === 'kettle' && ['she knows what a quorl does when it is frightened', 1], id === 'sohra' && ['herds and hawks: she has done this on the plain', 2], id === 'tuft' && ['something in those eyes is looking for her', -1]],
           go:'b3_c6_q_condor_dark', fail:'b3_c6_q_condor_bad'},
         {t:'Into them.', go:()=>startBattle('b3_c6_condors', {})}]}),
@@ -1057,6 +1065,7 @@ He jerks his chin at the reeds on the far bank. "Something's been watching us fr
 
 "Malazans," he says, in fair trade-tongue. "You carry one log, two of you, and you sweat. We carry two logs, one of us, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."`,
     ch:[{t:'"Show you." A log each, and a race to the slips.', check:['might', 14],
+          near:{t:()=>`Yes, but ${NAME(ROLL().who || 'sgt')} wins it by half a stride and pays for the half with a back that clicks every time it bends, and the night watch on the slips is coming: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           edges:id=>[id === 'brisk' && ['heavy infantry: this is what she is for', 2], id === 'greysword' && ['she has carried a shield wall up Capustan\'s steps', 1], id === 'tuft' && ['a cadre mage and a cedar log', -2], id === 'kettle' && ['she is half his size', -1]],
           go:'b3_c6_barghast_win', fail:'b3_c6_barghast_lose'},
         {t:'"We carry with our heads, friend." Leave him to it.', go:()=>startExplore()}]}),
@@ -1148,6 +1157,8 @@ Too still. The frogs have stopped.
 ${b3In('sohra') ? `"Somebody is lying in the reeds," Sohra says softly. "Many somebodies. The frogs say so."` : b3In('greysword') ? `"The reeds," Dannet says softly. "They have stopped moving with the wind."` : `Somebody is lying in the reeds. Many somebodies.`}`,
     ch:[{t:'Kettle\'s sharper, into the reeds where they\'re lying.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_raid', {pre:true})},
         {t:'Douse the torches on the slips, and wait for them in the dark.', check:['guile', 14],
+          near:{t:()=>b3In('ohl') && ROLL().who !== 'ohl' && S.loy && S.loy.ohl != null ? `Yes, but it is a long wait among the timber, and Ohl spends it whispering that men who come with fire-pots can be talked out of them, and that lying in the dark for them is murder with extra steps. He does not like how this is going to go.` : `Yes, but it is a long wait in the dark among the timber with the frogs gone quiet, and ${NAME(ROLL().who || 'sgt')} hears every reed move twice: −1 on the next check.`,
+            fx:()=>{ if (b3In('ohl') && ROLL().who !== 'ohl' && S.loy && S.loy.ohl != null) loy('ohl', -1); else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['she hunts at night', 1], id === 'ohl' && ['he would rather talk them out of it', -1]],
           go:'b3_c6_m_raid_dark', fail:'b3_c6_m_raid_bad'},
         {t:'Shout the alarm, and go in after them.', go:()=>startBattle('b3_c6_raid', {})}]}),
@@ -1187,6 +1198,7 @@ Then the reeds are full of men.${b3In('greysword') ? `
 "Grey sorcery," Dannet says, very quiet, looking at the bank. "Somebody there is wearing it."` : ''}`,
     ch:[{t:'Kettle\'s sharper, over the water into the reeds.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_ambush', {pre:true})},
         {t:'Shields up along the gunwale. Get the oar back.', check:['might', 14],
+          near:{t:()=>`Yes, but one stone comes in under the rim of the shield before the wall is set, and finds ${NAME(ROLL().who || 'sgt')} on the collarbone: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           edges:id=>[id === 'brisk' && ['a shield, a wall, a river: home', 2], id === 'greysword' && ['the Grey Swords\' wall-drill', 1]],
           go:'b3_c6_m_river_wall', fail:'b3_c6_m_river_bad'},
         {t:'Shoot back.', go:()=>startBattle('b3_c6_ambush', {})}]}),
@@ -1228,6 +1240,8 @@ There is a long silence along the landing, and in the silence the White Face on 
 Behind the herd, a man in a ragged Mott Irregular's coat, calling himself to anyone who will listen the High Marshal of something, is filling a sack with dried dung from the landing and being ignored by everyone including the bhederin.`,
     ch:[{t:'Sohra: talk to him, herder to herder.', req:()=>b3In('sohra'), fx:()=>{ S.f.b3_c6_herds = 'sohra'; ally(1, -1, 'Sohra moves a Rhivi herd with three words'); loy('sohra', 1); }, go:'b3_c6_herds_sohra'},
         {t:'"Please. The rest of the column is on the river."', check:['wits', 13],
+          near:{t:()=>S.f.b3_c6_nearSalve ? `Yes, but the old man's please has a price: his horse has a gall on its withers the size of a palm, and he looks at it, and at your kit, until the Fourth's pot of salve goes on it. One salve gone.` : `Yes, but he lets the herd go only after he has looked at the Fourth's empty hands for a long time, and the herders along the landing see him do it: −1 on the next check for ${NAME(ROLL().who || 'sgt')}, who felt every moment of it.`,
+            fx:()=>{ S.f.b3_c6_nearSalve = 0; if (S.inv.salve > 0) { S.inv.salve--; S.f.b3_c6_nearSalve = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'ohl' && ['an old man\'s patience with old men', 1], id === 'kettle' && ['she says what she thinks of herds', -1]],
           go:'b3_c6_herds_ok', fail:'b3_c6_herds_no'},
         {t:'Wait. It isn\'t your herd and it isn\'t your river.', fx:()=>{ S.f.b3_c6_herds = 'wait'; }, go:'b3_c6_herds_wait'}]}),

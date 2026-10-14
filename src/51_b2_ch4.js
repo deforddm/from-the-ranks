@@ -352,6 +352,7 @@ Then the reeds thin, and there is a stretch of open bank, and the ropes: four of
     ch:[{t:'Into them.', go:()=>startBattle('b2_ropes', {})},
         {t:'Sathi and Hackle through the reeds first, to the archers\' flank.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows reeds', 2], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>`Yes, but a man out on the ropes saw the reeds move and loosed at the movement, not knowing what it was, and the arrow went through ${NAME(ROLL().who || 'sathi')}'s sleeve and some of what was in it: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
           go:'b2_ropes_quiet', fail:'b2_ropes_loud'},
         {t:'Tangle\'s sharper into the stakes first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b2_ropesSharper = 1; }, go:()=>startBattle('b2_ropes', {pre:'Tangle\'s sharper goes into the stakes in a flat bright crack, and two of the ropes go slack, and the men on them go into the Vathar.', surprise:'p'})}]}),
   b2_ropes_quiet:()=>({sp:'The reeds', txt:`${by({sathi:`Sathi and the dog go into the reeds and are gone. A breath. Then an archer at the end of the line sits down, and the one beside him turns round into Hackle.`, _:`{who} goes into the reeds with Sathi and the dog. A breath. At the end of the line, an archer sits down without a sound.`})}`, ch:[{t:'Now.', go:()=>startBattle('b2_ropes', {surprise:'p'})}]}),
@@ -527,6 +528,7 @@ He looks at you the way he looks at mules. "The Council's affairs are the Counci
 
 He is sweating. It is not a warm night.`,
     ch:[{t:'"Where is the Council going in the dark?"', check:['wits',14], edges:id=>[id === 'haddat' && ['she has watched men like him lie for years', 2], id === 'sgt' && ['six years of garrison paperwork', 1], id === 'redblade' && ['Ehrlitan merchants sweat the same way', 1]],
+          near:{t:()=>`Yes, but he saw ${NAME(ROLL().who || 'sgt')} watch his eyes go to the water, and he opens the ledger again and writes a line in it, slowly, looking at them while he does it; it sits in them like a stone all night: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sgt')},
           go:'b2_steward4_slip', fail:'b2_steward4_shut'},
         {t:'Let him go about his business. Watch where it takes him.', go:'b2_steward4_watch'}]}),
   b2_steward4_slip:()=>({sp:'Lord Nethpara\'s steward', fx:()=>{ S.f.b2_dealHint = 1; }, txt:
@@ -546,6 +548,8 @@ He closes the ledger. "Good night, Sergeant." He goes off between the carriages 
 
 ${b2In('haddat') ? `Haddat goes and helps with the rope. She doesn't say anything. After a while, in the same dialect, she says something about the weather, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}`,
     ch:[{t:b2In('haddat') ? 'Let Haddat talk to them.' : 'Talk to them in their own tongue.', check:['guile',13], edges:id=>[id === 'haddat' && ['their own dialect', 3], id === 'sgt' && ['gutter Hissari', 1], id === 'redblade' && ['they hate a Red Blade more than a Malazan', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the grey woman wants something for it before she says the last of it, and in the Chain there is only one thing to want: a skin of water for her two boys: −1 water.` : `Yes, but the grey woman wants a skin of water for her two boys before she says the last of it, and the squad has none to give; ${NAME(ROLL().who || 'sgt')} has to beg it out of her instead, and hates it: −1 on the next check.`,
+            fx:()=>b2NearWater(ROLL().who || 'sgt')},
           go:'b2_servants_talk', fail:'b2_servants_shut'},
         {t:'Leave them to their rope.', go:()=>startExplore()}]}),
   b2_servants_talk:()=>({sp:'Hissari servants', fx:()=>{ S.f.b2_dealKnown = 1; if (b2In('haddat')) loy('haddat', 1); }, txt:
@@ -607,6 +611,8 @@ ${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not se
     ch:[{t:'Now. Into them.', req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown), go:()=>startBattle('b2_envoy', {})},
         {t:'Closer first, through the reeds.', check:['guile',14], req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown),
           edges:id=>[id === 'sathi' && ['Hackle knows reeds', 2], id === 'tangle' && ['sappers go quiet', 1], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the bank is all black mud under the reeds, and the munitions satchel drags through it on ${NAME(ROLL().who || 'sgt')}'s back: a smoker comes out of it clogged and useless: one smoker lost.` : `Yes, but the bank is all black mud under the reeds, and ${NAME(ROLL().who || 'sgt')} goes into it to the elbows and comes up slow and filthy and cold: −1 on the next check.`,
+            fx:()=>b2NearKit('smoker', ROLL().who || 'sgt')},
           go:'b2_envoy_close', fail:'b2_envoy_seen'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b2_envoy_close:()=>({sp:'The reeds', txt:`Through the reeds on your bellies, in the mud, until you can hear them: the officer's good Malazan, the steward's thin voice. "...all of them, every house of the Council, and anyone who walks with them..." Then the officer looks up.`, ch:[{t:'Up.', go:()=>startBattle('b2_envoy', {surprise:'p'})}]}),
@@ -647,6 +653,8 @@ They turn and look at you. They have learned to look at you. ${S.f.b2_key === 'd
 "Safe passage," somebody says. "Sergeant. They say there's safe passage."`,
     html:chainHTML('The Vathar · before dawn'),
     ch:[{t:'"Sit down. Nobody goes into that river until I say." Hold them.', check:['might',15], edges:id=>[id === 'haddat' && ['they are her street', 2], id === 'sgt' && ['they are yours', 1], id === 'redblade' && ['they hate the red', -1], id === 'marrow' && ['she sits down first, and they follow her', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but while you were holding the front of the stretch, an old man at the back of it got up quietly with his bundle and went down to the water, and nobody saw him go until he was gone: −1 in the column.` : `Yes, but it takes everything ${NAME(ROLL().who || 'sgt')} has, and by first light there is no voice left to give an order with: −1 on the next check.`,
+            fx:()=>b2NearColumn(ROLL().who || 'sgt')},
           go:'b2_hold_ok', fail:'b2_hold_some'},
         {t:'"Then we go with them, and keep them together in the water."', fx:()=>{ S.f.b2_heldBack = 0; if (b2In('marrow')) loy('marrow', -1); if (b2In('sathi')) loy('sathi', 1); }, go:'b2_hold_go'}]}),
   b2_hold_ok:()=>({sp:'The squad\'s carts', fx:()=>{ S.f.b2_heldBack = 2; if (b2In('haddat')) loy('haddat', 1); }, txt:

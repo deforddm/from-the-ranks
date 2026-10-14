@@ -429,6 +429,7 @@ ${SQUAD().includes('brisk') ? `Brisk sets her shield. "Nobody dies," she says, t
       ch:[{t:'"Off the planks."', fx:()=>{ S.f.c6_bonfireFought=1; }, go:()=>startBattle('c6_bonfire',{})},
           {t:'Tell them what is under the planks. Most of it.', check:['guile',16],
            edges:id => [id === 'ellis' && ['she has her mother\'s Gadrobi', 2], id === 'kettle' && ['a sapper on gas, with numbers', 1], S.f.c6_vFid && ['Simtal\'s blue on your arm', 1]],
+           near:{t:()=>`Yes, but "most of it" was a little more than most: the man in the apron heard the word *Moranth* in there somewhere, and ${NAME(ROLL().who || 'sgt')} lies awake the whole of the hour wondering who he'll tell: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
            go:'c6_bonfire_ok', fail:'c6_bonfire_bad'}]}),
     c6_bonfire_ok:()=>({sp:'The crossing', scene:'fete_street', fx:()=>{ S.f.c6_bonfireTalked=1; }, txt:
 `${by({

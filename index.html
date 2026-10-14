@@ -616,7 +616,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.1.3';
+const VERSION = '6.2.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5796,6 +5796,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['6.2.0', ['Every "yes, but" in all three books now has its own price, written for its moment. Fifty-four checks that used to share one stock cost now each take something that fits the scene.', 'A dyer\'s roof gives way under Sathi. The warden at the cistern wants a skin for the families on his stair. Kettle sniffs the red powder too hard. A Khundryl pony kicks Haddat. A bull bhederin puts someone into the well-head. A Barghast tells the clans he watched Malazans bargain with Pannions.', 'The prices vary: health at the start of the next fight, a rattle, a salve or a munition from the pack, water and stragglers on the Chain, a squadmate\'s good opinion, the Alliance\'s trust and dread in Book Three. Silver only where somebody is actually being paid.']],
   ['6.1.2', ['A "yes, but" no longer charges three silver in places where silver makes no sense. Money only changes hands when the scene is about money: a bribe, a fee, a clerk\'s counting-table.', 'Otherwise the near thing is paid by whoever rolled it. A Might check costs skin: they start the next fight a few health down (more as they level). A Wits or Guile check leaves them rattled: −1 on their next check.', 'At Dryj Spring, going round by the gully has its own price now: the last Tithansi heard the dog.']],
   ['6.1.1', ['Tracker\'s Mark no longer uses the action. Ellis, Sathi and Sohra mark a target and still shoot the same turn. The mark recharges after two rounds, one from level 6.']],
   ['6.1.0', ['Book Three\'s Fourth are veterans: every Book Three game starts at level 8 and can grow to 15. Levels 9 to 15 add damage, armour, a stronger Measure, longer-reaching spells, and veteran picks at 9, 11, 13 and 15, two of them new: Stout and Edge.', 'A Book One squad brought across keeps what it earned: the gear it wears, its spare kit, its talents and picks, and the tricks its soldiers carry.', 'Every Book Three fight is retuned for the new levels. Books One and Two still stop at level 8.']],
@@ -10444,8 +10445,12 @@ ${SQUAD().includes('kettle') ? `Kettle is already at the counter. She has picked
           {t:`Hood's Repellent, ${pr(12)} silver`, req:()=>!has('hoodrep') && S.silver >= pr(12), fx:()=>{ S.silver -= pr(12); S.f.c3_brackVisit=1; tally('brackBought'); gain('hoodrep'); }, go:'c3_brack_hood'},
           {t:`A Genuine Shard of Moon's Spawn, ${pr(3)} silver`, req:()=>!has('spawnshard') && S.silver >= pr(3), fx:()=>{ S.silver -= pr(3); S.f.c3_brackVisit=1; tally('brackBought'); gain('spawnshard'); }, go:'c3_brack_shard'},
           {t:`A Map to the Hoard of the Tyrant, ${pr(2)} silver`, req:()=>!has('tyrantmap') && S.silver >= pr(2), fx:()=>{ S.silver -= pr(2); S.f.c3_brackVisit=1; tally('brackBought'); gain('tyrantmap'); }, go:'c3_brack_map'},
-          {t:'Haggle.', check:['guile', 13], req:()=>!S.f.c3_brackHaggled, fx:()=>{ S.f.c3_brackHaggled=1; }, go:'c3_brack_haggle_ok', fail:'c3_brack_haggle_bad'},
-          {t:'Let Kettle look at his "Moranth" powders.', check:['wits', 12, 'kettle'], req:()=>SQUAD().includes('kettle') && !S.f.c3_brackKettleTried, fx:()=>{ S.f.c3_brackKettleTried=1; }, go:'c3_brack_kettle_ok', fail:'c3_brack_kettle_bad'},
+          {t:'Haggle.', check:['guile', 13], req:()=>!S.f.c3_brackHaggled, fx:()=>{ S.f.c3_brackHaggled=1; },
+            near:{t:()=>ROLL().paid ? 'Yes, but the discount comes with a condition: two silver on the counter first, "to seal the friendship", which he pockets without counting: −2 silver.' : `Yes, but he makes you listen to the whole history of the Hoard of the Tyrant before he'll say "two off", and ${NAME(ROLL().who || 'sgt')} comes away from it dazed: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (S.silver >= 2) { S.silver -= 2; r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'sgt'] = 1; } }},
+            go:'c3_brack_haggle_ok', fail:'c3_brack_haggle_bad'},
+          {t:'Let Kettle look at his "Moranth" powders.', check:['wits', 12, 'kettle'], req:()=>SQUAD().includes('kettle') && !S.f.c3_brackKettleTried, fx:()=>{ S.f.c3_brackKettleTried=1; },
+            near:{t:()=>`Yes, but ${NAME(ROLL().who || 'kettle')} sniffs the red one a little too hard to be sure, and is sure, and is still sneezing pepper an hour later: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'kettle'] = 1; }},
+            go:'c3_brack_kettle_ok', fail:'c3_brack_kettle_bad'},
           {t:'Ask about the deck of cards in the window.', req:()=>!S.f.c3_brackDeck, fx:()=>{ S.f.c3_brackDeck=1; }, go:'c3_brack_deck'},
           {t:'"Good luck with the Council, Doctor."'}]}; },
     c3_brack_coin:()=>({sp:'Doctor Brack', txt:
@@ -11329,6 +11334,7 @@ ${SQUAD().includes('kettle') ? `Kettle, very low: "He's been *practising* that."
           {t:'Pay him. Ten silver, and never met.', tag:'10 silver', req:()=>S.silver>=10, fx:()=>{ S.silver-=10; AUDIO.play('coin'); }, go:'c3_cousins_paid'},
           {t:'Walk up to the big one. Make him want to go home.', check:['might',15],
             edges:id => [id === 'brisk' && ['heavy infantry', 2], id === 'kettle' && S.inv.cusser > 0 && ['a cusser, held up to his lantern', 2]],
+            near:{t:()=>`Yes, but one of the cousins on the bend lets a sling-stone go as they leave, for the family's honour, and it finds ${NAME(ROLL().who || 'sgt')}: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'c3_cousins_faced', fail:'c3_cousins_fail'}]}),
     c3_cousins_paid:()=>({sp:'The dogleg in the alley', fx:()=>{ S.f.c3_cousins='paid'; if (SQUAD().includes('kettle')) loy('kettle',-1); }, txt:
 `He counts it. He counts it twice, the way everyone in this country counts the Fourth: arrives at ten, and checks it. Then it goes inside his shirt, and he picks up his lantern, and his bucket, and says, "Never met," and goes off down the dogleg toward the Gadrobi with his cousins behind him in a line, like ducklings that have been in a great many fights.
@@ -15223,6 +15229,7 @@ ${SQUAD().includes('brisk') ? `Brisk sets her shield. "Nobody dies," she says, t
       ch:[{t:'"Off the planks."', fx:()=>{ S.f.c6_bonfireFought=1; }, go:()=>startBattle('c6_bonfire',{})},
           {t:'Tell them what is under the planks. Most of it.', check:['guile',16],
            edges:id => [id === 'ellis' && ['she has her mother\'s Gadrobi', 2], id === 'kettle' && ['a sapper on gas, with numbers', 1], S.f.c6_vFid && ['Simtal\'s blue on your arm', 1]],
+           near:{t:()=>`Yes, but "most of it" was a little more than most: the man in the apron heard the word *Moranth* in there somewhere, and ${NAME(ROLL().who || 'sgt')} lies awake the whole of the hour wondering who he'll tell: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
            go:'c6_bonfire_ok', fail:'c6_bonfire_bad'}]}),
     c6_bonfire_ok:()=>({sp:'The crossing', scene:'fete_street', fx:()=>{ S.f.c6_bonfireTalked=1; }, txt:
 `${by({
@@ -18827,6 +18834,7 @@ ${k ? `"No," says Kettle, in the voice you'd use to tell somebody the time. Her 
           {t:'Kettle rolls a sharper up the arch.', tag:'uses 1 sharper', req:()=>k && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('c7_worrygate', {pre:true})},
           {t:'Stare him down.', check:['might',15],
            edges:id=>[S.f.c3_gateFought && ['he remembers the wagon', 1], S.f.c7_clawFought && ['Claw blood on your boots', 1], id === 'ohl' && ['the healer\'s bag, open', 1], id === 'vell' && ['a Guild coat, in Worrytown', 2], C7H.dead().length && ['the squad is short', -1]],
+           near:{t:()=>`Yes, but it was close, and the crossbow on the water-butt never stops watching; ${NAME(ROLL().who || 'sgt')} feels it between the shoulders all the way to the tanneries: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
            go:'c7_worry_faced', fail:'c7_worry_fail'},
           {t:'Count out twenty silver.', tag:'20 silver', req:()=>S.silver >= 20, fx:()=>{ S.silver -= 20; S.f.c7_worryPaid=1; S.f.c7_worryDone=1; AUDIO.play('coin'); }, go:'c7_worry_paid'}]}; },
     c7_worry_faced:()=>{ const w = ROLL().who || 'sgt', near = nearMiss(); return {sp:'The Worry Gate', scene:'city_street', fx:()=>{ S.f.c7_worryFaced=1; S.f.c7_worryDone=1; }, txt:
@@ -21399,6 +21407,7 @@ The warden is behind the grille now, on the top step, with the key on a cord rou
 Water. The squad has ${numw(chainW())} skin${chainW() === 1 ? '' : 's'}. Down there is more than a squad could carry in a year.`,
       ch:[{t:'Haddat talks to the warden, in the quarter\'s Hissari.', check:['guile',13], req:()=>b2In('haddat'), not:['sgt','sathi','tangle','marrow'],
             edges:id=>[S.f.b2_ressan && ['he knows Ressan\'s soldier', 1], S.f.b2_ilharDoor === 'taken' && ['a green cloth in her shield grip', -1]],
+            near:{t:()=>ROLL().paid ? 'Yes, but the warden wants the quarter\'s due first, the old way: there are families hiding on his stair, and one of the squad\'s own skins goes down the steps to them before he lifts the cord: −1 water.' : `Yes, but the warden makes ${NAME(ROLL().who || 'haddat')} swear it in the quarter\'s oath, every word of it, with the street burning, and it costs: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (chainW() > 0) { S.chain.water--; updChain(); r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'haddat'] = 1; } }},
             go:'b2_cistern_talk', fail:'b2_cistern_thieves'},
           {t:'Tangle looks at the hinges.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, go:'b2_cistern_blow'},
           {t:'Leave the old man his grille.', go:()=>startExplore()}]},
@@ -21458,6 +21467,7 @@ ${b2In('haddat') ? `"They're marking the garrison's people," Haddat says. "The o
           {t:'Tangle rolls a sharper down the lane ahead of you.', tag:'uses 1 sharper', req:()=>S.inv.sharper > 0 && b2In('tangle'), fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_street', {pre:`Tangle hums four notes, stops, and bowls a sharper down the lane underarm, the way a boy rolls a ball. It goes off against the far wall.`})},
           {t:'Sathi and Hackle go round by the roofs.', check:['guile',14], req:()=>b2In('sathi'),
             edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'haddat' && ['she knows these roofs', 1]],
+            near:{t:()=>`Yes, but the dyer's roof is rotten, and ${NAME(ROLL().who || 'sathi')} goes through it to the thigh without a sound, and comes out of it bleeding: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
             go:'b2_lane_round', fail:'b2_lane_seen'},
           {t:'Not yet.'}]},
     b2_lane_round:()=>({sp:'The south lane', fx:()=>{ S.f.b2_laneRound = ROLL().who || 'sgt'; }, txt:
@@ -21801,6 +21811,7 @@ ${b2In('sathi') ? `Sathi answers. They talk fast for a while, and the outrider l
       ch:[{t:'Read the wash before they come.', check:['wits',12],
             edges:id=>[id === 'sathi' && ['Sathi reads ground from a saddle', 2], id === 'tangle' && ['a sapper looks at a ditch and sees a trench', 1]],
             clean:{t:'There\'s a place at the lip where a charge would have to bunch. Tangle has already seen it.', fx:()=>{ S.f.b2_washBunch = 1; }},
+            near:{t:()=>`Yes, but the bank by the dead tree goes out from under ${NAME(ROLL().who || 'sgt')}, who slides the whole of it to the bottom of the wash on the stones: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b2_outrider_read', fail:'b2_outrider_miss'},
           {t:'"Tell her we\'ll hold it."', fx:()=>{ S.f.b2_washRead = 0; }, go:()=>startExplore()}]}),
     b2_outrider_read:()=>({sp:'The dry wash', fx:()=>{ S.f.b2_washRead = 1; }, txt:
@@ -22370,6 +22381,7 @@ A man in a good coat gone grey with dust is supervising. He is sweating through 
 Behind you, in the shallows, your people are drinking mud.`,
     ch:[{t:'"Show me the Fist\'s order."', check:['wits',13], edges:id=>[id === 'haddat' && ['she has read a great many orders she was not supposed to', 1], id === 'sgt' && ['six years of garrison paperwork', 1]],
           clean:{t:'There is no order. There never was. He knows you know.', fx:()=>{ chain(1, 0, 'The deep water'); }},
+          near:{t:()=>ROLL().paid ? 'Yes, but he makes you wait while he reads the whole ledger for a clause, and the squad\'s people stand an hour in the sun at the edge of the deep water, drinking their own skins down: −1 water.' : `Yes, but he makes you wait an hour in the sun while he reads the ledger for a clause, with nothing in the skins to drink, and ${NAME(ROLL().who || 'sgt')} comes out of it light-headed: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (chainW() > 0) { S.chain.water--; updChain(); r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'sgt'] = 1; } }},
           go:'b2_steward_won', fail:'b2_steward_lost'},
         {t:'"Haddat. Tell his staves who owns this spring."', req:()=>b2In('haddat'), go:'b2_steward_haddat'},
         {t:'Leave it. The shallows will do.', go:'b2_steward_lost'}]}),
@@ -22511,6 +22523,7 @@ ${b2In('marrow') ? `Marrow does not tie a knot. She doesn't untie one, either. S
 ${b2In('marrow') ? `Marrow puts two fingers on the girl's neck and closes her eyes, and you can see her reach: a stillness, a listening, as if for footsteps a long way off. Her mouth tightens. "Thick tonight," she says. "Thick and wrong. Like wading in a ditch somebody's already drowned in." She doesn't open her eyes. "Sit with me, child. This is going to take the night."` : ''}`,
     ch:[{t:'Marrow reaches into Denul for the girl.', check:['wits',14], req:()=>b2In('marrow'), not:['sgt','haddat','sathi','tangle','redblade','warlock'],
           edges:id=>[S.f.b2_roadGave && ['the stretch had a mouthful tonight', 1], chainW() <= 0 && ['no water to cool her with', -2]],
+          near:{t:()=>`Yes, but the warren takes its price on the way back out, and ${NAME(ROLL().who || 'marrow')} comes out of it grey and shaking: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'marrow'] = 1; }},
           go:'b2_fever_held', fail:'b2_fever_lost'},
         {t:'Sit with her. Wet cloth, shade, a mouthful of water.', tag:'1 water', req:()=>!b2In('marrow') && chainW() > 0, fx:()=>{ chain(-1, 0, 'Water for a fevered girl'); S.f.b2_fever = R(2) ? 'held' : 'lost'; if (S.f.b2_fever === 'lost') chain(0, -1, 'A girl from the potters\' street'); }, go:'b2_fever_sat'},
         {t:'"I\'m sorry. There\'s nothing."', req:()=>!b2In('marrow'), fx:()=>{ S.f.b2_fever = 'lost'; chain(0, -1, 'A girl from the potters\' street'); }, go:'b2_fever_none'}]}),
@@ -23364,6 +23377,16 @@ SCENEX.b2_spirits = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
    the clan honours Sathi) or 'pull' (the squad pulled its people back into the wagons: a harder fight, the column kept, Sathi shamed before her clan).
    New here: a fight a squadmate sits out (def.away, 47: Tangle is in the ramp's banks with Mincer's sappers), and the Earth's Hand (a Wickan trick, below). */
 
+/* a "yes, but" paid out of the Chain or the satchel (used by Chapters 3-7). Each pays if it can and sets ROLL().nearPaid, so a near:'s
+   t() (run after its fx) can say what was actually paid; with nothing to pay, whoever is named is rattled (−1 on their next check) instead.
+   Water and the column are changed quietly here (no chain() note), since the near: text already names the cost. */
+function b2NearRattle(who){ S.rattled ??= {}; if (who) S.rattled[who] = 1; }
+function b2NearWater(who, n = 1){ const r = ROLL(); S.chain ??= {water:8, column:0};
+  if (S.chain.water > 0) { S.chain.water = Math.max(0, S.chain.water - n); r.nearPaid = 1; updChain(); } else { r.nearPaid = 0; b2NearRattle(who); } }
+function b2NearColumn(who, n = 1){ const r = ROLL(); S.chain ??= {water:8, column:0};
+  if (S.chain.column > 0) { const d = Math.min(n, S.chain.column); S.chain.column -= d; tally('columnLost', d); r.nearPaid = 1; updChain(); } else { r.nearPaid = 0; b2NearRattle(who); } }
+function b2NearKit(item, who){ const r = ROLL(); S.inv ??= {};
+  if ((S.inv[item] || 0) > 0) { S.inv[item]--; r.nearPaid = 1; } else { r.nearPaid = 0; b2NearRattle(who); } }
 /* Tangle is with the squad, and not off in a hole in the ramp with Mincer */
 const b2Tg = () => b2In('tangle') && !S.f.b2_tangleAway;
 /* the squad's own people, for a line: the daughters, the widow, or the stretch */
@@ -23862,6 +23885,8 @@ Wicket's people are already moving, flat, along the gully, with their oilcloth b
         {t:'Tangle\'s burner into the picket lines first.', tag:'uses 1 burner', req:()=>b2Tg() && S.inv.burner > 0, fx:()=>{ S.inv.burner--; S.f.b2_raidBurner = 1; }, go:()=>startBattle('b2_raid', {pre:'Tangle\'s burner goes up the bank in a long low arc and lands among the horses.', surprise:'p'})},
         {t:'Sathi and Hackle go along the gully and take the guards at the far fire.', check:['guile',14], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the gully is belly-deep in the cut's water in places, and the satchel went under with ${NAME(ROLL().who || 'sathi')}: one burner is drowned, its fuse a wet string: one burner lost.` : `Yes, but the gully is belly-deep in the cut's water in places, and ${NAME(ROLL().who || 'sathi')} came out of it shaking with cold, teeth shut hard: −1 on the next check.`,
+            fx:()=>b2NearKit('burner', ROLL().who || 'sathi')},
           go:'b2_raid_quiet', fail:'b2_raid_loud'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_raid_quiet:()=>({sp:'The picket lines', txt:
@@ -23976,6 +24001,8 @@ Just before you lose him, you hear him start humming. The four notes. Then nothi
 
 Chenned, behind him, does not look at you at all. That is how you know he knows.`,
     ch:[{t:'"Not a word, sir. He was just gone."', check:['guile',13], edges:id=>[id === 'sgt' && ['fourteen years of officers', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but Sulmar looked long enough to remember the squad, and by dusk the Seventh's water-sergeant has heard whose it is: your skins come back from the cart filled short: −1 water.` : `Yes, but Sulmar looked long enough to remember the squad, and ${NAME(ROLL().who || 'sgt')} feels it all evening, the way you feel an officer's eye: −1 on the next check.`,
+            fx:()=>b2NearWater(ROLL().who || 'sgt')},
           go:'b2_sulmar_ok', fail:'b2_sulmar_doubt'},
         {t:'"Ask Captain Mincer, sir. When he turns up."', go:'b2_sulmar_doubt'}]}),
   b2_sulmar_ok:()=>({sp:'Captain Sulmar', txt:`Sulmar looks at you a long moment and then turns away, muttering about sappers and their mothers, and goes up the bank toward the Fist's tent at a stiff fast walk. Chenned goes after him. As he passes you he says, without moving his lips: "Good."`, ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -24161,6 +24188,7 @@ ${b2In('sathi') ? `Behind them, at the back of the lancers, on a big horse, ther
 The lancers reach the first of them.`,
     ch:[{t:'"Hold. Hold. Hold." Keep them sitting.', check:['might',13], edges:id=>[id === 'haddat' && ['they are her street', 2], id === 'sgt' && ['they are yours', 1]],
           clean:{t:'Not one of them runs. Not one.', fx:()=>{ S.f.b2_baitHeld = 2; }},
+          near:{t:()=>`Yes, but a grandmother from the potters' street holds on to ${NAME(ROLL().who || 'sgt')}'s wrist to keep herself from running, and does not let go until the Weasels come, and her nails go in deep: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           go:'b2_bait_held', fail:'b2_bait_broke'}]}),
   b2_bait_held:()=>({sp:'The Shallows', fx:()=>{ S.f.b2_baitHeld = S.f.b2_baitHeld || 1; }, txt:
 `They hold. Your voice, ${b2In('haddat') ? `and Haddat's under it in the quarter's own Hissari, ` : ''}low and steady, and the people of the stretch sit in the sun with lances coming at them and do not run, because you have told them not to.
@@ -25006,6 +25034,7 @@ Then the reeds thin, and there is a stretch of open bank, and the ropes: four of
     ch:[{t:'Into them.', go:()=>startBattle('b2_ropes', {})},
         {t:'Sathi and Hackle through the reeds first, to the archers\' flank.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows reeds', 2], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>`Yes, but a man out on the ropes saw the reeds move and loosed at the movement, not knowing what it was, and the arrow went through ${NAME(ROLL().who || 'sathi')}'s sleeve and some of what was in it: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
           go:'b2_ropes_quiet', fail:'b2_ropes_loud'},
         {t:'Tangle\'s sharper into the stakes first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b2_ropesSharper = 1; }, go:()=>startBattle('b2_ropes', {pre:'Tangle\'s sharper goes into the stakes in a flat bright crack, and two of the ropes go slack, and the men on them go into the Vathar.', surprise:'p'})}]}),
   b2_ropes_quiet:()=>({sp:'The reeds', txt:`${by({sathi:`Sathi and the dog go into the reeds and are gone. A breath. Then an archer at the end of the line sits down, and the one beside him turns round into Hackle.`, _:`{who} goes into the reeds with Sathi and the dog. A breath. At the end of the line, an archer sits down without a sound.`})}`, ch:[{t:'Now.', go:()=>startBattle('b2_ropes', {surprise:'p'})}]}),
@@ -25181,6 +25210,7 @@ He looks at you the way he looks at mules. "The Council's affairs are the Counci
 
 He is sweating. It is not a warm night.`,
     ch:[{t:'"Where is the Council going in the dark?"', check:['wits',14], edges:id=>[id === 'haddat' && ['she has watched men like him lie for years', 2], id === 'sgt' && ['six years of garrison paperwork', 1], id === 'redblade' && ['Ehrlitan merchants sweat the same way', 1]],
+          near:{t:()=>`Yes, but he saw ${NAME(ROLL().who || 'sgt')} watch his eyes go to the water, and he opens the ledger again and writes a line in it, slowly, looking at them while he does it; it sits in them like a stone all night: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sgt')},
           go:'b2_steward4_slip', fail:'b2_steward4_shut'},
         {t:'Let him go about his business. Watch where it takes him.', go:'b2_steward4_watch'}]}),
   b2_steward4_slip:()=>({sp:'Lord Nethpara\'s steward', fx:()=>{ S.f.b2_dealHint = 1; }, txt:
@@ -25200,6 +25230,8 @@ He closes the ledger. "Good night, Sergeant." He goes off between the carriages 
 
 ${b2In('haddat') ? `Haddat goes and helps with the rope. She doesn't say anything. After a while, in the same dialect, she says something about the weather, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}`,
     ch:[{t:b2In('haddat') ? 'Let Haddat talk to them.' : 'Talk to them in their own tongue.', check:['guile',13], edges:id=>[id === 'haddat' && ['their own dialect', 3], id === 'sgt' && ['gutter Hissari', 1], id === 'redblade' && ['they hate a Red Blade more than a Malazan', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the grey woman wants something for it before she says the last of it, and in the Chain there is only one thing to want: a skin of water for her two boys: −1 water.` : `Yes, but the grey woman wants a skin of water for her two boys before she says the last of it, and the squad has none to give; ${NAME(ROLL().who || 'sgt')} has to beg it out of her instead, and hates it: −1 on the next check.`,
+            fx:()=>b2NearWater(ROLL().who || 'sgt')},
           go:'b2_servants_talk', fail:'b2_servants_shut'},
         {t:'Leave them to their rope.', go:()=>startExplore()}]}),
   b2_servants_talk:()=>({sp:'Hissari servants', fx:()=>{ S.f.b2_dealKnown = 1; if (b2In('haddat')) loy('haddat', 1); }, txt:
@@ -25261,6 +25293,8 @@ ${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not se
     ch:[{t:'Now. Into them.', req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown), go:()=>startBattle('b2_envoy', {})},
         {t:'Closer first, through the reeds.', check:['guile',14], req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown),
           edges:id=>[id === 'sathi' && ['Hackle knows reeds', 2], id === 'tangle' && ['sappers go quiet', 1], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the bank is all black mud under the reeds, and the munitions satchel drags through it on ${NAME(ROLL().who || 'sgt')}'s back: a smoker comes out of it clogged and useless: one smoker lost.` : `Yes, but the bank is all black mud under the reeds, and ${NAME(ROLL().who || 'sgt')} goes into it to the elbows and comes up slow and filthy and cold: −1 on the next check.`,
+            fx:()=>b2NearKit('smoker', ROLL().who || 'sgt')},
           go:'b2_envoy_close', fail:'b2_envoy_seen'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b2_envoy_close:()=>({sp:'The reeds', txt:`Through the reeds on your bellies, in the mud, until you can hear them: the officer's good Malazan, the steward's thin voice. "...all of them, every house of the Council, and anyone who walks with them..." Then the officer looks up.`, ch:[{t:'Up.', go:()=>startBattle('b2_envoy', {surprise:'p'})}]}),
@@ -25301,6 +25335,8 @@ They turn and look at you. They have learned to look at you. ${S.f.b2_key === 'd
 "Safe passage," somebody says. "Sergeant. They say there's safe passage."`,
     html:chainHTML('The Vathar · before dawn'),
     ch:[{t:'"Sit down. Nobody goes into that river until I say." Hold them.', check:['might',15], edges:id=>[id === 'haddat' && ['they are her street', 2], id === 'sgt' && ['they are yours', 1], id === 'redblade' && ['they hate the red', -1], id === 'marrow' && ['she sits down first, and they follow her', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but while you were holding the front of the stretch, an old man at the back of it got up quietly with his bundle and went down to the water, and nobody saw him go until he was gone: −1 in the column.` : `Yes, but it takes everything ${NAME(ROLL().who || 'sgt')} has, and by first light there is no voice left to give an order with: −1 on the next check.`,
+            fx:()=>b2NearColumn(ROLL().who || 'sgt')},
           go:'b2_hold_ok', fail:'b2_hold_some'},
         {t:'"Then we go with them, and keep them together in the water."', fx:()=>{ S.f.b2_heldBack = 0; if (b2In('marrow')) loy('marrow', -1); if (b2In('sathi')) loy('sathi', 1); }, go:'b2_hold_go'}]}),
   b2_hold_ok:()=>({sp:'The squad\'s carts', fx:()=>{ S.f.b2_heldBack = 2; if (b2In('haddat')) loy('haddat', 1); }, txt:
@@ -26292,6 +26328,7 @@ The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, a
     ch:[{t:'Into them.', go:()=>startBattle('b2_mounds', {})},
         {t:'Sathi and Hackle along the back of the mounds first.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows how to be quiet', 2], id === 'redblade' && ['spurs', -2], id === 'haddat' && ['mail', -1]],
+          near:{t:()=>`Yes, but the quick way round the ring goes over the top of a mound, not round it, and something under there noticed ${NAME(ROLL().who || 'sathi')} go by: they come down the far side cold to the fingertips and very quiet: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sathi')},
           go:'b2_mounds_quiet', fail:'b2_mounds_loud'},
         {t:'Tangle\'s sharper into the hollow first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; },
           go:()=>startBattle('b2_mounds', {pre:'Tangle hums four notes, stops, and rolls a sharper down the inside of the ring, away from the two tied by the mound. It goes off among the bundles with a crack the forest swallows whole.'})}]}),
@@ -27802,6 +27839,7 @@ The nearest rider is four carts away.`,
     ch: S.f.b2_ilhar || !b2In('haddat') ? [{t:'Leave it.', go:()=>startExplore()}] : [
       {t:'"Go, Haddat. We\'re with you."', check:['guile',14,'haddat'], fx:()=>{ S.f.b2_ilharTry = 1; },
         edges:id=>[['she has the Khundryl grandmothers\' words', 2], S.f.b2_ilharLook && ['the sergeant said they would look together', 1], b2Hurt() === 'haddat' && ['the Vathar wound', -1]],
+        near:{t:()=>`Yes, but Haddat got between them by going under the pony's nose, and a Khundryl pony does not care whose sister you are: it kicked her on the way past: ${bruiseN()} health down for Haddat at the start of the next fight.`, fx:()=>bruise('haddat', bruiseN())},
         go:'b2_ilhar_reach', fail:'b2_ilhar_late'},
       {t:'"Haddat. Hold. They are our allies today, and he is theirs."', go:'b2_ilhar_hold'}]}),
 
@@ -27852,6 +27890,7 @@ Haddat says nothing for a long time. Then she looks at you.
     ch:[{t:'"Give him back his water, Haddat."', req:()=>S.f.b2_ilharSkin === 'kept' && !S.f.b2_ilharGave, fx:()=>{ S.f.b2_ilharGave = 1; }, go:'b2_ilhar_water'},
         {t:'"Ask him to come with us. The column is his too."', check:['guile',15,'haddat'], fx:()=>{ S.f.b2_ilharAsked = 1; },
           edges:id=>[S.f.b2_ilharGave && ['she gave him back his water', 3], S.f.b2_prisonerFate === 'free' && ['a tanners\' boy told him the Malazans gave water', 2], S.f.b2_ilharSign === 'named' && ['she said his name at the Vathar', 1], S.f.b2_c5_key === 'column' && ['the stretch drank first on the Nenoth', 1]],
+          near:{t:()=>`Yes, but he makes her ask it twice, out loud, with the Khundryl riding by and the Seventh watching from its line, and it takes the last of what she had in her today: Haddat −1 on her next check.`, fx:()=>b2NearRattle('haddat')},
           go:'b2_ilhar_came', fail:'b2_ilhar_parts'},
         {t:'"Say goodbye to him, Haddat. Let him go."', go:'b2_ilhar_parts'}]}),
 
@@ -27865,6 +27904,8 @@ He looks at the skin, at the mark on the neck of it. He takes it. Then he laughs
 "It did," he says. "It did need it. You're a liar, sister. You always were a terrible liar."`,
     ch:[{t:'"Ask him now, Haddat."', check:['guile',15,'haddat'], fx:()=>{ S.f.b2_ilharAsked = 1; },
           edges:id=>[['she gave him back his water', 3], S.f.b2_prisonerFate === 'free' && ['a tanners\' boy told him the Malazans gave water', 2], S.f.b2_ilharSign === 'named' && ['she said his name at the Vathar', 1], S.f.b2_c5_key === 'column' && ['the stretch drank first on the Nenoth', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the Khundryl rider comes back along the row to see what became of his prisoner, and one of Dom's carters does not walk off with the Malazans for nothing: a skin of the squad's water goes over his saddle: −1 water.` : `Yes, but the Khundryl rider comes back along the row for his price, and the squad has no water to pay it with; Haddat argues him down in the grandmothers' words, and it costs her: Haddat −1 on her next check.`,
+            fx:()=>b2NearWater('haddat')},
           go:'b2_ilhar_came', fail:'b2_ilhar_parts'},
         {t:'"Now say goodbye."', go:'b2_ilhar_parts'}]}),
 
@@ -28001,7 +28042,8 @@ function b2PartCh(id, o){ const lean = b2Lean(id), stay = lean === 'stay';
   return [
     {t:stay ? o.letStay : o.letGo, fx:()=>{ b2Choose(id, stay, 'own'); loy(id, 1); }, go:stay ? o.stayNode : o.goNode},
     {t:stay ? o.askGo : o.askStay, tag:'they trust you', req:()=>(S.loy[id] || 0) >= 2, fx:()=>{ b2Choose(id, !stay, 'asked'); }, go:stay ? o.goNode : o.stayNode},
-    {t:stay ? o.argGo : o.argStay, check:['guile', 15, 'sgt'], edges:()=>b2Sway(id, stay ? o.edgesGo : o.edgesStay), go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
+    {t:stay ? o.argGo : o.argStay, check:['guile', 15, 'sgt'], edges:()=>b2Sway(id, stay ? o.edgesGo : o.edgesStay),
+      near:{t:()=>`Yes, but ${NAME(id)} gives way the way a soldier gives way to an order, and you both know that is what it was: −1 loyalty with ${NAME(id)}.`, fx:()=>{ S.loy ??= {}; S.loy[id] = Math.max(-3, (S.loy[id] || 0) - 1); }}, go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
 const b2Settle = (id, stay) => { if (!b2Said(id)) b2Choose(id, stay, (b2Lean(id) === 'stay') === stay ? 'own' : 'talked'); };
 
 Object.assign(B2CH6.dlg, {
@@ -28048,6 +28090,8 @@ The elders do not get up. They do not even look round. The old woman goes on thi
     ch:[{t:'Meet them in the grass.', go:()=>startBattle('b2_silver', {})},
         {t:'Sathi and Hackle out into the grass first, the Weasel way.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows long grass', 2], id === 'haddat' && ['mail', -1], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the man in the grass had a knife out already, and it opened ${NAME(ROLL().who || 'sathi')}'s forearm on his way down; it closes, but it takes a salve to close it: one salve used.` : `Yes, but the man in the grass had a knife out already, and it opened ${NAME(ROLL().who || 'sathi')}'s forearm on his way down, and there is no salve left to close it: ${bruiseN()} health down at the start of the fight.`,
+            fx:()=>{ const w = ROLL().who || 'sathi', r = ROLL(); if ((S.inv.salve || 0) > 0) { S.inv.salve--; r.nearPaid = 1; } else { r.nearPaid = 0; bruise(w, bruiseN()); } }},
           go:'b2_silver_quiet', fail:'b2_silver_loud'}]}),
   b2_silver_quiet:()=>({sp:'The long grass', txt:`${by({sathi:'Sathi goes into the grass with the dog and the grass closes behind them. A breath. Out in the dusk somebody sits down suddenly, and the grass round him thrashes once, and is still.', _:'{who} goes out into the grass with Sathi and the dog. A breath. Out in the dusk somebody sits down suddenly, and does not get up.'})}`, ch:[{t:'Now.', go:()=>startBattle('b2_silver', {surprise:'p'})}]}),
   b2_silver_loud:()=>({sp:'The long grass', txt:`A bird goes up out of the grass under somebody's boot, shrieking, and every wrapped head out there comes round at once.`, ch:[{t:'At them.', go:()=>startBattle('b2_silver', {})}]}),
@@ -28117,7 +28161,9 @@ ${S.f.b2_jarboy ? `${B2_BOY} is among them, from the Wickan wagons, asking each 
 
 "The Fist says the young go," he says. "With the warlocks. She is young." ${S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? `He looks at her a while. "She is also a Weasel. ${S.f.b2_sathiRode ? 'She turned the herd on the Nenoth. ' : ''}${S.f.b2_weaselHonour ? 'She held at the Shallows. ' : ''}${S.f.b2_sathiLaugh ? 'She laughed at the Foolish Dog\'s song. ' : ''}If she rides with the clan tonight, the clan will not send her away." He shrugs. "I do not tell her. I tell you. You are her sergeant."` : `He does not look at her. "If she stays, she stays on foot, with your Malazans. The clan does not take her. I do not tell her. I tell you."`}`,
     ch: !b2In('sathi') ? [{t:'On.', go:()=>startExplore()}] : S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? [{t:'On.', fx:()=>{ S.f.b2_sathiClan = 'yes'; }, go:()=>startExplore()}] : [
-      {t:'"She rode with my squad from Hissar, Captain. Take her, if she stays."', check:['guile', 15, 'sgt'], edges:()=>[S.f.b2_sathiPromise && ['you gave her your word', 2], S.f.b2_sathiTeeth && ['her teeth are filed', 1], ['the captain has watched her all the way', 1]], go:'b2_weaselcap6_yes', fail:'b2_weaselcap6_no'},
+      {t:'"She rode with my squad from Hissar, Captain. Take her, if she stays."', check:['guile', 15, 'sgt'], edges:()=>[S.f.b2_sathiPromise && ['you gave her your word', 2], S.f.b2_sathiTeeth && ['her teeth are filed', 1], ['the captain has watched her all the way', 1]],
+        near:{t:()=>ROLL().nearPaid ? `Yes, but a Weasel does not give anything for nothing, even a place in the clan: before he goes on he holds out his hand, and a skin of the squad's water goes to his horse: −1 water.` : `Yes, but a Weasel does not give anything for nothing, and the squad has no water to pay him; he takes it out of ${NAME(ROLL().who || 'sgt')} in the Weasel way instead, with a long look and a laugh: −1 on the next check.`,
+          fx:()=>b2NearWater(ROLL().who || 'sgt')}, go:'b2_weaselcap6_yes', fail:'b2_weaselcap6_no'},
       {t:'"Then she goes with the children."', fx:()=>{ S.f.b2_sathiClan = 'no'; }, go:()=>startExplore()}]}),
   b2_weaselcap6_yes:()=>({sp:'The Weasel captain', fx:()=>{ S.f.b2_sathiClan = 'yes'; }, txt:`He hears you out. Then he looks at Sathi, for the first time in a long time, a long look. "If she stays," he says, "she rides with the clan." He goes on down the line. He does not tell her. He was never going to.`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_weaselcap6_no:()=>({sp:'The Weasel captain', fx:()=>{ S.f.b2_sathiClan = 'no'; }, txt:`He hears you out, and shakes his head, once. "The Fist says the young go," he says. "I do not argue with the Fist on the last night." He goes on down the line.`, ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -29158,6 +29204,7 @@ Your stretch is the last of the column. Everything between the riders and the pe
         go:()=>startBattle('b2_runway', {pre:'Tangle lobs a smoker into the road behind the last cart, and the paving goes white from barrow to barrow, and the riders in it are shooting at nothing.'})},
       {t:'Sathi and Hackle up the barrow, the Weasel way, round behind them.', check:['guile', 15], req:()=>b2In('sathi'),
         edges:id=>[id === 'sathi' && ['Hackle knows a barrow-side', 2], id === 'haddat' && ['mail', -1], id === 'redblade' && ['spurs', -2]],
+        near:{t:()=>`Yes, but the far side of the barrow is steeper than the near, and ${NAME(ROLL().who || 'sathi')} comes down it faster than meant and meets the paving with a shoulder: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
         go:'b2_wstone_quiet', fail:'b2_wstone_loud'}]}),
   b2_wstone_quiet:()=>({sp:'Aren Way', txt:`${by({sathi:'Sathi goes up the side of the barrow on her belly with the dog, and over the top, and the first rider who comes round the foot of it never sees what pulls him down.', _:'{who} goes up the barrow with Sathi and the dog, and over, and the first rider round the foot of it never sees them.'})}`, ch:[{t:'Now.', go:()=>startBattle('b2_runway', {surprise:'p'})}]}),
   b2_wstone_loud:()=>({sp:'Aren Way', txt:`A stone goes rolling down the barrow-side under somebody's foot, and every rider at the foot of it looks up at once.`, ch:[{t:'At them.', go:()=>startBattle('b2_runway', {})}]}),
@@ -29461,6 +29508,7 @@ When ${B2.younger} sees you she fills the cup and holds it out. "The first one's
 `Your people, in a square by the harbour, sleeping on paving stones in a city, under the Aren Guard's lanterns, with the sea making a noise at the end of the street that most of them have never heard before.`,
     ch:[{t:'Help him look. Read him the slates.', check:['wits', 15], req:()=>!!S.f.b2_jarboy && !S.f.b2_girlsTried, fx:()=>{ S.f.b2_girlsTried = 1; },
           edges:id=>[id === 'haddat' && ['she reads the quarter\'s hand', 2], S.f.b2_youngest && ['the Crow girl said the children came in together', 1], S.f.b2_kenebHelp && ['Keneb', 1]],
+          near:{t:()=>`Yes, but the names are on the third slate, and ${NAME(ROLL().who || 'sgt')} reads the first two aloud to the end before getting there, every name on them, the living and the long lists of the dead: −1 on the next check.`, fx:()=>b2NearRattle(ROLL().who || 'sgt')},
           go:'b2_girls_found', fail:'b2_girls_not'},
         {t:'On.', go:()=>startExplore()}]}),
   b2_girls_found:()=>({sp:B2_BOY, fx:()=>{ S.f.b2_girlsFound = 1; chain(0, 2, `${B2.elder} and ${B2.younger}`); if (b2In('haddat')) loy('haddat', 1); }, txt:
@@ -31496,7 +31544,9 @@ Object.assign(B2CH5.dlg, {
 "There is something cold asleep in this forest," he says. "Older than her. Much older. She will not go near the tower. She says it is rude to wake the old." A pause. "She is a hundred and four."
 
 He sits up. "But there is water. Under the roots, there. The ground knows where. It is not sure it wants to tell a Foolish Dog, in a forest that is not ours." He holds the rattle of teeth loosely, the way you hold out a hand to a dog you do not know. "I could ask it."`,
-    ch:[{t:'"Ask it."', check:['wits', 13, 'warlock'], go:'b2_keth5_ok', fail:'b2_keth5_no'}, {t:'"Leave it sleeping. We\'ll manage."', go:()=>startExplore()}]}),
+    ch:[{t:'"Ask it."', check:['wits', 13, 'warlock'],
+          near:{t:()=>`Yes, but something older than the ground turned over in its sleep while he asked, and the cold of it went up through his palms: Keth starts the next fight ${bruiseN()} health down.`, fx:()=>bruise('warlock', bruiseN())},
+          go:'b2_keth5_ok', fail:'b2_keth5_no'}, {t:'"Leave it sleeping. We\'ll manage."', go:()=>startExplore()}]}),
   b2_keth5_ok:()=>({sp:'Keth', fx:()=>{ if (!S.f.b2_keth5) { S.f.b2_keth5 = 'water'; chain(2, 0, 'A seep under the roots, where the ground showed Keth'); } }, txt:
 `He puts the rattle down and his palms flat, and asks, in Foolish Dog, slowly, for a long time. Then he gets up and walks twenty paces into the trees and kicks at the leaf-litter between two roots, and it is dark, and then it is wet, and then it is a seep, cold, clean, filling a hollow the size of a helm.
 
@@ -34053,6 +34103,7 @@ Behind him the youngest of them, a long boy with his first torc still bright, wa
       ch:[{t:'Put a shield on the line.', check:['might',14],
             edges:id=>[id === 'brisk' && ['six years heavy infantry, and the line is the only thing she has ever loved', 2], id === 'sgt' && ['a shield picked up at Nathilog and never put down', 1], id === 'ohl' && ['an old man, and he knows it', -2], id === 'tuft' && ['she is half his weight', -2], id === 'kettle' && ['she would rather blow the line up', -1]],
             clean:{t:'Clean over, and Sarhul sits down hard in the dirt, laughing.', fx:()=>{ S.f.b3_c1_ilgresClean = 1; }},
+            near:{t:()=>`Yes, but Sarhul doesn't go quietly: the rim of his torc catches ${NAME(ROLL().who || 'sgt')} over the eye on the way down, and it bleeds the way brows do: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c1_ilgres_win', fail:'b3_c1_ilgres_lost'},
           {t:'"Not today, Sarhul."', fx:()=>{ S.f.b3_c1_ilgresDeclined = 1; }, go:'b3_c1_ilgres_no'}]}),
     b3_c1_ilgres_no:()=>({sp:'Sarhul', txt:
@@ -35253,7 +35304,11 @@ ${b3In('sohra') ? `"Betakullid," Sohra breathes. "On a Barghast hill. Eating." S
         {t:'Kettle\'s sharper into the picketed horses first.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c2_hillGo = 1; }, go:()=>startBattle('b3_c2_hill', {pre:true, surprise:S.f.b3_c2_carried ? null : 'p'})},
         {t:'Sohra goes round by the dry gully to come at them from behind.', check:['guile', 14], req:()=>b3In('sohra') && !S.f.b3_c2_gully,
           edges:id=>[id === 'sohra' && ['she knows this ground', 2], S.f.b3_c2_carried && ['they are watching the west', -2]],
-          fx:()=>{ S.f.b3_c2_gully = 1; S.f.b3_c2_hillGo = 1; }, go:'b3_c2_gully_ok', fail:'b3_c2_gully_seen'},
+          fx:()=>{ S.f.b3_c2_gully = 1; S.f.b3_c2_hillGo = 1; },
+          near:{fx:()=>{ const w = ROLL().who || 'sohra';
+            if (S.inv.smoker > 0) { S.inv.smoker--; note('Yes, but the gully is all loose stones and thorn, and somewhere on the way down a smoker works out of a satchel and stays there: −1 smoker.', 'bad'); }
+            else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but the gully is all loose stones and thorn, and ${NAME(w)} comes out of the bottom of it scratched and short of breath: −1 on the next check.`, 'bad'); } }},
+          go:'b3_c2_gully_ok', fail:'b3_c2_gully_seen'},
         {t:'Not yet.', go:()=>startExplore()}]},
   b3_c2_gully_ok:()=>({sp:'The Barghast hill', txt:
 `${by({sohra:`Sohra goes down off the horse and into the gully on her belly, and the grass closes over her as if she had never been there. A long minute. Then an archer by the pickets sits down with an arrow in him, quite slowly, looking puzzled, and his neighbour turns round to ask him why and finds a Rhivi girl behind him with a knife.`,
@@ -35279,7 +35334,9 @@ From the top of the hill you can see the column, very small, a day off to the we
 
 ${b3In('sohra') ? `Sohra is looking at the felled tree, its carved roots in the ashes. She doesn't say anything. Her face says that something should be done about it.` : `One of the inverted trees lies felled across the fire, its carved roots in the ashes.`}`,
     ch:[{t:'Stand the tree back on its head.', req:()=>!S.f.b3_c2_tree, check:['might', 13], edges:id=>[id === 'brisk' && ['shoulders like a wall', 2], id === 'sohra' && ['too small for this', -1]],
-          fx:()=>{ S.f.b3_c2_treeTried = 1; }, go:'b3_c2_tree', fail:'b3_c2_tree_no'},
+          fx:()=>{ S.f.b3_c2_treeTried = 1; },
+          near:{t:()=>`Yes, but the last heave is all ${NAME(ROLL().who || 'sgt')}, and something in the small of the back goes with it, and stays gone: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
+          go:'b3_c2_tree', fail:'b3_c2_tree_no'},
         {t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c2_tree:()=>({sp:'The Barghast hill', fx:()=>{ S.f.b3_c2_tree = 1; ally(1, 0, 'A Barghast tree stood up again'); }, txt:
@@ -36336,6 +36393,7 @@ ${c3Brisk() ? `Brisk has her shield on her arm already. "Twenty," she says. "Thi
         {t:'Kettle\'s sharper into the fire they want us to see.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c3_picket', {pre:true})},
         {t:'Round by the long grass, and up the back of the rise.', check:['guile',14],
           edges:id=>[id === 'sohra' && ['the grass is her country', 2], id === 'tuft' && ['small, and very quiet', 1], id === 'brisk' && ['she clanks', -1]],
+          near:{t:()=>`Yes, but it is half a bell flat on the belly in wet grass with every stalk a noise, and ${NAME(ROLL().who || 'sgt')} comes up the back of the rise with a heart going like a drum: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
           go:'b3_c3_picket_round', fail:'b3_c3_picket_seen'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_picket_round:()=>({sp:'The rise', txt:
@@ -36569,6 +36627,7 @@ On your right, Tav's file sets its shields. "Bris," says Tav. "Tav," says Brisk.
           go:()=>startBattle('b3_c3_hold', {pre:'Kettle\'s burner goes into the gap in the stakes where they are coming thickest, and the gap is fire, a wall of it, for as long as the oil lasts. The ones making for it go round, and round is longer.'})},
         {t:'"Shields. Lock with the Fourth Regiment."', check:['might',14], req:()=>c3Brisk(),
           edges:id=>[id === 'brisk' && ['her brother is the next shield', 2], id === 'sgt' && ['you drilled this on the plain', 1], id === 'tuft' && ['her shield arm is not her good arm', -1]],
+          near:{t:()=>`Yes, but to close the last gap in time ${NAME(ROLL().who || 'brisk')} has to throw the shield across it, and the rim comes back into the shoulder like a slammed door: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'brisk', bruiseN())},
           go:'b3_c3_lock_ok', fail:'b3_c3_lock_fail'}]}),
   b3_c3_lock_ok:()=>({sp:'The line', txt:
 `"*Nathilog*," says Brisk, and the shields go rim to rim along the Fourth's stretch and on into Tav's file without a gap, a hand's width of steel and wood and nothing else, and the line stops being a row of soldiers and becomes a wall.
@@ -36712,6 +36771,8 @@ The acolytes form up behind you in the street. They are very young.${b3In('kettl
         {t:'Kettle\'s cusser under the middle cart. The temple is far enough back. Probably.', tag:'uses 1 cusser', req:()=>b3In('kettle') && S.inv.cusser > 0, fx:()=>{ S.inv.cusser--; S.f.b3_c3Cusser = 1; }, go:'b3_c3_cusser'},
         {t:'Dannet\'s lane behind the dyers\' houses, and take the court from the side.', check:['guile',14],
           edges:id=>[S.f.b3_c3Lane && ['Dannet showed you the lane', 2], id === 'tuft' && ['small, and very quiet', 1], id === 'brisk' && ['the lane is one shield wide', -1]],
+          near:{fx:()=>{ const d0 = b3Dread(); ally(0, 1, 'Yes, but halfway down the lane a back door stands open on a dyer\'s kitchen the Tenescowri got to first. Nobody stops. Everybody looks');
+            if (b3Dread() === d0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but halfway down the lane a back door stands open on a dyer's kitchen the Tenescowri got to first, and ${NAME(w)} looks too long: −1 on the next check.`, 'bad'); } }},
           go:'b3_c3_lane_ok', fail:'b3_c3_lane_fail'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_cusser:()=>({sp:'Kettle', txt:
@@ -36934,6 +36995,8 @@ ${b3In('kettle') ? `"No burners," Kettle says, before you can ask. She sounds pe
     ch:[{t:'Break the doors, and in.', go:()=>startBattle('b3_c3_granary', {})},
         {t:'Call them out first: in Malazan, and then in whatever else the squad has.', check:['wits',15],
           edges:id=>[id === 'sohra' && ['she has traded with Pannion herders', 1], id === 'tuft' && ['a cadre mage\'s ear for tongues', 1]],
+          near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but the calling goes on long enough for a pair of white-faced Barghast to drift over from the Thrall\'s steps and watch Malazans bargain with Pannions, and go back to tell the clans');
+            if (b3Trust() === t0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but it takes a long time shouting at an oak door, and ${NAME(w)} is hoarse and short-tempered by the end of it: −1 on the next check.`, 'bad'); } }},
           go:'b3_c3_granary_talk', fail:'b3_c3_granary_fail'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_granary_talk:()=>({sp:'The granary', fx:()=>{ S.f.b3_c3GranaryTalked = 1; ally(0, -1, 'Four Beklites came out of the granary with their hands up'); }, txt:
@@ -38107,6 +38170,9 @@ He looks at you. He wants you to say something. He isn't sure what.
 "You heard him, this afternoon," he says. "So did I. I'm telling you so you'll have been told."`,
       ch:[{t:'"Whiskeyjack\'s order, Corporal. Back to your fire."', check:['guile', 14],
             edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'kettle' && ['she is talking too fast', -1]],
+            near:{fx:()=>{ const w = ROLL().who || 'sgt';
+              if (w !== 'sgt' && b3In(w)) { note(`Yes, but it was a near thing, and it was ${NAME(w)} who had to face down a man of the Host with his lads watching while you stood by. ${NAME(w)} does not thank you for that: loyalty −1.`, 'bad'); S.loy[w] ??= 0; loy(w, -1); }
+              else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but it was nearer than it looked, and afterwards you sit by the fire a long while with your hands between your knees until they stop: −1 on the next check.`, 'bad'); } }},
             go:'b3_c4_mosk_down', fail:'b3_c4_mosk_fight'},
           {t:'"Try it."', go:'b3_c4_mosk_fight'},
           {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'},
@@ -39129,7 +39195,10 @@ Tuft nods slowly, as if she were writing it down somewhere inside. The two of th
       ch:[{t:'"I\'m asking."', req:()=>S.f.b3_c5_asked == null && b3Trust() >= 6, fx:()=>{ S.f.b3_c5_asked = 1; }, go:'b3_c5_rider_yes'},
           {t:'"I\'m asking."', req:()=>S.f.b3_c5_asked == null && b3Trust() < 6, fx:()=>{ S.f.b3_c5_asked = 0; }, go:'b3_c5_rider_no'},
           {t:'"Sohra. Ask him the Rhivi way."', req:()=>S.f.b3_c5_asked == null && b3In('sohra'), check:['wits', 12, 'sohra'], fx:()=>{ S.f.b3_c5_asked = 0; },
-            edges:()=>[b3Trust() >= 6 && ['he has heard of the Fourth', 1], b3Trust() < 4 && ['he has heard of the Fourth', -1]], clean:{fx:()=>{ c5Loy('sohra', 1); }}, go:'b3_c5_rider_yes', fail:'b3_c5_rider_no'},
+            edges:()=>[b3Trust() >= 6 && ['he has heard of the Fourth', 1], b3Trust() < 4 && ['he has heard of the Fourth', -1]], clean:{fx:()=>{ c5Loy('sohra', 1); }},
+            near:{fx:()=>{ if (S.inv.sharper > 0) { S.inv.sharper--; note(`Yes, but the Rhivi way has a gift in it, and the gift he wants is one of the squad's sharpers, "for the spears": −1 sharper.`, 'bad'); }
+              else { S.rattled ??= {}; S.rattled.sohra = 1; note(`Yes, but the Rhivi way has a gift in it, and with nothing in the satchel to give, Sohra pays in a promise she will not repeat to you, and it sits on her: −1 on her next check.`, 'bad'); } }},
+            go:'b3_c5_rider_yes', fail:'b3_c5_rider_no'},
           {t:'Leave him to his fold of ground.'}]}),
     b3_c5_rider_yes:()=>({sp:'A Rhivi rider', fx:()=>{ S.f.b3_c5_asked = 1; }, txt:
 `He shrugs, the whole Rhivi shrug, shoulders and eyebrows and the horse's ears.
@@ -39153,6 +39222,7 @@ ${b3In('kettle') && S.inv.sharper > 0 ? `Kettle has a sharper in her hand and is
           {t:'Kettle\'s sharper, into the river short of their line.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c5_ford', S.f.b3_c5_read ? {pre:true, surprise:'p'} : {pre:true})},
           {t:'Read the ford before anyone goes in.', check:['wits', 14], req:()=>!S.f.b3_c5_readTried, fx:()=>{ S.f.b3_c5_readTried = 1; },
             edges:id=>[id === 'sohra' && ['she has crossed a hundred rivers with the herds', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s country', 2], id === 'ellis' && ['a scout\'s eye for ground', 1], id === 'kettle' && ['she is looking at where to throw, not where to walk', -1]],
+            near:{t:()=>`Yes, but to be sure of the shelf ${NAME(ROLL().who || 'sgt')} wades out to the knee to feel it, and a Beklite slinger on the far bank sees a target: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c5_ford_read', fail:'b3_c5_ford_miss'},
           {t:'Not yet.'}]},
     b3_c5_ford_read:()=>({sp:'The ford', fx:()=>{ S.f.b3_c5_read = 1; }, txt:
@@ -39357,6 +39427,9 @@ She and Sohra exchange a few words in Rhivi. Sohra's face does something complic
 ${S.f.b3_c5_ev === 1 ? `The calf is on the ground by the well, and the knife with the bright new filing is in your belt.` : S.f.b3_c5_ev === 0 ? `There's a dead calf at the bottom of it. That's all anyone can swear to.` : `Something is dead at the bottom of it. Nobody has looked properly yet.`}`,
       ch:[{t:'Have it hauled up and looked at properly.', req:()=>S.f.b3_c5_ev == null, check:['wits', 13],
             edges:id=>[id === 'ohl' && ['he has looked at worse things in water', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s wells', 2], id === 'sohra' && ['it is a Rhivi calf', 1], id === 'kettle' && ['she can tell a cut from a tear', 1]],
+            near:{fx:()=>{ const w = ROLL().who || 'sgt';
+              if (S.inv.salve > 0) { S.inv.salve--; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water, and a jar of salve goes on them: −1 salve.`, 'bad'); }
+              else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water and nothing to put on them: −1 on the next check.`, 'bad'); } }},
             go:'b3_c5_look', fail:'b3_c5_look_miss'},
           {t:'Find the man in the fur collar.', go:'b3_c5_confront'},
           {t:'Not yet.'}]} : {sp:'The well', txt:
@@ -39369,8 +39442,11 @@ ${c5Brisk() ? `Tav is off the cart. Tav is in the middle of it, of course he is,
 Out at the edge of the light the man with the fur collar is watching, and not moving, and smiling slightly.`,
       ch:[{t:'"Fourth! Between them. Now."', check:['might', 14],
             edges:id=>[id === 'brisk' && ['her brother is in the middle of it', 2], id === 'greysword' && ['the Grey Wall, drilled on Capustan\'s walls', 1], id === 'sgt' && ['your voice carries', 1], id === 'kettle' && ['she is better at starting noise than stopping it', -1]],
+            near:{t:()=>`Yes, but nobody told the bhederin, and a bull with somewhere to be puts ${NAME(ROLL().who || 'sgt')} into the well-head on his way past: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c5_well_calm', fail:'b3_c5_well_cut'},
-          {t:'"Sohra. The herders."', req:()=>b3In('sohra'), check:['wits', 13, 'sohra'], edges:()=>[b3Trust() >= 8 && ['the Rhivi trust the Fourth', 2], S.f.b3_c5_satSohra && ['she has been singing for days to keep from shouting', 1]], go:'b3_c5_well_calm', fail:'b3_c5_well_cut'}]},
+          {t:'"Sohra. The herders."', req:()=>b3In('sohra'), check:['wits', 13, 'sohra'], edges:()=>[b3Trust() >= 8 && ['the Rhivi trust the Fourth', 2], S.f.b3_c5_satSohra && ['she has been singing for days to keep from shouting', 1]],
+            near:{t:'Yes, but a bull swings his head at the wrong moment, and the horn passes a finger\'s width from Sohra\'s eye. She finishes the song. Her hands shake for an hour after: −1 on her next check.', fx:()=>{ S.rattled ??= {}; S.rattled.sohra = 1; }},
+            go:'b3_c5_well_calm', fail:'b3_c5_well_cut'}]},
     b3_c5_well_calm:()=>({sp:'The well', fx:()=>{ S.f.b3_c5_inc = 'calm'; ally(1, 0, 'The well held'); }, txt:
 `${by({sohra:`Sohra goes into the herd, not round it, straight in among the bulls with her staff over her head, singing. Not loudly. The bulls stop shoving to listen, and the herdsmen stop shouting because the bulls have stopped, and in the hush she says three things in Rhivi, fast and hard, and the knives go down one by one as if each of them had decided it alone.`, brisk:`Brisk goes through the Fourth Regiment the way a door goes through a draught and puts her shield between her brother and the spear, rim to the spear-point, and says "*Down*," in the regiment voice, and the Fourth Regiment remembers it is a regiment. Across the bucket the Rhivi see the shield and the voice and the big man laughing behind them, and their knives go down too.`, sgt:`You go in between them with your hands open and your sword sheathed, which is either the bravest thing you have done this spring or the stupidest, and use the voice that eleven years of marines have put in you. It carries. The Fourth Regiment's corporal hears his rank in it and shuts his mouth, and the Rhivi hear something else, and their knives go down.`, _:`{who} gets in between them, and the squad gets in behind, and for a long breath it might go either way. Then a knife goes down, and another, and the bhederin stop bellowing because the men have stopped.`})}
 
@@ -39422,6 +39498,8 @@ You show him the knife. He looks at the bright filing on the hilt for a long mom
 Across the green the old woman in the doorway is watching. He follows your eyes to her, and his own go flat.` : ''}`,
       ch:[{t:'"You put the calf down the well. Say it, in front of them."', check:['guile', 14], req:()=>!S.f.b3_c5_pressed, fx:()=>{ S.f.b3_c5_pressed = 1; },
             edges:()=>[S.f.b3_c5_ev === 1 && ['the knife with the fresh filing', 2], S.f.b3_c5_wit && ['an old woman saw him do it', 2], S.f.b3_c5_inc === 'cut' && ['there is blood on the ground and everyone is watching', 1]],
+            near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but he takes his time getting there, and on the way he says, pleasantly, for the Rhivi to hear, that Malazans are only tidier thieves than he is');
+              if (b3Trust() === t0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but he takes his time getting there, and the smile he gives ${NAME(w)} at the end of it stays with them: −1 on the next check.`, 'bad'); } }},
             go:'b3_c5_talked', fail:'b3_c5_draw'},
           {t:'"Take him."', go:()=>startBattle('b3_c5_wellfight')},
           {t:'Not yet.'}]}),
@@ -39906,6 +39984,9 @@ const c6Dust = () => `four thousand making the dust of ten`;
 const c6Told = () => (S && S.f && S.f.b3_c6_ask) || '';
 /* Kallor is "the tall man in the fur-collared cloak" until the squad has heard him named (Ch1 sets b3_kallor) */
 const c6Kallor = (cap) => S && S.f && S.f.b3_kallor ? 'Kallor' : (cap ? 'The' : 'the') + ' tall man in the fur-collared cloak';
+/* a "yes, but" that moves the Alliance's dread quietly (the cost text names it, so no second note): returns how far it actually rose */
+const c6Dread = n => { S.ally ??= {trust:5, dread:1}; if (S.card === 'b3c_obelisk') n = Math.max(0, n - 1); const d0 = S.ally.dread; S.ally.dread = clamp(d0 + n, 0, ALLY_MAX); const d = S.ally.dread - d0; if (d > 0) tally('dreadUp', d); updChain(); S.f.b3_c6_nearDread = d; return d; };
+const c6DreadTxt = () => S.f.b3_c6_nearDread ? `dread +${S.f.b3_c6_nearDread}` : 'the Obelisk takes it, and dread holds';
 
 /* ---- the battle ground: Book Three's battle maps mark low cover 't' and pits/deep water 'o' (31's rule); these draw them in this chapter's ground ---- */
 TILEX.b3_c6_campb = (ctx, ch, x, y, T, dark) => TILEX.b3camp_night && TILEX.b3camp_night(ctx, ch === 't' ? 'W' : ch === 'o' ? 'r' : ch, x, y, T, true);
@@ -40430,6 +40511,8 @@ If one of them gets home, the Seer knows by morning.${b3In('greysword') ? `
     ch:[{t:'"Take them. Quietly."', go:()=>startBattle('b3_c6_field', {})},
         {t:'Kettle\'s sharper, into the middle of them.', tag:'uses 1 sharper · loud', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c6_loud = 1; ally(-1, 0, 'A sharper on the lift field, heard two miles off'); }, go:()=>startBattle('b3_c6_field', {pre:true})},
         {t:'Round by the ditch, and take them from behind.', check:['guile', 14],
+          near:{t:()=>S.f.b3_c6_nearSmoke ? `Yes, but the ditch is a foot deep in cold water, and ${NAME(ROLL().who || 'sgt')} goes along it flat, with the munitions bag underneath. One of Kettle's smokers comes out of it a lump of wet clay. One smoker gone.` : `Yes, but the ditch is a foot deep in cold water, and ${NAME(ROLL().who || 'sgt')} comes up out of it shaking so hard the hand will not stay still: −1 on the next check.`,
+            fx:()=>{ S.f.b3_c6_nearSmoke = 0; if (S.inv.smoker > 0) { S.inv.smoker--; S.f.b3_c6_nearSmoke = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['the plains way: low, and downwind', 2], id === 'greysword' && ['she knows how Beklites walk a picket', 1], id === 'brisk' && ['heavy kit, and a shield', -1]],
           go:'b3_c6_field_round', fail:'b3_c6_field_seen'}]}),
   b3_c6_field_round:()=>({sp:'The lift field · the south rise', txt:
@@ -40637,6 +40720,8 @@ Near dawn the rider's hand comes up, flat, and the quorl drops. Ahead, on a ledg
 The Moranth looks back at you over its shoulder. It is asking.`,
     ch:[{t:'Kettle\'s sharper, off the harness, into their fire.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_landing', {pre:true})},
         {t:'Set us down beyond the crag. We go in on foot.', check:['guile', 14],
+          near:{t:()=>S.f.b3_c6_nearSharp ? `Yes, but a sharper works loose from a harness strap as the quorls lift away, and goes down the mountain into the snow, and does not go off, and is not coming back. One sharper gone.` : `Yes, but ${NAME(ROLL().who || 'sgt')} comes round the rock with frozen hands from the flight, and has to watch them to make them close: −1 on the next check.`,
+            fx:()=>{ S.f.b3_c6_nearSharp = 0; if (S.inv.sharper > 0) { S.inv.sharper--; S.f.b3_c6_nearSharp = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['she can come down on a herd without it lifting its head', 1], id === 'greysword' && ['Pannion pickets: she has watched them from a wall', 1], id === 'ohl' && ['his knees, on a mountain, in the dark', -1]],
           go:'b3_c6_q_foot', fail:'b3_c6_q_seen'},
         {t:'Straight down on them.', go:()=>startBattle('b3_c6_landing', {})}]}),
@@ -40831,6 +40916,7 @@ It is a carrion bird. It is a carrion bird the size of a small cart, bare-headed
 ${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}."` : `Do not look at its eyes.`}`,
     ch:[{t:'Kettle\'s sharper, under the first of them.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_condors', {pre:true})},
         {t:'Smother the fires. Make them come down to the quorls in the dark.', check:['wits', 14],
+          near:{t:()=>`Yes, but the last fire is the slowest, and ${NAME(ROLL().who || 'sgt')} is still kicking earth over it when the first bird turns its head and looks straight down into the trench. Everyone saw those eyes, and everyone will see them again tonight: ${c6DreadTxt()}.`, fx:()=>{ c6Dread(1); }},
           edges:id=>[id === 'kettle' && ['she knows what a quorl does when it is frightened', 1], id === 'sohra' && ['herds and hawks: she has done this on the plain', 2], id === 'tuft' && ['something in those eyes is looking for her', -1]],
           go:'b3_c6_q_condor_dark', fail:'b3_c6_q_condor_bad'},
         {t:'Into them.', go:()=>startBattle('b3_c6_condors', {})}]}),
@@ -40936,6 +41022,7 @@ He jerks his chin at the reeds on the far bank. "Something's been watching us fr
 
 "Malazans," he says, in fair trade-tongue. "You carry one log, two of you, and you sweat. We carry two logs, one of us, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."`,
     ch:[{t:'"Show you." A log each, and a race to the slips.', check:['might', 14],
+          near:{t:()=>`Yes, but ${NAME(ROLL().who || 'sgt')} wins it by half a stride and pays for the half with a back that clicks every time it bends, and the night watch on the slips is coming: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           edges:id=>[id === 'brisk' && ['heavy infantry: this is what she is for', 2], id === 'greysword' && ['she has carried a shield wall up Capustan\'s steps', 1], id === 'tuft' && ['a cadre mage and a cedar log', -2], id === 'kettle' && ['she is half his size', -1]],
           go:'b3_c6_barghast_win', fail:'b3_c6_barghast_lose'},
         {t:'"We carry with our heads, friend." Leave him to it.', go:()=>startExplore()}]}),
@@ -41027,6 +41114,8 @@ Too still. The frogs have stopped.
 ${b3In('sohra') ? `"Somebody is lying in the reeds," Sohra says softly. "Many somebodies. The frogs say so."` : b3In('greysword') ? `"The reeds," Dannet says softly. "They have stopped moving with the wind."` : `Somebody is lying in the reeds. Many somebodies.`}`,
     ch:[{t:'Kettle\'s sharper, into the reeds where they\'re lying.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_raid', {pre:true})},
         {t:'Douse the torches on the slips, and wait for them in the dark.', check:['guile', 14],
+          near:{t:()=>b3In('ohl') && ROLL().who !== 'ohl' && S.loy && S.loy.ohl != null ? `Yes, but it is a long wait among the timber, and Ohl spends it whispering that men who come with fire-pots can be talked out of them, and that lying in the dark for them is murder with extra steps. He does not like how this is going to go.` : `Yes, but it is a long wait in the dark among the timber with the frogs gone quiet, and ${NAME(ROLL().who || 'sgt')} hears every reed move twice: −1 on the next check.`,
+            fx:()=>{ if (b3In('ohl') && ROLL().who !== 'ohl' && S.loy && S.loy.ohl != null) loy('ohl', -1); else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'sohra' && ['she hunts at night', 1], id === 'ohl' && ['he would rather talk them out of it', -1]],
           go:'b3_c6_m_raid_dark', fail:'b3_c6_m_raid_bad'},
         {t:'Shout the alarm, and go in after them.', go:()=>startBattle('b3_c6_raid', {})}]}),
@@ -41066,6 +41155,7 @@ Then the reeds are full of men.${b3In('greysword') ? `
 "Grey sorcery," Dannet says, very quiet, looking at the bank. "Somebody there is wearing it."` : ''}`,
     ch:[{t:'Kettle\'s sharper, over the water into the reeds.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_ambush', {pre:true})},
         {t:'Shields up along the gunwale. Get the oar back.', check:['might', 14],
+          near:{t:()=>`Yes, but one stone comes in under the rim of the shield before the wall is set, and finds ${NAME(ROLL().who || 'sgt')} on the collarbone: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           edges:id=>[id === 'brisk' && ['a shield, a wall, a river: home', 2], id === 'greysword' && ['the Grey Swords\' wall-drill', 1]],
           go:'b3_c6_m_river_wall', fail:'b3_c6_m_river_bad'},
         {t:'Shoot back.', go:()=>startBattle('b3_c6_ambush', {})}]}),
@@ -41107,6 +41197,8 @@ There is a long silence along the landing, and in the silence the White Face on 
 Behind the herd, a man in a ragged Mott Irregular's coat, calling himself to anyone who will listen the High Marshal of something, is filling a sack with dried dung from the landing and being ignored by everyone including the bhederin.`,
     ch:[{t:'Sohra: talk to him, herder to herder.', req:()=>b3In('sohra'), fx:()=>{ S.f.b3_c6_herds = 'sohra'; ally(1, -1, 'Sohra moves a Rhivi herd with three words'); loy('sohra', 1); }, go:'b3_c6_herds_sohra'},
         {t:'"Please. The rest of the column is on the river."', check:['wits', 13],
+          near:{t:()=>S.f.b3_c6_nearSalve ? `Yes, but the old man's please has a price: his horse has a gall on its withers the size of a palm, and he looks at it, and at your kit, until the Fourth's pot of salve goes on it. One salve gone.` : `Yes, but he lets the herd go only after he has looked at the Fourth's empty hands for a long time, and the herders along the landing see him do it: −1 on the next check for ${NAME(ROLL().who || 'sgt')}, who felt every moment of it.`,
+            fx:()=>{ S.f.b3_c6_nearSalve = 0; if (S.inv.salve > 0) { S.inv.salve--; S.f.b3_c6_nearSalve = 1; } else { S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; } }},
           edges:id=>[id === 'ohl' && ['an old man\'s patience with old men', 1], id === 'kettle' && ['she says what she thinks of herds', -1]],
           go:'b3_c6_herds_ok', fail:'b3_c6_herds_no'},
         {t:'Wait. It isn\'t your herd and it isn\'t your river.', fx:()=>{ S.f.b3_c6_herds = 'wait'; }, go:'b3_c6_herds_wait'}]}),
@@ -41656,6 +41748,8 @@ const b3c7P = id => b3c7He(id) ? {she:'he', She:'He', her:'him', hers:'his'} : {
 const b3c7Loy = (id, n) => { if (b3In(id) && S.loy && S.loy[id] != null) loy(id, n); };
 /* Kallor knows the sergeant's face (Chapter 1's watch at the Mhybe's tent, or Chapter 5's word to Brood) */
 const b3c7Known7 = () => !!(S.f.b3_kallorEnemy || S.f.b3_kallorSaw);
+/* a "yes, but" that raises dread quietly (the cost text names it): remembers how far it actually rose */
+const b3c7Dread = n => { S.ally ??= {trust:5, dread:1}; if (S.card === 'b3c_obelisk') n = Math.max(0, n - 1); const d0 = S.ally.dread; S.ally.dread = clamp(d0 + n, 0, ALLY_MAX); const d = S.ally.dread - d0; if (d > 0) tally('dreadUp', d); updChain(); S.f.b3_c7_nearDread = d; return d; };
 /* the letter in Brisk's gorget: open (a fresh start, or an import that opened it) or still sealed */
 const b3c7Sealed = () => !!(S.imported && b3Was('c7_letter') !== 'brisk');
 /* the mortal fight's dead, this chapter */
@@ -42387,6 +42481,7 @@ ${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other 
 He turns back to the plain, on the good leg.`,
       ch:[{t:'"After Coral, sir."', fx:()=>{ S.f.b3_c7_wjWord = 'after'; }, go:()=>startExplore()},
           {t:'Push it. "Today, sir. Before whatever comes across that plain."', check:['guile', 17], fx:()=>{ S.f.b3_c7_wjPushed = 1; },
+            near:{t:()=>`Yes, but you pushed him in front of Brood and Korlat, and the look he gives ${NAME(ROLL().who || 'sgt')} for it is the one from Pale, the one that makes a sergeant feel like a recruit: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
             edges:id=>[id === 'ohl' && ['a healer of twenty-two years', 2], id === 'brisk' && ['she has never once asked him for anything', 1], S.f.b3_wjNoticed && ['he remembers Capustan', 1]],
             go:'b3_c7_wj_almost', fail:'b3_c7_wj_no'}]}),
   b3_c7_wj_almost:()=>({sp:'Whiskeyjack', txt:
@@ -42466,6 +42561,7 @@ ${b3c7Known7() ? `His eyes come round to you, slowly, and stop. "I know you," Ka
 ${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching his hands.' : ''}`,
       ch:[{t:'Go and stand somewhere.', go:()=>startExplore()},
           {t:'Hold his eye a moment longer than he likes.', check:['might', 15], fx:()=>{ S.f.b3_c7_kallorStare = 1; },
+            near:{t:()=>`Yes, but holding it costs ${NAME(ROLL().who || 'sgt')} something. For the length of that look you could see how old he is, and what he has outlived, and it walks back down the hill with you: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
             edges:id=>[id === 'brisk' && ['she has stared down worse', 1], id === 'tuft' && ['she will not look at him', -2]], go:'b3_c7_kallor_held', fail:'b3_c7_kallor_lost'}]}),
   b3_c7_kallor_held:()=>({sp:'Kallor', txt:
 `You hold it. It is like holding a coal. After a long moment something in his face becomes very slightly interested, which is worse than the contempt.

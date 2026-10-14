@@ -562,7 +562,11 @@ ${b3In('sohra') ? `"Betakullid," Sohra breathes. "On a Barghast hill. Eating." S
         {t:'Kettle\'s sharper into the picketed horses first.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c2_hillGo = 1; }, go:()=>startBattle('b3_c2_hill', {pre:true, surprise:S.f.b3_c2_carried ? null : 'p'})},
         {t:'Sohra goes round by the dry gully to come at them from behind.', check:['guile', 14], req:()=>b3In('sohra') && !S.f.b3_c2_gully,
           edges:id=>[id === 'sohra' && ['she knows this ground', 2], S.f.b3_c2_carried && ['they are watching the west', -2]],
-          fx:()=>{ S.f.b3_c2_gully = 1; S.f.b3_c2_hillGo = 1; }, go:'b3_c2_gully_ok', fail:'b3_c2_gully_seen'},
+          fx:()=>{ S.f.b3_c2_gully = 1; S.f.b3_c2_hillGo = 1; },
+          near:{fx:()=>{ const w = ROLL().who || 'sohra';
+            if (S.inv.smoker > 0) { S.inv.smoker--; note('Yes, but the gully is all loose stones and thorn, and somewhere on the way down a smoker works out of a satchel and stays there: −1 smoker.', 'bad'); }
+            else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but the gully is all loose stones and thorn, and ${NAME(w)} comes out of the bottom of it scratched and short of breath: −1 on the next check.`, 'bad'); } }},
+          go:'b3_c2_gully_ok', fail:'b3_c2_gully_seen'},
         {t:'Not yet.', go:()=>startExplore()}]},
   b3_c2_gully_ok:()=>({sp:'The Barghast hill', txt:
 `${by({sohra:`Sohra goes down off the horse and into the gully on her belly, and the grass closes over her as if she had never been there. A long minute. Then an archer by the pickets sits down with an arrow in him, quite slowly, looking puzzled, and his neighbour turns round to ask him why and finds a Rhivi girl behind him with a knife.`,
@@ -588,7 +592,9 @@ From the top of the hill you can see the column, very small, a day off to the we
 
 ${b3In('sohra') ? `Sohra is looking at the felled tree, its carved roots in the ashes. She doesn't say anything. Her face says that something should be done about it.` : `One of the inverted trees lies felled across the fire, its carved roots in the ashes.`}`,
     ch:[{t:'Stand the tree back on its head.', req:()=>!S.f.b3_c2_tree, check:['might', 13], edges:id=>[id === 'brisk' && ['shoulders like a wall', 2], id === 'sohra' && ['too small for this', -1]],
-          fx:()=>{ S.f.b3_c2_treeTried = 1; }, go:'b3_c2_tree', fail:'b3_c2_tree_no'},
+          fx:()=>{ S.f.b3_c2_treeTried = 1; },
+          near:{t:()=>`Yes, but the last heave is all ${NAME(ROLL().who || 'sgt')}, and something in the small of the back goes with it, and stays gone: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
+          go:'b3_c2_tree', fail:'b3_c2_tree_no'},
         {t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c2_tree:()=>({sp:'The Barghast hill', fx:()=>{ S.f.b3_c2_tree = 1; ally(1, 0, 'A Barghast tree stood up again'); }, txt:

@@ -5,6 +5,16 @@
    the clan honours Sathi) or 'pull' (the squad pulled its people back into the wagons: a harder fight, the column kept, Sathi shamed before her clan).
    New here: a fight a squadmate sits out (def.away, 47: Tangle is in the ramp's banks with Mincer's sappers), and the Earth's Hand (a Wickan trick, below). */
 
+/* a "yes, but" paid out of the Chain or the satchel (used by Chapters 3-7). Each pays if it can and sets ROLL().nearPaid, so a near:'s
+   t() (run after its fx) can say what was actually paid; with nothing to pay, whoever is named is rattled (−1 on their next check) instead.
+   Water and the column are changed quietly here (no chain() note), since the near: text already names the cost. */
+function b2NearRattle(who){ S.rattled ??= {}; if (who) S.rattled[who] = 1; }
+function b2NearWater(who, n = 1){ const r = ROLL(); S.chain ??= {water:8, column:0};
+  if (S.chain.water > 0) { S.chain.water = Math.max(0, S.chain.water - n); r.nearPaid = 1; updChain(); } else { r.nearPaid = 0; b2NearRattle(who); } }
+function b2NearColumn(who, n = 1){ const r = ROLL(); S.chain ??= {water:8, column:0};
+  if (S.chain.column > 0) { const d = Math.min(n, S.chain.column); S.chain.column -= d; tally('columnLost', d); r.nearPaid = 1; updChain(); } else { r.nearPaid = 0; b2NearRattle(who); } }
+function b2NearKit(item, who){ const r = ROLL(); S.inv ??= {};
+  if ((S.inv[item] || 0) > 0) { S.inv[item]--; r.nearPaid = 1; } else { r.nearPaid = 0; b2NearRattle(who); } }
 /* Tangle is with the squad, and not off in a hole in the ramp with Mincer */
 const b2Tg = () => b2In('tangle') && !S.f.b2_tangleAway;
 /* the squad's own people, for a line: the daughters, the widow, or the stretch */
@@ -503,6 +513,8 @@ Wicket's people are already moving, flat, along the gully, with their oilcloth b
         {t:'Tangle\'s burner into the picket lines first.', tag:'uses 1 burner', req:()=>b2Tg() && S.inv.burner > 0, fx:()=>{ S.inv.burner--; S.f.b2_raidBurner = 1; }, go:()=>startBattle('b2_raid', {pre:'Tangle\'s burner goes up the bank in a long low arc and lands among the horses.', surprise:'p'})},
         {t:'Sathi and Hackle go along the gully and take the guards at the far fire.', check:['guile',14], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'redblade' && ['spurs', -2]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but the gully is belly-deep in the cut's water in places, and the satchel went under with ${NAME(ROLL().who || 'sathi')}: one burner is drowned, its fuse a wet string: one burner lost.` : `Yes, but the gully is belly-deep in the cut's water in places, and ${NAME(ROLL().who || 'sathi')} came out of it shaking with cold, teeth shut hard: −1 on the next check.`,
+            fx:()=>b2NearKit('burner', ROLL().who || 'sathi')},
           go:'b2_raid_quiet', fail:'b2_raid_loud'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_raid_quiet:()=>({sp:'The picket lines', txt:
@@ -617,6 +629,8 @@ Just before you lose him, you hear him start humming. The four notes. Then nothi
 
 Chenned, behind him, does not look at you at all. That is how you know he knows.`,
     ch:[{t:'"Not a word, sir. He was just gone."', check:['guile',13], edges:id=>[id === 'sgt' && ['fourteen years of officers', 1]],
+          near:{t:()=>ROLL().nearPaid ? `Yes, but Sulmar looked long enough to remember the squad, and by dusk the Seventh's water-sergeant has heard whose it is: your skins come back from the cart filled short: −1 water.` : `Yes, but Sulmar looked long enough to remember the squad, and ${NAME(ROLL().who || 'sgt')} feels it all evening, the way you feel an officer's eye: −1 on the next check.`,
+            fx:()=>b2NearWater(ROLL().who || 'sgt')},
           go:'b2_sulmar_ok', fail:'b2_sulmar_doubt'},
         {t:'"Ask Captain Mincer, sir. When he turns up."', go:'b2_sulmar_doubt'}]}),
   b2_sulmar_ok:()=>({sp:'Captain Sulmar', txt:`Sulmar looks at you a long moment and then turns away, muttering about sappers and their mothers, and goes up the bank toward the Fist's tent at a stiff fast walk. Chenned goes after him. As he passes you he says, without moving his lips: "Good."`, ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -802,6 +816,7 @@ ${b2In('sathi') ? `Behind them, at the back of the lancers, on a big horse, ther
 The lancers reach the first of them.`,
     ch:[{t:'"Hold. Hold. Hold." Keep them sitting.', check:['might',13], edges:id=>[id === 'haddat' && ['they are her street', 2], id === 'sgt' && ['they are yours', 1]],
           clean:{t:'Not one of them runs. Not one.', fx:()=>{ S.f.b2_baitHeld = 2; }},
+          near:{t:()=>`Yes, but a grandmother from the potters' street holds on to ${NAME(ROLL().who || 'sgt')}'s wrist to keep herself from running, and does not let go until the Weasels come, and her nails go in deep: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           go:'b2_bait_held', fail:'b2_bait_broke'}]}),
   b2_bait_held:()=>({sp:'The Shallows', fx:()=>{ S.f.b2_baitHeld = S.f.b2_baitHeld || 1; }, txt:
 `They hold. Your voice, ${b2In('haddat') ? `and Haddat's under it in the quarter's own Hissari, ` : ''}low and steady, and the people of the stretch sit in the sun with lances coming at them and do not run, because you have told them not to.

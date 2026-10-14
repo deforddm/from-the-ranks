@@ -345,6 +345,7 @@ ${c3Brisk() ? `Brisk has her shield on her arm already. "Twenty," she says. "Thi
         {t:'Kettle\'s sharper into the fire they want us to see.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c3_picket', {pre:true})},
         {t:'Round by the long grass, and up the back of the rise.', check:['guile',14],
           edges:id=>[id === 'sohra' && ['the grass is her country', 2], id === 'tuft' && ['small, and very quiet', 1], id === 'brisk' && ['she clanks', -1]],
+          near:{t:()=>`Yes, but it is half a bell flat on the belly in wet grass with every stalk a noise, and ${NAME(ROLL().who || 'sgt')} comes up the back of the rise with a heart going like a drum: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
           go:'b3_c3_picket_round', fail:'b3_c3_picket_seen'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_picket_round:()=>({sp:'The rise', txt:
@@ -578,6 +579,7 @@ On your right, Tav's file sets its shields. "Bris," says Tav. "Tav," says Brisk.
           go:()=>startBattle('b3_c3_hold', {pre:'Kettle\'s burner goes into the gap in the stakes where they are coming thickest, and the gap is fire, a wall of it, for as long as the oil lasts. The ones making for it go round, and round is longer.'})},
         {t:'"Shields. Lock with the Fourth Regiment."', check:['might',14], req:()=>c3Brisk(),
           edges:id=>[id === 'brisk' && ['her brother is the next shield', 2], id === 'sgt' && ['you drilled this on the plain', 1], id === 'tuft' && ['her shield arm is not her good arm', -1]],
+          near:{t:()=>`Yes, but to close the last gap in time ${NAME(ROLL().who || 'brisk')} has to throw the shield across it, and the rim comes back into the shoulder like a slammed door: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'brisk', bruiseN())},
           go:'b3_c3_lock_ok', fail:'b3_c3_lock_fail'}]}),
   b3_c3_lock_ok:()=>({sp:'The line', txt:
 `"*Nathilog*," says Brisk, and the shields go rim to rim along the Fourth's stretch and on into Tav's file without a gap, a hand's width of steel and wood and nothing else, and the line stops being a row of soldiers and becomes a wall.
@@ -721,6 +723,8 @@ The acolytes form up behind you in the street. They are very young.${b3In('kettl
         {t:'Kettle\'s cusser under the middle cart. The temple is far enough back. Probably.', tag:'uses 1 cusser', req:()=>b3In('kettle') && S.inv.cusser > 0, fx:()=>{ S.inv.cusser--; S.f.b3_c3Cusser = 1; }, go:'b3_c3_cusser'},
         {t:'Dannet\'s lane behind the dyers\' houses, and take the court from the side.', check:['guile',14],
           edges:id=>[S.f.b3_c3Lane && ['Dannet showed you the lane', 2], id === 'tuft' && ['small, and very quiet', 1], id === 'brisk' && ['the lane is one shield wide', -1]],
+          near:{fx:()=>{ const d0 = b3Dread(); ally(0, 1, 'Yes, but halfway down the lane a back door stands open on a dyer\'s kitchen the Tenescowri got to first. Nobody stops. Everybody looks');
+            if (b3Dread() === d0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but halfway down the lane a back door stands open on a dyer's kitchen the Tenescowri got to first, and ${NAME(w)} looks too long: −1 on the next check.`, 'bad'); } }},
           go:'b3_c3_lane_ok', fail:'b3_c3_lane_fail'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_cusser:()=>({sp:'Kettle', txt:
@@ -943,6 +947,8 @@ ${b3In('kettle') ? `"No burners," Kettle says, before you can ask. She sounds pe
     ch:[{t:'Break the doors, and in.', go:()=>startBattle('b3_c3_granary', {})},
         {t:'Call them out first: in Malazan, and then in whatever else the squad has.', check:['wits',15],
           edges:id=>[id === 'sohra' && ['she has traded with Pannion herders', 1], id === 'tuft' && ['a cadre mage\'s ear for tongues', 1]],
+          near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but the calling goes on long enough for a pair of white-faced Barghast to drift over from the Thrall\'s steps and watch Malazans bargain with Pannions, and go back to tell the clans');
+            if (b3Trust() === t0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but it takes a long time shouting at an oak door, and ${NAME(w)} is hoarse and short-tempered by the end of it: −1 on the next check.`, 'bad'); } }},
           go:'b3_c3_granary_talk', fail:'b3_c3_granary_fail'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
   b3_c3_granary_talk:()=>({sp:'The granary', fx:()=>{ S.f.b3_c3GranaryTalked = 1; ally(0, -1, 'Four Beklites came out of the granary with their hands up'); }, txt:

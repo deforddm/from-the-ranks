@@ -57,6 +57,7 @@ Chapters are content modules (`src/40_chapter1.js`, …) registered at boot; eac
 
 Newest first.
 
+- v6.2.0 — Every skill check has its own "yes, but" cost written for its scene (54 new: 8 in Book One, 23 in Book Two, 23 in Book Three): skin, a rattle, kit, water or stragglers on the Chain, loyalty, and Book Three's trust and dread. Silver only where someone is being paid. tools/yesbut_test.mjs now fails any check without one and pays every scene cost once. Brief: docs/near-brief.md.
 - v6.1.3 — What's new caught up: notes for 6.0.0 through 6.1.2, shown once to anyone who updated without seeing them.
 - v6.1.2 — A "yes, but" never charges silver unless the scene itself is about money (a bribe, a fee). With no cost of its own, a near thing on Might costs the roller health at the start of the next fight (3, more with level); on Wits or Guile it leaves them rattled. Dryj Spring's gully flank gets its own cost. New test: tools/yesbut_test.mjs.
 - v6.1.1 — Tracker's Mark (Ellis, Sathi, Sohra) no longer uses the action: mark, then shoot. It recharges after 2 rounds (1 from level 6). New test: tools/mark_test.mjs.

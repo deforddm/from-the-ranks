@@ -717,6 +717,9 @@ He looks at you. He wants you to say something. He isn't sure what.
 "You heard him, this afternoon," he says. "So did I. I'm telling you so you'll have been told."`,
       ch:[{t:'"Whiskeyjack\'s order, Corporal. Back to your fire."', check:['guile', 14],
             edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'kettle' && ['she is talking too fast', -1]],
+            near:{fx:()=>{ const w = ROLL().who || 'sgt';
+              if (w !== 'sgt' && b3In(w)) { note(`Yes, but it was a near thing, and it was ${NAME(w)} who had to face down a man of the Host with his lads watching while you stood by. ${NAME(w)} does not thank you for that: loyalty −1.`, 'bad'); S.loy[w] ??= 0; loy(w, -1); }
+              else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but it was nearer than it looked, and afterwards you sit by the fire a long while with your hands between your knees until they stop: −1 on the next check.`, 'bad'); } }},
             go:'b3_c4_mosk_down', fail:'b3_c4_mosk_fight'},
           {t:'"Try it."', go:'b3_c4_mosk_fight'},
           {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'},

@@ -480,7 +480,10 @@ Tuft nods slowly, as if she were writing it down somewhere inside. The two of th
       ch:[{t:'"I\'m asking."', req:()=>S.f.b3_c5_asked == null && b3Trust() >= 6, fx:()=>{ S.f.b3_c5_asked = 1; }, go:'b3_c5_rider_yes'},
           {t:'"I\'m asking."', req:()=>S.f.b3_c5_asked == null && b3Trust() < 6, fx:()=>{ S.f.b3_c5_asked = 0; }, go:'b3_c5_rider_no'},
           {t:'"Sohra. Ask him the Rhivi way."', req:()=>S.f.b3_c5_asked == null && b3In('sohra'), check:['wits', 12, 'sohra'], fx:()=>{ S.f.b3_c5_asked = 0; },
-            edges:()=>[b3Trust() >= 6 && ['he has heard of the Fourth', 1], b3Trust() < 4 && ['he has heard of the Fourth', -1]], clean:{fx:()=>{ c5Loy('sohra', 1); }}, go:'b3_c5_rider_yes', fail:'b3_c5_rider_no'},
+            edges:()=>[b3Trust() >= 6 && ['he has heard of the Fourth', 1], b3Trust() < 4 && ['he has heard of the Fourth', -1]], clean:{fx:()=>{ c5Loy('sohra', 1); }},
+            near:{fx:()=>{ if (S.inv.sharper > 0) { S.inv.sharper--; note(`Yes, but the Rhivi way has a gift in it, and the gift he wants is one of the squad's sharpers, "for the spears": −1 sharper.`, 'bad'); }
+              else { S.rattled ??= {}; S.rattled.sohra = 1; note(`Yes, but the Rhivi way has a gift in it, and with nothing in the satchel to give, Sohra pays in a promise she will not repeat to you, and it sits on her: −1 on her next check.`, 'bad'); } }},
+            go:'b3_c5_rider_yes', fail:'b3_c5_rider_no'},
           {t:'Leave him to his fold of ground.'}]}),
     b3_c5_rider_yes:()=>({sp:'A Rhivi rider', fx:()=>{ S.f.b3_c5_asked = 1; }, txt:
 `He shrugs, the whole Rhivi shrug, shoulders and eyebrows and the horse's ears.
@@ -504,6 +507,7 @@ ${b3In('kettle') && S.inv.sharper > 0 ? `Kettle has a sharper in her hand and is
           {t:'Kettle\'s sharper, into the river short of their line.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c5_ford', S.f.b3_c5_read ? {pre:true, surprise:'p'} : {pre:true})},
           {t:'Read the ford before anyone goes in.', check:['wits', 14], req:()=>!S.f.b3_c5_readTried, fx:()=>{ S.f.b3_c5_readTried = 1; },
             edges:id=>[id === 'sohra' && ['she has crossed a hundred rivers with the herds', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s country', 2], id === 'ellis' && ['a scout\'s eye for ground', 1], id === 'kettle' && ['she is looking at where to throw, not where to walk', -1]],
+            near:{t:()=>`Yes, but to be sure of the shelf ${NAME(ROLL().who || 'sgt')} wades out to the knee to feel it, and a Beklite slinger on the far bank sees a target: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c5_ford_read', fail:'b3_c5_ford_miss'},
           {t:'Not yet.'}]},
     b3_c5_ford_read:()=>({sp:'The ford', fx:()=>{ S.f.b3_c5_read = 1; }, txt:
@@ -708,6 +712,9 @@ She and Sohra exchange a few words in Rhivi. Sohra's face does something complic
 ${S.f.b3_c5_ev === 1 ? `The calf is on the ground by the well, and the knife with the bright new filing is in your belt.` : S.f.b3_c5_ev === 0 ? `There's a dead calf at the bottom of it. That's all anyone can swear to.` : `Something is dead at the bottom of it. Nobody has looked properly yet.`}`,
       ch:[{t:'Have it hauled up and looked at properly.', req:()=>S.f.b3_c5_ev == null, check:['wits', 13],
             edges:id=>[id === 'ohl' && ['he has looked at worse things in water', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s wells', 2], id === 'sohra' && ['it is a Rhivi calf', 1], id === 'kettle' && ['she can tell a cut from a tear', 1]],
+            near:{fx:()=>{ const w = ROLL().who || 'sgt';
+              if (S.inv.salve > 0) { S.inv.salve--; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water, and a jar of salve goes on them: −1 salve.`, 'bad'); }
+              else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water and nothing to put on them: −1 on the next check.`, 'bad'); } }},
             go:'b3_c5_look', fail:'b3_c5_look_miss'},
           {t:'Find the man in the fur collar.', go:'b3_c5_confront'},
           {t:'Not yet.'}]} : {sp:'The well', txt:
@@ -720,8 +727,11 @@ ${c5Brisk() ? `Tav is off the cart. Tav is in the middle of it, of course he is,
 Out at the edge of the light the man with the fur collar is watching, and not moving, and smiling slightly.`,
       ch:[{t:'"Fourth! Between them. Now."', check:['might', 14],
             edges:id=>[id === 'brisk' && ['her brother is in the middle of it', 2], id === 'greysword' && ['the Grey Wall, drilled on Capustan\'s walls', 1], id === 'sgt' && ['your voice carries', 1], id === 'kettle' && ['she is better at starting noise than stopping it', -1]],
+            near:{t:()=>`Yes, but nobody told the bhederin, and a bull with somewhere to be puts ${NAME(ROLL().who || 'sgt')} into the well-head on his way past: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
             go:'b3_c5_well_calm', fail:'b3_c5_well_cut'},
-          {t:'"Sohra. The herders."', req:()=>b3In('sohra'), check:['wits', 13, 'sohra'], edges:()=>[b3Trust() >= 8 && ['the Rhivi trust the Fourth', 2], S.f.b3_c5_satSohra && ['she has been singing for days to keep from shouting', 1]], go:'b3_c5_well_calm', fail:'b3_c5_well_cut'}]},
+          {t:'"Sohra. The herders."', req:()=>b3In('sohra'), check:['wits', 13, 'sohra'], edges:()=>[b3Trust() >= 8 && ['the Rhivi trust the Fourth', 2], S.f.b3_c5_satSohra && ['she has been singing for days to keep from shouting', 1]],
+            near:{t:'Yes, but a bull swings his head at the wrong moment, and the horn passes a finger\'s width from Sohra\'s eye. She finishes the song. Her hands shake for an hour after: −1 on her next check.', fx:()=>{ S.rattled ??= {}; S.rattled.sohra = 1; }},
+            go:'b3_c5_well_calm', fail:'b3_c5_well_cut'}]},
     b3_c5_well_calm:()=>({sp:'The well', fx:()=>{ S.f.b3_c5_inc = 'calm'; ally(1, 0, 'The well held'); }, txt:
 `${by({sohra:`Sohra goes into the herd, not round it, straight in among the bulls with her staff over her head, singing. Not loudly. The bulls stop shoving to listen, and the herdsmen stop shouting because the bulls have stopped, and in the hush she says three things in Rhivi, fast and hard, and the knives go down one by one as if each of them had decided it alone.`, brisk:`Brisk goes through the Fourth Regiment the way a door goes through a draught and puts her shield between her brother and the spear, rim to the spear-point, and says "*Down*," in the regiment voice, and the Fourth Regiment remembers it is a regiment. Across the bucket the Rhivi see the shield and the voice and the big man laughing behind them, and their knives go down too.`, sgt:`You go in between them with your hands open and your sword sheathed, which is either the bravest thing you have done this spring or the stupidest, and use the voice that eleven years of marines have put in you. It carries. The Fourth Regiment's corporal hears his rank in it and shuts his mouth, and the Rhivi hear something else, and their knives go down.`, _:`{who} gets in between them, and the squad gets in behind, and for a long breath it might go either way. Then a knife goes down, and another, and the bhederin stop bellowing because the men have stopped.`})}
 
@@ -773,6 +783,8 @@ You show him the knife. He looks at the bright filing on the hilt for a long mom
 Across the green the old woman in the doorway is watching. He follows your eyes to her, and his own go flat.` : ''}`,
       ch:[{t:'"You put the calf down the well. Say it, in front of them."', check:['guile', 14], req:()=>!S.f.b3_c5_pressed, fx:()=>{ S.f.b3_c5_pressed = 1; },
             edges:()=>[S.f.b3_c5_ev === 1 && ['the knife with the fresh filing', 2], S.f.b3_c5_wit && ['an old woman saw him do it', 2], S.f.b3_c5_inc === 'cut' && ['there is blood on the ground and everyone is watching', 1]],
+            near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but he takes his time getting there, and on the way he says, pleasantly, for the Rhivi to hear, that Malazans are only tidier thieves than he is');
+              if (b3Trust() === t0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but he takes his time getting there, and the smile he gives ${NAME(w)} at the end of it stays with them: −1 on the next check.`, 'bad'); } }},
             go:'b3_c5_talked', fail:'b3_c5_draw'},
           {t:'"Take him."', go:()=>startBattle('b3_c5_wellfight')},
           {t:'Not yet.'}]}),

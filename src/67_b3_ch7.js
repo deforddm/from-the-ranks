@@ -33,6 +33,8 @@ const b3c7P = id => b3c7He(id) ? {she:'he', She:'He', her:'him', hers:'his'} : {
 const b3c7Loy = (id, n) => { if (b3In(id) && S.loy && S.loy[id] != null) loy(id, n); };
 /* Kallor knows the sergeant's face (Chapter 1's watch at the Mhybe's tent, or Chapter 5's word to Brood) */
 const b3c7Known7 = () => !!(S.f.b3_kallorEnemy || S.f.b3_kallorSaw);
+/* a "yes, but" that raises dread quietly (the cost text names it): remembers how far it actually rose */
+const b3c7Dread = n => { S.ally ??= {trust:5, dread:1}; if (S.card === 'b3c_obelisk') n = Math.max(0, n - 1); const d0 = S.ally.dread; S.ally.dread = clamp(d0 + n, 0, ALLY_MAX); const d = S.ally.dread - d0; if (d > 0) tally('dreadUp', d); updChain(); S.f.b3_c7_nearDread = d; return d; };
 /* the letter in Brisk's gorget: open (a fresh start, or an import that opened it) or still sealed */
 const b3c7Sealed = () => !!(S.imported && b3Was('c7_letter') !== 'brisk');
 /* the mortal fight's dead, this chapter */
@@ -764,6 +766,7 @@ ${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other 
 He turns back to the plain, on the good leg.`,
       ch:[{t:'"After Coral, sir."', fx:()=>{ S.f.b3_c7_wjWord = 'after'; }, go:()=>startExplore()},
           {t:'Push it. "Today, sir. Before whatever comes across that plain."', check:['guile', 17], fx:()=>{ S.f.b3_c7_wjPushed = 1; },
+            near:{t:()=>`Yes, but you pushed him in front of Brood and Korlat, and the look he gives ${NAME(ROLL().who || 'sgt')} for it is the one from Pale, the one that makes a sergeant feel like a recruit: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
             edges:id=>[id === 'ohl' && ['a healer of twenty-two years', 2], id === 'brisk' && ['she has never once asked him for anything', 1], S.f.b3_wjNoticed && ['he remembers Capustan', 1]],
             go:'b3_c7_wj_almost', fail:'b3_c7_wj_no'}]}),
   b3_c7_wj_almost:()=>({sp:'Whiskeyjack', txt:
@@ -843,6 +846,7 @@ ${b3c7Known7() ? `His eyes come round to you, slowly, and stop. "I know you," Ka
 ${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching his hands.' : ''}`,
       ch:[{t:'Go and stand somewhere.', go:()=>startExplore()},
           {t:'Hold his eye a moment longer than he likes.', check:['might', 15], fx:()=>{ S.f.b3_c7_kallorStare = 1; },
+            near:{t:()=>`Yes, but holding it costs ${NAME(ROLL().who || 'sgt')} something. For the length of that look you could see how old he is, and what he has outlived, and it walks back down the hill with you: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
             edges:id=>[id === 'brisk' && ['she has stared down worse', 1], id === 'tuft' && ['she will not look at him', -2]], go:'b3_c7_kallor_held', fail:'b3_c7_kallor_lost'}]}),
   b3_c7_kallor_held:()=>({sp:'Kallor', txt:
 `You hold it. It is like holding a coal. After a long moment something in his face becomes very slightly interested, which is worse than the contempt.
