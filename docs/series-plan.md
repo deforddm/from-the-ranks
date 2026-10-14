@@ -10,7 +10,7 @@ Tue Oct 13, 2026, 8:45 PM PDT. David's direction: no skipping ahead (one book pe
 | Four | House of Chains | Seven Cities: Aren → Raraku with the Adjunct's Fourteenth Army | **Book Two's squad**: Aren's survivors of the Seventh are folded into the Fourteenth. The Fourth stay on Genabackis (no place). |
 | Five | Midnight Tides | Lether, before the Malazans arrive | Almost no Malazans. Likely a new, local cast; neither squad returns. Open question. |
 | Six | The Bonehunters | Seven Cities: Y'Ghatan, the plague, Malaz City | **Both squads.** Onearm's Host sails to Seven Cities (Book Three's "host" ending) and meets the Fourteenth (Book Two's squad). The natural place for the two to share a book. |
-| Seven | Reaper's Gale | Lether, the Fourteenth's invasion | Book Two's squad with the Fourteenth; the Fourth if they marched with the Host. **Kettle's name clashes with the child in Midnight Tides: decide before Book Five.** |
+| Seven | Reaper's Gale | Lether, the Fourteenth's invasion | Book Two's squad with the Fourteenth; the Fourth if they marched with the Host. **Kettle keeps her name** (David, Oct 13, 2026): when the Fourth meet or hear of the Azath child Kettle, our Kettle remarks that the girl's parents had good taste, or something in that vein. |
 | Eight | Toll the Hounds | Darujhistan and Black Coral | **The Fourth** on Book Three's "daru" or "stand down" roads, a few years on. |
 | Nine–Ten | Dust of Dreams, The Crippled God | the Wastelands, Kolanse | Whoever is still with the Bonehunters. |
 
