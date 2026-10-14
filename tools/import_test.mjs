@@ -35,8 +35,8 @@ const r2 = await page.evaluate(() => ({ n: roster().list.length, z: localStorage
 r2.n === 3 && r2.z === null ? ok('imports once only') : no(`second run: ${r2.n} sergeants, zzz=${r2.z}`);
 // a fresh device: nothing to import, nothing breaks
 await page.evaluate(() => localStorage.clear()); await page.reload(); await page.waitForTimeout(600);
-const r3 = await page.evaluate(() => ({ n: roster().list.length, form: !!document.querySelector('#nm') }));
-r3.n === 0 && r3.form ? ok('a fresh device opens on the new-sergeant form') : no(`fresh device: ${JSON.stringify(r3)}`);
+const r3 = await page.evaluate(() => ({ n: roster().list.length, shelf: document.querySelectorAll('[data-shelf]').length }));
+r3.n === 0 && r3.shelf === 3 ? ok('a fresh device opens on Choose your book') : no(`fresh device: ${JSON.stringify(r3)}`);
 await br.close(); srv.kill();
 if (errors.length) { console.log('page errors:', errors); process.exit(1); }
 if (bad.length) { console.log(`import: FAIL (${bad.length})`); process.exit(1); }

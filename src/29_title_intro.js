@@ -49,25 +49,47 @@ const impShow = b => impList(b).length > 0;
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
-function showTitle(fresh){
+/* Choose your book (v6.3): the title shows the three books as covers. A returning player sees their sergeants first and the
+   shelf under them; a new device sees the shelf alone. A cover opens that book's page: its sergeants to carry on, and a new
+   sergeant for it (name, difficulty, a Book One road to bring). The book row on that page flips between books in place. */
+const coverSrcs = {};
+function coverSrc(key){ if (!ARTON() || !ART[key]) return '';
+  if (!coverSrcs[key]) { const [w, h] = ART_SIZE[key] || [1600, 900]; coverSrcs[key] = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ART[key].replace('<svg ', `<svg width="${w}" height="${h}" `)); }
+  return coverSrcs[key]; }
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
+const onShelf = (e, b) => (e.book || 'gotm') === b;
+function shelfHTML(list){
+  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${Object.values(BOOKS).map(B => {
+    const n = list.filter(e => onShelf(e, B.id)).length, src = coverSrc(B.titleArt || 'title/key');
+    return `<button class="cover" data-shelf="${B.id}" aria-label="Book ${B.word}: ${esc(B.name)}, beside ${esc(B.title)}${n ? `; ${n} sergeant${n > 1 ? 's' : ''}` : ''}">
+      <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false">` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
+      <span class="cw">Book ${B.word}</span><b>${esc(B.name)}</b><small>${esc(B.title)}</small></button>`; }).join('')}</div></div>`; }
+function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
-  const list = roster().list, form = fresh || !list.length, tb = titleBookOf(list), TB = BOOKS[tb];
-  const rows = list.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button></div>`).join('');
+  const list = roster().list, form = !!(fresh || want), tb = want && BOOKS[want] ? want : titleBookOf(list), TB = BOOKS[tb];
+  const rowsOf = (L, del) => L.map((e, i) => `<div class="sgtrow${del ? '' : ' nodel'}"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !del ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button>${del ? `<button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button>` : ''}</div>`).join('');
+  const rows = rowsOf(list, true);
+  const bookRows = b => { const L = list.filter(e => onShelf(e, b)); return L.length ? `<div class="roster"><div class="rh">Carry on in Book ${BOOKS[b].word}</div>${rowsOf(L, false)}</div>` : ''; };
   const taken = n => list.find(e => sameName(e.name, n));
+  const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : '';
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
     <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
     ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
+    <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
-    <div class="field"><label for="nm">${list.length ? 'Your new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
+    <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
-    ${!list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : ''}
+    ${iosNote}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
-    <div class="tbtns"><button class="btn primary" id="bNew">Begin</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
-      <div class="row2">${list.length ? '<button class="btn" id="bBack">Back to your sergeants</button>' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
-    : `<div class="roster"><div class="rh">${list.length > 1 ? 'Sergeants on this device' : 'Your sergeant'}</div>${rows}</div>
-    <div class="tbtns"><button class="btn" id="bNewSgt">New sergeant</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
-      <div class="row2"><button class="btn" id="bImp">Load a save code</button><button class="btn" id="bDeeds">Deeds</button></div></div>`}
+    <div class="tbtns"><button class="btn primary" id="bNew">Begin Book ${TB.word}</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
+      <div class="row2"><button class="btn" id="bBack">All books</button>${list.length ? '' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
+    : list.length ? `<div class="roster"><div class="rh">${list.length > 1 ? 'Sergeants on this device' : 'Your sergeant'}</div>${rows}</div>
+    ${shelfHTML(list)}
+    <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
+      <div class="row2"><button class="btn" id="bDeeds">Deeds</button></div></div>`
+    : `${shelfHTML(list)}${iosNote}
+    <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button></div>`}
     <div id="instSlot"></div>
     <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. Book One, Ashes of the Pale, beside Gardens of the Moon: the prologue and all seven chapters. Book Two, The Chain of Dogs, beside Deadhouse Gates: ${typeof dgChCount === 'function' && dgChCount() >= 7 ? 'all seven chapters' : typeof dgChCount === 'function' && dgChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][dgChCount()] : 'Chapter One'}. Book Three, The Fair Exchange, beside Memories of Ice: ${typeof b3ChCount !== 'function' || !b3ChCount() ? 'its chapters are being written' : b3ChCount() >= 7 ? 'all seven chapters' : b3ChCount() > 1 ? ['', '', 'Chapters One and Two', 'Chapters One to Three', 'Chapters One to Four', 'Chapters One to Five', 'Chapters One to Six'][b3ChCount()] : 'Chapter One'}. Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
   if (!ARTON()) startTitleBackdrop($('#titlecv'), tb); else titleAnim = null;
@@ -75,8 +97,11 @@ function showTitle(fresh){
   $('#bVer').onclick = () => { AUDIO.play('click'); openNotes(null); };
   if ($('#bFullT')) $('#bFullT').onclick = () => { AUDIO.play('click'); toggleFull(); };
   if ($('#bImp')) $('#bImp').onclick = () => { AUDIO.play('click'); openModal('save'); };
+  const bindLoads = root => root.querySelectorAll('.sgtrow .load').forEach(el => el.onclick = () => { AUDIO.play('click'); const s = loadSlot(el.dataset.id);
+    if (!s) { dropSlot(el.dataset.id); return showTitle(); } S = s; resume(); });
   if (form) {
     const msg = t => { $('#nmMsg').textContent = t; }, b = $('#bNew'), nm = $('#nm');
+    const label = () => `Begin Book ${BOOKS[book].word}`;
     // a name already on the roster asks twice: the second tap starts that sergeant over
     b.onclick = () => { AUDIO.play('click'); const n = nm.value.trim().replace(/\s+/g, ' ');
       if (!n) { msg('Give your sergeant a name.'); nm.focus(); return; }
@@ -88,10 +113,12 @@ function showTitle(fresh){
       if (book === 'moi') { S = newStateMOI(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
       S = newState(n); S.diff = diff; save(); showIntro(); };
     let diff = 'soldier', book = tb;
-    document.querySelectorAll('[data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('[data-book]').forEach(y => y.classList.toggle('on', y === x));
-      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); bindImp(); });
+    const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
+    document.querySelectorAll('.bseg [data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('.bseg [data-book]').forEach(y => y.classList.toggle('on', y === x));
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); bindImp();
+      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; disarm(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
-    nm.oninput = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); b.textContent = 'Begin'; msg(''); } };
+    nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
     /* picking a Book One sergeant for Book Three fills and locks the name (a fresh start unlocks it) */
     const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
@@ -99,14 +126,16 @@ function showTitle(fresh){
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi') { $('#impDesc').innerHTML = typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
-    bindImp();
-    if ($('#bBack')) $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
-    if (fresh) nm.focus();
+    bindImp(); bindLoads($('#bookRows'));
+    $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
+    if (fresh && !want) nm.focus();
   } else {
-    $('#bNewSgt').onclick = () => { AUDIO.play('click'); showTitle(true); };
-    $('#bDeeds').onclick = () => { AUDIO.play('click'); openModal('deeds'); };
-    document.querySelectorAll('.sgtrow .load').forEach(el => el.onclick = () => { AUDIO.play('click'); const s = loadSlot(el.dataset.id);
-      if (!s) { dropSlot(el.dataset.id); return showTitle(); } S = s; resume(); });
+    if ($('#bDeeds')) $('#bDeeds').onclick = () => { AUDIO.play('click'); openModal('deeds'); };
+    // a cover opens its book's page; pointing at one shows that book behind the title
+    document.querySelectorAll('[data-shelf]').forEach(el => { el.onclick = () => { AUDIO.play('click'); showTitle(false, el.dataset.shelf); };
+      el.onpointerenter = el.onfocus = () => titleDress(el.dataset.shelf); });
+    const sh = $('.shelf'); if (sh) sh.onpointerleave = () => titleDress(tb);
+    bindLoads(document);
     // erasing a sergeant asks twice: the first tap says who goes
     document.querySelectorAll('.sgtrow .del').forEach(el => el.onclick = () => { AUDIO.play('click'); const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id);
       if (el.dataset.arm) { dropSlot(el.dataset.id); return showTitle(); }

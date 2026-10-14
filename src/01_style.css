@@ -483,6 +483,23 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
   .titleart::after{background:linear-gradient(0deg,rgba(4,4,8,.6),rgba(4,4,8,0) 70%)}}
 .worldmap{display:block;width:100%;height:auto;border-radius:8px;margin:8px 0 6px;border:1px solid rgba(201,151,63,.3)}
 .meetl li{margin:6px 0}
+/* Choose your book: the three books as covers on the title (29: shelfHTML) */
+.shelf{display:flex;flex-direction:column;gap:8px}
+.shelf .rh{font-family:var(--label);font-size:.8rem;color:var(--mute);letter-spacing:.08em;text-shadow:0 1px 4px #000}
+.covers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cover{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;padding:6px 6px 8px;border:1px solid rgba(201,151,63,.45);background:linear-gradient(180deg,rgba(32,25,18,.94),rgba(14,11,9,.94));box-shadow:0 8px 22px rgba(0,0,0,.6);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.cover:hover,.cover:focus-visible{transform:translateY(-3px);border-color:var(--brass2);box-shadow:0 12px 28px rgba(0,0,0,.7),0 0 18px rgba(201,151,63,.25)}
+.cover:focus-visible{outline:2px solid var(--brass2);outline-offset:2px}
+.cover:active{transform:translateY(0)}
+.cover .cimg{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;background:radial-gradient(circle at 50% 40%,#2a2117,#0b0907);margin-bottom:4px;border:1px solid rgba(0,0,0,.6)}
+.cover .cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;display:block}
+.cover .cimg i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-style:normal;font-size:2.6rem;color:var(--brass2);text-shadow:0 0 18px rgba(201,151,63,.4)}
+.cover .cimg em{position:absolute;left:4px;bottom:4px;font-style:normal;font-family:var(--label);font-size:.66rem;letter-spacing:.06em;padding:2px 5px;background:rgba(10,8,6,.85);color:var(--brass2);border:1px solid rgba(201,151,63,.45)}
+.cover .cw{font-family:var(--label);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--brass2);opacity:.9}
+.cover b{font-family:var(--display);font-weight:400;font-size:1.02rem;line-height:1.05;color:#efe4cc}
+.cover small{font-size:.7rem;color:var(--mute);line-height:1.2;font-style:italic}
+@media (prefers-reduced-motion: reduce){.cover{transition:none}.cover:hover,.cover:focus-visible{transform:none}}
+.sgtrow.nodel{grid-template-columns:minmax(0,1fr)}
 .jbook{margin:0 0 2px;font-family:var(--label);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass2);opacity:.85}
 .chcard .bridge{font-family:var(--label);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:#cdbf9f;margin:6px 0 4px;opacity:.85}
 .narr .echo{border-left:2px solid rgba(201,151,63,.55);padding-left:10px;font-style:italic;color:#d8cbb0}
