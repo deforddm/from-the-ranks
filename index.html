@@ -616,7 +616,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.1.1';
+const VERSION = '6.1.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1477,6 +1477,11 @@ function rollAgain(r){
 }
 const TIERW = {crit:'a natural 20', clean:'clean', ok:'success', near:'yes, but…', fail:'failure', fumble:'a natural 1'};
 /* the outcome, once the dice have stopped: xp for clean work, the cost of a "yes, but", a rattle for a natural 1, a trick for a hard one */
+/* a "yes, but" with no cost of its own is paid by whoever rolled it, in a coin that fits any scene: a hard-won Might check costs skin
+   (health off the start of the next fight, never below 1), a near thing of Wits or Guile leaves them rattled. Never silver: a scene that
+   costs money says so in its own near:. */
+const bruiseN = () => 3 + lvT();
+function bruise(id, n){ if (!id) return; S.bruised ??= {}; S.bruised[id] = (S.bruised[id] || 0) + n; }
 function settleRoll(r, c){
   S.rattled ??= {}; S.lastRoll = {who:r.who, stat:r.stat, tier:r.tier, ok:r.ok, pass:r.pass, margin:r.margin, nat:r.nat}; // first, so a choice's own extras can read ROLL()
   tally(r.pass ? 'checksOk' : 'checksFail'); if (r.tier === 'clean' || r.tier === 'crit') tally('checksClean'); if (r.tier === 'near') tally('checksNear');
@@ -1485,8 +1490,8 @@ function settleRoll(r, c){
   else if (r.tier === 'clean') { gainXP(10); note(`Clean work from ${NAME(r.who)}. +10 xp.`, 'good'); extra(c.clean, 'good'); }
   else if (r.tier === 'near') {
     if (c.near && (c.near.fx || c.near.t)) extra(c.near, 'bad');
-    else if (S.silver >= 3) { S.silver -= 3; AUDIO.play('coin'); note(`Yes, but it costs: three silver to make it go away.`, 'bad'); }
-    else { S.rattled[r.who] = 1; note(`Yes, but ${NAME(r.who)} comes out of it rattled: −1 on their next check.`, 'bad'); } }
+    else if (r.stat === 'might') { const n = bruiseN(); bruise(r.who, n); note(`Yes, but ${NAME(r.who)} pays for it in skin: ${n} health down at the start of the next fight.`, 'bad'); }
+    else { S.rattled[r.who] = 1; note(`Yes, but it takes it out of ${NAME(r.who)}: rattled, −1 on their next check.`, 'bad'); } }
   else if (r.tier === 'fumble') { S.rattled[r.who] = 1; note(`A natural 1. ${NAME(r.who)} is rattled: −1 on their next check.`, 'bad'); extra(c.fumble, 'bad'); }
   if (r.ok && c.trick) earnTrick(c.trick, r.who);
   save();
@@ -4483,6 +4488,7 @@ function startBattle(id, opt={}){
   B = {def, id, opt, snap, warren:def.warren || {meanas:1, denul:1}, units:[], order:[], idx:-1, round:0, fires:[], smoke:[], fx:[], parts:[], log:[], used:Object.assign({}, opt.used || {}), cur:null, moved:false, acted:false, mode:null, aim:null, busy:true, over:false, turn:0, anim:null};
   SQUAD().forEach((pid,i) => { const p = def.party[i] || def.party[def.party.length - 1]; const at = freeNear(p[0], p[1]) || {x:p[0], y:p[1]}; B.units.push(mkParty(pid, at.x, at.y)); });
   if (opt.carry) B.units.forEach(u => { if (u.side === 'p' && opt.carry[u.id] != null) { u.hp = clamp(opt.carry[u.id], 1, u.maxhp); u.strain = (opt.strain && opt.strain[u.id]) || 0; } }); // into the second area as they came out of the first
+  if (!opt.carry && S.bruised) { B.units.forEach(u => { const n = S.bruised[u.id]; if (u.side === 'p' && n > 0) { u.hp = Math.max(1, u.hp - n); B.log.push(`${u.name} comes into it still sore from the last close thing: ${n} health down.`); } }); S.bruised = {}; } // a "yes, but" paid in skin (16)
   (def.allies || []).forEach(a => { const at = freeNear(a[1], a[2]); if (at) B.units.push(mkAlly(a[0], at.x, at.y)); });
   def.foes.forEach((f,i) => { if (opt.drop && opt.drop.includes(i)) return; B.units.push(mkFoe(f[0], f[1], f[2], f[0]==='stone' && S.f.noisy ? 10 : 0)); });
   const squadInit = (SQUAD().some(id => has(id,'sappers_eye')) ? 2 + lvAt(6) : 0) + (S.card === 'raven' ? 2 : 0);
@@ -22209,6 +22215,7 @@ ${b2In('haddat') ? `"They want water," Haddat says. "That is all. They are thirs
         {t:'Tangle\'s sharper into the tamarisks where they\'re bunching.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_spring', {pre:true})},
         {t:'Sathi and Hackle go round by the gully to take them from behind.', check:['guile',14], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'haddat' && ['she can hear their dialect', 1]],
+          near:{t:()=>`Yes, but the last of them heard the dog. He is down now, but a lance-butt found ${NAME(ROLL().who || 'sathi')} in the scrub on the way: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
           go:'b2_spring_round', fail:'b2_spring_seen'}]}),
   b2_spring_round:()=>({sp:'Dryj Spring', txt:
 `${by({sathi:`Sathi slides off down the gully on her belly with the dog beside her, and the two of them are gone into the scrub so completely that you stop being able to say where. A minute later the Tithansi bowman at the back of the party sits down with an arrow in him, and the one beside him turns round into a Wickan cattle-dog.`,

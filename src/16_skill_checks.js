@@ -55,6 +55,11 @@ function rollAgain(r){
 }
 const TIERW = {crit:'a natural 20', clean:'clean', ok:'success', near:'yes, but…', fail:'failure', fumble:'a natural 1'};
 /* the outcome, once the dice have stopped: xp for clean work, the cost of a "yes, but", a rattle for a natural 1, a trick for a hard one */
+/* a "yes, but" with no cost of its own is paid by whoever rolled it, in a coin that fits any scene: a hard-won Might check costs skin
+   (health off the start of the next fight, never below 1), a near thing of Wits or Guile leaves them rattled. Never silver: a scene that
+   costs money says so in its own near:. */
+const bruiseN = () => 3 + lvT();
+function bruise(id, n){ if (!id) return; S.bruised ??= {}; S.bruised[id] = (S.bruised[id] || 0) + n; }
 function settleRoll(r, c){
   S.rattled ??= {}; S.lastRoll = {who:r.who, stat:r.stat, tier:r.tier, ok:r.ok, pass:r.pass, margin:r.margin, nat:r.nat}; // first, so a choice's own extras can read ROLL()
   tally(r.pass ? 'checksOk' : 'checksFail'); if (r.tier === 'clean' || r.tier === 'crit') tally('checksClean'); if (r.tier === 'near') tally('checksNear');
@@ -63,8 +68,8 @@ function settleRoll(r, c){
   else if (r.tier === 'clean') { gainXP(10); note(`Clean work from ${NAME(r.who)}. +10 xp.`, 'good'); extra(c.clean, 'good'); }
   else if (r.tier === 'near') {
     if (c.near && (c.near.fx || c.near.t)) extra(c.near, 'bad');
-    else if (S.silver >= 3) { S.silver -= 3; AUDIO.play('coin'); note(`Yes, but it costs: three silver to make it go away.`, 'bad'); }
-    else { S.rattled[r.who] = 1; note(`Yes, but ${NAME(r.who)} comes out of it rattled: −1 on their next check.`, 'bad'); } }
+    else if (r.stat === 'might') { const n = bruiseN(); bruise(r.who, n); note(`Yes, but ${NAME(r.who)} pays for it in skin: ${n} health down at the start of the next fight.`, 'bad'); }
+    else { S.rattled[r.who] = 1; note(`Yes, but it takes it out of ${NAME(r.who)}: rattled, −1 on their next check.`, 'bad'); } }
   else if (r.tier === 'fumble') { S.rattled[r.who] = 1; note(`A natural 1. ${NAME(r.who)} is rattled: −1 on their next check.`, 'bad'); extra(c.fumble, 'bad'); }
   if (r.ok && c.trick) earnTrick(c.trick, r.who);
   save();

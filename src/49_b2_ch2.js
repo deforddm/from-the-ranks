@@ -332,6 +332,7 @@ ${b2In('haddat') ? `"They want water," Haddat says. "That is all. They are thirs
         {t:'Tangle\'s sharper into the tamarisks where they\'re bunching.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_spring', {pre:true})},
         {t:'Sathi and Hackle go round by the gully to take them from behind.', check:['guile',14], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle goes first', 2], id === 'haddat' && ['she can hear their dialect', 1]],
+          near:{t:()=>`Yes, but the last of them heard the dog. He is down now, but a lance-butt found ${NAME(ROLL().who || 'sathi')} in the scrub on the way: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
           go:'b2_spring_round', fail:'b2_spring_seen'}]}),
   b2_spring_round:()=>({sp:'Dryj Spring', txt:
 `${by({sathi:`Sathi slides off down the gully on her belly with the dog beside her, and the two of them are gone into the scrub so completely that you stop being able to say where. A minute later the Tithansi bowman at the back of the party sits down with an arrow in him, and the one beside him turns round into a Wickan cattle-dog.`,

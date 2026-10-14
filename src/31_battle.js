@@ -100,6 +100,7 @@ function startBattle(id, opt={}){
   B = {def, id, opt, snap, warren:def.warren || {meanas:1, denul:1}, units:[], order:[], idx:-1, round:0, fires:[], smoke:[], fx:[], parts:[], log:[], used:Object.assign({}, opt.used || {}), cur:null, moved:false, acted:false, mode:null, aim:null, busy:true, over:false, turn:0, anim:null};
   SQUAD().forEach((pid,i) => { const p = def.party[i] || def.party[def.party.length - 1]; const at = freeNear(p[0], p[1]) || {x:p[0], y:p[1]}; B.units.push(mkParty(pid, at.x, at.y)); });
   if (opt.carry) B.units.forEach(u => { if (u.side === 'p' && opt.carry[u.id] != null) { u.hp = clamp(opt.carry[u.id], 1, u.maxhp); u.strain = (opt.strain && opt.strain[u.id]) || 0; } }); // into the second area as they came out of the first
+  if (!opt.carry && S.bruised) { B.units.forEach(u => { const n = S.bruised[u.id]; if (u.side === 'p' && n > 0) { u.hp = Math.max(1, u.hp - n); B.log.push(`${u.name} comes into it still sore from the last close thing: ${n} health down.`); } }); S.bruised = {}; } // a "yes, but" paid in skin (16)
   (def.allies || []).forEach(a => { const at = freeNear(a[1], a[2]); if (at) B.units.push(mkAlly(a[0], at.x, at.y)); });
   def.foes.forEach((f,i) => { if (opt.drop && opt.drop.includes(i)) return; B.units.push(mkFoe(f[0], f[1], f[2], f[0]==='stone' && S.f.noisy ? 10 : 0)); });
   const squadInit = (SQUAD().some(id => has(id,'sappers_eye')) ? 2 + lvAt(6) : 0) + (S.card === 'raven' ? 2 : 0);
