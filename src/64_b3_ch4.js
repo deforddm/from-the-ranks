@@ -303,7 +303,7 @@ He rubs his thumb across his fingers. "The Host has a tent at the gap. Brood's p
           {t:'"Don\'t come back bleeding."', go:()=>startExplore()},
           {t:'Walk the stretch.', go:()=>startExplore()}]}),
     b3_c4_start_brisk:()=>({sp:'Brisk', scene:'b3_c4_prisoners', txt:
-`"Six days' bread for six${c4In('kettle') ? ', if nobody eats like Kettle' : ''}." Brisk doesn't look up from the sacks. "Two salve jars. Dried meat from the Rhivi, which tastes of the horse it came off. The Host feeds us at the big fires twice a day. The cart's not ours. The cart goes over the ditch at dawn and comes back empty."
+`"Six days' bread for ${numw(S.squad.length)}${c4In('kettle') ? ', if nobody eats like Kettle' : ''}." Brisk doesn't look up from the sacks. "Two salve jars. Dried meat from the Rhivi, which tastes of the horse it came off. The Host feeds us at the big fires twice a day. The cart's not ours. The cart goes over the ditch at dawn and comes back empty."
 
 She ties the sack off. "A handful a head, over there. Meal and Rhivi meat, when the carts come. The quartermaster says the Host's short. Brood's short. Everyone's short." She looks north, once, the length of a breath. "I counted the children by the ditch on our stretch. I stopped."`,
       ch:[{t:'"Ohl. How bad is it over there?"', req:()=>c4In('ohl') && !S.f.b3_c4_askOhl, fx:()=>{ S.f.b3_c4_askOhl = 1; }, go:'b3_c4_start_ohl'},
@@ -418,7 +418,7 @@ ${C4.mother} doesn't understand a word of it. She listens to all of it anyway, w
 "The grass is listening," Sohra says, getting up. "Over there too. I was not sure it would be." She doesn't look back at the shelters. "It is listening very hard. It has a great deal to listen to."`,
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
     b3_c4_sarn_bread:()=>({sp:C4.mother, txt:
-`A day's bread for six goes through the stakes in four pieces. ${c4In('brisk') ? `Brisk hands it over herself, without being asked, and writes it in the ration ledger afterward without being asked either: *One day. Gap. Not lost.*` : `You hand it over yourself.`}
+`A day's bread for ${numw(S.squad.length)} goes through the stakes in four pieces. ${c4In('brisk') ? `Brisk hands it over herself, without being asked, and writes it in the ration ledger afterward without being asked either: *One day. Gap. Not lost.*` : `You hand it over yourself.`}
 
 ${C4.mother} breaks the first piece into smaller pieces, and the smaller pieces into crumbs, and wets them from a cup, and feeds the boy a crumb at a time. She doesn't eat any. She doesn't thank you. She puts the rest inside her shirt against her skin, where nobody will see it in the night, and looks at you the way you would look at a door that had opened when you had not knocked.
 
@@ -719,7 +719,8 @@ He looks at you. He wants you to say something. He isn't sure what.
             edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'kettle' && ['she is talking too fast', -1]],
             go:'b3_c4_mosk_down', fail:'b3_c4_mosk_fight'},
           {t:'"Try it."', go:'b3_c4_mosk_fight'},
-          {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'}]}),
+          {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'},
+          {t:'Not yet. Watch them a moment longer.', go:()=>startExplore()}]}),
     b3_c4_mosk_down:()=>({sp:'Corporal ' + C4.corporal, fx:()=>{ S.f.b3_c4_mosk = 'talked'; ally(1, 0, 'The Rhivi saw the order kept'); }, txt:
 `${by({brisk:`Brisk walks up to him until they are a hand apart, which with the two of them is not far, and says one thing, very quietly, in the voice the heavy regiments use in the line when the line is about to break. You don't hear what. ${C4.corporal} does.`, greysword:`Dannet steps up beside you with her shield on her arm. "I was on the wall on the second day," she says to him. "I saw what they did. I saw who told them to. You are not going over that ditch to find him. He is not there."`, sgt:`You say it once, in the voice you have used maybe four times in eleven years, the one that does not argue because it has already won.`, _:`{who} says it once, in the voice you use when there is no second time.`})}
 
@@ -796,7 +797,7 @@ ${b3Mind() === 'haunted' ? `Nobody has slept since the gully. Everyone keeps loo
 She puts the card back in the Deck very carefully. "I wanted to be near her," she says. "I've wanted it all spring. I'm glad I'm here. I'm glad I'm *here*, and I'm ashamed of being glad."`,
       ch:[{t:'"Sleep, if you can."', go:'b3_c4_fire'}]}),
     b3_c4_fire_sohra:()=>({sp:'Sohra', txt:
-`"Alone." Sohra is sitting cross-legged with her bow across her knees, facing south-east. "The child went out with the fat Daru this afternoon, and your two marines. The Mhybe sat at her tent door all evening and did not sing, and did not eat, and when I went to her she did not know me for a moment." She is quiet for a while. "She was young at the turn of the year, herd-mother. I remember. I am not mad. She was *young*."
+`"Alone." Sohra is sitting cross-legged with her bow across her knees, facing south-east. "The child went out with the fat Daru this afternoon, and your two marines. The Mhybe sat at her tent door all evening and did not sing, and did not eat, and when I went to her she did not know me for a moment." She is quiet for a while. "She taught me the calving song, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. This spring. I remember. I am not mad. She was *young*."
 
 ${c4In('ohl') ? `Ohl, without looking up from the tea: "I know, child. I have been watching too."` : 'Nobody at the fire tells her she is mad.'} Sohra doesn't cry. She picks up her bow and checks the string, which did not need checking.`,
       ch:[{t:'Let her be.', go:'b3_c4_fire'}]}),
@@ -908,7 +909,7 @@ They sit there. The sun comes up. Neither of them says *we don't leave people*. 
 
 "They're on your side now, Sergeant," he says. "Your side of the ditch. They're not on my count." He doesn't say whose count they're on. "The Host feeds its own. I've no orders for these."
 
-${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for six," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
+${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for ${numw(S.squad.length)}," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
 
 ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are wrapped in rags that have stopped being white. He doesn't say anything. He doesn't need to say anything. He is looking at the salve jars.` : 'A girl at the end of the row has her feet wrapped in rags that have stopped being white.'}`,
       ch:[{t:'Open the sacks. The children and the sick, the bread and the salves.', fx:()=>{ S.f.b3_c4_key = 'share'; S.f.b3_wjNoticed = 1; const n = Math.min(2, S.inv.salve || 0); S.inv.salve = (S.inv.salve || 0) - n; S.f.b3_c4_salvesGiven = n; ally(2, -2, 'The Fourth\'s own bread'); if (c4In('ohl')) loy('ohl', 1); if (c4In('sohra')) loy('sohra', 1); if (c4In('brisk')) loy('brisk', -1); }, go:'b3_c4_share'},
@@ -917,7 +918,7 @@ ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are w
     b3_c4_share:()=>({sp:'The ration cart', txt:
 `The Fourth opens its sacks. ${c4In('brisk') ? `Brisk does it herself, after a moment, because if it is going to be done it is going to be done properly: she breaks the bread into even pieces with her knife and gives them out down the row, one each, and the dried meat after, and writes it in the ledger as she goes: *Six days. Gap. Given.*` : `The bread goes down the row in even pieces, one each, and the dried meat after.`} ${c4In('ohl') ? `Ohl kneels at the end of the row with the salve jars, ${S.f.b3_c4_salvesGiven ? `${S.f.b3_c4_salvesGiven === 1 ? 'the last of them' : 'both of them'}, and unwraps the girl's feet, and does not make a face, and does them properly, with boiled cloth.` : `which are empty already, and does what he can with boiled cloth.`}` : S.f.b3_c4_salvesGiven ? `The salve goes on the worst feet, and the worst hands.` : ''}
 
-It is not very much. Six days' bread for six does not go far down a row like that. It goes far enough that the children at the end of it get some.
+It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.
 
 Down at the end of the line, by the dead tree, Whiskeyjack has stopped talking to the quartermaster. He is looking at the Fourth's empty sacks. He doesn't come over. He doesn't say anything. After a while he nods, once, to nobody you can see, and walks on up the line, slowly, on the leg.
 

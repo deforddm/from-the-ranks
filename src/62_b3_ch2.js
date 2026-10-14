@@ -186,7 +186,7 @@ ${b3In('sohra') ? `
 At the top, beside the fire they made of it, a man in grey with a long mace across his knees is getting up without any hurry at all.`,
         map:["#..##..#","........",".#....#.","...##...","........",".#....#.","........","..,..,..","........","##....##"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b3_c2_seer',3,1],['b3_c2_betakullid',1,2],['b3_c2_betakullid',6,2],['b3_c2_betabow',5,0]]} },
+        foes:[['b3_c2_seer',3,1],['b3_c2_betakullid',0,1],['b3_c2_betakullid',5,1],['b3_c2_betabow',5,0]]} },
     /* the night raid on the herd lines: hold until the Rhivi are mounted, then the one who sent them */
     b3_c2_night:{title:'The herd lines', style:'b3_c2_plain_night', dark:true, open:true, warrenText:'Night on the plain · the warrens clean, for now', warren:{meanas:1, denul:1}, music:'battle',
       map:["........",".,....,.","..#.....","........","...,,...","........",".....#..","........","........","........"],
@@ -204,7 +204,7 @@ All but one. Back where the grass rises, a man in grey sits a tall horse and wat
 "Seerdomin," Sohra says, very quietly. "That is what the word means. The Seer's own." She does not look frightened. She looks like a woman memorising a face.` : ''}`,
         map:["..,..,..","........",".#....#.","........","........","..,..,..","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_seerdomin',3,1],['b3_c2_betakullid',1,2],['b3_c2_betakullid',6,2],['b3_c2_betabow',4,0]]} },
+        foes:[['b3_seerdomin',3,1],['b3_c2_betakullid',0,1],['b3_c2_betakullid',5,1],['b3_c2_betabow',4,0]]} },
     /* the flood, the herd's road: the riders who have shadowed the column since the hill come for the scattered herd and the children */
     b3_c2_herdfight:{title:'The far bank', style:'b3_c2_plain', open:true, warrenText:'Dusk after the flood · the warrens clean, for now', warren:{meanas:1, denul:1}, music:'battle',
       map:["--------","..,..,..","........",".#....#.","........","..,..,..","........",".#....#.","........","........"],
@@ -235,7 +235,7 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
 "That's Tav's wagon," Brisk says. She doesn't raise her voice. She doesn't need to.` : ''}`,
         map:["--------","...##...","........","..#..#..","........","........",".,....,.","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_c2_betacap',3,1],['b3_c2_betakullid',1,2],['b3_c2_betabow',6,0]],
+        foes:[['b3_c2_betacap',2,0],['b3_c2_betakullid',1,2],['b3_c2_betabow',6,0]],
         waves:[{round:2, foes:[['b3_c2_betakullid',0,4]], text:'One more out of the water, soaked to the chest, lance first.'}]} } },
 
   foes:{
@@ -411,9 +411,9 @@ Brisk watches him a while longer. Then she comes back to the squad. "Sergeant," 
 
 Behind him, at a little distance, a younger man with the same broad face and the same beard, and a crossbow cocked and pointed at the ground, very carefully at the ground, is watching the squad without blinking.
 
-"That's one of my brothers," the Bole says. "Don't mind him. He's counting." He holds out the jug. "Mott Irregulars. Brothers, all of us, one family, one wood. Woodcutters and farmers till you lot came to Mott Wood and made us into something else." He beams. "Year and a half we had your Bridgeburners chasing round those trees. Good times. Nobody ever caught a Bole in Mott Wood." He considers. "Nobody ever caught a Bole anywhere. Drink?"`,
+"That's one of my brothers," the Bole says. "Don't mind him. He's counting." He holds out the jug. "Mott Irregulars. Brothers, all of us, one family, one wood. Woodcutters and farmers till you lot came to Mott Wood and made us into something else." He beams. "Your Bridgeburners know the Mott. Ask them about the Boles, when you see 'em. Watch their faces." He considers. "Good times. Drink?"`,
     ch:[{t:'Drink from the jug.', fx:()=>{ S.f.b3_c2_mottJug = 1; ally(1, 0, 'A jug with the Mott Irregulars'); }, go:'b3_c2_mott_drink'},
-        {t:'"What\'s she counting?"', go:'b3_c2_mott_count'},
+        {t:'"What\'s he counting?"', go:'b3_c2_mott_count'},
         {t:'"We\'re on the march. Another time."', go:'b3_c2_mott_no'}]}),
   b3_c2_mott_drink:()=>({sp:'A Bole', txt:
 `It is not wine. It is not beer. It is something that was a pear once, a long time ago, before the Boles got to it, and it goes down like a lit fuse.

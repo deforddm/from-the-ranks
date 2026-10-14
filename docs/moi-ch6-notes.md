@@ -19,6 +19,7 @@ Chosen at `b3_c6_after_field` (or Whiskeyjack in the camp, or "Give me tonight" 
 ## Flags later chapters may read
 
 - `b3_c6_key` 'quorl' | 'maurik'; `b3_flew` 1 / `b3_river` 1 (exactly one of them).
+- `b3_herdMother` = 1 when Sohra hears the truth at the river (she says "Herd-mother."); before that she says "Sergeant" unless Chapter 2 set it.
 - `b3_c6_ask`: what the sergeant told the Rhivi about the companies going — 'truth' | 'lie' | 'later' (unanswered: a quorl-road squad that said "ask me at the Maurik" never got there) — and `b3_c6_askWho` 'sohra' | 'rider'. On the maurik road 'later' becomes 'truth' or 'lie' at the river.
 - `b3_c6_loud` 1: a sharper was thrown on the lift field (trust −1 then).
 - `b3_c6_seed` 'rhivi' | 'left' | 'qm' (seed grain in a burnt farm's cellar).
@@ -27,7 +28,7 @@ Chosen at `b3_c6_after_field` (or Whiskeyjack in the camp, or "Give me tonight" 
 - `b3_c6_ohlWeek` 1 (Ohl offered Whiskeyjack the week; "after Coral") · `b3_c6_mallet` 1 (the sergeant said "Mallet's week" to his face; "after Coral") · `b3_legSeen` 1 on maurik.
 - `b3_c6_raidDone`, `b3_c6_hullLost` 1/0, `b3_c6_ambDone`, `b3_c6_barghastCame` 1/0, `b3_c6_logs` 'won' | 'lost' (a log race with a White Face warrior).
 - `b3_c6_herds` 'sohra' | 'asked' | 'slow' | 'wait' (Rhivi bhederin on Maurik's landing).
-- `b3_c6_brood` 1: watched Brood find out, from the guard line; `b3_kallor` = 1 there (a Rhivi names him). `b3_c6_kallorLook` 1: Kallor spoke to the sergeant at the river (and, if `b3_kallorSaw`/`b3_kallorEnemy`, said "I know you"). `b3_c6_korlat` 1: Korlat asked the sergeant to tell *her*, not Whiskeyjack, if he falls behind on the road — **Ch7 may pay this off** (the squad is too far when he falls; rule 2).
+- `b3_c6_brood` 1: watched Brood find out, from the guard line; `b3_kallor` = 1 there (a Rhivi names him). `b3_c6_kallorLook` 1: Kallor spoke to the sergeant at the river (and, if `b3_kallorSaw`/`b3_kallorEnemy`, said "I have seen you before"; Chapter 7's "I know you" places the face). `b3_c6_korlat` 1: Korlat asked the sergeant to tell *her*, not Whiskeyjack, if he falls behind on the road — **Ch7 may pay this off** (the squad is too far when he falls; rule 2).
 - Earlier flags read: `b3_c5_key === 'quiet'` → trust −1 after the field and Whiskeyjack mentions the rumour (default: no penalty); `b3_kallorSaw` / `b3_kallorEnemy` (Kallor knows the face; Hurlochel warns; Kallor's line at Maurik); `b3_kallor` (named or "the tall man in the fur-collared cloak"); `b3_treach` (Gruntle named at the ford, else "Capan soldiers with tiger stripes"); `b3_dannetDone`; `b3Was('c7_letter')` (the letter sealed for an import); `b3Fallen()` includes 'brisk' (Tav comes to the sergeant instead).
 
 ## Inventions

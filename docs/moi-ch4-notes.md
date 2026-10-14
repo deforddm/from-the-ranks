@@ -16,6 +16,7 @@
 
 ## The key: `S.f.b3_c4_key`
 
+- (Continuity pass: "six days' bread for" now counts the squad; Sohra's "herd-mother" at the night fire reads `b3_herdMother`, else "Sergeant".)
 - **`share`**: the squad's bread and up to two salves (`S.inv.salve` −2, floor 0; the count given in `b3_c4_salvesGiven`) go to the children and sick who came over the stakes. `ally(+2 trust, −2 dread)`, Ohl and Sohra loyalty +1, Brisk −1. **`S.f.b3_wjNoticed = 1`**: Whiskeyjack sees it from the dead tree and nods. Later chapters may let Whiskeyjack or a squadmate remember it (Ch7 especially).
 - **`hold`**: supplies kept. `ally(0, +2 dread)`, Ohl loyalty −1 (he does one girl's feet with his own cloth and won't look at the sergeant), Brisk +1. Nobody says out loud it was the right sum.
 

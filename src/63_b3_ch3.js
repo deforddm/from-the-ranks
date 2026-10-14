@@ -210,8 +210,8 @@ A Seerdomin. The Seer's own. ${c3Brisk() ? `"One," says Brisk. "Just the one." S
 Dannet, beside you, says one word in Capan. You do not need it translated.`,
         map:["#tttttt#","#......#","#.=..=.#","#......#","#......#","#..w...#","#......#","#......#","#......#","#......#"],
         party:P6,
-        foes:[['b3_c3_file',3,1],['b3_beklite',2,2],['b3_beklite',5,2],['b3_c3_pbow',6,0]],
-        waves:[{round:2, foes:[['b3_tenescowri',0,3],['b3_tenescowri',7,3]], text:'Two of the starving come out of a doorway on the court, where they have been all along, and do not look at anything but the nearest of you.'}]} },
+        foes:[['b3_c3_file',3,1],['b3_beklite',2,2],['b3_beklite',5,2],['b3_c3_pbow',5,1]],
+        waves:[{round:2, foes:[['b3_tenescowri',1,2],['b3_tenescowri',6,2]], text:'Two of the starving come out of a doorway on the court, where they have been all along, and do not look at anything but the nearest of you.'}]} },
 
     /* dusk: Beklites barred into a granary in the next Camp, with the last grain in it (optional) */
     b3_c3_granary:{title:'The granary', style:'b3_c3_city', dark:true, pitTxt:'the granary', warrenText:'The Camps at night · the warrens are poisoned here: a spell may burn its caster', warren:{denul:1, meanas:1}, music:'battle',

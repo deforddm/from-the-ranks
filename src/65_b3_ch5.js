@@ -266,7 +266,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     if (f.b3_c5_glean === 'fed') x.push('A woman gleaning single grains in the stubble on the south shore has a day of the Host\'s hardtack in her skirt.');
     if (f.b3_c5_glean === 'north') x.push('A woman gleaning in the stubble walked north to find the Grey Swords, on Dannet\'s word.');
     if (f.b3_c5_blood) x.push(`${c5Name(f.b3_c5_blood)} held an Ilgres shaman's knife while he said the blood-iron words, and did not let go.`);
-    if (f.b3_c5_leg) x.push('Whiskeyjack says the leg can have a month after Coral. Not before.');
+    if (f.b3_c5_leg) x.push('Whiskeyjack says Mallet can have his week after Coral. Not before.');
     if (f.b3_c5_quorls) x.push('Kettle counts the quorls at dusk and again at dawn, and the numbers do not agree. It is in the ledger.');
     if (preUsed('b3_c5_ford')) x.push('Kettle put a sharper in a river and the river got up and landed on a Beklite line. She wants it noted that this was a first.');
     return x; },
@@ -283,7 +283,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
 
   dlg:{
     /* ---- the south shore ---- */
-    b3_c5_start:()=>({sp:'The south shore', scene:'b3_c5_catlin', html:allyHTML('South of the Catlin · the Domin begins'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_c5_started = 1; ally(0, 1, 'The Domin'); }, txt:
+    b3_c5_start:()=>({sp:'The south shore', scene:'b3_c5_catlin', html:allyHTML('South of the Catlin · the Domin begins'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_kallor = 1; S.f.b3_c5_started = 1; ally(0, 1, 'The Domin'); }, txt:
 `The Fourth comes up out of the ford on the third morning with the Catlin to its knees, and then to its shins, and then at last only in its boots, where it means to stay for a week.
 
 The south shore is a field. It was a field. Somebody cut the barley green, before it had headed, and carried every sheaf away, and then came back for the stubble with rakes. There are no birds on it. There is nothing on it for a bird.
@@ -304,7 +304,7 @@ ${b3In('tuft') ? `Tuft, beside him, has her hands up her sleeves. "Meanas too," 
     b3_c5_start_sohra:()=>({sp:'Sohra', scene:'b3_c5_catlin', fx:()=>{ S.f.b3_c5_askSohra = 1; S.f.b3_c5_mhybe = 1; }, txt:
 `Sohra is sitting on her heels at the edge of the stubble with her bow across her knees, not singing. It takes a moment to see what is wrong with the picture. Sohra is always singing.
 
-"The Mhybe is not on this side of the river," she says, before you can ask. "The two Daru took her back to the city. In a wagon, with blankets. They say there is a temple in Capustan that can ease her." She says *ease* the way ${c5Brisk() ? 'Brisk' : 'a quartermaster'} says *a week*. "She was young at the turn of the year, Sergeant. She cannot lift a cup now."
+"The Mhybe is not on this side of the river," she says, before you can ask. "The two Daru took her back to the city. In a wagon, with blankets. They say there is a temple in Capustan that can ease her." She says *ease* the way ${c5Brisk() ? 'Brisk' : 'a quartermaster'} says *a week*. "At Pale she could still sit a horse, Sergeant. She cannot lift a cup now."
 
 She looks across the column to where Brood's people are still coming up out of the ford, and somewhere among them a girl walks on her own, straight-backed, at a distance from everyone. "Her daughter did not go with her. Her daughter is angry. The bones will not tell me with whom."
 
@@ -668,7 +668,7 @@ A pause.
       ch:[{t:'"The leg, sir."', req:()=>!S.f.b3_c5_leg, go:'b3_c5_wj_leg'},
           {t:'Leave him to his bucket.'}]}),
     b3_c5_wj_leg:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c5_leg = 1; S.f.b3_legSeen = 1; }, txt:
-`"Mallet wants a week." He says it the way you would say *it'll rain*. "He's wanted a week since Darujhistan. Flat on my back, he says, and he'll put it right."
+`"Mallet's not here to ask." He says it the way you would say *it'll rain*. "When he sees me he'll want his week. Flat on my back, he says, and he'll put it right."
 
 ${b3In('ohl') ? `Ohl, behind you, clears his throat. "I'd want less than a week, sir. Three days. Denul's bad down here; I'd go slow. But three days would do it."
 
@@ -676,7 +676,7 @@ Whiskeyjack looks at him, not unkindly. "After," he says.` : `"After," he says.`
 
 "After what, sir?"
 
-"Coral." He shifts the leg, and doesn't let his face move while he does it. "Then Mallet can have a month."`,
+"Coral." He shifts the leg, and doesn't let his face move while he does it. "Then Mallet can have his week."`,
       ch:[{t:'Leave him to his bucket.'}]}),
     b3_c5_herd:()=>({sp:'A Rhivi herd-mother', fx:()=>{ S.f.b3_c5_herd = 1; }, txt: S.f.b3_c5_key ?
 `The herd-mother is at the trough with her staff, counting the bulls as they drink, and does not lose count when you come up.
@@ -917,7 +917,7 @@ function c5FireLine(){
 function c5CloseLines(){ const f = S.f, out = [];
   if (b3In('brisk')) out.push(f.b3_c5_key === 'brood' ? `Brisk writes in the ledger by the last of the fire. *One well. Shared. One man to Brood's fire.* Then, smaller, under it: *Kallor.* She looks at the word for a while, and doesn't cross it out.` : `Brisk writes in the ledger by the last of the fire. *One well. Shared. No names.* She looks at it a while. "No names," she says. "That's the bit that'll come back. You watch."`);
   if (b3In('kettle')) out.push(f.b3_c5_quorls ? `Kettle is asleep sitting up, with the ledger open on her knee at the page with the quorls on it.` : `Kettle counts the satchel by touch, under her breath, and arrives at the same number twice, and seems disappointed.`);
-  if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's taller than the Mhybe was, at the turn of the year." She doesn't look away. "Nobody sits near her."`);
+  if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's as tall as a grown woman now." She doesn't look away. "Nobody sits near her."`);
   if (b3In('ohl')) out.push(f.b3_c5_orley ? `Ohl has the list open. He has turned back to the ford: *Orley.* He reads the name, and the ones above it, all the way up, with his lips moving.` : `Ohl has the list open on his knee and reads it with his lips moving, all of it, ${b3ListWords()}.`);
   if (b3In('sohra')) out.push(`Sohra sings to the bulls, low, from the edge of the light. Somewhere in it, you're nearly sure now, is the Mhybe's name.`);
   if (b3In('greysword')) out.push(`Dannet has the pot of grey paint out and is working on the wolf on her shield, a stroke at a time, by firelight. It is still not finished. "When I know what it's for," she says, when she sees you looking.`);

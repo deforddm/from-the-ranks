@@ -616,7 +616,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '5.4.0';
+const VERSION = '6.0.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -34320,7 +34320,7 @@ Then the camp goes quiet in a different way.
 
 A tall man comes down between the tents with two men in grey and fur a pace behind him: gaunt, grey, in a fur-collared cloak, unhurried, as if the night belonged to him and he had come to see what had been done with it. He looks at the dead brigand. He looks at the painted door-flap, for a long moment, and something moves in his face that is not pity. Then he looks at you.
 
-It is a long look. It is the look of a man writing a name in a book he has kept for longer than the Empire has had a name, in a hand that does not hurry.
+It is a long look. It is the look of a man writing a name in a book he has kept since before there were Malazans to write in it, in a hand that does not hurry.
 
 Then Kallor turns and goes back the way he came, and the men in grey and fur go after him.
 
@@ -34832,7 +34832,7 @@ ${b3In('sohra') ? `
 At the top, beside the fire they made of it, a man in grey with a long mace across his knees is getting up without any hurry at all.`,
         map:["#..##..#","........",".#....#.","...##...","........",".#....#.","........","..,..,..","........","##....##"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b3_c2_seer',3,1],['b3_c2_betakullid',1,2],['b3_c2_betakullid',6,2],['b3_c2_betabow',5,0]]} },
+        foes:[['b3_c2_seer',3,1],['b3_c2_betakullid',0,1],['b3_c2_betakullid',5,1],['b3_c2_betabow',5,0]]} },
     /* the night raid on the herd lines: hold until the Rhivi are mounted, then the one who sent them */
     b3_c2_night:{title:'The herd lines', style:'b3_c2_plain_night', dark:true, open:true, warrenText:'Night on the plain · the warrens clean, for now', warren:{meanas:1, denul:1}, music:'battle',
       map:["........",".,....,.","..#.....","........","...,,...","........",".....#..","........","........","........"],
@@ -34850,7 +34850,7 @@ All but one. Back where the grass rises, a man in grey sits a tall horse and wat
 "Seerdomin," Sohra says, very quietly. "That is what the word means. The Seer's own." She does not look frightened. She looks like a woman memorising a face.` : ''}`,
         map:["..,..,..","........",".#....#.","........","........","..,..,..","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_seerdomin',3,1],['b3_c2_betakullid',1,2],['b3_c2_betakullid',6,2],['b3_c2_betabow',4,0]]} },
+        foes:[['b3_seerdomin',3,1],['b3_c2_betakullid',0,1],['b3_c2_betakullid',5,1],['b3_c2_betabow',4,0]]} },
     /* the flood, the herd's road: the riders who have shadowed the column since the hill come for the scattered herd and the children */
     b3_c2_herdfight:{title:'The far bank', style:'b3_c2_plain', open:true, warrenText:'Dusk after the flood · the warrens clean, for now', warren:{meanas:1, denul:1}, music:'battle',
       map:["--------","..,..,..","........",".#....#.","........","..,..,..","........",".#....#.","........","........"],
@@ -34881,7 +34881,7 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
 "That's Tav's wagon," Brisk says. She doesn't raise her voice. She doesn't need to.` : ''}`,
         map:["--------","...##...","........","..#..#..","........","........",".,....,.","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_c2_betacap',3,1],['b3_c2_betakullid',1,2],['b3_c2_betabow',6,0]],
+        foes:[['b3_c2_betacap',2,0],['b3_c2_betakullid',1,2],['b3_c2_betabow',6,0]],
         waves:[{round:2, foes:[['b3_c2_betakullid',0,4]], text:'One more out of the water, soaked to the chest, lance first.'}]} } },
 
   foes:{
@@ -35057,9 +35057,9 @@ Brisk watches him a while longer. Then she comes back to the squad. "Sergeant," 
 
 Behind him, at a little distance, a younger man with the same broad face and the same beard, and a crossbow cocked and pointed at the ground, very carefully at the ground, is watching the squad without blinking.
 
-"That's one of my brothers," the Bole says. "Don't mind him. He's counting." He holds out the jug. "Mott Irregulars. Brothers, all of us, one family, one wood. Woodcutters and farmers till you lot came to Mott Wood and made us into something else." He beams. "Year and a half we had your Bridgeburners chasing round those trees. Good times. Nobody ever caught a Bole in Mott Wood." He considers. "Nobody ever caught a Bole anywhere. Drink?"`,
+"That's one of my brothers," the Bole says. "Don't mind him. He's counting." He holds out the jug. "Mott Irregulars. Brothers, all of us, one family, one wood. Woodcutters and farmers till you lot came to Mott Wood and made us into something else." He beams. "Your Bridgeburners know the Mott. Ask them about the Boles, when you see 'em. Watch their faces." He considers. "Good times. Drink?"`,
     ch:[{t:'Drink from the jug.', fx:()=>{ S.f.b3_c2_mottJug = 1; ally(1, 0, 'A jug with the Mott Irregulars'); }, go:'b3_c2_mott_drink'},
-        {t:'"What\'s she counting?"', go:'b3_c2_mott_count'},
+        {t:'"What\'s he counting?"', go:'b3_c2_mott_count'},
         {t:'"We\'re on the march. Another time."', go:'b3_c2_mott_no'}]}),
   b3_c2_mott_drink:()=>({sp:'A Bole', txt:
 `It is not wine. It is not beer. It is something that was a pear once, a long time ago, before the Boles got to it, and it goes down like a lit fuse.
@@ -36156,8 +36156,8 @@ A Seerdomin. The Seer's own. ${c3Brisk() ? `"One," says Brisk. "Just the one." S
 Dannet, beside you, says one word in Capan. You do not need it translated.`,
         map:["#tttttt#","#......#","#.=..=.#","#......#","#......#","#..w...#","#......#","#......#","#......#","#......#"],
         party:P6,
-        foes:[['b3_c3_file',3,1],['b3_beklite',2,2],['b3_beklite',5,2],['b3_c3_pbow',6,0]],
-        waves:[{round:2, foes:[['b3_tenescowri',0,3],['b3_tenescowri',7,3]], text:'Two of the starving come out of a doorway on the court, where they have been all along, and do not look at anything but the nearest of you.'}]} },
+        foes:[['b3_c3_file',3,1],['b3_beklite',2,2],['b3_beklite',5,2],['b3_c3_pbow',5,1]],
+        waves:[{round:2, foes:[['b3_tenescowri',1,2],['b3_tenescowri',6,2]], text:'Two of the starving come out of a doorway on the court, where they have been all along, and do not look at anything but the nearest of you.'}]} },
 
     /* dusk: Beklites barred into a granary in the next Camp, with the last grain in it (optional) */
     b3_c3_granary:{title:'The granary', style:'b3_c3_city', dark:true, pitTxt:'the granary', warrenText:'The Camps at night · the warrens are poisoned here: a spell may burn its caster', warren:{denul:1, meanas:1}, music:'battle',
@@ -37648,7 +37648,7 @@ He rubs his thumb across his fingers. "The Host has a tent at the gap. Brood's p
           {t:'"Don\'t come back bleeding."', go:()=>startExplore()},
           {t:'Walk the stretch.', go:()=>startExplore()}]}),
     b3_c4_start_brisk:()=>({sp:'Brisk', scene:'b3_c4_prisoners', txt:
-`"Six days' bread for six${c4In('kettle') ? ', if nobody eats like Kettle' : ''}." Brisk doesn't look up from the sacks. "Two salve jars. Dried meat from the Rhivi, which tastes of the horse it came off. The Host feeds us at the big fires twice a day. The cart's not ours. The cart goes over the ditch at dawn and comes back empty."
+`"Six days' bread for ${numw(S.squad.length)}${c4In('kettle') ? ', if nobody eats like Kettle' : ''}." Brisk doesn't look up from the sacks. "Two salve jars. Dried meat from the Rhivi, which tastes of the horse it came off. The Host feeds us at the big fires twice a day. The cart's not ours. The cart goes over the ditch at dawn and comes back empty."
 
 She ties the sack off. "A handful a head, over there. Meal and Rhivi meat, when the carts come. The quartermaster says the Host's short. Brood's short. Everyone's short." She looks north, once, the length of a breath. "I counted the children by the ditch on our stretch. I stopped."`,
       ch:[{t:'"Ohl. How bad is it over there?"', req:()=>c4In('ohl') && !S.f.b3_c4_askOhl, fx:()=>{ S.f.b3_c4_askOhl = 1; }, go:'b3_c4_start_ohl'},
@@ -37763,7 +37763,7 @@ ${C4.mother} doesn't understand a word of it. She listens to all of it anyway, w
 "The grass is listening," Sohra says, getting up. "Over there too. I was not sure it would be." She doesn't look back at the shelters. "It is listening very hard. It has a great deal to listen to."`,
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
     b3_c4_sarn_bread:()=>({sp:C4.mother, txt:
-`A day's bread for six goes through the stakes in four pieces. ${c4In('brisk') ? `Brisk hands it over herself, without being asked, and writes it in the ration ledger afterward without being asked either: *One day. Gap. Not lost.*` : `You hand it over yourself.`}
+`A day's bread for ${numw(S.squad.length)} goes through the stakes in four pieces. ${c4In('brisk') ? `Brisk hands it over herself, without being asked, and writes it in the ration ledger afterward without being asked either: *One day. Gap. Not lost.*` : `You hand it over yourself.`}
 
 ${C4.mother} breaks the first piece into smaller pieces, and the smaller pieces into crumbs, and wets them from a cup, and feeds the boy a crumb at a time. She doesn't eat any. She doesn't thank you. She puts the rest inside her shirt against her skin, where nobody will see it in the night, and looks at you the way you would look at a door that had opened when you had not knocked.
 
@@ -38064,7 +38064,8 @@ He looks at you. He wants you to say something. He isn't sure what.
             edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'kettle' && ['she is talking too fast', -1]],
             go:'b3_c4_mosk_down', fail:'b3_c4_mosk_fight'},
           {t:'"Try it."', go:'b3_c4_mosk_fight'},
-          {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'}]}),
+          {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'},
+          {t:'Not yet. Watch them a moment longer.', go:()=>startExplore()}]}),
     b3_c4_mosk_down:()=>({sp:'Corporal ' + C4.corporal, fx:()=>{ S.f.b3_c4_mosk = 'talked'; ally(1, 0, 'The Rhivi saw the order kept'); }, txt:
 `${by({brisk:`Brisk walks up to him until they are a hand apart, which with the two of them is not far, and says one thing, very quietly, in the voice the heavy regiments use in the line when the line is about to break. You don't hear what. ${C4.corporal} does.`, greysword:`Dannet steps up beside you with her shield on her arm. "I was on the wall on the second day," she says to him. "I saw what they did. I saw who told them to. You are not going over that ditch to find him. He is not there."`, sgt:`You say it once, in the voice you have used maybe four times in eleven years, the one that does not argue because it has already won.`, _:`{who} says it once, in the voice you use when there is no second time.`})}
 
@@ -38141,7 +38142,7 @@ ${b3Mind() === 'haunted' ? `Nobody has slept since the gully. Everyone keeps loo
 She puts the card back in the Deck very carefully. "I wanted to be near her," she says. "I've wanted it all spring. I'm glad I'm here. I'm glad I'm *here*, and I'm ashamed of being glad."`,
       ch:[{t:'"Sleep, if you can."', go:'b3_c4_fire'}]}),
     b3_c4_fire_sohra:()=>({sp:'Sohra', txt:
-`"Alone." Sohra is sitting cross-legged with her bow across her knees, facing south-east. "The child went out with the fat Daru this afternoon, and your two marines. The Mhybe sat at her tent door all evening and did not sing, and did not eat, and when I went to her she did not know me for a moment." She is quiet for a while. "She was young at the turn of the year, herd-mother. I remember. I am not mad. She was *young*."
+`"Alone." Sohra is sitting cross-legged with her bow across her knees, facing south-east. "The child went out with the fat Daru this afternoon, and your two marines. The Mhybe sat at her tent door all evening and did not sing, and did not eat, and when I went to her she did not know me for a moment." She is quiet for a while. "She taught me the calving song, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. This spring. I remember. I am not mad. She was *young*."
 
 ${c4In('ohl') ? `Ohl, without looking up from the tea: "I know, child. I have been watching too."` : 'Nobody at the fire tells her she is mad.'} Sohra doesn't cry. She picks up her bow and checks the string, which did not need checking.`,
       ch:[{t:'Let her be.', go:'b3_c4_fire'}]}),
@@ -38253,7 +38254,7 @@ They sit there. The sun comes up. Neither of them says *we don't leave people*. 
 
 "They're on your side now, Sergeant," he says. "Your side of the ditch. They're not on my count." He doesn't say whose count they're on. "The Host feeds its own. I've no orders for these."
 
-${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for six," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
+${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for ${numw(S.squad.length)}," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
 
 ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are wrapped in rags that have stopped being white. He doesn't say anything. He doesn't need to say anything. He is looking at the salve jars.` : 'A girl at the end of the row has her feet wrapped in rags that have stopped being white.'}`,
       ch:[{t:'Open the sacks. The children and the sick, the bread and the salves.', fx:()=>{ S.f.b3_c4_key = 'share'; S.f.b3_wjNoticed = 1; const n = Math.min(2, S.inv.salve || 0); S.inv.salve = (S.inv.salve || 0) - n; S.f.b3_c4_salvesGiven = n; ally(2, -2, 'The Fourth\'s own bread'); if (c4In('ohl')) loy('ohl', 1); if (c4In('sohra')) loy('sohra', 1); if (c4In('brisk')) loy('brisk', -1); }, go:'b3_c4_share'},
@@ -38262,7 +38263,7 @@ ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are w
     b3_c4_share:()=>({sp:'The ration cart', txt:
 `The Fourth opens its sacks. ${c4In('brisk') ? `Brisk does it herself, after a moment, because if it is going to be done it is going to be done properly: she breaks the bread into even pieces with her knife and gives them out down the row, one each, and the dried meat after, and writes it in the ledger as she goes: *Six days. Gap. Given.*` : `The bread goes down the row in even pieces, one each, and the dried meat after.`} ${c4In('ohl') ? `Ohl kneels at the end of the row with the salve jars, ${S.f.b3_c4_salvesGiven ? `${S.f.b3_c4_salvesGiven === 1 ? 'the last of them' : 'both of them'}, and unwraps the girl's feet, and does not make a face, and does them properly, with boiled cloth.` : `which are empty already, and does what he can with boiled cloth.`}` : S.f.b3_c4_salvesGiven ? `The salve goes on the worst feet, and the worst hands.` : ''}
 
-It is not very much. Six days' bread for six does not go far down a row like that. It goes far enough that the children at the end of it get some.
+It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.
 
 Down at the end of the line, by the dead tree, Whiskeyjack has stopped talking to the quartermaster. He is looking at the Fourth's empty sacks. He doesn't come over. He doesn't say anything. After a while he nods, once, to nobody you can see, and walks on up the line, slowly, on the leg.
 
@@ -38869,7 +38870,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     if (f.b3_c5_glean === 'fed') x.push('A woman gleaning single grains in the stubble on the south shore has a day of the Host\'s hardtack in her skirt.');
     if (f.b3_c5_glean === 'north') x.push('A woman gleaning in the stubble walked north to find the Grey Swords, on Dannet\'s word.');
     if (f.b3_c5_blood) x.push(`${c5Name(f.b3_c5_blood)} held an Ilgres shaman's knife while he said the blood-iron words, and did not let go.`);
-    if (f.b3_c5_leg) x.push('Whiskeyjack says the leg can have a month after Coral. Not before.');
+    if (f.b3_c5_leg) x.push('Whiskeyjack says Mallet can have his week after Coral. Not before.');
     if (f.b3_c5_quorls) x.push('Kettle counts the quorls at dusk and again at dawn, and the numbers do not agree. It is in the ledger.');
     if (preUsed('b3_c5_ford')) x.push('Kettle put a sharper in a river and the river got up and landed on a Beklite line. She wants it noted that this was a first.');
     return x; },
@@ -38886,7 +38887,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
 
   dlg:{
     /* ---- the south shore ---- */
-    b3_c5_start:()=>({sp:'The south shore', scene:'b3_c5_catlin', html:allyHTML('South of the Catlin · the Domin begins'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_c5_started = 1; ally(0, 1, 'The Domin'); }, txt:
+    b3_c5_start:()=>({sp:'The south shore', scene:'b3_c5_catlin', html:allyHTML('South of the Catlin · the Domin begins'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_kallor = 1; S.f.b3_c5_started = 1; ally(0, 1, 'The Domin'); }, txt:
 `The Fourth comes up out of the ford on the third morning with the Catlin to its knees, and then to its shins, and then at last only in its boots, where it means to stay for a week.
 
 The south shore is a field. It was a field. Somebody cut the barley green, before it had headed, and carried every sheaf away, and then came back for the stubble with rakes. There are no birds on it. There is nothing on it for a bird.
@@ -38907,7 +38908,7 @@ ${b3In('tuft') ? `Tuft, beside him, has her hands up her sleeves. "Meanas too," 
     b3_c5_start_sohra:()=>({sp:'Sohra', scene:'b3_c5_catlin', fx:()=>{ S.f.b3_c5_askSohra = 1; S.f.b3_c5_mhybe = 1; }, txt:
 `Sohra is sitting on her heels at the edge of the stubble with her bow across her knees, not singing. It takes a moment to see what is wrong with the picture. Sohra is always singing.
 
-"The Mhybe is not on this side of the river," she says, before you can ask. "The two Daru took her back to the city. In a wagon, with blankets. They say there is a temple in Capustan that can ease her." She says *ease* the way ${c5Brisk() ? 'Brisk' : 'a quartermaster'} says *a week*. "She was young at the turn of the year, Sergeant. She cannot lift a cup now."
+"The Mhybe is not on this side of the river," she says, before you can ask. "The two Daru took her back to the city. In a wagon, with blankets. They say there is a temple in Capustan that can ease her." She says *ease* the way ${c5Brisk() ? 'Brisk' : 'a quartermaster'} says *a week*. "At Pale she could still sit a horse, Sergeant. She cannot lift a cup now."
 
 She looks across the column to where Brood's people are still coming up out of the ford, and somewhere among them a girl walks on her own, straight-backed, at a distance from everyone. "Her daughter did not go with her. Her daughter is angry. The bones will not tell me with whom."
 
@@ -39271,7 +39272,7 @@ A pause.
       ch:[{t:'"The leg, sir."', req:()=>!S.f.b3_c5_leg, go:'b3_c5_wj_leg'},
           {t:'Leave him to his bucket.'}]}),
     b3_c5_wj_leg:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c5_leg = 1; S.f.b3_legSeen = 1; }, txt:
-`"Mallet wants a week." He says it the way you would say *it'll rain*. "He's wanted a week since Darujhistan. Flat on my back, he says, and he'll put it right."
+`"Mallet's not here to ask." He says it the way you would say *it'll rain*. "When he sees me he'll want his week. Flat on my back, he says, and he'll put it right."
 
 ${b3In('ohl') ? `Ohl, behind you, clears his throat. "I'd want less than a week, sir. Three days. Denul's bad down here; I'd go slow. But three days would do it."
 
@@ -39279,7 +39280,7 @@ Whiskeyjack looks at him, not unkindly. "After," he says.` : `"After," he says.`
 
 "After what, sir?"
 
-"Coral." He shifts the leg, and doesn't let his face move while he does it. "Then Mallet can have a month."`,
+"Coral." He shifts the leg, and doesn't let his face move while he does it. "Then Mallet can have his week."`,
       ch:[{t:'Leave him to his bucket.'}]}),
     b3_c5_herd:()=>({sp:'A Rhivi herd-mother', fx:()=>{ S.f.b3_c5_herd = 1; }, txt: S.f.b3_c5_key ?
 `The herd-mother is at the trough with her staff, counting the bulls as they drink, and does not lose count when you come up.
@@ -39520,7 +39521,7 @@ function c5FireLine(){
 function c5CloseLines(){ const f = S.f, out = [];
   if (b3In('brisk')) out.push(f.b3_c5_key === 'brood' ? `Brisk writes in the ledger by the last of the fire. *One well. Shared. One man to Brood's fire.* Then, smaller, under it: *Kallor.* She looks at the word for a while, and doesn't cross it out.` : `Brisk writes in the ledger by the last of the fire. *One well. Shared. No names.* She looks at it a while. "No names," she says. "That's the bit that'll come back. You watch."`);
   if (b3In('kettle')) out.push(f.b3_c5_quorls ? `Kettle is asleep sitting up, with the ledger open on her knee at the page with the quorls on it.` : `Kettle counts the satchel by touch, under her breath, and arrives at the same number twice, and seems disappointed.`);
-  if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's taller than the Mhybe was, at the turn of the year." She doesn't look away. "Nobody sits near her."`);
+  if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's as tall as a grown woman now." She doesn't look away. "Nobody sits near her."`);
   if (b3In('ohl')) out.push(f.b3_c5_orley ? `Ohl has the list open. He has turned back to the ford: *Orley.* He reads the name, and the ones above it, all the way up, with his lips moving.` : `Ohl has the list open on his knee and reads it with his lips moving, all of it, ${b3ListWords()}.`);
   if (b3In('sohra')) out.push(`Sohra sings to the bulls, low, from the edge of the light. Somewhere in it, you're nearly sure now, is the Mhybe's name.`);
   if (b3In('greysword')) out.push(`Dannet has the pot of grey paint out and is working on the wolf on her shield, a stroke at a time, by firelight. It is still not finished. "When I know what it's for," she says, when she sees you looking.`);
@@ -39903,7 +39904,7 @@ const B3CH6 = {
   intro:{loc:'The Pannion Domin', sub:'South of Setta · the road to the Maurik · early summer', scene:'b3_c6_lift', cap:'A field at night, and on it a dark row of things with wings, and men walking out to them with their packs on.',
     paras:[
 `Setta was empty. So was the country after it: fields gone to thistle, villages with their doors open and nothing behind the doors, wells that somebody had filled with stones. The Domin is a house with the furniture taken out. The Host walks through it at a predictable pace, the way Dujek promised at Pale, and leaves very good tracks.`,
-`Three nights ago the Fourth woke to a sound like a sail filling, a great many sails, somewhere out past the horse lines. In the morning a company of the Second had gone. Its tents were struck. Its fires were laid and cold. Nobody had marched past the pickets.`,
+`Three nights ago the Fourth woke to a sound like wind in a great deal of canvas, all at once, somewhere out past the horse lines. In the morning a company of the Second had gone. Its tents were struck. Its fires were laid and cold. Nobody had marched past the pickets.`,
 `Nobody has said anything. That is how you know.`],
     go:'Wake', node:'b3_c6_start'},
 
@@ -40021,7 +40022,7 @@ const B3CH6 = {
     b3_c6_field:{title:'The lift field', style:'b3_c6_campb', dark:true, open:true, warrenText:'Night in the Domin · the warrens are poisoned here: a spell may burn its caster', warren:{denul:1, meanas:1}, music:'battle',
       map:["..t.....","........","...,..t.","........",",..##...","........",".t....,.","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b3_c6_forager',1,1],['b3_c6_forager',5,0],['b3_c6_forager',6,2],['b3_c6_forager',3,2],['b3_c6_runner',3,0]], xp:120, after:'b3_c6_after_field',
+      foes:[['b3_c6_forager',1,1],['b3_c6_forager',5,0],['b3_c6_forager',5,1],['b3_c6_forager',3,2],['b3_c6_runner',3,0]], xp:120, after:'b3_c6_after_field',
       waves:[{round:2, foes:[['b3_c6_runner',7,5]], text:'One of them was out on the flank, and has seen the quorls. He is turning to run.'}],
       preText:()=>`The sharper goes off in the middle of them, and it is the loudest thing that has happened in the Domin for a month. Out on the field forty quorls lift their heads at once. In the camp behind you, somebody drops a pot.`,
       stage2:{title:'The gully', xp:50,
@@ -40045,7 +40046,7 @@ ${b3In('tuft') ? `
 "Seerdomin," Tuft says. "That's sorcery he's wearing, Sergeant, not a cloak." She flexes her fingers. "Down here it'll cost me to answer it. I'll answer it."` : ''}`,
         map:["##....##","##.t..##","#......#","##....##","#..t...#","##....##","#......#","#......#","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_seerdomin',3,1],['b3_beklite',2,3],['b3_beklite',5,3],['b3_beklite',4,4],['b3_c6_runner',4,0]]} },
+        foes:[['b3_seerdomin',2,0],['b3_beklite',2,3],['b3_beklite',5,3],['b3_beklite',4,4],['b3_c6_runner',4,0]]} },
 
     /* dusk at the roost: demon-ridden Condors follow the quorls home to the entrenchments. The Moranth come if they trust you. */
     b3_c6_condors:{title:'The roost at dusk', style:'b3_c6_ridgeb', open:true, warrenText:'Dusk above Coral · the warrens poisoned · something riding the birds', warren:{denul:1, meanas:1}, music:'battle',
@@ -40076,7 +40077,7 @@ ${b3In('brisk') ? `
 Brisk says one word, which is a Cawn word, and which you have heard her use before only about her brother. Then she goes for the fire.` : ''}`,
         map:["oooooooo","o..tt..o",".......o","........","..t..t..","........","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_c6_raidlead',3,1],['b3_c6_raider',1,2],['b3_c6_raider',6,2],['b3_c6_slinger',4,0]]} },
+        foes:[['b3_c6_raidlead',2,1],['b3_c6_raider',1,2],['b3_c6_raider',6,2],['b3_c6_slinger',5,1]]} },
 
     /* the river: an ambush from a reed bank on the day's float to Maurik. The White Face on the barge come if they trust you. */
     b3_c6_ambush:{title:'The river', style:'b3_c6_bankb', open:true, warrenText:'The Maurik at noon · the warrens poisoned · grey sorcery on the bank', warren:{denul:1, meanas:1}, music:'battle',
@@ -40289,7 +40290,7 @@ They meant to come back for it.`,
 
 They do not thank you. They look at the hand in the dust for a long time, and the girl says something in Rhivi, and the man answers, and they take the sacks.${b3In('sohra') ? `
 
-"She asked if the child is dead," Sohra says. "He said: the grain does not know." She watches them go. "That was a good thing to do, herd-mother. Do not do it where the quartermasters can see."` : ''}`,
+"She asked if the child is dead," Sohra says. "He said: the grain does not know." She watches them go. "That was a good thing to do, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. Do not do it where the quartermasters can see."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_farm_left:()=>({sp:'The burnt farm', txt:
 `You put the boards back the way they were, and the dust back over the boards as near as you can, and leave the hand where it is.
@@ -40439,7 +40440,7 @@ You watch him shift his weight on the stone, and stop, and decide not to try aga
   b3_c6_ask:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
 `Sohra is sitting at the Fourth's fire when you come back to it, on the side the smoke goes, with her bow across her knees. She was on the field. She saw the rows of quorls, and the company walking out to them, and the grass lying down.
 
-"The Mhybe's people lent me to you to watch the Malazans," she says. "So. I am watching." She does not look up from the bow. "Where do your people go at night, herd-mother?"
+"The Mhybe's people lent me to you to watch the Malazans," she says. "So. I am watching." She does not look up from the bow. "Where do your people go at night, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}?"
 
 It is the first time she has asked you anything she might not like the answer to.` :
 `A Rhivi rider is sitting his horse at the edge of the Seventh's lines in the dark, where the pickets have decided not to see him. He is young, with the pale spirit-mark across his eyes, and he is looking past you at the field to the east, where the grass is lying flat in long rows.
@@ -40473,7 +40474,7 @@ She looks at the field, where two hundred Malazans in full kit went up into the 
 "The Mhybe's people will laugh," he says. He does not laugh. He turns his horse and goes, and you have the feeling, watching him, that he will remember your face better than your answer.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_ask_later:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
-`"At the Maurik," Sohra says. She considers it. "A river is a good place for an answer. Things come out in water." She lays the bow down. "I will hold you to the river, herd-mother. All the way to it."` :
+`"At the Maurik," Sohra says. She considers it. "A river is a good place for an answer. Things come out in water." She lays the bow down. "I will hold you to the river, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. All the way to it."` :
 `"At the river," the rider says. He considers it, and you, and the flat grass. "Good. I will ask at the river." He turns his horse. "I will ask you. Not the others."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -40491,7 +40492,7 @@ Brisk says nothing. She looks south, the way the singing went. Then she nods, on
 
 "I have never flown," Ohl says. "I would like it noted that I am too old to begin." He goes to pack anyway.` : ''}${b3In('tuft') ? `
 
-Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn't there," she says, before anyone asks. "Not since the river. She's ahead of us. South. I can feel it like weather." She picks up her pack. "So it's the right way, either way."` : ''}${b3In('sohra') ? `
+Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn't there," she says, before anyone asks. "Not for two nights. She's ahead of us. South. I can feel it like weather." She picks up her pack. "So it's the right way, either way."` : ''}${b3In('sohra') ? `
 
 "The Mhybe's people said to watch the Malazans," Sohra says, faintly. "They did not say from underneath a bug."` : ''}${b3In('greysword') ? `
 
@@ -40782,7 +40783,7 @@ Somebody in the Seventh starts to pray. Somebody else tells him to shut up, and 
 
 It is a carrion bird. It is a carrion bird the size of a small cart, bare-headed, ruffed, with a hooked beak like an ivory pick. Its eyes are wrong.
 
-${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, herd-mother."` : `Do not look at its eyes.`}`,
+${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}."` : `Do not look at its eyes.`}`,
     ch:[{t:'Kettle\'s sharper, under the first of them.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_condors', {pre:true})},
         {t:'Smother the fires. Make them come down to the quorls in the dark.', check:['wits', 14],
           edges:id=>[id === 'kettle' && ['she knows what a quorl does when it is frightened', 1], id === 'sohra' && ['herds and hawks: she has done this on the plain', 2], id === 'tuft' && ['something in those eyes is looking for her', -1]],
@@ -40841,7 +40842,7 @@ Upriver, by the ford, a company of Capan soldiers with tiger stripes painted on 
   b3_c6_wj_leg:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c6_wjLeg = 1; S.f.b3_legSeen = 1; }, txt:
 `Whiskeyjack is sitting on a log by the slips with his bad leg stretched out in front of him on another log, which is the nearest anyone has seen him come to lying down. He is reading a wright's tally slate. He has his knife out and is cutting at a boot lace that has been tied too tight over the swelling.
 
-Close to, you can see it properly. The leg is wrapped from knee to ankle, and the wrapping is not clean, and the boot over it has been slit and laced shut again with cord. He sits the way a man sits when standing has become a thing he has to plan.
+Close to, you can see it properly. The leg is wrapped from knee to ankle, and the wrapping is not clean, and the boot over it has been slit and laced shut again with cord. He sits with it out straight in front of him, and does not move it unless he has to.
 
 He sees you looking. He does not cover it.
 
@@ -40943,7 +40944,7 @@ ${c6Told() === 'later' ? `You told somebody you would answer them at the Maurik.
 `A young Rhivi rider with the pale spirit-mark across his eyes is sitting his horse at the edge of the firelight, where the pickets have decided not to see him. It is the same one.
 
 "This is the river," he says. "You said I could ask at the river. I ask."`,
-    ch:[{t:'Tell the truth now. Half the Host went south by quorl, with Dujek.', fx:()=>{ S.f.b3_c6_ask = 'truth'; ally(1, 0, 'The truth, at the river, as promised'); if (b3In('sohra')) loy('sohra', 1); }, go:'b3_c6_river_truth'},
+    ch:[{t:'Tell the truth now. Half the Host went south by quorl, with Dujek.', fx:()=>{ S.f.b3_c6_ask = 'truth'; ally(1, 0, 'The truth, at the river, as promised'); if (b3In('sohra')) { loy('sohra', 1); S.f.b3_herdMother = 1; } }, go:'b3_c6_river_truth'},
         {t:'"Ask Whiskeyjack. At Maurik."', fx:()=>{ S.f.b3_c6_ask = 'lie'; if (b3In('sohra')) loy('sohra', -1); }, go:'b3_c6_river_dodge'}]}),
   b3_c6_river_truth:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
 `You tell her. She listens with her eyes on the river.
@@ -41139,7 +41140,7 @@ He hears you come up. He does not turn.
 
 "Four thousand," he says, to the river. "Pretending to be an army, so that six thousand can pretend to be a surprise. And the High Fist in the mountains with his one arm, waiting to see which of you the Seer eats first." He laughs, very softly. "I told Brood that to leave the Host to be annihilated would be a tactical mistake. He agreed. I have asked to ride south with your Whiskeyjack." He turns his head, at last. "I like to be there when things end, soldier. I have been there for a great many."${c6KallorKnows() ? `
 
-He looks at you a moment longer. "I know you," he says. "Don't I." It is not a question, and he does not wait for an answer.` : ''}` :
+He looks at you a moment longer. "I have seen you before," he says. "Haven't I." It is not a question, and he does not wait for an answer.` : ''}` :
 `A tall man in a fur-collared cloak stands apart on the landing, watching the barges come in, with two of his own soldiers at his back. He does not look at the Fourth. You find you are glad.`,
     ch:[{t:'Walk away.', go:()=>startExplore()}]}),
   b3_c6_korlat:()=>({sp:'Korlat', fx:()=>{ S.f.b3_c6_korlat = 1; }, txt:
@@ -41614,12 +41615,14 @@ const b3c7Known7 = () => !!(S.f.b3_kallorEnemy || S.f.b3_kallorSaw);
 const b3c7Sealed = () => !!(S.imported && b3Was('c7_letter') !== 'brisk');
 /* the mortal fight's dead, this chapter */
 const b3c7Fell = () => Object.keys((S && S.dead) || {}).filter(id => S.dead[id] && S.dead[id].ch === 7 && TPL[id]);
-/* Ohl's list, a name at a time (S.f.b3_listAdds is read by 60's b3List) */
+/* Ohl's list, a name at a time (S.f.b3_listAdds is read by 60's b3List): the legion (+1, lift), Whiskeyjack and the two marines (+3, the hill or Hurlochel's word, else at the burial), the Shield Anvil (+1, the barrow), Twist (+1, the burial) */
 const b3c7List = n => { S.f.b3_listAdds = (S.f.b3_listAdds || 0) + n; };
 /* who the Fourth's recruits are, and where */
 const b3c7Waiting = id => typeof b3Waiting === 'function' && b3Waiting(id);
-/* Kettle's cusser from Book One: Maud, or Gerrun on an import whose Book One sold Maud (c1_cusserSold) */
-const b3c7Maud = () => b3Was('c1_cusserSold') ? 'Gerrun' : 'Maud';
+/* Kettle's cusser: Maud (a new Maud keeps the name, as 60's quest line says), or, on an import that sent Maud home to the Moranth
+   (the same rule as Chapter 3's c3MaudHome), the Host's cusser she has taken to calling Little Maud. b3c7MaudLeft: is there one to speak of. */
+const b3c7Maud = () => (S.imported && b3Was('c7_debt') === 'paid' && !b3Was('c5_cusserUsed')) ? 'Little Maud' : 'Maud';
+const b3c7MaudLeft = () => (S.inv && S.inv.cusser > 0);
 const b3c7Count = () => { const n = b3c7Mates().length + 1; return n; };
 
 /* ---- the trick: the Shield Anvil's Weight (a moment borrowed from Itkovian: one squadmate's pain, taken; never his end) ---- */
@@ -41754,7 +41757,7 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
       npcs:[
         {id:'wj7', name:'Whiskeyjack', kind:'wj', x:7, y:1, node:()=>S.f.b3_c7_wj ? 'b3_c7_wj_again' : 'b3_c7_wj', fresh:()=>!S.f.b3_c7_wj},
         {id:'fox7', name:'Silverfox', kind:'silverfox', x:11, y:2, node:()=>'b3_c7_fox', fresh:()=>!S.f.b3_c7_fox},
-        {id:'mhybe7', name:'The Mhybe', kind:'mhybe', x:13, y:3, node:()=>'b3_c7_mhybe', fresh:()=>!S.f.b3_c7_mhybe},
+        {id:'mhybe7', name:'An old Rhivi woman', kind:'rhivi', x:13, y:3, node:()=>'b3_c7_mhybe', fresh:()=>!S.f.b3_c7_mhybe},
         {id:'korlat7', name:'Korlat', kind:'korlat', x:5, y:2, node:()=>'b3_c7_korlat', fresh:()=>!S.f.b3_c7_korlat},
         {id:'kallor7', name:'Kallor', kind:'kallor', x:3, y:1, node:()=>'b3_c7_kallor', fresh:()=>!S.f.b3_c7_kallor},
         {id:'brood7', name:'Caladan Brood', kind:'brood', x:9, y:4, node:()=>'b3_c7_brood', fresh:()=>!S.f.b3_c7_brood},
@@ -41878,8 +41881,8 @@ Up the street, between the square and the keep, a company of Seerdomin is coming
         text:()=>`The side street is held. Behind it there is a court with a cistern in it, and the Beklites who were coming down the street to take the square from the flank are in the court, with a Seerdomin among them who has worked out what the Fourth are doing there.`,
         map:["########","#......#","#.#..#.#","#......#","#..cc..#","#......#","#......#","#.#..#.#","#......#","#......#"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_c7_greyofficer',3,1],['b3_beklite',1,3],['b3_beklite',6,3],['b3_c7_greymage',4,0]],
-        waves:[{round:2, foes:[['b3_beklite',1,0],['b3_beklite',6,0]], text:'Two more come over the court wall from the next street.'}]} },
+        foes:[['b3_c7_greyofficer',3,1],['b3_beklite',1,3],['b3_beklite',6,3],['b3_c7_greymage',4,1]],
+        waves:[{round:2, foes:[['b3_beklite',1,1],['b3_beklite',5,1]], text:'Two more come over the court wall from the next street.'}]} },
 
     /* THE RIVER: the Pannion probe at the foot of the hill, before anything else comes. Then the gully mouth and its captain. */
     b3_c7_probe:{title:'The foot of the hill', style:'b3_c7_field', warrenText:'Outside Coral · the warrens poisoned, and the Seer\'s cold in the air', warren:{denul:.8, meanas:.8}, music:'battle',
@@ -42006,7 +42009,7 @@ ${b3In('kettle') ? `Kettle is lying on her back at the trench mouth, counting qu
 
 ` : ''}${b3In('ohl') ? `Ohl has his kit open on his knees and is not using it. "Denul is sour up here," he says. "Sour all the way down. I reached for a cut on a boy's hand this morning and something reached back." He closes the kit. "I have a rule. I don't reach twice."
 
-` : ''}${b3In('sohra') ? `Sohra is sitting with her back to the cedar screen and her eyes shut, very still, because there are no herds up here to sing to and she does not like it. "The Mhybe is down there," she says, without opening them. "On the plain, with Brood. Far." She opens them. "I can feel her getting older from here."
+` : ''}${b3In('sohra') ? `Sohra is sitting with her back to the cedar screen and her eyes shut, very still, because there are no herds up here to sing to and she does not like it. "The Mhybe is a long way north," she says, without opening them. "In Capustan, with the two Daru. Far." She opens them. "I can feel her getting older from here."
 
 ` : ''}Below, a long way below, are Coral's fires. Somewhere among the cedars the High Fist is talking to somebody in a low voice, over a map.`,
       ch:[b3DeckChoice(7),
@@ -42054,7 +42057,7 @@ He looks at the city. "After Coral," he says. "That's what he said. After Coral.
   b3_c7_dujek_brood:()=>({sp:'Dujek Onearm', txt:
 `"No." Flat. "Nor the Seer. That's the point." He chews. "Brood's people think we went somewhere. Kallor's been telling Brood where for a month, and he's wrong, and he's not, and that's how you can tell a man's a liar who knows his trade."${S.f.b3_kallorEnemy ? `
 
-He looks at you sideways. "Somebody told Brood what Kallor's men were doing at a well on the Catlin road. Marines, I heard." He doesn't ask. "It's the kind of thing Brood remembers."` : ''}
+He looks at you sideways. "Somebody told Brood what Kallor's men were doing at a well south of the Catlin. Marines, I heard." He doesn't ask. "It's the kind of thing Brood remembers."` : ''}
 
 "When this is done they'll know where we went," Dujek says. "Whether they thank us is their business."`,
       ch:[{t:'Leave him to his bread.', go:()=>startExplore()}]}),
@@ -42258,7 +42261,7 @@ Somewhere up there the Bridgeburners are. Nobody in the street says so.`,
       ch:[{t:'Wait for the rain to stop.', go:()=>startExplore()}]}),
 
   /* ---- the word from the hill: Hurlochel ---- */
-  b3_c7_news:()=>({sp:'Hurlochel · outrider', fx:()=>{ S.f.b3_c7_news = 1; ally(0, 2, 'The word from the hill'); b3c7List(3); }, txt:
+  b3_c7_news:()=>({sp:'Hurlochel · outrider', fx:()=>{ if (!S.f.b3_c7_news) { ally(0, 2, 'The word from the hill'); b3c7List(3); } S.f.b3_c7_news = 1; }, txt:
 `An outrider comes up the street on a lathered horse, through the rain, looking at every face: Hurlochel, the Host's outrider, come in from the hill outside the city. He is looking for the High Fist's people. He finds the Fourth.
 
 "Sergeant." His voice is quite steady, which is how you know. "The alliance's hill. Outside the city. The K'Chain Che'Malle came against Brood's army, hundreds of them, and Trake's Legion went into them, and while Brood was down the hill —" He stops. Starts again. "Kallor went for Korlat. Then for the child. Whiskeyjack stood in front of her."
@@ -42311,9 +42314,9 @@ Object.assign(B3CH7.dlg, {
   b3_c7_r_start:()=>({sp:'The alliance\'s hill · morning', scene:'b3_c7_hill', fx:()=>{ S.f.b3_c7_started = 1; S.f.b3_domin = 1; S.f.b3_river = 1; }, txt:
 `The column came up the back of the hill at dawn and found Brood's army already on it: the Rhivi herds in the hollow behind, Barghast fires along the crest, the Tiste Andii standing apart the way they always stand, and the Grey Swords, and the striped ones, Trake's Legion, sitting in the grass sharpening things. Between the hill and the city there is a plain, and nothing on it yet.
 
-${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other half of the Host went on the quorls. Tav's company went with them. She has not said his name since the Maurik. "We don't leave people," she said, the night the quorls came, and then the quorls left, and she stood on the bank and watched them go.
+${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other half of the Host went on the quorls. Tav's company went with them. She has not said his name since the lift field. "We don't leave people," she said, the night after the quorls took his company, and then she turned her back on the field and went down to the Maurik with the rest of you.
 
-` : ''}${b3In('sohra') ? `Sohra went straight to the Rhivi in the hollow and came back an hour later with her face shut. "The Mhybe," she says. "She is very old now. Older than anyone. They carry her." She sits down. "Sing to me later, herd-mother. I need someone to sing to me."
+` : ''}${b3In('sohra') ? `Sohra went straight to the Rhivi in the hollow and came back an hour later with her face shut. "A rider came down from Capustan," she says. "The Mhybe. She is very old now. Older than anyone. The two Daru carry her from the bed to the window." She sits down. "Sing to me later, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I need someone to sing to me."
 
 ` : ''}${b3In('tuft') ? `Tuft is looking at the crest, where the Rhivi have put up a tent in red wool beside Brood's. "She's up there," she says. Nobody asks who.
 
@@ -42379,13 +42382,13 @@ ${b3In('tuft') ? `Tuft walks up to the child and stops an arm's length off and d
 "Yes." The child almost smiles. "You were kind to me. To her. When it was very dark." She looks out at the plain again. "Go back to your sergeant, Tuft. It is going to be a bad day. I would like you to be somewhere I can't see you."` : `The child looks at you with eyes that are much too old, and nods, the way an officer nods to a sergeant she has heard of, and looks back at the plain.`}`,
       ch:[{t:b3In('tuft') ? 'Take Tuft back down the hill.' : 'Back down the hill.', fx:()=>{ b3c7Loy('tuft', 1); }, go:()=>startExplore()}]}),
 
-  /* ---- Sohra and the Mhybe ---- */
-  b3_c7_mhybe:()=>({sp:'The Mhybe', fx:()=>{ S.f.b3_c7_mhybe = 1; }, txt:
-`They have her on a litter in the shade of the Rhivi tent, under bhederin hides, and she is the oldest thing you have ever seen alive: a little dry bundle of a woman whose daughter is not two years born and looks fifteen, and who was young when the year turned. Her eyes are open. They are very bright.
+  /* ---- Sohra and the Mhybe (who is not here: Coll and Murillio took her back to Capustan before the Catlin; her word comes south by a rider) ---- */
+  b3_c7_mhybe:()=>({sp:'An old Rhivi woman', fx:()=>{ S.f.b3_c7_mhybe = 1; }, txt:
+`An old Rhivi woman sits in the shade of the Rhivi tent under bhederin hides, a cousin of the Mhybe's, tying knots in a cord. A rider came down from Capustan in the night with the Mhybe's words for whoever would carry them, and she is the one carrying them. The Mhybe is the oldest thing alive, the rider said: a little dry bundle of a woman whose daughter is not a year born and looks fifteen.
 
-${b3In('sohra') ? `Sohra kneels by the litter and takes the old hand in hers and sings, very low, one of the songs for the herds' dead, which is not a thing you sing to the living, and the Mhybe listens with her eyes shut.
+${b3In('sohra') ? `Sohra kneels by her and faces north and sings, very low, one of the songs for the herds' dead, which is not a thing you sing to the living, and the old woman listens with her eyes shut.
 
-${S.f.b3_mhybe || S.f.b3_c1_key === 'mhybe' ? 'Her eyes find you over Sohra\'s head. "The night watch," she says. "At Pale. I heard you, outside, all night. Shuffling." Something like a smile.\n\n' : ''}"Child," the Mhybe says, when it is done, in Rhivi, and then in Daru, so that you will understand. "Child. Did you watch the Malazans, as I asked?"
+${S.f.b3_mhybe || S.f.b3_c1_key === 'mhybe' ? 'Then her eyes find you over Sohra\'s head. "She sent a word for the night watch," she says. "At Pale. She heard you, outside, all night. Shuffling." Something like a smile.\n\n' : ''}"Child," the old woman says, when it is done, in Rhivi, and then in Daru, so that you will understand. "She says: *Child. Did you watch the Malazans, as I asked?*"
 
 "Yes, Mother."
 
@@ -42393,14 +42396,16 @@ ${S.f.b3_mhybe || S.f.b3_c1_key === 'mhybe' ? 'Her eyes find you over Sohra\'s h
 
 Sohra looks at the squad. "They are loud," she says. "And they don't leave people."
 
-The old woman laughs, a dry little sound like a stick breaking. "Good," she says. "Good. Go and sing to them, then."` : `"Malazans," she says, in a voice like dry leaves, and looks at you a long time. "The grey one on the crest is kind to my daughter. He is the only one who is not afraid of her." She closes her eyes. "Go and stand where he put you."`}`,
+The old woman laughs, a dry little sound like a stick breaking. "Good," she says. "She will like that. Go and sing to them, then."` : `"Malazans," she says, in a voice like dry leaves, and looks at you a long time. "She sent word from the north. She says the grey one on the crest is kind to her daughter. He is the only one who is not afraid of her." She closes her eyes. "Go and stand where he put you."`}`,
       ch:[{t:'Leave her to the shade.', fx:()=>{ b3c7Loy('sohra', 1); ally(1, 0, 'The Mhybe'); }, go:()=>startExplore()}]}),
 
   /* ---- Korlat ---- */
   b3_c7_korlat:()=>({sp:'Korlat', fx:()=>{ S.f.b3_c7_korlat = 1; }, txt:
 `The Tiste Andii woman stands a little apart from Brood and Whiskeyjack, very tall, very dark, watching Whiskeyjack and not the plain. She turns her head when you come up and inclines it to you, gravely, as if you were somebody of consequence.
 
-"Sergeant," she says. "Your squad marched with the child's people all the way from Pale. The Rhivi speak of it." A pause. "I am grateful. So, I think, is he." She does not look at Whiskeyjack when she says *he*. She does not need to.`,
+"Sergeant," she says. "Your squad marched with the child's people all the way from Pale. The Rhivi speak of it." A pause. "I am grateful. So, I think, is he." She does not look at Whiskeyjack when she says *he*. She does not need to.${S.f.b3_c6_korlat ? `
+
+"At Maurik I asked you to tell me if he fell behind," she says. "You never had to." Something that is almost a smile. "He would not let himself."` : ''}`,
       ch:[{t:'"Look after him, lady."', fx:()=>{ ally(1, 0, 'Korlat\'s regard'); }, go:'b3_c7_korlat2'},
           {t:'Bow, and go.', go:()=>startExplore()}]}),
   b3_c7_korlat2:()=>({sp:'Korlat', txt:
@@ -42411,7 +42416,7 @@ The old woman laughs, a dry little sound like a stick breaking. "Good," she says
   b3_c7_kallor:()=>({sp:'Kallor', fx:()=>{ S.f.b3_c7_kallor = 1; S.f.b3_kallor = 1; }, txt:
 `The tall man in the fur-collared cloak stands at the very edge of the hilltop with a two-handed sword point-down in the turf in front of him and both hands on the pommel. He is looking at the red tent. He is always looking at the red tent.
 
-${b3c7Known7() ? `His eyes come round to you, slowly, and stop. "I know you," Kallor says. His voice is pleasant, and old, older than the language he is speaking. "${S.f.b3_kallorEnemy ? 'The well on the Catlin road. The marine who carried tales to Brood.' : 'The tent of the Rhivi witch, at Pale. The one who stood the night watch.'}" He smiles. It does not reach anything. "I have outlived empires that had larger opinions than yours, Sergeant. Go and stand somewhere."` : `He does not look at you. There is nothing about the Fourth worth his looking at, and he wants you to know it. After a while he says, to the air, "Malazans," the way some people say *flies*.`}
+${b3c7Known7() ? `His eyes come round to you, slowly, and stop. "I know you," Kallor says. His voice is pleasant, and old, older than the language he is speaking. "${S.f.b3_kallorEnemy ? 'The well south of the Catlin. The marine who carried tales to Brood.' : 'The tent of the Rhivi witch, at Pale. The one who stood the night watch.'}" He smiles. It does not reach anything. "I have outlived empires that had larger opinions than yours, Sergeant. Go and stand somewhere."` : `He does not look at you. There is nothing about the Fourth worth his looking at, and he wants you to know it. After a while he says, to the air, "Malazans," and nothing after it, as if the one word were the whole of the insult.`}
 
 ${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching his hands.' : ''}`,
       ch:[{t:'Go and stand somewhere.', go:()=>startExplore()},
@@ -42515,7 +42520,7 @@ Then somebody on the hill screams, and it is not a soldier's scream.`,
       ch:[{t:'Look up the hill.', go:'b3_c7_r_hill'}]}),
 
   /* ---- what the Fourth saw from the foot of the hill: too far, and too late ---- */
-  b3_c7_r_hill:()=>({sp:'The foot of the hill', scene:'b3_c7_hill', fx:()=>{ S.f.b3_c7_saw = 1; if (b3c7Known7()) S.f.b3_c7_kallorLook = 1; ally(0, 2, 'The hill'); b3c7List(3); }, txt:
+  b3_c7_r_hill:()=>({sp:'The foot of the hill', scene:'b3_c7_hill', fx:()=>{ if (!S.f.b3_c7_saw) { ally(0, 2, 'The hill'); b3c7List(3); } S.f.b3_c7_saw = 1; if (b3c7Known7()) S.f.b3_c7_kallorLook = 1; }, txt:
 `The crest is three hundred paces up a steep slope, and the Fourth start up it at a run, and it is the longest three hundred paces in the world.
 
 You see it the way you see things a long way off: small, and clear, and much too slow. Brood is gone from the crest, down the far slope with his hammer, into the K'Chain Che'Malle. The tall man in the fur-collared cloak is not looking at the red tent any more. He has his sword up, and he has gone for Korlat, and she is down. Then he turns toward the tent.
@@ -42637,7 +42642,7 @@ ${b3In('ohl') ? `Ohl sets down a needle. Just a needle, a curved one, the kind h
           {t:'Not yet. Stay a while.', fx:()=>{ if (b3In('greysword')) S.f.b3_c7_dannetWolves = 1; b3c7List(1); }, go:()=>startExplore()}]}),
 
   /* ---- the burial: Moon's Spawn out over the sea, from the shore ---- */
-  b3_c7_burial:()=>({sp:'The shore · dusk', scene:'b3_c7_sea', fx:()=>{ S.f.b3_c7_burial = 1; ally(1, -1, 'The Spawn goes out'); }, txt:
+  b3_c7_burial:()=>({sp:'The shore · dusk', scene:'b3_c7_sea', fx:()=>{ if (!S.f.b3_c7_burial) b3c7List(1 + (S.f.b3_c7_news || S.f.b3_c7_saw ? 0 : 3)); S.f.b3_c7_burial = 1; ally(1, -1, 'The Spawn goes out'); }, txt:
 `They say afterwards that the Lord of Moon's Spawn offered it himself: that the Spawn was dying, and he asked that it be a tomb. For Whiskeyjack. For the Bridgeburners who did not come out of Coral: Trotts, and Hedge, and the others whose names their own will say. For the Black Moranth's commander, Twist, who went in over the keep with forty and did not come back. The Fourth hear it the way soldiers hear everything, three times, wrong, and then right.
 
 What the Fourth see is this. The Spawn, low over the water, broken, leaning, going out to sea in the last of the light very slowly, as if it were tired. On the shore the Host stands in its companies and Brood's people stand beside them. Nobody gives an order. Everybody is at attention anyway.
@@ -42676,7 +42681,7 @@ ${b3c7Fell().length ? `He looks at the fire. "And ${b3c7And(b3c7Fell())}. Those 
   b3_c7_w_kettle:()=>({sp:'Kettle', fx:()=>{ S.f.b3_c7_wKettle = 1; }, txt:
 `"Thirty-one," Kettle says. "Quorls. They took forty in over the keep and thirty-one came back, and the Achievant didn't." She is turning something over in her fingers: a scrap of black chitin. "One of them gave me this. Off his. I didn't ask. They don't give anybody anything."
 
-${S.f.b3_c7_maud ? `"And ${b3c7Maud()}'s gone," she says. "She went where she was for. Chub would have said that was the whole point of her." She tucks the chitin into the satchel where the cusser used to be. ` : `"${b3c7Maud()}'s still in the bottom of the satchel," she says. "I didn't throw her. Nothing was enough." She looks at the sea. "Something will be." `}Then: "${b3c7Count() > 1 ? `${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}, ${numw(S.inv.burner || 0)} burner${(S.inv.burner || 0) === 1 ? '' : 's'}, ${numw(S.inv.cusser || 0)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}. Not the same as this morning.` : 'Not the same as this morning.'}" She grins, and it nearly works. "Nothing's the same as this morning, Sergeant. I've decided I like it."`,
+${S.f.b3_c7_maud ? `"And ${b3c7Maud()}'s gone," she says. "She went where she was for. Chub would have said that was the whole point of her." She tucks the chitin into the satchel where the cusser used to be. ` : b3c7MaudLeft() ? `"${b3c7Maud()}'s still in the bottom of the satchel," she says. "I didn't throw her. Nothing was enough." She looks at the sea. "Something will be." ` : `"No cusser left," she says. "${b3c7Maud()} went where she was needed, before all this." She looks at the sea. "I'll draw another, and name her the same." `}Then: "${b3c7Count() > 1 ? `${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}, ${numw(S.inv.burner || 0)} burner${(S.inv.burner || 0) === 1 ? '' : 's'}, ${numw(S.inv.cusser || 0)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}. Not the same as this morning.` : 'Not the same as this morning.'}" She grins, and it nearly works. "Nothing's the same as this morning, Sergeant. I've decided I like it."`,
       ch:[{t:'"Put it in the ledger."', fx:()=>{ b3c7Loy('kettle', 1); }, go:'b3_c7_s_fire'},
           {t:'Let her count.', go:'b3_c7_s_fire'}]}),
   b3_c7_w_brisk:()=>({sp:'Brisk', fx:()=>{ S.f.b3_c7_wBrisk = 1; }, txt:
@@ -42696,7 +42701,7 @@ She looks at the fire. "I kept my promise. I said she was Tattersail, at Darujhi
       ch:[{t:'"You are."', fx:()=>{ b3c7Loy('tuft', 1); }, go:'b3_c7_s_fire'},
           {t:'Say nothing. Let her shuffle.', go:'b3_c7_s_fire'}]}),
   b3_c7_w_sohra:()=>({sp:'Sohra', fx:()=>{ S.f.b3_c7_wSohra = 1; }, txt:
-`"She sleeps," Sohra says. "The Mhybe. The Daru men are sitting with her, the fat one's friends. She is asleep and she will not wake, and in the sleep she is young." She has her bone beads in her lap and is counting them. "The child made it for her. A place in the dream. The spirits told me." She stops counting. "It is a good place. There is grass."
+`"She sleeps," Sohra says. "The Mhybe. In Capustan, a long way north. The Daru men are sitting with her, the fat one's friends. She is asleep and she will not wake, and in the sleep she is young." She has her bone beads in her lap and is counting them. "The child made it for her. A place in the dream. The spirits told me." She stops counting. "It is a good place. There is grass."
 
 "I watched the Malazans," she says. "As she asked." She looks round the fire. "I will tell my people you are a slow herd, and you complain, and you do not leave anyone." A pause. "And that I have a herd-mother now, who is a Malazan, and they can say what they like about it."`,
       ch:[{t:'"Sing, then. For all of them."', fx:()=>{ b3c7Loy('sohra', 1); ally(1, -1, 'A Rhivi song on the shore'); }, go:'b3_c7_s_fire'},
@@ -42704,7 +42709,7 @@ She looks at the fire. "I kept my promise. I said she was Tattersail, at Darujhi
   b3_c7_w_dannet:()=>({sp:'Dannet', fx:()=>{ S.f.b3_c7_wDannet = 1; }, txt:
 `The wolf on Dannet's shield is ${S.f.b3_c7_dannetWolves ? 'finished: grey, and lean, and looking back over its shoulder at whoever carries it.' : 'still half a wolf.'} She has the cold Fener amulet in her fist.
 
-"He took their grief," she says. "The Imass. All of it, at once, and it killed him. That's what a Shield Anvil is for. I used to think it was a title." She opens her hand and looks at the amulet. "I asked you once whether the Wolves were a god or a grief with teeth. At Coral, I said." She closes her hand. "Both. They're both. I heard them howl when he died. They were sorry."
+"He took their grief," she says. "The Imass. All of it, at once, and it killed him. That's what a Shield Anvil is for. I used to think it was a title." She opens her hand and looks at the amulet. "I said I would tell you what the Wolves were, when I knew. A god, or a grief with teeth." She closes her hand. "Both. They're both. I heard them howl when he died. They were sorry."
 
 She takes the amulet off over her head and holds it out over the fire, and does not let go, and then puts it in her kit instead. "Not yet," she says. "The boar was a long time in my family."`,
       ch:[{t:'"Take it home with you."', fx:()=>{ b3c7Loy('greysword', 1); }, go:'b3_c7_s_fire'},
@@ -42772,9 +42777,9 @@ ${b3c7Waiting('greysword') ? `Dannet is with them. She comes out of the lines wh
           b3c7AnvilCh('grey'),
           {t:'Leave them to their dead.', go:()=>startExplore()}]}),
   b3_c7_s_rhivi:()=>({sp:'Rhivi riders', fx:()=>{ S.f.b3_c7_srhivi = 1; }, txt:
-`The Rhivi have brought the herds down to the shore to drink at a stream that comes out of the hill, and the riders are sitting their horses among the bhederin, singing, low, the songs for the dead. Up by the tents two Daru men are sitting beside a litter under hides, very patiently, the way you sit with someone who is asleep and will not wake.
+`The Rhivi have brought the herds down to the shore to drink at a stream that comes out of the hill, and the riders are sitting their horses among the bhederin, singing, low, the songs for the dead, and then one more, facing north, slow, the kind you sing to someone who is asleep and will not wake.
 
-${b3c7Waiting('sohra') ? `Sohra rides out of the herd when she sees the squad, and pulls up, and looks down at you. "The Mhybe sleeps," she says. "For ever. In the sleep she is young." Her face does something. "I watched the Malazans for her, herd-mother. I am not finished watching."` : b3In('sohra') ? `They call to Sohra in Rhivi as you pass, and she answers, and for a moment she is one of them again, and then she is back in the Fourth's file, walking.` : `A rider looks at your badges and says something in Rhivi, and then in bad Daru: "The Malazans. You don't leave people." It might be a compliment. You decide to take it as one.`}`,
+${b3c7Waiting('sohra') ? `Sohra rides out of the herd when she sees the squad, and pulls up, and looks down at you. "The Mhybe sleeps," she says. "For ever. In the sleep she is young." Her face does something. "I watched the Malazans for her, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I am not finished watching."` : b3In('sohra') ? `They call to Sohra in Rhivi as you pass, and she answers, and for a moment she is one of them again, and then she is back in the Fourth's file, walking.` : `A rider looks at your badges and says something in Rhivi, and then in bad Daru: "The Malazans. You don't leave people." It might be a compliment. You decide to take it as one.`}`,
       ch:[{t:'"Ride with the Fourth again, Sohra."', req:()=>b3c7Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:()=>startExplore()},
           {t:'Leave them to the herds.', go:()=>startExplore()}]}),
 
@@ -42876,7 +42881,7 @@ B3FIN7.fate = (id, key) => {
     key === 'host' ? `Kettle marches with the Host and counts the quorls every dusk, one by one, by name now, and when the Black Moranth come down at the edge of the camp she goes and stands near them the way other people stand near a fire.` :
     key === 'daru' ? `Kettle goes to Darujhistan and finds the city has an alchemist with more munitions than sense, and is very happy for a while, and then looks at the sky every evening at dusk for quorls that do not come.` :
     `Kettle goes to the Black Moranth. They have never taken anyone. They take her. Nobody has ever seen a Moranth explain anything, and nobody explains it.`,
-    S.f.b3_c7_maud ? `${b3c7Maud()} went where she was for, at Coral. There is a scrap of black chitin in the bottom of the satchel where the cusser used to be. She counts it every morning.` : `${b3c7Maud()} is still at the bottom of the satchel. Nothing at Coral was enough. She has decided something will be, one day, and she will know it.`,
+    S.f.b3_c7_maud ? `${b3c7Maud()} went where she was for, at Coral. There is a scrap of black chitin in the bottom of the satchel where the cusser used to be. She counts it every morning.` : b3c7MaudLeft() ? `${b3c7Maud()} is still at the bottom of the satchel. Nothing at Coral was enough. She has decided something will be, one day, and she will know it.` : `There is a new cusser at the bottom of the satchel, drawn from the Host's stores after Coral, and she has named it ${b3c7Maud()}, because some names are a post, not a person.`,
     B3FIN7.loy('kettle', `"You point, I make it stop being a thing," she says. "That's love, in the sapper trade." She means it.`, `She stopped telling you the count somewhere on the road. She tells the quorls instead.`, `"Not the same as this morning," she says, every morning. You have stopped expecting it to be.`)]);
   if (id === 'tuft') return add('More than Tattersail', [
     `The child went over the sea with the T'lan Imass, to find the rest of them. Tuft stood on the shore and watched the dust go, and did not go with it, and has not said why, except once, to Kettle: "I'm the Fourth's."`,
@@ -42889,7 +42894,7 @@ B3FIN7.fate = (id, key) => {
     key === 'host' ? `The Host goes where it is sent, and by every rumour that is Seven Cities, his country, burning. He goes with it. He has not said one word about it. He reads the list at night with his lips moving, and adds the names of strangers.` :
     key === 'daru' ? `In Darujhistan he finds a temple of Soliel that asks him, very politely, to stay. He says no, for reasons he describes as theological, and patches the Phoenix's customers for nothing, and complains.` :
     `He goes south and east toward Seven Cities and Ehrlitan, alone, with his needles and the list. Not to stay. To look.`,
-    B3FIN7.loy('ohl', `"Drink the tea, Sergeant," he says. "It's not poison. It's just unpleasant, which is how you know." He has started calling you *child*, once in a while. You let him.`, `He keeps your name off the list. He keeps it off the other way, too: he does not speak to you more than he has to.`, `"I have a rule," he says. He still has not told you what it is.`)]);
+    B3FIN7.loy('ohl', `"Drink the tea, Sergeant," he says. "It's not poison. It's just unpleasant, which is how you know." He still calls you *child*, once in a while. You still let him.`, `He keeps your name off the list. He keeps it off the other way, too: he does not speak to you more than he has to.`, `"I have a rule," he says. He still has not told you what it is.`)]);
   if (id === 'sohra') return add('The herd-mother', [
     `The Mhybe sleeps, and will sleep for ever, and in the sleep she is young, in a place her daughter made for her where there is grass. Sohra sings to her before every march. Nobody else hears it.`,
     key === 'host' ? `Sohra stays with the Host, which nobody in the Rhivi camp understands, and rides out ahead of it where a scout rides, and sings to the dead of every battlefield it crosses, Malazan and otherwise. The Host has started to say *the Rhivi girl* the way it says *the Moranth*: as if it could not do without.` :
@@ -42928,7 +42933,7 @@ B3FIN7.gone = (id, key) => {
   if (b3Fallen().includes(id)) return {label:'Remembered', title:'Darujhistan', txt:`${NAME(id)} did not come out of Darujhistan, the year before. The Fourth marched south without ${P.her}, all the way to the sea, and counted ${P.her} anyway, once, at the end, the way you count a tooth that is gone.`};
   /* the two recruits, when they are not walking with the Fourth at the end (waiting near, or never asked in): a page each, with their people */
   if (B3_RECRUITS.includes(id) && !b3In(id)) return {label:'With her people', title:id === 'sohra' ? 'With the herds' : 'With the Grey Swords', txt:id === 'sohra'
-    ? `Sohra stayed with the Rhivi through Coral, at the herd lines, and when the Mhybe slept she sang to her, and then rode home with the herds across the plain. She watched the Malazans for a season, as she was asked. She tells her people they are loud, and do not leave anyone.`
+    ? `Sohra stayed with the Rhivi through Coral, at the herd lines, and when the Mhybe slept, far off in Capustan, she sang north to her, and then rode home with the herds across the plain. She watched the Malazans for a season, as she was asked. She tells her people they are loud, and do not leave anyone.`
     : `Dannet stood with the Grey Swords at Coral, and knelt with them in the rain on the plain, and was at the barrow all night. She went home with the company, to the Wolves, with an answer for the Destriant.`};
   return null;
 };
@@ -43351,6 +43356,626 @@ function b67ItemsArt(){ const gear = Object.assign({}, (typeof B3CH7 !== 'undefi
     const d = B67_ITEMS[k] || (/mail|hauberk|shirt|seerdomin/i.test(hay) ? 'greymail' : /k.?ell|che.?malle|hunter|blade|sword/i.test(hay) ? 'khellblade' : /spawn|basalt|shard|black stone/i.test(hay) ? 'spawnshard' : /coral|stone|chip/i.test(hay) ? 'coralstone' : /wolf|grey sword|token|pewter/i.test(hay) ? 'wolftoken' : 'bundle'), [tr, body] = B67_DRAW[d] || B67_DRAW.bundle;
     b67Item(k, nm.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'), body, it.slot ? it.slot === 'trinket' : tr); }); }
 b67ItemsArt();
+
+/* ============ Book Three: Through the Deck, the seven visions of The Fair Exchange ============
+   One per chapter, played when Book Three's reader (visReader(), 36b; Tuft, else Sohra, else Old Benna: 60) turns a card and looks into it.
+   Each is a scene somewhere the Fourth cannot see, at the same point of the story, through the eyes of a canon character the squad never
+   meets up close. Choices change words, never outcomes (S.f.b3v*_ keys; nothing else reads them). The last step of each is the reader,
+   back at the Fourth's fire: its sp, fig and txt are getters/functions of visReader(), so visAgain (36b) still matches it on a replay.
+   Canon basis: docs/moi-canon.md, "Visions". The darker material of Memories of Ice is headline only here, never detail. Backdrops are
+   VISBG entries b3v_* and the new figures FIGX b3v_* (68b, which loads after this file; both are only read when a vision plays). */
+
+/* ---------------- the reader, at the end of each vision ---------------- */
+const b3vP = r => r.he ? {S:'He', s:'he', H:'His', h:'his'} : {S:'She', s:'she', H:'Her', h:'her'};
+const b3vWho = r => ['tuft', 'sohra', 'benna'].includes(r.id) ? r.id : 'other';
+const b3vFig = () => { const r = visReader(); return r.id === 'tuft' || r.id === 'sohra' ? r.id : r.id === 'benna' ? 'b3v_benna' : FIGX[r.id] ? r.id : r.he ? 'b3_c5_villager' : 'b3v_benna'; };
+/* o = {tuft:(r, p) => text, sohra:..., benna:..., other:...}: Tuft, Sohra and Old Benna are 60's readers; other is the fallback */
+const b3vEnd = o => ({get sp(){ return visReader().name; }, get fig(){ return b3vFig(); }, bg:'b3deck',
+  txt:() => { const r = visReader(), p = b3vP(r); return (o[b3vWho(r)] || o.other)(r, p); }});
+
+Object.assign(VISIONS, {
+  /* ---- Chapter 1: the parley at Pale. Far to the south-east, a caravan captain wakes under the wall of a river town. ---- */
+  b3v1:{book:'moi', ch:1, who:'Gruntle', where:'Under Saltoan\'s Wall', fig:'b3v_gruntle', bg:'b3v_saltoan', cap:'A river town gone soft at the edges, a caravan camp under its wall, and the trader road going east.', steps:[
+    {txt:
+`Gruntle wakes under a wagon with his head full of last night's wine and the sound of somebody else's sword practice, and lies there a while deciding whether to be alive.
+
+He is a caravan captain. He has spent his life walking beside other people's money, and he is good at it, when he is sober, which is often enough. This season the money is one man: a merchant called Keruli, soft-spoken, who pays well, asks little, and keeps the curtains of his carriage drawn on the brightest days.
+
+The sword practice is Stonny Menackis, with her rapier, in the dew, killing a fence post with great precision. She has been killing it since dawn. She would like him to notice.`},
+    {txt:
+`Saltoan sits on its river like an old drunk on a bench: walls that were handsome once, gangs that own the streets after dark, and a harbour nobody dredges. Three nights the caravan has lain under its wall. In those three nights there have been killings in the lanes, and the town says strangers did them, as towns do.
+
+Harllo is at the fire, burning the porridge and talking. Harllo is always talking. This morning it is the Domin, south and east, past the river: what the Seer's people do, what they are said to do, how many of them there are. He has heard it from a boatman, who heard it from a man who was there.
+
+"Is it true, Captain?" says Harllo. "What they say they do?"`,
+     ch:[{t:'"Shut up and eat."', set:['b3v1_said','eat']},
+         {t:'"True enough. We\'re paid to go anyway."', set:['b3v1_said','paid']}]},
+    {txt:()=>`${S.f.b3v1_said === 'paid' ? `"True enough," Gruntle says. "We're paid to go anyway." Harllo thinks about that, and nods, and eats, which is the thing Gruntle likes best about him.` : `"Shut up and eat," Gruntle says. Harllo eats, and goes on talking with his mouth full, which is about what Gruntle expected.`}
+
+Then Keruli's driver comes for him. The merchant would like a word.
+
+Inside the carriage it is dim and smells of oil and old paper. Keruli is a quiet man with a face that gives nothing away, the kind you forget while you are still looking at it. He asks about the road. Gruntle tells him: east along the trader road to the Catlin; a bridge that was there last year and may not be this year; a ford, and mud; Capustan on the far bank, and past Capustan, the Domin, which is the part of the map nobody has drawn lately.
+
+"Roads remember the feet that walked them," says Keruli, as if that were an answer. "Some of them, Captain, remember a great deal."`,
+     ch:[{t:'Ask him what he\'s carrying.', set:['b3v1_ask','ask']},
+         {t:'Don\'t ask. You\'re paid not to.', set:['b3v1_ask','no']}]},
+    {txt:()=>`${S.f.b3v1_ask === 'ask' ? `"What are you carrying, sir?" Gruntle says. Keruli smiles, very slightly. "Friends," he says. "Or I hope to be." Gruntle decides that is the last question he will ask this season.` : `Gruntle doesn't ask. A man who keeps his curtains drawn has a reason, and the reason is not Gruntle's business, and the business pays.`}
+
+They are on the road by mid-morning. Stonny rides beside him and tells him he snores, and that Harllo cheats at dice, and that she means to be in Capustan before the month is out and drink something that has never seen a barrel in Saltoan. The wagons creak. The river goes along beside them, brown and full.
+
+Then the people start coming the other way.`},
+    {go:'East.', txt:
+`Families, mostly. A cart with a grandmother on it, sitting very straight. Men with their tools on their backs. Children who don't look at the caravan at all. They come in ones and tens out of the east, walking west toward Saltoan and anywhere past it, and none of them stops to talk, and nobody needs to ask.
+
+Gruntle counts his people without meaning to. Stonny, sour and splendid. Harllo, talking. The lads on the wagons. He has guarded a lot of roads. He has buried people on some of them, and liked most of them, and never once known ahead which.
+
+He puts that away where he keeps it. He looks east. The sky over the east is a colour he doesn't like, and he looks at it anyway, because he is paid to.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "A caravan," she says, "going east. Toward where we're going." She turns the card over and back, as if the people on the road might still be on it. "They were walking the other way, Sergeant. All of them." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together with the side of her hand. "A man who walks beside other people's wagons," she says, "toward the river, and the city on it." She looks south-east, past the herds. "The bones liked him. They did not like his road." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down and wipes her fingers on her apron. "Caravan guard," she says. "Married one, once. Thirty years he walked beside other folks' goods, and came home every time, until he didn't." She sniffs. "That one's going the wrong way." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "A caravan," ${p.s} says, "going east, toward the river. And everyone else coming the other way." ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 2: the Rhivi Plain. North of Capustan, a Grey Sword patrol meets what has been leaving the strides in the grass. ---- */
+  b3v2:{book:'moi', ch:2, who:'Itkovian', where:'North of Capustan', fig:'b3v_itkovian', bg:'b3v_capplain', cap:'Grey grass to every edge, a low sky, and a ridge with nothing on it yet.', steps:[
+    {txt:
+`Itkovian, Shield Anvil of the Grey Swords, rides at the head of sixty lancers a day north of Capustan, and listens to the silence where his god used to be.
+
+Fener has fallen. Karnadas the Destriant says so, and Itkovian believes him, and the company rides on as it has always ridden, in good order, because order is what remains. He is the Shield Anvil. It is his to take into himself the pain of those who fall, so that they may go on without it. He has not yet asked where the pain goes, now that there is no god to give it to.
+
+The grass is grey-green and wet. The sky sits low. Somewhere to the south, the Domin's army is coming up from the Catlin's far side, and the Mortal Sword wishes to know how fast.`},
+    {txt:
+`Sidlis, the outrider, comes back at a canter and says nothing until the horse has stopped, which is how Itkovian knows.
+
+Tracks. He goes to see. In a hollow where the grass is long, a line of prints, each as long as a man's arm, three-toed, pressed deep and far apart, as if whatever made them had been running and saw no reason to stop. They are not fresh. They are not old. Around one of them the grass has gone grey and brittle, the way grass goes where something dead has stood.
+
+"Sir," says Sidlis, very evenly. "What walks like that?"`,
+     ch:[{t:'"Close the files. We go on."', set:['b3v2_order','on']},
+         {t:'"Two riders to the Mortal Sword. Now."', set:['b3v2_order','send']}]},
+    {txt:()=>`${S.f.b3v2_order === 'send' ? `Two riders go south at the gallop with the word for the Mortal Sword. Itkovian watches them out of sight. It is the right order. It does not help.` : `The files close. The company goes on, at a walk, lances up, in good order. He does not tell them what he thinks. He is not certain yet, and certainty is the only thing he has ever been able to give them.`}
+
+It comes out of the long grass in the middle of the afternoon, and it is very fast.
+
+Grey. Taller than a mounted man. Two legs and a long tail held straight out behind for balance, and where its hands should be, swords, long as a lance is long, part of it. It is dry, and old, and its eyes are dull, and it has been dead a great while and does not know it.
+
+The first troopers to ride at it are not in their saddles any more. Itkovian does not let himself count them yet.
+
+"Ropes," he says.`},
+    {txt:
+`The Grey Swords have trained for a great many things, and this was never one of them, and they do it anyway. Riders circle it, wide. Ropes go over its neck, its arms, its tail, and horses dig in against it, and it drags them, and more ropes go on, and then, slowly, the thing goes down into the grass like a felled tree, and the lances go in, again and again, until it stops.
+
+Afterwards Itkovian walks among the fallen. He kneels by each of them, and takes what they cannot carry: the fear at the end, the pain, the last thought of home. It goes into him and stays. That is what he is for.
+
+The survivors are watching him. They want something from him.`,
+     ch:[{t:'"Their names will be said in Capustan. Every one."', set:['b3v2_word','names']},
+         {t:'Say nothing. Let them see you stand.', set:['b3v2_word','stand']}]},
+    {txt:()=>`${S.f.b3v2_word === 'stand' ? `He says nothing. He stands, and lets them see him standing, and that is enough to straighten their backs, for now.` : `"Their names will be said in Capustan," he tells them. "Every one." It is a small thing to promise. He has learned that small things are the ones that hold.`}
+
+Then Sidlis says, "Sir," very quietly, and points to the ridge.
+
+Four more. Standing along the skyline against the low grey sky, quite still, the way a heron stands at the edge of water. Then they come down the slope, and there is no going back to Capustan, and Itkovian knows it, and orders the line.
+
+And the ground in front of the line begins to smoke.
+
+Dust. It comes up out of the grass in a dozen places, in a hundred, and stands up, and is figures: shapes of hide and bone and old sinew, with swords of stone, by the hundred, between the Grey Swords and the dead things coming down the hill. They make no sound at all. They walk into the K'ell Hunters as if into a wind.`},
+    {go:'Ride south.', txt:
+`It is not quick. The stone swords break, and the figures that hold them break, more of them than Itkovian will ever be able to forget, and get up, some of them, and some do not. But at the end of it there are four grey shapes lying in the grass, and the dust is settling, and it is very quiet.
+
+One of them comes to him. A tall thing of leather and bone, with a face like a dry riverbed and two pale points of light where its eyes were.
+
+"I am Pran Chole," it says, "of the Kron. We are summoned, and pass by." It looks at the dead in the grass, his and its own, without anything that could be called expression. "These were old when we were young. Something has woken them."
+
+"Then I thank you," says Itkovian, "and I am in your debt."
+
+"No," says the Bonecaster. "You are going home to a siege. We have seen it." And it is dust, and gone.
+
+He rides south, and the Grey Swords ride behind him in good order, and he carries what he carries, and on the southern horizon there is a brown smudge across the sky the width of the world.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "They rope them," she says, as if it were the thing she most needed to know. "That's how. Ropes." Then, more quietly: "He takes it into himself. The dying. All of it." She doesn't say anything else for a while. Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together. "The grey runners," she says. "The ones that leave the dead grass." She is quiet for a moment. "And the dust that stood up. The herds' old stories say the dust walks, south of the river. I did not believe the stories." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down, face down. "Grey Swords," she says. "Mercenaries. Paid to hold a city, and holding it." She sniffs. "And something walked out of the grass at them that no copper ever paid for." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "Something grey in the grass," ${p.s} says, "and dust that stood up and fought it." ${p.S} looks south, toward Capustan. ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 3: Capustan, the night before the relief. On a roof inside the burning city, the Bridgeburners wait for morning. ---- */
+  b3v3:{book:'moi', ch:3, who:'Picker', where:'A Roof in Capustan', fig:'b3v_picker', bg:'b3v_caproof', cap:'Domes against a red sky, smoke going up in pillars, and a flat roof with a stair-head and a lot of people on it.', steps:[
+    {txt:
+`Picker lies flat on a roof in the middle of Capustan with a crossbow under her chin and her back against a chimney, and the whole city is on fire, and her arms itch.
+
+They came in at dusk, through the North Gate, which is not there any more. The sappers saw to that: a few of the good munitions, and the gate went up in pieces, and what was behind it went with it, and the Bridgeburners went through the smoke at a run into streets they had never seen, because that was the job. Then the streets filled up behind them, and in front of them, and here they are.
+
+Up a stair, on a flat roof, with a door that holds, so far.`},
+    {txt:
+`The itch is the torcs. Two of them, bronze, on her upper arms, bought on the Divide road from a man who swore they came off. They didn't. They've been warm for days now. Tonight they're hot.
+
+There are more people on the roof than Bridgeburners. A few Capan, townsmen with cudgels and a fire-bucket, who came up the stair ahead of them. And a big man with a short beard and two cutlasses, sitting with his back to the parapet, who came up the stair behind them, through whatever was on it, and has not said a word since.
+
+There are stripes on him. Dark bars, across his cheeks and down his bare arms, like paint, except they aren't paint. His eyes, when the firelight catches them, are the colour of old amber.`,
+     ch:[{t:'"Who in Hood\'s name are you?"', set:['b3v3_said','who']},
+         {t:'"Nice cutlasses."', set:['b3v3_said','blades']}]},
+    {txt:()=>`${S.f.b3v3_said === 'blades' ? `"Nice cutlasses," says Picker. He looks down at them as if he'd forgotten they were there.` : `"Who in Hood's name are you?" says Picker. He looks at her as if the question were a long way off.`}
+
+"Caravan guard," he says at last. "Captain of one. Or I was." He frowns at his arms. "I don't know what I am now."
+
+The torcs are burning. Picker hisses and pulls at the left one, out of habit, the way she's pulled at it every night since the Divide, and it slides down her arm and off her wrist as if it had never once been tight. The other follows. She sits there holding two warm rings of bronze and looking at a stranger with a tiger's stripes on him.
+
+It isn't hard to work out. She holds them out. "Here," she says. "I think these are yours."
+
+He takes them. He doesn't ask. Neither does she.`},
+    {txt:
+`The night goes on a long time.
+
+Below, the streets are full. Not with soldiers. With people the Seer has driven ahead of his army, more of them than anyone could count, and Picker does not look over the edge more than she has to, and when she does, she doesn't look long. That is all she will ever say about the streets of Capustan, to anyone.
+
+Twice they come up the stair. Twice the door holds, and the big man is there when it doesn't quite, with the cutlasses, moving like something that hunts. Spindle drops a sharper down the stairwell the second time, and swears afterwards, at length, about what he had been saving it for.
+
+Somebody counts the quarrels left, out loud, and then stops counting out loud.`},
+    {go:'Morning.', txt:
+`At dawn the Barghast come.
+
+Picker hears them before she sees them: a sound out of the north streets like surf, and then white faces, hundreds of them, painted for war, filling the lanes, going through the city the way a flood goes through a house. Whatever is in the streets runs, south and out, and the Barghast go after it.
+
+From the roof she can see over the wall to the plain. The Pannion army is coming out of the southern gates, pushed, a whole army backing out of a city it thought it had taken. And on the hills to the north, in the grey light, there are standards. The Host's. Brood's. Lines of men coming down the slope to meet it in the open, with the sun behind them.
+
+"Well," says Picker, to nobody, and then sits down, because her legs have decided it for her. "Look who turned up."
+
+Beside her the big man is turning the torcs over in his hands, looking at the stripes on his arms. He doesn't look like a man who has been given something. He looks like a man who has been told something, and is still deciding whether to believe it.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "Bridgeburners," she says, and something in her face goes careful, the way it does at that word. "In the city all night, on a roof." She looks north-east, where the light is coming. "That's us on the hills, at the end. That's tomorrow." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together. "A striped man," she says, "and a woman who gave him back what was his." She frowns at the smoke over the city. "The Tiger walked in Capustan tonight. The bones are sure." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down. "Bridgeburners," she says, the way some people say *weather*. "On a roof all night, waiting for the rest of us to turn up and take the credit." She almost smiles. "That's marines for you." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "They held a roof all night," ${p.s} says, "and at dawn the white faces came, and we were on the hills." ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 4: the prisoners. West of Capustan the Fourth watch dust stand on the horizon; under it, the Second Gathering. ---- */
+  b3v4:{book:'moi', ch:4, who:'Kruppe', where:'The Second Gathering', fig:'kruppe', bg:'b3v_gathering', cap:'A shallow valley on a cold plain, the dust standing in it like smoke, and a small figure in red in the middle of it all.', steps:[
+    {txt:
+`Kruppe has been riding a borrowed mule for three days, and the mule and Kruppe have come to an understanding, which is that neither of them will mention the other's weight.
+
+Ahead rides a child. Ten, perhaps, or older; it is hard to say, and gets harder by the week. A girl in red wool, on a Rhivi pony, who does not look back. Behind Kruppe ride two Malazan marines, women, quiet and watchful, who were sent to guard her and have plainly decided that guarding Kruppe is a separate duty for which they are not paid.
+
+The plain is cold. Colder than it should be, this far into the year. Kruppe's breath smokes. He has not been warm since the second morning.
+
+"Kruppe wonders," says Kruppe, to the back of the child's head, "whether one might know where we are going?"
+
+"To witness," says Silverfox, without turning round. "Who else will witness it, if not you?"`},
+    {txt:
+`They come over a fold in the ground, and Kruppe stops.
+
+The valley below is full. Not of men: of dust, standing in the air like smoke over a burned town, and in the dust, figures. Rows of them, ranks, clans, more than he can count and more beyond that. Short, broad, wrapped in rotted hide, with weapons of stone, and faces worn down to bone and leather by more years than Kruppe has the numbers for. They do not move. They have not moved for a very long time.
+
+The T'lan Imass. Come to the summons of a child.
+
+Silverfox rides down into them, and they part for her pony like grass. Kruppe follows, because a witness who stays on the ridge is not much of one. He finds he is very aware of the marines behind him, and grateful for them, and also that they cannot possibly help.`,
+     ch:[{t:'Offer the nearest Imass a pastry.', set:['b3v4_kruppe','pastry']},
+         {t:'Kruppe holds his tongue, for once.', set:['b3v4_kruppe','quiet']}]},
+    {txt:()=>`${S.f.b3v4_kruppe === 'pastry' ? `Kruppe, from long habit, offers the nearest one a pastry from his sleeve. It regards the pastry for some time out of two pinpricks of light. Kruppe eats it himself, as a courtesy to them both.` : `Kruppe holds his tongue. It is not a thing he does often, and he is surprised at how loud the silence is when he does.`}
+
+The child stops in the middle of them. A figure comes out of the ranks to meet her, and then another, and then a great many. Bonecasters, Kruppe thinks: their shamans, if dead things have shamans. They kneel.
+
+He leans toward her. "Kruppe might advise, perhaps, a little gentleness…"
+
+"No advice," says Silverfox. She is not looking at him. She is looking at them. "This is my Gathering, Kruppe. Leave me to it."
+
+So he does.`},
+    {txt:
+`What they want is very simple. They have kept a Vow for longer than there have been cities, a war against an enemy long since dead, and they are tired. They have been summoned by a Bonecaster of flesh and blood, the first in an age of the world, and they ask her, all of them together, in one voice like wind over stones, to let them go.
+
+"No," says Silverfox.
+
+Kruppe has heard many sounds in his life. He has heard the Fete, and a dragon over Darujhistan, and a tyrant waking under a garden. He has never heard anything like the sound that goes up from that valley. It goes on a long time. He does not put his hands over his ears, because the child does not, and she is ten, or older.
+
+When it is over, one clan withdraws its asking, very formally, and the dust begins to settle, and the ranks begin, one by one, to sink back into the ground they came out of.`},
+    {go:'Ride back.', txt:
+`They ride back in silence. The child in front, not looking round. Kruppe on his mule. The two marines behind, saying nothing, which Kruppe has come to think is their way of saying a great deal.
+
+Kruppe thinks about the child. About the people said to look out of that small face: a Malazan sorceress who died on the plain in a pillar of fire, and an older dead woman, and the Rhivi girl who was going to be somebody else. He thinks it is too much to put into one child. He thinks nobody asked her.
+
+On the second day they meet riders, coming out from the armies to look for them, and Kruppe hails them with the whole of his relief.
+
+"By chance," he calls, "would you gentlemen be riding to our fair armies? Kruppe wonders if he might impose."
+
+Behind him one of the marines laughs, once, quietly. It is the first sound either of them has made in three days. Kruppe treasures it.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "That's the dust," she says, and points with her chin to the horizon, where it stands. "That's what's under it." She is quiet for a long moment. "She said no to all of them. She's ten." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together and does not throw them again. "The Mhybe's daughter," she says. "The dead came to her across the whole world, and knelt, and asked, and she said no." She looks at the dust on the horizon. "The Rhivi will sing about this. I do not know yet what the song will say." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down. "Two of ours riding guard on her," she says. "Marines." She taps the card, once. "Nobody'll ever thank them. Nobody ever does." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "The dead came," ${p.s} says, "and asked the child to let them go, and she said no." ${p.S} looks at the dust on the horizon. ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 5: south of the Catlin. At Brood's fire, Kallor says out loud what the camp has been whispering. ---- */
+  b3v5:{book:'moi', ch:5, who:'Korlat', where:'Brood\'s Fire', fig:'korlat', bg:'b3v_broodfire', cap:'A command fire on a stripped plain, hide tents beyond it, and a great deal of dark that one of them can see through.', steps:[
+    {txt:
+`Korlat sits at Brood's fire south of the Catlin, and watches the humans try to see one another's faces in the dark.
+
+She sees them well enough. Tiste Andii were made for the night. Brood, enormous on his log, the hammer leaning beside him. Kallor, standing, because he will not sit at another man's fire. And across from her, his bad leg out straight before him as if it belonged to someone else, the Malazan, Whiskeyjack, whom she has been finding reasons to sit across from for some weeks now.
+
+Her lord is elsewhere. She speaks for the Andii in his absence. Tonight she has not yet had to say anything, and would prefer to keep it so.`},
+    {txt:
+`Kallor is talking. Kallor is very good at talking. He was a king once, of somewhere that is not there any more, and he speaks to Brood the way one old king speaks to another, as if the rest of them were furniture.
+
+The Malazans, he says, are marching on Coral for their Empire. The outlawing is a fiction, a story for children. Whoever holds Coral at the end holds the south, and Onearm knows it, and the Empress knows it, and only the warlord, it seems, does not.
+
+He does not look at Whiskeyjack once while he says it. That is how Korlat knows it is meant for him.`,
+     ch:[{t:'Speak: "My lord would want to hear this from you himself, Kallor."', set:['b3v5_said','lord']},
+         {t:'Say nothing. Watch his hands.', set:['b3v5_said','hands']}]},
+    {txt:()=>`${S.f.b3v5_said === 'lord' ? `"My lord would want to hear this from you himself, Kallor," she says, quite pleasantly. Kallor looks at her for the first time. It is not a look anyone would want twice. Then he goes on as if she had not spoken, which is its own answer.` : `She says nothing, and watches his hands. They are still. A man who lies with his mouth often tells the truth with his hands. Kallor's hands have been lying for longer than she has been alive.`}
+
+When he is done Brood looks at Whiskeyjack. Only that.
+
+Whiskeyjack shrugs, and it costs him something, with the leg. "We're marching on Coral," he says. "So are you. If you want to get there first, Warlord, I'd start walking." He waits. "That's all I've got. I'm a soldier. I leave the plotting to people with the time."
+
+Brood makes a sound deep in his chest that might be a laugh, in a smaller man. "We march," he says. That is all.
+
+Kallor goes. On his way out of the firelight his eyes go, just once, to the Rhivi tents, where the child sleeps. Korlat sees it. She is the only one who can.`},
+    {txt:
+`Later she walks the Malazan back toward his lines, because it is dark and he cannot see the ground, and because she wants to.
+
+He limps. He tries not to, and it makes it worse. Every step costs him something he is pretending not to pay. She has watched men die of wounds for a very long time, and she knows the colour of the skin round this one, even by starlight, and she knows what it means.
+
+"Let your healer see to it," she says. "Tonight."
+
+"Mallet's away with the Bridgeburners," says Whiskeyjack. "After Coral."`,
+     ch:[{t:'Insist.', set:['b3v5_leg','insist']},
+         {t:'Let it be. He has decided.', set:['b3v5_leg','let']}]},
+    {go:'Stand in the dark.', txt:()=>`${S.f.b3v5_leg === 'insist' ? `"Now," she says. "There are other healers." He stops, and looks at her, as if he could see her face. "After Coral," he says again, very gently, and that is the end of it, and she lets it be the end, because she has lived long enough to know a wall when she walks into one.` : `She lets it be. He has decided, and she has lived long enough among humans to know that they decide such things the way rivers decide where the sea is.`}
+
+At the edge of the Malazan lines he thanks her, formally, the way he thanks everybody, and goes in among his soldiers, and she can see him for a long time after they can.
+
+Korlat stands in the dark. Overhead something big and black goes across the stars with a raven's untidy wingbeat, south, toward Coral, toward her lord.
+
+She thinks about how short their lives are. She thinks that she has never minded it before.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "It's the old king saying it," she says. "Out loud, at Brood's own fire." She looks at the Host's lines, at the command tent where a lamp is still burning. "And the Commander's leg." She doesn't finish. Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together. "The Andii woman," she says. "She sees in the dark. She saw him look at the child's tent." Her mouth goes thin. "I see in the dark too, when it is the Mhybe's daughter." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down. "Leg," she says. "I've washed the shirts of a lot of men who said *after*." She folds her hands in her apron. "Somebody ought to sit on him." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "The old king said it out loud," ${p.s} says, "at Brood's fire. And the Commander's leg is worse." ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 6: the night lift. While the quorls carry the Host away in the dark, a man stands over the sea and looks at what lies under it. ---- */
+  b3v6:{book:'moi', ch:6, who:'Anomander Rake', where:'Ortnal\'s Cut', fig:'rake', bg:'b3v_cut', cap:'A black headland over a black sea, stars, and something under the water that is darker than the water.', steps:[
+    {txt:
+`Anomander Rake stands on a headland of black rock above the sea with the wind in his hair and his sword on his back, and looks down into the water.
+
+It is there. It has been there since he set it down. A darkness under the darkness, longer than a city, cracked and tilted on the bed of the Cut, the swell going over it as if it were only another reef. Moon's Spawn. His home, for longer than the humans have had a word for home. No light in it now. Fish swim through its halls.
+
+He has been away from the war for a season. He has not been idle.`},
+    {txt:
+`Something lands on the rock beside him with a great deal of noise and no grace at all.
+
+"My lord," says the Crone. "*My lord.* You will not believe the night I have had."
+
+He has had this conversation with her a thousand times over a thousand years, and he lets her have it again. The armies are south of the Catlin, she says. Brood marches. Kallor whispers. The child is back from her Gathering and in a temper. And the Malazan, Onearm, is doing something very clever and very quiet with the Moranth and their insects, every night, and is telling nobody, not even Brood.`,
+     ch:[{t:'"Let him."', set:['b3v6_said','let']},
+         {t:'"Does Brood know?"', set:['b3v6_said','brood']}]},
+    {txt:()=>`${S.f.b3v6_said === 'brood' ? `"Does Brood know?" he asks. "Brood," says the Crone, offended on the warlord's behalf, "knows everything he chooses to." Rake accepts that. It is, he reflects, the best description of Caladan Brood he has ever heard.` : `"Let him," says Rake. The Crone opens her beak to argue, and thinks better of it, which she does perhaps once a century.`}
+
+He looks up.
+
+Far off, inland, over the dark hills, the stars are going out and coming back in a long slow line, a little at a time, the way stars do when something passes in front of them. Many somethings. Flying low, north to south, toward the mountains above the city. One company a night, the Crone says. Whole companies, taken away in the dark from a road that will go on being marched by fewer and fewer men, at a predictable pace, for the Seer's spies to count.
+
+Rake watches them for a long time. He has fought these soldiers for ten years. He finds, a little to his surprise, that he likes them.`},
+    {txt:
+`South along the coast, a few leagues off, Coral sits on its bay. He can feel it from here the way you feel a draught under a door: a cold, and something old in the cold that is not what it says it is, and under that, a long way down, something chained, that will not stop screaming.
+
+On his back, in the sword, the chains answer. They always do.
+
+"You have that look," says the Crone. "The one before you do something enormous."
+
+He does not answer. He looks down into the water again, at the long dark shape on the bed of the Cut, and thinks that it has carried his people over half the world, and been hurt, and been sunk, and has one more thing still to do. One more. Then it can rest.`},
+    {go:'Wait for dawn.', txt:
+`The Crone goes, at last, in a clatter of wings, south, toward the warlord's fires with whatever she has decided to make of his silence.
+
+Rake stays. The wind drops. The last of the lights crosses the stars inland and goes down behind the mountains, and the line does not come back.
+
+He sits on the rock, his sword across his knees, the way he sat once on a temple roof over another city, and waits for the light, and listens to the sea go over the place where his home lies. In a few days he will need it.
+
+Under the water, very faintly, a crack in the dark stone gleams, as if something in there had remembered how to hold a light.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go, very slowly. "He's there," she says. "The Knight. At the edge of the sea, looking at something under the water." She turns the card face down, carefully. "It's the Spawn, Sergeant. That's what's under the water. It's been there all along." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together. "The tall one with the sword," she says. "He watches the sky, and the sea, and he is not angry." She looks at the dark where the quorls go. "That frightens me more than if he were." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down. "Him again," she says. "Stood over Pale, stood over Darujhistan, now he's stood over the sea." She shakes her head. "Whatever's under that water, I'd not want to be under it when it comes up." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "He stands over the sea," ${p.s} says, "and watches our quorls go over, and waits." ${p.H} hands are cold.`})]},
+
+  /* ---- Chapter 7: Coral. While the Fourth go to their own fight, the Bridgeburners go down out of the night sky into the city. ---- */
+  b3v7:{book:'moi', ch:7, who:'Quick Ben', where:'Into Coral', fig:'qb', bg:'b3v_coral', cap:'A city on a bay at night, a black keep with cold light in its windows, and the wind of a quorl\'s wings.', steps:[
+    {txt:
+`Quick Ben rides behind a Black Moranth on the back of a quorl, a thousand feet above Coral in the dark, with the wind trying to pull his teeth out, and every one of the souls he carries agrees that this is a terrible idea.
+
+He told them to be quiet. They aren't. They seldom are.
+
+Around him in the night, the other quorls: the Bridgeburners, what's left of them, a soldier behind every rider, munitions strapped wherever munitions will strap. He can't see them. He can hear the wings. Behind them on the mountain, Dujek and the rest of the Host, dug into the cedars, waiting for the signal. Before them, the city, on its bay. And in the middle of the city, the keep.`},
+    {txt:
+`It sits on its rise like a black tooth. Cold light in its high windows, blue-white, not lamplight. He has spent two days on that mountain trading sorcery with the men in that keep, the Seer's mages, all grey and patience, and he knows the taste of what is inside it now. Ice. Old ice. And under the ice, faint and rotten, the same chained thing that has been poisoning every warren in the south.
+
+Something comes up off the keep's towers. Big birds. Too big. Wrong in the way they fly, as if something else were moving their wings for them. The Moranth riders see them at the same moment, and the quorls tilt, and the Condors come up into the flight with a sound like tearing sailcloth.`,
+     ch:[{t:'Burn them out of the sky.', set:['b3v7_fight','burn']},
+         {t:'Hide the flight. Get down first, fight after.', set:['b3v7_fight','hide']}]},
+    {txt:()=>`${S.f.b3v7_fight === 'hide' ? `He folds the dark round the flight like a cloak, as much of it as he can hold, and the Condors go through the place where the quorls were and find air. Not all of them. Enough.` : `He opens a warren, a little one, a door left ajar, and lets what is behind it out at the nearest Condor. It falls burning toward the bay. The thing that was riding it shrieks all the way down. There are more.`}
+
+A quorl goes past him, falling, its wings gone wrong, its rider still holding the reins. He doesn't see where it lands. He doesn't look.
+
+Then they are down. A street in Coral, close by the keep's wall, paving stones and shut doors and the wet smell of the sea, and the Bridgeburners coming off the quorls before the quorls have landed, the way they always do, as if gravity were a sergeant they had stopped listening to years ago. Picker shouting. The sappers already at the wall with their satchels.`},
+    {txt:
+`The Captain is beside him. Paran, grey-faced, sick the way he has been sick all summer, with something at his heel in the shadow of a doorway that might be a Hound if you looked straight at it, which Quick Ben doesn't. A Condor comes down out of the dark at them, and Paran turns to it with the shadow going ahead of him, and Quick Ben leaves him to it, because there isn't time for anything else.
+
+The sappers run back. The wall goes up. Stone and dust and a noise like the end of the world, and when it settles, a hole in the keep of the Pannion Seer, and darkness inside it, and cold coming out of the darkness like breath.
+
+He thinks, for no reason at all, of Whiskeyjack out on the hill with the rest of them, on that leg.`,
+     ch:[{t:'"Don\'t die, Captain. It\'s untidy."', set:['b3v7_said','untidy']},
+         {t:'Say nothing. Go.', set:['b3v7_said','go']}]},
+    {go:'Go in.', txt:()=>`${S.f.b3v7_said === 'untidy' ? `"Don't die, Captain," he says over his shoulder. "It's untidy." Paran doesn't answer. Paran is busy. Quick Ben takes that as a promise.` : `He says nothing. There is nothing to say that every soldier in this street doesn't already know.`}
+
+He stands at the edge of the breach and looks back once, up, past the roofs, out over the bay.
+
+The stars over the sea are going out. Not a few at a time, the way they go behind a quorl. All of them, in a great black edge, moving inland, slow and enormous and silent, the way a mountain would move if a mountain could fly.
+
+Quick Ben grins in the dark. He can't help it.
+
+Then he goes in.`},
+    b3vEnd({
+      tuft:() => `Tuft lets the card go. "Quick Ben," she says, and for a moment she almost smiles, the way people who served with the cadre do at that name. Then she looks out toward the sea. "The stars were going out over the water, Sergeant. All of them." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together, and her hands are not steady. "The little dark one with many souls," she says. "He went into the cold place. Something very big was coming in from the sea behind him." She closes her fist on the bones. "Today. It is all today." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down, and for once she doesn't say anything clever. "Bridgeburners," she says at last. "Going in first. Always first." She looks at the squad, one after another. "Go on, then. Your turn." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "They came down out of the night into the city," ${p.s} says, "and something came in from the sea behind them." ${p.H} hands are cold.`})]},
+});
+
+/* ---- the glossary: two places only a vision shows ---- */
+GLOSSX.moi.push(
+  [1, 'Saltoan', 'A river city west of Capustan on the same trader road, gone to seed: handsome walls, gangs in the streets after dark, a harbour nobody dredges. Caravans bound east stop there.', ()=>!!(S && (S.seenVisions || []).includes('b3v1'))],
+  [6, 'Ortnal\'s Cut', 'A stretch of deep water by Coral. The fishermen there have stopped putting out over it this year, and will not say why.', ()=>!!(S && (S.seenVisions || []).includes('b3v6'))],
+);
+
+/* ============ Book Three: the visions' art (68) — backdrops VISBG b3v_* and the figures FIGX b3v_* ============
+   Drawn the way Book Two's vision backdrops are (56) and in Book Three's light (60b, 60d, 61b..67b): cold spring skies, long low ridges,
+   fires as warm glows in the dark, figures in the ~32px frame lit from the left. 36b's drawVision lays the vision's own figure, the motes,
+   the Deck's violet and the vignette over each backdrop. The grim things are far off and in silhouette: the streets of Capustan are a
+   red glow behind the parapet, the K'ell Hunters dark shapes on a ridge, the keep at Coral a black tooth with cold windows. */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* Gruntle before the Tiger: a big caravan captain, a travel-stained leather jerkin over a linen shirt, a short dark beard, two cutlasses
+     sheathed at the hips, and the look of a man who slept under a wagon */
+  b3v_gruntle(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.16, 1.14);
+    h.legs('#3a3026'); ctx.fillStyle = '#4a3624'; ctx.fillRect(-4.6, 9.2, 3.6, 3.8); ctx.fillRect(1, 9.2, 3.6, 3.8); // travel boots
+    ctx.fillStyle = '#8a7e66'; ctx.fillRect(-9.2, -5.6, 3, 8.6); ctx.fillRect(6.2, -5.6, 3, 8.6); // shirt sleeves, rolled
+    ell(ctx, -7.7, 3.6, 1.6, 1.5, '#8a6444'); ell(ctx, 7.7, 3.6, 1.7, 1.6, '#b48654');
+    poly(ctx, [[-7,-6.4],[7,-6.4],[6.6,7.4],[-6.6,7.4]], h.armor('#6e5438', '#24180e')); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-.3, -6, .6, 13); // the jerkin
+    poly(ctx, [[-1.8,-6.4],[1.8,-6.4],[0,-3.4]], '#c8bca0');
+    ctx.fillStyle = '#2a1c10'; ctx.fillRect(-6.8, 3, 13.6, 1.5); ctx.fillStyle = '#9a8a5a'; ctx.fillRect(-1, 3, 2, 1.5); // belt, an old buckle
+    B2F.line(ctx, '#2a1c10', 1.6, [[-6, 4.4], [-8.4, 10.6]]); B2F.line(ctx, '#2a1c10', 1.6, [[6, 4.4], [8.4, 10.6]]); ctx.fillStyle = '#8a7a4a'; ctx.fillRect(-6.6, 3.4, 1.6, 1.2); ctx.fillRect(5, 3.4, 1.6, 1.2); // two cutlasses, sheathed
+    h.head('#b48654', 4.7, -11.4); h.look('rgba(30,18,6,.92)', -11.8); ctx.fillStyle = 'rgba(80,30,20,.25)'; ctx.fillRect(-.8, -10.6, 4.6, .8); // red-eyed, this morning
+    poly(ctx, [[-3.6,-9.4],[4.2,-9.4],[3.8,-7.2],[1.4,-6],[-1.4,-6.2],[-3.2,-7.4]], '#2a1c10'); // a short dark beard
+    B2F.cap(ctx, '#1e140c', 4.8, -12.6, 1.02, 1.98); ctx.fillStyle = 'rgba(30,20,12,.7)'; ctx.fillRect(-4.7, -12.6, 1.2, 2.2);
+    ctx.restore(); },
+  /* Stonny Menackis: lean, black hair tied back, a fitted leather coat, a rapier out and low */
+  b3v_stonny(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.04); const sw = o.still ? 0 : Math.sin(t/260 + (o.phase || 0))*.25;
+    h.legs('#2a2420'); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-4.5, 7.6, 3.4, 5.4); ctx.fillRect(1.1, 7.6, 3.4, 5.4); // tall boots
+    poly(ctx, [[-5.6,-6],[5.6,-6],[6.4,6.4],[-6.4,6.4]], h.armor('#5a3a2a', '#1e120c')); ctx.fillStyle = '#c8b88a'; ctx.fillRect(-.4, -6, .8, 9); ctx.fillStyle = '#1a100a'; ctx.fillRect(-6, 2.6, 12, 1.1);
+    h.head('#c09a7c', 4.2, -11.4); h.look('rgba(20,12,8,.9)', -11.7);
+    B2F.cap(ctx, '#0e0a08', 4.5, -12.8); ctx.fillStyle = '#0e0a08'; ctx.fillRect(-5.2, -12, 1.6, 7); // black hair, tied back
+    ell(ctx, 6.6, 1.4, 1.3, 1.3, '#c09a7c'); ctx.save(); ctx.translate(6.6, 1.4); ctx.rotate(-.5 + sw); B2F.line(ctx, '#d8d4c8', .7, [[0, 0], [14, 0]]); ctx.strokeStyle = '#a89058'; ctx.lineWidth = .6; ctx.beginPath(); ctx.arc(.6, 0, 1.6, -1.6, 1.6); ctx.stroke(); ctx.restore(); // the rapier
+    ctx.restore(); },
+  /* Harllo: broad, fair, an apron of a cook's sacking over his mail-shirt, a ladle */
+  b3v_harllo(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.1, 1.02);
+    h.legs('#3a3428'); poly(ctx, [[-6.8,-6],[6.8,-6],[6.4,7],[-6.4,7]], h.armor('#8a8a86', '#3a3a38')); B3F.mail(ctx, -6.4, 6.4, -5.6, 2);
+    poly(ctx, [[-4.6,-1],[4.6,-1],[5.2,9],[-5.2,9]], '#8a7a5a'); ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-4.6, -1, 9.2, .8);
+    h.head('#d0a888', 4.6, -11.2); h.look('rgba(30,20,12,.85)', -11.5); B2F.cap(ctx, '#c8a060', 4.8, -12.6); ctx.fillStyle = 'rgba(200,160,96,.7)'; ctx.fillRect(-3.4, -8.6, 7, 1.4); // fair hair, a fair stubble
+    B2F.line(ctx, '#6a5a44', .9, [[6.6, 2], [10, -6]]); ell(ctx, 10.4, -6.6, 1.4, 1, '#5a4a34');
+    ctx.restore(); },
+  /* Itkovian before the siege: the Grey Swords' plate whole and clean, a grey surcoat, the visored helm under his arm; very straight */
+  b3v_itkovian(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.02, 1.12);
+    h.legs('#4a4a4c'); ctx.fillStyle = '#7a7a7c'; ctx.fillRect(-4.6, 5.4, 3.6, 5); ctx.fillRect(1, 5.4, 3.6, 5); ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(-4.6, 5.4, 1, 5); ctx.fillRect(1, 5.4, 1, 5);
+    poly(ctx, [[-6.4,-6.4],[6.4,-6.4],[6,6],[-6,6]], h.armor('#b2b4b6', '#46484c')); ctx.fillStyle = 'rgba(0,0,0,.28)'; for (let i=0;i<3;i++) ctx.fillRect(-6, -1 + i*2.4, 12, .45);
+    poly(ctx, [[-4.4,-2],[4.4,-2],[5.4,11],[-5.4,11]], h.armor('#9a9c9e', '#44464a')); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(-.3, -1, .6, 11.6); ctx.fillStyle = 'rgba(30,30,34,.6)'; ctx.fillRect(-2.6, 2, 5.2, 1); // the surcoat, whole
+    ell(ctx, -6.6, -5.6, 2.8, 2.2, '#9a9c9e'); ell(ctx, 6.6, -5.6, 2.8, 2.2, '#6a6c70'); ctx.fillStyle = 'rgba(255,255,255,.24)'; ctx.fillRect(-8.4, -6.6, 2.4, .7);
+    ctx.fillStyle = '#2a2420'; ctx.fillRect(-7.6, 2, 1.6, 9); B2F.line(ctx, '#5a5248', 1.1, [[-8.8, 2], [-4.8, 2]]); // the sword at his hip
+    ell(ctx, 8.8, 0, 3.4, 3.6, h.armor('#a8aaac', '#3a3c40')); ctx.fillStyle = '#0a0a0c'; ctx.fillRect(7.6, -.8, 3, 1); ctx.fillStyle = '#6a6a6c'; ctx.fillRect(6.2, 2.6, 2.4, 2); // the helm under his arm
+    h.head('#b8a08e', 4.1, -11.6); h.look('rgba(18,12,10,.9)', -11.9);
+    B2F.cap(ctx, '#4a3a2c', 4.3, -12.7, 1.04, 1.96); ctx.fillStyle = 'rgba(74,58,44,.6)'; ctx.fillRect(-4.2, -12.7, 1.2, 2);
+    ctx.restore(); },
+  /* Picker: a Bridgeburner corporal, short-cropped hair, a scuffed leather cuirass, a crossbow; two bronze torcs on her upper arms */
+  b3v_picker(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.02);
+    h.legs('#2e2a24'); ctx.fillStyle = '#3a2e22'; ctx.fillRect(-4.5, 9, 3.4, 4); ctx.fillRect(1.1, 9, 3.4, 4);
+    ctx.fillStyle = '#9a7656'; ctx.fillRect(-8.6, -5.4, 2.8, 8); ctx.fillRect(5.8, -5.4, 2.8, 8); // bare arms
+    if (!(typeof VIS !== 'undefined' && VIS && VIS.id === 'b3v3' && VIS.step >= 2)) { ctx.fillStyle = '#c89a4a'; ctx.fillRect(-8.8, -3.6, 3.2, 1.2); ctx.fillRect(5.6, -3.6, 3.2, 1.2); ctx.fillStyle = 'rgba(255,230,160,.6)'; ctx.fillRect(-8.6, -3.6, 1, .5); } // the torcs (gone, after she gives them up)
+    poly(ctx, [[-6,-6],[6,-6],[6,6.6],[-6,6.6]], h.armor('#7a5a3a', '#2a1a0e')); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-6, 1.4, 12, .6); ctx.fillStyle = '#1e140c'; ctx.fillRect(-6, 3, 12, 1.2);
+    ctx.fillStyle = '#5a6a48'; ctx.fillRect(-6, -6, 12, 1.4); // a faded Bridgeburner green at the collar
+    h.head('#b48a6a', 4.2, -11.4); h.look('rgba(22,12,8,.9)', -11.7); B2F.cap(ctx, '#3a2414', 4.5, -12.6, 1, 2); ctx.fillStyle = '#3a2414'; ctx.fillRect(-4.5, -12.6, 1.2, 2.6); // cropped brown hair
+    ctx.strokeStyle = '#4a3220'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(2, 0); ctx.lineTo(12, -2); ctx.stroke(); ctx.strokeStyle = '#8d8a86'; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(9.4, -6.4); ctx.quadraticCurveTo(11, -2, 9.4, 2.4); ctx.stroke(); // the crossbow
+    ctx.restore(); },
+  /* Old Benna: a Host laundress, stooped, a grey shawl, sleeves pushed up, a red-raw pair of hands and a wash-apron */
+  b3v_benna(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, .9); ctx.translate(0, 1); ctx.rotate(.06);
+    h.legs('#2e2a26'); B2F.robe(ctx, h, '#5a5248', '#22201c', 5.8, 7.4); poly(ctx, [[-4.4,-2],[4.4,-2],[5.6,11],[-5.6,11]], '#8a8274'); ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i=0;i<3;i++) ctx.fillRect(-4.8, 1 + i*3.2, 9.6, .5); // the wash-apron, damp
+    poly(ctx, [[-7,-6.6],[7,-6.6],[5,-1],[0,1],[-5,-1]], h.armor('#8a8a84', '#3a3a36')); // the shawl
+    ctx.fillStyle = '#b8846a'; ctx.fillRect(-8, -2, 2.4, 5); ctx.fillRect(5.6, -2, 2.4, 5); ell(ctx, -6.8, 3.2, 1.4, 1.3, '#c47a62'); ell(ctx, 6.8, 3.2, 1.4, 1.3, '#c47a62'); // forearms, hands red from the tubs
+    h.head('#b89a84', 4.2, -11.2); h.look('rgba(30,20,14,.85)', -11.4); ctx.fillStyle = 'rgba(80,50,40,.3)'; ctx.fillRect(-2.4, -8.4, 5.6, .5);
+    B2F.cloth(ctx, '#6a6258', 'rgba(40,36,30,.6)'); ctx.fillStyle = 'rgba(210,206,196,.7)'; ctx.fillRect(-4.6, -12.2, 1.4, 2.6); // a head-cloth, grey hair under it
+    ctx.restore(); },
+});
+
+/* ---------------- backdrop helpers ---------------- */
+const B3VB = {
+  sky(ctx, W, y, stops){ ctx.fillStyle = vgrad(ctx, 0, y, stops); ctx.fillRect(0, 0, W, y + 1); },
+  stars(ctx, W, H, T, n, ymax = .55, a = .7, seed = 1){ for (let i=0;i<n;i++){ ctx.globalAlpha = a*(.35 + .65*Math.abs(Math.sin(T/1100 + i*1.7))); ctx.fillStyle = '#dce6f4'; const b = hash(i, seed + 2) > .94 ? 1.6 : 1.1; ctx.fillRect(hash(i, seed)*W, Math.pow(hash(i, seed + 1), 1.4)*H*ymax, b, b); } ctx.globalAlpha = 1; },
+  /* a long low ridge line, filled down to the bottom */
+  ridge(ctx, W, H, base, amp, seed, col, peaks = []){ const pts = typeof moiRidge === 'function' ? moiRidge(W, H, base, amp, seed, peaks) : [[0, base - amp*.5], [W, base - amp*.5]]; ctx.beginPath(); ctx.moveTo(0, H); pts.forEach(([x, y]) => ctx.lineTo(x, y)); ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); return pts; },
+  /* grass in the foreground: short strokes, a little wind */
+  grass(ctx, W, y0, y1, T, n, col, seed = 3){ ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); for (let i=0;i<n;i++){ const y = y0 + hash(i, seed)*(y1 - y0), d = (y - y0)/(y1 - y0 + 1), x = hash(i, seed + 1)*W, l = 2 + d*6, w = Math.sin(T/900 + x/40)*(1 + d)*.8; ctx.moveTo(x, y); ctx.lineTo(x + w + 1, y - l); } ctx.stroke(); },
+  fire(ctx, x, y, T, k = 1){ const f = REDUCE() ? 1 : .86 + Math.sin(T/120)*.07 + Math.sin(T/47)*.05; glow(ctx, x, y - 4*k, 46*k, '#e07a30', .3*f); poly(ctx, [[x - 5*k, y],[x - 2*k, y - 10*k*f],[x, y - 4*k],[x + 2*k, y - 13*k*f],[x + 5*k, y]], '#d8642a'); poly(ctx, [[x - 2.4*k, y],[x, y - 7*k*f],[x + 2.4*k, y]], '#ffc060'); },
+  /* a rider seen from the side, small: a horse at a walk and a man on it with a lance; dir 1 faces right */
+  rider(ctx, x, y, s, col, T, ph = 0, dir = 1, lance = true){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const g = REDUCE() ? 0 : Math.sin(T/180 + ph);
+    ctx.fillStyle = col; ell(ctx, 0, -7, 6, 2.6, col); ctx.fillRect(4, -11, 2.2, 4.6); ell(ctx, 6.4, -11, 2.4, 1.3, col); // body, neck, head
+    ctx.strokeStyle = col; ctx.lineWidth = 1.1; ctx.beginPath(); [[-4, g], [-2.6, -g], [3, -g], [4.4, g]].forEach(([lx, k]) => { ctx.moveTo(lx, -5.6); ctx.lineTo(lx + k*1.4, 0); }); ctx.moveTo(-6, -7.4); ctx.lineTo(-8, -3.6); ctx.stroke(); // legs, tail
+    ctx.fillRect(-1.4, -14.6, 2.8, 6); ell(ctx, 0, -16, 1.5, 1.5, col); // the rider
+    if (lance) { ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(-1, -9); ctx.lineTo(2.4, -24); ctx.stroke(); }
+    ctx.restore(); },
+  /* a covered wagon in profile */
+  wagon(ctx, x, y, s, body, cover, wheel){ ctx.fillStyle = body; ctx.fillRect(x - 14*s, y - 9*s, 28*s, 5*s); ctx.beginPath(); ctx.moveTo(x - 13*s, y - 9*s); ctx.quadraticCurveTo(x - 12*s, y - 21*s, x, y - 21*s); ctx.quadraticCurveTo(x + 12*s, y - 21*s, x + 13*s, y - 9*s); ctx.closePath(); ctx.fillStyle = cover; ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i=0;i<3;i++) ctx.fillRect(x - 8*s + i*8*s, y - 20*s, .8*s, 11*s);
+    [x - 9*s, x + 9*s].forEach(wx => { ctx.strokeStyle = wheel; ctx.lineWidth = 1.4*s; ctx.beginPath(); ctx.arc(wx, y - 2.6*s, 3.6*s, 0, 7); ctx.stroke(); }); B2F.line(ctx, wheel, 1*s, [[x + 14*s, y - 6*s], [x + 22*s, y - 3*s]]); },
+  /* a small walking figure in silhouette, for crowds far off */
+  walker(ctx, x, y, s, col, T, ph = 0, dir = -1, load = 0){ const g = REDUCE() ? 0 : Math.sin(T/260 + ph); ctx.fillStyle = col; ctx.fillRect(x - 1.1*s, y - 6.4*s, 2.2*s, 4.4*s); ell(ctx, x, y - 7.6*s, 1.2*s, 1.2*s, col);
+    ctx.strokeStyle = col; ctx.lineWidth = .9*s; ctx.beginPath(); ctx.moveTo(x - .4*s, y - 2*s); ctx.lineTo(x - .4*s + g*1.2*s, y); ctx.moveTo(x + .4*s, y - 2*s); ctx.lineTo(x + .4*s - g*1.2*s, y); ctx.stroke(); if (load) ell(ctx, x - dir*1.6*s, y - 6*s, 1.8*s, 2.2*s, col); },
+  /* a hunched T'lan Imass in silhouette, for the ranks */
+  imass(ctx, x, y, s, col){ poly(ctx, [[x - 2.6*s, y],[x - 2.8*s, y - 5*s],[x - 1.6*s, y - 7.4*s],[x - .4*s, y - 8.4*s],[x + 1.2*s, y - 8*s],[x + 2.6*s, y - 6*s],[x + 2.8*s, y]], col); ell(ctx, x + .2*s, y - 9.2*s, 1.3*s, 1.3*s, col); B2F.line(ctx, col, .7*s, [[x + 2.6*s, y - 4*s], [x + 3.6*s, y - 10*s]]); },
+  /* dust standing in the air: a soft column of tan glow */
+  dust(ctx, x, y, w, h, T, a, seed = 0){ for (let i=0;i<7;i++){ const k = i/6, dy = REDUCE() ? 0 : Math.sin(T/1700 + i + seed)*3; glow(ctx, x + (hash(i, seed + 40) - .5)*w*.6, y - k*h + dy, w*(.35 + hash(i, seed + 41)*.25), '#c8b08a', a*(1 - k*.6)); } },
+  /* a quorl far off, side-on: a long thin body, a rider's bump, two pairs of wings as a flat shimmer over it */
+  quorl(ctx, x, y, s, T, a = 1, ph = 0, dir = 1){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const f = REDUCE() ? .6 : .5 + Math.abs(Math.sin(T/40 + ph))*.5;
+    ell(ctx, -2, -2.4, 9, 2.2*f + .4, `rgba(170,196,224,${.22*a})`); ell(ctx, 5, -2.2, 7, 2*f + .4, `rgba(170,196,224,${.18*a})`);
+    ctx.fillStyle = `rgba(4,6,10,${a})`; ctx.beginPath(); ctx.moveTo(-22, .6); ctx.quadraticCurveTo(-8, -.8, 9, -1.2); ctx.quadraticCurveTo(13, -1, 13, .4); ctx.quadraticCurveTo(9, 1.6, -8, 1.2); ctx.closePath(); ctx.fill(); ell(ctx, 14, 0, 2, 1.7, ctx.fillStyle); ctx.fillRect(2, -4.6, 2, 3.6); ell(ctx, 3, -5.4, 1.1, 1.1, ctx.fillStyle); ctx.strokeStyle = `rgba(150,176,210,${.35*a})`; ctx.lineWidth = .5/s + .3; ctx.beginPath(); ctx.moveTo(-22, .6); ctx.quadraticCurveTo(-8, -.8, 9, -1.2); ctx.quadraticCurveTo(13, -1, 13, .4); ctx.stroke();
+    ctx.restore(); },
+  /* a K'ell Hunter in silhouette on a skyline: leaning forward, the tail out straight, the long blades down */
+  khell(ctx, x, y, s, col, dir = -1){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s);
+    poly(ctx, [[-14, -15],[-4, -18],[4, -21],[8, -24],[11, -23],[9, -19],[4, -15],[-2, -12],[-14, -14]], col); // tail, body, neck, head
+    B2F.line(ctx, col, 1.6, [[-1, -13], [-3, -6], [-1, 0]]); B2F.line(ctx, col, 1.6, [[1, -13], [3, -6], [5, 0]]); // legs
+    B2F.line(ctx, col, .9, [[5, -17], [9, -10], [14, -4]]); B2F.line(ctx, col, .9, [[3, -16], [6, -9], [9, -2]]); // the blades
+    ctx.restore(); },
+  /* the hide tents of Brood's camp and the Rhivi */
+  tent(ctx, x, y, s, c){ poly(ctx, [[x - 9*s, y],[x - 1*s, y - 11*s],[x + 1*s, y - 11*s],[x + 9*s, y]], c); B2F.line(ctx, c, .8*s, [[x - 1*s, y - 11*s], [x - 2.4*s, y - 14*s]]); B2F.line(ctx, c, .8*s, [[x + 1*s, y - 11*s], [x + 2.4*s, y - 14*s]]); },
+};
+
+Object.assign(VISBG, {
+  /* Saltoan at dawn: the wall and its towers, the river, the caravan's wagons and Keruli's shut carriage; then the road east and the people on it */
+  b3v_saltoan(ctx, W, H, T, v){ const s = v.step || 0, road = s >= 3;
+    B3VB.sky(ctx, W, H*.6, [[0, '#4a5068'], [.6, '#a8988a'], [1, '#d8b890']]); glow(ctx, road ? W*.92 : W*.82, H*.56, W*.4, '#ffd8a0', .3);
+    for (let i=0;i<3;i++) cloud(ctx, W*(.18 + i*.32), H*(.14 + i*.04), W*.3, 3, '#e8d0b8', .12);
+    B3VB.ridge(ctx, W, H, H*.58, H*.06, 31, '#6a6670');
+    if (!road) { // the town on its river: a curtain wall, towers, roofs gone to ruin at one end
+      ctx.fillStyle = '#4a4248'; ctx.fillRect(0, H*.38, W*.62, H*.24); for (let i=0;i<5;i++){ const x = W*(.02 + i*.13); ctx.fillRect(x, H*(.3 - hash(i, 51)*.04), W*.05, H*.2); for (let j=0;j<3;j++) ctx.fillRect(x + j*W*.018, H*(.28 - hash(i, 51)*.04), W*.01, H*.02); }
+      ctx.fillStyle = '#3a343a'; for (let i=0;i<9;i++) poly(ctx, [[W*(.04 + i*.065), H*.38],[W*(.07 + i*.065), H*(.32 - hash(i, 52)*.03)],[W*(.1 + i*.065), H*.38]], '#3a343a');
+      ctx.fillStyle = 'rgba(255,220,170,.22)'; ctx.fillRect(0, H*.38, W*.62, 1); poly(ctx, [[W*.56, H*.62],[W*.6, H*.4],[W*.64, H*.46],[W*.66, H*.62]], '#4a4248'); } // the broken end
+    else { ctx.fillStyle = '#5a525a'; ctx.fillRect(0, H*.5, W*.12, H*.1); ctx.fillRect(W*.02, H*.46, W*.03, H*.06); } // the town small behind them now
+    ctx.fillStyle = vgrad(ctx, H*.62, H*.7, [[0, '#6a5a48'], [1, '#4a3e30']]); ctx.fillRect(0, H*.62, W, H*.08); ctx.fillStyle = 'rgba(255,220,170,.18)'; for (let i=0;i<8;i++) ctx.fillRect(hash(i, 53)*W, H*(.63 + hash(i, 54)*.05), 10 + hash(i, 55)*14, 1); // the brown river
+    ctx.fillStyle = vgrad(ctx, H*.7, H, [[0, '#5a5438'], [1, '#2e2a1c']]); ctx.fillRect(0, H*.7, W, H*.3); B3VB.grass(ctx, W, H*.72, H, T, 90, 'rgba(110,104,70,.6)', 5);
+    if (!road) { B3VB.wagon(ctx, W*.62, H*.84, 1.1, '#3a2a1a', '#a89a7e', '#2a1e12'); B3VB.wagon(ctx, W*.86, H*.8, .9, '#3a2a1a', '#968a70', '#2a1e12');
+      ctx.fillStyle = '#2a1c14'; ctx.fillRect(W*.4, H*.66, W*.12, H*.12); ctx.fillStyle = '#4a2a20'; ctx.fillRect(W*.405, H*.675, W*.03, H*.07); ctx.fillRect(W*.47, H*.675, W*.03, H*.07); ell(ctx, W*.42, H*.79, 4, 4, '#1a120c'); ell(ctx, W*.5, H*.79, 4, 4, '#1a120c'); // Keruli's carriage, curtains drawn
+      B3VB.fire(ctx, W*.34, H*.92, T, .9); ctx.fillStyle = 'rgba(200,200,210,.14)'; for (let i=0;i<5;i++) ell(ctx, W*.34 + Math.sin(T/900 + i)*4 + i*2, H*(.82 - i*.05), 3 + i, 2 + i*.6, 'rgba(200,200,210,.1)'); // smoke from the fire
+      if (s <= 1) { drawFigure(ctx, 'b3v_stonny', W*.76, H*.94, 1.8, T, {dir:-1, phase:1}); drawFigure(ctx, 'b3v_harllo', W*.42, H*.95, 1.8, T, {dir:-1, still:true}); }
+      ctx.fillStyle = '#4a3a2a'; ctx.fillRect(W*.82, H*.92, 3, 10); } // Stonny's fence post
+    else { for (let i=0;i<3;i++) B3VB.wagon(ctx, W*(.5 + i*.18) + (REDUCE() ? 0 : (T*.004) % 10), H*(.86 - i*.03), 1 - i*.15, '#3a2a1a', '#a89a7e', '#2a1e12');
+      drawFigure(ctx, 'b3v_stonny', W*.44, H*.9, 1.7, T, {dir:1, phase:1}); drawFigure(ctx, 'b3v_harllo', W*.62, H*.94, 1.7, T, {dir:1, phase:2});
+      if (s === 4) { const step = REDUCE() ? 0 : T*.006; for (let i=0;i<10;i++){ const x = W*(.98 - ((hash(i, 56)*.5 + step*.002*(1 + hash(i, 57))) % .6)), y = H*(.66 + hash(i, 58)*.04); B3VB.walker(ctx, x, y, 1.1 + hash(i, 59)*.3, '#3a342c', T, i, -1, hash(i, 60) > .5); } } } // the people coming west
+    return {fx:road ? W*.28 : W*.22, fy:H*.9, fs:2.2}; },
+
+  /* north of Capustan: grey grass to every edge under a low sky; the tracks; the Hunter and the ropes; the four on the ridge and the dust; after */
+  b3v_capplain(ctx, W, H, T, v){ const s = v.step || 0;
+    B3VB.sky(ctx, W, H*.58, [[0, '#5a6068'], [1, '#9aa09a']]); for (let i=0;i<4;i++) cloud(ctx, W*(.1 + i*.26), H*(.12 + (i%2)*.06), W*.34, 3, '#3e444c', .18);
+    if (s >= 5) { glow(ctx, W*.8, H*.56, W*.4, '#8a6a4a', .3); ctx.fillStyle = 'rgba(110,84,60,.35)'; ctx.fillRect(0, H*.5, W, H*.07); } // the Domin's dust, the width of the world
+    const rp = B3VB.ridge(ctx, W, H, H*.58, H*.1, 23, '#5a6458', [[.72, .6, .2]]); // the ridge, highest on the right
+    if (s === 4) { for (let i=0;i<4;i++){ const k = .62 + i*.07; const p = rp[Math.round(k*64)]; B3VB.khell(ctx, p[0], Math.max(p[1] + H*.045, H*.585), .7, '#2a2e2e', -1); } } // four on the skyline
+    ctx.fillStyle = vgrad(ctx, H*.58, H, [[0, '#6a7464'], [1, '#3a4436']]); ctx.fillRect(0, H*.6, W, H*.4); B3VB.grass(ctx, W, H*.62, H, T, 140, 'rgba(150,160,130,.45)', 7);
+    if (s <= 1) for (let i=0;i<7;i++) B3VB.rider(ctx, W*(.42 + i*.06), H*(.68 + (i%2)*.02), .9, '#3a3e3c', T, i, 1);
+    if (s === 1) for (let i=0;i<6;i++){ const x = W*(.36 + i*.1), y = H*(.86 + (i%2)*.05); ell(ctx, x, y, 7, 2, 'rgba(20,24,18,.6)'); for (let k=-1;k<=1;k++) B2F.line(ctx, 'rgba(20,24,18,.6)', 1.2, [[x + 4, y], [x + 9, y + k*3]]); ell(ctx, x, y + 1, 12, 3, 'rgba(160,160,150,.15)'); } // three-toed prints, the grass grey round them
+    if (s === 2) { const kx = W*.62, ky = H*.86; drawFigure(ctx, 'khell', kx, ky, 1.35, T, {dir:-1}); // the Hunter, and the ropes on it
+      for (let i=0;i<5;i++){ const a = i/5*Math.PI*2 + (REDUCE() ? 0 : T/3000), rx = kx + Math.cos(a)*W*.26, ry = H*(.8 + Math.sin(a)*.08); B3VB.rider(ctx, rx, ry, 1.25, '#2e3230', T, i, Math.cos(a) > 0 ? -1 : 1); ctx.strokeStyle = 'rgba(200,180,140,.7)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(rx, ry - 16); ctx.quadraticCurveTo((rx + kx)/2, ry - 6, kx, ky - 22); ctx.stroke(); } }
+    if (s === 3) { const kx = W*.62, ky = H*.88; poly(ctx, [[kx - 34, ky],[kx - 26, ky - 8],[kx - 6, ky - 12],[kx + 10, ky - 9],[kx + 22, ky - 4],[kx + 40, ky - 2],[kx + 36, ky + 2]], '#2a2c2a'); B2F.line(ctx, '#3a3c38', 1.6, [[kx - 6, ky - 10], [kx + 6, ky - 22]]); B2F.line(ctx, '#3a3c38', 1.6, [[kx + 2, ky - 10], [kx + 18, ky - 16]]); // the Hunter down in the grass, a long grey heap
+      ctx.strokeStyle = 'rgba(200,180,140,.6)'; ctx.lineWidth = .8; for (let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(kx - 20 + i*18, ky - 6); ctx.quadraticCurveTo(kx + 30 + i*10, ky - 20, W*(.76 + i*.06), H*(.76 + (i%2)*.03)); ctx.stroke(); }
+      for (let i=0;i<4;i++) B3VB.rider(ctx, W*(.74 + i*.06), H*(.78 + (i%2)*.03), .9, '#2e3230', T, i, -1); for (let i=0;i<3;i++) ell(ctx, W*(.4 + i*.08), H*(.9 + (i%2)*.03), 8, 2.4, '#2a2e26'); }
+    if (s === 4) { for (let i=0;i<5;i++) B3VB.dust(ctx, W*(.3 + i*.13), H*.82, 36, H*.4, T, .2, i); for (let i=0;i<9;i++) B3VB.imass(ctx, W*(.28 + i*.07), H*(.84 + (i%3)*.03), 1.5, 'rgba(70,60,46,.85)'); drawFigure(ctx, 'b3_c4_imass', W*.62, H*.94, 1.8, T, {dir:1}); }
+    if (s >= 5) { ell(ctx, W*.66, H*.88, 22, 4, '#2a2e26'); ell(ctx, W*.86, H*.82, 16, 3, '#2e3228'); B3VB.dust(ctx, W*.55, H*.92, 30, H*.2, T, .1, 9); drawFigure(ctx, 'b3_c4_imass', W*.5, H*.92, 2, T, {dir:-1, still:true}); for (let i=0;i<5;i++) B3VB.rider(ctx, W*(.72 + i*.05), H*(.74 + (i%2)*.02), .8, '#3a3e3c', T, i, -1); }
+    return {fx:W*.22, fy:H*.9, fs:2.2}; },
+
+  /* Capustan at night from a roof: domes and smoke against a red sky, the parapet, the stair-head door; at dawn, the plain and the standards on the hills */
+  b3v_caproof(ctx, W, H, T, v){ const s = v.step || 0, dawn = s >= 4, sc = Math.max(.6, Math.min(1, W/600));
+    B3VB.sky(ctx, W, H*.7, dawn ? [[0, '#5a5a6e'], [.6, '#a88a80'], [1, '#d8a888']] : [[0, '#0e0a10'], [.6, '#3a1814'], [1, '#7a3018']]);
+    if (!dawn) B3VB.stars(ctx, W, H, T, 18, .25, .4); else glow(ctx, W*.1, H*.6, W*.4, '#ffd0a0', .25);
+    if (dawn) { B3VB.ridge(ctx, W, H, H*.5, H*.08, 41, '#6a6460'); ctx.fillStyle = '#7a6e62'; ctx.fillRect(0, H*.5, W, H*.08); // the plain past the wall; the standards coming down the hills
+      for (let i=0;i<14;i++){ const x = W*(.04 + i*.035), y = H*(.47 - hash(i, 61)*.03); ctx.fillStyle = '#2a2420'; ctx.fillRect(x, y, 1, 7); ctx.fillStyle = i%3 ? '#5a1a1a' : '#2a2a3a'; ctx.fillRect(x + 1, y, 4, 3); } ctx.fillStyle = 'rgba(40,34,30,.6)'; ctx.fillRect(W*.02, H*.5, W*.5, 2.4); } // the Host and Brood's lines, dark threads on the slope
+    const fires = typeof b3c3Skyline === 'function' ? b3c3Skyline(ctx, W, H*.66, dawn ? sc*.62 : sc, 7, dawn ? {mass:['#5a4e4c', '#4a403e'], wall:'#4a4240', wallLit:'#6a5c56', tower:'#4e4644', dome:[['#8a7a50', '#4a4234'], ['#4a6a66', '#2a3a38'], ['#4a5a7a', '#2a3448']]} : {mass:['#1e1214', '#160e10'], wall:'#140c0c', wallLit:'#3a1a14', tower:'#180e0e', dome:[['#4a3420', '#1a120c'], ['#22302e', '#121a18'], ['#262a3a', '#12141c']]}, {windows:!dawn, light:dawn ? 1 : .4, thrall:W*.62}) : [];
+    if (!dawn) { fires.slice(0, 6).forEach(([fx, fy], i) => { glow(ctx, fx, fy, 30*sc, '#ff6a2a', .35 + (REDUCE() ? 0 : Math.sin(T/200 + i)*.06)); if (typeof b3c3Smoke === 'function') b3c3Smoke(ctx, fx, fy, sc*.6, T, REDUCE() ? 0 : 1, i, '#1a0e0c', .5); }); glow(ctx, W*.5, H*.7, W*.6, '#ff5a20', .2); }
+    else fires.slice(0, 4).forEach(([fx, fy], i) => { if (typeof b3c3Smoke === 'function') b3c3Smoke(ctx, fx, fy, sc*.5, T, REDUCE() ? 0 : 1, i, '#4a4440', .25); });
+    // the roof: flat, a parapet along its edge, a stair-head with a door on the right
+    ctx.fillStyle = dawn ? '#4a3e36' : '#1a1210'; ctx.fillRect(0, H*.74, W, H*.26); ctx.fillStyle = dawn ? '#5e5046' : '#22161a'; ctx.fillRect(0, H*.7, W, H*.05); for (let x=0; x<W; x+=14) ctx.fillRect(x, H*.67, 8, H*.03);
+    ctx.fillStyle = dawn ? 'rgba(255,220,180,.2)' : 'rgba(255,110,50,.25)'; ctx.fillRect(0, H*.7, W, 1.2);
+    const dx = W*.84; ctx.fillStyle = dawn ? '#52463e' : '#1e1416'; ctx.fillRect(dx - 18, H*.5, 36, H*.3); ctx.fillStyle = '#0a0606'; ctx.fillRect(dx - 7, H*.6, 14, H*.2); ctx.fillStyle = dawn ? '#6a5a44' : '#2a1a10'; ctx.fillRect(dx - 6, H*.61, 12, H*.19); ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.lineWidth = 1; for (let i=1;i<4;i++){ ctx.beginPath(); ctx.moveTo(dx - 6, H*(.61 + i*.045)); ctx.lineTo(dx + 6, H*(.61 + i*.045)); ctx.stroke(); } // the door that holds
+    ctx.fillStyle = dawn ? '#4a3c32' : '#160e0e'; ctx.fillRect(W*.3, H*.56, 10, H*.18); // a chimney
+    if (!dawn) glow(ctx, W*.5, H*.86, W*.5, '#ff6a30', .12);
+    drawFigure(ctx, 'b3_c3_gruntle', W*.6, H*.92, 1.9, T, {dir:-1, still:s !== 3, phase:1});
+    drawFigure(ctx, 'b3_c3_capan', W*.42, H*.93, 1.6, T, {dir:1, phase:2, still:true}); drawFigure(ctx, 'b3_c7_bridgeburner', W*.72, H*.92, 1.7, T, {dir:-1, phase:3, still:s < 3});
+    if (s >= 2) { const gx = W*.6 + 12, gy = H*.92 - 18; ctx.strokeStyle = 'rgba(214,170,80,.9)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(gx, gy, 2.4, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(gx + 3, gy + 1, 2.4, 0, 7); ctx.stroke(); } // the torcs, in his hands now
+    if (dawn) for (let i=0;i<6;i++) B3VB.walker(ctx, W*(.12 + i*.06), H*.69, 1, '#e8e0d0', T, i, 1); // white-painted faces going down a lane, glimpsed
+    return {fx:W*.22, fy:H*.92, fs:2.2}; },
+
+  /* the Gathering: a cold plain; the valley full of standing dust and the ranks of the dead; the ride back */
+  b3v_gathering(ctx, W, H, T, v){ const s = v.step || 0, val = s >= 1 && s <= 3;
+    B3VB.sky(ctx, W, H*.56, [[0, '#6a7480'], [1, '#c8ccc8']]); glow(ctx, W*.2, H*.2, 18, '#f0f0e8', .5); // a pale low sun
+    B3VB.ridge(ctx, W, H, H*.52, H*.05, 61, '#7a7c78');
+    if (!val) { ctx.fillStyle = vgrad(ctx, H*.52, H, [[0, '#8a8a7a'], [1, '#4a4a3e']]); ctx.fillRect(0, H*.54, W, H*.46); B3VB.grass(ctx, W, H*.56, H, T, 110, 'rgba(200,200,180,.35)', 11);
+      for (let i=0;i<14;i++) ell(ctx, hash(i, 62)*W, H*(.6 + hash(i, 63)*.36), 3 + hash(i, 64)*6, 1, 'rgba(230,236,240,.25)'); // frost in the hollows
+      if (s === 0) { drawFigure(ctx, 'silverfox', W*.66, H*.8, 2.3, T, {dir:1, phase:1}); drawFigure(ctx, 'b2soldier', W*.08, H*.84, 1.6, T, {dir:1, phase:2}); drawFigure(ctx, 'b2soldier', W*.02, H*.88, 1.6, T, {dir:1, phase:3}); }
+      else { for (let i=0;i<5;i++) B3VB.rider(ctx, W*(.62 + i*.07), H*(.66 + (i%2)*.02), 1, '#4a4a44', T, i, -1, false); drawFigure(ctx, 'b2soldier', W*.42, H*.9, 1.7, T, {dir:1, phase:2}); } }
+    else { ctx.fillStyle = vgrad(ctx, H*.5, H, [[0, '#7a7466'], [1, '#3a362c']]); ctx.fillRect(0, H*.52, W, H*.48); // the valley floor, down into it
+      const n = s === 3 ? 90 : 120; for (let r=0;r<5;r++) for (let i=0;i<n/5;i++){ const x = W*(.36 + (i/(n/5))*.62) + (r%2)*5, y = H*(.6 + r*.06); if (s === 3 && hash(i, r + 70) > .7) continue; B3VB.imass(ctx, x, y, .9 + r*.25, `rgba(${46 + r*6},${40 + r*5},${30 + r*4},${.55 + r*.08})`); } // the ranks
+      for (let i=0;i<6;i++) B3VB.dust(ctx, W*(.4 + i*.1), H*.72, 50, H*(.5 + (s === 3 ? .2 : 0)), T, s === 3 ? .16 : .12, i + 20);
+      drawFigure(ctx, 'silverfox', W*.68, H*.88, 2.3, T, {dir:-1, still:true}); if (s >= 2) { drawFigure(ctx, 'b3_c4_imass', W*.78, H*.9, 1.8, T, {dir:-1, still:true}); drawFigure(ctx, 'b3_c4_imass', W*.86, H*.88, 1.7, T, {dir:-1, still:true}); }
+      drawFigure(ctx, 'b2soldier', W*.4, H*.92, 1.6, T, {dir:1, still:true}); drawFigure(ctx, 'b2soldier', W*.46, H*.94, 1.6, T, {dir:1, still:true, phase:2}); }
+    return {fx:W*.22, fy:H*.9, fs:2.2}; },
+
+  /* Brood's fire south of the Catlin: a stripped plain at night, hide tents, the command fire; then the dark walk to the Malazan lamps */
+  b3v_broodfire(ctx, W, H, T, v){ const s = v.step || 0, walk = s >= 3;
+    B3VB.sky(ctx, W, H*.6, [[0, '#06070e'], [1, '#1a1c2a']]); B3VB.stars(ctx, W, H, T, 70, .55, .8, 5);
+    B3VB.ridge(ctx, W, H, H*.6, H*.04, 71, '#0e0f14'); ctx.fillStyle = vgrad(ctx, H*.6, H, [[0, '#14141a'], [1, '#08080a']]); ctx.fillRect(0, H*.6, W, H*.4);
+    if (!walk) { for (let i=0;i<7;i++) B3VB.tent(ctx, W*(.08 + i*.14), H*(.64 + (i%2)*.03), 1.3, '#1a1612');
+      const fx = W*.56, fy = H*.9; B3VB.fire(ctx, fx, fy, T, 1.8); glow(ctx, fx, fy - 10, W*.5, '#e07a30', .12);
+      drawFigure(ctx, 'brood', W*.7, H*.9, 1.8, T, {dir:-1, still:true}); drawFigure(ctx, 'wj', W*.42, H*.94, 1.9, T, {dir:1, still:true});
+      if (s <= 2) drawFigure(ctx, 'kallor', W*.86, H*.88, 1.8, T, {dir:-1, still:true, alpha:s === 2 ? .7 : 1}); }
+    else { for (let i=0;i<12;i++){ const x = W*(.5 + i*.04), y = H*(.66 + hash(i, 72)*.02); glow(ctx, x, y, 8, '#e8a050', .3); ctx.fillStyle = '#ffd890'; ctx.fillRect(x - .6, y - .6, 1.2, 1.2); } // the Malazan lines, lamps in a row
+      for (let i=0;i<5;i++) B3VB.tent(ctx, W*(.52 + i*.1), H*.68, .9, '#0e0c0a');
+      if (s === 3) drawFigure(ctx, 'wj', W*.46, H*.92, 1.9, T, {dir:1, phase:1});
+      if (s === 4) { const cx = W*(.2 + ((REDUCE() ? 0 : T/16000) % .8)), cy = H*.16; drawFigure(ctx, 'crone', cx, cy, .9, T, {air:true, dir:1}); } }
+    return {fx:walk ? W*.3 : W*.22, fy:H*.9, fs:2.2}; },
+
+  /* Ortnal's Cut: a black headland over a black sea; the Spawn under the water; the quorls crossing the stars inland; Coral's cold to the south */
+  b3v_cut(ctx, W, H, T, v){ const s = v.step || 0, pre = s >= 4;
+    B3VB.sky(ctx, W, H*.56, pre ? [[0, '#0a0c18'], [.75, '#1e2232'], [1, '#3a3a4a']] : [[0, '#05060c'], [1, '#141828']]); B3VB.stars(ctx, W, H, T, 90, .52, pre ? .5 : .9, 9);
+    B3VB.ridge(ctx, W, H, H*.52, H*.12, 81, '#0a0b12', [[.3, .7, .2], [.55, .5, .15]]); // the hills inland, and the mountains over Coral
+    if (s >= 3) { glow(ctx, W*.86, H*.5, 40, '#bcd8f0', .14); ctx.fillStyle = 'rgba(200,220,240,.5)'; ctx.fillRect(W*.86, H*.48, 1.4, 1.4); } // Coral's cold, far down the coast
+    if (s >= 2 && s <= 4) { const k = s === 4 ? .3 : 1; for (let i=0;i<6;i++){ const p = REDUCE() ? .5 : ((T/14000 + i*.17) % 1); B3VB.quorl(ctx, W*(.1 + p*.62), H*(.24 + i*.025 + p*.06), .75, T, .9*k, i); } } // the quorls, low over the hills, north to south
+    ctx.fillStyle = vgrad(ctx, H*.52, H, [[0, '#0e1220'], [1, '#04050a']]); ctx.fillRect(0, H*.52, W, H*.48); // the sea
+    ctx.fillStyle = 'rgba(160,180,220,.12)'; for (let i=0;i<20;i++){ const y = H*(.54 + hash(i, 82)*.44), x = (hash(i, 83)*W + (REDUCE() ? 0 : T*.004*(1 + hash(i, 84)))) % W; ctx.fillRect(x, y, 6 + hash(i, 85)*14, .8); }
+    // the Spawn under the water: a long dark shape, cracked, tilted, its edge catching nothing
+    ctx.save(); ctx.translate(W*.62, H*.8); ctx.rotate(-.05); ctx.globalAlpha = .9; poly(ctx, [[-W*.3, 0],[-W*.22, -H*.06],[-W*.04, -H*.08],[W*.16, -H*.07],[W*.3, -H*.02],[W*.26, H*.05],[W*.04, H*.08],[-W*.2, H*.06]], '#020308');
+    ctx.strokeStyle = 'rgba(130,120,190,.38)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-W*.3, 0); ctx.lineTo(-W*.22, -H*.06); ctx.lineTo(-W*.04, -H*.08); ctx.lineTo(W*.16, -H*.07); ctx.lineTo(W*.3, -H*.02); ctx.stroke(); for (let i=0;i<4;i++) ctx.fillRect(-W*.16 + i*W*.08, -H*.065, 2, H*.05); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.beginPath(); ctx.moveTo(-W*.06, -H*.07); ctx.lineTo(W*.02, H*.02); ctx.lineTo(-W*.02, H*.07); ctx.stroke(); // the crack
+    if (pre) { const g = REDUCE() ? .5 : .5 + Math.sin(T/700)*.3; glow(ctx, W*.01, H*.0, 14, '#9a86e0', .3*g); ctx.fillStyle = `rgba(200,190,255,${.6*g})`; ctx.fillRect(W*.01 - .8, -.8, 1.6, 1.6); } // a gleam in the crack
+    ctx.restore(); ctx.globalAlpha = 1;
+    poly(ctx, [[0, H*.44],[W*.12, H*.42],[W*.24, H*.5],[W*.32, H*.6],[W*.36, H*.74],[W*.3, H],[0, H]], '#050508'); ctx.strokeStyle = 'rgba(140,150,190,.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, H*.44); ctx.lineTo(W*.12, H*.42); ctx.lineTo(W*.24, H*.5); ctx.stroke(); // the headland
+    if (s === 1 || s === 2 || s === 3) drawFigure(ctx, 'crone', W*.26, H*.52, 1.2, T, {dir:-1, still:s !== 1});
+    return {fx:W*.16, fy:H*.44, fs:1.9}; },
+
+  /* Coral by night: from the air, the city on its bay and the keep; the Condors; the street by the keep wall; the breach; the sky over the sea going dark */
+  b3v_coral(ctx, W, H, T, v){ const s = v.step || 0, air = s <= 1;
+    B3VB.sky(ctx, W, H, [[0, '#04050a'], [.6, '#0e1220'], [1, '#141a2a']]);
+    const blot = s >= 4 ? (REDUCE() ? .5 : Math.min(1, ((T % 20000)/20000)*.6 + .4)) : 0;
+    B3VB.stars(ctx, W, H, T, 80, .6, .9, 13);
+    if (blot) { ctx.save(); ctx.beginPath(); const ex = W*(1.1 - blot*.5); ctx.moveTo(W, 0); ctx.lineTo(ex, 0); ctx.quadraticCurveTo(ex - W*.08, H*.18, ex + W*.04, H*.36); ctx.lineTo(W, H*.4); ctx.closePath(); ctx.fillStyle = '#020204'; ctx.fill(); ctx.strokeStyle = 'rgba(150,130,200,.2)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore(); } // the stars going out over the sea
+    if (air) { const base = H*.8, ks = Math.max(.7, W/560);
+      ctx.fillStyle = vgrad(ctx, H*.56, H, [[0, '#0c1018'], [1, '#05070c']]); ctx.fillRect(0, H*.56, W, H*.44); poly(ctx, [[W*.62, H],[W*.66, H*.7],[W*.76, H*.6],[W, H*.58],[W, H]], '#0e1626'); // the land, and the bay on the right
+      for (let r=0;r<4;r++) for (let i=0;i<22;i++){ const x = W*(.02 + i*.028 + (r%2)*.012), y = H*(.62 + r*.09) + hash(i, r + 30)*4, w = 5 + hash(i, r + 31)*8, hh = 4 + hash(i, r + 32)*9; if (x > W*.64 - r*W*.02) continue; ctx.fillStyle = r%2 ? '#161c2a' : '#121826'; ctx.fillRect(x, y - hh, w, hh); ctx.fillStyle = 'rgba(200,210,230,.06)'; ctx.fillRect(x, y - hh, w, 1);
+        if (hash(i, r + 33) > .5) { const lx = x + w*hash(i, r + 34), ly = y - hh*hash(i, r + 35); glow(ctx, lx, ly, 5, '#e8a050', .25); ctx.fillStyle = '#ffd090'; ctx.fillRect(lx, ly, 1, 1); } } // streets of roofs, a lamp here and there
+      for (let i=0;i<10;i++) ctx.fillRect(W*(.66 + hash(i, 36)*.3), H*(.66 + hash(i, 37)*.3), 4 + hash(i, 38)*6, .8); // lamplight on the bay
+      if (typeof b67Keep === 'function') { glow(ctx, W*.4, base - 40*ks, 70*ks, '#bcd8f0', .1); b67Keep(ctx, W*.4, base, ks, '#04050a', .75 + (REDUCE() ? 0 : Math.sin(T/600)*.1)); }
+      for (let i=0;i<5;i++){ const p = REDUCE() ? .5 : ((T/9000 + i*.2) % 1); B3VB.quorl(ctx, W*(.95 - p*.5), H*(.16 + i*.06), .7 + i*.08, T, .9, i, -1); }
+      if (s === 1) for (let i=0;i<3;i++) drawFigure(ctx, 'b3_c6_condor', W*(.5 + i*.13) + (REDUCE() ? 0 : Math.sin(T/500 + i)*6), H*(.44 - i*.07), .75, T, {air:true, phase:i, dir:-1, alpha:.85});
+      // the quorl he rides: a long dark body under the figure, wings blurring
+      const qx = W*.26, qy = H*.42; B3VB.quorl(ctx, qx + 4, qy + 6, 2.2, T, 1, 0, 1); drawFigure(ctx, 'b3_moranth', qx + 16, qy - 2, 1.1, T, {air:true, dir:1, still:true});
+      return {fx:qx - 2, fy:qy + 2, fs:1.5, air:true}; }
+    // the street by the keep wall
+    ctx.fillStyle = '#0a0b10'; ctx.fillRect(0, H*.18, W, H*.62); ctx.fillStyle = 'rgba(60,64,80,.4)'; for (let r=0;r<6;r++) for (let c=0;c<10;c++) ctx.fillRect(c*W/10 + (r%2)*W/20, H*(.2 + r*.1), W/10 - 2, 1); // the wall's courses
+    if (s >= 3) { const bx = W*.6, by = H*.8; poly(ctx, [[bx - 34, by],[bx - 30, by - H*.32],[bx - 12, by - H*.46],[bx + 10, by - H*.4],[bx + 30, by - H*.28],[bx + 36, by]], '#020306'); glow(ctx, bx, by - H*.2, 50, '#bcd8f0', .18); // the breach, and the cold coming out of it
+      for (let i=0;i<10;i++) ell(ctx, bx + (hash(i, 91) - .5)*80, by + hash(i, 92)*8, 3 + hash(i, 93)*6, 2, '#16161c'); for (let i=0;i<6;i++) glow(ctx, bx + (hash(i, 94) - .5)*60, by - 10 - i*8 - (REDUCE() ? 0 : (T/60) % 20), 18, '#8a8a90', .06); }
+    ctx.fillStyle = '#121218'; ctx.fillRect(0, H*.8, W, H*.2); ctx.fillStyle = 'rgba(120,130,160,.12)'; for (let i=0;i<14;i++) ell(ctx, hash(i, 95)*W, H*(.84 + hash(i, 96)*.14), 10, 1.4, 'rgba(120,130,160,.1)'); // wet paving
+    if (s === 2) { ctx.fillStyle = '#1a140e'; ctx.fillRect(W*.08, H*.5, 18, H*.3); ctx.fillRect(W*.86, H*.48, 18, H*.32); drawFigure(ctx, 'b3_c7_bridgeburner', W*.62, H*.94, 1.8, T, {dir:1, phase:1}); drawFigure(ctx, 'b3_c7_bridgeburner', W*.74, H*.92, 1.8, T, {dir:1, phase:2}); drawFigure(ctx, 'b3_c7_bridgeburner', W*.84, H*.94, 1.8, T, {dir:-1, phase:3}); drawFigure(ctx, 'b3v_picker', W*.48, H*.94, 1.8, T, {dir:1}); }
+    if (s === 3) { drawFigure(ctx, 'paran', W*.86, H*.92, 1.9, T, {dir:-1, phase:1}); ctx.save(); ctx.globalAlpha = .45; ctx.translate(W*.92, H*.94); ctx.scale(-.55, .55); if (typeof drawHound === 'function') drawHound(ctx, {gait:REDUCE() ? 0 : Math.sin(T/200), rim:'#c9bbff'}); ctx.restore(); drawFigure(ctx, 'b3_c6_condor', W*.8, H*.46, 1.5, T, {air:true, dir:-1}); }
+    if (s >= 4) { drawFigure(ctx, 'b3_c7_bridgeburner', W*.82, H*.92, 1.8, T, {dir:-1, still:true}); }
+    return {fx:s >= 3 ? W*.36 : W*.28, fy:H*.92, fs:2.2}; },
+
+  /* the reader, back at the Fourth's fire: a spring night on Genabackis, the Host's tents, an upturned shield with the card on it */
+  b3deck(ctx, W, H, T){ B3VB.sky(ctx, W, H*.66, [[0, '#05060c'], [1, '#161a26']]); B3VB.stars(ctx, W, H, T, 60, .5, .7, 17);
+    B3VB.ridge(ctx, W, H, H*.62, H*.05, 91, '#0c0e12'); for (let i=0;i<6;i++){ const x = W*(.5 + i*.08), y = H*.66; poly(ctx, [[x - 9, y],[x, y - 9],[x + 9, y]], '#121214'); if (hash(i, 97) > .5) glow(ctx, x + 10, y, 10, '#e8923a', .25); }
+    ctx.fillStyle = vgrad(ctx, H*.64, H, [[0, '#14160f'], [1, '#08090a']]); ctx.fillRect(0, H*.66, W, H*.34); B3VB.grass(ctx, W, H*.7, H, T, 60, 'rgba(90,100,70,.35)', 19);
+    B3VB.fire(ctx, W*.64, H*.88, T, 1.8);
+    ctx.save(); ctx.translate(W*.48, H*.9); ctx.scale(1, .42); ctx.beginPath(); ctx.arc(0, 0, 18, 0, 7); ctx.fillStyle = '#4a2a20'; ctx.fill(); ctx.strokeStyle = '#7a7266'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); // an upturned shield
+    ctx.save(); ctx.translate(W*.48, H*.88); ctx.rotate(-.08); ctx.fillStyle = '#d8ccb0'; ctx.fillRect(-7, -10, 14, 20); ctx.fillStyle = 'rgba(150,120,220,.5)'; ctx.fillRect(-5.4, -8.4, 10.8, 16.8); ctx.restore();
+    return {fx:W*.3, fy:H*.86, fs:2.4}; },
+});
 
 /* ============ resume & boot ============ */
 function resume(){

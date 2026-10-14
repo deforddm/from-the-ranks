@@ -4,6 +4,7 @@ A non-commercial Malazan Book of the Fallen fan RPG series for personal play, to
 
 - **Book One, Ashes of the Pale**, beside *Gardens of the Moon*: an original marine squad, the Fourth, from the aftermath of the Pale to the Fete in Darujhistan.
 - **Book Two, The Chain of Dogs**, beside *Deadhouse Gates*: a new squad of the Seventh Army on the Chain of Dogs, from the fall of Hissar toward Aren.
+- **Book Three, The Fair Exchange**, beside *Memories of Ice*: the Fourth again, marching with Onearm's Host and Caladan Brood's army from the parley at Pale to Coral. A finished Book One on the outlaw road can carry its Fourth across.
 
 Turn-based tactical combat, dialogue skill checks, warren strain, Moranth munitions and a Deck of Dragons reading in every chapter.
 
@@ -19,6 +20,7 @@ The Malazan world was created by Steven Erikson and Ian C. Esslemont, and it and
 
 - Book One: a prologue and seven chapters, from the tunnels under Pale to a brown hill east of Darujhistan the morning after the Fete, and an epilogue with four roads and a page for every squadmate.
 - Book Two: seven chapters on the Chain of Dogs, with the Chain screen (water and the column), squadmates who may stay with Coltaine for good, and three roads out of Aren.
+- Book Three: seven chapters from Pale to Coral, with the Alliance (trust and dread between the Host and Brood's army), poisoned warrens in the Pannion Domin, two recruits (Sohra the Rhivi spirit-singer and Dannet of the Grey Swords), two roads into Coral, and three roads out.
 - Three difficulties (Story, Soldier, Bridgeburner), set for each sergeant and changeable in Settings.
 - Skill checks where you choose who rolls, with the odds shown, and ten tricks to win on the hard ones and carry into battle.
 - When the whole squad goes down, the most loyal squadmate's god may answer, and the fight goes on.
@@ -55,6 +57,7 @@ Chapters are content modules (`src/40_chapter1.js`, …) registered at boot; eac
 
 Newest first.
 
+- v6.0.0 — Book Three, *The Fair Exchange*, beside *Memories of Ice*: all seven chapters (the Parley, the Rhivi Plain, Capustan, the Prisoners, South of the Catlin, the Night Lift, Coral) and the finale. The Fourth return with their IV patch; Sohra and Dannet can join; the Alliance's trust and dread; poisoned warrens; Treach answers for the sergeant; a Deck reading, a trick, new kit with artwork and a vision in every chapter; a Book One sergeant on the outlaw road can bring their squad. New tools/moi_test.mjs and tools/b3visions_test.mjs.
 - v4.7.6 — A squadmate shown on the map to talk to is not also drawn in the party line; the line closes up. New tools/trail_test.mjs checks every area of both books.
 - v4.7.5 — Every onward step from a map can be declined ("Not yet."), in both books, and a squadmate mentions anyone still waiting to talk. New tools/onward_test.mjs audits it.
 - v4.7.4 — The Ways on button row is removed; the brass rings on the map and the edge arrows stay.

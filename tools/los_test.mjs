@@ -7,7 +7,7 @@ const { page, errors } = await openGame(br, srv.url, { fast: true });
 let fail = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); if (!c) fail = 1; };
 const r = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)); const out = {};
   // every unit, every wave, every party start stands on ground it is allowed to stand on
-  out.badStarts = []; Object.entries(BATTLES).forEach(([id, d0]) => [d0, d0.stage2 ? Object.assign({}, d0, d0.stage2) : null].filter(Boolean).forEach(d => {
+  out.badStarts = []; Object.entries(BATTLES).forEach(([id, d0]) => [d0, d0.stage2 ? Object.assign({}, d0, {waves:undefined}, d0.stage2) : null].filter(Boolean).forEach(d => {
     const at = (x, y) => (d.map[y] || '')[x]; const chk = (x, y, who) => { if ('#to'.includes(at(x, y))) out.badStarts.push(`${id} ${who} ${x},${y} '${at(x, y)}'`); };
     (d.foes || []).forEach(f => chk(f[1], f[2], f[0])); (d.waves || []).forEach(w => w.foes.forEach(f => chk(f[1], f[2], 'wave ' + f[0])));
     (d.party || [[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]]).forEach(p => chk(p[0], p[1], 'party')); }));

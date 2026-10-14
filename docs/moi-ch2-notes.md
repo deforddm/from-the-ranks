@@ -27,7 +27,7 @@ Chosen at the flood (`b3_c2_flood`; the step before it, the ford, is declinable)
 - `b3_c2_kallorLook = 1` — only if `b3_kallorSaw` (Ch1 `mhybe`): the tall man looked at the sergeant at the Rhivi fires and let them see he remembered.
 - `b3_c2_carried` / `b3_c2_left` / `b3_c2_tookBow` (+ `b3_c2_bowBack`, given back to the old woman) — what the Fourth did with the dead outrider. `b3_c2_sang` — Sohra sang him home.
 - `b3_c2_tree = 1` — the Fourth stood a felled Barghast tree back up on the hill; "the Ilgres will hear of that". Ch3+ Barghast may remember.
-- `b3_c2_mottJug = 1` — drank with a Bole.
+- `b3_c2_mottJug = 1` — drank with a Bole. (The Bole no longer repeats Chapter 1's "never caught one of us" joke; the brother is "he".)
 - `b3_c2_sohraLate = 1` — Sohra joined at Ch2's start (Ch1 didn't bring her); on `crate` with a sour word about "boxes".
 - `b3_c2_hillDone`, `b3_c2_nightDone`, `b3_c2_floodDone` — the three fights.
 - Trick learned: `b3_c2_hand` (Moranth Hand-Talk) via the ✦ wits 16 check at the quorl lines.

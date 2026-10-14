@@ -28,7 +28,7 @@ Either way the well is shared by midnight, and the herd-mother gives the Rhivi w
 | `b3_domin` | 1 | set on chapter start, on the first node, and on any `b3_c5_` fight (warrens poisoned) |
 | `b3_c5_key` | `brood` / `quiet` | the key |
 | `b3_kallorEnemy` | 1 | on `brood` only |
-| `b3_kallor` | 1 | Kallor seen/named (Hurlochel, the man in the fur collar, Brood's fire) |
+| `b3_kallor` | 1 | set on the first node (the chapter names Kallor freely; Chapter 1's parley always set it in a full play) and again at Hurlochel / Brood's fire |
 | `b3_legSeen` | 1 | if the sergeant asks Whiskeyjack about the leg (`b3_c5_leg = 1`) |
 | `b3_listAdds` | +1 | Orley, at the ford (`b3_c5_orley = 1`) |
 | `b3_c5_mhybe` | 1 | Sohra told the sergeant the Mhybe has gone back to Capustan with Coll and Murillio (unnamed: "the two Daru") |
@@ -73,3 +73,7 @@ Flags read from earlier chapters (with defaults when unset): `b3_legSeen` (Ch1),
 - Whether the armies fought at any ford south of the Catlin: unconfirmed (the rearguard is small and invented).
 - Hurlochel: the canon sheet's table says "once Brood's, now the Host's (outrider)"; I could not confirm the Brood half, so the text calls him only one of the Host's outriders, Dujek's own.
 - The research behind this chapter is in the "Chapter 5 re-check" section appended to `docs/moi-canon.md` in this checkout.
+
+## Continuity pass (Tue Oct 13, 2026)
+
+`b3_kallor` is set on the first node. Whiskeyjack's leg line is "his week" after Coral (not "a month"), and opens "Mallet's not here to ask" so it doesn't repeat Chapter 4's words. Sohra no longer repeats "young at the turn of the year" (Chapter 2 has it); Tuft says the child is "as tall as a grown woman now". See `docs/moi-continuity.md`.

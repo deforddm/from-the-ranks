@@ -70,7 +70,7 @@ const B3CH6 = {
   intro:{loc:'The Pannion Domin', sub:'South of Setta · the road to the Maurik · early summer', scene:'b3_c6_lift', cap:'A field at night, and on it a dark row of things with wings, and men walking out to them with their packs on.',
     paras:[
 `Setta was empty. So was the country after it: fields gone to thistle, villages with their doors open and nothing behind the doors, wells that somebody had filled with stones. The Domin is a house with the furniture taken out. The Host walks through it at a predictable pace, the way Dujek promised at Pale, and leaves very good tracks.`,
-`Three nights ago the Fourth woke to a sound like a sail filling, a great many sails, somewhere out past the horse lines. In the morning a company of the Second had gone. Its tents were struck. Its fires were laid and cold. Nobody had marched past the pickets.`,
+`Three nights ago the Fourth woke to a sound like wind in a great deal of canvas, all at once, somewhere out past the horse lines. In the morning a company of the Second had gone. Its tents were struck. Its fires were laid and cold. Nobody had marched past the pickets.`,
 `Nobody has said anything. That is how you know.`],
     go:'Wake', node:'b3_c6_start'},
 
@@ -188,7 +188,7 @@ const B3CH6 = {
     b3_c6_field:{title:'The lift field', style:'b3_c6_campb', dark:true, open:true, warrenText:'Night in the Domin · the warrens are poisoned here: a spell may burn its caster', warren:{denul:1, meanas:1}, music:'battle',
       map:["..t.....","........","...,..t.","........",",..##...","........",".t....,.","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b3_c6_forager',1,1],['b3_c6_forager',5,0],['b3_c6_forager',6,2],['b3_c6_forager',3,2],['b3_c6_runner',3,0]], xp:120, after:'b3_c6_after_field',
+      foes:[['b3_c6_forager',1,1],['b3_c6_forager',5,0],['b3_c6_forager',5,1],['b3_c6_forager',3,2],['b3_c6_runner',3,0]], xp:120, after:'b3_c6_after_field',
       waves:[{round:2, foes:[['b3_c6_runner',7,5]], text:'One of them was out on the flank, and has seen the quorls. He is turning to run.'}],
       preText:()=>`The sharper goes off in the middle of them, and it is the loudest thing that has happened in the Domin for a month. Out on the field forty quorls lift their heads at once. In the camp behind you, somebody drops a pot.`,
       stage2:{title:'The gully', xp:50,
@@ -212,7 +212,7 @@ ${b3In('tuft') ? `
 "Seerdomin," Tuft says. "That's sorcery he's wearing, Sergeant, not a cloak." She flexes her fingers. "Down here it'll cost me to answer it. I'll answer it."` : ''}`,
         map:["##....##","##.t..##","#......#","##....##","#..t...#","##....##","#......#","#......#","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_seerdomin',3,1],['b3_beklite',2,3],['b3_beklite',5,3],['b3_beklite',4,4],['b3_c6_runner',4,0]]} },
+        foes:[['b3_seerdomin',2,0],['b3_beklite',2,3],['b3_beklite',5,3],['b3_beklite',4,4],['b3_c6_runner',4,0]]} },
 
     /* dusk at the roost: demon-ridden Condors follow the quorls home to the entrenchments. The Moranth come if they trust you. */
     b3_c6_condors:{title:'The roost at dusk', style:'b3_c6_ridgeb', open:true, warrenText:'Dusk above Coral · the warrens poisoned · something riding the birds', warren:{denul:1, meanas:1}, music:'battle',
@@ -243,7 +243,7 @@ ${b3In('brisk') ? `
 Brisk says one word, which is a Cawn word, and which you have heard her use before only about her brother. Then she goes for the fire.` : ''}`,
         map:["oooooooo","o..tt..o",".......o","........","..t..t..","........","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b3_c6_raidlead',3,1],['b3_c6_raider',1,2],['b3_c6_raider',6,2],['b3_c6_slinger',4,0]]} },
+        foes:[['b3_c6_raidlead',2,1],['b3_c6_raider',1,2],['b3_c6_raider',6,2],['b3_c6_slinger',5,1]]} },
 
     /* the river: an ambush from a reed bank on the day's float to Maurik. The White Face on the barge come if they trust you. */
     b3_c6_ambush:{title:'The river', style:'b3_c6_bankb', open:true, warrenText:'The Maurik at noon · the warrens poisoned · grey sorcery on the bank', warren:{denul:1, meanas:1}, music:'battle',
@@ -456,7 +456,7 @@ They meant to come back for it.`,
 
 They do not thank you. They look at the hand in the dust for a long time, and the girl says something in Rhivi, and the man answers, and they take the sacks.${b3In('sohra') ? `
 
-"She asked if the child is dead," Sohra says. "He said: the grain does not know." She watches them go. "That was a good thing to do, herd-mother. Do not do it where the quartermasters can see."` : ''}`,
+"She asked if the child is dead," Sohra says. "He said: the grain does not know." She watches them go. "That was a good thing to do, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. Do not do it where the quartermasters can see."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_farm_left:()=>({sp:'The burnt farm', txt:
 `You put the boards back the way they were, and the dust back over the boards as near as you can, and leave the hand where it is.
@@ -606,7 +606,7 @@ You watch him shift his weight on the stone, and stop, and decide not to try aga
   b3_c6_ask:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
 `Sohra is sitting at the Fourth's fire when you come back to it, on the side the smoke goes, with her bow across her knees. She was on the field. She saw the rows of quorls, and the company walking out to them, and the grass lying down.
 
-"The Mhybe's people lent me to you to watch the Malazans," she says. "So. I am watching." She does not look up from the bow. "Where do your people go at night, herd-mother?"
+"The Mhybe's people lent me to you to watch the Malazans," she says. "So. I am watching." She does not look up from the bow. "Where do your people go at night, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}?"
 
 It is the first time she has asked you anything she might not like the answer to.` :
 `A Rhivi rider is sitting his horse at the edge of the Seventh's lines in the dark, where the pickets have decided not to see him. He is young, with the pale spirit-mark across his eyes, and he is looking past you at the field to the east, where the grass is lying flat in long rows.
@@ -640,7 +640,7 @@ She looks at the field, where two hundred Malazans in full kit went up into the 
 "The Mhybe's people will laugh," he says. He does not laugh. He turns his horse and goes, and you have the feeling, watching him, that he will remember your face better than your answer.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_ask_later:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
-`"At the Maurik," Sohra says. She considers it. "A river is a good place for an answer. Things come out in water." She lays the bow down. "I will hold you to the river, herd-mother. All the way to it."` :
+`"At the Maurik," Sohra says. She considers it. "A river is a good place for an answer. Things come out in water." She lays the bow down. "I will hold you to the river, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. All the way to it."` :
 `"At the river," the rider says. He considers it, and you, and the flat grass. "Good. I will ask at the river." He turns his horse. "I will ask you. Not the others."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -658,7 +658,7 @@ Brisk says nothing. She looks south, the way the singing went. Then she nods, on
 
 "I have never flown," Ohl says. "I would like it noted that I am too old to begin." He goes to pack anyway.` : ''}${b3In('tuft') ? `
 
-Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn't there," she says, before anyone asks. "Not since the river. She's ahead of us. South. I can feel it like weather." She picks up her pack. "So it's the right way, either way."` : ''}${b3In('sohra') ? `
+Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn't there," she says, before anyone asks. "Not for two nights. She's ahead of us. South. I can feel it like weather." She picks up her pack. "So it's the right way, either way."` : ''}${b3In('sohra') ? `
 
 "The Mhybe's people said to watch the Malazans," Sohra says, faintly. "They did not say from underneath a bug."` : ''}${b3In('greysword') ? `
 
@@ -949,7 +949,7 @@ Somebody in the Seventh starts to pray. Somebody else tells him to shut up, and 
 
 It is a carrion bird. It is a carrion bird the size of a small cart, bare-headed, ruffed, with a hooked beak like an ivory pick. Its eyes are wrong.
 
-${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, herd-mother."` : `Do not look at its eyes.`}`,
+${b3In('sohra') ? `"Not a spirit," Sohra says, very fast. "Not a spirit. Do not look at its eyes, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}."` : `Do not look at its eyes.`}`,
     ch:[{t:'Kettle\'s sharper, under the first of them.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_condors', {pre:true})},
         {t:'Smother the fires. Make them come down to the quorls in the dark.', check:['wits', 14],
           edges:id=>[id === 'kettle' && ['she knows what a quorl does when it is frightened', 1], id === 'sohra' && ['herds and hawks: she has done this on the plain', 2], id === 'tuft' && ['something in those eyes is looking for her', -1]],
@@ -1008,7 +1008,7 @@ Upriver, by the ford, a company of Capan soldiers with tiger stripes painted on 
   b3_c6_wj_leg:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c6_wjLeg = 1; S.f.b3_legSeen = 1; }, txt:
 `Whiskeyjack is sitting on a log by the slips with his bad leg stretched out in front of him on another log, which is the nearest anyone has seen him come to lying down. He is reading a wright's tally slate. He has his knife out and is cutting at a boot lace that has been tied too tight over the swelling.
 
-Close to, you can see it properly. The leg is wrapped from knee to ankle, and the wrapping is not clean, and the boot over it has been slit and laced shut again with cord. He sits the way a man sits when standing has become a thing he has to plan.
+Close to, you can see it properly. The leg is wrapped from knee to ankle, and the wrapping is not clean, and the boot over it has been slit and laced shut again with cord. He sits with it out straight in front of him, and does not move it unless he has to.
 
 He sees you looking. He does not cover it.
 
@@ -1110,7 +1110,7 @@ ${c6Told() === 'later' ? `You told somebody you would answer them at the Maurik.
 `A young Rhivi rider with the pale spirit-mark across his eyes is sitting his horse at the edge of the firelight, where the pickets have decided not to see him. It is the same one.
 
 "This is the river," he says. "You said I could ask at the river. I ask."`,
-    ch:[{t:'Tell the truth now. Half the Host went south by quorl, with Dujek.', fx:()=>{ S.f.b3_c6_ask = 'truth'; ally(1, 0, 'The truth, at the river, as promised'); if (b3In('sohra')) loy('sohra', 1); }, go:'b3_c6_river_truth'},
+    ch:[{t:'Tell the truth now. Half the Host went south by quorl, with Dujek.', fx:()=>{ S.f.b3_c6_ask = 'truth'; ally(1, 0, 'The truth, at the river, as promised'); if (b3In('sohra')) { loy('sohra', 1); S.f.b3_herdMother = 1; } }, go:'b3_c6_river_truth'},
         {t:'"Ask Whiskeyjack. At Maurik."', fx:()=>{ S.f.b3_c6_ask = 'lie'; if (b3In('sohra')) loy('sohra', -1); }, go:'b3_c6_river_dodge'}]}),
   b3_c6_river_truth:()=>({sp:b3In('sohra') ? 'Sohra' : 'A Rhivi rider', txt: b3In('sohra') ?
 `You tell her. She listens with her eyes on the river.
@@ -1306,7 +1306,7 @@ He hears you come up. He does not turn.
 
 "Four thousand," he says, to the river. "Pretending to be an army, so that six thousand can pretend to be a surprise. And the High Fist in the mountains with his one arm, waiting to see which of you the Seer eats first." He laughs, very softly. "I told Brood that to leave the Host to be annihilated would be a tactical mistake. He agreed. I have asked to ride south with your Whiskeyjack." He turns his head, at last. "I like to be there when things end, soldier. I have been there for a great many."${c6KallorKnows() ? `
 
-He looks at you a moment longer. "I know you," he says. "Don't I." It is not a question, and he does not wait for an answer.` : ''}` :
+He looks at you a moment longer. "I have seen you before," he says. "Haven't I." It is not a question, and he does not wait for an answer.` : ''}` :
 `A tall man in a fur-collared cloak stands apart on the landing, watching the barges come in, with two of his own soldiers at his back. He does not look at the Fourth. You find you are glad.`,
     ch:[{t:'Walk away.', go:()=>startExplore()}]}),
   b3_c6_korlat:()=>({sp:'Korlat', fx:()=>{ S.f.b3_c6_korlat = 1; }, txt:

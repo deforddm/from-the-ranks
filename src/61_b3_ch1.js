@@ -937,7 +937,7 @@ Then the camp goes quiet in a different way.
 
 A tall man comes down between the tents with two men in grey and fur a pace behind him: gaunt, grey, in a fur-collared cloak, unhurried, as if the night belonged to him and he had come to see what had been done with it. He looks at the dead brigand. He looks at the painted door-flap, for a long moment, and something moves in his face that is not pity. Then he looks at you.
 
-It is a long look. It is the look of a man writing a name in a book he has kept for longer than the Empire has had a name, in a hand that does not hurry.
+It is a long look. It is the look of a man writing a name in a book he has kept since before there were Malazans to write in it, in a hand that does not hurry.
 
 Then Kallor turns and goes back the way he came, and the men in grey and fur go after him.
 
