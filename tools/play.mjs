@@ -186,8 +186,8 @@ async function run(i) {
   while (true) {
     ticks++;
     try { status = await page.evaluate(() => __bot.tick()); } catch (e) { problems.push('tick threw: ' + e.message); break; }
-    const info = await page.evaluate(() => ({ sig: __bot.sig(), ch: S ? S.chapter : -1, area: S ? S.area : '', view, node: S && S.node }));
-    if (info.ch !== chapterSeen) { chapterSeen = info.ch; if (!quiet) console.log(`run ${i}: chapter ${info.ch} at ${((Date.now() - t0) / 1000).toFixed(0)}s`); }
+    const info = await page.evaluate(() => ({ sig: __bot.sig(), ch: S ? S.chapter : -1, lvl: S ? S.lvl : 0, area: S ? S.area : '', view, node: S && S.node }));
+    if (info.ch !== chapterSeen) { chapterSeen = info.ch; if (!quiet) console.log(`run ${i}: chapter ${info.ch} (level ${info.lvl}) at ${((Date.now() - t0) / 1000).toFixed(0)}s`); }
     if (shots && (info.area + info.view) !== (areaSeen + viewSeen)) { areaSeen = info.area; viewSeen = info.view; await shot(`${info.view}_${info.area}`); }
     if (errs.length > errShot) { errShot = errs.length; await shot('error'); }
     if (status === 'END') break;
