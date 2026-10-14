@@ -106,7 +106,7 @@ const INIT = () => {
   const minD = (p, list) => list.length ? Math.min(...list.map(e => cheb(e, p))) : 99;
   const danger = e => avg(e.dmg) * (e.attacks || 1) * (e.stun ? .2 : 1);
   /* what an attack on t from tile `from` is worth: expected damage, a likely kill, the most-damaged first */
-  const tv = (u, t, from, dmg) => { const c = atkCalc(u, t, { from }), p = hitPct(c) / 100, d = avg(dmg || u.dmg) + (t.markedUntil >= B.round ? 2 : 0);
+  const tv = (u, t, from, dmg) => { const c = atkCalc(u, t, { from }), p = hitPct(c) / 100, d = avg(dmg || u.dmg) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0);
     const kill = t.immortal ? 0 : t.hp <= d ? p : t.hp <= d * 1.6 ? p * .4 : 0;
     return p * d * 2 + kill * 25 + (1 - pct(t)) * 12 - Math.min(t.hp, 60) * .15 - (t.immortal ? 20 : 0) - (t.stun ? 3 : 0); };
   const can = (u, k) => !B.acted && u.ab.includes(k) && abOk(u, k);
@@ -219,7 +219,7 @@ const INIT = () => {
       // Vell: the hook on a shooter or a caster standing off, hauled in among the squad
       if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.boss && !e.immortal && e.maxhp < 45 && (e.rng > 1 || danger(e) >= 8)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('grapple', t.x, t.y); }
-      // Ellis: the mark on something big the squad is about to hit
+      // the tracker's mark (Ellis, Sathi, Sohra): free, so mark something big the squad is about to hit, then shoot
       if (can(u, 'mark')) { const t = AB.mark.tiles(u).filter(e => !e.immortal && e.hp >= 15 && sq.filter(p => p !== u && cheb(p, e) <= p.rng + p.mv).length >= 2).sort((a, b) => b.hp - a.hp)[0];
         if (t) return tryAb('mark', t.x, t.y); }
       // an attack from where we stand: ranged always (then step back), melee when already engaged (Brisk's bash when it's up)
