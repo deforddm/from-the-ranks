@@ -353,7 +353,7 @@ const b3Waiting = id => !!(b3On() && S.f && S.f[B3_DONE[id]] === 2 && !b3In(id) 
 /* ---- how far Book Three goes, for the title: counted from the chapters actually registered ---- */
 const b3ChCount = () => Object.keys(BOOK === 'moi' ? CHAPTERS : BOOKSNAP.moi.ch).length;
 const b3Progress = () => { const n = b3ChCount(); return n >= 7 ? 'All seven chapters.' : n === 0 ? 'Its chapters are being written.' : n === 1 ? 'Chapter One so far.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n]} chapters so far.`; };
-Object.defineProperty(BOOKS.moi, 'blurb', {configurable:true, get(){ return 'Genabackis, the spring after the Fete, beside Memories of Ice. The Fourth Squad again, with Onearm\'s Host and Caladan Brood\'s army, from the parley at Pale to Coral. Plays on its own; a finished Book One on the outlaw road can carry its Fourth across. ' + b3Progress(); }});
+Object.defineProperty(BOOKS.moi, 'blurb', {configurable:true, get(){ return 'Genabackis, the spring after the Fete, beside Memories of Ice. The Fourth Squad again, with Onearm\'s Host and Caladan Brood\'s army, from the parley at Pale to Coral. Plays on its own; a finished Book One on the outlaw road can carry its Fourth across.' + (b3ChCount() >= 7 ? '' : ' ' + b3Progress()); }});
 /* the painted title, while the artist's file is loading or if it is missing: Book One's */
 Object.defineProperty(BOOKS.moi, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/moi'] ? 'title/moi' : 'title/key'; }});
 

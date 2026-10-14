@@ -32,8 +32,8 @@ const click = async (re) => { const r = await ev(re => { const b = [...document.
 // ---- the chapter is there, and the book is seven chapters long ----
 await fresh();
 const reg = await ev(() => ({ch:!!CHAPTERS[7] && CHAPTERS[7].title, n:dgChCount(), areas:['b2_balahn', 'b2_way', 'b2_aren', 'b2_quay'].every(a => AREAS[a]), fights:['b2_runway', 'b2_barrow', 'b2_postern'].every(b => BATTLES[b] && BATTLES[b].stage2),
-  six:AREAS.b2_geleen && AREAS.b2_geleen.title, blurb:BOOKS.dg.blurb}));
-ok(reg.ch === 'Aren Way' && reg.n === 7 && /All seven chapters/.test(reg.blurb), `Book Two's Chapter 7 is registered, and Book Two reads seven chapters (${reg.n})`);
+  six:AREAS.b2_geleen && AREAS.b2_geleen.title, blurb:BOOKS.dg.blurb, prog:dgProgress()}));
+ok(reg.ch === 'Aren Way' && reg.n === 7 && /All seven chapters/.test(reg.prog) && !/chapters/i.test(reg.blurb), `Book Two's Chapter 7 is registered, seven chapters, and the finished book's blurb doesn't count them (${reg.n})`);
 ok(reg.areas && reg.fights, 'all four areas and three fights (each with a second ground) are registered');
 ok(/Geleen/.test(reg.six || ''), 'Chapter 6\'s areas are still Chapter 6\'s');
 await ev(() => { startChapter(7); }); await page.waitForTimeout(300);
