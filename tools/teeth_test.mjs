@@ -21,6 +21,7 @@ async function run(motion, deep) {
     const f = fs[0]; k.x = 3; k.y = 7; f.x = 3; f.y = 3; f.ac = -50; f.hp = f.maxhp = 200; if (deep && fs[1]) { fs[1].x = 4; fs[1].y = 3; fs[1].hp = fs[1].maxhp = 200; }
     B.cur = k; B.busy = false; window._f = f; window._hp0 = f.hp; window._bolts = 0;
     const push = B.fx.push.bind(B.fx); B.fx.push = (...a) => { a.forEach(x => { if (x.kind === 'bolt') window._bolts++; }); return push(...a); };
+    const _rnd = Math.random; Math.random = () => .05 + _rnd()*.95; // no natural 1: a bite that cannot miss on armour can still miss on a 1
     window._t0 = performance.now(); window._hitAt = null; const _h = hurt; hurt = function(u, n, c){ if (u === window._f && window._hitAt == null) window._hitAt = performance.now() - window._t0; return _h(u, n, c); };
     window._done = false; const p = AB.b2_teeth.run(k, f.x, f.y); window._promise = !!(p && p.then); if (p && p.then) p.then(() => { window._done = true; });
     const t = B.fx.filter(x => x.kind === 'teeth'); window._tfx = t[0]; return {teeth:t.length, dur:t[0] && t[0].dur, x:f.x, y:f.y}; }, deep);
