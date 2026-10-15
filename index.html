@@ -633,7 +633,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.3.1';
+const VERSION = '6.3.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5842,6 +5842,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['6.3.2', ['Book Two, the Sekala: give Tangle\'s cusser for the ford before you meet Captain Mincer, and Mincer now counts fifty-five when you do. He no longer says he still has the last one to find.']],
   ['6.3.0', ['Choose your book. The title now shows all three books as covers, so a new book is one tap away: no more New sergeant first.', 'A cover opens that book\'s page: the sergeants already in it to carry on, and a new sergeant for it, with a Begin Book Two (or One, or Three) button. The book row on that page flips between books in place, and All books goes back.', 'Each cover counts the sergeants you have in that book. On a PC, pointing at a cover shows that book behind the title.']],
   ['6.2.0', ['Every "yes, but" in all three books now has its own price, written for its moment. Fifty-four checks that used to share one stock cost now each take something that fits the scene.', 'A dyer\'s roof gives way under Sathi. The warden at the cistern wants a skin for the families on his stair. Kettle sniffs the red powder too hard. A Khundryl pony kicks Haddat. A bull bhederin puts someone into the well-head. A Barghast tells the clans he watched Malazans bargain with Pannions.', 'The prices vary: health at the start of the next fight, a rattle, a salve or a munition from the pack, water and stragglers on the Chain, a squadmate\'s good opinion, the Alliance\'s trust and dread in Book Three. Silver only where somebody is actually being paid.']],
   ['6.1.2', ['A "yes, but" no longer charges three silver in places where silver makes no sense. Money only changes hands when the scene is about money: a bribe, a fee, a clerk\'s counting-table.', 'Otherwise the near thing is paid by whoever rolled it. A Might check costs skin: they start the next fight a few health down (more as they level). A Wits or Guile check leaves them rattled: −1 on their next check.', 'At Dryj Spring, going round by the gully has its own price now: the last Tithansi heard the dog.']],
@@ -22698,7 +22699,7 @@ Tangle is looking at the river, not the hill. He has the expression of a man who
 
 He jerks his head at the river. "Stones. Flat ones, out of every wall and grave for a league round, laid edge to edge on the bottom, under the water, all the way over, in the dark, while the warlocks kept the fog on it. A road." He says it the way another man would say *my daughter*. "You can drive a wagon across that ford now at a trot. You couldn't yesterday. Nobody on that hill knows it."
 
-He taps the slate. "And under the stones, fifty-four cussers. Fifty-five when I find the last. When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."`,
+${S.f.b2_cusser ? `He taps the slate. "And under the stones, fifty-five cussers. Fifty-five. I was one short till this morning, and then a sapper of yours waded out of the river with the last one in both hands." There it is on the slate, *Tangle*, in a careful hand beside the last mark. "When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."` : `He taps the slate. "And under the stones, fifty-four cussers. Fifty-five when I find the last.${S.f.b2_cusserKept ? ` Some fool's kit, some dead wagon. I always find one.` : ''} When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."`}`,
     ch:[{t:'"How do your people get flat so fast when the fuse is lit?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
           edges:id=>[id === 'tangle' && ['his own captain', 2], id === 'sathi' && ['she fights from a saddle, not a ditch', -1]],
           go:'b2_mincer_drop', fail:'b2_mincer_miss'},
@@ -22717,13 +22718,13 @@ ${by({tangle:`Tangle has gone red to the ears. "Sir," he says. It is the most he
   b2_mincer_miss:()=>({sp:'Captain Mincer', txt:
 `Mincer looks at ${by({sgt:'you', _:'{who}'})} for a moment, and then at the slate.
 
-"You lie down," he says. "Quick." He makes a mark. "Ask me after. If there's an after." It's not unkind. It's a man with fifty-four cussers on his mind and one missing.`,
+"You lie down," he says. "Quick." He makes a mark. "Ask me after. If there's an after." It's not unkind. ${S.f.b2_cusser ? `It's a man with fifty-five cussers on his mind, and every one of them where he wants it.` : `It's a man with fifty-four cussers on his mind and one missing.`}`,
     ch:[{t:'"Who lights it?"', go:'b2_mincer_who'},
         {t:'Leave him to it.', go:()=>startExplore()}]}),
   b2_mincer_who:()=>({sp:'Captain Mincer', txt:
-`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the fuse. Cuttle always has the fuse. When Cuttle's got the fuse, I sleep." He doesn't look like a man who has slept in a month. "${b2In('tangle') ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
+`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the fuse. Cuttle always has the fuse. When Cuttle's got the fuse, I sleep." He doesn't look like a man who has slept in a month. "${b2In('tangle') && !S.f.b2_fordWork ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
 
-${b2In('tangle') ? `"Sir," says Tangle. He has already taken his boots off.` : ''}`,
+${b2In('tangle') && !S.f.b2_fordWork ? `"Sir," says Tangle. He has already taken his boots off.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_mincer_again:()=>({sp:'Captain Mincer', txt: S.f.b2_cusser ?
 `Mincer looks up from the slate when he sees you, which he did not do the first time.

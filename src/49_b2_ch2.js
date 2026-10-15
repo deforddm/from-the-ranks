@@ -752,7 +752,7 @@ Tangle is looking at the river, not the hill. He has the expression of a man who
 
 He jerks his head at the river. "Stones. Flat ones, out of every wall and grave for a league round, laid edge to edge on the bottom, under the water, all the way over, in the dark, while the warlocks kept the fog on it. A road." He says it the way another man would say *my daughter*. "You can drive a wagon across that ford now at a trot. You couldn't yesterday. Nobody on that hill knows it."
 
-He taps the slate. "And under the stones, fifty-four cussers. Fifty-five when I find the last. When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."`,
+${S.f.b2_cusser ? `He taps the slate. "And under the stones, fifty-five cussers. Fifty-five. I was one short till this morning, and then a sapper of yours waded out of the river with the last one in both hands." There it is on the slate, *Tangle*, in a careful hand beside the last mark. "When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."` : `He taps the slate. "And under the stones, fifty-four cussers. Fifty-five when I find the last.${S.f.b2_cusserKept ? ` Some fool's kit, some dead wagon. I always find one.` : ''} When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."`}`,
     ch:[{t:'"How do your people get flat so fast when the fuse is lit?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
           edges:id=>[id === 'tangle' && ['his own captain', 2], id === 'sathi' && ['she fights from a saddle, not a ditch', -1]],
           go:'b2_mincer_drop', fail:'b2_mincer_miss'},
@@ -771,13 +771,13 @@ ${by({tangle:`Tangle has gone red to the ears. "Sir," he says. It is the most he
   b2_mincer_miss:()=>({sp:'Captain Mincer', txt:
 `Mincer looks at ${by({sgt:'you', _:'{who}'})} for a moment, and then at the slate.
 
-"You lie down," he says. "Quick." He makes a mark. "Ask me after. If there's an after." It's not unkind. It's a man with fifty-four cussers on his mind and one missing.`,
+"You lie down," he says. "Quick." He makes a mark. "Ask me after. If there's an after." It's not unkind. ${S.f.b2_cusser ? `It's a man with fifty-five cussers on his mind, and every one of them where he wants it.` : `It's a man with fifty-four cussers on his mind and one missing.`}`,
     ch:[{t:'"Who lights it?"', go:'b2_mincer_who'},
         {t:'Leave him to it.', go:()=>startExplore()}]}),
   b2_mincer_who:()=>({sp:'Captain Mincer', txt:
-`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the fuse. Cuttle always has the fuse. When Cuttle's got the fuse, I sleep." He doesn't look like a man who has slept in a month. "${b2In('tangle') ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
+`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the fuse. Cuttle always has the fuse. When Cuttle's got the fuse, I sleep." He doesn't look like a man who has slept in a month. "${b2In('tangle') && !S.f.b2_fordWork ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
 
-${b2In('tangle') ? `"Sir," says Tangle. He has already taken his boots off.` : ''}`,
+${b2In('tangle') && !S.f.b2_fordWork ? `"Sir," says Tangle. He has already taken his boots off.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_mincer_again:()=>({sp:'Captain Mincer', txt: S.f.b2_cusser ?
 `Mincer looks up from the slate when he sees you, which he did not do the first time.
