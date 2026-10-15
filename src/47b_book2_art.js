@@ -547,26 +547,30 @@ SCENEX.b2_odhan_day = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 
 SCENEX.b2_basin = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44;
   ctx.drawImage(sceneLayer('b2:basin', W, H, (x, W, H) => {
-    x.fillStyle = vgrad(x, 0, hz, [[0,'#1c1e2c'],[.5,'#4a3a48'],[.85,'#b07060'],[1,'#e0a07a']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.86, hz, W*.4, '#ffb080', .35); // dawn, coming up behind the far rim
-    for (let i=0;i<4;i++) cloud(x, W*(.15 + i*.25), hz*(.25 + i*.12), W*.3, 3, i%2 ? '#d88070' : '#8a6070', .12);
-    x.fillStyle = '#3a2a2e'; x.beginPath(); x.moveTo(0, hz + 4); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - Math.sin(px/80)*3 - 2); x.lineTo(W, hz + 8); x.fill(); // the far rim
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#9aa4ac'],[.5,'#d4d2c8'],[1,'#f2ead6']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.3, hz*.2, W*.7, '#fffcf0', .6); ell(x, W*.3, hz*.2, 12, 12, '#ffffff'); glow(x, W*.3, hz*.2, 36, '#ffffff', .7); // a white sky, the sun in it white too
+    for (let i=0;i<3;i++) cloud(x, W*(.2 + i*.3), hz*(.3 + i*.14), W*.3, 3, '#ffffff', .1);
+    x.fillStyle = '#a49a8c'; x.beginPath(); x.moveTo(0, hz + 4); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - Math.sin(px/80)*3 - 2); x.lineTo(W, hz + 8); x.fill(); // the far rim
     // the army on it: a long dark mass, spears, standards, the dust of horses
-    for (let i=0;i<320;i++){ const px = W*(.2 + hash(i,71)*.72), py = hz - 1 - hash(i,72)*5 + Math.sin(px/80)*-3; x.fillStyle = `rgba(14,8,10,${.6 + hash(i,73)*.4})`; x.fillRect(px, py - 2, 1.4, 3); if (hash(i,74) > .8) x.fillRect(px + .3, py - 6, .5, 4); }
-    for (let i=0;i<9;i++){ const px = W*(.25 + i*.08), py = hz - 8 - hash(i,75)*3; x.fillStyle = '#0e080a'; x.fillRect(px, py - 6, .8, 12); x.fillStyle = i%3 ? '#2a3a2a' : '#4a1a14'; x.fillRect(px + .8, py - 6, 4, 3); }
-    glow(x, W*.6, hz - 4, W*.4, '#c8a090', .14);
+    glow(x, W*.62, hz - 6, W*.42, '#d8c4a0', .45); // their dust, standing up off the rim
+    for (let i=0;i<320;i++){ const px = W*(.2 + hash(i,71)*.72), py = hz - 1 - hash(i,72)*5 + Math.sin(px/80)*-3; x.fillStyle = `rgba(74,60,50,${.45 + hash(i,73)*.35})`; x.fillRect(px, py - 2, 1.4, 3); if (hash(i,74) > .8) x.fillRect(px + .3, py - 6, .5, 4); }
+    for (let i=0;i<9;i++){ const px = W*(.25 + i*.08), py = hz - 8 - hash(i,75)*3; x.fillStyle = '#4a3c32'; x.fillRect(px, py - 6, .8, 12); x.fillStyle = i%3 ? '#4a6a3a' : '#7a2a1a'; x.fillRect(px + .8, py - 6, 4, 3); }
+    glow(x, W*.6, hz - 4, W*.4, '#e8dcc4', .3); // the dust over them, so you see the army only as a darker line in it
     // the basin: wide and shallow, falling away and rising again; the dry wash down its middle
-    x.fillStyle = vgrad(x, hz, H, [[0,'#6a5050'],[.3,'#5a4234'],[.7,'#3a2a20'],[1,'#1a120c']]); x.fillRect(0, hz + 2, W, H);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#e2d2b0'],[.3,'#ccb48a'],[.7,'#a88c62'],[1,'#5a4a32']]); x.fillRect(0, hz + 2, W, H); x.fillStyle = 'rgba(255,250,240,.35)'; x.fillRect(0, hz + 2, W, 4); // the pan, white-hot
     for (let i=0;i<5;i++){ x.fillStyle = `rgba(0,0,0,${.06 + i*.02})`; x.beginPath(); x.moveTo(0, hz + 10 + i*H*.08); x.quadraticCurveTo(W*.5, hz + 30 + i*H*.1, W, hz + 10 + i*H*.08); x.lineTo(W, hz + 16 + i*H*.08); x.quadraticCurveTo(W*.5, hz + 36 + i*H*.1, 0, hz + 16 + i*H*.08); x.fill(); } // the slopes, in long bands
     const wash = k => [lerp(W*.56, W*.36, k) + Math.sin(k*4 + 1)*W*.05*k, lerp(hz + 8, H*.88, k)];
-    x.lineCap = 'round'; for (let pass=0;pass<2;pass++){ x.strokeStyle = pass ? 'rgba(190,160,130,.16)' : 'rgba(30,20,14,.32)'; x.beginPath(); for (let i=0;i<=40;i++){ const [px, py] = wash(i/40); x.lineWidth = lerp(2, 30, i/40)*(pass ? .5 : 1); i ? x.lineTo(px + (pass ? -2 : 0), py) : x.moveTo(px, py); } x.stroke(); } x.lineCap = 'butt'; // the wash, pale stones in a dark cut
-    for (let i=0;i<40;i++){ const [px, py] = wash(hash(i,81)); ell(x, px + (hash(i,82) - .5)*lerp(2, 24, (py - hz)/(H - hz)), py, 1 + hash(i,83)*2.4, .6 + hash(i,83)*1, 'rgba(210,190,160,.22)'); }
-    for (let i=0;i<90;i++){ const yy = hz + 10 + Math.pow(hash(i,91), 1.3)*(H - hz), px = hash(i,92)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .6 + d*1.6, `rgba(20,14,12,${.25 + d*.3})`); } // scrub
-    x.fillStyle = '#140e0a'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.84); x.quadraticCurveTo(W*.4, H*.8, W*.7, H*.86); x.quadraticCurveTo(W*.9, H*.88, W, H*.84); x.lineTo(W, H); x.fill(); // the near rim
+    x.lineCap = 'round'; for (let pass=0;pass<2;pass++){ x.strokeStyle = pass ? 'rgba(250,240,220,.3)' : 'rgba(90,64,40,.4)'; x.beginPath(); for (let i=0;i<=40;i++){ const [px, py] = wash(i/40); x.lineWidth = lerp(2, 30, i/40)*(pass ? .5 : 1); i ? x.lineTo(px + (pass ? -2 : 0), py) : x.moveTo(px, py); } x.stroke(); } x.lineCap = 'butt'; // the wash, pale stones in a dark cut
+    for (let i=0;i<40;i++){ const [px, py] = wash(hash(i,81)); ell(x, px + (hash(i,82) - .5)*lerp(2, 24, (py - hz)/(H - hz)), py, 1 + hash(i,83)*2.4, .6 + hash(i,83)*1, 'rgba(250,244,230,.35)'); }
+    for (let i=0;i<50;i++){ const yy = hz + 6 + hash(i,94)*(H - hz), px = hash(i,93)*W; x.strokeStyle = 'rgba(120,96,64,.3)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px, yy); x.lineTo(px + 10 + hash(i,95)*30, yy + (hash(i,96) - .5)*3); x.stroke(); } // the clay, cracked into plates
+    { const tx = W*.47, ty = hz + H*.16; x.strokeStyle = '#4a3624'; x.lineCap = 'round'; x.lineWidth = 2; x.beginPath(); x.moveTo(tx, ty); x.quadraticCurveTo(tx - 1, ty - 10, tx + 3, ty - 18); x.stroke(); x.lineWidth = 1; x.beginPath(); x.moveTo(tx + 1, ty - 10); x.lineTo(tx + 9, ty - 15); x.moveTo(tx + 3, ty - 18); x.lineTo(tx - 4, ty - 24); x.moveTo(tx + 2, ty - 15); x.lineTo(tx + 6, ty - 23); x.stroke(); x.lineCap = 'butt'; } // the dead tree over the lip of the wash
+    for (let i=0;i<90;i++){ const yy = hz + 10 + Math.pow(hash(i,91), 1.3)*(H - hz), px = hash(i,92)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .6 + d*1.6, `rgba(100,84,56,${.25 + d*.3})`); } // scrub
+    x.fillStyle = '#6a563a'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.84); x.quadraticCurveTo(W*.4, H*.8, W*.7, H*.86); x.quadraticCurveTo(W*.9, H*.88, W, H*.84); x.lineTo(W, H); x.fill(); // the near rim
   }), 0, 0, W, H);
-  for (let i=0;i<4;i++){ const k = ((t*mo/9000 + i/4) % 1); ell(ctx, W*(.3 + i*.18) + k*20, H*.44 - 6 - k*14, 20 + k*24, 3 + k*4, `rgba(200,150,130,${.14*Math.sin(k*Math.PI)})`); } // the army's dust
-  ctx.fillStyle = 'rgba(220,200,190,.18)'; for (let i=0;i<12;i++){ const k = ((t*mo/7000 + hash(i,3)) % 1); ell(ctx, hash(i,4)*W + k*40, H*(.6 + hash(i,5)*.3), 20, 2, `rgba(220,200,190,${.08*Math.sin(k*Math.PI)})`); } // ground mist, burning off
+  for (let i=0;i<4;i++){ const k = ((t*mo/9000 + i/4) % 1); ell(ctx, W*(.3 + i*.18) + k*20, H*.44 - 6 - k*14, 20 + k*24, 3 + k*4, `rgba(220,200,170,${.22*Math.sin(k*Math.PI)})`); } // the army's dust, coming on
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.1, W*.7, '#fff8e0', .12); ctx.globalCompositeOperation = 'source-over'; // glare
+  ctx.fillStyle = 'rgba(230,214,180,.25)'; for (let i=0;i<24;i++){ const xx = ((hash(i,61)*W) + t*mo*(.02 + hash(i,62)*.03)) % W, y = H*.46 + hash(i,63)*H*.5; ctx.fillRect(xx, y, 1.3, 1); } // grit on the wind
   const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
-  vign(ctx, W, H, .7, .5); };
+  vign(ctx, W, H, .42, .5); };
 
 /* the Seventh's camp in the grey before dawn: tents in their rows going away over the flat, the horse lines, wagons being loaded, the first
    cookfires and their smoke going straight up in the still air; and over the Fist's tent, along its ridge and its guy-ropes, crows */
@@ -601,3 +605,34 @@ SCENEX.b2_camp_dawn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   ctx.fillStyle = 'rgba(14,16,30,.25)'; ctx.fillRect(0, H*.76, W, H*.24);
   vign(ctx, W, H, .66, .5); };
+
+/* the Seventh's camp the night the squad comes in from Hissar: a league out on the Odhan, the city a red glow low on the sky behind, the
+   camp's fires spread over the flat with no telling where the camp stops and the refugees start, people still coming in down the road in
+   the dark on foot and on mules and in carts (one man carrying a door), going toward the fires; and out of the north, the Wickans coming
+   back in twos and threes on blown horses, somebody from Hissar on almost every saddle */
+SCENEX.b2_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), hz = H*.5, cx0 = W*.06;
+  const fires = [...Array(34)].map((_, i) => [W*(.3 + hash(i, 301)*.72), hz + H*(.02 + Math.pow(hash(i, 302), 1.4)*.26)]);
+  const road = k => [lerp(-W*.02, W*.5, Math.pow(k, .8)), lerp(H*.86, hz + H*.08, Math.pow(k, .6))]; // the road out of Hissar, toward the fires
+  ctx.drawImage(sceneLayer('b2:camp_night', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#05060c'],[.65,'#0e1220'],[1,'#1e1620']]); x.fillRect(0, 0, W, hz + 2);
+    for (let i=0;i<120;i++){ x.fillStyle = `rgba(220,226,250,${(.12 + hash(i, 311)*.45).toFixed(2)})`; x.fillRect(hash(i, 312)*W, hash(i, 313)*hz*.9, hash(i, 314) > .93 ? 1.5 : 1, 1); } // stars
+    glow(x, cx0, hz, W*.42, '#c8481e', .45); glow(x, cx0, hz - 4, W*.16, '#ff8a40', .4); // Hissar, a league behind, still burning
+    x.save(); x.translate(0, hz + 1); x.scale(.32, .32); b2Skyline(x, W*.62, 0, '#1a0806', 7, 14, true); x.restore(); x.fillStyle = 'rgba(255,120,50,.35)'; x.fillRect(0, hz - 1, W*.2, 1); // the city, small with distance, its windows burning
+    for (let i=0;i<3;i++) b2Smoke(x, 0, cx0 + i*W*.05, hz - 4, H*.36, 6, '#2a1210', .35, i + 300, .7);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#1e1616'],[.4,'#141010'],[1,'#060404']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<60;i++){ const yy = hz + 4 + Math.pow(hash(i, 321), 1.4)*(H - hz), px = hash(i, 322)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .5 + d, `rgba(0,0,0,${(.25 + d*.3).toFixed(2)})`); } // scrub
+    fires.forEach(([px, py], i) => { const s = .5 + (py - hz)/H*2.4; glow(x, px, py, 10*s + 4, '#ff8a40', .35); x.fillStyle = '#ffc070'; x.fillRect(px - .7*s, py - 1.2*s, 1.5*s, 1.5*s); // the fires
+      for (let k=0;k<2;k++){ const tx = px + (k ? 9 : -10)*s + (hash(i, 323 + k) - .5)*4*s, ty = py - 1*s; x.fillStyle = '#2a1e1a'; x.beginPath(); x.moveTo(tx - 5*s, ty); x.lineTo(tx, ty - 5*s); x.lineTo(tx + 5*s, ty); x.fill(); x.fillStyle = 'rgba(255,150,80,.3)'; x.beginPath(); x.moveTo(tx + (k ? -5 : 5)*s, ty); x.lineTo(tx, ty - 5*s); x.lineTo(tx + (k ? -1 : 1)*s, ty); x.fill(); } }); // tents, lit on the side toward the fire
+    b2Crowd(x, 160, i => { const [px, py] = fires[Math.floor(hash(i, 331)*fires.length)], s = .5 + (py - hz)/H*2.4; return [px + (hash(i, 332) - .5)*22*s, py + (hash(i, 333) - .2)*4*s, s*.55]; }, 'rgba(8,6,6,.95)', 334); // round every fire, people; no telling soldier from refugee
+    x.strokeStyle = 'rgba(120,80,60,.12)'; x.lineCap = 'round'; x.beginPath(); for (let i=0;i<=30;i++){ const [px, py] = road(i/30); x.lineWidth = lerp(16, 3, i/30); i ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke(); x.lineCap = 'butt';
+    b2Column(x, W, H, road, 90, 'rgba(6,4,4,.96)', null); // and more coming in along it: on foot, carts, a mule
+    { const [px, py] = road(.12); x.fillStyle = 'rgba(6,4,4,.96)'; x.fillRect(px - 1.2, py - 9, 2.4, 9); x.beginPath(); x.arc(px, py - 10, 1.2, 0, 7); x.fill(); x.fillStyle = 'rgba(40,26,20,.98)'; x.fillRect(px - 7, py - 15, 13, 3); x.fillStyle = 'rgba(255,150,80,.2)'; x.fillRect(px - 7, py - 15, 13, .8); } // a man carrying a door
+  }), 0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; fires.forEach(([px, py], i) => { const s = .5 + (py - hz)/H*2.4; glow(ctx, px, py - 1, 5*s + 2, '#ffa050', .18*(mo ? .75 + .25*Math.sin(t/(130 + i*7) + i*2.3) : 1)); }); glow(ctx, cx0, hz - 4, W*.2, '#ff7a30', .08*fl); ctx.globalCompositeOperation = 'source-over';
+  // the Wickans, coming back out of the north at a walk, horses blown, somebody on nearly every saddle
+  for (let i=0;i<9;i++){ const k = ((t*mo/50000 + hash(i, 341)) % 1), px = lerp(W*1.04, W*.62, k) + (i%3)*W*.02, py = lerp(hz + H*.06, H*.8, k*.7 + hash(i, 342)*.2), s = .5 + (py - hz)/H*2, fade = clamp(k*8, 0, 1)*clamp((1 - k)*6, 0, 1);
+    ctx.globalAlpha = fade; b2Rider(ctx, px, py, s, 'rgba(10,8,8,.97)', -1, mo ? Math.floor(t/300 + i) % 2 : i%2, false); if (hash(i, 343) > .2) { ctx.fillStyle = 'rgba(10,8,8,.97)'; ctx.beginPath(); ctx.ellipse(px + 2.6*s, py - 10.4*s, 1.2*s, 2.4*s, .2, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(px + 3*s, py - 13.4*s, 1*s, 0, 7); ctx.fill(); } // and behind the rider, holding on, a child, an old man, a woman with her eyes shut
+    ctx.fillStyle = 'rgba(255,140,70,.4)'; ctx.fillRect(px - 2*s, py - 13*s, .9*s, 4*s); ctx.fillRect(px - 5*s, py - 7*s, 7*s, .7*s); } ctx.globalAlpha = 1; // the camp's light on their faces and their horses' flanks
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(4,6,14,.4)'; ctx.fillRect(0, H*.78, W, H*.22); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.5, H*.86, W*.4, '#ff8a40', .05*fl); ctx.globalCompositeOperation = 'source-over';
+  vign(ctx, W, H, .8, .5); };

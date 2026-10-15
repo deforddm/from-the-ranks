@@ -220,7 +220,8 @@ On the next bridge, the one beyond this, among the officers at the rail, there i
     b2_vathar_dusk:{loc:'The Vathar', sub:'The ford · dusk', cap:'The river red with the last light, fires along the bank, and in the shallows a handful of riders under a pale cloth.', amb:'dusk'},
     b2_vathar_night:{loc:'The Vathar', sub:'Night · below the ford', cap:'The river black under the stars, and below the ford the Council\'s carriages in a ring, a lamp lit in every window.', amb:'night'},
     b2_vathar_dawn:{loc:'The Vathar', sub:'First light · the ford', cap:'Grey light over the old wood, and the ford full from bank to bank, people in the river to the chest, and nothing yet coming down it.', amb:'wind'},
-    b2_after:{loc:'The Vathar', sub:'Dusk, after', cap:'The river at dusk, smoke on it, birds over it, and on the far bank a long line of the living walking on into the trees.', amb:'dusk'} },
+    b2_after:{loc:'The Vathar', sub:'Dusk, after', cap:'The river at dusk, smoke on it, crows coming down over it, the far bank black, and on this side the living walking on up the rise.', amb:'dusk'},
+    b2_vathar_cross:{loc:'The Vathar', sub:'Afternoon · the crossing after', cap:'The Seventh wading the ford last, the bridges\' wreckage drifting by, carts on their sides in the mud, and on the far bank the column sitting down at the edge of the trees.', amb:'wind'} },
 
   end:{
     silanda:['Aboard the Silanda', 'At the Vathar the Nobles\' Council made its own peace with Korbolo Dom, and in the morning the refugees went into the ford under his word, and his bridges came down the river into them. The squad knew the night before. It could not stop it. It held a piece of the ford, and broke a bridge, and counted. One of the squad was not there to count: they went down the river to Aren the day before, on a burned ship rowed by something nobody looks at, with the Seventh\'s worst hurt. They will be waiting at the end of the road. If the road has an end.'],
@@ -792,7 +793,7 @@ He does not lift a hand. Neither does she.`,
   b2_ilhar_named:()=>({sp:'Haddat', txt:`She hears you. She does not turn round. In Hissari, very low, too low for the water to carry, she says a name. His. The second time you have heard her say it. The bridge drifts away round the bend with him on it, and he does not hear, or he does not show it.
 
 When she turns round her face is the face she wears to count the dead. "Thank you, Sergeant," she says. "I needed somebody to have heard me say it."`, ch:[{t:'On.', go:'b2_vcross'}]}),
-  b2_vcross:()=>({sp:'The Vathar · afternoon', scene:'b2_after', txt:
+  b2_vcross:()=>({sp:'The Vathar · afternoon', scene:'b2_vathar_cross', txt:
 `The Seventh crosses the Vathar in the afternoon, behind what is left of the column, over the ford, between the drifting wreckage of the bridges. Nobody shoots at it. Dom's archers on the far bank have gone back into the trees. The Foolish Dog went in after them, Bult says, and came out again, fewer.
 
 ${S.f.b2_heldBack ? 'Your stretch crosses with the army, last, through water that is not brown any more. You tell them not to look down. Most of them manage it.' : 'Your stretch is already over, the ones the ford left you, sitting on the far bank in a heap, soaked, holding on to each other.'}

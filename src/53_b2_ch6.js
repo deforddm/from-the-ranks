@@ -262,14 +262,17 @@ Sathi is already running. "The horses," she says, over her shoulder, as if that 
     b2_sanimon_dawn:{loc:'Sanimon', sub:'Dawn · the valley', cap:'The half-dark, the Seventh going down the slope with its shields up, and in the valley the Tregyn getting out of their blankets.', amb:'wind'},
     b2_dojal:{loc:'Dojal Spring', sub:'Noon', cap:'A pool among tamarisks in a fold of the plain, the first green since the hills, and the column crowding down to it.', amb:'plain'},
     b2_sanimon:{loc:'Sanimon', sub:'The Khundryl', cap:'A sea of riders coming down off the ridges, and the army they were thought to belong to turning to look at them, too late.', amb:'wind'},
+    b2_sanimon_field:{loc:'Sanimon', sub:'Afternoon · the field after', cap:'The Seventh standing in its ranks among the dead with its shields still up, and across the valley the Khundryl riding through the tribes\' smoking camps.', amb:'wind'},
+    b2_sanimon_chiefs:{loc:'Sanimon', sub:'Dusk · the Fist\'s standard', cap:'The Fist on foot under the black feathers, a knot of Khundryl war chiefs on their horses before him, one sword up, and riders on every slope.', amb:'dusk'},
     b2_geleen:{loc:'The Geleen Plain', sub:'Dusk · the split', cap:'Grass at dusk, one long column going on into the west, and a smaller, darker line of riders turning back the way it came.', amb:'dusk'},
+    b2_geleen_moon:{loc:'The Geleen Plain', sub:'Moonrise · the split', cap:'The moon up over the grass, the column a long dark river going west under it, and behind, a dark line facing the other way, crows over it, not settling.', amb:'night'},
     b2_kherahn:{loc:'The Geleen Plain', sub:'The Kherahn Dhobri', cap:'Old men and women by a fire, grave as judges, and between them and the Fist, chests of silver, open.', amb:'plain'} },
 
   end:{
     whole:['The whole squad', 'On the Geleen Plain the Fist split the Chain: the refugees went on to Aren with the historian and the youngest Wickans, and the Seventh stayed behind with him to hold Dom off. Every one of the squad chose the column. The sergeant walked at the head of the stretch with all of them, and nobody looked back at the dark line turning east, and all of them wanted to.'],
     some:['Some stayed', 'On the Geleen Plain the Fist split the Chain: the refugees went on to Aren with the historian and the youngest Wickans, and the Seventh stayed behind with him to hold Dom off. Not all of the squad went with the column. The sergeant walked at the head of the stretch, one short, or two, and counted the gap anyway.'],
     many:['Many stayed', 'On the Geleen Plain the Fist split the Chain: the refugees went on to Aren with the historian and the youngest Wickans, and the Seventh stayed behind with him to hold Dom off. Most of the squad stayed with it. The sergeant walked at the head of the stretch with what was left, and the stretch walked closer round the sergeant than it ever had.'] },
-  endScene:'b2_geleen',
+  endScene:'b2_geleen_moon',
   endCap:()=> S.f.b2_c6_key === 'whole' ? `Night on the Geleen Plain. The whole squad is walking west. Behind it, east, a dark line of riders is going the other way, and nobody in the squad turns round to watch it go.` : `Night on the Geleen Plain. The column is walking west. Behind it, east, a dark line is going the other way, and some of the squad is in it.`,
   tease:'Next: Balahn, and Aren Way, three leagues of road past old barrows to a city with its gates shut. And behind the column, the Barrow.',
 
@@ -459,7 +462,7 @@ ${b2In('sathi') ? 'Sathi is laughing. She cannot stop. Hackle is barking at the 
 
 /* ---------------- the field at Sanimon: the afternoon after, the bottle, the Khundryl, Ilhar ---------------- */
 Object.assign(B2CH6.dlg, {
-  b2_field_arrive:()=>({sp:'Sanimon · afternoon', scene:'b2_sanimon', fx:()=>{ S.f.b2_field = 1; }, txt:
+  b2_field_arrive:()=>({sp:'Sanimon · afternoon', scene:'b2_sanimon_field', fx:()=>{ S.f.b2_field = 1; }, txt:
 `It takes Dom four hours to drive the Khundryl back off his flank, and when he has done it there is nothing behind them to drive. The Bhilard are gone into the hills. The Tregyn are gone. The Can'eld are dead on the slope in their wrapped faces, or running, and what was left of the Semk and the Tithansi is not left any more.
 
 Dom's legions draw off north in good order, because Dom is a general. Everybody else is just gone.
@@ -498,7 +501,7 @@ He looks at his work, and nods, and gets back on his pony with the Tregyn's mant
   b2_khund_no:()=>({sp:'A Khundryl warrior', txt:`He listens, or watches, with his head on one side, and then laughs, not unkindly, and shakes his head, and taps the paint on his own face, and then taps yours, and says one word. ${b2In('haddat') ? `"Not yet," Haddat translates.` : 'It sounds like *not yet*.'} He rides off singing.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- the war chief, at dusk ---- */
-  b2_warchief:()=>({sp:'The Fist\'s standard · dusk', scene:'b2_sanimon', fx:()=>{ S.f.b2_warchief = 1; }, txt:
+  b2_warchief:()=>({sp:'The Fist\'s standard · dusk', scene:'b2_sanimon_chiefs', fx:()=>{ S.f.b2_warchief = 1; }, txt:
 `At dusk they come down to the Fist's standard: a knot of Khundryl war chiefs, grey scale and furs and fetishes, black braids to the waist, and one in front of the others, older, with the paint on his face gone dark with the day's sweat.
 
 The Seventh's line opens for them because nobody knows what else to do. Coltaine comes out to meet them on foot, in his black feathers, and the old war chief does not get down off his horse.
@@ -1066,7 +1069,7 @@ const B2_GOODBYE6 = {
   redblade:()=>`Ramin walks east in his red scale with the short lance on his shoulder, very straight, the only red in the dark line.`,
 };
 Object.assign(B2CH6.dlg, {
-  b2_split:()=>({sp:'The Geleen Plain · moonrise', scene:'b2_geleen', fx:()=>b2DoSplit(), txt: // the split is made by Bult's choice, before this text is written; the fx is a safety net
+  b2_split:()=>({sp:'The Geleen Plain · moonrise', scene:'b2_geleen_moon', fx:()=>b2DoSplit(), txt: // the split is made by Bult's choice, before this text is written; the fx is a safety net
 `The moon comes up over the Geleen, and the Chain of Dogs comes apart.
 
 It happens quietly. Nobody gives an order you can hear. The carts start to move west in the long grass, and the Kherahn go with them on their small horses, and the youngest of the Wickans, and the historian at the head of it on his bad horse with the bottle inside his shirt. And the Seventh does not move. It stands in its ranks on the grass, facing east, and lets the column walk out from behind it, and the gap between them gets longer.
@@ -1079,7 +1082,7 @@ ${b2Here6().length ? `${b2Here6().length === 1 ? NAME(b2Here6()[0]) + ' walks' :
     html:chainHTML('The Geleen Plain · the split'),
     ch:[{t:'Walk.', go:'b2_split2'}]}),
 
-  b2_split2:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen', txt:
+  b2_split2:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen_moon', txt:
 `You look back once. Everyone does, once.
 
 The column is a long dark river in the grass going west under the moon, a league of it, carts and walkers and the Kherahn's small horses, and the children of the Wickans riding along its flanks like dogs round a herd. Behind it, getting smaller, the Seventh: five thousand, in a dark line across the plain, facing the other way. The Fist's standard. ${S.f.b2_listWar ? 'Somewhere under it, a corporal with a bad foot who has found his war.' : ''} The crows, because there are always crows over Coltaine, going round and round above the line in the moonlight, not settling.
@@ -1089,7 +1092,7 @@ ${b2Rearguard().length ? `Somewhere in that line are ${b2Rearguard().length === 
 ${b2In('sathi') ? `Sathi does not look back. She rides at the column's flank with the Wickan children, very straight, with Hackle at her heels, and her face is wet, and she is not laughing.` : ''}`,
     ch:[{t:'Count them.', go:'b2_c6_end'}]}),
 
-  b2_c6_end:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen', txt:
+  b2_c6_end:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen_moon', txt:
 `You count them, walking.
 
 ${chainC()} in the squad's stretch, going west in the grass with Kherahn bread in them. ${S.f.b2_retreatLost ? `${numw(S.f.b2_retreatLost, true)} fewer than at Sanimon.` : ''}${S.f.b2_ilhar === 'came' ? ` A water-seller from Hissar at the front, finding the way.` : ''} ${chainW() > 0 ? `${numw(chainW(), true)} skin${chainW() === 1 ? '' : 's'} on the cart.` : 'No water on the cart, and the Kherahn know where the wells are.'}

@@ -198,10 +198,11 @@ ${b2In('sathi') ? `Sathi laughs, high and short, and Hackle goes down the bank a
     b2_hissar_burning:{loc:'Hissar', sub:'From the garrison wall', cap:'Roofs on fire in a ring round the old city, and the ring closing, and on every roof somebody shouting one word.', amb:'city_night'},
     b2_well:{loc:'Hissar', sub:'Ressan\'s well court', cap:'A courtyard well with a wooden cover, two water jars by it, a burning door across the court, and an old man sitting on the well-head as if it were a throne.', amb:'city_night'},
     b2_coltaine_tent:{loc:'The Seventh\'s camp', sub:'The Fist\'s tent', cap:'One lamp, a map weighted with stones, a cloak of black feathers over a stool, and nobody sitting on the stool.', amb:'interior'},
+    b2_camp_night:{loc:'The Seventh\'s camp', sub:'Night · a league outside Hissar', cap:'Fires all over the flat with no telling camp from refugees, people still coming in down the road in the dark, the city red behind, and Wickans riding in with someone on every saddle.', amb:'night'},
     b2_camp_dawn:{loc:'The Seventh\'s camp', sub:'Before dawn', cap:'Tents in their rows going away over the flat, the horse lines, the first fires, and along the ridge of the Fist\'s tent, crows, more of them coming.', amb:'wind'},
     b2_odhan_dusk:{loc:'The Odhan', sub:'Dusk', cap:'The column strung out across the Odhan for a league and more, carts and cattle and people, and dust going up off all of it into a red sky.', amb:'dusk'},
     b2_odhan_day:{loc:'The Odhan', sub:'Day', cap:'Glare, and dust, and the column going on into both of them.', amb:'plain'},
-    b2_basin:{loc:'The Vin\'til Basin', sub:'The basin floor', cap:'A wide pan of cracked clay under a white sky, a dry wash cut across it, and on the far rim, dust that is not the column\'s.', amb:'dusk'} },
+    b2_basin:{loc:'The Vin\'til Basin', sub:'The basin floor', cap:'A wide pan of cracked clay under a white sky, a dry wash cut across it, and on the far rim, dust that is not the column\'s.', amb:'plain'} },
 
   end:{
     daughters:['The promise kept', 'Hissar burned, and the sergeant went back into it for two girls from the water-sellers\' quarter while the garrison\'s water carts went out of the gate without the squad. The girls walk in the column now. Their father sat on his well-head and let them go. The squad has fewer skins than it should, and the sergeant has one promise kept and half of another.'],
@@ -604,7 +605,7 @@ ${b2In('sathi') ? `Sathi says something to him in Wickan, fast. He answers, slow
 ${S.f.b2_key === 'carts' ? `You think of a boy running back up the quarter with your word, and of a well court, and you hope the Crow is right about *many*.` : `He looks you over, all of you, and nods, as if counting.`}`,
       ch:[{t:'On.', go:()=>startExplore()}]}),
     /* ---- the Seventh's camp, before dawn ---- */
-    b2_camp_arrive:()=>({sp:'The Seventh\'s camp', scene:'b2_odhan_dusk', fx:()=>{ S.f.b2_campIn = 1; }, txt:
+    b2_camp_arrive:()=>({sp:'The Seventh\'s camp · night', scene:'b2_camp_night', fx:()=>{ S.f.b2_campIn = 1; }, txt:
 `The Fist's camp is a league outside the walls on the Odhan, and by the time the squad reaches it there is no telling where the camp stops and the refugees start. People are still coming in down the road behind you, and across the scrub on both sides of it, in the dark: on foot, on mules, in carts, carrying children and pots and a chair, one man carrying a door. Nobody is telling them where to go. They are going toward the fires.
 
 And out of the north, out of the dark round the city, the Wickans are coming back. Riders in twos and threes, their horses blown, and on almost every saddle, in front of the rider or behind, somebody from Hissar: a child, an old man, a woman holding on with both arms round a Wickan's waist and her eyes shut.

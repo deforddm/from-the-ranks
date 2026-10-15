@@ -378,3 +378,45 @@ SCENEX.b2_gelor_dusk = (cv, t) => { SCENEX.b2_gelor(cv, t, true); const {ctx, W,
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.86, H*.26, W*.4, '#ff8a4a', .22); for (let i=0;i<40;i++){ ctx.fillStyle = `rgba(220,226,250,${(.08 + hash(i, 1)*.25).toFixed(2)})`; ctx.fillRect(hash(i, 2)*W, hash(i, 3)*H*.12, 1, 1); } // red low behind the crest, the first stars
   for (let i=0;i<12;i++){ const px = W*(.1 + hash(i, 5)*.85), py = H*(.2 + hash(i, 6)*.06); glow(ctx, px, py, 4, '#ff9040', .3); } // their fires, coming up along the top
   ctx.restore(); vign(ctx, W, H, .35, .5); };
+
+/* the Odhan at dusk, west of the Sekala: the column strung out across it as in 47b, and on every skyline, riders. Tithansi, sitting their
+   horses on the mesas and the low rises against the red, a few here and a few there, lances up, watching; now and then one moves along the
+   crest. They ride at the tail of the column every night and cut away whatever is slowest */
+SCENEX.b2_odhan_riders = (cv, t) => { SCENEX.b2_odhan_dusk(cv, t); const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52;
+  const sky = px => hz - 2 - (m => m > 4 ? Math.min(m, 14) : m*.3)(Math.max(0, Math.sin(px/60 + 1) - .55)*30 + Math.max(0, Math.sin(px/37 + 3) - .7)*24); // the line of the mesas, as 47b draws it
+  const groups = [[.06, 3], [.22, 5], [.31, 2], [.47, 4], [.6, 2], [.74, 6], [.9, 3]];
+  groups.forEach(([u, n], g) => { for (let i=0;i<n;i++){ const drift = mo && i === 0 && g%2 ? ((t/40000 + g*.3) % 1)*W*.06 : 0, px = W*u + i*W*.016 + (hash(i, g + 30) - .5)*4 + drift, py = sky(px) + .6, s = .48 + hash(i, g + 31)*.1, d = hash(i, g + 32) > .5 ? 1 : -1;
+    ctx.fillStyle = 'rgba(30,14,16,.95)'; ctx.strokeStyle = 'rgba(30,14,16,.95)'; ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(px, py - 6*s, 5*s, 2.3*s, 0, 0, 7); ctx.fill(); ctx.lineWidth = 1*s; [[3.4, 3.8], [2.2, 2.4], [-3.2, -3.4], [-4.2, -4.6]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(px + a*d*s, py - 5*s); ctx.lineTo(px + b*d*s, py); ctx.stroke(); });
+    ctx.lineWidth = 2*s; ctx.beginPath(); ctx.moveTo(px + 3.6*d*s, py - 7*s); ctx.lineTo(px + 6.4*d*s, py - 10.6*s); ctx.stroke(); ctx.fillRect(px - 1.2*s, py - 13*s, 2.4*s, 6.4*s); ctx.beginPath(); ctx.arc(px, py - 14.4*s, 1.3*s, 0, 7); ctx.fill(); // horse standing, the rider sitting up on it, watching
+    if (hash(i, g + 33) > .35) { ctx.lineWidth = .6*s; ctx.beginPath(); ctx.moveTo(px + 1.6*s, py - 7*s); ctx.lineTo(px + 2.4*s, py - 24*s); ctx.stroke(); } ctx.lineCap = 'butt'; } }); // a lance, upright
+  ctx.globalCompositeOperation = 'lighter'; groups.forEach(([u, n], g) => { const px = W*u + n*W*.008; ctx.fillStyle = 'rgba(255,170,110,.18)'; ctx.fillRect(px - n*W*.01, sky(px) - .4, n*W*.02, .8); }); ctx.globalCompositeOperation = 'source-over'; }; // the red behind them, along the crest
+
+/* the camp at mid-morning, the day after the raid: the whole army digging. Tents in their rows on the flat in the glare, and all through
+   them pits, an arm deep, two arms, the spoil thrown up beside each, and in the bottom of every one a glint of water; people lying on their
+   bellies at the edges with cups on cords, people still digging, skins coming up fat. The squad's own pit close by, the children first */
+SCENEX.b2_camp_pits = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5;
+  const pits = [...Array(26)].map((_, i) => { const v = Math.pow(hash(i, 201), 1.2), py = hz + H*.05 + v*H*.26; return [W*(.03 + hash(i, 202)*.94), py, .6 + (py - hz)/H*3.6]; }).concat([[W*.7, H*.86, 3.2]]); // the last is the squad's
+  ctx.drawImage(sceneLayer('b2:camp_pits', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#8a9aa8'],[.5,'#c8ccc4'],[1,'#f0e8d4']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.24, hz*.3, W*.6, '#fffcf0', .55); ell(x, W*.24, hz*.3, 12, 12, '#ffffff'); glow(x, W*.24, hz*.3, 36, '#ffffff', .6); // mid-morning, the sun already white
+    for (let i=0;i<3;i++) cloud(x, W*(.3 + i*.25), hz*(.3 + i*.12), W*.3, 3, '#ffffff', .1);
+    x.fillStyle = '#a8a4a0'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1 - Math.max(0, Math.sin(px/60 + 1) - .6)*20); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // far mesas
+    x.fillStyle = vgrad(x, hz, H, [[0,'#e0d0ac'],[.4,'#c8b088'],[1,'#8a7452']]); x.fillRect(0, hz, W, H - hz); x.fillStyle = 'rgba(255,250,240,.35)'; x.fillRect(0, hz, W, 4);
+    for (let i=0;i<60;i++){ const yy = hz + 4 + Math.pow(hash(i, 32), 1.4)*(H - hz), px = hash(i, 31)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .5 + d, `rgba(100,90,60,${(.2 + d*.25).toFixed(2)})`); } // trodden scrub
+    // the tents, in rows going away, pale in the glare, their shadows short
+    for (let r=0;r<7;r++){ const v = Math.pow(r/7, 1.5), y = hz + 4 + v*H*.34, s = .35 + v*1.7, n = Math.round(22 - r*2); for (let i=0;i<n;i++){ const px = (i + (r%2)*.5)/n*W*1.1 - W*.04 + (hash(i, r + 210) - .5)*8*s; if (hash(i, r + 211) < .3) continue; if (pits.some(([qx, qy, qs]) => Math.abs(px - qx) < 12*qs && Math.abs(y - qy) < 7*qs)) continue;
+      ell(x, px + 2*s, y + .5, 7*s, 1.4*s, 'rgba(90,70,40,.3)'); x.fillStyle = '#d8ccb4'; x.beginPath(); x.moveTo(px - 6*s, y); x.lineTo(px, y - 6*s); x.lineTo(px + 6*s, y); x.fill(); x.fillStyle = 'rgba(110,90,70,.45)'; x.beginPath(); x.moveTo(px, y - 6*s); x.lineTo(px + 6*s, y); x.lineTo(px + 1*s, y); x.fill(); x.fillStyle = '#4a3a2a'; x.fillRect(px - .4*s, y - 2.4*s, .8*s, 2.4*s); } }
+    // the pits: a dark mouth, the spoil heaped beside it, water in the bottom; people round each
+    pits.forEach(([px, py, s], i) => { ell(x, px + 7*s, py - 1*s, 5*s, 2.2*s, '#b09068'); ell(x, px + 7*s, py - 1.6*s, 4*s, 1.4*s, '#c8a87c'); // the spoil, darker and damp where it came from deep
+      ell(x, px, py, 5.4*s, 2*s, '#5a4430'); ell(x, px, py + .3*s, 4.4*s, 1.5*s, '#2a1e14'); ell(x, px + .4*s, py + .6*s, 2.6*s, .7*s, 'rgba(150,180,200,.75)'); x.fillStyle = 'rgba(255,255,255,.7)'; x.fillRect(px - .6*s, py + .4*s, 1.4*s, .4*s); // the water at the bottom, catching the sky
+      const lie = hash(i, 220); if (lie > .3) { x.fillStyle = 'rgba(60,46,34,.95)'; x.fillRect(px - 9*s, py - 1.4*s, 4.4*s, 1.2*s); x.beginPath(); x.arc(px - 4.4*s, py - .9*s, .8*s, 0, 7); x.fill(); x.strokeStyle = 'rgba(60,46,34,.8)'; x.lineWidth = .3*s + .2; x.beginPath(); x.moveTo(px - 3.8*s, py - .6*s); x.lineTo(px - 1.6*s, py + .4*s); x.stroke(); } // on his belly at the edge, a cup on a cord
+      if (lie > .6) { x.fillStyle = 'rgba(70,52,38,.95)'; x.fillRect(px + 3*s, py - 1.8*s, 3.8*s, 1.2*s); x.beginPath(); x.arc(px + 2.6*s, py - 1.2*s, .8*s, 0, 7); x.fill(); } });
+    b2Crowd(x, 60, i => { const [px, py, s] = pits[Math.floor(hash(i, 230)*pits.length)]; return [px + (hash(i, 231) > .5 ? 1 : -1)*(8 + hash(i, 231)*6)*s, py - 1*s + (hash(i, 232) - .5)*3*s, s*.6]; }, 'rgba(60,46,34,.95)', 233, ['#6a5440', '#5a4a3e', '#7a6048', '#4a4450']); // and round them, waiting, carrying skins
+  }), 0, 0, W, H);
+  // the diggers, still at it: a back bending, a spade coming up with earth on it
+  pits.forEach(([px, py, s], i) => { if (hash(i, 240) < .45 && i !== pits.length - 1) return; const ph = mo ? (Math.sin(t/(380 + hash(i, 241)*160) + i*1.3) + 1)/2 : .5, dx = px - 1*s, dy = py + .4*s, lean = (1 - ph)*1.4*s; ctx.fillStyle = 'rgba(54,40,30,.97)'; ctx.beginPath(); ctx.moveTo(dx - 1*s, dy); ctx.lineTo(dx + 1*s, dy); ctx.lineTo(dx + 1*s + lean, dy - 4*s); ctx.lineTo(dx - 1*s + lean, dy - 4*s); ctx.fill(); ctx.beginPath(); ctx.arc(dx + lean*1.15, dy - 4.9*s, .9*s, 0, 7); ctx.fill(); // waist-deep in it, bending to the spade and straightening
+    const hx = dx + lean + 1*s, hy = dy - 3*s, bx = hx + (1.6 + ph*1.6)*s, by = dy + (1 - ph*2.6)*s; ctx.strokeStyle = 'rgba(70,50,30,.95)'; ctx.lineWidth = .45*s; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(bx, by); ctx.stroke(); if (ph > .5) { ctx.fillStyle = '#b8966a'; ctx.fillRect(bx - .4*s, by - .9*s, 1.4*s, .9*s); } ctx.fillStyle = '#5a4430'; ctx.fillRect(px - 5*s, py + .2*s, 10*s, .6*s); }); // the spade, coming up with earth on it
+  { const [px, py, s] = pits[pits.length - 1]; for (let i=0;i<3;i++){ const cx = px - 8*s - i*4.4*s, cy = py + 1.6*s + (i%2)*1.4; drawFigure(ctx, 'child', cx, cy, 1.25, t, {phase:i*1.7, dir:1}); } } // at the squad's pit, the children drink first
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.24, H*.12, W*.7, '#fff8e0', .12); ctx.globalCompositeOperation = 'source-over'; // glare
+  ctx.fillStyle = 'rgba(230,214,180,.25)'; for (let i=0;i<20;i++){ const xx = ((hash(i, 61)*W) + t*mo*(.02 + hash(i, 62)*.03)) % W, y = hz + hash(i, 63)*(H - hz); ctx.fillRect(xx, y, 1.3, 1); } // grit on the wind
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(28, W*.36/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .42, .5); };

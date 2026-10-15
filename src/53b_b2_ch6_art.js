@@ -316,3 +316,97 @@ SCENEX.b2_sanimon_dawn = (cv, t) => b2SanimonHills(cv, t, 'dawn');
 /* Dojal Spring: a pool among tamarisks in a fold of the plain, the column's head coming down to it at noon; the same hollow-and-water
    painting as Dryj (49b), because it is the same kind of place, and the column does the same thing at it */
 SCENEX.b2_dojal = (cv, t) => SCENEX.b2_dryj_spring(cv, t);
+
+/* ---------------- Sanimon after: the field in the afternoon, and the Fist's standard at dusk ---------------- */
+/* 'day': the afternoon after the battle. The valley floor among the dead, the Seventh standing in its ranks with its shields still up and
+   nothing to do with them, Dom's legions drawing off north over the far hills in good order, and across the valley the tribes' camps, hide
+   tents knocked flat and smoking, with the Khundryl riding to and fro through them taking what they want. 'dusk': the same field in the
+   last red light, the Seventh's line opened round the Fist's standard, the Fist on foot under it, and in front of him a knot of Khundryl war
+   chiefs on their horses, the old one with his sword up; and on every slope of the valley, their riders, too many to count */
+function b2Mounted(x, cx, cy, s, col, d, scale, sword){ b2Horse(x, cx, cy, s, col, d, false); x.fillStyle = col; x.fillRect(cx - 1.2*s, cy - 13*s, 2.6*s, 6.4*s); x.beginPath(); x.arc(cx + .2*s, cy - 14.4*s, 1.3*s, 0, 7); x.fill(); // horse, and the rider sitting up on it
+  if (scale) { x.fillStyle = scale; x.fillRect(cx - 1.2*s, cy - 12.4*s, 2.6*s, 2.6*s); }
+  if (sword) { x.strokeStyle = col; x.lineWidth = .9*s; x.beginPath(); x.moveTo(cx + .8*s, cy - 12*s); x.lineTo(cx + 1.2*s, cy - 17*s); x.stroke(); x.strokeStyle = sword; x.lineWidth = .8*s; x.beginPath(); x.moveTo(cx + 1.2*s, cy - 17*s); x.lineTo(cx + 1.6*s, cy - 26*s); x.stroke(); } }
+function b2SanimonField(cv, t, m){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, dusk = m === 'dusk', hz = H*.42, fl = b2Fl(t);
+  const D = py => clamp((py - hz)/(H - hz), 0, 1), camp = [W*.3, hz + H*.1], std = [W*(dusk ? .78 : .6), H*.74];
+  const hill = px => hz - 2 - Math.max(0, Math.sin(px/46 + 2) - .3)*14 - Math.max(0, Math.sin(px/90 + .5))*10;
+  ctx.drawImage(sceneLayer('b2:sanfield:' + m, W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, dusk ? [[0,'#1a1426'],[.4,'#4a2632'],[.78,'#b0502e'],[1,'#e89048']] : [[0,'#6a7486'],[.55,'#b4aa98'],[1,'#e2cca2']]); x.fillRect(0, 0, W, hz + 2);
+    if (dusk) { glow(x, W*.86, hz, W*.5, '#ff9048', .45); ell(x, W*.86, hz - 2, 10, 7, '#ffd8a0'); for (let i=0;i<5;i++) cloud(x, W*(.1 + i*.2), hz*(.25 + (i%3)*.16), W*.3, 3, i%2 ? '#6a2a2a' : '#2a1a24', .2); }
+    else { glow(x, W*.24, H*.08, W*.6, '#fff4dc', .4); for (let i=0;i<3;i++) cloud(x, W*(.15 + i*.32), hz*(.3 + i*.14), W*.34, 3, '#f0e4cc', .12); } // the high hard afternoon, dust in it; or the last of the light
+    x.fillStyle = dusk ? '#2a1a1e' : '#8a7a64'; x.beginPath(); x.moveTo(0, hz + 4); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, hill(px)); x.lineTo(W, hz + 4); x.fill(); // the hills round the valley
+    x.fillStyle = vgrad(x, hz, H, dusk ? [[0,'#5a3a2c'],[.35,'#3a261c'],[1,'#120c08']] : [[0,'#b89c70'],[.35,'#9a7e56'],[1,'#4a3a24']]); x.fillRect(0, hz, W, H);
+    for (let i=0;i<110;i++){ const yy = hz + 4 + Math.pow(hash(i, 31), 1.3)*(H - hz), px = hash(i, 32)*W, d = D(yy); ell(x, px, yy, 1 + d*4, .5 + d*1.4, dusk ? `rgba(14,8,6,${(.2 + d*.3).toFixed(2)})` : `rgba(60,44,26,${(.2 + d*.3).toFixed(2)})`); } // scrub
+    const dark = dusk ? 'rgba(14,8,8,.9)' : 'rgba(40,28,18,.85)';
+    if (!dusk) { for (let i=0;i<70;i++){ const px = W*(.74 + hash(i, 41)*.24), py = hill(px) - 1 - hash(i, 42)*2; x.fillStyle = 'rgba(50,40,34,.8)'; x.fillRect(px, py - 2.4, .9, 2.4); } // Dom's legions going away north over the far hills, in good order
+      for (let i=0;i<4;i++){ const px = W*(.78 + i*.05); x.fillStyle = '#2a201a'; x.fillRect(px, hill(px) - 9, .6, 8); x.fillStyle = i%2 ? '#6a2a1a' : '#3a4a2a'; x.fillRect(px + .6, hill(px) - 9, 2.6, 1.6); } }
+    // the tribes' camps across the valley: hide tents, some down, some burning
+    for (let i=0;i<46;i++){ const px = camp[0] + (hash(i, 43) - .5)*W*.56, py = camp[1] - H*.03 + hash(i, 44)*H*.07, s = .4 + D(py)*1.8, down = hash(i, 45) > .6;
+      x.fillStyle = dusk ? (i%2 ? '#3a2a24' : '#2a1e1a') : (i%2 ? '#8a7a66' : '#6a5a4a'); x.beginPath(); if (down) { x.moveTo(px - 6*s, py); x.lineTo(px - 2*s, py - 2*s); x.lineTo(px + 5*s, py - 1*s); x.lineTo(px + 6*s, py); } else { x.moveTo(px - 5*s, py); x.lineTo(px - 1*s, py - 5*s); x.lineTo(px + 5*s, py); } x.fill();
+      if (!down) { x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.moveTo(px - 1*s, py - 5*s); x.lineTo(px + 5*s, py); x.lineTo(px + 1*s, py); x.fill(); } }
+    // the dead: all across the valley floor, men and horses, dropped spears; nobody looks at them
+    for (let i=0;i<260;i++){ const py = hz + H*.06 + Math.pow(hash(i, 51), 1.1)*(H*.9 - hz - H*.06), px = hash(i, 52)*W, s = .4 + D(py)*1.6, r = hash(i, 53);
+      if (dusk && Math.hypot((px - std[0])/W, (py - std[1])/H) < .14) continue;
+      if (r < .14) { x.fillStyle = dark; x.beginPath(); x.ellipse(px, py - 2*s, 5*s, 2*s, 0, 0, 7); x.fill(); x.strokeStyle = dark; x.lineWidth = .8*s; x.beginPath(); x.moveTo(px - 2*s, py - 3*s); x.lineTo(px - 4*s, py - 6*s); x.moveTo(px + 1*s, py - 3*s); x.lineTo(px + 2*s, py - 6.4*s); x.moveTo(px + 4*s, py - 2*s); x.lineTo(px + 7.6*s, py - 3*s); x.stroke(); } // a horse down, legs out
+      else if (r < .8) { x.fillStyle = dark; x.fillRect(px - 2.4*s, py - 1.2*s, 4.8*s, 1.4*s); x.beginPath(); x.arc(px + (r > .5 ? 3 : -3)*s, py - .8*s, .8*s, 0, 7); x.fill(); if (hash(i, 54) > .6) { x.fillStyle = dusk ? 'rgba(90,40,30,.6)' : 'rgba(110,40,26,.55)'; x.fillRect(px - 1.6*s, py - 1.4*s, 2.4*s, .8*s); } } // a man, a wrapped face, a mantle
+      else { x.strokeStyle = dark; x.lineWidth = .6*s; x.beginPath(); x.moveTo(px - 5*s, py); x.lineTo(px + 5*s, py - 1.4*s); x.stroke(); } } // a spear, a lance, dropped
+    { const px = W*.14, py = H*.68; x.strokeStyle = dark; x.lineWidth = 1; x.beginPath(); x.moveTo(px - 12, py + 2); x.lineTo(px + 10, py - 3); x.stroke(); for (let k=0;k<3;k++){ x.beginPath(); x.moveTo(px - 8 + k*2.4, py + 1); x.quadraticCurveTo(px - 9 + k*2.4, py + 5, px - 11 + k*2, py + 7); x.stroke(); } } // a Tregyn horse-tail standard, down in the dust
+    if (!dusk) { // the Seventh in its ranks on the valley floor, shields up, standing, in the heat
+      for (let i=0;i<150;i++){ const r = Math.floor(i/30), c = i%30, px = W*(.5 + c*.015 + r*.008), py = H*(.62 - r*.022) + c*.2, s = .9 - r*.08; x.fillStyle = 'rgba(30,26,26,.95)'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.beginPath(); x.arc(px, py - 6.8*s, s, 0, 7); x.fill(); x.fillStyle = 'rgba(104,92,80,.95)'; x.fillRect(px + .5*s, py - 5*s, 1.7*s, 3.4*s); if (c%9 === 4 && r === 4) { x.fillStyle = '#1a1414'; x.fillRect(px, py - 20*s, .7, 14*s); x.fillStyle = '#4a4a54'; x.fillRect(px + .7, py - 20*s, 4*s, 2.4*s); } } }
+    else { // the Seventh's line, opened round the standard; the Wickans with their bows, all of them up
+      for (const side of [-1, 1]) for (let i=0;i<70;i++){ const r = Math.floor(i/35), c = i%35, px = std[0] + side*(W*.08 + c*W*.011), py = std[1] - H*.06 - r*H*.02 - c*.5*(side > 0 ? 1 : .3), s = .9 - r*.08 - c*.006; if (px < -4 || px > W + 4) continue; x.fillStyle = 'rgba(12,8,8,.96)'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.beginPath(); x.arc(px, py - 6.8*s, s, 0, 7); x.fill(); x.fillStyle = 'rgba(70,50,40,.9)'; x.fillRect(px + .5*s*side, py - 5*s, 1.6*s, 3.4*s); }
+      for (let i=0;i<30;i++){ const px = std[0] + (hash(i, 61) > .5 ? 1 : -1)*(W*.1 + hash(i, 62)*W*.3), py = std[1] - H*.12 - hash(i, 63)*H*.03; b2Horse(x, px, py, .5, 'rgba(14,10,10,.9)', px < std[0] ? 1 : -1, false); x.strokeStyle = 'rgba(14,10,10,.9)'; x.lineWidth = .5; x.beginPath(); x.arc(px, py - 8, 3, -2.2, -.9); x.stroke(); } } // Wickans, mounted, bows up
+  }), 0, 0, W, H);
+  if (!dusk) { // smoke off the camps; the Khundryl riding to and fro through them, singing, with what they have taken
+    for (let i=0;i<4;i++) b2Smoke(ctx, t*mo, camp[0] + (hash(i, 71) - .5)*W*.4, camp[1] + hash(i, 72)*H*.04, H*.3, 6, '#5a4a3e', .22, i + 30, .6);
+    for (let i=0;i<26;i++){ const sp = hash(i, 73)*.5 + .5, ph = (t*mo/(26000/sp) + hash(i, 74)*2) % 2, u = ph < 1 ? ph : 2 - ph, d = ph < 1 ? 1 : -1, py = camp[1] + H*(.02 + hash(i, 75)*.12), px = lerp(W*.02, W*.62, u) + (hash(i, 76) - .5)*W*.1, s = .45 + D(py)*1.6, pied = hash(i, 77) > .75;
+      b2Rider(ctx, px, py, s, pied ? '#5a4634' : 'rgb(40,30,20)', d, mo ? Math.floor(t/140 + i) % 2 : i%2, false); if (pied) { ctx.fillStyle = 'rgba(232,222,200,.8)'; ctx.fillRect(px - 2*s, py - 7*s, 3*s, 1.6*s); }
+      if (hash(i, 78) > .6) { ctx.fillStyle = ['#8a2a1a', '#3a5a6a', '#c8a050'][i%3]; ctx.fillRect(px - d*5*s, py - 9*s, 4*s, 2*s); } } // a mantle, a blanket, a pot, thrown over the withers
+    for (let i=0;i<6;i++){ const k = ((t*mo/14000 + i/6) % 1); ell(ctx, W*(.05 + k*.7), camp[1] + 4 + (i%3)*6, 30 + k*30, 3 + k*3, `rgba(214,190,150,${(.12*Math.sin(k*Math.PI)).toFixed(3)})`); } // dust
+    b2Wheel(ctx, t*mo, W*.5, H*.2, W*.3, H*.08, 16, 1, 'rgba(30,22,16,.75)', 5); } // and the birds, already
+  else { // every slope of the valley, riders; and in front of the standard the war chiefs, the old one with his sword up at it
+    for (let i=0;i<700;i++){ const px = hash(i, 81)*W, py = hill(px) + 2 + hash(i, 82)*H*.14, s = .3 + hash(i, 82)*.5; b2Fleck(ctx, px, py, s, 'rgba(18,10,10,.92)', hash(i, 83) > .85); if (hash(i, 84) > .9) { const up = mo ? Math.max(0, Math.sin(t/500 + hash(i, 85)*9)) : .6; ctx.fillStyle = 'rgba(230,200,170,.55)'; ctx.fillRect(px, py - 6*s - up*4*s, .5, 3*s); } } // swords coming up along the slopes as the shout goes round
+    const [sx, sy] = std; ctx.strokeStyle = '#0a0606'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy - H*.32); ctx.stroke(); ctx.fillStyle = '#0a0606'; ctx.fillRect(sx - 9, sy - H*.32, 18, 1.4);
+    for (let k=0;k<6;k++){ const fx = sx - 7 + k*2.8, sw = mo ? Math.sin(t/300 + k*1.3)*.25 : .1; ctx.save(); ctx.translate(fx, sy - H*.32 + 1); ctx.rotate(.15 + sw); ell(ctx, 0, 6 + (k%2)*2, 1.4, 6 + (k%2)*2, '#0a0606'); ctx.restore(); } // the Fist's standard: black feathers hung from a crossbar, stirring
+    for (let i=0;i<5;i++){ const cx = sx - W*.33 + i*W*.055 + (hash(i, 91) - .5)*6, cy = sy + H*.07 - (i%2)*4, s = i === 3 ? 2.2 : 1.9; b2Mounted(ctx, cx, cy, s, 'rgba(16,10,10,.97)', 1, 'rgba(150,150,140,.6)', i === 3 ? '#e8d8c0' : null); if (i !== 3) { ctx.strokeStyle = 'rgba(16,10,10,.9)'; ctx.lineWidth = .8; for (let k=0;k<3;k++){ ctx.beginPath(); ctx.moveTo(cx - 1 + k, cy - 13*s); ctx.lineTo(cx - 2 + k*.6, cy - 6*s); ctx.stroke(); } } } // the chiefs; black braids to the waist; the old one's blade catching the last light
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, sx - W*.33 + 3*W*.055 + 4, sy + H*.07 - 4 - 52, 10, '#ffd0a0', .3*fl); ctx.globalCompositeOperation = 'source-over';
+    drawFigure(ctx, 'coltaine', sx + 6, sy + H*.04, 1.35, t, {still:true, dir:-1});
+    b2Wheel(ctx, t*mo, sx, sy - H*.42, W*.14, H*.05, 11, .8, 'rgba(10,6,8,.85)', 7); } // crows, over the Fist, always
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(dusk ? 24 : 30, (dusk ? W*.3 : W*.4)/sq.length), H*.96 - (i%2)*3, dusk ? 1.9 : 2.1, t, {phase:i, dir:1}));
+  if (dusk) { ctx.fillStyle = 'rgba(30,10,14,.28)'; ctx.fillRect(0, H*.8, W, H*.2); }
+  vign(ctx, W, H, dusk ? .72 : .5, .5); }
+SCENEX.b2_sanimon_field = (cv, t) => b2SanimonField(cv, t, 'day');
+SCENEX.b2_sanimon_chiefs = (cv, t) => b2SanimonField(cv, t, 'dusk');
+
+/* the split on the Geleen, at moonrise and after: the same trail across the same plain as b2_geleen, but the sun long down and the moon
+   coming up big over the east. The column a long dark river in the grass going west under it, carts and walkers and the Kherahn's small
+   horses, the Wickan children riding its flanks; and behind, east, getting smaller, the Seventh: a dark line across the plain facing the
+   other way, the Fist's standard, and the crows going round and round over it in the moonlight, not settling */
+SCENEX.b2_geleen_moon = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, mx = W*.16, my = hz - H*.1;
+  const R = u => [lerp(-W*.04, W*1.04, u), hz + 1 + Math.exp(-Math.pow((u - .45)/.26, 2))*H*.24], D = py => (py - hz)/(H - hz), SC = py => .3 + D(py)*2.1;
+  ctx.drawImage(sceneLayer('b2:geleen_moon', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#04060e'],[.6,'#0c1224'],[1,'#1a2236']]); x.fillRect(0, 0, W, hz + 2);
+    for (let i=0;i<150;i++){ const qx = hash(i, 11)*W, qy = hash(i, 12)*hz*.95, near = Math.hypot(qx - mx, qy - my) < W*.14; if (near) continue; x.fillStyle = `rgba(220,226,255,${(.15 + hash(i, 13)*.55).toFixed(2)})`; const z = hash(i, 14) > .93 ? 1.5 : 1; x.fillRect(qx, qy, z, z); } // stars, thinned round the moon
+    glow(x, mx, my, W*.42, '#c8d4f0', .22); glow(x, mx, my, W*.12, '#e8ecff', .35); ell(x, mx, my, 13, 13, '#f2eedc'); ell(x, mx - 3, my - 2, 3.4, 2.6, 'rgba(180,176,160,.5)'); ell(x, mx + 4, my + 3, 2.4, 2, 'rgba(180,176,160,.45)'); // the moon, coming up big and yellow-white over the east
+    for (let i=0;i<4;i++) cloud(x, W*(.2 + i*.24), hz*(.3 + i*.12), W*.3, 2, '#6a7898', .08);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#2a3040'],[.3,'#1a1e28'],[1,'#07080c']]); x.fillRect(0, hz, W, H);
+    { const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(170,186,220,.16)'); g.addColorStop(.5, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, hz, W, H); } // the moon's side of the plain a little silver
+    x.fillStyle = 'rgba(8,10,16,.95)'; x.fillRect(0, hz - .6, W, 1.6); x.fillStyle = 'rgba(190,200,230,.3)'; x.fillRect(0, hz + 1, W*.5, 1.2); // the line of the world, flat as a table
+    for (let i=0;i<240;i++){ const yy = hz + 3 + Math.pow(hash(i, 21), 1.25)*(H - hz), px = hash(i, 22)*W, d = D(yy), l = 4 + d*30; x.strokeStyle = `rgba(${px < W*.5 ? '120,132,160' : '40,44,58'},${(.12 + d*.2).toFixed(2)})`; x.lineWidth = .6 + d; x.beginPath(); x.moveTo(px, yy); x.lineTo(px + l, yy + (hash(i, 23) - .5)*1.4); x.stroke(); } // grass in long bands, the wind over it
+    x.fillStyle = 'rgba(200,210,240,.12)'; for (let i=0;i<8;i++){ const yy = hz + 3 + i*i*2.4; x.fillRect(mx - 8 - i*6 + (hash(i, 24) - .5)*6, yy, 16 + i*12, 1); } // the moon's road on the grass-tops
+    x.lineCap = 'round'; for (let i=0;i<=80;i++){ const [px, py] = R(i/80), [qx, qy] = R((i + 1)/80), d = D(py); x.strokeStyle = `rgba(6,8,12,${(.3 + d*.8).toFixed(2)})`; x.lineWidth = 1.2 + d*16; x.beginPath(); x.moveTo(px, py); x.lineTo(qx, qy); x.stroke(); x.strokeStyle = `rgba(150,164,200,${(.04 + d*.18).toFixed(2)})`; x.lineWidth = .5 + d*2; x.beginPath(); x.moveTo(px, py - 1 - d*7); x.lineTo(qx, qy - 1 - d*7); x.stroke(); } x.lineCap = 'butt'; // the trail, trodden to the dirt
+  }), 0, 0, W, H);
+  // the column, going on west into the dark: carts and walkers and the Kherahn's small horses, the moon on their backs
+  const CN = 140; for (let i=0;i<CN;i++){ const u = .52 + ((hash(i, 41)*.46 + t*mo/420000) % .46), [px, py0] = R(u), s = SC(py0), r = hash(i, 42), fade = clamp((u - .52)*36, 0, 1)*clamp((.98 - u)*16, 0, 1), col = `rgba(6,6,10,${(.95*fade).toFixed(2)})`, cx = px + (hash(i, 45) - .5)*s*3, cy = py0 + (hash(i, 43) - .5)*s*6;
+    ctx.fillStyle = col;
+    if (r < .09) { ctx.fillRect(cx - 5*s, cy - 6*s, 10*s, 4*s); ctx.beginPath(); ctx.ellipse(cx, cy - 6*s, 5*s, 4*s, 0, Math.PI, 0); ctx.fill(); ctx.fillRect(cx - 4*s, cy - 2*s, 1.6*s, 2*s); ctx.fillRect(cx + 2.4*s, cy - 2*s, 1.6*s, 2*s); ctx.fillStyle = `rgba(180,194,230,${(.3*fade).toFixed(2)})`; ctx.fillRect(cx - 4.6*s, cy - 9.6*s, 5*s, .6*s); } // a cart, the moon on its canvas
+    else if (r < .2) { b2Rider(ctx, cx, cy, s*.6, col, 1, 0, false); } // a Kherahn on his small horse, or a Wickan child riding the flank
+    else { const hh = (4.6 + hash(i, 44)*2)*s, st = mo ? Math.sin(t/300 + i*1.7)*.4*s : 0; ctx.fillRect(cx - s*.9, cy - hh, s*1.8, hh); ctx.beginPath(); ctx.arc(cx, cy - hh - s*.7, s*.75, 0, 7); ctx.fill(); ctx.fillRect(cx - s*.8 + st, cy - s*.8, s*.6, s*.8);
+      ctx.fillStyle = `rgba(170,186,224,${(.35*fade).toFixed(2)})`; ctx.fillRect(cx - s*.9, cy - hh, s*.45, hh*.8); } } // walking; the moon on the side of every one of them that faces back
+  // the Seventh, behind, east: a dark line across the plain facing the other way, not moving; the standard; the crows round and round over it
+  const [lx, ly] = R(.18), ls = SC(ly); for (let i=0;i<46;i++){ const px = lx - W*.2 + i*W*.009, py = ly - 2 + Math.sin(i*1.3)*.6, s = ls*.75; if (i%3) { ctx.fillStyle = 'rgba(4,4,8,.97)'; ctx.fillRect(px - .8*s, py - 6*s, 1.6*s, 6*s); ctx.beginPath(); ctx.arc(px, py - 6.8*s, .8*s, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(160,176,214,.4)'; ctx.fillRect(px - .8*s, py - 5*s, .6*s, 3*s); } else b2Rider(ctx, px, py, s*.7, 'rgba(4,4,8,.97)', -1, 0, hash(i, 51) > .5); }
+  { const px = lx, py = ly - 2, s = ls; ctx.strokeStyle = 'rgba(4,4,8,.97)'; ctx.lineWidth = .7*s; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py - 22*s); ctx.stroke(); for (let k=0;k<4;k++) ell(ctx, px - 1.6*s + k*1.1*s, py - 19*s, .4*s, 2.4*s, 'rgba(4,4,8,.95)'); }
+  b2Wheel(ctx, t*mo, lx, ly - 34*ls, W*.12, H*.04, 16, .6, 'rgba(4,4,10,.9)', 13); // the crows, in the moonlight, not settling
+  for (let i=0;i<70;i++){ const gx = hash(i, 61)*W, gy = H*(.86 + hash(i, 62)*.16), l = 8 + hash(i, 63)*16, sw = mo ? Math.sin(t/900 + gx*.03)*3 + Math.sin(t/340 + i)*.8 : 0; ctx.strokeStyle = 'rgba(10,12,18,.88)'; ctx.lineWidth = 1 + hash(i, 64); ctx.beginPath(); ctx.moveTo(gx, gy); ctx.quadraticCurveTo(gx + sw*.4 + 2, gy - l*.6, gx + sw + 4, gy - l); ctx.stroke(); if (gx < W*.5) { ctx.strokeStyle = 'rgba(170,186,224,.25)'; ctx.lineWidth = .6; ctx.beginPath(); ctx.moveTo(gx + sw*.7 + 3, gy - l*.75); ctx.lineTo(gx + sw + 4, gy - l); ctx.stroke(); } } // the grass close by
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.56 + i*Math.min(28, W*.4/sq.length), H*.97 - (i%2)*3, 2, t, {phase:i*1.3, dir:id === 'sgt' ? -1 : 1}));
+  ctx.fillStyle = 'rgba(6,10,26,.35)'; ctx.fillRect(0, H*.8, W, H*.2); // night, on them
+  vign(ctx, W, H, .78, .5); };

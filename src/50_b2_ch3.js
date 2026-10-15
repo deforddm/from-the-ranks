@@ -48,7 +48,7 @@ GLOSSX.dg.push(
 
 const B2CH3 = {
   title:'The Ridge', number:'Three',
-  intro:{loc:'The Odhan', sub:'West of the Sekala · the long way to the P\'atha', scene:'b2_odhan_dusk', cap:'The column strung out across the Odhan at dusk, and on every skyline, riders.',
+  intro:{loc:'The Odhan', sub:'West of the Sekala · the long way to the P\'atha', scene:'b2_odhan_riders', cap:'The column strung out across the Odhan at dusk, and on every skyline, riders.',
     paras:[
 `The column slept a day on the west bank of the Sekala, and then it walked again, because Reloe had gone north to the next crossing and would be back, and because there was nowhere to go now but Aren.`,
 `The Weasels came back from the Sekala with fewer horses and filed teeth. All of them, the whole clan, sharpened to points like a dog's, the morning after the ford. Nobody asked them why. Nobody in the column asks the Weasels anything any more.`,
@@ -244,6 +244,8 @@ Two Foolish Dog riders come down off the lake-bed slope on blown horses, and get
     b2_sappershield:{name:'A sapper\'s dented shield-boss', slot:'trinket', who:null, hp:1, line:'The iron boss of a sapper\'s shield, dented in the shape of a horse\'s hoof. Tangle brought it back from the ramp. It was over his face at the time.'} },
 
   scenes:{
+    b2_odhan_riders:{loc:'The Odhan', sub:'Dusk · west of the Sekala', cap:'The column strung out across the Odhan at dusk, and on every skyline, riders, sitting their horses against the red.', amb:'dusk'},
+    b2_camp_pits:{loc:'The Seventh\'s camp', sub:'Mid-morning · the water under the camp', cap:'Pits dug all through the camp, the spoil heaped beside each and water in the bottom, and people on their bellies at the edges with cups on cords.', amb:'plain'},
     b2_tunnel:{loc:'The warlocks\' cut', sub:'Under the Odhan', cap:'Earth walls laced with pale roots, a floor of black water, and small cold lights set in the walls like held breath.', amb:'tunnel'},
     b2_gelor:{loc:'Gelor Ridge', sub:'The P\'atha', cap:'A long ridge over a dry lake bed, cut into one sandy ramp between high banks, and on top of it, an army.', amb:'wind'},
     b2_gelor_dusk:{loc:'Gelor Ridge', sub:'The P\'atha · dusk', cap:'The ridge in the last red light, cut into one sandy ramp between high banks, and along the top of it, an army lighting its fires.', amb:'wind'},
@@ -561,7 +563,7 @@ ${S.f.b2_clawStar === 'given' ? `You give Lull the star. He turns it over once, 
 
 "Dead. The one we went for." He rubs his face. "There was another one. Painted. You saw it, I think." It isn't a question. "It gets back up."`,
     ch:[{t:'"It does, sir."', go:'b2_water'}]}),
-  b2_water:()=>({sp:'The camp · morning', scene:'b2_odhan_day', fx:()=>{ if (!S.f.b2_tunnelWater) { S.f.b2_tunnelWater = 1; chain(4, 0, 'The water under the camp'); } }, txt:
+  b2_water:()=>({sp:'The camp · morning', scene:'b2_camp_pits', fx:()=>{ if (!S.f.b2_tunnelWater) { S.f.b2_tunnelWater = 1; chain(4, 0, 'The water under the camp'); } }, txt:
 `By the middle of the morning the whole army is digging.
 
 The historian told the Fist about the water in the warlocks' tunnel${S.f.b2_seep ? `, and so did Wicket, and somebody went down the south mouth with a skin and came back up with it full` : ''}, and now there are pits all through the camp, an arm deep, two arms, and in the bottom of every one of them, water. Sweet. Old rain. People are lying on their bellies at the edges of the pits with cups on cords, laughing, the way people laugh in a temple when the priest is not looking.

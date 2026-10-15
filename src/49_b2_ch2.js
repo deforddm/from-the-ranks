@@ -207,6 +207,10 @@ The Red Blades go up the rise beside you without waiting to be asked.`}`,
   scenes:{
     b2_dryj_spring:{loc:'Dryj Spring', sub:'The Odhan', cap:'A muddy spring in a ring of tamarisks, and round it people and cattle as far as the heat lets you see.', amb:'plain'},
     b2_sekala:{loc:'The Sekala', sub:'The ford at dawn', cap:'A broad brown river, a ford under it, and on both banks, armies.', amb:'plain'},
+    b2_sekala_dug:{loc:'The Sekala', sub:'First light · the east bank', cap:'The last of the fog on the river, the cattle going over the ford, and on the far bank the Seventh dug in behind raw earth and stakes under its own standards.', amb:'plain'},
+    b2_sekala_cross:{loc:'The Sekala', sub:'Afternoon · the crossing', cap:'Everything on the ford at once in the glare, carts and families and a nobles\' carriage, the water round their knees, and the Seventh\'s earthwork on the far bank.', amb:'plain'},
+    b2_sekala_west:{loc:'The Sekala', sub:'The west bank · afternoon', cap:'The regulars\' earthwork on the bank, and a bowshot off, the Guran in three square blocks under city standards and the Semk on a stony rise, the air over them bending.', amb:'wind'},
+    b2_sekala_blown:{loc:'The Sekala', sub:'From the west bank · afternoon', cap:'Reloe\'s host pouring down onto the ford in a brown flood, and the river standing up white along the whole length of it.', amb:'wind'},
     b2_dryj_dusk:{loc:'Dryj Spring', sub:'Dusk', cap:'The spring holding a red sky, the tamarisks black round it, and the first fires coming up among the people.', amb:'dusk'},
     b2_caravan_well:{loc:'The caravan well', sub:'The Odhan · noon', cap:'A mud-brick well-house on a road nobody uses, a broken wall, picket lines, a few hide tents, and by the well-head the skins stacked higher than a man.', amb:'plain'},
     b2_sekala_after:{loc:'The Sekala', sub:'The west bank · morning', cap:'The river from the west bank, a trench in it where the ford was with the water pouring in, and the column asleep in the shade of the carts.', amb:'plain'},
@@ -736,7 +740,7 @@ ${b2In('sathi') ? `Hackle runs down the slope to it without being told, and stan
 
 /* ---------------- the Sekala: the east bank ---------------- */
 Object.assign(B2CH2.dlg, {
-  b2_ford_arrive:()=>({sp:'The Sekala · the east bank', scene:'b2_sekala', fx:()=>{ if (!S.f.b2_fordIn) { S.f.b2_fordIn = 1; chain(3, 0, 'The Sekala'); } }, txt:
+  b2_ford_arrive:()=>({sp:'The Sekala · the east bank', scene:'b2_sekala_dug', fx:()=>{ if (!S.f.b2_fordIn) { S.f.b2_fordIn = 1; chain(3, 0, 'The Sekala'); } }, txt:
 `The army goes across in the dark.
 
 You don't see how. Nobody does. A fog comes up off the river at midnight that has no business being there in summer, thick and white and smelling of earth, and the Seventh's companies go down into it in file and do not come back up. ${b2In('sathi') ? `"The warlocks," Sathi says, low, with her hand in Hackle's ruff. The dog's hackles are up. "Sormo, and the young ones. They have asked the river for something." She doesn't say what the river asked for back.` : 'The Wickan warlocks, someone says. Nobody says it loudly.'}
@@ -888,14 +892,14 @@ He goes on down to the ford between his Wickans, ${b2In('sathi') ? 'and Sathi sa
   /* ---- the crossing ---- */
   b2_cross:()=> !S.f.b2_mincer ? {sp:'The ford', txt:
 `The paved ford, under knee-deep brown water. A sapper on the near end waves you off. Not yet. ${b2In('tangle') ? 'Tangle wants you to meet his captain first.' : 'The captain of sappers is down the bank.'}`,
-    ch:[{t:'Not yet.', go:()=>startExplore()}]} : {sp:'The ford', scene:'b2_sekala', txt:
+    ch:[{t:'Not yet.', go:()=>startExplore()}]} : {sp:'The ford · afternoon', scene:'b2_sekala_cross', txt:
 `Afternoon. The cattle are over. The horn goes, the long one, and the column comes down off the bank onto the ford: carts and families and the wounded and the nobles' carriages, everything, all at once, and the water closes over the paving stones round their knees.
 
 Behind, on the east bank, the noise has been getting closer all day. The rearguard is falling back toward the river in a ring, and past them, on the oxbow island in the bend, something is fighting that nobody living is fighting, in armour nobody has worn for a thousand years. ${S.f.b2_nil ? 'Nil\'s work.' : 'You don\'t look at it twice.'}
 
 The squad's stretch goes onto the stones.`,
     ch:[{t:'Across.', go:'b2_cross_jam'}, {t:'Not yet.', go:()=>startExplore()}]},
-  b2_cross_jam:()=>({sp:'The ford · midstream', scene:'b2_sekala', txt:
+  b2_cross_jam:()=>({sp:'The ford · midstream', scene:'b2_sekala_cross', txt:
 `Halfway over, it jams.
 
 Not the stones: the stones hold, every one of them, Mincer's road. It is the carts. Too many, too heavy, with the river shoving at the wheels, and the ones in front have slowed, and the squad's stretch is bunching up behind them in water to the waist now where the ford bends. ${S.f.b2_c2_key === 'water' || chainW() >= 6 ? `Your own carts are the heaviest on the ford: barrels and skins, all the water you have carried since Dryj.` : `Your carts are low in the water with barrels and skins.`}
@@ -923,7 +927,7 @@ The water comes over with you, every barrel. The squad's stretch comes up the we
 
 /* ---------------- the Sekala: the west bank ---------------- */
 Object.assign(B2CH2.dlg, {
-  b2_west_arrive:()=>({sp:'The Sekala · the west bank', scene:'b2_sekala', fx:()=>{ S.f.b2_westIn = 1; }, txt:
+  b2_west_arrive:()=>({sp:'The Sekala · the west bank', scene:'b2_sekala_west', fx:()=>{ S.f.b2_westIn = 1; }, txt:
 `The west bank is not empty.
 
 The regulars who crossed in the dark have dug a line along the top of it, earth thrown up on stakes, and behind the line the column is coming off the ford and spreading out over the stony ground like water out of a broken jar. In front of the line, a long bowshot off, there is another army.
@@ -953,7 +957,7 @@ Two Red Blades whose horses are dead get up out of the dust and fall in beside y
 ${b2In('marrow') ? `Marrow, at your shoulder, has her hand on the faceless Soliel in her pocket. "The warren stinks of them," she says. "If it gives me mud today, child, it gives me mud. I'm telling you now."` : ''}`,
     ch:[{t:'"Hold the bank."', go:()=>startBattle('b2_westbank', {})},
         {t:'Tangle\'s sharper into the Guran file.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_westbank', {pre:true})}]}),
-  b2_after_west:()=>({sp:'The west bank', scene:'b2_sekala', fx:()=>{ S.f.b2_westDone = 1; gain('b2_paving'); }, txt:
+  b2_after_west:()=>({sp:'The west bank', scene:'b2_sekala_west', fx:()=>{ S.f.b2_westDone = 1; gain('b2_paving'); }, txt:
 `The thing the god was wearing goes down on the stony rise and the god goes out of it, all at once, like a lamp going out, and what is left is a man, a thin old man with his paint run off, lying on his back with his mouth open. The Semk round him look at him and stop.
 
 They go back up the rise. Not running. Walking, slowly, as if they had forgotten something and had gone to look for it. The Guran file goes back to its blocks at the same steady walk it came at, and the blocks do not move. They are still watching.
@@ -964,7 +968,7 @@ ${b2In('marrow') ? `Marrow sits down in the mud at the top of the bank with her 
 
 And then, from behind, from the river, a horn.`,
     ch:[{t:'Turn round.', go:'b2_blown'}]}),
-  b2_blown:()=>({sp:'The Sekala', scene:'b2_sekala', fx:()=>{ S.f.b2_blown = 1; }, txt:
+  b2_blown:()=>({sp:'The Sekala', scene:'b2_sekala_blown', fx:()=>{ S.f.b2_blown = 1; }, txt:
 `The last of the column is up the west bank. The rearguard is coming over the ford at a run, the last of them, and behind them, on to the stones, after them, comes Reloe's army. Not the soldiers. The others: the peasant host, the town levies, the thousands who have followed the Seventh across the Odhan for three months to watch it die. They come down off the east bank onto Mincer's road in a brown flood, because it is a road, and roads go somewhere.
 
 ${b2In('tangle') ? `Tangle has stopped humming. He has stopped doing anything. He is standing on the bank with his hands open at his sides, looking at the ford, at a place on the near end of it where nobody is standing.` : 'On the near end of the ford, nobody is standing.'}

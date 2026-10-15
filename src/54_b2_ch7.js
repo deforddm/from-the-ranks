@@ -260,7 +260,9 @@ He looks at you. He looks at the bar. ${b2In('tangle') ? 'Tangle hums four notes
     b2_barrow:{loc:'The Barrow', sub:'Aren Way · within sight of the walls', cap:'A mound on the road, seen from far off: a dark knot on top of it, a sea round it, and over it the crows in a cloud.', amb:'wind'},
     b2_aren_way:{loc:'Aren Way', sub:'Dawn', cap:'The road at dawn, going away north between the barrows, and along it, small with distance, shapes standing upright that are not trees.', amb:'dusk'},
     b2_aren_way_dusk:{loc:'Aren Way', sub:'Dusk', cap:'The road going away north between the barrows into the last of the light, and along it, small with distance, shapes standing upright that are not trees.', amb:'dusk'},
-    b2_harbour:{loc:'Aren', sub:'The harbour', cap:'Ships at anchor in a grey harbour, more ships than any harbour should hold, and none of them going anywhere.', amb:'lake'},
+    b2_harbour:{loc:'Aren', sub:'The harbour', cap:'Ships at anchor in a bright harbour, more ships than any harbour should hold, and none of them going anywhere.', amb:'lake'},
+    b2_harbour_night:{loc:'Aren', sub:'The harbour · night', cap:'The fleet at anchor in the dark, a lantern on every deck and its road on the water, the light-tower lit, and none of them going anywhere.', amb:'lake'},
+    b2_harbour_fog:{loc:'Aren', sub:'The harbour · grey morning', cap:'The harbour gone grey in a fog that is not there, the fleet half lost in it, and out of it, oars working, a burned ship that should not float.', amb:'lake'},
     b2_balahn:{loc:'Balahn', sub:'Dusk · where Aren Way begins', cap:'Mud walls swamped in a sea of carts and cookfires, the raised road going away west between the barrows, and at the end of it, small and pale, Aren.', amb:'dusk'},
     b2_aren_sortie:{loc:'Aren', sub:'The north wall · early light', cap:'The army of Aren going out up the Way in a long bright column, its dust going up gold, and far off past the barrows, Dom\'s people running.', amb:'wind'},
     b2_aren_noon:{loc:'Aren', sub:'The north wall · noon', cap:'The Way empty in the white heat, the Barrow empty, and far off where the hills fold, a smudge with a ring of specks round it.', amb:'wind'},
@@ -1009,7 +1011,7 @@ const B2_OH7 = {
   vell:{look:'A long boy of seventeen, all elbows, with a coil of rope over his shoulder, sitting on the rail of the ship with his heels drumming.', say:'"I carry rope," he says. "That\'s all I do. I got the Fourth onto every roof in Darujhistan." He looks up at Aren\'s north wall with professional interest. "Off is the hard part. Off is the part people forget."', join:'"I\'ll get you onto any wall in this city," he says. "Or keep anyone else off it. Same rope."'},
 };
 Object.assign(B2CH7.dlg, {
-  b2_quay2:()=>({sp:'Aren harbour · night', scene:'b2_harbour', txt:
+  b2_quay2:()=>({sp:'Aren harbour · night', scene:'b2_harbour_night', txt:
 `The harbour of Aren, at night, and more ships in it than any harbour should hold: the Empire's fleet, at anchor, every one of them, because the High Fist ordered it kept in harbour, and arrested the admiral when he argued. Lanterns on every deck. Nobody going anywhere.
 
 ${b2OldHandPick() ? `Among them, at the end of the long quay, a fat-bellied transport flying a Genabaris pennant, with soldiers on her deck in the Host's colours, leaning on the rail, looking at the city. Her master was bound home, by way of Aren, and Aren has kept her.
@@ -1072,7 +1074,7 @@ const B2_BACK7 = {
 };
 Object.assign(B2CH7.dlg, {
   b2_quay4:()=>{ const w = b2Away();
-    return {sp:'Aren harbour · morning', scene:'b2_harbour', fx:()=>{ if (!S.f.b2_quay4) { S.f.b2_quay4 = 1; S.f.b2_silanda7 = 1;
+    return {sp:'Aren harbour · morning', scene:'b2_harbour_fog', fx:()=>{ if (!S.f.b2_quay4) { S.f.b2_quay4 = 1; S.f.b2_silanda7 = 1;
       if (b2Hurt() && !S.f.b2_woundHealed) { S.f.b2_woundHealed = 1; S.f.b2_healedBy = 'temple'; } } }, txt:
 `Grey morning on the harbour, and a fog on the water that the harbour-men say is not there, and out of it, slowly, oars working, a ship comes in that should not float.
 

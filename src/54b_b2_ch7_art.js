@@ -413,8 +413,8 @@ function b7Ship(x, cx, wy, s, col, sail, oars){ x.fillStyle = col; x.beginPath()
   x.fillRect(cx + 10*s, wy - 22*s, .7*s, 18*s); x.fillRect(cx + 6*s, wy - 19*s, 9*s, .6*s); // a mizzen
   x.strokeStyle = col; x.lineWidth = .4*s; x.beginPath(); x.moveTo(cx, wy - 34*s); x.lineTo(cx - 20*s, wy - 4*s); x.moveTo(cx, wy - 34*s); x.lineTo(cx + 22*s, wy - 6*s); x.stroke(); // stays
   if (oars) { x.lineWidth = .5*s; for (let i=0;i<9;i++){ x.beginPath(); x.moveTo(cx - 12*s + i*2.8*s, wy - 1*s); x.lineTo(cx - 13*s + i*2.8*s, wy + 3*s); x.stroke(); } } }
-SCENEX.b2_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44, wl = H*.56;
-  const ships = [[.42, .02, .9, 1, 0], [.58, .0, .7, 0, 1], [.72, .03, 1.1, 1, 0], [.86, .01, .8, 0, 0], [.3, .06, 1.3, 0, 1], [.95, .05, 1.2, 1, 0]];
+const B2HARB = [[.42, .02, .9, 1, 0], [.58, .0, .7, 0, 1], [.72, .03, 1.1, 1, 0], [.86, .01, .8, 0, 0], [.3, .06, 1.3, 0, 1], [.95, .05, 1.2, 1, 0]]; // the ships at anchor: [x, below the water-line, size, sail furled, oars]
+SCENEX.b2_harbour = (cv, t, m) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44, wl = H*.56, ships = B2HARB; // m: 'night' / 'fog' when b2_harbour_night / b2_harbour_fog paint over it
   ctx.drawImage(sceneLayer('b2:harbour', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#4a6a8e'],[.6,'#a8b8c0'],[1,'#e8dcc0']]); x.fillRect(0, 0, W, wl); // a clear sea sky, the afternoon on its way
     glow(x, W*.1, hz*.5, W*.45, '#ffe8c0', .45); for (let i=0;i<4;i++) cloud(x, W*(.3 + hash(i, 5)*.6), hz*(.2 + i*.14), W*(.2 + hash(i, 6)*.2), 2, '#ffffff', .14);
@@ -434,11 +434,37 @@ SCENEX.b2_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   // the water moving: glints and long slow swells
   for (let i=0;i<70;i++){ const yy = wl + 4 + Math.pow(hash(i, 21), 1.2)*(H - wl - 4), px = (hash(i, 22)*W + t*mo/(60 + hash(i, 23)*40)) % (W + 40) - 20, d = (yy - wl)/(H - wl), tw = mo ? (Math.sin(t/300 + i*1.7) + 1)/2 : .5; ctx.fillStyle = `rgba(255,240,210,${((.15 + tw*.35)*(1 - px/W*.6)).toFixed(2)})`; ctx.fillRect(px, yy, 4 + d*16, .8 + d); }
   ships.forEach(([u, dy, s, sail, oars], i) => { const bob = mo ? Math.sin(t/900 + i*1.3)*.6 : 0, cx = W*u, wy = wl + H*dy + bob; ctx.save(); ctx.translate(cx, wy); ctx.rotate(mo ? Math.sin(t/1100 + i)*.012 : 0); ctx.translate(-cx, -wy); b7Ship(ctx, cx, wy, s, i === 4 ? '#2a221c' : '#3a3028', sail ? '#d8ccb0' : '#b8a888', oars); ctx.fillStyle = 'rgba(255,236,200,.3)'; ctx.fillRect(cx - 18*s, wy - 3*s, 16*s, .7*s); ctx.restore(); }); // the light along each hull
-  for (let i=0;i<3;i++){ const k = ((t*mo/(30000 + i*9000) + i*.3) % 1), px = lerp(W*.1, W*.8, i%2 ? 1 - k : k), py = wl + H*(.12 + i*.06); ctx.fillStyle = '#2a221c'; ctx.beginPath(); ctx.ellipse(px, py, 6, 1.6, 0, 0, Math.PI); ctx.fill(); ctx.fillRect(px - 1, py - 4, 1.4, 4); ctx.fillStyle = '#b8a888'; ctx.fillRect(px - 3, py - 3, 3, 1.6); } // lighters, rowing between
-  b2Wheel(ctx, t*mo, W*.6, hz - H*.12, W*.2, H*.06, 7, .6, 'rgba(240,236,228,.85)', 51); // gulls
+  if (!m) for (let i=0;i<3;i++){ const k = ((t*mo/(30000 + i*9000) + i*.3) % 1), px = lerp(W*.1, W*.8, i%2 ? 1 - k : k), py = wl + H*(.12 + i*.06); ctx.fillStyle = '#2a221c'; ctx.beginPath(); ctx.ellipse(px, py, 6, 1.6, 0, 0, Math.PI); ctx.fill(); ctx.fillRect(px - 1, py - 4, 1.4, 4); ctx.fillStyle = '#b8a888'; ctx.fillRect(px - 3, py - 3, 3, 1.6); } // lighters, rowing between
+  if (m !== 'night') b2Wheel(ctx, t*mo, W*.6, hz - H*.12, W*.2, H*.06, 7, .6, 'rgba(240,236,228,.85)', 51); // gulls
+  if (m === 'night') b2HarbourNight(ctx, W, H, t, mo, hz, wl); else if (m === 'fog') b2HarbourFog(ctx, W, H, t, mo, hz, wl);
   ctx.fillStyle = '#5a4a3a'; ctx.fillRect(0, H*.9, W*.42, H*.1); ctx.fillStyle = 'rgba(255,236,200,.35)'; ctx.fillRect(0, H*.9, W*.42, 1.2); ctx.fillStyle = 'rgba(0,0,0,.3)'; for (let i=0;i<6;i++) ctx.fillRect(i*W*.07, H*.9, 1, H*.1); ell(ctx, W*.38, H*.92, 3, 2, '#2a2018'); ctx.fillRect(W*.38 - 1.2, H*.9 - 6, 2.4, 6); // a near quay, a bollard
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(26, W*.32/sq.length), H*.96 - (i%2)*2, 1.9, t, {phase:i, dir:1}));
-  vign(ctx, W, H, .45, .5); };
+  if (m === 'night') { ctx.fillStyle = 'rgba(4,8,20,.45)'; ctx.fillRect(0, H*.86, W, H*.14); }
+  vign(ctx, W, H, m === 'night' ? .8 : m === 'fog' ? .55 : .45, .5); };
+/* the harbour at night: everything above taken down into the dark (a multiply, as Gelor at dusk does), stars, the light-tower lit, lamps in
+   the city, and a lantern on every deck of the fleet the High Fist will not let sail, each with its road on the water */
+function b2HarbourNight(ctx, W, H, t, mo, hz, wl){ ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#141a34'],[.45,'#2a3450'],[1,'#141c2c']]); ctx.fillRect(0, 0, W, H); ctx.restore();
+  for (let i=0;i<90;i++){ ctx.fillStyle = `rgba(220,226,250,${(.15 + hash(i, 501)*.5).toFixed(2)})`; ctx.fillRect(hash(i, 502)*W, hash(i, 503)*hz*.9, hash(i, 504) > .93 ? 1.5 : 1, 1); }
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i=0;i<40;i++){ const px = hash(i, 505)*W*.44, py = wl - H*(.03 + hash(i, 506)*.2); if (hash(i, 507) > .45) { ctx.fillStyle = `rgba(255,190,110,${(.5 + hash(i, 508)*.4).toFixed(2)})`; ctx.fillRect(px, py, 1.4, 1.8); } } // lamps behind the shutters
+  { const lx = W*.66, ly = wl - H*.02 - H*.24, f = mo ? .8 + .2*Math.sin(t/400) : 1; glow(ctx, lx, ly, 40, '#ffc870', .45*f); glow(ctx, lx, ly, 10, '#fff0c0', .8*f); ctx.fillStyle = 'rgba(255,200,120,.25)'; for (let k=0;k<8;k++) ctx.fillRect(lx - 3 - k*.6, wl + 4 + k*5, 6 + k*1.2, 1); } // the light-tower, lit, and its road
+  B2HARB.forEach(([u, dy, s], i) => { const cx = W*u, wy = wl + H*dy + (mo ? Math.sin(t/900 + i*1.3)*.6 : 0), f = mo ? .8 + .2*Math.sin(t/(200 + i*30) + i) : 1; [[-14, -6], [16, -8]].forEach(([dx, dh]) => { glow(ctx, cx + dx*s, wy + dh*s, 9*s, '#ffb060', .4*f); ctx.fillStyle = `rgba(255,220,150,${(.9*f).toFixed(2)})`; ctx.fillRect(cx + dx*s - .8, wy + dh*s - 1, 1.6, 1.8); ctx.fillStyle = 'rgba(255,180,100,.18)'; for (let k=0;k<5;k++) ctx.fillRect(cx + dx*s - 2 - k*.4, wy + 4 + k*4*s, 4 + k, .9); }); }); // a lantern at bow and stern on every one, nobody going anywhere
+  ctx.globalCompositeOperation = 'source-over'; }
+/* the harbour on the grey morning: the same, washed out into a fog the harbour-men say is not there, the fleet half gone in it; and out of
+   it, slowly, oars working, a ship that should not float, burned black, low in the water, in a mist of her own */
+function b2HarbourFog(ctx, W, H, t, mo, hz, wl){ ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = 'rgb(176,180,184)'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  ctx.fillStyle = vgrad(ctx, 0, H, [[0,'rgba(196,198,200,.75)'],[.5,'rgba(186,190,194,.6)'],[.8,'rgba(160,166,172,.35)'],[1,'rgba(140,146,150,.1)']]); ctx.fillRect(0, 0, W, H); // grey, everywhere, and thickest out on the water
+  for (let i=0;i<7;i++){ const k = ((t*mo/40000 + i/7) % 1); ell(ctx, lerp(-W*.3, W*1.3, k), wl + 4 + (i%4)*H*.06, W*.3, 6 + (i%3)*4, `rgba(210,212,214,${(.3*Math.sin(k*Math.PI) + (mo ? 0 : .12)).toFixed(3)})`); } // fog banks, drifting
+  const sx = W*(.84 - (mo ? (t/90000) % 1 : .3)*.3), sy = H*.74, L = W*.24, hh = H*.03, row = mo ? t/1400 : 0; // the Silanda, coming in
+  for (let i=0;i<8;i++){ const a = (mo ? t/3400 : 0) + i*.8; glow(ctx, sx + Math.cos(a)*L*.5, sy - hh + Math.sin(a*1.3)*hh*2, H*.16, '#d8dcd4', .3); } // her own mist
+  ctx.save(); ctx.translate(sx, sy); ctx.fillStyle = '#0c0a0a'; ctx.beginPath(); ctx.moveTo(-L*.52, -hh*1.2); ctx.quadraticCurveTo(-L*.44, hh*.5, -L*.3, hh*.55); ctx.lineTo(L*.34, hh*.55); ctx.quadraticCurveTo(L*.5, hh*.3, L*.56, -hh*1.6); ctx.lineTo(L*.48, -hh*.9); ctx.lineTo(-L*.44, -hh*.8); ctx.closePath(); ctx.fill();
+  for (let i=0;i<16;i++){ const px = -L*.42 + i*L*.055; if (hash(i, 8) > .3) ctx.fillRect(px, -hh*.95 - (1 + hash(i, 9)*2), 1, 1 + hash(i, 9)*2); } // the rail, burned to teeth
+  poly(ctx, [[-L*.06, -hh*.9], [-L*.06 + 2, -hh*.9], [-L*.06 + 3, -hh*.9 - H*.07], [-L*.06 + 1.6, -hh*.9 - H*.085], [-L*.06 + .8, -hh*.9 - H*.065]], '#0c0a0a'); // the mast, snapped
+  ctx.strokeStyle = '#0c0a0a'; ctx.lineWidth = 1; for (let i=0;i<10;i++){ const ox = -L*.34 + i*L*.07, sw = Math.sin(row + i*.5)*2.4; ctx.beginPath(); ctx.moveTo(ox, hh*.1); ctx.lineTo(ox - 6 + sw, hh*1.5); ctx.stroke(); } // her oars, working, in the shadow
+  ctx.fillStyle = 'rgba(8,8,8,.3)'; ctx.beginPath(); ctx.ellipse(0, hh*1.4, L*.55, hh*.8, 0, 0, 7); ctx.fill(); ctx.restore();
+  glow(ctx, sx, sy - H*.04, L*.8, '#c8ccc4', .16); }
+SCENEX.b2_harbour_night = (cv, t) => SCENEX.b2_harbour(cv, t, 'night');
+SCENEX.b2_harbour_fog = (cv, t) => SCENEX.b2_harbour(cv, t, 'fog');
 
 /* the end of the book: an empty barrow at evening, a dead tree, the crows going up off it and away, and Aren small on the horizon
    with its first lamps. Nothing moves but the birds and the grass */
