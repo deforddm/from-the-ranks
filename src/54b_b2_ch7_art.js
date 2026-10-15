@@ -470,3 +470,124 @@ SCENEX.b2_finale = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   for (let i=0;i<3;i++){ const px = bx + (hash(i, 111) - .5)*W*.2, py = by - H*.12 + hash(i, 112)*H*.02, pk = mo ? (Math.sin(t/(700 + i*130) + i) > .7 ? 1 : 0) : 0; ell(ctx, px, py, 2.2, 1.4, '#0c0a0c'); ell(ctx, px + 1.8, py - 1.2 + pk, .9, .8, '#0c0a0c'); ctx.fillStyle = '#0c0a0c'; ctx.fillRect(px - 3.4, py - .2, 1.6, .7); } // walking, pecking
   { const px = bx + W*.25 + Math.cos(-Math.PI/2 + .08)*H*.16 - 6, py = by + 2 - H*.16 + 3; ell(ctx, px, py, 1.8, 1.2, '#0c0a0c'); ell(ctx, px + 1.6, py - 1.2, .8, .8, '#0c0a0c'); } // one on the tree, staying
   vign(ctx, W, H, .6, .5); };
+
+/* ---------------- Balahn at dusk, the north wall by day, and the city inside the gate ---------------- */
+/* Balahn: a village of mud walls on a low rise at the head of the raised road, swamped by the column's carts; the road going away west
+   between the barrows; and at the far end of it, small and pale on the sea-light, the walls of Aren. Three leagues off, and not one closer */
+SCENEX.b2_balahn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, vx = W*.74, fl = b2Fl(t);
+  const R = u => [lerp(W*.36, vx, Math.pow(u, .7)), lerp(H*.86, hz + 1, Math.pow(u, .5))]; // the Way, out of the village and away to the city
+  ctx.drawImage(sceneLayer('b2:balahn', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#1c1a2c'],[.4,'#4a3046'],[.75,'#c06a48'],[1,'#f0b070']]); x.fillRect(0, 0, W, hz + 2); // dusk, the sun gone down behind the city
+    glow(x, vx + W*.02, hz, W*.45, '#ffb070', .45); glow(x, vx + W*.02, hz, W*.1, '#fff0c8', .5);
+    for (let i=0;i<5;i++) cloud(x, W*(.08 + i*.2), hz*(.22 + (i%3)*.14), W*.3, 3, i%2 ? '#8a4a4a' : '#3a2a3a', .18);
+    x.fillStyle = 'rgba(200,214,224,.5)'; x.fillRect(vx - W*.02, hz - 1.4, W*.3, 1.6); glow(x, vx + W*.12, hz, W*.14, '#e8eef0', .25); // the sea, a thread of light beyond it
+    for (let i=0;i<9;i++){ const dx = vx - W*.06 + i*W*.017, dh = H*(.012 + hash(i, 92)*.018); x.fillStyle = 'rgba(150,118,110,.7)'; x.fillRect(dx, hz - H*.02 - dh, W*.014, dh); if (hash(i, 93) > .5) { x.beginPath(); x.ellipse(dx + W*.007, hz - H*.02 - dh, W*.007, W*.007, 0, Math.PI, 0); x.fill(); } } // domes and towers over the wall
+    b7Walls(x, vx - W*.07, vx + W*.08, hz, H*.022, '#a89080', 'rgba(255,220,180,.5)', 91, vx); // Aren, small, pale, a long way off
+    x.fillStyle = vgrad(x, hz, H, [[0,'#5a3e34'],[.3,'#3a2a24'],[1,'#120c0a']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<8;i++){ const u = .2 + i*.1, [px, py] = R(u), s = .4 + (py - hz)/(H - hz)*2.6, side = i%2 ? 1 : -1; b7Mound(x, px + side*(18 + hash(i, 3)*14)*s, py + 1, 14*s, 4*s, '#3a2a22', 'rgba(255,170,110,.3)', 60 + i, 'rgba(40,28,20,.8)'); } // the barrows, along both sides of the Way
+    x.lineCap = 'round'; for (let i=0;i<=40;i++){ const [px, py] = R(i/40), [qx, qy] = R((i + 1)/40), d = (py - hz)/(H - hz); x.strokeStyle = `rgba(190,140,110,${(.3 + d*.3).toFixed(2)})`; x.lineWidth = 1.4 + d*26; x.beginPath(); x.moveTo(px, py); x.lineTo(qx, qy); x.stroke(); } x.lineCap = 'butt'; // the raised road, paved under the dust, holding the last light
+    for (let i=0;i<80;i++){ const yy = hz + 3 + Math.pow(hash(i, 21), 1.3)*(H - hz), px = hash(i, 22)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .5 + d*1.2, `rgba(20,12,10,${(.2 + d*.3).toFixed(2)})`); } // scrub
+    // Balahn: mud-brick houses and a wall round them on the rise, flat roofs, a few doors lit
+    const vb = H*.74; x.fillStyle = '#22160f'; x.beginPath(); x.moveTo(0, vb + 8); x.quadraticCurveTo(W*.2, vb - 10, W*.44, vb + 6); x.lineTo(W*.44, H); x.lineTo(0, H); x.fill(); // the rise
+    for (let i=0;i<14;i++){ const bx = W*(-.02 + i*.032 + hash(i, 31)*.02), bw = W*(.03 + hash(i, 32)*.03), bh = H*(.05 + hash(i, 33)*.07), by = vb - 4 + Math.abs(i - 6)*1.4; x.fillStyle = i%2 ? '#3a2618' : '#30200f'; x.fillRect(bx, by - bh, bw, bh + 8); x.fillStyle = 'rgba(255,170,110,.22)'; x.fillRect(bx, by - bh, bw, 1.2); x.fillStyle = 'rgba(0,0,0,.25)'; x.fillRect(bx + bw*.7, by - bh, bw*.3, bh + 8);
+      if (hash(i, 34) > .55) { x.fillStyle = '#ffb060'; x.fillRect(bx + bw*.3, by - bh*.45, bw*.18, bh*.3); glow(x, bx + bw*.39, by - bh*.3, 9, '#ff9040', .35); } } // a lit door, a lit window
+    x.fillStyle = '#2a1a10'; x.fillRect(0, vb + 2, W*.44, H*.04); for (let px=0; px<W*.44; px+=7) x.fillRect(px, vb - 1, 4, 3); // the village wall
+    // the column, in a sea round it: carts packed every way out into the scrub, and the people among them, and the cookfires coming up
+    for (let i=0;i<46;i++){ const cx = W*(hash(i, 41)*1.02), cy = hz + H*.06 + Math.pow(hash(i, 42), .8)*H*.38, s = .4 + (cy - hz)/H*2.2; if (cx < W*.44 && cy < vb + 8 && cy > vb - H*.14) continue; x.fillStyle = 'rgba(20,12,10,.92)'; x.fillRect(cx - 6*s, cy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(cx, cy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); x.fillRect(cx - 5*s, cy - 2*s, 1.6*s, 2*s); x.fillRect(cx + 3.4*s, cy - 2*s, 1.6*s, 2*s); } // carts
+    b2Crowd(x, 220, i => { const cx = W*hash(i, 51), cy = hz + H*.05 + Math.pow(hash(i, 52), .9)*H*.4; return [cx, cy, .4 + (cy - hz)/H*2.4]; }, 'rgba(18,12,10,.9)', 53);
+    for (let i=0;i<16;i++){ const fx = W*hash(i, 61), fy = hz + H*.06 + Math.pow(hash(i, 62), .8)*H*.34; glow(x, fx, fy, 6 + (fy - hz)/H*16, '#ff8a40', .4); x.fillStyle = '#ffc070'; x.fillRect(fx - .6, fy - 1, 1.3, 1.3); } // fires
+    b2Column(x, W, H, k => R(.05 + k*.2), 30, 'rgba(20,12,10,.85)', null); // the head of it, already out on the road
+  }), 0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; for (let i=0;i<16;i++){ const fx = W*hash(i, 61), fy = hz + H*.06 + Math.pow(hash(i, 62), .8)*H*.34; glow(ctx, fx, fy - 2, 4 + (fy - hz)/H*10, '#ffa050', .16*(mo ? .8 + .2*Math.sin(t/140 + i*2.1) : 1)); } ctx.globalCompositeOperation = 'source-over';
+  for (let i=0;i<10;i++) b2Smoke(ctx, t*mo, W*hash(i, 61), hz + H*.06 + Math.pow(hash(i, 62), .8)*H*.34 - 2, H*.2, 5, '#2a1a1a', .12, i + 40, .6); // the cookfires' smoke, going west with the wind
+  b2Wheel(ctx, t*mo, W*.5, H*.18, W*.16, H*.04, 6, .7, 'rgba(20,12,16,.7)', 29);
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(30,12,14,.25)'; ctx.fillRect(0, H*.76, W, H*.24); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.9, W*.3, '#ff8a40', .05*fl); ctx.globalCompositeOperation = 'source-over';
+  vign(ctx, W, H, .7, .5); };
+
+/* From Aren's north wall, looking out up the Way: the road running away north between the barrows, the Barrow itself just out of bowshot.
+   'sortie': the early light, and the army of Aren going out along the road in a long bright column under its dust, and far off, past the
+   barrows, Dom's people running. 'noon': the same road empty in the white heat, the Barrow empty, and at the very edge of sight, where the
+   hills fold, a basin with an army in it and horsemen on every hill round it, too small to be anything but specks */
+function b2ArenNorth(cv, t, m){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, vx = W*.56, bx = W*.42, by = hz + H*.08, sortie = m === 'sortie';
+  const R = u => [lerp(W*.5, vx, Math.pow(u, .55)), lerp(H*.98, hz + 1, Math.pow(u, .42))], RW = u => lerp(W*.13, 1.2, Math.pow(u, .45)), SC = py => .25 + (py - hz)/(H - hz)*2.2;
+  ctx.drawImage(sceneLayer('b2:arennorth:' + m, W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, sortie ? [[0,'#4a5a7a'],[.5,'#b8a490'],[.85,'#ecc890'],[1,'#f4d8a4']] : [[0,'#9aa8b4'],[.5,'#d8d8cc'],[1,'#f4ecd8']]); x.fillRect(0, 0, W, hz + 2);
+    if (sortie) { glow(x, W*.96, hz*.8, W*.5, '#ffd8a0', .5); glow(x, W*.96, hz*.8, 16, '#fff4dc', .8); for (let i=0;i<4;i++) cloud(x, W*(.1 + i*.24), hz*(.2 + (i%2)*.2), W*.3, 2, '#fff0dc', .12); } // the sun just up, off over the sea
+    else { glow(x, W*.5, -H*.05, W*.7, '#ffffff', .6); for (let i=0;i<3;i++) cloud(x, W*(.2 + i*.3), hz*(.3 + i*.12), W*.3, 3, '#ffffff', .1); } // noon, straight down
+    x.fillStyle = sortie ? '#8a7466' : '#b4aa98'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, hz - 1 - Math.max(0, Math.sin(px/40 + 1) - .3)*6 - Math.max(0, Math.sin(px/90 + 4))*5); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // the hills to the north, where they fold
+    x.fillStyle = vgrad(x, hz, H, sortie ? [[0,'#a08868'],[.35,'#7a6448'],[1,'#3a2c1c']] : [[0,'#d0c0a0'],[.35,'#b09a74'],[1,'#6a5838']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<110;i++){ const yy = hz + 3 + Math.pow(hash(i, 21), 1.3)*(H - hz), px = hash(i, 22)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .4 + d*1.3, `rgba(60,46,28,${(.16 + d*.26).toFixed(2)})`); }
+    for (let i=0;i<12;i++){ const u = .12 + i*.07, [px, py] = R(u), s = SC(py), side = i%2 ? 1 : -1; if (Math.abs(px + side*(26 + hash(i, 3)*30)*s - bx) < W*.08 && Math.abs(py - by) < H*.05) continue; b7Mound(x, px + side*(26 + hash(i, 3)*30)*s, py, 13*s, 4*s, sortie ? '#6a5a40' : '#9a8a64', sortie ? 'rgba(255,220,160,.35)' : 'rgba(255,250,230,.3)', 70 + i, sortie ? 'rgba(70,56,36,.7)' : 'rgba(110,96,64,.6)'); } // the old barrows, both sides of the road
+    b7Mound(x, bx, by, W*.06, H*.05, sortie ? '#6a5a40' : '#9a8a64', sortie ? 'rgba(255,220,160,.4)' : 'rgba(255,250,230,.35)', 33, sortie ? 'rgba(70,56,36,.8)' : 'rgba(110,96,64,.7)'); // the Barrow, nothing on it now
+    x.fillStyle = vgrad(x, hz, H, sortie ? [[0,'rgba(220,196,150,.3)'],[1,'rgba(150,126,92,.45)']] : [[0,'rgba(240,230,206,.3)'],[1,'rgba(196,180,146,.45)']]); x.beginPath(); for (let i=0;i<=30;i++){ const [px, py] = R(i/30); i ? x.lineTo(px - RW(i/30)/2, py) : x.moveTo(px - RW(i/30)/2, py); } for (let i=30;i>=0;i--){ const [px, py] = R(i/30); x.lineTo(px + RW(i/30)/2, py); } x.closePath(); x.fill(); // the Way, raised and pale
+    if (!sortie) { for (let i=0;i<70;i++){ const a = hash(i, 41)*6.283, px = W*.86 + Math.cos(a)*W*.06, py = hz - 2 + Math.sin(a)*1.6 - Math.max(0, -Math.sin(a))*3; x.fillStyle = 'rgba(80,66,56,.7)'; x.fillRect(px, py - 1, .8, 1.2); } x.fillStyle = 'rgba(110,96,84,.5)'; x.fillRect(W*.83, hz - 1.4, W*.06, 1.2); } // far off in the fold of the hills: a ring of specks round a smudge
+    else for (let i=0;i<160;i++){ const px = vx - W*.14 + hash(i, 43)*W*.34, py = hz + 1 + hash(i, 44)*H*.03; x.fillStyle = 'rgba(40,30,26,.7)'; x.fillRect(px, py - 1.6, .9, 1.6); } // Dom's people, far up the road, running
+    // Aren's parapet: we are on it, between two merlons
+    const lit = sortie ? 'rgba(255,220,170,.2)' : 'rgba(255,250,236,.22)', st = sortie ? '#4a3a2c' : '#8a7c66';
+    x.fillStyle = st; x.fillRect(0, H*.9, W, H*.1); [[-.02, .12], [.84, .18]].forEach(([u, w]) => { x.fillStyle = st; x.fillRect(W*u, H*.66, W*w, H*.26); x.fillStyle = lit; x.fillRect(W*u, H*.66, W*w, 1.4); x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(W*(u + w) - W*.012, H*.66, W*.012, H*.26); });
+    x.fillStyle = lit; x.fillRect(0, H*.9, W, 1.4); x.fillStyle = 'rgba(0,0,0,.2)'; for (let i=0;i<9;i++) x.fillRect(W*(i*.12), H*.9, 1, H*.1); // the stone of it, in courses
+  }), 0, 0, W, H);
+  if (sortie) { // the army of Aren, going out: banners, the cavalry first in a long bright column, and the dust going up gold
+    const N = 150; for (let i=0;i<N;i++){ const u = ((hash(i, 51)*.55 + t*mo/60000) % .55) + .02, [px0, py] = R(u), s = SC(py), px = px0 + (hash(i, 52) - .5)*RW(u)*.6, horse = u > .3;
+      if (horse) b2Rider(ctx, px, py, s*.55, 'rgba(40,32,28,.95)', 1, Math.floor(t*mo/120 + i) % 2, hash(i, 53) > .6); else { ctx.fillStyle = 'rgba(46,38,34,.95)'; ctx.fillRect(px - s, py - 5*s, 2*s, 5*s); ctx.beginPath(); ctx.arc(px, py - 5.8*s, s*.9, 0, 7); ctx.fill(); ctx.fillRect(px + .8*s, py - 10*s, .4*s, 6*s); }
+      ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,230,170,.5)'; ctx.fillRect(px - .4*s, py - (horse ? 9 : 6.4)*s*(horse ? .55 : 1) - .6*s, s*.8, s*.6); ctx.globalCompositeOperation = 'source-over'; } // helms in the sun
+    for (let i=0;i<8;i++){ const u = ((i/8*.55 + t*mo/60000) % .55) + .02, [px, py] = R(u), s = SC(py); ctx.fillStyle = '#2a2018'; ctx.fillRect(px + 3*s, py - 14*s, .6*s, 14*s); ctx.fillStyle = i%2 ? '#b03a24' : '#d8b860'; ctx.fillRect(px + 3.6*s, py - 14*s, 4*s, 2.6*s); } // banners
+    for (let i=0;i<14;i++){ const k = ((t*mo/8000 + hash(i, 61)) % 1), [px, py] = R(.05 + hash(i, 62)*.6), s = SC(py); ell(ctx, px + 4 + k*8, py - 4 - k*16*s, 10 + k*24*s, 3 + k*6*s, `rgba(240,210,150,${(.2*Math.sin(k*Math.PI)).toFixed(3)})`); } } // dust, gold
+  else { const L = sceneLayer('b2:arennorth:' + m, W, H, () => {}), dpr = L.width / W; if (mo) for (let y=Math.floor(hz - 10); y<hz + 20; y+=2){ const off = Math.sin(t/170 + y*.7)*1.6*Math.sin((y - hz + 10)/30*Math.PI); ctx.drawImage(L, 0, y*dpr, L.width, 2*dpr, off, y, W, 2); } // heat, bending the far end of the road
+    b2Wheel(ctx, t*mo, W*.86, hz - H*.1, W*.06, H*.03, 7, .5, 'rgba(60,50,46,.6)', 47); } // birds over the basin, already
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.16 + i*Math.min(28, W*.46/sq.length), H*.975 + (i%2)*2, 2.1, t, {still:true, dir:1}));
+  ctx.fillStyle = sortie ? '#4a3a2c' : '#8a7c66'; ctx.fillRect(0, H*.955, W, H*.05); ctx.fillStyle = sortie ? 'rgba(255,220,170,.14)' : 'rgba(255,250,236,.18)'; ctx.fillRect(0, H*.955, W, 1); // the parapet before them, to the waist
+  if (!sortie) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.5, 0, W*.8, '#fffbe8', .12); ctx.globalCompositeOperation = 'source-over'; }
+  vign(ctx, W, H, sortie ? .5 : .4, .48); }
+SCENEX.b2_aren_sortie = (cv, t) => b2ArenNorth(cv, t, 'sortie');
+SCENEX.b2_aren_noon = (cv, t) => b2ArenNorth(cv, t, 'noon');
+
+/* Inside the gate: the square under the north tower, pale houses with their shutters down, a fountain, the inner face of the wall.
+   'day': the column coming in through the gate past the High Fist's army, rank on rank in clean kit. 'dusk': lanterns, and in the middle of
+   the square the Red Blades in a block, ringed by provosts. 'dawn': the street below the north gate full of the army of Aren, the cavalry at
+   the front and a man in gilt on a white horse */
+function b2ArenCity(cv, t, m){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), wb = H*.5, gy = H*.6, fx = W*.5, fy = H*.74;
+  const P = {day:{sky:[[0,'#5a7ea4'],[1,'#c8d8e0']], wall:'#c8b89a', wallD:'#8a7a62', house:['#d8c8aa','#c8b694','#e0d2b4'], shade:'rgba(60,50,40,.3)', ground:[[0,'#b8a684'],[1,'#7a6a50']], fig:'rgba(40,32,26,.92)'},
+             dusk:{sky:[[0,'#0e1428'],[.7,'#2a2a4a'],[1,'#5a3a4a']], wall:'#4a4250', wallD:'#2a2430', house:['#4a4048','#3e3640','#544a50'], shade:'rgba(0,0,0,.35)', ground:[[0,'#3a3236'],[1,'#141012']], fig:'rgba(14,10,12,.95)'},
+             dawn:{sky:[[0,'#3a4460'],[.6,'#a89aa0'],[1,'#e8c8a0']], wall:'#a89a8a', wallD:'#6a5e54', house:['#b8a898','#a89888','#c4b4a2'], shade:'rgba(40,30,30,.3)', ground:[[0,'#8a7a6a'],[1,'#3a3028']], fig:'rgba(34,28,26,.94)'}}[m];
+  ctx.drawImage(sceneLayer('b2:arencity:' + m, W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, wb, P.sky); x.fillRect(0, 0, W, wb + 2);
+    if (m === 'dusk') for (let i=0;i<50;i++){ x.fillStyle = `rgba(220,226,250,${(.15 + hash(i, 1)*.4).toFixed(2)})`; x.fillRect(hash(i, 2)*W, hash(i, 3)*wb*.6, 1, 1); }
+    else glow(x, W*.86, wb*.4, W*.4, m === 'dawn' ? '#ffd8a0' : '#fffaf0', .4);
+    // the north wall's inner face across the back, the tower at the corner, the gate's arch
+    x.fillStyle = P.wall; x.fillRect(0, H*.3, W, wb - H*.3 + H*.12); for (let px=0; px<W; px+=9) x.fillRect(px, H*.27, 5, H*.04); x.fillStyle = 'rgba(0,0,0,.12)'; for (let i=0;i<8;i++) x.fillRect(0, H*.34 + i*H*.03, W, .8); // the wall, in courses
+    { const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(0,0,0,.28)'); g.addColorStop(.6, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(255,240,210,.08)'); x.fillStyle = g; x.fillRect(0, H*.27, W, gy - H*.27); x.fillStyle = vgrad(x, H*.3, gy, [[0,'rgba(0,0,0,0)'],[1,'rgba(0,0,0,.22)']]); x.fillRect(0, H*.3, W, gy - H*.3); } // the light from the right, the foot of it in shadow
+    for (let i=0;i<14;i++){ const px = W*(.3 + hash(i, 4)*.42), py = H*.27; x.fillStyle = m === 'dusk' ? 'rgba(10,8,12,.9)' : 'rgba(50,40,34,.8)'; x.fillRect(px, py - 4, 1.4, 4); x.beginPath(); x.arc(px + .7, py - 4.6, .8, 0, 7); x.fill(); } // people up on the wall walk, looking out
+    const tx = W*.78; x.fillStyle = P.wall; x.fillRect(tx - W*.05, H*.08, W*.1, H*.4); for (let i=0;i<4;i++) x.fillRect(tx - W*.05 + i*W*.03, H*.05, W*.018, H*.04); x.fillStyle = P.wallD; x.fillRect(tx + W*.025, H*.08, W*.025, H*.4); x.fillStyle = '#1a1414'; x.fillRect(tx - 2, H*.16, 4, 8); x.fillRect(tx - 2, H*.28, 4, 8); // the north tower
+    x.fillStyle = '#100c0c'; x.beginPath(); x.moveTo(W*.14, gy); x.lineTo(W*.14, H*.42); x.arc(W*.2, H*.42, W*.06, Math.PI, 0); x.lineTo(W*.26, gy); x.fill(); // the north gate, its arch
+    if (m === 'day') { glow(x, W*.2, H*.5, W*.06, '#e8d8b0', .3); } // the plain beyond it, bright through the arch
+    // houses down both sides, flat roofs, shutters
+    [[-.04, .22, 1], [.78, 1.04, -1]].forEach(([u0, u1, side], j) => { for (let i=0;i<4;i++){ const hx = W*(u0 + i*(u1 - u0)/4), hw = W*(u1 - u0)/4 + 2, hh = H*(.24 + hash(i, j + 5)*.12), base = gy + H*.06 + i*H*.02*side; x.fillStyle = P.house[(i + j)%3]; x.fillRect(hx, base - hh, hw, hh + H*.2); x.fillStyle = P.shade; x.fillRect(side > 0 ? hx + hw*.75 : hx, base - hh, hw*.25, hh + H*.2);
+      for (let k=0;k<2;k++){ const wx = hx + hw*(.2 + k*.4), wy = base - hh*(.7 - k*.0); x.fillStyle = m === 'dusk' && hash(i, j + k + 9) > .4 ? '#ffb060' : '#3a2a20'; x.fillRect(wx, wy, hw*.16, hh*.18); if (m === 'dusk' && hash(i, j + k + 9) > .4) glow(x, wx + hw*.08, wy + hh*.09, 8, '#ff9a40', .3); } } }); // shutters; lamps lit behind some at dusk
+    // the square, paved, and the fountain in it
+    x.fillStyle = vgrad(x, gy, H, P.ground); x.fillRect(0, gy, W, H - gy); x.strokeStyle = 'rgba(0,0,0,.12)'; x.lineWidth = .8; for (let i=0;i<8;i++){ const yy = gy + Math.pow(i/8, 1.6)*(H - gy); x.beginPath(); x.moveTo(0, yy); x.lineTo(W, yy); x.stroke(); }
+    x.fillStyle = 'rgba(0,0,0,.14)'; x.beginPath(); x.moveTo(0, gy); x.lineTo(W*.22, gy); x.lineTo(W*.36, H); x.lineTo(0, H); x.fill(); // the houses' shadow across the square
+    ell(x, fx, fy, W*.07, H*.025, 'rgba(0,0,0,.25)'); x.fillStyle = P.wallD; x.fillRect(fx - W*.065, fy - H*.03, W*.13, H*.03); ell(x, fx, fy - H*.03, W*.065, H*.016, P.wall); ell(x, fx, fy - H*.03, W*.054, H*.011, m === 'dusk' ? '#2a3440' : '#7a98a8'); x.fillStyle = P.wallD; x.fillRect(fx - 1.6, fy - H*.1, 3.2, H*.07); ell(x, fx, fy - H*.1, 5, 2, P.wall); // the fountain
+    if (m === 'day') { // the High Fist's army, rank on rank on the right in clean kit; the column coming in through the gate on the left, past them
+      for (let r=0;r<6;r++) for (let i=0;i<14;i++){ const px = W*(.56 + i*.026) + r*2, py = gy + H*.03 + r*H*.035, s = .8 + r*.12; x.fillStyle = '#5a4a3e'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.fillStyle = '#c8c0b0'; x.beginPath(); x.arc(px, py - 6.8*s, s, Math.PI, 0); x.fill(); x.fillStyle = '#8a2a1e'; x.fillRect(px - s, py - 4*s, 2*s, .8*s); x.fillStyle = '#2a2018'; x.fillRect(px + 1.2*s, py - 11*s, .4*s, 9*s); }
+      b2Crowd(x, 160, i => { const k = hash(i, 71), cx = lerp(W*.2, W*.42, k) + (hash(i, 72) - .5)*W*.12*k, cy = lerp(gy, H*.96, k*k); return [cx, cy, .6 + k*1.6]; }, P.fig, 73, ['#5a4a3a', '#4a3a30', '#6a5a44', '#4a4048']); }
+    if (m === 'dusk') { // the Red Blades drawn up in the lantern-light, and round them, a ring of provosts
+      for (let r=0;r<4;r++) for (let i=0;i<10;i++){ const px = W*(.38 + i*.026) + r*3, py = gy + H*.06 + r*H*.04, s = .9 + r*.12; x.fillStyle = '#5a1a14'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.fillStyle = 'rgba(220,90,60,.6)'; x.fillRect(px - s, py - 6*s, .8*s, 5*s); x.fillStyle = '#1a1210'; x.beginPath(); x.arc(px, py - 6.8*s, s, 0, 7); x.fill(); }
+      for (let i=0;i<22;i++){ const a = i/22*6.283, px = W*.5 + Math.cos(a)*W*.2, py = gy + H*.12 + Math.sin(a)*H*.08, s = .9 + (py - gy)/H*1.6; x.fillStyle = '#121014'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.beginPath(); x.arc(px, py - 6.8*s, s, 0, 7); x.fill(); x.fillRect(px + 1.2*s, py - 11*s, .4*s, 10*s); } // provosts, with staves
+      for (let i=0;i<9;i++){ const px = W*(.42 + hash(i, 81)*.22), py = gy + H*(.2 + hash(i, 82)*.04); x.strokeStyle = 'rgba(200,190,170,.7)'; x.lineWidth = .8; x.beginPath(); x.moveTo(px, py); x.lineTo(px + 6, py - 1); x.stroke(); } } // sword-belts, put down on the stones
+    if (m === 'dawn') { // the army of Aren in the street below the gate, rank on rank, the cavalry at the front, the High Fist on a white horse
+      for (let r=0;r<7;r++) for (let i=0;i<20;i++){ const px = W*(.3 + i*.034) + (r%2)*3, py = gy + H*.02 + r*H*.045, s = .7 + r*.16; x.fillStyle = '#4a3e36'; x.fillRect(px - s, py - 6*s, 2*s, 6*s); x.fillStyle = '#b8b0a4'; x.beginPath(); x.arc(px, py - 6.8*s, s, Math.PI, 0); x.fill(); x.fillStyle = '#2a2018'; x.fillRect(px + 1.2*s, py - 12*s, .4*s, 10*s); }
+      for (let i=0;i<9;i++) b2Rider(x, W*(.2 + i*.035), gy + H*.02, .55, '#3a2e26', -1, 0, true); // the cavalry, at the gate
+      b2Rider(x, W*.47, gy + H*.1, .9, '#e8e4dc', -1, 0, false); x.fillStyle = '#d8b050'; x.fillRect(W*.47 - 1.4, gy + H*.1 - 13, 2.8, 4); // the white horse, the gilt
+      for (let i=0;i<6;i++){ const px = W*(.6 + i*.06), py = gy + H*.04; x.fillStyle = '#2a2018'; x.fillRect(px, py - 22, .8, 22); x.fillStyle = i%2 ? '#d8b860' : '#8a2a1e'; x.fillRect(px + .8, py - 22, 5, 3); } } // banners
+  }), 0, 0, W, H);
+  if (m === 'dusk') { ctx.globalCompositeOperation = 'lighter'; [[.3, .62], [.7, .62], [.5, .56]].forEach(([u, v], i) => { const f = mo ? .85 + .15*Math.sin(t/150 + i*2) : 1; glow(ctx, W*u, H*v, W*.18, '#ffa050', .22*f); glow(ctx, W*u, H*v, 6, '#ffe0a0', .8*f); }); ctx.globalCompositeOperation = 'source-over'; [[.3, .62], [.7, .62], [.5, .56]].forEach(([u, v]) => { ctx.fillStyle = '#100c0c'; ctx.fillRect(W*u - .6, H*v, 1.2, gy + H*.1 - H*v); }); } // lanterns on poles
+  if (m === 'day') for (let i=0;i<5;i++){ const k = ((t*mo/2400 + i/5) % 1); ctx.fillStyle = `rgba(230,240,250,${(.4*Math.sin(k*Math.PI)).toFixed(2)})`; ctx.fillRect(fx - 3 + hash(i, 91)*6, fy - H*.1 + k*H*.06, 1, 2); } // the fountain, running
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  if (m === 'dusk') { ctx.fillStyle = 'rgba(6,6,16,.35)'; ctx.fillRect(0, H*.78, W, H*.22); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.9, W*.3, '#ff9a40', .05*fl); ctx.globalCompositeOperation = 'source-over'; }
+  vign(ctx, W, H, m === 'dusk' ? .75 : .45, .5); }
+['day', 'dusk', 'dawn'].forEach(m => { SCENEX['b2_aren_city_' + m] = (cv, t) => b2ArenCity(cv, t, m); });
+
+/* Aren Way at dusk, the first evening of it: the same road and the same uprights, the light low at the far end of it (b2_way_dead) */
+SCENEX.b2_aren_way_dusk = (cv, t) => SCENEX.b2_aren_way(cv, t);

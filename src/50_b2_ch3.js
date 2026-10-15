@@ -246,12 +246,14 @@ Two Foolish Dog riders come down off the lake-bed slope on blown horses, and get
   scenes:{
     b2_tunnel:{loc:'The warlocks\' cut', sub:'Under the Odhan', cap:'Earth walls laced with pale roots, a floor of black water, and small cold lights set in the walls like held breath.', amb:'tunnel'},
     b2_gelor:{loc:'Gelor Ridge', sub:'The P\'atha', cap:'A long ridge over a dry lake bed, cut into one sandy ramp between high banks, and on top of it, an army.', amb:'wind'},
+    b2_gelor_dusk:{loc:'Gelor Ridge', sub:'The P\'atha · dusk', cap:'The ridge in the last red light, cut into one sandy ramp between high banks, and along the top of it, an army lighting its fires.', amb:'wind'},
+    b2_gelor_after:{loc:'Gelor Ridge', sub:'Dusk, after', cap:'The ridge black against the first stars, the Seventh\'s fires along its crest, the ramp a pale scar with what the charge left on it, and the camp on the lake bed below.', amb:'dusk'},
     b2_charge:{loc:'Gelor Ridge', sub:'The Foolish Dog', cap:'Dust down the whole length of the ramp, heavy riders inside it, and up at the top a white light going out.', amb:'plain'} },
 
   end:{
     bait:['The bait', 'Nine days east of the P\'atha the squad went under the Tithansi camp with the sappers to make a noise, while Captain Lull\'s party went in and did the killing, and the warlocks\' tunnel gave the army water. At Gelor Ridge the Seventh went up Reloe\'s ramp and broke his army, and on the Shallows below the Weasel Clan put the column out as bait and closed on the Tithansi, and the squad herded its own people into the open as it was told. The trap closed clean. The Tithansi are gone. So is a part of the squad\'s stretch that will not come back.'],
     pull:['Pulled back', 'Nine days east of the P\'atha the squad went under the Tithansi camp with the sappers to make a noise, while Captain Lull\'s party went in and did the killing, and the warlocks\' tunnel gave the army water. At Gelor Ridge the Seventh went up Reloe\'s ramp and broke his army, and on the Shallows below the Weasel Clan put the column out as bait and closed on the Tithansi. The squad pulled its own people back into the wagons. The trap closed late, and the squad paid for the gap in blood. Its stretch of the column is still walking. The Weasels have not forgotten whose it was.'] },
-  endScene:'b2_charge',
+  endScene:'b2_gelor_after',
   endCap:()=> S.f.b2_c3_key === 'bait' ? 'Dusk below Gelor Ridge. The Weasels are singing over their dead and laughing between the verses, and the squad\'s stretch is shorter, and quiet, and walks on.' : 'Dusk below Gelor Ridge. The Weasels are singing over their dead on the far side of the camp, and the squad\'s stretch is under the wagons, nearly all of it, alive.',
   tease:'Next: the Day of Pure Blood. Korbolo Dom has the rebel army now, and at the Vathar Crossing he offers the column safe passage.',
 
@@ -538,7 +540,7 @@ The last you saw of it, it was standing in the mouth of the cut with the earth c
 
 You go home in the dark, by feel, through water to the ankles that was not there an hour ago.`,
     ch:[{t:'Home.', go:'b2_raid_star'}]}),
-  b2_raid_star:()=>({sp:'The edge of the camp · before dawn', txt:
+  b2_raid_star:()=>({sp:'The edge of the camp · before dawn', scene:'b2_camp_dawn', txt:
 `You come up out of the north mouth into grey light, all of you. ${b2In('redblade') ? 'Ramin comes up last, as he went down second, and stands in the open air with his face turned up to it for a long moment.' : ''}${b2In('warlock') ? 'Keth comes up with his eyes shut, and stands in the open air with his palm on the ground at the top of the shaft, listening, and does not tell you what it says.' : ''}
 
 ${b2In('sathi') ? `Sathi has something in her fist. She opens it in front of you without a word. A throwing star, black iron, five points, every point edged. She pulled it out of a dead Tithansi in the horse lines, she says. In the throat. "Not Wicket's," she says. "Not ours. Not a Wickan's. Nobody here throws this."` : `${b2In('haddat') ? 'Haddat' : 'Somebody in the squad'} has something in their fist: a throwing star, black iron, five points, every point edged, out of a dead Tithansi in the horse lines. Nobody in the squad threw it. Nobody here throws anything like it.`}
@@ -546,7 +548,7 @@ ${b2In('sathi') ? `Sathi has something in her fist. She opens it in front of you
 ${b2Tg() ? `Tangle looks at it and goes very still. "Claw," he says, low. "That's a Claw's. Sergeant, put it away."` : `Wicket looks at it and goes very still. "Claw," she says. "Put it away, Sergeant."`}`,
     ch:[{t:'Give it to Captain Lull.', fx:()=>{ S.f.b2_clawStar = 'given'; }, go:'b2_raid_back'},
         {t:'Keep it. Say nothing.', fx:()=>{ S.f.b2_clawStar = 'kept'; gain('b2_clawstar'); if (b2Tg()) loy('tangle', -1); }, go:'b2_raid_back'}]}),
-  b2_raid_back:()=>({sp:'The camp · dawn', scene:'b2_odhan_dusk', fx:()=>{ S.f.b2_raidDone = 1; }, txt:
+  b2_raid_back:()=>({sp:'The camp · dawn', scene:'b2_camp_dawn', fx:()=>{ S.f.b2_raidDone = 1; }, txt:
 `Lull's party is already back. Not all of it.
 
 A marine is carrying Nil in her arms, the boy limp as washing, eyes open and seeing nothing, and a Wickan cattle-dog is dragging a travois behind her for the healers. Of the other young warlock there is no sign, and nobody says anything about it, and you understand that nobody is going to. The historian is sitting on the ground with his short sword across his knees and blood on it, looking at the sword as if it belonged to somebody else.
@@ -582,7 +584,7 @@ On the ridge, in the last of the light, fires. More of them than at the Sekala.`
 
 /* ---------------- the P'atha: the eve of Gelor ---------------- */
 Object.assign(B2CH3.dlg, {
-  b2_patha_arrive:()=>({sp:'The P\'atha · dusk', scene:'b2_gelor', fx:()=>{ S.f.b2_gelor = 1; }, txt:
+  b2_patha_arrive:()=>({sp:'The P\'atha · dusk', scene:'b2_gelor_dusk', fx:()=>{ S.f.b2_gelor = 1; }, txt:
 `The river is low, knee-deep at the fords, brown, with sandbars. Beyond it the dry lake bed runs west a long way, white and cracked, two thousand paces across, and at the far side of it the ground goes up all at once into a ridge.
 
 Gelor Ridge. You can see what Reloe has done to it from here. His people have cut it. The whole face of the ridge has been dug away into cliffs, all but one place, where a long sandy ramp goes up between high banks to the top, like a road somebody built for you on purpose.
@@ -931,7 +933,7 @@ By the middle of the afternoon there is nobody on Gelor Ridge but the Seventh.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- dusk: Tangle comes back, and Lull, and the count ---- */
-  b2_dusk:()=>({sp:'Below Gelor Ridge · dusk', scene:'b2_odhan_dusk', fx:()=>{ if (S.f.b2_tangleAway && !S.f.b2_tangleBack) { S.f.b2_tangleBack = 1; gain('b2_sappershield'); } }, txt:
+  b2_dusk:()=>({sp:'Below Gelor Ridge · dusk', scene:'b2_gelor_after', fx:()=>{ if (S.f.b2_tangleAway && !S.f.b2_tangleBack) { S.f.b2_tangleBack = 1; gain('b2_sappershield'); } }, txt:
 `${S.f.b2_tangleAway ? `Tangle comes back at dusk, walking, filthy from his hair to his boots, as if somebody had dug him up. Which somebody did.
 
 He sits down next to the satchel without a word, and opens it, and counts it, out loud: "${b2Count()}." He closes it. Then he takes the iron boss off his shield, which is dented in the exact shape of a horse's hoof, and puts it in your hand.
@@ -944,7 +946,7 @@ He sees you, with the eye he has left. "Sergeant." His voice is thick under the 
 
 ${b2In('marrow') ? `Marrow watches him go. "That'll scar," she says. "The eye's gone. The rest he'll live with." She has ${b2Knots()}.` : ''}`,
     ch:[{t:'Find Bult.', fx:()=>{ S.f.b2_lullHurt = 1; }, go:'b2_dom'}]}),
-  b2_dom:()=>({sp:'Bult', scene:'b2_gelor', fx:()=>{ S.f.b2_dom = 1; }, txt:
+  b2_dom:()=>({sp:'Bult', scene:'b2_gelor_after', fx:()=>{ S.f.b2_dom = 1; }, txt:
 `Bult is sitting on a dead horse at the foot of the ramp with a skin of wine he has got from somewhere, and for once he is not laughing at anything.
 
 "Sergeant. You held. Good." He drinks. "The Fist says the count is done. You don't want to hear it. Duiker's writing it down, and he's not enjoying it." He holds the skin out to you. "The Tithansi are finished. There aren't enough of them left to call a tribe. Reloe's army is in pieces all over the Odhan."
@@ -953,7 +955,7 @@ He takes the skin back. "And Reloe's done. He'll never command again; nobody wil
 
 He gets up off the dead horse. "Count them, Sergeant. Then sleep. Tomorrow we walk, and he'll be behind us."`,
     ch:[{t:'Count them.', go:'b2_c3_end'}]}),
-  b2_c3_end:()=>({sp:'Below Gelor Ridge · night', scene:'b2_charge', txt:
+  b2_c3_end:()=>({sp:'Below Gelor Ridge · night', scene:'b2_gelor_after', txt:
 `You count them.
 
 ${chainC()} in the squad's stretch, on the lake bed below Gelor Ridge, in the lee of the wagons. ${S.f.b2_c3_key === 'bait' ? 'Fewer than this morning, by the ones the Shallows kept. You have their names. Somebody should.' : 'Nearly all of them. Out on the Shallows the other stretches are counting fewer. You hear them doing it.'} ${chainW() > 0 ? `${numw(chainW(), true)} skin${chainW() === 1 ? '' : 's'} of the P'atha on the carts.` : 'No water worth the name.'}

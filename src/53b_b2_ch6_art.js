@@ -273,3 +273,46 @@ SCENEX.b2_kherahn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.66, 30, '#ff8a40', .1*fl); glow(ctx, W*.8, H*.66, W*.16, '#ff8a40', .1*fl); ctx.globalCompositeOperation = 'source-over'; // the firelight on their faces
   const sq = sceneSquad().slice(0, 4); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, 12 + i*Math.min(22, W*.055), H*.99 - (i%2)*2, 1.8, t, {phase:i, dir:1}));
   vign(ctx, W, H, .82, .5); };
+
+/* ---------------- the hills above Sanimon: the night before, and the half-dark going down ---------------- */
+/* 'night': the end of the Nenoth, stony hills fold on fold, and a fire on every ridge of them, every tribe on the Odhan come to the same water;
+   the column in a hollow with a thread of a seep. 'dawn': the half-light, the Seventh going down the slope in a dark block with its shields up,
+   the Wickans going round on either side at a walk, and at the bottom of the valley the Tregyn getting out of their blankets */
+function b2SanimonHills(cv, t, m){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, dawn = m === 'dawn', hz = H*.3, vy = H*.66, fl = b2Fl(t);
+  const ridge = (j, px) => hz + j*H*.07 + Math.sin(px/(60 + j*14) + j*1.7)*H*(.03 + j*.006) + Math.sin(px/23 + j)*H*.008; // fold on fold
+  const cols = dawn ? ['#6a6a7e', '#5a5a6a', '#4a4854', '#2c2a32', '#1a1818'] : ['#16161f', '#121219', '#0e0e14', '#0a0a0e', '#060607'];
+  const slope = px => H*.7 + Math.sin(px/W*3.1 + .4)*H*.03; // the near slope, going down into the valley
+  ctx.drawImage(sceneLayer('b2:sanhills:' + m, W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz + H*.05, dawn ? [[0,'#1e2234'],[.55,'#5a5a72'],[.9,'#b0989a'],[1,'#d8b8a4']] : [[0,'#04050a'],[.7,'#0c1020'],[1,'#1a1a2a']]); x.fillRect(0, 0, W, hz + H*.06);
+    if (dawn) { glow(x, W*.86, hz, W*.4, '#e8b890', .35); for (let i=0;i<20;i++){ x.fillStyle = `rgba(220,226,250,${(.1 + hash(i, 1)*.3).toFixed(2)})`; x.fillRect(hash(i, 2)*W*.6, hash(i, 3)*hz*.5, 1, 1); } }
+    else for (let i=0;i<140;i++){ x.fillStyle = `rgba(220,226,250,${(.15 + hash(i, 1)*.5).toFixed(2)})`; x.fillRect(hash(i, 2)*W, hash(i, 3)*hz, hash(i, 4) > .93 ? 1.5 : 1, 1); } // stars; fewer than the fires
+    for (let j=0;j<(dawn ? 3 : 5);j++){ x.fillStyle = cols[j]; x.beginPath(); x.moveTo(0, H); for (let px=0;px<=W + 6;px+=6) x.lineTo(px, ridge(j, px)); x.lineTo(W, H); x.fill();
+      x.fillStyle = dawn ? `rgba(230,200,180,${(.16 - j*.03).toFixed(2)})` : 'rgba(255,150,80,.1)'; for (let px=0;px<=W;px+=6) x.fillRect(px, ridge(j, px), 6, 1.2); // the light along each crest
+      const n = dawn ? 6 : 34 - j*4; for (let i=0;i<n;i++){ const px = hash(i, j + 10)*W, py = ridge(j, px) + 2 + hash(i, j + 20)*H*.03, r = 1.6 + j*.7; glow(x, px, py, r*2.6, '#ff7a30', dawn ? .14 : .32); x.fillStyle = dawn ? 'rgba(255,170,100,.5)' : '#ffc070'; x.fillRect(px - .5, py - .8, 1 + j*.2, 1 + j*.2); } } // a fire on every ridge: every tribe on the Odhan, at the same water
+    if (dawn) { // the valley floor, and the Tregyn camp at the bottom of it: hide tents, horse lines, the night's fires smoking
+      const cx = W*.56, v0 = hz + H*.2; x.fillStyle = vgrad(x, v0, H*.72, [[0,'#5a524e'],[1,'#3a3430']]); x.fillRect(0, v0, W, H*.72 - v0); for (let i=0;i<4;i++) glow(x, W*(.2 + i*.22), v0 + H*.06, W*.2, '#a8a0a4', .14); // the valley floor, mist lying in it
+      for (let i=0;i<40;i++){ const px = cx + (hash(i, 41) - .5)*W*.6, py = v0 + H*.04 + hash(i, 42)*H*.1, s = .6 + (py - v0)/H*3; x.fillStyle = hash(i, 44) > .5 ? '#8a7a66' : '#6a5a4a'; x.beginPath(); x.moveTo(px - 5*s, py); x.lineTo(px - 1*s, py - 5*s); x.lineTo(px + 5*s, py); x.fill(); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.moveTo(px - 1*s, py - 5*s); x.lineTo(px + 5*s, py); x.lineTo(px + 1*s, py); x.fill(); } // the Tregyn's hide tents
+      for (let i=0;i<10;i++){ const px = cx + (hash(i, 48) - .5)*W*.5, py = v0 + H*.06 + hash(i, 49)*H*.08; glow(x, px, py, 6, '#ff8040', .3); }
+      b2Crowd(x, 90, i => [cx + (hash(i, 45) - .5)*W*.62, v0 + H*.05 + hash(i, 46)*H*.1, .5 + hash(i, 46)*.4], 'rgba(40,32,28,.85)', 47); // getting out of their blankets
+      x.fillStyle = vgrad(x, H*.66, H, [[0,'#2a2624'],[1,'#0e0c0c']]); x.beginPath(); x.moveTo(0, H); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, slope(px)); x.lineTo(W, H); x.fill(); x.fillStyle = 'rgba(230,200,180,.12)'; for (let px=0;px<=W;px+=8) x.fillRect(px, slope(px), 8, 1.2); } // the near slope
+    else { // the hollow where the column has stopped, on this side, with a thread of water out of a rock-shelf and the people round it
+      x.fillStyle = '#0a0908'; x.beginPath(); x.moveTo(0, H*.74); x.quadraticCurveTo(W*.3, H*.66, W*.62, H*.76); x.lineTo(W*.62, H); x.lineTo(0, H); x.fill();
+      poly(x, [[W*.46, H*.76], [W*.5, H*.7], [W*.53, H*.68], [W*.58, H*.675], [W*.62, H*.69], [W*.67, H*.76]], '#0e0c0a'); x.strokeStyle = 'rgba(255,150,80,.14)'; x.lineWidth = 1; x.beginPath(); x.moveTo(W*.5, H*.7); x.lineTo(W*.53, H*.68); x.lineTo(W*.58, H*.675); x.lineTo(W*.62, H*.69); x.stroke(); x.fillStyle = 'rgba(160,190,220,.4)'; x.fillRect(W*.56, H*.7, 1, H*.06); ell(x, W*.565, H*.78, 7, 1.6, 'rgba(160,190,220,.35)'); // the seep, as thin as a thread
+      b2Crowd(x, 60, i => [W*(.4 + hash(i, 51)*.3), H*(.78 + hash(i, 52)*.06), .8], 'rgba(8,6,6,.95)', 53);
+      for (let i=0;i<10;i++){ const cx = W*(.66 + hash(i, 54)*.34), cy = H*(.72 + hash(i, 55)*.12), s = .7 + hash(i, 56)*.3; x.fillStyle = '#0a0808'; x.fillRect(cx - 6*s, cy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(cx, cy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); } } // the carts, drawn up on the stone
+  }), 0, 0, W, H);
+  if (!dawn) { ctx.globalCompositeOperation = 'lighter'; for (let j=0;j<5;j++){ const n = 30 - j*4; for (let i=0;i<n;i += 3){ const px = hash(i, j + 10)*W, py = ridge(j, px) + 2 + hash(i, j + 20)*H*.03; glow(ctx, px, py - 1, 2 + j*1.6, '#ffa050', .25*(mo ? .7 + .3*Math.sin(t/(120 + i*7) + i + j) : 1)); } } ctx.globalCompositeOperation = 'source-over'; // the fires, breathing
+    for (let i=0;i<6;i++) b2Smoke(ctx, t*mo, hash(i, 13)*W, ridge(3, hash(i, 13)*W) + 2, H*.16, 4, '#141018', .2, i + 60, .5); }
+  else { // the Seventh going down the slope in a dark block, shields up, nobody speaking; the Wickans going round on either side at a walk
+    const N = 120; for (let i=0;i<N;i++){ const r = Math.floor(i/20), c = i%20, k = (mo ? (t/60000) % .2 : .1), px = W*(.46 + c*.018 + r*.012) - k*W*.1, py = H*(.84 - r*.028) + c*.3 - k*H*.06, s = 1.1 - r*.07; ctx.fillStyle = 'rgba(20,18,20,.95)'; ctx.fillRect(px - s, py - 6*s, 2*s, 6*s); ctx.beginPath(); ctx.arc(px, py - 6.8*s, s, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(80,70,64,.9)'; ctx.fillRect(px + .6*s, py - 5*s, 1.6*s, 3.4*s); } // the block, shields on the arm
+    for (let side of [-1, 1]) for (let i=0;i<12;i++){ const k = ((hash(i, side + 70) + (mo ? t/90000 : 0)) % 1), px = W*(.64 + side*(.3 - k*.06)) + (hash(i, side + 71) - .5)*W*.05, py = lerp(H*.8, H*.62, k), s = .9 - k*.4; b2Rider(ctx, px, py, s, 'rgba(26,22,22,.92)', side < 0 ? 1 : -1, Math.floor(t*mo/240 + i) % 2, hash(i, side + 72) > .6); } // riders, wide, both sides
+    for (let i=0;i<6;i++) b2Smoke(ctx, t*mo, W*(.3 + hash(i, 81)*.5), hz + H*.28, H*.18, 5, '#7a7478', .14, i + 70, .4); // the camp's fires, smoking
+    ctx.fillStyle = 'rgba(20,24,40,.12)'; ctx.fillRect(0, 0, W, H); } // the half-dark, on everything
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  if (!dawn) { ctx.fillStyle = 'rgba(4,4,12,.4)'; ctx.fillRect(0, H*.78, W, H*.22); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.56, H*.84, W*.3, '#ff8a40', .04*fl); ctx.globalCompositeOperation = 'source-over'; }
+  vign(ctx, W, H, dawn ? .6 : .8, .5); }
+SCENEX.b2_sanimon_hills = (cv, t) => b2SanimonHills(cv, t, 'night');
+SCENEX.b2_sanimon_dawn = (cv, t) => b2SanimonHills(cv, t, 'dawn');
+/* Dojal Spring: a pool among tamarisks in a fold of the plain, the column's head coming down to it at noon; the same hollow-and-water
+   painting as Dryj (49b), because it is the same kind of place, and the column does the same thing at it */
+SCENEX.b2_dojal = (cv, t) => SCENEX.b2_dryj_spring(cv, t);

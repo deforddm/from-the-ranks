@@ -215,6 +215,11 @@ On the next bridge, the one beyond this, among the officers at the rail, there i
   scenes:{
     b2_vathar:{loc:'The Vathar', sub:'The crossing', cap:'A wide brown river at noon, a ford through it, floating bridges coming down it, and the far bank black with men.', amb:'wind'},
     b2_silanda:{loc:'The Vathar', sub:'The Silanda', cap:'A burned ship that has no business floating, low in the water in a mist of her own, her oars working in the shadow.', amb:'dark'},
+    b2_vathar_eve:{loc:'The Vathar', sub:'Afternoon · the near bank', cap:'A wide brown river with a pale ford under it, the Foolish Dog watering horses in the shallows, old trees beyond, and a burned ship in her own mist.', amb:'wind'},
+    b2_vathar_late:{loc:'The Vathar', sub:'Late afternoon · the near bank', cap:'The column along the near bank looking across, a few horses in the shallows, and only a little mist on the water where the ship was.', amb:'wind'},
+    b2_vathar_dusk:{loc:'The Vathar', sub:'The ford · dusk', cap:'The river red with the last light, fires along the bank, and in the shallows a handful of riders under a pale cloth.', amb:'dusk'},
+    b2_vathar_night:{loc:'The Vathar', sub:'Night · below the ford', cap:'The river black under the stars, and below the ford the Council\'s carriages in a ring, a lamp lit in every window.', amb:'night'},
+    b2_vathar_dawn:{loc:'The Vathar', sub:'First light · the ford', cap:'Grey light over the old wood, and the ford full from bank to bank, people in the river to the chest, and nothing yet coming down it.', amb:'wind'},
     b2_after:{loc:'The Vathar', sub:'Dusk, after', cap:'The river at dusk, smoke on it, birds over it, and on the far bank a long line of the living walking on into the trees.', amb:'dusk'} },
 
   end:{
@@ -268,7 +273,7 @@ ${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}`,
   b2_c4_deck:()=>b2DeckOffer(4, 'b2_c4_card'),
   b2_c4_card:()=>b2DeckCard(4),
 
-  b2_vathar_arrive:()=>({sp:'The Vathar · afternoon', scene:'b2_vathar', fx:()=>{ S.f.b2_vathar = 1; }, txt:
+  b2_vathar_arrive:()=>({sp:'The Vathar · afternoon', scene:'b2_vathar_eve', fx:()=>{ S.f.b2_vathar = 1; }, txt:
 `The river is wide and brown and slow, and on the far side of it there are trees. Real trees, old ones, a whole dark wall of them, the first in a thousand leagues. The column comes down to the near bank in the afternoon and stops, and looks at them, the way you would look at a coast.
 
 The Foolish Dog are already here, the ones that are left, watering their horses in the shallows. There is a ford, they say: a long pale bar of gravel under the water, waist-deep at the worst.
@@ -431,7 +436,7 @@ ${w === 'haddat' ? `Haddat stands up on it as soon as it is bound, and picks up 
 
 The Silanda goes away down the river with her mist round her and her oars working by themselves, and nobody on the bank watches her go for long.`,
       ch:[{t:'Back to the bank.', go:'b2_silanda_off'}]}; },
-  b2_silanda_off:()=>({sp:'The Vathar · late afternoon', fx:()=>{ S.f.b2_silandaGone = 1; }, txt:
+  b2_silanda_off:()=>({sp:'The Vathar · late afternoon', scene:'b2_vathar_late', fx:()=>{ S.f.b2_silandaGone = 1; }, txt:
 `Where the burned ship was moored there is only slack water, and a little mist on it that takes a long time to go.
 
 The rest of the column is coming down to the bank behind you, all of it, forty thousand people and what cattle are left and the nobles' carriages, and spreading out along the river to look at the far side. Nobody is crossing. The Fist has not said cross.
@@ -440,7 +445,7 @@ ${b2In('haddat') ? `Haddat is looking across the water. "Riders," she says. "On 
     ch:[{t:'Go and see.', go:'b2_envoys'}]}),
 
   /* ---- Dom's envoys, and the Fist's answer ---- */
-  b2_envoys:()=>({sp:'The ford · dusk', scene:'b2_vathar', fx:()=>{ S.f.b2_envoys = 1; S.f.b2_council = 1; }, txt:
+  b2_envoys:()=>({sp:'The ford · dusk', scene:'b2_vathar_dusk', fx:()=>{ S.f.b2_envoys = 1; S.f.b2_council = 1; }, txt:
 `They come over the ford in the last of the light, a handful of riders with the pale cloth on a lance, and stop in the shallows on this side: officers of Dom's, in good armour, very correct. One of them speaks for the rest. In Malazan. Good Malazan, a Quon accent under it.
 
 You cannot hear all of it from where the squad stands. You hear enough. Korbolo Dom offers the column safe passage over the Vathar. The refugees may cross unharmed. The army must stay on this bank and surrender its arms.
@@ -510,7 +515,7 @@ ${b2In('tangle') ? `Tangle squats beside him. They do not talk. After a while Mi
 
 /* ---------------- night: the Council's carriages, and the deal ---------------- */
 Object.assign(B2CH4.dlg, {
-  b2_carriages_arrive:()=>({sp:'The Council\'s carriages · night', scene:'b2_vathar', txt:
+  b2_carriages_arrive:()=>({sp:'The Council\'s carriages · night', scene:'b2_vathar_night', txt:
 `The nobles' carriages stand in a ring on the bank below the ford, gilt gone dull, wheels caked to the hubs, with lamps lit in the windows. Inside the ring there are more servants than the Seventh has cooks, and every one of them is working.
 
 They are packing. Not the way the column packs in the morning, slow and half-asleep. Fast, and quiet, in the dark, with the lamps turned low: chests roped, mules harnessed, the good horses brought in from the lines and put to the traces.
@@ -683,7 +688,7 @@ You go down to the ford in the dark with the rest of the column, into the cold w
 
 /* ---------------- the ford: the day ---------------- */
 Object.assign(B2CH4.dlg, {
-  b2_dawn:()=>({sp:'The Vathar · first light', scene:'b2_vathar', txt:
+  b2_dawn:()=>({sp:'The Vathar · first light', scene:'b2_vathar_dawn', txt:
 `The light comes up grey over the old forest, and you can see it.
 
 The ford is full. From bank to bank, the long pale bar of it under the brown water, and on it, in it, to the waist, to the chest, people: the column, tens of thousands, walking into the river in a crowd as wide as the river, the nobles' carriages at the head of it already halfway, lurching, the horses swimming where the gravel drops. Nobody is guarding them. Nobody is shooting at them. On the far bank, at the edge of the trees, nothing moves at all.

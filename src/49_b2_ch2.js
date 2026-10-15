@@ -207,6 +207,10 @@ The Red Blades go up the rise beside you without waiting to be asked.`}`,
   scenes:{
     b2_dryj_spring:{loc:'Dryj Spring', sub:'The Odhan', cap:'A muddy spring in a ring of tamarisks, and round it people and cattle as far as the heat lets you see.', amb:'plain'},
     b2_sekala:{loc:'The Sekala', sub:'The ford at dawn', cap:'A broad brown river, a ford under it, and on both banks, armies.', amb:'plain'},
+    b2_dryj_dusk:{loc:'Dryj Spring', sub:'Dusk', cap:'The spring holding a red sky, the tamarisks black round it, and the first fires coming up among the people.', amb:'dusk'},
+    b2_caravan_well:{loc:'The caravan well', sub:'The Odhan · noon', cap:'A mud-brick well-house on a road nobody uses, a broken wall, picket lines, a few hide tents, and by the well-head the skins stacked higher than a man.', amb:'plain'},
+    b2_sekala_after:{loc:'The Sekala', sub:'The west bank · morning', cap:'The river from the west bank, a trench in it where the ford was with the water pouring in, and the column asleep in the shade of the carts.', amb:'plain'},
+    b2_sekala_eve:{loc:'The Sekala', sub:'The west bank · evening', cap:'A trench in the river where the ford was, Reloe\'s army standing very still on the far bank, and fires coming up along this one.', amb:'dusk'},
     b2_spirits:{loc:'The west bank', sub:'Night', cap:'Far off on the plain, something huge and painted, and the earth coming up round it like hands.', amb:'night'} },
 
   end:{
@@ -383,7 +387,7 @@ ${b2In('sathi') ? `Sathi, flat on the bank beside you, is laughing under her bre
 
 This was never yours. Yours is two leagues on.`,
     ch:[{t:'The well.', go:'b2_well_go'}]}),
-  b2_well_go:()=>({sp:'The caravan well', scene:'b2_odhan_day', txt:
+  b2_well_go:()=>({sp:'The caravan well', scene:'b2_caravan_well', txt:
 `The well is an old caravan stop on a road nobody uses: a well-house of mud brick, a yard, a broken wall, picket lines, and water-skins stacked by the well-head higher than a man, every one of them full. The Tithansi left a camp here to keep it. Not many. The rest are in the valley, dying.
 
 The Weasel captain looks at the camp, and at you, and says one word.
@@ -391,7 +395,7 @@ The Weasel captain looks at the camp, and at you, and says one word.
 ${b2In('sathi') ? `"He says: you have the fire-pots. You go in the front. We go in the sides." Sathi grins. "He says it is an honour. It is also because he does not want to be the one in front."` : `He points at you, and at the front of the camp, and at his riders, and at the sides. It is not complicated.`}`,
     ch:[{t:'In the front.', go:()=>startBattle('b2_tithwell', {})},
         {t:'Tangle\'s sharper into the yard first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_tithwell', {pre:true, surprise:'p'})}]}),
-  b2_after_well:()=>({sp:'The caravan well', scene:'b2_odhan_day', fx:()=>{ S.f.b2_dryjFight = 1; S.f.b2_wellTaken = 1; chain(5, 0, 'The caravan well'); gain('b2_wellrope'); }, txt:
+  b2_after_well:()=>({sp:'The caravan well', scene:'b2_caravan_well', fx:()=>{ S.f.b2_dryjFight = 1; S.f.b2_wellTaken = 1; chain(5, 0, 'The caravan well'); gain('b2_wellrope'); }, txt:
 `The well-house door comes open and the man with the chain comes out of it the hard way, and that is the end of the caravan well's garrison.
 
 The Weasels load the spare horses with skins until the horses complain, and then load them some more. More water than the squad has seen since Hissar. Enough, ${b2In('marrow') ? 'Marrow says' : 'by Bult\'s arithmetic'}, to keep your stretch alive to the next river, if the next river is where Bult says it is.
@@ -400,7 +404,7 @@ They leave you one live Tithansi, a boy with a cut arm and a green cloth round t
 
 The Weasel captain says something to Sathi on the way back, short, and rides off before she can answer. She doesn't tell you what it was for a long time. Then, at the edge of the tamarisks: "He says I ride like a Weasel still. He says the dog was never in doubt." She is trying not to smile and failing.` : ''}`,
     ch:[{t:'Back to the spring.', go:'b2_back_spring'}]}),
-  b2_back_spring:()=>({sp:'Dryj Spring · dusk', scene:'b2_dryj_spring', fx:()=>{ if (!S.f.b2_springHit) { S.f.b2_springHit = 1; chain(0, -4, 'The spring, while the squad was gone'); } }, txt:
+  b2_back_spring:()=>({sp:'Dryj Spring · dusk', scene:'b2_dryj_dusk', fx:()=>{ if (!S.f.b2_springHit) { S.f.b2_springHit = 1; chain(0, -4, 'The spring, while the squad was gone'); } }, txt:
 `You come back to the spring at dusk with the skins, and the spring is wrong.
 
 Tithansi came while the Wickans were in the valley. Not the army: a raiding party that went round, for the water. The regulars at the spring drove them off. They did not drive them off from everywhere at once, and the south side, where nobody of yours was watching, is where they came in.
@@ -975,7 +979,7 @@ The river goes on downstream, carrying things. Nobody on the west bank watches i
 
 "Cuttle," Tangle says, after a long time, very quietly. ${S.f.b2_cusser ? `"Fifty-five." He doesn't say anything else, and nobody asks him to.` : `"That's Cuttle." He doesn't say anything else.`}` : ''}`,
     ch:[{t:'Count them.', go:'b2_west_count'}]}),
-  b2_west_count:()=>({sp:'The west bank · evening', fx:()=>{ S.f.b2_counted = 1; }, txt:
+  b2_west_count:()=>({sp:'The west bank · evening', scene:'b2_sekala_eve', fx:()=>{ S.f.b2_counted = 1; }, txt:
 `You count them. Bult said to.
 
 ${chainC()} in the squad's stretch, on the stony ground above the river, in the lee of the carts. ${S.f.b2_fordLight === 'dumped' ? 'Every one of them who went into the river came out of it.' : S.f.b2_fordLight === 'kept' ? 'The skins on the carts are full. The count is short.' : ''} ${S.f.b2_key === 'daughters' ? `${B2.elder} and ${B2.younger} among them, filling the jar at the river's edge.` : S.f.b2_yedda ? `${B2.widow} among them, sitting on her rope, telling her grandsons she saw the river stand up and it was nothing to the Hissar fire.` : ''}
@@ -1066,7 +1070,7 @@ ${b2In('marrow') ? `Beside you Marrow makes a small sound. "The warren," she say
 
 By dawn there is nothing out there but the plain.`,
     ch:[{t:'Morning.', go:'b2_end'}]}),
-  b2_end:()=>({sp:'The west bank · morning', scene:'b2_sekala', txt:
+  b2_end:()=>({sp:'The west bank · morning', scene:'b2_sekala_after', txt:
 `The column sleeps.
 
 All day, the way Bult said: forty thousand people lying in the shade of anything that throws one, on the west bank of a river with water in it, with the ford a trench behind them and Reloe ten days away and ten days back. The cattle go up into the hills to graze on what there is. Nobody counts anything, for a whole day, except you.

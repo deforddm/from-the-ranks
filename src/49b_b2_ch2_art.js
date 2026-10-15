@@ -300,14 +300,15 @@ function b2Tamarisk(x, cx, cy, s, col, pink){ x.strokeStyle = col; x.lineWidth =
   for (let i=0;i<16;i++){ const a = hash(i, Math.round(cx), 3)*6.28, d = (4 + hash(i, Math.round(cy), 4)*10)*s; x.fillStyle = col; x.beginPath(); x.ellipse(cx + 3*s + Math.cos(a)*d*1.2, cy - 20*s + Math.sin(a)*d*.6, (3 + hash(i, 5)*3)*s, (2 + hash(i, 6)*2)*s, 0, 0, 7); x.fill(); }
   if (pink) for (let i=0;i<6;i++){ x.fillStyle = 'rgba(190,120,130,.35)'; x.beginPath(); x.ellipse(cx + 3*s + (hash(i, 7) - .5)*24*s, cy - 22*s + (hash(i, 8) - .5)*10*s, 1.6*s, 3*s, 0, 0, 7); x.fill(); } }
 
-SCENEX.b2_dryj_spring = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52, sx = W*.52, sy = H*.68;
-  const L = sceneLayer('b2:dryj_spring', W, H, (x, W, H) => { b2PaintOdhan(x, W, H, 'day');
+/* tod 'day' (the spring at noon, glare) or 'dusk' (the squad coming back to it with the skins, the sky gone red and the pool holding it) */
+function b2DryjSpring(cv, t, tod){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52, sx = W*.52, sy = H*.68, dusk = tod === 'dusk';
+  const L = sceneLayer('b2:dryj_spring:' + tod, W, H, (x, W, H) => { b2PaintOdhan(x, W, H, tod);
     for (let i=0;i<7;i++){ const k = i/6; b2Tamarisk(x, W*(.06 + k*.9) + hash(i, 21)*20, hz + 4 + hash(i, 22)*6, .55 + hash(i, 23)*.25, 'rgba(96,100,82,.7)', i%2); } // tamarisks round the hollow, far
     x.fillStyle = 'rgba(70,60,44,.5)'; for (let i=0;i<6;i++){ const wx = W*(.12 + hash(i, 31)*.76), wy = hz + 8 + hash(i, 32)*8, s = .6 + hash(i, 33)*.3; x.fillRect(wx - 6*s, wy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(wx, wy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); } // the carts, drawn up beyond
     // the hollow: mud trampled black round a brown pool, the white sky lying on the water
     x.save(); x.translate(sx, sy); x.scale(1, .24); x.fillStyle = PR.rad(x, 0, 0, 4, W*.46, [[0,'rgba(58,42,26,.9)'], [.5,'rgba(84,64,42,.65)'], [1,'rgba(150,126,90,0)']]); x.fillRect(-W*.5, -W*.5, W, W); x.restore();
     const pool = () => { x.beginPath(); for (let i=0;i<=40;i++){ const a = i/40*6.28, r = 1 + (hash(i%40, 7) - .5)*.18 + Math.sin(a*3 + 1)*.06; const px = sx + Math.cos(a)*W*.19*r, py = sy + Math.sin(a)*H*.045*r; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.closePath(); };
-    pool(); x.fillStyle = vgrad(x, sy - H*.05, sy + H*.05, [[0,'#8a8672'], [.4,'#6a5e46'], [1,'#3a3020']]); x.fill(); x.save(); pool(); x.clip(); x.fillStyle = 'rgba(236,236,224,.25)'; x.fillRect(sx - W*.2, sy - H*.018, W*.4, 1.6); x.fillRect(sx - W*.1, sy + H*.005, W*.16, 1); x.restore();
+    pool(); x.fillStyle = vgrad(x, sy - H*.05, sy + H*.05, dusk ? [[0,'#c87a4a'], [.4,'#7a4030'], [1,'#2a1810']] : [[0,'#8a8672'], [.4,'#6a5e46'], [1,'#3a3020']]); x.fill(); x.save(); pool(); x.clip(); x.fillStyle = dusk ? 'rgba(255,190,130,.3)' : 'rgba(236,236,224,.25)'; x.fillRect(sx - W*.2, sy - H*.018, W*.4, 1.6); x.fillRect(sx - W*.1, sy + H*.005, W*.16, 1); x.restore();
     x.strokeStyle = 'rgba(40,28,16,.45)'; x.lineWidth = 1.2; pool(); x.stroke();
     for (let i=0;i<90;i++){ const a = hash(i, 41)*6.28, d = 1.05 + hash(i, 42)*1.1; ell(x, sx + Math.cos(a)*W*.2*d, sy + Math.sin(a)*H*.05*d, 1.6, .8, `rgba(30,20,12,${.25 + hash(i, 43)*.3})`); } // hoof-pocks
     // cattle and people, packed round the water and up the slope behind, more than the spring can give drink to
@@ -319,15 +320,19 @@ SCENEX.b2_dryj_spring = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
     b2Crowd(x, 80, i => { const cx = W*hash(i, 85), cy = sy + H*.04 + hash(i, 86)*H*.16; return [cx, cy, .9 + (cy - sy)/H*2.4]; }, mid, 88, ['#6a5440', '#7a6a50', '#5e4444', '#4e5260', '#8a7a5a']); // and on this side, all the way to us
     for (let i=0;i<12;i++){ const a = Math.PI*(.06 + hash(i, 71)*.88), cx = sx + Math.cos(a)*W*.22, cy = sy + Math.sin(a)*H*.06 + 5; b2Cattle(x, cx, cy, 1.5, col, hash(i, 72) > .25, cx < sx ? 1 : -1); } // the near edge, heads down at the water
     b2Crowd(x, 50, i => { const a = Math.PI*(.02 + hash(i, 81)*.96), d = 1.08 + hash(i, 82)*.5; return [sx + Math.cos(a)*W*.24*d, sy + Math.sin(a)*H*.07*d + 5, 1.1 + hash(i, 83)*.3]; }, col, 84, ['#4a3a2a', '#5a4a34', '#4a3434', '#3a3e48', '#6a5a40']);
-    glow(x, sx, sy - H*.06, W*.5, '#e8d8b0', .14); // the dust hanging over all of it
-    x.fillStyle = 'rgba(120,96,64,.25)'; x.fillRect(0, H*.84, W, H*.16); // the near slope
+    glow(x, sx, sy - H*.06, W*.5, dusk ? '#c86a40' : '#e8d8b0', .14); // the dust hanging over all of it
+    x.fillStyle = dusk ? 'rgba(30,14,10,.35)' : 'rgba(120,96,64,.25)'; x.fillRect(0, H*.84, W, H*.16); // the near slope
+    if (dusk) { x.fillStyle = 'rgba(40,14,20,.32)'; x.fillRect(0, hz, W, H - hz); for (let i=0;i<9;i++){ const fx = W*(.06 + i*.11 + hash(i, 95)*.04), fy = hz + H*(.06 + hash(i, 96)*.24); glow(x, fx, fy, 8, '#ff8a40', .4); x.fillStyle = '#ffc070'; x.fillRect(fx - .6, fy - 1, 1.3, 1.3); } } // the dusk on the crowd, and the first fires
   });
   ctx.drawImage(L, 0, 0, W, H);
   if (mo) { const dpr = L.width / W; for (let y=hz - 16; y<hz + 26; y+=2){ const off = Math.sin(t/170 + y*.7)*1.8*Math.sin((y - hz + 16)/42*Math.PI); ctx.drawImage(L, 0, y*dpr, L.width, 2*dpr, off, y, W, 2); } } // heat over everything far
-  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.78, H*.1, W*.75, '#fff8e0', .16); for (let i=0;i<5;i++){ const k = ((t*mo/2600 + i/5) % 1); ctx.fillStyle = `rgba(255,255,240,${.35*Math.sin(k*Math.PI)})`; ctx.fillRect(sx - W*.15 + hash(i, 91)*W*.3, sy - H*.02 + hash(i, 92)*H*.04, 4 + hash(i, 93)*6, 1); } ctx.globalCompositeOperation = 'source-over'; // glare, and the water winking
-  for (let i=0;i<4;i++){ const k = ((t*mo/12000 + i/4) % 1); ell(ctx, W*(.1 + i*.25) + k*50, H*.6 - k*H*.1, 30 + k*30, 5 + k*4, `rgba(220,200,160,${.14*Math.sin(k*Math.PI)})`); } // dust off the crowd
+  ctx.globalCompositeOperation = 'lighter'; if (!dusk) glow(ctx, W*.78, H*.1, W*.75, '#fff8e0', .16); for (let i=0;i<5;i++){ const k = ((t*mo/2600 + i/5) % 1); ctx.fillStyle = dusk ? `rgba(255,200,150,${.3*Math.sin(k*Math.PI)})` : `rgba(255,255,240,${.35*Math.sin(k*Math.PI)})`; ctx.fillRect(sx - W*.15 + hash(i, 91)*W*.3, sy - H*.02 + hash(i, 92)*H*.04, 4 + hash(i, 93)*6, 1); } ctx.globalCompositeOperation = 'source-over'; // glare, and the water winking
+  for (let i=0;i<4;i++){ const k = ((t*mo/12000 + i/4) % 1); ell(ctx, W*(.1 + i*.25) + k*50, H*.6 - k*H*.1, 30 + k*30, 5 + k*4, dusk ? `rgba(200,120,90,${.12*Math.sin(k*Math.PI)})` : `rgba(220,200,160,${.14*Math.sin(k*Math.PI)})`); } // dust off the crowd
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(34, W*.5/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
-  vign(ctx, W, H, .4, .5); };
+  if (dusk) { ctx.fillStyle = 'rgba(30,10,14,.25)'; ctx.fillRect(0, H*.76, W, H*.24); }
+  vign(ctx, W, H, dusk ? .62 : .4, .5); }
+SCENEX.b2_dryj_spring = (cv, t) => b2DryjSpring(cv, t, 'day');
+SCENEX.b2_dryj_dusk = (cv, t) => b2DryjSpring(cv, t, 'dusk');
 
 SCENEX.b2_sekala = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.38, r0 = H*.45, r1 = H*.72;
   const ford = k => [lerp(W*.2, W*.6, k), lerp(r1 + 4, r0, Math.pow(k, .8))]; // the paved ford, running out from the near bank to the far
@@ -390,3 +395,69 @@ SCENEX.b2_spirits = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   ctx.fillStyle = 'rgba(6,8,20,.45)'; ctx.fillRect(0, H*.7, W, H*.3); // the dark, on their backs
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.4, H*.82, W*.4, '#7a90b0', .05 + p*.03); ctx.globalCompositeOperation = 'source-over'; // what light there is, from out there
   vign(ctx, W, H, .8, .5); };
+
+/* the Sekala after: from the west bank, looking back east over the river. Where Mincer's road ran there is a trench in the river, the water
+   pouring into it brown and broken, and things going away downstream. 'morning': the column asleep in the shade of the carts, the far bank
+   empty but for smoke. 'eve': the evening of the same day, the far bank in the last light with Reloe's army on it, standing very still */
+function b2SekalaAfter(cv, t, m){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, eve = m === 'eve', hz = H*.38, r0 = H*.46, r1 = H*.72, fl = b2Fl(t);
+  const T = k => [lerp(W*.16, W*.62, k), lerp(r1 + 2, r0 + 1, Math.pow(k, .8))], TW = k => lerp(W*.1, W*.02, k); // the trench, where the ford was
+  ctx.drawImage(sceneLayer('b2:sekala_after:' + m, W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, eve ? [[0,'#1a1a30'],[.5,'#4a3e5a'],[1,'#a07a78']] : [[0,'#6a82a0'],[.55,'#ccc4b0'],[1,'#f2dcb0']]); x.fillRect(0, 0, W, hz + 2);
+    if (!eve) { glow(x, W*.3, hz*.5, W*.5, '#fff0d0', .5); ell(x, W*.3, hz*.5, 10, 10, '#fffaf0'); for (let i=0;i<3;i++) cloud(x, W*(.2 + i*.3), hz*(.3 + i*.12), W*.3, 3, '#ffffff', .1); } // the morning sun, up over the far bank
+    else { for (let i=0;i<30;i++){ x.fillStyle = `rgba(220,226,250,${(.1 + hash(i, 1)*.3).toFixed(2)})`; x.fillRect(hash(i, 2)*W, hash(i, 3)*hz*.4, 1, 1); } glow(x, W*.5, hz, W*.6, '#d08a6a', .2); } // the east going dark; the light is behind us
+    x.fillStyle = eve ? '#5a4040' : '#a09484'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 3 - Math.max(0, Math.sin(px/70 + 2))*5 - (px > W*.6 && px < W*.92 ? Math.min(1, (px - W*.6)/(W*.05), (W*.92 - px)/(W*.05))*H*.05 : 0)); x.lineTo(W, r0); x.lineTo(0, r0); x.fill(); // the far bank, and the long low hill with a flat top
+    x.fillStyle = eve ? 'rgba(255,170,120,.25)' : 'rgba(255,250,236,.3)'; x.fillRect(W*.62, hz - H*.055, W*.28, 1.2);
+    x.fillStyle = eve ? '#2a1e22' : '#5a5046'; x.fillRect(0, r0 - 5, W, 6); // its cut face
+    if (eve) { for (let i=0;i<500;i++){ const px = W*(.3 + hash(i, 11)*.7), py = r0 - 5 - hash(i, 12)*8; x.fillStyle = `rgba(26,16,20,${(.6 + hash(i, 13)*.4).toFixed(2)})`; x.fillRect(px, py - 2, 1.3, 3); } } // Reloe's army, standing very still
+    // the river, and the trench in it where the road was: dark, broken, pouring
+    x.fillStyle = vgrad(x, r0, r1, eve ? [[0,'#8a6460'],[.3,'#5a4a4e'],[1,'#22222a']] : [[0,'#a8987a'],[.3,'#7e7058'],[1,'#3a3628']]); x.fillRect(0, r0, W, r1 - r0);
+    for (let i=0;i<50;i++){ const yy = r0 + 3 + Math.pow(hash(i, 21), .8)*(r1 - r0 - 6), px = hash(i, 22)*W, l = 8 + hash(i, 23)*30*(yy - r0)/(r1 - r0); x.fillStyle = `rgba(${eve ? '230,190,180' : '255,246,220'},${(.06 + hash(i, 24)*.12).toFixed(2)})`; x.fillRect(px, yy, l, 1); }
+    x.beginPath(); for (let i=0;i<=30;i++){ const k = i/30, [px, py] = T(k); i ? x.lineTo(px - TW(k)/2, py) : x.moveTo(px - TW(k)/2, py); } for (let i=30;i>=0;i--){ const k = i/30, [px, py] = T(k); x.lineTo(px + TW(k)/2, py); } x.closePath(); x.fillStyle = eve ? 'rgba(20,16,20,.6)' : 'rgba(40,30,20,.55)'; x.fill(); // the trench
+    for (let i=0;i<50;i++){ const k = hash(i, 31), [px, py] = T(k), side = hash(i, 32) > .5 ? 1 : -1; x.fillStyle = `rgba(${eve ? '220,200,200' : '250,244,230'},${(.2 + hash(i, 33)*.2).toFixed(2)})`; x.fillRect(px + side*TW(k)*.5 - 2, py, 2 + (1 - k)*7, 1); } // the water breaking over its lips
+    for (let i=0;i<16;i++){ const px = W*(.5 + hash(i, 41)*.5), py = r0 + 6 + hash(i, 42)*(r1 - r0 - 12); x.fillStyle = 'rgba(20,14,12,.6)'; x.fillRect(px, py, 2 + hash(i, 43)*5, 1.2); } // things going away downstream; too far to say what
+    // the west bank: stony, the carts drawn up along it, and the column lying in whatever shade there is
+    x.fillStyle = vgrad(x, r1 - 4, H, eve ? [[0,'#4a3430'],[.4,'#2a1e1c'],[1,'#0a0606']] : [[0,'#8a7656'],[.4,'#6a5a40'],[1,'#2a2014']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, r1); for (let px=0;px<=W + 10;px+=12) x.lineTo(px, r1 - 1 + Math.sin(px/40)*2.4); x.lineTo(W, H); x.fill();
+    for (let i=0;i<40;i++){ const px = hash(i, 51)*W, py = r1 + 4 + hash(i, 52)*H*.2; ell(x, px, py, 2 + hash(i, 53)*3, 1 + hash(i, 53), eve ? 'rgba(10,6,6,.4)' : 'rgba(150,130,100,.5)'); } // stones
+    for (let i=0;i<12;i++){ const cx = W*(.08 + i*.08 + hash(i, 54)*.04), cy = r1 + 10 + hash(i, 55)*H*.08, s = .8 + hash(i, 56)*.3; x.fillStyle = eve ? '#140c0c' : '#3a2e22'; x.fillRect(cx - 6*s, cy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(cx, cy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); x.fillRect(cx - 5*s, cy - 2*s, 1.6*s, 2*s); x.fillRect(cx + 3.4*s, cy - 2*s, 1.6*s, 2*s);
+      if (!eve) { ell(x, cx + 7*s, cy + 1, 9*s, 2*s, 'rgba(40,30,20,.35)'); for (let j=0;j<3;j++){ x.fillStyle = 'rgba(50,38,28,.85)'; x.beginPath(); x.ellipse(cx + (2 + j*4)*s, cy, 2.4*s, .9*s, 0, 0, 7); x.fill(); } } } // in the shade of each, people asleep, one against another
+    if (eve) for (let i=0;i<7;i++){ const fx = W*(.06 + i*.14 + hash(i, 61)*.04), fy = r1 + 14 + hash(i, 62)*H*.06; glow(x, fx, fy, 9, '#ff8a40', .4); x.fillStyle = '#ffc070'; x.fillRect(fx - .6, fy - 1, 1.3, 1.3); } // the fires along the bank
+    if (eve) b2Crowd(x, 60, i => [W*(.55 + hash(i, 63)*.4), r1 + 8 + hash(i, 64)*H*.06, 1], 'rgba(60,14,10,.9)', 65); // the Red Blades, together, saying their names
+  }), 0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; for (let i=0;i<14;i++){ const k = ((t*mo/(2600 + hash(i, 71)*1600) + hash(i, 72)) % 1), [px, py] = T(hash(i, 73)), side = hash(i, 74) > .5 ? 1 : -1; ctx.fillStyle = `rgba(255,250,240,${(.3*Math.sin(k*Math.PI)).toFixed(3)})`; ctx.fillRect(px + side*TW(hash(i, 73))*.5 + k*10, py, 3 + hash(i, 75)*6, 1); } ctx.globalCompositeOperation = 'source-over'; // the water, still pouring into it
+  for (let i=0;i<5;i++){ const k = ((t*mo/30000 + i/5) % 1); ell(ctx, lerp(W*.2, W*1.1, k), r0 + 8 + i*7, 3, 1.2, `rgba(20,14,12,${(.6*Math.sin(k*Math.PI)).toFixed(2)})`); } // and things going away down it
+  if (!eve) { b2Smoke(ctx, t*mo, W*.74, hz - H*.05, H*.26, 8, '#8a807a', .14, 3, .6); b2Smoke(ctx, t*mo, W*.84, hz - H*.05, H*.2, 6, '#8a807a', .1, 5, .6); } // the far hill, smoke where the fires were
+  if (eve) { ctx.globalCompositeOperation = 'lighter'; for (let i=0;i<7;i++){ const fx = W*(.06 + i*.14 + hash(i, 61)*.04), fy = r1 + 14 + hash(i, 62)*H*.06; glow(ctx, fx, fy - 1, 6, '#ffa050', .14*(mo ? .8 + .2*Math.sin(t/130 + i*2) : 1)); } ctx.globalCompositeOperation = 'source-over'; }
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(32, W*.45/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  if (eve) { ctx.fillStyle = 'rgba(20,10,20,.3)'; ctx.fillRect(0, H*.74, W, H*.26); }
+  vign(ctx, W, H, eve ? .7 : .45, .5); }
+SCENEX.b2_sekala_after = (cv, t) => b2SekalaAfter(cv, t, 'morning');
+SCENEX.b2_sekala_eve = (cv, t) => b2SekalaAfter(cv, t, 'eve');
+
+/* the caravan well: an old stop on a road nobody uses, in the glare. A well-house of mud brick, a yard and a broken wall, picket lines, a
+   few hide tents for the Tithansi left to keep it, and by the well-head the water-skins stacked higher than a man, every one of them full */
+SCENEX.b2_caravan_well = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52, wx = W*.56, wy = H*.68;
+  const L = sceneLayer('b2:caravan_well', W, H, (x, W, H) => { b2PaintOdhan(x, W, H, 'day');
+    x.fillStyle = 'rgba(150,126,92,.35)'; x.beginPath(); x.moveTo(0, hz + H*.1); x.quadraticCurveTo(W*.5, hz + H*.03, W, hz + H*.08); x.lineTo(W, hz + H*.1); x.quadraticCurveTo(W*.5, hz + H*.05, 0, hz + H*.12); x.fill(); // the old road, a paler line
+    x.save(); x.translate(W*.5, H*.78); x.scale(1.6, 1.6); x.translate(-W*.5, -wy); // the place itself, near enough to count the skins
+    // the broken wall round the yard
+    x.fillStyle = '#a8906a'; [[.3, .14, 0], [.46, .1, 1], [.7, .18, 0]].forEach(([u, w, br], i) => { const bx = W*u, bw = W*w, bh = H*(.04 + (i%2)*.01); x.fillRect(bx, wy - H*.08 - bh, bw, bh); x.fillStyle = 'rgba(60,44,28,.35)'; x.fillRect(bx, wy - H*.08 - 1.5, bw, 1.5); x.fillStyle = '#a8906a'; if (br) { x.beginPath(); x.moveTo(bx + bw, wy - H*.08 - bh); x.lineTo(bx + bw + 6, wy - H*.08); x.lineTo(bx + bw, wy - H*.08); x.fill(); } });
+    // the well-house: mud brick, flat-roofed, a dark door, the wall's shadow
+    const hx = W*.6, hy = wy - H*.04; x.fillStyle = '#b89a70'; x.fillRect(hx, hy - H*.14, W*.14, H*.14); x.fillStyle = 'rgba(90,64,40,.4)'; x.fillRect(hx + W*.1, hy - H*.14, W*.04, H*.14); x.fillStyle = '#d0b488'; x.fillRect(hx - 2, hy - H*.145, W*.14 + 4, 3); x.fillStyle = '#1a120c'; x.fillRect(hx + W*.03, hy - H*.08, W*.025, H*.08); x.fillRect(hx + W*.08, hy - H*.11, W*.012, H*.025); // its door, a window
+    for (let i=0;i<20;i++){ x.fillStyle = 'rgba(120,90,60,.25)'; x.fillRect(hx + hash(i, 5)*W*.13, hy - H*.13 + hash(i, 6)*H*.12, 4, 1.2); } // the bricks showing through
+    // the well-head, and the skins stacked by it higher than a man
+    ell(x, wx - W*.04, wy + 2, 16, 4, 'rgba(60,44,28,.35)'); x.fillStyle = '#9a8060'; x.fillRect(wx - W*.04 - 12, wy - 8, 24, 9); ell(x, wx - W*.04, wy - 8, 12, 3, '#b8a07a'); ell(x, wx - W*.04, wy - 8, 9, 2, '#1a120c'); x.fillStyle = '#3a2a1a'; x.fillRect(wx - W*.04 - 11, wy - 26, 2, 18); x.fillRect(wx - W*.04 + 9, wy - 26, 2, 18); x.fillRect(wx - W*.04 - 12, wy - 27, 24, 2.4);
+    for (let r=0;r<5;r++) for (let i=0;i<7 - r;i++){ const sx = W*.42 + i*7 + r*3.5, sy = wy - 2 - r*4.2; x.fillStyle = (i + r)%2 ? '#6a4a2e' : '#7a5636'; x.beginPath(); x.ellipse(sx, sy, 4, 2.4, 0, 0, 7); x.fill(); x.fillStyle = 'rgba(255,230,190,.25)'; x.fillRect(sx - 2, sy - 2, 3, .8); } // skins, full
+    // the picket lines and the garrison's horses; a few hide tents
+    x.strokeStyle = 'rgba(40,30,20,.7)'; x.lineWidth = .7; x.beginPath(); x.moveTo(W*.12, wy - H*.02); x.lineTo(W*.3, wy - H*.03); x.stroke(); for (let i=0;i<6;i++) b2Rider(x, W*(.13 + i*.03), wy - H*.02, .6, 'rgba(60,42,28,.9)', i%2 ? 1 : -1, 1, false);
+    for (let i=0;i<4;i++){ const px = W*(.78 + i*.06), py = wy - H*.05 + (i%2)*3, s = 1; x.fillStyle = i%2 ? '#8a6a48' : '#7a5a3a'; x.beginPath(); x.moveTo(px - 8*s, py); x.lineTo(px - 1*s, py - 8*s); x.lineTo(px + 8*s, py); x.fill(); x.fillStyle = 'rgba(40,26,14,.4)'; x.beginPath(); x.moveTo(px - 1*s, py - 8*s); x.lineTo(px + 8*s, py); x.lineTo(px + 2*s, py); x.fill(); x.fillStyle = '#2a7a3a'; x.fillRect(px - 1.4*s, py - 11*s, 3*s, 1.6*s); x.fillStyle = '#2a1a10'; x.fillRect(px - 1.6*s, py - 11*s, .5*s, 3*s); } // hide tents, a green rag on a pole
+    b2Crowd(x, 9, i => [W*(.36 + hash(i, 71)*.5), wy - H*.03 + hash(i, 72)*H*.05, 1], 'rgba(60,42,30,.95)', 73, ['#6a5440', '#5a4a3a', '#2a6a34']); // the men left to keep it
+    // a dead tree by the wall, and this side: the lip of the streambed the Weasels came up
+    x.strokeStyle = '#4a3a28'; x.lineWidth = 2; x.lineCap = 'round'; x.beginPath(); x.moveTo(W*.26, wy - H*.08); x.lineTo(W*.25, wy - H*.24); x.moveTo(W*.25, wy - H*.17); x.lineTo(W*.21, wy - H*.22); x.moveTo(W*.25, wy - H*.2); x.lineTo(W*.29, wy - H*.27); x.stroke(); x.lineCap = 'butt'; x.restore();
+    x.fillStyle = vgrad(x, H*.8, H, [[0,'#a8926a'],[1,'#6a5838']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.88); x.quadraticCurveTo(W*.5, H*.85, W, H*.9); x.lineTo(W, H); x.fill(); x.fillStyle = 'rgba(60,44,28,.4)'; x.fillRect(0, H*.88, W, 1.4);
+  });
+  ctx.drawImage(L, 0, 0, W, H);
+  if (mo) { const dpr = L.width / W; for (let y=hz - 16; y<hz + 22; y+=2){ const off = Math.sin(t/170 + y*.7)*1.6*Math.sin((y - hz + 16)/38*Math.PI); ctx.drawImage(L, 0, y*dpr, L.width, 2*dpr, off, y, W, 2); } } // heat
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.78, H*.1, W*.7, '#fff8e0', .16); ctx.globalCompositeOperation = 'source-over'; // glare
+  ctx.fillStyle = 'rgba(230,214,180,.25)'; for (let i=0;i<24;i++){ const xx = ((hash(i, 61)*W) + t*mo*(.02 + hash(i, 62)*.03)) % W, yy = hz + hash(i, 63)*(H - hz); ctx.fillRect(xx, yy, 1.3, 1); } // grit on the wind
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(32, W*.45/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .42, .5); };

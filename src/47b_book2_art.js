@@ -567,3 +567,37 @@ SCENEX.b2_basin = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
   ctx.fillStyle = 'rgba(220,200,190,.18)'; for (let i=0;i<12;i++){ const k = ((t*mo/7000 + hash(i,3)) % 1); ell(ctx, hash(i,4)*W + k*40, H*(.6 + hash(i,5)*.3), 20, 2, `rgba(220,200,190,${.08*Math.sin(k*Math.PI)})`); } // ground mist, burning off
   const sq = sceneSquad(); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.93 - (i%2)*2, 2, t, {phase:i, dir:1}));
   vign(ctx, W, H, .7, .5); };
+
+/* the Seventh's camp in the grey before dawn: tents in their rows going away over the flat, the horse lines, wagons being loaded, the first
+   cookfires and their smoke going straight up in the still air; and over the Fist's tent, along its ridge and its guy-ropes, crows */
+SCENEX.b2_camp_dawn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, tx = W*.6, ty = H*.66, fl = b2Fl(t);
+  const fires = [...Array(10)].map((_, i) => [W*(.05 + hash(i, 81)*.9), hz + H*(.04 + Math.pow(hash(i, 82), 1.3)*.3)]);
+  ctx.drawImage(sceneLayer('b2:camp_dawn', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#1a1e2e'],[.5,'#4a4a5c'],[.85,'#a08884'],[1,'#d0ac94']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.84, hz, W*.45, '#e8b898', .35); // grey, going pink in the east
+    for (let i=0;i<30;i++){ x.fillStyle = `rgba(220,226,250,${(.1 + hash(i, 1)*.35).toFixed(2)})`; x.fillRect(hash(i, 2)*W*.7, hash(i, 3)*hz*.45, 1, 1); } // the last stars
+    for (let i=0;i<3;i++) cloud(x, W*(.2 + i*.3), hz*(.4 + i*.1), W*.3, 2, '#8a7a84', .14);
+    x.fillStyle = '#4a4248'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1 - Math.max(0, Math.sin(px/60 + 1) - .6)*20); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // far mesas
+    x.fillStyle = vgrad(x, hz, H, [[0,'#6a5a56'],[.4,'#4a3e38'],[1,'#1a1410']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<70;i++){ const yy = hz + 4 + Math.pow(hash(i, 32), 1.4)*(H - hz), px = hash(i, 31)*W, d = (yy - hz)/(H - hz); ell(x, px, yy, 1 + d*4, .5 + d, `rgba(20,14,14,${(.2 + d*.25).toFixed(2)})`); }
+    // the tents, in rows going away: pale canvas in the grey, their dark sides to the west
+    for (let r=0;r<7;r++){ const v = Math.pow(r/7, 1.5), y = hz + 4 + v*H*.36, s = .35 + v*1.8, n = Math.round(22 - r*1.8); for (let i=0;i<n;i++){ const px = (i + (r%2)*.5)/n*W*1.1 - W*.04 + (hash(i, r + 40) - .5)*8*s; if (Math.abs(px - tx) < W*.1 && Math.abs(y - ty) < H*.06) continue; if (hash(i, r + 41) < .18) continue;
+      x.fillStyle = '#9a8e88'; x.beginPath(); x.moveTo(px - 6*s, y); x.lineTo(px, y - 6*s); x.lineTo(px + 6*s, y); x.fill(); x.fillStyle = 'rgba(30,24,26,.5)'; x.beginPath(); x.moveTo(px - 6*s, y); x.lineTo(px, y - 6*s); x.lineTo(px - 1*s, y); x.fill(); x.fillStyle = '#1a1414'; x.fillRect(px - .4*s, y - 2.4*s, .8*s, 2.4*s); } } // their door-flaps
+    // the horse lines on the right, and the wagons on the left being loaded
+    for (let i=0;i<14;i++){ const px = W*(.72 + i*.02), py = hz + H*.12 + (i%2)*2; b2Rider(x, px, py, .5, 'rgba(30,24,22,.9)', -1, 1, false); } x.strokeStyle = 'rgba(20,16,16,.8)'; x.lineWidth = .6; x.beginPath(); x.moveTo(W*.7, hz + H*.1); x.lineTo(W*1.02, hz + H*.1); x.stroke();
+    for (let i=0;i<6;i++){ const cx = W*(.08 + i*.07), cy = hz + H*(.16 + (i%2)*.03), s = .8; x.fillStyle = '#241c18'; x.fillRect(cx - 6*s, cy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(cx, cy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); x.fillRect(cx - 5*s, cy - 2*s, 1.6*s, 2*s); x.fillRect(cx + 3.4*s, cy - 2*s, 1.6*s, 2*s); }
+    // the Fist's tent: bigger than the rest, a ridge-pole through its peak, a lamp still lit inside
+    x.fillStyle = '#7a6e6a'; x.beginPath(); x.moveTo(tx - 30, ty); x.lineTo(tx - 20, ty - 26); x.lineTo(tx + 20, ty - 26); x.lineTo(tx + 30, ty); x.fill(); x.fillStyle = 'rgba(20,16,18,.45)'; x.beginPath(); x.moveTo(tx - 30, ty); x.lineTo(tx - 20, ty - 26); x.lineTo(tx - 8, ty); x.fill();
+    x.fillStyle = '#1a1414'; x.fillRect(tx - 21, ty - 28, 42, 2.2); x.fillRect(tx - 21, ty - 34, 1.6, 34); x.fillRect(tx + 19.4, ty - 34, 1.6, 34); // the ridge-pole and its uprights
+    x.fillStyle = '#ffb060'; x.fillRect(tx - 3, ty - 12, 6, 12); glow(x, tx, ty - 6, 16, '#ff9a40', .45); x.fillStyle = '#1a1414'; x.fillRect(tx - .6, ty - 12, 1.2, 12); // the door, open, the lamp
+    x.strokeStyle = 'rgba(20,16,16,.8)'; x.lineWidth = .6; x.beginPath(); [[-21, -28, -40, 0], [21, -28, 40, 0], [-21, -20, -36, 0], [21, -20, 36, 0]].forEach(([a, b, c, d]) => { x.moveTo(tx + a, ty + b); x.lineTo(tx + c, ty + d); }); x.stroke(); // guy-ropes
+    for (let i=0;i<22;i++){ const k = hash(i, 61), px = tx - 20 + k*40, py = ty - 28.6; x.fillStyle = '#0a080a'; x.beginPath(); x.ellipse(px, py, 1.4, 1, 0, 0, 7); x.fill(); x.fillRect(px + (hash(i, 62) > .5 ? .8 : -1.6), py - 1.4, .9, .9); } // crows along the ridge, shoulder to shoulder
+    for (let i=0;i<10;i++){ const k = hash(i, 63), side = i%2 ? 1 : -1, px = tx + side*(21 + k*17), py = ty - 28 + k*26; x.fillStyle = '#0a080a'; x.beginPath(); x.ellipse(px, py - 1, 1.2, .9, 0, 0, 7); x.fill(); } // and on the guy-ropes
+    fires.forEach(([px, py]) => { const s = .5 + (py - hz)/H*2; glow(x, px, py, 6*s + 3, '#ff8a40', .4); x.fillStyle = '#ffc070'; x.fillRect(px - .6, py - 1, 1.3, 1.3); });
+    b2Crowd(x, 70, i => { const px = W*hash(i, 71), py = hz + H*(.06 + Math.pow(hash(i, 72), 1.2)*.32); return [px, py, .4 + (py - hz)/H*2]; }, 'rgba(26,20,20,.9)', 73); // people, up already
+  }), 0, 0, W, H);
+  fires.forEach(([px, py], i) => b2Smoke(ctx, t*mo, px, py - 1, H*.24, 4, '#4a4048', .12, i + 50, .15)); // smoke, going nearly straight up
+  ctx.globalCompositeOperation = 'lighter'; fires.forEach(([px, py], i) => glow(ctx, px, py - 1, 5, '#ffa050', .14*(mo ? .8 + .2*Math.sin(t/140 + i*2.3) : 1))); glow(ctx, tx, ty - 6, 20, '#ffa050', .1*fl); ctx.globalCompositeOperation = 'source-over';
+  b2Wheel(ctx, t*mo, tx, ty - H*.22, W*.14, H*.06, 16, .7, 'rgba(10,8,12,.85)', 7); for (let i=0;i<6;i++){ const k = ((t*mo/(7000 + hash(i, 91)*3000) + hash(i, 92)) % 1), sx = hash(i, 93) > .5 ? -W*.05 : W*1.05, px = lerp(sx, tx, k), py = lerp(H*(.05 + hash(i, 94)*.2), ty - H*.14, k); b2Bird(ctx, px, py, .7, Math.sin(t*mo/150 + i), 'rgba(10,8,12,.8)'); } // crows, more coming, without a sound
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(14,16,30,.25)'; ctx.fillRect(0, H*.76, W, H*.24);
+  vign(ctx, W, H, .66, .5); };

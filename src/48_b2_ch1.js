@@ -198,6 +198,7 @@ ${b2In('sathi') ? `Sathi laughs, high and short, and Hackle goes down the bank a
     b2_hissar_burning:{loc:'Hissar', sub:'From the garrison wall', cap:'Roofs on fire in a ring round the old city, and the ring closing, and on every roof somebody shouting one word.', amb:'city_night'},
     b2_well:{loc:'Hissar', sub:'Ressan\'s well court', cap:'A courtyard well with a wooden cover, two water jars by it, a burning door across the court, and an old man sitting on the well-head as if it were a throne.', amb:'city_night'},
     b2_coltaine_tent:{loc:'The Seventh\'s camp', sub:'The Fist\'s tent', cap:'One lamp, a map weighted with stones, a cloak of black feathers over a stool, and nobody sitting on the stool.', amb:'interior'},
+    b2_camp_dawn:{loc:'The Seventh\'s camp', sub:'Before dawn', cap:'Tents in their rows going away over the flat, the horse lines, the first fires, and along the ridge of the Fist\'s tent, crows, more of them coming.', amb:'wind'},
     b2_odhan_dusk:{loc:'The Odhan', sub:'Dusk', cap:'The column strung out across the Odhan for a league and more, carts and cattle and people, and dust going up off all of it into a red sky.', amb:'dusk'},
     b2_odhan_day:{loc:'The Odhan', sub:'Day', cap:'Glare, and dust, and the column going on into both of them.', amb:'plain'},
     b2_basin:{loc:'The Vin\'til Basin', sub:'The basin floor', cap:'A wide pan of cracked clay under a white sky, a dry wash cut across it, and on the far rim, dust that is not the column\'s.', amb:'dusk'} },
@@ -660,7 +661,7 @@ That's all. You wait. He doesn't say anything else. After a while it becomes cle
 
 Outside, Sathi has gone very quiet. She's looking up at the top of the tent.` : ''}`,
       ch:[{t:'Salute, and go.', go:'b2_crows'}]}),
-    b2_crows:()=>({sp:'Outside the Fist\'s tent', fx:()=>{ if (b2In('sathi')) S.f.b2_sathiCrows = 1; }, txt:
+    b2_crows:()=>({sp:'Outside the Fist\'s tent', scene:'b2_camp_dawn', fx:()=>{ if (b2In('sathi')) S.f.b2_sathiCrows = 1; }, txt:
 `${b2In('sathi') ? `Sathi hasn't moved. She's looking up at the peak of the Fist's tent, where the ridge-pole comes through, and following her eyes, you see them.
 
 Crows. In the dark before dawn, when crows have no business being awake: one, and then three, and then more than you want to count, coming down out of the smoke from Hissar and settling along the ridge of the Fist's tent, and on the guy-ropes, and on the poles of the tents around it, without a sound.

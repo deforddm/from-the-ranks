@@ -276,10 +276,10 @@ SCENEX.b2_tunnel = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.8, W*.3, '#6ab0a0', .06 + p*.03); ctx.globalCompositeOperation = 'source-over'; // the nearest light, on their shoulders
   vign(ctx, W, H, .75, .5); };
 
-SCENEX.b2_gelor = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.3;
+SCENEX.b2_gelor = (cv, t, eve) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.3; // eve: the evening before (b2_gelor_dusk), nobody on the ramp yet
   const crest = px => H*.24 + (1 - px/W)*H*.08 - Math.sin(px/W*3.2 + .4)*H*.04; // the ridge line, higher to the right
   const ramp = k => [lerp(W*.18, W*.66, k), lerp(H*.86, crest(W*.66) + 2, Math.pow(k, .8))], rampW = k => lerp(W*.2, W*.05, Math.pow(k, .7)); // Reloe's ramp, narrowing as it climbs
-  const L = sceneLayer('b2:gelor', W, H, (x, W, H) => {
+  const L = sceneLayer(eve ? 'b2:gelor:eve' : 'b2:gelor', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, H*.42, [[0,'#8a9aa8'],[.5,'#c8ccc4'],[1,'#f0e8d4']]); x.fillRect(0, 0, W, H*.42); glow(x, W*.2, H*.06, W*.6, '#fffcf0', .55); ell(x, W*.2, H*.06, 12, 12, '#ffffff'); // the white sun, behind and left
     for (let i=0;i<3;i++) cloud(x, W*(.3 + i*.25), H*(.08 + i*.04), W*.3, 4, '#ffffff', .08);
     // the ridge itself: a long hogback of dry grass, limestone in its flank, rising right
@@ -293,7 +293,7 @@ SCENEX.b2_gelor = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
       x.fillStyle = pass === 0 ? 'rgba(60,44,26,.45)' : pass === 1 ? '#7a6444' : vgrad(x, H*.3, H, [[0,'#c8b48a'],[1,'#a08a62']]); x.fill(); }
     x.strokeStyle = 'rgba(110,86,54,.4)'; x.lineWidth = 1; for (let j=0;j<4;j++){ x.beginPath(); for (let i=0;i<=30;i++){ const k = i/30, [px, py] = ramp(k), w = rampW(k), ox = (j/3 - .5)*w*.6 + Math.sin(k*20 + j)*w*.02; i ? x.lineTo(px + ox, py) : x.moveTo(px + ox, py); } x.stroke(); } // ruts, up its length
     for (let side=-1; side<=1; side+=2){ x.strokeStyle = side < 0 ? 'rgba(255,246,220,.35)' : 'rgba(40,28,14,.5)'; x.lineWidth = 2; x.beginPath(); for (let i=0;i<=30;i++){ const k = i/30, [px, py] = ramp(k), w = rampW(k)*1.12; i ? x.lineTo(px + side*w/2, py) : x.moveTo(px + side*w/2, py); } x.stroke(); } // the lips of its banks
-    b2Column(x, W, H, k => { const [px, py] = ramp(lerp(.04, .5, k)); return [px + (hash(Math.round(k*99), 3) - .5)*rampW(k*.5)*.5, py]; }, 50, 'rgba(40,32,22,.85)', null); // the Malazans already on it, going up into the funnel
+    if (!eve) b2Column(x, W, H, k => { const [px, py] = ramp(lerp(.04, .5, k)); return [px + (hash(Math.round(k*99), 3) - .5)*rampW(k*.5)*.5, py]; }, 50, 'rgba(40,32,22,.85)', null); // the Malazans already on it, going up into the funnel
     // the rebel army on the crest: a long dark mass, spears, the green, the city legions in their blocks; dust
     for (let i=0;i<520;i++){ const px = W*(.08 + hash(i, 11)*.92), py = crest(px) - hash(i, 12)*(4 + px/W*6); x.fillStyle = `rgba(28,22,20,${.55 + hash(i, 13)*.45})`; x.fillRect(px, py - 2, 1.3, 3); if (hash(i, 14) > .7) x.fillRect(px + .3, py - 8, .5, 6); }
     for (let b=0;b<3;b++){ const bx = W*(.42 + b*.18), by = crest(bx); x.fillStyle = 'rgba(70,64,56,.85)'; x.fillRect(bx - 18, by - 6, 36, 5); x.fillStyle = 'rgba(200,190,170,.4)'; for (let j=0;j<14;j++) x.fillRect(bx - 17 + j*2.5, by - 6.4, 1.2, .8); for (let j=0;j<10;j++){ x.fillStyle = '#1e1814'; x.fillRect(bx - 16 + j*3.4, by - 15, .5, 9); } } // the legions in their blocks, helms glinting
@@ -339,3 +339,42 @@ SCENEX.b2_charge = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   for (let i=0;i<14;i++){ const k = ((t*mo/5000 + hash(i, 91)) % 1), px = lerp(mx, W*.1, hash(i, 92)) + k*20, py = lerp(my + H*.08, H*.74, hash(i, 92)) - k*H*.12; ell(ctx, px, py, 26 + k*50, 8 + k*18, `rgba(206,186,146,${.22*Math.sin(k*Math.PI)})`); } // dust, boiling
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.42/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   vign(ctx, W, H, .55, .5); };
+
+/* Gelor Ridge after: the same ridge and ramp at the end of the day, black against a sky with the first stars in it. Nobody up there now but
+   the Seventh, a few of its fires and standards along the crest; at the foot of the ramp what the charge left, horses mostly; the river
+   holding the last light; the camp on the lake bed below, wagons and fires, and the Weasels singing somewhere in it */
+SCENEX.b2_gelor_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t);
+  const crest = px => H*.24 + (1 - px/W)*H*.08 - Math.sin(px/W*3.2 + .4)*H*.04;
+  const ramp = k => [lerp(W*.18, W*.66, k), lerp(H*.86, crest(W*.66) + 2, Math.pow(k, .8))], rampW = k => lerp(W*.2, W*.05, Math.pow(k, .7));
+  const fires = [...Array(14)].map((_, i) => { const px = W*(.04 + hash(i, 31)*.92), py = H*(.84 + hash(i, 32)*.1); return [px, py]; });
+  ctx.drawImage(sceneLayer('b2:gelor_after', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, H*.42, [[0,'#0a0c1a'],[.45,'#2a2238'],[.8,'#8a4a3e'],[1,'#c87a4a']]); x.fillRect(0, 0, W, H*.42); glow(x, W*.86, H*.36, W*.5, '#ff9a5a', .35); // the sun gone, the west still red behind the ridge's high end
+    for (let i=0;i<70;i++){ x.fillStyle = `rgba(220,226,250,${(.15 + hash(i, 1)*.5).toFixed(2)})`; x.fillRect(hash(i, 2)*W, hash(i, 3)*H*.2, 1, 1); } // the first stars
+    x.fillStyle = vgrad(x, H*.2, H, [[0,'#1c1618'],[.5,'#141012'],[1,'#0a0808']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, crest(0)); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, crest(px)); x.lineTo(W, H); x.fill(); // the ridge, black now
+    x.fillStyle = 'rgba(255,150,100,.22)'; x.beginPath(); x.moveTo(0, crest(0)); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, crest(px)); for (let px=W + 8;px>=0;px-=8) x.lineTo(px, crest(px) + 2); x.fill(); // the last light along its crest
+    x.fillStyle = vgrad(x, H*.2, H*.8, [[0,'rgba(120,70,80,.35)'],[1,'rgba(60,40,44,0)']]); x.beginPath(); x.moveTo(0, crest(0)); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, crest(px)); x.lineTo(W, H*.8); x.lineTo(0, H*.8); x.fill(); // the sky's last colour on the slope's face
+    for (let i=0;i<5;i++){ const x0 = W*(.05 + i*.22), g = x.createLinearGradient(x0, 0, x0 + W*.12, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.5, 'rgba(0,0,0,.25)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.beginPath(); x.moveTo(x0, crest(x0) + 6); x.lineTo(x0 + W*.12, crest(x0 + W*.12) + 6); x.lineTo(x0 - W*.06, H*.8); x.lineTo(x0 - W*.2, H*.8); x.fill(); } // its folds, the gullies
+    for (let i=0;i<90;i++){ const py = H*.34 + Math.pow(hash(i, 8), 1.2)*H*.46, px = hash(i, 7)*W, d = (py - H*.34)/(H*.46); ell(x, px, py, 1 + d*3, .5 + d, `rgba(4,2,4,${(.3 + d*.3).toFixed(2)})`); } // scrub
+    for (let pass=0;pass<2;pass++){ x.beginPath(); for (let i=0;i<=30;i++){ const k = i/30, [px, py] = ramp(k), w = rampW(k)*(pass ? 1 : 1.2); i ? x.lineTo(px - w/2, py) : x.moveTo(px - w/2, py); } for (let i=30;i>=0;i--){ const k = i/30, [px, py] = ramp(k), w = rampW(k)*(pass ? 1 : 1.2); x.lineTo(px + w/2, py); } x.closePath(); x.fillStyle = pass ? vgrad(x, H*.3, H, [[0,'#4a3a36'],[1,'#3a2c26']]) : 'rgba(0,0,0,.4)'; x.fill(); } // the ramp, a paler scar up the black
+    for (let i=0;i<26;i++){ const k = Math.pow(hash(i, 41), 1.6)*.5, [px, py] = ramp(k), w = rampW(k), ox = (hash(i, 42) - .5)*w*.9, s = .5 + (1 - k)*.9; x.fillStyle = 'rgba(10,8,8,.85)'; x.beginPath(); x.ellipse(px + ox, py - 1.6*s, 5*s, 1.8*s, (hash(i, 43) - .5)*.6, 0, 7); x.fill(); if (hash(i, 44) > .6) { x.fillRect(px + ox + 3*s, py - 3*s, 4*s, 1.2*s); } } // what the charge left on it: horses, mostly
+    for (let i=0;i<8;i++){ const px = W*(.2 + i*.1 + hash(i, 15)*.03), py = crest(px) - 1; x.fillStyle = '#0a0808'; x.fillRect(px, py - 12, .8, 12); x.fillStyle = i%3 ? '#3a3a44' : '#5a1e16'; x.fillRect(px + .8, py - 12, 4.4, 2.6); } // the Seventh's standards, up there now
+    x.fillStyle = vgrad(x, H*.78, H*.86, [[0,'#8a4a3e'],[1,'#3a2228']]); x.beginPath(); x.moveTo(0, H*.8); x.quadraticCurveTo(W*.5, H*.76, W, H*.82); x.lineTo(W, H*.86); x.quadraticCurveTo(W*.5, H*.82, 0, H*.86); x.fill(); x.fillStyle = 'rgba(255,170,120,.2)'; for (let i=0;i<20;i++) x.fillRect(hash(i, 21)*W, H*(.8 + hash(i, 22)*.05), 6 + hash(i, 23)*16, 1); // the P'atha, holding the last of the sky
+    x.fillStyle = vgrad(x, H*.84, H, [[0,'#241a18'],[1,'#0a0606']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.86); x.quadraticCurveTo(W*.5, H*.82, W, H*.86); x.lineTo(W, H); x.fill(); // the lake bed, this side
+    for (let i=0;i<16;i++){ const cx = W*hash(i, 51), cy = H*(.88 + hash(i, 52)*.1), s = .7 + hash(i, 53)*.4; x.fillStyle = '#0a0606'; x.fillRect(cx - 6*s, cy - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(cx, cy - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); } // the wagons
+    fires.forEach(([px, py]) => { glow(x, px, py, 9, '#ff8a40', .4); x.fillStyle = '#ffc070'; x.fillRect(px - .6, py - 1.2, 1.3, 1.3); });
+  }), 0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; for (let i=0;i<5;i++){ const px = W*(.24 + i*.15 + hash(i, 61)*.04), py = crest(px) + 3; glow(ctx, px, py, 5, '#ffa050', .3*(mo ? .8 + .2*Math.sin(t/150 + i*2) : 1)); } fires.forEach(([px, py], i) => glow(ctx, px, py - 2, 6, '#ffa050', .14*(mo ? .8 + .2*Math.sin(t/130 + i*1.7) : 1))); ctx.globalCompositeOperation = 'source-over'; // fires on the crest, and in the camp
+  for (let i=0;i<4;i++) b2Smoke(ctx, t*mo, fires[i*3][0], fires[i*3][1], H*.2, 4, '#1a1214', .18, i + 30, .5);
+  b2Wheel(ctx, t*mo, W*.5, H*.36, W*.18, H*.05, 14, .7, 'rgba(10,8,12,.8)', 19); // the crows, over the ramp
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(34, W*.5/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(8,6,16,.35)'; ctx.fillRect(0, H*.74, W, H*.26); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.9, W*.3, '#ff8a40', .05*fl); ctx.globalCompositeOperation = 'source-over';
+  vign(ctx, W, H, .75, .5); };
+
+/* Gelor Ridge at dusk, the evening the column came to the P'atha: the same ridge with Reloe's army on it, seen in the last of the light.
+   The noon painting, put into the evening: everything taken down toward red and violet, the sun's white glare gone, a red sky low behind the crest */
+SCENEX.b2_gelor_dusk = (cv, t) => { SCENEX.b2_gelor(cv, t, true); const {ctx, W, H} = sceneFit(cv);
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#4a3a66'],[.3,'#a0605a'],[.6,'#8a5a5a'],[1,'#4a3440']]); ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(30,14,30,.18)'; ctx.fillRect(0, 0, W, H*.22); // the high sky going dark
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.86, H*.26, W*.4, '#ff8a4a', .22); for (let i=0;i<40;i++){ ctx.fillStyle = `rgba(220,226,250,${(.08 + hash(i, 1)*.25).toFixed(2)})`; ctx.fillRect(hash(i, 2)*W, hash(i, 3)*H*.12, 1, 1); } // red low behind the crest, the first stars
+  for (let i=0;i<12;i++){ const px = W*(.1 + hash(i, 5)*.85), py = H*(.2 + hash(i, 6)*.06); glow(ctx, px, py, 4, '#ff9040', .3); } // their fires, coming up along the top
+  ctx.restore(); vign(ctx, W, H, .35, .5); };

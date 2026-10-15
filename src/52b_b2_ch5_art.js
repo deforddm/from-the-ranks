@@ -437,3 +437,29 @@ SCENEX.b2_trygalle = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.36/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   vign(ctx, W, H, .6, .5); };
 
+/* the Nenoth at dusk: the same cracked pan with the heat gone off it and the sky going red over it; the column stopped where it stopped,
+   the carts in a ring, the Wickans' horses inside, the Fist's tent in the middle, and fires of dung and broken cart. No wood, no water */
+SCENEX.b2_nenoth_dusk = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44, cx = W*.6, cy = H*.6, rx = W*.3, ry = H*.075, fl = b2Fl(t);
+  const L = sceneLayer('b2:nenoth_dusk', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#1c1426'],[.45,'#5a2a34'],[.8,'#c0583a'],[1,'#e89a5a']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.14, hz, W*.5, '#ff9a50', .5); ell(x, W*.14, hz - 1, 11, 5, '#ffd8a0'); // the sun going down red into the pan's edge
+    for (let i=0;i<4;i++) cloud(x, W*(.2 + i*.22), hz*(.25 + (i%2)*.25), W*.3, 3, i%2 ? '#8a3a3a' : '#2a1a2a', .18);
+    x.fillStyle = '#4a2a2a'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1 - Math.max(0, Math.sin(px/70 + 2))*3); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // the far edge of the pan
+    x.fillStyle = vgrad(x, hz, H, [[0,'#b0705a'],[.3,'#7a4a3a'],[.7,'#4a2e26'],[1,'#1e1210']]); x.fillRect(0, hz, W, H); x.fillStyle = 'rgba(255,170,120,.25)'; x.fillRect(0, hz, W, 3); // the clay, holding the last of the light
+    const N = 18, M = 14, P = (i, j) => { const u = (i + (hash(i, j, 1) - .5)*1.05 + (j%2)*.5)/N, v = Math.pow((j + (hash(i, j, 2) - .5)*.85)/M, 1.7); return [W/2 + (u - .5)*W*(.4 + v*2.6), hz + 3 + v*(H - hz)]; };
+    x.lineCap = 'round'; for (let j=0;j<=M;j++) for (let i=0;i<=N;i++){ const a = P(i, j), w = .4 + (a[1] - hz)/(H - hz)*2.4; [[i + 1, j], [i, j + 1]].forEach(([ii, jj]) => { if (ii > N || jj > M) return; const b = P(ii, jj); x.strokeStyle = 'rgba(30,16,12,.45)'; x.lineWidth = w; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); x.stroke(); x.strokeStyle = 'rgba(255,170,120,.18)'; x.lineWidth = w*.4; x.beginPath(); x.moveTo(a[0] - w*.6, a[1]); x.lineTo(b[0] - w*.6, b[1]); x.stroke(); }); } x.lineCap = 'butt'; // the cracks, the plates' lips catching the sun from the left
+    for (let i=0;i<5;i++){ const ex = W*(.05 + hash(i, 41)*.3), ey = hz + 6 + hash(i, 42)*H*.1, s = .5 + (ey - hz)/H*3; b2Cattle(x, ex, ey, s, 'rgba(40,22,18,.75)', true, 1); } // what the march left behind it, back the way it came
+    // the camp: the Fist's tent in the middle, the Wickans' horses round it, the carts in a ring, the Seventh round the outside facing out
+    x.fillStyle = '#1a0e0c'; x.beginPath(); x.moveTo(cx - 14, cy - 2); x.lineTo(cx - 9, cy - 16); x.lineTo(cx + 9, cy - 16); x.lineTo(cx + 14, cy - 2); x.fill(); x.fillRect(cx - .6, cy - 22, 1.2, 7); x.fillStyle = 'rgba(255,160,100,.25)'; x.fillRect(cx - 9, cy - 16, 6, 1); // the Fist's tent
+    for (let i=0;i<26;i++){ const a = hash(i, 51)*6.283, d = .25 + hash(i, 52)*.5, hx = cx + Math.cos(a)*rx*d, hy = cy + Math.sin(a)*ry*d; b2Rider(x, hx, hy, .45 + (hy - hz)/H*.8, 'rgba(26,14,12,.92)', hash(i, 53) > .5 ? 1 : -1, 1, false); } // horses, no riders up: b2Rider's figure stands for horse and the boy holding it
+    for (let i=0;i<30;i++){ const a = i/30*6.283, px = cx + Math.cos(a)*rx, py = cy + Math.sin(a)*ry, s = .5 + (py - hz)/H*1.6; x.fillStyle = '#160c0a'; x.fillRect(px - 6*s, py - 6*s, 12*s, 4*s); x.beginPath(); x.ellipse(px, py - 6*s, 6*s, 4.4*s, 0, Math.PI, 0); x.fill(); x.fillRect(px - 5*s, py - 2*s, 1.6*s, 2*s); x.fillRect(px + 3.4*s, py - 2*s, 1.6*s, 2*s); } // the carts, wheel to wheel
+    b2Crowd(x, 90, i => { const a = hash(i, 61)*6.283, d = 1.08 + hash(i, 62)*.1, py = cy + Math.sin(a)*ry*d + 2; return [cx + Math.cos(a)*rx*d, py, .5 + (py - hz)/H*1.4]; }, 'rgba(20,10,10,.92)', 63); // the Seventh round the outside, facing out
+    b2Crowd(x, 70, i => { const px = W*hash(i, 64), py = H*(.72 + hash(i, 65)*.16); return [px, py, .9 + (py - hz)/H*1.4]; }, 'rgba(22,12,10,.9)', 66, ['#3a2420', '#2a1c1c', '#3a2a24']); // and the column's people, sitting down where they stopped
+    for (let i=0;i<9;i++){ const a = hash(i, 71)*6.283, d = hash(i, 72)*.8, fx = cx + Math.cos(a)*rx*d, fy = cy + Math.sin(a)*ry*d + 3; glow(x, fx, fy, 7, '#ff7a30', .4); x.fillStyle = '#ffb060'; x.fillRect(fx - .6, fy - 1, 1.2, 1.2); } // fires of dung and broken cart
+  });
+  ctx.drawImage(L, 0, 0, W, H);
+  for (let i=0;i<5;i++) b2Smoke(ctx, t*mo, cx + (hash(i, 81) - .5)*rx*1.2, cy, H*.2, 4, '#2a1818', .14, i + 80, .6); // the dung smoke, thin and low
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy, rx*.9, '#ff8040', .06*fl); glow(ctx, W*.14, hz, W*.4, '#ff9a50', .08); ctx.globalCompositeOperation = 'source-over';
+  b2Wheel(ctx, t*mo, W*.36, hz - 18, W*.1, 8, 5, .7, 'rgba(30,14,16,.75)', 5); // the vultures, going down to the ones behind
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(32, W*.45/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i*1.6, dir:1}));
+  ctx.fillStyle = 'rgba(30,10,14,.22)'; ctx.fillRect(0, H*.76, W, H*.24);
+  vign(ctx, W, H, .66, .48); };

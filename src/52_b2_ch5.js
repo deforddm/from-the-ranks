@@ -232,6 +232,7 @@ Haddat is looking at the skins on his saddle. She has gone very still.` : ''}`,
     b2_forest:{loc:'Vathar Forest', sub:'The old wood', cap:'An old dark forest, long mounds under the leaf-litter, and far off over the trees the top of a tower.', amb:'dark'},
     b2_tower:{loc:'Vathar Forest', sub:'The tower', cap:'Inside a tower of fitted stone, every surface white with frost, two braziers burning with no flame, and a stair going up into the cold.', amb:'tunnel'},
     b2_dry_march:{loc:'The Nenoth Odhan', sub:'The Dry March', cap:'The column on a cracked white pan under a white sun, and dark shapes on the ground behind it that were cattle.', amb:'wind'},
+    b2_nenoth_dusk:{loc:'The Nenoth Odhan', sub:'Dusk', cap:'The cracked pan red with the last of the sun, the carts in a ring, the horses inside it, the Fist\'s tent in the middle, and fires of dung and broken cart.', amb:'dusk'},
     b2_trygalle:{loc:'The Nenoth Odhan', sub:'Out of nowhere', cap:'A carriage coming out of thin air in a shimmer, scorched black, nine horses lathered white, and battered guards on its roof holding on.', amb:'plain'} },
 
   end:{
@@ -647,7 +648,7 @@ ${B2.younger} is standing behind her, watching the jar, the way she watched it o
 
   /* ---- the ration: who drinks ---- */
   b2_ration:()=>{ const c = chainC(), w = chainW();
-    return {sp:'Bult', scene:'b2_dry_march', fx:()=>{ S.f.b2_ration = 1; }, txt:
+    return {sp:'Bult', scene:'b2_nenoth_dusk', fx:()=>{ S.f.b2_ration = 1; }, txt:
 `Bult comes down the column at dusk on foot, leading his horse because his horse has nothing left to carry him with, and stops at every stretch, and says the same thing. When he gets to yours he says it to you.
 
 "Three days to the hills. If there's water in the hills. The guides think there is. The guides thought there'd be cattle." He squints at your cart. "The Fist's orders. Every squad keeps what water it holds. No more is coming. Squads that hold stretches feed their stretches out of what they hold, or don't." He looks at you. "That's all the Fist says. I say the rest."
@@ -712,7 +713,7 @@ She holds it out to you, and then doesn't, and then does.
   b2_sealskin_drunk:()=>({sp:'Haddat', txt:`She carries it into the stretch herself and gives it out, a mouthful each, saying the names, and the children drink her brother's water and her mother's mark goes from hand to hand down the carts. When it is empty she rolls it up and puts it in the bottom of her kit. "He would have laughed," she says. "He always said I would come home thirsty."`, ch:[{t:'On.', go:'b2_dusk5'}]}),
   b2_sealskin_kept:()=>({sp:'Haddat', txt:`She stoppers it, and hangs it on her belt beside her own tin cup, and does not drink from it. "If I see him," she says. "At the next river. Or the one after." She looks north, where the dust is. "I will give him back his water, and tell him the column did not need it." She knows it is a lie. She will tell it anyway. It is a good lie.`, ch:[{t:'On.', go:'b2_dusk5'}]}),
 
-  b2_dusk5:()=>({sp:'The Nenoth · dusk', scene:'b2_dry_march', txt:
+  b2_dusk5:()=>({sp:'The Nenoth · dusk', scene:'b2_nenoth_dusk', txt:
 `Dusk. The column stops where it stops, on the clay, and makes a camp with nothing to make it with: no wood, no water, the carts in a ring and the Wickans' horses inside it and the Seventh round the outside, facing out. Fires of dung and broken cart. The Fist's tent in the middle.
 
 Nobody sings. Nobody has sung since the forest.

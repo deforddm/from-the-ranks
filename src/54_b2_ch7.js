@@ -54,7 +54,7 @@ GLOSSX.dg.push(
 
 const B2CH7 = {
   title:'Aren Way', number:'Seven',
-  intro:{loc:'Balahn', sub:'Dusk · where Aren Way begins', scene:'b2_aren_walls', cap:'A raised road going away west between old mounds, and at the end of it, on the sea-light, the walls of Aren.',
+  intro:{loc:'Balahn', sub:'Dusk · where Aren Way begins', scene:'b2_balahn', cap:'A raised road going away west between old mounds, and at the end of it, on the sea-light, the walls of Aren.',
     paras:[
 `Three days from the Geleen the grass gives out, and the Kherahn Dhobri bring the column down off the plain into Balahn and stop there, the way a river stops at the sea. Balahn is mud walls and goats and a well with a chain and no bucket. Nobody in it has ever seen so many people. Nobody in the column has ever been so glad of mud.`,
 `Aren Way begins at Balahn's last wall: a raised road, paved once, running west for three leagues between barrows older than the paving, straight as a lance. From the top of the wall you can see the end of it. A smudge on the sea-light, and towers. Aren.`,
@@ -259,7 +259,14 @@ He looks at you. He looks at the bar. ${b2In('tangle') ? 'Tangle hums four notes
     b2_aren_walls:{loc:'Aren Way', sub:'The walls of Aren', cap:'Aren\'s walls from the road, high and pale, with people running toward them along the raised way between the barrows.', amb:'wind'},
     b2_barrow:{loc:'The Barrow', sub:'Aren Way · within sight of the walls', cap:'A mound on the road, seen from far off: a dark knot on top of it, a sea round it, and over it the crows in a cloud.', amb:'wind'},
     b2_aren_way:{loc:'Aren Way', sub:'Dawn', cap:'The road at dawn, going away north between the barrows, and along it, small with distance, shapes standing upright that are not trees.', amb:'dusk'},
+    b2_aren_way_dusk:{loc:'Aren Way', sub:'Dusk', cap:'The road going away north between the barrows into the last of the light, and along it, small with distance, shapes standing upright that are not trees.', amb:'dusk'},
     b2_harbour:{loc:'Aren', sub:'The harbour', cap:'Ships at anchor in a grey harbour, more ships than any harbour should hold, and none of them going anywhere.', amb:'lake'},
+    b2_balahn:{loc:'Balahn', sub:'Dusk · where Aren Way begins', cap:'Mud walls swamped in a sea of carts and cookfires, the raised road going away west between the barrows, and at the end of it, small and pale, Aren.', amb:'dusk'},
+    b2_aren_sortie:{loc:'Aren', sub:'The north wall · early light', cap:'The army of Aren going out up the Way in a long bright column, its dust going up gold, and far off past the barrows, Dom\'s people running.', amb:'wind'},
+    b2_aren_noon:{loc:'Aren', sub:'The north wall · noon', cap:'The Way empty in the white heat, the Barrow empty, and far off where the hills fold, a smudge with a ring of specks round it.', amb:'wind'},
+    b2_aren_city_day:{loc:'Aren', sub:'Inside the north gate', cap:'Shuttered houses and a fountain running, the High Fist\'s army rank on rank in clean kit, and the column coming in through the gate past it.', amb:'plain'},
+    b2_aren_city_dusk:{loc:'Aren', sub:'The square under the north tower', cap:'Lanterns on poles and lamps behind the shutters, and in the square the Red Blades drawn up inside a ring of provosts.', amb:'night'},
+    b2_aren_city_dawn:{loc:'Aren', sub:'The muster · dawn', cap:'The street below the north gate full of the army of Aren in clean kit, the cavalry at the gate, and a man in gilt on a white horse.', amb:'plain'},
     b2_finale:{loc:'Aren Way', sub:'After', cap:'Crows over an empty barrow, and the city behind it, very quiet.', amb:'dusk'} },
 
   end:{
@@ -305,7 +312,7 @@ He looks at you. He looks at the bar. ${b2In('tangle') ? 'Tangle hums four notes
 /* ---------------- Balahn: the night before the run ---------------- */
 Object.assign(B2CH7.dlg, {
   b2_c7_start:()=>{ const rg = b2Rearguard();
-    return {sp:'Balahn', scene:'b2_aren_walls', fx:()=>{ if (!S.f.b2_c7Start) { S.f.b2_c7Start = 1; S.f.b2_drank = 0; S.f.b2_drankSkip = 0; S.f.b2_dry = 0; } }, txt:
+    return {sp:'Balahn', scene:'b2_balahn', fx:()=>{ if (!S.f.b2_c7Start) { S.f.b2_c7Start = 1; S.f.b2_drank = 0; S.f.b2_drankSkip = 0; S.f.b2_dry = 0; } }, txt:
 `The column comes down into Balahn at dusk and fills it, and overfills it, and spreads out round it in the scrub until the village is an island of mud walls in a sea of carts.
 
 The Kherahn will go home in the morning. They have brought the column to where the road begins, which is what they were paid for, and they have fed it, which they were not. Tomorrow it is three leagues of Aren Way, and the gate, and whatever is behind the gate.
@@ -574,7 +581,7 @@ const B2_BAREND7 = {
   redblade:()=>`Ramin holds a street's width of the mound on foot, the way the Red Blades were drilled to when the horses would not, until there is no street left to hold. He is the last red anyone sees on the Barrow.`,
 };
 Object.assign(B2CH7.dlg, {
-  b2_aren_arrive:()=>({sp:'Aren', scene:'b2_aren_walls', fx:()=>{ if (!S.f.b2_ph7) S.f.b2_ph7 = 1; }, txt:
+  b2_aren_arrive:()=>({sp:'Aren', scene:'b2_aren_city_day', fx:()=>{ if (!S.f.b2_ph7) S.f.b2_ph7 = 1; }, txt:
 `Inside the gate Aren is a city that has never been hungry. Clean streets. Fountains. Shops with their shutters down, and faces at the shutters. And soldiers: the High Fist's army, in clean kit, in rank after rank, ten thousand of them, who have stood behind these walls all summer and have not marched a step.
 
 They look at the column coming in through the gate the way you would look at something that walked up out of the sea.
@@ -752,7 +759,7 @@ Hackle comes up the wall stair on three legs and lies down across your feet, the
 /* the squad's own, after the Barrow, one line each (S.f.b2_sq7[id]) */
 const b2Sq7 = id => { S.f.b2_sq7 ??= {}; S.f.b2_sq7[id] = 1; };
 Object.assign(B2CH7.dlg, {
-  b2_evening:()=>({sp:'Aren · dusk', scene:'b2_aren_walls', fx:()=>{ if (b2Ph7() < 2) S.f.b2_ph7 = 2; }, txt:
+  b2_evening:()=>({sp:'Aren · dusk', scene:'b2_aren_city_dusk', fx:()=>{ if (b2Ph7() < 2) S.f.b2_ph7 = 2; }, txt:
 `The walls empty slowly. Nobody says anything on the stairs. Ten thousand men go down off the walls of Aren and back to their billets in the dusk, and not one of them looks at another.
 
 In the square below the north tower the Red Blades are drawn up in the lantern-light, all of them, Aren's company with its horses and what came in with the column on foot, and round them in a ring are the High Fist's provosts. An officer reads something off a paper. The Red Blades' commander listens without moving. Then he unbuckles his sword-belt, and holds it out, and every Red Blade in the square does the same.
@@ -889,7 +896,7 @@ ${w ? NAME(w) : 'The wounded one'} stands up and walks round the well, slowly, t
 
 /* ---------------- the sortie: dawn, the basin, the road ---------------- */
 Object.assign(B2CH7.dlg, {
-  b2_muster:()=>({sp:'The muster · dawn', scene:'b2_aren_walls', txt:
+  b2_muster:()=>({sp:'The muster · dawn', scene:'b2_aren_city_dawn', txt:
 `Dawn, and the whole army of Aren in the streets below the north gate, rank on rank in clean kit, ten thousand, with the cavalry at the front and the High Fist on a white horse in gilded armour, and the priest beside him on a mule.
 
 There was trouble in the High Fist's hall in the night. Everybody has heard some of it. The historian was brought before the High Fist to give his report, and Lord Nethpara laughed at him, and the historian killed Lord Nethpara with his foot, there, in front of everyone. And then the historian said something to the High Fist about the priest. A word. Nobody you ask knows what it was.
@@ -910,7 +917,7 @@ The historian's horse comes past you in the press, with the provosts either side
 
 There is nothing to do. There is nobody to stop. There is the gate, opening, and ten thousand men, and one historian on a bad horse among them.`,
     ch:[{t:'Let him go.', go:'b2_sortie'}]}),
-  b2_sortie:()=>({sp:'The north wall', scene:'b2_aren_walls', fx:()=>{ S.f.b2_sortieSeen = 1; }, txt:
+  b2_sortie:()=>({sp:'The north wall', scene:'b2_aren_sortie', fx:()=>{ S.f.b2_sortieSeen = 1; }, txt:
 `From the wall it is beautiful, which is the worst of it.
 
 The army of Aren goes out of the north gate in the early light, rank on rank, banners, the cavalry first in a long bright column, and along Aren Way, and the dust goes up gold. On the road ahead of it, among the barrows, Dom's army is lying where it fell asleep, drunk on yesterday, and it wakes, and it sees ten thousand coming, and it breaks.
@@ -929,7 +936,7 @@ ${b2In('tangle') ? '"That was too easy," Tangle says. Nobody answers him.' : 'No
         {t:'Point him at the tower.', go:'b2_keneb3c'}]}),
   b2_keneb3b:()=>({sp:'The tower', txt:`You take him up the tower stair through the Guard, two steps at a time. Blistig lowers the glass. Keneb says something to him with his back to you, low and fast, and Blistig goes very still, the way a man goes still when the floor moves. You do not hear the word. You are not meant to. Blistig looks out at the empty road a long moment, and then he says, quite quietly: "Double the guard on every gate. Nobody opens anything. Nobody. Whoever asks." And then, to Keneb: "You were right to come."`, ch:[{t:'On.', go:'b2_basin'}]}),
   b2_keneb3c:()=>({sp:'The tower', txt:`He goes. You watch him go up the tower stair through the Guard, and say something to Blistig with his back to the wall, low and fast, and Blistig lower the glass and go very still. Then Blistig's voice, carrying: "Double the guard on every gate. Nobody opens anything. Nobody. Whoever asks."`, ch:[{t:'On.', go:'b2_basin'}]}),
-  b2_basin:()=>({sp:'The north wall · noon', scene:'b2_aren_walls', txt:
+  b2_basin:()=>({sp:'The north wall · noon', scene:'b2_aren_noon', txt:
 `Noon. Blistig lets the squad have the glass, one at a time, because he cannot stand to hold it any more.
 
 Far out, at the very edge of it, where the hills fold, there is a basin, and in the basin is the army of Aren, ten thousand, standing in its ranks. There is no cavalry with it now. And on every hill round the basin, all the way round, in a ring that closes, there are horsemen.
@@ -940,7 +947,7 @@ You watch for an hour. Nothing happens, and then a thing happens: along the fron
 
 "He's surrendered," Blistig says. "The High Fist. On the priest's say, I'll lay money." He takes the glass back. He looks a long time. Then he lowers it. "There," he says, very flat. "A warchief's just taken his head off. With a tulwar. On his white horse." He gives the glass to nobody. "That was the High Fist."`,
     ch:[{t:'On.', go:'b2_way_dead'}]}),
-  b2_way_dead:()=>({sp:'Aren Way · dusk', scene:'b2_aren_way', fx:()=>{ if (b2Ph7() < 3) { S.f.b2_ph7 = 3; S.f.b2_wayDead = 1; } }, txt:
+  b2_way_dead:()=>({sp:'Aren Way · dusk', scene:'b2_aren_way_dusk', fx:()=>{ if (b2Ph7() < 3) { S.f.b2_ph7 = 3; S.f.b2_wayDead = 1; } }, txt:
 `They bring them back along the road in the afternoon, Dom's army, ten thousand men with nothing in their hands, walking.
 
 What happens to them on Aren Way you see from the wall, at a great distance, for the rest of that day and the night and the next morning, and there is nothing to be done about it, and every man on the wall knows it. The squad does not look away. It does not look for long, either. Nobody could.

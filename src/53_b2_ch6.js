@@ -71,7 +71,7 @@ GLOSSX.dg.push(
 
 const B2CH6 = {
   title:'Sanimon', number:'Six',
-  intro:{loc:'The hills above Sanimon', sub:'Night · every tribe on the Odhan at the same water', scene:'b2_odhan_dusk', cap:'Hills at the end of the Nenoth, and fires on every ridge of them, more fires than there are stars.',
+  intro:{loc:'The hills above Sanimon', sub:'Night · every tribe on the Odhan at the same water', scene:'b2_sanimon_hills', cap:'Hills at the end of the Nenoth, and fires on every ridge of them, more fires than there are stars.',
     paras:[
 `The hills at the end of the Nenoth have water in them. The guides were right this time. Everybody was right: the Bhilard, the Tregyn, the Can'eld, Korbolo Dom. Everybody came.`,
 `By the second night the Seventh is camped in a fold of the hills with its back to a spring, and across the valley Dom's tribes have their fires, and on every ridge round both, in a ring that goes all the way round and closes, there are more fires than anyone can count.`,
@@ -258,6 +258,9 @@ Sathi is already running. "The horses," she says, over her shoulder, as if that 
     b2_sash:{name:'A red sash', slot:'trinket', who:null, stat:{might:1}, line:'A Red Blade\'s red sash, folded, kept for the day there was a horse to ride in it. Ramin gave it to the sergeant on the Geleen Plain, still folded.'} },
 
   scenes:{
+    b2_sanimon_hills:{loc:'The hills above Sanimon', sub:'Night', cap:'Hills at the end of the Nenoth, fold on fold, and a fire on every ridge of them, more fires than there are stars.', amb:'night'},
+    b2_sanimon_dawn:{loc:'Sanimon', sub:'Dawn · the valley', cap:'The half-dark, the Seventh going down the slope with its shields up, and in the valley the Tregyn getting out of their blankets.', amb:'wind'},
+    b2_dojal:{loc:'Dojal Spring', sub:'Noon', cap:'A pool among tamarisks in a fold of the plain, the first green since the hills, and the column crowding down to it.', amb:'plain'},
     b2_sanimon:{loc:'Sanimon', sub:'The Khundryl', cap:'A sea of riders coming down off the ridges, and the army they were thought to belong to turning to look at them, too late.', amb:'wind'},
     b2_geleen:{loc:'The Geleen Plain', sub:'Dusk · the split', cap:'Grass at dusk, one long column going on into the west, and a smaller, darker line of riders turning back the way it came.', amb:'dusk'},
     b2_kherahn:{loc:'The Geleen Plain', sub:'The Kherahn Dhobri', cap:'Old men and women by a fire, grave as judges, and between them and the Fist, chests of silver, open.', amb:'plain'} },
@@ -300,7 +303,7 @@ Sathi is already running. "The horses," she says, over her shoulder, as if that 
 
 /* ---------------- the hills above Sanimon: the night before ---------------- */
 Object.assign(B2CH6.dlg, {
-  b2_c6_start:()=>({sp:'The hills above Sanimon', scene:'b2_odhan_dusk', fx:()=>{ if (!S.f.b2_c6Start) { S.f.b2_c6Start = 1; S.f.b2_drankSkip = 0; S.f.b2_dry = 0; chain(0, -1, 'The last day on the Nenoth'); } }, txt:
+  b2_c6_start:()=>({sp:'The hills above Sanimon', scene:'b2_sanimon_hills', fx:()=>{ if (!S.f.b2_c6Start) { S.f.b2_c6Start = 1; S.f.b2_drankSkip = 0; S.f.b2_dry = 0; chain(0, -1, 'The last day on the Nenoth'); } }, txt:
 `The last day on the Nenoth takes one more of the stretch, an old man from the potters' street who sat down on the clay at noon to rest and was resting at dusk. ${b2In('haddat') ? 'Haddat has his name.' : 'You have his name.'} Then the clay turns to stone, and the stone to hills, and in the hills there is water, real water, coming out of the rock in a seep as thin as a thread.
 
 There is also everyone else.
@@ -427,7 +430,7 @@ The Seventh is forming up below the camp in silence.`,
         {t:'Not yet.', go:()=>startExplore()}]}),
 
   /* ---- dawn: into the Tregyn ---- */
-  b2_sdawn:()=>({sp:'Dawn · Sanimon', scene:'b2_odhan_day', txt:
+  b2_sdawn:()=>({sp:'Dawn · Sanimon', scene:'b2_sanimon_dawn', txt:
 `The Seventh goes down the slope in the half-dark with its shields up and nobody speaking, and the Wickans go round on either side at a walk, and at the bottom of the valley the Tregyn are getting out of their blankets.
 
 It will be noon before this is done, one way or the other. Everybody knows it. Anybody in iron will be an oven by then. ${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).length ? `${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).join(' and ')} ${b2In('haddat') && b2In('redblade') ? 'are' : 'is'} in iron.` : ''}${b2In('warlock') ? ` Keth is in hide, and walks at the back of the squad with his rattle going very softly, listening to the ground under the Tregyn. His face says it is not telling him anything good.` : ''}
@@ -435,7 +438,7 @@ It will be noon before this is done, one way or the other. Everybody knows it. A
 ${chainW() > 0 ? `There are ${numw(chainW())} skin${chainW() === 1 ? '' : 's'} on the cart.` : 'There is no water on the cart.'}`,
     ch:[{t:'Drink first, all of you. One skin.', tag:'1 water', req:()=>chainW() > 0, fx:()=>{ b2Drink('b2_sanimon'); }, go:'b2_sdawn2'},
         {t:'No. Keep it for the stretch. Into them.', go:'b2_sdawn2'}]}),
-  b2_sdawn2:()=>({sp:'Dawn · Sanimon', scene:'b2_odhan_day', txt:
+  b2_sdawn2:()=>({sp:'Dawn · Sanimon', scene:'b2_sanimon_dawn', txt:
 `The Fist's horn. The Seventh starts to run.`,
     ch:[{t:'Into the Tregyn.', go:()=>startBattle('b2_sanimon', {surprise:'p'})},
         {t:'Tangle: a sharper into their blankets first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; },
@@ -667,7 +670,7 @@ ${S.f.b2_retreatLost ? `The stretch loses ${numw(S.f.b2_retreatLost)} in the for
     html:chainHTML('The running retreat · forty hours'),
     ch:[{t:'Noon of the second day.', go:()=>{ startExplore('b2_dojal'); talk('b2_dojal_arrive'); }}]}),
 
-  b2_dojal_arrive:()=>({sp:'Dojal Spring · noon', scene:'b2_odhan_day', txt:
+  b2_dojal_arrive:()=>({sp:'Dojal Spring · noon', scene:'b2_dojal', txt:
 `Dojal Spring: a pool among tamarisks in a fold of the plain, green, the first green since the hills. The column's head reaches it at noon of the second day and the whole Chain smells it at once, and the carts start to run.
 
 So do Dom's people. A company of his on foot, pikes and bows, and Can'eld who escaped the Khundryl, coming down on the far side of the spring to take it, or foul it, or only to stand on it while the column dies of thirst in sight of it.

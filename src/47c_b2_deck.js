@@ -70,7 +70,7 @@ const B2RD_DECK = {
 };
 /* per chapter: the scene, where it is laid out, where the start node was going (back/backT), and the reader's own words */
 const B2DECK = {
-  1:{scene:'b2_odhan_day', on:'the tailboard of a water-cart', back:()=>{ startExplore(); talk('b2_march'); }, backT:'Back to the wagons.', // b2_march is a map node: back on the map, not a backdrop
+  1:{scene:'b2_camp_dawn', on:'the tailboard of a water-cart', back:()=>{ startExplore(); talk('b2_march'); }, backT:'Back to the wagons.', // b2_march is a map node: back on the map, not a backdrop
     set:'First light, grey over the Odhan, and the wagons loading.',
     marrow:`"Soliel's priests read for the sick before they put a hand on them," she says. "I read for the squad before it walks. Sit, child. One card. For the road."`,
     yedda:`"My husband never let me read for him," she says. "Said it was asking for trouble. He's dead, so." She shuffles. "One card. For the road."`,
@@ -95,12 +95,12 @@ const B2DECK = {
     marrow:`She is sitting on a root with her back against a trunk, the first thing she has leaned on in weeks. "Trees," she says. "I'd forgotten. One card, child, while I remember how to sit in the shade."`,
     yedda:`"Leaf-litter," she says, scuffing it. "You can't read on leaf-litter. The cards slide." She reads on it anyway.`,
     kanese:`He has found a flat place by the track and wiped it with his sleeve. "A forest for the dead," he says. "We ask them, then. One card."`},
-  6:{scene:'b2_odhan_dusk', on:'a shelf of rock above the seep', back:()=>startExplore(), backT:'Look round.',
+  6:{scene:'b2_sanimon_hills', on:'a shelf of rock above the seep', back:()=>startExplore(), backT:'Look round.',
     set:'The halt in the hills above Sanimon, with fires on every ridge for a league round.',
     marrow:`"Everyone's here," she says, looking at the ridges. "Every army in Seven Cities. Let's see who the Deck thinks is winning."`,
     yedda:`"Water out of a rock," she says. "My husband would have sold them rope to let a bucket down into it." She shuffles. "One card."`,
     kanese:`He is sitting by the seep, watching it fill a cup a drop at a time. "Long wait," he says. "Long enough for a card."`},
-  7:{scene:'b2_aren_walls', on:'a cloth against Balahn\'s mud wall', back:()=>startExplore(), backT:'Look round.',
+  7:{scene:'b2_balahn', on:'a cloth against Balahn\'s mud wall', back:()=>startExplore(), backT:'Look round.',
     set:'Dusk in Balahn, three leagues from Aren, and the village an island of mud walls in a sea of carts.',
     marrow:`"Three leagues," she says. "I've read for this squad since Hissar, child. Let me read for the end of it."`,
     yedda:`"Aren tomorrow," she says. "I said in Hissar I'd read for you at the gate. This is near enough."`,
