@@ -98,9 +98,10 @@ function drawInterior(cv, kind, t){
 
 /* the Rhivi Plain (Chapter 2) and the Gadrobi Hills (Chapter 5): day, dusk and night; the light in the west once it rises; the rent on the far hill */
 function paintPlain(x, W, H, hills, tod, hz){
-  const night = tod === 'night', dusk = tod === 'dusk';
-  x.fillStyle = vgrad(x, 0, hz, night ? [[0,'#030309'],[1,'#0e0d18']] : dusk ? [[0,'#140e1a'],[.45,'#3e1e24'],[.8,'#9a4a2a'],[1,'#e08a44']] : [[0,'#2a3040'],[.6,'#6e6e68'],[1,'#b0a68c']]); x.fillRect(0,0,W,hz + 2);
-  if (night) { for (let i=0;i<110;i++){ const sx = hash(i,41)*W, sy = Math.pow(hash(i,42), 1.3)*hz; if (hills && sx > W*.52 && sx < W*.9 && sy > hz*.35) continue; x.fillStyle = `rgba(225,225,245,${.25 + hash(i,43)*.55})`; x.fillRect(sx, sy, hash(i,44) > .9 ? 1.6 : 1, hash(i,44) > .9 ? 1.6 : 1); } // no stars over the barrow
+  const grey = tod === 'grey', night = tod === 'night' || grey, dusk = tod === 'dusk'; // grey: the hour before dawn, drawn as the night with the east going grey
+  x.fillStyle = vgrad(x, 0, hz, grey ? [[0,'#0a0b14'],[.55,'#262834'],[1,'#5e5e66']] : night ? [[0,'#030309'],[1,'#0e0d18']] : dusk ? [[0,'#140e1a'],[.45,'#3e1e24'],[.8,'#9a4a2a'],[1,'#e08a44']] : [[0,'#2a3040'],[.6,'#6e6e68'],[1,'#b0a68c']]); x.fillRect(0,0,W,hz + 2);
+  if (grey) { for (let i=0;i<5;i++) glow(x, W*(.5 + i*.13), hz, W*(.3 + i*.06), '#b4b0b8', .1 + i*.05); for (let i=0;i<40;i++){ const sx = hash(i,41)*W*.6, sy = Math.pow(hash(i,42), 1.3)*hz*.6; x.fillStyle = `rgba(225,225,245,${.12 + hash(i,43)*.3})`; x.fillRect(sx, sy, 1, 1); } } // grey in the east, the last stars going out in the west
+  else if (night) { for (let i=0;i<110;i++){ const sx = hash(i,41)*W, sy = Math.pow(hash(i,42), 1.3)*hz; if (hills && sx > W*.52 && sx < W*.9 && sy > hz*.35) continue; x.fillStyle = `rgba(225,225,245,${.25 + hash(i,43)*.55})`; x.fillRect(sx, sy, hash(i,44) > .9 ? 1.6 : 1, hash(i,44) > .9 ? 1.6 : 1); } // no stars over the barrow
     x.fillStyle = 'rgba(160,160,200,.05)'; x.beginPath(); x.ellipse(W*.3, hz*.45, W*.5, hz*.12, -.3, 0, 7); x.fill(); } // the smear of the sky's river
   else if (dusk) { const sx = W*.84, sy = hz - H*.035; glow(x, sx, sy, W*.5, '#ff9a50', .4); ell(x, sx, sy, 16, 16, '#ffc890'); glow(x, sx, sy, 30, '#fff0c0', .5);
     for (let i=0;i<5;i++) cloud(x, W*(.2 + hash(i,5)*.6), hz*(.3 + i*.13), W*(.26 + hash(i,6)*.24), 3 + i, i%2 ? '#e07848' : '#b85a4a', .16); } // cloud lit from below
@@ -118,32 +119,107 @@ function paintPlain(x, W, H, hills, tod, hz){
   // the ground, grass all the way down
   x.fillStyle = vgrad(x, hz, H, night ? [[0,'#141a10'],[1,'#060805']] : dusk ? [[0,'#4a3a22'],[1,'#1e1a10']] : [[0,'#56603a'],[1,'#26301a']]); x.fillRect(0, hz + (hills ? H*.14 : 1), W, H);
   if (hills) { x.fillStyle = night ? '#0c100a' : dusk ? '#3a2c1a' : '#4a5030'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, hz + H*.2); x.quadraticCurveTo(W*.3, hz + H*.12, W*.6, hz + H*.2); x.quadraticCurveTo(W*.85, hz + H*.26, W, hz + H*.18); x.lineTo(W, H); x.fill(); }
+  if (grey) { x.fillStyle = 'rgba(150,150,160,.07)'; x.fillRect(0, hz - 2, W, H - hz + 2); }
   x.lineWidth = 1; for (let i=0;i<260;i++){ const y0 = hz + (hills ? H*.2 : 3), yy = y0 + Math.pow(hash(i,52), .8)*(H - y0), px = hash(i,51)*W, d = (yy - y0)/(H - y0), h = 2 + d*9 + hash(i,53)*4;
     x.strokeStyle = night ? `rgba(70,90,55,${.2 + d*.25})` : dusk ? `rgba(${150 + d*40},${110 + d*20},60,${.2 + d*.3})` : `rgba(${120 + hash(i,54)*50},${140 + hash(i,55)*30},80,${.25 + d*.35})`; x.beginPath(); x.moveTo(px, yy); x.quadraticCurveTo(px + 1, yy - h*.6, px + (hash(i,56) - .5)*4, yy - h); x.stroke(); }
   if (!hills) { const wx = W*.74, wy = hz + H*.07; ell(x, wx + 30, wy + 26, 40, 5, 'rgba(0,0,0,.35)'); x.fillStyle = '#2a2018'; x.fillRect(wx, wy + 8, 58, 16); x.fillStyle = night ? '#2a2620' : '#8a7e66'; x.beginPath(); x.moveTo(wx - 2, wy + 9); x.quadraticCurveTo(wx + 29, wy - 14, wx + 60, wy + 9); x.fill(); x.strokeStyle = 'rgba(0,0,0,.35)'; for (let i=1;i<5;i++){ x.beginPath(); x.moveTo(wx + i*12, wy + 9); x.quadraticCurveTo(wx + i*12, wy - 4, wx + i*12 + 1, wy - 2); x.stroke(); } // the wagon, its canvas hooped
     [[wx + 10],[wx + 48]].forEach(([cx]) => { ell(x, cx, wy + 26, 7, 7, '#15100a'); x.strokeStyle = '#3a2c1c'; x.beginPath(); x.arc(cx, wy + 26, 5, 0, 7); x.stroke(); }); x.fillStyle = '#1a140e'; x.fillRect(wx + 58, wy + 18, 18, 2); }
 }
+/* the Book One plain and hills variants, by who is in them:
+   plain_andii: the fourth camp at night, the fire lit, three Tiste Andii standing at the edge of its light (Chapter 2, the road);
+   plain_grey / plain_grey_crone: the hour before dawn, the fire dead, and (crone) the Great Raven on the wagon's tailboard;
+   plain_glass / plain_glass_crone: the burned circle and the glass in it, the Rhivi on its far edge, and (crone) the Raven on the big one's shoulder;
+   plain_grey_glass: the glass again in the grey before dawn, with nobody left by it;
+   hills_puppet: the puppet on the next crest; hills_rent: and the rent torn down the hillside under it; hills_hounds: and the Hounds of Shadow
+   out of the rent and running up the slope at it; hills_kill: the rent still open, the crest empty, and on the far hill against the stars the
+   Hounds standing over what is left; hills_rake: the fold, a Hound dropped, a Hound across Paran, and the tall man over them with the black sword (Chapter 5) */
+/* a Hound of Shadow for the backdrops, standing on (x, y): lit along the back with shadow-light so it reads on a night hillside; dead: lying flat, eyes out;
+   lift: its head up, looking; eye: how bright the lamps are */
+function shadowHound(ctx, x, y, s, t, o = {}){ const g = o.still || o.dead ? 0 : Math.sin(t/240 + (o.phase || 0)), a = o.alpha ?? 1; if (a <= 0) return;
+  ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); if (o.rot) ctx.rotate(o.rot); ctx.scale((o.dir || 1)*s, s*(o.dead ? .62 : 1)); ell(ctx, 0, 0, 26, 4, 'rgba(0,0,0,.55)'); glow(ctx, 0, -10, 34, '#7a66c8', .22);
+  if (!o.dead) for (let i=0;i<3;i++){ const k = ((t/1800 + i/3 + (o.phase || 0)*.1) % 1); ell(ctx, -18 - k*10, -12 - k*10, 3 + k*5, 1.4 + k*2.4, `rgba(60,46,110,${.3*(1 - k)})`); } // shadow smoking off its back
+  if (o.lift) ctx.rotate(-.12);
+  drawHound(ctx, {gait:g, body:o.dead ? '#322e3c' : '#363042', rim:'#dcd0ff', eyeA: o.dead ? 0 : (o.eye || 1)*(.85 + Math.sin(t/300 + (o.phase || 0))*.15)}); ctx.restore(); }
+/* a Tiste Andii standing with the sword on its back and its hands empty (the figure sprite holds its sword drawn) */
+function andiiBack(ctx, x, y, s, t, o = {}){ ctx.save(); ctx.translate(x, y); ctx.scale((o.dir || 1)*s, s); ctx.globalAlpha = o.alpha ?? 1;
+  ell(ctx, 0, 13, 9, 3, 'rgba(0,0,0,.5)');
+  ctx.strokeStyle = '#0c0b10'; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(-7, 9); ctx.lineTo(5.4, -14); ctx.stroke(); // the scabbard, across the back
+  ctx.strokeStyle = '#4a4454'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(5, -13.4); ctx.lineTo(8.4, -19.4); ctx.moveTo(3.2, -15.8); ctx.lineTo(7.6, -12.6); ctx.stroke(); ell(ctx, 8.7, -19.9, 1.1, 1.1, '#7a7488'); // the hilt over the shoulder
+  ctx.fillStyle = '#0e0d12'; ctx.fillRect(-4.5, 5, 3.4, 8); ctx.fillRect(1.1, 5, 3.4, 8);
+  const g = ctx.createLinearGradient(-7, -8, 7, 8); g.addColorStop(0, '#1a1a26'); g.addColorStop(1, '#07070c'); poly(ctx, [[-6.5,-6],[6.5,-6],[8.5,13],[-8.5,13]], g);
+  ell(ctx, -7.4, 4.2, 1.5, 1.7, '#4a4a58'); ell(ctx, 7.4, 4.2, 1.5, 1.7, '#4a4a58'); // the hands, open, empty
+  ell(ctx, 0, -12, 4.4, 4.6, '#5a5a66'); ctx.fillStyle = '#d8d8e0'; ctx.beginPath(); ctx.moveTo(-5, -14); ctx.quadraticCurveTo(0, -18, 5, -14); ctx.lineTo(6, 2); ctx.lineTo(4, 2); ctx.lineTo(4, -10); ctx.lineTo(-4, -10); ctx.lineTo(-4, 2); ctx.lineTo(-6, 2); ctx.fill(); // silver hair, unbound
+  ctx.fillStyle = 'rgba(200,200,240,.6)'; ctx.fillRect(1, -11.6, 1.5, 1); ctx.fillRect(-2.5, -11.6, 1.5, 1); ctx.restore(); }
+const PLAIN_NIGHT = ['plain_andii','plain_glass','plain_glass_crone','hills_hounds','hills_kill','hills_rake'];
 function drawPlain(cv, kind, t){
-  // hills_puppet: the night hills with the puppet on the next crest; hills_rent: and the rent torn down the hillside under it (Chapter 5)
-  const {ctx, W, H} = sceneFit(cv), hills = kind.startsWith('hills'), puppet = kind === 'hills_puppet' || kind === 'hills_rent', tod = kind.endsWith('dusk') ? 'dusk' : kind.endsWith('night') || puppet ? 'night' : 'day', hz = H*(hills ? .44 : .58), mo = REDUCE() ? 0 : 1;
+  const {ctx, W, H} = sceneFit(cv), hills = kind.startsWith('hills'), puppet = ['hills_puppet','hills_rent','hills_hounds'].includes(kind), rent = ['hills_rent','hills_hounds','hills_kill','hills_rake'].includes(kind),
+    tod = kind.endsWith('dusk') ? 'dusk' : kind.startsWith('plain_grey') ? 'grey' : kind.endsWith('night') || puppet || PLAIN_NIGHT.includes(kind) ? 'night' : 'day', hz = H*(hills ? .44 : .58), mo = REDUCE() ? 0 : 1, fl = .85 + (Math.sin(t/110)*.08 + Math.sin(t/41)*.05)*mo;
   ctx.drawImage(sceneLayer('plain:' + (hills ? 'hills_' : 'plain_') + tod, W, H, (x, W, H) => paintPlain(x, W, H, hills, tod, hz)), 0, 0, W, H);
   if (!hills && tod === 'night' && S && S.f && S.f.c2_light && !S.f.c2_lightOut && !S.f.c2_lightDone) { const lx = W*.1, f = .85 + (Math.sin(t/140)*.08 + Math.sin(t/53)*.05)*mo; glow(ctx, lx, hz, W*.5, '#ffb35a', .35*f); const g = ctx.createLinearGradient(lx - 12, 0, lx + 12, 0); g.addColorStop(0,'rgba(255,200,120,0)'); g.addColorStop(.5,`rgba(255,230,180,${.55*f})`); g.addColorStop(1,'rgba(255,200,120,0)'); ctx.fillStyle = g; ctx.fillRect(lx - 12, hz*.1, 24, hz*.9); } // the light in the west
   if (hills && tod === 'dusk') for (let i=0;i<4;i++){ const k = ((t/4200*mo + i/4) % 1); ell(ctx, W*.64 + 4 + k*18, hz + H*.08 + 8 - k*22, 5 + k*16, 2 + k*5, `rgba(200,220,235,${.16*(1 - k)})`); } // cold breathing out of the opened barrow
-  if (puppet) { const hx = W*.72, hy = hz - 2;
-    if (kind === 'hills_rent') { // the rent: a slit of grey down the hillside from the puppet's feet to the bottom of the fold, pulling
-      const top = [hx - 4, hy + 8], bot = [W*.5, H*.9], mx = (top[0] + bot[0])/2, my = (top[1] + bot[1])/2, wd = 18 + Math.sin(t/300)*2.5*mo, dx = bot[0] - top[0], dy = bot[1] - top[1], dl = Math.hypot(dx, dy), ux = -dy/dl, uy = dx/dl;
-      const lens = w => { ctx.beginPath(); ctx.moveTo(top[0], top[1]); ctx.quadraticCurveTo(mx + ux*w, my + uy*w, bot[0], bot[1]); ctx.quadraticCurveTo(mx - ux*w, my - uy*w, top[0], top[1]); ctx.closePath(); };
-      glow(ctx, mx, my, W*.32, '#b4b4c4', .18 + Math.sin(t/200)*.05*mo); glow(ctx, mx, my, 70, '#9a86e0', .16);
-      lens(wd); ctx.fillStyle = vgrad(ctx, top[1], bot[1], [[0,'rgba(150,150,162,.92)'],[.5,'rgba(104,104,118,.96)'],[1,'rgba(150,148,160,.92)']]); ctx.fill();
-      lens(wd*.5); ctx.fillStyle = 'rgba(70,70,82,.7)'; ctx.fill(); lens(wd*.2); ctx.fillStyle = 'rgba(40,40,50,.6)'; ctx.fill(); // grey, going away forever
-      ctx.save(); lens(wd); ctx.clip(); ctx.lineWidth = 1; for (let i=0;i<12;i++){ const k = ((t/1800*mo + i/12) % 1), u = .1 + hash(i,3)*.75, o = (hash(i,4) - .5)*wd*1.4*Math.sin(u*Math.PI), x0 = lerp(top[0], bot[0], u) + ux*o, y0 = lerp(top[1], bot[1], u) + uy*o, len = .05 + k*.06;
-        ctx.strokeStyle = `rgba(232,232,242,${.35*Math.sin(k*Math.PI)})`; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + dx*len, y0 + dy*len); ctx.stroke(); } ctx.restore(); // the wind in it
-      ctx.strokeStyle = `rgba(236,234,246,${.75 + Math.sin(t/90)*.15*mo})`; ctx.lineWidth = 1.6; lens(wd); ctx.stroke(); ctx.strokeStyle = 'rgba(236,234,246,.25)'; ctx.lineWidth = 4; lens(wd + 2); ctx.stroke(); // the edges, curled back and bright
-      for (let i=0;i<16;i++){ const k = ((t/(2400 + i*110)*mo + hash(i,7)) % 1), sx = hash(i,8)*W, sy = hz + H*.06 + hash(i,9)*(H*.94 - hz), e = k*k; ctx.fillStyle = `rgba(200,198,186,${.55*(1 - k)})`; ctx.fillRect(lerp(sx, mx + (hash(i,10) - .5)*16, e), lerp(sy, my + (hash(i,11) - .5)*50, e), 1.8, 1.3); } } // stones and grass, going in
-    drawFigure(ctx, 'hairlock', hx, hy, 1.2, t, {still:true, alpha:.7}); glow(ctx, hx, hy - 10, 26, '#e8d8c8', .06); } // on the next hill, the size of a child and not one
-  ctx.lineWidth = 1.2; for (let i=0;i<46;i++){ const px = hash(i,61)*W, yy = H*(.9 + hash(i,62)*.12), h = 10 + hash(i,63)*14, sw = Math.sin(t/900 + i*.7)*3*mo; ctx.strokeStyle = tod === 'night' ? 'rgba(40,56,34,.8)' : tod === 'dusk' ? 'rgba(90,64,34,.8)' : 'rgba(84,100,52,.85)'; ctx.beginPath(); ctx.moveTo(px, yy); ctx.quadraticCurveTo(px + sw*.3, yy - h*.6, px + sw, yy - h); ctx.stroke(); } // the near grass, moving
-  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(36, W*.6/sq.length), H*.93 + (i%2)*3, 2.1, t, {phase:i, dir:1}));
-  vign(ctx, W, H, tod === 'night' ? .82 : tod === 'dusk' ? .62 : .5);
+  const wx = W*.74, wy = hz + H*.07; // the wagon (painted in the layer), for the plain scenes
+  if (['plain_andii','plain_grey','plain_grey_crone'].includes(kind)) { const lit = kind === 'plain_andii', fx = W*(lit ? .5 : .58), fy = H*.86; // the fire: lit, or out and grey
+    if (lit) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy - 8, W*.34, '#e8923a', .3*fl); glow(ctx, fx, fy - 6, 40, '#ffc070', .3*fl); ctx.globalCompositeOperation = 'source-over'; }
+    ell(ctx, fx, fy + 2, 17, 4.6, lit ? '#2a1a10' : '#1c1a18'); for (let i=0;i<9;i++){ const a = i/9*Math.PI*2; ell(ctx, fx + Math.cos(a)*16, fy + 2 + Math.sin(a)*4.4, 3.2, 2, lit ? '#3a2c22' : '#3a3836'); }
+    ctx.strokeStyle = lit ? '#1a0e06' : '#2a2622'; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(fx - 10, fy + 2); ctx.lineTo(fx + 6, fy - 3); ctx.moveTo(fx + 9, fy + 3); ctx.lineTo(fx - 5, fy - 2); ctx.stroke();
+    if (lit) { poly(ctx, [[fx - 9, fy],[fx + 9, fy],[fx + Math.sin(t/90)*4*mo, fy - 28*fl]], '#ffb35a'); poly(ctx, [[fx - 5, fy],[fx + 5, fy],[fx + Math.sin(t/70)*2*mo, fy - 15*fl]], '#fff1c2');
+      for (let i=0;i<6;i++){ const k = ((t/1600*mo + i/6) % 1); ctx.fillStyle = `rgba(255,${150 + Math.round(hash(i,3)*60)},60,${.8*(1 - k)})`; ctx.fillRect(fx + Math.sin(t/300 + i)*10*k, fy - 10 - k*50, 1.6, 1.6); } }
+    else { ell(ctx, fx, fy, 9, 2.4, 'rgba(150,146,140,.35)'); for (let i=0;i<4;i++){ const k = ((t/5200*mo + i/4) % 1); ell(ctx, fx + 2 + k*14, fy - 4 - k*46, 2 + k*8, 1.4 + k*3, `rgba(170,168,172,${.14*(1 - k)})`); } } // ash, and one thread of smoke
+    if (lit) { // the three, at the edge of the firelight and no further: the one who asks half a pace in front of the younger one, who is looking west
+      [[W*.69, H*.84, 2.35, .9, 'young'],[W*.9, H*.85, 2.35, .9, ''],[W*.79, H*.89, 2.55, 1, 'first']].forEach(([x, y, s, a, who], i) => { glow(ctx, x, y - 14*s, 22*s, '#9a86e0', .07);
+        andiiBack(ctx, x, y, s, t, {dir:-1, alpha:a}); ctx.globalCompositeOperation = 'lighter'; glow(ctx, x - 6*s, y - 4*s, 12*s, '#e8923a', .12*fl); ctx.globalCompositeOperation = 'source-over'; // the firelight on the near side of them
+        ctx.fillStyle = `rgba(255,180,110,${.55*fl})`; ctx.fillRect(x - 2.4*s, y - 11.8*s, 1.3*s, .8*s); if (who !== 'young') ctx.fillRect(x + .8*s, y - 11.8*s, 1.3*s, .8*s); }); } // the dead fire's light, in their eyes
+    if (kind === 'plain_grey_crone') drawFigure(ctx, 'crone', wx + 5, wy + 9 - 7*1.5, 1.5, t, {still:true, dir:-1, air:true}); } // on the tailboard, as if it were a branch
+  if (kind.startsWith('plain_glass') || kind === 'plain_grey_glass') { const gx = W*.63, gy = H*.84, q = 1.3;
+    glow(ctx, gx, H*.22, W*.42, '#000000', tod === 'grey' ? .35 : .7); // a dark over it that the stars can't get into
+    ell(ctx, gx, gy, W*.38, H*.09, 'rgba(10,8,6,.45)'); ell(ctx, gx, gy, W*.34, H*.075, 'rgba(14,10,8,.92)'); // the burned circle
+    for (let i=0;i<44;i++){ const a = hash(i,81)*Math.PI*2, r = .8 + hash(i,82)*.25; ctx.strokeStyle = 'rgba(34,26,18,.85)'; ctx.lineWidth = 1; const px = gx + Math.cos(a)*W*.34*r, py = gy + Math.sin(a)*H*.075*r; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + (hash(i,83) - .5)*3, py - 3 - hash(i,84)*3); ctx.stroke(); } // stubble, burned to the root
+    glow(ctx, gx, gy, W*.2, '#7a6ab8', tod === 'grey' ? .06 : .12); ell(ctx, gx, gy, W*.16, H*.042, '#040306'); // the glass
+    ctx.globalAlpha = .9; ell(ctx, gx - 4*q, gy - 1, 24*q, 4.6*q, '#1a1822'); ell(ctx, gx - 31*q, gy - 2.4*q, 5.4*q, 4*q, '#1a1822'); ell(ctx, gx + 20*q, gy + 1, 9*q, 2.4*q, '#1a1822', .2); // the large one, on its back, the glass gone over it like water over a stone
+    ell(ctx, gx + 2*q, gy - 4.6*q, 9*q, 3*q, '#242030', -.1); ell(ctx, gx - 8*q, gy - 5.2*q, 3.2*q, 2.6*q, '#242030'); ctx.strokeStyle = '#242030'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(gx - 4*q, gy - 4*q); ctx.quadraticCurveTo(gx - 12*q, gy - 1*q, gx - 16*q, gy - 2.4*q); ctx.stroke(); ctx.globalAlpha = 1; // and the small one, with its arms round it
+    const sh = ctx.createLinearGradient(gx - W*.16, gy - H*.04, gx + W*.16, gy + H*.04); sh.addColorStop(0, 'rgba(150,140,200,0)'); sh.addColorStop(.42, 'rgba(170,160,220,.2)'); sh.addColorStop(.5, 'rgba(220,214,255,.32)'); sh.addColorStop(.58, 'rgba(170,160,220,.2)'); sh.addColorStop(1, 'rgba(150,140,200,0)'); ell(ctx, gx, gy - 1, W*.155, H*.038, sh); // starlight lying on it
+    ctx.strokeStyle = 'rgba(210,206,240,.4)'; ctx.lineWidth = .9; ctx.beginPath(); ctx.ellipse(gx, gy, W*.16, H*.042, 0, Math.PI*1.05, Math.PI*1.9); ctx.stroke();
+    for (let i=0;i<9;i++){ const k = ((t/(900 + i*170)*mo + hash(i,85)) % 1); if (k < .18 || !mo) { const a = mo ? 1 - k/.18 : .5; ctx.fillStyle = `rgba(236,232,255,${.8*a})`; ctx.fillRect(gx + (hash(i,86) - .5)*W*.28, gy + (hash(i,87) - .5)*H*.06, 1.4, 1.4); } } // ticking as it cools
+    if (kind === 'plain_glass') { const ry = gy - H*.08; for (let i=0;i<11;i++){ const k = i/10, x = lerp(W*.36, W*.66, k) + (hash(i,88) - .5)*6, y = ry - Math.sin(k*Math.PI)*3 + (i%2)*2; if (i === 5) continue; drawFigure(ctx, 'rhivi', x, y, .85, t, {still:true, dir: k < .5 ? 1 : -1, phase:i, alpha:.85}); } // the Rhivi on the far edge, round the woman with the bundle
+      const bx = W*.51, by = ry - 4; drawFigure(ctx, 'rhivi', bx, by, .95, t, {still:true, dir:1}); ell(ctx, bx + 4, by - 1, 4.2, 3.2, '#8a2a1a'); ell(ctx, bx + 4.4, by - 2, 2.2, 1.6, '#aa3a26'); }
+    else if (kind === 'plain_glass_crone') drawFigure(ctx, 'crone', gx - 30*q, gy - 6 - 7*1.3, 1.3, t, {still:true, dir:-1, air:true}); } // on the big one's shoulder
+  if (rent) { const hx = W*.72, hy = hz - 2; // the rent: a slit of grey down the hillside from where the puppet sat to the bottom of the fold, pulling
+    if (kind === 'hills_rake') ctx.globalAlpha = .5; // still open behind the fold; nobody is looking at it now
+    const top = [hx - 4, hy + 8], bot = [W*.5, H*.9], mx = (top[0] + bot[0])/2, my = (top[1] + bot[1])/2, wd = 18 + Math.sin(t/300)*2.5*mo, dx = bot[0] - top[0], dy = bot[1] - top[1], dl = Math.hypot(dx, dy), ux = -dy/dl, uy = dx/dl;
+    const lens = w => { ctx.beginPath(); ctx.moveTo(top[0], top[1]); ctx.quadraticCurveTo(mx + ux*w, my + uy*w, bot[0], bot[1]); ctx.quadraticCurveTo(mx - ux*w, my - uy*w, top[0], top[1]); ctx.closePath(); };
+    glow(ctx, mx, my, W*.32, '#b4b4c4', .18 + Math.sin(t/200)*.05*mo); glow(ctx, mx, my, 70, '#9a86e0', .16);
+    lens(wd); ctx.fillStyle = vgrad(ctx, top[1], bot[1], [[0,'rgba(150,150,162,.92)'],[.5,'rgba(104,104,118,.96)'],[1,'rgba(150,148,160,.92)']]); ctx.fill();
+    lens(wd*.5); ctx.fillStyle = 'rgba(70,70,82,.7)'; ctx.fill(); lens(wd*.2); ctx.fillStyle = 'rgba(40,40,50,.6)'; ctx.fill(); // grey, going away forever
+    ctx.save(); lens(wd); ctx.clip(); ctx.lineWidth = 1; for (let i=0;i<12;i++){ const k = ((t/1800*mo + i/12) % 1), u = .1 + hash(i,3)*.75, o = (hash(i,4) - .5)*wd*1.4*Math.sin(u*Math.PI), x0 = lerp(top[0], bot[0], u) + ux*o, y0 = lerp(top[1], bot[1], u) + uy*o, len = .05 + k*.06;
+      ctx.strokeStyle = `rgba(232,232,242,${.35*Math.sin(k*Math.PI)})`; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + dx*len, y0 + dy*len); ctx.stroke(); } ctx.restore(); // the wind in it
+    ctx.strokeStyle = `rgba(236,234,246,${.75 + Math.sin(t/90)*.15*mo})`; ctx.lineWidth = 1.6; lens(wd); ctx.stroke(); ctx.strokeStyle = 'rgba(236,234,246,.25)'; ctx.lineWidth = 4; lens(wd + 2); ctx.stroke(); // the edges, curled back and bright
+    for (let i=0;i<16;i++){ const k = ((t/(2400 + i*110)*mo + hash(i,7)) % 1), sx = hash(i,8)*W, sy = hz + H*.06 + hash(i,9)*(H*.94 - hz), e = k*k; ctx.fillStyle = `rgba(200,198,186,${.55*(1 - k)})`; ctx.fillRect(lerp(sx, mx + (hash(i,10) - .5)*16, e), lerp(sy, my + (hash(i,11) - .5)*50, e), 1.8, 1.3); } // stones and grass, going in
+    ctx.globalAlpha = 1;
+    if (kind === 'hills_hounds') for (let i=0;i<6;i++){ // the pack, out of the grey at a run, past the Fourth and up the slope at the crest
+      const k = mo ? ((t/3600 + i/6 + hash(i,91)*.08) % 1) : (i + .5)/6, u = .5 + hash(i,92)*.4, sx = lerp(top[0], bot[0], u), sy = lerp(top[1], bot[1], u) + 10, ex = hx - 30 + i*10, ey = hy + 14 + (i%2)*5,
+        px = lerp(sx, ex, k) + Math.sin(k*Math.PI)*W*.2, py = lerp(sy, ey, k) + Math.sin(k*Math.PI)*H*.04, s = lerp(1.5, .55, Math.pow(k, .8)), a = Math.min(1, k*7, (1 - k)*9);
+      shadowHound(ctx, px, py, s, t, {dir:1, alpha:a, phase:i*1.7}); } }
+  if (puppet) { const hx = W*.72, hy = hz - 2; drawFigure(ctx, 'hairlock', hx, hy, 1.2, t, {still:true, alpha:.7}); glow(ctx, hx, hy - 10, 26, '#e8d8c8', .06); } // on the next hill, the size of a child and not one
+  if (kind === 'hills_kill') { // the far hill, against the stars: shapes the size of horses, and what is left of the small one among them
+    const ridge = px => hz - Math.abs(Math.sin(px/70))*26 - Math.sin(px/31)*2; let bx = W*.2; for (let px = W*.14; px < W*.42; px += 2) if (ridge(px) < ridge(bx)) bx = px; const by = ridge(bx) + 1;
+    ctx.strokeStyle = 'rgba(150,150,190,.3)'; ctx.lineWidth = 1; ctx.beginPath(); for (let px = 0; px <= W*.52; px += 4) px ? ctx.lineTo(px, ridge(px)) : ctx.moveTo(px, ridge(px)); ctx.stroke(); // starlight along the far crest
+    glow(ctx, bx, by - 8, 60, '#9a86e0', .12);
+    ctx.strokeStyle = 'rgba(220,214,200,.3)'; ctx.lineWidth = .6; for (let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(bx - 22 + i*6, by - 1); ctx.quadraticCurveTo(bx - 12 + i*7, by - 4 - i, bx + 6 + i*5, by); ctx.stroke(); } // the strings, slack, lying over the grass like cobweb
+    for (let i=0;i<8;i++){ ctx.save(); ctx.translate(bx - 6 + hash(i,93)*12, by - 1 - hash(i,94)*2); ctx.rotate(hash(i,95)*3); ctx.fillStyle = i%3 ? '#8a7a64' : '#b09a78'; ctx.fillRect(-2.2, -.6, 4.4, 1.2); ctx.restore(); } // wood, split
+    [[-26, .78, 1, .95, 0],[24, .82, -1, .95, 0],[-4, .9, 1, 1, 1],[44, .7, -1, .85, 0]].forEach(([dx, s, d, a, lift], i) => shadowHound(ctx, bx + dx, ridge(bx + dx) + 2, s, t, {still:true, dir:d, alpha:a, phase:i, lift, eye:1.4})); }
+  if (kind === 'hills_rake') { // in the fold: the second Hound across Paran, the first dropped where it died, and the tall man standing over them, speaking to him, the black sword back over his shoulder
+    const px = W*.62, py = H*.93, rx = W*.82, ry = H*.86;
+    glow(ctx, rx - 20, ry - 10, W*.3, '#b8c8ee', .12 + Math.sin(t/900)*.03*mo); // cold, coming off him
+    shadowHound(ctx, W*.93, H*.8, 1.05, t, {still:true, dir:1, dead:true, rot:-.06}); // the first, dropped all at once
+    ctx.save(); ctx.translate(px - 10, py - 2); ctx.rotate(-Math.PI/2); drawFigure(ctx, 'paran', 0, 0, 1.9, t, {still:true, air:true}); ctx.restore(); // on his back, under it
+    shadowHound(ctx, px - 6, py + 4, 1.45, t, {still:true, dir:-1, dead:true, rot:.1}); // slumped across him like a dropped tent
+    for (let i=0;i<6;i++) ell(ctx, px - 16 + hash(i,96)*36, py + 4 + hash(i,97)*8, 4 + hash(i,98)*6, 1.6, 'rgba(4,2,6,.8)'); // its blood, black in the starlight
+    drawFigure(ctx, 'rake', rx, ry, 2.3, t, {still:true, dir:-1}); ctx.globalCompositeOperation = 'lighter'; glow(ctx, rx + 6, ry - 30, 34, '#8090c0', .14); ctx.globalCompositeOperation = 'source-over'; // taller than any man, white hair, the black sword over his shoulder
+    for (let i=0;i<6;i++){ const k = ((t/3000*mo + i/6) % 1); ell(ctx, rx + 14 - k*10 + Math.sin(t/800 + i)*3, ry - 34 - k*26, 1.6 + k*5, 1 + k*2.4, `rgba(205,215,240,${.16*(1 - k)})`); } } // the air round the blade smoking like iron in a hard frost
+  ctx.lineWidth = 1.2; for (let i=0;i<46;i++){ const px = hash(i,61)*W, yy = H*(.9 + hash(i,62)*.12), h = 10 + hash(i,63)*14, sw = Math.sin(t/900 + i*.7)*3*mo; ctx.strokeStyle = tod === 'night' || tod === 'grey' ? 'rgba(40,56,34,.8)' : tod === 'dusk' ? 'rgba(90,64,34,.8)' : 'rgba(84,100,52,.85)'; ctx.beginPath(); ctx.moveTo(px, yy); ctx.quadraticCurveTo(px + sw*.3, yy - h*.6, px + sw, yy - h); ctx.stroke(); } // the near grass, moving
+  const sq = marchOrder(sceneSquad()), tight = kind === 'plain_andii' || kind.startsWith('plain_grey') || kind.startsWith('plain_glass') || kind === 'hills_rake', st = tight ? Math.min(26, W*.4/sq.length) : Math.min(36, W*.6/sq.length);
+  sq.forEach((id, i) => drawFigure(ctx, id, W*(tight ? .07 : .1) + i*st, H*.93 + (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  vign(ctx, W, H, tod === 'night' ? .82 : tod === 'grey' ? .7 : tod === 'dusk' ? .62 : .5);
 }
 
 /* Darujhistan, for Chapter 3 talk nodes: the street, the Phoenix Inn, the cellar under the dig, the dye-shop room, a rooftop at dawn */
@@ -236,7 +312,7 @@ function drawCity(cv, kind, t){
 }
 
 /* ============ Chapters 6 and 7: the Fete, the Tyrant, the sky over the city, the Lakefront, the hill, the road ============ */
-const FETE_SCENES = ['fete_street','fete_street_night','fete_hall','fete_garden','garden_storm','garden_after','dragon_sky','alley_night','alley_crimson','lakefront_dawn','quorl_hill','quorl_sky','road_east','ship'];
+const FETE_SCENES = ['fete_street','fete_street_night','fete_crossing','fete_hall','fete_garden','garden_storm','garden_after','dragon_sky','alley_night','alley_crimson','lakefront_dawn','quorl_hill','quorl_sky','road_east','ship'];
 /* the rooftop variants are drawn by drawCity (the boot loop only sends it roof and roof_night by name) */
 SCENEX.roof_andii = (cv, t) => drawCity(cv, 'roof_andii', t);
 SCENEX.roof_shapes = (cv, t) => drawCity(cv, 'roof_shapes', t);
@@ -263,12 +339,13 @@ function skyline(ctx, W, base, h, col, win, seed = 1, x0 = -10, x1 = W + 10, ws 
     else { const tw = w*.4; ctx.fillRect(x + w*.3, base - hh*1.5, tw, hh*1.5); poly(ctx, [[x + w*.3 - 1, base - hh*1.5],[x + w*.3 + tw*.5, base - hh*1.5 - tw*1.6],[x + w*.3 + tw + 1, base - hh*1.5]], col); ctx.fillRect(x, base - hh*.6, w, hh*.6); }
     if (win) for (let j=0;j<4;j++) if (hash(i, j + seed*7) > .55) { ctx.fillStyle = typeof win === 'function' ? win(x/W, j) : win; ctx.fillRect(x + 3 + hash(j, i + seed)*(w - 6), base - hh*(.2 + hash(i, j + 3)*.6), 1.6, 2); }
     x += w - 1; i++; } }
-/* a string of Fete lanterns between two points, sagging, swaying; dead ones hang dark and torn */
+/* a string of Fete lanterns between two points, sagging, swaying; dead ones hang dark and torn; 'unlit' ones are paper in the daylight, waiting */
 function lanternLine(ctx, x0, y0, x1, y1, sag, n, t, s = 1, seed = 0, dead = false){
-  ctx.strokeStyle = dead ? 'rgba(60,70,80,.7)' : 'rgba(120,100,70,.7)'; ctx.lineWidth = Math.max(.6, s*.8); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo((x0 + x1)/2, (y0 + y1)/2 + sag*2, x1, y1); ctx.stroke();
+  ctx.strokeStyle = dead && dead !== 'unlit' ? 'rgba(60,70,80,.7)' : 'rgba(120,100,70,.7)'; ctx.lineWidth = Math.max(.6, s*.8); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo((x0 + x1)/2, (y0 + y1)/2 + sag*2, x1, y1); ctx.stroke();
   for (let i=0;i<n;i++){ const k = (i + .5)/n, bx = (1-k)*(1-k)*x0 + 2*k*(1-k)*(x0 + x1)/2 + k*k*x1, by = (1-k)*(1-k)*y0 + 2*k*(1-k)*((y0 + y1)/2 + sag*2) + k*k*y1, c = LANT[(i + seed) % 4], sw = Math.sin(t/800 + i*1.3 + seed)*.2, fl = .85 + Math.sin(t/170 + i*2.3 + seed)*.1;
     ctx.save(); ctx.translate(bx, by); ctx.rotate(sw); ctx.strokeStyle = 'rgba(30,24,18,.8)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 3*s); ctx.stroke();
-    if (dead) { poly(ctx, [[-2.4*s, 3*s],[2*s, 2.6*s],[2.8*s, 8*s],[-1*s, 9.6*s]], shade(c, -.6)); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.beginPath(); ctx.moveTo(0, 9*s); ctx.lineTo(hash(i, seed)*3*s - 1.5*s, 12*s); ctx.stroke(); }
+    if (dead && dead !== 'unlit') { poly(ctx, [[-2.4*s, 3*s],[2*s, 2.6*s],[2.8*s, 8*s],[-1*s, 9.6*s]], shade(c, -.6)); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.beginPath(); ctx.moveTo(0, 9*s); ctx.lineTo(hash(i, seed)*3*s - 1.5*s, 12*s); ctx.stroke(); }
+    else if (dead === 'unlit') { ell(ctx, 0, 6.5*s, 3*s, 4*s, shade(c, -.15)); ell(ctx, -.8*s, 5.6*s, 1.2*s, 2.4*s, 'rgba(255,240,210,.25)'); ctx.fillStyle = 'rgba(30,20,12,.85)'; ctx.fillRect(-1.8*s, 2.4*s, 3.6*s, .9*s); ctx.fillRect(-1.8*s, 10.2*s, 3.6*s, .9*s); } // paper in the daylight, the candle not lit yet
     else { glow(ctx, 0, 6*s, 12*s, c, .3*fl); ell(ctx, 0, 6.5*s, 3*s, 4*s, c); ell(ctx, -.6*s, 6*s, 1.4*s, 2.6*s, `rgba(255,236,190,${.6*fl})`); ctx.fillStyle = 'rgba(30,20,12,.85)'; ctx.fillRect(-1.8*s, 2.4*s, 3.6*s, .9*s); ctx.fillRect(-1.8*s, 10.2*s, 3.6*s, .9*s); }
     ctx.restore(); } }
 function confetti(ctx, W, H, t, n, a = .7){ for (let i=0;i<n;i++){ const y = ((hash(i,61)*H) + t*(.012 + hash(i,62)*.02)) % (H + 10) - 5, x = hash(i,63)*W + Math.sin(t/1300 + i)*10, r = t/400 + i; ctx.save(); ctx.translate(x, y); ctx.rotate(r); ctx.scale(1, Math.abs(Math.sin(r*1.4)) + .15); ctx.fillStyle = rgba(['#d8503a','#e8a040','#4aa870','#d8b84a','#e8d8c0','#c05a8a'][i % 6], a); ctx.fillRect(-2, -1.2, 4, 2.4); ctx.restore(); } }
@@ -291,40 +368,51 @@ function drawDragon(ctx, x, y, s, ang, flap, body, rim, wrong, t){
 function drawEstate(cv, kind, t){
   const {ctx, W, H} = sceneFit(cv), fl = .85 + Math.sin(t/140)*.06 + Math.sin(t/53)*.04, squad = (typeof SQUAD === 'function' && S ? SQUAD() : PORDER);
   ctx.fillStyle = '#060505'; ctx.fillRect(0,0,W,H);
-  if (kind === 'fete_street' || kind === 'fete_street_night') {
+  if (kind === 'fete_street' || kind === 'fete_street_night' || kind === 'fete_crossing') {
     // dusk over a street strung with lanterns; the lake at the end of it, and the black mountain over the lake.
     // fete_street_night: the same street late in the night of the Fete, still dancing, with the Tyrant's frost running down through the cobbles toward the lake
-    const night = kind === 'fete_street_night', mo = REDUCE() ? 0 : 1;
-    ctx.fillStyle = vgrad(ctx, 0, H*.56, night ? [[0,'#03040b'],[.6,'#0c0e1e'],[1,'#1c1a2c']] : [[0,'#120c1c'],[.5,'#3a1a2c'],[.85,'#8a4030'],[1,'#c0703a']]); ctx.fillRect(0,0,W,H*.56);
-    ctx.fillStyle = 'rgba(230,220,240,.5)'; for (let i=0;i<(night ? 50 : 24);i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*(night ? .4 : .22), 1, 1);
-    const vx = W*.56, vy = H*.5; ctx.fillStyle = night ? '#141826' : '#2a1e2c'; ctx.fillRect(W*.4, H*.44, W*.32, H*.1); for (let i=0;i<14;i++){ ctx.fillStyle = night ? `rgba(110,160,230,${.08 + hash(i,5)*.14})` : `rgba(255,170,100,${.12 + hash(i,5)*.2})`; ctx.fillRect(W*.42 + hash(i,6)*W*.28, H*.45 + hash(i,7)*H*.07, 4 + hash(i,8)*10, 1); }
-    skyline(ctx, W, H*.46, H*.08, night ? '#0e0c16' : '#1a1220', 'rgba(232,192,115,.5)', 3, W*.36, W*.76);
-    drawSpawn(ctx, W*.62, H*.19, 1.05, t, night ? '#2a2a3a' : '#5a2a3a');
+    // fete_crossing: the same street in the Gadrobi District late in the afternoon, the light gone gold and low, the lanterns strung and not lit,
+    // the blue lamps dark in their glass, and at the crossing the Works stakes round the planks over the ladder-hole, with Trotts by the last of them
+    const night = kind === 'fete_street_night', aft = kind === 'fete_crossing', mo = REDUCE() ? 0 : 1;
+    ctx.fillStyle = vgrad(ctx, 0, H*.56, aft ? [[0,'#46587a'],[.45,'#9a8a7a'],[.8,'#e0a860'],[1,'#f2c67c']] : night ? [[0,'#03040b'],[.6,'#0c0e1e'],[1,'#1c1a2c']] : [[0,'#120c1c'],[.5,'#3a1a2c'],[.85,'#8a4030'],[1,'#c0703a']]); ctx.fillRect(0,0,W,H*.56);
+    if (aft) { glow(ctx, W*.06, H*.42, W*.6, '#ffd890', .35); cloud(ctx, W*.3, H*.14, W*.4, 8, '#fff0d8', .14); cloud(ctx, W*.78, H*.24, W*.3, 6, '#ffe0b0', .12); } // a low sun, off down the street to the west
+    else { ctx.fillStyle = 'rgba(230,220,240,.5)'; for (let i=0;i<(night ? 50 : 24);i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*(night ? .4 : .22), 1, 1); }
+    const vx = W*.56, vy = H*.5; ctx.fillStyle = aft ? '#6a5a50' : night ? '#141826' : '#2a1e2c'; ctx.fillRect(W*.4, H*.44, W*.32, H*.1); for (let i=0;i<14;i++){ ctx.fillStyle = aft ? `rgba(255,220,150,${.25 + hash(i,5)*.3})` : night ? `rgba(110,160,230,${.08 + hash(i,5)*.14})` : `rgba(255,170,100,${.12 + hash(i,5)*.2})`; ctx.fillRect(W*.42 + hash(i,6)*W*.28, H*.45 + hash(i,7)*H*.07, 4 + hash(i,8)*10, 1); }
+    skyline(ctx, W, H*.46, H*.08, aft ? '#4a3a40' : night ? '#0e0c16' : '#1a1220', aft ? null : 'rgba(232,192,115,.5)', 3, W*.36, W*.76);
+    drawSpawn(ctx, W*.62, H*.19, 1.05, t, aft ? '#8a6a58' : night ? '#2a2a3a' : '#5a2a3a');
     const wallL = k => ({top: lerp(-H*.05, H*.3, k), bot: lerp(H*.98, H*.56, k), x: lerp(-W*.02, vx - W*.13, k)}), wallR = k => ({top: lerp(-H*.05, H*.3, k), bot: lerp(H*.98, H*.56, k), x: lerp(W*1.02, vx + W*.13, k)});
     const segs = [0,.3,.52,.67,.78,.86,.92,.96,1];
-    [wallL, wallR].forEach((wf, side) => { for (let i=0;i<segs.length-1;i++){ const a = wf(segs[i]), b = wf(segs[i+1]), lift = (hash(i, side + 3) - .3)*H*.12*(1 - segs[i]), c = ['#2a1c1e','#221a22','#302024','#1e181e'][(i + side) % 4];
+    [wallL, wallR].forEach((wf, side) => { for (let i=0;i<segs.length-1;i++){ const a = wf(segs[i]), b = wf(segs[i+1]), lift = (hash(i, side + 3) - .3)*H*.12*(1 - segs[i]), c = aft ? (side ? ['#7a5a46','#6a4c3e','#84624a','#5e4438'] : ['#3a2c2e','#322630','#402e30','#2c2428'])[i % 4] : ['#2a1c1e','#221a22','#302024','#1e181e'][(i + side) % 4];
       poly(ctx, [[a.x, a.bot],[a.x, a.top - lift],[b.x, b.top - lift*.8],[b.x, b.bot]], c); ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(b.x, b.top - lift*.8); ctx.lineTo(b.x, b.bot); ctx.stroke();
       for (let r=0;r<3;r++) for (let q=0;q<2;q++){ const k = (q + .5)/2, wx = lerp(a.x, b.x, k), wt = lerp(a.top - lift, b.top - lift*.8, k), wb = lerp(a.bot, b.bot, k), wy = lerp(wt, wb, .18 + r*.22), ww = Math.abs(b.x - a.x)*.2, wh = (wb - wt)*.1;
-        const lit = hash(i*7 + r, q + side*3) > .35; ctx.fillStyle = lit ? `rgba(255,${180 + Math.round(hash(r,q)*40)},110,${.5 + Math.sin(t/900 + i + r)*.08})` : 'rgba(8,6,8,.8)'; ctx.fillRect(wx - ww/2, wy, ww, wh); if (lit) glow(ctx, wx, wy + wh/2, ww*1.6, '#ffb060', .08); } } });
+        const lit = hash(i*7 + r, q + side*3) > (aft ? .92 : .35); ctx.fillStyle = aft && !lit ? (side ? 'rgba(40,26,20,.75)' : 'rgba(14,10,12,.8)') : lit ? `rgba(255,${180 + Math.round(hash(r,q)*40)},110,${.5 + Math.sin(t/900 + i + r)*.08})` : 'rgba(8,6,8,.8)'; ctx.fillRect(wx - ww/2, wy, ww, wh); if (lit) glow(ctx, wx, wy + wh/2, ww*1.6, '#ffb060', .08); } } });
     // the street, cobbles running to the end of it
-    poly(ctx, [[0, H],[-W*.02, H*.98],[vx - W*.13, H*.56],[vx + W*.13, H*.56],[W*1.02, H*.98],[W, H]], '#241e22'); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
+    poly(ctx, [[0, H],[-W*.02, H*.98],[vx - W*.13, H*.56],[vx + W*.13, H*.56],[W*1.02, H*.98],[W, H]], aft ? '#4a3e3a' : '#241e22'); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
     for (let i=0;i<14;i++){ const k = Math.pow(i/14, 1.8), yy = lerp(H*.56, H, k); ctx.beginPath(); ctx.moveTo(lerp(vx - W*.13, -W*.02, k), yy); ctx.lineTo(lerp(vx + W*.13, W*1.02, k), yy); ctx.stroke(); }
     for (let i=-6;i<=6;i++){ ctx.beginPath(); ctx.moveTo(vx + i*W*.02, H*.56); ctx.lineTo(vx + i*W*.16, H); ctx.stroke(); }
-    ctx.fillStyle = night ? 'rgba(160,190,230,.04)' : 'rgba(255,170,100,.06)'; ctx.fillRect(0, H*.6, W, H*.4);
+    ctx.fillStyle = aft ? 'rgba(255,200,120,.1)' : night ? 'rgba(160,190,230,.04)' : 'rgba(255,170,100,.06)'; ctx.fillRect(0, H*.6, W, H*.4);
+    if (aft) { poly(ctx, [[-W*.02, H*.98],[vx - W*.13, H*.56],[vx - W*.02, H*.56],[W*.36, H]], 'rgba(20,12,16,.3)'); } // the shade of the west side of the street, lying across it
     if (night) { ctx.lineWidth = 1.2; for (let i=-6;i<=6;i++){ const k = mo ? ((t/2600 + hash(i + 7, 3)) % 1) : 1, x0 = vx + i*W*.16, x1 = vx + i*W*.02; // frost in the cracks, running downhill to the lake
       ctx.strokeStyle = 'rgba(215,238,255,.32)'; ctx.beginPath(); ctx.moveTo(x0, H); ctx.lineTo(lerp(x0, x1, k), lerp(H, H*.56, k)); ctx.stroke(); ell(ctx, lerp(x0, x1, k), lerp(H, H*.56, k), 3*(1 - k*.7), 1.4*(1 - k*.7), 'rgba(235,248,255,.55)'); }
       for (let i=0;i<14;i++){ const k = Math.pow(i/14, 1.8), yy = lerp(H*.56, H, k); ctx.strokeStyle = 'rgba(215,238,255,.1)'; ctx.beginPath(); ctx.moveTo(lerp(vx - W*.13, -W*.02, k), yy); ctx.lineTo(lerp(vx + W*.13, W*1.02, k), yy); ctx.stroke(); } }
     // blue lamps along both sides (at night, as the frost passes under them, every flame shrinking in its glass and coming back)
-    [.12,.45,.7].forEach((k, i) => [wallL, wallR].forEach((wf, side) => { const a = wf(k), sc = lerp(1.6, .5, k), lx = a.x + (side ? -1 : 1)*18*sc, ly = a.bot - 2*sc, dip = night ? .35 + .65*Math.abs(Math.sin(t/700*mo + i*.9 + side)) : 1;
-      ctx.fillStyle = '#141418'; ctx.fillRect(lx - 1.2*sc, ly - 44*sc, 2.4*sc, 44*sc); ctx.fillStyle = '#26262c'; ctx.fillRect(lx - 4*sc, ly - 52*sc, 8*sc, 8*sc); ctx.fillStyle = `rgba(160,210,255,${(.7 + Math.sin(t/230 + i + side)*.2)*dip})`; ctx.fillRect(lx - 2.5*sc, ly - 50*sc, 5*sc, 5*sc); glow(ctx, lx, ly - 47*sc, 46*sc, '#6aa8ff', .3*fl*dip); ell(ctx, lx, ly + 2, 26*sc, 5*sc, `rgba(90,140,210,${.08*dip})`); }));
+    [.12,.45,.7].forEach((k, i) => [wallL, wallR].forEach((wf, side) => { const a = wf(k), sc = lerp(1.6, .5, k), lx = a.x + (side ? -1 : 1)*18*sc, ly = a.bot - 2*sc, dip = aft ? 0 : night ? .35 + .65*Math.abs(Math.sin(t/700*mo + i*.9 + side)) : 1;
+      ctx.fillStyle = '#141418'; ctx.fillRect(lx - 1.2*sc, ly - 44*sc, 2.4*sc, 44*sc); ctx.fillStyle = '#26262c'; ctx.fillRect(lx - 4*sc, ly - 52*sc, 8*sc, 8*sc); ctx.fillStyle = aft ? '#6a6c72' : `rgba(160,210,255,${(.7 + Math.sin(t/230 + i + side)*.2)*dip})`; ctx.fillRect(lx - 2.5*sc, ly - 50*sc, 5*sc, 5*sc); glow(ctx, lx, ly - 47*sc, 46*sc, '#6aa8ff', .3*fl*dip); ell(ctx, lx, ly + 2, 26*sc, 5*sc, `rgba(90,140,210,${.08*dip})`); }));
     // lantern strings across the street
-    [.08,.3,.5,.66,.8].forEach((k, i) => { const a = wallL(k), b = wallR(k), y = lerp(a.top, a.bot, .3); lanternLine(ctx, a.x, y, b.x, y, lerp(22, 5, k), Math.round(lerp(14, 6, k)), t, lerp(2.2, .7, k), i); });
+    [.08,.3,.5,.66,.8].forEach((k, i) => { const a = wallL(k), b = wallR(k), y = lerp(a.top, a.bot, .3); lanternLine(ctx, a.x, y, b.x, y, lerp(22, 5, k), Math.round(lerp(14, 6, k)), t, lerp(2.2, .7, k), i, aft ? 'unlit' : false); });
+    if (aft) { // the crossing: the Works stakes round the planks over the ladder-hole, lantern-light coming up between them, and Trotts by the last stake
+      const cx = W*.7, cy = H*.86; ell(ctx, cx, cy + 4, W*.15, H*.04, 'rgba(0,0,0,.25)');
+      for (let i=0;i<5;i++){ const x0 = cx - W*.1 + i*W*.04, y0 = cy - 3 + i*1.2; ctx.fillStyle = i%2 ? '#5a4030' : '#6a4a34'; ctx.fillRect(x0, y0, W*.035, 9); ctx.fillStyle = `rgba(255,200,120,${.55 + Math.sin(t/300 + i)*.1*mo})`; if (i < 4) ctx.fillRect(x0 + W*.035, y0 + 1, 1.4, 8); } // planks, and the light between them
+      glow(ctx, cx - W*.02, cy, 30, '#ffb060', .16);
+      const st = [[cx - W*.15, cy + 6],[cx - W*.07, cy - 10],[cx + W*.07, cy - 9],[cx + W*.13, cy + 7]]; ctx.strokeStyle = 'rgba(200,180,140,.7)'; ctx.lineWidth = 1; ctx.beginPath(); st.forEach(([x, y], i) => { const p = [x, y - 16]; i ? ctx.quadraticCurveTo((st[i-1][0] + x)/2, (st[i-1][1] + y)/2 - 10, p[0], p[1]) : ctx.moveTo(p[0], p[1]); }); ctx.stroke(); // a rope between the stakes
+      st.forEach(([x, y]) => { ctx.fillStyle = '#4a3624'; ctx.fillRect(x - 1.6, y - 20, 3.2, 22); ctx.fillStyle = 'rgba(255,220,150,.4)'; ctx.fillRect(x - 1.6, y - 20, 1.2, 22); ell(ctx, x + 14, y + 2, 14, 2, 'rgba(0,0,0,.25)'); }); // and their long shadows, away from the sun
+      drawFigure(ctx, 'trotts', W*.87, H*.93, 2.1, t, {still:true, dir:-1}); }
     // masked revellers, far and near
     [[.12,5],[.3,4],[.55,4],[.8,3]].forEach(([d, n], j) => { const yy = lerp(H*.58, H*.96, d), sc = lerp(.7, 2.3, d), half = lerp(W*.13, W*.5, d);
-      for (let i=0;i<n;i++){ const k = ((hash(i, j + 20) + t/(40000 - d*20000)*(i%2 ? 1 : -1)) % 1 + 1) % 1, xx = vx - half*.9 + k*half*1.8; if (d > .7 && xx < W*.34) continue; drawFigure(ctx, 'reveller', xx, yy, sc, t, {phase:i*3 + j*7 + 1, dir: i%2 ? 1 : -1}); } });
+      for (let i=0;i<n;i++){ const k = ((hash(i, j + 20) + t/(40000 - d*20000)*(i%2 ? 1 : -1)) % 1 + 1) % 1, xx = vx - half*.9 + k*half*1.8; if (d > .7 && xx < W*.34) continue; if (aft && d > .5) continue; /* fewer out yet, and nobody by the planks */ drawFigure(ctx, 'reveller', xx, yy, sc, t, {phase:i*3 + j*7 + 1, dir: i%2 ? 1 : -1}); } });
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.06 + i*30, H*.95, 2.1, t, {phase:i, dir:1}));
-    confetti(ctx, W, H, t, night ? 12 : 26, .55);
-    vign(ctx, W, H, night ? .82 : .75);
+    confetti(ctx, W, H, t, aft ? 8 : night ? 12 : 26, .55);
+    vign(ctx, W, H, aft ? .55 : night ? .82 : .75);
   } else if (kind === 'fete_hall') {
     // the hall: dark red walls, gilt, tall windows full of night, chandeliers, masked dancers turning, a very tall guest by a pillar
     ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#1c0a0c'],[.6,'#2a1012'],[1,'#120708']]); ctx.fillRect(0,0,W,H);

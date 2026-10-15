@@ -252,6 +252,7 @@ ${SQUAD().includes('kettle') ? `"A *lantern*," Kettle says. "In *there*." She's 
 
   scenes:{
     fete_street:{loc:'Darujhistan', sub:'The Gedderone Fete', cap:'Paper lanterns in every colour but blue, masks on every face, music from three directions and none of it in time, and over the lake a black mountain wearing nothing at all.', amb:'explore'},
+    fete_crossing:{loc:'Darujhistan', sub:'The Gedderone Fete · late afternoon', cap:'Late gold light down the street, paper lanterns strung and not yet lit, the blue lamps dark, the first masks out, and Works stakes round the planks at the crossing, Trotts by the last.', amb:'explore'},
     fete_hall:{loc:'Lady Simtal\'s estate', sub:'The hall and the terraces', cap:'Chandeliers the size of wagons, two hundred masks on a black and white floor, and by one pillar a guest so tall that the dancers go round him the way water goes round a stone.', amb:'explore'},
     fete_garden:{loc:'Lady Simtal\'s estate',
       get sub(){ return (typeof S !== 'undefined' && S && S.f && (S.chapter >= 7 || /^c6_(dawn|close)/.test(S.node || ''))) ? 'The garden · dawn' : 'The garden · the Fete'; },
@@ -411,7 +412,7 @@ Dusk is a few hours off. There are people in this vault you could talk to, and y
           {t:'Wait for dusk.', go:'c6_crossing'}]}),
 
     /* ---- the crossing, late afternoon: the Fete wants the Works stakes for a bonfire (v3.12) ---- */
-    c6_crossing:()=>({sp:'Trotts · the crossing', scene:'fete_street', txt:
+    c6_crossing:()=>({sp:'Trotts · the crossing', scene:'fete_crossing', txt:
 `Late in the afternoon, when the light down the ladder-hole has gone from white to gold, Trotts says one word down it.
 
 "Sergeant."
@@ -434,7 +435,7 @@ ${SQUAD().includes('brisk') ? `Brisk sets her shield. "Nobody dies," she says, t
            edges:id => [id === 'ellis' && ['she has her mother\'s Gadrobi', 2], id === 'kettle' && ['a sapper on gas, with numbers', 1], S.f.c6_vFid && ['Simtal\'s blue on your arm', 1]],
            near:{t:()=>`Yes, but "most of it" was a little more than most: the man in the apron heard the word *Moranth* in there somewhere, and ${NAME(ROLL().who || 'sgt')} lies awake the whole of the hour wondering who he'll tell: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
            go:'c6_bonfire_ok', fail:'c6_bonfire_bad'}]}),
-    c6_bonfire_ok:()=>({sp:'The crossing', scene:'fete_street', fx:()=>{ S.f.c6_bonfireTalked=1; }, txt:
+    c6_bonfire_ok:()=>({sp:'The crossing', scene:'fete_crossing', fx:()=>{ S.f.c6_bonfireTalked=1; }, txt:
 `${by({
   ellis:`Ellis does it. She walks out among the bull masks with her hands empty and says something in Gadrobi, low, the way you'd talk to a horse you didn't trust yet, and the man in the apron turns his head at the sound of it like a man hearing his own village. Then she says one sentence more. It's the right one.`,
   kettle:`Kettle does it. It's true, every word, and she tells it the way she tells lies, with total confidence and far too much detail: what runs under the planks, and how a main goes when you light a fire on it, and how far, and what it does to a crossing and the chandler's and the street and the lads standing in it, with numbers. By the time she gets to the numbers nobody is standing on the planks.`,
@@ -449,7 +450,7 @@ Trotts allows it.
 
 From the ladder-hole: "Sergeant." A pause. "Sleep. You've an hour."`,
       ch:[{t:'Down the ladder.', go:'c6_vault_sleep'}]}),
-    c6_bonfire_bad:()=>({sp:'The crossing', scene:'fete_street', txt:
+    c6_bonfire_bad:()=>({sp:'The crossing', scene:'fete_crossing', txt:
 `${by({
   ellis:`Ellis tries. She gets three words of Gadrobi out, and the man in the apron hears where her mother was from in the second one, and grins, and says something about hill people that makes the lads roar.`,
   kettle:`Kettle tries. It's all true, and she tells it the way she tells lies, and halfway through the numbers one of the bull masks says *Malazan* in a voice that means he's just noticed what her accent is.`,
@@ -458,7 +459,7 @@ From the ladder-hole: "Sergeant." A pause. "Sleep. You've an hour."`,
 
 Not unkindly. It's a holiday. The man in the apron takes his foot off the planks, and takes the meat-hook off his belt, and says one word in Gadrobi that nobody needs translated.`,
       ch:[{t:'"Shields!"', fx:()=>{ S.f.c6_bonfireFought=1; }, go:()=>startBattle('c6_bonfire',{surprise:'e'})}]}),
-    c6_after_bonfire:()=>({sp:'The crossing', scene:'fete_street', txt:
+    c6_after_bonfire:()=>({sp:'The crossing', scene:'fete_crossing', txt:
 `Nobody dies. You'll be prouder of that than of anything else you do tonight, and you'll never be able to tell anyone why.
 
 It takes longer than a fight that kills people. It's knees, and shield-rims, and the flat of a blade, and a cudgel taken off a boy and thrown in the brazier; and down in the chandler's cellar, at the end of it, the foreman's lantern going over between the oil barrels, and ${SQUAD().includes('kettle') ? `Kettle` : `you`} catching it an inch off the boards with the oil already running out of the burst reservoir, and holding it up, upright, at arm's length, ${SQUAD().includes('kettle') ? `like a sapper holding a fuse` : `the way you've seen a sapper hold a fuse`}, until somebody pinches the wick.

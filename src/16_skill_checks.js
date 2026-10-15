@@ -229,7 +229,7 @@ const SCENES = {
   ship:{loc:'Lake Azur', sub:'A deck', cap:'Grey water, a sail, and the city getting smaller.', amb:'explore'},
 };
 /* ambience for the new scenes: the Fete has a crowd and pipes, the lake has water and gulls */
-const sceneAmb = (kind, amb) => amb === 'explore' && ['fete_street','fete_street_night','fete_hall'].includes(kind) ? 'fete' : amb === 'explore' && kind === 'fete_garden' && !feteDawn() ? 'fete' : amb === 'explore' && ['lakefront_dawn','ship'].includes(kind) ? 'lake' : amb;
+const sceneAmb = (kind, amb) => amb === 'explore' && ['fete_street','fete_street_night','fete_crossing','fete_hall'].includes(kind) ? 'fete' : amb === 'explore' && kind === 'fete_garden' && !feteDawn() ? 'fete' : amb === 'explore' && ['lakefront_dawn','ship'].includes(kind) ? 'lake' : amb;
 function sceneShell(kind){
   if (kind === 'explore') { if (view !== 'explore') { startExplore(); } return; }
   S.bg = kind;

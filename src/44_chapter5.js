@@ -162,6 +162,12 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the gap, and then back the way you
     otatglove:{name:'Otataral-dusted glove', slot:'trinket', who:['sgt','brisk'], ac:1, line:'A plain riding glove, left on a stone where the Adjunct\'s tent stood. There is a fine red dust worked into the seams that will not brush out. Sorcery slides off the hand in it like rain off oilcloth: a mage\'s working will find the glove and forget what it was for. Tuft will not stand on the same side of the fire as it.'},
     scoutcloak:{name:'Malazan scout\'s cloak', slot:'armour', who:['ellis','kettle','sgt','vell'], ac:1, line:'Second Army issue, grey-green, rolled tight behind a saddle and strapped with a scout\'s knot. Toc\'s. The horse came back without him before dawn, lathered, and stood by the Fourth\'s fire because it had nowhere else to stand.'} },
 
+  /* the Hounds, only where they are seen: out of the rent and up the slope; on the far hill over the puppet; dead in the fold under the black sword */
+  scenes:{
+    hills_hounds:{loc:'The Gadrobi Hills', sub:'Night · Shadow', warren:true, cap:'Out of the grey at a run, the size of horses, eyes like lamps through smoke: the Hounds, going past you up the hillside at the thing on the crest.', amb:'dark'},
+    hills_kill:{loc:'The Gadrobi Hills', sub:'Night · the next hill', warren:true, cap:'The rent still open and the crest above it empty. On the far hill, against the stars, shapes the size of horses over split wood and slack string.', amb:'dark'},
+    hills_rake:{loc:'The Gadrobi Hills', sub:'Night · the fold', warren:true, cap:'A Hound dead in the fold, another across Paran, and over them a man taller than any man, white hair to his waist, a black sword over his shoulder smoking with cold.', amb:'dark'} },
+
   card:{ id:'herald', name:'Herald of High House Death', house:'High House Death', hue:'#8fa38a',
     txt:`A grey figure with its face turned away, holding a door open for somebody you cannot see. Tuft has turned it before, over the years, and never liked it. "Not for us," she says. "For someone near us. It always says that. I'd like it to stop."`,
     fx:'Once a fight, a squadmate who would go down stays standing at 1 health.' },
@@ -1252,7 +1258,7 @@ On the crest the puppet laughs, and lifts both wooden hands on their strings, an
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
 
     /* ---- after the rent: the Hounds, and Hairlock's end ---- */
-    c5_after_rent:()=>({sp:'The hillside', scene:'hills_rent', fx:()=>{ S.f.c5_rentFought=1; }, txt:
+    c5_after_rent:()=>({sp:'The hillside', scene:'hills_hounds', fx:()=>{ S.f.c5_rentFought=1; }, txt:
 `You hold. You don't know how. The things out of the grey don't die the way things die; they come apart, and the pieces go on for a while on their own. Shadow-shapes with too many joints. And the other things, the ones with the legs, that came out folding and unfolding like hands opening and closing, and went for ${SQUAD().includes('brisk') ? `Brisk's shield` : `the fire`} as if they hated light.
 
 ${C5H.tuftOut() ? `Tuft is walking back up the slope before the last of it has stopped moving. You said *the threshold*. She heard *threshold*; she didn't hear *once*. She stands at the lip of the grey again with her toes on the line, and puts her arm back into it, to the elbow, and nobody calls her back. Nobody has the breath.
@@ -1273,7 +1279,7 @@ ${C5H.rentDowns()}
 
 ${SQUAD().includes('tuft') ? `Tuft, somewhere behind you, in a voice like someone praying: "*Shadow.*"` : ''}`,
       ch:[{t:'Watch.', go:'c5_hairlock_end'}]}),
-    c5_hairlock_end:()=>({sp:'The next hill', scene:'hills_puppet', txt:
+    c5_hairlock_end:()=>({sp:'The next hill', scene:'hills_kill', txt:
 `The puppet gets up.
 
 It gets up the way a man gets up who has forgotten he has no legs: all at once, flailing, the strings jerking it upright a fraction too late. It's saying something. It's saying a great many things, very fast, in the grown man's voice, and none of them are words any more.
@@ -1294,7 +1300,7 @@ ${S.f.c5_key === 'through' && !S.f.c5_ellisThrough ? `At Tuft, standing at the l
             edges:id => [S.f.c5_toolSaw && ['the Imass told you: stay small', 1], C5H.red() === id && ['red dust on you: Shadow slides off it', 1], S.f.c1_key === 'line' && ['the Hounds met the Fourth at Pale', -1], S.card === 'hounds' && ['Tuft turned the Hounds tonight', -1]],
             go:'c5_hound_pass', fail:'c5_hound_held'},
           {t:'Let it look.', go:'c5_hounds_gone'}]}),
-    c5_hound_pass:()=>({sp:'The next hill', scene:'hills_night', fx:()=>{ S.f.c5_houndPassed=1; S.f.c5_houndBy = ROLL().who || 'sgt'; }, txt:
+    c5_hound_pass:()=>({sp:'The next hill', scene:'hills_kill', fx:()=>{ S.f.c5_houndPassed=1; S.f.c5_houndBy = ROLL().who || 'sgt'; }, txt:
 `${by({
   kettle:`Kettle doesn't say anything.
 
@@ -1309,7 +1315,7 @@ The Hound's eyes come across the fold. Lamps, seen through smoke. They go over t
 
 They don't stop.`,
       ch:[{t:'Breathe.', go:'c5_hounds_gone'}]}),
-    c5_hound_held:()=>({sp:'The next hill', scene:'hills_night', fx:()=>{ S.f.c5_houndLooked = ROLL().who || 'sgt'; }, txt:
+    c5_hound_held:()=>({sp:'The next hill', scene:'hills_kill', fx:()=>{ S.f.c5_houndLooked = ROLL().who || 'sgt'; }, txt:
 `${by({
   kettle:`Kettle manages it for a long time, for Kettle. Face in the grass, mouth shut. Then something comes out of her anyway: not a word, the start of one, a little catch of breath like a hiccup.`,
   ellis:`Ellis has her eyes down and her body still, perfectly still, Claw-still; and that's the trouble. On a hillside where everything else is shaking, still *on purpose* is a shape too.`,
@@ -1324,7 +1330,7 @@ Then it looks away.
 
 ${by({kettle:`Kettle lets out the rest of the breath, very slowly. "It *looked* at me," she whispers. "Sergeant. Why does everything *look* at me?"`, _:''})}`,
       ch:[{t:'Breathe.', go:'c5_hounds_gone'}]}),
-    c5_hounds_gone:()=>({sp:'The next hill', scene:'hills_night', txt:
+    c5_hounds_gone:()=>({sp:'The next hill', scene:'hills_rake', txt:
 `Then they turn.
 
 Not away. Toward the fold. They come down off the next hill together, not hurrying, low to the grass, the size of horses, and the lamp-eyes are on Paran and only on Paran.${S.f.c5_houndPassed ? ` They don't so much as glance at the fire. Whatever ${C5H.nm('c5_houndBy')} did on the hillside, it's holding.` : C5H.who('c5_houndLooked') ? ` Only on him; except once, coming down, so quick you'd have missed it if you weren't watching for it, a flick of lamp-light across the fold to ${C5H.nm('c5_houndLooked')}, and back. Like a dog checking a door.` : ''}

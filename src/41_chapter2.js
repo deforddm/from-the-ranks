@@ -176,7 +176,14 @@ ${SQUAD().includes('ellis') ? `Ellis: "Two gaps in the thorn. He's standing in t
     toccloak:{name:'Toc\'s spare cloak', slot:'armour', who:['ellis','tuft','sgt','vell'], ac:1, line:'A Claw\'s field cloak, grey going brown, with the shoulder cut for a bow. Toc left it on the wagon\'s tailboard and did not look back at it.'} },
 
   /* inside the barrow on the wagon road (it was 'dark', which is headed "Under the Pale" and tinted with Kurald Galain) */
-  scenes:{ rhivi_barrow:{loc:'The Rhivi Plain', sub:'Inside the barrow', cap:'Dry-laid stone, a slab with nothing on it, and a cold that has nothing to do with the weather.', amb:'dark'} },
+  scenes:{ rhivi_barrow:{loc:'The Rhivi Plain', sub:'Inside the barrow', cap:'Dry-laid stone, a slab with nothing on it, and a cold that has nothing to do with the weather.', amb:'dark'},
+    /* the Andii only where they stand at the fire; the hour before dawn after them; the glass, and the Raven where it lands */
+    plain_andii:{loc:'The Rhivi Plain', sub:'Night · the fourth camp', cap:'Three of them at the edge of the firelight and not in it: taller than Brisk, silver hair unbound, swords on their backs and their hands empty.', amb:'explore'},
+    plain_grey:{loc:'The Rhivi Plain', sub:'Before dawn · the fourth camp', cap:'Grey in the east, the last stars going out in the west, the fire dead in its ring of stones, and nobody on the grass now but the Fourth.', amb:'explore'},
+    plain_grey_crone:{loc:'The Rhivi Plain', sub:'Before dawn · the fourth camp', cap:'Grey in the east, the fire dead, and on the wagon\'s tailboard, as if it were a branch, a bird the size of a dog with its wings folded, looking at you.', amb:'explore'},
+    plain_glass:{loc:'The Rhivi Plain', sub:'Night · the ashes', cap:'A circle of burned grass, black glass in the middle still ticking as it cools, two shapes in it close as one, and on the far edge the Rhivi round a woman with a bundle.', amb:'dark'},
+    plain_glass_crone:{loc:'The Rhivi Plain', sub:'Night · the ashes', cap:'Black glass ticking in a circle of burned grass, two shapes in it close as one, and on the big one\'s shoulder a bird the size of a dog, looking at you.', amb:'dark'},
+    plain_grey_glass:{loc:'The Rhivi Plain', sub:'Before dawn · the ashes', cap:'Grey coming up in the east over the burned circle, the glass gone quiet, two shapes in it close as one, and nobody left on its far edge.', amb:'dark'} },
 
   card:{ id:'raven', name:'The Great Raven', house:'Unaligned', hue:'#6a6f7a',
     txt:`A black bird on a black branch, and something dead beneath it that the painter did not bother to finish. Tuft does not put it back. "It's looking at us," she says. "Not the card. The bird."`,
@@ -1017,7 +1024,7 @@ Sethand has not drawn. He rides forward now, alone, into the space you've cleare
 
 "Look," he says, not turning. "Do not touch. And do not ask what they carry. And do not, Malazan, ever tell anyone I brought you here."`,
       ch:[{t:'Ride through.', go:'c2_ashes'}]}),
-    c2_ashes:()=>({sp:'The ashes', scene:'plain_night', fx:()=>{S.f.c2_ashes=1; S.f.c2_lightOut=1;}, txt:
+    c2_ashes:()=>({sp:'The ashes', scene:'plain_glass', fx:()=>{S.f.c2_ashes=1; S.f.c2_lightOut=1;}, txt:
 `The light is gone by the time you reach the place, and it leaves a dark behind it that the stars can't get into.
 
 A circle of burned grass a hundred paces across, and in the middle of it the ground has gone to glass. Black glass, still ticking as it cools. Two shapes in it, close enough to be one. The large one is larger than a man should be, on its back, and the glass has gone over it like water over a stone. The other is small, and has its arms round the large one, and you don't look at the other for long, because you knew her.
@@ -1093,7 +1100,7 @@ Nobody sleeps. The light burns in the west for two hours and doesn't flicker, an
 
 ${SQUAD().includes('ellis') ? `Ellis comes in from the stakes an hour before dawn. "Sergeant. Three. On foot, walking, from the west, and they're not Rhivi, and I couldn't see them until they wanted me to."` : `Sethand, an hour before dawn, on his feet with his knife out: "Malazan. Get up. Something is coming across the grass, and it is not walking like anything I know."`}`,
       ch:[{t:'"Stand to."', go:'c2_andii'}]}),
-    c2_andii:()=>({sp:'Tiste Andii', scene:'plain_night', fx:()=>{S.f.c2_andii=1; S.f.c2_lightOut=1;}, txt:
+    c2_andii:()=>({sp:'Tiste Andii', scene:'plain_andii', fx:()=>{S.f.c2_andii=1; S.f.c2_lightOut=1;}, txt:
 `Three of them. Tall, taller than Brisk, and the tallness is wrong for people; it's the tallness of something that had a long time to grow. Silver hair, long and unbound, and skin the colour of the dark between the stars, and eyes that have the light of the dead fire in them, still, hours after it went out.
 
 They stop at the edge of the firelight. They don't come into it. Their swords are on their backs and their hands are empty and it makes no difference at all.
@@ -1111,7 +1118,7 @@ That's the question. You understand, somehow, that it's the only one.`,
             edges:id=>[id === 'kettle' && S.f.c2_bones && ['Kettle has been reading tells since the bones', 1], S.f.c2_printsTrod && id === S.f.c2_printsWho && ['Hound-ground on these boots: the Andii keep looking', -1]],
             near:{t:()=>`${NAME(ROLL().who)} sees it, and is seen seeing it.`, fx:()=>{ S.f.c2_andiiStared=1; S.f.c2_andiiStaredWho=ROLL().who; }},
             go:'c2_andii_fear', fail:'c2_andii_caught'}]}),
-    c2_andii_no:()=>({sp:'Tiste Andii', txt:
+    c2_andii_no:()=>({sp:'Tiste Andii', scene:'plain_andii', txt:
 `The one in the middle nods. It's a small movement. It has centuries in it.
 
 "No," he says. "Nor did we."
@@ -1122,7 +1129,7 @@ Kettle, when they're gone: "They asked one thing and answered nothing. That's no
 
 "Tiste Andii," says Tuft, from the ground. "The Spawn's. Three of them. Nobody's ever seen three of them and not been in a war." She doesn't get up. "We're in one. We just haven't been told."`,
       ch:[{t:'Watch them go.', go:'c2_andii_go'}]}),
-    c2_andii_fear:()=>({sp:'Tiste Andii', fx:()=>{S.f.c2_andiiFear=1; S.f.c2_andiiFearBy = ROLL().who || 'sgt'; loy('tuft',1);}, txt:
+    c2_andii_fear:()=>({sp:'Tiste Andii', scene:'plain_andii', fx:()=>{S.f.c2_andiiFear=1; S.f.c2_andiiFearBy = ROLL().who || 'sgt'; loy('tuft',1);}, txt:
 `${by({
   sgt:`You answer, and while you answer you watch, and you see it.`,
   ohl:`You answer. Ohl watches their hands, because hands are where a healer looks first: the face is what a man has decided to show you, and the hands are what he hasn't. And Ohl sees it.`,
@@ -1143,7 +1150,7 @@ ${ROLL().who === 'ellis' ? `"The young one's afraid of what they saw," Ellis say
 ` : ''}${ROLL().who === 'tuft' ? `"They're the oldest thing on this plain," Tuft says, when they're gone.` : `Tuft has seen it too. "They're the oldest thing on this plain," she says, when they're gone.`} "And they're scared of the second-oldest. I'd like that written down somewhere, Sergeant. I'd like somebody to have it."`,
       ch:[{t:'Watch them go.', go:'c2_andii_go'}]}),
     /* a watch that was noticed: the one in the middle looks back at whoever was watching (Sethand and Crone both remark on it) */
-    c2_andii_caught:()=>{ const p = c2P(ROLL().who); return {sp:'Tiste Andii', fx:()=>{ S.f.c2_andiiStared=1; S.f.c2_andiiStaredWho=ROLL().who || 'sgt'; }, txt:
+    c2_andii_caught:()=>{ const p = c2P(ROLL().who); return {sp:'Tiste Andii', scene:'plain_andii', fx:()=>{ S.f.c2_andiiStared=1; S.f.c2_andiiStaredWho=ROLL().who || 'sgt'; }, txt:
 `${by({
   sgt:`You answer, and you watch while you answer, and you watch too hard. You're a sergeant; you have never in your life looked at a thing without wanting to know what it will do next, and the one in the middle feels it like a hand on his sleeve.`,
   ohl:`You answer. Ohl watches the way he'd watch a wound, close and patient, and forgets, for a moment, that this one can watch back.`,
@@ -1163,7 +1170,7 @@ Kettle, when they're gone: "They asked one thing and answered nothing. That's no
 
 "Tiste Andii," says Tuft, from the ground. "The Spawn's." She doesn't get up. "And he looked at ${p.you ? 'you' : ROLL().who === 'tuft' ? '*me*' : p.n}, Sergeant. They don't look at *us*. Nobody's ever told me what it means when they do."`,
       ch:[{t:'Watch them go.', go:'c2_andii_go'}]}; },
-    c2_andii_go:()=>({sp:'The fourth camp', txt:
+    c2_andii_go:()=>({sp:'The fourth camp', scene:'plain_grey', txt:
 `Grey in the east. The fire's out; nobody fed it after the Andii, and nobody noticed till now.
 
 Sethand puts his knife away. He has held it the whole time and it has been no use at all and he knows it. "The Andii do not walk," he says. "They fly, on the Moon, and they do not come down. They came down. For that." He looks west. "The clans will be talking about this when your Empire is a story."${S.f.c2_andiiStared ? ((p) => ` He looks at ${p.n}. "And one of you read them. The Andii do not like to be read, Malazan; they would rather be feared. ${p.N} ${p.has} given one of them a face to keep, and they keep things a very long time."`)(c2P(S.f.c2_andiiStaredWho)) : ''}
@@ -1174,7 +1181,7 @@ It's big. It's slow. It's the wrong shape for a bird and it's a bird anyway, and
       ch:[{t:'Look back at it.', go:'c2_crone'}]}),
 
     /* ---- Crone ---- */
-    c2_crone:()=>({sp:'Crone · Great Raven', fx:()=>{S.f.c2_crone=1;}, txt:
+    c2_crone:()=>({sp:'Crone · Great Raven', scene:S.f.c2_key === 'light' ? 'plain_glass_crone' : 'plain_grey_crone', fx:()=>{S.f.c2_crone=1;}, txt:
 `It's the size of a dog. Its feathers are black and its eyes are black and there is something in the eyes that is not a bird's and is not a person's and is very, very old. It cocks its head. It looks at Brisk's shield, and Kettle's satchel, ${S.f.c2_printsTrod ? `and ${c2P(S.f.c2_printsWho).poss} boots, for a long and interested moment, ` : ''}and Tuft, longest.
 
 Then it opens its beak and laughs.
@@ -1190,7 +1197,7 @@ The head turns to ${c2P(S.f.c2_printsWho).n}. "And *you*. You've been standing w
 "And one of you *stared* at my lord's children. Ha! They'll carry that face home. They carry everything home. It's why the Moon is so *heavy*."` : ''}`,
       ch:[{t:'"What did you see? Out there."', go:'c2_crone_saw'},
           {t:S.f.c2_key === 'light' ? '"Get off him."' : '"Get off my wagon."', fx:()=>loy('brisk',1), go:'c2_crone_off'}]}),
-    c2_crone_saw:()=>({sp:'Crone', fx:()=>{S.f.c2_croneSaw=1;}, txt:
+    c2_crone_saw:()=>({sp:'Crone', scene:S.f.c2_key === 'light' ? 'plain_glass_crone' : 'plain_grey_crone', fx:()=>{S.f.c2_croneSaw=1;}, txt:
 `"Everything, child. It is what I *do*."
 
 ${S.f.c2_key === 'light' ? `"I saw a fat woman run across this plain from a friend who was sent after her, and turn, and take hold of him, and burn them both, and I saw what the fire made, and so did the Rhivi, and so, I think, did your little mage. Ask *her* what she saw. I am too old to tell children the ends of stories."` :
@@ -1200,7 +1207,7 @@ ${S.f.c2_key === 'light' ? `"I saw a fat woman run across this plain from a frie
 
 The head cocks the other way, and the black eye takes you in, all of you, the way a clerk takes in a page. "Sergeant {sgt}," it says. Nobody told it. "There. Now I have it."`,
       ch:[{t:S.f.c2_key === 'light' ? '"Get off him."' : '"Get off my wagon."', go:'c2_crone_off'}]}),
-    c2_crone_off:()=>({sp:'Crone', txt:
+    c2_crone_off:()=>({sp:'Crone', scene:S.f.c2_key === 'light' ? 'plain_grey_glass' : 'plain_grey', txt:
 `"Ha! *Manners*." It doesn't move. Then it does, all at once, a beat of wings that puts the fire's ash in the air and Kettle's hand on the satchel, and it's above you, circling once, the wrong shape for a bird.
 
 ${S.f.c2_key === 'light' ? `"Sergeant." The voice comes down clear. "The girl on her knees on the glass. Keep her. Not for her sake. For what she'll be worth to someone, and it will not be you, and it will not be me, and I would *so* like to see the face of whoever it is."` : `"Sergeant." The voice comes down clear. "You counted your bread while she burned. Good. Keep counting. Somebody in this war is going to need soldiers who do as they are told, and my lord has none, and it is his only weakness, and I have told him so."`}
