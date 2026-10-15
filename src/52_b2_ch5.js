@@ -123,7 +123,7 @@ const B2CH5 = {
       walk:'.,s', triggers:{W:'b2_ncart', b:'b2_carcass', x:'b2_lookback', h:'b2_nhorses'}, start:{x:8, y:7},
       quest:()=> !S.f.b2_herdDone ? (S.f.b2_weaselAsk ? 'The cattle, and the Bhilard on the skyline.' : 'The Weasel captain, by the horse lines.') : !S.f.b2_c5_key ? 'Bult has the water ration.' : !S.f.b2_dryDone ? 'Midday. The Tregyn are coming for the carts.' : 'Dusk. Back to the camp.',
       npcs:[
-        {id:'weaselcap5', name:'The Weasel captain', kind:'weasel', x:4, y:9, node:()=>'b2_weaselcap5', fresh:()=>!S.f.b2_weaselAsk},
+        {id:'weaselcap5', name:'The Weasel captain', kind:'weasel', x:4, y:9, node:()=>S.f.b2_weaselAsk ? 'b2_weaselcap5b' : 'b2_weaselcap5', fresh:()=>!S.f.b2_weaselAsk},
         {id:'cattle1', name:'The last cattle', kind:'cattle', x:11, y:9, node:()=>'b2_cattle', show:()=>!S.f.b2_cattleDead, fresh:()=>!S.f.b2_herdDone && !!S.f.b2_weaselAsk},
         {id:'cattle2', name:'A cow', kind:'cattle', x:13, y:8, node:()=>'b2_cattle', show:()=>!S.f.b2_cattleDead},
         {id:'bult7', name:'Bult', kind:'bult', x:9, y:4, node:()=>'b2_ration', show:()=>!!S.f.b2_herdDone, fresh:()=>!!S.f.b2_herdDone && !S.f.b2_c5_key},
@@ -542,6 +542,18 @@ Sathi steps in front of him anyway. She says something in Wickan, low and fast, 
         {t:'"Go with them, Sathi. Take Hackle."', fx:()=>{ S.f.b2_sathiRode = 1; loy('sathi', 1); }, go:'b2_sathi_rides'},
         {t:'"I need her with the squad, Captain."', fx:()=>{ loy('sathi', -1); }, go:'b2_sathi_stays'}] :
       [{t:'"The gap, then."', go:()=>startExplore()}]}),
+  /* tapped again: he has said his piece, and does not say it twice (v6.7.1) */
+  b2_weaselcap5b:()=>({sp:'The Weasel captain', txt: S.f.b2_cattleDead ?
+`The Weasel captain is sitting his horse at the edge of the pan where the herd was, with his lance across his knees, watching the dogs. The dogs are lying in a ring round nothing.
+
+He sees you looking. "We kept them a day," he says. "That is what I asked for. A day." He does not say anything else, and you do not ask him to.` : S.f.b2_herdDone ?
+`The Weasel captain is riding the lines again, slower now, with the dust of the herd still on him. He lifts his lance an inch as you pass, which from a Weasel is a speech.
+
+"For today, Malazan," he says, and rides on.` :
+`The Weasel captain looks down at you from the saddle as if you were a cow that had wandered off.
+
+"I have said it once." He points his lance east, at the skyline, and then at the gap in the rocks. "Noon. Your feet, in the gap. ${S.f.b2_sathiRode && b2In('sathi') ? 'Your girl is with my riders. ' : ''}The Bhilard will not wait for you to finish talking."`,
+    ch: !S.f.b2_herdDone ? [{t:'To the gap.', go:'b2_herd_go'}, {t:'Not yet.', go:()=>startExplore()}] : [{t:'On.', go:()=>startExplore()}]}),
   b2_sathi_rides:()=>({sp:'Sathi', txt:
 `Sathi is on the grey before you have finished saying it, without touching the stirrup, the way she gets onto everything. Hackle is already running at the horse's heels. She looks down at you from the saddle, and she is seventeen, and she is a Weasel, and for a moment she is so happy it is hard to look at.
 
