@@ -134,6 +134,11 @@ const AUDIO = (() => {
     /* Book Two's games: water running from one skin to another; and the four voices under the ground (a pentatonic, low and old) */
     pour(){ const t = now(); noise({t, a:.08, d:.45, v:.16, f:900, slide:1500, q:3, type:'bandpass', buf:'p'}); for (let i = 0; i < 6; i++) tone(rnd(700, 1300), {t:t + rnd(.05, .45), type:'sine', a:.005, d:.06, v:.03, slide:rnd(400, 600)}); },
     stone(k = 0){ const t = now(), fr = [196, 233.1, 293.7, 349.2][k % 4]; tone(fr, {t, type:'triangle', a:.02, d:.9, v:.16, wet:sfxWet}); tone(fr * 2, {t, type:'sine', a:.03, d:.6, v:.04, wet:sfxWet}); tone(fr / 2, {t, type:'sine', a:.05, d:1.1, v:.08}); },
+    /* the Land's Teeth (Book Two, Keth): the ground growling up under someone, and then its jaws: stone on stone, and a crack of bone */
+    rumble(){ const t = now(); noise({t, a:.22, d:.5, v:.55, f:170, slide:340, type:'lowpass', buf:'b', wet:sfxWet}); tone(46, {t, type:'sawtooth', a:.18, d:.6, v:.2, slide:36, filt:{f:230}, am:[17, .5]});
+      for (let i = 0; i < 7; i++) noise({t:t + rnd(.05, .5), d:.02, v:rnd(.05, .12), f:rnd(700, 1600), q:2, pan:P()}); },
+    chomp(){ const t = now(); noise({t, a:.002, d:.22, v:.75, f:1100, slide:180, type:'lowpass', buf:'b', wet:sfxWet}); tone(88, {t, d:.32, v:.45, slide:38}); tone(140, {t, type:'triangle', d:.12, v:.18, slide:70});
+      for (let i = 0; i < 6; i++) noise({t:t + i*.016 + rnd(0, .01), d:.022, v:rnd(.18, .34), f:rnd(1700, 3300), q:2.5, pan:P()}); tone(rnd(1300, 1500), {t:t + .01, type:'triangle', a:.001, d:.05, v:.07}); },
     howl(){ const t = now(); tone(390, {t, type:'triangle', a:.35, d:.9, v:.11, slide:640, vib:22, filt:{f:2000}, wet:sfxWet}); tone(640, {t:t + 1.1, type:'triangle', a:.06, d:1.5, v:.1, slide:330, vib:30, filt:{f:1800}, wet:sfxWet}); tone(1280, {t:t + .4, type:'sine', a:.4, d:1.6, v:.025, slide:700, wet:sfxWet}); },
   };
   function play(k, ...a){

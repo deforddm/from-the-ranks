@@ -43,11 +43,23 @@ const b2TeethR = u => has(u.id, 'deepground') ? 5 : 4;
 Object.assign(AB, {
   b2_teeth:{name:'The Land\'s Teeth', spirit:true, desc:()=>`An enemy within ${S && has('warlock', 'deepground') ? 5 : 4}: the spirits of the ground come up for it. 1d8+${2 + lvDmg()} on a hit, and what they bite is held by the feet: slowed, and −2 to hit until Keth's next turn${S && has('warlock', 'deepground') ? '. Every enemy next to it is held too' : ''}. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level. Spirit-craft: it never sputters.`,
     ok:u=>!(u.cdTeeth >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= b2TeethR(u) && sees(u, f)),
-    run(u, x, y){ const t = unitAt(x, y); if (!t) return; u.cdTeeth = B.round + 2 - lvAt(6); AUDIO.play('step'); shakeMap();
-      const hold = f => { if (!f || f.hp <= 0) return; f.earthUntil = B.round + 1; f.earthPen = 2; f.slowTurn = true; float(f, 'held', '#9fbf7a'); sparks(f.x, f.y, 8, '#8aa86a', .4); };
+    /* v6.4: nothing crosses the field. Keth's palms go to the ground, the ground under the target splits, a mouth of bone-stone fangs
+       comes up round it and snaps shut (the blow lands on the snap), grinds, and goes back down; the spirits that did it rise out of
+       the hole. Deep Ground: smaller mouths open under everyone next to it, a beat later. The turn waits for the bite. */
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; u.cdTeeth = B.round + 2 - lvAt(6);
+      const RM = REDUCE(), dur = RM ? pace(700) : pace(1250), snapAt = dur*.4, col = '#9fd27a', now = performance.now(), seed = 1 + Math.floor(Math.random()*997);
+      const hold = f => { if (!f || f.hp <= 0) return; f.earthUntil = B.round + 1; f.earthPen = 2; f.slowTurn = true; float(f, 'held', '#9fbf7a'); };
+      const grit = (f, n) => { sparks(f.x, f.y + .1, n, '#6b5a40', .9); sparks(f.x, f.y + .1, Math.round(n/2), '#a8946c', .6); };
+      u.facing = t.x >= u.x ? 1 : -1; AUDIO.play('rumble'); B.fx.push({kind:'ring', x:u.x, y:u.y, col, t:now, dur:pace(600)}); sparks(u.x, u.y + .2, 6, col, .3);
+      B.fx.push({kind:'teeth', x:t.x, y:t.y, col, seed, t:now + pace(120), dur});
       blog(`${u.name} shakes the rattle of dog's teeth at the ground under ${t.name} and asks it, in Foolish Dog, the way you would ask a strange dog.`);
-      const r = attack(u, t, {dmg:[1, 8, 2 + lvDmg()], verb:'calls the ground up under'});
-      later(() => { if (!B) return; if (r.hit) hold(t); if (has(u.id, 'deepground')) foes().filter(f => f !== t && cheb(f, t) <= 1).forEach(hold); updBattleUI(); }, pace(260)); }},
+      later(() => { if (B && t.hp > 0) grit(t, 10); }, pace(120) + dur*.2);
+      later(() => { if (!B) return; AUDIO.play('chomp'); shakeMap(); grit(t, 14); }, pace(120) + snapAt);
+      const r = attack(u, t, {dmg:[1, 8, 2 + lvDmg()], verb:'calls the ground up under', ground:true, land:pace(120) + snapAt + pace(30)});
+      const deep = has(u.id, 'deepground') ? foes().filter(f => f !== t && f.hp > 0 && cheb(f, t) <= 1) : [];
+      deep.forEach((f, i) => B.fx.push({kind:'teeth', x:f.x, y:f.y, col, seed:seed + 31*(i + 1), t:now + pace(300) + i*pace(70), dur:dur*.85}));
+      if (deep.length) later(() => { if (B) AUDIO.play('chomp'); }, pace(300) + dur*.85*.4);
+      return new Promise(res => { later(() => { if (B) { if (r.hit) hold(t); deep.forEach(hold); updBattleUI(); } res(); }, pace(300) + dur*.5); setTimeout(res, pace(300) + dur + 600); }); }},
   /* the Old Woman's Bargain: she takes a wound out of a squadmate and gives it to the ground, and the ground gives it to whoever is
      standing on it nearest. A heal that is also a blow: the same number, out of one and into the other, no roll */
   b2_bargain:{name:'The Old Woman\'s Bargain', spirit:true, desc:()=>`Keth or a hurt squadmate within 4: the old woman takes a wound out of them and gives it to the ground. They heal 2d6+${2 + lvB()}, and the nearest enemy within 3 of them takes the same, no roll, as the ground gives it on. It stops bleeding, too. ${lvAt(6) ? 'Twice a fight.' : 'Once a fight (twice from level 6).'} Grows with the squad's level. Spirit-craft: it never sputters.`,

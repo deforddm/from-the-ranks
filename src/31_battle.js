@@ -360,14 +360,15 @@ function attack(a, t, o={}){
   const verb = o.verb || a.verb;
   const ranged = cheb(a, t) > 1 && !a.reachMelee; // a halberd's reach is still a blow, not a shot
   const lash = a.kind === 'tuft' && !B.def.nomagic;
-  if (ranged) B.fx.push({kind:'bolt', from:{x:a.x,y:a.y}, to:{x:t.x,y:t.y}, col:lash ? '#9a86e0' : '#cfc8b8', t:performance.now(), dur:220, wob:lash});
+  if (o.ground) {} // it comes up out of the ground under them (the Land's Teeth): the caller draws it, and nothing crosses the field
+  else if (ranged) B.fx.push({kind:'bolt', from:{x:a.x,y:a.y}, to:{x:t.x,y:t.y}, col:lash ? '#9a86e0' : '#cfc8b8', t:performance.now(), dur:220, wob:lash});
   else B.anim = {u:a, tx:t.x, ty:t.y, t0:performance.now()};
   a.facing = t.x >= a.x ? 1 : -1;
-  AUDIO.play(lash ? 'shadow' : a.kind === 'kettle' || a.kind === 'xbow' ? 'bow' : hit ? 'sword' : 'miss');
+  if (!o.ground) AUDIO.play(lash ? 'shadow' : a.kind === 'kettle' || a.kind === 'xbow' ? 'bow' : hit ? 'sword' : 'miss');
   const math = SET.dice ? ` <span class="stat">(${nat}+${bonus} vs ${ac})</span>` : '';
   const tags = [o.aoo ? 'free attack' : '', fl ? 'flanking +2' : '', cover ? 'behind cover' : '', t.prone && cheb(a, t) <= 1 ? 'prone' : ''].filter(Boolean).join(', ');
   const tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
-  const land = ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
+  const land = o.land != null ? o.land : ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
   const dd = o.dmg || a.dmg; const dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0);
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
@@ -708,6 +709,71 @@ function battleWatchdog(now){
   B.wdT = 0; console.warn('battle: turn ' + B.turn + ' hung; moving on');
   if (B.cur && B.cur.side === 'p' && !B.cur.ally && B.cur.hp > 0) { B.busy = false; B.mode = 'act'; B.aim = null; updBattleUI(); } else endTurn();
 }
+/* ---- the Land's Teeth (v6.4): the ground under the target opens a mouth and bites ----
+   One effect, {kind:'teeth', x, y, col, seed, t, dur}. It is drawn in two halves round the figure that stands on its tile (the pit, the cracks
+   and the fangs behind first; the fangs in front, the lip of earth and the spirits after) so the jaws close round them, not over them. The
+   beats, as a share of dur: the ground listens and splits (0-.2), the fangs come up out of it (.18-.38), the jaws snap (.38-.45, where the
+   blow lands), they grind (.45-.72), and they go back down and the spirits that did it rise out of the hole and go (.72-1).
+   A unit held by the feet (earthUntil) keeps a ring of small stone fingers round its ankles until it is let go. */
+const backOut = k => { const c = 1.9, m = k - 1; return 1 + (c + 1)*m*m*m + c*m*m; };
+function teethPhases(f, now){ const k = clamp((now - f.t) / f.dur, 0, 1);
+  return {k, open:clamp(k/.2, 0, 1), rise:clamp((k - .18)/.2, 0, 1), snap:clamp((k - .38)/.07, 0, 1), sink:clamp((k - .72)/.26, 0, 1)}; }
+function drawFang(ctx, bx, by, tx, ty, w, col, a, glowA){
+  const g = ctx.createLinearGradient(bx, by, tx, ty); g.addColorStop(0, rgba('#1e1810', a)); g.addColorStop(.3, rgba('#6e604a', a)); g.addColorStop(.7, rgba('#d8ccae', a)); g.addColorStop(1, rgba('#fbf5e2', a));
+  const mx = (bx + tx)/2, my = (by + ty)/2, nx = (ty - by), ny = -(tx - bx), nl = Math.hypot(nx, ny) || 1, bow = w*.55; // a fang curves a little, like a dog's
+  ctx.beginPath(); ctx.moveTo(bx - w, by); ctx.quadraticCurveTo(mx - w*.5 + nx/nl*bow, my + ny/nl*bow, tx, ty); ctx.quadraticCurveTo(mx + w*.5 + nx/nl*bow*.4, my + ny/nl*bow*.4, bx + w, by); ctx.closePath();
+  ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = rgba('#120d07', a*.9); ctx.lineWidth = Math.max(1, w*.22); ctx.stroke();
+  ctx.strokeStyle = rgba('#3a3022', a*.7); ctx.lineWidth = Math.max(.6, w*.12); ctx.beginPath(); ctx.moveTo(lerp(bx, tx, .25) - w*.2, lerp(by, ty, .25)); ctx.lineTo(lerp(bx, tx, .5) + w*.15, lerp(by, ty, .5)); ctx.lineTo(lerp(bx, tx, .62), lerp(by, ty, .62)); ctx.stroke(); // an old crack in the bone-stone
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = rgba(col, a*.55); ctx.lineWidth = Math.max(.8, w*.18); ctx.beginPath(); ctx.moveTo(bx - w*.7, by - w*.3); ctx.quadraticCurveTo(lerp(bx, tx, .5) - w*.45, lerp(by, ty, .5), tx, ty); ctx.stroke(); ctx.restore(); // the spirits' light along one edge
+  if (glowA > 0) glow(ctx, tx, ty, w*3.2, col, glowA); }
+function drawTeeth(ctx, f, cx, cy, layer, now, T){
+  const RM = REDUCE(), {k, open, rise, snap, sink} = teethPhases(f, now), fade = 1 - ease(sink), rx = T*.56, ry = T*.24, sd = f.seed || 1;
+  if (layer === 0) {
+    // the light under the ground, and the hole
+    glow(ctx, cx, cy, T*(.6 + open*.7), f.col, (.3*open + (snap > 0 && snap < 1 ? .35 : 0))*fade);
+    ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let pass = 0; pass < 2; pass++) { ctx.strokeStyle = pass ? rgba(f.col, .75*fade) : rgba('#0b0805', .85*fade); ctx.lineWidth = pass ? Math.max(.8, T*.016) : Math.max(1.2, T*.045);
+      for (let i = 0; i < 7; i++) { const an = i/7*Math.PI*2 + hash(i, sd)*.7, len = (.55 + hash(i, sd, 1)*.65)*open, cs = Math.cos(an), sn = Math.sin(an); ctx.beginPath();
+        for (let q = 0; q <= 4; q++) { const r = lerp(.8, .8 + len, q/4), j = q && q < 4 ? (hash(i, q, sd)-.5)*.35 : 0, x = cx + (cs*r - sn*j)*rx, y = cy + (sn*r + cs*j)*ry; q ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+        ctx.stroke(); } }
+    ctx.restore();
+    const m = open*(1 - sink*.35); ell(ctx, cx, cy, rx*m, ry*m, rgba('#040302', .92*fade));
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(1, ry/rx); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx*m || 1); g.addColorStop(0, rgba(f.col, .55*fade*open)); g.addColorStop(.7, rgba(f.col, .12*fade)); g.addColorStop(1, rgba(f.col, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rx*m || 1, 0, 7); ctx.fill(); ctx.restore();
+  }
+  // the fangs: the ones round the back of the mouth go behind the figure, the front ones in front of it
+  if (rise > 0 && fade > 0) {
+    const lift = RM ? 1 : clamp(backOut(rise), 0, 1.2), grind = !RM && k > .45 && k < .74, N = 11, list = [];
+    for (let i = 0; i < N; i++) { const an = (i + .5)/N*Math.PI*2 + hash(sd, 9)*.4, sn = Math.sin(an); if ((sn < 0) !== (layer === 0)) continue;
+      const bx = cx + Math.cos(an)*rx*.9, by = cy + sn*ry*.9, h = T*(sn < 0 ? .72 + hash(i, sd, 2)*.4 : .3 + hash(i, sd, 2)*.24)*lift*(1 - ease(sink)), w = T*(sn < 0 ? .09 : .1)*(1 + hash(i, sd, 3)*.5);
+      const inward = sn < 0 ? .15 + (RM ? .5 : snap*.5) : .12 + (RM ? .3 : snap*.3), jx = grind ? Math.sin(now/26 + i*1.7)*T*.012 : 0;
+      list.push({bx, by, tx:bx + (cx - bx)*inward + jx, ty:by - h + (cy - by)*inward*.3, w}); }
+    list.sort((a, b) => a.by - b.by).forEach(p => drawFang(ctx, p.bx, p.by, p.tx, p.ty, p.w, f.col, fade, (.18 + snap*.25)*fade));
+  }
+  if (layer === 1) {
+    // the dust the ground throws up as it opens and again as it shuts
+    if (!RM) [[.18, .32], [.38, .3]].forEach(([k0, len], b) => { const q = clamp((k - k0)/len, 0, 1); if (q <= 0 || q >= 1) return;
+      for (let i = 0; i < 6; i++) { const an = i/6*Math.PI*2 + b + sd, r = .55 + q*(.5 + hash(i, b, sd)*.4); ell(ctx, cx + Math.cos(an)*rx*r, cy + Math.sin(an)*ry*r - q*T*.28, T*(.12 + q*.18), T*(.07 + q*.1), rgba('#9c8a68', (1 - q)*.42)); } });
+    // the lip of earth along the front of the mouth, so the fangs come up out of the ground and not off it
+    if (open > 0) { ctx.save(); ctx.strokeStyle = rgba('#241c12', .95*fade); ctx.lineWidth = Math.max(2, T*.075); ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(cx, cy + T*.01, rx*open*.96, ry*open*.96, 0, .1, Math.PI - .1); ctx.stroke();
+      ctx.strokeStyle = rgba('#5a4a32', .7*fade); ctx.lineWidth = Math.max(1, T*.025); ctx.beginPath(); ctx.ellipse(cx, cy - T*.015, rx*open*.98, ry*open*.98, 0, .25, Math.PI - .25); ctx.stroke(); ctx.restore(); }
+    // the snap: a ring of light out along the ground
+    if (snap > 0 && k < .62 && !RM) { const q = clamp((k - .38)/.24, 0, 1); ctx.strokeStyle = rgba(f.col, (1 - q)*.8); ctx.lineWidth = Math.max(1, T*.04*(1 - q)); ctx.beginPath(); ctx.ellipse(cx, cy, rx*(1 + q*1.2), ry*(1 + q*1.2), 0, 0, 7); ctx.stroke(); }
+    // the spirits that did it: pale things with eyes, going back up out of the hole
+    if (k > .42) for (let j = 0; j < 3; j++) { const q = clamp((k - .44 - j*.07)/.5, 0, 1); if (q <= 0 || q >= 1) continue;
+      const wx = cx + (RM ? (j - 1)*T*.22 : Math.sin(q*5 + j*2.1 + sd)*T*.26), wy = cy - T*.25 - q*T*1.25, a = Math.sin(q*Math.PI)*.75;
+      glow(ctx, wx, wy, T*.55, f.col, a*.5); ell(ctx, wx, wy, T*.13, T*.2, rgba('#dfe8c8', a*.4), Math.sin(q*4 + j)*.3); ell(ctx, wx + (RM ? 0 : Math.sin(q*7 + j)*T*.05), wy + T*.2, T*.06, T*.14, rgba('#dfe8c8', a*.22)); // a head, and a tail of smoke
+      ctx.fillStyle = rgba('#efffd0', a); ctx.fillRect(wx - T*.045, wy - T*.05, Math.max(1.5, T*.03), Math.max(1.5, T*.03)); ctx.fillRect(wx + T*.02, wy - T*.05, Math.max(1.5, T*.03), Math.max(1.5, T*.03)); }
+  }
+}
+/* held by the feet: a ring of small fingers of stone round the ankles, flexing; behind and in front of the figure like the jaws */
+function drawHeld(ctx, u, cx, cy, layer, t, T){
+  const RM = REDUCE(), rx = T*.36, ry = T*.15, col = '#8aa86a', N = 7, sd = (u.x*7 + u.y*13) | 0;
+  if (layer === 0) { ell(ctx, cx, cy + T*.01, rx*1.05, ry*1.05, 'rgba(10,8,5,.55)'); glow(ctx, cx, cy, T*.6, col, .14 + (RM ? 0 : Math.sin(t/240)*.05)); }
+  for (let i = 0; i < N; i++) { const an = (i + .5)/N*Math.PI*2 + .2, sn = Math.sin(an); if ((sn < 0) !== (layer === 0)) continue;
+    const bx = cx + Math.cos(an)*rx, by = cy + sn*ry, h = T*(.22 + hash(i, sd)*.12)*(1 + (RM ? 0 : Math.sin(t/300 + i*1.3)*.12)), w = T*.06;
+    drawFang(ctx, bx, by, bx + (cx - bx)*.45, by - h, w, col, .95, .12); }
+}
 function drawBattle(t){
   const {ctx, T} = G; if (!ctx || !B) return; const def = B.def, now = performance.now(), H = G.oy || 0, RM = REDUCE();
   battleWatchdog(now);
@@ -772,7 +838,10 @@ function drawBattle(t){
     if (u.cantRound === B.round) { ctx.fillStyle = '#f2c46b'; ctx.font = `${Math.round(T*.28)}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText('✋', cx, cy - T*1.05); }
     if (u.markedUntil >= B.round) { ctx.strokeStyle = 'rgba(242,196,107,.8)'; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(cx, cy + T*.04, T*.4, T*.16, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
     const arrive = u.arrived ? clamp((now - u.arrived) / 450, 0, 1) : 1;
+    const bite = B.fx.filter(f => f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur), fx0 = d.x*T + T/2, fy0 = d.y*T + T*.6, held = u.earthUntil >= B.round && !bite.length;
+    bite.forEach(f => { f.fr = now; drawTeeth(ctx, f, fx0, fy0, 0, now, T); }); if (held) drawHeld(ctx, u, fx0, fy0, 0, t, T);
     drawFigure(ctx, u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85});
+    bite.forEach(f => drawTeeth(ctx, f, fx0, fy0, 1, now, T)); if (held) drawHeld(ctx, u, fx0, fy0, 1, t, T);
     if (u.flash && now - u.flash < 160) { ctx.globalCompositeOperation = 'lighter'; ell(ctx, cx, cy - T*.4, T*.35, T*.45, `rgba(255,120,100,${(1 - (now - u.flash)/160)*.6})`); ctx.globalCompositeOperation = 'source-over'; }
     if (u.healed && now - u.healed < 500) glow(ctx, cx, cy - T*.4, T*.9, '#9fe0b8', (1 - (now - u.healed)/500)*.4);
     const k = K(u.x,u.y);
@@ -823,6 +892,7 @@ function drawBattle(t){
   B.fx = B.fx.filter(f => now - f.t < (f.dur ? f.dur + 40 : 950));
   B.fx.forEach(f => { if (now < f.t) return; const k = clamp((now - f.t) / (f.dur || 950), 0, 1);
     if (f.kind === 'boom') { ctx.globalAlpha = (1 - k) * .9; ctx.fillStyle = f.col; const s = (f.r + .5) * T * (0.4 + k*.7); ctx.beginPath(); ctx.arc(f.x*T + T/2, f.y*T + T/2, s, 0, 7); ctx.fill(); ctx.globalAlpha = (1 - k) * .5; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(f.x*T + T/2, f.y*T + T/2, s*1.3, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(ctx, f.x*T + T/2, f.y*T + T/2, s*2.5, f.col, (1-k)*.4); }
+    else if (f.kind === 'teeth') { if (f.fr !== now) { const x = f.x*T + T/2, y = f.y*T + T*.6; drawTeeth(ctx, f, x, y, 0, now, T); drawTeeth(ctx, f, x, y, 1, now, T); } } // nobody standing in it any more
     else if (f.kind === 'ring') { ctx.globalAlpha = 1 - k; ctx.strokeStyle = f.col; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(f.x*T + T/2, f.y*T + T*.6, T*(.3 + k*.7), T*(.12 + k*.28), 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
     else if (f.kind === 'bolt') { const x = lerp(f.from.x, f.to.x, k)*T + T/2, y = lerp(f.from.y, f.to.y, k)*T + T*.5 + (f.wob ? Math.sin(k*20)*T*.15 : 0); ctx.strokeStyle = f.col; ctx.lineWidth = f.wob ? 2.5 : 1.5; ctx.beginPath(); ctx.moveTo(lerp(f.from.x, f.to.x, Math.max(0,k-.15))*T + T/2, lerp(f.from.y, f.to.y, Math.max(0,k-.15))*T + T*.5); ctx.lineTo(x, y); ctx.stroke(); if (f.wob) glow(ctx, x, y, T*.6, f.col, .5); }
     else if (f.kind === 'lance') { const x0 = f.from.x*T + T/2, y0 = f.from.y*T + T*.3, x1 = f.to.x*T + T/2, y1 = f.to.y*T + T*.45, a = k < .6 ? 1 : 1 - (k - .6)/.4, reach = clamp(k*3, 0, 1);
