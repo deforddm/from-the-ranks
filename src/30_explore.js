@@ -130,7 +130,7 @@ function unspokenLine(id, ch){
   const waiting = (AREA().npcs || []).filter(n => { try { return (!n.show || n.show()) && n.fresh && !/^\(\)\s*=>\s*true$/.test(String(n.fresh)) && n.fresh() && n.node() !== id; } catch(e) { return false; } });
   if (!waiting.length) return '';
   const talks = new Set(waiting.map(n => n.node())); // two figures, one conversation (Hedge and Fiddler at the bones) are one somebody
-  const named = waiting.filter(n => !/^(a|an|the|something|someone)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]));
+  const named = waiting.filter(n => !/^(a|an|the|something|someone)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
   const who = talks.size === 1 && named.length ? `${named[0].name}'s` : 'Somebody here\'s';
   const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = mates.length ? NAME(mates[k % mates.length]) : '';
   return mate ? `${mate}, low: "${who} still waiting on a word, Sergeant."` : `${who.replace(/'s$/, ' is')} still waiting on a word.`;
@@ -237,7 +237,7 @@ function drawExplore(t){
   // party: sergeant + trail, interpolated
   // a squadmate standing on the map to be talked to is not also in the line behind
   const onMap = new Set(a.npcs.filter(n => !n.show || n.show()).map(n => n.kind));
-  SQUAD().slice(1).filter(id => !onMap.has(id)).forEach((id,i) => { const p = S.trail[i]; if (!p) return; const d = dispOf(id, p.x, p.y); drawFigure(ctx, id, d.x*T + T/2, d.y*T + T*.6, T/32*.85, t, {phase:i+1, dir: d.x <= S.pos.x ? 1 : -1, still:!walking}); });
+  SQUAD().slice(1).filter(id => !onMap.has(id) && !mateAway(id)).forEach((id,i) => { const p = S.trail[i]; if (!p) return; const d = dispOf(id, p.x, p.y); drawFigure(ctx, id, d.x*T + T/2, d.y*T + T*.6, T/32*.85, t, {phase:i+1, dir: d.x <= S.pos.x ? 1 : -1, still:!walking}); });
   const d = dispOf('sgt', S.pos.x, S.pos.y);
   if (!walking) { const p = REDUCE() ? 0 : (Math.sin(t/260)+1)*.5; ctx.strokeStyle = `rgba(201,151,63,${.35+p*.4})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(d.x*T + T/2, d.y*T + T*.6, T*.4 + p*2, T*.16 + p, 0, 0, 7); ctx.stroke(); }
   drawFigure(ctx, 'sgt', d.x*T + T/2, d.y*T + T*.6, T/32, t, {phase:0, still:!walking});

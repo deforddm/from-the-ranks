@@ -3,7 +3,7 @@
    - The Water-Seller's Measure (Ch2, the night march): pour between skins until one holds exactly the measure. Three puzzles.
    - Hackle's Herd (Ch3, the Shallows): the column's stragglers are scattered and the dust is coming; Hackle brings them in.
    - Ask the Ground (Ch3, before the warlocks' tunnel): the ground answers in lights and tones; answer it back the same.
-   - The Trygalle Haggle (Ch5, the Nenoth camp): talk a shareholder down, skin by skin, before her patience runs out.
+   - Haggling (every water-trader on the Chain; first the Trygalle shareholder, Ch5): talk a price down, skin by skin, before patience runs out.
    - Khundryl Knucklebones (Ch6, the hills above Sanimon): toss the taw, scoop the bones, catch it. Played for skins.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim) and keep their deeds on S.deeds (the Deeds page reads them). */
 
@@ -174,55 +174,115 @@ function playGround(opt = {}){
   redraw();
 }
 
-/* ============ 4. The Trygalle Haggle ============
-   A shareholder, a price in skins, and her patience, which she does not show you except by tapping her glove when it is nearly gone.
-   Nudge (a skin off, likely), lowball (two off, a long shot, and it costs her more patience), or have a squadmate say something: each of
-   them knows a way to buy you a little time, once. Pay when you are happy. Push her past her patience and she closes the box on that
-   piece, and the price goes up a skin. One haggle a piece. */
-const HAGGLE_HELP = {haddat:['Haddat talks trade-talk', 'Haddat says something to her in the trade-talk of the Odhan, very politely. The shareholder laughs despite herself.'],
-  tangle:['Tangle counts at her', 'Tangle counts her crate out loud, item by item, with a sapper\'s precision. She is impressed despite herself.'],
-  sathi:['Sathi admires the horses', 'Sathi says the carriage horses are the best she has seen on the continent, which is true, and the shareholder softens, which is truer.'],
-  marrow:['Marrow looks at her hand', 'Marrow looks at the scorched glove and says, "That wants dressing, child." The shareholder lets her. It takes a while.'],
-  redblade:['Ramin bows', 'Ramin bows to her, the Ehrlitan way, from the waist, and says something gracious about the Guild. She has not been bowed to in a year.'],
-  warlock:['Keth\'s grandmother speaks up', 'The old woman in Keth says something to her about the warrens that the shareholder very much wants to hear more of.'],
-  sgt:['Tell her about the road', 'You tell her about the road from Hissar. Not all of it. Enough. She is quiet a moment.']};
+/* ============ 4. Haggling on the Chain (the Trygalle Haggle, v5.3; every water-trader, v6.4.1) ============
+   A trader, a price in skins, and their patience, which they do not show you except by a tell when it is nearly gone.
+   Nudge (a skin off, likely), lowball (two off, a long shot, and it costs more patience), or have a squadmate say something: each of
+   them knows a way to buy you a little time, once. Pay when you are happy. Push past their patience and they close on that piece, and
+   the price goes up a skin. One haggle a piece.
+   And once a haggle, the squad's own argument: "We're guarding your life." The Seventh's squads hold the stretches; every soul in the
+   column walks inside them. Said to someone who walks in the column, it is a strong argument: two skins off, and the bottom with them.
+   Said to a Trygalle shareholder it is a weak one (the Guild guards the Guild); said to a Khundryl who rode four hundred leagues to
+   fight for you, it is a joke, and he likes the nerve. */
+const HAGGLERS = {
+  b2_follower2:{who:'The camp follower', g:'f', kick:'The Sekala · the west bank', fig:'hissari_w', prop:'blanket', day:true, tell:'She starts rolling up the blanket.',
+    open:(p, it) => `"${p} skins, ${it}." She does not move her hand anywhere near the fetish. "Haggle if you like. I have nowhere to be but the next river."`,
+    yes1:['"One less."', 'She sucks her teeth. "One."', '"One. For the Seventh. Don\'t tell the weavers."'], yes2:['"Two. Two, and I never want to see that axe again."', 'A long look. "Two less. You haggle like my mother."'],
+    no:['"No."', '"I picked those off the dead myself, Sergeant. No."', 'She shakes her head and looks at the river.'],
+    bottom:'"That\'s the bottom. Below that I\'d sooner throw it in the Sekala."', shut:p => `She rolls the blanket over it. "No. Now it's ${p}. Because you pushed."`,
+    paid:['"Done," she says, and does not count the skins twice, which is the nicest thing anyone has done for you all day.', '"Done."', '"Done." She is not sorry at all.'],
+    guard:{p:.8, ok:'She looks past you, at the bank, where the Semk came down at the carts yesterday and the squad was between. For a long breath she says nothing. "Two less," she says. "And the bottom with it. Don\'t make me say why."', no:'"Everybody guards everybody," she says. "That\'s what the Chain is. No."'}},
+  b2_tinker3:{who:'The tinker', g:'m', kick:'The P\'atha · the tinker\'s handcart', fig:'hissari_m', prop:'cart', day:false, tell:'He starts whistling, and not cheerfully.',
+    open:(p, it) => `"${p} skins, ${it}." He folds his hands on the handle of the cart. "In Kan we haggle for an hour before tea. Out here, I give you until the water boils."`,
+    yes1:['"One less. Only because you are polite."', '"One." He writes it on his palm with a burnt stick.', 'He spreads his hands. "One, then."'], yes2:['"Two. Two! The Kanese do not do two. Nobody tell Kan."', 'He laughs, painfully. "Two less. My grandfather is turning in the sea."'],
+    no:['"No."', '"I walked this cart from Hissar, Sergeant. No."', 'He shakes his head, very slowly, as at a grandson.'],
+    bottom:'"That is the bottom. Under that, I am giving it away, and I do not give."', shut:p => `He puts it back under the canvas. "No. Now it is ${p}. You made an old man say no."`,
+    paid:['"Done. You haggled like a Kanese. It is the highest thing I can say."', '"Done."', '"Done," he says, satisfied, and counts the skins twice.'],
+    guard:{p:.75, ok:'He stops. He looks at you for a while, and at the squad, and back along the column, at all the carts that are still carts. "Yes," he says. "Yes, you are. Two less. And I will not go under it again, but I will go to it."', no:'"And I sharpen your knives," he says, quite kindly. "We are all paying each other, on the Odhan. No."'}},
+  b2_servant4:{who:'The noble\'s man', g:'m', kick:'The ring of carts · behind the last carriage', fig:'hissari_m', prop:'bundle', day:false, tell:'He looks back at the carriages.',
+    open:(p, it) => `"${p} skins, ${it}." He keeps his voice very low. "Please be quick. If the steward sees me, there will be no kitchen cart to bring it to."`,
+    yes1:['"One less. Please."', '"One." He looks back at the carriages.', '"Yes, yes, one less."'], yes2:['"Two. Two, and quickly."', 'He winces. "Two less. The children will drink less. Two."'],
+    no:['"No. The children."', '"I cannot. I am sorry. No."', 'He shakes his head, and keeps looking at the carriages.'],
+    bottom:'"That is the bottom. Under that it does not fill the kitchen cart\'s skins, and then why did I steal it?"', shut:p => `He rolls the bundle closed. "No. ${p}. I am sorry. I have to go back."`,
+    paid:['"Thank you." He says it as if it hurt. "The children will not know who to thank. I will tell them a soldier."', '"Thank you."', '"Done." He is already walking back to the kitchen cart.'],
+    guard:{p:.85, ok:'He looks at your squad, at the dust on the shields, at the stretch the carriages sit inside like eggs in a nest. "My master would not say it," he says. "So I will. Two less. And the bottom with it. You are the only wall we have."', no:'"My master says the Seventh is paid for that," he says, ashamed of it. "I am sorry. No."'}},
+  b2_trader5:{who:'The shareholder', g:'f', kick:'The Nenoth · the Trygalle carriage', fig:'trygalle_guard', prop:'carriage', day:false, tell:'She taps her glove.',
+    open:(p, it) => `"${p} skins, ${it}." She folds her arms. One of them has a scorched glove on it. "Go on, then. Everybody haggles. It's the only fun we get."`,
+    yes1:['"One less. One."', 'She sighs, theatrically. "One."', '"For a sergeant of the Seventh, one." She does not mean it kindly.'], yes2:['A long look. "Fine. Two. You have a face like a tax-collector\'s mother."', '"Two." She says it like a curse. "Two less. Take it before I come to my senses."'],
+    no:['"No."', 'She looks at you for a long moment. "No."', '"The Guild crossed a warren with a war in it. The Guild does not take one less."'],
+    bottom:'"That\'s the bottom. I\'d sooner give it to the Semk."', shut:p => `She shuts the lid. "No," she says, quite pleasantly. "Now it's ${p}. Because you made me say no."`,
+    paid:['"Robbery," she says, and shakes your hand. "Come and work for the Guild. You\'d hate it."', '"Done," she says. "Don\'t tell the partners."', '"Done." She does not even pretend to be sorry.'],
+    help:{haddat:'Haddat says something to her in the trade-talk of the Odhan, very politely. The shareholder laughs despite herself.', tangle:'Tangle counts her crate out loud, item by item, with a sapper\'s precision. She is impressed despite herself.', sathi:'Sathi says the carriage horses are the best she has seen on the continent, which is true, and the shareholder softens, which is truer.', marrow:'Marrow looks at the scorched glove and says, "That wants dressing, child." The shareholder lets her. It takes a while.', redblade:'Ramin bows to her, the Ehrlitan way, from the waist, and says something gracious about the Guild. She has not been bowed to in a year.', warlock:'The old woman in Keth says something to her about the warrens that the shareholder very much wants to hear more of.'},
+    guard:{p:.25, free:true, ok:'She laughs out loud. "You? Guard the Trygalle?" And then, because the Fist\'s camp is all that stands between her horses and Korbolo Dom tonight, and she knows it: "All right. That one\'s fair. Two less, and the bottom with it, and you never say it again."', no:'She laughs out loud. "Sergeant. The Guild guards the Guild. We came through a warren with a war in it." But she is still smiling, and it costs you nothing.'}},
+  b2_ktrader6:{who:'The Khundryl', g:'m', kick:'The hills above Sanimon · the Khundryl horse lines', fig:'khundryl', prop:'hide', day:true, tell:'He goes back to his paint.',
+    open:(p, it) => `"${p}," he says, in trade-talk, ${it} across his knees. "Skins. Talk if you like. The Khundryl like a man who talks before he pays. It means he has thought."`,
+    yes1:['"One less."', 'He shrugs. "One."', '"One. My horses will drink less. They will forgive you."'], yes2:['"Two." He laughs. "Two, for the nerve."', 'A long look, through the paint. "Two less. You fight like that too, I think."'],
+    no:['"No."', 'He looks at you through the paint and says nothing, which is no.', '"No. My horses are thirsty, Malazan. Ask them."'],
+    bottom:'"That is the bottom. Under it I am giving gifts, and a gift is not given to a man who haggles."', shut:p => `He puts it back across his knees. "No. ${p}. You pushed a Khundryl. Remember it, it is a good story."`,
+    paid:['He clasps your forearm, Khundryl fashion. "Good trade. I will tell my sons a Malazan robbed me."', '"Good."', 'He nods, once, and goes back to his paint.'],
+    guard:{p:.2, gain:true, ok:'He stares at you. Then he laughs, the whole of him, until he has to wipe the paint off his eyes. "You guard me? Malazan, I rode four hundred leagues to guard you!" He holds up two fingers. "Two less. For the joke. It is the best I have heard since the river."', no:'He stares at you. Then he laughs, the whole of him. "You guard me? Malazan, I rode four hundred leagues to guard you." He does not take anything off. But he likes you better now, and he is in no hurry.'}}};
+const HAGGLE_HELP = {haddat:['Haddat talks trade-talk', P => `Haddat says something to ${P.him} in the trade-talk of the Odhan, very politely. ${P.She} laughs despite ${P.self}.`],
+  tangle:['Tangle counts at {him}', P => `Tangle counts ${P.his} wares out loud, item by item, with a sapper's precision. ${P.She} is impressed despite ${P.self}.`],
+  sathi:['Sathi talks horses', P => `Sathi says something about horses, the way a Weasel does, and ${P.lc} turns out to have opinions about horses. Everybody on the Odhan does. It takes a while.`],
+  marrow:['Marrow looks at {his} hands', P => `Marrow looks at ${P.his} cracked hands and says, "Those want seeing to, child." ${P.She} lets her. It takes a while.`],
+  redblade:['Ramin bows', P => `Ramin bows to ${P.him}, the Ehrlitan way, from the waist, and says something gracious. ${P.She} has not been bowed to in a year.`],
+  warlock:['Keth\'s grandmother speaks up', P => `The old woman in Keth says something to ${P.him}, rude and very old and very funny, and ${P.she} laughs before ${P.she} can stop ${P.self}.`],
+  sgt:['Tell {him} about the road', P => `You tell ${P.him} about the road from Hissar. Not all of it. Enough. ${P.She} is quiet a moment.`]};
+const haggler = node => { const h = HAGGLERS[node] || HAGGLERS.b2_trader5, f = h.g === 'f';
+  return Object.assign({She:f ? 'She' : 'He', she:f ? 'she' : 'he', his:f ? 'her' : 'his', him:f ? 'her' : 'him', self:f ? 'herself' : 'himself', lc:h.who.replace(/^The /, 'the ')}, h); };
 function playHaggle(o){
-  const it = ITEMS[o.item], pick = a => a[R(a.length)], floor = Math.max(1, o.price - 3);
-  const g = MG.state = {price:o.price, pat:3 + R(2), used:{}, over:false, paid:false, talk:'', tap:0, mood:0};
-  mgOpen({kick:'The Nenoth · the Trygalle carriage', title:`Haggling for ${it.name.replace(/^(A|An|The) /, 'the ').toLowerCase()}`, leaveText:'Walk away', done:() => talk(o.node), leave:() => { finish(false); }});
+  const it = ITEMS[o.item], P = haggler(o.node), pick = a => a[R(a.length)], iname = it.name.replace(/^(A|An) /, 'the ').toLowerCase();
+  const g = MG.state = {price:o.price, floor:Math.max(1, o.price - 3), pat:3 + R(2), used:{}, over:false, paid:false, talk:'', tap:0, guard:false};
+  mgOpen({kick:P.kick, title:`Haggling for ${it.name.replace(/^(A|An|The) /, 'the ').toLowerCase()}`, leaveText:'Walk away', done:() => talk(o.node), leave:() => { finish(false); }});
   const say = (who, line) => { g.talk = mgSay(who, line); draw(); };
-  const finish = paid => { if (!g.over) { g.over = true; S.f.b2_haggled ??= {}; S.f.b2_haggled[o.item] = 1; S.f.b2_price ??= {}; S.f.b2_price[o.node + ':' + o.item] = g.price; } mgClose({paid, price:g.price}); };
-  const draw = () => { const helpers = [...SQUAD().filter(k => HAGGLE_HELP[k] && !g.used[k])];
-    mgPanel(`<div class="cpbar"><span>Her price: <b>${g.price}</b> skin${g.price === 1 ? '' : 's'}</span><span>You have ${chainW()}</span><span>${g.tap ? '<b class="warnc">She taps her glove.</b>' : 'She waits.'}</span></div>
+  const seal = () => { S.f.b2_haggled ??= {}; S.f.b2_haggled[o.item] = 1; S.f.b2_price ??= {}; S.f.b2_price[o.node + ':' + o.item] = g.price; };
+  const finish = paid => { if (!g.over) { g.over = true; seal(); } mgClose({paid, price:g.price}); };
+  const tap = () => { g.tap = g.pat <= 1 ? 1 : 0; };
+  const helpTxt = k => (P.help && P.help[k]) || HAGGLE_HELP[k][1](P), helpLabel = k => HAGGLE_HELP[k][0].replace('{him}', P.him).replace('{his}', P.his);
+  const draw = () => { const helpers = [...SQUAD().filter(k => HAGGLE_HELP[k] && !g.used[k] && !mateAway(k))];
+    mgPanel(`<div class="cpbar"><span>${P.his[0].toUpperCase() + P.his.slice(1)} price: <b>${g.price}</b> skin${g.price === 1 ? '' : 's'}</span><span>You have ${chainW()}</span><span>${g.tap ? `<b class="warnc">${P.tell}</b>` : `${P.She} waits.`}</span></div>
       ${g.talk}
-      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="hgDone" data-bot="1">Back to the carriage</button>` : `
-        <button class="btn" id="hgNudge" data-bot="1" ${g.price > floor ? '' : 'disabled'}>"One skin less."</button>
-        <button class="btn" id="hgLow" ${g.price - 2 >= floor ? '' : 'disabled'}>"Two less, or I walk."</button>
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="hgDone" data-bot="1">Back</button>` : `
+        <button class="btn" id="hgNudge" data-bot="1" ${g.price > g.floor ? '' : 'disabled'}>"One skin less."</button>
+        <button class="btn" id="hgLow" ${g.price - 2 >= g.floor ? '' : 'disabled'}>"Two less, or I walk."</button>
         <button class="btn primary" id="hgPay" ${chainW() >= g.price ? '' : 'disabled'}>Pay ${g.price}</button>`}</div>
-      ${g.over ? '' : `<div class="row mgbtns">${helpers.slice(0, 4).map(k => `<button class="btn" data-help="${k}">${esc(HAGGLE_HELP[k][0])}</button>`).join('')}</div>`}
-      <p class="fine">Nudge a skin off, or lowball for two. Every push tries her patience; a squadmate can buy some back, once each. When she taps her glove she is nearly done. Push her past it and the price goes up.</p>`);
+      ${g.over ? '' : `<div class="row mgbtns">${g.guard ? '' : `<button class="btn" id="hgGuard">"We're guarding your life."</button>`}${helpers.slice(0, 4).map(k => `<button class="btn" data-help="${k}">${esc(helpLabel(k))}</button>`).join('')}</div>`}
+      <p class="fine">Nudge a skin off, or lowball for two. Every push tries ${P.his} patience; a squadmate can buy some back, once each. When ${P.she} ${P.tell.replace(/^(She|He) /, '').replace(/\.$/, '')}, ${P.she} is nearly done: push past it and the price goes up. Once, you can remind ${P.him} who holds the stretch.</p>`);
     if ($('#hgNudge')) $('#hgNudge').onclick = () => push(1); if ($('#hgLow')) $('#hgLow').onclick = () => push(2);
-    if ($('#hgPay')) $('#hgPay').onclick = () => { if (!b2Buy(o.item, g.price, 'The Trygalle')) return; const saved = o.price - g.price; if (saved > 0) { mgDeed('b2HaggleSaved', saved); tally('haggled', saved); } AUDIO.play('coin'); g.over = true; S.f.b2_haggled ??= {}; S.f.b2_haggled[o.item] = 1;
-      say('The shareholder', saved >= 2 ? '"Robbery," she says, and shakes your hand. "Come and work for the Guild. You\'d hate it."' : saved ? '"Done," she says. "Don\'t tell the partners."' : '"Done." She does not even pretend to be sorry.'); };
+    if ($('#hgGuard')) $('#hgGuard').onclick = () => guard();
+    if ($('#hgPay')) $('#hgPay').onclick = () => { if (!b2Buy(o.item, g.price, P.who)) return; const saved = o.price - g.price; if (saved > 0) { mgDeed('b2HaggleSaved', saved); tally('haggled', saved); } AUDIO.play('coin'); g.over = true; seal();
+      say(P.who, saved >= 2 ? P.paid[0] : saved ? P.paid[1] : P.paid[2]); };
     if ($('#hgDone')) $('#hgDone').onclick = () => { AUDIO.play('click'); finish(true); };
-    document.querySelectorAll('#mgPanel [data-help]').forEach(b => b.onclick = () => { const k = b.dataset.help; g.used[k] = 1; g.pat += 1; g.tap = g.pat <= 1 ? 1 : 0; AUDIO.play('click'); say(k === 'sgt' ? '' : NAME(k), HAGGLE_HELP[k][1]); }); };
+    document.querySelectorAll('#mgPanel [data-help]').forEach(b => b.onclick = () => { const k = b.dataset.help; g.used[k] = 1; g.pat += 1; tap(); AUDIO.play('click'); say(k === 'sgt' ? '' : NAME(k), helpTxt(k)); }); };
+  /* the squad's own argument, once a haggle */
+  const guard = () => { if (g.over || g.guard) return; g.guard = true; const G = P.guard;
+    if (Math.random() < G.p) { g.floor = Math.max(1, g.floor - 1); g.price = Math.max(g.floor, g.price - 2); AUDIO.play('coin'); tap(); mgDeed('b2HaggleGuard'); return say(P.who, G.ok); }
+    if (G.gain) { g.pat += 1; tap(); AUDIO.play('click'); return say(P.who, G.no); }
+    if (!G.free) { g.pat -= 1; if (g.pat < 0) return shut(); }
+    tap(); AUDIO.play('click'); say(P.who, G.no); };
+  const shut = () => { g.price += 1; g.over = true; AUDIO.play('miss'); seal(); mgDeed('b2HaggleLost'); say(P.who, `${P.shut(g.price)} ${P.She} will not haggle over this one again.`); };
   const push = n => { if (g.over) return; const chance = n === 1 ? .78 : .42; g.pat -= n;
-    if (g.pat < 0) { g.price += 1; g.over = true; AUDIO.play('miss'); S.f.b2_haggled ??= {}; S.f.b2_haggled[o.item] = 1; S.f.b2_price ??= {}; S.f.b2_price[o.node + ':' + o.item] = g.price; mgDeed('b2HaggleLost');
-      return say('The shareholder', `She shuts the lid. "No," she says, quite pleasantly. "Now it's ${g.price}. Because you made me say no." She will not haggle over this one again.`); }
-    if (Math.random() < chance) { g.price = Math.max(floor, g.price - n); AUDIO.play('coin'); g.tap = g.pat <= 1 ? 1 : 0;
-      say('The shareholder', g.price <= floor ? '"That\'s the bottom. I\'d sooner give it to the Semk."' : pick(n === 2 ? ['A long look. "Fine. Two. You have a face like a tax-collector\'s mother."', '"Two." She says it like a curse. "Two less. Take it before I come to my senses."'] : ['"One less. One."', 'She sighs, theatrically. "One."', '"For a sergeant of the Seventh, one." She does not mean it kindly.'])); }
-    else { g.tap = g.pat <= 1 ? 1 : 0; AUDIO.play('click'); say('The shareholder', pick(['"No."', 'She looks at you for a long moment. "No."', '"The Guild crossed a warren with a war in it. The Guild does not take one less."'])); } };
-  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H; b2Night(ctx, W, H, t); glow(ctx, W*.2, H*.7, W*.4, '#e8923a', .22);
-    // the carriage, black, its wheels steaming
-    ctx.fillStyle = '#120e0c'; ctx.fillRect(W*.55, H*.22, W*.38, H*.42); ctx.fillStyle = '#2a1e16'; ctx.fillRect(W*.58, H*.28, W*.12, H*.14); ctx.fillStyle = 'rgba(255,190,110,.25)'; ctx.fillRect(W*.59, H*.29, W*.1, H*.12);
-    [W*.62, W*.86].forEach((x, i) => { ctx.strokeStyle = '#3a2a1e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, H*.68, H*.11, 0, 7); ctx.stroke(); for (let s = 0; s < 3; s++) { const y = H*.55 - ((t/18 + s*20 + i*9) % 50); ctx.fillStyle = `rgba(220,220,230,${.12*(1 - (H*.55 - y)/50)})`; ell(ctx, x + Math.sin(t/300 + s)*4, y, 6, 4, ctx.fillStyle); } });
-    // the trestles, the piece, the skins you would pay
-    ctx.fillStyle = '#4a3420'; ctx.fillRect(W*.1, H*.62, W*.38, 6); ctx.fillRect(W*.13, H*.62, 4, H*.18); ctx.fillRect(W*.44, H*.62, 4, H*.18);
+    if (g.pat < 0) return shut();
+    if (Math.random() < chance) { g.price = Math.max(g.floor, g.price - n); AUDIO.play('coin'); tap(); say(P.who, g.price <= g.floor ? P.bottom : pick(n === 2 ? P.yes2 : P.yes1)); }
+    else { tap(); AUDIO.play('click'); say(P.who, pick(P.no)); } };
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H; b2Night(ctx, W, H, t, {day:P.day}); glow(ctx, W*.2, H*.7, W*.4, P.day ? '#f2d08a' : '#e8923a', P.day ? .14 : .22);
+    if (P.prop === 'carriage') { // the Trygalle carriage, black, its wheels steaming
+      ctx.fillStyle = '#120e0c'; ctx.fillRect(W*.55, H*.22, W*.38, H*.42); ctx.fillStyle = '#2a1e16'; ctx.fillRect(W*.58, H*.28, W*.12, H*.14); ctx.fillStyle = 'rgba(255,190,110,.25)'; ctx.fillRect(W*.59, H*.29, W*.1, H*.12);
+      [W*.62, W*.86].forEach((x, i) => { ctx.strokeStyle = '#3a2a1e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, H*.68, H*.11, 0, 7); ctx.stroke(); for (let s = 0; s < 3; s++) { const y = H*.55 - ((t/18 + s*20 + i*9) % 50); ctx.fillStyle = `rgba(220,220,230,${.12*(1 - (H*.55 - y)/50)})`; ell(ctx, x + Math.sin(t/300 + s)*4, y, 6, 4, ctx.fillStyle); } }); }
+    else if (P.prop === 'cart') { ctx.fillStyle = '#3a2a1c'; ctx.fillRect(W*.6, H*.48, W*.3, H*.14); ctx.strokeStyle = '#2a1c12'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(W*.75, H*.68, H*.08, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(W*.9, H*.52); ctx.lineTo(W*.98, H*.6); ctx.stroke();
+      for (let i = 0; i < 5; i++) ell(ctx, W*(.63 + i*.055), H*.47, W*.02, H*.025, ['#6a5a48', '#8a6a3a', '#5a6a6a', '#7a5a3a', '#6a6a5a'][i]); }
+    else if (P.prop === 'bundle') { ctx.fillStyle = '#1a1410'; ctx.fillRect(W*.6, H*.2, W*.34, H*.36); ctx.fillStyle = 'rgba(255,200,120,.18)'; ctx.fillRect(W*.64, H*.26, W*.1, H*.1); ctx.strokeStyle = '#2a1e16'; ctx.lineWidth = 3; [W*.66, W*.88].forEach(x => { ctx.beginPath(); ctx.arc(x, H*.62, H*.09, 0, 7); ctx.stroke(); }); }
+    else if (P.prop === 'hide') { for (let i = 0; i < 2; i++) { const x = W*(.66 + i*.17), y = H*.5, c = i ? '#3a2a1c' : '#241a12', b = (RM => RM ? 0 : Math.sin(t/700 + i*2)*2)(REDUCE()); // two horses at the line, heads down to nothing
+      ctx.fillStyle = c; [[-.055, 0], [-.035, .01], [.035, .01], [.055, 0]].forEach(([dx, dl]) => ctx.fillRect(x + W*dx, y + H*.02, Math.max(2, W*.008), H*(.17 - dl)));
+      ell(ctx, x, y, W*.075, H*.05, c); ctx.beginPath(); ctx.moveTo(x + W*.05, y - H*.02); ctx.lineTo(x + W*.1, y + H*.06 + b); ctx.lineTo(x + W*.085, y + H*.075 + b); ctx.lineTo(x + W*.035, y + H*.01); ctx.closePath(); ctx.fill();
+      ell(ctx, x + W*.1, y + H*.085 + b, W*.018, H*.03, c, .5); ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - W*.07, y - H*.01); ctx.quadraticCurveTo(x - W*.1, y + H*.05, x - W*.085, y + H*.11); ctx.stroke(); } }
+    // the goods, on trestles or a blanket; the skins you would pay
+    if (P.prop === 'blanket' || P.prop === 'hide') { ell(ctx, W*.29, H*.66, W*.2, H*.05, P.prop === 'hide' ? '#5a4230' : '#6a4a4a'); }
+    else { ctx.fillStyle = '#4a3420'; ctx.fillRect(W*.1, H*.62, W*.38, 6); ctx.fillRect(W*.13, H*.62, 4, H*.18); ctx.fillRect(W*.44, H*.62, 4, H*.18); }
     b2Text(ctx, it.name, W*.29, H*.58, Math.min(15, W*.034), 'rgba(240,220,180,.9)');
     for (let i = 0; i < g.price; i++) { const x = W*.13 + (i%6)*W*.055, y = H*.86 - Math.floor(i/6)*H*.08; ell(ctx, x, y, W*.022, H*.035, '#6a4a2c'); ell(ctx, x - 2, y - 3, W*.008, H*.012, 'rgba(255,230,200,.2)'); }
-    drawFigure(ctx, 'trygalle_guard', W*.5, H*.8, Math.min(2.2, H/120), t, {still:true, dir:-1});
+    drawFigure(ctx, P.fig, W*.5, H*.8, Math.min(2.2, H/120), t, {still:true, dir:-1});
     if (g.tap && !g.over) { const k = (Math.sin(t/120) + 1)/2; ell(ctx, W*.5 + 14, H*.8 - 30, 4 + k*2, 4 + k*2, `rgba(240,140,110,${.4 + k*.4})`); } };
-  g.talk = mgSay('The shareholder', `"${o.price} skins, ${it.name.replace(/^(A|An) /, 'the ').toLowerCase()}." She folds her arms. One of them has a scorched glove on it. "Go on, then. Everybody haggles. It's the only fun we get."`);
+  g.talk = mgSay(P.who, P.open(o.price, iname));
   draw();
 }
 
@@ -311,7 +371,7 @@ ${b2In('sathi') ? '"Riders," Sathi says, shading her eyes. "Not soon. Soon." Hac
 Object.assign(B2CH3.dlg, {
   b2_ground_after:()=>({sp:'Nil', txt:S.f.b2_ground ? `Nil puts his hands back on the earth. "Tonight it will be asked for a great deal," he says. "It will remember you were polite." He does not look up again.` : `"Another time," Nil says, without looking up. "It is tired tonight. So am I."`, ch:[{t:'Leave them to it.', go:()=>startExplore()}]}),
 });
-/* the Trygalle's haggle comes back to the trader's node itself (playHaggle's done → talk(node)) */
+/* a haggle comes back to the trader's node itself (playHaggle's done → talk(node)) */
 Object.assign(B2CH6.dlg, {
   b2_jacks6:()=>({sp:'A Khundryl fire', fx:()=>{ S.f.b2_jacks6 = 1; }, txt:
 `A ring of Khundryl round a fire, half of them painted already, passing a cup, and in the middle of them a warrior with five knucklebones on a hide in front of him, playing against everyone in turn and beating them.

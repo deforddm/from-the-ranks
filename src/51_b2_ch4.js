@@ -451,7 +451,7 @@ Coltaine listens to all of it. His hand is bound up in a strip of cloth.
 
 Then he says one word, and turns his back on the envoys, and walks away up the bank. You don't need to hear the word.
 
-${b2In('haddat') ? `"No," Haddat says, very quietly, translating nothing.` : ''}${b2In('redblade') ? ` Ramin lets out a breath. "Good," he says. "In Ehrlitan, men who offer that much are selling something else."` : ''}`,
+${b2In('haddat') ? `"No," Haddat says, very quietly, translating nothing.` : ''}${b2In('redblade') ? ` Ramin lets out a breath. "Good," he says. "In Ehrlitan, men who offer that much are selling something else."` : ''}${b2In('warlock') ? ` "Soft hands," the old woman says, out of Keth, not quietly enough. "Soft hands and a hard purse. I have buried a hundred of them."` : ''}`,
     ch:[{t:'Watch the envoys go.', go:()=>startExplore()}]}),
   b2_dom_far:()=>({sp:'The far bank', fx:()=>{ S.f.b2_domSeen = 1; }, txt:
 `You wade out into the ford to the knees, as far as the pickets let anyone go, and look.
@@ -573,7 +573,7 @@ ${b2In('haddat') ? `Haddat, very quietly, in Hissari: "He is drunk with fear." T
   b2_nethpara2:()=>({sp:'Lord Nethpara', fx:()=>{ S.f.b2_dealHint = 1; }, txt:
 `"A *deal*." He goes red, and then very pale, and the cup shakes. "How dare you. I am a member of the Council. I do not make *deals* with rebels, I..." He stops. He looks past you, at the river. "Go away, soldier. Go and die for the Fist. Somebody should."
 
-${b2In('redblade') ? `Ramin, as you go: "In Ehrlitan, Sergeant, when a rich man says *how dare you*, it means *yes*." He says it without heat. He has seen this before.` : 'It is the most honest thing he has said.'}
+${b2In('redblade') ? `Ramin, as you go: "In Ehrlitan, Sergeant, when a rich man says *how dare you*, it means *yes*." He says it without heat. He has seen this before.` : b2In('warlock') ? `It is the most honest thing he has said. The old woman, out of Keth, as you go: "He means yes. They always mean yes. They only want to be seen being dragged to it." Keth looks mortified.` : 'It is the most honest thing he has said.'}
 
 You do not touch him. You are a soldier of the Seventh, and he is what the Seventh is marching for, and both of you know it.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),

@@ -41,7 +41,7 @@ PATRONS.warlock = {god:'the grandmother', title:'The dead of the Foolish Dog', t
 /* the Land's Teeth: the spirits of the ground come up for an enemy and bite; what they bite is held by the feet (the Earth's Hand's hold, 50) */
 const b2TeethR = u => has(u.id, 'deepground') ? 5 : 4;
 Object.assign(AB, {
-  b2_teeth:{name:'The Land\'s Teeth', spirit:true, desc:()=>`An enemy within ${S && has('warlock', 'deepground') ? 5 : 4}: the spirits of the ground come up for it. 1d8+${2 + lvDmg()} on a hit, and what they bite is held by the feet: slowed, and −2 to hit until Keth's next turn${S && has('warlock', 'deepground') ? '. Every enemy next to it is held too' : ''}. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level. Spirit-craft: it never sputters.`,
+  b2_teeth:{name:'The Land\'s Teeth', spirit:true, desc:()=>`An enemy within ${S && has('warlock', 'deepground') ? 5 : 4}: the spirits of the ground come up for it. 1d8+${2 + lvDmg()} on a hit (2d8 on what is left of the Semk god: the ground knows the taste), and what they bite is held by the feet: slowed, and −2 to hit until Keth's next turn${S && has('warlock', 'deepground') ? '. Every enemy next to it is held too' : ''}. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level. Spirit-craft: it never sputters.`,
     ok:u=>!(u.cdTeeth >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= b2TeethR(u) && sees(u, f)),
     /* v6.4: nothing crosses the field. Keth's palms go to the ground, the ground under the target splits, a mouth of bone-stone fangs
        comes up round it and snaps shut (the blow lands on the snap), grinds, and goes back down; the spirits that did it rise out of
@@ -55,7 +55,10 @@ Object.assign(AB, {
       blog(`${u.name} shakes the rattle of dog's teeth at the ground under ${t.name} and asks it, in Foolish Dog, the way you would ask a strange dog.`);
       later(() => { if (B && t.hp > 0) grit(t, 10); }, pace(120) + dur*.2);
       later(() => { if (!B) return; AUDIO.play('chomp'); shakeMap(); grit(t, 14); }, pace(120) + snapAt);
-      const r = attack(u, t, {dmg:[1, 8, 2 + lvDmg()], verb:'calls the ground up under', ground:true, land:pace(120) + snapAt + pace(30)});
+      const god = t.id === 'b2_godrider'; // the ground has eaten most of the Semk god already, beyond the Sekala; it knows the taste
+      if (god) later(() => { if (B) blog(`The ground knows this one. It has eaten most of it already, and it comes up for the rest with its mouth wide. The old woman, out of ${u.name}: <em>There you are.</em>`); }, pace(120) + dur*.2);
+      const r = attack(u, t, {dmg:[god ? 2 : 1, 8, 2 + lvDmg()], verb:'calls the ground up under', ground:true, land:pace(120) + snapAt + pace(30)});
+      if (god && r.hit) S.f.b2_kethBitGod = 1;
       const deep = has(u.id, 'deepground') ? foes().filter(f => f !== t && f.hp > 0 && cheb(f, t) <= 1) : [];
       deep.forEach((f, i) => B.fx.push({kind:'teeth', x:f.x, y:f.y, col, seed:seed + 31*(i + 1), t:now + pace(300) + i*pace(70), dur:dur*.85}));
       if (deep.length) later(() => { if (B) AUDIO.play('chomp'); }, pace(300) + dur*.85*.4);
@@ -214,11 +217,24 @@ Object.assign(B2CHX.dlg, {
 });
 
 /* ---------------- Chapter 2: the night of the spirits; and the chapter's page ---------------- */
-{ const f = B2CH2.dlg.b2_night; B2CH2.dlg.b2_night = () => { const n = f(); if (b2In('warlock')) n.txt = n.txt.replace('By dawn there is nothing out there but the plain.',
-`Keth is sitting up on the far side of the cart, very straight, with his palms flat on the ground and his eyes shut. "Do not watch," the old woman says, out of him, quite calm. "It is rude. They have not eaten in a very long time." Then, in his own voice, much smaller: "Nil is out there. And Sormo. Holding it still for them."
+/* the night beyond the Sekala, when Sormo and Nil and Nether give the Semk god to the land: this is Keth's whole craft, and he feels the
+   piece of it that gets away (the god-ridden of Chapter 3) */
+{ const f = B2CH2.dlg.b2_night; B2CH2.dlg.b2_night = () => { const n = f(); if (!b2In('warlock')) return n;
+  const fx = n.fx; n.fx = () => { if (fx) fx(); S.f.b2_kethPiece = 1; };
+  n.txt = n.txt.replace('By dawn there is nothing out there but the plain.',
+`Keth is sitting up on the far side of the cart, very straight, with his palms flat on the ground and his eyes shut. He is not shaking. He is the only one of you who is not.
+
+"Do not watch," the old woman says, out of him, quite calm. "It is rude. They have not eaten in a very long time."
+
+"It is young, the Semk god," Keth says, in his own voice, much smaller, without opening his eyes. "A hundred years. Two. It came up out of the hills and put its feet on this ground and never once asked." His palms press flatter. "Nil is out there. And Nether. And Sormo, holding it still for them. The ground is old here. It remembers how to do this."
+
+Out on the plain the painted thing goes down on one knee, and after that it is very hard to see.
+
+Then Keth's eyes come open, all at once, and he says something sharp in Foolish Dog that is not a prayer. The old woman, out of him, slowly: "Not all of it. Something went into the ground, child, and out the other side, and away. A piece. A small piece, hiding in somebody." He looks at you across the cart in the dark. "It will want its paint back," he says. "Tell the Fist. Nobody will listen. Tell him anyway."
 
 By dawn there is nothing out there but the plain.`); return n; }; }
 { const e = B2CH2.extras; B2CH2.extras = () => { const x = e();
+    if (S.f.b2_kethPiece) x.push('The night the land took the Semk god, Keth felt a piece of it get away into somebody, and said so.');
     if (b2In('warlock')) x.push('Keth, a young warlock of the Foolish Dog, walks with the squad, and his great-grandmother walks inside him. He listens to the ground at night. She tells him what it says, rudely.');
     else if (S.f.b2_kethDone === 2) x.push('A young Wickan warlock of the Foolish Dog walks near the squad\'s stretch, and listens to the ground along it at night.');
     if (S.f.b2_kethDone === 0) x.push('A young Wickan warlock offered to walk with the squad on the west bank, and the squad sent him back to Sormo.');
@@ -237,6 +253,19 @@ The old woman, out of his mouth, very dry: "He is jealous. He should be grateful
 "I am young," Keth says.
 
 "Yes," says the old woman.`,
+    ch:[{t:'"The Semk god. Is it dead?"', req:()=>!S.f.b2_keth3god, fx:()=>{ S.f.b2_keth3god = 1; }, go:'b2_keth3g'},
+        {t:'"Then listen for us tonight."', fx:()=>{ S.f.b2_keth3 = 'listen'; loy('warlock', 1); }, go:'b2_keth3b'},
+        {t:'"You\'ll get your turn."', fx:()=>{ S.f.b2_keth3 = 'turn'; }, go:'b2_keth3c'}]}),
+  b2_keth3g:()=>({sp:'Keth', txt:
+`He doesn't answer at once. He puts his palm flat again and listens, with his head on one side, like a dog at a rabbit-hole.
+
+"Mostly," he says. "There is a piece of it in the Tithansi camp. In a man. I can hear it from here, walking about on the ground the way it always did, as if the ground were its own. It is very hurt and very angry and it does not know yet that it is dying."
+
+The old woman, out of his mouth: "It knows. Gods always know. They only behave as if they don't."${S.f.b2_kethPiece ? `
+
+"I said, at the Sekala," Keth says. "Did you tell the Fist?" You did. Or you meant to. He nods, as if either one were the answer he expected.` : ''}
+
+"If you meet it," he says, "do not let it put the paint on you. And bring me close. The ground remembers what it tasted. It will want the rest."`,
     ch:[{t:'"Then listen for us tonight."', fx:()=>{ S.f.b2_keth3 = 'listen'; loy('warlock', 1); }, go:'b2_keth3b'},
         {t:'"You\'ll get your turn."', fx:()=>{ S.f.b2_keth3 = 'turn'; }, go:'b2_keth3c'}]}),
   b2_keth3b:()=>({sp:'Keth', txt:`He looks at you for a long moment, and then down at his hands. "Yes," he says. "I will listen. If it lets go of anyone, I will know." He presses his palms flatter into the ground, as if he could hold it up from here. Perhaps he can. He does not sleep all night.`, ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -246,6 +275,26 @@ The old woman, out of his mouth, very dry: "He is jealous. He should be grateful
   n.txt = n.txt.replace('and you understand that nobody is going to.', `and you understand that nobody is going to.
 
 Except Keth. He is sitting on the bare patch where the other boy sat before the raid, with his palms on the ground. ${S.f.b2_keth3 === 'listen' ? 'He has been there all night. ' : ''}He says a name, once, quietly, into the earth, now that the work is done. The old woman in him does not say anything at all, which is the first time you have known her not to.`); return n; }; }
+
+/* the god-ridden: Keth knows it at once; the raid back; the pits; and at the Shallows the ground finishes its meal, and Keth with it */
+{ const st = B2CH3.battles.b2_raid.stage2, f = st.text; st.text = () => { const t = f(); if (!b2In('warlock')) return t;
+  return t.replace('Wicket, flat in the mouth of the cut:', `Keth has gone white under the ochre. "That," he says. "That is the piece." And the old woman, out of his mouth, with something in it very like hunger: "Bring me close to it, Malazan. Bring me close."
+
+Wicket, flat in the mouth of the cut:`); }; }
+{ const g = B2CH3.dlg.b2_raid_back; B2CH3.dlg.b2_raid_back = () => { const n = g(); if (!b2In('warlock')) return n;
+  n.txt += `\n\nBehind you Keth says, to nobody, "Not for much longer."${S.f.b2_kethBitGod ? ` He is looking at his own hands as if they had eaten something, and were not sure yet whether it agreed with them. The old woman, out of him, quite satisfied: "It did. Wash them."` : ` The old woman doesn't say anything at all.`}`; return n; }; }
+{ const f = B2CH3.dlg.b2_water; B2CH3.dlg.b2_water = () => { const n = f(); if (!b2In('warlock')) return n;
+  n.txt = n.txt.replace(/(He says it like a man who(?:'s| is) hoping\.["`]?)/, `$1
+
+Keth is lying on his belly at the edge of the squad's pit with one palm flat on the wet clay at the bottom. "Sormo is right," he says. "It is walking south with the Tithansi, slower every night. It drags." The old woman, out of him: "It will not cross the river. The ground has told me. I asked it nicely."`); return n; }; }
+['b2_after_bait', 'b2_after_pull'].forEach(k => { const f = B2CH3.dlg[k]; B2CH3.dlg[k] = () => { const n = f(); if (!b2In('warlock')) return n;
+  const fx = n.fx; n.fx = () => { if (fx) fx(); S.f.b2_kethFed = 1; };
+  n.txt = n.txt.replace('and you look away.', `and you look away.
+
+Keth does not look away. He is on his knees in the white dirt with both palms flat, and his lips are moving, and it is not his voice and not the old woman's: it is both, together, the way they laugh at funerals. "There," they say. "There. That is all of it now. Eat."
+
+When it is over he sits back on his heels and is sick, neatly, to one side, and wipes his mouth on his sleeve, and looks surprised to find himself a boy. "It is gone," he tells you. "All of it. There is nothing left anywhere that wants its paint back."${S.f.b2_kethBitGod ? ` A breath. "I had a bite of it, in the cut. The grandmother says that makes us family, a little. I would rather not be."` : ''}`); return n; }; });
+{ const e = B2CH3.extras; B2CH3.extras = () => { const x = e(); if (S.f.b2_kethFed) x.push('Below Gelor Ridge the land finished the Semk god, the last of it, in a painted man on a big horse, and Keth knelt on the lake bed and said the words for it to eat.'); return x; }; }
 
 /* ---------------- Chapter 4: the carriages, and Sormo at the Vathar ---------------- */
 Object.assign(B2CH4.dlg, {

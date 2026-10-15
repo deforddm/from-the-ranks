@@ -129,7 +129,7 @@ function bookDeedsHTML(b, all){
     const fires = [['The Water-Seller\'s Measure', meas ? `${meas} of 3 measured${d('b2MeasurePar') ? `, ${d('b2MeasurePar')} in as few pours as the water-sellers` : ''}` : 'Not yet'],
       ['Hackle\'s herd', d('b2Herd') ? `${herd} of 7 brought in${d('b2HerdAll') ? ', all seven at least once' : ''}` : 'Not yet'],
       ['Ask the Ground', d('b2Ground') ? `It answered${d('b2Ground') > 1 ? ` ${d('b2Ground')} times` : ''}` : d('b2GroundLost') ? 'It went quiet' : 'Not yet'],
-      ['The Trygalle haggle', d('b2HaggleSaved') ? `${d('b2HaggleSaved')} skin${d('b2HaggleSaved') === 1 ? '' : 's'} saved` : d('b2HaggleLost') ? 'She said no' : 'Not yet'],
+      ['Haggling on the Chain', d('b2HaggleSaved') ? `${d('b2HaggleSaved')} skin${d('b2HaggleSaved') === 1 ? '' : 's'} saved${d('b2HaggleGuard') ? ', and reminded them who holds the stretch' : ''}` : d('b2HaggleLost') ? 'They said no' : 'Not yet'],
       ['Khundryl knucklebones', d('b2JacksWon') || d('b2JacksLost') ? `${d('b2JacksWon')} won, ${d('b2JacksLost')} lost` : 'Not yet']];
     extra = `<h4 class="jh">The Chain</h4><div class="kv">${rows2.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div><h4 class="jh">At the fires</h4><div class="kv">${fires.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
   const open = (S ? bookOf(S) : BOOK) === b;

@@ -68,7 +68,7 @@ function b2Trader(node, o){ return () => { const left = o.wares.filter(([it]) =>
   return {sp:o.sp, fx:()=>{ S.f[node] = 1; }, txt:`${typeof o.txt === 'function' ? o.txt() : o.txt}${left.length ? `\n\n${left.map(([it, p]) => `*${ITEMS[it].name}*, ${numw(b2Price(node, it, p))} skin${b2Price(node, it, p) === 1 ? '' : 's'}: ${b2WareSays(it)}.`).join('\n\n')}` : `\n\n${o.empty || 'There is nothing left you could use.'}`}`,
     html:chainHTML(), ch:[
       ...left.map(([it, p]) => { const q = b2Price(node, it, p); return {t:`Buy the ${ITEMS[it].name.replace(/^(A|An|The) /, '').toLowerCase()}.`, tag:`${q} water`, req:()=>chainW() >= q, fx:()=>{ b2Buy(it, q, o.sp); }, go:node}; }),
-      ...(o.haggle ? left.filter(([it]) => !(S.f.b2_haggled || {})[it]).map(([it, p]) => ({t:`Haggle for the ${ITEMS[it].name.replace(/^(A|An|The) /, '').toLowerCase()}.`, tag:'Haggle', go:()=>playHaggle({item:it, price:b2Price(node, it, p), node, trader:o.sp})})) : []),
+      ...(o.haggle !== false ? left.filter(([it]) => !(S.f.b2_haggled || {})[it]).map(([it, p]) => ({t:`Haggle for the ${ITEMS[it].name.replace(/^(A|An|The) /, '').toLowerCase()}.`, tag:'Haggle', go:()=>playHaggle({item:it, price:b2Price(node, it, p), node, trader:o.sp})})) : []),
       ...(o.more ? o.more() : []),
       {t:left.length && !left.some(([it, p]) => w >= b2Price(node, it, p)) ? 'Not enough water. Leave it.' : 'Leave it.', go:()=>startExplore()}]}; }; }
 /* a price, after any haggling (S.f.b2_price[node:item]) */

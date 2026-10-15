@@ -430,7 +430,7 @@ The Seventh is forming up below the camp in silence.`,
   b2_sdawn:()=>({sp:'Dawn · Sanimon', scene:'b2_odhan_day', txt:
 `The Seventh goes down the slope in the half-dark with its shields up and nobody speaking, and the Wickans go round on either side at a walk, and at the bottom of the valley the Tregyn are getting out of their blankets.
 
-It will be noon before this is done, one way or the other. Everybody knows it. Anybody in iron will be an oven by then. ${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).length ? `${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).join(' and ')} ${b2In('haddat') && b2In('redblade') ? 'are' : 'is'} in iron.` : ''}
+It will be noon before this is done, one way or the other. Everybody knows it. Anybody in iron will be an oven by then. ${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).length ? `${[b2In('haddat') && 'Haddat', b2In('redblade') && 'Ramin'].filter(Boolean).join(' and ')} ${b2In('haddat') && b2In('redblade') ? 'are' : 'is'} in iron.` : ''}${b2In('warlock') ? ` Keth is in hide, and walks at the back of the squad with his rattle going very softly, listening to the ground under the Tregyn. His face says it is not telling him anything good.` : ''}
 
 ${chainW() > 0 ? `There are ${numw(chainW())} skin${chainW() === 1 ? '' : 's'} on the cart.` : 'There is no water on the cart.'}`,
     ch:[{t:'Drink first, all of you. One skin.', tag:'1 water', req:()=>chainW() > 0, fx:()=>{ b2Drink('b2_sanimon'); }, go:'b2_sdawn2'},

@@ -14,7 +14,7 @@ const cleanRoll = () => ROLL().tier === 'clean' || ROLL().tier === 'crit';
 function checkers(c){
   const who = c.check[2]; if (who) return [SQUAD().includes(who) ? who : 'sgt'];
   const T = c.trick && TRICKS[c.trick], no = [...(c.not || []), ...((T && T.not) || [])];
-  const ids = SQUAD().filter(id => !no.includes(id)); return ids.length ? ids : ['sgt'];
+  const ids = SQUAD().filter(id => !no.includes(id) && !mateAway(id)); return ids.length ? ids : ['sgt'];
 }
 /* the named bonuses one roller brings to one check */
 function edgesFor(c, id){

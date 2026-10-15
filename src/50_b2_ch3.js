@@ -17,6 +17,7 @@ function b2NearKit(item, who){ const r = ROLL(); S.inv ??= {};
   if ((S.inv[item] || 0) > 0) { S.inv[item]--; r.nearPaid = 1; } else { r.nearPaid = 0; b2NearRattle(who); } }
 /* Tangle is with the squad, and not off in a hole in the ramp with Mincer */
 const b2Tg = () => b2In('tangle') && !S.f.b2_tangleAway;
+AWAY.push(k => k === 'tangle' && S && S.book === 'dg' && !!S.f.b2_tangleAway && !S.f.b2_tangleBack); // from the ramp's night until he walks back in at dusk
 /* the squad's own people, for a line: the daughters, the widow, or the stretch */
 const b2Ours3 = () => S.f.b2_key === 'daughters' ? B2.elder : S.f.b2_yedda ? B2.widow : null;
 
@@ -416,7 +417,7 @@ Whatever goes down that hole tonight should go down it with something in its mou
         {t:'Give tonight\'s skin to the stretch.', tag:'1 water', req:()=>chainW() > 0, fx:()=>{ S.f.b2_eastRest = 1; S.f.b2_eastGave = 1; chain(-1, 1, 'The squad\'s skin to the stretch'); if (b2In('marrow')) loy('marrow', 1); if (b2In('redblade')) loy('redblade', 1); }, go:'b2_east_gave'},
         {t:'Keep it. Go down dry.', fx:()=>{ S.f.b2_eastRest = 1; }, go:'b2_east_dry'}]},
   b2_east_slept:()=>({sp:'The squad\'s fire', txt:`The skin goes round once. Everybody holds the mouthful before they swallow it, the way you taught them. ${b2In('sathi') ? 'Sathi gives half of hers to Hackle out of her cupped hand.' : ''} An hour's sleep on the hardpan, with the cattle dying all down the column. It is better than nothing. It is not much better.`, ch:[{t:'Up.', go:()=>startExplore()}]}),
-  b2_east_gave:()=>({sp:'The squad\'s fire', txt:`The skin goes down the stretch, cart to cart, children first. ${b2In('redblade') ? 'Ramin carries it, and does not drink from it, and says that is an order he gave himself.' : ''} ${b2In('marrow') ? '"Stupid," Marrow says. "Good." She doesn\'t lie down. There\'s a hole to go into.' : 'Nobody in the squad says anything. Nobody has the spit.'}`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_east_gave:()=>({sp:'The squad\'s fire', txt:`The skin goes down the stretch, cart to cart, children first. ${b2In('redblade') ? 'Ramin carries it, and does not drink from it, and says that is an order he gave himself.' : ''}${b2In('warlock') ? 'Keth walks it down the stretch himself, and the old woman tells each of them, out of him, exactly how much to drink, and nobody argues with her.' : ''} ${b2In('marrow') ? '"Stupid," Marrow says. "Good." She doesn\'t lie down. There\'s a hole to go into.' : 'Nobody in the squad says anything. Nobody has the spit.'}`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_east_dry:()=>({sp:'The squad\'s fire', txt:`Nobody drinks. The skins stay on the cart where the stretch can see them. ${b2Tg() ? 'Tangle says, "Dry fuses are good fuses," which is not a joke, and nobody laughs.' : 'It is the sensible thing. Your mouth is full of sand.'}`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_east_horses:()=>({sp:'The Weasel horse lines', txt:`The Weasels' horses, standing in a long line with their heads down. You can count their ribs in the dark. ${b2In('sathi') ? 'Sathi walks the line with her hand on every neck she passes, and says each one\'s name, and does not say anything to you.' : 'Nobody is riding anywhere tonight that they can walk.'}`, ch:[{t:'Leave them.', go:()=>startExplore()}]}),
@@ -538,7 +539,7 @@ The last you saw of it, it was standing in the mouth of the cut with the earth c
 You go home in the dark, by feel, through water to the ankles that was not there an hour ago.`,
     ch:[{t:'Home.', go:'b2_raid_star'}]}),
   b2_raid_star:()=>({sp:'The edge of the camp · before dawn', txt:
-`You come up out of the north mouth into grey light, all of you. ${b2In('redblade') ? 'Ramin comes up last, as he went down second, and stands in the open air with his face turned up to it for a long moment.' : ''}
+`You come up out of the north mouth into grey light, all of you. ${b2In('redblade') ? 'Ramin comes up last, as he went down second, and stands in the open air with his face turned up to it for a long moment.' : ''}${b2In('warlock') ? 'Keth comes up with his eyes shut, and stands in the open air with his palm on the ground at the top of the shaft, listening, and does not tell you what it says.' : ''}
 
 ${b2In('sathi') ? `Sathi has something in her fist. She opens it in front of you without a word. A throwing star, black iron, five points, every point edged. She pulled it out of a dead Tithansi in the horse lines, she says. In the throat. "Not Wicket's," she says. "Not ours. Not a Wickan's. Nobody here throws this."` : `${b2In('haddat') ? 'Haddat' : 'Somebody in the squad'} has something in their fist: a throwing star, black iron, five points, every point edged, out of a dead Tithansi in the horse lines. Nobody in the squad threw it. Nobody here throws anything like it.`}
 
@@ -613,7 +614,7 @@ Tangle has already stood up. He is looking at the satchel. Then at you.
   b2_tangle_go:()=>({sp:'Tangle', txt:
 `${S.f.b2_rampSatchel === 'took' ? `Tangle takes a sharper and a cusser out of the satchel and puts them in the bag on his back, very carefully, and buckles the satchel and hands it to you. "${b2Count()}," he says. "That's what you've got. Don't let anybody throw it who doesn't know how." He thinks. "Nobody here knows how. Don't let anybody throw it."` : `Tangle buckles the satchel and hands it to you, all of it. "${b2Count()}," he says. "Count it while I'm gone. Out loud. I'll know if you don't."`}
 
-${b2In('sathi') ? 'Hackle follows him to the water\'s edge and sits down there, and will not come back until Sathi calls him twice.' : ''}${b2In('redblade') ? ` Ramin salutes him, Malazan style, very correctly. Tangle looks at the salute as if it were a lit fuse.` : ''}
+${b2In('sathi') ? 'Hackle follows him to the water\'s edge and sits down there, and will not come back until Sathi calls him twice.' : ''}${b2In('redblade') ? ` Ramin salutes him, Malazan style, very correctly. Tangle looks at the salute as if it were a lit fuse.` : ''}${b2In('warlock') ? ` Keth shakes the rattle of teeth at Tangle's back, once, for luck. Tangle, without turning round: "Don't."` : ''}
 
 He goes down into the river in the dusk with Mincer's people, all of them carrying picks and shields and nothing else, and wades across, and goes up into the far bank under the ramp, and you lose him in the dark long before he gets there.
 

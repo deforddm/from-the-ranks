@@ -32,3 +32,5 @@ function toggleFull(on){ if (on === undefined) on = !isFull(); try {
 const fullBtn = id => fullOK() ? `<button class="btn icon" id="${id}" data-full aria-label="${isFull() ? 'Leave full screen' : 'Full screen'}" title="${isFull() ? 'Leave full screen' : 'Full screen'} (F)">${isFull() ? FULL_OUT : FULL_IN}</button>` : '';
 /* a new page starts at its top: the window now, and again once the new page has laid out */
 function toTop(){ const go = () => { try { window.scrollTo(0, 0); } catch(e) {} if (document.scrollingElement) document.scrollingElement.scrollTop = 0; }; go(); requestAnimationFrame(go); }
+/* a squadmate who is in the squad but not here (Book Two: Tangle in the ramp's bank with Mincer's sappers): not on the map, not in the roll, not heard */
+const AWAY = []; const mateAway = k => AWAY.some(f => { try { return f(k); } catch(e) { return false; } });
