@@ -51,8 +51,9 @@ ok(!r.badTxt, `every line reads clean${r.badTxt ? ': ' + r.badTxt : ''}`);
 // the Land's Teeth on what is left of the god: 2d8, and Keth has had a bite
 const t = await ev(async () => { setBook('dg'); S = newStateDG('Hask'); S.chapter = 3; S.lvl = 4; S.chain = {water:6, column:20}; S.squad.push('warlock'); S.f.b2_kethDone = 1; migrate(S); save();
   startBattle('b2_raid', {}); const k = B.units.find(u => u.id === 'warlock'); B.units = B.units.filter(u => u.side === 'p'); const g = mkFoe('b2_godrider', 3, 3); g.ac = -50; g.hp = g.maxhp = 500; B.units.push(g); k.x = 3; k.y = 6; B.cur = k;
+  const _rnd = Math.random; Math.random = () => .05 + _rnd()*.95; // no natural 1
   let seen = null; const _a = attack; attack = function(a, t, o){ if (t === g) seen = o.dmg[0]; return _a(a, t, o); };
-  await AB.b2_teeth.run(k, 3, 3); attack = _a; const o = {dice:seen, bit:!!S.f.b2_kethBitGod, log:B.log.some(l => /The ground knows this one/.test(l))}; B = null; return o; });
+  await AB.b2_teeth.run(k, 3, 3); attack = _a; Math.random = _rnd; const o = {dice:seen, bit:!!S.f.b2_kethBitGod, log:B.log.some(l => /The ground knows this one/.test(l))}; B = null; return o; });
 ok(t.dice === 2 && t.bit && t.log, `the Land's Teeth on the god-ridden: ${t.dice}d8, the ground knows the taste`);
 ok(!errors.length, `no page errors${errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''}`);
 await br.close(); srv.kill(); process.exit(fail);
