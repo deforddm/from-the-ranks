@@ -263,12 +263,15 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
     b3_c2_herds_dawn:{loc:'The Rhivi Plain', sub:'The herd lines · first light', cap:'The fires down to embers, dew grey on the grass, and the Rhivi walking slowly through the herd, counting.', amb:'explore'},
     b3_c2_ford:{loc:'The river', sub:'The ford · afternoon', cap:'A brown river running full, the herd going over at the ford with children riding the calves, the wagons waiting their turn, and up the river to the east a sky gone black.', amb:'explore'},
     b3_c2_flood_night:{loc:'The river', sub:'Night · after the spate', cap:'The river still high and loud in the dark, Rhivi fires along the far bank, and the wagons drawn into a ring on the near one.', amb:'night'},
+    b3_c2_herds_rain:{loc:'The Rhivi Plain', sub:'South-east · the rains', cap:'The column going on across the plain under a lid of grey cloud, the herds on its flank, and far off in the east, hills with grey curtains of rain hanging under the cloud.', amb:'wind'},
+    b3_c2_far_dusk:{loc:'The river', sub:'The far bank · dusk', cap:'The spate going by brown and loud, the wagons small on the other bank, the herd scattered through the reeds on this one with the children, and in the reeds on the right, riders who are not Rhivi.', amb:'explore'},
+    b3_c2_far_night:{loc:'The river', sub:'The far bank · night', cap:'The river still high and black, the wagon ring\'s fires small on the other side of it, and on this bank the herd lying down in the reeds, the Rhivi mothers\' fires, and the Fourth\'s.', amb:'night'},
     b3_c2_strides:{loc:'The far grass', sub:'A wallow by a stream', cap:'A dead horse in the mud, and in the mud round it, tracks that should not be that far apart.', amb:'explore'} },
 
   end:{
     herd:['The herd came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth went into it for the Rhivi herd and the children riding it. The Rhivi will remember. So will the Host\'s quartermaster.'],
     wagons:['The wagons came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth held the Host\'s wagons on the ford with Tav\'s company. The Host will eat. The Rhivi watched from the far bank, and counted.'] },
-  endScene:'b3_c2_flood_night',
+  get endScene(){ return S && S.f && S.f.b3_c2_key === 'herd' ? 'b3_c2_far_night' : 'b3_c2_flood_night'; }, // the herd: the Fourth came out on the far bank
   endCap:()=> S.f.b3_c2_key === 'herd' ? 'The far bank at night. Rhivi fires, and children asleep against warm hide, and the river still loud in the dark.' : 'The near bank at night. The wagons in a ring, the Fourth Regiment\'s fires, and a big man somewhere among them singing badly.',
   tease:'Next: Capustan. The Barghast and the Bridgeburners get there first; the Host gets there after, with Brood, onto a field where something very large and black is in the sky.',
 
@@ -812,7 +815,7 @@ ${b3In('sohra') ? `Sohra walks the herd with them and comes back grey with tired
 ${S.f.b3_c2_kallorLook ? `Across the camp, on the slope where Brood's tents are, a tall man in a fur-collared cloak is standing in the grey light watching the herd lines. Watching the Fourth. Then he isn't.` : ''}`,
     ch:[{t:'On to the river with the column.', go:'b3_c2_to_river'},
         {t:'Not yet.', go:()=>startExplore()}]}),
-  b3_c2_to_river:()=>({sp:'The road south-east', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_onRiver = 1; }, txt:
+  b3_c2_to_river:()=>({sp:'The road south-east', scene:'b3_c2_herds_rain', fx:()=>{ S.f.b3_c2_onRiver = 1; }, txt:
 `Two more weeks.
 
 The plain goes on. It rains, and stops, and rains. To the east, very far off, there are hills where the rain is falling all the time, grey curtains of it hanging under the clouds, and the Rhivi look at those hills every morning and say nothing.
@@ -908,7 +911,7 @@ ${b3In('brisk') ? `Brisk is standing in the reeds with water running off her, lo
 
 And on the far bank, in the reeds where the herd has scattered, there are riders. Not Rhivi.`,
     ch:[{t:'"Shields. Up. Now."', go:'b3_c2_herd_fight'}]}),
-  b3_c2_herd_fight:()=>({sp:'The far bank · dusk', txt:
+  b3_c2_herd_fight:()=>({sp:'The far bank · dusk', scene:'b3_c2_far_dusk', txt:
 `Betakullid: the riders who ran south from the hill, or their brothers. They have shadowed the column for a week, waiting for it to come apart, and the river has just done it for them. The herd is scattered along the bank in the dusk, the children with it, and the Rhivi riders who should be guarding it are on the other side of a river that is standing up.
 
 They are not here for the Fourth. They are here for calves, and anything else small enough to carry.
@@ -916,7 +919,7 @@ They are not here for the Fourth. They are here for calves, and anything else sm
 ${b3In('sohra') ? `Sohra has a child under each arm, and puts them down behind ${b3In('ohl') ? 'Ohl\'s back, or yours' : 'your back'}, and nocks.` : `The children are behind you. That is where they are going to stay.`}`,
     ch:[{t:'Hold the bank.', go:()=>startBattle('b3_c2_herdfight', {})},
         {t:'Kettle\'s sharper into the reeds where they are bunching.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c2_herdfight', {pre:true})}]}),
-  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_flood_night', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
+  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_far_night', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
       if (b3In('sohra')) S.f.b3_herdMother = 1; }, txt:
 `The captain goes down in the gully with his plume in the mud, and the riders who are left go south into the dark, and every child who went into that river is on this side of it, alive, wet, and screaming for its mother.
 

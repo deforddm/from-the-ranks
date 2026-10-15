@@ -374,6 +374,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
     b3_c7_spawn:{loc:'Coral', sub:'Moon\'s Spawn', cap:'Something vast and dark coming down out of the sky onto the keep, from a long way off, slowly, the way a mountain would fall if mountains fell.', amb:'storm'},
     b3_c7_barrow:{loc:'Outside Coral', sub:'The Shield Anvil\'s barrow', cap:'A barrow on the plain at dawn, made of gifts, and soldiers of every army standing round it.', amb:'dusk'},
     b3_c7_sea:{loc:'The coast by Coral', sub:'The Rust Ocean', cap:'Moon\'s Spawn going out over the sea, low and slow and small on the horizon, with the sun going down behind it.', amb:'lake'},
+    b3_c7_shore_night:{loc:'The coast by Coral', sub:'The shore · night', cap:'Stars down to the sea and nothing on the horizon, the companies still standing along the shingle with a few torches, and the Fourth among them in the dark.', amb:'lake'},
     b3_c7_finale:{loc:'The coast by Coral', sub:'After', cap:'A shore, the sea, and where the dark shape was, nothing.', amb:'lake'} },
 
   end:{
@@ -1077,7 +1078,7 @@ Somewhere along the shore the High Fist is standing with what is left of the Bri
 
 The Spawn gets smaller. Then it is a dark shape on the horizon. Then it is nothing.`,
       ch:[{t:'Stand there until it is dark.', go:'b3_c7_burial2'}]}),
-  b3_c7_burial2:()=>({sp:'The shore · night', scene:'b3_c7_finale', txt:
+  b3_c7_burial2:()=>({sp:'The shore · night', scene:'b3_c7_shore_night', txt:
 `${b3c7Fell().length ? `${b3c7And(b3c7Fell())} went out with it, or into the ground by the barrow; the Fourth will argue about which, later, and never settle it, because it does not matter where. ` : ''}You count the Fourth, there on the shore, in the dark. ${numw(b3c7Count(), true)}. You count twice. ${b3In('ohl') ? `\n\nBeside you Ohl says, very quietly, "${b3ListWords()}." He doesn't take the list out. He doesn't need to.` : ''}
 
 *After Coral*, he said.`,

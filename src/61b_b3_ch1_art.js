@@ -95,8 +95,10 @@ function b3c1Fire(x, px, py, s, a = 1){ glow(x, px, py, 14*s, '#e07a30', .28*a);
 
 /* the parley: a grey spring afternoon on the plain below Pale; the Host's square camp on the left, Brood's sprawl on the right, the
    pavilion between them with both standards up, and in the middle distance a small figure in red wool. The crows circle. */
-SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, px = W*.54, py = H*.7, ps = clamp(W/250, 1.05, 1.5);
-  ctx.drawImage(sceneLayer('b3c1:parley', W, H, (x, W, H) => {
+/* and after (b3_c1_parley_after): the great have gone up into the tent; its front let down and laced, a lamp's light along the seams, the awning
+   empty, the guard line still in front of it, and the child and the old woman gone in with them */
+function b3c1Parley(after){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, px = W*.54, py = H*.7, ps = clamp(W/250, 1.05, 1.5);
+  ctx.drawImage(sceneLayer('b3c1:parley' + (after ? '-after' : ''), W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#2a3442'],[.5,'#5e6a78'],[.85,'#98a0a6'],[1,'#b6b8b2']]); x.fillRect(0, 0, W, hz + 2);
     for (let i=0;i<6;i++) cloud(x, W*(hash(i,3)*1.1 - .05), hz*(.15 + i*.12), W*(.35 + hash(i,4)*.3), 5 + i, i%2 ? '#d4d8dc' : '#3a4452', .16); // low cloud, a thaw sky
     // far hills, and Pale on its hill to the left: walls, a few towers, the old breaches patched
@@ -121,14 +123,19 @@ SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
     const tw = 62*ps, th = 30*ps; ell(x, px, py + 3*ps, tw*.66, 6*ps, 'rgba(0,0,0,.35)');
     x.fillStyle = vgrad(x, py - th, py, [[0,'#b8b0a0'],[1,'#7a7264']]); x.beginPath(); x.moveTo(px - tw*.5, py); x.lineTo(px - tw*.44, py - th*.55); x.lineTo(px - tw*.16, py - th); x.lineTo(px + tw*.16, py - th); x.lineTo(px + tw*.44, py - th*.55); x.lineTo(px + tw*.5, py); x.closePath(); x.fill();
     x.fillStyle = 'rgba(40,36,30,.35)'; x.beginPath(); x.moveTo(px + tw*.16, py - th); x.lineTo(px + tw*.44, py - th*.55); x.lineTo(px + tw*.5, py); x.lineTo(px + tw*.18, py); x.closePath(); x.fill(); // the shaded side
-    x.fillStyle = '#16120e'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); x.fillStyle = 'rgba(232,180,110,.18)'; x.fillRect(px - tw*.2, py - th*.48, tw*.4, th*.1); // the open front, a lamp lit inside
+    if (!after) { x.fillStyle = '#16120e'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); x.fillStyle = 'rgba(232,180,110,.18)'; x.fillRect(px - tw*.2, py - th*.48, tw*.4, th*.1); } // the open front, a lamp lit inside
+    else { x.fillStyle = vgrad(x, py - th*.52, py, [[0,'#a49c8c'],[1,'#6e665a']]); x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); // the front let down
+      x.fillStyle = 'rgba(30,24,18,.35)'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.06); x.strokeStyle = 'rgba(40,32,24,.7)'; x.lineWidth = .8; x.beginPath(); x.moveTo(px, py - th*.52); x.lineTo(px, py); x.stroke(); // the two halves, meeting
+      x.strokeStyle = 'rgba(30,24,18,.75)'; x.lineWidth = .5; for (let i=0;i<6;i++){ const ly = py - th*.48 + i*th*.08; x.beginPath(); x.moveTo(px - 1.6*ps, ly); x.lineTo(px + 1.6*ps, ly + th*.04); x.moveTo(px + 1.6*ps, ly); x.lineTo(px - 1.6*ps, ly + th*.04); x.stroke(); } // laced shut
+      x.fillStyle = 'rgba(255,200,130,.32)'; x.fillRect(px - .5, py - th*.5, 1, th*.5); x.fillRect(px - tw*.24, py - 1.4, tw*.48, 1.2); } // lamplight along the seam and under the hem
     x.fillStyle = '#9a9282'; x.beginPath(); x.moveTo(px - tw*.32, py - th*.56); x.lineTo(px + tw*.32, py - th*.56); x.lineTo(px + tw*.38, py - th*.42); x.lineTo(px - tw*.38, py - th*.42); x.fill(); // the awning
     x.fillStyle = '#2a2018'; [-.36, .36].forEach(k => x.fillRect(px + tw*k - .6, py - th*.44, 1.2, th*.44)); x.fillRect(px - .7, py - th - 7*ps, 1.4, 7*ps);
     x.strokeStyle = 'rgba(30,24,18,.5)'; x.lineWidth = .6; for (let i=0;i<5;i++){ x.beginPath(); x.moveTo(px - tw*.16 + i*tw*.08, py - th); x.lineTo(px - tw*.46 + i*tw*.23, py); x.stroke(); } // seams
     [[-tw*.58, '#2a2826'], [tw*.58, '#6a2a22']].forEach(([dx, c]) => { x.fillStyle = '#1e1810'; x.fillRect(px + dx - .7, py - th*1.5, 1.4, th*1.5); });
     // the guard line in front of the tent, and the people gathered, small and dark
     for (let i=0;i<9;i++){ const gx = px - tw*.9 + i*tw*.22, gy = py + 9*ps; x.fillStyle = '#1a1c1e'; x.fillRect(gx - .8*ps, gy - 6*ps, 1.6*ps, 6*ps); x.beginPath(); x.arc(gx, gy - 7*ps, 1*ps, 0, 7); x.fill(); x.fillRect(gx + 1*ps, gy - 10*ps, .4*ps, 9*ps); } // spearmen
-    [[-.3, 1], [-.14, 1.14], [.2, 1.3], [.08, 1], [.3, 1.08]].forEach(([k, s], i) => { const gx = px + tw*k, gy = py + 1*ps; x.fillStyle = i === 2 ? '#141012' : '#24221e'; x.fillRect(gx - 1*ps*s, gy - 7*ps*s, 2*ps*s, 7*ps*s); x.beginPath(); x.arc(gx, gy - 8*ps*s, 1.2*ps*s, 0, 7); x.fill(); }); // the great ones under the awning; one very tall
+    if (!after) [[-.3, 1], [-.14, 1.14], [.2, 1.3], [.08, 1], [.3, 1.08]].forEach(([k, s], i) => { const gx = px + tw*k, gy = py + 1*ps; x.fillStyle = i === 2 ? '#141012' : '#24221e'; x.fillRect(gx - 1*ps*s, gy - 7*ps*s, 2*ps*s, 7*ps*s); x.beginPath(); x.arc(gx, gy - 8*ps*s, 1.2*ps*s, 0, 7); x.fill(); }); // the great ones under the awning; one very tall
+    else { ell(x, px, py - 1, tw*.3, 2*ps, 'rgba(30,26,20,.35)'); [[-.26, .4], [.18, .5]].forEach(([k, l]) => { x.strokeStyle = 'rgba(28,22,16,.8)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px + tw*k, py); x.lineTo(px + tw*k + 3*ps, py - 3*ps*l); x.stroke(); }); } // under the awning: nobody; the ground scuffed, a stool kicked over
     // the near rise: a stake line, the Fourth's picket
     x.fillStyle = vgrad(x, H*.84, H, [[0,'#1c1e1a'],[1,'#0a0b0a']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.86); x.quadraticCurveTo(W*.4, H*.82, W, H*.88); x.lineTo(W, H); x.fill();
     x.strokeStyle = '#2a2218'; x.lineWidth = 1.6; for (let i=0;i<8;i++){ const sx = W*(.04 + i*.135), sy = H*(.86 - Math.sin(i/7*Math.PI)*.02); x.beginPath(); x.moveTo(sx, sy + 4); x.lineTo(sx + 1.6, sy - 10); x.stroke(); }
@@ -139,13 +146,16 @@ SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   // the two standards: the Host's dark one, Brood's people's pale red one
   const tw = 62*ps, th = 30*ps; [[-tw*.58, '#2a2826', '#4a4642', 0], [tw*.58, '#7a2a22', '#a8443a', 2]].forEach(([dx, c1, c2, ph]) => { const sx = px + dx, sy = py - th*1.5, w = Math.sin(t*mo/500 + ph)*1.4*ps;
     ctx.fillStyle = c1; ctx.beginPath(); ctx.moveTo(sx + .7, sy); ctx.quadraticCurveTo(sx + 6*ps, sy + w, sx + 12*ps, sy + 1*ps + w*1.4); ctx.lineTo(sx + 11*ps, sy + 7*ps + w*1.2); ctx.quadraticCurveTo(sx + 6*ps, sy + 6*ps - w, sx + .7, sy + 7*ps); ctx.fill(); ctx.fillStyle = c2; ctx.fillRect(sx + .7, sy, 3*ps, 1*ps); });
-  // the child in red wool, in the middle distance, among the Rhivi by the tent's right; and the old woman beside her
-  drawFigure(ctx, 'mhybe', px + tw*.72, py + 6*ps, .62*ps, t, {still:true, dir:-1}); drawFigure(ctx, 'silverfox', px + tw*.62, py + 6*ps, .78*ps, t, {still:true, dir:-1});
-  ctx.globalCompositeOperation = 'lighter'; glow(ctx, px + tw*.62, py + 2*ps, 8*ps, '#d05a3a', .12); ctx.globalCompositeOperation = 'source-over';
+  // the child in red wool, in the middle distance, among the Rhivi by the tent's right; and the old woman beside her (after, they have gone in)
+  if (!after) { drawFigure(ctx, 'mhybe', px + tw*.72, py + 6*ps, .62*ps, t, {still:true, dir:-1}); drawFigure(ctx, 'silverfox', px + tw*.62, py + 6*ps, .78*ps, t, {still:true, dir:-1});
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, px + tw*.62, py + 2*ps, 8*ps, '#d05a3a', .12); ctx.globalCompositeOperation = 'source-over'; }
+  else { const p = mo ? (Math.sin(t/1900) + 1)/2 : .5; ctx.globalCompositeOperation = 'lighter'; glow(ctx, px, py - th*.25, 10*ps, '#ffc070', .06 + p*.04); ctx.globalCompositeOperation = 'source-over'; } // the lamp inside, breathing through the canvas
   // the crows, circling over the tent
   for (let i=0;i<5;i++){ const a = t*mo/(2400 + i*300) + i*1.3, rx = px + Math.cos(a)*(20 + i*7)*ps, ry = py - th - 22*ps + Math.sin(a)*(6 + i*2)*ps, f = Math.sin(t*mo/140 + i*2)*1.4; ctx.strokeStyle = '#0c0c0e'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(rx - 3, ry - f); ctx.quadraticCurveTo(rx - 1, ry - .6, rx, ry); ctx.quadraticCurveTo(rx + 1, ry - .6, rx + 3, ry - f); ctx.stroke(); }
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(30, W*.42/sq.length), H*.95 - (i%2)*3, 2, t, {phase:i, dir:1}));
-  vign(ctx, W, H, .7, .5); };
+  vign(ctx, W, H, .7, .5); }; }
+SCENEX.b3_c1_parley = b3c1Parley(false);
+SCENEX.b3_c1_parley_after = b3c1Parley(true);
 
 /* Pale's tunnels: the sappers' galleries under the city, cut the year the Host sat here; timber sets running away into the dark, a lamp
    hung on the nearest, a side gallery black on the right, the things men left behind on the floor */

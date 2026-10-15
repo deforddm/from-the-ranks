@@ -34891,6 +34891,7 @@ const B3CH1 = {
 
   scenes:{
     b3_c1_parley:{loc:'Below Brood\'s tent', sub:'The parley ground · noon', cap:'The meeting ground below the command tent: two armies\' worth of watchers, a knot of the great in the middle, and a child in red wool a little apart.', amb:'explore'},
+    b3_c1_parley_after:{loc:'Below Brood\'s tent', sub:'The parley ground · after', cap:'The command tent with its front let down and laced, lamplight along the seam, the awning empty, and the guard line still standing in front of it.', amb:'explore'},
     b3_c1_tunnels:{loc:'Under Pale', sub:'The old north sap', cap:'A sapper tunnel by lamplight, the shoring black with old smoke, and the dark at the end of it gone ordinary at last.', amb:'tunnel'},
     b3_c1_rhivi:{loc:'The Rhivi camp', sub:'Night', cap:'Round hide tents, low fires, the herds a dark mass breathing on the slope above, and somebody singing to them.', amb:'explore'},
     b3_c1_divide:{loc:'The Divide road', sub:'Night · the cutting', cap:'A pale road going up between black hills into a cutting banked with scree, six wagons under oiled hide, and quorls very high against the stars.', amb:'night'},
@@ -35279,7 +35280,7 @@ Then Brood is between them. He doesn't seem to hurry; he is simply there, the wa
 
 The child has gone to Whiskeyjack. She stands beside him, and looks up at him, and says something.${b3In('ohl') ? ` Ohl, who reads lips in three languages, says afterward that it might have been *uncle*. He is not sure. He is sure.` : ''}`,
       ch:[{t:'Breathe.', go:'b3_c1_parley_after'}]}),
-    b3_c1_parley_after:()=>({sp:'The picket', scene:'b3_c1_parley', fx:()=>{ S.f.b3_c1_parleyDone = 1; S.f.b3_kallor = 1; ally(0, 1, 'The parley'); }, txt:
+    b3_c1_parley_after:()=>({sp:'The picket', scene:'b3_c1_parley_after', fx:()=>{ S.f.b3_c1_parleyDone = 1; S.f.b3_kallor = 1; ally(0, 1, 'The parley'); }, txt:
 `It takes the meeting ground a while to start breathing again, and then it does, all at once, too loud. The great go up into the command tent. The tall man in the fur-collared cloak goes in last, alone, and the tent flap falls behind him like a door.
 
 "Kallor," says a pikeman of the Host along the line, to nobody, as if he had been waiting all morning for a reason to say it. "Brood's second. They say he was a king, once. Of somewhere that isn't there any more." He spits. "They say he did that to it."
@@ -35766,8 +35767,10 @@ function b3c1Fire(x, px, py, s, a = 1){ glow(x, px, py, 14*s, '#e07a30', .28*a);
 
 /* the parley: a grey spring afternoon on the plain below Pale; the Host's square camp on the left, Brood's sprawl on the right, the
    pavilion between them with both standards up, and in the middle distance a small figure in red wool. The crows circle. */
-SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, px = W*.54, py = H*.7, ps = clamp(W/250, 1.05, 1.5);
-  ctx.drawImage(sceneLayer('b3c1:parley', W, H, (x, W, H) => {
+/* and after (b3_c1_parley_after): the great have gone up into the tent; its front let down and laced, a lamp's light along the seams, the awning
+   empty, the guard line still in front of it, and the child and the old woman gone in with them */
+function b3c1Parley(after){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, px = W*.54, py = H*.7, ps = clamp(W/250, 1.05, 1.5);
+  ctx.drawImage(sceneLayer('b3c1:parley' + (after ? '-after' : ''), W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#2a3442'],[.5,'#5e6a78'],[.85,'#98a0a6'],[1,'#b6b8b2']]); x.fillRect(0, 0, W, hz + 2);
     for (let i=0;i<6;i++) cloud(x, W*(hash(i,3)*1.1 - .05), hz*(.15 + i*.12), W*(.35 + hash(i,4)*.3), 5 + i, i%2 ? '#d4d8dc' : '#3a4452', .16); // low cloud, a thaw sky
     // far hills, and Pale on its hill to the left: walls, a few towers, the old breaches patched
@@ -35792,14 +35795,19 @@ SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
     const tw = 62*ps, th = 30*ps; ell(x, px, py + 3*ps, tw*.66, 6*ps, 'rgba(0,0,0,.35)');
     x.fillStyle = vgrad(x, py - th, py, [[0,'#b8b0a0'],[1,'#7a7264']]); x.beginPath(); x.moveTo(px - tw*.5, py); x.lineTo(px - tw*.44, py - th*.55); x.lineTo(px - tw*.16, py - th); x.lineTo(px + tw*.16, py - th); x.lineTo(px + tw*.44, py - th*.55); x.lineTo(px + tw*.5, py); x.closePath(); x.fill();
     x.fillStyle = 'rgba(40,36,30,.35)'; x.beginPath(); x.moveTo(px + tw*.16, py - th); x.lineTo(px + tw*.44, py - th*.55); x.lineTo(px + tw*.5, py); x.lineTo(px + tw*.18, py); x.closePath(); x.fill(); // the shaded side
-    x.fillStyle = '#16120e'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); x.fillStyle = 'rgba(232,180,110,.18)'; x.fillRect(px - tw*.2, py - th*.48, tw*.4, th*.1); // the open front, a lamp lit inside
+    if (!after) { x.fillStyle = '#16120e'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); x.fillStyle = 'rgba(232,180,110,.18)'; x.fillRect(px - tw*.2, py - th*.48, tw*.4, th*.1); } // the open front, a lamp lit inside
+    else { x.fillStyle = vgrad(x, py - th*.52, py, [[0,'#a49c8c'],[1,'#6e665a']]); x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.52); // the front let down
+      x.fillStyle = 'rgba(30,24,18,.35)'; x.fillRect(px - tw*.24, py - th*.52, tw*.48, th*.06); x.strokeStyle = 'rgba(40,32,24,.7)'; x.lineWidth = .8; x.beginPath(); x.moveTo(px, py - th*.52); x.lineTo(px, py); x.stroke(); // the two halves, meeting
+      x.strokeStyle = 'rgba(30,24,18,.75)'; x.lineWidth = .5; for (let i=0;i<6;i++){ const ly = py - th*.48 + i*th*.08; x.beginPath(); x.moveTo(px - 1.6*ps, ly); x.lineTo(px + 1.6*ps, ly + th*.04); x.moveTo(px + 1.6*ps, ly); x.lineTo(px - 1.6*ps, ly + th*.04); x.stroke(); } // laced shut
+      x.fillStyle = 'rgba(255,200,130,.32)'; x.fillRect(px - .5, py - th*.5, 1, th*.5); x.fillRect(px - tw*.24, py - 1.4, tw*.48, 1.2); } // lamplight along the seam and under the hem
     x.fillStyle = '#9a9282'; x.beginPath(); x.moveTo(px - tw*.32, py - th*.56); x.lineTo(px + tw*.32, py - th*.56); x.lineTo(px + tw*.38, py - th*.42); x.lineTo(px - tw*.38, py - th*.42); x.fill(); // the awning
     x.fillStyle = '#2a2018'; [-.36, .36].forEach(k => x.fillRect(px + tw*k - .6, py - th*.44, 1.2, th*.44)); x.fillRect(px - .7, py - th - 7*ps, 1.4, 7*ps);
     x.strokeStyle = 'rgba(30,24,18,.5)'; x.lineWidth = .6; for (let i=0;i<5;i++){ x.beginPath(); x.moveTo(px - tw*.16 + i*tw*.08, py - th); x.lineTo(px - tw*.46 + i*tw*.23, py); x.stroke(); } // seams
     [[-tw*.58, '#2a2826'], [tw*.58, '#6a2a22']].forEach(([dx, c]) => { x.fillStyle = '#1e1810'; x.fillRect(px + dx - .7, py - th*1.5, 1.4, th*1.5); });
     // the guard line in front of the tent, and the people gathered, small and dark
     for (let i=0;i<9;i++){ const gx = px - tw*.9 + i*tw*.22, gy = py + 9*ps; x.fillStyle = '#1a1c1e'; x.fillRect(gx - .8*ps, gy - 6*ps, 1.6*ps, 6*ps); x.beginPath(); x.arc(gx, gy - 7*ps, 1*ps, 0, 7); x.fill(); x.fillRect(gx + 1*ps, gy - 10*ps, .4*ps, 9*ps); } // spearmen
-    [[-.3, 1], [-.14, 1.14], [.2, 1.3], [.08, 1], [.3, 1.08]].forEach(([k, s], i) => { const gx = px + tw*k, gy = py + 1*ps; x.fillStyle = i === 2 ? '#141012' : '#24221e'; x.fillRect(gx - 1*ps*s, gy - 7*ps*s, 2*ps*s, 7*ps*s); x.beginPath(); x.arc(gx, gy - 8*ps*s, 1.2*ps*s, 0, 7); x.fill(); }); // the great ones under the awning; one very tall
+    if (!after) [[-.3, 1], [-.14, 1.14], [.2, 1.3], [.08, 1], [.3, 1.08]].forEach(([k, s], i) => { const gx = px + tw*k, gy = py + 1*ps; x.fillStyle = i === 2 ? '#141012' : '#24221e'; x.fillRect(gx - 1*ps*s, gy - 7*ps*s, 2*ps*s, 7*ps*s); x.beginPath(); x.arc(gx, gy - 8*ps*s, 1.2*ps*s, 0, 7); x.fill(); }); // the great ones under the awning; one very tall
+    else { ell(x, px, py - 1, tw*.3, 2*ps, 'rgba(30,26,20,.35)'); [[-.26, .4], [.18, .5]].forEach(([k, l]) => { x.strokeStyle = 'rgba(28,22,16,.8)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px + tw*k, py); x.lineTo(px + tw*k + 3*ps, py - 3*ps*l); x.stroke(); }); } // under the awning: nobody; the ground scuffed, a stool kicked over
     // the near rise: a stake line, the Fourth's picket
     x.fillStyle = vgrad(x, H*.84, H, [[0,'#1c1e1a'],[1,'#0a0b0a']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.86); x.quadraticCurveTo(W*.4, H*.82, W, H*.88); x.lineTo(W, H); x.fill();
     x.strokeStyle = '#2a2218'; x.lineWidth = 1.6; for (let i=0;i<8;i++){ const sx = W*(.04 + i*.135), sy = H*(.86 - Math.sin(i/7*Math.PI)*.02); x.beginPath(); x.moveTo(sx, sy + 4); x.lineTo(sx + 1.6, sy - 10); x.stroke(); }
@@ -35810,13 +35818,16 @@ SCENEX.b3_c1_parley = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   // the two standards: the Host's dark one, Brood's people's pale red one
   const tw = 62*ps, th = 30*ps; [[-tw*.58, '#2a2826', '#4a4642', 0], [tw*.58, '#7a2a22', '#a8443a', 2]].forEach(([dx, c1, c2, ph]) => { const sx = px + dx, sy = py - th*1.5, w = Math.sin(t*mo/500 + ph)*1.4*ps;
     ctx.fillStyle = c1; ctx.beginPath(); ctx.moveTo(sx + .7, sy); ctx.quadraticCurveTo(sx + 6*ps, sy + w, sx + 12*ps, sy + 1*ps + w*1.4); ctx.lineTo(sx + 11*ps, sy + 7*ps + w*1.2); ctx.quadraticCurveTo(sx + 6*ps, sy + 6*ps - w, sx + .7, sy + 7*ps); ctx.fill(); ctx.fillStyle = c2; ctx.fillRect(sx + .7, sy, 3*ps, 1*ps); });
-  // the child in red wool, in the middle distance, among the Rhivi by the tent's right; and the old woman beside her
-  drawFigure(ctx, 'mhybe', px + tw*.72, py + 6*ps, .62*ps, t, {still:true, dir:-1}); drawFigure(ctx, 'silverfox', px + tw*.62, py + 6*ps, .78*ps, t, {still:true, dir:-1});
-  ctx.globalCompositeOperation = 'lighter'; glow(ctx, px + tw*.62, py + 2*ps, 8*ps, '#d05a3a', .12); ctx.globalCompositeOperation = 'source-over';
+  // the child in red wool, in the middle distance, among the Rhivi by the tent's right; and the old woman beside her (after, they have gone in)
+  if (!after) { drawFigure(ctx, 'mhybe', px + tw*.72, py + 6*ps, .62*ps, t, {still:true, dir:-1}); drawFigure(ctx, 'silverfox', px + tw*.62, py + 6*ps, .78*ps, t, {still:true, dir:-1});
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, px + tw*.62, py + 2*ps, 8*ps, '#d05a3a', .12); ctx.globalCompositeOperation = 'source-over'; }
+  else { const p = mo ? (Math.sin(t/1900) + 1)/2 : .5; ctx.globalCompositeOperation = 'lighter'; glow(ctx, px, py - th*.25, 10*ps, '#ffc070', .06 + p*.04); ctx.globalCompositeOperation = 'source-over'; } // the lamp inside, breathing through the canvas
   // the crows, circling over the tent
   for (let i=0;i<5;i++){ const a = t*mo/(2400 + i*300) + i*1.3, rx = px + Math.cos(a)*(20 + i*7)*ps, ry = py - th - 22*ps + Math.sin(a)*(6 + i*2)*ps, f = Math.sin(t*mo/140 + i*2)*1.4; ctx.strokeStyle = '#0c0c0e'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(rx - 3, ry - f); ctx.quadraticCurveTo(rx - 1, ry - .6, rx, ry); ctx.quadraticCurveTo(rx + 1, ry - .6, rx + 3, ry - f); ctx.stroke(); }
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(30, W*.42/sq.length), H*.95 - (i%2)*3, 2, t, {phase:i, dir:1}));
-  vign(ctx, W, H, .7, .5); };
+  vign(ctx, W, H, .7, .5); }; }
+SCENEX.b3_c1_parley = b3c1Parley(false);
+SCENEX.b3_c1_parley_after = b3c1Parley(true);
 
 /* Pale's tunnels: the sappers' galleries under the city, cut the year the Host sat here; timber sets running away into the dark, a lamp
    hung on the nearest, a side gallery black on the right, the things men left behind on the floor */
@@ -36303,12 +36314,15 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
     b3_c2_herds_dawn:{loc:'The Rhivi Plain', sub:'The herd lines · first light', cap:'The fires down to embers, dew grey on the grass, and the Rhivi walking slowly through the herd, counting.', amb:'explore'},
     b3_c2_ford:{loc:'The river', sub:'The ford · afternoon', cap:'A brown river running full, the herd going over at the ford with children riding the calves, the wagons waiting their turn, and up the river to the east a sky gone black.', amb:'explore'},
     b3_c2_flood_night:{loc:'The river', sub:'Night · after the spate', cap:'The river still high and loud in the dark, Rhivi fires along the far bank, and the wagons drawn into a ring on the near one.', amb:'night'},
+    b3_c2_herds_rain:{loc:'The Rhivi Plain', sub:'South-east · the rains', cap:'The column going on across the plain under a lid of grey cloud, the herds on its flank, and far off in the east, hills with grey curtains of rain hanging under the cloud.', amb:'wind'},
+    b3_c2_far_dusk:{loc:'The river', sub:'The far bank · dusk', cap:'The spate going by brown and loud, the wagons small on the other bank, the herd scattered through the reeds on this one with the children, and in the reeds on the right, riders who are not Rhivi.', amb:'explore'},
+    b3_c2_far_night:{loc:'The river', sub:'The far bank · night', cap:'The river still high and black, the wagon ring\'s fires small on the other side of it, and on this bank the herd lying down in the reeds, the Rhivi mothers\' fires, and the Fourth\'s.', amb:'night'},
     b3_c2_strides:{loc:'The far grass', sub:'A wallow by a stream', cap:'A dead horse in the mud, and in the mud round it, tracks that should not be that far apart.', amb:'explore'} },
 
   end:{
     herd:['The herd came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth went into it for the Rhivi herd and the children riding it. The Rhivi will remember. So will the Host\'s quartermaster.'],
     wagons:['The wagons came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth held the Host\'s wagons on the ford with Tav\'s company. The Host will eat. The Rhivi watched from the far bank, and counted.'] },
-  endScene:'b3_c2_flood_night',
+  get endScene(){ return S && S.f && S.f.b3_c2_key === 'herd' ? 'b3_c2_far_night' : 'b3_c2_flood_night'; }, // the herd: the Fourth came out on the far bank
   endCap:()=> S.f.b3_c2_key === 'herd' ? 'The far bank at night. Rhivi fires, and children asleep against warm hide, and the river still loud in the dark.' : 'The near bank at night. The wagons in a ring, the Fourth Regiment\'s fires, and a big man somewhere among them singing badly.',
   tease:'Next: Capustan. The Barghast and the Bridgeburners get there first; the Host gets there after, with Brood, onto a field where something very large and black is in the sky.',
 
@@ -36852,7 +36866,7 @@ ${b3In('sohra') ? `Sohra walks the herd with them and comes back grey with tired
 ${S.f.b3_c2_kallorLook ? `Across the camp, on the slope where Brood's tents are, a tall man in a fur-collared cloak is standing in the grey light watching the herd lines. Watching the Fourth. Then he isn't.` : ''}`,
     ch:[{t:'On to the river with the column.', go:'b3_c2_to_river'},
         {t:'Not yet.', go:()=>startExplore()}]}),
-  b3_c2_to_river:()=>({sp:'The road south-east', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_onRiver = 1; }, txt:
+  b3_c2_to_river:()=>({sp:'The road south-east', scene:'b3_c2_herds_rain', fx:()=>{ S.f.b3_c2_onRiver = 1; }, txt:
 `Two more weeks.
 
 The plain goes on. It rains, and stops, and rains. To the east, very far off, there are hills where the rain is falling all the time, grey curtains of it hanging under the clouds, and the Rhivi look at those hills every morning and say nothing.
@@ -36948,7 +36962,7 @@ ${b3In('brisk') ? `Brisk is standing in the reeds with water running off her, lo
 
 And on the far bank, in the reeds where the herd has scattered, there are riders. Not Rhivi.`,
     ch:[{t:'"Shields. Up. Now."', go:'b3_c2_herd_fight'}]}),
-  b3_c2_herd_fight:()=>({sp:'The far bank · dusk', txt:
+  b3_c2_herd_fight:()=>({sp:'The far bank · dusk', scene:'b3_c2_far_dusk', txt:
 `Betakullid: the riders who ran south from the hill, or their brothers. They have shadowed the column for a week, waiting for it to come apart, and the river has just done it for them. The herd is scattered along the bank in the dusk, the children with it, and the Rhivi riders who should be guarding it are on the other side of a river that is standing up.
 
 They are not here for the Fourth. They are here for calves, and anything else small enough to carry.
@@ -36956,7 +36970,7 @@ They are not here for the Fourth. They are here for calves, and anything else sm
 ${b3In('sohra') ? `Sohra has a child under each arm, and puts them down behind ${b3In('ohl') ? 'Ohl\'s back, or yours' : 'your back'}, and nocks.` : `The children are behind you. That is where they are going to stay.`}`,
     ch:[{t:'Hold the bank.', go:()=>startBattle('b3_c2_herdfight', {})},
         {t:'Kettle\'s sharper into the reeds where they are bunching.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c2_herdfight', {pre:true})}]}),
-  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_flood_night', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
+  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_far_night', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
       if (b3In('sohra')) S.f.b3_herdMother = 1; }, txt:
 `The captain goes down in the gully with his plume in the mud, and the riders who are left go south into the dark, and every child who went into that river is on this side of it, alive, wet, and screaming for its mother.
 
@@ -37199,25 +37213,39 @@ function b3c2Cumulus(x, cx, cy, w, hh, seed, lit, mid, base){ const n = 20, P = 
   x.save(); shape(); x.clip(); P.forEach(([px, py, r]) => { ell(x, px - r*.3, py - r*.35, r*.7, r*.5, rgba(lit, .55)); ell(x, px + r*.35, py + r*.5, r*.8, r*.45, rgba(base, .35)); }); // each billow's lit cap and shadowed underside, soft
   x.fillStyle = PR.lin(x, 0, cy - hh*.25, 0, cy + w*.05, [[0, rgba(base, 0)], [1, rgba(base, .9)]]); x.fillRect(cx - w, cy - hh, w*2, hh + w*.1); x.restore(); } // flat and grey underneath
 
-SCENEX.b3_c2_herds = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.6;
-  ctx.drawImage(sceneLayer('b3c2:herds', W, H, (x, W, H) => {
+/* the plain on the march (b3_c2_herds), and the same march weeks on in the rains (b3_c2_herds_rain): a low grey lid of cloud instead of the
+   thunderheads, the grass dark with wet, rain going across in squalls, and far off in the east, hills with grey curtains of rain hanging under the cloud */
+function b3c2Herds(rain){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.6;
+  ctx.drawImage(sceneLayer('b3c2:herds' + (rain ? '-rain' : ''), W, H, (x, W, H) => {
+    if (rain) { x.fillStyle = vgrad(x, 0, hz, [[0,'#3a4048'],[.4,'#5c646c'],[.8,'#8a9094'],[1,'#a4a8a6']]); x.fillRect(0, 0, W, hz + 2); // a lid of cloud from edge to edge
+      for (let i=0;i<9;i++) cloud(x, W*(hash(i, 151)*1.1 - .05), H*(.04 + i*.045), W*(.3 + hash(i, 152)*.3), 6 + i, i%3 ? '#4a5058' : '#7a8086', .22); // its underside, rolled and heavy
+      glow(x, W*.2, hz*.7, W*.35, '#c8ccc8', .16); // a thin place in it, where the sun is somewhere
+      // the hills in the east, far off, and the rain hanging off the cloud over them in grey curtains
+      x.fillStyle = 'rgba(70,78,90,.75)'; x.beginPath(); x.moveTo(W*.5, hz + 1); for (let px=W*.5;px<=W + 10;px+=8) x.lineTo(px, hz - 3 - Math.max(0, Math.sin(px/40 + 1))*7 - Math.max(0, Math.sin(px/17))*3 - (px - W*.5)/W*14); x.lineTo(W, hz + 1); x.fill();
+      for (let i=0;i<5;i++){ const cx = W*(.6 + i*.09 + hash(i, 153)*.04), cw = W*(.05 + hash(i, 154)*.05), top = hz*(.5 + hash(i, 155)*.12); // each curtain: a grey veil and a great many thin strands, slanting
+        x.save(); x.translate(cx, top); x.scale(1, 2.6); glow(x, 0, (hz - top)/5.2, cw*1.2, '#4a505c', .3); x.restore();
+        for (let j=0;j<46;j++){ const sx = cx + (hash(i, j, 156) - .5)*cw*2, y0 = top + hash(i, j, 157)*(hz - top)*.3, a = .05 + hash(i, j, 158)*.09; x.strokeStyle = `rgba(60,66,78,${a.toFixed(3)})`; x.lineWidth = .8 + hash(i, j, 159)*1.4; x.beginPath(); x.moveTo(sx, y0); x.lineTo(sx - (hz - y0)*.16, hz); x.stroke(); } }
+      x.fillStyle = 'rgba(96,104,112,.55)'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1.2 - Math.max(0, Math.sin(px/90 + 1.4))*3); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // the plain's far lip, grey in the wet
+      x.fillStyle = vgrad(x, hz, H, [[0,'#6e7462'],[.12,'#56644a'],[.4,'#40552e'],[1,'#26361a']]); x.fillRect(0, hz, W, H - hz); }
+    else {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#3c5a80'],[.45,'#6e8eae'],[.82,'#aebcc4'],[1,'#d6d8cc']]); x.fillRect(0, 0, W, hz + 2); // the sky: most of the picture, and all of it moving
     glow(x, W*.14, H*.1, W*.5, '#fff6dc', .3);
     for (let i=0;i<5;i++){ x.fillStyle = `rgba(200,206,214,${.12 + hash(i, 51)*.1})`; x.beginPath(); x.ellipse(W*hash(i, 52), H*(.05 + hash(i, 53)*.14), 40 + hash(i, 54)*70, 1.2, 0, 0, 7); x.fill(); } // high mares' tails
     b3c2Cumulus(x, W*.72, hz - H*.2, W*.5, H*.3, 11, '#fbf8ee', '#d8d8d4', '#8e98a6'); b3c2Cumulus(x, W*.22, hz - H*.28, W*.36, H*.16, 23, '#f6f2e6', '#cfd0cc', '#8a94a2'); // two thunderheads building
     b3c2Cumulus(x, W*.46, hz - H*.06, W*.3, H*.06, 37, '#e8e6dc', '#c4c6c4', '#9aa2aa'); b3c2Cumulus(x, W*.95, hz - H*.05, W*.2, H*.05, 41, '#e4e2d8', '#bcbebe', '#9aa2aa');
     x.fillStyle = 'rgba(110,130,150,.5)'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1.5 - Math.max(0, Math.sin(px/90 + 1.4))*3.5); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill(); // the plain's far lip, blue with distance
-    x.fillStyle = vgrad(x, hz, H, [[0,'#9aa678'],[.12,'#7e925a'],[.4,'#5e7a3e'],[1,'#3a5226']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#9aa678'],[.12,'#7e925a'],[.4,'#5e7a3e'],[1,'#3a5226']]); x.fillRect(0, hz, W, H - hz); }
     for (let i=0;i<7;i++){ const yy = hz + 4 + Math.pow(i/7, 1.6)*(H - hz); x.fillStyle = `rgba(${i%2 ? '190,186,120' : '40,60,24'},${.12 + i*.015})`; x.beginPath(); x.moveTo(0, yy); for (let px=0;px<=W + 12;px+=12) x.lineTo(px, yy + Math.sin(px/(60 + i*20) + i*1.7)*(1 + i*.8)); x.lineTo(W, yy + 6 + i*2); x.lineTo(0, yy + 6 + i*2); x.fill(); } // long low swells of grass, gold where the wind lays it over
     // the herd: a brown tide across the middle distance, too many to count, thinning to the right where the riders keep it
     const hy0 = hz + 3, hy1 = hz + H*.16;
     for (let i=0;i<900;i++){ const k = Math.pow(hash(i, 61), .9), cy = lerp(hy0, hy1, Math.pow(hash(i, 62), 1.3)), cx = W*(.3 + k*.8) + Math.sin(cy*.3 + i)*6, s = .2 + (cy - hz)/H*3.4; if (cx > W*(.95 + (cy - hz)/H*.4)) continue;
       b3c2Beast(x, cx, cy, s, `rgba(${48 + hash(i, 63)*22},${34 + hash(i, 63)*14},${24},${.55 + (cy - hz)/H*2})`, hash(i, 64) > .5 ? 1 : -1, hash(i, 65) > .55 ? 1 : 0); }
-    glow(x, W*.66, hz + 4, W*.4, '#d8c8a0', .22); // their dust
+    if (!rain) glow(x, W*.66, hz + 4, W*.4, '#d8c8a0', .22); else glow(x, W*.66, hz + 4, W*.4, '#8a9088', .14); // their dust (in the wet, only steam off their backs)
     for (let i=0;i<9;i++){ const cx = W*(.42 + i*.07) + hash(i, 66)*10, cy = hy1 + 4 + hash(i, 67)*8; b2Rider(x, cx, cy, .42 + (cy - hz)/H*.6, 'rgba(36,26,18,.85)', hash(i, 68) > .4 ? 1 : -1, i%2, false); } // Rhivi riders on the herd's near edge
     // the Host: a column winding in from the left, wagons and blocks of foot, standards, its own dust
     const path = k => [lerp(-W*.04, W*.42, Math.pow(k, .8)), lerp(H*.86, hz + 2, Math.pow(k, .55))];
-    for (let i=0;i<40;i++){ const [cx, cy] = path(i/40); ell(x, cx, cy - 3, 14*(1 - i/40) + 3, 4*(1 - i/40) + 1, 'rgba(200,184,140,.12)'); }
+    if (!rain) for (let i=0;i<40;i++){ const [cx, cy] = path(i/40); ell(x, cx, cy - 3, 14*(1 - i/40) + 3, 4*(1 - i/40) + 1, 'rgba(200,184,140,.12)'); }
+    else for (let i=0;i<40;i++){ const [cx, cy] = path(i/40); ell(x, cx, cy + 1, 12*(1 - i/40) + 3, 2*(1 - i/40) + .6, 'rgba(20,24,18,.18)'); } // the track it has churned to mud
     b2Column(x, W, H, k => path(lerp(.04, 1, k)), 150, 'rgba(36,32,26,.88)', null);
     for (let i=0;i<6;i++){ const [px, py] = path(.1 + i*.15), sc = 1 - i*.13; x.fillStyle = '#1e1a14'; x.fillRect(px + 5, py - 15*sc, .8, 13*sc); x.fillStyle = i%2 ? '#6a2a20' : '#4a4a52'; x.fillRect(px + 5.8, py - 15*sc, 4.4*sc, 2.6*sc); } // standards
     // Brood's people beyond: a dark mass with spears on the far right, Barghast and the Andii banner, small
@@ -37225,14 +37253,20 @@ SCENEX.b3_c2_herds = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
     x.fillStyle = '#141018'; x.fillRect(W*.86, hz - 6, .7, 9); x.fillStyle = '#20202a'; x.fillRect(W*.86 + .7, hz - 6, 4, 2.4);
     // the near grass, long, a few flowers, the ground under the squad's feet
     x.strokeStyle = 'rgba(40,56,24,.85)'; x.lineWidth = 1.1; for (let i=0;i<260;i++){ const gx = hash(i, 81)*W, gy = H*.82 + hash(i, 82)*H*.2, l = 6 + hash(i, 83)*14; x.beginPath(); x.moveTo(gx, gy); x.quadraticCurveTo(gx + 2, gy - l*.6, gx + 4 + hash(i, 84)*4, gy - l); x.stroke(); }
-    for (let i=0;i<40;i++) ell(x, hash(i, 85)*W, H*.84 + hash(i, 86)*H*.15, 1.1, 1.1, ['#e8dc7a', '#f0ece0', '#c890c8'][i%3]);
+    for (let i=0;i<40;i++) ell(x, hash(i, 85)*W, H*.84 + hash(i, 86)*H*.15, 1.1, 1.1, rain ? ['#a8a46a', '#b8b8ae', '#8a7090'][i%3] : ['#e8dc7a', '#f0ece0', '#c890c8'][i%3]);
+    if (rain) for (let i=0;i<34;i++){ const k = Math.pow(hash(i, 87), 1.4), yy = hz + 4 + k*(H - hz)*.9, r = 3 + k*20; ell(x, hash(i, 88)*W, yy, r, r*.14, `rgba(160,168,172,${(.14 + k*.14).toFixed(2)})`); } // standing water in the grass, the grey sky in it
   }), 0, 0, W, H);
   // cloud shadows going over the plain; the wind in the grass
-  ctx.save(); ctx.beginPath(); ctx.rect(0, hz, W, H - hz); ctx.clip(); for (let i=0;i<3;i++){ const k = ((t*mo/40000 + i/3) % 1), cx = (k*1.6 - .3)*W, cy = hz + 6 + i*H*.08; ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .16 + i*.06); glow(ctx, 0, 0, W*.28, '#1a2410', .32); ctx.restore(); } ctx.restore();
+  if (!rain) { ctx.save(); ctx.beginPath(); ctx.rect(0, hz, W, H - hz); ctx.clip(); for (let i=0;i<3;i++){ const k = ((t*mo/40000 + i/3) % 1), cx = (k*1.6 - .3)*W, cy = hz + 6 + i*H*.08; ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .16 + i*.06); glow(ctx, 0, 0, W*.28, '#1a2410', .32); ctx.restore(); } ctx.restore(); }
   for (let i=0;i<6;i++){ const k = ((t*mo/7000 + i/6) % 1), yy = hz + 10 + i*(H - hz)/7; ctx.fillStyle = `rgba(220,214,150,${.1*Math.sin(k*Math.PI)})`; ctx.beginPath(); ctx.ellipse(k*W*1.3 - W*.15, yy, W*.18, 2 + i, 0, 0, 7); ctx.fill(); } // gusts laying the grass over
-  for (let i=0;i<5;i++){ const k = ((t*mo/(14000 + i*2600) + i/5) % 1), bx = W*(.1 + k*.9), by = H*(.14 + i*.04) + Math.sin(t*mo/900 + i*2)*3, f = Math.sin(t*mo/120 + i*1.7); ctx.strokeStyle = 'rgba(40,40,50,.65)'; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(bx - 3, by - f*1.4); ctx.quadraticCurveTo(bx - 1.4, by - 1, bx, by); ctx.quadraticCurveTo(bx + 1.4, by - 1, bx + 3, by - f*1.4); ctx.stroke(); } // birds, following the herd
+  for (let i=0;i<(rain ? 2 : 5);i++){ const k = ((t*mo/(14000 + i*2600) + i/5) % 1), bx = W*(.1 + k*.9), by = H*(.14 + i*.04) + Math.sin(t*mo/900 + i*2)*3, f = Math.sin(t*mo/120 + i*1.7); ctx.strokeStyle = 'rgba(40,40,50,.65)'; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(bx - 3, by - f*1.4); ctx.quadraticCurveTo(bx - 1.4, by - 1, bx, by); ctx.quadraticCurveTo(bx + 1.4, by - 1, bx + 3, by - f*1.4); ctx.stroke(); } // birds, following the herd
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.56 + i*Math.min(32, W*.4/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:-1}));
-  vign(ctx, W, H, .35, .45); };
+  if (rain) { const sq = (mo ? (Math.sin(t/5200) + 1)/2 : .6)*.6 + .4; // a squall: it rains, and eases, and rains
+    ctx.strokeStyle = `rgba(200,206,214,${(.22*sq).toFixed(3)})`; ctx.lineWidth = .7; ctx.beginPath(); for (let i=0;i<110;i++){ const k = ((t*mo/650 + hash(i, 161)) % 1), rx = hash(i, 162)*W*1.15 - k*22, ry = k*H*1.05 - 8; ctx.moveTo(rx, ry); ctx.lineTo(rx - 3, ry + 10); } ctx.stroke();
+    ctx.fillStyle = `rgba(150,158,166,${(.1*sq).toFixed(3)})`; ctx.fillRect(0, 0, W, H); } // the air grey with it
+  vign(ctx, W, H, rain ? .5 : .35, .45); }; }
+SCENEX.b3_c2_herds = b3c2Herds(false);
+SCENEX.b3_c2_herds_rain = b3c2Herds(true);
 
 SCENEX.b3_c2_flood = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, r0 = H*.44, r1 = H*.8;
   ctx.drawImage(sceneLayer('b3c2:flood', W, H, (x, W, H) => {
@@ -37480,6 +37514,57 @@ function b3c2River(mode){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), 
 SCENEX.b3_c2_ford = b3c2River('ford');
 SCENEX.b3_c2_flood_night = b3c2River('night');
 
+/* the far bank, looking back across the river at the column's side: at dusk (b3_c2_far_dusk) the spate going past brown and loud between, the
+   wagons small on the near bank with the Fourth Regiment round them, the herd scattered through the reeds on this side with the children, and
+   riders in the reeds who are not Rhivi; at night (b3_c2_far_night) the river still high and black, the wagon ring's fires small across it, and
+   on this bank the herd lying down, the Rhivi mothers' fires, and the Fourth's own fire in the reeds */
+function b3c2FarBank(mode){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, night = mode === 'night', hz = H*.34, r0 = H*.42, r1 = H*.64, s = clamp(W/360, .9, 1.4), fl = b2Fl(t);
+  ctx.drawImage(sceneLayer('b3c2:farbank-' + mode, W, H, (x, W, H) => {
+    if (night) { x.fillStyle = vgrad(x, 0, hz, [[0,'#04060c'],[.6,'#0e1424'],[1,'#1c2436']]); x.fillRect(0, 0, W, hz + 2); for (let i=0;i<150;i++){ x.fillStyle = `rgba(210,220,244,${(.12 + hash(i, 3)*.45).toFixed(2)})`; x.fillRect(hash(i, 1)*W, Math.pow(hash(i, 2), 1.3)*hz*.9, .9, .9); }
+      for (let i=0;i<4;i++) cloud(x, W*(.04 + i*.1), hz*(.3 + i*.12), W*.3, 3, '#05070c', .5); } // the storm going away east (on the left now, looking back), eating the stars
+    else { x.fillStyle = vgrad(x, 0, hz, [[0,'#141624'],[.4,'#3a3248'],[.75,'#8a4a44'],[1,'#d88a52']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.3, hz, W*.45, '#ffb070', .45); // dusk, the last of it in the west behind the column's bank
+      for (let i=0;i<6;i++) cloud(x, W*(.1 + i*.17), hz*(.18 + (i%3)*.16), W*.34, 4, i%2 ? '#2a2234' : '#4a3040', .5);
+      for (let i=0;i<7;i++){ const rx = W*(.0 + hash(i, 5)*.3); x.fillStyle = 'rgba(30,26,46,.2)'; x.beginPath(); x.moveTo(rx, hz*.3); x.lineTo(rx + 16, hz*.3); x.lineTo(rx + 4, hz + 2); x.lineTo(rx - 12, hz + 2); x.fill(); } } // rain on the hills upstream, to the left
+    b67Ridge(x, W*.42, hz + 2, H*.03, 29, night ? '#0a0e16' : '#2a2232', 8); // the hills the river comes out of, upstream (left from this bank)
+    // the near bank, across the water: the column's side, low, the wagons on it, and the Host strung along it
+    x.fillStyle = night ? '#0c1018' : '#2a2230'; x.beginPath(); x.moveTo(0, hz + 2); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz + 1 - Math.max(0, Math.sin(px/70 + 2))*3); x.lineTo(W, r0); x.lineTo(0, r0); x.fill();
+    if (!night) { for (let i=0;i<5;i++){ const wx = W*(.5 + i*.08), wy = r0 - 2, ws = .55*s; x.fillStyle = '#120c10'; x.fillRect(wx - 12*ws, wy - 6*ws, 24*ws, 5*ws); x.fillStyle = '#5a4a48'; x.beginPath(); x.moveTo(wx - 12*ws, wy - 6*ws); x.quadraticCurveTo(wx, wy - 18*ws, wx + 12*ws, wy - 6*ws); x.fill(); } // the wagons, hauled up the bank
+      for (let i=0;i<120;i++){ const px = W*(.36 + hash(i, 11)*.62), py = r0 - 2 - hash(i, 12)*5; x.fillStyle = `rgba(20,14,18,${(.6 + hash(i, 13)*.3).toFixed(2)})`; x.fillRect(px, py - 2.4, 1, 2.6); } } // the Fourth Regiment and the rest, a crowd along the edge
+    else { const cx = W*.62, cy = r0 - 4; for (let i=0;i<7;i++){ const a = Math.PI*(1 + i/6), wx = cx + Math.cos(a)*W*.08, wy = cy + Math.sin(a)*H*.012, ws = .45*s; x.fillStyle = '#030304'; x.fillRect(wx - 12*ws, wy - 7*ws, 24*ws, 5*ws); x.beginPath(); x.moveTo(wx - 12*ws, wy - 7*ws); x.quadraticCurveTo(wx, wy - 20*ws, wx + 12*ws, wy - 7*ws); x.fill(); } } // the wagons in their ring, across
+    x.fillStyle = night ? '#06080c' : '#100c10'; x.fillRect(0, r0 - 2, W, 3);
+    // the river between: in spate at dusk, brown and red-streaked; at night black, high, loud
+    x.fillStyle = night ? vgrad(x, r0, r1, [[0,'#141820'],[.4,'#1c1e24'],[1,'#0e0e12']]) : vgrad(x, r0, r1, [[0,'#6a4038'],[.1,'#b0704a'],[.22,'#7a5440'],[.5,'#5e4a38'],[1,'#4a3c2e']]); x.fillRect(0, r0, W, r1 - r0);
+    for (let i=0;i<80;i++){ const yy = r0 + 2 + Math.pow(hash(i, 31), .9)*(r1 - r0 - 4), d = (yy - r0)/(r1 - r0), px = hash(i, 32)*W; x.fillStyle = night ? `rgba(140,150,170,${(.04 + hash(i, 34)*.08).toFixed(2)})` : `rgba(${d < .3 ? '255,170,110' : '200,184,160'},${(.08 + hash(i, 34)*.14).toFixed(2)})`; x.fillRect(px, yy, 6 + hash(i, 33)*26*(.4 + d), 1 + d); }
+    if (!night) for (let i=0;i<14;i++){ const cx = hash(i, 41)*W, cy = r0 + 6 + hash(i, 42)*(r1 - r0 - 12), w = 10 + hash(i, 43)*24; x.strokeStyle = 'rgba(230,214,190,.22)'; x.lineWidth = 1.2; x.beginPath(); x.moveTo(cx - w, cy + 2); x.quadraticCurveTo(cx, cy - 4 - hash(i, 44)*4, cx + w, cy + 2); x.stroke(); } // standing waves
+    // this bank: mud and trampled reeds where the herd came out, a gully going back into the grass on the right
+    x.fillStyle = vgrad(x, r1 - 4, H, night ? [[0,'#0e0c0c'],[1,'#040304']] : [[0,'#3a2c26'],[.4,'#241a16'],[1,'#0e0a08']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, r1); for (let px=0;px<=W + 10;px+=12) x.lineTo(px, r1 - 2 + Math.sin(px/30)*2); x.lineTo(W, H); x.fill();
+    if (!night) { x.fillStyle = 'rgba(255,170,110,.26)'; x.beginPath(); x.moveTo(0, r1 - 2); for (let px=0;px<=W + 10;px+=12) x.lineTo(px, r1 - 2 + Math.sin(px/30)*2); x.lineTo(W, r1 + 1); x.lineTo(0, r1 + 1); x.fill(); } // the wet lip, the sky on it
+    x.fillStyle = night ? '#030203' : '#140e0c'; x.beginPath(); x.moveTo(W*.78, H); x.quadraticCurveTo(W*.84, H*.8, W*.96, r1 + 6); x.lineTo(W, r1 + 6); x.lineTo(W, H); x.fill(); // the gully
+    const reed = (rx, ry, l, a, c) => { x.strokeStyle = c; x.lineWidth = 1; x.beginPath(); x.moveTo(rx, ry); x.quadraticCurveTo(rx + a*.4, ry - l*.6, rx + a, ry - l); x.stroke(); if (l > 14 && hash(rx | 0, ry | 0) > .6) { x.fillStyle = c; x.beginPath(); x.ellipse(rx + a, ry - l, 1, 3, a*.05, 0, 7); x.fill(); } };
+    for (let i=0;i<220;i++){ const k = hash(i, 51), rx = hash(i, 52)*W, ry = r1 + 2 + k*k*(H - r1)*.6, l = 8 + hash(i, 53)*18*(1 + k), a = (hash(i, 54) - .3)*8; if (ry < r1 + 22 && hash(i, 55) > .25) continue; if (rx > W*.3 && rx < W*.62 && ry > r1 + 10) continue; reed(rx, ry, l, a, night ? 'rgba(8,8,10,.95)' : `rgba(${30 + (k*20 | 0)},${26 + (k*14 | 0)},20,.9)`); } // reeds, flattened where the herd came through
+  }), 0, 0, W, H);
+  // the water going by
+  ctx.save(); ctx.beginPath(); ctx.rect(0, r0, W, r1 - r0); ctx.clip(); ctx.globalCompositeOperation = 'lighter';
+  for (let i=0;i<24;i++){ const k = ((t*mo/((night ? 2200 : 2600) + hash(i, 61)*1800) + hash(i, 62)) % 1), yy = r0 + 4 + hash(i, 63)*(r1 - r0 - 8), d = (yy - r0)/(r1 - r0); ctx.fillStyle = night ? `rgba(120,130,150,${(.12*Math.sin(k*Math.PI)).toFixed(3)})` : `rgba(230,200,170,${(.18*Math.sin(k*Math.PI)).toFixed(3)})`; ctx.fillRect(W*1.1 - k*W*1.2, yy, 10 + d*24, 1 + d); } // running right to left, seen from this side
+  ctx.globalCompositeOperation = 'source-over';
+  if (!night) for (let i=0;i<3;i++){ const k = ((t*mo/(15000 + i*5000) + i*.33) % 1), yy = r0 + 10 + i*(r1 - r0)*.26, sc = .7 + i*.25, bx = W*1.15 - k*W*1.3; ctx.save(); ctx.translate(bx, yy + Math.sin(t*mo/500 + i)*1.4); ctx.rotate(Math.sin(t*mo/1400 + i)*.3); B2F.line(ctx, '#1a1210', 2.2*sc, [[-12*sc, 0], [14*sc, -1*sc]]); for (let j=0;j<4;j++) B2F.line(ctx, '#1a1210', .8*sc, [[14*sc, -1*sc], [18*sc + hash(j, i)*4*sc, -6*sc + j*3*sc]]); ctx.restore(); } // a drowned tree going by
+  ctx.restore();
+  if (!night) { // the herd scattered in the reeds, calves bawling, a few children among them; and in the reeds on the right, riders who are not Rhivi
+    for (let i=0;i<22;i++){ const cx = W*(.3 + hash(i, 71)*.48), cy = r1 + 3 + hash(i, 72)*12, sc = (1 + (cy - r1)/H*3)*s; b3c2Beast(ctx, cx, cy, sc, 'rgba(26,16,12,.97)', hash(i, 73) > .5 ? 1 : -1, 0); } // the herd, scattered along the edge, dark against the water
+    for (let i=0;i<5;i++){ const cx = W*(.4 + i*.05) + hash(i, 74)*6, cy = r1 + 16 + hash(i, 75)*5, sc = 1.25*s; ctx.fillStyle = '#140c0a'; ctx.fillRect(cx - .9*sc, cy - 5*sc, 1.8*sc, 5*sc); ctx.beginPath(); ctx.arc(cx, cy - 6*sc, 1.1*sc, 0, 7); ctx.fill(); } // the children, wet, standing where they were put
+    for (let i=0;i<3;i++){ const k = mo ? Math.sin(t/2600 + i*2)*.01 : 0; b2Rider(ctx, W*(.8 + i*.07 + k), r1 + 8 + i*5, (1.15 + i*.12)*s, 'rgba(12,9,8,.97)', -1, mo ? Math.floor(t/500 + i)%2 : 0, false); } // riders in the reeds, coming along the bank
+    ctx.strokeStyle = 'rgba(180,170,190,.24)'; ctx.lineWidth = .8; ctx.beginPath(); for (let i=0;i<60;i++){ const k = ((t*mo/700 + hash(i, 81)) % 1), rx = hash(i, 82)*W*1.2 - k*24, ry = k*H; ctx.moveTo(rx, ry); ctx.lineTo(rx - 3, ry + 9); } ctx.stroke(); } // rain
+  else { // the wagon ring's fires small across the water, and their light on it; this bank's fires: the Rhivi who swam over, and the Fourth's
+    [[.56, .405], [.62, .4], [.68, .405]].forEach(([u, v], i) => { const f = fl*(.85 + (mo ? Math.sin(t/110 + i*2)*.1 : 0)); glow(ctx, W*u, H*v, 10*s, '#e07a30', .3*f); ctx.fillStyle = `rgba(255,200,120,${(.85*f).toFixed(2)})`; ctx.fillRect(W*u - .8, H*v - 1, 1.6, 1.4); for (let j=0;j<5;j++){ ctx.fillStyle = `rgba(255,170,90,${(.08*(1 - j/5)).toFixed(3)})`; ctx.fillRect(W*u - 3 + (mo ? Math.sin(t/300 + j + i)*2 : 0), r0 + 3 + j*(r1 - r0)*.08, 6 - j, 1); } });
+    for (let i=0;i<40;i++){ const cx = W*(.42 + hash(i, 91)*.56), cy = r1 + 6 + Math.pow(hash(i, 92), 1.3)*(H - r1)*.3, sc = (.6 + (cy - r1)/H*2.2)*s; b3c2Beast(ctx, cx, cy, sc, 'rgba(34,24,20,.97)', hash(i, 93) > .5 ? 1 : -1, 1); } // the herd lying down in the reeds
+    [[.66, .74, .8], [.9, .71, .7]].forEach(([u, v, k], i) => { const f = fl*(.9 + (mo ? Math.sin(t/130 + i*3)*.1 : 0)); ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*u, H*v, W*.1*k, '#ff8a3a', .22*f); ctx.globalCompositeOperation = 'source-over'; b2Flames(ctx, W*u, H*v, 11*k*s, f);
+      for (let j=0;j<3;j++){ const px = W*u + (j - 1)*9*k*s + (j === 1 ? 0 : 0), py = H*v + 3; ctx.fillStyle = '#060404'; ctx.beginPath(); ctx.ellipse(px, py - 3*k*s, 2.6*k*s, 3.6*k*s, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(px, py - 7.6*k*s, 1.5*k*s, 0, 7); ctx.fill(); } }); // the mothers, at their fires, with what came back
+    const cx = W*.46, cy = H*.85; ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy - 4, W*.24, '#ff8a3a', .32*fl); ctx.globalCompositeOperation = 'source-over'; b2Flames(ctx, cx, cy, 18*s, fl); } // the Fourth's fire, in the reeds
+  const sq = marchOrder(sceneSquad()); ctx.save(); if (night) ctx.filter = 'brightness(.6) saturate(.6)'; sq.forEach((id, i) => { const n = sq.length, fx = W*.06 + i*Math.min(28, W*.3/n), fy = H*.97 - (i%2)*3; drawFigure(ctx, id, fx, fy, 2.1, t, {phase:i, dir:1}); }); ctx.restore();
+  vign(ctx, W, H, night ? .7 : .5, .5); }; }
+SCENEX.b3_c2_far_dusk = b3c2FarBank('dusk');
+SCENEX.b3_c2_far_night = b3c2FarBank('night');
+
 /* ============ Book Three, Chapter 3: Capustan ============ */
 /* The last night of the march, the relief of Capustan, and the city after.
    Canon (docs/moi-canon.md §1.3, §1.5 and the Chapter 3 re-check): the Barghast and the Bridgeburners break into the city by night (heard,
@@ -37722,6 +37807,7 @@ Dannet, beside you, says one word in Capan. You do not need it translated.`,
 
   scenes:{
     b3_c3_walls:{loc:'Capustan', sub:'On the Catlin', cap:'Walls and domes on a low hill over the river, and smoke going up from a dozen places.', amb:'explore'},
+    b3_c3_walls_dawn:{loc:'Capustan', sub:'On the Catlin · sunrise', cap:'Walls and domes on a low hill over the river with the sun just up off to the east, the Pannion camp left grey and empty below them, and the Host\'s standards coming over the rise into line.', amb:'explore'},
     b3_c3_dragon:{loc:'The field before Capustan', sub:'Noon', warren:true, cap:'Something black and vast over a breaking army, seen from far below.', amb:'explore'},
     b3_c3_walls_night:{loc:'Capustan', sub:'On the Catlin · night', cap:'Walls and domes on a low hill over the river, dark against a sky the colour of a forge, and small fires across the field below.', amb:'night'},
     b3_c3_field:{loc:'The field before Capustan', sub:'After the shadow', cap:'The sky empty again but for the city\'s smoke, the starving lying down in the grass by the thousand, and the Rhivi riding slowly out to herd them.', amb:'wind'},
@@ -37943,7 +38029,7 @@ ${S.f.b3_c3Rested ? 'The squad is as rested as it is going to be.' : 'The squad 
 
 /* ---------------- the field, and the choice ---------------- */
 Object.assign(B3CH3.dlg, {
-  b3_c3_field_arrive:()=>({sp:'The field before Capustan', scene:'b3_c3_walls', html:allyHTML('Before Capustan · the allied line'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_capustan = 1; S.f.b3_c3Field = 1; }, txt:
+  b3_c3_field_arrive:()=>({sp:'The field before Capustan', scene:'b3_c3_walls_dawn', html:allyHTML('Before Capustan · the allied line'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_capustan = 1; S.f.b3_c3Field = 1; }, txt:
 `The field below Capustan is a mile of trampled ground between the river and the hills, and the Pannion army has lived on it for weeks: siege banks, stake lines, the black rings of cook-fires, a tent city gone grey with smoke and left in the night. Everything in it faces the walls.
 
 Now the Host faces the other way. It comes down onto the field at sunrise and opens out into line across the north road, the heavy infantry in the centre, the marines among them, the Fourth's stretch of ground marked by a broken stake and a dropped shield. To the left, a long way off, the Rhivi on their horses. To the right, Brood's standard, the dark ranks of the Andii, and the Mott Irregulars doing something unofficial to a fence.
@@ -38734,18 +38820,32 @@ function b3c3Skyline(x, W, base, s, seed, cols, opt = {}){ const fires = [], wal
 /* a column of smoke from (sx, sy), leaning downwind; puffs drift up it with time */
 function b3c3Smoke(ctx, sx, sy, s, t, mo, i, col, a, lean = 1){ for (let j=0;j<14;j++){ const k = ((j/14 + t*mo/26000 + hash(i, 5)*.7) % 1), y = sy - k*150*s, xx = sx + lean*Math.pow(k, 1.6)*110*s + Math.sin(k*6 + i)*6*s, r = (6 + k*34)*s; glow(ctx, xx, y, r, col, a*(1 - k)*Math.min(1, k*6)); } }
 
-SCENEX.b3_c3_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.62, s = Math.max(.75, Math.min(1.25, W/700));
+/* Capustan from the field (b3_c3_walls), and the same field at sunrise as the Host comes down onto it (b3_c3_walls_dawn): the sun just up in the
+   east on the left, the sky over the city rose and pale gold, the smoke lit pink on its sunward side, the walls taking the light on their east
+   faces, long shadows across the field, and the Pannion siege camp on it grey and abandoned, its cook-fire rings cold */
+function b3c3Walls(dawn){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.62, s = Math.max(.75, Math.min(1.25, W/700));
   let fires = [];
-  ctx.drawImage(sceneLayer('b3c3:walls', W, H, (x, W, H) => {
+  ctx.drawImage(sceneLayer('b3c3:walls' + (dawn ? '-dawn' : ''), W, H, (x, W, H) => {
+    if (dawn) { x.fillStyle = vgrad(x, 0, hz, [[0, '#2e3656'], [.35, '#6a6a8a'], [.7, '#d0948a'], [.9, '#f0b88a'], [1, '#f8d8a4']]); x.fillRect(0, 0, W, hz + 2); // sunrise: night still in the top of the sky, rose and gold at the rim
+      glow(x, W*.09, hz - H*.24, W*.55, '#ffc890', .45); glow(x, W*.09, hz - H*.24, W*.14, '#fff0d0', .6); ell(x, W*.09, hz - H*.24, 9, 9, 'rgba(255,246,220,.95)'); // the sun, just up over the country to the east, above the city's far shoulder
+      for (let i=0;i<4;i++) cloud(x, W*(.1 + i*.27), H*(.1 + hash(i, 4)*.12), W*.34, 6, '#4a3a44', .12); // the smoke shelf, thinner in the morning air
+      for (let i=0;i<5;i++){ x.fillStyle = `rgba(255,200,170,${(.16 + hash(i, 6)*.12).toFixed(2)})`; x.beginPath(); x.ellipse(W*(.1 + hash(i, 7)*.8), H*(.08 + i*.05), 30 + hash(i, 8)*60, 1.4, 0, 0, 7); x.fill(); } // thin cloud lit from beneath
+      x.fillStyle = 'rgba(220,170,150,.22)'; x.fillRect(0, hz - H*.2, W, H*.2); }
+    else {
     x.fillStyle = vgrad(x, 0, hz, [[0, '#4a4a52'], [.4, '#7a6e64'], [.8, '#b89a76'], [1, '#c8a880']]); x.fillRect(0, 0, W, hz + 2); // late afternoon through the smoke: brown-gold, low
     glow(x, W*.82, hz - H*.16, W*.4, '#ffd8a0', .4); ell(x, W*.82, hz - H*.16, 8, 8, 'rgba(255,236,200,.85)'); // the sun, a disc through haze
     for (let i=0;i<4;i++) cloud(x, W*(.1 + i*.27), H*(.1 + hash(i, 4)*.12), W*.34, 6, '#2a2624', .14); // smoke lying over the city in a flat shelf
-    x.fillStyle = 'rgba(160,140,120,.35)'; x.fillRect(0, hz - H*.2, W, H*.2);
-    b3c3Skyline(x, W, hz - H*.06, s*.62, 31, {mass:['#7e6e60', '#8c7c6c'], dome:[['#a49070', '#7e6e5c']], wall:'#8a7a68', wallLit:'#a8987e'}, {light:.4}); // the far side of the city, hazed
-    fires = b3c3Skyline(x, W, hz, s, 7, {mass:['#4a3e36', '#5a4c40'], dome:[['#9a8452', '#5e5034'], ['#587a70', '#36504a'], ['#55667a', '#323e50'], ['#7e665a', '#544238']], wall:'#6a5c4c', wallLit:'rgba(255,226,180,.22)', tower:'#4a4036'}, {thrall: W*.62, gate: W*.3});
-    x.fillStyle = vgrad(x, hz - 90*s, hz, [[0, 'rgba(180,150,116,.0)'], [.6, 'rgba(180,150,116,.16)'], [1, 'rgba(200,170,130,.3)']]); x.fillRect(0, hz - 90*s, W, 90*s); // haze, thickening at the foot of the walls
+    x.fillStyle = 'rgba(160,140,120,.35)'; x.fillRect(0, hz - H*.2, W, H*.2); }
+    b3c3Skyline(x, W, hz - H*.06, s*.62, 31, dawn ? {mass:['#7a6a78', '#86768a'], dome:[['#a88a88', '#7a6676']], wall:'#84727e', wallLit:'#c8a49a'} : {mass:['#7e6e60', '#8c7c6c'], dome:[['#a49070', '#7e6e5c']], wall:'#8a7a68', wallLit:'#a8987e'}, {light:.4}); // the far side of the city, hazed
+    fires = b3c3Skyline(x, W, hz, s, 7, {mass:dawn ? ['#3e3440', '#4a3e48'] : ['#4a3e36', '#5a4c40'], dome:[['#9a8452', '#5e5034'], ['#587a70', '#36504a'], ['#55667a', '#323e50'], ['#7e665a', '#544238']], wall:dawn ? '#5a4c54' : '#6a5c4c', wallLit:dawn ? 'rgba(255,200,150,.42)' : 'rgba(255,226,180,.22)', tower:dawn ? '#40363e' : '#4a4036'}, {thrall: W*.62, gate: W*.3});
+    x.fillStyle = dawn ? vgrad(x, hz - 90*s, hz, [[0, 'rgba(220,170,170,.0)'], [.6, 'rgba(220,170,160,.14)'], [1, 'rgba(240,200,170,.26)']]) : vgrad(x, hz - 90*s, hz, [[0, 'rgba(180,150,116,.0)'], [.6, 'rgba(180,150,116,.16)'], [1, 'rgba(200,170,130,.3)']]); x.fillRect(0, hz - 90*s, W, 90*s); // haze, thickening at the foot of the walls
     // the field before the walls: trampled, scarred with the besiegers' trenches, a wrecked siege tower, ladders still against the wall
-    x.fillStyle = vgrad(x, hz, H, [[0, '#7a6a54'], [.3, '#5e5040'], [1, '#2a2218']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = dawn ? vgrad(x, hz, H, [[0, '#8a6e60'], [.3, '#5a4840'], [1, '#221a18']]) : vgrad(x, hz, H, [[0, '#7a6a54'], [.3, '#5e5040'], [1, '#2a2218']]); x.fillRect(0, hz, W, H - hz);
+    if (dawn) { for (let i=0;i<26;i++){ const k = Math.pow(hash(i, 101), 1.2), tx = W*(.06 + hash(i, 102)*.9), ty = hz + 5 + k*H*.16, ts = (.7 + k*1.6)*s; if (Math.abs(tx - W*.47) < 26*s) continue; // the Pannion camp, left in the night: tents gone grey, some down
+        x.fillStyle = hash(i, 103) > .35 ? '#7a7270' : '#5e5654'; if (hash(i, 104) > .3) { x.beginPath(); x.moveTo(tx - 5*ts, ty); x.lineTo(tx, ty - 5*ts); x.lineTo(tx + 5*ts, ty); x.fill(); x.fillStyle = 'rgba(30,20,24,.45)'; x.beginPath(); x.moveTo(tx, ty - 5*ts); x.lineTo(tx + 5*ts, ty); x.lineTo(tx + 1*ts, ty); x.fill(); x.fillStyle = 'rgba(255,200,160,.35)'; x.beginPath(); x.moveTo(tx, ty - 5*ts); x.lineTo(tx - 5*ts, ty); x.lineTo(tx - 3.6*ts, ty); x.fill(); }
+          else { x.beginPath(); x.moveTo(tx - 6*ts, ty); x.quadraticCurveTo(tx - 1*ts, ty - 2.4*ts, tx + 5*ts, ty - .6*ts); x.lineTo(tx + 6*ts, ty); x.fill(); }
+          x.fillStyle = 'rgba(16,10,12,.35)'; x.beginPath(); x.moveTo(tx + 5*ts, ty); x.lineTo(tx + 16*ts, ty + 1.2*ts); x.lineTo(tx + 1*ts, ty + .6*ts); x.fill(); } // each with its long shadow, west
+      for (let i=0;i<10;i++){ const cx = W*(.08 + hash(i, 105)*.84), cy = hz + 8 + hash(i, 106)*H*.18; ell(x, cx, cy, (5 + hash(i, 107)*4)*s, (1.4 + hash(i, 107))*s, 'rgba(20,14,14,.5)'); ell(x, cx, cy, (2.4 + hash(i, 107)*2)*s, (.7 + hash(i, 107)*.5)*s, 'rgba(120,110,108,.45)'); } } // cold cook-fire rings
     for (let i=0;i<6;i++){ const y = hz + H*(.04 + i*.06), w = W*(.3 + hash(i, 61)*.5); x.fillStyle = 'rgba(30,22,14,.35)'; x.fillRect(hash(i, 62)*W - w*.3, y, w, 1.4 + i*.5); x.fillStyle = 'rgba(220,190,150,.12)'; x.fillRect(hash(i, 62)*W - w*.3, y - 1, w, 1); } // trench lines
     for (let i=0;i<5;i++){ const lx = W*(.08 + i*.2 + hash(i, 63)*.06); x.strokeStyle = 'rgba(40,30,20,.7)'; x.lineWidth = 1; x.beginPath(); x.moveTo(lx, hz + 2); x.lineTo(lx + 5*s, hz - 15*s); x.moveTo(lx + 3*s, hz + 2); x.lineTo(lx + 8*s, hz - 15*s); x.stroke(); } // ladders against the wall
     { const sx = W*.47, sy = hz + H*.08; x.fillStyle = '#1e1610'; poly(x, [[sx - 10*s, sy], [sx - 6*s, sy - 44*s], [sx + 9*s, sy - 38*s], [sx + 13*s, sy]], '#1e1610'); x.strokeStyle = '#1e1610'; x.lineWidth = 1.4; for (let j=0;j<4;j++){ x.beginPath(); x.moveTo(sx + 9*s - j*2, sy - 38*s + j*9*s); x.lineTo(sx + 22*s - j*2, sy - 30*s + j*9*s); x.stroke(); } } // a siege tower, burnt and broken-backed
@@ -38753,13 +38853,17 @@ SCENEX.b3_c3_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
     // the near foreground: the allies' own line, dark, and a broken stake-row
     x.fillStyle = '#1a140e'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.9); x.quadraticCurveTo(W*.4, H*.86, W, H*.9); x.lineTo(W, H); x.fill();
     for (let i=0;i<14;i++){ const px = W*(.02 + i*.072 + hash(i, 81)*.02), py = H*(.89 - Math.sin(i)*.005), a = (hash(i, 82) - .5)*.9; x.strokeStyle = '#120c08'; x.lineWidth = 2.2; x.beginPath(); x.moveTo(px, py + 6); x.lineTo(px + Math.sin(a)*18, py - Math.cos(a)*18); x.stroke(); }
+    if (dawn) { x.fillStyle = 'rgba(255,190,140,.16)'; x.beginPath(); x.moveTo(0, H*.9); x.quadraticCurveTo(W*.4, H*.86, W, H*.9); x.lineTo(W, H*.905); x.quadraticCurveTo(W*.4, H*.868, 0, H*.908); x.fill(); // the first sun along the near rise
+      for (let i=0;i<7;i++){ const sx = W*(.36 + i*.09), sy = H*(.885 - Math.sin(i*.7)*.004); x.fillStyle = '#100a08'; x.fillRect(sx, sy - 22*s, 1.2*s, 22*s); x.fillStyle = i%3 === 1 ? '#6a2a22' : i%3 === 2 ? '#2a2830' : '#3a3a42'; x.fillRect(sx + 1.2*s, sy - 22*s, 6*s, 3.6*s); } } // the Host's standards coming over it into line
     vign(x, W, H, .45, .5); }), 0, 0, W, H);
   // what moves: the smoke going up from the fires inside, and leaning away on the wind; fire-glow at their feet; crows turning over the walls
   const cityFires = [[.18, .66], [.4, .7], [.55, .62], [.74, .68], [.9, .64]];
-  cityFires.forEach(([fx, fh], i) => { const sx = W*fx, sy = hz - 24*s - hash(i, 3)*10*s; glow(ctx, sx, sy, 16*s, '#ff7a30', (.35 + Math.sin(t*mo/(160 + i*30) + i)*.08)); b3c3Smoke(ctx, sx, sy, s*(.8 + hash(i, 9)*.5), t, mo, i, '#1e1a18', .5, .9); });
+  cityFires.forEach(([fx, fh], i) => { const sx = W*fx, sy = hz - 24*s - hash(i, 3)*10*s; glow(ctx, sx, sy, 16*s, '#ff7a30', (.35 + Math.sin(t*mo/(160 + i*30) + i)*.08)*(dawn ? .7 : 1)); b3c3Smoke(ctx, sx, sy, s*(.8 + hash(i, 9)*.5), t, mo, i, dawn ? '#3a2a30' : '#1e1a18', .5, .9); if (dawn) b3c3Smoke(ctx, sx - 3*s, sy, s*(.7 + hash(i, 9)*.4), t, mo, i, '#ffb090', .14, .9); }); // at dawn its sunward side lit
   for (let i=0;i<9;i++){ const a = t*mo/(2600 + i*170) + i*.7, cx = W*(.36 + hash(i, 91)*.3) + Math.cos(a)*30*s, cy = hz - 60*s - hash(i, 92)*30*s + Math.sin(a*1.3)*10*s, f = Math.sin(t*mo/120 + i)*1.4; ctx.strokeStyle = 'rgba(16,12,10,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 3, cy + f); ctx.lineTo(cx, cy); ctx.lineTo(cx + 3, cy + f); ctx.stroke(); } // crows
-  { const sq = sceneSquad(); ctx.save(); ctx.filter = 'brightness(.3) saturate(.5)'; squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(22, W*.34/Math.max(1, sq.length)), H*.905 - 19 - (i%2)*1.5, 1.45, t, {phase:i, dir:1})); ctx.restore(); } // the Fourth on the near bank, looking at it
-  vign(ctx, W, H, .25, .5); };
+  { const sq = sceneSquad(); ctx.save(); ctx.filter = dawn ? 'brightness(.42) saturate(.55)' : 'brightness(.3) saturate(.5)'; squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(22, W*.34/Math.max(1, sq.length)), H*.905 - 19 - (i%2)*1.5, 1.45, t, {phase:i, dir:1})); ctx.restore(); } // the Fourth on the near bank, looking at it
+  vign(ctx, W, H, .25, .5); }; }
+SCENEX.b3_c3_walls = b3c3Walls(false);
+SCENEX.b3_c3_walls_dawn = b3c3Walls(true);
 
 /* the black dragon over the field, from far below. Anomander Rake in his other shape: a span wider than the eye can take in, flying out over the
    Pannion army, the light coming through the membranes at the edges; under it, the field a strip of dust and tiny men breaking every way. */
@@ -43838,6 +43942,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
     b3_c7_spawn:{loc:'Coral', sub:'Moon\'s Spawn', cap:'Something vast and dark coming down out of the sky onto the keep, from a long way off, slowly, the way a mountain would fall if mountains fell.', amb:'storm'},
     b3_c7_barrow:{loc:'Outside Coral', sub:'The Shield Anvil\'s barrow', cap:'A barrow on the plain at dawn, made of gifts, and soldiers of every army standing round it.', amb:'dusk'},
     b3_c7_sea:{loc:'The coast by Coral', sub:'The Rust Ocean', cap:'Moon\'s Spawn going out over the sea, low and slow and small on the horizon, with the sun going down behind it.', amb:'lake'},
+    b3_c7_shore_night:{loc:'The coast by Coral', sub:'The shore · night', cap:'Stars down to the sea and nothing on the horizon, the companies still standing along the shingle with a few torches, and the Fourth among them in the dark.', amb:'lake'},
     b3_c7_finale:{loc:'The coast by Coral', sub:'After', cap:'A shore, the sea, and where the dark shape was, nothing.', amb:'lake'} },
 
   end:{
@@ -44541,7 +44646,7 @@ Somewhere along the shore the High Fist is standing with what is left of the Bri
 
 The Spawn gets smaller. Then it is a dark shape on the horizon. Then it is nothing.`,
       ch:[{t:'Stand there until it is dark.', go:'b3_c7_burial2'}]}),
-  b3_c7_burial2:()=>({sp:'The shore · night', scene:'b3_c7_finale', txt:
+  b3_c7_burial2:()=>({sp:'The shore · night', scene:'b3_c7_shore_night', txt:
 `${b3c7Fell().length ? `${b3c7And(b3c7Fell())} went out with it, or into the ground by the barrow; the Fourth will argue about which, later, and never settle it, because it does not matter where. ` : ''}You count the Fourth, there on the shore, in the dark. ${numw(b3c7Count(), true)}. You count twice. ${b3In('ohl') ? `\n\nBeside you Ohl says, very quietly, "${b3ListWords()}." He doesn't take the list out. He doesn't need to.` : ''}
 
 *After Coral*, he said.`,
@@ -45157,8 +45262,23 @@ SCENEX.b3_c7_sea = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
 
 /* the end of Book Three: the Fourth on a shingle shore in the first grey of morning, the sea flat and pale, the horizon empty where the rock was.
    Quiet: the swell, a few gulls, the figures' own breathing. Nothing else */
-SCENEX.b3_c7_finale = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52;
-  ctx.drawImage(sceneLayer('b3:c7finale', W, H, (x, W, H) => {
+/* and the same shore the night before (b3_c7_shore_night, after the Spawn has gone): stars to the horizon and nothing on it, the sea black with
+   only the starlight on the swell, the Host and Brood's people still standing in their companies along the shingle with a few torches, and the
+   Fourth among them, dark, counting */
+function b67Finale(night){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52;
+  ctx.drawImage(sceneLayer('b3:c7finale' + (night ? '-night' : ''), W, H, (x, W, H) => {
+    if (night) { x.fillStyle = vgrad(x, 0, hz, [[0,'#03040a'],[.55,'#0a0e1c'],[.9,'#161c30'],[1,'#1e2438']]); x.fillRect(0, 0, W, hz + 1); // night, a little lighter at the rim
+      for (let i=0;i<190;i++){ const yy = Math.pow(hash(i, 141), 1.2)*hz*.96; x.fillStyle = `rgba(222,228,250,${((.1 + hash(i, 142)*.5)*(1 - yy/hz*.5)).toFixed(2)})`; const r = hash(i, 143) > .93 ? 1.4 : .9; x.fillRect(hash(i, 144)*W, yy, r, r); }
+      for (let i=0;i<5;i++) glow(x, W*(.05 + i*.22), hz*(.25 + hash(i, 145)*.3), W*.16, '#5a6688', .05); // the river of stars, faint
+      x.fillStyle = 'rgba(70,78,104,.6)'; x.fillRect(0, hz - .5, W, 1); // the horizon: nothing on it
+      x.fillStyle = vgrad(x, hz, H, [[0,'#1a2032'],[.2,'#10141e'],[.6,'#080a12'],[1,'#040508']]); x.fillRect(0, hz, W, H - hz);
+      x.fillStyle = 'rgba(20,22,32,.9)'; x.beginPath(); x.moveTo(W*.9, hz); x.quadraticCurveTo(W*.96, hz - H*.025, W + 2, hz - H*.03); x.lineTo(W + 2, hz); x.fill(); // the headland, black
+      x.fillStyle = vgrad(x, H*.74, H, [[0,'#121218'],[.3,'#0c0c10'],[1,'#050506']]); x.beginPath(); x.moveTo(0, H*.74); x.quadraticCurveTo(W*.5, H*.76, W, H*.8); x.lineTo(W, H); x.lineTo(0, H); x.fill();
+      x.fillStyle = 'rgba(120,130,170,.14)'; x.beginPath(); x.moveTo(0, H*.74); x.quadraticCurveTo(W*.5, H*.76, W, H*.8); x.lineTo(W, H*.81); x.quadraticCurveTo(W*.5, H*.775, 0, H*.755); x.fill(); // the wet band, a little starlight in it
+      for (let i=0;i<120;i++){ const px = hash(i, 21)*W, py = H*(.78 + Math.pow(hash(i, 22), .8)*.22), r = .6 + hash(i, 23)*1.4*(py/H); x.fillStyle = hash(i, 24) > .5 ? 'rgba(90,96,120,.18)' : 'rgba(0,0,0,.4)'; x.beginPath(); x.ellipse(px, py, r*1.3, r*.8, 0, 0, 7); x.fill(); } // stones
+      // along the shore to the right, going away: the companies still standing, dark, a few torches among them
+      for (let i=0;i<180;i++){ const k = hash(i, 151), px = W*(.56 + k*.42), py = H*(.775 + (1 - k)*.03) + hash(i, 152)*H*.012 + (px/W - .5)*H*.04, hh = 3.2 - k*1.6; x.fillStyle = `rgba(2,2,4,${(.75 + hash(i, 153)*.2).toFixed(2)})`; x.fillRect(px, py - hh, Math.max(.8, 1.2 - k*.5), hh); }
+      return; }
     x.fillStyle = vgrad(x, 0, hz, [[0,'#2a3044'],[.5,'#6a7284'],[.85,'#b4b4b4'],[1,'#d8ccbc']]); x.fillRect(0, 0, W, hz + 1); // morning, grey, no colour yet but a little at the rim
     glow(x, W*.7, hz, W*.45, '#f0dcc0', .22); for (let i=0;i<5;i++) cloud(x, W*(.1 + hash(i, 3)*.8), hz*(.2 + i*.13), W*(.3 + hash(i, 4)*.2), 1.4, '#c8c8d0', .1);
     x.fillStyle = '#e8e4ec'; x.fillRect(W*.22, hz*.22, 1.2, 1.2); glow(x, W*.22 + .6, hz*.22 + .6, 4, '#e8e4ec', .3); // one star, going
@@ -45172,14 +45292,18 @@ SCENEX.b3_c7_finale = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
     for (let i=0;i<120;i++){ const px = hash(i, 21)*W, py = H*(.78 + Math.pow(hash(i, 22), .8)*.22), r = .6 + hash(i, 23)*1.4*(py/H); x.fillStyle = hash(i, 24) > .5 ? 'rgba(150,150,160,.25)' : 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(px, py, r*1.3, r*.8, 0, 0, 7); x.fill(); } // stones
     { const dx = W*.84, dy = H*.86; x.strokeStyle = '#1a1614'; x.lineWidth = 2; x.lineCap = 'round'; x.beginPath(); x.moveTo(dx - 16, dy); x.lineTo(dx + 14, dy - 3); x.stroke(); x.lineWidth = 1.2; x.beginPath(); x.moveTo(dx + 4, dy - 2); x.lineTo(dx + 10, dy - 8); x.stroke(); x.lineCap = 'butt'; } // driftwood
   }), 0, 0, W, H);
-  // the swell coming in, slow
-  for (let i=0;i<50;i++){ const yy = hz + 2 + Math.pow(hash(i, 31), 1.2)*(H*.22), d = (yy - hz)/(H*.22), px = (hash(i, 32)*W + t*mo/(140 + hash(i, 33)*60)) % (W + 30) - 15; ctx.fillStyle = `rgba(230,228,236,${(.08 + d*.12).toFixed(2)})`; ctx.fillRect(px, yy, 4 + d*14, .6 + d*.5); }
-  { const a = mo ? (Math.sin(t/2400) + 1)/2 : .4; ctx.strokeStyle = `rgba(236,236,244,${(.18 + a*.2).toFixed(2)})`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(0, H*(.745 - a*.006)); ctx.quadraticCurveTo(W*.5, H*(.765 - a*.006), W, H*(.8 - a*.006)); ctx.stroke(); } // the edge of the water, breathing
-  b2Wheel(ctx, t*mo, W*.62, hz - H*.2, W*.14, H*.05, 3, .5, 'rgba(236,236,240,.75)', 73);
+  // the swell coming in, slow (at night only the starlight on it)
+  for (let i=0;i<50;i++){ const yy = hz + 2 + Math.pow(hash(i, 31), 1.2)*(H*.22), d = (yy - hz)/(H*.22), px = (hash(i, 32)*W + t*mo/(140 + hash(i, 33)*60)) % (W + 30) - 15; ctx.fillStyle = night ? `rgba(150,160,200,${(.04 + d*.07).toFixed(2)})` : `rgba(230,228,236,${(.08 + d*.12).toFixed(2)})`; ctx.fillRect(px, yy, 4 + d*14, .6 + d*.5); }
+  { const a = mo ? (Math.sin(t/2400) + 1)/2 : .4; ctx.strokeStyle = night ? `rgba(170,180,220,${(.08 + a*.1).toFixed(2)})` : `rgba(236,236,244,${(.18 + a*.2).toFixed(2)})`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(0, H*(.745 - a*.006)); ctx.quadraticCurveTo(W*.5, H*(.765 - a*.006), W, H*(.8 - a*.006)); ctx.stroke(); } // the edge of the water, breathing
+  if (!night) b2Wheel(ctx, t*mo, W*.62, hz - H*.2, W*.14, H*.05, 3, .5, 'rgba(236,236,240,.75)', 73);
+  else { [[.62, .76], [.74, .775], [.83, .784], [.93, .79]].forEach(([u, v], i) => { const f = mo ? .85 + Math.sin(t/(140 + i*20) + i*2)*.12 : .9, px = W*u, py = H*v - 6; ctx.globalCompositeOperation = 'lighter'; glow(ctx, px, py, 12 - i*1.6, '#ff9a4a', .3*f); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = `rgba(255,210,140,${(.9*f).toFixed(2)})`; ctx.fillRect(px - .6, py - 1, 1.2, 1.6); ctx.fillStyle = 'rgba(255,170,90,.1)'; ctx.fillRect(px - 3, H*(.745 + (u - .5)*.11) + 2, 6, 1); }); } // torches down the shore, their light on the wet stones
   // the Fourth, standing on the stones a little apart, looking out
   const sq = marchOrder(sceneSquad()), n = sq.length, sc = clamp(Math.min(W*.7, H)/300, .9, 1.3), gap = Math.min(34*sc, W*.74/Math.max(1, n)); // small against the sea, a little apart: nobody standing close
+  ctx.save(); if (night) ctx.filter = 'brightness(.5) saturate(.5)';
   sq.forEach((id, i) => { const fx = W*(W < H ? .1 : .14) + i*gap + hash(i, 131)*gap*.3, fy = H*(.85 + hash(i, 132)*.05); ell(ctx, fx, fy + .5, 7*sc, 1.6*sc, 'rgba(0,0,0,.25)'); drawFigure(ctx, id, fx, fy, sc*(.92 + (fy/H - .85)*1.6), t*mo, {phase:i*1.3, dir:1}); });
-  vign(ctx, W, H, .42, .5); };
+  ctx.restore(); vign(ctx, W, H, night ? .6 : .42, .5); }; }
+SCENEX.b3_c7_finale = b67Finale(false);
+SCENEX.b3_c7_shore_night = b67Finale(true);
 
 /* the alliance's hill outside Coral: tents and standards along a long crest, the slope going down to a plain, and at the plain's far edge a dark city
    by the sea with its keep. Morning (b3_c7_hill), and the same hill at dusk after, fires lit, a great many people on it standing still (b3_c7_hill_dusk) */

@@ -236,18 +236,32 @@ function b3c3Skyline(x, W, base, s, seed, cols, opt = {}){ const fires = [], wal
 /* a column of smoke from (sx, sy), leaning downwind; puffs drift up it with time */
 function b3c3Smoke(ctx, sx, sy, s, t, mo, i, col, a, lean = 1){ for (let j=0;j<14;j++){ const k = ((j/14 + t*mo/26000 + hash(i, 5)*.7) % 1), y = sy - k*150*s, xx = sx + lean*Math.pow(k, 1.6)*110*s + Math.sin(k*6 + i)*6*s, r = (6 + k*34)*s; glow(ctx, xx, y, r, col, a*(1 - k)*Math.min(1, k*6)); } }
 
-SCENEX.b3_c3_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.62, s = Math.max(.75, Math.min(1.25, W/700));
+/* Capustan from the field (b3_c3_walls), and the same field at sunrise as the Host comes down onto it (b3_c3_walls_dawn): the sun just up in the
+   east on the left, the sky over the city rose and pale gold, the smoke lit pink on its sunward side, the walls taking the light on their east
+   faces, long shadows across the field, and the Pannion siege camp on it grey and abandoned, its cook-fire rings cold */
+function b3c3Walls(dawn){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.62, s = Math.max(.75, Math.min(1.25, W/700));
   let fires = [];
-  ctx.drawImage(sceneLayer('b3c3:walls', W, H, (x, W, H) => {
+  ctx.drawImage(sceneLayer('b3c3:walls' + (dawn ? '-dawn' : ''), W, H, (x, W, H) => {
+    if (dawn) { x.fillStyle = vgrad(x, 0, hz, [[0, '#2e3656'], [.35, '#6a6a8a'], [.7, '#d0948a'], [.9, '#f0b88a'], [1, '#f8d8a4']]); x.fillRect(0, 0, W, hz + 2); // sunrise: night still in the top of the sky, rose and gold at the rim
+      glow(x, W*.09, hz - H*.24, W*.55, '#ffc890', .45); glow(x, W*.09, hz - H*.24, W*.14, '#fff0d0', .6); ell(x, W*.09, hz - H*.24, 9, 9, 'rgba(255,246,220,.95)'); // the sun, just up over the country to the east, above the city's far shoulder
+      for (let i=0;i<4;i++) cloud(x, W*(.1 + i*.27), H*(.1 + hash(i, 4)*.12), W*.34, 6, '#4a3a44', .12); // the smoke shelf, thinner in the morning air
+      for (let i=0;i<5;i++){ x.fillStyle = `rgba(255,200,170,${(.16 + hash(i, 6)*.12).toFixed(2)})`; x.beginPath(); x.ellipse(W*(.1 + hash(i, 7)*.8), H*(.08 + i*.05), 30 + hash(i, 8)*60, 1.4, 0, 0, 7); x.fill(); } // thin cloud lit from beneath
+      x.fillStyle = 'rgba(220,170,150,.22)'; x.fillRect(0, hz - H*.2, W, H*.2); }
+    else {
     x.fillStyle = vgrad(x, 0, hz, [[0, '#4a4a52'], [.4, '#7a6e64'], [.8, '#b89a76'], [1, '#c8a880']]); x.fillRect(0, 0, W, hz + 2); // late afternoon through the smoke: brown-gold, low
     glow(x, W*.82, hz - H*.16, W*.4, '#ffd8a0', .4); ell(x, W*.82, hz - H*.16, 8, 8, 'rgba(255,236,200,.85)'); // the sun, a disc through haze
     for (let i=0;i<4;i++) cloud(x, W*(.1 + i*.27), H*(.1 + hash(i, 4)*.12), W*.34, 6, '#2a2624', .14); // smoke lying over the city in a flat shelf
-    x.fillStyle = 'rgba(160,140,120,.35)'; x.fillRect(0, hz - H*.2, W, H*.2);
-    b3c3Skyline(x, W, hz - H*.06, s*.62, 31, {mass:['#7e6e60', '#8c7c6c'], dome:[['#a49070', '#7e6e5c']], wall:'#8a7a68', wallLit:'#a8987e'}, {light:.4}); // the far side of the city, hazed
-    fires = b3c3Skyline(x, W, hz, s, 7, {mass:['#4a3e36', '#5a4c40'], dome:[['#9a8452', '#5e5034'], ['#587a70', '#36504a'], ['#55667a', '#323e50'], ['#7e665a', '#544238']], wall:'#6a5c4c', wallLit:'rgba(255,226,180,.22)', tower:'#4a4036'}, {thrall: W*.62, gate: W*.3});
-    x.fillStyle = vgrad(x, hz - 90*s, hz, [[0, 'rgba(180,150,116,.0)'], [.6, 'rgba(180,150,116,.16)'], [1, 'rgba(200,170,130,.3)']]); x.fillRect(0, hz - 90*s, W, 90*s); // haze, thickening at the foot of the walls
+    x.fillStyle = 'rgba(160,140,120,.35)'; x.fillRect(0, hz - H*.2, W, H*.2); }
+    b3c3Skyline(x, W, hz - H*.06, s*.62, 31, dawn ? {mass:['#7a6a78', '#86768a'], dome:[['#a88a88', '#7a6676']], wall:'#84727e', wallLit:'#c8a49a'} : {mass:['#7e6e60', '#8c7c6c'], dome:[['#a49070', '#7e6e5c']], wall:'#8a7a68', wallLit:'#a8987e'}, {light:.4}); // the far side of the city, hazed
+    fires = b3c3Skyline(x, W, hz, s, 7, {mass:dawn ? ['#3e3440', '#4a3e48'] : ['#4a3e36', '#5a4c40'], dome:[['#9a8452', '#5e5034'], ['#587a70', '#36504a'], ['#55667a', '#323e50'], ['#7e665a', '#544238']], wall:dawn ? '#5a4c54' : '#6a5c4c', wallLit:dawn ? 'rgba(255,200,150,.42)' : 'rgba(255,226,180,.22)', tower:dawn ? '#40363e' : '#4a4036'}, {thrall: W*.62, gate: W*.3});
+    x.fillStyle = dawn ? vgrad(x, hz - 90*s, hz, [[0, 'rgba(220,170,170,.0)'], [.6, 'rgba(220,170,160,.14)'], [1, 'rgba(240,200,170,.26)']]) : vgrad(x, hz - 90*s, hz, [[0, 'rgba(180,150,116,.0)'], [.6, 'rgba(180,150,116,.16)'], [1, 'rgba(200,170,130,.3)']]); x.fillRect(0, hz - 90*s, W, 90*s); // haze, thickening at the foot of the walls
     // the field before the walls: trampled, scarred with the besiegers' trenches, a wrecked siege tower, ladders still against the wall
-    x.fillStyle = vgrad(x, hz, H, [[0, '#7a6a54'], [.3, '#5e5040'], [1, '#2a2218']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = dawn ? vgrad(x, hz, H, [[0, '#8a6e60'], [.3, '#5a4840'], [1, '#221a18']]) : vgrad(x, hz, H, [[0, '#7a6a54'], [.3, '#5e5040'], [1, '#2a2218']]); x.fillRect(0, hz, W, H - hz);
+    if (dawn) { for (let i=0;i<26;i++){ const k = Math.pow(hash(i, 101), 1.2), tx = W*(.06 + hash(i, 102)*.9), ty = hz + 5 + k*H*.16, ts = (.7 + k*1.6)*s; if (Math.abs(tx - W*.47) < 26*s) continue; // the Pannion camp, left in the night: tents gone grey, some down
+        x.fillStyle = hash(i, 103) > .35 ? '#7a7270' : '#5e5654'; if (hash(i, 104) > .3) { x.beginPath(); x.moveTo(tx - 5*ts, ty); x.lineTo(tx, ty - 5*ts); x.lineTo(tx + 5*ts, ty); x.fill(); x.fillStyle = 'rgba(30,20,24,.45)'; x.beginPath(); x.moveTo(tx, ty - 5*ts); x.lineTo(tx + 5*ts, ty); x.lineTo(tx + 1*ts, ty); x.fill(); x.fillStyle = 'rgba(255,200,160,.35)'; x.beginPath(); x.moveTo(tx, ty - 5*ts); x.lineTo(tx - 5*ts, ty); x.lineTo(tx - 3.6*ts, ty); x.fill(); }
+          else { x.beginPath(); x.moveTo(tx - 6*ts, ty); x.quadraticCurveTo(tx - 1*ts, ty - 2.4*ts, tx + 5*ts, ty - .6*ts); x.lineTo(tx + 6*ts, ty); x.fill(); }
+          x.fillStyle = 'rgba(16,10,12,.35)'; x.beginPath(); x.moveTo(tx + 5*ts, ty); x.lineTo(tx + 16*ts, ty + 1.2*ts); x.lineTo(tx + 1*ts, ty + .6*ts); x.fill(); } // each with its long shadow, west
+      for (let i=0;i<10;i++){ const cx = W*(.08 + hash(i, 105)*.84), cy = hz + 8 + hash(i, 106)*H*.18; ell(x, cx, cy, (5 + hash(i, 107)*4)*s, (1.4 + hash(i, 107))*s, 'rgba(20,14,14,.5)'); ell(x, cx, cy, (2.4 + hash(i, 107)*2)*s, (.7 + hash(i, 107)*.5)*s, 'rgba(120,110,108,.45)'); } } // cold cook-fire rings
     for (let i=0;i<6;i++){ const y = hz + H*(.04 + i*.06), w = W*(.3 + hash(i, 61)*.5); x.fillStyle = 'rgba(30,22,14,.35)'; x.fillRect(hash(i, 62)*W - w*.3, y, w, 1.4 + i*.5); x.fillStyle = 'rgba(220,190,150,.12)'; x.fillRect(hash(i, 62)*W - w*.3, y - 1, w, 1); } // trench lines
     for (let i=0;i<5;i++){ const lx = W*(.08 + i*.2 + hash(i, 63)*.06); x.strokeStyle = 'rgba(40,30,20,.7)'; x.lineWidth = 1; x.beginPath(); x.moveTo(lx, hz + 2); x.lineTo(lx + 5*s, hz - 15*s); x.moveTo(lx + 3*s, hz + 2); x.lineTo(lx + 8*s, hz - 15*s); x.stroke(); } // ladders against the wall
     { const sx = W*.47, sy = hz + H*.08; x.fillStyle = '#1e1610'; poly(x, [[sx - 10*s, sy], [sx - 6*s, sy - 44*s], [sx + 9*s, sy - 38*s], [sx + 13*s, sy]], '#1e1610'); x.strokeStyle = '#1e1610'; x.lineWidth = 1.4; for (let j=0;j<4;j++){ x.beginPath(); x.moveTo(sx + 9*s - j*2, sy - 38*s + j*9*s); x.lineTo(sx + 22*s - j*2, sy - 30*s + j*9*s); x.stroke(); } } // a siege tower, burnt and broken-backed
@@ -255,13 +269,17 @@ SCENEX.b3_c3_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
     // the near foreground: the allies' own line, dark, and a broken stake-row
     x.fillStyle = '#1a140e'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.9); x.quadraticCurveTo(W*.4, H*.86, W, H*.9); x.lineTo(W, H); x.fill();
     for (let i=0;i<14;i++){ const px = W*(.02 + i*.072 + hash(i, 81)*.02), py = H*(.89 - Math.sin(i)*.005), a = (hash(i, 82) - .5)*.9; x.strokeStyle = '#120c08'; x.lineWidth = 2.2; x.beginPath(); x.moveTo(px, py + 6); x.lineTo(px + Math.sin(a)*18, py - Math.cos(a)*18); x.stroke(); }
+    if (dawn) { x.fillStyle = 'rgba(255,190,140,.16)'; x.beginPath(); x.moveTo(0, H*.9); x.quadraticCurveTo(W*.4, H*.86, W, H*.9); x.lineTo(W, H*.905); x.quadraticCurveTo(W*.4, H*.868, 0, H*.908); x.fill(); // the first sun along the near rise
+      for (let i=0;i<7;i++){ const sx = W*(.36 + i*.09), sy = H*(.885 - Math.sin(i*.7)*.004); x.fillStyle = '#100a08'; x.fillRect(sx, sy - 22*s, 1.2*s, 22*s); x.fillStyle = i%3 === 1 ? '#6a2a22' : i%3 === 2 ? '#2a2830' : '#3a3a42'; x.fillRect(sx + 1.2*s, sy - 22*s, 6*s, 3.6*s); } } // the Host's standards coming over it into line
     vign(x, W, H, .45, .5); }), 0, 0, W, H);
   // what moves: the smoke going up from the fires inside, and leaning away on the wind; fire-glow at their feet; crows turning over the walls
   const cityFires = [[.18, .66], [.4, .7], [.55, .62], [.74, .68], [.9, .64]];
-  cityFires.forEach(([fx, fh], i) => { const sx = W*fx, sy = hz - 24*s - hash(i, 3)*10*s; glow(ctx, sx, sy, 16*s, '#ff7a30', (.35 + Math.sin(t*mo/(160 + i*30) + i)*.08)); b3c3Smoke(ctx, sx, sy, s*(.8 + hash(i, 9)*.5), t, mo, i, '#1e1a18', .5, .9); });
+  cityFires.forEach(([fx, fh], i) => { const sx = W*fx, sy = hz - 24*s - hash(i, 3)*10*s; glow(ctx, sx, sy, 16*s, '#ff7a30', (.35 + Math.sin(t*mo/(160 + i*30) + i)*.08)*(dawn ? .7 : 1)); b3c3Smoke(ctx, sx, sy, s*(.8 + hash(i, 9)*.5), t, mo, i, dawn ? '#3a2a30' : '#1e1a18', .5, .9); if (dawn) b3c3Smoke(ctx, sx - 3*s, sy, s*(.7 + hash(i, 9)*.4), t, mo, i, '#ffb090', .14, .9); }); // at dawn its sunward side lit
   for (let i=0;i<9;i++){ const a = t*mo/(2600 + i*170) + i*.7, cx = W*(.36 + hash(i, 91)*.3) + Math.cos(a)*30*s, cy = hz - 60*s - hash(i, 92)*30*s + Math.sin(a*1.3)*10*s, f = Math.sin(t*mo/120 + i)*1.4; ctx.strokeStyle = 'rgba(16,12,10,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 3, cy + f); ctx.lineTo(cx, cy); ctx.lineTo(cx + 3, cy + f); ctx.stroke(); } // crows
-  { const sq = sceneSquad(); ctx.save(); ctx.filter = 'brightness(.3) saturate(.5)'; squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(22, W*.34/Math.max(1, sq.length)), H*.905 - 19 - (i%2)*1.5, 1.45, t, {phase:i, dir:1})); ctx.restore(); } // the Fourth on the near bank, looking at it
-  vign(ctx, W, H, .25, .5); };
+  { const sq = sceneSquad(); ctx.save(); ctx.filter = dawn ? 'brightness(.42) saturate(.55)' : 'brightness(.3) saturate(.5)'; squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(22, W*.34/Math.max(1, sq.length)), H*.905 - 19 - (i%2)*1.5, 1.45, t, {phase:i, dir:1})); ctx.restore(); } // the Fourth on the near bank, looking at it
+  vign(ctx, W, H, .25, .5); }; }
+SCENEX.b3_c3_walls = b3c3Walls(false);
+SCENEX.b3_c3_walls_dawn = b3c3Walls(true);
 
 /* the black dragon over the field, from far below. Anomander Rake in his other shape: a span wider than the eye can take in, flying out over the
    Pannion army, the light coming through the membranes at the edges; under it, the field a strip of dust and tiny men breaking every way. */

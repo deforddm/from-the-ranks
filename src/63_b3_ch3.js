@@ -240,6 +240,7 @@ Dannet, beside you, says one word in Capan. You do not need it translated.`,
 
   scenes:{
     b3_c3_walls:{loc:'Capustan', sub:'On the Catlin', cap:'Walls and domes on a low hill over the river, and smoke going up from a dozen places.', amb:'explore'},
+    b3_c3_walls_dawn:{loc:'Capustan', sub:'On the Catlin · sunrise', cap:'Walls and domes on a low hill over the river with the sun just up off to the east, the Pannion camp left grey and empty below them, and the Host\'s standards coming over the rise into line.', amb:'explore'},
     b3_c3_dragon:{loc:'The field before Capustan', sub:'Noon', warren:true, cap:'Something black and vast over a breaking army, seen from far below.', amb:'explore'},
     b3_c3_walls_night:{loc:'Capustan', sub:'On the Catlin · night', cap:'Walls and domes on a low hill over the river, dark against a sky the colour of a forge, and small fires across the field below.', amb:'night'},
     b3_c3_field:{loc:'The field before Capustan', sub:'After the shadow', cap:'The sky empty again but for the city\'s smoke, the starving lying down in the grass by the thousand, and the Rhivi riding slowly out to herd them.', amb:'wind'},
@@ -461,7 +462,7 @@ ${S.f.b3_c3Rested ? 'The squad is as rested as it is going to be.' : 'The squad 
 
 /* ---------------- the field, and the choice ---------------- */
 Object.assign(B3CH3.dlg, {
-  b3_c3_field_arrive:()=>({sp:'The field before Capustan', scene:'b3_c3_walls', html:allyHTML('Before Capustan · the allied line'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_capustan = 1; S.f.b3_c3Field = 1; }, txt:
+  b3_c3_field_arrive:()=>({sp:'The field before Capustan', scene:'b3_c3_walls_dawn', html:allyHTML('Before Capustan · the allied line'), fx:()=>{ S.f.b3_domin = 1; S.f.b3_capustan = 1; S.f.b3_c3Field = 1; }, txt:
 `The field below Capustan is a mile of trampled ground between the river and the hills, and the Pannion army has lived on it for weeks: siege banks, stake lines, the black rings of cook-fires, a tent city gone grey with smoke and left in the night. Everything in it faces the walls.
 
 Now the Host faces the other way. It comes down onto the field at sunrise and opens out into line across the north road, the heavy infantry in the centre, the marines among them, the Fourth's stretch of ground marked by a broken stake and a dropped shield. To the left, a long way off, the Rhivi on their horses. To the right, Brood's standard, the dark ranks of the Andii, and the Mott Irregulars doing something unofficial to a fence.

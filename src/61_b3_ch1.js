@@ -219,6 +219,7 @@ const B3CH1 = {
 
   scenes:{
     b3_c1_parley:{loc:'Below Brood\'s tent', sub:'The parley ground · noon', cap:'The meeting ground below the command tent: two armies\' worth of watchers, a knot of the great in the middle, and a child in red wool a little apart.', amb:'explore'},
+    b3_c1_parley_after:{loc:'Below Brood\'s tent', sub:'The parley ground · after', cap:'The command tent with its front let down and laced, lamplight along the seam, the awning empty, and the guard line still standing in front of it.', amb:'explore'},
     b3_c1_tunnels:{loc:'Under Pale', sub:'The old north sap', cap:'A sapper tunnel by lamplight, the shoring black with old smoke, and the dark at the end of it gone ordinary at last.', amb:'tunnel'},
     b3_c1_rhivi:{loc:'The Rhivi camp', sub:'Night', cap:'Round hide tents, low fires, the herds a dark mass breathing on the slope above, and somebody singing to them.', amb:'explore'},
     b3_c1_divide:{loc:'The Divide road', sub:'Night · the cutting', cap:'A pale road going up between black hills into a cutting banked with scree, six wagons under oiled hide, and quorls very high against the stars.', amb:'night'},
@@ -607,7 +608,7 @@ Then Brood is between them. He doesn't seem to hurry; he is simply there, the wa
 
 The child has gone to Whiskeyjack. She stands beside him, and looks up at him, and says something.${b3In('ohl') ? ` Ohl, who reads lips in three languages, says afterward that it might have been *uncle*. He is not sure. He is sure.` : ''}`,
       ch:[{t:'Breathe.', go:'b3_c1_parley_after'}]}),
-    b3_c1_parley_after:()=>({sp:'The picket', scene:'b3_c1_parley', fx:()=>{ S.f.b3_c1_parleyDone = 1; S.f.b3_kallor = 1; ally(0, 1, 'The parley'); }, txt:
+    b3_c1_parley_after:()=>({sp:'The picket', scene:'b3_c1_parley_after', fx:()=>{ S.f.b3_c1_parleyDone = 1; S.f.b3_kallor = 1; ally(0, 1, 'The parley'); }, txt:
 `It takes the meeting ground a while to start breathing again, and then it does, all at once, too loud. The great go up into the command tent. The tall man in the fur-collared cloak goes in last, alone, and the tent flap falls behind him like a door.
 
 "Kallor," says a pikeman of the Host along the line, to nobody, as if he had been waiting all morning for a reason to say it. "Brood's second. They say he was a king, once. Of somewhere that isn't there any more." He spits. "They say he did that to it."
