@@ -62,7 +62,7 @@ Object.assign(AB, {
 });
 
 /* ---- the Deck at the first halt (60c): the Leper's chapter ---- */
-B3DECK[6] = {scene:'b3_c6_lift', where:'a quorl-blanket spread on the mud between two tent lines', set:'Night, the third out of Setta. Out past the horse lines something large is breathing in the dark, and nobody in the Host is supposed to have heard it.',
+B3DECK[6] = {scene:'b3_c6_host', where:'a quorl-blanket spread on the mud between two tent lines', set:'Night, the third out of Setta. Out past the horse lines something large is breathing in the dark, and nobody in the Host is supposed to have heard it.',
   back:'b3_c6_start2', backT:'Back to the lines.',
   say:{tuft:`"There's something in the air tonight," Tuft says, "and it isn't the Deck." She shuffles anyway. "One card, Sergeant. The road's about to fork. I can feel it in the cards the way an old soldier feels rain in a knee."`,
     sohra:`"Your people are quiet tonight," Sohra says. "Malazans are never quiet. That is how the herds know where you are." She rattles the bones. "Sit. The smoke will tell me what you are not saying."`,
@@ -286,13 +286,21 @@ ${b3In('greysword') ? `
 
   scenes:{
     b3_c6_lift:{loc:'The lift field', sub:'Night · the Domin', cap:'Quorls in dark rows on a field with no lanterns, and a company walking out to them with its packs on.', amb:'night'},
+    b3_c6_host:{loc:'The Pannion Domin', sub:'The Host\'s camp · night', cap:'The Host asleep in its tent lines with a few fires banked, and very high, going south across the stars, a long ragged line of something darker than the dark.', amb:'night'},
+    b3_c6_road:{loc:'The Pannion Domin', sub:'The road south · dusk', cap:'The column on the road at dusk, strung out under its own dust and more dust than it should raise, a burnt farmstead by the way, and the mountains going blue in the south.', amb:'wind'},
+    b3_c6_lift_empty:{loc:'The lift field', sub:'Night · after', cap:'The field empty, the grass pressed flat in long rows where the quorls sat, and a man sitting on a stone at the top of the gully with one leg out straight.', amb:'night'},
+    b3_c6_flight:{loc:'The night sky', sub:'South, by quorl', cap:'The Domin black below, a river like a crack in glass, the mountains coming up with snow on them, the quorls in a long low line between, and ahead under a crag, one small fire.', amb:'wind'},
+    b3_c6_ledge:{loc:'The mountains above Coral', sub:'The landing ledge · first light', cap:'A ledge under a crag in the first grey, a dead fire, quorls coming down out of the paling sky, and through a gap in the cloud far below, something black on a grey sea.', amb:'hills'},
+    b3_c6_slips_night:{loc:'The Maurik', sub:'The slips · midnight', cap:'Torches along the slips and the wrights working in their light, the river black beyond, and on this bank the reeds, very tall, and very still.', amb:'night'},
+    b3_c6_downriver:{loc:'The Maurik', sub:'Downriver · after noon', cap:'The barges going down the river in a long line, poled and leaking, the White Face painted and singing on them, and ahead the river bending under a high bank of reeds.', amb:'plain'},
+    b3_c6_maurik:{loc:'Maurik', sub:'The landing · evening', cap:'An empty city on the river, every door open and chalked, and along its long stone landing Brood\'s army, drawn up and watching the barges come in.', amb:'explore'},
     b3_c6_entrench:{loc:'The entrenchments', sub:'The mountains above Coral', cap:'Trenches under cedar boughs and moss, and far below, a black city on the edge of the sea.', amb:'hills'},
     b3_c6_barges:{loc:'The Maurik', sub:'The barge camp at dawn', cap:'Barges on their slips, half ribs and half planking, and a river going south toward the sea.', amb:'plain'} },
 
   end:{
     quorl:['The night lift', 'Night after night the Black Moranth took the Host away by quorl, a company at a time, and told neither Brood nor the Seer. The Fourth went with the Seventh. They came down on a ledge above Coral in the dark and fought for it, and dug in under cedar and moss with Dujek\'s half of the Host, six thousand people being quiet on a mountain. At dusk the Condors came after the quorls. Whiskeyjack is somewhere behind, on the road, making the dust of an army.'],
     maurik:['The Maurik', 'Night after night the Black Moranth took the Host away by quorl, and the Fourth stayed: four thousand on the road under Whiskeyjack, making the dust of ten. They built barges on the Maurik below the ford, kept them from burning, and rode them a day downriver to an empty city with the White Face Barghast singing badly on the decks. At Maurik, Brood found out. Whiskeyjack did not wait to be forgiven. He marched for Coral that afternoon.'] },
-  get endScene(){ return S && S.f && S.f.b3_c6_key === 'maurik' ? 'b3_c6_barges' : 'b3_c6_entrench'; },
+  get endScene(){ return S && S.f && S.f.b3_c6_key === 'maurik' ? 'b3_c6_road' : 'b3_c7_coral'; },
   endCap:()=> S.f.b3_c6_key === 'maurik' ? 'Dusk on the road south of Maurik, the column strung out and walking fast. The sergeant counts the Fourth twice, and then, without meaning to, counts the man at the head of the column, and how he walks.' : 'Night in the entrenchments, no fires showing. Below, Coral\'s lamps. The sergeant counts the Fourth twice in the dark, by touch.',
   tease:'Next: Coral. The last chapter of Book Three.',
 
@@ -333,7 +341,7 @@ ${b3In('greysword') ? `
 
 /* ---------------- the camp south of Setta: the companies going, and the lift field ---------------- */
 Object.assign(B3CH6.dlg, {
-  b3_c6_start:()=>({sp:'The Host · south of Setta', scene:'b3_c6_lift', fx:()=>{ if (!S.f.b3_c6Start) { S.f.b3_c6Start = 1; S.f.b3_domin = 1; } }, txt:
+  b3_c6_start:()=>({sp:'The Host · south of Setta', scene:'b3_c6_host', fx:()=>{ if (!S.f.b3_c6Start) { S.f.b3_c6Start = 1; S.f.b3_domin = 1; } }, txt:
 `The second time it happens, you are awake for it.
 
 A sound out past the horse lines like a great many sails filling at once. Then nothing. Then, very high, going south, a long ragged line of something darker than the dark, across the stars, and gone.
@@ -349,7 +357,7 @@ Brisk went down the line at first light to look at the empty tents. The Fourth R
   /* the reading at the first halt (60c) */
   b3_c6_deck:()=>b3DeckOffer(6),
   b3_c6_card:()=>b3DeckCard(6),
-  b3_c6_start2:()=>({sp:'The Host · south of Setta', scene:'b3_c6_lift', txt:
+  b3_c6_start2:()=>({sp:'The Host · south of Setta', scene:'b3_c6_road', txt:
 `The Host marches all day as if nothing had happened, because that is the order nobody gave.
 
 Dujek's standard goes at the head of the column where it always goes. Nobody has seen Dujek under it for two days.${b3In('ohl') ? ` Ohl mentions this at the noon halt, mildly, to his tea, and then says nothing else about it for the rest of the day, which from Ohl is a speech.` : ''} The Rhivi outriders on the flanks ride up to the column more often than they used to, and look along it, and ride away.
@@ -568,7 +576,7 @@ The rest turn round to see what happened to the back of their file. That is when
 
 One of them shouts. One of them, worse, does not shout, and turns to run.`,
     ch:[{t:'After them.', go:()=>startBattle('b3_c6_field', {surprise:'e'})}]}),
-  b3_c6_after_field:()=>({sp:'The lift field', scene:'b3_c6_lift', fx:()=>{ if (!S.f.b3_c6_fieldDone) { S.f.b3_c6_fieldDone = 1; if (c6Quiet()) ally(-1, 0, 'Kallor\'s whisper, with something to stand on now'); } }, txt:
+  b3_c6_after_field:()=>({sp:'The lift field', scene:'b3_c6_lift_empty', fx:()=>{ if (!S.f.b3_c6_fieldDone) { S.f.b3_c6_fieldDone = 1; if (c6Quiet()) ally(-1, 0, 'Kallor\'s whisper, with something to stand on now'); } }, txt:
 `The file-leader goes down at the bottom of the gully with his horn under him, unblown. Nobody went home.
 
 Behind you the field is empty. The last row of quorls is a darker line on the dark, very high, going south, and then not even that. The grass is flat in long rows where they sat. Two hundred people were standing there a quarter of an hour ago.${b3In('brisk') && !c6BriskGone() ? ` Brisk stands looking at the place where the singing was, for exactly as long as it takes to wipe her blade, and then turns her back on it.` : ''}
@@ -749,7 +757,7 @@ Kettle is up before anyone, satchel strapped to her chest, both hands flat on th
 
 Then the wings open, all four at once, and the field drops away under you like a stone down a well.`,
     ch:[{t:'Hold on.', go:'b3_c6_q_flight'}]}),
-  b3_c6_q_flight:()=>({sp:'The night sky · south', scene:'b3_c6_lift', txt:
+  b3_c6_q_flight:()=>({sp:'The night sky · south', scene:'b3_c6_flight', txt:
 `Cold. That is the first thing and the last. Cold that gets in at the wrists and the neck and stays.
 
 Below, the Domin goes by in the dark: a river like a crack in black glass, a town with no lights at all, the line of the Host's road and the small fires of the four thousand on it, getting smaller. Then hills, then mountains, their snow faint in the starlight, and the quorls going between them in a long line, low, so low that once a pine top whips the soles of your boots.${b3In('ohl') ? `
@@ -768,17 +776,17 @@ The Moranth looks back at you over its shoulder. It is asking.`,
           edges:id=>[id === 'sohra' && ['she can come down on a herd without it lifting its head', 1], id === 'greysword' && ['Pannion pickets: she has watched them from a wall', 1], id === 'ohl' && ['his knees, on a mountain, in the dark', -1]],
           go:'b3_c6_q_foot', fail:'b3_c6_q_seen'},
         {t:'Straight down on them.', go:()=>startBattle('b3_c6_landing', {})}]}),
-  b3_c6_q_foot:()=>({sp:'The landing ledge', txt:
+  b3_c6_q_foot:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', txt:
 `The quorls put you down in a hollow beyond the crag and lift away without a sound, and the Fourth comes round the rock on the picket's blind side, slowly, one boot at a time, in the grey before the sun.
 
 ${by({sohra:`Sohra is first round the rock. She has her bow drawn before anyone at the fire has turned.`, greysword:`Dannet is first round the rock. She points, twice, at the two men who matter, and is already moving.`, _:`{who} is first round the rock, and has picked the one to take before the picket knows there is anyone to pick.`})}`,
     ch:[{t:'Now.', go:()=>startBattle('b3_c6_landing', {surprise:'p'})}]}),
-  b3_c6_q_seen:()=>({sp:'The landing ledge', txt:
+  b3_c6_q_seen:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', txt:
 `The quorls put you down in a hollow beyond the crag, and the hollow is full of loose scree, and the scree goes down the mountain with a noise like a cart of crockery overturning.
 
 At the fire, every head comes up.`,
     ch:[{t:'Go.', go:()=>startBattle('b3_c6_landing', {surprise:'e'})}]}),
-  b3_c6_q_after_land:()=>({sp:'The landing ledge', scene:'b3_c6_entrench', fx:()=>{ if (!S.f.b3_c6_landDone) { S.f.b3_c6_landDone = 1; ally(0, 1, 'A Seerdomin on the goat track above Coral'); } }, txt:
+  b3_c6_q_after_land:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', fx:()=>{ if (!S.f.b3_c6_landDone) { S.f.b3_c6_landDone = 1; ally(0, 1, 'A Seerdomin on the goat track above Coral'); } }, txt:
 `The Seerdomin goes down on the goat track in a long clatter of plate, and the grey goes out of the air round him the way frost goes out of a window.
 
 Nobody went down the mountain to tell it.
@@ -971,7 +979,7 @@ The birds come down into a dark trench full of nets and cedar and marines who we
   b3_c6_q_condor_bad:()=>({sp:'The roost · dusk', txt:
 `A fire goes out. Another flares up instead as somebody kicks dry boughs into it, and the roost is lit like a stage, and every bird in the sky turns its head toward it at once.`,
     ch:[{t:'Hold.', go:()=>startBattle('b3_c6_condors', {surprise:'e'})}]}),
-  b3_c6_q_after_condors:()=>({sp:'The roost · night', scene:'b3_c6_entrench', fx:()=>{ if (!S.f.b3_c6_condorsDone) { S.f.b3_c6_condorsDone = 1; S.f.b3_c6_moranthCame = b3Trust() >= 8 ? 1 : 0; ally(0, 1, 'Something rode those birds'); if (!S.f.b3_c6_feath) { S.f.b3_c6_feath = 1; gain('b3_c6_feather'); } } }, txt:
+  b3_c6_q_after_condors:()=>({sp:'The roost · night', scene:'b3_c7_coral', fx:()=>{ if (!S.f.b3_c6_condorsDone) { S.f.b3_c6_condorsDone = 1; S.f.b3_c6_moranthCame = b3Trust() >= 8 ? 1 : 0; ally(0, 1, 'Something rode those birds'); if (!S.f.b3_c6_feath) { S.f.b3_c6_feath = 1; gain('b3_c6_feather'); } } }, txt:
 `The ridden one goes off the crag at last, not falling, flying, badly, one wing dragging, out over the screen and down toward Coral in the dark. Whatever was in it does not come back to look.
 
 The roost is full of feathers. Two quorls are dead. One rider. The Moranth lay the rider out on the rock and stand round him, and say nothing, the way they say everything.${S.f.b3_c6_moranthCame ? `
@@ -989,7 +997,7 @@ Tomorrow the quorls go back for more of the Host. The night after, more. Then, s
 
 /* ---------------- the river road: four thousand making the dust of ten, the barges, the raid, the river, Maurik ---------------- */
 Object.assign(B3CH6.dlg, {
-  b3_c6_m_march:()=>({sp:'The road south · Whiskeyjack\'s column', scene:'b3_c6_barges', html:allyHTML('The road to the Maurik · four thousand'), txt:
+  b3_c6_m_march:()=>({sp:'The road south · Whiskeyjack\'s column', scene:'b3_c6_road', html:allyHTML('The road to the Maurik · four thousand'), txt:
 `The Host that marches south out of that camp is less than half the Host that marched into it, and it marches exactly the same way.
 
 Every squad draws a second ration of firewood and lights three fires at night instead of one. The wagons drag cut brush behind them on chains to raise the dust of a column three times as long. Companies of cooks and farriers and carpenters march in the files of the companies that went, under their standards, with their spears. The Seventh's standard goes by in the hands of a quartermaster's clerk who has never held one in his life and holds it as if it might go off.${b3In('kettle') ? `
@@ -1149,7 +1157,7 @@ At dusk the wrights call for every pair of hands that can hold a mallet: they me
         {t:'Not yet.', go:()=>startExplore()}] : [
         {t:'Guard the slips through the night.', onward:true, go:'b3_c6_m_raid_pre'},
         {t:'Not yet.', go:()=>startExplore()}]}),
-  b3_c6_m_raid_pre:()=>({sp:'The slips · midnight', scene:'b3_c6_barges', txt:
+  b3_c6_m_raid_pre:()=>({sp:'The slips · midnight', scene:'b3_c6_slips_night', txt:
 `Torches along the slips, and the wrights working in their light, and the river black beyond, and the reeds on this bank black too, and very tall, and very still.
 
 Too still. The frogs have stopped.
@@ -1184,7 +1192,7 @@ By noon the barges are in the water.`,
         {t:'Not yet.', go:()=>startExplore('b3_c6_bank')}]}),
 
   /* ---- the river ---- */
-  b3_c6_m_river:()=>({sp:'The Maurik · downriver', scene:'b3_c6_barges', txt:
+  b3_c6_m_river:()=>({sp:'The Maurik · downriver', scene:'b3_c6_downriver', txt:
 `The barges go downriver in a long line, poled and steered and leaking, with four thousand Malazans on them and three clans of the White Face, who have painted themselves for the occasion and sing the whole way. The rest of the Barghast walk along the banks, keeping pace, and sing back.
 
 Humbrall Taur himself is on the lead barge beside Whiskeyjack, a vast old man in furs, saying nothing at all, which among the White Face is apparently a mark of great rank.${b3In('ohl') ? `
@@ -1208,7 +1216,7 @@ Then the reeds are full of men.${b3In('greysword') ? `
   b3_c6_m_river_bad:()=>({sp:'The Maurik · the reed bank', txt:
 `The oar swings loose and the barge slews round broadside to the bank, and for a long moment the Fourth is standing in an open boat in plain sight with nothing between it and the reeds but air.`,
     ch:[{t:'Down, and shoot.', go:()=>startBattle('b3_c6_ambush', {surprise:'e'})}]}),
-  b3_c6_m_after_amb:()=>({sp:'The Maurik · the reed bank', scene:'b3_c6_barges', fx:()=>{ if (!S.f.b3_c6_ambDone) { S.f.b3_c6_ambDone = 1; S.f.b3_c6_barghastCame = b3Trust() >= 7 ? 1 : 0; ally(0, 1, 'A Condor, dead in the reeds, a long way from the mountains'); if (!S.f.b3_c6_feath) { S.f.b3_c6_feath = 1; gain('b3_c6_feather'); } } }, txt:
+  b3_c6_m_after_amb:()=>({sp:'The Maurik · the reed bank', scene:'b3_c6_downriver', fx:()=>{ if (!S.f.b3_c6_ambDone) { S.f.b3_c6_ambDone = 1; S.f.b3_c6_barghastCame = b3Trust() >= 7 ? 1 : 0; ally(0, 1, 'A Condor, dead in the reeds, a long way from the mountains'); if (!S.f.b3_c6_feath) { S.f.b3_c6_feath = 1; gain('b3_c6_feather'); } } }, txt:
 `The Seerdomin master goes down in the reeds and lies still, and the grey goes out of the air.${S.f.b3_c6_barghastCame ? ` The White Face who came over the side with the Fourth stand round him and sing something short and ugly, and then go back to their barge, very pleased.` : ''}
 
 Further up the bank, in a hollow among the reeds, there is something else: a bird. A carrion bird, huge, bigger than any bird should be, lying with its wings spread and its neck broken, as if it had fallen out of the sky. It has been dead a day or two. It has not been touched. Nothing in the reeds has gone near it, not a fly.
@@ -1221,7 +1229,7 @@ One long black feather has come loose from the wing and lies on the mud by your 
 
 By evening the barges are tying up at Maurik.`,
     ch:[{t:'Ashore.', go:'b3_c6_m_landing_in'}]}),
-  b3_c6_m_landing_in:()=>({sp:'Maurik', scene:'b3_c6_barges', txt:
+  b3_c6_m_landing_in:()=>({sp:'Maurik', scene:'b3_c6_maurik', txt:
 `Maurik is empty. A city on a river, walls, temples, a long stone landing with iron rings in it, and not a soul. The doors stand open. Somebody has chalked the Seer's sign on every one, and somebody else has chalked over it, and then everyone left.
 
 Brood's army is here.

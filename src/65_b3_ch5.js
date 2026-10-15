@@ -249,7 +249,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
   end:{
     brood:['Brood heard it', 'South of the Catlin a man in Kallor\'s colours put a dead calf down a well and told the Fourth Regiment and the Rhivi two halves of one lie. The Fourth caught him and walked him to Caladan Brood\'s fire, and said it in order in front of Korlat, and in front of Kallor, who listened as if to weather. Brood\'s people trust the Fourth further now. Kallor knows the sergeant\'s face, and has decided something about it.'],
     quiet:['Among soldiers', 'South of the Catlin a man in Kallor\'s colours put a dead calf down a well and told the Fourth Regiment and the Rhivi two halves of one lie. The Fourth caught him, broke his nose and sent him back to his own lines with no names said aloud, and the well was shared by midnight. In Brood\'s camp they are still saying the Malazans mean to keep Coral for the Empress. Nobody can say where it started.'] },
-  endScene:'b3_c5_burnt',
+  endScene:'b3_c5_camp',
   endCap:()=> S.f.b3_c5_key === 'brood' ? 'A dead village in the Domin, after midnight. Across the halt Caladan Brood sits by his fire with the hammer across his knees, and does not sleep, and does not look toward Kallor\'s tents.' : 'A dead village in the Domin, after midnight. The bhederin drink from a trough knocked together out of a cart-bed, and Tav sings to them, badly, and nobody stops him.',
   tease:'Next: the road to the Maurik, and the quorls that come down at dusk and are gone by morning, more of them every night.',
 

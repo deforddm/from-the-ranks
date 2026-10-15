@@ -46,7 +46,7 @@ Object.assign(AB, {
     const dd = o.dmg || a.dmg; return _attack(a, t, Object.assign({}, o, {dmg:[dd[0], dd[1], (dd[2] || 0) + 2 + lvT()]})); }; }
 
 /* ---- the reading at the last halt (60c): the Mason leans in ---- */
-B3DECK[3] = {scene:'b3_c3_walls', where:'an upturned shield in the lee of a wagon', set:'The last halt before Capustan, two bells short of dawn, and the sky to the south-east the colour of a forge.',
+B3DECK[3] = {scene:'b3_c3_walls_night', where:'an upturned shield in the lee of a wagon', set:'The last halt before Capustan, two bells short of dawn, and the sky to the south-east the colour of a forge.',
   back:()=>startExplore(), backT:'Back to the halt.',
   say:{tuft:`"A city on fire," she says, "and two armies walking at it in the dark." She shuffles, and the cards are slow in her hands tonight, the way they are when they mean to be listened to. "One card, Sergeant. For whatever is under that light."`,
     sohra:`"The dead in that city are very loud," Sohra says. She does not look south-east; she looks at the bones in her fist. "I will ask them something else. Sit. Do not breathe on the smoke."`,
@@ -56,7 +56,7 @@ const P6 = [[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]];
 
 const B3CH3 = {
   title:'Capustan', number:'Three',
-  intro:{loc:'Capustan', sub:'The Catlin road · the last night of the march', scene:'b3_c3_walls', cap:'Walls and domes on a low hill over the river, and the smoke going up off them into the dark.',
+  intro:{loc:'Capustan', sub:'The Catlin road · the last night of the march', scene:'b3_c3_walls_night', cap:'Walls and domes on a low hill over the river, and the smoke going up off them into the dark.',
     paras:[
 `Six weeks of grass, and then a night with no grass in it: only the road, and the dark, and the whole Host walking at the pace Whiskeyjack sets, which tonight is faster than anyone's legs.`,
 `In the south-east the sky has been the wrong colour since dusk. Low, red, unsteady, the way a sky is over a forge or a city. The scouts say it is a city. Capustan, on the Catlin, under the Pannion siege, burning.`,
@@ -241,12 +241,15 @@ Dannet, beside you, says one word in Capan. You do not need it translated.`,
   scenes:{
     b3_c3_walls:{loc:'Capustan', sub:'On the Catlin', cap:'Walls and domes on a low hill over the river, and smoke going up from a dozen places.', amb:'explore'},
     b3_c3_dragon:{loc:'The field before Capustan', sub:'Noon', warren:true, cap:'Something black and vast over a breaking army, seen from far below.', amb:'explore'},
+    b3_c3_walls_night:{loc:'Capustan', sub:'On the Catlin · night', cap:'Walls and domes on a low hill over the river, dark against a sky the colour of a forge, and small fires across the field below.', amb:'night'},
+    b3_c3_field:{loc:'The field before Capustan', sub:'After the shadow', cap:'The sky empty again but for the city\'s smoke, the starving lying down in the grass by the thousand, and the Rhivi riding slowly out to herd them.', amb:'wind'},
+    b3_c3_court:{loc:'Capustan', sub:'A temple court in the Camps', cap:'Pale walls in hard sun, the Camp\'s people sitting along them where they came out, and acolytes in grey going among them with water.', amb:'explore'},
     b3_c3_thrall:{loc:'Capustan', sub:'The Thrall at dusk', cap:'A great domed hall with every window lit, and voices coming down its steps.', amb:'explore'} },
 
   end:{
     field:['The line held', 'At Capustan the Barghast and the Bridgeburners broke into the city by night, and in the morning drove the Pannion army out of its gates onto the allied line. The Fourth held the Host\'s stretch of it all day, beside the Fourth Regiment, and Brood\'s people saw who held. A black dragon came over the field, and the Seer\'s starving army lay down in the grass. Capustan is relieved. Nobody in it would use the word.'],
     camps:['Into the Camps', 'At Capustan the Barghast and the Bridgeburners broke into the city by night, and in the morning drove the Pannion army out of its gates onto the allied line. The Fourth was not on the line. It went into the city with a Grey Sword party and opened a barricade in the south Camp, and four hundred people came out of a temple into the light. The Fourth saw what nine days did to Capustan. It will not say.'] },
-  endScene:'b3_c3_thrall',
+  endScene:'b3_c3_walls_night',
   endCap:()=> c3Key() === 'camps' ? 'Night on the field below Capustan. The Thrall\'s lamps are still lit behind the walls. The squad sleeps badly, and nobody asks anybody why.' : 'Night on the field below Capustan, where the Pannion army stood this morning. The Rhivi fires are close tonight. Somebody over there is singing about a line that held.',
   tease:'Next: the prisoners. West of the city, the starving the Seer drove ahead of his army, under guard in their tens of thousands; an order from Whiskeyjack that not everyone wants to keep; and one cold night, dust on the horizon.',
 
@@ -287,7 +290,7 @@ Dannet, beside you, says one word in Capan. You do not need it translated.`,
 
 /* ---------------- the last halt ---------------- */
 Object.assign(B3CH3.dlg, {
-  b3_c3_start:()=>({sp:'The last halt', scene:'b3_c3_walls', html:allyHTML('The Catlin road · three leagues short of Capustan'), txt:
+  b3_c3_start:()=>({sp:'The last halt', scene:'b3_c3_walls_night', html:allyHTML('The Catlin road · three leagues short of Capustan'), txt:
 `The Host comes off the road into a fallow field and lies down in it, company by company, without being told twice. Fires are allowed, small ones. Nobody sings.
 
 From the rise at the field's edge you can see it properly for the first time: a smudge of walls on a low hill over the river, domes on top of it like upturned bowls, and the light under the smoke going up and down, slowly, the way a fire breathes.${b3In('kettle') ? `
@@ -609,7 +612,7 @@ ${b3In('tuft') ? `Tuft has her hand over her mouth. "High House Dark," she says 
 
 ${b3In('sohra') ? `Sohra does not look at it at all. She is watching the grass to the west, where the starving were running. "They have stopped," she says. "Look. They are lying down."` : 'To the west, where the starving were running, they have stopped. They are lying down in the grass.'}`,
     ch:[{t:'Watch.', go:'b3_c3_grass'}]}),
-  b3_c3_grass:()=>({sp:'The field before Capustan', txt:
+  b3_c3_grass:()=>({sp:'The field before Capustan', scene:'b3_c3_field', txt:
 `They lie down by the hundred and then by the thousand, in the trampled grass west of the field: men and women and the very old and the very young, the whole starving army of the Seer lying down under the shadow as if somebody had told them it was allowed now. Some of them put their hands over their heads. Most of them don't bother.
 
 The shadow goes up again, and away, and is gone over the river. Nobody on the field says anything for a long time.
@@ -766,7 +769,7 @@ ${b3In('tuft') ? `"High House Dark," Tuft says. Her voice is very steady. "The K
 
 Out on the field, to the west, the Tenescowri are lying down in the grass by the thousand.`,
     ch:[{t:'Down, to the people.', go:'b3_c3_camp_help'}]}),
-  b3_c3_camp_help:()=>({sp:'The temple court', txt:
+  b3_c3_camp_help:()=>({sp:'The temple court', scene:'b3_c3_court', txt:
 `Below, in the court, the Camp's people sit where they came out, against the walls, in the sun. The acolytes go among them with water. Dannet is on her knees by an old woman who will not let go of her hand.
 
 The Grey Sword comes up the steps. "That was well done, Sergeant." From her it sounds like a medal. "The barracks will want your healer, if you have one, and every pair of hands. The Host will be sending its own wounded in by evening." She looks down at the court. "Before that, there is this."`,
@@ -994,7 +997,7 @@ Brisk is across the square before he has finished the verse. She stops a pace sh
 `At the bottom of the square a street runs down to the west postern, and out of it to the field, where the Host's fires are being lit across the ground the Pannion army stood on this morning.${!S.f.b3_c3Barracks ? ' The barracks door is still lit behind you. The healers are still working.' : ''}`,
     ch:[{t:'Back out to the Host\'s lines.', go:'b3_c3_close'},
         {t:'"Not yet."', go:()=>startExplore()}]}),
-  b3_c3_close:()=>({sp:'Capustan · night', scene:'b3_c3_walls', fx:()=>{ S.f.b3_c3Close = 1; }, txt:
+  b3_c3_close:()=>({sp:'Capustan · night', scene:'b3_c3_walls_night', fx:()=>{ S.f.b3_c3Close = 1; }, txt:
 `You go out through the west postern under a sky with no dragon in it. Behind you the Thrall's lamps are still lit. In front of you the Host's fires are spread across the field, and beyond them, west, the Rhivi fires ring a darkness that is the starving, lying in the grass, under guard, more of them than anyone has yet tried to count.
 
 Hurlochel passes you at the postern, riding in. "They say the First Child's taken," he says, reining in. "The one who led them. Taken alive." He shrugs. "Nobody I'd believe saw it. Everybody says they did." He rides on.${b3In('kettle') ? `

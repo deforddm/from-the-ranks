@@ -242,12 +242,14 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
   scenes:{
     b3_c4_prisoners:{loc:'West of Capustan', sub:'The prisoners · dusk', cap:'The plain filled to the horizon with people sitting down, a few thin fires among them, and the guards\' fires all along the near edge like a line drawn under a sum.', amb:'explore'},
     b3_c4_gathering:{loc:'West of Capustan', sub:'The plain · a cold sky', cap:'Frost on the grass where there should be none, a white sky, and on the horizon a wall of dust standing up with no wind to raise it.', amb:'explore'},
+    b3_c4_cold_night:{loc:'West of Capustan', sub:'The plain · after midnight', cap:'Frost glittering on the grass under hard stars, the Grey Swords riding back with their heads down, and low in the south-east a stretch of sky with no stars in it.', amb:'night'},
+    b3_c4_dawn:{loc:'West of Capustan', sub:'The guards\' bank · dawn', cap:'The frost going off the grass in the first sun, the horizon clear where the dust stood, and a ragged row of the ones who came over the stakes in the night, sitting by the ration cart.', amb:'explore'},
     b3_c4_founders:{loc:'Capustan', sub:'The Thrall · the floor torn up', cap:'Flagstones heaved and stacked against the walls, and in the pit beneath them, by torchlight, great black canoes laid side by side, and in the canoes, bones too big to be anyone\'s.', amb:'explore'} },
 
   end:{
     share:['The squad\'s own bread', 'Two hundred thousand starving people sat on the plain west of Capustan, and the Host was told nobody touches them. A priest drove some of them at the Fourth\'s stretch of the stakes one night, and the Fourth held it and tried to sort the starving from the priest\'s people in the dark. In the morning the Fourth emptied its own sacks and its own salve jars into the hands of the children and the sick who had come over the stakes. Whiskeyjack saw it, at the end of the line, and said nothing, which is how he says the other thing.'],
     hold:['Kept for the road', 'Two hundred thousand starving people sat on the plain west of Capustan, and the Host was told nobody touches them. A priest drove some of them at the Fourth\'s stretch of the stakes one night, and the Fourth held it and tried to sort the starving from the priest\'s people in the dark. In the morning the Fourth kept its sacks and its salve for the march south, because the Domin is stripped bare and somebody has to be able to fight in it. It was the right sum. Nobody in the squad has said so out loud.'] },
-  endScene:'b3_c4_gathering',
+  endScene:'b3_c4_dawn',
   endCap:()=> S.f.b3_c4_key === 'share' ? 'Dawn on the guards\' bank. A boy asleep against the ration cart with the squad\'s last bread in his fist, and the frost going off the grass.' : 'Dawn on the guards\' bank. The squad\'s sacks are full and tied, and nobody is looking at them.',
   tease:'Next: the Catlin. The armies cross to the south shore and march into the Domin, a land stripped bare ahead of them, and a tall man in a fur-collared cloak starts telling Brood what the Malazans really want.',
 
@@ -692,7 +694,7 @@ Flint. Long, leaf-shaped, knapped to an edge so fine it seems to cut the light. 
 ${c4In('tuft') ? `"Don't," Tuft says from the foot of the rise. She hasn't come up. "Sergeant. I don't know what that is, and that's twice tonight I've said that, and I've never said it before this year."` : `Nobody comes up the rise after you.`}`,
       ch:[{t:'Take it.', fx:()=>{ S.f.b3_c4_flint = 1; gain('b3_c4_flint'); if (c4In('tuft')) loy('tuft', -1); }, go:'b3_c4_hunt_home'},
           {t:'Leave it where it was put.', fx:()=>{ S.f.b3_c4_flint = 'left'; if (c4In('tuft')) loy('tuft', 1); }, go:'b3_c4_hunt_home'}]}),
-    b3_c4_hunt_home:()=>({sp:'The plain west of Capustan', scene:'b3_c4_gathering', txt:
+    b3_c4_hunt_home:()=>({sp:'The plain west of Capustan', scene:'b3_c4_cold_night', txt:
 `You ride back in the dark with the Grey Swords, and the cold comes with you all the way. ${S.f.b3_c4_flint === 1 ? `The flint blade rides wrapped in a blanket across the back of a horse that keeps trying to look round at it. ` : ''}The wall of dust is still there on the horizon when the light is gone. You can't see it. You can feel where it is, the way you can feel where a fire is with your eyes shut.
 
 Some time after midnight the howling starts.
@@ -841,7 +843,7 @@ Tav comes along the bank from the Fourth Regiment's stretch with blood on his ar
       ch:[{t:'Dawn.', go:()=>{ startExplore('b3_c4_dawn'); talk('b3_c4_dawn'); }}]}),
 
     /* ---- dawn on the bank ---- */
-    b3_c4_dawn:()=>({sp:'The guards\' bank · dawn', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_dawn = 1; }, txt:
+    b3_c4_dawn:()=>({sp:'The guards\' bank · dawn', scene:'b3_c4_dawn', fx:()=>{ S.f.b3_c4_dawn = 1; }, txt:
 `The frost goes off the grass in the first sun as if somebody were wiping a slate. The wall of dust on the horizon is gone. The howling stopped an hour before dawn and has not started again, and the silence where it was is enormous.
 
 Along the gap, on your side of the ditch now, the ones who came over the stakes in the night and did not go back are sitting in a long ragged row by the ration cart: children, most of them, and the sick, and the very old, who could not get back across the ditch, or did not want to. Nobody has told them to go back. Nobody has told them to stay.

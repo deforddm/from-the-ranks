@@ -389,3 +389,79 @@ const b3c3Card = ([label, kind, body]) => { const tk = kind === 't', w = tk ? 24
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="${tk ? .65 : .62}"><stop offset="0" stop-color="#2c3340"></stop><stop offset="1" stop-color="#0a0c10"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect>\n${body}</svg>`; };
 /* the items' keys (the writer's CH.gear ids in 63) -> the drawing */
 Object.entries({b3_c3_shield:'shield', b3_c3_surcoat:'surcoat', b3_c3_spear:'spear', b3_c3_stripe:'stripe'}).forEach(([k, d]) => { ART['item/' + k] = b3c3Card(B3C3_ART[d]); });
+
+/* ---------------- the field after the dragon, and a temple court in the Camps ---------------- */
+/* the field before Capustan after the Knight has gone over: the sky empty again but for the city's smoke, the starving lying down in the trampled
+   grass west of the field by the thousand, the Rhivi riding slowly out to herd them; the allied line nearest, a broken stake and a dropped shield */
+SCENEX.b3_c3_field = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, s = Math.max(.75, Math.min(1.25, W/700));
+  ctx.drawImage(sceneLayer('b3c3:field', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0, '#3a4048'], [.35, '#6e6c72'], [.75, '#aa9a88'], [1, '#d2bc9a']]); x.fillRect(0, 0, W, hz + 2); // a high pale sky, stained with smoke
+    for (let i=0;i<6;i++) cloud(x, W*hash(i, 13), H*(.06 + hash(i, 14)*.3), W*(.3 + hash(i, 15)*.3), 14, i%2 ? '#e8dccc' : '#4a4650', .12);
+    glow(x, W*.6, hz*.4, W*.5, '#f4e4c4', .18);
+    for (let i=0;i<3;i++){ const sx0 = W*(.06 + i*.07), g = x.createLinearGradient(0, hz, 0, H*.05); g.addColorStop(0, 'rgba(40,34,32,.5)'); g.addColorStop(1, 'rgba(40,34,32,0)'); x.fillStyle = g; x.beginPath(); x.moveTo(sx0 - 3, hz - 4); x.quadraticCurveTo(sx0 + 10, H*.3, sx0 + 50 + i*20, H*.05); x.lineTo(sx0 + 90 + i*20, H*.05); x.quadraticCurveTo(sx0 + 20, H*.3, sx0 + 5, hz - 4); x.fill(); } // Capustan's smoke
+    x.fillStyle = '#6a5e58'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W;px+=10) x.lineTo(px, hz - 3 - Math.sin(px*.013)*2.4 - hash(Math.round(px), 2)*1.6); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill();
+    b3c3Skyline(x, W*.3, hz - 1, .34, 5, {mass:['#5a504a', '#605650'], dome:[['#6a6056', '#5a504a'], ['#5a6662', '#4a5652']], wall:'#585048', wallLit:'#7a6e60'}, {light:.3}); // the city, on its hill, small
+    // the field: trampled grass and dust, the besiegers' stake lines and black fire-rings
+    x.fillStyle = vgrad(x, hz, H, [[0, '#8a7c64'], [.4, '#6a604a'], [1, '#2e281e']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<5;i++){ const y = hz + H*(.03 + i*.05), w = W*(.2 + hash(i, 21)*.4); x.fillStyle = 'rgba(30,22,14,.3)'; x.fillRect(hash(i, 22)*W - w*.3, y, w, 1 + i*.4); }
+    for (let i=0;i<12;i++) ell(x, hash(i, 23)*W, hz + H*(.04 + hash(i, 24)*.2), 4 + hash(i, 25)*8, 1.4, 'rgba(20,16,12,.45)'); // cook-fire rings, black
+    // the starving, lying down in the grass to the west (right) by the thousand: dark low shapes, a few sitting up
+    for (let i=0;i<1600;i++){ const d = Math.pow(hash(i, 31), 1.4), py = hz + 2 + d*H*.24, px = W*(.42 + hash(i, 32)*.62) - d*W*.1, sc = .4 + d*1.4; if (px > W + 4) continue; const c = 30 + Math.round(hash(i, 33)*24); b3c4Folk(x, px, py, sc, `rgba(${c + 6},${c},${c - 4},${(.5 + d*.4).toFixed(2)})`, hash(i, 34) < .22 ? .3 : .9); }
+    // the allied line, nearest: the Host's stretch, a broken stake and a dropped shield, soldiers standing and looking
+    x.fillStyle = '#2a2218'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.84); x.quadraticCurveTo(W*.4, H*.8, W, H*.84); x.lineTo(W, H); x.fill();
+    for (let i=0;i<10;i++){ const px = W*(.04 + i*.1 + hash(i, 41)*.03), py = H*(.83 - Math.sin(i)*.004), a = (hash(i, 42) - .5)*(i === 4 ? 2 : .5); x.strokeStyle = '#140e08'; x.lineWidth = 2; x.beginPath(); x.moveTo(px, py + 5); x.lineTo(px + Math.sin(a)*14, py - Math.cos(a)*14); x.stroke(); } // stakes, one broken over
+    ell(x, W*.5, H*.86, 7, 3, '#4a3a2a'); ell(x, W*.5, H*.857, 4, 1.6, '#6a5a44'); // a dropped shield
+    for (let i=0;i<14;i++){ const fx = W*(.56 + i*.032) + hash(i, 43)*3, fy = H*(.8 + hash(i, 44)*.02), sc = 1.1 + hash(i, 45)*.2; x.fillStyle = '#1a1612'; x.fillRect(fx - 1*sc, fy - 6*sc, 2*sc, 6*sc); x.beginPath(); x.arc(fx, fy - 7*sc, 1*sc, 0, 7); x.fill(); if (hash(i, 46) > .4) x.fillRect(fx + 1.2*sc, fy - 13*sc, .5*sc, 12*sc); } // the Host's soldiers, looking
+    vign(x, W, H, .4, .45); }), 0, 0, W, H);
+  // the Rhivi riding out to herd them, slow
+  for (let i=0;i<9;i++){ const k = ((t*mo/(60000 + i*7000) + hash(i, 51)) % 1), px = W*(.4 + k*.5 + hash(i, 52)*.1), py = hz + H*(.04 + hash(i, 53)*.16), sc = .5 + (py - hz)/H*2.4; b2Rider(ctx, px, py, sc, 'rgba(36,26,18,.88)', 1, mo ? Math.floor(t/500 + i)%2 : i%2, false); }
+  for (let i=0;i<3;i++) b3c3Smoke(ctx, W*(.08 + i*.08), hz - 10, s*.8, t, mo, i, '#2a2420', .35, .9); // and the city burning behind
+  for (let i=0;i<6;i++){ const a = t*mo/(2600 + i*170) + i*.7, cx = W*(.7 + hash(i, 61)*.2) + Math.cos(a)*24*s, cy = hz - H*.12 - hash(i, 62)*H*.08 + Math.sin(a*1.3)*8*s, f = Math.sin(t*mo/120 + i)*1.4; ctx.strokeStyle = 'rgba(16,12,10,.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 3, cy + f); ctx.lineTo(cx, cy); ctx.lineTo(cx + 3, cy + f); ctx.stroke(); } // crows, coming down
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(30, W*.4/sq.length), H*.97 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .3, .45); };
+
+/* a temple court in the Camps the afternoon of the relief: pale stone walls in hard sun, a temple's steps and columns at the back, the Camp's
+   people sitting along the walls where they came out, and the acolytes in grey going among them with water. Dannet kneels by an old woman */
+SCENEX.b3_c3_court = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, base = H*.62, s = Math.max(.85, Math.min(1.3, W/420));
+  ctx.drawImage(sceneLayer('b3c3:court', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, base, [[0, '#6a7a90'], [.6, '#aab0b4'], [1, '#cfc4b0']]); x.fillRect(0, 0, W, base);
+    cloud(x, W*.3, H*.12, W*.5, 10, '#3a3634', .14); // smoke still going over
+    // the temple at the back: a pediment on columns, a low dome behind, broad steps down into the court
+    const tx = W*.5, tw = W*.5, top = base - H*.34;
+    b3c3Skyline(x, W, base - H*.2, s*.5, 41, {mass:['#9a8a74', '#a8987e'], dome:[['#b09a6a', '#8a7a58'], ['#7a948a', '#5a7066']], wall:'#a8987e', wallLit:'#c8b898'}, {light:.6}); // the roofs of the Camps beyond the walls
+    x.fillStyle = '#c4b49a'; x.fillRect(tx - tw*.5, top + H*.06, tw, base - top - H*.06); x.beginPath(); x.ellipse(tx, top + H*.06, tw*.2, H*.09, 0, Math.PI, 0); x.fillStyle = '#9aa898'; x.fill(); // the temple, its green-bronze dome
+    poly(x, [[tx - tw*.54, top + H*.07], [tx, top - H*.02], [tx + tw*.54, top + H*.07]], '#d4c4a8'); poly(x, [[tx - tw*.46, top + H*.06], [tx, top + H*.005], [tx + tw*.46, top + H*.06]], '#a89878'); // the pediment
+    for (let i=0;i<8;i++){ const cx = tx - tw*.44 + i*tw*.125; x.fillStyle = '#e2d6bc'; x.fillRect(cx - 2.4*s, top + H*.08, 4.8*s, base - top - H*.14); x.fillStyle = 'rgba(80,64,46,.35)'; x.fillRect(cx + 1*s, top + H*.08, 1.4*s, base - top - H*.14); } // columns, lit from the left
+    x.fillStyle = '#3a2e22'; x.fillRect(tx - tw*.36, top + H*.1, tw*.72, base - top - H*.16); for (let i=0;i<8;i++){ const cx = tx - tw*.44 + i*tw*.125; x.fillStyle = '#e2d6bc'; x.fillRect(cx - 2.4*s, top + H*.08, 4.8*s, base - top - H*.14); x.fillStyle = 'rgba(80,64,46,.35)'; x.fillRect(cx + 1*s, top + H*.08, 1.4*s, base - top - H*.14); } // the dark of the portico behind them
+    for (let i=0;i<4;i++){ x.fillStyle = i%2 ? '#cbbca0' : '#d8caae'; x.fillRect(tx - tw*(.5 + i*.04), base - H*.06 + i*H*.018, tw*(1 + i*.08), H*.02); } // the steps
+    // the court's side walls, in perspective, one in shadow
+    poly(x, [[0, H*.2], [W*.16, base - H*.28], [W*.16, base + H*.02], [0, H*.8]], '#b8a888'); poly(x, [[W, H*.2], [W*.84, base - H*.28], [W*.84, base + H*.02], [W, H*.8]], '#7a6a56');
+    x.fillStyle = 'rgba(255,240,200,.18)'; x.fillRect(W*.16 - 1, base - H*.28, 2, H*.3);
+    // the court floor: flags, hard sun, the shadow of the right wall
+    x.fillStyle = vgrad(x, base, H, [[0, '#c8b898'], [1, '#8a7a60']]); x.beginPath(); x.moveTo(W*.16, base + H*.02); x.lineTo(W*.84, base + H*.02); x.lineTo(W, H*.8); x.lineTo(W, H); x.lineTo(0, H); x.lineTo(0, H*.8); x.fill();
+    x.strokeStyle = 'rgba(90,74,54,.25)'; x.lineWidth = 1; for (let i=1;i<6;i++){ const y = base + H*.02 + (H - base)*Math.pow(i/6, 1.4); x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); } for (let i=-8;i<=8;i++){ x.beginPath(); x.moveTo(W*.5 + i*W*.04, base + H*.02); x.lineTo(W*.5 + i*W*.14, H); x.stroke(); }
+    x.fillStyle = 'rgba(40,30,30,.28)'; x.beginPath(); x.moveTo(W*.84, base + H*.02); x.lineTo(W, H*.8); x.lineTo(W, H*.92); x.lineTo(W*.66, base + H*.06); x.fill(); // the wall's shadow across the flags
+    // the Camp's people, sitting against the walls where they came out: rags, children, the old, very still
+    for (let i=0;i<90;i++){ const side = i%2, k = hash(i, 71), px = side ? lerp(W*.82, W*.98, k) : lerp(W*.18, W*.02, k), py = lerp(base + H*.04, H*.9, k) + (hash(i, 72) - .5)*H*.03, sc = (2.4 + k*5)*s, c = 46 + Math.round(hash(i, 73)*30); b3c4Folk(x, px, py, sc, `rgb(${c + 14},${c + 4},${c - 4})`, hash(i, 74)*.7); }
+    for (let i=0;i<30;i++){ const k = hash(i, 75), px = W*(.3 + hash(i, 76)*.4), py = base + H*.03 + Math.pow(k, 1.4)*H*.1, sc = (2 + k*1.6)*s, c = 56 + Math.round(hash(i, 77)*26); b3c4Folk(x, px, py, sc, `rgb(${c + 14},${c + 4},${c - 4})`, hash(i, 78)*.6); } // and on the temple steps
+  }), 0, 0, W, H);
+  // the acolytes in grey, going among them with water: they walk; the yoke-buckets sway
+  for (let i=0;i<4;i++){ const k = ((t*mo/(26000 + i*4000) + hash(i, 81)) % 1), side = i%2, px = side ? lerp(W*.66, W*.8, k) : lerp(W*.34, W*.2, k), py = lerp(base + H*.08, H*.82, (i + 1)/5), sc = (2.2 + (py - base)/H*5)*s, sw = mo ? Math.sin(t/260 + i)*.5 : 0;
+    ctx.fillStyle = '#8a8e94'; ctx.fillRect(px - 1.4*sc, py - 7*sc, 2.8*sc, 7*sc); ctx.fillStyle = '#6a6e74'; ctx.fillRect(px + .4*sc, py - 7*sc, 1*sc, 7*sc); ctx.fillStyle = '#c8a888'; ctx.beginPath(); ctx.arc(px, py - 8.2*sc, 1.2*sc, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = .7*sc; ctx.beginPath(); ctx.moveTo(px - 4*sc, py - 6.4*sc); ctx.lineTo(px + 4*sc, py - 6.4*sc); ctx.stroke(); [-1, 1].forEach(d => { ctx.fillStyle = '#4a3a28'; ctx.fillRect(px + d*4*sc - 1*sc + sw*d, py - 5.6*sc, 2*sc, 2.2*sc); }); }
+  drawFigure(ctx, 'greysword', W*.72, H*.88, 1.6*s, t, {still:true, dir:-1}); b3c4Folk(ctx, W*.77, H*.89, 3*s, '#5a4a40', .3); // Dannet, by an old woman who will not let go of her hand
+  for (let i=0;i<10;i++){ const k = ((t*mo/14000 + i/10) % 1); ctx.fillStyle = `rgba(255,246,220,${(.25*Math.sin(k*Math.PI)).toFixed(2)})`; ctx.fillRect(W*(.3 + hash(i, 91)*.4) + k*8, H*(.2 + hash(i, 92)*.4) - k*20, 1, 1); } // dust in the sun
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(28, W*.36/sq.length), H*.97 - (i%2)*3, 2, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .35, .5); };
+
+/* Capustan from the field at night (the last halt, the reading before dawn, the way out through the postern after): the same walls and domes, gone
+   dark under a few stars, the sky over the city the colour of a forge, its fires breathing, and the allied fires small across the field */
+SCENEX.b3_c3_walls_night = (cv, t) => { SCENEX.b3_c3_walls(cv, t); const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.62, s = Math.max(.75, Math.min(1.25, W/700));
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = vgrad(ctx, 0, H, [[0, '#141a34'], [.55, '#3a3046'], [.7, '#4a3a44'], [1, '#2a2a3a']]); ctx.fillRect(0, 0, W, H); ctx.restore(); // night over all of it
+  for (let i=0;i<60;i++){ const y = Math.pow(hash(i, 201), 1.6)*H*.32, tw = mo ? (Math.sin(t/(800 + hash(i, 202)*900) + i) + 1)/2 : .6; ctx.fillStyle = `rgba(220,226,250,${((.2 + hash(i, 203)*.5)*(.5 + tw*.5)).toFixed(2)})`; ctx.fillRect(hash(i, 204)*W, y, .9, .9); } // a few stars, away from the glow
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const br = mo ? .8 + Math.sin(t/1700)*.12 + Math.sin(t/610)*.06 : .85; glow(ctx, W*.55, hz - H*.12, W*.55, '#a03a1a', .22*br); glow(ctx, W*.5, hz - H*.06, W*.3, '#ff6a2a', .14*br); // the sky over the city, a forge's colour, going up and down slowly the way a fire breathes
+  [[.18, .66], [.4, .7], [.55, .62], [.74, .68], [.9, .64]].forEach(([fx], i) => { const f = mo ? .8 + Math.sin(t/(160 + i*30) + i)*.15 : .9; glow(ctx, W*fx, hz - 28*s, 30*s, '#ff7a30', .12*f); });
+  for (let i=0;i<22;i++){ const px = W*(.04 + hash(i, 211)*.92), py = hz + H*(.06 + Math.pow(hash(i, 212), 1.2)*.18), f = mo ? .8 + Math.sin(t/(110 + i*9) + i)*.15 : .9; glow(ctx, px, py, 6*s, '#e07a30', .3*f); ctx.fillStyle = `rgba(255,190,110,${(.8*f).toFixed(2)})`; ctx.fillRect(px - .6, py - .6, 1.2, 1.1); } // the allied fires on the field, small ones
+  ctx.restore();
+  vign(ctx, W, H, .4, .5); };

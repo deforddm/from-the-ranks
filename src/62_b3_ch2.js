@@ -257,12 +257,18 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
   scenes:{
     b3_c2_herds:{loc:'The Rhivi Plain', sub:'South-east from Pale', cap:'The herds and the two armies on the plain under a sky too big for any of them.', amb:'explore'},
     b3_c2_flood:{loc:'The river', sub:'Dusk · the spate', cap:'A river standing up out of its bed at dusk, brown and white and full of everything it has picked up on the way.', amb:'explore'},
+    b3_c2_far:{loc:'The far grass', sub:'Two days east of the column', cap:'Grass and wind and sky and no column anywhere, and on the low hills, stones, and oak trunks planted upside down with their roots in the air.', amb:'wind'},
+    b3_c2_hill:{loc:'The far grass', sub:'The Barghast hill', cap:'The stand trees along the crest, roots to the sky, one of them felled into a fire, and far off to the west the column, very small.', amb:'wind'},
+    b3_c2_camp_night:{loc:'The Rhivi Plain', sub:'The night camp · moonrise', cap:'The Host\'s fires in long straight lines, the Rhivi\'s in rings round the herds, the Barghast\'s off to the south, and a big moon coming up off the grass.', amb:'night'},
+    b3_c2_herds_dawn:{loc:'The Rhivi Plain', sub:'The herd lines · first light', cap:'The fires down to embers, dew grey on the grass, and the Rhivi walking slowly through the herd, counting.', amb:'explore'},
+    b3_c2_ford:{loc:'The river', sub:'The ford · afternoon', cap:'A brown river running full, the herd going over at the ford with children riding the calves, the wagons waiting their turn, and up the river to the east a sky gone black.', amb:'explore'},
+    b3_c2_flood_night:{loc:'The river', sub:'Night · after the spate', cap:'The river still high and loud in the dark, Rhivi fires along the far bank, and the wagons drawn into a ring on the near one.', amb:'night'},
     b3_c2_strides:{loc:'The far grass', sub:'A wallow by a stream', cap:'A dead horse in the mud, and in the mud round it, tracks that should not be that far apart.', amb:'explore'} },
 
   end:{
     herd:['The herd came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth went into it for the Rhivi herd and the children riding it. The Rhivi will remember. So will the Host\'s quartermaster.'],
     wagons:['The wagons came out', 'Six weeks across the Rhivi Plain. Paran\'s Bridgeburners went east to the Barghast, and Mallet with them, and the week Whiskeyjack never gave him went too. A Rhivi rider died by a stream in the far grass, and whatever killed him walks on two legs and strides like nothing alive. At the river the water came down out of the hills at dusk, and the Fourth held the Host\'s wagons on the ford with Tav\'s company. The Host will eat. The Rhivi watched from the far bank, and counted.'] },
-  endScene:'b3_c2_flood',
+  endScene:'b3_c2_flood_night',
   endCap:()=> S.f.b3_c2_key === 'herd' ? 'The far bank at night. Rhivi fires, and children asleep against warm hide, and the river still loud in the dark.' : 'The near bank at night. The wagons in a ring, the Fourth Regiment\'s fires, and a big man somewhere among them singing badly.',
   tease:'Next: Capustan. The Barghast and the Bridgeburners get there first; the Host gets there after, with Brood, onto a field where something very large and black is in the sky.',
 
@@ -484,7 +490,7 @@ Two days east, he says. Light, quick, and back to the column by the time it make
 
 /* ---------------- the far grass: the strides, and the hill ---------------- */
 Object.assign(B3CH2.dlg, {
-  b3_c2_far_arrive:()=>({sp:'The far grass', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_farIn = 1; }, txt:
+  b3_c2_far_arrive:()=>({sp:'The far grass', scene:'b3_c2_far', fx:()=>{ S.f.b3_c2_farIn = 1; }, txt:
 `Two days east of the column there is no column. There is grass, and wind in it, and the sky, and every now and then a hill with stones on top.
 
 The Barghast stand trees on those hills, Hurlochel says: oak trunks carried down out of the north, carved, and planted upside down with their roots in the air. Sacred places. The traders' track to Capustan runs past a dozen of them. Nobody camps on them who wants to see morning.
@@ -581,7 +587,7 @@ ${b3In('sohra') ? `Sohra comes back up out of the gully at a run, swearing in Rh
 
 They know you are there now. They come anyway.`,
     ch:[{t:'Hold, and take them.', go:()=>startBattle('b3_c2_hill', {surprise:'e'})}]}),
-  b3_c2_after_hill:()=>({sp:'The Barghast hill', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_hillDone = 1; gain('b3_c2_mace'); if (B && B.def && (B.def.b3Came || []).length) ally(1, 0, 'The Rhivi saw the Fourth on the hill'); }, txt:
+  b3_c2_after_hill:()=>({sp:'The Barghast hill', scene:'b3_c2_hill', fx:()=>{ S.f.b3_c2_hillDone = 1; gain('b3_c2_mace'); if (B && B.def && (B.def.b3Came || []).length) ally(1, 0, 'The Rhivi saw the Fourth on the hill'); }, txt:
 `The man in grey goes down among the inverted trees, beside the fire he made out of one of them, and the long mace goes out of his hand and rolls a little way down the slope and stops against a root.
 
 He was not young. He has a face like a clerk's, and grey eyes that stay open, and on the inside of his wrist a mark like a closed eye, tattooed. ${b3In('tuft') ? `Tuft won't go near him. "There was something behind his eyes," she says. "When he looked at me. Something that wasn't him, looking out through him, very cold." She rubs her arms. "It's gone now. I think it went *home*."` : `When he looked at you, before the end, something looked out of his eyes that was not him. You are fairly sure of that. You are not going to say it to anybody.`}
@@ -613,7 +619,7 @@ Hurlochel looks at it with his head on one side. "The Ilgres will hear of that,"
 
 /* ---------------- the night camp ---------------- */
 Object.assign(B3CH2.dlg, {
-  b3_c2_camp_arrive:()=>({sp:'The night camp', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_campIn = 1; }, txt:
+  b3_c2_camp_arrive:()=>({sp:'The night camp', scene:'b3_c2_camp_night', fx:()=>{ S.f.b3_c2_campIn = 1; }, txt:
 `Three weeks out.
 
 The column makes its night camp where the grass goes down to a little water, and the Fourth comes in at moonrise with the far grass still on its boots. The Host's fires in long straight lines, the way the Host does everything. The Rhivi fires in rings round the herds, singing. Brood's Barghast off to the south with their own fires, louder. The Andii somewhere, quiet. Nobody, anywhere, entirely asleep.
@@ -796,7 +802,7 @@ The Rhivi are only now getting to their horses. The Fourth is between the riders
 ${b3In('brisk') ? `"Hold it," Brisk says. Not to you. To herself. To the shield.` : `Hold until the Rhivi are mounted.`}`,
     ch:[{t:'Hold the herd lines.', go:()=>startBattle('b3_c2_night', {})},
         {t:'Kettle\'s smoker across the grass between them and the herd.', tag:'uses 1 smoker', req:()=>b3In('kettle') && S.inv.smoker > 0, fx:()=>{ S.inv.smoker--; S.f.b3_c2_smoke = 1; }, go:()=>startBattle('b3_c2_night', {pre:true, surprise:'p'})}]}),
-  b3_c2_after_night:()=>({sp:'The herd lines · before dawn', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_nightDone = 1; if (B && B.def && (B.def.b3Came || []).length) ally(1, 0, 'The herd lines held, together'); }, txt:
+  b3_c2_after_night:()=>({sp:'The herd lines · before dawn', scene:'b3_c2_herds_dawn', fx:()=>{ S.f.b3_c2_nightDone = 1; if (B && B.def && (B.def.b3Came || []).length) ally(1, 0, 'The herd lines held, together'); }, txt:
 `The man in grey goes down in the grass with his long mace under him, and his riders take what is left of their horses south into the dark, and do not take a single calf with them.
 
 The Rhivi come back from chasing them at first light, singing, slow, the way they sing for the dead and for the living both. They walk the herd, counting. Some calves are not there to count: trampled, in the first rush, before the Fourth was between. Fewer than there would have been.
@@ -820,7 +826,7 @@ The herds go first. They always go first.`,
 
 /* ---------------- the river ---------------- */
 Object.assign(B3CH2.dlg, {
-  b3_c2_river_arrive:()=>({sp:'The river', scene:'b3_c2_herds', fx:()=>{ S.f.b3_c2_riverIn = 1; }, txt:
+  b3_c2_river_arrive:()=>({sp:'The river', scene:'b3_c2_ford', fx:()=>{ S.f.b3_c2_riverIn = 1; }, txt:
 `The herd is half across.
 
 A brown tide on a brown river, the bhederin going into the water at the ford in a long stream, bawling, the calves swimming where it deepens with their noses up and the Rhivi riders in among them to the saddle-girths, singing. And on some of the calves, children: Rhivi children of six and eight and ten, riding the young bhederin across the way children have always ridden them across, bareback, gripping the hair, shrieking with joy.
@@ -910,7 +916,7 @@ They are not here for the Fourth. They are here for calves, and anything else sm
 ${b3In('sohra') ? `Sohra has a child under each arm, and puts them down behind ${b3In('ohl') ? 'Ohl\'s back, or yours' : 'your back'}, and nocks.` : `The children are behind you. That is where they are going to stay.`}`,
     ch:[{t:'Hold the bank.', go:()=>startBattle('b3_c2_herdfight', {})},
         {t:'Kettle\'s sharper into the reeds where they are bunching.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c2_herdfight', {pre:true})}]}),
-  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_flood', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
+  b3_c2_after_herd:()=>({sp:'The far bank · night', scene:'b3_c2_flood_night', fx:()=>{ S.f.b3_c2_floodDone = 1; if (!S.kit.includes('b3_c2_hornbow') && !S.f.b3_c2_bowBack) { S.f.b3_c2_bowGift = 1; gain('b3_c2_hornbow'); }
       if (b3In('sohra')) S.f.b3_herdMother = 1; }, txt:
 `The captain goes down in the gully with his plume in the mud, and the riders who are left go south into the dark, and every child who went into that river is on this side of it, alive, wet, and screaming for its mother.
 
@@ -948,7 +954,7 @@ And then, along the near bank, out of the dusk: riders. Not Rhivi. Coming for th
 The Fourth Regiment's heavies form on the squad without being told, two files, shields up. ${b3In('brisk') ? `Tav is in the left file. Brisk looks at him once and then not again, the way you don't look at a thing you might start counting.` : ''}`,
     ch:[{t:'Hold the wagons.', go:()=>startBattle('b3_c2_wagonfight', {})},
         {t:'Kettle\'s sharper into them where they come down to the water.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c2_wagonfight', {pre:true})}]}),
-  b3_c2_after_wagons:()=>({sp:'The near bank · night', scene:'b3_c2_flood', fx:()=>{ S.f.b3_c2_floodDone = 1; S.f.b3_c2_tavWagons = 1; }, txt:
+  b3_c2_after_wagons:()=>({sp:'The near bank · night', scene:'b3_c2_flood_night', fx:()=>{ S.f.b3_c2_floodDone = 1; S.f.b3_c2_tavWagons = 1; }, txt:
 `The captain goes off the top of the wagon into the shallows with his plume under him, and his riders go south into the dark, and the wagon of salt pork is still the Host's.
 
 The Fourth Regiment rights it with ropes and oxen and a great deal of noise, and somebody starts singing, and it is Tav, and this time nobody throws anything.

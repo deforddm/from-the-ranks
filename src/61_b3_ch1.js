@@ -220,12 +220,15 @@ const B3CH1 = {
   scenes:{
     b3_c1_parley:{loc:'Below Brood\'s tent', sub:'The parley ground · noon', cap:'The meeting ground below the command tent: two armies\' worth of watchers, a knot of the great in the middle, and a child in red wool a little apart.', amb:'explore'},
     b3_c1_tunnels:{loc:'Under Pale', sub:'The old north sap', cap:'A sapper tunnel by lamplight, the shoring black with old smoke, and the dark at the end of it gone ordinary at last.', amb:'tunnel'},
-    b3_c1_rhivi:{loc:'The Rhivi camp', sub:'Night', cap:'Round hide tents, low fires, the herds a dark mass breathing on the slope above, and somebody singing to them.', amb:'explore'} },
+    b3_c1_rhivi:{loc:'The Rhivi camp', sub:'Night', cap:'Round hide tents, low fires, the herds a dark mass breathing on the slope above, and somebody singing to them.', amb:'explore'},
+    b3_c1_divide:{loc:'The Divide road', sub:'Night · the cutting', cap:'A pale road going up between black hills into a cutting banked with scree, six wagons under oiled hide, and quorls very high against the stars.', amb:'night'},
+    b3_pale_grey:{loc:'Outside Pale', sub:'The munitions park · before dawn', cap:'The Host\'s lines in the grey before dawn, the wagons in under their hides, and a quorl coming down at the edge of the park.', amb:'explore'},
+    b3_pale_dawn:{loc:'Outside Pale', sub:'Dawn · the south-east road', cap:'The tents struck, and two armies going out down the south-east road at a walk, banners up, the herds on their flank and Pale behind.', amb:'explore'} },
 
   end:{
     mhybe:['The night watch', 'The parley at Pale held, just, after Whiskeyjack struck Brood\'s second in front of both armies. That night the Fourth stood watch at the Mhybe\'s tent for a Rhivi girl who asked, and brigands off the Divide came for the herds and did not get them. Sohra walks with the Fourth now. Brood\'s people have started to look at the squad as people instead of weather. And a tall man in a fur-collared cloak knows the sergeant\'s face.'],
     crate:['The Host\'s order', 'The parley at Pale held, just, after Whiskeyjack struck Brood\'s second in front of both armies. That night the Host sent the Fourth up the Divide road for a Moranth munitions train, and the train came in, and the squad\'s satchel is heavier than it has been since Darujhistan. A Rhivi girl asked the Fourth for something else that night. She will find them on the march, she says. She did not say it warmly.'] },
-  endScene:'b3_pale_camp',
+  endScene:'b3_pale_dawn',
   endCap:()=> S.f.b3_c1_key === 'mhybe' ? 'Dawn outside Pale. Two armies take the road south-east at a walk anyone could time, and a Rhivi girl rides at the Fourth\'s shoulder, singing to the herds.' : 'Dawn outside Pale. Two armies take the road south-east at a walk anyone could time, and the munitions wagons creak behind the Fourth, heavy and careful.',
   tease:'Next: the Rhivi Plain. Six weeks south-east with the herds and Brood\'s strange contingents, the Bridgeburners going their own way, and, far out on the grass, a track too long for anything that walks.',
 
@@ -958,7 +961,7 @@ ${b3In('sohra') ? `She falls in at the end of the Fourth's line, where the new o
 "The Host gave an order," she says. "Of course." She turns back to the fire. "Go and get your crates, Malazans." It is perfectly polite. It is the coldest thing anyone has said to the Fourth all day, and that includes Kallor.${b3In('tuft') ? `\n\nTuft looks back once, at the painted door-flap, as the Fourth goes. Then she doesn't again.` : ''}`,
       ch:[{t:'Up the Divide road.', onward:true, go:'b3_c1_road'},
           {t:'Not yet.', go:()=>startExplore()}]}),
-    b3_c1_road:()=>({sp:'The Divide road', scene:'b3_c1_rhivi', txt:
+    b3_c1_road:()=>({sp:'The Divide road', scene:'b3_c1_divide', txt:
 `The Divide road goes up out of the valley into the hills between Pale and Darujhistan, a pale scar in the starlight between black slopes. Two leagues up it, at a cutting where the road goes between banks of scree, the Fourth meets the train: six wagons with Moranth drivers in black chitin, sitting very still, and crates under oiled hide that everyone keeps a respectful distance from.
 
 Something goes over, high up, with a sound like a struck string. ${b3In('kettle') ? `"Quorls," Kettle breathes, looking up, and her whole face is lit with it. "They're flying cover. They're flying cover for *us*."` : `Quorls, flying cover, high and invisible.`}
@@ -966,7 +969,7 @@ Something goes over, high up, with a sound like a struck string. ${b3In('kettle'
 The lead driver clicks at you, once, which might be a greeting, and the train starts down through the cutting at a walk. Halfway through it, somebody on the scree above starts a little avalanche of pebbles, and then a bigger one, and then a voice says something in the Divide's ugly dialect and the dark on both banks stands up.`,
       ch:[{t:'"To the wagons."', go:()=>startBattle('b3_c1_train', {})},
           {t:'Kettle lights up the cutting wall with a burner.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_train', {pre:true})}]}),
-    b3_c1_train_after:()=>({sp:'The Divide road', scene:'b3_c1_rhivi', fx:()=>{ S.f.b3_c1_trainDone = 1; S.inv.sharper = (S.inv.sharper || 0) + 2; S.inv.cusser = (S.inv.cusser || 0) + 1; note('The Moranth quartermaster signs two sharpers and a cusser over to the Fourth, for the road.', 'good'); }, txt:
+    b3_c1_train_after:()=>({sp:'The Divide road', scene:'b3_pale_grey', fx:()=>{ S.f.b3_c1_trainDone = 1; S.inv.sharper = (S.inv.sharper || 0) + 2; S.inv.cusser = (S.inv.cusser || 0) + 1; note('The Moranth quartermaster signs two sharpers and a cusser over to the Fourth, for the road.', 'good'); }, txt:
 `The man with the cut ear is down on the road, and the rest of them are gone back over the ridge into the dark, and the train is in: six wagons creaking into the Host's lines an hour before dawn with every crate still under its hide.
 
 At the munitions park a Black Moranth quartermaster walks the length of the wagons, clicking softly, counting. At the end it turns its blank black helm on the Fourth and holds out two sharpers and a cusser, without a word, the way you'd hand a man his wages.
@@ -978,7 +981,7 @@ Down the slope, the Rhivi camp is waking. Nobody from it comes up to see the tra
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ---- dawn: the armies march ---- */
-    b3_c1_dawn:()=>({sp:'Outside Pale · dawn', scene:'b3_pale_camp', fx:()=>{ S.f.b3_c1_dawn = 1; }, txt:
+    b3_c1_dawn:()=>({sp:'Outside Pale · dawn', scene:'b3_pale_dawn', fx:()=>{ S.f.b3_c1_dawn = 1; }, txt:
 `Dawn, and two armies take the road.
 
 They do it slowly, and in the open. The Host's column goes out down the south-east road in the grey light with its banners up and its drums going, at a walk you could time with a water-clock, and on its flank Brood's people go with it: the Rhivi and their herds, the Barghast, the Andii keeping their own silent order, the Mott brothers in their dreadful hats. Whiskeyjack rides past the Fourth at the head of a company, sitting the horse as if the leg were nobody's business, and says, without stopping, "Steady, Sergeant. We walk. Where everybody can see us." He doesn't say why. ${b3In('ohl') ? `"Somebody down south is setting a timetable by us," Ohl says, watching him go. "I'd put money on it." Nobody takes the bet.` : `Somebody down south, you'd guess, is setting a timetable by it.`}

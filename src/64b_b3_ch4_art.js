@@ -307,3 +307,57 @@ SCENEX.b3_c4_founders = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
   const gear = typeof B3CH4 !== 'undefined' && B3CH4.gear ? B3CH4.gear : {};
   Object.entries(gear).forEach(([k, it]) => { const p = PICS[pick(k, it && it.name)]; if (p) card(k, (it && it.name) || p[0], p[1], p[2]); });
 }
+
+/* ---------------- the plain at night after the hunt, and the guards' bank at dawn after the Gathering ---------------- */
+/* riding back in the dark with the Grey Swords: the cold come with them, frost glittering on the grass under hard stars, and low in the south-east
+   a long patch of sky with no stars in it, where the dust stands that nobody can see now. Their breath goes up white */
+SCENEX.b3_c4_cold_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.56, s = clamp(W/360, .9, 1.4);
+  ctx.drawImage(sceneLayer('b3c4:coldnight', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#02040a'],[.55,'#0a1222'],[1,'#1a2638']]); x.fillRect(0, 0, W, hz + 2);
+    for (let i=0;i<260;i++){ const px = hash(i, 1)*W, py = Math.pow(hash(i, 2), 1.3)*hz*.96, dx = (px - W*.72)/(W*.26), dy = (py - hz*.86)/(hz*.32); if (dx*dx + dy*dy < 1 && hash(i, 5) > .08) continue; x.fillStyle = `rgba(214,226,250,${(.15 + hash(i, 3)*.6).toFixed(2)})`; x.fillRect(px, py, hash(i, 4) > .92 ? 1.4 : .8, hash(i, 4) > .92 ? 1.4 : .8); } // the stars, and low in the south-east a place where there are none
+    glow(x, W*.72, hz - H*.06, W*.3, '#04060a', .5);
+    x.fillStyle = '#0a0e16'; x.beginPath(); x.moveTo(0, hz); for (let px=0;px<=W + 10;px+=10) x.lineTo(px, hz - 1 - Math.max(0, Math.sin(px/70 + 2))*2.4); x.lineTo(W, hz + 2); x.lineTo(0, hz + 2); x.fill();
+    x.fillStyle = vgrad(x, hz, H, [[0,'#141a24'],[.4,'#0e121a'],[1,'#05070a']]); x.fillRect(0, hz, W, H - hz);
+    for (let i=0;i<9;i++){ const yy = hz + H*(.03 + i*.045), w = W*(.2 + hash(i, 11)*.4); x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(hash(i, 12)*W - w*.2, yy, w, 1.2 + i*.4); } // the gullies, darker lines
+    for (let i=0;i<500;i++){ const d = Math.pow(hash(i, 21), 1.3), py = hz + 2 + d*(H - hz), px = hash(i, 22)*W, l = 1 + d*3; x.strokeStyle = `rgba(150,170,196,${(.05 + d*.13).toFixed(2)})`; x.lineWidth = .5 + d*.6; x.beginPath(); x.moveTo(px, py); x.lineTo(px + l*.3, py - l); x.stroke(); } // frosted grass, the starlight on it
+    x.fillStyle = vgrad(x, H*.86, H, [[0,'rgba(2,3,6,0)'],[1,'rgba(2,3,6,.7)']]); x.fillRect(0, H*.86, W, H*.14);
+  }), 0, 0, W, H);
+  for (let i=0;i<120;i++){ const d = Math.pow(hash(i, 31), 1.2), py = hz + 3 + d*(H - hz)*.9, px = hash(i, 32)*W, tw = mo ? (Math.sin(t/(400 + hash(i, 33)*700) + i) + 1)/2 : .5; ctx.fillStyle = `rgba(220,236,255,${((.1 + d*.4)*tw).toFixed(2)})`; ctx.fillRect(px, py, 1, 1); } // frost, glittering
+  // the Grey Swords riding back, heads down, a long file, ropes coiled on the saddles; their breath
+  for (let i=0;i<10;i++){ const k = i/9, px = lerp(W*.98, W*.32, k) + (mo ? ((t/30000) % 1)*0 : 0), py = lerp(hz + H*.06, hz + H*.2, k), sc = lerp(.7, 1.4, k)*s, step = mo ? Math.floor(t/420 + i)%2 : i%2;
+    b2Rider(ctx, px, py, sc, '#05070b', -1, step, false); ctx.fillStyle = 'rgba(140,150,170,.3)'; ctx.fillRect(px - 2*sc, py - 11*sc, 4*sc, .6*sc); // starlight on a helm
+    if (mo) { const kk = ((t/2400 + i*.31) % 1); glow(ctx, px - 6*sc - kk*6, py - 13*sc - kk*5, 2 + kk*5*sc, '#c8d4e4', .14*Math.sin(kk*Math.PI)); } }
+  const sq = marchOrder(sceneSquad()); ctx.save(); ctx.filter = 'brightness(.42) saturate(.5)'; sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(28, W*.36/sq.length), H*.96 - (i%2)*3, 2, t, {phase:i, dir:-1})); ctx.restore();
+  ctx.fillStyle = 'rgba(140,160,200,.05)'; ctx.fillRect(0, 0, W, H);
+  vign(ctx, W, H, .7, .5); };
+
+/* the guards' bank at dawn: the frost going off the grass in the first sun, the horizon clear where the dust stood, the prisoners' camp grey and
+   quiet across the ditch, the guards' fires down to smoke; and on this side, by the ration cart, the ones who came over the stakes in the night
+   and did not go back, sitting in a long ragged row. Up the bank, a long way off, one man walking toward you */
+SCENEX.b3_c4_dawn = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, ly = H*.7, s = clamp(W/360, .9, 1.4);
+  const LINE = u => ly - H*.03 + u*H*.05;
+  ctx.drawImage(sceneLayer('b3c4:dawn', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#2a3044'],[.4,'#6a6a7a'],[.8,'#c8a490'],[1,'#ecd2b0']]); x.fillRect(0, 0, W, hz + 2); // the first sun, and nothing in the sky but a few clouds
+    glow(x, W*.86, hz, W*.45, '#ffd8a8', .45); glow(x, W*.86, hz - 2, 12, '#fff2d8', .8);
+    for (let i=0;i<4;i++) cloud(x, W*(.1 + hash(i, 61)*.8), hz*(.2 + i*.14), W*(.24 + hash(i, 62)*.2), 2, '#e0b8a8', .12);
+    { const cx = W*.82, by = hz + 1; x.fillStyle = 'rgba(70,64,74,.8)'; x.fillRect(cx - W*.14, by - H*.025, W*.3, H*.025); for (let i=0;i<7;i++){ const dx = cx - W*.12 + i*W*.04 + hash(i, 63)*W*.02, r = H*(.012 + hash(i, 64)*.016); x.beginPath(); x.arc(dx, by - H*.025, r, Math.PI, 0); x.fill(); } } // Capustan, far off, against the sun
+    x.fillStyle = vgrad(x, hz, H, [[0,'#8a8478'],[.35,'#5e5850'],[1,'#1e1a16']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = 'rgba(160,150,140,.6)'; x.fillRect(0, hz - 1, W, 2); // the horizon, clear: the dust is gone
+    for (let i=0;i<2000;i++){ const d = Math.pow(hash(i, 71), 1.6), py = hz + 1.5 + d*(LINE(.5) - hz - H*.03), sc = .35 + d*1.3, px = hash(i, 72)*W; const c = 34 + Math.round(hash(i, 73)*22); b3c4Folk(x, px, py, sc, `rgba(${c + 8},${c + 2},${c},${(.5 + d*.4).toFixed(2)})`, hash(i, 74)); } // the prisoners, grey in the morning, very quiet
+    for (let i=0;i<300;i++){ const d = Math.pow(hash(i, 75), 1.2), py = hz + 2 + d*(H - hz), px = hash(i, 76)*W, shade = (px/W); x.fillStyle = `rgba(232,238,244,${((.12 + d*.25)*(1 - shade*.7)).toFixed(2)})`; x.fillRect(px, py, 1 + d, .8); } // the frost, going off from the sun's side first
+    { const g = x.createLinearGradient(0, hz, 0, hz + H*.14); g.addColorStop(0, 'rgba(236,210,180,.55)'); g.addColorStop(1, 'rgba(236,210,180,0)'); x.fillStyle = g; x.fillRect(0, hz, W, H*.14); } // mist off the plain in the sun
+    x.fillStyle = '#16100c'; x.beginPath(); x.moveTo(0, LINE(0)); x.lineTo(W, LINE(1)); x.lineTo(W, LINE(1) + H*.025); x.lineTo(0, LINE(0) + H*.025); x.fill();
+    for (let px=2; px<W; px+=4 + hash(Math.round(px), 91)*3){ const py = LINE(px/W); x.strokeStyle = '#2a201a'; x.lineWidth = 1.2; x.beginPath(); x.moveTo(px, py + H*.02); x.lineTo(px - 3, py - H*.035); x.stroke(); x.fillStyle = 'rgba(240,244,248,.35)'; x.fillRect(px - 3, py - H*.035, 1, 1); } // the stakes, frost on their points
+    x.fillStyle = vgrad(x, ly, H, [[0,'#4a4036'],[1,'#16120e']]); x.beginPath(); x.moveTo(0, LINE(0) + H*.025); x.lineTo(W, LINE(1) + H*.025); x.lineTo(W, H); x.lineTo(0, H); x.fill(); // our side
+    // the ration cart, and by it the ones who came over in the night and did not go back: children mostly, the sick, the very old
+    const cx = W*.62, cy = H*.86; x.fillStyle = '#2a2018'; x.fillRect(cx - 18*s, cy - 10*s, 36*s, 7*s); ell(x, cx - 12*s, cy - 2*s, 4.4*s, 4.4*s, '#1a1410'); ell(x, cx + 12*s, cy - 2*s, 4.4*s, 4.4*s, '#1a1410'); x.fillStyle = '#6a5a44'; x.fillRect(cx - 16*s, cy - 14*s, 10*s, 4*s); x.fillRect(cx - 4*s, cy - 13*s, 9*s, 3*s); x.fillRect(cx + 6*s, cy - 14*s, 9*s, 4*s); // sacks on it
+    for (let i=0;i<16;i++){ const px = W*(.3 + i*.042) + hash(i, 81)*4, py = H*(.8 + (i%3)*.012) + hash(i, 82)*3, sc = (2 + hash(i, 83)*1.4)*s, c = 60 + Math.round(hash(i, 84)*30); if (Math.abs(px - cx) < 20*s) continue; b3c4Folk(x, px, py, sc, `rgb(${c + 10},${c + 2},${c - 6})`, hash(i, 85)*.5); } // sitting in a long ragged row
+  }), 0, 0, W, H);
+  // the guards' fires gone to smoke; the frost-smoke off the grass where the sun touches it
+  [.12, .38, .88].forEach((u, i) => { const gx = W*u, gy = LINE(u) + H*.06; ell(ctx, gx, gy, 6, 2, '#2a1a10'); glow(ctx, gx, gy - 1, 6, '#ff8a3a', .2); for (let k=0;k<10;k++){ const kk = ((k/10 + t*mo/14000 + i*.3) % 1); glow(ctx, gx + kk*kk*W*.06, gy - kk*H*.3, 2 + kk*12, '#a8a0a0', .22*(1 - kk)); } });
+  for (let i=0;i<16;i++){ const k = ((t*mo/9000 + hash(i, 101)) % 1), px = W*(.4 + hash(i, 102)*.6), py = hz + H*(.04 + hash(i, 103)*.24); glow(ctx, px, py - k*H*.06, 3 + k*8, '#f4ecdc', .12*Math.sin(k*Math.PI)); }
+  // up the bank, a long way off, one man walking toward you, a little stiffly
+  { const k = mo ? ((t/120000) % 1)*.3 : .15, px = lerp(W*.97, W*.84, k), py = LINE(1) + H*.07, sc = 1.3*s, step = mo ? Math.sin(t/300)*.6 : 0; ctx.fillStyle = '#16120e'; ctx.fillRect(px - 1*sc, py - 7*sc, 2*sc, 5*sc); ctx.fillRect(px - .9*sc + step, py - 2*sc, .8*sc, 2*sc); ctx.fillRect(px + .2*sc - step, py - 2*sc, .8*sc, 2*sc); ctx.beginPath(); ctx.arc(px, py - 8*sc, 1*sc, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,210,160,.4)'; ctx.fillRect(px + .6*sc, py - 7*sc, .5*sc, 5*sc); }
+  squadLine(sceneSquad(), 1, (id, i) => drawFigure(ctx, id, W*.04 + i*Math.min(26, W*.3/Math.max(1, sceneSquad().length)) + 10, H*.97 - (i%2)*2, 2, t, {still:true, dir:1}));
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.86, H*.8, W*.4, '#ffb070', .05); ctx.globalCompositeOperation = 'source-over';
+  vign(ctx, W, H, .45, .5); };
