@@ -15,7 +15,8 @@ const c3Spot = () => { const k = S.f.bonesSpotLast; if (!k) return '';
 const brackOff = () => Math.min(3, (S.f.c3_brackDisc ? 2 : 0) + (S.f.c3_brackKettle ? 2 : 0));
 const CH3 = {
   title:'Blue Fire', number:'Three',
-  intro:{loc:'Darujhistan', sub:'The Worry Gate · dusk', cap:'Blue lamps coming on one at a time along the walls, and above the lake a mountain that nobody looks at.',
+  endScene:'roof', // the end page (Classic pictures) shows where the chapter ends: dawn on the chandler's roof, not the Pale
+  intro:{scene:'city_dusk', loc:'Darujhistan', sub:'The Worry Gate · dusk', cap:'Blue lamps coming on one at a time along the walls, and above the lake a mountain that nobody looks at.',
     paras:[
 () => `The road comes down out of the Gadrobi Hills in switchbacks, the way a drunk comes down a stair, and the wagon comes down it the same way, with Brisk at the brake and ${S.f.c2_wagon ? 'Pell the mule' : 'the mule'} expressing an opinion at every turn. There are goats on the slopes and goatherds who do not look up at Malazans, and a shrine to a god whose face somebody has chiselled off with care. Kettle has stopped counting munitions. She is counting chimneys.`,
 `Then the hills open, and there is the lake, flat and grey as a slate, and on the near shore a city so large that the eye refuses it and goes looking for its edges, and does not find them. Walls inside walls. Domes, towers, a hill with palaces on it like teeth. Smoke from ten thousand kitchens. You are Sergeant {sgt}, Fourth Squad, and you have seen Pale and Genabaris and Nathilog, and you have never seen anything that made you feel so precisely the size of one wagon.`,
@@ -198,7 +199,7 @@ Inside, steam, and a sour mineral stink, and vats sunk in the floor like wells, 
 
   dlg:{
     /* ---- opening: the Worry Gate ---- */
-    c3_start:()=>({sp:'The Worry Gate', scene:'city_street', fx:()=>{S.f.c3_started=1;}, txt:
+    c3_start:()=>({sp:'The Worry Gate', scene:'city_dusk', fx:()=>{S.f.c3_started=1;}, txt:
 `The caravan road runs the last half-mile under the city's outer wall, which is higher than the Pale's was before the Pale fell into itself, and older, and has been patched so many times in so many colours of stone that it looks less like a wall than a quarrel. The gate ahead is called the Worry Gate, and nobody on the road can tell you why, and all of them smile when you ask.
 
 The lamps along the wall are coming on one at a time. Not lit. *Coming on*, a little tongue of blue in each glass, with a hiss you feel in your teeth.
@@ -467,7 +468,7 @@ ${S.f.c2_badge ? `She has the Ninth Regiment badge on a thong round her wrist no
 ${S.f.c3_pallickTip ? `You keep to the right-hand side of the arch, as the clerk said, and so you are already looking at the lane on the left when something moves in it.` : S.f.c3_paid ? `Something moves in the lane. Pennick said it: silver makes a noise.` : S.f.c3_briskVoice ? `Something moves in the lane. Brisk's voice carried; a guild wagon is a wagon somebody has paid for, and someone in that lane knows the arithmetic.` : `Something moves in the lane. A wagon that didn't pay the toll is a wagon with something on it worth not paying for, and someone in that lane can count.`}`,
       ch:[{t:'Keep walking.', go:'c3_ambush'},
           {t:'Not yet.'}]},
-    c3_ambush:()=>({sp:'The lane by the Worry Gate', scene:'city_street', txt:
+    c3_ambush:()=>({sp:'The lane by the Worry Gate', scene:'city_dusk', txt:
 `Three of them come out of the lane at once, low and fast, thin as the lane itself, knives out and held the Daru way, point down along the forearm. Behind them, filling the lane from wall to wall, two Gadrobi with cudgels and faces like walls that have been punched a great deal and have decided to be proud of it.
 
 The first one is at the wagon's tail before the mule has finished being alarmed. His hand is already under the oilcloth.
@@ -483,7 +484,7 @@ ${S.f.c2_wagon ? 'Pell the mule' : 'The mule'}, as if understanding, tries to bi
 ${SQUAD().includes('brisk') ? `Brisk's shield was off her back before the first of them cleared the lane.` : `The squad was turned to face the lane before the first of them cleared it.`} A lie told properly at a clerk's desk has bought the Fourth one breath, and nobody wastes it.` : ''}`,
       ch:[{t:'"Brisk."', go:()=>startBattle('cutpurses', S.f.c3_pallickTip ? {surprise:'p'} : {})},
           {t:'Kettle has a sharper in her hand already.', tag:'uses 1 sharper', req:()=>S.inv.sharper>0, fx:()=>{S.inv.sharper--;}, go:()=>startBattle('cutpurses', S.f.c3_pallickTip ? {pre:true, surprise:'p'} : {pre:true})}]}),
-    c3_after_cutpurses:()=>({sp:'The lane by the Worry Gate', scene:'city_street', fx:()=>{ S.f.c3_gateFought=1; gain('daruknife'); }, txt:
+    c3_after_cutpurses:()=>({sp:'The lane by the Worry Gate', scene:'city_dusk', fx:()=>{ S.f.c3_gateFought=1; gain('daruknife'); }, txt:
 `It isn't long, for all that. City fights aren't; there's nowhere to run in a lane or a yard except the ends, and there are Malazans at both of them. The bigger of the two Gadrobi goes down last and hardest and gets up again on his hands and knees and crawls, with great dignity, into the dark, and nobody stops him.
 
 ${S.f.c2_wagon ? 'Pell' : 'The mule'} is standing in the middle of the carters' yard between the shafts, eating somebody's hay, with the air of an animal who did all of it on purpose. The crate is still under the oilcloth.${SQUAD().includes('kettle') ? ' Kettle checks the seals twice anyway.' : ''}
@@ -1231,7 +1232,7 @@ Ellis has stopped at the foot of the alley. She has the folded paper in her glov
       ch:[{t:'Not yet.'}]},
 
     /* ---- the dogleg: the big one from the gate, on the second night (once; see c3Up) ---- */
-    c3_cousins:()=>({sp:'The dogleg in the alley', scene:'city_street', txt:
+    c3_cousins:()=>({sp:'The dogleg in the alley', scene:'alley_night', txt:
 `Halfway up, where the alley doglegs between the blind walls and neither the crossing nor the Phoenix can see round the bend, somebody has set a lantern on the cobbles, turned low, and an upturned bucket behind it, and is sitting on the bucket.
 
 It's the big Gadrobi from the lane by the Worry Gate. He has a rag tied round his head and his cudgel across his knees, the way Whiskeyjack holds a sword, and you have the uncomfortable feeling he spent the day across the crossing, watching how. Behind him, filling the elbow of the alley: his cousins. You can tell they're his cousins. They have his face, at various stages of being punched. Two more at the top of the bend have slings hanging loose from their fists. The Gadrobi have slings because the Gadrobi have goats.
@@ -1280,7 +1281,7 @@ Kettle, going past him, very politely: "Goodnight." He doesn't answer. She is pl
 
 Then he laughs. It's a good laugh, big and real, and it's the signal: the first sling-stone comes off the top of the bend before he has finished laughing.`,
       ch:[{t:'Fight.', go:()=>startBattle('c3_toughs', {surprise:'e'})}]}),
-    c3_after_cousins:()=>({sp:'The dogleg in the alley', scene:'city_street', fx:()=>{ S.f.c3_cousins='fought'; }, txt:
+    c3_after_cousins:()=>({sp:'The dogleg in the alley', scene:'alley_night', fx:()=>{ S.f.c3_cousins='fought'; }, txt:
 `The big one goes down last and hardest, the way he did at the gate, and gets up the way he did at the gate: onto his hands and knees, then his feet, then off down the dogleg toward the Gadrobi with enormous dignity and one hand on the wall. He stops for his bucket. Nobody stops him. His cousins have already gone the way cousins go, over the walls, carrying each other.
 
 ${SQUAD().includes('brisk') ? `Brisk is looking back down the alley, past the bend, to where the brazier at the crossing throws a little orange on the walls. "He heard that," she says. "Whiskeyjack. He'll not ask."` : ''}
@@ -1566,7 +1567,7 @@ She doesn't raise her voice. She said she wouldn't, and she doesn't.
 
 ${SQUAD().includes('ellis') ? `On the stair, Ellis says one sentence, and it's the right one. "She's already sent them; she sent them when you came up the stair."` : SQUAD().includes('kettle') ? `On the stair, Kettle, very quietly, feeling in her satchel: "Sergeant, I think we should stop being on this stair."` : ''}`,
       ch:[{t:'Down the stair.', go:'c3_alley'}]}),
-    c3_alley:()=>({sp:'The alley behind the dye-shop', scene:'city_street', txt:
+    c3_alley:()=>({sp:'The alley behind the dye-shop', scene:'alley_night', txt:
 `The stair comes down into the courtyard, and the courtyard gate lets out, not onto the street, but into the alley behind it, because the street gate has been locked while you were upstairs. Nobody heard it lock.
 
 No lamps in the alley. Blue light from the street at the far end, and between you and it, forty paces of dark, and dyeing-racks, and wet cloth hanging from them like flayed things, dripping indigo.
@@ -1578,7 +1579,7 @@ ${S.f.c3_lieDeep ? `Three` : `Four`} shapes come off the racks, low, with the Da
 ${SQUAD().includes('ellis') ? `Ellis, very quietly: "The one at the end is Claw. The others are money. Kill the money if you have to. Don't let the Claw get behind anyone."` : `Tuft, very quietly: "The one at the end isn't hired. He's the one who pays."`}`,
       ch:[{t:'"Shields. Close up."', go:()=>startBattle('knives', c3KnivesOpt(false))},
           {t:'Kettle rolls a sharper down the alley.', tag:'uses 1 sharper', req:()=>S.inv.sharper>0, fx:()=>{S.inv.sharper--;}, go:()=>startBattle('knives', c3KnivesOpt(true))}]}),
-    c3_after_knives:()=>({sp:'The alley behind the dye-shop', scene:'city_street', fx:()=>{ S.f.c3_knivesFought=1; gain('lampchip'); }, txt:
+    c3_after_knives:()=>({sp:'The alley behind the dye-shop', scene:'alley_night', fx:()=>{ S.f.c3_knivesFought=1; gain('lampchip'); }, txt:
 `The hired ones don't die well or badly. The ones who can still run go out through the vat-house's street door, and one of them doesn't get up, and wet indigo runs over his hand and into the gutter, and the gutter takes it down to the street where it will go blue into somebody's well. The men in aprons have gone back to being dyers. Tomorrow one of them will be stirring a vat, and won't know you.
 
 The Claw is not among them. There's blood on the cobbles back in the alley where he was, and more on the courtyard wall, and a smear of it at the top of the wall where he went over, and nothing after. He was hurt. He did the arithmetic. He left.
@@ -1668,7 +1669,7 @@ ${SQUAD().includes('tuft') ? `Tuft is awake, sitting up, with her knees drawn in
 
 ${SQUAD().includes('kettle') ? `Kettle is asleep, actually asleep, the only one, with her satchel in her arms. Her lips are moving. She's counting.${trickBy('bluefire') === 'kettle' ? ` Cussers, sharpers, smokers, and two of something new, which she has named.` : ''}` : ''}`,
       ch:[{t:'Watch the last of the lamps go out.', go:'c3_close_shapes'}]}),
-    c3_close_shapes:()=>({sp:'The chandler\'s roof', scene:'roof', txt:
+    c3_close_shapes:()=>({sp:'The chandler\'s roof', scene:'roof_shapes', txt:
 `The last lamp on the lakefront goes out.
 
 In the grey that's left, you see them. Not at once.

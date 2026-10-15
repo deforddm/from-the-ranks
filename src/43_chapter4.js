@@ -20,6 +20,7 @@ const C4H = {
 const C4_RIDGE = ["##....##","##.,,.##","###..###","###..###","##.,,.##","###..###","###..###","##....##","#......#","#......#"];
 const CH4 = {
   title:'Assassins', number:'Four',
+  endScene:'roof', // the end page (Classic pictures) shows where the chapter ends: dawn on the chandler's roof, not the Pale
   intro:{loc:'Darujhistan', sub:'The rooftops · two nights on', cap:'Slate and chimney-pots under a blue haze, and above them a black mountain with no light in its windows.',
     paras:[
 `Two nights since the dye-shop. Two nights of hauling nothing, guarding a hole, and pretending to be a road crew for a city that has stopped pretending not to notice. The Gadrobi crossing has a new brazier and an old silence. Hedge sings in the hole. Trotts stands at the stakes. Whiskeyjack sits on his bucket, and looks at the lake, and does not say what he is waiting for, which is how you know he is waiting for something.`,
@@ -754,7 +755,7 @@ ${SQUAD().includes('ellis') ? `"They're listening," Ellis breathes, at the parap
 
 Then the lean one on the north roof stops talking in the middle of a word.`,
       ch:[{t:'Watch.', go:'c4_meet_andii'}]}),
-    c4_meet_andii:()=>({sp:'Kalam\'s roof', scene:'roof_night', txt:
+    c4_meet_andii:()=>({sp:'Kalam\'s roof', scene:'roof_andii', txt:
 `He stops because there's a hand on his shoulder, and it's not a hand anyone in the Guild has.
 
 It's long, and dark, darker than the night, and the fingers are very long, and above it, behind him, where there was nothing a heartbeat ago, is someone tall. Silver hair. No hood. A face you can't see because the candlelight doesn't reach it, and because, you think afterwards, it does not choose to be seen.
@@ -769,7 +770,7 @@ Nobody touches Kalam. They go round him the way a river goes round a post.
 
 ${SQUAD().includes('tuft') ? `Beside you, Tuft has her hands over her mouth. Not from horror. You can see her eyes over the fingers, and they're wide and wet and *shining*, and her whole body is leaning toward Kalam's roof the way a plant leans toward a window. "Kurald Galain," she whispers through her fingers. "Not leaking. Not seeping through a crack. *Walking.* That's what it's for. Oh, gods, Sergeant, it's so *cold*." And under the horror, under all of it, something you'd never heard in her voice before and would give a great deal never to hear again: longing.` : `Beside you, Ohl has his hand on his chest, over the oilcloth. He isn't writing. There's no time to write. He's just holding it, the way you'd hold a wound.`}`,
       ch:[{t:'Watch.', go:'c4_meet_run'}]}),
-    c4_meet_run:()=>({sp:'Kalam\'s roof', scene:'roof_night', txt:
+    c4_meet_run:()=>({sp:'Kalam\'s roof', scene:'roof_andii', txt:
 `Kalam runs.
 
 Not away from them. They've let him be, and he knows it, and he doesn't wait to find out for how long. He goes off the east edge of his roof in a long flat dive that ends on the ridge of the next roof down, rolls, comes up, and is gone into the dark, faster than you've ever seen a big man move, with his hood up and his knives out and nobody behind him.
@@ -790,7 +791,7 @@ He sees you. He sees the squad. His face does a thing you have seen faces do on 
 
 Two roofs behind him, coming over the ridge without hurry, tall, silver-haired: one of them. Closing.`,
       ch:[{t:'The boy.', go:'c4_vell'}]}),
-    c4_vell:()=>({sp:'The boy', scene:'roof_night', txt:
+    c4_vell:()=>({sp:'The boy', scene:'roof_andii', txt:
 `"I'm nobody," the boy says. He says it to you, because you're the one in front, and his voice cracks on it like a boy's does. "I'm nobody. I'm *nobody*. Please."
 
 He's on his knees. He doesn't know he's on his knees. The knife is still in his hand and he's holding it out to you, blade first, as if you'd asked for it. There's blood running down the back of his legs from the cut. He's young enough that it's still a surprise to him that he has so much of it.
@@ -808,7 +809,7 @@ You have perhaps a breath. ${SQUAD().includes('brisk') ? `Brisk is already on he
           {t:'Step out of the way.', fx:()=>{ S.f.c4_key='aside'; S.f.c4_seen=1; S.f.c4_tuftDark=1; }, go:'c4_aside'},
           {t:'"Tuft—"', req:()=>SQUAD().includes('tuft') && !S.f.c4_askTuft, fx:()=>{S.f.c4_askTuft=1;}, go:'c4_vell_tuft'},
           {t:'"Brisk—"', req:()=>SQUAD().includes('brisk') && !S.f.c4_askBrisk, fx:()=>{S.f.c4_askBrisk=1;}, go:'c4_vell_brisk'}]}),
-    c4_vell_tuft:()=>({sp:'Tuft', scene:'roof_night', txt:
+    c4_vell_tuft:()=>({sp:'Tuft', scene:'roof_andii', txt:
 `She doesn't turn her head. She's looking at the tall shape, and her lips are parted, and her breath is smoking in air that was not cold a moment ago.
 
 "Tiste Andii," she says. "From the Spawn. It's one of *his*." She doesn't say whose. "Sergeant, it's — I can see the warren on it. It's wearing it. Like a cloak. Like skin. There's no bottom to it. Meanas is a pond and that's the *sea*."
@@ -819,7 +820,7 @@ A breath.
       ch:[{t:'Stand between them.', fx:()=>{ S.f.c4_key='shield'; S.f.c4_vell=1; S.f.c4_guildKnows=1; }, go:'c4_shield'},
           {t:'Step out of the way.', fx:()=>{ S.f.c4_key='aside'; S.f.c4_seen=1; S.f.c4_tuftDark=1; }, go:'c4_aside'},
           {t:'"Brisk—"', req:()=>SQUAD().includes('brisk') && !S.f.c4_askBrisk, fx:()=>{S.f.c4_askBrisk=1;}, go:'c4_vell_brisk'}]}),
-    c4_vell_brisk:()=>({sp:'Brisk', scene:'roof_night', txt:
+    c4_vell_brisk:()=>({sp:'Brisk', scene:'roof_andii', txt:
 `"I don't know what it is." Flat. Her shield's up and her spear's out and her eyes haven't left it. "I know what he is. He's a boy on his knees on our roof."
 
 "Whiskeyjack said watch. Whiskeyjack didn't say what to do when the thing we're watching comes over the parapet onto us." She shifts her weight, forward foot, back foot. "That's what a sergeant's for. That's you."
@@ -830,7 +831,7 @@ A breath.
           {t:'"Tuft—"', req:()=>SQUAD().includes('tuft') && !S.f.c4_askTuft, fx:()=>{S.f.c4_askTuft=1;}, go:'c4_vell_tuft'}]}),
 
     /* ---- shield: stand between them ---- */
-    c4_shield:()=>({sp:'Two roofs over', scene:'roof_night', txt:
+    c4_shield:()=>({sp:'Two roofs over', scene:'roof_andii', txt:
 `You step forward, past the boy, between him and it, and you don't think about it, and afterwards you'll never be able to say you did. ${SQUAD().includes('brisk') ? `Brisk is on your left before your foot is down. Her shield comes up beside yours with a sound like a door closing, and the two rims overlap, the way they overlapped at Nathilog, a hand's width, no more.` : `The squad is round you before your foot is down, closing the gap without being told.`}
 
 The tall shape stops.
@@ -911,7 +912,7 @@ ${S.f.c4_rallickTail ? `On the ridge two roofs north, the lean man in the plain 
       ch:[{t:'On your feet.', go:()=>startExplore()}]}),
 
     /* ---- aside: step out of the way ---- */
-    c4_aside:()=>({sp:'Two roofs over', scene:'roof_night', txt:
+    c4_aside:()=>({sp:'Two roofs over', scene:'roof_andii', txt:
 `You step aside.
 
 It's one step. Half a step. You move your foot, and your weight goes with it, and there's nothing between the boy on his knees and the tall shape coming down onto your roof but a stretch of lead the width of a doorway.
@@ -1113,7 +1114,7 @@ There's a long dark mark down one wall where something hung and swung against th
 Halfway down, the lane narrows between two warehouse walls, and there's no blue at all.`}`,
       ch:[{t:'On.', req:()=>S.f.c4_key === 'shield', go:'c4_vell_thanks'},
           {t:'On.', req:()=>S.f.c4_key !== 'shield', go:'c4_reprisal'}]}),
-    c4_reprisal:()=>({sp:'The alley under the roofs', scene:'city_street', txt:
+    c4_reprisal:()=>({sp:'The alley under the roofs', scene:'alley_night', txt:
 `They're waiting in the narrow part, where the warehouse walls lean together overhead and the lane is two shoulders wide. You don't see them. You smell them: lamp-soot and tar and the sour sweat of people who have been crouching in the dark for a long time, very still, getting angrier.
 
 Four. Two in front, low, with the soot-black blades.${S.f.c4_ropeDown ? ` One of them has a coil of tarred line over his shoulder with a knot of black rag on the end of it. You know the line.` : ''} Two behind them, standing, not crouching: a woman with a Guild blade and a face like a shut door, and beside her an older man, grey at the temples, with a Guild blade held loose along his leg. ${S.f.c4_guildmen ? `You've seen him before. On Kalam's roof, kneeling among the dead, looking at your feet, and at the space where you stood aside.` : `You've seen him before, or the shape of him: one of the two who came back to Kalam's roof for the dead while you were still on yours.`}
@@ -1125,7 +1126,7 @@ He doesn't say anything for a long moment. When he does, it's in Malazan, carefu
 ${SQUAD().includes('brisk') ? `Brisk has her shield up. She doesn't look at you. She hasn't looked at you since the roof. "I'd have stood," she says, to the old man, not to you, and it's the only thing she says.` : ''}`,
       ch:[{t:'"Close up."', go:()=>startBattle('reprisal',{})},
           {t:'Kettle rolls a sharper down the lane.', tag:'uses 1 sharper', req:()=>S.inv.sharper>0, fx:()=>{S.inv.sharper--;}, go:()=>startBattle('reprisal',{pre:true})}]}),
-    c4_after_reprisal:()=>({sp:'The alley under the roofs', scene:'city_street', fx:()=>{S.f.c4_reprisalFought=1;}, txt:
+    c4_after_reprisal:()=>({sp:'The alley under the roofs', scene:'alley_night', fx:()=>{S.f.c4_reprisalFought=1;}, txt:
 `It's close work in a lane that narrow, and there's no room to be clever, and nobody is. Shield and knife and elbow and wall. Then the yard, where there's room, which is worse: barrels going over, a quarrel out of the dark from the gallery steps, staves rolling underfoot like logs in a river. When it's over, one of the young ones is on his back in the gutter with his eyes open and the other has gone, back up the lane, running, and the old man is sitting against the warehouse wall with a hand pressed to his ribs, breathing in short pulls, looking at you.
 
 He doesn't reach for the blade. It's on the cobbles by his foot. He could.

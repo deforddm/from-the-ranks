@@ -313,7 +313,7 @@ const AUDIO = (() => {
 
   /* ---- what to play where ---- */
   const SCENE_AMB = {camp:'camp', camp_night:'camp_night', fire:'camp_night', tent:'interior', room:'interior', inn:'inn', plain:'plain', plain_dusk:'dusk', plain_night:'night',
-    hills:'hills', hills_dusk:'dusk', quorl_hill:'hills', road_east:'hills', city_street:'city', roof:'city_night', roof_night:'city_night', fete_garden:'plain',
+    hills:'hills', hills_dusk:'dusk', quorl_hill:'hills', road_east:'hills', city_street:'city', city_dusk:'city', city_day:'city', roof:'city_night', roof_night:'city_night', roof_andii:'city_night', roof_shapes:'city_night', quorl_sky:'hills', fete_garden:'plain',
     b2_hissar_burning:'city_night', b2_coltaine_tent:'interior', b2_odhan_dusk:'dusk', b2_odhan_day:'plain', b2_well:'city_night', b2_basin:'dusk',
     b3_pale_camp:'camp', b3_pale_night:'camp_night', b3_plain:'plain', b3_plain_dusk:'dusk', b3_plain_night:'night', b3_tent:'interior', b3_capustan:'city', b3_capustan_night:'city_night', b3_catlin:'plain', b3_domin:'wind', b3_domin_night:'night', b3_rain:'storm', b3_maurik:'plain', b3_coral:'hills', b3_entrench:'hills'}; // Book Two; Book Three (60)
   const DECOR_AMB = {pale:'camp', camp_night:'camp_night', plain:'plain', plain_dusk:'dusk', plain_night:'night', hills:'hills', hills_dusk:'dusk', city_dusk:'city', city_night:'city_night', roof_night:'city_night', cellar:'tunnel', hissar:'city_night', odhan:'plain', odhan_night:'night', b3camp:'camp', b3plain:'plain', b3plain_night:'night', b3city:'city', b3domin:'wind', b3domin_night:'night'};

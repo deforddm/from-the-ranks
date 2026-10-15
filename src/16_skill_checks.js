@@ -203,13 +203,19 @@ const SCENES = {
   plain_night:{loc:'The Rhivi Plain', sub:'Night', cap:'Stars all the way down to the ground. Nothing between you and them.', amb:'explore'},
   hills:{loc:'The Gadrobi Hills', sub:'Brown hills, folded', cap:'Barrow mounds like knuckles under the grass. The city a smudge behind you. Nothing moves that you can see.', amb:'explore'},
   hills_dusk:{loc:'The Gadrobi Hills', sub:'Dusk', cap:'The hills go red and then brown and then nothing. The opened barrow breathes cold up out of the ground.', amb:'explore'},
-  hills_night:{loc:'The Gadrobi Hills', sub:'Night', cap:'No stars over the barrow. There should be. Something on the next hill is the size of a child and is not one.', amb:'dark'},
+  hills_night:{loc:'The Gadrobi Hills', sub:'Night', cap:'No stars over the long barrow, where there should be stars. Frost on the grass, the folds of the hills going black, and nothing on them that you can see.', amb:'dark'},
+  hills_puppet:{loc:'The Gadrobi Hills', sub:'Night · the next hill', cap:'No stars over the barrow. There should be. Something on the next hill is the size of a child and is not one.', amb:'dark'},
+  hills_rent:{loc:'The Gadrobi Hills', sub:'Night · the rent', warren:true, cap:'A slit of grey down the hillside from the puppet\'s feet to the bottom of the fold, curling at the edges, and everything loose on the grass going into it.', amb:'dark'},
   city_street:{loc:'Darujhistan', sub:'The city of blue fire', cap:'Gas lamps burning blue down every street, and a black mountain hanging over the lake that nobody looks at any more.', amb:'explore'},
+  city_dusk:{loc:'Darujhistan', sub:'Under the walls · dusk', cap:'The lamps coming on one at a time, a little tongue of blue in each glass, and out over the lake, black against the last of the light, a mountain hanging.', amb:'explore'},
+  city_day:{loc:'Darujhistan', sub:'The morning after the Fete', cap:'Full light, the lamps out in their glass, last night\'s smoke lying in the streets like a dog that won\'t move, and over the lake a sky with nothing in it.', amb:'explore'},
   inn:{loc:'The Phoenix Inn', sub:'The Daru District', cap:'Low beams, spilled wine, a fat man in a red waistcoat, and every thief in the city pretending not to watch the door.', amb:'explore'},
   cellar:{loc:'Under the intersection', sub:'The gas conduits', cap:'Cut stone, a lantern, a smell like a struck match, and crates with Moranth seals stacked where no crate should be.', amb:'tunnel'},
   room:{loc:'The dye-shop', sub:'An upstairs room, Daru District', cap:'Skeins of blue and madder hung to dry, one lamp, one chair, and a woman who has been expecting you.', amb:'explore'},
-  roof_night:{loc:'Darujhistan', sub:'The rooftops · night', cap:'Flat roofs and planks, chimneys, the lake mist coming up between the buildings, and a black mountain over all of it. Nothing moves. Something is moving.', amb:'explore'},
-  roof:{loc:'Darujhistan', sub:'A rooftop above the dig · dawn', cap:'Tiles wet with lake mist. The blue fire going out lamp by lamp, and a shape on the next roof that was not there a moment ago.', amb:'explore'},
+  roof_night:{loc:'Darujhistan', sub:'The rooftops · night', cap:'Flat roofs and planks, chimneys, a skylight, the lake mist coming up between the buildings, and a black mountain over all of it with no light in its windows.', amb:'explore'},
+  roof_andii:{loc:'Darujhistan', sub:'The rooftops · night · Kurald Galain', warren:true, cap:'Tall shapes with silver hair on the far ridges, and one stepping across onto the next roof without hurrying, with a dark sword held low and the cold coming off it like cold off a well.', amb:'explore'},
+  roof:{loc:'Darujhistan', sub:'A rooftop above the dig · dawn', cap:'Tiles wet with lake mist, the blue fire going out lamp by lamp, a kitchen chimney starting to smoke, and the black mountain over the lake catching none of the light.', amb:'explore'},
+  roof_shapes:{loc:'Darujhistan', sub:'A rooftop above the dig · dawn', cap:'In the grey after the last lamp goes out: figures, crouched along every ridge across the city, dozens of them, all facing the same way, like crows in a field before weather.', amb:'explore'},
   /* Chapters 6 and 7 (the chapters overwrite these with their own text at registration) */
   fete_street:{loc:'Darujhistan', sub:'The Gedderone Fete · dusk', cap:'Lanterns strung across every street, masks on every face, and a black mountain over the lake that nobody looks at.', amb:'explore'},
   fete_hall:{loc:'Lady Simtal\'s estate', sub:'The hall', cap:'Chandeliers, masks, music, and a very tall guest by a pillar who does not dance.', amb:'explore'},
@@ -223,7 +229,7 @@ const SCENES = {
   ship:{loc:'Lake Azur', sub:'A deck', cap:'Grey water, a sail, and the city getting smaller.', amb:'explore'},
 };
 /* ambience for the new scenes: the Fete has a crowd and pipes, the lake has water and gulls */
-const sceneAmb = (kind, amb) => amb === 'explore' && ['fete_street','fete_hall'].includes(kind) ? 'fete' : amb === 'explore' && kind === 'fete_garden' && !feteDawn() ? 'fete' : amb === 'explore' && ['lakefront_dawn','ship'].includes(kind) ? 'lake' : amb;
+const sceneAmb = (kind, amb) => amb === 'explore' && ['fete_street','fete_street_night','fete_hall'].includes(kind) ? 'fete' : amb === 'explore' && kind === 'fete_garden' && !feteDawn() ? 'fete' : amb === 'explore' && ['lakefront_dawn','ship'].includes(kind) ? 'lake' : amb;
 function sceneShell(kind){
   if (kind === 'explore') { if (view !== 'explore') { startExplore(); } return; }
   S.bg = kind;

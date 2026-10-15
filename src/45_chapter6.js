@@ -259,7 +259,10 @@ ${SQUAD().includes('kettle') ? `"A *lantern*," Kettle says. "In *there*." She's 
       amb:'explore'},
     garden_storm:{loc:'Lady Simtal\'s garden', sub:'Omtose Phellack', cap:'The lawn gone white in rings, the lanterns dead one after another, the fountain hanging in the air, and a figure in a tusked face standing over a hole in a flowerbed.', amb:'dark'},
     dragon_sky:{loc:'Darujhistan', sub:'The sky over the city', cap:'Two shapes over the roofs the size of ships, one black and one wrong, and a whole city in the street with its face turned up.', amb:'dark'},
-    alley_night:{loc:'Darujhistan', sub:'An alley off the Daru District', cap:'Wet stone, walls close enough to touch both at once, one blue lamp, and a doorway where somebody is standing who was not standing there a moment ago.', amb:'dark'} },
+    garden_after:{loc:'Lady Simtal\'s garden', sub:'After the Tyrant', cap:'Frost on the lawn in rings, every lantern dead in the trees, the fountain frozen on its rim, and over the crater where he went into the ground a black sapling the height of a man.', amb:'dark'},
+    fete_street_night:{loc:'Darujhistan', sub:'The Gedderone Fete · late', cap:'Masks and paper lanterns and music still going in the streets, and under the dancing, in the cracks between the cobbles, a whiteness running downhill toward the lake.', amb:'explore'},
+    alley_night:{loc:'Darujhistan', sub:'An alley · night', cap:'Wet stone, walls close enough to touch both at once, one blue lamp on a bracket, and a dark doorway halfway down with nobody in it.', amb:'dark'},
+    alley_crimson:{loc:'Darujhistan', sub:'An alley off the Daru District', cap:'Wet stone, one blue lamp, and in the doorway that was empty a moment ago a squat dark man in a faded crimson cloak, with a plain sword in each hand.', amb:'dark'} },
 
   quests:{
     fete_street:()=> S.f.c6_gateDone ? 'Through the gate' : 'The Fete. Lady Simtal\'s gate, north. You\'re on the guard list.',
@@ -1985,7 +1988,7 @@ The lanterns don't come back on. But the fountain comes down, all at once, the h
 
 Where the old priest was, on the frozen lawn, there's only a mask: grey-green, tusked, pasteboard and paint. It isn't anybody's face now.`,
       ch:[{t:'Whiskeyjack.', go:'c6_bb_leg'}]}),
-    c6_bb_leg:()=>({sp:'Whiskeyjack', scene:'garden_storm', fx:()=>{ S.f.c6_wjLeg=1; if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+    c6_bb_leg:()=>({sp:'Whiskeyjack', scene:'garden_after', fx:()=>{ S.f.c6_wjLeg=1; if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
 `He's down.
 
 You saw it happen and you didn't, the way you see everything in a fight. Somewhere in the middle of it, when the seven doors were open and Paran was gone and Hedge was running, Whiskeyjack went in at the Tyrant's flank with his halberd like a man going in at a boar, and it swept him aside without looking, the way you'd brush a wasp off a table, and he came down on the frozen lawn with one leg under him.
@@ -2040,7 +2043,7 @@ ${S.f.c6_tuft === 'kept' && SQUAD().includes('tuft') ? `Tuft comes with you. The
 
 ${SQUAD().includes('kettle') ? `Kettle, running beside you, already talking, fast and low, the way a sapper counts drops: "Forty of Hedge's. Twelve cussers. At the joints. The big joints, where the pressure's worst. If that cold gets down into the stone the clay'll go brittle, and brittle clay cracks, and if one cracks next to a—" She stops herself. "Sergeant. I carried them down there. I *stacked* them."` : ''}`,
       ch:[{t:'Run.', go:'c6_cellars_run'}]}),
-    c6_cellars_run:()=>({sp:'The streets', scene:'fete_street', txt:
+    c6_cellars_run:()=>({sp:'The streets', scene:'fete_street_night', txt:
 `Down the hill through the Estate District at a run, with the halberds thrown in a gutter somewhere behind you, and the Fete doesn't know yet.
 
 That's the terrible thing. Up on the hill, in one garden, the lawn is freezing in rings; and down here the street is full of masks and paper lanterns and music, a woman in a swan mask kissing a man in a bull mask in a doorway, children with sparklers, a drunk singing about Gedderone. They don't know. They step out of your way laughing, because you're guards and you're running and it must be a joke.
@@ -2166,7 +2169,7 @@ ${S.f.c6_tuft === 'kept' && SQUAD().includes('tuft') ? `Behind you, pleasantly, 
 
 The little iron gate. The lane behind the garden wall: dark, wet, empty. And at the far end of it, turning a corner without hurrying, a dark cloak.`,
       ch:[{t:'After her.', go:'c6_alley_streets'}]}),
-    c6_alley_streets:()=>({sp:'The streets', scene:'fete_street', txt:
+    c6_alley_streets:()=>({sp:'The streets', scene:'fete_street_night', txt:
 `She doesn't run. She walks, fast, and the Fete gets out of her way without knowing it's doing it: masks turning aside, dancers stepping back, a man with a tray of cakes swinging round her like a door on a hinge. Nobody looks at her. Nobody at a Fete looks at the one person not wearing a face.
 
 You keep her in sight for three streets. The frost comes down the hill behind you through the cobbles, and the blue lamps flicker as it passes under them, and the Fete begins, street by street, to stop laughing.
@@ -2227,7 +2230,7 @@ Nobody who falls in this alley is getting up again. Everybody in the Fourth know
           {t:'Kettle rolls a sharper at her feet. Munitions don\'t care about otataral.', tag:'uses 1 sharper', req:()=>SQUAD().includes('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.c6_alleyPre=1; S.f.c6_alleySh = S.inv.sharper; }, go:()=>startBattle('lorn_alley',{pre:true})}]}),
     c6_after_alley:()=>{ const fell = (S.f.lastFallen || []).filter(id => id !== 'sgt'); const names = fell.map(id => NAME(id)); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
       const pre = !!S.f.c6_alleyPre || preUsed('lorn_alley'), knelt = heldDowns('lorn_alley') > 0;
-      return {sp:'The alley', scene:'alley_night', fx:()=>{ if (knelt) S.f.c6_lornKnelt=1; }, txt:
+      return {sp:'The alley', scene:'alley_crimson', fx:()=>{ if (knelt) S.f.c6_lornKnelt=1; }, txt:
 `Three rounds. You'll never be able to say how.
 
 It comes in pieces, and the pieces have edges. No Meanas. No Denul. No shadow round anybody's hands. Iron, and brick, and bodies, and the Adjunct in the middle of it cutting twice for every blow that reaches her, and the blows that reach her don't seem to matter. She fights like the thing she is: the Empress's own hand, closing.

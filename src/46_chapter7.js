@@ -267,6 +267,7 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
   scenes:{
     lakefront_dawn:{loc:'Darujhistan', sub:'The Lakefront · dawn', cap:'Blue lamps going out along the quay, a coastal trader at the long pier, gulls, and over the lake a sky with nothing in it.', amb:'explore'},
     quorl_hill:{loc:'East of Darujhistan', sub:'A hill on Jammit\'s Worry · noon', cap:'Quorls on the brown grass like dragonflies the size of barges, Black Moranth standing among them, and the city small and blue behind.', amb:'explore'},
+    quorl_sky:{loc:'Over Jammit\'s Worry', sub:'North, on a quorl', cap:'The hill dropping away, the city tilting small and blue on the rim of its lake, the Host\'s quorls strung out north like geese, and far off in the brown grass one figure walking alone.', amb:'explore'},
     road_east:{loc:'Genabackis', sub:'North · the Host outside Pale', cap:'A camp so far off it could be an anthill: wagons, banners, cook-smoke, and an outlawed army outside Pale, waiting on a conversation.', amb:'explore'},
     ship:{loc:'The lake, and after it the sea', sub:'A coastal trader, westbound', cap:'A deck, a rail, a grey sail filling, and the city of blue fire going down behind the stern like a lamp turned low.', amb:'explore'} },
 
@@ -1408,7 +1409,7 @@ Then the gate you came in by, and the road. The hill is an hour on. The quorls l
 
     /* ---- the Worry Gate (v3.12): Pennick writes the Fourth out, and the lane that tried the wagon on the way in tries the satchel ---- */
     c7_worry:()=>{ const f = S.f, d = C7H.dead(), b = C7H.has('brisk'), k = C7H.has('kettle');
-      if (f.c7_worryDone) return {sp:'The Worry Gate', scene:'city_street', txt:
+      if (f.c7_worryDone) return {sp:'The Worry Gate', scene:'city_day', txt:
 `Pennick doesn't look up. "You're written out, Sergeant," he tells the ledger. "Go and be written somewhere else."`,
         ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]};
       const name = f.c3_trueName ? `"Sergeant {sgt}." He finds the page without looking for it; he has had it open since dawn, you think. "Unta, from the vowels. In, by this gate. Out, this morning." He writes it.`
@@ -1416,7 +1417,7 @@ Then the gate you came in by, and the road. The hill is an hour on. The quorls l
         : f.c3_briskVoice ? (b ? `He looks at Brisk, and something in him that has been thirty years at this desk lights up very slightly, the way a lamp does. "Paviors," he says. "Section four. Outbound, exempt." He writes it. He underlines it.` : `"Paviors," he says. "Section four." He looks along the Fourth for the one who cited it, and doesn't find her, and doesn't ask. He writes it anyway, *Paviors, outbound, exempt*, and underlines it.`)
         : f.c3_paid ? `"Road crew, one wagon, paid, no name," he says, finding the line. "Outbound, no name." He writes it. "The Council will be bereft again."`
         : `"No name in, no name out." He writes it. "The Council will bear up."`;
-      return {sp:'The Worry Gate', scene:'city_street', txt:
+      return {sp:'The Worry Gate', scene:'city_day', txt:
 `Up through the city in the full light, under the Estate hill, where last night's smoke is still lying in the streets like a dog that won't move, past doorways with shutters propped in them and people on the steps with nothing to say, to the Worry Gate.
 
 The arch is twenty paces of dark with the morning at the far end of it. Carts are going out through it one behind another, slow, a man at each mule's head and a sheet over what's in the back: out to the pits past the tanneries, where the city puts what it can't keep. At the desk under the arch, with his lamp lit against the dark and ink to the second knuckle, Pennick is writing them out. One line each. He doesn't look up for the carts.
@@ -1443,7 +1444,7 @@ ${k ? `"No," says Kettle, in the voice you'd use to tell somebody the time. Her 
            near:{t:()=>`Yes, but it was close, and the crossbow on the water-butt never stops watching; ${NAME(ROLL().who || 'sgt')} feels it between the shoulders all the way to the tanneries: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
            go:'c7_worry_faced', fail:'c7_worry_fail'},
           {t:'Count out twenty silver.', tag:'20 silver', req:()=>S.silver >= 20, fx:()=>{ S.silver -= 20; S.f.c7_worryPaid=1; S.f.c7_worryDone=1; AUDIO.play('coin'); }, go:'c7_worry_paid'}]}; },
-    c7_worry_faced:()=>{ const w = ROLL().who || 'sgt', near = nearMiss(); return {sp:'The Worry Gate', scene:'city_street', fx:()=>{ S.f.c7_worryFaced=1; S.f.c7_worryDone=1; }, txt:
+    c7_worry_faced:()=>{ const w = ROLL().who || 'sgt', near = nearMiss(); return {sp:'The Worry Gate', scene:'city_day', fx:()=>{ S.f.c7_worryFaced=1; S.f.c7_worryDone=1; }, txt:
 `${by({
 sgt:`You don't say anything. You walk up the arch toward him at a marching pace with the Fourth at your back, and you don't stop until you're close enough to smell last night's wine on him. Then you stop, and you let him count you.`,
 brisk:`Brisk walks up the arch until she's standing much too close to him, shield on her arm, and looks at him over the rim of it for a long moment. "We were up all night," she says, in the regiment voice, the one that comes out of the chest like a drum. "Things came up out of the ground. We're still here." She lets him do the sum. "Think what that says about the things."`,
@@ -1461,14 +1462,14 @@ ${near ? `They let you by. The crossbow on the water-butt watches you all the wa
 
 Behind you at the desk Pennick writes something, and blots it. "He says that to everyone," he remarks to the ledger, and turns the page.`,
       ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]}; },
-    c7_worry_fail:()=>({sp:'The Worry Gate', scene:'city_street', txt:
+    c7_worry_fail:()=>({sp:'The Worry Gate', scene:'city_day', txt:
 `${by({sgt:`He counts you. He takes his time about it, and enjoys it.`, brisk:`He hears her out. He even nods, the way a man nods at a good point well made.`, kettle:`He looks at the thing in her hand, and then at the hand, which is shaking, and smiles.`, ohl:`He looks at the old man's open bag, and the old man's hands, and laughs, not unkindly.`, _:`He hears {who} out, and nods, and smiles.`})}
 
 "You're tired, Malazan," he says. "I can see it from here. That's rather the point of this morning."
 
 He doesn't give a signal. He doesn't need one. The lane comes out of the lane, and the crossbow on the water-butt has stopped looking at the sky.`,
       ch:[{t:'"Shields."', go:()=>startBattle('c7_worrygate', {surprise:'e'})}]}),
-    c7_worry_paid:()=>({sp:'The Worry Gate', scene:'city_street', txt:
+    c7_worry_paid:()=>({sp:'The Worry Gate', scene:'city_day', txt:
 `You count twenty silver out of the purse in the dark of the arch, where everybody can hear it, and knot it in a rag, and throw it underarm up the arch. He catches it without looking, the way a man catches a thing he has been catching all his life, and weighs it in his palm, and makes a face that says it's light, and that light will do.
 
 "Malazan arithmetic," he says, and steps back into the lane, and the lane takes him. On the Worrytown side the crossbow goes back to looking at the sky.
@@ -1477,7 +1478,7 @@ ${C7H.has('brisk') ? `Brisk watches the rag go and says nothing at all, which fr
 
 Behind you Pennick writes something, and blots it. "Toll," he says to the ledger. "Unofficial. Outbound." He turns the page. "I keep a column."`,
       ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]}),
-    c7_after_worry:()=>({sp:'The tanners\' yard', scene:'city_street', fx:()=>{ S.f.c7_worryFought=1; S.f.c7_worryDone=1; }, txt:
+    c7_after_worry:()=>({sp:'The tanners\' yard', scene:'city_day', fx:()=>{ S.f.c7_worryFought=1; S.f.c7_worryDone=1; }, txt:
 `It takes longer than the lane did on the way in. They've had weeks to think about it, and a tanners' yard has more corners than a lane. But they're Worrytown, and you're the Fourth, and the Fourth has had a year. In the end the big one is sitting in a tanning pit up to his chest in something nobody should be up to the chest in, with his cart-axle floating beside him, and his friends are in Worrytown's many doorways, and the doorways are shut.
 
 "Satchel," he says from the pit, with great dignity, the way a man states a position he's no longer in a position to hold.
@@ -2170,7 +2171,7 @@ ${held ? `Then she looks at you, and says one sentence, the first she has said t
 
 "It's on the record," you tell him. He nods, and grips your forearm the Guild way, wrist to wrist, hard, like a line taking weight. Then he goes.`}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
-    c7_close_end:()=>{ const k = S.f.c7_key || 'outlaw', n = C7H.countFollow(k); return {sp:'The quorl hill · noon', scene:k === 'outlaw' ? 'road_east' : 'quorl_hill', txt:
+    c7_close_end:()=>{ const k = S.f.c7_key || 'outlaw', n = C7H.countFollow(k); return {sp:'The quorl hill · noon', scene:k === 'outlaw' ? 'quorl_sky' : 'quorl_hill', txt:
 `${k === 'outlaw' ? `The quorl lifts under you with a lurch like a boat on a swell. The grass goes flat below in a roaring ring. The hill drops away, and the road, and the Rhivi on it, and the city tilts on the rim of its lake, blue and small; and then there's only the sky, and the sky has nothing in it but the Host's quorls strung out north like a line of geese, and the Fourth among them.` : k === 'disband' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. The hill empties the way a room empties at the end of a long night: not all at once, and then all at once.` : k === 'empire' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. It's very quiet on the hill without them. The road goes back past the city and away north-west, wide of Pale, toward Genabaris and the sea. It's a long road, and by the end of it you'll know every rut.` : `The last quorl goes up. The grass lies down in its ring, and slowly stands again. Below, the city: blue, loud even from here, with a house in a garden that wasn't there yesterday and a gate that needs somebody on it.`}
 
 Far off, south of the road, across the brown grass, a figure is walking. Alone. Not hurrying. The colour of the earth it walks on, with something long across its back that catches no light. It doesn't look round.

@@ -26,6 +26,7 @@ Brisk watches it go. "It dies," she says, low, to nobody. "Whatever it is. On th
 };
 const CH5 = {
   title:'The Gadrobi Hills', number:'Five',
+  endScene:'hills', // the end page (Classic pictures) shows where the chapter ends: dawn on the long ridge, not the Pale
   intro:{loc:'The Gadrobi Hills', sub:'East of Darujhistan · the third day', cap:'Brown hills folded on each other like blankets on a sickbed, and barrow-stones on every crest, and no smoke anywhere.',
     paras:[
 `Out through the Worry Gate before the lamps go off, through Worrytown, past the tanneries and the goat-pens and the last shrine to a god whose name has worn off the lintel, and then the road east stops pretending. Ruts. A cairn. A dead fire nobody claims. The city is behind you, blue and loud, and in front of you there is nothing, and the nothing goes up and down.`,
@@ -1035,7 +1036,7 @@ ${SQUAD().includes('tuft') ? `Tuft, twenty paces off, has gone grey again. She d
       ch:[{t:'Down to the fire.', go:'c5_hairlock'}]}),
 
     /* ---- night: Hairlock ---- */
-    c5_hairlock:()=>({sp:'The fold below the far hill', scene:'hills_night', fx:()=>{ rest(SQUAD().includes('ohl') ? 'An hour by Toc\'s fire. Nobody sleeps. Ohl goes round with the tea and the needle, and what the barrows did closes, mostly.' : 'An hour by Toc\'s fire. Nobody sleeps. The squad washes the barrows off at the spring and binds what needs binding, and it closes, mostly.'); }, txt:
+    c5_hairlock:()=>({sp:'The fold below the far hill', scene:'hills_puppet', fx:()=>{ rest(SQUAD().includes('ohl') ? 'An hour by Toc\'s fire. Nobody sleeps. Ohl goes round with the tea and the needle, and what the barrows did closes, mostly.' : 'An hour by Toc\'s fire. Nobody sleeps. The squad washes the barrows off at the spring and binds what needs binding, and it closes, mostly.'); }, txt:
 `The fire is small and smokeless and set in the lee of a rock, the way scouts set fires. Paran sits with his back to the rock and his sword across his knees and doesn't sleep. Toc sits across from him, restringing a bow that doesn't need it. The Fourth sits where it can: ${SQUAD().includes('brisk') ? `Brisk with her shield on her knees, facing out; ` : ''}${SQUAD().includes('kettle') ? `Kettle with the satchel in her arms; ` : ''}${SQUAD().includes('tuft') ? `Tuft as close to the fire as she can get without being in it${C5H.red() ? `, and as far round it from ${C5H.red() === 'sgt' ? 'you' : NAME(C5H.red())} as she can get without leaving` : ''}; ` : ''}${SQUAD().includes('ohl') ? `Ohl with a cup of tea he isn't drinking; ` : ''}${SQUAD().includes('ellis') ? `Ellis next to Toc, close enough that their shoulders touch, neither of them mentioning it.` : `nobody talking.`}
 
 For an hour nothing happens, and an hour is a long time. ${SQUAD().includes('ohl') ? `Ohl goes round the fire with the tea and the needle, and nobody argues with either.` : `The squad washes the barrows off its hands at the spring and binds what needs binding.`}
@@ -1054,7 +1055,7 @@ ${SQUAD().includes('tuft') ? `Tuft has stopped breathing. "That's a man," she wh
 
 The painted head turns. Wood creaks. The black eyes find the fire, and the man with the sword across his knees, and stop.`,
       ch:[{t:'Keep still.', go:'c5_hairlock_voice'}]}),
-    c5_hairlock_voice:()=>({sp:'The puppet', scene:'hills_night', txt:
+    c5_hairlock_voice:()=>({sp:'The puppet', scene:'hills_puppet', txt:
 `"*Captain.*"
 
 The voice is a man's. That's the worst of it. A grown man's voice, a little hoarse, the voice of someone who has been out in the cold too long and is glad to see a fire; and it comes out of the painted mouth without the mouth moving at all.
@@ -1071,7 +1072,7 @@ ${SQUAD().includes('ohl') ? `Ohl, very quietly, in Ehrlii: not an argument with 
 
 It lifts one wooden hand, on its string, and the air over the fold *tears*.`,
       ch:[{t:'The tear.', go:'c5_rent_open'}]}),
-    c5_rent_open:()=>({sp:'The rent', scene:'hills_night', txt:
+    c5_rent_open:()=>({sp:'The rent', scene:'hills_rent', txt:
 `There's no sound. That comes after. First there's the tear itself: a line of grey light down the hillside above the fire, from the puppet's feet to the bottom of the fold, as if someone had taken a knife to the dark and slit it like cloth. And the edges of the slit curl back. And behind them is *grey*. Not light. Not dark. Grey, going away forever, full of a wind that smells like a struck match and a slaughterhouse and a sea.
 
 ${SQUAD().includes('tuft') ? `Tuft makes a sound you've never heard her make. "Chaos," she gets out. "That's not a warren, that's the space *between*, that's — Sergeant, it's *pulling*—"` : ''}
@@ -1094,7 +1095,7 @@ On the ridge above the fold, somebody stands up out of the heather and runs for 
 
 The rent is still open. A tear of grey light on the hillside, curling at the edges, and pulling, and pulling.`,
       ch:[{t:'Hold on.', go:'c5_rent'}]}),
-    c5_rent:()=>({sp:'The rent', scene:'hills_night', txt: SQUAD().includes('ellis') ?
+    c5_rent:()=>({sp:'The rent', scene:'hills_rent', txt: SQUAD().includes('ellis') ?
 `Ellis is already moving.
 
 She's past the fire before you've understood that she's standing. She's got her bow in one hand and her gloved hand out in front of her, reaching, the way you'd reach for someone falling off a roof. The grey pulls at her cloak. She doesn't lean away from it. She leans *in*.
@@ -1130,7 +1131,7 @@ ${SQUAD().includes('brisk') ? `Brisk is standing with her shield, between Tuft a
           {t:'"No. Stay on this side, Tuft."', req:()=>!SQUAD().includes('ellis'), fx:()=>{ S.f.c5_key='hold'; }, go:'c5_hold_tuft'}]}),
 
     /* ---- through: Ellis ---- */
-    c5_through_ellis:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ S.f.c5_ellisThrough=1; unrecruit('ellis'); if (SQUAD().includes('brisk')) loy('brisk',-1); if (SQUAD().includes('tuft')) loy('tuft',1); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('kettle')) loy('kettle',-1); }, txt:
+    c5_through_ellis:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ S.f.c5_ellisThrough=1; unrecruit('ellis'); if (SQUAD().includes('brisk')) loy('brisk',-1); if (SQUAD().includes('tuft')) loy('tuft',1); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('kettle')) loy('kettle',-1); }, txt:
 `"Let her go," you say, and you don't know you've said it until it's out.
 
 She hears. She doesn't look back. She lifts the gloved hand, once, over her shoulder, not quite a salute, the way you'd lift a hand to someone on a dock as the ship goes out.
@@ -1153,7 +1154,7 @@ On the crest, the puppet laughs, and lifts both wooden hands on their strings, a
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
 
     /* ---- hold: Ellis ---- */
-    c5_hold_brisk:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ S.f.c5_ellisHeld=1; S.f.c5_briskHeld=1; loy('ellis',-3); }, txt:
+    c5_hold_brisk:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ S.f.c5_ellisHeld=1; S.f.c5_briskHeld=1; loy('ellis',-3); }, txt:
 `You don't get the word out. You don't need to.
 
 Brisk hits her from the side, shield-first, the way she'd hit a man coming over a wall, and they go down together in the flattened grass two paces from the grey. Ellis fights. She fights the way Claw are taught to fight, with everything, elbows and knees and the heel of her hand, and none of it matters, because Brisk has her by the belt and the collar and has put her whole weight down on her like a sack of grain on a mouse, and is not moving, and is not going to move.
@@ -1172,7 +1173,7 @@ Brisk doesn't let go. She doesn't look at you. She didn't ask. She'll never ask.
 
 On the crest the puppet laughs, and lifts both wooden hands on their strings, and the hillside *tears* again: lower, wider, a long grey mouth opening across the slope above the fire. And things are coming out of it.`,
       ch:[{t:'"Up! Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
-    c5_hold_ok:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ S.f.c5_ellisHeld=1; loy('ellis',-3); }, txt:
+    c5_hold_ok:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ S.f.c5_ellisHeld=1; loy('ellis',-3); }, txt:
 `You get to her at two paces from the grey. You don't tackle her. There isn't room. You just put your arms round her from behind, both arms, round her arms, the way you'd hold someone in a fire who wanted to go back in, and you set your heels, and the rent pulls at both of you, and you hold.
 
 She's fast and she's Claw and she knows exactly where to put an elbow, and she puts it there, twice. You hold. She stamps for your instep. You hold. She says something in a language you don't know, and then in one you do, and it's the worst thing anyone has ever said to you, and you hold.
@@ -1191,7 +1192,7 @@ She doesn't say anything. She's not going to. Not tonight.
 
 On the crest the puppet laughs, and lifts both wooden hands on their strings, and the hillside *tears* again: lower, wider, a long grey mouth across the slope. And things are coming out of it.`,
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
-    c5_hold_fail:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ S.f.c5_ellisHeld=1; S.f.c5_holdMissed=1; loy('ellis',-3); }, txt:
+    c5_hold_fail:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ S.f.c5_ellisHeld=1; S.f.c5_holdMissed=1; loy('ellis',-3); }, txt:
 `You get a hand on her cloak at three paces from the grey, and she's Claw, and she's out of the cloak before you've closed your fist, and it's in your hand, empty, and she's still going.
 
 Two paces. One.
@@ -1210,7 +1211,7 @@ On the crest the puppet laughs, and lifts both wooden hands on their strings, an
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
 
     /* ---- through: Tuft, to the threshold ---- */
-    c5_through_tuft:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ if (SQUAD().includes('tuft')) loy('tuft',2); if (SQUAD().includes('ohl')) loy('ohl',-1); if (SQUAD().includes('brisk')) loy('brisk',-1); }, txt:
+    c5_through_tuft:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ if (SQUAD().includes('tuft')) loy('tuft',2); if (SQUAD().includes('ohl')) loy('ohl',-1); if (SQUAD().includes('brisk')) loy('brisk',-1); }, txt:
 `"Go," you say. "The threshold. No further."
 
 She doesn't thank you. She doesn't look back. She walks to the rent the way she walked onto the roof in Darujhistan${S.f.c2_key === 'light' ? `, the way she walked onto the glass on the plain` : ''}, as if the ground went on further than it looked; and at the edge of the grey she stops, with her toes on the line where the hillside ends, and the wind of it pulling her hair out straight behind her like a flag.
@@ -1232,7 +1233,7 @@ Then the first of them reaches the squad, and she hears it, and she does what th
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
 
     /* ---- hold: Tuft ---- */
-    c5_hold_tuft:()=>({sp:'The rent', scene:'hills_night', fx:()=>{ S.f.c5_tuftHeld=1; if (SQUAD().includes('tuft')) loy('tuft',-2); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+    c5_hold_tuft:()=>({sp:'The rent', scene:'hills_rent', fx:()=>{ S.f.c5_tuftHeld=1; if (SQUAD().includes('tuft')) loy('tuft',-2); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
 `"No," you say. "Stay on this side, Tuft."
 
 She stops. She's two paces from the grey, with the wind of it pulling her hair out straight, and she stops because you said so, the way she's stopped every time, on the Pale, on the plain, on the roof. You watch her stop. You watch what it costs her.
@@ -1251,7 +1252,7 @@ On the crest the puppet laughs, and lifts both wooden hands on their strings, an
       ch:[{t:'"Hold the hillside!"', go:()=>startBattle('the_rent',{})}]}),
 
     /* ---- after the rent: the Hounds, and Hairlock's end ---- */
-    c5_after_rent:()=>({sp:'The hillside', scene:'hills_night', fx:()=>{ S.f.c5_rentFought=1; }, txt:
+    c5_after_rent:()=>({sp:'The hillside', scene:'hills_rent', fx:()=>{ S.f.c5_rentFought=1; }, txt:
 `You hold. You don't know how. The things out of the grey don't die the way things die; they come apart, and the pieces go on for a while on their own. Shadow-shapes with too many joints. And the other things, the ones with the legs, that came out folding and unfolding like hands opening and closing, and went for ${SQUAD().includes('brisk') ? `Brisk's shield` : `the fire`} as if they hated light.
 
 ${C5H.tuftOut() ? `Tuft is walking back up the slope before the last of it has stopped moving. You said *the threshold*. She heard *threshold*; she didn't hear *once*. She stands at the lip of the grey again with her toes on the line, and puts her arm back into it, to the elbow, and nobody calls her back. Nobody has the breath.
@@ -1272,7 +1273,7 @@ ${C5H.rentDowns()}
 
 ${SQUAD().includes('tuft') ? `Tuft, somewhere behind you, in a voice like someone praying: "*Shadow.*"` : ''}`,
       ch:[{t:'Watch.', go:'c5_hairlock_end'}]}),
-    c5_hairlock_end:()=>({sp:'The next hill', scene:'hills_night', txt:
+    c5_hairlock_end:()=>({sp:'The next hill', scene:'hills_puppet', txt:
 `The puppet gets up.
 
 It gets up the way a man gets up who has forgotten he has no legs: all at once, flailing, the strings jerking it upright a fraction too late. It's saying something. It's saying a great many things, very fast, in the grown man's voice, and none of them are words any more.

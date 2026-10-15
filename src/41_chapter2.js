@@ -34,6 +34,7 @@ const c2OutCh = () => [
   {t:'"Shields."', go:'c2_out_fight'}];
 const CH2 = {
   title:'The Rhivi Plain', number:'Two',
+  endScene:'plain', // the end page (Classic pictures) shows where the chapter ends: the last morning, at the edge of the Gadrobi Hills, not the Pale
   intro:{loc:'The Rhivi Plain', sub:'Genabackis · three days south-east of Pale', cap:'Grass to every horizon, and one wagon on it, and the sky empty of quorls.',
     paras:[
 `The Black Moranth went south the morning the wagon left, before it had rolled a mile, eight Bridgeburners riding things that should not fly, bound for the north shore of Lake Azur and a boat across it by night. Hedge was still complaining about the boat when the quorl lifted him. The sky over the Pale was full of wings for the time it takes to say a name, and then it was not. Whiskeyjack did not wave. Nobody expected him to. Kettle watched until there was nothing to watch, and then she counted the munitions.`,
@@ -743,7 +744,7 @@ Brisk watches them until there's nothing to watch. "Ten silver, to deserters, fo
 
 Ohl, from the driver's board: "Cheap. I have priced the other thing, Sergeant. Many times."` : ''}`,
       ch:[{t:'Up the ridge. Make camp.', go:()=>{ startExplore('ridge'); talk('c2_ridge_arrive'); }}]}),
-    c2_after_deserters:()=>({sp:'The crest', scene:'plain_night', fx:()=>{S.f.c2_desFought=1;}, txt:
+    c2_after_deserters:()=>({sp:'The crest', scene:'plain_dusk', fx:()=>{S.f.c2_desFought=1;}, txt:
 `It's done before the last of the light is. Eight men who walked out of the Pale and four days south, and stopped here, on a hill, over a wagon.${SQUAD().includes('brisk') ? `
 
 Brisk goes from one to the next with her shield still up and turns their collars over. Where the badges were there are only holes, cut and then frayed, and you can't tell a regiment from a hole. She does it anyway. She does all eight.${S.f.c2_badge ? ` The Ninth's badge is inside her gorget, with the letter. She doesn't take it out.` : ''}` : ''}${c2Moreau() ? `

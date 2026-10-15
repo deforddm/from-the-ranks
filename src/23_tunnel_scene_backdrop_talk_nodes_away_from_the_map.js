@@ -124,12 +124,23 @@ function paintPlain(x, W, H, hills, tod, hz){
     [[wx + 10],[wx + 48]].forEach(([cx]) => { ell(x, cx, wy + 26, 7, 7, '#15100a'); x.strokeStyle = '#3a2c1c'; x.beginPath(); x.arc(cx, wy + 26, 5, 0, 7); x.stroke(); }); x.fillStyle = '#1a140e'; x.fillRect(wx + 58, wy + 18, 18, 2); }
 }
 function drawPlain(cv, kind, t){
-  const {ctx, W, H} = sceneFit(cv), hills = kind.startsWith('hills'), tod = kind.endsWith('dusk') ? 'dusk' : kind.endsWith('night') ? 'night' : 'day', hz = H*(hills ? .44 : .58), mo = REDUCE() ? 0 : 1;
-  ctx.drawImage(sceneLayer('plain:' + kind, W, H, (x, W, H) => paintPlain(x, W, H, hills, tod, hz)), 0, 0, W, H);
+  // hills_puppet: the night hills with the puppet on the next crest; hills_rent: and the rent torn down the hillside under it (Chapter 5)
+  const {ctx, W, H} = sceneFit(cv), hills = kind.startsWith('hills'), puppet = kind === 'hills_puppet' || kind === 'hills_rent', tod = kind.endsWith('dusk') ? 'dusk' : kind.endsWith('night') || puppet ? 'night' : 'day', hz = H*(hills ? .44 : .58), mo = REDUCE() ? 0 : 1;
+  ctx.drawImage(sceneLayer('plain:' + (hills ? 'hills_' : 'plain_') + tod, W, H, (x, W, H) => paintPlain(x, W, H, hills, tod, hz)), 0, 0, W, H);
   if (!hills && tod === 'night' && S && S.f && S.f.c2_light && !S.f.c2_lightOut && !S.f.c2_lightDone) { const lx = W*.1, f = .85 + (Math.sin(t/140)*.08 + Math.sin(t/53)*.05)*mo; glow(ctx, lx, hz, W*.5, '#ffb35a', .35*f); const g = ctx.createLinearGradient(lx - 12, 0, lx + 12, 0); g.addColorStop(0,'rgba(255,200,120,0)'); g.addColorStop(.5,`rgba(255,230,180,${.55*f})`); g.addColorStop(1,'rgba(255,200,120,0)'); ctx.fillStyle = g; ctx.fillRect(lx - 12, hz*.1, 24, hz*.9); } // the light in the west
   if (hills && tod === 'dusk') for (let i=0;i<4;i++){ const k = ((t/4200*mo + i/4) % 1); ell(ctx, W*.64 + 4 + k*18, hz + H*.08 + 8 - k*22, 5 + k*16, 2 + k*5, `rgba(200,220,235,${.16*(1 - k)})`); } // cold breathing out of the opened barrow
-  if (hills && tod === 'night') { const hx = W*.72, hy = hz - 2; drawFigure(ctx, 'hairlock', hx, hy, 1.2, t, {still:true, alpha:.55}); // on the next hill, the size of a child and not one
-    if (S && S.f && S.f.c5_night && !S.f.c5_rentFought) { glow(ctx, hx - 20, hy - 14, 70, '#9a86e0', .28 + Math.sin(t/200)*.08*mo); ctx.strokeStyle = `rgba(210,205,230,${.7 + Math.sin(t/90)*.2*mo})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - 26, hy - 44); ctx.quadraticCurveTo(hx - 12, hy - 18, hx - 24, hy + 6); ctx.stroke(); } } // the rent
+  if (puppet) { const hx = W*.72, hy = hz - 2;
+    if (kind === 'hills_rent') { // the rent: a slit of grey down the hillside from the puppet's feet to the bottom of the fold, pulling
+      const top = [hx - 4, hy + 8], bot = [W*.5, H*.9], mx = (top[0] + bot[0])/2, my = (top[1] + bot[1])/2, wd = 18 + Math.sin(t/300)*2.5*mo, dx = bot[0] - top[0], dy = bot[1] - top[1], dl = Math.hypot(dx, dy), ux = -dy/dl, uy = dx/dl;
+      const lens = w => { ctx.beginPath(); ctx.moveTo(top[0], top[1]); ctx.quadraticCurveTo(mx + ux*w, my + uy*w, bot[0], bot[1]); ctx.quadraticCurveTo(mx - ux*w, my - uy*w, top[0], top[1]); ctx.closePath(); };
+      glow(ctx, mx, my, W*.32, '#b4b4c4', .18 + Math.sin(t/200)*.05*mo); glow(ctx, mx, my, 70, '#9a86e0', .16);
+      lens(wd); ctx.fillStyle = vgrad(ctx, top[1], bot[1], [[0,'rgba(150,150,162,.92)'],[.5,'rgba(104,104,118,.96)'],[1,'rgba(150,148,160,.92)']]); ctx.fill();
+      lens(wd*.5); ctx.fillStyle = 'rgba(70,70,82,.7)'; ctx.fill(); lens(wd*.2); ctx.fillStyle = 'rgba(40,40,50,.6)'; ctx.fill(); // grey, going away forever
+      ctx.save(); lens(wd); ctx.clip(); ctx.lineWidth = 1; for (let i=0;i<12;i++){ const k = ((t/1800*mo + i/12) % 1), u = .1 + hash(i,3)*.75, o = (hash(i,4) - .5)*wd*1.4*Math.sin(u*Math.PI), x0 = lerp(top[0], bot[0], u) + ux*o, y0 = lerp(top[1], bot[1], u) + uy*o, len = .05 + k*.06;
+        ctx.strokeStyle = `rgba(232,232,242,${.35*Math.sin(k*Math.PI)})`; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + dx*len, y0 + dy*len); ctx.stroke(); } ctx.restore(); // the wind in it
+      ctx.strokeStyle = `rgba(236,234,246,${.75 + Math.sin(t/90)*.15*mo})`; ctx.lineWidth = 1.6; lens(wd); ctx.stroke(); ctx.strokeStyle = 'rgba(236,234,246,.25)'; ctx.lineWidth = 4; lens(wd + 2); ctx.stroke(); // the edges, curled back and bright
+      for (let i=0;i<16;i++){ const k = ((t/(2400 + i*110)*mo + hash(i,7)) % 1), sx = hash(i,8)*W, sy = hz + H*.06 + hash(i,9)*(H*.94 - hz), e = k*k; ctx.fillStyle = `rgba(200,198,186,${.55*(1 - k)})`; ctx.fillRect(lerp(sx, mx + (hash(i,10) - .5)*16, e), lerp(sy, my + (hash(i,11) - .5)*50, e), 1.8, 1.3); } } // stones and grass, going in
+    drawFigure(ctx, 'hairlock', hx, hy, 1.2, t, {still:true, alpha:.7}); glow(ctx, hx, hy - 10, 26, '#e8d8c8', .06); } // on the next hill, the size of a child and not one
   ctx.lineWidth = 1.2; for (let i=0;i<46;i++){ const px = hash(i,61)*W, yy = H*(.9 + hash(i,62)*.12), h = 10 + hash(i,63)*14, sw = Math.sin(t/900 + i*.7)*3*mo; ctx.strokeStyle = tod === 'night' ? 'rgba(40,56,34,.8)' : tod === 'dusk' ? 'rgba(90,64,34,.8)' : 'rgba(84,100,52,.85)'; ctx.beginPath(); ctx.moveTo(px, yy); ctx.quadraticCurveTo(px + sw*.3, yy - h*.6, px + sw, yy - h); ctx.stroke(); } // the near grass, moving
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(36, W*.6/sq.length), H*.93 + (i%2)*3, 2.1, t, {phase:i, dir:1}));
   vign(ctx, W, H, tod === 'night' ? .82 : tod === 'dusk' ? .62 : .5);
@@ -178,35 +189,57 @@ function drawCity(cv, kind, t){
     drawFigure(ctx, 'claw', W*.7, H*.9, 2.5, t, {still:true, dir:-1});
     marchOrder(squad.slice(0,3)).forEach((id, i) => drawFigure(ctx, id, W*.18 + i*36, H*.97, 2.1, t, {phase:i, dir:1}));
   } else {
-    // the street or the roof: night sky, Moon's Spawn over the lake, roofs, blue lamps
-    const dawn = kind === 'roof', roofN = kind === 'roof_night';
-    const sky = ctx.createLinearGradient(0,0,0,H*.6); if (dawn) { sky.addColorStop(0,'#1a1a2a'); sky.addColorStop(.7,'#4a3a4a'); sky.addColorStop(1,'#a06a50'); } else { sky.addColorStop(0,'#04040a'); sky.addColorStop(1,'#10121e'); }
+    // the street or the roof: night sky (or dusk, or the morning after the Fete with nothing in it), Moon's Spawn over the lake, roofs, blue lamps
+    // roof / roof_shapes: dawn; roof_night / roof_andii: night; city_dusk: the lamps coming on; city_day: full light, last night's smoke, the Spawn gone; else night
+    const dawn = kind === 'roof' || kind === 'roof_shapes', roofN = kind === 'roof_night' || kind === 'roof_andii', dusk = kind === 'city_dusk', day = kind === 'city_day', mo = REDUCE() ? 0 : 1;
+    const sky = ctx.createLinearGradient(0,0,0,H*.6); if (dawn) { sky.addColorStop(0,'#1a1a2a'); sky.addColorStop(.7,'#4a3a4a'); sky.addColorStop(1,'#a06a50'); }
+    else if (dusk) { sky.addColorStop(0,'#160e20'); sky.addColorStop(.28,'#40202e'); sky.addColorStop(.52,'#9a4a32'); sky.addColorStop(.8,'#d0803e'); sky.addColorStop(1,'#e0a050'); }
+    else if (day) { sky.addColorStop(0,'#6a7a92'); sky.addColorStop(.6,'#aeacaa'); sky.addColorStop(1,'#d6c6a6'); }
+    else { sky.addColorStop(0,'#04040a'); sky.addColorStop(1,'#10121e'); }
     ctx.fillStyle = sky; ctx.fillRect(0,0,W,H*.6);
-    if (!dawn) { ctx.fillStyle = 'rgba(220,220,240,.6)'; for (let i=0;i<50;i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*.5, 1, 1); }
-    // Moon's Spawn, hanging
-    const mx = W*.74, my = H*.2 + Math.sin(t/4000)*2; glow(ctx, mx, my, 70, dawn ? '#6a4a5a' : '#2a2a3a', .5);
-    poly(ctx, [[mx-38,my+14],[mx-30,my-22],[mx-8,my-34],[mx+20,my-30],[mx+40,my-8],[mx+34,my+18],[mx+8,my+28],[mx-22,my+24]], dawn ? '#14101a' : '#08080c');
-    ctx.fillStyle = 'rgba(0,0,0,.6)'; ell(ctx, mx-6, my+4, 30, 22, 'rgba(0,0,0,.35)'); for (let i=0;i<6;i++){ ctx.fillStyle = `rgba(200,180,120,${.15 + hash(i,9)*.2})`; ctx.fillRect(mx - 24 + hash(i,10)*44, my - 12 + hash(i,11)*28, 1.5, 1.5); }
+    if (!dawn && !day) { ctx.fillStyle = 'rgba(220,220,240,.6)'; for (let i=0;i<(dusk ? 14 : 50);i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*(dusk ? .18 : .5), 1, 1); }
+    if (day) { glow(ctx, W*.12, H*.12, W*.42, '#fff2d8', .2); cloud(ctx, W*.32, H*.12, W*.36, 9, '#ece8e2', .12); cloud(ctx, W*.66, H*.42, W*.6, 8, '#6a6260', .2); } // a thin morning, and last night's smoke lying over the city
+    else { // Moon's Spawn, hanging (by the morning after the Fete it has gone)
+    const mx = W*.74, my = H*.2 + Math.sin(t/4000)*2; glow(ctx, mx, my, 70, dawn ? '#6a4a5a' : dusk ? '#5a2a3a' : '#2a2a3a', .5);
+    poly(ctx, [[mx-38,my+14],[mx-30,my-22],[mx-8,my-34],[mx+20,my-30],[mx+40,my-8],[mx+34,my+18],[mx+8,my+28],[mx-22,my+24]], dawn ? '#14101a' : dusk ? '#0c0810' : '#08080c');
+    ctx.fillStyle = 'rgba(0,0,0,.6)'; ell(ctx, mx-6, my+4, 30, 22, 'rgba(0,0,0,.35)'); for (let i=0;i<6;i++){ ctx.fillStyle = `rgba(200,180,120,${.15 + hash(i,9)*.2})`; ctx.fillRect(mx - 24 + hash(i,10)*44, my - 12 + hash(i,11)*28, 1.5, 1.5); } }
     // the lake, a line of it, and the far shore
-    ctx.fillStyle = dawn ? '#3a3a4a' : '#0c1018'; ctx.fillRect(0, H*.52, W, H*.1); ctx.fillStyle = dawn ? 'rgba(200,140,120,.15)' : 'rgba(90,140,210,.12)'; for (let i=0;i<20;i++) ctx.fillRect(hash(i,12)*W, H*.53 + hash(i,13)*H*.08, 10 + hash(i,14)*20, 1);
+    ctx.fillStyle = dawn ? '#3a3a4a' : dusk ? '#2c1e28' : day ? '#6a707e' : '#0c1018'; ctx.fillRect(0, H*.52, W, H*.1); ctx.fillStyle = dawn ? 'rgba(200,140,120,.15)' : dusk ? 'rgba(240,150,90,.2)' : day ? 'rgba(235,238,242,.22)' : 'rgba(90,140,210,.12)'; for (let i=0;i<20;i++) ctx.fillRect(hash(i,12)*W, H*.53 + hash(i,13)*H*.08, 10 + hash(i,14)*20, 1);
     // roofs, stepped, then the street or the near roof
-    for (let i=0;i<12;i++){ const x = i*W/11 - 10, h = H*.12 + hash(i,15)*H*.18, w = W/11 + 14; ctx.fillStyle = dawn ? (i%2 ? '#241c22' : '#1c161c') : (i%2 ? '#0c0a0e' : '#100d12'); poly(ctx, [[x, H*.62],[x, H*.62 - h],[x + w*.5, H*.62 - h - 18],[x + w, H*.62 - h],[x + w, H*.62]], ctx.fillStyle); if (!dawn && hash(i,16) > .5) { ctx.fillStyle = 'rgba(232,192,115,.25)'; ctx.fillRect(x + w*.4, H*.62 - h*.5, 6, 8); } }
+    for (let i=0;i<12;i++){ const x = i*W/11 - 10, h = H*.12 + hash(i,15)*H*.18, w = W/11 + 14; ctx.fillStyle = dawn ? (i%2 ? '#241c22' : '#1c161c') : dusk ? (i%2 ? '#1e1620' : '#18121a') : day ? (i%2 ? '#4a4650' : '#423e48') : (i%2 ? '#0c0a0e' : '#100d12'); poly(ctx, [[x, H*.62],[x, H*.62 - h],[x + w*.5, H*.62 - h - 18],[x + w, H*.62 - h],[x + w, H*.62]], ctx.fillStyle); if (!dawn && !day && hash(i,16) > .5) { ctx.fillStyle = 'rgba(232,192,115,.25)'; ctx.fillRect(x + w*.4, H*.62 - h*.5, 6, 8); } }
+    if (kind === 'roof_shapes') { // the city's other road crew: dozens of them crouched along the far ridges, all facing the same way
+      const crouch = (x, y, s, a) => { const c = '#0a080c'; ctx.globalAlpha = a; // a hooded man on his heels: feet, folded knees, a hunched back, the hood pushed forward
+        poly(ctx, [[x - 3.4*s, y],[x + 3.6*s, y],[x + 3.2*s, y - 2.6*s],[x - 2.4*s, y - 3*s]], c); ell(ctx, x - .4*s, y - 5.4*s, 2.9*s, 3.4*s, c); poly(ctx, [[x - 1.6*s, y - 7.6*s],[x + .4*s, y - 11.6*s],[x + 3.2*s, y - 8.4*s],[x + 2.6*s, y - 6*s],[x - .2*s, y - 5.4*s]], c);
+        ctx.strokeStyle = c; ctx.lineWidth = 1.1*s; ctx.beginPath(); ctx.moveTo(x + 1*s, y - 6*s); ctx.lineTo(x + 3.4*s, y - 3*s); ctx.stroke(); ctx.fillStyle = 'rgba(200,170,160,.25)'; ctx.fillRect(x - 1.8*s, y - 8.4*s, .7*s, 2.4*s); ctx.globalAlpha = 1; }; // the dawn on one cheek of the hood
+      for (let i=0;i<12;i++){ const x = i*W/11 - 10, h = H*.12 + hash(i,15)*H*.18, w = W/11 + 14, top = H*.62 - h; crouch(x + w*.5, top - 18 + 1, 1.15, .95); // one on every ridge
+        if (hash(i,23) > .45) { const k = hash(i,24) > .5 ? .25 : .75; crouch(x + w*k, top - 18*(1 - Math.abs(k - .5)*2) + 1, 1.05, .9); } if (hash(i,25) > .6) crouch(x + w*(.06 + hash(i,26)*.1), top + 1, 1, .85); }
+      ctx.fillStyle = '#18121a'; ctx.fillRect(W*.58, H*.36, 12, H*.26); crouch(W*.58 + 6, H*.36, 1.7, 1); } // and one on a chimney-stack three streets away
     if (roofN) { ctx.fillStyle = '#16141a'; ctx.fillRect(0, H*.66, W, H*.34); ctx.strokeStyle = 'rgba(0,0,0,.5)'; for (let r=0;r<6;r++){ ctx.beginPath(); ctx.moveTo(0, H*.66 + r*H*.06); ctx.lineTo(W, H*.66 + r*H*.06); ctx.stroke(); }
       ctx.fillStyle = '#0e0c10'; ctx.fillRect(W*.7, H*.5, 22, H*.2); ctx.fillRect(W*.2, H*.56, 16, H*.12); for (let i=0;i<3;i++) ell(ctx, W*.7 + 11 + Math.sin(t/600 + i)*6, H*.5 - 10 - i*14, 8 + i*4, 5 + i*2, `rgba(120,120,130,${.12 - i*.03})`);
       ctx.fillStyle = 'rgba(232,192,115,.16)'; ctx.fillRect(W*.42, H*.72, 50, 26); ctx.strokeStyle = '#3a2c1c'; ctx.lineWidth = 2; ctx.strokeRect(W*.42, H*.72, 50, 26);
       for (let i=0;i<20;i++) ell(ctx, hash(i,21)*W, H*.68 + hash(i,22)*H*.3, 30, 6, 'rgba(120,140,170,.05)');
-      drawFigure(ctx, 'andii', W*.9, H*.62, 1.5, t, {still:true, dir:-1, alpha:.5}); }
+      if (kind === 'roof_andii') { // the Tiste Andii: tall shapes on the far ridges, and one stepping onto the next roof, close, with the cold coming off it
+        [[W*.3, H*.47, .9, .35],[W*.52, H*.43, .75, .3],[W*.06, H*.5, .8, .3]].forEach(([x, y, s, a], i) => drawFigure(ctx, 'andii', x, y, s, t, {still:true, dir: i%2 ? 1 : -1, alpha:a}));
+        const ax = W*.86, ay = H*.74; glow(ctx, ax, ay - 22, 80, '#9a86e0', .14 + Math.sin(t/900)*.04*mo); glow(ctx, ax, ay - 30, 30, '#d8d8f0', .08);
+        for (let i=0;i<5;i++){ const k = ((t/3400*mo + i/5) % 1); ell(ctx, ax - 8 - k*30, ay + 8 - k*6, 10 + k*18, 3 + k*3, `rgba(190,200,235,${.1*(1 - k)})`); } // cold, pooling off it across the leads
+        drawFigure(ctx, 'andii', ax, ay, 2.5, t, {still:true, dir:-1, alpha:.95}); } }
     else if (dawn) { ctx.fillStyle = '#1e1a1e'; ctx.fillRect(0, H*.66, W, H*.34); ctx.strokeStyle = 'rgba(0,0,0,.5)'; for (let r=0;r<6;r++){ ctx.beginPath(); ctx.moveTo(0, H*.66 + r*H*.06); ctx.lineTo(W, H*.66 + r*H*.06); ctx.stroke(); } for (let i=0;i<30;i++) ell(ctx, hash(i,17)*W, H*.7 + hash(i,18)*H*.3, 8, 3, 'rgba(120,130,150,.12)');
-      drawFigure(ctx, 'assassin', W*.9, H*.66, 1.6, t, {still:true, dir:-1, alpha:.55});
-    } else { ctx.fillStyle = '#16161a'; ctx.fillRect(0, H*.62, W, H*.38); ctx.strokeStyle = 'rgba(0,0,0,.45)'; for (let i=0;i<40;i++){ ctx.beginPath(); ctx.ellipse(hash(i,19)*W, H*.66 + hash(i,20)*H*.34, 9, 4, 0, 0, 7); ctx.stroke(); }
-      for (let i=0;i<4;i++){ const x = W*.1 + i*W*.27, y = H*.62; ctx.fillStyle = '#1a1a1c'; ctx.fillRect(x-2, y-46, 4, 46); ctx.fillStyle = '#2e2e32'; ctx.fillRect(x-6, y-54, 12, 10); ctx.fillStyle = `rgba(160,210,255,${.7 + Math.sin(t/230 + i)*.2})`; ctx.fillRect(x-3, y-52, 6, 6); glow(ctx, x, y-48, 60, '#6aa8ff', .3*fl); ctx.fillStyle = 'rgba(90,140,210,.08)'; ell(ctx, x, y+10, 40, 10, 'rgba(90,140,210,.08)'); } }
+      ctx.fillStyle = '#141014'; ctx.fillRect(W*.84, H*.52, 20, H*.16); for (let i=0;i<3;i++) ell(ctx, W*.84 + 10 + Math.sin(t/700 + i)*5, H*.52 - 8 - i*12, 7 + i*3, 4 + i*2, `rgba(150,140,150,${.1 - i*.025})`); // a chimney, a kitchen fire somebody has lit
+    } else { ctx.fillStyle = day ? '#4a4848' : '#16161a'; ctx.fillRect(0, H*.62, W, H*.38); ctx.strokeStyle = day ? 'rgba(0,0,0,.3)' : 'rgba(0,0,0,.45)'; for (let i=0;i<40;i++){ ctx.beginPath(); ctx.ellipse(hash(i,19)*W, H*.66 + hash(i,20)*H*.34, 9, 4, 0, 0, 7); ctx.stroke(); }
+      for (let i=0;i<4;i++){ const x = W*.1 + i*W*.27, y = H*.62, lit = day ? 0 : dusk && i === 3 ? .35 + Math.sin(t/180)*.15*mo : 1; ctx.fillStyle = day ? '#2a2a2e' : '#1a1a1c'; ctx.fillRect(x-2, y-46, 4, 46); ctx.fillStyle = day ? '#3e3e44' : '#2e2e32'; ctx.fillRect(x-6, y-54, 12, 10);
+        if (!lit) { ctx.fillStyle = '#5a6068'; ctx.fillRect(x-3, y-52, 6, 6); continue; } // out, in the full light
+        ctx.fillStyle = `rgba(160,210,255,${(.7 + Math.sin(t/230 + i)*.2)*lit})`; ctx.fillRect(x-3, y-52, 6, 6); glow(ctx, x, y-48, 60, '#6aa8ff', .3*fl*lit); ctx.fillStyle = 'rgba(90,140,210,.08)'; ell(ctx, x, y+10, 40, 10, `rgba(90,140,210,${.08*lit})`); }
+      if (day) for (let i=0;i<7;i++){ const x = ((hash(i,27)*W*1.4 + t*.006*mo*(1 + hash(i,28))) % (W*1.4)) - W*.2; ell(ctx, x, H*(.66 + hash(i,29)*.22), W*(.16 + hash(i,30)*.14), 7 + hash(i,31)*6, 'rgba(120,112,110,.14)'); } } // the smoke, lying in the street like a dog that won't move
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.12 + i*36, H*.92, 2.1, t, {phase:i, dir:1}));
   }
   const v = ctx.createRadialGradient(W/2, H*.55, H*.3, W/2, H*.55, W*.72); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,.8)'); ctx.fillStyle = v; ctx.fillRect(0,0,W,H);
 }
 
 /* ============ Chapters 6 and 7: the Fete, the Tyrant, the sky over the city, the Lakefront, the hill, the road ============ */
-const FETE_SCENES = ['fete_street','fete_hall','fete_garden','garden_storm','dragon_sky','alley_night','lakefront_dawn','quorl_hill','road_east','ship'];
+const FETE_SCENES = ['fete_street','fete_street_night','fete_hall','fete_garden','garden_storm','garden_after','dragon_sky','alley_night','alley_crimson','lakefront_dawn','quorl_hill','quorl_sky','road_east','ship'];
+/* the rooftop variants are drawn by drawCity (the boot loop only sends it roof and roof_night by name) */
+SCENEX.roof_andii = (cv, t) => drawCity(cv, 'roof_andii', t);
+SCENEX.roof_shapes = (cv, t) => drawCity(cv, 'roof_shapes', t);
 const LANT = ['#d8503a','#e8a040','#4aa870','#d8b84a']; // red, amber, green, gold: every colour but blue (the city's own lamps are blue)
 /* the garden and its house are lit by dawn once the night is over */
 function feteDawn(){ return !!S && (S.chapter >= 7 || !!(S.f && S.f.c6_done) || /^c6_(dawn|close)/.test(S.node || '')); }
@@ -258,13 +291,15 @@ function drawDragon(ctx, x, y, s, ang, flap, body, rim, wrong, t){
 function drawEstate(cv, kind, t){
   const {ctx, W, H} = sceneFit(cv), fl = .85 + Math.sin(t/140)*.06 + Math.sin(t/53)*.04, squad = (typeof SQUAD === 'function' && S ? SQUAD() : PORDER);
   ctx.fillStyle = '#060505'; ctx.fillRect(0,0,W,H);
-  if (kind === 'fete_street') {
-    // dusk over a street strung with lanterns; the lake at the end of it, and the black mountain over the lake
-    ctx.fillStyle = vgrad(ctx, 0, H*.56, [[0,'#120c1c'],[.5,'#3a1a2c'],[.85,'#8a4030'],[1,'#c0703a']]); ctx.fillRect(0,0,W,H*.56);
-    ctx.fillStyle = 'rgba(230,220,240,.5)'; for (let i=0;i<24;i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*.22, 1, 1);
-    const vx = W*.56, vy = H*.5; ctx.fillStyle = '#2a1e2c'; ctx.fillRect(W*.4, H*.44, W*.32, H*.1); for (let i=0;i<14;i++){ ctx.fillStyle = `rgba(255,170,100,${.12 + hash(i,5)*.2})`; ctx.fillRect(W*.42 + hash(i,6)*W*.28, H*.45 + hash(i,7)*H*.07, 4 + hash(i,8)*10, 1); }
-    skyline(ctx, W, H*.46, H*.08, '#1a1220', 'rgba(232,192,115,.5)', 3, W*.36, W*.76);
-    drawSpawn(ctx, W*.62, H*.19, 1.05, t, '#5a2a3a');
+  if (kind === 'fete_street' || kind === 'fete_street_night') {
+    // dusk over a street strung with lanterns; the lake at the end of it, and the black mountain over the lake.
+    // fete_street_night: the same street late in the night of the Fete, still dancing, with the Tyrant's frost running down through the cobbles toward the lake
+    const night = kind === 'fete_street_night', mo = REDUCE() ? 0 : 1;
+    ctx.fillStyle = vgrad(ctx, 0, H*.56, night ? [[0,'#03040b'],[.6,'#0c0e1e'],[1,'#1c1a2c']] : [[0,'#120c1c'],[.5,'#3a1a2c'],[.85,'#8a4030'],[1,'#c0703a']]); ctx.fillRect(0,0,W,H*.56);
+    ctx.fillStyle = 'rgba(230,220,240,.5)'; for (let i=0;i<(night ? 50 : 24);i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*(night ? .4 : .22), 1, 1);
+    const vx = W*.56, vy = H*.5; ctx.fillStyle = night ? '#141826' : '#2a1e2c'; ctx.fillRect(W*.4, H*.44, W*.32, H*.1); for (let i=0;i<14;i++){ ctx.fillStyle = night ? `rgba(110,160,230,${.08 + hash(i,5)*.14})` : `rgba(255,170,100,${.12 + hash(i,5)*.2})`; ctx.fillRect(W*.42 + hash(i,6)*W*.28, H*.45 + hash(i,7)*H*.07, 4 + hash(i,8)*10, 1); }
+    skyline(ctx, W, H*.46, H*.08, night ? '#0e0c16' : '#1a1220', 'rgba(232,192,115,.5)', 3, W*.36, W*.76);
+    drawSpawn(ctx, W*.62, H*.19, 1.05, t, night ? '#2a2a3a' : '#5a2a3a');
     const wallL = k => ({top: lerp(-H*.05, H*.3, k), bot: lerp(H*.98, H*.56, k), x: lerp(-W*.02, vx - W*.13, k)}), wallR = k => ({top: lerp(-H*.05, H*.3, k), bot: lerp(H*.98, H*.56, k), x: lerp(W*1.02, vx + W*.13, k)});
     const segs = [0,.3,.52,.67,.78,.86,.92,.96,1];
     [wallL, wallR].forEach((wf, side) => { for (let i=0;i<segs.length-1;i++){ const a = wf(segs[i]), b = wf(segs[i+1]), lift = (hash(i, side + 3) - .3)*H*.12*(1 - segs[i]), c = ['#2a1c1e','#221a22','#302024','#1e181e'][(i + side) % 4];
@@ -275,18 +310,21 @@ function drawEstate(cv, kind, t){
     poly(ctx, [[0, H],[-W*.02, H*.98],[vx - W*.13, H*.56],[vx + W*.13, H*.56],[W*1.02, H*.98],[W, H]], '#241e22'); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
     for (let i=0;i<14;i++){ const k = Math.pow(i/14, 1.8), yy = lerp(H*.56, H, k); ctx.beginPath(); ctx.moveTo(lerp(vx - W*.13, -W*.02, k), yy); ctx.lineTo(lerp(vx + W*.13, W*1.02, k), yy); ctx.stroke(); }
     for (let i=-6;i<=6;i++){ ctx.beginPath(); ctx.moveTo(vx + i*W*.02, H*.56); ctx.lineTo(vx + i*W*.16, H); ctx.stroke(); }
-    ctx.fillStyle = 'rgba(255,170,100,.06)'; ctx.fillRect(0, H*.6, W, H*.4);
-    // blue lamps along both sides
-    [.12,.45,.7].forEach((k, i) => [wallL, wallR].forEach((wf, side) => { const a = wf(k), sc = lerp(1.6, .5, k), lx = a.x + (side ? -1 : 1)*18*sc, ly = a.bot - 2*sc;
-      ctx.fillStyle = '#141418'; ctx.fillRect(lx - 1.2*sc, ly - 44*sc, 2.4*sc, 44*sc); ctx.fillStyle = '#26262c'; ctx.fillRect(lx - 4*sc, ly - 52*sc, 8*sc, 8*sc); ctx.fillStyle = `rgba(160,210,255,${.7 + Math.sin(t/230 + i + side)*.2})`; ctx.fillRect(lx - 2.5*sc, ly - 50*sc, 5*sc, 5*sc); glow(ctx, lx, ly - 47*sc, 46*sc, '#6aa8ff', .3*fl); ell(ctx, lx, ly + 2, 26*sc, 5*sc, 'rgba(90,140,210,.08)'); }));
+    ctx.fillStyle = night ? 'rgba(160,190,230,.04)' : 'rgba(255,170,100,.06)'; ctx.fillRect(0, H*.6, W, H*.4);
+    if (night) { ctx.lineWidth = 1.2; for (let i=-6;i<=6;i++){ const k = mo ? ((t/2600 + hash(i + 7, 3)) % 1) : 1, x0 = vx + i*W*.16, x1 = vx + i*W*.02; // frost in the cracks, running downhill to the lake
+      ctx.strokeStyle = 'rgba(215,238,255,.32)'; ctx.beginPath(); ctx.moveTo(x0, H); ctx.lineTo(lerp(x0, x1, k), lerp(H, H*.56, k)); ctx.stroke(); ell(ctx, lerp(x0, x1, k), lerp(H, H*.56, k), 3*(1 - k*.7), 1.4*(1 - k*.7), 'rgba(235,248,255,.55)'); }
+      for (let i=0;i<14;i++){ const k = Math.pow(i/14, 1.8), yy = lerp(H*.56, H, k); ctx.strokeStyle = 'rgba(215,238,255,.1)'; ctx.beginPath(); ctx.moveTo(lerp(vx - W*.13, -W*.02, k), yy); ctx.lineTo(lerp(vx + W*.13, W*1.02, k), yy); ctx.stroke(); } }
+    // blue lamps along both sides (at night, as the frost passes under them, every flame shrinking in its glass and coming back)
+    [.12,.45,.7].forEach((k, i) => [wallL, wallR].forEach((wf, side) => { const a = wf(k), sc = lerp(1.6, .5, k), lx = a.x + (side ? -1 : 1)*18*sc, ly = a.bot - 2*sc, dip = night ? .35 + .65*Math.abs(Math.sin(t/700*mo + i*.9 + side)) : 1;
+      ctx.fillStyle = '#141418'; ctx.fillRect(lx - 1.2*sc, ly - 44*sc, 2.4*sc, 44*sc); ctx.fillStyle = '#26262c'; ctx.fillRect(lx - 4*sc, ly - 52*sc, 8*sc, 8*sc); ctx.fillStyle = `rgba(160,210,255,${(.7 + Math.sin(t/230 + i + side)*.2)*dip})`; ctx.fillRect(lx - 2.5*sc, ly - 50*sc, 5*sc, 5*sc); glow(ctx, lx, ly - 47*sc, 46*sc, '#6aa8ff', .3*fl*dip); ell(ctx, lx, ly + 2, 26*sc, 5*sc, `rgba(90,140,210,${.08*dip})`); }));
     // lantern strings across the street
     [.08,.3,.5,.66,.8].forEach((k, i) => { const a = wallL(k), b = wallR(k), y = lerp(a.top, a.bot, .3); lanternLine(ctx, a.x, y, b.x, y, lerp(22, 5, k), Math.round(lerp(14, 6, k)), t, lerp(2.2, .7, k), i); });
     // masked revellers, far and near
     [[.12,5],[.3,4],[.55,4],[.8,3]].forEach(([d, n], j) => { const yy = lerp(H*.58, H*.96, d), sc = lerp(.7, 2.3, d), half = lerp(W*.13, W*.5, d);
       for (let i=0;i<n;i++){ const k = ((hash(i, j + 20) + t/(40000 - d*20000)*(i%2 ? 1 : -1)) % 1 + 1) % 1, xx = vx - half*.9 + k*half*1.8; if (d > .7 && xx < W*.34) continue; drawFigure(ctx, 'reveller', xx, yy, sc, t, {phase:i*3 + j*7 + 1, dir: i%2 ? 1 : -1}); } });
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.06 + i*30, H*.95, 2.1, t, {phase:i, dir:1}));
-    confetti(ctx, W, H, t, 26, .55);
-    vign(ctx, W, H, .75);
+    confetti(ctx, W, H, t, night ? 12 : 26, .55);
+    vign(ctx, W, H, night ? .82 : .75);
   } else if (kind === 'fete_hall') {
     // the hall: dark red walls, gilt, tall windows full of night, chandeliers, masked dancers turning, a very tall guest by a pillar
     ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#1c0a0c'],[.6,'#2a1012'],[1,'#120708']]); ctx.fillRect(0,0,W,H);
@@ -311,8 +349,10 @@ function drawEstate(cv, kind, t){
     for (let p=0;p<4;p++){ const cx = W*(.22 + p*.17), cy = H*(.86 + (p%2)*.06), a = t/1400 + p*1.7; [0, Math.PI].forEach((o, j) => { const x = cx + Math.cos(a + o)*12, depth = Math.sin(a + o); drawFigure(ctx, 'reveller', x, cy + depth*3, 2 + depth*.1, t, {phase:p*2 + j + 2, dir: Math.cos(a + o + Math.PI/2) > 0 ? 1 : -1}); }); }
     marchOrder(squad.slice(0, 3)).forEach((id, i) => drawFigure(ctx, id, 22 + i*Math.min(24, W*.07), H*.99, 2.1, t, {phase:i, dir:1}));
     vign(ctx, W, H, .8);
-  } else if (kind === 'fete_garden') {
-    const dawn = feteDawn(), az = !!(S && S.f && S.f.c6_azath), vx = W*.5, vy = H*.5;
+  } else if (kind === 'fete_garden' || kind === 'garden_after') {
+    // garden_after: the same garden in the dark straight after the Tyrant went down: frost in rings, every lantern dead, nobody strolling, the fountain frozen,
+    // and the black sapling grown man-high over the crater where he went into the ground (the house is not there until dawn)
+    const after = kind === 'garden_after', dawn = !after && feteDawn(), az = !after && !!(S && S.f && S.f.c6_azath), vx = W*.5, vy = H*.5;
     ctx.fillStyle = dawn ? vgrad(ctx, 0, vy, [[0,'#2a2c3a'],[.55,'#6a5058'],[1,'#c89070']]) : vgrad(ctx, 0, vy, [[0,'#03050c'],[1,'#121c30']]); ctx.fillRect(0,0,W,vy + 2);
     if (!dawn) { ctx.fillStyle = 'rgba(220,225,245,.55)'; for (let i=0;i<40;i++) ctx.fillRect(hash(i,41)*W, hash(i,42)*H*.4, 1, 1); drawSpawn(ctx, W*.8, H*.15, .62, t); }
     else { if (!(S && S.chapter >= 7)) drawSpawn(ctx, W*.1, H*.3, .42, t, '#6a4a5a'); glow(ctx, W*.95, vy, W*.45, '#ffb080', .28); cloud(ctx, W*.6, H*.16, W*.3, 8, '#f0c8b8', .14); } // Moon's Spawn going west; by Chapter 7 the sky is empty
@@ -330,18 +370,26 @@ function drawEstate(cv, kind, t){
       poly(ctx, [[x0, y0],[x0 + sd*w0, y0],[x1 + sd*w1, y1],[x1, y1]], dawn ? '#1e2c1a' : '#07120b'); poly(ctx, [[x0, y0 - hh*.6],[x0 + sd*w0, y0 - hh*.6],[x0 + sd*w0, y0],[x0, y0]], dawn ? '#2a3a24' : '#0c1c12'); ctx.fillStyle = dawn ? 'rgba(200,210,170,.25)' : 'rgba(140,170,90,.22)'; ctx.fillRect(Math.min(x0, x0 + sd*w0), y0 - hh*.6, w0, 1.2);
       if (d%2 === 0) { const tx = x1 + sd*w1*.5, ty = y1 - 1, th = lerp(10, 40, k1); poly(ctx, [[tx - th*.28, ty],[tx, ty - th],[tx + th*.28, ty]], dawn ? '#223020' : '#081410'); poly(ctx, [[tx, ty - th],[tx + th*.28, ty],[tx + th*.08, ty]], 'rgba(0,0,0,.3)'); } } });
     // trees with lanterns in them, and pools of lantern-light under them
-    [[W*.43, vy + 2, .9],[W*.64, vy, .75],[W*.97, vy + 6, 1.25]].forEach(([x, y, sc], j) => { if (!dawn) ell(ctx, x, y + 14*sc, 50*sc, 8*sc, 'rgba(255,190,110,.07)'); ctx.fillStyle = dawn ? '#1e2218' : '#050a07'; ctx.fillRect(x - 3*sc, y - 30*sc, 6*sc, 32*sc);
+    [[W*.43, vy + 2, .9],[W*.64, vy, .75],[W*.97, vy + 6, 1.25]].forEach(([x, y, sc], j) => { if (!dawn && !after) ell(ctx, x, y + 14*sc, 50*sc, 8*sc, 'rgba(255,190,110,.07)'); ctx.fillStyle = dawn ? '#1e2218' : '#050a07'; ctx.fillRect(x - 3*sc, y - 30*sc, 6*sc, 32*sc);
       for (let i=0;i<11;i++) ell(ctx, x + (hash(i,j)-.5)*62*sc, y - 40*sc + (hash(j,i)-.5)*30*sc, 18*sc, 13*sc, dawn ? (i%2 ? '#232b1e' : '#1a2218') : (i%2 ? '#08140c' : '#0b1a10'));
-      lanternLine(ctx, x - 28*sc, y - 40*sc, x + 28*sc, y - 36*sc, 6*sc, 5, t, 1.2*sc, j*3, dawn); lanternLine(ctx, x - 20*sc, y - 26*sc, x + 22*sc, y - 24*sc, 4*sc, 4, t, 1.1*sc, j*3 + 2, dawn); });
-    if (!dawn) { [[.3,.6,.9],[.4,.66,1.1]].forEach(([k, yk, sc], i) => drawFigure(ctx, 'reveller', W*k + Math.sin(t/3000 + i)*14, H*yk, sc, t, {phase:i*5 + 3, dir:i ? -1 : 1})); } // guests, strolling
+      lanternLine(ctx, x - 28*sc, y - 40*sc, x + 28*sc, y - 36*sc, 6*sc, 5, t, 1.2*sc, j*3, dawn || after); lanternLine(ctx, x - 20*sc, y - 26*sc, x + 22*sc, y - 24*sc, 4*sc, 4, t, 1.1*sc, j*3 + 2, dawn || after); });
+    if (!dawn && !after) { [[.3,.6,.9],[.4,.66,1.1]].forEach(([k, yk, sc], i) => drawFigure(ctx, 'reveller', W*k + Math.sin(t/3000 + i)*14, H*yk, sc, t, {phase:i*5 + 3, dir:i ? -1 : 1})); } // guests, strolling
     // the fountain
     const fx = vx, fy = H*.72; ell(ctx, fx, fy + 6, 52, 11, 'rgba(0,0,0,.45)'); ell(ctx, fx, fy, 48, 11, dawn ? '#8a8680' : '#4a4c52'); ell(ctx, fx, fy - 1, 42, 8, dawn ? '#5a6a74' : '#0c1c28'); ctx.fillStyle = dawn ? '#8a8680' : '#4a4c52'; ctx.fillRect(fx - 4, fy - 32, 8, 31); ell(ctx, fx, fy - 30, 14, 4, dawn ? '#9a9690' : '#5a5c62');
-    if (!dawn) glow(ctx, fx, fy - 10, 60, '#6aa8d8', .07);
+    if (after) { ell(ctx, fx, fy - 1, 42, 8, 'rgba(200,228,245,.55)'); ctx.fillStyle = 'rgba(210,235,250,.5)'; ctx.fillRect(fx - 4, fy - 32, 8, 31); for (let i=0;i<9;i++) poly(ctx, [[fx - 40 + i*10, fy + 2],[fx - 37 + i*10, fy + 2],[fx - 38.5 + i*10, fy + 7 + hash(i,6)*6]], 'rgba(220,240,255,.6)'); glow(ctx, fx, fy - 12, 50, '#bfe0f5', .08); } // frozen, with icicles off the rim
+    else { if (!dawn) glow(ctx, fx, fy - 10, 60, '#6aa8d8', .07);
     for (let i=0;i<14;i++){ const k = ((t/900 + i/14) % 1), side = i%2 ? 1 : -1; ctx.fillStyle = `rgba(200,225,245,${(1-k)*.55})`; ctx.fillRect(fx + side*(4 + k*16), fy - 32 + Math.pow(k*2 - .7, 2)*16 - 4, 1.5, 1.5); }
-    for (let i=0;i<3;i++){ const k = ((t/1600 + i/3) % 1); ctx.strokeStyle = `rgba(170,210,240,${(1-k)*.3})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(fx, fy - 1, 8 + k*32, 2 + k*6, 0, 0, 7); ctx.stroke(); }
+    for (let i=0;i<3;i++){ const k = ((t/1600 + i/3) % 1); ctx.strokeStyle = `rgba(170,210,240,${(1-k)*.3})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(fx, fy - 1, 8 + k*32, 2 + k*6, 0, 0, 7); ctx.stroke(); } }
     // the sapling in turned earth, or the house that grew there overnight, with its yard of mounds
     const ax = W*.8, ay = H*.8, p = (Math.sin(t/1300) + 1)/2;
-    if (az) { ctx.lineCap = 'round'; for (let i=0;i<11;i++){ const a = i/10*Math.PI*1.1 - .05, ex = ax + Math.cos(a)*(78 + hash(i,4)*26), ey = ay + 6 + Math.sin(i*1.7)*8; ctx.strokeStyle = '#1c130c'; for (let q=0;q<3;q++){ ctx.lineWidth = 5 - q*1.6; ctx.beginPath(); ctx.moveTo(ax + Math.cos(a)*26, ay); ctx.quadraticCurveTo(ax + Math.cos(a)*54, ay + 8, lerp(ax + Math.cos(a)*54, ex, .4 + q*.3), lerp(ay + 8, ey, .4 + q*.3)); ctx.stroke(); } } ctx.lineCap = 'butt';
+    if (after) { const fr = (Math.sin(t/1700) + 1)/2; // frost in rings round the crater, the crater, and the sapling grown the height of a man, its roots heaving the lawn
+      ctx.fillStyle = 'rgba(190,215,235,.1)'; ctx.fillRect(0, vy, W, H - vy); for (let i=0;i<5;i++){ ctx.strokeStyle = `rgba(215,236,252,${.32 - i*.05})`; ctx.lineWidth = 1.4 - i*.15; ctx.beginPath(); ctx.ellipse(ax, ay + 2, 46 + i*42, 10 + i*9, 0, 0, 7); ctx.stroke(); }
+      ell(ctx, ax, ay + 4, 42, 10, 'rgba(225,240,252,.4)'); ell(ctx, ax, ay + 4, 36, 8, '#0a0806'); ell(ctx, ax - 6, ay + 2, 20, 4, '#1a120c');
+      ctx.lineCap = 'round'; for (let i=0;i<9;i++){ const a = i/8*Math.PI*1.1 - .05, ex = ax + Math.cos(a)*(64 + hash(i,4)*30), ey = ay + 6 + Math.sin(i*1.7)*7; ctx.strokeStyle = '#1c130c'; for (let q=0;q<2;q++){ ctx.lineWidth = 4 - q*1.6; ctx.beginPath(); ctx.moveTo(ax + Math.cos(a)*10, ay + 2); ctx.quadraticCurveTo(ax + Math.cos(a)*40, ay + 9, lerp(ax + Math.cos(a)*40, ex, .5 + q*.4), lerp(ay + 9, ey, .5 + q*.4)); ctx.stroke(); } ctx.strokeStyle = 'rgba(225,240,252,.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(ax + Math.cos(a)*14, ay); ctx.quadraticCurveTo(ax + Math.cos(a)*40, ay + 6, ex, ey - 2); ctx.stroke(); }
+      glow(ctx, ax, ay - 34, 60, '#7ad0a0', .08 + fr*.08); ctx.strokeStyle = '#040304'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(ax, ay + 2); ctx.bezierCurveTo(ax - 12, ay - 22, ax + 14, ay - 40, ax - 4, ay - 72); ctx.stroke(); ctx.lineWidth = 2.6;
+      [[-3,-58,-24,-78],[2,-46,24,-62],[0,-30,-18,-40],[-4,-66,6,-92],[2,-52,16,-48],[-2,-40,-14,-58]].forEach(([a,b,c,d]) => { ctx.beginPath(); ctx.moveTo(ax + a, ay + b); ctx.quadraticCurveTo(ax + (a+c)/2, ay + (b+d)/2 - 6, ax + c, ay + d); ctx.stroke(); }); ctx.lineCap = 'butt';
+      for (let i=0;i<6;i++){ const k = ((t/2600 + i/6) % 1); ell(ctx, ax + (hash(i,12) - .5)*50 + k*8, ay - k*30, 6 + k*14, 2 + k*4, `rgba(220,236,250,${.14*(1 - k)})`); } } // cold, still steaming off the crater
+    else if (az) { ctx.lineCap = 'round'; for (let i=0;i<11;i++){ const a = i/10*Math.PI*1.1 - .05, ex = ax + Math.cos(a)*(78 + hash(i,4)*26), ey = ay + 6 + Math.sin(i*1.7)*8; ctx.strokeStyle = '#1c130c'; for (let q=0;q<3;q++){ ctx.lineWidth = 5 - q*1.6; ctx.beginPath(); ctx.moveTo(ax + Math.cos(a)*26, ay); ctx.quadraticCurveTo(ax + Math.cos(a)*54, ay + 8, lerp(ax + Math.cos(a)*54, ex, .4 + q*.3), lerp(ay + 8, ey, .4 + q*.3)); ctx.stroke(); } } ctx.lineCap = 'butt';
       [[-86,10,0],[-58,22,0],[62,20,0],[92,8,0],[-20,28,0],[28,30,1]].forEach(([dx,dy,fresh]) => { const mx = ax + dx, my = ay + dy; ell(ctx, mx, my + 2, 18, 5, 'rgba(0,0,0,.35)'); ell(ctx, mx, my, 16, 6, fresh ? '#3a2616' : (dawn ? '#2a3422' : '#0c180f')); ell(ctx, mx - 3, my - 2, 10, 3, fresh ? '#4a3220' : (dawn ? '#3a4a2e' : '#12221a'));
         if (fresh) { ctx.fillStyle = 'rgba(110,76,50,.9)'; for (let i=0;i<7;i++) ctx.fillRect(mx - 13 + hash(i,9)*26, my - 3 + hash(i,8)*6, 2.2, 1.6); } else { ctx.strokeStyle = dawn ? 'rgba(150,170,110,.5)' : 'rgba(60,100,60,.5)'; ctx.lineWidth = 1; for (let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(mx - 10 + i*5, my - 3); ctx.lineTo(mx - 11 + i*5, my - 7); ctx.stroke(); } } }); // the yard of mounds; one is fresh
       ell(ctx, ax, ay + 4, 50, 8, 'rgba(0,0,0,.5)');
@@ -355,7 +403,8 @@ function drawEstate(cv, kind, t){
     } else { ell(ctx, ax, ay + 2, 30, 8, '#1e140e'); for (let i=0;i<12;i++) ell(ctx, ax + (hash(i,3)-.5)*50, ay + (hash(3,i)-.5)*9, 3.4, 2, '#2e2016'); glow(ctx, ax, ay - 16, 50, p > .5 ? '#7ad0a0' : '#9a86e0', .1 + p*.1);
       ctx.strokeStyle = '#040304'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.bezierCurveTo(ax - 8, ay - 16, ax + 9, ay - 26, ax - 3, ay - 46); ctx.stroke(); ctx.lineWidth = 2; [[-2,-38,-16,-52],[1,-30,16,-42],[0,-20,-12,-26],[-2,-44,5,-60],[1,-34,10,-30]].forEach(([a,b,c,d]) => { ctx.beginPath(); ctx.moveTo(ax + a, ay + b); ctx.quadraticCurveTo(ax + (a+c)/2, ay + (b+d)/2 - 5, ax + c, ay + d); ctx.stroke(); }); ctx.lineCap = 'butt'; }
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.06 + i*30, H*.97, 2.1, t, {phase:i, dir:1}));
-    if (!dawn) confetti(ctx, W, H, t, 16, .5); else { ctx.fillStyle = 'rgba(255,190,140,.06)'; ctx.fillRect(0,0,W,H); for (let i=0;i<30;i++){ ctx.fillStyle = `rgba(230,240,255,${.2 + Math.sin(t/400 + i)*.15})`; ctx.fillRect(hash(i,77)*W, vy + hash(i,78)*H*.5, 1, 1); } } // dew
+    if (after) { for (let i=0;i<46;i++){ const y = ((hash(i,51)*H) + t*(.008 + hash(i,52)*.01)) % H, x = hash(i,53)*W + Math.sin(t/1500 + i)*6; ctx.fillStyle = `rgba(228,242,255,${.35 + hash(i,54)*.3})`; ctx.fillRect(x, y, 1.4, 1.4); } ctx.fillStyle = 'rgba(120,170,220,.06)'; ctx.fillRect(0,0,W,H); } // the frost coming down for a long time afterwards, pattering
+    else if (!dawn) confetti(ctx, W, H, t, 16, .5); else { ctx.fillStyle = 'rgba(255,190,140,.06)'; ctx.fillRect(0,0,W,H); for (let i=0;i<30;i++){ ctx.fillStyle = `rgba(230,240,255,${.2 + Math.sin(t/400 + i)*.15})`; ctx.fillRect(hash(i,77)*W, vy + hash(i,78)*H*.5, 1, 1); } } // dew
     vign(ctx, W, H, dawn ? .6 : .8);
   } else if (kind === 'garden_storm') {
     // Omtose Phellack: frost going out across the lawn in rings, every lantern dead, a masked thing too tall for the man it was, and the Azath coming up out of the ground
@@ -410,8 +459,8 @@ function drawEstate(cv, kind, t){
     ctx.fillStyle = '#040408'; ctx.fillRect(0, H*.9, W, H*.1); poly(ctx, [[0, H],[0, H*.84],[W*.3, H*.86],[W*.34, H]], '#08070a');
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.03 + i*18, H*.9, 1.5, t, {phase:i, dir:1, still:true}));
     vign(ctx, W, H, .75, .45);
-  } else if (kind === 'alley_night') {
-    // a narrow wet alley: high walls close on both sides, a strip of sky, one blue lamp, a doorway, and somebody in it who is only faintly there
+  } else if (kind === 'alley_night' || kind === 'alley_crimson') {
+    // a narrow wet alley: high walls close on both sides, a strip of sky, one blue lamp, a doorway; alley_crimson: and a man in a faded crimson cloak in it, who was not there a moment ago
     const vx = W*.52, vy = H*.42, ex0 = vx - 20, ex1 = vx + 20, et = vy - 34, eb = vy + 16, lt = W*.2, rt = W*.8;
     ctx.fillStyle = vgrad(ctx, 0, et, [[0,'#0a0e1c'],[1,'#1a2236']]); poly(ctx, [[lt, 0],[rt, 0],[ex1, et],[ex0, et]], ctx.fillStyle); ctx.fillStyle = 'rgba(220,225,245,.55)'; for (let i=0;i<8;i++) ctx.fillRect(lerp(lt, rt, hash(i,4)), hash(i,5)*et*.7, 1, 1);
     ctx.fillStyle = '#1c2230'; ctx.fillRect(ex0, et, ex1 - ex0, eb - et); glow(ctx, vx, eb - 6, 30, '#6aa8ff', .25); ctx.fillStyle = 'rgba(160,190,230,.18)'; ctx.fillRect(ex0, eb - 10, ex1 - ex0, 10); // the far end: a lit street crossing it
@@ -434,8 +483,9 @@ function drawEstate(cv, kind, t){
     // the doorway on the left wall, and the figure in it, half in shadow
     const dx0 = W*.13, dx1 = W*.22, dyb = x => vy + (H*.86 - vy)*((vx - x)/vx), dyt = x => vy + (H*.34 - vy)*((vx - x)/vx);
     poly(ctx, [[dx0, dyb(dx0)],[dx0, dyt(dx0)],[dx1, dyt(dx1)],[dx1, dyb(dx1)]], '#040306'); ctx.strokeStyle = '#2a2420'; ctx.lineWidth = 2; ctx.stroke();
-    drawFigure(ctx, 'crimson', (dx0 + dx1)/2, dyb((dx0 + dx1)/2) - 4, 2.2, t, {still:true, dir:1, alpha:.55 + Math.sin(t/1600)*.06});
-    const sh = ctx.createLinearGradient(dx0, 0, dx1, 0); sh.addColorStop(0, 'rgba(4,3,6,.92)'); sh.addColorStop(.55, 'rgba(4,3,6,.5)'); sh.addColorStop(1, 'rgba(4,3,6,0)'); ctx.fillStyle = sh; ctx.fillRect(dx0 - 10, dyt(dx0) - 10, dx1 - dx0 + 10, dyb(dx0) - dyt(dx0) + 20); // the shadow takes half of him
+    if (kind === 'alley_crimson') { glow(ctx, (dx0 + dx1)/2, dyb((dx0 + dx1)/2) - 30, 34, '#7a3430', .1); const cx = (dx0 + dx1)/2 + 4, cy = dyb((dx0 + dx1)/2) - 2; drawFigure(ctx, 'crimson', cx, cy, 2.3, t, {still:true, dir:1, alpha:.9});
+      ctx.strokeStyle = 'rgba(184,178,164,.85)'; ctx.lineWidth = 1.3*2.3; ctx.beginPath(); ctx.moveTo(cx - 7*2.3, cy + 2*2.3); ctx.lineTo(cx - 12*2.3, cy - 10*2.3); ctx.stroke(); } // a plain sword in each hand
+    const sh = ctx.createLinearGradient(dx0, 0, dx1, 0); sh.addColorStop(0, `rgba(4,3,6,${kind === 'alley_crimson' ? .55 : .92})`); sh.addColorStop(.55, `rgba(4,3,6,${kind === 'alley_crimson' ? .15 : .5})`); sh.addColorStop(1, 'rgba(4,3,6,0)'); ctx.fillStyle = sh; ctx.fillRect(dx0 - 10, dyt(dx0) - 10, dx1 - dx0 + 10, dyb(dx0) - dyt(dx0) + 20); // the shadow takes half of him
     glow(ctx, dx1, dyt(dx1) + 30, 20, '#6aa8ff', .08);
     for (let i=0;i<30;i++){ const x = hash(i,81)*W, y = ((hash(i,82)*H) + t*.25) % H; ctx.strokeStyle = 'rgba(160,190,230,.16)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 1, y + 6); ctx.stroke(); } // a fine rain
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.36 + i*28, H*.99, 2.1, t, {phase:i, dir:1}));
@@ -485,6 +535,27 @@ function drawEstate(cv, kind, t){
     ctx.strokeStyle = 'rgba(140,130,80,.5)'; ctx.lineWidth = 1; for (let i=0;i<50;i++){ const x = hash(i,51)*W*.42, y = H*.84 + hash(i,52)*H*.16, h = 3 + hash(i,53)*6; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + Math.sin(t/900 + i)*2, y - h*.6, x + Math.sin(t/700 + i)*3, y - h); ctx.stroke(); }
     marchOrder(squad).forEach((id, i) => drawFigure(ctx, id, W*.05 + i*28, H*.95, 2.1, t, {phase:i, dir:1, still:road}));
     ctx.fillStyle = 'rgba(255,220,160,.05)'; ctx.fillRect(0,0,W,H); vign(ctx, W, H, .5);
+  } else if (kind === 'quorl_sky') {
+    // off the hill on a quorl: the land tilting away below, the city small on its lake, the Host's quorls strung north like geese,
+    // a raven going west, and far off south of the road one figure walking alone; the near wings of your own quorl at the edges
+    const mo = REDUCE() ? 0 : 1, tilt = -.08 + Math.sin(t/2800)*.025*mo, hz = H*.5;
+    ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#3a5674'],[.45,'#8aa0b6'],[.7,'#c4c2b4'],[1,'#c4c2b4']]); ctx.fillRect(0,0,W,H); glow(ctx, W*.85, H*.12, W*.4, '#fff4d8', .26); cloud(ctx, W*.3, H*.1, W*.36, 9, '#f0ece4', .14);
+    ctx.save(); ctx.translate(W/2, H*.62); ctx.rotate(tilt); ctx.translate(-W/2, -H*.62);
+    for (let i=0;i<4;i++){ ctx.fillStyle = ['#8a8270','#7a6e58','#6a5e46','#5a4e36'][i]; ctx.beginPath(); ctx.moveTo(-W*.2, H*1.3); ctx.lineTo(-W*.2, hz + i*H*.05); for (let x=-W*.2;x<=W*1.2;x+=16) ctx.lineTo(x, hz + i*H*.05 - Math.abs(Math.sin(x/(120 - i*14) + i*1.7))*(10 - i*1.5)); ctx.lineTo(W*1.2, H*1.3); ctx.fill(); } // brown country, folded, a long way down
+    ctx.fillStyle = 'rgba(200,215,232,.16)'; ctx.fillRect(-W*.2, hz - 3, W*1.4, 6);
+    ell(ctx, W*.16, hz + H*.1, W*.2, H*.035, '#7a8ca0'); ell(ctx, W*.16, hz + H*.1, W*.18, H*.025, 'rgba(210,225,240,.3)'); skyline(ctx, W, hz + H*.08, H*.035, 'rgba(70,74,90,.9)', 'rgba(170,200,240,.6)', 11, W*.2, W*.34, .35); glow(ctx, W*.27, hz + H*.07, 26, '#a8c0e0', .2); // the city tilting on the rim of its lake, blue and small
+    ctx.strokeStyle = 'rgba(190,170,130,.55)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(W*.34, hz + H*.09); ctx.bezierCurveTo(W*.5, hz + H*.14, W*.62, hz + H*.2, W*1.1, hz + H*.24); ctx.stroke(); // the road east
+    for (let i=0;i<6;i++){ const x = W*(.5 + i*.025), y = hz + H*(.145 + i*.006); ctx.fillStyle = '#3a2c1c'; ctx.fillRect(x, y - 2, 1.4, 2); } // the Rhivi on it
+    ell(ctx, W*.62, H*.96, W*.3, H*.14, '#5a4a30'); ell(ctx, W*.62, H*.9, W*.12, H*.03, 'rgba(160,150,100,.3)'); for (let i=0;i<5;i++){ const x = W*(.52 + i*.05), y = H*(.88 + hash(i,4)*.05); ell(ctx, x, y, 4, 1.4, '#14141a'); ctx.strokeStyle = 'rgba(170,190,210,.4)'; ctx.lineWidth = .6; ctx.beginPath(); ctx.moveTo(x - 6, y - 1); ctx.lineTo(x + 6, y - 1); ctx.stroke(); } // the hill dropping away, quorls still on the grass
+    const fx = W*.9 + ((t/60000*mo) % .05)*W, fy = hz + H*.29; drawFigure(ctx, 'tool', fx, fy, .55, t, {dir:1, phase:3}); // one figure walking alone, south of the road, not looking round
+    ctx.restore();
+    for (let i=0;i<8;i++){ const k = i/7, x = W*(.42 + k*.5) + Math.sin(t/2000 + i)*3*mo, y = H*(.34 - k*.24) + (i%2)*5; drawFigure(ctx, 'quorl', x, y, .58 - k*.36, t, {air:true, dir:1, phase:i}); } // the Host's quorls strung out north like a line of geese
+    { const k = ((t/26000*mo + .3) % 1), gx = (1 - k)*W*.5 - 10, gy = H*.44 + Math.sin(t/700)*3, f = Math.sin(t/160)*2.4; ctx.strokeStyle = '#0a0a0e'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(gx - 6, gy - f); ctx.quadraticCurveTo(gx - 2.5, gy - 3, gx, gy); ctx.quadraticCurveTo(gx + 2.5, gy - 3, gx + 6, gy - f); ctx.stroke(); } // the raven, going west, low
+    const wing = (x, y, ang, len, a) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ang); const g = ctx.createLinearGradient(0, 0, len, 0); g.addColorStop(0, `rgba(22,26,34,${.9*a})`); g.addColorStop(1, `rgba(140,160,190,${.12*a})`); ell(ctx, len/2, 0, len/2, len*.09, g);
+      ctx.strokeStyle = `rgba(20,24,30,${.5*a})`; ctx.lineWidth = 1; for (let q=0;q<5;q++){ ctx.beginPath(); ctx.moveTo(len*.05, (q - 2)*len*.02); ctx.lineTo(len*(.5 + q*.1), (q - 2)*len*.03); ctx.stroke(); } ell(ctx, len*.55, -len*.02, len*.2, len*.025, 'rgba(190,170,230,.14)'); ctx.restore(); };
+    const fl = Math.sin(t/90)*.06*mo; wing(W*.5, H*1.04, Math.PI + .5 + fl, W*.62, 1); wing(W*.5, H*1.04, -.5 - fl, W*.62, 1); wing(W*.5, H*1.06, Math.PI + .3 - fl, W*.55, .7); wing(W*.5, H*1.06, -.3 + fl, W*.55, .7); // your own quorl's four wings
+    ell(ctx, W*.5, H*1.06, 22, 18, '#0a0a0e'); ell(ctx, W*.5 - 6, H*.98, 8, 3, 'rgba(160,170,190,.25)'); // its lacquered back
+    ctx.fillStyle = 'rgba(255,240,210,.05)'; ctx.fillRect(0,0,W,H); vign(ctx, W, H, .45);
   } else if (kind === 'ship') {
     // a deck, a rail, a sail; grey water all round, and the city going small behind
     const roll = Math.sin(t/1800)*.02; ctx.save(); ctx.translate(W/2, H/2); ctx.rotate(roll); ctx.translate(-W/2, -H/2);
