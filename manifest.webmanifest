@@ -1,8 +1,8 @@
 {
   "id": "./",
   "name": "From the Ranks",
-  "short_name": "The Ranks",
-  "description": "A Malazan fan RPG series told by ordinary soldiers: Ashes of the Pale and The Chain of Dogs.",
+  "short_name": "FTR",
+  "description": "A Malazan fan RPG series told by ordinary soldiers: Ashes of the Pale, The Chain of Dogs and The Fair Exchange.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
