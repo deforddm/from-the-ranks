@@ -157,8 +157,18 @@ function bindChoices(){
 }
 function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === 'scene') { console.warn('backdrop leave: ' + was); startExplore(); } return; } /* a plain 'leave' never strands the squad on a backdrop */
   if (typeof tgt === 'function') { closeSheet(); tgt(); return; } talk(tgt); }
+/* a choice's own effect; a munition it spends ("uses 1 sharper") counts as thrown on the Deeds page, as one thrown in a fight does.
+   Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
+const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
+function runFx(c){
+  if (!c.fx) return;
+  const had = MUNIS.map(k => (S && S.inv && S.inv[k]) || 0);
+  c.fx();
+  if (!S || !S.inv || /for good/.test(typeof c.tag === 'string' ? c.tag : '')) return;
+  MUNIS.forEach((k, i) => { const d = had[i] - (S.inv[k] || 0); if (d > 0) tally('thrown_' + k, d); });
+}
 function choose(c){
-  if (!c.check) { if (c.fx) c.fx(); return goTo(c.go); }
+  if (!c.check) { runFx(c); return goTo(c.go); }
   const ids = checkers(c);
   if (c.check[2] || ids.length <= 1) return rollFor(c, ids[0]);
   openPicker(c, ids);
@@ -180,7 +190,7 @@ function openPicker(c, ids){
   b0 && b0.scrollIntoView({block:'nearest'});
 }
 function rollFor(c, who){
-  if (c.fx) c.fx();
+  runFx(c);
   const r = check(c.check[0], c.check[1], who, c);
   $('#sheet').querySelectorAll('.choice').forEach(b => b.disabled = true);
   rollDice(r, fr => { settleRoll(fr, c); goTo(fr.pass ? c.go : c.fail); });
