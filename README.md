@@ -57,6 +57,12 @@ Chapters are content modules (`src/40_chapter1.js`, …) registered at boot; eac
 
 Newest first.
 
+- v6.8.0 — The sound pass. A voice per book (Book One D Phrygian with flute, cello and bells; Book Two a Seven Cities scale with reed, oud and frame drums; Book Three a low Aeolian with choir, bells and a war drum); the title plays the book shown. Twenty-four new ambiences (the desert, the Chain on the march, rivers, the sea, the siege, snow, the burnt lands, rain, barrows, Coral, the Spawn) and every scene, map and battle in all three books now resolves to the ambience it named (about eighty Book Two and Three scenes had fallen to wind). Munitions, weapons and warrens each have their own sound; stingers for chapter openings, the Deck's Houses and key choices; two reverbs (open air, stone hall). All procedural, no sample files. tools/audio_test.mjs renders every sound, cue and ambience offline and checks the plumbing.
+- v6.7.0 — The pictures match the story: a second pass over every scene's painting in all three books, with the near-misses from v6.6 fixed.
+- v6.6.0 — The pictures match the story: every scene in all three books read against the painting behind it (place, time, who is present).
+- v6.5.0 — Book Two: every trader who takes water can be haggled with, each in their own voice.
+- v6.4.0 — Book Two: Keth's Land's Teeth comes up out of the ground under its target.
+- v6.3.0 — Choose your book: the title shows all three books as covers, a new book one tap away.
 - v6.2.0 — Every skill check has its own "yes, but" cost written for its scene (54 new: 8 in Book One, 23 in Book Two, 23 in Book Three): skin, a rattle, kit, water or stragglers on the Chain, loyalty, and Book Three's trust and dread. Silver only where someone is being paid. tools/yesbut_test.mjs now fails any check without one and pays every scene cost once. Brief: docs/near-brief.md.
 - v6.1.3 — What's new caught up: notes for 6.0.0 through 6.1.2, shown once to anyone who updated without seeing them.
 - v6.1.2 — A "yes, but" never charges silver unless the scene itself is about money (a bribe, a fee). With no cost of its own, a near thing on Might costs the roller health at the start of the next fight (3, more with level); on Wits or Guile it leaves them rattled. Dryj Spring's gully flank gets its own cost. New test: tools/yesbut_test.mjs.
