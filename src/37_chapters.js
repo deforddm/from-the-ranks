@@ -138,7 +138,7 @@ function showChapterIntro(){
   <div class="row"><button class="btn primary" id="bGo">${I.go}</button><button class="btn" id="bSq">The squad</button></div>`;
   const dec = CH.area.decor || '';
   G.sceneKind = I.scene || (S.chapter === 6 ? 'fete_street' : S.chapter === 7 ? 'lakefront_dawn' : dec === 'pale' ? 'camp' : dec.startsWith('plain') || dec.startsWith('hills') ? dec : dec.startsWith('city') ? 'city_street' : dec === 'roof_night' ? 'roof_night' : dec.startsWith('estate') ? 'fete_garden' : dec === 'lakefront' ? 'lakefront_dawn' : 'camp_night');
-  AUDIO.setScene(sceneAmb(G.sceneKind, 'explore'));
+  AUDIO.setScene(sceneAmb(G.sceneKind, 'explore')); AUDIO.play('chapter'); // the chapter's sting, in the book's voice (v6.8.0)
   $('#bGo').onclick = () => { AUDIO.play('click'); $('#bGo').disabled = true; startExplore(CH.area.id); if (I.node) talk(I.node); };
   $('#bSq').onclick = () => { AUDIO.play('click'); openChars(0); };
   bindHud();

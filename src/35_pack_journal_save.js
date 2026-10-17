@@ -1,6 +1,6 @@
 /* ============ pack / journal / save ============ */
 function openModal(tab){
-  const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
+  const m = $('#modal'); if (m.hidden) AUDIO.play('open'); m.hidden = false; m.scrollTop = 0;
   const tabs = S ? ['pack','journal','save','deeds'] : ['save','deeds']; routeAnim = null;
   const body = {
     pack:()=>`<div class="kv">${S.book === 'dg' ? `<span>Water</span><span>${chainW()} skin${chainW() === 1 ? '' : 's'}</span>` : `<span>Silver</span><span>${S.silver}</span>`}<span>${zoomArt('munitions/sharper', 'ico', 'Sharpers', true)}</span><span>${S.inv.sharper}</span><span>${zoomArt('munitions/burner', 'ico', 'Burners', true)}</span><span>${S.inv.burner}</span><span>${zoomArt('munitions/cusser', 'ico', 'Cussers', true)}</span><span>${S.inv.cusser}</span>${S.inv.smoker > 0 || S.f.gotSmokers ? `<span>${zoomArt('munitions/smoker', 'ico', 'Smokers', true)}</span><span>${S.inv.smoker}</span>` : ''}<span>${zoomArt('munitions/salve', 'ico', 'Healing salves', true)}</span><span>${S.inv.salve}</span>
@@ -22,7 +22,7 @@ function openModal(tab){
     <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
     <div>${body[tab]()}</div></div>`);
   m.querySelectorAll('.tab').forEach(b => b.onclick = () => { AUDIO.play('click'); if (b.dataset.t === 'squad') { m.hidden = true; openChars(0); } else openModal(b.dataset.t); });
-  $('#bClose').onclick = () => { AUDIO.play('click'); m.hidden = true; };
+  $('#bClose').onclick = () => { AUDIO.play('close'); m.hidden = true; };
   m.querySelectorAll('[data-salve]').forEach(b => b.onclick = () => { salveOut(b.dataset.salve); openModal('pack'); }); // Bridgeburner: a salve between fights
   if (tab === 'pack' && S.card) inlineCard($('#icard'), S.card, false);
   bindItemZoom(m);
@@ -172,6 +172,10 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['6.8.0', ['Sound. Each book now has its own music: Book One keeps its flute, cello and bells; Book Two has a reed, an oud and frame drums, in a Seven Cities scale; Book Three a choir, bells and a war drum, low and cold. The title plays the voice of the book shown. Everything is still made in the game as you play: nothing to download.',
+    'The places sound like themselves. The Odhan by day and night, the Chain on the march (wagons, cattle, hooves, and somebody a long way off), the Sekala and the Vathar, Aren\'s walls, Hissar burning; the Rhivi herds, the siege of Capustan, the snow, the burnt lands of the Domin, rain on the plain, Coral under its dark and Moon\'s Spawn over the sea. About eighty scenes in Books Two and Three that asked for dusk, night, plains or hills and got wind now get what they asked for, and every battle has the sound of where it is fought.',
+    'New sounds: a sharper, a cusser and a smoker each sound like themselves; a mace, a spear, claws and a sling no longer all sound like a sword; Thyr\'s fire, Omtose Phellack\'s ice, Hood\'s grey and Serc\'s air each have a sound. Pages open and close, items are found, tricks are learned. A short sting opens each chapter, the Deck plays a figure for the turned card\'s House, and the chapter\'s key choice is marked with a low chord.',
+    'Outdoors has the open air; tunnels, cellars, barrows and Coral have the stone hall. Your volume settings are unchanged. Nothing about old saves changes.']],
   ['6.7.2', ['The Deeds page counts every munition thrown. Before, only the ones thrown in a fight were counted: a sharper rolled down an alley before a fight, a smoker over the carts or a cusser under the bridge never made the tally. Now they do, in all three books.',
     'Munitions given away for good, and ones lost on a "yes, but", are not counted as thrown.',
     'The count starts from here: munitions already spent in the story were never written down, so they can\'t be added back to an old save.',

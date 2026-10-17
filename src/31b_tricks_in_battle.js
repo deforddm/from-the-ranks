@@ -22,7 +22,7 @@ Object.assign(AB, {
   t_bluefire:{name:TRICKS.bluefire.name, trick:'bluefire', boom:true, aoe:1, range:4, desc:()=>TRICKS.bluefire.fx,
     run(u,x,y){ const pt = scatter(u,x,y,1,1); throwArc(u, pt, () => {
       const caught = B.units.filter(v => v.hp > 0 && cheb(v, pt) <= 1); caught.forEach(v => { v.dazzleUntil = B.round + 1; });
-      blast(pt, [[2,6,lvDmg()],[2,6,lvDmg()]], '#6fb7ff'); AUDIO.play('burner', 1.1); sparks(pt.x, pt.y, 34, '#6fb7ff', .9); sparks(pt.x, pt.y, 14, '#e8f4ff', 1.3); });
+      blast(pt, [[2,6,lvDmg()],[2,6,lvDmg()]], '#6fb7ff'); AUDIO.play('ice'); sparks(pt.x, pt.y, 34, '#6fb7ff', .9); sparks(pt.x, pt.y, 14, '#e8f4ff', 1.3); });
       blog(`${u.name} lobs a bladder of lamp-gas. It goes up blue, the colour of every street in Darujhistan, all at once.`); }},
   t_cant:{name:TRICKS.cant.name, trick:'cant', free:true, desc:()=>TRICKS.cant.fx,
     tiles:u=>foes().filter(f => cheb(u,f) <= 6 && f.cantRound !== B.round && sees(u,f)),
@@ -44,7 +44,7 @@ Object.assign(AB, {
       updBattleUI(); afterAct(); }},
   t_rime:{name:TRICKS.rime.name, trick:'rime', sorcery:true, elder:true, desc:()=>TRICKS.rime.fx,
     tiles:u=>foes().filter(f => cheb(u,f) <= 4 && sees(u,f)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.rimeUntil = B.round + 1; t.rimeDmg = 2 + lvT(); AUDIO.play('slam'); sparks(t.x, t.y, 24, '#bfe8ff', .7);
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.rimeUntil = B.round + 1; t.rimeDmg = 2 + lvT(); AUDIO.play('ice'); sparks(t.x, t.y, 24, '#bfe8ff', .7);
       if (t.boss && d20() >= 12 + 2*lvT()) { blog(`Rime goes over ${t.name} in a ring and cracks. It keeps moving, but it is brittle now.`); float(t, 'brittle', '#bfe8ff'); }
       else { t.stun = true; blog(`Rime goes over ${t.name} in a ring, and it stops, white to the eyes.`); float(t, 'rimed', '#bfe8ff'); } }},
 });

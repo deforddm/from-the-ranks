@@ -133,7 +133,7 @@ function talk(id){
   if (S.picksDue && S.picksDue.length) return openPicks(() => talk(id));
   const n = DLG[id]();
   S.node = id; save();
-  if (n.fx) { S.fxd = S.fxd || {}; if (!S.fxd[id]) { S.fxd[id] = 1; n.fx(); } }
+  if (n.fx) { S.fxd = S.fxd || {}; if (!S.fxd[id]) { S.fxd[id] = 1; keyWatch(n.fx); } }
   if (n.scene) { sceneShell(n.scene); }
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
@@ -160,10 +160,13 @@ function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === '
 /* a choice's own effect; a munition it spends ("uses 1 sharper") counts as thrown on the Deeds page, as one thrown in a fight does.
    Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
 const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
+/* the chapter's key flag (c3_key, b2_c3_key, b3_c3_key); when a choice sets it, a low chord marks the moment (v6.8.0) */
+const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
+function keyWatch(fn){ const k = keyFlag(), was = k && S.f ? S.f[k] : undefined; fn(); if (k && S && S.f && !was && S.f[k]) AUDIO.play('choice'); }
 function runFx(c){
   if (!c.fx) return;
   const had = MUNIS.map(k => (S && S.inv && S.inv[k]) || 0);
-  c.fx();
+  keyWatch(c.fx);
   if (!S || !S.inv || /for good/.test(typeof c.tag === 'string' ? c.tag : '')) return;
   MUNIS.forEach((k, i) => { const d = had[i] - (S.inv[k] || 0); if (d > 0) tally('thrown_' + k, d); });
 }

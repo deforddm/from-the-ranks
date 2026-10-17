@@ -56,7 +56,7 @@ function cardSequence(done, opt = {}){
       const x = lerp(deckX, sl.x, a), y = lerp(deckY, sl.y, a) - (i === 1 ? (sc - 1) * CH*.4 : 0);
       if (k > 0 && i === 1) glow(ctx, x + CW/2, y + CH/2, CW*1.4*sc, c.hue, .12 + k*.28 + Math.sin(t/300)*.04);
       drawCardFlip(ctx, id, x, y, CW, CH, k, t, sl.rot * (1 - a) + sl.rot, sc);
-      if (k > .5) cue('f' + i, () => AUDIO.play(i === 1 ? 'reveal' : 'flip'));
+      if (k > .5) cue('f' + i, () => { AUDIO.play(i === 1 ? 'reveal' : 'flip'); if (i === 1) AUDIO.play('house', c.house); });
       if (i !== 1 && !self) { const ref = clamp((t - flipT - 700) / 800, 0, 1); if (ref > 0) { ctx.save(); ctx.translate(x + CW/2, y + CH/2); ctx.rotate(sl.rot); ctx.globalAlpha = ref * .85; ctx.fillStyle = '#060504'; ctx.fillRect(-CW/2, -CH/2, CW, CH); for (let j=0;j<9;j++) ell(ctx, Math.sin(t/500 + j)*CW*.3, CH/2 - ((t/5 + j*30) % (CH+20)), CW*(.15 + hash(j,1)*.15), 6 + hash(j,2)*6, 'rgba(38,32,30,.55)'); ctx.globalAlpha = 1; ctx.restore(); } }
     });
     // captions

@@ -46,7 +46,7 @@ function trickLeft(k){ const T = TRICKS[k], t = S && S.tricks && S.tricks[k]; if
 function spendTrick(k){ const T = TRICKS[k], t = S.tricks && S.tricks[k]; if (!T || !t) return; if (T.use === 'chapter') t.left = Math.max(0, (t.left ?? trickN(k)) - 1); tally('tricksUsed'); save(); }
 function earnTrick(k, who){
   const T = TRICKS[k]; if (!T) return; S.tricks ??= {}; if (S.tricks[k]) return;
-  S.tricks[k] = {who, ch:S.chapter || 0, left:T.n != null ? trickN(k) : null}; tally('tricks'); AUDIO.play('up');
+  S.tricks[k] = {who, ch:S.chapter || 0, left:T.n != null ? trickN(k) : null}; tally('tricks'); AUDIO.play('trick');
   note(`✦ ${NAME(who)} learns a trick: ${T.name}. ${T.fx}`, 'trick');
 }
 /* a new chapter: every charged trick comes back full */

@@ -1,11 +1,11 @@
 /* ============ settings ============ */
 function openSettings(){
-  const m = $('#settings'); m.hidden = false;
+  const m = $('#settings'); if (m.hidden) AUDIO.play('open'); m.hidden = false;
   const range = (k, label, small) => `<div class="opt"><label for="s_${k}">${label}</label><span class="stat" id="v_${k}">${Math.round(SET[k]*100)}%</span><input type="range" id="s_${k}" min="0" max="1" step=".05" value="${SET[k]}">${small ? `<small>${small}</small>` : ''}</div>`;
   const seg = (k, label, opts, small) => `<div class="opt"><label>${label}</label><div class="seg">${opts.map(([v,l]) => `<button class="btn ${String(SET[k]) === String(v) ? 'on' : ''}" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>${small ? `<small>${small}</small>` : ''}</div>`;
   m.innerHTML = `<div class="mbox"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px"><h2 class="m">Settings</h2><button class="btn" id="sClose">Close</button></div>
     <div class="set">
-      ${range('master', 'Master volume')}${range('music', 'Music', 'A slow score in D Phrygian, generated as you play. Changes with the scene.')}${range('sfx', 'Sound effects')}${range('amb', 'Ambience', 'Wind over the ruins, the camp at night, the city, the Fete, the lake, dripping stone.')}
+      ${range('master', 'Master volume')}${range('music', 'Music', 'A score generated as you play, in each book\'s own voice: Book One\'s flute and bells, Book Two\'s reed and frame drums, Book Three\'s choir and war drum. Changes with the scene.')}${range('sfx', 'Sound effects')}${range('amb', 'Ambience', 'Wind over the ruins, the camp at night, the city, the desert and the Chain on the march, the rivers, the siege, the snow.')}
       ${seg('shake', 'Screen shake', [[true,'On'],[false,'Off']])}
       ${seg('blood', 'Blood', [[true,'On'],[false,'Off']], 'Wounds leave marks on the ground where they fall.')}
       ${seg('motion', 'Motion', [['auto','System'],['on','Full'],['off','Reduced']], 'Reduced motion shortens animations and the card reading.')}
@@ -34,7 +34,7 @@ function openSettings(){
     if (b.dataset.arm) { if (S) dropSlot(S.sid); else roster().list.forEach(e => dropSlot(e.id)); S = null; m.hidden = true; m.innerHTML = ''; showTitle(); }
     else { b.textContent = tapWord('Tap again to erase'); b.classList.add('warn'); b.dataset.arm = 1; } };
   $('#sNotes').onclick = () => { AUDIO.play('click'); m.hidden = true; m.innerHTML = ''; openNotes(null); };
-  $('#sClose').onclick = () => { AUDIO.play('click'); m.hidden = true; m.innerHTML = ''; };
+  $('#sClose').onclick = () => { AUDIO.play('close'); m.hidden = true; m.innerHTML = ''; };
   m.onclick = e => { if (e.target === m) { m.hidden = true; m.innerHTML = ''; } };
 }
 

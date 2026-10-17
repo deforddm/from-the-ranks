@@ -1,6 +1,6 @@
 /* ============ character sheets, one at a time ============ */
 let charIdx = 0, charTab = 'soldier', charAnim = null;
-function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars'); if (c) c.scrollTop = 0; });
+function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars'); if (c) c.scrollTop = 0; }); { const c0 = $('#chars'); if (c0 && c0.hidden) AUDIO.play('open'); }
   if (!S) { S = newState('Hask'); S._preview = true; }
   const SQ = SQUAD(); charIdx = ((i % SQ.length) + SQ.length) % SQ.length; if (tab) charTab = tab;
   const id = SQ[charIdx], c = TPL[id], L = S.lvl - 1, m = $('#chars'); m.hidden = false;
@@ -55,5 +55,5 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   let sx = null; m.ontouchstart = e => { sx = e.touches[0].clientX; }; m.ontouchend = e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 70) { AUDIO.play('flip'); openChars(charIdx + (dx < 0 ? 1 : -1)); } };
   m.onclick = e => { if (e.target === m) closeChars(); };
 }
-function closeChars(){ const m = $('#chars'); m.hidden = true; m.innerHTML = ''; charAnim = null; if (S && S._preview) S = null; }
+function closeChars(){ const m = $('#chars'); if (!m.hidden) AUDIO.play('close'); m.hidden = true; m.innerHTML = ''; charAnim = null; if (S && S._preview) S = null; }
 
