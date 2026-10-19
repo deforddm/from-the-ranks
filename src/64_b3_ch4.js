@@ -56,6 +56,17 @@ Object.assign(AB, {
       float(t, 'roped', '#c8ccd4'); sparks(t.x, t.y, 12, '#a4a6a8', .5);
       blog(`${u.name} throws the hooks low. The rope goes round ${t.name}'s legs and ${big ? 'every hand near it takes hold and pulls the same way at the same moment. It is too big to fall. It staggers' : 'snaps tight, and it staggers'}.`); }},
 });
+/* v6.10: in the open, a hook from a rope man is a rope on it. Vell's grapple on the Hunter at the gully mouth does not try to haul it
+   (nothing hauls a Hunter); it goes round a leg and the line goes to the nearest Grey Sword, taut: the roped effect for a round. */
+{ const _grap = AB.grapple && AB.grapple.run;
+  if (_grap) AB.grapple.run = async function(u, x, y){ const t = unitAt(x, y);
+    if (!(b3On() && B && B.id === 'b3_c4_hunt' && B.def && !B.def.isStage2 && t && t.kind === 'khell' && u && u.id === 'vell')) return _grap.call(this, u, x, y);
+    u.cdHook = B.round + 2 - lvAt(6); AUDIO.play('bow');
+    const r = attack(u, t, {dmg:[1,6,1 + lvDmg()], verb:'throws the hook at'}); if (!r.hit) return;
+    await wait(pace(300)); if (!B || t.hp <= 0) return;
+    t.b3RopeUntil = B.round + 1; t.b3RopeAc = 4; t.b3RopeHit = 4; S.f.b3_c4_vellRope = (S.f.b3_c4_vellRope || 0) + 1;
+    float(t, 'roped', '#c8ccd4'); sparks(t.x, t.y, 12, '#a4a6a8', .5); shakeMap();
+    blog(`The hook goes round its leg. Vell does not haul on it; he throws the line back to the nearest Grey Sword, and it goes taut. <em>One more rope on it.</em> Until his next turn it is −4 to hit and every blow on it hits +4.`); }; }
 { const _atkCalc = atkCalc;
   atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (!b3On() || !B || !a || !t) return c;
     if (t.side === 'e' && t.b3RopeUntil >= B.round) c.ac -= t.b3RopeAc || 2;
@@ -227,7 +238,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     /* the starving the priest drives at the stakes: not the enemy (the breakout spares them: def.b3Spare) */
     b3_c4_starving:{name:'Starving Tenescowri', sig:'t', kind:'tenescowri', hp:6, ac:9, atk:1, dmg:[1,3,0], rng:1, mv:4, init:0, spare:true, verb:'claws at'},
     /* the K'ell Hunter, roped and down in the gully (the first ground is the engine's b3_khell) */
-    b3_c4_roped:{name:'K\'ell Hunter, roped', sig:'K', kind:'khell', hp:40, attacks:2, ac:12, atk:5, dmg:[2,6,2], rng:1, mv:2, init:2, boss:true, verb:'scythes a blade-arm through'},
+    b3_c4_roped:{name:'K\'ell Hunter, roped', sig:'K', kind:'khell', hp:60, attacks:2, ac:13, atk:7, dmg:[2,8,3], rng:1, mv:2, init:2, boss:true, dr:5, sk:['parry'], resist:{sharper:.5}, weak:{cusser:1.5}, verb:'scythes a blade-arm through'},
     /* Corporal Mosk and his lads, of the Ninth Company: fists and cudgels */
     b3_c4_mosk:{name:'Corporal ' + C4.corporal, sig:'M', kind:'b2soldier', hp:18, ac:13, atk:4, dmg:[1,4,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a fist like a mallet at'},
     b3_c4_lad:{name:'One of ' + C4.corporal + '\'s lads', sig:'l', kind:'b2soldier', hp:12, ac:12, atk:3, dmg:[1,4,1], rng:1, mv:4, init:1, verb:'swings a cudgel at'},
@@ -279,7 +290,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     f.b3_c4_broke && `A priest of the Seer drove his people and the starving at the Fourth's stretch of the stakes. The Fourth held it, and sorted the one from the other as best it could in the dark.`,
     f.b3_c4_heart && `On the night of the breakout something huge came down out of the sky over the heart of the prisoners' camp. In the morning the word was that Anaster, the First Child, was taken, and the women who guarded him were dead, and Whiskeyjack had been there.`,
     f.b3_c4_gathering && `The child went out of the camp with the fat Daru and two Host marines, two women. That night was cold out of nowhere, and the dust stood up on the horizon.`,
-    f.b3_c4_hunted && `The Grey Swords pulled a K'ell Hunter down into a gully with ropes, and the Fourth helped kill it. Something dust-grey watched from a rise, and was gone.`,
+    f.b3_c4_hunted && `The Grey Swords pulled a K'ell Hunter down into a gully with ropes${f.b3_c4_vellRope ? ', one of them Vell\'s,' : ''}, and the Fourth helped kill it. Something dust-grey watched from a rise, and was gone.`,
     f.b3_c4_dannet && `Dannet, a Capan second daughter and a Grey Sword acolyte, is lent to the Malazans as a guide into the Domin.`,
     f.b3_c4_founders && `The Barghast tore up the floor of the Thrall and found their First Founders in nine great canoes.`,
     f.b3_c4_order && `Whiskeyjack's order: nobody goes over the stakes, nobody takes anything from the other side of them, nobody touches the Tenescowri except to feed them or bury them.`,
@@ -568,11 +579,11 @@ One of the recruits, a man of fifty with a farmer's hands, drops his wooden swor
     b3_c4_ambrel:()=>({sp:C4.ropesgt + ' · rope-sergeant of the Grey Swords', fx:()=>{ S.f.b3_c4_ambrel = 1; }, txt:
 `An old soldier, older than anyone else in the yard, bald as a stone and missing the last two fingers of his left hand. He is coiling a grey rope over his elbow and palm with two iron hooks at the end of it, back to back, and he does not stop coiling while he talks.
 
-"Malazans." His Daru is a Genabaris dock-hand's. "Good. One of you'll be a sapper." He looks along the Fourth.${c4In('kettle') ? ` His eyes stop on Kettle's satchel. "Good."` : ''} "There's a K'ell Hunter on the plain west of the prisoners' camp. One of the Seer's lizards. It came up behind Kulpath's army, or with it, and when the army broke it didn't. It's been in the gullies since. Killed two Rhivi herders yesterday and one of our outriders this morning." He finishes the coil. "We ride out at dusk with the ropes."
+"Malazans." His Daru is a Genabaris dock-hand's. "Good. One of you'll be a sapper." He looks along the Fourth.${c4In('kettle') ? ` His eyes stop on Kettle's satchel. "Good."` : ''} "Sharpers won't do it, I'll tell you that for free. We tried. It looks round. A cusser under it, when it's held: that it feels."${c4In('vell') ? ` His eyes go to the line coiled on Vell's shoulder, and stay there. "And a rope man." He looks at the coil, not the boy. "Where did you learn to coil like that?" Vell tells him: a city, a Guild, roofs. The old man nods, slowly, the way a man nods at a thing he did not expect to find in a yard. "Roofs. Well. Tonight it's legs, and the thing on the other end wants you dead, and it's heavier than a house." He goes back to coiling. "But a rope man's a rope man."` : ''} "There's a K'ell Hunter on the plain west of the prisoners' camp. One of the Seer's lizards. It came up behind Kulpath's army, or with it, and when the army broke it didn't. It's been in the gullies since. Killed two Rhivi herders yesterday and one of our outriders this morning." He finishes the coil. "We ride out at dusk with the ropes."
 
 "Before the siege we met one on the plain. Pulled it down with these." He lifts the hooks. "It killed eleven of us doing it. Then four more came and we would all have died, and something out of the dust saved us that I will not talk about in a city." He looks at you. "The Host was asked for a squad that can throw things and doesn't run. Somebody said the Fourth."`,
       ch:[{t:'"Show me how the rope goes on."', check:['might', 16], trick:'b3_c4_wolfrope', req:()=>!S.f.b3_c4_ropeTried, fx:()=>{ S.f.b3_c4_ropeTried = 1; },
-            edges:id=>[id === 'greysword' && ['she drilled it on the walls', 2], id === 'brisk' && ['the heavy work', 1], id === 'kettle' && ['knots are sapper work', 1], id === 'tuft' && ['not her kind of rope', -1]],
+            edges:id=>[id === 'vell' && ['a rope man since he could walk', 3], id === 'greysword' && ['she drilled it on the walls', 2], id === 'brisk' && ['the heavy work', 1], id === 'kettle' && ['knots are sapper work', 1], id === 'tuft' && ['not her kind of rope', -1]],
             go:'b3_c4_rope_ok', fail:'b3_c4_rope_miss'},
           {t:'"We\'ll ride with you."', go:'b3_c4_hunt_out'},
           {t:'Not yet.', go:()=>startExplore()}]}),
@@ -581,13 +592,13 @@ One of the recruits, a man of fifty with a farmer's hands, drops his wooden swor
 
 On the fourth throw the hooks go round his shins and the recruits pull and he goes over in the dust, slowly, the way an old man goes over, and lies there.
 
-"That," he says from the ground, "is the Wolves' Rope. In the winter it had the boar's name." He holds out his good hand to be pulled up. "${by({greysword:'You had it already, girl. I only reminded you.', brisk:'Heavy infantry. I can always tell.', kettle:'Sapper. Knew it. You hold a rope like it owes you money.', _:'You\'ll do.'})}"`,
+"That," he says from the ground, "is the Wolves' Rope. In the winter it had the boar's name." He holds out his good hand to be pulled up. "${by({vell:'Guild rope. I knew it from the coil. You\'d have had it on the second throw if you\'d stop trying to go *up* with it. Down, rope man. Everything tonight is down.', greysword:'You had it already, girl. I only reminded you.', brisk:'Heavy infantry. I can always tell.', kettle:'Sapper. Knew it. You hold a rope like it owes you money.', _:'You\'ll do.'})}"`,
       ch:[{t:'"We\'ll ride with you."', go:'b3_c4_hunt_out'},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b3_c4_rope_miss:()=>({sp:C4.ropesgt, txt:
 `It goes wrong on the second throw: the hooks go round ${C4.ropesgt}'s middle instead of his legs, and the recruits on the tail pull anyway, as they were told, and he goes over sideways and takes ${by({sgt:'you', _:'{who}'})} with him.
 
-"*Body*," he says, from underneath. "Never the body. The body's where the blades are." He gets up, slowly. "That's how I lost these." He holds up the hand with the two fingers gone. "We'll put you on the tail of it tonight. The tail's an honourable place."`,
+"*Body*," he says, from underneath. "Never the body. The body's where the blades are." He gets up, slowly. "That's how I lost these." He holds up the hand with the two fingers gone. "We'll put you on the tail of it tonight. The tail's an honourable place."${by({vell:` Then, to Vell, not unkindly: "Even a rope man. Roofs don't swing back."`, _:''})}`,
       ch:[{t:'"We\'ll ride with you."', go:'b3_c4_hunt_out'},
           {t:'Not yet.', go:()=>startExplore()}]}),
 
@@ -662,15 +673,21 @@ Then it comes out of the gully. It does not hurry.
 
 Grey-skinned, two-legged, the height of a mounted man, leaning forward over its long tail the way a heron leans. Where its hands should be there are blades, long and curved, and it holds them low and wide. Its skin has gone wrong in places, split and dry, as if it had been dead a long time and had not been told. Its eyes find the Grey Swords, and then the Fourth, and it seems to decide something.
 
-"In the open," ${C4.ropesgt} says quietly, "we hold it. We do not try to kill it. We hold it until the ropes are on." He looks at you. "Then we kill it."`,
+"In the open," ${C4.ropesgt} says quietly, "we hold it. We do not try to kill it. We hold it until the ropes are on." He looks at you. "Then we kill it."${c4In('vell') ? `
+
+He puts a coil into Vell's hands without looking at him. "First rope's yours, rope man. Low. Round the legs. And when it's on, you let go of it and get out from under, because the next thing it does is come down the rope at whoever is holding it." Vell weighs the coil, once, the way he weighs a line before a drop, and says nothing at all, which from Vell is a speech.` : ''}`,
       ch:[{t:'"Hold it."', go:()=>startBattle('b3_c4_hunt', {})},
           {t:'Kettle puts a sharper under its feet.', tag:'uses 1 sharper', req:()=>c4In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c4_hunt', {pre:`Kettle bowls the sharper low and flat across the frost, the way you would roll a ball to a dog, and gets her hands over her ears.`})}]}),
-    b3_c4_hunt_after:()=>({sp:'The gully', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_hunted = 1; gain('b3_c4_ropehooks'); }, txt:
+    b3_c4_hunt_after:()=>({sp:'The gully', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_hunted = 1; gain('b3_c4_ropehooks'); if (c4In('vell')) loy('vell', 1); }, txt:
 `It takes a long time to stop moving. Long after it should have, a blade-arm goes on scything slowly at the stones, and the Grey Swords stand clear of it and wait, the way you wait for a fire to burn out, and keep the ropes taut.
 
-When it is still, ${C4.ropesgt} goes down into the gully and looks at it for a long time. Then he cuts the hooks free, all of them, and coils the ropes, and brings one coil up the bank and puts it in ${S.f.b3_hurtMost && TPL[S.f.b3_hurtMost] && c4In(S.f.b3_hurtMost) ? `${NAME(S.f.b3_hurtMost)}'s` : 'your'} hands.
+When it is still, ${C4.ropesgt} goes down into the gully and looks at it for a long time. Then he cuts the hooks free, all of them, and coils the ropes, and brings one coil up the bank and puts it in ${c4In('vell') ? `Vell's` : S.f.b3_hurtMost && TPL[S.f.b3_hurtMost] && c4In(S.f.b3_hurtMost) ? `${NAME(S.f.b3_hurtMost)}'s` : 'your'} hands.
 
-"For the Fourth," he says. "You held it in the open. Most don't." He looks back down at the thing in the gully. "It was dead before we started, you know. Long dead. They don't stay down because they were never properly up."${c4In('greysword') ? `
+"For the Fourth," he says. "You held it in the open. Most don't." He looks back down at the thing in the gully. "It was dead before we started, you know. Long dead. They don't stay down because they were never properly up."${c4In('vell') ? `
+
+He looks at Vell, properly, for the first time. "${S.f.b3_c4_vellRope ? `Your rope man put a line on it in the open, on his own, with the thing still on its feet. I have seen Grey Swords not manage that. I have buried Grey Swords who did not manage that.` : `Rope man. You held your end and you let go when I said. That is all the Wolves ever asked of anybody.`}"
+
+Vell is turning the coil over in his hands. "Guild rope's thinner," he says, to nobody. "Guild rope never had to hold anything that wanted it dead." He puts it over his shoulder with the other one, and from then on he carries two.` : ''}${c4In('greysword') ? `
 
 Dannet is standing at the lip of the gully with her shield still up. She lowers it slowly. "The patrol before the siege," she says. "I was not on it. The ones who were are mostly not on anything now." She touches the amulet, and the wolf.` : ''}`,
       ch:[{t:'Look up at the rise.', go:'b3_c4_imass'}]}),

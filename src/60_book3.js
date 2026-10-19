@@ -184,7 +184,8 @@ Object.assign(FOES, {
   b3_beklite:{name:'Beklite', kind:'beklite', sig:'B', hp:13, ac:14, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, verb:'drives a spear at'},
   b3_seerdomin:{name:'Seerdomin', kind:'seerdomin', sig:'Σ', hp:26, ac:15, atk:5, dmg:[1,10,3], rng:1, mv:4, init:2, verb:'brings the long mace down on'},
   b3_tenescowri:{name:'Tenescowri', kind:'tenescowri', sig:'t', hp:7, ac:10, atk:2, dmg:[1,4,0], rng:1, mv:4, init:0, verb:'claws at'},
-  b3_khell:{name:'K\'ell Hunter', kind:'khell', sig:'K', hp:60, ac:15, atk:6, dmg:[2,8,3], rng:1, mv:6, init:3, boss:true, verb:'scythes a blade-arm through'},
+  /* v6.10: nearly impossible for mortal arms. Two blade-arms a turn with reach, a parry a round, a hide that halves a sharper; a cusser tears it (×1.5). Skilled hands bring one down, at a cost. */
+  b3_khell:{name:'K\'ell Hunter', kind:'khell', sig:'K', hp:96, ac:17, atk:8, dmg:[2,10,4], attacks:2, rng:1, mv:7, init:4, boss:true, dr:5, sk:['reach','parry'], resist:{sharper:.5}, weak:{cusser:1.5}, verb:'scythes a blade-arm through'},
 });
 const B3_AID = ['b3_rhivi_rider', 'b3_barghast', 'b3_andii', 'b3_greysword', 'b3_moranth'];
 const B3_AID_WHO = {b3_rhivi_rider:'the Rhivi', b3_barghast:'the Barghast', b3_andii:'the Tiste Andii', b3_greysword:'the Grey Swords', b3_moranth:'the Black Moranth'};
@@ -378,7 +379,7 @@ GLOSSX.moi = [
   [0, 'Treach', 'The Tiger of Summer. A god new this year, they say, risen as the Boar fell. Soldiers who swore by Fener are learning a different oath.', ()=>godMet('sgt') || !!(S.f && S.f.b3_treach)],
   [1, 'Kallor', 'Brood\'s second. Old, the soldiers say, older than the Empire, a king of somewhere that is not there any more. The soldiers do not like him. He does not appear to need them to.', ()=>!!(S.f && S.f.b3_kallor)],
   [1, 'The Mhybe', 'The Rhivi elder who carries the child. She was young at the turn of the year.', ()=>!!(S.f && S.f.b3_mhybe)],
-  [2, 'K\'Chain Che\'Malle', 'Something older than the Imass, walking again: two-legged, long-tailed, grey, with blades where its hands should be. The K\'ell Hunters. Ropes, munitions, and luck.', ()=>!!(S.f && S.f.b3_khell)],
+  [2, 'K\'Chain Che\'Malle', 'Something older than the Imass, walking again: two-legged, long-tailed, grey, with blades where its hands should be. The K\'ell Hunters. No mortal company fights one and keeps its number. Ropes, a cusser under it, and luck: a sharper only makes it look round.', ()=>!!(S.f && S.f.b3_khell)],
   [3, 'Capustan', 'A city on the Catlin River, under the Pannion siege: a prince, a Mask Council of quarrelling priests, and the Grey Swords on its walls.', ()=>S.chapter >= 3 || !!(S.f && S.f.b3_capustan)],
   [3, 'The Grey Swords', 'Fener\'s Reve, a mercenary company in Capustan\'s pay. Their god was torn down this year. They are learning to pray to wolves.', ()=>!!(S.f && S.f.b3_greyswords)],
   [3, 'Warrens poisoned', 'In the Pannion lands the warrens are fouled. A healer reaching into Denul may find something reaching back.', ()=>!!(S.f && S.f.b3_domin)],

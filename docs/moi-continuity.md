@@ -54,3 +54,10 @@ Lint's REVIEW list for Book Three: every entry is a node reached only with that 
 - **Ohl's offers** vary (a night, five days, three days, a week): each is his guess on the day, and none heals the leg.
 - **Ohl's list and the legion** (Ch7 lift): the legion's fourteen dead count as one entry.
 - **Whiskeyjack calls Ohl "Ehrlii"** in Ch6, as a nickname from his people's name. Left.
+
+## v6.10.0 (Oct 18, 2026): the K'ell Hunter, and a rope man
+
+- `FOES.b3_khell` and `b3_c4_roped` are what the books say: two blade-arms a turn (`attacks:2`), reach, a parry a round, `dr:5` (a hide that takes 5 off every ordinary blow; a critical goes through), `resist:{sharper:.5}`, `weak:{cusser:1.5}`. The roped one has 60 health. Any later chapter that places a Hunter inherits this; place one only where the squad has ropes, cussers, or allies, and say so in the text.
+- Engine hooks (31): `u.dr` on blows in `attack()`; `u.resist` / `u.weak` by munition name in `blast()`, read from `B.blastKind` (set by `useAb` from the ability's item; the quorl counts as a sharper). The opening sharper of a fight (`opt.pre`) honours `resist.sharper` too.
+- **Vell** (an import from Book One) in Chapter 4: the rope-sergeant Ambrel sees the Guild line on his shoulder (`b3_c4_ambrel`); Vell has a +3 edge on the Wolves' Rope check; at the gully mouth the first rope is his (`b3_c4_hunt_find`); in the hunt's first ground his grapple on the Hunter does not haul it but ropes it for a round (`S.f.b3_c4_vellRope` counts the throws; the gully's roped Hunter is still too heavy to haul); after, the coil goes into his hands, Ambrel's word depends on `b3_c4_vellRope`, and Vell gains 1 loyalty. The chapter recap names his rope. Later chapters may read `b3_c4_vellRope` (he "carries two" ropes from then on).
+- Ambrel always says, in the yard, that sharpers won't do it and a cusser under it when it is held will: the player is told the rule in the world.

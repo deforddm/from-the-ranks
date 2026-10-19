@@ -123,7 +123,7 @@ function startBattle(id, opt={}){
   $('#order').onclick = e => { const c = e.target.closest('[data-u]'); if (!c || !B) return; const u = B.units[+c.dataset.u]; if (!u) return; B.ping = {u, t:performance.now()}; if (u.hp > 0) blog(`${esc(u.name)}: ${u.hp}/${u.maxhp} health, armour ${u.ac}${u.rng > 1 ? `, range ${u.rng}` : ''}.`); };
   G.disp = {};
   fitBattle();
-  if (opt.pre) { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => hurt(f, roll(1,10))); blog(typeof opt.pre === 'string' ? opt.pre : `Kettle's sharper skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
+  if (opt.pre) { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); blog(typeof opt.pre === 'string' ? opt.pre : `Kettle's sharper skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
   if (opt.pre) { S.f.pre ??= {}; S.f.pre[id] = 1; if (def.preText) blog(`<em>${typeof def.preText === 'function' ? def.preText() : def.preText}</em>`); if (def.preFx) { try { def.preFx(B); } catch(e) { console.warn('preFx', e); } } } // what Kettle's opening sharper changed here (31c)
   if (def.nomagic) { blog(`<em>Otataral. The warrens are dead here.</em>${SQUAD().some(id => trickAbs(id).some(k => AB[k] && AB[k].elder)) ? ' Not the older ones: the dark and the cold the squad carries still answer.' : ''}`); if (SQUAD().includes('kettle') && S.inv.burner > 0) blog(`Kettle straps her burners down tight. "Not near that stuff. Burners and otataral don't argue, they just go."`); }
   if (def.nothrow) blog(`<em>Gas in the pipes. Nobody throws anything in here.</em>`);
@@ -327,7 +327,10 @@ function scatter(u, x, y, failOn, dist){
 function throwArc(u, pt, then){ const dur = REDUCE() ? 1 : 420; B.fx.push({kind:'arc', from:{x:u.x,y:u.y}, to:pt, t:performance.now(), dur}); later(then, dur); }
 function blast(pt, dice, col){
   B.fx.push({kind:'boom', x:pt.x, y:pt.y, r:dice.length - 1, col, t:performance.now()});
-  B.units.filter(u => u.hp > 0).forEach(u => { const d = cheb(u, pt); if (d < dice.length) { const [n,s,p] = dice[d]; hurt(u, roll(n,s,p)); if (u.side === 'p') blog(`${u.name} is caught in the blast.`); } });
+  B.units.filter(u => u.hp > 0).forEach(u => { const d = cheb(u, pt); if (d < dice.length) { const [n,s,p] = dice[d]; let dmg = roll(n,s,p); const k = B.blastKind;
+    if (k && u.resist && u.resist[k]) { dmg = Math.max(1, Math.round(dmg * u.resist[k])); blog(`<em>The ${k}'s iron rattles off ${u.name}.</em> ${dmg} damage, where it should have been more.`); float(u, 'shrugs it off', '#a99a88'); } // a hide that laughs at sharpers (v6.10)
+    else if (k && u.weak && u.weak[k]) { dmg = Math.round(dmg * u.weak[k]); blog(`<em>The ${k} does what nothing else could.</em> ${u.name} is torn open: ${dmg} damage.`); float(u, 'torn open', '#ffcf7a'); }
+    hurt(u, dmg); if (u.side === 'p') blog(`${u.name} is caught in the blast.`); } });
   updBattleUI(); if (B.cur && B.cur.side === 'p') afterAct(); else if (checkEnd()) updBattleUI();
 }
 /* flanking: attacker gets +2 if an ally is adjacent to the target on the far side (works for melee and ranged) */
@@ -384,10 +387,11 @@ function attack(a, t, o={}){
   if (!o.ground) AUDIO.play(lash ? 'shadow' : a.kind === 'kettle' || a.kind === 'xbow' ? 'bow' : hit ? AUDIO.blow(verb, ranged) : 'miss'); // a mace, a spear, teeth or a blade, by the verb (v6.8.0)
   const math = SET.dice ? ` <span class="stat">(${nat}+${bonus} vs ${ac})</span>` : '';
   const tags = [o.aoo ? 'free attack' : '', fl ? 'flanking +2' : '', cover ? 'behind cover' : '', t.prone && cheb(a, t) <= 1 ? 'prone' : ''].filter(Boolean).join(', ');
-  const tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
+  let tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
   const land = o.land != null ? o.land : ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
-  const dd = o.dmg || a.dmg; const dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) : 0); // the Boar and the Tiger (31c)
+  const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) : 0); // the Boar and the Tiger (31c)
+  if (t.dr && !crit) { const cut = Math.min(t.dr, dmg - 1); if (cut > 0) { dmg -= cut; tagTxt = tagTxt ? tagTxt.replace(/\]<\/span>$/, `, hide −${cut}]</span>`) : ` <span class="stat">[hide −${cut}]</span>`; } } // a hide that turns ordinary iron (v6.10: the K'ell Hunter); a critical goes through
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
   later(() => { if (t.hp <= 0) return; if (crit) sparks(t.x, t.y, 16, '#ffcf7a'); else sparks(t.x, t.y - .1, 5, '#f08a7c', .6);
     hurt(t, dmg, crit); foeRiders(a, t, dmg);
@@ -490,6 +494,7 @@ function useAb(k, x, y){
   if (a.boom || k === 'quickshot' || k === 'mark' || k === 'bash') u.fired = true;
   if (a.trick) { if (TRICKS[a.trick].use === 'chapter') spendTrick(a.trick); else { B.used[k] = 1; tally('tricksUsed'); } }
   if (!a.free) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; } B.mode = 'act'; B.aim = null; B.busy = true;
+  B.blastKind = a.item || (k === 'quorl' ? 'sharper' : null); // what a blast() that lands later was thrown with (v6.10: a foe may resist or fear a munition)
   const ran = a.run(u, x, y); castStrain(u, a.strain && u.id === 'tuft' && S.card === 'magi' ? a.strain - 1 : a.strain);
   if (a.aoe) { updBattleUI(); return; } // blast() resumes the turn when it lands
   if (ran && ran.then) { updBattleUI(); ran.catch(e => console.warn(k, e)).then(() => later(() => { if (!B) return; B.busy = false; afterAct(); }, pace(250))); return; } // the hook and the drive: the turn resumes when the movement is done
