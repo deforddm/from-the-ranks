@@ -1336,7 +1336,7 @@ ${S.f.c4_key === 'shield' ? `It isn't true. You both know it isn't true. He says
       ch:[{t:'The squad.', go:'c4_close'}]}),
 
     /* ---- chapter close: the roof at dawn ---- */
-    c4_close:()=>({sp:'The chandler\'s roof', scene:'roof', txt:
+    c4_close:()=>({sp:'The chandler\'s roof', scene:'roof', again:'The row under the eaves. The squad is still awake, and it is still the hour for it.', txt:
 `The city goes out lamp by lamp. You've seen it do it before, from this roof, and it's the same, and it isn't: the blue shrinking back into the glass street by street, as if something beneath the city were breathing in, and then gone.
 
 The Fourth is in a row under the eaves. Nobody is asleep.

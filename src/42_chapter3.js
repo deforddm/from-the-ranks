@@ -340,7 +340,7 @@ The arms come down a little. "Nine days." He nods at the gate, at the little des
 ${SQUAD().includes('kettle') ? `Kettle is already at the counter. She has picked up the small black bottle under the glass dome and is reading the label with her lips moving.` : SQUAD().includes('ohl') ? `Ohl has picked up one of the blue bottles, unstoppered it, sniffed it, and put it back with the expression of a surgeon finding a cobbler in his tent.` : ''}`,
       ch:[{t:'"Show us your wonders, Doctor."', go:'c3_brack_wares'},
           {t:'Leave him to the goat.'}]}),
-    c3_brack_wares:()=>{ const off = brackOff(), pr = n => Math.max(1, n - off), has = id => S.kit.includes(id); return {sp:'Doctor Brack\'s stall', txt:
+    c3_brack_wares:()=>{ const off = brackOff(), pr = n => Math.max(1, n - off), has = id => S.kit.includes(id); return {sp:'Doctor Brack\'s stall', again:'Brack lays a hand on the bottles again, in case one of them has changed its mind.', txt:
 `${S.f.c3_brackVisit ? `"*Returning* custom!" Doctor Brack spreads his arms. "The finest kind. Let me guess. You've reconsidered the Repellent."` : `Doctor Brack lays a hand on each of the bottles in turn, the way a man lays hands on a congregation.`}${off ? ` ${S.f.c3_brackKettle ? `He keeps one eye on Kettle at all times. His prices have come down. He'd rather not say why.` : `"For the Empire," he says, a little sourly, "a soldier's discount."`}` : ''}
 
 *Tincture of Soliel's Own Tears,* in the blue bottles. ${SQUAD().includes('ohl') ? `"Lard," says Ohl. "Lard and rosewater and something for the smell." A pause. "It'll work, mind. Lard works. I just object to the goddess."` : `"Healing in a bottle, blessed at the temple in Unta," says Brack. It smells of roses and, under the roses, of lard.`}

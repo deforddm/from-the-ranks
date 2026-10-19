@@ -1465,7 +1465,7 @@ Above the ridge, very high, a black mote hangs in the pale sky. It has been ther
       ch:[{t:'The squad.', go:'c5_close'}]}),
 
     /* ---- chapter close: the ridge at dawn ---- */
-    c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', txt:
+    c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', again:'The lee of the barrow-stones, for a moment longer. Nobody has started down.', txt:
 `Three days back to the city. Paran's horse will pass you on the road before noon, and he won't stop, and you won't expect him to.
 
 The Fourth sits for a moment in the lee of the barrow-stones before the walk, because it's the last moment anyone is going to get. Nobody has slept. ${S.f.c5_spotted ? `Nobody slept the night before either. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}

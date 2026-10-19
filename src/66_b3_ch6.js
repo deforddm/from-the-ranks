@@ -511,7 +511,7 @@ ${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says.
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- the quartermaster's wagons: the Host's quartermaster sells, in silver ---- */
-  b3_c6_wagons:()=>({sp:'The quartermaster', txt:
+  b3_c6_wagons:()=>({sp:'The quartermaster', again:()=>`The quartermaster's wagon. You have ${S.silver} silver.`, txt:
 `The Seventh's quartermaster has spent the week moving companies up into gaps so the column stays the same length, and has opinions about it, which he does not share. He has also got wagons, and on the wagons are things a squad can buy, in silver, from a man with a slate.
 
 "Salve, six. Sharpers, nine, and don't tell me the Moranth give them away, the Moranth don't give me anything. Smokers, five." He looks at the Fourth. "Buy now. I hear some of you are going a long way soon. Latrines, I hear."${b3In('kettle') ? `
@@ -1280,7 +1280,7 @@ The last barges, Trake's Legion's, come in hours late, and their people come ash
   b3_c6_unload:()=>({sp:'The barges', txt:
 `The barges unload onto the landing in a long confusion of crates and packs and sacks and soldiers, and the White Face come off them still in their war-paint and stand about looking at Brood's Barghast, who look back. Nobody is singing now.${S.f.b3_c6_brood ? ` The barges will not be needed again. Oskan is already arguing with a Rhivi about selling one.` : ''}`,
     ch:[{t:'Leave it.', go:()=>startExplore()}]}),
-  b3_c6_gear:()=>({sp:'The Host\'s gear', txt:
+  b3_c6_gear:()=>({sp:'The Host\'s gear', again:()=>`The landing, the stacks, the quartermaster's eye. You have ${S.silver} silver.`, txt:
 `The Host's gear, stacked on the landing under a quartermaster's eye: everything four thousand people need to march to Coral, which is less than four thousand people want.
 
 "Salve, six. Sharpers, nine. Smokers, five," the quartermaster says, without looking up. "Silver. Last shop before Coral."`,

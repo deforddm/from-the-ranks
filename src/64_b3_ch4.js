@@ -796,7 +796,7 @@ ${c4In('brisk') ? `Brisk, behind you, quietly: "I'll wake the line."` : `You'll 
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
 
     /* the fire: rest, the recruits, the cold, and the howling */
-    b3_c4_fire:()=>({sp:'The Fourth\'s fire', txt:
+    b3_c4_fire:()=>({sp:'The Fourth\'s fire', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', txt:
 `The fire is low and the frost comes right up to the edge of it and stops. ${c4In('kettle') ? `Kettle is lying on her back with the satchel under her head, eyes open. ` : ''}${c4In('ohl') ? `Ohl is boiling something that will be tea in the technical sense. ` : ''}${c4In('tuft') ? `Tuft is sitting up with her knees drawn in and her cards in her lap, not reading them.` : ''}
 
 ${b3Mind() === 'haunted' ? `Nobody has slept since the gully. Everyone keeps looking south-east, at nothing.` : b3Mind() === 'shaken' ? `Every time the howling starts, every head at the fire turns the same way, and then turns back.` : `The howling comes and goes. You find, after a while, that you have started to be able to talk over it.`}`,

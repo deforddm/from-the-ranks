@@ -447,7 +447,7 @@ The brother watches you go. You can feel him doing it, the way you feel sun on t
   b3_c2_mott_again:()=>({sp:'A Bole', txt:`${S.f.b3_c2_mottJug ? 'The Bole lifts the jug at you from across the road. You do not go over. Your stomach remembers.' : 'The Bole waves. Behind him the brother does not.'}`, ch:[{t:'Wave back.', go:()=>startExplore()}]}),
 
   /* ---- the quartermaster's clerk: silver for kit ---- */
-  b3_c2_qm:()=>({sp:'The quartermaster\'s clerk', fx:()=>{ S.f.b3_c2_qm = 1; }, txt:
+  b3_c2_qm:()=>({sp:'The quartermaster\'s clerk', fx:()=>{ S.f.b3_c2_qm = 1; }, again:()=>`He taps the slate. You have ${S.silver} silver.`, txt:
 `The Host's quartermaster rides somewhere up the column with the ledgers. His clerk walks with the stores wagon and sells what will not be missed, for silver, with a slate and a stub of chalk and the face of a man who has heard every story there is about why a squad is short.
 
 "Salve, five. Sharpers, eight, and don't tell the Moranth what I charged. Nothing else. There is nothing else." He taps the slate. "The Host feeds its own. The Host does not *arm* its own for free. Not on this road. Not with nobody paying the Host."

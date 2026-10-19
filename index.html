@@ -82,7 +82,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(3px,3px)}}
 canvas{display:block;touch-action:manipulation;max-width:100%}
 .hint{margin:0;font-family:var(--label);font-size:.78rem;color:var(--mute);letter-spacing:.05em}
-.log{font-size:.9rem;color:var(--mute);display:flex;flex-direction:column;gap:3px;min-height:4.2em;font-family:var(--prose)}
+.log{font-size:.9rem;color:var(--mute);display:flex;flex-direction:column;gap:3px;min-height:4.2em;max-height:7.8rem;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;padding-right:4px;font-family:var(--prose)}
 .log div:first-child{color:var(--ink)}
 .log em{color:var(--brass2);font-style:normal}
 /* title */
@@ -112,6 +112,8 @@ textarea#exp{height:90px;color:var(--mute)}
 .sp::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line2),transparent)}
 .txt{font-family:var(--prose);font-size:1.06rem;line-height:1.58}
 .txt p{margin:0 0 .75em}
+.txt.said{position:relative;max-height:3.3em;overflow:hidden;color:var(--mute)}.txt.said::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2.2em;background:linear-gradient(rgba(27,22,18,0),#1a1511)}
+.btn.sm.saidmore{margin:0 0 10px;min-height:36px;font-size:.74rem;color:var(--mute)}
 .note{font-family:var(--label);font-size:.8rem;letter-spacing:.04em;padding:6px 10px;margin-bottom:10px;border-left:2px solid var(--warren);background:rgba(154,134,224,.08);color:#d9d0f5}
 .note.good{border-color:var(--moss);background:rgba(111,159,130,.09);color:#cfe8d8}
 .note.bad{border-color:var(--blood2);background:rgba(168,51,42,.12);color:#f0c9c2}
@@ -385,7 +387,7 @@ kbd{display:inline-block;min-width:1.2em;padding:0 4px;margin:0 1px;border:1px s
   #app:has(> .cvwrap),#app:has(> .scene){display:grid;grid-template-columns:minmax(0,1fr) var(--side);grid-template-rows:repeat(10,auto) 1fr;column-gap:28px;row-gap:0;align-content:start}
   #app > .cvwrap,#app > .scene{grid-column:1;grid-row:1 / -1;align-self:start;position:sticky;top:10px} /* the picture stays in view while the column beside it scrolls */
   #app:has(> .cvwrap) > :not(.cvwrap),#app:has(> .scene) > :not(.scene){grid-column:2;margin-bottom:12px}
-  #app > .log{min-height:0;font-size:.95rem;gap:5px}
+  #app > .log{min-height:0;max-height:min(40vh,16rem);font-size:.95rem;gap:5px}
   /* a backdrop fills its side: the full width, and as tall as the window allows, down to a phone's proportions (a box no narrower
      than 1.4:1 is the same drawing a narrow phone shows, only bigger; wider than that the scene just has more room either side) */
   #app > .scene,.end > .scene{container-type:inline-size}
@@ -638,7 +640,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.11.0';
+const VERSION = '6.12.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1771,6 +1773,17 @@ function checkTag(c){
   return `<span class="tagk ${T ? 'trk' : ''}">${T ? '✦ ' : ''}${STATN[c.check[0]]}${SET.dice ? ' ' + dcOf(c) : ''} · ${esc(NAME(id))} ${SET.dice ? p + '%' : oddsWord(p)}</span>`;
 }
 let curCh = [];
+/* v6.12.0: words said once in a sitting. G.said keeps, for one sitting of the sheet (until it closes, or a map or a fight comes
+   between), the words every node showed. A node whose words come up again unchanged (a hub a branch has come back to) shows its
+   `again` line instead, where the writer gave one (a string or a function), or else its words folded to their first line with
+   "Read it again" under; and a choice that only asks a thing already heard (its node's every way out comes straight back here, and
+   its words would be the same) is not offered again, unless it is the only choice left. */
+const saidWords = n => (fmt(n.txt) + (n.after ? fmt(n.after) : '')).replace(/\d+/g, '#'); // a count that moved (silver, a tally) is still the same words
+function topicHeard(id, c, offers){ // offers: where this node's other choices go; a heard node whose every way out is one of those, or back here, has nothing left to give
+  if (!G.said || typeof c.go !== 'string' || c.check || c.fx || !(c.go in G.said)) return false;
+  try { const t = DLG[c.go](); if (saidWords(t) !== G.said[c.go]) return false;
+    const ways = (t.ch || []).filter(x => !x.req || x.req()); return ways.length > 0 && ways.every(x => typeof x.go === 'string' && !x.check && (x.go === id || offers.has(x.go))); } catch(e) { return false; }
+}
 function talk(id){
   if (S.picksDue && S.picksDue.length) return openPicks(() => talk(id));
   const n = DLG[id]();
@@ -1780,11 +1793,18 @@ function talk(id){
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
+  G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
+  if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
+  G.said[id] = words;
   let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
-  sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
+  const body = !said ? `<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}`
+    : n.again != null ? `<div class="txt">${fmt(typeof n.again === 'function' ? n.again() : n.again)}</div>${n.html || ''}`
+    : `<div class="txt said" id="saidTxt">${fmt(n.txt)}${n.after ? fmt(n.after) : ''}</div><button class="btn sm saidmore" type="button" id="saidMore">Read it again</button>${n.html || ''}`;
+  sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}${body}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
     <div class="choices">${curCh.map((c,i) => {
       const tag = c.check ? checkTag(c) : c.tag ? `<span class="tagk">${esc(c.tag)}</span>` : '';
       return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}</button>`; }).join('')}</div>`;
+  const more = $('#saidMore'); if (more) more.onclick = () => { const t = $('#saidTxt'); if (t) t.classList.remove('said'); more.remove(); };
   sh.scrollTop = 0;
   if (n.oncard) inlineCard($('#icard'), n.oncard[0], n.oncard[1]);
   if (n.onshow) { try { n.onshow(); } catch(e) { console.warn('onshow', e); } } // a node's own drawing (a painting, a map)
@@ -1830,7 +1850,7 @@ function openPicker(c, ids){
     ${no.map(id => `<button class="choice who" disabled><b>${esc(NAME(id))}</b><small>${esc((T && T.notWhy && T.notWhy[id]) || (c.notWhy && c.notWhy[id]) || 'not this one')}</small></button>`).join('')}
     <button class="choice back" data-back="1">Back</button>`;
   box.querySelectorAll('[data-who]').forEach(b => b.onclick = () => { AUDIO.play('click'); rollFor(c, b.dataset.who); });
-  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); talk(S.node); };
+  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; talk(S.node); }; // the same words again, not folded
   const b0 = box.querySelector('.best') || box.querySelector('[data-who]'); if (b0 && !('ontouchstart' in window)) b0.focus({preventScroll:true});
   b0 && b0.scrollIntoView({block:'nearest'});
 }
@@ -1841,7 +1861,7 @@ function rollFor(c, who){
   rollDice(r, fr => { settleRoll(fr, c); goTo(fr.pass ? c.go : c.fail); });
 }
 function closeSheet(){
-  $('#sheet').hidden = true; S.node = null;
+  $('#sheet').hidden = true; S.node = null; G.said = null; // a new sitting next time
   if (notes.length && view === 'explore') { notes.forEach(n => elog(n.t)); notes = []; }
   if (view === 'explore') updExplore();
   save();
@@ -5010,6 +5030,7 @@ let ash = [], fog = [];
 const AREA = () => AREAS[S.area] || AREAS.pale;
 const ACOLS = () => AREA().map[0].length, AROWS = () => AREA().map.length;
 function startExplore(areaId){
+  G.said = null; // the map between two talks: a new sitting (16)
   if (areaId && areaId !== S.area) { S.area = areaId; const a = AREAS[areaId]; S.pos = {...a.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:a.start.x+dx, y:a.start.y+dy})); }
   const a = AREA(), [kick, ttl] = splitTitle(a.title);
   view = 'explore'; S.scene = 'explore'; S.bg = 'explore'; B = null; save(); AUDIO.setScene(a.amb || decorAmb(a));
@@ -5329,7 +5350,7 @@ const veilPen = () => Math.round((5 + lvT()) * (B && B.warren ? B.warren.meanas 
 const pace = ms => ms * SET.speed; // combat pace setting (Slow / Normal / Fast)
 /* a timer that belongs to this battle: it does nothing if the battle was won, left, restarted or replaced meanwhile */
 function later(fn, ms){ const b0 = B; return setTimeout(() => { if (B && B === b0) fn(); }, ms); }
-function blog(m){ B.log.unshift(m); B.log = B.log.slice(0,5); const el = $('#blog'); if (el) { el.innerHTML = B.log.map(l => `<div>${l}</div>`).join(''); logFit(); } }
+function blog(m){ B.log.unshift(m); B.log = B.log.slice(0, 80); const el = $('#blog'); if (el) { el.innerHTML = B.log.map(l => `<div>${l}</div>`).join(''); logFit(); } } // the newest line on top; the fight's last eighty lines kept, and the box scrolls (v6.12.0)
 /* floating text over a unit; several at once on one unit stack instead of overprinting */
 function float(u, txt, col, big){ const now = performance.now(), n = B.fx.filter(f => f.kind === 'txt' && f.x === u.x && f.y === u.y && now - f.t < 350).length;
   B.fx.push({kind:'txt', x:u.x, y:u.y, txt, col, big, t:now + n*140}); }
@@ -5373,6 +5394,7 @@ function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};
   return null; }
 
 function startBattle(id, opt={}){
+  G.said = null; // a fight between two talks: a new sitting (16)
   const def = battleDef(id, opt.stage); // a second area is the same fight on a new map (31c)
   if (!def) { S.scene = 'explore'; S.battle = null; save(); return startExplore(); } // a save pointing at a fight that no longer exists
   // the satchel as it was when the fight began: a fight resumed after a reload starts over with it, whatever was saved mid-fight
@@ -5926,11 +5948,11 @@ function battleSettle(){
   lg.style.minHeight = '0'; let r = room(); if (r < minLog && G.T > 30) { fitBattle(Math.max(30, G.T - Math.ceil((minLog - r) / 10.5))); r = room(); }
   lg.dataset.room = Math.max(minLog, r); logFit();
 }
-/* the log shows only the lines that fit whole in the room it was given (the newest are first), none cut in half */
+/* the log is a box the player can scroll (the newest line on top, the fight's history below); in a narrow PC window it is given the
+   room under the turn bar (battleSettle), elsewhere the stylesheet's height (v6.12.0: before this, lines past the room were hidden) */
 function logFit(){
-  const lg = $('#blog'); if (!lg) return; const rows = [...lg.children]; rows.forEach(c => c.hidden = false); if (!lg.dataset.room) return;
-  const room = +lg.dataset.room, top = lg.getBoundingClientRect().top, cut = rows.findIndex((c, i) => i > 0 && c.getBoundingClientRect().bottom - top > room);
-  if (cut > 0) rows.slice(cut).forEach(c => c.hidden = true);
+  const lg = $('#blog'); if (!lg) return; [...lg.children].forEach(c => c.hidden = false);
+  lg.style.maxHeight = lg.dataset.room ? lg.dataset.room + 'px' : '';
 }
 function battleHeadroom(){
   const cv = $('#cv'); if (!cv || !G.ctx || G.cv !== cv) return;
@@ -6829,6 +6851,8 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['6.12.0', ['Conversations no longer repeat themselves. Within one sitting, a page you have already read comes back folded to its first line, with Read it again under it, or with a line of its own where the writer gave one (the rest at the roof, the ridge, the terrace steps and the quorl hill; the Fourth\'s fire west of Capustan; the vault under the crossing; Doctor Brack\'s stall; every quartermaster, with your silver). A thing already asked, whose answer only leads back, is not offered again; the last choice on a page is never taken away. A reader\'s deck is described in full the first time they read in a book, and in a line after that.',
+    'The fight log scrolls. It keeps the last eighty lines of the fight, newest on top, in a box five lines tall that you can scroll back through.']],
   ['6.11.0', ['The Deck is read on a table now. Every place the squad sits down to a reading has its own: the rubble at the tunnel mouth under Kettle\'s lantern, a cloak by the fire on the plain, the Phoenix Inn\'s table, a roof under the Spawn, the barrow ridge at dusk, the flagstones under the fete\'s lanterns, a stair at dawn; in Seven Cities the tailboard of a water-cart, a cloak in the cart\'s noon shade, the cask lid by torchlight, a flat stone in the dust, the leaf-litter, a shelf of rock with fires on every ridge, a cloth against Balahn\'s wall; in the north an upturned shield by the cook-fire and another under Capustan\'s red sky, a bhederin hide pegged on the grass, a ration sack on the guards\' bank, a cart-wheel in the ford, a quorl-blanket between the tent lines, a stone under the cedars or a shield in the grass above Coral.',
     'Each reader has a deck of their own and a way of laying it: Tuft\'s wooden deck in a row; Marrow\'s temple deck from Nap in Soliel\'s cross of five; Yedda\'s bright gate-market deck paid out like a line; the old Kanese\'s faded cards in a fan; old Benna\'s greasy soldier\'s deck askew, with a copper on the table. Sohra throws the knucklebones into the smoke, twice over, and the card comes up out of it.',
     'After the turn the House\'s light falls on the table: Death\'s frost from the corners, Dark dimming the lamp, Shadow guttering it, Life\'s green, Chains\' slow red pulse, an Unaligned flare. A refused card shows its face for a breath before the dark cracks through it. The reading fades in and out, and has the Deck\'s music while it is out. The risen card tilts under your finger. The House\'s mark sits faint behind the words. On the phone, Back hurries the reading like a tap, and once the words are up it puts the cards away.']],
@@ -8001,7 +8025,7 @@ function playVision(id, done){
   if (done) { S.tuftVisions = S.tuftVisions || []; if (!S.tuftVisions.includes(id)) S.tuftVisions.push(id); }
   const ret = {view, kind:G.sceneKind, bg:S.bg, node:S.node}, cardNode = cardNodeName();
   VIS = {id, ret, replay:!done, again, done:done || (() => { if (ret.node && DLG[ret.node]) talk(ret.node); }), resume:done ? (DLG[cardNode] ? cardNode : ret.node) : ret.node, bg:V.bg, fig:V.fig, t0:performance.now()};
-  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null;
+  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null; G.said = null; // a vision between: the card's page comes back whole (16)
   document.body.classList.add('vision');
   view = 'scene'; B = null; G.sceneKind = 'vision'; AUDIO.setScene('dark'); AUDIO.play('reveal');
   toTop(); $('#app').innerHTML = `<header class="hud vhud"><div><div class="kick">Through the Deck</div><div class="loc">${esc(V.who)}</div><div class="sub warren">${esc(V.where)}</div></div></header>
@@ -8681,7 +8705,7 @@ She's back to her cards before you reach the flap. "Go."`,
       elog(`<em>Kettle:</em> "Tunnels. Finally, something I'm good at."`); }}]}),
   tat_map:()=>({sp:'Tattersail', txt:`"North wall, Sergeant. The cards aren't getting any better while you stand there."`, ch:[{t:'Leave'}]}),
 
-  pell:()=>({sp:'Quartermaster Pell', txt:
+  pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things all week. "Moranth don't give these away, and neither do I."
 
 You carry ${S.silver} silver.`,
@@ -9398,7 +9422,7 @@ She's back to her cards before you reach the flap. "Sergeant. If you hear dogs t
       ch:[c1Home, {t:'Leave', go:()=>startExplore()}]}),
 
     /* ---- Pell's wagon ---- */
-    c1_pell:()=>({sp:'Quartermaster Pell', txt:
+    c1_pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things all week and has started saying no before the question. The Moranth crates have new seals on them. "Restocked. Don't ask from where. Moranth don't give these away and neither do I."
 
 You carry ${S.silver} silver.`,
@@ -11497,7 +11521,7 @@ The arms come down a little. "Nine days." He nods at the gate, at the little des
 ${SQUAD().includes('kettle') ? `Kettle is already at the counter. She has picked up the small black bottle under the glass dome and is reading the label with her lips moving.` : SQUAD().includes('ohl') ? `Ohl has picked up one of the blue bottles, unstoppered it, sniffed it, and put it back with the expression of a surgeon finding a cobbler in his tent.` : ''}`,
       ch:[{t:'"Show us your wonders, Doctor."', go:'c3_brack_wares'},
           {t:'Leave him to the goat.'}]}),
-    c3_brack_wares:()=>{ const off = brackOff(), pr = n => Math.max(1, n - off), has = id => S.kit.includes(id); return {sp:'Doctor Brack\'s stall', txt:
+    c3_brack_wares:()=>{ const off = brackOff(), pr = n => Math.max(1, n - off), has = id => S.kit.includes(id); return {sp:'Doctor Brack\'s stall', again:'Brack lays a hand on the bottles again, in case one of them has changed its mind.', txt:
 `${S.f.c3_brackVisit ? `"*Returning* custom!" Doctor Brack spreads his arms. "The finest kind. Let me guess. You've reconsidered the Repellent."` : `Doctor Brack lays a hand on each of the bottles in turn, the way a man lays hands on a congregation.`}${off ? ` ${S.f.c3_brackKettle ? `He keeps one eye on Kettle at all times. His prices have come down. He'd rather not say why.` : `"For the Empire," he says, a little sourly, "a soldier's discount."`}` : ''}
 
 *Tincture of Soliel's Own Tears,* in the blue bottles. ${SQUAD().includes('ohl') ? `"Lard," says Ohl. "Lard and rosewater and something for the smell." A pause. "It'll work, mind. Lard works. I just object to the goddess."` : `"Healing in a bottle, blessed at the temple in Unta," says Brack. It smells of roses and, under the roses, of lard.`}
@@ -14184,7 +14208,7 @@ ${S.f.c4_key === 'shield' ? `It isn't true. You both know it isn't true. He says
       ch:[{t:'The squad.', go:'c4_close'}]}),
 
     /* ---- chapter close: the roof at dawn ---- */
-    c4_close:()=>({sp:'The chandler\'s roof', scene:'roof', txt:
+    c4_close:()=>({sp:'The chandler\'s roof', scene:'roof', again:'The row under the eaves. The squad is still awake, and it is still the hour for it.', txt:
 `The city goes out lamp by lamp. You've seen it do it before, from this roof, and it's the same, and it isn't: the blue shrinking back into the glass street by street, as if something beneath the city were breathing in, and then gone.
 
 The Fourth is in a row under the eaves. Nobody is asleep.
@@ -15754,7 +15778,7 @@ Above the ridge, very high, a black mote hangs in the pale sky. It has been ther
       ch:[{t:'The squad.', go:'c5_close'}]}),
 
     /* ---- chapter close: the ridge at dawn ---- */
-    c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', txt:
+    c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', again:'The lee of the barrow-stones, for a moment longer. Nobody has started down.', txt:
 `Three days back to the city. Paran's horse will pass you on the road before noon, and he won't stop, and you won't expect him to.
 
 The Fourth sits for a moment in the lee of the barrow-stones before the walk, because it's the last moment anyone is going to get. Nobody has slept. ${S.f.c5_spotted ? `Nobody slept the night before either. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}
@@ -16279,7 +16303,7 @@ ${SQUAD().includes('brisk') ? `Brisk, behind you, very low: "Furniture." She tri
       ch:[{t:'"Sir."', go:'c6_vault'}]}),
 
     /* ---- the vault: the afternoon ---- */
-    c6_vault:()=>({sp:'The vault under the crossing', scene:'cellar', txt:
+    c6_vault:()=>({sp:'The vault under the crossing', scene:'cellar', again:'The vault. The drums go on in the streets, and dusk is still a few hours off.', txt:
 `${S.f.c6_vParan || S.f.c6_vFid || S.f.c6_vKalam ? `The afternoon goes the way afternoons go under a city, which is without anyone noticing. The light down the ladder-hole goes from white to gold. The drums in the streets get closer together.` : `The afternoon goes the way afternoons go under a city. Somebody brings bread. The drums in the streets go on. Hedge sings, until Fiddler stops him.`}
 
 Dusk is a few hours off. There are people in this vault you could talk to, and you have the feeling, clear as cold water, that by morning some of them will be harder to reach.`,
@@ -18333,7 +18357,7 @@ ${S.f.wjRegard > 0 ? `"Get some sleep," he says. "Somebody should. It won't be m
 
     /* ---- chapter close: the terrace steps at dawn ---- */
     c6_close:()=>{ const dead = Object.keys(S.dead || {}).filter(id => S.dead[id] && S.dead[id].ch === 6); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
-      return {sp:'The terrace steps · dawn', scene:'fete_garden', txt:
+      return {sp:'The terrace steps · dawn', scene:'fete_garden', again:'The terrace steps, in the wet. Nobody has moved.', txt:
 `${SQUAD().length > 1 ? `The Fourth sits on the terrace steps in the wet, in Lady Simtal's blue with the armbands torn off, and for a long time nobody says anything.` : `You sit on the terrace steps in the wet, in Lady Simtal's blue with the armband torn off, and for a long time there's nobody to say anything to.`}
 
 ${dead.length ? `There's room on the step for ${C6H.words(dead.length)} more. Nobody sits in it. Nobody says they're not sitting in it. ${C6H.names(dead)}.` : `${w}. You count twice, the way you always do, and it's right both times, and you sit with that for a while.`}${C6H.here(S.f.c6_rimeBit) ? `
@@ -20583,7 +20607,7 @@ You take it. He folds his arms again. That's all. It's a great deal, from Trotts
       ch:[{t:'Not yet.'}]}),
 
     /* ---- the close: the squad's last round ---- */
-    c7_close:()=>{ const k = S.f.c7_key || 'outlaw', stay = SQUAD().filter(id => id !== 'sgt' && !C7H.follows(id, k)); return {sp:'The quorl hill · noon', scene:'quorl_hill', txt:
+    c7_close:()=>{ const k = S.f.c7_key || 'outlaw', stay = SQUAD().filter(id => id !== 'sgt' && !C7H.follows(id, k)); return {sp:'The quorl hill · noon', scene:'quorl_hill', again:'The lee of the hill. The quorl is still waiting, and so is its rider.', txt:
 `${k === 'outlaw' ? `The Moranth are strapping the last of the Bridgeburners in. Behind you a quorl has its wings down in the grass, waiting, with a rider on it who has not once turned his faceless helm your way and is waiting all the same.` : k === 'disband' ? `The words are said. They're only words. They're the right ones. The quorls go on going up around you in their roaring rings, and the Fourth stands in the grass with nothing to stand in a line for.` : `The quorls are going up around you in their roaring rings of flattened grass, one after another, north, and not one of them is yours.`}
 
 The Fourth sits for a moment in the lee of the hill before the road, because it's the last moment anyone is going to get. ${k !== 'disband' && stay.length ? `${C7H.names(stay)} won't be coming. ${stay.length === 1 ? C7H.pr(stay[0]).She + ' knows it' : 'They know it'}. You know it. Nobody has said it yet.` : ''}
@@ -22079,9 +22103,10 @@ CARDBOOK = {
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
 function b2DeckChoice(n){ const r = b2Rd();
   return {t:`Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b2_c${n}_drawn`] && !S.f[`b2_c${n}_noCard`], go:`b2_c${n}_deck`}; }
-function b2DeckOffer(n, card = `b2_c${n}_card`){ const D = B2DECK[n], r = b2Rd();
-  return {sp:r.name === 'Yedda' ? 'Yedda · a ropemaker\'s widow' : r.name, scene:D.scene, txt:
-`${B2RD_DECK[r.id] || ''}
+const B2RD_AGAIN = {marrow:'Marrow has her Deck out, the temple deck from Nap.', yedda:'Yedda has the Deck out of her apron, in its square of sacking.', kanese:'The old Kanese has his Deck out of the prayer-cloth.'}; // the deck described once a book, then this (v6.12.0)
+function b2DeckOffer(n, card = `b2_c${n}_card`){ const D = B2DECK[n], r = b2Rd(), seen = S.f['b2_rd_' + r.id];
+  return {sp:r.name === 'Yedda' ? 'Yedda · a ropemaker\'s widow' : r.name, scene:D.scene, fx:()=>{ S.f['b2_rd_' + r.id] = 1; }, txt:
+`${(seen ? B2RD_AGAIN[r.id] : B2RD_DECK[r.id]) || ''}
 
 ${D.set} ${D[r.id] || ''}`,
     ch:[{t:`Let ${b2RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b2_c${n}_drawn`] = 1; S.f[`b2_c${n}_reader`] = r.id; S.card = dealCard(B2POOL[n]); }, go:()=>cardSequence(()=>talk(card))},
@@ -34925,9 +34950,10 @@ const b3CardSay = id => { const s = B3SAY[id], r = b3Rd().id, v = s && (typeof s
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
 function b3DeckChoice(n){ const r = b3Rd();
   return {t:r.id === 'sohra' ? `Sit with Sohra and the bones.` : `Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b3_c${n}_drawn`] && !S.f[`b3_c${n}_noCard`], go:`b3_c${n}_deck`}; }
-function b3DeckOffer(n, card = `b3_c${n}_card`){ const D = B3DECK[n] || B3DECK[1], r = b3Rd();
-  return {sp:r.id === 'benna' ? 'Old Benna · a Host laundress' : r.name, scene:D.scene, txt:
-`${B3RD_DECK[r.id] || ''}
+const B3RD_AGAIN = {tuft:'Tuft has the Deck out, the wooden one.', sohra:'Sohra has the bone cup out, and the knucklebones.', benna:'Old Benna has the deck out, and her hand out for the copper.'}; // the deck described once a book, then this (v6.12.0)
+function b3DeckOffer(n, card = `b3_c${n}_card`){ const D = B3DECK[n] || B3DECK[1], r = b3Rd(), seen = S.f['b3_rd_' + r.id];
+  return {sp:r.id === 'benna' ? 'Old Benna · a Host laundress' : r.name, scene:D.scene, fx:()=>{ S.f['b3_rd_' + r.id] = 1; }, txt:
+`${(seen ? B3RD_AGAIN[r.id] : B3RD_DECK[r.id]) || ''}
 
 ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:r.id === 'sohra' ? 'Let her throw.' : `Let ${b3RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b3_c${n}_drawn`] = 1; S.f[`b3_c${n}_reader`] = r.id; S.card = dealCard(B3POOL[n] || B3POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
@@ -35927,7 +35953,7 @@ He waits until you take it. "Four coppers," he says to the fire, and that is the
       ch:[{t:'Leave him to it.'}]}),
 
     /* ---- Pell's wagon ---- */
-    b3_c1_pell:()=>({sp:'Quartermaster Pell', fx:()=>{ S.f.b3_c1_pellMet = 1; }, txt:
+    b3_c1_pell:()=>({sp:'Quartermaster Pell', fx:()=>{ S.f.b3_c1_pellMet = 1; }, again:()=>`Pell has the ledger open and his thumb on the page. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things for a year and has started saying no before the question. He was the Host's quartermaster at Pale the first time. He is the Host's quartermaster at Pale now. In between, he says, he was outlawed, by people who have never once had to feed an army, and he has decided this means he can charge what he likes.
 
 "Moranth stock. Fresh off the quorls."${b3In('kettle') ? ` He doesn't look at Kettle. He doesn't need to; everyone always knows where Kettle is relative to a munitions crate.` : ''} ${S.f.b3_c1_tunnelsDone ? `"And the Fourth went down the old sap and brought me back two crates of my own salve and a sack of my own boot-nails. Adequate."` : `"Somebody's been coming up out of the old saps at night and lifting it off my wagon. I told Whiskeyjack it was rats."`}
@@ -37278,7 +37304,7 @@ The brother watches you go. You can feel him doing it, the way you feel sun on t
   b3_c2_mott_again:()=>({sp:'A Bole', txt:`${S.f.b3_c2_mottJug ? 'The Bole lifts the jug at you from across the road. You do not go over. Your stomach remembers.' : 'The Bole waves. Behind him the brother does not.'}`, ch:[{t:'Wave back.', go:()=>startExplore()}]}),
 
   /* ---- the quartermaster's clerk: silver for kit ---- */
-  b3_c2_qm:()=>({sp:'The quartermaster\'s clerk', fx:()=>{ S.f.b3_c2_qm = 1; }, txt:
+  b3_c2_qm:()=>({sp:'The quartermaster\'s clerk', fx:()=>{ S.f.b3_c2_qm = 1; }, again:()=>`He taps the slate. You have ${S.silver} silver.`, txt:
 `The Host's quartermaster rides somewhere up the column with the ledgers. His clerk walks with the stores wagon and sells what will not be missed, for silver, with a slate and a stub of chalk and the face of a man who has heard every story there is about why a squad is short.
 
 "Salve, five. Sharpers, eight, and don't tell the Moranth what I charged. Nothing else. There is nothing else." He taps the slate. "The Host feeds its own. The Host does not *arm* its own for free. Not on this road. Not with nobody paying the Host."
@@ -40646,7 +40672,7 @@ ${c4In('brisk') ? `Brisk, behind you, quietly: "I'll wake the line."` : `You'll 
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
 
     /* the fire: rest, the recruits, the cold, and the howling */
-    b3_c4_fire:()=>({sp:'The Fourth\'s fire', txt:
+    b3_c4_fire:()=>({sp:'The Fourth\'s fire', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', txt:
 `The fire is low and the frost comes right up to the edge of it and stops. ${c4In('kettle') ? `Kettle is lying on her back with the satchel under her head, eyes open. ` : ''}${c4In('ohl') ? `Ohl is boiling something that will be tea in the technical sense. ` : ''}${c4In('tuft') ? `Tuft is sitting up with her knees drawn in and her cards in her lap, not reading them.` : ''}
 
 ${b3Mind() === 'haunted' ? `Nobody has slept since the gully. Everyone keeps looking south-east, at nothing.` : b3Mind() === 'shaken' ? `Every time the howling starts, every head at the fire turns the same way, and then turns back.` : `The howling comes and goes. You find, after a while, that you have started to be able to talk over it.`}`,
@@ -41536,7 +41562,7 @@ He turns the horse. "Watch your wells. Somebody's going to make a fight about wa
       ch:[{t:'Leave him to his count.'}]}),
 
     /* the Seventh's quartermaster: no forage, and everything for sale */
-    b3_c5_qm:()=>({sp:'The quartermaster-sergeant', fx:()=>{ S.f.b3_c5_qm = 1; }, txt:
+    b3_c5_qm:()=>({sp:'The quartermaster-sergeant', fx:()=>{ S.f.b3_c5_qm = 1; }, again:()=>`The tailboard, the slate, the insult. You have ${S.silver} silver.`, txt:
 `The Seventh's quartermaster-sergeant has set up shop on the tailboard of a wagon that came through the ford without its back wheels, which he takes as a personal insult. He is selling. In the Host this spring everything is sold.
 
 "Forage?" He laughs, once. "There's no forage. They took the seed grain, Sergeant. You know what that means? It means nobody's coming back to plant it. It means they knew we were coming and they made the ground say so." He slaps a crate. "No paymaster this side of the proclamations, so it's silver or nothing. Salves, five. Moranth sharpers, eight. Don't ask me for a cusser. Don't ask me why."`,
@@ -42938,7 +42964,7 @@ ${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says.
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- the quartermaster's wagons: the Host's quartermaster sells, in silver ---- */
-  b3_c6_wagons:()=>({sp:'The quartermaster', txt:
+  b3_c6_wagons:()=>({sp:'The quartermaster', again:()=>`The quartermaster's wagon. You have ${S.silver} silver.`, txt:
 `The Seventh's quartermaster has spent the week moving companies up into gaps so the column stays the same length, and has opinions about it, which he does not share. He has also got wagons, and on the wagons are things a squad can buy, in silver, from a man with a slate.
 
 "Salve, six. Sharpers, nine, and don't tell me the Moranth give them away, the Moranth don't give me anything. Smokers, five." He looks at the Fourth. "Buy now. I hear some of you are going a long way soon. Latrines, I hear."${b3In('kettle') ? `
@@ -43707,7 +43733,7 @@ The last barges, Trake's Legion's, come in hours late, and their people come ash
   b3_c6_unload:()=>({sp:'The barges', txt:
 `The barges unload onto the landing in a long confusion of crates and packs and sacks and soldiers, and the White Face come off them still in their war-paint and stand about looking at Brood's Barghast, who look back. Nobody is singing now.${S.f.b3_c6_brood ? ` The barges will not be needed again. Oskan is already arguing with a Rhivi about selling one.` : ''}`,
     ch:[{t:'Leave it.', go:()=>startExplore()}]}),
-  b3_c6_gear:()=>({sp:'The Host\'s gear', txt:
+  b3_c6_gear:()=>({sp:'The Host\'s gear', again:()=>`The landing, the stacks, the quartermaster's eye. You have ${S.silver} silver.`, txt:
 `The Host's gear, stacked on the landing under a quartermaster's eye: everything four thousand people need to march to Coral, which is less than four thousand people want.
 
 "Salve, six. Sharpers, nine. Smokers, five," the quartermaster says, without looking up. "Silver. Last shop before Coral."`,

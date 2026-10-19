@@ -402,7 +402,7 @@ ${SQUAD().includes('brisk') ? `Brisk, behind you, very low: "Furniture." She tri
       ch:[{t:'"Sir."', go:'c6_vault'}]}),
 
     /* ---- the vault: the afternoon ---- */
-    c6_vault:()=>({sp:'The vault under the crossing', scene:'cellar', txt:
+    c6_vault:()=>({sp:'The vault under the crossing', scene:'cellar', again:'The vault. The drums go on in the streets, and dusk is still a few hours off.', txt:
 `${S.f.c6_vParan || S.f.c6_vFid || S.f.c6_vKalam ? `The afternoon goes the way afternoons go under a city, which is without anyone noticing. The light down the ladder-hole goes from white to gold. The drums in the streets get closer together.` : `The afternoon goes the way afternoons go under a city. Somebody brings bread. The drums in the streets go on. Hedge sings, until Fiddler stops him.`}
 
 Dusk is a few hours off. There are people in this vault you could talk to, and you have the feeling, clear as cold water, that by morning some of them will be harder to reach.`,
@@ -2456,7 +2456,7 @@ ${S.f.wjRegard > 0 ? `"Get some sleep," he says. "Somebody should. It won't be m
 
     /* ---- chapter close: the terrace steps at dawn ---- */
     c6_close:()=>{ const dead = Object.keys(S.dead || {}).filter(id => S.dead[id] && S.dead[id].ch === 6); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
-      return {sp:'The terrace steps · dawn', scene:'fete_garden', txt:
+      return {sp:'The terrace steps · dawn', scene:'fete_garden', again:'The terrace steps, in the wet. Nobody has moved.', txt:
 `${SQUAD().length > 1 ? `The Fourth sits on the terrace steps in the wet, in Lady Simtal's blue with the armbands torn off, and for a long time nobody says anything.` : `You sit on the terrace steps in the wet, in Lady Simtal's blue with the armband torn off, and for a long time there's nobody to say anything to.`}
 
 ${dead.length ? `There's room on the step for ${C6H.words(dead.length)} more. Nobody sits in it. Nobody says they're not sitting in it. ${C6H.names(dead)}.` : `${w}. You count twice, the way you always do, and it's right both times, and you sit with that for a while.`}${C6H.here(S.f.c6_rimeBit) ? `

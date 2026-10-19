@@ -163,9 +163,10 @@ CARDBOOK = {
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
 function b2DeckChoice(n){ const r = b2Rd();
   return {t:`Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b2_c${n}_drawn`] && !S.f[`b2_c${n}_noCard`], go:`b2_c${n}_deck`}; }
-function b2DeckOffer(n, card = `b2_c${n}_card`){ const D = B2DECK[n], r = b2Rd();
-  return {sp:r.name === 'Yedda' ? 'Yedda · a ropemaker\'s widow' : r.name, scene:D.scene, txt:
-`${B2RD_DECK[r.id] || ''}
+const B2RD_AGAIN = {marrow:'Marrow has her Deck out, the temple deck from Nap.', yedda:'Yedda has the Deck out of her apron, in its square of sacking.', kanese:'The old Kanese has his Deck out of the prayer-cloth.'}; // the deck described once a book, then this (v6.12.0)
+function b2DeckOffer(n, card = `b2_c${n}_card`){ const D = B2DECK[n], r = b2Rd(), seen = S.f['b2_rd_' + r.id];
+  return {sp:r.name === 'Yedda' ? 'Yedda · a ropemaker\'s widow' : r.name, scene:D.scene, fx:()=>{ S.f['b2_rd_' + r.id] = 1; }, txt:
+`${(seen ? B2RD_AGAIN[r.id] : B2RD_DECK[r.id]) || ''}
 
 ${D.set} ${D[r.id] || ''}`,
     ch:[{t:`Let ${b2RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b2_c${n}_drawn`] = 1; S.f[`b2_c${n}_reader`] = r.id; S.card = dealCard(B2POOL[n]); }, go:()=>cardSequence(()=>talk(card))},

@@ -472,7 +472,7 @@ She's back to her cards before you reach the flap. "Sergeant. If you hear dogs t
       ch:[c1Home, {t:'Leave', go:()=>startExplore()}]}),
 
     /* ---- Pell's wagon ---- */
-    c1_pell:()=>({sp:'Quartermaster Pell', txt:
+    c1_pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things all week and has started saying no before the question. The Moranth crates have new seals on them. "Restocked. Don't ask from where. Moranth don't give these away and neither do I."
 
 You carry ${S.silver} silver.`,

@@ -129,6 +129,17 @@ function checkTag(c){
   return `<span class="tagk ${T ? 'trk' : ''}">${T ? '✦ ' : ''}${STATN[c.check[0]]}${SET.dice ? ' ' + dcOf(c) : ''} · ${esc(NAME(id))} ${SET.dice ? p + '%' : oddsWord(p)}</span>`;
 }
 let curCh = [];
+/* v6.12.0: words said once in a sitting. G.said keeps, for one sitting of the sheet (until it closes, or a map or a fight comes
+   between), the words every node showed. A node whose words come up again unchanged (a hub a branch has come back to) shows its
+   `again` line instead, where the writer gave one (a string or a function), or else its words folded to their first line with
+   "Read it again" under; and a choice that only asks a thing already heard (its node's every way out comes straight back here, and
+   its words would be the same) is not offered again, unless it is the only choice left. */
+const saidWords = n => (fmt(n.txt) + (n.after ? fmt(n.after) : '')).replace(/\d+/g, '#'); // a count that moved (silver, a tally) is still the same words
+function topicHeard(id, c, offers){ // offers: where this node's other choices go; a heard node whose every way out is one of those, or back here, has nothing left to give
+  if (!G.said || typeof c.go !== 'string' || c.check || c.fx || !(c.go in G.said)) return false;
+  try { const t = DLG[c.go](); if (saidWords(t) !== G.said[c.go]) return false;
+    const ways = (t.ch || []).filter(x => !x.req || x.req()); return ways.length > 0 && ways.every(x => typeof x.go === 'string' && !x.check && (x.go === id || offers.has(x.go))); } catch(e) { return false; }
+}
 function talk(id){
   if (S.picksDue && S.picksDue.length) return openPicks(() => talk(id));
   const n = DLG[id]();
@@ -138,11 +149,18 @@ function talk(id){
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
+  G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
+  if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
+  G.said[id] = words;
   let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
-  sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
+  const body = !said ? `<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}`
+    : n.again != null ? `<div class="txt">${fmt(typeof n.again === 'function' ? n.again() : n.again)}</div>${n.html || ''}`
+    : `<div class="txt said" id="saidTxt">${fmt(n.txt)}${n.after ? fmt(n.after) : ''}</div><button class="btn sm saidmore" type="button" id="saidMore">Read it again</button>${n.html || ''}`;
+  sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}${body}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
     <div class="choices">${curCh.map((c,i) => {
       const tag = c.check ? checkTag(c) : c.tag ? `<span class="tagk">${esc(c.tag)}</span>` : '';
       return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}</button>`; }).join('')}</div>`;
+  const more = $('#saidMore'); if (more) more.onclick = () => { const t = $('#saidTxt'); if (t) t.classList.remove('said'); more.remove(); };
   sh.scrollTop = 0;
   if (n.oncard) inlineCard($('#icard'), n.oncard[0], n.oncard[1]);
   if (n.onshow) { try { n.onshow(); } catch(e) { console.warn('onshow', e); } } // a node's own drawing (a painting, a map)
@@ -188,7 +206,7 @@ function openPicker(c, ids){
     ${no.map(id => `<button class="choice who" disabled><b>${esc(NAME(id))}</b><small>${esc((T && T.notWhy && T.notWhy[id]) || (c.notWhy && c.notWhy[id]) || 'not this one')}</small></button>`).join('')}
     <button class="choice back" data-back="1">Back</button>`;
   box.querySelectorAll('[data-who]').forEach(b => b.onclick = () => { AUDIO.play('click'); rollFor(c, b.dataset.who); });
-  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); talk(S.node); };
+  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; talk(S.node); }; // the same words again, not folded
   const b0 = box.querySelector('.best') || box.querySelector('[data-who]'); if (b0 && !('ontouchstart' in window)) b0.focus({preventScroll:true});
   b0 && b0.scrollIntoView({block:'nearest'});
 }
@@ -199,7 +217,7 @@ function rollFor(c, who){
   rollDice(r, fr => { settleRoll(fr, c); goTo(fr.pass ? c.go : c.fail); });
 }
 function closeSheet(){
-  $('#sheet').hidden = true; S.node = null;
+  $('#sheet').hidden = true; S.node = null; G.said = null; // a new sitting next time
   if (notes.length && view === 'explore') { notes.forEach(n => elog(n.t)); notes = []; }
   if (view === 'explore') updExplore();
   save();

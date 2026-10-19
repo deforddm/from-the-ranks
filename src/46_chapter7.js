@@ -2108,7 +2108,7 @@ You take it. He folds his arms again. That's all. It's a great deal, from Trotts
       ch:[{t:'Not yet.'}]}),
 
     /* ---- the close: the squad's last round ---- */
-    c7_close:()=>{ const k = S.f.c7_key || 'outlaw', stay = SQUAD().filter(id => id !== 'sgt' && !C7H.follows(id, k)); return {sp:'The quorl hill · noon', scene:'quorl_hill', txt:
+    c7_close:()=>{ const k = S.f.c7_key || 'outlaw', stay = SQUAD().filter(id => id !== 'sgt' && !C7H.follows(id, k)); return {sp:'The quorl hill · noon', scene:'quorl_hill', again:'The lee of the hill. The quorl is still waiting, and so is its rider.', txt:
 `${k === 'outlaw' ? `The Moranth are strapping the last of the Bridgeburners in. Behind you a quorl has its wings down in the grass, waiting, with a rider on it who has not once turned his faceless helm your way and is waiting all the same.` : k === 'disband' ? `The words are said. They're only words. They're the right ones. The quorls go on going up around you in their roaring rings, and the Fourth stands in the grass with nothing to stand in a line for.` : `The quorls are going up around you in their roaring rings of flattened grass, one after another, north, and not one of them is yours.`}
 
 The Fourth sits for a moment in the lee of the hill before the road, because it's the last moment anyone is going to get. ${k !== 'disband' && stay.length ? `${C7H.names(stay)} won't be coming. ${stay.length === 1 ? C7H.pr(stay[0]).She + ' knows it' : 'They know it'}. You know it. Nobody has said it yet.` : ''}

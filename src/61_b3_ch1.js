@@ -475,7 +475,7 @@ He waits until you take it. "Four coppers," he says to the fire, and that is the
       ch:[{t:'Leave him to it.'}]}),
 
     /* ---- Pell's wagon ---- */
-    b3_c1_pell:()=>({sp:'Quartermaster Pell', fx:()=>{ S.f.b3_c1_pellMet = 1; }, txt:
+    b3_c1_pell:()=>({sp:'Quartermaster Pell', fx:()=>{ S.f.b3_c1_pellMet = 1; }, again:()=>`Pell has the ledger open and his thumb on the page. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things for a year and has started saying no before the question. He was the Host's quartermaster at Pale the first time. He is the Host's quartermaster at Pale now. In between, he says, he was outlawed, by people who have never once had to feed an army, and he has decided this means he can charge what he likes.
 
 "Moranth stock. Fresh off the quorls."${b3In('kettle') ? ` He doesn't look at Kettle. He doesn't need to; everyone always knows where Kettle is relative to a munitions crate.` : ''} ${S.f.b3_c1_tunnelsDone ? `"And the Fourth went down the old sap and brought me back two crates of my own salve and a sack of my own boot-nails. Adequate."` : `"Somebody's been coming up out of the old saps at night and lifting it off my wagon. I told Whiskeyjack it was rats."`}

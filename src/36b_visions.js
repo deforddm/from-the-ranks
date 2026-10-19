@@ -525,7 +525,7 @@ function playVision(id, done){
   if (done) { S.tuftVisions = S.tuftVisions || []; if (!S.tuftVisions.includes(id)) S.tuftVisions.push(id); }
   const ret = {view, kind:G.sceneKind, bg:S.bg, node:S.node}, cardNode = cardNodeName();
   VIS = {id, ret, replay:!done, again, done:done || (() => { if (ret.node && DLG[ret.node]) talk(ret.node); }), resume:done ? (DLG[cardNode] ? cardNode : ret.node) : ret.node, bg:V.bg, fig:V.fig, t0:performance.now()};
-  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null;
+  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null; G.said = null; // a vision between: the card's page comes back whole (16)
   document.body.classList.add('vision');
   view = 'scene'; B = null; G.sceneKind = 'vision'; AUDIO.setScene('dark'); AUDIO.play('reveal');
   toTop(); $('#app').innerHTML = `<header class="hud vhud"><div><div class="kick">Through the Deck</div><div class="loc">${esc(V.who)}</div><div class="sub warren">${esc(V.where)}</div></div></header>

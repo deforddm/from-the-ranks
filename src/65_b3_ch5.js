@@ -351,7 +351,7 @@ He turns the horse. "Watch your wells. Somebody's going to make a fight about wa
       ch:[{t:'Leave him to his count.'}]}),
 
     /* the Seventh's quartermaster: no forage, and everything for sale */
-    b3_c5_qm:()=>({sp:'The quartermaster-sergeant', fx:()=>{ S.f.b3_c5_qm = 1; }, txt:
+    b3_c5_qm:()=>({sp:'The quartermaster-sergeant', fx:()=>{ S.f.b3_c5_qm = 1; }, again:()=>`The tailboard, the slate, the insult. You have ${S.silver} silver.`, txt:
 `The Seventh's quartermaster-sergeant has set up shop on the tailboard of a wagon that came through the ford without its back wheels, which he takes as a personal insult. He is selling. In the Host this spring everything is sold.
 
 "Forage?" He laughs, once. "There's no forage. They took the seed grain, Sergeant. You know what that means? It means nobody's coming back to plant it. It means they knew we were coming and they made the ground say so." He slaps a crate. "No paymaster this side of the proclamations, so it's silver or nothing. Salves, five. Moranth sharpers, eight. Don't ask me for a cusser. Don't ask me why."`,

@@ -167,9 +167,10 @@ const b3CardSay = id => { const s = B3SAY[id], r = b3Rd().id, v = s && (typeof s
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
 function b3DeckChoice(n){ const r = b3Rd();
   return {t:r.id === 'sohra' ? `Sit with Sohra and the bones.` : `Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b3_c${n}_drawn`] && !S.f[`b3_c${n}_noCard`], go:`b3_c${n}_deck`}; }
-function b3DeckOffer(n, card = `b3_c${n}_card`){ const D = B3DECK[n] || B3DECK[1], r = b3Rd();
-  return {sp:r.id === 'benna' ? 'Old Benna · a Host laundress' : r.name, scene:D.scene, txt:
-`${B3RD_DECK[r.id] || ''}
+const B3RD_AGAIN = {tuft:'Tuft has the Deck out, the wooden one.', sohra:'Sohra has the bone cup out, and the knucklebones.', benna:'Old Benna has the deck out, and her hand out for the copper.'}; // the deck described once a book, then this (v6.12.0)
+function b3DeckOffer(n, card = `b3_c${n}_card`){ const D = B3DECK[n] || B3DECK[1], r = b3Rd(), seen = S.f['b3_rd_' + r.id];
+  return {sp:r.id === 'benna' ? 'Old Benna · a Host laundress' : r.name, scene:D.scene, fx:()=>{ S.f['b3_rd_' + r.id] = 1; }, txt:
+`${(seen ? B3RD_AGAIN[r.id] : B3RD_DECK[r.id]) || ''}
 
 ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:r.id === 'sohra' ? 'Let her throw.' : `Let ${b3RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b3_c${n}_drawn`] = 1; S.f[`b3_c${n}_reader`] = r.id; S.card = dealCard(B3POOL[n] || B3POOL[1]); }, go:()=>cardSequence(()=>talk(card))},

@@ -81,7 +81,7 @@ She's back to her cards before you reach the flap. "Go."`,
       elog(`<em>Kettle:</em> "Tunnels. Finally, something I'm good at."`); }}]}),
   tat_map:()=>({sp:'Tattersail', txt:`"North wall, Sergeant. The cards aren't getting any better while you stand there."`, ch:[{t:'Leave'}]}),
 
-  pell:()=>({sp:'Quartermaster Pell', txt:
+  pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
 `Pell has a wagon, a ledger, and the face of a man who has been asked for things all week. "Moranth don't give these away, and neither do I."
 
 You carry ${S.silver} silver.`,

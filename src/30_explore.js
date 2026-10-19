@@ -3,6 +3,7 @@ let ash = [], fog = [];
 const AREA = () => AREAS[S.area] || AREAS.pale;
 const ACOLS = () => AREA().map[0].length, AROWS = () => AREA().map.length;
 function startExplore(areaId){
+  G.said = null; // the map between two talks: a new sitting (16)
   if (areaId && areaId !== S.area) { S.area = areaId; const a = AREAS[areaId]; S.pos = {...a.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:a.start.x+dx, y:a.start.y+dy})); }
   const a = AREA(), [kick, ttl] = splitTitle(a.title);
   view = 'explore'; S.scene = 'explore'; S.bg = 'explore'; B = null; save(); AUDIO.setScene(a.amb || decorAmb(a));

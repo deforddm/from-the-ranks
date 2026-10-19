@@ -48,7 +48,7 @@ const veilPen = () => Math.round((5 + lvT()) * (B && B.warren ? B.warren.meanas 
 const pace = ms => ms * SET.speed; // combat pace setting (Slow / Normal / Fast)
 /* a timer that belongs to this battle: it does nothing if the battle was won, left, restarted or replaced meanwhile */
 function later(fn, ms){ const b0 = B; return setTimeout(() => { if (B && B === b0) fn(); }, ms); }
-function blog(m){ B.log.unshift(m); B.log = B.log.slice(0,5); const el = $('#blog'); if (el) { el.innerHTML = B.log.map(l => `<div>${l}</div>`).join(''); logFit(); } }
+function blog(m){ B.log.unshift(m); B.log = B.log.slice(0, 80); const el = $('#blog'); if (el) { el.innerHTML = B.log.map(l => `<div>${l}</div>`).join(''); logFit(); } } // the newest line on top; the fight's last eighty lines kept, and the box scrolls (v6.12.0)
 /* floating text over a unit; several at once on one unit stack instead of overprinting */
 function float(u, txt, col, big){ const now = performance.now(), n = B.fx.filter(f => f.kind === 'txt' && f.x === u.x && f.y === u.y && now - f.t < 350).length;
   B.fx.push({kind:'txt', x:u.x, y:u.y, txt, col, big, t:now + n*140}); }
@@ -92,6 +92,7 @@ function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};
   return null; }
 
 function startBattle(id, opt={}){
+  G.said = null; // a fight between two talks: a new sitting (16)
   const def = battleDef(id, opt.stage); // a second area is the same fight on a new map (31c)
   if (!def) { S.scene = 'explore'; S.battle = null; save(); return startExplore(); } // a save pointing at a fight that no longer exists
   // the satchel as it was when the fight began: a fight resumed after a reload starts over with it, whatever was saved mid-fight
@@ -645,11 +646,11 @@ function battleSettle(){
   lg.style.minHeight = '0'; let r = room(); if (r < minLog && G.T > 30) { fitBattle(Math.max(30, G.T - Math.ceil((minLog - r) / 10.5))); r = room(); }
   lg.dataset.room = Math.max(minLog, r); logFit();
 }
-/* the log shows only the lines that fit whole in the room it was given (the newest are first), none cut in half */
+/* the log is a box the player can scroll (the newest line on top, the fight's history below); in a narrow PC window it is given the
+   room under the turn bar (battleSettle), elsewhere the stylesheet's height (v6.12.0: before this, lines past the room were hidden) */
 function logFit(){
-  const lg = $('#blog'); if (!lg) return; const rows = [...lg.children]; rows.forEach(c => c.hidden = false); if (!lg.dataset.room) return;
-  const room = +lg.dataset.room, top = lg.getBoundingClientRect().top, cut = rows.findIndex((c, i) => i > 0 && c.getBoundingClientRect().bottom - top > room);
-  if (cut > 0) rows.slice(cut).forEach(c => c.hidden = true);
+  const lg = $('#blog'); if (!lg) return; [...lg.children].forEach(c => c.hidden = false);
+  lg.style.maxHeight = lg.dataset.room ? lg.dataset.room + 'px' : '';
 }
 function battleHeadroom(){
   const cv = $('#cv'); if (!cv || !G.ctx || G.cv !== cv) return;
