@@ -602,7 +602,8 @@ One of them has left his blade on the roof, where it skidded out of his hand. Sh
 ${SQUAD().includes('ohl') ? `Ohl is kneeling at the edge of the roof, looking down into the blue. He can't see the bottom. None of you can. "I'd like to go down to ${S.f.c4_fewer ? 'him' : 'them'}," he says. "I know I can't." He doesn't take the oilcloth out. He just kneels there for a moment longer, and then gets up, and his knees crack like the slates.` : ''}
 
 ${SQUAD().includes('kettle') && S.f.c4_cusserHeld && S.inv.cusser > 0 ? `Kettle has her hand flat on the satchel flap again. She hasn't let go of it since the knives came. "Still here," she says, to nobody. "Still here."` : ''}`,
-      ch:[{t:'Across to the Daru roofs.', go:()=>{ startExplore('roofs_daru'); talk('c4_daru_arrive'); }},
+      ch:[{t:'Across the Daru roofs, low, between the Guild\'s lanterns.', tag:'Roof run', go:()=>playRoofRun({after:r => { S.f.c4_run = r.done ? (r.seen ? 'seen' : 'unseen') : 'walked'; startExplore('roofs_daru'); talk('c4_daru_arrive'); }})}, // v6.12.1: the run is offered here, where the squad stands, not only back at the plank (open question Q3)
+          {t:'Across to the Daru roofs, openly.', go:()=>{ startExplore('roofs_daru'); talk('c4_daru_arrive'); }},
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ---- the rope-line over the last gap (✦ The Rope's Way) ---- */
