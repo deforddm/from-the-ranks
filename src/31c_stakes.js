@@ -72,6 +72,7 @@ function foeRiders(a, t, dmg){
 }
 /* the squad's own state at the start of its turn: bleeding, slowed, held down. Returns false if the turn is lost to it. */
 function squadTurnStart(u){
+  if (typeof boonTurnStart === 'function') boonTurnStart(u); // the gods' boons (below): Soliel stops the bleeding before it bites
   if (u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); hurt(u, roll(1,4)); }
   if (u.slowTurn) { u.slowTurn = false; B.mvLeft = Math.max(0, u.mv - 2); float(u, 'slowed', '#bfe8ff'); }
   if (u.prone) { u.prone = false; B.mvLeft = 0; blog(`${u.name} spends the turn getting up.`); float(u, 'getting up', '#cfc8b8'); }
@@ -163,9 +164,56 @@ function chapterAgain(){
   if (n === 0) s = newState(S.name);
   else if (S.chsnap && S.chsnap[n]) s = JSON.parse(JSON.stringify(S.chsnap[n]));
   else s = rebuildAt(S, n);
-  Object.assign(s, keep); s.gods = {ch:n, used:[]}; S = migrate(s); S.scene = 'chintro'; save(); B = null; $('#sheet').hidden = true;
+  Object.assign(s, keep); s.gods = {ch:n, used:[]}; s.boons = null; S = migrate(s); S.scene = 'chintro'; save(); B = null; $('#sheet').hidden = true;
   if (n === 0) showIntro(); else startChapter(n);
 }
+
+/* ---- v6.9 the gods' boons: every answer leaves a boon on the fight, by god, so the fight you rise into is not the one you lost.
+   They stack when more than one god answers (at most two on Story, the newest kept), and last the fight and its second area.
+   S.boons = {fight, gods:[keys], spared:{id}} is set on the retry (31_battle.js lose) and cleared when the fight is won. ---- */
+const BOONS = {
+  'Hood':               {key:'hood',   name:'The gate stays shut',   txt:'The first time each squadmate would go down, they stay up at 1 health.'},
+  'Oponn':              {key:'oponn',  name:'The Lady pulls',        txt:'+2 to hit, and each squadmate rolls twice and keeps the better on their first attack each round.'},
+  'Shadowthrone':       {key:'shadow', name:'Shadow wraps the squad', txt:'Enemies are −2 to hit, and nobody in the squad can be flanked.'},
+  'Soliel':             {key:'soliel', name:'Temple oil',            txt:'Every squadmate heals 3 at the start of their turn, and bleeding stops.'},
+  'Cotillion':          {key:'rope',   name:'The Rope',              txt:'+2 move, and stepping away draws no free swings.'},
+  'Fener':              {key:'boar',   name:'The Boar charges',      txt:'+3 damage on every hit.'},
+  'Treach':             {key:'tiger',  name:'The Tiger',             txt:'+2 damage, and +2 to hit on any enemy a squadmate is already standing next to.'},
+  'the spirits':        {key:'cold',   name:'The ground goes cold',  txt:'An enemy that starts its turn next to a squadmate moves at half pace and is −1 to hit.'},
+  'the Queen of Dreams':{key:'dream',  name:'Far away',              txt:'Enemies are −2 to hit, and enemy sorcery does half: the Semk fire burns for half, and a daze is only a stagger.'},
+  'the grandmother':    {key:'ground', name:'The ground gives back', txt:'No spell sputters this fight, and every squadmate heals 2 at the start of their turn.'},
+  'the Rhivi spirits':  {key:'herd',   name:'The herd goes through', txt:'+2 move, and enemy shots are −3 to hit.'},
+  'Togg and Fanderay':  {key:'wolves', name:'The Wolves of Winter',  txt:'+1 armour, and an enemy that starts its turn next to a squadmate takes 1d4 cold.'},
+};
+const BOON_BY_KEY = Object.fromEntries(Object.entries(BOONS).map(([god, b]) => [b.key, Object.assign({god}, b)]));
+/* the boons on the fight being fought (or about to be): keys, newest last */
+const boonsOn = () => { const f = (B && B.id) || (S && S.battle); return S && S.boons && f && S.boons.fight === f ? (S.boons.gods || []) : []; };
+const boon = k => boonsOn().includes(k);
+const patronBoon = who => { const P = who && PATRONS[who]; return P && BOONS[P.god] ? Object.assign({god:P.god}, BOONS[P.god]) : null; };
+/* grant a god's boon on the fight about to be fought again: dedupe by god, newest last; Story keeps the newest two */
+function boonGrant(fight, b){
+  if (!b) return; const prev = S.boons && S.boons.fight === fight ? (S.boons.gods || []) : [];
+  let gods = prev.filter(k => k !== b.key).concat(b.key);
+  if (DIFF() === DIFFS.story) gods = gods.slice(-2);
+  S.boons = {fight, gods, spared:{}};
+}
+const boonsClear = () => { if (S && S.boons) S.boons = null; };
+/* what a squadmate's turn opens with under the gods */
+function boonTurnStart(u){
+  if (boon('soliel')) { if (u.bleed > 0) { u.bleed = 0; float(u, 'bleeding stops', '#9fe0b8'); } if (u.hp < u.maxhp) { heal(u, 3); blog(`<em>Temple oil.</em> ${u.name} heals 3.`); } }
+  if (boon('ground') && u.hp < u.maxhp) { heal(u, 2); blog(`<em>The ground gives back.</em> ${u.name} heals 2.`); }
+}
+/* what an enemy's turn opens with: the Wickan cold and the Wolves, for anyone standing next to the squad */
+function boonFoeTurnStart(u){
+  if (u.mvFull != null) { u.mv = u.mvFull; u.mvFull = null; B.mvLeft = u.mv; } // last turn's cold wears off
+  if (u.side !== 'e' || u.hp <= 0) return;
+  const adj = B.units.some(p => p.side === 'p' && p.hp > 0 && cheb(p, u) === 1); if (!adj) return;
+  if (boon('cold')) { u.coldTurn = B.turn; u.mvFull = u.mv; u.mv = Math.ceil(u.mv / 2); B.mvLeft = u.mv; blog(`<em>The ground goes cold under ${u.name}.</em> Half pace, −1 to hit.`); float(u, 'slowed', '#bfe8ff'); }
+  if (boon('wolves')) { const n = roll(1, 4); blog(`<em>The Wolves' breath.</em> ${u.name} takes ${n} cold.`); sparks(u.x, u.y, 8, '#bfe8ff', .5); hurt(u, n); }
+}
+/* the chips under the map, and the log line a fight opens with */
+const boonsHTML = () => boonsOn().map(k => BOON_BY_KEY[k]).filter(Boolean).map(b => `<span class="boon" title="${esc(b.txt)}">✦ ${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}: ${esc(b.name.toLowerCase())}</span>`).join('');
+const boonsLine = () => { const bs = boonsOn().map(k => BOON_BY_KEY[k]).filter(Boolean); return bs.length ? `<em>The gods' boons.</em> ${bs.map(b => `${b.name}: ${b.txt}`).join(' ')}` : ''; };
 
 /* ============ v3.13 tactics: through the squad, Steady, Post up, hold-out takedowns ============ */
 /* the squad passes through its own people (and allies) on the move; enemies block */

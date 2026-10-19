@@ -207,7 +207,7 @@ const B2_HEALS = ['mend', 'wash', 'stanch', 'argument'];
     const u = B && B.cur, a = AB[k];
     if (!S || S.book !== 'dg' || !u || !a || !a.strain || a.elder || a.spirit || u.side !== 'p' || u.ally) return _useAb(k, x, y);
     const heal = B2_HEALS.includes(k);
-    if (R(100) >= Math.round(b2Sputter() * 100) || (typeof b2Steady === 'function' && b2Steady(u))) { if (heal && u.id === 'marrow') S.f.b2_knots = (S.f.b2_knots || 0) + 1; return _useAb(k, x, y); }
+    if (R(100) >= Math.round(b2Sputter() * 100) || (typeof b2Steady === 'function' && b2Steady(u)) || boon('ground')) { if (heal && u.id === 'marrow') S.f.b2_knots = (S.f.b2_knots || 0) + 1; return _useAb(k, x, y); } // the grandmother's boon keeps the warren clean (31c)
     if (heal && u.id === 'marrow') S.f.b2_sputters = (S.f.b2_sputters || 0) + 1;
     blog(`<em>${u.name} reaches into the warren. ${b2Mud()}</em> Half effect.`); float(u, 'sputters', '#a08a5a'); tally('sputters');
     const w0 = B.warren || {}, down = B.units.filter(p => p.side === 'p' && p.hp <= 0);
@@ -222,13 +222,13 @@ SORC.push('sbolt');
     u.cd = u.cd || {};
     if (hasSk(u, 'sbolt') && !(u.cd.sbolt > B.round)) {
       const t = party().filter(p => !p.ally && cheb(u, p) <= 5 && cheb(u, p) > 1 && canShoot(u, p)).sort((a, b) => a.hp - b.hp)[0];
-      if (t && R(2) === 0) { u.cd.sbolt = B.round + 2; const sp = R(100) < Math.round(b2Sputter() * 100);
-        if (sp) blog(`<em>${u.name} calls on the Semk god. ${b2Mud()}</em>`);
+      if (t && R(2) === 0) { u.cd.sbolt = B.round + 2; const far = boon('dream'), sp = far || R(100) < Math.round(b2Sputter() * 100); // the Queen's boon: the fire comes from far away, at half (31c)
+        if (sp) blog(far ? `<em>${u.name} calls on the Semk god, and the fire arrives from a long way off.</em>` : `<em>${u.name} calls on the Semk god. ${b2Mud()}</em>`);
         AUDIO.play('shadow'); attack(u, t, {dmg:sp ? [1,6,0] : [2,6,1], verb:sp ? 'spits half a curse at' : 'throws the god\'s fire at'}); await wait(650); return true; } }
     const dazeReady = hasSk(u, 'daze') && !(u.cd.daze > B.round), before = new Set(party().filter(p => p.stun));
     const r = await _foeSpecial(u, gone);
-    if (dazeReady && u.cd.daze > B.round && B && R(100) < Math.round(b2Sputter() * 100)) {
-      party().filter(p => p.stun && !before.has(p)).forEach(p => { p.stun = false; p.slowTurn = true; float(p, 'staggered', '#a08a5a'); blog(`<em>The warren gives ${u.name} back mud.</em> ${p.name} staggers, and keeps the turn.`); }); }
+    if (dazeReady && u.cd.daze > B.round && B && (boon('dream') || R(100) < Math.round(b2Sputter() * 100))) {
+      party().filter(p => p.stun && !before.has(p)).forEach(p => { p.stun = false; p.slowTurn = true; float(p, 'staggered', '#a08a5a'); blog(boon('dream') ? `<em>The daze reaches ${p.name} as if from a dream.</em> A stagger, and the turn is kept.` : `<em>The warren gives ${u.name} back mud.</em> ${p.name} staggers, and keeps the turn.`); }); }
     return r; }; }
 /* flat on the ground (Mincer's Drop, Chapter 2): shots and thrown things find it hard to hit what is lying in a fold of earth */
 { const _atkCalc = atkCalc;

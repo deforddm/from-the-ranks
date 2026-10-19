@@ -56,6 +56,7 @@ function hurt(u, n, crit){ if (u.hp <= 0) return; // already down: a second blas
   if (u.side === 'p' && !u.ally && DIFF().dmg !== 1) n = Math.max(1, Math.round(n * DIFF().dmg)); // the difficulty, on every wound the squad takes
   if (u.side === 'p' && !u.ally && u.hp - n <= 0 && S.f && S.f.hoodRepCh !== (S.chapter || 0) && Object.values((S.gear && S.gear[u.id]) || {}).includes('hoodrep')) { S.f.hoodRepCh = S.chapter || 0; n = u.hp - 1; blog(`<em>The little black bottle at ${u.name}'s throat cracks.</em> ${u.name} does not go down. Nobody can explain it. Doctor Brack could, at length.`); float(u, 'repelled', '#9fb3d9'); } // Doctor Brack's Hood's Repellent: once a chapter
   if (u.side === 'p' && !u.ally && S.card === 'herald' && u.hp - n <= 0 && !B.used.herald) { B.used.herald = true; n = u.hp - 1; blog(`<em>The Herald turns its head.</em> ${u.name} stays standing at 1 health.`); float(u, 'spared', '#8fa38a'); }
+  if (u.side === 'p' && !u.ally && u.hp - n <= 0 && boon('hood') && !(S.boons.spared && S.boons.spared[u.id])) { (S.boons.spared ??= {})[u.id] = 1; n = u.hp - 1; blog(`<em>The gate stays shut.</em> ${u.name} stays up at 1 health.`); float(u, 'the gate holds', '#8fa38a'); } // Hood's boon: once each, for the fight (31c)
   if (u.stanch && u.stanch.hp > 0 && u.hp - n < 1) { n = Math.max(0, u.hp - 1); float(u, 'held', '#9fe0b8'); blog(`${u.name} should have gone down. ${u.stanch.name} said no.`); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // Stanch
   if (u.immortal && u.hp - n < 1) { n = Math.max(0, u.hp - 1); float(u, 'holds', '#bfe8ff'); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // it does not fall
   if (u.side === 'e') tally('dealt', Math.min(n, u.hp)); else if (!u.ally) tally('taken', Math.min(n, u.hp));
@@ -72,6 +73,7 @@ function mkParty(id, x, y){
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
+  if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('wolves')) u.ac += 1; // the gods' boons on a fight fought again (31c)
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
@@ -113,6 +115,7 @@ function startBattle(id, opt={}){
     ${def.objective ? `<div class="objective" id="objective"></div>` : ''}
     <div class="order" id="order" aria-label="Turn order"></div>
     <div class="cvwrap"><canvas id="cv" aria-label="Battle map"></canvas></div>
+    ${boonsOn().length ? `<div class="boons" id="boons" aria-label="The gods' boons">${boonsHTML()}</div>` : ''}
     <div class="ubar" id="ubar"></div>
     <div class="log" id="blog" aria-live="polite"></div>`;
   bindHud();
@@ -126,6 +129,7 @@ function startBattle(id, opt={}){
   if (def.nothrow) blog(`<em>Gas in the pipes. Nobody throws anything in here.</em>`);
   if (def.mortal) blog(`<em>Whoever falls here stays down.</em>`);
   if (def.isStage2) blog(`<em>${def.title}. The second ground.</em>`);
+  { const bl = boonsLine(); if (bl) blog(bl); } // the gods' boons on a fight fought again, and into its second ground (31c)
   if (def.objective) blog(`<em>${def.objective.text}</em>`);
   if (def.allies && def.allies.some(x => x[0] !== 'hackle')) blog(`Others fight beside you${def.dark ? ' tonight' : ''}. They are not yours.`);
   if (B.surprise === 'p') blog(`Surprise: your squad moves first.`);
@@ -152,6 +156,7 @@ function nextTurn(){
   if (!u || u.hp <= 0) return nextTurn();
   if (B.line && (B.line.u === u || B.line.u.hp <= 0)) B.line = null; // The Line holds until its bearer's next turn
   B.cur = u; B.moved = false; B.mvLeft = u.mv; B.acted = false; B.mode = null; B.aim = null; B.turn++; B.turnAt = performance.now();
+  boonFoeTurnStart(u); // the gods' boons on an enemy's turn: the Wickan cold, the Wolves (31c)
   if (u.strain) u.strain = Math.max(0, u.strain - 1);
   if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
   { const fi = B.fires.find(f => f.x === u.x && f.y === u.y); if (fi && u.hp > 0) { blog(`${u.name} is caught in ${fi.txt || 'burner fire'}.`); hurt(u, roll(1,6)); } }
@@ -179,6 +184,7 @@ function endBeat(won){
 }
 function win(){
   if (!B) return;
+  boonsClear(); // the gods' boons end with the fight (31c)
   tally('won'); const xp = Math.round((B.def.xp || 0) * XPK), up = gainXP(xp), head = `${B.def.objective ? 'Held' : 'Victory'}. +${xp} experience.`;
   if (B.def.mortal) { // the fallen stay down: the sergeant gets up with a scar, everyone else is dead
     const fallen = B.units.filter(u => u.side === 'p' && !u.ally && u.hp <= 0).map(u => u.id);
@@ -199,8 +205,11 @@ function lose(){
   if (P) { S.gods.used.push(who); S.godsMet ??= []; if (!S.godsMet.includes(who)) S.godsMet.push(who); tally('godsAnswered'); } // godsMet: the glossary's record of who has answered
   save();
   const story = DIFF() === DIFFS.story, left = story ? null : (() => { const ch = S.gods; const n = [...SQUAD().filter(id => id !== 'sgt' && PATRONS[id] && (S.loy[id] || 0) > 0), 'sgt'].filter(id => !ch.used.includes(id)).length; return n; })();
+  const bn = patronBoon(who), was = boonsOn(), kept = bn ? (story ? [...was.filter(k => k !== bn.key), bn.key].slice(-2) : [...was.filter(k => k !== bn.key), bn.key]) : was; // the boons the fight will carry (31c)
+  const others = kept.filter(k => bn && k !== bn.key).map(k => BOON_BY_KEY[k]).filter(Boolean), lapsed = was.filter(k => !kept.includes(k)).map(k => BOON_BY_KEY[k]).filter(Boolean);
+  const boonNote = bn ? `<div class="note boonnote"><b>The boon: ${esc(bn.name)}.</b> ${esc(bn.txt)} It lasts the fight, and its second ground.${others.length ? ` It joins ${others.map(b => `${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}'s (${esc(b.name.toLowerCase())})`).join(' and ')}.` : ''}${lapsed.length ? ` On Story two gods hold at once: ${lapsed.map(b => esc(b.name.toLowerCase())).join(' and ')} lapse${lapsed.length > 1 ? '' : 's'}.` : ''}</div>` : '';
   if (P) sh.innerHTML = `${art('patrons/' + (P.sig || who), 'godsig')}<div class="sp godsp">${esc(P.title)}</div><div class="txt god">${fmt(P.txt(who))}</div>
-    <div class="note trick">The Fourth's road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>
+    <div class="note trick">The Fourth's road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
     <div class="choices"><button class="choice" id="bRetry">Rise, and fight it again</button></div>`;
   else sh.innerHTML = `<div class="sp godsp">No one answers</div><div class="txt god">${fmt(`Every god who had a reason to listen has already spent it this chapter. Hood's gate opens the rest of the way, and it is very quiet on the other side.\n\nAnd then it is morning, and the Fourth is where this chapter began, with all of it still to do, and nobody quite able to say why they are so tired.`)}</div>
     <div class="choices"><button class="choice" id="bRetry">Begin the chapter again</button></div>`;
@@ -208,7 +217,7 @@ function lose(){
   const snap = B.snap; // the save as it stood when the fight (or its second area) began: items, health, the lot
   $('#bRetry').onclick = () => { AUDIO.play('click'); sh.hidden = true; const st = S.stats, gods = S.gods, met = S.godsMet;
     if (!P) return chapterAgain();
-    S = migrate(JSON.parse(snap)); if (st) S.stats = st; S.gods = gods; if (met) S.godsMet = met; startBattle(S.battle, S.bopt || {}); }; // the count and the gods remember the lost fight
+    S = migrate(JSON.parse(snap)); if (st) S.stats = st; S.gods = gods; if (met) S.godsMet = met; boonGrant(S.battle, bn); startBattle(S.battle, S.bopt || {}); }; // the count and the gods remember the lost fight; the god's boon goes on it (31c)
 }
 
 const grapR = () => 3 + lvT(), shoveDist = () => 1 + lvAt(4);
@@ -329,15 +338,22 @@ function flankers(a, t, from){
 function flanked(a, t, from){ return flankers(a, t, from).length > 0; }
 /* attacks of opportunity: leaving a tile next to an enemy gives that enemy one free melee swing per turn */
 function threatsAt(u, x, y){ return B.units.filter(e => e.side !== u.side && e.hp > 0 && !e.stun && cheb(e, {x,y}) === 1); }
-function provokes(u, from, to){ return threatsAt(u, from.x, from.y).filter(e => e.aooTurn !== B.turn || (e.side === 'p' && !e.ally && has(e.id,'holdline'))); }
+function provokes(u, from, to){ if (u.side === 'p' && boon('rope')) return []; /* the Rope: the squad steps away for free (31c) */ return threatsAt(u, from.x, from.y).filter(e => e.aooTurn !== B.turn || (e.side === 'p' && !e.ally && has(e.id,'holdline'))); }
+/* the gods' boons on a blow (31c): +2 for the Lady, +2 for the Tiger on an enemy a squadmate already stands beside; −2 under Shadow or the Queen's dream, −1 cold, −3 on a shot through the herd */
+function boonHit(a, t, o){
+  const mine = a.side === 'p', ranged = cheb(o.from || a, t) > 1 && !a.reachMelee;
+  if (mine) return a.ally ? 0 : (boon('oponn') ? 2 : 0) + (boon('tiger') && B.units.some(b => b !== a && b.side === 'p' && b.hp > 0 && cheb(b, t) === 1) ? 2 : 0);
+  if (t.side !== 'p') return 0;
+  return (boon('shadow') ? -2 : 0) + (boon('dream') ? -2 : 0) + (boon('cold') && a.coldTurn === B.turn ? -1 : 0) + (boon('herd') && ranged ? -3 : 0);
+}
 /* the numbers behind a blow: the attacker's bonus, the target's armour, the lowest natural roll that crits, and whether it flanks */
 function atkCalc(a, t, o={}){
   const mine = a.side === 'p';
-  const line = lineCovers(t), fl = !o.aoo && !line && flanked(a, t, o.from); // The Line: no flanking anyone in it
+  const line = lineCovers(t), fl = !o.aoo && !line && !(t.side === 'p' && boon('shadow')) && flanked(a, t, o.from); // The Line: no flanking anyone in it; nor under Shadow's boon
   const wallBonus = t.side === 'p' && friendsOf(t).some(f => !f.ally && has(f.id,'shieldwall') && cheb(f,t) === 1) ? 2 + lvAt(6) : 0;
   const discipline = t.side === 'p' && !t.ally && SQUAD().some(id => has(id,'discipline')) ? 1 + lvAt(8) : 0;
   const aooBonus = o.aoo && !a.ally && a.side === 'p' && (has(a.id,'holdline') || has(a.id,'sappers_eye')) ? 2 + lvAt(6) : 0;
-  const bonus = (o.bonus || 0) + (mine && a.steady ? 2 : 0) + (mine && B.howlUntil >= B.round ? -1 : 0) + (!mine && B.foeRallyUntil >= B.round ? 2 : 0) + (!mine && t.clawMarkUntil >= B.round ? 2 : 0) + a.atk + (mine && S.card === 'oponn' ? 1 : 0) + (mine && a.rallyUntil >= B.round ? 2 : 0) + (!mine && S.card === 'knight' ? -1 : 0) + (fl ? 2 : 0) + aooBonus + (a.dazzleUntil >= B.round ? -3 : 0) + (!mine && a.snareUntil >= B.round ? -2 : 0) + (!mine && inDark(a.x, a.y) ? -2 : 0); // Blue Fire dazzles; Andii dark blinds
+  const bonus = (o.bonus || 0) + (mine && a.steady ? 2 : 0) + (mine && B.howlUntil >= B.round ? -1 : 0) + (!mine && B.foeRallyUntil >= B.round ? 2 : 0) + (!mine && t.clawMarkUntil >= B.round ? 2 : 0) + a.atk + (mine && S.card === 'oponn' ? 1 : 0) + (mine && a.rallyUntil >= B.round ? 2 : 0) + (!mine && S.card === 'knight' ? -1 : 0) + (fl ? 2 : 0) + aooBonus + (a.dazzleUntil >= B.round ? -3 : 0) + (!mine && a.snareUntil >= B.round ? -2 : 0) + (!mine && inDark(a.x, a.y) ? -2 : 0) + boonHit(a, t, o); // Blue Fire dazzles; Andii dark blinds; the gods' boons
   const ghost = t.side === 'p' && !t.ally && has(t.id,'ghost') ? 2 + lvAt(6) : 0;
   const cover = !o.aoo && coverFor(o.from || a, t); // behind a table or a crate: +2 against shots (v3.19)
   const ac = t.ac + (t.veilUntil >= B.round ? veilPen() : 0) + wallBonus + discipline + ghost + (line ? 3 + lvT() : 0) + (t.darkUntil >= B.round ? 2 : 0) + (t.side === 'e' && t.snareUntil >= B.round ? -2 : 0) + (cover ? 2 : 0) + (t.prone && cheb(o.from || a, t) <= 1 ? -2 : 0);
@@ -346,7 +362,8 @@ function atkCalc(a, t, o={}){
 /* chance to hit in percent: a natural 1 always misses, a crit always hits */
 function hitPct(c){ let n = 0; for (let r = 1; r <= 20; r++) if (r >= c.critOn || (r !== 1 && r + c.bonus >= c.ac)) n++; return n * 5; }
 function attack(a, t, o={}){
-  const mine = a.side === 'p', lucky = mine && a.luckyTurn === B.turn; let nat = d20();
+  const mine = a.side === 'p', pull = mine && !a.ally && boon('oponn') && a.pullRound !== B.round, lucky = (mine && a.luckyTurn === B.turn) || pull; let nat = d20();
+  if (pull) a.pullRound = B.round; // Oponn's boon: the first attack each round is rolled twice (31c)
   if (lucky) { const n2 = d20(); blog(`<em>The Lady pulls.</em> ${a.name} rolls ${SET.dice ? `${nat} and ${n2}` : 'twice'} and keeps the better.`); nat = Math.max(nat, n2); a.luckyTurn = -1; }
   const {bonus, ac, critOn, fl, cover} = atkCalc(a, t, o);
   if (mine && a.steady) a.steady = false; // spent on this blow
@@ -370,7 +387,7 @@ function attack(a, t, o={}){
   const tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
   const land = o.land != null ? o.land : ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
-  const dd = o.dmg || a.dmg; const dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0);
+  const dd = o.dmg || a.dmg; const dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) : 0); // the Boar and the Tiger (31c)
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
   later(() => { if (t.hp <= 0) return; if (crit) sparks(t.x, t.y, 16, '#ffcf7a'); else sparks(t.x, t.y - .1, 5, '#f08a7c', .6);
     hurt(t, dmg, crit); foeRiders(a, t, dmg);
@@ -494,7 +511,7 @@ async function ai(u, turnId){
   catch (e) { console.error('battle ai', e); if (B && !B.over && B.turn === turnId) { updBattleUI(); if (!checkEnd()) endTurn(); } } // a fault never leaves the turn hanging
 }
 /* the free swings stepping out of x,y gives away to u's enemies (each swings once a turn; Brisk with Hold the Line, always) */
-const leaveCost = (u, x, y) => threatsAt(u, x, y).filter(e => e.aooTurn !== B.turn || (e.side === 'p' && !e.ally && has(e.id,'holdline'))).length;
+const leaveCost = (u, x, y) => u.side === 'p' && boon('rope') ? 0 : threatsAt(u, x, y).filter(e => e.aooTurn !== B.turn || (e.side === 'p' && !e.ally && has(e.id,'holdline'))).length;
 /* walk u along a path, paying free swings on the way; false if the battle or the turn went away meanwhile */
 async function aiWalk(u, path, gone){
   if (u.rising === B.turn) return true; // spent getting up
