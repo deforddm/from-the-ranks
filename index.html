@@ -636,7 +636,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '6.9.0';
+const VERSION = '6.9.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5473,7 +5473,7 @@ function battleHeadroom(){
 }
 window.addEventListener('resize', () => { if (view !== 'battle' || !B) return; // a phone's address bar coming and going is not worth a re-layout
   if (Math.abs(window.innerWidth - (B.fitW || 0)) > 2 || Math.abs(window.innerHeight - (B.fitH || 0)) > (WIDE() || FINE() ? 2 : 120)) { fitBattle(); battleSettle(); } else battleHeadroom(); });
-const ukey = u => u.key || (u.key = 'u' + B.units.indexOf(u)); // one display slot per unit (two allies of a kind used to share one)
+const ukey = u => u.key || (u.key = 'u' + (B.ukeyN = (B.ukeyN || 0) + 1)); // one display slot per unit, never reused: an index would be handed out twice once a unit is taken out of B.units mid-fight (Book Three's spared starving) and a wave unit then drew on top of someone else (v6.9.1)
 function updBattleUI(){
   if (!B || view !== 'battle') return;
   queueMicrotask(battleSettle); // once the bar below has its new contents, whichever way this returns
@@ -6356,6 +6356,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['6.9.1', ['Fixed: in Book Three\'s stake-line fight (Chapter 4), once a starving one had been dragged back alive, the next arrivals could be painted on top of another figure, two or three to a square and shifting between them, and a tap on the figure found nobody. Every unit now keeps its own place on the map for the whole fight. A fight already in that state restarts clean when the game is reopened.']],
   ['6.9.0', ['The gods\' boons. When the whole squad goes down and a god answers, the fight you rise into is not the one you lost: the god leaves a boon on it, for the fight and its second ground. Hood keeps the gate shut (the first time each squadmate would go down, they stay up at 1). Oponn pulls (+2 to hit, and the first attack each round is rolled twice). Shadowthrone wraps the squad (enemies −2 to hit, no flanking). Soliel\'s temple oil (3 health at the start of each turn, bleeding stops). Cotillion\'s Rope (+2 move, no free swings). Fener\'s charge (+3 damage), or Treach\'s stripe in Book Three (+2 damage, +2 to hit beside a squadmate). The Wickan spirits chill the ground, the Queen of Dreams makes it all far away, Keth\'s grandmother keeps the warren clean, the Rhivi herd hides the squad from shots, and the Wolves of Winter bite whoever stands too close.',
     'If more than one god answers in the same fight, the boons stack. On Story, where the gods always answer, the two newest hold. Each boon is named on the god\'s page, shown as a chip under the map, and written into the fight log.',
     'Old saves: nothing changes until the next time a god answers.']],

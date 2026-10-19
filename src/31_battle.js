@@ -660,7 +660,7 @@ function battleHeadroom(){
 }
 window.addEventListener('resize', () => { if (view !== 'battle' || !B) return; // a phone's address bar coming and going is not worth a re-layout
   if (Math.abs(window.innerWidth - (B.fitW || 0)) > 2 || Math.abs(window.innerHeight - (B.fitH || 0)) > (WIDE() || FINE() ? 2 : 120)) { fitBattle(); battleSettle(); } else battleHeadroom(); });
-const ukey = u => u.key || (u.key = 'u' + B.units.indexOf(u)); // one display slot per unit (two allies of a kind used to share one)
+const ukey = u => u.key || (u.key = 'u' + (B.ukeyN = (B.ukeyN || 0) + 1)); // one display slot per unit, never reused: an index would be handed out twice once a unit is taken out of B.units mid-fight (Book Three's spared starving) and a wave unit then drew on top of someone else (v6.9.1)
 function updBattleUI(){
   if (!B || view !== 'battle') return;
   queueMicrotask(battleSettle); // once the bar below has its new contents, whichever way this returns
