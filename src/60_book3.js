@@ -116,7 +116,7 @@ Object.assign(PATRONS, {
   greysword:{god:'Togg and Fanderay', title:'Togg and Fanderay, the Wolves of Winter', txt:id => `Dannet goes down with her hand on the half-painted wolf, and the air goes cold, very suddenly, the cold of a hill in deep winter.\n\nSomewhere two wolves lift their heads at the same time, a long way apart, and look the same way. Neither of them is a boar. Neither of them is kind. The grey cloak on Dannet's shoulders frosts white, and she gets up.`},
 });
 const PATRON_FENER = PATRONS.sgt;
-const PATRON_TREACH = {god:'Treach', title:'Treach, the Tiger of Summer', txt:id => `Something long and striped goes past at the edge of the light, low to the ground, and the grass stands up behind it as if it had been combed.\n\nFener does not answer this year; everyone in the Host knows it, and nobody can say how. Treach, the Tiger of Summer, is new to being a god and has not learned to be polite about it. He likes a fight that is not finished. This one is not finished.`};
+const PATRON_TREACH = {sig:'treach', god:'Treach', title:'Treach, the Tiger of Summer', txt:id => `Something long and striped goes past at the edge of the light, low to the ground, and the grass stands up behind it as if it had been combed.\n\nFener does not answer this year; everyone in the Host knows it, and nobody can say how. Treach, the Tiger of Summer, is new to being a god and has not learned to be polite about it. He likes a fight that is not finished. This one is not finished.`};
 Object.defineProperty(PATRONS, 'sgt', {configurable:true, enumerable:true, get(){ return S && S.book === 'moi' ? PATRON_TREACH : PATRON_FENER; }, set(v){ /* kept per book */ }});
 
 /* ---- their two abilities ---- */

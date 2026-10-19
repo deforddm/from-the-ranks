@@ -11,6 +11,11 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   // every patron of every book has a boon
   const gods = Object.keys(PATRONS).map(id => PATRONS[id].god); out.patrons = Object.keys(PATRONS).length; out.unboonod = gods.filter(g => !BOONS[g]);
   S = newState('Hask'); S.book = 'moi'; out.treach = patronBoon('sgt') && patronBoon('sgt').key; S.book = 'gotm'; out.fener = patronBoon('sgt') && patronBoon('sgt').key;
+  // every god has a sigil of its own (v6.9.2): the squadmate's own, or the one it borrows (Book Two's Hood, Oponn and Soliel)
+  const sigOf = id => { const P = PATRONS[id]; return 'patrons/' + (P.sig || id); };
+  out.noSigil = Object.keys(PATRONS).filter(id => id !== 'sgt' && !ART[sigOf(id)]).map(sigOf);
+  S.book = 'moi'; out.sgtMoi = sigOf('sgt') + ':' + !!ART[sigOf('sgt')]; S.book = 'gotm'; out.sgtGotm = sigOf('sgt') + ':' + !!ART[sigOf('sgt')];
+  out.distinct = new Set(Object.keys(PATRONS).map(id => id === 'sgt' ? 'patrons/sgt' : sigOf(id)).concat(['patrons/treach'])).size;
   // a two-ground fight; Brisk most loyal (Hood), then Ohl (Soliel)
   S = newState('Hask'); S.chapter = 3; S.lvl = 4; S.squad = ['sgt','brisk','kettle','tuft','ohl']; migrate(S); S.loy.brisk = 2; S.loy.ohl = 1; save();
   BATTLES.__b = Object.assign({}, BATTLES.knives, {after:'__after', stage2:{title:'The courtyard', text:'Further in.', map:BATTLES.knives.map, foes:[['bruiser',3,1],['guildveteran',4,1]], xp:50}});
@@ -80,6 +85,8 @@ console.log(JSON.stringify(r));
 ok(!r.err, 'no error in the page script' + (r.err ? ': ' + r.err : ''));
 ok(r.patrons >= 15 && r.unboonod && r.unboonod.length === 0, `every patron has a boon (${r.patrons} patrons${r.unboonod && r.unboonod.length ? ', missing ' + r.unboonod.join(', ') : ''})`);
 ok(r.treach === 'tiger' && r.fener === 'boar', `the sergeant's god follows the book: Treach in Book Three (${r.treach}), Fener otherwise (${r.fener})`);
+ok(r.noSigil && r.noSigil.length === 0 && r.sgtMoi === 'patrons/treach:true' && r.sgtGotm === 'patrons/sgt:true', `every god has a sigil; Treach's is the tiger, Fener's the boar (${(r.noSigil || []).join(',') || 'none missing'}; ${r.sgtMoi}; ${r.sgtGotm})`);
+ok(r.distinct === 12, `twelve distinct sigils across the three books (${r.distinct})`);
 ok(r.noChips && r.noBoons, 'a fresh fight has no boons and no chips');
 ok(r.godScreen && r.beforeRetry, 'the god\'s screen names the boon and its length; nothing is granted until Rise');
 ok(r.afterRetry === '["hood"]' && r.chips === 1 && /Hood/.test(r.chipText || '') && r.logLine, `Rise: Hood's boon on the fight, one chip, the log line (${r.afterRetry}, ${r.chips} chip)`);
