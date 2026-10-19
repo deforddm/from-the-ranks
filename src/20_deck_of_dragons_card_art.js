@@ -1,10 +1,13 @@
 /* ============ Deck of Dragons card art ============ */
 /* later books' cards: CARDART[id](ctx, {px, py, pw, ph, cx, gy, t, hue}) paints the picture panel (57b); a painted deck/ face, where there is one, still comes first */
 const CARDART = {};
+/* whose deck is on the table: a face-down card takes that reader's back (DECKBACK in 21b); Tuft's is the wheel below (v6.11.0) */
+let DECKBACK_NOW = 'tuft';
 function drawCard(ctx, id, W, H, face, t = 0){
   ctx.save();
   // card body
   const r = W * .06; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(0, 0, W, H, r) : ctx.rect(0,0,W,H); ctx.clip();
+  if (!face && DECKBACK_NOW !== 'tuft' && typeof DECKBACK !== 'undefined' && DECKBACK[DECKBACK_NOW]) { DECKBACK[DECKBACK_NOW](ctx, W, H, t); ctx.restore(); return; }
   const body = ctx.createLinearGradient(0, 0, W, H); body.addColorStop(0, '#1d1511'); body.addColorStop(1, '#0c0908'); ctx.fillStyle = body; ctx.fillRect(0,0,W,H);
   // worn wood grain
   ctx.strokeStyle = 'rgba(255,255,255,.03)'; ctx.lineWidth = 1; for (let i=0;i<18;i++){ ctx.beginPath(); ctx.moveTo(0, i*H/18 + hash(i,1)*8); ctx.bezierCurveTo(W*.3, i*H/18 + hash(i,2)*14, W*.7, i*H/18 - hash(i,3)*14, W, i*H/18 + hash(i,4)*8); ctx.stroke(); }
@@ -153,9 +156,9 @@ function drawCardFlip(ctx, id, x, y, W, H, k, t, rot = 0, scale = 1){
 }
 /* small inline card in the dialogue sheet; if refuse, it sours after flipping */
 function inlineCard(cv, id, refuse){
-  if (!cv) return; const ctx = cv.getContext('2d'), t0 = performance.now(); let played = false;
+  if (!cv) return; const ctx = cv.getContext('2d'), t0 = performance.now(), rd = typeof readingReader === 'function' ? readingReader() : 'tuft'; let played = false;
   function fr(){ if (!cv.isConnected) return; const t = performance.now() - t0, k = REDUCE() ? 1 : clamp((t - 300) / 700, 0, 1);
-    ctx.clearRect(0,0,240,360); drawCardFlip(ctx, id, 0, 0, 240, 360, k, t);
+    ctx.clearRect(0,0,240,360); const keep = DECKBACK_NOW; DECKBACK_NOW = rd; drawCardFlip(ctx, id, 0, 0, 240, 360, k, t); DECKBACK_NOW = keep;
     if (!played && k > .5) { played = true; AUDIO.play('flip'); }
     if (refuse && t > 1300) { const a = clamp((t - 1300) / 900, 0, .75); ctx.fillStyle = `rgba(6,5,4,${a})`; ctx.fillRect(0,0,240,360); for (let i=0;i<8;i++){ const yy = 360 - ((t/6 + i*47) % 400); ell(ctx, 120 + Math.sin(t/400 + i)*60, yy, 40, 14, `rgba(60,50,45,${a*.5})`); } }
     if (k < 1 || (refuse && t < 2400) || ['oponn','chains','crown','blank','knight','raven','hounds','magi'].includes(id) || CARDART[id]) requestAnimationFrame(fr); }

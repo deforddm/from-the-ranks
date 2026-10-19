@@ -76,6 +76,7 @@ function guardUp(){ try { if (gLevel() < 1) history.pushState({g:1}, ''); if (gL
 /* close the top thing that is open; false when nothing was */
 function backTop(){
   if (typeof artViewOpen === 'function' && artViewOpen()) { $('#avClose').click(); return true; }
+  if (!$('#cardfx').hidden) { const cf = $('#cardfx'), b = cf.dataset.shown ? cf.querySelector('#cfGo') : null; if (b) b.click(); else cf.click(); return true; } // a reading: Back hurries it like a tap, and once the words are up it puts the cards away (v6.11.0)
   if (picksOpen()) return true; // the level-up choice has to be made
   if (!$('#chars').hidden) { AUDIO.play('click'); closeChars(); return true; }
   if (!$('#settings').hidden) { AUDIO.play('click'); $('#settings').hidden = true; $('#settings').innerHTML = ''; return true; }
