@@ -100,7 +100,7 @@ const CH6 = {
              {id:'simtal', name:'Lady Simtal', kind:'simtal', x:5, y:2, node:()=>'c6_simtal', show:()=>!S.f.c6_duelDone, fresh:()=>!S.f.c6_simtal},
              {id:'orr', name:'A councilman in green and gold', kind:'orr', x:9, y:5, node:()=>'c6_orr', show:()=>!S.f.c6_duelDone, fresh:()=>!S.f.c6_orr},
              {id:'mammot', name:'An old priest in a Jaghut mask', kind:'mammot', x:13, y:8, still:true, node:()=>'c6_mammot', show:()=>!S.f.c6_tuft, fresh:()=>!S.f.c6_mammotSeen},
-             {id:'rallick_t', name:'The man from the doorway', kind:'rallick', x:11, y:9, node:()=>'c6_duel', show:()=>!S.f.c6_duelDone, fresh:()=>true},
+             {id:'rallick_t', name:'The man from the doorway', kind:'rallick', x:11, y:9, node:()=>'c6_duel', show:()=>!S.f.c6_duelDone && !!S.f.c6_hallSeen, fresh:()=>true}, // he comes in once you have looked in at the hall doors (Q3, v6.13.0)
              {id:'derudan', name:'A woman in a mask of feathers', kind:'reveller', x:2, y:4, still:true, node:()=>'c6_derudan', fresh:()=>!S.f.c6_derudan},
              {id:'knives', name:'Shapes on the balustrade', kind:'guildknife', x:14, y:1, still:true, node:()=>'c6_knives', show:()=>!S.f.c6_knivesDone, fresh:()=>true} ] },
 
@@ -267,7 +267,7 @@ ${SQUAD().includes('kettle') ? `"A *lantern*," Kettle says. "In *there*." She's 
 
   quests:{
     fete_street:()=> S.f.c6_gateDone ? 'Through the gate' : 'The Fete. Lady Simtal\'s gate, north. You\'re on the guard list.',
-    simtal_terrace:()=> S.f.c6_duelDone && S.f.c6_knivesDone ? 'Down the steps to the garden' : !S.f.c6_knivesDone && !S.f.c6_duelDone ? 'Walk the terraces. Every dangerous person in the city is on them.' : !S.f.c6_knivesDone ? 'Guard rounds: the upper terrace, north-east' : 'The man from the doorway is on the terrace',
+    simtal_terrace:()=> S.f.c6_duelDone && S.f.c6_knivesDone ? 'Down the steps to the garden' : !S.f.c6_knivesDone && !S.f.c6_duelDone ? 'Walk the terraces. Every dangerous person in the city is on them.' : !S.f.c6_knivesDone ? 'Guard rounds: the upper terrace, north-east' : !S.f.c6_hallSeen ? 'The hall doors: Whiskeyjack wants his names' : 'The man from the doorway is on the terrace',
     simtal_garden:()=> S.f.c6_key ? 'Dawn' : S.f.c6_tuft ? 'The old priest in the Jaghut mask is walking to the sapling' : S.f.c6_houndDone ? 'A grey cloak by the fountain' : S.f.c6_wjGarden ? 'Something on the east wall' : 'Whiskeyjack, by the fountain' },
 
   end:{
@@ -916,7 +916,7 @@ ${SQUAD().includes('tuft') ? `Tuft stops dead in the terrace doors. ${S.f.c4_tuf
       ch:[{t:'The terrace.', go:()=>startExplore('simtal_terrace')}]}),
 
     /* ---- the terraces ---- */
-    c6_hall:()=>({sp:'The hall doors', scene:'fete_hall', txt: S.f.c6_duelDone ?
+    c6_hall:()=>({sp:'The hall doors', scene:'fete_hall', fx:()=>{ S.f.c6_hallSeen = 1; }, txt: S.f.c6_duelDone ?
 `The hall, through the terrace doors. The music has stopped and started again, the way music does in a house where something has happened that everyone has agreed not to have seen. The dancers are dancing a little closer together.
 
 At the far end of the hall there's a small door with a gilt handle. It's closed. Nobody is standing near it. Everyone in the room is very carefully not standing near it.` :
@@ -1303,7 +1303,7 @@ ${SQUAD().includes('kettle') ? `Kettle, very quietly: "Is anyone going to *do* a
 `White steps going down off the marble into the dark, to lawns and hedges and lanterns in the trees. Fiddler and Hedge have the garden. Whiskeyjack is down there already.`,
       ch:[{t:'Down to the garden.', go:()=>{ startExplore('simtal_garden'); if (!S.f.c6_gardenSeen) talk('c6_garden_arrive'); }},
           {t:'Not yet.'}]} : {sp:'The garden steps', txt:
-`White steps going down into the garden. Fiddler said walk the terrace first, upper and lower.${!S.f.c6_knivesDone ? ` You haven't walked the upper terrace yet, at the corner of the house over the lake.` : ''}${!S.f.c6_duelDone ? ` And the man from the doorway has just come in through the terrace doors, walking the way a knife walks, and you'd like to know where to.` : ''}`,
+`White steps going down into the garden. Fiddler said walk the terrace first, upper and lower.${!S.f.c6_knivesDone ? ` You haven't walked the upper terrace yet, at the corner of the house over the lake.` : ''}${!S.f.c6_hallSeen ? ` And Whiskeyjack wants his names: the hall doors, the lit ones, and a minute's look at the masks.` : !S.f.c6_duelDone ? ` And the man from the doorway has just come in through the terrace doors, walking the way a knife walks, and you'd like to know where to.` : ''}`,
       ch:[{t:'Not yet.'}]},
 
     /* ---- the garden ---- */
