@@ -1086,7 +1086,7 @@ The Spawn gets smaller. Then it is a dark shape on the horizon. Then it is nothi
 
   /* ---- the fire: the Fourth's last words ---- */
   b3_c7_s_fire:()=>({sp:'The fire on the shore', txt:
-`A fire on the shore, with the sea making the noise the sea makes. The squad sits round it, close, the way it always has. The squad is in no hurry to go to sleep. Sleep is where tomorrow starts.`,
+`A fire on the shore, with the sea making the noise the sea makes. The squad sits round it, close, the way it always has. Sleep can wait. Sleep is where tomorrow starts.`,
       html:allyHTML('Coral · the shore, after'),
       ch:[{t:'Ohl, and the list.', req:()=>b3In('ohl') && !S.f.b3_c7_wOhl, go:'b3_c7_w_ohl'},
           {t:'Kettle, and the count.', req:()=>b3In('kettle') && !S.f.b3_c7_wKettle, go:'b3_c7_w_kettle'},

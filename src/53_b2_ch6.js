@@ -75,7 +75,7 @@ const B2CH6 = {
     paras:[
 `The hills at the end of the Nenoth have water in them. The guides were right this time. Everybody was right: the Bhilard, the Tregyn, the Can'eld, Korbolo Dom. Everybody came.`,
 `By the second night the Seventh is camped in a fold of the hills with its back to a spring, and across the valley Dom's tribes have their fires, and on every ridge round both, in a ring that goes all the way round and closes, there are more fires than anyone can count.`,
-`Khundryl, the guides say. Tens of thousands. Nobody has spoken to them. Dom's riders go up to their fires and come back down again, and Dom's camp sings at night, so everybody knows whose they are.`],
+`Khundryl, the guides say. Tens of thousands. They have spoken to no one. Dom's riders go up to their fires and come back down again, and Dom's camp sings at night, so everybody knows whose they are.`],
     go:'Into the camp', node:'b2_c6_start'},
 
   areas:[
@@ -283,7 +283,7 @@ Sathi is already running. "The horses," she says, over her shoulder, as if that 
     if (f.b2_ilhar === 'came') x.push('Haddat\'s brother Ilhar took off the green cloth at Sanimon and walks in the squad\'s stretch.');
     if (f.b2_ilhar === 'parted') x.push(`Haddat found her brother at Dom's water-carts at Sanimon and they said what they had to say. ${f.b2_ilharGave ? 'She gave him back his water. ' : ''}He went back to Dom alive.`);
     if (f.b2_ilhar === 'fell') x.push('Haddat found her brother at Dom\'s water-carts at Sanimon, under the Khundryl. She said his name to him, at the end.');
-    if (f.b2_ilhar === 'lost') x.push('Haddat saw her brother at Dom\'s water-carts at Sanimon, under the Khundryl, and the sergeant held her back. Nobody knows what became of him.');
+    if (f.b2_ilhar === 'lost') x.push('Haddat saw her brother at Dom\'s water-carts at Sanimon, under the Khundryl, and the sergeant held her back. The squad never learned what became of him.');
     if (trickBy('b2_paint')) x.push(`${NAME(trickBy('b2_paint'))} wears the Khundryl paint into a fight.`);
     if (f.b2_dojalDone) x.push('On the running retreat the squad held Dojal Spring long enough for its stretch to drink.');
     if (f.b2_retreatLost) x.push(`The forty hours of the running retreat cost the stretch ${numw(f.b2_retreatLost)}.`);
@@ -353,9 +353,9 @@ ${b2In('marrow') ? `"Yes," says Marrow, from the dark, where she is sitting down
 
   /* ---- the squad, the night before ---- */
   b2_haddat6:()=>({sp:'Haddat', fx:()=>{ S.f.b2_haddat6 = 1; }, txt:
-`Haddat is standing at the edge of the camp with her shield on her back, looking across the valley at Dom's fires.
+`Haddat is standing at the edge of the camp, looking across the valley at Dom's fires.
 
-"There," she says, without turning round. "Behind the Tregyn. Those are the water-carts." You look. Carts in a row, a fire beside them, and men going to and fro between the carts and a spring with skins on their shoulders. ${S.f.b2_ilharWater ? `"The tribes' water. Somebody is filling the tribes' skins for Dom." She touches the belt where ${S.f.b2_ilharSkin === 'kept' ? 'her mother\'s skin hangs, full' : 'her mother\'s skin hung, before the stretch drank it'}. "My mother's skins."` : `"Somebody fills the tribes' skins for Dom. Somebody who knows water."`}
+"There," she says, without turning round. "Behind the Tregyn. Those are the water-carts." You look. Carts in a row, a fire beside them, and men going to and fro between the carts and a spring with skins on their shoulders. ${S.f.b2_ilharWater ? `"The tribes' water. Somebody is filling the tribes' skins for Dom." She touches the belt where ${S.f.b2_ilharSkin === 'kept' ? 'her mother\'s skin hangs, full' : 'her mother\'s skin hung, before the stretch drank it'}. "My mother's skins."` : `"Somebody fills the tribes' skins for Dom. And knows water."`}
 
 She is quiet a while.
 
@@ -370,13 +370,13 @@ She is quiet a while.
 "They are talking," she says at last, in Malazan. "At the fires. The old ones. They say if it comes to the end, the Fist will send the young ones away. To live. To take the story home to the plains." She pulls Hackle's ear. "The young ones. Nil. Nether. The children who ride the remounts." She looks at you, and her teeth${S.f.b2_sathiTeeth ? ', filed to points,' : ''} show. "I am seventeen, Sergeant. I have ridden with Coltaine since the plains. ${S.f.b2_sathiRode ? 'I turned the herd on the Nenoth with the clan. ' : ''}I am not a child for sending away."`,
     ch:[{t:'"If it comes to it, I\'ll speak for you."', fx:()=>{ S.f.b2_sathiPromise = 1; loy('sathi', 1); }, go:'b2_sathi6b'},
         {t:'"Nobody is sending anyone anywhere yet. Sleep."', go:'b2_sathi6c'}]}),
-  b2_sathi6b:()=>({sp:'Sathi', txt:`She looks at you a long moment. Then she nods, once, the way the Weasel captain nods, and lies down against the cart wheel with Hackle across her legs. "Good," she says, to the dog, in Malazan, so you will hear it. "The sergeant will speak. Remember it."`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_sathi6b:()=>({sp:'Sathi', txt:`She looks at you. Then she nods, once, as she has seen the Weasel captain do it, and lies down against the cart wheel with Hackle across her legs. "Good," she says, to the dog, in Malazan, so you will hear it. "The sergeant will speak. Remember it."`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_sathi6c:()=>({sp:'Sathi', txt:`"Yet," Sathi says. She says it to Hackle, and Hackle thumps his tail once, and neither of them says anything else. She does not sleep. You can tell by the dog.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_tangle6:()=>({sp:'Tangle', fx:()=>{ S.f.b2_tangle6 = 1; }, txt:
 `Tangle has the satchel open on the tailboard and is counting it by feel, in the dark, with his eyes shut.
 
-"${b2Count()}," he says. "Same as at the Vathar${S.inv.sharper + S.inv.burner + S.inv.cusser + S.inv.smoker <= 2 ? ', near enough. Near enough nothing' : ''}." He closes it. "Bungle came by. The company's dry, he says. Not water. Nothing to throw. He says if it comes to a last ditch the Fist'll want sappers in it, and sappers with nothing to throw are men with spades, and men with spades are what a last ditch is." He hums the four notes, and stops on the third. ${S.f.b2_bungle5 === 'gave' ? `"Mincer asked after me. By name." He looks at the satchel. "He's never done that."` : S.f.b2_robe === 'mincer' ? `"Mincer asked after me. Since the ford he asks." He doesn't say what happened in the ford. He never has.` : `"Mincer's digging latrines and singing. Somebody should."`}`,
+"${b2Count()}," he says. "Same as at the Vathar${S.inv.sharper + S.inv.burner + S.inv.cusser + S.inv.smoker <= 2 ? ', near enough. Near enough nothing' : ''}." He closes it. "Bungle came by. The company's dry, he says. Not water. Nothing to throw. He says if it comes to a last ditch the Fist'll want sappers in it, and sappers with nothing to throw are men with spades, and men with spades are what a last ditch is." He hums the four notes, and stops on the third. ${S.f.b2_bungle5 === 'gave' ? `"Mincer asked after me. By name." He looks at the satchel. "He's never done that."` : S.f.b2_robe === 'mincer' ? `"Mincer asked after me. Since the ford he asks." He doesn't say what happened in the ford. He never has.` : `"Mincer's digging latrines and singing. One of us ought to."`}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_marrow6:()=>({sp:'Marrow', fx:()=>{ S.f.b2_marrow6 = 1; }, txt:
@@ -403,17 +403,17 @@ She has ${b2Knots()}. "I count them at night," she says, under the hat, as if sh
   /* ---- the camp at night: the seep, the ridges, the horse lines, the fire, the cart ---- */
   b2_hseep:()=>({sp:'The seep', txt: S.f.b2_seepDone ?
 `The seep, a thread of water out of the rock into a basin somebody's grandfather cut, and a line of the Seventh waiting at it with skins, and the line never gets shorter.` :
-`Water, coming out of the rock in a thread no thicker than a fuse-cord, into a stone basin somebody cut a long time ago. A line of the Seventh waiting at it with skins. It takes an age to fill one. Nobody minds. It is water, and it is not from Darujhistan, and it is not in a dead man's skin.`,
+`Water, coming out of the rock in a thread no thicker than a fuse-cord, into a stone basin somebody cut a long time ago. A line of the Seventh waiting at it with skins. It takes an age to fill one, and the line waits. It is water, and it is not from Darujhistan, and it is not in a dead man's skin.`,
     ch:[{t:'Wait in the line. Fill the squad\'s skins.', tag:'+3 water', req:()=>!S.f.b2_seepDone, fx:()=>{ S.f.b2_seepDone = 1; chain(3, 0, 'The seep in the hills'); }, go:'b2_seep_done'},
         {t:'Leave it.', go:()=>startExplore()}]}),
-  b2_seep_done:()=>({sp:'The seep', txt:`It takes most of the night. ${b2In('haddat') ? 'Haddat fills them, one after another, slowly, the water-seller\'s way, not a drop on the stone, and says nothing about it.' : 'You fill them one after another, slowly, not a drop on the stone.'} When the last one is full the sky in the east has gone the colour of a bruise.`, html:chainHTML('The hills above Sanimon · the seep'), ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_seep_done:()=>({sp:'The seep', txt:`It takes most of the night. ${b2In('haddat') ? 'Haddat fills them, one after another, slowly, the water-seller\'s way, not a drop on the stone.' : 'You fill them one after another, slowly, not a drop on the stone.'} When the last one is full the sky in the east has gone the colour of a bruise.`, html:chainHTML('The hills above Sanimon · the seep'), ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_ridge:()=>({sp:'The lookout', fx:()=>{ S.f.b2_khundryl = 1; }, txt:
 `A spur of rock at the top of the camp where the pickets stand, and from it the whole of it: the valley, Dom's fires across it in their thousands, and above both, all the way round, on every ridge, more fires. Nobody's.
 
 They are singing up there, the Khundryl. Not Dom's camp's songs. Something slower, under the wind, that comes and goes.
 
-${b2In('haddat') ? `Haddat listens a long time with her head on one side. "I know some of their words," she says. "Not many. Their grandmothers traded salt with mine." She listens. "They are not singing about Dom. They are singing about horses. And about the strongest." She frowns. "*Who is the strongest.* Over and over. As if it were a question."` : 'You listen until the wind takes it. It sounds like a question, asked over and over.'}`,
+${b2In('haddat') ? `Haddat listens a long time with her head on one side. "I know some of their words," she says. "Not many. Their grandmothers traded salt with mine." She listens. "They are not singing about Dom. They are singing about horses. And about the strongest." She frowns. "*Who is the strongest.* Over and over. A question."` : 'You listen until the wind takes it. It sounds like a question, asked over and over.'}`,
     ch:[{t:'Back down.', go:()=>startExplore()}]}),
 
   b2_hhorses:()=>({sp:'The horse lines', txt:
@@ -467,7 +467,7 @@ Object.assign(B2CH6.dlg, {
 
 Dom's legions draw off north in good order, because Dom is a general. Everybody else is just gone.
 
-The Seventh holds the field. It does not know what to do with it. It stands in its ranks on the valley floor among the dead with its shields still up, in the heat, and watches the Khundryl ride to and fro across the valley, taking what they want from the tribes' camps, singing. Nobody has told anybody what the Khundryl are now. Nobody knows.
+The Seventh holds the field. It does not know what to do with it. It stands in its ranks on the valley floor among the dead with its shields still up, in the heat, and watches the Khundryl ride to and fro across the valley, taking what they want from the tribes' camps, singing. The ranks have not been told what the Khundryl are now. It may be that nobody knows.
 
 The Fist's word comes down the line at last: the column moves at dusk. Until then, nobody goes near the Khundryl who doesn't have to.`,
     ch:[{t:'Look round.', go:()=>startExplore()}]}),
@@ -492,7 +492,7 @@ ${b2In('haddat') ? `"He asks which tribe we are," Haddat says. "I told him the S
           go:'b2_khund_paint', fail:'b2_khund_no'},
         {t:'Nod, and leave him to his pony.', go:()=>startExplore()}]}),
   b2_khund_paint:()=>({sp:'A Khundryl warrior', txt:
-`${by({haddat:`Haddat asks it in the grandmothers' words, badly, and he laughs at how badly, and then stops laughing, and looks at her a long moment, and takes a pot of ochre from his belt.`, sathi:`Sathi asks it in no words at all: she points at the paint, and at her own face, and grins with her teeth, and he grins back with his, and takes a pot of ochre from his belt.`, _:`{who} asks it with a finger, pointing from the paint to {who}'s own face, and he considers it, and then takes a pot of ochre from his belt.`})}
+`${by({haddat:`Haddat asks it in the grandmothers' words, badly, and he laughs at how badly, and then stops laughing, and looks at her properly, and takes a pot of ochre from his belt.`, sathi:`Sathi asks it in no words at all: she points at the paint, and at her own face, and grins with her teeth, and he grins back with his, and takes a pot of ochre from his belt.`, _:`{who} asks it with a finger, pointing from the paint to {who}'s own face, and he considers it, and then takes a pot of ochre from his belt.`})}
 
 Three strokes, with two fingers, from the brow down across the eyes, ochre and then ash, and a word with each one. ${b2In('haddat') ? `"He says the one who wears it has already been mourned," Haddat says, very quietly. "So there is nothing left to be afraid of."` : 'You do not need the words. You can feel what they mean.'}
 
@@ -549,7 +549,7 @@ ${b2In('marrow') ? 'Marrow walks among them and does not reach for the warren. T
 
 On the third cart a man in a city coat is standing very still with a skin over his shoulder and a knife in his hand, and a green cloth on his arm, watching the riders come along the row toward him.
 
-Haddat has stopped walking. She does not say anything. She does not have to. You have never seen him, and you would know him anywhere: he has her face.
+Haddat has stopped walking. You have never seen him, and you would know him anywhere: he has her face.
 
 The nearest rider is four carts away.`,
     ch: S.f.b2_ilhar || !b2In('haddat') ? [{t:'Leave it.', go:()=>startExplore()}] : [
@@ -564,7 +564,7 @@ The nearest rider is four carts away.`,
 
 The rider comes along the row. Another cart. Another. Dust goes up from the third cart, and men, and horses, and when it comes down there is nobody standing on it, and nobody on the ground beside it that you can see from here, and the rider is going on along the row, and you will never know.
 
-Haddat does not look at you. "Yes, Sergeant," she says, in Hissari. Then she turns round and walks back to the Seventh's line, very straight, and does not say anything else for the rest of the day.`,
+Haddat keeps her eyes on the carts. "Yes, Sergeant," she says, in Hissari. Then she turns round and walks back to the Seventh's line, very straight, and does not say anything else for the rest of the day.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_ilhar_late:()=>({sp:'The water-carts', fx:()=>{ if (!S.f.b2_ilhar) { S.f.b2_ilhar = 'fell'; loy('haddat', 1); } }, txt:
@@ -572,7 +572,7 @@ Haddat does not look at you. "Yes, Sergeant," she says, in Hissari. Then she tur
 
 When you get there it is done. The rider looks at Haddat, at her face, at the man's face, and says something that might be sorry, and rides on.
 
-Haddat is on her knees by the third cart with his head in her lap. He is still alive. Not for long, and he knows it, and he looks up at her as if she were the last thing he expected and the only thing he wanted. He says something in the quarter's Hissari. She answers. ${S.f.b2_ilharSkin === 'kept' ? `She takes her mother's skin off her belt, the one from the Nenoth, full, and unstoppers it, and gives him a mouthful, the way a water-seller gives it, not a drop on the ground. "Your water," she says. "The column did not need it."` : 'She cups his face in her hands.'}
+Haddat is on her knees by the third cart with his head in her lap. He is still alive. Not for long, and he knows it, and he looks up at her as if she were the last thing he expected and the only thing he wanted. He says something in the quarter's Hissari. She answers. ${S.f.b2_ilharSkin === 'kept' ? `She takes her mother's skin off her belt, the one from the Nenoth, full, and unstoppers it, and gives him a mouthful, the water-seller's way, not a drop on the ground. "Your water," she says. "The column did not need it."` : 'She cups his face in her hands.'}
 
 She says his name. You hear her say it. It is the last time.
 
@@ -586,7 +586,7 @@ ${nearMiss() ? `He has already lowered the lance. It goes into the side of the c
 
 "*Mine*," Haddat says to him, and puts herself between the pony and the cart. "*This one is mine. My brother. My prisoner. My blood.*" ${b2In('sathi') ? 'Sathi is beside her with an arrow on the string, laughing, which is the right thing to do with a Khundryl, as it turns out.' : ''} The rider looks at her shield, and her face, and the man's face on the cart, and laughs, and says something, and rides on along the row to the next cart.
 
-The man on the cart puts the knife down. He looks at his sister for a long moment.
+The man on the cart puts the knife down. He looks at his sister.
 
 "You took the Empire's silver," he says. In Malazan, so that you will understand him. "I heard."
 
@@ -600,7 +600,7 @@ They talk in the quarter's Hissari. Haddat gives you some of it, flat, after.
 
 He says: *Dom says the column dies at Aren. He says Aren will not open for Coltaine. He says it as if he knew.* He says: *I filled their skins because somebody had to know where the water was, and it was always me.* He says: *I told them, at the ridge. Leave the blue shield alone.* He says: *Come with me. There is water where I am going.*
 
-Haddat says nothing for a long time. Then she looks at you.
+Haddat stands there with her hands at her sides. Then she looks at you.
 
 "Sergeant," she says. "Tell me what to say to him."`,
     ch:[{t:'"Give him back his water, Haddat."', req:()=>S.f.b2_ilharSkin === 'kept' && !S.f.b2_ilharGave, fx:()=>{ S.f.b2_ilharGave = 1; }, go:'b2_ilhar_water'},
@@ -628,7 +628,7 @@ He looks at the skin, at the mark on the neck of it. He takes it. Then he laughs
   b2_ilhar_came:()=>({sp:'Ilhar', fx:()=>{ if (!S.f.b2_ilhar) { S.f.b2_ilhar = 'came'; chain(0, 1, 'A water-seller from Hissar'); loy('haddat', 2); } }, txt:
 `Haddat asks him. Not in Malazan. You do not need it in Malazan.
 
-He doesn't answer for a long time. He looks north, where Dom's dust is going away. He looks at the Khundryl along the row of carts. He looks at the Seventh, standing in its ranks among the dead in the heat, and at the column's carts on the slope behind it, and at his sister.
+He doesn't answer. He looks north, where Dom's dust is going away. He looks at the Khundryl along the row of carts. He looks at the Seventh, standing in its ranks among the dead in the heat, and at the column's carts on the slope behind it, and at his sister.
 
 Then he unties the green cloth from his arm, slowly, and holds it a moment, and gives it to her.
 
@@ -695,7 +695,7 @@ Captain Lull is at the spring with his one eye and a handful of marines. He sees
   b2_nobles6:()=>({sp:'A noble\'s carriage', fx:()=>{ S.f.b2_nobles6 = 1; S.f.b2_tumlit = 1; }, txt:
 `The Council's carriages have come up to the spring ahead of the carts, the way they come up to everything, and their servants are filling barrels at the edge of the pool. Lord Nethpara is sitting in the door of his carriage with a damp cloth on his neck, watching them do it. He sees you, and his face does a thing. ${S.f.b2_stewardWon || S.f.b2_conduct ? 'He remembers you.' : ''}
 
-"Lord Tumlit is unwell," he says, to nobody, as if somebody had asked. "In his carriage. He has been unwell since the Vathar. The heat." He dabs his neck. "Nobody thinks of us, Sergeant. Nobody ever thinks of us."
+"Lord Tumlit is unwell," he says, to nobody, as if somebody had asked. "In his carriage. He has been unwell since the Vathar. The heat." He dabs his neck. "No one thinks of us, Sergeant. Nobody ever thinks of us."
 
 ${b2In('haddat') ? `Haddat says something to the servants at the barrels, in the quarter's Hissari, quietly. One of them looks up at her, and then at the stretch coming down the slope behind her with its pots, and moves his barrel along, to make room.` : 'The servants at the barrels do not look up.'}`,
     ch:[{t:'Leave him to his cloth.', go:()=>startExplore()}]}),
@@ -706,7 +706,7 @@ ${b2In('haddat') ? `Haddat says something to the servants at the barrels, in the
 "The water," ${B2.younger} says, into her sister's neck, when she sees the green of the tamarisks. "Is that water." ${B2.elder} says yes. ${B2.younger} holds the jar tighter. "Is it ours."
 
 ${B2.elder} looks at you.` : S.f.b2_ilhar === 'came' ?
-`Ilhar is at the front of the stretch, looking at the tamarisks the way a man looks at a ledger. "Good water," he says. "Sweet. Dom's people know it too." He looks at you. "My sister will want to know where I am in the fight. Tell her: with the pots. Somebody has to carry the pots."` : S.f.b2_yedda ?
+`Ilhar is at the front of the stretch, looking at the tamarisks, and at the mud round their roots. "Good water," he says. "Sweet. Dom's people know it too." He looks at you. "My sister will want to know where I am in the fight. Tell her: with the pots. The pots don't carry themselves."` : S.f.b2_yedda ?
 `${B2.widow}'s cart has lost a wheel at last, somewhere in the second night, and she is carrying the rope over her shoulder, coiled, and her grandsons are carrying everything else. "Not leaving the rope," she says, before you can ask. "A rope's a rope."` :
 `Your people, coming down the slope toward the green with their pots, faster than they have moved in two days, and then stopping, all of them at once, when they see the pike-heads in the tamarisks.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -725,9 +725,9 @@ It is noon. ${chainW() > 0 ? `There are ${numw(chainW())} skin${chainW() === 1 ?
   b2_after_dojal:()=>({sp:'Dojal Spring', fx:()=>{ if (!S.f.b2_dojalDone) { S.f.b2_dojalDone = 1; chain(4, 0, 'Dojal Spring'); } }, txt:
 `The captain goes down in the tamarisks with his badgeless coat over his face, and what is left of his company goes back into the scrub and keeps going.
 
-Behind you the stretch is already at the water. Nobody told them they could. Nobody needed to.
+Behind you the stretch is already at the water. No one gave them leave. They did not need it.
 
-${S.f.b2_key === 'daughters' ? `${B2.younger} gets down off her sister's back and walks to the edge of the pool on her own and fills Ressan's jar, very carefully, and stoppers it. Then she drinks out of her hands. ` : ''}${S.f.b2_ilhar === 'came' ? `Ilhar fills his mother's skins at the far edge of the pool, where the water comes in clean, and carries them back to the stretch, and gives them to Haddat to give out. ` : ''}The squad fills its skins last, and sits in the shade of the tamarisks with its boots in the mud, and for a while nobody says anything at all.`,
+${S.f.b2_key === 'daughters' ? `${B2.younger} gets down off her sister's back and walks to the edge of the pool on her own and fills Ressan's jar, very carefully, and stoppers it. Then she drinks out of her hands. ` : ''}${S.f.b2_ilhar === 'came' ? `Ilhar fills his mother's skins at the far edge of the pool, where the water comes in clean, and carries them back to the stretch, and gives them to Haddat to give out. ` : ''}The squad fills its skins last, and sits in the shade of the tamarisks with its boots in the mud, and for a while that is all it does.`,
     html:chainHTML('Dojal Spring · the running retreat'),
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -737,14 +737,14 @@ ${S.f.b2_key === 'daughters' ? `${B2.younger} gets down off her sister's back an
         {t:'Leave it.', go:()=>startExplore()}]}),
 
   b2_dojal_out:()=>({sp:'The road west', txt: !S.f.b2_dojalDone ?
-`The road on, west, out of the fold. Nobody is going anywhere until the column has drunk.` :
+`The road on, west, out of the fold. The column is going nowhere until it has drunk.` :
 `The road on, west, out of the fold of the plain, and the column already on it, the carts first. Beyond, the guides say, the Odhan turns to grass: the Geleen Plain. And on the Geleen, the Kherahn Dhobri, who have kept out of the war, and whom the Fist means to ask for something.`,
     ch:[{t:'On, to the Geleen.', req:()=>!!S.f.b2_dojalDone, go:'b2_geleen_go'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_geleen_go:()=>({sp:'The Geleen Plain', scene:'b2_kherahn', fx:()=>{ S.f.b2_geleen = 1; }, txt:
 `Grass.
 
-After the Nenoth, after the hills and the forty hours, grass: short and grey-green, and then long, to the knee, moving in the wind like water, all the way to the edge of the sky. The column walks into it as if it were walking into a river, slowly, touching it.
+After the Nenoth, after the hills and the forty hours, grass: short and grey-green, and then long, to the knee, moving in the wind like water, all the way to the edge of the sky. The column walks into it slowly, with its hands out, touching it.
 
 At dusk there is a fire on the plain ahead, a single fire, and old men and women round it on blankets, grave as judges, and the Fist rides out to it alone with Bult and two Wickans leading horses, and on the horses are chests.`,
     ch:[{t:'Make camp.', go:()=>{ startExplore('b2_geleen'); talk('b2_geleen_arrive'); }}]}),
@@ -759,7 +759,7 @@ function b2PartCh(id, o){ const lean = b2Lean(id), stay = lean === 'stay';
     {t:stay ? o.letStay : o.letGo, fx:()=>{ b2Choose(id, stay, 'own'); loy(id, 1); }, go:stay ? o.stayNode : o.goNode},
     {t:stay ? o.askGo : o.askStay, tag:'they trust you', req:()=>(S.loy[id] || 0) >= 2, fx:()=>{ b2Choose(id, !stay, 'asked'); }, go:stay ? o.goNode : o.stayNode},
     {t:stay ? o.argGo : o.argStay, check:['guile', 15, 'sgt'], edges:()=>b2Sway(id, stay ? o.edgesGo : o.edgesStay),
-      near:{t:()=>`Yes, but ${NAME(id)} gives way the way a soldier gives way to an order, and you both know that is what it was: −1 loyalty with ${NAME(id)}.`, fx:()=>{ S.loy ??= {}; S.loy[id] = Math.max(-3, (S.loy[id] || 0) - 1); }}, go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
+      near:{t:()=>`Yes, but ${NAME(id)} gives way because it is an order, and you both know that is what it was: −1 loyalty with ${NAME(id)}.`, fx:()=>{ S.loy ??= {}; S.loy[id] = Math.max(-3, (S.loy[id] || 0) - 1); }}, go:stay ? o.goNode : o.stayNode, fail:stay ? o.stayNode : o.goNode}]; }
 const b2Settle = (id, stay) => { if (!b2Said(id)) b2Choose(id, stay, (b2Lean(id) === 'stay') === stay ? 'own' : 'talked'); };
 
 Object.assign(B2CH6.dlg, {
@@ -786,16 +786,16 @@ He looks at you at last. "Every Can'eld and Bhilard who got away from the Khundr
   b2_kherahn6:()=>({sp:'A Kherahn elder', scene:'b2_kherahn', fx:()=>{ S.f.b2_kherahn = 1; }, txt:
 `An old woman of the Kherahn Dhobri, sitting on a blanket by the fire with her hands folded, in a robe the colour of the grass, looking at the chests of silver the way a judge looks at a man who has pleaded guilty to something he did not do.
 
-She looks at you for a long time. Then at the squad. Then past you, at the column, its fires spread out across the grass for a league, and the people round them.
+She looks at you. Then at the squad. Then past you, at the column, its fires spread out across the grass for a league, and the people round them.
 
 ${b2In('haddat') ? `She says something. Haddat answers, carefully, in a tongue you have never heard her use. "She asks if those are ours," Haddat says. "The people. I said some of them are. She says: then why is it the soldiers' silver on the blanket, and not theirs?" Haddat pauses. "I said they have none. She says: then it is a good bargain."` : `She says something you do not understand, and nods at the column, and nods at the silver, as if she were weighing one against the other and finding it a fair price.`}`,
     ch:[{t:'Put the squad\'s own silver on the chests.', tag:'all the squad\'s silver', req:()=>!S.f.b2_paid && S.silver > 0, fx:()=>{ S.f.b2_paid = S.silver; S.silver = 0; chain(0, 2, 'The Kherahn\'s healers'); if (b2In('haddat')) loy('haddat', 1); if (b2In('sathi')) loy('sathi', 1); if (b2In('tangle')) loy('tangle', -1); }, go:'b2_kherahn_paid'},
         {t:'Bow, and leave her to her judging.', go:()=>startExplore()}]}),
-  b2_kherahn_paid:()=>({sp:'A Kherahn elder', txt:`You put it on the blanket with the rest: not much, against forty-one thousand, a sergeant's purse and what the squad had in its boots. The old woman watches you do it. Then she lifts one hand and says a word, and two of the younger Kherahn get up from the edge of the firelight and go with you to your stretch, with bags, and kneel by the sick, and start to work. ${b2In('marrow') ? `Marrow watches them a while, and then sits down beside one of them and starts to work too, and they do not need a language for it.` : ''}${b2In('tangle') ? ` Tangle counts the empty purse. "Worth it," he says. "Probably. Don't tell me if it wasn't."` : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_kherahn_paid:()=>({sp:'A Kherahn elder', txt:`You put it on the blanket with the rest: not much, against forty-one thousand, a sergeant's purse and what the squad had in its boots. The old woman watches you do it. Then she lifts one hand and says a word, and two of the younger Kherahn get up from the fire and go with you to your stretch, with bags, and kneel by the sick, and start to work. ${b2In('marrow') ? `Marrow watches them a while, and then sits down beside one of them and starts to work too, and they do not need a language for it.` : ''}${b2In('tangle') ? ` Tangle counts the empty purse. "Worth it," he says. "Probably. Don't tell me if it wasn't."` : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_chests:()=>({sp:'The chests', txt: S.f.b2_silverDone ?
-`The chests, on the blanket by the elders' fire. The elders have said yes. Nobody is guarding them any more: they are the Kherahn's, and the Kherahn's young men sit by them with spears across their knees, and nobody in the world is going to try.` : !S.f.b2_bult10 ?
-`Chests on a blanket by the fire, lids open, silver in them to the brim, and Wickans throwing gold on top out of their braids. You have never seen so much money. Nobody in the Seventh has. Bult is watching it with his thumbs in his belt.` :
+`The chests, on the blanket by the elders' fire. The elders have said yes. They are not guarded any more: they are the Kherahn's, and the Kherahn's young men sit by them with spears across their knees, and nobody in the world is going to try.` : !S.f.b2_bult10 ?
+`Chests on a blanket by the fire, lids open, silver in them to the brim, and Wickans throwing gold on top out of their braids. You have never seen so much money. Neither has anyone in the Seventh. Bult is watching it with his thumbs in his belt.` :
 `The chests, lids open, silver to the brim, and the gold of the Wickans' braids on top, catching the firelight, and the elders round them on their blankets thinking. Out in the long grass, beyond the light, the grass is moving against the wind.`,
     ch:[{t:'Stand by the chests.', req:()=>!!S.f.b2_bult10 && !S.f.b2_silverDone, go:'b2_silver_go'},
         {t:'Leave them.', go:()=>startExplore()}]}),
@@ -817,7 +817,7 @@ The elders do not get up. They do not even look round. The old woman goes on thi
 
 When you come back to the fire the old woman of the Kherahn is standing up. The elders are all standing up. She says one word to the Fist, and Coltaine nods, once, and that is the bargain made: passage, and food, and healers, and an escort to Balahn.
 
-Bult comes over from the fire. He doesn't look at the chests. He looks at you, and the squad, and the stretch behind you, for a long moment, the way he looked at you in the camp outside Hissar when he said *you own these*.
+Bult comes over from the fire. He doesn't look at the chests. He looks at you, and the squad, and the stretch behind you, the way he looked at you in the camp outside Hissar when he said *you own these*.
 
 "Here it is, then," he says. "The Fist's splitting the Chain. The people go on to Aren with the Kherahn, tonight. The historian takes them. Nil and Nether, and the youngest of the Wickans, the children, as their escort, because they're all the Wickans have left that'll live to be old. And the squads that hold stretches walk their stretches." He jerks his head east, back the way you came. "Everybody else stays with the Fist. The Seventh holds Dom off the column's tail as long as there's a Seventh to do it."
 
@@ -826,11 +826,11 @@ He lets that sit.
 "He says it's not an order for anyone who'd rather stay with him. That's the only thing he's said today that isn't an order. Your people will have to choose. Each of them. Tonight."`,
     ch:[{t:'"And me?"', go:'b2_bult_sq'},
         {t:'"I\'d rather stay, Bult."', go:'b2_bult_no'}]}),
-  b2_bult_sq:()=>({sp:'Bult', txt:`"You?" He looks surprised that you asked. "You've got a stretch. I gave it you outside Hissar, and I said *you own these*, and I meant it the way a Wickan means it. A herder doesn't stay behind to die well. A herder gets the herd home." He claps you on the shoulder, hard. "Go and hear your people. Then come and tell me who's walking and who isn't. I'll want to know who to look for, at the end."`, ch:[{t:'Go and hear them.', go:()=>startExplore()}]}),
+  b2_bult_sq:()=>({sp:'Bult', txt:`"You?" He looks surprised that you asked. "You've got a stretch. I gave it you outside Hissar, and I said *you own these*, and I meant it in Wickan. A herder doesn't stay behind to die well. A herder gets the herd home." He claps you on the shoulder, hard. "Go and hear your people. Then come and tell me who's walking and who isn't. I'll want to know who to look for, at the end."`, ch:[{t:'Go and hear them.', go:()=>startExplore()}]}),
   b2_bult_no:()=>({sp:'Bult', txt:`"No." He doesn't even think about it. "You'd rather. I'd rather be thirty and on a good horse in the Wickan hills with a girl I knew once. We're not getting what we'd rather, Sergeant, either of us." He jabs a finger at the stretch, at the carts and the fires in the grass. "I gave you those outside Hissar. *You own these.* A herder doesn't stay behind to die well. A herder gets the herd home. That's the harder job, and you know it, and that's why it's yours." He claps you on the shoulder. "Go and hear your people. Then come and tell me."`, ch:[{t:'Go and hear them.', go:()=>startExplore()}]}),
 
   b2_bult11:()=>({sp:'Bult', txt: !b2AllSaid() ?
-`Bult is watching the column start to pack, by firelight. "Heard them all yet?" He sees that you have not. "Every one, Sergeant. Then come back to me. Nobody's going anywhere till moonrise."` :
+`Bult is watching the column start to pack, by firelight. "Heard them all yet?" He sees that you have not. "Every one, Sergeant. Then come back to me. The column's not going anywhere till moonrise."` :
 `Bult looks at you as you come up, and at the squad behind you, and reads it off your faces before you say anything. You say it anyway. ${b2Here6().length ? b2Here6().map(id => `${NAME(id)}: ${b2Staying(id) ? 'stays' : 'walks'}.`).join(' ') : 'There is nobody to choose but you, and you do not get to.'}
 
 He nods at each name, slowly, as if he were putting it somewhere.`,
@@ -848,7 +848,7 @@ That is all. He goes back to looking at the fire.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_duiker11:()=>({sp:'Duiker', fx:()=>{ S.f.b2_duiker11 = 1; }, txt:
-`The historian is standing at the edge of the firelight with his horse's reins in his hand, looking at the column the way a man looks at a river he has been told to carry across a desert in his arms.
+`The historian is standing at the edge of the firelight with his horse's reins in his hand, looking at the column.
 
 "Me," he says. "He gave them to me. Forty thousand people. I am a historian, Sergeant. I write down what other people do." He touches his shirt, where the bottle is. "I suppose that's why. Somebody has to be there at the end to write it, and not be in it." ${S.f.b2_duikerTold3 ? `He looks at you. "You told me your stretch's story at the Ridge, names and all. I wrote it down. I'd like to write the end of it in Aren. Walk at the front with me, when we go."` : `He looks at you. "You still owe me a column, you know. The story of it. Walk at the front with me, when we go, and tell me on the way."`}
 
@@ -858,7 +858,7 @@ He gets up on the horse, badly, the way he always does. "Lull's staying," he say
   b2_lull8:()=>({sp:'Captain Lull', fx:()=>{ S.f.b2_lull8 = 1; S.f.b2_listWar = 1; }, txt:
 `Lull is sitting on his saddle in the grass, fitting a new strap to his shield by feel. He does not get up.
 
-"Sergeant. You're walking, I hear. Good. Somebody should." He works the strap. "I'm rearguard. I've always been rearguard. It's restful; you always know which way the enemy is." He tugs it tight. "Corporal List came to me an hour ago. Asked me to take a message to the historian, because he couldn't say it to his face, the historian being the historian." The one eye looks at you. "*I have found my war.* That was the message. That was all of it." He goes back to the strap. "I've been a soldier longer than he's been alive and never found mine. I'm told it's a thing that happens to corporals."
+"Sergeant. You're walking, I hear. Good." He works the strap. "I'm rearguard. I've always been rearguard. It's restful; you always know which way the enemy is." He tugs it tight. "Corporal List came to me an hour ago. Asked me to take a message to the historian, because he couldn't say it to his face, the historian being the historian." The one eye looks at you. "*I have found my war.* That was the message. That was all of it." He goes back to the strap. "I've been a soldier longer than he's been alive and never found mine. I'm told it's a thing that happens to corporals."
 
 ${S.f.b2_list7 ? `Over by the standard, List is sitting with his bad foot stretched out and the Seventh's colours across his knees, mending a tear in them with a needle, very carefully, the way you mend something you mean to keep.` : `Over by the standard, List is sitting with his bad foot stretched out, looking east, peaceful, the way you have only seen him look since the forest.`}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -866,7 +866,7 @@ ${S.f.b2_list7 ? `Over by the standard, List is sitting with his bad foot stretc
   b2_youngest:()=>({sp:'Nil and Nether', fx:()=>{ S.f.b2_youngest = 1; if (S.f.b2_jarboy) S.f.b2_girlsVathar = 1; }, txt:
 `The youngest of the Wickans are gathered at the horse lines, the remount boys and girls and the warlocks, Nil and Nether in the middle of them, and they are furious. Not loud. Wickans are not loud. They stand with their arms folded and their faces shut and their horses saddled, which is worse.
 
-"He sends us to herd," Nil says. He is not talking to you. He is talking to the grass. "The last warlocks of the Wickans, and he sends us to herd cattle that walk on two legs." Nether says nothing at all. She is looking east, where the Seventh will stand, with her jaw set so hard it must hurt.
+"He sends us to herd," Nil says. He is not talking to you. He is talking to the grass. "The last warlocks of the Wickans, and he sends us to herd cattle that walk on two legs." Nether is looking east, where the Seventh will stand, with her jaw set so hard it must hurt.
 
 ${S.f.b2_jarboy ? `${B2_BOY} is among them, from the Wickan wagons, asking each of them the same thing, in his hoarse voice. One of them, a Crow girl no older than him, stops and thinks about it. "Two city girls," she says. "In front of my aunt and behind my cousin. As far as the river. The bad river." She shrugs. "After that, I don't know. After that nobody knows anybody." ${B2_BOY} thanks her, the way the quarter thanks, and goes on asking.` : b2In('sathi') ? `Sathi is not among them. She is at the other end of the horse lines with the Weasels, as far from the children as the lines go, with her back to them.` : 'One of the remount girls is crying, very angrily, into her horse\'s neck.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -875,7 +875,7 @@ ${S.f.b2_jarboy ? `${B2_BOY} is among them, from the Wickan wagons, asking each 
 `The Weasel captain is going down the clan's lines with his lance across his shoulders, looking at each rider as he passes, as if he were counting them for something. He nods to you. He does not stop.` :
 `The Weasel captain, going down the clan's lines with his lance across his shoulders. He stops by you without being asked, and looks over at Sathi, who is at the end of the line with Hackle, not looking at either of you.
 
-"The Fist says the young go," he says. "With the warlocks. She is young." ${S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? `He looks at her a while. "She is also a Weasel. ${S.f.b2_sathiRode ? 'She turned the herd on the Nenoth. ' : ''}${S.f.b2_weaselHonour ? 'She held at the Shallows. ' : ''}${S.f.b2_sathiLaugh ? 'She laughed at the Foolish Dog\'s song. ' : ''}If she rides with the clan tonight, the clan will not send her away." He shrugs. "I do not tell her. I tell you. You are her sergeant."` : `He does not look at her. "If she stays, she stays on foot, with your Malazans. The clan does not take her. I do not tell her. I tell you."`}`,
+"The Fist says the young go," he says. "With the warlocks. She is young." ${S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? `He looks at her a while. "She is also a Weasel. ${S.f.b2_sathiRode ? 'She turned the herd on the Nenoth. ' : ''}${S.f.b2_weaselHonour ? 'She held at the Shallows. ' : ''}${S.f.b2_sathiLaugh ? 'She laughed at the Foolish Dog\'s song. ' : ''}If she rides with the clan tonight, the clan will not send her away." He shrugs. "I do not tell her. I tell you. You are her sergeant."` : `He keeps his eyes on the horses. "If she stays, she stays on foot, with your Malazans. The clan does not take her. I do not tell her. I tell you."`}`,
     ch: !b2In('sathi') ? [{t:'On.', go:()=>startExplore()}] : S.f.b2_weaselHonour || S.f.b2_sathiRode || S.f.b2_sathiLaugh ? [{t:'On.', fx:()=>{ S.f.b2_sathiClan = 'yes'; }, go:()=>startExplore()}] : [
       {t:'"She rode with my squad from Hissar, Captain. Take her, if she stays."', check:['guile', 15, 'sgt'], edges:()=>[S.f.b2_sathiPromise && ['you gave her your word', 2], S.f.b2_sathiTeeth && ['her teeth are filed', 1], ['the captain has watched her all the way', 1]],
         near:{t:()=>ROLL().nearPaid ? `Yes, but a Weasel does not give anything for nothing, even a place in the clan: before he goes on he holds out his hand, and a skin of the squad's water goes to his horse: −1 water.` : `Yes, but a Weasel does not give anything for nothing, and the squad has no water to pay him; he takes it out of ${NAME(ROLL().who || 'sgt')} in the Weasel way instead, with a long look and a laugh: −1 on the next check.`,
@@ -890,7 +890,7 @@ ${S.f.b2_jarboy ? `${B2_BOY} is among them, from the Wickan wagons, asking each 
 ${S.f.b2_key === 'daughters' ? `${B2.younger} is asleep with a Kherahn woman's hand on her forehead, and the woman is singing to her in a language nobody here knows. ${B2.elder} is watching them, very still. "Nobody has done that," she says, "since Mother." She does not look away.` : S.f.b2_ilhar === 'came' ? `Ilhar is talking to a Kherahn grandmother about the wells between here and Balahn, in a tongue that is half Hissari and half hands, and she is laughing at him. Haddat watches them from across the fire, and does not come over, and does not look away.` : S.f.b2_yedda ? `${B2.widow} has been given a bowl and has given it to her grandsons and been given another and given that away too, and the Kherahn woman has sat down beside her and is not leaving until she eats. They are both very stubborn. It is going to be a long night.` : `A Kherahn woman is going along your stretch with a bowl, and a child takes it, and then gives it back, because it does not believe it is allowed to keep it.`}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
-  b2_gfire:()=>({sp:'The elders\' fire', txt:`The elders' fire, and the old Kherahn round it on their blankets, and the chests beside it${S.f.b2_silverDone ? ', paid' : ''}. ${S.f.b2_silverDone ? 'The Fist is not there now. Only the silver and the old people and the fire.' : 'The Fist stands at the edge of the light, saying nothing, while they think.'}`,
+  b2_gfire:()=>({sp:'The elders\' fire', txt:`The elders' fire, and the old Kherahn round it on their blankets, and the chests beside it${S.f.b2_silverDone ? ', paid' : ''}. ${S.f.b2_silverDone ? 'The Fist is not there now. Only the silver and the old people and the fire.' : 'The Fist stands back from the fire, saying nothing, while they think.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_ghorses:()=>({sp:'The horse lines', txt:`The Wickan horse lines in the long grass. The riders have been taking the gold out of their braids all evening, rings and wire and little bells, and walking to the elders' fire with it in their fists, and coming back with their hair loose. ${S.f.b2_silverDone ? 'Now they are saddling: some to ride west with the children, and most of them, the older ones, to ride east with the Fist.' : ''}${b2In('sathi') ? ` Sathi has taken the Weasel teeth from her throat${S.f.b2_sathiTeeth ? ', and her own are filed now and she does not need them,' : ''} and is turning them over in her hand, deciding.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -907,7 +907,7 @@ Object.assign(B2CH6.dlg, {
   /* ---- Haddat ---- */
   b2_part_haddat:()=>{ const f = S.f, lean = b2Lean('haddat');
     return {sp:'Haddat', txt:
-`Haddat is sitting by the stretch's fire with her shield across her knees, watching the elders' fire, where the chests are.
+`Haddat is sitting by the stretch's fire, watching the elders' fire, where the chests are.
 
 ${lean === 'go' ? `"My brother walks in your stretch," she says, before you can ask. "With no cloth on his arm, and my mother's skins on his back, finding water for people who would have killed him in Hissar. If I stay, he walks into Aren a rebel, with nobody who knows his name." She turns the shield over. "I took the Empire's silver. I can keep the word on it in Aren as well as here." She looks up at you. "Tell me I am wrong, Sergeant. I would like somebody to."` :
 `"I watched them count it," she says. "The silver. Forty-one thousand. Mine is in it. Seven years, every coin the Empire paid me since I was twenty-one, on a Kherahn blanket, for the column's road." She turns the shield over. "Paid. The Empire has paid me in full tonight, and given it all away, and I find I do not mind.
@@ -938,7 +938,7 @@ Then she goes and sits with her brother at the stretch's fire, and they talk in 
 "Now you have them," she says.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_p_haddat_go:()=>({sp:'Haddat', fx:()=>b2Settle('haddat', false), txt:
-`${b2HowSaid('haddat') === 'asked' ? `She looks at you a long moment. "Because you asked," she says. "Not because you are right." She puts the shield on her back. "Somebody has to say the names in Aren. You would get them wrong."` : b2HowSaid('haddat') === 'talked' ? `She hears you out. Then she laughs, very quietly, which you have heard perhaps three times since Hissar. "The names," she says. "Yes. You would get them wrong, Sergeant. You always say the potter's boy's name like a Malazan."` : `"Good," she says. That is all. She puts the shield on her back and goes back to the stretch's fire${S.f.b2_ilhar === 'came' ? ', and sits down beside her brother, close, without saying anything to him at all' : ''}.`}
+`${b2HowSaid('haddat') === 'asked' ? `She takes her time. "Because you asked," she says. "Not because you are right." She puts the shield on her back. "The names have to be said in Aren. You would get them wrong."` : b2HowSaid('haddat') === 'talked' ? `She hears you out. Then she laughs, very quietly, which you have heard perhaps three times since Hissar. "The names," she says. "Yes. You would get them wrong, Sergeant. You always say the potter's boy's name like a Malazan."` : `"Good," she says. That is all. She puts the shield on her back and goes back to the stretch's fire${S.f.b2_ilhar === 'came' ? ', and sits down beside her brother, close, without saying anything to him at all' : ''}.`}
 
 ${b2In('marrow') && !b2Said('marrow') ? 'Behind her, Marrow is watching you, waiting her turn, with her hat in her hands.' : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -948,7 +948,7 @@ ${b2In('marrow') && !b2Said('marrow') ? 'Behind her, Marrow is watching you, wai
     return {sp:'Sathi', txt:
 `Sathi is at the end of the Weasel lines with Hackle and the bony grey from the Nenoth, saddled. She has been saddled since Bult came to the fire.
 
-"The Fist says the young ones go," she says. "Nil. Nether. The remount children. Me." She says it the way you would read out a charge. "To herd the people to Aren, so the Wickans have someone left who will grow old. The Weasels stay with him. My clan stays." ${clan === 'yes' ? `She looks down the line at the captain, who is not looking at her. "The captain says if I stay I ride with the clan. He did not say it to me. He said it to the horse. Weasels."` : clan === 'no' ? `She laughs, short. "The captain says the clan does not take me. So I will stay on foot. With the Malazans. With Hackle. There are worse ways to go."` : `"I have not asked the captain. I will not ask. I will just be there in the morning, and he can send me away if he can catch me."`}
+"The Fist says the young ones go," she says. "Nil. Nether. The remount children. Me." She counts them off on her fingers. "To herd the people to Aren, so the Wickans have someone left who will grow old. The Weasels stay with him. My clan stays." ${clan === 'yes' ? `She looks down the line at the captain, who is not looking at her. "The captain says if I stay I ride with the clan. He did not say it to me. He said it to the horse. Weasels."` : clan === 'no' ? `She laughs, short. "The captain says the clan does not take me. So I will stay on foot. With the Malazans. With Hackle. There are worse ways to go."` : `"I have not asked the captain. I will not ask. I will just be there in the morning, and he can send me away if he can catch me."`}
 
 She pulls Hackle's ear. "I am staying, Sergeant. Hackle stays where I stay. He is the clever one. He has known since the hills." ${f.b2_sathiPromise ? `She looks at you, and her chin comes up. "You said you would speak for me. In the hills. You said."` : ''}`,
       ch:b2PartCh('sathi', {stayNode:'b2_p_sathi_stay', goNode:'b2_p_sathi_go',
@@ -959,9 +959,9 @@ She pulls Hackle's ear. "I am staying, Sergeant. Hackle stays where I stay. He i
   b2_p_sathi_stay:()=>({sp:'Sathi', fx:()=>b2Settle('sathi', true), txt:
 `${b2HowSaid('sathi') === 'talked' ? `She hears you out, and for a moment you think you have her. Then she shakes her head, slowly, and her teeth show. "You are right," she says. "Every word. And I am staying." She laughs.` : `Sathi laughs.`} It is the Wickan laugh, the funeral one, that nobody told the squad about, and it goes on, and Hackle's tail goes with it.
 
-"Good," she says. "Good. Now we are all where we should be." She takes the bone whistle from round her neck, the one Hackle answers and nobody else can hear properly, and holds it out. "Hackle will not need it where we are going. You blow it. Sometimes. Somebody should."
+"Good," she says. "Good. Now we are all where we should be." She takes the bone whistle from round her neck, the one Hackle answers and nobody else can hear properly, and holds it out. "Hackle will not need it where we are going. You blow it. Sometimes."
 
-She is on the grey before you have closed your hand on it, without the stirrup, the way she gets onto everything. ${S.f.b2_sathiClan === 'no' ? 'She rides down the Seventh\'s lines, not the Weasels\', looking for the foot she will stand with. The Weasel captain watches her go past. He does not say anything. After a while he turns his horse and follows her.' : 'She rides down the line to the Weasels, and the captain moves his horse over without looking at her, and there is room.'} Hackle runs at the horse's heels. He does not look back. Dogs don't.`,
+She is on the grey before you have closed your hand on it, without the stirrup, the way she gets onto everything. ${S.f.b2_sathiClan === 'no' ? 'She rides down the Seventh\'s lines, not the Weasels\', looking for the foot she will stand with. The Weasel captain watches her go past. After a while he turns his horse and follows her.' : 'She rides down the line to the Weasels, and the captain moves his horse over without looking at her, and there is room.'} Hackle runs at the horse's heels. He does not look back. Dogs don't.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_p_sathi_go:()=>({sp:'Sathi', fx:()=>b2Settle('sathi', false), txt:
 `${b2HowSaid('sathi') === 'asked' ? `She stares at you. For a long moment you think she is going to hit you, or laugh, and she does neither. "Because you asked," she says. "I would not do it for the Fist."` : `She hears you out, all of it, with her face shut like the remount children's. "You are right," she says at last. "I hate it. I hate you. You are right."`}
@@ -976,7 +976,7 @@ She takes the Weasel teeth from her throat and holds them a while, and then puts
     return {sp:'Tangle', txt:
 `Tangle is sitting on the squad's tailboard with the satchel in his lap, not counting it. That is how you know.
 
-${lean === 'stay' ? `"Bungle's company is staying," he says. "Last ditch. Mincer's out there already, digging it, singing. He sent a man to ask if I'd be along." He turns the satchel over. "By name. Mincer's never asked for anybody by name.${f.b2_robe === 'mincer' ? ' Not since the ford. Not since what we did in the ford.' : ''}" He looks east. "Sappers dig the last ditch. That's what we're for, at the end. I always thought I'd mind."` : `"Somebody's got to count it into Aren," he says. "${b2Count()}." He pats the satchel. "There's a sum in here, and I'm the only one who knows it, and if I'm not there to finish it the sum's wrong. I hate a wrong sum." He looks east, where Bungle's company is forming. "They'll manage. Mincer's got a spade."`}${b2Hurt() === 'tangle' ? `
+${lean === 'stay' ? `"Bungle's company is staying," he says. "Last ditch. Mincer's out there already, digging it, singing. He sent a man to ask if I'd be along." He turns the satchel over. "By name. Mincer's never asked for anybody by name.${f.b2_robe === 'mincer' ? ' Not since the ford. Not since what we did in the ford.' : ''}" He looks east. "Sappers dig the last ditch. That's what we're for, at the end. I always thought I'd mind."` : `"The count has to get to Aren," he says. "${b2Count()}." He pats the satchel. "There's a sum in here, and I'm the only one who knows it, and if I'm not there to finish it the sum's wrong. I hate a wrong sum." He looks east, where Bungle's company is forming. "They'll manage. Mincer's got a spade."`}${b2Hurt() === 'tangle' ? `
 
 He moves his leg, where the Vathar wound is, and doesn't wince, and you see him not wince. "And this won't do Aren Way at a run. You know it won't."` : ''}`,
       ch:b2PartCh('tangle', {stayNode:'b2_p_tangle_stay', goNode:'b2_p_tangle_go',
@@ -986,7 +986,7 @@ He moves his leg, where the Vathar wound is, and doesn't wince, and you see him 
         edgesStay:[S.f.b2_bungle6 && ['Bungle said he would be welcome', 2], S.f.b2_bungle5 === 'gave' && ['he gave the company a sharper on the Nenoth', 1]]})}; },
   b2_p_tangle_stay:()=>{ const n = S.inv.sharper + S.inv.burner + S.inv.cusser + S.inv.smoker;
     return {sp:'Tangle', fx:()=>b2Settle('tangle', true), txt:
-`${b2HowSaid('tangle') === 'asked' ? `He looks at you a while. "All right," he says. "You asked. I'd have gone with you if you'd asked the other way. You know that." He doesn't say it bitterly. Tangle doesn't say things bitterly. He just counts them.` : b2HowSaid('tangle') === 'talked' ? `He hears you out, and nods slowly. "That's a good argument," he says. "Mincer's is better. Mincer doesn't make arguments. He just asks."` : `He nods. He hums the four notes, and does not stop on any of them, and that is the first time you have heard all four.`}
+`${b2HowSaid('tangle') === 'asked' ? `He looks at you a while. "All right," he says. "You asked. I'd have gone with you if you'd asked the other way. You know that." There is no bitterness in it. Tangle doesn't say things bitterly. He just counts them.` : b2HowSaid('tangle') === 'talked' ? `He hears you out, and nods slowly. "That's a good argument," he says. "Mincer's is better. Mincer doesn't make arguments. He just asks."` : `He nods. He hums the four notes, and does not stop on any of them, and that is the first time you have heard all four.`}
 
 ${n ? `Then he holds up the satchel. "${b2Count()}," he says. "Now the hard sum. The last ditch'll want it. So will Aren's gate. Your call, Sergeant. It always was."` : `He holds up the satchel. It is empty. "Nothing to argue about," he says. "That's a relief."`}`,
       ch: n ? [{t:'"Take it. They\'ll need it more."', fx:()=>{ S.f.b2_satchel6 = 'went'; loy('tangle', 1); }, go:'b2_p_tangle_satchel'},
@@ -998,7 +998,7 @@ ${n ? `Then he holds up the satchel. "${b2Count()}," he says. "Now the hard sum.
 He takes the prayer bead out of his pocket, the Kanese one with no prayer he could ever remember, and gives it to you. "You remember one," he says. "For me. Any one. They're all the same prayer, Mincer says, only some of them have better tunes." He gets up, and unwinds the fuse-cord from one wrist, and ties it round yours, quickly, a sapper's knot, before you can stop him. Then he walks off east through the grass toward the sound of spades, humming.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_p_tangle_go:()=>({sp:'Tangle', fx:()=>b2Settle('tangle', false), txt:
-`${b2HowSaid('tangle') === 'asked' ? `He looks at you a while. "All right," he says. "You asked." He looks east, at the spades. "Mincer'll understand. Mincer understands everything. It's his worst quality."` : b2HowSaid('tangle') === 'talked' ? `"A sapper at Aren's gate," he says. "Yes. Somebody'll want something blown, and it'll be the wrong thing, and I'll have to stop them." He puts the satchel strap over his shoulder.` : `"Right," he says, and gets up, and puts the satchel strap over his shoulder.`}
+`${b2HowSaid('tangle') === 'asked' ? `He looks at you a while. "All right," he says. "You asked." He looks east, at the spades. "Mincer'll understand. Mincer understands everything. It's his worst quality."` : b2HowSaid('tangle') === 'talked' ? `"A sapper at Aren's gate," he says. "Yes. There'll be something somebody wants blown, and it'll be the wrong thing, and I'll have to stop them." He puts the satchel strap over his shoulder.` : `"Right," he says, and gets up, and puts the satchel strap over his shoulder.`}
 
 "${b2Count()}," he says. "Into Aren. Don't let me lose count." He hums the four notes, and stops on the third, and looks east once, where the spades are, and then doesn't again.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -1017,7 +1017,7 @@ She puts her hand on the Vathar wound under her coat, absently, the way she woul
         edgesGo:[['the stretch\'s children', 2], b2Hurt() === 'marrow' && ['Aren has clean healers', 1]],
         edgesStay:[['the rearguard has no healer', 2]]})}; },
   b2_p_marrow_stay:()=>({sp:'Marrow', fx:()=>b2Settle('marrow', true), txt:
-`${b2HowSaid('marrow') === 'asked' ? `"Well," says Marrow. She looks at you for a long time. "You've learned something, child. You've learned to ask for the hard thing." She does not say whether she is pleased.` : b2HowSaid('marrow') === 'talked' ? `"No, child," she says, quite gently. "That's a good argument. I've made it myself. I'm still tired."` : `"Good," says Marrow. "Sit down. No, sit. I am not doing this standing up."`}
+`${b2HowSaid('marrow') === 'asked' ? `"Well," says Marrow. She looks you up and down. "You've learned something, child. You've learned to ask for the hard thing." She does not say whether she is pleased.` : b2HowSaid('marrow') === 'talked' ? `"No, child," she says, quite gently. "That's a good argument. I've made it myself. I'm still tired."` : `"Good," says Marrow. "Sit down. No, sit. I am not doing this standing up."`}
 
 She takes the string, all of it, the knots from Hissar to the Geleen, ${numw(S.f.b2_knots || 0)} new since Hissar and the old ones from before, and puts it in your hand, and closes your hand over it with both of hers.
 
@@ -1030,7 +1030,7 @@ Then she picks up her kit, and her hat, and walks east through the grass toward 
 
 She looks east, where the Seventh's fires are, and the Fist's lot, who will have nobody. She looks at them a long time. Then she looks at the stretch, and the children with the flux, and the Kherahn healer kneeling among them.
 
-"Somebody tell them," she says, to nobody, "that I'm sorry." And then she gets up, and goes to the children.`,
+"Tell them," she says, to nobody, "that I'm sorry." And then she gets up, and goes to the children.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- Ramin ---- */
@@ -1045,7 +1045,7 @@ She looks east, where the Seventh's fires are, and the Fist's lot, who will have
         edgesGo:[['the company', 2]],
         edgesStay:[['a Red Blade on the Seventh\'s last field', 1]]})}; },
   b2_p_ramin_stay:()=>({sp:'Ramin', fx:()=>b2Settle('redblade', true), txt:
-`${b2HowSaid('redblade') === 'asked' ? `He is quiet a moment. Then he puts the helm on. "Yes," he says. "I hoped somebody would ask a Red Blade for something hard. Nobody does. They ask us to hold doors."` : `He hears you out, and something in his face goes very still, and then very bright. "Yes," he says. "Let them see the red."`}
+`${b2HowSaid('redblade') === 'asked' ? `He is quiet a moment. Then he puts the helm on. "Yes," he says. "I hoped somebody would ask a Red Blade for something hard. They never do. They ask us to hold doors."` : `He hears you out, and something in his face goes very still, and then very bright. "Yes," he says. "Let them see the red."`}
 
 He takes the red sash from his kit, the one he kept folded for the day there was a horse to ride in it, and gives it to you, still folded.
 
@@ -1054,7 +1054,7 @@ He takes the red sash from his kit, the one he kept folded for the day there was
 He walks east toward the Seventh's fires in his red scale with the short lance on his shoulder, very straight, and he is the only red in the whole dark line.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_p_ramin_go:()=>({sp:'Ramin', fx:()=>b2Settle('redblade', false), txt:
-`${b2HowSaid('redblade') === 'asked' ? `He bows, the Ehrlitan way, from the waist. "As you ask, Sergeant." He puts the helm on.` : b2HowSaid('redblade') === 'talked' ? `"The company," he says, and his face does something complicated. "Yes. It will want me back. It has said so." He puts the helm on.` : `He nods, once, the way a Red Blade nods at an order he gave himself a long time ago, and puts the helm on.`}
+`${b2HowSaid('redblade') === 'asked' ? `He bows, the Ehrlitan way, from the waist. "As you ask, Sergeant." He puts the helm on.` : b2HowSaid('redblade') === 'talked' ? `"The company," he says, and his face does something complicated. "Yes. It will want me back. It has said so." He puts the helm on.` : `He nods, once, and puts the helm on.`}
 
 "Then I am still lent," he says. "Good. I will be given back in Aren, and the company will see I was kept clean." He looks east, at the Seventh's fires, a long time. "In Ehrlitan they would say this is the right choice. In Ehrlitan they say a great many things."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -1072,7 +1072,7 @@ Object.assign(B2CH6.dlg, {
   b2_split:()=>({sp:'The Geleen Plain · moonrise', scene:'b2_geleen_moon', fx:()=>b2DoSplit(), txt: // the split is made by Bult's choice, before this text is written; the fx is a safety net
 `The moon comes up over the Geleen, and the Chain of Dogs comes apart.
 
-It happens quietly. Nobody gives an order you can hear. The carts start to move west in the long grass, and the Kherahn go with them on their small horses, and the youngest of the Wickans, and the historian at the head of it on his bad horse with the bottle inside his shirt. And the Seventh does not move. It stands in its ranks on the grass, facing east, and lets the column walk out from behind it, and the gap between them gets longer.
+It happens quietly. If an order is given, you do not hear it. The carts start to move west in the long grass, and the Kherahn go with them on their small horses, and the youngest of the Wickans, and the historian at the head of it on his bad horse with the bottle inside his shirt. And the Seventh does not move. It stands in its ranks on the grass, facing east, and lets the column walk out from behind it, and the gap between them gets longer.
 
 ${b2Rearguard().length ? b2Rearguard().map(id => B2_GOODBYE6[id]()).join('\n\n') : `Nobody from the squad goes east. They stand round you at the head of the stretch, all of them${b2Away() ? `, all but ${NAME(b2Away())}, who is in Aren, if the ship got there,` : ''} and watch the Seventh not move.`}${b2Rearguard().length && b2Away() ? `
 
@@ -1089,7 +1089,7 @@ The column is a long dark river in the grass going west under the moon, a league
 
 ${b2Rearguard().length ? `Somewhere in that line are ${b2Rearguard().length === 1 ? NAME(b2Rearguard()[0]) : b2Rearguard().slice(0, -1).map(id => NAME(id)).join(', ') + ' and ' + NAME(b2Rearguard().slice(-1)[0])}${b2Rearguard().includes('sathi') ? ', and a dog' : ''}. You cannot see them. You look anyway, until the grass takes the line, and then you look at the place where it was.` : 'Nobody you know is in that line. Everybody you know is in that line. Both are true, on the Chain.'}
 
-${b2In('sathi') ? `Sathi does not look back. She rides at the column's flank with the Wickan children, very straight, with Hackle at her heels, and her face is wet, and she is not laughing.` : ''}`,
+${b2In('sathi') ? `Sathi rides at the column's flank with the Wickan children, very straight, with Hackle at her heels, and her face is wet, and she is not laughing.` : ''}`,
     ch:[{t:'Count them.', go:'b2_c6_end'}]}),
 
   b2_c6_end:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen_moon', txt:
