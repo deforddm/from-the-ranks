@@ -850,7 +850,7 @@ ${S.f.b2_c5_key === 'column' && b2In('marrow') ? 'Marrow drinks, and sits down, 
     html:chainHTML('The Nenoth · the Trygalle\'s water'),
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_kfire:()=>({sp:'A fire', txt:
-`A dung-fire, low and smoky, and the Seventh round it in the dark with full cups for the first time in a week, not talking. Somebody starts to hum, a marching song, and stops, and then somebody else picks it up. Not singing. Not yet. Humming.
+`A dung-fire, low and smoky, and the Seventh round it in the dark with full cups for the first time in a week, not talking. One of them starts to hum, a marching song, and stops, and then another picks it up. Not singing. Not yet. Humming.
 
 ${b2In('tangle') ? 'Tangle listens to it a while. It is not his four notes. He hums along anyway.' : 'You hum along.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),

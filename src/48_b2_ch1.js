@@ -403,7 +403,7 @@ Water. The squad has ${numw(chainW())} skin${chainW() === 1 ? '' : 's'}. Down th
     b2_cistern_talk:()=>({sp:'The cistern warden', fx:()=>{ S.f.b2_cistern = 'talked'; chain(2, 0, 'The quarter cistern'); }, txt:
 `Haddat crouches by the grille so her face is level with his, and talks. You get one word in five. Her mother's name. Ressan's. The word for *thirst*, which in the quarter's Hissari is also the word for *debt*.
 
-The warden looks at her. Then he takes the cord off his neck with both hands, slowly, an old man lifting the one thing he owns, and gives her the key through the bars.
+The warden looks at her. Then he takes the cord off his neck with both hands, slowly, an old man handing over the one thing he was ever trusted with, and gives her the key through the bars.
 
 He says something you don't follow at all, long and sing-song, with his hand over his heart. Haddat bows her head. "He says the water knows its own," she says, filling the skins. "It is a blessing. It is also a complaint about the price."`,
       ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -750,7 +750,7 @@ ${b2In('tangle') ? `Tangle hums the four notes over the satchel, once, the way o
 You sleep an hour. It's not enough. It's what there is.`,
       ch:[{t:'Wake.', go:()=>startExplore()}]}),
     b2_fire_dry:()=>({sp:'The squad\'s fire', txt:
-`The skins stay on the wagon. The squad sits round the fire with its mouths dry and the skins hung where everyone can see them, and every pair of eyes finds something else to rest on.
+`The skins stay on the wagon. They sit round the fire, dry-mouthed, with the skins hung where everyone can see them, and every pair of eyes finds somewhere else to rest.
 
 ${b2In('marrow') ? `"Sensible," says Marrow. "Hateful. Sensible."` : `It's the right call. It doesn't feel like one.`}`,
       ch:[{t:'Up.', go:()=>startExplore()}]}),
