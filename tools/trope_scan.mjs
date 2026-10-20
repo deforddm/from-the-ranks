@@ -28,7 +28,7 @@ export const FAMILIES = [
   {id:'cold', name:'"her / his hands are cold" (the reader\'s closer)', re:/hands are cold/gi, cap:8},
   {id:'regvoice', name:'"the regiment voice"', re:/regiment voice/gi, cap:4},
   {id:'heads', name:'"the fist is still counting heads"', re:/still counting heads/gi, cap:4},
-  {id:'knife', name:'"a pause you could fit a knife into"', re:/pause you could fit/gi, cap:1},
+  {id:'knife', name:'"a pause you could fit a knife into"', re:/pause you could fit/gi, cap:2},
   {id:'without', name:'"without anything in it (that isn\'t…)"', re:/without anything in it/gi, cap:2},
 ];
 const strip = t => t.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' ')).replace(/^\s*\/\/.*$/gm, '');
