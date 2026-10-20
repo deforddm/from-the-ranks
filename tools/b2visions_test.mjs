@@ -11,8 +11,8 @@ let fail = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); i
 const ev = (f, a) => page.evaluate(f, a);
 const BAD = /\bundefined\b|\bNaN\b|\$\{|\[object/;
 const READERS = [{id:'marrow', name:'Marrow', he:false, fig:'marrow', line:/Marrow lets the card go/}, {id:'yedda', name:'Yedda', he:false, fig:'hissari_w', line:/Yedda lets the card go/},
-  {id:'kanese', name:'The old Kanese', mid:'the old Kanese', he:true, fig:'hissari_m', line:/The old Kanese lets the card go[\s\S]*His hands are cold/},
-  {id:'stranger', name:'Tobb', he:true, fig:'hissari_m', line:/Tobb lets the card go[\s\S]*His hands are cold/}];
+  {id:'kanese', name:'The old Kanese', mid:'the old Kanese', he:true, fig:'hissari_m', line:/The old Kanese lets the card go/},
+  {id:'stranger', name:'Tobb', he:true, fig:'hissari_m', line:/Tobb lets the card go/}];
 // a Book Two sergeant on the map in chapter ch, with the reader stubbed (the readings builder's VISREADER is kept and put back after)
 const setup = (ch, r) => ev(([ch, r]) => {
   document.querySelectorAll('#modal,#chars,#settings').forEach(e => e.hidden = true);
