@@ -435,7 +435,7 @@ Men are coming down it with jars. Malazan kit, garrison issue, the badges cut of
 
 He opens the grille. You fill the skins. Haddat says something to him in Hissari that sounds like an apology and isn't one, and he takes it as one.
 
-${b2In('marrow') ? `Marrow goes to the one who's still breathing and kneels by him, knees first, slowly. She ties no knot. "The warren didn't want him," she says, getting up. "Or it did, and not the way I asked."` : `The squad keeps its eyes on the water.`}`,
+${b2In('marrow') ? `Marrow goes to the one who's still breathing and kneels by him, knees first, slowly. She ties no knot. "The warren didn't want him," she says, getting up. "Or it did, and not the way I asked."` : ``}`,
       ch:[{t:'On.', go:()=>startExplore()}]}),
 
     /* ---- the south lane: the green cloths with the list ---- */
@@ -729,7 +729,7 @@ Marrow ties a knot in her string, as she gets up. Not for a healing. You don't a
     b2_imra_camp:()=>({sp:B2.elder, fx:()=>{ S.f.b2_imraCamp = 1; }, txt:
 `${B2.elder} has found a corner of a wagon-bed for ${B2.younger}, who is asleep on it with both arms round the jar. ${B2.elder} is not asleep. She is sitting on the wheel looking back at the glow over Hissar.
 
-"He'll be all right," she says, before you can say anything. "Everybody wants water. He said so." Her eyes stay on the glow. "He's said it every summer of my life. It's always been true."
+"He'll be all right," she says, before you can say anything. "Everybody wants water. He said so. He's said it every summer of my life. It's always been true."
 
 ${b2In('marrow') ? `Marrow comes and sits on the wheel beside her, because it's a wheel. Presently ${B2.elder} leans on her.` : `You stand there for a while. After a while she says, "Go on. You've got people to count. Bult told everyone."`}`,
       ch:[{t:'Leave her be.', go:()=>startExplore()}]}),

@@ -789,7 +789,7 @@ At the fire, every head comes up.`,
   b3_c6_q_after_land:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', fx:()=>{ if (!S.f.b3_c6_landDone) { S.f.b3_c6_landDone = 1; ally(0, 1, 'A Seerdomin on the goat track above Coral'); } }, txt:
 `The Seerdomin goes down on the goat track in a long clatter of plate, and the grey goes out of the air round him the way frost goes out of a window.
 
-Not one of them went down the mountain to tell it.
+No word of it went down the mountain.
 
 The quorls come back in twos and threes out of the paling sky and settle on the ledge, folding their wings, and the Seventh's marines climb off them stiff and blue and swearing in whispers. The Moranth do not swear. They walk among the dead picket and turn each one over with a boot, and look at the Fourth, and one of them inclines its helm a quarter of an inch.${b3In('kettle') ? ` Kettle goes pink to the ears.` : ''}
 

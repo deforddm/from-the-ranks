@@ -312,7 +312,7 @@ ${by({
 
 You get up off your knees. Your knees are shaking. You tell yourself it's the slate.${nearMiss() ? `
 
-Behind you, as the last of the weight comes off it, the old glass gives: a long thin creak, like ice on a pond in the first cold week. Below, the girl keeps her eyes on the sleeping man. She doesn't need to lift them.` : ''}`,
+Behind you, as the last of the weight comes off it, the old glass gives: a long thin creak, like ice on a pond in the first cold week. Below, the girl's head stays bent over the sleeping man. She doesn't need to lift it.` : ''}`,
       ch:[{t:'"Ellis. Which planks?"', req:()=>SQUAD().includes('ellis') && !S.f.c4_planks, go:'c4_planks'},
           {t:'Away from the glass.', go:()=>startExplore()}]}),
     c4_sky_fail:()=>({sp:'The skylight', fx:()=>{ S.f.c4_skyCreak=1; S.f.c4_skyWho=ROLL().who; }, txt:
@@ -1110,7 +1110,7 @@ ${S.f.c4_key === 'shield' ? `Vell is walking. Mostly. ${SQUAD().includes('brisk'
 
 Halfway down, a rope hangs out of the dark between the eaves and stops at head height, turning a little, though there's no wind: the line off the Gadrobi chimney. Vell stops under it. "That's mine," he says. "I strung that, two nights ago." He looks at it, and then at ${S.f.c4_ropeFell && S.f.c4_ropeFell !== 'sgt' && SQUAD().includes(S.f.c4_ropeFell) ? `${NAME(S.f.c4_ropeFell)}'s` : 'your'} rope-burned palms, and very carefully doesn't ask.` : ''}` : `${SQUAD().includes('ellis') ? `Ellis is walking last, where a scout walks, and twice you see her stop and look back up the lane, and listen, and come on.` : `Kettle is walking last, with the crossbow cocked, and twice you hear her stop and listen and come on.`}${S.f.c4_ropeDown ? `
 
-There's a long dark mark down one wall where something hung and swung against the brick, and nothing hanging there now. The line off the Gadrobi chimney has been taken in. The Guild has been down this lane before you tonight, and didn't mind you knowing it.` : ''}
+There's a long dark mark down one wall where something hung and swung against the brick, and nothing hanging there now. The line off the Gadrobi chimney has been taken in. Whoever took it in has been down this lane before you tonight, and didn't mind you knowing it.` : ''}
 
 Halfway down, the lane narrows between two warehouse walls, and there's no blue at all.`}`,
       ch:[{t:'On.', req:()=>S.f.c4_key === 'shield', go:'c4_vell_thanks'},
@@ -1289,7 +1289,7 @@ Only, as ${trickBy('cant') === 'sgt' ? 'you pass' : `${NAME(trickBy('cant'))} pa
 
 "The Guild won't deal," he says. "Not with us. Not tonight, not this month. Kalam went up to buy them and found somebody'd already bought the roof out from under him, with the Guild still on it." He doesn't sound angry. He sounds like a man reading a distance. "That's that, then. We do this the other way."${preUsed('c4_clan') ? `
 
-"There was a fire on the Daru ridge in the third bell," he says, to the lake. "A chimney. Blue at the root. The Watch had it out with sand before it found the next house, and they're saying *the gas*."${SQUAD().includes('kettle') ? ` "Everybody in this city says the gas. Fiddler will want a word, Sergeant. He'll want it with you, and then he'll want it with her, and it'll be the same word."` : ` A pause. "Everybody in this city says the gas. Fiddler will want a word, Sergeant."`}` : ''}${preUsed('reprisal') ? `
+"There was a fire on the Daru ridge in the third bell," he says, to the lake. "A chimney. Blue at the root. The Watch had it out with sand before it found the next house, and they're saying *the gas*."${SQUAD().includes('kettle') ? ` He keeps talking to the lake. "Everybody in this city says the gas. Fiddler will want a word, Sergeant. He'll want it with you, and then he'll want it with her, and it'll be the same word."` : ` A pause. "Everybody in this city says the gas. Fiddler will want a word, Sergeant."`}` : ''}${preUsed('reprisal') ? `
 
 "And somebody put Moranth clay in a lane above the Gadrobi crossing in the small hours. The Watch were up and down the lanes with rattles till the fourth bell, asking road crews where they'd been." A pause. "Nobody's asked ours. Yet."` : ''}
 

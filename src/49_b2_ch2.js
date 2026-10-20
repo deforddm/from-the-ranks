@@ -819,7 +819,7 @@ When they come out he is blue-lipped and grinning. Then the grin goes.
 `The sappers are still in the river. One of them comes up, looks at Tangle's satchel, and then at Tangle, and goes back under without a word.
 
 "Captain'll find one," Tangle says, to nobody.` :
-`The sappers are still in the river, laying stones under the brown water by feel. Not one of them comes up to look at you.`,
+`The sappers are still in the river, laying stones under the brown water by feel. Their heads stay down.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_cusser_give:()=>({sp:'Tangle', txt:
 `He takes the cusser out of the satchel with both hands, the way ${b2In('marrow') ? 'Marrow' : 'a priest'} holds a thing that matters, and wades back out with it, and gives it to Mincer at the water's edge. Mincer looks at it, and at Tangle, and writes on his slate.

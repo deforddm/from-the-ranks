@@ -1012,7 +1012,7 @@ const B2_OH7 = {
 };
 Object.assign(B2CH7.dlg, {
   b2_quay2:()=>({sp:'Aren harbour · night', scene:'b2_harbour_night', txt:
-`The harbour of Aren, at night, and more ships in it than any harbour should hold: the Empire's fleet, at anchor, every one of them, because the High Fist ordered it kept in harbour, and arrested the admiral when he argued. Lanterns on every deck. Not one of them going anywhere.
+`The harbour of Aren, at night, and more ships in it than any harbour should hold: the Empire's fleet, at anchor, every one of them, because the High Fist ordered it kept in harbour, and arrested the admiral when he argued. Lanterns on every deck, and no anchor coming up.
 
 ${b2OldHandPick() ? `Among them, at the end of the long quay, a fat-bellied transport flying a Genabaris pennant, with soldiers on her deck in the Host's colours, leaning on the rail, looking at the city. Her master was bound home, by way of Aren, and Aren has kept her.
 

@@ -400,7 +400,7 @@ When you came in, its head was facing the tent flap.
 
 It is now facing ${by({sgt:'you', _:'{who}'})}.
 
-None of you has moved. The candle didn't gutter. Tattersail's hand has stopped on the cards. "Hairlock," she says, without turning round. "Luggage. Don't talk to it. It talks back."`,
+The tent is quite still. The candle didn't gutter. Tattersail's hand has stopped on the cards. "Hairlock," she says, without turning round. "Luggage. Don't talk to it. It talks back."`,
       ch:[{t:'Say nothing. Keep your hand near the knife.', go:'c1_tuft_still'},
           {t:'"That was cadre. Wasn\'t it. That was a man."', fx:()=>{S.f.c1_namedHairlock=1;}, go:'c1_tuft_still'}]}),
     // nobody saw it move, but it saw who looked: after the Hounds it is off its crate, facing them (c1_after_line_tat / c1_after_claw_tat)
@@ -675,7 +675,7 @@ Then he does turn round, and so do the rest of them, and they come at the voice.
     c1_raid_let:()=>({sp:'Pell\'s wagon', fx:()=>{ S.f.c1_raidLet = 1; if (SQUAD().includes('kettle')) loy('kettle',-1); }, txt:
 `You walk on. Behind you a seal gives with a sound like a knuckle, and Pell doesn't say no, and then doesn't say anything.
 
-${SQUAD().includes('kettle') ? `Kettle walks the rest of the way to the fire looking back over her shoulder. "Moranth," she says, to nobody. "Do you know what they *want* for those?" She isn't asking about the price.` : `The squad keeps its eyes front.`}${SQUAD().includes('brisk') ? `
+${SQUAD().includes('kettle') ? `Kettle walks the rest of the way to the fire looking back over her shoulder. "Moranth," she says, to nobody. "Do you know what they *want* for those?" She isn't asking about the price.` : ``}${SQUAD().includes('brisk') ? `
 
 Brisk says nothing at all, which is what Brisk says when she's decided you were right and doesn't like it.` : ''}`,
       ch:[{t:'Back to the fire.', go:'c1_sleep'}]}),
@@ -778,7 +778,7 @@ There's a tooth the length of a finger snapped off in a tent pole beside you. It
 
 ${S.f.c1_sawHairlock ? `The puppet is where it was. Its head has turned to look at the captain. You decide not to mention it.` : pWho('c1_hairlockLooked') ? `The puppet is not on its crate. It's on the floor by the cot, sitting up, legs out in front of it, its head turned toward ${pYou(pWho('c1_hairlockLooked'))}. It got down without anyone seeing. It stays where it is.` : `The puppet on the crate has fallen over. It stays fallen.`}${S.f.c1_clawTentAsked ? `
 
-"I had a visitor while you held the row," Tattersail says. "Not a Hound. The crate's been moved an inch, and put back nearly right. Nothing's gone." She looks at you. "Something was *looked at*."` : ''}
+"The tent had company while you held the row," Tattersail says. "Not a Hound. The crate's been moved an inch, and put back nearly right. Nothing's gone." She looks at you. "Something was *looked at*."` : ''}
 
 "You held the row, Sergeant. The cadre don't forget that. There aren't enough of us left to afford to." She looks at Tuft, once, and Tuft looks back, and something passes between them that you weren't invited to. "Go and find Whiskeyjack. He'll want it from you before he gets it from anyone else."`,
       ch:[{t:'Find Whiskeyjack.', go:()=>talk(S.f.marked ? 'c1_accounting' : 'c1_wj_last')}]}),

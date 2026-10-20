@@ -766,7 +766,7 @@ The Pannion army is coming out onto it. All of it, from here, out of the gates o
 
 Then something comes over the walls, low, from the east: black, long, the size of it wrong, with wings that go over the city with a sound like a sail filling. The acolytes on the steps go flat. The Camp's people don't; they have no fear left to go flat with. They only watch it go out over the field, and turn, and drop toward the west, where the starving were running.
 
-${b3In('tuft') ? `"High House Dark," Tuft says. Her voice is very steady. "The Knight." She watches until it has gone up again, over the river. "I'd like to know what he's looking for."` : 'On the steps, the word *dragon* goes unsaid. It does not need saying.'}
+${b3In('tuft') ? `"High House Dark," Tuft says. Her voice is very steady. "The Knight." She watches until it has gone up again, over the river. "I'd like to know what he's looking for."` : ''}
 
 Out on the field, to the west, the Tenescowri are lying down in the grass by the thousand.`,
     ch:[{t:'Down, to the people.', go:'b3_c3_camp_help'}]}),

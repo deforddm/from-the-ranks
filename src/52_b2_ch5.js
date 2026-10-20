@@ -367,7 +367,7 @@ ${b2In('haddat') ? `Haddat looks at the dead Bhilard a while. "Odhan men," she s
   b2_oldbones:()=>({sp:'Old bones', txt:
 `Bones in the leaf-litter, where a mound has slumped. Not a man's. Too long in the arm, too heavy in the brow, and a jaw with two tusks in it, yellow as old ivory, curving up. Beside it, half sunk, a shoulder-blade with a hole through it the size of a fist, made by something that was not a spear.
 
-${b2In('tangle') ? `Tangle squats by it and looks at the hole a long time. "Stone," he says. "Something stone went through that." He stands up. "Don't like it." He doesn't hum.` : b2In('haddat') ? `Haddat looks at the tusks, and then at you. "My grandmother told stories," she says. "About the grey people who made winter. I thought they were stories."` : 'The squad keeps its hands to itself.'}`,
+${b2In('tangle') ? `Tangle squats by it and looks at the hole a long time. "Stone," he says. "Something stone went through that." He stands up. "Don't like it." He doesn't hum.` : b2In('haddat') ? `Haddat looks at the tusks, and then at you. "My grandmother told stories," she says. "About the grey people who made winter. I thought they were stories."` : 'It stays where it lies, untouched.'}`,
     ch:[{t:'Leave it lie.', go:()=>startExplore()}]}),
 
   /* ---- Bungle's company, and Mincer in it ---- */

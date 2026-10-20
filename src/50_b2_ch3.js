@@ -809,7 +809,7 @@ You get your people up. You tell them to walk out onto the open lake bed, away f
 
 ${b2Ours3() === B2.elder ? `${B2.elder} goes out with ${B2.younger} by the hand and the jar under her arm. She doesn't ask why. At the edge of the carts she looks back at you once. You make yourself look back.` : b2Ours3() === B2.widow ? `${B2.widow} goes out with her grandsons and sits down on her rope in the middle of the white ground and arranges her skirts. "I hope you know what you're doing, soldier," she says. You don't answer.` : `A mother from the weavers' street goes out first, with the baby, and sits down, and the others follow her.`}
 
-The squad goes with them, and lies down flat in the dirt among them, weapons under cloaks. ${b2In('haddat') ? `Haddat lies down beside a grandmother from the potters' street and puts her shield over both of them.` : ''}${b2In('marrow') ? ` Marrow sits up, because Marrow sits, and holds a child in her lap, and keeps her eyes on the river.` : ''}
+The squad goes with them, and lies down flat in the dirt among them, weapons under cloaks. ${b2In('haddat') ? `Haddat lies down beside a grandmother from the potters' street and puts her shield over both of them.` : ''}${b2In('marrow') ? ` Marrow sits up, because Marrow sits, and holds a child in her lap.` : ''}
 
 Then, out of the gullies across the river: lancers.`,
     ch:[{t:'Lie still. Wait for the Weasels.', go:'b2_bait_wait'}]}),

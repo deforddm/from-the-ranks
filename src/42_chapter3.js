@@ -122,7 +122,7 @@ const CH3 = {
       stage2:{ title:'The carters\' yard behind the gatehouse', warrenText:'Straw, dung and wet stone · the blue lamps hiss over the wall · warrens steady',
         text:()=>{ const m = S.f.c2_wagon ? 'Pell' : 'the mule'; return `The lane is yours. The wagon isn't. ${preUsed('cutpurses') ? `At the bang, ${S.f.c2_wagon ? 'Pell the mule' : 'the mule'} decided he had heard all he needed to of Darujhistan, and went` : `Somewhere in the noise ${S.f.c2_wagon ? 'Pell the mule' : 'the mule'} decided he had been reached for once too often, and went`}: out of the arch and hard right through the gate of the carters' yard behind the gatehouse, wagon, crate and all. The rest of the lane's people were in the yard. They had been waiting for something like this, and they aren't fussy about what.
 
-A crossbow in the hayloft. A Gadrobi the size of a door with one hand on the bridle and ${m}'s teeth in his other sleeve. ${SQUAD().includes('kettle') ? `Kettle, white to the lips: "That's a *Moranth crate* on a *bolting mule*, Sergeant." She is already running.` : `*Moranth crate* goes unsaid. It doesn't need saying.`}`; },
+A crossbow in the hayloft. A Gadrobi the size of a door with one hand on the bridle and ${m}'s teeth in his other sleeve. ${SQUAD().includes('kettle') ? `Kettle, white to the lips: "That's a *Moranth crate* on a *bolting mule*, Sergeant." She is already running.` : ``}`; },
         map:["...#....","...#.,..","##.#.##.","........",".##...,.","......##","...,....","###..###","........","#......#"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['c3_loftbow',1,0],['bruiser',5,1],['cutpurse',7,3],['cutpurse',0,5],['cutpurse',6,6]] } },
@@ -647,7 +647,7 @@ ${S.f.c3_inn ? (S.f.c3_collSore ? `"Been to the Phoenix?" He looks at you a mome
 Ohl, when you've moved on: "He knows. About the list. I don't know how." Then, mildly: "Healers."`,
       ch:[{t:'Leave him.'}]}),
     c3_trotts:()=>({sp:'Trotts', txt:
-`He's standing at the stakes. He has been standing at the stakes since you arrived and, as far as anyone can tell, since the city was founded. Barghast: tattoos across the whole of his face in blue lines, like a map of rivers, and teeth filed, and hair in knots with little bones in them. He is enormous in the way that walls are enormous. His eyes stay on the street.
+`He's standing at the stakes. He has been standing at the stakes since you arrived and, as far as anyone can tell, since the city was founded. Barghast: tattoos across the whole of his face in blue lines, like a map of rivers, and teeth filed, and hair in knots with little bones in them. He is enormous in the way that walls are enormous.
 
 ${SQUAD().includes('brisk') ? `Brisk stops in front of him. They regard each other, two walls meeting. Then Trotts, very slowly, bares his teeth. Every one of them. Brisk nods, once, as if in answer to a question she's been asked a great many times, and moves on, and says to you, with enormous satisfaction, "*Him* I like."` : `Kettle stops in front of him and looks up, and up. Trotts bares his teeth. Kettle bares hers back. Something is agreed that nobody else understands.`}`,
       ch:[{t:'Leave him.'}]}),
@@ -1568,7 +1568,7 @@ She doesn't raise her voice. She said she wouldn't, and she doesn't.
 ${SQUAD().includes('ellis') ? `On the stair, Ellis says one sentence, and it's the right one. "She's already sent them; she sent them when you came up the stair."` : SQUAD().includes('kettle') ? `On the stair, Kettle, very quietly, feeling in her satchel: "Sergeant, I think we should stop being on this stair."` : ''}`,
       ch:[{t:'Down the stair.', go:'c3_alley'}]}),
     c3_alley:()=>({sp:'The alley behind the dye-shop', scene:'alley_night', txt:
-`The stair comes down into the courtyard, and the courtyard gate lets out, not onto the street, but into the alley behind it, because the street gate has been locked while you were upstairs. None of you heard it lock.
+`The stair comes down into the courtyard, and the courtyard gate lets out, not onto the street, but into the alley behind it, because the street gate has been locked while you were upstairs. You never heard it lock.
 
 No lamps in the alley. Blue light from the street at the far end, and between you and it, forty paces of dark, and dyeing-racks, and wet cloth hanging from them like flayed things, dripping indigo.
 

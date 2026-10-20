@@ -615,7 +615,7 @@ ${b3In('ohl') ? `Ohl goes down the line with his kit, not reaching into Denul at
   b3_c7_descend:()=>({sp:'Down the mountain', scene:'b3_c7_coral', txt:
 `The Host goes down the mountain in file, in the grey before dawn, without a word, and into Coral by a breach the sappers blew in the night where the wall meets the rock. Ahead, somewhere in the black streets, the Bridgeburners are making the kind of noise only munitions make. ${b3In('kettle') ? 'Kettle names every one of them, under her breath, as they go off. "Cusser. Sharper. Sharper. That one was a burner, the idiot."' : ''}
 
-The Fourth's company goes in behind the Fourth Regiment. ${b3In('brisk') ? 'Brisk can see Tav\'s shield three ranks ahead. She does not take her eyes off it.' : 'Somewhere ahead is Tav\'s company. The squad keeps his name to itself.'} Then you are in the streets, and the city closes over your heads like water.`,
+The Fourth's company goes in behind the Fourth Regiment. ${b3In('brisk') ? 'Brisk can see Tav\'s shield three ranks ahead. She does not take her eyes off it.' : 'Somewhere ahead is Tav\'s company.'} Then you are in the streets, and the city closes over your heads like water.`,
       ch:[{t:'Into the streets.', go:()=>{ startExplore('b3_c7_coral'); talk('b3_c7_streets'); }},
           {t:'Not yet.', go:()=>startExplore()}]}),
 
@@ -1352,7 +1352,7 @@ B3FIN7.gone = (id, key) => {
       {brisk:`${b3c7Sealed() ? 'The letter went with her, still sealed.' : 'Tav never paid the four coppers.'} He stands at the edge of the Fourth's fire some evenings, the way she used to stand at his, until somebody looks up.`,
        kettle:`The satchel came back without her. The Fourth counts it every morning, out loud, so it knows.`,
        tuft:`The Deck came back without her. The Fourth cannot read it. Nobody will throw it away.`,
-       ohl:`The list came back without him. A trooper in the Fourth reads it at night now, lips moving, and adds his name at the end, every time, as if it might not have stuck.`,
+       ohl:`The list came back without him. A trooper in the Fourth reads it at night now, lips moving, and adds Ohl\'s name at the end, every time, as if it might not have stuck.`,
        sohra:`The Rhivi sang her home across the plain. Somewhere at the edge of the grass she is standing with the herd's dead, watching the Malazans.`,
        greysword:`The Grey Swords took her shield home to the company, with the wolf on it.`}[id] || '',
       `Ohl's list has ${P.her} on it. The Fourth carried the name the rest of the way.`])};

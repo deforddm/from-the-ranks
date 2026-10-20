@@ -460,7 +460,7 @@ From the ladder-hole: "Sergeant." A pause. "Sleep. You've an hour."`,
 Not unkindly. It's a holiday. The man in the apron takes his foot off the planks, and takes the meat-hook off his belt, and says one word in Gadrobi that nobody needs translated.`,
       ch:[{t:'"Shields!"', fx:()=>{ S.f.c6_bonfireFought=1; }, go:()=>startBattle('c6_bonfire',{surprise:'e'})}]}),
     c6_after_bonfire:()=>({sp:'The crossing', scene:'fete_crossing', txt:
-`Not one of them dies. You'll be prouder of that than of anything else you do tonight, and you'll never be able to tell anyone why.
+`Not a soul dies. You'll be prouder of that than of anything else you do tonight, and you'll never be able to tell anyone why.
 
 It takes longer than a fight that kills people. It's knees, and shield-rims, and the flat of a blade, and a cudgel taken off a boy and thrown in the brazier; and down in the chandler's cellar, at the end of it, the foreman's lantern going over between the oil barrels, and ${SQUAD().includes('kettle') ? `Kettle` : `you`} catching it an inch off the boards with the oil already running out of the burst reservoir, and holding it up, upright, at arm's length, ${SQUAD().includes('kettle') ? `like a sapper holding a fuse` : `the way you've seen a sapper hold a fuse`}, until somebody pinches the wick.
 
@@ -1046,7 +1046,7 @@ Kruppe beams. He holds up a little cake. "Kruppe is told that dragons are fond o
 
 "Thank you," says the tall guest. "No." And he goes on, to the far balustrade, and stands there looking down at the garden, and the space goes with him.
 
-Kruppe eats the cake himself. For the space of one chew you can see what it cost him: the whole length of a roof-ridge in the dark, without looking down. He is very pleased with himself, and is going to need to sit very still for a while.
+Kruppe eats the cake himself. For the space of one chew he has just walked the whole length of a roof-ridge in the dark without looking down, and is very pleased with himself, and is going to need to sit very still for a while.
 
 Then he sees you. "Guards! Kruppe did say. Not to *guard* him." He pushes the second plate an inch toward you. "Cake?"`,
       ch:[{t:'Take a cake.', fx:()=>{ if (SQUAD().includes('kettle') && !S.f.c6_cake) { S.f.c6_cake=1; loy('kettle',1); } }},
@@ -1527,7 +1527,7 @@ By the fountain, where a lantern has gone out and nobody has lit it again, a man
     c6_hound_lying:()=>({sp:'The Hound', txt:
 `It's lying by the east wall where it lay down, with its hurt flank to the sky, breathing. The smoke has stopped coming off the wound. It watches the black sapling, and the terrace, and Tuft. Mostly Tuft.
 
-${SQUAD().includes('tuft') ? `Tuft keeps looking back at it. She does the same with her lamp, at night.` : ''}`,
+${SQUAD().includes('tuft') ? `Tuft keeps looking back at it.` : ''}`,
       ch:[{t:'Leave it be.'}]}),
     c6_after_hound:()=>{ const pre = preUsed('garden_hound'), lh = S.f.lastHold && S.f.lastHold.id === 'garden_hound' ? S.f.lastHold : null;
       const down = heldDowns('garden_hound') > 0 && !!lh && lh.names.includes(FOES.houndhurt.name), shades = lh ? lh.names.filter(n => n === FOES.shade.name).length : 0;
@@ -2096,7 +2096,7 @@ There are eleven more cussers with a bead of acid sitting in a notch in the wax,
 
 One at a time. She starts at the far end, at the last cusser, and works back toward the ladder, and at every niche she kneels, and puts her burned hand flat on the clay for a moment, as if taking its temperature, and then with the other hand, very gently, lifts the bead out of the notch on the point of her knife. Scrapes the notch clean. Packs it with tallow from the tin at her belt, and smooths it with her thumb. Moves on.
 
-She works alone. None of you would dare help. ${SQUAD().includes('brisk') ? `Brisk stands at the foot of the ladder with her shield turned to the vault, as if the dark might try something.` : ''} ${SQUAD().includes('ohl') ? `Ohl tries, once, to look at the hand, and she says "*Later*," without looking up, in a voice he has never heard out of her, and he steps back.` : ''}
+She works alone. ${SQUAD().includes('brisk') ? `Brisk stands at the foot of the ladder with her shield turned to the vault, as if the dark might try something.` : ''} ${SQUAD().includes('ohl') ? `Ohl tries, once, to look at the hand, and she says "*Later*," without looking up, in a voice he has never heard out of her, and he steps back.` : ''}
 
 The frost on the pipes is thickening. You can hear the clay tick in the cold: small dry sounds, like things thinking about cracking. She doesn't hurry. She has never hurried wax in her life.
 
@@ -2130,7 +2130,7 @@ ${(S.f.markedPale || (S.f.marked && S.f.c3_key !== 'refuse')) ? `You've never se
 
 ${SQUAD().includes('ellis') ? `Ellis reads it over your shoulder, which she has never done. "That's the house hand," she says. "Every order out of the green door is written like that. They train you to it, the ones who'll be writing." She says it to the paper, not to you.` : ''}
 
-You fold it, and put it inside your coat, against your ribs. The hand that gave that order wanted a city gone, with forty thousand people in one district and Whiskeyjack's company in the hole under it, and wrote it down so neatly. It is going to want this paper back.
+You fold it, and put it inside your coat, against your ribs. The hand that gave that order wanted a city gone, with forty thousand people in one district and Whiskeyjack's company in the hole under it, and wrote it down so neatly. Its owner is going to want this paper back.
 
 ${SQUAD().includes('brisk') ? `Brisk watches you put it away. "That's leverage," she says. "Or it's a knife with no handle." A pause. "Don't cut yourself."` : ''}`,
       ch:[{t:'Up the ladder.', go:'c6_mines_sky'}]}),
@@ -2413,7 +2413,7 @@ ${S.f.c6_key === 'bridgeburners' ? `And the house is still there.` : `And there'
 
 At the far end of the lawn, where the flowerbed was, where the Adjunct knelt and a black stick grew, ${S.f.c6_key === 'bridgeburners' ? `there's the house you watched come up out of the lawn in the night, with the Tyrant going into it. In daylight it's worse.` : `there's a house that wasn't there last night.`} It isn't large. Squat and dark, made of wood that is still growing, you'd swear, if you stood and watched it long enough: a peaked roof, a door, one small window with a light in it that isn't any colour a lamp makes. Round it, a yard. And in the yard, mounds. Low grassed mounds, a dozen or more, as if the house had arrived with its graves already dug. One of them is fresh. Bare earth, still dark with the wet.${preUsed('garden_hound') ? ` And out of the yard, across the lawn, runs a single ridge of root, black, the thickness of a man's arm, to the scorched patch by the east wall where Kettle's sharper went off, and stops there, like a dog that has come to the end of its chain to see who knocked.` : ''}
 
-The Fourth doesn't say who's under it. None of you knows.
+The Fourth doesn't say who's under it. It doesn't know.
 
 An old man in dark red robes is standing at the edge of the yard with his hands folded, looking at the mounds. He has come a long way to stand at graves like these.${C6H.here(S.f.c6_darkMissed) ? ` When the Fourth comes level with him he turns his head, and finds ${S.f.c6_darkMissed === 'sgt' ? 'you' : NAME(S.f.c6_darkMissed)}, and inclines his own: once, slow, with the eyes kept up. The right way. Then he goes back to his mounds. The sum is corrected; he does not need to be thanked for it.` : ''}
 

@@ -62,7 +62,7 @@ ${by({tuft:`Tuft has been watching her hands, not the cards. Later, in the lee o
   sgt:`You've been watching her hands, not the cards. Under, over, and the turned card is simply not there any more. You think you could do it, if a card ever came up that you couldn't live with. You think Tuft could do it better.`,
   _:`{who} has been watching her hands, not the cards. Under, over, and the turned card is simply not there any more.`})}
 
-"Don't stare, Sergeant." Her eyes stay on the spread. "It's the only trick the cadre teach, and we don't teach it. The Deck lets me. Mostly. It may not let you."`, ch:tatRest()}),
+"Don't stare, Sergeant." She lays the next card. "It's the only trick the cadre teach, and we don't teach it. The Deck lets me. Mostly. It may not let you."`, ch:tatRest()}),
   p_fold_fail:()=>({sp:'Tattersail', scene:'tent', fx:()=>{ S.f.p_foldFail = 1; }, txt:
 `She turns another card, doesn't like it, and it goes back into the spread under ${by({sgt:'your', _:'{who}\'s'})} eyes without ever seeming to move. Another comes up.
 
@@ -77,7 +77,7 @@ In the flap, Tuft pulls her sleeve down over her own.` : ''}`, ch:tatRest()}),
 
 She's back to her cards before you reach the flap. "Go."`,
     ch:[{t:'Leave the tent', go:()=>{ S.f.quest = 1; startExplore();
-      elog(`<em>Ohl:</em> "There's no such thing as good at tunnels. Some of us just come out of them."`);
+      elog(`<em>Ohl:</em> "Nobody's good at tunnels. Some of us just come out of them."`);
       elog(`<em>Kettle:</em> "Tunnels. Finally, something I'm good at."`); }}]}),
   tat_map:()=>({sp:'Tattersail', txt:`"North wall, Sergeant. The cards aren't getting any better while you stand there."`, ch:[{t:'Leave'}]}),
 
@@ -239,7 +239,7 @@ The dark between you and Varrow moves, the way water moves when something under 
 
 ${by({tuft:`Tuft stops breathing. Then she starts again, and hands you the page by one corner, turned the right way up for you.`, _:`Behind you, Tuft stops breathing. Then she starts again.`})}${S.f.p_deserterWords ? `
 
-*Ask your High Mage where the rest of it went.* It doesn't need saying.` : ''}`,
+*Ask your High Mage where the rest of it went.* You hear it again anyway.` : ''}`,
     ch:[{t:'Close it. Head for the surface.', go:()=>talk(S.f.clawFooled ? 'final' : 'claw2')}]}),
   journal_blur:()=>({sp:'Varrow\'s journal', fx:()=>S.f.partial=1, txt:
 `${by({ohl:`Ohl peels the oilcloth back with a healer's fingers, and it isn't enough.`,

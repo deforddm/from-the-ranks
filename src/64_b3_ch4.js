@@ -681,7 +681,7 @@ He puts a coil into Vell's hands without looking at him. "First rope's yours, ro
     b3_c4_hunt_after:()=>({sp:'The gully', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_hunted = 1; gain('b3_c4_ropehooks'); if (c4In('vell')) loy('vell', 1); }, txt:
 `It takes a long time to stop moving. Long after it should have, a blade-arm goes on scything slowly at the stones, and the Grey Swords stand clear of it and wait, the way you wait for a fire to burn out, and keep the ropes taut.
 
-When it is still, ${C4.ropesgt} goes down into the gully and stands over it with his maimed hand at his side. Then he cuts the hooks free, all of them, and coils the ropes, and brings one coil up the bank and puts it in ${c4In('vell') ? `Vell's` : S.f.b3_hurtMost && TPL[S.f.b3_hurtMost] && c4In(S.f.b3_hurtMost) ? `${NAME(S.f.b3_hurtMost)}'s` : 'your'} hands.
+When it is still, ${C4.ropesgt} goes down into the gully and stands over it. Then he cuts the hooks free, all of them, and coils the ropes, and brings one coil up the bank and puts it in ${c4In('vell') ? `Vell's` : S.f.b3_hurtMost && TPL[S.f.b3_hurtMost] && c4In(S.f.b3_hurtMost) ? `${NAME(S.f.b3_hurtMost)}'s` : 'your'} hands.
 
 "For the Fourth," he says. "You held it in the open. Most don't." He looks back down at the thing in the gully. "It was dead before we started, you know. Long dead. They don't stay down because they were never properly up."${c4In('vell') ? `
 

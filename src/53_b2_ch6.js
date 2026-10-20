@@ -564,7 +564,7 @@ The nearest rider is four carts away.`,
 
 The rider comes along the row. Another cart. Another. Dust goes up from the third cart, and men, and horses, and when it comes down there is nobody standing on it, and nobody on the ground beside it that you can see from here, and the rider is going on along the row, and you will never know.
 
-Haddat keeps her eyes on the carts. "Yes, Sergeant," she says, in Hissari. Then she turns round and walks back to the Seventh's line, very straight, and does not say anything else for the rest of the day.`,
+Haddat's jaw sets. "Yes, Sergeant," she says, in Hissari. Then she turns round and walks back to the Seventh's line, very straight, and does not say anything else for the rest of the day.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_ilhar_late:()=>({sp:'The water-carts', fx:()=>{ if (!S.f.b2_ilhar) { S.f.b2_ilhar = 'fell'; loy('haddat', 1); } }, txt:

@@ -371,7 +371,7 @@ You stand on the near bank among the cut stakes, breathing. Your hands are shaki
 
 Then you count the squad, the way you always do${b2Worst() ? `, and you stop counting at ${NAME(b2Worst())}` : ''}.
 
-${b2Worst() ? `An arrow. ${b2He(b2Worst()) === 'he' ? 'He' : 'She'} took it early, from a man on a rope, and went on fighting with it in, the way you're not supposed to, and now ${b2He(b2Worst())} is sitting on the bank with ${b2His(b2Worst())} back against a stake and a face like paper. ${b2In('marrow') && b2Worst() !== 'marrow' ? `Marrow is already there. She looks at the wound, and at you. "I can close the top of it," she says. "Not the bottom. Not with this warren." A pause. "There's a ship."` : `None of you can close it. There's a ship.`}` : `All of you are standing. None of you is unhurt.`}`,
+${b2Worst() ? `An arrow. ${b2He(b2Worst()) === 'he' ? 'He' : 'She'} took it early, from a man on a rope, and went on fighting with it in, the way you're not supposed to, and now ${b2He(b2Worst())} is sitting on the bank with ${b2His(b2Worst())} back against a stake and a face like paper. ${b2In('marrow') && b2Worst() !== 'marrow' ? `Marrow is already there. She looks at the wound, and at you. "I can close the top of it," she says. "Not the bottom. Not with this warren." A pause. "There's a ship."` : `It won't close, not with what the squad carries. There's a ship.`}` : `All of you are standing. All of you are hurt.`}`,
     ch:[{t:'Carry them back to the ford.', go:'b2_punch'}]}),
 
   /* ---- the Silanda takes the wounded; Coltaine and Gesler ---- */
@@ -397,7 +397,7 @@ Sathi, at your elbow, very low: "The Fist broke his hand on that one's face." Sh
 "Room for one more of yours," he says. "Down the river. Aren in a few days, at the rate she goes; a proper healer at the end of it, if Aren's got any left." He makes a mark on his slate and holds the chalk over it. "Or keep ${b2Him(d)}. ${b2He(d) === 'he' ? 'He' : 'She'}'ll walk, likely. Bind it tight and ${b2He(d)}'ll walk all the way to Aren with it, and fight on it too, and it'll take something out of ${b2Him(d)} every day ${b2He(d)} does." He shrugs. "Your call, Sergeant. They always are."
 
 ${c.length > 1 ? 'The squad is watching you.' : ''}${b2In('marrow') && d !== 'marrow' ? ` Marrow says, very quietly: "The ship, child. If it were mine to say."` : ''}${b2In('haddat') && d !== 'haddat' ? ` Haddat nods at whoever is speaking, every time.` : ''}` :
-`Gesler looks at the squad, and at you, and makes no mark on his slate. "None of yours bad enough," he says. "Good. Keep it that way."`,
+`Gesler looks at the squad, and at you, and makes no mark on his slate. "Yours aren't bad enough," he says. "Good. Keep it that way."`,
       ch: d ? [
         {t:`Put ${NAME(d)} aboard.`, fx:()=>{ S.f.b2_c4_key = 'silanda'; b2Aboard(d); }, go:'b2_aboard'},
         {t:'Someone else goes. Not the one with the arrow.', req:()=>c.length > 1, go:'b2_silanda_other'},

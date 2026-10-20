@@ -405,7 +405,7 @@ Tuft, very quietly: "They're not undead. They're *worse* than undead. They're pa
 
 ${preUsed('barrow') ? `Kettle is looking up. Over the first room a capstone the size of a cart-bed has come a hand's width out of the corbelling and stopped there, thinking about it. "Dry-laid," she says. "No mortar. A sharper in a room like that doesn't go *off*, Sergeant, it goes *round*. It put them down before they'd finished getting up, and that was lovely. And everything in here heard it, and everything under here heard it, and came up to see." She doesn't sound pleased, which for Kettle and a room is new. "I'd do it again. I'd like it noted I'd do it smaller."
 
-${SQUAD().includes('brisk') ? `"Everyone heard it," says Brisk, already looking at the stair, and the light at the top of it. "Not just in here."` : `Everyone is thinking it, and it goes unsaid: it wasn't only the barrow that heard.`}
+${SQUAD().includes('brisk') ? `"Everyone heard it," says Brisk, already looking at the stair, and the light at the top of it. "Not just in here."` : `Everyone is thinking it: it wasn't only the barrow that heard.`}
 
 ` : ''}There's a torc on the bier that wasn't there before. Black iron. Nobody saw who put it down.
 
@@ -520,7 +520,7 @@ He picks a burr off the bowstring.
 
 "I've served the Claw nine years, Sergeant, and I've never seen the Empire lose an argument that fast."${S.f.c2_paranTurned ? `
 
-"Your people found the boot. I hoped nobody would but me. He turned *into* it, Sergeant. I've been sitting here an hour trying to make that mean something else."` : ''}
+He drops the burr in the grass. "Your people found the boot. I hoped nobody would but me. He turned *into* it, Sergeant. I've been sitting here an hour trying to make that mean something else."` : ''}
 
 ${S.f.c1_key === 'line' ? `"You were at the Pale when they came through the tent lines. I heard. Held the row for the cadre." He looks at you with the one eye. "Then you know what I'm not saying."` : S.f.clawFavour ? `"You were at the Pale when they came through the tent lines. I heard. Held the tent for the grey cloaks." Something in his face shuts. "Then you'll know who to tell."` : `"You were at the Pale. Then you've heard them. That's enough. Nobody should have to see them twice."`}`,
       ch:[{t:'"Where\'s the captain?"', req:()=>!S.f.c2_tocCaptain, go:'c2_toc_captain'},
@@ -597,7 +597,7 @@ Ellis watches the whole of it. When it's done she looks at Ohl with something yo
 She takes the newer glove off, and looks at the burned hand under it, fused at two knuckles, and puts the glove back on. "Fire at the Pale," she says, to nobody. "Before the Hounds. I'm telling you so you won't ask."`,
       ch:[{t:'Help her bury it.', go:'c2_bury'}]}),
     c2_horse_refuse:()=>({sp:'Ellis', txt:
-`"Understood." Her eyes stay on the mare. Not on Toc either, who has heard.
+`"Understood." She keeps her head down over the mare, turned from Toc, who has heard.
 
 Toc stands. He does it himself, with his knife, one-handed, badly, because the burn pulls, and it takes longer than it should. Ellis holds the head the whole time. When it's done she lays it down and stands and takes her glove off and looks at the hand under it, burned, fused at two knuckles, and puts the glove back on, and looks at you.
 
@@ -680,7 +680,7 @@ At the edge of the flattened grass he stops, once, and looks back at the place w
 
 Then he's a shape in the grass, and then he's the grass.
 
-There's a cloak on the wagon's tailboard that wasn't there before. Grey going brown, the shoulder cut for a bow. ${S.f.c2_ellisJoined ? `Ellis doesn't touch it at first. "His spare," she says. "He never wears it. He says it's for when he's cold, and he's never cold. That's a Claw joke. There aren't many." She puts it on.` : `${(w => w ? `The cloak sits there unclaimed. Then ${w === 'sgt' ? 'you put it on' : `${NAME(w)} puts it on`}, because the nights on the plain are cold and it's a good cloak, and Toc would call leaving it folded a waste.` : `It goes unclaimed. Brisk folds it and puts it under the oilcloth with the rest of what the Bridgeburners left.`)(['tuft','sgt'].find(x => S.gear[x] && S.gear[x].armour === 'toccloak'))}`}
+There's a cloak on the wagon's tailboard that wasn't there before. Grey going brown, the shoulder cut for a bow. ${S.f.c2_ellisJoined ? `Ellis doesn't touch it at first. "His spare," she says. "He never wears it. He says it's for when he's cold, and he's never cold. That's a Claw joke. There aren't many." She puts it on.` : `${(w => w ? `The cloak sits there unclaimed. Then ${w === 'sgt' ? 'you put it on' : `${NAME(w)} puts it on`}, because the nights on the plain are cold and it's a good cloak, and Toc would call leaving it folded a waste.` : `It stays folded. In the end Brisk puts it under the oilcloth with the rest of what the Bridgeburners left.`)(['tuft','sgt'].find(x => S.gear[x] && S.gear[x].armour === 'toccloak'))}`}
 
 Sethand, from his horse, to nobody: "The ridge, before full dark. I said not to stop long."`,
       ch:[{t:'East. The ridge.', go:()=>startExplore()}]}),
@@ -1005,7 +1005,7 @@ The man in front says one more thing, to Sethand, and Sethand translates it with
 
 Word for word. That's the trouble.
 
-The man in front lets it run to the end. Then he laughs, once, short, at a child with its helmet on backwards; and the riders behind him do not laugh at all.
+The man in front lets it run to the end. Then he laughs, once, short, as at a child with its helmet on backwards; and the riders behind him do not laugh at all.
 
 Sethand has closed his eyes. "That," he says, "is the song for a horse."${SQUAD().includes('kettle') ? `
 
