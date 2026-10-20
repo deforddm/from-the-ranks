@@ -1366,21 +1366,21 @@ He stands, and hitches the rope up on his shoulder.
 
 "Harl," he says.
 
-"Rope boy." The old man doesn't get up. He looks Vell over, the stitches and the line and the Malazan company he keeps, without hurrying, the way you'd look over a knot somebody else had tied. "The clan says you're paid up. The clan says a lot of things this morning." Then, to you: "Malazan. A word, because the boy's in it, and the Guild looks after its own even when they've stopped being its own."
+"Rope boy." The old man doesn't get up. He looks Vell over, the stitches and the line and the Malazan company he keeps, without hurrying, a roper checking another man's knot. "The clan says you're paid up. The clan says a lot of things this morning." Then, to you: "Malazan. A word, because the boy's in it, and the Guild looks after its own even when they've stopped being its own."
 
 ${shot ? `He nods past you at the splinters in the piling by the pier. "There was a man on the chandlery roof across from the green door, with a crossbow. The grey man's. We were on our way up to have a word with him." A shrug. "You had the word first. Louder."` : done ? `"There was a man on the chandlery roof across from the green door, with a crossbow. The grey man's. We had a word with him before the lamps were out. You'd never have known. That's how it's meant to work."` : `"There's a man on the chandlery roof across from the green door with a crossbow," he says. "Since before the lamps went out. The grey man's." A small pause. "Was. We had a word with him. He isn't on the roof any more."`}
 
 "His name was Hollin. Out of Unta." He looks at Vell, not at you. "He'll want it. He keeps names now, I'm told. Picked it up somewhere."
 
-Vell doesn't say anything. He's looking at the chandlery roof, at the place where a man was, measuring it the way he measures every roof: where the line would go, and how you'd get off.
+Vell is looking at the chandlery roof, at the place where a man was, measuring it the way he measures every roof: where the line would go, and how you'd get off.
 
 "That's the Guild's half," says Harl, and gets up, and goes back into the alley. "The boy's half, he's paying in person. I'm told it's not paid yet. I'm told he likes it that way."`,
       ch:[{t:'"Vell?"'}]}; },
     c7_veteran:()=>{ const st = S.f.c6_steppedIn ? 'settled' : S.f.c6_terraceFought ? 'lapsed' : 'open';
       return {sp:'An old man mending a net', fx:()=>{ S.f.c7_veteran=1; S.f.c7_grudge=st; if (st === 'settled') S.f.c7_vellWarned=1; }, txt:
-`You know him. The older man from the Daru roof, grey at the temples, a Guild blade across his knees among the dead the night Kalam's candles went out; the man in the alley afterward with his hand pressed to his ribs, asking his question again. He's sitting on the step of the east alley mending a fishing net, badly, which is how you know it isn't his net.
+`You know him. The older man from the Daru roof, grey at the temples, a Guild blade across his knees among the dead the night Kalam's candles went out; the man in the alley afterward with his hand pressed to his ribs, asking his question again. He's sitting on the step of the east alley mending a fishing net, badly. It isn't his net.
 
-"Malazan." He doesn't look up. "The clan-master sent me to see you off. He didn't say which way off."
+"Malazan." He goes on with the net. "The clan-master sent me to see you off. He didn't say which way off."
 
 ${st === 'settled' ? `He ties a knot and looks at it and doesn't like it. "You stood in front of the Adjunct last night, for a Daru boy with a coin. Word gets about. The Guild had people in that street." A long pause. "That's an answer. It isn't the same answer as the roof. It'll do." He puts the net down. ${S.f.c7_clawFought && !S.f.c7_vellWarned ? `"There was a crossbow on the chandlery roof across the quay. It wasn't ours. We were going to see to it." He looks at the splinters in the piling by the pier. "You saw to it yourselves."` : `"There's a crossbow on the chandlery roof across the quay. It isn't ours. It isn't there any more, either."`}` : st === 'lapsed' ? `"You killed more of ours on Simtal's terrace," he says. "Three. Four. I've stopped counting. Somebody in this city has to." He ties a knot. "The Guild's not buying. I told you that in the alley. It's still not." He looks up at last. "But the Guild's burying this morning, a great many, and it hasn't the hands to hate you as well. Go before it finds them."` : `"The Guild's burying this morning," he says. "A great many. Not you. It hasn't the hands to hate you and grieve at the same time." He ties a knot and looks at it and doesn't like it. "It isn't settled. It's put down. That's a different thing. Go, Malazan, before somebody picks it up."`}`,
       ch:[{t:'Leave him to the net.'}]}; },
@@ -1399,7 +1399,7 @@ The man in the grey cloak is still on the step by the green door. He hasn't move
 `The steps at the turn of the quay are where you left them, warm in the sun. Beyond them the city, and the gate you came in by, and the road. The hill is an hour on. The quorls leave at noon.` :
 `East along the quay to where it turns, and a flight of old steps goes down into the lake, the stone already warm, the sun full on it.
 
-The Fourth sits down on them. Nobody gives the order. ${C7H.has('ohl') ? `Ohl gets a fire going in half a fish-crate and makes tea, because it's morning and he always has. It's technically medicine. Everybody drinks it. Nobody says what it tastes like.` : C7H.isDead('ohl') ? `Somebody passes a flask along the step, and it isn't tea, and nobody says that either.` : `Somebody passes a flask along the step. Nobody asks what's in it.`} ${C7H.has('kettle') ? `Kettle goes to sleep sitting up with her cheek on the satchel, which is a thing only a sapper can do.` : ''} ${C7H.has('brisk') ? `Brisk unbuckles her greaves and sets them on the step beside her, side by side, the way you'd set down a pair of boots in a house you meant to stay in.` : ''} ${C7H.has('tuft') ? `Tuft sits a step lower than everyone else, with her face turned up to the empty sky and her eyes shut.` : ''}${C7H.dead().length ? ` There's room on the step for ${C7H.dead().length > 1 ? 'more' : 'one more'}. Nobody sits in it.` : ''}
+The Fourth sits down on them. Nobody gives the order. ${C7H.has('ohl') ? `Ohl gets a fire going in half a fish-crate and makes tea, because it's morning and he always has. It's technically medicine. Everybody drinks it. The taste goes unmentioned.` : C7H.isDead('ohl') ? `A flask goes along the step, and it isn't tea, and no one mentions that either.` : `A flask goes along the step. Whatever's in it, nobody asks.`} ${C7H.has('kettle') ? `Kettle goes to sleep sitting up with her cheek on the satchel, which is a thing only a sapper can do.` : ''} ${C7H.has('brisk') ? `Brisk unbuckles her greaves and sets them on the step beside her, side by side, toes to the lake.` : ''} ${C7H.has('tuft') ? `Tuft sits a step lower than everyone else, with her face turned up to the empty sky and her eyes shut.` : ''}${C7H.dead().length ? ` There's room on the step for ${C7H.dead().length > 1 ? 'more' : 'one more'}. Nobody sits in it.` : ''}
 
 The gulls argue. The sun comes the rest of the way up. For the length of a bell, nobody in the Fourth counts anything.
 
@@ -1414,7 +1414,7 @@ Then the gate you came in by, and the road. The hill is an hour on. The quorls l
         ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]};
       const name = f.c3_trueName ? `"Sergeant {sgt}." He finds the page without looking for it; he has had it open since dawn, you think. "Unta, from the vowels. In, by this gate. Out, this morning." He writes it.`
         : f.c3_falseName ? `He says the name off the headstone in Unta, carefully, to get it right, the way he said it on the way in. "It held," he says. "This city knows you by it. I'd keep it." He writes it.`
-        : f.c3_briskVoice ? (b ? `He looks at Brisk, and something in him that has been thirty years at this desk lights up very slightly, the way a lamp does. "Paviors," he says. "Section four. Outbound, exempt." He writes it. He underlines it.` : `"Paviors," he says. "Section four." He looks along the Fourth for the one who cited it, and doesn't find her, and doesn't ask. He writes it anyway, *Paviors, outbound, exempt*, and underlines it.`)
+        : f.c3_briskVoice ? (b ? `He looks at Brisk, and something in him that has been thirty years at this desk lights up very slightly. "Paviors," he says. "Section four. Outbound, exempt." He writes it. He underlines it.` : `"Paviors," he says. "Section four." He looks along the Fourth for the one who cited it, and doesn't find her, and doesn't ask. He writes it anyway, *Paviors, outbound, exempt*, and underlines it.`)
         : f.c3_paid ? `"Road crew, one wagon, paid, no name," he says, finding the line. "Outbound, no name." He writes it. "The Council will be bereft again."`
         : `"No name in, no name out." He writes it. "The Council will bear up."`;
       return {sp:'The Worry Gate', scene:'city_day', txt:
@@ -1426,7 +1426,7 @@ He looks up for you.
 
 "Outbound," he says. ${name} ${d.length ? `He looks along the Fourth and counts, the way everyone does, and writes a number, and it isn't the number he wrote on the way in. He doesn't ask. He has been writing the dead out of this gate since first light; he knows a short count when he sees one.` : `He looks along the Fourth and counts, the way everyone does, and writes the number down.`}
 
-${f.c3_brack ? `Across the arch, in the inbound queue, under an awning the colour of old soup, Doctor Ottavio Brack is still open for business. He sees the Fourth and lifts a blue bottle in salute. Pennick does not look at him. "The Council," says Pennick, to the ledger, "has not ruled on miracles." A pause. "I have written again."${S.kit.includes('hoodrep') && S.f.hoodRepCh != null ? ` Brack sees the cracked black bottle on its thong and his whole face lights up. "*Satisfied customer!*" he shouts across the arch, to the entire queue.` : ''}
+${f.c3_brack ? `Across the arch, in the inbound queue, under an awning the colour of old soup, Doctor Ottavio Brack is still open for business. He sees the Fourth and lifts a blue bottle in salute. "The Council," says Pennick, to the ledger, "has not ruled on miracles." A pause. "I have written again."${S.kit.includes('hoodrep') && S.f.hoodRepCh != null ? ` Brack sees the cracked black bottle on its thong and his whole face lights up. "*Satisfied customer!*" he shouts across the arch, to the entire queue.` : ''}
 
 ` : ''}"Mind the lane," he says, to the ledger. "It's the same lane. Going out, it's on the other side." He turns a page. "The Watch is inside this morning, carrying shutters. The lane has noticed."
 
@@ -1447,30 +1447,30 @@ ${k ? `"No," says Kettle, in the voice you'd use to tell somebody the time. Her 
     c7_worry_faced:()=>{ const w = ROLL().who || 'sgt', near = nearMiss(); return {sp:'The Worry Gate', scene:'city_day', fx:()=>{ S.f.c7_worryFaced=1; S.f.c7_worryDone=1; }, txt:
 `${by({
 sgt:`You don't say anything. You walk up the arch toward him at a marching pace with the Fourth at your back, and you don't stop until you're close enough to smell last night's wine on him. Then you stop, and you let him count you.`,
-brisk:`Brisk walks up the arch until she's standing much too close to him, shield on her arm, and looks at him over the rim of it for a long moment. "We were up all night," she says, in the regiment voice, the one that comes out of the chest like a drum. "Things came up out of the ground. We're still here." She lets him do the sum. "Think what that says about the things."`,
-kettle:`Kettle walks up to him with her hand in the satchel, and takes it out again with something round and clay-grey in it, black wax on the seal, and holds it up between them the way you'd show a man a coin. "You want the satchel," she says kindly. "This is what's in the satchel. Do you want it now? I can do now."`,
+brisk:`Brisk walks up the arch until she's standing much too close to him, shield on her arm, and looks at him over the rim of it. "We were up all night," she says, in the regiment voice, the one that comes out of the chest like a drum. "Things came up out of the ground. We're still here." She lets him do the sum. "Think what that says about the things."`,
+kettle:`Kettle walks up to him with her hand in the satchel, and takes it out again with something round and clay-grey in it, black wax on the seal, and holds it up between them, wax side out. "You want the satchel," she says kindly. "This is what's in the satchel. Do you want it now? I can do now."`,
 ohl:`Ohl walks up to him with his healer's bag open on his arm. "I've had my hands inside a great many people since midnight, child," he says. "I'm tired, and I'm old, and I know exactly where everything is in a man. I'm asking you, as a professional courtesy, not to add to the number."`,
 tuft:`Tuft walks up to him and says nothing at all. She only looks at him, the way she looks at a card she has already read, until he looks away first.`,
 ellis:`Ellis walks up to him and says one sentence, and it's the right one. "I'd like it noted," she says, "that I'm the friendly one."`,
 _:`{who} walks up the arch to him and says it plainly: the Fourth has been up all night with worse than him, and is still standing, and would very much like to go on standing somewhere else.`})}
 
-The big one looks at ${C7H.rw(w)} for as long as it takes a cart of the dead to go by. Then along the rest of the Fourth. Then, for a long moment, at the crossbow on the water-butt, who has found something very interesting to look at in the sky.
+The big one looks at ${C7H.rw(w)} for as long as it takes a cart of the dead to go by. Then along the rest of the Fourth. Then, longest, at the crossbow on the water-butt, who has found something very interesting to look at in the sky.
 
 "Another time, Malazan," he says, with great dignity, and steps back into the lane, and the lane takes him, and the ones with knives, and the ones with cudgels.
 
-${near ? `They let you by. The crossbow on the water-butt watches you all the way out through Worrytown to the tanneries, and you feel it between your shoulders every step, and the Fourth walks a little faster than a squad should.` : `Nobody watches you out through Worrytown. Nobody in Worrytown watches anything this morning that might watch them back.`}
+${near ? `They let you by. The crossbow on the water-butt watches you all the way out through Worrytown to the tanneries, and you feel it between your shoulders every step, and the Fourth walks a little faster than a squad should.` : `Worrytown lets you out without a glance. This morning it isn't watching anything that might watch it back.`}
 
 Behind you at the desk Pennick writes something, and blots it. "He says that to everyone," he remarks to the ledger, and turns the page.`,
       ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]}; },
     c7_worry_fail:()=>({sp:'The Worry Gate', scene:'city_day', txt:
-`${by({sgt:`He counts you. He takes his time about it, and enjoys it.`, brisk:`He hears her out. He even nods, the way a man nods at a good point well made.`, kettle:`He looks at the thing in her hand, and then at the hand, which is shaking, and smiles.`, ohl:`He looks at the old man's open bag, and the old man's hands, and laughs, not unkindly.`, _:`He hears {who} out, and nods, and smiles.`})}
+`${by({sgt:`He counts you. He takes his time about it, and enjoys it.`, brisk:`He hears her out. He even nods at the good points.`, kettle:`He looks at the thing in her hand, and then at the hand, which is shaking, and smiles.`, ohl:`He looks at the old man's open bag, and the old man's hands, and laughs, not unkindly.`, _:`He hears {who} out, and nods, and smiles.`})}
 
 "You're tired, Malazan," he says. "I can see it from here. That's rather the point of this morning."
 
 He doesn't give a signal. He doesn't need one. The lane comes out of the lane, and the crossbow on the water-butt has stopped looking at the sky.`,
       ch:[{t:'"Shields."', go:()=>startBattle('c7_worrygate', {surprise:'e'})}]}),
     c7_worry_paid:()=>({sp:'The Worry Gate', scene:'city_day', txt:
-`You count twenty silver out of the purse in the dark of the arch, where everybody can hear it, and knot it in a rag, and throw it underarm up the arch. He catches it without looking, the way a man catches a thing he has been catching all his life, and weighs it in his palm, and makes a face that says it's light, and that light will do.
+`You count twenty silver out of the purse in the dark of the arch, where everybody can hear it, and knot it in a rag, and throw it underarm up the arch. He catches it without looking, and weighs it in his palm, and makes a face that says it's light, and that light will do.
 
 "Malazan arithmetic," he says, and steps back into the lane, and the lane takes him. On the Worrytown side the crossbow goes back to looking at the sky.
 
@@ -1483,11 +1483,11 @@ Behind you Pennick writes something, and blots it. "Toll," he says to the ledger
 
 "Satchel," he says from the pit, with great dignity, the way a man states a position he's no longer in a position to hold.
 
-${C7H.has('kettle') ? `"No," says Kettle kindly, and goes on scraping her boot on the edge of the pit.` : `Nobody answers him. Nobody needs to.`} ${C7H.has('ohl') ? `Ohl looks down at him a moment, professionally, and then holds out a hand. The big one looks at the hand as if it were a trick. It isn't. Ohl gets him out. "Wash," Ohl tells him. "In the lake. Not the near end."` : ''}
+${C7H.has('kettle') ? `"No," says Kettle kindly, and goes on scraping her boot on the edge of the pit.` : `He gets no answer. He doesn't need one.`} ${C7H.has('ohl') ? `Ohl looks down at him a moment, professionally, and then holds out a hand. The big one looks at the hand as if it were a trick. It isn't. Ohl gets him out. "Wash," Ohl tells him. "In the lake. Not the near end."` : ''}
 
 ${C7H.has('brisk') ? `Brisk wipes her spear on a hide on a drying frame, and looks at it, and wipes it again. "Last time through this gate we had ${S.f.c2_wagon ? 'Pell' : 'a mule'}," she says. "I miss the mule."` : ''}
 
-${preUsed('c7_worrygate') ? `Back under the arch Pennick has his lamp lit again. It's the only thing about him that has moved. There's ink across his page in a long black fan where the bang knocked the pot over, and he's writing round it. Against the wall of the arch two of the Watch are sitting with their helmets in their laps, the way men sit after being put down by people who could have done a great deal worse, and one of them is still holding his end of the shutter.
+${preUsed('c7_worrygate') ? `Back under the arch Pennick has his lamp lit again. It's the only thing about him that has moved. There's ink across his page in a long black fan where the bang knocked the pot over, and he's writing round it. Against the wall of the arch two of the Watch are sitting with their helmets in their laps. They were put down by people who could have done a great deal worse, and they know it, and one of them is still holding his end of the shutter.
 
 "The Watch will want to know about the lane," Pennick says, writing. "I was going to tell them it was the gas." He looks at the two against the wall. "They were here." He blots the line, and then he turns the ledger round on the desk so you can read it, which in thirty years he has never done for anybody: *Outbound. Fourth Squad, Malazan marines. One Moranth munition, discharged under the Worry Gate, the morning after.* He has underlined *the morning after*.
 
@@ -1504,9 +1504,9 @@ Quorls.
 
 They're on the grass of a long brown hill just north of the road, a dozen of them and more, folded down like dragonflies the size of barges: long black bodies, lacquer-bright; four wings apiece, each longer than a man, clear as oiled paper and veined in black, twitching in the sun. Black Moranth stand among them in black chitin plate, helms with no faces, not moving. Bridgeburners are going up the hill in twos and threes with packs, and being strapped in behind the riders, and not looking down.
 
-${C7H.has('kettle') ? `Kettle stops dead in the road. She has checked the sky for quorls every day since Nathilog, the way you'd check for weather. Now they're on the ground in front of her, on the grass, close enough to touch. "Oh," she says. "Oh, they're *here*."` : ''}
+${C7H.has('kettle') ? `Kettle stops dead in the road. She has checked the sky for quorls every morning since Nathilog. Now they're on the ground in front of her, on the grass, close enough to touch. "Oh," she says. "Oh, they're *here*."` : ''}
 
-A litter by the biggest of them, and on it a man with a leg splinted out straight and a sword across his knees. A dark small man beside him, cross-legged in the grass. A captain with an empty scabbard and somebody else's sword, looking at nothing. And down on the road east, where it bends round the foot of the hill, a Rhivi party with pack-ponies, and a woman on a grey mare with a child of four or five in good red wool on the saddle before her, and a rider at their head sitting his horse like a man who has decided to be patient.
+A litter by the biggest of them, and on it a man with a leg splinted out straight and a sword across his knees. A dark small man beside him, cross-legged in the grass. A captain with an empty scabbard and somebody else's sword, looking at nothing. And down on the road east, where it bends round the foot of the hill, a Rhivi party with pack-ponies, and a woman on a grey mare with a child of four or five in good red wool on the saddle before her, and a rider at their head, sitting his horse, patient on purpose.
 
 On a barrow-stone at the top of the hill, a raven the size of a dog is watching all of it and laughing, very quietly, to itself.
 
@@ -1519,9 +1519,9 @@ ${pend ? (S.f.c7_kalamWarned || S.f.c7_mallet ? `Behind you on the road, a big s
 
 He sees you coming. He sees Mallet behind you. He lifts one hand, very slightly, and Mallet stops ten paces off and stands there with his bag and his word, and waits.
 
-You tell him. In order, without anything in it that isn't so. The paper, the dye-shop, the tea, the blue hands, the purse. What she asked. What you gave her.
+You tell him. In order, leaving nothing out. The paper, the dye-shop, the tea, the blue hands, the purse. What she asked. What you gave her.
 
-He listens with his eyes on the city, small and blue behind you on the rim of its lake. When you've finished he doesn't say anything for a while. Then he looks past you at Mallet.
+He listens with his eyes on the city, small and blue behind you on the rim of its lake. When you've finished he lets the silence run. Then he looks past you at Mallet.
 
 "Mallet. Kalam's word."
 
@@ -1529,18 +1529,18 @@ He listens with his eyes on the city, small and blue behind you on the rim of it
 
 "I've had it. From the right mouth." He looks back at you. "Go and see to your bag."
 
-Mallet goes. Whiskeyjack looks at you a long moment more.
+Mallet goes. Whiskeyjack goes on looking at you.
 
 "You told me yourself," he says. "Late. But before anybody could." A pause. "Kalam bet me you'd get up the hill first. I'll have to pay him, and he's on a boat." Something happens at the corner of his mouth that isn't a smile, and he doesn't let it become one. "Good."`,
       ch:[{t:'"Sir."', go:'c7_wj'}]}),
     c7_hill_word:()=>({sp:'The quorl hill', scene:'quorl_hill', fx:()=>{ S.f.c7_wjKnows='kalam'; }, txt:
-`You let him pass you. He does it without looking at you, the way a man walks past a grave he isn't going to stop at.
+`You let him pass you. He does it without looking at you.
 
-He goes up to the litter. He bends and says something, low, not long. Whiskeyjack listens. He doesn't look at you. He doesn't look at you for a long time.
+He goes up to the litter. He bends and says something, low, not long. Whiskeyjack listens. He doesn't look at you. He goes on not looking at you.
 
 Then he nods, once, to Mallet, and Mallet goes to see to his bag; and Whiskeyjack goes on looking at the city, small and blue behind you on the rim of its lake, and the hill is very quiet, and the quorls' wings tick in the sun.
 
-${C7H.has('brisk') ? `Brisk doesn't say anything. She's looking at you. She's always looking at you, at the moment it matters.` : ''}`,
+${C7H.has('brisk') ? `Brisk is looking at you. She's always looking at you, at the moment it matters.` : ''}`,
       ch:[{t:'Up the hill.', go:()=>startExplore()}]}),
     c7_wj:()=>{ const f = S.f, d = C7H.dead(), r = f.wjRegard || 0; return {sp:'Whiskeyjack', scene:'quorl_hill', fx:()=>{ S.f.c7_wjHill=1; }, txt:
 `They've set the litter down in the lee of the biggest quorl, out of the wind of its wings. He's got the sword across his knees and the splinted leg out straight and a Moranth water-skin by his hand that he hasn't touched. Quick Ben is sitting in the grass beside him. Neither of them is talking.
@@ -1589,7 +1589,7 @@ When you've finished he's quiet a long time, looking at the city.
 
 "I know," he says.
 
-That's all. He knew all of it. He had it before you came up the hill, from Hedge and Mallet and Paran${f.c7_wjKnows === 'kalam' ? ' and Kalam' : ''}${f.c7_wjKnows === 'claw' ? ' and a paper in a neat hand' : ''}, the way a man who has been listening for twenty years has everything; and there's nothing in a report in order that he didn't have already, except who gave it.
+That's all. He knew all of it. He had it before you came up the hill, from Hedge and Mallet and Paran${f.c7_wjKnows === 'kalam' ? ' and Kalam' : ''}${f.c7_wjKnows === 'claw' ? ' and a paper in a neat hand' : ''}, as anyone who has listened for twenty years has everything; and there's nothing in a report in order that he didn't have already, except who gave it.
 
 "It was a good report," he says. ${f.c7_wjKnows === 'claw' ? `"It came second."` : `"It doesn't change what I said."`} He doesn't say it unkindly. He doesn't say anything unkindly. "Paran will want them. Give them to him."`,
       ch:[{t:'Tell him where the Fourth is going.', go:'c7_choice'},
@@ -1616,7 +1616,7 @@ Whiskeyjack waits. He's good at it. He's had twenty years of practice.`,
     c7_road_outlaw:()=>({sp:'Whiskeyjack', scene:'quorl_hill', txt: C7H.wjTrust() ?
 `"North," you say.
 
-"Good." He says it the way he said it at the Gadrobi crossing: a whole sentence. "Fourth Squad, attached to me." He looks at you. "You'll fly with us."${S.f.c7_wjReport === 'near' ? ` A pause. "First in, Sergeant. I said where it's worst. I meant it."` : ''}
+"Good." The same whole sentence he gave you at the Gadrobi crossing. "Fourth Squad, attached to me." He looks at you. "You'll fly with us."${S.f.c7_wjReport === 'near' ? ` A pause. "First in, Sergeant. I said where it's worst. I meant it."` : ''}
 
 ${S.f.c7_clawDeal === 'took' ? (S.f.c7_wjReport ? `He knows what's in your coat. You told him, in order. He doesn't mention it, and he won't. Quick Ben, in the grass beside him, looks at your coat for exactly one breath, and then at the sky.` : `He doesn't know what's in your coat. Quick Ben, in the grass beside him, looks at your coat for exactly one breath, and then at the sky, and says nothing, and goes on saying it.`) : ''}` :
 `"North," you say.
@@ -1633,12 +1633,12 @@ It's Paran, from the next quorl, with Lorn's sword across his back and a Moranth
 
 "Then give me them. I'm short."
 
-Whiskeyjack looks at Paran for a long moment. Then at you. "They're yours, Captain," he says. "You'll answer for them." ${S.f.c7_wjReport === 'heard' ? `And then, to you, not looking: "Give him your reports. In order. He'll need them more than I did." And he doesn't look at you again.` : `And he doesn't look at you again.`}`,
+Whiskeyjack looks at Paran. Then at you. "They're yours, Captain," he says. "You'll answer for them." ${S.f.c7_wjReport === 'heard' ? `And then, to you, not looking: "Give him your reports. In order. He'll need them more than I did." And he doesn't look at you again.` : `And he doesn't look at you again.`}`,
       ch:[{t:'The squad.', go:'c7_close'}]}),
     c7_road_empire:()=>({sp:'Whiskeyjack', scene:'quorl_hill', txt:
 `"Home," you say.
 
-He doesn't say anything for a while. He looks past you, west and north: at the city and the lake and the long brown country beyond, where the road goes the long way round, wide of Pale, to Genabaris and the sea.
+He looks past you, west and north: at the city and the lake and the long brown country beyond, where the road goes the long way round, wide of Pale, to Genabaris and the sea.
 
 "Home," he says. He says it without weight, and that's the weight. "It's a long road to Genabaris. There'll be a ship at the end of it. ${S.f.c7_clawDeal === 'took' ? `You'll have a paper that gets you on it.` : `Report to whoever's left in the garrison as a loyal squad of an outlawed army, and see what they make of you. I'd like to see their faces. I won't.`}"
 

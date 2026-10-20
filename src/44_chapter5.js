@@ -364,7 +364,7 @@ It doesn't go east, over the vale, as you'd feared. It goes up. Up and up, until
 
 ${SQUAD().includes('ellis') ? `Ellis, lying on her back in the grass, squinting at it: "It'll stay up there all day. A raven that size, that high. The Adjunct's going to see it." A pause. "She'll know whose it is. She won't know it's anything to do with us. That's the best cover I've ever had. I hate it."` : `Kettle, lying on her back in the grass, squinting at it: "Can I shoot it?" Brisk: "No." Kettle: "Can I *want* to shoot it?" Brisk thinks about this. "Yes."`}${SQUAD().includes('vell') ? `
 
-Vell, flat on his face in the heather with his hands over his head: "Things don't *fly* that big in the city." Muffled. "I'm just saying. Nobody told me about the size of things out here."` : ''}`,
+Vell, flat on his face in the heather with his hands over his head: "Things don't *fly* that big in the city." Muffled. "I'm just saying. They never told me about the size of things out here."` : ''}`,
       ch:[{t:'Back to the ridge.', go:()=>startExplore()}]}),
     c5_crone_again:()=>({sp:'A speck in the sky', txt:
 `${S.f.c5_night ? `The sky over the ridge is black and full of stars and there's no speck in it. You have the strong impression that there's a raven in it anyway.` : `The raven is a black mote high over the ridge. It hasn't moved in an hour. Once, very faintly, carried down on the wind from a height no bird should reach, you hear it laugh.`}`,
@@ -382,7 +382,7 @@ The vale. A long low hill running down the middle of it, too regular to be a hil
 
 Nobody moving. That's the first thing you see, and it's wrong, because somebody has to be moving; the smoke doesn't feed itself.
 
-${SQUAD().includes('ellis') ? `Ellis is beside you. You didn't hear her come. "Tent's empty," she breathes. "Horse is resting a hind foot. Nobody's been near it an hour." A pause. "Look at the dig, Sergeant. Not the tent. The *dig*."` : `Kettle is beside you, breathing through her teeth. "Tent," she whispers. "Horse. Fire. Nobody." A pause. "Nobody's a lot of people not to see."`}`,
+${SQUAD().includes('ellis') ? `Ellis is beside you. You didn't hear her come. "Tent's empty," she breathes. "Horse is resting a hind foot. Hasn't had company in an hour." A pause. "Look at the dig, Sergeant. Not the tent. The *dig*."` : `Kettle is beside you, breathing through her teeth. "Tent," she whispers. "Horse. Fire. Nobody." A pause. "Nobody's a lot of people not to see."`}`,
       ch:[{t:'Look at the dig. Carefully.', fx:()=>{ S.f.c5_edgeDone=1; S.f.c5_edgeHow='look'; }, check:['wits',13],
             edges:id => [S.f.c5_sethDust && ['Sethand told you where it kneels', 1], SQUAD().includes('ellis') && id !== 'ellis' && ['Ellis: the dig, not the tent', 1], id === 'tuft' && ['the hole in the world, two valleys off', -1]],
             near:C5H.edgeNear, clean:C5H.edgeClean, go:'c5_edge_ok', fail:'c5_edge_fail'},
@@ -414,14 +414,14 @@ So you can take your time, and you do. You look at the dig, and at first you see
   ellis:`Ellis goes along the crest to the rock spur on her elbows, and you lose her in the grass inside ten paces, and you were watching. A quarter of an hour later she's beside you again, without a sound, with grass-seed in her hair. "East end," she breathes. "In the hole. Don't look at the hole. Look at the shadow in it."`,
   tuft:`Tuft goes along the crest to the rock spur slowly, grey in the face, with nothing round her hands; this close to the vale there's no shadow to put there. She goes anyway, the hard way, on her belly like a soldier. When she comes back she lies still, breathing, before she can talk. "East end," she whispers. "In the dig. Look at the *shadow*, Sergeant."`,
   kettle:`Kettle goes along the crest to the rock spur with the satchel held against her chest like a baby, and you wait for the noise, and there isn't one. She comes back pink with triumph and trying not to show it. "East end," she whispers. "In the hole. There's a bit of the dark that's the wrong *shape*."`,
-  sgt:`You go along the crest to the rock spur yourself, because if somebody's going to be seen it had better be the one who gave the order. Nobody sees. From the spur you can see into the opened end of the barrow, and you come back and put the squad's eyes where yours were.`,
+  sgt:`You go along the crest to the rock spur yourself, because if somebody's going to be seen it had better be the one who gave the order. You aren't seen. From the spur you can see into the opened end of the barrow, and you come back and put the squad's eyes where yours were.`,
   _:`{who} goes along the crest to the rock spur, slow and flat, and comes back the same way, and puts a finger on the place: the east end, the opened earth.`})}
 
 ${by({sgt:`You look again from the lip, where the spur showed you.`, _:`You look where you've been told to look.`})} At first you see only earth, turned and heaped, black where it's fresh, and the long shadow of the barrow across it. And then a piece of the shadow moves.` : by({
   sgt:`You look at the dig, and at first you see only earth, turned and heaped, black where it's fresh, and the long shadow of the barrow across it. And then a piece of the shadow moves.`,
   ohl:`Ohl looks at the dig the way he looks at a wound: a long time, without blinking, waiting for it to tell him something. Then his hand closes on your wrist. He doesn't point. You follow his eyes down past the heaped earth, black where it's fresh, to the long shadow of the barrow across it. And a piece of the shadow moves.`,
   ellis:`Ellis never once looks at the tent. She looks at the dig, only the dig, for as long as it takes, and then she says "There," without moving her lips. You look where she's looking: turned earth, black where it's fresh, and the long shadow of the barrow across it. And a piece of the shadow moves.`,
-  kettle:`Kettle looks at the dig the way she'd look at a fuse that's gone quiet. "Spoil heap's wrong," she breathes. "Somebody's still *making* it." You look past the heap, at the long shadow of the barrow across the turned earth. And a piece of the shadow moves.`,
+  kettle:`Kettle looks at the dig the way she'd look at a fuse that's gone quiet. "Spoil heap's wrong," she breathes. "Something's still *making* it." You look past the heap, at the long shadow of the barrow across the turned earth. And a piece of the shadow moves.`,
   tuft:`Tuft looks for three breaths with her eyes half shut, the way she'd look at a card she didn't like, and then touches your sleeve and tips her head at the dig. Turned earth, black where it's fresh. The long shadow of the barrow across it. A piece of the shadow moves.`,
   _:`{who} looks at the dig, and keeps looking, and then touches your arm. At first you see only earth, turned and heaped, black where it's fresh, and the long shadow of the barrow across it. And then a piece of the shadow moves.`})}
 
@@ -660,7 +660,7 @@ The dead thing from the head of the row has let go of something. A leaf of grey 
 
 ${S.f.c5_cusserUsed ? `Kettle is sitting in the crater with her legs out in front of her, at her ease. Soot to the eyebrows. Frost in her hair. She hasn't said a word. She's looking at the hole in the ground where the barrows were, and her mouth is open a little, and she looks about nine years old.
 
-Down in the vale, the Adjunct has turned round. For the first time all day. She looks at the crater, and at the sapper sitting in it, and her face does nothing. Then she turns back to the dig. Nothing else happens. You have the feeling it has been written down somewhere all the same.` : C5H.wardsPre() && SQUAD().includes('kettle') ? `Kettle is wiping frost off her crossbow and grinning at the slush where the ward was. "Jaghut ice," she says. "Doesn't like a shove. Nobody ever *told* it." A glance down the vale, at the woman on the lip of the dig. "And she can't do a thing about powder, can she. That sword's for mages. Moranth don't do magic. They do *recipes*." Then, fairer, because Kettle is fair: "Woke the last barrow in the row, mind. That one's mine. Sorry."` : ''}${C5H.wardsPre() && SQUAD().includes('tuft') ? `
+Down in the vale, the Adjunct has turned round. For the first time all day. She looks at the crater, and at the sapper sitting in it, and her face does nothing. Then she turns back to the dig. Nothing else happens. You have the feeling it has been written down somewhere all the same.` : C5H.wardsPre() && SQUAD().includes('kettle') ? `Kettle is wiping frost off her crossbow and grinning at the slush where the ward was. "Jaghut ice," she says. "Doesn't like a shove. Should've *said*." A glance down the vale, at the woman on the lip of the dig. "And she can't do a thing about powder, can she. That sword's for mages. Moranth don't do magic. They do *recipes*." Then, fairer, because Kettle is fair: "Woke the last barrow in the row, mind. That one's mine. Sorry."` : ''}${C5H.wardsPre() && SQUAD().includes('tuft') ? `
 
 Tuft, grey to the lips, is looking at the ${S.f.c5_cusserUsed ? 'crater' : 'scorch where it went off'}. "It isn't magic," she says, almost jealous. "That's why it works. Three hundred paces from her and I've got a thread of shadow I couldn't strangle a cat with, and Kettle's clay pots don't even *notice* her."` : ''}`,
       ch:[{t:'"Kettle."', req:()=>SQUAD().includes('kettle') && S.f.c5_cusserUsed, go:'c5_after_kettle'},
@@ -834,7 +834,7 @@ Behind you, down in the dark at the east end of the long barrow, something breat
 
 Not a sound. A change in the air. The frost on the grass round the ring goes out another pace, and stops. And under your boots, very faintly, so faintly you think at first it's your own pulse, the ground goes: *thud*. And, a long time later: *thud*.
 
-${S.f.c5_spotted ? `Nobody in the Fourth is going to sleep tonight. You knew it on the ridge. You know it harder now.` : `The Fourth goes on with its packs and leaves that where it is.`}`,
+${S.f.c5_spotted ? `The Fourth isn't going to sleep tonight. You knew it on the ridge. You know it harder now.` : `The Fourth goes on with its packs and leaves that where it is.`}`,
       ch:[{t:'Up the north slope, to the man in the grass.', req:()=>!S.f.c5_collTried, fx:()=>{ S.f.c5_collTried=1; }, check:['wits',16],
             edges:id => [id === 'ohl' && ['Denul, back now that she has gone', 1], S.inv.salve > 0 && ['a salve in the satchel', 1], id === 'tuft' && ['she has never closed a wound', -1]],
             near:{t:()=> S.f.c5_collSalve ? 'Yes, but it takes the squad\'s salve to do it.' : `Yes, but ${NAME(ROLL().who || 'sgt')} comes back down the slope with someone else's blood to the elbows, rattled: −1 on the next check.`,
@@ -977,7 +977,7 @@ Six silver among the lot of them, and a twist of tobacco. About what ten days on
 
 ${preUsed('c5_dig') && SQUAD().includes('kettle') ? `Kettle is standing at the slumped lip of the dig, where her sharper went off, looking down into the dark. The lip is half in. The mouth is still open under it.
 
-"I knocked on a Jaghut's door," she says. "A *king's*. With a sharper." She swallows. "And it knocked *back*." She sits down on the handcart, hard. It squeaks. Nobody laughs. "Put it in the ledger, Sergeant. Under *never*. Under *never again*, and *I mean it this time*."${SQUAD().includes('tuft') ? `
+"I knocked on a Jaghut's door," she says. "A *king's*. With a sharper." She swallows. "And it knocked *back*." She sits down on the handcart, hard. It squeaks. The squad keeps its faces straight. "Put it in the ledger, Sergeant. Under *never*. Under *never again*, and *I mean it this time*."${SQUAD().includes('tuft') ? `
 
 Tuft hasn't come any nearer the hole. "It heard that," she says. "Sergeant. It wasn't listening for us before. It is now."` : ''}` : SQUAD().includes('kettle') ? `Kettle sits down on the handcart. It squeaks. She looks at it. "They brought a *cart*," she says. "For a king's grave. A *handcart*." She doesn't laugh. She looks as if she'd like to.` : ''}
 
@@ -1007,7 +1007,7 @@ ${SQUAD().includes('ohl') ? `Ohl has stopped beside her. "Denul goes thin near t
 `${by({
   kettle:`Kettle does it the way she'd load a charge in the rain. She takes an empty sharper casing out of the satchel and knocks the old wax out of it, and holds it under the cut, and with the *back* of her knife, never the edge, she works the dust out of the stone a grain at a time, and doesn't breathe, and doesn't talk, which for Kettle is the same thing.
 
-When she's done she plugs the casing with her thumb and a dab of fuse-wax and holds it up to the stars. "Two pinches," she says. "Two and a bit. Fiddler would have kittens." She puts it in the satchel next to the sharpers, and thinks about that, and moves it to the other end. "Not by the burners. Nobody knows what it does to a burner. *I* don't know what it does to a burner."`,
+When she's done she plugs the casing with her thumb and a dab of fuse-wax and holds it up to the stars. "Two pinches," she says. "Two and a bit. Fiddler would have kittens." She puts it in the satchel next to the sharpers, and thinks about that, and moves it to the other end. "Not by the burners. Who knows what it does to a burner? *I* don't know what it does to a burner."`,
   ellis:`Ellis doesn't hesitate. She has done this before. She takes a square of oilcloth from inside her glove, lays it under the cut, and lifts the dust out of the stone with the point of a knife, exactly, the way she'd copy a cipher, and folds the cloth into a packet the size of a thumbnail.
 
 "The Claw carry it," she says. "A pinch. For mages who are having a good day." The packet goes somewhere you don't see. "I'd like it noted that I never had to use mine."`,
@@ -1051,7 +1051,7 @@ It's Toc who sees it first. He stops, with the bowstring half-looped, and looks 
 
 Something is sitting on the crest.
 
-It's small. The size of a child, sitting with its legs dangling over the slope, a child on a wall. The starlight catches it, a little: a round wooden head, and a face painted on the wood, white, with red cheeks and a red smile and two black eyes, the paint cracked. Its arms hang loose. From its wrists and its knees and the crown of its head, thin lines go up into the dark, straight up, taut, and end in nothing at all.
+It's small. The size of a child, sitting with its legs dangling over the slope, heels against the turf. The starlight catches it, a little: a round wooden head, and a face painted on the wood, white, with red cheeks and a red smile and two black eyes, the paint cracked. Its arms hang loose. From its wrists and its knees and the crown of its head, thin lines go up into the dark, straight up, taut, and end in nothing at all.
 
 ${S.f.c1_sawHairlock ? `You know it. You saw it on a crate in Tattersail's tent at Pale, with its head turned toward you, and it stayed turned. *Luggage*, she said. *Don't talk to it. It talks back.*` : `A puppet. A marionette. Some child's toy, left on a hill in the middle of the Gadrobi nowhere, with its strings going up to nobody.`}
 
@@ -1303,7 +1303,7 @@ ${S.f.c5_key === 'through' && !S.f.c5_ellisThrough ? `At Tuft, standing at the l
   kettle:`Kettle goes quiet.
 
 Kettle, who talks when she's frightened, who talked through the Pale and the tunnels and the roofs, lies down flat in the grass with her face turned into it and her mouth shut, and reaches out without looking and gets a fistful of the nearest sleeve and the nearest belt, and holds on. And because Kettle isn't talking, nobody else so much as breathes.`,
-  ellis:`Ellis says one word, under her breath, and it's the right one. "*Ground.*" And everyone looks at the ground, and at nothing else. Nobody is anything else: grass, and stones, and things lying on a hill.`,
+  ellis:`Ellis says one word, under her breath, and it's the right one. "*Ground.*" And everyone looks at the ground, and at nothing else, and is nothing else: grass, and stones, and things lying on a hill.`,
   sgt:`You put your hand flat on the grass, palm down, the way Sethand did on the ridge and the Imass did in the dig, and look at nothing but the back of it. The squad sees you do it. One by one, the hands go flat. The eyes go down.`,
   brisk:`Brisk lays her shield face-down in the grass so the rim won't catch the starlight, and lies down behind it, and puts a hand on the back of the nearest neck and pushes, gently, until that face is in the grass too.`,
   ohl:`Ohl begins, very softly, to pray. Not to Hood. Not in Ehrlii. Just the shape of praying, low and even and dull as a millpond, and the squad goes quiet under it the way children do, and lies still.`,
@@ -1386,7 +1386,7 @@ ${SQUAD().includes('ohl') ? `Ohl hasn't said anything. He's looking at the grey 
     c5_night_after:()=>({sp:'The fold below the far hill', scene:'hills_night', txt:
 `${numw(SQUAD().length, true)}. You count twice. You count a third time, because the number's right and it doesn't feel right.
 
-${S.f.c5_ellisThrough ? `There's a place by the fire, next to where Toc sat, where the grass is pressed flat in the shape of someone sitting close to someone else. Nobody sits in it. Nobody says they're not sitting in it.` : S.f.c5_ellisHeld ? `Ellis is sitting on the far side of the fire from you, with her back to you, facing the hillside where the rent was. She hasn't moved since the Hounds went. She isn't going to. ${S.f.c5_cloakGone ? `Her cloak is somewhere in the grey with Toc. ` : ''}Brisk has put a blanket round her shoulders, and she hasn't taken it off, and she hasn't acknowledged it's there.` : S.f.c5_tuftMarked ? `Tuft is sitting beside you. Everyone keeps looking at her hair and then looking away.` : `Tuft is sitting at the far edge of the firelight with her knees drawn up, facing the place where the rent was. She hasn't said a word since *yes, Sergeant*. Kettle is sitting beside her, not talking either, which for Kettle is a kind of shouting.`}
+${S.f.c5_ellisThrough ? `There's a place by the fire, next to where Toc sat, where the grass is pressed flat in the shape of someone sitting close to someone else. Nobody sits in it, or says they aren't.` : S.f.c5_ellisHeld ? `Ellis is sitting on the far side of the fire from you, with her back to you, facing the hillside where the rent was. She hasn't moved since the Hounds went. She isn't going to. ${S.f.c5_cloakGone ? `Her cloak is somewhere in the grey with Toc. ` : ''}Brisk has put a blanket round her shoulders, and she hasn't taken it off, and she hasn't acknowledged it's there.` : S.f.c5_tuftMarked ? `Tuft is sitting beside you. Everyone keeps looking at her hair and then looking away.` : `Tuft is sitting at the far edge of the firelight with her knees drawn up, facing the place where the rent was. She hasn't said a word since *yes, Sergeant*. Kettle is sitting beside her, not talking either, which for Kettle is a kind of shouting.`}
 
 Paran hasn't sat down. He's standing at the edge of the fold with his back to the fire, looking west, at the long barrow, a black line under the stars. *Thud*, from under it. A long time later: *thud*. It's slower now, and deeper: a sleeper's heart, near waking.
 
@@ -1410,7 +1410,7 @@ Somewhere before dawn there's a sound of hooves, slow and uneven, coming down in
 
 Paran is on his horse. He's grey in the face, grey the way Tuft went grey near the Adjunct, as if something had been drawn out of him in the night and not put back. He has Toc's horse on a lead rein. He sat with it, you think, the last hour before light.${S.f.c4_ellisToc ? ` The ridge where Ellis knelt is empty. There's a line of prints in the frost going west from it, a scout's, the kind that are trying not to be there, and then not trying any more.` : ''} Behind its saddle, rolled tight and strapped with a scout's knot, a Second Army cloak; he unstraps it without a word and holds it down to you, and you take it.${S.f.c5_cloakGone && SQUAD().includes('ellis') ? ` You know already whose it's going to be.` : ''}
 
-His hands are still black to the wrist. You saw him wash them in the spring, twice, and it hasn't come off, and he's stopped trying. Where the Hounds died there's nothing: torn turf, and a dark stain the frost won't settle on, and nothing else. Nobody saw anyone take them.
+His hands are still black to the wrist. You saw him wash them in the spring, twice, and it hasn't come off, and he's stopped trying. Where the Hounds died there's nothing: torn turf, and a dark stain the frost won't settle on, and nothing else. Whatever took them left no tracks.
 
 "The Adjunct's gone to the city," he says. "I'm to follow." He looks west, along the vale, toward Darujhistan. "I'm going to find Whiskeyjack first."
 
@@ -1418,11 +1418,11 @@ He's quiet for a moment.
 
 "Tell Whiskeyjack I'm coming," he says. "Tell him —" And stops, and you watch him look at whatever he was going to say, and put it down. "No. I'll tell him."
 
-He turns the horse; not west, yet, but up the slope toward the next hill, where the strings are lying in the grass. "I'm going to look at what's left of him before I go. Somebody who knew him should." A pause. "Then the man the Adjunct rode down, on the north slope. ${S.f.c5_collTended ? `Your people were up there with him in the night; I watched them go. He'll be alive, then, and he'll need a horse more than I need a spare one.` : S.f.c5_collRefused ? `One of yours came down off that slope last night with a split lip. Dying men don't punch. He'll need a horse more than I need a spare one.` : `If he's alive he'll need a horse more than I need a spare one.`}" Another pause. "I'll pass you on the road. But when you get there, tell Whiskeyjack about Toc. I'd rather he heard it from someone who saw."
+He turns the horse; not west, yet, but up the slope toward the next hill, where the strings are lying in the grass. "I'm going to look at what's left of him before I go. Someone who knew him should." A pause. "Then the man the Adjunct rode down, on the north slope. ${S.f.c5_collTended ? `Your people were up there with him in the night; I watched them go. He'll be alive, then, and he'll need a horse more than I need a spare one.` : S.f.c5_collRefused ? `One of yours came down off that slope last night with a split lip. Dying men don't punch. He'll need a horse more than I need a spare one.` : `If he's alive he'll need a horse more than I need a spare one.`}" Another pause. "I'll pass you on the road. But when you get there, tell Whiskeyjack about Toc. I'd rather he heard it from someone who saw."
 
 ${S.f.c5_toolSaw ? `As he goes: "The Imass spoke to you. I saw it from the head of the vale." He doesn't turn round. "It hasn't spoken to me once, in all these weeks. I'd think about that, Sergeant."` : ''}
 
-And away to the west, under the long barrow, something turns over in its sleep. You feel it through your boots: a long, slow shift, a sleeper turning toward the wall. The frost ring shivers. The split stones round the near end groan, all together, like old men getting up.
+And away to the west, under the long barrow, something turns over in its sleep. You feel it through your boots: one long, slow shift, and the turf settling after it. The frost ring shivers. The split stones round the near end groan, all together, like old men getting up.
 
 Then it's still. It's still for now.`,
       ch:[{t:'Ellis.', req:()=>!!S.f.c5_ellisHeld, go:'c5_dawn_ellis'},
@@ -1447,7 +1447,7 @@ It's the right sentence. You'll think about it for years, and you won't find a b
 
 The Rhivi are still on the ridge. They've been there all night; you can see it in how they're lying. They watched the frost go out round the long barrow. They watched the grey light on the far hill, and the shapes that came out of it, and the tall one that came after them out of the dark, and went back into it. They watched the Adjunct go by in the dark, alone, and did not shoot, and are still alive because they did not.
 
-The woman with the bundle is standing, below the crest, among the horses. She has it in both arms now, against her chest, the good red Rhivi wool, and she's looking west, toward the city, the way the Adjunct went. The bundle is very still.${S.f.c5_sethBundle ? ` It looks bigger than it did yesterday. Nobody says so.` : S.f.c2_key === 'light' ? ` It's bigger than it was on the plain. Sethand's eyes go to it, and away.` : ''}
+The woman with the bundle is standing, below the crest, among the horses. She has it in both arms now, against her chest, the good red Rhivi wool, and she's looking west, toward the city, the way the Adjunct went. The bundle is very still.${S.f.c5_sethBundle ? ` It looks bigger than it did yesterday. You keep that to yourself.` : S.f.c2_key === 'light' ? ` It's bigger than it was on the plain. Sethand's eyes go to it, and away.` : ''}
 
 Sethand is on his feet by his barrow-stone. He watches you come up the slope, all of you, and you watch him count, the way everyone counts the Fourth. ${S.f.c5_ellisThrough ? `He arrives at five, and you see him notice who isn't there, and put it away.` : `He arrives at the number, and it's the right one, and something in his face moves.`}
 
@@ -1466,7 +1466,7 @@ Above the ridge, very high, a black mote hangs in the pale sky. It has been ther
     c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', again:'The lee of the barrow-stones, for a moment longer. The Fourth hasn\'t started down yet.', txt:
 `Three days back to the city. Paran's horse will pass you on the road before noon, and he won't stop, and you won't expect him to.
 
-The Fourth sits for a moment in the lee of the barrow-stones before the walk, because it's the last moment anyone is going to get. Nobody has slept. ${S.f.c5_spotted ? `The night before was no better. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}
+The Fourth sits for a moment in the lee of the barrow-stones before the walk, because it's the last moment anyone is going to get. Not one of them has slept. ${S.f.c5_spotted ? `The night before was no better. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}
 
 ${S.f.c5_ellisThrough ? `Five. Brisk counted the rations this morning and the number came out wrong, and she counted again, and it came out wrong the same way, and she closed the ledger and hasn't opened it since.` : S.f.c5_tuftMarked ? `Tuft sits with her hood up. Everyone knows why.` : ''}
 
@@ -1560,7 +1560,7 @@ The grey lock at her temple is still there in daylight. It's the colour of ash. 
 
 "Near the Adjunct there was nothing," she says. "A hole in the world. I couldn't feel Meanas, I couldn't feel *me*. I've never been so frightened." She turns the top card over. It's blank; the paint's worn off. She turns it back. "And then the rent, and it was everything. And the Hounds came out of it and went past us like we were furniture."
 
-"Somebody sent them." She looks west, toward the city. "Somebody who knew exactly where that puppet would be. That's the part I can't stop thinking about. We weren't the only ones watching this hill."${seenVis('v3_qb') ? ` Her eyes stay on the west. "I know who. I watched one of Whiskeyjack's sell that puppet to Shadow, in the card, and laugh about it after. I just didn't know it would be *here*."` : ''}`}
+"Someone sent them." She looks west, toward the city. "Someone who knew exactly where that puppet would be. That's the part I can't stop thinking about. We weren't the only ones watching this hill."${seenVis('v3_qb') ? ` Her eyes stay on the west. "I know who. I watched one of Whiskeyjack's sell that puppet to Shadow, in the card, and laugh about it after. I just didn't know it would be *here*."` : ''}`}
 
 ${C5H.red() ? `Her eyes go, despite herself, to ${C5H.red() === 'sgt' ? 'your hands' : NAME(C5H.red())}. "${typeof trickBy === 'function' && trickBy('otataral') ? `And now one of us is carrying a pinch of *her*,` : `And now one of us has *her* in their seams,`}" she says. "Like salt. Like it's nothing." She doesn't say she minds. ${C5H.red() === 'sgt' ? `She shifts, very slightly, away from you; and then, ashamed of it, back.` : `She shifts, very slightly, so that you're between her and it.`}` : ''}`,
       ch:[{t:'Back to the row.', go:'c5_close'}]}),
