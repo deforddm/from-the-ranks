@@ -641,7 +641,7 @@ ${SQUAD().includes('tuft') ? `Tuft walks in the Andii cloak with her head down, 
 
 ${SQUAD().includes('ellis') ? `Ellis has seen something at the east end of the street, and has stopped looking at it very carefully.` : SQUAD().includes('vell') ? `Vell keeps looking up. At every roof on the street he's checking where the lines would go. Some of them are already there, and he's stopped pointing them out.` : ''}
 
-Over the lake, over the lanterns, over every mask in the city: the Moon's Spawn. Not one lantern hangs on it.`,
+Over the lake, over the lanterns, over every mask in the city: the Moon's Spawn, dark, without so much as a ribbon.`,
       ch:[{t:'The street.', go:()=>startExplore()}]}),
 
     c6_kruppe:()=>{ const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet'); const ring = S.kit.includes('collsignet') && !S.f.c6_collRing;
@@ -2096,7 +2096,7 @@ There are eleven more cussers with a bead of acid sitting in a notch in the wax,
 
 One at a time. She starts at the far end, at the last cusser, and works back toward the ladder, and at every niche she kneels, and puts her burned hand flat on the clay for a moment, as if taking its temperature, and then with the other hand, very gently, lifts the bead out of the notch on the point of her knife. Scrapes the notch clean. Packs it with tallow from the tin at her belt, and smooths it with her thumb. Moves on.
 
-None of you helps her. None of you would dare. ${SQUAD().includes('brisk') ? `Brisk stands at the foot of the ladder with her shield turned to the vault, as if the dark might try something.` : ''} ${SQUAD().includes('ohl') ? `Ohl tries, once, to look at the hand, and she says "*Later*," without looking up, in a voice he has never heard out of her, and he steps back.` : ''}
+She works alone. None of you would dare help. ${SQUAD().includes('brisk') ? `Brisk stands at the foot of the ladder with her shield turned to the vault, as if the dark might try something.` : ''} ${SQUAD().includes('ohl') ? `Ohl tries, once, to look at the hand, and she says "*Later*," without looking up, in a voice he has never heard out of her, and he steps back.` : ''}
 
 The frost on the pipes is thickening. You can hear the clay tick in the cold: small dry sounds, like things thinking about cracking. She doesn't hurry. She has never hurried wax in her life.
 
@@ -2262,7 +2262,7 @@ ${w}.
 
 You count again, and it's still ${w.toLowerCase()}, and you understand that it's going to be ${w.toLowerCase()} now for as long as there's a Fourth to count. ${names.length === 1 ? `${names[0]} is lying on the cobbles.` : `${names.slice(0,-1).join(', ')} and ${names[names.length-1]} are lying on the cobbles.`} Nobody who falls in this alley gets up. You knew that. You stepped in anyway. So did they.` : `You count. ${w}. You count twice, and a third time, because the number's right and it can't be.
 
-Everybody's standing. Some of them only just. Not one of them will ever be able to tell you how.`}`,
+Everybody's standing. Some of them only just. They'll never be able to tell you how.`}`,
       ch:[{t:'The fallen.', req:()=>(S.f.lastFallen || []).filter(id => id !== 'sgt').length > 0, go:'c6_alley_fallen'},
           {t:'After her.', req:()=>!((S.f.lastFallen || []).filter(id => id !== 'sgt').length > 0), go:'c6_alley_sky'}]}; },
     c6_alley_fallen:()=>{ const fell = C6H.fell(), n = listCount(), first = n - fell.length + 1;
