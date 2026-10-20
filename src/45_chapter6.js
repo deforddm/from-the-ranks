@@ -1645,7 +1645,7 @@ The cards on either side stay face down. She turns it over.`,
 
 Not worn. Not the House of Shadow with the paint rubbed off. *Blank*: pale gesso over the grain of the wood, smooth and unmarked, as if the painter had primed it and then put down the brush and gone to the window and never come back.
 
-Tuft looks at it for a long time.
+Tuft looks at it. Her thumb goes across the gesso, once.
 
 Then she laughs.
 
@@ -2343,7 +2343,7 @@ The black one drives the pale one back up the hill, toward the great houses of t
 
 The sound comes a heartbeat later, faint, over the whole city at once. Chains, dragged over stone a long way down, by a great many hands.
 
-Then the pale thing is gone. Not dead. *Gone*, the way a thing goes that's been taken somewhere.
+Then the pale thing is gone. Not dead. *Gone*, carried off somewhere you will never be.
 
 ${SQUAD().includes('tuft') ? (S.card === 'chains' ? `Tuft has her hand over her sleeve, over the Deck. "Bound," she whispers. "At both ends. It came up at the gate. ${seenVis('v6_rake') ? `I saw it in the card, and I still didn't believe it.` : `I didn't know what it *meant*.`}"` : `Tuft is looking at the roof where the smoke was. Near the Adjunct she felt nothing; she's feeling something now. "Everything it kills goes *with* it," she says. "Sergeant. I felt that go. It's still going."`) : ''}
 
@@ -2443,7 +2443,7 @@ ${dead.length ? `You count. You get the number you got in the alley. You'll get 
 
 "Report."
 
-You give it to him the way he taught you, in order, without anything in it that isn't so. ${S.f.c6_key === 'bridgeburners' ? `The lawn, and the line, and the rime-dead.${S.f.c6_tyrantKnelt ? ` The Tyrant on one knee.` : ''} Seven doors. The sword that drank the lance. Hedge running. The roots. The sky.` : S.f.c6_key === 'cellars' ? `The run down the hill with the frost in the cobbles. The lantern at the bottom of the ladder that shouldn't have been lit. Four grey cloaks and a phial. The wax. The sky, from the crossing.` : `The gate, and the streets, and the thing that went up over the roofs. The alley. The boy against the wall and the order: *hold him*. What you did. The man in crimson. The two women from the Phoenix. The captain, kneeling. The sky.`}${dead.length ? (dead.length === 1 ? ` The name.` : ` The names.`) : ''}
+You give it to him the way he taught you, in order, and nothing added. ${S.f.c6_key === 'bridgeburners' ? `The lawn, and the line, and the rime-dead.${S.f.c6_tyrantKnelt ? ` The Tyrant on one knee.` : ''} Seven doors. The sword that drank the lance. Hedge running. The roots. The sky.` : S.f.c6_key === 'cellars' ? `The run down the hill with the frost in the cobbles. The lantern at the bottom of the ladder that shouldn't have been lit. Four grey cloaks and a phial. The wax. The sky, from the crossing.` : `The gate, and the streets, and the thing that went up over the roofs. The alley. The boy against the wall and the order: *hold him*. What you did. The man in crimson. The two women from the Phoenix. The captain, kneeling. The sky.`}${dead.length ? (dead.length === 1 ? ` The name.` : ` The names.`) : ''}
 
 He listens with his face doing nothing.
 

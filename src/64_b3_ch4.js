@@ -303,7 +303,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
 
 On the far side of the ditch, sitting down, as far as the eye goes, the Tenescowri. Most of them are not doing anything. That is the first thing you notice and the thing you go on noticing: two hundred thousand people, and almost none of them moving. Some are lying down. A few are walking, slowly, nowhere. Here and there a shelter of sticks and rags. Very few fires.
 
-${c4In('brisk') ? `Brisk has her shield on her back and is counting the ration sacks on the cart with her lips moving, the way she counts everything. ` : ''}${c4In('kettle') ? `Kettle is sitting on the satchel, for once not opening it. ` : ''}${c4In('tuft') ? `Tuft is looking north across the ditch at nothing in particular, very carefully. ` : ''}${c4In('ohl') ? `Ohl has his sleeves rolled up already, and nothing to do with his hands.` : ''}`,
+${c4In('brisk') ? `Brisk is counting the ration sacks on the cart with her lips moving, the way she counts everything. ` : ''}${c4In('kettle') ? `Kettle is sitting on the satchel, for once not opening it. ` : ''}${c4In('tuft') ? `Tuft is looking north across the ditch at nothing in particular, very carefully. ` : ''}${c4In('ohl') ? `Ohl has his sleeves rolled up already, and nothing to do with his hands.` : ''}`,
       ch:[b3DeckChoice(4),
           {t:'"Ohl. How bad is it over there?"', req:()=>c4In('ohl') && !S.f.b3_c4_askOhl, fx:()=>{ S.f.b3_c4_askOhl = 1; }, go:'b3_c4_start_ohl'},
           {t:'"Brisk. What have we got?"', req:()=>c4In('brisk') && !S.f.b3_c4_askBrisk, fx:()=>{ S.f.b3_c4_askBrisk = 1; }, go:'b3_c4_start_brisk'},
@@ -396,9 +396,9 @@ It isn't a question. You don't answer it.` : ''}`,
 
 He looks back at the gap. "Some nights," he says, "a man can't sleep."
 
-${c4In('brisk') ? `Brisk, behind you, in her regiment voice, which she uses about once a season: "Then he can lie awake, Corporal. Same as the rest of us."
+${c4In('brisk') ? `Brisk, behind you, in the voice she uses about once a season: "Then he can lie awake, Corporal. Same as the rest of us."
 
-${C4.corporal} grins without anything in it. "Heavy," he says. "I can hear it." ` : ''}You know exactly what he means. So does he.`,
+${C4.corporal} shows his teeth. "Heavy," he says. "I can hear it." ` : ''}You know exactly what he means. So does he.`,
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
 
     /* ---- Sarn and her boy, at the gap ---- */
@@ -530,7 +530,7 @@ The Fourth stays clear of the palace. ${C4.corporal} was right to stop where he 
 Tuft walks close to the sergeant, which she doesn't usually do. "Something's very wrong with the warrens here," she says, low. "Not quiet. *Wrong.* Like a well somebody's dropped something in."` : ''}`,
       ch:[{t:'The Grey Swords\' barracks.', go:()=>startExplore()}]}),
     b3_c4_dannet:()=>{ const how = c4DannetHow(); return {sp:'Dannet · Grey Sword acolyte', fx:()=>{ S.f.b3_c4_dannet = 1; S.f.b3_dannetMet = 1; S.f.b3_greyswords = 1; }, txt:
-`${how === 'field' ? `You know her before she turns round. The acolyte who came down the field line with water on the day the Pannion army broke, and who poured it into every mouth that opened and did not hurry and did not duck. She is in a clean grey surcoat now, with a round shield on her back, the boar scraped off it and a wolf's head half painted over the scrape.` : how === 'camps' ? `You know her before she turns round. The acolyte who went into the Camp with you behind the Grey Sword party, and saw what the siege had done there, and told you the order of it afterward and nothing else. She has a round shield on her back now, the boar scraped off it and a wolf's head half painted over the scrape.` : `A tall, square young woman in a grey surcoat too big in the shoulders, standing in the barracks gate as if there were a wall behind her even where there isn't. Shorn hair. A round shield on her back with a boar scraped off it and a wolf's head half painted over the scrape.`}
+`${how === 'field' ? `You know her before she turns round. The acolyte who came down the field line with water on the day the Pannion army broke, and who poured it into every mouth that opened and did not hurry and did not duck. She is in a clean grey surcoat now, with a round shield on her back, the boar scraped off it and a wolf's head half painted over the scrape.` : how === 'camps' ? `You know her before she turns round. The acolyte who went into the Camp with you behind the Grey Sword party, and saw what the siege had done there, and told you the order of it afterward and nothing else. She carries a round shield now, the boar scraped off it and a wolf's head half painted over the scrape.` : `A tall, square young woman in a grey surcoat too big in the shoulders, standing in the barracks gate as if there were a wall behind her even where there isn't. Shorn hair. A round shield on her back with a boar scraped off it and a wolf's head half painted over the scrape.`}
 
 "Sergeant." Formal. A Capan accent you could cut glass with. "I am Dannet. ${how === 'new' ? `A second daughter of Capustan, and an acolyte of the Grey Swords for a year.` : `We have met.`} The company lends me to the Malazans as a guide into the Domin until the Domin is done. I know the roads south as far as Coral. I know the wells. I know which villages will have been burned." A pause. "All of them, I expect."
 
@@ -914,7 +914,7 @@ You know which shelter. You find that you will keep knowing.`,
 They sit there. The sun comes up. Neither of them says *we don't leave people*. Neither of them has to.`,
       ch:[{t:'Leave them be.', go:()=>startExplore()}]}),
     b3_c4_dannet_dawn:()=>({sp:'Dannet', txt:
-`Dannet has come along the bank from the Grey Swords' lines with her shield on her back, and is standing a little way off from the Fourth's fire, watching the row of people by the cart. "The company is recruiting by the gap this morning," she says. "I said I would see who came." She looks at you. "Send for me when you want me, Sergeant. I am a guide. I will be where I am needed."`,
+`Dannet has come along the bank from the Grey Swords' lines, and is standing a little way off from the Fourth's fire, watching the row of people by the cart. "The company is recruiting by the gap this morning," she says. "I said I would see who came." She looks at you. "Send for me when you want me, Sergeant. I am a guide. I will be where I am needed."`,
       ch:[{t:'Back to the cart.', go:()=>startExplore()}]}),
     b3_c4_road_dawn:()=>({sp:'The road east', txt:
 `The road east, to the city and the Catlin crossing beyond it. The Host marches in three days. The cart first.`,

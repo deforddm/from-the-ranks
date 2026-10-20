@@ -821,7 +821,7 @@ Or you could settle it here, among soldiers. A broken nose, his own lines by mor
 
 Caladan Brood's fire is the biggest in the halt and has the fewest people round it. Brood sits beside it on a saddle with the hammer leaning on his knee like a walking stick, and does not get up. Korlat stands at his shoulder, tall and dark and very still, and inclines her head to Whiskeyjack, and then, after a moment, to you.
 
-You tell it. In order, without anything in it that isn't so: the two lines at the well, the story at each fire, the dead calf, ${c5Proof().length ? c5ProofWords() + ', ' : ''}the man with the fur collar watching from the edge of the light.
+You tell it. In order, and only what you saw: the two lines at the well, the story at each fire, the dead calf, ${c5Proof().length ? c5ProofWords() + ', ' : ''}the man with the fur collar watching from the edge of the light.
 
 Brood listens to all of it. He doesn't move at all while he listens, and when you have finished he still doesn't, for long enough that you begin to wonder if he heard.
 
