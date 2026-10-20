@@ -4,7 +4,7 @@ const pWho = k => { const w = S.f[k]; return typeof w === 'string' && TPL[w] && 
 const pYou = id => !id || id === 'sgt' ? 'you' : NAME(id);
 const pYour = id => !id || id === 'sgt' ? 'your' : NAME(id) + '\'s';
 /* the grey cloak backs off a stand-off, but goes away with a name: shared by both "close ranks" checks at the tunnel mouth */
-const pClawNear = {t:()=>{ const w = ROLL().who; return w && w !== 'sgt' ? `He goes. But he goes looking at ${NAME(w)}, and says “${NAME(w)}” on his way past, pleasantly, as if he'd always known it. Nobody told him.` : `He goes. But he says “Another time” to you, specifically, the way a man makes an appointment.`; },
+const pClawNear = {t:()=>{ const w = ROLL().who; return w && w !== 'sgt' ? `He goes. But he goes looking at ${NAME(w)}, and says “${NAME(w)}” on his way past, pleasantly, as if he'd always known it. He was never told it.` : `He goes. But first he says “Another time” to you, specifically, and it sounds like an appointment.`; },
   fx:()=>{ S.f.p_clawNamed = ROLL().who || 'sgt'; }};
 /* the prologue's one new face on a battle map: Moreau, at the heart of the deserters' second ground (BATTLES.deserters.stage2).
    The prologue has no chapter module, so he is added to FOES here, the way registerChapter() adds a chapter's foes. */
@@ -44,7 +44,7 @@ ${by({tuft:`Tuft, having asked, has gone very still.`, _:`Behind you, Tuft has g
   // a bad question gets a warning instead of an answer: the satchel is tied the cadre way, and she will know (paid off in 'final' and Ch1's tent)
   tat_wits_fail:()=>({sp:'Tattersail', scene:'tent', fx:()=>{ S.f.p_tatKnots = 1; }, txt:
 `${by({ohl:`Ohl asks it, gently. It comes out sounding like a diagnosis, and she doesn't care for it.`,
-  tuft:`Tuft asks it, from the flap, too quietly and too exactly, the way the cadre ask. Tattersail doesn't look up.`,
+  tuft:`Tuft asks it, from the flap, too quietly and too exactly, the way the cadre ask.`,
   kettle:`"Is it maps?" Kettle asks. "Tell me it's maps." It is the wrong question in the wrong tent.`,
   sgt:`You ask it, and hear it come out as curiosity, which is the wrong thing to bring into a cadre tent.`,
   _:`{who} asks it, and it comes out as curiosity, which is the wrong thing to bring into a cadre tent.`})}
@@ -54,7 +54,7 @@ ${by({tuft:`Tuft, having asked, has gone very still.`, _:`Behind you, Tuft has g
 The cards offer you nothing more, and neither does she.`, ch:tatRest()}),
   /* ✦ the Fold: whoever watched her hands learns it (the engine grants the trick); a miss and the Deck noticed (paid off at Tuft's draw) */
   p_fold_ok:()=>({sp:'Tattersail', scene:'tent', txt:
-`She turns another card, and doesn't like that one either, and her fingers take it back into the spread so smoothly that you'd swear it never came up. Another comes up in its place. She doesn't look at it any more fondly.
+`She turns another card, and doesn't like that one either, and her fingers take it back into the spread so smoothly that you'd swear it never came up. Another comes up in its place. She likes it no better.
 
 ${by({tuft:`Tuft has been watching her hands, not the cards. Later, in the lee of Pell's wagon, she does it once with her own Deck, badly, and then again, not badly. "It lets her," she says, to the cards. "It might let me. Sometimes."`,
   ohl:`Ohl has been watching her hands the way he watches a surgeon's, for the moment the knife goes in. "It's a stitch," he says later, outside, pleased with himself. "Under, over, and the cut never shows. I'll show the child. She'll pretend she knew."`,
@@ -62,11 +62,11 @@ ${by({tuft:`Tuft has been watching her hands, not the cards. Later, in the lee o
   sgt:`You've been watching her hands, not the cards. Under, over, and the turned card is simply not there any more. You think you could do it, if a card ever came up that you couldn't live with. You think Tuft could do it better.`,
   _:`{who} has been watching her hands, not the cards. Under, over, and the turned card is simply not there any more.`})}
 
-"Don't stare, Sergeant." She doesn't look up. "It's the only trick the cadre teach, and we don't teach it. The Deck lets me. Mostly. It may not let you."`, ch:tatRest()}),
+"Don't stare, Sergeant." Her eyes stay on the spread. "It's the only trick the cadre teach, and we don't teach it. The Deck lets me. Mostly. It may not let you."`, ch:tatRest()}),
   p_fold_fail:()=>({sp:'Tattersail', scene:'tent', fx:()=>{ S.f.p_foldFail = 1; }, txt:
 `She turns another card, doesn't like it, and it goes back into the spread under ${by({sgt:'your', _:'{who}\'s'})} eyes without ever seeming to move. Another comes up.
 
-She lays one hand flat over the cards, the way you'd put a hand on a dog's head. "Don't watch the Deck do that," she says, not unkindly. "It notices. They talk to each other, Decks."${SQUAD().includes('tuft') ? `
+She lays one hand flat over the cards and keeps it there. "Don't watch the Deck do that," she says, not unkindly. "It notices. They talk to each other, Decks."${SQUAD().includes('tuft') ? `
 
 In the flap, Tuft pulls her sleeve down over her own.` : ''}`, ch:tatRest()}),
   tat_pay:()=>({sp:'Tattersail', scene:'tent', txt:
@@ -77,12 +77,12 @@ In the flap, Tuft pulls her sleeve down over her own.` : ''}`, ch:tatRest()}),
 
 She's back to her cards before you reach the flap. "Go."`,
     ch:[{t:'Leave the tent', go:()=>{ S.f.quest = 1; startExplore();
-      elog(`<em>Ohl:</em> "Nobody's good at tunnels. Some of us just come out of them."`);
+      elog(`<em>Ohl:</em> "There's no such thing as good at tunnels. Some of us just come out of them."`);
       elog(`<em>Kettle:</em> "Tunnels. Finally, something I'm good at."`); }}]}),
   tat_map:()=>({sp:'Tattersail', txt:`"North wall, Sergeant. The cards aren't getting any better while you stand there."`, ch:[{t:'Leave'}]}),
 
   pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
-`Pell has a wagon, a ledger, and the face of a man who has been asked for things all week. "Moranth don't give these away, and neither do I."
+`Pell has a wagon, a ledger, and a week's worth of being asked for things in his face. "Moranth don't give these away, and neither do I."
 
 You carry ${S.silver} silver.`,
     ch:[
@@ -117,8 +117,8 @@ You carry ${S.silver} silver.`,
         {t:'"Who\'s asking?"', go:'claw_noone'},
         {t:'Say nothing and keep walking.', fx:()=>loy('brisk',1), go:'claw_silent'}]}),
   claw_fooled:()=>({sp:'A grey cloak', fx:()=>S.f.clawFooled=1, txt:
-`${by({tuft:`"Grave detail," says Tuft, before you can, in a voice so ordinary it is barely there. She doesn't look at him. She looks at the crater, the way you'd look at a pit you've been told to fill.`,
-  kettle:`"Grave detail," says Kettle, with the total confidence of a woman who has never once been on grave detail, and adds that the Fist wants the north quarter done by morning, which she personally thinks is optimistic.`,
+`${by({tuft:`"Grave detail," says Tuft, before you can, in a voice so ordinary it is barely there. She keeps her eyes on the crater and measures it for shovels.`,
+  kettle:`"Grave detail," says Kettle, who has never once been on grave detail, with total confidence, and adds that the Fist wants the north quarter done by morning, which she personally thinks is optimistic.`,
   sgt:`"Grave detail," you say.`, _:`"Grave detail," says {who}.`})}
 
 "Grim work. Hood keeps a long ledger." He looks back into the crater. When you glance over again, he isn't there.${by({tuft:`
@@ -155,11 +155,11 @@ Tuft doesn't let her breath go until the rubble line.`, _:''})}`, ch:[{t:'Move o
   approach:()=>({sp:'North sapper tunnel', fx:()=>{S.bg='tunnel';}, scene:'tunnel', txt:
 `Forty paces in, lamplight. Voices. Four figures crouch around a collapsed timber, prying at something with a spear-butt: Malazan kit, company badges cut off. Deserters.
 
-Nobody has seen you yet.`,
+They haven't seen you yet.`,
     ch:[
       // knowing Garrow's word is what makes this one easy; the edge says so out loud
       {t:'Call Moreau by name, and give them Garrow\'s word.', req:()=>S.f.knowDeserters, fx:()=>{S.f.garrowWord=1;}, check:['guile',14], edges:()=>[['Garrow\'s word', 4]],
-        near:{t:()=>S.f.p_moreauPaid ? `They go. The last of them stops at the edge of the light with his hand out, and Garrow's word turns out to be worth ${['','one','two','three'][S.f.p_moreauPaid]} silver to a man with a long way to run.` : `They go. The last of them stops at the edge of the light with his hand out, finds nothing worth taking, and spits on ${pYour(ROLL().who)} boots instead. It stays with ${pYou(ROLL().who)}: −1 on the next check.`,
+        near:{t:()=>S.f.p_moreauPaid ? `They go. The last of them stops at the edge of the light with his hand out, and Garrow's word turns out to be worth ${['','one','two','three'][S.f.p_moreauPaid]} silver to a man with a long way to run.` : `They go. The last of them stops where the lamplight gives out, with his hand out, finds nothing worth taking, and spits on ${pYour(ROLL().who)} boots instead. It stays with ${pYou(ROLL().who)}: −1 on the next check.`,
           fx:()=>{ const p = Math.min(3, S.silver); S.silver -= p; S.f.p_moreauPaid = p; if (!p) S.rattled[ROLL().who] = 1; }},
         go:'desert_flee', fail:'p_desert_named'},
       {t:'Talk them down.', check:['guile',14], edges:id => [id === 'kettle' && ['her satchel does half the talking', 1]],
@@ -170,10 +170,10 @@ Nobody has seen you yet.`,
         fx:()=>{S.inv.sharper--; S.f.noisy=1;}, go:()=>startBattle('deserters',{pre:true})}]}),
   desert_flee:()=>({sp:'North sapper tunnel', txt:
 `${by({tuft:`"Moreau." Tuft doesn't raise her voice; she doesn't have to. "Garrow says the Fist is still counting heads." Every head in the lamplight turns the wrong way, looking for her.`,
-  kettle:`"Moreau!" Kettle, cheerfully, as if hailing a barge. "Garrow says the Fist is still counting heads! He says hello." A pause. "He didn't say hello."`,
-  brisk:`"Moreau." Brisk, in the regiment voice, the one that carries down a line of shields. "Garrow says the Fist is still counting heads."`,
-  sgt:`"Moreau!" Your voice goes down the tunnel ahead of you. "Garrow says the Fist is still counting heads."`,
-  _:`"Moreau!" {who} calls down the tunnel. "Garrow says the Fist is still counting heads."`})}
+  kettle:`"Moreau!" Kettle, cheerfully, as if hailing a barge. She gives them Garrow's word, and adds that he says hello. A pause. "He didn't say hello."`,
+  brisk:`"Moreau." Brisk, in the regiment voice, the one that carries down a line of shields, and then Garrow's word, every syllable of it.`,
+  sgt:`"Moreau!" Your voice goes down the tunnel ahead of you, and Garrow's word goes after it.`,
+  _:`"Moreau!" {who} calls down the tunnel, and gives them Garrow's word.`})}
 
 The lamp swings round. A long silence, then a thin voice: "Garrow's alive?" Then boots, running, the other way. One of them leaves the lamp behind.
 
@@ -182,19 +182,19 @@ Brisk watches them go. "Malazans running from Malazans. Hood's laughing somewher
     ch:[{t:'Press on', go:'deep1'}]}),
   // Garrow's word, said wrong: one of them runs for the surface with Garrow's name (garrow_again, Ch1's pits and close)
   p_desert_named:()=>({sp:'North sapper tunnel', fx:()=>{ S.f.p_garrowCrossed = 1; }, txt:
-`${by({tuft:`"Moreau. Garrow says the Fist is still counting heads." Tuft says it too softly, and it comes out sounding like a question.`,
-  kettle:`"Moreau!" Kettle, cheerfully, as if hailing a barge. "Garrow says the Fist is still counting heads!" It echoes. It goes on echoing.`,
-  brisk:`"Moreau." Brisk, in the regiment voice. "Garrow says the Fist is still counting heads." It sounds like an arrest.`,
-  sgt:`"Moreau!" you call. "Garrow says the Fist is still counting heads." It sounds like an arrest.`,
-  _:`"Moreau!" {who} calls. "Garrow says the Fist is still counting heads." It sounds like an arrest.`})}
+`${by({tuft:`"Moreau." Tuft gives them Garrow's word too softly, and it comes out sounding like a question.`,
+  kettle:`"Moreau!" Kettle, at the top of her voice, and Garrow's word after it. It echoes. It goes on echoing.`,
+  brisk:`"Moreau." Brisk gives them Garrow's word in the voice for reading out charges. It sounds like an arrest.`,
+  sgt:`"Moreau!" you call, and give them Garrow's word. It comes out sounding like an arrest.`,
+  _:`"Moreau!" {who} calls, and gives them Garrow's word. It sounds like an arrest.`})}
 
 The lamp swings round. A long silence, then a thin voice: "Garrow's alive?" And another, not thin at all: "Then Garrow's got a mouth on him."
 
-One of them is already running, back the way you came, toward the surface, the way a man runs who has somewhere to be. The other three come for you.`,
+One of them is already running, back the way you came, toward the surface, with somewhere to be. The other three come for you.`,
     ch:[{t:'Fight', go:()=>startBattle('deserters',{drop:[0]})}]}),
   // the two who back away go deeper, not up: they fetch Moreau (the second ground)
   desert_half:()=>({sp:'North sapper tunnel', fx:()=>{ S.f.p_desertHalf = 1; }, txt:
-`${by({tuft:`Tuft steps into the light with empty hands and talks to them the way you'd talk to a dog you don't know: low, level, nothing sudden. She tells them the roof is coming down. She sounds like someone who would know.`,
+`${by({tuft:`Tuft steps into the light with empty hands and talks to them low and level. Nothing sudden. She tells them the roof is coming down. She sounds like someone who would know.`,
   kettle:`Kettle steps into the light with her hands empty and her satchel very much not, and explains, with total confidence, which of the beams over their heads she has already wired. None of them. She is very specific about which.`,
   sgt:`You step into the light with empty hands and a sergeant's voice.`,
   _:`{who} steps into the light with empty hands and talks, low and level, about the Fist, and the gallows, and the long way round.`})} Two of them look at each other, then at your sapper's satchel, and back away into the dark. The other two have come too far to go back.`,
@@ -230,16 +230,16 @@ The dark between you and Varrow moves, the way water moves when something under 
           go:'journal_read', fail:'journal_blur'},
         {t:'"Leave it closed. Not our business."', fx:()=>{loy('brisk',1); loy('tuft',-1);}, go:'journal_closed'}]}),
   journal_read:()=>({sp:'Varrow\'s journal', fx:()=>{S.f.knowTruth=1; S.f.p_reader = ROLL().who || 'sgt'; loy('tuft',1);}, txt:
-`${by({ohl:`Ohl holds the page out at arm's length to the lantern, the way old men read, and reads it aloud in a low voice, and stops.`,
+`${by({ohl:`Ohl holds the page out at arm's length to the lantern, squinting, and reads it aloud in a low voice, and stops.`,
   tuft:`Tuft takes the page before anyone can tell her not to. She reads it once. She reads it again.`,
   kettle:`Kettle reads it with a finger under each line and her lips moving, the way she reads a Moranth seal.`,
   sgt:`Varrow's hand is small and careful.`, _:`{who} reads it by the lantern. Varrow's hand is small and careful.`})} Times. Positions. An order relayed through the High Mage's staff that moved the cadre forward, and a line underlined twice:
 
 *Moved before the Spawn attacked. Not after.*
 
-${by({tuft:`Tuft stops breathing. Then she starts again, and hands you the page open, the way you'd hand someone a knife: handle first.`, _:`Behind you, Tuft stops breathing. Then she starts again.`})}${S.f.p_deserterWords ? `
+${by({tuft:`Tuft stops breathing. Then she starts again, and hands you the page by one corner, turned the right way up for you.`, _:`Behind you, Tuft stops breathing. Then she starts again.`})}${S.f.p_deserterWords ? `
 
-Nobody says *ask your High Mage where the rest of it went*. Nobody has to.` : ''}`,
+*Ask your High Mage where the rest of it went.* It doesn't need saying.` : ''}`,
     ch:[{t:'Close it. Head for the surface.', go:()=>talk(S.f.clawFooled ? 'final' : 'claw2')}]}),
   journal_blur:()=>({sp:'Varrow\'s journal', fx:()=>S.f.partial=1, txt:
 `${by({ohl:`Ohl peels the oilcloth back with a healer's fingers, and it isn't enough.`,
@@ -257,7 +257,7 @@ Nobody says *ask your High Mage where the rest of it went*. Nobody has to.` : ''
 `The grey cloak from the crater is waiting at the tunnel mouth, leaning on the shoring as if he's been part of it since the siege. His boots are still clean.
 
 "Grave detail," he says pleasantly${S.f.p_clawDoubt ? '' : `, though nobody said those words to him at the crater`}. "Find anything heavy? I'd be glad to carry it."` :
-`A man in a grey cloak is waiting at the tunnel mouth, leaning on the shoring as if he's been part of it since the siege. His boots are clean. Nobody's boots are clean.
+`A man in a grey cloak is waiting at the tunnel mouth, leaning on the shoring as if he's been part of it since the siege. His boots are clean, in a city where nothing is.
 
 "Grave detail," he says pleasantly, before you can. "Find anything heavy? I'd be glad to carry it."`) + (S.f.p_clawDoubt ? `
 
@@ -304,7 +304,7 @@ It's her munitions ledger. "He can have it," she says. "I know where every cusse
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div>`, oncard:['herald',false],
     after:`"Then the High Mage will have it by morning," she says. "Go and get some sleep, Sergeant. Somebody should."`,
     ch:[{t:'Leave the tent', go:()=>finish('claw')}]} : {sp:'Tattersail', scene:'tent', txt:
-`Back in the tent, the cards are exactly where she left them. Tattersail takes the satchel in both hands, the way you'd take something out of a fire.${marks ? `
+`Back in the tent, the cards are exactly where she left them. Tattersail takes the satchel in both hands, quickly, and holds it against her.${marks ? `
 
 ${marks}` : ''}
 

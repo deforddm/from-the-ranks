@@ -293,7 +293,7 @@ const AB = {
       if (await forcedMove(t, to, 'driven')) { if (B && u.hp > 0 && free(left.x, left.y, u)) offerFollow(u, left, t); return; }
       if (B && u.hp > 0 && (t.x !== left.x || t.y !== left.y) && free(left.x, left.y, u)) offerFollow(u, left, t);
       if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); } }},
-  ropeswing:{name:'Rope Swing', free:true, desc:()=>`Once a turn, and it does not use his action: swing to any open tile within ${3 + lvT()}. Nobody gets a free swing. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
+  ropeswing:{name:'Rope Swing', free:true, desc:()=>`Once a turn, and it does not use his action: swing to any open tile within ${3 + lvT()}. No free swings. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
     tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 3 + lvT() && free(x,y,u) && !(x === u.x && y === u.y) && sees(u,{x,y})) out.push({x,y,step:true}); return out; },
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#b0a0c8', .4); u.x = x; u.y = y; sparks(x, y, 8, '#b0a0c8', .4); blog(`${u.name} throws the hook at something high and goes with it.`); enterFire(u); updBattleUI(); }},
   /* talents (level 3 picks) */

@@ -52,7 +52,7 @@ Object.assign(AB, {
       const grit = (f, n) => { sparks(f.x, f.y + .1, n, '#6b5a40', .9); sparks(f.x, f.y + .1, Math.round(n/2), '#a8946c', .6); };
       u.facing = t.x >= u.x ? 1 : -1; AUDIO.play('rumble'); B.fx.push({kind:'ring', x:u.x, y:u.y, col, t:now, dur:pace(600)}); sparks(u.x, u.y + .2, 6, col, .3);
       B.fx.push({kind:'teeth', x:t.x, y:t.y, col, seed, t:now + pace(120), dur});
-      blog(`${u.name} shakes the rattle of dog's teeth at the ground under ${t.name} and asks it, in Foolish Dog, the way you would ask a strange dog.`);
+      blog(`${u.name} shakes the rattle of dog's teeth at the ground under ${t.name} and asks it, in Foolish Dog, very politely.`);
       later(() => { if (B && t.hp > 0) grit(t, 10); }, pace(120) + dur*.2);
       later(() => { if (!B) return; AUDIO.play('chomp'); shakeMap(); grit(t, 14); }, pace(120) + snapAt);
       const god = t.id === 'b2_godrider'; // the ground has eaten most of the Semk god already, beyond the Sekala; it knows the taste
@@ -126,7 +126,7 @@ b2Area(6, 'b2_geleen').npcs.push({id:'p_keth', name:'Keth', kind:'warlock', x:10
 const B2_OFF = {
   redblade:{2:`Ramin is with what is left of the Red Blades' file on the bank, polishing the red of his scale.`,
     3:`Ramin is at the Red Blades' fire below the ridge camp with the other horseless men, polishing the red of his scale by a cattle-fire. He is the only one of them still doing it.`,
-    4:`Ramin is standing with the Red Blades' file at the edge of the ring of carts, very straight, looking at the nobles' carriages the way a man looks at a tavern he once lost a fight in.`,
+    4:`Ramin is standing with the Red Blades' file at the edge of the ring of carts, very straight, looking at the nobles' carriages with his jaw set.`,
     5:`Ramin is walking the edge of the trees with the Red Blades' horseless file, in his scale, in the heat, because a Red Blade does not take it off for the weather.`,
     6:`Ramin is with the Red Blades' file in the hills, counting the company's dead out loud at dusk. It takes longer every night.`,
     7:`Ramin is at the Red Blades' fire in Balahn, polishing the red of his scale a scale at a time. He puts the cloth down when he sees you.`},
@@ -171,14 +171,14 @@ He winces, as if somebody had kicked him under a table. "Sorry. She does that."
 
 The old woman, out of his mouth: "A little. He says a little."
 
-"She was a witch of the Foolish Dog for sixty years," he says, "and she has been in me for two, and she would like everyone to know which of those was worse." He looks at the squad, one at a time, the way a dog-boy looks at a new herd. "I can ask the ground for things. Small things. It does not always answer. She can take a wound out of one of you and give it to somebody who deserves it more. She likes that one. She calls it a bargain." A pause. "Nobody has ever got the better of her in one."`,
+"She was a witch of the Foolish Dog for sixty years," he says, "and she has been in me for two, and she would like everyone to know which of those was worse." He looks at the squad, one at a time, counting. "I can ask the ground for things. Small things. It does not always answer. She can take a wound out of one of you and give it to somebody who deserves it more. She likes that one. She calls it a bargain." A pause. "Nobody has ever got the better of her in one."`,
     ch:[{t:b2In('redblade') ? '"Walk with us, Keth. Ramin goes back to his file."' : '"Third Squad. If you want it."', go:'b2_keth_yes'},
         {t:'"Not now. Walk near us. We may need you."', go:'b2_keth_later'},
         {t:'"No. Go back to Sormo."', go:'b2_keth_no'}]}),
   b2_keth_yes:()=>({sp:'Keth', fx:()=>{ b2SwapIn('warlock'); loy('warlock', 1); if (b2In('sathi')) loy('sathi', 1); if (b2In('tangle')) loy('tangle', -1); }, txt:
 `"Third Squad," he says, trying it, and the old woman says it after him, as if correcting his accent. He goes and sits down at the end of the line with his palms flat on the ground, and that seems to be how a Foolish Dog joins anything.
 
-${b2In('sathi') ? `Hackle barks, once, and goes and lies down across his feet. Sathi looks at the dog for a long moment. "Traitor," she tells it, in Wickan. Hackle thumps his tail.` : 'A dog from somewhere in the column comes and lies down across his feet. Then another one.'}${b2In('redblade') ? `\n\nRamin, at the end of the line, sees how it is before you say anything. He salutes, Malazan style, very correctly. "A lent sword goes where it is carried," he says, "and today it is carried back to its file." He goes down the bank to what is left of the Red Blades. "Near, Sergeant. Ask at any fire."` : ''}${b2In('tangle') ? `\n\nTangle moves round, quietly, to stand upwind of him. "Nothing personal," he says. "I like things to stay buried when I bury them."` : ''}${b2In('marrow') ? `\n\nMarrow looks at the blood on his sleeve. "Not yours?" He shakes his head. "Then sit," she says, "and give me your hands," and checks them anyway.` : ''}`,
+${b2In('sathi') ? `Hackle barks, once, and goes and lies down across his feet. Sathi looks at the dog. "Traitor," she tells it, in Wickan. Hackle thumps his tail.` : 'A dog from somewhere in the column comes and lies down across his feet. Then another one.'}${b2In('redblade') ? `\n\nRamin, at the end of the line, sees how it is before you say anything. He salutes, Malazan style, very correctly. "A lent sword goes where it is carried," he says, "and today it is carried back to its file." He goes down the bank to what is left of the Red Blades. "Near, Sergeant. Ask at any fire."` : ''}${b2In('tangle') ? `\n\nTangle moves round, quietly, to stand upwind of him. "Nothing personal," he says. "I like things to stay buried when I bury them."` : ''}${b2In('marrow') ? `\n\nMarrow looks at the blood on his sleeve. "Not yours?" He shakes his head. "Then sit," she says, "and give me your hands," and checks them anyway.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_keth_later:()=>({sp:'Keth', fx:()=>{ S.f.b2_kethDone = 2; }, txt:
 `He shrugs, the Wickan way, with one shoulder. "Near, then. I walk by your stretch anyway. The ground does not care which fire I sit at." The old woman adds, out of his mouth: "It cares a little."
@@ -190,7 +190,7 @@ He goes back down the bank to the Foolish Dog's horses and sits among them with 
 
 The old woman says something in Foolish Dog as he goes. ${b2In('sathi') ? 'Sathi will not translate it. She is trying not to laugh.' : 'It is plainly about you. It does not sound like a compliment.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_keth_again:()=>({sp:'Keth', txt:`Keth is down among the Foolish Dog's horses with his palms flat on the bank. He does not look up.`, ch:[{t:'Leave him.', go:()=>startExplore()}]}),
+  b2_keth_again:()=>({sp:'Keth', txt:`Keth is down among the Foolish Dog's horses with his palms flat on the bank.`, ch:[{t:'Leave him.', go:()=>startExplore()}]}),
 });
 
 /* ---------------- the swap, at any fire: Ramin or Keth, asked back ---------------- */
@@ -268,7 +268,7 @@ The old woman, out of his mouth: "It knows. Gods always know. They only behave a
 "If you meet it," he says, "do not let it put the paint on you. And bring me close. The ground remembers what it tasted. It will want the rest."`,
     ch:[{t:'"Then listen for us tonight."', fx:()=>{ S.f.b2_keth3 = 'listen'; loy('warlock', 1); }, go:'b2_keth3b'},
         {t:'"You\'ll get your turn."', fx:()=>{ S.f.b2_keth3 = 'turn'; }, go:'b2_keth3c'}]}),
-  b2_keth3b:()=>({sp:'Keth', txt:`He looks at you for a long moment, and then down at his hands. "Yes," he says. "I will listen. If it lets go of anyone, I will know." He presses his palms flatter into the ground, as if he could hold it up from here. Perhaps he can. He does not sleep all night.`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_keth3b:()=>({sp:'Keth', txt:`He looks at you, and then down at his hands. "Yes," he says. "I will listen. If it lets go of anyone, I will know." He presses his palms flatter into the ground, as if he could hold it up from here. Perhaps he can. He does not sleep all night.`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_keth3c:()=>({sp:'Keth', txt:`"Not if I can help it," says the old woman, before he can answer. He opens his mouth to argue with her and shuts it again. It is plainly an old argument, and she has plainly never lost it.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 });
 { const f = B2CH3.dlg.b2_raid_back; B2CH3.dlg.b2_raid_back = () => { const n = f(); if (!b2In('warlock')) return n;
@@ -282,7 +282,7 @@ Except Keth. He is sitting on the bare patch where the other boy sat before the 
 
 Wicket, flat in the mouth of the cut:`); }; }
 { const g = B2CH3.dlg.b2_raid_back; B2CH3.dlg.b2_raid_back = () => { const n = g(); if (!b2In('warlock')) return n;
-  n.txt += `\n\nBehind you Keth says, to nobody, "Not for much longer."${S.f.b2_kethBitGod ? ` He is looking at his own hands as if they had eaten something, and were not sure yet whether it agreed with them. The old woman, out of him, quite satisfied: "It did. Wash them."` : ` The old woman doesn't say anything at all.`}`; return n; }; }
+  n.txt += `\n\nBehind you Keth says, to nobody, "Not for much longer."${S.f.b2_kethBitGod ? ` He is looking at his own hands as if they had eaten something, and were not sure yet whether it agreed with them. The old woman, out of him, quite satisfied: "It did. Wash them."` : ` The old woman, for once, keeps her opinion to herself.`}`; return n; }; }
 { const f = B2CH3.dlg.b2_water; B2CH3.dlg.b2_water = () => { const n = f(); if (!b2In('warlock')) return n;
   n.txt = n.txt.replace(/(He says it like a man who(?:'s| is) hoping\.["`]?)/, `$1
 
@@ -350,7 +350,7 @@ He sits up. "But there is water. Under the roots, there. The ground knows where.
           near:{t:()=>`Yes, but something older than the ground turned over in its sleep while he asked, and the cold of it went up through his palms: Keth starts the next fight ${bruiseN()} health down.`, fx:()=>bruise('warlock', bruiseN())},
           go:'b2_keth5_ok', fail:'b2_keth5_no'}, {t:'"Leave it sleeping. We\'ll manage."', go:()=>startExplore()}]}),
   b2_keth5_ok:()=>({sp:'Keth', fx:()=>{ if (!S.f.b2_keth5) { S.f.b2_keth5 = 'water'; chain(2, 0, 'A seep under the roots, where the ground showed Keth'); } }, txt:
-`He puts the rattle down and his palms flat, and asks, in Foolish Dog, slowly, for a long time. Then he gets up and walks twenty paces into the trees and kicks at the leaf-litter between two roots, and it is dark, and then it is wet, and then it is a seep, cold, clean, filling a hollow the size of a helm.
+`He puts the rattle down and his palms flat, and asks, in Foolish Dog, slowly, and keeps asking. Then he gets up and walks twenty paces into the trees and kicks at the leaf-litter between two roots, and it is dark, and then it is wet, and then it is a seep, cold, clean, filling a hollow the size of a helm.
 
 "It says you may have it," he says, "because you asked. It says nobody has asked it anything for a very long time." The old woman: "Fill the skins before it changes its mind."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -384,16 +384,16 @@ And then the old woman, out of his mouth, as dry as the Odhan: "I have died once
         edgesGo:[['the Fist\'s order', 2]],
         edgesStay:[['the grandmother wants it', 2]]})}; },
   b2_p_keth_stay:()=>({sp:'Keth', fx:()=>b2Settle('warlock', true), txt:
-`${b2HowSaid('warlock') === 'asked' ? `He looks at you for a long time. "Yes," he says at last, and it is his own voice, and then the old woman says it too, a breath behind him, like the funeral laugh. "Yes."` : `"Ha," says the old woman, out of him, enormously satisfied. Keth shuts his eyes. "Yes," he says. "All right. Yes."`}
+`${b2HowSaid('warlock') === 'asked' ? `He looks at you. "Yes," he says at last, and it is his own voice, and then the old woman says it too, a breath behind him, like the funeral laugh. "Yes."` : `"Ha," says the old woman, out of him, enormously satisfied. Keth shuts his eyes. "Yes," he says. "All right. Yes."`}
 
 He takes something off the thong at his neck and puts it in your hand: a dog's tooth, yellow, worn smooth. "My first dog's," he says. "I do not wear it. Give it to the Weasel's dog, when he is old. He will know what it is for."
 
 He walks east toward the Seventh's fires with his rattle going at his hip, two voices arguing in one mouth, and halfway up the rise both of them laugh.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_p_keth_go:()=>({sp:'Keth', fx:()=>b2Settle('warlock', false), txt:
-`${b2HowSaid('warlock') === 'asked' ? `He nods, slowly. "A warlock who can still hear," he says. "Yes. Nil cannot, now. Nether hears too much." The old woman says nothing for a while. Then: "Fine. Fine. Herd your cattle, then."` : b2HowSaid('warlock') === 'talked' ? `"An order," he says. "Yes." The old woman, out of him, sour: "I have never once in my life done what a Fist said." "You are not in your life," Keth tells her. "You are in mine."` : `"Then I go," he says, and the old woman says nothing at all, which from her is an argument lost.`}
+`${b2HowSaid('warlock') === 'asked' ? `He nods, slowly. "A warlock who can still hear," he says. "Yes. Nil cannot, now. Nether hears too much." The old woman sulks first. Then: "Fine. Fine. Herd your cattle, then."` : b2HowSaid('warlock') === 'talked' ? `"An order," he says. "Yes." The old woman, out of him, sour: "I have never once in my life done what a Fist said." "You are not in your life," Keth tells her. "You are in mine."` : `"Then I go," he says, and the old woman says nothing at all, which from her is an argument lost.`}
 
-"Then I walk on with the people," he says, "and listen to the ground for them all the way to Aren." He looks east, where the Seventh's fires are, for a long time. "She says to tell the Fist she would have stayed. I will not tell him that. He knows."`,
+"Then I walk on with the people," he says, "and listen to the ground for them all the way to Aren." He looks east, where the Seventh's fires are. "She says to tell the Fist she would have stayed. I will not tell him that. He knows."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 });
 B2_SPLIT.push('warlock');
@@ -411,7 +411,7 @@ Object.assign(B2CH7.dlg, {
 
 "Nil has not spoken since the Geleen," he says. "Nether feels the Seventh. All of it. Every one that dies, back there, behind us. She says it is like being stung." He turns the rattle over. "I feel the ground. Only the ground. It is setting a table, Sergeant, out on that road to Aren. A long one."
 
-The old woman, out of him, quietly, which is how you know it is bad: "Walk fast tomorrow, Malazan. Do not stop to look at anything."`,
+The old woman, out of him, low, with none of her usual relish: "Walk fast tomorrow, Malazan. Do not stop to look at anything."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_keth7b:()=>({sp:'Keth', fx:()=>{ S.f.b2_keth7bDone = 1; }, txt:
 `Keth is sitting at the bottom of the wall stair with his back to the stone. Everybody else is going up. He is not.
@@ -436,12 +436,12 @@ He puts two fingers on your back, briefly, the way he does in a fight, and goes 
 /* the evening after the Barrow: Keth goes to the children if he is with the squad; whoever is near, not with, goes their own way too */
 { const f = B2CH7.dlg.b2_evening; B2CH7.dlg.b2_evening = () => { const n = f(), rOff = b2AllyOff('redblade') && S.f.b2_raminDone === 1, kOff = b2AllyOff('warlock') && S.f.b2_kethDone === 1;
   if (rOff) n.txt += `\n\nAt the end of the rank, on foot, the only one of them with no horse, is Ramin. He sees you on the stair. He does not leave the rank; a Red Blade in rank does not. But his hand comes off the buckle, once, flat, the way you would show a sergeant that the sword is clean. Then the provosts close round them, and the red goes out of the square.`;
-  if (kOff) n.txt += `\n\nDown at the horse lines the Wickan children are sitting by their horses with their faces shut, and among them, with his palms flat on the paving, is Keth. He does not look up. You think the old woman in him is saying the names.`;
+  if (kOff) n.txt += `\n\nDown at the horse lines the Wickan children are sitting by their horses with their faces shut, and among them, with his palms flat on the paving, is Keth. His lips are moving. You think the old woman in him is saying the names.`;
   if (rOff || kOff) { const fx = n.fx; n.fx = () => { if (fx) fx(); if (rOff) S.f.b2_raminGone = 1; if (kOff) S.f.b2_kethGone = 1; }; }
   if (b2In('warlock')) n.ch = [{t:'Keth.', go:'b2_keth_go'}];
   return n; }; }
-{ const f = B2CH7.dlg.b2_wall_crows; B2CH7.dlg.b2_wall_crows = () => { const n = f(); if (b2In('warlock')) n.txt += `\n\nKeth is beside you with both palms flat on the parapet, the stone, as if it were ground. His eyes are shut. "He is still alive," the old woman says, out of him, quite steady, to nobody. "He is still alive. He is still—" And then she does not say anything, and the boy is crying, and you do not ask.`; return n; }; }
-Object.assign(B2_BAR7, {warlock:()=>`Keth is behind the shields with his palms flat on the mound, which is the oldest ground he has ever touched, and the most crowded. The old woman is talking to it, out of him, steadily, the way you would talk to a dog that is about to be asked for everything. "Not yet," she is telling it. "Not yet. Not these."`});
+{ const f = B2CH7.dlg.b2_wall_crows; B2CH7.dlg.b2_wall_crows = () => { const n = f(); if (b2In('warlock')) n.txt += `\n\nKeth is beside you with both palms flat on the stone of the parapet, listening to it anyway. His eyes are shut. "He is still alive," the old woman says, out of him, quite steady, to nobody. "He is still alive. He is still—" And then she does not say anything, and the boy is crying, and you do not ask.`; return n; }; }
+Object.assign(B2_BAR7, {warlock:()=>`Keth is behind the shields with his palms flat on the mound, which is the oldest ground he has ever touched, and the most crowded. The old woman is talking to it, out of him, low and steady, coaxing it. "Not yet," she is telling it. "Not yet. Not these."`});
 Object.assign(B2_BAREND7, {warlock:()=>`When the crows come down Keth looks up at them, and laughs, the funeral laugh, a breath late, the way he always did; and this time the old woman laughs with him, at the same moment, in the same breath, and then there is only one voice, and you could not say whose it is.`});
 /* the end of the book: Keth with the children, if he went to them (from the squad, or from near it) */
 { const g = B2FIN.gone; B2FIN.gone = (id, key) => {

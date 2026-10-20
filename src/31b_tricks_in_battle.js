@@ -18,7 +18,7 @@ Object.assign(AB, {
       blog(`${u.name} sings the Rhivi words for the dead, low, the way Sethand's people sing them. The grass in them carries ${near.length > 1 ? 'the squad' : u.name} a little way.`); }},
   t_pull:{name:TRICKS.pull.name, trick:'pull', self:true, free:true, desc:()=>'Spin the coin: this turn\'s attack rolls twice and keeps the better. The Lord pushes back: the squad\'s next check is −2. Does not use the action.',
     ok:u=>!B.acted && u.luckyTurn !== B.turn,
-    run(u){ u.luckyTurn = B.turn; S.push = 1; AUDIO.play('coin'); float(u, 'the Lady pulls', '#e8c073'); sparks(u.x, u.y, 10, '#e8c073', .4); blog(`${u.name} spins a coin on a thumbnail and does not look at how it lands.`); }},
+    run(u){ u.luckyTurn = B.turn; S.push = 1; AUDIO.play('coin'); float(u, 'the Lady pulls', '#e8c073'); sparks(u.x, u.y, 10, '#e8c073', .4); blog(`${u.name} spins a coin on a thumbnail and pockets it without checking the face.`); }},
   t_bluefire:{name:TRICKS.bluefire.name, trick:'bluefire', boom:true, aoe:1, range:4, desc:()=>TRICKS.bluefire.fx,
     run(u,x,y){ const pt = scatter(u,x,y,1,1); throwArc(u, pt, () => {
       const caught = B.units.filter(v => v.hp > 0 && cheb(v, pt) <= 1); caught.forEach(v => { v.dazzleUntil = B.round + 1; });
@@ -30,7 +30,7 @@ Object.assign(AB, {
   t_rope:{name:TRICKS.rope.name, trick:'rope', free:true, desc:()=>TRICKS.rope.fx,
     tiles:u=>party().filter(p => p !== u && !p.ally && cheb(u,p) <= 5 + lvT()),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; const ux = u.x, uy = u.y; sparks(ux, uy, 10, '#9a86e0', .4); sparks(t.x, t.y, 10, '#9a86e0', .4);
-      u.x = t.x; u.y = t.y; t.x = ux; t.y = uy; AUDIO.play('shadow'); B.moved = true; blog(`${u.name} and ${t.name} are each where the other was. Nobody saw the rope.`); }},
+      u.x = t.x; u.y = t.y; t.x = ux; t.y = uy; AUDIO.play('shadow'); B.moved = true; blog(`${u.name} and ${t.name} are each where the other was. The enemy never saw the rope.`); }},
   t_otataral:{name:TRICKS.otataral.name, trick:'otataral', desc:()=>TRICKS.otataral.fx,
     tiles:u=>foes().filter(f => cheb(u,f) <= 3 + lvT() && !f.otat && sees(u,f)),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.otat = true; AUDIO.play('burner', .4); sparks(t.x, t.y, 18, '#c8644a', .5); float(t, 'otataral', '#e0846a');
@@ -40,7 +40,7 @@ Object.assign(AB, {
   t_dark:{name:TRICKS.dark.name, trick:'dark', sorcery:true, elder:true, aoe:1, range:5, smoke:true, darkness:true, desc:()=>TRICKS.dark.fx,
     run(u,x,y){ const pt = {x, y}; AUDIO.play('shadow'); sparks(x, y, 22, '#3a3070', .5);
       for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) if (!solid(x+dx, y+dy)) B.smoke.push({x:x+dx, y:y+dy, until:B.round + 2 + lvAt(5), dark:true, g:'d' + B.turn + ':' + x + ',' + y});
-      blog(`${u.name} says nothing and inclines their head. Kurald Galain comes down over the ${placeWord(B.def)} like a cloak over a lamp.`);
+      blog(`${u.name} inclines their head. Kurald Galain comes down over the ${placeWord(B.def)} like a cloak over a lamp.`);
       updBattleUI(); afterAct(); }},
   t_rime:{name:TRICKS.rime.name, trick:'rime', sorcery:true, elder:true, desc:()=>TRICKS.rime.fx,
     tiles:u=>foes().filter(f => cheb(u,f) <= 4 && sees(u,f)),
