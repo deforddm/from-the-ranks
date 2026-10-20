@@ -29,6 +29,8 @@ export const FAMILIES = [
   {id:'regvoice', name:'"the regiment voice"', re:/regiment voice/gi, cap:4},
   {id:'heads', name:'"the fist is still counting heads"', re:/still counting heads/gi, cap:4},
   {id:'knife', name:'"a pause you could fit a knife into"', re:/pause you could fit/gi, cap:2},
+  {id:'eyes', name:'"her eyes stay on…" / "keeps his eyes on…" (the v6.14 replacement that became its own tic)', re:/\beyes (stay|stays|stayed) on|keeps? (her|his|their) eyes/gi, rate:0.6},
+  {id:'unsaid', name:'"goes unsaid" / "doesn\'t need saying" / "goes unmentioned"', re:/goes un(said|mentioned|claimed|read|answered)|(doesn't|does not) need saying/gi, cap:2},
   {id:'without', name:'"without anything in it (that isn\'t…)"', re:/without anything in it/gi, cap:2},
 ];
 const strip = t => t.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' ')).replace(/^\s*\/\/.*$/gm, '');
