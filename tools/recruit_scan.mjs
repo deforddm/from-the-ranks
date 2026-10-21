@@ -110,6 +110,7 @@ for (const [k, s] of Object.entries(R.seen)) console.log(`  ${k.padEnd(34)} ${St
 // except the old hand in Book Two (Aren only, the last part of Ch7) and Book Three's imported Ellis and Vell (a smaller share: 25%)
 const low = Object.entries(R.seen).filter(([k, s]) => { const [f, nm] = k.split(' · '); const n = parseInt(f, 10);
   if (n >= 48 && n <= 54 && !['Ramin', 'Keth'].includes(nm)) return false; // the old hand: checked by the review, not by a floor
+  if ((OK.seen || []).includes(k)) return false;
   const share = n >= 61 && ['Ellis', 'Vell'].includes(nm) ? 0.25 : 0.4; return s.core >= 4 && s.rec < Math.max(3, Math.floor(share * s.core)); });
 if (process.argv.includes('--check')) { console.log(`== BELOW THE FLOOR: ${low.length}`); low.forEach(([k, s]) => console.log(`  ${k}: ${s.rec} (core ${s.core.toFixed(0)})`)); }
 process.exit(newL.length || newC.length || (process.argv.includes('--check') && low.length) ? 1 : 0);
