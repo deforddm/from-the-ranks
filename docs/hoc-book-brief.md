@@ -1,6 +1,6 @@
 # Book Four: *Unblooded*, the book brief (Chapters 1–7)
 
-Tue Oct 20, 2026, 11:20 PM PDT. Against the Book Four engine on branch `book4` (bb1d8ff onward; v7.0.0, not shipped). This is the standing work order for every chapter of Book Four, beside *House of Chains*.
+Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (bb1d8ff onward; v7.0.0, not shipped). This is the standing work order for every chapter of Book Four, beside *House of Chains*.
 
 **How the chapters are built.** Book Four is built **one chapter a session**, writer first and artist second, on the `book4` branch (`ashes-of-the-pale/series-build-prompts.md`, sessions 6–12). A writer can read the chapters before theirs, but **this brief fixes every key, flag, item id, trick, reading place and fire in advance, so honour it exactly.**
 - Set the flags your section says to set.
