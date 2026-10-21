@@ -767,7 +767,7 @@ Sethand comes up the slope when it's over, and not before. He looks at the dead,
 
     /* ---- the ridge: the fourth camp (the chapter's rest, for Bridgeburner) ---- */
     c2_ridge_arrive:()=>{ const m = c2P(S.f.c2_barrowMissWho); return {sp:'The fourth camp', scene:'plain_night', fx:()=>{ S.f.c2_ridge=1; rest('The fourth camp: Brisk\'s fire, Ohl\'s needle by Kettle\'s lamp, and sleep in shifts while it lasts. Wounds close, mostly.'); }, txt:
-`Night on the ridge. Two tents, because Brisk will not sleep in one with Kettle and Kettle will not sleep in one without Tuft, and Ohl sleeps in the wagon, and you sleep where you can see all of it. The fire is small and Brisk built it${S.f.c2_desFought ? `, in the deserters' fire-ring, because it was there` : ''}. The stars are the wrong stars; they have been since Pale, and nobody has said so.
+`Night on the ridge. Two tents, because Brisk will not sleep in one with Kettle and Kettle will not sleep in one without Tuft, and Ohl sleeps in the wagon${SQUAD().includes('ellis') ? `, and Ellis sleeps in neither and not for long` : ''}, and you sleep where you can see all of it. The fire is small and Brisk built it${S.f.c2_desFought ? `, in the deserters' fire-ring, because it was there` : ''}. The stars are the wrong stars; they have been since Pale, and nobody has said so.
 
 Sethand has come into the firelight. He has not done that on any night before. He sits with his back to the west, which is not where he has been looking.
 
@@ -921,7 +921,7 @@ Sethand doesn't argue. He looks at the light, and at you, and something in his f
 
 "Two hours," he says. "The Rhivi will be there first. They are always there first. Do not draw on them. I mean that as I have never meant anything to a Malazan."
 
-You go, the wagon lurching on ground it was never meant for. The light doesn't get closer, and doesn't, and then it does, all at once, and the grass ahead is lit like day and there are riders in it.`,
+You go, the wagon lurching on ground it was never meant for.${SQUAD().includes('ellis') ? ` Ellis goes out ahead of it on foot, picking the line between the holes, and doesn't once look back to see if it's following.` : ''} The light doesn't get closer, and doesn't, and then it does, all at once, and the grass ahead is lit like day and there are riders in it.`,
       ch:[{t:'Rein in.', go:'c2_outriders'}]}),
     c2_outriders:()=>({sp:'Rhivi outriders', txt:
 `Six of them, then nine, then more than you want to count: small horses, small men, bows strung, arrows on the string and not yet drawn. They come out of the lit grass in a curve and stop at a distance that is exactly a bowshot, which is not an accident.
@@ -1034,7 +1034,9 @@ The Rhivi are already here. Thirty of them. They are not looking at the glass. T
 Ohl has the oilcloth open on his knee. He writes. One line. He closes it. "She was not mine to write, Sergeant. I wrote her." His hand is steady. His voice isn't.
 
 Kettle, very quietly: "Sail."
-
+${SQUAD().includes('ellis') ? `
+Ellis has stopped at the edge of the burn, where the grass is still grass. She knew the name from a file. She bows her head to it anyway, the half-inch the Claw allows, and then a little more.
+` : ''}
 Tuft is on her knees at the edge of the glass.`,
       ch:[{t:'Go to Tuft.', go:'c2_ashes_tuft'},
           {t:'"Sethand. What are they carrying?"', go:'c2_ashes_rhivi'},
@@ -1095,7 +1097,9 @@ Brisk nods. Once. She goes back to the fire and feeds it a stick, and that is he
 Tuft sits down where she was standing, on the ground, with her back to the fire and her face to the light, and she does not move again for the rest of the night. Kettle goes and sits beside her, and after a while puts a hand on her shoulder, and Tuft lets her, which is a thing you have not seen.
 
 Ohl closes the oilcloth. He doesn't open it again. "Somebody is dying," he says, to the fire, "and we are counting rations." It isn't an argument. It's a line in a ledger; he's putting it where he'll find it.
-
+${SQUAD().includes('ellis') ? `
+Ellis goes back out past the stakes with her back to the light. When you walk the line an hour later she says one word to you, "Orders," in the voice of somebody reading it off a page she has read before.
+` : ''}
 The Fourth doesn't sleep. The light burns in the west for two hours and doesn't flicker, and then it goes out all at once, and the dark it leaves is worse.
 
 ${SQUAD().includes('ellis') ? `Ellis comes in from the stakes an hour before dawn. "Sergeant. Three. On foot, walking, from the west, and they're not Rhivi, and I couldn't see them until they wanted me to."` : `Sethand, an hour before dawn, on his feet with his knife out: "Malazan. Get up. Something is coming across the grass, and it is not walking like anything I know."`}`,
@@ -1105,7 +1109,7 @@ ${SQUAD().includes('ellis') ? `Ellis comes in from the stakes an hour before daw
 
 They stop at the edge of the firelight. They don't come into it. Their swords are on their backs and their hands are empty and it makes no difference at all.
 
-Brisk has her shield up. Kettle has her hand on the satchel and has not opened it. Tuft has not stood. Tuft is looking at them from the ground the way she looked at the light, and her lips are moving, and the word on them is a name you learned at the Pale from the sky.
+Brisk has her shield up. Kettle has her hand on the satchel and has not opened it.${SQUAD().includes('ellis') ? ` Ellis has an arrow on the string and has not drawn it, and you watch her work out, in the space of a breath, that drawing it would be a kind of manners she can't afford.` : ''} Tuft has not stood. Tuft is looking at them from the ground the way she looked at the light, and her lips are moving, and the word on them is a name you learned at the Pale from the sky.
 
 The one in the middle looks at each of you in turn. Counts. Arrives at ${SQUAD().includes('ellis') ? 'six' : 'five'}.${S.f.c2_printsTrod ? ` His eyes go back once, to ${c2P(S.f.c2_printsWho).poss} boots, and stay there a moment longer than they should.` : ''}
 
@@ -1182,7 +1186,7 @@ It's big. It's slow. It's the wrong shape for a bird and it's a bird anyway, and
 
     /* ---- Crone ---- */
     c2_crone:()=>({sp:'Crone · Great Raven', scene:S.f.c2_key === 'light' ? 'plain_glass_crone' : 'plain_grey_crone', fx:()=>{S.f.c2_crone=1;}, txt:
-`It's the size of a dog. Its feathers are black and its eyes are black and there is something in the eyes that is not a bird's and is not a person's and is very, very old. It cocks its head. It looks at Brisk's shield, and Kettle's satchel, ${S.f.c2_printsTrod ? `and ${c2P(S.f.c2_printsWho).poss} boots, for a long and interested moment, ` : ''}and Tuft, longest.
+`It's the size of a dog. Its feathers are black and its eyes are black and there is something in the eyes that is not a bird's and is not a person's and is very, very old. It cocks its head. It looks at Brisk's shield, and Kettle's satchel, ${S.f.c2_printsTrod ? `and ${c2P(S.f.c2_printsWho).poss} boots, for a long and interested moment, ` : ''}${SQUAD().includes('ellis') ? `and Ellis's gloves, which she does not hide, because hiding is a thing it would remember, ` : ''}and Tuft, longest.
 
 Then it opens its beak and laughs.
 
@@ -1221,7 +1225,7 @@ ${SQUAD().includes('ellis') ? `Ellis, quietly: "It was counting us. Not our head
 
 "A day," she says, when you're close enough. "That's what that cost. Whiskeyjack's *eleven days* are twelve now, and he'll know, because he's the kind that knows, and he'll ask, and I'll tell him."
 
-Tuft has not spoken since the glass. She walks. She doesn't walk in the tall grass any more; she walks beside the wagon where everyone can see her, and it's the first time. The squad pretends not to notice.` :
+Tuft has not spoken since the glass. She walks. She doesn't walk in the tall grass any more; she walks beside the wagon where everyone can see her, and it's the first time. The squad pretends not to notice.${SQUAD().includes('ellis') ? ` Ellis, who notices everything, walks on Tuft's other side, the side nearer the grass, and pretends hardest.` : ''}` :
 `It's full day. The ridge is a ridge. In the west, where the light was, there's nothing: grass, sky, a low smudge that could be smoke and could be cloud. Sethand looks at it once and then doesn't.
 
 Brisk has the tents struck and the wagon loaded and ${c2Mule()} hitched before the sun's clear of the horizon. She is very efficient this morning. She has been proved right and would rather not have been, and it comes out as efficiency.

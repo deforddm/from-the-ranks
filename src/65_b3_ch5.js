@@ -292,7 +292,11 @@ ${c5Brisk() ? `Brisk has the ration sacks open on a cart-tail before anyone has 
 
 ${b3In('greysword') ? `Dannet stands at the edge of the stubble and looks south as if she could see the whole road from here. "This is the Domin," she says. "From here it is all like this."` : `South, the stubble goes on to the edge of sight, and past it, by every account, the Domin goes on the same.`}${b3In('ohl') ? `
 
-Ohl has taken his hand out of his satchel and is looking at it.` : ''}`,
+Ohl has taken his hand out of his satchel and is looking at it.` : ''}${b3In('ellis') ? `
+
+Ellis has been a little way out into the stubble and back. "Rakes," she says. "Not a dog, not a goat. Just rakes." She shows you the width of the rake-marks with two fingers of the gloved hand. "Somebody did every row on purpose."` : ''}${b3In('vell') ? `
+
+Vell looks along the shore, out of habit, for anything taller than his knee, and finds nothing. "Pale had walls," he says, to nobody much.` : ''}`,
       ch:c5StartCh()}),
     b3_c5_start_ohl:()=>({sp:'Ohl', scene:'b3_c5_catlin', fx:()=>{ S.f.b3_c5_askOhl = 1; }, txt:
 `"Nothing." He flexes the fingers. "I reached for Denul. A blister on a carter's hand. Nothing; a thing I could do asleep." He turns the hand over. "It came. It came with something in it. Like drawing water and finding the bucket warm."
@@ -329,7 +333,7 @@ She doesn't say where. She was on Capustan's wall when the Tenescowri came over 
 
     /* Hurlochel, the Host's outrider: the race for Coral, and who is telling it */
     b3_c5_hurl:()=>({sp:'Hurlochel · outrider', fx:()=>{ S.f.b3_c5_hurl = 1; S.f.b3_kallor = 1; }, txt:
-`A rider is walking his horse down the column toward you, which outriders never do unless they want something or have something. Hurlochel is one of the Host's outriders, Dujek's own, and sits a horse like a man who has never let rank come between him and a good one.
+`A rider is walking his horse down the column toward you, which outriders never do unless they want something or have something. Hurlochel is one of the Host's outriders, Dujek's own, and sits a horse like a man who has never let rank come between him and a good one.${b3In('ellis') ? ` Ellis looks at the horse first, as she always does, and then at its feet. New shoes. Somebody in the Host still has a farrier.` : ''}
 
 "Seventh Company. The Fourth." He doesn't ask; he knows. "You'll want this before it reaches you sideways. Brood's camp has a story going round it. The Host means to march hard for Coral, they say, and take it before Brood's people get there, and hold it for the Empress." He makes a face at nothing in particular. "Brood's people believe about half of it. The half they believe is growing."
 
@@ -438,7 +442,9 @@ ${b3In('sohra') ? `Sohra lets her breath out. "The iron sang back," she says. "I
 
 The river is brown and quick between steep banks, and the ford is a wide pale tongue of gravel across it, knee-deep. On the far bank a low earthwork has been thrown up across the road, and behind it spears catch the light. Beklites: the Seer's line infantry, holding the ford so that something can get away behind them.
 
-${b3In('greysword') ? `"A rearguard," Dannet says. "They do this. They hold until the column behind them is gone, and then they die." She says it flatly, a Grey Sword reciting a drill. "They don't run. Nobody ever told them they could."` : `They are not running. By the look of them, nobody has ever told them they can.`}
+${b3In('greysword') ? `"A rearguard," Dannet says. "They do this. They hold until the column behind them is gone, and then they die." She says it flatly, a Grey Sword reciting a drill. "They don't run. Nobody ever told them they could."` : `They are not running. By the look of them, nobody has ever told them they can.`}${b3In('ellis') ? `
+
+Ellis has been out with the Host's scouts since first light, and is back. "Forty spears that I could count," she says. "Slings behind the earthwork. And one at the back who keeps looking up the road, waiting for something." She would like that noted. You note it.` : ''}
 
 The Seventh's lieutenant is up on the bank with a pair of cadre mages, pointing.`,
       ch:[{t:'Up the bank.'}]}),
@@ -502,7 +508,9 @@ South of the river the road goes on toward a smudge of smoke on the horizon, thr
       ch:[{t:'Cross. South.', go:()=>{ startExplore('b3_c5_town'); talk('b3_c5_town_arrive'); }}, {t:'Not yet.'}]} : {sp:'The ford', txt:
 `The gravel tongue runs out into the river and the river runs over it, knee-deep and quick and the colour of strong tea. Thirty paces across. On the far side the Beklites wait behind their earthwork with their spears levelled, not shouting.${S.f.b3_c5_asked === 1 ? ` Downstream the Rhivi have gone down into their fold of ground and not come out of it.` : ''}
 
-${b3In('kettle') && S.inv.sharper > 0 ? `Kettle has a sharper in her hand and is looking at the water just short of their line, where the spears stand in the river. "In the river," she says. "It'd throw half the river at them. Gravel too." She is not asking. She is hoping.` : b3In('kettle') ? `Kettle has her hand in the satchel and nothing in it to throw. She says so, twice.` : `It is a long thirty paces.`}`,
+${b3In('kettle') && S.inv.sharper > 0 ? `Kettle has a sharper in her hand and is looking at the water just short of their line, where the spears stand in the river. "In the river," she says. "It'd throw half the river at them. Gravel too." She is not asking. She is hoping.` : b3In('kettle') ? `Kettle has her hand in the satchel and nothing in it to throw. She says so, twice.` : `It is a long thirty paces.`}${b3In('vell') ? `
+
+Vell has the coil off his shoulder and is measuring the river by eye. "I could get a line across," he says. "If they'd stop looking at it." They won't.` : ''}`,
       ch:[{t:'Into the water.', go:()=>startBattle('b3_c5_ford', S.f.b3_c5_read ? {surprise:'p'} : {})},
           {t:'Kettle\'s sharper, into the river short of their line.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c5_ford', S.f.b3_c5_read ? {pre:true, surprise:'p'} : {pre:true})},
           {t:'Read the ford before anyone goes in.', check:['wits', 14], req:()=>!S.f.b3_c5_readTried, fx:()=>{ S.f.b3_c5_readTried = 1; },
@@ -511,7 +519,7 @@ ${b3In('kettle') && S.inv.sharper > 0 ? `Kettle has a sharper in her hand and is
             go:'b3_c5_ford_read', fail:'b3_c5_ford_miss'},
           {t:'Not yet.'}]},
     b3_c5_ford_read:()=>({sp:'The ford', fx:()=>{ S.f.b3_c5_read = 1; }, txt:
-`${by({sohra:`Sohra watches the water a long time, the way she watches the herds, and then points with her chin. "There. The river is shallower by the left bank. See the ripple? Their line is two deep on the right and one deep on the left, because the right is where they think we will come."`, greysword:`Dannet crouches on the bank with her eyes half shut. "The gravel shelves on the left," she says. "Their line is two deep on the right and one on the left. They think we're fools. Good."`, sgt:`You watch the water a long time. The ripple's wrong on the left: shallower there. Their line is two deep on the right and one on the left, because the right is where they think you'll come.`, _:`{who} watches the water a long time. "The left," {who} says at last. "Shallower. Their line is two deep on the right and one on the left. They think we'll come where it's easy."`})}
+`${by({sohra:`Sohra watches the water a long time, the way she watches the herds, and then points with her chin. "There. The river is shallower by the left bank. See the ripple? Their line is two deep on the right and one deep on the left, because the right is where they think we will come."`, ellis:`Ellis counts the spears, and then the ripples, and puts the two counts together. "Two deep on the right," she says. "One on the left, where it's shallower. They've counted on us coming the easy way."`, greysword:`Dannet crouches on the bank with her eyes half shut. "The gravel shelves on the left," she says. "Their line is two deep on the right and one on the left. They think we're fools. Good."`, sgt:`You watch the water a long time. The ripple's wrong on the left: shallower there. Their line is two deep on the right and one on the left, because the right is where they think you'll come.`, _:`{who} watches the water a long time. "The left," {who} says at last. "Shallower. Their line is two deep on the right and one on the left. They think we'll come where it's easy."`})}
 
 It isn't much. It's the first step, which is the one that matters.`,
       ch:[{t:'Into the water. The left.', go:()=>startBattle('b3_c5_ford', {surprise:'p'})},
@@ -527,7 +535,7 @@ It isn't much. It's the first step, which is the one that matters.`,
 
 The man the cadre drowned is still on his knees in the dust beside the cart, bent forward with his forehead on the ground as if he were praying. The earth round him is wet in a wide dark circle. Nothing else on the far bank is wet. The flies have found him already. The Fourth goes no closer than it has to.
 
-Downstream the Seventh is pulling a boy out of the deep water at the edge of the ford, where the gravel stops without warning. He went in face-down in his armour and did not come up. ${b3In('ohl') ? `Ohl wades out to him, and turns him over, and does not reach for Denul, because there is nothing for it to do. Then he takes out his book and writes it before the boy is out of the river: *Orley. The Seventh. Nineteen. A ford with no name.* The list is ${b3ListWords()} now. He shuts the book.` : `One of the Seventh says his name was Orley, and that he was nineteen. You write it down, because Ohl would have.`}`,
+Downstream the Seventh is pulling a boy out of the deep water at the edge of the ford, where the gravel stops without warning. He went in face-down in his armour and did not come up.${b3In('vell') ? ` Vell's line goes out to them across the deep water, and they take it, and it is good for nothing now but bringing him in.` : ''} ${b3In('ohl') ? `Ohl wades out to him, and turns him over, and does not reach for Denul, because there is nothing for it to do. Then he takes out his book and writes it before the boy is out of the river: *Orley. The Seventh. Nineteen. A ford with no name.* The list is ${b3ListWords()} now. He shuts the book.` : `One of the Seventh says his name was Orley, and that he was nineteen. You write it down, because Ohl would have.`}`,
       ch:[{t:'See to the cadre mage.', go:'b3_c5_drowned'}, {t:'Back across. Leave the far bank to the flies.', go:()=>startExplore()}]}),
     b3_c5_drowned:()=>({sp:'A cadre mage', scene:'b3_c5_drowned', fx:()=>{ S.f.b3_c5_drowned = 1; }, txt:
 `The mage with the wet sleeves is sitting on the near bank again with her feet in the river and her head between her knees, and her partner is holding a cloth to her face, and the cloth is red.
@@ -540,7 +548,9 @@ She looks across at the man kneeling on the far bank, and away again.
 
 Tuft is behind you. When you look round she has her hands up her sleeves again and is looking at the river, not the man, as if the river had done it on its own.` : ''}${b3In('ohl') ? `
 
-Ohl gives the partner a pad of clean lint from his satchel and shows her how to pinch the bridge of the nose, which she knows, and lets him show her anyway.` : ''}`,
+Ohl gives the partner a pad of clean lint from his satchel and shows her how to pinch the bridge of the nose, which she knows, and lets him show her anyway.` : ''}${b3In('ellis') ? `
+
+Ellis has watched all of it from the bank, with the gloved hand inside her coat. "The Claw has mages who can do that," she says. "None of them sit down after."` : ''}`,
       ch:[{t:'Leave her to it.', go:()=>startExplore()}]}),
 
     /* ---- the burnt town ---- */
@@ -559,7 +569,9 @@ ${b3In('greysword') ? `"They're taking the last of them south," Dannet says quie
 
 "They burned it when the priests told them," he says, as if somebody had asked. "Their own houses. Our houses. So the Malazans would find nothing." He strokes the cat. "I told them the Malazans would find me. Here you are."
 
-He nods up the street toward the noise. "There are some left, in the square. The priest's soldiers are taking them south, roped like goats. There's a lane by the smithy that comes out behind the well." He looks at the cat. "I used to take that way when my wife wanted me home."`,
+He nods up the street toward the noise. "There are some left, in the square. The priest's soldiers are taking them south, roped like goats. There's a lane by the smithy that comes out behind the well." He looks at the cat. "I used to take that way when my wife wanted me home."${b3In('vell') ? `
+
+Vell, behind you, is looking up at the black walls and the open sky where the roofs were. "Back home I'd have gone over the top," he says. "There's no top."` : ''}`,
       ch: S.f.b3_c5_oldman ? [{t:'Leave him to his doorway.'}] : [
           {t:'Give him something to eat.', fx:()=>{ S.f.b3_c5_oldman = 'fed'; S.f.b3_c5_lane = 1; ally(0, -1, 'An old man fed in a doorway'); }, go:'b3_c5_oldman_after'},
           {t:'"The lane by the smithy. Thank you."', fx:()=>{ S.f.b3_c5_oldman = 'lane'; S.f.b3_c5_lane = 1; }, go:'b3_c5_oldman_after'}]}),
@@ -589,7 +601,9 @@ He nods up the street toward the noise. "There are some left, in the square. The
       ch:[{t:'Leave the square.'}]} : {sp:'The square', txt:
 `From the corner of the street you can see all of it. A square round a well with a broken windlass. In the middle, in the mud, fifty people sit roped together in a long line, farmers and their children and their old, with their heads down in the rain. Round them, Beklites with whips and spears are getting them up to walk, one rope at a time.
 
-On the temple steps a Seerdomin stands with a grey mace, watching the work. He wears a chain round his neck with a disc of bone on it. He has not raised his voice once.${S.f.b3_c5_lane ? `
+On the temple steps a Seerdomin stands with a grey mace, watching the work. He wears a chain round his neck with a disc of bone on it. He has not raised his voice once.${b3In('ellis') ? `
+
+Ellis is beside you, watching the doorways rather than the whips. "The whips are for show," she says. "Whoever's in the doorways isn't."` : ''}${S.f.b3_c5_lane ? `
 
 The lane by the smithy runs off to your left between two black walls. The old man said it comes out behind the well.` : ''}`,
       ch:[{t:'Go in.', go:()=>startBattle('b3_c5_town')},
@@ -605,7 +619,9 @@ The Grey Swords come into the square from the far street at a run, shields up, a
     b3_c5_remnants:()=>({sp:'The square', scene:'b3_c5_burnt', txt:
 `They are farmers, mostly, and their children, and their old. What they have been made to do this past year is in their faces. Nobody in the Fourth asks, and nobody in the square offers.
 
-${b3In('greysword') ? `Dannet cuts the first rope herself. Her hands are not quite steady. "In Capustan," she says, to nobody, "they came over the walls like this." She cuts the next. "Exactly like this."` : `The rope is wet and swollen and has to be sawn through, one at a time.`}
+${b3In('greysword') ? `Dannet cuts the first rope herself. Her hands are not quite steady. "In Capustan," she says, to nobody, "they came over the walls like this." She cuts the next. "Exactly like this."` : `The rope is wet and swollen and has to be sawn through, one at a time.`}${b3In('vell') ? `
+
+Vell takes the next rope and saws, and looks at the cut end. "Good hemp," he says. "The Guild would pay for this." He hates that he knows it, and saws the one after faster.` : ''}
 
 When they are loose they do not go anywhere. They look at the Fourth's packs.`,
       ch:[{t:'Give them what the squad is carrying. All of it.', fx:()=>{ S.f.b3_c5_remnants = 'fed'; ally(1, -2, 'Bread for the starving'); if ((S.inv.salve || 0) > 0) { S.inv.salve--; note('A salve gone, too, to a child with a whip-cut that would not close.', 'bad'); } c5Loy('ohl', 1); c5Loy('greysword', 1); c5Loy('brisk', -1); }, go:'b3_c5_remnants_fed'},
@@ -751,7 +767,7 @@ ${c5Brisk() ? `Brisk has him by the collar a moment later and is looking at the 
 The herd-mother pushes through to the well with her staff. "Poison, they say." She looks at the bucket. "Look, before you say it again."`,
       ch:[{t:'Look.', go:'b3_c5_well'}]}),
     b3_c5_look:()=>({sp:'The well', fx:()=>{ S.f.b3_c5_ev = 1; }, txt:
-`It takes four men and a grapnel off the water cart. What comes up out of the well is a bhederin calf with a white blaze, three days old, its throat cut.
+`It takes four men and a grapnel off the water cart.${b3In('vell') ? ` Vell ties the grapnel on himself, and won't let anyone else, and pays the line out hand over hand into the dark.` : ''} What comes up out of the well is a bhederin calf with a white blaze, three days old, its throat cut.
 
 ${by({ohl:`Ohl turns the throat to the lantern. "Straight blade," he says. "One stroke, left to right, by somebody who's done it before. Rhivi cut a calf the other way, and they say a word first, and they don't throw it down a well." He sits back on his heels. "And look here."`, greysword:`Dannet turns the throat to the lantern. "A straight blade," she says. "Not a Rhivi knife. And look here."`, sohra:`Sohra makes a small sound and kneels by the calf, and touches the blaze. "A Rhivi would not cut a calf so," she says. "And a Rhivi would not put it in a well. Look."`, kettle:`Kettle turns the throat to the lantern. "That's a cut, not a tear," she says. "Straight blade. Clean. Whoever did it has done it before. And here, look."`, _:`{who} turns the throat to the lantern. A straight blade, one stroke. "And look here."`})}
 
@@ -780,7 +796,9 @@ She looks past you at the bhederin, and the Rhivi children asleep on their backs
 
 You show him the knife. He looks at the bright filing on the hilt for a long moment, and the smile stays where it is, but something behind it has started counting.` : ''}${S.f.b3_c5_wit ? `
 
-Across the green the old woman in the doorway is watching. He follows your eyes to her, and his own go flat.` : ''}`,
+Across the green the old woman in the doorway is watching. He follows your eyes to her, and his own go flat.` : ''}${b3In('ellis') ? `
+
+Ellis has come up on his left without anyone seeing her do it. She is watching his hands, not his face. The Claw taught her which one lies first.` : ''}`,
       ch:[{t:'"You put the calf down the well. Say it, in front of them."', check:['guile', 14], req:()=>!S.f.b3_c5_pressed, fx:()=>{ S.f.b3_c5_pressed = 1; },
             edges:()=>[S.f.b3_c5_ev === 1 && ['the knife with the fresh filing', 2], S.f.b3_c5_wit && ['an old woman saw him do it', 2], S.f.b3_c5_inc === 'cut' && ['there is blood on the ground and everyone is watching', 1]],
             near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but he takes his time getting there, and on the way he says, pleasantly, for the Rhivi to hear, that Malazans are only tidier thieves than he is');
@@ -812,7 +830,11 @@ You have ${c5ProofWords()}.
 
 You could walk him across the halt to Caladan Brood's fire tonight and say it there, in order, in front of Brood and Korlat and whoever else is sitting at it. Everyone would know whose man he is, then. Everyone would know whose sergeant said so.
 
-Or you could settle it here, among soldiers. A broken nose, his own lines by morning, the truth told quietly at both fires, and no names said aloud. The well shared. Nobody's name in anybody's mouth.`,
+Or you could settle it here, among soldiers. A broken nose, his own lines by morning, the truth told quietly at both fires, and no names said aloud. The well shared. Nobody's name in anybody's mouth.${b3In('ellis') ? `
+
+Ellis says one sentence: "The Claw would do it quietly." You can't tell from her voice whether that is for it or against.` : ''}${b3In('vell') ? `
+
+"In the Daru District," Vell says, "you'd settle it on a roof, and he'd walk home." He thinks about it. "Mostly."` : ''}`,
       ch:[{t:'"Brood\'s fire. Tonight."', fx:()=>{ S.f.b3_c5_key = 'brood'; }, go:'b3_c5_brood'},
           {t:'"Here. Among soldiers. No names."', fx:()=>{ S.f.b3_c5_key = 'quiet'; }, go:'b3_c5_quiet'},
           {t:'"Not yet. Hold him."'}]}),
@@ -880,7 +902,7 @@ ${c5FireLine()}`,
           {t:'Sit the night out.', req:()=>!!S.f.b3_c5_key, go:'b3_c5_close'},
           {t:'Not now.'}]}),
     b3_c5_fire_rest:()=>({sp:'The Fourth\'s fire', fx:()=>{ b3Rest('The Fourth rests in the lee of a broken wall, with the Host round it and the Domin all round that. Wounds close, mostly.'); }, txt:
-`An hour. Boots off, for the first time since the ford. ${b3In('ohl') ? `Ohl makes the tea, which is worse than usual, because the water is. Nobody complains, because complaining is drinking it slower.` : `Tea gets made, and it is bad, because the water is.`}${b3In('sohra') ? ` Sohra sings under her breath to nothing anyone else can see, and the fire burns a little steadier for it, or seems to.` : ''}
+`An hour. Boots off, for the first time since the ford. ${b3In('ohl') ? `Ohl makes the tea, which is worse than usual, because the water is. Nobody complains, because complaining is drinking it slower.` : `Tea gets made, and it is bad, because the water is.`}${b3In('sohra') ? ` Sohra sings under her breath to nothing anyone else can see, and the fire burns a little steadier for it, or seems to.` : ''}${b3In('ellis') ? ` Ellis takes her boots off last, and sits with the gloved hand in her lap, and is asleep sitting up before the fire has settled.` : ''}${b3In('vell') ? ` Vell unwraps the hook, dries it one tine at a time, and wraps it again in its rag.` : ''}
 
 It isn't much. In the Domin, it's what there is.`,
       ch:[{t:'Up again.'}]}),
@@ -931,6 +953,8 @@ function c5CloseLines(){ const f = S.f, out = [];
   if (b3In('kettle')) out.push(f.b3_c5_quorls ? `Kettle is asleep sitting up, with the ledger open on her knee at the page with the quorls on it.` : `Kettle counts the satchel by touch, under her breath, and arrives at the same number twice, and seems disappointed.`);
   if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's as tall as a grown woman now." She doesn't look away. "Her own people won't sit near her."`);
   if (b3In('ohl')) out.push(f.b3_c5_orley ? `Ohl has the list open. He has turned back to the ford: *Orley.* He reads the name, and the ones above it, all the way up, with his lips moving.` : `Ohl has the list open on his knee and reads it with his lips moving, all of it, ${b3ListWords()}.`);
+  if (b3In('ellis')) out.push(f.b3_c5_key === 'brood' ? `Ellis sits with her back to the wall, where she can see Kallor's tents and the way out of the halt both. "Both," she says, when she sees you see. "I like to know where the door is. And where he is."` : `Ellis sits with her back to the wall, facing the halt, with the bow across her knees, which is what she does instead of sleeping.`);
+  if (b3In('vell')) out.push(`Vell lies on his back with the coil under his head, looking up. "Clear sky," he says. "All the way to the sea, I'd bet." He is asleep before anyone takes the bet.`);
   if (b3In('sohra')) out.push(`Sohra sings to the bulls, low, from among them. Somewhere in it, you're nearly sure now, is the Mhybe's name.`);
   if (b3In('greysword')) out.push(`Dannet has the pot of grey paint out and is working on the wolf on her shield, a stroke at a time, by firelight. It is still not finished. "When I know what it's for," she says, when she sees you looking.`);
   if (f.b3_c5_key === 'brood') out.push(`Across the halt, Kallor's tents are dark. You don't look at them. You find you know exactly where they are anyway.`);

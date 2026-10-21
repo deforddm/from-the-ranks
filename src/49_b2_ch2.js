@@ -992,13 +992,13 @@ Along the bank the Red Blades are counting theirs. They say the names out loud, 
     html:chainHTML('The Sekala · the west bank'),
     ch:[{t:'Walk the bank.', go:()=>startExplore()}]}),
   b2_ford_look:()=>({sp:'The ford', txt: S.f.b2_blown ?
-`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.` :
+`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.${b2In('redblade') ? ` Ramin comes and stands beside you at the edge. "My horse is in there somewhere," he says. "She was a good horse. She did not like the ford either." Then he goes back to the carts.` : ''}${b2In('warlock') ? ` Keth crouches at the lip of the bank with his palm flat on the wet stone. "The river is angry," he says. Then, in a voice forty years older than his: "The river is busy. Leave it be."` : ''}` :
 `The ford behind you, under the brown water, and the last of the column still coming over it. ${S.f.b2_westDone ? 'The rearguard is close.' : 'Not now.'}`,
     ch:[{t:'Leave it.', go:()=>startExplore()}]}),
-  b2_chenned_again:()=>({sp:'Captain Chenned', txt:`Chenned is sitting on an upturned shield with his bandaged hand in his lap, looking at the river. "Held," he says, when you come by, which is all he says.`, ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_west_wagons:()=>({sp:'The squad\'s carts', txt:`The carts, drawn up in the lee of the bank. ${chainC()} people under them and round them.`, html:chainHTML('The Sekala · the west bank'), ch:[{t:'Leave them.', go:()=>startExplore()}]}),
+  b2_chenned_again:()=>({sp:'Captain Chenned', txt:`Chenned is sitting on an upturned shield with his bandaged hand in his lap, looking at the river. "Held," he says, when you come by, which is all he says.${b2In('redblade') ? ` Then he sees Ramin behind you, and lifts the bandaged hand an inch. "Your file held the rise, Red Blade." Ramin salutes. "Half of it, sir." Chenned nods, as if half were the right answer.` : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_west_wagons:()=>({sp:'The squad\'s carts', txt:`The carts, drawn up in the lee of the bank. ${chainC()} people under them and round them.${b2In('redblade') ? ' Ramin has posted himself at the end of the carts nearest the river, as straight as a picket. No one posted him there.' : ''}${b2In('warlock') ? ' Keth has walked the line of the carts once already with one hand trailing along the ground, and two of the column\'s dogs have walked it with him.' : ''}`, html:chainHTML('The Sekala · the west bank'), ch:[{t:'Leave them.', go:()=>startExplore()}]}),
   b2_west_ours:()=>({sp:'The squad\'s people', fx:()=>{ S.f.b2_westOurs = 1; }, txt:
-`Your people, on the stony ground above the river. They have stopped being afraid of the Red Blades, a little. A woman from the weavers' street has taken a skin down to the two who held the bank beside the squad, and they took it, and thanked her in the quarter's own Hissari, and she came back up the bank looking as if she'd been stung.
+`Your people, on the stony ground above the river. They have stopped being afraid of the Red Blades, a little. A woman from the weavers' street has taken a skin down to the two who held the bank beside the squad, and they took it, and thanked her in the quarter's own Hissari, and she came back up the bank looking as if she'd been stung.${b2In('redblade') ? ` Ramin hears the quarter's Hissari from the end of the carts, and turns his head, and turns it back again, correctly. The woman sees. She brings him a cup of river water too. He drinks it standing.` : ''}${b2In('warlock') ? ` The children have found Keth. They want to know if the old woman is real. She tells them, out of him, that she is, and that they are filthy, and they shriek and run off and come straight back for more.` : ''}
 
 ${S.f.b2_prisonerFate === 'column' ? 'The boy from the tanners\' street is sitting a little apart, looking across the river at Reloe\'s fires. He has the green cloth out of his pocket. He is turning it over in his hands. He puts it back.' : 'There\'s a fire going, and someone has found a cooking-pot. It is the closest thing to a feast the squad\'s stretch has seen since Hissar: river water, boiled, with nothing in it.'}`,
     ch:[{t:'Leave them.', go:()=>startExplore()}]}),
@@ -1009,7 +1009,7 @@ ${S.f.b2_prisonerFate === 'column' ? 'The boy from the tanners\' street is sitti
 
 "Sergeant. Ramin, of the Red Blades. Of Ehrlitan." He nods back at the rise. "My horse is in the river. My file is up there. All of it but me." He says it in the present tense, as if they were waiting for him somewhere. "The commander is lending out the men who have no horse to the Seventh's squads that are short, until the company can remount. In Aren, perhaps. Captain Chenned says your squad held the bank behind my file." A pause. "I would rather be lent to people I have seen fight."
 
-He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}`,
+He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}${b2In('warlock') ? ` Keth, at the end of the line, has his palm on the ground. "He fought," he says. "The rise has his file's blood in it. It is not angry with him." And then, drier, and not his: "It is not angry with anyone. It is full."` : ''}`,
     ch:[{t:'"Why the Red Blades?"', req:()=>!S.f.b2_raminAsked, fx:()=>{ S.f.b2_raminAsked = 1; }, go:'b2_ramin_ask'},
         {t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
@@ -1022,7 +1022,9 @@ He looks back at the rise, at the red shapes on it.
 
 "I will go back to the company when it calls for me. I say it now so nobody can say I didn't. A lent sword goes back to its owner." He looks at you. "Until then it is kept clean."${b2In('tangle') ? `
 
-Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}`,
+Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
+
+The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. One of you should know how to stand still."` : ''}`,
     ch:[{t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
   b2_ramin_yes:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 1; recruit('redblade'); loy('redblade', 1); if (b2In('haddat')) loy('haddat', 1); if (b2In('tangle')) loy('tangle', -1); }, txt:
@@ -1039,7 +1041,9 @@ Along the bank the Red Blades are still saying their dead. Ramin says them with 
   b2_ramin_no:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 0; }, txt:
 `He nods. Once, correctly. "Sergeant." He doesn't argue. He has been told no by Malazans before; he has the face for it.
 
-"Then I will ask the next squad," he says. "Somebody will lend for a red horse with no horse." And he goes back down the bank toward the company, and puts his helm on, and stands with them for the names.`,
+"Then I will ask the next squad," he says. "Somebody will lend for a red horse with no horse." And he goes back down the bank toward the company, and puts his helm on, and stands with them for the names.${b2In('warlock') ? `
+
+Keth watches him go. "Correct," the old woman says, out of him. "He will be correct all the way to Aren." Keth, in his own voice: "She liked him."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_ramin_again:()=>({sp:'Ramin', txt:`He's with what's left of the Red Blades, saying the names.`, ch:[{t:'Leave him.', go:()=>startExplore()}]}),
 
@@ -1055,7 +1059,11 @@ He looks at the river.
 
 "Ubaryd has fallen. A rider came over this morning, a Wickan who went to look. The city's taken, and the fleet's gone out of it, and there is nobody there to put us on ships." He takes his feet out of the bucket. "So. No Ubaryd. Aren." He lets the name sit. "All the way to Aren."
 
-Then, the grin coming back, a little: "Count them, Sergeant. It's further than it was this morning."`,
+Then, the grin coming back, a little: "Count them, Sergeant. It's further than it was this morning."${b2In('redblade') ? `
+
+Ramin, behind you, very quietly, to himself: "Aren. The company will remount in Aren." He says it like a count he means to keep.` : ''}${b2In('warlock') ? `
+
+"Aren is a long way for the ground to listen," Keth says. The old woman, out of him: "Then walk, child. It listens better to feet."` : ''}`,
     ch:[{t:'"Sir."', go:'b2_night'}, {t:'Not yet.', go:()=>startExplore()}]},
 
   /* ---- the night: the spirits and the Semk god ---- */
@@ -1068,7 +1076,9 @@ The ground is coming up out of itself. That is the only way you can say it after
 
 It does not make a sound you can hear. You hear it anyway.
 
-${b2In('sathi') ? `"The warlocks," Sathi whispers. "Sormo. They have given it to the spirits. To the land. The land is old here and it is very hungry and nobody has fed it in a long time." She is not laughing. You have never seen her not laugh at a death. "Don't watch, Sergeant. It isn't ours. It's theirs."` : `It isn't yours to watch. You watch anyway.`}
+${b2In('sathi') ? `"The warlocks," Sathi whispers. "Sormo. They have given it to the spirits. To the land. The land is old here and it is very hungry and nobody has fed it in a long time." She is not laughing. You have never seen her not laugh at a death. "Don't watch, Sergeant. It isn't ours. It's theirs."` : `It isn't yours to watch. You watch anyway.`}${b2In('redblade') ? `
+
+Ramin is on his feet with his lance before he is properly awake, in his shirt, between the carts and the plain. He stands there until dawn. He does not put the lance down, and he does not ask anyone what he is looking at.` : ''}
 
 ${b2In('marrow') ? `Beside you Marrow makes a small sound. "The warren," she says. "Feel it, child. Something just went out of it." She has her hand flat on her chest. "For a breath, it was clean." She keeps the string in her lap and does not tie anything.` : ''}
 

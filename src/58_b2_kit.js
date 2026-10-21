@@ -117,13 +117,13 @@ ${b2In('sathi') ? `He sees Sathi and his face changes completely. They talk in W
 Object.assign(B2CH3.dlg, {
   b2_tinker3:b2Trader('b2_tinker3', {sp:'A Kanese tinker', txt:()=>`An old Kanese tinker has walked his handcart all the way from Hissar, and set up shop on it at the edge of the camp as if this were a market day in Kan: pots, buckles, needles, a lance off a dead Tithansi, a pale Odhan robe folded very neatly.
 
-"The robe is for the noon," he says. "The tribes are not fools. Malazans walk the Odhan in iron, and then they are surprised." He holds up the lance. "And this, for reaching over things."`,
+"The robe is for the noon," he says. "The tribes are not fools. Malazans walk the Odhan in iron, and then they are surprised." He holds up the lance. "And this, for reaching over things."${b2In('redblade') ? `\n\nRamin takes the lance from him, weighs it, sights along it, and hands it back with a small bow. "Tithansi," he says. "Too long in the head and too short in the haft. In the right hands it will do." He does not say whose hands those are. He does not have to.` : ''}`,
     wares:[['b2_tithlance', 2], ['b2_robe', 3]], empty:'"Sold out," he says, with enormous satisfaction. "On the Odhan. In a war. Write that down, somebody."'}),
 });
 Object.assign(B2CH4.dlg, {
   b2_servant4:b2Trader('b2_servant4', {sp:'A noble\'s man', txt:()=>`A noble's man, in a good coat gone grey with dust, is standing behind the last carriage in the ring with a long bundle under his arm, looking both ways before he speaks.
 
-"My master has water for his horses and not for his household," he says, very low. "He will not notice these are gone. He has not noticed anything since Hissar." He unrolls the bundle: a sabre with a scratched-off crest, never used; a dead officer's scale coat, the plates still bright. "Water, soldier. Skins. For the children in the kitchen cart."`,
+"My master has water for his horses and not for his household," he says, very low. "He will not notice these are gone. He has not noticed anything since Hissar." He unrolls the bundle: a sabre with a scratched-off crest, never used; a dead officer's scale coat, the plates still bright. "Water, soldier. Skins. For the children in the kitchen cart."${b2In('redblade') ? `\n\nRamin looks at the officer's scale, at the bright plates, and touches his own red ones, once. "Somebody kept that well," he says. "Then somebody stopped."` : ''}`,
     wares:[['b2_noblesabre', 4], ['b2_officerscale', 4]], empty:'He folds the empty cloth and goes back to the kitchen cart.'}),
   b2_silanda4:()=>({sp:'A Foolish Dog rider', fx:()=>{ S.f.b2_silanda4 = 1; }, txt:
 `A Foolish Dog warrior with his arm strapped to his chest is sitting on a root at the edge of the trees, turning something over in his good hand. He went down the river on the Silanda with the wounded, and came back up the bank this morning, and has not said a word about it to anyone.
@@ -145,7 +145,7 @@ Object.assign(B2CH5.dlg, {
 Object.assign(B2CH6.dlg, {
   b2_ktrader6:b2Trader('b2_ktrader6', {sp:'A Khundryl horse-trader', txt:()=>`A Khundryl warrior with his face half painted is sitting by his horses with a cloak of black horsehair over his knees and a long curved blade across it. He has come a long way to fight somebody else's war, and he has things he will not need.
 
-"Water," he says, in trade-talk. "My horses drink. Your silver does not." He shakes out the cloak. "This one is not painted. Paint it when you are ready."`,
+"Water," he says, in trade-talk. "My horses drink. Your silver does not." He shakes out the cloak. "This one is not painted. Paint it when you are ready."${b2In('warlock') ? `\n\nKeth squats down by the Khundryl's paint-pots and sniffs them. The old woman, out of him, approving: "Ochre and ash. Proper manners. Buy something, Malazan, so he thinks well of us."` : ''}${b2In('redblade') ? `\n\nThe Khundryl looks at Ramin's red scale and says something in trade-talk. Ramin answers in the same, with a bow, and the Khundryl laughs and slaps his own knee.` : ''}`,
     wares:[['b2_horsehair', 3], ['b2_khundrylblade', 3]], empty:'He nods, once, and goes back to his paint.'}),
 });
 Object.assign(B2CH7.dlg, {
@@ -160,7 +160,7 @@ Object.assign(B2CH7.dlg, {
   b2_feather7:()=>({sp:'A Wickan child', fx:()=>{ S.f.b2_feather7 = 1; }, txt:
 `A Wickan child, a Crow girl no older than eight, walks up to you on the quay without a word and holds out a feather: black, the length of your hand, with the light going blue along it.
 
-She waits until you take it. Then she goes back to the other children, at the end of the quay, and sits down with them, and none of them look at you, and all of them know.`,
+She waits until you take it. Then she goes back to the other children, at the end of the quay, and sits down with them, and none of them look at you, and all of them know.${b2OH() && b2In(b2OH()) ? `\n\n${NAME(b2OH())} watches her go. "On Genabackis we'd have called that an omen," ${['ohl', 'vell'].includes(b2OH()) ? 'he' : 'she'} says. "Here I think it's just thanks."` : ''}`,
     ch:[{t:'Keep it.', fx:()=>{ gain('b2_crowfeather'); }, go:()=>startExplore()}]}),
 });
 

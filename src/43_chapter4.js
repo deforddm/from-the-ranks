@@ -805,7 +805,7 @@ It does not speak. You understand, looking at it, that it's not going to.
 
 One roof. Then none.
 
-You have perhaps a breath. ${SQUAD().includes('brisk') ? `Brisk is already on her feet behind you, shield up. She's looking at you, not at it.` : ''} ${SQUAD().includes('tuft') ? `Tuft hasn't moved at all.` : ''}`,
+You have perhaps a breath. ${SQUAD().includes('brisk') ? `Brisk is already on her feet behind you, shield up. She's looking at you, not at it.` : ''} ${SQUAD().includes('tuft') ? `Tuft hasn't moved at all.` : ''}${SQUAD().includes('ellis') ? ` Ellis has an arrow on the string, and the point is on the tall shape, not the boy. She is waiting for your word, as the Claw taught her to wait, and you can see her hoping it won't be the Claw's word.` : ''}`,
       ch:[{t:'Stand between them.', fx:()=>{ S.f.c4_key='shield'; S.f.c4_vell=1; S.f.c4_guildKnows=1; }, go:'c4_shield'},
           {t:'Step out of the way.', fx:()=>{ S.f.c4_key='aside'; S.f.c4_seen=1; S.f.c4_tuftDark=1; }, go:'c4_aside'},
           {t:'"Tuft—"', req:()=>SQUAD().includes('tuft') && !S.f.c4_askTuft, fx:()=>{S.f.c4_askTuft=1;}, go:'c4_vell_tuft'},
@@ -1226,7 +1226,9 @@ He's looking up the street, the way you've come, toward the lamp ${SQUAD().inclu
 
 That's all.
 
-${SQUAD().includes('ellis') ? `Ellis, when you're round the corner, very low: "That wasn't Watch." A pause. "The Claw's got a page on this city with a hole in the middle of it. Everything we ever sent into that hole came back as *a man on a corner*. Never the same corner. Never a name." She lets out a long breath. "I think we just walked past the hole."` : `Kettle, when you're round the corner, very low: "That wasn't Watch." "No." "Who was it?" "Nobody," you say, and you find you mean it as a kind of respect.`}`,
+${SQUAD().includes('ellis') ? `Ellis, when you're round the corner, very low: "That wasn't Watch." A pause. "The Claw's got a page on this city with a hole in the middle of it. Everything we ever sent into that hole came back as *a man on a corner*. Never the same corner. Never a name." She lets out a long breath. "I think we just walked past the hole."` : `Kettle, when you're round the corner, very low: "That wasn't Watch." "No." "Who was it?" "Nobody," you say, and you find you mean it as a kind of respect.`}${SQUAD().includes('vell') ? `
+
+Vell hasn't looked back once. "He was watching the lamp," he says, to the cobbles. "Where I'd have been standing." A few steps on, quieter: "I'm glad I'm not standing there."` : ''}`,
       ch:[{t:'Keep walking.', go:'c4_dawn'},
           {t:'Go back and nod to him.', go:'c4_corner_nod'}]}),
     c4_corner_nod:()=>({sp:'The street corner', scene:'city_street', fx:()=>{S.f.c4_nodded=1;}, txt:
@@ -1276,7 +1278,11 @@ He's alive. That's the first thing.
 
 He's furious. That's the second, and it's worse. Not loud. Kalam doesn't get loud. It's in the way he wipes each blade and lays it down exactly parallel to the last, and in the way he doesn't look up, and in the way the air round him feels like the air round a banked forge.
 
-${S.f.c4_kalamLook ? `He does look up, once, when you come near. At you. The same beat too long as in the vault. Then back down to the knives.` : ''}
+${S.f.c4_kalamLook ? `He does look up, once, when you come near. At you. The same beat too long as in the vault. Then back down to the knives.` : ''}${SQUAD().includes('vell') ? `
+
+Vell has stopped at the top of the ladder. Every journeyman in the Daru District knows that face from a description, and has been told what to do if he ever sees it: go the other way. He doesn't. He comes up the last rung and stands at the end of the row, where the count's easy, and keeps very still.` : SQUAD().includes('ellis') ? `
+
+Ellis stops a pace short of him and watches the knives go down in their row. The Claw cleans them like that: in order, the same order every time, so a hand in the dark can find any one of them. Kalam doesn't look up. He moves the last knife a finger's width, so it lies a little out of true, and leaves it there.` : ''}
 
 "Moon's Spawn," he says.
 
@@ -1287,7 +1293,7 @@ Only, as ${trickBy('cant') === 'sgt' ? 'you pass' : `${NAME(trickBy('cant'))} pa
     c4_dawn_wj:()=>({sp:'Whiskeyjack', scene:'roof', txt:
 `Whiskeyjack has turned back to the lake. The Moon's Spawn hangs over it, black against the grey, and the light is coming up over the hills to the east and not touching it.
 
-"The Guild won't deal," he says. "Not with us. Not tonight, not this month. Kalam went up to buy them and found somebody'd already bought the roof out from under him, with the Guild still on it." He doesn't sound angry. He sounds like a man reading a distance. "That's that, then. We do this the other way."${preUsed('c4_clan') ? `
+"The Guild won't deal," he says. "Not with us. Not tonight, not this month. Kalam went up to buy them and found somebody'd already bought the roof out from under him, with the Guild still on it." He doesn't sound angry. He sounds like a man reading a distance. "That's that, then. We do this the other way."${SQUAD().includes('vell') ? ` At the end of the row, Vell looks down at the coil of line on his shoulder. It was his Guild that wouldn't, and he was on the roof when it decided.` : ''}${preUsed('c4_clan') ? `
 
 "There was a fire on the Daru ridge in the third bell," he says, to the lake. "A chimney. Blue at the root. The Watch had it out with sand before it found the next house, and they're saying *the gas*."${SQUAD().includes('kettle') ? ` He keeps talking to the lake. "Everybody in this city says the gas. Fiddler will want a word, Sergeant. He'll want it with you, and then he'll want it with her, and it'll be the same word."` : ` A pause. "Everybody in this city says the gas. Fiddler will want a word, Sergeant."`}` : ''}${preUsed('reprisal') ? `
 
@@ -1320,7 +1326,7 @@ He doesn't know. For the first time since you've known him, you can hear Whiskey
 
 He looks back at the lake.
 
-"You stood in front of one of them, for a Guild boy." He says it slowly, as if tasting it. "That was a stupid thing to do. I'd have done it. I'd like you not to do it again, and I know you will." A breath. "Brisk'll be insufferable."` : `He turns his head, then. Not all the way. Enough.
+"You stood in front of one of them, for a Guild boy." He says it slowly, as if tasting it. "That was a stupid thing to do. I'd have done it. I'd like you not to do it again, and I know you will." A breath. "Brisk'll be insufferable."${SQUAD().includes('vell') ? ` His eyes go back along the row to the boy with the rope. "And the Fourth has a Guild journeyman in it. Dujek will ask me how that happened. I'm going to say *a roof*, and see how far it gets me."` : ''}` : `He turns his head, then. Not all the way. Enough.
 
 "Yes," he says. "That's what I thought. I wanted to hear if you'd say it." He looks back at the lake. "Something on that mountain knows your squad's faces now. Not your names. Faces. It doesn't need names."
 
@@ -1331,7 +1337,7 @@ He looks back at the lake.
 
 ${S.f.c4_key === 'shield' ? `It isn't true. You both know it isn't true. He puts a lid on it, and you let him, because the thing under the lid is Quick Ben's, and whatever it is, it laughs.
 
-"Keep not knowing," he says. "It's a skill. Quick's been practising for years." He looks back at the lake. "You stood in front of one of them for a Guild boy. I'll hear about that from the Guild before I hear about it from Dujek, and I'll hear it from both." A breath. "I'd have done it. Don't tell Kalam I said so."` : `It's true. That's the terrible thing. It's the truest thing he's ever said to you.
+"Keep not knowing," he says. "It's a skill. Quick's been practising for years." He looks back at the lake. "You stood in front of one of them for a Guild boy. I'll hear about that from the Guild before I hear about it from Dujek, and I'll hear it from both." A breath. "I'd have done it. Don't tell Kalam I said so."${SQUAD().includes('vell') ? ` A glance down the row, at the boy with the rope on his shoulder. "And then you brought him home. I'll hear about that too."` : ''}` : `It's true. That's the terrible thing. It's the truest thing he's ever said to you.
 
 "Something on that mountain looked at the Fourth tonight," he says, "and decided it was worth a nod. I don't know what that buys you. I don't know what it costs." He looks back at the lake. "You watched, like I said. You didn't help. That was the order and you kept it." A pause. "The boy's mine. Not yours. I sent you up. Put him on my list, not yours, if you keep one."`}`,
       ch:[{t:'The squad.', go:'c4_close'}]}),
@@ -1363,12 +1369,14 @@ She's quiet for a moment.
 
 She's quiet for a moment.
 
-"The cloak's still cold," she says, differently. "Cloth warms up. This doesn't. I keep thinking I can hear something, in it. Not a voice. The place a voice would be. A long way off, and down." She pulls it closer. "I'm not going to take it off. I thought you should know that. I don't entirely know why."`}`,
+"The cloak's still cold," she says, differently. "Cloth warms up. This doesn't. I keep thinking I can hear something, in it. Not a voice. The place a voice would be. A long way off, and down." She pulls it closer. "I'm not going to take it off. I thought you should know that. I don't entirely know why."${SQUAD().includes('vell') ? `
+
+She looks past you, down the row, at the rope boy asleep under the eaves. "He's only himself in there," she says. "Nothing tied up in string. Nothing at the window." Almost a smile. "It's restful. Keep him."` : ''}`}`,
       ch:[{t:'Back to the row.', go:'c4_close'}]}),
     c4_close_ohl:()=>({sp:'Ohl', scene:'roof', txt:
 `He's sitting with his back to the chimney and a cup of his tea going cold in his hands. He's not drinking it. He's holding it for the warmth.
 
-${S.f.c4_key === 'shield' ? `"I crossed one off," he says, when you sit. "Did you see? I don't get to do that. Twenty-two years, and the list goes one way." He turns the cup. "I've had names on it I thought were going to come off. Soldiers carried in who might have lived. I never wrote those. I wait. I wait until I'm sure." A breath. "Tonight I didn't wait. I wrote him as he came over the parapet. I *knew*." He looks at the cup. "And then I didn't know. I'd forgotten that could happen. I'm too old to be surprised, Sergeant. It was very pleasant."
+${S.f.c4_key === 'shield' ? `"I crossed one off," he says, when you sit. "Did you see? I don't get to do that. Twenty-two years, and the list goes one way." He turns the cup. "I've had names on it I thought were going to come off. Soldiers carried in who might have lived. I never wrote those. I wait. I wait until I'm sure." A breath. "Tonight I didn't wait. I wrote him as he came over the parapet. I *knew*." He looks at the cup. "And then I didn't know. I'd forgotten that could happen. I'm too old to be surprised, Sergeant. It was very pleasant."${SQUAD().includes('vell') ? ` He tips the cup toward the end of the row, where Vell is lying with the line under his head. "And then he followed us home. That's never happened either. I've had to redo a cobbler's stitches on him. Properly."` : ''}
 
 He drinks the tea, finally, cold, and makes the face.` : `"${S.f.c2_key === 'light' ? 'Two hundred and thirteen' : 'Two hundred and twelve'}," he says, when you sit. "I read it again on the stair. I read them all, most nights. I know where each of them is, on the cloth. I can find any of them in the dark."
 
@@ -1385,7 +1393,9 @@ He doesn't drink the tea. He pours it out onto the tiles, slowly, and watches it
 
 She doesn't explain. After a while she does anyway.
 
-"Nathilog, I held a line in front of the Fist's tent. Two days. Lost four out of nine. Nobody behind that line was going to die. The Fist was in the next valley, it turned out. We held a line in front of an empty tent." Tap. "Tonight there was a boy behind it." She sights along the rim. "I'm leaving a bit of the bend in. So I know which dent was for something."` : `She's sitting as far down the row as the roof allows, with the ledger closed on her knee. She doesn't look up when you sit. She doesn't move away, either, which you take as the most she can manage.
+"Nathilog, I held a line in front of the Fist's tent. Two days. Lost four out of nine. Nobody behind that line was going to die. The Fist was in the next valley, it turned out. We held a line in front of an empty tent." Tap. "Tonight there was a boy behind it." She sights along the rim. "I'm leaving a bit of the bend in. So I know which dent was for something."${SQUAD().includes('vell') ? `
+
+She looks down the row, at the boy asleep under the eaves with the line under his head. "He's still behind it," she says. "That's the part they don't tell you. Sometimes the one behind the line comes with you." Tap. "I'll have to teach him where to stand."` : ''}` : `She's sitting as far down the row as the roof allows, with the ledger closed on her knee. She doesn't look up when you sit. She doesn't move away, either, which you take as the most she can manage.
 
 "I've written it," she says. "What happened on the roof. I wrote *stood aside*. I thought about writing *by order*. It was by order. Whiskeyjack said watch." She turns the ledger over in her hands. "I didn't write it. It'd be true, and it'd be a lie."
 
@@ -1400,7 +1410,7 @@ A long silence.
 
 She opens her eyes and looks at the city, going grey in the dawn, all those roofs, all those houses under them, all those kitchens with gas pipes coming up through the floor.
 
-"Hedge'd say I've gone soft." She thinks about it. "Fiddler'd say I've gone sapper. I'd rather Fiddler." She shuts her eyes again.` : ` She opens her eyes and looks at the city, going grey in the dawn, all those roofs, all those houses under them. Then she shuts them again.`}${preUsed('c4_clan') ? ` "And I set a roof on fire with a *sharper*. Do you know how hard that is? Away from the edge, and the gas found it anyway." She hugs the satchel. "Fiddler's going to stand there and not say anything. For a *week*."` : ''} "Sergeant. That thing on the roof. The tall one. ${S.f.c4_key === 'shield' ? `I put a quarrel in it and it didn't look round.${preUsed('andii_roof') ? ' I lit it up and looked it in the face and it didn\'t *mind*.' : ''}` : `It walked past me close enough to touch, and I had the crossbow in my hands, and I didn't lift it. I *couldn't*.`}" A long breath. "That's the first thing in six years I couldn't make stop being a thing. I don't like it. I want you to know I don't like it."`,
+"Hedge'd say I've gone soft." She thinks about it. "Fiddler'd say I've gone sapper. I'd rather Fiddler." She shuts her eyes again.` : ` She opens her eyes and looks at the city, going grey in the dawn, all those roofs, all those houses under them. Then she shuts them again.`}${preUsed('c4_clan') ? ` "And I set a roof on fire with a *sharper*. Do you know how hard that is? Away from the edge, and the gas found it anyway." She hugs the satchel. "Fiddler's going to stand there and not say anything. For a *week*."` : ''} "Sergeant. That thing on the roof. The tall one. ${S.f.c4_key === 'shield' ? `I put a quarrel in it and it didn't look round.${preUsed('andii_roof') ? ' I lit it up and looked it in the face and it didn\'t *mind*.' : ''}` : `It walked past me close enough to touch, and I had the crossbow in my hands, and I didn't lift it. I *couldn't*.`}" A long breath. "That's the first thing in six years I couldn't make stop being a thing. I don't like it. I want you to know I don't like it."${SQUAD().includes('vell') ? ` She opens one eye and looks down the row at the rope boy. "He says he can get a man onto any roof in the city. I asked him about a sharper. He said *how big*." The eye shuts. "We're going to get on."` : ''}`,
       ch:[{t:'Back to the row.', go:'c4_close'}]}),
     c4_close_vell:()=>({sp:'Vell', scene:'roof', txt:
 `He isn't asleep. He's lying on his back under the eaves with his eyes open and the line coiled under his head, looking up at the underside of the Spawn: a ceiling he'd never noticed was there.
@@ -1433,7 +1443,7 @@ The Guild is not on the roofs this morning. The Guild is under them, counting.
 
 ${S.f.c4_key === 'shield' ? `And across the lake, the Moon's Spawn, black, with the dawn going round it the way water goes round a stone. You watch it. Somewhere on it, you think, something is also looking at a roof. It hesitated. You'd swear to it in front of Dujek. You're beginning to understand you'll never be asked to.` : `And across the lake, the Moon's Spawn, black, with the dawn going round it the way water goes round a stone. You watch it until your eyes ache. You have the feeling, clear as cold water, that it's looking back, and that it knows exactly which roof to look at.`}
 
-${SQUAD().includes('tuft') ? `At the end of the row, in the grey cloak, Tuft is looking at it too.` : ''}
+${SQUAD().includes('tuft') ? `At the end of the row, in the grey cloak, Tuft is looking at it too.` : ''}${SQUAD().includes('vell') ? ` Vell is asleep at last, one hand on the coil of line, like a purse in a strange inn.` : SQUAD().includes('ellis') ? ` Ellis is at the parapet with her legs over the drop, watching the roofs instead: the planks, the gutters, the one that's pine cut to look like oak. Counting them, the way she counted them two years ago.` : ''}
 
 Below, Whiskeyjack has gone back down to his bucket. Kalam has gone somewhere. Quick Ben is sitting on the chandler's step with the sack in his lap, whistling, and the city starts, around all of you, to shout about fish.`,
       ch:[{t:'Sleep. Or pretend.', fx:()=>{S.f.c4_done=1;}, go:()=>chapterEnd(4, S.f.c4_key || 'aside')}]}),
