@@ -1,6 +1,6 @@
 # House of Chains: canon sheet for Book Four
 
-Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, broken up into the Adjunct's Fourteenth Army as canon does with every unit of Chain survivors, serving as medium infantry of Blistig's 9th Legion on the march from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. **This file is the first half (game Chapters 1–4); step 3 adds Chapters 5–7, the keep-open rules, the name clashes and the Visions section.**
+Tue Oct 20, 2026, 9:30 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, broken up into the Adjunct's Fourteenth Army as canon does with every unit of Chain survivors, serving as medium infantry of Blistig's 9th Legion on the march from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. **This file is the first half (game Chapters 1–4); step 3 adds Chapters 5–7, the keep-open rules, the name clashes and the Visions section.**
 
 **Marks.** **[H]** two sources agree (closed). **[1]** one source (supported). **[O]** open: nothing found. **[M]** memory, not checked; a lead only. **[D]** David's ruling. Every line carries its source.
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. *W8* means the page *House of Chains/Chapter 8*.
