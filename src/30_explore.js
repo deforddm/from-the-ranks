@@ -132,7 +132,8 @@ function unspokenLine(id, ch){
   if (!waiting.length) return '';
   const talks = new Set(waiting.map(n => n.node())); // two figures, one conversation (Hedge and Fiddler at the bones) are one somebody
   const named = waiting.filter(n => !/^(a|an|the|something|someone)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
-  const who = talks.size === 1 && named.length ? `${named[0].name}'s` : 'Somebody here\'s';
+  const many = n => /^(Men|Strangers)\b|\b(recruits|servants|riders|lancers|youths|shamans|Blades)$/.test(n || ''); // a crowd is waiting, not is
+  const who = talks.size === 1 && named.length ? (many(named[0].name) ? `${named[0].name} are` : `${named[0].name}'s`) : 'Somebody here\'s';
   const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = mates.length ? NAME(mates[k % mates.length]) : '';
   return mate ? `${mate}, low: "${who} still waiting on a word, Sergeant."` : `${who.replace(/'s$/, ' is')} still waiting on a word.`;
 }

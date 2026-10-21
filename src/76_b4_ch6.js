@@ -555,7 +555,9 @@ Radde comes along the scrapes with the book and a cow's horn on a thong, and put
           {t:'Not now.', go:()=>startExplore()}]}),
     b4_c6_nightfall:()=> !S.f.b4_c6_duskDone ? ({sp:'The picket', txt:
 `The light is going. Radde will want the screen before it goes.`,
-      ch:[{t:'Not yet.'}]}) : ({sp:'Nightfall', scene:'b4_c6_eve', txt:
+      ch:[{t:'Not yet.'}]}) : S.area === 'b4_c6_night' ? ({sp:'The picket at night', txt:
+`The night has come already. Radde has set the watch, and the Third has its scrapes at the end of the line.`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}) : ({sp:'Nightfall', scene:'b4_c6_eve', txt:
 `The light goes. It goes red and then brown and then it is gone, and the dust goes on coming down in the dark, and all along the lines to the west the fires come up behind their shields, a long low string of them, and across the basin, on the ramps, the Dogslayers' fires come up the same.
 
 Radde sets the watch. He puts the Third in the scrapes at the end, the company's regulars along the screen, and the recruits in the middle, where they can see the squad on one side and the regulars on the other. "Midnight," he says. "I'll want you at midnight, Sergeant. Sleep till then if you can."`,
