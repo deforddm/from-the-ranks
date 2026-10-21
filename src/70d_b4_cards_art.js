@@ -112,7 +112,7 @@ Object.assign(POR, {
     PR.neck(ctx, F, 6.2); PR.face(ctx, F);
     // the helm a size too big, down to the brows
     const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-15.6, F.cy - 6); ctx.bezierCurveTo(-16.4, top - 6, 16.4, top - 6, 15.6, F.cy - 6); ctx.lineTo(16.8, F.cy - 4); ctx.lineTo(-16.8, F.cy - 4); ctx.closePath();
-    ctx.fillStyle = PR.lin(ctx, -16, 0, 16, 0, [[0,'#d8d4c8'], [.35,'#9a968a'], [.75,'#3a3830'], [1,'#121210']]); ctx.fill(); PR.stroke(ctx, 'rgba(255,255,250,.35)', 1, () => { ctx.moveTo(-10, top - 2); ctx.quadraticCurveTo(-4, top - 4.6, 2, top - 3.6); });
+    ctx.fillStyle = PR.lin(ctx, -16, 0, 16, 0, [[0,'#d8d4c8'], [.35,'#9a968a'], [.75,'#3a3830'], [1,'#121210']]); ctx.fill(); PR.stroke(ctx, 'rgba(255,255,250,.35)', 1, () => { ctx.moveTo(-10, top + 1); ctx.quadraticCurveTo(-4, top - 1.6, 2, top - .6); });
     PR.soft(ctx, 0, F.cy - 3, 12, 2.4, '#140806', .5); return F; },
   hessa(ctx){ const F = {cy:-75, w:13.4, h:20.2, jaw:.92, chin:6, skin:'#9a7454', iris:'#3a2a1a', lip:'#7a4a3a', browCol:'#140a06', browW:1.6, arch:.4, rim:'#8a9a6a', rimA:.16, nose:1.1, look:0, smileL:-.25, smileR:-.25, mouthW:4};
     // the tall shield behind her right shoulder, the worm carved round its rim
