@@ -200,7 +200,8 @@ const B4GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3
   5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}};
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b4On()) return u; const g = B4GAP[clamp(S.chapter || 1, 1, 7)];
-    if (g) { u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk; u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp)); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg]; }
+    if (g) { const s = (S.diff || 'soldier') === 'soldier' && g.s ? g.s : {hp:1, atk:0, dmg:0};
+      u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk + (s.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp * (s.hp || 1))); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg + (s.dmg || 0)]; }
     return b4Shorten(u); }; }
 /* the squad's sorcery in the dust: half effect when it sputters (the mechanism Book Two's fouled warrens use, 47) */
 const b4Grit = () => ['The warren comes up full of sand.', 'Grit in the warren. Half of it comes through.', 'The sorcery catches in the dust like cloth on a nail.', 'The Whirlwind\'s sand is in the warren too.'][R(4)];
