@@ -18,6 +18,7 @@ The patches are a matched set, so these rules hold for every book.
 |---|---|---|---|---|---|
 | One, Ashes of the Pale | The Fourth, Seventh Company marines | Round | Dark brown, gold stitching | (none beyond the numeral) | Top, above IV |
 | Two, The Chain of Dogs | The Third, Hissar garrison, Seventh Army | Heater shield | Sun-faded ochre, sand stitching, scorch mark lower right | Crow Clan feather behind III; chain links across the top | Bottom, below the tally |
+| Four, Unblooded | The Third again: Third squad, 9th Legion, the Fourteenth | Lozenge (a square on its point) | Sun-bleached grey linen, sand stitching | A finger bone on a thong across the tally (the bones the Fourteenth wears from Aren) | Left of III |
 | Three, The Fair Exchange | The Fourth again | Round (Book One's patch, unchanged) | Dark brown, gold stitching | (none beyond the numeral) | Top, above IV |
 
 ## Looking ahead
