@@ -73,9 +73,9 @@ David: the measured book "sounds too easy overall, death should still be a possi
 | road | Soldier won | Soldier runs with a death | Soldier dead a won fight | Bridgeburner won | Bridgeburner dead a won fight |
 |---|---|---|---|---|---|
 | held as posted | 100% | 25% | 0.30 | 95% | 0.95 |
-| forward | 100% | 25% | 0.30 | BBCLOSE |
+| forward | 100% | 25% | 0.30 | 100% | 0.40 |
 
-Soldier is on target (death possible, in about a quarter of runs). Bridgeburner sits just over the ≤ 0.8 asked; left there, since the hardest difficulty's mortal fight should cost.
+Soldier is on target (death possible, in about a quarter of runs). Bridgeburner meets the ≤ 0.8 asked on the forward road (0.40) and sits just over it on the road held as posted (0.95); left there, since the hardest difficulty's mortal fight should cost.
 
 The play bot (`play.mjs 1 --book=hoc`, no cheat) did not finish inside 25 minutes: it loses and re-fights Ch2's robbers several times and explores 10,000+ choices. The same bot with `--cheat` finishes the whole book in 201 s with no problems (343 nodes, all seven chapters, the ledger ending), so the flow is sound and the slow run is the naive bot losing the tuned fights. `run_all --play=N` plays Book One only, so this does not touch the ship gate.
 
