@@ -1,6 +1,6 @@
 # House of Chains: canon sheet for Book Four
 
-Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, folded into the Adjunct's Fourteenth Army as medium infantry of Blistig's Ninth Legion, marching from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. **This file is the first half (game Chapters 1–4); step 3 adds Chapters 5–7, the keep-open rules, the name clashes and the Visions section.**
+Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, broken up into the Adjunct's Fourteenth Army as canon does with every unit of Chain survivors, serving as medium infantry of Blistig's 9th Legion on the march from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. **This file is the first half (game Chapters 1–4); step 3 adds Chapters 5–7, the keep-open rules, the name clashes and the Visions section.**
 
 **Marks.** **[H]** two sources agree (closed). **[1]** one source (supported). **[O]** open: nothing found. **[M]** memory, not checked; a lead only. **[D]** David's ruling. Every line carries its source.
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. *W8* means the page *House of Chains/Chapter 8*.
@@ -45,8 +45,10 @@ Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, no
 
 ### 1.2 Game Chapter 2, Coltaine's Fall: the Aren Way (novel ch 11)
 
-- **Where.** Coltaine's Fall: the hill on the Aren Way, covered in ants and in memorials (braids, dog skulls, crow feathers). [H] R11, W11
+- **Where.** Coltaine's Fall, about a day north of Aren (W *Topper*: the army is "a day's march north of Aren") [1]: the hill on the Aren Way, covered in ants and in memorials (braids, dog skulls, crow feathers). [H] R11, W11
   - The road is lined with spiked trees hung with fetishes and painted soldier figures. Tavore forbids cutting them down. [H] R11, W11
+  - The trees still show "the spike holes and bloodstains" of Pormqual's ten thousand, nailed along the whole Way at the end of DG (R11; W *Aren Way*; DGC). No bodies are mentioned: show the trees empty [O].
+  - Duiker's tree, the last on the Way, is empty. Gesler shows it and says the body went missing (R11); Gesler thinks it was stolen, since Aren's markets sell Chain relics (W *Duiker*). [H]
 - **When.** The end of the first day out. Gamet notes they have barely moved. [1] R11
 - **Who is there.** [H] R11, W11
   - Gamet, Tavore and Tene Baralta. Baralta names the Khundryl and the Semk among the clans who fought at the Fall.
@@ -61,7 +63,7 @@ Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, no
   - *Conflict:* the W *Borduke* page puts Tavos Pond in Borduke's squad.
 - **Temul.** Gamet reports that the Crow elders refuse Temul as their commander. [H] R11, W11
 - **Topper's news.** Tavore seals her otataral sword in a stone box. Topper comes through a portal with news of Genabackis: Whiskeyjack is dead, the Bridgeburners and Paran are dead (as Topper believes), and Dujek is broken. He says desertions may follow; Tavore will not allow them. [H] R11, W11
-  - The detail of what Topper says is being re-checked (§2).
+  - Exactly what may be said of it: §5.
 - **That night.** [H] R11, W11, except as marked
   - Bottle listens through small creatures and spreads the news.
   - Fiddler grieves, and finds Temul weeping. He tells him to take the Wickans' horses to humble them (R11 only; the W *Temul* page leaves out the horses [1]).
@@ -127,21 +129,138 @@ Tue Oct 20, 2026, 9:40 PM PDT. Built for Book Four of From the Ranks (v7.0.0, no
 
 ---
 
-## 2. Re-checks in progress
+## 2. The army the squad joins
 
-A second pass is checking the facts the game's margins lean on (sources reached Oct 20, 2026):
-- What the Fourteenth is made of, and whether Blistig's Aren Guard became the 9th Legion.
-- The Red Blades out of the cells.
-- Temul's 41 youths and Nil and Nether's state.
-- Duiker and the Aren Way trees.
-- Keneb's family.
-- Rel and Pullyk.
-- The Khundryl's name.
-- What is on Coltaine's Fall.
-- How far the Vathar is from Aren.
-- Ubaryd.
-- The Seti.
-- The raiders before the Vathar Hills.
-- Topper's words.
-- Places in Aren a soldier could stand.
-- The gods in Aren.
+- **The Fourteenth is three legions.** [H] W *House of Chains/Chapter 5*, W *Tene Baralta*, R5
+  - The **8th**, under Fist Gamet: about 4,000 (W8). Keneb has it after Gamet.
+  - The **9th**, under Fist **Blistig**.
+  - The **10th**, under Fist **Tene Baralta**, who also keeps command of the Red Blades.
+  - No total for the army is given in any source reached [O]. Three legions of that size would be about 12,000 foot, but that is an inference, not canon: never print it.
+- **The 8th Legion has nine companies.** Its 9th Company (Keneb's) has 24 squads: 3 heavy, 3 marine and 18 medium. [1] W *Malaz 14th Army* (ch 5, ch 8)
+- **The recruits.** They are untested (R5; W *Gamet*), and "fully half" come from Quon Tali, "the very centre of the empire" [1] (W8; W *Malaz 14th Army*). They arrived by transport (W ch 5). Which port they sailed from is open.
+- **The Chain's survivors are broken up and spread through all three legions.** [H] R5, W ch 5
+  - So a squad of Chain veterans in Blistig's 9th fits canon. This is why Book Four's squad is where it is.
+- **The Aren Guard did not become the 9th Legion.** [H] W ch 5, W *Aren Guard*
+  - Admiral Nok detaches Commander **Alardis**, one of his own officers, to command it. Blistig is promoted out of it to Fist of the 9th, a command he was not allowed to refuse (W *Blistig*).
+  - The Guard stays behind as Aren's garrison, "disordered and apathetic after Pormqual's death" (W *Aren Guard*).
+  - Whether Blistig's 300 from DG follow him into the 9th is not stated [O]. It is a free margin: one of them may (the plan's Aren regular).
+  - **Correction to the plan (Oct 20).** The plan said Blistig's Aren Guard "becomes the Ninth Legion". The plan's question 1 has been corrected to match this section; what David decided (the `guard` and `wickans` roads both transfer) is unchanged.
+- **The Red Blades.** [H] for each point except where marked
+  - Pormqual had them arrested on Mallick Rel's advice, and Blistig freed them after Pormqual marched out (R DG ch 22–23; W *Red Blades*).
+  - In HoC they join the Adjunct with their own command intact, under Tene Baralta (W *Red Blades*, W *Tene Baralta*, R5).
+  - Lostara thinks they are kept apart from the army [1] (R5).
+  - They are cavalry in chain, some of it with otataral links woven in [1] (W *Red Blades*).
+  - A company of them died with the Chain, which gives Baralta a motive for revenge [1] (W *Tene Baralta*).
+  - In Aren they act as provosts, seizing drink and durhang [1] (R8).
+  - So Ramin (Book Two's recruit, marched to the cells with them) is with them, free, and serving.
+- **The Wickans.** [H] for each point except where marked
+  - **Temul** is captain of the Wickan youths who came through the Chain. They are the Adjunct's bodyguard (R5, W ch 5).
+  - **Their number is in conflict:** 41 (W *Temul*) or 40 (W ch 5). Write "some forty" until David checks.
+  - The **300 Crow** come by ship with horses and dogs. They are veterans of the Wickan Wars and refuse the boy as commander (R8, W8, R11, W *Temul*).
+  - On the march, the Wickans guard the wagons and keep the discipline that spares them the Seti's losses (W *Temul*; R19).
+  - Temul carries a blank vellum scroll in Duiker's honour and keeps Duiker's mare, expecting him back [1] (W *Temul*, W *Duiker*).
+  - So Keth (Book Two's Wickan recruit, gone to the Wickan children in Aren) is with Temul's youths.
+- **Nil and Nether have lost their power. They did not refuse it.** [H] W *Nil*, W *Nether*, R5, W ch 5
+  - They are broken by the Chain, dirty and barefoot. "The warlock spirits within us are silent": they can speak to spirits but no longer compel them.
+  - They wanted to go home. The Adjunct holds them to "Coltaine's last command" and orders them to wake their spirits.
+  - In ch 15 they try to reach Sormo E'nath's spirit with a bowl and butterflies. Fiddler is answered instead, and it is not Sormo.
+  - *For the game:* Keth's spirit-craft (Book Two: never sputters) may be quieter beside theirs, but it is the squad's own and not canon's.
+- **The Seti.** [1] W *Seti*
+  - A Quon Tali horse people from Por Seti, organised in warrior societies named for animals: young lancers and women archers serving as Malazan scouts and skirmishers.
+  - With the Fourteenth they are led into ambushes by their own recklessness [1] (W *Temul*).
+  - **The ambush is in conflict.** R19 says more than 300 killed and many wounded left behind for the Malazans ("Wounded Malazans are better than dead ones"). W *Leoman* says all were killed. **The game follows R19**: the wounded Seti in camp are Chapter 4's margin.
+- **The raiders before the Vathar camp** are never identified [O] (R15, W15). Leoman still has about 800 at the barrows in ch 19, so Gall did not destroy *his* force. The game treats them as unnamed tribal bands and never calls them Leoman's.
+- **Ubaryd.** [H] for each point except where marked
+  - It fell in DG [1] (W *Ubaryd*).
+  - Nok is tasked with the port cities in ch 5, and by ch 15 Ubaryd's harbour is "crowded with Nok's ships". It is the army's resupply (R15; W *Ubaryd*).
+  - The day it was retaken is never given.
+- **Plague: none in HoC.** [H] R5, W ch 5, and the first pass over every chapter. Poliel's Bluetongue starts in BH (W *Poliel*).
+
+## 3. People in Chapters 1–4: where they are, and what the squad may see
+
+| Who | In these chapters | The squad may | The squad may not |
+|---|---|---|---|
+| Tavore, the Adjunct | Aren, the march; seals her otataral sword in a stone box (ch 11) [H] | see her at a distance on the review ground and on the road; hear her orders through officers | speak with her at length; be in her tent; see the sword drawn |
+| Gamet, Fist of the 8th | Aren, the Fall, the Vathar; falls in ch 19 and steps down [H] | see him; hear the camp talk of his fall | be at his fall or his rescue (Gesler and Pella) |
+| Blistig, Fist of the 9th | Aren (calls the Adjunct mad, R8); the march | serve under him; hear him grumble; Book Two's `guard` road knows him | see him break with the Adjunct openly, or anything from later books (his conduct with Pores and Kindly) |
+| Tene Baralta, Fist of the 10th, Red Blades | Aren, the Fall, the Vathar [H] | see him; meet Red Blades under him | any later-book fate (his disfigurement at Y'Ghatan, his death at Lostara's hand) |
+| Keneb, captain, then acting Fist (ch 19) | Aren with Grub; the rumour of his desertion (ch 15) [H] | see him; repeat the rumour as rumour | say where his family is [O]; settle the rumour |
+| Grub | Aren (the thighbone), the march (walks in the sun, ch 19) [H] | see a small fair-haired boy who walks beside the wagons | call him anything to come ("the future First Sword", ch 19 epigraph: keep closed) |
+| Temul and the Wickans | Aren, the Fall (refused), the Vathar (Gall's sword) [H] | Book Two's `wickans` road and Keth know them; Sathi's clan is dead or scattered | be in the Fall scene with Fiddler; settle the dispute |
+| Nil and Nether | Aren, the Vathar (the bowl and butterflies) [H] | see them grieving and powerless; Book Two's squad knew them | restore their power; hear what speaks to Fiddler |
+| Gall and the Khundryl | from the camp before the Vathar on [H] | feast with them; take the Khundryl recruit | name Gall's wife or sons (unnamed in HoC; Hanavat is TCG's) |
+| Strings (Fiddler), Cuttle and the 4th squad; Gesler's 5th; Borduke's 6th | everywhere [H] | see them at a distance, in a line, at a fire across the yard; hear of the blast | stand in any of their scenes (§4); learn who Strings is |
+| Lostara Yil and Pearl | Aren (ch 8), then away by warren [H] | see Red Blades and a Claw-shaped stranger asking questions | be in the questioning of Gesler and Stormy, or on the *Silanda* |
+| Topper | at the Fall, by portal (ch 11) [H] | hear the news as Bottle spread it, as rumour | see Topper |
+| Duiker | **not there.** His body is gone from the last tree on the Aren Way [H] (R11, W *Duiker*) | believe it was stolen (relics are sold in Aren's markets) | say who took it or that he lives (Baruk raises him in MoI: keep closed) |
+| Mallick Rel, Pullyk Alar | gone from Aren with each other (W *Pullyk Alar*, ch 8, Cuttle says so); banished by Sha'ik (R7, W *Mallick Rel*) [H] | hear rumours of where Rel went (south to take the throne, ch 10; to Aren to surrender and blame Pormqual, ch 21); Book Two's Pullyk who "will remember your face" is gone | say where Rel goes; reveal anything later (the Black Glove, Emperor) |
+| Lenestro | killed by Cuttle in revenge for the Chain (W8, R8) [H] | hear of it in the barracks | see it |
+| Coltaine | dead (DG). The Fall is the hill where he died, now a pilgrims' place [H] (W *Coltaine*, R11, W11) | climb it as pilgrims do, at night | show his body (gone; the crows) or a standing cross (open: use pilgrims' markers only) |
+| Leoman | raiding: the oil bolas (ch 18), the Seti (ch 19), the barrows (ch 19) [H] | see his riders at night and far off; fight unnamed raiders | meet or stop Leoman; fight Corabb |
+
+## 4. Hard limits for Chapters 1–4
+
+The squad never stands in these scenes, never changes their outcome, and never meets the people in them on the page.
+
+- **Ch 1.**
+  - The review ground at the moment of Cuttle's blast and at Grub's walk-on. The squad is in another legion's line and hears or sees it from across the ground.
+  - Strings's veterans' circle and the Nok story.
+  - The questioning of Gesler and Stormy.
+  - The *Silanda* (Pearl and Lostara's).
+  - The Adjunct's councils.
+  - The squad may raid the same cemetery as other squads (R8: "the squads" raid it), but never with Strings's.
+- **Ch 2.**
+  - Fiddler and Temul's talk.
+  - Topper in the Adjunct's tent.
+  - Bottle's eavesdropping.
+- **Ch 3.**
+  - Fiddler's squad scouting the Khundryl.
+  - Gall kneeling to Temul.
+  - Keneb and Gamet's talk.
+  - The butterflies.
+  - **The first crossing of the ford** (Fiddler's squad's honour).
+  - The squad may feast, may carry bones out of its own stretch of the ford before or after the sappers' work (the plan's key), and crosses after Fiddler's squad.
+- **Ch 4.**
+  - The scorpion contest (the 9th Company's three marine squads).
+  - **The barrow trap** (the marines).
+  - **Gamet's ride and rescue** (Gesler and Pella).
+  - The squad may hold a 9th Legion picket elsewhere on the night (R19: the pickets were "set up too far apart"), tend the Seti wounded, and fight the burning wagons.
+- **Throughout.**
+  - Never inside the Whirlwind or the oasis camp.
+  - Never in Kalam's, Karsa's, Cutter's or Trull's threads, except in a vision.
+  - No marine squad of the Fourteenth is ours; ours is medium infantry of the 9th Legion. The 9th Company's 4th, 5th and 6th marine squads and Sergeant Balm's Ninth are canon, man for man. **The squad keeps the number III** (the plan); no canon squad of that number has been found [O]. Step 3's name check confirms it.
+
+## 5. Keep closed (from Chapters 1–4; step 3 adds them to `series-canon.md` §(a))
+
+- **Duiker's body.** It is gone from the tree. Who took it and that he lives are never said (W *Duiker*: Baruk raises him in MoI).
+- **Grub.** Never "First Sword", never anything to come.
+- **Topper's news.** Paran, every Bridgeburner and Whiskeyjack dead, and Dujek's Host broken (R11, W *Topper*), is what the army believes. A character may say it; the narrator never confirms it.
+  - Never Picker and the survivors.
+  - Never the Bridgeburners ascending (beyond Fiddler's feeling late in the book, which is his).
+  - Cuttle's word that Quick Ben lives is the one counter-rumour.
+- **Mallick Rel.** Never where he goes, the Black Glove, the pogrom, his time as Emperor, or his priesthood beyond the DG word "Jhistal".
+- **Later books' fates.**
+  - Temul as Fist, and the Wickans sent home (BH).
+  - Baralta's disfigurement and death.
+  - Hanavat and the Khundryl's end (TCG).
+  - Blistig's later conduct; Pores as quartermaster (later). In HoC Pores is a lieutenant.
+- **No plague**, and no Poliel as Consort.
+- **The Khundryl's black tears are tattooed.** Why they are called Burned Tears is not given in any source [O]. Show the tears; never explain them.
+- **Never "Dancer's Tavern".** It is a canon Aren name (W ch 5), but Dancer is on the never-use list (`series-canon.md` §(a) rule 13).
+
+## 6. For David to check in his copy
+
+1. The chapter count (26?) and which chapter opens each of the four parts.
+2. Temul's youths: 40 or 41 (ch 5)?
+3. The Seti in ch 19: were the wounded left alive for the Malazans (R19) or all killed (W *Leoman*)?
+4. Whose horse Leoman's oil raid draws off in ch 18.
+5. Is the camp where the Khundryl join called the Vathar Hills (W15 only)?
+6. Coltaine's Fall in ch 11: is anything left standing on the hill (a cross, a marker)?
+7. Tavos Pond: Gesler's squad (R11) or Borduke's (W *Borduke*)?
+
+## Sources
+
+- W: malazan.fandom.com: *House of Chains* main page; *House of Chains/Chapter 5, 7, 8, 10, 11, 13, 15, 18, 19*; *Temul*, *Nil*, *Nether*, *Gamet*, *Keneb*, *Grub*, *Blistig*, *Tene Baralta*, *Red Blades*, *Aren Guard*, *Aren Way*, *Duiker*, *Coltaine*, *Mallick Rel*, *Pullyk Alar*, *Khundryl*, *Khundryl Burned Tears*, *Day of Pure Blood*, *Ubaryd*, *Seti*, *Topper*, *Leoman*, *Fiddler*, *Borduke*, *Malaz 14th Army*, *D'rek*, *Poliel*.
+- Not reached (two tries): *Fourteenth Army*, *Burned Tears*, *Gall*, *Coltaine's Fall*, *Vathar Crossing*, *Aren*, *Soliel*, *Gesler*, *Fiddler's squad*.
+- R: reactormag.com Malazan Re-read, *House of Chains* chapters 5, 6–8, 11–19 (through the WordPress API); *Deadhouse Gates* chapters 20–21 and 22–23.
+- Wp: en.wikipedia.org *House of Chains*.
