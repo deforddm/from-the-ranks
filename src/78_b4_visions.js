@@ -127,7 +127,7 @@ She was a Red Blade before she was anything else. Red Blades are good at decidin
     {txt:
 `Karsa Orlong walks across the Jhag Odhan, because the Odhan is in his way, and he has never in his life gone round a thing that was in his way.
 
-The grass is short and grey-gold and goes on to the edge of the world. The sky is larger than any sky in the mountains of his people. The children of the lowlands say nothing lives out here. The children say a great many things. He has stopped listening to most of them.
+The grass is short and grey-gold and goes on to the edge of the world. The sky is larger than any sky in the mountains of his people. The children of the lowlands say nothing lives out here. The children say all manner of things. He has stopped listening to most of them.
 
 His sword is on his back. His feet are bare and hard. The heat sits on the plain like a hand, and he walks through it.`},
     {txt:
@@ -321,7 +321,7 @@ Sha'ik sits in the dark of the helm with her gauntleted hands in her lap, and wa
 
 That is wrong. He does not remember putting it on. He remembers the lamp in his tent, and a pain behind his eyes that grew and grew until it was the whole of the world. The pain is gone now. Everything is very clear and very quiet.
 
-He is standing in the dark at the edge of the Malazan lines, and there are a great many people standing round him, and none of them are breathing.
+He is standing in the dark at the edge of the Malazan lines, and there are crowds of people standing round him, and none of them are breathing.
 
 He understands, then. It does not surprise him as much as he would have expected.`},
     {txt:
