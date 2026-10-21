@@ -63,7 +63,8 @@ const r = await page.evaluate(async () => {
   S = null; showTitle(); await wait(200); out.shelf = [...document.querySelectorAll('[data-shelf]')].map(b => b.dataset.shelf).join(',');
   showTitle(false, 'dg'); await wait(200); out.picker = [...document.querySelectorAll('.bseg [data-book]')].map(b => b.dataset.book).join(',');
   showTitle(false, 'hoc'); await wait(200); out.hocTitle = {name:$('#tName').textContent, tag:$('#tTag').textContent, patch:$('#tPatch').dataset.book, picker:[...document.querySelectorAll('.bseg [data-book]')].map(b => b.dataset.book).join(','), imp:!$('#impField').hidden};
-  $('#nm').value = 'Newer'; $('#bNew').click(); await wait(200); out.begin = {msg:$('#nmMsg').textContent, view, S:!!S};
+  out.hasCh = Object.keys((BOOKSNAP.hoc && BOOKSNAP.hoc.ch) || {}).length; // with a chapter registered (71 on) the book is on the shelf and Begin starts it
+  $('#nm').value = 'Newer'; $('#bNew').click(); await wait(200); out.begin = {msg:($('#nmMsg') || {}).textContent || '', view, S:!!S, book:S && S.book, ch:S && S.chapter};
   out.impDesc = b4ImpDesc(id);
   } catch (e) { out.err = e.stack; }
   return out;
@@ -93,9 +94,11 @@ R.broke === 0 ? ok('at Nerve 0 the regular breaks at the end of round 2') : no('
 R.n8.dustLog && R.n8.xbRng === Math.max(2, R.n8.xbBase - 2) ? ok(`Dust 2 is logged and shortens the crossbow (${R.n8.xbBase} → ${R.n8.xbRng})`) : no('dust ' + JSON.stringify(R.n8));
 R.nerveMax === 10 && R.nerveMin === 0 && R.html ? ok('Nerve stays within 0..10; the widget shows Nerve and Dust') : no('nerve ' + R.nerveMax + ' ' + R.nerveMin);
 R.pct === 15 && /never sputters/.test(R.leperFx) ? ok('Dust 3: sorcery sputters 15%; the Leper keeps it clean') : no('pct ' + R.pct);
-R.shelf === 'gotm,dg,moi' && R.picker === 'gotm,dg,moi' ? ok('Book Four is off the shelf and the picker while it has no chapters') : no('shelf ' + R.shelf + ' picker ' + R.picker);
+if (R.hasCh) R.shelf === 'gotm,dg,moi,hoc' && R.picker === 'gotm,dg,moi,hoc' ? ok(`Book Four is on the shelf and the picker with ${R.hasCh} chapter${R.hasCh > 1 ? 's' : ''} written`) : no('shelf ' + R.shelf + ' picker ' + R.picker);
+else R.shelf === 'gotm,dg,moi' && R.picker === 'gotm,dg,moi' ? ok('Book Four is off the shelf and the picker while it has no chapters') : no('shelf ' + R.shelf + ' picker ' + R.picker);
 R.hocTitle.name === 'Unblooded' && /never fought/.test(R.hocTitle.tag) && R.hocTitle.patch === 'hoc' && /hoc/.test(R.hocTitle.picker) && R.hocTitle.imp ? ok('asked for by name, the title dresses for Book Four (Unblooded, its line, its patch) and offers the transfer') : no('hoc title ' + JSON.stringify(R.hocTitle));
-/still being written/.test(R.begin.msg) && R.begin.view === 'title' && !R.begin.S ? ok('Begin Book Four says it is still being written and stays on the title') : no('begin ' + JSON.stringify(R.begin));
+if (R.hasCh) R.begin.S && R.begin.book === 'hoc' && R.begin.ch === 1 && R.begin.view !== 'title' ? ok('Begin Book Four starts a Book Four game at Chapter One') : no('begin ' + JSON.stringify(R.begin));
+else /still being written/.test(R.begin.msg) && R.begin.view === 'title' && !R.begin.S ? ok('Begin Book Four says it is still being written and stays on the title') : no('begin ' + JSON.stringify(R.begin));
 /Haddat and Tangle/.test(R.impDesc) && /Sathi and Marrow|Marrow and Sathi/.test(R.impDesc) && /Tallow and Hessa/.test(R.impDesc) ? ok('the transfer is described when picked: ' + R.impDesc) : no('impDesc ' + R.impDesc);
 }
 errors.length ? no('page errors: ' + errors.join(' | ')) : ok('no page errors');

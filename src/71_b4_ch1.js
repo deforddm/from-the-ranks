@@ -340,7 +340,7 @@ ${b41Say({marrow:`"A child with a bone," Marrow says. "Hood's humour, child. It 
 
 "Eyes front," says the company's sergeant, walking behind the line. "Eyes front. It's a boy. I've seen two wars and a great many boys."`,
       ch:[{t:'Eyes front.', go:'b4_c1_fallout'}]}),
-    b4_c1_fallout:()=>({sp:'The marshaling ground', scene:'b4_c1_review', fx:()=>{ S.f.b4_blistig = 1; }, txt:
+    b4_c1_fallout:()=>({sp:'The marshaling ground', scene:'b4_c1_review', fx:()=>{ S.f.b4_blistig = 1; b4Nerve(-1, 'The Fist said it where the recruits could hear'); }, txt:
 `The review ends the way reviews end, without anybody saying so: the Adjunct's riders turn and go back toward the city, and the Fists come away from her in three directions, and the order comes down the lines a quarter of an hour behind them. *Two days. The army marches in two days. Until then, every soldier is confined to barracks.*
 
 Fist Blistig rides back along the 9th's front with his officers around him. He is a heavy man on a heavy horse, and his face is the face of somebody with a bad tooth that has been talking to him all morning. As he passes the Second Company you hear him, quite clearly, because he is not trying to be quiet: "...mad. She'll have us all in the ground by midsummer, and she'll review the graves."
@@ -408,7 +408,7 @@ The rest of them are listening very hard. Over on the dust the 8th is still stan
             near:{t:()=>`Yes, but a shield rim comes round on the second try and catches ${NAME(ROLL().who || 'sgt')} across the mouth. The freckled girl is very sorry. ${3 + lvT()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', 3 + lvT())},
             go:'b4_c1_drill_ok', fail:'b4_c1_drill_fail'},
           {t:'"All the way. Now drink some water."', fx:()=>{ S.f.b4_c1_drill = 'talk'; }, go:'b4_c1_drill_talk'}]}),
-    b4_c1_drill_ok:()=>({sp:'The Second Company\'s recruits', fx:()=>{ S.f.b4_c1_drill = cleanRoll() ? 'clean' : 'ok'; b4Nerve(1, 'The recruits locked shields with the Chain squad'); }, txt:
+    b4_c1_drill_ok:()=>({sp:'The Second Company\'s recruits', fx:()=>{ S.f.b4_c1_drill = cleanRoll() ? 'clean' : 'ok'; if (cleanRoll()) b4Nerve(1, 'The recruits locked shields with the Chain squad'); }, txt:
 `${by({hessa:`Hessa takes the front, and says three words in the temple tongue that probably mean *together*, and then in Malazan: "You are a wall. Walls do not have opinions." She puts their rims together one by one with her own hands.`, darrut:`Darrut takes the front. "Gate," he says, the Aren Guard's word, and puts the freckled girl's shield against his own with one hand like a man shutting a door. "Gate. Now you. Now you."`, haddat:`Haddat takes the front and teaches them the way the Seventh taught her: by standing there until they stand there too.`, _:`{who} takes the front and shows them, slowly, the way it was done on the Chain: rim on rim, the knee bent, the weight forward, the face behind the shield and not over it.`})}
 
 The third time, they hold. Eight recruits, rims locked in a row along the wall, faces red, breathing hard, and when you shove the end of the line it gives an inch and comes back.
@@ -492,7 +492,7 @@ ${b41Say({haddat:`Haddat looks at the phials for a long breath. "There were crow
             edges:id=>[id === 'haddat' && ['she has wanted to since she saw it', 2], id === 'darrut' && ['he knows how the Guard turns over a stall', 1], id === 'hessa' && ['she does not lose her temper; she decides', 1], id === 'tallow' && ['he is very sure it is wrong and not at all sure he is allowed', -1]],
             near:{t:'Yes, but the trestle goes over with a crash that brings the Red Blades up the street at a run, and their officer takes the sergeant\'s name and the squad\'s number before he lets it go.', fx:()=>{ S.f.b4_c1_redName = 1; }},
             go:'b4_c1_stall_break', fail:'b4_c1_stall_fail'},
-          {t:'Walk on.', fx:()=>{ S.f.b4_c1_relic = 'left'; b41L('haddat', -1); }, go:'b4_c1_stall_walk'}]}),
+          {t:'Walk on.', fx:()=>{ S.f.b4_c1_relic = 'left'; b41L('haddat', -1); note(b4In('haddat') ? 'Behind the squad the seller is calling it again. Haddat says one thing in Hissari, the length of the street later: "Twelve silver."' : 'Behind the squad the seller is calling it again. Coltaine\'s finger. In glass.'); }, go:()=>startExplore()}]}),
     b4_c1_stall_buy:()=>({sp:'The relic stall', scene:'b4_c1_market', txt:
 `The seller takes the silver and wraps the phial in a square of cloth, and makes a little bow. "A fine choice, Sergeant. He'll watch over you."
 
@@ -509,11 +509,6 @@ One phial has rolled to the kerb without breaking. ${b41Say({haddat:`Haddat will
 `The trestle is better made than it looks, and the seller is quicker than he looks, and he is shouting for the Red Blades before ${by({sgt:'you have', _:'{who} has'})} got it off the ground. Two of them come down the street at a trot, in red scale, and stand between the squad and the stall, and their officer says, very politely, that the Adjunct's order is that the soldiers of the Fourteenth are not to trouble the people of Aren.
 
 Soldiers of the 10th, who saw it, laugh. The seller smiles.${b4In('haddat') ? `\n\nHaddat walks away first. She walks very fast.` : ''}`,
-      ch:[{t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_stall_walk:()=>({sp:'The relic stall', scene:'b4_c1_market', txt:
-`You walk on. Behind you the seller is already calling it again. *Coltaine's finger. In glass.*
-
-${b41Say({haddat:`Haddat walks on too, because you did, and she does not say anything for the length of the street, and then she says, in Hissari, "Twelve silver." Only that.`, _:`The squad walks the length of the street in silence.`})}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
     b4_c1_sweep:()=>({sp:'The Red Blades', fx:()=>{ S.f.b4_c1_sweep = 1; }, txt:
 `Red Blades, six of them, in red-enamelled scale with their swords sheathed, working down the street tavern by tavern. Two go in. They come out carrying a cask between them, or a crate of jars, or a sack that smells of durhang resin, and put it on a cart with the rest, and go on to the next. The soldiers of the Fourteenth stand aside and call them names: *Baralta's dogs*, *lapdogs*, *Seven Cities traitors*. The Red Blades do not seem to hear.
@@ -536,15 +531,12 @@ ${b41Say({haddat:`Haddat picks up the sash and shakes the dust out of it. "Ehrli
 
 "The company has horses again," he says. "Tene Baralta has us taking the drink off the army, because the Adjunct ordered it and because nobody likes us anyway." He shrugs at the cask. "My captain says I may ask to be lent, if the squad will have me. He does not understand it. He says yes anyway." He looks at you. "I am asking."`,
       ch:[{t:'"Walk with us."', fx:()=>{ b4Join('redblade'); gain('b4_c1_redsash'); S.f.b4_c1_sash = 1; }, go:'b4_c1_ramin_join'},
-          {t:'"Stay near your company. We\'ll send for you."', fx:()=>{ S.f.b4_raminDone = 2; }, go:'b4_c1_ramin_near'}]}),
+          {t:'"Stay near your company. We\'ll send for you."', fx:()=>{ S.f.b4_raminDone = 2; note('"Near," Ramin says. "That is a Red Blade\'s word too. Ask at any fire, Sergeant. I will come."'); }, go:()=>startExplore()}]}),
     b4_c1_ramin_join:()=>({sp:'Ramin', txt: b4In('redblade') ?
 `He nods once, once, at an order he was hoping for, and goes to tell his officer, and comes back without the cask. He has unwound his sash, the red silk one, and put it in your hand. "For the squad," he says. "I have another. The company always has another." He does not say what it costs a Red Blade to give one away. He does not have to.
 
 The horse he leaves with the company. "There is no room for a horse in a squad of foot," he says. "I have learned that much." He sounds almost cheerful about it.` :
 `He nods, and goes to his officer, and comes back. "Another walks with you already," he says. "Then I will be near. Ask, at any fire, and I will come." He puts his sash in your hand anyway. "For the squad. The company always has another."`,
-      ch:[{t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_ramin_near:()=>({sp:'Ramin', txt:
-`"Near," he says, and nods. "That is a Red Blade's word too. We are always near." He picks up the cask. "Ask, at any fire, Sergeant. I will come."`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
     b4_c1_sweep_again:()=>({sp:'The Red Blades', txt:
 `The Red Blades are three taverns further down the street, carrying out casks. ${b4In('redblade') ? `One of them sees Ramin with the squad and raises a hand. Ramin raises his back.` : S.f.b4_raminDone === 2 ? `Ramin, among them, raises a hand.` : `The soldiers have stopped calling them names. It is too hot.`}`,
@@ -563,22 +555,19 @@ Further along the quay, standing very straight beside a grey mare, is the boy: T
 ${b41Say({sathi:`Sathi has gone completely still beside you, and so has Hackle at her knee. "Crow," she says. "Old men. Old women." She watches them walk past Temul. "Old fools." She says it in Wickan, and loud, and two of the Crow turn their heads, and she meets their eyes and does not stop grinning, every filed tooth.`, haddat:`"They will not take him," Haddat says, watching. "Not a boy. Not after Coltaine." She sounds as if she understands it, and does not like understanding it.`, _:`The squad watches them walk past the boy. The whole quay is quiet.`})}`,
       ch:[{t:'"Keth."', req:()=>b4CanRecruit('warlock') && !b4In('warlock') && S.f.b4_kethDone == null, go:'b4_c1_keth'},
           {t:'Back to the carts, and the gate.', go:()=>{ startExplore(); }}]}),
-    b4_c1_keth:()=>({sp:'Keth · the Wickan youths', txt:
+    b4_c1_keth:()=>({sp:'Keth · the Wickan youths', scene:'b4_c1_quay', txt:
 `He is among Temul's youths, thin as a tent-pole and grown another hand out of his sleeves since Aren's wall, with ochre across his eyes and a rattle of dog's teeth at his belt. He sees you before you see him. He has always done that.
 
 "Sergeant," he says in his own voice, and then, in the other one, older and ruder, out of the same mouth: "*Still alive. The healer's doing, I suppose.*"${b4In('marrow') ? ` He looks at Marrow and grins. "*Healer.*" "Witch," says Marrow, pleased.` : ''}${b4In('sathi') ? ` Sathi says something to him in Wickan that makes two of the youths laugh, and he says something back that makes the rest of them laugh, and she punches his arm.` : ''}
 
 He looks along the quay at the Crow walking past Temul. "They won't follow him," he says, his own voice. "They say a boy can't lead them. The grandmother says the Crow couldn't lead a goat to grass." He shrugs. "Temul says I can go with the squad, if the squad asks. He says the youths will hold without me. He is probably right." He sounds as if he would like to be told otherwise. "Are you asking?"`,
       ch:[{t:'"We\'re asking."', fx:()=>{ b4Join('warlock'); }, go:'b4_c1_keth_join'},
-          {t:'"Stay with Temul. He needs you more."', fx:()=>{ S.f.b4_kethDone = 2; }, go:'b4_c1_keth_near'}]}),
+          {t:'"Stay with Temul. He needs you more."', fx:()=>{ S.f.b4_kethDone = 2; note('"He does," Keth says, looking at the boy by the grey mare. "Somebody should stand next to him. Ask at any fire, Sergeant. I\'ll come."'); }, go:()=>startExplore()}]}),
     b4_c1_keth_join:()=>({sp:'Keth', scene:'b4_c1_quay', txt: b4In('warlock') ?
 `He goes to Temul, and says something low, and Temul looks across at the squad and nods once, trying to nod like Coltaine. Keth comes back with his kit on his shoulder and Hackle's-cousin, a big yellow camp dog, at his heels; he sends the dog back to the youths with a word.
 
 "*The 9th,*" says the grandmother, looking at the squad's badges. "*Never heard of it.*" "No one has," says Keth. "It's new." "*Everything is new,*" the grandmother says. "*That is what is wrong with it.*"` :
 `He goes to Temul, and comes back. "Another walks with you already," he says. "Then I'll be with the youths, near. Ask at any fire." The grandmother says something about the 9th that is not polite.`,
-      ch:[{t:'Back to the carts, and the gate.', go:()=>startExplore()}]}),
-    b4_c1_keth_near:()=>({sp:'Keth', scene:'b4_c1_quay', txt:
-`He looks at Temul, standing straight by the grey mare with the Crow walking past him, and nods. "He does," he says. "Somebody should stand next to him." The grandmother says nothing at all, which from her is agreement. "Ask at any fire, Sergeant. I'll come."`,
       ch:[{t:'Back to the carts, and the gate.', go:()=>startExplore()}]}),
     b4_c1_back_line:()=>({sp:'The way back', txt:
 `West, the streets climb back toward the marshaling ground. The company has gone in to the barracks already; there is nothing up there but dust and the 8th's carts.`,
@@ -661,13 +650,13 @@ And beyond the wall, in the old cemetery, there are lanterns among the graves, a
     b4_c1_yard:()=>({sp:'The Third\'s fire', scene:'b4_aren_yard', again:()=> b41Done() ? 'The fire, burnt down to coals. The march is at dawn.' : `The Third's fire, in the yard. ${b41Ph() >= 3 ? 'The second night.' : 'The lanterns are still moving over the wall.'}`, txt:
 `${b41Done() ? `The Third's fire has burned down to a red eye of coals in a ring of stones. Round the yard the other fires are going out one by one. The march is at dawn. The recruits who could not sleep last night are asleep now, all of them, all at once, as if somebody had blown them out.` : b41Ph() >= 3 ? `The Third's fire, the second night. The yard is louder than it was: the recruits have been confined for a day and a half, the Red Blades have taken every cask in the Fourteenth, and somebody in the end bunk-house has found one they missed.` : `The Third's fire, in a ring of stones on the flags, with a pot on it that ${b4In('marrow') ? 'Marrow says is tea' : 'is meant to be tea'}${b4In('tangle') ? ' and Tangle says is a crime' : ''}. The yard is full of other fires and other squads, and every one of them is talking about the boy with the bone. Over the back wall the lanterns are still moving among the graves.`}${b4In('marrow') ? '' : `\n\nThe pot is just a pot. There is nobody in the squad who will call it tea.`}`,
       ch:[b4DeckChoice(1),
-          {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b4_c1_rest' + b41Ph()], fx:()=>{ S.f['b4_c1_rest' + b41Ph()] = 1; b4Rest('The squad sits an hour by its own fire, inside the 9th\'s walls. Wounds close, mostly.'); b4Nerve(b41Ph() === 2 ? 1 : 0, 'The company saw the Chain squad sit calm'); }, go:'b4_c1_yard_rest'},
+          {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b4_c1_rest' + b41Ph()], fx:()=>{ S.f['b4_c1_rest' + b41Ph()] = 1; b4Rest('The squad sits an hour by its own fire, inside the 9th\'s walls. Wounds close, mostly.'); }, go:'b4_c1_yard_rest'},
           {t:'Talk with the squad.', go:'b4_c1_yard_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c1_yard_swap'})),
-          b4PipeChoice('b4_c1_yard_pipe'),
-          {t:'Sell the confiscated pipe to the quartermaster\'s clerk.', tag:'+8 silver', req:()=>(S.kit || []).includes('b4_c1_durhangpipe') && !S.f['b4_pipe' + (S.chapter || 0)], fx:()=>{ b41Drop('b4_c1_durhangpipe'); S.silver = (S.silver || 0) + 8; updSilver(); S.f.b4_c1_pipeSold = 1; }, go:'b4_c1_yard_sold'},
+          b4PipeChoice('b4_c1_yard'),
+          {t:'Sell the confiscated pipe to the quartermaster\'s clerk.', tag:'+8 silver', req:()=>(S.kit || []).includes('b4_c1_durhangpipe') && !S.f['b4_pipe' + (S.chapter || 0)], fx:()=>{ b41Drop('b4_c1_durhangpipe'); S.silver = (S.silver || 0) + 8; updSilver(); S.f.b4_c1_pipeSold = 1; note('The quartermaster\'s clerk buys the pipe for eight silver without asking where it came from. He will sell it to the 10th before morning.'); }, go:'b4_c1_yard'},
           {t:'Over the wall, to the cemetery.', req:()=>b41Ph() === 2 && !S.f.b4_c1_digDone, onward:true, go:'b4_c1_wall'},
-          {t:'Over the wall with the dig detail.', req:()=>b41Ph() >= 3 && S.f.b4_c1_key === 'grave' && !b41Done(), onward:true, go:'b4_c1_watch_out'},
+          {t:'Over the wall with the dig detail.', req:()=>b41Ph() >= 3 && S.f.b4_c1_key === 'grave' && !b41Done(), onward:true, go:()=>{ startExplore('b4_c1_cemetery'); talk('b4_c1_watch_arrive'); }},
           {t:'The noise from the end bunk-house.', req:()=>b41Ph() >= 3 && S.f.b4_c1_key === 'chain' && !b41Done(), onward:true, go:'b4_c1_brawl_start'},
           {t:'Sleep. The march is at dawn.', req:()=>b41Done(), onward:true, go:'b4_c1_dawn'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -679,14 +668,6 @@ ${b41Say({marrow:`Marrow goes round the squad the way she always has, without as
     b4_c1_yard_swap:()=>({sp:'The Third\'s fire', scene:'b4_aren_yard', txt:
 `${b4In('redblade') ? `Ramin comes across the yard from the Red Blades' lines, walking the way he walks, as if there were a horse under him. He puts his kit down by the fire. "Lent again," he says. "My captain sighed. He sighs a great deal."` : b4In('warlock') ? `Keth comes over the wall from the Wickan youths' lines, which he is not supposed to do, with the grandmother complaining about the climb all the way down. He puts his kit by the fire. "*Temul says go,*" the grandmother says. "*Temul says a great many things.*"` : `The swap is made. The fire takes the news calmly.`}`,
       ch:[{t:'Back to the fire.', go:'b4_c1_yard'}]}),
-    b4_c1_yard_pipe:()=>({sp:'The Third\'s fire', scene:'b4_aren_yard', txt:
-`The pipe goes round once, and the yard's noise goes a little further away, and the ache in everybody's shoulders goes with it.${b4In('marrow') ? ` Marrow does not take it. She watches it go round with her mouth thin. "Once," she says. "I am counting."` : ''}${b4In('tallow') ? ` Tallow coughs until his eyes run, and passes it on, and says it was very nice.` : ''}`,
-      ch:[{t:'Back to the fire.', go:'b4_c1_yard'}]}),
-    b4_c1_yard_sold:()=>({sp:'The Third\'s fire', scene:'b4_aren_yard', txt:
-`The quartermaster's clerk, who has been prowling the yard all evening with his book, buys the pipe for eight silver without asking where it came from, and writes something in the book that is probably *pipe*, and goes away. He will sell it back to someone in the 10th before morning. Everybody knows it.`,
-      ch:[{t:'Back to the fire.', go:'b4_c1_yard'}]}),
-
-    /* the squad's talk at the fire: a line for each who is here */
     b4_c1_yard_talk:()=>{ const n2 = b41Ph() >= 3, ln = [];
       if (b4In('haddat')) ln.push(n2 ? `Haddat is mending her shield-strap by feel. "The recruits ask me about the Chain now," she says. "I tell them the names. It is the only answer I have." She says one, quietly, the way she says them at night, and goes on mending.` : `Haddat sits with her back to the yard and her face to the wall, toward the lanterns in the cemetery. "They are digging up the dead for bones," she says. "In Hissar we would call that a crime. Here it is an order, by morning, I think." She does not sound as if she knows yet what she thinks of it.`);
       if (b4In('sathi')) ln.push(n2 ? `Sathi is teaching Hackle to growl at the word *Crow*. He has nearly got it. "The Crow walked past Temul again today," she says. "I would like to bite one."` : `Sathi has her feet on Hackle and her chin on her knees. "Coltaine's own, they call themselves," she says, of the Crow on the quay. "We were Coltaine's own. The Weasels. All of us." She grins, and it is not a grin.`);
@@ -764,7 +745,7 @@ He sees you watching. "Chain lot," he says. "${b4In('marrow') ? 'You\'ve your ow
           {t:'Not now.', go:()=>startExplore()}]}) : b41Ph() >= 3 ? ({sp:'The back wall', txt: S.f.b4_c1_key === 'grave' ?
 `The back wall, and over it the old cemetery, dark tonight except for one lantern at the Chain's corner where the company's dig detail is waiting.` :
 `The back wall. The cemetery beyond it is dark tonight. The Third's business is in the yard.`,
-      ch:[{t:'Over the wall with the dig detail.', req:()=>S.f.b4_c1_key === 'grave' && !b41Done(), onward:true, go:'b4_c1_watch_out'},
+      ch:[{t:'Over the wall with the dig detail.', req:()=>S.f.b4_c1_key === 'grave' && !b41Done(), onward:true, go:()=>{ startExplore('b4_c1_cemetery'); talk('b4_c1_watch_arrive'); }},
           {t:'Not now.', go:()=>startExplore()}]}) : ({sp:'The back wall', txt:
 `The back wall of the yard is old Aren brick, chest high on this side and a good deal more on the other, and somebody has leaned a bunk-ladder against it. Over it, the old cemetery: dark tombs, and lanterns moving among them, and the sound of a great many spades.
 
@@ -818,13 +799,8 @@ ${b41Say({haddat:`Haddat goes down on her knees by the cloth and begins, very ca
 When it is done, the squad carries the sacks back to the Chain's corner and puts them in the open graves and fills the graves in, and puts the boards back up, as near as anybody can tell where they went. ${b41R({redblade:`Ramin carries the board that says *Seventh* and puts it back himself, very straight.`, warlock:`Keth walks the length of the corner with his palms out, low, and the grandmother says something in Wickan that might be a prayer and might be a scolding.`})}
 
 Radde is standing at the end of the row when you straighten up. You did not hear him come. He has the book under his arm.`,
-      ch:[{t:'Bury the market finger with them.', req:()=>(S.kit || []).includes('b4_c1_relic') && S.f.b4_c1_relic === 'bought' && !S.f.b4_c1_relicBuried, fx:()=>{ b41Drop('b4_c1_relic'); S.f.b4_c1_relicBuried = 1; b41L('haddat', 1); }, go:'b4_c1_buried'},
+      ch:[{t:'Bury the market finger with them.', req:()=>(S.kit || []).includes('b4_c1_relic') && S.f.b4_c1_relic === 'bought' && !S.f.b4_c1_relicBuried, fx:()=>{ b41Drop('b4_c1_relic'); S.f.b4_c1_relicBuried = 1; b41L('haddat', 1); note(b4In('haddat') ? 'The phial goes in last, under the board that says Seventh. Haddat says a name over it that is not Coltaine\'s. Then she says "Goat," and almost laughs.' : 'The phial goes in last, under the board that says Seventh. It is not Coltaine. It is buried anyway.'); }, go:'b4_c1_key'},
           {t:'"Sergeant."', go:'b4_c1_key'}]}),
-    b4_c1_buried:()=>({sp:'The Chain\'s corner', scene:'b4_c1_graveyard', txt:
-`The phial goes in last, still wrapped, under the board that says *Seventh*. ${b41Say({haddat:`Haddat says a name over it, in Hissari, that is not Coltaine's. It is somebody's. Then she says, "Goat," and almost laughs, and does not.`, _:`Coltaine's name is not said over it. It is not Coltaine. It is buried anyway.`})}`,
-      ch:[{t:'Radde is waiting.', go:'b4_c1_key'}]}),
-
-    /* ---- the key: the Adjunct's order is coming; whose bones does the Third wear? ---- */
     b4_c1_key:()=>({sp:'Sergeant Radde', scene:'b4_c1_graveyard', txt:
 `"Thought it would be you," Radde says. "The Chain's corner." He looks at the filled graves, and the boards, and the squad's hands. "Good work. I'll write it." He does not write it yet.
 
@@ -855,12 +831,8 @@ Radde looks at you for a long breath. Then he opens the book on the pencil and d
 "Chain," he says. "That's the mark. I decided." He shuts the book. "The company'll see it. Some of them will think you're putting on airs. Some of them will think you're right. Some of them will think you think you're better than them, and they'll be recruits, and they'll have had their drink taken." He shrugs. "I'd watch the yard, the next night or two."
 
 ${b41Say({haddat:`Haddat ${S.f.b4_c1_token === 'thread' ? 'unwinds the blue thread from her fingers and breaks it into lengths with her teeth, one for each of you, and ties yours on herself' : 'ties her bone on, and the token with it, and holds it in her fist a moment'}. "Coltaine's," she says, in Hissari. "Still."`, _:''})}${b41Say({marrow:`${b4In('haddat') ? '\n\n' : ''}Marrow ${S.f.b4_c1_token === 'string' ? 'unpicks a knot off the end of her string for each of you, and ties them on, and the string is shorter by that much' : 'ties hers on'}. "There," she says. "Now we're carrying them properly, child."`, _:''})}${b41Say({sathi:`${b4In('haddat') || b4In('marrow') ? '\n\n' : ''}Sathi grins at the bone, all her filed teeth. "Crow," she says. "Good."`, _:''})}${b41R({redblade:`\n\nRamin ties the token on beside the bone, very carefully, the way he keeps his sword. "A company of ours did not come off the Chain," he says. "I will carry them too."`, warlock:`\n\nKeth ties the token on, and the grandmother says, "*Good. The dead like to be carried by those who knew them. Strangers drop things.*"`})}`,
-      ch:[{t:'"Write it, then."', fx:()=>{ S.f.b4_c1_key = 'chain'; S.f.b4_bone = 'chain'; S.f.b4_c1_radded = 1; b4Nerve(-1, 'The company saw the Third set itself apart'); b41L('haddat', 1); b41L('marrow', 1); b41L('sathi', 1); gain('b4_c1_finger'); }, go:'b4_c1_key_chain2'},
+      ch:[{t:'"Write it, then."', fx:()=>{ S.f.b4_c1_key = 'chain'; S.f.b4_bone = 'chain'; S.f.b4_c1_radded = 1; b4Nerve(-1, 'The company saw the Third set itself apart'); b41L('haddat', 1); b41L('marrow', 1); b41L('sathi', 1); gain('b4_c1_finger'); note('The squad goes back over the wall with its bones at its throats, and the Chain\'s tied to every one of them.'); }, onward:true, go:()=>{ startExplore('b4_c1_barracks'); talk('b4_c1_night2'); }},
           {t:'"Not yet."', go:()=>startExplore()}]}),
-    b4_c1_key_chain2:()=>({sp:'The old cemetery', scene:'b4_c1_graveyard', txt:
-`The squad goes back over the wall with its bones at its throats, and the Chain's tied to every one of them. Behind you, in the Chain's corner, the boards stand up straight again in the dark.`,
-      ch:[{t:'Back over the wall.', onward:true, go:()=>{ startExplore('b4_c1_barracks'); talk('b4_c1_night2'); }},
-          {t:'Not now.', go:()=>startExplore()}]}),
     b4_c1_cem_back:()=>({sp:'The cemetery wall', txt: S.f.b4_c1_digDone && !S.f.b4_c1_key ?
 `The wall back to the barracks. Radde is waiting in the Chain's corner for an answer first.` : b41Ph() >= 3 && S.f.b4_c1_key === 'grave' && !S.f.b4_c1_watchDone ?
 `The wall back to the barracks. The dig detail is still out in the Chain's corner, waiting for the squad.` :
@@ -881,10 +853,6 @@ Hollet sends word at dusk: the company's own bones are to be gathered properly, 
 The Red Blades came through the yard again at noon and took a cask out of the end bunk-house that somebody had hidden under the floor. The recruits who hid it are saying somebody told the Red Blades where to look. They are saying it loudly. They are saying it about the Chain dogs.`}`,
       ch:[{t:'The Third\'s fire.', go:'b4_c1_yard'},
           {t:'Walk the yard.', go:()=>startExplore()}]}),
-    b4_c1_watch_out:()=>({sp:'The back wall', txt:
-`The dig detail is going over the wall: a dozen of the company's regulars with spades and two lanterns and a corporal who looks as if he would rather be anywhere. They wait for the Third at the bottom of the ladder.`,
-      ch:[{t:'Over the wall with them.', onward:true, go:()=>{ startExplore('b4_c1_cemetery'); talk('b4_c1_watch_arrive'); }},
-          {t:'Not now.', go:()=>startExplore()}]}),
     b4_c1_watch_arrive:()=>({sp:'The old cemetery', scene:'b4_c1_graveyard', txt:
 `The cemetery is quiet tonight. The whole of the Fourteenth has its bones, and the graves it opened last night have been closed again, more or less, by soldiers who were ashamed in the morning. One lantern hangs at the Chain's corner, where the detail is starting work among the old Aren graves beside it, quietly, asking first.
 
@@ -954,13 +922,6 @@ Outside the north gate the Fourteenth is forming on the Aren Way: three legions,
 The Way goes north from the gate between the trees. ${b4Fresh() ? 'The squad knows this road. It walked the last of it the other way.' : 'The squad knows this road. It came down the last of it, once, the other way, and some of it did not get to the gate.'}
 
 ${b41Say({haddat:`Haddat walks at the front of the squad with the shield up. "North," she says, in Hissari, to herself. "Again."`, tangle:`Tangle counts the satchel. "Same as yesterday," he says. "Lovely."`, _:`The squad takes its place in the column.`})}${b4In('tallow') ? `\n\nTallow touches the bone at his throat, and then the oilcloth inside his shirt, and then he stops touching things and walks.` : ''}${b41R({redblade:`\n\nRamin walks with the squad, on foot, his horse with the company somewhere behind. "Lent," he says, cheerfully, to nobody. "Again."`, warlock:`\n\nKeth walks with the squad, and every few hundred paces turns his head to look for the Wickan youths on the flank. The grandmother says nothing. She is looking north.`})}`,
-      ch:[{t:'North.', onward:true, go:()=>chapterEnd(1, S.f.b4_c1_key || 'grave')},
-          {t:'One more look at Aren.', go:'b4_c1_dawn_look'},
-          {t:'Not yet.', go:()=>startExplore()}]}),
-    b4_c1_dawn_look:()=>({sp:'Aren · dawn', scene:'b4_march', txt:
-`Behind the column Aren goes pale in the first sun: the walls the Chain came in under, the north gate, the roofs full of watchers, the harbour with the Crow ships still warped in against the quay. Somewhere in the old cemetery the Chain's corner has its boards up again.
-
-The column moves. It does not wait for anybody to finish looking.`,
       ch:[{t:'North.', onward:true, go:()=>chapterEnd(1, S.f.b4_c1_key || 'grave')},
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
