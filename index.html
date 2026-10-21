@@ -55733,15 +55733,14 @@ const b47FaceLook = () => { const f = b47Face(), s = b47Sure(), tok = S.f.b4_bon
     || (f ? `a rider the squad knows at once by the seat and the shoulders` : `a broad rider with a ladle stuck through his belt, who fed the Seventh's file on the Chain when there was anything to feed it`);
   return `One of them, at the near edge, is ${who}. ${how.charAt(0).toUpperCase() + how.slice(1)}.${tok}`; };
 
-/* ---- the mortal fight, on Ch6's forward road: it begins a round sooner, and nearer (the extra fleer was dropped at the 2026-10-21 tuning:
+/* ---- the mortal fight, on Ch6's forward road: they start nearer (the earlier wave and the extra fleer was dropped at the 2026-10-21 tuning:
    with the tuned B4GAP it made the road a massacre, docs/hoc-balance.md) ---- */
 { const _battleDef = battleDef;
   battleDef = function(id, stage){ const d = _battleDef(id, stage); if (!d || !b4On() || id !== 'b4_c7_breakout' || !b47Close()) return d;
     const near = f => [f[0], f[1], Math.min(7, f[2] + 1)], out = Object.assign({}, d, {foes:d.foes.map(near), b47Close:true});
-    if (d.waves) out.waves = d.waves.map(w => Object.assign({}, w, {round:Math.max(2, w.round - 1)}));
     return out; }; }
 { const _startBattle = startBattle;
-  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line a round sooner, and nearer.</em>`); return r; }; }
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line sooner than anybody would like.</em>`); return r; }; }
 
 /* ---- the black bead (Orvas's gift on the horse road): the wearer's first hit in a fight carries +2, for the dead ---- */
 { const _attack = attack;
@@ -55907,7 +55906,7 @@ const B4CH7 = {
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b4_c7_outchief',2,0],['b4_c7_outrider',1,3],['b4_c7_outrider',6,3],['b4_c7_outbow',4,0]]} },
     /* before dawn, the end of the line: a band of desert warriors scattering out of Raraku, running east past the last of the pickets.
-       Mortal: whoever falls here stays down. On Ch6's forward road (b4_saw 'close') it begins a round sooner and harder (the battleDef wrap
+       Mortal: whoever falls here stays down. On Ch6's forward road (b4_saw 'close') the band starts nearer (the battleDef wrap
        above). The second ground: the end of the line itself, where the last of them make a stand rather than be caught in the open. */
     b4_c7_breakout:{title:'The end of the line', style:'b4_c7_breach', dark:true, mortal:true, hurtMost:true, open:true, warrenText:'The end of the line · before dawn · whoever falls here stays down', warren:{meanas:1, denul:1}, music:'battle',
       company:{at:[[1, 8], [6, 8]], n:1},
