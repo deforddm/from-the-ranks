@@ -1,13 +1,13 @@
-Wed Oct 21, 2026, 7:39 AM PDT. Book Four continuity, against branch book4 (v7.0.0, not shipped).
+Wed Oct 21, 2026, 7:58 AM PDT. Book Four continuity, against branch book4 (v7.0.0, not shipped), with the findings fixed on `b4-fix`.
 
 # Book Four: *Unblooded* (beside *House of Chains*) — continuity
 
-What each chapter set up, for the books after it. Later books read this doc, not the source. Written by a fresh reader from `src/70*`–`78`; where a chapter note and the code disagree, the code is what is described here. The open faults found on the read are in `docs/hoc-continuity-findings.md`.
+What each chapter set up, for the books after it. Later books read this doc, not the source. Written by a fresh reader from `src/70*`–`78`; where a chapter note and the code disagree, the code is what is described here. The faults found on the read are in `docs/hoc-continuity-findings.md`, all fixed; this doc describes the fixed text.
 
 **Shared helpers.** Each chapter has its own `b4NL / b4NSay / b4NR / b4NDog / b4NNew / b4NPh / b4NKey` (N = 1–7), all file-local in name but global in scope. Engine (70): `b4On, b4In(id), b4Was(k), b4Fresh, b4Fallen, b4FallenNames, b4Nerve, b4NerveNow, b4Mood, nerveHTML, b4Join, b4SwapIn, b4Offers, b4Waiting, b4Recruit_, b4Room, b4CanRecruit, b4Rest, b4DustNow`. Ch1 adds `b4PipeChoice(back)` (any fire) and `b41Token()`. Ch3 adds the ferry rope's check wrap. Ch5 adds `b45Rng(u, clear)` (range without/with the dust; Ch6 calls it).
 
 **The book's recurring cast (inventions, all chapters).**
-- **The 9th Legion's Second Company.** Captain **Hollet**: thin, Genabackan, a cough (in nearly every scene), kept a garrison's books at Genabaris for nine years; decent, frightened of Blistig; his line is "I keep the numbers". Sergeant-of-the-line **Radde**: bald Falari, sunburnt scalp, a pointing stick, "two wars, the Falari one and the one after"; keeps **the book** (the company roll) with marks: a finger bone for the company, a knot for the Chain (Ch1 `chain`), "the Fall" / "its place" (Ch2), an unseen mark (Ch4 `picket`), "steady" (Ch5 `column`), "held as posted" signed by Hollet (Ch6 `hold`), and on `ledger` "*lost in the water*" against every name.
+- **The 9th Legion's Second Company.** Captain **Hollet**: thin, Genabackan, a cough (in a few scenes; worst after the oil raid, absent when it matters in Ch7), kept a garrison's books at Genabaris for nine years; decent, frightened of Blistig; his line is "I keep the numbers". Sergeant-of-the-line **Radde**: bald Falari, sunburnt scalp, a pointing stick, "two wars, the Falari one and the one after"; keeps **the book** (the company roll) with marks: a finger bone for the company, a knot for the Chain (Ch1 `chain`), "the Fall" / "its place" (Ch2), an unseen mark (Ch4 `picket`), "steady" (Ch5 `column`), "held as posted" signed by Hollet (Ch6 `hold`), and on `ledger` "*lost in the water*" against every name.
 - **The freckled girl** (unnamed recruit, she, inland Quon, big, came by transport): in every chapter. Holds her spear like a broom (Ch1), learns it (Ch3), first kill on the barrow stone (Ch4 `picket`), never saw the sea before the transports (Ch5), her brother "went with the Seventh, out of Aren, before the rising" and she looked for him among the riders (Ch7; open whether she saw him; Haddat has his name).
 - **The old soldier of the 9th** (`oldninth`, he, no name): reads the Deck for a finger of rum; the third reader.
 - **The squad next along**: an unnamed Second Company squad with "a good corporal" that takes whatever post the Third does not (Ch2 `fall`, Ch4).
@@ -37,7 +37,7 @@ Aren, two days before the march: the review from the 9th's line (the flash in th
 
 ## Chapter 2 — Coltaine's Fall (`src/72_b4_ch2.js`)
 
-The first day out on the Aren Way: the empty trees (braids, painted soldiers; the Adjunct forbids cutting), the standard raised far up the column, the camp at dusk barely past the hill with Aren's walls still in sight ("the shortest day's march in the history of the Empire"), robbers stripping the hill, the night (key), the news by morning.
+The first day out on the Aren Way: the empty trees (Pormqual's army was crucified on them after the Chain was inside Aren; the squad watched it from the wall, and walks under them now for the first time; braids, painted soldiers; the Adjunct forbids cutting), the standard raised far up the column, the camp at dusk barely past the hill with Aren's walls still in sight ("the shortest day's march in the history of the Empire"), robbers stripping the hill, the night (key), the news by morning.
 
 **The hill is the Barrow.** The army calls it Coltaine's Fall; the squad calls it the Barrow (Book Two's mound within sight of the walls). `b4_c2_called` = `barrow`/`fall` (what the sergeant told Radde).
 
@@ -48,7 +48,7 @@ The first day out on the Aren Way: the empty trees (braids, painted soldiers; th
 
 **Flags:** `b4_barrowSeen` 1 (always); `b4_news` 1 (always, Nerve −1): "a Claw out of a warren" at the Adjunct's tents; the camp says Whiskeyjack, the Bridgeburners, Captain Paran dead, Dujek's Host broken — belief only; `b4_temulPast` 1 (`wickans` road: Temul walks past the fire); `b4_c2_axes` `stopped`/`cut`/`left` (+`b4_c2_tenthName`); `b4_c2_front` 1/0; `b4_c2_ask` `all`/`names`/`walk`; `b4_c2_fear` `fire`/`quiet`; `b4_c2_doubt`; `b4_c2_cart` `ok`/`no`; `b4_c2_crowTaught`; `b4_c2_duiker` (the marine sergeant of the 8th: the last tree empty, "the markets", no one knows).
 
-**Inventions:** the braid-cutter and the hill's robbers (Aren's poor; never Semk); the old woman of the Crow (unnamed); the cairn on the verge; the last milestone (Aren Guard's "one stone out"); the 10th's corporal with the axe; the raiders (hill clans, never Leoman's).
+**Inventions:** the Crow pilgrims walk north from Aren to the hill, faster than the column; the braid-cutter and the hill's robbers (Aren's poor; never Semk); the old woman of the Crow (unnamed); the cairn on the verge; the last milestone (Aren Guard's "one stone out"); the 10th's corporal with the axe; the raiders (hill clans, never Leoman's).
 
 **Trick:** The Pilgrim's Crow `b4_c2_crow` (✦ guile 15; spirit): enemy blows on the bearer re-rolled (neighbours too from level 11). **Items:** `b4_c2_fetish` (+1 armour), `b4_c2_milestone` (first landed blow +1), `b4_c2_crowfeather` (+1 wits).
 
@@ -87,7 +87,7 @@ North of the Vathar: the boy with the bone walking in the hottest sun (Marrow: "
 
 **Morning camp talk (canon, never seen):** the marines sat in the barrows under helms; "eight hundred" (the 8th's boast); Fist Gamet rode to an overrun picket in fog, his horse killed by a munition, pulled out by two marines of the 8th, legs cut, "not right in the head", gave up his legion; Keneb acting Fist. Empty helms on the barrows ("the marines' spare").
 
-**Inventions:** the jackal-tail lancers (a young society); the old Seti cutter (grey braids); **the Seti archer with the bound left hand** (thirty, a scar through one eyebrow; "the gorge took the fingers that draw"; she gives the squad her mother's horn bow — see findings: later chapters give her a bow again); the 9th's munitions wagon; the picket lantern.
+**Inventions:** the jackal-tail lancers (a young society); the old Seti cutter (grey braids); **the Seti archer with the bound left hand** (thirty, a scar through one eyebrow; "the gorge took the fingers that draw"; she gives the squad her mother's horn bow; in Ch7 she sits the picket with a sling and spots, never draws; Ch5's scout and Ch6's picket archer are other Seti women); the 9th's munitions wagon; the picket lantern.
 
 **Trick:** The Oil Bola `b4_c4_bola` (✦ wits 16; Tangle +3): a 3×3 of burning oil for 2 rounds. **Items:** `b4_c4_lampball` (once a book), `b4_c4_setibow` (+1 hit, +1 range), `b4_c4_helm` (+1 armour), `b4_c4_salve` (first heal +2).
 
@@ -95,7 +95,7 @@ North of the Vathar: the boy with the bone walking in the hottest sun (Marrow: "
 
 ## Chapter 5 — The Wall (`src/75_b4_ch5.js`)
 
-Dust from here (`B4DUST` 5:1). The camp a mile short of the Whirlwind Wall; the reshuffle across the hollow (Keneb reads medium squads onto the marines' rolls, "Greymane's way", a young officer of good family = Ranal unnamed; "not the 9th"); the marine mage "playing with dolls" (queue talk); Neffarias Bredd (rumour); **an officer walks to the Wall alone and back** (never named: Gamet); the picket at the Wall's edge; the Wall draws back a mile off before "a grey shape on a grey horse" (no sword); Temul's scouts with Khundryl go in; the old sea floor; Blistig's bandage ("Fist Gamet's taken the 8th back... broke his nose for him"); seven days of water, foul wells; the canal city at dusk.
+Dust from here (`B4DUST` 5:1). The camp a mile short of the Whirlwind Wall (new, raised with the rising: nobody's father saw it; Raraku under it is old, and Haddat's mother's people walked in over open sand to sell water); the reshuffle across the hollow (Keneb reads medium squads onto the marines' rolls, "Greymane's way", a young officer of good family = Ranal unnamed; "not the 9th"); the marine mage "playing with dolls" (queue talk); Neffarias Bredd (rumour); **an officer walks to the Wall alone and back** (never named: Gamet); the picket at the Wall's edge; the Wall draws back a mile off before "a grey shape on a grey horse" (no sword); Temul's scouts with Khundryl go in; the old sea floor; Blistig's bandage ("Fist Gamet's taken the 8th back... broke his nose for him"); seven days of water, foul wells (Fist Gamet suspects Dom's people); the canal city at dusk.
 
 **Key `S.f.b4_c5_key`:**
 - `seep`: a water party to **the Widow**, a seep under a coral reef half a day north-west (invention; no canon spring). Nerve −1 then +2; Haddat +2, Tebbet +1. **`b4_seepWater` 1**. `b4_c5_found` `ok`/`late`. Fight `b4_c5_seep` (the water-master in a grey veil).
@@ -125,7 +125,7 @@ Dust 2. The lines face the Dogslayers' trenches on three ramps across a basin. O
 
 **Flags:** `b4_c6_recTold`; `b4_c6_recNight` `sat`/`gone` (the boy who shook); `b4_c6_counted`/`countNo`; `b4_c6_dug`/`digNo`; `b4_c6_listenTried`; `b4_c6_hornBlown` (once a book); `b4_c6_eve_<id>`; `b4_c6_setiStood`; glossary `b4_c6_panarak`, `b4_c6_dogs`.
 
-**The eve (who they were before; adds to the templates):** Haddat (a water-seller's daughter by the old wells; took the silver at twenty-one; the shield her grandfather's); Sathi (stole a grey mare with one white foot at nine; the mare's daughter died at the river); Tangle (blew stumps for farmers in Itko Kan; his mother gave the bead); Marrow (a fisherman's daughter, novice of Soliel in Nap; thirteen years); Tallow (gutted fish and sang; his grandmother's three cards: a soldier, a door with a grey figure, and a figure in rags with a bell, "not one of hers" = the faceless Leper); Hessa (the Grand Temple's east door, six years; why she left kept "for after" — **open**); Tebbet (his father's goats in Dal Hon; dreamt of the ramps); Darrut (the baker's boy of the Old Quarter; Blistig "once, when it mattered, stood with us"); Orvas (his mother's third son; Gall's oath quoted); Ramin (his father a Red Blade of Ehrlitan; Blistig let them out of the cells); Keth (the boy who could hear his dead grandmother).
+**The eve (who they were before; adds to the templates):** Haddat (a water-seller's daughter by the old wells; took the silver at twenty-one; the shield her grandfather's; her brother by `b2_ilhar`, including `parted`); Sathi (stole a grey mare with one white foot at nine; the mare's daughter died at the river); Tangle (blew stumps for farmers in Itko Kan with Moranth crackers; his mother gave the bead); Marrow (a fisherman's daughter, novice of Soliel in Nap; thirteen years); Tallow (gutted fish and sang; his grandmother's three cards: a soldier, a door with a grey figure, and a figure in rags with a bell, "not one of hers" = the faceless Leper); Hessa (the Grand Temple's east door, six years; why she left kept "for after" — **open**); Tebbet (his father's goats in Dal Hon; dreamt of the ramps); Darrut (the baker's boy of the Old Quarter; Blistig "once, when it mattered, stood with us"); Orvas (his mother's third son; Gall's oath quoted, the only time in the book); Ramin (his father a Red Blade of Ehrlitan; Blistig let them out of the cells); Keth (the boy who could hear his dead grandmother).
 
 **Inventions:** the Dogslayers' badge (a red square, a black dog's head with a black bar across its throat); the spur post and its sergeant with a whistle; the marching song with the words changed; the Wickan youth at the horse lines.
 
@@ -175,8 +175,8 @@ One per chapter, `book:'hoc'`, any card but the blank: `b4v1` Trull Sengar and O
 
 ## The recruits (one walks at a time; the others wait near; swapped at any fire)
 
-- **Ramin** (`redblade`, transfer with `S.imported.ramin`): joined on Ch1's drink sweep or near. Red Blade of Ehrlitan, lent again; a horse now, left with the company; red scale (brown in the dust). His father a Red Blade. **His dead company's location is inconsistent across chapters (findings).** On `ledger` he leaves the scale on the coral; otherwise "lent and kept".
-- **Keth** (`warlock`, transfer with `S.imported.keth`): joined on Ch1's quay or near, from Temul's youths. The grandmother's voice ("*Children*"). Swap line always "*Temul says go*".
+- **Ramin** (`redblade`, transfer with `S.imported.ramin`): joined on Ch1's drink sweep or near. Red Blade of Ehrlitan, lent again; a horse now, left with the company; red scale (brown in the dust). His father a Red Blade. Half his company died at the Sekala on the Chain (Book Two's canon sheet); the rest came down the Aren Way into the city and the cells; every chapter says so. On `ledger` he leaves the scale on the coral; otherwise "lent and kept".
+- **Keth** (`warlock`, transfer with `S.imported.keth`): joined on Ch1's quay or near, from Temul's youths. The grandmother's voice ("*Children*"). Swap line "*Temul says go*" at Ch1 and Ch7, varied between.
 - **Orvas** (every game, Ch3 at the feast): 23, Gall's Burned Tears; held the horses when the clan rode away from Coltaine; tears new in Ch3; never explains them ("They are the reason"); `b4_orvasDone` 1/2/0; regard from the ford (`S.loy.orvas ≥ 2`) read in Ch4; finder of the seep (Ch5); leads the `horse` road and gives the bead.
 - Fallen recruits get their own Fallen page; a recruit not walking at the end gets "With his people".
 
@@ -184,12 +184,12 @@ One per chapter, `book:'hoc'`, any card but the blank: `b4v1` Trull Sengar and O
 
 - **Tallow** (he, 18, Quon coast fishing village): reads his grandmother's deck; talks too much; writes home and never sends; one of the recruits at heart ("you were sick from Unta to Aren, I held your head").
 - **Hessa** (she, 31, Kartool City): stood the Grand Temple's east door six years; "eventually"; why she left is kept for "after" (open).
-- **Tebbet** (he, 26, Dal Hon): bowman; "I'd rather be a long way off"; dreams that come true (sand, the ramps).
+- **Tebbet** (he, 26, Dal Hon): bowman; "I'd rather be a long way off" (his epithet; said at Ch4's key, his eve, the coral fire and the finale, not every scene); dreams that come true (sand, the ramps).
 - **Darrut** (he, 34, Aren's Old Quarter): Aren Guard, followed Blistig; the camel in the governor's garden; "I was on the wall. That is all I will say about the wall" — says it once in Ch7 and stops; a sister in the Old Quarter.
 
 ## Book Two carried in
 
-`S.imported.f` and `b4Was(k)`: `b2_c7_key` (guard/wickans; desert refused), `b2_vatharLost` (Ch3 count), `b2_stay`/`b2_barrowHeld` (Ch2 Barrow line), `b2_hackleBack` (Hackle at the sergeant's knee if Sathi fell), `b2_ilhar` (Haddat's brother: `came` sells water in Aren; `fell` dead; `lost` and `parted` alive with Dom, possibly in the trenches — never learned; see findings for `parted` gaps), `b2_nobles7` (Ch1 copies it in), keepsakes (Ch1 token, Ch2 left on the hill). Book Two's dead stay in `S.dead` with `from:'dg'`; fresh start has Sathi dead at the Barrow.
+`S.imported.f` and `b4Was(k)`: `b2_c7_key` (guard/wickans; desert refused), `b2_vatharLost` (Ch3 count), `b2_stay`/`b2_barrowHeld` (Ch2 Barrow line), `b2_hackleBack` (Hackle at the sergeant's knee if Sathi fell), `b2_ilhar` (Haddat's brother: `came` sells water in Aren; `fell` dead; `lost` lost on the Chain; `parted` went back north to Dom alive with the family's skins; on `lost`/`parted` possibly in the trenches, never met or seen, never learned; unset on a fresh start: "she has not said her brother's name since Hissar"). All four are read in the bio (70), Ch5's seep, Ch6's lookout, eve and trench, and Ch7), `b2_nobles7` (Ch1 copies it in), keepsakes (Ch1 token, Ch2 left on the hill). Book Two's dead stay in `S.dead` with `from:'dg'`; fresh start has Sathi dead at the Barrow.
 
 ## Left open on purpose (for Book Six and after)
 
