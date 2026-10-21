@@ -24209,7 +24209,7 @@ He looks back at the rise, at the red shapes on it.
 
 Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
 
-The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. Somebody in this squad should know how to stand still."` : ''}`,
+The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. One of you should know how to stand still."` : ''}`,
     ch:[{t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
   b2_ramin_yes:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 1; recruit('redblade'); loy('redblade', 1); if (b2In('haddat')) loy('haddat', 1); if (b2In('tangle')) loy('tangle', -1); }, txt:
@@ -25254,7 +25254,7 @@ Whatever goes down that hole tonight should go down it with something in its mou
     ch:[{t:'Drink, and rest before the raid.', tag:'1 water', req:()=>chainW() > 0, fx:()=>{ S.f.b2_eastRest = 1; dgRest('The squad drinks, slowly, round the fire, and sleeps an hour on the hardpan. Wounds close, mostly.'); }, go:'b2_east_slept'},
         {t:'Give tonight\'s skin to the stretch.', tag:'1 water', req:()=>chainW() > 0, fx:()=>{ S.f.b2_eastRest = 1; S.f.b2_eastGave = 1; chain(-1, 1, 'The squad\'s skin to the stretch'); if (b2In('marrow')) loy('marrow', 1); if (b2In('redblade')) loy('redblade', 1); }, go:'b2_east_gave'},
         {t:'Keep it. Go down dry.', fx:()=>{ S.f.b2_eastRest = 1; }, go:'b2_east_dry'}]},
-  b2_east_slept:()=>({sp:'The squad\'s fire', txt:`The skin goes round once. Everybody holds the mouthful before they swallow it, the way you taught them. ${b2In('sathi') ? 'Sathi gives half of hers to Hackle out of her cupped hand.' : ''}${b2In('warlock') ? ' Keth drinks his with his other palm flat on the ground, as if he were sharing it.' : ''} An hour's sleep on the hardpan, with the cattle dying all down the column. It is better than nothing. It is not much better.`, ch:[{t:'Up.', go:()=>startExplore()}]}),
+  b2_east_slept:()=>({sp:'The squad\'s fire', txt:`The skin goes round once. Everybody holds the mouthful before they swallow it, the way you taught them. ${b2In('sathi') ? 'Sathi gives half of hers to Hackle out of her cupped hand.' : ''} An hour's sleep on the hardpan, with the cattle dying all down the column. It is better than nothing. It is not much better.`, ch:[{t:'Up.', go:()=>startExplore()}]}),
   b2_east_gave:()=>({sp:'The squad\'s fire', txt:`The skin goes down the stretch, cart to cart, children first. ${b2In('redblade') ? 'Ramin carries it, and does not drink from it, and says that is an order he gave himself.' : ''}${b2In('warlock') ? 'Keth walks it down the stretch himself, and the old woman tells each of them, out of him, exactly how much to drink, and nobody argues with her.' : ''} ${b2In('marrow') ? '"Stupid," Marrow says. "Good." She doesn\'t lie down. There\'s a hole to go into.' : 'The squad goes dry, and keeps its mouth shut about it.'}`, ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_east_dry:()=>({sp:'The squad\'s fire', txt:`The skins stay on the cart where the stretch can see them. ${b2Tg() ? 'Tangle says, "Dry fuses are good fuses," which is not a joke.' : 'It is the sensible thing. Your mouth is full of sand.'}${b2In('redblade') ? ' Ramin stands by the cart with the skins until the stretch is asleep, so that nobody has to wonder who is watching them.' : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -25265,7 +25265,7 @@ Whatever goes down that hole tonight should go down it with something in its mou
 `The squad's carts and the squad's people, ${chainC()} of them, asleep or pretending. ${!S.f.b2_lull ? 'A marine captain has been asking for the Third Squad.' : 'Wicket\'s sappers are by the low rock.'}` :
 `The squad's carts. ${chainC()} people asleep or pretending, and the dry streambed beyond them, and beyond that, a long way off, the Tithansi fires.
 
-Out at the edge of the camp Nil and the other young warlock have stood up. The ground round them has gone dark, the colour of wet earth.${b2In('warlock') ? ' Keth is on his feet at the end of the squad\'s line, watching them, with the rattle of teeth quiet in his fist.' : ''}
+Out at the edge of the camp Nil and the other young warlock have stood up. The ground round them has gone dark, the colour of wet earth.
 
 ${S.f.b2_eastRest ? 'The squad is as ready as it is going to be.' : 'The squad has not sat down since dusk.'}`,
     html:chainHTML('The Odhan · nine days east of the P\'atha'),
@@ -25404,7 +25404,7 @@ ${S.f.b2_clawStar === 'given' ? `You give Lull the star. He turns it over once, 
 
 The historian told the Fist about the water in the warlocks' tunnel${S.f.b2_seep ? `, and so did Wicket, and somebody went down the south mouth with a skin and came back up with it full` : ''}, and now there are pits all through the camp, an arm deep, two arms, and in the bottom of every one of them, water. Sweet. Old rain. People are lying on their bellies at the edges of the pits with cups on cords, laughing, and shushing each other, and laughing again.
 
-Your stretch digs its own. ${b2In('haddat') ? 'Haddat digs it, mostly, and then stands back and lets the children drink first, and then the old, and drinks last, slowly.' : 'The children drink first.'}${b2In('redblade') ? ' Ramin stands at the head of the squad\'s pit with his lance grounded, keeping the line as if it were the Old Quarter gate, and the line keeps itself.' : ''} The skins come up fat. ${b2In('sathi') ? 'Hackle lies in the bottom of the pit with his chin on the wet and will not come out.' : ''}
+Your stretch digs its own. ${b2In('haddat') ? 'Haddat digs it, mostly, and then stands back and lets the children drink first, and then the old, and drinks last, slowly.' : 'The children drink first.'}${b2In('redblade') ? ' Ramin stands at the head of the squad\'s pit with his lance grounded, keeping the line like his father at the Old Quarter gate, and the line keeps itself.' : ''} The skins come up fat. ${b2In('sathi') ? 'Hackle lies in the bottom of the pit with his chin on the wet and will not come out.' : ''}
 
 ${b2In('marrow') ? `Marrow sits at the edge of the squad's pit with her feet in it. "Sormo says a piece of the Semk god lived through the Sekala," she says. "In a man. That thing last night. Sormo says it's badly hurt now." She moves her feet in the water. "He says it like a man who's hoping."` : `Word comes down from the Fist's tent that Sormo says a piece of the Semk god lived through the Sekala, in a man, and that the raid hurt it badly. He says it like a man who is hoping.`}`,
     html:chainHTML('Nine days east of the P\'atha · the pits'),
@@ -26819,7 +26819,7 @@ He closes the ledger. "Good night, Sergeant." He goes off between the carriages 
   b2_servants:()=>({sp:'Hissari servants', fx:()=>{ S.f.b2_servants = 1; }, txt:
 `Three of the Council's servants are roping a chest by a carriage wheel: a grey woman and two young men, Hissari, talking low in the old families' dialect while they work, the way servants talk when they think nobody who matters can understand them.
 
-${b2In('haddat') ? `Haddat goes and helps with the rope. When the first knot is tied she says something in the same dialect about the river, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}${b2In('redblade') ? ' Ramin stays back between two carriages, where the lamps will not show them his red.' : ''}`,
+${b2In('haddat') ? `Haddat goes and helps with the rope. When the first knot is tied she says something in the same dialect about the river, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}`,
     ch:[{t:b2In('haddat') ? 'Let Haddat talk to them.' : 'Talk to them in their own tongue.', check:['guile',13], edges:id=>[id === 'haddat' && ['their own dialect', 3], id === 'sgt' && ['gutter Hissari', 1], id === 'redblade' && ['they hate a Red Blade more than a Malazan', -2]],
           near:{t:()=>ROLL().nearPaid ? `Yes, but the grey woman wants something for it before she says the last of it, and in the Chain there is only one thing to want: a skin of water for her two boys: −1 water.` : `Yes, but the grey woman wants a skin of water for her two boys before she says the last of it, and the squad has none to give; ${NAME(ROLL().who || 'sgt')} has to beg it out of her instead, and hates it: −1 on the next check.`,
             fx:()=>b2NearWater(ROLL().who || 'sgt')},
@@ -26879,7 +26879,7 @@ He turns his back on the carriages, deliberately, as a Red Blade turns his back 
 
 Men in the bow. Pikes, upright. They ground in the shallows and get out, quietly, and the one in front, an officer, goes up to the steward with something under his arm. A satchel. The steward holds out his hand for it.
 
-${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has both palms in the mud of the bank. "Two boats," he whispers. "The river does not like what is in the second."' : b2In('redblade') ? ' Ramin draws the curved sword a finger at a time, so it will not ring.' : ''}` :
+${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has both palms in the mud of the bank. "Two boats," he whispers. "The river does not like what is in the second."' : ''}` :
 `The river, black, below the carriages. On the far bank, fires, more than there are stars. Nothing moves on the water that you can see.`,
     ch:[{t:'Now. Into them.', req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown), go:()=>startBattle('b2_envoy', {})},
         {t:'Closer first, through the reeds.', check:['guile',14], req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown),
@@ -27184,7 +27184,7 @@ He turns round. "In Ehrlitan, Sergeant, the rich men watched from the hill. Toda
 
 And round the stretch, in the dark where a fire would be if anyone had lit one, children. Five of them. Six. Soaked, silent, with nobody, from somewhere in the ford. They have come up the bank to the nearest people who look as if they know what they are doing, and sat down, and they are watching the skins on your cart.
 
-${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}${b2In('warlock') ? ' The dogs that follow Keth have come up from the river with him, and lie down among the children, and the children put their hands in the fur.' : ''}`,
+${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}`,
     html:chainHTML('The far bank of the Vathar'),
     ch:[{t:'Take them into the stretch.', tag:'2 water', req:()=>!S.f.b2_orphans && chainW() >= 2, fx:()=>{ S.f.b2_orphans = 'took'; chain(-2, 5, 'Children from the ford'); if (b2In('haddat')) loy('haddat', 1); if (b2In('marrow')) loy('marrow', 1); }, go:'b2_orphans_took'},
         {t:'Give them a skin, and walk them to the Wickan wagons.', tag:'1 water', req:()=>!S.f.b2_orphans && chainW() >= 1, fx:()=>{ S.f.b2_orphans = 'sent'; chain(-1, 0, 'A skin for the children'); }, go:'b2_orphans_sent'},
@@ -28194,7 +28194,7 @@ You can see it all from here: the mounds in their rows between the trees, more t
 
 North, back across the Vathar, there is dust on the horizon. A great deal of it. More than at the river.
 
-${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}${b2In('redblade') ? ` Ramin looks south instead, at the white. "Nothing to remount on, out there," he says. "Nothing to ride to."` : ''}`,
+${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}`,
     ch:[{t:'Down.', go:()=>startExplore()}]}),
   b2_tower_leave:()=>({sp:'Outside', scene:'b2_forest', fx:()=>{ S.f.b2_towerOut = 1; }, txt:
 `You come out through the gap where the door was into heat that hits like a hand, and stand in it, and let it.
@@ -36237,7 +36237,7 @@ ${b31Say({kettle:`"Hello," says Kettle, from the bottom of the heap, to a man wi
 
 Behind the beam there are Pell's crates, two of salve and a sack of boot-nails, a bed of stolen blankets, and, scratched into the timber over the bed in charcoal, in a big careful hand: *THE FIST IS STILL COUNTING HEADS*. Somebody, once, carried a word down here, and somebody else kept it.${b3In('kettle') ? `\n\nKettle looks down the dark fork where the passage goes on under the slope, toward the place the Bridgeburners' gallery came down the night of the assault. "That's where—" she begins. "Leave it," says ${b3In('brisk') ? 'Brisk' : 'somebody'}.` : ''}
 
-And there is a boy. Sixteen, perhaps, hiding behind the crates with a knife he hasn't used, filthy, blinking at the lamps. He was a camp follower's son, he says, when the Host was here before. Then the Host went to Darujhistan and he didn't.${b3In('ellis') ? `\n\n"The barefoot one," Ellis says, to nobody, and lowers the bow.` : ''}${b3In('vell') ? ` Vell looks at him a while, the knife, the blinking. "I was carrying rope at thirteen," he says, to you, not the boy. "Nobody asked me either."` : ''}`,
+And there is a boy. Sixteen, perhaps, hiding behind the crates with a knife he hasn't used, filthy, blinking at the lamps. He was a camp follower's son, he says, when the Host was here before. Then the Host went to Darujhistan and he didn't.${b3In('ellis') ? `\n\n"The barefoot one," Ellis says, to nobody, and lowers the bow.` : ''}${b3In('vell') ? ` Vell looks at him a while, the knife, the blinking. "I was carrying rope at thirteen," he says, to you, not the boy. "I wasn't asked either."` : ''}`,
       ch:[{t:'"Up. The provosts will feed you, at least."', fx:()=>{ S.f.b3_c1_boy = 'provost'; b31L('brisk', 1); }, go:'b3_c1_boy_up'},
           {t:'Show him the far shaft into the city. "Go. Now."', fx:()=>{ S.f.b3_c1_boy = 'let'; b31L('ohl', 1); b31L('brisk', -1); }, go:'b3_c1_boy_let'}]}),
     b3_c1_boy_up:()=>({sp:'The old north sap', scene:'b3_c1_tunnels', txt:
@@ -36468,7 +36468,7 @@ ${b31Say({kettle:`"Why?" says Kettle, who would.`, brisk:`"Why?" says Brisk.`, _
     b3_c1_rhivi_arrive:()=>({sp:'The Rhivi camp', scene:'b3_c1_rhivi', fx:()=>{ S.f.b3_c1_inRhivi = 1; }, txt:
 `The Rhivi camp at night is round hide tents and low fires and the herds a great dark breathing mass on the slope above, horses and the shaggy humped bhederin together, and somebody, always somebody, singing to them, low, between other jobs.
 
-The Fourth walks in unchallenged, and ungreeted. Rhivi faces turn in the firelight, look, and turn back. *Malazans*. Something you don't argue with. Something that passes.${b3In('ellis') ? ` Ellis walks in the way a scout walks into another army's camp: slow, hands in plain sight, the gloved one too.` : ''}${b3In('tuft') ? `\n\nTuft walks a little ahead of the squad, and then a little behind it, and then beside you, as if she can't decide which is safest. Somewhere in this camp is a tent with a child in it. She doesn't ask which.` : ''}`,
+The Fourth walks in unchallenged, and ungreeted. Rhivi faces turn in the firelight, look, and turn back. *Malazans*. Something you don't argue with. Something that passes.${b3In('ellis') ? ` Ellis walks in like a scout into another army's camp: slow, hands in plain sight, the gloved one too.` : ''}${b3In('tuft') ? `\n\nTuft walks a little ahead of the squad, and then a little behind it, and then beside you, as if she can't decide which is safest. Somewhere in this camp is a tent with a child in it. She doesn't ask which.` : ''}`,
       ch:[{t:'Find Sohra.', go:()=>startExplore()}]}),
     b3_c1_rhivi_back:()=>({sp:'The slope', txt: b31Done() ?
 `North, up the slope to the picket. The armies march at dawn.` :
@@ -36601,7 +36601,7 @@ ${b3Mind() ? `The Fourth sits down as if it had been carrying something a long w
     b3_c1_rfire_slept:()=>({sp:'A Rhivi fire', txt:
 `You wake to the same song, or another one very like it, and a blanket over you that you didn't have when you lay down.
 
-${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening to the old man sing. "It's a list," he says quietly, when he sees you're awake. "I asked. It's the names of the herd's dead. All of them. Every one since his grandfather." He sounds envious, and something else. "He doesn't write it. He just *knows* it."`, tuft:`Tuft is awake, sitting with her knees up, looking at the painted door-flap of the biggest tent in the camp.`, _:`The old man nods to you, once, without stopping his song.`})}${b3In('ellis') ? `\n\nEllis is awake too, or never slept: sitting with her back to the fire and her face to the dark, the gloved hand in her lap. She knows a few words of the song. She doesn't say where from.` : ''}`,
+${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening to the old man sing. "It's a list," he says quietly, when he sees you're awake. "I asked. It's the names of the herd's dead. All of them. Every one since his grandfather." He sounds envious, and something else. "He doesn't write it. He just *knows* it."`, tuft:`Tuft is awake, sitting with her knees up, looking at the painted door-flap of the biggest tent in the camp.`, _:`The old man nods to you, once, without stopping his song.`})}${b3In('ellis') ? `\n\nEllis is awake too, or never slept, with the gloved hand in her lap and her head turned toward the herd. She knows a few words of the song. She doesn't say where from.` : ''}`,
       ch:[{t:'Up.'}]}),
 
     /* ---- the Host's runner ---- */
@@ -36696,7 +36696,7 @@ They do it slowly, and in the open. The Host's column goes out down the south-ea
 
 ${S.f.b3_tav ? (b3In('brisk') ? `Somewhere back down the column the Fourth Regiment is singing a Cawn barge song, and one voice in it is worse than all the others put together. Brisk, marching, doesn't turn her head. Her mouth moves, once, on the last line.` : `Somewhere back down the column the Fourth Regiment is marching, and one big man in it is not singing.`) : `Somewhere back down the column the Second is singing, badly.`}
 
-${S.f.b3_c1_key === 'mhybe' ? (b3In('sohra') ? `Sohra rides at the Fourth's shoulder on a dun mare, singing to the herds, and every so often counts the squad under her breath.` : `Sohra rides with the herd on the Fourth's flank, close enough to call to. She lifts her herd-staff an inch, which is either a greeting or a note in a ledger.`) : `A Rhivi girl rides past the Fourth on the herd's flank without turning her head. "I will find you on the march," Sohra says, to the road ahead. "When I have decided what to say."`}${b3In('tuft') ? `\n\nTuft walks on the side of the column nearest the Rhivi, where she can see the Mhybe's wagon. She doesn't go any nearer. She doesn't look away either.` : ''}${b3In('vell') ? `\n\nVell keeps looking up at nothing: no roofs between here and wherever south ends, nothing to string a line between. Somebody has told him so. He says he knows. He has started, to his own surprise, to like the sky.` : ''}
+${S.f.b3_c1_key === 'mhybe' ? (b3In('sohra') ? `Sohra rides at the Fourth's shoulder on a dun mare, singing to the herds, and every so often counts the squad under her breath.` : `Sohra rides with the herd on the Fourth's flank, close enough to call to. She lifts her herd-staff an inch, which is either a greeting or a note in a ledger.`) : `A Rhivi girl rides past the Fourth on the herd's flank without turning her head. "I will find you on the march," Sohra says, to the road ahead. "When I have decided what to say."`}${b3In('tuft') ? `\n\nTuft walks on the side of the column nearest the Rhivi, where she can see the Mhybe's wagon. She doesn't go any nearer. She doesn't look away either.` : ''}${b3In('vell') ? `\n\nVell keeps looking up at nothing: no roofs between here and wherever south ends, nothing to string a line between. He has been told so. He says he knows. He has started, to his own surprise, to like the sky.` : ''}
 
 Behind the Fourth, Pale goes down into its own hills: the broken north wall, the burial field green over its mounds, the hill where the cadre row was, with a horse on it. ${b31Say({kettle:`"Same as this morning," Kettle says, to nobody, with a hand on the satchel. Then: "No. Not the same."`, _:`The Fourth doesn't look back. It counts itself instead.`})}${b3In('ellis') ? ` Ellis looks back once, at the city, and pulls the glove tighter on the burned hand, and then doesn't again.` : ''}`,
       html:allyHTML('Outside Pale · the march begins'),
@@ -37397,7 +37397,7 @@ The column learns the plain the way it learns any country, by walking on it unti
 
 ${S.f.b3_c2_sohraLate && b3In('sohra') ? (S.f.b3_c1_key === 'crate' ? `Sohra finds the Fourth on the second morning, riding in from the herds on a dun horse with her bow across her knees. "The Mhybe says I am to watch the Malazans," she says. "I watched you at Pale. You went to fetch boxes." She gets down. "Next time she asks you to stand at her tent, stand at her tent." Then, because she is Rhivi and it is spring: "I have brought smoked meat. Not for you. For the one who does not complain."` : `Sohra finds the Fourth on the second morning, riding in from the herds on a dun horse with her bow across her knees. "The Mhybe says I am to watch the Malazans," she says, getting down. "So. I am watching." She looks the squad over, one by one, as if counting calves. "You are a slow herd. I will bring you in."`) : b3In('sohra') ? `Sohra rides beside the squad on a dun horse when she is not off with the herds, and walks beside it when the Fourth's pace offends the horse. She sings under her breath to the bhederin. They do not seem to mind.` : `The Rhivi girl the Mhybe sent to watch the Malazans rides with her own people this week; there is no room in the Fourth, and both sides have been very polite about it. She waves from the herds, now and then, as if checking the count.`}
 
-${b3In('kettle') ? `Kettle has counted the munitions every morning. "${S.inv.sharper} sharper${S.inv.sharper === 1 ? '' : 's'}, ${S.inv.burner} burner${S.inv.burner === 1 ? '' : 's'}, ${S.inv.cusser} cusser${S.inv.cusser === 1 ? '' : 's'}. Same as yesterday. The Moranth counted too." ` : ''}${b3In('ohl') ? `Ohl walks with a hand on the wagon-side and says the grass is giving him hay fever, which is a thing, he says, in Ehrlitan. ` : ''}${b3In('tuft') ? `Tuft walks a little further up the column every day, toward the Rhivi, without seeming to.` : ''}`,
+${b3In('kettle') ? `Kettle has counted the munitions every morning. "${S.inv.sharper} sharper${S.inv.sharper === 1 ? '' : 's'}, ${S.inv.burner} burner${S.inv.burner === 1 ? '' : 's'}, ${S.inv.cusser} cusser${S.inv.cusser === 1 ? '' : 's'}. Same as yesterday. The Moranth counted too." ` : ''}${b3In('ohl') ? `Ohl walks with a hand on the wagon-side and says the grass is giving him hay fever, which is a thing, he says, in Ehrlitan. ` : ''}${b3In('tuft') ? `Tuft walks a little further up the column every day, toward the Rhivi, without seeming to.` : ''}${b3In('ellis') ? `\n\nEllis knows this grass. The Claw finished with her on it, not long ago and a long way from here, by some dead horses. She walks it now with the bow unstrung, which for Ellis is a kind of trust, and reads it anyway.` : ''}${b3In('vell') ? `\n\n${b3In('sohra') ? `Sohra has offered to teach Vell to ride. He asked what happens if he falls off. "You get back on," she said. He is still thinking about it, on foot.` : `Vell walks with his head tipped back, looking at a sky with nothing in it to throw a line over. He keeps doing it. He seems to like it.`}` : ''}`,
     html:allyHTML('The Rhivi Plain · the first week out of Pale'),
     ch:[b3DeckChoice(2),
         {t:'"On, then. Walk."', go:()=>startExplore()}]}),
@@ -37414,7 +37414,7 @@ ${b3In('brisk') ? `Trotts sees Brisk. He bares his teeth. She bares hers. Neithe
 
 ` : ''}Paran sees the Fourth, and slows. He looks along the squad the way he always has, the way everyone in this army seems to.
 
-"Sergeant." A breath. "${c2Five()}." He nods, as if that were a thing settled, and goes on, east, onto the track.
+"Sergeant." A breath. "${c2Five()}." He nods, as if that were a thing settled, and goes on, east, onto the track.${b3In('ellis') ? ` His eyes touch Ellis on the way past, and stop, a breath too long. He was the one who told her Toc the Younger kept riding. She hasn't asked him anything since. She doesn't now.` : ''}
 
 Mallet is the last of them. He stops by Whiskeyjack's stirrup and says something too low to hear, and Whiskeyjack says something back, and Mallet looks at the leg and then, for some reason, at you.`,
     ch:[{t:'Go and stand by Mallet.', go:'b3_c2_mallet'},
@@ -37450,12 +37450,12 @@ Whiskeyjack looks down at him from the horse. It isn't unkind.
 
 "Sir." Ohl steps back. Then, to you, very quietly, in the voice he uses for the list: "Later. I'm writing that down, child. I find men keep to a word better once they've seen it written."
 
-Mallet looks at Ohl, and at you, and something in his tired face eases a little. "Two of you," he says. "Good. He'll ignore you both. But it'll take him longer."`,
+Mallet looks at Ohl, and at you, and something in his tired face eases a little. "The pair of you," he says. "Good. He'll ignore you both. But it'll take him longer."`,
     ch:[{t:'Let them go.', go:'b3_c2_mallet2'}]}),
   b3_c2_paran_gone:()=>({sp:'The road east', txt:
 `The Bridgeburners go over the first rise and are gone. The column does not say where they are going. Everybody in it knows: the Barghast, in the hills, to talk to people who whiten their faces and quarrel with everybody. Thirty-odd Bridgeburners to talk a whole people round. The Host has decided this is either very clever or a funeral, and is holding its opinion until it hears which.
 
-${b3In('kettle') ? `"Bridgeburners," Kettle says, watching the rise, with deep and personal envy. "Off to do something stupid and famous. And we get *grass*."` : ''}${b3In('tuft') ? ` Tuft watches the place where Paran went over the rise long after the rest of you have stopped.` : ''}`,
+${b3In('kettle') ? `"Bridgeburners," Kettle says, watching the rise, with deep and personal envy. "Off to do something stupid and famous. And we get *grass*."` : ''}${b3In('tuft') ? ` Tuft watches the place where Paran went over the rise long after the rest of you have stopped.` : ''}${b3In('vell') ? `\n\n"They'll want rope," Vell says. "In hills. Everybody wants rope in hills, and then they find out it's the wrong rope."` : ''}${b3In('ellis') ? `\n\nEllis watches the rise a while after the last of them is over it, and then looks down the track they took, and then, deliberately, south-east again.` : ''}`,
     ch:[{t:'Back to the column.', go:()=>startExplore()}]}),
   b3_c2_wj_again:()=>({sp:'Whiskeyjack', txt:
 `Whiskeyjack rides at the head of the Host's column with Dujek's standard a little behind him and a tall Tiste Andii woman riding at his stirrup, and he sits the horse because standing is worse.
@@ -37513,7 +37513,7 @@ Behind him, at a little distance, a younger man with the same broad face and the
   b3_c2_mott_drink:()=>({sp:'A Bole', txt:
 `It is not wine. It is not beer. It is something that was a pear once, a long time ago, before the Boles got to it, and it goes down like a lit fuse.
 
-${b3In('kettle') ? `Kettle drinks, and goes a colour, and holds out the jug for more. "That's *beautiful*," she says hoarsely. "What's it made of? Can it be made to go off?" The Bole looks at her with something like love.` : `You drink. Your eyes water. The Bole is delighted.`}${b3In('ohl') ? ` Ohl declines, on medical grounds, and then accepts, on medical grounds.` : ''}
+${b3In('kettle') ? `Kettle drinks, and goes a colour, and holds out the jug for more. "That's *beautiful*," she says hoarsely. "What's it made of? Can it be made to go off?" The Bole looks at her with something like love.` : `You drink. Your eyes water. The Bole is delighted.`}${b3In('ohl') ? ` Ohl declines, on medical grounds, and then accepts, on medical grounds.` : ''}${b3In('vell') ? ` Vell takes a pull to be polite, and spends some time afterwards looking at the sky from closer to the grass than he meant to.` : ''}
 
 "There," the Bole says. "Now you've had a drink with Mott. That's a thing. You tell your Bridgeburners, when you see 'em, we've no hard feelings. Mostly." He takes the jug back. Behind him, the brother has not blinked once.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -37522,7 +37522,7 @@ ${b3In('kettle') ? `Kettle drinks, and goes a colour, and holds out the jug for 
 
 The brother has not blinked. He does not look as if it was a joke.
 
-${b3In('brisk') ? `Brisk moves, very slightly, so that she is between the brother and the rest of the squad. The brother notices. Something like approval crosses his face, and is gone.` : `You find you have moved so that nobody in the Fourth has their back to him.`}`,
+${b3In('brisk') ? `Brisk moves, very slightly, so that she is between the brother and the rest of the squad. The brother notices. Something like approval crosses his face, and is gone.` : `You find you have moved so that nobody in the Fourth has their back to him.`}${b3In('ellis') ? `\n\nEllis has been counting him back since he started. When the Bole looks at her she doesn't stop.` : ''}`,
     ch:[{t:'Drink from the jug.', req:()=>!S.f.b3_c2_mottJug, fx:()=>{ S.f.b3_c2_mottJug = 1; ally(1, 0, 'A jug with the Mott Irregulars'); }, go:'b3_c2_mott_drink'},
         {t:'Move on, carefully.', go:()=>startExplore()}]}),
   b3_c2_mott_no:()=>({sp:'A Bole', txt:
@@ -37584,7 +37584,7 @@ Object.assign(B3CH2.dlg, {
 
 The Barghast stand trees on those hills, Hurlochel says: oak trunks carried down out of the north, carved, and planted upside down with their roots in the air. Sacred places. The traders' track to Capustan runs past a dozen of them. You don't camp on them if you want to see morning.
 
-${b3In('sohra') ? `Sohra rides ahead. She has stopped singing. After a while she lifts a hand and points south, to where a stream comes down through a fold in the ground, and the grass by it is flattened in a way that has nothing to do with grazing. "There," she says. Her voice is very flat. "His horse. I can see his horse."` : `Toward noon Hurlochel stops and points south, to where a stream comes down through a fold in the ground. Something is lying in the mud by it. Something the size of a horse.`}`,
+${b3In('sohra') ? `Sohra rides ahead. She has stopped singing. After a while she lifts a hand and points south, to where a stream comes down through a fold in the ground, and the grass by it is flattened in a way that has nothing to do with grazing. "There," she says. Her voice is very flat. "His horse. I can see his horse."` : `Toward noon Hurlochel stops and points south, to where a stream comes down through a fold in the ground. Something is lying in the mud by it. Something the size of a horse.`}${b3In('ellis') ? `\n\nEllis has been watching that fold for an hour, since the crows started going down into it and not coming up. She didn't say. She was waiting to be sure.` : ''}`,
     ch:[{t:'Down to the stream.', go:()=>startExplore()}]}),
   b3_c2_strides:()=> S.f.b3_khell ? {sp:'The wallow', scene:'b3_c2_strides', txt:
 `The wallow by the stream. ${S.f.b3_c2_carried ? 'The rider has gone home across a saddle.' : S.f.b3_c2_kin ? 'His kin have come and taken the rider.' : 'The rider lies under a cloak.'} The horse is still there. So are the tracks, going east into the grass, unwalked.`,
@@ -37595,7 +37595,7 @@ The rider is a little way off. ${b3In('ohl') ? `Ohl goes to him, because Ohl alw
 
 Then the tracks.
 
-They are in the mud of the wallow, and out of it, into the grass, going east. Each print is longer than a man's forearm: three great toes forward, a spur behind, and the deep stab of a claw at the end of every toe, like the print of an eagle, if an eagle were the size of a house. And between them, the stride. ${b3In('kettle') ? `Kettle lays a spear down beside one print, and another spear end to end with it, and then looks at the next print, which is beyond the end of both. "That's a step," she says. "That's one *step*." She is not chattering. That is how you know.` : `You pace it out. You stop pacing it out.`}
+They are in the mud of the wallow, and out of it, into the grass, going east. Each print is longer than a man's forearm: three great toes forward, a spur behind, and the deep stab of a claw at the end of every toe, like the print of an eagle, if an eagle were the size of a house. And between them, the stride. ${b3In('kettle') ? `Kettle lays a spear down beside one print, and another spear end to end with it, and then looks at the next print, which is beyond the end of both. "That's a step," she says. "That's one *step*." She is not chattering. That is how you know.` : `You pace it out. You stop pacing it out.`}${b3In('ellis') ? `\n\nEllis goes down on one knee at the edge of the mud with her bare hand flat beside a print, not touching, the way she reads anything. She takes a long time. "Six years I read ground for the Claw," she says at last. "I never read this." Then, exactly, as if for a report: "It wasn't running. That's a walk. It was in no hurry at all."` : ''}${b3In('vell') ? `\n\nVell, who has spent his life judging gaps between roofs, looks at the gap between two prints and doesn't say what he'd call it.` : ''}
 
 ${b3In('tuft') ? `Tuft stands at the edge of the mud with her arms wrapped round herself. "It's cold," she says. "Not the mud. *It.* Whatever made these was cold, the way a barrow is cold." She looks east, along the tracks. "Nothing alive leaves cold like that, Sergeant."` : `The mud is cold where the prints are. Colder than it ought to be in spring.`}
 
@@ -37650,7 +37650,7 @@ ${b3In('sohra') ? `He and Sohra talk in Rhivi a while, low. When he rides off sh
     ch:[{t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }}, {t:'Not yet.', go:()=>startExplore()}]} : {sp:'The Barghast hill', txt:
 `The hill stands up out of the grass a league east of the stream, steep-sided, with a crown of grey stones and, among the stones, the trees: oak trunks standing on their heads with their roots spread against the sky like hands. A thread of smoke goes up among them.
 
-At the foot of the hill, on the side away from the column's road, horses are picketed in the long grass. Fifteen, twenty. Small, tough, plains horses, saddled for war. Men in leather and iron are sitting by them, eating. Lances stacked. Short bows. ${S.f.b3_c2_carried ? `They are watching the west. They have been watching it all afternoon, since a party rode north from the stream with something across a saddle.` : `They are not watching the west. They have not looked at the stream once.`}
+At the foot of the hill, on the side away from the column's road, horses are picketed in the long grass. Fifteen, twenty. Small, tough, plains horses, saddled for war.${b3In('ellis') ? ` "Eighteen," Ellis says, before you've finished counting.` : ''} Men in leather and iron are sitting by them, eating. Lances stacked. Short bows. ${S.f.b3_c2_carried ? `They are watching the west. They have been watching it all afternoon, since a party rode north from the stream with something across a saddle.` : `They are not watching the west. They have not looked at the stream once.`}
 
 ${b3In('sohra') ? `"Betakullid," Sohra breathes. "On a Barghast hill. Eating." She has an arrow on the string already. "The Barghast will want their skulls for cups. I will tell them where to look."` : `"Betakullid," Hurlochel says, very low. "Domin horse. And whoever made that fire is up top."`}`,
     ch:[{t:'"Take the foot of the hill."', fx:()=>{ S.f.b3_c2_hillGo = 1; }, go:()=>startBattle('b3_c2_hill', S.f.b3_c2_carried ? {} : {surprise:'p'})},
@@ -37693,7 +37693,7 @@ ${b3In('sohra') ? `Sohra is looking at the felled tree, its carved roots in the 
         {t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c2_tree:()=>({sp:'The Barghast hill', fx:()=>{ S.f.b3_c2_tree = 1; ally(1, 0, 'A Barghast tree stood up again'); }, txt:
-`It takes ${by({brisk:'Brisk and a rope and Hurlochel\'s horse', sgt:'you and a rope and Hurlochel\'s horse', _:'{who} and a rope and Hurlochel\'s horse'})} and most of an hour and a great deal of swearing, but the tree goes back up into its hole roots-first, carved roots to the sky, and stands there among the others as if it had never been down.
+`It takes ${by({brisk:'Brisk and a rope and Hurlochel\'s horse', sgt:'you and a rope and Hurlochel\'s horse', _:'{who} and a rope and Hurlochel\'s horse'})} and most of an hour and a great deal of swearing, but the tree goes back up into its hole roots-first, carved roots to the sky, and stands there among the others as if it had never been down.${b3In('vell') ? ` The rope is Vell's, and so is the rig: a turn round the next tree over for a block, and a knot he says the Guild would fine a journeyman for not knowing.` : ''}
 
 Hurlochel looks at it with his head on one side. "The Ilgres will hear of that," he says. "Barghast hear everything that happens on their hills. They'll want to know which Malazans." He coils the rope. "I'll tell them, if they ask. It's the kind of thing they remember."`,
     ch:[{t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }},
@@ -37724,7 +37724,7 @@ ${b3In('tuft') ? `Tuft looks toward the Rhivi fires the moment the squad gets do
     ch:[{t:'The herd lines. Take the watch.', go:'b3_c2_herdlines'}, {t:'Leave it.', go:()=>startExplore()}]} : {sp:'The Fourth\'s fire', txt:
 `A fire of dried dung and dead grass in a scrape, because there is nothing else on the plain to burn, and the Fourth round it, and the stars coming down to the ground on every side.
 
-From the Rhivi fires beyond comes singing, slow, the same few notes over and over. ${b3In('sohra') ? `Sohra sits with her back to the Fourth's fire and her face to the Rhivi ones, and sings with them, under her breath.` : ''}
+From the Rhivi fires beyond comes singing, slow, the same few notes over and over. ${b3In('sohra') ? `Sohra sits with her back to the Fourth's fire and her face to the Rhivi ones, and sings with them, under her breath.` : ''}${b3In('vell') ? ` Vell lies flat with his hands under his head, counting stars. He has got to some number nobody believes, and says Darujhistan hasn't got half of them, which everyone does believe.` : ''}
 
 ${b3Mind() ? `The tracks go unmentioned. Everybody is thinking about them. You can tell by the way the squad sits: facing out.` : `Nobody says anything about the tracks. That is how the Fourth talks about things.`}`,
     ch:[{t:'Rest. Let the singing do what it does.', fx:()=>{ S.f.b3_c2_rest = 1; b3Rest('The Fourth sleeps by its fire with the Rhivi singing on every side, and ten thousand people of the Host snoring beyond them. Wounds close, mostly.'); }, go:'b3_c2_fire_rest'},
@@ -37732,7 +37732,7 @@ ${b3Mind() ? `The tracks go unmentioned. Everybody is thinking about them. You c
   b3_c2_fire_rest:()=>({sp:'The Fourth\'s fire', txt:
 `${b3In('sohra') ? `Some time in the night Sohra comes and sits down by the fire, because the Rhivi singing has stopped and she does not like the quiet. "It is for the herd," she says, when you ask her what the songs are. "So the herd knows we are here. So the dead in the grass know we are here." She pokes the fire. "So whatever made those tracks knows we are here." She thinks about it. "That last part I am less sure is good."` : `Some time in the night the Rhivi singing stops, and the quiet after it is very big.`}
 
-${b3In('brisk') ? `Brisk takes the first watch without being asked, sitting with her back to the fire and her face to the dark, where the herd is.` : `You take the first watch yourself.`} The rest sleep. On the plain, under that sky, it is easier than it has any right to be.`,
+${b3In('brisk') ? `Brisk takes the first watch without being asked, sitting with her back to the fire and her face to the dark, where the herd is.` : `You take the first watch yourself.`}${b3In('ellis') ? ` Ellis takes the second. She wasn't asked either.` : ''} The rest sleep. On the plain, under that sky, it is easier than it has any right to be.`,
     ch:[{t:'Wake for the watch.', go:()=>startExplore()}]}),
 
   /* the Mhybe and the child */
@@ -37796,7 +37796,7 @@ When she has finished she nods, as if the number were right. Then she goes back 
 
 He is looking at the child.
 
-He does not move. He does not need to. ${b3In('tuft') ? `Tuft has seen him. She has stopped walking. "He looks at her like ${b3In('kettle') ? 'Kettle' : 'a sapper'} looks at a fuse," she says, very low. "Like he's working out how long."` : `He looks at her the way a sapper looks at a fuse: working out how long.`}
+He does not move. He does not need to. ${b3In('tuft') ? `Tuft has seen him. She has stopped walking. "He looks at her like ${b3In('kettle') ? 'Kettle' : 'a sapper'} looks at a fuse," she says, very low. "Like he's working out how long."` : `He looks at her the way a sapper looks at a fuse: working out how long.`}${b3In('ellis') ? ` Ellis has moved, without seeming to, until she has a line on him from the dark. She doesn't nock. She just wants the line.` : ''}
 
 ${S.f.b3_kallorSaw ? `Then he turns his head, slowly, and looks at you. He has seen your face before, at the Mhybe's tent after the parley. He lets you see that he remembers it. Then he looks back at the child, as if you had been a thing in the way of the view.` : `After a while his eyes move off the child and go over the Fourth, once, without interest, the way you look at a cart going by.`}
 
@@ -37880,7 +37880,7 @@ ${b3In('tuft') ? `Tuft, beside you, has gone still at the name. "Talked," she sa
 
 ${S.f.b3_c2_rest ? '' : 'The squad has not slept. '}The Rhivi riders who should be walking the outer edge are fewer than they should be. ${S.f.b3_c2_hillDone ? 'Some of them went out after the Betakullid who rode south from the hill.' : ''}
 
-${b3In('sohra') ? `Sohra stops dead. Lifts her head. "The old bulls," she whispers. "Listen to the old bulls." They have all got up, along the edge of the herd, every one, and they are facing the same way, out into the dark.` : `Along the edge of the herd the old bulls have all got up, every one, and are facing the same way, out into the dark.`}`,
+${b3In('sohra') ? `Sohra stops dead. Lifts her head. "The old bulls," she whispers. "Listen to the old bulls." They have all got up, along the edge of the herd, every one, and they are facing the same way, out into the dark.` : `Along the edge of the herd the old bulls have all got up, every one, and are facing the same way, out into the dark.`}${b3In('ellis') ? `\n\nEllis is flat on the ground with her ear to it. "Horses," she says. "A lot. Walking, not running. They want to be close before they're heard." She gets up. "They're close."` : ''}`,
     ch:[{t:'"Shields. Face out."', go:'b3_c2_raid'},
         {t:'Not yet.', go:()=>startExplore()}]},
   b3_c2_raid:()=>({sp:'The herd lines', txt:
@@ -37924,7 +37924,7 @@ Behind the herd, on this bank, the Host's wagons are drawn up to cross next: the
 
 To the east, up the river, the sky over the hills is black.
 
-${b3In('sohra') ? `Sohra is looking at it. Her hands have gone still on her bow.` : ''}`,
+${b3In('sohra') ? `Sohra is looking at it. Her hands have gone still on her bow.` : ''}${b3In('vell') ? `\n\nVell is looking at the ford the way he looks at the gap between two roofs. "You'd want a line across," he says. "Bank to bank. Nobody's put a line across." He gets no answer. He goes on looking.` : ''}`,
     html:allyHTML('The Rhivi Plain · the river, five weeks out'),
     ch:[{t:'Walk down to the ford.', go:()=>startExplore()}]}),
   b3_c2_mother:()=>({sp:'A Rhivi herd-mother', fx:()=>{ S.f.b3_c2_mother = 1; }, txt:
@@ -37969,7 +37969,7 @@ You hear it first, the way you hear a cavalry charge first, as a sound in the gr
 
 There is time to shout. There is time for one thing.
 
-Out in the ford, the tail of the herd: the last calves, swimming, and on them the last of the children, three of them, four, and the Rhivi riders turning their horses to go back for them, too far, too slow. ${b3In('sohra') ? `Sohra is already off her horse and running for the water.` : ''}
+Out in the ford, the tail of the herd: the last calves, swimming, and on them the last of the children, three of them, four${b3In('ellis') ? ` ("Four," Ellis says, exactly, beside you)` : ''}, and the Rhivi riders turning their horses to go back for them, too far, too slow. ${b3In('sohra') ? `Sohra is already off her horse and running for the water.` : ''}
 
 On the bank and in the shallows, the wagons: the first three already in the water with the Fourth Regiment to the waist round them, the oxen bellowing, the whole Host's bread and salt and Moranth munitions about to go down the river. ${b3In('brisk') ? `Tav is at the first wheel. He has seen it. He is not letting go of the wheel.` : `The heavies at the wheels have seen it. Not one of them lets go.`}
 
@@ -37985,7 +37985,7 @@ Not both.`,
       c2L('sohra', 2); c2L('ohl', 1); c2L('tuft', 1); c2L('brisk', -1); c2L('kettle', -1); } }, txt:
 `You go into the water.
 
-All of you, the Fourth, off the bank and into the ford to the waist, to the chest, the gravel moving under your boots, the current already pulling. ${b3In('brisk') ? `Brisk goes in first, shield and all, and gets a calf by the hair and a child by the arm and turns, all in one movement, like a woman shouldering a door.` : ''}${b3In('ohl') ? ` Ohl has a boy by the collar and is swearing at Hood in Ehrlii, steadily, all the way.` : ''}${b3In('sohra') ? ` Sohra is out past all of you, swimming, singing at the calves in a high cracked voice, and the calves turn toward her, the way calves turn to their mothers.` : ''}
+All of you, the Fourth, off the bank and into the ford to the waist, to the chest, the gravel moving under your boots, the current already pulling. ${b3In('brisk') ? `Brisk goes in first, shield and all, and gets a calf by the hair and a child by the arm and turns, all in one movement, like a woman shouldering a door.` : ''}${b3In('ohl') ? ` Ohl has a boy by the collar and is swearing at Hood in Ehrlii, steadily, all the way.` : ''}${b3In('sohra') ? ` Sohra is out past all of you, swimming, singing at the calves in a high cracked voice, and the calves turn toward her, the way calves turn to their mothers.` : ''}${b3In('vell') ? ` Vell has a line round his waist and the other end on a Rhivi rider's saddle-horn, and goes out to the end of it, and further, because the line is long.` : ''}${b3In('ellis') ? ` Ellis goes for the smallest child, the one furthest out, because she counted.` : ''}
 
 Then the water hits.
 
@@ -38009,7 +38009,7 @@ ${b3In('sohra') ? `Sohra has a child under each arm, and puts them down behind $
       if (b3In('sohra')) S.f.b3_herdMother = 1; }, txt:
 `The captain goes down in the gully with his plume in the mud, and the riders who are left go south into the dark, and every child who went into that river is on this side of it, alive, wet, and screaming for its mother.
 
-Their mothers come across at midnight, when the river has dropped enough for the Rhivi to swim the horses over, and there is a great deal of noise, and some of it is weeping and most of it is not. The girl from the bank finds her sister, the one who always gets the dun calf. The dun calf made it too. Sennet is very pleased about the calf.
+Their mothers come across at midnight, when the river has dropped enough for the Rhivi to swim the horses over, and there is a great deal of noise, and some of it is weeping and most of it is not. The girl from the bank finds her sister, the one who always gets the dun calf. The dun calf made it too. Sennet is very pleased about the calf.${b3In('ellis') ? ` Ellis counts the children off as their mothers take them, under her breath, the way she counts anything. It comes out right, and she stops.` : ''}
 
 ${S.f.b3_c2_bowGift ? `Later, an old Rhivi man comes to the Fourth's fire with a bow in his hands: bhederin horn and sinew, doubled back on itself, a good bow. "My nephew's," he says, in trade-tongue. "By the stream. He would want it shooting." He puts it down by the fire and goes.
 
@@ -38025,7 +38025,7 @@ ${S.f.b3_c2_bowGift ? `Later, an old Rhivi man comes to the Fourth's fire with a
       c2L('brisk', 2); c2L('kettle', 1); c2L('sohra', -2); c2L('ohl', -1); } }, txt:
 `You go for the wagons.
 
-Into the shallows, shoulders to the wheels beside the Fourth Regiment, and the oxen bellowing and the water already climbing your legs. ${b3In('brisk') ? `Brisk puts her shoulder to the first wheel beside Tav without a word, and he looks at her, once, and doesn't sing.` : ''}${b3In('kettle') ? ` Kettle goes for the Moranth crates, because Kettle would go for the Moranth crates if the sky were falling, and gets two of them up the bank by herself, and goes back for a third.` : ''}
+Into the shallows, shoulders to the wheels beside the Fourth Regiment, and the oxen bellowing and the water already climbing your legs. ${b3In('brisk') ? `Brisk puts her shoulder to the first wheel beside Tav without a word, and he looks at her, once, and doesn't sing.` : ''}${b3In('kettle') ? ` Kettle goes for the Moranth crates, because Kettle would go for the Moranth crates if the sky were falling, and gets two of them up the bank by herself, and goes back for a third.` : ''}${b3In('vell') ? ` Vell gets a line on the lead yoke and round a stake on the bank, and leans on it, and the oxen come up with it, bellowing, a step at a time.` : ''}
 
 Then the water hits.
 
@@ -38072,7 +38072,7 @@ The river goes down in two days, the way the Rhivi said it would, and the whole 
 
 Ahead, the Barghast hills on the left hand, and somewhere ahead of that, Capustan, on its river, under siege. The outriders say they can see smoke on the horizon at dawn now. A great deal of smoke.
 
-${b3In('ohl') ? `Ohl has started looking at the horizon in the mornings the way he looks at a wound before he unwraps it. ` : ''}${b3In('kettle') ? `Kettle counts the munitions at every halt. ` : ''}${b3In('tuft') ? `Tuft has not drawn a card since the Rhivi fires. ` : ''}You count the Fourth. You count twice.`,
+${b3In('ohl') ? `Ohl has started looking at the horizon in the mornings the way he looks at a wound before he unwraps it. ` : ''}${b3In('kettle') ? `Kettle counts the munitions at every halt. ` : ''}${b3In('tuft') ? `Tuft has not drawn a card since the Rhivi fires. ` : ''}${b3In('ellis') ? `Ellis looks down every track that leaves the road anywhere but south-east, and doesn't say why. ` : ''}${b3In('vell') ? `Vell has stopped looking for roofs. ` : ''}You count the Fourth. You count twice.`,
     html:allyHTML('The Rhivi Plain · six weeks out of Pale'),
     ch:[{t:'On, toward Capustan.', go:()=>chapterEnd(2, S.f.b3_c2_key || 'herd')},
         {t:'Not yet.', go:()=>startExplore()}]},
@@ -40596,7 +40596,7 @@ He sees Brisk and doesn't stop singing. He finishes the verse, because you finis
       ch:[{t:'"Your bread, corporal. You\'ll be short at Coral."', go:'b3_c4_tav2'},
           {t:'Leave them to it.', fx:()=>{ loy('brisk', 1); }, go:()=>startExplore()}]}),
     b3_c4_tav2:()=>({sp:'Tav', txt:
-`"I'll be short at Coral anyway." He shrugs, a big slow shrug. "We grew up on the Cawn wharves, Sergeant, the two of us. There were winters." He looks at the children, who have not gone away. "When you're that hungry somebody tells you what to do and you do it. You'd eat the boards off the quay if somebody told you it was bread. They're people. Hungry ones. I've been hungry." He looks at his sister. "So's she."
+`"I'll be short at Coral anyway." He shrugs, a big slow shrug. "We grew up on the Cawn wharves, Sergeant, her and me. There were winters." He looks at the children, who have not gone away. "When you're that hungry somebody tells you what to do and you do it. You'd eat the boards off the quay if somebody told you it was bread. They're people. Hungry ones. I've been hungry." He looks at his sister. "So's she."
 
 Brisk's mouth goes tight. Then she takes the heel of bread out of her own kit, the end she keeps for the march, and hands it to her brother, and he passes it through the stakes without a word, and the smallest one gets it again.
 
@@ -40983,7 +40983,7 @@ Whiskeyjack: shields, not blades, if you can. The ones with brow-bands are the o
 
 ${c4Dead() ? `You count. Everyone counts. ${c4Back()}, dragged or crawling or walking, from the Fourth's stretch. ${numw(c4Dead(), true)} did not. ${c4In('ohl') ? `Ohl goes and kneels by each of the ${c4Dead() === 1 ? 'one' : numw(c4Dead())} in turn, and closes ${c4Dead() === 1 ? 'the eyes' : 'their eyes'}, and doesn't write anything.` : `You close ${c4Dead() === 1 ? 'the eyes' : 'their eyes'} yourself.`}${S.f.b3_c4_sharperNight ? `${c4In('kettle') ? ' Kettle is sitting on the satchel with her hands over her face.' : ''}` : ''}` : `You count. Everyone counts. ${c4Back()} from the Fourth's stretch, dragged or crawling or walking. Not one of them died on it. ${c4In('brisk') ? `Brisk writes it in the ledger by firelight, in capitals, the way she writes the things she wants to be able to find again.` : `You write it in the pay ledger, in the margin, where you will be able to find it again.`}`}
 
-${c4In('vell') ? `Vell goes along the stake line in the grey, unpicking his rope from the stakes it held, one loop at a time. Two of the stakes have hands' worth of rag still knotted to them where people held on. He leaves those.
+${c4In('vell') ? `Vell goes along the stake line in the dark, unpicking his rope from the stakes it held, one loop at a time. It held. He coils it, slowly, and sits on the bank with the coil in his lap a while before he puts it back over his shoulder.
 
 ` : ''}Up the line, at the heart of the camp, the shouting has stopped. Torches are moving there. A great many torches.${c4In('brisk') ? `
 
@@ -40998,7 +40998,9 @@ Along the gap, on your side of the ditch now, the ones who came over the stakes 
 
 The word comes down the line with the water carts, from fire to fire, the way word does. Anaster, the First Child, is taken. The women who guarded him are dead, all of them, his mother among them. The black dragon came down on them out of the sky. Whiskeyjack was there.
 
-That is all the word says. Up the line, a long way off, he is walking toward you along the bank.`,
+That is all the word says. Up the line, a long way off, he is walking toward you along the bank.${c4In('ellis') ? `
+
+Ellis is standing on the cart with her hand over her eyes, looking south-east where the dust was. "Gone," she says. "All of it, and no tracks going." She gets down. "I'd like to know how you move that much of anything and leave no tracks."` : ''}`,
       ch:[{t:'Wait for him.', go:()=>startExplore()}]}),
     b3_c4_dawn_wj:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c4_dawnWj = 1; }, txt:
 `He looks a hundred years old. He is limping now and has stopped pretending not to. There is blood on his boots that is not his and he has not noticed it, or has noticed and not cared.
@@ -41064,14 +41066,22 @@ They sit there. The sun comes up. Neither of them says *we don't leave people*. 
 
 ${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for ${numw(S.squad.length)}," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
 
-${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are wrapped in rags that have stopped being white. He is looking at the salve jars.` : 'A girl at the end of the row has her feet wrapped in rags that have stopped being white.'}`,
+${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are wrapped in rags that have stopped being white. He is looking at the salve jars.` : 'A girl at the end of the row has her feet wrapped in rags that have stopped being white.'}${c4In('greysword') ? `
+
+"The Domin is bare," Dannet says. "I told you so, Sergeant. I know the villages." A pause. "I did not tell you what to do about it. That is not a guide's business."` : ''}${c4In('sohra') ? `
+
+"In a hard winter," Sohra says, "the herd feeds the calves first. Then the herd starves a little." She looks at the row. "My people do not call that kindness. They call it the herd."` : ''}${c4In('ellis') ? `
+
+Ellis is doing the sum on her fingers, the scout's sum: days, legs, water. She gets to the end of it and shrugs. "We can walk hungry," she says. "I've walked hungry. It's horses I'd worry for, and we've none of our own."` : ''}${c4In('vell') ? `
+
+Vell is looking at the girl's feet, and then at his own boots, Daru boots, good ones, a long way from any cobbler. He keeps his opinion. It is on his face anyway.` : ''}`,
       ch:[{t:'Open the sacks. The children and the sick, the bread and the salves.', fx:()=>{ S.f.b3_c4_key = 'share'; S.f.b3_wjNoticed = 1; const n = Math.min(2, S.inv.salve || 0); S.inv.salve = (S.inv.salve || 0) - n; S.f.b3_c4_salvesGiven = n; ally(2, -2, 'The Fourth\'s own bread'); if (c4In('ohl')) loy('ohl', 1); if (c4In('sohra')) loy('sohra', 1); if (c4In('brisk')) loy('brisk', -1); }, go:'b3_c4_share'},
           {t:'"We keep what we carry. The Domin is bare, and somebody has to be able to fight in it."', fx:()=>{ S.f.b3_c4_key = 'hold'; ally(0, 2, 'Kept for the road'); if (c4In('ohl')) loy('ohl', -1); if (c4In('brisk')) loy('brisk', 1); }, go:'b3_c4_hold'},
           {t:'Not yet.', go:()=>startExplore()}]},
     b3_c4_share:()=>({sp:'The ration cart', txt:
 `The Fourth opens its sacks. ${c4In('brisk') ? `Brisk does it herself, after a moment, because if it is going to be done it is going to be done properly: she breaks the bread into even pieces with her knife and gives them out down the row, one each, and the dried meat after, and writes it in the ledger as she goes: *Six days. Gap. Given.*` : `The bread goes down the row in even pieces, one each, and the dried meat after.`} ${c4In('ohl') ? `Ohl kneels at the end of the row with the salve jars, ${S.f.b3_c4_salvesGiven ? `${S.f.b3_c4_salvesGiven === 1 ? 'the last of them' : 'both of them'}, and unwraps the girl's feet, and does not make a face, and does them properly, with boiled cloth.` : `which are empty already, and does what he can with boiled cloth.`}` : S.f.b3_c4_salvesGiven ? `The salve goes on the worst feet, and the worst hands.` : ''}
 
-It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.
+It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.${c4In('vell') ? ` Vell lifts the smallest of them up onto the cart's tailboard, one at a time, so they can eat up off the frozen ground.` : ''}
 
 Down at the end of the line, by the dead tree, Whiskeyjack has stopped talking to the quartermaster. He is looking at the Fourth's empty sacks. He doesn't come over. After a while he nods, once, to nobody you can see, and walks on up the line, slowly, on the leg.
 
@@ -41083,7 +41093,7 @@ ${c4In('kettle') ? `"We're going to be so hungry," Kettle says cheerfully, sitti
       ch:[{t:'Rest. The Catlin in three days.', go:()=>chapterEnd(4, 'share')},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b3_c4_hold:()=>({sp:'The ration cart', txt:
-`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}
+`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}${c4In('ellis') ? ` Ellis knots the sacks onto the Fourth's packs herself, quick and tight, and is back at her place on the bank before the cart has gone.` : ''}
 
 The clerk nods as if you had confirmed a figure, and loads the cart, and takes it over the ditch at the gap with the morning's handful a head, and the row by his wheels watches it go. ${c4In('ohl') ? `Ohl looks at the girl at the end of the row, and then at you, and then he takes a strip of boiled cloth out of his own kit, which is not the squad's, and goes and kneels by her and does her feet with that and nothing else. He doesn't look at you while he does it, or afterward.` : `A Grey Sword recruiter comes along the row later and takes the girl at the end of it, and a few others, to the barracks, where there is meal.`}
 
@@ -45957,13 +45967,13 @@ The Fourth has to go somewhere. It is your call. It always was.`,
   b3_c7_road_host:()=>({sp:'The Host', txt:
 `The Host, then. Dujek's, whatever the proclamations end up calling it, going where it is sent, which by every rumour on the shore is Seven Cities and the year after this one.
 
-${b3In('ohl') ? 'Ohl looks up when you say it. Seven Cities is his country. "Ehrlitan," he says, and nothing else, and it is enough. ' : ''}${b3In('kettle') ? 'Kettle looks at the quorl roosts down the shore. "They\'ll be coming," she says. "The Moranth. They always come." ' : ''}${b3In('brisk') ? 'Brisk looks at the Fourth Regiment\'s lines, where Tav is. "Same army," she says. That is all she needs. ' : ''}`,
+${b3In('ohl') ? 'Ohl looks up when you say it. Seven Cities is his country. "Ehrlitan," he says, and nothing else, and it is enough. ' : ''}${b3In('kettle') ? 'Kettle looks at the quorl roosts down the shore. "They\'ll be coming," she says. "The Moranth. They always come." ' : ''}${b3In('brisk') ? 'Brisk looks at the Fourth Regiment\'s lines, where Tav is. "Same army," she says. That is all she needs. ' : ''}${b3In('sohra') ? 'Sohra watches the herds going inland without her, and then turns her back on them. "A long way from the grass," she says. "I said I would watch the Malazans. I did not say where." ' : ''}${b3In('greysword') ? 'Dannet looks at the Grey Swords\' camp by the barrow. "I am lent," she says. "No one has asked for me back." ' : ''}${b3In('ellis') ? 'Ellis looks along the coast road. "More roads," she says. From her it might be approval. ' : ''}${b3In('vell') ? 'Vell says, "Seven Cities means ships. Ships have rigging." He has plainly been waiting a long time to say it. ' : ''}`,
       ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'host'; b3c7Loy('ohl', 1); b3c7Loy('brisk', 1); }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_road_daru:()=>({sp:'Darujhistan', txt:
 `Darujhistan, then. The long way back over the Domin and the plain to the city of blue fire on its lake, where nobody reads the Empire's ledgers and Kruppe has already, somehow, arranged everything. Not a bar of your own; not anybody else's either. The Phoenix has a door that needs standing in, and the Fourth know what a door is for.
 
-${b3In('tuft') ? 'Tuft looks west. "It\'s where she was born," she says. "The second time." ' : ''}${b3In('kettle') ? 'Kettle frowns. "No Moranth quartermaster in Darujhistan," she says. Then: "There\'s an alchemist." ' : ''}${b3In('sohra') ? 'Sohra says, "A city," the way you would say *a hole*. Then she shrugs. "The herd goes where the herd goes." ' : ''}`,
+${b3In('tuft') ? 'Tuft looks west. "It\'s where she was born," she says. "The second time." ' : ''}${b3In('kettle') ? 'Kettle frowns. "No Moranth quartermaster in Darujhistan," she says. Then: "There\'s an alchemist." ' : ''}${b3In('sohra') ? 'Sohra says, "A city," the way you would say *a hole*. Then she shrugs. "The herd goes where the herd goes." ' : ''}${b3In('greysword') ? 'Dannet says the long way goes by Capustan, and that she will want an hour there, at the wall, and does not say which part of it. ' : ''}${b3In('vell') ? 'Vell has gone very still. "Home," he says, and then, more carefully, "the city." Whatever the Guild wrote against his name is still written there. He looks, for a moment, about fifteen. ' : ''}${b3In('ellis') ? 'Ellis says, "The Phoenix," and nothing after it, which is a whole speech. ' : ''}`,
       ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'daru'; b3c7Loy('tuft', 1); b3c7Loy('kettle', -1); }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_road_stand:()=>({sp:'Stood down', txt:
@@ -46068,10 +46078,13 @@ B3FIN7.fate = (id, key) => {
     B3FIN7.loy('greysword', `"Shield up, Sergeant," she says. "Not for you. For me. I like to know where it is."`, `She was lent to the Malazans. She has made it plain she was lent, and nothing more.`, `She says *sir* to you now, the way he did. To everyone. She is learning.`)]);
   if (id === 'ellis') return add('Still looking', [
     `Ellis looked at every face that came out of Coral and down the hill. Not there. She is still looking, down every road that leads anywhere but where the Fourth is going, and she is still with the Fourth. She would like both of those noted.`,
-    key === 'standdown' ? `She rides, when the Fourth stands down. The Fourth does not ask where.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`]);
+    key === 'standdown' ? `She rides, when the Fourth stands down. The Fourth does not ask where.` : key === 'daru' ? `In Darujhistan she takes the post across the street from the Phoenix's door, which is not the same as standing in it, and counts everyone who goes in, and everyone who comes out, and the numbers always match.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`,
+    B3FIN7.loy('ellis', `She counts you first now, at every halt, before the horses. She has never said so. Kettle told you.`, `She reports to you in one sentence, always the right one, and never a second.`, `"Counted," she says at every halt, and you know it means you as well.`)]);
   if (id === 'vell') return add('Sky', [
     `Vell crossed half a continent with nothing to string a line between, and found he liked the sky. Don't tell the Guild.`,
-    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`]);
+    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered.` : key === 'standdown' ? `When the Fourth stands down he goes wherever there is sky, with a coil of rope and a Guild knot nobody else in the Host can tie, and says he will write. He is the only one of them who does.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`,
+    `${S.f.b3_c7_barrow ? 'He left a length of that rope on the Shield Anvil\'s barrow, tied so it holds. ' : ''}He still asks after the names of the two marines on the hill, wherever he stops. Somebody always knows, he says. No one has, yet.`,
+    B3FIN7.loy('vell', `"Off is the hard part," he says, when anyone asks how the Fourth came through it. "The sergeant's good at off." From a rope man there is nothing higher.`, `He keeps his rope coiled and his thoughts with it, and goes up on his own afterwards, to be somewhere you are not.`, `He still checks your knots when he thinks you are not looking. You still let him.`)]);
   return {title:TPL[id] ? TPL[id].role : '', txt:TPL[id] ? TPL[id].quest : ''};
 };
 
@@ -46086,7 +46099,9 @@ B3FIN7.gone = (id, key) => {
        tuft:`The Deck came back without her. The Fourth cannot read it. Nobody will throw it away.`,
        ohl:`The list came back without him. A trooper in the Fourth reads it at night now, lips moving, and adds Ohl\'s name at the end, every time, as if it might not have stuck.`,
        sohra:`The Rhivi sang her home across the plain. Somewhere at the edge of the grass she is standing with the herd's dead, watching the Malazans.`,
-       greysword:`The Grey Swords took her shield home to the company, with the wolf on it.`}[id] || '',
+       greysword:`The Grey Swords took her shield home to the company, with the wolf on it.`,
+       ellis:`Her bow came back without her, and the glove. The Fourth will not wear the glove, or throw it away. At every halt somebody counts the horses first, because she would have.`,
+       vell:`His rope came back without him, coiled the Guild way. No one in the Fourth has uncoiled it. It rides in the baggage, for a roof, some day.`}[id] || '',
       `Ohl's list has ${P.her} on it. The Fourth carried the name the rest of the way.`])};
   }
   if (b3Fallen().includes(id)) return {label:'Remembered', title:'Darujhistan', txt:`${NAME(id)} did not come out of Darujhistan, the year before. The Fourth marched south without ${P.her}, all the way to the sea, and counted ${P.her} anyway, once, at the end, the way you count a tooth that is gone.`};
@@ -47423,7 +47438,7 @@ You carry ${S.silver} silver.`,
   if (typeof B3CH2 !== 'undefined') { wrap(B3CH2, 'b3_c2_wagons', n => before(n, '^Leave them', [{t:'The chitin guard by the third crate is watching your hands.', tag:'Hand-Talk', go:()=>playHandTalk({after:r => { S.f.b3_handLast = r; talk('b3_c2_hand_after'); }})}]));
     B3CH2.dlg.b3_c2_hand_after = () => { const r = S.f.b3_handLast || {}; return {sp:'The Host\'s wagons', txt: r.all ?
 `The guard has gone back to its crate as if nothing had happened, and nothing has, by Moranth reckoning: a thing was said and answered. The munitions in your satchel say otherwise.${b3In('kettle') ? ` Kettle walks away from the wagon very carefully, the way she walks when she is carrying something that could end her, which she is.` : ''}` : r.won ?
-`The guard turns back to its crate. ${r.won >= 2 ? `What it set on the tailboard goes into the satchel. ` : ''}${b3In('kettle') ? `"It *talked* to you," Kettle says, for the third time. "Sergeant. A Moranth. It talked to you with its *hands*."` : `The Host will never believe you.`}` :
+`The guard turns back to its crate. ${r.won >= 2 ? `What it set on the tailboard goes into the satchel. ` : ''}${b3In('kettle') ? `"It *talked* to you," Kettle says, for the third time. "Sergeant. A Moranth. It talked to you with its *hands*."` : `The Host will never believe you.`}${b3In('ellis') ? ` Ellis watched every sign from the next wagon. "Six," she says, later. "They only have six. Everything else is the order." She learned a hand-talk of her own once, in another trade, and does not say whose.` : ''}` :
 `The guard lowers its hands and turns back to the crate, and whatever it was going to say stays said in Moranth.`,
       ch:[{t:'Back to the wagons.', go:'b3_c2_wagons'}]}; }; }
   /* Ch4: the drill at the fire west of Capustan */
@@ -47446,7 +47461,7 @@ You carry ${S.silver} silver.`,
     wrap(B3CH6, 'b3_c6_bank_fire', n => n && n.sp === 'The Fourth\'s fire' ? before(n, '^Leave it', [{t:'The bargemen are running a barge across in the dark for practice. Take the pole.', tag:'The Crossing', go:()=>playCrossing({mode:'barge', after:r => { S.f.b3_crossLast = Object.assign(r, {mode:'barge'}); b3CrossPay(r); talk('b3_c6_cross_after'); }})}]) : n);
     B3CH6.dlg.b3_c6_cross_after = () => { const r = S.f.b3_crossLast || {}, q = r.mode !== 'barge'; return {sp: q ? 'The roost' : 'The slips', txt: !r.done ?
 `You come down before the far side. ${q ? 'The roost-master says the quorl will remember, and that the quorl is not the one he is worried about.' : 'The bargeman takes his pole back. He has seen marines before.'}` : r.clean ?
-`${q ? `Across clean, and the roost-master, who has watched four hundred riders learn the lift, tilts his helm a hair. The rider behind you says one word in Moranth. You decide it was a good one.` : `Across clean, and the bargemen, who have seen four hundred marines fall in the Maurik, do not laugh once. One of them nods. You will take the nod.`}` :
+`${q ? `Across clean, and the roost-master, who has watched four hundred riders learn the lift, tilts his helm a hair. The rider behind you says one word in Moranth. You decide it was a good one.` : `Across clean, and the bargemen, who have seen four hundred marines fall in the Maurik, do not laugh once. One of them nods. You will take the nod.`}${b3In('vell') ? (q ? ` Vell is at the roost edge when you come down, grinning like a boy who has just watched his first parapet taken clean. "Up is easy," he says. "That was *off*."` : ` Vell coiled the bow line for the bargemen while you were out there, without being asked, and they let him.`) : ''}` :
 `${q ? `Across, in the end, with ${numw(r.caught, true)} gust${r.caught === 1 ? '' : 's'} in it and the roost-master's whole opinion of marines confirmed. The quorl, at least, does not hold it against you.` : `Across, in the end, with the river having had its say ${numw(r.caught, true)} time${r.caught === 1 ? '' : 's'}. The bargeman takes his pole back and looks at it as if you might have bent it.`}`,
       ch:[{t:'Back to the fire.', go:()=>talk(q ? 'b3_c6_ledge_fire' : 'b3_c6_bank_fire')}]}; }; }
 }

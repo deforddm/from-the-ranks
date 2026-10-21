@@ -1251,7 +1251,7 @@ The Fourth has to go somewhere. It is your call. It always was.`,
   b3_c7_road_host:()=>({sp:'The Host', txt:
 `The Host, then. Dujek's, whatever the proclamations end up calling it, going where it is sent, which by every rumour on the shore is Seven Cities and the year after this one.
 
-${b3In('ohl') ? 'Ohl looks up when you say it. Seven Cities is his country. "Ehrlitan," he says, and nothing else, and it is enough. ' : ''}${b3In('kettle') ? 'Kettle looks at the quorl roosts down the shore. "They\'ll be coming," she says. "The Moranth. They always come." ' : ''}${b3In('brisk') ? 'Brisk looks at the Fourth Regiment\'s lines, where Tav is. "Same army," she says. That is all she needs. ' : ''}${b3In('sohra') ? 'Sohra watches the herds going inland without her, and then turns her back on them. "A long way from the grass," she says. "I said I would watch the Malazans. I did not say where." ' : ''}${b3In('greysword') ? 'Dannet looks at the Grey Swords\' camp by the barrow. "I am lent," she says. "Nobody has asked for me back." ' : ''}${b3In('ellis') ? 'Ellis looks along the coast road. "More roads," she says. From her it might be approval. ' : ''}${b3In('vell') ? 'Vell says, "Genabaris means ships. Ships have rigging." He sounds as if he has been waiting a long time to say it. ' : ''}`,
+${b3In('ohl') ? 'Ohl looks up when you say it. Seven Cities is his country. "Ehrlitan," he says, and nothing else, and it is enough. ' : ''}${b3In('kettle') ? 'Kettle looks at the quorl roosts down the shore. "They\'ll be coming," she says. "The Moranth. They always come." ' : ''}${b3In('brisk') ? 'Brisk looks at the Fourth Regiment\'s lines, where Tav is. "Same army," she says. That is all she needs. ' : ''}${b3In('sohra') ? 'Sohra watches the herds going inland without her, and then turns her back on them. "A long way from the grass," she says. "I said I would watch the Malazans. I did not say where." ' : ''}${b3In('greysword') ? 'Dannet looks at the Grey Swords\' camp by the barrow. "I am lent," she says. "No one has asked for me back." ' : ''}${b3In('ellis') ? 'Ellis looks along the coast road. "More roads," she says. From her it might be approval. ' : ''}${b3In('vell') ? 'Vell says, "Seven Cities means ships. Ships have rigging." He has plainly been waiting a long time to say it. ' : ''}`,
       ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'host'; b3c7Loy('ohl', 1); b3c7Loy('brisk', 1); }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_road_daru:()=>({sp:'Darujhistan', txt:
@@ -1362,10 +1362,13 @@ B3FIN7.fate = (id, key) => {
     B3FIN7.loy('greysword', `"Shield up, Sergeant," she says. "Not for you. For me. I like to know where it is."`, `She was lent to the Malazans. She has made it plain she was lent, and nothing more.`, `She says *sir* to you now, the way he did. To everyone. She is learning.`)]);
   if (id === 'ellis') return add('Still looking', [
     `Ellis looked at every face that came out of Coral and down the hill. Not there. She is still looking, down every road that leads anywhere but where the Fourth is going, and she is still with the Fourth. She would like both of those noted.`,
-    key === 'standdown' ? `She rides, when the Fourth stands down. The Fourth does not ask where.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`]);
+    key === 'standdown' ? `She rides, when the Fourth stands down. The Fourth does not ask where.` : key === 'daru' ? `In Darujhistan she takes the post across the street from the Phoenix's door, which is not the same as standing in it, and counts everyone who goes in, and everyone who comes out, and the numbers always match.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`,
+    B3FIN7.loy('ellis', `She counts you first now, at every halt, before the horses. She has never said so. Kettle told you.`, `She reports to you in one sentence, always the right one, and never a second.`, `"Counted," she says at every halt, and you know it means you as well.`)]);
   if (id === 'vell') return add('Sky', [
     `Vell crossed half a continent with nothing to string a line between, and found he liked the sky. Don't tell the Guild.`,
-    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`]);
+    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered.` : key === 'standdown' ? `When the Fourth stands down he goes wherever there is sky, with a coil of rope and a Guild knot nobody else in the Host can tie, and says he will write. He is the only one of them who does.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`,
+    `${S.f.b3_c7_barrow ? 'He left a length of that rope on the Shield Anvil\'s barrow, tied so it holds. ' : ''}He still asks after the names of the two marines on the hill, wherever he stops. Somebody always knows, he says. No one has, yet.`,
+    B3FIN7.loy('vell', `"Off is the hard part," he says, when anyone asks how the Fourth came through it. "The sergeant's good at off." From a rope man there is nothing higher.`, `He keeps his rope coiled and his thoughts with it, and goes up on his own afterwards, to be somewhere you are not.`, `He still checks your knots when he thinks you are not looking. You still let him.`)]);
   return {title:TPL[id] ? TPL[id].role : '', txt:TPL[id] ? TPL[id].quest : ''};
 };
 
@@ -1380,7 +1383,9 @@ B3FIN7.gone = (id, key) => {
        tuft:`The Deck came back without her. The Fourth cannot read it. Nobody will throw it away.`,
        ohl:`The list came back without him. A trooper in the Fourth reads it at night now, lips moving, and adds Ohl\'s name at the end, every time, as if it might not have stuck.`,
        sohra:`The Rhivi sang her home across the plain. Somewhere at the edge of the grass she is standing with the herd's dead, watching the Malazans.`,
-       greysword:`The Grey Swords took her shield home to the company, with the wolf on it.`}[id] || '',
+       greysword:`The Grey Swords took her shield home to the company, with the wolf on it.`,
+       ellis:`Her bow came back without her, and the glove. The Fourth will not wear the glove, or throw it away. At every halt somebody counts the horses first, because she would have.`,
+       vell:`His rope came back without him, coiled the Guild way. No one in the Fourth has uncoiled it. It rides in the baggage, for a roof, some day.`}[id] || '',
       `Ohl's list has ${P.her} on it. The Fourth carried the name the rest of the way.`])};
   }
   if (b3Fallen().includes(id)) return {label:'Remembered', title:'Darujhistan', txt:`${NAME(id)} did not come out of Darujhistan, the year before. The Fourth marched south without ${P.her}, all the way to the sea, and counted ${P.her} anyway, once, at the end, the way you count a tooth that is gone.`};

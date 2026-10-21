@@ -471,7 +471,7 @@ He sees Brisk and doesn't stop singing. He finishes the verse, because you finis
       ch:[{t:'"Your bread, corporal. You\'ll be short at Coral."', go:'b3_c4_tav2'},
           {t:'Leave them to it.', fx:()=>{ loy('brisk', 1); }, go:()=>startExplore()}]}),
     b3_c4_tav2:()=>({sp:'Tav', txt:
-`"I'll be short at Coral anyway." He shrugs, a big slow shrug. "We grew up on the Cawn wharves, Sergeant, the two of us. There were winters." He looks at the children, who have not gone away. "When you're that hungry somebody tells you what to do and you do it. You'd eat the boards off the quay if somebody told you it was bread. They're people. Hungry ones. I've been hungry." He looks at his sister. "So's she."
+`"I'll be short at Coral anyway." He shrugs, a big slow shrug. "We grew up on the Cawn wharves, Sergeant, her and me. There were winters." He looks at the children, who have not gone away. "When you're that hungry somebody tells you what to do and you do it. You'd eat the boards off the quay if somebody told you it was bread. They're people. Hungry ones. I've been hungry." He looks at his sister. "So's she."
 
 Brisk's mouth goes tight. Then she takes the heel of bread out of her own kit, the end she keeps for the march, and hands it to her brother, and he passes it through the stakes without a word, and the smallest one gets it again.
 
@@ -947,7 +947,7 @@ ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are w
 
 "In a hard winter," Sohra says, "the herd feeds the calves first. Then the herd starves a little." She looks at the row. "My people do not call that kindness. They call it the herd."` : ''}${c4In('ellis') ? `
 
-Ellis is doing the sum on her fingers, the scout's sum: days, legs, water. She gets to the end of it and shrugs. "We can walk hungry," she says. "I've walked hungry. It's the horses I'd worry for, and we haven't any."` : ''}${c4In('vell') ? `
+Ellis is doing the sum on her fingers, the scout's sum: days, legs, water. She gets to the end of it and shrugs. "We can walk hungry," she says. "I've walked hungry. It's horses I'd worry for, and we've none of our own."` : ''}${c4In('vell') ? `
 
 Vell is looking at the girl's feet, and then at his own boots, Daru boots, good ones, a long way from any cobbler. He keeps his opinion. It is on his face anyway.` : ''}`,
       ch:[{t:'Open the sacks. The children and the sick, the bread and the salves.', fx:()=>{ S.f.b3_c4_key = 'share'; S.f.b3_wjNoticed = 1; const n = Math.min(2, S.inv.salve || 0); S.inv.salve = (S.inv.salve || 0) - n; S.f.b3_c4_salvesGiven = n; ally(2, -2, 'The Fourth\'s own bread'); if (c4In('ohl')) loy('ohl', 1); if (c4In('sohra')) loy('sohra', 1); if (c4In('brisk')) loy('brisk', -1); }, go:'b3_c4_share'},
@@ -956,7 +956,7 @@ Vell is looking at the girl's feet, and then at his own boots, Daru boots, good 
     b3_c4_share:()=>({sp:'The ration cart', txt:
 `The Fourth opens its sacks. ${c4In('brisk') ? `Brisk does it herself, after a moment, because if it is going to be done it is going to be done properly: she breaks the bread into even pieces with her knife and gives them out down the row, one each, and the dried meat after, and writes it in the ledger as she goes: *Six days. Gap. Given.*` : `The bread goes down the row in even pieces, one each, and the dried meat after.`} ${c4In('ohl') ? `Ohl kneels at the end of the row with the salve jars, ${S.f.b3_c4_salvesGiven ? `${S.f.b3_c4_salvesGiven === 1 ? 'the last of them' : 'both of them'}, and unwraps the girl's feet, and does not make a face, and does them properly, with boiled cloth.` : `which are empty already, and does what he can with boiled cloth.`}` : S.f.b3_c4_salvesGiven ? `The salve goes on the worst feet, and the worst hands.` : ''}
 
-It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.
+It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.${c4In('vell') ? ` Vell lifts the smallest of them up onto the cart's tailboard, one at a time, so they can eat up off the frozen ground.` : ''}
 
 Down at the end of the line, by the dead tree, Whiskeyjack has stopped talking to the quartermaster. He is looking at the Fourth's empty sacks. He doesn't come over. After a while he nods, once, to nobody you can see, and walks on up the line, slowly, on the leg.
 
@@ -968,7 +968,7 @@ ${c4In('kettle') ? `"We're going to be so hungry," Kettle says cheerfully, sitti
       ch:[{t:'Rest. The Catlin in three days.', go:()=>chapterEnd(4, 'share')},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b3_c4_hold:()=>({sp:'The ration cart', txt:
-`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}
+`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}${c4In('ellis') ? ` Ellis knots the sacks onto the Fourth's packs herself, quick and tight, and is back at her place on the bank before the cart has gone.` : ''}
 
 The clerk nods as if you had confirmed a figure, and loads the cart, and takes it over the ditch at the gap with the morning's handful a head, and the row by his wheels watches it go. ${c4In('ohl') ? `Ohl looks at the girl at the end of the row, and then at you, and then he takes a strip of boiled cloth out of his own kit, which is not the squad's, and goes and kneels by her and does her feet with that and nothing else. He doesn't look at you while he does it, or afterward.` : `A Grey Sword recruiter comes along the row later and takes the girl at the end of it, and a few others, to the barracks, where there is meal.`}
 

@@ -1024,7 +1024,7 @@ He looks back at the rise, at the red shapes on it.
 
 Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
 
-The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. Somebody in this squad should know how to stand still."` : ''}`,
+The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. One of you should know how to stand still."` : ''}`,
     ch:[{t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
   b2_ramin_yes:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 1; recruit('redblade'); loy('redblade', 1); if (b2In('haddat')) loy('haddat', 1); if (b2In('tangle')) loy('tangle', -1); }, txt:

@@ -494,7 +494,7 @@ You can see it all from here: the mounds in their rows between the trees, more t
 
 North, back across the Vathar, there is dust on the horizon. A great deal of it. More than at the river.
 
-${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}${b2In('redblade') ? ` Ramin looks south instead, at the white. "Nothing to remount on, out there," he says. "Nothing to ride to."` : ''}`,
+${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}`,
     ch:[{t:'Down.', go:()=>startExplore()}]}),
   b2_tower_leave:()=>({sp:'Outside', scene:'b2_forest', fx:()=>{ S.f.b2_towerOut = 1; }, txt:
 `You come out through the gap where the door was into heat that hits like a hand, and stand in it, and let it.

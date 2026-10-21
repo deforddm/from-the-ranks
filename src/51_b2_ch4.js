@@ -569,7 +569,7 @@ He closes the ledger. "Good night, Sergeant." He goes off between the carriages 
   b2_servants:()=>({sp:'Hissari servants', fx:()=>{ S.f.b2_servants = 1; }, txt:
 `Three of the Council's servants are roping a chest by a carriage wheel: a grey woman and two young men, Hissari, talking low in the old families' dialect while they work, the way servants talk when they think nobody who matters can understand them.
 
-${b2In('haddat') ? `Haddat goes and helps with the rope. When the first knot is tied she says something in the same dialect about the river, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}${b2In('redblade') ? ' Ramin stays back between two carriages, where the lamps will not show them his red.' : ''}`,
+${b2In('haddat') ? `Haddat goes and helps with the rope. When the first knot is tied she says something in the same dialect about the river, and the grey woman answers, and then they are talking, all four of them, quietly, with the rope going round and round the chest.` : `You speak gutter Hissari. Not this Hissari. But near enough to follow.`}`,
     ch:[{t:b2In('haddat') ? 'Let Haddat talk to them.' : 'Talk to them in their own tongue.', check:['guile',13], edges:id=>[id === 'haddat' && ['their own dialect', 3], id === 'sgt' && ['gutter Hissari', 1], id === 'redblade' && ['they hate a Red Blade more than a Malazan', -2]],
           near:{t:()=>ROLL().nearPaid ? `Yes, but the grey woman wants something for it before she says the last of it, and in the Chain there is only one thing to want: a skin of water for her two boys: −1 water.` : `Yes, but the grey woman wants a skin of water for her two boys before she says the last of it, and the squad has none to give; ${NAME(ROLL().who || 'sgt')} has to beg it out of her instead, and hates it: −1 on the next check.`,
             fx:()=>b2NearWater(ROLL().who || 'sgt')},
@@ -629,7 +629,7 @@ He turns his back on the carriages, deliberately, as a Red Blade turns his back 
 
 Men in the bow. Pikes, upright. They ground in the shallows and get out, quietly, and the one in front, an officer, goes up to the steward with something under his arm. A satchel. The steward holds out his hand for it.
 
-${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has both palms in the mud of the bank. "Two boats," he whispers. "The river does not like what is in the second."' : b2In('redblade') ? ' Ramin draws the curved sword a finger at a time, so it will not ring.' : ''}` :
+${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has both palms in the mud of the bank. "Two boats," he whispers. "The river does not like what is in the second."' : ''}` :
 `The river, black, below the carriages. On the far bank, fires, more than there are stars. Nothing moves on the water that you can see.`,
     ch:[{t:'Now. Into them.', req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown), go:()=>startBattle('b2_envoy', {})},
         {t:'Closer first, through the reeds.', check:['guile',14], req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown),
@@ -934,7 +934,7 @@ He turns round. "In Ehrlitan, Sergeant, the rich men watched from the hill. Toda
 
 And round the stretch, in the dark where a fire would be if anyone had lit one, children. Five of them. Six. Soaked, silent, with nobody, from somewhere in the ford. They have come up the bank to the nearest people who look as if they know what they are doing, and sat down, and they are watching the skins on your cart.
 
-${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}${b2In('warlock') ? ' The dogs that follow Keth have come up from the river with him, and lie down among the children, and the children put their hands in the fur.' : ''}`,
+${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}`,
     html:chainHTML('The far bank of the Vathar'),
     ch:[{t:'Take them into the stretch.', tag:'2 water', req:()=>!S.f.b2_orphans && chainW() >= 2, fx:()=>{ S.f.b2_orphans = 'took'; chain(-2, 5, 'Children from the ford'); if (b2In('haddat')) loy('haddat', 1); if (b2In('marrow')) loy('marrow', 1); }, go:'b2_orphans_took'},
         {t:'Give them a skin, and walk them to the Wickan wagons.', tag:'1 water', req:()=>!S.f.b2_orphans && chainW() >= 1, fx:()=>{ S.f.b2_orphans = 'sent'; chain(-1, 0, 'A skin for the children'); }, go:'b2_orphans_sent'},
