@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v6.15.0'; // the recruits: the squadmates you can gain are part of the squad in every chapter they walk in
+const CACHE = 'ftr-v7.0.0'; // Book Four: House of Chains, the Third squad of the 9th marches with the Fourteenth from Aren to Raraku
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
