@@ -4,7 +4,7 @@
 import { server, browser as launch, openGame } from './page.mjs';
 const srv = await server(); const br = await launch();
 const { page, errors } = await openGame(br, srv.url, {});
-const BOOKS_N = await page.evaluate(() => Object.fromEntries(Object.keys(BOOKS).map(k => [k, 1]))); // v6.0: a section per book on the shelf (three now)
+const BOOKS_N = await page.evaluate(() => Object.fromEntries(shelfBooks().map(B => [B.id, 1]))); // v6.0: a section per book on the shelf (three now; v7.0: a book still being written has none)
 const bad = [], ok = m => console.log('  ok  ' + m), no = m => { bad.push(m); console.log('  FAIL ' + m); };
 const r = await page.evaluate(async () => {
   const out = {};

@@ -21,18 +21,20 @@ const tables = await ev(() => { const out = {keys:Object.keys(READTABLE), bad:[]
   for (let ch = 1; ch <= 6; ch++) out.resolved['moi:' + ch] = want('moi', ch, () => { setBook('moi'); S = newStateMOI('Hask'); S.chapter = ch; migrate(S); });
   out.resolved['moi:7a'] = want('moi', 7, () => { setBook('moi'); S = newStateMOI('Hask'); S.chapter = 7; S.f.b3_flew = 1; migrate(S); });
   out.resolved['moi:7b'] = want('moi', 7, () => { setBook('moi'); S = newStateMOI('Hask'); S.chapter = 7; S.f.b3_river = 1; migrate(S); });
+  for (let ch = 1; ch <= 7; ch++) out.resolved['hoc:' + ch] = want('hoc', ch, () => { setBook('hoc'); S = newStateHOC('Hask'); S.chapter = ch; migrate(S); }); // v7.0: Book Four's seven places
   return out; });
-ok(tables.keys.length >= 24, `${tables.keys.length} tables (Book One 9, Book Two 7, Book Three 8)`);
+ok(tables.keys.length >= 31, `${tables.keys.length} tables (Book One 9, Book Two 7, Book Three 8, Book Four 7)`);
 ok(!tables.bad.length, 'every table paints without an error' + (tables.bad.length ? ': ' + tables.bad.join('; ') : ''));
 ok(!tables.flat.length, 'no table is one flat colour' + (tables.flat.length ? ': ' + tables.flat.join(', ') : ''));
 const unresolved = Object.entries(tables.resolved).filter(([k, v]) => v !== k || !tables.keys.includes(v));
 ok(!unresolved.length, 'every reading place resolves to its own table' + (unresolved.length ? ': ' + unresolved.map(([k, v]) => k + '→' + v).join(', ') : ''));
 
 /* 2. the decks' backs: one per reader, each its own; and the spreads */
-const backs = await ev(() => { const sig = {}; for (const r of ['tuft', 'marrow', 'yedda', 'kanese', 'benna', 'sohra']) { const cv = document.createElement('canvas'); cv.width = 120; cv.height = 180; const ctx = cv.getContext('2d'); DECKBACK_NOW = r; drawCard(ctx, null, 120, 180, false, 0); const d = ctx.getImageData(0, 0, 120, 180).data; let h = 0; for (let i = 0; i < d.length; i += 4) h = (h * 31 + d[i] + d[i+1] * 3 + d[i+2] * 7) | 0; sig[r] = h; } DECKBACK_NOW = 'tuft';
-  const sp = {}; for (const r of ['tuft', 'marrow', 'yedda', 'kanese', 'benna', 'sohra']) { const s = readingSpread(r); sp[r] = {n:s.slots.length, ans:s.slots.filter(x => x.ans).length, bones:!!s.bones, name:READER_SPREAD[r]}; }
+const backs = await ev(() => { const sig = {}; for (const r of ['tuft', 'marrow', 'yedda', 'kanese', 'benna', 'sohra', 'tallow', 'oldninth']) { const cv = document.createElement('canvas'); cv.width = 120; cv.height = 180; const ctx = cv.getContext('2d'); DECKBACK_NOW = r; drawCard(ctx, null, 120, 180, false, 0); const d = ctx.getImageData(0, 0, 120, 180).data; let h = 0; for (let i = 0; i < d.length; i += 4) h = (h * 31 + d[i] + d[i+1] * 3 + d[i+2] * 7) | 0; sig[r] = h; } DECKBACK_NOW = 'tuft';
+  const sp = {}; for (const r of ['tuft', 'marrow', 'yedda', 'kanese', 'benna', 'sohra', 'tallow', 'oldninth']) { const s = readingSpread(r); sp[r] = {n:s.slots.length, ans:s.slots.filter(x => x.ans).length, bones:!!s.bones, name:READER_SPREAD[r]}; }
   return {sig, sp, nowAfter:DECKBACK_NOW}; });
-ok(new Set(Object.values(backs.sig)).size === 6, 'six readers, six different deck backs');
+ok(new Set(Object.values(backs.sig)).size === 8, 'eight readers, eight different deck backs (Book Four adds Tallow\'s grandmother\'s deck and the old soldier\'s)');
+ok(backs.sp.tallow.name === 'step3' && backs.sp.oldninth.name === 'pair3', 'Tallow lays them as the old woman did; the old soldier crosses two on the ground');
 ok(Object.values(backs.sp).every(s => s.ans === 1), 'every spread has one card that answers');
 ok(backs.sp.marrow.n === 5 && backs.sp.marrow.name === 'cross5', "Marrow's temple cross: five cards");
 ok(backs.sp.sohra.bones && backs.sp.sohra.n === 6, "Sohra throws the bones: five in a ring and the card");
@@ -48,6 +50,9 @@ const CASES = [
   ['moi', 1, 'tuft', "setBook('moi'); S = newStateMOI('Hask'); S.chapter = 1; S.squad = ['tuft','kettle']; migrate(S); save();", 'b3c_knight'],
   ['moi', 2, 'sohra', "setBook('moi'); S = newStateMOI('Hask'); S.chapter = 2; S.squad = ['sohra','kettle']; migrate(S); save();", 'b3c_gate'],
   ['moi', 6, 'benna', "setBook('moi'); S = newStateMOI('Hask'); S.chapter = 6; S.squad = ['kettle']; migrate(S); save();", 'b3c_kingchains'],
+  ['hoc', 1, 'marrow', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 1; migrate(S); save();", 'b2c_soldier'],
+  ['hoc', 3, 'tallow', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 3; S.squad = ['sgt','tallow','tangle']; migrate(S); save();", 'b4c_knightchains'],
+  ['hoc', 7, 'oldninth', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 7; S.squad = ['sgt','haddat']; migrate(S); save();", 'b4c_leper'],
 ];
 for (const [book, ch, reader, setup, card] of CASES) {
   const r0 = await ev(({ setup, card }) => { eval(setup); S.card = card; AUDIO.setScene('explore'); const want0 = AUDIO._dev.state.want; cardSequence(() => { window.__done = (window.__done || 0) + 1; }, {}); return {reader:readingReader(), key:readingTableKey(), back:DECKBACK_NOW, want0, hidden:$('#cardfx').hidden, text:$('#cfText').classList.contains('show')}; }, { setup, card });

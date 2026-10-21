@@ -5,7 +5,8 @@
 //   COUNT   — a head-count in words ("the five of you", "all four") that doesn't match the squad on the map
 //   ABSENT  — the recruit is named although they never joined, or have gone (lint's REVIEW list covers the same ground, Book One's Vell too here)
 // Recruits by book: Book One Ellis (Ch2–5, Ch7) and Vell (Ch4 on); Book Two Ramin and Keth (Ch2 on), and the old hand from Book One;
-// Book Three Sohra (Ch1 on) and Dannet (Ch3 on), and Ellis or Vell when an import brings them.
+// Book Three Sohra (Ch1 on) and Dannet (Ch3 on), and Ellis or Vell when an import brings them; Book Four Ramin and Keth (a Book Two
+// transfer only) and Orvas (Ch3 on), with Book Two's four and the four new soldiers of the Fourteenth as the squad.
 // Usage: node tools/recruit_scan.mjs [--json=FILE] [--file=SRCFILE]   (build first: python3 build.py)
 //        exit 1 when LISTED or COUNT has a line not in tools/recruit_ok.json (the reviewed, deliberate ones)
 import { server, browser as launch, openGame } from './page.mjs';
@@ -31,16 +32,19 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
   const chOfFile = f => { const n = parseInt(f, 10);
     if (n >= 39 && n <= 46) return {book:'gotm', ch:n - 39}; if (n >= 48 && n <= 54) return {book:'dg', ch:n - 47};
     if (n >= 61 && n <= 67) return {book:'moi', ch:n - 60}; if (n === 47 || (n >= 55 && n <= 58)) return {book:'dg', ch:0};
-    if (n >= 60 && n <= 69) return {book:'moi', ch:0}; return null; };
+    if (n >= 60 && n <= 69) return {book:'moi', ch:0}; if (n >= 71 && n <= 77) return {book:'hoc', ch:n - 70}; if (n >= 70 && n <= 79) return {book:'hoc', ch:0}; return null; };
   const BOOK = {
     gotm:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'ellis', from:2, to:7}, {id:'vell', from:4, to:7}]},
     dg:{core:['haddat', 'sathi', 'tangle', 'marrow'], rec:[{id:'redblade', from:2, to:7}, {id:'warlock', from:2, to:7}, ...['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].map(id => ({id, from:7, to:7, old:1}))]}, // Book Two: Ramin, Keth, and in Aren an old hand of the Fourth (b2OldHand)
     moi:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'sohra', from:1, to:7}, {id:'greysword', from:3, to:7}, {id:'ellis', from:1, to:7, imp:1}, {id:'vell', from:1, to:7, imp:1}]},
+    // Book Four: Book Two's four and the Fourteenth's four new soldiers; Ramin and Keth (transfer only) and Orvas (from Chapter 3) as recruits
+    hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}]},
   };
   const NUM = {two:2, three:3, four:4, five:5, six:6, seven:7};
   function mk(book, ch, v, withR, without) {
     if (book === 'gotm') { S = newState('Hask'); S.squad = [...PORDER]; }
     else if (book === 'dg') { S = newStateDG('Hask'); }
+    else if (book === 'hoc') { S = newStateHOC('Hask'); S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'marrow']; }
     else { S = newStateMOI('Hask'); }
     S.chapter = ch || 1; S.scene = 'talk'; S.lvl = Math.min(8, 1 + S.chapter); S.xp = LEVELS[S.lvl - 1] || 0;
     if (book === 'dg') { S.chain = {water:6, column:20}; } if (book === 'moi') S.ally = {trust:6, dread:3};
@@ -53,6 +57,7 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     if (withR) Object.keys(S.f).forEach(k => { if (k.startsWith(withR + 'Gone') || /ellisThrough|ellisToc|ellisRefused|ellisWalked/.test(k) && withR === 'ellis') delete S.f[k]; });
     if (book === 'dg' && withR && TPL[withR] && PORDER.concat(['ellis', 'vell']).includes(withR)) { S.squad = S.squad.filter(x => !['redblade', 'warlock'].includes(x) || x === withR); S.f.b2_oldHand = withR; S.imported = {from:'Kell', sid:'scan', road:'empire', lvl:5, dead:[], f:{}}; }
     if (book === 'moi' && withR && ['ellis', 'vell'].includes(withR)) S.imported = {from:'Kell', sid:'scan', road:'outlaw', lvl:8, dead:[], f:{}};
+    if (book === 'hoc') { S.nerve = 5; delete S.dead.sathi; if (withR && ['redblade', 'warlock'].includes(withR)) S.imported = {from:'Kell', sid:'scan', road:'guard', lvl:8, mates:['haddat', 'sathi', 'tangle', 'marrow'], dead:[], f:{}, ramin:true, keth:true}; }
     S.card = null; return S;
   }
   const render = id => { let n; try { n = DLG[id](); } catch (e) { return null; } if (!n || typeof n.txt !== 'string') return null;

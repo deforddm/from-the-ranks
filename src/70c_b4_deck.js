@@ -88,7 +88,7 @@ const B4SAY = {
     oldninth:`"Luck," says the old soldier. "Twins. I had them before my first battle and I'm still here." He shrugs. "So's half my company. The other half had them too."`},
   obelisk:{d:'A standing stone, unaligned and older than anyone\'s gods.',
     marrow:`"Something endures," Marrow says. "The priests said that one meant the patient would live, and not to be too pleased about it."`,
-    tallow:`"The stone," Tallow says. "She'd give that one to the old men. It means you'll last." He puts it down carefully, as if it were heavy.`,
+    tallow:`"The stone," Tallow says. "She'd give that one to the old men. It means you'll last." He puts it down carefully, like something heavy.`,
     oldninth:`"Obelisk. You'll last," the old soldier says. "Don't know about the rest of them." He nods at the yard full of recruits. "You'll last."`},
   b2c_king:{d:'A hooded figure on a grey seat with no back to it, hands folded, and behind it a gate with the dead walking through, unhurried.',
     marrow:`Marrow looks at it for a while. "The King of High House Death," she says. "On a hill with his dead round him." She does not turn toward the Fall. "We know the hill, child."`,

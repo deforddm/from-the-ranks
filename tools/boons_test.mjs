@@ -15,6 +15,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   const sigOf = id => { const P = PATRONS[id]; return 'patrons/' + (P.sig || id); };
   out.noSigil = Object.keys(PATRONS).filter(id => id !== 'sgt' && !ART[sigOf(id)]).map(sigOf);
   S.book = 'moi'; out.sgtMoi = sigOf('sgt') + ':' + !!ART[sigOf('sgt')]; S.book = 'gotm'; out.sgtGotm = sigOf('sgt') + ':' + !!ART[sigOf('sgt')];
+  S.book = 'hoc'; out.treachHoc = patronBoon('sgt') && patronBoon('sgt').key; out.sgtHoc = sigOf('sgt'); S.book = 'gotm'; // v7.0: Treach answers in Book Four too
+  out.newGods = {hessa:patronBoon('hessa') && patronBoon('hessa').key, orvas:patronBoon('orvas') && patronBoon('orvas').key, hessaSig:!!ART['patrons/hessa'], orvasSig:!!ART['patrons/orvas']};
   out.distinct = new Set(Object.keys(PATRONS).map(id => id === 'sgt' ? 'patrons/sgt' : sigOf(id)).concat(['patrons/treach'])).size;
   // a two-ground fight; Brisk most loyal (Hood), then Ohl (Soliel)
   S = newState('Hask'); S.chapter = 3; S.lvl = 4; S.squad = ['sgt','brisk','kettle','tuft','ohl']; migrate(S); S.loy.brisk = 2; S.loy.ohl = 1; save();
@@ -53,6 +55,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   startBattle('__b', {}); await settle(); freeze();
   const g = B.units.find(u => u.id === 'sgt'), kt = B.units.find(u => u.id === 'kettle'), e = foes()[0], e2 = foes()[1];
   out.moveArmour = {mv:g.mv - mv0, ac:g.ac - ac0, kettleMv:kt.mv - kmv0}; // the Rope +2 and the herd +2; the Wolves +1
+  S.boons.gods = ['tears']; const tmv = mkParty('sgt', 0, 0).mv; S.boons.gods = []; out.tearsMv = tmv - mkParty('sgt', 0, 0).mv;
+  S.boons.gods = ['oponn','shadow','rope','boar','tiger','cold','dream','ground','herd','wolves'];
   // the squad's blow: the Lady +2, the Tiger +2 beside a squadmate
   B.units.forEach(u => { u.x = 0; u.y = 0; }); g.x = 3; g.y = 3; e.x = 4; e.y = 3; e2.x = 6; e2.y = 6; kt.x = 4; kt.y = 4; e.hp = e.maxhp = 60; e.boss = false; e.immortal = false;
   const bon = (a, t) => atkCalc(a, t).bonus;
@@ -70,6 +74,12 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   // the Boar and the Tiger on the damage; the Lady's reroll on the first blow of a round
   const dmgWith = async gods => { S.boons.gods = gods; g.atk = 60; g.pullRound = -1; B.round++; let res; for (let i = 0; i < 40; i++) { B.log = []; res = attack(g, e, {dmg:[1,1,0]}); if (res.hit && !B.log.some(l => /critical/.test(String(l)))) break; } return res.dmg; }; // a plain hit: a crit doubles the die
   out.dmg = {none:await dmgWith([]), boar:await dmgWith(['boar']), tiger:await dmgWith(['tiger']), both:await dmgWith(['boar','tiger'])};
+  // v7.0 the Khundryl dead: +2 on a squadmate's first hit of a turn only; D'rek: a melee blow on a squadmate rots the striker for 3, a shot does not
+  { S.boons.gods = ['tears']; g.atk = 60; B.turn++; let a1, a2; for (let i = 0; i < 40; i++) { B.log = []; a1 = attack(g, e, {dmg:[1,1,0]}); if (a1.hit && !B.log.some(l => /critical/.test(String(l)))) break; B.turn++; }
+    for (let i = 0; i < 40; i++) { B.log = []; a2 = attack(g, e, {dmg:[1,1,0]}); if (a2.hit && !B.log.some(l => /critical/.test(String(l)))) break; } out.tears = {first:a1.dmg, second:a2.dmg}; }
+  await wait(700); // the blows above land late (attack's later): let them, before the rot is counted
+  { S.boons.gods = ['worm']; const ea = e.atk; e.atk = 60; e.hp = e.maxhp = 60; g.hp = g.maxhp = 999; e.x = 4; e.y = 3; for (let i = 0; i < 40 && !attack(e, g, {dmg:[1,1,0]}).hit; i++); await wait(700); out.worm = 60 - e.hp;
+    e.hp = 60; e.x = 3; e.y = 6; e.rng = 5; for (let i = 0; i < 40 && !attack(e, g, {dmg:[1,1,0]}).hit; i++); await wait(700); out.wormShot = 60 - e.hp; e.atk = ea; e.x = 4; e.y = 3; e.rng = 1; }
   S.boons.gods = ['oponn']; g.pullRound = -1; B.round++; B.log = []; attack(g, e, {dmg:[1,1,0]}); const pulled1 = B.log.some(l => /The Lady pulls/.test(l)); B.log = []; attack(g, e, {dmg:[1,1,0]}); const pulled2 = B.log.some(l => /The Lady pulls/.test(l)); out.pull = {first:pulled1, second:pulled2, round:g.pullRound === B.round};
   // the grandmother heals 2
   S.boons.gods = ['ground']; g.hp = g.maxhp - 10; g.bleed = 0; g.prone = false; g.slowTurn = false; squadTurnStart(g); out.ground = g.maxhp - g.hp;
@@ -86,7 +96,11 @@ ok(!r.err, 'no error in the page script' + (r.err ? ': ' + r.err : ''));
 ok(r.patrons >= 15 && r.unboonod && r.unboonod.length === 0, `every patron has a boon (${r.patrons} patrons${r.unboonod && r.unboonod.length ? ', missing ' + r.unboonod.join(', ') : ''})`);
 ok(r.treach === 'tiger' && r.fener === 'boar', `the sergeant's god follows the book: Treach in Book Three (${r.treach}), Fener otherwise (${r.fener})`);
 ok(r.noSigil && r.noSigil.length === 0 && r.sgtMoi === 'patrons/treach:true' && r.sgtGotm === 'patrons/sgt:true', `every god has a sigil; Treach's is the tiger, Fener's the boar (${(r.noSigil || []).join(',') || 'none missing'}; ${r.sgtMoi}; ${r.sgtGotm})`);
-ok(r.distinct === 12, `twelve distinct sigils across the three books (${r.distinct})`);
+ok(r.distinct === 14, `fourteen distinct sigils across the four books (${r.distinct})`);
+ok(r.treachHoc === 'tiger' && r.sgtHoc === 'patrons/treach', `Book Four: the sergeant's god is Treach (${r.treachHoc}, ${r.sgtHoc})`);
+ok(r.newGods && r.newGods.hessa === 'worm' && r.newGods.orvas === 'tears' && r.newGods.hessaSig && r.newGods.orvasSig, `Book Four's new gods: D'rek and the Khundryl dead, each a boon and a sigil (${JSON.stringify(r.newGods)})`);
+ok(r.tearsMv === 2 && r.tears && r.tears.first === 3 && r.tears.second === 1, `the Khundryl dead: +2 move, +2 on the first hit of a turn only (${r.tearsMv}; ${JSON.stringify(r.tears)})`);
+ok(r.worm === 3 && r.wormShot === 0, `D'rek: a melee blow on a squadmate rots the striker for 3, a shot does not (${r.worm}, ${r.wormShot})`);
 ok(r.noChips && r.noBoons, 'a fresh fight has no boons and no chips');
 ok(r.godScreen && r.beforeRetry, 'the god\'s screen names the boon and its length; nothing is granted until Rise');
 ok(r.afterRetry === '["hood"]' && r.chips === 1 && /Hood/.test(r.chipText || '') && r.logLine, `Rise: Hood's boon on the fight, one chip, the log line (${r.afterRetry}, ${r.chips} chip)`);

@@ -81,7 +81,31 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     S.card = v % 3 === 0 ? null : (typeof B3CARDS !== 'undefined' ? Object.keys(B3CARDS)[v % Object.keys(B3CARDS).length] : null);
     return S;
   }
-  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : isMOI(id) ? mkMOI(v, chOfMOI(id)) : mk(ch, v);
+  // Book Four (House of Chains): ids carry b4_ and are checked under Book Four states (S.book 'hoc', Book Two's squad refilled from the
+  // Fourteenth, a recruit or not, a Book Two transfer or a fresh start, random Nerve and Dust)
+  const isHOC = id => /^b4_/.test(id);
+  const chOfHOC = id => { const m = /^b4_c(\d)_/.exec(id); return m ? +m[1] : 1 + (seed % 7); };
+  function mkHOC(v, ch = 1) {
+    const imp = v % 6 === 5;
+    S = newStateHOC('Hask'); S.chapter = ch; S.scene = 'talk';
+    S.lvl = Math.min(15, 7 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
+    if (imp) { S.imported = { from: 'Kell', sid: 'lint', road: v % 4 === 1 ? 'wickans' : 'guard', lvl: 8, mates: ['haddat', 'sathi', 'tangle'], dead: ['marrow'], ramin: true, keth: v % 2 === 0,
+      f: { b2_c7_key: 'guard', b2_ilhar: ['came', 'fell', 'lost'][v % 3], b2_hackleBack: 1, b2_vatharLost: 3, b2_barrowHeld: 1, keepsakes: [] } };
+      S.dead = { marrow: { ch: 7, where: 'The Barrow', from: 'dg' } }; S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'tallow']; }
+    if (v % 5 === 3) S.squad = S.squad.filter(x => x !== 'tangle' && x !== 'marrow'); // text must hold up if a squadmate is missing
+    if (v % 7 === 4) S.squad = S.squad.filter(x => x !== 'haddat' && x !== 'tallow');
+    if (v % 3 === 0 && TPL.orvas) S.squad.push('orvas'); else if (imp && v % 4 === 1 && TPL.redblade) S.squad.push('redblade'); else if (imp && v % 2 === 0 && TPL.warlock) S.squad.push('warlock'); // one recruit at a time, or neither
+    migrate(S);
+    S.chapters = {}; S.nerve = v % 6 === 0 ? 2 : Math.floor(rng() * 11); S.dust = ch >= 5 ? ch - 4 : 0;
+    S.inv = { sharper: v % 4, burner: v % 3, cusser: v % 2, salve: 2, smoker: v % 3 };
+    const setF = f => { if (objFlags.includes(f)) S.f[f] = f === 'lastFallen' ? [] : {}; else S.f[f] = flagVals[f] ? flagVals[f][Math.floor(rng() * flagVals[f].length)] : (rng() < .15 ? 2 : 1); };
+    if (v === 1) flags.forEach(f => objFlags.includes(f) ? setF(f) : S.f[f] = (flagVals[f] && flagVals[f][0]) || 1);
+    else if (v > 1) flags.forEach(f => { if (rng() < 0.35) setF(f); });
+    Object.keys(S.loy).forEach(k => { S.loy[k] = (v % 7) - 3; });
+    S.card = v % 3 === 0 ? null : (typeof B4POOL !== 'undefined' ? B4POOL[1 + (v % 7)][v % 5] : null);
+    return S;
+  }
+  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : isMOI(id) ? mkMOI(v, chOfMOI(id)) : isHOC(id) ? mkHOC(v, chOfHOC(id)) : mk(ch, v);
   function mk(ch, v) {
     S = newState('Hask'); S.chapter = ch; S.scene = 'talk';
     S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
@@ -278,6 +302,43 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     if (typeof B3DECK !== 'undefined') Object.keys(B3DECK).forEach(n => { try { const o = b3DeckOffer(+n), c = b3DeckCard(+n); [o.txt, c.txt, c.after].forEach(x => { if (bad.test(fmt(x))) err(`moi deck ${n} leaks (variant ${v}): ${String(x).slice(0, 120)}`); }); if (o.scene && !SCENES[o.scene]) err(`moi deck ${n}: unknown scene ${o.scene}`); } catch (e) { err(`moi deck ${n} throws ${e.message}`); } });
     (GLOSSX.moi || []).forEach(g => { try { if (g[3]) g[3](); } catch (e) { err(`moi glossary ${g[1]} throws ${e.message}`); } });
     try { const h = allyHTML('The road'); if (bad.test(h.replace(/<[^>]+>/g, ' '))) err('moi allyHTML leaks'); } catch (e) { err('moi allyHTML throws ' + e.message); }
+  }
+  // Book Four: the same check for Book Two's squad, the new soldiers and the recruits
+  for (const id of ids.filter(isHOC)) {
+    for (const x of ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'redblade', 'warlock', 'orvas']) {
+      if (!TPL[x]) continue; const nm = TPL[x].name, re = new RegExp('\\b' + nm + '\\b');
+      for (let v = 0; v < 8; v++) {
+        mkHOC(v, chOfHOC(id)); S.squad = S.squad.filter(q => q !== x);
+        let n; try { n = DLG[id](); } catch (e) { continue; }
+        const vis = (n.ch || []).filter(c => { try { return !c.req || c.req(); } catch (e) { return false; } });
+        const text = [n.txt || '', ...vis.map(c => c.t)].join(' '); const mm = re.exec(text);
+        if (mm) { const k = id + ' · ' + nm; if (!absent[k]) absent[k] = '…' + text.slice(Math.max(0, mm.index - 90), mm.index + 60).replace(/\s+/g, ' ') + '…'; break; }
+      }
+    }
+  }
+  // Book Four's chapters: the end screen and the journal, under Book Four states
+  for (const [n, CH] of Object.entries((BOOKSNAP.hoc && BOOKSNAP.hoc.ch) || {})) {
+    for (let v = 0; v < VAR; v++) { mkHOC(v, +n);
+      const C = CHAPTERS[n] && CHAPTERS[n].book === 'hoc' ? CHAPTERS[n] : CH;
+      for (const k of ['extras', 'journal', 'endCap']) { if (!C[k]) { if (k !== 'endCap' && v === 0) warn(`hoc chapter ${n}: no ${k}`); continue; }
+        let r; try { r = C[k](); } catch (e) { err(`hoc chapter ${n}: ${k}() throws ${e.message} (variant ${v})`); continue; }
+        const txt = Array.isArray(r) ? r.filter(Boolean).join(' | ') : String(r); if (bad.test(txt)) { err(`hoc chapter ${n}: ${k}() leaks (variant ${v}): ${txt.slice(0, 160)}`); } }
+      if (C.end) Object.entries(C.end).forEach(([k, e]) => { if (!Array.isArray(e) || e.length < 2) err(`hoc chapter ${n}: end.${k} is not [title, text]`); });
+      if (C.endScene && !SCENES[C.endScene] && v === 0) err(`hoc chapter ${n}: endScene ${C.endScene} unknown`);
+      if (C.intro && C.intro.scene && !SCENES[C.intro.scene] && v === 0) err(`hoc chapter ${n}: intro.scene ${C.intro.scene} unknown`);
+    }
+  }
+  // Book Four's engine text: every template field (Book Two's four wear their Book Four lives here), the deck lines, the glossary, the widget
+  for (let v = 0; v < VAR; v++) { mkHOC(v, 1 + (v % 7));
+    for (const id of ['sgt', 'haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas']) { const t = TPL[id]; if (!t) continue;
+      for (const k of ['epithet', 'service', 'bio', 'bio2', 'quest']) { let x; try { x = t[k]; } catch (e) { err(`hoc TPL.${id}.${k} throws ${e.message}`); continue; } if (typeof x === 'string' && bad.test(fmt(x))) err(`hoc TPL.${id}.${k} leaks (variant ${v}): ${x.slice(0, 120)}`); }
+      if (id !== 'sgt' && (!Array.isArray(t.banter) || t.banter.length < 3)) err(`hoc TPL.${id}: fewer than three banter lines`); }
+    if (typeof B4SAY !== 'undefined') Object.keys(B4SAY).forEach(c => { try { const x = b4CardSay(c); if (bad.test(fmt(x))) err(`hoc card ${c} leaks (variant ${v})`); if (!CARDS[c]) err(`hoc card ${c} is not in CARDS`); } catch (e) { err(`hoc card ${c} throws ${e.message}`); } });
+    if (typeof B4POOL !== 'undefined') Object.values(B4POOL).flat().forEach(c => { if (!CARDS[c] || !B4SAY[c]) err(`hoc pool card ${c} has no card or no reading`); });
+    if (typeof B4DECK !== 'undefined') Object.keys(B4DECK).forEach(n => { try { const o = b4DeckOffer(+n), c = b4DeckCard(+n); [o.txt, c.txt, c.after].forEach(x => { if (bad.test(fmt(x))) err(`hoc deck ${n} leaks (variant ${v}): ${String(x).slice(0, 120)}`); }); if (o.scene && !SCENES[o.scene]) err(`hoc deck ${n}: unknown scene ${o.scene}`); } catch (e) { err(`hoc deck ${n} throws ${e.message}`); } });
+    (GLOSSX.hoc || []).forEach(g => { try { if (g[3]) g[3](); } catch (e) { err(`hoc glossary ${g[1]} throws ${e.message}`); } });
+    try { const h = nerveHTML('The road'); if (bad.test(h.replace(/<[^>]+>/g, ' '))) err('hoc nerveHTML leaks'); } catch (e) { err('hoc nerveHTML throws ' + e.message); }
+    try { const d = b4ImpDesc(''); if (bad.test(d)) err('hoc b4ImpDesc leaks'); } catch (e) { err('hoc b4ImpDesc throws ' + e.message); }
   }
   newState('Hask'); // back to Book One for whatever follows
   const orphans = ids.filter(id => !refd.has(id));

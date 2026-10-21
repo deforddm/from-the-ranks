@@ -24,7 +24,7 @@ const render = (what) => page.evaluate(async (what) => {
 }, what);
 
 const names = await page.evaluate(() => AUDIO._dev.names);
-ok(names.voices.length === 3 && names.voices.join() === 'gotm,dg,moi', 'three voices: ' + names.voices.join(', '));
+ok(names.voices.length === 4 && names.voices.join() === 'gotm,dg,moi,hoc', 'four voices, one per book: ' + names.voices.join(', '));
 ok(names.sfx.length >= 45, names.sfx.length + ' sound effects');
 ok(names.amb.length >= 38, names.amb.length + ' ambiences');
 
@@ -39,7 +39,7 @@ for (const h of ['High House Dark', 'High House Shadow', 'High House Life', 'Hig
   const r = await render({ sfx: 'house', args: [h], sec: 2.5, voice: h.includes('Chains') ? 'moi' : h.includes('Life') ? 'dg' : 'gotm' });
   ok(r.nan === 0 && r.peak > .003 && r.peak <= 1, `house ${h}: peak ${r.peak.toFixed(3)}`);
 }
-for (const v of ['dg', 'moi']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
+for (const v of ['dg', 'moi', 'hoc']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
   const r = await render({ sfx: k, sec: 3, voice: v });
   ok(r.nan === 0 && r.peak > .004 && r.peak <= 1, `sfx ${k} in ${v}: peak ${r.peak.toFixed(3)}`);
 }
@@ -78,8 +78,11 @@ ok(b4.length === 0, `${ambs.length} scene ambience words are understood (${ambs.
 ok(resolve.scenes.b2_odhan_dusk === 'desert_dusk' && resolve.scenes.b3_c3_walls_night === 'siege_night' && resolve.scenes.b2_vathar_night === 'river_night' && resolve.decors.b3_c5_domin === 'burnt' && resolve.styles.b3_c7_coral === 'coral', 'spot checks: the Odhan at dusk, Capustan\'s walls at night, the Vathar at night, the Domin, Coral');
 
 /* the voice follows the book, on the title too */
-const voices = await page.evaluate(() => { const out = {}; setBook('dg'); out.titleDg = AUDIO._dev.cue('title'); S = newState('Hask'); S.book = 'moi'; AUDIO.revoice(); out.moi = AUDIO._dev.state.voice; S.book = 'gotm'; AUDIO.revoice(); out.gotm = AUDIO._dev.state.voice; S = null; setBook('gotm'); return out; });
-ok(voices.moi === 'moi' && voices.gotm === 'gotm', `the voice follows the save's book (${voices.moi}, ${voices.gotm})`);
+const voices = await page.evaluate(() => { const out = {}; setBook('dg'); out.titleDg = AUDIO._dev.cue('title'); S = newState('Hask'); S.book = 'moi'; AUDIO.revoice(); out.moi = AUDIO._dev.state.voice; S.book = 'hoc'; AUDIO.revoice(); out.hoc = AUDIO._dev.state.voice; out.titleHoc = AUDIO._dev.cue('title'); out.endHoc = AUDIO._dev.cue('end'); S.book = 'gotm'; AUDIO.revoice(); out.gotm = AUDIO._dev.state.voice; S = null; setBook('gotm'); return out; });
+ok(voices.moi === 'moi' && voices.gotm === 'gotm' && voices.hoc === 'hoc', `the voice follows the save's book (${voices.moi}, ${voices.hoc}, ${voices.gotm})`);
+ok(voices.titleHoc && voices.titleHoc.amb === 'desert' && voices.endHoc && voices.endHoc.amb === 'sea_night', `Book Four's title is the desert and its end the sea at night (${JSON.stringify(voices.titleHoc)}, ${JSON.stringify(voices.endHoc)})`);
+const b4p = await page.evaluate(() => ['b4_aren_yard', 'b4_road_fire', 'b4_feast', 'b4_seti_fire', 'b4_wall_fire', 'b4_picket', 'b4_coral', 'b4_nowhere', 'b4_nowhere_night'].map(k => AUDIO._dev.placeAmb(k)));
+ok(b4p.join() === 'city_night,desert_night,camp_night,column_night,desert_night,desert_night,coral,desert,desert_night', 'Book Four\'s reading places, and b4_ falling to the desert: ' + b4p.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));
