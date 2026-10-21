@@ -328,7 +328,7 @@ ${b3In('brisk') ? `Trotts sees Brisk. He bares his teeth. She bares hers. Neithe
 
 ` : ''}Paran sees the Fourth, and slows. He looks along the squad the way he always has, the way everyone in this army seems to.
 
-"Sergeant." A breath. "${c2Five()}." He nods, as if that were a thing settled, and goes on, east, onto the track.${b3In('ellis') ? ` His eyes touch Ellis on the way past, and stop, a breath too long. He was the one who told her Toc the Younger kept riding. She hasn't asked him anything since. She doesn't now.` : ''}
+"Sergeant." A breath. "${c2Five()}." He nods, as if that were a thing settled, and goes on, east, onto the track.${b3In('ellis') ? ` His eyes touch Ellis on the way past, and stop, a breath too long. He was the one Toc's last word was for: *kept riding*. She has never asked him about it. She doesn't now.` : ''}
 
 Mallet is the last of them. He stops by Whiskeyjack's stirrup and says something too low to hear, and Whiskeyjack says something back, and Mallet looks at the leg and then, for some reason, at you.`,
     ch:[{t:'Go and stand by Mallet.', go:'b3_c2_mallet'},
@@ -436,7 +436,7 @@ ${b3In('kettle') ? `Kettle drinks, and goes a colour, and holds out the jug for 
 
 The brother has not blinked. He does not look as if it was a joke.
 
-${b3In('brisk') ? `Brisk moves, very slightly, so that she is between the brother and the rest of the squad. The brother notices. Something like approval crosses his face, and is gone.` : `You find you have moved so that nobody in the Fourth has their back to him.`}${b3In('ellis') ? `\n\nEllis has been counting him back since he started. When the Bole looks at her she doesn't stop.` : ''}`,
+${b3In('brisk') ? `Brisk moves, very slightly, so that she is between the brother and the rest of the squad. The brother notices. Something like approval crosses his face, and is gone.` : `You find you have moved so that nobody in the Fourth has their back to him.`}${b3In('ellis') ? `\n\nEllis has been watching his hands since he started. When the Bole looks at her she goes on watching them.` : ''}`,
     ch:[{t:'Drink from the jug.', req:()=>!S.f.b3_c2_mottJug, fx:()=>{ S.f.b3_c2_mottJug = 1; ally(1, 0, 'A jug with the Mott Irregulars'); }, go:'b3_c2_mott_drink'},
         {t:'Move on, carefully.', go:()=>startExplore()}]}),
   b3_c2_mott_no:()=>({sp:'A Bole', txt:
@@ -564,7 +564,7 @@ ${b3In('sohra') ? `He and Sohra talk in Rhivi a while, low. When he rides off sh
     ch:[{t:'Ride for the night camp.', go:()=>{ startExplore('b3_c2_camp'); talk('b3_c2_camp_arrive'); }}, {t:'Not yet.', go:()=>startExplore()}]} : {sp:'The Barghast hill', txt:
 `The hill stands up out of the grass a league east of the stream, steep-sided, with a crown of grey stones and, among the stones, the trees: oak trunks standing on their heads with their roots spread against the sky like hands. A thread of smoke goes up among them.
 
-At the foot of the hill, on the side away from the column's road, horses are picketed in the long grass. Fifteen, twenty. Small, tough, plains horses, saddled for war.${b3In('ellis') ? ` "Eighteen," Ellis says, before you've finished counting.` : ''} Men in leather and iron are sitting by them, eating. Lances stacked. Short bows. ${S.f.b3_c2_carried ? `They are watching the west. They have been watching it all afternoon, since a party rode north from the stream with something across a saddle.` : `They are not watching the west. They have not looked at the stream once.`}
+At the foot of the hill, on the side away from the column's road, horses are picketed in the long grass. Fifteen, twenty. Small, tough, plains horses, saddled for war.${b3In('ellis') ? ` Ellis looks them over and decides they are better kept than the men.` : ''} Men in leather and iron are sitting by them, eating. Lances stacked. Short bows. ${S.f.b3_c2_carried ? `They are watching the west. They have been watching it all afternoon, since a party rode north from the stream with something across a saddle.` : `They are not watching the west. They have not looked at the stream once.`}
 
 ${b3In('sohra') ? `"Betakullid," Sohra breathes. "On a Barghast hill. Eating." She has an arrow on the string already. "The Barghast will want their skulls for cups. I will tell them where to look."` : `"Betakullid," Hurlochel says, very low. "Domin horse. And whoever made that fire is up top."`}`,
     ch:[{t:'"Take the foot of the hill."', fx:()=>{ S.f.b3_c2_hillGo = 1; }, go:()=>startBattle('b3_c2_hill', S.f.b3_c2_carried ? {} : {surprise:'p'})},
@@ -899,7 +899,7 @@ Not both.`,
       c2L('sohra', 2); c2L('ohl', 1); c2L('tuft', 1); c2L('brisk', -1); c2L('kettle', -1); } }, txt:
 `You go into the water.
 
-All of you, the Fourth, off the bank and into the ford to the waist, to the chest, the gravel moving under your boots, the current already pulling. ${b3In('brisk') ? `Brisk goes in first, shield and all, and gets a calf by the hair and a child by the arm and turns, all in one movement, like a woman shouldering a door.` : ''}${b3In('ohl') ? ` Ohl has a boy by the collar and is swearing at Hood in Ehrlii, steadily, all the way.` : ''}${b3In('sohra') ? ` Sohra is out past all of you, swimming, singing at the calves in a high cracked voice, and the calves turn toward her, the way calves turn to their mothers.` : ''}${b3In('vell') ? ` Vell has a line round his waist and the other end on a Rhivi rider's saddle-horn, and goes out to the end of it, and further, because the line is long.` : ''}${b3In('ellis') ? ` Ellis goes for the smallest child, the one furthest out, because she counted.` : ''}
+All of you, the Fourth, off the bank and into the ford to the waist, to the chest, the gravel moving under your boots, the current already pulling. ${b3In('brisk') ? `Brisk goes in first, shield and all, and gets a calf by the hair and a child by the arm and turns, all in one movement, like a woman shouldering a door.` : ''}${b3In('ohl') ? ` Ohl has a boy by the collar and is swearing at Hood in Ehrlii, steadily, all the way.` : ''}${b3In('sohra') ? ` Sohra is out past all of you, swimming, singing at the calves in a high cracked voice, and the calves turn toward her, the way calves turn to their mothers.` : ''}${b3In('vell') ? ` Vell has a line round his waist and the other end on a Rhivi rider's saddle-horn, and goes out to the end of it, and further, because the line is long.` : ''}${b3In('ellis') ? ` Ellis goes for the smallest child, the one furthest out, because nobody else has.` : ''}
 
 Then the water hits.
 

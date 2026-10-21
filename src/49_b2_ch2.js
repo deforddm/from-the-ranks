@@ -992,7 +992,7 @@ Along the bank the Red Blades are counting theirs. They say the names out loud, 
     html:chainHTML('The Sekala · the west bank'),
     ch:[{t:'Walk the bank.', go:()=>startExplore()}]}),
   b2_ford_look:()=>({sp:'The ford', txt: S.f.b2_blown ?
-`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.${b2In('redblade') ? ` Ramin comes and stands beside you at the edge, helm under his arm. "My horse is in there somewhere," he says. "She was a good horse. She did not like the ford either." Then he goes back to the carts.` : ''}${b2In('warlock') ? ` Keth crouches at the lip of the bank with his palm flat on the wet stone. "The river is angry," he says. The old woman, out of him: "The river is busy. Leave it be."` : ''}` :
+`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.${b2In('redblade') ? ` Ramin comes and stands beside you at the edge. "My horse is in there somewhere," he says. "She was a good horse. She did not like the ford either." Then he goes back to the carts.` : ''}${b2In('warlock') ? ` Keth crouches at the lip of the bank with his palm flat on the wet stone. "The river is angry," he says. Then, in a voice forty years older than his: "The river is busy. Leave it be."` : ''}` :
 `The ford behind you, under the brown water, and the last of the column still coming over it. ${S.f.b2_westDone ? 'The rearguard is close.' : 'Not now.'}`,
     ch:[{t:'Leave it.', go:()=>startExplore()}]}),
   b2_chenned_again:()=>({sp:'Captain Chenned', txt:`Chenned is sitting on an upturned shield with his bandaged hand in his lap, looking at the river. "Held," he says, when you come by, which is all he says.${b2In('redblade') ? ` Then he sees Ramin behind you, and lifts the bandaged hand an inch. "Your file held the rise, Red Blade." Ramin salutes. "Half of it, sir." Chenned nods, as if half were the right answer.` : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -1009,7 +1009,7 @@ ${S.f.b2_prisonerFate === 'column' ? 'The boy from the tanners\' street is sitti
 
 "Sergeant. Ramin, of the Red Blades. Of Ehrlitan." He nods back at the rise. "My horse is in the river. My file is up there. All of it but me." He says it in the present tense, as if they were waiting for him somewhere. "The commander is lending out the men who have no horse to the Seventh's squads that are short, until the company can remount. In Aren, perhaps. Captain Chenned says your squad held the bank behind my file." A pause. "I would rather be lent to people I have seen fight."
 
-He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}${b2In('warlock') ? ` Keth, at the end of the line, has his palm on the ground. "He fought," he says. "The rise has his file's blood in it. It is not angry with him." The old woman, out of him: "It is not angry with anyone. It is full."` : ''}`,
+He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}${b2In('warlock') ? ` Keth, at the end of the line, has his palm on the ground. "He fought," he says. "The rise has his file's blood in it. It is not angry with him." And then, drier, and not his: "It is not angry with anyone. It is full."` : ''}`,
     ch:[{t:'"Why the Red Blades?"', req:()=>!S.f.b2_raminAsked, fx:()=>{ S.f.b2_raminAsked = 1; }, go:'b2_ramin_ask'},
         {t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
@@ -1063,7 +1063,7 @@ Then, the grin coming back, a little: "Count them, Sergeant. It's further than i
 
 Ramin, behind you, very quietly, to himself: "Aren. The company will remount in Aren." He says it like a count he means to keep.` : ''}${b2In('warlock') ? `
 
-Keth has his palm flat on the bank. "Aren is a long way for the ground to listen," he says. The old woman, out of him: "Then walk, child. It listens better to feet."` : ''}`,
+"Aren is a long way for the ground to listen," Keth says. The old woman, out of him: "Then walk, child. It listens better to feet."` : ''}`,
     ch:[{t:'"Sir."', go:'b2_night'}, {t:'Not yet.', go:()=>startExplore()}]},
 
   /* ---- the night: the spirits and the Semk god ---- */

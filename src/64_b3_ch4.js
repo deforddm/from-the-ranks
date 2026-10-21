@@ -875,7 +875,7 @@ The word comes down the line with the water carts, from fire to fire, the way wo
 
 That is all the word says. Up the line, a long way off, he is walking toward you along the bank.${c4In('ellis') ? `
 
-Ellis is standing on the cart with her hand over her eyes, looking south-east where the dust was. "Gone," she says. "All of it, and no tracks going." She gets down. "I'd like to know how you move that much of anything and leave no tracks."` : ''}`,
+Ellis is standing on the cart with her hand over her eyes, looking south-east where the dust was. "Gone," she says. "All of it." She gets down. "I'd like to know how you move that much of anything and leave no tracks."` : ''}`,
       ch:[{t:'Wait for him.', go:()=>startExplore()}]}),
     b3_c4_dawn_wj:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c4_dawnWj = 1; }, txt:
 `He looks a hundred years old. He is limping now and has stopped pretending not to. There is blood on his boots that is not his and he has not noticed it, or has noticed and not cared.

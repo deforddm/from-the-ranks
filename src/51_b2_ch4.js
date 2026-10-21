@@ -268,7 +268,7 @@ Two of your people sat down this week and did not get up. ${b2In('haddat') ? 'Ha
 
 Behind the column, every evening, dust. Not riders on the skyline any more, not Tithansi. Just dust, a long way back, a great deal of it, that does not settle. ${b2In('tangle') ? `"${b2Count()}," Tangle says at the halt, and then, because the dust is there: "Not enough."` : ''}
 
-${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}${b2In('redblade') ? `${b2In('marrow') ? ' ' : ''}Ramin watches the dust at every halt with his helm under his arm. "A Fist's army," he says. "It marches like ours. That is the part I do not like."` : b2In('warlock') ? `${b2In('marrow') ? ' ' : ''}Keth puts his palms on the ground at the halt, and takes them away again fast. "Feet," he says. "Behind us. So many the ground has stopped counting them."` : ''}`,
+${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}${b2In('redblade') ? `${b2In('marrow') ? ' ' : ''}Ramin watches the dust at every halt. "A Fist's army," he says. "It marches like ours. That is the part I do not like."` : b2In('warlock') ? `${b2In('marrow') ? ' ' : ''}Keth's dogs turn round at the halt, all together, and stare back the way you came. "Feet," Keth says. "Behind us. So many the ground has stopped counting them."` : ''}`,
     html:chainHTML('The Odhan · toward the Vathar'),
     ch:[b2DeckChoice(4), {t:'On, to the river.', go:'b2_vathar_arrive'}]}),
   /* the reading at the evening halt (47c) */
@@ -303,7 +303,7 @@ He looks at you, sidelong. "Anyone you put aboard: tell them stay on deck. Don't
 
 ${b2In('tangle') ? `Tangle has been looking at the oars. They are moving, very slightly, in the slack water. The benches you can see are empty. "Sergeant," he says quietly, "I'm going to stand over there."` : 'Her oars are moving, very slightly, in the slack water. There are benches. You cannot see anyone on them.'}${b2In('warlock') ? `
 
-"He means Nil," Keth says, when Gesler is out of earshot. "*Your warlock girl.*" The old woman, out of him, with relish: "Let her hear him say it. I would like to watch."` : ''}`,
+"He means Nether," Keth says, when Gesler is out of earshot. "*Your warlock girl.*" Then, with relish, in the voice that is not his: "Let her hear him say it. I would like to watch."` : ''}`,
     ch:[{t:'Leave him to his ship.', go:()=>startExplore()}]}),
   b2_gesler_again:()=>({sp:'Sergeant Gesler', txt: S.f.b2_ropesDone ? `Gesler is on the bank by the Silanda's plank with a slate, chalking up names as the wagons of the wounded come down. "Worst first," he says. "If it can walk, it walks."` : `Gesler has gone back to sitting on the rail. "Lull's looking for squads," he says. "I've told him I'm not one."`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -538,7 +538,7 @@ They are packing. Not the way the column packs in the morning, slow and half-asl
 
 ${b2In('haddat') ? `Haddat watches the servants a long while. "They are Hissari," she says. "From the old families' houses. I know how they work when the master is afraid." A pause. "This is how they work when the master is afraid."` : 'You have seen people pack like that before. In Hissar, the night it burned.'}${b2In('warlock') ? `
 
-Keth stays out of the lamplight with a palm on the ground. "They walk heavy tonight, these," he says. "Heavier than this morning. The ground can tell when a man is carrying something he has bought."` : ''}`,
+Keth stays out of the lamplight. "They walk heavy tonight, these," he says. "Heavier than this morning. The ground can tell when a man is carrying something he has bought."` : ''}`,
     ch:[{t:'Look round.', go:()=>startExplore()}]}),
 
   /* ---- the steward, who wrote the sergeant's name down at Dryj ---- */
@@ -629,7 +629,7 @@ He turns his back on the carriages, deliberately, as a Red Blade turns his back 
 
 Men in the bow. Pikes, upright. They ground in the shallows and get out, quietly, and the one in front, an officer, goes up to the steward with something under his arm. A satchel. The steward holds out his hand for it.
 
-${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has both palms in the mud of the bank. "Two boats," he whispers. "The river does not like what is in the second."' : ''}` :
+${b2In('sathi') ? 'Sathi has an arrow on the string. "Now?"' : 'They have not seen you.'}${b2In('warlock') ? ' Keth has gone still beside you, the way the dogs go still. "Two boats," he whispers. "The river does not like what is in the second."' : ''}` :
 `The river, black, below the carriages. On the far bank, fires, more than there are stars. Nothing moves on the water that you can see.`,
     ch:[{t:'Now. Into them.', req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown), go:()=>startBattle('b2_envoy', {})},
         {t:'Closer first, through the reeds.', check:['guile',14], req:()=>!S.f.b2_envoyDone && !!(S.f.b2_steward4 || S.f.b2_dealKnown),
@@ -697,7 +697,7 @@ Down at the ford the noise goes on. People going into water. Some of your people
 Down at the ford the noise goes on.`,
     ch:[{t:'Wait for the light.', go:'b2_dawn'}]}),
   b2_hold_go:()=>({sp:'The squad\'s carts', txt:
-`"Together," you say. "In a file. Hand on the shoulder in front. You don't let go." They do it, because you said it. The squad goes in front, and at the sides, and at the back. ${b2In('sathi') ? 'Sathi says, "Good. If they go, we go with them. That is the Wickan way."' : ''}${b2In('marrow') ? ' Marrow says nothing at all, which from Marrow is a speech.' : ''}${b2In('redblade') ? ' Ramin takes the back of the file. "In order," he says. "As the company crosses a river."' : b2In('warlock') ? ' Keth goes at the front with a palm held out low over the water, feeling for the gravel bar, and the old woman tells him where it is, rudely.' : ''}
+`"Together," you say. "In a file. Hand on the shoulder in front. You don't let go." They do it, because you said it. The squad goes in front, and at the sides, and at the back. ${b2In('sathi') ? 'Sathi says, "Good. If they go, we go with them. That is the Wickan way."' : ''}${b2In('marrow') ? ' Marrow says nothing at all, which from Marrow is a speech.' : ''}${b2In('redblade') ? ' Ramin takes the back of the file. "In order," he says. "As the company crosses a river."' : b2In('warlock') ? ' Keth goes at the front, wading, feeling for the gravel bar with his toes, and the old woman tells him where it is, rudely.' : ''}
 
 You go down to the ford in the dark with the rest of the column, into the cold water, and wait there, in the river to the waist, for the light.`,
     ch:[{t:'The light.', go:'b2_dawn'}]}),
@@ -969,7 +969,7 @@ Haddat sits with her shield across her knees and looks at the river, black under
 
 Ramin sleeps sitting up, in his scale, facing the river, where the company held.` : b2In('warlock') ? `
 
-Keth sleeps with his palms flat in the leaf-litter and the dogs round him. Once in the night he says something in an old woman's voice, and then, in his own, "I know," and is quiet.` : ''}
+Keth sleeps in the leaf-litter with the dogs round him. Once in the night he says something in an old woman's voice, and then, in his own, "I know," and is quiet.` : ''}
 
 Somebody has named the day. It is a Wickan name, or a soldier's, or both; by midnight nobody can remember who said it first. The Day of Pure Blood. Nobody who was in the river says it out loud.`,
     html:chainHTML('The far bank of the Vathar'),

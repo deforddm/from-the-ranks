@@ -352,7 +352,7 @@ Kettle has not slept. She sat up all night on her satchel facing east, and the f
 
 Brisk went down the line at first light to look at the empty tents. The Fourth Regiment is Tav's regiment. She comes back and sits down and starts oiling her shield, which does not need it. "Not his company," she says, once. That is all she says.` : ''}${b3In('ellis') ? `
 
-Ellis has walked the empty lines too, and counted. "Forty-one tents, struck and folded," she says. "Not a boot-print going out past the pickets. Not one." She looks east. "I'd like it noted that I can't track a thing that doesn't touch the ground."` : ''}`,
+Ellis has walked the empty lines too. "Every tent struck and folded," she says. "Not a boot-print going out past the pickets. Not one." She looks east. "I can't track a thing that doesn't touch the ground."` : ''}`,
     ch:[b3DeckChoice(6),
         {t:'Count the fires.', go:'b3_c6_start2'},
         {t:'"Nobody says anything. Then neither do we."', go:'b3_c6_start2'}]}),
@@ -438,7 +438,7 @@ He goes back to his pack.`,
 
 He glances at you sideways. "Some of the riders asking aren't Rhivi. Fur on the collars. ${c6KallorKnows() ? `The tall man's colours. He knows your face, I hear. I'd keep it out of the firelight.` : `The tall man's colours: Brood's second. He doesn't send riders to count things for the fun of it.`}"${b3In('ellis') ? `
 
-"The Claw had men who counted fires for a living," Ellis says. "They never rode up to the pickets to do it."
+"The Claw had men who watched fires for a living," Ellis says. "They never rode up to the pickets to do it."
 
 Hurlochel looks at her over the horse's back, and then, thoughtfully, at her glove.` : ''}`,
     ch:[{t:'"What are they counting, Hurlochel?"', go:'b3_c6_hurl2'},
@@ -685,7 +685,7 @@ Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn'
 
 "Coral," Dannet says. "From the sky." She touches the half-painted wolf. "They will never believe me in Capustan."` : ''}${b3In('ellis') ? `
 
-"From up there you could count everything," Ellis says. She sounds, for Ellis, very nearly pleased.` : ''}${b3In('vell') ? `
+"From up there you could see every road out," Ellis says. She sounds, for Ellis, very nearly pleased.` : ''}${b3In('vell') ? `
 
 Vell is grinning before anybody else has finished. "Higher than the Spawn," he says. "Higher than anything with a roof on it." Then, more practically: "Do they give you a rope?"` : ''}`,
     ch:[{t:'The next night.', go:'b3_c6_q_night'}]}),
@@ -790,7 +790,7 @@ Tuft is quiet. When you look back at her she is looking south, past the rider's 
 
 Dannet rides with her shield strapped flat on her back and her eyes shut, and opens them once, over a river, to see if it is the one at Capustan. It isn't.` : ''}${b3In('ellis') ? `
 
-Ellis is counting the fires on the road below as they go back under you, and loses the count, and starts again.` : ''}${b3In('vell') ? `
+Ellis watches the fires on the road below go back under you, and keeps her bow hand flat on the harness the whole way.` : ''}${b3In('vell') ? `
 
 Vell lets go with one hand to lean out and look straight down. Without turning its head, the Moranth in front of him reaches back and puts the hand back on the strap.` : ''}
 

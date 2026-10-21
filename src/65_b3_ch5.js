@@ -294,9 +294,9 @@ ${b3In('greysword') ? `Dannet stands at the edge of the stubble and looks south 
 
 Ohl has taken his hand out of his satchel and is looking at it.` : ''}${b3In('ellis') ? `
 
-Ellis has been a little way out into the stubble and back. "No tracks," she says. "Not a dog, not a goat. Rakes." She shows you the width of the rake-marks with two fingers of the gloved hand. "I'd like it noted that I've never read a field with nothing on it before."` : ''}${b3In('vell') ? `
+Ellis has been a little way out into the stubble and back. "Rakes," she says. "Not a dog, not a goat. Just rakes." She shows you the width of the rake-marks with two fingers of the gloved hand. "Somebody did every row on purpose."` : ''}${b3In('vell') ? `
 
-Vell looks along the shore for something to tie off to, out of habit, and finds nothing standing higher than his knee. "Pale had walls," he says, to nobody much.` : ''}`,
+Vell looks along the shore, out of habit, for anything taller than his knee, and finds nothing. "Pale had walls," he says, to nobody much.` : ''}`,
       ch:c5StartCh()}),
     b3_c5_start_ohl:()=>({sp:'Ohl', scene:'b3_c5_catlin', fx:()=>{ S.f.b3_c5_askOhl = 1; }, txt:
 `"Nothing." He flexes the fingers. "I reached for Denul. A blister on a carter's hand. Nothing; a thing I could do asleep." He turns the hand over. "It came. It came with something in it. Like drawing water and finding the bucket warm."
@@ -333,7 +333,7 @@ She doesn't say where. She was on Capustan's wall when the Tenescowri came over 
 
     /* Hurlochel, the Host's outrider: the race for Coral, and who is telling it */
     b3_c5_hurl:()=>({sp:'Hurlochel · outrider', fx:()=>{ S.f.b3_c5_hurl = 1; S.f.b3_kallor = 1; }, txt:
-`A rider is walking his horse down the column toward you, which outriders never do unless they want something or have something. Hurlochel is one of the Host's outriders, Dujek's own, and sits a horse like a man who has never let rank come between him and a good one.${b3In('ellis') ? ` Ellis looks at the horse first, as she always does, and counts its shoes. Four, and new. Somebody in the Host still has a farrier.` : ''}
+`A rider is walking his horse down the column toward you, which outriders never do unless they want something or have something. Hurlochel is one of the Host's outriders, Dujek's own, and sits a horse like a man who has never let rank come between him and a good one.${b3In('ellis') ? ` Ellis looks at the horse first, as she always does, and then at its feet. New shoes. Somebody in the Host still has a farrier.` : ''}
 
 "Seventh Company. The Fourth." He doesn't ask; he knows. "You'll want this before it reaches you sideways. Brood's camp has a story going round it. The Host means to march hard for Coral, they say, and take it before Brood's people get there, and hold it for the Empress." He makes a face at nothing in particular. "Brood's people believe about half of it. The half they believe is growing."
 
@@ -603,7 +603,7 @@ Vell, behind you, is looking up at the black walls and the open sky where the ro
 
 On the temple steps a Seerdomin stands with a grey mace, watching the work. He wears a chain round his neck with a disc of bone on it. He has not raised his voice once.${b3In('ellis') ? `
 
-Ellis is beside you, counting. "Eight with whips that I can see," she says. "And doorways. I can't count into doorways."` : ''}${S.f.b3_c5_lane ? `
+Ellis is beside you, watching the doorways rather than the whips. "The whips are for show," she says. "Whoever's in the doorways isn't."` : ''}${S.f.b3_c5_lane ? `
 
 The lane by the smithy runs off to your left between two black walls. The old man said it comes out behind the well.` : ''}`,
       ch:[{t:'Go in.', go:()=>startBattle('b3_c5_town')},
@@ -902,7 +902,7 @@ ${c5FireLine()}`,
           {t:'Sit the night out.', req:()=>!!S.f.b3_c5_key, go:'b3_c5_close'},
           {t:'Not now.'}]}),
     b3_c5_fire_rest:()=>({sp:'The Fourth\'s fire', fx:()=>{ b3Rest('The Fourth rests in the lee of a broken wall, with the Host round it and the Domin all round that. Wounds close, mostly.'); }, txt:
-`An hour. Boots off, for the first time since the ford. ${b3In('ohl') ? `Ohl makes the tea, which is worse than usual, because the water is. Nobody complains, because complaining is drinking it slower.` : `Tea gets made, and it is bad, because the water is.`}${b3In('sohra') ? ` Sohra sings under her breath to nothing anyone else can see, and the fire burns a little steadier for it, or seems to.` : ''}${b3In('ellis') ? ` Ellis takes her boots off last, and sits with the gloved hand in her lap, counting the fires across the halt until she loses the count.` : ''}${b3In('vell') ? ` Vell coils his line, and uncoils it, and coils it again, for no reason he could give you.` : ''}
+`An hour. Boots off, for the first time since the ford. ${b3In('ohl') ? `Ohl makes the tea, which is worse than usual, because the water is. Nobody complains, because complaining is drinking it slower.` : `Tea gets made, and it is bad, because the water is.`}${b3In('sohra') ? ` Sohra sings under her breath to nothing anyone else can see, and the fire burns a little steadier for it, or seems to.` : ''}${b3In('ellis') ? ` Ellis takes her boots off last, and sits with the gloved hand in her lap, and is asleep sitting up before the fire has settled.` : ''}${b3In('vell') ? ` Vell unwraps the hook, dries it one tine at a time, and wraps it again in its rag.` : ''}
 
 It isn't much. In the Domin, it's what there is.`,
       ch:[{t:'Up again.'}]}),
@@ -953,7 +953,7 @@ function c5CloseLines(){ const f = S.f, out = [];
   if (b3In('kettle')) out.push(f.b3_c5_quorls ? `Kettle is asleep sitting up, with the ledger open on her knee at the page with the quorls on it.` : `Kettle counts the satchel by touch, under her breath, and arrives at the same number twice, and seems disappointed.`);
   if (b3In('tuft')) out.push(`Tuft is looking across the halt at the Rhivi fires. "She's older again," she says, to nobody. "Every time I look. She's as tall as a grown woman now." She doesn't look away. "Her own people won't sit near her."`);
   if (b3In('ohl')) out.push(f.b3_c5_orley ? `Ohl has the list open. He has turned back to the ford: *Orley.* He reads the name, and the ones above it, all the way up, with his lips moving.` : `Ohl has the list open on his knee and reads it with his lips moving, all of it, ${b3ListWords()}.`);
-  if (b3In('ellis')) out.push(f.b3_c5_key === 'brood' ? `Ellis sits with her back to the wall, where she can see Kallor's tents and the way out of the halt both. "Noted," she says, when she sees you see. "Both of those."` : `Ellis sits with her back to the wall, facing the halt, and counts the horses on the picket lines, which is what she does instead of sleeping.`);
+  if (b3In('ellis')) out.push(f.b3_c5_key === 'brood' ? `Ellis sits with her back to the wall, where she can see Kallor's tents and the way out of the halt both. "Both," she says, when she sees you see. "I like to know where the door is. And where he is."` : `Ellis sits with her back to the wall, facing the halt, with the bow across her knees, which is what she does instead of sleeping.`);
   if (b3In('vell')) out.push(`Vell lies on his back with the coil under his head, looking up. "Clear sky," he says. "All the way to the sea, I'd bet." He is asleep before anyone takes the bet.`);
   if (b3In('sohra')) out.push(`Sohra sings to the bulls, low, from among them. Somewhere in it, you're nearly sure now, is the Mhybe's name.`);
   if (b3In('greysword')) out.push(`Dannet has the pot of grey paint out and is working on the wolf on her shield, a stroke at a time, by firelight. It is still not finished. "When I know what it's for," she says, when she sees you looking.`);

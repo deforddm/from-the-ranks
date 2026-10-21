@@ -288,7 +288,7 @@ ${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. "Nobody's touch
 
 It is the mounds. They are everywhere once you have seen the first: long and low under the leaf-litter, longer than a man, longer than a cart, lying side by side between the trees in rows that go on into the dark of the wood further than anyone wants to walk. Some have a stone at the head. Some have had the stone pulled down a long time ago and left.
 
-${b2In('sathi') ? `Hackle will not go off the track. Sathi does not make him. "The spirits here are not ours," she says, low. "They are not anyone's. They are only angry." She has her bow strung, which she never does under trees.` : 'The dogs will not go off the track, any of them.'}${b2In('warlock') ? ` Keth walks the middle of the track with his palms turned down, touching nothing. "The dead here are not dead the right way," the old woman says, out of him. "Stay on the track, Malazan. Do not sit on anything."` : ''}
+${b2In('sathi') ? `Hackle will not go off the track. Sathi does not make him. "The spirits here are not ours," she says, low. "They are not anyone's. They are only angry." She has her bow strung, which she never does under trees.` : 'The dogs will not go off the track, any of them.'}${b2In('warlock') ? ` Keth walks the middle of the track with his arms held in close. "The dead here are not dead the right way," the old woman says, out of him. "Stay on the track, Malazan. Do not sit on anything."` : ''}
 
 There are no birds. Not one, all morning. The whole forest is listening to something, and it is not you.`,
     ch:[{t:'Look round.', go:()=>startExplore()}]}),
@@ -345,7 +345,7 @@ ${b2In('sathi') ? `Sathi says something to him in Wickan, short. He looks at her
   b2_mounds_go:()=>({sp:'Among the mounds', txt:
 `You go in among the mounds in a file, off the track, and the forest closes behind you like a door.
 
-The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, and blood, a little. Then the mounds open out into a ring of them round a hollow, and in the hollow are the Bhilard, eight or so, lean men in dust-coloured cloth, going through a cart's bundles. Two people from the column sit with their backs to a mound, tied, watching them do it. A third is lying very still. ${b2In('sathi') ? 'Sathi has an arrow on the string.' : ''}${b2In('redblade') ? ' Ramin has the curved sword out and is looking at the two tied by the mound, and at nothing else.' : b2In('warlock') ? ' Keth has a palm on the litter. "Eight," he whispers. "And three of ours. The ground has the third already."' : ''}${b2Hands5() <= 3 ? ' The Weasel rider has come with you, on foot, his knife out, because he has counted your squad and does not think much of the number.' : ''}`,
+The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, and blood, a little. Then the mounds open out into a ring of them round a hollow, and in the hollow are the Bhilard, eight or so, lean men in dust-coloured cloth, going through a cart's bundles. Two people from the column sit with their backs to a mound, tied, watching them do it. A third is lying very still. ${b2In('sathi') ? 'Sathi has an arrow on the string.' : ''}${b2In('redblade') ? ' Ramin has the curved sword out and is looking at the two tied by the mound, and at nothing else.' : b2In('warlock') ? ' Keth is listening with his head down. "Eight," he whispers. "And three of ours. The ground has the third already."' : ''}${b2Hands5() <= 3 ? ' The Weasel rider has come with you, on foot, his knife out, because he has counted your squad and does not think much of the number.' : ''}`,
     ch:[{t:'Into them.', go:()=>startBattle('b2_mounds', {})},
         {t:'Sathi and Hackle along the back of the mounds first.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows how to be quiet', 2], id === 'redblade' && ['spurs', -2], id === 'haddat' && ['mail', -1]],
@@ -516,7 +516,7 @@ The column is already moving out onto it. ${b2In('tangle') ? '"Dry March," Tangl
   b2_nenoth_go:()=>({sp:'The edge of the forest', scene:'b2_dry_march', txt:
 `The last tree. Then the scrub, then the cracked white clay, and the sun on it like a hammer on an anvil, and the column going out into it a cart at a time, a family at a time, the way people go into cold water.
 
-${b2In('marrow') ? 'Marrow pulls her hat down. "Well," she says. "It was nice to be cold."' : 'Behind you the forest is very quiet.'}${S.f.b2_towerOut && b2In('haddat') ? ` Haddat looks back once, north-east, where the top of the tower shows over the trees. Then she does not look back again.` : ''}${b2In('warlock') ? ` Keth puts his palm on the first of the white clay, and takes it off fast. "Dead," he says. "Not asleep. Dead. There is nothing down there to ask."` : b2In('redblade') ? ` Ramin does up every strap of his scale before he steps out onto it, properly, as for an inspection.` : ''}`,
+${b2In('marrow') ? 'Marrow pulls her hat down. "Well," she says. "It was nice to be cold."' : 'Behind you the forest is very quiet.'}${S.f.b2_towerOut && b2In('haddat') ? ` Haddat looks back once, north-east, where the top of the tower shows over the trees. Then she does not look back again.` : ''}${b2In('warlock') ? ` Keth steps onto the first of the white clay, and off it again fast. "Dead," he says. "Not asleep. Dead. There is nothing down there to ask."` : b2In('redblade') ? ` Ramin does up every strap of his scale before he steps out onto it, properly, as for an inspection.` : ''}`,
     ch:[{t:'Onto the Dry March.', fx:()=>{ if (!S.f.b2_nenoth) { S.f.b2_nenoth = 1; chain(-2, -2, 'Days on the Nenoth'); } }, go:()=>{ startExplore('b2_nenoth'); talk('b2_nenoth_arrive'); }}]}),
 });
 
@@ -708,7 +708,7 @@ ${S.f.b2_marchLost ? `In the night ${numw(S.f.b2_marchLost)} of the stretch do n
   b2_dryraid_go:()=>({sp:'Midday · the carts', scene:'b2_dry_march', txt:
 `They come at noon, as Bult said: the Tregyn, out of the shimmer to the south, on foot and on horses, in horsehair mantles, with empty skins slung on their backs. They are not coming for the column. They are coming for the stretch with the driest look, and there it is.
 
-${S.f.b2_dry ? `Your mouth is dust. Everybody's is. ${b2In('haddat') ? 'Haddat pulls her mail straight, and her hands are slow doing it.' : 'Hands are slow on buckles.'}` : `The squad drank this morning, a mouthful each, and it is in you, like a coal. ${S.f.b2_drankSkip === 'redblade' ? 'Ramin did not. He is very straight, and very pale under the brown, and his scale is already too hot to touch.' : ''}`}${b2In('warlock') ? ` Keth is crouched at a cart wheel with his palms on the clay. "There," he says, and points into the shimmer before anyone can see anything. "And there. Many feet, running."` : ''}${b2Hands5() <= 3 ? `
+${S.f.b2_dry ? `Your mouth is dust. Everybody's is. ${b2In('haddat') ? 'Haddat pulls her mail straight, and her hands are slow doing it.' : 'Hands are slow on buckles.'}` : `The squad drank this morning, a mouthful each, and it is in you, like a coal. ${S.f.b2_drankSkip === 'redblade' ? 'Ramin did not. He is very straight, and very pale under the brown, and his scale is already too hot to touch.' : ''}`}${b2In('warlock') ? ` Keth is crouched at a cart wheel with the dogs pressed against his legs, every one of them facing the same way. "There," he says, and points into the shimmer before anyone can see anything. "And there. Many feet, running."` : ''}${b2Hands5() <= 3 ? `
 
 Three of the Seventh's regulars come trotting down the line with their shields up, sent by Bult, because word has gone round that your squad is short${S.f.b2_dry ? ', and where its water went' : ''}. "Sergeant," says the older one. "Where do you want us?"` : ''}`,
     ch:[{t:'To the carts.', go:()=>startBattle('b2_dryraid', {})},
@@ -740,7 +740,7 @@ She holds it out to you, and then doesn't, and then does.
 
 The column does not sing. It has not sung since the forest.
 
-The squad goes in through the ring to the stretch's place, and sits down, and does not get up.${b2In('redblade') ? ' Ramin sits last, and takes off his helm, and that is all he takes off.' : b2In('warlock') ? ' Keth lies down flat on the clay with his palms on it, and the dogs lie down round him.' : ''}`,
+The squad goes in through the ring to the stretch's place, and sits down, and does not get up.${b2In('redblade') ? ' Ramin sits last, and takes off his helm, and that is all he takes off.' : b2In('warlock') ? ' Keth lies down where he stands, and the dogs lie down round him.' : ''}`,
     ch:[{t:'Sit.', go:()=>{ startExplore('b2_karpcamp'); talk('b2_carriage_comes'); }}]}),
 });
 
@@ -753,7 +753,7 @@ One moment there is the ring of carts, and the dung-fires, and the dark beyond. 
 
 It is scorched black to the axles. The horses are lathered white and screaming. There are men on its roof, holding on to the rails, in armour that has been hit by a great many things, and one of them is on fire, a little, and puts it out with his hand. The carriage comes through the gap in the carts that the pickets are shouting about, and slews, and stops, twenty paces from the Fist's tent, and the air closes behind it like water.
 
-Every Wickan bow in the camp is drawn on it.${b2In('warlock') ? ` Keth has his palms on the ground. "It did not come over the ground," he says, very small. "It came through somewhere else." The old woman: "Somewhere I would not go, and I am dead."` : b2In('redblade') ? ` Ramin is looking at the horses. "Nine," he says. "Lathered to the hocks. Whatever road that was, they ran all of it."` : ''}
+Every Wickan bow in the camp is drawn on it.${b2In('warlock') ? ` Keth is white to the lips. "It did not come over the ground," he says, very small. "It came through somewhere else." The old woman: "Somewhere I would not go, and I am dead."` : b2In('redblade') ? ` Ramin is looking at the horses. "Nine," he says. "Lathered to the hocks. Whatever road that was, they ran all of it."` : ''}
 
 The door opens. A man gets out: a huge man, round as a wine-jar, in silks that were good once, sweating. He looks round at the bows, and the carts, and the Seventh, and smiles, and his teeth are capped with gold, and in the gold there are diamonds, and they catch the firelight.
 
@@ -886,7 +886,7 @@ Sathi is not at the squad's fire. She is at the Weasels'. You can hear her laugh
 
 Ramin is polishing the red of his scale by the dung-fire, a scale at a time, with the trader's water still on his chin.` : b2In('warlock') ? `
 
-Keth is asleep on his back with his palms on the clay and a ring of the Weasels' dogs round him. The ground here is dead, he said. He sleeps that way anyway.` : ''}
+Keth is asleep on his back with a ring of the Weasels' dogs round him. The ground here is dead, he said. He sleeps that way anyway.` : ''}
 
 Somewhere in the dark the trader's carriage is being harnessed, quietly, to go back the way it came. In the morning it will not be there. In the morning there will be hills, and water in them, and every tribe on the Odhan going to the same water.`,
     html:chainHTML('The Nenoth · the end of the Dry March'),

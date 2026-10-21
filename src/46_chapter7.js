@@ -82,7 +82,7 @@ const C7H = {
       return fol ? 'Vell, on every roof in the city.' : 'Not Vell. Not on these roofs, not yet.'; }
     return ''; },
   count:(n, w) => { n = Math.max(0, n | 0); return n === 0 ? `no ${w}s` : `${C7H.num(n)} ${w}${n === 1 ? '' : 's'}`; },
-  pr:id => id === 'ohl' ? {she:'he', She:'He', her:'him', hers:'his'} : {she:'she', She:'She', her:'her', hers:'her'},
+  pr:id => ['ohl','vell'].includes(id) ? {she:'he', She:'He', her:'him', hers:'his'} : {she:'she', She:'She', her:'her', hers:'her'},
   roadWho:key => { const ids = SQUAD().filter(id => id !== 'sgt'); return ids.length ? ids.map(id => C7H.reason(id, key)).join(' ') : 'Nobody. Only you.'; },
   countFollow:key => 1 + SQUAD().filter(id => id !== 'sgt' && C7H.follows(id, key)).length,
   intact:key => !C7H.dead().length && SQUAD().every(id => id === 'sgt' || C7H.follows(id, key)),
@@ -998,7 +998,7 @@ He goes along the Lakefront without hurrying. After a while the shapes by the fi
     c7_claw_talk_fail:()=>{ const w = ROLL().who || 'sgt'; return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawNoted = w; }, txt:
 `He smiles. It's the smile of a man writing something down.
 
-"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', vell:'rope', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He writes it without a glance at her collar.`, _:''})} "It doesn't change the sum."
+"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', vell:'rope man', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He writes it without a glance at her collar.`, _:''})} "It doesn't change the sum."
 
 The shapes by the fish-crates are moving.`,
       ch:[{t:'Show him the order from the cellars.', req:()=>!!S.f.c6_orders, go:'c7_claw_orders'},
