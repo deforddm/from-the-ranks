@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Thu Oct 8, 2026, 12:30 AM PDT. Written for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Tue Oct 20, 2026, 9:48 PM PDT (Book Four's rules, names and gods added to §(a), §(b) and §(f); against v6.15.0). First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -38,6 +38,28 @@ Each rule says what a later book depends on. Break one and a sequel chapter, or 
 
 Also binding (common brief): a character may believe what a later book overturns; the narrator may not state it.
 
+### Book Four (*House of Chains*), added Oct 20, 2026
+
+The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
+
+17. **Duiker's body** is gone from the last tree on the Aren Way. Never say who took it, or that he lives.
+18. **Grub** is a small boy and nothing more. Never "First Sword", never anything to come.
+19. **Topper's news is belief.** The army believes Paran, every Bridgeburner and Whiskeyjack are dead and Dujek's Host broken; the narrator never confirms it.
+    - Never mention Picker and the survivors.
+    - The Bridgeburners' ascension stays Fiddler's feeling, never narration.
+    - Hedge's voice in the sandstorm stays unexplained.
+20. **Mallick Rel.** Rumours only of where he goes. Never the Black Glove, the pogrom, his rise, or his priesthood beyond "Jhistal".
+21. **Leoman lives and reaches Y'Ghatan.** Never kill, wound, capture or meet Leoman or Corabb. The pursuit is ordered, never finished; never the fire at Y'Ghatan.
+22. **The Adjunct never knows that Sha'ik was Felisin**, and no soldier learns it (David, Oct 20). Pearl and Lostara take the body.
+23. **Felisin Younger, Heboric and Scillara** leave Raraku unseen by any soldier. Cutter guards Felisin Younger. **L'oric lives.** Nothing more of any of them.
+24. **Karsa** rides west. Never call him the Knight of Chains as settled, and never say what he will do. **Korbolo Dom** is handed to the Adjunct; never his fate.
+25. **The House of Chains is sanctioned**, and nobody in the army knows it. Never name the Master of the Deck or the later holders of the House's cards. A reader may lay only the Knight and the Leper of Chains, faceless.
+26. **Sinn** is one of sixteen strangers from the flood; never her power. **Raraku's sea** rises and stands; never say it lasts or what lives in it. **The Liosan** are "pale riders" at most, never met.
+27. **Gall's Khundryl** stay under Temul's Crow Clan. Never Hanavat or their end. The black tears are tattooed; never explain the name.
+28. **Keneb is Fist** from the morning after Raraku. Blistig's and Baralta's discontent is grumbling only. Never Baralta's later fate. Never Temul as Fist, or the Wickans sent home.
+29. **Never print "Bonehunters" before Book Six.** The finger bones and the standard exist from Aren.
+30. **No plague before Book Six**, and Poliel is never a patron. Never "Dancer's Tavern" (rule 13).
+
 ---
 
 ## (b) Name clashes and their resolutions
@@ -49,6 +71,17 @@ Also binding (common brief): a character may believe what a later book overturns
 | **Tav, "Tavore-by-no-relation" → Tavrin** | Done: full name Tavrin, called Tav; "by-no-relation" removed. | Tavore Paran, Adjunct after Lorn, centre of HoC to TCG. | Never write "Tavore" for Brisk's brother. |
 | **Chains card → the Wain** | Done in name and card text; internal id `chains` stays. The art still shows chains (art worker redraws). | High House Chains enters the Deck in MoI as the Crippled God's House (FC, W). | Never call an Unaligned card "Chains" or "Chain". |
 | **Madryn** | Kept. | Madrun, a masked estate guard in Darujhistan in TtH and OST *(memory; W page returned 402 twice)*. | One letter apart. If the game reaches TtH Darujhistan, keep them in different rooms. |
+
+| **Bungle** (Book Two) | **Open: Q18.** | Bungle is a sapper **sergeant** in DG ch 19 (wiki character list). The game calls him Captain Bungle from Book Two Ch4 on. | Book Four never gives him a rank until Q18 is answered. |
+| Keth (Book Two) | Kept. | A minor soldier of the Malazan 4th Army in SW, and Fist Rillish Jal Keth's house name there. | Low risk on another continent. Beside a Rillish, write "Keth of the Foolish Dog". |
+| Ibbin (Book Two) | Kept. | Ebbin, an OST viewpoint character; Ibb, a minor HoC marine in Borduke's squad. | Never put Ibbin and Ibb in one scene. |
+| Mosk (Book Three) | Kept. | Moak, a Fourteenth sergeant in HoC; Mock's Hold. | Book Three only. |
+| Imra (Book Two) | Kept. | Imrahl, a Khundryl warrior in HoC. | Keep Imra out of Book Four's Khundryl scenes. |
+| Tallow, Hessa, Tebbet, Darrut, Orvas (Book Four) | Clear (supported: some wiki lists didn't load). | The nearest found: Tarlow (a GotM mention), Hesta (an OST mage). | Kept. The full table is in `docs/hoc-canon.md` §11. |
+| Third squad, 9th Legion (Book Four) | Clear (supported). | No canon third squad in the Fourteenth was found; the numbered canon squads found are in the 8th Legion. | **Never write "3rd Company"**, which is canon in the 8th Legion. |
+| *Unblooded* (Book Four's title) | Kept. | A Tiste Edur word in MT for warriors who have not yet killed. | A canon word, not a canon title. |
+
+**Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
 
 Minor, no action (FC): Tuft and Tufty (Raest's undead cat in TtH, W *Raest*), Pell and Pella, Gerrun and a Gerrun in *Assail*, Bris and Brys Beddict.
 
@@ -158,6 +191,9 @@ The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later ch
 - **Cotillion** (the Rope). Active through TCG; at the end he stabs the Crippled God and sends him home. GotM 23.1: Paran gives him Chance; whether he kept it is not said. [W *Cotillion*; R GotM 22–23]
 - **Soliel** (**Mistress of Healing**, not "Lady of Health"). Sister of Poliel. BH: speaks through a chosen girl; agrees to heal the Host, at a cost to Paran; Poliel is killed by the Deragoth. [R BH ch. 15; W *Soliel* returned 402 twice]
 - **Fener** (the Boar, the Lord of Summer). **DG: torn down into the mortal world** by Heboric. MoI: Treach takes his place as god of war; his Grey Swords turn to Togg and Fanderay. RG: hiding in Letheras. **TCG: killed** at the Spire when Karsa breaks a tusk in his Darujhistan temple; his blood makes the Imass and the undead Jaghut mortal. Not available as a patron after DG. [W *Fener*]
+- **Treach** (the Tiger of Summer). The god of war after Fener. Heboric is made his Destriant in Raraku (HoC ch 13). He answers for the sergeant in Books Three and Four. [R13; W13]
+- **D'rek** (the Worm of Autumn). Her Grand Temple is in Kartool City; she is a soldier's and sailor's oath in HoC (Nok's story). She answers for Hessa in Book Four. [W *D'rek*; R8 HoC]
+- **The Khundryl dead** (an invention, marked so). The dead of a Burned Tears clan ride with Raraku's ghosts in HoC ch 25. They answer for Orvas in Book Four. Nothing canon names a Khundryl god. [R25 HoC]
 
 ---
 

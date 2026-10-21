@@ -1,6 +1,6 @@
 # House of Chains: canon sheet for Book Four
 
-Tue Oct 20, 2026, 9:30 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, broken up into the Adjunct's Fourteenth Army as canon does with every unit of Chain survivors, serving as medium infantry of Blistig's 9th Legion on the march from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. **This file is the first half (game Chapters 1–4); step 3 adds Chapters 5–7, the keep-open rules, the name clashes and the Visions section.**
+Tue Oct 20, 2026, 9:46 PM PDT. Built for Book Four of From the Ranks (v7.0.0, not yet built), against v6.15.0. Book Four is Book Two's squad, broken up into the Adjunct's Fourteenth Army as canon does with every unit of Chain survivors, serving as medium infantry of Blistig's 9th Legion on the march from Aren to Raraku. The plan with David's decisions is `ashes-of-the-pale/book4-hoc-plan.md`. Part one (§1–§6) covers game Chapters 1–4, and part two (§7–§14) covers Chapters 5–7, the keep-open rules, the name clashes, the gods and the Visions.
 
 **Marks.** **[H]** two sources agree (closed). **[1]** one source (supported). **[O]** open: nothing found. **[M]** memory, not checked; a lead only. **[D]** David's ruling. Every line carries its source.
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. *W8* means the page *House of Chains/Chapter 8*.
@@ -258,9 +258,247 @@ The squad never stands in these scenes, never changes their outcome, and never m
 6. Coltaine's Fall in ch 11: is anything left standing on the hill (a cross, a marker)?
 7. Tavos Pond: Gesler's squad (R11) or Borduke's (W *Borduke*)?
 
+---
+
+# Part two: game Chapters 5–7 (step 3)
+
+## 7. The campaign, in order (game Chapters 5–7)
+
+### 7.1 Game Chapter 5, The Wall: the Whirlwind Wall, into Raraku (novel ch 21–22)
+
+- **The Wall's fire (ch 22).** [1] R22, except as marked
+  - **Where:** a fire short of the Wall, the Wall itself, the hill above it, and the rearguard.
+  - **Who is there:** Fiddler; Sergeant **Balm** (the Ninth squad) with **Deadsmell** and **Throatslitter**; **Moak**, **Able**, **Shortnose**, **Flashwit** and **Tugg**; Bottle and Smiles; Gesler; Gamet, Grub, Keneb, Temul, Tavore, Tene Baralta, Blistig, Nil and Nether.
+  - **Neffarias Bredd**, a heavy-infantry legend, is named in rumour and never seen.
+- **The reshuffle.** Medium-infantry squads are joined to the marines. The sergeants doubt Keneb and fear Ranal's noble birth. [1] R22
+  - Later, Ranal's promotion to captain is revoked, but his Greymane-model reshuffle of the squads is kept. [1] R22
+- **Bottle's divining.** Bottle divines with twigs and a grass doll and feels the **Rope** "close, way too close". The doll's shadow moves. Fiddler: "Because he isn't ready yet." Fiddler judges that someone dangerous is past the Wall. [H] R22, W22
+- **Gamet at the Wall.** Gamet, eaten by guilt, goes to the Wall wanting to die, and Grub talks him out of it. [H] R22, W22, W *Gamet*
+- **The Wall withdraws** on its own, as Tavore is about to bare her otataral sword. [H] R22, W22
+  - Nil thinks the goddess will now lean on her mortal army.
+  - Temul sends scouts.
+- **Gamet takes his command back.** Blistig urges him to, and Gamet breaks Blistig's nose. Tavore tells him to keep such quarrels private. [H] R22, W *Blistig*, W *Gamet*
+- **The army enters Raraku.** [H] R22, W22
+- **The other side (ch 21).** [H] R21, W21
+  - Febryl opens a path for Dom's assassins, and Bidithal joins the plot.
+  - L'oric meets his father Osric.
+  - Leoman has about 700 left: the raids cost him about half his force.
+  - Karsa nears Raraku, and Siballe names him "Knight of Chains".
+
+### 7.2 Game Chapter 6, Pan'arak: the lines before the oasis (novel ch 23–24)
+
+- **Where:** the Malazan lines facing the rebel trenches at the **Pan'arak oasis** and the dead city, the basin between, and Leoman's camp outside. [H] R24, W24
+- **The plan.** One legion, a third of the army, is to block the enemy's retreat. [1] R24
+  - **Open:** R24 calls it "Keneb's legion", though Gamet took his command back in ch 22.
+- **The rite.** Tavore points out Dom and Reloe across the field. Nil and Nether, shielded by her otataral, work a rite with **Gamet's blood**: the land's spirits are resisting a goddess who wants the warren's fragment. [1] R24
+- **Gamet.** Tavore tells him that unknown units may appear in the battle and that he should command them. He leaves with a worsening headache and "the song" in his veins. [1] R24
+- **Bottle and Fiddler.** Bottle eases Fiddler's song-pain. Fiddler thinks the Bridgeburners "were born at Raraku". [1] R24
+- **The other side.** [H] R24, W24, except as marked
+  - Dom's killers wound Heboric with three crossbow bolts, and ghosts kill the killers. [1] R24
+  - Sha'ik puts on her predecessor's armour and admits she may have to kill her sister.
+  - Dom has L'oric knifed in the back; he lives.
+  - Mathok has more than 300 round Sha'ik's palace. [1] R24
+
+### 7.3 Game Chapter 7, The Convergence: Raraku (novel ch 25–26)
+
+- **The night (ch 25).** All of it happens inside or beyond the rebel lines, out of the squad's sight. [H] R25, W25
+  - Karsa kills Kesanal and four assassins, then Silgar (who calls himself the Leper of Chains), Bidithal and Febryl.
+  - Kalam kills Talon assassins. Quick Ben comes out of Kalam's acorn. Henaras is found dead. Kalam knocks Dom out and leaves him for Pearl.
+  - **Kamist Reloe dies** (W25: Quick Ben; R25: "to sorcery"). [CONFLICT]
+  - Mathok takes the Book of Dryjhna to Leoman and then leaves for Y'Ghatan, leaving Leoman about 9,000.
+  - Leoman is attacked in a defile and escapes on Corabb's horse.
+  - The two Deragoth come. Karsa kills one; he and Leoman, with Corabb, kill the other.
+  - L'oric, holding a Deck, tells Heboric that a Master has **sanctioned the House of Chains**. Heboric flees with Felisin Younger: "There are two Felisins. Save the one you can."
+- **Gamet's death and the ride (ch 25).** [H] R25, W25, W *Gamet*
+  - Gamet dies "in agony" and wakes as a spirit in armour.
+  - Guided by **Grub**, with Nil and Nether, he rides with ghost riders of a Burned Tears clan led by a dark-skinned woman against the Dogslayers, and Wickans and Malazans take the flanks.
+  - The W *Gamet* page: he joins Raraku's ghosts, with fallen Wickan tribes and **Pormqual's crucified soldiers**, and together they massacre Dom's Dogslayers.
+- **The morning (ch 26).** [H] R26, W26, except as marked
+  - Keneb reports that Gamet died of "a clot in his brain" (W *Gamet*: likely from the fall, found dead in his bed). **Keneb is made Fist.**
+  - The goddess, caught in vines that turn to chains, is killed by Dom's Talons.
+  - **The duel:** Sha'ik walks down alone and Tavore rides out. The goddess leaves her, and Tavore kills Felisin with one thrust. **[D] The Adjunct never knows who she was.**
+  - Leoman rides for **Y'Ghatan**. Karsa refuses to go, rides past the Malazans saying they are no longer his enemies, and leaves.
+  - Pearl and Lostara hand Dom to Tavore. Pearl takes Felisin's body away by warren, and Tene Baralta is angry about it.
+  - Nil and Nether: the Dogslayers were killed by Raraku's ghosts **with the spirits of the army's own dead**. [1] R26
+  - Baralta's men find Captain **Kindly** and Lieutenant **Pores** in the Dogslayer camp.
+  - Tavore orders the **pursuit of Leoman**.
+  - **The sandstorm:** Ranal chases about twenty desert warriors into a sandstorm against Fiddler's advice. Gesler's **Sands** fires a cusser and drives off the Tiste Liosan. Corabb grabs Fiddler's munitions bag, and the blast **kills Ranal**. Borduke's squad comes up.
+  - **Sinn** kills Fayelle and rejoins the sixteen surviving Ashok.
+  - **The sea rises:** Nil and Nether warn the army to reach the coral islands, and Raraku floods into an inland sea. [H] R26, W26, Wp
+  - Kalam and Quick Ben step out of a warren and embrace Fiddler.
+
+### 7.4 What Chapters 5–7 lean on (the second check, Oct 20)
+
+- **Raraku.** [H] W *Raraku*, R20, R22
+  - The Wall is a sandstorm more than a mile deep round Raraku, enclosing a fragment of a warren.
+  - Inside, the ground is an old inland sea floor: sea bones and conch shells, roads and battle wreckage uncovered by the wind, petrified ships, a ruined canal city, a road "lined with ghosts" (R20, Kalam's crossing).
+  - The oasis is ringed by coral islands.
+- **Water in Raraku before the flood:** no spring is named [O]. Gamet only suspects Dom of fouling the waterholes (R22 commentary). The game's seep (Chapter 5's key) is an invention, marked so: Haddat's knowledge, a hole in the old sea bed, nothing canon names.
+- **The days to the Wall** are not given [O].
+- **The reshuffle's reach.** Only Keneb's company of the 8th is shown taking medium-infantry squads, "using Greymane's arrangements", because "we are to hold the rear… on a broken landscape" [1] R22. Nothing touches the 9th Legion [O].
+  - The squads named there are canon: Balm's Ninth, Moak, Thom Tissy, Able, Shortnose, Tugg and Sobelone.
+  - The squad is not joined to marines.
+- **Dispositions at Pan'arak.**
+  - The horse is held back for lack of room [1] R24.
+  - The Dogslayers hold three ramps with trenches behind [H] W24, R24.
+  - The lines are only "within sight" of each other [O].
+  - **Who blocks the retreat is in conflict:** R24 says Keneb's legion, though Gamet had the 8th back. Where the 9th stood is not given anywhere [O].
+  - **Claude's call:** the squad is detached from the 9th to the flank pickets of the blocking force. It is never the blocking force, and never in any legion's main line.
+- **What the line could see and hear on the night.** [H] R25, W25
+  - Fiddler "can almost hear sounds of battle", then "the darkness above the oasis began to change".
+  - Kalam glimpses a Wickan standard by the trenches.
+  - Gamet hears sounds "a league distant", and butterflies are over the trenches.
+  - The dead were Raraku's ancient ghosts, the army's own dead, Pormqual's crucified soldiers and the Chain of Dogs' dead [H] R25, R26, W *Gamet*. **That last is canon's own permission for the plan's question 9:** a Barrow-fallen squadmate glimpsed among them.
+- **No living Malazan legion fought at the trenches** [H] R25, R26, W26.
+  - **Leoman is attacked in a defile by unnamed men** [1] R25. Dom had ordered his 4th Company and Fayelle to block Leoman, so those men were probably Dom's (an inference).
+  - **The game's mortal fight** (Chapter 7) is therefore pure margin. It is a band of desert warriors scattering past the end of the picket line before dawn: small, at the edge, never Leoman, Corabb or Mathok, never the Dogslayers' main body, and away from every named squad, Ranal, the Liosan and the Ashok.
+- **The morning.** [H] for each point except where marked
+  - The army watched the duel in silence. T'amber is called for, then sent back [1] R26.
+  - No Dogslayer prisoners are recorded.
+  - Kindly and Pores were freed by Bridgeburner ghosts, as R26 tells it [1].
+  - The sandstorm chase is Ranal, Fiddler and Cuttle (R26, W26), with Gesler's and Borduke's squads (R only).
+  - The flood came as "a wall of water" for the Ashok [1] W *Sinn*, and the army reached the coral islands ahead of it. How fast it came is not given.
+  - The pursuit is ordered: "cross this entire continent" [1] R26.
+- **Kamist Reloe:** Quick Ben killed him with sorcery [H] W25, W *Kamist Reloe*; R25 is consistent.
+
+## 8. People in Chapters 5–7
+
+| Who | In these chapters | The squad may | The squad may not |
+|---|---|---|---|
+| Gamet | the Wall (wants to die; Grub), breaks Blistig's nose, the rite, dies on the night, the ghost ride [H] | see him at the Wall from a distance; hear he took his legion back; hear in the morning he died in his bed; see a rider among the ghosts that might be anyone | be at the Wall with him, at the rite, or in the ride |
+| Blistig | his nose broken (ch 22) | serve under him; see the bandage; hear the story | see the blow; hint at his later plotting |
+| Keneb | acting Fist, then Fist the morning after [H] | hear it | — |
+| Grub | at the Wall with Gamet; guides the ride [H] | see a small boy who walks where he likes | say what he does on the night |
+| Nil and Nether | the rite; the warning of the flood [H] | hear the warning passed down the line | see the rite |
+| Bottle | the grass doll at the Wall [H] | hear camp talk of a marine mage "playing with dolls" | see the casting |
+| Ranal | dies in the sandstorm (ch 26) [H] | hear of it | be there |
+| Sinn and the Ashok | join the army in the morning [H] | see sixteen strangers come in from the flood, a girl among them | say anything of her power |
+| Tavore | the duel; orders the pursuit [H] | watch the duel in silence from the line, as the army did; hear the order | know or guess who Sha'ik was **[D]**; see Felisin's face; see the body taken |
+| Sha'ik / Felisin, the goddess, Karsa, Leoman, L'oric, Heboric, Felisin Younger, Scillara, Kalam, Quick Ben, Pearl, Lostara, Dom, Reloe, the Talon | all inside or beyond the Whirlwind's camp [H] | see Karsa ride past the army the morning after, a giant on a horse, saying nothing to them | meet any of them; see anything inside the camp |
+| Korbolo Dom | handed to the Adjunct by Pearl and Lostara [H] | hear it as a rumour, or see a bound man brought in | say what becomes of him |
+| The Tiste Liosan | driven off in the sandstorm [H] | at most, hear of "pale riders" in the storm | meet them; name them |
+
+## 9. Hard limits for Chapters 5–7
+
+- **Ch 5.**
+  - The Wall at the moment it withdraws, close to the Adjunct.
+  - Gamet and Grub at the Wall.
+  - Bottle's fire.
+  - Balm's and the marines' fire.
+  - The blow to Blistig.
+- **Ch 6.**
+  - The Adjunct's council and the rite with Gamet's blood.
+  - The squad is never the blocking legion; it holds its flank pickets (§7.4).
+- **Ch 7.**
+  - Anywhere inside the rebel camp: the night belongs to Karsa, Kalam, Quick Ben, the Talon and Leoman.
+  - The ghost ride. The squad sees it only as a change in the dark, sound at a league, a standard, butterflies, and perhaps one face.
+  - The duel ground: watched from the line in silence, never closer.
+  - Felisin's body.
+  - **The sandstorm** (Ranal, Fiddler, Cuttle, Gesler's and Borduke's squads, Sands's cusser, the Liosan).
+  - The Kalam–Quick Ben–Fiddler reunion.
+  - Sinn's fight with Fayelle.
+  - The defile where Leoman is attacked.
+- **The mortal fight** stays at the end of the picket line, against nameless desert warriors scattering before dawn (§7.4).
+
+## 10. Keep open: rules for every later writer (to `series-canon.md` §(a))
+
+Chapters 1–4's list (§5) stands. Book Four adds these (W and R as given in §1–§9; the full reasoning is in the step 3 research notes):
+
+1. **Leoman lives and reaches Y'Ghatan.** Never kill, wound, capture or meet Leoman or Corabb, and never tell the siege (W *Leoman*).
+2. **The pursuit is ordered, not finished.** Never the fire at Y'Ghatan or its losses.
+3. **[D] The Adjunct never knows Sha'ik was Felisin**, and no soldier learns it. Pearl and Lostara take the body.
+4. **Felisin Younger, Heboric and Scillara** leave Raraku together, and Cutter is set to guard Felisin Younger. No soldier sees them.
+5. **L'oric lives.** Nothing more.
+6. **Karsa** rides west. Never call him Knight of Chains as settled, and never say what he will do.
+7. **Korbolo Dom** is handed to the Adjunct. Never his fate.
+8. **The House of Chains is sanctioned**, and nobody in the army knows it or who the Master of the Deck is. Never name the Master. Never name the later holders of the House's cards. The only Chains cards a reader may lay are the Knight and the Leper, both faceless.
+9. **The Bridgeburners' ascension** stays a feeling (Fiddler's), never narration. Quick Ben's "dead except Picker and a few" is his line, never the narrator's. Hedge's voice in the sandstorm stays unexplained.
+10. **Pearl, Lostara and Cotillion:** nothing of their road.
+11. **Sinn** may be seen as one of sixteen strangers. Never her power.
+12. **Raraku's sea** may be seen rising and standing. Never say it lasts, what feeds it, or what lives in it.
+13. **The Liosan** are "pale riders" at most, and never met.
+14. **Gall and the Khundryl** stay with the army under Temul's Crow Clan. Nothing of their later battles; never Hanavat.
+15. **Keneb is Fist from the morning after.** Blistig's and Baralta's discontent shows as grumbling only, and Baralta wanting the body as a scowl at most.
+16. **Never print "Bonehunters" in Book Four.** The bones are worn, joked about and carried on the standard; the name comes later [M: the W page for the army was unreached].
+17. **Mathok, T'morol and the Book of Dryjhna** go toward Y'Ghatan. Nothing more.
+18. **Off the map:** Icarium, Mappo and Tremorlor, and Paran in Raraku (a later book).
+19. **No plague** in Book Four (§2).
+
+## 11. Names: the series-wide clash check (Oct 20)
+
+**How it was checked.** The Malazan Wiki character lists were read for GotM, DG, HoC, MT, TCG, NoK, SW, OST, *Dancer's Lament* and *The God is Not Willing*, plus Wikipedia's character list, and a web search was run on each name. The lists for MoI, BH, RG, TtH, DoD, RotCG, B&B, *Assail*, *Deadhouse Landing*, *Kellanved's Reach* and *Forge of Darkness* would not load after a retry. **So every "clear" below is supported, not closed.** A later pass, or David's books, can close them.
+
+### Book Four's new names (Claude's calls, from the first clear candidate in each slot)
+
+| Who | Name | Status | Nearest canon | Note |
+|---|---|---|---|---|
+| The raw Quon recruit, the reader | **Tallow** | clear [1] | Tarlow, a Darujhistan warehouse owner, mentioned in GotM | one letter, an obscure mention, another continent |
+| The Kartoolian, D'rek's ex-temple guard | **Hessa** | clear [1] | Hesta, a minor mage in OST | keep apart if a later book reaches OST's Darujhistan |
+| The Dal Honese bowman | **Tebbet** | clear [1] | none found | chosen over Oruk (Oru the Seguleh Eleventh, OST; Orule, TGINW) |
+| The Aren Guard regular | **Darrut** | clear [1] | none found | Ebbin was rejected: Scholar Ebbin is an OST viewpoint |
+| The Khundryl recruit | **Orvas** | clear [1] | none Malazan | Senn was rejected (Sinn) |
+| The squad | **Third squad, 9th Legion** | clear [1] | no canon third squad in the Fourteenth was found | every numbered canon squad found is in the 8th Legion: the 9th Company's 4th (Strings), 5th (Gesler), 6th (Borduke), 8th (Hellian), 9th (Balm), and the later 13th (Brethless); the 3rd Company's 4th (Sinter) and 10th (Primly) from RG. **Never write "3rd Company"**, which is canon in the 8th Legion |
+| The title | ***Unblooded*** | a canon word, not a canon title | in MT the Tiste Edur call young warriors who have not yet killed "unblooded" | usable; it echoes Book Five's people, which suits a series that goes there next |
+
+**Canon names in Book Four's novel to avoid as inventions:**
+- Moak, Able, Shortnose, Flashwit, Tugg, Thom Tissy and Sobelone.
+- Hubb, Maybe, Balgrid, Lutes and Ibb.
+- Deadsmell, Throatslitter, Balm, Neffarias Bredd and Imrahl (a Khundryl).
+- Kindly, Pores, Ranal, Roach (the dog) and Sands.
+
+### Q16: Book Two's and Book Three's names
+
+| Name | Status | Canon bearer | Ruling |
+|---|---|---|---|
+| **Bungle** | **canon, wrong rank** | a sapper **sergeant** in DG ch 19 | the game's "Captain Bungle" (Book Two, from Ch4) contradicts canon. Open question **Q18** in `open-questions.md` |
+| Mincer, Lull, List, Bult | canon | the canon characters themselves | fine |
+| Wicket | invented, clear | — | fine |
+| Keth | near-clash, low–medium | a minor soldier of the Malazan 4th Army in SW, and the house name of Fist Rillish Jal Keth there | keep; a different continent and era. If Book Four's Keth is ever beside a Rillish, use "Keth of the Foolish Dog" |
+| Ibbin | near-clash, medium | Ebbin (OST viewpoint), Ibb (a minor HoC marine in Borduke's squad) | keep for Book Two; **Book Four never puts Ibbin and Ibb in one scene** |
+| Mosk | near-clash, medium for Book Four | Moak, a Fourteenth sergeant in HoC; Mock's Hold | Book Three only; Book Four doesn't use Mosk |
+| Imra | near-clash | Imrahl, a Khundryl warrior in HoC | **keep Imra out of Book Four's Khundryl scenes** |
+| Yedda | low | Yedan Derryg (DoD/TCG), two letters off | fine |
+| Sathi | low | Sathal (TGINW), two letters off | fine |
+| Tangle, Haddat, Marrow, Ramin, Hackle, Dessi, Ilhar, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan, Ambrel | clear [1] | — | fine |
+
+## 12. Visions: one canon viewpoint per chapter (Through the Deck)
+
+Each is seen through canon eyes, changes nothing, and stops before anything later books need. The novel has no formal Deck reading, so the reading is always the squad's own (Marrow, or the Quon recruit); the vision is what the card opens.
+
+| Game ch | Viewpoint | The moment | Novel ch, place | Source | Stop before |
+|---|---|---|---|---|---|
+| 1 | **Trull Sengar** (and Onrack) | On the long wall in the Nascent's flooded world, Onrack, about to pass, breaks Trull's chains after Trull says he was "once among enemies", and carries him on his back. | 6, the Nascent | W6, W Prologue | why Trull was Shorned (MT's story) |
+| 2 | **Lostara Yil** | In the Imperial Warren, across ash, a pit with a vast dragon crucified, otataral-aspected, still alive; Olar Shayn's head set on a ledge in the sun. | 12, the Imperial Warren | W12 | the dragon's name or story; Pearl's Claw business |
+| 3 | **Karsa Orlong** | On the Jhag Odhan, thousands of Jhag horses answer the blood-oil in him; he picks a young white-maned stallion and names it Havok. | 17, the Jhag Odhan | W17 | his destiny; anything of Icarium beyond a presence |
+| 4 | **Leoman** | The oil-ball raid: two hundred riders, clay lamps thrown like bolas, wagons burning, the Malazan horse drawn off as he meant. The squad was in that camp: the vision shows the night it lived through, from the other side. | 18, the Malazan camp | R18, W18, W *Leoman* | anything of Y'Ghatan |
+| 5 | **Heboric** | Drugged, he dreams the jade giants "perfect and sexless", with "screaming terrified mouths", following a fallen god in; he wakes with Treach's stripes and jade hands. Treach is the sergeant's god in this book. | 13, Raraku | W13 | his road out of Raraku |
+| 6 | **Sha'ik (Felisin)** | In her tent she looks at her predecessor's armour, the visored helm with a web of chain over the eye-slits, puts it on, light as it was made to be, and asks herself whether she has a choice. | 24, her tent | R24 | the walk down the hill; her sister's name in her thoughts beyond "her sister" |
+| 7 | **Gamet** | He wakes armoured among the dead. Grub sends him up the main ramp beside a dark-skinned, blue-eyed woman of the Burned Tears' dead; there is sound a league off and butterflies over the trenches; he says goodbye to the Adjunct. | 25, the ramps | R25, W25, W *Gamet* | what the dead do in the trenches (headline only: they ride down); never the Dogslayers' deaths in detail |
+
+**Deck echoes for the reader** (no formal HoC reading exists):
+- Bottle's grass doll at the Wall ("the Rope… too close", ch 22: R22, W22) for the Chapter 5 reading.
+- L'oric's "a Master has sanctioned the House of Chains" (ch 25: R25, W25) for Chapter 7, when the reader's cards settle without anyone saying why.
+- Never name the Master.
+
+## 13. The gods who may answer in Book Four (to `series-canon.md` §(f))
+
+- **Treach** answers for the sergeant. Fener is gone (DG). Heboric is made Treach's Destriant in Raraku (ch 13: R13, W13) [H]. The boon and sigil exist from Book Three.
+- Book Two's patrons carry over unchanged: Hood (Haddat; Darrut), Oponn (Tangle; Tallow), Soliel (Marrow), the Wickan spirits (Sathi), the Queen of Dreams (Ramin; Tebbet), and the grandmother (Keth).
+  - **Nil and Nether's spirits are silent this book** (§2). The Wickan spirits' boon still answers Sathi and Keth, because their bond is their own, and a line may say the spirits are slow to come.
+- **D'rek**, the Worm of Autumn, answers for Hessa. Her Grand Temple is in Kartool City [1] W *D'rek*, and Nok's story sinks ships "as an offering to D'rek" [1] R8. **A new boon and a new sigil.**
+- **The Khundryl dead** answer for Orvas. The Burned Tears "grieve the loss of ourselves" (Gall, R15). The dead riders of a Burned Tears clan ride with Raraku's ghosts on the night (R25). **A new boon and a new sigil.** The ancestors as patrons are an invention, marked so; nothing canon names a Khundryl god.
+- **Never in Book Four:** Fener (torn down in DG); Poliel as a patron (the plague is BH's); the Crippled God; the Whirlwind goddess (the enemy).
+
+## 14. For David to check in his copy (Chapters 5–7)
+
+8. Ch 24: which legion blocks the retreat (R24 says "Keneb's"), and is the 9th placed anywhere?
+9. Ch 22: is there any spring or waterhole named inside Raraku before the flood?
+10. Ch 25: who attacks Leoman in the defile?
+
+
 ## Sources
 
 - W: malazan.fandom.com: *House of Chains* main page; *House of Chains/Chapter 5, 7, 8, 10, 11, 13, 15, 18, 19*; *Temul*, *Nil*, *Nether*, *Gamet*, *Keneb*, *Grub*, *Blistig*, *Tene Baralta*, *Red Blades*, *Aren Guard*, *Aren Way*, *Duiker*, *Coltaine*, *Mallick Rel*, *Pullyk Alar*, *Khundryl*, *Khundryl Burned Tears*, *Day of Pure Blood*, *Ubaryd*, *Seti*, *Topper*, *Leoman*, *Fiddler*, *Borduke*, *Malaz 14th Army*, *D'rek*, *Poliel*.
 - Not reached (two tries): *Fourteenth Army*, *Burned Tears*, *Gall*, *Coltaine's Fall*, *Vathar Crossing*, *Aren*, *Soliel*, *Gesler*, *Fiddler's squad*.
-- R: reactormag.com Malazan Re-read, *House of Chains* chapters 5, 6–8, 11–19 (through the WordPress API); *Deadhouse Gates* chapters 20–21 and 22–23.
+- R: reactormag.com Malazan Re-read, *House of Chains* chapters 5–8, 11–26 (through the WordPress API); *Deadhouse Gates* chapters 20–21 and 22–23.
 - Wp: en.wikipedia.org *House of Chains*.
