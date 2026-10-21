@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v6.13.0'; // Book Three's games at the fires, and the masks not walked past
+const CACHE = 'ftr-v6.14.0'; // the trope pass: the same few phrases no longer on every page
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];

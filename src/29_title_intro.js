@@ -147,7 +147,7 @@ function showTitle(fresh, want){
 function showIntro(){
   view = 'intro'; S.scene = 'intro'; save(); titleAnim = null; AUDIO.setScene('explore');
   toTop(); $('#app').innerHTML = `<header class="hud"><div><div class="loc">The Pale</div><div class="sub">Genabackis · three days after</div></div><div class="hudr">${hudButtons()}</div></header>
-  ${artPlate(0, 'The Second Army lies in pits on the hillside. Nobody talks about whose sorcery fell on whom.')}
+  ${artPlate(0, 'The Second Army lies in pits on the hillside. The squads do not talk about whose sorcery fell on whom.')}
   <div class="narr">
     <p>Three days ago the Moon's Spawn drifted away from the Pale, leaving behind a city that had surrendered and an army that hadn't survived the surrender. What's left of the Second Army lies in pits on the hillside. The cadre of mages is down to a handful. Onearm's Host holds the ruins, counts its dead, and doesn't talk about whose sorcery fell on whom.</p>
     <p>You are Sergeant ${esc(S.name)}, Fourth Squad, Seventh Company marines. Your squad came through the siege with all five of you still breathing, which in this army makes you either lucky or suspicious.</p>

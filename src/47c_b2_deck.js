@@ -66,7 +66,7 @@ const b2RdObj = () => b2Rd().he ? 'him' : 'her';
 const B2RD_DECK = {
   marrow:`Marrow has her Deck out: a temple deck from Nap, old, the paint gone soft at the corners from other people's fingers. She learned it from Soliel's priests, who read for the sick before they touched them, and she has kept it through twelve years of the army and never once explained why.`,
   yedda:`Yedda has a Deck out of her apron, wrapped in a square of rope-walk sacking: the cheap kind they sold by the south gate in Hissar, the paint bright and the wood thin. She reads the way the rope-walk women read, fast, and for money, except that she has never once asked the squad for any.`,
-  kanese:`The old Kanese from the squad's stretch has his Deck out, wrapped in a faded prayer-cloth. Nobody knows his name. He walks by the carts, and reads for anyone who asks, and for nothing, and says his prayers in Kanese over every card he turns.`,
+  kanese:`The old Kanese from the squad's stretch has his Deck out, wrapped in a faded prayer-cloth. He has never given his name. He walks by the carts, and reads for anyone who asks, and for nothing, and says his prayers in Kanese over every card he turns.`,
 };
 /* per chapter: the scene, where it is laid out, where the start node was going (back/backT), and the reader's own words */
 const B2DECK = {
@@ -79,7 +79,7 @@ const B2DECK = {
     set:'The noon halt, under a cloak on two spears, with the column lying in every shadow it can find.',
     marrow:`"Three weeks and nobody's asked me," she says. "I'm offended. The warren won't talk to me today, child. Perhaps the Deck will."`,
     yedda:`"You've the face of someone who's been told it's two days to water," she says. "Sit. One card. It's cheaper than hoping."`,
-    kanese:`He has laid his cloth in the shade of a cart and is waiting beside it with the Deck, the way a man waits at a well. "One card," he says. "Before the water."`},
+    kanese:`He has laid his cloth in the shade of a cart and is waiting beside it with the Deck, a water-skin hung from the cart's wheel. "One card," he says. "Before the water."`},
   3:{scene:'b2_odhan_dusk', on:'the lid of the squad\'s water-cask, by torchlight', back:()=>startExplore(), backT:'Make camp.',
     set:'Night on the long flat nothing, and the sound of the herders at the cattle all down the column.',
     marrow:`"Nobody's sleeping through that," she says, meaning the cattle. "We may as well read."`,
@@ -113,7 +113,7 @@ const B2SAY = {
     yedda:`"Dogs," Yedda says, and looks at Hackle. "Not that kind of dog." She taps the card. "It means keep moving. Everything means keep moving this summer."`,
     kanese:`The old Kanese breathes in through his teeth. "In Itko Kan they came through a village once," he says. "Every door open after. We walk fast now, yes?"`},
   oponn:{d:'The jesters of chance, back to back, and a coin in the air between them.',
-    marrow:`"The Twins," Marrow says. "The Lady's pulling, for now." She looks at the coin a long moment. "Don't thank her, child. She hears."`,
+    marrow:`"The Twins," Marrow says. "The Lady's pulling, for now." She turns the coin over once. "Don't thank her, child. She hears."`,
     yedda:`"Luck," says Yedda, with contempt. "My husband had luck. Thirty years and never a rope broke on him, and then one did." She leaves the card face up anyway.`,
     kanese:`"The Twins," he says, and smiles with no teeth. "Good card, bad card. Same card. Today, good."`},
   obelisk:{d:'A standing stone, unaligned and older than anyone\'s gods.',
@@ -126,7 +126,7 @@ const B2SAY = {
     kanese:`"Dark," he says. "Not for us. He looks the other way. Let him."`},
   assassin:{d:'A figure half in shadow, rope and knives.',
     marrow:`"The Rope," Marrow says, and makes a small sign with two fingers that the temple never taught her. "Shadow's knife. He's been busy in Seven Cities, they say."`,
-    yedda:`"Knives," says Yedda. "And a rope." She sniffs. "That's a ropemaker's card. Somebody bought good rope."`,
+    yedda:`"Knives," says Yedda. "And a rope." She sniffs. "That's a ropemaker's card. Good rope, and paid for."`,
     kanese:`The old man touches the card's edge and takes his finger back fast. "Shadow," he says. "Quick hands. Quick ends." He grins, suddenly. "Ours, today."`},
   herald:{d:'A grey figure with its face turned away, holding a door open for somebody you cannot see.',
     marrow:`Marrow looks at it a long time. "Hood's door," she says. "Held open. Not for us, child. For someone near us." She turns it face down. "I've had a great deal of near us this summer."`,

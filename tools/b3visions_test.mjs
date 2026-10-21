@@ -12,9 +12,9 @@ const { page, errors } = await openGame(br, srv.url, { fast: true });
 let fail = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); if (!c) fail = 1; };
 const ev = (f, a) => page.evaluate(f, a);
 const BAD = /\bundefined\b|\bNaN\b|\$\{|\[object/;
-const READERS = [{id:'tuft', name:'Tuft', fig:'tuft', line:/^Tuft lets the card go[\s\S]*Her hands are cold\.$/},
-  {id:'sohra', name:'Sohra', fig:'sohra', line:/^Sohra sweeps the bones together[\s\S]*Her hands are cold\.$/},
-  {id:'benna', name:'Old Benna', fig:'b3v_benna', line:/^Old Benna puts the card down[\s\S]*Her hands are cold\.$/}];
+const READERS = [{id:'tuft', name:'Tuft', fig:'tuft', line:/^Tuft lets the card go/},
+  {id:'sohra', name:'Sohra', fig:'sohra', line:/^Sohra sweeps the bones together/},
+  {id:'benna', name:'Old Benna', fig:'b3v_benna', line:/^Old Benna puts the card down/}];
 // a Book Three sergeant on the map in chapter ch, with the reader the squad gives (Tuft; else Sohra; else Old Benna)
 const setup = (ch, rid) => ev(([ch, rid]) => {
   document.querySelectorAll('#modal,#chars,#settings,#cardfx').forEach(e => e.hidden = true);

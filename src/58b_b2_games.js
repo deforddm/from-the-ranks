@@ -97,7 +97,7 @@ function playHerd(opt = {}){
     const prev = S.f.b2_herd || 0, gain = Math.max(0, g.inN - prev); if (gain) chain(0, gain, `${dog === 'Hackle' ? 'Hackle' : 'The dog'} brought them in`); S.f.b2_herd = Math.max(prev, g.inN);
     mgDeed('b2Herd'); if (g.inN >= g.strays.length) mgDeed('b2HerdAll');
     g.talk = mgSay(dog === 'Hackle' ? 'Sathi' : 'The herder', g.inN >= g.strays.length ? (dog === 'Hackle' ? '"All of them. Every one." She is laughing. "He is the clever one. I told you. I only ride."' : '"All of them! The Malazans will want to buy him now. He is not for sale."') :
-      g.inN ? `"${numw(g.inN, true)}." ${early ? 'The dog comes back, tongue out.' : 'The dust comes over the flat and the riders in it, and the stretch closes up, and whoever is still out there is out there.'} ${prev && !gain ? 'No more than last time. The ones from last time are still with you.' : ''}` : '"None." Nobody says anything else.');
+      g.inN ? `"${numw(g.inN, true)}." ${early ? 'The dog comes back, tongue out.' : 'The dust comes over the flat and the riders in it, and the stretch closes up, and whoever is still out there is out there.'} ${prev && !gain ? 'No more than last time. The ones from last time are still with you.' : ''}` : '"None." That is the whole count.');
     redraw(); };
   const setTo = e => { const r = MG.cv.getBoundingClientRect(); g.to = {x:clamp((e.clientX - r.left)/MG.W, .02, .98), y:clamp((e.clientY - r.top)/MG.H, .05, .95)}; if (!g.t0 && !g.over) go(); };
   MG.cv.onpointerdown = e => { MG.cv.setPointerCapture && MG.cv.setPointerCapture(e.pointerId); g.drag = true; setTo(e); };
@@ -170,7 +170,7 @@ function playGround(opt = {}){
       for (let i = 0; i < 3; i++) { const q = t/900 + i*2.1 + k; ell(ctx, p.x + Math.cos(q)*p.r*.55, p.y - p.r*.2 + Math.sin(q*1.3)*p.r*.2, 2.4, 1.4, `rgba(220,230,210,${on ? .7 : .12})`); }
       b2Text(ctx, `${k + 1}`, p.x, p.y + 4, 12, on ? '#1a1410' : 'rgba(200,190,170,.5)'); });
     drawFigure(ctx, host === 'Keth' ? 'warlock' : 'nil', W/2, H*.6, Math.min(1.8, H/170), t, {still:true}); };
-  g.talk = mgSay(host, host === 'Keth' ? '"Put your hands flat, next to mine. Not like that. Like you would on a horse that might bolt." The old woman, out of him: "Now be quiet. It talks to the quiet ones."' : `"Put your hands down, Malazan. Flat." He does not look at you. "It does not talk to many. It might talk to you, because you are new. It likes new."${keth ? ' Keth sits down on your other side, and the old woman in him says something to the ground that sounds like an introduction.' : ''}`);
+  g.talk = mgSay(host, host === 'Keth' ? '"Put your hands flat, next to mine. Not like that. Like you would on a horse that might bolt." The old woman, out of him: "Now be quiet. It talks to the quiet ones."' : `"Put your hands down, Malazan. Flat. It does not talk to many. It might talk to you, because you are new. It likes new."${keth ? ' Keth sits down on your other side, and the old woman in him says something to the ground that sounds like an introduction.' : ''}`);
   redraw();
 }
 
@@ -208,7 +208,7 @@ const HAGGLERS = {
   b2_trader5:{who:'The shareholder', g:'f', kick:'The Nenoth · the Trygalle carriage', fig:'trygalle_guard', prop:'carriage', day:false, tell:'She taps her glove.',
     open:(p, it) => `"${p} skins, ${it}." She folds her arms. One of them has a scorched glove on it. "Go on, then. Everybody haggles. It's the only fun we get."`,
     yes1:['"One less. One."', 'She sighs, theatrically. "One."', '"For a sergeant of the Seventh, one." She does not mean it kindly.'], yes2:['A long look. "Fine. Two. You have a face like a tax-collector\'s mother."', '"Two." She says it like a curse. "Two less. Take it before I come to my senses."'],
-    no:['"No."', 'She looks at you for a long moment. "No."', '"The Guild crossed a warren with a war in it. The Guild does not take one less."'],
+    no:['"No."', 'She weighs it. "No."', '"The Guild crossed a warren with a war in it. The Guild does not take one less."'],
     bottom:'"That\'s the bottom. I\'d sooner give it to the Semk."', shut:p => `She shuts the lid. "No," she says, quite pleasantly. "Now it's ${p}. Because you made me say no."`,
     paid:['"Robbery," she says, and shakes your hand. "Come and work for the Guild. You\'d hate it."', '"Done," she says. "Don\'t tell the partners."', '"Done." She does not even pretend to be sorry.'],
     help:{haddat:'Haddat says something to her in the trade-talk of the Odhan, very politely. The shareholder laughs despite herself.', tangle:'Tangle counts her crate out loud, item by item, with a sapper\'s precision. She is impressed despite herself.', sathi:'Sathi says the carriage horses are the best she has seen on the continent, which is true, and the shareholder softens, which is truer.', marrow:'Marrow looks at the scorched glove and says, "That wants dressing, child." The shareholder lets her. It takes a while.', redblade:'Ramin bows to her, the Ehrlitan way, from the waist, and says something gracious about the Guild. She has not been bowed to in a year.', warlock:'The old woman in Keth says something to her about the warrens that the shareholder very much wants to hear more of.'},
@@ -216,7 +216,7 @@ const HAGGLERS = {
   b2_ktrader6:{who:'The Khundryl', g:'m', kick:'The hills above Sanimon · the Khundryl horse lines', fig:'khundryl', prop:'hide', day:true, tell:'He goes back to his paint.',
     open:(p, it) => `"${p}," he says, in trade-talk, ${it} across his knees. "Skins. Talk if you like. The Khundryl like a man who talks before he pays. It means he has thought."`,
     yes1:['"One less."', 'He shrugs. "One."', '"One. My horses will drink less. They will forgive you."'], yes2:['"Two." He laughs. "Two, for the nerve."', 'A long look, through the paint. "Two less. You fight like that too, I think."'],
-    no:['"No."', 'He looks at you through the paint and says nothing, which is no.', '"No. My horses are thirsty, Malazan. Ask them."'],
+    no:['"No."', 'He looks at you through the paint and shakes his head, once.', '"No. My horses are thirsty, Malazan. Ask them."'],
     bottom:'"That is the bottom. Under it I am giving gifts, and a gift is not given to a man who haggles."', shut:p => `He puts it back across his knees. "No. ${p}. You pushed a Khundryl. Remember it, it is a good story."`,
     paid:['He clasps your forearm, Khundryl fashion. "Good trade. I will tell my sons a Malazan robbed me."', '"Good."', 'He nods, once, and goes back to his paint.'],
     guard:{p:.2, gain:true, ok:'He stares at you. Then he laughs, the whole of him, until he has to wipe the paint off his eyes. "You guard me? Malazan, I rode four hundred leagues to guard you!" He holds up two fingers. "Two less. For the joke. It is the best I have heard since the river."', no:'He stares at you. Then he laughs, the whole of him. "You guard me? Malazan, I rode four hundred leagues to guard you." He does not take anything off. But he likes you better now, and he is in no hurry.'}}};
@@ -369,7 +369,7 @@ ${b2In('sathi') ? '"Riders," Sathi says, shading her eyes. "Not soon. Soon." Hac
 /* Nil, before the tunnel: put your hands on the ground beside him */
 { const f = B2CH3.dlg.b2_nil3; B2CH3.dlg.b2_nil3 = () => { const n = f(); n.ch = [...(S.f.b2_ground ? [] : [{t:'Put your hands on the ground beside him.', tag:'Ask the Ground', go:()=>playGround({host:'Nil', after:()=>talk('b2_ground_after')})}]), ...n.ch]; return n; }; }
 Object.assign(B2CH3.dlg, {
-  b2_ground_after:()=>({sp:'Nil', txt:S.f.b2_ground ? `Nil puts his hands back on the earth. "Tonight it will be asked for a great deal," he says. "It will remember you were polite." He does not look up again.` : `"Another time," Nil says, without looking up. "It is tired tonight. So am I."`, ch:[{t:'Leave them to it.', go:()=>startExplore()}]}),
+  b2_ground_after:()=>({sp:'Nil', txt:S.f.b2_ground ? `Nil puts his hands back on the earth. "Tonight it will be asked for a great deal," he says. "It will remember you were polite."` : `"Another time," Nil says, without looking up. "It is tired tonight. So am I."`, ch:[{t:'Leave them to it.', go:()=>startExplore()}]}),
 });
 /* a haggle comes back to the trader's node itself (playHaggle's done → talk(node)) */
 Object.assign(B2CH6.dlg, {

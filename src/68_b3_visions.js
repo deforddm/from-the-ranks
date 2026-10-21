@@ -55,7 +55,7 @@ He puts that away where he keeps it. He looks east. The sky over the east is a c
       tuft:() => `Tuft lets the card go. "A caravan," she says, "going east. Toward where we're going." She turns the card over and back, as if the people on the road might still be on it. "They were walking the other way, Sergeant. All of them." Her hands are cold.`,
       sohra:() => `Sohra sweeps the bones together with the side of her hand. "A man who walks beside other people's wagons," she says, "toward the river, and the city on it." She looks south-east, past the herds. "The bones liked him. They did not like his road." Her hands are cold.`,
       benna:() => `Old Benna puts the card down and wipes her fingers on her apron. "Caravan guard," she says. "Married one, once. Thirty years he walked beside other folks' goods, and came home every time, until he didn't." She sniffs. "That one's going the wrong way." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "A caravan," ${p.s} says, "going east, toward the river. And everyone else coming the other way." ${p.H} hands are cold.`})]},
+      other:(r, p) => `${r.name} lets the card go. "A caravan," ${p.s} says, "going east, toward the river. And everyone else coming the other way."`})]},
 
   /* ---- Chapter 2: the Rhivi Plain. North of Capustan, a Grey Sword patrol meets what has been leaving the strides in the grass. ---- */
   b3v2:{book:'moi', ch:2, who:'Itkovian', where:'North of Capustan', fig:'b3v_itkovian', bg:'b3v_capplain', cap:'Grey grass to every edge, a low sky, and a ridge with nothing on it yet.', steps:[
@@ -66,7 +66,7 @@ Fener has fallen. Karnadas the Destriant says so, and Itkovian believes him, and
 
 The grass is grey-green and wet. The sky sits low. Somewhere to the south, the Domin's army is coming up from the Catlin's far side, and the Mortal Sword wishes to know how fast.`},
     {txt:
-`Sidlis, the outrider, comes back at a canter and says nothing until the horse has stopped, which is how Itkovian knows.
+`Sidlis, the outrider, comes back at a canter and holds his report until the horse has stopped. That tells Itkovian enough.
 
 Tracks. He goes to see. In a hollow where the grass is long, a line of prints, each as long as a man's arm, three-toed, pressed deep and far apart, as if whatever made them had been running and saw no reason to stop. They are not fresh. They are not old. Around one of them the grass has gone grey and brittle, the way grass goes where something dead has stood.
 
@@ -90,7 +90,7 @@ Afterwards Itkovian walks among the fallen. He kneels by each of them, and takes
 The survivors are watching him. They want something from him.`,
      ch:[{t:'"Their names will be said in Capustan. Every one."', set:['b3v2_word','names']},
          {t:'Say nothing. Let them see you stand.', set:['b3v2_word','stand']}]},
-    {txt:()=>`${S.f.b3v2_word === 'stand' ? `He says nothing. He stands, and lets them see him standing, and that is enough to straighten their backs, for now.` : `"Their names will be said in Capustan," he tells them. "Every one." It is a small thing to promise. He has learned that small things are the ones that hold.`}
+    {txt:()=>`${S.f.b3v2_word === 'stand' ? `He stands, and lets them see him standing, and that is enough to straighten their backs, for now.` : `"Their names will be said in Capustan," he tells them. "Every one." It is a small thing to promise. He has learned that small things are the ones that hold.`}
 
 Then Sidlis says, "Sir," very quietly, and points to the ridge.
 
@@ -112,10 +112,10 @@ One of them comes to him. A tall thing of leather and bone, with a face like a d
 
 He rides south, and the Grey Swords ride behind him in good order, and he carries what he carries, and on the southern horizon there is a brown smudge across the sky the width of the world.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go. "They rope them," she says, as if it were the thing she most needed to know. "That's how. Ropes." Then, more quietly: "He takes it into himself. The dying. All of it." She doesn't say anything else for a while. Her hands are cold.`,
-      sohra:() => `Sohra sweeps the bones together. "The grey runners," she says. "The ones that leave the dead grass." She is quiet for a moment. "And the dust that stood up. The herds' old stories say the dust walks, south of the river. I did not believe the stories." Her hands are cold.`,
-      benna:() => `Old Benna puts the card down, face down. "Grey Swords," she says. "Mercenaries. Paid to hold a city, and holding it." She sniffs. "And something walked out of the grass at them that no copper ever paid for." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "Something grey in the grass," ${p.s} says, "and dust that stood up and fought it." ${p.S} looks south, toward Capustan. ${p.H} hands are cold.`})]},
+      tuft:() => `Tuft lets the card go. "They rope them," she says, and nods, filing it away. "That's how. Ropes." Then, more quietly: "He takes it into himself. The dying. All of it." She pulls her sleeve down over her fingers.`,
+      sohra:() => `Sohra sweeps the bones together. "The grey runners," she says. "The ones that leave the dead grass." She is quiet for a moment. "And the dust that stood up. The herds' old stories say the dust walks, south of the river. I did not believe the stories."`,
+      benna:() => `Old Benna puts the card down, face down. "Grey Swords," she says. "Mercenaries. Paid to hold a city, and holding it." She sniffs. "And something walked out of the grass at them that no copper ever paid for."`,
+      other:(r, p) => `${r.name} lets the card go. "Something grey in the grass," ${p.s} says, "and dust that stood up and fought it." ${p.S} looks south, toward Capustan.`})]},
 
   /* ---- Chapter 3: Capustan, the night before the relief. On a roof inside the burning city, the Bridgeburners wait for morning. ---- */
   b3v3:{book:'moi', ch:3, who:'Picker', where:'A Roof in Capustan', fig:'b3v_picker', bg:'b3v_caproof', cap:'Domes against a red sky, smoke going up in pillars, and a flat roof with a stair-head and a lot of people on it.', steps:[
@@ -153,18 +153,18 @@ Somebody counts the quarrels left, out loud, and then stops counting out loud.`}
     {go:'Morning.', txt:
 `At dawn the Barghast come.
 
-Picker hears them before she sees them: a sound out of the north streets like surf, and then white faces, hundreds of them, painted for war, filling the lanes, going through the city the way a flood goes through a house. Whatever is in the streets runs, south and out, and the Barghast go after it.
+Picker hears them before she sees them: a sound out of the north streets like surf, and then white faces, hundreds of them, painted for war, filling the lanes, coming through the city street by street. Whatever is in the streets runs, south and out, and the Barghast go after it.
 
 From the roof she can see over the wall to the plain. The Pannion army is coming out of the southern gates, pushed, a whole army backing out of a city it thought it had taken. And on the hills to the north, in the grey light, there are standards. The Host's. Brood's. Lines of men coming down the slope to meet it in the open, with the sun behind them.
 
 "Well," says Picker, to nobody, and then sits down, because her legs have decided it for her. "Look who turned up."
 
-Beside her the big man is turning the torcs over in his hands, looking at the stripes on his arms. He doesn't look like a man who has been given something. He looks like a man who has been told something, and is still deciding whether to believe it.`},
+Beside her the big man is turning the torcs over in his hands, looking at the stripes on his arms. He is not looking at a gift. He is looking at news, and still deciding whether to believe it.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go. "Bridgeburners," she says, and something in her face goes careful, the way it does at that word. "In the city all night, on a roof." She looks north-east, where the light is coming. "That's us on the hills, at the end. That's tomorrow." Her hands are cold.`,
-      sohra:() => `Sohra sweeps the bones together. "A striped man," she says, "and a woman who gave him back what was his." She frowns at the smoke over the city. "The Tiger walked in Capustan tonight. The bones are sure." Her hands are cold.`,
-      benna:() => `Old Benna puts the card down. "Bridgeburners," she says, the way some people say *weather*. "On a roof all night, waiting for the rest of us to turn up and take the credit." She almost smiles. "That's marines for you." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "They held a roof all night," ${p.s} says, "and at dawn the white faces came, and we were on the hills." ${p.H} hands are cold.`})]},
+      tuft:() => `Tuft lets the card go. "Bridgeburners," she says, and something in her face goes careful, the way it does at that word. "In the city all night, on a roof." She looks north-east, where the light is coming. "That's us on the hills, at the end. That's tomorrow."`,
+      sohra:() => `Sohra sweeps the bones together. "A striped man," she says, "and a woman who gave him back what was his." She frowns at the smoke over the city. "The Tiger walked in Capustan tonight. The bones are sure."`,
+      benna:() => `Old Benna puts the card down. "Bridgeburners," she says. "On a roof all night, waiting for the rest of us to turn up and take the credit." She almost smiles. "That's marines for you."`,
+      other:(r, p) => `${r.name} lets the card go. "They held a roof all night," ${p.s} says, "and at dawn the white faces came, and we were on the hills."`})]},
 
   /* ---- Chapter 4: the prisoners. West of Capustan the Fourth watch dust stand on the horizon; under it, the Second Gathering. ---- */
   b3v4:{book:'moi', ch:4, who:'Kruppe', where:'The Second Gathering', fig:'kruppe', bg:'b3v_gathering', cap:'A shallow valley on a cold plain, the dust standing in it like smoke, and a small figure in red in the middle of it all.', steps:[
@@ -216,10 +216,10 @@ On the second day they meet riders, coming out from the armies to look for them,
 
 Behind him one of the marines laughs, once, quietly. It is the first sound either of them has made in three days. Kruppe treasures it.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go. "That's the dust," she says, and points with her chin to the horizon, where it stands. "That's what's under it." She is quiet for a long moment. "She said no to all of them. She's ten." Her hands are cold.`,
-      sohra:() => `Sohra sweeps the bones together and does not throw them again. "The Mhybe's daughter," she says. "The dead came to her across the whole world, and knelt, and asked, and she said no." She looks at the dust on the horizon. "The Rhivi will sing about this. I do not know yet what the song will say." Her hands are cold.`,
-      benna:() => `Old Benna puts the card down. "Two of ours riding guard on her," she says. "Marines." She taps the card, once. "Nobody'll ever thank them. Nobody ever does." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "The dead came," ${p.s} says, "and asked the child to let them go, and she said no." ${p.S} looks at the dust on the horizon. ${p.H} hands are cold.`})]},
+      tuft:() => `Tuft lets the card go. "That's the dust," she says, and points with her chin to the horizon, where it stands. "That's what's under it." She squares the cards against her knee. "She said no to all of them. She's ten."`,
+      sohra:() => `Sohra sweeps the bones together and does not throw them again. "The Mhybe's daughter," she says. "The dead came to her across the whole world, and knelt, and asked, and she said no." She looks at the dust on the horizon. "The Rhivi will sing about this. I do not know yet what the song will say."`,
+      benna:() => `Old Benna puts the card down. "Two of ours riding guard on her," she says. "Marines." She taps the card, once. "Nobody'll ever thank them. Nobody ever does." She smooths the cloth on the table flat.`,
+      other:(r, p) => `${r.name} lets the card go. "The dead came," ${p.s} says, "and asked the child to let them go, and she said no." ${p.S} looks at the dust on the horizon.`})]},
 
   /* ---- Chapter 5: south of the Catlin. At Brood's fire, Kallor says out loud what the camp has been whispering. ---- */
   b3v5:{book:'moi', ch:5, who:'Korlat', where:'Brood\'s Fire', fig:'korlat', bg:'b3v_broodfire', cap:'A command fire on a stripped plain, hide tents beyond it, and a great deal of dark that one of them can see through.', steps:[
@@ -264,17 +264,17 @@ Korlat stands in the dark. Overhead something big and black goes across the star
 
 She thinks about how short their lives are. She thinks that she has never minded it before.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go. "It's the old king saying it," she says. "Out loud, at Brood's own fire." She looks at the Host's lines, at the command tent where a lamp is still burning. "And the Commander's leg." She doesn't finish. Her hands are cold.`,
-      sohra:() => `Sohra sweeps the bones together. "The Andii woman," she says. "She sees in the dark. She saw him look at the child's tent." Her mouth goes thin. "I see in the dark too, when it is the Mhybe's daughter." Her hands are cold.`,
-      benna:() => `Old Benna puts the card down. "Leg," she says. "I've washed the shirts of a lot of men who said *after*." She folds her hands in her apron. "Somebody ought to sit on him." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "The old king said it out loud," ${p.s} says, "at Brood's fire. And the Commander's leg is worse." ${p.H} hands are cold.`})]},
+      tuft:() => `Tuft lets the card go. "It's the old king saying it," she says. "Out loud, at Brood's own fire." She looks at the Host's lines, at the command tent where a lamp is still burning. "And the Commander's leg." She doesn't finish. She turns the lamp down instead.`,
+      sohra:() => `Sohra sweeps the bones together. "The Andii woman," she says. "She sees in the dark. She saw him look at the child's tent." Her mouth goes thin. "I see in the dark too, when it is the Mhybe's daughter." She drops the bones in their pouch and pulls the cord tight.`,
+      benna:() => `Old Benna puts the card down. "Leg," she says. "I've washed the shirts of a lot of men who said *after*." She folds her hands in her apron. "Somebody ought to sit on him."`,
+      other:(r, p) => `${r.name} lets the card go. "The old king said it out loud," ${p.s} says, "at Brood's fire. And the Commander's leg is worse."`})]},
 
   /* ---- Chapter 6: the night lift. While the quorls carry the Host away in the dark, a man stands over the sea and looks at what lies under it. ---- */
   b3v6:{book:'moi', ch:6, who:'Anomander Rake', where:'Ortnal\'s Cut', fig:'rake', bg:'b3v_cut', cap:'A black headland over a black sea, stars, and something under the water that is darker than the water.', steps:[
     {txt:
 `Anomander Rake stands on a headland of black rock above the sea with the wind in his hair and his sword on his back, and looks down into the water.
 
-It is there. It has been there since he set it down. A darkness under the darkness, longer than a city, cracked and tilted on the bed of the Cut, the swell going over it as if it were only another reef. Moon's Spawn. His home, for longer than the humans have had a word for home. No light in it now. Fish swim through its halls.
+It is there. It has been there since he set it down. A darkness under the darkness, longer than a city, cracked and tilted on the bed of the Cut, the swell going over it as it goes over any reef. Moon's Spawn. His home, for longer than the humans have had a word for home. No light in it now. Fish swim through its halls.
 
 He has been away from the war for a season. He has not been idle.`},
     {txt:
@@ -291,7 +291,7 @@ He looks up.
 
 Far off, inland, over the dark hills, the stars are going out and coming back in a long slow line, a little at a time, the way stars do when something passes in front of them. Many somethings. Flying low, north to south, toward the mountains above the city. One company a night, the Crone says. Whole companies, taken away in the dark from a road that will go on being marched by fewer and fewer men, at a predictable pace, for the Seer's spies to count.
 
-Rake watches them for a long time. He has fought these soldiers for ten years. He finds, a little to his surprise, that he likes them.`},
+Rake watches them pass. He has fought these soldiers for ten years. He finds, a little to his surprise, that he likes them.`},
     {txt:
 `South along the coast, a few leagues off, Coral sits on its bay. He can feel it from here the way you feel a draught under a door: a cold, and something old in the cold that is not what it says it is, and under that, a long way down, something chained, that will not stop screaming.
 
@@ -309,10 +309,10 @@ He sits on the rock, his sword across his knees, the way he sat once on a temple
 
 Under the water, very faintly, a crack in the dark stone gleams, as if something in there had remembered how to hold a light.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go, very slowly. "He's there," she says. "The Knight. At the edge of the sea, looking at something under the water." She turns the card face down, carefully. "It's the Spawn, Sergeant. That's what's under the water. It's been there all along." Her hands are cold.`,
-      sohra:() => `Sohra sweeps the bones together. "The tall one with the sword," she says. "He watches the sky, and the sea, and he is not angry." She looks at the dark where the quorls go. "That frightens me more than if he were." Her hands are cold.`,
-      benna:() => `Old Benna puts the card down. "Him again," she says. "Stood over Pale, stood over Darujhistan, now he's stood over the sea." She shakes her head. "Whatever's under that water, I'd not want to be under it when it comes up." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "He stands over the sea," ${p.s} says, "and watches our quorls go over, and waits." ${p.H} hands are cold.`})]},
+      tuft:() => `Tuft lets the card go, very slowly. "He's there," she says. "The Knight. At the edge of the sea, looking at something under the water." She turns the card face down, carefully. "It's the Spawn, Sergeant. That's what's under the water. It's been there all along."`,
+      sohra:() => `Sohra sweeps the bones together. "The tall one with the sword," she says. "He watches the sky, and the sea, and he is not angry." She looks at the dark where the quorls go. "That frightens me more than if he were." She watches the fire's smoke go straight up into the dark.`,
+      benna:() => `Old Benna puts the card down. "Him again," she says. "Stood over Pale, stood over Darujhistan, now he's stood over the sea." She shakes her head. "Whatever's under that water, I'd not want to be under it when it comes up."`,
+      other:(r, p) => `${r.name} lets the card go. "He stands over the sea," ${p.s} says, "and watches our quorls go over, and waits."`})]},
 
   /* ---- Chapter 7: Coral. While the Fourth go to their own fight, the Bridgeburners go down out of the night sky into the city. ---- */
   b3v7:{book:'moi', ch:7, who:'Quick Ben', where:'Into Coral', fig:'qb', bg:'b3v_coral', cap:'A city on a bay at night, a black keep with cold light in its windows, and the wind of a quorl\'s wings.', steps:[
@@ -341,20 +341,20 @@ The sappers run back. The wall goes up. Stone and dust and a noise like the end 
 He thinks, for no reason at all, of Whiskeyjack out on the hill with the rest of them, on that leg.`,
      ch:[{t:'"Don\'t die, Captain. It\'s untidy."', set:['b3v7_said','untidy']},
          {t:'Say nothing. Go.', set:['b3v7_said','go']}]},
-    {go:'Go in.', txt:()=>`${S.f.b3v7_said === 'untidy' ? `"Don't die, Captain," he says over his shoulder. "It's untidy." Paran doesn't answer. Paran is busy. Quick Ben takes that as a promise.` : `He says nothing. There is nothing to say that every soldier in this street doesn't already know.`}
+    {go:'Go in.', txt:()=>`${S.f.b3v7_said === 'untidy' ? `"Don't die, Captain," he says over his shoulder. "It's untidy." Paran doesn't answer. Paran is busy. Quick Ben takes that as a promise.` : `He goes. There is nothing to say that every soldier in this street doesn't already know.`}
 
 He stands at the edge of the breach and looks back once, up, past the roofs, out over the bay.
 
-The stars over the sea are going out. Not a few at a time, the way they go behind a quorl. All of them, in a great black edge, moving inland, slow and enormous and silent, the way a mountain would move if a mountain could fly.
+The stars over the sea are going out. Not a few at a time, the way they go behind a quorl. All of them, in a great black edge, moving inland, slow and enormous and silent, a mountain in the air.
 
 Quick Ben grins in the dark. He can't help it.
 
 Then he goes in.`},
     b3vEnd({
-      tuft:() => `Tuft lets the card go. "Quick Ben," she says, and for a moment she almost smiles, the way people who served with the cadre do at that name. Then she looks out toward the sea. "The stars were going out over the water, Sergeant. All of them." Her hands are cold.`,
+      tuft:() => `Tuft lets the card go. "Quick Ben," she says, and for a moment she almost smiles. Then she looks out toward the sea. "The stars were going out over the water, Sergeant. All of them." Her hands are cold.`,
       sohra:() => `Sohra sweeps the bones together, and her hands are not steady. "The little dark one with many souls," she says. "He went into the cold place. Something very big was coming in from the sea behind him." She closes her fist on the bones. "Today. It is all today." Her hands are cold.`,
       benna:() => `Old Benna puts the card down, and for once she doesn't say anything clever. "Bridgeburners," she says at last. "Going in first. Always first." She looks at the squad, one after another. "Go on, then. Your turn." Her hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "They came down out of the night into the city," ${p.s} says, "and something came in from the sea behind them." ${p.H} hands are cold.`})]},
+      other:(r, p) => `${r.name} lets the card go. "They came down out of the night into the city," ${p.s} says, "and something came in from the sea behind them."`})]},
 });
 
 /* ---- the glossary: two places only a vision shows ---- */

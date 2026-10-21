@@ -37,11 +37,11 @@ Down in the hollow the small woman sits cross-legged between her two guards and 
 The first of the light comes over the rocks and touches her. She opens the Book.`,
      ch:[{t:'Breathe out, slowly, and loose.', set:['b2v1_shot','breath']},
          {t:'Say a word to whatever is listening, and loose.', set:['b2v1_shot','word']}]},
-    {txt:()=>`${S.f.b2v1_shot === 'word' ? `She says it under her breath. It is not a prayer, exactly. Nobody she knows of is listening at this hour. Then she looses.` : `She lets her breath go, all of it, the way she was taught, and at the bottom of it, where everything is still, she looses.`}
+    {txt:()=>`${S.f.b2v1_shot === 'word' ? `She says it under her breath. It is not a prayer, exactly. No god she knows of keeps these hours. Then she looses.` : `She lets her breath go, all of it, the way she was taught, and at the bottom of it, where everything is still, she looses.`}
 
 The quarrel takes the prophetess in the head. She goes over sideways, and the Book slides off her knees into the sand, and the light comes on over the desert exactly as it was always going to.
 
-Then the Red Blades are up out of the rocks and running, and it goes wrong faster than Lostara would have believed. The lean man has his flails out before the first of them reaches the hollow, and they sing. The giant simply walks into the troop as if it were weather. Tene Baralta is shouting the recall. She is on her feet, the crossbow empty, her sword half drawn, and the giant is in front of her; and then the world is a hand the size of a shield, and the sand comes up to meet her.`},
+Then the Red Blades are up out of the rocks and running, and it goes wrong faster than Lostara would have believed. The lean man has his flails out before the first of them reaches the hollow, and they sing. The giant simply walks into the troop and keeps walking. Tene Baralta is shouting the recall. She is on her feet, the crossbow empty, her sword half drawn, and the giant is in front of her; and then the world is a hand the size of a shield, and the sand comes up to meet her.`},
     {bg:'canyon', go:'Ride.', txt:
 `She wakes face down across a saddle in a small canyon, with blood in her mouth and her ribs on fire, and Tene Baralta crouching by her head.
 
@@ -51,7 +51,7 @@ She says yes. It is the only word she has ever had for him.
 
 The guards did not follow. The last thing she saw before the hand was the lean man kneeling in the sand by the small body, and the giant standing over them both, looking at nothing. Nobody came after the Red Blades at all. She thinks about that, riding, more than she likes.
 
-Behind her, over the Holy Desert, the wind is getting up. She does not look round.`},
+Behind her, over the Holy Desert, the wind is getting up.`},
     b2vEnd({
       marrow:() => `Marrow lets the card go and sits back on her heels, the way she sits whenever she can. "Well, child," she says. "Somebody shot the prophetess." She looks back east, where Hissar is still a red smear on the dark. "And the whole country got up anyway. As if it had only been waiting for someone to try and stop it." She puts the cards away. Her hands are cold, in all this heat.`,
       yedda:() => `Yedda lets the card go and wipes her fingers on her skirt, as if it had been greasy. "A girl with a crossbow," she says. "Thirty years my man made rope in Hissar, and I sold it, and never once asked who'd be hanging off the end of it." She looks back at the glow where the city was. Her hands are cold.`,
@@ -63,7 +63,7 @@ Behind her, over the Holy Desert, the wind is getting up. She does not look roun
     {txt:
 `Felisin has been out of Skullcup six days, and the desert has not yet decided whether to kill her.
 
-Everything here is red: the dust, the rocks, the sky at evening, the inside of her eyelids. Otataral, the guards called it in the mines, as if it were a joke. Sorcery dies on it. Bloodflies don't. Her face is a map of their bites, healing ugly. She does not look at it. There is nothing out here to look at it in.
+Everything here is red: the dust, the rocks, the sky at evening, the inside of her eyelids. Otataral, the guards in the mines called it, grinning. Sorcery dies on it. Bloodflies don't. Her face is a map of their bites, healing ugly. She does not look at it. There is nothing out here to look at it in.
 
 Ahead walks Baudin, big and silent and ugly, carrying everything, whom she has decided to hate. Behind, falling further behind every hour, comes Heboric: an old priest of the Boar with no hands, who was a historian once, and who has not stopped talking since the lake.`},
     {txt:
@@ -98,10 +98,10 @@ He lifts his face into the wind and says he can smell water.
 
 Felisin walks behind them both. She has dreamed it every night since the mines: of the three of them, only she comes through. She believes it the way she once believed somebody would come for her.`},
     b2vEnd({
-      marrow:() => `Marrow lets the card go and lays her hand flat over it, the way you'd lay a hand on a child with a fever. "Something fell," she says. "Somewhere a long way off. A god, by the weight of it." She takes her hand away and looks at the palm. "Soliel keep that girl. Nobody else is going to." Her hands are cold.`,
-      yedda:() => `Yedda lets the card go. "That poor girl," she says, and then, because she is Yedda, "and that poor old man, with no hands to hold his own cup." She looks at her grandsons asleep under the cart. Her hands are cold.`,
-      kanese:(r) => `${r.name} lets the card go and touches his forehead, his mouth, his chest. "Something fell," he says. "Big. A god, maybe. I feel it in my knees, like rain coming." He doesn't laugh. His hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "Something fell," ${p.s} says. "Did you feel it? No." ${p.S} looks at the sky over the Odhan for a long time, as if to see if it has a tear in it. ${p.H} hands are cold.`})]},
+      marrow:() => `Marrow lets the card go and lays her hand flat over it, feeling it for fever. "Something fell," she says. "Somewhere a long way off. A god, by the weight of it." She takes her hand away and looks at the palm. "Soliel keep that girl. She'll need it."`,
+      yedda:() => `Yedda lets the card go. "That poor girl," she says, and then, because she is Yedda, "and that poor old man, with no hands to hold his own cup." She looks at her grandsons asleep under the cart.`,
+      kanese:(r) => `${r.name} lets the card go and touches his forehead, his mouth, his chest. "Something fell," he says. "Big. A god, maybe. I feel it in my knees, like rain coming." He doesn't laugh.`,
+      other:(r, p) => `${r.name} lets the card go. "Something fell," ${p.s} says. "Did you feel it? No." ${p.S} searches the sky over the Odhan for a tear in it.`})]},
 
   /* ---- Chapter 3: the Ridge. Under Gelor Ridge's sky and no sky at all, Kalam walks Keneb's family across the Imperial Warren to Aren. ---- */
   b2v3:{book:'dg', ch:3, who:'Minala', where:'The Imperial Warren', fig:'minala', bg:'impwarren', cap:'Ash to every horizon, under a sky the colour of old pewter.', steps:[
@@ -122,11 +122,11 @@ Then: clouds, low on the horizon, where there should be none. Kalam stops and ta
 
 The company does not come. Instead the ground drops away in front of them into a pit. Its sides are layer on layer: ash, and bone, and broken stone, and ash again, fire after fire after fire, older than she can think about. At the bottom, half buried, the ruin of a machine: rings inside rings, bronze gone green, teeth along their rims like a mill-wheel's.
 
-Keneb goes very quiet. A seer at the garrison in Orbal once read the Deck for him, he says, and put a name out in the Pan'potsun hills, a Jhag's name out of the old stories, a builder of wheels that count the years. He says the name. Nobody wants to stay.`},
+Keneb goes very quiet. A seer at the garrison in Orbal once read the Deck for him, he says, and put a name out in the Pan'potsun hills, a Jhag's name out of the old stories, a builder of wheels that count the years. He says the name. After that the fire breaks up early.`},
     {txt:
-`They camp in a sunken road that runs south. Out on the plain things are moving in the dusk, big things and swarming things, all of them going north past the road and none of them toward it, like water toward a drain. Kalam watches them go and says nothing.
+`They camp in a sunken road that runs south. Out on the plain things are moving in the dusk, big things and swarming things, all of them going north past the road and none of them toward it, like water toward a drain. Kalam watches them go and keeps a hand near his knives.
 
-By the fire Keneb talks to him, low, the way men talk about a woman who is near enough to hear. About her husband. About the colonel at Orbal, and the garrison healer who was paid to hide what the colonel did to her. The colonel is dead now. Somebody saw to it, the first night of the rising. Keneb has never asked her who.
+By the fire Keneb talks to him, low, because she is near enough to hear. About her husband. About the colonel at Orbal, and the garrison healer who was paid to hide what the colonel did to her. The colonel is dead now. It was seen to, the first night of the rising. Keneb has never asked her who.
 
 Minala looks into the fire and lets them talk. She has learned a great deal about letting men talk.`,
      ch:[{t:'Look up. Let Kalam see that you heard.', set:['b2v3_heard','look']},
@@ -149,10 +149,10 @@ He isn't a subtle man. She finds she does not mind.
 
 When Keneb comes looking for her she is packing. She tells him she is going after him. "And don't talk about him," she says. "Ever. Promise me." Keneb, who is a good man and has never once asked her the question he ought to, promises.`},
     b2vEnd({
-      marrow:() => `Marrow lets the card go. "Aren," she says. "It showed me Aren, child. Lamps on the walls, and a woman packing a bag." She thinks about that for a while under her hat. "So there's an Aren at the end of this. That's worth knowing." Her hands are cold.`,
-      yedda:() => `Yedda lets the card go. "She'll catch him," she says, with great satisfaction. "That kind always does." Then, more quietly: "Aren. It's still there, then." Her hands are cold.`,
-      kanese:(r) => `${r.name} lets the card go. "Aren," he says. "Walls. Lamps. Still there." He nods several times, as if somebody had argued. His hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "Aren," ${p.s} says. "It's still standing. There were lamps on the walls." ${p.S} says it twice, as if to make sure of it. ${p.H} hands are cold.`})]},
+      marrow:() => `Marrow lets the card go. "Aren," she says. "It showed me Aren, child. Lamps on the walls, and a woman packing a bag." She thinks about that for a while under her hat. "So there's an Aren at the end of this. That's worth knowing."`,
+      yedda:() => `Yedda lets the card go. "She'll catch him," she says, with great satisfaction. "That kind always does." Then, more quietly: "Aren. It's still there, then."`,
+      kanese:(r) => `${r.name} lets the card go. "Aren," he says. "Walls. Lamps. Still there." He nods several times, as if somebody had argued.`,
+      other:(r, p) => `${r.name} lets the card go. "Aren," ${p.s} says. "It's still standing. There were lamps on the walls." ${p.S} says it twice, as if to make sure of it.`})]},
 
   /* ---- Chapter 4: the Vathar. Far off in the Holy Desert, on the road to Tremorlor, a Trell stops lying to his friend. ---- */
   b2v4:{book:'dg', ch:4, who:'Mappo', where:'The Road to Tremorlor', fig:'mappo', bg:'roots', cap:'A torn piece of some other world: roots to the horizon, and a sky that cannot settle on a colour.', steps:[
@@ -163,7 +163,7 @@ This is not a real place, or not wholly: a torn piece of some old warren, a fore
 
 Mappo is a Trell, and big even for a Trell. His braids are full of small fetishes that click when he turns his head, so he does not turn it. Round the fire the humans sleep: the sapper, the boy, the girl's old father, the little priest of Shadow muttering in his dreams. Two are awake. Icarium sits with his back to Mappo, his long grey hands loose on his knees, and across the fire from him the girl, Apsalar, is talking.`},
     {txt:
-`She talks quietly, the way people do at night. About the sea. About her father's nets, on a coast a long way west. About an old woman on a road, a candle witch, who had lost a husband and children to the Empire and who hid a frightened girl somewhere deep inside her while a god wore her. About the god, too, and that is the strangest part: she speaks of him as if she had learned something from him that she would rather not have known, and was not sorry to know.
+`She talks quietly. About the sea. About her father's nets, on a coast a long way west. About an old woman on a road, a candle witch, who had lost a husband and children to the Empire and who hid a frightened girl somewhere deep inside her while a god wore her. About the god, too, and that is the strangest part: she speaks of him as if she had learned something from him that she would rather not have known, and was not sorry to know.
 
 Icarium listens. Then he says something, very low, about a weight, and how he would carry it gladly.
 
@@ -172,7 +172,7 @@ Icarium listens. Then he says something, very low, about a weight, and how he wo
 Mappo lies very still. His eyes are wet. Across the fire, he can hear that Icarium's are too.`,
      ch:[{t:'Keep still. Let them think you sleep.', set:['b2v4_mappo','still']},
          {t:'Turn over, heavily, so they know.', set:['b2v4_mappo','turn']}]},
-    {txt:()=>`${S.f.b2v4_mappo === 'turn' ? `He turns over, heavily, grunting, the way a sleeping Trell turns. The talking stops. Nobody says anything for a long while, and that is a kindness in both directions.` : `He keeps still. He has kept still for a very long time. He is good at it.`}
+    {txt:()=>`${S.f.b2v4_mappo === 'turn' ? `He turns over, heavily, grunting, a sleeping Trell to the life. The talking stops, and stays stopped, and that is a kindness in both directions.` : `He keeps still. He has kept still for a very long time. He is good at it.`}
 
 He was set to this road by the Nameless Ones, longer ago than most nations have lasted: walk at the Jhag's side; keep him searching, and never finding; and never, ever let him learn what he does when he is angry. Lie to him if you must. Mappo has. Every day, gently, for centuries.
 
@@ -180,7 +180,7 @@ In the morning, on the roots, with the House somewhere ahead, he stops lying.
 
 He tells Icarium about the rage. Not all of it. Enough. That there is something in him that wakes when he is pushed too far; that it has killed more people than anyone has counted; that it will again; and that the House ahead was made for things like that.`},
     {txt:
-`Icarium listens the way he listens to everything: as if it were a mechanism he might, with patience, come to understand. When Mappo has finished he is quiet a long while. Then he says that if it is true, the House should have him. That it would be just. He says it gently, as if he were the one breaking bad news.
+`Icarium listens to it as he listens to everything else: a mechanism he might, with patience, come to understand. When Mappo has finished he is quiet a long while. Then he says that if it is true, the House should have him. That it would be just. He says it gently, as if he were the one breaking bad news.
 
 Mappo finds he has no answer. He had a thousand, and they have all gone.
 
@@ -190,10 +190,10 @@ Ahead, the roots knot themselves into walls, into a maze; and beyond the maze, s
 
 Mappo picks up his club and his bag, and goes to stand at Icarium's shoulder, where he has always stood.`},
     b2vEnd({
-      marrow:() => `Marrow lets the card go. "He told him," she says. "After all that time." She is quiet under her hat. "Some kindnesses look exactly like lies for a hundred years, child. Then one morning they don't." Her hands are cold.`,
-      yedda:() => `Yedda lets the card go and blows her nose, hard. "Big lump," she says. "Lying to his friend all that while. My husband was the same about his chest." She doesn't say what happened to him. Her hands are cold.`,
-      kanese:(r) => `${r.name} lets the card go. "The girl," he says. "Kan girl. A fisher's girl, from my coast. I know how they talk about the sea, those girls." He says a prayer for her in Kanese, quietly, to the card. His hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "He told him the truth," ${p.s} says, "and the truth was worse than the lie." ${p.S} doesn't say anything else. ${p.H} hands are cold.`})]},
+      marrow:() => `Marrow lets the card go. "He told him," she says. "After all that time." She is quiet under her hat. "Some kindnesses look exactly like lies for a hundred years, child. Then one morning they don't."`,
+      yedda:() => `Yedda lets the card go and blows her nose, hard. "Big lump," she says. "Lying to his friend all that while. My husband was the same about his chest." She folds the handkerchief small and tucks it away.`,
+      kanese:(r) => `${r.name} lets the card go. "The girl," he says. "Kan girl. A fisher's girl, from my coast. I know how they talk about the sea, those girls." He says a prayer for her in Kanese, quietly, to the card.`,
+      other:(r, p) => `${r.name} lets the card go. "He told him the truth," ${p.s} says, "and the truth was worse than the lie."`})]},
 
   /* ---- Chapter 5: the Dry March. At the Holy Desert's oasis, the prophetess comes back, and calls the tribes to war. ---- */
   b2v5:{book:'dg', ch:5, who:'Leoman', where:"Sha'ik's Camp", fig:'leoman', bg:'oasis', cap:'A ruined city round an oasis, palms and tents and forty thousand riders, and a platform of planks in the middle of it.', steps:[
@@ -231,10 +231,10 @@ It comes up out of the desert all round the oasis: a wall of sand, turning, high
 
 Leoman stands below the platform with his flails in his belt and looks up at her. She is smiling. It is not a smile he has seen on that face before, and he does not think it is meant for anyone here.`},
     b2vEnd({
-      marrow:() => `Marrow lets the card go. "One city left," she says. "One." She doesn't say which. She doesn't need to. After a while she pulls her hat back down over her face. "Well. We were going there anyway, child." Her hands are cold.`,
-      yedda:() => `Yedda lets the card go. "She's no older than the girls who sold water in the square at home," she says. She looks at the dark to the west, where Aren is. Her hands are cold.`,
-      kanese:(r) => `${r.name} lets the card go. "One city," he says. "Everybody there knows which." He looks west, toward Aren, a long time. His hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "One city left," ${p.s} says. "Ours." ${p.S} looks west, toward Aren, for a long time. ${p.H} hands are cold.`})]},
+      marrow:() => `Marrow lets the card go. "One city left," she says. "One." She doesn't say which. She doesn't need to. After a while she pulls her hat back down over her face. "Well. We were going there anyway, child."`,
+      yedda:() => `Yedda lets the card go. "She's no older than the girls who sold water in the square at home," she says. She smooths her skirt over her knees and looks west, where Aren is.`,
+      kanese:(r) => `${r.name} lets the card go. "One city," he says. "Everybody there knows which." He looks west, toward Aren, and rubs his bad knee.`,
+      other:(r, p) => `${r.name} lets the card go. "One city left," ${p.s} says. "Ours." ${p.S} turns the card face down.`})]},
 
   /* ---- Chapter 6: Sanimon. In the Holy Desert, the Azath House will not open; and a carriage the column knows comes calling. ---- */
   b2v6:{book:'dg', ch:6, who:'Fiddler', where:'Tremorlor', fig:'fiddler', bg:'tremorlor', cap:'An Azath House in a yard of roots, its door shut, and something humming in the sky behind.', steps:[
@@ -256,7 +256,7 @@ Icarium comes up off the roots where the Trell laid him with his face gone somew
 
 Something climbs down his arm.
 
-Moby. The boy's little bhok'aral, which has come and gone all the way across Seven Cities, and smells of spice when it comes. It goes down Fiddler's sleeve like a squirrel down a tree, and for a moment its outline blurs, the way a thing blurs through heat over a road, and looks a great deal bigger than it ought to. It lays one small hand flat on the door.
+Moby. The boy's little bhok'aral, which has come and gone all the way across Seven Cities, and smells of spice when it comes. It goes down Fiddler's sleeve like a squirrel down a tree, and for a moment its outline blurs and looks a great deal bigger than it ought to. It lays one small hand flat on the door.
 
 The door opens.`},
     {bg:'azath', txt:
@@ -274,10 +274,10 @@ The parcel is from Quick Ben. It is heavy the way only one thing is heavy: Moran
 
 Fiddler stands in the doorway with his arms full of a Bridgeburner's idea of a present, and grins until his face hurts.`},
     b2vEnd({
-      marrow:() => `Marrow lets the card go, and laughs, which nobody expected, least of all Marrow. "The fat man," she says. "The carriage. He went there too, after us. Child, that man gets about." She wipes her eyes. Her hands are cold.`,
-      yedda:() => `Yedda lets the card go. "That fat merchant," she says. "The one with the carriage, who brought the water. Well." She seems to find it a comfort that somebody is still making deliveries. Her hands are cold.`,
-      kanese:(r) => `${r.name} lets the card go and laughs with no teeth. "The fat man!" he says. "Carriage man. Water man. He goes everywhere. Good business." His hands are cold.`,
-      other:(r, p) => `${r.name} lets the card go. "The carriage," ${p.s} says. "The one that brought the water. It went on, after us. Somewhere stranger." ${p.H} hands are cold.`})]},
+      marrow:() => `Marrow lets the card go, and laughs, which nobody expected, least of all Marrow. "The fat man," she says. "The carriage. He went there too, after us. Child, that man gets about." She wipes her eyes.`,
+      yedda:() => `Yedda lets the card go. "That fat merchant," she says. "The one with the carriage, who brought the water. Well." She seems to find it a comfort that somebody is still making deliveries.`,
+      kanese:(r) => `${r.name} lets the card go and laughs with no teeth. "The fat man!" he says. "Carriage man. Water man. He goes everywhere. Good business."`,
+      other:(r, p) => `${r.name} lets the card go. "The carriage," ${p.s} says. "The one that brought the water. It went on, after us. Somewhere stranger."`})]},
 
   /* ---- Chapter 7: Aren. The other side of the sea, in Malaz City, the assassin keeps his appointment with the Empress. ---- */
   b2v7:{book:'dg', ch:7, who:'Kalam', where:"Mock's Hold", fig:'kalam', bg:'malaz', cap:'Malaz City by night: wet cobbles, a shut town, and an old keep on the cliff above the harbour.', steps:[
@@ -292,7 +292,7 @@ He took two of the first three. The third he lost. He binds the wound, badly, in
 
 Hooves. A horse comes up the alley at a dead run, and the woman on its back has a marine's crossbow at her shoulder; she shoots the Hand off him, and reaches down her free arm.
 
-Minala. From Aren. He left her in an inn by the harbour at the other end of the world without a proper goodbye. She swam a horse ashore after him, she says, as if it were a reasonable thing to have done. She has known about him, it turns out, all along.`,
+Minala. From Aren. He left her in an inn by the harbour at the other end of the world without a proper goodbye. She swam a horse ashore after him, she says, and seems to think that a reasonable thing to have done. She has known about him, it turns out, all along.`,
      ch:[{t:'"I\'m not a subtle man."', set:['b2v7_kal','subtle']},
          {t:'Say nothing. Climb up behind her.', set:['b2v7_kal','climb']}]},
     {txt:()=>`${S.f.b2v7_kal === 'subtle' ? `"I'm not a subtle man," he says. She laughs at him, which he supposes he has earned, and tells him to get up.` : `He says nothing, because there is nothing he could say that she doesn't know already, and climbs up behind her.`}

@@ -56,7 +56,7 @@ ok(spec.heavy && spec.robe, 'an officer\'s scale is heavy; a desert robe over it
 ok(spec.f1 && !spec.f2 && spec.f3, 'the Semk fetish saves one spoiled spell a chapter');
 ok(spec.free && spec.paid, 'the Trygalle skin: one free rest a chapter, then rests cost water again');
 const fight = await ev(() => { startBattle('b2_spring', {}); const h = B.units.find(u => u.id === 'haddat'), s = B.units.find(u => u.id === 'sgt'), f = foes()[0];
-  f.atk = 50; f.x = h.x; f.y = h.y - 1; let hp0 = f.hp; for (let i = 0; i < 12; i++) { hp0 = f.hp; attack(f, h); if (hp0 - f.hp === 3 || f.hp <= 0) break; } window._k = {hp0, f}; // a natural 1 misses: swing until the plank has bitten once (v6.13.0) s.atk = 50; const f2 = foes()[1]; f2.x = s.x; f2.y = s.y - 1; attack(s, f2); window._k.f2 = f2; return true; });
+  f.atk = 50; f.x = h.x; f.y = h.y - 1; let hp0 = f.hp; for (let i = 0; i < 12; i++) { hp0 = f.hp; attack(f, h); if (hp0 - f.hp === 3 || f.hp <= 0) break; } window._k = {hp0, f}; /* a natural 1 misses: swing until the plank has bitten once (v6.13.0; comment closed in v6.14.0) */ s.atk = 50; const f2 = foes()[1]; f2.x = s.x; f2.y = s.y - 1; attack(s, f2); window._k.f2 = f2; return true; });
 await wait(700);
 const fight2 = await ev(() => { const {hp0, f, f2} = window._k, o = {bit:hp0 - f.hp === 3 || f.hp <= 0, cold:f2.hp <= 0 || !!f2.slowTurn}; const h = B.units.find(u => u.id === 'haddat'); const hp1 = f.hp; attack(f, h); window._k.hp1 = hp1; return o; });
 await wait(700);

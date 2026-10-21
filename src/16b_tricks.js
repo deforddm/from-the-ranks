@@ -24,7 +24,7 @@ const TRICKS = {
     get fx(){ const n = 1 + lvT(); return `Once a fight, and it does not use the bearer's action: sign an enemy within 6. The next ${n > 1 ? ['','','two','three'][n] + ' hits' : 'hit'} on it this round ${n > 1 ? 'are criticals' : 'is a critical'}. Grows with level.`; }},
   rope:{name:'The Rope\'s Way', ch:4, use:'fight', ab:'t_rope', where:'the rope-line across the roofs',
     lore:'The Patron of Assassins is called the Rope. On the roofs of Darujhistan there are lines strung between the chimneys that nobody admits to stringing, and the ones who use them do not fall.',
-    get fx(){ return `Once a fight, and it does not use the bearer's action: swap places with any squadmate within ${5 + lvT()}. Nobody gets a free swing. Grows with level.`; }},
+    get fx(){ return `Once a fight, and it does not use the bearer's action: swap places with any squadmate within ${5 + lvT()}. No free swings. Grows with level.`; }},
   otataral:{name:'Otataral Dust', ch:5, use:'chapter', n:2, ab:'t_otataral', not:['tuft','ohl'], where:'the ward-stone the Adjunct\'s sword cut',
     notWhy:{tuft:'won\'t touch it. Meanas goes quiet near it', ohl:'won\'t touch it. Denul goes thin near it'},
     lore:'Red dust mined at the edge of the Otataral Desert, in Seven Cities. The Adjunct\'s sword is made of it. The cut she left in the ward-stone was still shedding it.',

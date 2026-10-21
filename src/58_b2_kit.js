@@ -16,8 +16,8 @@ const B2_ITEMS = {
   b2_auxmail:{name:'Auxiliary mail', slot:'armour', who:['sgt', 'haddat', 'redblade', 'tangle'], ac:2, hp:2, heavy:true, line:'A long auxiliary mail shirt off the garrison racks, oiled against the sand. Good mail. Heavy mail: at noon in the heat it is an oven, unless the wearer drank first.'},
   /* Chapter 2: a Weasel horse-boy at Dryj Spring; Semk loot on the Sekala's west bank, sold by a camp follower for water */
   b2_horsebow:{name:'A Weasel horse-bow', slot:'weapon', who:['sathi', 'sgt'], atk:1, rng:1, line:'A Weasel Clan horse-bow, short and doubled back on itself, horn and sinew, with a fresh string. The boy who gave it to you had a better one. He made a point of saying so.'},
-  b2_semkaxe:{name:'A Semk war-axe', slot:'weapon', who:B2W.front, dmg:[1,10,2], line:'A broad-bladed Semk axe with the god\'s marks burnt into the haft. Somebody picked it up off the west bank after the ford. It is heavy in the head and does not care what it hits.'},
-  b2_fetish:{name:'A Semk god-fetish', slot:'trinket', who:null, stat:{wits:1}, line:'A knot of hair, bone and painted clay off a dead Semk on the west bank: the god they wore, before the spirits ate it. Held by a squadmate who casts, a spell the fouled warren would spoil comes out clean instead, once a chapter. Nobody is sure why. Marrow says not to ask it.'},
+  b2_semkaxe:{name:'A Semk war-axe', slot:'weapon', who:B2W.front, dmg:[1,10,2], line:'A broad-bladed Semk axe with the god\'s marks burnt into the haft. It came up off the west bank after the ford. It is heavy in the head and does not care what it hits.'},
+  b2_fetish:{name:'A Semk god-fetish', slot:'trinket', who:null, stat:{wits:1}, line:'A knot of hair, bone and painted clay off a dead Semk on the west bank: the god they wore, before the spirits ate it. Held by a squadmate who casts, a spell the fouled warren would spoil comes out clean instead, once a chapter. Marrow says not to ask it why.'},
   b2_wickanhide:{name:'Wickan hardened hide', slot:'armour', who:B2W.light, ac:1, mv:1, line:'A Wickan rider\'s hide coat, boiled and hardened, fringed at the yoke. It turns a knife and it does not cook you. The Wickans laugh at Malazans in mail.'},
   /* Chapter 3: a Kanese tinker at the P'atha; the column's stragglers at the Shallows */
   b2_tithlance:{name:'A Tithansi lance', slot:'weapon', who:['redblade', 'haddat', 'sgt'], atk:1, rng:1, ac:-1, reach:true, line:'A Tithansi lance, cut down to a long spear. It reaches over a shield to the man behind it, and leaves the one holding it a little open.'},
@@ -105,13 +105,13 @@ Object.assign(B2CH2.dlg, {
   b2_horseboy:()=>({sp:'A Weasel horse-boy', fx:()=>{ S.f.b2_horseboy = 1; }, txt:
 `A Weasel boy of about twelve is holding six horses at the edge of the tamarisks, and looking at you as if you were a seventh horse, and not a good one.
 
-${b2In('sathi') ? `He sees Sathi and his face changes completely. They talk in Weasel, fast, both of them laughing, and then he unslings a bow off his own back and holds it out to her. "He says mine is bad," Sathi tells you. "It is not bad. He says his cousin's is better, and he will take his cousin's, and his cousin can have mine." She takes it as if it were nothing. "This is how the Weasels say thank you for the spring."` : `"Malazan," he says. "You have a bow?" You do not. "You should have a bow. Everybody should have a bow." He holds one out, short and doubled back on itself. "A skin of water. For the horses. Not for me."`}`,
+${b2In('sathi') ? `He sees Sathi and his face changes completely. They talk in Weasel, fast, both of them laughing, and then he unslings a bow off his own back and holds it out to her. "He says mine is bad," Sathi tells you. "It is not bad. He says his cousin's is better, and he will take his cousin's, and his cousin can have mine." She takes it with a nod. "This is how the Weasels say thank you for the spring."` : `"Malazan," he says. "You have a bow?" You do not. "You should have a bow. Everybody should have a bow." He holds one out, short and doubled back on itself. "A skin of water. For the horses. Not for me."`}`,
     ch:[{t:'Take the bow.', req:()=>b2In('sathi') && !S.kit.includes('b2_horsebow'), fx:()=>{ gain('b2_horsebow'); }, go:()=>startExplore()},
         {t:'A skin of water for the bow.', tag:'1 water', req:()=>!b2In('sathi') && !S.kit.includes('b2_horsebow') && chainW() >= 1, fx:()=>{ b2Buy('b2_horsebow', 1, 'For the horses'); }, go:()=>startExplore()},
         {t:'Leave him to the horses.', go:()=>startExplore()}]}),
   b2_follower2:b2Trader('b2_follower2', {sp:'A camp follower', txt:()=>`A woman from the weavers' street has spread a blanket on the stony ground above the river, and on it is what came off the dead Semk on the west bank in the night: an axe, a coat of Wickan hide somebody traded her for bread, and a knot of hair and bone and painted clay she will not touch with her bare hand.
 
-"Water," she says. "Not silver. Nobody on this river wants silver. Silver does not wet anything."`,
+"Water," she says. "Not silver. This river has no use for silver. Silver does not wet anything."`,
     wares:[['b2_semkaxe', 2], ['b2_wickanhide', 2], ['b2_fetish', 3]], empty:'She rolls up the empty blanket. "That\'s the dead picked clean, then."'}),
 });
 Object.assign(B2CH3.dlg, {
@@ -124,7 +124,7 @@ Object.assign(B2CH4.dlg, {
   b2_servant4:b2Trader('b2_servant4', {sp:'A noble\'s man', txt:()=>`A noble's man, in a good coat gone grey with dust, is standing behind the last carriage in the ring with a long bundle under his arm, looking both ways before he speaks.
 
 "My master has water for his horses and not for his household," he says, very low. "He will not notice these are gone. He has not noticed anything since Hissar." He unrolls the bundle: a sabre with a scratched-off crest, never used; a dead officer's scale coat, the plates still bright. "Water, soldier. Skins. For the children in the kitchen cart."`,
-    wares:[['b2_noblesabre', 4], ['b2_officerscale', 4]], empty:'He folds the empty cloth and goes back to the kitchen cart, and does not look round.'}),
+    wares:[['b2_noblesabre', 4], ['b2_officerscale', 4]], empty:'He folds the empty cloth and goes back to the kitchen cart.'}),
   b2_silanda4:()=>({sp:'A Foolish Dog rider', fx:()=>{ S.f.b2_silanda4 = 1; }, txt:
 `A Foolish Dog warrior with his arm strapped to his chest is sitting on a root at the edge of the trees, turning something over in his good hand. He went down the river on the Silanda with the wounded, and came back up the bank this morning, and has not said a word about it to anyone.
 
@@ -152,7 +152,7 @@ Object.assign(B2CH7.dlg, {
   b2_stores7:()=>({sp:'The Aren stores', fx:()=>{ S.f.b2_stores7 = 1; }, txt:
 `The Aren stores are open, for once: a Guard sergeant with a slate at the door of a warehouse full of things nobody has used, letting the Seventh's squads in two at a time and not writing anything down.
 
-"Take what you'll carry up the wall," he says. "The High Fist says the stores are for the city's army. The city's army has more than it can carry already." He does not look at you. "Nobody's counting. Nobody's been counting all summer."`,
+"Take what you'll carry up the wall," he says. "The High Fist says the stores are for the city's army. The city's army has more than it can carry already." He waves a hand at the crates. "There's been no count kept all summer."`,
     ch:[{t:'A longsword, still in its grease.', req:()=>!S.kit.includes('b2_arensword'), fx:()=>{ gain('b2_arensword'); }, go:'b2_stores7'},
         {t:'A mail shirt, every ring whole.', req:()=>!S.kit.includes('b2_arenmail'), fx:()=>{ gain('b2_arenmail'); }, go:'b2_stores7'},
         {t:'Fill every skin at the cistern.', req:()=>chainW() < CHAIN_MAXW && !S.f.b2_storesWater, fx:()=>{ S.f.b2_storesWater = 1; chain(CHAIN_MAXW - chainW(), 0, 'The Aren cistern'); }, go:'b2_stores7'},
@@ -176,7 +176,7 @@ function b2Steady(u){ if (!u || !b2Worn(u.id, 'b2_fetish') || S.f.b2_fetishCh ==
       later(() => { if (!B || a.hp <= 0) return; blog(`<em>The black wood at ${t.name}'s belt bites.</em> ${a.name} takes 3.`); hurt(a, 3); sparks(a.x, a.y, 10, '#3a2a3a', .5); updBattleUI(); }, pace(300)); } }
   return r; }; }
 /* the Trygalle skin: one rest a chapter costs no water */
-{ const _rest = dgRest; dgRest = function(t){ if (S && b2Carrier('b2_tskin') && S.f.b2_tskinCh !== S.chapter) { S.f.b2_tskinCh = S.chapter; note('The Trygalle skin is full again. Nobody saw it filled. The rest costs no water.', 'good'); rest(t || 'The squad rests in what shade there is. Wounds close, mostly.'); return true; } return _rest(t); }; }
+{ const _rest = dgRest; dgRest = function(t){ if (S && b2Carrier('b2_tskin') && S.f.b2_tskinCh !== S.chapter) { S.f.b2_tskinCh = S.chapter; note('The Trygalle skin is full again. It was empty last night. The rest costs no water.', 'good'); rest(t || 'The squad rests in what shade there is. Wounds close, mostly.'); return true; } return _rest(t); }; }
 
 /* ---------------- the HUD and the pack count water, not silver ---------------- */
 { const _u = updSilver; updSilver = function(){ _u(); const el = typeof document !== 'undefined' && document.getElementById('silver'); if (el) el.style.display = S && S.book === 'dg' ? 'none' : ''; }; }

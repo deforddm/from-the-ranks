@@ -69,7 +69,7 @@ const C7H = {
       if (fol && C7H.leashed()) return 'Tuft, with a window still open in her collar.';
       if (fol) return key === 'outlaw' ? 'Tuft, back to where the cadre was.' : key === 'empire' ? (st === 'glove' ? 'Tuft, home, where the High Mage can\'t find her any more.' : 'Tuft, home, to the High Mage\'s staff.') : 'Tuft, by a door of Baruk\'s that only she can see.';
       return `Not Tuft. She goes ${east}.`; }
-    if (id === 'ohl') { if (key === 'disband') return C7H.tuftEast('disband') ? 'Ohl goes east with Tuft. Somebody has to argue with Hood for her.' : 'Ohl goes north, where the wounded will be.';
+    if (id === 'ohl') { if (key === 'disband') return C7H.tuftEast('disband') ? 'Ohl goes east with Tuft, to argue with Hood for her.' : 'Ohl goes north, where the wounded will be.';
       if (key === 'outlaw') return fol ? (f.c7_askedOhl ? 'Ohl, to Dujek\'s work.' : 'Ohl, where the wounded will be.') : 'Ohl goes north to the Host\'s hospital. Not to you.';
       return fol ? (key === 'empire' ? 'Ohl, home to an Empire with Seven Cities in it.' : 'Ohl, in a room at the Phoenix.') : 'Not Ohl. The wounded will be north.'; }
     if (id === 'ellis') { if (key === 'disband') return 'Ellis rides.';
@@ -106,7 +106,7 @@ const C7H = {
 
 He looks at you. He doesn't say *I know*. He waits.
 
-So you give it to him, standing in the wind off the quorls' wings, in order, without anything in it that isn't so. ${bits.join(' ')}`; },
+So you give it to him, standing in the wind off the quorls' wings, in order, and all of it true. ${bits.join(' ')}`; },
   /* what Madryn actually promised at the dye-shop: the whole report got "not from me, and not this year"; part of it got "one day; everyone does" */
   madryn:() => S.f.c3_toldAll ? `Madryn told you he'd not hear of it this year. It's a new year somewhere. It always is.` : `Madryn told you he'd hear of it one day, because everyone does. This is one of the days.`,
   /* v3.13: what word of Kettle's sharpers this morning did when it reached the sappers on the hill (Hedge, with the onion) */
@@ -131,7 +131,7 @@ const CH7 = {
   title:'Outlaws', number:'Seven',
   intro:{loc:'Darujhistan', sub:'The Lakefront · the morning after', cap:'Blue lamps going out along the quay one at a time, gulls on every piling, and over the lake a sky with nothing in it.',
     paras:[
-`The lamps go out along the Lakefront the way they have gone out every morning for three hundred years: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. Nobody watches them go. This morning, for once, the whole of Darujhistan is watching something else.`,
+`The lamps go out along the Lakefront the way they have gone out every morning for three hundred years: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. This morning, for once, nobody watches them go: the whole of Darujhistan is watching something else.`,
 `The sky. There is nothing in it. For a month a mountain of black stone hung over the lake with nothing under it, and the city learned not to look up. Now the city looks up and can't stop. Moon's Spawn went west at first light, slow as a barge on a canal, and the sky where it had been is empty, and the morning falls on the water and the roofs and on faces that had forgotten what it was to be lit from above.`,
 `The lake smells of weed and fish and last night's smoke. On the Estate hill a house that was not there yesterday stands in a garden full of mounds. In the Daru District they are carrying people out of doorways on shutters. Darujhistan is counting. So is the Fourth. You have been counting since midnight, and the number is the number, and you count it again.`],
     go:'Morning', node:'c7_start'},
@@ -237,9 +237,9 @@ ${preUsed('last_accounting') ? `Behind you the eel-crates are still burning on t
       preFx:B => { foes().filter(f => f.id === 'bruiser').forEach(f => { f.stun = true; }); preFoe('c7_watch', 0, 9); preFoe('c7_watch', 7, 9); },
       waves:[{round:2, foes:[['cutpurse',7,5],['knife',6,5]], text:'Two more come out of the lane, low and fast, knives held the Daru way.'}],
       stage2:{ title:'The tanners\' yard', warrenText:'Worrytown · tanning pits and drying frames · warrens steady',
-        text:()=>`They break at the far mouth of the arch the way a lane breaks, all at once and in every direction, and you'd let them go. The big one doesn't let you. He walks back through Worrytown with his friends round him and a cart-axle on his shoulder, past the goat-pens and into the tanners' yard, and stops in the middle of it, and turns round; and you understand that the yard is where he meant this to happen all along.
+        text:()=>`They break at the far mouth of the arch, all at once and in every direction, and you'd let them go. The big one doesn't let you. He walks back through Worrytown with his friends round him and a cart-axle on his shoulder, past the goat-pens and into the tanners' yard, and stops in the middle of it, and turns round; and you understand that the yard is where he meant this to happen all along.
 
-${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the Watch are sitting against the wall holding their heads, and Pennick is relighting his lamp. Nobody is following you into Worrytown to help. Nobody in Worrytown expected them to.
+${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the Watch are sitting against the wall holding their heads, and Pennick is relighting his lamp. The Watch isn't following you into Worrytown to help. Worrytown didn't expect it to.
 
 ` : ''}Pits in rows, full of things nobody should name, with planks between them a man can stand on if he's careful. Hides on drying frames like the flags of a very ugly country. ${C7H.has('kettle') ? `"Oh, that *smell*," says Kettle, with something like respect. "That's not a smell. That's a *position*."` : `The smell comes out of the pits and stands in front of you like one more Gadrobi with a cudgel.`}`,
         map:["#..,...#",".tt..tt.","........",".#.oo.#.","........","#..oo..#","........",".#.oo.#.","........","........"], pitTxt:'a tanning pit', // the drying frames are low (t), the pits are pits (o): v3.19
@@ -256,9 +256,9 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
          c7_watch:{name:'City Watch', sig:'w', kind:'guard', hp:9, ac:12, atk:3, dmg:[1,4,1], rng:1, mv:4, init:2, verb:'swings a halberd-butt at'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    moranthchit:{name:'Moranth chit', slot:'trinket', who:['kettle'], hp:2, line:'A curved scrap of black chitin the size of a thumbnail, cut from a moult, with one notch filed in its edge. The Black Moranth give them to those they have finished counting with. Kettle wears it on a thong at her throat and touches it when she is frightened, which is how you will always know.'},
+    moranthchit:{name:'Moranth chit', slot:'trinket', who:['kettle'], hp:2, line:'A curved scrap of black chitin the size of a thumbnail, cut from a moult, with one notch filed in its edge. The Black Moranth give them to those they have finished counting with. Kettle wears it on a thong at her throat and touches it when she is frightened. You will always be able to tell.'},
     phoenixkey:{name:'Key to a door that does not exist', slot:'trinket', who:null, stat:{guile:1}, line:'Old black iron, a hand long, with a bit like a broken tooth. It opens the back door of the Phoenix Inn, the one that is not there. Kruppe has had several copies made and forgets which he gave to whom, so that everyone he likes can come in.'},
-    clawpen:{name:'A neat hand\'s pen', slot:'trinket', who:null, stat:{wits:1}, line:'A steel nib in a plain grey holder, the kind a clerk buys by the dozen, with ink dried in the slit. It was left on the Lakefront the morning a grey cloak\'s book was closed, by a man who never put anything down. It has written the Fourth\'s name more times than anyone alive. Nobody in the squad will write with it. Nobody will throw it away.'} },
+    clawpen:{name:'A neat hand\'s pen', slot:'trinket', who:null, stat:{wits:1}, line:'A steel nib in a plain grey holder, the kind a clerk buys by the dozen, with ink dried in the slit. It was left on the Lakefront the morning a grey cloak\'s book was closed, by a man who never put anything down. It has written the Fourth\'s name more times than anyone alive. No one in the squad will write with it, or throw it away.'} },
 
   card:{ id:'crown', name:'Crown', house:'Unaligned', hue:'#e8c073',
     txt:`An iron crown with a thread of gold worked through it, on nothing: no head under it, and behind it, where a throne should be, only the dark. "Sovereignty," Tuft says. "It means nobody owns us." She looks at it again. "Or everybody wants to."`,
@@ -283,7 +283,7 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
   endCap:()=>{ const k = S.f.c7_key, d = C7H.dead();
     return (k === 'outlaw' ? 'Noon, and the quorls going up off a brown hill, north.' : k === 'empire' ? 'Noon, and the quorls going up without you. The road to Genabaris is long.' : k === 'city' ? 'Noon, and the quorls going up without you, and the city blue behind.' : 'Noon on a brown hill, and a squad standing down.') + (d.length ? ` ${C7H.names(d)} ${d.length === 1 ? 'is' : 'are'} not on the hill.` : ''); },
   extras:()=>{ const f = S.f, x = [];
-    x.push((f.c7_pardonEmpty ? `The grey cloak's pardon is in the sergeant's coat. ${C7H.Rw(f.c7_emptyBy)} paid for it with a report in order, without anything in it that wasn't so, and nothing in it he could use.` : f.c7_emptyFail ? `The grey cloak was offered a report with nothing in it for his pardon. He wrote it down, and kept the pardon.` : '') || {took:'The grey cloak\'s pardon is in the sergeant\'s coat. So is everything the sergeant told him to get it.', refused:'The grey cloak offered the Empire\'s pardon on the Lakefront, and the Fourth said no. He wrote that down too.'}[f.c7_clawDeal] ||
+    x.push((f.c7_pardonEmpty ? `The grey cloak's pardon is in the sergeant's coat. ${C7H.Rw(f.c7_emptyBy)} paid for it with a report in order, every word of it true, and nothing in it he could use.` : f.c7_emptyFail ? `The grey cloak was offered a report with nothing in it for his pardon. He wrote it down, and kept the pardon.` : '') || {took:'The grey cloak\'s pardon is in the sergeant\'s coat. So is everything the sergeant told him to get it.', refused:'The grey cloak offered the Empire\'s pardon on the Lakefront, and the Fourth said no. He wrote that down too.'}[f.c7_clawDeal] ||
       (f.c7_clawFought ? 'The grey cloak stepped backward off the end of a pier with wet boots and did not come up. His ledger did not go with him.' : f.c7_clawBought ? 'The Claw\'s own order to fire the mains closed the Fourth\'s entry. The grey cloak drew the line himself.' : f.c7_clawTalked ? 'The grey cloak closed his ledger on the Lakefront and walked away. There was nobody left to send it to.' : f.c7_clawAvoided ? 'The Fourth walked past the green door and the man on its step. The entry stays open.' : ''));
     x.push({told:'Whiskeyjack heard about the dye-shop from the sergeant, before anyone else could tell him.', claw:'Whiskeyjack read about the dye-shop in the grey cloak\'s hand.', kalam:'Whiskeyjack heard about the dye-shop from Kalam, by way of Mallet, before the sergeant got up the hill.'}[f.c7_wjKnows] || '');
     if (f.c7_ellisBack) x.push('Ellis walked out of the dark on the Lakefront with Kettle\'s cord on her wrist.' + (f.c7_ohlEllis ? ' Ohl crossed out her space.' : ''));
@@ -299,7 +299,7 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
     x.push({paid:'Kettle handed a cusser back to a Black Moranth. Square.', spent:'Kettle told a Black Moranth what Chub\'s cusser was spent on, and it called that square.', owed:'Kettle still owes the Moranth. She kept the cusser, and the spoon, and knows whose they are.', closed:'The Moranth closed Kettle\'s debt. The dead do not owe.'}[f.c7_debt] || '');
     if (f.c7_chub === 'signed') x.push('Kettle signed for Chub on a Moranth slate, two clicks and a hiss. Twelve hands signed. Chub is square.'); else if (f.c7_chub === 'carried') x.push('Kettle asked to sign for Chub. The Moranth said the dead do not sign; the dead are carried. She carries him.');
     if (f.c7_tocNeither) x.push('Toc the Younger is on neither of the Moranth\'s rolls. They have a mark for it. They do not use it often.');
-    if (f.c7_moranthMark) x.push(`There is a mark against ${C7H.nm(f.c7_moranthMark, 'the sergeant')}'s name on a Moranth slate. ${C7H.has('kettle') ? 'Kettle says it means "asked".' : 'Nobody in the Fourth can read it.'}`);
+    if (f.c7_moranthMark) x.push(`There is a mark against ${C7H.nm(f.c7_moranthMark, 'the sergeant')}'s name on a Moranth slate. ${C7H.has('kettle') ? 'Kettle says it means "asked".' : 'The Fourth has nobody who can read it.'}`);
     if (f.c7_wjReport) x.push({ok:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He took the Fourth as his.', near:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He took the Fourth as his, and said he\'d put them where it\'s worst.', heard:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He heard it out. It didn\'t change the sum.'}[f.c7_wjReport] || '');
     if (f.c7_tattersail) x.push(C7H.isDead('tuft') ? 'A raven told the Fourth on Jammit\'s Worry what Tuft did not live to: the child in the Rhivi red wool is Tattersail.' : 'Tuft kept her promise on Jammit\'s Worry: the child in the Rhivi red wool is Tattersail.');
     if (f.c7_tuftCut) x.push(`The working in Tuft's badge died in an otataral glove ${f.c7_tuftCutHill ? 'on Jammit\'s Worry, with the Rhivi going by' : 'on the Lakefront'}.`); else if (C7H.has('tuft') && C7H.leashed()) x.push('The window in Tuft\'s collar is still open.');
@@ -328,7 +328,7 @@ It's small, and wrong, and made of wood that hasn't finished deciding what shape
 
 ${S.f.c6_wjLeg ? `You were there when the leg went. You heard it go, under the ice and the noise, a sound like a green branch in a frost. You'll go on hearing it for a while.` : `You weren't there when the leg went. You were ${S.f.c6_key === 'cellars' ? 'under the Gadrobi crossing with acid on your hands' : S.f.c6_key === 'alley' ? 'in an alley off the Daru District' : 'somewhere else in the dark'}, and you heard about it at dawn, from Mallet, in four words.`}
 
-Mallet is crouched at the end of the bench packing his kit, slowly, the way a man packs when he's done what he's been allowed to and it isn't enough.
+Mallet is crouched at the end of the bench packing his kit, slowly. He has done what he was allowed to, and it isn't enough.
 
 "Sergeant." Whiskeyjack doesn't turn his head. He counts. You watch him do it, the way everyone does. ${d.length ? `He arrives at the number, and it's the wrong one, and he knows exactly how wrong.
 
@@ -349,7 +349,7 @@ He looks at the leg, and then at the man attached to it.
 
 "It'll *do*," Mallet agrees, in a voice that means the opposite, and goes back to his buckles.
 
-${C7H.has('ohl') ? `Ohl has come to look at the splint the way he looks at a wound he wasn't asked to see. He and Mallet exchange the long nod of two old dogs across a yard. "Denul will knit that," Ohl says quietly, "given a week of him lying still." "He won't lie still," says Mallet. "Not this week. Not any week." Neither of them says anything else. Healers don't lie to each other. Everybody else, yes.` : `Nobody says anything. The house in the garden doesn't either.`}
+${C7H.has('ohl') ? `Ohl has come to look at the splint the way he looks at a wound he wasn't asked to see. He and Mallet exchange the long nod of two old dogs across a yard. "Denul will knit that," Ohl says quietly, "given a week of him lying still." "He won't lie still," says Mallet. "Not this week. Not any week." Neither of them says anything else. Healers don't lie to each other. Everybody else, yes.` : `The only sound is Mallet's buckles. The house in the garden adds nothing.`}
 
 ${S.f.c6_wjLeg ? `"You carried me off the lawn," Whiskeyjack says, to you, not looking round. "I remember that part. I don't remember much else." A pause. "I'd rather not."` : ''}`,
       ch:[{t:'"Sir. Before the news. There\'s something you should hear from me."', req:()=>C7H.pendingTell(), go:'c7_confess'},
@@ -380,7 +380,7 @@ ${C7H.has('brisk') ? `Behind you, Brisk lets out a breath she has been holding s
 
 At the Pale, in the vault, on the roofs with a laughing sack under his arm, he smiled at something just past your shoulder, where he kept the joke. This morning there's nothing past your shoulder. He sits down on the frost-burned grass at Whiskeyjack's feet, cross-legged, like a boy at a fire, and takes a thing out of his sleeve.
 
-A bone. A knuckle, you think, old and brown as a nut, wound round and round with fine copper wire. He holds it on his open palm. He says a word you don't catch, and then another, and the copper goes warm and then hot, you can see it, and his face goes very still, the way a man's face goes still when he's lifting something heavy and doesn't want you to see how heavy.
+A bone. A knuckle, you think, old and brown as a nut, wound round and round with fine copper wire. He holds it on his open palm. He says a word you don't catch, and then another, and the copper goes warm and then hot, you can see it, and his face goes very still. He's lifting something heavy, and he doesn't want you to see how heavy.
 
 ${C7H.has('tuft') ? (C7H.tuft() === 'glove' ? `Tuft can't feel it. Meanas has been quiet in her since the glove, a room with the fire out. She watches the bone the way you'd watch someone speak a language you used to know.` : `Tuft has gone the colour of the linen on Whiskeyjack's leg. "That isn't a warren," she whispers. "Sergeant, he's *carrying* it. The whole distance. In his hand."`) : ''}
 
@@ -439,7 +439,7 @@ You give him ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}.
 The voice is quiet a moment. "Corporal, I've a whole Host to count and one arm to count it on. I don't carry the rolls in my head." Not unkind. Tired. "The Moranth carry them. Living, and the other kind. They never lose a thing; it's a religious matter with them. Ask the Moranth." A pause. "I stopped reading the other kind after Pale. Ask for the living first."
 
 "Sir." Brisk steps back into her place. Her face does nothing at all. Her hand has gone to her gorget, where the letter is.` :
-`You ask it yourself. Somebody has to.
+`You ask it yourself. Brisk can't.
 
 "Sir. A soldier of the Second. Fourth Regiment. Tavrin, called Tav, of Cawn." You hear yourself say the rest. "His sister was mine."
 
@@ -464,7 +464,7 @@ Ohl doesn't have to take it out. "${C7H.Num(C7H.lc())}, sir."
 
 "None of them yours, I'll bet. None of the Fourth."
 
-${d.length ? `Ohl is quiet for a long moment. "${d.length === 1 ? 'One' : C7H.Num(d.length)} of them, sir. Since last night."
+${d.length ? `Ohl is quiet. "${d.length === 1 ? 'One' : C7H.Num(d.length)} of them, sir. Since last night."
 
 The wind in the bone goes on for a while with nobody speaking over it.
 
@@ -472,7 +472,7 @@ The wind in the bone goes on for a while with nobody speaking over it.
 
 "Keep it that way. That's an order. First one I've given all week that anybody's going to obey."
 
-Ohl bows his head over the bone, the way you'd bow over a hand you were holding.`}` :
+Ohl bows his head over the bone.`}` :
 `"Is Ohl with you?" the voice asks, before you've found the words. "Old Ehrlitan. Bad tea. Argues with Hood in his sleep. Served the Second before I was the whole of it. Said he was going to a marine squad for the small wounds. For a rest."
 
 You tell him.
@@ -488,7 +488,7 @@ Ohl's oilcloth is in your pack, where it's been since the alley. It's heavier th
     c7_orders:()=>({sp:'Whiskeyjack', scene:'fete_garden', fx:()=>{ S.f.c7_orders=1; }, txt:
 `The copper goes cold. The voice goes, not all at once: it thins into wind, and the wind into nothing, and there's a garden, and a gull, and a small wrong house.
 
-Quick Ben winds the wire back round the bone, slowly, turn by turn. He looks up and catches you looking. For a moment he has the face of a man who knows the end of a story you've only heard the start of, and has decided you'll like it better not knowing. Nobody says anything. He puts the bone away.
+Quick Ben winds the wire back round the bone, slowly, turn by turn. He looks up and catches you looking. For a moment he has the face of a man who knows the end of a story you've only heard the start of, and has decided you'll like it better not knowing. He puts the bone away.
 
 Whiskeyjack shifts his weight on the bench, and his mouth goes thin, and goes back.
 
@@ -526,11 +526,11 @@ At the end of the easternmost pier a man stands alone, looking north across the 
 
 And across the quay, on the step of a wine-merchant's with a green door, a man in a grey cloak is waiting with a book under his arm. The quay is a quarter-inch of lake and fish and last night. His boots are clean.
 
-${C7H.has('ellis') ? `Ellis has stopped. She's looking at the door, not the man. "Green," she says. That's all. Her gloved hand has closed.` : S.f.c2_ellisRefused ? `Two doors down from the green door, on an upturned cask, a woman is sitting with a bow across her knees and her back to the wall. Plains leathers. A glove. ${C7H.has('ohl') && C7H.has('kettle') ? `"Ohl," says Kettle, very quietly. "Ohl. Look."` : `Nobody says her name. Everybody knows it.`}` : ''}
+${C7H.has('ellis') ? `Ellis has stopped. She's looking at the door, not the man. "Green," she says. That's all. Her gloved hand has closed.` : S.f.c2_ellisRefused ? `Two doors down from the green door, on an upturned cask, a woman is sitting with a bow across her knees and her back to the wall. Plains leathers. A glove. ${C7H.has('ohl') && C7H.has('kettle') ? `"Ohl," says Kettle, very quietly. "Ohl. Look."` : `Everybody knows her name.`}` : ''}
 
 ${S.f.c5_ellisThrough && !C7H.isDead('ellis') ? (sp ? `${NAME(sp)} stops dead. ${He}'s looking at the mouth of an alley between two warehouses, where the dawn hasn't got to yet. "Sergeant," ${she} says. "Sergeant, there's somebody in the dark."` : `You stop dead. There's an alley between two warehouses where the dawn hasn't got to yet, and there's somebody standing in the dark of it.`) : ''}
 
-${C7H.has('tuft') ? `At the foot of the stair Tuft has the Deck out of her sleeve. She isn't shuffling. She's holding it the way you'd hold a bird. "One card," she says. "For the squad. The last one, I think." A pause. "I'd like to be the one who says when it's the last."` : `The Deck is in Tuft's pack, and the pack is on ${C7H.has('brisk') ? `Brisk's back` : C7H.has('ohl') ? `Ohl's back` : `your back`}, and nobody has opened it. You feel it there at the top of the stair, a small square weight, like a held breath. Nobody draws. There's nobody to draw.`}`,
+${C7H.has('tuft') ? `At the foot of the stair Tuft has the Deck out of her sleeve. She isn't shuffling. She's holding it the way you'd hold a bird. "One card," she says. "For the squad. The last one, I think." A pause. "I'd like to be the one who says when it's the last."` : `The Deck is in Tuft's pack, and the pack is on ${C7H.has('brisk') ? `Brisk's back` : C7H.has('ohl') ? `Ohl's back` : `your back`}, and nobody has opened it. You feel it there at the top of the stair, a small square weight, like a held breath. There's nobody to draw.`}`,
       ch:[{t:'Let her draw.', req:()=>C7H.has('tuft') && !S.f.c7_drawn && !S.f.c7_noCard, fx:()=>{ S.f.c7_drawn=1; const pool = ['crown','crown','obelisk','oponn','chains','knight'].filter(k => CARDS[k]); S.card = pool.length ? dealCard(pool) : 'crown'; }, go:()=>cardSequence(()=>talk('c7_card'))},
           {t:'"No readings. Not this morning."', req:()=>C7H.has('tuft') && !S.f.c7_drawn && !S.f.c7_noCard, fx:()=>{ S.f.c7_noCard=1; loy('tuft',-1); if (C7H.has('brisk')) loy('brisk',1); }, go:'c7_card_no'},
           {t:'The quay.', req:()=>!C7H.has('tuft') || S.f.c7_drawn || S.f.c7_noCard, go:()=>startExplore()}]}; },
@@ -542,32 +542,32 @@ ${C7H.has('tuft') ? `At the foot of the stair Tuft has the Deck out of her sleev
       html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[S.card || 'crown', false],
       after:`${S.card === 'crown' ? crown : (c.txt || '')}
 
-${S.card === 'crown' ? ({glove:`"The Deck isn't Meanas," she says, when she sees you watching her hands. "It never was. It's paint and wood and whoever's holding it. Meanas is a room with the fire out. This still works."`, kept:`She lays the Crown face up and looks at it, and then across the quay at the green door and the man on the step, and puts her hand over her collar. "Or everybody wants to," she says again, more quietly.`, shadow:`The paint is worn off the House of Shadow on every card in the Deck. It's worn off the Crown too, a little, at one corner, as if a thumb had rested there. She doesn't point it out. You see it anyway.`, dark:`She looks west, where the mountain was, for a long moment. "He never wanted one," she says, and doesn't say who, and doesn't need to.`}[st] || '') : S.card === 'chains' ? `She looks across the quay at the man on the step of the green door, with his book under his arm. "I'd like it to stop meaning him," she says.` : `She turns it over in her fingers. "Not the one I expected," she says. "They never are, on the last morning."`}
+${S.card === 'crown' ? ({glove:`"The Deck isn't Meanas," she says, when she sees you watching her hands. "It never was. It's paint and wood and whoever's holding it. Meanas is a room with the fire out. This still works."`, kept:`She lays the Crown face up and looks at it, and then across the quay at the green door and the man on the step, and puts her hand over her collar. "Or everybody wants to," she says again, more quietly.`, shadow:`The paint is worn off the House of Shadow on every card in the Deck. It's worn off the Crown too, a little, at one corner, as if a thumb had rested there. She doesn't point it out. You see it anyway.`, dark:`She looks west, where the mountain was. "He never wanted one," she says, and doesn't say who, and doesn't need to.`}[st] || '') : S.card === 'chains' ? `She looks across the quay at the man on the step of the green door, with his book under his arm. "I'd like it to stop meaning him," she says.` : `She turns it over in her fingers. "Not the one I expected," she says. "They never are, on the last morning."`}
 
-${C7H.has('kettle') ? `Kettle, softly: "Put them away, Tuft. It's morning."` : `Nobody says anything. The gulls go on arguing.`}`,
+${C7H.has('kettle') ? `Kettle, softly: "Put them away, Tuft. It's morning."` : `The gulls go on arguing.`}`,
       ch:[{t:'Put the cards away.', go:()=>startExplore()}]}; },
     c7_card_no:()=>({sp:'Tuft', scene:'lakefront_dawn', txt:
 `She doesn't argue. She squares the Deck against her knee and puts it back in her sleeve, and keeps her hand over the sleeve a moment, as if keeping something warm.
 
 "Yes, Sergeant."
 
-${[S.f.noCard, S.f.c1_noCard, S.f.c2_noCard, S.f.c3_noCard, S.f.c4_noCard, S.f.c5_noCard, S.f.c6_noCard].filter(Boolean).length >= 3 ? `She doesn't say anything about the other times. She's long past saying it. She only looks at you, once, and there's no reproach in it, only arithmetic. "That's the last time you'll say that," she says. It isn't a complaint.` : `"You're probably right," she says. "It'd only have told me something I know already." A small smile. "They mostly do, on the last morning."`}`,
+${[S.f.noCard, S.f.c1_noCard, S.f.c2_noCard, S.f.c3_noCard, S.f.c4_noCard, S.f.c5_noCard, S.f.c6_noCard].filter(Boolean).length >= 3 ? `She's long past saying anything about the other times. She only looks at you, once, and there's no reproach in it, only arithmetic. "That's the last time you'll say that," she says. It isn't a complaint.` : `"You're probably right," she says. "It'd only have told me something I know already." A small smile. "They mostly do, on the last morning."`}`,
       ch:[{t:'The quay.', go:()=>startExplore()}]}),
 
     /* ---- the ship: Kalam, Fiddler, Crokus, Apsalar, Mallet ---- */
     c7_kalam:()=>{ const pend = C7H.pendingTell();
       /* he says goodbye once (v3.13: a second visit no longer replays it) */
       if (S.f.c7_kalam) return {sp:'Kalam', txt: pend ?
-`He's watching the rooftops. He doesn't look round. "The hill, Sergeant," he says. "Before Mallet."` :
+`He's watching the rooftops. "The hill, Sergeant," he says. "Before Mallet."` :
 `He's watching the rooftops. He nods to you once more without looking away from them. It's the same goodbye. Kalam doesn't have two.`, ch:[{t:'Leave him to the roofs.'}]};
       return {sp:'Kalam', fx:()=>{ S.f.c7_kalam=1; if (pend) S.f.c7_kalamWarned=1; }, txt:
-`He's standing a little apart from the others, with his back to the trader's hull and his pack at his feet, watching the rooftops along the quay. Not any rooftop. All of them. It's dawn and the city is exhausted and there's nobody up there, and he watches them anyway, the way a man keeps a hand near a knife in a house he knows is empty.
+`He's standing a little apart from the others, with his back to the trader's hull and his pack at his feet, watching the rooftops along the quay. Not any rooftop. All of them. It's dawn and the city is exhausted and there's nobody up there, and he watches them anyway.
 
 "Sergeant." A pause you could fit a knife into.
 
 ${pend ? `He looks at you a beat too long. The same beat as in the vault, before the roofs. He's been carrying it since then. So have you.
 
-"Somebody in your squad sat at a table with the Claw," he says. Conversationally; he could be talking about the weather over the lake. "Blue hands. Tea. I smelt it on you before the roofs, and I told him somebody, and he told me not to find out." A breath through the nose. "I found out anyway. I'm Kalam."
+"Somebody in your squad sat at a table with the Claw," he says. Conversationally. "Blue hands. Tea. I smelt it on you before the roofs, and I told him somebody, and he told me not to find out." A breath through the nose. "I found out anyway. I'm Kalam."
 
 "I've given Mallet a word to carry up the hill. It's your name." He looks back at the roofs. "Get up that hill before Mallet does, Sergeant, and tell him yourself. It's the only road out of this where you're the one walking."` : S.f.c7_wjKnows === 'told' ? `He looks at you a beat too long, and then, for once, he stops. "You told him yourself," he says. Not a question. "On the bench, before the bone. He said you would. I said you wouldn't; I've been Claw, I know how it goes, it goes quiet." He looks back at the roofs. "I was wrong. I'm not often wrong about that. I'm glad."` : S.f.c7_wjKnows === 'claw' ? `"He had it in the grey man's hand before I could give it to him," Kalam says: of Whiskeyjack, of the dye-shop, of all of it, without looking at you. "Neat. Every word in its place." A long pause. "I'd have told it kinder. I'm not known for kind."` : S.f.c4_key === 'shield' ? `"You held a roof for a Guild boy," he says. "The Guild's still talking about it. I'm not; I'm leaving." He almost smiles. "I stood on that roof with my hands empty and watched the Spawn's people take the Guild apart around me. I've been trying all week to decide what I'd have done in your place. I'd have done what you did. I'd have hated it less."` : `"You stepped aside on a roof for a Tiste Andii," he says. "I'd have done the same. I'd have hated it the same." He watches the roofs. "It nodded at you. They don't nod. I've been thinking about that all week, and I'm going to go on thinking about it on a boat, where it's quieter."`}
 
@@ -596,13 +596,13 @@ ${S.f.c6_hedgeCusser ? `"You gave Hedge his cusser back." He sniffs. "On the law
 
 "It went off. That's what they're for. Mattering's for priests."` : S.inv.cusser > 0 ? `"You didn't throw it." He almost sounds proud. "Hedge says you've gone Fiddler. I told him that's not a thing. It's a thing."` : `"None." He looks at her, and then at the city, all those roofs over all that gas. "Good," he says. "Somebody on this quay should be empty-handed. It won't be me."`}
 
-"Listen." He puts a hand on the satchel strap, lightly, the way you'd put a hand on a dog that might bite. "I'm going on a boat. Boats and munitions: never. Not in the hold, not in your hand, not in your *thoughts*. Remember I told you."
+"Listen." He puts a hand on the satchel strap, lightly, two fingers on the buckle. "I'm going on a boat. Boats and munitions: never. Not in the hold, not in your hand, not in your *thoughts*. Remember I told you."
 
 "Fiddler," says Kettle. "I *know*."
 
 "I know you know. I'm telling you so you'll remember I told you." He takes his hand off the strap. "Your lot were good hands," he says, over her head, to you. "Tell your sergeant. That's you. I'm telling you."
 
-Kettle doesn't say anything. She puts both arms round him, satchel and all, quickly, the way you'd grab a thing about to fall off a table, and lets go before he can object, and walks off down the quay very fast; and Fiddler stands there with his hands held out from his sides like a man who's just been handed somebody's baby.
+Kettle puts both arms round him, satchel and all, quickly, and lets go before he can object, and walks off down the quay very fast; and Fiddler stands there with his hands held out from his sides like a man who's just been handed somebody's baby.
 
 "Hood's breath," he says. "Don't tell Hedge."` :
 `He's got the fiddle case on his back and a pack at his feet, and he's looking along the Fourth the way everyone does, counting, and he finds the gap before he's finished.
@@ -611,7 +611,7 @@ Kettle doesn't say anything. She puts both arms round him, satchel and all, quic
 
 You tell him. It doesn't take long. It never does.
 
-He's quiet for a long while. The lake laps at the pilings.
+He's quiet. The lake laps at the pilings.
 
 "She had good hands," he says at last. "Best I've seen on a Falari. Never spilled a drop in her life." He spits into the lake, which is a sapper's blessing, and wipes his mouth. "I told her once, no munitions on the roofs. She said *I know*. I said I'm telling you so you'll remember I told you." He picks up his pack. "I'd like to have told her something else. I don't know what. I'm a sapper. Nobody tells us what the other thing is."`,
       ch:[{t:'"Safe water, Fiddler."'}]}),
@@ -622,7 +622,7 @@ ${S.f.c3_inn ? `He knows you.` : `He knows who you are, which isn't the same thi
 
 ${S.f.c6_steppedIn ? `Then he looks at you properly, and the laugh goes out of him. "You were in the alley," he says, low. "Last night. The woman with the sword. You stood — " He stops. He doesn't have the words, and he's the kind of boy who's ashamed of that, and he'll grow out of it. "Thank you. I didn't say it. I'm saying it."` : S.f.c6_lornEnd ? `Then he looks at you properly. "You were there," he says. "In the alley. At the end of it. You didn't — " He stops. "No. It's all right. I don't know what I'd have done either."${S.f.c3_innCrokus ? ` Nearly the same words he said at the Phoenix, about the Pale. He doesn't notice. You do.` : ''}` : ''}
 
-"Uncle Mammot's dead," he says. He says it the way you'd tell somebody the weather had turned. "I'm going with her. Apsalar. To her home. Kalam says it's a long way."
+"Uncle Mammot's dead," he says. "I'm going with her. Apsalar. To her home. Kalam says it's a long way."
 
 He's walking a coin across the backs of his knuckles, back and forth, without looking at it${S.f.c3_inn ? `, the way he did at the Phoenix` : ''}. It's the only thing about him that hasn't got older.`,
       ch:[{t:'The coin.', go:'c7_coin'},
@@ -634,7 +634,7 @@ He's walking a coin across the backs of his knuckles, back and forth, without lo
 
 He turns, and draws his arm back, and throws it overhand, far out over the water: a good throw, a thief's throw. It goes up spinning into the new light, both faces flashing, one and then the other, and comes down a long way out, and the lake takes it without a sound.
 
-${C7H.has('tuft') ? `Tuft has watched it the whole way. When it goes in she lets out a breath she's been holding since ${S.f.c3_inn ? 'the Phoenix' : 'she first saw it walk across his knuckles'}. "Oponn," she says. "The Twins. He's thrown a god in the lake." A pause. "Good."` : C7H.has('kettle') ? `Kettle watches it go. "That was *gold*," she says. "It was bad luck," says Crokus. "It was *gold* bad luck."` : `Nobody says anything. The gulls go out to look, and come back disappointed.`}
+${C7H.has('tuft') ? `Tuft has watched it the whole way. When it goes in she lets out a breath she's been holding since ${S.f.c3_inn ? 'the Phoenix' : 'she first saw it walk across his knuckles'}. "Oponn," she says. "The Twins. He's thrown a god in the lake." A pause. "Good."` : C7H.has('kettle') ? `Kettle watches it go. "That was *gold*," she says. "It was bad luck," says Crokus. "It was *gold* bad luck."` : `The gulls go out to look, and come back disappointed.`}
 
 "There," says Crokus. It doesn't sound like relief. It sounds like a man putting down a bag he's going to miss.`,
       ch:[{t:'"Safe road, Crokus."'}]}),
@@ -642,7 +642,7 @@ ${C7H.has('tuft') ? `Tuft has watched it the whole way. When it goes in she lets
 `He's handing packs up to Fiddler on the trader's deck. His knuckles keep moving while he does it, back and forth, walking a coin that isn't there.`,
       ch:[{t:'Leave him.'}]}),
     c7_apsalar:()=> S.f.c7_apsalar ? {sp:S.f.c7_crokus ? 'Apsalar' : 'A girl in a plain dress', txt:
-`She's watching the gulls. She smiles at you the way you'd smile at a stranger on a quay who has already said goodbye once, politely, and goes back to the gulls.`, ch:[{t:'Leave her to the gulls.'}]} : ({sp:'A girl in a plain dress', fx:()=>{ S.f.c7_apsalar=1; }, txt:
+`She's watching the gulls. She gives you the small polite smile kept for strangers who have already said goodbye once, and goes back to the gulls.`, ch:[{t:'Leave her to the gulls.'}]} : ({sp:'A girl in a plain dress', fx:()=>{ S.f.c7_apsalar=1; }, txt:
 `The girl from the Gadrobi crossing. ${S.f.c4_sawSorry ? `The girl in the doorway under the skylight, who looked up through the bubbled glass at you and didn't blink.` : `The girl in the grey shawl that everyone in the crossing stood with their backs to.`} Sorry.
 
 She isn't. That's the first thing, and it's the only thing. She's a fisher girl of perhaps sixteen, with salt-cracked hands and a plain face and a plain dress, sitting on the trader's rail with her feet dangling, watching the gulls; and when you come up she looks at you the way anybody looks at a stranger on a quay, a glance and a polite nothing, and back to the gulls.
@@ -658,7 +658,7 @@ ${C7H.has('ellis') ? `Ellis looks at her a long time. "She doesn't know us," she
 `"Thank you," says ${S.f.c7_crokus ? 'Apsalar' : 'the girl'}, and means it, and doesn't know what she's thanking you for; and neither, quite, do you.`,
       ch:[{t:'Leave her to the gulls.'}]}),
     c7_mallet:()=>{ const d = C7H.dead(); return {sp:'Mallet · healer', fx:()=>{ S.f.c7_mallet=1; }, txt:
-`${S.f.c7_shipGone ? `He's sitting on a fish-crate by the gap in the boats where the trader lay, with his bag between his feet, watching her sail go west across the lake. "I came down to see Fid off," he says. "I saw him off. The whole Lakefront saw him off."${C7H.has('kettle') ? ` He doesn't look at Kettle. He doesn't need to.` : ''}` : `He's sitting on a fish-crate by the trader's side with his bag between his feet, waiting to see Fiddler off and not liking any of it.`}
+`${S.f.c7_shipGone ? `He's sitting on a fish-crate by the gap in the boats where the trader lay, with his bag between his feet, watching her sail go west across the lake. "I came down to see Fid off," he says. "I saw him off. The whole Lakefront saw him off."${C7H.has('kettle') ? ` He doesn't need to look at Kettle.` : ''}` : `He's sitting on a fish-crate by the trader's side with his bag between his feet, waiting to see Fiddler off and not liking any of it.`}
 
 "He'll walk," he says, of Whiskeyjack, before you ask. "With a stick. He'll hate the stick. It wants days he won't give me, and he'll never tell anybody it hurts, and it'll hurt every day he doesn't." He looks at his hands. "I'm good at this, Sergeant. I'm the best there is at this in the Host. That's the patient I got."
 
@@ -689,7 +689,7 @@ He sees you look at the empty scabbard. "I gave it away," he says. That's all he
 
 ${C7H.has('tuft') ? (C7H.tuft() === 'glove' ? `Tuft walks all the way out along the pier with you. "It's all right," she says, to your look. "There's nothing left in me for it to eat."` : `Tuft stops at the foot of the pier and won't come any further. You don't ask her to.`) : ''}
 
-"Sergeant." He doesn't turn round. "I buried her. North shore. There's a hill there with a view of the city." Flat. Like weather. "She'd have hated the view."
+"Sergeant." He doesn't turn round. "I buried her. North shore. There's a hill there with a view of the city." Flat. "She'd have hated the view."
 
 ${S.f.c6_lornEnd ? `"You were in the alley," he says, "when I came. At the mouth of it. ${S.f.c6_steppedIn ? `You'd stood between her and the boy. The Adjunct of the Empress, and a squad of marines in front of a Daru thief with a coin.` : `You were against the wall, all of you, well back. I could see where you'd stood when it mattered. I didn't ask why. A year ago I'd have been standing there with you.`}" He's quiet a moment. "You didn't say anything to me when I knelt down. I've been grateful for that all night."` : ''}
 
@@ -702,7 +702,7 @@ ${S.f.c1_key === 'line' ? `"Pale," he says. "The cadre row. There was a line of 
     c7_paran_toc:()=>{ const hill = S.area === 'quorl_hill'; return {sp:'Captain Paran', fx:()=>{ S.f.c7_paranToc=1; }, txt:
 `"On the Rhivi Plain. Before he rode for the Adjunct. He said: if you get to Darujhistan and the captain's there, tell him Toc kept riding. He'll know what it means."
 
-For a long time Paran doesn't do anything. ${hill ? `A quorl shifts its wings in the grass behind him, and a Moranth clicks at it, and it goes still.` : `The lake laps at the pilings. A gull comes and stands on the skiff's gunwale and looks at the spade.`}
+Paran doesn't move. ${hill ? `A quorl shifts its wings in the grass behind him, and a Moranth clicks at it, and it goes still.` : `The lake laps at the pilings. A gull comes and stands on the skiff's gunwale and looks at the spade.`}
 
 Then he laughs. Not much. Once, down his nose: the laugh of a man hit somewhere he'd thought was armoured.
 
@@ -714,7 +714,7 @@ Then he laughs. Not much. Once, down his nose: the laugh of a man hit somewhere 
 
 "It's in the stable at the Worry Gate. I led it all the way in from the hills. It stood by my fire every night because it had nowhere else to stand." He takes one hand off the pommel of the sword that isn't his. "It's yours, if you want it. He'd want it ridden."
 
-Ellis doesn't say anything for a moment. Then she nods, once, the way you'd nod at a number you'd been waiting to hear.
+Ellis is still a moment. Then she nods, once.
 
 ${S.f.c5_toc && S.f.c2_ellisJoined ? `"Five," she says, very quietly, to nobody, and pulls her glove tight. And then, to Paran: "Thank you, sir."` : `"Thank you, sir," she says. And then, very quietly, to nobody: "He kept riding. So will it."`}`,
       ch:[{t:'Leave him to the lake.'}]}),
@@ -725,7 +725,7 @@ ${S.f.c5_toc && S.f.c2_ellisJoined ? `"Five," she says, very quietly, to nobody,
 
 "Ah! The road-menders!" Crumbs. "Kruppe has been waiting. Kruppe has been waiting since before dawn, an hour Kruppe regards as largely theoretical."
 
-His small brown eyes go along the Fourth, counting, ${C7H.dead().length ? `and stop at the gap, and stay there a moment, and then go on, gently, the way you'd step round a grave on a path.` : `and arrive, and are satisfied, and move on to the pastry.`}
+His small brown eyes go along the Fourth, counting, ${C7H.dead().length ? `and stop at the gap, and stay there a moment, and then go on, gently, stepping round it.` : `and arrive, and are satisfied, and move on to the pastry.`}
 
 "Such a night! Such a garden! A young house where no house was, and in it a gentleman of Kruppe's acquaintance who went in last night carrying someone, and has not come out, and will not, Kruppe suspects, for some while. Houses of that kind are very hospitable. It is the leaving they are strict about."
 
@@ -754,11 +754,11 @@ ${C7H.has('ohl') ? `Ohl is looking at the key. "The Phoenix," he says. "Jeth Arr
     c7_coll:()=>({sp:'Coll', fx:()=>{ S.f.c7_coll=1; }, txt:
 `He's standing by Kruppe's bollard, a big man in a clean coat that doesn't fit him yet, the way new clothes don't, with a face that was handsome once and is sober this morning, which on Coll looks like a wound. He's here for the boy. He says so.
 
-"Crokus. I taught him to hold a knife. Badly. Somebody should see him off who can tell him he still holds it badly."
+"Crokus. I taught him to hold a knife. Badly. He should be seen off by someone who can tell him he still holds it badly."
 
 ${S.f.c3_innColl ? `He knows you. "The Malazans from the Phoenix." A thin smile. "I told you your Empress waits. It turns out she waited for the wrong thing."` : `He looks at you, and at the squad, and you watch him place you: Malazans, soldiers, the wrong side of something. He doesn't seem to mind.`}
 
-${S.f.c6_collRing ? `He holds up his hand. The ring is on it: heavy gold, the crest ground off. "You gave it back," he says. "In the street outside my own gate, on the night I got the gate back. I've been trying all night to work out what that cost you."` : S.f.c3_coll && S.kit.includes('collsignet') ? `His eyes find the ring, wherever it is on you, the way a man's eyes find his own face in a crowd. "You've still got it," he says. Not a question. ${S.f.c6_signetSeen ? `"Somebody recognised the shape last night. Kruppe said they would."` : `"Nobody recognised the shape last night. Kruppe will be disappointed."`}` : S.f.c3_collTalk && !S.f.c3_coll ? `He holds up his hand. The ring is on it, where you pushed it back across the table at the Phoenix. "Hood take you," he says, without heat. "I've been wearing it since."` : ''}
+${S.f.c6_collRing ? `He holds up his hand. The ring is on it: heavy gold, the crest ground off. "You gave it back," he says. "In the street outside my own gate, on the night I got the gate back. I've been trying all night to work out what that cost you."` : S.f.c3_coll && S.kit.includes('collsignet') ? `His eyes find the ring at once, wherever it is on you. "You've still got it," he says. Not a question. ${S.f.c6_signetSeen ? `"Somebody recognised the shape last night. Kruppe said they would."` : `"The shape went unrecognised last night. Kruppe will be disappointed."`}` : S.f.c3_collTalk && !S.f.c3_coll ? `He holds up his hand. The ring is on it, where you pushed it back across the table at the Phoenix. "Hood take you," he says, without heat. "I've been wearing it since."` : ''}
 
 "I've got my house back. Turban Orr is dead, and my wife — " He stops. "I've got my house back," he says again, as if he's trying the weight. "There's a thing in the garden. A house, in the garden of my house. The Council say it's mine. I say it isn't anybody's. It's the first time the Council and I have agreed on anything in two years."
 
@@ -769,7 +769,7 @@ ${S.f.c6_collRing ? `He holds up his hand. The ring is on it: heavy gold, the cr
     c7_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c7_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); Object.keys(S.gear).forEach(w => { if (S.gear[w].trinket === 'collsignet') delete S.gear[w].trinket; }); if (C7H.has('ohl')) loy('ohl',1); }, txt:
 `You hold it out to him on your palm. Heavy gold, the crest ground off, only the shape of a house left and not its name.
 
-He looks at it for a long time without taking it.
+He looks at it, and doesn't take it.
 
 "Hood take you," he says at last, without heat. He takes it. He puts it on. It fits; of course it fits. He turns his hand over and looks at the ring, and then up the hill toward the Estate District, where a house is standing with its door open and a stranger in its garden.
 
@@ -783,7 +783,7 @@ He looks at it for a long time without taking it.
 
     /* ---- the last accounting: the grey cloak on the step of the green door ---- */
     c7_claw:()=>{ const fr = C7H.friend(); return {sp:'A grey cloak', fx:()=>{ S.f.c7_clawMet=1; }, txt:
-`He's on the step of the wine-merchant's, beside the green door, with a ledger under his arm: a plain book bound in grey, the kind a clerk buys by the dozen. ${fr ? `He's been waiting for you, and he's pleased you've come, the way a man is pleased when a column of figures comes out right.` : `He's been waiting for you the way a man waits for the last line of a column.`}
+`He's on the step of the wine-merchant's, beside the green door, with a ledger under his arm: a plain book bound in grey, the kind a clerk buys by the dozen. ${fr ? `He's been waiting for you, and he's pleased you've come: a column of figures, come out right.` : `He's been waiting for you, patiently, as a clerk waits on the last line of a column.`}
 
 His boots are clean.
 
@@ -791,7 +791,7 @@ His boots are clean.
 
 ${S.f.c3_knivesFought ? `There's a scar across the back of his left hand, new since you last saw it. He sees you see it. "The wall behind the dye-shop," he says. "It was higher than it looked."` : ''}
 
-${C7H.has('tuft') && C7H.leashed() ? `His eyes go past you to Tuft, and rest there. "And the mage," he says. "Good morning." Tuft doesn't answer. Her hand is over her collar, and the hand is shaking.` : C7H.has('tuft') && S.f.c6_tuft ? `His eyes go past you to Tuft, to her collar, and rest there a moment, the way a man's eyes rest on a pocket where a purse used to be. He doesn't say anything about it. He writes something.` : ''}
+${C7H.has('tuft') && C7H.leashed() ? `His eyes go past you to Tuft, and rest there. "And the mage," he says. "Good morning." Tuft doesn't answer. Her hand is over her collar, and the hand is shaking.` : C7H.has('tuft') && S.f.c6_tuft ? `His eyes go past you to Tuft, to her collar, and rest there a moment, on the place where something used to be. He writes something.` : ''}
 
 ${fr ? `"I've come with good news," he says. "It's rarer in my trade than you'd think."` : `"I've come to close the entry."`}`,
       ch:[{t:'"Go on."', go:fr ? 'c7_claw_offer' : 'c7_claw_close'},
@@ -814,7 +814,7 @@ ${C7H.has('brisk') ? `Brisk has gone completely still. Not the stillness of wait
 
 ${C7H.has('ellis') ? `Ellis, very low, to nobody: "That's how they do it. They don't take you. They make you carry yourself in."` : ''}
 
-${C7H.has('ohl') ? `Ohl has the oilcloth out. He isn't writing on it. He's holding it the way you'd hold a hand.` : ''}`,
+${C7H.has('ohl') ? `Ohl has the oilcloth out. He isn't writing on it. He's holding it, folded, in both hands.` : ''}`,
       ch:[{t:'Take the pardon. Give him his report.', go:'c7_claw_took'},
           /* hard check: a report in order, without anything in it that isn't so, and nothing in it he can use. Whoever gives it gives their own count */
           {t:'Take the pardon. Give him a report with nothing in it.', check:['guile',17], near:false, req:()=>!S.f.c7_emptyTried, fx:()=>{ S.f.c7_emptyTried=1; },
@@ -829,7 +829,7 @@ It's lighter than paper should be. That's the first frightening thing.
 
 He waits, pen lifted. You give him the Bridgeburners: the hill, noon, the quorls, north. It's nothing he couldn't have had from a gull. He writes it down anyway. Then he turns a page, and waits, and you understand that he means the other thing.
 
-You give him that too. In order, without anything in it that isn't so; it's the only way you know how to give a report. ${ids.length ? `${C7H.names(ids)}. One at a time.` : `Your dead, one at a time, because they're all the people you have left.`} He writes each name in the neat hand, and a line after it, and doesn't show you the line.
+You give him that too. In order, and true; it's the only way you know how to give a report. ${ids.length ? `${C7H.names(ids)}. One at a time.` : `Your dead, one at a time, because they're all the people you have left.`} He writes each name in the neat hand, and a line after it, and doesn't show you the line.
 
 "Thank you, Sergeant." He blots the page. ${S.f.c7_wjKnows === 'told' ? `"I had meant to put Whiskeyjack's silence about the dye-shop in the price. I'm told you'd already spent it, on a bench, in a garden, before the bone." A small, precise pause. "So the price was smaller than I'd written. I've written that down too." He closes the ledger on his pen.` : `"Whiskeyjack need never hear of the dye-shop. That's in the price too. ${S.f.c3_toldAll ? `Madryn told you he'd hear of it one day, but not this year." He closes the ledger on his pen. "It's a new year somewhere. It always is.` : `Madryn told you he'd hear of it one day, because everyone does." He closes the ledger on his pen. "Everyone but him.`} He won't hear it from me."${C7H.pendingTell() ? `
 
@@ -839,7 +839,7 @@ ${C7H.has('tuft') && C7H.leashed() ? `He looks at Tuft. "Genabaris," he says to 
 
 He goes along the Lakefront without hurrying, and turns at the corner, and is gone, and his boots are still clean.
 
-${C7H.has('brisk') ? `"Sergeant," says Brisk. That's all. It's the whole conversation, and you can hear in the one word that it's going to be the last whole conversation for a long time.` : ''}
+${C7H.has('brisk') ? `"Sergeant," says Brisk. That's all. It's the whole conversation, and you can hear in the one word that there won't be another whole one soon.` : ''}
 
 ${C7H.has('ellis') ? `Ellis says one sentence, and it's the right one. "He wrote a line after my name, and you'll never know what it said, and neither will I."` : ''}
 
@@ -873,8 +873,8 @@ ${C7H.has('brisk') ? `Brisk lets a breath out through her nose. "Outlaws," she s
 He waits, pen lifted. You give him the Bridgeburners: the hill, noon, the quorls, north. It's nothing he couldn't have had from a gull. He writes it down anyway. Then he turns a page, and waits, and you understand that he means the other thing.
 
 ${by({
-sgt:`So you give him that. In order, without anything in it that isn't so: the pay ledger. Every name in the Fourth, and against each name the pay owed, to the copper, and the date it was last paid, and in what coin, and the stoppages, and why. ${S.f.c2_wagon ? `The mule: Pell, by name, and what Pell bit, and what it cost. ` : ''}He asked you who would follow whom. You tell him who is owed what. It's the most complete account of the Fourth Squad ever given to anybody, and there's nothing in it a living soul could use.`,
-brisk:`Brisk steps in front of you before you can open your mouth. You didn't tell her to. "Report," she says, in the regiment voice, and gives him one.
+sgt:`So you give him that. In order, and nothing in it that isn't so: the pay ledger. Every name in the Fourth, and against each name the pay owed, to the copper, and the date it was last paid, and in what coin, and the stoppages, and why. ${S.f.c2_wagon ? `The mule: Pell, by name, and what Pell bit, and what it cost. ` : ''}He asked you who would follow whom. You tell him who is owed what. It's the most complete account of the Fourth Squad ever given to anybody, and there's nothing in it a living soul could use.`,
+brisk:`Brisk steps in front of you before you can open your mouth. You didn't tell her to. "Report," she says, from the chest, and gives him one.
 
 The ration count. From the Pale to this morning, day by day, not skipping: what was drawn, what was eaten, what was short, what the mule ate, what Kettle ate. He asked who would follow whom. Brisk tells him who ate what. She doesn't hurry and she doesn't leave anything out, and every word of it is so.`,
 kettle:`"I'll give it," says Kettle, before you can stop her, and does.
@@ -882,22 +882,22 @@ kettle:`"I'll give it," says Kettle, before you can stop her, and does.
 Munitions. Every sharper, burner, smoker and cusser the Fourth has drawn since the Pale: where from, who made it, who carried it, where it went, and what it sounded like going. Maud. Gerrun. Chub's three fingers. The spoon, which she still won't explain, at length. She talks the way she talks when she's frightened, fast and all at once and with total confidence, and for once in her life there isn't a lie in it anywhere for him to catch. She has never been so happy.`,
 tuft:`"I'll give it," says Tuft. Quietly. Exactly.
 
-She takes the Deck out of her sleeve and gives him a reading for each of the Fourth, one at a time, in order, the way you'd read a roll: what the cards say about each of them, card by card, house by house. Nothing. "The cards say nothing about any of them," she says at the end. "I checked." Every word of it is so.`,
+She takes the Deck out of her sleeve and gives him a reading for each of the Fourth, one at a time, in order, down the roll: what the cards say about each of them, card by card, house by house. Nothing. "The cards say nothing about any of them," she says at the end. "I checked." Every word of it is so.`,
 ohl:`Ohl takes the oilcloth out. "A report," he says. "In order."
 
 He begins at one: a name, a regiment, a place, and how, in the small careful voice he keeps for Hood, and he doesn't skip. The grey cloak writes the first nine. At the fortieth his pen stops. Ohl doesn't. He has ${C7H.num(C7H.lc())} to get through, and he means to, every one of them so, and not one of them anybody the Empire would cross a street to find.`,
 ellis:`"I'll give it," says Ellis. "I know the form."
 
 Horses. Every horse the Fourth has seen since the Pale, in order: colour, height, brand, the state of the feet, who was riding it and which way it went. The dead mare on the plain. Toc's. She counts horses first; she always has. He asked who would follow whom. She tells him which horses would. It's a perfect report, in the form his people taught her, and there's nothing in it.`,
-_:`{who} gives it. In order, without anything in it that isn't so, and nothing in it he could use: a count, and only a count, and every word of it true.`})}
+_:`{who} gives it. In order, nothing left out, and nothing in it he could use: a count, and only a count, and every word of it true.`})}
 
-He writes it all down. He doesn't hurry. At the end he lifts his pen and looks at the page for a long moment, the way a man looks at a sum that has come out right in the wrong column.
+He writes it all down. He doesn't hurry. At the end he lifts his pen and looks at the page, the way a man looks at a sum that has come out right in the wrong column.
 
 "That's a report," he says at last. "In order. Without anything in it that isn't so." The smallest pause. "I asked for a report."
 
 He doesn't take the paper back.
 
-"It's the form," he says. And then, which you'll think about for a long time afterward: "I've never once been allowed to say that about something I *liked*."
+"It's the form," he says. And then, which you'll think about afterward, often: "I've never once been allowed to say that about something I *liked*."
 
 ${lsh ? `He looks at Tuft. "Genabaris," he says to her, pleasantly. "That was never in the report, mage. It was never theirs to give." Tuft doesn't answer. She's looking at you. She doesn't stop.` : ''}
 
@@ -914,11 +914,11 @@ ${C7H.has('kettle') && w !== 'kettle' ? `Kettle is grinning at the paper in your
       return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawDeal='refused'; S.f.c7_emptyFail=1; S.f.c7_clawDone=1; S.f.c7_clawGone=1; if (tell) S.f.c7_wjKnows='claw'; }, txt:
 `You take the paper.
 
-${by({sgt:`Then you open the pay ledger, and get as far as the mule.`, brisk:`Brisk starts on the ration count, in the regiment voice, and gets as far as the fourth day out of the Pale.`, kettle:`Kettle starts on the munitions return, fast and with total confidence, and gets as far as Maud.`, tuft:`Tuft starts laying out a reading for each of the Fourth, and gets as far as the second card.`, ohl:`Ohl takes out the oilcloth and begins at one, and gets as far as eleven.`, ellis:`Ellis starts on the horses, in the form his people taught her, and gets as far as the dead mare on the plain.`, _:`{who} starts on a count, in order, and gets a little way into it.`})}
+${by({sgt:`Then you open the pay ledger, and get as far as the mule.`, brisk:`Brisk starts on the ration count, at parade pitch, and gets as far as the fourth day out of the Pale.`, kettle:`Kettle starts on the munitions return, fast and with total confidence, and gets as far as Maud.`, tuft:`Tuft starts laying out a reading for each of the Fourth, and gets as far as the second card.`, ohl:`Ohl takes out the oilcloth and begins at one, and gets as far as eleven.`, ellis:`Ellis starts on the horses, in the form his people taught her, and gets as far as the dead mare on the plain.`, _:`{who} starts on a count, in order, and gets a little way into it.`})}
 
 He hasn't written any of it down. His pen is lifted, the way it was lifted over a table with blue hands, waiting for the part that matters; and it doesn't come, and he knows it isn't going to.
 
-"That's very good," he says. "That's ${by({sgt:'a pay ledger', brisk:'a ration count', kettle:'a munitions return', tuft:'a reading', ohl:'a list of the dead', ellis:'a remount return', _:'a count'})}. I'll put it in." He does: one line, short. Then he takes the pardon out of your hand, gently, the way you'd take a cup from somebody asleep, and folds it back along its creases, and closes the ledger on it.
+"That's very good," he says. "That's ${by({sgt:'a pay ledger', brisk:'a ration count', kettle:'a munitions return', tuft:'a reading', ohl:'a list of the dead', ellis:'a remount return', _:'a count'})}. I'll put it in." He does: one line, short. Then he takes the pardon out of your hand, gently, and folds it back along its creases, and closes the ledger on it.
 
 "The offer was for a report, Sergeant. You've shown me you know what one is. That's worth knowing about a soldier." He tucks the book under his arm. "It's withdrawn."
 
@@ -965,13 +965,13 @@ You let that sit.
 tuft:`Tuft says it. She doesn't step forward to do it; she says it from where she stands, quietly, the way she lays a card. "The Empress outlawed the Host this morning. Your book is a list of people she doesn't want *back*." A pause, exact. "She'll be reading Seven Cities. You're not closing an entry. You're closing the book, and there's nobody to hand it to."`,
 ellis:`Ellis says it. One sentence, and it's the right one. "I know what happens to a book when the house it was kept for burns down, because I've seen it: nobody reads it, ever, and the clerk who kept it goes on keeping it for nobody, for years, with clean boots."`,
 kettle:`Kettle says it, because Kettle says everything. "She's not going to *read* it," she tells him, with total confidence. "The Empress. She's outlawed the Host, she's got Seven Cities coming, have you *seen* Seven Cities? Nobody's reading your book. You're closing it for nobody." She considers. "I'd close it for nobody too, if I were you. Only I'd do it somewhere with a fire."`,
-ohl:`Ohl says it, gently, the way he tells a man the leg has to come off. "The Empress outlawed the Host this morning, child. Your book is a list of people she doesn't want back. Nobody is going to read it." A pause. "I keep a list too. I know what it is to keep one for nobody. Mine, at least, they'd have wanted kept."`,
-brisk:`Brisk says it, in the regiment voice, as if reading him an order off a board. "The Host is outlawed. Your book's on the Host. Nobody reads it." That's the whole of it. It's enough.`,
+ohl:`Ohl says it, gently, the way he tells a man the leg has to come off. "The Empress outlawed the Host this morning, child. Your book is a list of people she doesn't want back. It's going to go unread." A pause. "I keep a list too. I know what it is to keep one for nobody. Mine, at least, they'd have wanted kept."`,
+brisk:`Brisk says it as if reading him an order off a board. "The Host is outlawed. Your book's on the Host. It won't be read." That's the whole of it. It's enough.`,
 _:`{who} says it, plainly: the Empress outlawed the Host this morning; his book is a list of people she doesn't want back, and she'll be busy reading Seven Cities. "You're not closing an entry. You're closing the book. There's nobody to hand it to."`})}
 
 He looks at ${C7H.rw(w)} for as long as it takes a gull to cross the quay. Then down at the page. Then he closes the ledger, very gently, the way you'd close a door on a sleeping room.
 
-${page ? `Then he opens it again at the ribbon, and takes hold of the page, and tears it out along the spine, neatly, the way you'd tear a page out of a pay book with a mistake on it. He folds it in three and puts it inside his coat. "One," he says. "For the form." It's the page with ${C7H.rws(w)} name on it. You saw.
+${page ? `Then he opens it again at the ribbon, and takes hold of the page, and tears it out along the spine, neatly. He folds it in three and puts it inside his coat. "One," he says. "For the form." It's the page with ${C7H.rws(w)} name on it. You saw.
 
 ` : ''}"Another time," he says, from habit. And then, as if correcting a clerical error: "No. There isn't one, is there." He looks at the book in his hands. "I'll write it closed."
 
@@ -980,7 +980,7 @@ He goes along the Lakefront without hurrying. After a while the shapes by the fi
     c7_claw_talk_fail:()=>{ const w = ROLL().who || 'sgt'; return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawNoted = w; }, txt:
 `He smiles. It's the smile of a man writing something down.
 
-"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He doesn't look at her collar while he writes it. He doesn't need to.`, _:''})} "It doesn't change the sum."
+"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He writes it without a glance at her collar.`, _:''})} "It doesn't change the sum."
 
 The shapes by the fish-crates are moving.`,
       ch:[{t:'Show him the order from the cellars.', req:()=>!!S.f.c6_orders, go:'c7_claw_orders'},
@@ -1027,7 +1027,7 @@ It goes out like a candle under a cup. There isn't a sound. There's the absence 
 
 "It's quiet," she says. "Oh, it's so *quiet*. I can't feel Meanas. I can't feel *anything*." She grips your sleeve. "I can't feel *him*."
 
-${!hill && !gone ? `Across the quay, on the step by the green door, the grey cloak is looking down at his own hand, the way a man looks at his hand when something he was holding by a string has gone slack. He looks at it a long moment. Then he writes a line.` : S.f.c7_clawFought ? `Somewhere a long way off, you're quite sure, whoever stood at that window has looked down at his own hand, the way a man looks at his hand when something he was holding by a string has gone slack. The one who held the middle of the string for him is at the bottom of the lake.` : `Somewhere ${hill ? 'west, in the city' : 'along the Lakefront'}, you're quite sure, a man in a grey cloak has stopped in the middle of a street and is looking down at his own hand, the way a man looks at his hand when something he was holding by a string has gone slack.`}`,
+${!hill && !gone ? `Across the quay, on the step by the green door, the grey cloak is looking down at his own hand, the way a man looks at his hand when something he was holding by a string has gone slack. Then he writes a line.` : S.f.c7_clawFought ? `Somewhere a long way off, you're quite sure, whoever stood at that window has looked down at his own hand, at a string gone slack in it. The one who held the middle of the string for him is at the bottom of the lake.` : `Somewhere ${hill ? 'west, in the city' : 'along the Lakefront'}, you're quite sure, a man in a grey cloak has stopped in the middle of a street and is looking down at his own hand. Something he held by a string has gone slack.`}`,
       ch:[{t:'Back to the grey cloak.', req:()=>!hill && !S.f.c7_clawDone, go:()=>talk(C7H.friend() ? 'c7_claw_offer' : 'c7_claw_close')},
           {t:'Let her sit a while.', req:()=>hill || !!S.f.c7_clawDone}]}; },
     c7_after_accounting:()=>{ const pre = preUsed('last_accounting'), coin = pre && !S.f.c7_coin;
@@ -1038,7 +1038,7 @@ The grey cloak is the last.
 
 He's at the end of the pier, where the planks give out over grey water, with blood coming through the grey at his side and the ledger still under his arm. He isn't looking at you. He's looking down at his boots.
 
-They're wet. Lake-water and blood and fish-scale to the ankle. In all the months since the north quarter, in ash and rain and the mud of the tent lines, you have never once seen them anything but clean. He looks at them for a long moment, the way a man looks at a sum that won't come out.
+They're wet. Lake-water and blood and fish-scale to the ankle. In all the months since the north quarter, in ash and rain and the mud of the tent lines, you have never once seen them anything but clean. He looks at them. It's a sum that won't come out.
 
 Then he steps backward off the end of the pier.
 
@@ -1046,7 +1046,7 @@ He doesn't fall. He steps, as if there were one more plank. The lake takes him w
 
 The ledger is on the planks where it slipped from under his arm, open, with a steel pen lying in the gutter of the book.
 
-${C7H.has('brisk') ? `Brisk looks at the water for a long time. "Claw bleeds," she says. "Same as anyone." She wipes her spear on her sleeve. "Slower. Somewhere else."` : ''}${pre ? `
+${C7H.has('brisk') ? `Brisk looks at the water. "Claw bleeds," she says. "Same as anyone." She wipes her spear on her sleeve. "Slower. Somewhere else."` : ''}${pre ? `
 
 Behind you, back along the quay, the eel-crates are still burning where the sharper went off, and the trader is gone from her berth; the fishing boats moored either side of where she lay are still rocking in her wake. Her master didn't stop to ask what a Moranth sharper was doing on his quay; he cut his hawsers at the bang, and she's out in the roads now, a cable off, her grey sail half sheeted home and filling, going west on the morning wind a little earlier than anybody meant.
 
@@ -1054,16 +1054,16 @@ On her stern rail a man with a fiddle case on his back is shouting. You can't he
 
 "It was the *quay*!" Kettle bellows back at him, hands round her mouth. "I rolled it on the *QUAY*!"${S.f.c7_fiddler ? ` He shakes his head at her, slowly, the whole width of the shoulders, the way a man shakes his head at a dog that has brought him something dead and is very pleased about it. Then he lifts a hand, and keeps it up. He'll be telling Hedge about this for twenty years.` : ` Then she stops, with her hands still up round her mouth and nothing coming out of them, because she's understood that that was it. That was the goodbye. A sapper's goodbye, across a cable of grey water, about a sharper. He lifts a hand, and keeps it up, until she lifts hers.`}
 
-${S.f.c7_kalam ? `Kalam is at the rail amidships, watching the rooftops of the Lakefront slide by. He doesn't look round. He's already said his.` : `Kalam is at the rail amidships, watching the rooftops of the Lakefront slide by. Then, once, he looks at you, across the water: a pause you could fit a knife into. That's goodbye, from Kalam. You won't get a better one. You won't get another.`}${coin ? ` Beside him a boy draws his arm back and throws something overhand, far out over the water: a good throw, a thief's throw. It goes up spinning into the new light, both faces flashing, one and then the other, and comes down a long way out, and the lake takes it without a sound.` : ''}${S.f.c7_apsalar ? '' : ` A girl in a plain dress is sitting on the rail with her feet dangling, watching the gulls, not you.`}
+${S.f.c7_kalam ? `Kalam is at the rail amidships, watching the rooftops of the Lakefront slide by. He's already said his.` : `Kalam is at the rail amidships, watching the rooftops of the Lakefront slide by. Then, once, he looks at you across the water, and holds it. That's goodbye, from Kalam. You won't get a better one. You won't get another.`}${coin ? ` Beside him a boy draws his arm back and throws something overhand, far out over the water: a good throw, a thief's throw. It goes up spinning into the new light, both faces flashing, one and then the other, and comes down a long way out, and the lake takes it without a sound.` : ''}${S.f.c7_apsalar ? '' : ` A girl in a plain dress is sitting on the rail with her feet dangling, watching the gulls, not you.`}
 
 ${C7H.has('kettle') ? `"He'll tell Hedge," Kettle says, when the trader is only a sail. "He'll tell *everybody*." She looks back at the crates, burning on the quay. "It was a good sharper, though," she says, more quietly. "It went exactly where I sent it. It's not my fault where the boat was."` : ''}` : ''}`,
       ch:[{t:'Read the page.', go:'c7_claw_ledger'}]}; },
     c7_claw_ledger:()=>({sp:'A ledger bound in grey', txt:
-`It's open at the ribbon. The hand is small, square, perfectly even, and you know it the way you'd know a voice.
+`It's open at the ribbon. The hand is small, square, perfectly even, and you know it at once.
 
 *Fourth Squad, Seventh Company, marines. Sgt. {sgt}.*
 
-Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for three rounds.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, the way a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
+Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for three rounds.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, where a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
 
 Near the foot, in ink fresher than the rest, the line he wrote on the quay: *${C7H.nm(S.f.c7_clawNoted, 'The sergeant')}, this morning: the Host is outlawed and the book has no reader. True. Noted.*` : ''}
 
@@ -1080,7 +1080,7 @@ And nothing after *by*.`,
 The pen you keep. You couldn't have said why. You put it in your coat, and nobody in the squad asks.` :
 `You close it and put it in your pack, next to the pay ledger. Two ledgers now. One of them's honest.
 
-The pen you put in your coat. Nobody in the squad asks. Nobody in the squad would write with it for money.`,
+The pen you put in your coat. The squad doesn't ask. They wouldn't write with it for money.`,
       ch:[{t:'The quay.', go:()=>startExplore()}]}),
     c7_claw_avoid:()=>{ const fr = C7H.friend(), tell = fr && C7H.pendingTell(); return {sp:'The green door', fx:()=>{ S.f.c7_clawAvoided=1; if (tell) S.f.c7_wjKnows='claw'; }, txt:
 `You walk past him.
@@ -1129,7 +1129,7 @@ ${C7H.has('kettle') ? `Kettle is staring at the cord. Her mouth is working and n
 
 ${C7H.has('ohl') ? `Ohl has the oilcloth half out of his coat. He hasn't opened it. He's looking at her the way he looks at a wound that's closed on its own, when he'd been sure it wouldn't.` : ''}
 
-${C7H.dead().length ? `Then she looks along the squad again, slowly, the way she reads ground, and finds the ${C7H.dead().length > 1 ? 'gaps' : 'gap'}. "${C7H.names(C7H.dead())}," she says. It isn't a question. You tell her anyway: the alley, the otataral, last night. She listens the way she listened to Toc's orders, all the way to the end.${C7H.isDead('kettle') ? ` Then she looks down at the cord on her wrist, and doesn't say anything at all.` : ''}` : ''}`,
+${C7H.dead().length ? `Then she looks along the squad again, slowly, the way she reads ground, and finds the ${C7H.dead().length > 1 ? 'gaps' : 'gap'}. "${C7H.names(C7H.dead())}," she says. It isn't a question. You tell her anyway: the alley, the otataral, last night. She listens the way she listened to Toc's orders, all the way to the end.${C7H.isDead('kettle') ? ` Then she looks down at the cord on her wrist, and keeps looking.` : ''}` : ''}`,
       ch:[{t:'"Fourth Squad. If you want it."', req:()=>!C7H.has('vell'), go:'c7_ellis_take'},
           {t:'"You don\'t owe us anything. Go where you like, Ellis."', go:'c7_ellis_let'}]}),
     c7_ellis_take:()=>({sp:'Ellis', fx:()=>{ recruit('ellis'); S.f.c7_ellisBack=1; loy('ellis',1); if (C7H.has('ohl')) S.f.c7_ohlEllis=1; }, txt:
@@ -1137,9 +1137,9 @@ ${C7H.dead().length ? `Then she looks along the squad again, slowly, the way she
 
 She comes out of the shadow into the light.
 
-${C7H.has('kettle') ? `Kettle gets to her first. She doesn't say anything. She takes Ellis's wrist in both hands and picks at the knot until it gives, and unwinds the two lengths of trip-cord, and coils them, very carefully, the way she'd coil a trip-line she meant to set, and puts them in her satchel. "Mine," she says, thickly. "You never said what for." "I'm saying now," says Ellis. "I know," says Kettle. "I *know*. Shut up."` : C7H.isDead('kettle') ? `Nobody unties the cord. There's nobody to give it back to. She leaves it on her wrist.` : `Nobody unties the cord. She leaves it on her wrist.`}
+${C7H.has('kettle') ? `Kettle gets to her first, without a word, and takes Ellis's wrist in both hands and picks at the knot until it gives, and unwinds the two lengths of trip-cord, and coils them, very carefully, the way she'd coil a trip-line she meant to set, and puts them in her satchel. "Mine," she says, thickly. "You never said what for." "I'm saying now," says Ellis. "I know," says Kettle. "I *know*. Shut up."` : C7H.isDead('kettle') ? `There's nobody to give the cord back to. She leaves it on her wrist.` : `She leaves the cord on her wrist, knotted.`}
 
-${C7H.has('ohl') ? `Ohl opens the oilcloth. At the bottom, under the last name, there are two spaces he has carried since the hills. He takes the charcoal stub and draws it through one of them, carefully, from end to end. "I've never been able to do that," he says. "Cross out a space." He looks at the other one, Toc's, for a long moment, and folds the oilcloth along its old creases and puts it away. "Some lists close from the other side," he says. "I said that. I didn't know it would be *true*."` : ''}
+${C7H.has('ohl') ? `Ohl opens the oilcloth. At the bottom, under the last name, there are two spaces he has carried since the hills. He takes the charcoal stub and draws it through one of them, carefully, from end to end. "I've never been able to do that," he says. "Cross out a space." He looks at the other one, Toc's, and folds the oilcloth along its old creases and puts it away. "Some lists close from the other side," he says. "I said that. I didn't know it would be *true*."` : ''}
 
 ${C7H.has('brisk') ? `Brisk hasn't moved. "We don't leave people," she says. "You left."
 
@@ -1148,7 +1148,7 @@ ${C7H.has('brisk') ? `Brisk hasn't moved. "We don't leave people," she says. "Yo
 "That's the half nobody says," says Brisk, and doesn't finish, and puts her hand on Ellis's shoulder, which she has never done to anyone, and takes it away again, and goes back to being a wall.` : ''}`,
       ch:[{t:'The quay.'}]}),
     c7_ellis_let:()=>({sp:'Ellis', fx:()=>{ S.f.c7_ellisLeft=1; if (C7H.has('ohl')) S.f.c7_ohlEllis=1; }, txt:
-`She looks at you for a long moment, the way she looked at the planks on the Gadrobi roofs, weighing what would hold.
+`She looks at you the way she looked at the planks on the Gadrobi roofs, weighing what would hold.
 
 "I'd like it in the ledger," she says, "that you asked. And that you didn't make me say no." A breath. "I'd have said no, Sergeant. I think. I'd have hated saying it."
 
@@ -1160,7 +1160,7 @@ You tell her about the horse: that it came back out of the hills riderless, on t
 
 ${C7H.has('kettle') ? `Kettle holds out her hand for the cord. Ellis looks at it, and then shakes her head, very slightly. "Not yet," she says. "I might need a line back." Kettle closes her hand on nothing and nods.` : ''}
 
-She goes along the quay, not fast, a scout's walk, and at the corner she lifts the gloved hand over her shoulder, once, not quite a salute: the way you'd lift a hand to someone on a dock as the ship goes out.${C7H.has('ohl') ? `
+She goes along the quay, not fast, a scout's walk, and at the corner she lifts the gloved hand over her shoulder, once, not quite a salute.${C7H.has('ohl') ? `
 
 When she's round the corner Ohl takes out the oilcloth and draws the charcoal through one of the two spaces he's carried since the hills. "She's not dead," he says. "She's only not ours. Those are different lists." He looks at the other space, Toc's, and folds it away.` : ''}`,
       ch:[{t:'The quay.'}]}),
@@ -1188,14 +1188,14 @@ She looks along the quay at the green door, and the man on its step${S.f.c7_claw
       if (S.f.c7_ledgerDone) return {sp:'The green door', txt:
 `The green door is shut. The smoke from the counting-room chimney has stopped. Whatever was written in there has been read, or burned, or roped into a crate and carried away, and the house is only a wine-merchant's now, with bad wine.`, ch:[{t:'Leave it.'}]};
       if (inSq || atDoor) return {sp:'The green door', txt:
-`A wine-merchant's, near the Gadrobi quarter. Flaking green paint. A brass knocker in the shape of a hand. Somebody inside is burning paper: you can smell it, and see the smoke going straight up from the counting-room chimney in the still air.
+`A wine-merchant's, near the Gadrobi quarter. Flaking green paint. A brass knocker in the shape of a hand. Inside, somebody is burning paper: you can smell it, and see the smoke going straight up from the counting-room chimney in the still air.
 
-${!S.f.c7_clawGone ? `The man in the grey cloak is on the step. He moves his feet to let you by. He doesn't look up from his ledger. "Mind the step," he says.` : ''}
+${!S.f.c7_clawGone ? `The man in the grey cloak is on the step. He moves his feet to let you by, and turns a page. "Mind the step," he says.` : ''}
 
 ${inSq ? `Ellis stops with her hand an inch from the door. "I carried a letter here once," she says. "The man who took it looked at my hand, before it was burned, and said *pretty*, and wrote something down." She puts her gloved hand flat on the green paint. "I've wanted to know what for, for four years."` : `Ellis has come down off her cask and is standing at your shoulder. "Here," she says. "This is where names go."`}`,
         ch:[{t:'In.', go:'c7_ledger'},{t:'Not yet.'}]};
       return {sp:'The green door', txt:
-`A wine-merchant's, near the Gadrobi quarter. Flaking green paint. A brass knocker in the shape of a hand. Somebody inside is burning paper; you can smell it, and see the smoke going straight up from the counting-room chimney in the still air.
+`A wine-merchant's, near the Gadrobi quarter. Flaking green paint. A brass knocker in the shape of a hand. Paper is burning somewhere inside; you can smell it, and see the smoke going straight up from the counting-room chimney in the still air.
 
 ${!S.f.c7_clawGone ? `"Nothing in there for you, Sergeant," says the man on the step, without looking up. He taps the book under his arm. "Your entry's out here. With me."` : `Whatever's written in there, none of it is anybody the Fourth has left to ask about.`}`,
         ch:[{t:'Leave it.'}]}; },
@@ -1204,13 +1204,13 @@ ${!S.f.c7_clawGone ? `"Nothing in there for you, Sergeant," says the man on the 
 
 There are ledgers on every shelf. There are ledgers in a crate by the door, roped for carrying. There are ledgers on the floor by the grate, stacked, waiting their turn. The Claw is leaving Darujhistan. It's leaving tidily. It's burning what it can't carry.
 
-${S.f.c3_ellisMsg ? `The clerk looks up. He's young; nineteen. Ellis stops in the doorway. "Hello," she says, and you know him then without ever having seen him: the boy from the Gadrobi well, who cried every night for a year in the yards at Genabaris and then one night stopped. He looks at her a long moment. He doesn't say *pretty*. He doesn't say anything. He feeds another sheet to the fire.` : `The clerk looks up at Ellis, and at her glove, and at the squad behind her, and goes back to the fire. Whatever he's been told to burn, nobody told him to stop you, and nobody told him not to.`}
+${S.f.c3_ellisMsg ? `The clerk looks up. He's young; nineteen. Ellis stops in the doorway. "Hello," she says, and you know him then without ever having seen him: the boy from the Gadrobi well, who cried every night for a year in the yards at Genabaris and then one night stopped. He looks at her. He doesn't say *pretty*. He feeds another sheet to the fire.` : `The clerk looks up at Ellis, and at her glove, and at the squad behind her, and goes back to the fire. Whatever he's been told to burn, nobody told him to stop you, and nobody told him not to.`}
 
 "The G shelf," Ellis says, very quietly. "Genabaris." Her eyes go along the stack by the grate. "He's working through the Gs."`,
       /* three ways at it, each with its own hands; all three end in the same two nodes and the same flags (c7_ledgerBurnt on a miss) */
       ch:[{t:'Go through the stack before he gets to it.', check:['wits',13], fx:()=>{ S.f.c7_ledgerHow='stacks'; },
            edges:id=>[S.f.c7_clawLedger === 'kept' && ['the grey cloak\'s ledger: his shelf-marks', 2], id === 'ellis' && ['her own name', 1]],
-           near:{t:'Found, but the clerk saw which book. Somebody else\'s page from the river quarter goes on the coals instead.', fx:()=>{ S.f.c7_ledgerOther=1; }},
+           near:{t:'Found, but the clerk saw which book. A page from the river quarter, somebody else\'s, goes on the coals instead.', fx:()=>{ S.f.c7_ledgerOther=1; }},
            clean:{t:()=>ROLL().who === 'ellis' ? 'Ellis found it a long way ahead of the fire.' : `${C7H.Rw(ROLL().who)} found it before Ellis did, and handed it to her without looking at it.`, fx:()=>{ const w = ROLL().who; if (C7H.sq(w) && C7H.has(w)) loy(w,1); }},
            go:'c7_ledger_ok', fail:'c7_ledger_fail'},
           {t:'Take the clerk\'s wrist.', check:['might',13], fx:()=>{ S.f.c7_ledgerHow='wrist'; },
@@ -1223,9 +1223,9 @@ ${S.f.c3_ellisMsg ? `The clerk looks up. He's young; nineteen. Ellis stops in th
                  fx:()=>{ if (S.silver >= 3) { S.silver -= 3; S.f.c7_clerkPaid=1; AUDIO.play('coin'); } else { S.rattled[ROLL().who || 'sgt'] = 1; } }},
            go:'c7_ledger_ok', fail:'c7_ledger_fail'}]}),
     c7_ledger_ok:()=>{ const how = S.f.c7_ledgerHow || 'stacks', w = ROLL().who || 'sgt', near = nearMiss();
-      const eyes = S.kit.includes('clawpen') ? `${C7H.Rw(w)} ${w === 'sgt' ? 'put' : 'puts'} a steel pen in a plain grey holder on the counting-table in front of him, and ${w === 'sgt' ? 'say' : 'says'} nothing. He knows it. He looks at it the way you'd look at a dead man's boots by the door, and he doesn't stop looking.` :
+      const eyes = S.kit.includes('clawpen') ? `${C7H.Rw(w)} ${w === 'sgt' ? 'put' : 'puts'} a steel pen in a plain grey holder on the counting-table in front of him, and ${w === 'sgt' ? 'say' : 'says'} nothing. He knows it. He looks at it, and he doesn't stop looking.` :
         w === 'sgt' && S.f.c7_clawDeal === 'took' ? `You put the grey cloak's pardon on the counting-table in front of him, seal up. He knows the seal. He reads it. He reads it twice, the way you read orders, and while he's reading it a third time he isn't looking at anything else.` :
-        by({tuft:`Tuft goes to the counting-table and lays one card on it in front of him, face down, and doesn't say anything. He looks at it. Everybody looks at a card laid face down; it's the oldest trick in the Deck. He looks at it for as long as it takes.`,
+        by({tuft:`Tuft goes to the counting-table and lays one card on it in front of him, face down, without a word. He looks at it. Everybody looks at a card laid face down; it's the oldest trick in the Deck. He looks at it for as long as it takes.`,
             kettle:`Kettle tells him the chimney's on fire. It isn't. She tells him with such total confidence, and at such length, with her hands, that he goes and leans over the grate to look up the flue, and stays there while she explains the draught.`,
             sgt:`You put the pay ledger on the counting-table in front of him and ask him for a receipt. For the Fourth. Itemised. He's Claw; he can't not. He looks at the ledger, and then for a pen, and then for the right form, and he isn't looking at the stack.`,
             _:`{who} goes to the counting-table and talks to him: about Genabaris, about the yards, about nothing. He looks up. He keeps looking.`});
@@ -1245,11 +1245,11 @@ ${S.f.c3_ellisMsg ? `The clerk looks up. He's young; nineteen. Ellis stops in th
 
 ${how === 'stacks' ? `Three from the bottom` : `At the bottom of the stack, while he isn't looking`}, in a book with *Genabaris, the river quarter* inked small and square on its spine, Ellis puts one gloved finger on a page and stops.
 
-${near && how === 'stacks' ? `The clerk has seen which book. He doesn't fight for it. He takes the one under it, the second volume, and tears out a gathering and lays it on the coals, and looks at Ellis while he does it. Somebody's line, from the river quarter. Not hers. "Somebody's," Ellis says, very low. "I'll carry that too."
+${near && how === 'stacks' ? `The clerk has seen which book. He doesn't fight for it. He takes the one under it, the second volume, and tears out a gathering and lays it on the coals, and looks at Ellis while he does it. A line from the river quarter. Not hers. "Somebody's," Ellis says, very low. "I'll carry that too."
 
 ` : near && how === 'wrist' ? `He makes a small sound when ${C7H.sq(w) ? `${NAME(w)} lets` : 'you let'} go, and holds the wrist in his other hand. There'll be marks on it tomorrow, four of them, the shape of a hand. He's nineteen. ${w === 'ellis' ? `Ellis looks at the marks she made, and then away.` : `Ellis looks at the marks, and then away.`}
 
-` : ''}She doesn't read it at once. She holds it the way you'd hold a letter you've waited years for and aren't sure you want.
+` : ''}She doesn't read it at once. She holds it in both hands. She has waited years for this, and she isn't sure she wants it.
 
 Then she reads it.`,
       ch:[{t:'Read it over her shoulder.', go:'c7_ledger_read'}]}; },
@@ -1262,7 +1262,7 @@ Then she reads it.`,
   kettle:`Kettle tells him the chimney's on fire. He looks at her, and at the fire, which is in the grate where he put it. "No it isn't," he says, quite kindly, and takes the next book off the pile.`,
   tuft:`Tuft lays a card on the table in front of him, face down. He doesn't look at it. He's the only person you've ever seen not look. He looks at Tuft instead, the whole time, and takes the next book off the pile.`,
   sgt:`You try. He doesn't look. He looks at you the whole time you're talking, politely, the way a clerk looks at somebody who has come to the wrong window, and takes the next book off the pile.`,
-  _:`{who} tries. He doesn't look away. He looks at {who} the whole time, politely, the way a clerk looks at somebody who has come to the wrong window, and takes the next book off the pile.`}) : by({
+  _:`{who} tries. He doesn't look away. He keeps his eyes on {who} the whole time, polite as a clerk at a window, and takes the next book off the pile.`}) : by({
   ellis:`Ellis is going through the right stack, and she's too slow by one book: the clerk, not hurrying, not looking, takes the next one off the pile by the grate.`,
   ohl:`Ohl is too careful. He reads every spine; the clerk doesn't read any. He's going through the wrong stack and Ellis is going through the right one, and the clerk, not hurrying, not looking, takes the next book off the pile by the grate.`,
   sgt:`You're too slow. You're going through the wrong stack; she's going through the right one; and the clerk, not hurrying, not looking, takes the next book off the pile by the grate.`,
@@ -1309,7 +1309,7 @@ ${held ? `Then she turns, and looks at you, and says one sentence: the first thi
 
 ${S.f.c7_clerkHurt ? `The clerk feeds another book to the fire, left-handed, with the other wrist held against his chest. He hasn't said a word. As you go out, very quietly, to the grate, he says, "Good." You'll never know which of you he meant. You know which of you he didn't.` : `The clerk feeds another book to the fire. He hasn't said a word. As you go out, very quietly, to the grate, he says, "Good." You'll never know which of you he meant.`}${S.f.c7_ellisBurnt && C7H.has('ohl') ? `
 
-Out on the step, Ohl has her burned hand before she can say no. She says no. ${S.f.c2_ellisJoined ? `Toc asked you, on the plain: *let him look anyway*. You let him look.` : `He looks anyway.`} He peels the glove back from the new burn on the old one and looks for a long time, and says nothing at all about the old one, which is the kindest thing anybody has done for that hand since the Pale. "It'll do," he says. She lets him bind it.` : ''}`,
+Out on the step, Ohl has her burned hand before she can say no. She says no. ${S.f.c2_ellisJoined ? `Toc asked you, on the plain: *let him look anyway*. You let him look.` : `He looks anyway.`} He peels the glove back from the new burn on the old one and looks at both, and says nothing at all about the old one, which is the kindest thing anybody has done for that hand since the Pale. "It'll do," he says. She lets him bind it.` : ''}`,
       ch:[{t:'Out onto the quay.', req:()=>!C7H.has('ellis'), go:'c7_ellis_walk'},
           {t:'Out onto the quay.', req:()=>C7H.has('ellis')}]}),
     c7_ellis_walk:()=>({sp:'Ellis', txt:
@@ -1366,21 +1366,21 @@ He stands, and hitches the rope up on his shoulder.
 
 "Harl," he says.
 
-"Rope boy." The old man doesn't get up. He looks Vell over, the stitches and the line and the Malazan company he keeps, without hurrying, the way you'd look over a knot somebody else had tied. "The clan says you're paid up. The clan says a lot of things this morning." Then, to you: "Malazan. A word, because the boy's in it, and the Guild looks after its own even when they've stopped being its own."
+"Rope boy." The old man doesn't get up. He looks Vell over, the stitches and the line and the Malazan company he keeps, without hurrying, a roper checking another man's knot. "The clan says you're paid up. The clan says a lot of things this morning." Then, to you: "Malazan. A word, because the boy's in it, and the Guild looks after its own even when they've stopped being its own."
 
 ${shot ? `He nods past you at the splinters in the piling by the pier. "There was a man on the chandlery roof across from the green door, with a crossbow. The grey man's. We were on our way up to have a word with him." A shrug. "You had the word first. Louder."` : done ? `"There was a man on the chandlery roof across from the green door, with a crossbow. The grey man's. We had a word with him before the lamps were out. You'd never have known. That's how it's meant to work."` : `"There's a man on the chandlery roof across from the green door with a crossbow," he says. "Since before the lamps went out. The grey man's." A small pause. "Was. We had a word with him. He isn't on the roof any more."`}
 
 "His name was Hollin. Out of Unta." He looks at Vell, not at you. "He'll want it. He keeps names now, I'm told. Picked it up somewhere."
 
-Vell doesn't say anything. He's looking at the chandlery roof, at the place where a man was, measuring it the way he measures every roof: where the line would go, and how you'd get off.
+Vell is looking at the chandlery roof, at the place where a man was, measuring it the way he measures every roof: where the line would go, and how you'd get off.
 
 "That's the Guild's half," says Harl, and gets up, and goes back into the alley. "The boy's half, he's paying in person. I'm told it's not paid yet. I'm told he likes it that way."`,
       ch:[{t:'"Vell?"'}]}; },
     c7_veteran:()=>{ const st = S.f.c6_steppedIn ? 'settled' : S.f.c6_terraceFought ? 'lapsed' : 'open';
       return {sp:'An old man mending a net', fx:()=>{ S.f.c7_veteran=1; S.f.c7_grudge=st; if (st === 'settled') S.f.c7_vellWarned=1; }, txt:
-`You know him. The older man from the Daru roof, grey at the temples, a Guild blade across his knees among the dead the night Kalam's candles went out; the man in the alley afterward with his hand pressed to his ribs, asking his question again. He's sitting on the step of the east alley mending a fishing net, badly, which is how you know it isn't his net.
+`You know him. The older man from the Daru roof, grey at the temples, a Guild blade across his knees among the dead the night Kalam's candles went out; the man in the alley afterward with his hand pressed to his ribs, asking his question again. He's sitting on the step of the east alley mending a fishing net, badly. It isn't his net.
 
-"Malazan." He doesn't look up. "The clan-master sent me to see you off. He didn't say which way off."
+"Malazan." He goes on with the net. "The clan-master sent me to see you off. He didn't say which way off."
 
 ${st === 'settled' ? `He ties a knot and looks at it and doesn't like it. "You stood in front of the Adjunct last night, for a Daru boy with a coin. Word gets about. The Guild had people in that street." A long pause. "That's an answer. It isn't the same answer as the roof. It'll do." He puts the net down. ${S.f.c7_clawFought && !S.f.c7_vellWarned ? `"There was a crossbow on the chandlery roof across the quay. It wasn't ours. We were going to see to it." He looks at the splinters in the piling by the pier. "You saw to it yourselves."` : `"There's a crossbow on the chandlery roof across the quay. It isn't ours. It isn't there any more, either."`}` : st === 'lapsed' ? `"You killed more of ours on Simtal's terrace," he says. "Three. Four. I've stopped counting. Somebody in this city has to." He ties a knot. "The Guild's not buying. I told you that in the alley. It's still not." He looks up at last. "But the Guild's burying this morning, a great many, and it hasn't the hands to hate you as well. Go before it finds them."` : `"The Guild's burying this morning," he says. "A great many. Not you. It hasn't the hands to hate you and grieve at the same time." He ties a knot and looks at it and doesn't like it. "It isn't settled. It's put down. That's a different thing. Go, Malazan, before somebody picks it up."`}`,
       ch:[{t:'Leave him to the net.'}]}; },
@@ -1399,7 +1399,7 @@ The man in the grey cloak is still on the step by the green door. He hasn't move
 `The steps at the turn of the quay are where you left them, warm in the sun. Beyond them the city, and the gate you came in by, and the road. The hill is an hour on. The quorls leave at noon.` :
 `East along the quay to where it turns, and a flight of old steps goes down into the lake, the stone already warm, the sun full on it.
 
-The Fourth sits down on them. Nobody gives the order. ${C7H.has('ohl') ? `Ohl gets a fire going in half a fish-crate and makes tea, because it's morning and he always has. It's technically medicine. Everybody drinks it. Nobody says what it tastes like.` : C7H.isDead('ohl') ? `Somebody passes a flask along the step, and it isn't tea, and nobody says that either.` : `Somebody passes a flask along the step. Nobody asks what's in it.`} ${C7H.has('kettle') ? `Kettle goes to sleep sitting up with her cheek on the satchel, which is a thing only a sapper can do.` : ''} ${C7H.has('brisk') ? `Brisk unbuckles her greaves and sets them on the step beside her, side by side, the way you'd set down a pair of boots in a house you meant to stay in.` : ''} ${C7H.has('tuft') ? `Tuft sits a step lower than everyone else, with her face turned up to the empty sky and her eyes shut.` : ''}${C7H.dead().length ? ` There's room on the step for ${C7H.dead().length > 1 ? 'more' : 'one more'}. Nobody sits in it.` : ''}
+The Fourth sits down on them. Nobody gives the order. ${C7H.has('ohl') ? `Ohl gets a fire going in half a fish-crate and makes tea, because it's morning and he always has. It's technically medicine. Everybody drinks it.` : C7H.isDead('ohl') ? `A flask goes along the step, and it isn't tea, and no one mentions that either.` : `A flask goes along the step. Whatever's in it, nobody asks.`} ${C7H.has('kettle') ? `Kettle goes to sleep sitting up with her cheek on the satchel, which is a thing only a sapper can do.` : ''} ${C7H.has('brisk') ? `Brisk unbuckles her greaves and sets them on the step beside her, side by side, toes to the lake.` : ''} ${C7H.has('tuft') ? `Tuft sits a step lower than everyone else, with her face turned up to the empty sky and her eyes shut.` : ''}${C7H.dead().length ? ` There's room on the step for ${C7H.dead().length > 1 ? 'more' : 'one more'}. Nobody sits in it.` : ''}
 
 The gulls argue. The sun comes the rest of the way up. For the length of a bell, nobody in the Fourth counts anything.
 
@@ -1414,7 +1414,7 @@ Then the gate you came in by, and the road. The hill is an hour on. The quorls l
         ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]};
       const name = f.c3_trueName ? `"Sergeant {sgt}." He finds the page without looking for it; he has had it open since dawn, you think. "Unta, from the vowels. In, by this gate. Out, this morning." He writes it.`
         : f.c3_falseName ? `He says the name off the headstone in Unta, carefully, to get it right, the way he said it on the way in. "It held," he says. "This city knows you by it. I'd keep it." He writes it.`
-        : f.c3_briskVoice ? (b ? `He looks at Brisk, and something in him that has been thirty years at this desk lights up very slightly, the way a lamp does. "Paviors," he says. "Section four. Outbound, exempt." He writes it. He underlines it.` : `"Paviors," he says. "Section four." He looks along the Fourth for the one who cited it, and doesn't find her, and doesn't ask. He writes it anyway, *Paviors, outbound, exempt*, and underlines it.`)
+        : f.c3_briskVoice ? (b ? `He looks at Brisk, and something in him that has been thirty years at this desk lights up very slightly. "Paviors," he says. "Section four. Outbound, exempt." He writes it. He underlines it.` : `"Paviors," he says. "Section four." He looks along the Fourth for the one who cited it, and doesn't find her, and doesn't ask. He writes it anyway, *Paviors, outbound, exempt*, and underlines it.`)
         : f.c3_paid ? `"Road crew, one wagon, paid, no name," he says, finding the line. "Outbound, no name." He writes it. "The Council will be bereft again."`
         : `"No name in, no name out." He writes it. "The Council will bear up."`;
       return {sp:'The Worry Gate', scene:'city_day', txt:
@@ -1426,7 +1426,7 @@ He looks up for you.
 
 "Outbound," he says. ${name} ${d.length ? `He looks along the Fourth and counts, the way everyone does, and writes a number, and it isn't the number he wrote on the way in. He doesn't ask. He has been writing the dead out of this gate since first light; he knows a short count when he sees one.` : `He looks along the Fourth and counts, the way everyone does, and writes the number down.`}
 
-${f.c3_brack ? `Across the arch, in the inbound queue, under an awning the colour of old soup, Doctor Ottavio Brack is still open for business. He sees the Fourth and lifts a blue bottle in salute. Pennick does not look at him. "The Council," says Pennick, to the ledger, "has not ruled on miracles." A pause. "I have written again."${S.kit.includes('hoodrep') && S.f.hoodRepCh != null ? ` Brack sees the cracked black bottle on its thong and his whole face lights up. "*Satisfied customer!*" he shouts across the arch, to the entire queue.` : ''}
+${f.c3_brack ? `Across the arch, in the inbound queue, under an awning the colour of old soup, Doctor Ottavio Brack is still open for business. He sees the Fourth and lifts a blue bottle in salute. "The Council," says Pennick, to the ledger, "has not ruled on miracles." A pause. "I have written again."${S.kit.includes('hoodrep') && S.f.hoodRepCh != null ? ` Brack sees the cracked black bottle on its thong and his whole face lights up. "*Satisfied customer!*" he shouts across the arch, to the entire queue.` : ''}
 
 ` : ''}"Mind the lane," he says, to the ledger. "It's the same lane. Going out, it's on the other side." He turns a page. "The Watch is inside this morning, carrying shutters. The lane has noticed."
 
@@ -1447,30 +1447,30 @@ ${k ? `"No," says Kettle, in the voice you'd use to tell somebody the time. Her 
     c7_worry_faced:()=>{ const w = ROLL().who || 'sgt', near = nearMiss(); return {sp:'The Worry Gate', scene:'city_day', fx:()=>{ S.f.c7_worryFaced=1; S.f.c7_worryDone=1; }, txt:
 `${by({
 sgt:`You don't say anything. You walk up the arch toward him at a marching pace with the Fourth at your back, and you don't stop until you're close enough to smell last night's wine on him. Then you stop, and you let him count you.`,
-brisk:`Brisk walks up the arch until she's standing much too close to him, shield on her arm, and looks at him over the rim of it for a long moment. "We were up all night," she says, in the regiment voice, the one that comes out of the chest like a drum. "Things came up out of the ground. We're still here." She lets him do the sum. "Think what that says about the things."`,
-kettle:`Kettle walks up to him with her hand in the satchel, and takes it out again with something round and clay-grey in it, black wax on the seal, and holds it up between them the way you'd show a man a coin. "You want the satchel," she says kindly. "This is what's in the satchel. Do you want it now? I can do now."`,
+brisk:`Brisk walks up the arch until she's standing much too close to him, shield on her arm, and looks at him over the rim of it. "We were up all night," she says, in the regiment voice, the one that comes out of the chest like a drum. "Things came up out of the ground. We're still here." She lets him do the sum. "Think what that says about the things."`,
+kettle:`Kettle walks up to him with her hand in the satchel, and takes it out again with something round and clay-grey in it, black wax on the seal, and holds it up between them, wax side out. "You want the satchel," she says kindly. "This is what's in the satchel. Do you want it now? I can do now."`,
 ohl:`Ohl walks up to him with his healer's bag open on his arm. "I've had my hands inside a great many people since midnight, child," he says. "I'm tired, and I'm old, and I know exactly where everything is in a man. I'm asking you, as a professional courtesy, not to add to the number."`,
 tuft:`Tuft walks up to him and says nothing at all. She only looks at him, the way she looks at a card she has already read, until he looks away first.`,
 ellis:`Ellis walks up to him and says one sentence, and it's the right one. "I'd like it noted," she says, "that I'm the friendly one."`,
 _:`{who} walks up the arch to him and says it plainly: the Fourth has been up all night with worse than him, and is still standing, and would very much like to go on standing somewhere else.`})}
 
-The big one looks at ${C7H.rw(w)} for as long as it takes a cart of the dead to go by. Then along the rest of the Fourth. Then, for a long moment, at the crossbow on the water-butt, who has found something very interesting to look at in the sky.
+The big one looks at ${C7H.rw(w)} for as long as it takes a cart of the dead to go by. Then along the rest of the Fourth. Then, longest, at the crossbow on the water-butt, who has found something very interesting to look at in the sky.
 
 "Another time, Malazan," he says, with great dignity, and steps back into the lane, and the lane takes him, and the ones with knives, and the ones with cudgels.
 
-${near ? `They let you by. The crossbow on the water-butt watches you all the way out through Worrytown to the tanneries, and you feel it between your shoulders every step, and the Fourth walks a little faster than a squad should.` : `Nobody watches you out through Worrytown. Nobody in Worrytown watches anything this morning that might watch them back.`}
+${near ? `They let you by. The crossbow on the water-butt watches you all the way out through Worrytown to the tanneries, and you feel it between your shoulders every step, and the Fourth walks a little faster than a squad should.` : `Worrytown lets you out without a glance. This morning it isn't watching anything that might watch it back.`}
 
 Behind you at the desk Pennick writes something, and blots it. "He says that to everyone," he remarks to the ledger, and turns the page.`,
       ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]}; },
     c7_worry_fail:()=>({sp:'The Worry Gate', scene:'city_day', txt:
-`${by({sgt:`He counts you. He takes his time about it, and enjoys it.`, brisk:`He hears her out. He even nods, the way a man nods at a good point well made.`, kettle:`He looks at the thing in her hand, and then at the hand, which is shaking, and smiles.`, ohl:`He looks at the old man's open bag, and the old man's hands, and laughs, not unkindly.`, _:`He hears {who} out, and nods, and smiles.`})}
+`${by({sgt:`He counts you. He takes his time about it, and enjoys it.`, brisk:`He hears her out. He even nods at the good points.`, kettle:`He looks at the thing in her hand, and then at the hand, which is shaking, and smiles.`, ohl:`He looks at the old man's open bag, and the old man's hands, and laughs, not unkindly.`, _:`He hears {who} out, and nods, and smiles.`})}
 
 "You're tired, Malazan," he says. "I can see it from here. That's rather the point of this morning."
 
 He doesn't give a signal. He doesn't need one. The lane comes out of the lane, and the crossbow on the water-butt has stopped looking at the sky.`,
       ch:[{t:'"Shields."', go:()=>startBattle('c7_worrygate', {surprise:'e'})}]}),
     c7_worry_paid:()=>({sp:'The Worry Gate', scene:'city_day', txt:
-`You count twenty silver out of the purse in the dark of the arch, where everybody can hear it, and knot it in a rag, and throw it underarm up the arch. He catches it without looking, the way a man catches a thing he has been catching all his life, and weighs it in his palm, and makes a face that says it's light, and that light will do.
+`You count twenty silver out of the purse in the dark of the arch, where everybody can hear it, and knot it in a rag, and throw it underarm up the arch. He catches it without looking, and weighs it in his palm, and makes a face that says it's light, and that light will do.
 
 "Malazan arithmetic," he says, and steps back into the lane, and the lane takes him. On the Worrytown side the crossbow goes back to looking at the sky.
 
@@ -1483,11 +1483,11 @@ Behind you Pennick writes something, and blots it. "Toll," he says to the ledger
 
 "Satchel," he says from the pit, with great dignity, the way a man states a position he's no longer in a position to hold.
 
-${C7H.has('kettle') ? `"No," says Kettle kindly, and goes on scraping her boot on the edge of the pit.` : `Nobody answers him. Nobody needs to.`} ${C7H.has('ohl') ? `Ohl looks down at him a moment, professionally, and then holds out a hand. The big one looks at the hand as if it were a trick. It isn't. Ohl gets him out. "Wash," Ohl tells him. "In the lake. Not the near end."` : ''}
+${C7H.has('kettle') ? `"No," says Kettle kindly, and goes on scraping her boot on the edge of the pit.` : `He gets no answer. He doesn't need one.`} ${C7H.has('ohl') ? `Ohl looks down at him a moment, professionally, and then holds out a hand. The big one looks at the hand as if it were a trick. It isn't. Ohl gets him out. "Wash," Ohl tells him. "In the lake. Not the near end."` : ''}
 
 ${C7H.has('brisk') ? `Brisk wipes her spear on a hide on a drying frame, and looks at it, and wipes it again. "Last time through this gate we had ${S.f.c2_wagon ? 'Pell' : 'a mule'}," she says. "I miss the mule."` : ''}
 
-${preUsed('c7_worrygate') ? `Back under the arch Pennick has his lamp lit again. It's the only thing about him that has moved. There's ink across his page in a long black fan where the bang knocked the pot over, and he's writing round it. Against the wall of the arch two of the Watch are sitting with their helmets in their laps, the way men sit after being put down by people who could have done a great deal worse, and one of them is still holding his end of the shutter.
+${preUsed('c7_worrygate') ? `Back under the arch Pennick has his lamp lit again. It's the only thing about him that has moved. There's ink across his page in a long black fan where the bang knocked the pot over, and he's writing round it. Against the wall of the arch two of the Watch are sitting with their helmets in their laps. They were put down by people who could have done a great deal worse, and they know it, and one of them is still holding his end of the shutter.
 
 "The Watch will want to know about the lane," Pennick says, writing. "I was going to tell them it was the gas." He looks at the two against the wall. "They were here." He blots the line, and then he turns the ledger round on the desk so you can read it, which in thirty years he has never done for anybody: *Outbound. Fourth Squad, Malazan marines. One Moranth munition, discharged under the Worry Gate, the morning after.* He has underlined *the morning after*.
 
@@ -1504,9 +1504,9 @@ Quorls.
 
 They're on the grass of a long brown hill just north of the road, a dozen of them and more, folded down like dragonflies the size of barges: long black bodies, lacquer-bright; four wings apiece, each longer than a man, clear as oiled paper and veined in black, twitching in the sun. Black Moranth stand among them in black chitin plate, helms with no faces, not moving. Bridgeburners are going up the hill in twos and threes with packs, and being strapped in behind the riders, and not looking down.
 
-${C7H.has('kettle') ? `Kettle stops dead in the road. She has checked the sky for quorls every day since Nathilog, the way you'd check for weather. Now they're on the ground in front of her, on the grass, close enough to touch. "Oh," she says. "Oh, they're *here*."` : ''}
+${C7H.has('kettle') ? `Kettle stops dead in the road. She has checked the sky for quorls every morning since Nathilog. Now they're on the ground in front of her, on the grass, close enough to touch. "Oh," she says. "Oh, they're *here*."` : ''}
 
-A litter by the biggest of them, and on it a man with a leg splinted out straight and a sword across his knees. A dark small man beside him, cross-legged in the grass. A captain with an empty scabbard and somebody else's sword, looking at nothing. And down on the road east, where it bends round the foot of the hill, a Rhivi party with pack-ponies, and a woman on a grey mare with a child of four or five in good red wool on the saddle before her, and a rider at their head sitting his horse like a man who has decided to be patient.
+A litter by the biggest of them, and on it a man with a leg splinted out straight and a sword across his knees. A dark small man beside him, cross-legged in the grass. A captain with an empty scabbard and somebody else's sword, looking at nothing. And down on the road east, where it bends round the foot of the hill, a Rhivi party with pack-ponies, and a woman on a grey mare with a child of four or five in good red wool on the saddle before her, and a rider at their head, sitting his horse, patient on purpose.
 
 On a barrow-stone at the top of the hill, a raven the size of a dog is watching all of it and laughing, very quietly, to itself.
 
@@ -1519,9 +1519,9 @@ ${pend ? (S.f.c7_kalamWarned || S.f.c7_mallet ? `Behind you on the road, a big s
 
 He sees you coming. He sees Mallet behind you. He lifts one hand, very slightly, and Mallet stops ten paces off and stands there with his bag and his word, and waits.
 
-You tell him. In order, without anything in it that isn't so. The paper, the dye-shop, the tea, the blue hands, the purse. What she asked. What you gave her.
+You tell him. In order, leaving nothing out. The paper, the dye-shop, the tea, the blue hands, the purse. What she asked. What you gave her.
 
-He listens with his eyes on the city, small and blue behind you on the rim of its lake. When you've finished he doesn't say anything for a while. Then he looks past you at Mallet.
+He listens with his eyes on the city, small and blue behind you on the rim of its lake. When you've finished he lets the silence run. Then he looks past you at Mallet.
 
 "Mallet. Kalam's word."
 
@@ -1529,18 +1529,18 @@ He listens with his eyes on the city, small and blue behind you on the rim of it
 
 "I've had it. From the right mouth." He looks back at you. "Go and see to your bag."
 
-Mallet goes. Whiskeyjack looks at you a long moment more.
+Mallet goes. Whiskeyjack goes on looking at you.
 
 "You told me yourself," he says. "Late. But before anybody could." A pause. "Kalam bet me you'd get up the hill first. I'll have to pay him, and he's on a boat." Something happens at the corner of his mouth that isn't a smile, and he doesn't let it become one. "Good."`,
       ch:[{t:'"Sir."', go:'c7_wj'}]}),
     c7_hill_word:()=>({sp:'The quorl hill', scene:'quorl_hill', fx:()=>{ S.f.c7_wjKnows='kalam'; }, txt:
-`You let him pass you. He does it without looking at you, the way a man walks past a grave he isn't going to stop at.
+`You let him pass you. He does it without looking at you.
 
-He goes up to the litter. He bends and says something, low, not long. Whiskeyjack listens. He doesn't look at you. He doesn't look at you for a long time.
+He goes up to the litter. He bends and says something, low, not long. Whiskeyjack listens. He doesn't look at you. He goes on not looking at you.
 
 Then he nods, once, to Mallet, and Mallet goes to see to his bag; and Whiskeyjack goes on looking at the city, small and blue behind you on the rim of its lake, and the hill is very quiet, and the quorls' wings tick in the sun.
 
-${C7H.has('brisk') ? `Brisk doesn't say anything. She's looking at you. She's always looking at you, at the moment it matters.` : ''}`,
+${C7H.has('brisk') ? `Brisk is looking at you. She's always looking at you, at the moment it matters.` : ''}`,
       ch:[{t:'Up the hill.', go:()=>startExplore()}]}),
     c7_wj:()=>{ const f = S.f, d = C7H.dead(), r = f.wjRegard || 0; return {sp:'Whiskeyjack', scene:'quorl_hill', fx:()=>{ S.f.c7_wjHill=1; }, txt:
 `They've set the litter down in the lee of the biggest quorl, out of the wind of its wings. He's got the sword across his knees and the splinted leg out straight and a Moranth water-skin by his hand that he hasn't touched. Quick Ben is sitting in the grass beside him. Neither of them is talking.
@@ -1589,7 +1589,7 @@ When you've finished he's quiet a long time, looking at the city.
 
 "I know," he says.
 
-That's all. He knew all of it. He had it before you came up the hill, from Hedge and Mallet and Paran${f.c7_wjKnows === 'kalam' ? ' and Kalam' : ''}${f.c7_wjKnows === 'claw' ? ' and a paper in a neat hand' : ''}, the way a man who has been listening for twenty years has everything; and there's nothing in a report in order that he didn't have already, except who gave it.
+That's all. He knew all of it. He had it before you came up the hill, from Hedge and Mallet and Paran${f.c7_wjKnows === 'kalam' ? ' and Kalam' : ''}${f.c7_wjKnows === 'claw' ? ' and a paper in a neat hand' : ''}, as anyone who has listened for twenty years has everything; and there's nothing in a report in order that he didn't have already, except who gave it.
 
 "It was a good report," he says. ${f.c7_wjKnows === 'claw' ? `"It came second."` : `"It doesn't change what I said."`} He doesn't say it unkindly. He doesn't say anything unkindly. "Paran will want them. Give them to him."`,
       ch:[{t:'Tell him where the Fourth is going.', go:'c7_choice'},
@@ -1616,7 +1616,7 @@ Whiskeyjack waits. He's good at it. He's had twenty years of practice.`,
     c7_road_outlaw:()=>({sp:'Whiskeyjack', scene:'quorl_hill', txt: C7H.wjTrust() ?
 `"North," you say.
 
-"Good." He says it the way he said it at the Gadrobi crossing: a whole sentence. "Fourth Squad, attached to me." He looks at you. "You'll fly with us."${S.f.c7_wjReport === 'near' ? ` A pause. "First in, Sergeant. I said where it's worst. I meant it."` : ''}
+"Good." The same whole sentence he gave you at the Gadrobi crossing. "Fourth Squad, attached to me." He looks at you. "You'll fly with us."${S.f.c7_wjReport === 'near' ? ` A pause. "First in, Sergeant. I said where it's worst. I meant it."` : ''}
 
 ${S.f.c7_clawDeal === 'took' ? (S.f.c7_wjReport ? `He knows what's in your coat. You told him, in order. He doesn't mention it, and he won't. Quick Ben, in the grass beside him, looks at your coat for exactly one breath, and then at the sky.` : `He doesn't know what's in your coat. Quick Ben, in the grass beside him, looks at your coat for exactly one breath, and then at the sky, and says nothing, and goes on saying it.`) : ''}` :
 `"North," you say.
@@ -1633,12 +1633,12 @@ It's Paran, from the next quorl, with Lorn's sword across his back and a Moranth
 
 "Then give me them. I'm short."
 
-Whiskeyjack looks at Paran for a long moment. Then at you. "They're yours, Captain," he says. "You'll answer for them." ${S.f.c7_wjReport === 'heard' ? `And then, to you, not looking: "Give him your reports. In order. He'll need them more than I did." And he doesn't look at you again.` : `And he doesn't look at you again.`}`,
+Whiskeyjack looks at Paran. Then at you. "They're yours, Captain," he says. "You'll answer for them." ${S.f.c7_wjReport === 'heard' ? `And then, to you, not looking: "Give him your reports. In order. He'll need them more than I did." And he doesn't look at you again.` : `And he doesn't look at you again.`}`,
       ch:[{t:'The squad.', go:'c7_close'}]}),
     c7_road_empire:()=>({sp:'Whiskeyjack', scene:'quorl_hill', txt:
 `"Home," you say.
 
-He doesn't say anything for a while. He looks past you, west and north: at the city and the lake and the long brown country beyond, where the road goes the long way round, wide of Pale, to Genabaris and the sea.
+He looks past you, west and north: at the city and the lake and the long brown country beyond, where the road goes the long way round, wide of Pale, to Genabaris and the sea.
 
 "Home," he says. He says it without weight, and that's the weight. "It's a long road to Genabaris. There'll be a ship at the end of it. ${S.f.c7_clawDeal === 'took' ? `You'll have a paper that gets you on it.` : `Report to whoever's left in the garrison as a loyal squad of an outlawed army, and see what they make of you. I'd like to see their faces. I won't.`}"
 
@@ -1664,7 +1664,7 @@ Something happens at the corner of his mouth, and he lets it.
     c7_road_disband:()=>({sp:'Whiskeyjack', scene:'quorl_hill', txt:
 `"I'm standing them down," you say.
 
-He looks at you for a long time.
+He looks at you until a quorl has gone up behind him.
 
 "You can't," he says. "Not in the Host's books. There's no form for it."
 
@@ -1702,7 +1702,7 @@ He goes back to watching the quorls. The conversation is over. It was over befor
 
 Paran doesn't turn round for a while. A quorl shifts its wings in the grass behind him, and a Moranth clicks at it, and it goes still.
 
-"Neither," he says. Flat, like weather. Then, not flat: "I'll take it. It's better than the other one."
+"Neither," he says. Flat. Then, not flat: "I'll take it. It's better than the other one."
 
 ${S.f.c7_paranToc || S.f.c6_paranToc ? `He looks north, where the first of the quorls are already specks. "I said I'd take *he kept riding* to mean he's still at it. It's good to have the Moranth agree with me. I don't expect it to happen often."` : `He looks north, where the first of the quorls are already specks. "I'm told I'm the one who decides what things mean now. I've decided that one means he's still at it."`}`,
       ch:[{t:'Leave him.'}]}),
@@ -1714,7 +1714,7 @@ It's looking at you. You can't tell how you know.
 ${C7H.has('kettle') ? `Kettle has her hand out, flat, an inch from its side, not touching. "They're *warm*," she whispers, as if it were a secret. "Chub said they were warm. I never believed him." She touches it. It lets her.` : `The Moranth rider by its head doesn't turn. After a while, very slightly, the quorl's wings go still.`}`,
       ch:[{t:'Leave it.'}]}),
     c7_moranth:()=>({sp:'A Black Moranth', fx:()=>{ S.f.c7_moranth=1; }, txt:
-`A Black Moranth, standing by a quorl's head with a crossbow across its chest. Black chitin plate from crown to heel, overlapping like the shell of a beetle, with a sheen on it like oil on water. A full helm with no eye-slits, no mouth, no face at all. Nobody in the Host has ever seen a Moranth face, and the Bridgeburners have a wager on it twenty years old that nobody expects to settle.
+`A Black Moranth, standing by a quorl's head with a crossbow across its chest. Black chitin plate from crown to heel, overlapping like the shell of a beetle, with a sheen on it like oil on water. A full helm with no eye-slits, no mouth, no face at all. The Host has never once seen a Moranth face, and the Bridgeburners have a wager on it twenty years old that nobody expects to settle.
 
 It turns the helm toward you. A click, from somewhere inside. A hiss. Another click.
 
@@ -1749,7 +1749,7 @@ You tell it.
 
 The helm stays on you a long time. Click. Hiss. "Then the debt is closed," says the Moranth. "We do not collect from the dead." Click. "We carry them." It writes one mark on its slate and shows it to you, as if you could read it. "Here. With the others we carry."
 
-Then it touches the stylus to its own chest-plate. Two clicks and a hiss. "Ch'kess," it says, in its lobster's Malazan, so that you will know who is carrying her.` : `It doesn't look at you. It's counting. You get the impression that if you stood here until the quorls left, it would finish counting first, and then look at you, and it wouldn't be worth the wait.`}`,
+Then it touches the stylus to its own chest-plate. Two clicks and a hiss. "Ch'kess," it says, in its lobster's Malazan, so that you will know who is carrying her.` : `It's counting. It hasn't looked at you. You get the impression that if you stood here until the quorls left, it would finish counting first, and then look at you, and it wouldn't be worth the wait.`}`,
         ch:[{t:'Kettle. Give it back.', req:()=>k && !S.f.c7_debt && S.inv.cusser > 0, go:'c7_debt_paid'},
             {t:'Kettle. Tell the Moranth where it went.', req:()=>k && !S.f.c7_debt && (!!S.f.c5_cusserUsed || S.inv.cusser <= 0), go:'c7_debt_spent'},
             {t:'"Not yet."', req:()=>k && !S.f.c7_debt && S.inv.cusser > 0, go:'c7_debt_owed'},
@@ -1763,7 +1763,7 @@ Then it touches the stylus to its own chest-plate. Two clicks and a hiss. "Ch'ke
     c7_debt_paid:()=>({sp:'Ch\'kess', fx:()=>{ S.inv.cusser = Math.max(0, S.inv.cusser - 1); S.f.c7_debt='paid'; gain('moranthchit'); if (C7H.has('kettle')) loy('kettle',1); }, txt:
 `Kettle puts her hand in the satchel and takes out a cusser. Round, clay-grey, the Moranth seal on it in black wax. ${S.f.c5_cusserUsed ? `Not Chub's. Chub's went up at the barrow in a fountain of turf and bone. ${S.f.c6_hedgeCusser ? (S.f.c1_cusserSold ? `This one's Gerrun, off Quartermaster Pell's wagon at the Pale.` : `This one came out of a Host crate somewhere along the road, the way most of them do.`) : `This one's Hedge's, from the vault.`} "A cusser's a cusser," she says, to the helm. "You count *cussers*. Not names."` : `"Maud," she says. "I've been calling her Maud. She was Chub's." Her hand is shaking. "She was yours."`}
 
-She holds it out in both hands, the way you'd hand somebody a baby.
+She holds it out in both hands, seal up, very carefully.
 
 Ch'kess takes it. It turns it over once in its chitin fingers, and looks at the seal, and clicks. "Twelve," it says.
 
@@ -1811,7 +1811,7 @@ She has her hand on the satchel flap, holding it shut.
 
 "I've still got one. I know it's yours. I *know*." She can't look at the helm. "There's still — it might still matter. For something. Chub said I'd know." A breath. "I don't know yet."
 
-The helm regards her for a long time.
+The helm regards her, and goes on regarding her.
 
 "Owed," says Ch'kess. Click. "Owed is a thing that is. We carry it. You carry it." It writes a mark on its slate. "It is lighter carried by two."
 
@@ -1828,7 +1828,7 @@ Ch'kess stops counting.
 
 "Chub," Kettle says, in Malazan, because she can't do the rest in Moranth and she wants it said. "Twelve went into the crate. Eleven hands signed. He didn't. He couldn't. He was short three fingers and he was busy." Her voice wobbles and she doesn't let it. "I'm his hands. I carried it for him. Let me sign."
 
-The helm regards her for a long time. Click. Hiss. A long click.
+The helm regards her. Click. Hiss. A long click.
 
 Then Ch'kess holds out the slate, and the stylus.
 
@@ -1862,7 +1862,7 @@ ${C7H.has('brisk') ? `Brisk comes. She doesn't hurry. She reads the way she coun
 
 *Tavrin, of Cawn. Fourth Regiment. Living.*
 
-She doesn't say anything. She doesn't move. Her finger stays on the line, as if the name might get up and walk off the vellum if she took it away.
+She doesn't move. Her finger stays on the line, as if the name might get up and walk off the vellum if she took it away.
 
 "Living," says Ch'kess, helpfully. Click.
 
@@ -1885,7 +1885,7 @@ You give it ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}. It writ
 ohl:`Ohl reads the living the way he reads his own list: with his finger, in order, not skipping. The Second Army. The Bridgeburners. Then, at the very end of the Host, a heading with one line under it: *Claw, attached*. His finger stops.`,
 ellis:`Ellis reads the living faster than anybody in the Fourth reads anything, the way she reads ground: not the names, the shape of the columns. At the very end, a heading with one line under it: *Claw, attached*. Her finger stops.`,
 kettle:`Kettle reads the living with her lips moving, the way she counts a satchel. At the very end, a heading with one line under it: *Claw, attached*. Her finger stops.`,
-tuft:`Tuft reads the living quietly, the way she reads a spread, and doesn't look up until her finger stops, at the very end, on a heading with one line under it: *Claw, attached*.`,
+tuft:`Tuft reads the living quietly, the way she reads a spread, and her eyes don't leave the vellum until her finger stops, at the very end, on a heading with one line under it: *Claw, attached*.`,
 sgt:`You read the living down the long even columns, not skipping, to a heading at the very end with one line under it: *Claw, attached*. Your finger stops.`,
 _:`{who} reads the living down the long even columns, not skipping, to a heading at the very end with one line under it, *Claw, attached*, and stops.`})}
 
@@ -1908,7 +1908,7 @@ ${C7H.has('ellis') ? `Ellis puts one gloved finger on the mark. "Neither," she s
 
 ${C7H.Rw(w)} ${C7H.sq(w) ? 'reaches' : 'reach'} for the other spindle, the one Ch'kess didn't unroll.
 
-The chitin hand comes down on it. Not hard. Just there, the way a wall is there.
+The chitin hand comes down on it. Not hard. Just there.
 
 "Not yours," says Ch'kess. Click. It takes up its slate and writes a short mark, and turns the slate round so you can see it, as if you could read it. "Asked," it says. "The ones who ask are written. It is a short roll." It winds the living back onto its spindle, turn by turn. "The count is closed."
 
@@ -1921,7 +1921,7 @@ ${C7H.has('ohl') ? `Ohl looks at the space at the foot of his list a long time, 
     c7_letter:()=>({sp:'Brisk', fx:()=>{ S.f.c7_letter='brisk'; if (C7H.has('brisk')) loy('brisk',1); }, txt:
 `She takes it out of her gorget. It has been there three years, against her chest under the scale, and it's soft as cloth now and the seal is worn nearly flat. ${S.f.c1_pits ? `She looks at it the way she looked at the pits at the Pale.
 
-*If I open it now it means something*, she said, on the burial field. It does. It means he's alive.` : `She looks at it for a long time. She was always going to open it when she found him. It means he's alive.`}
+*If I open it now it means something*, she said, on the burial field. It does. It means he's alive.` : `She looks at it, and turns it over once. She was always going to open it when she found him. It means he's alive.`}
 
 She breaks the seal with her thumb.
 
@@ -1935,7 +1935,7 @@ It comes out of her all at once, a big ugly bark of a laugh that makes the neare
 
 "Four coppers," she says into her wrist. "The *bastard*."
 
-${S.f.c6_steppedIn || S.f.c6_key === 'bridgeburners' || S.f.c4_key === 'shield' ? `And then, when she can: "Don't stand in front of things." She looks at the shield on her back, at the rim where she kept a bit of the bend. "Too late, Tav."` : ''}`,
+${S.f.c6_steppedIn || S.f.c6_key === 'bridgeburners' || S.f.c4_key === 'shield' ? `And then, when she can: "Don't stand in front of things." She looks round at her shield, at the rim where she kept a bit of the bend. "Too late, Tav."` : ''}`,
       ch:[{t:'Leave her to it.'}]}),
     c7_letter_sgt:()=>({sp:'Brisk\'s letter', fx:()=>{ S.f.c7_letter='sgt'; }, txt:
 `It's in your coat, where it's been since the alley: soft as cloth, three years old, the seal worn nearly flat from riding against her chest under the scale. It still has the shape of her in it, a little. A curve.
@@ -1982,7 +1982,7 @@ He looks at the woman on the grey mare, and the child, and back at you.
 
 "You will not say what you have seen on this road. To your Empress. To your grey man with the clean boots. To your children, if soldiers have them. It cannot be paid, because it is never finished." A pause. "That is the kind of debt the Rhivi like best."` : ''}
 
-${S.f.c5_sethSat ? `His eyes go to your wrist, to the horse's knuckle-bone on its plait of hair, with the blue bead. He looks at it a long moment. He doesn't say anything about it. He said it once.` : ''}`,
+${S.f.c5_sethSat ? `His eyes go to your wrist, to the horse's knuckle-bone on its plait of hair, with the blue bead. He looks at it. He said what he had to say about it once.` : ''}`,
       ch:[{t:'The child in the red wool.', go:'c7_bundle'},
           {t:'Leave him to the road.'}]}),
     c7_bundle:()=>{ const t = C7H.has('tuft'), lsh = t && C7H.leashed(), wall = !!S.f.c2_outFought, kr = !!S.f.c3_kruppe;
@@ -1991,13 +1991,13 @@ ${S.f.c5_sethSat ? `His eyes go to your wrist, to the horse's knuckle-bone on it
             {t:'The glove. Tuft, now.', req:()=>C7H.has('tuft') && C7H.leashed(), go:'c7_tuft_glove'},
             {t:'Let them go.'}];
       if (S.f.c7_tattersail) return {sp:'The Rhivi road', txt:
-`The Rhivi are still on the road, waiting on something Sethand hasn't said. The woman on the grey mare has her arm round the child in the red wool, and doesn't take it away. ${t ? (lsh ? `Tuft is standing twenty paces off in the grass, with her hand over her collar, not coming any nearer.` : `Tuft is standing at the mare's shoulder. She doesn't say anything else. She's said it.`) : `The raven on the barrow-stone has stopped laughing, for now.`}`, ch};
+`The Rhivi are still on the road, waiting on something Sethand hasn't said. The woman on the grey mare has her arm round the child in the red wool, and doesn't take it away. ${t ? (lsh ? `Tuft is standing twenty paces off in the grass, with her hand over her collar, not coming any nearer.` : `Tuft is standing at the mare's shoulder. She's said what she came to say.`) : `The raven on the barrow-stone has stopped laughing, for now.`}`, ch};
       return {sp:'The Rhivi road', fx:()=>{ S.f.c7_tattersail=1; }, txt:
-`${S.f.c2_outFought ? `The Rhivi won't let you near. A rider moves his horse between you and the grey mare, not threatening, simply there, the way a wall is there. You see the child past his shoulder: red wool, bound at the waist with plaited hair, and a woman's arm round it.` : `The woman on the grey mare looks down at you without expression. The Mhybe, the Rhivi round her call her, and nothing else. She has one arm round the child on the saddle before her, the way she had it on the ridge in the Gadrobi Hills, and she doesn't take it away. The good red Rhivi wool, bound at the waist with plaited hair.`}
+`${S.f.c2_outFought ? `The Rhivi won't let you near. A rider moves his horse between you and the grey mare, not threatening, simply there. You see the child past his shoulder: red wool, bound at the waist with plaited hair, and a woman's arm round it.` : `The woman on the grey mare looks down at you without expression. The Mhybe, the Rhivi round her call her, and nothing else. She has one arm round the child on the saddle before her, the way she had it on the ridge in the Gadrobi Hills, and she doesn't take it away. The good red Rhivi wool, bound at the waist with plaited hair.`}
 
 ${t ? `${lsh ? `Tuft has come down the hill behind you. She stops twenty paces off, in the grass at the side of the road, and comes no nearer.
 
-"No closer," she says. "Not with this on me." Her hand is over her collar. "Not with him looking."` : wall ? `Tuft has come down the hill behind you. The rider doesn't move his horse for her either. She stands at its shoulder and looks past him at the child, and after a while, without anybody saying anything, he lets her look.` : `Tuft has come down the hill behind you. ${C7H.tuft() === 'glove' ? `She walks all the way to the grey mare's shoulder. Nothing in her pulls away from anything now. Meanas is quiet in her; there's nothing in her the child need be afraid of, or she of it.` : `She walks to the grey mare's shoulder, slowly, the way you'd walk up to a horse that might shy, and stops there.`}`}
+"No closer," she says. "Not with this on me." Her hand is over her collar. "Not with him looking."` : wall ? `Tuft has come down the hill behind you. The rider doesn't move his horse for her either. She stands at its shoulder and looks past him at the child, and after a while, without anybody saying anything, he lets her look.` : `Tuft has come down the hill behind you. ${C7H.tuft() === 'glove' ? `She walks all the way to the grey mare's shoulder. Nothing in her pulls away from anything now. Meanas is quiet in her; there's nothing in her the child need be afraid of, or she of it.` : `She walks to the grey mare's shoulder, slowly, hands where the mare can see them, and stops there.`}`}
 
 ${S.f.c3_askedTuft ? `"I promised," she says. "At the Phoenix. That when I knew, you'd be the first." She doesn't take her eyes off the child. "You're the first."` : kr ? `"Kruppe said a thing at the door of the Phoenix," she says. "I never told you what it meant." She doesn't take her eyes off the child. "I'm telling you first."` : `"I've never told anybody this," she says. She doesn't take her eyes off the child. "You're the first."`}
 
@@ -2025,7 +2025,7 @@ Tattersail. ${S.f.c3_askedTuft ? `Kruppe said it at the door of the Phoenix, and
 
 *Tattersail. Cadre. Two hundred and twelve.*
 
-He looks at it for a long time. Then at the child. Then at the charcoal stub in his fingers.
+He looks at it. Then at the child. Then at the charcoal stub in his fingers.
 
 "Nobody's dead until I know where they went," he says. "That's a rule. I made it in the hills." He draws the charcoal through her name, once, carefully, from end to end. "I know where she went. East."
 
@@ -2041,10 +2041,10 @@ You draw the charcoal through her name, once, from end to end. It isn't your lis
     c7_rhivi:()=>({sp:'A Rhivi rider', txt:
 `A boy with a horn bow, fifteen or sixteen, sitting a pony at the back of the party. ${S.f.c5_outrider ? `The outrider from the ridge in the Gadrobi Hills, whose cousin the Adjunct killed on the plain.` : `He has the look of somebody the plain started young and is finishing fast.`}
 
-${S.f.c2_outFought ? `He looks at the badge on your kit. "Fourth," he says. He knows the word. Somebody taught it to him, and not kindly. He turns his pony east and doesn't say anything else.` : `"Malazan," he says, in the Malazan he learned from people shouting it. Then, carefully, as if he has been practising: "Go well." ${S.f.c5_outrider ? `A pause. "She is dead. The woman with the sword. I hear it." He looks at you. "Good."` : ''}`}`,
+${S.f.c2_outFought ? `He looks at the badge on your kit. "Fourth," he says. He knows the word. He was taught it, and not kindly. He turns his pony east.` : `"Malazan," he says, in the Malazan he learned from people shouting it. Then, carefully, as if he has been practising: "Go well." ${S.f.c5_outrider ? `A pause. "She is dead. The woman with the sword. I hear it." He looks at you. "Good."` : ''}`}`,
       ch:[{t:'Leave him to the road.'}]}),
     c7_crone:()=>({sp:'Crone · Great Raven', fx:()=>{ S.f.c7_crone=1; }, txt:
-`It's on the barrow-stone at the top of the hill, the one the Moranth have landed round without touching. The size of a dog, and greyer at the throat than it was ${S.f.c5_crone ? 'on the ridge in the hills' : 'on the plain'}. It watches you come up the way a merchant watches a customer who has finally, after long haggling, brought enough money.
+`It's on the barrow-stone at the top of the hill, the one the Moranth have landed round without touching. The size of a dog, and greyer at the throat than it was ${S.f.c5_crone ? 'on the ridge in the hills' : 'on the plain'}. It watches you come up with a merchant's eye for a customer who has finally, after long haggling, brought enough money.
 
 "Ha!" It opens its beak and laughs. "Little soldiers! On a hill! *Deciding* things!"
 
@@ -2077,7 +2077,7 @@ ${S.f.c7_debt === 'paid' ? `"I gave one back," says Kettle. "To the Moranth. Ch'
 
 ${S.f.c7_chub === 'signed' ? `"I signed for Chub," says Kettle. "On their slate. They let me."
 
-Hedge stops chewing. He looks at her a long moment. Then he takes his cap off, which nobody in the Bridgeburners has ever seen him do, and holds it against his chest, and puts it back on. "Good," he says, thickly. "Onion," he explains, to nobody.
+Hedge stops chewing. He looks at her. Then he takes his cap off, which nobody in the Bridgeburners has ever seen him do, and holds it against his chest, and puts it back on. "Good," he says, thickly. "Onion," he explains, to nobody.
 
 ` : S.f.c7_chub === 'carried' ? `"I asked to sign for Chub," says Kettle. "They said the dead are carried."
 
@@ -2093,13 +2093,13 @@ You tell him.
 He sits there a long time with an onion in his fist, not eating it. "I gave her a cusser," he says at last. "In the vault. Told her not to name it." He puts the onion away. "I hope she named it. I hope she named it something awful."`,
       ch:[{t:'Leave him to the Moranth.'}]}),
     c7_trotts:()=>({sp:'Trotts', txt:
-`He's standing in the grass with his arms folded, as he stood at the stakes in the Gadrobi crossing, as he has presumably stood everywhere since the world was made. The Moranth are working round him like water round a rock. He does not look at you.
+`He's standing in the grass with his arms folded, as he stood at the stakes in the Gadrobi crossing, as he has presumably stood everywhere since the world was made. The Moranth are working round him like water round a rock.
 
 ${C7H.has('brisk') ? `Brisk stops in front of him. They regard each other: two walls meeting on a hill. Trotts, very slowly, bares his teeth. Every one of them.
 
 Brisk bares hers back.
 
-Nobody in the Fourth has ever seen Brisk bare her teeth. Trotts looks at them for a long moment, and then nods, once, as if a question had been answered that he has been asked a great many times. Brisk walks on. "*Him*," she says to you, with enormous satisfaction, "I'll miss."` : C7H.isDead('brisk') ? `He looks along the Fourth, slowly, the way a wall would look if a wall could, and doesn't find the other wall. Then he looks at you. Very slowly, he pulls one of the little bones out of the knots in his hair and holds it out.
+Nobody in the Fourth has ever seen Brisk bare her teeth. Trotts considers them, and then nods, once, as if a question had been answered that he has been asked a great many times. Brisk walks on. "*Him*," she says to you, with enormous satisfaction, "I'll miss."` : C7H.isDead('brisk') ? `He looks along the Fourth, slowly, and doesn't find the other wall. Then he looks at you. Very slowly, he pulls one of the little bones out of the knots in his hair and holds it out.
 
 You take it. He folds his arms again. That's all. It's a great deal, from Trotts.` : `He bares his teeth at you. You're not sure what it means. You decide it means well.`}`,
       ch:[{t:'Leave him.'}]}),
@@ -2132,25 +2132,25 @@ She salutes, which she doesn't have to do any more, and means it, which she alwa
 
 "You will."
 
-"I'll stand where you put me, Sergeant. Same as always." She runs her thumb along the shield rim. "Even on that."` : k === 'outlaw' ? `She's standing, not sitting, with her shield on her back. "North," she says. "Not with the Fourth. To the Fourth Regiment. To Tav." She looks at you. "I asked Paran for the transfer. He signed it on his knee. He didn't ask why. He's learning."
+"I'll stand where you put me, Sergeant. Same as always." She runs her thumb along the shield rim. "Even on that."` : k === 'outlaw' ? `She's standing, not sitting, with her kit already on. "North," she says. "Not with the Fourth. To the Fourth Regiment. To Tav." She looks at you. "I asked Paran for the transfer. He signed it on his knee. He didn't ask why. He's learning."
 
-She doesn't salute. She nods. "Sergeant." It's the whole conversation, and for once it isn't enough, and she knows it isn't, and she goes.` : fol && k === 'empire' ? `She's sitting with her shield across her knees, looking north.
+She doesn't salute. She nods. "Sergeant." It's the whole conversation, and for once it isn't enough, and she knows it isn't, and she goes.` : fol && k === 'empire' ? `She's sitting on her pack, looking north.
 
-"He's alive," she says, before you can speak. "He's alive, and he's north, and I'm going west." She says it the way she'd read out a ration count. "I've been working out if that makes sense. It doesn't." She looks at you. "You asked. I'm coming. That's what *we don't leave people* means, I think. I think it means the ones in front of you."` : fol ? `"The Phoenix," she says. "The door. Kruppe said." She looks at the city, small and blue on its lake. "I've stood in worse doors." A pause. "I'll write to him. Tav. The Moranth carry everything." ${read ? `Something almost happens to her mouth. "I'll put four coppers at the bottom of every one."` : ''}` : `She's standing with her shield on her back. "No," she says, before you've asked. "He's north. Three years I've looked for him. I'm not ${k === 'city' ? 'staying in a city' : 'walking the other way'} now he's found."
+"He's alive," she says, before you can speak. "He's alive, and he's north, and I'm going west." She lists it, item by item. "I've been working out if that makes sense. It doesn't." She looks at you. "You asked. I'm coming. That's what *we don't leave people* means, I think. I think it means the ones in front of you."` : fol ? `"The Phoenix," she says. "The door. Kruppe said." She looks at the city, small and blue on its lake. "I've stood in worse doors." A pause. "I'll write to him. Tav. The Moranth carry everything." ${read ? `Something almost happens to her mouth. "I'll put four coppers at the bottom of every one."` : ''}` : `She's standing, shield slung. "No," she says, before you've asked. "He's north. Three years I've looked for him. I'm not ${k === 'city' ? 'staying in a city' : 'walking the other way'} now he's found."
 
 She comes to attention, and salutes, and it's correct in every particular. "Sergeant." And she goes up the hill toward the quorls, and doesn't look back, because Brisk never looks back. It's what the shield's for.`}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
     c7_close_kettle:()=>{ const k = S.f.c7_key || 'outlaw', fol = C7H.follows('kettle', k), sq = C7H.square(); return {sp:'Kettle', scene:'quorl_hill', txt:
 `${k === 'disband' ? `"The Moranth," she says. ${sq ? `"I'm square. I'm going anyway. They count, Sergeant. They count *everything*. I've never met anybody who counts like I do."` : `"I owe them. I'm going to go and owe them properly, where they can see."`}
 
-"You kept pointing me at things," she says. "And I kept making them stop being things." Her eyes are very bright. "That's love, in the sapper trade. I told you that the first week. I'm telling you again so you'll remember I told you."` : k === 'outlaw' && fol ? `She's standing by the waiting quorl with her hand flat on its side, the way you'd put a hand on a horse's neck. It's warm. She keeps being surprised that it's warm.
+"You kept pointing me at things," she says. "And I kept making them stop being things." Her eyes are very bright. "That's love, in the sapper trade. I told you that the first week. I'm telling you again so you'll remember I told you."` : k === 'outlaw' && fol ? `She's standing by the waiting quorl with her hand flat on its side. It's warm. She keeps being surprised that it's warm.
 
-"I'm going to name it," she says. "Don't tell the Moranth." ${sq ? `She touches the chit at her throat. "I'm square with them. I can name what I like."` : `"I owe them. I'm going to name it anyway. They can put it on the bill."`}` : k === 'outlaw' ? `"I'm going with ${S.f.c7_qmMet ? 'Ch\'kess' : 'the Moranth'}," she says. "Not with the Fourth. With the munitions." She doesn't look at you. "It isn't the debt. Or it is. I don't know. They count, Sergeant. I've never met anybody who counts like I do."` : fol && k === 'empire' ? `She's looking at the sky. "No quorls over the sea," she says. "I asked ${S.f.c7_qmMet ? 'Ch\'kess' : 'the quartermaster'}. It clicked at me. I think it meant no." She puts her hand on the satchel. "${S.inv.cusser > 0 ? `I've still got one. Boats and munitions: never. Fiddler said.` : `Nothing in it. Good. Boats and munitions: never. Fiddler said.`} I'm telling you so you'll remember I told you."` : fol ? `"A city sitting on gas," she says, with a new and terrible tenderness. "The *whole* place, Sergeant." She looks at you. "Somebody should stay and keep an eye on Hedge's eggs, under the crossing. They're asleep. They should stay asleep." A pause. "I'll sing to them."` : `${sq ? `"I'm going with the Moranth," she says.` : `"I can't," she says. "I owe them. They're right *there*."`} She won't look at you. "${S.f.c7_debt === 'owed' ? 'Owed is lighter carried by two, it said. ' : ''}${sq ? `I'm square, and I want to carry something anyway. I don't know what else I'm for.` : S.f.c7_debt === 'owed' ? `I'm going to go and carry my half where it can see me.` : `I've never once gone and told them. I'm going to go and owe them properly, where they can see.`}"`}`,
+"I'm going to name it," she says. "Don't tell the Moranth." ${sq ? `She touches the chit at her throat. "I'm square with them. I can name what I like."` : `"I owe them. I'm going to name it anyway. They can put it on the bill."`}` : k === 'outlaw' ? `"I'm going with ${S.f.c7_qmMet ? 'Ch\'kess' : 'the Moranth'}," she says. "Not with the Fourth. With the munitions." She's looking at the satchel. "It isn't the debt. Or it is. I don't know. They count, Sergeant. I've never met anybody who counts like I do."` : fol && k === 'empire' ? `She's looking at the sky. "No quorls over the sea," she says. "I asked ${S.f.c7_qmMet ? 'Ch\'kess' : 'the quartermaster'}. It clicked at me. I think it meant no." She puts her hand on the satchel. "${S.inv.cusser > 0 ? `I've still got one. Boats and munitions: never. Fiddler said.` : `Nothing in it. Good. Boats and munitions: never. Fiddler said.`} I'm telling you so you'll remember I told you."` : fol ? `"A city sitting on gas," she says, with a new and terrible tenderness. "The *whole* place, Sergeant." She looks at you. "I'll stay and keep an eye on Hedge's eggs, under the crossing. They're asleep. They should stay asleep." A pause. "I'll sing to them."` : `${sq ? `"I'm going with the Moranth," she says.` : `"I can't," she says. "I owe them. They're right *there*."`} She won't look at you. "${S.f.c7_debt === 'owed' ? 'Owed is lighter carried by two, it said. ' : ''}${sq ? `I'm square, and I want to carry something anyway. I don't know what else I'm for.` : S.f.c7_debt === 'owed' ? `I'm going to go and carry my half where it can see me.` : `I've never once gone and told them. I'm going to go and owe them properly, where they can see.`}"`}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
     c7_close_tuft:()=>{ const k = S.f.c7_key || 'outlaw', fol = C7H.follows('tuft', k), lsh = C7H.leashed(), st = lsh ? 'kept' : C7H.tuft(); return {sp:'Tuft', scene:'quorl_hill', txt:
-`${(k === 'disband' || !fol) && !(k === 'empire' && lsh) ? (lsh ? `"West," she says. "To him." Her hand is on her collar. "If he's looking out of me, I'll give him something to look at that isn't her. I'll walk into his tent at Genabaris with a letter that says nothing and stand where he says and keep my eyes open, and she'll be a thousand leagues east growing up where he can't see."
+`${(k === 'disband' || !fol) && !(k === 'empire' && lsh) ? (lsh ? `"West," she says. "To him." Her hand is on her collar. "If he's looking out of me, I'll give him something to look at that isn't her. I'll walk into his tent at Genabaris with a letter with nothing in it and stand where he says and keep my eyes open, and she'll be a thousand leagues east growing up where he can't see."
 
-She takes the hand away. "That's the last thing I can do for her. It's a good one."` : `"East," she says. "With the Rhivi. With her." She looks down at the road, at the woman on the grey mare. ${k === 'disband' ? `"Sethand says I may. He said it once."` : S.f.c7_tattersail ? `"${S.f.c3_askedTuft ? 'I kept my promise. ' : ''}You were the first to know. Now I'd like to be there for every day after that, for as long as it takes her to grow up and remember."` : `"There's a child in that red wool I'd like to watch grow up. Ask me why, one day. I'll tell you."`}`) : k === 'empire' && lsh ? `She's standing. "He's called," she says. She takes her hand off her collar and looks at it. "I'm going home to the staff. With a letter that says nothing, like last time." She tries to smile. "It was always going to be him or the glove. It wasn't the glove."` : k === 'outlaw' ? (lsh ? `She's sitting with her hand over her collar. "He'll come north with us," she says. "The High Mage. In here." She doesn't take the hand away. "I'll know when he's looking. I'll sit with my back to the command tent when he is."` : `She's sitting with the Deck in her lap, not drawing. "North," she says. "Where the cadre was." ${st === 'glove' ? `She turns her hand over. Nothing curls round the fingers. "I'm nobody's. I'll be nobody's in the Host. I didn't know you could be."` : st === 'shadow' ? `She touches the grey at her temple. "Something will follow us north under the ground. It'll be polite about it."` : st === 'dark' ? `She pulls the Andii cloak closer. "The house went away with the mountain. I miss the window." ${C7H.has('ohl') ? `She almost laughs. "Don't tell Ohl."` : `She almost laughs, and then doesn't, because there's no Ohl left not to tell.`}` : ''}`) : k === 'empire' ? `"Home," she says. "To the High Mage's staff." She almost smiles. ${st === 'glove' ? `"He can't find me any more. I could stand in his tent and he'd look through me."` : st === 'shadow' ? `"He'll find somebody's thumb on me. I'd like to see his face."` : st === 'dark' ? `"He'll find Kurald Galain looked at me once and didn't forget. I think that frightens him. I hope so."` : `"He'll find me. I'll find out what he wants."`}` : `"Baruk has a door only I can see," she says. "Kruppe says." She almost laughs. "I'm going to sit beside it and read the Deck for nobody."`}`,
+She takes the hand away. "That's the last thing I can do for her. It's a good one."` : `"East," she says. "With the Rhivi. With her." She looks down at the road, at the woman on the grey mare. ${k === 'disband' ? `"Sethand says I may. He said it once."` : S.f.c7_tattersail ? `"${S.f.c3_askedTuft ? 'I kept my promise. ' : ''}You were the first to know. Now I'd like to be there for every day after that, for as long as it takes her to grow up and remember."` : `"There's a child in that red wool I'd like to watch grow up. Ask me why, one day. I'll tell you."`}`) : k === 'empire' && lsh ? `She's standing. "He's called," she says. She takes her hand off her collar and looks at it. "I'm going home to the staff. With an empty letter, like last time." She tries to smile. "It was always going to be him or the glove. It wasn't the glove."` : k === 'outlaw' ? (lsh ? `She's sitting with her hand over her collar. "He'll come north with us," she says. "The High Mage. In here." She doesn't take the hand away. "I'll know when he's looking. I'll sit with my back to the command tent when he is."` : `She's sitting with the Deck in her lap, not drawing. "North," she says. "Where the cadre was." ${st === 'glove' ? `She turns her hand over. Nothing curls round the fingers. "I'm nobody's. I'll be nobody's in the Host. I didn't know you could be."` : st === 'shadow' ? `She touches the grey at her temple. "Something will follow us north under the ground. It'll be polite about it."` : st === 'dark' ? `She pulls the Andii cloak closer. "The house went away with the mountain. I miss the window." ${C7H.has('ohl') ? `She almost laughs. "Don't tell Ohl."` : `She almost laughs, and then doesn't, because there's no Ohl left not to tell.`}` : ''}`) : k === 'empire' ? `"Home," she says. "To the High Mage's staff." She almost smiles. ${st === 'glove' ? `"He can't find me any more. I could stand in his tent and he'd look through me."` : st === 'shadow' ? `"He'll find somebody's thumb on me. I'd like to see his face."` : st === 'dark' ? `"He'll find Kurald Galain looked at me once and didn't forget. I think that frightens him. I hope so."` : `"He'll find me. I'll find out what he wants."`}` : `"Baruk has a door only I can see," she says. "Kruppe says." She almost laughs. "I'm going to sit beside it and read the Deck for nobody."`}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
     c7_close_ohl:()=>{ const k = S.f.c7_key || 'outlaw', fol = C7H.follows('ohl', k), d = C7H.dead(); return {sp:'Ohl', scene:'quorl_hill', txt:
 `${k === 'disband' ? (C7H.tuftEast('disband') ? `"East," he says. "With the child. With Tuft." He looks down at the road. "Somebody has to argue with Hood for her, and I'm old, and I've got the time.${C7H.tuft() === 'shadow' ? ` And something's got a thumb on her, and I'd like to be standing next to her when it presses.` : ''}"` : `"North," he says. "Where the wounded will be. There'll be a great many." He doesn't apologise. He never has.`) : k === 'outlaw' && fol ? `He has a cup of tea going cold on his knee, made on a Moranth fire, which he says is the worst fire he has ever made tea on and will not stop describing. ${S.f.c7_askedOhl ? `"Dujek has work for me," he says. "He said. More work than Hood's got time for." He drinks the tea, finally, and makes the face. "I'll keep losing slowly. It's an order. I've decided to obey one before I die."` : `"There'll be work, north," he says. "There always is, where Dujek goes." He drinks the tea, finally, and makes the face.`}` : !fol ? `"North," he says. "To the Host's hospital tents. Not to the Fourth." He folds the oilcloth. "I'm old, Sergeant. I go where the wounded are. There will be a great many, north."` : k === 'empire' ? `"Seven Cities," he says, as if tasting it. "They're saying it will rise within the year. Ehrlitan's in Seven Cities." He turns the cup. "I'll go home with you, Sergeant, to an Empire that's about to be at war with where I was born." A breath. "The list will get longer. I'll be there to write it. That's all a list is."` : `"Jeth Arrow's room," he says. "At the Phoenix, by the stair, where the lamp doesn't reach." He's smiling, which is rare. "I said I didn't know how to write a room. I've decided I'll live in it. Then it'll write itself."`}
@@ -2165,14 +2165,14 @@ ${held ? `Then she looks at you, and says one sentence, the first she has said t
 "You held on to me on that hill because you'd decided I was yours, and I've been angry at you for it every morning since, and I've decided you were right."` : ''}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
     c7_close_vell:()=>{ const k = S.f.c7_key || 'outlaw', fol = C7H.follows('vell', k); return {sp:'Vell', scene:'quorl_hill', txt:
-`${k === 'disband' ? `He's coiling the line. He's done it four times. "Home, then," he says. "Down there." He nods at the city, small and blue on its lake. "I'll have to explain to the clan what a sergeant is. They won't believe me." He stops coiling. "I'll tell him anyway. Somebody should know."` : k === 'city' && fol ? `"I could show you every roof," he says, looking down at the city. "Every one. Which gutters hold. Where the lines go. Where you'd put a man if you wanted him not to be seen." He grins, and then stops grinning. "I'd like to show you the ones that don't matter, too. The ones with nothing on them but a view."` : k === 'outlaw' && fol ? `He's looking at the quorl as if it might eat him, which is fair. "I've never been anywhere," he says. "I've been *up*. That's different." He hitches the line on his shoulder. "North. All right. What do you tie a rope to, in the north?" "Each other," says ${C7H.has('brisk') ? 'Brisk, going past' : 'somebody'}. He thinks about that the way he thinks about everything, out loud and in order. "All right," he says.` : k === 'empire' && fol ? `"The Empire," he says. "The one with the contract on all of you." He looks at you. "I'm going to the place where everybody hates the Guild, with the people the Guild was paid to hate." A long breath. "I asked to. I'd like that written down somewhere."` : `He's standing a little way off, with the line on his shoulder, looking at the city and not at you.
+`${k === 'disband' ? `He's coiling the line. He's done it four times. "Home, then," he says. "Down there." He nods at the city, small and blue on its lake. "I'll have to explain to the clan what a sergeant is. They won't believe me." He stops coiling. "I'll tell him anyway. He ought to know."` : k === 'city' && fol ? `"I could show you every roof," he says, looking down at the city. "Every one. Which gutters hold. Where the lines go. Where you'd put a man if you wanted him not to be seen." He grins, and then stops grinning. "I'd like to show you the ones that don't matter, too. The ones with nothing on them but a view."` : k === 'outlaw' && fol ? `He's looking at the quorl as if it might eat him, which is fair. "I've never been anywhere," he says. "I've been *up*. That's different." He hitches the line on his shoulder. "North. All right. What do you tie a rope to, in the north?" "Each other," says ${C7H.has('brisk') ? 'Brisk, going past' : 'somebody'}. He thinks about that the way he thinks about everything, out loud and in order. "All right," he says.` : k === 'empire' && fol ? `"The Empire," he says. "The one with the contract on all of you." He looks at you. "I'm going to the place where everybody hates the Guild, with the people the Guild was paid to hate." A long breath. "I asked to. I'd like that written down somewhere."` : `He's standing a little way off, with the line on his shoulder, looking at the city and not at you.
 
 "I can't," he says. "${k === 'outlaw' ? `North. Away from every roof I know. I'd be no use to you on a plain, Sergeant, I'd be a boy with a rope and nothing to throw it at` : k === 'empire' ? `The Empire. I can't walk into Genabaris with a Guild coat on and a debt in my mouth. They'd hang me for the coat` : `I can't stay in a city where I've stood on a roof with Malazans in front of the whole Guild. Not yet. Ask me in a year`}." He swallows. "I'm sorry. I'd like it on the record that I'm sorry."
 
 "It's on the record," you tell him. He nods, and grips your forearm the Guild way, wrist to wrist, hard, like a line taking weight. Then he goes.`}`,
       ch:[{t:'Back to the squad.', go:'c7_close'}]}; },
     c7_close_end:()=>{ const k = S.f.c7_key || 'outlaw', n = C7H.countFollow(k); return {sp:'The quorl hill · noon', scene:k === 'outlaw' ? 'quorl_sky' : 'quorl_hill', txt:
-`${k === 'outlaw' ? `The quorl lifts under you with a lurch like a boat on a swell. The grass goes flat below in a roaring ring. The hill drops away, and the road, and the Rhivi on it, and the city tilts on the rim of its lake, blue and small; and then there's only the sky, and the sky has nothing in it but the Host's quorls strung out north like a line of geese, and the Fourth among them.` : k === 'disband' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. The hill empties the way a room empties at the end of a long night: not all at once, and then all at once.` : k === 'empire' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. It's very quiet on the hill without them. The road goes back past the city and away north-west, wide of Pale, toward Genabaris and the sea. It's a long road, and by the end of it you'll know every rut.` : `The last quorl goes up. The grass lies down in its ring, and slowly stands again. Below, the city: blue, loud even from here, with a house in a garden that wasn't there yesterday and a gate that needs somebody on it.`}
+`${k === 'outlaw' ? `The quorl lifts under you with a lurch like a boat on a swell. The grass goes flat below in a roaring ring. The hill drops away, and the road, and the Rhivi on it, and the city tilts on the rim of its lake, blue and small; and then there's only the sky, and the sky has nothing in it but the Host's quorls strung out north like a line of geese, and the Fourth among them.` : k === 'disband' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. The hill empties: not all at once, and then all at once.` : k === 'empire' ? `The last quorl goes up. The grass lies down in its ring, and slowly stands again. It's very quiet on the hill without them. The road goes back past the city and away north-west, wide of Pale, toward Genabaris and the sea. It's a long road, and by the end of it you'll know every rut.` : `The last quorl goes up. The grass lies down in its ring, and slowly stands again. Below, the city: blue, loud even from here, with a house in a garden that wasn't there yesterday and a gate that needs somebody on it.`}
 
 Far off, south of the road, across the brown grass, a figure is walking. Alone. Not hurrying. The colour of the earth it walks on, with something long across its back that catches no light. It doesn't look round.
 
@@ -2210,12 +2210,12 @@ C7H.ending = key => {
     const f = S.f, n = C7H.countFollow(key), intact = C7H.intact(key), took = f.c7_clawDeal === 'took', alive = SQUAD().filter(id => id !== 'sgt');
     let P;
     if (key === 'outlaw') P = [
-`Noon on a brown hill east of Darujhistan, and the quorls go up. They go up all at once, the way a flock goes, with a noise like a hundred sails filling, and the grass lies flat under them in rings, and the city tilts away blue and small on the rim of its lake. And there is the Fourth, strapped in behind Black Moranth who have never shown anybody their faces, going north into a sky with nothing in it.`,
+`Noon on a brown hill east of Darujhistan, and the quorls go up. They go up all at once, with a noise like a hundred sails filling, and the grass lies flat under them in rings, and the city tilts away blue and small on the rim of its lake. And there is the Fourth, strapped in behind Black Moranth who have never shown anybody their faces, going north into a sky with nothing in it.`,
 `The Host is outlawed. Dujek Onearm has a price on his head he'd be insulted by if it were any lower; Whiskeyjack is his second, with a leg that will never be right; a green captain with a dead woman's sword has the Bridgeburners. ${C7H.wjTrust() ? `The Fourth flies with them. Attached, Whiskeyjack said on the hill, and the word has held, the way his words do.${f.c7_wjReport === 'near' ? ` First in, he said, and where it's worst. He meant it. So did you.` : f.c7_wjReport === 'ok' ? ` You gave him the report on the hill, in order; it was the last thing that tipped it, and you both know it.` : ''}` : `The Fourth flies with the baggage: the Host's marines, not his. Paran asked for you anyway, and got you, and you are finding out what that's worth, and it's worth more than you'd have guessed.`}${took ? ` There's a pardon in the bottom of your pack in a neat hand. You never unfold it. You never throw it away, either.` : ''}`,
 `Somewhere ahead is Caladan Brood, and whatever Dujek means to say to him, and after that whatever comes after that, which in this world is always more of it. ${n === 1 ? `Of the Fourth, only you are on the quorls.` : intact ? `All ${C7H.num(n)} of the Fourth are on the quorls.` : `${C7H.Num(n)} of the Fourth are on the quorls.`} The Empire has written every one of you down as an outlaw. You find you don't mind the word. It's the first thing the Empire has ever called the Fourth that sounded as if it meant it.`];
     else if (key === 'empire') P = [
 `Home, then. Weeks on the road to Genabaris, north-west and wide of Pale, over grass that doesn't care, and then the sea, and a ship, and a grey sail filling, and the city of blue fire going down behind the rail like a lamp turned low.`,
-took && f.c7_pardonEmpty ? `There's a pardon in your coat, in a neat hand. It says the Fourth were loyal. It doesn't say to what. ${C7H.Rw(f.c7_emptyBy)} paid for it on the Lakefront with a report in order, without anything in it that wasn't so, and nothing in it anybody could use; and somewhere in a grey ledger there's a page of ${f.c7_emptyBy === 'brisk' ? 'rations' : f.c7_emptyBy === 'kettle' ? 'munitions' : f.c7_emptyBy === 'ohl' ? 'the dead' : f.c7_emptyBy === 'ellis' ? 'horses' : f.c7_emptyBy === 'tuft' ? 'cards that say nothing' : 'pay owed'} where the Fourth's names should be. You carry the paper across the sea like a joke you're saving for the right company.` : took ? `There's a pardon in your coat, in a neat hand. It says the Fourth were loyal. It doesn't say to what. The grey cloak wrote your people down in his book one by one, with a line after each name, and you gave him every line, in order, without anything in it that wasn't so; and you carry that across the sea like ballast.` : `No pardon. Nobody asked the Fourth to be loyal and nobody thanks you for it. At the Genabaris garrison a captain you've never met looks at you across a table and tries to decide what a loyal squad of an outlawed army is. There isn't a column for it. You watch him rule one.`,
+took && f.c7_pardonEmpty ? `There's a pardon in your coat, in a neat hand. It says the Fourth were loyal. It doesn't say to what. ${C7H.Rw(f.c7_emptyBy)} paid for it on the Lakefront with a report in order, every word of it so, and nothing in it anybody could use; and somewhere in a grey ledger there's a page of ${f.c7_emptyBy === 'brisk' ? 'rations' : f.c7_emptyBy === 'kettle' ? 'munitions' : f.c7_emptyBy === 'ohl' ? 'the dead' : f.c7_emptyBy === 'ellis' ? 'horses' : f.c7_emptyBy === 'tuft' ? 'cards that say nothing' : 'pay owed'} where the Fourth's names should be. You carry the paper across the sea like a joke you're saving for the right company.` : took ? `There's a pardon in your coat, in a neat hand. It says the Fourth were loyal. It doesn't say to what. The grey cloak wrote your people down in his book one by one, with a line after each name, and you gave him every line, in order, and every line true; and you carry that across the sea like ballast.` : `No pardon. The Fourth wasn't asked to be loyal, and nobody thanks you for it. At the Genabaris garrison a captain you've never met looks at you across a table and tries to decide what a loyal squad of an outlawed army is. There isn't a column for it. You watch him rule one.`,
 `The Host goes north without you. ${C7H.has('brisk') ? (C7H.follows('brisk','empire') ? `Brisk's brother is in it, and Brisk is on the ship, and neither of those things has stopped being true since the hill.` : `Brisk's brother is in it, and so, now, is Brisk.`) : `Tav of Cawn is in it, alive, on the Moranth's rolls.`} ${took ? `The Claw keeps its ledger, and the Fourth's page stays open, because the Claw never closes a page on anyone useful.` : (f.c7_clawFought || f.c7_clawBought || f.c7_clawTalked) ? `The grey cloak's page on the Fourth is closed, or drowned. The Claw has other clerks. It always has.` : `The Claw keeps its ledger. Somewhere in it the Fourth's entry is still open.`} ${n === 1 ? `You count on the deck at dawn, out of habit, and get one.` : `You count on the deck at dawn: ${intact ? `all ${C7H.num(n)}` : C7H.num(n)}.`} Home is a word with some give in it. You're going to find out how much.`];
     else if (key === 'city') P = [
 `You stay. The quorls go up without you and dwindle north over the Gadrobi Hills, and you walk back into Darujhistan${preUsed('c7_worrygate') ? `, though not by the gate you went out of: the Worry Gate has a new crack in its arch and Pennick under it with a column for the Fourth. You go round the walls to the next gate, and the gate-watch there` : ` by the gate you went out of, and the gate-watch`} looks at the Fourth and doesn't write anything down, which in Darujhistan is a kind of welcome.`,
@@ -2247,13 +2247,13 @@ C7H.fateX = id => {
   const f = S.f, me = id === 'sgt', P = C7H.pr(id), She = me ? 'You' : P.She, she = me ? 'you' : P.she, her = me ? 'your' : P.hers, out = [];
   if (f.c7_emptyBy === id && f.c7_pardonEmpty) out.push({
     sgt:`You gave a grey cloak the pay ledger for a pardon, on the Lakefront, every word of it so, and he took it. It's the only time anybody but you ever read the pay ledger. It's the only time it mattered.`,
-    brisk:`She gave a grey cloak the ration count for a pardon, on the Lakefront, in the regiment voice, and he took it. She has never once mentioned it. She wrote it in the ration ledger instead: *One pardon. Rations, in lieu.*`,
+    brisk:`She gave a grey cloak the ration count for a pardon, on the Lakefront, from the chest, and he took it. She has never once mentioned it. She wrote it in the ration ledger instead: *One pardon. Rations, in lieu.*`,
     kettle:`She gave a grey cloak the munitions return for a pardon, every word of it true, and he took it. She tells it at every fire, and it's longer every time, and there still isn't a lie in it.`,
     tuft:`She gave a grey cloak a reading for a pardon: the cards say nothing about any of them. He took it. It's the only reading she has ever given that she's proud of.`,
     ohl:`He read a grey cloak the list for a pardon, from one, and the man stopped writing at forty and took it anyway. Ohl says it's the first time the list ever did anybody any good. He's wrong, but he's earned it.`,
     ellis:`She gave a grey cloak a remount return for a pardon, in the form his people taught her, and he took it. "Six years they had me giving reports," she says. "One was worth it."`}[id] || '');
   if (f.c7_clawPage === id) out.push(me ? `The grey cloak tore one page out of his book before he closed it, on the Lakefront, and kept it, folded in three, inside his coat. It has your name on it. Somewhere, it still does.` : `The grey cloak tore one page out of his book before he closed it, on the Lakefront, and kept it. It has ${her} name on it. ${She} knows exactly where it is: folded in three, in a grey coat, somewhere. It's the only line about ${me ? 'you' : P.her} in the world ${she} will never get to strike out.`);
-  if (f.c7_moranthMark === id) out.push(id === 'kettle' ? `There's a second mark against her name on a Moranth slate now, beside the old one from Nathilog. It means *asked*. She's prouder of it than of anything she's ever carried.` : `There's a mark against ${her} name on a Moranth slate, short, from the hill. ${C7H.has('kettle') ? `Kettle says it means *asked*.` : `Nobody left in the Fourth can read it.`} The Moranth are polite to ${me ? 'you' : P.her} ever after, the way they're polite to weather.`);
+  if (f.c7_moranthMark === id) out.push(id === 'kettle' ? `There's a second mark against her name on a Moranth slate now, beside the old one from Nathilog. It means *asked*. She's prouder of it than of anything she's ever carried.` : `There's a mark against ${her} name on a Moranth slate, short, from the hill. ${C7H.has('kettle') ? `Kettle says it means *asked*.` : `The Fourth has nobody left who can read it.`} The Moranth are scrupulously polite to ${me ? 'you' : P.her} ever after.`);
   if (f.c7_tocNeither && f.c7_tocBy === id && !['ohl','ellis'].includes(id)) out.push(`${She} found Toc on the Moranth's rolls, on the hill, under a mark for *neither*, and ${me ? 'have' : 'has'} never once been sorry ${she} looked.`);
   return out.filter(Boolean).join(' ');
 };
@@ -2264,21 +2264,21 @@ C7H.fateBase = (id, key) => {
   if (id === 'brisk') {
     const read = f.c7_letter === 'brisk', toTav = !fol || k === 'disband' || k === 'outlaw';
     const things = [f.c1_key === 'line' ? 'a Hound of Shadow on the cadre row' : '', f.c4_key === 'shield' ? 'a Tiste Andii on a Daru roof' : '', f.c6_key === 'bridgeburners' ? 'a Jaghut tyrant in a garden' : '', f.c6_steppedIn ? 'an Adjunct of the Empress in an alley' : ''].filter(Boolean);
-    const self = !f.c7_tav && (k === 'empire' || k === 'city') ? `She read the Moranth's rolls for herself on the hill, while you were with Whiskeyjack: with her finger, down the columns, not skipping. *Tavrin, of Cawn. Fourth Regiment. Living.* Nobody took her. Nobody needed to.\n\n` : '';
+    const self = !f.c7_tav && (k === 'empire' || k === 'city') ? `She read the Moranth's rolls for herself on the hill, while you were with Whiskeyjack: with her finger, down the columns, not skipping. *Tavrin, of Cawn. Fourth Regiment. Living.* She didn't need taking.\n\n` : '';
     const p1 = self + (k === 'outlaw' && fol ? `Brisk flies north on a quorl with her shield strapped under her like a saddle, and doesn't look down once. She says afterwards she didn't need to; she could hear how far it was.
 
-The Host's lines are a city of tents with no Empire in it. The Fourth Regiment is at the far end. Brisk walks the length of the camp in the first hour, not hurrying, with the shield on her back. There's a big man at a cook-fire who can't sing, singing. She stands behind him until he feels it, the way you feel weather.
+The Host's lines are a city of tents with no Empire in it. The Fourth Regiment is at the far end. Brisk walks the length of the camp in the first hour, not hurrying, with the shield on her back. There's a big man at a cook-fire who can't sing, singing. She stands behind him until he feels it.
 
-"${read ? `Four coppers` : `Tav`}," she says. He turns round.` : k === 'outlaw' ? `Brisk flies north with the Host, but not with the Fourth. On the first morning in the lines she asks for a transfer to the Fourth Regiment in the regiment voice, and gets it, because nobody refuses Brisk in the regiment voice. She finds Tav by noon. She doesn't come back to the Fourth's fire. Once, a month on, a runner brings a slate with one line on it in her square hand: *Rations short. Count them twice.* From Brisk, it's a letter.` : k === 'disband' ? `Standing down is a thing Brisk has never done. She does it the way she does everything: completely. She hands you the ration ledger on the hill, closed, with the count on the last page, and it's right. Then she goes north with the Host to the Fourth Regiment, to a big man at a cook-fire who can't sing, singing. She stands behind him until he feels it. "${read ? `Four coppers` : `Tav`}," she says. He turns round.` : fol && k === 'empire' ? `Brisk goes west. She walks beside you all the way to Genabaris with her shield on her back and the letter ${read ? 'open' : 'sealed'} in her gorget, and every mile of it is a mile away from Tav, and she knows it, and she walks it anyway. "He's alive," she says on the ship, the only time she mentions it. "He doesn't need me standing in front of him. You might."` : fol ? `Brisk stays. She stands in the door of the Phoenix Inn five nights a week and stops fights by standing in them, and the thieves of Darujhistan come to regard her as a kind of weather. Kruppe calls her the armoured lady to her face and the wall behind her back, and she knows about both and permits one. She writes to Tav. The letters go north with the Moranth, who carry everything. He writes back, badly and seldom.${read ? ` At the foot of every letter she writes *four coppers*, and at the foot of every one of his he writes *no*.` : ''}` : `Brisk doesn't ${k === 'city' ? 'stay' : 'go west'}. At the foot of the hill she plants her shield in the grass and looks at you over the rim, the way she looked at you on the Pale when the grey cloak said leave the mage. "He's north," she says. "Three years I've looked. I'm not ${k === 'city' ? 'sitting in a city' : 'walking the other way'} now he's found." She goes north with the Host, and the last you see of her is the shield, going up into the sky on the back of a quorl, not looking down.`);
-    const p2 = toTav ? (read ? (k === 'outlaw' && fol ? `Nobody in the Fourth sees the rest, and Brisk never tells it. What you know is that she comes back to the fire at dusk with a split lip she won't explain and a face doing something it has never done in front of you, and sits down, and counts the rations aloud, and gets the number wrong, and doesn't correct it.` : `Nobody sees the rest, and Brisk never tells it. Months on, a Moranth brings you a slate with one line on it in her square hand: *Found him. He still owes me four coppers.*`) : `She opens the letter that night, sitting next to him at his own fire, and reads it to him out loud, all of it, and he's mortified, and she makes him hear it to the end. Then she hits him. Then she doesn't let go of him for a long time.`) : (read ? `She'll see him again. The Empire is small in the end, if you're patient, and Brisk is the most patient person in it. She has four coppers to collect.` : `She hasn't opened the letter. She says she'll open it when she can put it in his hand and watch his face. She's patient. She's the most patient person in the Empire.`);
-    const p3 = d.length ? `She carries ${C7H.names(d)} the way she carries the shield: on her back, out of sight, and never once put down. "We don't leave people," she says once more, to nobody, and then doesn't say it again. She's worked out what it means. It means you carry them.` : things.length ? `${read || toTav ? `*Don't stand in front of things.* ` : ''}She stood in front of ${things.length < 2 ? things[0] : things.slice(0, -1).join(', ') + ' and ' + things[things.length - 1]}, and she keeps a bit of the bend in her shield rim so she knows which dents were for something.` : `She keeps the ration ledger still, out of habit. Some nights she writes the count in it for a squad that isn't there, and gets it right.`;
+"${read ? `Four coppers` : `Tav`}," she says. He turns round.` : k === 'outlaw' ? `Brisk flies north with the Host, but not with the Fourth. On the first morning in the lines she asks for a transfer to the Fourth Regiment at full parade pitch, and gets it, because nobody refuses Brisk at full parade pitch. She finds Tav by noon. She doesn't come back to the Fourth's fire. Once, a month on, a runner brings a slate with one line on it in her square hand: *Rations short. Count them twice.* From Brisk, it's a letter.` : k === 'disband' ? `Standing down is a thing Brisk has never done. She does it the way she does everything: completely. She hands you the ration ledger on the hill, closed, with the count on the last page, and it's right. Then she goes north with the Host to the Fourth Regiment, to a big man at a cook-fire who can't sing, singing. She stands behind him until he feels it. "${read ? `Four coppers` : `Tav`}," she says. He turns round.` : fol && k === 'empire' ? `Brisk goes west. She walks beside you all the way to Genabaris with her shield on her back and the letter ${read ? 'open' : 'sealed'} in her gorget, and every mile of it is a mile away from Tav, and she knows it, and she walks it anyway. "He's alive," she says on the ship, the only time she mentions it. "He doesn't need me standing in front of him. You might."` : fol ? `Brisk stays. She stands in the door of the Phoenix Inn five nights a week and stops fights by standing in them, and the thieves of Darujhistan come to regard her as part of the building. Kruppe calls her the armoured lady to her face and the wall behind her back, and she knows about both and permits one. She writes to Tav. The letters go north with the Moranth, who carry everything. He writes back, badly and seldom.${read ? ` At the foot of every letter she writes *four coppers*, and at the foot of every one of his he writes *no*.` : ''}` : `Brisk doesn't ${k === 'city' ? 'stay' : 'go west'}. At the foot of the hill she plants her shield in the grass and looks at you over the rim, the way she looked at you on the Pale when the grey cloak said leave the mage. "He's north," she says. "Three years I've looked. I'm not ${k === 'city' ? 'sitting in a city' : 'walking the other way'} now he's found." She goes north with the Host, and the last you see of her is the shield, going up into the sky on the back of a quorl, not looking down.`);
+    const p2 = toTav ? (read ? (k === 'outlaw' && fol ? `The Fourth never sees the rest, and Brisk never tells it. What you know is that she comes back to the fire at dusk with a split lip she won't explain and a face doing something it has never done in front of you, and sits down, and counts the rations aloud, and gets the number wrong, and doesn't correct it.` : `The rest goes unseen, and Brisk never tells it. Months on, a Moranth brings you a slate with one line on it in her square hand: *Found him. He still owes me four coppers.*`) : `She opens the letter that night, sitting next to him at his own fire, and reads it to him out loud, all of it, and he's mortified, and she makes him hear it to the end. Then she hits him. Then she doesn't let go of him.`) : (read ? `She'll see him again. The Empire is small in the end, if you're patient, and Brisk is the most patient person in it. She has four coppers to collect.` : `She hasn't opened the letter. She says she'll open it when she can put it in his hand and watch his face. She's patient. She's the most patient person in the Empire.`);
+    const p3 = d.length ? `She carries ${C7H.names(d)} the way she carries the shield: on her back, out of sight, and never once put down. "We don't leave people," she says once more, to nobody, and never says it again. She's worked out what it means. It means you carry them.` : things.length ? `${read || toTav ? `*Don't stand in front of things.* ` : ''}She stood in front of ${things.length < 2 ? things[0] : things.slice(0, -1).join(', ') + ' and ' + things[things.length - 1]}, and she keeps a bit of the bend in her shield rim so she knows which dents were for something.` : `She keeps the ration ledger still, out of habit. Some nights she writes the count in it for a squad that isn't there, and gets it right.`;
     const p4 = l >= 2 ? `"Sergeant," she says, the last time you see her. That's the whole conversation. It always was, and it was always enough.` : l <= -2 ? `She doesn't forgive you. Her loyalty was slow to give and it doesn't come back once spent; she told you that the first week, in fewer words. ${k === 'outlaw' ? `She salutes when she passes you in the lines. She salutes correctly.` : `She writes to Tav. She never once writes to you, and she'd call that correct.`} It's the coldest thing she knows how to do.` : fol ? `She never tells you what she thought of how it ended. She tells you when the orders are stupid. The deal held.` : `She never tells you what she thought of how it ended. The deal was that she'd tell you when the orders were stupid. She never said this one was.`;
     return {title: read ? 'Four coppers' : 'The line', txt:C7H.join([p1, p2, p3, p4])};
   }
   if (id === 'kettle') {
     const sq = C7H.square(), c = (S.inv && S.inv.cusser) || 0;
-    const p1 = k === 'outlaw' && fol ? `Kettle flies north on the back of the thing she's been checking the sky for since Nathilog. She names it. It doesn't answer to the name, and the Moranth rider pretends not to have heard. Hedge rides the next quorl over and they shout across the gap at each other about cussers the whole way, and the Moranth, who have never once been known to express an opinion, fly a little faster.` : k === 'empire' && fol ? `Kettle goes west, square with the Moranth, and on the ship out of Genabaris she stands at the rail and watches the sky out of habit for three days. There are no quorls over the sea. On the fourth day she stops looking up. She says it's the first time since Nathilog her neck hasn't hurt.` : k === 'city' && fol ? `Kettle stays in the city of blue fire, which is sitting on gas, and she knows it, and she has never been happier. She gets a job with the Paviors' Guild, a real one this time, Gadrobi District, on the strength of a charter nobody else has read. She knows where the Bridgeburners' eggs are sleeping under the Gadrobi crossing, and she goes down the ladder once a week to sit with them. "Somebody has to," she says. Nobody asks what she means, and she tells them anyway.` : `Kettle goes with the Moranth${k === 'outlaw' ? ', not with the Fourth' : ''}. She rides in ${S.f.c7_qmMet ? 'Ch\'kess\'s' : 'the Moranth\'s'} munitions train, ${sq ? 'square with them, and choosing it anyway' : 'working off what she owes a crate at a time'}, and she's good at it, and the Moranth say so, in clicks, which is more than they have said to any human in a generation. They count everything. She has never met anybody who counts like she does.`;
-    const p2 = f.c7_debt === 'paid' ? `She handed a cusser back to a Black Moranth on a hill east of Darujhistan, and it gave her a chit of chitin that says square, and she wears it on a thong at her throat and touches it when she's frightened, which is how you'll always know. The spoon is explained now. She still won't explain it.` : f.c7_debt === 'spent' ? `She told a Black Moranth what Chub's cusser was spent on, and it said the one that mattered is the one that is thrown, and she has decided to believe it, most days. The chit at her throat says square. The spoon is explained now. She still won't explain it.` : f.c7_debt === 'owed' ? `The debt is still owed, and she and Ch'kess both know it, and it weighs less than it did. The spoon is still in her kit. She knows whose it is now.${c > 0 ? ` So is the cusser. Chub said she'd know the one that matters. She's still waiting to know.` : ''}` : `The debt is still owed. The spoon is still in her kit, unexplained. "It's a measure," she says, if you ask, which you don't. "For powder. It's Moranth. It isn't mine." And then, because she's Kettle: "Yet."${c > 0 ? ` She still has a cusser. Chub said she'd know the one that matters. She's still waiting to know.` : ''}`;
+    const p1 = k === 'outlaw' && fol ? `Kettle flies north on the back of the thing she's been checking the sky for since Nathilog. She names it. It doesn't answer to the name, and the Moranth rider pretends not to have heard. Hedge rides the next quorl over and they shout across the gap at each other about cussers the whole way, and the Moranth, who have never once been known to express an opinion, fly a little faster.` : k === 'empire' && fol ? `Kettle goes west, square with the Moranth, and on the ship out of Genabaris she stands at the rail and watches the sky out of habit for three days. There are no quorls over the sea. On the fourth day she stops looking up. She says it's the first time since Nathilog her neck hasn't hurt.` : k === 'city' && fol ? `Kettle stays in the city of blue fire, which is sitting on gas, and she knows it, and she has never been happier. She gets a job with the Paviors' Guild, a real one this time, Gadrobi District, on the strength of a charter nobody else has read. She knows where the Bridgeburners' eggs are sleeping under the Gadrobi crossing, and she goes down the ladder once a week to sit with them. "Somebody has to," she says. Her crew don't ask what she means, and she tells them anyway.` : `Kettle goes with the Moranth${k === 'outlaw' ? ', not with the Fourth' : ''}. She rides in ${S.f.c7_qmMet ? 'Ch\'kess\'s' : 'the Moranth\'s'} munitions train, ${sq ? 'square with them, and choosing it anyway' : 'working off what she owes a crate at a time'}, and she's good at it, and the Moranth say so, in clicks, which is more than they have said to any human in a generation. They count everything. She has never met anybody who counts like she does.`;
+    const p2 = f.c7_debt === 'paid' ? `She handed a cusser back to a Black Moranth on a hill east of Darujhistan, and it gave her a chit of chitin that says square, and she wears it on a thong at her throat and touches it when she's frightened. It's the only way you'd ever know she is. The spoon is explained now. She still won't explain it.` : f.c7_debt === 'spent' ? `She told a Black Moranth what Chub's cusser was spent on, and it said the one that mattered is the one that is thrown, and she has decided to believe it, most days. The chit at her throat says square. The spoon is explained now. She still won't explain it.` : f.c7_debt === 'owed' ? `The debt is still owed, and she and Ch'kess both know it, and it weighs less than it did. The spoon is still in her kit. She knows whose it is now.${c > 0 ? ` So is the cusser. Chub said she'd know the one that matters. She's still waiting to know.` : ''}` : `The debt is still owed. The spoon is still in her kit, unexplained. "It's a measure," she says, if you ask, which you don't. "For powder. It's Moranth. It isn't mine." And then, because she's Kettle: "Yet."${c > 0 ? ` She still has a cusser. Chub said she'd know the one that matters. She's still waiting to know.` : ''}`;
     const p2b = f.c7_chub === 'signed' ? `On a Moranth slate somewhere north there are twelve marks against a crate from Nathilog, and the twelfth is in her hand, for Chub. Square. She's never once said so out loud. She doesn't need to; the Moranth know, and they count everything.` : f.c7_chub === 'carried' ? `She asked to sign for Chub, on the hill, and the Moranth said the dead are not signed for; the dead are carried. So she carries him. She says he weighs about what a cusser weighs, and she'd know.` : '';
     const p3 = f.c7_ellisBack && C7H.has('ellis') ? `Ellis's two lengths of trip-cord are coiled in the bottom of her satchel. She has never used them. She never will.` : '';
     const p4 = l >= 2 ? `"You kept pointing me at things," she tells you, at the end of it, "and I kept making them stop being things." A pause. "That's love, in the sapper trade. I told you that. I'm telling you again so you'll remember I told you."` : l <= -2 ? (fol ? `She stopped giving you the count some while before the end. She gives it to ${C7H.has('brisk') && C7H.follows('brisk', k) ? 'Brisk' : 'the Moranth'} instead. You hear it through the tent wall at night: two sharpers, one burner, no cussers. Same as this morning.` : `She stopped giving you the count on the hill. She gives it to the Moranth now, in clicks, and they write it down.`) : fol ? `She gives you the count every morning without being asked. "Same as yesterday. You can stop asking." You never asked.` : `She didn't give you the count on the hill. It's the first morning in five years she hasn't. You find you'd been waiting for it.`;
@@ -2288,8 +2288,8 @@ The Host's lines are a city of tents with no Empire in it. The Fourth Regiment i
     const lsh = C7H.leashed(), st = lsh ? 'kept' : C7H.tuft(), east = !lsh && (k === 'disband' || !fol), west = C7H.tuftWest(k);
     const stLine = {glove:`Meanas comes back to her a thread at a time, like feeling coming back into a hand that's been slept on. It comes back hers. She's nobody's. She's surprised, still, how light it is.`, shadow:`The Hounds are somewhere under her road, always. She can feel them the way you feel a river under a bridge. They don't come up. They know where she is. That, she says, is the polite thing about Shadow: it lets you know it knows.`, dark:`The house in Kurald Galain went away with the mountain. She misses the window. She wears the Andii cloak that doesn't take the light, and it still hasn't warmed up, and she's stopped expecting it to.`}[st] || '';
     const p1 = east ? `Tuft goes east with the Rhivi. She walks beside the woman on the grey mare, and Sethand lets her, which is the most he has ever let anybody. ${f.c7_tattersail ? `The child in the red wool grows too fast${f.c3_kruppe ? ', the way Kruppe said' : ''}. Within weeks she can say Tuft's name. Within months she looks at her, sometimes, the way a mage in a tent on the cadre row once looked at a card she had already turned.` : `The child in the red wool grows too fast. Tuft watches her the way she used to watch the Deck.`}` :
-      west ? `Tuft goes west, alone, to Genabaris and the High Mage's staff, with a letter that says nothing and a face that says the rest. If he's looking out of her collar, she gives him Genabaris to look at, and the staff, and the sea: everything but a road going east through the grass. It's the last thing she can do for the child. She does it every day.` :
-      k === 'empire' && lsh ? `Tuft goes home, but not with you. ${f.c7_clawFought ? `The grey cloak is at the bottom of the lake; it makes no difference; the High Mage has other hands.` : `The grey cloak is waiting on the quay at Genabaris, politely, as he said he would be.`} She goes back to the High Mage's staff the way she left it, with a letter that says nothing and a face that says the rest. Somewhere on that staff a mage sleeps with two lamps lit, and draws no cards, and is very, very careful never to think about a child on the Rhivi road. She's good at it. She has to be. The window's open.` :
+      west ? `Tuft goes west, alone, to Genabaris and the High Mage's staff, with a letter with nothing in it and a face that says the rest. If he's looking out of her collar, she gives him Genabaris to look at, and the staff, and the sea: everything but a road going east through the grass. It's the last thing she can do for the child. She does it every day.` :
+      k === 'empire' && lsh ? `Tuft goes home, but not with you. ${f.c7_clawFought ? `The grey cloak is at the bottom of the lake; it makes no difference; the High Mage has other hands.` : `The grey cloak is waiting on the quay at Genabaris, politely, as he said he would be.`} She goes back to the High Mage's staff the way she left it, with an empty letter and a face that says the rest. Somewhere on that staff a mage sleeps with two lamps lit, and draws no cards, and is very, very careful never to think about a child on the Rhivi road. She's good at it. She has to be. The window's open.` :
       k === 'outlaw' && lsh ? `Tuft flies north with the Host, and the window in her collar flies with her. She knows when somebody's at it. She sits with her back to the command tent when somebody is, and reads the Deck for nobody, and waits. In the second month Quick Ben sits down across a fire from her and says, "Your collar," and she says, "I know," and he does something with two fingers she doesn't see. In the morning the badge is only a badge. Neither of them mentions it again. It's the most she has ever been given by somebody who wanted nothing for it.` :
       k === 'outlaw' ? `Tuft flies north with the Host. She sits behind the Moranth rider with her eyes shut and her hands flat on the chitin, and says afterwards that the quorl was thinking about something the whole way, and it wasn't them. ${stLine}` :
       k === 'empire' ? `Tuft goes home with the Fourth, into an Empire whose High Mage ${st === 'glove' ? `can't find her any more: she could stand among his staff and nobody would look twice` : st === 'shadow' ? `would find somebody else's thumb on her if he looked, and doesn't look` : st === 'dark' ? `would find that Kurald Galain looked at her once and didn't forget, and doesn't care to look` : `hasn't yet decided what to do about her`}. ${stLine}` :
@@ -2302,9 +2302,9 @@ The Host's lines are a city of tents with no Empire in it. The Fourth Regiment i
   }
   if (id === 'ohl') {
     const tEast = k === 'disband' && C7H.tuftEast('disband');
-    const p1 = tEast ? `Ohl goes east with Tuft and the Rhivi. "Somebody has to argue with Hood for her," he says, "and I'm old, and I've got the time." Sethand looks at him for a long while and then moves his horse over, so there's room on the road.` :
+    const p1 = tEast ? `Ohl goes east with Tuft and the Rhivi. "Hood will need arguing with," he says, "and I'm old, and I've got the time." Sethand looks at him, long and level, and then moves his horse over, so there's room on the road.` :
       k === 'outlaw' && fol ? `Ohl flies north with the Host, complaining about the quorl the entire way in Ehrlii, and Dujek gives him a hospital tent the size of a barn on the first day. He argues with Hood in it, loudly, all that season. He loses, slowly.${f.c7_askedOhl ? ` *Keep losing slowly*, Dujek said, and it's the first order in years Ohl has found no fault with.` : ''}` :
-      k === 'empire' && fol ? `Ohl goes west with the Fourth, and home, as far as the Empire is home to a man from Ehrlitan. In Genabaris they're saying Seven Cities will rise within the year. Ohl says nothing about it. He buys more gut and needles in the market by the docks than a squad could use in ten years, and packs them very carefully.` :
+      k === 'empire' && fol ? `Ohl goes west with the Fourth, and home, as far as the Empire is home to a man from Ehrlitan. In Genabaris they're saying Seven Cities will rise within the year. Ohl doesn't discuss it. He buys more gut and needles in the market by the docks than a squad could use in ten years, and packs them very carefully.` :
       k === 'city' && fol ? `Ohl stays in Darujhistan and takes a room at the Phoenix Inn: the one by the stair, where the lamp doesn't reach. Jeth Arrow's room. He lives in it now, and it writes itself. He treats thieves for nothing and nobles for a great deal, and Kruppe pays for his wine and never mentions it.` :
       `Ohl goes north with the Host, to the hospital tents${k === 'outlaw' ? ', and not to the Fourth\'s fire' : ''}. Dujek gives him a tent the size of a barn and more work than Hood has time for. He sends tea. It's technically medicine.`;
     const parts = [`The list is ${C7H.num(C7H.lc())} names.`];
@@ -2322,11 +2322,11 @@ The Host's lines are a city of tents with no Empire in it. The Fourth Regiment i
     const horse = !!f.c7_tocHorse, lc = f.c7_ledger, act = f.c7_ledgerAct, rides = !fol || k === 'disband';
     const p1 = rides ? `${k === 'empire' && C7H.soldOut() ? `"You took his paper," she said, on the hill. "I'm not going home to be written." ` : ''}Ellis rides.${horse ? ` On Toc's horse, which has decided she will do.` : ''} South, some days; east, most. *He kept riding. Somebody should see where.* She looks at the ground more than the sky. Once in a long while, where the grass is pressed flat in a way grass shouldn't be, she gets down and puts her gloved hand flat on the prints and counts the days.` :
       k === 'outlaw' ? `Ellis goes north with the Host and scouts for it, out ahead where a scout rides${horse ? `, on Toc's horse, which has decided she will do` : ''}. She looks back once a day and counts. The number is right more often than it isn't.` :
-      k === 'empire' ? `Ellis goes home to Genabaris, the river quarter, where a man who never gave his name took her off a dock at eighteen. She walks past the dock. She doesn't look at it. Then she goes back and looks at it, for a long time, and walks on, and that's the end of that.` :
+      k === 'empire' ? `Ellis goes home to Genabaris, the river quarter, where a man who never gave his name took her off a dock at eighteen. She walks past the dock. She doesn't look at it. Then she goes back and looks at it, properly, and walks on, and that's the end of that.` :
       `Ellis stays in Darujhistan. Her mother was Gadrobi and sold horses at the Fete, and there's a horse-market outside the Worry Gate every tenth day, and by midsummer the Gadrobi traders have stopped trying to cheat the woman with the glove, which in that market is a kind of citizenship.${horse ? ` She keeps Toc's horse. She never sells it.` : ''}`;
     const said = f.c7_ledgerBurnt ? `something the fire had half of` : lc === 'retained' ? `*retained, useful through the Fourth*` : lc === 'lost' ? `*lost, entry closed*` : `*not retained*`;
     const did = act === 'struck' ? `She struck it through, neatly. They'd want it neat.` : act === 'burned' ? `She gave it to the fire, which was where it was going.` : act === 'kept' ? `She keeps it folded small in the cuff of her glove, against the burned hand. When she's dead properly, somebody can send it back to them.` : '';
-    const p2 = lc ? `Her line in the ledger behind the green door said ${said}. ${did}${f.c7_ledgerOther ? ` Somebody else's line from the river quarter went on the fire that morning so hers didn't. She doesn't know whose. She carries it anyway.` : ''}` : `She never went through the green door. "I know which way it's written," she says, if anybody asks. "It's written the way I walk."`;
+    const p2 = lc ? `Her line in the ledger behind the green door said ${said}. ${did}${f.c7_ledgerOther ? ` Another line from the river quarter, somebody else's, went on the fire that morning so hers didn't. She doesn't know whose. She carries it anyway.` : ''}` : `She never went through the green door. "I know which way it's written," she says, if anybody asks. "It's written the way I walk."`;
     const p3 = [f.c7_ellisBack ? `She came back out of the grey after four days that were longer. The grey is still in her hair. It doesn't take the light.` : '', f.c7_tocNeither ? `Her captain is on neither of the Moranth's rolls. They have a mark for it. She has decided that's the one that's true.` : '', f.c5_ellisHeld ? (f.c7_ellisSpoke ? `She talks to you again. She has since that last morning: one sentence, the right one, and then others, which were only sentences.` : `She talks to you again, in the end. It takes a while. The first thing she says is one sentence, the right one, and after that the others are only sentences.`) : ''].filter(Boolean).join(' ');
     const p4 = l >= 2 ? `"I'm still not used to it," she says. "Don't stop."` : l <= -2 ? `She never says thank you. She told you on the plain she wasn't used to it. She never got used to it.` : `"I'd like it in the ledger," she says, "that I ${f.c7_ellisBack ? 'came back' : 'was here'}."`;
     return {title:'Which way it is written', txt:C7H.join([p1, p2, p3, p4])};
@@ -2399,8 +2399,8 @@ C7H.gone = (id, key) => {
   const lc = f.c7_ledger, act = f.c7_ledgerAct, horse = !!f.c7_tocHorse;
   if (f.c4_ellisToc && !f.c7_ellisBack && !f.c7_ellisLeft) return {title:'He kept riding', txt:C7H.join([
 `She went east off a Daru street corner, the night the Fourth took on a rope boy, to find her captain in the hills. She found him. She was on the ridge above the fold when the grey took him, and too far, the way she'd chosen to be.`,
-`In the morning there was a line of prints going west from the ridge, a scout's, trying not to be there and then not trying. Toc's horse went west too. Somebody at the Worry Gate stabled a horse that week for a woman with a glove, and didn't ask her name, and didn't need it.`,
-`"He kept riding," she says, to the horse, wherever she is. "So will we."${f.c7_tocNeither ? ` The Moranth have him on neither of their rolls, under a mark they don't use often. Nobody told her. She'd have said she knew.` : ''}`])};
+`In the morning there was a line of prints going west from the ridge, a scout's, trying not to be there and then not trying. Toc's horse went west too. That week a stable-hand at the Worry Gate took a horse in for a woman with a glove, and didn't ask her name, and didn't need it.`,
+`"He kept riding," she says, to the horse, wherever she is. "So will we."${f.c7_tocNeither ? ` The Moranth have him on neither of their rolls, under a mark they don't use often. She was never told. She'd have said she knew.` : ''}`])};
   if (f.c7_ellisLeft) return {title:'He kept riding', txt:C7H.join([
 `She came back out of the grey on the Lakefront at dawn, with ash in her hair and Kettle's cord on her wrist, and the sergeant told her she could go where she liked, and she did.`,
 `There was a horse in the stable at the Worry Gate that nobody was riding. It remembered her. She rides. South, some days; east, most. She looks at the ground more than the sky, and once in a long while, where the grass is pressed flat in a way grass shouldn't be, she gets down and puts her gloved hand flat on the prints and counts the days.`,
@@ -2412,8 +2412,8 @@ f.c7_ohlEllis ? `Ohl crossed out her space anyway, at the corner where she went.
     return {title:'Which way it is written', txt:C7H.join([
       lc ? `She read her line in the ledger behind the green door with the Fourth beside her. It said ${said}, and she ${did}, and then she walked east along the Lakefront, not fast, a scout's walk, and at the corner she lifted the gloved hand over her shoulder once, and was gone.${C7H.soldOut() ? ` "You took his paper," she said, when the sergeant asked her to come. It wasn't personal. It was training.` : ''}` :
         `She was on the Lakefront that morning, on a cask two doors down from the green door, with her bow across her knees. ${f.c7_ellisDoor ? `The sergeant said not yet.` : `The Fourth didn't go over.`} She went in alone, later. Nobody knows what the book said. She knows. That was the whole of the point.`,
-      `She counts the Rhivi Plain now, for whoever pays. She's good at it. She counts horses before people still, and apologises for it, to nobody. Nobody writes her down.`,
-      f.c7_ledgerOther ? `Somebody else's line from the river quarter went on the Claw's fire so hers didn't. She doesn't know whose. She carries it anyway.` : '',
+      `She counts the Rhivi Plain now, for whoever pays. She's good at it. She counts horses before people still, and apologises for it, to no one in particular. She is on nobody's books.`,
+      f.c7_ledgerOther ? `A stranger's line from the river quarter went on the Claw's fire so hers didn't. She doesn't know whose. She carries it anyway.` : '',
       C7H.has('ohl') ? (f.c7_ohlHand ? `Ohl looked at her hand once, on the step of the green door, with the Claw's fire still on it. She said no. He looked anyway. "It'll do," he says, when anybody asks, which nobody does.` : `"I'd have liked to look at her hand," Ohl says, sometimes, when the fire's low. "That's all. It's the healer talking."`) : ''])};
   }
   return {title:'Gone her own way', txt:`Ellis went her own way. The Fourth counted her, afterwards, out of habit, and got the number wrong, and didn't correct it.`};
@@ -2427,6 +2427,6 @@ C7H.coda = key => {
     city:`The Fourth stayed, and the city, which never conquers anyone, let it.`,
     disband:`There is no Fourth now. There ${alive === 1 ? 'is one sergeant who was it' : `are ${C7H.num(alive)} people who were it, on ${C7H.num(alive)} roads`}, and ${alive === 1 ? 'the sergeant still counts' : 'every one of them still counts'}.`}[key];
   return [
-`In Darujhistan they light the lamps at dusk, street by street, blue, as if something under the city were breathing out. In a garden on the Estate hill a small wrong house keeps its door shut and its guests in. At the bottom of the lake a coin lies in the mud on neither face. Somewhere over water, a mountain drifts with a lord in it who was interested once, and is no longer. The gods don't say what they made of any of it. Nobody asks them. Nobody ever asks the gods anything, in the end, but marines, and marines don't wait for the answer.`,
+`In Darujhistan they light the lamps at dusk, street by street, blue, as if something under the city were breathing out. In a garden on the Estate hill a small wrong house keeps its door shut and its guests in. At the bottom of the lake a coin lies in the mud on neither face. Somewhere over water, a mountain drifts with a lord in it who was interested once, and is no longer. The gods don't say what they made of any of it. Nobody ever asks the gods anything, in the end, but marines, and marines don't wait for the answer.`,
 `Three days after the Pale fell, a sergeant came into a tent on the cadre row with ${S.ending === 'claw' ? `empty hands and all five, and a mage heard the sergeant out without looking up from her cards` : `a satchel and all five, and a mage looked up from her cards and said it was a nice touch`}. East on the Rhivi road, a child in good red wool is going to grow up too fast and remember a great many things. One of them, perhaps, will be that. ${last} Somebody noticed. It was enough.`];
 };

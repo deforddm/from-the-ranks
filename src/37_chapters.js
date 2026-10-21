@@ -20,8 +20,8 @@ const CHEND = {
   5:{
     /* v3.16: Ellis went through after him (c5_ellisThrough); on the Tuft path nobody followed, and Tuft went only to the threshold (if she died before Ch6, the sergeant held the edge) */
     through:{0:'Into the grey', length:2, get 1(){ const f = (typeof S !== 'undefined' && S && S.f) || {};
-      return 'A puppet opened the world on a hillside and Toc the Younger went through it, and ' + (f.c5_ellisThrough ? 'when Ellis moved to follow him, the sergeant said go' : !(S && S.dead && S.dead.tuft && S.dead.tuft.ch <= 5) ? 'Tuft went to the edge of it after him, as far as the sergeant said and no further' : 'the sergeant held the line at the edge of it') + '. The rent closed. The Hounds came for the puppet and not for you. Something under the hill turned over in its sleep, and Paran rode for the city at dawn with a face like a man who has read the end of the book.'; }},
-    hold:['You held the line','A puppet opened the world on a hillside and Toc the Younger went through it, and the Fourth held on to its own. The rent closed on nothing. The Hounds came for the puppet and not for you. Something under the hill turned over in its sleep. Somebody in the squad has not forgiven the sergeant, and says so with silence.'] },
+      return 'A puppet opened the world on a hillside and Toc the Younger went through it, and ' + (f.c5_ellisThrough ? 'when Ellis moved to follow him, the sergeant said go' : !(S && S.dead && S.dead.tuft && S.dead.tuft.ch <= 5) ? 'Tuft went to the edge of it after him, as far as the sergeant said and no further' : 'the sergeant held the line at the edge of it') + '. The rent closed. The Hounds came for the puppet and not for you. Something under the hill turned over in its sleep, and Paran rode for the city at dawn, grey in the face.'; }},
+    hold:['You held the line','A puppet opened the world on a hillside and Toc the Younger went through it, and the Fourth held on to its own. The rent closed on nothing. The Hounds came for the puppet and not for you. Something under the hill turned over in its sleep. One of the squad has not forgiven the sergeant, and says so with silence.'] },
 };
 const CHTEASE = {
   0:'Next: Captain Paran arrives at the Pale, the Hounds of Shadow come hunting, and the Fourth is told where it is going.',
@@ -58,13 +58,13 @@ function showChapterEnd(){
     if (S.f.c3_lied) extra.push(S.f.c3_lieHeld ? 'You lied to a Claw handler to her face, and she half believed it. She will find out which half.' : 'You lied to a Claw handler to her face. She thanked you for the trouble.');
     if (S.f.c3_told) extra.push('Madryn knows what is under the intersection. That is a drop of acid on a wax plug, with the Fourth\'s name on it.');
     if (S.f.c3_wjTold) extra.push('Whiskeyjack said "Good." Once. The squad heard it.');
-    if (S.f.c3_kruppe) extra.push('Kruppe said a sentence about the plain and Tuft went white. Nobody else understood it. Tuft has not explained.');
+    if (S.f.c3_kruppe) extra.push('Kruppe said a sentence about the plain and Tuft went white. The rest of the squad missed it. Tuft has not explained.');
     if (S.f.c3_sorry) extra.push('The sergeant spoke to Sorry. Eleven words came back. They were the wrong shape.');
     if (S.f.c3_coll) extra.push('Coll\'s signet is in the sergeant\'s pocket. It opens doors in this city that Coll no longer walks through.');
     if (S.f.c3_ellisMsg) extra.push('The Claw\'s message came through Ellis. She brought it anyway. Remember that.');
-    if (S.f.c3_trueName) extra.push('The sergeant\'s real name is in a gate-clerk\'s ledger, spelled correctly. Somebody reads that ledger.'); else if (S.f.c3_falseName) extra.push('A dead man\'s name off an Untan headstone is in a gate-clerk\'s ledger. It is the name this city knows the sergeant by.'); else if (S.f.c3_paid) extra.push('Five silver kept the Fourth\'s name out of a gate-clerk\'s ledger. It did not keep it out of anyone else\'s.');
+    if (S.f.c3_trueName) extra.push('The sergeant\'s real name is in a gate-clerk\'s ledger, spelled correctly. That ledger gets read.'); else if (S.f.c3_falseName) extra.push('A dead man\'s name off an Untan headstone is in a gate-clerk\'s ledger. It is the name this city knows the sergeant by.'); else if (S.f.c3_paid) extra.push('Five silver kept the Fourth\'s name out of a gate-clerk\'s ledger. It did not keep it out of anyone else\'s.');
     if (S.f.wjRegard > 0) extra.push('Whiskeyjack has decided the Fourth is worth the trouble.'); if (S.f.wjRegard < 0) extra.push('Whiskeyjack has decided the Fourth is trouble.');
-    if (S.f.c3_pinup) extra.push('Two painted women on a crate lid, Rumjugs and Sweetlard, rode out of the crossing on the Bridgeburners\' tailboard. Nobody knows who they are. Hedge thinks he will.');
+    if (S.f.c3_pinup) extra.push('Two painted women on a crate lid, Rumjugs and Sweetlard, rode out of the crossing on the Bridgeburners\' tailboard. Who they are is anyone\'s guess. Hedge means to find out.');
   }
   if (BOOK === 'gotm' && n === 4) {
     if (S.f.c4_vell) extra.push(SQUAD().includes('vell') ? 'Vell is alive, and walks with the Fourth. A Guild journeyman owed it his life, and has decided to pay in person.' : 'Vell is alive. A Guild journeyman owes the Fourth his life, and the Guild pays its debts, one way or the other.');
@@ -74,7 +74,7 @@ function showChapterEnd(){
     if (S.f.c4_tuftDark) extra.push('Tuft has not slept. She says the dark was polite. She says it the way you say a thing you are trying not to say.');
     if (S.f.c4_kalamLook) extra.push('Kalam looked at the sergeant a beat too long before he went up. He knows something was told. He does not know by whom. Yet.');
     if (S.f.c4_reprisalFought) extra.push('Guild blood in the lane and in a cooperage yard. Ocelot sent his knives after the Fourth, and fewer walked home than went out, the old one holding his ribs. Ocelot will count that.');
-    if (S.f.c4_sawSorry) extra.push('A girl in a doorway who did not move at all. Kettle has not stopped talking about it, which is how Kettle is afraid.');
+    if (S.f.c4_sawSorry) extra.push('A girl in a doorway who did not move at all. Kettle has not stopped talking about it. With Kettle, that is fear.');
     if (S.f.c4_rallick) extra.push((SQUAD().includes('ellis') && (S.f.c4_rallickOk || S.f.c4_rallickTail) ? 'Rallick Nom' : 'The Guild man on the roof') + ' told the Fourth to go home. He is the first person in this city to say it as a kindness.');
     if (S.f.wjRegard > 0) extra.push('Whiskeyjack has decided the Fourth is worth the trouble.'); if (S.f.wjRegard < 0) extra.push('Whiskeyjack has decided the Fourth is trouble.');
   }
@@ -212,7 +212,7 @@ const QUESTS = {
   roofs_daru:()=> S.f.c4_key ? 'Down, west. The street.' : S.f.c4_meet ? 'The parapet' : 'Kalam\'s roof. Watch.',
   daru_lane:()=> S.f.c3_inn ? 'Back down the alley, to the crossing' : 'The Phoenix. The door with the painted bird.',
   daru_street:()=> S.f.c3_key ? 'Back west, to the dig' : S.f.c3_madryn ? 'The dye-shop. Decide.' : S.f.c3_guards ? 'The dye-shop. The outside stair.' : 'The dye-shop. The Watch is on the corner.',
-  pale_night:()=> S.f.c1_done ? 'Get some sleep. Somebody should.' : S.f.c1_hounds ? 'Hounds in the tent lines' : !S.f.c1_reported ? 'Report to Whiskeyjack at the Bridgeburners\' fire (east)' : !S.f.c1_tent ? 'Tattersail\'s tent, cadre row (north)' : 'Walk the lines. Something is coming. Back to the fire past Pell\'s wagon, when the squad is ready.',
+  pale_night:()=> S.f.c1_done ? 'Get some sleep. One of you should.' : S.f.c1_hounds ? 'Hounds in the tent lines' : !S.f.c1_reported ? 'Report to Whiskeyjack at the Bridgeburners\' fire (east)' : !S.f.c1_tent ? 'Tattersail\'s tent, cadre row (north)' : 'Walk the lines. Something is coming. Back to the fire past Pell\'s wagon, when the squad is ready.',
 };
 /* ability picks: shown before the next conversation after a level 3/5/7 */
 function openPicks(done){
