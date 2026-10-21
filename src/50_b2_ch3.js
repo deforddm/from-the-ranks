@@ -376,7 +376,7 @@ Keth stops at the edge of the bare patch and will not step onto it. The other yo
 
 ${b2Tg() ? `Tangle sits down on the edge of the oilcloth as if he'd been sitting there all his life. "Wicket," he says. That's all. They look at each other the way people look at each other who have stood in the same hole when it went wrong. Then Wicket nods at his satchel. "Count," she says, and he does, out loud: "${b2Count()}." She whistles. "Rich man."
 
-` : ''}"Here's the night," she says. "The warlocks cut us our own little hole, north of the captain's. We go down it, we come up under their horse lines, we make the loudest noise anyone's made on the Odhan since Cuttle stood the Sekala on end. Everyone in that camp looks north. The captain works south. Then we go home the way we came, quick, before anyone thinks to follow." She pats the oilcloth. "Questions? Good. Nobody ever has questions."${b2In('redblade') ? ` She looks at Ramin's scale, and his spurs. "And you've brought a horse soldier to a hole. Lovely. Spurs off, Red Blade. Horses hear spurs." He takes them off, correctly, and puts them in his pack.` : ''}${b2In('warlock') ? ` She looks at Keth. "And a warlock's boy. Keep him by the walls. If they start talking to him, I want to know before they stop."` : ''}`,
+` : ''}"Here's the night," she says. "The warlocks cut us our own little hole, north of the captain's. We go down it, we come up under their horse lines, we make the loudest noise anyone's made on the Odhan since Cuttle stood the Sekala on end. Everyone in that camp looks north. The captain works south. Then we go home the way we came, quick, before anyone thinks to follow." She pats the oilcloth. "Questions? Good. Nobody ever has questions."${b2In('redblade') ? ` She looks at Ramin's scale, and his spurs. "And you've brought a horse soldier to a hole. Lovely. Mind those spurs, Red Blade. Horses hear spurs." Ramin looks down at them as if she had asked him to take off his name.` : ''}${b2In('warlock') ? ` She looks at Keth. "And a warlock's boy. Keep him by the walls. If they start talking to him, I want to know before they stop."` : ''}`,
     ch:[{t:'"What if something does follow?"', go:'b2_wicket_follow'},
         {t:'"We\'ll be behind you."', go:()=>startExplore()}]}),
   b2_wicket_follow:()=>({sp:'Sergeant Wicket', txt:
@@ -523,7 +523,7 @@ Keth lays his palm flat on the wall beside the wet and listens. "Old," he says. 
 
 Above the lip, the Tithansi picket lines: a long rope between stakes, horses on it, a guard-fire at each end, and men asleep by the horses with their spears beside them. Beyond them, a long way south, the main camp. Somewhere down there Lull is going in.
 
-Wicket's people are already moving, flat, along the gully, with their oilcloth bundles. ${b2Tg() ? 'Tangle is with them. He has not hummed since the water.' : ''}${b2In('warlock') ? ' Keth is flat in the gully beside you with both palms in the shallow water, listening up through the earth to the horses.' : ''}${b2In('redblade') ? ' Ramin, flat on your other side, has his lance laid along the ground and his spurs in his pack.' : ''}`,
+Wicket's people are already moving, flat, along the gully, with their oilcloth bundles. ${b2Tg() ? 'Tangle is with them. He has not hummed since the water.' : ''}${b2In('warlock') ? ' Keth is flat in the gully beside you with both palms in the shallow water, listening up through the earth to the horses.' : ''}${b2In('redblade') ? ' Ramin, flat on your other side, has his lance laid along the ground, and one hand over his spurs.' : ''}`,
     ch:[{t:'Up, and into them.', go:()=>startBattle('b2_raid', {})},
         {t:'Tangle\'s burner into the picket lines first.', tag:'uses 1 burner', req:()=>b2Tg() && S.inv.burner > 0, fx:()=>{ S.inv.burner--; S.f.b2_raidBurner = 1; }, go:()=>startBattle('b2_raid', {pre:'Tangle\'s burner goes up the bank in a long low arc and lands among the horses.', surprise:'p'})},
         {t:'Sathi and Hackle go along the gully and take the guards at the far fire.', check:['guile',14], req:()=>b2In('sathi'),
@@ -951,7 +951,9 @@ And as the Foolish Dog came up the ramp, the banks on either side of it came up 
 
 ${b2In('sathi') ? `Out on the northern lake bed, last of all, the Weasels came. They had finished with the Tithansi and they came on round the Shallows with the cattle-dogs running in front of them, onto the flank of the city cavalry that had broken the Hissar Guard, and Sathi, standing on a wagon to see, laughs out loud for the first time all day. ${S.f.b2_sathiShamed ? 'Then she stops, as if she had remembered something.' : ''}` : `Out on the northern lake bed, last of all, the Weasels came round the Shallows with the cattle-dogs running in front, onto the flank of the city cavalry. It ended there.`}
 
-${b2In('warlock') ? `Keth stands on a wagon-tongue and watches his clan go down that ramp, and he is laughing, a breath after everyone else, and crying, and does not seem to know which. ` : ''}${b2In('redblade') ? `Ramin watches with his helm under his arm. "That," he says, when it is done, "is how it is supposed to be done." He says it to the ramp.
+${b2In('warlock') ? `Keth stands on a wagon-tongue and watches his clan go down that ramp, and he is laughing, a breath after everyone else, and crying, and does not seem to know which.
+
+` : ''}${b2In('redblade') ? `Ramin watches with his helm under his arm. "That," he says, when it is done, "is how it is supposed to be done." He says it to the ramp.
 
 ` : ''}By the middle of the afternoon there is nobody on Gelor Ridge but the Seventh.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),

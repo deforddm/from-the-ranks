@@ -454,7 +454,7 @@ Hurlochel looks at her over the horse's back, and then, thoughtfully, at her glo
   b3_c6_farm:()=>({sp:'The burnt farm', txt:
 `A farmstead, or the stone half of one: a house and a byre and a wall round a yard, the roofs burned off and the beams fallen in. Not this week. The ash has been rained on more than once. On the lintel somebody has painted the Seer's sign, and somebody else has tried to scrape it off, and given up halfway.
 
-Nothing in the byre. Nothing in the yard. The well has stones in it. The Domin is like this all the way from the Catlin: not burned by an enemy. Emptied by its own side.${b3In('ellis') ? ` Ellis goes once round the yard, reading the ground. "Cart, and a lot of bare feet, all going one way," she says. "Nobody came back."` : ''}
+Nothing in the byre. Nothing in the yard. The well has stones in it. The Domin is like this all the way from the Catlin: not burned by an enemy. Emptied by its own side.${b3In('ellis') ? ` Ellis goes once round the yard, reading the ground. "Cart, and a lot of bare feet, all going one way," she says. "None of it came back."` : ''}
 ${b3In('greysword') ? `
 "The Tenescowri come through first," Dannet says, behind you, very flat. "Then the army takes what they missed. Then nobody lives here." She does not say how she knows. She was on Capustan's wall.` : ''}`,
     ch:[{t:'Look in the root cellar.', req:()=>!S.f.b3_c6_seed, go:'b3_c6_farm_cellar'},
@@ -859,7 +859,7 @@ It is too far to see anything but its shape. Walls. A great dark mass in the mid
 
 ${b3In('tuft') ? `Tuft puts her eye to the gap. "There's something under the city," she says at last. "Old. Cold. And something on top of it that isn't." She steps back from the screen. "I don't want to look any more, Sergeant."` : `It is very quiet up here. Nothing moves on the plain at all.`}${b3In('vell') ? `
 
-Vell looks at the walls a long while, the way he would look at a parapet from the street. "High," he says at last. "Not as high as up here." It is meant to be a comfort.` : ''}`,
+Vell studies the walls the way he would look at a parapet from the street. "High," he says at last. "Not as high as up here." It is meant to be a comfort.` : ''}`,
     ch:[{t:'Step back from the screen.', go:()=>startExplore()}]}),
   b3_c6_twist:()=>({sp:'Achievant Twist · the Black Moranth', fx:()=>{ S.f.b3_c6_twist = 1; }, txt:
 `The Moranth commander stands among the roosting quorls with one arm held stiffly across his chest. His armour is the same black chitin as the others', but a Malazan cloak is thrown over it, and you know who he is before the riders' heads all turn to him: Twist, Achievant of the Black Moranth, who has flown Dujek's Host out of the Domin a company at a time for a week of nights.
@@ -1103,7 +1103,7 @@ He jerks his chin at the reeds on the far bank. "Something's been watching us fr
   b3_c6_barghast:()=>({sp:'A White Face warrior', txt:
 `A White Face Barghast warrior, a head taller than ${b3In('brisk') ? 'Brisk' : 'anyone in the Fourth'}, his face painted chalk-white with black round the eyes so that he looks like a skull that has been told a joke, is carrying a cedar log on one shoulder that two Malazan carpenters had been trying to roll. He sets it down by the slips, and looks at the Fourth, and grins.
 
-"Malazans," he says, in fair trade-tongue. "You carry one log, two of you, and you sweat. We carry two logs, one of us, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."${b3In('greysword') ? `
+"Malazans," he says, in fair trade-tongue. "You carry one log between two, and you sweat. We carry two logs to one man, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."${b3In('greysword') ? `
 
 Dannet looks at the log, and at him. "On Capustan's walls," she says, "we carried the dead up the steps two at a time, and did not sing." The Barghast considers this. "Then you will like it better," he says, "with singing."` : ''}`,
     ch:[{t:'"Show you." A log each, and a race to the slips.', check:['might', 14],

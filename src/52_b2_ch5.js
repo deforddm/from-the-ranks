@@ -276,7 +276,7 @@ Object.assign(B2CH5.dlg, {
 
 ${b2Away() ? `You count the squad at the first halt, out of habit, and get to the end and count ${NAME(b2Away())} anyway, who is on a burned ship somewhere down the Vathar, or in Aren, or neither. You will stop doing that. Not yet.` : b2Hurt() ? `${NAME(b2Hurt())} walks with the wound from the ropes bound under the kit, and does not mention it, and you watch ${b2Him(b2Hurt())} not mention it every time the track goes uphill.` : 'You count the squad at the first halt. All there. You count them again anyway.'}
 
-${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. "Nobody's touched it. Don't look at it."` : ''}${b2In('marrow') ? ` Marrow has ${b2Knots()}.` : ''}`,
+${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. "Nobody's touched it. Don't look at it."` : ''}${b2In('marrow') ? ` Marrow has ${b2Knots()}.` : ''}${b2In('redblade') ? `${b2In('tangle') || b2In('marrow') ? ' ' : ''}Ramin digs in his scale, and at dusk says your two with the company's names, in the same voice, as if they had always been on the list.` : b2In('warlock') ? `${b2In('tangle') || b2In('marrow') ? ' ' : ''}Keth puts a palm flat on each grave before the column moves on. "So the ground knows whose they are," he says. "It is a strange ground. It should be told."` : ''}`,
     html:chainHTML('Vathar Forest · south of the river'),
     ch:[b2DeckChoice(5), {t:'On, under the trees.', go:'b2_forest_arrive'}]}),
   /* the reading at the first halt under the trees (47c) */
@@ -288,7 +288,7 @@ ${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. "Nobody's touch
 
 It is the mounds. They are everywhere once you have seen the first: long and low under the leaf-litter, longer than a man, longer than a cart, lying side by side between the trees in rows that go on into the dark of the wood further than anyone wants to walk. Some have a stone at the head. Some have had the stone pulled down a long time ago and left.
 
-${b2In('sathi') ? `Hackle will not go off the track. Sathi does not make him. "The spirits here are not ours," she says, low. "They are not anyone's. They are only angry." She has her bow strung, which she never does under trees.` : 'The dogs will not go off the track, any of them.'}
+${b2In('sathi') ? `Hackle will not go off the track. Sathi does not make him. "The spirits here are not ours," she says, low. "They are not anyone's. They are only angry." She has her bow strung, which she never does under trees.` : 'The dogs will not go off the track, any of them.'}${b2In('warlock') ? ` Keth walks the middle of the track with his palms turned down, touching nothing. "The dead here are not dead the right way," the old woman says, out of him. "Stay on the track, Malazan. Do not sit on anything."` : ''}
 
 There are no birds. Not one, all morning. The whole forest is listening to something, and it is not you.`,
     ch:[{t:'Look round.', go:()=>startExplore()}]}),
@@ -309,7 +309,9 @@ He is young and earnest and very tired, and there is something behind his eyes t
 
 "He says this whole country is dead because of what was done here. Not the forest: all of it, south of the river, all the way out. He says the Imass broke his people's bones and put the living under stones, and it was so long ago that nobody has a number for it." He swallows. "He says don't go in the tower. Then he says it doesn't matter, there's nothing in it now. He says both, every time."
 
-${b2In('marrow') ? `Marrow, who has been listening with her eyes shut: "Child, have you told the Fist's healers about these dreams?" "Yes," says List. "They said it was the fever." "Was it?" "No," says List.` : `You do not ask him if it was the fever. He has been asked.`}`,
+${b2In('marrow') ? `Marrow, who has been listening with her eyes shut: "Child, have you told the Fist's healers about these dreams?" "Yes," says List. "They said it was the fever." "Was it?" "No," says List.` : `You do not ask him if it was the fever. He has been asked.`}${b2In('warlock') ? `
+
+The old woman, out of Keth, sharp: "Listen to the boy. The ones under the stones are not dead. They only cannot get up." List looks at Keth, and Keth looks at his boots, and neither of them is happy about it.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_list5_again:()=>({sp:'Corporal List', txt: S.f.b2_towerOut ? `List looks at your face, and then away. "You went in," he says. It isn't a question. "Good. Now we can leave."` : `List is on his feet beside the historian, looking north-east through the trees. "Past the standing stone," he says, without being asked. "If you go. I'd not."`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -343,7 +345,7 @@ ${b2In('sathi') ? `Sathi says something to him in Wickan, short. He looks at her
   b2_mounds_go:()=>({sp:'Among the mounds', txt:
 `You go in among the mounds in a file, off the track, and the forest closes behind you like a door.
 
-The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, and blood, a little. Then the mounds open out into a ring of them round a hollow, and in the hollow are the Bhilard, eight or so, lean men in dust-coloured cloth, going through a cart's bundles. Two people from the column sit with their backs to a mound, tied, watching them do it. A third is lying very still. ${b2In('sathi') ? 'Sathi has an arrow on the string.' : ''}${b2Hands5() <= 3 ? ' The Weasel rider has come with you, on foot, his knife out, because he has counted your squad and does not think much of the number.' : ''}`,
+The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, and blood, a little. Then the mounds open out into a ring of them round a hollow, and in the hollow are the Bhilard, eight or so, lean men in dust-coloured cloth, going through a cart's bundles. Two people from the column sit with their backs to a mound, tied, watching them do it. A third is lying very still. ${b2In('sathi') ? 'Sathi has an arrow on the string.' : ''}${b2In('redblade') ? ' Ramin has the curved sword out and is looking at the two tied by the mound, and at nothing else.' : b2In('warlock') ? ' Keth has a palm on the litter. "Eight," he whispers. "And three of ours. The ground has the third already."' : ''}${b2Hands5() <= 3 ? ' The Weasel rider has come with you, on foot, his knife out, because he has counted your squad and does not think much of the number.' : ''}`,
     ch:[{t:'Into them.', go:()=>startBattle('b2_mounds', {})},
         {t:'Sathi and Hackle along the back of the mounds first.', check:['guile',15], req:()=>b2In('sathi'),
           edges:id=>[id === 'sathi' && ['Hackle knows how to be quiet', 2], id === 'redblade' && ['spurs', -2], id === 'haddat' && ['mail', -1]],
@@ -357,7 +359,7 @@ The tracks are easy: a cart's ruts, and the scuffing of somebody being pulled, a
   b2_after_mounds:()=>({sp:'Among the mounds', fx:()=>{ if (!S.f.b2_moundsDone) { S.f.b2_moundsDone = 1; chain(0, 2, 'Stragglers from the mounds'); } }, txt:
 `The last of them goes over a mound and does not come back over it.
 
-The two by the mound are a carter and his grown son, both alive, both cut about, the son with a split lip and the carter not speaking at all. The one lying still is the carter's wife. ${b2In('marrow') ? 'Marrow kneels by her, and looks, and does not reach for the warren. "No," she says. That is all.' : 'You look, and there is nothing to do.'}
+The two by the mound are a carter and his grown son, both alive, both cut about, the son with a split lip and the carter not speaking at all. The one lying still is the carter's wife. ${b2In('marrow') ? 'Marrow kneels by her, and looks, and does not reach for the warren. "No," she says. That is all.' : 'You look, and there is nothing to do.'}${b2In('warlock') ? ` Keth kneels beside her and puts his palm on the ground by her hand, and tells it, in Foolish Dog, whose she is.` : ''}
 
 You bring the two of them back to the track, and they walk in your stretch now, because there is nowhere else for them to walk.
 
@@ -367,7 +369,9 @@ ${b2In('haddat') ? `Haddat looks at the dead Bhilard a while. "Odhan men," she s
   b2_oldbones:()=>({sp:'Old bones', txt:
 `Bones in the leaf-litter, where a mound has slumped. Not a man's. Too long in the arm, too heavy in the brow, and a jaw with two tusks in it, yellow as old ivory, curving up. Beside it, half sunk, a shoulder-blade with a hole through it the size of a fist, made by something that was not a spear.
 
-${b2In('tangle') ? `Tangle squats by it and looks at the hole a long time. "Stone," he says. "Something stone went through that." He stands up. "Don't like it." He doesn't hum.` : b2In('haddat') ? `Haddat looks at the tusks, and then at you. "My grandmother told stories," she says. "About the grey people who made winter. I thought they were stories."` : 'It stays where it lies, untouched.'}`,
+${b2In('tangle') ? `Tangle squats by it and looks at the hole a long time. "Stone," he says. "Something stone went through that." He stands up. "Don't like it." He doesn't hum.` : b2In('haddat') ? `Haddat looks at the tusks, and then at you. "My grandmother told stories," she says. "About the grey people who made winter. I thought they were stories."` : 'It stays where it lies, untouched.'}${b2In('warlock') ? `
+
+The old woman, out of Keth, very low: "Grey people. The Imass did that, child. The Imass do not stop. Remember it." Keth would rather not remember it, and says so, and she makes him say it again.` : ''}`,
     ch:[{t:'Leave it lie.', go:()=>startExplore()}]}),
 
   /* ---- Bungle's company, and Mincer in it ---- */
@@ -413,7 +417,7 @@ ${b2In('sathi') ? `Hackle sits down at the stone and will not go past it.` : ''}
 
 The tower is round, and fitted stone without mortar, the stones so close you could not get a knife-blade between them, and it has no door. It has a gap where a door was, a long time ago, and frost round the gap thick as fur. Cold comes out of it. Not like a cellar. Like a winter, waiting.
 
-${b2In('sathi') ? `Sathi stops at the edge of the frost with Hackle pressed against her legs. "No," she says, quite calmly. "Not for me. Not for the dog. This is not a place for anything that lives." She sits down on a root to wait, facing away from it. "Go if you go. Come back."` : ''}${b2In('haddat') ? ` Haddat says her five words to no god, under her breath, and goes in first, because Haddat always goes in first.` : ''}`,
+${b2In('sathi') ? `Sathi stops at the edge of the frost with Hackle pressed against her legs. "No," she says, quite calmly. "Not for me. Not for the dog. This is not a place for anything that lives." She sits down on a root to wait, facing away from it. "Go if you go. Come back."` : ''}${b2In('haddat') ? ` Haddat says her five words to no god, under her breath, and goes in first, because Haddat always goes in first.` : ''}${b2In('redblade') ? ` Ramin stands at the edge of the frost with his breath showing white. "I have never seen my breath," he says, quite steadily. "I would like to go in before I think about it."` : b2In('warlock') ? ` Keth stops at the frost line. "She does not want to go in," he says. "She says it is rude to wake the old." He goes in anyway, because the squad is going, and she comes with him, because she has no choice, and lets him know it.` : ''}`,
     ch:[{t:'In.', go:()=>{ startExplore('b2_jtower'); talk('b2_tower_in'); }},
         {t:'Not today. Back to the column.', go:()=>startExplore()}]}),
 });
@@ -490,7 +494,7 @@ You can see it all from here: the mounds in their rows between the trees, more t
 
 North, back across the Vathar, there is dust on the horizon. A great deal of it. More than at the river.
 
-${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}`,
+${b2In('haddat') ? `Haddat looks north a long time, her thumb on the rim of her shield.` : 'You look north a long time.'}${b2In('redblade') ? ` Ramin looks south instead, at the white. "Nothing to remount on, out there," he says. "Nothing to ride to."` : ''}`,
     ch:[{t:'Down.', go:()=>startExplore()}]}),
   b2_tower_leave:()=>({sp:'Outside', scene:'b2_forest', fx:()=>{ S.f.b2_towerOut = 1; }, txt:
 `You come out through the gap where the door was into heat that hits like a hand, and stand in it, and let it.
@@ -512,7 +516,7 @@ The column is already moving out onto it. ${b2In('tangle') ? '"Dry March," Tangl
   b2_nenoth_go:()=>({sp:'The edge of the forest', scene:'b2_dry_march', txt:
 `The last tree. Then the scrub, then the cracked white clay, and the sun on it like a hammer on an anvil, and the column going out into it a cart at a time, a family at a time, the way people go into cold water.
 
-${b2In('marrow') ? 'Marrow pulls her hat down. "Well," she says. "It was nice to be cold."' : 'Behind you the forest is very quiet.'}${S.f.b2_towerOut && b2In('haddat') ? ` Haddat looks back once, north-east, where the top of the tower shows over the trees. Then she does not look back again.` : ''}`,
+${b2In('marrow') ? 'Marrow pulls her hat down. "Well," she says. "It was nice to be cold."' : 'Behind you the forest is very quiet.'}${S.f.b2_towerOut && b2In('haddat') ? ` Haddat looks back once, north-east, where the top of the tower shows over the trees. Then she does not look back again.` : ''}${b2In('warlock') ? ` Keth puts his palm on the first of the white clay, and takes it off fast. "Dead," he says. "Not asleep. Dead. There is nothing down there to ask."` : b2In('redblade') ? ` Ramin does up every strap of his scale before he steps out onto it, properly, as for an inspection.` : ''}`,
     ch:[{t:'Onto the Dry March.', fx:()=>{ if (!S.f.b2_nenoth) { S.f.b2_nenoth = 1; chain(-2, -2, 'Days on the Nenoth'); } }, go:()=>{ startExplore('b2_nenoth'); talk('b2_nenoth_arrive'); }}]}),
 });
 
@@ -537,7 +541,9 @@ And behind, every evening, the dust. Bult says Dom has five men now for every on
 
 ${b2In('sathi') ? (S.f.b2_sathiShamed && !S.f.b2_sathiLaugh ? `He does not look at Sathi. He has not looked at her since the Shallows.
 
-Sathi steps in front of him anyway. She says something in Wickan, low and fast, with her chin up. He hears her out, and then, for the first time since the Shallows, he looks at her. A long look. Then he jerks his head at a spare horse, a bony grey. "He says I may ride," Sathi says, very flat. "If my sergeant can spare me."` : `He looks at Sathi. "And you, girl. I have a horse with no rider. Your sergeant can spare you a morning." It is not a question to you. It is a question to her.${S.f.b2_weaselHonour || S.f.b2_sathiLaugh ? ` She has gone red to the ears, which on Sathi you have never seen.` : ''}`) : `"Your Wickan girl would have been useful," he says. "Pity."`}`,
+Sathi steps in front of him anyway. She says something in Wickan, low and fast, with her chin up. He hears her out, and then, for the first time since the Shallows, he looks at her. A long look. Then he jerks his head at a spare horse, a bony grey. "He says I may ride," Sathi says, very flat. "If my sergeant can spare me."` : `He looks at Sathi. "And you, girl. I have a horse with no rider. Your sergeant can spare you a morning." It is not a question to you. It is a question to her.${S.f.b2_weaselHonour || S.f.b2_sathiLaugh ? ` She has gone red to the ears, which on Sathi you have never seen.` : ''}`) : `"Your Wickan girl would have been useful," he says. "Pity."`}${b2In('warlock') ? `
+
+He looks at Keth. "And a Foolish Dog with no horse. What use is that?" The old woman tells him, out of the boy, at length, in Wickan. The captain rides off before she has finished. Keth looks pleased with her, for once.` : ''}`,
     ch: b2In('sathi') ? [
         {t:'"Go with them, Sathi. Take Hackle."', fx:()=>{ S.f.b2_sathiRode = 1; loy('sathi', 1); }, go:'b2_sathi_rides'},
         {t:'"I need her with the squad, Captain."', fx:()=>{ loy('sathi', -1); }, go:'b2_sathi_stays'}] :
@@ -594,7 +600,9 @@ Not to the Bhilard. To the Nenoth. Two days after the gap the first of them lie 
 
 On the fourth morning the last cow in the Seventh's herd stands in the middle of the pan with her head down, and the Weasels' dogs stand round her in a ring, watching, and then she lies down too, slowly, front legs first, the way cattle do, and that is the end of the herd that walked out of Hissar.
 
-${b2In('sathi') ? `Sathi sits by her a while with Hackle. When she comes back she doesn't laugh. "The dogs have nothing to herd now," she says. "They don't know what they are for."` : `The dogs stand round her a long time, not knowing what they are for.`}`,
+${b2In('sathi') ? `Sathi sits by her a while with Hackle. When she comes back she doesn't laugh. "The dogs have nothing to herd now," she says. "They don't know what they are for."` : `The dogs stand round her a long time, not knowing what they are for.`}${b2In('warlock') ? `
+
+That night the Weasels' dogs come and lie down round Keth instead, a ring of them, all facing out. "They want to be for something," he says. "I told them they could be for me."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_carcass:()=>({sp:'Bones', txt: S.f.b2_cattleDead ?
@@ -609,7 +617,7 @@ Dust. A wall of it on the horizon, low and brown and wide, wider than yesterday.
 ${b2In('haddat') && S.f.b2_ilharSeen ? `Haddat comes and stands in the hand's-width of shade beside you, and looks at the dust. She doesn't say his name. She says: "He was always the one who knew where the water was." Then she goes back to the carts.` : b2In('haddat') ? `Haddat looks at the dust a long time, at every part of it, as if she could pick out one face at a league.` : 'You look at it until your eyes water, which is a waste.'}`,
     ch:[{t:'Back to the carts.', go:()=>startExplore()}]}),
   b2_nhorses:()=>({sp:'The horse lines', txt:
-`The Wickan horse lines: what is left of them. Horses standing with their heads low, ribs like barrel-hoops, and Wickans walking among them with a little water in their cupped hands, giving each horse a mouthful, one after another, down the line, with a word in each one's ear. ${b2In('sathi') ? `Sathi goes and helps. She gives the bony grey hers, out of her own skin, and Hackle watches her do it and does not ask for any.` : ''}`,
+`The Wickan horse lines: what is left of them. Horses standing with their heads low, ribs like barrel-hoops, and Wickans walking among them with a little water in their cupped hands, giving each horse a mouthful, one after another, down the line, with a word in each one's ear. ${b2In('sathi') ? `Sathi goes and helps. She gives the bony grey hers, out of her own skin, and Hackle watches her do it and does not ask for any.` : ''}${b2In('redblade') ? ` Ramin goes down the line behind them and holds each head while it drinks, the Red Blade way, a hand flat under the jaw. The Wickans let him. One of them says something to him that might be thanks.` : ''}`,
     ch:[{t:'Leave them to it.', go:()=>startExplore()}]}),
 
   /* ---- the column grows on the Dry March, too ---- */
@@ -678,7 +686,9 @@ The stretch hears. They do not shout, or plead, or come at the cart. They have w
 
 ${b2In('tangle') ? `"It's right," Tangle says, very low, to nobody. "It's right. It's the sum." He does not hum. ` : ''}${b2In('sathi') ? `Sathi nods. "The riders drink first," she says. "So the herd has riders. That is the Wickan way." She does not laugh when she says it. ` : ''}${b2In('haddat') ? `Haddat takes her share of the skin and holds it, and looks at the stretch, and drinks, because you have ordered it, and then goes and sits with the stretch, and does not come back to the squad's fire. ` : ''}${b2In('marrow') ? `Marrow drinks. She does not tie anything. ` : ''}${b2In('redblade') ? `
 
-Ramin takes his share of the skin, and walks over to the stretch with it, and gives it to the first child he comes to, and comes back. "An order I gave myself," he says, when you look at him. "Long ago. It does not change because I am thirsty." He will go into the Tregyn tomorrow in scale over chain with nothing in him. He knows it.` : ''}
+Ramin takes his share of the skin, and walks over to the stretch with it, and gives it to the first child he comes to, and comes back. "An order I gave myself," he says, when you look at him. "Long ago. It does not change because I am thirsty." He will go into the Tregyn tomorrow in scale over chain with nothing in him. He knows it.` : b2In('warlock') ? `
+
+Keth drinks his mouthful. Then the old woman, out of him, says something to the stretch in Wickan, which none of them can understand. "She says she is sorry," Keth tells you, astonished. "I have never heard her say it."` : ''}
 
 ${S.f.b2_marchLost ? `In the night ${numw(S.f.b2_marchLost)} of the stretch do not wake. ${b2In('haddat') ? 'Haddat has their names. She says them at the squad\'s fire, standing, before she sits down at the other one.' : 'You have their names.'}` : 'There is nobody in the stretch to go without. That is its own answer.'}`,
     html:chainHTML('The Nenoth · the night before'),
@@ -698,7 +708,7 @@ ${S.f.b2_marchLost ? `In the night ${numw(S.f.b2_marchLost)} of the stretch do n
   b2_dryraid_go:()=>({sp:'Midday · the carts', scene:'b2_dry_march', txt:
 `They come at noon, as Bult said: the Tregyn, out of the shimmer to the south, on foot and on horses, in horsehair mantles, with empty skins slung on their backs. They are not coming for the column. They are coming for the stretch with the driest look, and there it is.
 
-${S.f.b2_dry ? `Your mouth is dust. Everybody's is. ${b2In('haddat') ? 'Haddat pulls her mail straight, and her hands are slow doing it.' : 'Hands are slow on buckles.'}` : `The squad drank this morning, a mouthful each, and it is in you, like a coal. ${S.f.b2_drankSkip === 'redblade' ? 'Ramin did not. He is very straight, and very pale under the brown, and his scale is already too hot to touch.' : ''}`}${b2Hands5() <= 3 ? `
+${S.f.b2_dry ? `Your mouth is dust. Everybody's is. ${b2In('haddat') ? 'Haddat pulls her mail straight, and her hands are slow doing it.' : 'Hands are slow on buckles.'}` : `The squad drank this morning, a mouthful each, and it is in you, like a coal. ${S.f.b2_drankSkip === 'redblade' ? 'Ramin did not. He is very straight, and very pale under the brown, and his scale is already too hot to touch.' : ''}`}${b2In('warlock') ? ` Keth is crouched at a cart wheel with his palms on the clay. "There," he says, and points into the shimmer before anyone can see anything. "And there. Many feet, running."` : ''}${b2Hands5() <= 3 ? `
 
 Three of the Seventh's regulars come trotting down the line with their shields up, sent by Bult, because word has gone round that your squad is short${S.f.b2_dry ? ', and where its water went' : ''}. "Sergeant," says the older one. "Where do you want us?"` : ''}`,
     ch:[{t:'To the carts.', go:()=>startBattle('b2_dryraid', {})},
@@ -708,7 +718,7 @@ Three of the Seventh's regulars come trotting down the line with their shields u
   b2_after_dryraid:()=>({sp:'The carts', fx:()=>{ if (!S.f.b2_dryDone) { S.f.b2_dryDone = 1; chain(2, 0, 'The water-carrier\'s skins'); } }, txt:
 `The water-carrier goes down on the clay with his mantle over him like a tent, and his guard runs, and the Tregyn on the pan see him go and break, all at once, into the shimmer.
 
-He brought skins to carry the stretch's water away in. Some of them were full already: water for the raid, for his men, from wherever the Tregyn get water. ${S.f.b2_dry ? 'The squad drinks from them where it stands, on its knees on the clay, and nobody is ashamed of it.' : 'The squad brings them in to the cart.'}
+He brought skins to carry the stretch's water away in. Some of them were full already: water for the raid, for his men, from wherever the Tregyn get water. ${S.f.b2_dry ? 'The squad drinks from them where it stands, on its knees on the clay, and nobody is ashamed of it.' : 'The squad brings them in to the cart.'}${S.f.b2_drankSkip === 'redblade' && b2In('redblade') ? ' Ramin carries his to the cart unopened.' : ''}
 
 ${b2In('haddat') ? `Haddat has one of the skins in her hands. She is not drinking from it. She is looking at the neck of it, where the leather is stamped.` : ''}`,
     ch:[{t:b2In('haddat') ? 'Haddat.' : 'Back to the column.', go:b2In('haddat') ? 'b2_sealskin' : 'b2_dusk5'}]}),
@@ -730,7 +740,7 @@ She holds it out to you, and then doesn't, and then does.
 
 The column does not sing. It has not sung since the forest.
 
-The squad goes in through the ring to the stretch's place, and sits down, and does not get up.`,
+The squad goes in through the ring to the stretch's place, and sits down, and does not get up.${b2In('redblade') ? ' Ramin sits last, and takes off his helm, and that is all he takes off.' : b2In('warlock') ? ' Keth lies down flat on the clay with his palms on it, and the dogs lie down round him.' : ''}`,
     ch:[{t:'Sit.', go:()=>{ startExplore('b2_karpcamp'); talk('b2_carriage_comes'); }}]}),
 });
 
@@ -743,7 +753,7 @@ One moment there is the ring of carts, and the dung-fires, and the dark beyond. 
 
 It is scorched black to the axles. The horses are lathered white and screaming. There are men on its roof, holding on to the rails, in armour that has been hit by a great many things, and one of them is on fire, a little, and puts it out with his hand. The carriage comes through the gap in the carts that the pickets are shouting about, and slews, and stops, twenty paces from the Fist's tent, and the air closes behind it like water.
 
-Every Wickan bow in the camp is drawn on it.
+Every Wickan bow in the camp is drawn on it.${b2In('warlock') ? ` Keth has his palms on the ground. "It did not come over the ground," he says, very small. "It came through somewhere else." The old woman: "Somewhere I would not go, and I am dead."` : b2In('redblade') ? ` Ramin is looking at the horses. "Nine," he says. "Lathered to the hocks. Whatever road that was, they ran all of it."` : ''}
 
 The door opens. A man gets out: a huge man, round as a wine-jar, in silks that were good once, sweating. He looks round at the bows, and the carts, and the Seventh, and smiles, and his teeth are capped with gold, and in the gold there are diamonds, and they catch the firelight.
 
@@ -790,7 +800,7 @@ He watches her work. "Thanks," he says, when she's done. "I'll put you in my wil
   b2_shareholder2:()=>({sp:'A Trygalle shareholder', fx:()=>{ S.f.b2_shareholder2 = 1; }, txt:
 `A woman in battered scale on the carriage roof, with her legs dangling, counting the horses as the grooms lead them off. She gets to nine, and stops, and counts again.
 
-"Eleven, we started with," she says to you. "Darujhistan to here. Eleven horses, eight of us on the roof." She doesn't say how many came out the other end. You can count the roof. ${b2In('tangle') ? `"Sapper?" she says to Tangle, looking at the satchel. "Moranth? We carried a crate of those once. Never again. The warrens don't like them."` : ''}`,
+"Eleven, we started with," she says to you. "Darujhistan to here. Eleven horses, eight of us on the roof." She doesn't say how many came out the other end. You can count the roof.${b2In('redblade') ? ` Ramin, beside you, is watching the grooms. "They should be walked," he says, "not stood. Or they will not stand again." The woman looks at him, and then shouts to the grooms to walk them.` : ''} ${b2In('tangle') ? `"Sapper?" she says to Tangle, looking at the satchel. "Moranth? We carried a crate of those once. Never again. The warrens don't like them."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- Duiker and List by the Fist's tent ---- */
@@ -846,7 +856,7 @@ ${B2.elder} laughs. You have not heard her laugh since the well court. "Drink it
   b2_kcart_water:()=>({sp:'The squad\'s cart', txt:
 `You give it out. The stretch first, then the squad, the way it has always gone, except when it didn't. ${S.f.b2_c5_key === 'squad' ? `The stretch takes it from your hands without looking at you, and drinks, and then some of them do look at you. You let them. ${S.f.b2_marchLost ? `There are ${numw(S.f.b2_marchLost)} who are not here to drink.` : ''}` : `When it comes to the squad's turn the stretch does not let you give it out. ${b2Ours5() || 'A woman from the weavers\' street'} takes the skin out of your hands and gives it to you, first, and stands there until you drink.`}
 
-${S.f.b2_c5_key === 'column' && b2In('marrow') ? 'Marrow drinks, and sits down, and laughs, and coughs, and laughs. ' : ''}${b2In('tangle') ? `Tangle drinks, and wipes his mouth, and counts the satchel. "${b2Count()}," he says. "And water. I'd forgotten that was a thing you could count." ` : ''}${b2In('sathi') ? 'Sathi gives Hackle his first, out of her cupped hands, before she drinks herself. ' : ''}${S.f.b2_drankSkip === 'redblade' && b2In('redblade') ? `Ramin drinks last of all, after the last child, and only a little, and then a lot.` : ''}`,
+${S.f.b2_c5_key === 'column' && b2In('marrow') ? 'Marrow drinks, and sits down, and laughs, and coughs, and laughs. ' : ''}${b2In('tangle') ? `Tangle drinks, and wipes his mouth, and counts the satchel. "${b2Count()}," he says. "And water. I'd forgotten that was a thing you could count." ` : ''}${b2In('sathi') ? 'Sathi gives Hackle his first, out of her cupped hands, before she drinks herself. ' : ''}${S.f.b2_drankSkip === 'redblade' && b2In('redblade') ? `Ramin drinks last of all, after the last child, and only a little, and then a lot.` : ''}${b2In('warlock') ? `Keth pours the first of his on the clay, a little, and the old woman says something to it in Foolish Dog. Then he drinks the rest so fast he chokes.` : ''}`,
     html:chainHTML('The Nenoth · the Trygalle\'s water'),
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_kfire:()=>({sp:'A fire', txt:
@@ -872,7 +882,11 @@ ${b2Away() ? `And the squad: one short, still. ${NAME(b2Away())} is in Aren by n
 
 Haddat sleeps with her mother's skin on her belt, full, the stopper tied down.` : ''}${b2In('sathi') && S.f.b2_sathiRode ? `
 
-Sathi is not at the squad's fire. She is at the Weasels'. You can hear her laughing from here.` : ''}
+Sathi is not at the squad's fire. She is at the Weasels'. You can hear her laughing from here.` : ''}${b2In('redblade') ? `
+
+Ramin is polishing the red of his scale by the dung-fire, a scale at a time, with the trader's water still on his chin.` : b2In('warlock') ? `
+
+Keth is asleep on his back with his palms on the clay and a ring of the Weasels' dogs round him. The ground here is dead, he said. He sleeps that way anyway.` : ''}
 
 Somewhere in the dark the trader's carriage is being harnessed, quietly, to go back the way it came. In the morning it will not be there. In the morning there will be hills, and water in them, and every tribe on the Odhan going to the same water.`,
     html:chainHTML('The Nenoth · the end of the Dry March'),
