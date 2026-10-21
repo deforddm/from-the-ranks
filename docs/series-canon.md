@@ -80,6 +80,7 @@ The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
 | Tallow, Hessa, Tebbet, Darrut, Orvas (Book Four) | Clear (supported: some wiki lists didn't load). | The nearest found: Tarlow (a GotM mention), Hesta (an OST mage). | Kept. The full table is in `docs/hoc-canon.md` §11. |
 | Third squad, 9th Legion (Book Four) | Clear (supported). | No canon third squad in the Fourteenth was found; the numbered canon squads found are in the 8th Legion. | **Never write "3rd Company"**, which is canon in the 8th Legion. |
 | *Unblooded* (Book Four's title) | Kept. | A Tiste Edur word in MT for warriors who have not yet killed. | A canon word, not a canon title. |
+| Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
 
