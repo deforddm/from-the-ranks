@@ -1,8 +1,78 @@
-Wed Oct 21, 2026, 12:57 PM PDT. Book Four balance, measured on branch book4 (v7.0.0, not shipped); no change made.
+Wed Oct 21, 2026, 2:38 PM PDT. Book Four balance on v7.0.0 (not shipped): TUNED (branch b4-tune). The first measurement, as built, is kept below it as the "before".
 
 # Book Four balance (House of Chains, *Unblooded*)
 
-Every number here is a measurement; no game rule, foe or `B4GAP` value was changed. The proposals at the end are for David to accept or refuse, one by one.
+## Tuned, Wed Oct 21, 2026 (David's targets, 1:02 PM PDT)
+
+David: the measured book "sounds too easy overall, death should still be a possibility even on soldier." Targets: Soldier, the smart bot wins ~85–95% of first attempts a fight, losing 30–50% health; Bridgeburner ~65–75%; Ch7's mortal fight kills a squadmate in ~15–25% of Soldier runs, and on Bridgeburner on the forward road ≤ 0.8 dead a won fight.
+
+**What changed.**
+1. **`B4GAP` rows** (src/70_book4.js), Bridgeburner's side:
+
+| Ch | armour | to hit | health | damage | Soldier-only extra (`s`) |
+|---|---|---|---|---|---|
+| 1 | +7 | +4 | ×1.8 → **×1.85** | +6 | health ×1.08, damage +1 |
+| 2 | +6 | +4 | ×1.7 → **×1.8** | +5 → **+7** | health ×1.2, to hit +1, damage +1 |
+| 3 | +5 | +4 | ×1.55 → **×1.75** | +4 → **+6** | health ×1.2, to hit +1, damage +2 |
+| 4 | +6 | +4 | ×1.5 → **×1.95** | +5 → **+7** | health ×1.2, to hit +1, damage +2 |
+| 5 | +5 | +2 | ×1.35 → **×1.5** | +4 → **+5** | health ×1.2, to hit +1, damage +2 |
+| 6 | +5 | +2 | ×1.25 → **×1.47** | +4 → **+6** | health ×1.2, to hit +1, damage +2 |
+| 7 | +5 | +1 | ×1.25 → **×1.5** | +4 → **+6** | health ×1.2, to hit +1, damage +2 |
+
+2. **A Book-Four-only Soldier adjustment** (the `s` column): applied in the `B4GAP` `mkFoe` wrap only when `S.diff` is Soldier, so Books One–Three and the global `DIFFS` are untouched. Why: as built Bridgeburner was near its old target and Soldier trivial, and the global Soldier/Bridgeburner gap (×1.25 health, ×1.2 wounds, +1 to hit) is too wide for David's new pair of targets; one `B4GAP` row cannot put both in band.
+3. **Ch7's `b4_c7_breakout` on the forward road** (`b4_saw` close, src/77_b4_ch7.js): the extra `b4_c7_fleer` is dropped and "nearer" is one row, not two; it still begins a round sooner. With the tuned rows, the old wrap killed 3.5 a won fight on Soldier (13% won) and 5 on Bridgeburner (6% won).
+
+**Final numbers** (16 runs a fight a difficulty, the method below; "lost" is over won fights):
+
+| Ch | Fight | Soldier win | lost | Bridgeburner win | lost |
+|---|---|---|---|---|---|
+| 1 | brawl | 81% | 21% | 69% | 40% |
+| 1 | dig | 88% | 30% | 75% | 48% |
+| 1 | runners | 100% | 15% | 94% | 33% |
+| 1 | watch | 88% | 24% | 63% | 36% |
+| 2 | hill | 88% | 32% | 75% | 34% |
+| 2 | probe | 69% | 41% | 56% | 30% |
+| 2 | robbers | 100% | 40% | 63% | 28% |
+| 3 | brawl | 100% | 40% | 100% | 41% |
+| 3 | poles | 100% | 28% | 75% | 28% |
+| 3 | raiders | 94% | 27% | 94% | 34% |
+| 3 | scavengers | 100% | 32% | 94% | 32% |
+| 4 | lancers_brawl | 100% | 24% | 100% | 26% |
+| 4 | picket | 69% | 38% | 50% | 39% |
+| 4 | wagons | 94% | 39% | 69% | 26% |
+| 4 | wounded | 100% | 26% | 75% | 35% |
+| 5 | deserters | 100% | 24% | 94% | 24% |
+| 5 | rearguard | 81% | 20% | **31%** | 43% |
+| 5 | seep | 81% | 22% | 63% | 27% |
+| 5 | wallriders | 100% | 25% | 81% | 21% |
+| 6 | dusk | 100% | 22% | 94% | 27% |
+| 6 | nest | 94% | 23% | 69% | 27% |
+| 6 | outpost | 100% | 24% | 75% | 34% |
+| 6 | patrol | 100% | 25% | 94% | 33% |
+| 7 | breakout | 100% | 23% | 81% | 30% |
+| 7 | outriders | 94% | 20% | 75% | 31% |
+| 7 | spur | 81% | 24% | 56% | 33% |
+
+| Ch | Soldier win (before) | lost (before) | Bridgeburner win (before) | lost (before) |
+|---|---|---|---|---|
+| 1 | 89% (96%) | 22% (28%) | 75% (82%) | 39% (41%) |
+| 2 | 85% (100%) | 38% (17%) | 65% (97%) | 31% (28%) |
+| 3 | 98% (100%) | 32% (15%) | 91% (99%) | 34% (33%) |
+| 4 | 91% (100%) | 31% (24%) | 73% (97%) | 31% (45%) |
+| 5 | 91% (100%) | 23% (16%) | 67% (88%) | 26% (46%) |
+| 6 | 98% (100%) | 24% (17%) | 83% (97%) | 30% (36%) |
+| 7 | 92% (100%) | 22% (15%) | 71% (100%) | 31% (15%) |
+
+**The mortal fight** (16 runs): normal road, Soldier 100% won with no deaths, Bridgeburner 81% won with no deaths. Forward road (as now built): Soldier 100% won, 0.56 dead a won fight, a death in 44% of won fights; Bridgeburner 81% won, 1.92 dead a won fight (85%).
+**Transfer squad**, Ch5 seep, Soldier: 100% (12), 20% lost (the easier road, as allowed).
+
+**Where it is off target, honestly.** Soldier wins sit in band (85–98% a chapter; single fights 69–100%), but health lost is 20–25% from Ch5 on, under the 30–50% asked: the late gear (see "How much the gear does") flattens it, and pushing it up would cost more Soldier wins first. Ch3 and Ch6 are easy on Bridgeburner (91% and 83%); Ch5's rearguard (31%) and Ch4's picket (50%) are hard outliers. The mortal fight's deaths are inverted from what David asked: none on the normal road, too many on the forward road (Bridgeburner 1.9 a won fight against ≤ 0.8 asked). These were left at the time budget; next levers, untested: Ch3 health ×1.75 → ×1.85 and Ch6 ×1.47 → ×1.55; one fewer foe in the rearguard; on the forward road, drop "a round sooner" for the wave too (keep the nearer row); for Soldier deaths on the normal road, a Ch7-only Soldier `s` damage +3.
+
+---
+
+# Before: as first measured (12:57 PM PDT, no change made)
+
+Every number in this part is the first measurement; the proposals at its end were superseded by the tuning above.
 
 ## How it was measured
 
