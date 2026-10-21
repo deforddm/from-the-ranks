@@ -772,7 +772,7 @@ The Fourth walks in unchallenged, and ungreeted. Rhivi faces turn in the firelig
     b3_c1_sohra:()=>({sp:'Sohra · Rhivi herd-rider', fx:()=>{ S.f.b3_sohraMet = 1; S.f.b3_c1_sohraFire = 1; }, txt:
 `${S.f.b3_sohraMet ? `Sohra is at a small fire on the edge of the camp, nearest the herds, with a pot of something on it and a smoked haunch of bhederin hung over it. "You came," she says. "Good. I have been telling people about you."` : `A Rhivi girl of about twenty is sitting at a small fire on the edge of the camp, nearest the herds, with a horn bow beside her and a pale mark painted across her eyes. "You are the Malazans who stand together like young bulls," she says. "I saw you on the line. Sit. I am Sohra. The Mhybe's people sent me to watch the Malazans and say what they are." She shrugs. "I was told I could say so, if I was asked. You have not asked. I am saying so anyway. It saves time."`}
 
-She cuts the Fourth a slice of the haunch each, exactly the same size, and watches you eat it.
+She cuts the Fourth a slice of the haunch each, exactly the same size, and watches you eat it.${b3In('vell') ? ` Vell finishes his in four bites and looks at the haunch with open hope. Sohra looks back. He stops hoping.` : ''}
 
 "Your officer struck the High King today," she says. "For the child." Her voice does something careful on *the child*. "Some of the young men wanted to make him a song. The old ones said a song for a Malazan would bring storms." She picks at the fire. "I said: he struck *Kallor*. I would like to see the weather that is worse than Kallor."
 
@@ -894,7 +894,7 @@ ${b3Mind() ? `The Fourth sits down as if it had been carrying something a long w
     b3_c1_rfire_slept:()=>({sp:'A Rhivi fire', txt:
 `You wake to the same song, or another one very like it, and a blanket over you that you didn't have when you lay down.
 
-${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening to the old man sing. "It's a list," he says quietly, when he sees you're awake. "I asked. It's the names of the herd's dead. All of them. Every one since his grandfather." He sounds envious, and something else. "He doesn't write it. He just *knows* it."`, tuft:`Tuft is awake, sitting with her knees up, looking at the painted door-flap of the biggest tent in the camp.`, _:`The old man nods to you, once, without stopping his song.`})}`,
+${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening to the old man sing. "It's a list," he says quietly, when he sees you're awake. "I asked. It's the names of the herd's dead. All of them. Every one since his grandfather." He sounds envious, and something else. "He doesn't write it. He just *knows* it."`, tuft:`Tuft is awake, sitting with her knees up, looking at the painted door-flap of the biggest tent in the camp.`, _:`The old man nods to you, once, without stopping his song.`})}${b3In('ellis') ? `\n\nEllis is awake too, or never slept: sitting with her back to the fire and her face to the dark, the gloved hand in her lap. She knows a few words of the song. She doesn't say where from.` : ''}`,
       ch:[{t:'Up.'}]}),
 
     /* ---- the Host's runner ---- */
@@ -936,7 +936,7 @@ Then the far herd screams: horses, high and terrible, and men's voices in the da
 The herd stops. A thousand animals that had decided to run stand still in the dark, blinking, and the men who came down among them to drive them are suddenly standing in the open in the middle of a herd that won't move, with nowhere to go and everybody looking at them.`,
       ch:[{t:'"Now."', go:()=>startBattle('b3_c1_herds', {surprise:'p'})}]}),
     b3_c1_herds_after:()=>({sp:'The Mhybe\'s tent', scene:'b3_c1_rhivi', fx:()=>{ S.f.b3_c1_herdsDone = 1; S.f.b3_kallorSaw = 1; S.f.b3_kallor = 1; }, txt:
-`The man with the cut ear is down in the mud a pace from the painted door-flap, and the rest of them are gone back up into the Divide hills with fewer horses than they came with and nothing of the Rhivi's. The herd is whole. The Rhivi young men come back from the far herd at a dead run, too late, and stop, and look at the Fourth standing in a ring round the Mhybe's tent, and don't know what to say.
+`The man with the cut ear is down in the mud a pace from the painted door-flap, and the rest of them are gone back up into the Divide hills with fewer horses than they came with and nothing of the Rhivi's. The herd is whole. The Rhivi young men come back from the far herd at a dead run, too late, and stop, and look at the Fourth standing in a ring round the Mhybe's tent, and don't know what to say.${b3In('vell') ? ` One of the brigands is still sitting by the tent pole holding his shin, where Vell's line was.` : ''}
 
 Then the camp goes quiet in a different way.
 

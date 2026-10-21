@@ -245,6 +245,7 @@ On the next bridge, the one beyond this, among the officers at the rail, there i
     if (f.b2_marrowEnd === 'on') x.push('Marrow healed on the far bank until the warren had nothing left to give, and then a little after that.');
     if (f.b2_orphans === 'took') x.push('At dusk the squad took in children the ford had left with nobody.');
     if (f.b2_sathiLaugh) x.push('When the butterflies came up off the river, Sathi laughed, the Wickan way, and the Weasels laughed with her.');
+    if (f.b2_raminCount) x.push('On the far bank Ramin said the Red Blades\' dead at dusk, by name, as he does every dusk. It took longer than it ever had.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -898,7 +899,9 @@ Down by the water, someone laughs back.
 
 Then more of them. A Weasel, two, a handful, the clan's riders sitting their tired horses at the river's edge, laughing in the dark between the verses, and one of them turns in the saddle and looks up the bank at the girl who laughed first. ${S.f.b2_sathiShamed ? `It is the first time a Weasel has looked at her since the Shallows.` : S.f.b2_sathiTeeth ? `He grins at her, all points, and she grins back, all points.` : ''}
 
-${S.f.b2_sathiShamed ? `Sathi doesn't move. But she doesn't stop laughing either, until the song does.` : `"For Sormo," she says to you, when it is over, wiping her eyes. "He would want it loud. The old ones carry him now. Eight of them, the clan says, inside him. Now nine."`}`,
+${S.f.b2_sathiShamed ? `Sathi doesn't move. But she doesn't stop laughing either, until the song does.` : `"For Sormo," she says to you, when it is over, wiping her eyes. "He would want it loud. The old ones carry him now. Eight of them, the clan says, inside him. Now nine."`}${b2In('warlock') ? `
+
+Down in the shallows, Keth's shoulders go once at the laugh, and then again.` : ''}`,
     ch:[{t:'Let her be.', go:()=>startExplore()}]}),
 
   /* ---- Duiker, hoarse ---- */
@@ -931,7 +934,7 @@ He turns round. "In Ehrlitan, Sergeant, the rich men watched from the hill. Toda
 
 And round the stretch, in the dark where a fire would be if anyone had lit one, children. Five of them. Six. Soaked, silent, with nobody, from somewhere in the ford. They have come up the bank to the nearest people who look as if they know what they are doing, and sat down, and they are watching the skins on your cart.
 
-${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}`,
+${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody in the squad says anything.'}${b2In('warlock') ? ' The dogs that follow Keth have come up from the river with him, and lie down among the children, and the children put their hands in the fur.' : ''}`,
     html:chainHTML('The far bank of the Vathar'),
     ch:[{t:'Take them into the stretch.', tag:'2 water', req:()=>!S.f.b2_orphans && chainW() >= 2, fx:()=>{ S.f.b2_orphans = 'took'; chain(-2, 5, 'Children from the ford'); if (b2In('haddat')) loy('haddat', 1); if (b2In('marrow')) loy('marrow', 1); }, go:'b2_orphans_took'},
         {t:'Give them a skin, and walk them to the Wickan wagons.', tag:'1 water', req:()=>!S.f.b2_orphans && chainW() >= 1, fx:()=>{ S.f.b2_orphans = 'sent'; chain(-1, 0, 'A skin for the children'); }, go:'b2_orphans_sent'},
@@ -949,7 +952,7 @@ ${b2In('haddat') ? 'Haddat looks at them, and then at you, and waits.' : 'Nobody
   b2_bult6:()=>({sp:'Bult', txt:
 `Bult is sitting on a dead log at the edge of the trees with no wine and no grin, looking at the river.
 
-"Sergeant." He keeps his back to you. "Duiker has the count. Do you want it?" He doesn't wait. "Twenty thousand of the column. Near enough. Seven hundred of ours. The Foolish Dog are fewer than five hundred, and they were five thousand at Gelor. And Sormo." He is quiet a moment. "Sormo, who was older than he looked, and younger than he should have been, and carried his teachers inside him like a man carries his dead. He went into the water to stop it. With his hands."
+"Sergeant." He keeps his back to you. "Duiker has the count. Do you want it?" He doesn't wait. "Twenty thousand of the column. Near enough. Seven hundred of ours. The Foolish Dog are fewer than five hundred, and they were five thousand at Gelor. And Sormo." He is quiet a moment. "Sormo, who was older than he looked, and younger than he should have been, and carried his teachers inside him like a man carries his dead. He went into the water to stop it. With his hands."${b2In('warlock') ? ` He looks down the bank toward the Foolish Dog's boy, ${S.f.b2_keth4bDone ? 'up out of the river now, dripping' : 'still sitting in the river'}. "That one carries his dead too. A smaller load. Keep him out of the water, Sergeant."` : ''}
 
 He picks up a stone and turns it over. "The Council lived. Most of it. Nethpara. Pullyk. The ones who made the deal walked over on Dom's paper and his archers let them by." He puts the stone down. "The Fist knows. He will do nothing, because there is nothing to do that does not lose us the rest of the column, and he is a Fist, and that is what a Fist is for." He looks at you at last. "I'm his uncle. I'm allowed to hate it."
 
@@ -962,7 +965,11 @@ ${chainC()} in the squad's stretch, on the far bank of the Vathar, under the fir
 
 ${S.f.b2_c4_key === 'silanda' && b2Mate(S.f.b2_silandaWho) ? `And the squad: one short. ${NAME(S.f.b2_silandaWho)} is somewhere down the river tonight, on a burned ship, going to Aren. You find yourself counting ${b2Him(S.f.b2_silandaWho)} anyway. You will for a while.` : S.f.b2_c4_key === 'keep' && b2Mate(S.f.b2_woundWho) && b2In(S.f.b2_woundWho) ? `And the squad: all of it. ${NAME(S.f.b2_woundWho)} is asleep with the wound bound tight under the kit, and wakes when ${b2He(S.f.b2_woundWho)} turns over, every time.` : 'And the squad: all of it.'}${b2In('haddat') && S.f.b2_ilharSeen ? `
 
-Haddat sits with her shield across her knees and looks at the river, black under the stars, where a bridge went round the bend this morning with a man on it from the water-sellers' quarter.` : ''}
+Haddat sits with her shield across her knees and looks at the river, black under the stars, where a bridge went round the bend this morning with a man on it from the water-sellers' quarter.` : ''}${b2In('redblade') ? `
+
+Ramin sleeps sitting up, in his scale, facing the river, where the company held.` : b2In('warlock') ? `
+
+Keth sleeps with his palms flat in the leaf-litter and the dogs round him. Once in the night he says something in an old woman's voice, and then, in his own, "I know," and is quiet.` : ''}
 
 Somebody has named the day. It is a Wickan name, or a soldier's, or both; by midnight nobody can remember who said it first. The Day of Pure Blood. Nobody who was in the river says it out loud.`,
     html:chainHTML('The far bank of the Vathar'),

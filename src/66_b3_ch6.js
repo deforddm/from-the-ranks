@@ -454,7 +454,7 @@ Hurlochel looks at her over the horse's back, and then, thoughtfully, at her glo
   b3_c6_farm:()=>({sp:'The burnt farm', txt:
 `A farmstead, or the stone half of one: a house and a byre and a wall round a yard, the roofs burned off and the beams fallen in. Not this week. The ash has been rained on more than once. On the lintel somebody has painted the Seer's sign, and somebody else has tried to scrape it off, and given up halfway.
 
-Nothing in the byre. Nothing in the yard. The well has stones in it. The Domin is like this all the way from the Catlin: not burned by an enemy. Emptied by its own side.
+Nothing in the byre. Nothing in the yard. The well has stones in it. The Domin is like this all the way from the Catlin: not burned by an enemy. Emptied by its own side.${b3In('ellis') ? ` Ellis goes once round the yard, reading the ground. "Cart, and a lot of bare feet, all going one way," she says. "Nobody came back."` : ''}
 ${b3In('greysword') ? `
 "The Tenescowri come through first," Dannet says, behind you, very flat. "Then the army takes what they missed. Then nobody lives here." She does not say how she knows. She was on Capustan's wall.` : ''}`,
     ch:[{t:'Look in the root cellar.', req:()=>!S.f.b3_c6_seed, go:'b3_c6_farm_cellar'},
@@ -503,7 +503,7 @@ Tuft has stopped walking. She stands quite still, the way she always does near h
   b3_c6_fire:()=> S.f.b3_c6_fieldDone && b3In('sohra') && !c6Told() ? DLG.b3_c6_ask() : ({sp:'The Fourth\'s fire', txt:
 `The Fourth's fire, small and banked. Every fire in the Seventh's lines is banked tonight, and no one gave the order.${S.f.b3_c6_fieldDone ? ` The field to the east is empty again. Out past the horse lines the grass is flattened in long rows where the quorls sat.` : ''}
 
-${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says. "Same as this morning." She sounds, for the first time in a month, as if she'd like it not to be.` : 'The satchel is where it always is.'}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords tonight, three lines over, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is at the Rhivi fires tonight, if the Fourth wants her.` : ''}`,
+${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says. "Same as this morning." She sounds, for the first time in a month, as if she'd like it not to be.` : 'The satchel is where it always is.'}${b3In('greysword') ? ` Dannet has the pot of grey paint open on her knee and is not painting, only looking at the wolf.` : ''}${b3In('ellis') ? ` Ellis sits facing east, toward the horse lines, with the gloved hand in her lap.` : ''}${b3In('vell') ? ` Vell lies on his back watching the sky over the field, as if something might go across it. Twice tonight, something does.` : ''}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords tonight, three lines over, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is at the Rhivi fires tonight, if the Fourth wants her.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_rest, fx:()=>{ S.f.b3_c6_rest = 1; b3Rest('The Fourth sleeps in its boots by a banked fire, the way the Seventh sleeps tonight. Wounds close, mostly.'); }, go:'b3_c6_rested'},
         {t:'Send for Dannet.', req:()=>b3Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
         {t:'Send for Sohra.', req:()=>b3Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},

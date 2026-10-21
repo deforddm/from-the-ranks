@@ -1207,13 +1207,13 @@ She ties one more knot in the string, slowly, and holds it up for you to see. "T
   b2_road_guard:()=>({sp:'The Aren Guard', txt:
 `The Aren Guard. Blistig's three hundred, and a sash each, and the north wall, and the Adjunct's fleet a week out, and whatever army she makes on this quay out of the leavings of a summer.
 
-${b2In('tangle') ? 'Tangle nods slowly: a wall is a thing a sapper understands. ' : ''}${b2In('sathi') ? 'Sathi looks down the quay at the Wickan children. ' : ''}${b2In('haddat') ? 'Haddat touches the Seventh\'s badge on her coat, and then the Hissari blue on her shield. "The Empire\'s silver," she says. "Still." ' : ''}`,
+${b2In('tangle') ? 'Tangle nods slowly: a wall is a thing a sapper understands. ' : ''}${b2In('sathi') ? 'Sathi looks down the quay at the Wickan children. ' : ''}${b2In('haddat') ? 'Haddat touches the Seventh\'s badge on her coat, and then the Hissari blue on her shield. "The Empire\'s silver," she says. "Still." ' : ''}${b2OH() && b2In(b2OH()) ? `${NAME(b2OH())} looks at the north wall, and then at the Genabaris transport. "The Fourth'll likely be on this quay too, when she lands," ${B2FIN.P(b2OH()).she} says. "Same wall, then. Near enough."` : ''}`,
     ch:[{t:'This road.', fx:()=>{ S.f.b2_c7_key = 'guard'; if (b2In('tangle')) loy('tangle', 1); if (b2In('marrow')) loy('marrow', 1); if (b2OH()) loy(b2OH(), 1); if (b2In('sathi')) loy('sathi', -1); }, go:'b2_c7_end'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_road_wickans:()=>({sp:'With the Wickans', txt:
 `The Wickans: Temul and the children, and Nil and Nether, who feel every death on this continent and have nobody left to tell, and whatever of the clans comes looking for them. Horses. A road that is wherever they are.
 
-${b2In('sathi') ? 'Sathi is already grinning, all her teeth. Hackle barks once. ' : ''}${b2In('tangle') ? 'Tangle looks at the horses with deep distrust. "I\'ll walk," he says. ' : ''}${b2In('marrow') ? 'Marrow sighs. "Children," she says. "With the flux, I shouldn\'t wonder." She is pleased. ' : ''}`,
+${b2In('sathi') ? 'Sathi is already grinning, all her teeth. Hackle barks once. ' : ''}${b2In('tangle') ? 'Tangle looks at the horses with deep distrust. "I\'ll walk," he says. ' : ''}${b2In('marrow') ? 'Marrow sighs. "Children," she says. "With the flux, I shouldn\'t wonder." She is pleased. ' : ''}${b2OH() && b2In(b2OH()) ? `${NAME(b2OH())} looks at the horses, and at the transport. "I go back up that plank when the ship sails," ${B2FIN.P(b2OH()).she} says. "Till then I'll see you as far as the horse lines."` : ''}`,
     ch:[{t:'This road.', fx:()=>{ S.f.b2_c7_key = 'wickans'; if (b2In('sathi')) loy('sathi', 2); if (b2In('tangle')) loy('tangle', -1); }, go:'b2_c7_end'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_road_desert:()=>({sp:'The landward gate', txt:
@@ -1221,7 +1221,7 @@ ${b2In('sathi') ? 'Sathi is already grinning, all her teeth. Hackle barks once. 
 
 Off the map. Out of the Empire's ledger. Into the country the Chain walked across, with the people it walked with.
 
-${b2In('haddat') ? 'Haddat looks at the gate a long time. "My country," she says. "Still." ' : ''}${b2In('tangle') ? 'Tangle looks at his satchel. "No Moranth quartermaster that way either," he says. ' : ''}`,
+${b2In('haddat') ? 'Haddat looks at the gate a long time. "My country," she says. "Still." ' : ''}${b2In('tangle') ? 'Tangle looks at his satchel. "No Moranth quartermaster that way either," he says. ' : ''}${b2OH() && b2In(b2OH()) ? `"Off the ledger," says ${NAME(b2OH())}, and whistles, low. "Sergeant ${esc(b2OHFrom())} would have a fit." ${B2FIN.P(b2OH()).She} does not make it sound like a reason not to.` : ''}`,
     ch:[{t:'This road.', fx:()=>{ S.f.b2_c7_key = 'desert'; if (b2In('haddat')) loy('haddat', 1); if (b2In('tangle')) loy('tangle', -1); }, go:'b2_c7_end'},
         {t:'Not yet.', go:()=>startExplore()}]}),
   b2_c7_end:()=>{ const k = S.f.b2_c7_key || 'guard', fell = b2Fallen();

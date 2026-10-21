@@ -963,7 +963,7 @@ Later in the evening there is a glow over the roofs of the next Camp, and a smel
   b3_c3_granary_go:()=>({sp:'The granary', txt:
 `The granary is a round stone tower with a cone of a roof, behind a dyers' street where the gutters still run blue. The doors are oak and barred, and somebody inside has heard you coming and stopped talking.
 
-${b3In('kettle') ? `"No burners," Kettle says, before you can ask. She sounds personally wounded by it. "Not with grain. Grain dust goes up like a Fete." She looks at the doors. "I can do the hinges. Quietly."` : 'No burners. Not with grain. Grain dust goes up like a city.'}`,
+${b3In('kettle') ? `"No burners," Kettle says, before you can ask. She sounds personally wounded by it. "Not with grain. Grain dust goes up like a Fete." She looks at the doors. "I can do the hinges. Quietly."` : 'No burners. Not with grain. Grain dust goes up like a city.'}${b3In('vell') ? ` Vell is looking up at the cone of the roof. "There's a hatch at the top," he says. "There always is, on a granary. For the chute." He weighs the coil on his shoulder. "Not that anyone asked."` : ''}`,
     ch:[{t:'Break the doors, and in.', go:()=>startBattle('b3_c3_granary', {})},
         {t:'Call them out first: in Malazan, and then in whatever else the squad has.', check:['wits',15],
           edges:id=>[id === 'sohra' && ['she has traded with Pannion herders', 1], id === 'tuft' && ['a cadre mage\'s ear for tongues', 1]],
@@ -1027,7 +1027,7 @@ Tuft is looking west, past the Rhivi fires, toward where a wagon with a lantern 
 
 Sohra is asleep already, outside the tent, as she always is, with her bow under her hand. In her sleep she is singing, very quietly, the song for the edge of the grass.` : ''}${b3In('ellis') ? `
 
-Ellis sits a little apart, as she does, looking at the road out of the city: every face that came down it today, the Bridgeburners' among them, Paran's, and not the one she looks for. "Not there," she says, when she sees you watching. That is all.` : ''}${b3In('vell') ? `
+Ellis sits a little apart, as she does, looking at the road out of the city. She has looked at every face on it today, Host and Capan and Barghast, and not one of them was the one she looks for. "Not there," she says, when she sees you watching. That is all.` : ''}${b3In('vell') ? `
 
 Vell is on his back in the grass with his hands behind his head. "No dragon," he says, to the sky. "Good. I liked the sky better without."` : ''}
 

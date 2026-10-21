@@ -631,7 +631,7 @@ The Fourth's company goes in behind the Fourth Regiment. ${b3In('brisk') ? 'Bris
   b3_c7_streets:()=>({sp:'Coral · the streets', fx:()=>{ S.f.b3_c7_inCity = 1; }, txt:
 `Coral is black stone. Black paving, black walls, the coral-stone of the old city showing through grey and pitted where the black has worn. Fires in the side streets. Doors shut. No people, or none that come out.
 
-The Bridgeburners went through here an hour ago. You can tell, the way you can tell where a storm went. Up ahead, past a square, the street climbs toward the keep, and the sky over the keep is full of quorls going round like leaves in a drain, and things among them with wings that are not quorls. ${b3In('sohra') ? 'Sohra looks up once and then not again. "Birds," she says. "Something is wearing them."' : ''}
+The Bridgeburners went through here an hour ago. You can tell, the way you can tell where a storm went. Up ahead, past a square, the street climbs toward the keep, and the sky over the keep is full of quorls going round like leaves in a drain, and things among them with wings that are not quorls. ${b3In('sohra') ? 'Sohra looks up once and then not again. "Birds," she says. "Something is wearing them."' : ''}${b3In('ellis') ? ' Ellis crouches and reads the paving the way she reads a trail. "Boots," she says. "Thirty pairs, an hour gone, all going up." Then she looks back along the street, and stands up quickly.' : ''}
 
 Down the street behind the Bridgeburners, toward the square, something is coming that is too tall, and too fast, and makes no sound at all when it runs.`,
       ch:[{t:'To the square.', go:()=>startExplore()}]}),
@@ -648,7 +648,7 @@ It comes into the square from the west street. Taller than a horse, grey, two-le
 
 Above it a quorl is coming down, low, its rider standing in the stirrups with a munition. To the right a side street runs off toward the Beklites' flank, where they are massing to take the square when the Hunter has cleared it.
 
-${b3In('brisk') ? '"If it goes up that street," Brisk says, "it\'s in their backs." She is already looking at it the way she looks at anything she means to stand in front of.' : 'If it goes up that street it is in the Bridgeburners\' backs.'} Whatever falls in front of that thing, everybody here knows, is not going to get up again.`,
+${b3In('brisk') ? '"If it goes up that street," Brisk says, "it\'s in their backs." She is already looking at it the way she looks at anything she means to stand in front of.' : 'If it goes up that street it is in the Bridgeburners\' backs.'}${b3In('vell') ? (S.f.b3_c4_hunted ? ' Vell has the hook off his shoulder. "We roped one, west of Capustan, with the Grey Swords," he says. He looks round the square, which has nothing in it to tie off to. "Not here."' : ' Vell looks round the square for something to tie a line off to, and there is nothing, and he puts the hook back.') : ''} Whatever falls in front of that thing, everybody here knows, is not going to get up again.`,
       html:allyHTML('Coral · the square'),
       ch:[{t:'"Here. We hold the square." (Whoever falls here stays down.)', fx:()=>{ S.f.b3_c7_square = 'hunt'; }, go:()=>startBattle('b3_c7_hunt', {})},
           {t:'Kettle puts the cusser under it as it comes.', tag:'uses 1 cusser · whoever falls stays down', req:()=>b3In('kettle') && S.inv.cusser > 0, fx:()=>{ S.inv.cusser--; S.f.b3_c7_square = 'hunt'; S.f.b3_c7_maud = 1; }, go:()=>startBattle('b3_c7_hunt', {pre:`Kettle says "${b3c7Maud()}" very quietly and rolls the cusser out under its feet.`})},
@@ -673,7 +673,7 @@ In the square, the Moranth took the Hunter down. You can see how, from the pavin
     : {sp:'The stair', txt:
 `A stair goes up between two black walls toward a terrace, and at the top of it a quorl has come down hard, on its side, one wing broken across the steps. Its rider is still alive. Beklites are coming down the terrace toward him, in no hurry at all.
 
-${b3In('kettle') ? '"Up," Kettle says. "Sergeant. *Up.*"' : 'Nobody has to say it.'}`,
+${b3In('kettle') ? '"Up," Kettle says. "Sergeant. *Up.*"' : 'Nobody has to say it.'}${b3In('vell') ? ' Vell looks at the terrace wall, and the stair, and the Beklites, and does a rope man\'s sum. "Stair," he says. "The wall\'s too smooth, and they\'d hear the hook."' : ''}`,
       ch:[{t:'"Up the stair."', go:()=>startBattle('b3_c7_stairs', {})},
           {t:'Not yet.', go:()=>startExplore()}]},
   b3_c7_after_stair:()=>({sp:'The stair', fx:()=>{ S.f.b3_c7_stairDone = 1; ally(1, 0, 'A Moranth rider brought down the stair'); b3c7Loy('kettle', 1); }, txt:
@@ -686,7 +686,7 @@ ${b3In('kettle') ? '"Up," Kettle says. "Sergeant. *Up.*"' : 'Nobody has to say i
   b3_c7_spawnfall:()=>({sp:'Coral · the keep', scene:'b3_c7_spawn', fx:()=>{ S.f.b3_c7_spawn = 1; ally(0, 1, 'Moon\'s Spawn'); }, txt:
 `Everybody in the street is looking up.
 
-Something is coming down out of the sky over the keep. It is so big that for a long time it does not seem to move, and then it does, and the light changes all over the city. Black, and vast, and very old, streaming water from every edge as if it had been pulled up out of the sea, which, the Host will say afterwards, is exactly what happened. Moon's Spawn.${S.f.b3_rake ? ' The Andii lord\'s, who was a black dragon over the field at Capustan.' : ''} ${b3In('tuft') ? `Tuft says, "Oh," very softly, the way you say it when somebody you knew comes into a room.` : ''}
+Something is coming down out of the sky over the keep. It is so big that for a long time it does not seem to move, and then it does, and the light changes all over the city. Black, and vast, and very old, streaming water from every edge as if it had been pulled up out of the sea, which, the Host will say afterwards, is exactly what happened. Moon's Spawn.${S.f.b3_rake ? ' The Andii lord\'s, who was a black dragon over the field at Capustan.' : ''} ${b3In('tuft') ? `Tuft says, "Oh," very softly, the way you say it when somebody you knew comes into a room.` : ''}${b3In('vell') ? ` Vell, who saw it hang over Darujhistan from the roofs every night of his life, takes a step back from it all the same.` : ''}
 
 It comes down on the Seer's keep slowly, the way a mountain would fall if mountains fell, and the sound arrives a long while after, and goes on. Then the rain comes off it, warm and dirty, over the whole city, and keeps coming.
 
@@ -707,7 +707,7 @@ He rides on up the street toward the keep, into the rain.`,
       ch:[{t:'"Mallet never got his week."', go:'b3_c7_news2'},
           {t:'Say nothing.', go:'b3_c7_news2'}]}),
   b3_c7_news2:()=>({sp:'Coral · the rain', txt:
-`${b3In('brisk') ? `Brisk takes her helmet off and stands in the rain with it under her arm. It is the only time anyone in the Fourth has ever seen her do it in a street with enemies in it.\n\n` : ''}${b3In('ohl') ? `Ohl has the list out in the rain. He writes the name, and then he writes *two marines*, because nobody here knows their names, and then he stops, with the pen over the page, and says in Ehrlii something that is not a prayer, to Hood, who is listening.\n\n` : ''}${b3In('tuft') ? `"She's alive," Tuft says. She is not speaking to anyone. "She's alive. He stood in front of her." She puts her hand over her mouth.\n\n` : ''}You were a long way up the mountain when the Host split, and further still this morning, in a city, behind a square, under a falling sky. You could not have been on that hill. You know it. You are going to go on knowing it.
+`${b3In('brisk') ? `Brisk takes her helmet off and stands in the rain with it under her arm. It is the only time anyone in the Fourth has ever seen her do it in a street with enemies in it.\n\n` : ''}${b3In('ohl') ? `Ohl has the list out in the rain. He writes the name, and then he writes *two marines*, because nobody here knows their names, and then he stops, with the pen over the page, and says in Ehrlii something that is not a prayer, to Hood, who is listening.\n\n` : ''}${b3In('tuft') ? `"She's alive," Tuft says. She is not speaking to anyone. "She's alive. He stood in front of her." She puts her hand over her mouth.\n\n` : ''}${b3In('greysword') ? `Dannet heard *the Shield Anvil*. She stands in the street with her shield on her arm and her other hand closed round the cold amulet, and asks nothing else, and does not move until you say her name.\n\n` : ''}${b3In('sohra') ? `Sohra says a few words in Rhivi, north, toward Capustan. "The Mhybe will want to know her daughter lives," she says. "I told her. She will hear it, wherever she is."\n\n` : ''}${b3In('vell') ? `"Who were they?" Vell says. "The two women." The street does not know. He looks as though that is the part he cannot put down.\n\n` : ''}You were a long way up the mountain when the Host split, and further still this morning, in a city, behind a square, under a falling sky. You could not have been on that hill. You know it. You are going to go on knowing it.
 
 *After Coral*, he said.`,
       ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -736,7 +736,7 @@ Brisk walks out into the street and stops in front of him. Neither of them speak
 
   /* ---- the way out of the city, once the word has come ---- */
   b3_c7_f_out:()=>({sp:'The breach', txt:
-`The Host is coming back out of Coral through the breach in the rain, company by company, carrying its own. Beyond the wall the ground falls away to the shore, and along the shore, from the hill, Brood's army is coming down to meet it: Rhivi and Barghast and Tiste Andii, and the Grey Swords, and what is left of Trake's Legion, walking very slowly.
+`The Host is coming back out of Coral through the breach in the rain, company by company, carrying its own. Beyond the wall the ground falls away to the shore, and along the shore, from the hill, Brood's army is coming down to meet it: Rhivi and Barghast and Tiste Andii, and the Grey Swords, and what is left of Trake's Legion, walking very slowly.${b3In('sohra') ? ' Sohra picks out the Rhivi riders in that line before anyone else can tell them from the Barghast.' : ''}${b3In('greysword') ? ' Dannet sees the grey of the Grey Swords among them, and how few, and stops counting anything else.' : ''}
 
 There is no cheering. Neither army knows yet what to say to the other one.`,
     ch:[{t:'Down to the shore.', go:()=>{ startExplore('b3_c7_shore'); talk('b3_c7_s_arrive'); }},
@@ -752,6 +752,12 @@ ${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other 
 ` : ''}${b3In('sohra') ? `Sohra went straight to the Rhivi in the hollow and came back an hour later with her face shut. "A rider came down from Capustan," she says. "The Mhybe. She is very old now. Older than anyone. The two Daru carry her from the bed to the window." She sits down. "Sing to me later, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I need someone to sing to me."
 
 ` : ''}${b3In('tuft') ? `Tuft is looking at the crest, where the Rhivi have put up a tent in red wool beside Brood's. "She's up there," she says. The squad does not need to ask who.
+
+` : ''}${b3In('greysword') ? `Dannet saw the Grey Swords on the hill before the column reached the foot of it, and has been standing straighter ever since. "The company," she says. "What is left of it." She does not go to them. She is lent.
+
+` : ''}${b3In('ellis') ? `Ellis has been down to the foot of the hill and back before the column has finished dropping its packs. "Long grass," she says. "Gullies in it. I'd come that way." She means somebody will.
+
+` : ''}${b3In('vell') ? `Vell is looking past all of it at the city on the edge of the sea: walls, a keep, a great many roofs, two hours off. He has the look of a man reading a menu.
 
 ` : ''}Whiskeyjack is up there too. You can see him from here, standing with Brood, with his weight on one leg.`,
       ch:[b3DeckChoice(7),
@@ -805,7 +811,7 @@ Ohl gets up, slowly. When you are back at the foot of the hill he says, "I have 
   b3_c7_fox:()=>({sp:'Silverfox', fx:()=>{ S.f.b3_c7_fox = 1; }, txt:
 `She is not a child any more, or not only. She looks perhaps fifteen, perhaps more, tall in red wool, with a face that is a girl's and eyes that are not, and she is standing at the door of the Rhivi tent looking out at the plain the way Whiskeyjack is.
 
-Two marines of the Host stand a few paces off from her, women, from some other company, fighting kit on, saying nothing; they stand shoulder to shoulder, a pair long used to it. ${b3In('tuft') ? 'Tuft stops when she sees them, and then goes on.' : ''}
+Two marines of the Host stand a few paces off from her, women, from some other company, fighting kit on, saying nothing; they stand shoulder to shoulder, a pair long used to it. ${b3In('tuft') ? 'Tuft stops when she sees them, and then goes on.' : ''}${b3In('ellis') ? ' Ellis looks at the pair a breath longer than the rest of the squad does: where they stand, what they can see from there, what they can\'t. Then she nods to them, scout to sentries, and they nod back.' : ''}
 
 ${b3In('tuft') ? `Tuft walks up to the child and stops an arm's length off and does not know what to do with her hands. The child looks at her.
 
@@ -852,7 +858,7 @@ The old woman laughs, a dry little sound like a stick breaking. "Good," she says
 
 ${b3c7Known7() ? `His eyes come round to you, slowly, and stop. "I know you," Kallor says. His voice is pleasant, and old, older than the language he is speaking. "${S.f.b3_kallorEnemy ? 'The well south of the Catlin. The marine who carried tales to Brood.' : 'The tent of the Rhivi witch, at Pale. The one who stood the night watch.'}" He smiles. It does not reach anything. "I have outlived empires that had larger opinions than yours, Sergeant. Go and stand somewhere."` : `His eyes pass over you. There is nothing about the Fourth worth stopping them for, and he wants you to know it. After a while he says, to the air, "Malazans," and nothing after it, as if the one word were the whole of the insult.`}
 
-${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching his hands.' : ''}`,
+${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching his hands.' : ''}${b3In('ellis') ? `${b3In('tuft') ? ' ' : ''}Ellis has stood the whole time where she could see both his hands and the pommel. "He'd kill all of us," she says, on the way down, "and not move his feet."` : ''}`,
       ch:[{t:'Go and stand somewhere.', go:()=>startExplore()},
           {t:'Hold his eye a moment longer than he likes.', check:['might', 15], fx:()=>{ S.f.b3_c7_kallorStare = 1; },
             near:{t:()=>`Yes, but holding it costs ${NAME(ROLL().who || 'sgt')} something. For the length of that look you could see how old he is, and what he has outlived, and it walks back down the hill with you: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
