@@ -47731,8 +47731,11 @@ const b4Shorten = u => { const d = b4DustNow(); if (d && u && u.rng > 1) u.rng =
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y); if (b4On() && k === 'b4_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b4reg = true; } return b4On() ? b4Shorten(u) : u; }; }
 /* Book Four's squad is the same veterans' curve as Book Three's (8..15 against 2..8): its enemies carry the gap, per chapter. Starting
    numbers are Book Three's (B3GAP); tools/balance.mjs tunes them with David once fights exist. */
-const B4GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3:{ac:5, atk:4, hp:1.55, dmg:4}, 4:{ac:6, atk:4, hp:1.5, dmg:5},
-  5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}};
+/* tuned 2026-10-21 (docs/hoc-balance.md): Bridgeburner ~65-75% a fight. s = Book Four only, Soldier only, on top of the row: Soldier and
+   Bridgeburner sit closer here than DIFFS puts them (David: "death should still be a possibility even on soldier", ~85-95% a fight). */
+const B4GAP = {1:{ac:7, atk:4, hp:1.85, dmg:6, s:{hp:1.08, atk:0, dmg:1}}, 2:{ac:6, atk:4, hp:1.8, dmg:7, s:{hp:1.2, atk:1, dmg:1}},
+  3:{ac:5, atk:4, hp:1.75, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 4:{ac:6, atk:4, hp:1.95, dmg:7, s:{hp:1.2, atk:1, dmg:2}},
+  5:{ac:5, atk:2, hp:1.5, dmg:5, s:{hp:1.2, atk:1, dmg:2}}, 6:{ac:5, atk:2, hp:1.47, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 7:{ac:5, atk:1, hp:1.5, dmg:6, s:{hp:1.2, atk:1, dmg:2}}};
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b4On()) return u; const g = B4GAP[clamp(S.chapter || 1, 1, 7)];
     if (g) { const s = (S.diff || 'soldier') === 'soldier' && g.s ? g.s : {hp:1, atk:0, dmg:0};
@@ -55730,14 +55733,15 @@ const b47FaceLook = () => { const f = b47Face(), s = b47Sure(), tok = S.f.b4_bon
     || (f ? `a rider the squad knows at once by the seat and the shoulders` : `a broad rider with a ladle stuck through his belt, who fed the Seventh's file on the Chain when there was anything to feed it`);
   return `One of them, at the near edge, is ${who}. ${how.charAt(0).toUpperCase() + how.slice(1)}.${tok}`; };
 
-/* ---- the mortal fight, on Ch6's forward road: it begins a round sooner, and harder (the band is closer, and there are more of them) ---- */
+/* ---- the mortal fight, on Ch6's forward road: it begins a round sooner, and nearer (the extra fleer was dropped at the 2026-10-21 tuning:
+   with the tuned B4GAP it made the road a massacre, docs/hoc-balance.md) ---- */
 { const _battleDef = battleDef;
   battleDef = function(id, stage){ const d = _battleDef(id, stage); if (!d || !b4On() || id !== 'b4_c7_breakout' || !b47Close()) return d;
-    const near = f => [f[0], f[1], Math.min(7, f[2] + 2)], out = Object.assign({}, d, {foes:d.foes.map(near).concat([['b4_c7_fleer', 1, 3]]), b47Close:true});
+    const near = f => [f[0], f[1], Math.min(7, f[2] + 1)], out = Object.assign({}, d, {foes:d.foes.map(near), b47Close:true});
     if (d.waves) out.waves = d.waves.map(w => Object.assign({}, w, {round:Math.max(2, w.round - 1)}));
     return out; }; }
 { const _startBattle = startBattle;
-  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line a round sooner, and there are more of them.</em>`); return r; }; }
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line a round sooner, and nearer.</em>`); return r; }; }
 
 /* ---- the black bead (Orvas's gift on the horse road): the wearer's first hit in a fight carries +2, for the dead ---- */
 { const _attack = attack;

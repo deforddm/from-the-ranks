@@ -196,8 +196,11 @@ const b4Shorten = u => { const d = b4DustNow(); if (d && u && u.rng > 1) u.rng =
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y); if (b4On() && k === 'b4_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b4reg = true; } return b4On() ? b4Shorten(u) : u; }; }
 /* Book Four's squad is the same veterans' curve as Book Three's (8..15 against 2..8): its enemies carry the gap, per chapter. Starting
    numbers are Book Three's (B3GAP); tools/balance.mjs tunes them with David once fights exist. */
-const B4GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3:{ac:5, atk:4, hp:1.55, dmg:4}, 4:{ac:6, atk:4, hp:1.5, dmg:5},
-  5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}};
+/* tuned 2026-10-21 (docs/hoc-balance.md): Bridgeburner ~65-75% a fight. s = Book Four only, Soldier only, on top of the row: Soldier and
+   Bridgeburner sit closer here than DIFFS puts them (David: "death should still be a possibility even on soldier", ~85-95% a fight). */
+const B4GAP = {1:{ac:7, atk:4, hp:1.85, dmg:6, s:{hp:1.08, atk:0, dmg:1}}, 2:{ac:6, atk:4, hp:1.8, dmg:7, s:{hp:1.2, atk:1, dmg:1}},
+  3:{ac:5, atk:4, hp:1.75, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 4:{ac:6, atk:4, hp:1.95, dmg:7, s:{hp:1.2, atk:1, dmg:2}},
+  5:{ac:5, atk:2, hp:1.5, dmg:5, s:{hp:1.2, atk:1, dmg:2}}, 6:{ac:5, atk:2, hp:1.47, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 7:{ac:5, atk:1, hp:1.5, dmg:6, s:{hp:1.2, atk:1, dmg:2}}};
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b4On()) return u; const g = B4GAP[clamp(S.chapter || 1, 1, 7)];
     if (g) { const s = (S.diff || 'soldier') === 'soldier' && g.s ? g.s : {hp:1, atk:0, dmg:0};

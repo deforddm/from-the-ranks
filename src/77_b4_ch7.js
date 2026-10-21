@@ -75,14 +75,15 @@ const b47FaceLook = () => { const f = b47Face(), s = b47Sure(), tok = S.f.b4_bon
     || (f ? `a rider the squad knows at once by the seat and the shoulders` : `a broad rider with a ladle stuck through his belt, who fed the Seventh's file on the Chain when there was anything to feed it`);
   return `One of them, at the near edge, is ${who}. ${how.charAt(0).toUpperCase() + how.slice(1)}.${tok}`; };
 
-/* ---- the mortal fight, on Ch6's forward road: it begins a round sooner, and harder (the band is closer, and there are more of them) ---- */
+/* ---- the mortal fight, on Ch6's forward road: it begins a round sooner, and nearer (the extra fleer was dropped at the 2026-10-21 tuning:
+   with the tuned B4GAP it made the road a massacre, docs/hoc-balance.md) ---- */
 { const _battleDef = battleDef;
   battleDef = function(id, stage){ const d = _battleDef(id, stage); if (!d || !b4On() || id !== 'b4_c7_breakout' || !b47Close()) return d;
-    const near = f => [f[0], f[1], Math.min(7, f[2] + 2)], out = Object.assign({}, d, {foes:d.foes.map(near).concat([['b4_c7_fleer', 1, 3]]), b47Close:true});
+    const near = f => [f[0], f[1], Math.min(7, f[2] + 1)], out = Object.assign({}, d, {foes:d.foes.map(near), b47Close:true});
     if (d.waves) out.waves = d.waves.map(w => Object.assign({}, w, {round:Math.max(2, w.round - 1)}));
     return out; }; }
 { const _startBattle = startBattle;
-  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line a round sooner, and there are more of them.</em>`); return r; }; }
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line a round sooner, and nearer.</em>`); return r; }; }
 
 /* ---- the black bead (Orvas's gift on the horse road): the wearer's first hit in a fight carries +2, for the dead ---- */
 { const _attack = attack;
