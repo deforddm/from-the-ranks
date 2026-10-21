@@ -84,7 +84,7 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
         }
       }
       // SEEN: how many nodes of this chapter name the recruit when they are there, against the squad's own (a recruit who is a ghost shows up low)
-      { mk(loc.book, loc.ch, 0, r.id, null); const t = render(id); if (t) { const key = `${f} · ${rn}`; res.seen[key] ??= {nodes:0, rec:0, core:0};
+      if (loc.ch) { mk(loc.book, loc.ch, 0, r.id, null); const t = render(id); if (t) { const key = `${f} · ${rn}`; res.seen[key] ??= {nodes:0, rec:0, core:0};
         res.seen[key].nodes++; if (rre.test(t)) res.seen[key].rec++; res.seen[key].core += B.core.filter(x => TPL[x] && S.squad.includes(x) && new RegExp('\\b' + TPL[x].name + '\\b').test(t)).length / B.core.length; } }
       // ABSENT: the recruit named when not with the squad (never asked, or gone)
       for (let v = 0; v < 4; v++) {
@@ -106,4 +106,10 @@ for (const [h, o, keys] of [['LISTED (a roll of the squad without the recruit st
 console.log(`== ABSENT (named when not with the squad; review): ${Object.keys(R.absent).length}`); for (const [k, s] of Object.entries(R.absent)) console.log(`  ${k}\n      ${s}`);
 console.log('== SEEN (chapter · recruit: nodes that name them when present / nodes played, against the average core squadmate)');
 for (const [k, s] of Object.entries(R.seen)) console.log(`  ${k.padEnd(34)} ${String(s.rec).padStart(4)} / ${s.nodes}   core avg ${s.core.toFixed(0)}`);
-process.exit(newL.length || newC.length ? 1 : 0);
+// the floor: a recruit with the squad is named in at least 40% as many of a chapter's nodes as the average core squadmate (and 3),
+// except the old hand in Book Two (Aren only, the last part of Ch7) and Book Three's imported Ellis and Vell (a smaller share: 25%)
+const low = Object.entries(R.seen).filter(([k, s]) => { const [f, nm] = k.split(' · '); const n = parseInt(f, 10);
+  if (n >= 48 && n <= 54 && !['Ramin', 'Keth'].includes(nm)) return false; // the old hand: checked by the review, not by a floor
+  const share = n >= 61 && ['Ellis', 'Vell'].includes(nm) ? 0.25 : 0.4; return s.core >= 4 && s.rec < Math.max(3, Math.floor(share * s.core)); });
+if (process.argv.includes('--check')) { console.log(`== BELOW THE FLOOR: ${low.length}`); low.forEach(([k, s]) => console.log(`  ${k}: ${s.rec} (core ${s.core.toFixed(0)})`)); }
+process.exit(newL.length || newC.length || (process.argv.includes('--check') && low.length) ? 1 : 0);
