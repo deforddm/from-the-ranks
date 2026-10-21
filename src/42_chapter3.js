@@ -761,7 +761,7 @@ ${SQUAD().includes('ohl') ? `Ohl, halfway down the ladder, has stopped. "There a
 
 ` : S.f.c3_charges === 'part' ? `You lay what you can before Hedge takes the chalk back, not unkindly, and finishes the rest himself in about four minutes, whistling.
 
-` : ''}It takes three hours. Nothing gets dropped. Not a sneeze. Brisk carries cussers down the ladder, one at a time, with the same face she uses for rations, and Tuft holds the lantern and watches the dark past the pipes, where the vault goes on further than the lantern does.
+` : ''}It takes three hours. Nothing gets dropped. Not a sneeze. Brisk carries cussers down the ladder, one at a time, with the same face she uses for rations, and Tuft holds the lantern and watches the dark past the pipes, where the vault goes on further than the lantern does.${SQUAD().includes('ellis') ? ` Ellis takes the foot of the ladder and the crates off it, and counts every one in under her breath, and at the end gives Hedge the number before he asks. He checks it anyway. It's right.` : ''}
 
 When it's done, Hedge wipes his hands on his shirt, which makes them dirtier.
 
@@ -885,7 +885,7 @@ He goes back to the rooftops.`,
 
 "Ah!" Crumbs. A small, round, sticky hand flutters up and dusts them off your sleeve, and then off his own waistcoat, which is red, and embroidered, and strains. "Kruppe begs pardon of the honest labourer, who is doubtless weary from honest labour, as Kruppe is weary from observing it. Such digging! Such diligence! The Gadrobi District has never seen a hole so lovingly attended."
 
-He beams. His eyes are small and brown and extremely friendly, and they have, in the time it took him to dust your sleeve, counted your squad, priced your boots, noted Kettle's satchel and the way she holds it, and moved on to Tuft, and stopped there, for exactly one blink, and moved on again.
+He beams. His eyes are small and brown and extremely friendly, and they have, in the time it took him to dust your sleeve, counted your squad, priced your boots, noted Kettle's satchel and the way she holds it,${SQUAD().includes('ellis') ? ` skipped Ellis's gloves with enormous care,` : ''} and moved on to Tuft, and stopped there, for exactly one blink, and moved on again.
 
 "Kruppe is merely a humble citizen of this great city, a man of modest appetites and immodest waistcoats. Kruppe drinks at the Phoenix, at the top of the alley yonder, the first door in the Daru District, for Kruppe is a Daru man, though his heart is broad enough for both districts and his waistcoat very nearly so. Kruppe finds that road crews are thirsty. Kruppe finds that thirsty road crews, from the *hills*," he lingers on the word, lovingly, like a man smelling a wine he knows to be forged, "are the most delightful company in all Darujhistan, having so many stories and so few of them true."`,
       ch:[{t:'"We\'re from the hills."', go:'c3_kruppe_hills'},
@@ -1142,7 +1142,7 @@ At the door he stops. He isn't looking at you. He's looking at Tuft, and his fac
 
 "Kruppe once heard it said, little mage, that on the plain to the north the grass took a thing out of a fire that was a woman when it went into the fire, and is a child now, and will be a woman again sooner than any child should, and will *remember*, and that the Rhivi carry her very carefully, as one carries a thing that is heavier every day." A pause, delicate as a knife laid on a plate. "Kruppe merely repeats. Kruppe knows nothing of plains. Kruppe does not care for grass."
 
-The rest of the table doesn't understand a word of it. Kettle frowns. Brisk looks at the fat man as if he'd spoken Rhivi.
+The rest of the table doesn't understand a word of it. Kettle frowns. Brisk looks at the fat man as if he'd spoken Rhivi.${SQUAD().includes('ellis') ? ` Ellis, by the door, has stopped watching the room and started watching Kruppe, which she should have been doing all along, and knows it.` : ''}
 
 Tuft has gone white. Not pale: *white*, the colour of a candle with no flame in it, and her hand is on the doorframe, and she's holding it.
 
@@ -1344,7 +1344,7 @@ At the corner, under a lamp, two men in the city's grey-and-blue watch colours h
     c3_guard:()=>({sp:'City Watch', txt:
 `There are two of them: an older one with a paunch and a pike he uses to lean on, and a younger one with a pike he holds as if it might be asked a question.
 
-"Evening." The older one. "Road crew." He's read the guild mark. "Gadrobi crossing, that'll be. Long way up from the Gadrobi crossing, this. Long way up after dark." He looks at Brisk's shield, at Kettle's satchel, at the whole shape of you. "You're a lot of road crew for a small hole."
+"Evening." The older one. "Road crew." He's read the guild mark. "Gadrobi crossing, that'll be. Long way up from the Gadrobi crossing, this. Long way up after dark." He looks at Brisk's shield, at Kettle's satchel, ${SQUAD().includes('ellis') ? `at the bow on Ellis's back and the hood she has up, ` : ''}at the whole shape of you. "You're a lot of road crew for a small hole."
 
 The young one says nothing. His hand has moved an inch down the pike-haft, and you see him notice that it has.`,
       ch:[{t:'Tell them it\'s the drains: the dye-works runs blue into the Gadrobi mains.', check:['guile',12],
@@ -1667,7 +1667,9 @@ The purse is under your head. It makes a very poor pillow. It makes a noise ever
 
 ${SQUAD().includes('tuft') ? `Tuft is awake, sitting up, with her knees drawn in and her arms round them, looking at the Spawn. ${S.f.c3_kruppe ? `She has been looking at it since the Phoenix. Whatever Kruppe said to her in the door, she's turning it over and over the way Crokus turns his coin, and it keeps landing on its edge.` : `She looks at it the way she used to look at the cadre row. The way you look at a place you've been, and got out of, and can see from where you are.`}` : ''}
 
-${SQUAD().includes('kettle') ? `Kettle is asleep, actually asleep, the only one, with her satchel in her arms. Her lips are moving. She's counting.${trickBy('bluefire') === 'kettle' ? ` Cussers, sharpers, smokers, and two of something new, which she has named.` : ''}` : ''}`,
+${SQUAD().includes('kettle') ? `Kettle is asleep, actually asleep, the only one, with her satchel in her arms. Her lips are moving. She's counting.${trickBy('bluefire') === 'kettle' ? ` Cussers, sharpers, smokers, and two of something new, which she has named.` : ''}` : ''}${SQUAD().includes('ellis') ? `
+
+${S.f.c3_key === 'refuse' ? `Ellis has the end of the row nearest the ladder. She isn't asleep. She has her gloved hand under her cheek, and for once she doesn't look like someone waiting to hear her name read out.` : `Ellis has the end of the row nearest the ladder, with her face to the Daru District. She doesn't pretend to sleep. She's keeping a watch nobody gave her, on a door that has been opened once.`}` : ''}`,
       ch:[{t:'Watch the last of the lamps go out.', go:'c3_close_shapes'}]}),
     c3_close_shapes:()=>({sp:'The chandler\'s roof', scene:'roof_shapes', txt:
 `The last lamp on the lakefront goes out.

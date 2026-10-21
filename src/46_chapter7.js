@@ -217,7 +217,7 @@ const CH7 = {
 
 ${preUsed('last_accounting') ? `Behind you the eel-crates are still burning on the quay, black tar-smoke going straight up in the still air like a signal, and the trader is gone from her berth between the fishing boats: her master cut his hawsers at the bang and she's standing off in the roads with her sail half up. ${C7H.has('kettle') ? `"It was on the *quay*," Kettle says, to nobody, to the lake. "Nowhere *near* the boat."` : ''}
 
-` : ''}The neck of the pier is two shields wide and wet the whole way. ${C7H.has('brisk') ? `Brisk looks at it and settles her shield on her arm. "Narrow," she says. "Good."` : `Whoever goes out along it first goes first alone.`}${C7H.has('kettle') ? ` Behind you Kettle is counting the satchel under her breath, and doesn't like the number.` : ''}`,
+` : ''}The neck of the pier is two shields wide and wet the whole way. ${C7H.has('brisk') ? `Brisk looks at it and settles her shield on her arm. "Narrow," she says. "Good."` : `Whoever goes out along it first goes first alone.`}${C7H.has('kettle') ? ` Behind you Kettle is counting the satchel under her breath, and doesn't like the number.` : ''}${C7H.has('vell') ? ` Vell is looking past the neck at the right-hand jetty and the boat at the end of it, and the gap of water between, measuring it for a line.` : ''}`,
         map:["#,,,,,,#",",,,,,,,,",",##,,##,",",##,,##,",",#,,,,#,","##,,,,##","###,,###","#,,,,,,#","#......#","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['clawknife',3,0],['clawmage',4,0],['assassin',1,1],['assassin',6,1],['clawcrossbow',7,4]],
@@ -500,7 +500,9 @@ Whiskeyjack shifts his weight on the bench, and his mouth goes thin, and goes ba
 
 ${(S.f.wjRegard || 0) >= 1 || S.f.c7_wjKnows === 'told' || S.f.c3_wjTold ? `A pause. "I'd like you on them. I'm saying that once."` : (S.f.wjRegard || 0) <= -1 ? `A pause. "Nobody's going to count the quorls to see if you're on them." It's a lie, and he knows it's a lie, because everybody counts the Fourth.` : `A pause, in which he doesn't say what he'd like, and you understand that he won't, so that it won't weigh.`}
 
-"Go down to the Lakefront first. Kalam's ship goes out on the morning wind. ${C7H.has('kettle') ? `Fiddler will want to see your sapper.` : `Fiddler will want to see you. He's heard.`} Say your goodbyes." He looks at the house in the garden. "Everybody's saying them this morning. The whole city."`,
+"Go down to the Lakefront first. Kalam's ship goes out on the morning wind. ${C7H.has('kettle') ? `Fiddler will want to see your sapper.` : `Fiddler will want to see you. He's heard.`} Say your goodbyes." He looks at the house in the garden. "Everybody's saying them this morning. The whole city."${C7H.has('vell') ? `
+
+By the garden wall Vell is turning the word over, under his breath, the way he tests a knot before he trusts it. "Outlawed," he says. "The Guild does that to people sometimes." A pause. "It's not always an insult."` : ''}`,
       ch:[{t:'Quick Ben.', req:()=>!S.f.c7_qb, go:'c7_qb'},
           {t:'"Sir." Down to the Lakefront.', go:()=>{ startExplore('lakefront'); talk('c7_lake_arrive'); }}]}),
     c7_qb:()=>({sp:'Quick Ben', scene:'fete_garden', fx:()=>{ S.f.c7_qb=1; }, txt:
@@ -561,7 +563,7 @@ ${[S.f.noCard, S.f.c1_noCard, S.f.c2_noCard, S.f.c3_noCard, S.f.c4_noCard, S.f.c
 `He's watching the rooftops. "The hill, Sergeant," he says. "Before Mallet."` :
 `He's watching the rooftops. He nods to you once more without looking away from them. It's the same goodbye. Kalam doesn't have two.`, ch:[{t:'Leave him to the roofs.'}]};
       return {sp:'Kalam', fx:()=>{ S.f.c7_kalam=1; if (pend) S.f.c7_kalamWarned=1; }, txt:
-`He's standing a little apart from the others, with his back to the trader's hull and his pack at his feet, watching the rooftops along the quay. Not any rooftop. All of them. It's dawn and the city is exhausted and there's nobody up there, and he watches them anyway.
+`He's standing a little apart from the others, with his back to the trader's hull and his pack at his feet, watching the rooftops along the quay. Not any rooftop. All of them. It's dawn and the city is exhausted and there's nobody up there, and he watches them anyway.${C7H.has('vell') ? ` Beside you Vell follows his eyes along the ridges, naming the clans under his breath, one to a roof. Kalam hears him, and doesn't stop him, and doesn't stop watching either.` : ''}
 
 "Sergeant." A pause you could fit a knife into.
 
@@ -624,7 +626,9 @@ ${S.f.c6_steppedIn ? `Then he looks at you properly, and the laugh goes out of h
 
 "Uncle Mammot's dead," he says. "I'm going with her. Apsalar. To her home. Kalam says it's a long way."
 
-He's walking a coin across the backs of his knuckles, back and forth, without looking at it${S.f.c3_inn ? `, the way he did at the Phoenix` : ''}. It's the only thing about him that hasn't got older.`,
+He's walking a coin across the backs of his knuckles, back and forth, without looking at it${S.f.c3_inn ? `, the way he did at the Phoenix` : ''}. It's the only thing about him that hasn't got older.${C7H.has('vell') ? `
+
+"I know him," Vell says, low, at your shoulder. "Daru District. He goes over the roofs at night without a line. The clans had a pool on when he'd fall." He looks at the stitched cut. "Nobody's collected."` : ''}`,
       ch:[{t:'The coin.', go:'c7_coin'},
           {t:'"Safe road, Crokus."'}]}),
     c7_coin:()=>({sp:'Crokus', fx:()=>{ S.f.c7_coin=1; }, txt:
@@ -749,7 +753,9 @@ He presses something into your hand: a key, old black iron, a hand long.
 
 "The back door of the Phoenix. The one that does not exist. Kruppe has had copies made, several, and forgets to whom he gave which, so that everybody he likes may come in." He pats your hand closed over it. "Kruppe likes a great many people. It is his only vice. Apart from the others."
 
-${C7H.has('ohl') ? `Ohl is looking at the key. "The Phoenix," he says. "Jeth Arrow's room." You can see him turn it over. "I said I didn't know how to write a room. I could write one if I lived in it."` : ''}`,
+${C7H.has('ohl') ? `Ohl is looking at the key. "The Phoenix," he says. "Jeth Arrow's room." You can see him turn it over. "I said I didn't know how to write a room. I could write one if I lived in it."` : ''}${C7H.has('vell') ? `
+
+Vell is looking at the key too, and then up the hill, toward the Phoenix. "There's a good roof over that back door," he says. "Slate, and a ridge you can sit on." He catches your look. "I'm only saying. Somebody should know where off is."` : ''}`,
       ch:[{t:'Leave him to the pastry.'}]}),
     c7_coll:()=>({sp:'Coll', fx:()=>{ S.f.c7_coll=1; }, txt:
 `He's standing by Kruppe's bollard, a big man in a clean coat that doesn't fit him yet, the way new clothes don't, with a face that was handsome once and is sober this morning, which on Coll looks like a wound. He's here for the boy. He says so.
@@ -814,7 +820,9 @@ ${C7H.has('brisk') ? `Brisk has gone completely still. Not the stillness of wait
 
 ${C7H.has('ellis') ? `Ellis, very low, to nobody: "That's how they do it. They don't take you. They make you carry yourself in."` : ''}
 
-${C7H.has('ohl') ? `Ohl has the oilcloth out. He isn't writing on it. He's holding it, folded, in both hands.` : ''}`,
+${C7H.has('ohl') ? `Ohl has the oilcloth out. He isn't writing on it. He's holding it, folded, in both hands.` : ''}${C7H.has('vell') ? `
+
+Vell's hand has gone to the coil on his shoulder, the way it goes on a roof when the slates start to move. "In the Guild," he says, very quietly, "you don't sell the roof you're standing on."` : ''}`,
       ch:[{t:'Take the pardon. Give him his report.', go:'c7_claw_took'},
           /* hard check: a report in order, without anything in it that isn't so, and nothing in it he can use. Whoever gives it gives their own count */
           {t:'Take the pardon. Give him a report with nothing in it.', check:['guile',17], near:false, req:()=>!S.f.c7_emptyTried, fx:()=>{ S.f.c7_emptyTried=1; },
@@ -843,7 +851,9 @@ ${C7H.has('brisk') ? `"Sergeant," says Brisk. That's all. It's the whole convers
 
 ${C7H.has('ellis') ? `Ellis says one sentence, and it's the right one. "He wrote a line after my name, and you'll never know what it said, and neither will I."` : ''}
 
-${C7H.has('kettle') ? `Kettle is looking at her boots. "I'd like to go home," she says, very small. "I just didn't want to go like *that*."` : ''}`,
+${C7H.has('kettle') ? `Kettle is looking at her boots. "I'd like to go home," she says, very small. "I just didn't want to go like *that*."` : ''}${C7H.has('vell') ? `
+
+Vell is looking at your coat, where the paper went, and then up at the roofs. "In the Guild that's called selling the roof," he says. "I always wondered what it looked like." He takes the coil off his shoulder and coils it again, though it didn't need it.` : ''}`,
       ch:[{t:'The glove. Tuft, now.', req:()=>C7H.has('tuft') && C7H.leashed(), go:'c7_tuft_glove'},
           {t:'Walk away from the green door.'}]}; },
     c7_claw_refused:()=>{ const tell = C7H.pendingTell(); return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawDeal='refused'; S.f.c7_clawDone=1; S.f.c7_clawGone=1; if (tell) S.f.c7_wjKnows='claw'; if (C7H.has('brisk')) loy('brisk',1); if (C7H.has('ellis')) loy('ellis',2); if (C7H.has('tuft')) loy('tuft',1); }, txt:
@@ -861,7 +871,9 @@ He goes along the Lakefront without hurrying, and turns at the corner, and is go
 
 ${C7H.has('ellis') ? `Ellis says one sentence, and it's the right one. "${S.f.c3_key === 'refuse' ? `That's the second time you've shut that door with me on the right side of it.` : `Late, Sergeant, but it's shut, and I'm on the right side of it.`}"` : ''}
 
-${C7H.has('brisk') ? `Brisk lets a breath out through her nose. "Outlaws," she says, trying it. She seems to like it better than she expected.` : ''}`,
+${C7H.has('brisk') ? `Brisk lets a breath out through her nose. "Outlaws," she says, trying it. She seems to like it better than she expected.` : ''}${C7H.has('vell') ? `
+
+"The Guild will like that," Vell says, grinning in spite of himself. "They've always liked people the Empire doesn't."` : ''}`,
       ch:[{t:'The glove. Tuft, now.', req:()=>C7H.has('tuft') && C7H.leashed(), go:'c7_tuft_glove'},
           {t:'Walk away from the green door.'}]}; },
     /* the hard road to the pardon: a report in order, without anything in it that isn't so, and nothing in it he can use */
@@ -889,6 +901,9 @@ He begins at one: a name, a regiment, a place, and how, in the small careful voi
 ellis:`"I'll give it," says Ellis. "I know the form."
 
 Horses. Every horse the Fourth has seen since the Pale, in order: colour, height, brand, the state of the feet, who was riding it and which way it went. The dead mare on the plain. Toc's. She counts horses first; she always has. He asked who would follow whom. She tells him which horses would. It's a perfect report, in the form his people taught her, and there's nothing in it.`,
+vell:`"I'll give it," says Vell. "I've never given a report. I'd like to try one."
+
+Rope. Every line the Fourth has run since the Daru roof, in order: how long, how thick, what it was tied to, what it held, who came down it and how fast. The knots, by name, the Guild names and then the ones he made up. He asked who would follow whom. Vell tells him what would hold whom. He says it carefully, out loud and in order, the way he thinks, and every word of it is so.`,
 _:`{who} gives it. In order, nothing left out, and nothing in it he could use: a count, and only a count, and every word of it true.`})}
 
 He writes it all down. He doesn't hurry. At the end he lifts his pen and looks at the page, the way a man looks at a sum that has come out right in the wrong column.
@@ -905,7 +920,9 @@ He goes along the Lakefront without hurrying, and turns at the corner, and is go
 
 ${C7H.has('brisk') && w !== 'brisk' ? `"Sergeant," says Brisk. A long pause. "It was a good report." She doesn't like any of it. She can't fault a word.` : ''}
 
-${C7H.has('ellis') ? (w === 'ellis' ? `Ellis watches the corner where he went. "Six years they had me giving reports," she says. "That's the first one I've enjoyed."` : `Ellis says one sentence, and it's the right one. "They make you carry yourself in, and you've just made him carry nothing out."`) : ''}
+${C7H.has('ellis') ? (w === 'ellis' ? `Ellis watches the corner where he went. "Six years they had me giving reports," she says. "That's the first one I've enjoyed."` : `Ellis says one sentence, and it's the right one. "They make you carry yourself in, and you've just made him carry nothing out."`) : ''}${C7H.has('vell') && w === 'vell' ? `
+
+Vell is pink to the ears. "That was my first report," he says. "Was it all right?"` : ''}
 
 ${C7H.has('kettle') && w !== 'kettle' ? `Kettle is grinning at the paper in your coat. "I'd like to go home," she says. "I just didn't want to go like *that*." She looks at the corner where he went. "This isn't like that."` : ''}`,
       ch:[{t:'The glove. Tuft, now.', req:()=>C7H.has('tuft') && C7H.leashed(), go:'c7_tuft_glove'},
@@ -914,11 +931,11 @@ ${C7H.has('kettle') && w !== 'kettle' ? `Kettle is grinning at the paper in your
       return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawDeal='refused'; S.f.c7_emptyFail=1; S.f.c7_clawDone=1; S.f.c7_clawGone=1; if (tell) S.f.c7_wjKnows='claw'; }, txt:
 `You take the paper.
 
-${by({sgt:`Then you open the pay ledger, and get as far as the mule.`, brisk:`Brisk starts on the ration count, at parade pitch, and gets as far as the fourth day out of the Pale.`, kettle:`Kettle starts on the munitions return, fast and with total confidence, and gets as far as Maud.`, tuft:`Tuft starts laying out a reading for each of the Fourth, and gets as far as the second card.`, ohl:`Ohl takes out the oilcloth and begins at one, and gets as far as eleven.`, ellis:`Ellis starts on the horses, in the form his people taught her, and gets as far as the dead mare on the plain.`, _:`{who} starts on a count, in order, and gets a little way into it.`})}
+${by({sgt:`Then you open the pay ledger, and get as far as the mule.`, brisk:`Brisk starts on the ration count, at parade pitch, and gets as far as the fourth day out of the Pale.`, kettle:`Kettle starts on the munitions return, fast and with total confidence, and gets as far as Maud.`, tuft:`Tuft starts laying out a reading for each of the Fourth, and gets as far as the second card.`, ohl:`Ohl takes out the oilcloth and begins at one, and gets as far as eleven.`, ellis:`Ellis starts on the horses, in the form his people taught her, and gets as far as the dead mare on the plain.`, vell:`Vell starts on the rope, every line since the Daru roof, and gets as far as the first knot.`, _:`{who} starts on a count, in order, and gets a little way into it.`})}
 
 He hasn't written any of it down. His pen is lifted, the way it was lifted over a table with blue hands, waiting for the part that matters; and it doesn't come, and he knows it isn't going to.
 
-"That's very good," he says. "That's ${by({sgt:'a pay ledger', brisk:'a ration count', kettle:'a munitions return', tuft:'a reading', ohl:'a list of the dead', ellis:'a remount return', _:'a count'})}. I'll put it in." He does: one line, short. Then he takes the pardon out of your hand, gently, and folds it back along its creases, and closes the ledger on it.
+"That's very good," he says. "That's ${by({sgt:'a pay ledger', brisk:'a ration count', kettle:'a munitions return', tuft:'a reading', ohl:'a list of the dead', ellis:'a remount return', vell:'a rope inventory', _:'a count'})}. I'll put it in." He does: one line, short. Then he takes the pardon out of your hand, gently, and folds it back along its creases, and closes the ledger on it.
 
 "The offer was for a report, Sergeant. You've shown me you know what one is. That's worth knowing about a soldier." He tucks the book under his arm. "It's withdrawn."
 
@@ -944,7 +961,7 @@ He looks up. "I've come to draw the line under it."
 
 They're on the quay now. You didn't see them come. Two hooded shapes by the fish-crates with their knives held low; a third in the green doorway with nothing in its hands and something in the air around them. ${S.f.c7_vellWarned ? `And on the chandlery roof across the quay, nobody. There should be. The Guild has had a word with him.` : `And on the chandlery roof across the quay, the short glint of a crossbow, where the sun's just reached.`}
 
-${C7H.has('brisk') ? `Brisk's shield comes off her back. She doesn't hurry either.` : ''}`,
+${C7H.has('brisk') ? `Brisk's shield comes off her back. She doesn't hurry either.` : ''}${C7H.has('vell') ? ` ${S.f.c7_vellWarned ? `Vell glances at the empty chandlery roof and gives it a small nod, as to somebody who kept an appointment.` : `Vell has seen the glint. "Roof," he says, very quietly, not pointing. "Chandlery. One."`}` : ''}`,
       ch:[{t:'Tell him the book has nobody left to read it.', check:['guile',14],
            edges:id=>[id === 'ellis' && ['she knows how they close a book', 2], id === 'tuft' && C7H.leashed() && ['he is looking out of her collar', -3], S.f.c7_vellWarned && ['the roof is empty', 1], S.f.c3_knivesFought && ['the wall behind the dye-shop', -1], S.f.c3_lied && ['your count was wrong at the dye-shop', -1]],
            near:{t:'He closes the book. First he tears one page out of it, neatly, and keeps it.', fx:()=>{ S.f.c7_clawPage = ROLL().who || 'sgt'; }},
@@ -967,6 +984,7 @@ ellis:`Ellis says it. One sentence, and it's the right one. "I know what happens
 kettle:`Kettle says it, because Kettle says everything. "She's not going to *read* it," she tells him, with total confidence. "The Empress. She's outlawed the Host, she's got Seven Cities coming, have you *seen* Seven Cities? Nobody's reading your book. You're closing it for nobody." She considers. "I'd close it for nobody too, if I were you. Only I'd do it somewhere with a fire."`,
 ohl:`Ohl says it, gently, the way he tells a man the leg has to come off. "The Empress outlawed the Host this morning, child. Your book is a list of people she doesn't want back. It's going to go unread." A pause. "I keep a list too. I know what it is to keep one for nobody. Mine, at least, they'd have wanted kept."`,
 brisk:`Brisk says it as if reading him an order off a board. "The Host is outlawed. Your book's on the Host. It won't be read." That's the whole of it. It's enough.`,
+vell:`Vell says it, carefully, the way he says everything, in order. "The Empress outlawed the Host this morning. So your book's full of people she doesn't want back. So nobody's going to read it." He thinks about it. "You're closing it for nobody. I've never kept a book, and even I know you can't hand one to nobody."`,
 _:`{who} says it, plainly: the Empress outlawed the Host this morning; his book is a list of people she doesn't want back, and she'll be busy reading Seven Cities. "You're not closing an entry. You're closing the book. There's nobody to hand it to."`})}
 
 He looks at ${C7H.rw(w)} for as long as it takes a gull to cross the quay. Then down at the page. Then he closes the ledger, very gently, the way you'd close a door on a sleeping room.
@@ -980,7 +998,7 @@ He goes along the Lakefront without hurrying. After a while the shapes by the fi
     c7_claw_talk_fail:()=>{ const w = ROLL().who || 'sgt'; return {sp:'The grey cloak', fx:()=>{ S.f.c7_clawNoted = w; }, txt:
 `He smiles. It's the smile of a man writing something down.
 
-"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He writes it without a glance at her collar.`, _:''})} "It doesn't change the sum."
+"That's very good, ${by({sgt:'Sergeant', tuft:'mage', ellis:'Ellis', kettle:'sapper', ohl:'healer', brisk:'corporal', vell:'rope', _:'Sergeant'})}. I'll put it in." He does: a line, short, in the neat hand, under ${C7H.rws(w)} name. ${by({ellis:`"You always did report well."`, tuft:`He writes it without a glance at her collar.`, _:''})} "It doesn't change the sum."
 
 The shapes by the fish-crates are moving.`,
       ch:[{t:'Show him the order from the cellars.', req:()=>!!S.f.c6_orders, go:'c7_claw_orders'},
@@ -1046,7 +1064,7 @@ He doesn't fall. He steps, as if there were one more plank. The lake takes him w
 
 The ledger is on the planks where it slipped from under his arm, open, with a steel pen lying in the gutter of the book.
 
-${C7H.has('brisk') ? `Brisk looks at the water. "Claw bleeds," she says. "Same as anyone." She wipes her spear on her sleeve. "Slower. Somewhere else."` : ''}${pre ? `
+${C7H.has('brisk') ? `Brisk looks at the water. "Claw bleeds," she says. "Same as anyone." She wipes her spear on her sleeve. "Slower. Somewhere else."` : ''}${C7H.has('vell') ? `${C7H.has('brisk') ? '\n\n' : ''}Vell is watching the rings go out. "He didn't want off," he says. "Off's the hard part. He didn't even try."` : ''}${pre ? `
 
 Behind you, back along the quay, the eel-crates are still burning where the sharper went off, and the trader is gone from her berth; the fishing boats moored either side of where she lay are still rocking in her wake. Her master didn't stop to ask what a Moranth sharper was doing on his quay; he cut his hawsers at the bang, and she's out in the roads now, a cable off, her grey sail half sheeted home and filling, going west on the morning wind a little earlier than anybody meant.
 

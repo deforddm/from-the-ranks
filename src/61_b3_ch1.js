@@ -268,7 +268,7 @@ const B3CH1 = {
     /* ---- opening: the Fourth's tent, forty paces from where it stood the night the sky came down ---- */
     b3_c1_start:()=>({sp:'The Fourth\'s tent', scene:'b3_pale_camp', fx:()=>{ S.f.b3_c1_started = 1; }, txt:
 `The Fourth's tent is pitched where the Host's quartermaster put it, which by some joke of his is forty paces from where it stood the night before the sky came down on Pale. Nobody in the squad said so when they drove the pegs. Everybody noticed.
-${b3In('brisk') ? `\nBrisk is standing over the cook-fire as if it might try something.` : ''}${b3In('kettle') ? ` Kettle has the satchel open on her knee and is counting it by touch.` : ''}${b3In('ohl') ? ` Ohl has the oilcloth out and is not reading it, which is a thing he does when the list is long enough already.` : ''}${b3In('tuft') ? `\n\nTuft is at the end of the tent line with her back to the squad, looking north at the hill where the cadre row stood. There is grass on it now, and somebody's horse. She has been looking at it since first light.` : ''}${b3Fallen().length ? `\n\nThere is room in the tent nobody has filled. ${b3FallenNames()} did not come out of Darujhistan. You still count to the old number, every morning, and stop.` : ''}
+${b3In('brisk') ? `\nBrisk is standing over the cook-fire as if it might try something.` : ''}${b3In('kettle') ? ` Kettle has the satchel open on her knee and is counting it by touch.` : ''}${b3In('ohl') ? ` Ohl has the oilcloth out and is not reading it, which is a thing he does when the list is long enough already.` : ''}${b3In('tuft') ? `\n\nTuft is at the end of the tent line with her back to the squad, looking north at the hill where the cadre row stood. There is grass on it now, and somebody's horse. She has been looking at it since first light.` : ''}${b3In('ellis') ? `\n\nEllis is looking the other way, at the city, with the gloved hand tucked under her arm. The fire that did the hand was here, before the Hounds; she told the squad that much on the plain and has not added to it since. She isn't adding to it now.` : ''}${b3In('vell') ? `\n\nVell has been up the tent's ridge-pole already to look at Pale's walls, and has come down disappointed in them. "Low," he says. "You could get a mule over those." He sounds personally let down.` : ''}${b3Fallen().length ? `\n\nThere is room in the tent nobody has filled. ${b3FallenNames()} did not come out of Darujhistan. You still count to the old number, every morning, and stop.` : ''}
 
 Across the valley, Brood's army is cooking breakfast: a thousand thin smokes going straight up in the still air, and below them, nearer, the round hide tents of the Rhivi and their herds grazing between. The meeting ground is the trampled slope below Brood's command tent. Noon, the runners say.
 
@@ -315,7 +315,7 @@ Then, quieter, and not about the hill at all: "She's over there, Sergeant." She 
     b3_c1_fire_sat:()=>({sp:'The Fourth\'s fire', txt:
 `An hour, then, in the mud by the fire, with the Host going past on its business and nobody's business coming to the Fourth.
 
-${b31Say({kettle:`Kettle, flat on her back with her hands behind her head, watches a quorl come down at the edge of the camp, gold-brown wings going like a struck string. "Warm," she says, to nobody. "Chub said."`, ohl:`Ohl drinks his own tea and makes a face at it, and pours another.`, _:`One of them sleeps. The other pretends to.`})}${b3In('brisk') && b3In('tuft') ? `\n\nBrisk sits facing the hill, between Tuft and the hill. Tuft lets her.` : ''}`,
+${b31Say({kettle:`Kettle, flat on her back with her hands behind her head, watches a quorl come down at the edge of the camp, gold-brown wings going like a struck string. "Warm," she says, to nobody. "Chub said."`, ohl:`Ohl drinks his own tea and makes a face at it, and pours another.`, _:`One of them sleeps. The other pretends to.`})}${b3In('brisk') && b3In('tuft') ? `\n\nBrisk sits facing the hill, between Tuft and the hill. Tuft lets her.` : ''}${b3In('ellis') ? `\n\nEllis sits with her back to the fire and her face to the camp, which is how she rests, as far as anyone has ever been able to tell.` : ''}${b3In('vell') ? `\n\nVell has the rope off his shoulder and is whipping the ends again. They didn't need it. They never do. "Habit," he says, when he sees you looking. "The Guild fines you for a frayed end."` : ''}`,
       ch:[{t:'Up. The picket.', go:()=>startExplore()}]}),
 
     /* ---- Whiskeyjack and Mallet by the standard: the leg ---- */
@@ -347,7 +347,7 @@ Whiskeyjack looks at him, not unkindly. "Your sergeant needs you more than I do,
 "There's a parley at noon," he says. "Brood's people will be watching how I stand. I'll stand."`}`,
       ch:[{t:'"Sir."', go:'b3_c1_wj_order'}]}),
     b3_c1_wj_order:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c1_order = 1; }, txt:
-`He looks at the Fourth, and counts it without seeming to, the way he did on this hill a year ago at the Bridgeburners' fire. ${b31Five() >= 5 && !b3Fallen().length ? `"All five," he says. "Still."` : b3Fallen().length ? `"${numw(b31Five(), true)}." A pause you could stand a spear in. "I heard. ${b3FallenNames()}." He doesn't say he's sorry. He says the names, which is better.` : `"${numw(b31Five(), true)}," he says. "Still."`}
+`He looks at the Fourth, and counts it without seeming to, the way he did on this hill a year ago at the Bridgeburners' fire. ${!b3Fallen().length && (b3In('ellis') || b3In('vell')) ? `"${numw(b31Five(), true)}," he says. His eyes go to ${b3In('ellis') ? 'Ellis' : 'Vell'}, the one who wasn't in the Fourth the first time it stood on this hill, and back. "Still."` : b31Five() >= 5 && !b3Fallen().length ? `"All five," he says. "Still."` : b3Fallen().length ? `"${numw(b31Five(), true)}." A pause you could stand a spear in. "I heard. ${b3FallenNames()}." He doesn't say he's sorry. He says the names, which is better.` : `"${numw(b31Five(), true)}," he says. "Still."`}
 
 Then he points with his chin, north, at the broken line of the city wall and the rubble at its foot. "The north quarter. You know it. You were down the sapper tunnels under it the week the sky came down, before any of us went back for anything." He doesn't ask what you found. He never did. "The old saps run out under the slope where Brood's army is camped. Under the ground where Dujek and Brood are going to stand at noon."
 
@@ -508,7 +508,7 @@ The Fourth went down this hole once, the week the sky came down, with a lantern 
 
 It doesn't smell the way it did. ${b3In('tuft') ? `"The cold's gone," Tuft says, from the lip, very quietly. "Quick Ben said a month." It has been a good deal more than a month.` : `The cold that lived down there, the cold that pushed against the lantern, is gone.`} What it smells of now is smoke, and people, and somebody's dinner.
 
-Fresh boot-prints in the mud at the mouth, going down. A Host crate-lid with Pell's mark on it, kicked into the rubble. ${b3In('kettle') ? `Kettle crouches over a scrap of fuse-cord on the timbers and sniffs it. "Ours," she says. "Old. Somebody down there knows what this is."` : ''}
+Fresh boot-prints in the mud at the mouth, going down. A Host crate-lid with Pell's mark on it, kicked into the rubble. ${b3In('kettle') ? `Kettle crouches over a scrap of fuse-cord on the timbers and sniffs it. "Ours," she says. "Old. Somebody down there knows what this is."` : ''}${b3In('ellis') ? `\n\nEllis is down on one knee over the prints with her bare hand flat beside them, not touching. "Four," she says. "One heavy. One favours the left foot. One's barefoot, and light." A pause. "The fourth walks as if the place is his. He'll be at the back."` : ''}${b3In('vell') ? `\n\nVell looks down the hole with the expression of a rope boy who has been shown a building upside down. "It's a roof," he says at last, "only on the wrong side." He does not sound reassured.` : ''}
 
 ${b3In('brisk') ? `"Straight down the sap," Brisk says, "or the side gallery." She doesn't say *the one the deserters used, the first time*. She doesn't have to.` : `There are two ways in: straight down the sap, or the side gallery the deserters used, the first time.`}`,
       ch:[{t:'"Straight down. Shields first."', go:()=>startBattle('b3_c1_tunnels', {})},
@@ -523,14 +523,14 @@ ${b3In('brisk') ? `"Straight down the sap," Brisk says, "or the side gallery." S
 
 Right in front of them.
 
-${b31Say({kettle:`"Hello," says Kettle, from the bottom of the heap, to a man with a crossbow. "We're from the quartermaster."`, _:`Down the sap, a man shouts. Lamps go out. Something with a string on it goes *click*.`})}`,
+${b31Say({kettle:`"Hello," says Kettle, from the bottom of the heap, to a man with a crossbow. "We're from the quartermaster."`, _:`Down the sap, a man shouts. Lamps go out. Something with a string on it goes *click*.`})}${b3In('vell') ? `\n\nVell comes down the fall of stone feet first, and lands like a cat, and is the only one of the Fourth who does.` : ''}`,
       ch:[{t:'Up. Into them.', go:()=>startBattle('b3_c1_tunnels', {surprise:'e'})}]}),
     b3_c1_tunnels_after:()=>({sp:'The fallen chamber', scene:'b3_c1_tunnels', fx:()=>{ S.f.b3_c1_tunnelsDone = 1; }, txt:
 `The man by the lamp is down. When the squad turns him over he is older than he fought: grey in the stubble, a Second Army tattoo on the back of the hand, sapper's burns up both forearms. ${b3In('ohl') ? `Ohl kneels, and looks, and closes the eyes. "He came down the night the sky fell," he says. "I'd know the burns. He just never went up." He does not take out the oilcloth. "I don't know his name. I won't write a man I don't know."` : `He came down the night the sky fell, by the burns. He never went up.`}
 
 Behind the beam there are Pell's crates, two of salve and a sack of boot-nails, a bed of stolen blankets, and, scratched into the timber over the bed in charcoal, in a big careful hand: *THE FIST IS STILL COUNTING HEADS*. Somebody, once, carried a word down here, and somebody else kept it.${b3In('kettle') ? `\n\nKettle looks down the dark fork where the passage goes on under the slope, toward the place the Bridgeburners' gallery came down the night of the assault. "That's where—" she begins. "Leave it," says ${b3In('brisk') ? 'Brisk' : 'somebody'}.` : ''}
 
-And there is a boy. Sixteen, perhaps, hiding behind the crates with a knife he hasn't used, filthy, blinking at the lamps. He was a camp follower's son, he says, when the Host was here before. Then the Host went to Darujhistan and he didn't.`,
+And there is a boy. Sixteen, perhaps, hiding behind the crates with a knife he hasn't used, filthy, blinking at the lamps. He was a camp follower's son, he says, when the Host was here before. Then the Host went to Darujhistan and he didn't.${b3In('ellis') ? `\n\n"The barefoot one," Ellis says, to nobody, and lowers the bow.` : ''}${b3In('vell') ? ` Vell looks at him a while, the knife, the blinking. "I was carrying rope at thirteen," he says, to you, not the boy. "Nobody asked me either."` : ''}`,
       ch:[{t:'"Up. The provosts will feed you, at least."', fx:()=>{ S.f.b3_c1_boy = 'provost'; b31L('brisk', 1); }, go:'b3_c1_boy_up'},
           {t:'Show him the far shaft into the city. "Go. Now."', fx:()=>{ S.f.b3_c1_boy = 'let'; b31L('ohl', 1); b31L('brisk', -1); }, go:'b3_c1_boy_let'}]}),
     b3_c1_boy_up:()=>({sp:'The old north sap', scene:'b3_c1_tunnels', txt:
@@ -541,7 +541,7 @@ ${b31Say({brisk:`"He'll eat," says Brisk. "He'll be a soldier by Capustan, or wh
     b3_c1_boy_let:()=>({sp:'The old north sap', scene:'b3_c1_tunnels', txt:
 `He goes up the far shaft into the ruins of the north quarter like a cat up a drainpipe, without a backward glance, and is gone.
 
-${b31Say({ohl:`"He'll find the Pale garrison," Ohl says, "or a cookhouse, or a girl. Any of those is better than a provost." He puts his hands in his sleeves. "We don't leave people. But sometimes they leave, and you let them."`, _:`Whatever he finds up there, it isn't a provost.`})}${b3In('brisk') ? `\n\nBrisk says nothing at all, all the way back up the sap.` : ''}`,
+${b31Say({ohl:`"He'll find the Pale garrison," Ohl says, "or a cookhouse, or a girl. Any of those is better than a provost." He puts his hands in his sleeves. "We don't leave people. But sometimes they leave, and you let them."`, _:`Whatever he finds up there, it isn't a provost.`})}${b3In('ellis') ? `\n\n"He lasted a year down here and nobody found him," Ellis says. "That's a skill. Somebody up there will pay for it." She doesn't say who. She knows who.` : ''}${b3In('brisk') ? `\n\nBrisk says nothing at all, all the way back up the sap.` : ''}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
 
     /* ---- east, to the picket ---- */
@@ -556,7 +556,7 @@ ${b31Say({ohl:`"He'll find the Pale garrison," Ohl says, "or a cookhouse, or a g
 
 Brood's camp starts forty paces off, and it is not one camp but a dozen: the tall dark-skinned Tiste Andii, very still, in their own lines; Barghast round a fire, shoving each other over a line in the dirt and roaring; a scatter of woodsmen in hats that were recently alive; mercenaries in mismatched mail; and south, down the slope, the Rhivi tents and the herds. Up the hill is the command tent, and below it the trampled meeting ground, already filling with the kind of people who stand near the great when the great are about to talk.
 
-${b31Say({kettle:`"Ten years," says Kettle, "we tried to kill all that." She says it with something like wonder. "We were *rubbish* at it."`, brisk:`"Ten years," says Brisk, and leaves it there.`, _:`Ten years the Host tried to kill all that. Now it stands forty paces off, and the Fourth watches it, and it watches back.`})}`,
+${b31Say({kettle:`"Ten years," says Kettle, "we tried to kill all that." She says it with something like wonder. "We were *rubbish* at it."`, brisk:`"Ten years," says Brisk, and leaves it there.`, _:`Ten years the Host tried to kill all that. Now it stands forty paces off, and the Fourth watches it, and it watches back.`})}${b3In('ellis') ? `\n\nEllis has started counting fires. She does it with her lips shut and her eyes moving, the way she was taught, and she will have a number by noon, and it will be right, and she will give it to nobody unless asked.` : ''}${b3In('vell') ? `\n\n"Their hats are alive," Vell says, of the woodsmen. "Some of them. I saw one move."` : ''}`,
       ch:[{t:'To the post.'}]}),
     b3_c1_line_back:()=>({sp:'The Host\'s palisade', txt: S.f.b3_c1_parleyDone ?
 `West, back through the gap into the Host's lines. The Fourth is off the line at dusk; the Rhivi camp is south.` :
@@ -602,7 +602,7 @@ He is looking at the child. The whole meeting ground has gone quiet round that o
 
 Whiskeyjack moves first. He has to come round Dujek to do it, on the leg, and the leg takes his weight wrong for one step and he doesn't care. He strikes the tall man. From the picket it is only a shape and a sound, a blow, flat and hard, and the tall man goes back a pace with his head turned.
 
-Every hand on both picket lines is on a weapon. ${b31Say({brisk:`Brisk's shield is up before she knows it.`, kettle:`Kettle's hand is in the satchel.`, _:`Yours too.`})} ${b3In('ohl') ? 'Ohl says something to Hood in Ehrlii that sounds like a bargain.' : ''} The Host's line holds its breath. So does Brood's.
+Every hand on both picket lines is on a weapon. ${b31Say({brisk:`Brisk's shield is up before she knows it.`, kettle:`Kettle's hand is in the satchel.`, _:`Yours too.`})} ${b3In('ohl') ? 'Ohl says something to Hood in Ehrlii that sounds like a bargain.' : ''}${b3In('ellis') ? ' Ellis has an arrow on the string, pointed at the grass, which is the only place on this slope it can point.' : ''} The Host's line holds its breath. So does Brood's.
 
 Then Brood is between them. He doesn't seem to hurry; he is simply there, the way a hill is there, and he says one word, low, that doesn't reach the picket. The tall man straightens. He looks at Whiskeyjack for a long time. He looks at the child. Then he turns his back on the lot of them, and that, somehow, is worse than the hilt.
 
@@ -613,7 +613,7 @@ The child has gone to Whiskeyjack. She stands beside him, and looks up at him, a
 
 "Kallor," says a pikeman of the Host along the line, to nobody, as if he had been waiting all morning for a reason to say it. "Brood's second. They say he was a king, once. Of somewhere that isn't there any more." He spits. "They say he did that to it."
 
-${b31Say({brisk:`"Good," says Brisk. That's all. She means the blow.`, kettle:`"He *hit* him," Kettle says. "Whiskeyjack. He hit Brood's— he walked over on that leg and he *hit* him." She can't decide whether she's frightened or in love.`, _:`The Fourth's stretch of the line has gone very quiet.`})}${b3In('ohl') ? `\n\n"On that leg," Ohl says. "Hood's breath. Mallet's going to kill him before anybody else gets the chance."` : ''}${b3In('tuft') ? `\n\nTuft hasn't moved. "I've seen him look at her," she says. "Since she was a bundle on a saddle. I've seen him *look*." She takes a breath that doesn't go all the way down. "Now I've heard him say it."` : ''}`,
+${b31Say({brisk:`"Good," says Brisk. That's all. She means the blow.`, kettle:`"He *hit* him," Kettle says. "Whiskeyjack. He hit Brood's— he walked over on that leg and he *hit* him." She can't decide whether she's frightened or in love.`, _:`The Fourth's stretch of the line has gone very quiet.`})}${b3In('ohl') ? `\n\n"On that leg," Ohl says. "Hood's breath. Mallet's going to kill him before anybody else gets the chance."` : ''}${b3In('tuft') ? `\n\nTuft hasn't moved. "I've seen him look at her," she says. "Since she was a bundle on a saddle. I've seen him *look*." She takes a breath that doesn't go all the way down. "Now I've heard him say it."` : ''}${b3In('ellis') ? `\n\nEllis lets the arrow off the string, slowly. "The Claw keeps a page on Brood's second," she says. "I read it once. It's short." She puts the arrow back. "It says *don't be in the room*."` : ''}`,
       ch:[{t:'Stand the line.', go:()=>startExplore()}]}),
 
     /* ---- the Ilgres fire ---- */
@@ -716,7 +716,7 @@ He looks at the command tent. "Going to be marching a long way now, I hear."`,
     b3_c1_delegate_2:()=>({sp:'A Daru attendant', txt:
 `He takes this the way the young of Darujhistan take everything outside Darujhistan: as a personal discourtesy from the world. "South," he says. "They keep saying south. Master Coll says he's going with them. Further south. With the armies." He looks at the ledger as if it might contain an argument against this. It doesn't. "I'm to go with him."
 
-"Bring boots," ${b31Say({kettle:'Kettle tells him kindly', brisk:'Brisk tells him', _:'you tell him'})}. He writes it in the ledger.`,
+"Bring boots," ${b31Say({vell:'Vell tells him, in a Daru District voice that makes the attendant look at him properly for the first time', kettle:'Kettle tells him kindly', brisk:'Brisk tells him', _:'you tell him'})}. He writes it in the ledger.`,
       ch:[{t:'Walk on.'}]}),
     b3_c1_kruppe:()=>({sp:'A round man in silks', fx:()=>{ S.f.b3_c1_kruppe = 1; }, txt:
 `A short, round man in silks of every colour that silk comes in is standing beside the stuck carriage dabbing at his forehead with a crimson handkerchief and addressing the day, which is warmer than spring has any right to be.

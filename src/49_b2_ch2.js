@@ -992,13 +992,13 @@ Along the bank the Red Blades are counting theirs. They say the names out loud, 
     html:chainHTML('The Sekala · the west bank'),
     ch:[{t:'Walk the bank.', go:()=>startExplore()}]}),
   b2_ford_look:()=>({sp:'The ford', txt: S.f.b2_blown ?
-`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.` :
+`Where the ford was there is a trench in the river with brown water pouring through it, and a line of broken stones along the near edge like teeth. On the far bank, Reloe's fires.${b2In('redblade') ? ` Ramin comes and stands beside you at the edge, helm under his arm. "My horse is in there somewhere," he says. "She was a good horse. She did not like the ford either." Then he goes back to the carts.` : ''}${b2In('warlock') ? ` Keth crouches at the lip of the bank with his palm flat on the wet stone. "The river is angry," he says. The old woman, out of him: "The river is busy. Leave it be."` : ''}` :
 `The ford behind you, under the brown water, and the last of the column still coming over it. ${S.f.b2_westDone ? 'The rearguard is close.' : 'Not now.'}`,
     ch:[{t:'Leave it.', go:()=>startExplore()}]}),
-  b2_chenned_again:()=>({sp:'Captain Chenned', txt:`Chenned is sitting on an upturned shield with his bandaged hand in his lap, looking at the river. "Held," he says, when you come by, which is all he says.`, ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_west_wagons:()=>({sp:'The squad\'s carts', txt:`The carts, drawn up in the lee of the bank. ${chainC()} people under them and round them.`, html:chainHTML('The Sekala · the west bank'), ch:[{t:'Leave them.', go:()=>startExplore()}]}),
+  b2_chenned_again:()=>({sp:'Captain Chenned', txt:`Chenned is sitting on an upturned shield with his bandaged hand in his lap, looking at the river. "Held," he says, when you come by, which is all he says.${b2In('redblade') ? ` Then he sees Ramin behind you, and lifts the bandaged hand an inch. "Your file held the rise, Red Blade." Ramin salutes. "Half of it, sir." Chenned nods, as if half were the right answer.` : ''}`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_west_wagons:()=>({sp:'The squad\'s carts', txt:`The carts, drawn up in the lee of the bank. ${chainC()} people under them and round them.${b2In('redblade') ? ' Ramin has posted himself at the end of the carts nearest the river, as straight as a picket. No one posted him there.' : ''}${b2In('warlock') ? ' Keth has walked the line of the carts once already with one hand trailing along the ground, and two of the column\'s dogs have walked it with him.' : ''}`, html:chainHTML('The Sekala · the west bank'), ch:[{t:'Leave them.', go:()=>startExplore()}]}),
   b2_west_ours:()=>({sp:'The squad\'s people', fx:()=>{ S.f.b2_westOurs = 1; }, txt:
-`Your people, on the stony ground above the river. They have stopped being afraid of the Red Blades, a little. A woman from the weavers' street has taken a skin down to the two who held the bank beside the squad, and they took it, and thanked her in the quarter's own Hissari, and she came back up the bank looking as if she'd been stung.
+`Your people, on the stony ground above the river. They have stopped being afraid of the Red Blades, a little. A woman from the weavers' street has taken a skin down to the two who held the bank beside the squad, and they took it, and thanked her in the quarter's own Hissari, and she came back up the bank looking as if she'd been stung.${b2In('redblade') ? ` Ramin hears the quarter's Hissari from the end of the carts, and turns his head, and turns it back again, correctly. The woman sees. She brings him a cup of river water too. He drinks it standing.` : ''}${b2In('warlock') ? ` The children have found Keth. They want to know if the old woman is real. She tells them, out of him, that she is, and that they are filthy, and they shriek and run off and come straight back for more.` : ''}
 
 ${S.f.b2_prisonerFate === 'column' ? 'The boy from the tanners\' street is sitting a little apart, looking across the river at Reloe\'s fires. He has the green cloth out of his pocket. He is turning it over in his hands. He puts it back.' : 'There\'s a fire going, and someone has found a cooking-pot. It is the closest thing to a feast the squad\'s stretch has seen since Hissar: river water, boiled, with nothing in it.'}`,
     ch:[{t:'Leave them.', go:()=>startExplore()}]}),
@@ -1055,7 +1055,11 @@ He looks at the river.
 
 "Ubaryd has fallen. A rider came over this morning, a Wickan who went to look. The city's taken, and the fleet's gone out of it, and there is nobody there to put us on ships." He takes his feet out of the bucket. "So. No Ubaryd. Aren." He lets the name sit. "All the way to Aren."
 
-Then, the grin coming back, a little: "Count them, Sergeant. It's further than it was this morning."`,
+Then, the grin coming back, a little: "Count them, Sergeant. It's further than it was this morning."${b2In('redblade') ? `
+
+Ramin, behind you, very quietly, to himself: "Aren. The company will remount in Aren." He says it like a count he means to keep.` : ''}${b2In('warlock') ? `
+
+Keth has his palm flat on the bank. "Aren is a long way for the ground to listen," he says. The old woman, out of him: "Then walk, child. It listens better to feet."` : ''}`,
     ch:[{t:'"Sir."', go:'b2_night'}, {t:'Not yet.', go:()=>startExplore()}]},
 
   /* ---- the night: the spirits and the Semk god ---- */

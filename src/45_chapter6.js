@@ -375,7 +375,7 @@ ${S.f.c5_ellisThrough ? `And Ellis, after him, on purpose, with her hand up over
 
 The Hounds, going past the fire and not stopping. The puppet on the next hill, and the sound it made. Toc's horse walking back into the firelight before dawn with nobody on it. The *thud* under the long barrow, getting slower: a sleeper's heart, before he wakes.
 
-He listens to all of it with his face doing nothing. At Toc, he doesn't move at all. Neither does Paran, against the wall.
+He listens to all of it with his face doing nothing. At Toc, he doesn't move at all. Neither does Paran, against the wall.${SQUAD().includes('vell') ? (S.f.c6_vellJoined ? ` Vell, who never met Toc, has taken his hand off his line and doesn't put it back.` : ` Vell was on that hillside. He keeps his hand flat on his coiled line the whole time, holding it still.`) : ''}
 
 When you've finished, there's only the pipes, hissing.
 
@@ -398,7 +398,9 @@ He's quiet for as long as it takes a pipe to hiss twice.
 
 "Stand where Fiddler puts you. When it goes bad, and it'll go bad, you'll see what needs doing before I can tell you, because I won't be able to tell you." He looks at you. "Do it."
 
-${SQUAD().includes('brisk') ? `Brisk, behind you, very low: "Furniture." She tries the word the way she'd try a strap. "I've been furniture. Nathilog, the Fist's tent. Furniture's what gets broken first."` : ''}`,
+${SQUAD().includes('brisk') ? `Brisk, behind you, very low: "Furniture." She tries the word the way she'd try a strap. "I've been furniture. Nathilog, the Fist's tent. Furniture's what gets broken first."` : ''}
+
+${SQUAD().includes('ellis') ? `Ellis, at the foot of the ladder, flat: "Every dangerous person." She looks at the ladder-hole, not at him. "He's leaving some out."` : ''}${SQUAD().includes('vell') ? `Vell, very low, to you: "The Guild'll be on her roofs by dark. It doesn't get invited. It goes anyway."` : ''}`,
       ch:[{t:'"Sir."', go:'c6_vault'}]}),
 
     /* ---- the vault: the afternoon ---- */
@@ -429,7 +431,9 @@ Whiskeyjack's voice comes up the hole behind you, not loud. "${S.f.c6_vFid ? `Yo
 
 ${SQUAD().includes('kettle') ? `Kettle is looking at the brazier, and then at the planks, and then at the brazier. "They want a *fire*," she says. "On *that*."` : ''}
 
-${SQUAD().includes('brisk') ? `Brisk sets her shield. "Holiday rules," she says, the way she'd repeat a ration count she didn't believe. "No dying. That's the hard kind."` : ''}`,
+${SQUAD().includes('brisk') ? `Brisk sets her shield. "Holiday rules," she says, the way she'd repeat a ration count she didn't believe. "No dying. That's the hard kind."` : ''}
+
+${SQUAD().includes('vell') ? `Vell looks at the planks, and the drop under them, and the brazier, and puts his hook back on his shoulder. There's nothing here a rope man can climb.` : ''}`,
       ch:[{t:'"Off the planks."', fx:()=>{ S.f.c6_bonfireFought=1; }, go:()=>startBattle('c6_bonfire',{})},
           {t:'Tell them what is under the planks. Most of it.', check:['guile',16],
            edges:id => [id === 'ellis' && ['she has her mother\'s Gadrobi', 2], id === 'kettle' && ['a sapper on gas, with numbers', 1], S.f.c6_vFid && ['Simtal\'s blue on your arm', 1]],
@@ -439,6 +443,7 @@ ${SQUAD().includes('brisk') ? `Brisk sets her shield. "Holiday rules," she says,
 `${by({
   ellis:`Ellis does it. She walks out among the bull masks with her hands empty and says something in Gadrobi, low, and the man in the apron turns his head at the sound of it like a man hearing his own village. Then she says one sentence more. It's the right one.`,
   kettle:`Kettle does it. It's true, every word, and she tells it the way she tells lies, with total confidence and far too much detail: what runs under the planks, and how a main goes when you light a fire on it, and how far, and what it does to a crossing and the chandler's and the street and the lads standing in it, with numbers. By the time she gets to the numbers nobody is standing on the planks.`,
+  vell:`Vell does it, in Daru, the way a boy from the next district over talks to the big lads from this one: politely, and from a little way off. He tells them about the gas under the planks, and the bad joint, and he says *Works* the way the city says it, as if the Works were a god nobody likes.`,
   sgt:`You tell them. Not about the munitions. About the gas: the main that runs under these planks, the bad joint the Works are mending, and what a bonfire on top of it does to a crossing on a holiday. You take it slowly, one fact to a breath, and you watch it go into them one at a time.`,
   _:`{who} tells them. Not about the munitions. About the gas: the main under these planks, the bad joint, and what a bonfire on top of it does to a crossing on a holiday.`})}
 
@@ -454,6 +459,7 @@ From the ladder-hole: "Sergeant." A pause. "Sleep. You've an hour."`,
 `${by({
   ellis:`Ellis tries. She gets three words of Gadrobi out, and the man in the apron hears where her mother was from in the second one, and grins, and says something about hill people that makes the lads roar.`,
   kettle:`Kettle tries. It's all true, and she tells it the way she tells lies, and halfway through the numbers one of the bull masks says *Malazan* in a voice that means he's just noticed what her accent is.`,
+  vell:`Vell tries, in Daru. It's the wrong language for this crossing. The man in the apron hears a Daru boy telling Gadrobi what lives under Gadrobi streets, and laughs.`,
   sgt:`You tell them about the gas. They've lived over gas all their lives. They laugh.`,
   _:`{who} tells them about the gas. They've lived over gas all their lives. They laugh.`})}
 
@@ -474,6 +480,8 @@ ${SQUAD().includes('ohl') ? `Ohl has been from lad to lad in the gutter with his
 
 ${SQUAD().includes('tuft') ? `Tuft is sitting on the chandler's step with her arms round her knees, watching the bull masks go. "They were so *happy*," she says. "Before."` : ''}
 
+${SQUAD().includes('vell') ? `Vell is sucking a split knuckle. "In the Guild you don't hit anybody you aren't paid to," he says. He thinks about it. "That was nicer."` : ''}
+
 From the ladder-hole: "Sergeant." A pause. "Sleep. You've an hour."`,
       ch:[{t:'Down the ladder.', go:'c6_vault_sleep'}]}),
     /* an hour's sleep in the vault before the Fete (Bridgeburner: the wounds close) */
@@ -489,6 +497,8 @@ ${SQUAD().includes('kettle') ? `Kettle lies on her back on the brick with her he
 ${SQUAD().includes('tuft') ? `Tuft curls up round her little lamp, the way she has every night since the Pale, with the Andii cloak over her like a tent, so that all you can see of her is a little light that won't quite go through the cloth.` : ''}
 
 ${SQUAD().includes('ellis') ? (S.f.c5_ellisHeld ? `Ellis doesn't sleep. She sits at the foot of the ladder with her back to the squad and watches the hole.` : `Ellis sleeps the way scouts sleep, all at once, and wakes once, and looks at the ladder, and sleeps again.`) : ''}
+
+${SQUAD().includes('vell') ? `Vell sleeps on top of the tallest stack of crates, nearest the ladder-hole, with his line coiled under his head, because he can't sleep anywhere he couldn't climb off.` : ''}
 
 Across the vault Hedge is humming the same four notes over and over, and Fiddler isn't stopping him. *Sleep. Or pretend.* Tattersail's advice. You take it.
 
@@ -535,7 +545,7 @@ ${SQUAD().includes('ohl') ? `Behind you, Ohl has taken the oilcloth half out of 
     c6_fid:()=>({sp:'Fiddler and Hedge', scene:'cellar', fx:()=>{ gain('bbstrap'); }, txt:
 `Fiddler has the blue bundle open on a crate: armbands, twenty or so, blue silk with a silver thread run through it, Lady Simtal's colours. He's handing them out like a quartermaster who has been told the count and doesn't believe it.
 
-"Guards," he says. "Hers, for one night." He ties one round your arm himself, tight, with a sapper's knot. "On the Fete you don't ask anybody anything. That's what the masks are for."
+"Guards," he says. "Hers, for one night." He ties one round your arm himself, tight, with a sapper's knot. "On the Fete you don't ask anybody anything. That's what the masks are for."${SQUAD().includes('vell') ? ` He gets to Vell last, and ties the same knot, and looks at the hook. "Daru?" "Daru." "Good. Gadrobi guards with a Daru in them look *hired*."` : ''}
 
 "They give you a *halberd* at the gate," says Hedge, with enormous disgust. "Nobody expects you to use it. It's a hat you hold."
 
@@ -651,7 +661,7 @@ Over the lake, over the lanterns, over every mask in the city: the Moon's Spawn,
 
 "The road-menders!" Crumbs. "No. The *guards*. Kruppe sees the armbands; Kruppe sees the blue; Kruppe sees a halberd in the future of the armoured lady, and weeps for the halberd." He beams. "How *versatile* the Empire's children are. Road-menders one week and guards the next. Kruppe expects to see you next as dancing-masters."
 
-The small brown eyes go over the squad the way they did in the crossing, counting and pricing, and stop, for one blink, on Tuft.
+The small brown eyes go over the squad the way they did in the crossing, counting and pricing, and stop, for one blink, on Tuft.${SQUAD().includes('vell') ? ` Then, for exactly as long, on Vell. "And a rope man of Ocelot's, in Malazan company, in Simtal's blue," Kruppe murmurs. "Kruppe will tell no one. Kruppe will not need to."` : ''}
 
 "Kruppe will say only this, as a friend, to friends, who are guards, which are the best kind of friend to have at a party, being unable to leave early. There will be a guest tonight so tall that the doorways have been told about him in advance. Kruppe advises the guards not to *guard* him. He does not require it. He will not notice it. And the doorways will be so much happier."
 
@@ -722,7 +732,9 @@ ${S.f.c4_crokusNo ? `You could tell him you've seen him before, on the Gadrobi r
 
 He's walking the coin across his knuckles without knowing it, the way he did at the Phoenix: over, and under, and over. It stops, balanced on its edge, and stays there, which it shouldn't. He catches it and it's gone, and so is he, into the crowd.
 
-${SQUAD().includes('tuft') ? `Tuft is watching the place where the coin was. "That's not his," she says. "The coin. It's *somebody's*. I don't want to be standing near him when they come to collect."` : ''}`,
+${SQUAD().includes('tuft') ? `Tuft is watching the place where the coin was. "That's not his," she says. "The coin. It's *somebody's*. I don't want to be standing near him when they come to collect."` : ''}
+
+${SQUAD().includes('vell') ? `Vell watches him go. "Rag on the hook, so it won't ring on the tiles," he says. "Not Guild. Somebody taught him that, though." He sounds faintly, professionally offended.` : ''}`,
       ch:[{t:'"We didn\'t see you."', fx:()=>{ if (SQUAD().includes('kettle')) loy('kettle',1); }},
           {t:'Let him go.'}]}),
 
@@ -734,7 +746,9 @@ ${S.f.c4_rallick ? `He looks at you. He doesn't say *go home* this time. He said
 
 He's looking at Lady Simtal's gate. Not the way the big man across the street looks at it. The way a man looks at the place where a thing he has waited two years for is going to happen, and has stopped being able to want it, and is going to do it anyway.
 
-${SQUAD().includes('tuft') ? `Tuft has stopped a pace behind you, staring at him. "Sergeant," she breathes. "He's got it *on* him. Like the Adjunct. Not a sword. Dust. In his clothes, in his hair, on his hands." She takes a step back. "It's like standing next to a very small hole."` : `Kettle, a pace behind you, sniffs. "He smells like a forge that's gone out," she says. "Why does he smell like that?"`}`,
+${SQUAD().includes('tuft') ? `Tuft has stopped a pace behind you, staring at him. "Sergeant," she breathes. "He's got it *on* him. Like the Adjunct. Not a sword. Dust. In his clothes, in his hair, on his hands." She takes a step back. "It's like standing next to a very small hole."` : `Kettle, a pace behind you, sniffs. "He smells like a forge that's gone out," she says. "Why does he smell like that?"`}
+
+${SQUAD().includes('vell') ? `Vell has stepped behind you, and stays there. "Rallick Nom," he breathes, hardly moving his mouth. "Ocelot's clan, same as me. He's working for himself tonight, and Ocelot doesn't know at what." A swallow. "Don't stand in his doorway, Sergeant."` : ''}`,
       ch:[{t:'Leave him to his doorway.'}]}),
 
     c6_reveller:()=>({sp:'A reveller in a goat mask', fx:()=>{ S.f.c6_rev=1; }, txt: S.f.c6_rev ?
@@ -745,7 +759,9 @@ ${SQUAD().includes('tuft') ? `Tuft has stopped a pace behind you, staring at him
 
 ${SQUAD().includes('tuft') ? `Tuft has stopped dead. She isn't looking at the goat. She's looking east, over the roofs, toward the Gadrobi Hills${S.f.c5_sethBundle ? ` and the long road the Rhivi took with the bundle` : ''}, and her face has gone the colour it went at the Phoenix door.` : ''}
 
-${SQUAD().includes('ohl') ? `Ohl, behind you, very quietly: "Nothing comes back." He says it in his *technically* voice. "No. But I'd keep the space open anyway."` : ''}`,
+${SQUAD().includes('ohl') ? `Ohl, behind you, very quietly: "Nothing comes back." He says it in his *technically* voice. "No. But I'd keep the space open anyway."` : ''}
+
+${SQUAD().includes('ellis') ? `Ellis has turned her head at *comes back*. She turns it away again, east, toward the hills, and keeps it there.` : ''}`,
       ch:[{t:'Let him go.'}]}),
 
     c6_horses:()=>({sp:'Ellis', fx:()=>{ S.f.c6_horses=1; }, txt: S.f.c6_horses ?

@@ -311,7 +311,7 @@ Object.assign(B2CH6.dlg, {
 
 There is also everyone else.
 
-${b2Away() ? `You count the squad at the halt and get to ${NAME(b2Away())} and stop. Aren, by now. Or not. ` : ''}${b2Hurt() ? `${NAME(b2Hurt())} sits down carefully at the halt and gets up carefully, the Vathar wound bound tight under the kit, and says it is better. It is not better. ` : ''}${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. ` : ''}${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}`,
+${b2Away() ? `You count the squad at the halt and get to ${NAME(b2Away())} and stop. Aren, by now. Or not. ` : ''}${b2Hurt() ? `${NAME(b2Hurt())} sits down carefully at the halt and gets up carefully, the Vathar wound bound tight under the kit, and says it is better. It is not better. ` : ''}${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. ` : ''}${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}${b2In('redblade') ? ` Ramin stays on his feet at the halt, in his scale, very straight. "If I sit down in this on clay," he says, "I am a Red Blade who sat down on clay. Better to stand."` : ''}${b2In('warlock') ? ` Keth puts both palms flat on the first stone past the clay and keeps them there. "Water," he says. "The ground says so." Then, in the old woman's voice: "It also says everyone."` : ''}`,
     html:chainHTML('The hills above Sanimon · the end of the Nenoth'),
     ch:[b2DeckChoice(6), {t:'Look round.', go:()=>startExplore()}]}),
   /* the reading at the halt above Sanimon (47c) */
@@ -342,7 +342,7 @@ He looks at the ridges a while.
 
 "He hasn't come back," he says. "My Jaghut. Not since the forest." He moves his toes in the water. "I thought I'd miss him. I don't. I keep thinking..." He frowns, trying to get it right. "I keep thinking I'm about to find something, Sergeant. Something I was looking for. And I don't know what it is, and I'm not frightened of it." He looks at you. "That's mad. Isn't it."
 
-${b2In('marrow') ? `"Yes," says Marrow, from the dark, where she is sitting down. "Get your foot out of that, child, before it rots off you and you never find anything."` : 'You tell him it isn\'t. You are not sure.'}`,
+${b2In('marrow') ? `"Yes," says Marrow, from the dark, where she is sitting down. "Get your foot out of that, child, before it rots off you and you never find anything."` : b2In('warlock') ? `"Not mad," says Keth, from the dark, in the old woman's voice. "Empty. A house with the lodger gone out. It is quiet, after. You get used to the quiet." Then, in his own, apologetic: "She means it kindly. She was a lodger too, once."` : 'You tell him it isn\'t. You are not sure.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_lull6:()=>({sp:'Captain Lull', fx:()=>{ S.f.b2_lull6 = 1; }, txt:
@@ -413,14 +413,22 @@ She has ${b2Knots()}. "I count them at night," she says, under the hat, as if sh
 
 They are singing up there, the Khundryl. Not Dom's camp's songs. Something slower, under the wind, that comes and goes.
 
-${b2In('haddat') ? `Haddat listens a long time with her head on one side. "I know some of their words," she says. "Not many. Their grandmothers traded salt with mine." She listens. "They are not singing about Dom. They are singing about horses. And about the strongest." She frowns. "*Who is the strongest.* Over and over. A question."` : 'You listen until the wind takes it. It sounds like a question, asked over and over.'}`,
+${b2In('haddat') ? `Haddat listens a long time with her head on one side. "I know some of their words," she says. "Not many. Their grandmothers traded salt with mine." She listens. "They are not singing about Dom. They are singing about horses. And about the strongest." She frowns. "*Who is the strongest.* Over and over. A question."` : 'You listen until the wind takes it. It sounds like a question, asked over and over.'}${b2In('redblade') ? `
+
+Ramin has come up behind you with his helm under his arm. He listens. "Whatever they are singing," he says, "it is a song for the saddle. You can hear the walk of the horse in it." For a Red Blade on foot, he sounds almost homesick.` : ''}${b2In('warlock') ? `
+
+Keth is crouched on the rock with his palms flat on it. "The ground up there is full of hooves," he says. "All night. Never still." The old woman, out of him: "They have not made up their minds yet, Malazan. That is the part to be afraid of."` : ''}`,
     ch:[{t:'Back down.', go:()=>startExplore()}]}),
 
   b2_hhorses:()=>({sp:'The horse lines', txt:
-`The Wickan horse lines, the horses drinking at last from buckets passed hand to hand up from the seep, a mouthful at a time, the riders talking to them low. ${b2In('sathi') ? `Sathi is down the line with the bony grey from the Nenoth, and the grey has its head on her shoulder.` : ''} Further along, at the end of the line, the youngest of the Wickans, the remount boys and girls, the ones who hold the spare horses in a fight, are sitting together and not talking at all.`,
+`The Wickan horse lines, the horses drinking at last from buckets passed hand to hand up from the seep, a mouthful at a time, the riders talking to them low. ${b2In('sathi') ? `Sathi is down the line with the bony grey from the Nenoth, and the grey has its head on her shoulder.` : ''} Further along, at the end of the line, the youngest of the Wickans, the remount boys and girls, the ones who hold the spare horses in a fight, are sitting together and not talking at all.${b2In('redblade') ? `
+
+Ramin comes with you as far as the first horse and stops there, and watches them drink, and goes no closer. "Eleven, the company has," he says. "These are better." He does not say it bitterly. He says it as a Red Blade says a fact about horses.` : ''}${b2In('warlock') ? `
+
+Keth goes down the line ahead of you touching each neck in passing, and the Wickan horses let him, and one of the remount boys at the end looks up and says something in Wickan. Keth answers in Foolish Dog. It does not sound like a kind answer. The boy almost smiles.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
-  b2_hfire:()=>({sp:'A fire', txt:`A fire in a hollow of the rock, kept low, the squad's, with the stretch's fires further down the slope. Above everything, on every ridge, the other fires.`,
+  b2_hfire:()=>({sp:'A fire', txt:`A fire in a hollow of the rock, kept low, the squad's, with the stretch's fires further down the slope. Above everything, on every ridge, the other fires.${b2In('redblade') ? ' Ramin sits on the far side of it with his back to a rock and his scale on, and will sleep like that, if he sleeps.' : ''}${b2In('warlock') ? ' Keth is already lying on his back beside it with his palms flat on the ground, listening to the valley through the stone.' : ''}`,
     ch:[{t:'Drink, and sleep while there is night left.', tag:'1 water', req:()=>!S.f.b2_hillsRest && chainW() > 0, fx:()=>{ S.f.b2_hillsRest = 1; dgRest('The squad sleeps in the hollow of the rock with its boots on, under more fires than stars. Wounds close, mostly.'); }, go:()=>startExplore()},
         {t:'Leave it.', go:()=>startExplore()}]}),
 
@@ -456,7 +464,7 @@ They do not come for the Seventh. They go past the end of the Seventh's line at 
 
 In the middle of it, on the rise where the standard is, you see Coltaine. He pulls something off over his head on a chain, smoky, the size of a thumb, and throws it, hard, without looking, to the historian beside him, who catches it against his chest the way you catch something you did not want. The Fist does not watch him catch it. He is already riding down the slope.
 
-${b2In('sathi') ? 'Sathi is laughing. She cannot stop. Hackle is barking at the whole valley.' : ''}${b2In('haddat') ? ` Haddat is not laughing. She is looking north, past the Tregyn, at the water-carts.` : ''}`,
+${b2In('sathi') ? 'Sathi is laughing. She cannot stop. Hackle is barking at the whole valley.' : ''}${b2In('haddat') ? ` Haddat is not laughing. She is looking north, past the Tregyn, at the water-carts.` : ''}${b2In('redblade') ? ` Ramin stands with the short lance grounded, watching them go past, all those horses, and says something under his breath in Ehrlitan that might be a prayer and might be envy.` : ''}${b2In('warlock') ? ` Keth is down on his knees with both palms on the shaking ground, grinning like a boy, and then like an old woman.` : ''}`,
     ch:[{t:'Afterwards.', go:()=>{ startExplore('b2_field'); talk('b2_field_arrive'); }}]}),
 });
 
@@ -492,7 +500,7 @@ ${b2In('haddat') ? `"He asks which tribe we are," Haddat says. "I told him the S
           go:'b2_khund_paint', fail:'b2_khund_no'},
         {t:'Nod, and leave him to his pony.', go:()=>startExplore()}]}),
   b2_khund_paint:()=>({sp:'A Khundryl warrior', txt:
-`${by({haddat:`Haddat asks it in the grandmothers' words, badly, and he laughs at how badly, and then stops laughing, and looks at her properly, and takes a pot of ochre from his belt.`, sathi:`Sathi asks it in no words at all: she points at the paint, and at her own face, and grins with her teeth, and he grins back with his, and takes a pot of ochre from his belt.`, _:`{who} asks it with a finger, pointing from the paint to {who}'s own face, and he considers it, and then takes a pot of ochre from his belt.`})}
+`${by({haddat:`Haddat asks it in the grandmothers' words, badly, and he laughs at how badly, and then stops laughing, and looks at her properly, and takes a pot of ochre from his belt.`, sathi:`Sathi asks it in no words at all: she points at the paint, and at her own face, and grins with her teeth, and he grins back with his, and takes a pot of ochre from his belt.`, redblade:`Ramin asks it the Ehrlitan way, with a bow from the waist, very correct, and the Khundryl laughs at the bow, and then, because it was a good bow, takes a pot of ochre from his belt.`, warlock:`Keth asks it with ochre already across his own eyes and the rattle in his hand, and the Khundryl stops laughing, and looks at the ochre, and nods to him as to a colleague, and takes a pot of it from his belt.`, _:`{who} asks it with a finger, pointing from the paint to {who}'s own face, and he considers it, and then takes a pot of ochre from his belt.`})}
 
 Three strokes, with two fingers, from the brow down across the eyes, ochre and then ash, and a word with each one. ${b2In('haddat') ? `"He says the one who wears it has already been mourned," Haddat says, very quietly. "So there is nothing left to be afraid of."` : 'You do not need the words. You can feel what they mean.'}
 
@@ -522,7 +530,7 @@ The war chief draws his sword. Every Wickan bow on the field comes up. He does n
 
 Then they turn their horses and ride away into the dusk, still shouting it, and it goes on, fainter and fainter, from the hills, for a long time after you can no longer see them.
 
-${b2In('sathi') ? 'Sathi is crying. She is also laughing. Wickan manners. Hackle howls with the hills.' : 'Somewhere among the Wickans, someone is laughing. Wickan manners.'}`,
+${b2In('sathi') ? 'Sathi is crying. She is also laughing. Wickan manners. Hackle howls with the hills.' : 'Somewhere among the Wickans, someone is laughing. Wickan manners.'}${b2In('warlock') ? ` Keth laughs too, a breath after the others, and then the old woman laughs in him, louder, and longer, and the Wickans near him turn round to see who it is.` : ''}${b2In('redblade') ? ` Ramin has stood to attention through the whole of it, helm on, lance upright. "Somebody on this field should," he says afterwards, "for a thing like that."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_ours11:()=>({sp:b2Ours6() || 'The squad\'s people', fx:()=>{ S.f.b2_ours11 = 1; }, txt: S.f.b2_key === 'daughters' ?
@@ -536,7 +544,7 @@ ${b2In('sathi') ? 'Sathi is crying. She is also laughing. Wickan manners. Hackle
   b2_fdead:()=>({sp:'The dead', txt:
 `Can'eld, mostly, here, in their wrapped faces, where the Khundryl went through them. Some Tregyn. A Bhilard boy no older than the jar-boys in Hissar, with a horse-bow still in his hand. The Khundryl have been along already and taken what they wanted, which is the horses and the good knives and, from the chiefs, something you do not look at long enough to see.
 
-${b2In('marrow') ? 'Marrow walks among them and does not reach for the warren. There is nothing here for it.' : 'There is nothing here for anyone.'}`,
+${b2In('marrow') ? 'Marrow walks among them and does not reach for the warren. There is nothing here for it.' : 'There is nothing here for anyone.'}${b2In('warlock') ? ` Keth crouches by the Bhilard boy and puts one palm on the ground beside him, and shakes the rattle once, very softly. "He was somebody's," he says. "The ground should know whose. It is hungry. It is not stupid."` : ''}`,
     ch:[{t:'Leave them.', go:()=>startExplore()}]}),
 
   b2_ftree:()=>({sp:'The rise', txt:`A dead tree on the rise where the Fist's standard was this morning. From under it you can see the whole valley: the Seventh in its ranks, small, the dead, the Khundryl riding to and fro across Dom's camps, and north, a long way off, the dust of Dom's legions going away in good order. ${S.f.b2_ilhar ? '' : b2In('haddat') ? 'And north of the field, the water-carts, and the Khundryl among them.' : ''}`,
@@ -669,7 +677,11 @@ Somewhere in the second night the guides say *Tathimon*, and there are a few wal
 
 The column shrinks. Not all at once: a cart that loses a wheel and is left, a grandmother who sits down, a child who wanders to the edge in the dark. Bult comes down the line on the second morning on a horse that is mostly bones and says the Seventh is five thousand who can still hold a weapon, and does not say how many it was.
 
-${S.f.b2_retreatLost ? `The stretch loses ${numw(S.f.b2_retreatLost)} in the forty hours. ${b2In('haddat') ? 'Haddat has their names. She says them walking, because nobody stops.' : 'You have their names. You say them walking.'}` : 'Nobody in the stretch is lost, because there is nobody in the stretch to lose.'}${S.f.b2_ilhar === 'came' ? ` Ilhar walks at the front of it with his mother's skins and finds water where nobody else would look: a cistern under a stone, a seep at the root of a dead tree. Twice. The stretch has started to call him the water-seller.` : ''}`,
+${S.f.b2_retreatLost ? `The stretch loses ${numw(S.f.b2_retreatLost)} in the forty hours. ${b2In('haddat') ? 'Haddat has their names. She says them walking, because nobody stops.' : 'You have their names. You say them walking.'}` : 'Nobody in the stretch is lost, because there is nobody in the stretch to lose.'}${S.f.b2_ilhar === 'came' ? ` Ilhar walks at the front of it with his mother's skins and finds water where nobody else would look: a cistern under a stone, a seep at the root of a dead tree. Twice. The stretch has started to call him the water-seller.` : ''}${b2In('redblade') ? `
+
+Ramin walks the forty hours in his scale and never takes it off, and in the second night, when a knot of Dom's riders comes in on the stretch's flank, he is between them and the carts before anyone has called him, on foot, with the short lance, and they go round him. "A Red Blade holds a street," he says after, breathing hard. "This is a street. It is only a long one."` : ''}${b2In('warlock') ? `
+
+Keth puts his palms to the ground at every halt, and tells you which side Dom will come from next. He is right four times in five. The fifth time, he says, the grandmother was talking.` : ''}`,
     html:chainHTML('The running retreat · forty hours'),
     ch:[{t:'Noon of the second day.', go:()=>{ startExplore('b2_dojal'); talk('b2_dojal_arrive'); }}]}),
 
@@ -727,7 +739,7 @@ It is noon. ${chainW() > 0 ? `There are ${numw(chainW())} skin${chainW() === 1 ?
 
 Behind you the stretch is already at the water. No one gave them leave. They did not need it.
 
-${S.f.b2_key === 'daughters' ? `${B2.younger} gets down off her sister's back and walks to the edge of the pool on her own and fills Ressan's jar, very carefully, and stoppers it. Then she drinks out of her hands. ` : ''}${S.f.b2_ilhar === 'came' ? `Ilhar fills his mother's skins at the far edge of the pool, where the water comes in clean, and carries them back to the stretch, and gives them to Haddat to give out. ` : ''}The squad fills its skins last, and sits in the shade of the tamarisks with its boots in the mud, and for a while that is all it does.`,
+${S.f.b2_key === 'daughters' ? `${B2.younger} gets down off her sister's back and walks to the edge of the pool on her own and fills Ressan's jar, very carefully, and stoppers it. Then she drinks out of her hands. ` : ''}${S.f.b2_ilhar === 'came' ? `Ilhar fills his mother's skins at the far edge of the pool, where the water comes in clean, and carries them back to the stretch, and gives them to Haddat to give out. ` : ''}The squad fills its skins last, and sits in the shade of the tamarisks with its boots in the mud, and for a while that is all it does.${b2In('redblade') ? ` Ramin unbuckles his helm for the first time since the hills and fills it at the pool and drinks out of it, and then, after some thought, pours the rest over his own head.` : ''}${b2In('warlock') ? ` Keth lies on his front at the pool's edge with his palms in the mud. "It is glad," he says, into it. "The ground. It has not been drunk from by so many for a very long time."` : ''}`,
     html:chainHTML('Dojal Spring · the running retreat'),
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -844,7 +856,11 @@ He sees you. He looks past you, at your stretch, at its carts and its fires in t
 
 "Walk them," he says.
 
-That is all. He goes back to looking at the fire.`,
+That is all. He goes back to looking at the fire.${b2In('redblade') ? `
+
+Behind you Ramin has come to attention so hard his scale rings. He holds it until you have walked away, and some way after.` : ''}${b2In('warlock') ? `
+
+Behind you Keth ducks his head to the Fist and keeps it ducked, and for once the old woman in him has nothing at all to add.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   b2_duiker11:()=>({sp:'Duiker', fx:()=>{ S.f.b2_duiker11 = 1; }, txt:
@@ -892,7 +908,7 @@ ${S.f.b2_key === 'daughters' ? `${B2.younger} is asleep with a Kherahn woman's h
 
   b2_gfire:()=>({sp:'The elders\' fire', txt:`The elders' fire, and the old Kherahn round it on their blankets, and the chests beside it${S.f.b2_silverDone ? ', paid' : ''}. ${S.f.b2_silverDone ? 'The Fist is not there now. Only the silver and the old people and the fire.' : 'The Fist stands back from the fire, saying nothing, while they think.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_ghorses:()=>({sp:'The horse lines', txt:`The Wickan horse lines in the long grass. The riders have been taking the gold out of their braids all evening, rings and wire and little bells, and walking to the elders' fire with it in their fists, and coming back with their hair loose. ${S.f.b2_silverDone ? 'Now they are saddling: some to ride west with the children, and most of them, the older ones, to ride east with the Fist.' : ''}${b2In('sathi') ? ` Sathi has taken the Weasel teeth from her throat${S.f.b2_sathiTeeth ? ', and her own are filed now and she does not need them,' : ''} and is turning them over in her hand, deciding.` : ''}`,
+  b2_ghorses:()=>({sp:'The horse lines', txt:`The Wickan horse lines in the long grass. The riders have been taking the gold out of their braids all evening, rings and wire and little bells, and walking to the elders' fire with it in their fists, and coming back with their hair loose. ${S.f.b2_silverDone ? 'Now they are saddling: some to ride west with the children, and most of them, the older ones, to ride east with the Fist.' : ''}${b2In('sathi') ? ` Sathi has taken the Weasel teeth from her throat${S.f.b2_sathiTeeth ? ', and her own are filed now and she does not need them,' : ''} and is turning them over in her hand, deciding.` : ''}${b2In('warlock') ? ` Keth's hair is already loose. He took the twist of copper wire out of his braid, which is all the gold a dog-boy has, and walked it to the elders' fire before anyone asked, and the old woman in him has been complaining about it ever since. "It was mine," she says. "It was in my hair first." "You are dead," Keth tells her. "You do not have hair."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_gcart:()=>({sp:'The squad\'s cart', txt:`The squad's cart in the long grass, the stretch round it, eating Kherahn bread. ${S.f.b2_silverDone ? 'The squad is not eating. The squad is waiting to be asked.' : ''}`,
     html:chainHTML('The Geleen Plain'),
@@ -1089,7 +1105,7 @@ The column is a long dark river in the grass going west under the moon, a league
 
 ${b2Rearguard().length ? `Somewhere in that line are ${b2Rearguard().length === 1 ? NAME(b2Rearguard()[0]) : b2Rearguard().slice(0, -1).map(id => NAME(id)).join(', ') + ' and ' + NAME(b2Rearguard().slice(-1)[0])}${b2Rearguard().includes('sathi') ? ', and a dog' : ''}. You cannot see them. You look anyway, until the grass takes the line, and then you look at the place where it was.` : 'Nobody you know is in that line. Everybody you know is in that line. Both are true, on the Chain.'}
 
-${b2In('sathi') ? `Sathi rides at the column's flank with the Wickan children, very straight, with Hackle at her heels, and her face is wet, and she is not laughing.` : ''}`,
+${b2In('sathi') ? `Sathi rides at the column's flank with the Wickan children, very straight, with Hackle at her heels, and her face is wet, and she is not laughing.` : ''}${b2In('redblade') ? ` Ramin walks beside the squad's cart with his helm on. Once the Red Blades' file goes past along the column's flank, the eleven on horses and the rest on foot, and the commander lifts a hand to him, and Ramin lifts his. "Lent," he says, to you, "and still lent. Good."` : ''}${b2In('warlock') ? ` Keth walks at the back of the squad, facing east as often as west, with his palms open at his sides. "They are still standing," he says, when he sees you looking. And later, in the old woman's voice, quieter: "Still."` : ''}`,
     ch:[{t:'Count them.', go:'b2_c6_end'}]}),
 
   b2_c6_end:()=>({sp:'The Geleen Plain · night', scene:'b2_geleen_moon', txt:
