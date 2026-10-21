@@ -28,7 +28,7 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
      - The squad is never in a scene canon gives to named people. That covers the marines' squads (Strings's 4th, Gesler's 5th, Borduke's 6th, Balm's Ninth), Cuttle's blast, Grub's walk-on, the first crossing of the ford, the barrow trap, Gamet's rescue, the Wall's withdrawal, the rite, the ghost ride, the duel, the sandstorm, and anything inside the Whirlwind's camp.
      - The squad never meets Kalam, Quick Ben, Karsa, Leoman, Corabb, Sha'ik, Heboric, L'oric, Pearl, Lostara or the Liosan.
      - The Adjunct is seen from a distance and never knows who Sha'ik was (David's ruling).
-     - Never print a Burn's Sleep year, the never-use names (§(a) rule 13), "Bonehunters", "3rd Company" or "Dancer's Tavern".
+     - Never print a Burn's Sleep year, the never-use names (§(a) rule 13), "Bonehunters", "3rd Company" or "Dancer's Tavern". **Rule 13 includes Topper and the Talon:** write "a Claw out of a warren" and "Dom's killers" (found by Chapter 2's writer).
      - Grub is a small boy and nothing more.
      - Temul's youths are "some forty".
      - Never say why the Khundryl's tears are black.
