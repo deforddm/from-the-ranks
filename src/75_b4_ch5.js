@@ -231,7 +231,7 @@ const B4CH5 = {
         text:()=>`They fall back round the seep, the way they came, and the squad goes after them, round the wet black lip of it where the old sea bed is soft, to the far side where their skins are stacked and their water-master is standing over them.\n\nHe is older than the rest, with a grey veil and a staff of black sea-wood, and he has been watering riders at this hole for longer than the Whirlwind has had a name. He does not run. He is not going to leave the water to anybody.${b45Say({haddat:`\n\nHaddat sees the staff, and the marks cut in it, and says something under her breath in Hissari that might be a prayer and might be the water-sellers' word for a thief.`, orvas:`\n\nOrvas grounds his lance in the soft bed. "That is the one who keeps the water," he says. "In the Odhan you would let him live. Here I do not know."`, _:''})}`,
         map:["##....##","#..t...#","...ww...","..wwww..","...ww...","#......#","#..t...#","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c5_waterman',3,1],['b4_c5_rider',1,4],['b4_c5_rider',6,4],['b4_c5_riderbow',4,0]]} },
+        foes:[['b4_c5_waterman',2,0],['b4_c5_rider',1,4],['b4_c5_rider',6,4],['b4_c5_riderbow',4,0]]} },
     /* 'column': the column's rearguard in the dust, riders out of the sand at the last wagons, with the company. The second ground: the
        last wagons themselves, where the riders have got among the water barrels. */
     b4_c5_rearguard:{title:'The rearguard', style:'b4_c5_seabed', open:true, warrenText:'The old sea bed · the warren is full of sand', warren:{meanas:1, denul:1}, music:'battle',
@@ -258,7 +258,7 @@ const B4CH5 = {
         text:()=>`They go back across the canal by the one bridge left, the way they came, and the squad goes after them over the broken stones with the dry canal yawning on either side, to a little square on the far bank where the old city kept something once, a market or a temple, with three walls left.\n\nThe plunder is there in a heap: the 10th's boots, the 10th's water skins, a pair of Malazan short swords. Their leader is a big man in a Whirlwind officer's sash with the badges cut off it, and he has the look of somebody who walked out of Sha'ik's army in the night and is not going to be taken back to anybody's.${b45Say({haddat:`\n\n"He left her," Haddat says. "He left the goddess. And this is what he did with it." She cannot decide what she feels about that, and does not try.`, marrow:`\n\n"Deserters," Marrow says. "Every army grows them, child. Ours too." She ties a knot in her string, hard.`, _:''})}`,
         map:["##....##","#..t...#","#......#","..t..t..","........","oooo-ooo","oooo-ooo","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c5_desleader',3,1],['b4_c5_deserter',1,3],['b4_c5_deserter',6,3],['b4_c5_desbow',4,0]]} } },
+        foes:[['b4_c5_desleader',2,0],['b4_c5_deserter',1,3],['b4_c5_deserter',6,3],['b4_c5_desbow',4,0]]} } },
 
   foes:{
     /* the Whirlwind's riders: desert warriors of the deep tribes, veiled against the sand, out of the Wall on its own side */

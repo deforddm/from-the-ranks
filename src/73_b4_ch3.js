@@ -233,7 +233,7 @@ const B4CH3 = {
     b4_c3_poles:{title:'The poles', style:'b4_c3_ford', dark:true, open:true, pitTxt:'the river', warrenText:'Night on the far bank · the warren is cold here, and listening', warren:{meanas:1, denul:1}, music:'battle',
       map:["..t...t.","........",".,..t...","........","...,....","........",",,,,,,,,","--------","---oo---","oooooooo"],
       party:[[3,5],[4,5],[2,6],[5,6],[3,6],[4,6]],
-      foes:[['b4_c3_warrior',2,1],['b4_c3_warrior',5,1],['b4_c3_spear',3,2],['b4_c3_archer',6,0]], xp:160, after:'b4_c3_poles_after',
+      foes:[['b4_c3_warrior',2,1],['b4_c3_warrior',5,1],['b4_c3_spear',3,2],['b4_c3_archer',5,0]], xp:160, after:'b4_c3_poles_after',
       waves:[{round:2, foes:[['b4_c3_warrior',0,3]], text:'Another comes out of the reeds at the side, painted for it, with a spear and a long grievance.'}, {round:3, foes:[['b4_c3_warrior',7,3]], text:'And one more, from the poles, the youngest of them, too angry to wait his turn.'}],
       preText:()=>`Tangle's burner goes up among the poles, and the carcasses on them are suddenly lit from below, and so are the men under them, who had been waiting very still.`,
       stage2:{title:'The headman\'s poles', xp:80,

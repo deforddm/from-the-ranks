@@ -51241,7 +51241,7 @@ const B4CH3 = {
     b4_c3_poles:{title:'The poles', style:'b4_c3_ford', dark:true, open:true, pitTxt:'the river', warrenText:'Night on the far bank · the warren is cold here, and listening', warren:{meanas:1, denul:1}, music:'battle',
       map:["..t...t.","........",".,..t...","........","...,....","........",",,,,,,,,","--------","---oo---","oooooooo"],
       party:[[3,5],[4,5],[2,6],[5,6],[3,6],[4,6]],
-      foes:[['b4_c3_warrior',2,1],['b4_c3_warrior',5,1],['b4_c3_spear',3,2],['b4_c3_archer',6,0]], xp:160, after:'b4_c3_poles_after',
+      foes:[['b4_c3_warrior',2,1],['b4_c3_warrior',5,1],['b4_c3_spear',3,2],['b4_c3_archer',5,0]], xp:160, after:'b4_c3_poles_after',
       waves:[{round:2, foes:[['b4_c3_warrior',0,3]], text:'Another comes out of the reeds at the side, painted for it, with a spear and a long grievance.'}, {round:3, foes:[['b4_c3_warrior',7,3]], text:'And one more, from the poles, the youngest of them, too angry to wait his turn.'}],
       preText:()=>`Tangle's burner goes up among the poles, and the carcasses on them are suddenly lit from below, and so are the men under them, who had been waiting very still.`,
       stage2:{title:'The headman\'s poles', xp:80,
@@ -52363,7 +52363,7 @@ const B4CH4 = {
       objective:{type:'survive', rounds:4, text:'Hold the 9th\'s wagon line among the burning wagons for four rounds, until the riders have done what they came for and go.'},
       map:["..#..#..","........",".t....t.","........","#..##..#","........","..t..t..","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c4_raidlead',3,1],['b4_c4_raider',1,2],['b4_c4_raider',6,2],['b4_c4_lamper',4,0],['b4_c4_raider',5,3]], xp:200, after:'b4_c4_wagons_after',
+      foes:[['b4_c4_raidlead',3,1],['b4_c4_raider',0,1],['b4_c4_raider',5,1],['b4_c4_lamper',4,0],['b4_c4_raider',5,3]], xp:200, after:'b4_c4_wagons_after',
       waves:[{round:2, foes:[['b4_c4_lamper',7,1]], text:'Another rider comes in along the wagons at a gallop with a lamp swinging on its cord, lit, and lets it go over the squad\'s heads into the canvas behind.'},
         {round:3, foes:[['b4_c4_raider',0,3]], text:'One comes over a burning wagon\'s tongue on foot, his horse gone out from under him, still coming.'}],
       stage2:{title:'The horse lines', xp:100,
@@ -53531,7 +53531,7 @@ const B4CH5 = {
         text:()=>`They fall back round the seep, the way they came, and the squad goes after them, round the wet black lip of it where the old sea bed is soft, to the far side where their skins are stacked and their water-master is standing over them.\n\nHe is older than the rest, with a grey veil and a staff of black sea-wood, and he has been watering riders at this hole for longer than the Whirlwind has had a name. He does not run. He is not going to leave the water to anybody.${b45Say({haddat:`\n\nHaddat sees the staff, and the marks cut in it, and says something under her breath in Hissari that might be a prayer and might be the water-sellers' word for a thief.`, orvas:`\n\nOrvas grounds his lance in the soft bed. "That is the one who keeps the water," he says. "In the Odhan you would let him live. Here I do not know."`, _:''})}`,
         map:["##....##","#..t...#","...ww...","..wwww..","...ww...","#......#","#..t...#","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c5_waterman',3,1],['b4_c5_rider',1,4],['b4_c5_rider',6,4],['b4_c5_riderbow',4,0]]} },
+        foes:[['b4_c5_waterman',2,0],['b4_c5_rider',1,4],['b4_c5_rider',6,4],['b4_c5_riderbow',4,0]]} },
     /* 'column': the column's rearguard in the dust, riders out of the sand at the last wagons, with the company. The second ground: the
        last wagons themselves, where the riders have got among the water barrels. */
     b4_c5_rearguard:{title:'The rearguard', style:'b4_c5_seabed', open:true, warrenText:'The old sea bed · the warren is full of sand', warren:{meanas:1, denul:1}, music:'battle',
@@ -53558,7 +53558,7 @@ const B4CH5 = {
         text:()=>`They go back across the canal by the one bridge left, the way they came, and the squad goes after them over the broken stones with the dry canal yawning on either side, to a little square on the far bank where the old city kept something once, a market or a temple, with three walls left.\n\nThe plunder is there in a heap: the 10th's boots, the 10th's water skins, a pair of Malazan short swords. Their leader is a big man in a Whirlwind officer's sash with the badges cut off it, and he has the look of somebody who walked out of Sha'ik's army in the night and is not going to be taken back to anybody's.${b45Say({haddat:`\n\n"He left her," Haddat says. "He left the goddess. And this is what he did with it." She cannot decide what she feels about that, and does not try.`, marrow:`\n\n"Deserters," Marrow says. "Every army grows them, child. Ours too." She ties a knot in her string, hard.`, _:''})}`,
         map:["##....##","#..t...#","#......#","..t..t..","........","oooo-ooo","oooo-ooo","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c5_desleader',3,1],['b4_c5_deserter',1,3],['b4_c5_deserter',6,3],['b4_c5_desbow',4,0]]} } },
+        foes:[['b4_c5_desleader',2,0],['b4_c5_deserter',1,3],['b4_c5_deserter',6,3],['b4_c5_desbow',4,0]]} } },
 
   foes:{
     /* the Whirlwind's riders: desert warriors of the deep tribes, veiled against the sand, out of the Wall on its own side */
@@ -54715,21 +54715,21 @@ const B4CH6 = {
         text:()=>`They go back up the spur the way they came, and the squad goes after them, hand over hand on the hot rock, to a hollow at the top where the wind has scooped out a bowl and somebody has built a wall of stones round it, waist high, very neatly, the way the Malazan drill-books say.\n\nThere is a sergeant in it with a whistle on a cord, and the badges cut off his sleeves, and Malazan kit on him from the helm down. He looks at the Third coming over his wall and does not look surprised. He has been watching the blocking legion go round all afternoon, and knew somebody would come.${b46Say({haddat:`\n\nHaddat stops on the wall with her shield up. "Malazan," she says, very quietly. "He is wearing our helm."`, darrut:`\n\nDarrut sets his big shield on the wall. "Aren Guard drill," he says. "That wall. That's how we built them." He looks as if he would rather not know it.`, _:''})}`,
         map:["#..##..#","..t..t..","#......#","...#....","........",".t....t.","........","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c6_dogsgt',3,1],['b4_c6_dogslayer',1,2],['b4_c6_dogslayer',6,2],['b4_c6_dogxbow',4,0]]} },
+        foes:[['b4_c6_dogsgt',3,1],['b4_c6_dogslayer',1,2],['b4_c6_dogslayer',6,2],['b4_c6_dogxbow',5,0]]} },
     /* dusk: Dogslayer skirmishers probe the flank where the picket runs out, with the company. The second ground: the end of the screen,
        where the stakes stop and the rock starts, and their second try at it */
     b4_c6_dusk:{title:'The probe at dusk', style:'b4_c6_lines', open:true, warrenText:'Before Pan\'arak · dust in the warren, red at dusk', warren:{meanas:1, denul:1}, music:'battle',
       company:{at:[[1, 8], [6, 8], [0, 9]], n:1},
       map:["..,...,.",".,..t...","...,....","..t...t.","........",".,....,.","tt.tt.tt","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c6_dogscout',1,1],['b4_c6_dogscout',6,1],['b4_c6_dogxbow',3,0],['b4_c6_dogslayer',4,2],['b4_c6_dogscout',2,3]], xp:160, after:'b4_c6_dusk_after',
+      foes:[['b4_c6_dogscout',1,1],['b4_c6_dogscout',6,1],['b4_c6_dogxbow',3,0],['b4_c6_dogslayer',4,2],['b4_c6_dogscout',1,2]], xp:160, after:'b4_c6_dusk_after',
       waves:[{round:3, foes:[['b4_c6_dogscout',7,2]], text:'Another comes in low out of the scrub on the flank, where the screen ends, the way they were told the screen would end.'}],
       preText:()=>`Tangle's sharpers go off in the scrub in front of the screen, and the skirmishers coming through it come through it in a hurry.`,
       stage2:{title:'The end of the screen', xp:80,
         text:()=>`They go back into the dust, and come again, along the line this time, to the very end of the screen where the stakes stop and the broken rock starts, because that is where a picket is thinnest and every skirmisher alive knows it.\n\nThe squad gets there first, just. Their sergeant is with them now: a heavy man in a Malazan helm with a whistle in his teeth, blowing it short and sharp, and every time he blows it they move as one.${b46Say({tebbet:`\n\nTebbet has an arrow up and the dust between him and the whistle. "I can't see him," he says. "I can hear him fine."`, hessa:`\n\nHessa plants her spear at the last stake and her shield in front of it. "A door," she says. "I have stood a door before."`, _:''})}`,
         map:["#..,..##","#.t.....","...#..t.","........","..,...,.","t.tt.tt.","........","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c6_dogsgt',3,1],['b4_c6_dogscout',1,2],['b4_c6_dogscout',6,2],['b4_c6_dogxbow',4,0]]} },
+        foes:[['b4_c6_dogsgt',3,1],['b4_c6_dogscout',1,2],['b4_c6_dogscout',5,1],['b4_c6_dogxbow',4,0]]} },
     /* 'hold': a Dogslayer patrol tests the picket after midnight, with the company (and the Seti archer, on b4_setiSaved). The second
        ground: the gap in the screen, where they come through */
     b4_c6_patrol:{title:'The patrol after midnight', style:'b4_c6_lines', dark:true, open:true, warrenText:'The picket at night · the warren is quiet, and listening', warren:{meanas:1, denul:1}, music:'battle',
@@ -55900,7 +55900,7 @@ const B4CH7 = {
         text:()=>`They go back along the scrub the way they came, and the squad goes after them, down into a dry gully off the end of the line where they left their horses with a boy to hold them.\n\nThe boy has run. The horses have not. The riders who are left have turned at the bottom with their backs to the horse lines and their veils up, and their leader is shouting at them in a tongue of the deep desert, and pointing at the Malazan lines, and at the trenches, and at the sky over the oasis, which nobody has looked at for an hour.${b47Say({tebbet:`\n\nTebbet has an arrow on the string and the dust between him and everything. "In this," he says, "far off is ten paces."`, darrut:`\n\nDarrut sets his big shield in the gully's mouth. "They wanted to see the block," he says. "Let's show it to them."`, _:''})}`,
         map:["##....##","#..t...#","........","..t..t..","........",".,......","........","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c7_outchief',3,1],['b4_c7_outrider',1,3],['b4_c7_outrider',6,3],['b4_c7_outbow',4,0]]} },
+        foes:[['b4_c7_outchief',2,0],['b4_c7_outrider',1,3],['b4_c7_outrider',6,3],['b4_c7_outbow',4,0]]} },
     /* before dawn, the end of the line: a band of desert warriors scattering out of Raraku, running east past the last of the pickets.
        Mortal: whoever falls here stays down. On Ch6's forward road (b4_saw 'close') it begins a round sooner and harder (the battleDef wrap
        above). The second ground: the end of the line itself, where the last of them make a stand rather than be caught in the open. */
@@ -55908,7 +55908,7 @@ const B4CH7 = {
       company:{at:[[1, 8], [6, 8]], n:1},
       map:["........",".,....,.","...t....","........","..,...t.","........","t.......","tt......","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0],['b4_c7_fleer',3,2]], xp:180, after:'b4_c7_break_after',
+      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0],['b4_c7_fleer',3,1]], xp:180, after:'b4_c7_break_after',
       waves:[{round:3, foes:[['b4_c7_fleer',7,2]], text:'More come out of the dark behind them at a run, two and three together, not stopping for anything, and the ones who see the Third go at it rather than round it.'}],
       preText:()=>`Tangle's sharpers go off in the dark across their path, and the band running for the open desert is two bands, one of them on the ground.`,
       stage2:{title:'Past the last picket', xp:90,
@@ -55921,14 +55921,14 @@ const B4CH7 = {
     b4_c7_spur:{title:'The coral spur', style:'b4_c7_isle', dust:1, open:true, pitTxt:'the water', warrenText:'Raraku · the warren is waking, and wet', warren:{meanas:1, denul:1}, music:'battle',
       map:["oo....oo","o..t...o","........","..t..t..","o......o","oo....oo","o......o","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c7_stragchief',3,1],['b4_c7_straggler',2,2],['b4_c7_straggler',5,2],['b4_c7_stragbow',4,0],['b4_c7_straggler',3,4]], xp:170, after:'b4_c7_spur_after',
+      foes:[['b4_c7_stragchief',2,0],['b4_c7_straggler',2,2],['b4_c7_straggler',5,2],['b4_c7_stragbow',4,0],['b4_c7_straggler',3,4]], xp:170, after:'b4_c7_spur_after',
       waves:[{round:2, foes:[['b4_c7_straggler',6,3]], text:'Another comes up out of the water at the spur\'s side, soaked to the chest, with a knife in his teeth, because there was nowhere else to come up.'}],
       preText:()=>`Tangle's burner goes up on the spur in front of them, on wet coral, which burns for no time at all and long enough, and the men on the spur come through it in ones.`,
       stage2:{title:'The island\'s foot', xp:85,
         text:()=>`They fall back along the spur to where it joins the island, and the squad goes after them with the water at its heels, over coral that was dry a hundred breaths ago and is not now.\n\nAt the island's foot the last of them have turned. The water is round their ankles and climbing. Behind them is the coral and the high ground and the rest of the 9th, already up it. Behind the Third is the sea. Every man on that spur means to live through the next hour, and there is not room on it for all of them to.${b47Say({hessa:`\n\nHessa plants her spear in the coral. "D'rek does not mind water," she says. "Neither do I. Today."`, tangle:`\n\nTangle has the satchel over his head with both hands. "Not wet," he says. "Not now. Not after all this."`, _:''})}`,
         map:["##....##","#..t...#","........","..t..t..","........","o......o","oo....oo","o......o","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c7_stragchief',3,1],['b4_c7_straggler',1,3],['b4_c7_straggler',6,3],['b4_c7_stragbow',4,0]]} } },
+        foes:[['b4_c7_stragchief',2,0],['b4_c7_straggler',1,3],['b4_c7_straggler',6,3],['b4_c7_stragbow',4,0]]} } },
 
   foes:{
     /* the Whirlwind's outriders: desert warriors who ride for Sha'ik, out round the end of the block at dusk to look at it */

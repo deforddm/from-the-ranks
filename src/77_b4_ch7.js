@@ -246,7 +246,7 @@ const B4CH7 = {
         text:()=>`They go back along the scrub the way they came, and the squad goes after them, down into a dry gully off the end of the line where they left their horses with a boy to hold them.\n\nThe boy has run. The horses have not. The riders who are left have turned at the bottom with their backs to the horse lines and their veils up, and their leader is shouting at them in a tongue of the deep desert, and pointing at the Malazan lines, and at the trenches, and at the sky over the oasis, which nobody has looked at for an hour.${b47Say({tebbet:`\n\nTebbet has an arrow on the string and the dust between him and everything. "In this," he says, "far off is ten paces."`, darrut:`\n\nDarrut sets his big shield in the gully's mouth. "They wanted to see the block," he says. "Let's show it to them."`, _:''})}`,
         map:["##....##","#..t...#","........","..t..t..","........",".,......","........","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c7_outchief',3,1],['b4_c7_outrider',1,3],['b4_c7_outrider',6,3],['b4_c7_outbow',4,0]]} },
+        foes:[['b4_c7_outchief',2,0],['b4_c7_outrider',1,3],['b4_c7_outrider',6,3],['b4_c7_outbow',4,0]]} },
     /* before dawn, the end of the line: a band of desert warriors scattering out of Raraku, running east past the last of the pickets.
        Mortal: whoever falls here stays down. On Ch6's forward road (b4_saw 'close') it begins a round sooner and harder (the battleDef wrap
        above). The second ground: the end of the line itself, where the last of them make a stand rather than be caught in the open. */
@@ -254,7 +254,7 @@ const B4CH7 = {
       company:{at:[[1, 8], [6, 8]], n:1},
       map:["........",".,....,.","...t....","........","..,...t.","........","t.......","tt......","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0],['b4_c7_fleer',3,2]], xp:180, after:'b4_c7_break_after',
+      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0],['b4_c7_fleer',3,1]], xp:180, after:'b4_c7_break_after',
       waves:[{round:3, foes:[['b4_c7_fleer',7,2]], text:'More come out of the dark behind them at a run, two and three together, not stopping for anything, and the ones who see the Third go at it rather than round it.'}],
       preText:()=>`Tangle's sharpers go off in the dark across their path, and the band running for the open desert is two bands, one of them on the ground.`,
       stage2:{title:'Past the last picket', xp:90,
@@ -267,14 +267,14 @@ const B4CH7 = {
     b4_c7_spur:{title:'The coral spur', style:'b4_c7_isle', dust:1, open:true, pitTxt:'the water', warrenText:'Raraku · the warren is waking, and wet', warren:{meanas:1, denul:1}, music:'battle',
       map:["oo....oo","o..t...o","........","..t..t..","o......o","oo....oo","o......o","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c7_stragchief',3,1],['b4_c7_straggler',2,2],['b4_c7_straggler',5,2],['b4_c7_stragbow',4,0],['b4_c7_straggler',3,4]], xp:170, after:'b4_c7_spur_after',
+      foes:[['b4_c7_stragchief',2,0],['b4_c7_straggler',2,2],['b4_c7_straggler',5,2],['b4_c7_stragbow',4,0],['b4_c7_straggler',3,4]], xp:170, after:'b4_c7_spur_after',
       waves:[{round:2, foes:[['b4_c7_straggler',6,3]], text:'Another comes up out of the water at the spur\'s side, soaked to the chest, with a knife in his teeth, because there was nowhere else to come up.'}],
       preText:()=>`Tangle's burner goes up on the spur in front of them, on wet coral, which burns for no time at all and long enough, and the men on the spur come through it in ones.`,
       stage2:{title:'The island\'s foot', xp:85,
         text:()=>`They fall back along the spur to where it joins the island, and the squad goes after them with the water at its heels, over coral that was dry a hundred breaths ago and is not now.\n\nAt the island's foot the last of them have turned. The water is round their ankles and climbing. Behind them is the coral and the high ground and the rest of the 9th, already up it. Behind the Third is the sea. Every man on that spur means to live through the next hour, and there is not room on it for all of them to.${b47Say({hessa:`\n\nHessa plants her spear in the coral. "D'rek does not mind water," she says. "Neither do I. Today."`, tangle:`\n\nTangle has the satchel over his head with both hands. "Not wet," he says. "Not now. Not after all this."`, _:''})}`,
         map:["##....##","#..t...#","........","..t..t..","........","o......o","oo....oo","o......o","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b4_c7_stragchief',3,1],['b4_c7_straggler',1,3],['b4_c7_straggler',6,3],['b4_c7_stragbow',4,0]]} } },
+        foes:[['b4_c7_stragchief',2,0],['b4_c7_straggler',1,3],['b4_c7_straggler',6,3],['b4_c7_stragbow',4,0]]} } },
 
   foes:{
     /* the Whirlwind's outriders: desert warriors who ride for Sha'ik, out round the end of the block at dusk to look at it */

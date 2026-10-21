@@ -215,7 +215,7 @@ const B4CH4 = {
       objective:{type:'survive', rounds:4, text:'Hold the 9th\'s wagon line among the burning wagons for four rounds, until the riders have done what they came for and go.'},
       map:["..#..#..","........",".t....t.","........","#..##..#","........","..t..t..","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c4_raidlead',3,1],['b4_c4_raider',1,2],['b4_c4_raider',6,2],['b4_c4_lamper',4,0],['b4_c4_raider',5,3]], xp:200, after:'b4_c4_wagons_after',
+      foes:[['b4_c4_raidlead',3,1],['b4_c4_raider',0,1],['b4_c4_raider',5,1],['b4_c4_lamper',4,0],['b4_c4_raider',5,3]], xp:200, after:'b4_c4_wagons_after',
       waves:[{round:2, foes:[['b4_c4_lamper',7,1]], text:'Another rider comes in along the wagons at a gallop with a lamp swinging on its cord, lit, and lets it go over the squad\'s heads into the canvas behind.'},
         {round:3, foes:[['b4_c4_raider',0,3]], text:'One comes over a burning wagon\'s tongue on foot, his horse gone out from under him, still coming.'}],
       stage2:{title:'The horse lines', xp:100,
