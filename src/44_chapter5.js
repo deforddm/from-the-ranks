@@ -761,7 +761,7 @@ He lowers his voice.
 ${SQUAD().includes('ellis') ? `Ellis is watching him the way she watches ground. "You're frightened," she says. Nobody else in the Fourth would have said it out loud. Toc looks at her. "Yes," he says, simply. "Aren't you?"` : ''}`,
       ch:[{t:'The captain.', go:'c5_paran'}]}),
     c5_toc_again:()=>({sp:'Toc the Younger', txt:
-`He's seeing to the horses, both of them, with his back to the dig. ${SQUAD().includes('ellis') ? `Ellis is helping him. They're not talking. They're working side by side the way two people work who've done it before, a lot, in the dark, somewhere worse.` : `He whistles under his breath while he does it, a Genabari dock song, and stops whenever the T'lan Imass stops digging, and starts again when it starts.`}
+`He's seeing to the horses, both of them, with his back to the dig. ${SQUAD().includes('ellis') ? `Ellis is helping him. They're not talking. They're working side by side the way two people work who've done it before, a lot, in the dark, somewhere worse.` : `He whistles under his breath while he does it, a Genabari dock song, and stops whenever the T'lan Imass stops digging, and starts again when it starts.${SQUAD().includes('vell') ? ` Vell is holding the second horse's head for him, at the full length of his arm, the way Kettle holds a lit fuse. "He's never held one," Toc says, without turning round. "She can tell. She's being kind to him."` : ''}`}
 
 "The captain," he says, without turning round. "When you're ready. He won't come to you. He doesn't go to people any more. He waits and they come."`,
       ch:[{t:'The captain.', req:()=>!S.f.c5_paran, go:'c5_paran'},
@@ -889,7 +889,7 @@ ${by({
 
 And then he wakes.
 
-All at once, the way soldiers wake. He sees a Malazan helm over him against the stars, an hour after the Empire put him in the grass, and he does what you'd do. A fist in ${by({sgt:'your', _:'{who}\'s'})} collar. A knee coming up, with a hole in him. It's a long, ugly, quiet moment, the two of you in the frost, before he lets go; and when he does it's only to drag himself a pace away from the hands, and then another, and lie on his back, breathing at the sky.
+All at once, the way soldiers wake. He sees a Malazan helm over him against the stars, an hour after the Empire put him in the grass, and he does what you'd do. A fist in ${by({sgt:'your', _:'{who}\'s'})} collar. A knee coming up, with a hole in him. It's a long, ugly, quiet moment, ${by({sgt:'you and him', _:'{who} and him'})} locked together in the frost, before he lets go; and when he does it's only to drag himself a pace away from the hands, and then another, and lie on his back, breathing at the sky.
 
 The cloth stays on the grass beside him, where he can reach it, and a blanket. ${by({sgt:'You come', _:'{who} comes'})} back down the slope with his blood to the elbows and a split lip that wasn't there before. Whether he sees the morning is between him and the frost now. Paran watches you come down. He doesn't ask.`,
       ch:[{t:'East, to Paran\'s fire.', go:()=>startExplore('barrow_night')}]}),
@@ -1323,6 +1323,7 @@ Kettle, who talks when she's frightened, who talked through the Pale and the tun
   sgt:`You put your hand flat on the grass, palm down, the way Sethand did on the ridge and the Imass did in the dig, and look at nothing but the back of it. The squad sees you do it. One by one, the hands go flat. The eyes go down.`,
   brisk:`Brisk lays her shield face-down in the grass so the rim won't catch the starlight, and lies down behind it, and puts a hand on the back of the nearest neck and pushes, gently, until that face is in the grass too.`,
   ohl:`Ohl begins, very softly, to pray. Not to Hood. Not in Ehrlii. Just the shape of praying, low and even and dull as a millpond, and the squad goes quiet under it the way children do, and lies still.`,
+  vell:`Vell goes flat the way a rope boy goes flat on a ridge when the watch walks by below with a lantern: cheek down, eyes shut, so nothing wet can catch the light. "Be the roof," he whispers, and the squad, one by one, is the roof.`,
   _:`{who} gets the squad's faces into the grass, and keeps them there.`})}
 
 The Hound's eyes come across the fold. Lamps, seen through smoke. They go over the dead fire, and over Paran, and stop on Paran, a long time. Then they go on: across the flattened grass where the Fourth is lying, and over it, the way your eyes go over a row of stones on a hillside. Nothing there. Furniture.
@@ -1333,6 +1334,7 @@ They don't stop.`,
 `${by({
   kettle:`Kettle manages it longer than anyone would have bet. Face in the grass, mouth shut. Then something comes out of her anyway: not a word, the start of one, a little catch of breath like a hiccup.`,
   ellis:`Ellis has her eyes down and her body still, perfectly still, Claw-still; and that's the trouble. On a hillside where everything else is shaking, still *on purpose* is a shape too.`,
+  vell:`Vell is flat on the turf with his eyes shut, being the roof, and doing it well. Then the line on his shoulder shifts, and the hook at the end of it chinks once on a stone, small as a dropped coin.`,
   sgt:`You get the squad's faces into the grass. Then you look up. Just once. To see if it's worked.`,
   _:`{who} gets the squad's faces into the grass, nearly. Then {who} looks up. Just once.`})}
 
@@ -1402,7 +1404,9 @@ ${SQUAD().includes('ohl') ? `Ohl hasn't said anything. He's looking at the grey 
     c5_night_after:()=>({sp:'The fold below the far hill', scene:'hills_night', txt:
 `${numw(SQUAD().length, true)}. You count twice. You count a third time, because the number's right and it doesn't feel right.
 
-${S.f.c5_ellisThrough ? `There's a place by the fire, next to where Toc sat, where the grass is pressed flat in the shape of someone sitting close to someone else. Nobody sits in it, or says they aren't.` : S.f.c5_ellisHeld ? `Ellis is sitting on the far side of the fire from you, with her back to you, facing the hillside where the rent was. She hasn't moved since the Hounds went. She isn't going to. ${S.f.c5_cloakGone ? `Her cloak is somewhere in the grey with Toc. ` : ''}Brisk has put a blanket round her shoulders, and she hasn't taken it off, and she hasn't acknowledged it's there.` : S.f.c5_tuftMarked ? `Tuft is sitting beside you. Everyone keeps looking at her hair and then looking away.` : `Tuft is sitting at the far edge of the firelight with her knees drawn up, facing the place where the rent was. She hasn't said a word since *yes, Sergeant*. Kettle is sitting beside her, not talking either, which for Kettle is a kind of shouting.`}
+${S.f.c5_ellisThrough ? `There's a place by the fire, next to where Toc sat, where the grass is pressed flat in the shape of someone sitting close to someone else. Nobody sits in it, or says they aren't.` : S.f.c5_ellisHeld ? `Ellis is sitting on the far side of the fire from you, with her back to you, facing the hillside where the rent was. She hasn't moved since the Hounds went. She isn't going to. ${S.f.c5_cloakGone ? `Her cloak is somewhere in the grey with Toc. ` : ''}Brisk has put a blanket round her shoulders, and she hasn't taken it off, and she hasn't acknowledged it's there.` : S.f.c5_tuftMarked ? `Tuft is sitting beside you. Everyone keeps looking at her hair and then looking away.` : `Tuft is sitting at the far edge of the firelight with her knees drawn up, facing the place where the rent was. She hasn't said a word since *yes, Sergeant*. Kettle is sitting beside her, not talking either, which for Kettle is a kind of shouting.`}${SQUAD().includes('vell') ? `
+
+Vell has tied one end of his line round the rock and the other round his own wrist, and sits down at the end of it. He doesn't explain. You don't ask him to.` : ''}
 
 Paran hasn't sat down. He's standing at the edge of the fold with his back to the fire, looking west, at the long barrow, a black line under the stars. *Thud*, from under it. A long time later: *thud*. It's slower now, and deeper: a sleeper's heart, near waking.
 
@@ -1593,7 +1597,11 @@ A long, long time later: *thud*.
 
 It's not in your boots now. It's in the ridge. It's in the stone you're sitting on. It's slower than a heart, and deeper, and it's getting, very slowly, *interested*.
 
-${SQUAD().includes('tuft') ? `Tuft, beside you${S.f.c5_tuftMarked ? `, with her hood up` : ''}: "It knows we were here," she says. "Not who. Just that something small stood on its hill and watched${preUsed('c5_dig') ? `. And knocked` : ''}." ${S.f.c5_toolSaw ? `A pause. "*You are very small. Stay that way.*" She says it in almost the Imass's voice, dry and exact, every word set down on its own. "I'd like to. I'd really like to."` : `A pause. "I'd like to stay small, Sergeant. I'd really like to."`}` : ''}
+${SQUAD().includes('tuft') ? `Tuft, beside you${S.f.c5_tuftMarked ? `, with her hood up` : ''}: "It knows we were here," she says. "Not who. Just that something small stood on its hill and watched${preUsed('c5_dig') ? `. And knocked` : ''}." ${S.f.c5_toolSaw ? `A pause. "*You are very small. Stay that way.*" She says it in almost the Imass's voice, dry and exact, every word set down on its own. "I'd like to. I'd really like to."` : `A pause. "I'd like to stay small, Sergeant. I'd really like to."`}` : ''}${SQUAD().includes('ellis') ? `
+
+Ellis has already turned her back on the vale. She's reading the ground west, the way you'd read a letter twice before you trust it.` : SQUAD().includes('vell') ? `
+
+Vell is standing on the stone beside you, on his toes, looking west for the city's blue glow over the hills. It's too far. He looks anyway. "Roofs," he says, to himself. It comes out sounding like *home*.` : ''}
 
 West, then. Three days. The city, and the blue fire, and Whiskeyjack on his bucket, and a report to give in order, every word of it so.`,
       ch:[{t:'West, toward the city.', fx:()=>{ S.f.c5_done=1; }, go:()=>chapterEnd(5, S.f.c5_key || 'hold')}]}),

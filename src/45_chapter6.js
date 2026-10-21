@@ -855,6 +855,7 @@ ${SQUAD().includes('ellis') ? `Ellis, at the end of the line, has gone still in 
 `${by({
   tuft:`It's true, which helps. Tuft tells it, quietly and exactly, the way she lays out a reading: a tavern with a painted bird over the door, a big man with a jug and a ruined soldier's shoulders, a round bought with the only thing he had left worth buying with. She doesn't decorate it. Decorating is for lies.`,
   ellis:`It's true, which helps. Ellis says one sentence: "A big man at the Phoenix with a jug and a soldier's shoulders, who'd nothing left to buy a round with but that." It's the right one.`,
+  vell:`It's true, which helps. Vell tells it in Daru, out loud and in order, the way he tells everything: the Phoenix, the jug, the shoulders, the round. A Daru boy in Gadrobi blue telling a house man about Coll's ring in Coll's own city, and he is so plainly not clever enough to have made it up that the captain stops looking for the lie.`,
   kettle:`It's true, which helps less than it should. Kettle tells it the way she tells lies, with total confidence and far too much detail: the painted bird over the door, the jug, the shoulders, what the round was and who spilled most of it. It is so entirely a Kettle story that the captain stops looking for the lie in it. There isn't room.`,
   sgt:`It's true, which helps. You tell it the way it was: a tavern with a painted bird over the door, a big man with a jug and a ruined soldier's shoulders, a round bought with the only thing he had left worth buying with.`,
   _:`It's true, which helps. {who} tells it the way it was: a tavern with a painted bird over the door, a big man with a jug and a ruined soldier's shoulders, a round bought with the only thing he had left worth buying with.`})}${S.f.c6_coll ? ` And then, because it's simpler, a nod across the street, to where a very big man in plain brown is standing against a wall with his arms folded, looking at this gate. The captain looks, and goes on looking.` : ''}
@@ -875,6 +876,7 @@ ${SQUAD().includes('brisk') ? `Brisk, when you're through the gate: "He served i
 `${S.f.c6_signetTried ? `${by({
   tuft:`Tuft tells him, quietly and exactly. It's true. It doesn't matter: it's a girl with a mage's hands telling a house man where a dead house's ring came from, and he has heard quieter lies from better liars.`,
   ellis:`Ellis says one sentence. It's true, and it's the right one, and she says it in a voice the captain has heard before, at doors he didn't like opening.`,
+  vell:`Vell tells him, in Daru. It's true. It's also a Daru boy with a grappling hook on his shoulder explaining a ring to a house man, and the captain has spent eleven years keeping boys with hooks off this roof.`,
   kettle:`Kettle tells him. It's true, every word, and she tells it the way she tells lies, with total confidence and a great deal about the jug, and halfway through the captain stops listening to the words and starts listening to her.`,
   sgt:`You tell him: a tavern, a drunk, a round. It's true, and it comes out of you like a report, which is how the Empire tells the truth, and it's the wrong way to tell it to this man.`,
   _:`{who} tells him. It's true. It doesn't help.`})}
@@ -1009,6 +1011,7 @@ Then he looks away, and the cold goes with his eyes, and it's a party again.
   tuft:`Tuft does it. She steps to the very edge of the space the whole Fete is keeping round him, in the Andii cloak that won't take the light, and lifts her chin until the dragon mask is looking down into her face; and then she inclines her head. Once. Slow. Not low. Her eyes stay up on the eyeholes the whole way down and the whole way back.${roof ? ` It's the nod from the roof, given back.` : ''}`,
   kettle:`Kettle does it. She was never taught. ${roof ? `She saw it once, on a roof, and she copies it now` : `She has never seen it done, and she does it anyway,`} with total confidence and her heart going so hard you can see it in her throat: chin up, eyes up, the head going down once, slow, and coming up again. She doesn't add anything to it. It's the first thing you've ever seen Kettle not add anything to.`,
   ellis:`Ellis does it the way she does everything: exactly. Chin. Eyes up, and kept up. The head down once, slow, and back. The Claw has a page on how the Andii greet one another. She has read it, and she never once expected to need it.`,
+  vell:`Vell does it. The last time one of them came this close to him there was a sword in it, and a squad in the way: chin up, eyes up, the head going down once, slow, and back. His hands want to do something with the line on his shoulder. He doesn't let them.`,
   brisk:`Brisk does it. She starts the regiment bow out of habit, the one for officers, and stops it halfway, and makes it the other thing: chin up, eyes up, the head going down once, slow. A soldier's nod across a field, after.`,
   ohl:`Ohl does it, which nobody expected. He inclines his head the way he does to Hood: slowly, once, and with no apology in it anywhere.`,
   sgt:`You do it. You step to the edge of the space round him, where the cold comes off him like the breath of a well, and look up into the eyeholes, and don't look away; and you incline your head. Once. Slow. Not a guard's bob to a guest.${roof ? ` The nod from the roof.` : ''}`,
@@ -1035,6 +1038,7 @@ ${SQUAD().includes('ohl') && ROLL().who !== 'ohl' ? `Ohl looks at ${C6H.you()}, 
   tuft:`Tuft tries. She gets as far as the edge of the space round him and lifts her chin, and the cold comes off him into her face like the breath of a well, and her nerve gutters out. The nod comes out small and quick and down at the floor: a cadre mage's bob to a visiting officer.`,
   kettle:`Kettle tries, with total confidence, and gets it nearly right, and then, because she's Kettle, adds something: a little dip at the knee, the way the Daru ladies do it on the stairs. She hears herself do it. Two masks behind her laugh.`,
   ellis:`Ellis does it exactly as the page says. That's what's wrong with it. It's a thing read off a page, and it looks like one.`,
+  vell:`Vell tries. Halfway down, the nod turns into a Guild boy's duck of the head to a clan elder, and he feels it go and can't get it back.`,
   sgt:`You try. Halfway down the nod turns into a guard's bob to a guest without asking you, eleven years of it, and you feel it go wrong and can't stop it.`,
   _:`{who} tries, and it comes out wrong: a guard's bob to a guest.`})}
 
@@ -1122,6 +1126,7 @@ ${SQUAD().includes('tuft') ? `Tuft is walking with her arms folded tight inside 
   ohl:`Ohl looks past the mask, at the hands round the cup: an old man's hands, spotted, the nails gone blue. When you've walked on he says, very low, "Eighty years old, and his hands don't shake. Not a hair. I've had my hands in a thousand old men, and their hands *shake*." He rubs his own. "There's nobody in there doing the shaking."`,
   tuft:`Tuft looks, and her eyes close while she does it. She isn't using them. When they open she's white. "I said something was standing behind a door," she whispers. "I was wrong. *He's* the door, Sergeant. The old man. There's something standing where he used to be, wearing him."`,
   ellis:`Ellis looks at his feet, not his face, the way the Claw teaches. "There's frost on the marble round his shoes," she says, when you've walked on. "A hand's width. It's going out while he stands there." One sentence more. "Old priests don't do that."`,
+  vell:`Vell looks the way a rope man looks at a roof he doesn't trust: at where the weight is. "He's standing wrong," he says, when you've walked on. "Old men lean. He's standing like there's something much heavier inside him than an old man, and the floor knows."`,
   sgt:`You look properly, the way Whiskeyjack taught you to look at a ridge: not at the thing, at what's round it. The wine in his cup has a skin of ice. While you watch, on a warm night, in an old man's hand, the skin gets thicker.`,
   _:`{who} looks properly: not at the tusks, at what's round them. The wine in his cup is icing over while he holds it, on a warm night, in an old man's hand.`})}
 
@@ -1137,6 +1142,7 @@ ${nearMiss() ? `And as ${C6H.you()} turn${C6H.you() === 'you' ? '' : 's'} away, 
   ohl:`Ohl looks at the old man's hands too long, the way he'd look at a patient's, and the old man's head turns, slowly, and the eyeholes find Ohl and stay. Ohl comes away with his own hands shaking, which they never do. "It looked at *me*," he says. "Not him. The thing. It looked out of him at me the way I look at a wound."`,
   tuft:`Tuft looks the way she looked at the house on the roof, and it's the wrong way to look at this. Something behind the eyeholes feels her do it. The mask turns. She takes three steps back without meaning to. "It *noticed*," she whispers. "Sergeant. Whatever's in there, it knows there's a mage on this terrace. It knows my face."`,
   ellis:`Ellis watches his feet too long and too still, the way the Claw teaches. The old man turns his head: not to her face, to her feet, and then up, slowly, all the way, the way she was looking at him. She's white when she comes away. "He did it back," she says.`,
+  vell:`Vell stares too long, the way he'd stare at a roof he was about to put a line across, and the old man's head comes round the way a sentry's does. Vell comes away fast, not quite running. "He *saw* me," he says. "Like I was on his roof."`,
   sgt:`You look too long. The eyeholes come round and find you, and something a long way down behind them looks at your face, once, carefully: a name read off a list, to be known again.`,
   _:`{who} looks too long. The eyeholes come round, and something a long way down behind them looks back, carefully, and learns the face.`})}
 
@@ -1226,6 +1232,8 @@ ${S.f.c4_key === 'aside' ? `The old man from the alley goes down last. He sits a
 One of them has dropped his blade on the leads. Longer than the roof knives, blacked with soot from point to pommel so that not even the edge catches the lantern. A party knife. ${SQUAD().includes('ellis') ? `Ellis picks it up by the blade and holds it out to you hilt first, without looking at you. "For walking into lamplight," she says, "and out again, without anybody remembering."` : SQUAD().includes('brisk') ? `Brisk picks it up and hands it to you hilt first. "Black all over. Even the edge. They've thought about it." She looks at the balustrade. "Didn't think about us."` : `You pick it up. It's lighter than it looks.`}
 
 ${SQUAD().includes('ohl') ? `Ohl is kneeling by the one who didn't get up, with his hands on him, arguing quietly in Ehrlii. He loses. He usually does, with the ones he meets like this. He closes the man's eyes and doesn't take out the oilcloth.` : ''}
+
+${SQUAD().includes('vell') ? `Vell is looking at the faces of the ones on the leads, one after another. He doesn't say whether he knows them. He coils his line, slowly, and keeps it coiled, and stands a little nearer the Fourth than he did.` : ''}
 
 ${pre ? `When you come down off the leads the dark has gone, as if it had never been. There's a black star on the marble where the sharper went, the size of a cartwheel. At the foot of the upper steps the old man in dark red is looking at it with his untouched wine: a blot on a page of figures. He looks once along the terrace, toward a pillar, and back.
 
@@ -1492,6 +1500,7 @@ ${SQUAD().includes('tuft') ? (S.f.c5_tuftMarked ? `Tuft has gone very still. Her
   kettle:`"It's a *dog*," Kettle tells the lawn, with total confidence, in the voice of somebody who works here. "Lady Simtal's. She breeds them. It's very large and very shy and it can't abide music, so if everybody would just go up the steps, slowly, and *not look at it*—" And they go: laughing, glasses in hand, up the white steps, telling each other about Lady Simtal's dogs. One of them says he's heard about the dogs.`,
   tuft:`Tuft walks the gravel saying the same quiet sentence to every couple she passes: "The hostess asks you up to the terrace, please. An animal's got in." She says it so plainly and so politely, and looks so exactly like somebody who has been sent, that nobody thinks to ask who sent her.`,
   ellis:`Ellis says one sentence to the nearest man in a mask, the one with the loudest friends: "Lady Simtal's dog is loose, and she'd rather nobody saw it." It's the right one. He tells his friends, and his friends tell the lawn, and the lawn goes up the steps to see the dog from somewhere safe.`,
+  vell:`Vell does it the way he did it on the roofs for four years: by not being there. He goes along the hedges telling the couples behind them, one at a time, in Daru, that Lady Simtal's steward is coming this way with a list of who's behind which hedge. The lawn empties faster than you'd believe.`,
   brisk:`Brisk says "*Dog.* Terrace. *Now*," in the regiment voice, the one that moved a street in Nathilog, and the lawn is halfway up the steps before it has decided whether to go, because nobody has ever argued with that voice and won.`,
   sgt:`You walk the gravel with the halberd held the way guards hold them, saying "The terrace, my lord. The terrace, my lady. An animal's got in," in a voice that has said it forty times tonight and is bored of it. Bored is the trick. Nobody panics at bored.`,
   _:`{who} walks the gravel saying "The terrace, please. An animal's got in," in the voice of somebody who has said it forty times tonight and is bored of it. Bored works.`})}
@@ -1507,6 +1516,7 @@ It has to come through you now. You're ready for it to try.`,
   kettle:`"It's a *dog*," Kettle tells the lawn, and her voice cracks on *dog*, and the whole lawn hears it crack.`,
   tuft:`Tuft tries the quiet sentence, and with that thing on the grass her voice won't come up past a whisper, and the couple she whispers it to look past her and see why.`,
   ellis:`Ellis says her one sentence to the wrong man: a young lord in a stag mask, exactly drunk enough to want to see the animal.`,
+  vell:`Vell tells the couples behind the hedges that the steward is coming, and one of them is a young lord in a stag mask who doesn't care who knows where he's been, and comes out to see what's on the wall.`,
   brisk:`"*Dog,*" says Brisk. It's the voice for a line, not a lawn.`,
   sgt:`You walk the gravel in your bored guard's voice, and halfway along it a woman in a swan mask looks past you and sees what you're walking her away from.`,
   _:`{who} tries, and halfway along the gravel a woman in a swan mask looks past {who} and sees it.`})}
@@ -1878,6 +1888,7 @@ Up on the terrace somebody screams, and the music stops in the middle of a bar.`
   brisk:`Brisk goes. Of course Brisk goes. She's across the gravel before you've said it, and she grounds the shield rim-first on the stones in front of the two fox masks, and sets her feet the way she set them on the roof.`,
   sgt:`You go. Across the gravel, between the ring and the two fox masks, and you ground the halberd on the stones and set your feet, because a line is a thing you can be even on your own.`,
   ohl:`Ohl goes, which nobody expected, Ohl least of all. He takes the two fox masks by their collars the way he'd take two drunks out of a surgeon's tent, and puts them behind him, and turns round, and stands.`,
+  vell:`Vell goes, the way he'd go along a ridge: fast, low, without looking down. He gets the two fox masks by the sleeves and swings them behind him like a coil of line, and turns, and stands.`,
   kettle:`Kettle goes, talking. "Behind me. *Behind* me. No, the other behind." She gets the two fox masks by the hands and pulls, and puts herself where they were, and plants her boots, and stops talking, which is how you know she's frightened.`,
   _:`{who} goes: across the gravel, between the ring and the two fox masks, and stands there with both feet planted.`})}
 
@@ -1894,6 +1905,7 @@ ${by({
   sgt:`You look down. There's frost on your knuckles that doesn't melt, and your breath comes out white and stays white a heartbeat longer than breath should. Something of that ring stopped at your boots and didn't go on with the rest. It's still there. It's yours now, or you're its.`,
   ohl:`Ohl looks at his hands. There's frost in the creases of them that his own warmth won't shift. "Well," he says, quite calmly. "That's new." He flexes them. "Hood's *teeth*, that's cold."`,
   kettle:`Kettle looks down at the white rim round her boots, and then at her hands, where the frost is. "I've got some," she says. "Sergeant. It *stayed*. I've got some of it." She sounds like somebody who has been handed a cusser.`,
+  vell:`Vell looks at his hands. There's frost in the rope-calluses that won't melt. "My grip," he says, and closes them, and opens them. "It's still there. It's just *cold*."`,
   _:`There's frost on {who}'s knuckles that doesn't melt. Something of that ring stopped at {who}'s boots and didn't go on with the rest.`})}`,
       ch:[{t:'On.', go:'c6_choice'}]}),
     c6_rime_bad:()=>({sp:'The garden', scene:'garden_storm', fx:()=>{ const w = ROLL().who || 'sgt'; S.f.c6_rimeBit = w; S.rattled ??= {}; S.rattled[w] = 1; note(`The frost is in ${NAME(w)}'s hands: rattled, −1 on the next check.`, 'bad'); }, txt:
@@ -1902,11 +1914,12 @@ ${by({
   sgt:`You get there, and the ring doesn't stop. It goes over your boots like a tide over sand, and your feet go out from under you on the white gravel, and you're on your back with the cold in you to the bone.`,
   ohl:`Ohl gets there, and the ring goes over him as if he weren't, and the cold takes his hands first, the way cold always takes a surgeon first.`,
   kettle:`Kettle gets there, talking, and the ring goes over her boots in the middle of a word, and she stops talking.`,
+  vell:`Vell gets there, fast, and the ring goes over his boots and his feet go out from under him on the white gravel the way they never go out from under him on a roof.`,
   _:`{who} gets there, and the ring doesn't stop. It goes over {who}'s boots like a tide over sand.`})}
 
 From nowhere, Hedge has the two fox masks by their collars and is throwing them at the steps, one and then the other, like a man throwing sacks onto a cart.
 
-${by({sgt:`You get up. Your fingers are white to the second knuckle, and there's no feeling in them, and there won't be for a while.`, ohl:`Ohl gets up. His fingers are white to the second knuckle, and there's no feeling in them, which for a surgeon is a kind of blindness.`, _:`{who} gets up. Her fingers are white to the second knuckle, and there's no feeling in them, and there won't be for a while.`})}`,
+${by({sgt:`You get up. Your fingers are white to the second knuckle, and there's no feeling in them, and there won't be for a while.`, ohl:`Ohl gets up. His fingers are white to the second knuckle, and there's no feeling in them, which for a surgeon is a kind of blindness.`, vell:`Vell gets up. His fingers are white to the second knuckle, and he can't close them on the line, and he keeps trying.`, _:`{who} gets up. Her fingers are white to the second knuckle, and there's no feeling in them, and there won't be for a while.`})}`,
       ch:[{t:'On.', go:'c6_choice'}]}),
     c6_choice:()=>({sp:'The garden', scene:'garden_storm', txt:
 `Everything happens at once. That's how you'll tell it afterwards, and it's the only true way to tell it.

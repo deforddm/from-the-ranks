@@ -350,7 +350,9 @@ In the morning another company is missing. A company of the Fourth Regiment this
 ${b3In('kettle') ? `
 Kettle has not slept. She sat up all night on her satchel facing east, and the face she turns to you has the look of someone who has heard a very good secret through a wall. "Quorls," she says. "Dozens, Sergeant. I counted the wingbeats."` : ''}${b3In('brisk') && !c6BriskGone() ? `
 
-Brisk went down the line at first light to look at the empty tents. The Fourth Regiment is Tav's regiment. She comes back and sits down and starts oiling her shield, which does not need it. "Not his company," she says, once. That is all she says.` : ''}`,
+Brisk went down the line at first light to look at the empty tents. The Fourth Regiment is Tav's regiment. She comes back and sits down and starts oiling her shield, which does not need it. "Not his company," she says, once. That is all she says.` : ''}${b3In('ellis') ? `
+
+Ellis has walked the empty lines too, and counted. "Forty-one tents, struck and folded," she says. "Not a boot-print going out past the pickets. Not one." She looks east. "I'd like it noted that I can't track a thing that doesn't touch the ground."` : ''}`,
     ch:[b3DeckChoice(6),
         {t:'Count the fires.', go:'b3_c6_start2'},
         {t:'"Nobody says anything. Then neither do we."', go:'b3_c6_start2'}]}),
@@ -434,7 +436,11 @@ He goes back to his pack.`,
 
 "Sergeant." He nods south and west, where the dark is. "Brood's two days behind and taking his time. Rhivi outriders keep coming up to our pickets after dark and counting fires. One of them asked me straight out why the Malazans have fewer fires every night." He works the brush along the horse's flank. "I told him we're a careless people and we lose things. He wrote it down."
 
-He glances at you sideways. "Some of the riders asking aren't Rhivi. Fur on the collars. ${c6KallorKnows() ? `The tall man's colours. He knows your face, I hear. I'd keep it out of the firelight.` : `The tall man's colours: Brood's second. He doesn't send riders to count things for the fun of it.`}"`,
+He glances at you sideways. "Some of the riders asking aren't Rhivi. Fur on the collars. ${c6KallorKnows() ? `The tall man's colours. He knows your face, I hear. I'd keep it out of the firelight.` : `The tall man's colours: Brood's second. He doesn't send riders to count things for the fun of it.`}"${b3In('ellis') ? `
+
+"The Claw had men who counted fires for a living," Ellis says. "They never rode up to the pickets to do it."
+
+Hurlochel looks at her over the horse's back, and then, thoughtfully, at her glove.` : ''}`,
     ch:[{t:'"What are they counting, Hurlochel?"', go:'b3_c6_hurl2'},
         {t:'Leave him to the horse.', go:()=>startExplore()}]}),
   b3_c6_hurl2:()=>({sp:'Hurlochel', txt:
@@ -556,7 +562,9 @@ In front of you a stone turns over in the dark.
 
 Voices, low, in a tongue that is not Malazan. Then shapes on the rise, a dozen of them, spears and packs, a foraging party out to count the Host's fires, and they have come over the rise and stopped dead, and they are looking past the Fourth at forty quorls and two hundred Malazans going up into the sky.
 
-If one of them gets home, the Seer knows by morning.${b3In('greysword') ? `
+If one of them gets home, the Seer knows by morning.${b3In('ellis') ? `
+
+"Twelve," Ellis breathes. "And one out on the flank I can hear and can't see."` : ''}${b3In('greysword') ? `
 
 "Beklite foragers," Dannet breathes. "They count. That is all they are for."` : ''}`,
     ch:[{t:'"Take them. Quietly."', go:()=>startBattle('b3_c6_field', {})},
@@ -581,7 +589,7 @@ One of them shouts. One of them, worse, does not shout, and turns to run.`,
 
 Behind you the field is empty. The last row of quorls is a darker line on the dark, very high, going south, and then not even that. The grass is flat in long rows where they sat. Two hundred people were standing there a quarter of an hour ago.${b3In('brisk') && !c6BriskGone() ? ` Brisk stands looking at the place where the singing was, for exactly as long as it takes to wipe her blade, and then turns her back on it.` : ''}
 
-Whiskeyjack comes across the grass to the gully. He walks slowly, and the slowness is not the dark. He looks at the dead, and at the Fourth, and counts.
+Whiskeyjack comes across the grass to the gully. He walks slowly, and the slowness is not the dark. He looks at the dead, and at the Fourth, and counts.${b3In('ellis') ? ` Ellis has counted them already. She catches his eye and nods once: the same number.` : ''}
 
 "Nobody went home," he says.
 
@@ -675,7 +683,11 @@ Tuft looks south-west, toward Brood's fires, and the Rhivi among them. "She isn'
 
 "The Mhybe's people said to watch the Malazans," Sohra says, faintly. "They did not say from underneath a bug."` : ''}${b3In('greysword') ? `
 
-"Coral," Dannet says. "From the sky." She touches the half-painted wolf. "They will never believe me in Capustan."` : ''}`,
+"Coral," Dannet says. "From the sky." She touches the half-painted wolf. "They will never believe me in Capustan."` : ''}${b3In('ellis') ? `
+
+"From up there you could count everything," Ellis says. She sounds, for Ellis, very nearly pleased.` : ''}${b3In('vell') ? `
+
+Vell is grinning before anybody else has finished. "Higher than the Spawn," he says. "Higher than anything with a roof on it." Then, more practically: "Do they give you a rope?"` : ''}`,
     ch:[{t:'The next night.', go:'b3_c6_q_night'}]}),
   b3_c6_key_maurik:()=>({sp:'Whiskeyjack', fx:()=>{ S.f.b3_c6_key = 'maurik'; S.f.b3_river = 1; delete S.f.b3_flew; if (!S.f.b3_c6_keyLoy) { S.f.b3_c6_keyLoy = 1; if (b3In('ohl')) loy('ohl', 1); if (b3In('kettle')) loy('kettle', -1); if (b3In('sohra')) loy('sohra', 1); } }, txt:
 `Whiskeyjack looks at you for a moment longer than he needs to.
@@ -691,7 +703,11 @@ Brisk watches them go with her arms folded. "Tav went up last night," she says, 
 
 Ohl watches Whiskeyjack walk back to his tent, and how he walks. He has stopped saying things about it out loud, in case Hood is listening.` : ''}${b3In('sohra') ? `
 
-Sohra looks at the empty field, and then at you. "You stayed," she says. "On the ground, where a person can see you." She nods. "Good. I was not going to fly."` : ''}`,
+Sohra looks at the empty field, and then at you. "You stayed," she says. "On the ground, where a person can see you." She nods. "Good. I was not going to fly."` : ''}${b3In('ellis') ? `
+
+Ellis watches the Rhivi outriders on the far edge of the field, who are watching the Seventh go. "On the ground," she says, "you can see who's following." She has counted them already.` : ''}${b3In('vell') ? `
+
+Vell watches the quorls until there is nothing left to watch, and a while after. "Next time," he says, mostly to himself.` : ''}`,
     ch:[{t:'Walk.', go:'b3_c6_m_march'}]}),
 });
 
@@ -710,7 +726,11 @@ Brisk has stopped. She is watching the line go out with a look you have not seen
 
 "Tavrin's sister."
 
-"Big lad? Sings?" He winces. "I'm sorry for you."` : ''}`,
+"Big lad? Sings?" He winces. "I'm sorry for you."` : ''}${b3In('vell') ? `
+
+Vell's hands are moving at his sides, copying the throw without meaning to. "That's not a Guild knot," he says. "The Guild would pay to know that one."
+
+"The Guild," says Oskan, "can come to the Cawn and ask."` : ''}`,
     ch:[{t:'"Show us the knot."', check:['wits', 16], trick:'b3_c6_knot', req:()=>!S.f.b3_c6_knotTried, fx:()=>{ S.f.b3_c6_knotTried = 1; },
           edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with fuses', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1]],
           go:'b3_c6_oskan0_knot', fail:'b3_c6_oskan0_miss'},
@@ -725,7 +745,9 @@ The third throw takes the post. The fourth jerks it half out of the ground.
 
 "There." He takes the line back and coils it, and then, after a moment's thought, cuts a length from the coil and gives it over, weight and all. "Every bargeman on the Cawn can do that drunk, in the rain, at night. Now so can a marine." He looks at you. "Don't tell them on the Cawn."${by({brisk:`
 
-Brisk coils the line round her forearm without looking, the way you do a thing your hands learned before you did. "Tav could never get it," she says. "Not once. Nine years." She almost smiles.`, _:''})}`,
+Brisk coils the line round her forearm without looking, the way you do a thing your hands learned before you did. "Tav could never get it," she says. "Not once. Nine years." She almost smiles.`, vell:`
+
+Vell coils the line the Guild way without thinking, and stops, and coils it again the Cawn way, to feel the difference. "Huh," he says, which from a rope man is a speech.`, _:''})}`,
     ch:[{t:'"A river, you said."', go:'b3_c6_oskan0_river'},
         {t:'Thank him, and go.', go:()=>startExplore()}]}),
   b3_c6_oskan0_miss:()=>({sp:'Oskan', txt:
@@ -764,7 +786,13 @@ Below, the Domin goes by in the dark: a river like a crack in black glass, a tow
 
 Somewhere behind you Ohl is praying, steadily, to Soliel, in a voice that suggests he is also making notes for a complaint.` : ''}${b3In('tuft') ? `
 
-Tuft is quiet. When you look back at her she is looking south, past the rider's shoulder, as if something there were already looking back.` : ''}
+Tuft is quiet. When you look back at her she is looking south, past the rider's shoulder, as if something there were already looking back.` : ''}${b3In('greysword') ? `
+
+Dannet rides with her shield strapped flat on her back and her eyes shut, and opens them once, over a river, to see if it is the one at Capustan. It isn't.` : ''}${b3In('ellis') ? `
+
+Ellis is counting the fires on the road below as they go back under you, and loses the count, and starts again.` : ''}${b3In('vell') ? `
+
+Vell lets go with one hand to lean out and look straight down. Without turning its head, the Moranth in front of him reaches back and puts the hand back on the strap.` : ''}
 
 Near dawn the rider's hand comes up, flat, and the quorl drops. Ahead, on a ledge under a crag, a small fire that should not be there. Men round it. A Pannion picket, high and lonely, put out to watch the passes and not expecting anything to come down on it out of the sky.
 
@@ -779,7 +807,7 @@ The Moranth looks back at you over its shoulder. It is asking.`,
   b3_c6_q_foot:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', txt:
 `The quorls put you down in a hollow beyond the crag and lift away without a sound, and the Fourth comes round the rock on the picket's blind side, slowly, one boot at a time, in the grey before the sun.
 
-${by({sohra:`Sohra is first round the rock. She has her bow drawn before anyone at the fire has turned.`, greysword:`Dannet is first round the rock. She points, twice, at the two men who matter, and is already moving.`, _:`{who} is first round the rock, and has picked the one to take before the picket knows there is anyone to pick.`})}`,
+${by({sohra:`Sohra is first round the rock. She has her bow drawn before anyone at the fire has turned.`, greysword:`Dannet is first round the rock. She points, twice, at the two men who matter, and is already moving.`, ellis:`Ellis is first round the rock, and nobody at the fire hears her go. She holds up the gloved hand: five fingers, then one. Six at the fire.`, _:`{who} is first round the rock, and has picked the one to take before the picket knows there is anyone to pick.`})}`,
     ch:[{t:'Now.', go:()=>startBattle('b3_c6_landing', {surprise:'p'})}]}),
   b3_c6_q_seen:()=>({sp:'The landing ledge', scene:'b3_c6_ledge', txt:
 `The quorls put you down in a hollow beyond the crag, and the hollow is full of loose scree, and the scree goes down the mountain with a noise like a cart of crockery overturning.
@@ -829,7 +857,9 @@ The Moranth looks at her. Then it goes back and sits down among the quorls, and 
 
 It is too far to see anything but its shape. Walls. A great dark mass in the middle of it, darker than the rest.
 
-${b3In('tuft') ? `Tuft puts her eye to the gap. "There's something under the city," she says at last. "Old. Cold. And something on top of it that isn't." She steps back from the screen. "I don't want to look any more, Sergeant."` : `It is very quiet up here. Nothing moves on the plain at all.`}`,
+${b3In('tuft') ? `Tuft puts her eye to the gap. "There's something under the city," she says at last. "Old. Cold. And something on top of it that isn't." She steps back from the screen. "I don't want to look any more, Sergeant."` : `It is very quiet up here. Nothing moves on the plain at all.`}${b3In('vell') ? `
+
+Vell looks at the walls a long while, the way he would look at a parapet from the street. "High," he says at last. "Not as high as up here." It is meant to be a comfort.` : ''}`,
     ch:[{t:'Step back from the screen.', go:()=>startExplore()}]}),
   b3_c6_twist:()=>({sp:'Achievant Twist · the Black Moranth', fx:()=>{ S.f.b3_c6_twist = 1; }, txt:
 `The Moranth commander stands among the roosting quorls with one arm held stiffly across his chest. His armour is the same black chitin as the others', but a Malazan cloak is thrown over it, and you know who he is before the riders' heads all turn to him: Twist, Achievant of the Black Moranth, who has flown Dujek's Host out of the Domin a company at a time for a week of nights.
@@ -910,7 +940,7 @@ He lifts one hand and makes a sign: fingers spread, then closed, then dragged do
 *Here. You. When they come.*`,
     ch:[{t:'Nod.', go:()=>startExplore()}]}),
   b3_c6_dujek:()=>({sp:'Dujek Onearm · High Fist', fx:()=>{ S.f.b3_c6_dujek = 1; }, txt:
-`Dujek Onearm is walking the trenches with a staff officer trotting behind him, the empty sleeve pinned across his chest, stopping every twenty paces to look at a firing step or a latrine or a man's boots. He stops in front of the Fourth.
+`Dujek Onearm is walking the trenches with a staff officer trotting behind him, the empty sleeve pinned across his chest, stopping every twenty paces to look at a firing step or a latrine or a man's boots. He stops in front of the Fourth.${b3In('greysword') ? ` His eye goes to the wolf painted over the boar on Dannet's shield, and stays there a moment. "Capustan," he says. That's all, and she stands straighter for it.` : ''}
 
 "The Seventh's marines. The ones from the lift field." He looks you over. "Whiskeyjack sent word you made it quiet. Good." A pause. "How was he?"
 
@@ -1000,7 +1030,9 @@ Object.assign(B3CH6.dlg, {
   b3_c6_m_march:()=>({sp:'The road south · Whiskeyjack\'s column', scene:'b3_c6_road', html:allyHTML('The road to the Maurik · four thousand'), txt:
 `The Host that marches south out of that camp is less than half the Host that marched into it, and it marches exactly the same way.
 
-Every squad draws a second ration of firewood and lights three fires at night instead of one. The wagons drag cut brush behind them on chains to raise the dust of a column three times as long. Companies of cooks and farriers and carpenters march in the files of the companies that went, under their standards, with their spears. The Seventh's standard goes by in the hands of a quartermaster's clerk who has never held one in his life and holds it as if it might go off.${b3In('kettle') ? `
+Every squad draws a second ration of firewood and lights three fires at night instead of one. The wagons drag cut brush behind them on chains to raise the dust of a column three times as long. Companies of cooks and farriers and carpenters march in the files of the companies that went, under their standards, with their spears. The Seventh's standard goes by in the hands of a quartermaster's clerk who has never held one in his life and holds it as if it might go off.${b3In('ellis') ? `
+
+Ellis lights the Fourth's three fires every night and then walks out past the pickets to look back at the column's. "From the hills it's eleven thousand," she says. "I'd round down."` : ''}${b3In('kettle') ? `
 
 Kettle walks with her eyes on the sky every night until the wingbeats stop. On the fourth night they do not come at all. "That's everybody, then," she says. "Everybody who's going." She does not look at the sky after that.` : ''}
 
@@ -1011,7 +1043,7 @@ Whiskeyjack rides at the head of it. On the fifth day he stops riding, and walks
   b3_c6_m_march2:()=>({sp:'The Maurik · below the ford', scene:'b3_c6_barges', txt:
 `The Maurik is wide and brown and slow, going south between banks of reed toward a sea you cannot see. There is a ford, a long pale shallows where the old road crosses, and a league below the ford, where the bank shelves and the cedars come down to the water, Whiskeyjack halts the column and says: here.
 
-By nightfall there are slips cut in the bank and the first keels laid on them. The wrights, all eleven of them, go up and down the bank shouting. Everyone else carries timber.
+By nightfall there are slips cut in the bank and the first keels laid on them. The wrights, all eleven of them, go up and down the bank shouting. Everyone else carries timber.${b3In('vell') ? ` Vell is up on the ribs with the wrights inside the hour, because a barge on a slip is mostly rope and height, and nobody can get him down.` : ''}
 
 The White Face Barghast came down to the river two days ago from wherever the White Face go, a great many of them, painted, loud, and are camped on the high ground above the slips, singing, and coming down in the afternoons to help carry logs, by which they mean to carry more logs than the Malazans.${S.f.b3_treach ? `
 
@@ -1071,7 +1103,9 @@ He jerks his chin at the reeds on the far bank. "Something's been watching us fr
   b3_c6_barghast:()=>({sp:'A White Face warrior', txt:
 `A White Face Barghast warrior, a head taller than ${b3In('brisk') ? 'Brisk' : 'anyone in the Fourth'}, his face painted chalk-white with black round the eyes so that he looks like a skull that has been told a joke, is carrying a cedar log on one shoulder that two Malazan carpenters had been trying to roll. He sets it down by the slips, and looks at the Fourth, and grins.
 
-"Malazans," he says, in fair trade-tongue. "You carry one log, two of you, and you sweat. We carry two logs, one of us, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."`,
+"Malazans," he says, in fair trade-tongue. "You carry one log, two of you, and you sweat. We carry two logs, one of us, and we sing." He points at the log pile. "Humbrall Taur says the Malazans are our friends now. I say show me."${b3In('greysword') ? `
+
+Dannet looks at the log, and at him. "On Capustan's walls," she says, "we carried the dead up the steps two at a time, and did not sing." The Barghast considers this. "Then you will like it better," he says, "with singing."` : ''}`,
     ch:[{t:'"Show you." A log each, and a race to the slips.', check:['might', 14],
           near:{t:()=>`Yes, but ${NAME(ROLL().who || 'sgt')} wins it by half a stride and pays for the half with a back that clicks every time it bends, and the night watch on the slips is coming: ${bruiseN()} health down at the start of the next fight.`, fx:()=>bruise(ROLL().who || 'sgt', bruiseN())},
           edges:id=>[id === 'brisk' && ['heavy infantry: this is what she is for', 2], id === 'greysword' && ['she has carried a shield wall up Capustan\'s steps', 1], id === 'tuft' && ['a cadre mage and a cedar log', -2], id === 'kettle' && ['she is half his size', -1]],
@@ -1162,7 +1196,7 @@ At dusk the wrights call for every pair of hands that can hold a mallet: they me
 
 Too still. The frogs have stopped.
 
-${b3In('sohra') ? `"Somebody is lying in the reeds," Sohra says softly. "Many somebodies. The frogs say so."` : b3In('greysword') ? `"The reeds," Dannet says softly. "They have stopped moving with the wind."` : `There are men lying in the reeds. A great many.`}`,
+${b3In('sohra') ? `"Somebody is lying in the reeds," Sohra says softly. "Many somebodies. The frogs say so."` : b3In('greysword') ? `"The reeds," Dannet says softly. "They have stopped moving with the wind."` : b3In('ellis') ? `"Twenty in the reeds," Ellis says softly. "Perhaps more. They're breathing together."` : `There are men lying in the reeds. A great many.`}`,
     ch:[{t:'Kettle\'s sharper, into the reeds where they\'re lying.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c6_raid', {pre:true})},
         {t:'Douse the torches on the slips, and wait for them in the dark.', check:['guile', 14],
           near:{t:()=>b3In('ohl') && ROLL().who !== 'ohl' && S.loy && S.loy.ohl != null ? `Yes, but it is a long wait among the timber, and Ohl spends it whispering that men who come with fire-pots can be talked out of them, and that lying in the dark for them is murder with extra steps. He does not like how this is going to go.` : `Yes, but it is a long wait in the dark among the timber with the frogs gone quiet, and ${NAME(ROLL().who || 'sgt')} hears every reed move twice: −1 on the next check.`,
@@ -1199,7 +1233,7 @@ Humbrall Taur himself is on the lead barge beside Whiskeyjack, a vast old man in
 
 Ohl sits in the middle of the Fourth's barge with both hands on the gunwales. "I have never liked boats," he says. "I would like it noted that this is not a boat. This is a floor that has been told lies about water."` : ''}
 
-A little after noon the river bends hard under a high bank of reeds, and the barge swings in toward it, and the steersman shouts, and a stone the size of a fist comes out of the reeds and takes him off the steering oar into the water.
+A little after noon the river bends hard under a high bank of reeds, and the barge swings in toward it, and the steersman shouts, and a stone the size of a fist comes out of the reeds and takes him off the steering oar into the water.${b3In('vell') ? ` Vell has a line out to him before he comes up, and hauls him in along the side, coughing.` : ''}
 
 Then the reeds are full of men.${b3In('greysword') ? `
 
@@ -1236,7 +1270,9 @@ Brood's army is here.
 
 It came overland, fast, by the ford, and got here first, and it is drawn up along the landing and the street above it: Rhivi, and Tiste Andii, and Barghast of other clans, and mercenaries, and Mott Irregulars, and every one of them is looking at the barges coming in, and counting.
 
-There is a long silence along the landing, and in the silence the White Face on the barges stop singing.`,
+There is a long silence along the landing, and in the silence the White Face on the barges stop singing.${b3In('ellis') ? `
+
+Ellis, beside you, is counting them back. She gets as far as the Andii and stops. "I'd like it noted," she says, "that they got here first."` : ''}`,
     ch:[{t:'Off the barge.', go:()=>startExplore('b3_c6_landing')}]}),
 
   /* ---- Maurik ---- */
@@ -1289,7 +1325,7 @@ The last barges, Trake's Legion's, come in hours late, and their people come ash
         {t:'A smoker.', tag:'5 silver', req:()=>S.silver >= 5, fx:()=>{ S.silver -= 5; S.inv.smoker++; updSilver(); note('A smoker, from the Host\'s gear at Maurik.', 'good'); }, go:'b3_c6_gear'},
         {t:'Nothing.', go:()=>startExplore()}]}),
   b3_c6_landing_fire:()=>({sp:'A fire on the landing', txt:
-`A fire on the stones of the landing, made of a door from one of Maurik's empty houses. The Fourth sits round it and eats, and does not look at Brood's people, and Brood's people do not look at the Fourth, very carefully, all evening.`,
+`A fire on the stones of the landing, made of a door from one of Maurik's empty houses. The Fourth sits round it and eats, and does not look at Brood's people, and Brood's people do not look at the Fourth, very carefully, all evening.${b3In('greysword') ? ` Dannet sits with her shield face-in against her knees, so the wolf is toward the fire and not the landing.` : ''}${b3In('vell') ? ` Vell has climbed the landing wall to sit on top of it, because it is the only high thing in Maurik nobody has chalked on.` : ''}${b3In('ellis') ? ` Ellis eats with her back to the river, where she can see the street and the command tent both.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_lrest, fx:()=>{ S.f.b3_c6_lrest = 1; b3Rest('The Fourth sleeps on the stones of the landing at Maurik, in a city nobody lives in, and wakes no worse.'); }, go:'b3_c6_landing_rested'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b3_c6_landing_rested:()=>({sp:'A fire on the landing', txt:`You sleep. In the night somebody walks past the fire very slowly, a tall shape in a fur collar, and stops, and goes on. In the morning you are not sure you did not dream it.`,

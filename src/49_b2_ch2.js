@@ -1009,7 +1009,7 @@ ${S.f.b2_prisonerFate === 'column' ? 'The boy from the tanners\' street is sitti
 
 "Sergeant. Ramin, of the Red Blades. Of Ehrlitan." He nods back at the rise. "My horse is in the river. My file is up there. All of it but me." He says it in the present tense, as if they were waiting for him somewhere. "The commander is lending out the men who have no horse to the Seventh's squads that are short, until the company can remount. In Aren, perhaps. Captain Chenned says your squad held the bank behind my file." A pause. "I would rather be lent to people I have seen fight."
 
-He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}`,
+He waits. He is very straight. ${b2In('haddat') ? `Haddat is looking at him the way you'd look at your own face in the water, if it had chosen differently.` : ''}${b2In('warlock') ? ` Keth, at the end of the line, has his palm on the ground. "He fought," he says. "The rise has his file's blood in it. It is not angry with him." The old woman, out of him: "It is not angry with anyone. It is full."` : ''}`,
     ch:[{t:'"Why the Red Blades?"', req:()=>!S.f.b2_raminAsked, fx:()=>{ S.f.b2_raminAsked = 1; }, go:'b2_ramin_ask'},
         {t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
@@ -1022,7 +1022,9 @@ He looks back at the rise, at the red shapes on it.
 
 "I will go back to the company when it calls for me. I say it now so nobody can say I didn't. A lent sword goes back to its owner." He looks at you. "Until then it is kept clean."${b2In('tangle') ? `
 
-Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}`,
+Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
+
+The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. Somebody in this squad should know how to stand still."` : ''}`,
     ch:[{t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
         {t:'"No. We\'re enough as we are."', go:'b2_ramin_no'}]}),
   b2_ramin_yes:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 1; recruit('redblade'); loy('redblade', 1); if (b2In('haddat')) loy('haddat', 1); if (b2In('tangle')) loy('tangle', -1); }, txt:
@@ -1039,7 +1041,9 @@ Along the bank the Red Blades are still saying their dead. Ramin says them with 
   b2_ramin_no:()=>({sp:'Ramin', fx:()=>{ S.f.b2_raminDone = 0; }, txt:
 `He nods. Once, correctly. "Sergeant." He doesn't argue. He has been told no by Malazans before; he has the face for it.
 
-"Then I will ask the next squad," he says. "Somebody will lend for a red horse with no horse." And he goes back down the bank toward the company, and puts his helm on, and stands with them for the names.`,
+"Then I will ask the next squad," he says. "Somebody will lend for a red horse with no horse." And he goes back down the bank toward the company, and puts his helm on, and stands with them for the names.${b2In('warlock') ? `
+
+Keth watches him go. "Correct," the old woman says, out of him. "He will be correct all the way to Aren." Keth, in his own voice: "She liked him."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_ramin_again:()=>({sp:'Ramin', txt:`He's with what's left of the Red Blades, saying the names.`, ch:[{t:'Leave him.', go:()=>startExplore()}]}),
 
@@ -1072,7 +1076,9 @@ The ground is coming up out of itself. That is the only way you can say it after
 
 It does not make a sound you can hear. You hear it anyway.
 
-${b2In('sathi') ? `"The warlocks," Sathi whispers. "Sormo. They have given it to the spirits. To the land. The land is old here and it is very hungry and nobody has fed it in a long time." She is not laughing. You have never seen her not laugh at a death. "Don't watch, Sergeant. It isn't ours. It's theirs."` : `It isn't yours to watch. You watch anyway.`}
+${b2In('sathi') ? `"The warlocks," Sathi whispers. "Sormo. They have given it to the spirits. To the land. The land is old here and it is very hungry and nobody has fed it in a long time." She is not laughing. You have never seen her not laugh at a death. "Don't watch, Sergeant. It isn't ours. It's theirs."` : `It isn't yours to watch. You watch anyway.`}${b2In('redblade') ? `
+
+Ramin is on his feet with his lance before he is properly awake, in his shirt, between the carts and the plain. He stands there until dawn. He does not put the lance down, and he does not ask anyone what he is looking at.` : ''}
 
 ${b2In('marrow') ? `Beside you Marrow makes a small sound. "The warren," she says. "Feel it, child. Something just went out of it." She has her hand flat on her chest. "For a breath, it was clean." She keeps the string in her lap and does not tie anything.` : ''}
 

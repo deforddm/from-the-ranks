@@ -710,7 +710,7 @@ He looks at the command tent. "Going to be marching a long way now, I hear."`,
     b3_c1_delegate:()=>({sp:'A Daru attendant', fx:()=>{ S.f.b3_c1_delegate = 1; }, txt:
 `A carriage has been driven out of the city and up to the edge of Brood's camp, and stuck there, axle-deep in spring mud, with its horses looking ashamed of it. A young Daru attendant in a coat much too good for the mud is standing on the step holding a parasol over nothing and a ledger against his chest.
 
-"Soldier." He sounds relieved to see anyone who looks as if they might know where things are. "The Darujhistan delegation. Councillor D'Arle, Master Coll, Master Murillio, and" (a fractional pause, the pause of a young man trying very hard to be professional) "*him*." He looks at the ledger. "Fourteen trunks. Thirteen arrived. I'm told the fourteenth was eaten, or will be." He looks at you hopefully. "Is there a road?"`,
+"Soldier." He sounds relieved to see anyone who looks as if they might know where things are. "The Darujhistan delegation. Councillor D'Arle, Master Coll, Master Murillio, and" (a fractional pause, the pause of a young man trying very hard to be professional) "*him*." He looks at the ledger. "Fourteen trunks. Thirteen arrived. I'm told the fourteenth was eaten, or will be." He looks at you hopefully. "Is there a road?"${b3In('vell') ? `\n\nVell has gone very interested in the carriage's back axle. The coat is a Council house's livery, and a Guild journeyman learns those before he learns knots, so he knows whose roofs not to cross.` : ''}`,
       ch:[{t:'"There\'s mud. There\'s more mud south."', go:'b3_c1_delegate_2'},
           {t:'Walk on.'}]}),
     b3_c1_delegate_2:()=>({sp:'A Daru attendant', txt:
@@ -729,7 +729,7 @@ A great black bird drops out of the air onto the carriage roof with a noise like
 
 "A *parrot*?"
 
-${b3In('tuft') ? `Tuft, beside you, has gone a little pale at *red wool* and is not laughing. Kruppe looks at her over the handkerchief, very briefly, with eyes that are not round at all, and then he is all silk again.` : `Kruppe dabs his forehead, and winks at nobody in particular.`}`,
+${b3In('tuft') ? `Tuft, beside you, has gone a little pale at *red wool* and is not laughing. Kruppe looks at her over the handkerchief, very briefly, with eyes that are not round at all, and then he is all silk again.` : `Kruppe dabs his forehead, and winks at nobody in particular.`}${b3In('vell') ? `\n\nVell, at the back, has gone a careful shade of nothing. In the Daru District they say you never owe Kruppe money, because you can never be sure you don't.` : ''}`,
       ch:[{t:'Leave them to it.'}]}),
 
     /* ---- Sohra on the line ---- */
@@ -748,7 +748,7 @@ ${b31Say({kettle:`"Why?" says Kettle, who would.`, brisk:`"Why?" says Brisk.`, _
     b3_c1_sohra_line2:()=>({sp:'Sohra', txt:
 `She looks the Fourth over, one at a time, taking her time about it.
 
-"Loud," she says. "Muddy. You stand close together, like the young bulls do when there are wolves." She tilts her head. "The Mhybe asked me what Malazans are like, before. I said loud. She said that was not an answer." A small, sharp smile. "I am going to tell her it is the whole answer, and see what she says."`,
+"Loud," she says. "Muddy. You stand close together, like the young bulls do when there are wolves." She tilts her head. "The Mhybe asked me what Malazans are like, before. I said loud. She said that was not an answer." A small, sharp smile. "I am going to tell her it is the whole answer, and see what she says."${b3In('ellis') ? `\n\nHer eyes stop on Ellis, at the end, a little apart from the rest. "Not that one," she says. "That one is quiet. She stands at the edge, like a scout, and she has been watching me watch you." Ellis doesn't deny it. Sohra looks pleased, as if she had found a second rider in a herd of cows.` : ''}`,
       ch:[{t:'Walk on.'}]}),
 
     /* ---- south, to the Rhivi camp, when the line is relieved ---- */
@@ -761,7 +761,7 @@ ${b31Say({kettle:`"Why?" says Kettle, who would.`, brisk:`"Why?" says Brisk.`, _
     b3_c1_rhivi_arrive:()=>({sp:'The Rhivi camp', scene:'b3_c1_rhivi', fx:()=>{ S.f.b3_c1_inRhivi = 1; }, txt:
 `The Rhivi camp at night is round hide tents and low fires and the herds a great dark breathing mass on the slope above, horses and the shaggy humped bhederin together, and somebody, always somebody, singing to them, low, between other jobs.
 
-The Fourth walks in unchallenged, and ungreeted. Rhivi faces turn in the firelight, look, and turn back. *Malazans*. Something you don't argue with. Something that passes.${b3In('tuft') ? `\n\nTuft walks a little ahead of the squad, and then a little behind it, and then beside you, as if she can't decide which is safest. Somewhere in this camp is a tent with a child in it. She doesn't ask which.` : ''}`,
+The Fourth walks in unchallenged, and ungreeted. Rhivi faces turn in the firelight, look, and turn back. *Malazans*. Something you don't argue with. Something that passes.${b3In('ellis') ? ` Ellis walks in the way a scout walks into another army's camp: slow, hands in plain sight, the gloved one too.` : ''}${b3In('tuft') ? `\n\nTuft walks a little ahead of the squad, and then a little behind it, and then beside you, as if she can't decide which is safest. Somewhere in this camp is a tent with a child in it. She doesn't ask which.` : ''}`,
       ch:[{t:'Find Sohra.', go:()=>startExplore()}]}),
     b3_c1_rhivi_back:()=>({sp:'The slope', txt: b31Done() ?
 `North, up the slope to the picket. The armies march at dawn.` :
@@ -862,7 +862,7 @@ After a while, without opening her eyes, the Mhybe takes something from round he
 
 They watch the Mhybe's tent and nothing else.
 
-${b3In('sohra') ? `"Kallor's," Sohra says, not quietly. "He has a few of his own. He never says where he finds them."` : `A Rhivi boy going past with a water-skin sees where you're looking. "Kallor's," he says, low. "The High King has a few of his own." He hurries on.`}`,
+${b3In('sohra') ? `"Kallor's," Sohra says, not quietly. "He has a few of his own. He never says where he finds them."` : `A Rhivi boy going past with a water-skin sees where you're looking. "Kallor's," he says, low. "The High King has a few of his own." He hurries on.`}${b3In('ellis') ? `\n\n"Paid by the year," Ellis says, very low. "Not by the job. The ones paid by the job fidget."` : ''}`,
       ch:[{t:'Walk over and stand near them. Just stand.', check:['might',13],
             edges:id=>[id === 'brisk' && ['she has stood in front of worse things, and looks it', 2], id === 'kettle' && ['she keeps a hand in the satchel, which helps', 1], id === 'tuft' && ['they do not see her as a threat', -1]],
             near:{t:'They go, but slowly, and the one with the scar looks back.'},
@@ -913,7 +913,7 @@ ${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening
 
 ${S.f.b3_c1_runner ? `The Host's runner is standing three paces off with his slate, pretending not to listen. The munitions train comes down off the Divide road tonight, late, and the Host wants the Fourth on it.` : `And up the slope a runner of the Host is coming down between the tents, asking every Rhivi he passes where the Malazans are, with a slate in his hand that says the Moranth munitions train is coming in off the Divide road tonight, and the Host wants the Fourth on it.`}
 
-Two things want the Fourth tonight. It can do one of them.`,
+${b3In('ellis') ? `Ellis has been looking at the hills while Sohra talks. "She's right about the fire," she says. "I saw it at dusk. Small, for the number round it. Men who don't want to be counted keep a small fire."\n\n` : ''}${b3In('vell') ? `Vell looks from the runner to the painted door-flap and back, and keeps his mouth shut, which is new, and which he seems to find very hard.\n\n` : ''}Two things want the Fourth tonight. It can do one of them.`,
       ch:[{t:'"We\'ll stand at the tent." Send the runner back with the Fourth\'s regrets.', fx:()=>{ S.f.b3_c1_key = 'mhybe'; S.f.b3_mhybe = 1; ally(2, 0, 'The Mhybe\'s tent'); b31L('tuft', 1); b31L('ohl', 1); b31L('kettle', -1); }, go:'b3_c1_watch'},
           {t:'"The Host has given us an order." Go up the Divide road.', fx:()=>{ S.f.b3_c1_key = 'crate'; ally(-1, 0, 'Sohra asked, and the Fourth went elsewhere'); b31L('kettle', 1); b31L('brisk', 1); b31L('tuft', -1); }, go:'b3_c1_crate'},
           {t:'"Not yet. Let me think."', go:()=>startExplore()}]}),
@@ -922,7 +922,7 @@ Two things want the Fourth tonight. It can do one of them.`,
     b3_c1_watch:()=>({sp:'The Mhybe\'s tent', scene:'b3_c1_rhivi', txt:
 `The Fourth stands the night outside the tent with the painted door-flap, shields on their arms, while the fires burn down.
 
-${S.f.b3_c1_kmenGone ? `The men in grey and fur don't come back.` : `The men in grey and fur come back once, near midnight, and see the shields, and look at them, and go away again between the tents without a word.`} Sohra sits with her back against the tent pole and sings to the herd, very low.${b3In('tuft') ? ` Tuft stands at the door-flap, as close as she has been, closer than she said she'd come, with her back to it so she won't look in.` : ''}
+${S.f.b3_c1_kmenGone ? `The men in grey and fur don't come back.` : `The men in grey and fur come back once, near midnight, and see the shields, and look at them, and go away again between the tents without a word.`} Sohra sits with her back against the tent pole and sings to the herd, very low.${b3In('tuft') ? ` Tuft stands at the door-flap, as close as she has been, closer than she said she'd come, with her back to it so she won't look in.` : ''}${b3In('ellis') ? ` Ellis takes the dark side of the tent, away from the fires, where the light won't spoil her eyes.` : ''}${b3In('vell') ? ` Vell runs a line from the tent pole to the nearest picket stake at ankle height, and tells everyone where it is, twice.` : ''}
 
 Somewhere past the middle of the night the singing stops.
 
@@ -951,7 +951,7 @@ ${b3In('sohra') ? `"He will remember your face," Sohra says.` : `"He will rememb
     b3_c1_sohra_join:()=>({sp:'Sohra', fx:()=>{ if (!b3In('sohra')) b3Join('sohra'); }, txt:
 `"I was sent to watch the Malazans," she says. "I can watch them better from inside the herd." She slings the horn bow. "When you march, I am marching with you. The Mhybe's people will say I am still watching. I will be." A beat. "I will also be making sure you do not get lost. You are a very slow herd, and you complain, and you would get lost."
 
-${b3In('sohra') ? `She falls in at the end of the Fourth's line, where the new one always stands, and looks along it, and counts it, under her breath, the way the Fourth does. It comes out right.` : `There isn't room in the Fourth for another, not yet; she sees that before you say it, and shrugs. "Then I will ride beside the herd," she says. "Ask at any fire, and I will come."`}${b3In('brisk') ? `\n\nBrisk looks her up and down. "Good," she says. It is the longest review she has ever given.` : ''}`,
+${b3In('sohra') ? `She falls in at the end of the Fourth's line, where the new one always stands, and looks along it, and counts it, under her breath, the way the Fourth does. It comes out right.${b3In('vell') ? ` Vell moves up one place to make room, the way Brisk did for him once, and looks pleased to have somebody to do it for.` : b3In('ellis') ? ` Ellis moves up one place to make room without being asked. The end of the line is a scout's place, and she is giving it up, and both of them know it.` : ''}` : `There isn't room in the Fourth for another, not yet; she sees that before you say it, and shrugs. "Then I will ride beside the herd," she says. "Ask at any fire, and I will come."`}${b3In('brisk') ? `\n\nBrisk looks her up and down. "Good," she says. It is the longest review she has ever given.` : ''}`,
       ch:[{t:'Sleep until the march.', go:'b3_c1_dawn'},
           {t:'Not yet. Walk the camp.', go:()=>startExplore()}]}),
 
@@ -967,7 +967,7 @@ ${b3In('sohra') ? `She falls in at the end of the Fourth's line, where the new o
 
 Something goes over, high up, with a sound like a struck string. ${b3In('kettle') ? `"Quorls," Kettle breathes, looking up, and her whole face is lit with it. "They're flying cover. They're flying cover for *us*."` : `Quorls, flying cover, high and invisible.`}
 
-The lead driver clicks at you, once, which might be a greeting, and the train starts down through the cutting at a walk. Halfway through it, somebody on the scree above starts a little avalanche of pebbles, and then a bigger one, and then a voice says something in the Divide's ugly dialect and the dark on both banks stands up.`,
+The lead driver clicks at you, once, which might be a greeting, and the train starts down through the cutting at a walk.${b3In('ellis') ? ` Ellis, walking at the lead wagon's wheel, looks up at the scree and keeps looking. "Too even," she says, quietly, to you. "Scree's never even."` : ''}${b3In('vell') ? ` Vell has his hook off his shoulder, for no reason he could give.` : ''} Halfway through it, somebody on the scree above starts a little avalanche of pebbles, and then a bigger one, and then a voice says something in the Divide's ugly dialect and the dark on both banks stands up.`,
       ch:[{t:'"To the wagons."', go:()=>startBattle('b3_c1_train', {})},
           {t:'Kettle lights up the cutting wall with a burner.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_train', {pre:true})}]}),
     b3_c1_train_after:()=>({sp:'The Divide road', scene:'b3_pale_grey', fx:()=>{ S.f.b3_c1_trainDone = 1; S.inv.sharper = (S.inv.sharper || 0) + 2; S.inv.cusser = (S.inv.cusser || 0) + 1; note('The Moranth quartermaster signs two sharpers and a cusser over to the Fourth, for the road.', 'good'); }, txt:
@@ -989,9 +989,9 @@ They do it slowly, and in the open. The Host's column goes out down the south-ea
 
 ${S.f.b3_tav ? (b3In('brisk') ? `Somewhere back down the column the Fourth Regiment is singing a Cawn barge song, and one voice in it is worse than all the others put together. Brisk, marching, doesn't turn her head. Her mouth moves, once, on the last line.` : `Somewhere back down the column the Fourth Regiment is marching, and one big man in it is not singing.`) : `Somewhere back down the column the Second is singing, badly.`}
 
-${S.f.b3_c1_key === 'mhybe' ? (b3In('sohra') ? `Sohra rides at the Fourth's shoulder on a dun mare, singing to the herds, and every so often counts the squad under her breath.` : `Sohra rides with the herd on the Fourth's flank, close enough to call to. She lifts her herd-staff an inch, which is either a greeting or a note in a ledger.`) : `A Rhivi girl rides past the Fourth on the herd's flank without turning her head. "I will find you on the march," Sohra says, to the road ahead. "When I have decided what to say."`}${b3In('tuft') ? `\n\nTuft walks on the side of the column nearest the Rhivi, where she can see the Mhybe's wagon. She doesn't go any nearer. She doesn't look away either.` : ''}
+${S.f.b3_c1_key === 'mhybe' ? (b3In('sohra') ? `Sohra rides at the Fourth's shoulder on a dun mare, singing to the herds, and every so often counts the squad under her breath.` : `Sohra rides with the herd on the Fourth's flank, close enough to call to. She lifts her herd-staff an inch, which is either a greeting or a note in a ledger.`) : `A Rhivi girl rides past the Fourth on the herd's flank without turning her head. "I will find you on the march," Sohra says, to the road ahead. "When I have decided what to say."`}${b3In('tuft') ? `\n\nTuft walks on the side of the column nearest the Rhivi, where she can see the Mhybe's wagon. She doesn't go any nearer. She doesn't look away either.` : ''}${b3In('vell') ? `\n\nVell keeps looking up at nothing: no roofs between here and wherever south ends, nothing to string a line between. Somebody has told him so. He says he knows. He has started, to his own surprise, to like the sky.` : ''}
 
-Behind the Fourth, Pale goes down into its own hills: the broken north wall, the burial field green over its mounds, the hill where the cadre row was, with a horse on it. ${b31Say({kettle:`"Same as this morning," Kettle says, to nobody, with a hand on the satchel. Then: "No. Not the same."`, _:`The Fourth doesn't look back. It counts itself instead.`})}`,
+Behind the Fourth, Pale goes down into its own hills: the broken north wall, the burial field green over its mounds, the hill where the cadre row was, with a horse on it. ${b31Say({kettle:`"Same as this morning," Kettle says, to nobody, with a hand on the satchel. Then: "No. Not the same."`, _:`The Fourth doesn't look back. It counts itself instead.`})}${b3In('ellis') ? ` Ellis looks back once, at the city, and pulls the glove tighter on the burned hand, and then doesn't again.` : ''}`,
       html:allyHTML('Outside Pale · the march begins'),
       ch:[{t:'South-east.', onward:true, go:()=>chapterEnd(1, S.f.b3_c1_key || 'mhybe')},
           {t:'Not yet.', go:()=>startExplore()}]}),
