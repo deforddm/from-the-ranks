@@ -56,6 +56,8 @@ function start(){
   if (typeof B2CH7 !== 'undefined') registerChapter(7, B2CH7, 'dg'); // Book Two, Chapter 7: Aren Way, and the end of Book Two (54)
   [typeof B3CH1 !== 'undefined' && B3CH1, typeof B3CH2 !== 'undefined' && B3CH2, typeof B3CH3 !== 'undefined' && B3CH3, typeof B3CH4 !== 'undefined' && B3CH4, // Book Three: The Fair Exchange (60);
    typeof B3CH5 !== 'undefined' && B3CH5, typeof B3CH6 !== 'undefined' && B3CH6, typeof B3CH7 !== 'undefined' && B3CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'moi'); }); // its chapters are const B3CH1..B3CH7
+  [typeof B4CH1 !== 'undefined' && B4CH1, typeof B4CH2 !== 'undefined' && B4CH2, typeof B4CH3 !== 'undefined' && B4CH3, typeof B4CH4 !== 'undefined' && B4CH4, // Book Four: Unblooded (70);
+   typeof B4CH5 !== 'undefined' && B4CH5, typeof B4CH6 !== 'undefined' && B4CH6, typeof B4CH7 !== 'undefined' && B4CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'hoc'); }); // its chapters are const B4CH1..B4CH7
   showTitle();
   requestAnimationFrame(loop);
 }

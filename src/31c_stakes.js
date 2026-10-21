@@ -184,6 +184,9 @@ const BOONS = {
   'the grandmother':    {key:'ground', name:'The ground gives back', txt:'No spell sputters this fight, and every squadmate heals 2 at the start of their turn.'},
   'the Rhivi spirits':  {key:'herd',   name:'The herd goes through', txt:'+2 move, and enemy shots are −3 to hit.'},
   'Togg and Fanderay':  {key:'wolves', name:'The Wolves of Winter',  txt:'+1 armour, and an enemy that starts its turn next to a squadmate takes 1d4 cold.'},
+  /* v7.0, Book Four (70): Hessa's goddess and Orvas's dead */
+  'D\'rek':             {key:'worm',   name:'The Worm of Autumn',    txt:'An enemy that lands a blow on a squadmate in melee takes 3 rot back.'},
+  'the Khundryl dead':  {key:'tears',  name:'The dead ride',         txt:'+2 move, and each squadmate\'s first hit in a turn does +2 damage.'},
 };
 const BOON_BY_KEY = Object.fromEntries(Object.entries(BOONS).map(([god, b]) => [b.key, Object.assign({god}, b)]));
 /* the boons on the fight being fought (or about to be): keys, newest last */
@@ -247,7 +250,7 @@ const avgDmg = d => d ? d[0] * (d[1] + 1) / 2 + (d[2] || 0) : 0;
 /* how much a piece of gear is worth on this squadmate: armour for the front, range for the ranged, a stat trinket on whoever rolls that stat */
 function gearValue(id, g){
   const it = ITEMS[g], t = TPL[id]; if (!it || !t || (it.who && !it.who.includes(id))) return -1;
-  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade'].includes(id);
+  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade', 'hessa', 'darrut'].includes(id);
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
   if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });

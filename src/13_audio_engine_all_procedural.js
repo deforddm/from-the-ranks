@@ -29,6 +29,12 @@ const AUDIO = (() => {
       inst:{title:['choir', 'bell'], calm:['cello', 'choir', 'bell'], end:['choir', 'bell', 'flute']},
       bpm:{title:50, calm:56, end:48, dread:50, battle:88, dark:80},
       pats:['K.......', 'K...K...', 'K.....S.', 'K..k..s.'], fills:['K.S.K.SS', 'K...KSSS'], ost:'X...x.X.'},
+    /* v7.0 Book Four (Seven Cities again, a year on, harder and drier): Phrygian dominant on C#2, a reed line and the oud, frame drums
+       hit sparer and harder, a pad with sand in it (a low noise hiss under the saw and triangle), very little room */
+    hoc:{scale:[0, 1, 4, 5, 7, 8, 10], root:69.30, pad:'sand', wet:.14, drum:'frame', lead:'reed', bellK:0, // C# Phrygian dominant
+      inst:{title:['reed', 'oud'], calm:['oud', 'reed'], end:['reed', 'oud', 'glass']},
+      bpm:{title:56, calm:60, end:50, dread:52, battle:100, dark:86},
+      pats:['K..sK..S', 'K...K.S.', 'K.s.K.SS', 'K..SK.s.'], fills:['K.SSK.SS', 'KSKSK.SS'], ost:'X.xX..x.'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -266,12 +272,13 @@ const AUDIO = (() => {
   const PD = [[[0,1],[0,4],[-3,1],[0,1]], [[0,4],[1,5],[-3,1],[-2,1]], [[0,1,4],[-3,1],[0,4],[1,5]]];
   function pad(L, t, degs, dur, v, cut){ // Book One: detuned saws, spread left and right, the filter opening and closing with the swell. Book Two: thinner, a triangle under the saw. Book Three: sung, through the choir's formants
     const kind = V.pad, g = gn(0, L.near), end = t + dur; let n = 0; const ns = [g];
+    if (kind === 'sand') noise({t, a:dur * .45, d:dur * .5, v:v * .45, f:cut * 2.2, q:.5, type:'bandpass', to:L.near, buf:'p'}); // Book Four: the sand under the chord
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * (kind === 'choir' ? 1.6 : 1), t + dur * .4); g.gain.linearRampToValueAtTime(0, end);
     let heads;
     if (kind === 'choir') { heads = [F('bandpass', 700, 4, g), F('bandpass', 1150, 5, g), F('lowpass', cut * .8, .5, g)]; }
     else { const fl = F('lowpass', cut * .5, .5, g); fl.frequency.setValueAtTime(cut * .5, t); fl.frequency.linearRampToValueAtTime(cut, t + dur * .45); fl.frequency.linearRampToValueAtTime(cut * .55, end); heads = [fl]; }
     ns.push(...heads);
-    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = kind === 'thin' && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' ? 7 : 4, kind === 'thin' ? 13 : 8);
+    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = (kind === 'thin' || kind === 'sand') && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' || kind === 'sand' ? 7 : 4, kind === 'thin' || kind === 'sand' ? 13 : 8);
       let h = o; if (ac.createStereoPanner) { h = ac.createStereoPanner(); h.pan.value = s * (.25 + .15 * i); o.connect(h); } heads.forEach(x => h.connect(x));
       if (kind === 'choir') { const l = ac.createOscillator(), lg = gn(7); l.frequency.value = rnd(4.2, 5.2); l.connect(lg); lg.connect(o.detune); l.start(t); l.stop(end + .05); ns.push(l, lg); }
       o.start(t); o.stop(end + .05); n++; L.keep.add(o);
@@ -304,7 +311,7 @@ const AUDIO = (() => {
       else if (chance(.6)) pad(L, t, [ch[0]], bl * 8 + .5, P0.pv * .6, P0.cut * .7); }
     if (b % 2 === 0) { const d = L.motif[L.mi];
       if (L.sec === 'full' && chance(P0.dens)) melody(L, t, d, bl);
-      else if (L.sec === 'thin' && b % 4 === 0 && chance(P0.dens * .5)) (V.key === 'dg' ? oud(L, t, f(d, 3), bl, .05) : glass(L, t, f(d, 3), .03));
+      else if (L.sec === 'thin' && b % 4 === 0 && chance(P0.dens * .5)) (V.key === 'dg' || V.key === 'hoc' ? oud(L, t, f(d, 3), bl, .05) : glass(L, t, f(d, 3), .03));
       if (++L.mi >= 4) { L.mi = 0; if (chance(.5)) L.motif = pick(MOT); } }
     if (V.bellK && b % P0.bellEvery === P0.bellAt && chance(P0.bell)) toll(t, f(pick(P0.bellDeg), 1), P0.bv * V.bellK, L.far);
     else if (!V.bellK && b % P0.bellEvery === P0.bellAt && chance(P0.bell * .6)) DRUM.frame.S(L, t, .5); // Book Two: a finger cymbal where Book One has a bell
@@ -486,6 +493,14 @@ const AUDIO = (() => {
     b3_c5_burnt:'burnt', b3_c5_camp:'camp', b3_c5_catlin:'plain', b3_catlin:'plain', b3_c5_drowned:'river', b3_c5_domin:'burnt', b3_c5_domin_night:'burnt_night', b3_domin:'burnt', b3_domin_night:'burnt_night', b3domin:'burnt', b3domin_night:'burnt_night', b3_rain:'rain',
     b3_c6_barges:'river', b3_c6_downriver:'river', b3_c6_entrench:'hills', b3_entrench:'hills', b3_c6_flight:'storm', b3_c6_host:'camp', b3_c6_ledge:'hills', b3_c6_lift:'hills', b3_c6_lift_empty:'hills', b3_c6_maurik:'plain', b3_maurik:'plain', b3_c6_road:'plain', b3_c6_slips_night:'night',
     b3_c6_mountain:'snow', b3_c6_mountain_night:'snow_night', b3_c6_river:'river', b3_c6_bankb:'river', b3_c6_campb:'camp', b3_c6_ridgeb:'hills',
+    // Book Four (70): the reading places and the decors the chapters will use; anything else b4_ falls to the desert
+    b4_aren_yard:'city_night', b4_aren:'city', b4_aren_night:'city_night', b4_barracks:'city_night', b4_graveyard:'city_night', b4aren:'city', b4aren_night:'city_night',
+    b4_road_fire:'desert_night', b4_road:'desert', b4_road_dusk:'desert_dusk', b4_fall:'desert_dusk', b4road:'desert', b4road_night:'desert_night', b4_march:'column', b4_march_dusk:'column_night',
+    b4_feast:'camp_night', b4_ford:'river', b4_ford_night:'river_night', b4ford:'river', b4_khundryl:'hills', b4_butte:'hills',
+    b4_seti_fire:'column_night', b4_camp:'column', b4_camp_night:'column_night', b4camp:'column', b4camp_night:'column_night', b4_hills:'hills', b4_barrows:'barrow',
+    b4_wall:'storm', b4_wall_fire:'desert_night', b4wall:'storm', b4_raraku:'desert', b4_raraku_night:'desert_night', b4raraku:'desert', b4raraku_night:'desert_night', b4_seep:'oasis',
+    b4_picket:'desert_night', b4_panarak:'siege', b4_panarak_night:'siege_night', b4picket:'desert_night', b4_trenches:'siege_night',
+    b4_coral:'coral', b4_coral_dawn:'sea', b4coral:'coral', b4_flood:'sea', b4_finale:'sea_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
@@ -493,6 +508,7 @@ const AUDIO = (() => {
     const base = n.replace(/_(night|dusk|dawn|day|eve|late|after)$/, ''); if (PLACE[base]) { const a = PLACE[base]; return /_night$|_eve$|_late$/.test(n) ? NIGHT[a] || a : a; }
     if (/^b2|^dg|odhan|hissar|aren/.test(n)) return dark ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert';
     if (/^b3|^moi/.test(n)) return dark || /night/.test(n) ? 'night' : /dusk/.test(n) ? 'dusk' : 'plain';
+    if (/^b4|^hoc/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Four: the Holy Desert
     return null;
   }
   const NIGHT = {plain:'night', dusk:'night', hills:'night', city:'city_night', camp:'camp_night', desert:'desert_night', desert_dusk:'desert_night', column:'column_night', river:'river_night', sea:'sea_night', siege:'siege_night', forest:'forest_night', snow:'snow_night', burnt:'burnt_night', herds:'night'};
@@ -509,8 +525,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' ? 'desert' : V.key === 'moi' ? 'snow' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' ? 'sea_night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};

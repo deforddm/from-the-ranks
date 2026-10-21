@@ -121,6 +121,7 @@ function bookDeedsHTML(b, all){
       ['Masks at the Fete', best ? `${best} of 5 named${d('masksAll') ? ', all five at least once' : ''}` : 'Not yet']];
     extra = `<h4 class="jh">At the tables</h4><div class="kv">${tables.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
   else if (b === 'moi') extra = typeof b3DeedsExtra === 'function' ? b3DeedsExtra(mine) : ''; // Book Three's Alliance (60)
+  else if (b === 'hoc') extra = typeof b4DeedsExtra === 'function' ? b4DeedsExtra(mine) : ''; // Book Four's Nerve and Dust (70)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
@@ -137,11 +138,11 @@ function bookDeedsHTML(b, all){
     <div class="route"><canvas data-route="${b}"></canvas></div><ol class="deeds-road">${rows}</ol>${extra}</details>`;
 }
 function fallenHTML(all){
-  const rows = []; all.forEach(({e, s}) => Object.entries(s.dead || {}).forEach(([id, dd]) => { const t = TPL[id]; if (!t) return;
+  const rows = []; all.forEach(({e, s}) => Object.entries(s.dead || {}).forEach(([id, dd]) => { const t = TPL[id]; if (!t || (dd && dd.from)) return; // a Book Four save carries Book Two's dead (from:'dg'): the Book Two save lists them
     rows.push(`<li><b>${esc(t.name)}</b> <span>${esc(dd.where || (dd.ch ? `Chapter ${dd.ch}` : ''))}</span> <em>Sergeant ${esc(e.name)}'s squad, Book ${(BOOKS[bookOf(s)] || BOOKS.gotm).word}</em></li>`); }));
   return rows.length ? `<h4 class="jh">The fallen</h4><ul class="jl fallen">${rows.join('')}</ul>` : ''; }
 deedsHTML = function(){
-  const all = allSergeants(), books = Object.keys(BOOKS), done = all.filter(({s}) => bookDone(s)).length;
+  const all = allSergeants(), books = shelfBooks().map(B => B.id), done = all.filter(({s}) => bookDone(s)).length;
   const sum = k => all.reduce((a, {s}) => a + (((s.stats || {})[k]) || 0), 0);
   const series = [['Sergeants', all.length], ['Books finished', done], ['Fights won', sum('won')], ['Foes put down', sum('kills')], ["The gods' answers", sum('godsAnswered')], ['Visions seen', all.reduce((a, {s}) => a + ((s.seenVisions || []).length), 0)]];
   const doneR = replayable();

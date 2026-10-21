@@ -316,6 +316,6 @@ const POR = {
 };
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
-  (id === 'sgt' && BOOK === 'dg' && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
+  (id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc') && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
   ctx.restore();
 }

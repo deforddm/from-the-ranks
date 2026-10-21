@@ -44,9 +44,10 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
   const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
 /* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
-const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : [];
+const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : b === 'hoc' && typeof b4Finished === 'function' ? b4Finished() : [];
 const impShow = b => impList(b).length > 0;
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+  if (b === 'hoc') return `<label for="impSel">Bring a Book Two sergeant and the squad</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book Two on the Aren Guard or the Wickan road: that squad was in Aren when the Adjunct came. The desert road leads elsewhere.</small>`;
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
 /* Choose your book (v6.3): the title shows the three books as covers. A returning player sees their sergeants first and the
@@ -59,7 +60,7 @@ function coverSrc(key){ if (!ARTON() || !ART[key]) return '';
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 const onShelf = (e, b) => (e.book || 'gotm') === b;
 function shelfHTML(list){
-  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${Object.values(BOOKS).map(B => {
+  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
     const n = list.filter(e => onShelf(e, B.id)).length, src = coverSrc(B.titleArt || 'title/key');
     return `<button class="cover" data-shelf="${B.id}" aria-label="Book ${B.word}: ${esc(B.name)}, beside ${esc(B.title)}${n ? `; ${n} sergeant${n > 1 ? 's' : ''}` : ''}">
       <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false">` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
@@ -75,7 +76,7 @@ function showTitle(fresh, want){
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
     <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
-    ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
+    ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).filter(b => !b.coming || b.id === tb).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}${b.coming ? ' · coming' : ''}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
     <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
@@ -107,10 +108,12 @@ function showTitle(fresh, want){
       if (!n) { msg('Give your sergeant a name.'); nm.focus(); return; }
       const imp = $('#impSel') && !$('#impField').hidden ? $('#impSel').value : '';
       if (book === 'moi' && typeof b3ChCount === 'function' && !b3ChCount()) { msg('Book Three is still being written. Its chapters are on the way.'); return; }
-      const t = book === 'moi' && imp ? list.find(e => e.book === 'moi' && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
+      if (book === 'hoc' && typeof b4ChCount === 'function' && !b4ChCount()) { msg('Book Four is still being written. Its chapters are on the way.'); return; }
+      const t = (book === 'moi' || book === 'hoc') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
       if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
       if (book === 'moi') { S = newStateMOI(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
+      if (book === 'hoc') { S = newStateHOC(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
       S = newState(n); S.diff = diff; save(); showIntro(); };
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
@@ -124,7 +127,7 @@ function showTitle(fresh, want){
     const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
-        if (book === 'moi') { $('#impDesc').innerHTML = typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
     bindImp(); bindLoads($('#bookRows'));
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };

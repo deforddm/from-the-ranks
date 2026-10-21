@@ -733,6 +733,12 @@ const AUDIO = (() => {
       inst:{title:['choir', 'bell'], calm:['cello', 'choir', 'bell'], end:['choir', 'bell', 'flute']},
       bpm:{title:50, calm:56, end:48, dread:50, battle:88, dark:80},
       pats:['K.......', 'K...K...', 'K.....S.', 'K..k..s.'], fills:['K.S.K.SS', 'K...KSSS'], ost:'X...x.X.'},
+    /* v7.0 Book Four (Seven Cities again, a year on, harder and drier): Phrygian dominant on C#2, a reed line and the oud, frame drums
+       hit sparer and harder, a pad with sand in it (a low noise hiss under the saw and triangle), very little room */
+    hoc:{scale:[0, 1, 4, 5, 7, 8, 10], root:69.30, pad:'sand', wet:.14, drum:'frame', lead:'reed', bellK:0, // C# Phrygian dominant
+      inst:{title:['reed', 'oud'], calm:['oud', 'reed'], end:['reed', 'oud', 'glass']},
+      bpm:{title:56, calm:60, end:50, dread:52, battle:100, dark:86},
+      pats:['K..sK..S', 'K...K.S.', 'K.s.K.SS', 'K..SK.s.'], fills:['K.SSK.SS', 'KSKSK.SS'], ost:'X.xX..x.'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -970,12 +976,13 @@ const AUDIO = (() => {
   const PD = [[[0,1],[0,4],[-3,1],[0,1]], [[0,4],[1,5],[-3,1],[-2,1]], [[0,1,4],[-3,1],[0,4],[1,5]]];
   function pad(L, t, degs, dur, v, cut){ // Book One: detuned saws, spread left and right, the filter opening and closing with the swell. Book Two: thinner, a triangle under the saw. Book Three: sung, through the choir's formants
     const kind = V.pad, g = gn(0, L.near), end = t + dur; let n = 0; const ns = [g];
+    if (kind === 'sand') noise({t, a:dur * .45, d:dur * .5, v:v * .45, f:cut * 2.2, q:.5, type:'bandpass', to:L.near, buf:'p'}); // Book Four: the sand under the chord
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * (kind === 'choir' ? 1.6 : 1), t + dur * .4); g.gain.linearRampToValueAtTime(0, end);
     let heads;
     if (kind === 'choir') { heads = [F('bandpass', 700, 4, g), F('bandpass', 1150, 5, g), F('lowpass', cut * .8, .5, g)]; }
     else { const fl = F('lowpass', cut * .5, .5, g); fl.frequency.setValueAtTime(cut * .5, t); fl.frequency.linearRampToValueAtTime(cut, t + dur * .45); fl.frequency.linearRampToValueAtTime(cut * .55, end); heads = [fl]; }
     ns.push(...heads);
-    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = kind === 'thin' && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' ? 7 : 4, kind === 'thin' ? 13 : 8);
+    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = (kind === 'thin' || kind === 'sand') && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' || kind === 'sand' ? 7 : 4, kind === 'thin' || kind === 'sand' ? 13 : 8);
       let h = o; if (ac.createStereoPanner) { h = ac.createStereoPanner(); h.pan.value = s * (.25 + .15 * i); o.connect(h); } heads.forEach(x => h.connect(x));
       if (kind === 'choir') { const l = ac.createOscillator(), lg = gn(7); l.frequency.value = rnd(4.2, 5.2); l.connect(lg); lg.connect(o.detune); l.start(t); l.stop(end + .05); ns.push(l, lg); }
       o.start(t); o.stop(end + .05); n++; L.keep.add(o);
@@ -1008,7 +1015,7 @@ const AUDIO = (() => {
       else if (chance(.6)) pad(L, t, [ch[0]], bl * 8 + .5, P0.pv * .6, P0.cut * .7); }
     if (b % 2 === 0) { const d = L.motif[L.mi];
       if (L.sec === 'full' && chance(P0.dens)) melody(L, t, d, bl);
-      else if (L.sec === 'thin' && b % 4 === 0 && chance(P0.dens * .5)) (V.key === 'dg' ? oud(L, t, f(d, 3), bl, .05) : glass(L, t, f(d, 3), .03));
+      else if (L.sec === 'thin' && b % 4 === 0 && chance(P0.dens * .5)) (V.key === 'dg' || V.key === 'hoc' ? oud(L, t, f(d, 3), bl, .05) : glass(L, t, f(d, 3), .03));
       if (++L.mi >= 4) { L.mi = 0; if (chance(.5)) L.motif = pick(MOT); } }
     if (V.bellK && b % P0.bellEvery === P0.bellAt && chance(P0.bell)) toll(t, f(pick(P0.bellDeg), 1), P0.bv * V.bellK, L.far);
     else if (!V.bellK && b % P0.bellEvery === P0.bellAt && chance(P0.bell * .6)) DRUM.frame.S(L, t, .5); // Book Two: a finger cymbal where Book One has a bell
@@ -1190,6 +1197,14 @@ const AUDIO = (() => {
     b3_c5_burnt:'burnt', b3_c5_camp:'camp', b3_c5_catlin:'plain', b3_catlin:'plain', b3_c5_drowned:'river', b3_c5_domin:'burnt', b3_c5_domin_night:'burnt_night', b3_domin:'burnt', b3_domin_night:'burnt_night', b3domin:'burnt', b3domin_night:'burnt_night', b3_rain:'rain',
     b3_c6_barges:'river', b3_c6_downriver:'river', b3_c6_entrench:'hills', b3_entrench:'hills', b3_c6_flight:'storm', b3_c6_host:'camp', b3_c6_ledge:'hills', b3_c6_lift:'hills', b3_c6_lift_empty:'hills', b3_c6_maurik:'plain', b3_maurik:'plain', b3_c6_road:'plain', b3_c6_slips_night:'night',
     b3_c6_mountain:'snow', b3_c6_mountain_night:'snow_night', b3_c6_river:'river', b3_c6_bankb:'river', b3_c6_campb:'camp', b3_c6_ridgeb:'hills',
+    // Book Four (70): the reading places and the decors the chapters will use; anything else b4_ falls to the desert
+    b4_aren_yard:'city_night', b4_aren:'city', b4_aren_night:'city_night', b4_barracks:'city_night', b4_graveyard:'city_night', b4aren:'city', b4aren_night:'city_night',
+    b4_road_fire:'desert_night', b4_road:'desert', b4_road_dusk:'desert_dusk', b4_fall:'desert_dusk', b4road:'desert', b4road_night:'desert_night', b4_march:'column', b4_march_dusk:'column_night',
+    b4_feast:'camp_night', b4_ford:'river', b4_ford_night:'river_night', b4ford:'river', b4_khundryl:'hills', b4_butte:'hills',
+    b4_seti_fire:'column_night', b4_camp:'column', b4_camp_night:'column_night', b4camp:'column', b4camp_night:'column_night', b4_hills:'hills', b4_barrows:'barrow',
+    b4_wall:'storm', b4_wall_fire:'desert_night', b4wall:'storm', b4_raraku:'desert', b4_raraku_night:'desert_night', b4raraku:'desert', b4raraku_night:'desert_night', b4_seep:'oasis',
+    b4_picket:'desert_night', b4_panarak:'siege', b4_panarak_night:'siege_night', b4picket:'desert_night', b4_trenches:'siege_night',
+    b4_coral:'coral', b4_coral_dawn:'sea', b4coral:'coral', b4_flood:'sea', b4_finale:'sea_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
@@ -1197,6 +1212,7 @@ const AUDIO = (() => {
     const base = n.replace(/_(night|dusk|dawn|day|eve|late|after)$/, ''); if (PLACE[base]) { const a = PLACE[base]; return /_night$|_eve$|_late$/.test(n) ? NIGHT[a] || a : a; }
     if (/^b2|^dg|odhan|hissar|aren/.test(n)) return dark ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert';
     if (/^b3|^moi/.test(n)) return dark || /night/.test(n) ? 'night' : /dusk/.test(n) ? 'dusk' : 'plain';
+    if (/^b4|^hoc/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Four: the Holy Desert
     return null;
   }
   const NIGHT = {plain:'night', dusk:'night', hills:'night', city:'city_night', camp:'camp_night', desert:'desert_night', desert_dusk:'desert_night', column:'column_night', river:'river_night', sea:'sea_night', siege:'siege_night', forest:'forest_night', snow:'snow_night', burnt:'burnt_night', herds:'night'};
@@ -1213,8 +1229,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' ? 'desert' : V.key === 'moi' ? 'snow' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' ? 'sea_night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};
@@ -1391,7 +1407,7 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
 const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210]; // levels 1..15 (Books One and Two stop at 8; Book Three runs 8..15)
-const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'moi') ? 15 : 8;
+const lvCap = () => (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70)
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -1448,8 +1464,13 @@ const BOOKS = {
   /* v6.0: Book Three. The Fourth again, on the road south with Onearm's Host and Brood. Its blurb and title art are filled in by 60_book3.js */
   moi:{id:'moi', n:3, word:'Three', title:'Memories of Ice', name:'The Fair Exchange', h1:['The Fair', 'Exchange'], squad:'Fourth Squad', unit:'the Fourth', tag:'Outlawed, the Empress says, the Host marches beside the enemy it fought for ten years. Five marines go south with it, into a country that has eaten itself.', titleArt:'title/moi', titleScene:'moi', patch:'insignia/patch',
     blurb:'Genabackis, the spring after the Fete, beside Memories of Ice.'},
+  /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 70_book4.js */
+  hoc:{id:'hoc', n:4, word:'Four', title:'House of Chains', name:'Unblooded', h1:['', 'Unblooded'], squad:'Third Squad', unit:'the squad', tag:'The Adjunct\'s army has never fought. Five who walked the Chain of Dogs are put in its ranks, and it marches north for Raraku.', titleArt:'title/hoc', titleScene:'hoc', patch:'insignia/hoc',
+    blurb:'Seven Cities, the year after the Chain, beside House of Chains.'},
 };
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}};
+/* the books the title offers: a book whose chapters are not written yet (B.coming) stays off the shelf, the picker and Deeds (70) */
+const shelfBooks = () => Object.values(BOOKS).filter(B => !B.coming);
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){
@@ -1823,7 +1844,7 @@ function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === '
    Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
 const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
 /* the chapter's key flag (c3_key, b2_c3_key, b3_c3_key); when a choice sets it, a low chord marks the moment (v6.8.0) */
-const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
+const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
 function keyWatch(fn){ const k = keyFlag(), was = k && S.f ? S.f[k] : undefined; fn(); if (k && S && S.f && !was && S.f[k]) AUDIO.play('choice'); }
 function runFx(c){
   if (!c.fx) return;
@@ -2002,7 +2023,7 @@ function drawHound(ctx, o = {}){
 /* ============ figure sprites ============ */
 /* draws a ~32px-tall figure centred at (cx, baseline cy). s = scale, dir = facing */
 function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
-  if (kind === 'sgt' && BOOK === 'dg' && FIGX.sgt_dg) kind = 'sgt_dg'; // Book Two has its own sergeant (55b)
+  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc') && FIGX.sgt_dg) kind = 'sgt_dg'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70)
   const dir = o.dir || 1, bob = o.still ? 0 : Math.sin(t/420 + (o.phase||0)) * .6 * s;
   ctx.save(); ctx.translate(cx, cy); ctx.scale(dir * s, s); ctx.translate(0, bob);
   ctx.globalAlpha = o.alpha ?? 1;
@@ -2519,7 +2540,7 @@ const POR = {
 };
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
-  (id === 'sgt' && BOOK === 'dg' && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
+  (id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc') && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
   ctx.restore();
 }
 
@@ -3004,7 +3025,7 @@ artWarm();
 
 /* ============ v6.9.2 the gods' sigils for Books Two and Three ============
    The painted set's six sigils (patrons/brisk, kettle, tuft, ohl, ellis, sgt) are drawn on the Patrons board (docs/art/Patrons.dc.html
-   → 19c). The gods who answer only in Books Two and Three are drawn here, in the same frame: a dark disc, the gold ring, a black
+   → 19c). The gods who answer only in Books Two to Four are drawn here, in the same frame: a dark disc, the gold ring, a black
    silhouette, pale accents, red eyes. Keyed by the squadmate whose god it is (PATRONS[id].sig or the id itself, 31_battle.js lose()). */
 {
   const frame = (label, bg, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="${label}">
@@ -3072,6 +3093,27 @@ ${body}</svg>`;
 <path d="M96 100 L100 98 L98 106 Z" fill="#2a2420"></path><path d="M104 100 L100 98 L102 106 Z" fill="#2a2420"></path>
 <g class="pt-eyes" fill="#c9d4ff"><ellipse cx="68" cy="90" rx="4.2" ry="2.4"></ellipse><ellipse cx="132" cy="90" rx="4.2" ry="2.4"></ellipse></g>
 <path d="M28 162 Q100 170 172 162" stroke="#c9d4ff" stroke-opacity="0.35" stroke-width="2" fill="none"></path>`);
+  /* v7.0, Book Four. D'rek, the Worm of Autumn (Hessa): the worm coiled through a fallen leaf, turned earth under it */
+  ART['patrons/hessa'] = frame('Sigil of D\'rek, the Worm of Autumn', '#16130c', `
+<circle class="pt-pulse" cx="100" cy="104" r="58" fill="#c9a050" opacity="0.08"></circle>
+<path d="M100 40 Q148 58 152 104 Q150 142 108 166 L100 172 L92 166 Q50 142 48 104 Q52 58 100 40 Z" fill="#0a0706"></path>
+<path d="M100 48 L100 164" stroke="#2a2418" stroke-width="3"></path>
+<g stroke="#2a2418" stroke-width="2" fill="none"><path d="M100 76 L126 62"></path><path d="M100 98 L136 86"></path><path d="M100 120 L134 112"></path><path d="M100 76 L74 62"></path><path d="M100 98 L64 86"></path><path d="M100 120 L66 112"></path></g>
+<path d="M60 130 Q70 104 96 110 Q122 116 118 92 Q114 70 90 76 Q70 82 78 98" stroke="#e8dcc2" stroke-opacity="0.88" stroke-width="7" stroke-linecap="round" fill="none"></path>
+<path d="M60 130 Q70 104 96 110 Q122 116 118 92 Q114 70 90 76 Q70 82 78 98" stroke="#0a0706" stroke-opacity="0.5" stroke-width="1.2" stroke-dasharray="2 4" fill="none"></path>
+<g class="pt-eyes"><circle cx="80" cy="98" r="2.6" fill="#c94a2a"></circle></g>
+<g fill="#e8dcc2" opacity="0.55"><ellipse cx="44" cy="170" rx="6" ry="2"></ellipse><ellipse cx="62" cy="174" rx="4" ry="1.6"></ellipse><ellipse cx="148" cy="172" rx="5" ry="1.8"></ellipse></g>
+<path d="M26 176 Q100 182 174 176" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
+  /* the dead of the Khundryl Burned Tears (Orvas): a black tear under an eye that is not there, and a rider's horse-tail behind it */
+  ART['patrons/orvas'] = frame('Sigil of the Khundryl dead', '#14100e', `
+<circle class="pt-pulse" cx="100" cy="100" r="60" fill="#c94a2a" opacity="0.07"></circle>
+<path d="M136 40 Q158 70 150 110 Q146 136 160 160 Q138 150 132 118 Q128 84 136 40 Z" fill="#2a2420"></path>
+<path d="M58 78 Q100 58 142 78 Q100 92 58 78 Z" fill="#0a0706"></path>
+<g class="pt-eyes"><ellipse cx="100" cy="77" rx="9" ry="3" fill="#c94a2a"></ellipse></g>
+<path d="M100 92 Q122 126 118 146 Q114 168 100 170 Q86 168 82 146 Q78 126 100 92 Z" fill="#0a0706"></path>
+<path d="M92 132 Q90 148 98 160" stroke="#e8dcc2" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+<g stroke="#e8dcc2" stroke-opacity="0.7" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M60 92 L56 108"></path><path d="M72 96 L70 114"></path><path d="M140 92 L144 108"></path></g>
+<path d="M28 168 Q100 176 172 168" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
 }
 
 /* ============ Deck of Dragons card art ============ */
@@ -4889,9 +4931,10 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
   const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
 /* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
-const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : [];
+const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : b === 'hoc' && typeof b4Finished === 'function' ? b4Finished() : [];
 const impShow = b => impList(b).length > 0;
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+  if (b === 'hoc') return `<label for="impSel">Bring a Book Two sergeant and the squad</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book Two on the Aren Guard or the Wickan road: that squad was in Aren when the Adjunct came. The desert road leads elsewhere.</small>`;
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
 /* Choose your book (v6.3): the title shows the three books as covers. A returning player sees their sergeants first and the
@@ -4904,7 +4947,7 @@ function coverSrc(key){ if (!ARTON() || !ART[key]) return '';
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 const onShelf = (e, b) => (e.book || 'gotm') === b;
 function shelfHTML(list){
-  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${Object.values(BOOKS).map(B => {
+  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
     const n = list.filter(e => onShelf(e, B.id)).length, src = coverSrc(B.titleArt || 'title/key');
     return `<button class="cover" data-shelf="${B.id}" aria-label="Book ${B.word}: ${esc(B.name)}, beside ${esc(B.title)}${n ? `; ${n} sergeant${n > 1 ? 's' : ''}` : ''}">
       <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false">` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
@@ -4920,7 +4963,7 @@ function showTitle(fresh, want){
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
     <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
-    ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
+    ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).filter(b => !b.coming || b.id === tb).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}${b.coming ? ' · coming' : ''}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
     <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
@@ -4952,10 +4995,12 @@ function showTitle(fresh, want){
       if (!n) { msg('Give your sergeant a name.'); nm.focus(); return; }
       const imp = $('#impSel') && !$('#impField').hidden ? $('#impSel').value : '';
       if (book === 'moi' && typeof b3ChCount === 'function' && !b3ChCount()) { msg('Book Three is still being written. Its chapters are on the way.'); return; }
-      const t = book === 'moi' && imp ? list.find(e => e.book === 'moi' && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
+      if (book === 'hoc' && typeof b4ChCount === 'function' && !b4ChCount()) { msg('Book Four is still being written. Its chapters are on the way.'); return; }
+      const t = (book === 'moi' || book === 'hoc') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
       if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
       if (book === 'moi') { S = newStateMOI(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
+      if (book === 'hoc') { S = newStateHOC(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
       S = newState(n); S.diff = diff; save(); showIntro(); };
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
@@ -4969,7 +5014,7 @@ function showTitle(fresh, want){
     const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
-        if (book === 'moi') { $('#impDesc').innerHTML = typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
     bindImp(); bindLoads($('#bookRows'));
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
@@ -5375,7 +5420,7 @@ function mkParty(id, x, y){
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
-  if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('wolves')) u.ac += 1; // the gods' boons on a fight fought again (31c)
+  if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; // the gods' boons on a fight fought again (31c)
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
@@ -5512,7 +5557,7 @@ function lose(){
   const others = kept.filter(k => bn && k !== bn.key).map(k => BOON_BY_KEY[k]).filter(Boolean), lapsed = was.filter(k => !kept.includes(k)).map(k => BOON_BY_KEY[k]).filter(Boolean);
   const boonNote = bn ? `<div class="note boonnote"><b>The boon: ${esc(bn.name)}.</b> ${esc(bn.txt)} It lasts the fight, and its second ground.${others.length ? ` It joins ${others.map(b => `${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}'s (${esc(b.name.toLowerCase())})`).join(' and ')}.` : ''}${lapsed.length ? ` On Story two gods hold at once: ${lapsed.map(b => esc(b.name.toLowerCase())).join(' and ')} lapse${lapsed.length > 1 ? '' : 's'}.` : ''}</div>` : '';
   if (P) sh.innerHTML = `${art('patrons/' + (P.sig || who), 'godsig')}<div class="sp godsp">${esc(P.title)}</div><div class="txt god">${fmt(P.txt(who))}</div>
-    <div class="note trick">${S.book === 'dg' ? 'The Third\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
+    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' ? 'The Third\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
     <div class="choices"><button class="choice" id="bRetry">Rise, and fight it again</button></div>`;
   else sh.innerHTML = `<div class="sp godsp">No one answers</div><div class="txt god">${fmt(`Every god who had a reason to listen has already spent it this chapter. Hood's gate opens the rest of the way, and it is very quiet on the other side.\n\nAnd then it is morning, and the Fourth is where this chapter began, with all of it still to do, and nobody quite able to say why they are so tired.`)}</div>
     <div class="choices"><button class="choice" id="bRetry">Begin the chapter again</button></div>`;
@@ -5693,12 +5738,13 @@ function attack(a, t, o={}){
   let tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
   const land = o.land != null ? o.land : ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
-  const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) : 0); // the Boar and the Tiger (31c)
+  const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) + (boon('tears') && a.tearsTurn !== B.turn ? (a.tearsTurn = B.turn, 2) : 0) : 0); // the Boar and the Tiger; the Khundryl dead on the first hit of a turn (31c)
   if (t.dr && !crit) { const cut = Math.min(t.dr, dmg - 1); if (cut > 0) { dmg -= cut; tagTxt = tagTxt ? tagTxt.replace(/\]<\/span>$/, `, hide −${cut}]</span>`) : ` <span class="stat">[hide −${cut}]</span>`; } } // a hide that turns ordinary iron (v6.10: the K'ell Hunter); a critical goes through
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
   later(() => { if (t.hp <= 0) return; if (crit) sparks(t.x, t.y, 16, '#ffcf7a'); else sparks(t.x, t.y - .1, 5, '#f08a7c', .6);
     hurt(t, dmg, crit); foeRiders(a, t, dmg);
     if (S.card === 'chains' && a.side === 'e' && t.side === 'p' && !t.ally && a.hp > 0) { hurt(a, 2); sparks(a.x, a.y, 10, '#9a9aa6', .5); blog(`<em>The chains bite back.</em> ${a.name} takes 2.`); }
+    if (boon('worm') && a.side === 'e' && t.side === 'p' && !t.ally && a.hp > 0 && !ranged) { hurt(a, 3); sparks(a.x, a.y, 10, '#8a7a3a', .4); blog(`<em>The Worm of Autumn.</em> Rot comes up the blade into ${a.name}: 3.`); } // D'rek's boon: a blow struck in melee rots the hand that struck it (31c)
     updBattleUI(); }, land);
   return {hit:true, dmg};
 }
@@ -6478,6 +6524,9 @@ const BOONS = {
   'the grandmother':    {key:'ground', name:'The ground gives back', txt:'No spell sputters this fight, and every squadmate heals 2 at the start of their turn.'},
   'the Rhivi spirits':  {key:'herd',   name:'The herd goes through', txt:'+2 move, and enemy shots are −3 to hit.'},
   'Togg and Fanderay':  {key:'wolves', name:'The Wolves of Winter',  txt:'+1 armour, and an enemy that starts its turn next to a squadmate takes 1d4 cold.'},
+  /* v7.0, Book Four (70): Hessa's goddess and Orvas's dead */
+  'D\'rek':             {key:'worm',   name:'The Worm of Autumn',    txt:'An enemy that lands a blow on a squadmate in melee takes 3 rot back.'},
+  'the Khundryl dead':  {key:'tears',  name:'The dead ride',         txt:'+2 move, and each squadmate\'s first hit in a turn does +2 damage.'},
 };
 const BOON_BY_KEY = Object.fromEntries(Object.entries(BOONS).map(([god, b]) => [b.key, Object.assign({god}, b)]));
 /* the boons on the fight being fought (or about to be): keys, newest last */
@@ -6541,7 +6590,7 @@ const avgDmg = d => d ? d[0] * (d[1] + 1) / 2 + (d[2] || 0) : 0;
 /* how much a piece of gear is worth on this squadmate: armour for the front, range for the ranged, a stat trinket on whoever rolls that stat */
 function gearValue(id, g){
   const it = ITEMS[g], t = TPL[id]; if (!it || !t || (it.who && !it.who.includes(id))) return -1;
-  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade'].includes(id);
+  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade', 'hessa', 'darrut'].includes(id);
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
   if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
@@ -7994,7 +8043,7 @@ let VISREADER = null;
 const visReader = () => (VISREADER && S && S.book && S.book !== 'gotm' ? VISREADER() : null) || {id:'tuft', name:'Tuft', he:false};
 /* the reader's name in the middle of a sentence ("the old Kanese"); and the node a reading's card screen comes back to: c4_card in Book One, b2_c4_card in Book Two */
 const visMid = () => { const r = visReader(); return r.mid || r.name; };
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;
@@ -8587,6 +8636,7 @@ function bookDeedsHTML(b, all){
       ['Masks at the Fete', best ? `${best} of 5 named${d('masksAll') ? ', all five at least once' : ''}` : 'Not yet']];
     extra = `<h4 class="jh">At the tables</h4><div class="kv">${tables.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
   else if (b === 'moi') extra = typeof b3DeedsExtra === 'function' ? b3DeedsExtra(mine) : ''; // Book Three's Alliance (60)
+  else if (b === 'hoc') extra = typeof b4DeedsExtra === 'function' ? b4DeedsExtra(mine) : ''; // Book Four's Nerve and Dust (70)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
@@ -8603,11 +8653,11 @@ function bookDeedsHTML(b, all){
     <div class="route"><canvas data-route="${b}"></canvas></div><ol class="deeds-road">${rows}</ol>${extra}</details>`;
 }
 function fallenHTML(all){
-  const rows = []; all.forEach(({e, s}) => Object.entries(s.dead || {}).forEach(([id, dd]) => { const t = TPL[id]; if (!t) return;
+  const rows = []; all.forEach(({e, s}) => Object.entries(s.dead || {}).forEach(([id, dd]) => { const t = TPL[id]; if (!t || (dd && dd.from)) return; // a Book Four save carries Book Two's dead (from:'dg'): the Book Two save lists them
     rows.push(`<li><b>${esc(t.name)}</b> <span>${esc(dd.where || (dd.ch ? `Chapter ${dd.ch}` : ''))}</span> <em>Sergeant ${esc(e.name)}'s squad, Book ${(BOOKS[bookOf(s)] || BOOKS.gotm).word}</em></li>`); }));
   return rows.length ? `<h4 class="jh">The fallen</h4><ul class="jl fallen">${rows.join('')}</ul>` : ''; }
 deedsHTML = function(){
-  const all = allSergeants(), books = Object.keys(BOOKS), done = all.filter(({s}) => bookDone(s)).length;
+  const all = allSergeants(), books = shelfBooks().map(B => B.id), done = all.filter(({s}) => bookDone(s)).length;
   const sum = k => all.reduce((a, {s}) => a + (((s.stats || {})[k]) || 0), 0);
   const series = [['Sergeants', all.length], ['Books finished', done], ['Fights won', sum('won')], ['Foes put down', sum('kills')], ["The gods' answers", sum('godsAnswered')], ['Visions seen', all.reduce((a, {s}) => a + ((s.seenVisions || []).length), 0)]];
   const doneR = replayable();
@@ -47483,6 +47533,975 @@ function b3CrossPay(r){ if (!r.done || S.f.b3_crossPaid) return; S.f.b3_crossPai
       ['The Crossing', d('b3CrossClean') ? `Clean${d('b3CrossClean') > 1 ? ` (${d('b3CrossClean')} times)` : ''}` : d('b3Cross') ? `Across, caught ${d('b3CrossCaught')} time${d('b3CrossCaught') === 1 ? '' : 's'}` : 'Not yet']];
     return base + `<h4 class="jh">At the fires</h4><div class="kv">${fires.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }; }
 
+/* ============ Book Four: Unblooded (beside House of Chains) — Book Two's squad in the Fourteenth, Nerve and Dust ============ */
+/* Book Four is Book Two's squad again, the year after the Chain: broken up into the Adjunct's Fourteenth Army as canon does with every unit
+   of Chain survivors, serving as medium infantry in Blistig's 9th Legion, from Aren north to Raraku. Its chapters register with
+   registerChapter(n, B4CHn, 'hoc') (90) and every id carries a b4_ prefix (areas, nodes, fights, foes, gear, scenes, tricks, flags S.f.b4_*).
+   This file holds what the book needs outside a chapter: the Book Two four's lives a few months on (swapped in and out by setBook), the four
+   new soldiers of the Fourteenth who fill the squad to five, the three recruits (Ramin, Keth, Orvas), Nerve and Dust, the company
+   regulars who come when the company is steady, the transfer of a finished Book Two save, the glossary, the gods, the journal and Deeds.
+   Everything here is guarded by S.book === 'hoc' (or BOOK === 'hoc'); Books One to Three play exactly as before.
+   The names a chapter writer uses are listed in docs/v7.0-notes.md, "For chapter writers". */
+
+const HOC_CORE = ['haddat', 'sathi', 'tangle', 'marrow'];      // Book Two's four: whoever lived keeps a place, in this order
+const HOC_NEW = ['tallow', 'hessa', 'tebbet', 'darrut'];       // the Fourteenth fills the squad back to five from these, in this order
+const B4_RECRUITS = ['redblade', 'warlock', 'orvas'];          // one at a time, swapped at a fire
+const b4On = () => !!(S && S.book === 'hoc');
+const b4In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
+/* the Book Two save a Book Four game was carried from: b4Was(k) reads one of its flags (undefined on a fresh start) */
+const b4Was = k => (S && S.imported && S.imported.f) ? S.imported.f[k] : undefined;
+/* who Book Two left at the Barrow: the transfer's dead, or on a fresh start the canon of the plan (Sathi fell; Hackle was not seen again) */
+const b4Fallen = () => S && S.imported && Array.isArray(S.imported.dead) ? S.imported.dead.filter(id => TPL[id]) : ['sathi'];
+const b4FallenNames = () => { const n = b4Fallen().map(id => TPL[id].name); return n.length > 1 ? n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1] : n[0] || ''; };
+const b4Fresh = () => !(S && S.imported);
+
+/* ---- the sergeant in Book Four: Book Two's sergeant, a year on, in the 9th ---- */
+BOOKSNAP.hoc.sgt = Object.getOwnPropertyDescriptors({
+  name:'', role:'Sergeant', sig:'S', col:'#d6a24a', hp:22, ac:14, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:2, guile:1}, ab:['rally','shove','salve'],
+  epithet:'Third squad, 9th Legion, the Fourteenth Army', origin:'Jakata, Quon Tali', age:37, service:'Fifteen years, the last seven in Seven Cities, and the Chain', height:'Middling, and burnt darker by a summer on the Aren Way.',
+  weapon:'Malazan longsword, and the shield that has had three regiments painted on it and now has a fourth', armour:'Boiled leather over quilting, the sand scarf, and a finger bone on a thong, because the whole legion wears one',
+  bio:`Walked the Chain of Dogs from Hissar to Aren and came in through the gate with what was left. The army that took the survivors in did not keep them together. It broke them up and dealt them out across three new legions like cards, so the recruits would have someone to copy. You were dealt to Blistig's 9th.`,
+  get bio2(){ const f = b4Fallen();
+    return `Kept the squad's number, and very little else from the Seventh except the habits. ${f.length ? `${b4FallenNames()} stayed on the Barrow. You still count ${f.length > 1 ? 'them' : TPL[f[0]] && ['tangle', 'redblade', 'warlock'].includes(f[0]) ? 'him' : 'her'} at the end of the roll, out loud, and the recruits have learned not to ask.` : 'Every one of them came off the Chain, which the 9th thinks is a story and is not.'}\n\nRessan's brass token is still on its cord. The Fourteenth has never fought. You have, and you are to teach them in the time it takes to walk to Raraku.`; },
+  traits:['Speaks gutter Hissari better than the officers speak Malazan', 'Drinks water slowly, always', 'Counts the column, still, though nobody asked', 'Will not sit on a horse unless ordered'],
+  gear:['Ressan\'s brass token, worn smooth', 'The squad roll, with new names under the old ones', 'Field kit: needle, thread, salt'],
+  get quest(){ return `The Fourteenth is green. Half of it came off the transports from Quon Tali and has never heard a sword drawn in anger. The Adjunct marches it north anyway, to Raraku and the Whirlwind, and somewhere in it is your squad, which has to be ready first.`; },
+});
+
+/* ---- Book Two's four, a few months on, in the Fourteenth: these fields swap in when the book is Book Four, and Book Two's come back
+   when it isn't (stats, abilities, portraits, sprites, traits and gear stay Book Two's: the same soldiers) ---- */
+const B4_FIELDS = ['epithet', 'service', 'bio2', 'quest', 'banter', 'rel'];
+const B4REL_NEW = { // how the new soldiers sit with each of Book Two's: merged into each overlay's rel
+  haddat:{tallow:'Makes him stand behind the shield in drill until he stops flinching. He has nearly stopped.', hessa:'Two women who keep their gods to themselves. They pray at the same hour, apart, and nod after.', tebbet:'Asks him what he sees from the back. He tells her. She believes him, which surprised him.', darrut:'He was on Aren\'s wall the day she came in under it. Neither has brought it up.', orvas:'Speaks to him in a tribal tongue of the Odhan, badly. He answers in Malazan, worse. They both find it restful.'},
+  sathi:{tallow:'Calls him "the foal". He has decided it is a compliment. It is, nearly.', hessa:'Asked if D\'rek eats people. Hessa said "Eventually." Sathi liked that very much.', tebbet:'Shoots against him every evening for a strip of dried meat. They are even, which neither will admit.', darrut:'Hackle growled at him on the first day and has not since. Sathi counts this in his favour.', orvas:'A Weasel and a Burned Tear. They agree about horses and about nothing else, loudly.'},
+  tangle:{tallow:'Lets him count the satchel once, as a privilege. Tallow got it right. Tangle counted it again.', hessa:'She asked what was in the clay. He told her. She stood further off, which he respects.', tebbet:'Two men who would rather do it from a distance. They get on.', darrut:'Darrut asked if a cusser could take down a wall. Tangle asked which wall. They have not resolved it.', orvas:'Keeps the satchel on the side away from the horse. "Nothing personal. Horses kick."'},
+  marrow:{tallow:'Watches him read the old woman\'s deck with her mouth shut, which for Marrow is a kind of review.', hessa:'Talks warrens with her: Denul, and whatever it is D\'rek does instead. Neither has convinced the other.', tebbet:'Stitched his bow hand after drill. He thanked her in Dal Honese, at length.', darrut:'He comes to her with every blister. She has started to suspect he likes the company.', orvas:'Asked about the tears on his face, once. He said, "They are the reason." She let it be.'},
+};
+BOOKSNAP.hoc.tpl = {
+  haddat:Object.getOwnPropertyDescriptors({
+    epithet:'"The Empire\'s silver. Still."', service:'Eight years, auxiliary, and a few months in the 9th',
+    get bio2(){ const il = b4Was('b2_ilhar');
+      return `Her family sold water in Hissar, and Hissar is ash. She came off the Chain into Aren with the squad and the Fourteenth took her in, and she has put the 9th's badge beside the auxiliary's brass and polishes both every night.\n\n${il === 'came' ? `Ilhar came over to the column before the end. He is somewhere in Aren now, selling water the old way, and she goes to see him when there is leave, and comes back quiet.` : il === 'fell' ? `Ilhar is dead. She has said his name aloud once since, to the sergeant, and has gone back to not saying it.` : il === 'lost' ? `Her brother rode with the green cloths and she lost him somewhere on the Chain. She does not know where he is. She has stopped looking at faces. Nearly.` : `She has not said her brother's name since Hissar.`}`; },
+    get quest(){ return `The Fourteenth marches north for Raraku, where the green cloths came from. Haddat walks at the front of the squad with the shield up, and at every halt she teaches the recruits the five words in Hissari that mean "water", "well", "poisoned", "enough" and "run".`; },
+    banter:[`"Sergeant." In Hissari still. The recruits have started saying it too, wrongly.`, `"The new ones lock shields like a gate with no hinges. We will fix it before the hills."`, `"Drink. Then drink again. The desert does not care that you are from Quon Tali."`],
+    rel:Object.assign({sathi:'Answers the girl\'s Wickan insults in Wickan. The recruits think they are fighting.', tangle:'Still pays him in water for a riot in Hissar. He has stopped pretending to mind.', marrow:'Carries the healer\'s kit at the end of a march. Has still never been thanked, which is how she likes it.', redblade:'Two Seven Cities soldiers who took the silver. They are polite about it in two languages, and now in a third.', warlock:'Asks the boy whether the Chain\'s dead are resting. He says some of them are.'}, B4REL_NEW.haddat)}),
+  sathi:Object.getOwnPropertyDescriptors({
+    epithet:'"Hackle remembers this road. So do I."', service:'Two summers with the Seventh, and one with the Fourteenth',
+    get bio2(){ return `The Weasel Clan sent its young south with Coltaine. Most of them did not come back from the Chain, and the clan that sent them is scattered. Sathi rides with a Malazan legion now because it is the nearest thing to a herd she has left, and says so, loudly, to anyone who looks at her as if she should be with the Wickans.${b4Was('b2_hackleBack') ? ' Hackle found his way home along the Way once already. He does not let her out of his sight now.' : ''}\n\nThe Crow elders came off the ships in Aren and will not take orders from a boy. She has opinions about the Crow elders. Most of them are about horses.`; },
+    get quest(){ return `The road north goes back past Coltaine's Fall. Sathi has not said she will climb it. She has asked Hackle, in Wickan, what he thinks, and Hackle has gone to sleep on her feet.`; },
+    banter:[`"Your recruits walk like cows, Sergeant. Hackle agrees." Hackle is asleep.`, `"The Crow elders say a boy cannot lead them. The Weasels say the Crow cannot count. We are both right."`, `"Lowlanders. You have brought a whole army to a desert and forgotten the horses."`],
+    rel:Object.assign({haddat:'A fine soldier and a bad Hissari, she tells the recruits, in Wickan, where Haddat can hear.', tangle:'Lets Hackle sleep on his feet. He has stopped pretending not to notice.', marrow:'Still "foal". Sathi has stopped arguing, which Marrow counts as growing up.', redblade:'"The red horse with no horse." Still a rank.', warlock:'Foolish Dog and Weasel: the insults go on, in Wickan, with real affection.'}, B4REL_NEW.sathi)}),
+  tangle:Object.getOwnPropertyDescriptors({
+    epithet:'Fuse-cord round both wrists. Counts the new satchel twice.', service:'Eleven years, sapper, and the Chain',
+    get bio2(){ return `Mincer's sappers came off the Chain fewer than they went on, and the Fourteenth dealt what was left of them out like the rest. Tangle went with the squad, because, he says, the squad knows where to stand when he lights something.\n\nThere are Moranth munitions in Aren again, in the Fourteenth's wagons, under guard. Tangle has counted the guards. He hums the same four notes over the satchel, and stops when it matters, and the recruits have started to listen for the stop as well.`; },
+    get quest(){ return `The satchel is not the only one on the march any more, and Tangle does not trust that. Somewhere in the 8th, people say, there is a sapper who is very good indeed and would rather nobody knew it. Tangle would like to see his fuse-work, and has decided not to go looking.`; },
+    banter:[`"Same as this morning. Don't make me say it at the next halt."`, `"The recruits want to hold a sharper. Nobody holds a sharper. You throw a sharper, or you're the sharper."`, `"Point. I'll make it go away. Just not in the column, please."`],
+    rel:Object.assign({sathi:'Lets the dog sleep on his feet.', haddat:'Owes her his life from Hissar. Pays in water, still.', marrow:'She stitched his ear on the Chain. He still hears it.', redblade:'Counts the satchel with Ramin, out loud, to help.', warlock:'Upwind. "Nothing personal."'}, B4REL_NEW.tangle)}),
+  marrow:Object.getOwnPropertyDescriptors({
+    epithet:'"The warren is still strange. So am I."', service:'Thirteen years, ten of them a squad healer',
+    get bio2(){ return `Trained at a temple of Soliel in Nap, left it for the army, and kept the squad alive from Hissar to Aren with a warren that gave back mud. It still does, some days. The knotted string is on its third length.\n\nNil and Nether walk with the Wickan children now, and the camp says their spirits have gone quiet. Marrow has looked at them across the horse lines and said, "That is grief, child, not sorcery," and gone back to her needles.`; },
+    get quest(){ return `Denul is thinner this side of Aren, and thick and wrong near the desert, as if something were standing in it a long way off and breathing. Marrow keeps the string. She reads the Deck for the squad at the first halt of every road, as she always has, and lately she holds each card a moment before she turns it.`; },
+    banter:[`"Sit. No, sit. Raraku will still be there, child."`, `"The recruits bleed like they're surprised. They'll learn."`, `"Soliel answers when she likes. The Adjunct, I'm told, the same."`],
+    rel:Object.assign({sathi:'Still "foal".', tangle:'Still checks the ear.', haddat:'Leans on her at the end of a march.', redblade:'Asked nothing about the company. He has decided she is still the only Malazan in the squad.', warlock:'Talks shop with the old woman in him, healer to witch.'}, B4REL_NEW.marrow)}),
+  /* Ramin and Keth keep their Book Two templates; their road and their relations move on (a Book Two transfer can bring them) */
+  redblade:Object.getOwnPropertyDescriptors({
+    get quest(){ return `The Red Blades are out of the cells and the company rides for the Adjunct under its own command, with Tene Baralta. Ramin has a horse again. He has asked to be lent to the squad again, and his captain, who does not understand it, has said yes.`; },
+    rel:{haddat:'Another Seven Cities soldier who took the silver.', sathi:'"The red horse with no horse," she still says. He has a horse now. She has not changed it.', tangle:'Counts the satchel with him, out loud.', marrow:'The only Malazan in the squad, he says. He has started to include the sergeant, on good days.', tallow:'Shows him how to keep a blade the way the Red Blades do. Tallow has never kept anything that carefully.', hessa:'They speak of temples and companies, and find they mean the same thing.', tebbet:'Two straight backs. They stand together at drill without discussing it.', darrut:'Darrut was Aren Guard. Ramin was in Aren\'s cells. They are working round it.', orvas:'Rides beside him on the march and talks horses. It is the happiest anyone has seen him.'}}),
+  warlock:Object.getOwnPropertyDescriptors({
+    get quest(){ return `Keth rides with Temul's Wickan youths, the ones who came through the Chain, and the old woman in him keeps them in line. The Crow who came by ship will not follow a boy. The grandmother has views on the Crow. She shares them.`; },
+    rel:{haddat:'Asks him about the Chain\'s dead every morning.', sathi:'Weasel and Foolish Dog: the insults go on.', tangle:'Keeps upwind of him.', marrow:'The only one the grandmother respects.', tallow:'The grandmother looked at Tallow\'s cards and laughed for a long breath. Tallow has not asked why.', hessa:'The old woman and the temple guard: two women who have met a god, and are not impressed.', tebbet:'Tebbet makes the sign against the evil eye when the old voice speaks. The grandmother makes a ruder one back.', darrut:'Darrut is frightened of him and hides it well. The boy is grateful.', orvas:'The Khundryl grieve their own dead. Keth carries his. They sit together some nights without speaking.'}}),
+};
+/* Book Two's own descriptors for those fields, kept at load (TPL here is still Book Two's) so setBook can put them back exactly */
+const B4_TWO = Object.fromEntries(Object.keys(BOOKSNAP.hoc.tpl).map(id => [id, Object.fromEntries(Object.keys(BOOKSNAP.hoc.tpl[id]).map(k => [k, Object.getOwnPropertyDescriptor(TPL[id], k)]))]));
+function b4Wear(on){ Object.entries(on ? BOOKSNAP.hoc.tpl : B4_TWO).forEach(([id, ds]) => { const t = TPL[id]; if (!t) return;
+  Object.entries(ds).forEach(([k, d]) => { if (k === 'name' || k === 'length' || k === 'prototype') return; if (d) Object.defineProperty(t, k, Object.assign({}, d, {configurable:true})); else delete t[k]; }); }); }
+{ const _setBook = setBook;
+  setBook = function(b){ const from = BOOK; _setBook(b); if (BOOK === from) return;
+    if (from === 'hoc') b4Wear(false); if (BOOK === 'hoc') b4Wear(true); }; }
+
+/* ---- the four new soldiers of the Fourteenth, and Orvas of the Burned Tears ---- */
+Object.assign(TPL, {
+  tallow:{name:'Tallow', role:'Raw recruit · Quon Tali', sig:'L', col:'#c9b27a', hp:17, ac:13, atk:3, dmg:[1,8,1], rng:1, mv:4, init:1, st:{might:1, wits:1, guile:2}, ab:['shove','salve'],
+    epithet:'"My grandmother read for fishermen. They mostly came back."', origin:'A fishing village on the Quon coast', age:18, service:'Four months, three of them on a transport', height:'Tall for his age and not used to it yet.',
+    weapon:'A short sword still bright from the armoury, and a spear he was told to carry', armour:'New boiled leather that creaks, a helm a size too big, and a finger bone on a thong like everyone else',
+    bio:`One of the half of the Fourteenth that came off the transports from Quon Tali and had never seen a desert or a dead man. He has seen both now, on the Aren Way, and is trying to look as if he had seen them before. Nobody is fooled. Everybody is kind about it, in the way soldiers are kind, which is loudly and at his expense.`,
+    bio2:`His grandmother read the Deck for the boats on the Quon coast, by the light of the gutting-shed, for fish heads and gossip. When she died the deck came to him in a square of oilcloth, the paint worn off the corners by sixty years of thumbs. He reads it the way she taught him, badly, and sometimes it is right, and that frightens him more than when it is wrong.`,
+    traits:['Salutes everyone, to be safe', 'Writes home and never sends it', 'Keeps the grandmother\'s deck in oilcloth inside his shirt', 'Laughs half a beat after the veterans, to check it was a joke'],
+    gear:['His grandmother\'s deck, in oilcloth', 'A letter home, unfinished, in its fourth month', 'A finger bone from the old Aren graveyard, on a thong'],
+    get quest(){ return b4In('marrow') ? `Marrow reads for the squad. She watched him lay the old woman's cards out once, at night, and told him afterwards which of them his grandmother had got wrong. He has decided to learn from her before the desert, while there is time.` : `With no healer to read for the squad, the squad has started asking him. He did not want it. He reads anyway, the way his grandmother did, for whoever sits down, and hopes the cards know more than he does.`; },
+    banter:[`"Sergeant." A pause. "Was that right? The salute?"`, `"My grandmother said Oponn gives with one hand. She never said what the other one was doing."`, `"I counted the bones on the standard. It made me feel worse. I'm going to stop counting things."`],
+    rel:{haddat:'She makes him stand behind the shield until he stops flinching. He has nearly stopped.', sathi:'"The foal." He has decided it is a compliment.', tangle:'Let him count the satchel once. He got it right. It was the proudest moment of his life.', marrow:'He watches her read and copies her hands. She knows. She lets him.', hessa:'She is the first temple guard he has ever spoken to. He keeps calling her "sister" by accident.', tebbet:'Tebbet is teaching him the bow in the evenings. He is not good at it.', darrut:'Darrut tells him the Aren Guard stories. Tallow believes nearly all of them.', orvas:'He has never seen a horse go like that. He tells Orvas so, every day, and Orvas lets him.', redblade:'Ramin showed him how to keep a blade clean. He keeps it cleaner than anything he owns.', warlock:'The grandmother in Keth laughed at his cards. He has not asked why.'}},
+  hessa:{name:'Hessa', role:'Spear and shield · Kartool', sig:'E', col:'#8a9a6a', hp:22, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:2, wits:1, guile:0}, ab:['bash','salve'],
+    epithet:'"D\'rek is patient. I am not, which is why I left."', origin:'Kartool City', age:31, service:'Six years at the temple doors, and a year in the Malazan ranks', height:'Square, heavy in the shoulder, and stands as still as a door.',
+    weapon:'A long-bladed temple spear, and a tall shield with a worm carved into the rim and painted over', armour:'Malazan scale over a temple guard\'s padded coat, and the Worm\'s mark inked on the inside of her left wrist',
+    bio:`Stood the doors of D'rek's Grand Temple in Kartool City for six years with a spear and a shield, while the priests inside did whatever the Worm of Autumn asks for. She does not say why she left. She signed on with the Malazans in the same week, which she says is a coincidence, and the 9th took her because she could already hold a line and nobody else in her intake could.`,
+    bio2:`The temple taught her that every living thing rots, and that rot is not an insult. It is the floor of the world. She is calm about it in a way the recruits find hard to stand next to. She prays at dusk, to the ground, very briefly, and then eats like someone who expects to be busy tomorrow.`,
+    traits:['Prays at dusk, to the ground, briefly', 'Will not step on a worm, and moves them off the road', 'Says "eventually" when asked anything about death', 'Sharpens the spear while she talks, by feel'],
+    gear:['A temple guard\'s seal, worn on a cord under the scale', 'A twist of grave-dirt from Kartool', 'A whetstone she has had since she was twelve'],
+    get quest(){ return `The temple asked something of her that she would not give, and she walked out of its doors and into the Empire's. Kartool is a long way behind. The Worm is not, she says. The Worm is under every road. She is waiting to learn whether it is waiting for her.`; },
+    banter:[`"Shields together. Together. You are a wall, not a row of doors."`, `"Everything rots, Sergeant. That is not a complaint. It is how the ground is made."`, `"In the temple we had a word for recruits like ours. I will not say it in front of them."`],
+    rel:{haddat:'Two women who keep their gods to themselves. They nod after prayers.', sathi:'Sathi asked if D\'rek eats people. "Eventually." They have been friends since.', tangle:'Asked what is in the clay, and then stood further off. He respects her for it.', marrow:'They argue warrens over the fire, gently, and enjoy it.', tallow:'He keeps calling her "sister". She has stopped correcting him.', tebbet:'Tebbet shoots past her shoulder in drill. She has never once flinched. He finds this unsettling.', darrut:'They share the front of the squad and the shield wall. They have not had a conversation. They do not need one.', orvas:'The Khundryl grieve their dead loudly. Hessa grieves no one. They are curious about each other.', redblade:'Temples and companies: they have found they mean the same thing.', warlock:'Two women who have met a god. Neither is impressed.'}},
+  tebbet:{name:'Tebbet', role:'Bowman · Dal Hon', sig:'B', col:'#b7895a', hp:14, ac:12, atk:4, dmg:[1,8,1], rng:6, mv:5, init:2, st:{might:1, wits:2, guile:2}, ab:['mark','salve'],
+    epithet:'"I would rather be a long way off when it happens."', origin:'Dal Hon, the hill country', age:26, service:'Five years, archer, two of them on Quon Tali\'s coast', height:'Long in the arm, narrow, and very still before he looses.',
+    weapon:'A Dal Honese recurve that his uncle made and he has rebuilt twice, and a knife he never uses if he can help it', armour:'A padded jack, a leather bracer worn smooth, and a cloth hood against the sun',
+    bio:`A Dal Honese bowman who joined the Malazans for the pay and has stayed for reasons he describes as "complicated" and nobody has the patience to hear. He was posted to the 9th because the 9th had no archers who could hit anything. It has one now. He would like a second, so that someone else can be the one everyone looks at.`,
+    bio2:`The Dal Honese dream, he says, and take the dreams seriously, and he has dreamt of sand for a month without having seen any. The sand was real when he got here. He has been quiet since. He prays to the Queen of Dreams the hill way, with his eyes open and his bow across his knees, which the squad finds unsettling and he finds practical.`,
+    traits:['Sights along every road as if it were an arrow', 'Prays with his eyes open', 'Mends his own fletching and nobody else\'s', 'Counts his arrows the way Tangle counts the satchel, and resents the comparison'],
+    gear:['Spare bowstrings in a waxed pouch', 'Goose fletching from Dal Hon, nearly gone', 'A dream-charm of knotted hair, his mother\'s'],
+    get quest(){ return `He dreamt of sand before he saw any. Lately he dreams of a sea where the sand is, and does not know what that means, and has decided not to mention it to Marrow in case she does.`; },
+    banter:[`"From back here, Sergeant, everything looks like a target. It's restful."`, `"The Queen sends dreams. I send arrows. We have an understanding."`, `"Two hundred paces, the sergeant says. In this dust, call it a hundred and pray."`],
+    rel:{haddat:'She asks what he sees from the back. She believes him, which surprised him.', sathi:'They shoot for dried meat every evening. They are even. Neither will say so.', tangle:'Two men who prefer to do it from a distance. They get on.', marrow:'She stitched his bow hand. He thanked her in Dal Honese, at length.', tallow:'He is teaching the boy the bow. The boy is not good at it. Tebbet is patient.', hessa:'He shoots past her shoulder in drill and she never flinches. He would like to know how.', darrut:'Darrut calls him "the Dal Honese" in the third person. Tebbet calls him "the wall" back.', orvas:'Horse archers make him nervous. Orvas has noticed, and rides closer.', redblade:'Two straight backs at drill.', warlock:'Makes the sign against the evil eye when the old voice speaks.'}},
+  darrut:{name:'Darrut', role:'Shield · late of the Aren Guard', sig:'D', col:'#9a8c70', hp:23, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash','salve'],
+    epithet:'"I was on the wall. That is all I will say about the wall."', origin:'Aren, the Old Quarter', age:34, service:'Twelve years in the Aren Guard, and a few months in the 9th', height:'Broad, thick in the neck, and moves slower than he can.',
+    weapon:'A Malazan short sword, and the Guard\'s big round shield with its badge scraped off', armour:'Aren Guard mail, patched, and a helm with the Guard\'s plume cut off',
+    bio:`Twelve years in the Aren Guard, which in Aren means drills, gates and the odd riot. When Blistig was promoted out of the Guard to command the 9th, three hundred of his men went with him, because they had stood with him once when it mattered. Darrut was one of them. He says it was the three hundred or the harbour, and he gets seasick.`,
+    bio2:`He was on Aren's north wall the day the Chain came in along the Way, and the day after. He does not tell that story. He tells every other Aren Guard story there is, the brawls and the drunk captains and the camel in the governor's garden, and he tells them well. The squad has noticed the one he leaves out.`,
+    traits:['Tells long stories with a short ending', 'Polishes the place on the shield where the badge was', 'Stands like a gate in a crowd', 'Eats whatever is left and calls it his favourite'],
+    gear:['A Guard plume he cut off and kept', 'A copper from every gate in Aren, on a string', 'A wineskin that has never once had wine in it'],
+    get quest(){ return `Blistig took three hundred men out of the Aren Guard and they followed him into the 9th. The legion grumbles that the Fist grumbles. Darrut has heard him say the Adjunct will kill them all. He has decided to see for himself, and to keep his shield up while he does.`; },
+    banter:[`"In the Guard we'd have called this a parade. Nobody fell over. Mostly."`, `"Did I tell you about the camel? I'll tell you about the camel."`, `"Shield up, recruit. Higher. That's your face it's for."`],
+    rel:{haddat:'He was on the wall when she came in under it. Neither has brought it up.', sathi:'Hackle growled at him once and never again. Sathi counts that for him.', tangle:'Asked if a cusser could take down a wall. "Which wall?" They have not resolved it.', marrow:'He comes to her with every blister. She suspects he likes the company, and allows it.', tallow:'He tells the boy the Guard stories. The boy believes nearly all of them, which is the right amount.', hessa:'They share the front of the line and have never needed a conversation.', tebbet:'"The Dal Honese." "The wall." It is fond, on both sides.', orvas:'Asked Orvas to teach him to ride. Orvas looked at him for some time and then said yes.', redblade:'Ramin was in Aren\'s cells. Darrut was the Guard. They are working round it.', warlock:'The boy frightens him. He hides it well, and the boy is grateful.'}},
+  orvas:{name:'Orvas', role:'Rider · Khundryl Burned Tears', sig:'O', col:'#a85a3a', hp:17, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:6, init:3, st:{might:1, wits:1, guile:2}, ab:['b2_lance','salve'],
+    epithet:'"We grieve the loss of ourselves. Then we ride."', origin:'The Khundryl, Gall\'s clan', age:23, service:'Every summer of his life on a horse, and one with the Malazans', height:'Lean as a tent-pole and always half turned toward his horse.',
+    weapon:'A Khundryl lance cut short for the press, and a curved knife', armour:'Lacquered leather, horsehair, and the black tears inked down both cheeks',
+    bio:`One of Gall's Burned Tears, the Khundryl who shadowed the Fourteenth out of the Vathar and came in to kneel. The clan has a debt to the Chain's dead, Gall says, for riding away before the end. Orvas has been lent to a Malazan squad of the 9th to pay a piece of it, which he thinks is a very small piece, and says so.`,
+    bio2:`The tears down his face are the reason, he says, when anybody asks, and that is all he says. He rides the way Sathi rides, as if the horse had been his idea, and he will not walk if there is anything with four legs within a hundred paces. He laughs a great deal. He grieves a great deal. He does both at the same fire.`,
+    traits:['Will not walk if he can ride', 'Grieves out loud at every fire', 'Laughs at the same fire, a moment later', 'Calls the squad "the herd" and means it well'],
+    gear:['A horse-tail standard, small, his father\'s', 'A pot of black ink and a needle', 'A strip of the clan\'s old colours, tied to the lance'],
+    get quest(){ return `The Burned Tears came to make amends to the dead of the Chain. Orvas has been told to ride with Malazans until the debt is paid. He does not know how they will know. He has decided to keep riding until somebody tells him to stop.`; },
+    banter:[`"A herd that walks. My grandmother would weep. Then she would laugh. I am doing both."`, `"The dead of my clan ride behind us, Sergeant. They are very slow. They are very many."`, `"Give me a horse and a flank and I will give you the rest of the afternoon."`],
+    rel:{haddat:'She speaks to him in an Odhan tongue, badly. He answers in Malazan, worse. Both find it restful.', sathi:'A Weasel and a Burned Tear. They agree about horses and nothing else, at volume.', tangle:'Tangle keeps the satchel on the far side from the horse. Orvas thinks this is wise.', marrow:'She asked about the tears once. He said, "They are the reason." She let it be, and he liked her for it.', tallow:'The boy says every day that he has never seen a horse go like that. Orvas lets him.', hessa:'The Khundryl grieve loudly. Hessa grieves no one. Each finds the other worth watching.', tebbet:'Horse archers make the Dal Honese nervous. Orvas rides closer, to help.', darrut:'He is teaching the Aren man to ride. It is going badly. They are both enjoying it.', redblade:'Ramin rides beside him and talks horses. They are, for a few hours a day, entirely happy.', warlock:'The Khundryl grieve their dead. Keth carries his. Some nights they sit together without a word.'}},
+});
+Object.assign(VERB, {tallow:'thrusts at', hessa:'drives the temple spear at', tebbet:'looses an arrow at', darrut:'cuts at', orvas:'drives the short lance at'});
+Object.assign(STATUP, {tallow:['guile', 'might'], hessa:['might', 'wits'], tebbet:['guile', 'wits'], darrut:['might', 'wits'], orvas:['guile', 'might']});
+Object.assign(PICKS[3], {
+  tallow:[['nerve', 'Grandmother\'s Luck', 'Tallow takes the Nerve pick early: +1 initiative and +1 to every skill check he rolls. The old woman said he was lucky. He is starting to believe her.'], ['holdline', 'Hold, Recruit', 'Tallow\'s free swings are unlimited and hit +2. The drill took, in the end.']],
+  hessa:[['shieldwall', 'The Temple Door', 'Squadmates standing next to Hessa get +2 armour. Six years in a doorway taught her how wide a door is.'], ['holdline', 'The Worm Waits', 'Hessa\'s free swings are unlimited and hit +2. Anything that walks away from her pays for it.']],
+  tebbet:[['quickshot', 'The Hill Pair', 'Once a fight: two arrows at one target within reach (three from level 6). The Dal Honese way: the second before the first has landed.'], ['ghost', 'Far Off', 'Enemies take −2 to hit Tebbet. He is always somewhere further away than you thought.']],
+  darrut:[['discipline', 'Guard Drill', 'Every squadmate wears +1 armour. Twelve years of telling people on a wall where to stand.'], ['holdline', 'The Gate', 'Darrut\'s free swings are unlimited and hit +2. He has held a gate. He knows what goes through.']],
+  orvas:[['ghost', 'Low on the Horse', 'Enemies take −2 to hit Orvas. He is never quite where the horse is.'], ['sappers_eye', 'The Flank', 'The squad rolls +2 initiative, and Orvas\'s free swings hit +2. The Khundryl see the gap before it opens.']],
+});
+/* their gods (31c), and the sergeant's in Book Four: Fener is gone, and Treach answers (Heboric is Treach's Destriant in Raraku; hoc-canon §13) */
+Object.assign(PATRONS, {
+  tallow:{sig:'kettle', god:'Oponn', title:'Oponn, the Twins', txt:id => `A card slides out of the oilcloth in Tallow's shirt and lands face up in the dust beside his hand. It is the Twins. It is always the Twins, his grandmother used to say, when you need them and when you don't.\n\nThe Lady pulls. Back to back with her, her brother looks at the boy, and then at the squad, and makes a note of what it will cost.`},
+  hessa:{sig:'hessa', god:'D\'rek', title:'D\'rek, the Worm of Autumn', txt:id => `Hessa, face down, puts her palm flat on the ground and says one word in the temple tongue, and the ground under the squad goes soft and warm, like a field turned over in autumn.\n\nThe Worm of Autumn does not hurry. It does not need to. Everything comes to it in the end, and it has decided that the end is not today, not for these. The enemy's blades come away from the squad with rot on them.`},
+  tebbet:{sig:'redblade', god:'the Queen of Dreams', title:'The Queen of Dreams', txt:id => `Tebbet goes down with his eyes open, the hill way, and the fight goes very far away, into a dream that somebody else is having about a sea where the sand should be.\n\nIn the dream the squad stands up. The Queen does not explain. The Dal Honese never ask her to.`},
+  darrut:{sig:'brisk', god:'Hood', title:'Hood, Lord of Death', txt:id => `Darrut, on his knees behind the big round shield, says the Aren Guard's prayer, which is short and mostly swearing.\n\nSomewhere there is a gate the size of the world, and Darrut has seen it once already, from a wall, on the day the Chain came in. A grey hand on it pauses. *Not these. Not after that.*`},
+  orvas:{sig:'orvas', god:'the Khundryl dead', title:'The dead of the Burned Tears', txt:id => `Orvas goes down laughing, and then he is grieving, out loud, the Khundryl way, and the sound goes out over the field and something answers it.\n\nThey come up out of the dust at a walk and then at a gallop: riders with black tears on their faces, a great many, and very old, and very patient. They ride round the squad once, the way you ride round a herd, and the enemy remembers somewhere else it needs to be.`},
+});
+{ const prev = Object.getOwnPropertyDescriptor(PATRONS, 'sgt');
+  Object.defineProperty(PATRONS, 'sgt', {configurable:true, enumerable:true, get(){ return S && S.book === 'hoc' ? PATRON_TREACH : prev.get ? prev.get() : prev.value; }, set(v){ /* kept per book */ }}); }
+
+/* ---- Nerve: how steady the raw company round the squad is (0..10, start 5) ----
+   b4Nerve(d, why) changes it and notes it. Omens, bad news and raids lower it (the chapters call it); the squad's steadiness, the Khundryl and a
+   clean fight raise it. A fight with def.company has company regulars in it: Nerve 7+ sends one more, 9+ two more; Nerve 3 or less, the
+   regulars may break at the end of round 2 (each 25% per point below 4). A won company fight in which nobody in the squad went down: +1. */
+const NERVE_MAX = 10, B4_NERVE0 = 5;
+function b4Nerve(d = 0, why = ''){ if (!S) return 0; S.nerve ??= B4_NERVE0;
+  const n0 = S.nerve; S.nerve = clamp(n0 + d, 0, NERVE_MAX); const dn = S.nerve - n0;
+  if (dn) { const s = `${why ? why + ': ' : ''}Nerve ${dn > 0 ? '+' : '−'}${Math.abs(dn)}.`; note(s.charAt(0).toUpperCase() + s.slice(1), dn < 0 ? 'bad' : 'good'); tally(dn > 0 ? 'nerveUp' : 'nerveDown', Math.abs(dn)); }
+  updChain(); return dn; }
+const b4NerveNow = () => (S && S.nerve != null ? S.nerve : B4_NERVE0);
+/* for text: 'steady' (7+), 'shaky' (3 or less), or '' */
+const b4Mood = () => b4NerveNow() >= 7 ? 'steady' : b4NerveNow() <= 3 ? 'shaky' : '';
+/* ---- Dust: from Chapter 5, the Whirlwind's sand (0..3). Set by the chapter (B4DUST, at startChapter); a fight may override it with def.dust.
+   Each point: every shot's range −1 (never below 2), and sorcery (a squadmate's strain-costing spell, and an enemy caster's trick) sputters
+   5% a point. Spirit-craft (a.spirit) and Elder tricks (a.elder) never sputter; nor anything under the Leper (70c). ---- */
+const B4DUST = {1:0, 2:0, 3:0, 4:0, 5:1, 6:2, 7:3};
+const b4DustNow = () => { if (!b4On()) return 0; const d = B && B.def && B.def.dust != null ? B.def.dust : S.dust != null ? S.dust : B4DUST[S.chapter] || 0; return clamp(d, 0, 3); };
+const b4SputterPct = () => 5 * b4DustNow();
+/* the widget for a node's html: two bars and a caption (styled like Book Two's chainHTML) */
+function nerveHTML(road){
+  const n = b4NerveNow(), d = b4On() ? (S.dust != null ? S.dust : B4DUST[S.chapter] || 0) : 0, m = b4Mood();
+  return `<div class="chainbox allybox" role="group" aria-label="Nerve and Dust">${road ? `<div class="road">${esc(road)}</div>` : ''}
+    <div class="crow"><span>Nerve</span><b>${n} of ${NERVE_MAX}${m === 'steady' ? ' · the company stands with you' : m === 'shaky' ? ' · the company may break' : ''}</b></div><div class="bar"><i style="width:${Math.round(n / NERVE_MAX * 100)}%"></i></div>
+    <div class="crow"><span>Dust</span><b>${d ? `${d} of 3 · shots −${d}, sorcery sputters ${5 * d}%` : 'none yet'}</b></div><div class="bar col"><i style="width:${Math.round(d / 3 * 100)}%"></i></div></div>`; }
+/* the HUD pill beside the silver: Nerve n · Dust n (Book Four only) */
+{ const _updChain = updChain;
+  updChain = function(){ const el = typeof document !== 'undefined' && document.getElementById('chainp');
+    if (!el || !S || S.book !== 'hoc') return _updChain();
+    const n = b4NerveNow(), d = S.dust != null ? S.dust : B4DUST[S.chapter] || 0;
+    el.innerHTML = `<span class="chainpill allypill"><span class="${n <= 3 ? 'dry' : ''}">Nerve <b>${n}</b></span>${d ? `<span class="dry">Dust <b>${d}</b></span>` : ''}</span>`; }; }
+/* the chapter sets the dust (a chapter may set S.dust itself after this, for one stretch) */
+{ const _startChapter = startChapter;
+  startChapter = function(n){ if (b4On() && CHAPTERS[n]) S.dust = B4DUST[n] || 0; return _startChapter(n); }; }
+/* shots shorten in the dust */
+const b4Shorten = u => { const d = b4DustNow(); if (d && u && u.rng > 1) u.rng = Math.max(2, u.rng - d); return u; };
+{ const _mkParty = mkParty; mkParty = function(id, x, y){ const u = _mkParty(id, x, y); return b4On() ? b4Shorten(u) : u; }; }
+{ const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y); if (b4On() && k === 'b4_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b4reg = true; } return b4On() ? b4Shorten(u) : u; }; }
+/* Book Four's squad is the same veterans' curve as Book Three's (8..15 against 2..8): its enemies carry the gap, per chapter. Starting
+   numbers are Book Three's (B3GAP); tools/balance.mjs tunes them with David once fights exist. */
+const B4GAP = {1:{ac:7, atk:4, hp:1.8, dmg:6}, 2:{ac:6, atk:4, hp:1.7, dmg:5}, 3:{ac:5, atk:4, hp:1.55, dmg:4}, 4:{ac:6, atk:4, hp:1.5, dmg:5},
+  5:{ac:5, atk:2, hp:1.35, dmg:4}, 6:{ac:5, atk:2, hp:1.25, dmg:4}, 7:{ac:5, atk:1, hp:1.25, dmg:4}};
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b4On()) return u; const g = B4GAP[clamp(S.chapter || 1, 1, 7)];
+    if (g) { u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk; u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp)); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg]; }
+    return b4Shorten(u); }; }
+/* the squad's sorcery in the dust: half effect when it sputters (the mechanism Book Two's fouled warrens use, 47) */
+const b4Grit = () => ['The warren comes up full of sand.', 'Grit in the warren. Half of it comes through.', 'The sorcery catches in the dust like cloth on a nail.', 'The Whirlwind\'s sand is in the warren too.'][R(4)];
+{ const _useAb = useAb;
+  useAb = function(k, x, y){
+    const u = B && B.cur, a = AB[k];
+    if (!b4On() || !u || !a || !a.strain || a.elder || a.spirit || u.side !== 'p' || u.ally || !b4DustNow()) return _useAb(k, x, y);
+    if (S.card === 'b4c_leper' || boon('ground') || R(100) >= b4SputterPct()) return _useAb(k, x, y);
+    blog(`<em>${u.name} reaches for the warren. ${b4Grit()}</em> Half effect.`); float(u, 'sputters', '#c8a868'); tally('b4Sputters'); S.f.b4_sputters = (S.f.b4_sputters || 0) + 1;
+    const w0 = B.warren || {}, down = B.units.filter(p => p.side === 'p' && p.hp <= 0);
+    B.warren = Object.assign({}, w0, {denul:(w0.denul || 1) * .5, meanas:(w0.meanas || 1) * .5});
+    try { return _useAb(k, x, y); }
+    finally { B.warren = w0; down.filter(p => p.hp > 0).forEach(p => { p.hp = Math.max(1, Math.ceil(p.hp / 2)); }); } }; }
+/* an enemy caster in the dust: its sorcery may fizzle for the turn (it fights with what it carries instead) */
+{ const _foeSpecial = foeSpecial;
+  foeSpecial = async function(u, gone){
+    if (!b4On() || !B || !u || !b4DustNow() || S.card === 'b4c_leper' || !(u.sk || []).some(k => SORC.includes(k)) || u.otat || R(100) >= b4SputterPct()) return _foeSpecial(u, gone);
+    u.otat = true; blog(`<em>${u.name} calls on something, and the dust swallows it.</em>`); float(u, 'sputters', '#c8a868');
+    try { return await _foeSpecial(u, gone); } finally { u.otat = false; } }; }
+
+/* ---- the company regulars: a fight with def.company = {at:[[x, y], …], n:1} (or true) has n regulars of the 9th beside the squad (default 1),
+   placed at the tiles given (or by the squad). Nerve 7+: one more; 9+: two more. Nerve 3 or less: at the end of round 2 each regular breaks
+   (leaves the field) at 25% per point of Nerve below 4. ---- */
+FOES.b4_regular = {name:'Ninth regular', kind:'b2soldier', sig:'n', hp:15, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, verb:'cuts at'};
+const b4CompanyN = d => { const c = d && d.company; if (!c) return 0; const base = c === true ? 1 : c.n ?? 1, n = b4NerveNow(); return base + (n >= 9 ? 2 : n >= 7 ? 1 : 0); };
+const b4BreakPct = () => Math.max(0, 4 - b4NerveNow()) * 25;
+{ const _battleDef = battleDef;
+  battleDef = function(id, stage){ const d = _battleDef(id, stage); if (!d || !b4On()) return d; let out = d;
+    if (d.company) { const c = d.company === true ? {} : d.company, at = c.at && c.at.length ? c.at : [d.party[0]], n = b4CompanyN(d);
+      out = Object.assign({}, out, {allies:[...(out.allies || []), ...Array.from({length:n}, (_, i) => ['b4_regular', at[i % at.length][0], at[i % at.length][1]])], b4Regs:n}); }
+    /* Hackle: at Sathi's knee if she came across; if she fell and the whistle brought him home in Book Two, at the sergeant's */
+    if (!d.noDog) { const sq = SQUAD(), i = b4In('sathi') ? sq.indexOf('sathi') : b4Was('b2_hackleBack') && !(S.dead && S.dead.hackle) ? sq.indexOf('sgt') : -1;
+      if (i >= 0) { const p = d.party[i] || d.party[d.party.length - 1]; out = Object.assign({}, out, {allies:[...(out.allies || []), ['hackle', p[0], p[1]]], dogIn:true}); } }
+    return out; }; }
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (!b4On() || !B || !B.def) return r;
+    const d = B.def, dust = b4DustNow();
+    if (d.dogIn) blog(b4In('sathi') ? `Hackle is at Sathi's knee, hackles up.` : `Hackle is at the sergeant's knee. He has been since the whistle.`);
+    if (dust) blog(`<em>Dust ${dust}. The Whirlwind's sand is in the air: every shot −${dust} range, and sorcery sputters ${5 * dust}% of the time. Spirit-craft is untouched.</em>`);
+    if (d.b4Regs) { const n = b4NerveNow(); B.b4Brittle = n <= 3;
+      blog(n >= 7 ? `<em>Nerve ${n}. The company is steady: ${d.b4Regs} of the 9th's regulars come up beside the squad without being asked.</em>` : n <= 3 ? `<em>Nerve ${n}. The regulars beside the squad keep looking back at the column. They may not stay.</em>` : `<em>Nerve ${n}. A regular of the 9th fights beside the squad.</em>`); }
+    return r; }; }
+{ const _newRound = newRound;
+  newRound = function(){ const r = _newRound(); if (!b4On() || !B || B.over || B.round !== 3 || !B.b4Brittle || B.b4Broke) return r;
+    B.b4Broke = true; const pct = b4BreakPct(), gone = new Set(B.units.filter(u => u.b4reg && u.hp > 0 && R(100) < pct));
+    if (gone.size) { B.units = B.units.filter(u => !gone.has(u)); B.initOrder = B.initOrder.filter(u => !gone.has(u)); B.order = B.order.filter(u => !gone.has(u));
+      blog(`<em>${gone.size > 1 ? `${gone.size} of the regulars break` : 'The regular breaks'} and run${gone.size > 1 ? '' : 's'} for the column.</em> Nobody calls after them.`);
+      tally('b4Broke', gone.size); S.f.b4_broke = (S.f.b4_broke || 0) + gone.size; updBattleUI(); }
+    return r; }; }
+
+/* ---- the squad away for one fight, the worst-hurt, the last stand and the rounds (as Book Three has them, for Book Four) ----
+   def.away = ['tangle']: fought without them (they are still in the squad). def.hurtMost: S.f.b4_hurtMost after the fight (never the sergeant,
+   never a recruit). def.lastStand: a hold-out; won or lost it goes on to def.after with the experience, no god, no retry; S.f.b4_lastHeld
+   1/0 and S.f.b4_lastRounds. Every fight writes S.f.b4_lastRoundsFought. A won company fight with nobody in the squad down: Nerve +1. */
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const d = b4On() ? BATTLES[id] : null, away = d && (d.away || (opt.stage === 2 && d.stage2 && d.stage2.away));
+    if (!away || !away.some(k => S.squad.includes(k))) return _startBattle(id, opt);
+    const sq = S.squad; S.squad = sq.filter(k => !away.includes(k));
+    try { return _startBattle(id, opt); }
+    finally { S.squad = sq; if (B && B.snap) { const o = JSON.parse(B.snap); o.squad = sq.slice(); B.snap = JSON.stringify(o); } save(); } }; }
+{ const _win = win;
+  win = function(){
+    if (b4On() && B && B.def) { S.f.b4_lastRoundsFought = B.round;
+      if (B.def.lastStand) { S.f.b4_lastHeld = 1; S.f.b4_lastRounds = B.round; }
+      if (B.def.hurtMost) { const c = B.units.filter(u => u.side === 'p' && !u.ally && u.id !== 'sgt' && !B4_RECRUITS.includes(u.id) && TPL[u.id] && S.squad.includes(u.id)).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp);
+        if (c.length) S.f.b4_hurtMost = c[0].id; }
+      if (B.def.company && B.units.filter(u => u.side === 'p' && !u.ally).every(u => u.hp > 0)) { tally('b4Clean'); b4Nerve(1, 'A clean fight, and the company saw it'); } }
+    return _win(); }; }
+{ const _lose = lose;
+  lose = function(){ if (!b4On() || !B || !B.def || !B.def.lastStand) return _lose();
+    AUDIO.play('lose'); const xp = Math.round((B.def.xp || 0) * XPK), up = gainXP(xp); S.f.b4_lastHeld = 0; S.f.b4_lastRounds = B.round;
+    note(`The squad went down, and the line went on past them. +${xp} experience.`, 'bad'); if (up) note(lvlNote(), 'good');
+    S.scene = 'talk'; save(); updBattleUI(); talk(B.def.after); }; }
+{ const _endBeat = endBeat;
+  endBeat = function(won){ const r = _endBeat(won); if (b4On() && B && B.banner && !won) B.banner.txt = B.def && B.def.lastStand ? 'The line went on' : 'The squad is down'; return r; }; }
+
+/* ---- a fresh Book Four sergeant, and what a finished Book Two can bring ----
+   Only a finished Book Two whose road out (b2_c7_key) was 'guard' or 'wickans' transfers: that squad was in Aren when the Adjunct came.
+   'desert' does not (it is heard of as rumour). An Old Hand of the Fourth goes back to the Fourth and does not come. */
+const B4_KEEP = ['b2_c7_key', 'b2_gateCount', 'b2_runLost', 'b2_ilhar', 'b2_ilharSeen', 'b2_girlsFound', 'b2_girlsRode', 'b2_vatharLost', 'b2_barrowHeld', 'b2_barrowFell', 'b2_barrowRounds', 'b2_hackleBack',
+  'b2_raminGone', 'b2_kethGone', 'b2_raminDone', 'b2_kethDone', 'b2_kethSormo', 'b2_stay', 'b2_split', 'b2_splitHow', 'b2_woundWho', 'b2_woundHealed', 'b2_silandaWho', 'b2_silandaBack', 'b2_sathiCrows',
+  'b2_ressanOut', 'b2_yedda', 'b2_imra', 'b2_knots', 'b2_sputters', 'b2_herd', 'b2_cusserKept', 'b2_marrowEnd', 'b2_sathiClan', 'b2_duiker', 'b2_bult', 'b2_c6_key', 'b2_c5_key', 'b2_c4_key', 'b2_c3_key', 'b2_c2_key', 'b2_c1_key'];
+const B4_ROADS = ['guard', 'wickans'];
+const b4Qualifies = o => !!(o && o.book === 'dg' && o.chapters && B4_ROADS.includes(o.chapters[7] ?? (o.f && o.f.b2_c7_key)));
+function b4Import(id){ const o = loadSlot(id); if (!b4Qualifies(o)) return null;
+  const f = o.f || {}, dead = o.dead || {}, road = o.chapters[7] ?? f.b2_c7_key;
+  const mates = HOC_CORE.filter(k => (o.squad || []).includes(k) && !dead[k]);
+  const keep = {}; B4_KEEP.forEach(k => { if (f[k] != null) keep[k] = f[k]; });
+  if (typeof B2_KEEP6 !== 'undefined') keep.keepsakes = Object.values(B2_KEEP6).filter(it => (o.kit || []).includes(it));
+  if (o.chain) keep.column = o.chain.column || 0;
+  const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
+  /* what the squad carried, as Book Three's transfer does (60): worn gear and unworn kit, talents and veteran picks, the tricks of anyone who comes across */
+  const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
+  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
+  const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
+  const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
+  const inv = Object.assign({sharper:0, burner:0, cusser:0, smoker:0}, ...B2_MUNI.map(k => ({[k]:Math.max(0, ((o.inv || {})[k]) || 0)})), {salve:Math.max(2, ((o.inv || {}).salve) || 0)}); // Tangle's satchel, as Book Two left it
+  return {from:o.name, sid:id, road, lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), deadAt:dead, f:keep, gear, picks, kit, tricks, inv,
+    ramin:!!f.b2_raminGone && !dead.redblade, keth:!!f.b2_kethGone && !dead.warlock}; }
+/* every Book Four game starts at level 8 (cap 15): the veterans' curve and its picks are Book Three's (60) */
+const B4_START_LVL = 8;
+function newStateHOC(name, importId, sid){
+  name = name || 'Hask';
+  const imp = importId ? b4Import(importId) : null, mates = imp ? imp.mates : ['haddat', 'tangle', 'marrow'];
+  const fill = HOC_NEW.slice(0, Math.max(0, 4 - mates.length)), squad = ['sgt', ...mates, ...fill];
+  const s = {v:1, book:'hoc', sid:sid || (imp ? newSid() : sidFor(name)), name, scene:'chintro', node:null, bg:null, silver:12, xp:0, lvl:1, card:null,
+    inv:{sharper:2, burner:1, cusser:1, salve:2, smoker:1}, loy:{}, f:{}, pos:{x:5, y:8},
+    trail:[{x:4, y:8}, {x:6, y:8}, {x:4, y:9}, {x:5, y:9}], log:[], ending:null, battle:null, bopt:null,
+    squad, chapter:0, chapters:{}, area:'pale', nerve:B4_NERVE0, dust:0, dead:{}};
+  squad.forEach(k => { if (k !== 'sgt') s.loy[k] = 0; });
+  s.lvl = Math.max(B4_START_LVL, Math.min(15, imp ? imp.lvl : 1)); s.xp = LEVELS[s.lvl - 1];
+  if (imp) { s.imported = {from:imp.from, sid:imp.sid, road:imp.road, lvl:imp.lvl, mates:imp.mates.slice(), dead:imp.dead, f:imp.f, ramin:imp.ramin, keth:imp.keth};
+    Object.assign(s.loy, imp.loy); s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks; s.inv = imp.inv;
+    imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; s.dead[k] = {ch:d.ch || 7, where:d.where || 'The Barrow', from:'dg'}; }); } // Book Two's dead stay dead: never in the squad, never a recruit
+  else s.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start: Sathi fell at the Barrow, and Hackle was not seen again
+  migrate(s); s.picksDue = b3PicksDue(s);
+  return s; }
+/* a recruit joining a veteran squad brings her own veteran picks for the levels already passed; a recruit joins the squad, not the Fourth */
+{ const _recruit = recruit;
+  recruit = function(id){ if (!b4On()) return _recruit(id); const was = S.squad.includes(id), n0 = note;
+    note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; }
+    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
+      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
+{ const _rest = rest; rest = function(t){ return _rest(t || (b4On() ? 'The squad rests inside the 9th\'s lines. Wounds close, mostly.' : t)); }; }
+const b4Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'The squad rests inside the 9th\'s lines, with a legion of recruits snoring round it. Wounds close, mostly.'); if (!had) note('Rested.', 'good'); save(); return true; };
+
+/* ---- the three recruits: one at a time, swapped at a fire (Book Two's and Three's rule) ----
+   Ramin (redblade) with the Red Blades, transfer only, if he went to the cells alive (S.imported.ramin). Keth (warlock) with Temul's Wickan
+   youths, transfer only, if he went to the Wickan children alive (S.imported.keth). Orvas, a Khundryl Burned Tear, from Chapter 3 in every game.
+   S.f.b4_raminDone / b4_kethDone / b4_orvasDone: 1 walks with the squad, 2 waits near with their own people, 0 sent away (set 0 yourself).
+   b4Join(id): joins if no other recruit walks with the squad and there is room (six at most); otherwise waits (2) with a note.
+   b4SwapIn(id): the recruit who walks goes back to their people (kit kept in S.f.b4_allyGear) and this one comes in. */
+const B4_DONE = {redblade:'b4_raminDone', warlock:'b4_kethDone', orvas:'b4_orvasDone'};
+const B4_HOME = {redblade:'the Red Blades\' lines', warlock:'Temul\'s Wickan youths', orvas:'the Khundryl fires'};
+const B4_CAP = 6;
+const b4Room = () => Math.max(0, B4_CAP - ((S && S.squad) || []).length);
+const b4Recruit_ = () => (S && Array.isArray(S.squad) && B4_RECRUITS.find(k => S.squad.includes(k))) || null;
+/* may this recruit be offered at all in this game? */
+const b4CanRecruit = id => !!(b4On() && TPL[id] && !(S.dead && S.dead[id]) && (id === 'orvas' ? true : id === 'redblade' ? !!(S.imported && S.imported.ramin) : id === 'warlock' ? !!(S.imported && S.imported.keth) : false));
+function b4Join(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
+  if (b4Recruit_() || b4Room() <= 0) { S.f[B4_DONE[id]] = 2; note(`${NAME(id)} stays with ${B4_HOME[id]} for now. Ask at any fire, and he'll come.`); save(); return false; }
+  S.f[B4_DONE[id]] = 1; recruit(id); return true; }
+function b4SwapIn(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
+  const out = b4Recruit_();
+  if (out) { S.f.b4_allyGear ??= {}; S.f.b4_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B4_DONE[out]] = 2;
+    S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B4_HOME[out]}. Ask at any fire, and he'll come.`); }
+  if (b4Room() <= 0) return false;
+  S.f[B4_DONE[id]] = 1; recruit(id);
+  Object.entries(((S.f.b4_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
+  save(); return true; }
+const b4Waiting = id => !!(b4On() && S.f && S.f[B4_DONE[id]] === 2 && !b4In(id) && !(S.dead && S.dead[id]));
+/* the recruits who could be asked at a fire, for a swap choice list */
+const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id));
+
+/* ---- who reads the Deck in Book Four (36b visReader, 21's captions, 70c's readings) ----
+   Marrow while she is in the squad and alive (she read for Book Two); otherwise Tallow, from his grandmother's deck; otherwise an old soldier
+   of the 9th who reads for the legion, whose name nobody has. */
+{ const _vr = VISREADER;
+  VISREADER = () => { if (!b4On()) return _vr ? _vr() : null;
+    if (b4In('marrow')) return {id:'marrow', name:'Marrow', he:false};
+    if (b4In('tallow')) return {id:'tallow', name:'Tallow', he:true};
+    return {id:'oldninth', name:'The old soldier', mid:'the old soldier', he:true}; }; }
+
+/* ---- how far Book Four goes, for the title: counted from the chapters actually registered. With none, the book is 'coming':
+   off the shelf, the picker and Deeds (14 shelfBooks); showTitle(false, 'hoc') still dresses the title for it, and Begin says it is being written ---- */
+const b4ChCount = () => Object.keys(BOOK === 'hoc' ? CHAPTERS : BOOKSNAP.hoc.ch).length;
+const b4Progress = () => { const n = b4ChCount(); return n >= 7 ? 'All seven chapters.' : n === 0 ? 'Its chapters are being written.' : n === 1 ? 'Chapter One so far.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n]} chapters so far.`; };
+Object.defineProperty(BOOKS.hoc, 'blurb', {configurable:true, get(){ return 'Seven Cities, the year after the Chain, beside House of Chains. Book Two\'s squad in the Adjunct\'s Fourteenth, from Aren to Raraku. Plays on its own; a finished Book Two save on the Aren Guard or Wickan road can bring its squad across.' + (b4ChCount() >= 7 ? '' : ' ' + b4Progress()); }});
+Object.defineProperty(BOOKS.hoc, 'coming', {configurable:true, get(){ return b4ChCount() === 0; }});
+Object.defineProperty(BOOKS.hoc, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/hoc'] ? 'title/hoc' : 'title/dg'; }});
+
+/* ---- the import, on the title: finished Book Two sergeants on the Aren Guard or the Wickan road ---- */
+const b4Finished = () => roster().list.filter(e => e.book === 'dg' && e.done && b4Qualifies(loadSlot(e.id)));
+function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. A recruit off the transports makes five.';
+  const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), fill = HOC_NEW.slice(0, Math.max(0, 4 - i.mates.length)).map(k => TPL[k].name);
+  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(went.join(', ')) : 'nobody but you'}${dead.length ? `. ${esc(dead.join(' and '))} stayed on the Barrow` : ''}${fill.length ? `. The Fourteenth makes up the five with ${esc(fill.join(', '))}` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
+
+/* ---- the words Book Four throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
+GLOSSX.hoc = [
+  [0, 'The Fourteenth', 'The Adjunct\'s new army, raised to put down the Whirlwind: three legions, the 8th, 9th and 10th, half of them recruits off the transports from Quon Tali who have never fought. The Chain\'s survivors were dealt out across all three.'],
+  [0, 'The Adjunct', 'Tavore, the Empress\'s Adjunct, who commands the Fourteenth. Plain, quiet, and very far from the ranks. The soldiers have not decided what she is. They have started calling her cold iron.'],
+  [0, 'The 9th Legion', 'Fist Blistig\'s legion. He commanded the Aren Guard before this and was given the 9th whether he wanted it or not. Some three hundred of the Guard followed him.'],
+  [0, 'The Red Blades', 'Seven Cities loyalists, cavalry in red-enamelled scale. Thrown in Aren\'s cells last year, freed, and riding now for the Adjunct under Tene Baralta.'],
+  [0, 'The Wickans', 'Temul\'s youths, some forty, who came through the Chain and guard the Adjunct; and three hundred Crow who came by ship and will not take orders from a boy.'],
+  [0, 'The Whirlwind', 'The rising, and the goddess in Raraku\'s sand. Sha\'ik and her army wait for the Fourteenth inside its wall of wind.'],
+  [0, 'Raraku', 'The Holy Desert, north of Aren: an old sea bed, they say, with the Whirlwind walled round it. Nobody in the 9th has been inside. Haddat has, a little way.'],
+  [0, 'The finger bones', 'Every soldier in the Fourteenth wears one on a thong, from the old graveyard in Aren. It started as a joke. The Adjunct made it the army\'s.'],
+  [0, 'Nerve', 'How steady the raw company round the squad is, out of ten. High, and regulars come into a fight beside you. Low, and they may run.'],
+  [0, 'Dust', 'The Whirlwind\'s sand, once the army is near it: shots fall short and sorcery catches in it. Spirit-craft is not touched.', ()=>!!(S && (S.dust || (S.chapter || 0) >= 5))],
+  [0, 'Treach', 'The Tiger of Summer. A god new this year, they say, risen as the Boar fell. Soldiers who swore by Fener are learning a different oath.', ()=>godMet('sgt') || !!(S.f && S.f.b4_treach)],
+  [0, 'D\'rek', 'The Worm of Autumn, whose Grand Temple is in Kartool City. Rot and the turning year. Hessa stood her doors for six years.', ()=>b4In('hessa') || godMet('hessa')],
+  [1, 'Blistig', 'Fist of the 9th, late of the Aren Guard. Says the Adjunct will get them all killed. Says it where the soldiers can hear.', ()=>!!(S.f && S.f.b4_blistig) || (S.chapter || 0) >= 1],
+  [2, 'Coltaine\'s Fall', 'The hill on the Aren Way where the Chain ended, a day north of the city. The pilgrims have hung it with braids and feathers.', ()=>(S.chapter || 0) >= 2],
+  [3, 'The Burned Tears', 'Gall\'s Khundryl, some three thousand riders with black tears inked on their faces. They rode away from Coltaine before the end. They have come to make it right.', ()=>(S.chapter || 0) >= 3 || !!(S.f && S.f.b4_khundryl)],
+  [4, 'Leoman', 'Leoman of the Flails, Sha\'ik\'s war leader, raiding the column with a few hundred riders. Fast, and never where you look for him.', ()=>(S.chapter || 0) >= 4 || !!(S.f && S.f.b4_leoman)],
+  [6, 'The House of Chains', 'A new House in the Deck, they say. Nobody in the army can say who put it there.', ()=>!!(S.f && S.f.b4_chains) || ['b4c_knightchains', 'b4c_leper'].includes(S.card)],
+];
+
+/* ---- the journal, the count and the Deeds, by book (38b handles Books One and Two; 60 Book Three) ---- */
+{ const _jn = journalNotes; journalNotes = function(){ const out = _jn(); if (!b4On()) return out; const i = S.imported;
+    out.unshift(i ? `The squad, from Sergeant ${esc(i.from)}'s Book Two: into Aren on the ${i.road === 'wickans' ? 'Wickan' : 'Aren Guard'} road.${b4Fallen().length ? ` ${esc(b4FallenNames())} stayed on the Barrow.` : ''}` : `The squad came off the Chain into Aren. Sathi stayed on the Barrow, and Hackle was not seen again.`);
+    return out; }; }
+{ const _sr = statsRows; statsRows = function(s){ const r = _sr(s); if (!s || s.book !== 'hoc') return r;
+    const st = s.stats || {};
+    r.push(['Nerve, now', `${s.nerve != null ? s.nerve : B4_NERVE0} of ${NERVE_MAX}`], ['Dust, now', `${s.dust || 0} of 3`], ['Sorcery that sputtered in the dust', (s.f && s.f.b4_sputters) || 0]);
+    if (st.nerveUp || st.nerveDown) r.push(['Nerve won and lost', `${st.nerveUp || 0} won, ${st.nerveDown || 0} lost`]);
+    if (st.b4Broke) r.push(['Regulars who broke', st.b4Broke]);
+    return r; }; }
+function b4DeedsExtra(mine){
+  const fin = mine.filter(({s}) => bookDone(s)), nerve = mine.map(({s}) => s.nerve != null ? s.nerve : B4_NERVE0);
+  const rows = [['Most nerve, now', mine.length ? Math.max(...nerve) : 'Not yet'], ['Came with the squad from Book Two', mine.filter(({s}) => s.imported).length || 'None yet'],
+    ['Regulars who broke', mine.reduce((a, {s}) => a + ((s.f && s.f.b4_broke) || 0), 0) || 'None yet'], ['Finished at Raraku', fin.length || 'Not yet']];
+  return `<h4 class="jh">Nerve and Dust</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
+
+/* ---- Book Four's road map: Aren, the Aren Way and Coltaine's Fall, the Vathar, the hills, the Whirlwind Wall, Pan'arak, Raraku ---- */
+const ROUTE_B4 = [ // chapter -> where (a sketch: Aren on the coast, Raraku inland to the north-east)
+  {x:.16, y:.86, t:'Aren', a:'l'}, {x:.2, y:.82, t:'Aren · the muster'}, {x:.26, y:.7, t:'Coltaine\'s Fall', a:'l'}, {x:.36, y:.58, t:'The Vathar'},
+  {x:.48, y:.5, t:'The hills', a:'l'}, {x:.6, y:.38, t:'The Whirlwind Wall'}, {x:.7, y:.27, t:'Pan\'arak', a:'l'}, {x:.78, y:.2, t:'Raraku'}];
+function drawB4Route(cv, s, t){
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
+  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2e2618'); bg.addColorStop(1, '#1c170e'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 33)*W, hash(i, 34)*H, 1 + hash(i, 35)*2, 1);
+  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(0, H*.7); ctx.quadraticCurveTo(W*.12, H*.84, W*.22, H); ctx.lineTo(0, H); ctx.fill(); // Aren Bay
+  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('Aren Bay', W*.02, H*.97);
+  ctx.strokeStyle = 'rgba(106,168,255,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.24, H*.5); ctx.quadraticCurveTo(W*.36, H*.6, W*.5, H*.66); ctx.stroke(); // the Vathar
+  for (let i = 0; i < 14; i++) { ctx.fillStyle = 'rgba(210,180,120,.10)'; ctx.fillRect(W*(.4 + hash(i, 36)*.5), H*(.1 + hash(i, 37)*.5), 12, 1); } // dunes
+  const done = bookDone(s), ch = s.chapter || 0, ww = (Math.sin(t/900) + 1)/2;
+  ctx.strokeStyle = `rgba(214,184,122,${.14 + ww*.06})`; ctx.lineWidth = 10; ctx.beginPath(); ctx.arc(W*.8, H*.18, Math.min(W, H)*.16, 0, 7); ctx.stroke(); // the Whirlwind's wall round Raraku
+  if (done) { ctx.fillStyle = 'rgba(80,130,180,.35)'; ctx.beginPath(); ctx.ellipse(W*.8, H*.18, Math.min(W, H)*.1, Math.min(W, H)*.07, 0, 0, 7); ctx.fill(); } // a sea where the desert was
+  const pts = ROUTE_B4.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
+  ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
+  ROUTE_B4.forEach((r, n) => { if (n === 1) return; const x = r.x*W, y = r.y*H, on = n === 0 || n <= ch, here = (n === 0 ? ch <= 1 : n === ch) && !done && ch > 0;
+    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
+    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
+    ctx.fillStyle = here ? '#f6dca0' : '#c9a35a'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
+    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
+    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
+}
+{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'hoc' ? drawB4Route(cv, s, t) : _drawRoute(cv, s, t); }; }
+
+/* ---- backdrops for Book Four's reading places and marches (the chapters add their own and may replace these; until then each reuses a
+   Book Two or Three drawing of a like place) ---- */
+const B4_SCENE_LIKE = {b4_aren_yard:'b2_camp_night', b4_road_fire:'b2_aren_way_dusk', b4_feast:'b2_sanimon_hills', b4_seti_fire:'b2_camp_night', b4_wall_fire:'b2_dry_march',
+  b4_picket:'b2_geleen_moon', b4_coral:'b3_c7_shore_night', b4_march:'b2_odhan_day', b4_march_dusk:'b2_odhan_dusk'};
+Object.assign(SCENES, {
+  b4_aren_yard:{loc:'Aren', sub:'The 9th\'s barracks yard · night', cap:'Lamps in the barracks windows, a legion of recruits failing to sleep, and the old graveyard over the wall.', amb:'explore'},
+  b4_road_fire:{loc:'The Aren Way', sub:'Below Coltaine\'s Fall · night', cap:'A fire off the road, the empty trees along it, and the hill above with the pilgrims\' braids on it.', amb:'explore'},
+  b4_feast:{loc:'The Vathar Hills', sub:'The Khundryl fires', cap:'Three thousand riders round their fires, grieving loudly, and the Fourteenth getting drunk among them.', amb:'explore'},
+  b4_seti_fire:{loc:'The column\'s camp', sub:'The Seti wounded · night', cap:'Wounded horse-warriors under blankets by a low fire, and the burnt wagons still smoking.', amb:'explore'},
+  b4_wall_fire:{loc:'Short of the Wall', sub:'The Whirlwind · night', cap:'A fire in the lee of a rock, and beyond it the Whirlwind, standing up out of the desert like a cliff of sand.', amb:'explore'},
+  b4_picket:{loc:'Before Pan\'arak', sub:'The picket line · night', cap:'A line of shallow scrapes in the sand, the rebel fires across the basin, and nothing to do but watch.', amb:'explore'},
+  b4_coral:{loc:'Raraku', sub:'A coral island · after the flood', cap:'Coral that was a desert floor yesterday, and water to the edge of sight where there was sand.', amb:'explore'},
+  b4_march:{loc:'The march north', sub:'The Fourteenth\'s column', cap:'A road of dust a league long, and the column in it, and the sun.', amb:'explore'},
+  b4_march_dusk:{loc:'The march north', sub:'The column at dusk', cap:'The column halting, fires going up along it, and the dust settling.', amb:'explore'},
+});
+Object.entries(B4_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
+
+/* ---- engine text that reads Book One's flags, given Book Four's own words while S.book is 'hoc' (each falls through to the book before) ---- */
+{ const B4FIN = {squad:'The squad', sgtRole:'Sergeant · Third squad, 9th Legion', road:'The squad\'s road', prologue:false, paper:false,
+    list:()=>['The roll', `${Object.keys((S && S.dead) || {}).length} names`], noDead:'None of the squad. Every one of them walked out of Raraku.', endline:'The End of <em>Unblooded</em>'};
+  Object.keys(B4FIN).forEach(k => { const prev = Object.getOwnPropertyDescriptor(FIN_L, k);
+    Object.defineProperty(FIN_L, k, {configurable:true, enumerable:true, get(){ return b4On() ? B4FIN[k] : prev && prev.get ? prev.get() : prev && prev.value; }, set(v){ /* kept per book */ }}); }); }
+/* the chapter card and end screen fall back to Book One's places by chapter number when a chapter names no scene: in Book Four, Aren, then the march */
+{ const _sci = showChapterIntro; showChapterIntro = function(){ const r = _sci(); const CH = CHAPTERS[S && S.chapter];
+    if (b4On() && CH && !(CH.intro && CH.intro.scene)) { G.sceneKind = S.chapter === 1 ? 'b4_aren_yard' : 'b4_march'; AUDIO.setScene(sceneAmb(G.sceneKind, 'explore')); } return r; }; }
+{ const _sce = showChapterEnd; showChapterEnd = function(...a){ const r = _sce(...a); const CH = CHAPTERS[S && S.chapter];
+    if (b4On() && CH && !CH.endScene) G.sceneKind = S.chapter === 1 ? 'b4_aren_yard' : 'b4_march_dusk'; return r; }; }
+{ const _mc = MUNI.cusser[2];
+  MUNI.cusser[2] = () => b4On() ? `The big one. Fired from the cradle under a crossbow, never thrown by anyone who wants to keep the arm.${b4In('tangle') ? ' Tangle counts the cussers last, and twice.' : ''}` : (typeof _mc === 'function' ? _mc() : _mc); }
+
+/* Book Four's chapters register in start() (90), after Book Three's: registerChapter(n, B4CHn, 'hoc') */
+
+/* each chapter publishes its key values here (B4KEYS[n] = ['x','y']): tools/play.mjs --from=N builds earlier chapters' keys from it.
+   These are the plan's draft keys (book4-hoc-plan.md, "Key choices"); the book brief fixes them, and a chapter may replace its row. */
+const B4KEYS = {1:['grave', 'chain'], 2:['fall', 'march'], 3:['carry', 'blow'], 4:['seti', 'picket'], 5:['seep', 'column'], 6:['hold', 'forward'], 7:['line', 'horse', 'ledger']};
+
+/* ============ Book Four's title: the Fourteenth's column on the road north, and the Whirlwind on the horizon (v7.0) ============
+   The painted title (ART 'title/hoc', drawn by Claude for this game, built here from a seeded generator so the column and the dust stay one
+   drawing): a low sun, a road out of the foreground into the north, the column on it, the empty spiked trees of the Aren Way, and on the
+   horizon the Whirlwind as a wall of dust. At the head of the column, the standard: a thin figure holding up a bone before a sandstorm
+   (hoc-canon §1.2). Its canvas stand-in for Settings › Artwork off is startTitleHOC, hooked into startTitleBackdrop from here.
+   The patch (ART 'insignia/hoc', docs/patches.md): a lozenge of sun-bleached grey linen, the stitched border, III in sand-gold, the five
+   tally strokes, a finger bone on a thong across the tally, and the shared flame on the left.
+   Motion: the .k4-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
+{
+  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
+  const W = 1600, H = 900, HZ = 560; // the horizon
+  const roadX = v => 820 + (1 - v) * -40 + Math.sin(v * 3) * 30, roadY = v => HZ + 6 + Math.pow(1 - v, 1.9) * (H - HZ); // v: 0 near … 1 at the horizon
+  const roadW = v => 6 + Math.pow(1 - v, 1.6) * 520;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+<style>.k4-dust{animation:k4-dust 22s linear infinite}.k4-dust2{animation:k4-dust 34s linear infinite reverse}.k4-wall{animation:k4-wall 11s ease-in-out infinite}
+.k4-sun{animation:k4-sun 7s ease-in-out infinite}.k4-haze{animation:k4-haze 3.4s ease-in-out infinite}.k4-flag{animation:k4-flag 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:0 50%}
+.k4-march{animation:k4-march 1.1s ease-in-out infinite}
+@keyframes k4-dust{from{transform:translate(0,0)}to{transform:translate(-400px,0)}}
+@keyframes k4-wall{0%,100%{opacity:.86;transform:translate(0,0)}50%{opacity:1;transform:translate(-14px,-6px)}}
+@keyframes k4-sun{0%,100%{opacity:.9}50%{opacity:1}}
+@keyframes k4-haze{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1.5px)}}
+@keyframes k4-flag{0%,100%{transform:skewY(0)}50%{transform:skewY(-5deg)}}
+@keyframes k4-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
+@media (prefers-reduced-motion: reduce){.k4-dust,.k4-dust2,.k4-wall,.k4-sun,.k4-haze,.k4-flag,.k4-march{animation:none}}.reduce .k4-dust,.reduce .k4-dust2,.reduce .k4-wall,.reduce .k4-haze,.reduce .k4-flag,.reduce .k4-march{animation:none}</style>
+<defs>
+<linearGradient id="k4-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1612"/><stop offset=".35" stop-color="#4a3a2a"/><stop offset=".55" stop-color="#8a6a42"/><stop offset=".62" stop-color="#c49a5a"/><stop offset=".64" stop-color="#d8b070"/></linearGradient>
+<radialGradient id="k4-sunglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff0c8" stop-opacity=".95"/><stop offset=".18" stop-color="#ffd890" stop-opacity=".7"/><stop offset=".5" stop-color="#e0a050" stop-opacity=".25"/><stop offset="1" stop-color="#a06030" stop-opacity="0"/></radialGradient>
+<linearGradient id="k4-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7a4a"/><stop offset=".08" stop-color="#6e5434"/><stop offset=".4" stop-color="#3a2c1c"/><stop offset="1" stop-color="#140f0a"/></linearGradient>
+<linearGradient id="k4-wallg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a878" stop-opacity="0"/><stop offset=".25" stop-color="#b8925e" stop-opacity=".55"/><stop offset=".7" stop-color="#a07a4a" stop-opacity=".85"/><stop offset="1" stop-color="#8a6a40" stop-opacity=".9"/></linearGradient>
+<linearGradient id="k4-road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b89868"/><stop offset="1" stop-color="#5a4630"/></linearGradient>
+<linearGradient id="k4-vig" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".7"/><stop offset=".45" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+<radialGradient id="k4-vig2" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
+</defs>
+<rect width="${W}" height="${HZ + 4}" fill="url(#k4-sky)"/>`;
+  for (let i = 0; i < 40; i++) s += `<rect x="${f1(h(i, 401) * W)}" y="${f1(Math.pow(h(i, 402), 1.8) * HZ * .4)}" width="1.6" height="1.6" fill="#e8dcc8" opacity="${f1(.2 + h(i, 403) * .4)}"/>`; // the last stars
+  s += `<g class="k4-sun"><circle cx="470" cy="${HZ - 36}" r="300" fill="url(#k4-sunglow)"/><circle cx="470" cy="${HZ - 36}" r="38" fill="#fff4d8"/></g>`; // the low sun
+  for (let i = 0; i < 5; i++) { const y = 300 + i * 46, x0 = h(i, 404) * 700, w = 400 + h(i, 405) * 600; s += `<rect x="${f1(x0)}" y="${y}" width="${f1(w)}" height="5" rx="2.5" fill="#2a1e14" opacity=".45"/><rect x="${f1(x0 + w * .1)}" y="${y + 4}" width="${f1(w * .8)}" height="1.4" fill="#f0c080" opacity=".35"/>`; } // cloud bars lit from below
+  /* the Whirlwind: a wall of dust standing up off the horizon to the right, streaked, with a brighter edge where the sun catches it */
+  let wall = `M 860 ${HZ + 4}`; for (let i = 0; i <= 30; i++) { const x = 860 + i * 25, y = HZ - 150 - Math.sin(i * .7) * 18 - h(i, 406) * 40 - (i > 3 && i < 27 ? 40 : i * 4); wall += ` L ${f1(x)} ${f1(Math.min(HZ, y))}`; } wall += ` L 1640 ${HZ - 210} L 1640 ${HZ + 4} Z`;
+  s += `<g class="k4-wall"><path d="${wall}" fill="url(#k4-wallg)"/>`;
+  for (let i = 0; i < 26; i++) { const x = 880 + h(i, 407) * 740, y = HZ - 40 - h(i, 408) * 170; s += `<path d="M ${f1(x)} ${f1(y)} q 40 -12 90 ${f1(-4 - h(i, 409) * 8)}" stroke="#d8b886" stroke-opacity="${f1(.12 + h(i, 410) * .2)}" stroke-width="${f1(2 + h(i, 411) * 4)}" fill="none"/>`; }
+  s += `<path d="M 880 ${HZ - 170} Q 1240 ${HZ - 250} 1640 ${HZ - 215}" stroke="#f0d098" stroke-opacity=".35" stroke-width="5" fill="none"/></g>`;
+  /* the land: the far ridges, the ground, dune crests */
+  s += `<path d="M0 ${HZ - 8} Q 160 ${HZ - 26} 320 ${HZ - 12} T 640 ${HZ - 10} T 900 ${HZ - 4} L 900 ${HZ + 6} L 0 ${HZ + 6} Z" fill="#5a4630" opacity=".85"/>`;
+  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k4-ground)"/>`;
+  for (let i = 0; i < 6; i++) { const y = HZ + 40 + i * i * 9; s += `<path d="M0 ${y} Q 200 ${y - 10} 400 ${y} T 800 ${y} T 1200 ${y} T 1600 ${y}" stroke="#c89a5a" stroke-opacity="${f1(.06 + i * .02)}" stroke-width="1.5" fill="none"/>`; }
+  /* the road: out of the foreground and up to the horizon */
+  let rl = '', rr = ''; for (let i = 0; i <= 24; i++) { const v = i / 24, x = roadX(v), y = roadY(v), w = roadW(v) / 2; rl += `${i ? ' L' : 'M'} ${f1(x - w)} ${f1(y)}`; rr = ` L ${f1(x + w)} ${f1(y)}` + rr; }
+  s += `<path d="${rl}${rr} Z" fill="url(#k4-road)" opacity=".55"/>`;
+  /* the spiked trees of the Aren Way, empty, along both sides of the road */
+  for (let i = 0; i < 14; i++) { const v = .12 + i * .06, side = i % 2 ? 1 : -1, x = roadX(v) + side * (roadW(v) / 2 + 20 + (1 - v) * 60), y = roadY(v), sc = Math.max(.12, Math.pow(1 - v, 1.3)) * 1.6;
+    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 10) / 10})" fill="#1a120c"><rect x="-3" y="-120" width="6" height="120"/><path d="M0 -110 L -28 -150 L -24 -152 L 2 -118 Z"/><path d="M0 -90 L 30 -130 L 33 -126 L 4 -86 Z"/><path d="M0 -70 L -20 -96 L -17 -98 L 2 -74 Z"/><circle cx="0" cy="-64" r="1.6" fill="#6a4a30"/></g>`; }
+  /* the column: soldiers four abreast on the road, smaller into the distance, the dust they raise */
+  s += `<g class="k4-march">`;
+  for (let i = 0; i < 220; i++) { const v = .08 + (i / 220) * .86, row = i % 4, x = roadX(v) + (row - 1.5) * roadW(v) * .14, y = roadY(v), sc = Math.max(.1, Math.pow(1 - v, 1.5)) * 2.2;
+    if (i % 22 === 0) s += `<ellipse cx="${f1(roadX(v))}" cy="${f1(y - 10 * sc)}" rx="${f1(roadW(v) * .5)}" ry="${f1(12 * sc + 2)}" fill="#c8a070" opacity=".12"/>`;
+    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 100) / 100})" fill="#120c08"><rect x="-3" y="-22" width="6" height="18"/><circle cx="0" cy="-26" r="3.6"/><rect x="-3" y="-4" width="2.4" height="5"/><rect x=".6" y="-4" width="2.4" height="5"/>${i % 7 === 3 ? '<rect x="3" y="-40" width="1.2" height="36"/>' : ''}${i % 5 === 1 ? '<ellipse cx="-4" cy="-14" rx="3.5" ry="5"/>' : ''}</g>`; }
+  s += `</g>`;
+  /* the standard at the head of the nearer column: a thin figure holding up a bone before a sandstorm, on a tall pole */
+  { const v = .3, x = roadX(v) + roadW(v) * .3, y = roadY(v), sc = Math.pow(1 - v, 1.5) * 2.2;
+    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 100) / 100})"><rect x="-1.2" y="-130" width="2.4" height="130" fill="#120c08"/>
+<g class="k4-flag"><rect x="1" y="-128" width="44" height="54" fill="#6a5034" stroke="#2a1e12" stroke-width="1.2"/>
+<path d="M3 -80 Q 14 -100 22 -96 Q 34 -110 44 -118 L 44 -76 Z" fill="#a8885a" opacity=".85"/>
+<path d="M18 -82 L 20 -102 L 24 -102 L 25 -82 Z M21 -102 L 21 -112 M21 -104 L 15 -116 M21 -104 L 27 -118" stroke="#1a120c" stroke-width="2" fill="#1a120c"/>
+<rect x="14" y="-121" width="3" height="8" rx="1.5" fill="#e8dcc0"/><circle cx="21" cy="-107" r="3" fill="#1a120c"/></g></g>`; }
+  /* dust blowing across, two layers */
+  ['k4-dust', 'k4-dust2'].forEach((cls, L) => { s += `<g class="${cls}">`; for (let i = 0; i < 40; i++) { const x = h(i, 412 + L) * (W + 400), y = HZ - 120 + h(i, 414 + L) * 420; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(60 + h(i, 416 + L) * 160)}" ry="${f1(3 + h(i, 418 + L) * 8)}" fill="#d8b07a" opacity="${f1(.04 + h(i, 420 + L) * .07)}"/>`; } s += `</g>`; });
+  s += `<rect width="${W}" height="${H}" fill="url(#k4-vig)"/><rect width="${W}" height="${H}" fill="url(#k4-vig2)"/></svg>`;
+  ART['title/hoc'] = s; ART_SIZE['title/hoc'] = [W, H];
+}
+
+/* the Third's patch in Book Four: a lozenge of sun-bleached grey linen; the stitched border, III, the five strokes, the flame on the left, and a
+   finger bone on a thong across the tally (docs/patches.md). The flame is the same path as every other patch's, moved. */
+ART['insignia/hoc'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" role="img" aria-label="The Third's squad patch, Book Four">
+<defs><radialGradient id="phoc-cloth" cx="0.42" cy="0.38" r="0.75"><stop offset="0" stop-color="#b4b0a4"/><stop offset=".6" stop-color="#8e8a7e"/><stop offset="1" stop-color="#5e5b52"/></radialGradient>
+<pattern id="phoc-weave" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0 L4 0 M0 2 L4 2" stroke="#4a473f" stroke-opacity=".18" stroke-width=".8"/><path d="M1 0 L1 4 M3 0 L3 4" stroke="#ffffff" stroke-opacity=".06" stroke-width=".8"/></pattern></defs>
+<path d="M150 18 L292 170 L150 322 L8 170 Z" fill="#2a2822"/>
+<path d="M150 32 L278 170 L150 308 L22 170 Z" fill="url(#phoc-cloth)"/>
+<path d="M150 32 L278 170 L150 308 L22 170 Z" fill="url(#phoc-weave)"/>
+<path d="M150 25 L285 170 L150 315 L15 170 Z" fill="none" stroke="#d8b884" stroke-width="2.5" stroke-dasharray="6 4"/>
+<path d="M196 92 Q232 128 240 160 Q220 122 196 92 Z" fill="#ffffff" opacity=".12"/>
+<ellipse cx="190" cy="262" rx="26" ry="9" fill="#6a5a40" opacity=".18"/>
+<text x="150" y="196" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="92" font-weight="700" fill="#d8b884" stroke="#2a2016" stroke-width="7" paint-order="stroke">III</text>
+<g stroke="#f0e8d6" stroke-width="5" stroke-linecap="round"><path d="M118 222 L118 246"/><path d="M136 222 L136 246"/><path d="M154 222 L154 246"/><path d="M172 222 L172 246"/><path d="M110 241 L182 228"/></g>
+<path d="M96 214 Q 150 254 206 226" stroke="#4a3220" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<g transform="translate(150 240) rotate(-14)"><rect x="-14" y="-4" width="28" height="8" rx="4" fill="#e8dcc0" stroke="#5a4a32" stroke-width="1.2"/><circle cx="-14" cy="-1.5" r="3.6" fill="#e8dcc0" stroke="#5a4a32" stroke-width="1"/><circle cx="-14" cy="2.5" r="3.4" fill="#e8dcc0" stroke="#5a4a32" stroke-width="1"/><circle cx="14" cy="0" r="3.8" fill="#e8dcc0" stroke="#5a4a32" stroke-width="1"/><path d="M-6 -1 L 8 -1" stroke="#a89878" stroke-width="1"/></g>
+<g transform="translate(-92 -110)"><path d="M140.4 296.0 C134.7 290.3 136.4 281.3 142.6 276.7 C142.1 282.4 145.5 285.2 146.6 280.7 C146.6 273.9 151.1 267.7 150.0 262.0 C156.2 269.4 158.5 275.0 155.1 281.8 C158.5 279.6 160.2 276.2 159.6 271.6 C166.4 279.6 165.3 290.9 159.6 296.0 Z" fill="#a8341a" stroke="#5a1a0e" stroke-width="0.8"/><path d="M143.8 296.0 C139.8 291.5 141.5 284.7 146.0 281.3 C146.0 285.8 148.3 287.5 149.4 283.5 C150.0 277.9 153.4 274.5 152.8 269.9 C157.4 276.7 158.5 283.5 156.8 288.1 C159.1 286.4 160.2 283.5 159.6 280.1 C162.5 286.9 160.8 293.2 156.2 296.0 Z" fill="#e0782a"/><path d="M147.2 296.0 C144.3 292.6 146.6 286.9 150.0 283.5 C150.6 287.5 152.8 289.2 152.3 284.7 C155.1 289.2 155.7 292.6 155.1 294.3 C154.5 295.4 153.4 296.0 152.8 296.0 Z" fill="#f6cf74"/><path d="M140.4 296.0 C134.7 290.3 136.4 281.3 142.6 276.7 C142.1 282.4 145.5 285.2 146.6 280.7 C146.6 273.9 151.1 267.7 150.0 262.0 C156.2 269.4 158.5 275.0 155.1 281.8 C158.5 279.6 160.2 276.2 159.6 271.6 C166.4 279.6 165.3 290.9 159.6 296.0 Z" fill="none" stroke="#e8c58a" stroke-width="0.6" stroke-dasharray="1.2 1.2" opacity="0.55"/></g>
+</svg>`;
+ART_SIZE['insignia/hoc'] = [300, 340];
+
+/* the classic title (Settings › Artwork off): the same scene on the canvas. The column walks up the road, the dust blows, the Whirlwind breathes */
+function paintHocStill(x, W, H){
+  const hz = H*.62, sky = x.createLinearGradient(0, 0, 0, hz); sky.addColorStop(0, '#1a1612'); sky.addColorStop(.55, '#4a3a2a'); sky.addColorStop(.85, '#8a6a42'); sky.addColorStop(1, '#d8b070');
+  x.fillStyle = sky; x.fillRect(0, 0, W, hz + 2);
+  glow(x, W*.3, hz - H*.04, W*.4, '#ffd890', .5); ell(x, W*.3, hz - H*.04, H*.03, H*.03, '#fff4d8'); // the low sun
+  for (let i = 0; i < 4; i++) { const y = hz*(.55 + i*.08), x0 = W*hash(i, 431)*.4, w = W*(.25 + hash(i, 432)*.3); ell(x, x0 + w/2, y, w/2, H*.005, 'rgba(42,30,20,.5)'); }
+  x.fillStyle = 'rgba(176,140,90,.7)'; x.beginPath(); x.moveTo(W*.54, hz + 2); for (let i = 0; i <= 20; i++) x.lineTo(W*(.54 + i*.025), hz - H*(.18 + Math.sin(i*.7)*.02 + hash(i, 433)*.04)); x.lineTo(W, hz + 2); x.closePath(); x.fill(); // the Whirlwind's wall
+  const gd = x.createLinearGradient(0, hz, 0, H); gd.addColorStop(0, '#9a7a4a'); gd.addColorStop(.1, '#6e5434'); gd.addColorStop(.5, '#3a2c1c'); gd.addColorStop(1, '#140f0a'); x.fillStyle = gd; x.fillRect(0, hz, W, H - hz);
+  const rx = v => W*(.51 + Math.sin(v*3)*.02 - (1 - v)*.03), ry = v => hz + 4 + Math.pow(1 - v, 1.9)*(H - hz), rw = v => W*(.004 + Math.pow(1 - v, 1.6)*.32);
+  x.fillStyle = 'rgba(184,152,104,.5)'; x.beginPath(); for (let i = 0; i <= 20; i++) { const v = i/20; i ? x.lineTo(rx(v) - rw(v)/2, ry(v)) : x.moveTo(rx(v) - rw(v)/2, ry(v)); } for (let i = 20; i >= 0; i--) { const v = i/20; x.lineTo(rx(v) + rw(v)/2, ry(v)); } x.closePath(); x.fill(); // the road
+  x.fillStyle = '#1a120c'; for (let i = 0; i < 12; i++) { const v = .12 + i*.07, sd = i % 2 ? 1 : -1, tx = rx(v) + sd*(rw(v)/2 + W*.02), ty = ry(v), sc = Math.max(.15, 1 - v)*H*.0016; x.fillRect(tx - 3*sc, ty - 120*sc, 6*sc, 120*sc); x.beginPath(); x.moveTo(tx, ty - 110*sc); x.lineTo(tx - 28*sc, ty - 150*sc); x.lineTo(tx - 24*sc, ty - 152*sc); x.closePath(); x.fill(); } // the empty spiked trees
+  return {hz, rx, ry, rw};
+}
+function startTitleHOC(cv){
+  const ctx = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1); let still = null, info = null;
+  const fit = () => { cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); still = null; }; fit(); window.addEventListener('resize', fit);
+  const walkers = Array.from({length:140}, (_, i) => ({u: i/140, k: i % 4, v: .000006 + Math.random()*.000002}));
+  const dust = Array.from({length:60}, () => ({x: Math.random(), y: .3 + Math.random()*.6, v: .00003 + Math.random()*.00008, s: 20 + Math.random()*80}));
+  let last = performance.now();
+  titleAnim = () => {
+    if (!cv.isConnected) { titleAnim = null; window.removeEventListener('resize', fit); return; }
+    const W = innerWidth, H = innerHeight, mo = REDUCE() ? 0 : 1, now = performance.now(), dt = Math.min(64, now - last)*mo, t = now*mo; last = now;
+    if (!still) { still = document.createElement('canvas'); still.width = W*dpr; still.height = H*dpr; const x = still.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); info = paintHocStill(x, W, H); }
+    ctx.drawImage(still, 0, 0, W, H); const {rx, ry, rw} = info;
+    glow(ctx, W*.78, info.hz - H*.1, W*.25, '#d8b07a', .1 + Math.sin(t/1800)*.04); // the Whirlwind breathing
+    walkers.forEach((w, i) => { if (mo) { w.u += w.v*dt; if (w.u > 1) w.u -= .86; } const v = .08 + (w.u % 1)*.86, s = Math.max(.12, Math.pow(1 - v, 1.5))*H*.0028, x = rx(v) + (w.k - 1.5)*rw(v)*.14, y = ry(v);
+      ctx.fillStyle = '#120c08'; ctx.fillRect(x - 3*s, y - 22*s + (mo ? Math.sin(t/180 + i)*.6*s : 0), 6*s, 18*s); ctx.beginPath(); ctx.arc(x, y - 26*s, 3.6*s, 0, 7); ctx.fill(); if (i % 7 === 3) ctx.fillRect(x + 3*s, y - 40*s, 1.2*s, 36*s); });
+    { const v = .3, s = Math.pow(1 - v, 1.5)*H*.0028, x = rx(v) + rw(v)*.3, y = ry(v), fl = mo ? Math.sin(t/400)*2*s : 0; // the standard
+      ctx.fillStyle = '#120c08'; ctx.fillRect(x - 1.2*s, y - 130*s, 2.4*s, 130*s); ctx.fillStyle = '#6a5034'; ctx.fillRect(x + s, y - 128*s + fl, 44*s, 54*s);
+      ctx.fillStyle = '#1a120c'; ctx.fillRect(x + 18*s, y - 102*s + fl, 6*s, 20*s); ctx.beginPath(); ctx.arc(x + 21*s, y - 107*s + fl, 3*s, 0, 7); ctx.fill(); ctx.fillStyle = '#e8dcc0'; ctx.fillRect(x + 14*s, y - 121*s + fl, 3*s, 8*s); }
+    dust.forEach(d => { if (mo) { d.x -= d.v*dt; if (d.x < -.2) d.x = 1.2; } ell(ctx, d.x*W, d.y*H, d.s, d.s*.06 + 2, 'rgba(216,176,122,.07)'); });
+    const lv = ctx.createLinearGradient(0, 0, W, 0); lv.addColorStop(0, 'rgba(0,0,0,.7)'); lv.addColorStop(.45, 'rgba(0,0,0,.12)'); lv.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = lv; ctx.fillRect(0, 0, W, H);
+    const vg = ctx.createRadialGradient(W/2, H*.5, H*.25, W/2, H*.5, H*.95); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.6)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  };
+}
+{ const base = startTitleBackdrop; startTitleBackdrop = function(cv, book){ if (book && BOOKS[book] && BOOKS[book].titleScene === 'hoc') return startTitleHOC(cv); return base(cv, book); }; }
+
+/* ============ Book Four: the Deck of Dragons on the march to Raraku ============
+   A reading in every chapter, at the chapter's first halt. The reader is VISREADER (70): Marrow while she is with the squad; else Tallow,
+   from his grandmother's deck; else an old soldier of the 9th who reads for the legion and whose name nobody has.
+   The novel has no formal reading, so every reading is the squad's own (hoc-canon §12).
+
+   How a chapter uses it (Book Three's pattern, 60c):
+     - fill B4DECK[n] from the chapter's own file: {scene, where, set, back, backT, say:{marrow, tallow, oldninth}}
+         scene  a SCENES key for the backdrop (70 registers one per reading place: b4_aren_yard, b4_road_fire, b4_feast, b4_seti_fire,
+                b4_wall_fire, b4_picket, b4_coral); where  what the cards are laid out on; set  one sentence of time and place;
+         back   where the start node was going (a node id, or a function); backT  its button; say  each reader's offer.
+     - put b4DeckChoice(n) among the chapter's first halt choices;
+     - register two nodes:  b4_c<n>_deck: () => b4DeckOffer(n),  b4_c<n>_card: () => b4DeckCard(n).
+   "Let him/her draw" sets S.f.b4_c<n>_drawn = 1 and S.f.b4_c<n>_reader, deals from B4POOL[n] and plays the card screen; "Not now" sets
+   S.f.b4_c<n>_noCard = 1. b4_c<n>_card is what 36b's cardNodeName() returns in Book Four.
+
+   The cards are canon Deck cards Books One to Three already hold (their effects are engine-wide and keyed on S.card), and, new this book,
+   two of High House Chains: the Knight of Chains and the Leper, both faceless (hoc-canon §10 rule 8: the only Chains cards a reader may lay). */
+
+const B4CARDS = {
+  b4c_knightchains:{name:'The Knight of Chains', house:'High House Chains', hue:'#a0705a',
+    txt:'A tall figure in a chain hauberk, standing alone on a plain with a broken chain hanging from each wrist. There is no face under the helm. It has not decided whose it is.',
+    fx:'A squadmate with no other squadmate beside them hits +2.'},
+  b4c_leper:{name:'The Leper', house:'High House Chains', hue:'#8a7a62',
+    txt:'A figure in grey rags and bandages, walking a pale road alone with a bell in its hand. There is no face under the wrappings, only the road behind it going pale.',
+    fx:'Sorcery never sputters in the dust, but every spell heals or harms 1 less.'},
+};
+Object.assign(CARDS, B4CARDS);
+
+/* each chapter's pool leans to one card (three of it), with two others (canon Deck cards; the House of Chains only as the Knight and the Leper) */
+const B4POOL = {
+  1:['b2c_soldier', 'b2c_soldier', 'b2c_soldier', 'oponn', 'obelisk'],                 // Aren: a whole army putting on the dead's bones
+  2:['b2c_king', 'b2c_king', 'b2c_king', 'hounds', 'oponn'],                         // Coltaine's Fall: the hill of the dead
+  3:['b4c_knightchains', 'b4c_knightchains', 'b4c_knightchains', 'oponn', 'b3c_lifesoldier'], // the Khundryl: the riders who came back
+  4:['b2c_queen', 'b2c_queen', 'b2c_queen', 'assassin', 'b2c_mason'],                // the Seti wounded: somebody mends
+  5:['assassin', 'assassin', 'assassin', 'obelisk', 'b4c_leper'],                    // the Wall: the Rope is close (Bottle's doll, R22)
+  6:['b4c_leper', 'b4c_leper', 'b4c_leper', 'b2c_soldier', 'herald'],                // Pan'arak: the eve
+  7:['herald', 'herald', 'herald', 'b4c_knightchains', 'b4c_leper'],                 // Raraku: the door held open for the dead
+};
+
+/* ---- the two new cards' effects: engine-wide, keyed on S.card ---- */
+const b4Card = k => !!(S && S.card === k && B);
+/* the Knight of Chains: a squadmate who fights alone (no other squadmate beside them) hits +2 */
+{ const _atkCalc = atkCalc;
+  atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o);
+    if (b4Card('b4c_knightchains') && a && a.side === 'p' && !a.ally && !B.units.some(b => b !== a && b.side === 'p' && !b.ally && b.hp > 0 && cheb(a, b) === 1)) c.bonus += 2;
+    return c; }; }
+/* the Leper: a squadmate's spell (anything that costs strain) heals or harms 1 less; the dust never makes it sputter (70 reads the card) */
+{ const _useAb = useAb;
+  useAb = function(k, x, y){ const u = B && B.cur, a = AB[k];
+    if (!(b4Card('b4c_leper') && a && a.strain && u && u.side === 'p' && !u.ally)) return _useAb(k, x, y);
+    const _h = heal, _x = hurt;
+    heal = function(t, n){ return _h(t, t && t.side === 'p' && n > 0 ? Math.max(0, n - 1) : n); };
+    hurt = function(t, n, crit){ return _x(t, t && t.side === 'e' && n > 0 ? Math.max(1, n - 1) : n, crit); };
+    try { return _useAb(k, x, y); } finally { heal = _h; hurt = _x; } }; }
+/* a Book Four fight opens with the card's word in the log, whichever card it is */
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt);
+    if (S && S.book === 'hoc' && B && B.log && CARDS[S.card] && CARDS[S.card].fx) blog(`<em>${CARDS[S.card].name}:</em> ${CARDS[S.card].fx}`);
+    return r; }; }
+
+/* ---- the readers ---- */
+const b4Rd = () => visReader();
+const b4RdObj = () => b4Rd().he ? 'him' : 'her';
+const B4RD_DECK = {
+  marrow:`Marrow has her Deck out: the temple deck from Nap, the paint soft at the corners from other people's fingers, that she carried the length of the Chain and never once explained. She reads for the squad at the first halt of a road, as she always has. This year she holds each card a moment before she turns it.`,
+  tallow:`Tallow has his grandmother's deck out of its oilcloth: fishing-village cards cut from thin board, the paint worn off the corners by sixty years of thumbs. He lays them the way she did, two down and one up, and his hands are not quite steady, and the squad pretends not to see.`,
+  oldninth:`An old soldier of the 9th reads for the legion behind the cook-lines for a finger of rum: a grey man with a soldier's deck that has been to more wars than he has. Nobody knows his name. He has been asked. He says the cards know it, and that is enough people.`,
+};
+const B4RD_AGAIN = {marrow:'Marrow has the temple deck out.', tallow:'Tallow has the old woman\'s deck out of its oilcloth.', oldninth:'The old soldier has his deck out, and his cup out for the rum.'}; // the deck described once a book, then this
+/* per chapter: the scene, where the cards are laid out, a line of time and place, where the start node was going (back/backT), and each reader's offer.
+   Chapter writers fill B4DECK[2..7] from their own files (READTABLE['hoc:n'] already has the table for each place); this is Chapter One's, as the worked example. */
+const B4DECK = {
+  1:{scene:'b4_aren_yard', where:'an upturned crate in the barracks yard', set:'Night in Aren, two days before the march, and the yard full of recruits who cannot sleep.',
+    back:()=>startExplore(), backT:'Back to the yard.',
+    say:{marrow:`"A new army," she says. "I read for the old one from Hissar to here. Sit, child. One card, for a road we've walked once already."`,
+      tallow:`"My grandmother read for the boats the night before they went out," he says. "I don't know if it's the same for armies." He shuffles badly. "One card, Sergeant?"`,
+      oldninth:`"Third squad," the old soldier says. "The Chain lot. Sit, then. Rum after, if you've any. One card. The Deck's kind to the ones who've already paid."`}},
+};
+/* each card, said by each reader */
+const B4SAY = {
+  b2c_soldier:{d:'A soldier in grey armour with no badge on it, standing at a gate with the shield up, and behind the visor something that is not quite a face.',
+    marrow:`"Soldier of High House Death," Marrow says. "I drew him on the Chain, child, more than once." She taps the visor. "Every one of them wearing a dead man's bone this week. The Deck's noticed."`,
+    tallow:`"Grandmother said this one came up before a storm," Tallow says. "She'd tell them to tie everything down." He looks at the finger bone on his own thong. "I think we're tied down."`,
+    oldninth:`"Death's soldier," says the old man. "Armour, Sergeant. It means armour. The whole legion's got a dead man round its neck, and the Deck says that's a kind of mail." He drinks.`},
+  oponn:{d:'The jesters of chance, back to back, and a coin in the air between them.',
+    marrow:`"The Twins," Marrow says. "The Lady's pulling, for now." She leaves the card face up. "Don't thank her, child. She hears."`,
+    tallow:`"It's always the Twins," Tallow says, too quickly. "That's what she used to say. When you need them and when you don't." He looks at the coin a long breath, and then puts it down.`,
+    oldninth:`"Luck," says the old soldier. "Twins. I had them before my first battle and I'm still here." He shrugs. "So's half my company. The other half had them too."`},
+  obelisk:{d:'A standing stone, unaligned and older than anyone\'s gods.',
+    marrow:`"Something endures," Marrow says. "The priests said that one meant the patient would live, and not to be too pleased about it."`,
+    tallow:`"The stone," Tallow says. "She'd give that one to the old men. It means you'll last." He puts it down carefully, as if it were heavy.`,
+    oldninth:`"Obelisk. You'll last," the old soldier says. "Don't know about the rest of them." He nods at the yard full of recruits. "You'll last."`},
+  b2c_king:{d:'A hooded figure on a grey seat with no back to it, hands folded, and behind it a gate with the dead walking through, unhurried.',
+    marrow:`Marrow looks at it for a while. "The King of High House Death," she says. "On a hill with his dead round him." She does not turn toward the Fall. "We know the hill, child."`,
+    tallow:`"The hooded man," Tallow says. "Grandmother turned this one face down and wouldn't read it." He doesn't turn it face down. He has decided to be braver than her, tonight.`,
+    oldninth:`"Hood's own," the old soldier says, and touches his bone. "Means the dead are close. Means hit what's already falling." He looks up the road at the hill. "They're close, all right."`},
+  hounds:{d:'Seven shapes running under a moon that isn\'t there.',
+    marrow:`"Shadow's dogs," Marrow says. "They ran through Seven Cities last summer. The Wickans saw the tracks." She puts the card away quickly. "Walk quick on the road, child."`,
+    tallow:`"Dogs," Tallow says, and looks at the dark past the fire. "Grandmother said they came for the ones who were lost at sea." He laughs. "We're not at sea."`,
+    oldninth:`"Hounds," the old man says. "Keep moving, that one means. It always means keep moving." He drinks. "The Adjunct's already got us moving."`},
+  b4c_knightchains:{d:B4CARDS.b4c_knightchains.txt,
+    marrow:()=>`Marrow holds it a while before she turns it to the squad. "I don't know this one, child," she says. "Chains. A House I've never laid." She runs her thumb along the broken chain at the wrist. "A knight who stands on his own. Whoever he is, he hasn't said yes to it."`,
+    tallow:`Tallow stares at it. "This wasn't in her deck," he says. "I know every card in her deck." He turns it over. The back is the same as all the others. "It wasn't," he says again, quieter.`,
+    oldninth:`The old soldier puts his cup down. "Never had that," he says. "Forty years." He looks at the empty helm. "Something new in the Deck. Fights alone, by the look." He doesn't take the rum.`},
+  b3c_lifesoldier:{d:'A soldier in plain mail with a shield on one arm and a bandage in the other hand, kneeling over somebody you cannot see.',
+    marrow:`"High House Life," Marrow says, surprised and trying not to be. "Things mend, this road. Better than they should." She ties a knot in her string, for luck, which she has never done.`,
+    tallow:`"The kneeling soldier," Tallow says. "That's a good one. She'd give that to the boats that had a sick man aboard." He looks at Marrow, if she is there, and then at his own hands.`,
+    oldninth:`"Life's soldier," says the old man. "Healer's card. You've a healer? Tell them the Deck says they'll be busy."`},
+  b2c_queen:{d:'A woman seated in a garden at night, her face veiled, a cup overflowing in her lap, and the water running into dry ground that goes green where it touches.',
+    marrow:`"The Queen of High House Life," Marrow says. "Water in a dry place." She looks over at the wounded under their blankets. "There's mending to do here, child. The Deck agrees."`,
+    tallow:`"The veiled lady with the cup," Tallow says. "Grandmother said it meant a good catch." He frowns. "I don't know what it means in a desert. Water, maybe."`,
+    oldninth:`"The Queen with the cup," the old soldier says. "Heals heal more. The Seti could use her." He pours a drop of rum on the ground for them, which is generous.`},
+  assassin:{d:'A figure half in shadow, rope and knives, at the edge of the card.',
+    marrow:`"High House Shadow's Assassin," Marrow says. "The Rope." She looks out at the Wall. "Somebody close is walking where we can't see him." She lays the card face down. "Watch the gaps, child."`,
+    tallow:`"The rope man," Tallow says. "She hated this one. She said it meant someone in the boat you didn't know." He looks round the squad, slowly, as if counting.`,
+    oldninth:`"Shadow's knife," says the old man. "Hit hard, hit where it hurts. You'll get your blows in clean, this one says." He grins. "So will they, if they've drawn it too."`},
+  b2c_mason:{d:'A broad, bent figure in a dusty apron with a mallet and a chisel, cutting a long stone to fit a long hole.',
+    marrow:()=>b4In('tangle') ? `"The Mason," Marrow says, and slides the card across the fire to Tangle without a word. Tangle looks at it, and hums his four notes, and stops.` : `"The Mason of High House Death," Marrow says. "What we throw lands heavy this road."`,
+    tallow:`"The mason," Tallow says. "He builds the houses for the dead." He looks at the sapper's satchel. "Is that us?"`,
+    oldninth:`"Mason," says the old soldier. "You've a sapper? Course you have. Tell him it's his road."`},
+  b4c_leper:{d:B4CARDS.b4c_leper.txt,
+    marrow:()=>`"Chains again," Marrow says. "The Leper. Walks through the bad places and catches nothing." She holds her own hand up to the dust in the air. "The warren won't choke on the sand, child. It won't give as much, either. A fair trade, the priests would say."`,
+    tallow:`"The bell," Tallow says. "He rings it so you know he's coming." He listens, for a moment, to the dust hissing past the fire. "I can't hear it."`,
+    oldninth:`"New one, that," the old man says. "Leper. Chains." He taps the bandaged head. "Your mages want to hear it. Sand won't foul them. Won't give them much either." He drinks, then, a lot.`},
+  herald:{d:'A grey figure with its face turned away, holding a door open for somebody you cannot see.',
+    marrow:`"The Herald," Marrow says. "High House Death, holding the door." She looks out over the dark toward the trenches. "Somebody is coming through it tonight, child. Not us. Not if I can help it."`,
+    tallow:`"The door man," Tallow says. "She said that one means the dead come home." He tries to say it lightly. It does not come out lightly.`,
+    oldninth:`"Herald," says the old soldier, and he is not drinking now. "The door's open. One of you goes down and gets up again." He looks round the squad. "Don't ask me which. I never know which."`},
+};
+const b4CardSay = id => { const s = B4SAY[id], r = b4Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]); return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); };
+/* the card screen in Book Four: the reader's captions and the card's words (21). The other books keep theirs (47c, 60c). */
+{ const _cb = CARDBOOK;
+  CARDBOOK = {
+    txt:id => { if (!(S && S.book === 'hoc')) return _cb ? _cb.txt(id) : ((CARDS[id] && CARDS[id].txt) || ''); const s = B4SAY[id]; return s ? s.d : ((CARDS[id] && CARDS[id].txt) || ''); },
+    cap(t, self, second){ if (!(S && S.book === 'hoc')) return _cb ? _cb.cap(t, self, second) : '';
+      const r = b4Rd(), n = r.name;
+      const first = {marrow:'Marrow shuffles the temple deck, slowly.', tallow:'Tallow shuffles the way his grandmother did, badly.', oldninth:'The old soldier shuffles one-handed.'}[r.id] || `${n} shuffles.`;
+      const three = {marrow:'The temple cross, and the card in the middle.', tallow:'Two down, one up.', oldninth:'Three cards, and the rum beside them.'}[r.id] || 'Three cards.';
+      if (second) return t < 1500 ? `${n} gathers it back in.` : t < 2900 ? `Again. It lets ${b4RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
+      return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first refuses ${b4RdObj()}.` : t < 4900 ? `The second refuses ${b4RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+  }; }
+
+/* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
+function b4DeckChoice(n){ const r = b4Rd();
+  return {t:`Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b4_c${n}_drawn`] && !S.f[`b4_c${n}_noCard`], go:`b4_c${n}_deck`}; }
+function b4DeckOffer(n, card = `b4_c${n}_card`){ const D = B4DECK[n] || B4DECK[1], r = b4Rd(), seen = S.f['b4_rd_' + r.id];
+  return {sp:r.id === 'oldninth' ? 'The old soldier · the 9th' : r.name, scene:D.scene, fx:()=>{ S.f['b4_rd_' + r.id] = 1; }, txt:
+`${(seen ? B4RD_AGAIN[r.id] : B4RD_DECK[r.id]) || ''}
+
+${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
+    ch:[{t:`Let ${b4RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b4_c${n}_drawn`] = 1; S.f[`b4_c${n}_reader`] = r.id; S.card = dealCard(B4POOL[n] || B4POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
+        {t:'"Not now."', fx:()=>{ S.f[`b4_c${n}_noCard`] = 1; }, go:D.back}]}; }
+function b4DeckCard(n){ const D = B4DECK[n] || B4DECK[1], r = b4Rd(), pool = B4POOL[n] || B4POOL[1], id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
+  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. Two cards refuse ${b4RdObj()}. The third does not.`,
+    html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
+    after:b4CardSay(id),
+    ch:[{t:D.backT, go:D.back}]}; }
+
+/* ---- the tables (21b): one per chapter's reading place ----
+   1 the 9th Legion's barracks yard in Aren at night; 2 a fire off the Aren Way below Coltaine's Fall; 3 the Khundryl feast fires in the
+   Vathar Hills; 4 the wounded Seti's fire in the column's camp; 5 a fire short of the Whirlwind Wall; 6 the picket line before Pan'arak;
+   7 the coral island after the flood. */
+Object.assign(READTABLE, {
+  'hoc:1':{surf:'stone', p:{base:'#5a5248', dark:'#2a2620', flags:1}, light:'lantern', lp:[.12, .1], lc:'#ffc070', air:'none', dark:'#0a0908', props:[['lantern', .12, .1, 14], ['cup', .86, .16, 12]]},
+  'hoc:2':{surf:'ground', p:{base:'#6a5a40', dark:'#2e2618', stones:30, ash:140, cracks:4}, light:'fire', lp:[.9, .92], lc:'#ff9a40', air:'sparks', dark:'#0e0a06', props:[]},
+  'hoc:3':{surf:'hide', p:{base:'#7a5a3a', dark:'#3a2818', under:{base:'#4a4030', dark:'#221c12', stones:30}}, light:'fire', lp:[.1, .9], lc:'#ff8a30', air:'sparks', dark:'#0c0806', props:[['winecup', .86, .14, 14], ['jug', .9, .82, 16]]},
+  'hoc:4':{surf:'cloth', p:{base:'#4a4038', dark:'#201a14', under:{base:'#5a4e3c', dark:'#2a2418', stones:20}, rot:.05, stains:6, stain:'#4a1a14', folds:3}, light:'coals', lp:[.5, .96], lc:'#ff6a30', air:'ash', dark:'#0a0806', props:[['helm', .88, .18, 16]]},
+  'hoc:5':{surf:'ground', p:{base:'#8a7650', dark:'#4a3a24', stones:12, cracks:2}, light:'fire', lp:[.1, .12], lc:'#ffa050', air:'dust', dark:'#120e08', props:[]},
+  'hoc:6':{surf:'shield', p:{base:'#5a5044', dark:'#2a2420', under:{base:'#7a6a4a', dark:'#3a3020', stones:20}}, light:'dusk', lp:[.5, 0], lc:'#c08060', air:'dust', dark:'#0e0a08', props:[]},
+  'hoc:7':{surf:'stone', p:{base:'#b8a898', dark:'#5a5048', cracks:5, lichen:14}, light:'dawn', lp:[.9, .1], lc:'#d8c8c0', air:'mist', dark:'#0e0c0c', props:[]},
+});
+/* the decks' backs: Tallow's grandmother's fishing-village deck; the old soldier's deck that has been to more wars than he has */
+Object.assign(DECKBACK, {
+  tallow(ctx, W, H){ // thin board, a faded sea-blue wash, a hand-drawn boat and two fish, the corners worn to the wood
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#5a7a86'); g.addColorStop(1, '#3a5662'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    [[0, 0], [W, 0], [0, H], [W, H]].forEach(([x, y], i) => glow(ctx, x, y, W * (.28 + hash(i, 1, 111) * .12), '#c8b48a', .55)); // the wood showing through at the corners
+    ctx.strokeStyle = 'rgba(230,220,190,.55)'; ctx.lineWidth = W * .014; ctx.strokeRect(W * .08, H * .055, W * .84, H * .89);
+    const cx = W / 2, cy = H * .5, s = W * .26; ctx.strokeStyle = '#e8dcc0'; ctx.lineWidth = W * .02; ctx.beginPath(); ctx.moveTo(cx - s, cy); ctx.quadraticCurveTo(cx, cy + s * .55, cx + s, cy); ctx.stroke(); // the hull
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - s * 1.2); ctx.stroke(); poly(ctx, [[cx + W * .01, cy - s * 1.1], [cx + s * .8, cy - s * .2], [cx + W * .01, cy - s * .2]], 'rgba(232,220,192,.8)'); // mast and sail
+    for (let i = 0; i < 2; i++) { const fy = H * (.76 + i * .07), fx = cx + (i ? s * .4 : -s * .4); ell(ctx, fx, fy, W * .07, W * .025, 'rgba(232,220,192,.7)'); poly(ctx, [[fx + W * .06, fy], [fx + W * .1, fy - W * .03], [fx + W * .1, fy + W * .03]], 'rgba(232,220,192,.7)'); } // two fish
+    ctx.strokeStyle = 'rgba(232,220,192,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.moveTo(W * .12, H * (.2 + i * .03)); ctx.quadraticCurveTo(W * .5, H * (.18 + i * .03), W * .88, H * (.2 + i * .03)); ctx.stroke(); } }, // the sea, in four brush lines
+  oldninth(ctx, W, H){ // a soldier's deck: sand-bleached leather brown, a cracked varnish, a finger bone burnt into the middle
+    const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#7a6448'); g.addColorStop(1, '#4a3a28'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 26; i++) { ctx.strokeStyle = 'rgba(30,20,10,.35)'; ctx.lineWidth = .8; const x = hash(i, 1, 112) * W, y = hash(i, 2, 112) * H; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (hash(i, 3, 112) - .5) * W * .3, y + (hash(i, 4, 112) - .5) * H * .2); ctx.stroke(); } // the varnish, cracked
+    ctx.strokeStyle = '#2a1e12'; ctx.lineWidth = W * .025; ctx.strokeRect(W * .07, H * .05, W * .86, H * .9);
+    const cx = W / 2, cy = H / 2; ell(ctx, cx, cy, W * .24, W * .24, 'rgba(30,20,10,.45)');
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-.5); ctx.fillStyle = '#d8ccb0'; ctx.fillRect(-W * .03, -W * .17, W * .06, W * .34); ell(ctx, 0, -W * .17, W * .05, W * .04, '#d8ccb0'); ell(ctx, 0, W * .17, W * .05, W * .04, '#d8ccb0'); ctx.restore(); // the bone
+    ctx.strokeStyle = '#2a1e12'; ctx.lineWidth = W * .012; ctx.beginPath(); ctx.moveTo(cx - W * .2, cy - W * .2); ctx.quadraticCurveTo(cx, cy - W * .32, cx + W * .2, cy - W * .2); ctx.stroke(); }, // its thong
+});
+Object.assign(SPREADS, {
+  step3:{slots:[{dx:-1.1, yy:.3, rot:-.06, flip:2900}, {dx:-1.1, yy:.62, rot:.05, flip:3900}, {dx:.6, yy:.44, rot:0, ans:1}]},   // Tallow: two down the left, the one that answers beside them, as the old woman laid them
+  pair3:{slots:[{dx:-.3, yy:.6, rot:-.45, flip:2900}, {dx:.3, yy:.6, rot:.45, flip:3900}, {dx:0, yy:.3, rot:0, ans:1}]},       // the old soldier: two crossed on the ground, the answer above
+});
+Object.assign(READER_SPREAD, {tallow:'step3', oldninth:'pair3'});
+Object.assign(TBL_KIT, {
+  tallow(ctx, x, y, CW){ TBL_PROP.sacking(ctx, x + CW * .5, y - CW * .7, CW * .9); }, // the oilcloth the deck lives in
+  oldninth(ctx, x, y, CW){ TBL_PROP.cup(ctx, x - CW * .9, y - CW * .3, CW * .22); }, // the rum
+});
+
+/* ============ Book Four art: the two new cards of High House Chains, and the looks of the five new soldiers ============
+   Cards (20 drawCard calls CARDART[id]): the Knight of Chains and the Leper, both faceless (hoc-canon §10 rule 8), in High House Chains'
+   frame of iron links over the gold (as Book Three's Chains cards wear it, 60d). Every other card Book Four deals is one the earlier books
+   already paint. Looks: a battle figure (FIGX, 18) and a painted bust (POR, 19) for Tallow, Hessa, Tebbet, Darrut and Orvas, each told
+   apart from the others and from Book Two's four by its silhouette: Tallow's big helm and bright new kit, Hessa's tall worm-rimmed
+   shield and temple spear, Tebbet's long bow and hood, Darrut's great round Guard shield and plume-less helm, Orvas's black tears and
+   horse-tail. Same rules as Books Two and Three: lantern low on the left, the squadmate's own colour as a rim on the right. */
+{
+  const frame = (P) => { const X = x => P.px + x / 100 * P.pw, Y = y => P.py + y / 100 * P.ph, u = P.pw / 100; return {X, Y, u}; };
+  const sky = (ctx, P, c0, c1) => { const g = ctx.createLinearGradient(0, P.py, 0, P.gy); g.addColorStop(0, c0); g.addColorStop(1, c1); ctx.fillStyle = g; ctx.fillRect(P.px, P.py, P.pw, P.gy - P.py); };
+  /* a broken chain hanging from a wrist: links alternately face-on and edge-on, the last one open */
+  const chainDown = (ctx, x, y, n, r, col) => { for (let i = 0; i < n; i++) { const yy = y + i * r * 1.5; ctx.save(); ctx.translate(x + Math.sin(i * .8) * r * .3, yy);
+    if (i % 2) { ctx.fillStyle = col; ctx.fillRect(-r * .22, -r * .6, r * .44, r * 1.2); } else { ctx.strokeStyle = col; ctx.lineWidth = r * .4; ctx.beginPath(); ctx.ellipse(0, 0, r * .55, r * .85, 0, i === n - 1 ? .6 : 0, i === n - 1 ? 5.6 : 7); ctx.stroke(); } ctx.restore(); } };
+
+  /* the Knight of Chains: a tall figure in a chain hauberk on an empty plain at dusk, a broken chain from each wrist; under the helm, nothing */
+  CARDART.b4c_knightchains = (ctx, P) => { const {X, Y, u} = frame(P), t = P.t;
+    sky(ctx, P, '#1a120e', '#6a3a24'); glow(ctx, P.cx, P.gy, 44*u, '#d07040', .22 + Math.sin(t/1300)*.04);
+    ctx.fillStyle = '#1a110c'; ctx.fillRect(P.px, P.gy - 3*u, P.pw, P.ph); // the plain
+    for (let i = 0; i < 6; i++) { const k = ((t/5200) + i/6) % 1; ell(ctx, P.px + k*P.pw, P.gy - 4*u - hash(i, 61)*12*u, (8 + k*10)*u, 1.4*u, `rgba(200,140,90,${.18*(1 - Math.abs(k - .5)*2)})`); } // dust going past
+    const cx = P.cx, top = Y(16), fy = P.gy;
+    poly(ctx, [[cx - 10*u, fy], [cx - 13*u, top + 26*u], [cx - 12*u, top + 13*u], [cx - 5*u, top + 9*u], [cx + 5*u, top + 9*u], [cx + 12*u, top + 13*u], [cx + 13*u, top + 26*u], [cx + 10*u, fy]], PR.lin(ctx, cx - 13*u, 0, cx + 13*u, 0, [[0,'#5a4a40'], [.45,'#2a221e'], [1,'#0a0808']])); // the hauberk, long
+    ctx.strokeStyle = 'rgba(200,170,140,.22)'; ctx.lineWidth = .7; for (let r = 0; r < 14; r++) for (let c = 0; c < 8; c++) { ctx.beginPath(); ctx.arc(cx - 10*u + c*2.8*u + (r % 2)*1.4*u, top + 14*u + r*3.2*u, .9*u, 0, Math.PI); ctx.stroke(); } // the rings of it
+    ctx.fillStyle = '#1a1410'; ctx.fillRect(cx - 2*u, top + 40*u, 4*u, fy - top - 40*u); // the parting of the skirts
+    ell(ctx, cx - 14*u, top + 14*u, 4.6*u, 3.4*u, '#3a2e28'); ell(ctx, cx + 14*u, top + 14*u, 4.6*u, 3.4*u, '#181210');
+    ctx.strokeStyle = '#2a221e'; ctx.lineWidth = 4*u; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - 14*u, top + 16*u); ctx.lineTo(cx - 18*u, top + 36*u); ctx.moveTo(cx + 14*u, top + 16*u); ctx.lineTo(cx + 18*u, top + 36*u); ctx.stroke(); ctx.lineCap = 'butt'; // the arms, hanging
+    ell(ctx, cx - 18*u, top + 37*u, 2.4*u, 2.4*u, '#4a3a32'); ell(ctx, cx + 18*u, top + 37*u, 2.4*u, 2.4*u, '#4a3a32'); // shackles at the wrists
+    const sw = Math.sin(t/1400)*.6*u; chainDown(ctx, cx - 18*u + sw, top + 40*u, 5, 2.2*u, '#6a564a'); chainDown(ctx, cx + 18*u - sw, top + 40*u, 4, 2.2*u, '#6a564a'); // broken chains
+    ell(ctx, cx, top + 4*u, 6*u, 7*u, PR.lin(ctx, cx - 6*u, 0, cx + 6*u, 0, [[0,'#6a5a50'], [1,'#141010']])); // the helm
+    ell(ctx, cx, top + 6*u, 3.6*u, 4.4*u, '#050304'); // and the dark under it: no face
+    ctx.strokeStyle = 'rgba(240,180,120,.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, top + 4*u, 6.2*u, Math.PI*.8, Math.PI*1.5); ctx.stroke();
+    glow(ctx, cx, top + 30*u, 16*u, P.hue, .1); };
+
+  /* the Leper: a figure wrapped in grey rags walking a pale road toward us with a bell; the bandages cover the whole head; no face */
+  CARDART.b4c_leper = (ctx, P) => { const {X, Y, u} = frame(P), t = P.t;
+    sky(ctx, P, '#2a261c', '#7a6a4c'); glow(ctx, X(78), Y(30), 26*u, '#e0d0a0', .16);
+    ctx.fillStyle = '#2e2618'; ctx.fillRect(P.px, P.gy - 4*u, P.pw, P.ph);
+    poly(ctx, [[X(44), P.gy - 4*u], [X(54), P.gy - 4*u], [X(86), P.py + P.ph], [X(14), P.py + P.ph]], '#c8bc9c'); // the road gone pale behind it
+    ctx.globalAlpha = .4; poly(ctx, [[X(44), P.gy - 4*u], [X(54), P.gy - 4*u], [X(60), P.gy + 10*u], [X(40), P.gy + 10*u]], '#3a3020'); ctx.globalAlpha = 1; // where it has not walked yet
+    const cx = P.cx, fy = P.gy + 8*u, st = Math.sin(t/800)*1.2*u;
+    poly(ctx, [[cx - 7*u, fy - 40*u], [cx + 7*u, fy - 40*u], [cx + 10*u, fy - 4*u], [cx + 4*u, fy], [cx, fy - 5*u], [cx - 4*u, fy], [cx - 10*u, fy - 4*u]], PR.lin(ctx, cx - 10*u, 0, cx + 10*u, 0, [[0,'#9a8e78'], [1,'#3a3428']])); // rags
+    ctx.strokeStyle = 'rgba(230,220,196,.55)'; ctx.lineWidth = 1.2*u; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(cx - 7*u, fy - (36 - i*6)*u); ctx.lineTo(cx + 7*u, fy - (33 - i*6)*u); ctx.stroke(); } // bandages wound round the body
+    ell(ctx, cx, fy - 45*u, 4.8*u, 5.6*u, '#d8ccb0'); ctx.strokeStyle = 'rgba(120,104,80,.7)'; ctx.lineWidth = .9; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(cx - 4.6*u, fy - (49 - i*1.8)*u); ctx.lineTo(cx + 4.6*u, fy - (47.6 - i*1.8)*u); ctx.stroke(); } // the head wrapped all round: no slit, no face
+    poly(ctx, [[cx - 6.4*u, fy - 51*u], [cx + 6.4*u, fy - 51*u], [cx + 8.4*u, fy - 38*u], [cx - 8.4*u, fy - 38*u]], 'rgba(100,88,64,.85)'); // the hood
+    ctx.strokeStyle = '#9a8e78'; ctx.lineWidth = 2*u; ctx.beginPath(); ctx.moveTo(cx + 6*u, fy - 36*u); ctx.lineTo(cx + 13*u, fy - 30*u); ctx.stroke();
+    const bx = cx + 14*u - st*.4, by = fy - 27*u; ctx.strokeStyle = '#3a3020'; ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(cx + 13*u, fy - 30*u); ctx.lineTo(bx, by); ctx.stroke(); poly(ctx, [[bx - 2.4*u, by + 4*u], [bx - 1.6*u, by], [bx + 1.6*u, by], [bx + 2.4*u, by + 4*u]], '#8a7a4a'); // the bell
+    if (Math.abs(st) > 1) for (let i = 0; i < 3; i++) { ctx.strokeStyle = `rgba(230,210,160,${.35 - i*.1})`; ctx.lineWidth = .7; ctx.beginPath(); ctx.arc(bx, by + 3*u, (5 + i*3)*u, -Math.PI*.3, Math.PI*.3); ctx.stroke(); }
+    glow(ctx, cx, fy - 30*u, 22*u, P.hue, .08); };
+
+  /* High House Chains' frame on Book Four's two Chains cards: iron links over the gold, rust, a shackle at each corner (Book Three's look, 60d) */
+  const CH4 = new Set(['b4c_knightchains', 'b4c_leper']);
+  const chainFrame4 = (ctx, W, H) => { ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(0, 0, W, H, W*.06) : ctx.rect(0, 0, W, H); ctx.clip();
+    ctx.strokeStyle = '#3a1e16'; ctx.lineWidth = W*.034; ctx.strokeRect(W*.05, H*.035, W*.9, H*.93);
+    const r = W*.024, side = (x0, y0, x1, y1) => { const n = Math.round(Math.hypot(x1 - x0, y1 - y0)/(r*1.7)); for (let i = 0; i <= n; i++) { const k = i/n, x = lerp(x0, x1, k), y = lerp(y0, y1, k), a = Math.atan2(y1 - y0, x1 - x0);
+      ctx.save(); ctx.translate(x, y); ctx.rotate(a); if (i % 2) { ctx.fillStyle = '#4a3a32'; ctx.fillRect(-r, -r*.24, r*2, r*.48); } else { ctx.strokeStyle = '#5e4c42'; ctx.lineWidth = r*.46; ctx.beginPath(); ctx.ellipse(0, 0, r, r*.6, 0, 0, 7); ctx.stroke(); }
+      if (hash(i, Math.round(x0 + y0)) > .7) { ctx.fillStyle = 'rgba(140,60,30,.55)'; ctx.fillRect(-r*.3, r*.1, r*.5, r*.4); } ctx.restore(); } };
+    const x0 = W*.05, y0 = H*.035, x1 = W*.95, y1 = H*.965; side(x0, y0, x1, y0); side(x1, y0, x1, y1); side(x1, y1, x0, y1); side(x0, y1, x0, y0);
+    [[x0, y0], [x1, y0], [x0, y1], [x1, y1]].forEach(([x, y]) => { ell(ctx, x, y, W*.04, W*.04, '#2a1a14'); ctx.strokeStyle = '#6a564a'; ctx.lineWidth = W*.012; ctx.beginPath(); ctx.arc(x, y, W*.03, 0, 7); ctx.stroke(); ell(ctx, x, y, W*.01, W*.01, '#0e0806'); });
+    ctx.restore(); };
+  const drawCardB3 = drawCard; drawCard = function(ctx, id, W, H, face, t = 0){ drawCardB3(ctx, id, W, H, face, t); if (face && CH4.has(id)) chainFrame4(ctx, W, H); };
+}
+
+/* ---------------- the five new soldiers: battle figures (FIGX, in the ~32px frame drawFigure sets up) ---------------- */
+Object.assign(FIGX, {
+  /* Tallow: tall and new, kit too bright, a helm a size too big, a spear he was told to carry, a borrowed shield */
+  tallow(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.1);
+    B2F.line(ctx, '#8b7355', 1.3, [[8, 12], [8, -21]]); poly(ctx, [[8,-25],[6.6,-19],[9.4,-19]], '#e0dccc'); // the spear
+    h.legs('#3a3428'); h.torso('#a8865a', '#4a3620', 6.2); ctx.fillStyle = 'rgba(255,240,210,.25)'; ctx.fillRect(-5.6, -5.6, 2, 10); // new leather, still pale
+    ctx.fillStyle = '#5a4630'; ctx.fillRect(-6.2, 3.6, 12.4, 1.2); B2F.line(ctx, '#3a2a18', .5, [[-2, -6], [.4, -2.6], [2.6, -6]]); ell(ctx, .4, -2, .7, 1.2, '#e8dcc0'); // the finger bone on its thong
+    h.head('#d0a888', 4.3, -11); h.look('rgba(24,14,10,.82)', -11.2);
+    ctx.beginPath(); ctx.arc(0, -12.6, 6, Math.PI*.98, Math.PI*2.02); ctx.fillStyle = h.armor('#a09a8c', '#3a3830'); ctx.fill(); ctx.fillRect(-6.4, -12.8, 12.8, 1.6); ctx.fillStyle = 'rgba(255,255,250,.3)'; ctx.fillRect(-3.6, -17.4, 3, 1); // the helm, too big, down over the brows
+    h.shield('#7a6a4e', '#2e281c', 5.6, -7, .6); ctx.restore(); },
+  /* Hessa: square and still; a tall shield with a worm carved round the rim; a long-bladed temple spear held upright */
+  hessa(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.1, 1.06);
+    B2F.line(ctx, '#5a4632', 1.5, [[8.4, 12], [8.4, -22]]); poly(ctx, [[8.4,-29],[6.6,-21],[8.4,-19],[10.2,-21]], '#d8d0bc'); // the temple spear, a long blade
+    h.legs('#2e2a22'); h.torso('#6a7458', '#23281a', 7); ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 5; i++) { ctx.moveTo(-6.6, -4 + i*2); ctx.lineTo(6.6, -4 + i*2); } ctx.stroke(); // scale over the padded coat
+    h.head('#9a7454', 4.6, -11.2); h.look('rgba(20,10,6,.85)', -11.4); B2F.cap(ctx, '#1a120a', 4.8, -12.6); ctx.fillStyle = '#1a120a'; ctx.fillRect(-4.8, -12.6, 2.2, 6); // dark hair cropped close, a temple guard's
+    poly(ctx, [[-12.4,-8],[-3.4,-8],[-3.4,8],[-7.9,11],[-12.4,8]], h.armor('#5a5a44', '#1c1c12')); // the tall shield
+    ctx.strokeStyle = 'rgba(220,206,170,.7)'; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(-12, -7); for (let i = 0; i <= 8; i++) ctx.lineTo(-12 + (i % 2 ? 1 : 0), -7 + i*1.9); ctx.stroke(); // the worm, round the rim
+    ell(ctx, -7.9, 1, 1.4, 1.4, '#8a8470'); ctx.restore(); },
+  /* Tebbet: long in the arm, narrow, hooded; a tall recurve strung and held low */
+  tebbet(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .9, 1.12);
+    h.legs('#2a2620'); h.torso('#6a5a44', '#26201a', 5.4); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-5.4, 3, 10.8, 1.1); ctx.fillStyle = '#5a4430'; ctx.fillRect(-8.6, -5, 2.2, 8); poly(ctx, [[-8.6,-5],[-7.5,-8.4],[-6.4,-5]], '#c8b898'); // the quiver, fletching up
+    h.head('#6e4a32', 4.1, -11.2); h.look('rgba(230,214,190,.55)', -11.4);
+    poly(ctx, [[-5.6,-6],[-4.4,-15.4],[0,-17.4],[4.4,-15.4],[5.6,-6],[3.6,-8],[3.4,-13],[-3.4,-13],[-3.6,-8]], '#5a4a36'); // the cloth hood against the sun
+    ctx.strokeStyle = '#6a4a2a'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(9, -14); ctx.quadraticCurveTo(12.6, -8, 10.6, -2); ctx.quadraticCurveTo(12.6, 4, 9, 10); ctx.stroke(); ctx.strokeStyle = 'rgba(230,220,200,.6)'; ctx.lineWidth = .4; ctx.beginPath(); ctx.moveTo(9, -14); ctx.lineTo(9, 10); ctx.stroke(); // the Dal Honese recurve
+    ctx.restore(); },
+  /* Darrut: broad, thick-necked; the Aren Guard's great round shield with the badge scraped off; a helm with the plume cut away */
+  darrut(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.16, 1.04);
+    h.legs('#2e2a26'); h.torso('#8a8478', '#2c2a26', 7.4); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .6; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(-7, -3.6 + i*2.4); ctx.lineTo(7, -3.6 + i*2.4); } ctx.stroke(); // patched Guard mail
+    ctx.fillStyle = '#7a4a2a'; ctx.fillRect(-1.6, -2, 3.2, 2.4); // a patch
+    h.head('#a07c60', 4.7, -11); h.look(); ctx.fillStyle = 'rgba(30,20,14,.6)'; ctx.fillRect(-3, -8.6, 7, 1.6); // a heavy jaw, stubbled
+    ctx.beginPath(); ctx.arc(0, -12.2, 5.4, Math.PI, 0); ctx.fillStyle = h.armor('#8a8680', '#2a2826'); ctx.fill(); ctx.fillRect(-5.8, -12.6, 11.6, 1.4); ctx.fillStyle = '#4a4640'; ctx.fillRect(-.8, -18.4, 1.6, 1.4); // the helm, a stub where the plume was
+    ctx.beginPath(); ctx.arc(-7.4, 0, 8.4, 0, 7); ctx.fillStyle = h.armor('#9a8a62', '#2e2818'); ctx.fill(); ctx.strokeStyle = '#151210'; ctx.lineWidth = 1.1; ctx.stroke(); // the great round shield
+    ctx.fillStyle = 'rgba(200,190,160,.3)'; ctx.fillRect(-9.4, -2.2, 4, 4); ell(ctx, -7.4, 0, 1.6, 1.6, '#6b6155'); // the bright patch where the badge was
+    h.sword(); ctx.restore(); },
+  /* Orvas: lean, half turned to a horse that isn't there; lacquered leather and horsehair; black tears down both cheeks; the short lance with the clan's rag */
+  orvas(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.08); const fl = o.still ? 0 : Math.sin(t/220 + (o.phase || 0))*.8;
+    B2F.line(ctx, '#6a4a2a', 1.4, [[7.6, 12], [9.4, -20]]); poly(ctx, [[9.4,-24],[8.4,-19],[10.4,-19]], '#d8d0bc'); poly(ctx, [[9.2,-18],[13.6,-17 + fl],[13,-14 + fl],[9.4,-15]], '#a83a2a'); // the lance and the clan's rag
+    h.legs('#2a1e14'); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-4.5, 8.6, 3.4, 4.4); ctx.fillRect(1.1, 8.6, 3.4, 4.4); // riding boots
+    h.torso('#7a3a24', '#2a120a', 6); ctx.fillStyle = 'rgba(255,200,160,.2)'; ctx.fillRect(-5.4, -5, 1.6, 9); ctx.fillStyle = '#c8b898'; for (let i = 0; i < 5; i++) ctx.fillRect(-5 + i*2.4, 6, .6, 2.4); // lacquered leather, horsehair tassels
+    h.head('#8a5a3a', 4.2, -11.2); h.look('rgba(20,10,6,.88)', -11.6); ctx.fillStyle = '#0a0606'; ctx.fillRect(-.6, -10.6, .8, 3.4); ctx.fillRect(2.4, -10.6, .8, 3.4); // the black tears
+    B2F.cap(ctx, '#0e0a08', 4.5, -12.6); poly(ctx, [[-4.4,-13],[-9.4,-10 + fl],[-10,-5 + fl],[-5.6,-9]], '#1a1410'); // a black horse-tail of hair, blown back
+    ctx.restore(); },
+});
+
+/* ---------------- their busts (POR): in bust units, shoulders at y = 0, the face about y = −74 ---------------- */
+Object.assign(POR, {
+  tallow(ctx){ const F = {cy:-74, w:12.2, h:19.4, jaw:.72, chin:4.4, skin:'#d0a888', iris:'#5a6a7a', lip:'#a0685a', browCol:'#7a5a3a', browW:1.15, arch:1.1, browL:.5, browR:.5, rim:'#c9b27a', rimA:.18, nose:.95, look:.3, open:1.12, smileL:.1, smileR:.35, mouthW:3.6, flush:'#d07a6a'};
+    PR.torsoPath(ctx, 36, 4); ctx.fillStyle = PR.lit(ctx, '#b08c5e', '#3a2a16', -36, 26); ctx.fill(); // new boiled leather, still pale, creasing
+    ctx.save(); PR.torsoPath(ctx, 36, 4); ctx.clip(); PR.stroke(ctx, 'rgba(60,40,20,.35)', .8, () => { for (let i = 0; i < 5; i++) { ctx.moveTo(-30 + i*12, -40); ctx.quadraticCurveTo(-28 + i*12, -20, -32 + i*12, 0); } }); PR.soft(ctx, -20, -30, 16, 10, '#fff0d0', .12); ctx.restore();
+    PR.stroke(ctx, '#3a2a18', .9, () => { ctx.moveTo(-8, -46); ctx.quadraticCurveTo(0, -32, 8, -46); }); ctx.save(); ctx.translate(0, -33); ctx.rotate(.2); ctx.fillStyle = PR.lin(ctx, -2, 0, 2, 0, [[0,'#f0e8d0'], [1,'#8a7e66']]); ctx.fillRect(-1.4, -4, 2.8, 8); ell(ctx, 0, -4, 1.8, 1.4, '#e8dcc0'); ell(ctx, 0, 4, 1.8, 1.4, '#e8dcc0'); ctx.restore(); // the finger bone on its thong
+    PR.neck(ctx, F, 6.2); PR.face(ctx, F);
+    // the helm a size too big, down to the brows
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-15.6, F.cy - 6); ctx.bezierCurveTo(-16.4, top - 6, 16.4, top - 6, 15.6, F.cy - 6); ctx.lineTo(16.8, F.cy - 4); ctx.lineTo(-16.8, F.cy - 4); ctx.closePath();
+    ctx.fillStyle = PR.lin(ctx, -16, 0, 16, 0, [[0,'#d8d4c8'], [.35,'#9a968a'], [.75,'#3a3830'], [1,'#121210']]); ctx.fill(); PR.stroke(ctx, 'rgba(255,255,250,.35)', 1, () => { ctx.moveTo(-10, top - 2); ctx.quadraticCurveTo(-4, top - 4.6, 2, top - 3.6); });
+    PR.soft(ctx, 0, F.cy - 3, 12, 2.4, '#140806', .5); return F; },
+  hessa(ctx){ const F = {cy:-75, w:13.4, h:20.2, jaw:.92, chin:6, skin:'#9a7454', iris:'#3a2a1a', lip:'#7a4a3a', browCol:'#140a06', browW:1.6, arch:.4, rim:'#8a9a6a', rimA:.16, nose:1.1, look:0, smileL:-.25, smileR:-.25, mouthW:4};
+    // the tall shield behind her right shoulder, the worm carved round its rim
+    ctx.save(); ctx.translate(34, -40); ctx.fillStyle = PR.lin(ctx, -18, 0, 18, 0, [[0,'#6a6a52'], [.5,'#3a3a2a'], [1,'#121208']]); PR.path(ctx, [[-16, -40], [16, -40], [16, 30], [0, 44], [-16, 30]]); ctx.fill();
+    PR.stroke(ctx, 'rgba(220,206,170,.55)', 1.6, () => { ctx.moveTo(-13, -36); for (let i = 0; i <= 14; i++) ctx.lineTo(-13 + (i % 2 ? 2 : 0), -36 + i*4.6); }); ctx.restore();
+    PR.torsoPath(ctx, 44, 2); ctx.fillStyle = PR.lit(ctx, '#6a7458', '#1c2014', -44, 30); ctx.fill();
+    ctx.save(); PR.torsoPath(ctx, 44, 2); ctx.clip(); PR.scales(ctx, -44, 44, -44, 10, 6, '#7a8466'); PR.soft(ctx, 26, -20, 24, 22, '#000000', .45); ctx.restore();
+    ell(ctx, -2, -40, 3, 3, PR.rad(ctx, -3, -41, .3, 3.2, [[0,'#f0e0b0'], [1,'#5a4a20']])); // the temple seal, at the throat
+    PR.neck(ctx, F, 7); PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-13.6, F.cy - 4); ctx.bezierCurveTo(-14.4, top - 1, 14.4, top - 1, 13.6, F.cy - 4); ctx.quadraticCurveTo(12, F.cy - 14, 0, F.cy - 16.6); ctx.quadraticCurveTo(-12, F.cy - 14, -13.6, F.cy - 4); // hair cropped close
+    ctx.fillStyle = PR.lin(ctx, -14, 0, 14, 0, [[0,'#3a2a1a'], [.5,'#1a100a'], [1,'#060402']]); ctx.fill(); return F; },
+  tebbet(ctx){ const F = {cy:-73, w:11.6, h:20, jaw:.7, chin:4.6, skin:'#6e4a32', iris:'#1e140c', lip:'#5a3428', browCol:'#0a0604', browW:1.3, arch:.8, rim:'#b7895a', rimA:.2, nose:1.05, look:-.3, open:.9, smileL:.15, smileR:.1, mouthW:3.6};
+    // the recurve, strung, over his left shoulder
+    ctx.save(); ctx.translate(-28, -50); ctx.rotate(-.3); PR.stroke(ctx, '#6a4a2a', 3, () => { ctx.moveTo(0, -46); ctx.quadraticCurveTo(10, -24, 4, 0); ctx.quadraticCurveTo(10, 24, 0, 46); }); PR.stroke(ctx, 'rgba(230,220,200,.6)', .6, () => { ctx.moveTo(0, -46); ctx.lineTo(0, 46); }); ctx.restore();
+    PR.torsoPath(ctx, 32, 6); ctx.fillStyle = PR.lit(ctx, '#6a5a44', '#1e1810', -32, 24); ctx.fill(); // the padded jack
+    ctx.save(); PR.torsoPath(ctx, 32, 6); ctx.clip(); PR.stroke(ctx, 'rgba(0,0,0,.3)', .7, () => { for (let i = 0; i < 6; i++) { ctx.moveTo(-32, -40 + i*7); ctx.lineTo(32, -40 + i*7); } }); ctx.restore();
+    PR.neck(ctx, F, 5.8); PR.face(ctx, F);
+    // the cloth hood against the sun, over the head and down round the jaw
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-24, -38); ctx.bezierCurveTo(-22, -50, -18, F.cy, -15, F.cy - 8); ctx.bezierCurveTo(-15, top - 9, 15, top - 9, 15, F.cy - 8); ctx.bezierCurveTo(18, F.cy, 22, -50, 24, -38); ctx.quadraticCurveTo(0, -30, -24, -38); ctx.closePath();
+    ctx.moveTo(0, F.cy - 16); ctx.bezierCurveTo(9, F.cy - 16, 12.2, F.cy - 8, 12, F.cy); ctx.bezierCurveTo(12, F.cy + 10, 6, F.cy + 18, 0, F.cy + 19); ctx.bezierCurveTo(-6, F.cy + 18, -12, F.cy + 10, -12, F.cy); ctx.bezierCurveTo(-12.2, F.cy - 8, -9, F.cy - 16, 0, F.cy - 16); ctx.closePath();
+    ctx.fillStyle = PR.lin(ctx, -24, 0, 24, 0, [[0,'#8a7656'], [.4,'#5a4a36'], [1,'#14100a']]); ctx.fill('evenodd'); return F; },
+  darrut(ctx){ const F = {cy:-76, w:14.6, h:20.4, jaw:.98, chin:6.8, skin:'#a07c60', iris:'#4a3a2a', lip:'#8a5a4a', browCol:'#2a1a10', browW:1.7, arch:.5, rim:'#9a8c70', rimA:.15, nose:1.2, age:.5, look:.1, smileL:.4, smileR:.6, mouthW:4.4};
+    // the great round shield behind him, the bright patch where the badge was scraped off
+    ctx.save(); ctx.translate(-30, -34); ell(ctx, 0, 0, 36, 38, '#141210'); ell(ctx, 0, 0, 33, 35, PR.lin(ctx, -33, -35, 30, 35, [[0,'#b0a07a'], [.5,'#6a5a3a'], [1,'#1a160e']])); PR.soft(ctx, -4, -6, 10, 10, '#e8dcc0', .3); ell(ctx, 6, 4, 6, 6.4, PR.rad(ctx, 5, 3, .5, 6.4, [[0,'#e0dccc'], [.4,'#8a867c'], [1,'#22201c']])); ctx.restore();
+    PR.torsoPath(ctx, 52, 0); ctx.fillStyle = PR.lit(ctx, '#8a8478', '#262420', -52, 40); ctx.fill();
+    ctx.save(); PR.torsoPath(ctx, 52, 0); ctx.clip(); PR.mail(ctx, -54, 54, -48, 2, '#8a8478', 2); ctx.fillStyle = PR.lit(ctx, '#7a4a2a', '#3a2010', 8, 22); ctx.fillRect(8, -30, 14, 10); PR.stitch(ctx, '#2a1408', .7, () => { ctx.rect(8, -30, 14, 10); }); PR.soft(ctx, 34, -18, 26, 22, '#000000', .45); ctx.restore(); // patched Guard mail
+    PR.neck(ctx, F, 8.6);
+    F.under = (ctx, F) => PR.dots(ctx, F, 160, 'rgba(50,30,20,.42)', .5, [6, 19, (x, y) => y > 8]); // the stubble on a heavy jaw
+    PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-16, F.cy - 5); ctx.bezierCurveTo(-17, top - 5, 17, top - 5, 16, F.cy - 5); ctx.lineTo(17.4, F.cy - 2.6); ctx.lineTo(-17.4, F.cy - 2.6); ctx.closePath(); // the Guard helm, the plume cut off
+    ctx.fillStyle = PR.lin(ctx, -17, 0, 17, 0, [[0,'#c8c4b8'], [.35,'#8a867c'], [.75,'#2e2c28'], [1,'#0e0e0c']]); ctx.fill(); ctx.fillStyle = '#3a3630'; ctx.fillRect(-2, top - 8, 4, 3.4); return F; },
+  orvas(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.74, chin:4.6, skin:'#8a5a3a', iris:'#1a1008', lip:'#6a3a2a', browCol:'#0a0604', browW:1.4, arch:1.1, browL:.4, rim:'#a85a3a', rimA:.2, nose:1, look:.45, smileL:.6, smileR:.9, mouthW:3.8, teeth:1};
+    // the horse-tail standard behind him, his father's
+    PR.stroke(ctx, '#4a3220', 2.4, () => { ctx.moveTo(30, 4); ctx.lineTo(36, -120); }); for (let i = 0; i < 9; i++) PR.stroke(ctx, i % 2 ? '#1a1410' : '#3a2e24', 1.4, () => { ctx.moveTo(35.6, -112); ctx.quadraticCurveTo(44 + i, -96, 40 + i*1.6, -76 + i*2); });
+    PR.torsoPath(ctx, 34, 4); ctx.fillStyle = PR.lit(ctx, '#8a4228', '#24100a', -34, 26); ctx.fill(); // lacquered leather
+    ctx.save(); PR.torsoPath(ctx, 34, 4); ctx.clip(); PR.soft(ctx, -18, -34, 14, 8, '#ffd0a0', .2); for (let i = 0; i < 9; i++) PR.stroke(ctx, '#d8c8a8', .8, () => { ctx.moveTo(-24 + i*6, -10); ctx.lineTo(-25 + i*6, 2); }); ctx.restore(); // horsehair tassels
+    PR.neck(ctx, F, 6);
+    F.under = (ctx, F) => { const u = F.h/20; [-1, 1].forEach(sd => { const x = sd*F.w*.4; ctx.fillStyle = 'rgba(8,4,4,.92)'; ctx.beginPath(); ctx.moveTo(x - .9, F.cy + 1*u); ctx.quadraticCurveTo(x - 1.4, F.cy + 7*u, x, F.cy + 10*u); ctx.quadraticCurveTo(x + 1.4, F.cy + 7*u, x + .9, F.cy + 1*u); ctx.closePath(); ctx.fill(); }); }; // the black tears, inked
+    PR.face(ctx, F);
+    // black hair, long, tied back and blown
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12.4, F.cy - 2); ctx.bezierCurveTo(-13.6, top - 1, 13.6, top - 1, 12.4, F.cy - 2); ctx.quadraticCurveTo(11.4, F.cy - 13, 0, F.cy - 16.4); ctx.quadraticCurveTo(-11.4, F.cy - 13, -12.4, F.cy - 2);
+    ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#2a1e16'], [.5,'#0e0a08'], [1,'#040302']]); ctx.fill();
+    PR.stroke(ctx, '#0e0a08', 4, () => { ctx.moveTo(-10, F.cy - 6); ctx.quadraticCurveTo(-22, F.cy + 4, -26, F.cy + 26); }); return F; },
+});
+
 /* ============ resume & boot ============ */
 function resume(){
   $('#sheet').hidden = true; $('#modal').hidden = true; notes = []; titleAnim = null;
@@ -47541,6 +48560,8 @@ function start(){
   if (typeof B2CH7 !== 'undefined') registerChapter(7, B2CH7, 'dg'); // Book Two, Chapter 7: Aren Way, and the end of Book Two (54)
   [typeof B3CH1 !== 'undefined' && B3CH1, typeof B3CH2 !== 'undefined' && B3CH2, typeof B3CH3 !== 'undefined' && B3CH3, typeof B3CH4 !== 'undefined' && B3CH4, // Book Three: The Fair Exchange (60);
    typeof B3CH5 !== 'undefined' && B3CH5, typeof B3CH6 !== 'undefined' && B3CH6, typeof B3CH7 !== 'undefined' && B3CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'moi'); }); // its chapters are const B3CH1..B3CH7
+  [typeof B4CH1 !== 'undefined' && B4CH1, typeof B4CH2 !== 'undefined' && B4CH2, typeof B4CH3 !== 'undefined' && B4CH3, typeof B4CH4 !== 'undefined' && B4CH4, // Book Four: Unblooded (70);
+   typeof B4CH5 !== 'undefined' && B4CH5, typeof B4CH6 !== 'undefined' && B4CH6, typeof B4CH7 !== 'undefined' && B4CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'hoc'); }); // its chapters are const B4CH1..B4CH7
   showTitle();
   requestAnimationFrame(loop);
 }

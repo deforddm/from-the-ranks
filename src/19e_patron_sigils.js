@@ -1,6 +1,6 @@
 /* ============ v6.9.2 the gods' sigils for Books Two and Three ============
    The painted set's six sigils (patrons/brisk, kettle, tuft, ohl, ellis, sgt) are drawn on the Patrons board (docs/art/Patrons.dc.html
-   → 19c). The gods who answer only in Books Two and Three are drawn here, in the same frame: a dark disc, the gold ring, a black
+   → 19c). The gods who answer only in Books Two to Four are drawn here, in the same frame: a dark disc, the gold ring, a black
    silhouette, pale accents, red eyes. Keyed by the squadmate whose god it is (PATRONS[id].sig or the id itself, 31_battle.js lose()). */
 {
   const frame = (label, bg, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="${label}">
@@ -68,4 +68,25 @@ ${body}</svg>`;
 <path d="M96 100 L100 98 L98 106 Z" fill="#2a2420"></path><path d="M104 100 L100 98 L102 106 Z" fill="#2a2420"></path>
 <g class="pt-eyes" fill="#c9d4ff"><ellipse cx="68" cy="90" rx="4.2" ry="2.4"></ellipse><ellipse cx="132" cy="90" rx="4.2" ry="2.4"></ellipse></g>
 <path d="M28 162 Q100 170 172 162" stroke="#c9d4ff" stroke-opacity="0.35" stroke-width="2" fill="none"></path>`);
+  /* v7.0, Book Four. D'rek, the Worm of Autumn (Hessa): the worm coiled through a fallen leaf, turned earth under it */
+  ART['patrons/hessa'] = frame('Sigil of D\'rek, the Worm of Autumn', '#16130c', `
+<circle class="pt-pulse" cx="100" cy="104" r="58" fill="#c9a050" opacity="0.08"></circle>
+<path d="M100 40 Q148 58 152 104 Q150 142 108 166 L100 172 L92 166 Q50 142 48 104 Q52 58 100 40 Z" fill="#0a0706"></path>
+<path d="M100 48 L100 164" stroke="#2a2418" stroke-width="3"></path>
+<g stroke="#2a2418" stroke-width="2" fill="none"><path d="M100 76 L126 62"></path><path d="M100 98 L136 86"></path><path d="M100 120 L134 112"></path><path d="M100 76 L74 62"></path><path d="M100 98 L64 86"></path><path d="M100 120 L66 112"></path></g>
+<path d="M60 130 Q70 104 96 110 Q122 116 118 92 Q114 70 90 76 Q70 82 78 98" stroke="#e8dcc2" stroke-opacity="0.88" stroke-width="7" stroke-linecap="round" fill="none"></path>
+<path d="M60 130 Q70 104 96 110 Q122 116 118 92 Q114 70 90 76 Q70 82 78 98" stroke="#0a0706" stroke-opacity="0.5" stroke-width="1.2" stroke-dasharray="2 4" fill="none"></path>
+<g class="pt-eyes"><circle cx="80" cy="98" r="2.6" fill="#c94a2a"></circle></g>
+<g fill="#e8dcc2" opacity="0.55"><ellipse cx="44" cy="170" rx="6" ry="2"></ellipse><ellipse cx="62" cy="174" rx="4" ry="1.6"></ellipse><ellipse cx="148" cy="172" rx="5" ry="1.8"></ellipse></g>
+<path d="M26 176 Q100 182 174 176" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
+  /* the dead of the Khundryl Burned Tears (Orvas): a black tear under an eye that is not there, and a rider's horse-tail behind it */
+  ART['patrons/orvas'] = frame('Sigil of the Khundryl dead', '#14100e', `
+<circle class="pt-pulse" cx="100" cy="100" r="60" fill="#c94a2a" opacity="0.07"></circle>
+<path d="M136 40 Q158 70 150 110 Q146 136 160 160 Q138 150 132 118 Q128 84 136 40 Z" fill="#2a2420"></path>
+<path d="M58 78 Q100 58 142 78 Q100 92 58 78 Z" fill="#0a0706"></path>
+<g class="pt-eyes"><ellipse cx="100" cy="77" rx="9" ry="3" fill="#c94a2a"></ellipse></g>
+<path d="M100 92 Q122 126 118 146 Q114 168 100 170 Q86 168 82 146 Q78 126 100 92 Z" fill="#0a0706"></path>
+<path d="M92 132 Q90 148 98 160" stroke="#e8dcc2" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+<g stroke="#e8dcc2" stroke-opacity="0.7" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M60 92 L56 108"></path><path d="M72 96 L70 114"></path><path d="M140 92 L144 108"></path></g>
+<path d="M28 168 Q100 176 172 168" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
 }
