@@ -18,7 +18,7 @@ const r = await page.evaluate(async () => {
   /* a fight forced: both grounds (killing `dies` on the last one if asked), then the node after it */
   const force = async (id, dies) => { const res = {id};
     startBattle(id, {}); await wait(60); res.started = !!B && B.id === id; res.regs = B.def.b4Regs || 0; res.dust = b4DustNow(); res.dog = B.units.some(u => u.kind === 'hackle');
-    res.mortal = !!B.def.mortal; res.foes = B.units.filter(u => u.side === 'e').length; res.minY = Math.min(...B.units.filter(u => u.side === 'e').map(u => u.y)); res.close = !!B.def.b47Close;
+    res.mortal = !!B.def.mortal; res.foes = B.units.filter(u => u.side === 'e').length; res.minY = Math.min(...B.units.filter(u => u.side === 'e').map(u => u.y)); res.close = !!B.def.b47Close; res.sumY = B.units.filter(u => u.side === 'e').reduce((a, u) => a + u.y, 0);
     if (BATTLES[id].stage2) { B.units.filter(u => u.side === 'e').forEach(u => u.hp = 0); B.over = true; stageBreak(); await wait(30); const on = document.getElementById('bOn'); res.stage2 = !!on; if (on) on.click(); await wait(60);
       res.inStage2 = !!B && !!B.def.isStage2; }
     if (dies) { const u = B.units.find(v => v.id === dies); if (u) u.hp = 0; }
@@ -130,8 +130,8 @@ const r = await page.evaluate(async () => {
   { const s0 = S.f.b4_saw, c0 = S.f.b4_fallClimbed; S.f.b4_saw = 'far'; S.f.b4_fallClimbed = 0; out.t.farLook = /too far for a face/i.test(b47FaceLook()) && b47Sure() === 'sure'; S.f.b4_saw = s0; S.f.b4_fallClimbed = c0; }
   { const sv = S; S = JSON.parse(JSON.stringify(S)); delete S.imported; S.dead = {sathi:{ch:7, where:'The Barrow', from:'dg'}}; S.f.b4_saw = 'close'; out.t.freshClose = b47Face() === 'sathi' && /plainly/.test(b47FaceLook()) && /braids flying/.test(b47FaceLook()); S = sv; }
   out.t.out = await force('b4_c7_outriders');
-  S.f.b4_c7_ph = 3; out.t.br = await force('b4_c7_breakout'); out.t.brFar = (() => { const s = S.f.b4_saw; S.f.b4_saw = 'far'; const d = battleDef('b4_c7_breakout'); S.f.b4_saw = s; return {foes:d.foes.length, minY:Math.min(...d.foes.map(f => f[2])), wave:d.waves[0].round}; })();
-  out.t.brClose = (() => { const d = battleDef('b4_c7_breakout'); return {foes:d.foes.length, minY:Math.min(...d.foes.map(f => f[2])), wave:d.waves[0].round}; })();
+  S.f.b4_c7_ph = 3; out.t.br = await force('b4_c7_breakout'); out.t.brFar = (() => { const s = S.f.b4_saw; S.f.b4_saw = 'far'; const d = battleDef('b4_c7_breakout'); S.f.b4_saw = s; return {foes:d.foes.length, minY:Math.min(...d.foes.map(f => f[2])), sumY:d.foes.reduce((a, f) => a + f[2], 0), wave:d.waves[0].round}; })();
+  out.t.brClose = (() => { const d = battleDef('b4_c7_breakout'); return {foes:d.foes.length, minY:Math.min(...d.foes.map(f => f[2])), sumY:d.foes.reduce((a, f) => a + f[2], 0), wave:d.waves[0].round}; })();
   /* the swap at the island fire: Orvas in, Ramin back to the Red Blades */
   S.f.b4_c7_ph = 6; startExplore('b4_c7_isle'); talk('b4_c7_isle'); out.t.swapOffered = has('b4_c7_isle', /Send across the water for Orvas/); take('b4_c7_isle', /Send across the water for Orvas/);
   out.t.swap = {orvas:b4In('orvas'), ramin:b4In('redblade'), raminWaits:S.f.b4_raminDone === 2, line:/Orvas comes across/.test(DLG.b4_c7_isle_swap().txt), fireLine:/Orvas/.test(DLG.b4_c7_isle_talk().txt)};
@@ -168,7 +168,7 @@ tr.tiles && tr.spirit && tr.dmg >= 2 + 2 + 3 && tr.tear && tr.hit2 >= 3 ? ok(`in
 if (t.renderErr) {
   !t.renderErr.length && t.face === 'marrow' && t.sure === 'clear' && t.namer === 'haddat' && t.look.marrow && t.look.clear && t.look.unnamed && t.look.token && t.look.named && t.intro && t.farLook && t.freshClose ? ok('a transfer with Marrow dead at the Barrow and b4_saw close: every node renders; the face is Marrow\'s, plainly, Haddat says the name; the intro remembers going forward; far and no Fall: a shape they are sure of; a fresh start on the forward road sees Sathi plainly') : no('transfer face ' + JSON.stringify(t));
   t.ramin && t.raminNamed.length >= 7 && t.out.dog ? ok(`Ramin named in ${t.raminNamed.length} of 10 sampled nodes; Hackle at Sathi's knee`) : no('transfer ramin ' + JSON.stringify([t.ramin, t.raminNamed, t.out]));
-  t.br.close && t.brClose.foes === t.brFar.foes + 1 && t.brClose.minY > t.brFar.minY && t.brClose.wave < t.brFar.wave ? ok(`b4_saw close: the breakout begins sooner and harder (${t.brClose.foes} foes against ${t.brFar.foes}, nearer, the wave at round ${t.brClose.wave} not ${t.brFar.wave})`) : no('close ' + JSON.stringify([t.br, t.brClose, t.brFar]));
+  t.br.close && t.brClose.foes === t.brFar.foes && t.brClose.sumY > t.brFar.sumY && t.brClose.wave === t.brFar.wave ? ok(`b4_saw close: the breakout's flank fleers start nearer (${t.brClose.foes} foes either way, rows ${t.brClose.sumY} against ${t.brFar.sumY}, the wave at round ${t.brClose.wave} on both roads; tuned Oct 21)`) : no('close ' + JSON.stringify([t.br, t.brClose, t.brFar]));
   t.swapOffered && t.swap.orvas && !t.swap.ramin && t.swap.raminWaits && t.swap.line && t.swap.fireLine ? ok('the swap at the island fire: Orvas in, Ramin back to the Red Blades; Orvas has his line at the fire') : no('swap ' + JSON.stringify([t.swapOffered, t.swap]));
   t.horse.lead === 'orvas' && t.horse.tear && t.horse.sathi && t.horse.tangle && !t.leaks.length && t.riders === 'Among the riders' && t.riderTxt && t.ramin === 'With his people' && t.raminTxt ? ok(`the horse road on the transfer: Orvas leads and gives the black bead; Sathi's horses, Tangle walks; the finale (${t.pages} pages): Marrow among the riders, Ramin with the Red Blades; fates ${t.fates}`) : no('transfer finale ' + JSON.stringify([t.horse, t.leaks, t.riders, t.riderTxt, t.ramin, t.raminTxt, t.fates]));
 }
