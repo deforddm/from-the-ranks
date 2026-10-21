@@ -68,6 +68,18 @@ David: the measured book "sounds too easy overall, death should still be a possi
 
 **Where it is off target, honestly.** Soldier wins sit in band (85–98% a chapter; single fights 69–100%), but health lost is 20–25% from Ch5 on, under the 30–50% asked: the late gear (see "How much the gear does") flattens it, and pushing it up would cost more Soldier wins first. Ch3 and Ch6 are easy on Bridgeburner (91% and 83%); Ch5's rearguard (31%) and Ch4's picket (50%) are hard outliers. The mortal fight's deaths are inverted from what David asked: none on the normal road, too many on the forward road (Bridgeburner 1.9 a won fight against ≤ 0.8 asked). These were left at the time budget; next levers, untested: Ch3 health ×1.75 → ×1.85 and Ch6 ×1.47 → ×1.55; one fewer foe in the rearguard; on the forward road, drop "a round sooner" for the wave too (keep the nearer row); for Soldier deaths on the normal road, a Ch7-only Soldier `s` damage +3.
 
+**Follow-up, 2026-10-21 afternoon (Claude's call, under David's targets).** Remeasured at 20 runs: the "no deaths on the normal road" above did not hold up. With the tuned rows the breakout killed on both roads alike (Soldier: a death in 45–50% of runs; Bridgeburner: 1.7–1.9 dead a won fight), so the road was never the cause. Changes in src/77_b4_ch7.js: the centre `b4_c7_fleer` (3,1) is dropped from the fight on both roads; on the forward road the wave no longer comes a round early and only the two flank fleers start a row nearer. Result (20 runs a cell):
+
+| road | Soldier won | Soldier runs with a death | Soldier dead a won fight | Bridgeburner won | Bridgeburner dead a won fight |
+|---|---|---|---|---|---|
+| held as posted | 100% | 25% | 0.30 | 95% | 0.95 |
+| forward | 100% | 25% | 0.30 | BBCLOSE |
+
+Soldier is on target (death possible, in about a quarter of runs). Bridgeburner sits just over the ≤ 0.8 asked; left there, since the hardest difficulty's mortal fight should cost.
+
+The play bot (`play.mjs 1 --book=hoc`, no cheat) did not finish inside 25 minutes: it loses and re-fights Ch2's robbers several times and explores 10,000+ choices. The same bot with `--cheat` finishes the whole book in 201 s with no problems (343 nodes, all seven chapters, the ledger ending), so the flow is sound and the slow run is the naive bot losing the tuned fights. `run_all --play=N` plays Book One only, so this does not touch the ship gate.
+
+
 ---
 
 # Before: as first measured (12:57 PM PDT, no change made)

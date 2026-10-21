@@ -79,7 +79,7 @@ const b47FaceLook = () => { const f = b47Face(), s = b47Sure(), tok = S.f.b4_bon
    with the tuned B4GAP it made the road a massacre, docs/hoc-balance.md) ---- */
 { const _battleDef = battleDef;
   battleDef = function(id, stage){ const d = _battleDef(id, stage); if (!d || !b4On() || id !== 'b4_c7_breakout' || !b47Close()) return d;
-    const near = f => [f[0], f[1], Math.min(7, f[2] + 1)], out = Object.assign({}, d, {foes:d.foes.map(near), b47Close:true});
+    const near = f => [f[0], f[1], Math.min(7, f[2] + 1)], out = Object.assign({}, d, {foes:d.foes.map(f => f[0] === 'b4_c7_fleer' ? near(f) : f), b47Close:true});
     return out; }; }
 { const _startBattle = startBattle;
   startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (b4On() && B && B.def && B.def.b47Close) blog(`<em>The squad went forward on the night before Pan'arak and knows this ground in the dark: so do they. They are on the line sooner than anybody would like.</em>`); return r; }; }
@@ -254,7 +254,7 @@ const B4CH7 = {
       company:{at:[[1, 8], [6, 8]], n:1},
       map:["........",".,....,.","...t....","........","..,...t.","........","t.......","tt......","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0],['b4_c7_fleer',3,1]], xp:180, after:'b4_c7_break_after',
+      foes:[['b4_c7_fleechief',4,0],['b4_c7_fleer',2,1],['b4_c7_fleer',6,1],['b4_c7_fleebow',5,0]], xp:180, after:'b4_c7_break_after',
       waves:[{round:3, foes:[['b4_c7_fleer',7,2]], text:'More come out of the dark behind them at a run, two and three together, not stopping for anything, and the ones who see the Third go at it rather than round it.'}],
       preText:()=>`Tangle's sharpers go off in the dark across their path, and the band running for the open desert is two bands, one of them on the ground.`,
       stage2:{title:'Past the last picket', xp:90,
