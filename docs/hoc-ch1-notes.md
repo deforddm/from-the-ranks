@@ -102,3 +102,9 @@ A playthrough fights three (runners, dig, one key fight): about 366 xp, level 8 
 - Whether the Crow's ships came in on the review day: written as the same afternoon.
 - Where Lenestro died, and when: written as camp talk, "the day the army came in".
 - Whether the 9th's barracks are near the harbour or the old cemetery: an invention (the canon sheet places a cemetery near "the barracks").
+
+## Tests
+
+- `tools/b4ch1_test.mjs` (22 checks): a fresh start through the review, the company, the streets, the harbour fight (company, forced win, Nerve +1), the trick, the first halt and the Deck, the fire, the night, the graveyard fight (both grounds), both keys and both key fights (both grounds each) to the chapter's end; then a Book Two transfer on the Aren Guard road with Sathi alive (Hackle in the fights), Ramin joining on the drink sweep, Keth waiting, the swap at the fire, the Pullyk line, and the keepsake token.
+- With a Book Four chapter registered, Book Four is on the shelf, in the picker and in Deeds, and Begin starts it. Four tests assumed three books and were made to expect Book Four exactly when `BOOKS.hoc.coming` is false: `b4carry_test` (shelf, picker, Begin), `shelf_test` (covers, pictures, the Classic numerals), `moi_test` (the picker, Deeds), `import_test` (a fresh device's shelf).
+- `lint.mjs` still warns (not errors) on the three new battle styles `b4_c1_aren`, `b4_c1_graves`, `b4_c1_barracks`: its style list knows `/^b3/` and not `/^b4/`.

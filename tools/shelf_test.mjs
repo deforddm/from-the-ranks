@@ -14,10 +14,11 @@ for (const [w, h, mobile] of [[360, 780, true], [1280, 800, false]]) {
   await wait(page, 400);
   let r = await page.evaluate(() => ({ covers: [...document.querySelectorAll('[data-shelf]')].map(b => b.dataset.shelf).join(','), nm: !!document.querySelector('#nm'), rh: document.querySelector('.shelf .rh').textContent,
     imgs: [...document.querySelectorAll('.cover img')].map(i => i.complete && i.naturalWidth > 0).join(','), fit: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
-    inview: [...document.querySelectorAll('.cover')].every(c => { const b = c.getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth + 1 && b.height > 80; }) }));
-  ok(r.covers === 'gotm,dg,moi', `${tag} new device: three covers (${r.covers})`);
+    inview: [...document.querySelectorAll('.cover')].every(c => { const b = c.getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth + 1 && b.height > 80; }),
+    want: Object.keys(BOOKS).filter(k => !BOOKS[k].coming).join(',') })); // Book Four joins the shelf once a chapter of it is registered (71 on)
+  ok(r.covers === 'gotm,dg,moi' + (r.want.includes('hoc') ? ',hoc' : ''), `${tag} new device: ${r.want.includes('hoc') ? 'four' : 'three'} covers (${r.covers})`);
   ok(!r.nm && r.rh === 'Choose your book', `${tag} new device: the shelf first, no name field (${r.rh})`);
-  ok(r.imgs === 'true,true,true', `${tag} cover pictures load (${r.imgs})`);
+  ok(r.imgs === r.want.split(',').map(() => 'true').join(','), `${tag} cover pictures load (${r.imgs})`);
   ok(r.fit && r.inview, `${tag} covers fit the screen`);
   await shot(page, `${w}-new`);
   // a cover opens that book's page
@@ -61,8 +62,8 @@ for (const [w, h, mobile] of [[360, 780, true], [1280, 800, false]]) {
   // classic artwork: covers fall back to the numeral
   await page.evaluate(() => { SET.art = false; showTitle(); });
   await wait(page);
-  r = await page.evaluate(() => ({ n: [...document.querySelectorAll('.cover .cimg i')].map(i => i.textContent).join(','), img: document.querySelectorAll('.cover img').length }));
-  ok(r.n === 'I,II,III' && !r.img, `${tag} Classic artwork: covers show I, II, III (${r.n})`);
+  r = await page.evaluate(() => ({ n: [...document.querySelectorAll('.cover .cimg i')].map(i => i.textContent).join(','), img: document.querySelectorAll('.cover img').length, hoc: !BOOKS.hoc.coming }));
+  ok(r.n === 'I,II,III' + (r.hoc ? ',IV' : '') && !r.img, `${tag} Classic artwork: covers show I, II, III${r.hoc ? ', IV' : ''} (${r.n})`);
   await page.evaluate(() => { SET.art = true; });
   ok(!errors.length, `${tag} no page errors${errors.length ? ': ' + errors.slice(0, 2).join(' | ') : ''}`);
   await page.close();
