@@ -468,6 +468,7 @@ ${b43Say({marrow:`Marrow sits down by the fire the Third has been given and acce
           {t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b4_c3_rest2, fx:()=>{ S.f.b4_c3_rest2 = 1; b4Rest('The squad sits an hour by its fire among the Khundryl\'s, while three thousand people grieve and laugh round it. Wounds close, mostly.'); }, go:'b4_c3_feast_rest'},
           {t:'Talk with the squad.', go:'b4_c3_feast_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c3_feast_swap'})),
+          b4SpareChoice('b4_c3_feast'),
           b4PipeChoice('b4_c3_feast'),
           {t:'The shouting at the 10th\'s fires.', req:()=>!S.f.b4_c3_brawlDone, onward:true, go:'b4_c3_brawl_start'},
           {t:'Sleep. The river tomorrow.', req:()=>!!S.f.b4_c3_brawlDone, onward:true, go:'b4_c3_to_ford'},

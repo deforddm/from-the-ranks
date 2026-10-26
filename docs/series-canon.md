@@ -78,6 +78,7 @@ The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
 | Mosk (Book Three) | Kept. | Moak, a Fourteenth sergeant in HoC; Mock's Hold. | Book Three only. |
 | Imra (Book Two) | Kept. | Imrahl, a Khundryl warrior in HoC. | Keep Imra out of Book Four's Khundryl scenes. |
 | Tallow, Hessa, Tebbet, Darrut, Orvas (Book Four) | Clear (supported: some wiki lists didn't load). | The nearest found: Tarlow (a GotM mention), Hesta (an OST mage). | Kept. The full table is in `docs/hoc-canon.md` §11. |
+| Mirrel, Yorin, Rasp (Book Four, v7.1) | Clear (supported: the MoI, BH, RG, TtH, DoD and TCG lists did not load). | The nearest found: Mirepool (HoC dramatis personae), Raest. **Gimlet** was rejected: Gamet's nickname in HoC. Ostrey was rejected as too near Osric. | Kept. Detail in `docs/v7.1-squad-brief.md`. |
 | Third squad, 9th Legion (Book Four) | Clear (supported). | No canon third squad in the Fourteenth was found; the numbered canon squads found are in the 8th Legion. | **Never write "3rd Company"**, which is canon in the 8th Legion. |
 | *Unblooded* (Book Four's title) | Kept. | A Tiste Edur word in MT for warriors who have not yet killed. | A canon word, not a canon title. |
 | Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |

@@ -523,6 +523,7 @@ The Third has its own fire, off the road at the camp's edge. ${b42Say({tangle:`T
           {t:'Sit an hour before the march.', req:()=>dawn && k === 'march' && !S.f.b4_c2_rest5, fx:()=>{ S.f.b4_c2_rest5 = 1; b4Rest('An hour by the black stones while the column forms. Wounds close, mostly.'); }, go:'b4_c2_fire_rest'},
           {t:'Talk with the squad.', go:'b4_c2_fire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c2_fire_swap'})),
+          b4SpareChoice('b4_c2_fire'),
           b4PipeChoice('b4_c2_fire'),
           {t:'Up the path to the hill, before dark.', req:()=>ph <= 2 && !S.f.b4_c2_robbersDone, onward:true, go:'b4_c2_path'},
           {t:'The pilgrims\' lamps on the hill. Find Radde.', req:()=>ph === 3 && !k, onward:true, go:'b4_c2_key'},

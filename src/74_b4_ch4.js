@@ -555,6 +555,7 @@ ${b44Barrow() ? b44Barrow() + '\n\n' : ''}${b44Say({marrow:`Marrow is already go
           {t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b4_c4_rest, fx:()=>{ S.f.b4_c4_rest = 1; b4Rest('The squad sits an hour by the Seti fire among the wounded, and some of it sleeps sitting up, the way the Chain taught it. Wounds close, mostly.'); }, go:'b4_c4_setifire_rest'},
           {t:'Talk with the squad.', go:'b4_c4_setifire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c4_setifire_swap'})),
+          b4SpareChoice('b4_c4_setifire'),
           b4PipeChoice('b4_c4_setifire'),
           {t:'Find Radde. The night\'s orders.', req:()=>!b44Key() && !!S.f.b4_c4_lancersDone, onward:true, go:'b4_c4_key'},
           {t:'The shouting at the horse lines.', req:()=>!S.f.b4_c4_lancersDone, onward:true, go:'b4_c4_lancers'},

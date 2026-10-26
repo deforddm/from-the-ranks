@@ -305,7 +305,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
   }
   // Book Four: the same check for Book Two's squad, the new soldiers and the recruits
   for (const id of ids.filter(isHOC)) {
-    for (const x of ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'redblade', 'warlock', 'orvas']) {
+    for (const x of ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp', 'redblade', 'warlock', 'orvas']) {
       if (!TPL[x]) continue; const nm = TPL[x].name, re = new RegExp('\\b' + nm + '\\b');
       for (let v = 0; v < 8; v++) {
         mkHOC(v, chOfHOC(id)); S.squad = S.squad.filter(q => q !== x);
@@ -330,7 +330,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
   }
   // Book Four's engine text: every template field (Book Two's four wear their Book Four lives here), the deck lines, the glossary, the widget
   for (let v = 0; v < VAR; v++) { mkHOC(v, 1 + (v % 7));
-    for (const id of ['sgt', 'haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas']) { const t = TPL[id]; if (!t) continue;
+    for (const id of ['sgt', 'haddat', 'sathi', 'tangle', 'marrow', 'redblade', 'warlock', 'tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp', 'orvas']) { const t = TPL[id]; if (!t) continue;
       for (const k of ['epithet', 'service', 'bio', 'bio2', 'quest']) { let x; try { x = t[k]; } catch (e) { err(`hoc TPL.${id}.${k} throws ${e.message}`); continue; } if (typeof x === 'string' && bad.test(fmt(x))) err(`hoc TPL.${id}.${k} leaks (variant ${v}): ${x.slice(0, 120)}`); }
       if (id !== 'sgt' && (!Array.isArray(t.banter) || t.banter.length < 3)) err(`hoc TPL.${id}: fewer than three banter lines`); }
     if (typeof B4SAY !== 'undefined') Object.keys(B4SAY).forEach(c => { try { const x = b4CardSay(c); if (bad.test(fmt(x))) err(`hoc card ${c} leaks (variant ${v})`); if (!CARDS[c]) err(`hoc card ${c} is not in CARDS`); } catch (e) { err(`hoc card ${c} throws ${e.message}`); } });

@@ -764,6 +764,7 @@ Dawn comes up out of the water. There is mist on it, white and low, and the isla
           {t:'Sit in the sun and rest. There is nowhere to be.', req:()=>!S.f.b4_c7_rest, fx:()=>{ S.f.b4_c7_rest = 1; b4Rest('The squad sits in the sun on the coral with its boots off, and rests, properly, for the first time since Aren. Wounds close.'); }, go:'b4_c7_isle_rest'},
           {t:'Talk with the squad.', go:'b4_c7_isle_talk'},
           ...b4Offers().map(id => ({t:`Send across the water for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c7_isle_swap'})),
+          b4SpareChoice('b4_c7_isle'),
           {t:'Find Radde first.', req:()=>!S.f.b4_c7_raddeIsle, go:()=>startExplore()},
           {t:'The road out.', req:()=>!!S.f.b4_c7_raddeIsle && !b47Key(), onward:true, go:'b4_c7_key'},
           {t:'The last of it. Let it end here.', req:()=>!!b47Key(), onward:true, go:'b4_c7_last'},
@@ -904,7 +905,7 @@ B4FIN7.KEYS = ['line', 'horse', 'ledger'];
 B4FIN7.key = k => B4FIN7.KEYS.includes(k) ? k : B4FIN7.KEYS.includes(S.f.b4_c7_key) ? S.f.b4_c7_key : 'line';
 B4FIN7.join = ps => ps.filter(p => p && String(p).trim()).join('\n\n');
 B4FIN7.loy = (id, warm, cold, mid) => { const l = (S.loy && S.loy[id]) || 0; return l >= 2 ? warm : l <= -2 ? cold : mid; };
-B4FIN7.P = id => ['haddat', 'sathi', 'marrow', 'hessa'].includes(id) ? {she:'she', her:'her', hers:'her'} : {she:'he', her:'him', hers:'his'};
+B4FIN7.P = id => ['haddat', 'sathi', 'marrow', 'hessa', 'mirrel', 'rasp'].includes(id) ? {she:'she', her:'her', hers:'her'} : {she:'he', her:'him', hers:'his'};
 B4FIN7.trickLine = id => trickBy('b4_c7_deadride') === id ? (id === 'sgt' ? 'When it is bad now, you can call the dust, once, and a rider comes out of it. You do not call it often. You know whose face you hold when you do.' : `When it is bad now, ${B4FIN7.P(id).she} can call the dust, once, and a rider comes out of it. ${B4FIN7.P(id).she.charAt(0).toUpperCase() + B4FIN7.P(id).she.slice(1)} knows whose face to hold.`) : '';
 B4FIN7.nerve = () => { const n = b4NerveNow();
   return `The company, at the end of it: Nerve ${n} of ${NERVE_MAX}. ${n >= 8 ? 'The Second Company would follow the Chain squad into anything, and has said so, loudly, to the 10th.' : n >= 6 ? 'The Second Company stands when the Third stands, and that is what it was for.' : n >= 4 ? 'The Second Company is a company now, more or less, which it was not at Aren.' : 'The Second Company came through Raraku frightened, and came through it. That is not nothing.'}${S.f.b4_broke ? ` ${numw(S.f.b4_broke, true)} of its regulars ran, on the road, at one fight or another. Radde wrote them down and took them back.` : ''}`; };
@@ -984,6 +985,25 @@ B4FIN7.fate = (id, key) => {
     `Darrut marches in the file with his big shield and his Guard drill, and the Second Company's recruits have started to stand the way he stands, without knowing they do.`,
     `He was on the wall at Aren when the gate shut on the Chain. He has said so now, once, to the Third. It is enough.`,
     B4FIN7.loy('darrut', `"You'd have done in the Guard," he tells you. From an Aren man it is everything.`, `He stands where you put him, and no nearer.`, `"Sergeant," he says, Guard-fashion, with the heel of the hand to the chest.`)]);
+  /* v7.1: the Fourteenth's spares (70e) */
+  if (id === 'mirrel') return add('Three, and up', [
+    R === 'line' ? `Mirrel marches with the 9th, and at every halt the Second Company's recruits come to her with their feet, and she sits them down and counts to three, and on three nobody moves. She keeps a ledger of her own now, like Radde's: who came, and with what, and whether it took.` :
+    R === 'horse' ? `Mirrel rides a mule she says is the only sensible animal in the army, with the hospice bag across the saddle, and the riders bring her their wounds at the fires, and their horses' wounds, and she does both, in threes.` :
+    `Mirrel walks out of the ledger, and in the first town south of the sea she finds a poorhouse with forty beds and one tired healer, which is how she likes it, and puts her bag down.`,
+    `She healed a great many soldiers between Aren and the sea, and some of them were trying to kill somebody at the time. She decided it made no difference to the work. She has not decided what it made a difference to.`,
+    B4FIN7.loy('mirrel', `"Sit," she tells you, at the end of every march. "Hand. Other hand. Good." It is how she says she is glad you are alive.`, `She tends you as she tends everybody, quickly, and moves on.`, `"You'll keep," she tells you. From Mirrel it is a diagnosis.`)]);
+  if (id === 'yorin') return add('Clear tomorrow', [
+    R === 'line' ? `Yorin marches with the 9th and tells the file what the sky will do, every morning, and is right more often than not, and the Second Company has started to plan its washing by him.` :
+    R === 'horse' ? `Yorin rides out with the scouts, because the scouts want to know what the sky will do and he wants to be asked. On the long days he puts a wind at the riders' backs, and does not tell the sergeant what it costs him.` :
+    `Yorin walks out of the ledger and, a month south, finds a river with barges on it, and tells a barge-master, unasked, that it will rain on the third day. It does. The barge-master hires him.`,
+    `He saw the Whirlwind come down, and the sand fall out of the sky over an hour, and the sky go clear. He says it was the finest sky he ever saw, and that it was not his, and that he does not mind.`,
+    B4FIN7.loy('yorin', `"Clear tomorrow, Sergeant," he tells you, every night. He has never once been wrong for you. He checks twice.`, `He tells you the weather when you ask, and no more.`, `"Hot," he says, every morning, and grins, because it always is.`)]);
+  if (id === 'rasp') return add('Lovely', [
+    R === 'line' ? `Rasp marches with the 9th with the satchel on her hip and the file on her belt, and the 8th's sappers have started to come by the Third's fire at night to talk fuse with her, and go away thoughtful.` :
+    R === 'horse' ? `Rasp walks at the riders' stirrups with the satchel, because she will not put Moranth clay on a horse, and keeps up. The Khundryl have decided she is a holy woman of some kind, and give her the best of the meat.` :
+    `Rasp walks out of the ledger with the satchel, which is the Empire's, and has decided the Empire owes her one. South of the sea there is a quarry that needs a sapper and does not ask where she trained.`,
+    `She never did get to the marines. She has stopped minding. The marines get the good fuse, she says. She got the good squad.`,
+    B4FIN7.loy('rasp', `"You point," she tells you, "and I make it lovely." From Rasp there is nothing warmer.`, `She tells you the satchel's weight and nothing else.`, `She weighs the satchel in one hand every morning and nods to you. It is enough.`)]);
   if (id === 'orvas') return add('The tears', [
     R === 'horse' ? `Orvas rides with the Khundryl again, on a good horse, low on its neck, laughing, with the Third beside him. ${S.f.b4_c7_tear ? 'The bead he gave the sergeant has not been asked for back. It will not be.' : ''}` :
     R === 'line' ? `Orvas walks in the 9th's file with his lance at the trail, a rider on foot, and the Khundryl ride past the column every morning going out, and every morning he lifts the lance to them, and they lift theirs.` :
@@ -1025,6 +1045,9 @@ B4FIN7.gone = (id, key) => {
      hessa:'Her spear came back without her. It stands upright in the wagon, because a spear should be upright.',
      tebbet:'His bow came back without him. It hangs unstrung. He would rather have been a long way off.',
      darrut:'His big shield came back without him. A recruit of the Second Company carries it now, and stands the way he stood.',
+     mirrel:'Her hospice bag came back without her. The Third will not open it, and will not leave it. The linen in it is still clean.',
+     yorin:'His copper wind-vane came back without him. It still turns. The Third does not look to see which way.',
+     rasp:'Her satchel came back without her, and the file. The Third weighs the satchel every morning, in one hand, as she did.',
      orvas:'The Khundryl came for him across the water and took him, and wept at their fires all night, very loudly, and the Third wept with them.',
      redblade:'The Red Blades came for him, and took his scale, and left the Third his sword.',
      warlock:'The Wickan youths came for him, the forty of them, and the grandmother was very quiet, at last.'}[id] || '',
@@ -1059,7 +1082,7 @@ B4FIN7.coda = key => {
 };
 
 B4CH7.finale = {
-  ids:()=>{ const core = ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas', 'redblade', 'warlock'], f = b47Face();
+  ids:()=>{ const core = ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp', 'orvas', 'redblade', 'warlock'], f = b47Face();
     return f ? core.filter(k => k !== f).concat([f]) : core; },
   labels:{epi:'Epilogue', squad:'The Third', fallen:'The fallen', away:'Gone back to their people', sgtRole:'Sergeant · Third squad, 9th Legion, the Fourteenth Army', road:'The Third\'s road', prologue:false,
     list:()=>['The roll', `${Object.keys((S && S.dead) || {}).length} names`], noDead:'None of the Third. Every one of them came away from Raraku.', paper:false,

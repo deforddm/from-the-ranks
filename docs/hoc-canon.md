@@ -437,6 +437,9 @@ Chapters 1–4's list (§5) stands. Book Four adds these (W and R as given in §
 | The Dal Honese bowman | **Tebbet** | clear [1] | none found | chosen over Oruk (Oru the Seguleh Eleventh, OST; Orule, TGINW) |
 | The Aren Guard regular | **Darrut** | clear [1] | none found | Ebbin was rejected: Scholar Ebbin is an OST viewpoint |
 | The Khundryl recruit | **Orvas** | clear [1] | none Malazan | Senn was rejected (Sinn) |
+| The Denul healer (v7.1) | **Mirrel** | clear [1] | Mirepool, a minor HoC name | checked Oct 26, 2026 (GotM, DG, HoC, OST lists and a web search) |
+| The Serc mage (v7.1) | **Yorin** | clear [1] | none found | Ostrey was rejected (Osric, Osserc) |
+| The marine-trained sapper (v7.1) | **Rasp** | clear [1] | Raest | **Gimlet** was rejected: canon, Gamet's nickname in HoC |
 | The squad | **Third squad, 9th Legion** | clear [1] | no canon third squad in the Fourteenth was found | every numbered canon squad found is in the 8th Legion: the 9th Company's 4th (Strings), 5th (Gesler), 6th (Borduke), 8th (Hellian), 9th (Balm), and the later 13th (Brethless); the 3rd Company's 4th (Sinter) and 10th (Primly) from RG. **Never write "3rd Company"**, which is canon in the 8th Legion |
 | The title | ***Unblooded*** | a canon word, not a canon title | in MT the Tiste Edur call young warriors who have not yet killed "unblooded" | usable; it echoes Book Five's people, which suits a series that goes there next |
 

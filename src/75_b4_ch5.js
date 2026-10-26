@@ -338,6 +338,7 @@ ${b45Say({haddat:`Haddat stands at the edge of the hollow with the blue shield g
           {t:'Sit an hour out of the wind. Let the squad rest.', req:()=>!S.f.b4_c5_rest, fx:()=>{ S.f.b4_c5_rest = 1; b4Rest('The squad sits an hour in the lee of the rock with the Wall roaring over the top of it, and eats sand, and rests. Wounds close, mostly.'); }, go:'b4_c5_wallfire_rest'},
           {t:'Talk with the squad.', go:'b4_c5_wallfire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c5_wallfire_swap'})),
+          b4SpareChoice('b4_c5_wallfire'),
           b4PipeChoice('b4_c5_wallfire'),
           {t:'Find Radde first.', req:()=>!S.f.b4_c5_raddeSaid, go:()=>startExplore()},
           {t:'Sleep. The Wall\'s edge at first light.', req:()=>!!S.f.b4_c5_raddeSaid, onward:true, go:'b4_c5_dawn'},

@@ -1587,7 +1587,7 @@ const DIFF = () => DIFFS[(S && S.diff) || 'soldier'] || DIFFS.soldier;
 function tally(k, n = 1){ if (!S) return; S.stats ??= {}; S.stats[k] = (S.stats[k] || 0) + n; }
 const SQUAD = () => S.squad;
 /* the squad's healer, if one is with it: Ohl in Book One, Marrow in Book Two */
-const HEALER = () => S && S.squad ? ['ohl', 'marrow'].find(id => S.squad.includes(id)) || null : null;
+const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel'].find(id => S.squad.includes(id)) || null : null;
 /* a squadmate's abilities: the template's, plus Kettle's smokers once she has ever had any */
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
@@ -5609,7 +5609,7 @@ const AB = {
     run(u,x,y){ const t = unitAt(x,y); AUDIO.play('shadow'); B.fx.push({kind:'bolt', from:{x:u.x,y:u.y}, to:{x:t.x,y:t.y}, col:'#9a86e0', t:performance.now(), dur:400, wob:true});
       t.blindTurns = 2 + lvT(); float(t,'blinded','#9a86e0'); sparks(t.x, t.y, 14, '#6a58b0', .45);
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
-  mend:{name:'Mend', strain:3, desc:()=>`Denul healing on a squadmate within ${has('ohl','triage') ? 4 : 3}: 2d6+${(has('ohl','triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`,
+  mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
     run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); heal(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
@@ -47554,7 +47554,7 @@ function b3CrossPay(r){ if (!r.done || S.f.b3_crossPaid) return; S.f.b3_crossPai
    The names a chapter writer uses are listed in docs/v7.0-notes.md, "For chapter writers". */
 
 const HOC_CORE = ['haddat', 'sathi', 'tangle', 'marrow'];      // Book Two's four: whoever lived keeps a place, in this order
-const HOC_NEW = ['tallow', 'hessa', 'tebbet', 'darrut'];       // the Fourteenth fills the squad back to five from these, in this order
+const HOC_NEW = ['tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp']; // the Fourteenth's new soldiers (v7.1: the sergeant picks the fill at the muster, 70e)
 const B4_RECRUITS = ['redblade', 'warlock', 'orvas'];          // one at a time, swapped at a fire
 const b4On = () => !!(S && S.book === 'hoc');
 const b4In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
@@ -47631,21 +47631,22 @@ function b4Wear(on){ Object.entries(on ? BOOKSNAP.hoc.tpl : B4_TWO).forEach(([id
 
 /* ---- the four new soldiers of the Fourteenth, and Orvas of the Burned Tears ---- */
 Object.assign(TPL, {
-  tallow:{name:'Tallow', role:'Raw recruit · Quon Tali', sig:'L', col:'#c9b27a', hp:17, ac:13, atk:3, dmg:[1,8,1], rng:1, mv:4, init:1, st:{might:1, wits:1, guile:2}, ab:['shove','salve'],
+  /* v7.1: Tallow is the squad's skirmisher (a sling, and the Twins' luck); Hessa a battle-priest of D'rek (her prayers are 70e's) */
+  tallow:{name:'Tallow', role:'Skirmisher · Quon Tali', sig:'L', col:'#c9b27a', hp:17, ac:12, atk:4, dmg:[1,6,1], rng:4, mv:5, init:2, st:{might:1, wits:1, guile:2}, ab:['b4_twins','salve'],
     epithet:'"My grandmother read for fishermen. They mostly came back."', origin:'A fishing village on the Quon coast', age:18, service:'Four months, three of them on a transport', height:'Tall for his age and not used to it yet.',
-    weapon:'A short sword still bright from the armoury, and a spear he was told to carry', armour:'New boiled leather that creaks, a helm a size too big, and a finger bone on a thong like everyone else',
-    bio:`One of the half of the Fourteenth that came off the transports from Quon Tali and had never seen a desert or a dead man. He has seen both now, on the Aren Way, and is trying to look as if he had seen them before. It fools no one. The squad is kind about it, as soldiers are kind: loudly, and at his expense.`,
+    weapon:'A leather sling and a pouch of beach stones from home, and a short sword still bright from the armoury', armour:'New boiled leather that creaks, a helm a size too big, and a finger bone on a thong like everyone else',
+    bio:`One of the half of the Fourteenth that came off the transports from Quon Tali and had never seen a desert or a dead man. He has seen both now, on the Aren Way, and is trying to look as if he had seen them before. It fools no one. The squad is kind about it, as soldiers are kind: loudly, and at his expense.\n\nThey gave him a spear. He gave it back. He spent ten years on the Quon coast knocking gulls off the gutting-shed roof with a sling, and the 9th, which has very few soldiers who can hit anything at forty paces, has decided to let him.`,
     bio2:`His grandmother read the Deck for the boats on the Quon coast, by the light of the gutting-shed, for fish heads and gossip. When she died the deck came to him in a square of oilcloth, the paint worn off the corners by sixty years of thumbs. He reads it the way she taught him, badly, and sometimes it is right, and that frightens him more than when it is wrong.`,
     traits:['Salutes everyone, to be safe', 'Writes home and never sends it', 'Keeps the grandmother\'s deck in oilcloth inside his shirt', 'Laughs half a beat after the veterans, to check it was a joke'],
     gear:['His grandmother\'s deck, in oilcloth', 'A letter home, unfinished, in its fourth month', 'A finger bone from the old Aren graveyard, on a thong'],
     get quest(){ return b4In('marrow') ? `Marrow reads for the squad. She watched him lay the old woman's cards out once, at night, and told him afterwards which of them his grandmother had got wrong. He has decided to learn from her before the desert, while there is time.` : `With no healer to read for the squad, the squad has started asking him. He did not want it. He reads anyway, the way his grandmother did, for whoever sits down, and hopes the cards know more than he does.`; },
     banter:[`"Sergeant." A pause. "Was that right? The salute?"`, `"My grandmother said Oponn gives with one hand. She never said what the other one was doing."`, `"I counted the bones on the standard. It made me feel worse. I'm going to stop counting things."`],
     rel:{haddat:'She makes him stand behind the shield until he stops flinching. He has nearly stopped.', sathi:'"The foal." He has decided it is a compliment.', tangle:'Let him count the satchel once. He got it right. It was the proudest moment of his life.', marrow:'He watches her read and copies her hands. She knows. She lets him.', hessa:'She is the first temple guard he has ever spoken to. He keeps calling her "sister" by accident.', tebbet:'Tebbet is teaching him the bow in the evenings. He is not good at it.', darrut:'Darrut tells him the Aren Guard stories. Tallow believes nearly all of them.', orvas:'He has never seen a horse go like that. He tells Orvas so, every day, and Orvas lets him.', redblade:'Ramin showed him how to keep a blade clean. He keeps it cleaner than anything he owns.', warlock:'The grandmother in Keth laughed at his cards. He has not asked why.'}},
-  hessa:{name:'Hessa', role:'Spear and shield · Kartool', sig:'E', col:'#8a9a6a', hp:22, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:2, wits:1, guile:0}, ab:['bash','salve'],
+  hessa:{name:'Hessa', role:'Battle-priest of D\'rek · Kartool', sig:'E', col:'#8a9a6a', hp:22, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:2, wits:1, guile:0}, ab:['b4_rot','b4_wormgift','salve'],
     epithet:'"D\'rek is patient. I am not, which is why I left."', origin:'Kartool City', age:31, service:'Six years at the temple doors, and a year in the Malazan ranks', height:'Square, heavy in the shoulder, and stands as still as a door.',
     weapon:'A long-bladed temple spear, and a tall shield with a worm carved into the rim and painted over', armour:'Malazan scale over a temple guard\'s padded coat, and the Worm\'s mark inked on the inside of her left wrist',
     bio:`Stood the doors of D'rek's Grand Temple in Kartool City for six years with a spear and a shield, while the priests inside did whatever the Worm of Autumn asks for. She does not say why she left. She signed on with the Malazans in the same week, which she says is a coincidence, and the 9th took her because she could already hold a line and nobody else in her intake could.`,
-    bio2:`The temple taught her that every living thing rots, and that rot is not an insult. It is the floor of the world. She is calm about it in a way the recruits find hard to stand next to. She prays at dusk, to the ground, very briefly, and then eats like someone who expects to be busy tomorrow.`,
+    bio2:`The temple taught her that every living thing rots, and that rot is not an insult. It is the floor of the world. She is calm about it in a way the recruits find hard to stand next to. She prays at dusk, to the ground, very briefly, and then eats like someone who expects to be busy tomorrow.\n\nThe temple gave its guards two prayers, short ones, for use at the doors: one for rot and one for mending. D'rek answers them still, out here, through the sand. She has not decided whether that is a kindness or a reminder.`,
     traits:['Prays at dusk, to the ground, briefly', 'Will not step on a worm, and moves them off the road', 'Says "eventually" when asked anything about death', 'Sharpens the spear while she talks, by feel'],
     gear:['A temple guard\'s seal, worn on a cord under the scale', 'A twist of grave-dirt from Kartool', 'A whetstone she has had since she was twelve'],
     get quest(){ return `The temple asked something of her that she would not give, and she walked out of its doors and into the Empire's. Kartool is a long way behind. The Worm is not, she says. The Worm is under every road. She is waiting to learn whether it is waiting for her.`; },
@@ -47682,10 +47683,10 @@ Object.assign(TPL, {
     banter:[`"A herd that walks. My grandmother would weep. Then she would laugh. I am doing both."`, `"The dead of my clan ride behind us, Sergeant. They are very slow. They are very many."`, `"Give me a horse and a flank and I will give you the rest of the afternoon."`],
     rel:{haddat:'She speaks to him in an Odhan tongue, badly. He answers in Malazan, worse. Both find it restful.', sathi:'A Weasel and a Burned Tear. They agree about horses and nothing else, at volume.', tangle:'Tangle keeps the satchel on the far side from the horse. Orvas thinks this is wise.', marrow:'She asked about the tears once. He said, "They are the reason." She let it be, and he liked her for it.', tallow:'The boy says every day that he has never seen a horse go like that. Orvas lets him.', hessa:'The Khundryl grieve loudly. Hessa grieves no one. Each finds the other worth watching.', tebbet:'Horse archers make the Dal Honese nervous. Orvas rides closer, to help.', darrut:'He is teaching the Aren man to ride. It is going badly. They are both enjoying it.', redblade:'Ramin rides beside him and talks horses. They are, for a few hours a day, entirely happy.', warlock:'The Khundryl grieve their dead. Keth carries his. Some nights they sit together without a word.'}},
 });
-Object.assign(VERB, {tallow:'thrusts at', hessa:'drives the temple spear at', tebbet:'looses an arrow at', darrut:'cuts at', orvas:'drives the short lance at'});
+Object.assign(VERB, {tallow:'slings a stone at', hessa:'drives the temple spear at', tebbet:'looses an arrow at', darrut:'cuts at', orvas:'drives the short lance at'});
 Object.assign(STATUP, {tallow:['guile', 'might'], hessa:['might', 'wits'], tebbet:['guile', 'wits'], darrut:['might', 'wits'], orvas:['guile', 'might']});
 Object.assign(PICKS[3], {
-  tallow:[['nerve', 'Grandmother\'s Luck', 'Tallow takes the Nerve pick early: +1 initiative and +1 to every skill check he rolls. The old woman said he was lucky. He is starting to believe her.'], ['holdline', 'Hold, Recruit', 'Tallow\'s free swings are unlimited and hit +2. The drill took, in the end.']],
+  tallow:[['nerve', 'Grandmother\'s Luck', 'Tallow takes the Nerve pick early: +1 initiative and +1 to every skill check he rolls. The old woman said he was lucky. He is starting to believe her.'], ['ghost', 'Keep Moving', 'Enemies take −2 to hit Tallow. The skirmish drill taught him one thing well: never be where the spear is.']],
   hessa:[['shieldwall', 'The Temple Door', 'Squadmates standing next to Hessa get +2 armour. Six years in a doorway taught her how wide a door is.'], ['holdline', 'The Worm Waits', 'Hessa\'s free swings are unlimited and hit +2. Anything that walks away from her pays for it.']],
   tebbet:[['quickshot', 'The Hill Pair', 'Once a fight: two arrows at one target within reach (three from level 6). The Dal Honese way: the second before the first has landed.'], ['ghost', 'Far Off', 'Enemies take −2 to hit Tebbet. He is always somewhere further away than you thought.']],
   darrut:[['discipline', 'Guard Drill', 'Every squadmate wears +1 armour. Twelve years of telling people on a wall where to stand.'], ['holdline', 'The Gate', 'Darrut\'s free swings are unlimited and hit +2. He has held a gate. He knows what goes through.']],
@@ -47760,7 +47761,7 @@ const b4Grit = () => ['The warren comes up full of sand.', 'Grit in the warren. 
     if (S.card === 'b4c_leper' || boon('ground') || R(100) >= b4SputterPct()) return _useAb(k, x, y);
     blog(`<em>${u.name} reaches for the warren. ${b4Grit()}</em> Half effect.`); float(u, 'sputters', '#c8a868'); tally('b4Sputters'); S.f.b4_sputters = (S.f.b4_sputters || 0) + 1;
     const w0 = B.warren || {}, down = B.units.filter(p => p.side === 'p' && p.hp <= 0);
-    B.warren = Object.assign({}, w0, {denul:(w0.denul || 1) * .5, meanas:(w0.meanas || 1) * .5});
+    B.warren = Object.assign({}, w0, {denul:(w0.denul || 1) * .5, meanas:(w0.meanas || 1) * .5, serc:(w0.serc || 1) * .5}); // serc: Yorin's sky (70e)
     try { return _useAb(k, x, y); }
     finally { B.warren = w0; down.filter(p => p.hp > 0).forEach(p => { p.hp = Math.max(1, Math.ceil(p.hp / 2)); }); } }; }
 /* an enemy caster in the dust: its sorcery may fizzle for the turn (it fights with what it carries instead) */
@@ -47856,6 +47857,8 @@ const B4_START_LVL = 8;
 function newStateHOC(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b4Import(importId) : null, mates = imp ? imp.mates : ['haddat', 'tangle', 'marrow'];
+  /* v7.1: the empty places are the sergeant's pick at the muster (70e, Chapter 1's start). Until then they hold a provisional fill in the old
+     order, so a save opened anywhere still has a squad of five; the muster clears it (S.f.b4_fill) before the sergeant chooses. */
   const fill = HOC_NEW.slice(0, Math.max(0, 4 - mates.length)), squad = ['sgt', ...mates, ...fill];
   const s = {v:1, book:'hoc', sid:sid || (imp ? newSid() : sidFor(name)), name, scene:'chintro', node:null, bg:null, silver:12, xp:0, lvl:1, card:null,
     inv:{sharper:2, burner:1, cusser:1, salve:2, smoker:1}, loy:{}, f:{}, pos:{x:5, y:8},
@@ -47867,7 +47870,8 @@ function newStateHOC(name, importId, sid){
     Object.assign(s.loy, imp.loy); s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks; s.inv = imp.inv;
     imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; s.dead[k] = {ch:d.ch || 7, where:d.where || 'The Barrow', from:'dg'}; }); } // Book Two's dead stay dead: never in the squad, never a recruit
   else s.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start: Sathi fell at the Barrow, and Hackle was not seen again
-  migrate(s); s.picksDue = b3PicksDue(s);
+  s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
+  migrate(s); s.picksDue = b3PicksDue(fill.length ? Object.assign({}, s, {squad:s.squad.filter(k => !fill.includes(k))}) : s); // the fill's picks come when the muster takes them on
   return s; }
 /* a recruit joining a veteran squad brings her own veteran picks for the levels already passed; a recruit joins the squad, not the Fourth */
 { const _recruit = recruit;
@@ -47926,9 +47930,9 @@ Object.defineProperty(BOOKS.hoc, 'titleArt', {configurable:true, get(){ return t
 /* ---- the import, on the title: finished Book Two sergeants on the Aren Guard or the Wickan road ---- */
 const b4Finished = () => roster().list.filter(e => e.book === 'dg' && e.done && b4Qualifies(loadSlot(e.id)));
 const b4And = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a[0] || '';
-function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. A recruit off the transports makes five.';
-  const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), fill = HOC_NEW.slice(0, Math.max(0, 4 - i.mates.length)).map(k => TPL[k].name);
-  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${fill.length ? `. The Fourteenth makes up the five with ${esc(b4And(fill))}` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
+function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. At the muster you pick one of the Fourteenth\'s spares to make five.';
+  const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), n = Math.max(0, 4 - i.mates.length);
+  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
 
 /* ---- the words Book Four throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.hoc = [
@@ -48422,14 +48426,15 @@ Object.assign(TBL_KIT, {
 
 /* ---------------- the five new soldiers: battle figures (FIGX, in the ~32px frame drawFigure sets up) ---------------- */
 Object.assign(FIGX, {
-  /* Tallow: tall and new, kit too bright, a helm a size too big, a spear he was told to carry, a borrowed shield */
-  tallow(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.1);
-    B2F.line(ctx, '#8b7355', 1.3, [[8, 12], [8, -21]]); poly(ctx, [[8,-25],[6.6,-19],[9.4,-19]], '#e0dccc'); // the spear
+  /* Tallow: tall and new, kit too bright, a helm a size too big, and (v7.1) a sling swinging from his hand and a pouch of beach stones */
+  tallow(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.1); const sw = o.still ? 0 : Math.sin(t/180 + (o.phase || 0))*1.4;
+    B2F.line(ctx, '#6a5030', .7, [[7, 1], [8.4 + sw*.3, 6], [9.6 + sw, 9.4]]); B2F.line(ctx, '#6a5030', .7, [[7, 1], [10.6 + sw*.4, 5.4], [9.6 + sw, 9.4]]); ell(ctx, 9.8 + sw, 9.8, 1.5, 1.1, '#5a4028'); ell(ctx, 9.6 + sw, 9.4, .8, .6, '#b8b0a0'); // the sling, a stone in it
     h.legs('#3a3428'); h.torso('#a8865a', '#4a3620', 6.2); ctx.fillStyle = 'rgba(255,240,210,.25)'; ctx.fillRect(-5.6, -5.6, 2, 10); // new leather, still pale
     ctx.fillStyle = '#5a4630'; ctx.fillRect(-6.2, 3.6, 12.4, 1.2); B2F.line(ctx, '#3a2a18', .5, [[-2, -6], [.4, -2.6], [2.6, -6]]); ell(ctx, .4, -2, .7, 1.2, '#e8dcc0'); // the finger bone on its thong
     h.head('#d0a888', 4.3, -11); h.look('rgba(24,14,10,.82)', -11.2);
     ctx.beginPath(); ctx.arc(0, -12.6, 6, Math.PI*.98, Math.PI*2.02); ctx.fillStyle = h.armor('#a09a8c', '#3a3830'); ctx.fill(); ctx.fillRect(-6.4, -12.8, 12.8, 1.6); ctx.fillStyle = 'rgba(255,255,250,.3)'; ctx.fillRect(-3.6, -17.4, 3, 1); // the helm, too big, down over the brows
-    h.shield('#7a6a4e', '#2e281c', 5.6, -7, .6); ctx.restore(); },
+    ctx.fillStyle = '#7a6040'; ctx.fillRect(-7.4, 2.6, 3.2, 3.4); ctx.fillStyle = '#8a7050'; ctx.fillRect(-7.4, 2.6, 3.2, 1); // the pouch of stones
+    ctx.restore(); },
   /* Hessa: square and still; a tall shield with a worm carved round the rim; a long-bladed temple spear held upright */
   hessa(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.1, 1.06);
     B2F.line(ctx, '#5a4632', 1.5, [[8.4, 12], [8.4, -22]]); poly(ctx, [[8.4,-29],[6.6,-21],[8.4,-19],[10.2,-21]], '#d8d0bc'); // the temple spear, a long blade
@@ -48461,6 +48466,31 @@ Object.assign(FIGX, {
     h.torso('#7a3a24', '#2a120a', 6); ctx.fillStyle = 'rgba(255,200,160,.2)'; ctx.fillRect(-5.4, -5, 1.6, 9); ctx.fillStyle = '#c8b898'; for (let i = 0; i < 5; i++) ctx.fillRect(-5 + i*2.4, 6, .6, 2.4); // lacquered leather, horsehair tassels
     h.head('#8a5a3a', 4.2, -11.2); h.look('rgba(20,10,6,.88)', -11.6); ctx.fillStyle = '#0a0606'; ctx.fillRect(-.6, -10.6, .8, 3.4); ctx.fillRect(2.4, -10.6, .8, 3.4); // the black tears
     B2F.cap(ctx, '#0e0a08', 4.5, -12.6); poly(ctx, [[-4.4,-13],[-9.4,-10 + fl],[-10,-5 + fl],[-5.6,-9]], '#1a1410'); // a black horse-tail of hair, blown back
+    ctx.restore(); },
+  /* v7.1 (70e). Mirrel: small and quick, a padded jack with the sleeves cut off, a hospice bag with a red hand, hair in a knot, a roll of linen */
+  mirrel(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, .98);
+    h.legs('#3a3428'); h.torso('#9a967a', '#3a382a', 5.8); ctx.strokeStyle = 'rgba(0,0,0,.22)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(-5.4, -4 + i*2.6); ctx.lineTo(5.4, -4 + i*2.6); } ctx.stroke(); // the quilted jack
+    ctx.fillStyle = '#c8a080'; ctx.fillRect(-7.4, -5, 1.6, 4); ctx.fillRect(5.8, -5, 1.6, 4); // bare forearms
+    B2F.line(ctx, '#4a3420', .7, [[-7.4, .6], [2.4, -6]]); ctx.fillStyle = '#6a5236'; ctx.fillRect(-10, .2, 5, 5.6); ctx.fillStyle = '#7a6044'; ctx.fillRect(-10, .2, 5, 1.6); ell(ctx, -7.5, 3.4, 1, 1.1, '#b23a2a'); // the hospice bag, its red hand
+    h.head('#c8a080', 4.2, -11.2); h.look('rgba(24,14,10,.82)', -11.4); B2F.cap(ctx, '#3a2418', 4.4, -12.4); ell(ctx, .4, -16.6, 2, 1.6, '#3a2418'); // dark hair, in a knot
+    ctx.fillStyle = '#ece6d4'; ctx.fillRect(6.2, -1, 2.4, 3.6); ctx.fillStyle = 'rgba(0,0,0,.15)'; ctx.fillRect(6.2, .4, 2.4, .5); // a roll of clean linen
+    ctx.restore(); },
+  /* Yorin: thin and windburnt, a sky-blue sash, a copper vane at the chest, hair blown back, one hand up to the sky with a thread of lightning at the fingers */
+  yorin(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1.08); const fl = o.still ? 1 : (Math.sin(t/140 + (o.phase || 0)) + 1)/2;
+    h.legs('#2e3038'); h.torso('#6a6a62', '#24241e', 5.4); poly(ctx, [[-5.4,-6],[-2.8,-6],[5,5.4],[2.4,5.4]], '#6fa8d8'); // the sash the quartermaster dislikes
+    ell(ctx, -2.6, -2.4, 1.3, 1.3, '#c87a3a'); ctx.fillStyle = '#e8a060'; ctx.fillRect(-2.9, -4.4, .6, 1.6); // the copper vane
+    h.head('#c09a7a', 4.1, -11.2); h.look('rgba(24,14,10,.82)', -11.6); B2F.cap(ctx, '#6a4a2a', 4.3, -12.4, 1.05, 1.95); poly(ctx, [[-4,-14.6],[-8.4,-15.6],[-4.6,-12.4]], '#6a4a2a'); // hair blown back
+    B2F.line(ctx, '#6a6a62', 1.6, [[5, -4], [8, -10]]); B2F.line(ctx, '#c09a7a', 1.2, [[8, -10], [9, -14]]); // the arm up
+    ctx.globalAlpha = .45 + fl*.55; B2F.line(ctx, '#e4f0ff', .7, [[9, -15], [10.6, -17.6], [9.4, -19], [11.2, -22]]); ctx.globalAlpha = 1; // lightning at the fingers
+    ctx.restore(); },
+  /* Rasp: compact, a scorched apron, the satchel, the file at her belt, cropped red-brown hair, a marine crossbow with a filed cradle */
+  rasp(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1);
+    h.legs('#2a2420'); h.torso('#4a3e30', '#1a140e', 5.8); poly(ctx, [[-4.6,-3],[4.6,-3],[5.6,10],[-5.6,10]], h.armor('#7a5a3a', '#2e1e10')); ell(ctx, 1.6, 5, 1.4, 1, 'rgba(10,6,4,.55)'); // the apron, scorched
+    ctx.fillStyle = '#4a3622'; ctx.fillRect(-10, -1, 5, 6.6); ctx.fillStyle = '#5e4630'; ctx.fillRect(-10, -1, 5, 1.6); ctx.fillStyle = '#d0864a'; ctx.fillRect(-8.2, 1, 1.2, 1.2); // the satchel
+    ctx.fillStyle = '#9a968c'; ctx.fillRect(3.2, 3.4, .8, 5.2); ctx.fillStyle = '#5a3e22'; ctx.fillRect(3, 2.2, 1.2, 1.4); // the file at her belt
+    h.head('#c89a78', 4.2, -11.2); h.look('rgba(24,14,10,.82)', -11.4); B2F.cap(ctx, '#8a4a24', 4.4, -12.6, 1.02, 1.98); ctx.fillStyle = 'rgba(140,60,30,.55)'; ctx.fillRect(-1.6, -9.8, .6, .6); ctx.fillRect(2.4, -9.4, .6, .6); ctx.fillRect(.6, -8.8, .5, .5); // cropped hair, burn-freckles
+    ctx.strokeStyle = '#4a3320'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(2, -.6); ctx.lineTo(12.6, -2.4); ctx.stroke(); ctx.strokeStyle = '#8d8a86'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(9.4, -6.8); ctx.lineTo(9.4, 1.4); ctx.stroke(); // the crossbow
+    ctx.fillStyle = '#7a7466'; ctx.fillRect(7, -1.2, 3.6, 1.4); ctx.fillStyle = 'rgba(255,255,240,.35)'; ctx.fillRect(7, -1.2, 3.6, .4); // the cradle, filed bright
     ctx.restore(); },
 });
 
@@ -48517,7 +48547,287 @@ Object.assign(POR, {
     const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12.4, F.cy - 2); ctx.bezierCurveTo(-13.6, top - 1, 13.6, top - 1, 12.4, F.cy - 2); ctx.quadraticCurveTo(11.4, F.cy - 13, 0, F.cy - 16.4); ctx.quadraticCurveTo(-11.4, F.cy - 13, -12.4, F.cy - 2);
     ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#2a1e16'], [.5,'#0e0a08'], [1,'#040302']]); ctx.fill();
     PR.stroke(ctx, '#0e0a08', 4, () => { ctx.moveTo(-10, F.cy - 6); ctx.quadraticCurveTo(-22, F.cy + 4, -26, F.cy + 26); }); return F; },
+  /* v7.1 (70e) */
+  mirrel(ctx){ const F = {cy:-73, w:11.8, h:19.2, jaw:.7, chin:4.2, skin:'#c8a080', iris:'#4a3a24', lip:'#9a5a4a', browCol:'#2a1810', browW:1.25, arch:.9, browL:.55, rim:'#8fbfa0', rimA:.2, nose:1, look:-.25, open:1, smileL:.2, smileR:.05, mouthW:3.5};
+    PR.torsoPath(ctx, 32, 6); ctx.fillStyle = PR.lit(ctx, '#a29e82', '#2e2c20', -32, 24); ctx.fill(); // the quilted jack
+    ctx.save(); PR.torsoPath(ctx, 32, 6); ctx.clip(); PR.stroke(ctx, 'rgba(0,0,0,.25)', .7, () => { for (let i = 0; i < 6; i++) { ctx.moveTo(-34, -42 + i*7); ctx.lineTo(34, -42 + i*7); } });
+    PR.stroke(ctx, '#4a3420', 3.2, () => { ctx.moveTo(-26, -6); ctx.lineTo(18, -46); }); PR.soft(ctx, 24, -20, 18, 18, '#000000', .4); ctx.restore(); // the bag's strap
+    ctx.save(); ctx.translate(-20, -12); ctx.fillStyle = PR.lit(ctx, '#7a6044', '#2e2010', -10, 10); ctx.fillRect(-10, -6, 20, 14); ell(ctx, 0, 1, 3, 3.4, '#b23a2a'); PR.stroke(ctx, '#b23a2a', 1.1, () => { for (let i = -2; i <= 2; i++) { ctx.moveTo(i*1.2, -1); ctx.lineTo(i*1.6, -4.6); } }); ctx.restore(); // the red hand on the flap
+    PR.neck(ctx, F, 5.8); PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12.4, F.cy - 2); ctx.bezierCurveTo(-13.4, top - 1, 13.4, top - 1, 12.4, F.cy - 2); ctx.quadraticCurveTo(11.2, F.cy - 13, 0, F.cy - 16); ctx.quadraticCurveTo(-11.2, F.cy - 13, -12.4, F.cy - 2);
+    ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#4a3020'], [.5,'#2a1810'], [1,'#0a0604']]); ctx.fill(); ell(ctx, 2, top - 3, 6, 4.6, PR.rad(ctx, 0, top - 4, .5, 6, [[0,'#4a3020'], [1,'#140c06']])); return F; }, // hair pulled back into a knot
+  yorin(ctx){ const F = {cy:-74, w:11.4, h:20, jaw:.68, chin:4.2, skin:'#c09a7a', iris:'#5a7a9a', lip:'#8a5a4a', browCol:'#5a3a1a', browW:1.1, arch:1.3, browL:.7, browR:.4, rim:'#9fc4e8', rimA:.24, nose:1.05, look:.5, open:1.15, smileL:.35, smileR:.1, mouthW:3.6};
+    PR.torsoPath(ctx, 30, 6); ctx.fillStyle = PR.lit(ctx, '#6e6e66', '#1c1c18', -30, 22); ctx.fill(); // the padded jack
+    ctx.save(); PR.torsoPath(ctx, 30, 6); ctx.clip(); ctx.fillStyle = PR.lin(ctx, -30, -40, 30, 0, [[0,'#8ac0ee'], [.6,'#4f86b8'], [1,'#1e3650']]); PR.path(ctx, [[-30, -40], [-18, -48], [30, -4], [30, 8]]); ctx.fill(); PR.soft(ctx, 22, -18, 18, 18, '#000000', .45); ctx.restore(); // the sky-blue sash
+    PR.stroke(ctx, '#2a2018', .6, () => { ctx.moveTo(-5, -47); ctx.quadraticCurveTo(-4, -38, 0, -33); ctx.moveTo(5, -47); ctx.quadraticCurveTo(4, -38, 0, -33); }); ell(ctx, 0, -30, 3.6, 3.6, PR.rad(ctx, -1, -31, .4, 3.6, [[0,'#f0b070'], [1,'#7a3a12']])); PR.stroke(ctx, '#f8d0a0', .8, () => { ctx.moveTo(0, -30); ctx.lineTo(2.6, -33.4); }); // the copper vane at his throat
+    PR.neck(ctx, F, 5.6); PR.face(ctx, F);
+    [-1, 1].forEach(sd => PR.strands(ctx, 16, ['#7a5a3a', '#5a3a1a', '#3a2410'], .6, 50 + sd, (i, r) => { const x = sd*(6 + r()*6), y = F.cy - 16 + r()*3; return [x, y, x - 8 - r()*6, y - 4, x - 14 - r()*8, y - 2 + r()*4]; })); // hair blown back by a wind nobody else feels
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12, F.cy - 4); ctx.bezierCurveTo(-13, top, 12, top - 2, 12.4, F.cy - 4); ctx.quadraticCurveTo(10, F.cy - 13, 0, F.cy - 15.6); ctx.quadraticCurveTo(-10, F.cy - 13, -12, F.cy - 4);
+    ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#7a5a3a'], [.5,'#4a3018'], [1,'#1a1008']]); ctx.fill(); return F; },
+  rasp(ctx){ const F = {cy:-74, w:12.2, h:19.6, jaw:.8, chin:5, skin:'#c89a78', iris:'#3a4a3a', lip:'#8a4a3a', browCol:'#6a3010', browW:1.35, arch:.7, browL:.3, browR:.6, rim:'#d0864a', rimA:.2, nose:1.05, look:.2, smileL:.5, smileR:-.1, mouthW:3.8};
+    // the marine crossbow behind her right shoulder, the cradle filed bright
+    ctx.save(); ctx.translate(26, -46); ctx.rotate(.22); ctx.fillStyle = PR.lin(ctx, -3, 0, 4, 0, [[0,'#8a6440'], [.5,'#5a3e22'], [1,'#1e140a']]); ctx.fillRect(-3, -44, 6, 70);
+    ctx.strokeStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'#9a968c'], [.5,'#4a4640'], [1,'#141210']]); ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-20, -30); ctx.bezierCurveTo(-12, -38, -4, -40, 0, -40); ctx.bezierCurveTo(4, -40, 12, -38, 20, -30); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = '#8a8476'; ctx.fillRect(-4.6, -18, 9.2, 5); ctx.fillStyle = 'rgba(255,255,240,.4)'; ctx.fillRect(-4.6, -18, 9.2, 1.2); ctx.restore();
+    PR.torsoPath(ctx, 34, 4); ctx.fillStyle = PR.lit(ctx, '#4e3e2c', '#1a120a', -34, 24); ctx.fill(); // the jerkin
+    ctx.save(); PR.torsoPath(ctx, 34, 4); ctx.clip(); ctx.fillStyle = PR.lit(ctx, '#86603e', '#2e1e10', -20, 20); PR.path(ctx, [[-20, -30], [20, -30], [24, 6], [-24, 6]]); ctx.fill(); // the leather apron
+    PR.soft(ctx, -8, -16, 6, 4, '#120a04', .5); PR.soft(ctx, 10, -8, 5, 3, '#120a04', .4); PR.stroke(ctx, '#3a2412', 1.4, () => { ctx.moveTo(-20, -30); ctx.lineTo(-12, -48); ctx.moveTo(20, -30); ctx.lineTo(12, -48); }); PR.soft(ctx, 26, -18, 18, 18, '#000000', .45); ctx.restore(); // scorch marks, the apron's straps
+    PR.neck(ctx, F, 6.2);
+    F.under = (ctx, F) => PR.dots(ctx, F, 40, 'rgba(150,70,40,.4)', .55, [-4, 10]); // burn-freckles
+    PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-13.4, F.cy - 4); ctx.bezierCurveTo(-14.4, top - 2, 14.4, top - 2, 13.4, F.cy - 4); ctx.quadraticCurveTo(11.4, F.cy - 12.6, 0, F.cy - 15.8); ctx.quadraticCurveTo(-11.4, F.cy - 12.6, -13.4, F.cy - 4); // hair cropped short, red-brown
+    ctx.fillStyle = PR.lin(ctx, -14, 0, 14, 0, [[0,'#a85a2a'], [.5,'#6a3410'], [1,'#200c04']]); ctx.fill(); return F; },
 });
+
+/* ============ Book Four, v7.1: the Fourteenth's spares (David, Oct 26, 2026) ============ */
+/* Three more soldiers of the Fourteenth (Mirrel, a Denul healer; Yorin, a mage of Serc; Rasp, a marine-trained sapper), Tallow's Twins and
+   Hessa's prayers to D'rek (their templates are in 70), the muster at Chapter 1's start (the sergeant picks who fills the squad's empty
+   places from the company's spares, each marked with the role the squad lacks), and the fire offer for a save that began before the muster
+   existed ("Radde has spares from the company": swap a new soldier for a spare). Names and voices: docs/v7.1-squad-brief.md; numbers and
+   rulings: docs/v7.1-notes.md. Everything here is guarded by S.book === 'hoc'. */
+
+/* ---- the three, at base (level 1) numbers: Mirrel is built like Marrow, Rasp like Tangle, Yorin like Tuft with a knife for a lash ---- */
+Object.assign(TPL, {
+  mirrel:{name:'Mirrel', role:'Healer · Denul · Li Heng', sig:'I', col:'#8fbfa0', hp:15, ac:12, atk:2, dmg:[1,6,0], rng:1, mv:4, init:0, st:{might:0, wits:3, guile:1}, ab:['mend','wash','stanch','salve'], magic:true,
+    epithet:'"Sit. Hand. Other hand. Good."', origin:'Li Heng, Quon Tali', age:34, service:'Eleven years in the Li Heng poorhouse hospice, and a few months in the 9th', height:'Small, quick, and always slightly ahead of whoever she is walking with.',
+    weapon:'A knife for cutting linen, and the threat of being sat down', armour:'A padded jack with the sleeves cut off at the elbow, and a hospice bag with a red hand stitched on the flap',
+    bio:`A midwife's daughter from Li Heng who learned Denul in the city's poorhouse hospice, where nobody paid and everybody bled. She signed on when the Fourteenth was raised because the army pays its healers on the first of the month, and the hospice did not pay them at all. This is her first campaign.`,
+    bio2:`She has healed a great many people. Until the Aren Way she had never healed one who was trying to kill somebody else at the time. She has found that it makes no difference to the work, and has decided not to think about what that says about the work.\n\nShe counts in threes, out loud, to everything: a patient up off a cot, a stitch, a sergeant who will not hold still. The squad has started counting with her, and on three, nobody moves.`,
+    traits:['Counts in threes, out loud', 'Talks to wounds, not to the people they are in', 'Will not lend her clean linen to anyone, for anything', 'Dry about the gods, and about officers'],
+    gear:['A hospice bag with a red hand on the flap', 'A roll of clean linen, guarded', 'A brass thimble from her mother'],
+    get quest(){ return b4In('marrow') ? `There is another healer in the squad, older, from Nap, whose warren has moods. Mirrel's does not, she says. She has started to wonder, near the desert, whether that is because she has not been listening.` : `She is the squad's healer, and the Third has walked a long way already without one. She intends to walk them the rest of it, to Raraku and out, and to count them on the way. In threes.`; },
+    banter:[`"Sit. Hand. Other hand. Good."`, `"The warren does not have moods, Sergeant. People do."`, `"In Li Heng we'd have called this a quiet night."`],
+    rel:{haddat:'Haddat held a man down for her once, without being asked. They have liked each other since.', sathi:'Sathi will not let her near Hackle. She has stitched Hackle twice, at night, and neither of them is telling.', tangle:'Asked him to keep the satchel on the far side of the fire from her linen. He moved it. She counts that as a courtship.', marrow:'Two Denul healers in one squad. They argue about the warren in whispers, like two cooks in one kitchen.', redblade:'She mended his sword hand and told him to rest it. He has not. She has written his name down.', warlock:'The old woman in him asked to see her hands, and looked at them a long while. Mirrel does not know what she saw.', tallow:'He comes to her with every scrape. She suspects he likes being told to sit still.', hessa:'Denul and D\'rek: she mends, and Hessa says the Worm will have it back eventually. They get on better than that sounds.', tebbet:'She rebinds his bow hand after drill. He thanks her in Dal Honese. She has started answering in Li Heng street cant.', darrut:'He calls her "the surgeon", which she is not. She lets him.', orvas:'He offered to show her how the tears are cut. She said no, and gave him a lesson in clean cuts instead.', yorin:'She makes him drink water after every spell. He forgets. She does not.', rasp:'Rasp\'s hands are a map of small burns. Mirrel keeps a separate salve for them.'}},
+  yorin:{name:'Yorin', role:'Squad mage · Serc · Cawn', sig:'Y', col:'#9fc4e8', hp:14, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, st:{might:0, wits:3, guile:2}, ab:['b4_bolt','b4_gust','salve'], magic:true,
+    epithet:'"Sky\'s clear, Sergeant. That\'s the trouble with it."', origin:'Cawn, Quon Tali', age:27, service:'A season at a cadre school, sent back "unfinished", and a few months in the 9th', height:'Thin, windburnt, and always looking a little above whoever he is talking to.',
+    weapon:'A knife, and the sky, when it is in the mood', armour:'A padded jack, a sky-blue sash the quartermaster has twice told him to take off, and a copper wind-vane on a cord',
+    bio:`A barge-master's son from Cawn who could tell what the sky over the river would do three days out, and then found out why. Serc, the Path of the Sky. A cadre school took him for a season and sent him home with a chit that says "unfinished". The Fourteenth was not particular, and the 9th had no mage at all.`,
+    bio2:`He calls lightning, and he moves air, and he is honest about how well: well enough, mostly, on a clear day. He talks about the sky the way other men talk about a difficult relative.\n\nThe Whirlwind frightens him in a professional way. It is the biggest thing in the sky he has ever seen, and it is not his, and the sand in it gets into the warren like grit into a lock.`,
+    traits:['Looks up before he answers anything', 'Talks fastest when frightened, which is often', 'Taps the copper vane for luck, and then checks which way it points', 'Will not stand under a tree in a storm, or near Tangle\'s satchel in any season'],
+    gear:['A copper wind-vane the size of his palm', 'The cadre school\'s chit: "unfinished"', 'A barge-pole splinter from home, for luck'],
+    get quest(){ return `The Fourteenth marches toward a wall of wind that somebody else is holding up. Yorin would like very much to know who, and how, and to be a long way off when he finds out. He has decided the first two are worth the third.`; },
+    banter:[`"Sky's clear, Sergeant. That's the trouble with it. It never stays clear."`, `"That's not a storm out there. A storm has the decency to move."`, `"I can put lightning on him. I can't promise it'll be the same him afterwards."`],
+    rel:{haddat:'She asks him every morning what the sky will do. He tells her. She believes him, which frightens him.', sathi:'Sathi says Wickans can smell rain. He tested her. She can.', tangle:'Tangle keeps the satchel downwind of him, "in case of lightning". That is not how lightning works. He is not sure.', marrow:'She calls him "child" and makes him sit down after every spell. He has stopped arguing.', redblade:'Ramin asked him to keep the lightning away from the horses. He has promised, and means it.', warlock:'The grandmother says his warren is "very loud". He casts more quietly round the boy now.', tallow:'Two Quon boys off the transports. They talk about the sea, and not about missing it.', hessa:'She says the sky is only the ground\'s roof. He has not found an answer to that in three weeks.', tebbet:'Tebbet asks which way the wind will be at the next halt, every halt. Tebbet is right more often than he is.', darrut:'Darrut says the Aren Guard used to hang mages for lightning in the harbour. Yorin has decided it is a joke.', orvas:'Orvas wants to know if the wind can make a horse run faster. It can. They have not told the sergeant.', mirrel:'She makes him drink water after every spell. He forgets. She does not.', rasp:'Rasp asked him, with interest, how close lightning has to be to light a fuse. He walks on the other side of the column now.'}},
+  rasp:{name:'Rasp', role:'Sapper · marine-trained · Malaz City', sig:'P', col:'#d0864a', hp:16, ac:13, atk:3, dmg:[1,8,0], rng:5, mv:4, init:2, st:{might:1, wits:2, guile:2}, ab:['sharper','burner','cusser','smoker','salve'],
+    epithet:'"Don\'t touch that. Don\'t look at it like that either."', origin:'Malaz City', age:29, service:'A year at the marine sappers\' school on Malaz Island, and a few months in the 9th', height:'Compact, burn-freckled, and moves round the satchel as a cook moves round a hot stove.',
+    weapon:'A marine crossbow with the cradle filed to her own pattern, and a satchel of Moranth munitions', armour:'A leather apron over a jerkin, the file on her belt, and burns on both hands she does not discuss',
+    bio:`Trained a year at the marine sappers' school on Malaz Island, and passed. The Fourteenth had more trained sappers than marine squads to put them in, so she was posted to the 9th's medium infantry with a satchel and a crossbow, and has decided not to take it personally. Mostly.`,
+    bio2:`She is named for the file on her belt and for her voice, which a cusser went off too near when she was nineteen. She does not count the satchel. She weighs it in her hand and knows.\n\nShe is kind to recruits in a way that sounds like threats, and fond of munitions in a way the squad finds worrying. She says the marines get the good fuse. She says it burns the same.`,
+    traits:['Weighs the satchel in one hand instead of counting it', 'Files her crossbow cradle smooth at every halt', 'Stands upwind of her own munitions', 'Calls every munition "lovely", and means it'],
+    gear:['The file on her belt', 'A coil of marine fuse, waxed', 'A Malaz City harbour token, worn smooth'],
+    get quest(){ return `There are Moranth munitions in the Fourteenth's wagons, and a great many sappers in the 8th who are better at this than anyone has a right to be. Rasp would like to be counted among them, one day. Until then she has a satchel, a crossbow and a squad, and she has decided that is enough to be going on with.`; },
+    banter:[`"Don't touch that. Don't look at it like that either."`, `"Moranth clay. Lovely stuff. Smells like the end of an argument."`, `"Marines get the good fuse. I get the fuse the marines dropped. It burns the same."`],
+    rel:{haddat:'Haddat walks between her and the recruits on the march. Rasp has decided that is respect, and is right.', sathi:'"Will a sharper scare a horse?" "Yours, or the other side\'s?" They are friends.', tangle:'Has heard of Mincer\'s sappers. Would like to see his fuse-work, from a different squad.', marrow:'Marrow looked at her hands and said nothing, and gave her a tin of salve. She keeps the tin, full.', redblade:'Ramin treats her like a lady. It confuses her. She has started to enjoy it.', warlock:'The grandmother calls her "the loud one". She takes it as a professional compliment.', tallow:'She let him hold a smoker once. He held it like a baby bird. She liked him after that.', hessa:'Hessa asked what is in the clay. Rasp told her, in detail. Hessa stood further off, and Rasp respects her for it.', tebbet:'Two who would rather do it from a distance. They compare ranges at night, as other soldiers compare boots.', darrut:'Darrut wants to know if a cusser could take down Aren\'s north gate. She has worked it out. She will not tell him.', orvas:'Orvas keeps the horse on the far side of her. She thinks that is wise, and says so.', mirrel:'Mirrel keeps a separate salve for her hands, and does not lecture. Rasp counts that a kindness.', yorin:'She asked him how close lightning has to be to light a fuse. He walks on the other side of the column now.'}},
+});
+Object.assign(VERB, {mirrel:'jabs a linen knife at', yorin:'slashes a knife at', rasp:'looses a quarrel at'});
+Object.assign(STATUP, {mirrel:['wits', 'guile'], yorin:['wits', 'guile'], rasp:['wits', 'might']});
+Object.assign(PICKS[3], {
+  mirrel:[['triage', 'The Hospice Way', 'Mend heals +3 and reaches 4 tiles. Li Heng\'s poorhouse had one healer to forty beds, and she learned to reach.'], ['argument', 'Not on My Table', 'Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3. She has never lost one on her table and does not intend to start in a desert.']],
+  yorin:[['b4_stormeye', 'Storm Eye', 'Sky-Fire reaches 6 tiles and strikes at +3. He can see a storm coming three days off, and a soldier three tiles further.'], ['b4_squall', 'Squall', 'The Sky\'s Shove throws one tile further, and does 1d6 instead of 1d4. The river taught him what a squall does to a barge.']],
+  rasp:[['longfuse', 'The Marine Cradle', 'A cradle under the crossbow, filed to the marine pattern: sharpers, burners, smokers and cussers never scatter, and reach one tile further.'], ['sappers_eye', 'Short Fuse', 'The squad rolls +2 initiative, and Rasp\'s free swings hit +2. The school on Malaz Island taught one thing first: the sapper who moves first is the one still there.']],
+});
+Object.assign(PATRONS, {
+  mirrel:{sig:'ohl', god:'Soliel', title:'Soliel, Mistress of Healing', txt:id => `Mirrel, face down, counts to three under her breath, the way she counts a patient up off a cot, and on three the air smells of the hospice in Li Heng: lye, linen and lamp-oil.\n\nSoliel does not often answer soldiers. She answers the women who sit up all night with the poor, sometimes, and Mirrel has sat up a great many nights.`},
+  yorin:{sig:'tuft', god:'Shadowthrone', title:'Shadowthrone, King of High House Shadow', txt:id => `Yorin goes down with one hand still open to a sky that has stopped answering, and the shadows at the edge of the field lean in over him like men round a dice game.\n\nHigh House Shadow likes mages. It likes them in its debt. Yorin, when he can talk again, says that is a problem for later, and later has always been his favourite time.`},
+  rasp:{sig:'ellis', god:'Cotillion', title:'Cotillion, the Rope', txt:id => `Rasp, on her back, says the sappers' word to the Rope out of habit, the one you say before a fuse is lit, and something very high up takes in the slack.\n\nThe Patron of Assassins has a soft spot for sappers. They are the only soldiers who plan their way out as carefully as he does.`},
+});
+/* how everyone else sits with the three (the sheets show only those in the squad) */
+{ const R3 = {
+    haddat:{mirrel:'Held a man down for the new healer once, without being asked. They have liked each other since.', yorin:'Asks the mage every morning what the sky will do, and believes him, which frightens him.', rasp:'Walks between the sapper and the recruits on the march, and does not explain.'},
+    sathi:{mirrel:'Will not let the new healer near Hackle. Hackle has been stitched twice, at night, and is not telling.', yorin:'Says Wickans can smell rain. The mage tested it. She can.', rasp:'"Will a sharper scare a horse?" "Yours, or theirs?" Friends since.'},
+    tangle:{mirrel:'Moved the satchel to the far side of the fire from her linen when she asked. She counts that a courtship.', yorin:'Keeps the satchel downwind of the mage, "in case of lightning".', rasp:'Another sapper. They have agreed, politely, to be in different squads.'},
+    marrow:{mirrel:'Two Denul healers in one squad. They argue about the warren in whispers, like two cooks in one kitchen.', yorin:'Calls him "child", and makes him sit after every spell.', rasp:'Gave her a tin of salve for her hands and said nothing about them.'},
+    redblade:{mirrel:'She mended his sword hand and told him to rest it. He has not.', yorin:'Has asked the mage to keep the lightning away from the horses.', rasp:'Treats her like a lady. It confuses her. She has started to enjoy it.'},
+    warlock:{mirrel:'The grandmother asked to see the healer\'s hands, and looked at them a long while.', yorin:'The grandmother says the mage\'s warren is "very loud".', rasp:'The grandmother calls her "the loud one".'},
+    tallow:{mirrel:'Goes to her with every scrape. She suspects he likes being told to sit still.', yorin:'Two Quon boys off the transports. They talk about the sea, and not about missing it.', rasp:'She let him hold a smoker once. He held it like a baby bird.'},
+    hessa:{mirrel:'Denul and D\'rek: one mends, the other says the Worm will have it all back. They get on.', yorin:'Told him the sky is only the ground\'s roof. He has not found an answer.', rasp:'Asked what was in the clay, and then stood further off.'},
+    tebbet:{mirrel:'She rebinds his bow hand after drill, and answers his Dal Honese in Li Heng cant.', yorin:'Asks the mage which way the wind will be, every halt, and is right more often than the mage.', rasp:'Two who would rather do it from a distance. They compare ranges at night.'},
+    darrut:{mirrel:'Calls her "the surgeon". She is not. She lets him.', yorin:'Tells the mage the Aren Guard used to hang mages for lightning in the harbour. Yorin has decided it is a joke.', rasp:'Wants to know if a cusser could take down Aren\'s north gate. She has worked it out, and will not tell him.'},
+    orvas:{mirrel:'Offered to show her how the tears are cut. She gave him a lesson in clean cuts instead.', yorin:'Wants to know if the wind can make a horse run faster. It can. They have not told the sergeant.', rasp:'Keeps the horse on the far side of her. She approves.'}};
+  Object.entries(R3).forEach(([id, r]) => { const d = BOOKSNAP.hoc.tpl[id] && BOOKSNAP.hoc.tpl[id].rel; const tgt = d && d.value ? d.value : TPL[id] && TPL[id].rel; if (tgt) Object.assign(tgt, r); }); }
+
+/* ---- the gear the Book Four chapters (and Book Two's kit) let Tangle or Marrow wear, Rasp and Mirrel can wear too; Yorin, what Marrow can ---- */
+const B4_WEARS_LIKE = {rasp:'tangle', mirrel:'marrow', yorin:'marrow'};
+const b4WhoPatch = items => Object.values(items || {}).forEach(it => { if (it && Array.isArray(it.who)) Object.entries(B4_WEARS_LIKE).forEach(([id, like]) => { if (it.who.includes(like) && !it.who.includes(id)) it.who.push(id); }); });
+b4WhoPatch(ITEMS);
+{ const _reg = registerChapter; registerChapter = function(n, CH, book){ const r = _reg(n, CH, book); if (book === 'hoc' && CH && CH.gear) b4WhoPatch(CH.gear); return r; }; }
+
+/* ---- an old save's Tallow had "Hold, Recruit" (holdline); a slinger takes "Keep Moving" (ghost) instead ---- */
+{ const _migrate = migrate; migrate = function(s){ const r = _migrate(s);
+    if (s && s.book === 'hoc' && s.picks && Array.isArray(s.picks.tallow) && s.picks.tallow.includes('holdline')) s.picks.tallow = s.picks.tallow.map(k => k === 'holdline' ? 'ghost' : k);
+    return r; }; }
+
+/* ---------------- the new abilities ---------------- */
+/* Serc in the Dust: 70's sputter halves B.warren.serc for the one cast; Yorin's spells read it */
+const b4Serc = () => (B && B.warren && B.warren.serc != null ? B.warren.serc : 1);
+const b4BoltR = u => has(u && u.id ? u.id : 'yorin', 'b4_stormeye') ? 6 : 5;
+const b4GustD = (u, half) => half ? 1 : 2 + (has(u && u.id ? u.id : 'yorin', 'b4_squall') ? 1 : 0);
+const b4TwinsOn = u => !!(b4On() && B && u && u.side === 'p' && !u.ally && u.twinsUntil >= B.round);
+Object.assign(AB, {
+  /* Tallow: the Twins. Once a fight, a free act: a squadmate within 4 (or himself) carries the Lady's luck until the end of the next round */
+  b4_twins:{name:'The Twins', free:true, desc:()=>`Once a fight, and it does not use his action: Tallow or a squadmate within 4 carries the Twins until the end of the next round. The first blow they miss is rolled again, and the first save they fail against fire or a daze is rolled again. Oponn's luck, not sorcery: it never sputters.`,
+    ok:()=>!B.used.b4_twins, tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 4 && sees(u, p)),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_twins = 1; t.twinsUntil = B.round + 1; AUDIO.play('coin'); float(t, 'the Twins', '#e8c073'); sparks(t.x, t.y, 12, '#e8c073', .4);
+      blog(`${u.name} touches the card in the oilcloth inside his shirt and says, "${t === u ? 'Me, this once' : t.name}," to nobody in particular, and is heard by somebody in particular.`); }},
+  /* Hessa: two prayers to D'rek. A god's answer, not a warren: no strain, the Dust never touches them; otataral does (sorcery) */
+  b4_rot:{name:'Autumn\'s Touch', prayer:true, sorcery:true, desc:()=>`A prayer to D'rek on an enemy within 2: no roll, the Worm takes it. 1d4+${lvDmg()} rot, and its armour rots −3 through its next two rounds. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. A god's answer, not a warren: the Dust never touches it. Otataral does.`,
+    ok:u=>!(u.cdRot >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= 2 && sees(u, f)),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; u.cdRot = B.round + 2 - lvAt(6); u.fired = true; t.rotUntil = B.round + 2; t.rotPen = 3;
+      AUDIO.play('rumble'); sparks(t.x, t.y, 14, '#8a7a3a', .45); float(t, 'rots −3', '#b0a060'); u.facing = t.x >= u.x ? 1 : -1;
+      blog(`${u.name} says one word in the temple tongue, low, and ${t.name}'s ${t.ac >= 15 ? 'armour' : 'hide and harness'} goes soft and brown at the edges, the way leaves go in autumn.`);
+      const n = roll(1, 4, lvDmg()); later(() => { if (B && t.hp > 0) { hurt(t, n); updBattleUI(); } }, pace(200)); }},
+  b4_wormgift:{name:'The Worm Gives Back', prayer:true, sorcery:true, desc:()=>`A prayer to D'rek: Hessa or a squadmate next to her heals 1d6+${2 + lvB()} and stops bleeding. Twice a fight. Grows with the squad's level. A god's answer, not a warren: the Dust never touches it. Otataral does.`,
+    ok:()=>(B.used.b4_wormgift || 0) < 2, tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 1 && p.hp < p.maxhp),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_wormgift = (B.used.b4_wormgift || 0) + 1; AUDIO.play('heal'); heal(t, roll(1, 6, 2 + lvB())); t.bleed = 0; sparks(t.x, t.y, 10, '#b8a870', .35);
+      blog(`${u.name} puts ${t === u ? 'her own palm' : `her palm on ${t.name}'s back`} and asks the Worm for a little of what it has taken. It gives it back, warm, smelling of turned earth.`); }},
+  /* Yorin: Serc, the Path of the Sky. Warren sorcery: strain, and in the Dust it sputters (half) */
+  b4_bolt:{name:'Sky-Fire', strain:2, desc:()=>`Serc: lightning on an enemy within ${b4BoltR(B && B.cur)} in sight. It strikes at +${S && has('yorin', 'b4_stormeye') ? 3 : 2}: 2d6+${2 + lvDmg()} on a hit. Strain 2. A warren: in the Dust it can sputter (half damage).`,
+    tiles:u=>foes().filter(f => cheb(u, f) <= b4BoltR(u) && sees(u, f)),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; const half = b4Serc() < 1, k = 2 + lvDmg(); u.facing = t.x >= u.x ? 1 : -1;
+      B.fx.push({kind:'bolt', from:{x:u.x, y:u.y - .6}, to:{x:t.x, y:t.y}, col:'#d8ecff', t:performance.now(), dur:pace(260), wob:true}); AUDIO.play('magic'); sparks(t.x, t.y, 18, '#d8ecff', 1.1);
+      blog(`${u.name} opens a hand to the sky and pulls. ${half ? 'Something comes down, thinner than he asked for.' : 'It comes down.'}`);
+      return attack(u, t, {dmg:half ? [1, 6, Math.floor(k / 2)] : [2, 6, k], bonus:has(u.id, 'b4_stormeye') ? 3 : 2, verb:'brings the lightning down on', ground:true, land:pace(240)}); }},
+  b4_gust:{name:'The Sky\'s Shove', strain:3, desc:()=>`Serc: a fist of wind at an enemy within 4. It and every enemy next to it are thrown straight back from Yorin ${b4GustD(B && B.cur)} tiles, ${S && has('yorin', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. Bosses and the very heavy stagger and stay put. Strain 3. A warren: in the Dust it can sputter (thrown 1 tile).`,
+    tiles:u=>foes().filter(f => cheb(u, f) <= 4 && sees(u, f)),
+    async run(u, x, y){ const t = unitAt(x, y); if (!t) return; const half = b4Serc() < 1, d = b4GustD(u, half), die = has(u.id, 'b4_squall') ? 6 : 4; u.facing = t.x >= u.x ? 1 : -1;
+      const group = [t, ...foes().filter(f => f !== t && cheb(f, t) === 1)].sort((a, b) => cheb(b, u) - cheb(a, u)); // the far ones first, so the near ones have room
+      AUDIO.play('slam'); shakeMap(); B.fx.push({kind:'ring', x:t.x, y:t.y, col:'#d8ecff', t:performance.now(), dur:pace(500)});
+      blog(`${u.name} throws both hands out, and the air in front of him goes with them${half ? ', what there is of it' : ''}.`);
+      for (const f of group) { if (!B || f.hp <= 0) continue; sparks(f.x, f.y, 10, '#e4f0ff', .9); hurt(f, roll(1, die, 0)); if (!B || f.hp <= 0) continue;
+        if (f.boss || f.immortal || f.maxhp >= 45) { float(f, 'staggers', '#d8ecff'); blog(`${f.name} leans into the wind and stays.`); continue; }
+        const dx = Math.sign(f.x - u.x), dy = Math.sign(f.y - u.y); if (!dx && !dy) continue;
+        let to = {x:f.x, y:f.y}, slam = false;
+        for (let i = 0; i < d; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, f)) { slam = true; break; } to = n; }
+        if (to.x === f.x && to.y === f.y) { blog(`${f.name} is thrown into what is behind it.`); hurt(f, roll(1, 6, 0)); updBattleUI(); continue; }
+        float(f, 'thrown back', '#d8ecff'); f.b4thrown = B.round;
+        if (await forcedMove(f, to, 'thrown')) continue;
+        if (slam && f.hp > 0) { blog(`${f.name} fetches up hard against what is behind it.`); hurt(f, roll(1, 6, 0)); }
+        updBattleUI(); await wait(pace(100)); } }},
+});
+/* Autumn's Touch: the rot strips armour (−3) while it lasts */
+{ const _atkCalc = atkCalc;
+  atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (t && t.rotUntil >= (B ? B.round : 0)) c.ac -= (t.rotPen || 3); return c; }; }
+/* the Twins on a blow: a miss is thrown again, once */
+{ const _attack = attack;
+  attack = function(a, t, o = {}){ const r = _attack(a, t, o);
+    if (r && !r.hit && !o.b4twins && b4TwinsOn(a) && t && t.hp > 0) { a.twinsUntil = -1; tally('b4Twins');
+      blog(`<em>The Twins.</em> The Lady pulls: ${a.name} gets a second try at it.`); float(a, 'the Lady pulls', '#e8c073');
+      return _attack(a, t, Object.assign({}, o, {b4twins:true})); }
+    return r; }; }
+/* the Twins on a save: fire (a burner's flames) and a daze */
+const B4ROLL = {d20:() => d20()}; // the Twins' second roll (a test may fix it)
+const b4TwinsSave = (u, mod, dc) => { const nat = B4ROLL.d20(); return {ok:nat !== 1 && (nat === 20 || nat + mod >= dc), math:SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ''}; };
+{ const _enterFire = enterFire;
+  enterFire = function(u){ const armed = b4TwinsOn(u), b0 = (u && u.burnTurns) || 0; const r = _enterFire(u);
+    if (armed && u.hp > 0 && (u.burnTurns || 0) > b0) { u.twinsUntil = -1; tally('b4Twins');
+      const s = b4TwinsSave(u, Math.max(statOf(u.id, 'might'), statOf(u.id, 'guile')) + (u.steady ? 2 : 0), 12 + DIFF().dc);
+      if (s.ok) { u.burnTurns = b0; float(u, 'the Lady pulls', '#e8c073'); blog(`<em>The Twins.</em> ${u.name} rolls in the dust and the flames go out${s.math}.`); }
+      else blog(`<em>The Twins</em> look the other way. ${u.name} is still burning${s.math}.`); }
+    return r; }; }
+{ const _foeSpecial = foeSpecial;
+  foeSpecial = async function(u, gone){ if (!b4On() || !B) return _foeSpecial(u, gone);
+    const armed = party().filter(p => b4TwinsOn(p) && !p.stun); const r = await _foeSpecial(u, gone);
+    armed.filter(p => B && p.stun && p.hp > 0).forEach(p => { p.twinsUntil = -1; tally('b4Twins');
+      const s = b4TwinsSave(p, statOf(p.id, 'wits') + (p.steady ? 2 : 0), 14);
+      if (s.ok) { p.stun = false; float(p, 'the Lady pulls', '#e8c073'); blog(`<em>The Twins.</em> ${p.name} shakes it off${s.math}.`); }
+      else blog(`<em>The Twins</em> look the other way. ${p.name} stays dazed${s.math}.`); });
+    return r; }; }
+
+/* ---------------- the muster: the sergeant picks who fills the squad's empty places ---------------- */
+/* HOC_NEW is the pool (70). The sapper is offered only when Tangle is not in the squad. */
+const B4_ROLEW = {tallow:'skirmisher, sling', hessa:'battle-priest of D\'rek, spear and shield', tebbet:'bowman', darrut:'shield, late of the Aren Guard', mirrel:'Denul healer', yorin:'mage of Serc', rasp:'sapper'};
+const B4_FILLS = {tallow:'bow', tebbet:'bow', mirrel:'healer', yorin:'sorcery', rasp:'munitions'}; // the role each one fills, if the squad lacks it
+const B4_LACKW = {healer:'no healer in the squad', bow:'no bow in the squad', munitions:'no sapper in the squad', sorcery:'no sorcery in the squad'};
+const B4_SEEN = {
+  tallow:'Tallow, a tall Quon boy off the transports, with a sling through his belt and something in oilcloth inside his shirt.',
+  hessa:'Hessa, out of Kartool, square as a door, with a temple spear and a worm carved round the rim of her shield. She stood D\'rek\'s doors for six years, and she prays as if she expects an answer.',
+  tebbet:'Tebbet, a Dal Honese bowman, long in the arm and very still.',
+  darrut:'Darrut, one of the Aren Guard who followed Blistig into the 9th, with a big round shield and the badge scraped off it.',
+  mirrel:'Mirrel, a healer from Li Heng with a hospice bag over her shoulder, who looks at the squad\'s hands before its faces.',
+  yorin:'Yorin, a mage of Serc from Cawn, young and windburnt, telling the soldier beside him about the sky. The soldier is not listening.',
+  rasp:'Rasp, a sapper out of Malaz City, marine-trained, with a satchel, a crossbow and a file on her belt, and a voice like the file.'};
+const B4_COMES = {
+  tallow:'Tallow comes over and salutes you, and then salutes the squad, to be safe.',
+  hessa:'Hessa comes over, sets the butt of her spear in the dust beside you, and is still.',
+  tebbet:'Tebbet comes over, sights along the squad as if along an arrow, and nods.',
+  darrut:'Darrut comes over and stands where the shield wall will want him, without being told.',
+  mirrel:'Mirrel comes over and looks at everybody\'s hands, and then at yours. "Fine," she says. "For now."',
+  yorin:'Yorin comes over, looks up, and says it will be hot. It will be. Everybody knew that.',
+  rasp:'Rasp comes over, sets the satchel down very gently, and stands upwind of it.'};
+const b4She = id => ['hessa', 'mirrel', 'rasp', 'haddat', 'sathi', 'marrow'].includes(id);
+/* what the squad lacks now: {healer, bow, munitions, sorcery} (true = lacks) */
+function b4Lacks(){ const sq = ((S && S.squad) || []).filter(k => TPL[k] && !(S.dead && S.dead[k])), ab = k => TPL[k].ab || [];
+  const muni = k => ab(k).includes('sharper');
+  return {healer:!sq.some(k => ab(k).includes('mend')), bow:!sq.some(k => k !== 'sgt' && TPL[k].rng >= 4 && !muni(k)), munitions:!sq.some(muni),
+    sorcery:!sq.some(k => (TPL[k].magic && !ab(k).includes('mend')) || ab(k).some(a => AB[a] && AB[a].spirit))}; }
+/* the mark on a spare: the role the squad lacks that this one fills, in words ('' if none) */
+const b4SpareMark = id => { const r = B4_FILLS[id]; return r && b4Lacks()[r] ? B4_LACKW[r] : ''; };
+const b4SpareOk = id => !!(S && TPL[id] && !(S.dead && S.dead[id]) && !(S.squad || []).includes(id) && !(id === 'rasp' && b4In('tangle')));
+const b4SpareList = () => HOC_NEW.filter(b4SpareOk);
+/* the empty places in a squad of five (the sergeant counts) */
+const b4Places = () => Math.max(0, 5 - ((S && S.squad) || []).filter(k => !(S.dead && S.dead[k])).length);
+const b4MusterDue = () => !!(b4On() && S.f && S.f.b4_musterDue > 0 && !S.f.b4_mustered);
+/* the muster opens: the provisional fill (70's newStateHOC) goes back to the company, so the places are empty for the sergeant's pick */
+function b4MusterOpen(){ if (!b4MusterDue() || S.f.b4_musterOpen) return; S.f.b4_musterOpen = 1;
+  (Array.isArray(S.f.b4_fill) ? S.f.b4_fill : []).forEach(k => { if (!S.squad.includes(k)) return; S.squad = S.squad.filter(x => x !== k); if (S.gear) S.gear[k] = {}; if (S.loy) delete S.loy[k]; if (S.picks) delete S.picks[k]; });
+  S.trail = (S.trail || []).slice(0, Math.max(1, S.squad.length - 1)); S.f.b4_took = []; save(); }
+/* take a spare on: joins the squad (70's recruit brings the veteran picks); the talent pick waits for the end of the muster */
+function b4Take(id){ if (!b4SpareOk(id) || b4Places() <= 0) return false; const pd = (S.picksDue || []).slice();
+  recruit(id); S.picksDue = pd; if (!Array.isArray(S.f.b4_took)) S.f.b4_took = []; S.f.b4_took.push(id);
+  while ((S.trail || []).length < S.squad.length - 1) S.trail.push(Object.assign({}, S.trail[S.trail.length - 1] || S.pos));
+  save(); return true; }
+function b4MusterDone(){ if (!b4On()) return; S.f.b4_mustered = 1; S.picksDue = b3PicksDue(S); save(); }
+/* one for one at a fire: the spare comes in where the soldier who goes back stood in the order */
+function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; const i = S.squad.indexOf(out);
+  S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; note(`${NAME(out)} goes back to the company.`);
+  recruit(inn); S.squad = S.squad.filter(x => x !== inn); S.squad.splice(i, 0, inn);
+  if (!Array.isArray(S.f.b4_spareSwaps)) S.f.b4_spareSwaps = []; S.f.b4_spareSwaps.push([out, inn]); save(); return true; }
+/* the fire offer is for a save that came into the book before the muster existed (no b4_musterDue), until the sergeant has had it */
+const b4FillsIn = () => HOC_NEW.filter(b4In);
+const b4SparesOpen = () => !!(b4On() && S.f && S.f.b4_musterDue == null && !S.f.b4_mustered && b4FillsIn().length && b4SpareList().length);
+/* the choice a chapter's fire offers (back: the fire node's id) */
+function b4SpareChoice(back){ return {t:'Radde has spares from the company.', tag:'swap a new soldier', req:()=>b4SparesOpen(), fx:()=>{ S.f.b4_spareBack = back; }, go:'b4_spares'}; }
+const b4SpareBack = () => { const b = S.f.b4_spareBack; return b && DLG[b] ? talk(b) : startExplore(); };
+const b4SpareRows = ids => ids.map(id => B4_SEEN[id]).join('\n\n');
+const b4SpareChoices = (go, fx) => b4SpareList().map(id => { const m = b4SpareMark(id); return Object.assign({t:`Take ${NAME(id)} (${B4_ROLEW[id]}).`, fx:()=>fx(id), go}, m ? {tag:m} : {}); });
+
+Object.assign(DLG, {
+  /* Chapter 1's start (B4CH1.intro's node, 71, while the muster is due): Radde and the company roll */
+  b4_muster:()=>{ b4MusterOpen(); const n = b4Places(), took = Array.isArray(S.f && S.f.b4_took) ? S.f.b4_took : [], last = took[took.length - 1], spares = b4SpareList();
+    const head = !took.length ? `Before the line forms, Radde finds you. He is the Second Company's sergeant, a narrow man with a ledger under one arm and a stick for straightening lines under the other, and he does not waste mornings.
+
+"Third squad," he says. "The Fourteenth says five to a squad, and it says it in writing. You're ${numw(n)} short." He opens the ledger on his forearm. "I've got spares. Soldiers the other squads were dealt and didn't keep, or that asked out. None of them asked for you. Take your pick before the Adjunct looks this way."
+
+The spares stand in a loose row in the dust behind him, trying not to look chosen.` : `${B4_COMES[last] || `${NAME(last)} comes over.`}
+
+Radde writes ${NAME(last)} down against the Third's number. ${n ? `"${numw(n, true)} more," he says, and waits.` : `He shuts the ledger. "Third squad, five," he says. "Into the line, Sergeant. And keep them in it."`}`;
+    return {sp:'Sergeant Radde', scene:'b4_c1_review', txt:`${head}${n && spares.length ? `\n\n${b4SpareRows(spares)}` : ''}`,
+      ch:n > 0 && spares.length ? b4SpareChoices('b4_muster', id => { b4Take(id); }) : [{t:'Into the line.', fx:()=>{ b4MusterDone(); }, go:'b4_c1_start'}]}; },
+  /* the fire offer, for a save from before the muster: one for one, as many times as the sergeant likes, then done for the book */
+  b4_spares:()=>{ const spares = b4SpareList();
+    return {sp:'Sergeant Radde', again:()=>`Radde is still at the fire with the ledger open. The spares are still by the company's fire, waiting to see what you do.`, txt:
+`Radde comes round the fires with the ledger under his arm, the way he does when he wants a thing written down before he forgets it.
+
+"Third," he says. "The company's got spares. Soldiers who were dealt to other squads and didn't take, or that asked out. If there's anybody in your five you'd rather swap, now's the time, before the road makes it complicated." He nods at the row of them by the company's fire. "One for one. Same as a muster."
+
+${b4SpareRows(spares)}`,
+      ch:[...b4SpareChoices('b4_spares_out', id => { S.f.b4_spareIn = id; }),
+        {t:'Keep the squad as it is.', fx:()=>{ S.f.b4_mustered = 'kept'; save(); }, go:()=>b4SpareBack()}]}; },
+  b4_spares_out:()=>{ const inn = S.f.b4_spareIn;
+    return {sp:'Sergeant Radde', txt:`"${TPL[inn] ? NAME(inn) : 'That one'}," Radde says, and writes it. "And who goes back to the company?"`,
+      ch:[...b4FillsIn().map(o => ({t:`${NAME(o)} goes back to the company.`, fx:()=>{ S.f.b4_spareOut = o; b4SwapNew(o, inn); }, go:'b4_spares_done'})),
+        {t:'Not that one after all.', go:'b4_spares'}]}; },
+  b4_spares_done:()=>{ const o = S.f.b4_spareOut, inn = S.f.b4_spareIn;
+    return {sp:'The Third\'s fire', txt:`${TPL[o] ? `${NAME(o)} picks up ${b4She(o) ? 'her' : 'his'} kit and goes back to the company's fire. The Third makes nothing of it; it is the army.` : 'The swap is made.'}${TPL[inn] ? `\n\n${B4_COMES[inn] || ''}` : ''}`,
+      ch:[{t:'Another.', req:()=>b4SpareList().length > 0 && b4FillsIn().length > 0, go:'b4_spares'},
+        {t:'That will do. Back to the fire.', fx:()=>{ S.f.b4_mustered = 'fire'; save(); }, go:()=>b4SpareBack()}]}; },
+});
+
+/* ---- the words the three bring to Book Four's glossary ---- */
+GLOSSX.hoc.push(
+  [0, 'Denul', 'The warren of healing. A Denul healer reaches into it and puts what comes out into a wound. The Fourteenth has fewer healers than it has squads.', ()=>b4In('mirrel') || b4In('marrow')],
+  [0, 'Serc', 'The Path of the Sky: the warren of the sky: wind, storm and lightning. Ordinary sorcery, and in the Whirlwind\'s sand it sputters like the rest.', ()=>b4In('yorin')],
+  [0, 'Oponn', 'The Twins, the Jesters of Chance: the Lady pulls, the Lord pushes, and both keep count. Tallow\'s grandmother read their card for the boats.', ()=>b4In('tallow') || godMet('tallow')]);
 
 /* ============ Book Four, Chapter 1: The Muster ============ */
 /* Aren, two days before the march (House of Chains, ch 8). The Adjunct reviews a Fourteenth in disorder on the marshaling ground; the
@@ -48622,10 +48932,11 @@ const B4CH1 = {
   intro:{loc:'Aren', sub:'The marshaling ground · two days before the march', scene:'b4_c1_review', cap:'Three legions on a dust plain under the walls, in lines that do not stay straight, and far across it a few riders under a standard.',
     paras:[
 `Aren has been looking at soldiers all year. It watched the Chain come in under its walls, and what was left of it come in through the north gate, and it watched the High Fist march out the other way. Now the Empress has sent it an army by sea, and the city has gone up on its roofs to look at that one too.`,
-()=>{ const v = b41Vets().map(id => TPL[id].name), n = b41New(), fill = {tallow:'a fishing boy off the Quon transports called Tallow', hessa:'a woman out of Kartool called Hessa, who stood a temple door for six years and does not say why she stopped', tebbet:'a Dal Honese bowman called Tebbet', darrut:'Darrut, one of the Aren Guard who followed Blistig into the 9th'};
-  return `You are Sergeant {sgt}, Third squad, 9th Legion, the Fourteenth Army. The army broke the Chain's survivors up when it took them in and dealt them out across its three legions like cards, so the recruits would have somebody to copy. You were dealt to Blistig's 9th, to its Second Company. ${v.length ? `${b4And(v)} came off the Chain with you and were dealt with you.` : 'Nobody else from the Chain was dealt with you.'} ${n.length ? `The Fourteenth made the squad up to five with ${b4And(n.map(id => fill[id]))}.` : 'The Fourteenth looked at the squad, counted it, and left it as it was.'}`; },
+()=>{ const v = b41Vets().map(id => TPL[id].name), n = b41New(), fill = {tallow:'a fishing boy off the Quon transports called Tallow', hessa:'a woman out of Kartool called Hessa, who stood a temple door for six years and does not say why she stopped', tebbet:'a Dal Honese bowman called Tebbet', darrut:'Darrut, one of the Aren Guard who followed Blistig into the 9th', mirrel:'a healer from Li Heng called Mirrel', yorin:'a mage of Serc from Cawn called Yorin', rasp:'a marine-trained sapper out of Malaz City called Rasp'};
+  const owed = typeof b4MusterDue === 'function' && b4MusterDue() ? (S.f.b4_musterDue || 1) : 0; // v7.1: the empty places are the sergeant's pick at the muster (70e)
+  return `You are Sergeant {sgt}, Third squad, 9th Legion, the Fourteenth Army. The army broke the Chain's survivors up when it took them in and dealt them out across its three legions like cards, so the recruits would have somebody to copy. You were dealt to Blistig's 9th, to its Second Company. ${v.length ? `${b4And(v)} came off the Chain with you and were dealt with you.` : 'Nobody else from the Chain was dealt with you.'} ${owed ? `The Fourteenth owes the squad ${numw(owed)} soldier${owed > 1 ? 's' : ''} to make it five, and the company's sergeant has the roll.` : n.length ? `The Fourteenth made the squad up to five with ${b4And(n.map(id => fill[id]))}.` : 'The Fourteenth looked at the squad, counted it, and left it as it was.'}`; },
 `This morning the Adjunct is reviewing her army on the marshaling ground. Half of it came off the transports from Quon Tali a month ago and has never heard a sword drawn in anger. The other half is trying not to show it. The 9th is drawn up on the far side of the ground from the Adjunct, which Radde, the company's sergeant, says is the best place in any army to be.`],
-    go:'Into the line', node:'b4_c1_start'},
+    go:'Into the line', get node(){ return typeof b4MusterDue === 'function' && b4MusterDue() ? 'b4_muster' : 'b4_c1_start'; }}, // v7.1: the muster first, while the squad has places to fill (70e)
 
   areas:[
     /* 16 x 12 (b4_c1_aren, day).  , the marshaling ground's dust  . paving  # wall  c a munitions cart  w a well  = the officers' awning  > east, into the streets */
@@ -49176,6 +49487,7 @@ And beyond the wall, in the old cemetery, there are lanterns among the graves, d
           {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b4_c1_rest' + b41Ph()], fx:()=>{ S.f['b4_c1_rest' + b41Ph()] = 1; b4Rest('The squad sits an hour by its own fire, inside the 9th\'s walls. Wounds close, mostly.'); }, go:'b4_c1_yard_rest'},
           {t:'Talk with the squad.', go:'b4_c1_yard_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c1_yard_swap'})),
+          b4SpareChoice('b4_c1_yard'),
           b4PipeChoice('b4_c1_yard'),
           {t:'Sell the confiscated pipe to the quartermaster\'s clerk.', tag:'+8 silver', req:()=>(S.kit || []).includes('b4_c1_durhangpipe') && !S.f['b4_pipe' + (S.chapter || 0)], fx:()=>{ b41Drop('b4_c1_durhangpipe'); S.silver = (S.silver || 0) + 8; updSilver(); S.f.b4_c1_pipeSold = 1; note('The quartermaster\'s clerk buys the pipe for eight silver without asking where it came from. He will sell it to the 10th before morning.'); }, go:'b4_c1_yard'},
           {t:'Over the wall, to the cemetery.', req:()=>b41Ph() === 2 && !S.f.b4_c1_digDone, onward:true, go:'b4_c1_wall'},
@@ -50300,6 +50612,7 @@ The Third has its own fire, off the road at the camp's edge. ${b42Say({tangle:`T
           {t:'Sit an hour before the march.', req:()=>dawn && k === 'march' && !S.f.b4_c2_rest5, fx:()=>{ S.f.b4_c2_rest5 = 1; b4Rest('An hour by the black stones while the column forms. Wounds close, mostly.'); }, go:'b4_c2_fire_rest'},
           {t:'Talk with the squad.', go:'b4_c2_fire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c2_fire_swap'})),
+          b4SpareChoice('b4_c2_fire'),
           b4PipeChoice('b4_c2_fire'),
           {t:'Up the path to the hill, before dark.', req:()=>ph <= 2 && !S.f.b4_c2_robbersDone, onward:true, go:'b4_c2_path'},
           {t:'The pilgrims\' lamps on the hill. Find Radde.', req:()=>ph === 3 && !k, onward:true, go:'b4_c2_key'},
@@ -51492,6 +51805,7 @@ ${b43Say({marrow:`Marrow sits down by the fire the Third has been given and acce
           {t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b4_c3_rest2, fx:()=>{ S.f.b4_c3_rest2 = 1; b4Rest('The squad sits an hour by its fire among the Khundryl\'s, while three thousand people grieve and laugh round it. Wounds close, mostly.'); }, go:'b4_c3_feast_rest'},
           {t:'Talk with the squad.', go:'b4_c3_feast_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c3_feast_swap'})),
+          b4SpareChoice('b4_c3_feast'),
           b4PipeChoice('b4_c3_feast'),
           {t:'The shouting at the 10th\'s fires.', req:()=>!S.f.b4_c3_brawlDone, onward:true, go:'b4_c3_brawl_start'},
           {t:'Sleep. The river tomorrow.', req:()=>!!S.f.b4_c3_brawlDone, onward:true, go:'b4_c3_to_ford'},
@@ -52719,6 +53033,7 @@ ${b44Barrow() ? b44Barrow() + '\n\n' : ''}${b44Say({marrow:`Marrow is already go
           {t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b4_c4_rest, fx:()=>{ S.f.b4_c4_rest = 1; b4Rest('The squad sits an hour by the Seti fire among the wounded, and some of it sleeps sitting up, the way the Chain taught it. Wounds close, mostly.'); }, go:'b4_c4_setifire_rest'},
           {t:'Talk with the squad.', go:'b4_c4_setifire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c4_setifire_swap'})),
+          b4SpareChoice('b4_c4_setifire'),
           b4PipeChoice('b4_c4_setifire'),
           {t:'Find Radde. The night\'s orders.', req:()=>!b44Key() && !!S.f.b4_c4_lancersDone, onward:true, go:'b4_c4_key'},
           {t:'The shouting at the horse lines.', req:()=>!S.f.b4_c4_lancersDone, onward:true, go:'b4_c4_lancers'},
@@ -53654,6 +53969,7 @@ ${b45Say({haddat:`Haddat stands at the edge of the hollow with the blue shield g
           {t:'Sit an hour out of the wind. Let the squad rest.', req:()=>!S.f.b4_c5_rest, fx:()=>{ S.f.b4_c5_rest = 1; b4Rest('The squad sits an hour in the lee of the rock with the Wall roaring over the top of it, and eats sand, and rests. Wounds close, mostly.'); }, go:'b4_c5_wallfire_rest'},
           {t:'Talk with the squad.', go:'b4_c5_wallfire_talk'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c5_wallfire_swap'})),
+          b4SpareChoice('b4_c5_wallfire'),
           b4PipeChoice('b4_c5_wallfire'),
           {t:'Find Radde first.', req:()=>!S.f.b4_c5_raddeSaid, go:()=>startExplore()},
           {t:'Sleep. The Wall\'s edge at first light.', req:()=>!!S.f.b4_c5_raddeSaid, onward:true, go:'b4_c5_dawn'},
@@ -54844,6 +55160,7 @@ Across the basin, a long bowshot and then another and another, the three ramps g
           {t:'Talk with the squad.', go:'b4_c6_picketfire_talk'},
           {t:'The eve. Sit with each of them a while.', req:()=>b46Ph() >= 2, go:'b4_c6_eve'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c6_picketfire_swap'})),
+          b4SpareChoice('b4_c6_picketfire'),
           b4PipeChoice('b4_c6_picketfire'),
           {t:'Find Radde first.', req:()=>b46Ph() === 1 && !S.f.b4_c6_raddeSaid, go:()=>startExplore()},
           {t:'Out to the spur.', req:()=>b46Ph() === 1 && !!S.f.b4_c6_raddeSaid && !S.f.b4_c6_nestDone, onward:true, go:'b4_c6_to_spur'},
@@ -56436,6 +56753,7 @@ Dawn comes up out of the water. There is mist on it, white and low, and the isla
           {t:'Sit in the sun and rest. There is nowhere to be.', req:()=>!S.f.b4_c7_rest, fx:()=>{ S.f.b4_c7_rest = 1; b4Rest('The squad sits in the sun on the coral with its boots off, and rests, properly, for the first time since Aren. Wounds close.'); }, go:'b4_c7_isle_rest'},
           {t:'Talk with the squad.', go:'b4_c7_isle_talk'},
           ...b4Offers().map(id => ({t:`Send across the water for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c7_isle_swap'})),
+          b4SpareChoice('b4_c7_isle'),
           {t:'Find Radde first.', req:()=>!S.f.b4_c7_raddeIsle, go:()=>startExplore()},
           {t:'The road out.', req:()=>!!S.f.b4_c7_raddeIsle && !b47Key(), onward:true, go:'b4_c7_key'},
           {t:'The last of it. Let it end here.', req:()=>!!b47Key(), onward:true, go:'b4_c7_last'},
@@ -56576,7 +56894,7 @@ B4FIN7.KEYS = ['line', 'horse', 'ledger'];
 B4FIN7.key = k => B4FIN7.KEYS.includes(k) ? k : B4FIN7.KEYS.includes(S.f.b4_c7_key) ? S.f.b4_c7_key : 'line';
 B4FIN7.join = ps => ps.filter(p => p && String(p).trim()).join('\n\n');
 B4FIN7.loy = (id, warm, cold, mid) => { const l = (S.loy && S.loy[id]) || 0; return l >= 2 ? warm : l <= -2 ? cold : mid; };
-B4FIN7.P = id => ['haddat', 'sathi', 'marrow', 'hessa'].includes(id) ? {she:'she', her:'her', hers:'her'} : {she:'he', her:'him', hers:'his'};
+B4FIN7.P = id => ['haddat', 'sathi', 'marrow', 'hessa', 'mirrel', 'rasp'].includes(id) ? {she:'she', her:'her', hers:'her'} : {she:'he', her:'him', hers:'his'};
 B4FIN7.trickLine = id => trickBy('b4_c7_deadride') === id ? (id === 'sgt' ? 'When it is bad now, you can call the dust, once, and a rider comes out of it. You do not call it often. You know whose face you hold when you do.' : `When it is bad now, ${B4FIN7.P(id).she} can call the dust, once, and a rider comes out of it. ${B4FIN7.P(id).she.charAt(0).toUpperCase() + B4FIN7.P(id).she.slice(1)} knows whose face to hold.`) : '';
 B4FIN7.nerve = () => { const n = b4NerveNow();
   return `The company, at the end of it: Nerve ${n} of ${NERVE_MAX}. ${n >= 8 ? 'The Second Company would follow the Chain squad into anything, and has said so, loudly, to the 10th.' : n >= 6 ? 'The Second Company stands when the Third stands, and that is what it was for.' : n >= 4 ? 'The Second Company is a company now, more or less, which it was not at Aren.' : 'The Second Company came through Raraku frightened, and came through it. That is not nothing.'}${S.f.b4_broke ? ` ${numw(S.f.b4_broke, true)} of its regulars ran, on the road, at one fight or another. Radde wrote them down and took them back.` : ''}`; };
@@ -56656,6 +56974,25 @@ B4FIN7.fate = (id, key) => {
     `Darrut marches in the file with his big shield and his Guard drill, and the Second Company's recruits have started to stand the way he stands, without knowing they do.`,
     `He was on the wall at Aren when the gate shut on the Chain. He has said so now, once, to the Third. It is enough.`,
     B4FIN7.loy('darrut', `"You'd have done in the Guard," he tells you. From an Aren man it is everything.`, `He stands where you put him, and no nearer.`, `"Sergeant," he says, Guard-fashion, with the heel of the hand to the chest.`)]);
+  /* v7.1: the Fourteenth's spares (70e) */
+  if (id === 'mirrel') return add('Three, and up', [
+    R === 'line' ? `Mirrel marches with the 9th, and at every halt the Second Company's recruits come to her with their feet, and she sits them down and counts to three, and on three nobody moves. She keeps a ledger of her own now, like Radde's: who came, and with what, and whether it took.` :
+    R === 'horse' ? `Mirrel rides a mule she says is the only sensible animal in the army, with the hospice bag across the saddle, and the riders bring her their wounds at the fires, and their horses' wounds, and she does both, in threes.` :
+    `Mirrel walks out of the ledger, and in the first town south of the sea she finds a poorhouse with forty beds and one tired healer, which is how she likes it, and puts her bag down.`,
+    `She healed a great many soldiers between Aren and the sea, and some of them were trying to kill somebody at the time. She decided it made no difference to the work. She has not decided what it made a difference to.`,
+    B4FIN7.loy('mirrel', `"Sit," she tells you, at the end of every march. "Hand. Other hand. Good." It is how she says she is glad you are alive.`, `She tends you as she tends everybody, quickly, and moves on.`, `"You'll keep," she tells you. From Mirrel it is a diagnosis.`)]);
+  if (id === 'yorin') return add('Clear tomorrow', [
+    R === 'line' ? `Yorin marches with the 9th and tells the file what the sky will do, every morning, and is right more often than not, and the Second Company has started to plan its washing by him.` :
+    R === 'horse' ? `Yorin rides out with the scouts, because the scouts want to know what the sky will do and he wants to be asked. On the long days he puts a wind at the riders' backs, and does not tell the sergeant what it costs him.` :
+    `Yorin walks out of the ledger and, a month south, finds a river with barges on it, and tells a barge-master, unasked, that it will rain on the third day. It does. The barge-master hires him.`,
+    `He saw the Whirlwind come down, and the sand fall out of the sky over an hour, and the sky go clear. He says it was the finest sky he ever saw, and that it was not his, and that he does not mind.`,
+    B4FIN7.loy('yorin', `"Clear tomorrow, Sergeant," he tells you, every night. He has never once been wrong for you. He checks twice.`, `He tells you the weather when you ask, and no more.`, `"Hot," he says, every morning, and grins, because it always is.`)]);
+  if (id === 'rasp') return add('Lovely', [
+    R === 'line' ? `Rasp marches with the 9th with the satchel on her hip and the file on her belt, and the 8th's sappers have started to come by the Third's fire at night to talk fuse with her, and go away thoughtful.` :
+    R === 'horse' ? `Rasp walks at the riders' stirrups with the satchel, because she will not put Moranth clay on a horse, and keeps up. The Khundryl have decided she is a holy woman of some kind, and give her the best of the meat.` :
+    `Rasp walks out of the ledger with the satchel, which is the Empire's, and has decided the Empire owes her one. South of the sea there is a quarry that needs a sapper and does not ask where she trained.`,
+    `She never did get to the marines. She has stopped minding. The marines get the good fuse, she says. She got the good squad.`,
+    B4FIN7.loy('rasp', `"You point," she tells you, "and I make it lovely." From Rasp there is nothing warmer.`, `She tells you the satchel's weight and nothing else.`, `She weighs the satchel in one hand every morning and nods to you. It is enough.`)]);
   if (id === 'orvas') return add('The tears', [
     R === 'horse' ? `Orvas rides with the Khundryl again, on a good horse, low on its neck, laughing, with the Third beside him. ${S.f.b4_c7_tear ? 'The bead he gave the sergeant has not been asked for back. It will not be.' : ''}` :
     R === 'line' ? `Orvas walks in the 9th's file with his lance at the trail, a rider on foot, and the Khundryl ride past the column every morning going out, and every morning he lifts the lance to them, and they lift theirs.` :
@@ -56697,6 +57034,9 @@ B4FIN7.gone = (id, key) => {
      hessa:'Her spear came back without her. It stands upright in the wagon, because a spear should be upright.',
      tebbet:'His bow came back without him. It hangs unstrung. He would rather have been a long way off.',
      darrut:'His big shield came back without him. A recruit of the Second Company carries it now, and stands the way he stood.',
+     mirrel:'Her hospice bag came back without her. The Third will not open it, and will not leave it. The linen in it is still clean.',
+     yorin:'His copper wind-vane came back without him. It still turns. The Third does not look to see which way.',
+     rasp:'Her satchel came back without her, and the file. The Third weighs the satchel every morning, in one hand, as she did.',
      orvas:'The Khundryl came for him across the water and took him, and wept at their fires all night, very loudly, and the Third wept with them.',
      redblade:'The Red Blades came for him, and took his scale, and left the Third his sword.',
      warlock:'The Wickan youths came for him, the forty of them, and the grandmother was very quiet, at last.'}[id] || '',
@@ -56731,7 +57071,7 @@ B4FIN7.coda = key => {
 };
 
 B4CH7.finale = {
-  ids:()=>{ const core = ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas', 'redblade', 'warlock'], f = b47Face();
+  ids:()=>{ const core = ['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp', 'orvas', 'redblade', 'warlock'], f = b47Face();
     return f ? core.filter(k => k !== f).concat([f]) : core; },
   labels:{epi:'Epilogue', squad:'The Third', fallen:'The fallen', away:'Gone back to their people', sgtRole:'Sergeant · Third squad, 9th Legion, the Fourteenth Army', road:'The Third\'s road', prologue:false,
     list:()=>['The roll', `${Object.keys((S && S.dead) || {}).length} names`], noDead:'None of the Third. Every one of them came away from Raraku.', paper:false,

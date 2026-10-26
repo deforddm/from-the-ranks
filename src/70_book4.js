@@ -9,7 +9,7 @@
    The names a chapter writer uses are listed in docs/v7.0-notes.md, "For chapter writers". */
 
 const HOC_CORE = ['haddat', 'sathi', 'tangle', 'marrow'];      // Book Two's four: whoever lived keeps a place, in this order
-const HOC_NEW = ['tallow', 'hessa', 'tebbet', 'darrut'];       // the Fourteenth fills the squad back to five from these, in this order
+const HOC_NEW = ['tallow', 'hessa', 'tebbet', 'darrut', 'mirrel', 'yorin', 'rasp']; // the Fourteenth's new soldiers (v7.1: the sergeant picks the fill at the muster, 70e)
 const B4_RECRUITS = ['redblade', 'warlock', 'orvas'];          // one at a time, swapped at a fire
 const b4On = () => !!(S && S.book === 'hoc');
 const b4In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
@@ -86,21 +86,22 @@ function b4Wear(on){ Object.entries(on ? BOOKSNAP.hoc.tpl : B4_TWO).forEach(([id
 
 /* ---- the four new soldiers of the Fourteenth, and Orvas of the Burned Tears ---- */
 Object.assign(TPL, {
-  tallow:{name:'Tallow', role:'Raw recruit · Quon Tali', sig:'L', col:'#c9b27a', hp:17, ac:13, atk:3, dmg:[1,8,1], rng:1, mv:4, init:1, st:{might:1, wits:1, guile:2}, ab:['shove','salve'],
+  /* v7.1: Tallow is the squad's skirmisher (a sling, and the Twins' luck); Hessa a battle-priest of D'rek (her prayers are 70e's) */
+  tallow:{name:'Tallow', role:'Skirmisher · Quon Tali', sig:'L', col:'#c9b27a', hp:17, ac:12, atk:4, dmg:[1,6,1], rng:4, mv:5, init:2, st:{might:1, wits:1, guile:2}, ab:['b4_twins','salve'],
     epithet:'"My grandmother read for fishermen. They mostly came back."', origin:'A fishing village on the Quon coast', age:18, service:'Four months, three of them on a transport', height:'Tall for his age and not used to it yet.',
-    weapon:'A short sword still bright from the armoury, and a spear he was told to carry', armour:'New boiled leather that creaks, a helm a size too big, and a finger bone on a thong like everyone else',
-    bio:`One of the half of the Fourteenth that came off the transports from Quon Tali and had never seen a desert or a dead man. He has seen both now, on the Aren Way, and is trying to look as if he had seen them before. It fools no one. The squad is kind about it, as soldiers are kind: loudly, and at his expense.`,
+    weapon:'A leather sling and a pouch of beach stones from home, and a short sword still bright from the armoury', armour:'New boiled leather that creaks, a helm a size too big, and a finger bone on a thong like everyone else',
+    bio:`One of the half of the Fourteenth that came off the transports from Quon Tali and had never seen a desert or a dead man. He has seen both now, on the Aren Way, and is trying to look as if he had seen them before. It fools no one. The squad is kind about it, as soldiers are kind: loudly, and at his expense.\n\nThey gave him a spear. He gave it back. He spent ten years on the Quon coast knocking gulls off the gutting-shed roof with a sling, and the 9th, which has very few soldiers who can hit anything at forty paces, has decided to let him.`,
     bio2:`His grandmother read the Deck for the boats on the Quon coast, by the light of the gutting-shed, for fish heads and gossip. When she died the deck came to him in a square of oilcloth, the paint worn off the corners by sixty years of thumbs. He reads it the way she taught him, badly, and sometimes it is right, and that frightens him more than when it is wrong.`,
     traits:['Salutes everyone, to be safe', 'Writes home and never sends it', 'Keeps the grandmother\'s deck in oilcloth inside his shirt', 'Laughs half a beat after the veterans, to check it was a joke'],
     gear:['His grandmother\'s deck, in oilcloth', 'A letter home, unfinished, in its fourth month', 'A finger bone from the old Aren graveyard, on a thong'],
     get quest(){ return b4In('marrow') ? `Marrow reads for the squad. She watched him lay the old woman's cards out once, at night, and told him afterwards which of them his grandmother had got wrong. He has decided to learn from her before the desert, while there is time.` : `With no healer to read for the squad, the squad has started asking him. He did not want it. He reads anyway, the way his grandmother did, for whoever sits down, and hopes the cards know more than he does.`; },
     banter:[`"Sergeant." A pause. "Was that right? The salute?"`, `"My grandmother said Oponn gives with one hand. She never said what the other one was doing."`, `"I counted the bones on the standard. It made me feel worse. I'm going to stop counting things."`],
     rel:{haddat:'She makes him stand behind the shield until he stops flinching. He has nearly stopped.', sathi:'"The foal." He has decided it is a compliment.', tangle:'Let him count the satchel once. He got it right. It was the proudest moment of his life.', marrow:'He watches her read and copies her hands. She knows. She lets him.', hessa:'She is the first temple guard he has ever spoken to. He keeps calling her "sister" by accident.', tebbet:'Tebbet is teaching him the bow in the evenings. He is not good at it.', darrut:'Darrut tells him the Aren Guard stories. Tallow believes nearly all of them.', orvas:'He has never seen a horse go like that. He tells Orvas so, every day, and Orvas lets him.', redblade:'Ramin showed him how to keep a blade clean. He keeps it cleaner than anything he owns.', warlock:'The grandmother in Keth laughed at his cards. He has not asked why.'}},
-  hessa:{name:'Hessa', role:'Spear and shield · Kartool', sig:'E', col:'#8a9a6a', hp:22, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:2, wits:1, guile:0}, ab:['bash','salve'],
+  hessa:{name:'Hessa', role:'Battle-priest of D\'rek · Kartool', sig:'E', col:'#8a9a6a', hp:22, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:2, wits:1, guile:0}, ab:['b4_rot','b4_wormgift','salve'],
     epithet:'"D\'rek is patient. I am not, which is why I left."', origin:'Kartool City', age:31, service:'Six years at the temple doors, and a year in the Malazan ranks', height:'Square, heavy in the shoulder, and stands as still as a door.',
     weapon:'A long-bladed temple spear, and a tall shield with a worm carved into the rim and painted over', armour:'Malazan scale over a temple guard\'s padded coat, and the Worm\'s mark inked on the inside of her left wrist',
     bio:`Stood the doors of D'rek's Grand Temple in Kartool City for six years with a spear and a shield, while the priests inside did whatever the Worm of Autumn asks for. She does not say why she left. She signed on with the Malazans in the same week, which she says is a coincidence, and the 9th took her because she could already hold a line and nobody else in her intake could.`,
-    bio2:`The temple taught her that every living thing rots, and that rot is not an insult. It is the floor of the world. She is calm about it in a way the recruits find hard to stand next to. She prays at dusk, to the ground, very briefly, and then eats like someone who expects to be busy tomorrow.`,
+    bio2:`The temple taught her that every living thing rots, and that rot is not an insult. It is the floor of the world. She is calm about it in a way the recruits find hard to stand next to. She prays at dusk, to the ground, very briefly, and then eats like someone who expects to be busy tomorrow.\n\nThe temple gave its guards two prayers, short ones, for use at the doors: one for rot and one for mending. D'rek answers them still, out here, through the sand. She has not decided whether that is a kindness or a reminder.`,
     traits:['Prays at dusk, to the ground, briefly', 'Will not step on a worm, and moves them off the road', 'Says "eventually" when asked anything about death', 'Sharpens the spear while she talks, by feel'],
     gear:['A temple guard\'s seal, worn on a cord under the scale', 'A twist of grave-dirt from Kartool', 'A whetstone she has had since she was twelve'],
     get quest(){ return `The temple asked something of her that she would not give, and she walked out of its doors and into the Empire's. Kartool is a long way behind. The Worm is not, she says. The Worm is under every road. She is waiting to learn whether it is waiting for her.`; },
@@ -137,10 +138,10 @@ Object.assign(TPL, {
     banter:[`"A herd that walks. My grandmother would weep. Then she would laugh. I am doing both."`, `"The dead of my clan ride behind us, Sergeant. They are very slow. They are very many."`, `"Give me a horse and a flank and I will give you the rest of the afternoon."`],
     rel:{haddat:'She speaks to him in an Odhan tongue, badly. He answers in Malazan, worse. Both find it restful.', sathi:'A Weasel and a Burned Tear. They agree about horses and nothing else, at volume.', tangle:'Tangle keeps the satchel on the far side from the horse. Orvas thinks this is wise.', marrow:'She asked about the tears once. He said, "They are the reason." She let it be, and he liked her for it.', tallow:'The boy says every day that he has never seen a horse go like that. Orvas lets him.', hessa:'The Khundryl grieve loudly. Hessa grieves no one. Each finds the other worth watching.', tebbet:'Horse archers make the Dal Honese nervous. Orvas rides closer, to help.', darrut:'He is teaching the Aren man to ride. It is going badly. They are both enjoying it.', redblade:'Ramin rides beside him and talks horses. They are, for a few hours a day, entirely happy.', warlock:'The Khundryl grieve their dead. Keth carries his. Some nights they sit together without a word.'}},
 });
-Object.assign(VERB, {tallow:'thrusts at', hessa:'drives the temple spear at', tebbet:'looses an arrow at', darrut:'cuts at', orvas:'drives the short lance at'});
+Object.assign(VERB, {tallow:'slings a stone at', hessa:'drives the temple spear at', tebbet:'looses an arrow at', darrut:'cuts at', orvas:'drives the short lance at'});
 Object.assign(STATUP, {tallow:['guile', 'might'], hessa:['might', 'wits'], tebbet:['guile', 'wits'], darrut:['might', 'wits'], orvas:['guile', 'might']});
 Object.assign(PICKS[3], {
-  tallow:[['nerve', 'Grandmother\'s Luck', 'Tallow takes the Nerve pick early: +1 initiative and +1 to every skill check he rolls. The old woman said he was lucky. He is starting to believe her.'], ['holdline', 'Hold, Recruit', 'Tallow\'s free swings are unlimited and hit +2. The drill took, in the end.']],
+  tallow:[['nerve', 'Grandmother\'s Luck', 'Tallow takes the Nerve pick early: +1 initiative and +1 to every skill check he rolls. The old woman said he was lucky. He is starting to believe her.'], ['ghost', 'Keep Moving', 'Enemies take −2 to hit Tallow. The skirmish drill taught him one thing well: never be where the spear is.']],
   hessa:[['shieldwall', 'The Temple Door', 'Squadmates standing next to Hessa get +2 armour. Six years in a doorway taught her how wide a door is.'], ['holdline', 'The Worm Waits', 'Hessa\'s free swings are unlimited and hit +2. Anything that walks away from her pays for it.']],
   tebbet:[['quickshot', 'The Hill Pair', 'Once a fight: two arrows at one target within reach (three from level 6). The Dal Honese way: the second before the first has landed.'], ['ghost', 'Far Off', 'Enemies take −2 to hit Tebbet. He is always somewhere further away than you thought.']],
   darrut:[['discipline', 'Guard Drill', 'Every squadmate wears +1 armour. Twelve years of telling people on a wall where to stand.'], ['holdline', 'The Gate', 'Darrut\'s free swings are unlimited and hit +2. He has held a gate. He knows what goes through.']],
@@ -215,7 +216,7 @@ const b4Grit = () => ['The warren comes up full of sand.', 'Grit in the warren. 
     if (S.card === 'b4c_leper' || boon('ground') || R(100) >= b4SputterPct()) return _useAb(k, x, y);
     blog(`<em>${u.name} reaches for the warren. ${b4Grit()}</em> Half effect.`); float(u, 'sputters', '#c8a868'); tally('b4Sputters'); S.f.b4_sputters = (S.f.b4_sputters || 0) + 1;
     const w0 = B.warren || {}, down = B.units.filter(p => p.side === 'p' && p.hp <= 0);
-    B.warren = Object.assign({}, w0, {denul:(w0.denul || 1) * .5, meanas:(w0.meanas || 1) * .5});
+    B.warren = Object.assign({}, w0, {denul:(w0.denul || 1) * .5, meanas:(w0.meanas || 1) * .5, serc:(w0.serc || 1) * .5}); // serc: Yorin's sky (70e)
     try { return _useAb(k, x, y); }
     finally { B.warren = w0; down.filter(p => p.hp > 0).forEach(p => { p.hp = Math.max(1, Math.ceil(p.hp / 2)); }); } }; }
 /* an enemy caster in the dust: its sorcery may fizzle for the turn (it fights with what it carries instead) */
@@ -311,6 +312,8 @@ const B4_START_LVL = 8;
 function newStateHOC(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b4Import(importId) : null, mates = imp ? imp.mates : ['haddat', 'tangle', 'marrow'];
+  /* v7.1: the empty places are the sergeant's pick at the muster (70e, Chapter 1's start). Until then they hold a provisional fill in the old
+     order, so a save opened anywhere still has a squad of five; the muster clears it (S.f.b4_fill) before the sergeant chooses. */
   const fill = HOC_NEW.slice(0, Math.max(0, 4 - mates.length)), squad = ['sgt', ...mates, ...fill];
   const s = {v:1, book:'hoc', sid:sid || (imp ? newSid() : sidFor(name)), name, scene:'chintro', node:null, bg:null, silver:12, xp:0, lvl:1, card:null,
     inv:{sharper:2, burner:1, cusser:1, salve:2, smoker:1}, loy:{}, f:{}, pos:{x:5, y:8},
@@ -322,7 +325,8 @@ function newStateHOC(name, importId, sid){
     Object.assign(s.loy, imp.loy); s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks; s.inv = imp.inv;
     imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; s.dead[k] = {ch:d.ch || 7, where:d.where || 'The Barrow', from:'dg'}; }); } // Book Two's dead stay dead: never in the squad, never a recruit
   else s.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start: Sathi fell at the Barrow, and Hackle was not seen again
-  migrate(s); s.picksDue = b3PicksDue(s);
+  s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
+  migrate(s); s.picksDue = b3PicksDue(fill.length ? Object.assign({}, s, {squad:s.squad.filter(k => !fill.includes(k))}) : s); // the fill's picks come when the muster takes them on
   return s; }
 /* a recruit joining a veteran squad brings her own veteran picks for the levels already passed; a recruit joins the squad, not the Fourth */
 { const _recruit = recruit;
@@ -381,9 +385,9 @@ Object.defineProperty(BOOKS.hoc, 'titleArt', {configurable:true, get(){ return t
 /* ---- the import, on the title: finished Book Two sergeants on the Aren Guard or the Wickan road ---- */
 const b4Finished = () => roster().list.filter(e => e.book === 'dg' && e.done && b4Qualifies(loadSlot(e.id)));
 const b4And = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a[0] || '';
-function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. A recruit off the transports makes five.';
-  const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), fill = HOC_NEW.slice(0, Math.max(0, 4 - i.mates.length)).map(k => TPL[k].name);
-  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${fill.length ? `. The Fourteenth makes up the five with ${esc(b4And(fill))}` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
+function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. At the muster you pick one of the Fourteenth\'s spares to make five.';
+  const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), n = Math.max(0, 4 - i.mates.length);
+  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
 
 /* ---- the words Book Four throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.hoc = [

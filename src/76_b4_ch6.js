@@ -349,6 +349,7 @@ Across the basin, a long bowshot and then another and another, the three ramps g
           {t:'Talk with the squad.', go:'b4_c6_picketfire_talk'},
           {t:'The eve. Sit with each of them a while.', req:()=>b46Ph() >= 2, go:'b4_c6_eve'},
           ...b4Offers().map(id => ({t:`Send for ${NAME(id)}.`, fx:()=>{ b4SwapIn(id); }, go:'b4_c6_picketfire_swap'})),
+          b4SpareChoice('b4_c6_picketfire'),
           b4PipeChoice('b4_c6_picketfire'),
           {t:'Find Radde first.', req:()=>b46Ph() === 1 && !S.f.b4_c6_raddeSaid, go:()=>startExplore()},
           {t:'Out to the spur.', req:()=>b46Ph() === 1 && !!S.f.b4_c6_raddeSaid && !S.f.b4_c6_nestDone, onward:true, go:'b4_c6_to_spur'},

@@ -254,7 +254,7 @@ const AB = {
     run(u,x,y){ const t = unitAt(x,y); AUDIO.play('shadow'); B.fx.push({kind:'bolt', from:{x:u.x,y:u.y}, to:{x:t.x,y:t.y}, col:'#9a86e0', t:performance.now(), dur:400, wob:true});
       t.blindTurns = 2 + lvT(); float(t,'blinded','#9a86e0'); sparks(t.x, t.y, 14, '#6a58b0', .45);
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
-  mend:{name:'Mend', strain:3, desc:()=>`Denul healing on a squadmate within ${has('ohl','triage') ? 4 : 3}: 2d6+${(has('ohl','triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`,
+  mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
     run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); heal(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),

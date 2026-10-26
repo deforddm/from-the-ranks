@@ -77,7 +77,7 @@ R.fresh.squad === 'sgt,haddat,tangle,marrow,tallow' && R.fresh.dead === 'sathi' 
 !R.fresh.ramin && !R.fresh.keth && R.fresh.orvas ? ok('a fresh start offers Orvas only (Ramin and Keth come by transfer)') : no('fresh recruits ' + JSON.stringify(R.fresh));
 R.fresh.nerve === 5 && R.fresh.dust === 0 && R.fresh.reader === 'marrow' && R.fresh.sgtGod === 'Treach' ? ok('Nerve 5, no Dust; Marrow reads; Treach answers for the sergeant') : no('fresh misc ' + JSON.stringify(R.fresh));
 R.offered === 'Rusk' && R.desertQualifies === false ? ok('only the finished Aren Guard save is offered: the desert road and an unfinished Book Two are not') : no('offered ' + R.offered + ' desert ' + R.desertQualifies);
-R.imp.lvl === 8 && R.imp.squad === 'sgt,haddat,tangle,tallow,hessa' ? ok('the transfer: level 8, Haddat and Tangle keep their places, Tallow and Hessa fill the squad to five') : no('imp ' + JSON.stringify(R.imp));
+R.imp.lvl === 8 && R.imp.squad === 'sgt,haddat,tangle,tallow,hessa' ? ok('the transfer: level 8, Haddat and Tangle keep their places, Tallow and Hessa hold the two empty places until the muster (v7.1)') : no('imp ' + JSON.stringify(R.imp));
 R.imp.dead === 'marrow,sathi' && R.imp.deadFrom && !R.sathiInSquad && R.marrowRecruitable === false ? ok('the Barrow dead stay dead (in S.dead, marked from Book Two)') : no('dead ' + R.imp.dead + ' from ' + R.imp.deadFrom);
 R.imp.haddatGear && R.imp.tangleGear && R.imp.kit ? ok('worn gear and unworn kit come across') : no('gear ' + JSON.stringify(R.imp));
 R.imp.picks === '["shieldwall","iron","keen"]' ? ok('talents and veteran picks come across') : no('picks ' + R.imp.picks + ' due ' + R.imp.due);
@@ -99,7 +99,7 @@ else R.shelf === 'gotm,dg,moi' && R.picker === 'gotm,dg,moi' ? ok('Book Four is 
 R.hocTitle.name === 'Unblooded' && /never fought/.test(R.hocTitle.tag) && R.hocTitle.patch === 'hoc' && /hoc/.test(R.hocTitle.picker) && R.hocTitle.imp ? ok('asked for by name, the title dresses for Book Four (Unblooded, its line, its patch) and offers the transfer') : no('hoc title ' + JSON.stringify(R.hocTitle));
 if (R.hasCh) R.begin.S && R.begin.book === 'hoc' && R.begin.ch === 1 && R.begin.view !== 'title' ? ok('Begin Book Four starts a Book Four game at Chapter One') : no('begin ' + JSON.stringify(R.begin));
 else /still being written/.test(R.begin.msg) && R.begin.view === 'title' && !R.begin.S ? ok('Begin Book Four says it is still being written and stays on the title') : no('begin ' + JSON.stringify(R.begin));
-/Haddat and Tangle/.test(R.impDesc) && /Sathi and Marrow|Marrow and Sathi/.test(R.impDesc) && /Tallow and Hessa/.test(R.impDesc) ? ok('the transfer is described when picked: ' + R.impDesc) : no('impDesc ' + R.impDesc);
+/Haddat and Tangle/.test(R.impDesc) && /Sathi and Marrow|Marrow and Sathi/.test(R.impDesc) && /pick two of the Fourteenth's spares/.test(R.impDesc) ? ok('the transfer is described when picked: ' + R.impDesc) : no('impDesc ' + R.impDesc);
 }
 errors.length ? no('page errors: ' + errors.join(' | ')) : ok('no page errors');
 await br.close(); srv.kill();

@@ -61,14 +61,15 @@
 
 /* ---------------- the five new soldiers: battle figures (FIGX, in the ~32px frame drawFigure sets up) ---------------- */
 Object.assign(FIGX, {
-  /* Tallow: tall and new, kit too bright, a helm a size too big, a spear he was told to carry, a borrowed shield */
-  tallow(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.1);
-    B2F.line(ctx, '#8b7355', 1.3, [[8, 12], [8, -21]]); poly(ctx, [[8,-25],[6.6,-19],[9.4,-19]], '#e0dccc'); // the spear
+  /* Tallow: tall and new, kit too bright, a helm a size too big, and (v7.1) a sling swinging from his hand and a pouch of beach stones */
+  tallow(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.1); const sw = o.still ? 0 : Math.sin(t/180 + (o.phase || 0))*1.4;
+    B2F.line(ctx, '#6a5030', .7, [[7, 1], [8.4 + sw*.3, 6], [9.6 + sw, 9.4]]); B2F.line(ctx, '#6a5030', .7, [[7, 1], [10.6 + sw*.4, 5.4], [9.6 + sw, 9.4]]); ell(ctx, 9.8 + sw, 9.8, 1.5, 1.1, '#5a4028'); ell(ctx, 9.6 + sw, 9.4, .8, .6, '#b8b0a0'); // the sling, a stone in it
     h.legs('#3a3428'); h.torso('#a8865a', '#4a3620', 6.2); ctx.fillStyle = 'rgba(255,240,210,.25)'; ctx.fillRect(-5.6, -5.6, 2, 10); // new leather, still pale
     ctx.fillStyle = '#5a4630'; ctx.fillRect(-6.2, 3.6, 12.4, 1.2); B2F.line(ctx, '#3a2a18', .5, [[-2, -6], [.4, -2.6], [2.6, -6]]); ell(ctx, .4, -2, .7, 1.2, '#e8dcc0'); // the finger bone on its thong
     h.head('#d0a888', 4.3, -11); h.look('rgba(24,14,10,.82)', -11.2);
     ctx.beginPath(); ctx.arc(0, -12.6, 6, Math.PI*.98, Math.PI*2.02); ctx.fillStyle = h.armor('#a09a8c', '#3a3830'); ctx.fill(); ctx.fillRect(-6.4, -12.8, 12.8, 1.6); ctx.fillStyle = 'rgba(255,255,250,.3)'; ctx.fillRect(-3.6, -17.4, 3, 1); // the helm, too big, down over the brows
-    h.shield('#7a6a4e', '#2e281c', 5.6, -7, .6); ctx.restore(); },
+    ctx.fillStyle = '#7a6040'; ctx.fillRect(-7.4, 2.6, 3.2, 3.4); ctx.fillStyle = '#8a7050'; ctx.fillRect(-7.4, 2.6, 3.2, 1); // the pouch of stones
+    ctx.restore(); },
   /* Hessa: square and still; a tall shield with a worm carved round the rim; a long-bladed temple spear held upright */
   hessa(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.1, 1.06);
     B2F.line(ctx, '#5a4632', 1.5, [[8.4, 12], [8.4, -22]]); poly(ctx, [[8.4,-29],[6.6,-21],[8.4,-19],[10.2,-21]], '#d8d0bc'); // the temple spear, a long blade
@@ -100,6 +101,31 @@ Object.assign(FIGX, {
     h.torso('#7a3a24', '#2a120a', 6); ctx.fillStyle = 'rgba(255,200,160,.2)'; ctx.fillRect(-5.4, -5, 1.6, 9); ctx.fillStyle = '#c8b898'; for (let i = 0; i < 5; i++) ctx.fillRect(-5 + i*2.4, 6, .6, 2.4); // lacquered leather, horsehair tassels
     h.head('#8a5a3a', 4.2, -11.2); h.look('rgba(20,10,6,.88)', -11.6); ctx.fillStyle = '#0a0606'; ctx.fillRect(-.6, -10.6, .8, 3.4); ctx.fillRect(2.4, -10.6, .8, 3.4); // the black tears
     B2F.cap(ctx, '#0e0a08', 4.5, -12.6); poly(ctx, [[-4.4,-13],[-9.4,-10 + fl],[-10,-5 + fl],[-5.6,-9]], '#1a1410'); // a black horse-tail of hair, blown back
+    ctx.restore(); },
+  /* v7.1 (70e). Mirrel: small and quick, a padded jack with the sleeves cut off, a hospice bag with a red hand, hair in a knot, a roll of linen */
+  mirrel(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, .98);
+    h.legs('#3a3428'); h.torso('#9a967a', '#3a382a', 5.8); ctx.strokeStyle = 'rgba(0,0,0,.22)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(-5.4, -4 + i*2.6); ctx.lineTo(5.4, -4 + i*2.6); } ctx.stroke(); // the quilted jack
+    ctx.fillStyle = '#c8a080'; ctx.fillRect(-7.4, -5, 1.6, 4); ctx.fillRect(5.8, -5, 1.6, 4); // bare forearms
+    B2F.line(ctx, '#4a3420', .7, [[-7.4, .6], [2.4, -6]]); ctx.fillStyle = '#6a5236'; ctx.fillRect(-10, .2, 5, 5.6); ctx.fillStyle = '#7a6044'; ctx.fillRect(-10, .2, 5, 1.6); ell(ctx, -7.5, 3.4, 1, 1.1, '#b23a2a'); // the hospice bag, its red hand
+    h.head('#c8a080', 4.2, -11.2); h.look('rgba(24,14,10,.82)', -11.4); B2F.cap(ctx, '#3a2418', 4.4, -12.4); ell(ctx, .4, -16.6, 2, 1.6, '#3a2418'); // dark hair, in a knot
+    ctx.fillStyle = '#ece6d4'; ctx.fillRect(6.2, -1, 2.4, 3.6); ctx.fillStyle = 'rgba(0,0,0,.15)'; ctx.fillRect(6.2, .4, 2.4, .5); // a roll of clean linen
+    ctx.restore(); },
+  /* Yorin: thin and windburnt, a sky-blue sash, a copper vane at the chest, hair blown back, one hand up to the sky with a thread of lightning at the fingers */
+  yorin(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1.08); const fl = o.still ? 1 : (Math.sin(t/140 + (o.phase || 0)) + 1)/2;
+    h.legs('#2e3038'); h.torso('#6a6a62', '#24241e', 5.4); poly(ctx, [[-5.4,-6],[-2.8,-6],[5,5.4],[2.4,5.4]], '#6fa8d8'); // the sash the quartermaster dislikes
+    ell(ctx, -2.6, -2.4, 1.3, 1.3, '#c87a3a'); ctx.fillStyle = '#e8a060'; ctx.fillRect(-2.9, -4.4, .6, 1.6); // the copper vane
+    h.head('#c09a7a', 4.1, -11.2); h.look('rgba(24,14,10,.82)', -11.6); B2F.cap(ctx, '#6a4a2a', 4.3, -12.4, 1.05, 1.95); poly(ctx, [[-4,-14.6],[-8.4,-15.6],[-4.6,-12.4]], '#6a4a2a'); // hair blown back
+    B2F.line(ctx, '#6a6a62', 1.6, [[5, -4], [8, -10]]); B2F.line(ctx, '#c09a7a', 1.2, [[8, -10], [9, -14]]); // the arm up
+    ctx.globalAlpha = .45 + fl*.55; B2F.line(ctx, '#e4f0ff', .7, [[9, -15], [10.6, -17.6], [9.4, -19], [11.2, -22]]); ctx.globalAlpha = 1; // lightning at the fingers
+    ctx.restore(); },
+  /* Rasp: compact, a scorched apron, the satchel, the file at her belt, cropped red-brown hair, a marine crossbow with a filed cradle */
+  rasp(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1);
+    h.legs('#2a2420'); h.torso('#4a3e30', '#1a140e', 5.8); poly(ctx, [[-4.6,-3],[4.6,-3],[5.6,10],[-5.6,10]], h.armor('#7a5a3a', '#2e1e10')); ell(ctx, 1.6, 5, 1.4, 1, 'rgba(10,6,4,.55)'); // the apron, scorched
+    ctx.fillStyle = '#4a3622'; ctx.fillRect(-10, -1, 5, 6.6); ctx.fillStyle = '#5e4630'; ctx.fillRect(-10, -1, 5, 1.6); ctx.fillStyle = '#d0864a'; ctx.fillRect(-8.2, 1, 1.2, 1.2); // the satchel
+    ctx.fillStyle = '#9a968c'; ctx.fillRect(3.2, 3.4, .8, 5.2); ctx.fillStyle = '#5a3e22'; ctx.fillRect(3, 2.2, 1.2, 1.4); // the file at her belt
+    h.head('#c89a78', 4.2, -11.2); h.look('rgba(24,14,10,.82)', -11.4); B2F.cap(ctx, '#8a4a24', 4.4, -12.6, 1.02, 1.98); ctx.fillStyle = 'rgba(140,60,30,.55)'; ctx.fillRect(-1.6, -9.8, .6, .6); ctx.fillRect(2.4, -9.4, .6, .6); ctx.fillRect(.6, -8.8, .5, .5); // cropped hair, burn-freckles
+    ctx.strokeStyle = '#4a3320'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(2, -.6); ctx.lineTo(12.6, -2.4); ctx.stroke(); ctx.strokeStyle = '#8d8a86'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(9.4, -6.8); ctx.lineTo(9.4, 1.4); ctx.stroke(); // the crossbow
+    ctx.fillStyle = '#7a7466'; ctx.fillRect(7, -1.2, 3.6, 1.4); ctx.fillStyle = 'rgba(255,255,240,.35)'; ctx.fillRect(7, -1.2, 3.6, .4); // the cradle, filed bright
     ctx.restore(); },
 });
 
@@ -156,4 +182,34 @@ Object.assign(POR, {
     const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12.4, F.cy - 2); ctx.bezierCurveTo(-13.6, top - 1, 13.6, top - 1, 12.4, F.cy - 2); ctx.quadraticCurveTo(11.4, F.cy - 13, 0, F.cy - 16.4); ctx.quadraticCurveTo(-11.4, F.cy - 13, -12.4, F.cy - 2);
     ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#2a1e16'], [.5,'#0e0a08'], [1,'#040302']]); ctx.fill();
     PR.stroke(ctx, '#0e0a08', 4, () => { ctx.moveTo(-10, F.cy - 6); ctx.quadraticCurveTo(-22, F.cy + 4, -26, F.cy + 26); }); return F; },
+  /* v7.1 (70e) */
+  mirrel(ctx){ const F = {cy:-73, w:11.8, h:19.2, jaw:.7, chin:4.2, skin:'#c8a080', iris:'#4a3a24', lip:'#9a5a4a', browCol:'#2a1810', browW:1.25, arch:.9, browL:.55, rim:'#8fbfa0', rimA:.2, nose:1, look:-.25, open:1, smileL:.2, smileR:.05, mouthW:3.5};
+    PR.torsoPath(ctx, 32, 6); ctx.fillStyle = PR.lit(ctx, '#a29e82', '#2e2c20', -32, 24); ctx.fill(); // the quilted jack
+    ctx.save(); PR.torsoPath(ctx, 32, 6); ctx.clip(); PR.stroke(ctx, 'rgba(0,0,0,.25)', .7, () => { for (let i = 0; i < 6; i++) { ctx.moveTo(-34, -42 + i*7); ctx.lineTo(34, -42 + i*7); } });
+    PR.stroke(ctx, '#4a3420', 3.2, () => { ctx.moveTo(-26, -6); ctx.lineTo(18, -46); }); PR.soft(ctx, 24, -20, 18, 18, '#000000', .4); ctx.restore(); // the bag's strap
+    ctx.save(); ctx.translate(-20, -12); ctx.fillStyle = PR.lit(ctx, '#7a6044', '#2e2010', -10, 10); ctx.fillRect(-10, -6, 20, 14); ell(ctx, 0, 1, 3, 3.4, '#b23a2a'); PR.stroke(ctx, '#b23a2a', 1.1, () => { for (let i = -2; i <= 2; i++) { ctx.moveTo(i*1.2, -1); ctx.lineTo(i*1.6, -4.6); } }); ctx.restore(); // the red hand on the flap
+    PR.neck(ctx, F, 5.8); PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12.4, F.cy - 2); ctx.bezierCurveTo(-13.4, top - 1, 13.4, top - 1, 12.4, F.cy - 2); ctx.quadraticCurveTo(11.2, F.cy - 13, 0, F.cy - 16); ctx.quadraticCurveTo(-11.2, F.cy - 13, -12.4, F.cy - 2);
+    ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#4a3020'], [.5,'#2a1810'], [1,'#0a0604']]); ctx.fill(); ell(ctx, 2, top - 3, 6, 4.6, PR.rad(ctx, 0, top - 4, .5, 6, [[0,'#4a3020'], [1,'#140c06']])); return F; }, // hair pulled back into a knot
+  yorin(ctx){ const F = {cy:-74, w:11.4, h:20, jaw:.68, chin:4.2, skin:'#c09a7a', iris:'#5a7a9a', lip:'#8a5a4a', browCol:'#5a3a1a', browW:1.1, arch:1.3, browL:.7, browR:.4, rim:'#9fc4e8', rimA:.24, nose:1.05, look:.5, open:1.15, smileL:.35, smileR:.1, mouthW:3.6};
+    PR.torsoPath(ctx, 30, 6); ctx.fillStyle = PR.lit(ctx, '#6e6e66', '#1c1c18', -30, 22); ctx.fill(); // the padded jack
+    ctx.save(); PR.torsoPath(ctx, 30, 6); ctx.clip(); ctx.fillStyle = PR.lin(ctx, -30, -40, 30, 0, [[0,'#8ac0ee'], [.6,'#4f86b8'], [1,'#1e3650']]); PR.path(ctx, [[-30, -40], [-18, -48], [30, -4], [30, 8]]); ctx.fill(); PR.soft(ctx, 22, -18, 18, 18, '#000000', .45); ctx.restore(); // the sky-blue sash
+    PR.stroke(ctx, '#2a2018', .6, () => { ctx.moveTo(-5, -47); ctx.quadraticCurveTo(-4, -38, 0, -33); ctx.moveTo(5, -47); ctx.quadraticCurveTo(4, -38, 0, -33); }); ell(ctx, 0, -30, 3.6, 3.6, PR.rad(ctx, -1, -31, .4, 3.6, [[0,'#f0b070'], [1,'#7a3a12']])); PR.stroke(ctx, '#f8d0a0', .8, () => { ctx.moveTo(0, -30); ctx.lineTo(2.6, -33.4); }); // the copper vane at his throat
+    PR.neck(ctx, F, 5.6); PR.face(ctx, F);
+    [-1, 1].forEach(sd => PR.strands(ctx, 16, ['#7a5a3a', '#5a3a1a', '#3a2410'], .6, 50 + sd, (i, r) => { const x = sd*(6 + r()*6), y = F.cy - 16 + r()*3; return [x, y, x - 8 - r()*6, y - 4, x - 14 - r()*8, y - 2 + r()*4]; })); // hair blown back by a wind nobody else feels
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-12, F.cy - 4); ctx.bezierCurveTo(-13, top, 12, top - 2, 12.4, F.cy - 4); ctx.quadraticCurveTo(10, F.cy - 13, 0, F.cy - 15.6); ctx.quadraticCurveTo(-10, F.cy - 13, -12, F.cy - 4);
+    ctx.fillStyle = PR.lin(ctx, -13, 0, 13, 0, [[0,'#7a5a3a'], [.5,'#4a3018'], [1,'#1a1008']]); ctx.fill(); return F; },
+  rasp(ctx){ const F = {cy:-74, w:12.2, h:19.6, jaw:.8, chin:5, skin:'#c89a78', iris:'#3a4a3a', lip:'#8a4a3a', browCol:'#6a3010', browW:1.35, arch:.7, browL:.3, browR:.6, rim:'#d0864a', rimA:.2, nose:1.05, look:.2, smileL:.5, smileR:-.1, mouthW:3.8};
+    // the marine crossbow behind her right shoulder, the cradle filed bright
+    ctx.save(); ctx.translate(26, -46); ctx.rotate(.22); ctx.fillStyle = PR.lin(ctx, -3, 0, 4, 0, [[0,'#8a6440'], [.5,'#5a3e22'], [1,'#1e140a']]); ctx.fillRect(-3, -44, 6, 70);
+    ctx.strokeStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'#9a968c'], [.5,'#4a4640'], [1,'#141210']]); ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-20, -30); ctx.bezierCurveTo(-12, -38, -4, -40, 0, -40); ctx.bezierCurveTo(4, -40, 12, -38, 20, -30); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = '#8a8476'; ctx.fillRect(-4.6, -18, 9.2, 5); ctx.fillStyle = 'rgba(255,255,240,.4)'; ctx.fillRect(-4.6, -18, 9.2, 1.2); ctx.restore();
+    PR.torsoPath(ctx, 34, 4); ctx.fillStyle = PR.lit(ctx, '#4e3e2c', '#1a120a', -34, 24); ctx.fill(); // the jerkin
+    ctx.save(); PR.torsoPath(ctx, 34, 4); ctx.clip(); ctx.fillStyle = PR.lit(ctx, '#86603e', '#2e1e10', -20, 20); PR.path(ctx, [[-20, -30], [20, -30], [24, 6], [-24, 6]]); ctx.fill(); // the leather apron
+    PR.soft(ctx, -8, -16, 6, 4, '#120a04', .5); PR.soft(ctx, 10, -8, 5, 3, '#120a04', .4); PR.stroke(ctx, '#3a2412', 1.4, () => { ctx.moveTo(-20, -30); ctx.lineTo(-12, -48); ctx.moveTo(20, -30); ctx.lineTo(12, -48); }); PR.soft(ctx, 26, -18, 18, 18, '#000000', .45); ctx.restore(); // scorch marks, the apron's straps
+    PR.neck(ctx, F, 6.2);
+    F.under = (ctx, F) => PR.dots(ctx, F, 40, 'rgba(150,70,40,.4)', .55, [-4, 10]); // burn-freckles
+    PR.face(ctx, F);
+    const u = F.h/20, top = F.cy - 21*u; ctx.beginPath(); ctx.moveTo(-13.4, F.cy - 4); ctx.bezierCurveTo(-14.4, top - 2, 14.4, top - 2, 13.4, F.cy - 4); ctx.quadraticCurveTo(11.4, F.cy - 12.6, 0, F.cy - 15.8); ctx.quadraticCurveTo(-11.4, F.cy - 12.6, -13.4, F.cy - 4); // hair cropped short, red-brown
+    ctx.fillStyle = PR.lin(ctx, -14, 0, 14, 0, [[0,'#a85a2a'], [.5,'#6a3410'], [1,'#200c04']]); ctx.fill(); return F; },
 });
