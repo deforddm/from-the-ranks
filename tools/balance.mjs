@@ -136,7 +136,7 @@ const INIT = () => {
     const pool = B4POOL[spec.ch]; S.card = pool[Math.floor(Math.random() * pool.length)]; notes = [];
     startBattle(spec.id, spec.opt || {});
   };
-  const isHealer = u => u.id === 'ohl' || (W.hoc && u.id === 'marrow');
+  const isHealer = u => u.id === 'ohl' || (W.hoc && (u.id === 'marrow' || u.id === 'mirrel'));
 
   /* ---------------- the smart player ---------------- */
   const threatAt = (p, self) => { let s = 0; foes().forEach(e => { if (e.stun || e.hp <= 0) return; if (cheb(e, p) <= e.mv + e.rng) s += avg(e.dmg) * (e.attacks || 1); }); return s; };
@@ -256,6 +256,12 @@ const INIT = () => {
       // Vell: the hook on a shooter or a caster standing off, hauled in among the squad
       if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.boss && !e.immortal && e.maxhp < 45 && (e.rng > 1 || danger(e) >= 8)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('grapple', t.x, t.y); }
+      // v7.1 Book Four: the Twins first (free), Hessa's prayers, Yorin's Serc (the Shove where it catches two or more, else Sky-Fire on the worst thing in reach)
+      if (can(u, 'b4_twins')) { const t = AB.b4_twins.tiles(u).sort((a, b) => b.atk - a.atk)[0]; if (t) { const r = tryAb('b4_twins', t.x, t.y); if (r) return r; } }
+      if (can(u, 'b4_wormgift')) { const t = AB.b4_wormgift.tiles(u).filter(p => pct(p) < .5).sort((a, b) => pct(a) - pct(b))[0]; if (t) return tryAb('b4_wormgift', t.x, t.y); }
+      if (can(u, 'b4_gust')) { const t = AB.b4_gust.tiles(u).map(e => [e, opp.filter(o => cheb(o, e) <= 1).length]).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1])[0]; if (t && strainOk(u, 3)) return tryAb('b4_gust', t[0].x, t[0].y); }
+      if (can(u, 'b4_bolt') && strainOk(u, 2)) { const t = AB.b4_bolt.tiles(u).filter(e => !e.immortal).sort((a, b) => danger(b) - danger(a))[0]; if (t) return tryAb('b4_bolt', t.x, t.y); }
+      if (can(u, 'b4_rot')) { const t = AB.b4_rot.tiles(u).filter(e => !e.immortal).sort((a, b) => b.hp - a.hp)[0]; if (t) return tryAb('b4_rot', t.x, t.y); }
       // the tracker's mark (Ellis, Sathi, Sohra): free, so mark something big the squad is about to hit, then shoot
       if (can(u, 'mark')) { const t = AB.mark.tiles(u).filter(e => !e.immortal && e.hp >= 15 && sq.filter(p => p !== u && cheb(p, e) <= p.rng + p.mv).length >= 2).sort((a, b) => b.hp - a.hp)[0];
         if (t) return tryAb('mark', t.x, t.y); }
