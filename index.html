@@ -640,7 +640,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '7.0.0';
+const VERSION = '7.0.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1725,7 +1725,13 @@ const TIERW = {crit:'a natural 20', clean:'clean', ok:'success', near:'yes, butâ
    costs money says so in its own near:. */
 const bruiseN = () => 3 + lvT();
 function bruise(id, n){ if (!id) return; S.bruised ??= {}; S.bruised[id] = (S.bruised[id] || 0) + n; }
+/* v7.0.1: a check is rolled once. Its result is kept (S.rolled, cleared when a chapter starts, so a replay can try it again), and a
+   node shown again does not offer the same check a second time, unless the choice says again:true or it is the node's only way out.
+   Without this a check at a cart or a figure on the map could be tried until it came up, and paid each time it did. */
+const rolledKey = (id, c) => `${id}|${c.check[0]}|${c.t}`;
+const rolledHere = (id, c) => !!(c.check && !c.again && S.rolled && S.rolled[rolledKey(id, c)]);
 function settleRoll(r, c){
+  if (S.node && c && c.check) { S.rolled ??= {}; S.rolled[rolledKey(S.node, c)] = r.pass ? 1 : 2; }
   S.rattled ??= {}; S.lastRoll = {who:r.who, stat:r.stat, tier:r.tier, ok:r.ok, pass:r.pass, margin:r.margin, nat:r.nat}; // first, so a choice's own extras can read ROLL()
   tally(r.pass ? 'checksOk' : 'checksFail'); if (r.tier === 'clean' || r.tier === 'crit') tally('checksClean'); if (r.tier === 'near') tally('checksNear');
   const extra = (x, cls) => { if (!x) return; try { if (x.fx) x.fx(); } catch(e) { console.warn('check extra', e); } if (x.t) note(typeof x.t === 'function' ? x.t() : x.t, cls); };
@@ -1814,6 +1820,7 @@ function talk(id){
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
+  { const fresh = curCh.filter(c => !rolledHere(id, c)); if (fresh.length) curCh = fresh; } // a check already rolled here is not offered again
   G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
@@ -6901,6 +6908,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.0.1', ['A skill check is now tried once. Coming back to a cart, a figure or a place no longer offers the same check again, so the munitions cart in Aren stops asking (and stops handing out a sharper every time it comes up). The same holds in every book. Replaying a chapter lets you try its checks again. Saves carry on as they were.']],
   ['7.0.0', ['Book Four, House of Chains, is on the shelf. Seven chapters and a finale beside the Fourteenth Army: the march from Aren under the new Adjunct, the Holy Desert, and Raraku. You are a sergeant of the Third squad, 9th Legion, Second Company, with the regulars of the company around you. Start fresh, or bring your Book Two squad on from the Aren Guard or the Wickan roads, with their levels, gear, picks and tricks. Every chapter has its Deck reading, its hard check and its key choice; the fights are harder than Book Three\'s, and in the last chapter there is one fight where whoever falls stays down, on any difficulty. Nothing in Books One to Three has changed; saves carry on as they were.']],
   ['6.15.0', ['The squadmates you can gain now walk in the story as well as the fights. In Book One, Ellis and Vell speak up in the chapters they travel in (Vell most of all, from the roofs to the Fete to the quay), and the stand-down roads at the end no longer forget him. In Book Two, Ramin and Keth have something to say in every chapter, and an old hand of the Fourth who joins in Aren is part of the last of it. In Book Three, Sohra and Dannet have more, and Ellis or Vell, if your Book One save brings them, are part of the squad from Pale to the shore instead of silent. When the narration names the squad around a fire it names them too, and a head-count that left one out is fixed. Vell is no longer called her when he falls. Nothing that happens has changed; saves carry on as they were.']],
   ['6.14.0', ['A pass over the writing in all three books. The same few moves had taken over: people looking at you as if you were weather, "the way a man looks atâ€¦", someone who says nothing or doesn\'t look at you, sentences starting on Nobody, long moments. About two lines in three of those are gone or said plainly, and the refrains (Garrow\'s password, the regiment voice, the reader\'s cold hands after a vision) now come at the moments they were written for. Nothing that happens has changed: the same people, the same choices, the same fights. Saves carry on as they were.']],
@@ -8280,7 +8288,7 @@ function showChapterEnd(){
 }
 function startChapter(n){
   const CH = CHAPTERS[n]; if (!CH) return showTitle();
-  S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.gods = {ch:n, used:[]}; S.boons = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
+  S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.gods = {ch:n, used:[]}; S.boons = null; S.rolled = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
   if (n >= 1) { const c = JSON.parse(JSON.stringify(S)); delete c.chsnap; c.log = []; S.chsnap ??= {}; S.chsnap[n] = c; } // replays start from here
   S.area = CH.area.id; S.pos = {...CH.area.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:S.pos.x+dx, y:S.pos.y+dy})); S.log = [];
   save(); showChapterIntro();
@@ -48958,7 +48966,9 @@ ${b4In('darrut') ? `Darrut, beside you, has gone very still. He followed this ma
     b4_c1_well:()=>({sp:'The well', txt:
 `A public well at the edge of the ground, a round curb of old dressed stone, with a bucket on a chain and a queue of thirsty recruits. ${b41Say({haddat:`Haddat goes to the head of the queue, which nobody argues with, and draws a bucket, and then makes each of the recruits drink twice, and says a word in Hissari as each of them does: *water*, *well*, *poisoned*, *enough*, *run*. "You will need these," she tells them. "Say them back to me." They do, badly. She makes them do it again.`, _:`The squad drinks, slowly, the way the Chain taught it, and the recruits watching copy it without knowing they are copying.`})}`,
       ch:[{t:'Drink, and walk on.', go:()=>startExplore()}]}),
-    b4_c1_cart:()=>({sp:'A munitions cart', txt:
+    b4_c1_cart:()=> S.f.b4_c1_cartTried ? ({sp:'A munitions cart', txt:
+`The cart under its oiled hide, and the 8th's guard in front of it with the crossbow. ${S.f.b4_c1_cartSharper ? 'He does not look at the Third\'s satchel. He is very careful not to.' : 'He sees the Third coming and lifts the crossbow an inch, the way he did before.'}`,
+      ch:[{t:'Walk on.', go:()=>startExplore()}]}) : ({sp:'A munitions cart', txt:
 `A heavy cart under an oiled hide, with three soldiers of the 8th sitting on it and a fourth standing in front of it with a crossbow, looking at everybody. The hide is roped down very carefully. Under it, by the shape, are crates; and on the crates, by the smell, is the resin-and-clay smell that every sapper knows.
 
 ${b41Say({tangle:`Tangle stops dead and looks at the cart with open longing. "Moranth," he says softly. "A whole cart." He counts the guards, out loud: "Four." He counts them again. "Four. Sergeant, they'd never miss one."`, _:`Moranth munitions, by the smell. A whole cart of them, after this morning.`})}`,
@@ -48967,10 +48977,10 @@ ${b41Say({tangle:`Tangle stops dead and looks at the cart with open longing. "Mo
             near:{t:'Yes, but the guard writes the sergeant\'s name on the back of his hand before he hands it over. The 8th\'s quartermaster will hear of it.', fx:()=>{ S.f.b4_c1_cartName = 1; }},
             go:'b4_c1_cart_ok', fail:'b4_c1_cart_no'},
           {t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_cart_ok:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartSharper = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('+1 sharper.', 'good'); }, txt:
+    b4_c1_cart_ok:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartTried = 1; S.f.b4_c1_cartSharper = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('+1 sharper.', 'good'); }, txt:
 `${by({tangle:`Tangle talks to the guard sapper to sapper, about fuse-cord and the price of clay in Malaz City and a man they both turn out to have known, and somewhere in the middle of it a sharper goes from the cart into the satchel and the guard watches it go and does not stop it.`, _:`{who} talks to the guard about the satchel, and the Chain, and how far it is to Raraku, and somewhere in the middle of it the guard gets down and lifts a corner of the hide.`})} "One," the guard says. "For the Chain. Don't throw it at the 8th."`,
       ch:[{t:'"Never."', go:()=>startExplore()}]}),
-    b4_c1_cart_no:()=>({sp:'A munitions cart', txt:
+    b4_c1_cart_no:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartTried = 1; }, txt:
 `The guard listens to all of it with great patience, and then lifts the crossbow an inch. "No," he says. "This morning a sapper of the 8th put one of these under the parade ground. The captain says the next man who asks for one gets to sit on the cart until Raraku." He considers. "Nicely put, though."${b4In('tangle') ? `\n\nTangle sighs, and counts the guards again, and walks away.` : ''}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
     b4_c1_to_streets:()=> S.f.b4_c1_errand ? ({sp:'Into the streets', txt:

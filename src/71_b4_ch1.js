@@ -445,7 +445,9 @@ ${b4In('darrut') ? `Darrut, beside you, has gone very still. He followed this ma
     b4_c1_well:()=>({sp:'The well', txt:
 `A public well at the edge of the ground, a round curb of old dressed stone, with a bucket on a chain and a queue of thirsty recruits. ${b41Say({haddat:`Haddat goes to the head of the queue, which nobody argues with, and draws a bucket, and then makes each of the recruits drink twice, and says a word in Hissari as each of them does: *water*, *well*, *poisoned*, *enough*, *run*. "You will need these," she tells them. "Say them back to me." They do, badly. She makes them do it again.`, _:`The squad drinks, slowly, the way the Chain taught it, and the recruits watching copy it without knowing they are copying.`})}`,
       ch:[{t:'Drink, and walk on.', go:()=>startExplore()}]}),
-    b4_c1_cart:()=>({sp:'A munitions cart', txt:
+    b4_c1_cart:()=> S.f.b4_c1_cartTried ? ({sp:'A munitions cart', txt:
+`The cart under its oiled hide, and the 8th's guard in front of it with the crossbow. ${S.f.b4_c1_cartSharper ? 'He does not look at the Third\'s satchel. He is very careful not to.' : 'He sees the Third coming and lifts the crossbow an inch, the way he did before.'}`,
+      ch:[{t:'Walk on.', go:()=>startExplore()}]}) : ({sp:'A munitions cart', txt:
 `A heavy cart under an oiled hide, with three soldiers of the 8th sitting on it and a fourth standing in front of it with a crossbow, looking at everybody. The hide is roped down very carefully. Under it, by the shape, are crates; and on the crates, by the smell, is the resin-and-clay smell that every sapper knows.
 
 ${b41Say({tangle:`Tangle stops dead and looks at the cart with open longing. "Moranth," he says softly. "A whole cart." He counts the guards, out loud: "Four." He counts them again. "Four. Sergeant, they'd never miss one."`, _:`Moranth munitions, by the smell. A whole cart of them, after this morning.`})}`,
@@ -454,10 +456,10 @@ ${b41Say({tangle:`Tangle stops dead and looks at the cart with open longing. "Mo
             near:{t:'Yes, but the guard writes the sergeant\'s name on the back of his hand before he hands it over. The 8th\'s quartermaster will hear of it.', fx:()=>{ S.f.b4_c1_cartName = 1; }},
             go:'b4_c1_cart_ok', fail:'b4_c1_cart_no'},
           {t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_cart_ok:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartSharper = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('+1 sharper.', 'good'); }, txt:
+    b4_c1_cart_ok:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartTried = 1; S.f.b4_c1_cartSharper = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('+1 sharper.', 'good'); }, txt:
 `${by({tangle:`Tangle talks to the guard sapper to sapper, about fuse-cord and the price of clay in Malaz City and a man they both turn out to have known, and somewhere in the middle of it a sharper goes from the cart into the satchel and the guard watches it go and does not stop it.`, _:`{who} talks to the guard about the satchel, and the Chain, and how far it is to Raraku, and somewhere in the middle of it the guard gets down and lifts a corner of the hide.`})} "One," the guard says. "For the Chain. Don't throw it at the 8th."`,
       ch:[{t:'"Never."', go:()=>startExplore()}]}),
-    b4_c1_cart_no:()=>({sp:'A munitions cart', txt:
+    b4_c1_cart_no:()=>({sp:'A munitions cart', fx:()=>{ S.f.b4_c1_cartTried = 1; }, txt:
 `The guard listens to all of it with great patience, and then lifts the crossbow an inch. "No," he says. "This morning a sapper of the 8th put one of these under the parade ground. The captain says the next man who asks for one gets to sit on the cart until Raraku." He considers. "Nicely put, though."${b4In('tangle') ? `\n\nTangle sighs, and counts the guards again, and walks away.` : ''}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
     b4_c1_to_streets:()=> S.f.b4_c1_errand ? ({sp:'Into the streets', txt:

@@ -60,7 +60,13 @@ const TIERW = {crit:'a natural 20', clean:'clean', ok:'success', near:'yes, butâ
    costs money says so in its own near:. */
 const bruiseN = () => 3 + lvT();
 function bruise(id, n){ if (!id) return; S.bruised ??= {}; S.bruised[id] = (S.bruised[id] || 0) + n; }
+/* v7.0.1: a check is rolled once. Its result is kept (S.rolled, cleared when a chapter starts, so a replay can try it again), and a
+   node shown again does not offer the same check a second time, unless the choice says again:true or it is the node's only way out.
+   Without this a check at a cart or a figure on the map could be tried until it came up, and paid each time it did. */
+const rolledKey = (id, c) => `${id}|${c.check[0]}|${c.t}`;
+const rolledHere = (id, c) => !!(c.check && !c.again && S.rolled && S.rolled[rolledKey(id, c)]);
 function settleRoll(r, c){
+  if (S.node && c && c.check) { S.rolled ??= {}; S.rolled[rolledKey(S.node, c)] = r.pass ? 1 : 2; }
   S.rattled ??= {}; S.lastRoll = {who:r.who, stat:r.stat, tier:r.tier, ok:r.ok, pass:r.pass, margin:r.margin, nat:r.nat}; // first, so a choice's own extras can read ROLL()
   tally(r.pass ? 'checksOk' : 'checksFail'); if (r.tier === 'clean' || r.tier === 'crit') tally('checksClean'); if (r.tier === 'near') tally('checksNear');
   const extra = (x, cls) => { if (!x) return; try { if (x.fx) x.fx(); } catch(e) { console.warn('check extra', e); } if (x.t) note(typeof x.t === 'function' ? x.t() : x.t, cls); };
@@ -149,6 +155,7 @@ function talk(id){
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
+  { const fresh = curCh.filter(c => !rolledHere(id, c)); if (fresh.length) curCh = fresh; } // a check already rolled here is not offered again
   G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
