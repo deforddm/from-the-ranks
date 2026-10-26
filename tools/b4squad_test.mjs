@@ -22,10 +22,18 @@ const r = await page.evaluate(async () => {
   out.fresh.btn = [...document.querySelectorAll('#sheet .choice')].map(b => b.textContent).join(' | ');
   take('b4_muster', /Take Yorin/); out.fresh.after = {squad:S.squad.join(','), choices:vis('b4_muster').map(c => c.t), loy:S.loy.yorin, vet:(S.picks.yorin || []).filter(p => PICKS.vet.some(v => v[0] === p)).length};
   take('b4_muster', /Into the line/); out.fresh.done = {node:S.node, mustered:S.f.b4_mustered, due:(S.picksDue || []).join(','), intro:B4CH1.intro.node, spares:b4SparesOpen()};
-  /* ================= the muster: the sergeant, Haddat and Ramin (two places) ================= */
+  /* ================= the muster: the sergeant, Haddat and Ramin (three places: Ramin walks on top of the five, v7.1) ================= */
   S = newStateHOC('Two'); S.squad = ['sgt', 'haddat', 'redblade']; S.loy = {haddat:0, redblade:0}; S.f.b4_musterDue = 2; S.f.b4_fill = []; S.picksDue = []; S.chapter = 1; save();
-  out.two = {marks:marks()}; talk('b4_muster'); take('b4_muster', /Take Mirrel/); out.two.marks2 = marks(); take('b4_muster', /Take Rasp/);
+  out.two = {marks:marks()}; talk('b4_muster'); take('b4_muster', /Take Mirrel/); out.two.marks2 = marks(); take('b4_muster', /Take Rasp/); out.two.places2 = b4Places(); take('b4_muster', /Take Yorin/);
   out.two.squad = S.squad.join(','); out.two.last = vis('b4_muster').map(c => c.t).join('|'); take('b4_muster', /Into the line/); out.two.mustered = S.f.b4_mustered;
+  /* ================= David's save (v7.1): from before the muster, the sergeant, Haddat, Ramin, Tallow, Hessa: one place short ================= */
+  S = newStateHOC('Short'); S.squad = ['sgt', 'haddat', 'redblade', 'tallow', 'hessa']; S.loy = {haddat:0, redblade:0, tallow:0, hessa:0}; delete S.f.b4_musterDue; S.f.b4_mustered = 0; S.picksDue = []; S.chapter = 2;
+  S.imported = {ramin:true, keth:false, mates:['haddat'], f:{}}; S.f.b4_raminDone = 1; save();
+  out.short = {open:b4SparesOpen(), places:b4Places()}; out.short.choices = vis('b4_spares').map(c => c.t);
+  take('b4_spares', /Take Mirrel/); out.short.squad = S.squad.join(','); out.short.orvas = b4Join('orvas'); out.short.after = S.squad.length;
+  /* a recruit comes on top of a full five without anybody going back */
+  S = newStateHOC('Five'); S.squad = ['sgt', 'haddat', 'tallow', 'hessa', 'tebbet']; S.imported = {ramin:true, keth:false, mates:['haddat'], f:{}}; S.f.b4_mustered = 1; save();
+  out.five = {ramin:b4Join('redblade'), squad:S.squad.join(','), orvas:b4Join('orvas'), len:S.squad.length};
   /* ================= a fight: Tallow, Hessa, Mirrel, Yorin, Rasp ================= */
   S = newStateHOC('Fight'); S.squad = ['sgt', 'tallow', 'hessa', 'mirrel', 'yorin', 'rasp']; ['tallow', 'hessa', 'mirrel', 'yorin', 'rasp'].forEach(k => { S.loy[k] = 0; S.gear[k] = {}; S.picks[k] = []; });
   S.f.b4_mustered = 1; S.chapter = 2; S.dust = 0; S.picksDue = []; migrate(S); save();
@@ -101,8 +109,12 @@ else {
   F.done.mustered === 1 && /3/.test(F.done.due) && F.done.intro === 'b4_c1_start' && !F.done.spares ? ok('into the line: mustered, Yorin\'s talent pick due, no fire offer afterwards') : no('fresh done ' + JSON.stringify(F.done));
   const m2 = R.two.marks; m2.mirrel === 'no healer in the squad' && m2.tallow === 'no bow in the squad' && m2.tebbet === 'no bow in the squad' && m2.yorin === 'no sorcery in the squad' && m2.rasp === 'no sapper in the squad' && m2.hessa === '-' && m2.darrut === '-'
     ? ok('the sergeant, Haddat and Ramin: healer, bow, sorcery and munitions all marked') : no('two marks ' + JSON.stringify(m2));
-  R.two.marks2.mirrel === 'x' && R.two.marks2.rasp === 'no sapper in the squad' && R.two.squad === 'sgt,haddat,redblade,mirrel,rasp' && R.two.last === 'Into the line.' && R.two.mustered === 1
-    ? ok('two places: Mirrel then Rasp, the marks recounted after each pick') : no('two ' + JSON.stringify(R.two));
+  R.short.open && R.short.places === 1 && R.short.choices.some(t => /^Take Mirrel/.test(t)) && R.short.squad === 'sgt,haddat,redblade,tallow,hessa,mirrel' && R.short.orvas === false && R.short.after === 6
+    ? ok('a save from before the muster one short (sergeant, Haddat, Ramin, Tallow, Hessa): the fire offers a spare straight in, to six; Orvas then has no room') : no('short ' + JSON.stringify(R.short));
+  R.five.ramin === true && R.five.squad === 'sgt,haddat,tallow,hessa,tebbet,redblade' && R.five.orvas === false && R.five.len === 6
+    ? ok('a recruit joins a full five without anybody going back; the sixth place is the last') : no('five ' + JSON.stringify(R.five));
+  R.two.marks2.mirrel === 'x' && R.two.marks2.rasp === 'no sapper in the squad' && R.two.places2 === 1 && R.two.squad === 'sgt,haddat,redblade,mirrel,rasp,yorin' && R.two.last === 'Into the line.' && R.two.mustered === 1
+    ? ok('three places beside Ramin (a recruit walks on top of the five): Mirrel, Rasp, Yorin, the marks recounted after each pick') : no('two ' + JSON.stringify(R.two));
   const G = R.fight;
   G.ab.tallow === 'b4_twins,salve' && G.ab.hessa === 'b4_rot,b4_wormgift,salve' && G.ab.mirrel === 'mend,wash,stanch,salve' && G.ab.yorin === 'b4_bolt,b4_gust,salve' && G.ab.rasp === 'sharper,burner,cusser,smoker,salve' && G.healer === 'mirrel' && G.yorinMagic && !G.hessaMagic
     ? ok('the abilities: Tallow the Twins, Hessa two prayers, Mirrel Marrow\'s, Yorin two Serc spells, Rasp the satchel; Mirrel is the healer') : no('abilities ' + JSON.stringify(G));

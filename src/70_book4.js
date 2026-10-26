@@ -351,10 +351,11 @@ const b4Recruit_ = () => (S && Array.isArray(S.squad) && B4_RECRUITS.find(k => S
 /* may this recruit be offered at all in this game? */
 const b4CanRecruit = id => !!(b4On() && TPL[id] && !(S.dead && S.dead[id]) && (id === 'orvas' ? true : id === 'redblade' ? !!(S.imported && S.imported.ramin) : id === 'warlock' ? !!(S.imported && S.imported.keth) : false));
 function b4Join(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  if (b4Recruit_() || b4Room() <= 0) { S.f[B4_DONE[id]] = 2; note(`${NAME(id)} stays with ${B4_HOME[id]} for now. Ask at any fire, and he'll come.`); save(); return false; }
+  /* v7.1 (David, Oct 26): more than one recruit may walk, so long as the squad stays at six */
+  if (b4Room() <= 0) { S.f[B4_DONE[id]] = 2; note(`${NAME(id)} stays with ${B4_HOME[id]} for now. Ask at any fire, and he'll come.`); save(); return false; }
   S.f[B4_DONE[id]] = 1; recruit(id); return true; }
 function b4SwapIn(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  const out = b4Recruit_();
+  const out = b4Room() > 0 ? null : b4Recruit_(); // room in the six: they come without anybody going back
   if (out) { S.f.b4_allyGear ??= {}; S.f.b4_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B4_DONE[out]] = 2;
     S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B4_HOME[out]}. Ask at any fire, and he'll come.`); }
   if (b4Room() <= 0) return false;

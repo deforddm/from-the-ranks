@@ -184,7 +184,7 @@ const b4SpareMark = id => { const r = B4_FILLS[id]; return r && b4Lacks()[r] ? B
 const b4SpareOk = id => !!(S && TPL[id] && !(S.dead && S.dead[id]) && !(S.squad || []).includes(id) && !(id === 'rasp' && b4In('tangle')));
 const b4SpareList = () => HOC_NEW.filter(b4SpareOk);
 /* the empty places in a squad of five (the sergeant counts) */
-const b4Places = () => Math.max(0, 5 - ((S && S.squad) || []).filter(k => !(S.dead && S.dead[k])).length);
+const b4Places = () => Math.max(0, 5 - ((S && S.squad) || []).filter(k => !(S.dead && S.dead[k]) && !B4_RECRUITS.includes(k)).length); // v7.1 (David, Oct 26): a recruit walks on top of the five, never in a fill-in's place
 const b4MusterDue = () => !!(b4On() && S.f && S.f.b4_musterDue > 0 && !S.f.b4_mustered);
 /* the muster opens: the provisional fill (70's newStateHOC) goes back to the company, so the places are empty for the sergeant's pick */
 function b4MusterOpen(){ if (!b4MusterDue() || S.f.b4_musterOpen) return; S.f.b4_musterOpen = 1;
@@ -203,7 +203,7 @@ function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; c
   if (!Array.isArray(S.f.b4_spareSwaps)) S.f.b4_spareSwaps = []; S.f.b4_spareSwaps.push([out, inn]); save(); return true; }
 /* the fire offer is for a save that came into the book before the muster existed (no b4_musterDue), until the sergeant has had it */
 const b4FillsIn = () => HOC_NEW.filter(b4In);
-const b4SparesOpen = () => !!(b4On() && S.f && S.f.b4_musterDue == null && !S.f.b4_mustered && b4FillsIn().length && b4SpareList().length);
+const b4SparesOpen = () => !!(b4On() && S.f && S.f.b4_musterDue == null && !S.f.b4_mustered && (b4FillsIn().length || b4Places() > 0) && b4SpareList().length);
 /* the choice a chapter's fire offers (back: the fire node's id) */
 function b4SpareChoice(back){ return {t:'Radde has spares from the company.', tag:'swap a new soldier', req:()=>b4SparesOpen(), fx:()=>{ S.f.b4_spareBack = back; }, go:'b4_spares'}; }
 const b4SpareBack = () => { const b = S.f.b4_spareBack; return b && DLG[b] ? talk(b) : startExplore(); };
@@ -227,18 +227,18 @@ Radde writes ${NAME(last)} down against the Third's number. ${n ? `"${numw(n, tr
     return {sp:'Sergeant Radde', again:()=>`Radde is still at the fire with the ledger open. The spares are still by the company's fire, waiting to see what you do.`, txt:
 `Radde comes round the fires with the ledger under his arm, the way he does when he wants a thing written down before he forgets it.
 
-"Third," he says. "The company's got spares. Soldiers who were dealt to other squads and didn't take, or that asked out. If there's anybody in your five you'd rather swap, now's the time, before the road makes it complicated." He nods at the row of them by the company's fire. "One for one. Same as a muster."
+"Third," he says. "The company's got spares. Soldiers who were dealt to other squads and didn't take, or that asked out.${b4Places() > 0 ? ` And you're ${numw(b4Places())} short. ${b4Recruit_() ? `${NAME(b4Recruit_())} doesn't count; ${b4She(b4Recruit_()) ? 'she' : 'he'}'s lent, not ours.` : 'The book says five.'} Take ${b4Places() > 1 ? 'them' : 'one'} on.` : ''} If there's anybody in your five you'd rather swap, now's the time, before the road makes it complicated." He nods at the row of them by the company's fire. "One for one. Same as a muster."
 
 ${b4SpareRows(spares)}`,
-      ch:[...b4SpareChoices('b4_spares_out', id => { S.f.b4_spareIn = id; }),
+      ch:[...(b4Places() > 0 ? b4SpareChoices('b4_spares_done', id => { S.f.b4_spareIn = id; S.f.b4_spareOut = null; b4Take(id); }) : b4SpareChoices('b4_spares_out', id => { S.f.b4_spareIn = id; })),
         {t:'Keep the squad as it is.', fx:()=>{ S.f.b4_mustered = 'kept'; save(); }, go:()=>b4SpareBack()}]}; },
   b4_spares_out:()=>{ const inn = S.f.b4_spareIn;
     return {sp:'Sergeant Radde', txt:`"${TPL[inn] ? NAME(inn) : 'That one'}," Radde says, and writes it. "And who goes back to the company?"`,
       ch:[...b4FillsIn().map(o => ({t:`${NAME(o)} goes back to the company.`, fx:()=>{ S.f.b4_spareOut = o; b4SwapNew(o, inn); }, go:'b4_spares_done'})),
         {t:'Not that one after all.', go:'b4_spares'}]}; },
   b4_spares_done:()=>{ const o = S.f.b4_spareOut, inn = S.f.b4_spareIn;
-    return {sp:'The Third\'s fire', txt:`${TPL[o] ? `${NAME(o)} picks up ${b4She(o) ? 'her' : 'his'} kit and goes back to the company's fire. The Third makes nothing of it; it is the army.` : 'The swap is made.'}${TPL[inn] ? `\n\n${B4_COMES[inn] || ''}` : ''}`,
-      ch:[{t:'Another.', req:()=>b4SpareList().length > 0 && b4FillsIn().length > 0, go:'b4_spares'},
+    return {sp:'The Third\'s fire', txt:`${o && TPL[o] ? `${NAME(o)} picks up ${b4She(o) ? 'her' : 'his'} kit and goes back to the company's fire. The Third makes nothing of it; it is the army.` : (o === null ? '' : 'The swap is made.')}${TPL[inn] ? `\n\n${B4_COMES[inn] || ''}` : ''}`,
+      ch:[{t:'Another.', req:()=>b4SpareList().length > 0 && (b4FillsIn().length > 0 || b4Places() > 0), go:'b4_spares'},
         {t:'That will do. Back to the fire.', fx:()=>{ S.f.b4_mustered = 'fire'; save(); }, go:()=>b4SpareBack()}]}; },
 });
 
