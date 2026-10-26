@@ -38,7 +38,7 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     dg:{core:['haddat', 'sathi', 'tangle', 'marrow'], rec:[{id:'redblade', from:2, to:7}, {id:'warlock', from:2, to:7}, ...['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].map(id => ({id, from:7, to:7, old:1}))]}, // Book Two: Ramin, Keth, and in Aren an old hand of the Fourth (b2OldHand)
     moi:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'sohra', from:1, to:7}, {id:'greysword', from:3, to:7}, {id:'ellis', from:1, to:7, imp:1}, {id:'vell', from:1, to:7, imp:1}]},
     // Book Four: Book Two's four and the Fourteenth's four new soldiers; Ramin and Keth (transfer only) and Orvas (from Chapter 3) as recruits
-    hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}]},
+    hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}, {id:'mirrel', from:1, to:7}, {id:'yorin', from:1, to:7}, {id:'rasp', from:1, to:7}]},
   };
   const NUM = {two:2, three:3, four:4, five:5, six:6, seven:7};
   function mk(book, ch, v, withR, without) {
