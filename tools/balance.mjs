@@ -19,6 +19,7 @@
 //                variants unless asked. Books One to Three are untouched without it.
 //   --diff=bridgeburner  the difficulty (default Soldier); --transfer  the Book Two squad instead of the fresh start (hoc only)
 //   --noorvas    hoc: leave Orvas out from Chapter 3 on
+//   --squad=a,b  hoc: the squad after the sergeant (e.g. haddat,redblade,tallow,hessa), for the muster's picks
 //   --nogear     hoc: no gear from earlier Book Four chapters (the squad as it starts the book)
 //   --flags=k:v,k:v  hoc: story flags set in S.f before the fight (e.g. b4_saw:close for Ch7's breakout on the forward road)
 //   --patch=f.js JS evaluated in the page after boot (global scope) to try a tuning in memory without touching src/,
@@ -123,6 +124,7 @@ const INIT = () => {
     if (spec.transfer) { S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'marrow', 'redblade']; delete S.dead.sathi;
       S.imported = {from:'Hask', sid:'x', road:'guard', lvl:8, mates:['haddat', 'sathi', 'tangle', 'marrow'], dead:[], f:{}, ramin:true, keth:false}; S.f.b4_raminDone = 1; }
     else if (spec.orvas && !S.squad.includes('orvas')) { S.squad.push('orvas'); S.f.b4_orvasDone = 1; }
+    if (spec.squad) { S.squad = ['sgt', ...spec.squad.split(',')]; if (spec.squad.includes('redblade')) S.f.b4_raminDone = 1; } // --squad=a,b,c: this squad (after the sergeant) instead
     migrate(S); S.picksDue = [];
     S.squad.forEach(id => { const o = PICKS[3][id]; S.picks[id] ??= []; if (o && !S.picks[id].includes(o[0][0])) S.picks[id].push(o[0][0]); });
     [5, 7, 9, 11, 13, 15].filter(l => S.lvl >= l).forEach((l, i) => S.squad.forEach(id => { const v = PICKS.vet[i]; if (v && !S.picks[id].includes(v[0])) S.picks[id].push(v[0]); }));
@@ -355,7 +357,7 @@ const battles = meta.filter(b => !ONLY.length || ONLY.includes(b.id)).sort((a, b
 const jobs = [];
 for (const b of battles) {
   const base = { id: b.id, ch: b.ch, lvl: LVL, inv: HOC ? hocSatchel() : satchel(b.id, b.ch), maxRounds: MAXR, wall: 90000, munCap: RICH ? 99 : 2, cusserCap: RICH ? 99 : 1, salveCap: RICH ? 99 : 1,
-    book: BOOK, diff: DIFF, flags: FLAGS, nogear: NOGEAR, transfer: HOC && TRANSFER, orvas: HOC && !NOORVAS && b.ch >= 3 };
+    book: BOOK, diff: DIFF, flags: FLAGS, nogear: NOGEAR, transfer: HOC && TRANSFER, orvas: HOC && !NOORVAS && b.ch >= 3 && !opt('squad', ''), squad: HOC ? opt('squad', '') : '' };
   const E = !HOC && ellisCan(b.id, b.ch);
   for (let i = 0; i < RUNS; i++) jobs.push({ ...base, variant: 'smart', policy: 'smart', ellis: E, vell: VELL && base.ch >= 4 });
   if (E) for (let i = 0; i < NOE; i++) jobs.push({ ...base, variant: 'smartNoE', policy: 'smart', ellis: false });
