@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v7.1.0'; // Book Four's muster: a healer, a Serc mage and a sapper to pick from; Hessa prays, Tallow slings
+const CACHE = 'ftr-v7.2.0'; // one roster in every book, gear by role, Ellis and Vell at home in Book Three
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
