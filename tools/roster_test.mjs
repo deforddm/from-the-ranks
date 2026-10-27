@@ -2,7 +2,8 @@
 // recruits and spares can be sent to camp and brought back, choosing both sides on one screen; gear is parked and given back; the Book Three
 // full import (sergeant, four, Ellis) can bench Ellis for Sohra, Sohra waiting is offered, and no fire claims she came when there was no room;
 // Book Four chooses which recruit goes and keeps its five; transfers carry Ramin into Book Four and Ellis into Book Three with gear, loyalty
-// and picks; Back drops a half-made choice, then closes; the screen fits a phone.
+// and picks; Back drops a half-made choice, then closes; the screen fits a phone. v7.2.2: a recruit can go to camp for a Book Four spare;
+// a late joiner owes the level rewards already passed (talent, veteran picks) and chooses them; the level bar fits at 15.
 // Usage: node tools/roster_test.mjs   (build first; exit 1 on a failure)
 import { server, browser as launch, openGame } from './page.mjs';
 const srv = await server(); const br = await launch();
@@ -68,11 +69,21 @@ const r = await page.evaluate(() => { const out = {};
   b4Join('redblade'); out.four.ramin = {sq:S.squad.join(','), gear:JSON.stringify(S.gear.redblade), loy:S.loy.redblade, picks:(S.picks.redblade || []).join(',')};
   S.f.b4_orvasDone = 2; out.four.waiting = rosterCampList().join(',');
   out.four.spareAlone = rosterCanOut('tallow'); out.four.spareSwap = rosterCanSwap('tallow', 'hessa'); out.four.spareForRecruit = rosterCanSwap('tallow', 'orvas'); out.four.coreOut = rosterCanOut('haddat');
-  out.four.recruitForRecruit = rosterCanSwap('redblade', 'orvas');
+  out.four.recruitForRecruit = rosterCanSwap('redblade', 'orvas'); out.four.recruitForSpare = rosterCanSwap('redblade', 'hessa'); // v7.2.2
   openRoster(null); click('[data-rin="orvas"]'); out.four.outs = [...document.querySelectorAll('[data-rout]')].filter(b => !b.disabled).map(b => b.dataset.rout).join(',');
   click('[data-rout="redblade"]'); click('#rDo'); out.four.after = {sq:S.squad.join(','), camp:rosterCampList().join(','), flag:S.f.b4_raminDone};
   click('[data-rout="tallow"]'); click('[data-rin="tebbet"]'); click('#rDo'); out.four.spare = S.squad.join(','); closeRoster();
   out.four.offers = b4Offers().join(','); b4SwapIn('redblade'); out.four.sendFor = {sq:S.squad.join(','), gear:JSON.stringify(S.gear.redblade)};
+  /* ---- v7.2.2: a late joiner owes the squad's level rewards, and only they choose; the level bar fits ---- */
+  setBook('gotm'); S = newState('Late'); S.chapter = 4; S.lvl = 6; S.xp = LEVELS[5]; S.picksDue = []; ['sgt', 'brisk', 'kettle', 'tuft', 'ohl'].forEach(k => S.picks[k] = [PICKS[3][k][0][0], 'iron']);
+  recruit('ellis'); out.late = {due:S.picksDue.join(',')}; openPicks(() => {}); out.late.who = [...document.querySelectorAll('#modal .pk h4')].map(h => h.textContent.split(' ')[0]).join(',');
+  click('[data-id="ellis"][data-k="ghost"]'); click('#bPick'); click('[data-id="ellis"][data-k="keen"]'); click('#bPick');
+  out.late.after = {picks:S.picks.ellis.join(','), due:S.picksDue.join(','), sgt:S.picks.sgt.join(',')}; $('#modal').hidden = true;
+  const st = {}; ['sgt', 'ellis'].forEach(k => { const u = mkParty(k, 0, 0); st[k] = {atk:u.atk, mv:u.mv}; }); out.late.st = st;
+  rosterOut('ellis'); S.lvl = 7; S.picksDue = [7]; S.picks.sgt.push('fleet'); ['brisk', 'kettle', 'tuft', 'ohl'].forEach(k => S.picks[k].push('fleet')); openPicks(() => {});
+  out.late.benched = S.picksDue.join(','); rosterIn('ellis'); out.late.back = S.picksDue.join(',');
+  setBook('hoc'); S = newStateHOC('Bar'); S.lvl = 13; openChars(0); const lb = [...document.querySelectorAll('#chars .stbar')].find(e => /Level/.test(e.textContent));
+  out.bar = lb ? {i:lb.querySelector('.bar i').getBoundingClientRect().right, bar:lb.querySelector('.bar').getBoundingClientRect().right} : null; $('#chars').hidden = true;
   return out; });
 console.log(JSON.stringify(r, null, 1).slice(0, 4000));
 for (const [book, f] of Object.entries(r.fires)) {
@@ -98,6 +109,11 @@ ok(r.seven.sq === 'sgt,brisk,kettle,tuft,ohl,ellis' && r.seven.camp === 'vell' &
 ok(r.four.imp && /arensword/.test(r.four.parked), 'Book Four: Ramin\'s Book Two gear waits for him');
 ok(/redblade/.test(r.four.ramin.sq) && /arensword/.test(r.four.ramin.gear) && /arenmail/.test(r.four.ramin.gear) && r.four.ramin.loy === 3 && /iron/.test(r.four.ramin.picks), `Ramin joins in his Book Two gear, loyalty and picks (${JSON.stringify(r.four.ramin)})`);
 ok(!r.four.spareAlone && r.four.spareSwap && !r.four.spareForRecruit && !r.four.coreOut && r.four.recruitForRecruit, 'Book Four: a spare goes only for a spare (the five stay filled); recruit for recruit; never the core');
+ok(r.four.recruitForSpare, 'Book Four: a recruit can go to camp for a spare, so six still walk (David, Oct 27)');
+ok(r.late.due === '3,5' && r.late.who === 'Ellis', `a late joiner owes the talent and the level-5 pick, and only she chooses (${r.late.due}; ${r.late.who})`);
+ok(r.late.after.picks === 'ghost,keen' && r.late.after.due === '' && r.late.after.sgt === 'discipline,iron', `chosen, and nobody else got a pick (${JSON.stringify(r.late.after)})`);
+ok(r.late.st.ellis.atk >= 1 && r.late.benched === '' && r.late.back === '7', `benched through a level-up, she owes it when she's back (${r.late.benched} -> ${r.late.back})`);
+ok(r.bar && r.bar.i <= r.bar.bar + 0.5, `the level bar stays inside its box at level 13 (${JSON.stringify(r.bar)})`);
 ok(r.four.outs === 'redblade' && r.four.after.sq.includes('orvas') && !r.four.after.sq.includes('redblade') && r.four.after.camp.includes('redblade') && r.four.after.flag === 2, `Book Four: the sergeant chooses which recruit goes (${r.four.outs}; ${JSON.stringify(r.four.after)})`);
 ok(r.four.spare.includes('tebbet') && !r.four.spare.includes('tallow'), `a spare swapped for a spare (${r.four.spare})`);
 ok(r.four.offers === 'redblade' && r.four.sendFor.sq.includes('redblade') && /arensword/.test(r.four.sendFor.gear), `"Send for Ramin" swaps him back for Orvas, in his own gear (${JSON.stringify(r.four.sendFor)})`);

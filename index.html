@@ -653,7 +653,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '7.2.1';
+const VERSION = '7.2.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1605,8 +1605,22 @@ const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel'].find(id => S.squ
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
 function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push(id); S.loy[id] ??= 0; S.gear[id] ??= {}; S.picks[id] ??= [];
-  if (S.lvl >= 3 && PICKS[3][id] && !S.picks[id].some(k => PICKS[3][id].some(o => o[0] === k)) && !S.picksDue.includes(3)) S.picksDue.push(3);
+  picksCatchUp();
   note(`${NAME(id)} joins the Fourth.`, 'good'); AUDIO.play('up'); save(); }
+/* v7.2.2 (David, Oct 27: a recruit joins at the squad's level and gets its rewards): the squad's level is shared, and what each soldier
+   brings from it is the talent at 3 and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late owes the ones passed;
+   they are chosen at the next conversation (openPicks, 37), in every book. picksOwed(s) is the list of levels someone walking still owes. */
+const VET_LVLS = [5,7,9,11,13,15];
+const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
+const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
+const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
+function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
+  if (sq.some(k => talentOwed(s, k))) due.push(3);
+  VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
+  return due; }
+/* Book Four's muster keeps its own count until the pick is made (70e b4MusterDone) */
+function picksCatchUp(){ if (!S || !Array.isArray(S.squad)) return; if (S.book === 'hoc' && typeof b4MusterDue === 'function' && b4MusterDue()) return;
+  S.picksDue = picksOwed(S); }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }
@@ -6701,7 +6715,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
     return `<div>${a.item && ART['munitions/' + a.item] ? zoomArt('munitions/' + a.item, 'ico abico', a.name) : ''}<b>${a.name}${a.item ? ` <span class="stat">×${S.inv[a.item]}</span>` : ''}</b><span>${d}</span></div>`; }).join('');
   const banter = c.banter ? c.banter[loyN <= -1 ? 0 : loyN >= 2 ? 2 : 1] : null;
   const rel = c.rel ? Object.entries(c.rel).filter(([k]) => SQ.includes(k)).map(([k,v]) => `<li><b>${TPL[k].name}.</b> ${v}</li>`).join('') : SQ.slice(1).map(k => `<li><b>${TPL[k].name}.</b> ${loyLabel(S.loy[k])}.</li>`).join('');
-  const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${S.lvl/8*100}%"></i></div><span>${S.lvl}</span></div></div></div>
+  const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${Math.min(100, S.lvl / lvCap() * 100)}%"></i></div><span>${S.lvl}</span></div></div></div>
     <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(d => `${d[0]}d${d[1]}${d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0)) ? '+' + (d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0))) : ''}`)(gb.dmg || c.dmg)}${(lvDmg() + (has(id,'edge') ? 1 : 0)) ? ` <span class="gbon">level +${(lvDmg() + (has(id,'edge') ? 1 : 0))}</span>` : ''}${gb.dmg ? ' <span class="gbon">weapon</span>' : ''}</span><span>Reach</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
     <div class="sec"><h4>Field rules</h4><p class="fine">Flanking: +2 to hit when an ally stands next to the target on the far side, melee or ranged. Stepping out of a tile next to an enemy gives that enemy one free swing a turn, wherever you step to. Once you have moved and then acted, your movement for the turn is spent. The squad can move through its own people, but not stop on them. End a turn without acting and you are Steady: +2 to your next attack or save. A ranged squadmate who has not fired yet this fight is Posted up: the first enemy to step into their reach takes a free shot. Gold numbers are what gear adds.</p></div>
     <div class="sec"><h4>Abilities</h4><div class="abl">${abil}</div></div>
@@ -6955,6 +6969,9 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.2.2', ['A squadmate who joins late now catches up with the squad\'s level: the talent and every veteran pick (+1 to hit, +1 move, +6 health and the rest) for the levels already passed are chosen at the next conversation, in every book. Saves with a late joiner are offered the missing picks on load. The level-up picks now go only to those who owe them.',
+    'Book Four: Ramin (or any recruit) can go to camp for one of the Fourteenth\'s spares, so six still walk.',
+    'The Level bar on a squadmate\'s sheet no longer runs past its box above level 8.']],
   ['7.2.1', ['When Kettle opens a fight with a sharper and something comes down (the dyeing-racks, the eaves in the lane, the spoil-heap at the dig, the young Azath\'s roots, the tunnel timber), it is now drawn where it fell. Before, those squares blocked movement and sight with nothing to show for it. Saves carry on as they were.']],
   ['7.2.0', ['One way to change the squad in every book. Up to six walk with the sergeant; whoever else the book has given you waits at camp. Open the Roster from the pack, or choose "The roster." at a chapter\'s fire, and pick who comes in and who goes out, with each one\'s role marked and what the squad lacks shown. Each book\'s own squad always walks; recruits and spares can wait. Gear now goes by kind (armour, shields, blades, bows, satchels, healing kits, charms), so anyone who can carry a kind of gear can wear it, and whoever goes to camp leaves theirs in the pack and gets it back on return. A squad carried into the next book brings everyone\'s gear, loyalty and picks, recruits included. In Book Three, Ellis and Vell from a Book One save now have something to say in every chapter, and a full squad from Book One can make room for Sohra and Dannet. Saves carry on as they were.']],
   ['7.1.0', ['Book Four\'s squad has more to choose from. At the muster in Aren, Radde lines up the company\'s spares and you pick who fills the empty places, with what your squad lacks marked: Mirrel, a Denul healer from Li Heng; Yorin, a squad mage of Serc, the sky, who throws lightning and wind (and hates the dust); and Rasp, a sapper out of the marine school, when Tangle is not with you. Hessa now prays to D\'rek in a fight, a decay that strips armour and a little healing from the Worm. Tallow carries a sling and his grandmother\'s luck. If you are already in Book Four, the next fire offers the spares. The opening sharper in a fight now names your own sapper.']],
@@ -8430,12 +8447,15 @@ const QUESTS = {
   daru_street:()=> S.f.c3_key ? 'Back west, to the dig' : S.f.c3_madryn ? 'The dye-shop. Decide.' : S.f.c3_guards ? 'The dye-shop. The outside stair.' : 'The dye-shop. The Watch is on the corner.',
   pale_night:()=> S.f.c1_done ? 'Get some sleep. One of you should.' : S.f.c1_hounds ? 'Hounds in the tent lines' : !S.f.c1_reported ? 'Report to Whiskeyjack at the Bridgeburners\' fire (east)' : !S.f.c1_tent ? 'Tattersail\'s tent, cadre row (north)' : 'Walk the lines. Something is coming. Back to the fire past Pell\'s wagon, when the squad is ready.',
 };
+/* who owes a pick at this level: the talent at 3 if not yet chosen; a veteran pick if they have fewer than the levels passed call for (v7.2.2) */
+const owesAt = (id, lvl) => lvl === 3 ? talentOwed(S, id) : VET_LVLS.includes(lvl) ? vetOwedAt(S, id, lvl) : true;
 /* ability picks: shown before the next conversation after a level 3/5/7 */
 function openPicks(done){
-  const lvl = S.picksDue[0]; if (!lvl) return done && done();
+  while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
+  const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
   const chosen = {};
-  const optsFor = id => lvl === 3 ? ((PICKS[3][id] || []).some(o => has(id, o[0])) ? [] : PICKS[3][id] || []) : PICKS.vet.filter(v => !has(id, v[0]));
+  const optsFor = id => !owesAt(id, lvl) ? [] : lvl === 3 ? PICKS[3][id] || [] : PICKS.vet.filter(v => !has(id, v[0]));
   m.innerHTML = `<div class="mbox"><h2 class="m">Level ${lvl}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
     <div class="picks">${SQUAD().filter(id => optsFor(id).length).map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="btn primary" id="bPick" disabled>Confirm</button></div></div>`;
@@ -8770,7 +8790,8 @@ const ROSTER_BOOKS = {
     wait:id=>B4_RECRUITS.includes(id) ? S.f[B4_DONE[id]] === 2 : HOC_NEW.includes(id) && !b4MusterDue() && b4SpareOk(id),
     gone:id=>(B4_RECRUITS.includes(id) && !b4CanRecruit(id)) || (HOC_NEW.includes(id) && !b4SpareOk(id)),
     open:()=>!b4MusterDue(),
-    valid:(sq, was)=>{ const n = a => a.filter(k => !B4_RECRUITS.includes(k)).length; return n(sq) <= 5 && n(sq) >= Math.min(5, n(was)); },
+    /* v7.2.2 (David, Oct 27: Ramin to camp, and a spare in his place): any six; only the five places once filled must stay filled */
+    valid:(sq, was)=>{ const n = a => a.filter(k => !B4_RECRUITS.includes(k)).length; return n(sq) >= Math.min(5, n(was)); },
     in:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 1; },
     out:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 2; else if (HOC_NEW.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); } }},
 };
@@ -8827,7 +8848,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
   if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
-  S.loy[id] ??= 0; S.picks[id] ??= []; rsRestore(id); rsTrail(); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; rsRestore(id); rsTrail(); picksCatchUp(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
 const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
@@ -8863,6 +8884,7 @@ equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) r
       /* more than six: the last recruits to come step out to camp (a Book One with Ellis and Vell both, a Book Three import with both) */
       while (s.squad.length > ROSTER_CAP) { const id = [...s.squad].reverse().find(rosterBenchable); if (!id) break; rsOut(id); }
       gearTidy();
+      picksCatchUp(); // v7.2.2: a recruit who joined late owes the picks for the levels passed
     } finally { S = S0; }
     return r; }; }
 
@@ -35116,10 +35138,7 @@ function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
    The level-3 talent and the veteran picks at 5 and 7 are chosen on the first talk (openPicks), unless a transfer already made them. */
 const B3_START_LVL = 8;
 const B3_VET_LVLS = [5,7,9,11,13,15];
-function b3PicksDue(s){ const due = [];
-  if (s.squad.some(k => PICKS[3][k] && !(s.picks[k] || []).some(p => PICKS[3][k].some(o => o[0] === p)))) due.push(3);
-  B3_VET_LVLS.filter(l => s.lvl >= l).forEach((l, i) => { if (s.squad.some(k => ((s.picks[k] || []).filter(p => PICKS.vet.some(v => v[0] === p))).length <= i)) due.push(l); });
-  return due; }
+function b3PicksDue(s){ return picksOwed(s); } // v7.2.2: one rule for every book (15)
 function newStateMOI(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b3Import(importId) : null;
@@ -35135,11 +35154,7 @@ function newStateMOI(name, importId, sid){
   migrate(s); s.picksDue = b3PicksDue(s);
   return s;
 }
-/* v6.1: a recruit who joins a veteran squad brings her own veteran picks for the levels already passed (in order) */
-{ const _recruit = recruit;
-  recruit = function(id){ const was = S && S.squad && S.squad.includes(id); _recruit(id);
-    if (b3On() && !was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
-      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
+/* v6.1's automatic veteran picks for a late recruit are gone in v7.2.2: they are owed and chosen (15 picksOwed), as in every book */
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);
@@ -48776,12 +48791,11 @@ function newStateHOC(name, importId, sid){
   s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
   migrate(s); s.picksDue = b3PicksDue(fill.length ? Object.assign({}, s, {squad:s.squad.filter(k => !fill.includes(k))}) : s); // the fill's picks come when the muster takes them on
   return s; }
-/* a recruit joining a veteran squad brings her own veteran picks for the levels already passed; a recruit joins the squad, not the Fourth */
+/* a recruit joins the squad, not the Fourth */
 { const _recruit = recruit;
   recruit = function(id){ if (!b4On()) return _recruit(id); const was = S.squad.includes(id), n0 = note;
     note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; }
-    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
-      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
+    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the levels passed are owed and chosen (15 picksOwed)
 { const _rest = rest; rest = function(t){ return _rest(t || (b4On() ? 'The squad rests inside the 9th\'s lines. Wounds close, mostly.' : t)); }; }
 const b4Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'The squad rests inside the 9th\'s lines, with a legion of recruits snoring round it. Wounds close, mostly.'); if (!had) note('Rested.', 'good'); save(); return true; };
 

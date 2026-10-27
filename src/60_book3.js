@@ -297,10 +297,7 @@ function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
    The level-3 talent and the veteran picks at 5 and 7 are chosen on the first talk (openPicks), unless a transfer already made them. */
 const B3_START_LVL = 8;
 const B3_VET_LVLS = [5,7,9,11,13,15];
-function b3PicksDue(s){ const due = [];
-  if (s.squad.some(k => PICKS[3][k] && !(s.picks[k] || []).some(p => PICKS[3][k].some(o => o[0] === p)))) due.push(3);
-  B3_VET_LVLS.filter(l => s.lvl >= l).forEach((l, i) => { if (s.squad.some(k => ((s.picks[k] || []).filter(p => PICKS.vet.some(v => v[0] === p))).length <= i)) due.push(l); });
-  return due; }
+function b3PicksDue(s){ return picksOwed(s); } // v7.2.2: one rule for every book (15)
 function newStateMOI(name, importId, sid){
   name = name || 'Hask';
   const imp = importId ? b3Import(importId) : null;
@@ -316,11 +313,7 @@ function newStateMOI(name, importId, sid){
   migrate(s); s.picksDue = b3PicksDue(s);
   return s;
 }
-/* v6.1: a recruit who joins a veteran squad brings her own veteran picks for the levels already passed (in order) */
-{ const _recruit = recruit;
-  recruit = function(id){ const was = S && S.squad && S.squad.includes(id); _recruit(id);
-    if (b3On() && !was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
-      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
+/* v6.1's automatic veteran picks for a late recruit are gone in v7.2.2: they are owed and chosen (15 picksOwed), as in every book */
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);

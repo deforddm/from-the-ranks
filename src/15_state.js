@@ -59,8 +59,22 @@ const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel'].find(id => S.squ
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
 function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push(id); S.loy[id] ??= 0; S.gear[id] ??= {}; S.picks[id] ??= [];
-  if (S.lvl >= 3 && PICKS[3][id] && !S.picks[id].some(k => PICKS[3][id].some(o => o[0] === k)) && !S.picksDue.includes(3)) S.picksDue.push(3);
+  picksCatchUp();
   note(`${NAME(id)} joins the Fourth.`, 'good'); AUDIO.play('up'); save(); }
+/* v7.2.2 (David, Oct 27: a recruit joins at the squad's level and gets its rewards): the squad's level is shared, and what each soldier
+   brings from it is the talent at 3 and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late owes the ones passed;
+   they are chosen at the next conversation (openPicks, 37), in every book. picksOwed(s) is the list of levels someone walking still owes. */
+const VET_LVLS = [5,7,9,11,13,15];
+const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
+const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
+const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
+function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
+  if (sq.some(k => talentOwed(s, k))) due.push(3);
+  VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
+  return due; }
+/* Book Four's muster keeps its own count until the pick is made (70e b4MusterDone) */
+function picksCatchUp(){ if (!S || !Array.isArray(S.squad)) return; if (S.book === 'hoc' && typeof b4MusterDue === 'function' && b4MusterDue()) return;
+  S.picksDue = picksOwed(S); }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }

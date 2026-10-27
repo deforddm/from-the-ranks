@@ -214,12 +214,15 @@ const QUESTS = {
   daru_street:()=> S.f.c3_key ? 'Back west, to the dig' : S.f.c3_madryn ? 'The dye-shop. Decide.' : S.f.c3_guards ? 'The dye-shop. The outside stair.' : 'The dye-shop. The Watch is on the corner.',
   pale_night:()=> S.f.c1_done ? 'Get some sleep. One of you should.' : S.f.c1_hounds ? 'Hounds in the tent lines' : !S.f.c1_reported ? 'Report to Whiskeyjack at the Bridgeburners\' fire (east)' : !S.f.c1_tent ? 'Tattersail\'s tent, cadre row (north)' : 'Walk the lines. Something is coming. Back to the fire past Pell\'s wagon, when the squad is ready.',
 };
+/* who owes a pick at this level: the talent at 3 if not yet chosen; a veteran pick if they have fewer than the levels passed call for (v7.2.2) */
+const owesAt = (id, lvl) => lvl === 3 ? talentOwed(S, id) : VET_LVLS.includes(lvl) ? vetOwedAt(S, id, lvl) : true;
 /* ability picks: shown before the next conversation after a level 3/5/7 */
 function openPicks(done){
-  const lvl = S.picksDue[0]; if (!lvl) return done && done();
+  while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
+  const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
   const chosen = {};
-  const optsFor = id => lvl === 3 ? ((PICKS[3][id] || []).some(o => has(id, o[0])) ? [] : PICKS[3][id] || []) : PICKS.vet.filter(v => !has(id, v[0]));
+  const optsFor = id => !owesAt(id, lvl) ? [] : lvl === 3 ? PICKS[3][id] || [] : PICKS.vet.filter(v => !has(id, v[0]));
   m.innerHTML = `<div class="mbox"><h2 class="m">Level ${lvl}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
     <div class="picks">${SQUAD().filter(id => optsFor(id).length).map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="btn primary" id="bPick" disabled>Confirm</button></div></div>`;

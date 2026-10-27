@@ -338,12 +338,11 @@ function newStateHOC(name, importId, sid){
   s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
   migrate(s); s.picksDue = b3PicksDue(fill.length ? Object.assign({}, s, {squad:s.squad.filter(k => !fill.includes(k))}) : s); // the fill's picks come when the muster takes them on
   return s; }
-/* a recruit joining a veteran squad brings her own veteran picks for the levels already passed; a recruit joins the squad, not the Fourth */
+/* a recruit joins the squad, not the Fourth */
 { const _recruit = recruit;
   recruit = function(id){ if (!b4On()) return _recruit(id); const was = S.squad.includes(id), n0 = note;
     note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; }
-    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; const have = S.picks[id].filter(p => PICKS.vet.some(v => v[0] === p)).length, want = B3_VET_LVLS.filter(l => S.lvl >= l).length;
-      PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, Math.max(0, want - have)).forEach(k => S.picks[id].push(k)); save(); } }; }
+    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the levels passed are owed and chosen (15 picksOwed)
 { const _rest = rest; rest = function(t){ return _rest(t || (b4On() ? 'The squad rests inside the 9th\'s lines. Wounds close, mostly.' : t)); }; }
 const b4Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'The squad rests inside the 9th\'s lines, with a legion of recruits snoring round it. Wounds close, mostly.'); if (!had) note('Rested.', 'good'); save(); return true; };
 
