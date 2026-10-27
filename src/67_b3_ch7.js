@@ -625,7 +625,7 @@ Below, the rings of fires round the keep burn down a little, the way fires do at
 
 "Slate," he says, when you sit down. "Most of it. Some tile, down by the harbour. Steep pitch: they get the rain off the sea." He has plainly been working it out since the quorls set the Fourth down. "You could cross half that city without touching a street. A Guild clan would do it in a night and be home for breakfast."${b3Was('c4_vell') ? `
 
-He turns the hook over in his hands. "Somebody held a roof for me once, in Darujhistan, when I was nobody's. I keep thinking I'd like to do that back. For somebody." He looks down at the city. "Tomorrow's got a lot of roofs in it."` : ''}${S.f.b3_c4_vellRope ? ` He has two coils now. The second is the Grey Swords' rope, from the gully west of Capustan. He carries it the way other men carry a letter.` : ''}`,
+He turns the hook over in his hands. "Somebody held a roof for me once, in Darujhistan, when I was nobody's. I keep thinking I'd like to do that back. For somebody." He looks down at the city. "Tomorrow's got a lot of roofs in it."` : ''}${S.f.b3_c4_vellRope ? ` He has two coils now. The second is the Grey Swords' rope, from the gully west of Capustan. He carries it as carefully as other men carry a letter.` : ''}`,
       ch:[{t:'"Tomorrow, then. Pick your roof."', fx:()=>{ b3c7Loy('vell', 1); }, go:()=>startExplore()},
           {t:'"You stay off them unless I say."', go:()=>startExplore()}]},
   b3_c7_vell_roofs:()=> S.f.b3_c7_vRoofs ? {sp:'Vell', txt:
@@ -636,7 +636,7 @@ He turns the hook over in his hands. "Somebody held a roof for me once, in Daruj
 "Give me a hundred heartbeats," he says. "From up there you'd see the square and the keep road both. Down here you see a wall." He has the hook in his hand already. He is trying very hard to look as if he does not mind either way.`,
       ch:[{t:'"Go. Look. Come down."', check:['guile', 15], fx:()=>{ S.f.b3_c7_vRoofs = 1; },
             near:{t:()=>`Yes, but slate in the sea air is slate in the sea air. A tile goes, and the street hears it, and a Beklite archer two roofs over puts an arrow into the eaves a hand from ${NAME(ROLL().who || 'sgt')}'s fingers. It walks back down the wall with ${ROLL().who === 'sgt' || !ROLL().who ? 'you' : b3c7P(ROLL().who).her}: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
-            edges:id=>[id === 'vell' && ['the Guild had him on roofs before it taught him his letters', 3], id === 'ellis' && ['once she is up, she knows where to look', 1], id === 'brisk' && ['she climbs the way a shield climbs', -1]],
+            edges:id=>[id === 'vell' && ['the Guild had him on roofs before it taught him his letters', 3], id === 'ellis' && ['once she is up, she knows where to look', 1], id === 'brisk' && ['she climbs like a shield', -1]],
             go:'b3_c7_vell_roofs_ok', fail:'b3_c7_vell_roofs_miss'},
           {t:'"No. We stay together."', fx:()=>{ S.f.b3_c7_vRoofs = 'stayed'; }, go:()=>startExplore()}]},
   b3_c7_vell_roofs_ok:()=>({sp:'Vell', fx:()=>{ S.f.b3_c7_vRoofs = 'ok'; b3c7Loy('vell', 1); }, txt:
@@ -671,7 +671,7 @@ ${b3In('sohra') ? 'Sohra, beside her, looks at the dry gully a long while and th
       ch:[{t:'"Then we watch them all."', go:()=>startExplore()}]}),
 
   b3_c7_vell_stakes:()=> S.f.b3_c7_vStakes ? {sp:'Vell', txt:
-`${S.f.b3_c7_vStakes === 'lashed' ? 'The Fourth\'s stretch of stakes is lashed the Guild way now, a knot to a stake. Vell walks it once more, tugging each one, and finds nothing to fix, and looks almost disappointed.' : 'Vell has the coil back over his shoulder, and is looking at the broken stakes the way a carpenter looks at somebody else\'s table.'}`, ch:[{t:'On.', go:()=>startExplore()}]}
+`${S.f.b3_c7_vStakes === 'lashed' ? 'The Fourth\'s stretch of stakes is lashed the Guild way now, a knot to a stake. Vell walks it once more, tugging each one, and finds nothing to fix, and looks almost disappointed.' : 'Vell has the coil back over his shoulder, and is looking at the broken stakes like a carpenter at somebody else\'s table.'}`, ch:[{t:'On.', go:()=>startExplore()}]}
     : {sp:'Vell', txt:
 `Vell is at the stake line with a coil over his shoulder, going from stake to stake where the Barghast have pulled some up for firewood, and lashing the broken ones to the whole ones with short ends of rope, quick and tight, a knot to a stake.
 
@@ -684,7 +684,7 @@ ${b3In('sohra') ? 'Sohra, beside her, looks at the dry gully a long while and th
     : {sp:'Ellis', fx:()=>{ S.f.b3_c7_eDusk = 1; }, txt:
 `Ellis is sitting at the eastern edge of the crest in the near-dark, apart, facing out over the plain. Her bow is across her knees, unstrung. You have seen her unstring it perhaps three times since the Pale.
 
-"Three hundred and twelve," she says, when you sit. "From the stakes to the tent. I counted it running." She doesn't turn round. "I count things. It's what I'm for. It doesn't make them closer."${b3Was('c5_ellisThrough') ? ` She has the fuse-cord on her wrist between finger and thumb, turning it, the way other people turn a ring.` : ''}
+"Three hundred and twelve," she says, when you sit. "From the stakes to the tent. I counted it running." She doesn't turn round. "I count things. It's what I'm for. It doesn't make them closer."${b3Was('c5_ellisThrough') ? ` She has the fuse-cord on her wrist between finger and thumb, turning it, as other people turn a ring.` : ''}
 
 Down on the plain the gold is still lying over the ground where the Hunters fell, and nothing moves on it.`,
       ch:[{t:'"Noted."', fx:()=>{ b3c7Loy('ellis', 1); }, go:()=>startExplore()},
@@ -692,7 +692,7 @@ Down on the plain the gold is still lying over the ground where the Hunters fell
   b3_c7_vell_dusk:()=> S.f.b3_c7_vDusk ? {sp:'Vell', txt:
 `Vell is coiling the rope, and uncoiling it, and coiling it again.`, ch:[{t:'Leave him to it.', go:()=>startExplore()}]}
     : {sp:'Vell', fx:()=>{ S.f.b3_c7_vDusk = 1; }, txt:
-`Vell is sitting on a rock on the western side of the crest with the rope laid out in the grass in front of him, the whole length of it, which is how a rope man thinks.
+`Vell is sitting on a rock on the western side of the crest with the rope laid out in the grass in front of him, the whole length of it. A rope man thinks in lengths.
 
 "I did the sum," he says. "From the stakes to the top. There isn't a line long enough. There isn't an anchor. There's nothing to throw at. It's a hill." He starts to coil it, slowly, a turn at a time. "In Darujhistan there's always a way across. Somebody put it there for you a hundred years ago: a chimney, a gutter, a beam. That's what a city is." He finishes the coil. "Out here nobody put anything anywhere."`,
       ch:[{t:'"Coil it anyway. We\'ll want it."', fx:()=>{ b3c7Loy('vell', 1); }, go:()=>startExplore()},
