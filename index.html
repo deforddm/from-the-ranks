@@ -47745,6 +47745,10 @@ const b4Shorten = u => { const d = b4DustNow(); if (d && u && u.rng > 1) u.rng =
    numbers are Book Three's (B3GAP); tools/balance.mjs tunes them with David once fights exist. */
 /* tuned 2026-10-21 (docs/hoc-balance.md): Bridgeburner ~65-75% a fight. s = Book Four only, Soldier only, on top of the row: Soldier and
    Bridgeburner sit closer here than DIFFS puts them (David: "death should still be a possibility even on soldier", ~85-95% a fight). */
+/* v7.1 (David, Oct 26): a squad of six (a recruit on top of the five) meets foes with more in them: measured, the six-strong squads won
+   92-98% on Soldier and 84-97% on Bridgeburner where the five-strong start won 74-81%; this brings them together (docs/hoc-balance.md) */
+const B4SIX = {hp:1.15, dmg:1};
+const b4Six = () => !!(S && Array.isArray(S.squad) && S.squad.filter(id => TPL[id] && !(S.dead && S.dead[id])).length >= 6);
 const B4GAP = {1:{ac:7, atk:4, hp:1.85, dmg:6, s:{hp:1.08, atk:0, dmg:1}}, 2:{ac:6, atk:4, hp:1.8, dmg:7, s:{hp:1.2, atk:1, dmg:1}},
   3:{ac:5, atk:4, hp:1.75, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 4:{ac:6, atk:4, hp:1.95, dmg:7, s:{hp:1.2, atk:1, dmg:2}},
   5:{ac:5, atk:2, hp:1.5, dmg:5, s:{hp:1.2, atk:1, dmg:2}}, 6:{ac:5, atk:2, hp:1.47, dmg:6, s:{hp:1.2, atk:1, dmg:2}}, 7:{ac:5, atk:1, hp:1.5, dmg:6, s:{hp:1.2, atk:1, dmg:2}}};
@@ -47752,6 +47756,7 @@ const B4GAP = {1:{ac:7, atk:4, hp:1.85, dmg:6, s:{hp:1.08, atk:0, dmg:1}}, 2:{ac
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b4On()) return u; const g = B4GAP[clamp(S.chapter || 1, 1, 7)];
     if (g) { const s = (S.diff || 'soldier') === 'soldier' && g.s ? g.s : {hp:1, atk:0, dmg:0};
       u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk + (s.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp * (s.hp || 1))); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg + (s.dmg || 0)]; }
+    if (b4Six()) { u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * B4SIX.hp)); if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + B4SIX.dmg]; }
     return b4Shorten(u); }; }
 /* the squad's sorcery in the dust: half effect when it sputters (the mechanism Book Two's fouled warrens use, 47) */
 const b4Grit = () => ['The warren comes up full of sand.', 'Grit in the warren. Half of it comes through.', 'The sorcery catches in the dust like cloth on a nail.', 'The Whirlwind\'s sand is in the warren too.'][R(4)];

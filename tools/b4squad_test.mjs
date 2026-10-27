@@ -31,6 +31,9 @@ const r = await page.evaluate(async () => {
   S.imported = {ramin:true, keth:false, mates:['haddat'], f:{}}; S.f.b4_raminDone = 1; save();
   out.short = {open:b4SparesOpen(), places:b4Places()}; out.short.choices = vis('b4_spares').map(c => c.t);
   take('b4_spares', /Take Mirrel/); out.short.squad = S.squad.join(','); out.short.orvas = b4Join('orvas'); out.short.after = S.squad.length;
+  /* the six-strong rule: the same foe has more in it against six than against five */
+  { const sv = S; S = newStateHOC('Six'); S.chapter = 3; S.squad = ['sgt', 'haddat', 'tallow', 'hessa', 'tebbet', 'darrut']; const six = mkFoe(Object.keys(FOES).find(k => /^b4_c3_/.test(k)), 0, 0);
+    S.squad = S.squad.slice(0, 5); const five = mkFoe(Object.keys(FOES).find(k => /^b4_c3_/.test(k)), 0, 0); out.six = {six:six.maxhp, five:five.maxhp, d6:six.dmg && six.dmg[2], d5:five.dmg && five.dmg[2]}; S = sv; }
   /* a recruit comes on top of a full five without anybody going back */
   S = newStateHOC('Five'); S.squad = ['sgt', 'haddat', 'tallow', 'hessa', 'tebbet']; S.imported = {ramin:true, keth:false, mates:['haddat'], f:{}}; S.f.b4_mustered = 1; save();
   out.five = {ramin:b4Join('redblade'), squad:S.squad.join(','), orvas:b4Join('orvas'), len:S.squad.length};
@@ -111,6 +114,7 @@ else {
     ? ok('the sergeant, Haddat and Ramin: healer, bow, sorcery and munitions all marked') : no('two marks ' + JSON.stringify(m2));
   R.short.open && R.short.places === 1 && R.short.choices.some(t => /^Take Mirrel/.test(t)) && R.short.squad === 'sgt,haddat,redblade,tallow,hessa,mirrel' && R.short.orvas === false && R.short.after === 6
     ? ok('a save from before the muster one short (sergeant, Haddat, Ramin, Tallow, Hessa): the fire offers a spare straight in, to six; Orvas then has no room') : no('short ' + JSON.stringify(R.short));
+  R.six.six === Math.max(1, Math.round(R.six.five * 1.15)) && R.six.d6 === R.six.d5 + 1 ? ok(`a squad of six meets more in each foe (health ${R.six.five} -> ${R.six.six}, damage +1)`) : no('six ' + JSON.stringify(R.six));
   R.five.ramin === true && R.five.squad === 'sgt,haddat,tallow,hessa,tebbet,redblade' && R.five.orvas === false && R.five.len === 6
     ? ok('a recruit joins a full five without anybody going back; the sixth place is the last') : no('five ' + JSON.stringify(R.five));
   R.two.marks2.mirrel === 'x' && R.two.marks2.rasp === 'no sapper in the squad' && R.two.places2 === 1 && R.two.squad === 'sgt,haddat,redblade,mirrel,rasp,yorin' && R.two.last === 'Into the line.' && R.two.mustered === 1

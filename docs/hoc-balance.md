@@ -205,3 +205,17 @@ Not measured: the chapters' optional helpers (the Seti archer, the picket's horn
 4. **\`b4_c7_breakout\` on the forward road (the battleDef wrap in 77): keep "a round sooner and nearer", drop the extra \`b4_c7_fleer\`.** As built that road kills 1.6 squadmates a won fight on Bridgeburner (73% of wins), against none on the normal road. Without the extra man (with P3) Bridgeburner won 100% and the deaths fell to 1.07 a fight; with the unchanged Ch7 row it should fall further. Fixes the one fight whose cost is out of line with its road.
 5. **Leave the gear as it is, and accept that late Soldier fights are lighter than the 20–45% band** (14–21% lost from Ch5 on). The squad's trinkets are what makes the late book easy (no-gear Ch7 spur: 43% lost, not 16%); weakening them would also hurt Bridgeburner, which is on target there. If David wants Soldier harder late, the place is Soldier-only (DIFFS), not B4GAP.
 6. **The transfer squad: foes' health x1.15 in Book Four when the squad fields six (an engine line in the \`B4GAP\` \`mkFoe\` wrap, \`SQUAD().length >= 6\`).** As built it wins every fight on both difficulties with 8–22% lost. Expected Bridgeburner ~90%, still the easier road, which fits a squad that earned its way across. Untested; David may prefer to leave the transfer easy as a reward.
+
+## v7.1.0: six-strong squads (Mon Oct 26, 2026)
+
+After the squad-variety work (the muster pick, Mirrel, Yorin, Rasp; Hessa's prayers, Tallow's sling and Twins) and David's rule that a recruit walks on top of the five (cap six), the smart bot (now using every new ability) won, at 12 runs a fight: the tuned five-strong start (sgt, Haddat, Tangle, Marrow, Tallow; Orvas from Ch3) 94% Soldier / 85% Bridgeburner; a six-strong transfer with a healer (Haddat, Ramin, Tallow, Hessa, Mirrel) 99% / 97%. Five-strong transfers without the sixth had won 74–78% / 57–65%.
+
+Tried (8 runs a fight, three line-ups, both difficulties): every foe ×1.25 health +2 damage (start 56%/33%, too hard); ×1.12 +1 (start 74%/67%, six 92–98%/84–93%); then **only against a squad of six: ×1.15 health, +1 damage** (`B4SIX`, src/70_book4.js). David chose the last, Oct 26, 7:46 PM PDT:
+
+| Line-up | Soldier | Bridgeburner |
+|---|---|---|
+| The start (five until Orvas at Ch3) | 81% | 74% |
+| Haddat, Ramin, Tallow, Hessa, Mirrel | 89% | 84% |
+| Haddat, Ramin, Tallow, Hessa, Tebbet | 98% | 96% |
+
+Left open on purpose: squads with a bow are the easiest; adjust from David's play.
