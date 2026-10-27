@@ -119,7 +119,7 @@ const r = await page.evaluate(async () => {
   out.t.finders.orvas = fnd();
   b4SwapIn('redblade'); out.t.finders.none = fnd();
   S.f.b4_setiSaved = 1; out.t.finders.seti = fnd(); out.t.setiNpc = AREAS.b4_c5_seabed.npcs.find(n => n.id === 'seti').show();
-  delete S.f.b4_setiSaved; S.squad = S.squad.filter(k => k !== 'redblade'); S.squad.push('darrut'); migrate(S); // v7.2: six at most out.t.finders.darrut = fnd();
+  delete S.f.b4_setiSaved; S.squad = S.squad.filter(k => k !== 'redblade'); S.squad.push('darrut'); migrate(S); /* v7.2: six at most */ out.t.finders.darrut = fnd();
   talk('b4_c5_key'); take('b4_c5_key', /Show us the seep/); take('b4_c5_seep_chosen', /Off the road/); out.t.seepGo = /Darrut leads/.test(DLG.b4_c5_seep_go().txt);
   out.t.seep = await force('b4_c5_seep'); out.t.water = S.f.b4_seepWater;
   } catch (e) { out.err2 = e.stack; }
