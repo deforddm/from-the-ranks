@@ -159,6 +159,7 @@ const unused = Object.keys(ALLOW).filter(k => !res.some(o => o.id === k)); if (u
    night and a way to stay, with the reminder; "Not yet." leaves the squad on the map; the burial pits (only a way to stay) say nothing */
 /* v7.1: the sheet check runs in a fresh page. After the audit's tens of thousands of stubbed talks the page's scene loops pile up and
    a single click can take minutes (seen on v7.0.1 as on v7.1.0); the check is about one node in the real sheet, not about that pile. */
+await page.close(); // free the audit's page first: two at once crashed the renderer (v7.2.0 suite)
 const { page: page2, errors: errors2 } = await openGame(br, srv.url, {});
 const ui = await page2.evaluate(async () => {
   S = newState('Hask'); S.squad = [...PORDER]; migrate(S); S.chapter = 1; S.f.c1_wj = 1; S.f.c1_reported = 1; S.f.c1_tent = 1; S.f.c1_bones = 1; S.f.c1_claw = 1; S.silver = 3; save(); startExplore('pale_night');
