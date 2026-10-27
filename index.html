@@ -624,6 +624,19 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .wayrow .wk{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brass2);opacity:.8;flex:0 0 auto}
 .wayrow .way{flex:0 0 auto;min-height:36px;border-color:rgba(201,151,63,.6);color:#f1dfb4}
 .wayrow .way.lead{background:linear-gradient(180deg,rgba(201,151,63,.32),rgba(120,84,30,.28));border-color:var(--brass);color:#ffe7b0;box-shadow:0 0 10px rgba(232,192,115,.25)}
+/* v7.2 the roster (38c) */
+.roster .rlack{font-family:var(--label);letter-spacing:.04em;color:var(--brass2);margin:4px 0 10px}
+.roster .rlist{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.roster .rrow{display:flex;align-items:center;gap:8px;justify-content:space-between;border:1px solid var(--line);padding:6px 8px;background:rgba(0,0,0,.18);min-width:0}
+.roster .rrow.sel{border-color:var(--brass2);box-shadow:0 0 0 1px rgba(201,151,63,.35) inset}
+.roster .rwho{min-width:0;flex:1}
+.roster .rwho small{opacity:.75}
+.roster .rmks{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.roster .rmk{font-family:var(--label);font-size:.72rem;letter-spacing:.06em;border:1px solid rgba(201,151,63,.4);color:var(--brass2);padding:0 5px;border-radius:2px}
+.roster .rmk.core{opacity:.6}.roster .rmk.fill{color:#a8d8a0;border-color:rgba(140,200,130,.5)}.roster .rmk.at{opacity:.7}
+.roster .rrow .btn{flex:none}.roster .btn.on{border-color:var(--brass2);color:var(--brass2)}
+.roster .rask{border:1px solid var(--brass2);padding:8px 10px;margin:6px 0 10px;background:rgba(201,151,63,.07)}
+.roster .rask p{margin:0 0 6px}
 </style>
 <style>[hidden]{display:none!important}body{margin:0}</style>
 </head><body>
@@ -2979,7 +2992,7 @@ function itemInfo(key){
       it.stat && Object.entries(it.stat).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)} +${v}`).join(' · ')].filter(Boolean).join(' · ');
     const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null;
     return {name: it.name, kicker: `${it.slot[0].toUpperCase() + it.slot.slice(1)}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
-      who: who ? `Can be used by ${who.length > 1 ? who.slice(0, -1).join(', ') + ' and ' + who[who.length - 1] : who[0]}.` : 'Anyone in the squad can use it.'}; }
+      who: typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.'}; }
   if (kind === 'munitions' && id.startsWith('keep_')) { const w = id.slice(5), c = TPL[w]; if (!c) return null;
     const nm = w === 'sgt' ? (S && S.name ? `Sergeant ${S.name}` : 'The sergeant') : c.name;
     return {name: `What ${nm} carries`, kicker: 'Keepsakes · never sold, never traded', stat: '', text: c.gear.join('. ') + '.', who: c.quest || ''}; }
@@ -6597,8 +6610,8 @@ const heldDowns = id => (S && S.f && S.f.holdDowns && S.f.holdDowns[id]) || 0;
 const avgDmg = d => d ? d[0] * (d[1] + 1) / 2 + (d[2] || 0) : 0;
 /* how much a piece of gear is worth on this squadmate: armour for the front, range for the ranged, a stat trinket on whoever rolls that stat */
 function gearValue(id, g){
-  const it = ITEMS[g], t = TPL[id]; if (!it || !t || (it.who && !it.who.includes(id))) return -1;
-  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade', 'hessa', 'darrut'].includes(id);
+  const it = ITEMS[g], t = TPL[id]; if (!it || !t || !canWear(id, g)) return -1; // v7.2: by role (38c), not by name
+  const ranged = t.rng > 1, front = ['shield', 'mail'].some(r => rolesOf(id).includes(r)); // the front line: whoever takes a shield or mail (v7.2: Dannet, Orvas, Rasp and the sappers too)
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
   if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
@@ -6607,7 +6620,7 @@ function gearValue(id, g){
 /* a new piece goes to whoever it suits best among those with that slot empty */
 function placeGear(g){
   const it = ITEMS[g]; if (!it) return null;
-  const who = (it.who || SQUAD()).filter(w => SQUAD().includes(w) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
+  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
   if (who && gearValue(who, g) > 0) { S.gear[who][it.slot] = g; return who; } return null;
 }
 /* Allocate: everything in the kit, re-dealt for the most good (biggest gains first) */
@@ -6644,7 +6657,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const hp = c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
   const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
-  const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && (!it.who || it.who.includes(id)));
+  const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
   const wearer = g => SQUAD().find(w => Object.values(S.gear[w] || {}).includes(g));
   const kit = kitItems.length ? kitItems.map(it => { const w = wearer(it.id); return `<div class="it">${zoomArt('item/' + it.id, 'ico item', it.name)}<div class="ith"><b>${it.name}</b> <span class="stat">${it.slot}${[it.ac && `armour +${it.ac}`, it.atk && `hit +${it.atk}`, it.hp && `health +${it.hp}`, it.mv && `move +${it.mv}`, it.rng && `range +${it.rng}`, it.stat && Object.entries(it.stat).map(([k,v]) => `${k} +${v}`).join(' ')].filter(Boolean).map(x => ' · ' + x).join('')}</span></div>
     ${w === id ? `<button class="btn" data-uneq="${it.slot}">Remove</button>` : `<button class="btn" data-eq="${it.id}">${w ? `Take from ${NAME(w)}` : 'Equip'}</button>`}<small>${it.line}</small></div>`; }).join('') : `<p class="fine">Nothing found yet that ${id === 'sgt' ? 'you' : c.name} could use.</p>`;
@@ -6736,6 +6749,7 @@ function openSettings(){
 
 /* ============ pack / journal / save ============ */
 function openModal(tab){
+  if (tab === 'roster' && S) return openRoster(null); // v7.2: the roster (38c)
   const m = $('#modal'); if (m.hidden) AUDIO.play('open'); m.hidden = false; m.scrollTop = 0;
   const tabs = S ? ['pack','journal','save','deeds'] : ['save','deeds']; routeAnim = null;
   const body = {
@@ -6755,7 +6769,7 @@ function openModal(tab){
       <div class="row" style="margin-top:8px"><button class="btn primary" id="bLoad">Load code</button></div><p class="fine" id="impMsg"></p>`,
   };
   m.innerHTML = smartq(`<div class="mbox"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><h2 class="m">${S ? ((BOOKS[(S.book) || 'gotm'] || BOOKS.gotm).squad || 'The squad') : tab === 'deeds' ? 'Deeds' : 'Load a game'}</h2><button class="btn" id="bClose">Close</button></div>
-    <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
+    <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button><button class="tab" data-t="roster">Roster</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
     <div>${body[tab]()}</div></div>`);
   m.querySelectorAll('.tab').forEach(b => b.onclick = () => { AUDIO.play('click'); if (b.dataset.t === 'squad') { m.hidden = true; openChars(0); } else openModal(b.dataset.t); });
   $('#bClose').onclick = () => { AUDIO.play('close'); m.hidden = true; };
@@ -8687,6 +8701,247 @@ deedsHTML = function(){
       return mine.sort((x, y) => (bookDone(y) - bookDone(x)) || ((y.chapter || 0) - (x.chapter || 0)))[0] || {chapter:0, book:b}; };
     routeAnim = t => { const live = cvs.filter(c => c.isConnected); if (!live.length) { routeAnim = null; return; }
       live.forEach(c => { if (c.closest('details') && !c.closest('details').open) return; const s = farthest(c.dataset.route); drawRoute(c, Object.assign({}, s, {book:c.dataset.route}), t); }); }; }; }
+
+/* ============ v7.2 the roster: one way to change who walks, in all four books; and gear by role ============ */
+/* David, Oct 26-27: the squad is up to six (the sergeant and five). Everyone else the book has given the sergeant waits at camp.
+   Each book's core squad always walks (unless the story takes someone out); recruits and spares can be sent to camp and brought back,
+   at any chapter's fire ("The roster.") or from the squad's Roster tab. Whoever goes to camp leaves their gear in the pack (S.parked
+   remembers what they wore); coming back, they get it again if nobody else has it on.
+   S.camp: the ids waiting at camp. S.parked: {id: {slot: item}}, what each one wore when they stepped out.
+   The per-book helpers (b2SwapIn, b3Join/b3SwapIn, b4Join/b4SwapIn/b4SwapNew) go through rosterIn/rosterOut/rosterSwap. docs/v7.2-notes.md */
+
+const ROSTER_CAP = 6;
+/* per book: core (always walks), bench (can be sent to camp), home (where the waiting wait, in words), and the book's own rules.
+   wait(id): the book's older "waiting" state (a flag 2, an ally off with their people) counts as at camp. open(): changes allowed now.
+   valid(sq, before): a squad the book allows (Book Four: the five non-recruit places stay filled). in/out(id): the book's own flags. */
+const ROSTER_BOOKS = {
+  gotm:{core:['sgt', 'brisk', 'kettle', 'tuft', 'ohl'], bench:()=>['ellis', 'vell'], home:()=>'camp',
+    open:()=>(S.chapter || 0) >= 1},
+  dg:{core:['sgt', 'haddat', 'sathi', 'tangle', 'marrow'], bench:()=>['redblade', 'warlock', ...(S.f.b2_oldHand ? [S.f.b2_oldHand] : [])],
+    home:id=>(typeof B2_HOME !== 'undefined' && B2_HOME[id]) || 'the column',
+    wait:id=>typeof b2AllyOff === 'function' && ['redblade', 'warlock'].includes(id) && b2AllyOff(id),
+    gone:id=>typeof b2AllyLeft === 'function' && ['redblade', 'warlock'].includes(id) && b2AllyLeft(id),
+    open:()=>typeof b2SwapOpen === 'function' && b2SwapOpen(),
+    in:id=>{ if (typeof B2_DONE !== 'undefined' && B2_DONE[id]) S.f[B2_DONE[id]] = 1; }},
+  moi:{core:['sgt', 'brisk', 'kettle', 'tuft', 'ohl'], bench:()=>['sohra', 'greysword', 'ellis', 'vell'],
+    home:id=>(typeof B3_HOME !== 'undefined' && B3_HOME[id]) || 'the baggage train',
+    wait:id=>typeof B3_DONE !== 'undefined' && !!B3_DONE[id] && S.f[B3_DONE[id]] === 2,
+    open:()=>true,
+    in:id=>{ if (typeof B3_DONE !== 'undefined' && B3_DONE[id]) S.f[B3_DONE[id]] = 1; },
+    out:id=>{ if (typeof B3_DONE !== 'undefined' && B3_DONE[id]) S.f[B3_DONE[id]] = 2; }},
+  hoc:{core:['sgt', 'haddat', 'sathi', 'tangle', 'marrow'], bench:()=>[...B4_RECRUITS, ...HOC_NEW],
+    home:id=>(typeof B4_HOME !== 'undefined' && B4_HOME[id]) || 'the company',
+    /* the recruits wait with their people (flag 2); the Fourteenth's spares are always at the company, once the muster is done */
+    wait:id=>B4_RECRUITS.includes(id) ? S.f[B4_DONE[id]] === 2 : HOC_NEW.includes(id) && !b4MusterDue() && b4SpareOk(id),
+    gone:id=>(B4_RECRUITS.includes(id) && !b4CanRecruit(id)) || (HOC_NEW.includes(id) && !b4SpareOk(id)),
+    open:()=>!b4MusterDue(),
+    valid:(sq, was)=>{ const n = a => a.filter(k => !B4_RECRUITS.includes(k)).length; return n(sq) <= 5 && n(sq) >= Math.min(5, n(was)); },
+    in:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 1; },
+    out:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 2; else if (HOC_NEW.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); } }},
+};
+const rosterBook = () => ROSTER_BOOKS[(S && S.book) || 'gotm'] || ROSTER_BOOKS.gotm;
+const rosterDead = id => !!(S && S.dead && S.dead[id]);
+const rosterCore = id => id === 'sgt' || rosterBook().core.includes(id);
+const rosterBenchable = id => !!(S && TPL[id] && !rosterCore(id) && rosterBook().bench().includes(id));
+/* waiting at camp: could be brought in now (alive, not gone by the story, not walking) */
+function rosterWaiting(id){ if (!rosterBenchable(id) || (S.squad || []).includes(id) || rosterDead(id)) return false; const b = rosterBook();
+  if (b.gone && b.gone(id)) return false;
+  return (S.camp || []).includes(id) || !!(b.wait && b.wait(id)); }
+const rosterCampList = () => S ? rosterBook().bench().filter(rosterWaiting) : [];
+const rosterOpen = () => !!(S && !(typeof B !== 'undefined' && B && !B.over && view === 'battle') && rosterBook().open());
+/* would this squad be allowed? */
+function rosterValid(sq){ if (sq.length > ROSTER_CAP) return false; const was = S.squad || [];
+  if (was.some(k => rosterCore(k) && !sq.includes(k))) return false; const b = rosterBook(); return b.valid ? b.valid(sq, was) : true; }
+const rosterCanIn = id => rosterWaiting(id) && rosterValid([...S.squad, id]);
+const rosterCanOut = id => S.squad.includes(id) && rosterBenchable(id) && rosterValid(S.squad.filter(k => k !== id));
+const rosterCanSwap = (out, inn) => S.squad.includes(out) && rosterBenchable(out) && rosterWaiting(inn) && rosterValid([...S.squad.filter(k => k !== out), inn]);
+const rosterRoom = () => Math.max(0, ROSTER_CAP - ((S && S.squad) || []).length);
+
+/* ---- what each soldier does, for the marks: healer, bow, munitions, sorcery, shield ---- */
+const ROSTER_MARKW = {healer:'healer', bow:'bow', munitions:'munitions', sorcery:'sorcery', shield:'shield'};
+const ROSTER_LACKW = {healer:'a healer', bow:'a bow', munitions:'a sapper', sorcery:'sorcery', shield:'a shield in the line'};
+function rosterMarks(id){ const t = TPL[id]; if (!t) return []; const ab = typeof kitAb === 'function' && S ? kitAb(id) : (t.ab || []), A = k => (typeof AB !== 'undefined' && AB[k]) || {};
+  const muni = ab.includes('sharper'), heal = ab.includes('mend'), out = [];
+  if (heal) out.push('healer');
+  if (id !== 'sgt' && t.rng >= 4 && !muni) out.push('bow');
+  if (muni) out.push('munitions');
+  if ((t.magic && !heal) || ab.some(k => A(k).spirit || A(k).sorcery || A(k).prayer)) out.push('sorcery');
+  if (id !== 'sgt' && rolesOf(id).includes('shield')) out.push('shield');
+  return out; }
+/* what the walking squad lacks, of the five */
+function rosterLacks(sq){ sq = (sq || (S && S.squad) || []).filter(k => TPL[k] && !rosterDead(k)); const have = new Set(sq.flatMap(rosterMarks));
+  return Object.keys(ROSTER_MARKW).filter(k => !have.has(k)); }
+
+/* ---- the moves ---- */
+const rsWorn = (it, but) => (S.squad || []).find(w => w !== but && Object.values(S.gear[w] || {}).includes(it));
+function rsTrail(){ S.trail = (S.trail || []).slice(0, Math.max(1, S.squad.length - 1));
+  while (S.trail.length < S.squad.length - 1) S.trail.push(Object.assign({}, S.trail[S.trail.length - 1] || S.pos || {x:5, y:8})); }
+/* a squadmate's gear goes into the pack: remembered, so they get it back */
+function rsPark(id){ S.parked ??= {}; const g = S.gear[id] || {}; if (Object.keys(g).length) S.parked[id] = Object.assign({}, g); S.gear[id] = {}; }
+function rsRestore(id){ S.parked ??= {}; const p = S.parked[id]; S.gear[id] ??= {}; if (!p) return;
+  Object.entries(p).forEach(([slot, it]) => { if (ITEMS[it] && (S.kit || []).includes(it) && !S.gear[id][slot] && !rsWorn(it, id) && canWear(id, it)) S.gear[id][slot] = it; });
+  delete S.parked[id]; }
+/* one item, one wearer; nobody off the squad wears anything (it is parked for them); a squadmate back gets theirs again */
+function gearTidy(){ if (!S || !S.gear) return; S.parked ??= {}; const seen = new Set();
+  Object.keys(S.gear).forEach(id => { if (!(S.squad || []).includes(id) && Object.keys(S.gear[id] || {}).length) { if (!rosterDead(id)) S.parked[id] = Object.assign({}, S.parked[id] || {}, S.gear[id]); S.gear[id] = {}; } });
+  (S.squad || []).forEach(id => { const g = S.gear[id] ??= {}; Object.entries(g).forEach(([slot, it]) => { if (seen.has(it)) delete g[slot]; else seen.add(it); }); });
+  (S.squad || []).forEach(id => { if (S.parked[id]) rsRestore(id); }); }
+function rsOut(id){ const i = S.squad.indexOf(id); if (i < 0) return -1; S.squad.splice(i, 1); rsPark(id);
+  S.camp = [...(S.camp || []).filter(x => x !== id), id]; const b = rosterBook(); if (b.out) b.out(id); rsTrail(); return i; }
+function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = rosterBook(); if (b.in) b.in(id);
+  if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
+  if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
+  if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; rsRestore(id); rsTrail(); }
+const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
+const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle'].includes(id) ? 'she' : 'he';
+/* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
+function rosterOut(id){ if (!rosterCanOut(id)) return false; rsOut(id); note(rsCampNote(id)); save(); return true; }
+function rosterIn(id){ if (!rosterCanIn(id)) return false; rsIn(id); note(`${NAME(id)} comes in from ${rosterBook().home(id)} and falls in.`, 'good'); AUDIO.play('up'); save(); return true; }
+function rosterSwap(out, inn){ if (!out) return rosterIn(inn); if (!rosterCanSwap(out, inn)) return false;
+  const i = rsOut(out); rsIn(inn, i); note(rsCampNote(out)); note(`${NAME(inn)} comes in from ${rosterBook().home(inn)} and takes the place.`, 'good'); AUDIO.play('up'); save(); return true; }
+
+/* ---- the books' own joining goes through here: a join with no room waits at camp, and says so ---- */
+{ const _recruit = recruit;
+  recruit = function(id){ if (!S || !TPL[id] || S.squad.includes(id)) return _recruit(id);
+    if (S.squad.length >= ROSTER_CAP && rosterBenchable(id)) { S.camp = [...(S.camp || []).filter(x => x !== id), id]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {};
+      const b = rosterBook(); if (b.out) b.out(id);
+      note(`No room in the squad: ${NAME(id)} waits at ${b.home(id)}. The roster can bring ${rsHe(id) === 'she' ? 'her' : 'him'} in.`); save(); return; }
+    _recruit(id); if (S.squad.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); rsRestore(id); rsTrail(); } }; }
+/* the story's own leavings: gear goes into the pack (remembered), and nobody leaves twice */
+letGo = function(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); rsPark(id); S.camp = (S.camp || []).filter(x => x !== id);
+  S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); };
+unrecruit = function(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); rsPark(id); S.camp = (S.camp || []).filter(x => x !== id); S.f[id + 'Gone'] = 1;
+  S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); };
+{ const _kill = kill; kill = function(id){ _kill(id); if (S) { S.camp = (S.camp || []).filter(x => x !== id); if (S.parked) delete S.parked[id]; } }; }
+/* equipping takes the piece off anyone else first, the parked included */
+equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) return; Object.keys(S.gear).forEach(w => { const g = S.gear[w] || {}; Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }); });
+  Object.values(S.parked || {}).forEach(g => Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }));
+  S.gear[who] ??= {}; S.gear[who][it.slot] = id; save(); };
+
+/* ---- old saves: Book Two/Three/Four kept a recruit's kit in S.f.b2/b3/b4_allyGear and their waiting in flags; the squad was not capped ---- */
+{ const _migrate = migrate;
+  migrate = function(s){ const r = _migrate(s); if (!s) return r; const S0 = S; S = s;
+    try { s.camp ??= []; s.parked ??= {};
+      ['b2_allyGear', 'b3_allyGear', 'b4_allyGear'].forEach(k => { const g = s.f && s.f[k]; if (g) { Object.entries(g).forEach(([id, sl]) => { if (!s.squad.includes(id) && sl && Object.keys(sl).length) s.parked[id] = Object.assign({}, sl, s.parked[id] || {}); }); delete s.f[k]; } });
+      const b = rosterBook(); b.bench().forEach(id => { if (!s.squad.includes(id) && !rosterDead(id) && b.wait && b.wait(id) && !s.camp.includes(id) && !(s.book === 'hoc' && HOC_NEW.includes(id))) s.camp.push(id); });
+      /* more than six: the last recruits to come step out to camp (a Book One with Ellis and Vell both, a Book Three import with both) */
+      while (s.squad.length > ROSTER_CAP) { const id = [...s.squad].reverse().find(rosterBenchable); if (!id) break; rsOut(id); }
+      gearTidy();
+    } finally { S = S0; }
+    return r; }; }
+
+/* ============ the roster screen (in the pack/journal modal: the Roster tab, and a fire's "The roster.") ============ */
+let rosterSel = {out:null, inn:null}, rosterBack = null;
+const rosterMarkHtml = id => rosterMarks(id).map(k => `<span class="rmk">${ROSTER_MARKW[k]}</span>`).join('');
+function rosterFills(id){ const lack = rosterLacks(); return rosterMarks(id).filter(k => lack.includes(k)); }
+function rosterHTML(){ const sq = S.squad.filter(k => TPL[k]), camp = rosterCampList(), open = rosterOpen(), lack = rosterLacks(), sel = rosterSel;
+  const row = (id, side) => { const core = rosterCore(id), on = sel[side === 'w' ? 'out' : 'inn'] === id, fills = side === 'c' ? rosterFills(id) : [];
+    let btn = '';
+    if (open && side === 'w' && !core && rosterBenchable(id)) { const ok = sel.inn ? rosterCanSwap(id, sel.inn) : (rosterCanOut(id) || camp.some(c => rosterCanSwap(id, c)));
+      btn = `<button class="btn sm${on ? ' on' : ''}" data-rout="${id}"${ok || on ? '' : ' disabled'}>${on ? 'Chosen' : 'To camp'}</button>`; }
+    if (open && side === 'c') { const ok = sel.out ? rosterCanSwap(sel.out, id) : (rosterCanIn(id) || sq.some(w => rosterCanSwap(w, id)));
+      btn = `<button class="btn sm${on ? ' on' : ''}" data-rin="${id}"${ok || on ? '' : ' disabled'}>${on ? 'Chosen' : 'Bring in'}</button>`; }
+    const who = id === 'sgt' ? `Sergeant ${esc(S.name)}` : esc(TPL[id].name);
+    return `<div class="rrow${on ? ' sel' : ''}"><div class="rwho"><b>${who}</b> <small>${esc(id === 'sgt' ? 'you' : TPL[id].role || '')}</small><div class="rmks">${rosterMarkHtml(id)}${core && id !== 'sgt' ? '<span class="rmk core">always walks</span>' : ''}${fills.length ? `<span class="rmk fill">fills: ${fills.map(k => ROSTER_LACKW[k]).join(', ')}</span>` : ''}${side === 'c' ? `<span class="rmk at">at ${esc(rosterBook().home(id))}</span>` : ''}</div></div>${btn}</div>`; };
+  let ask = '';
+  if (open && (sel.out || sel.inn)) { const o = sel.out, i = sel.inn;
+    const can = o && i ? rosterCanSwap(o, i) : o ? rosterCanOut(o) : rosterCanIn(i);
+    const what = o && i ? `${NAME(o)} to camp, ${NAME(i)} walks.` : o ? (can ? `${NAME(o)} to camp.` : `${NAME(o)} to camp: choose who comes in to take the place.`) : (can ? `${NAME(i)} walks.` : `No room: choose who goes to camp for ${NAME(i)}.`);
+    ask = `<div class="rask"><p>${esc(what)}</p><div class="row">${can ? '<button class="btn primary sm" id="rDo">Do it</button>' : ''}<button class="btn sm" id="rCancel">Not now</button></div></div>`; }
+  return `<p class="fine">Up to six walk: you and five. ${open ? 'Anyone else waits at camp until sent for. Choose who goes, who comes, or both.' : rosterLockWords()}</p>
+    <p class="rlack">${lack.length ? `The squad lacks ${rsAnd(lack.map(k => ROSTER_LACKW[k]))}.` : 'The squad has a healer, a bow, a sapper, sorcery and a shield in the line.'}</p>
+    ${ask}
+    <h4 class="jh">Walking · ${sq.length} of ${ROSTER_CAP}</h4><div class="rlist">${sq.map(id => row(id, 'w')).join('')}</div>
+    <h4 class="jh">At camp</h4><div class="rlist">${camp.length ? camp.map(id => row(id, 'c')).join('') : '<p class="fine">Nobody waits at camp.</p>'}</div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="rDone">Done</button></div>`; }
+const rsAnd = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a[0] || '';
+function rosterLockWords(){ const b = S.book || 'gotm';
+  return b === 'hoc' ? 'Radde\'s muster comes first.' : b === 'dg' ? 'Nobody can be sent for on this stretch. At the next halt.' : 'Nobody can be sent for here.'; }
+/* open the screen; back: the fire node to show again on Done (or null for the map) */
+function openRoster(back){ if (!S) return; if (back !== undefined) rosterBack = back; const m = $('#modal'); if (m.hidden) AUDIO.play('open'); m.hidden = false; m.scrollTop = 0; routeAnim = null;
+  const tabs = ['pack', 'journal', 'save', 'deeds'];
+  m.innerHTML = smartq(`<div class="mbox roster"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><h2 class="m">The roster</h2><button class="btn" id="bClose">Close</button></div>
+    <div class="tabs"><button class="tab" data-t="squad">Squad</button><button class="tab on" data-t="roster">Roster</button>${tabs.map(k => `<button class="tab" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
+    <div>${rosterHTML()}</div></div>`);
+  m.querySelectorAll('.tab').forEach(b => b.onclick = () => { AUDIO.play('click'); rosterSel = {out:null, inn:null}; if (b.dataset.t === 'roster') return; if (b.dataset.t === 'squad') { m.hidden = true; openChars(0); } else openModal(b.dataset.t); });
+  const shut = () => { AUDIO.play('close'); closeRoster(); };
+  $('#bClose').onclick = shut; $('#rDone').onclick = shut;
+  m.querySelectorAll('[data-rout]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.rout; rosterSel.out = rosterSel.out === id ? null : id; if (rosterSel.inn && rosterSel.out && !rosterCanSwap(rosterSel.out, rosterSel.inn)) rosterSel.inn = null; openRoster(); });
+  m.querySelectorAll('[data-rin]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.rin; rosterSel.inn = rosterSel.inn === id ? null : id; if (rosterSel.inn && rosterSel.out && !rosterCanSwap(rosterSel.out, rosterSel.inn)) rosterSel.out = null; openRoster(); });
+  const doIt = $('#rDo'); if (doIt) doIt.onclick = () => { const {out, inn} = rosterSel; rosterSel = {out:null, inn:null}; if (out && inn) rosterSwap(out, inn); else if (out) rosterOut(out); else if (inn) rosterIn(inn); openRoster(); };
+  const no = $('#rCancel'); if (no) no.onclick = () => { AUDIO.play('click'); rosterSel = {out:null, inn:null}; openRoster(); };
+}
+const rosterIsOpen = () => !$('#modal').hidden && !!$('#modal .mbox.roster');
+/* Back: a choice half made is dropped first; then the screen closes */
+function rosterBackOne(){ if (!rosterIsOpen()) return false; if (rosterSel.out || rosterSel.inn) { rosterSel = {out:null, inn:null}; openRoster(); return true; } closeRoster(); return true; }
+function closeRoster(){ const m = $('#modal'); m.hidden = true; m.innerHTML = ''; rosterSel = {out:null, inn:null}; const back = rosterBack; rosterBack = null;
+  if (back && DLG[back] && !$('#sheet').hidden && S.node === back) talk(back); // the fire again, with what has changed
+  else if (notes.length && view === 'explore') { /* the notes wait for the next conversation */ } }
+/* the choice every chapter fire offers (ROSTER_FIRES): the screen over the fire */
+function rosterChoice(back){ const camp = S ? rosterCampList() : [], lack = S ? rosterLacks() : [];
+  const tag = camp.length ? `${camp.length} at camp` : lack.length && lack.length < 5 ? `lacks ${ROSTER_LACKW[lack[0]]}` : 'who walks';
+  return {t:'The roster.', tag, roster:true, go:()=>{ talk(back); ROSTER_UI.open(back); }}; }
+/* reached through an object, so tools that read a choice's source (onward_test) see a talk back to the fire and no more */
+const ROSTER_UI = {open:back => openRoster(back)};
+/* each book's chapter fires: [book][chapter] = node ids. Book One has no fire of its own in most chapters; its Roster tab is always there. */
+const ROSTER_FIRES = {
+  gotm:{2:['c2_fire']},
+  dg:{1:['b2_fire'], 2:['b2_road_fire'], 3:['b2_east_fire'], 4:['b2_bank_cart', 'b2_far_wagon'], 5:['b2_kfire'], 6:['b2_hfire', 'b2_gfire'], 7:['b2_bfire']},
+  moi:{1:['b3_c1_fire', 'b3_c1_rfire'], 2:['b3_c2_fire'], 3:['b3_c3_fire'], 4:['b3_c4_fire'], 5:['b3_c5_fire'], 6:['b3_c6_fire', 'b3_c6_ledge_fire', 'b3_c6_trench_fire', 'b3_c6_bank_fire', 'b3_c6_landing_fire'], 7:['b3_c7_f_fire', 'b3_c7_r_fire', 'b3_c7_h_fire', 'b3_c7_s_fire']},
+  hoc:{1:['b4_c1_yard'], 2:['b4_c2_fire'], 3:['b4_c3_feast', 'b4_c3_farfire'], 4:['b4_c4_setifire'], 5:['b4_c5_wallfire'], 6:['b4_c6_picketfire'], 7:['b4_c7_isle', 'b4_c7_coldfire']},
+};
+/* the fire nodes get the choice, just before their last (the way out) */
+function rosterWrapFires(){ Object.values(ROSTER_FIRES).forEach(chs => Object.values(chs).flat().forEach(id => { const f = DLG[id]; if (!f || f._roster) return;
+  const w = function(){ const n = f.apply(this, arguments); if (n && Array.isArray(n.ch) && S && !n.ch.some(c => c && c.roster)) { const c = rosterChoice(id); n.ch = n.ch.slice(); n.ch.splice(Math.max(0, n.ch.length - 1), 0, c); } return n; };
+  w._roster = true; DLG[id] = w; })); }
+
+/* ============ gear by role ============ */
+/* what a squadmate can use: GEAR_TAGW names each tag. Anyone whose roles hold an item's role can wear it; a few pieces stay personal (who). */
+const GEAR_TAGW = {heavy:'heavy armour', mail:'mail', light:'light armour', shield:'a shield', blade:'a blade', heavyweapon:'a heavy weapon', reach:'a spear or a lance',
+  ranged:'a bow or a crossbow', satchel:'a sapper\'s kit', healkit:'a healer\'s kit', focus:'a focus or a charm', any:'anyone'};
+const TPL_ROLES = {
+  sgt:['heavy', 'mail', 'light', 'shield', 'blade', 'heavyweapon', 'reach', 'ranged'],
+  brisk:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'], kettle:['light', 'mail', 'satchel', 'ranged', 'blade'], tuft:['light', 'focus'],
+  ohl:['light', 'healkit', 'focus', 'blade'], ellis:['light', 'ranged', 'blade'], vell:['light', 'blade'],
+  sathi:['light', 'ranged', 'blade', 'reach'], tangle:['light', 'mail', 'satchel', 'ranged', 'blade'], haddat:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'],
+  marrow:['light', 'healkit', 'focus', 'blade'], redblade:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'], warlock:['light', 'focus', 'blade'],
+  sohra:['light', 'ranged', 'blade', 'reach', 'focus'], greysword:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'],
+  tallow:['light', 'ranged', 'blade'], hessa:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach', 'focus'], tebbet:['light', 'ranged', 'blade'],
+  darrut:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'], orvas:['light', 'mail', 'blade', 'reach'],
+  mirrel:['light', 'healkit', 'focus', 'blade'], yorin:['light', 'focus', 'blade'], rasp:['light', 'mail', 'satchel', 'ranged', 'blade']};
+/* every piece's role. Not listed: 'any' (trinkets mostly). GEAR_SIG: the pieces that stay with one soldier (the story needs it) */
+const ITEM_ROLE = {
+  heater:'shield', cadretoken:'focus', clawknife:'blade', rhivibow:'ranged', toccloak:'light', daruknife:'blade', ropehook:'light', guildblade:'blade', andiicloak:'focus',
+  barrowflint:'blade', otatglove:'heavy', scoutcloak:'light', simtalhalberd:'reach', blackedblade:'blade',
+  b2_auxtulwar:'heavyweapon', b2_auxmail:'mail', b2_horsebow:'ranged', b2_semkaxe:'heavyweapon', b2_wickanhide:'light', b2_tithlance:'reach', b2_noblesabre:'blade',
+  b2_officerscale:'heavy', b2_coldknife:'blade', b2_tcrossbow:'ranged', b2_tleathers:'light', b2_khundrylblade:'blade', b2_arensword:'heavyweapon', b2_arenmail:'mail',
+  b3_c2_hornbow:'ranged', b3_c2_mace:'heavyweapon', b3_c3_shield:'shield', b3_c3_spear:'reach', b3_c4_flint:'blade', b3_c6_axe:'heavyweapon', b3_c7_hunterblade:'heavyweapon',
+  b4_c1_relic:'any', b4_c3_khundrylknife:'blade', b4_c4_setibow:'ranged', b4_c6_trenchspade:'satchel', b4_c7_dogslayerblade:'blade'};
+const GEAR_SIG = {secondbadge:['brisk', 'sgt'], moranthchit:['kettle'], b2_sealskin:['haddat']}; // Tav's regiment; Kettle's Moranth; the water-sellers' seal Haddat took
+const rolesOf = id => { const t = TPL[id]; if (!t) return []; if (!t.roles) t.roles = (TPL_ROLES[id] || ['light', 'blade']).slice(); return t.roles; };
+/* give every item its role (and drop the old name lists), every TPL its roles: run as chapters register, and once more on first use */
+let gearRolesN = -1;
+function gearRolesApply(){ Object.keys(TPL).forEach(rolesOf);
+  Object.entries(ITEMS).forEach(([k, it]) => { if (!it || it._roled) return; it._roled = 1;
+    if (GEAR_SIG[k]) it.who = GEAR_SIG[k].slice();
+    else if (ITEM_ROLE[k]) { it.role = ITEM_ROLE[k]; delete it.who; }
+    else if (!it.role && !it.who) it.role = 'any';
+    else if (!it.role) it.role = 'any'; /* an unlisted piece with a name list keeps it (a writer's signature piece) */ });
+  gearRolesN = Object.keys(ITEMS).length; }
+function canWear(id, g){ const it = ITEMS[g]; if (!it || !TPL[id]) return false; if (gearRolesN !== Object.keys(ITEMS).length) gearRolesApply();
+  if (Array.isArray(it.who)) return it.who.includes(id);
+  const r = [].concat(it.role || 'any'); return r.includes('any') || r.some(x => rolesOf(id).includes(x)); }
+/* the words for the item viewer: who can use it */
+function wearWords(g){ const it = ITEMS[g]; if (!it) return ''; if (gearRolesN !== Object.keys(ITEMS).length) gearRolesApply();
+  if (Array.isArray(it.who)) { const w = it.who.map(x => x === 'sgt' ? 'the sergeant' : TPL[x].name); return `Can be used by ${rsAnd(w)}. It stays with ${w.length > 1 ? 'them' : rsHe(it.who[0]) === 'she' ? 'her' : 'him'}.`; }
+  const r = [].concat(it.role || 'any'); if (r.includes('any')) return 'Anyone in the squad can use it.';
+  const here = S ? [...(S.squad || []), ...rosterCampList()].filter(id => canWear(id, g)).map(x => x === 'sgt' ? 'you' : TPL[x].name) : [];
+  return `Can be used by anyone who takes ${rsAnd(r.map(x => GEAR_TAGW[x] || x))}${here.length ? `: ${rsAnd(here)}, of this squad` : ''}.`; }
+{ const _reg = registerChapter; registerChapter = function(n, CH, book){ const r = _reg(n, CH, book); gearRolesApply(); rosterWrapFires(); return r; }; }
+/* the map and a fight start from a tidy kit: one wearer per piece, and a squadmate back from wherever the story sent them wears theirs again */
+{ const _se = startExplore; startExplore = function(){ try { gearTidy(); } catch(e) { console.warn('gearTidy', e); } return _se.apply(this, arguments); }; }
+{ const _sb = startBattle; startBattle = function(){ try { gearTidy(); } catch(e) { console.warn('gearTidy', e); } return _sb.apply(this, arguments); }; }
 
 /* ============ the prologue: dialogue (Tattersail, the tunnels under the Pale) ============ */
 /* who did it, from a flag that kept a roller's id (S.f.x = ROLL().who): the id while they are still in the squad, else '' */
@@ -21245,7 +21500,9 @@ function newStateDG(name, importId){
 /* only the road out of Darujhistan and who walked it: the empire road's ship can call at Aren (Book Two, Chapter 7) */
 function dgImport(id){ const o = loadSlot(id); if (!o || !o.chapters || o.chapters[7] == null) return null;
   const road = o.chapters[7], follow = (o.f && o.f.c7_follow) || {}, mates = ['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].filter(k => (o.squad || []).includes(k) && !(o.dead && o.dead[k]));
-  return {from:o.name, sid:id, road, lvl:o.lvl || 1, follow, mates, dead:Object.keys(o.dead || {}), loy:Object.assign({}, o.loy || {})}; }
+  /* v7.2: an Old Hand brings what they wore and the picks they made (b2OldHand puts them on) */
+  const gear = {}, picks = {}; mates.forEach(k => { gear[k] = Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {}); picks[k] = (((o.picks || {})[k]) || []).slice(); });
+  return {from:o.name, sid:id, road, lvl:o.lvl || 1, follow, mates, dead:Object.keys(o.dead || {}), loy:Object.assign({}, o.loy || {}), gear, picks}; }
 const dgOldHands = () => { const i = S && S.imported; if (!i || i.road !== 'empire') return []; return i.mates.filter(k => !i.follow || i.follow[k] !== false); };
 
 /* the HUD line on the map: water and the column, beside the silver (Book Two only) */
@@ -21452,7 +21709,11 @@ function b2LastStandEnd(){ if (!Array.isArray(S.f.b2_wallSquad)) return false; c
 const b2OldHandPick = () => { const h = dgOldHands(), i = S && S.imported; if (!h.length) return null;
   return h.slice().sort((a, b) => ((i.loy || {})[b] || 0) - ((i.loy || {})[a] || 0))[0]; };
 function b2OldHand(id){ if (!TPL[id] || S.squad.includes(id) || ['redblade', 'warlock'].some(k => S.squad.includes(k))) return false;
-  recruit(id); S.f.b2_oldHand = id; S.picks[id] ??= [];
+  S.f.b2_oldHand = id; const i = S.imported || {}; // v7.2: before recruit, so the roster counts them as the book's own bench
+  S.picks[id] = ((i.picks || {})[id] || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][id] || []).some(v => v[0] === p)));
+  if (i.loy && i.loy[id] != null) S.loy[id] = clamp(i.loy[id], -2, 3);
+  S.parked ??= {}; const g = {}; Object.entries((i.gear || {})[id] || {}).forEach(([slot, it]) => { if (!ITEMS[it]) return; if (!S.kit.includes(it)) S.kit.push(it); g[slot] = it; }); S.parked[id] = g;
+  recruit(id); if (!S.squad.includes(id)) return false;
   if (S.lvl >= 5 && !S.picks[id].includes('iron')) S.picks[id].push('iron'); if (S.lvl >= 7 && !S.picks[id].includes('keen')) S.picks[id].push('keen');
   save(); return true; }
 
@@ -33521,12 +33782,11 @@ const b2AllyOff = id => !!(S && S.book === 'dg' && S.f && TPL[id] && !b2In(id) &
 const b2SwapOpen = () => !!(S && S.book === 'dg' && ((S.chapter >= 2 && S.chapter <= 5) || (S.chapter === 6 && !S.f.b2_silverDone) || (S.chapter === 7 && !b2Ph7())));
 const B2_HOME = {redblade:'what is left of the Red Blades\' file', warlock:'the Foolish Dog\'s fires'};
 function b2SwapIn(id){ if (!TPL[id] || b2In(id)) return;
-  const out = b2Ally();
-  if (out) { S.f.b2_allyGear ??= {}; S.f.b2_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {};
-    note(`${NAME(out)} goes back to ${B2_HOME[out]}, near the squad's stretch. Ask at any fire.`); }
-  S.f[B2_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b2_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); }
+  /* v7.2: through the roster (38c): room in the six, and nobody goes back; otherwise the recruit who walks goes back to their people */
+  S.f[B2_DONE[id]] = 1;
+  if (rosterRoom() > 0) { S.camp = [...(S.camp || []).filter(x => x !== id), id]; rosterIn(id); return; }
+  S.camp = [...(S.camp || []).filter(x => x !== id), id]; const out = b2Ally();
+  if (!out || !rosterSwap(out, id)) note(`No room in the squad: ${NAME(id)} waits with ${B2_HOME[id]}. The roster at any fire can bring him in.`); }
 
 /* where each chapter keeps them: [area, the tile for whichever recruit is with the squad (Ramin's own talk tile), Ramin's fire, Keth's fire] */
 const B2_POSTS = [[3, 'b2_east', [6, 6], [4, 6], [8, 6]], [4, 'b2_carriages', [9, 9], [7, 7], [11, 8]], [5, 'b2_vforest', [13, 8], [11, 7], [13, 6]],
@@ -34801,14 +35061,14 @@ const B3_MATES = ['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'];
 const b3Qualifies = o => !!(o && (!o.book || o.book === 'gotm') && o.chapters && o.chapters[7] === 'outlaw');
 function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
   const f = o.f || {}, dead = o.dead || {}, follow = f.c7_follow || {};
-  const mates = B3_MATES.filter(k => (o.squad || []).includes(k) && !dead[k] && follow[k] !== false);
+  const mates = B3_MATES.filter(k => ((o.squad || []).includes(k) || (o.camp || []).includes(k)) && !dead[k] && follow[k] !== false); // v7.2: whoever waited at camp comes too
   const keep = {}; B3_KEEP.forEach(k => { if (f[k] != null) keep[k] = f[k]; });
   keep.list = 211 + (f.c2_key === 'light' ? 1 : 0) + (f.c4_key === 'aside' ? 1 : 0) + Object.keys(dead).length + (f.listAdds || 0);
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
   /* v6.1: the transfer brings what the Fourth carried: the gear each of them wears and the unworn kit, their talents and veteran picks, and every
      trick held by someone who comes across (charges full again). Gear and tricks of the dead and of anyone who stayed behind stay behind. */
   const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
-  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+  who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
     picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
@@ -34850,17 +35110,15 @@ const B3_HOME = {sohra:'the Rhivi fires', greysword:'the Grey Swords\' lines'};
 const b3Recruit_ = () => (S && Array.isArray(S.squad) && B3_RECRUITS.find(k => S.squad.includes(k))) || null;
 /* a recruit joins if there is room; otherwise they wait near with their own people (flag 2) and b3SwapIn can bring them in */
 function b3Join(id){ if (!TPL[id] || !B3_RECRUITS.includes(id) || b3In(id)) return false;
-  if (b3Room() <= 0) { S.f[B3_DONE[id]] = 2; note(`${NAME(id)} stays with ${B3_HOME[id]} for now. There is no room in the Fourth, and both of you know it.`); save(); return false; }
+  if (b3Room() <= 0) { S.f[B3_DONE[id]] = 2; S.camp = [...(S.camp || []).filter(x => x !== id), id]; note(`${NAME(id)} stays with ${B3_HOME[id]} for now. There is no room in the Fourth, and both of you know it. The roster at any fire can change that.`); save(); return false; }
   S.f[B3_DONE[id]] = 1; recruit(id); return true; }
-/* swap the recruit who walks with the squad for the one who waits (like b2SwapIn): the one going out keeps their kit for later */
+/* v7.2: through the roster (38c): room, and she comes; no room, and the other recruit who walks goes back. A squad full of the Fourth
+   (an import with Ellis or Vell) has nobody to send back here: b3CanSend says no, and the fire's roster lets the sergeant choose. */
 function b3SwapIn(id){ if (!TPL[id] || !B3_RECRUITS.includes(id) || b3In(id)) return false;
-  const out = b3Recruit_();
-  if (b3Room() <= 0) { if (!out) return false;
-    S.f.b3_allyGear ??= {}; S.f.b3_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B3_DONE[out]] = 2;
-    S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B3_HOME[out]}. Ask at any halt, and she'll come.`); }
-  S.f[B3_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b3_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); return true; }
+  if (b3Room() > 0) return rosterIn(id);
+  const out = b3Recruit_(); return !!out && rosterSwap(out, id); }
+/* can a fire send for her now, without the roster: she waits, and there is room or another recruit to go back */
+const b3CanSend = id => b3Waiting(id) && (b3Room() > 0 || !!b3Recruit_());
 const b3Waiting = id => !!(b3On() && S.f && S.f[B3_DONE[id]] === 2 && !b3In(id) && !(S.dead && S.dead[id]));
 
 /* ---- who reads the Deck in Book Three (36b visReader, 21's captions, 60c's readings) ----
@@ -42434,8 +42692,8 @@ Sohra listens to it for a while from the herd-lines and comes back with her mout
 
 ${c5FireLine()}`,
       ch:[{t:'Rest by the fire.', req:()=>!S.f.b3_c5_rested, fx:()=>{ S.f.b3_c5_rested = 1; }, go:'b3_c5_fire_rest'},
-          {t:'Send to the Grey Swords\' lines for Dannet.', req:()=>b3Waiting('greysword'), go:'b3_c5_swap'},
-          {t:'Send to the Rhivi fires for Sohra.', req:()=>b3Waiting('sohra'), go:'b3_c5_swap'},
+          {t:'Send to the Grey Swords\' lines for Dannet.', req:()=>b3CanSend('greysword'), go:'b3_c5_swap'},
+          {t:'Send to the Rhivi fires for Sohra.', req:()=>b3CanSend('sohra'), go:'b3_c5_swap'},
           {t:'"Kettle. You\'ve been counting something."', req:()=>b3In('kettle') && !S.f.b3_c5_quorls, go:'b3_c5_quorls'},
           {t:'Sit the night out.', req:()=>!!S.f.b3_c5_key, go:'b3_c5_close'},
           {t:'Not now.'}]}),
@@ -43309,8 +43567,8 @@ Tuft has stopped walking. She stands quite still, the way she always does near h
 
 ${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says. "Same as this morning." She sounds, for the first time in a month, as if she'd like it not to be.` : 'The satchel is where it always is.'}${b3In('greysword') ? ` Dannet has the pot of grey paint open on her knee and is not painting, only looking at the wolf.` : ''}${b3In('ellis') ? ` Ellis sits facing east, toward the horse lines, with the gloved hand in her lap.` : ''}${b3In('vell') ? ` Vell lies on his back watching the sky over the field, as if something might go across it. Twice tonight, something does.` : ''}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords tonight, three lines over, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is at the Rhivi fires tonight, if the Fourth wants her.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_rest, fx:()=>{ S.f.b3_c6_rest = 1; b3Rest('The Fourth sleeps in its boots by a banked fire, the way the Seventh sleeps tonight. Wounds close, mostly.'); }, go:'b3_c6_rested'},
-        {t:'Send for Dannet.', req:()=>b3Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
-        {t:'Send for Sohra.', req:()=>b3Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
+        {t:'Send for Dannet.', req:()=>b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
+        {t:'Send for Sohra.', req:()=>b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b3_c6_rested:()=>({sp:'The Fourth\'s fire', txt:
 `You sleep, or something near it. Twice in the night the sound of sails filling comes from the east, a long way off, and twice you are awake before it stops.${b3In('ohl') ? ` Ohl does not sleep at all. In the morning he says he did.` : ''}`,
@@ -43953,8 +44211,8 @@ ${c6Told() === 'later' ? `You told somebody you would answer them at the Maurik.
   b3_c6_bank_fire:()=> c6Told() === 'later' && !S.f.b3_c6_riverAsk ? DLG.b3_c6_river_ask() : ({sp:'The Fourth\'s fire', txt:
 `The Fourth's fire, on the bank above the slips, built big, because the order on this road is big fires, three to a squad. You sit by one of them. The other two burn for nobody, very convincingly.${b3In('kettle') ? ` Kettle counts the satchel by feel. "${c6Count()}," she says.` : ''}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords' few who came on the road, further up the bank, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is with the Rhivi riders who stayed by the column, if the Fourth wants her.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_mrest, fx:()=>{ S.f.b3_c6_mrest = 1; b3Rest('The Fourth sleeps by a fire meant for three squads, warm for once all the way through.'); }, go:'b3_c6_bank_rested'},
-        {t:'Send for Dannet.', req:()=>b3Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
-        {t:'Send for Sohra.', req:()=>b3Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
+        {t:'Send for Dannet.', req:()=>b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
+        {t:'Send for Sohra.', req:()=>b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b3_c6_bank_rested:()=>({sp:'The Fourth\'s fire', txt:`You sleep to the sound of adzes, which the wrights do not stop for anything, and wake to the sound of the White Face singing, which nobody can stop either.`,
     ch:[{t:'Up.', go:()=>startExplore()}]}),
@@ -46004,14 +46262,14 @@ ${b3In('tuft') ? `Tuft goes to her. You don't hear what they say. You see the ch
 `The Grey Swords have pitched their camp nearest the barrow. Capan women mostly, the acolytes, shorn, in grey, and among them the few old troopers who came out of Capustan, very quiet. The whole company talks in murmurs.
 
 ${b3c7Waiting('greysword') ? `Dannet is with them. She comes out of the lines when she sees the squad, with the half-painted shield on her arm, and stops in front of you. "Sergeant," she says. "I'm lent to you till the Domin's done." She looks back at the barrow. "The Domin's done." Then: "Ask me anyway."` : b3In('greysword') ? `They know Dannet. They make room for her at the fire without being asked, and she sits, and an old trooper puts his hand on her shoulder and leaves it there.` : `An acolyte looks up at the Fourth's badges, and nods${S.f.b3_c3_key === 'camps' ? ', and you know her: she was in the Camp at Capustan, the day the Fourth went in with the company' : ''}, and says in Daru, "He would have said *sir*. To you. To everyone." She looks at the barrow. "We are learning to say it for him."`}`,
-      ch:[{t:'"Come back to the Fourth, Dannet, if you want it."', req:()=>b3c7Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:()=>startExplore()},
+      ch:[{t:'"Come back to the Fourth, Dannet, if you want it."', req:()=>b3c7Waiting('greysword') && b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:()=>startExplore()},
           b3c7AnvilCh('grey'),
           {t:'Leave them to their dead.', go:()=>startExplore()}]}),
   b3_c7_s_rhivi:()=>({sp:'Rhivi riders', fx:()=>{ S.f.b3_c7_srhivi = 1; }, txt:
 `The Rhivi have brought the herds down to the shore to drink at a stream that comes out of the hill, and the riders are sitting their horses among the bhederin, singing, low, the songs for the dead, and then one more, facing north, slow, the kind you sing to someone who is asleep and will not wake.
 
 ${b3c7Waiting('sohra') ? `Sohra rides out of the herd when she sees the squad, and pulls up, and looks down at you. "The Mhybe sleeps," she says. "For ever. In the sleep she is young." Her face does something. "I watched the Malazans for her, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I am not finished watching."` : b3In('sohra') ? `They call to Sohra in Rhivi as you pass, and she answers, and for a moment she is one of them again, and then she is back in the Fourth's file, walking.` : `A rider looks at your badges and says something in Rhivi, and then in bad Daru: "The Malazans. You don't leave people." It might be a compliment. You decide to take it as one.`}`,
-      ch:[{t:'"Ride with the Fourth again, Sohra."', req:()=>b3c7Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:()=>startExplore()},
+      ch:[{t:'"Ride with the Fourth again, Sohra."', req:()=>b3c7Waiting('sohra') && b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:()=>startExplore()},
           {t:'Leave them to the herds.', go:()=>startExplore()}]}),
 
   /* ---- the road out ---- */
@@ -47850,14 +48108,18 @@ function b4Import(id){ const o = loadSlot(id); if (!b4Qualifies(o)) return null;
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
   /* what the squad carried, as Book Three's transfer does (60): worn gear and unworn kit, talents and veteran picks, the tricks of anyone who comes across */
   const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
-  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+  who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
     picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  /* v7.2: Ramin and Keth, if they come later, bring what they wore in Book Two (parked for them), their loyalty and their picks */
+  const carry = {}; [['redblade', !!f.b2_raminGone && !dead.redblade], ['warlock', !!f.b2_kethGone && !dead.warlock]].forEach(([k, on]) => { if (!on) return;
+    const g = {}; Object.entries(Object.assign({}, ((o.f || {}).b2_allyGear || {})[k] || {}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it] && (o.kit || []).includes(it) && !worn.has(it)) { g[slot] = it; worn.add(it); } });
+    carry[k] = {gear:g, loy:clamp(((o.loy || {})[k]) || 0, -2, 3), picks:(((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p)))}; });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
   const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
   const inv = Object.assign({sharper:0, burner:0, cusser:0, smoker:0}, ...B2_MUNI.map(k => ({[k]:Math.max(0, ((o.inv || {})[k]) || 0)})), {salve:Math.max(2, ((o.inv || {}).salve) || 0)}); // Tangle's satchel, as Book Two left it
   return {from:o.name, sid:id, road, lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), deadAt:dead, f:keep, gear, picks, kit, tricks, inv,
-    ramin:!!f.b2_raminGone && !dead.redblade, keth:!!f.b2_kethGone && !dead.warlock}; }
+    ramin:!!f.b2_raminGone && !dead.redblade, keth:!!f.b2_kethGone && !dead.warlock, carry}; }
 /* every Book Four game starts at level 8 (cap 15): the veterans' curve and its picks are Book Three's (60) */
 const B4_START_LVL = 8;
 function newStateHOC(name, importId, sid){
@@ -47874,6 +48136,7 @@ function newStateHOC(name, importId, sid){
   s.lvl = Math.max(B4_START_LVL, Math.min(15, imp ? imp.lvl : 1)); s.xp = LEVELS[s.lvl - 1];
   if (imp) { s.imported = {from:imp.from, sid:imp.sid, road:imp.road, lvl:imp.lvl, mates:imp.mates.slice(), dead:imp.dead, f:imp.f, ramin:imp.ramin, keth:imp.keth};
     Object.assign(s.loy, imp.loy); s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks; s.inv = imp.inv;
+    s.parked = {}; Object.entries(imp.carry || {}).forEach(([k, c]) => { s.parked[k] = c.gear; s.loy[k] = c.loy; s.picks[k] = c.picks.slice(); }); // v7.2: Ramin's and Keth's Book Two selves wait for them
     imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; s.dead[k] = {ch:d.ch || 7, where:d.where || 'The Barrow', from:'dg'}; }); } // Book Two's dead stay dead: never in the squad, never a recruit
   else s.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start: Sathi fell at the Barrow, and Hackle was not seen again
   s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
@@ -47902,20 +48165,16 @@ const b4Recruit_ = () => (S && Array.isArray(S.squad) && B4_RECRUITS.find(k => S
 /* may this recruit be offered at all in this game? */
 const b4CanRecruit = id => !!(b4On() && TPL[id] && !(S.dead && S.dead[id]) && (id === 'orvas' ? true : id === 'redblade' ? !!(S.imported && S.imported.ramin) : id === 'warlock' ? !!(S.imported && S.imported.keth) : false));
 function b4Join(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  /* v7.1 (David, Oct 26): more than one recruit may walk, so long as the squad stays at six */
-  if (b4Room() <= 0) { S.f[B4_DONE[id]] = 2; note(`${NAME(id)} stays with ${B4_HOME[id]} for now. Ask at any fire, and he'll come.`); save(); return false; }
+  /* v7.1 (David, Oct 26): more than one recruit may walk, so long as the squad stays at six; v7.2: no room, and they wait at camp (38c) */
+  if (b4Room() <= 0) { S.f[B4_DONE[id]] = 2; S.camp = [...(S.camp || []).filter(x => x !== id), id]; note(`${NAME(id)} stays with ${B4_HOME[id]} for now: no room in the squad. The roster at any fire can bring him in.`); save(); return false; }
   S.f[B4_DONE[id]] = 1; recruit(id); return true; }
+/* v7.2: through the roster (38c): room, and they come; no room, and the recruit who walks goes back (the roster lets the sergeant choose which) */
 function b4SwapIn(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  const out = b4Room() > 0 ? null : b4Recruit_(); // room in the six: they come without anybody going back
-  if (out) { S.f.b4_allyGear ??= {}; S.f.b4_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B4_DONE[out]] = 2;
-    S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B4_HOME[out]}. Ask at any fire, and he'll come.`); }
-  if (b4Room() <= 0) return false;
-  S.f[B4_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b4_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); return true; }
+  if (b4Room() > 0) return rosterIn(id);
+  const out = b4Recruit_(); return !!out && rosterSwap(out, id); }
 const b4Waiting = id => !!(b4On() && S.f && S.f[B4_DONE[id]] === 2 && !b4In(id) && !(S.dead && S.dead[id]));
 /* the recruits who could be asked at a fire, for a swap choice list */
-const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id));
+const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id) && (b4Room() > 0 || !!b4Recruit_())); // v7.2: only those who can come now; the roster has the rest
 
 /* ---- who reads the Deck in Book Four (36b visReader, 21's captions, 70c's readings) ----
    Marrow while she is in the squad and alive (she read for Book Two); otherwise Tallow, from his grandmother's deck; otherwise an old soldier
@@ -48653,11 +48912,7 @@ Object.assign(PATRONS, {
     orvas:{mirrel:'Offered to show her how the tears are cut. She gave him a lesson in clean cuts instead.', yorin:'Wants to know if the wind can make a horse run faster. It can. They have not told the sergeant.', rasp:'Keeps the horse on the far side of her. She approves.'}};
   Object.entries(R3).forEach(([id, r]) => { const d = BOOKSNAP.hoc.tpl[id] && BOOKSNAP.hoc.tpl[id].rel; const tgt = d && d.value ? d.value : TPL[id] && TPL[id].rel; if (tgt) Object.assign(tgt, r); }); }
 
-/* ---- the gear the Book Four chapters (and Book Two's kit) let Tangle or Marrow wear, Rasp and Mirrel can wear too; Yorin, what Marrow can ---- */
-const B4_WEARS_LIKE = {rasp:'tangle', mirrel:'marrow', yorin:'marrow'};
-const b4WhoPatch = items => Object.values(items || {}).forEach(it => { if (it && Array.isArray(it.who)) Object.entries(B4_WEARS_LIKE).forEach(([id, like]) => { if (it.who.includes(like) && !it.who.includes(id)) it.who.push(id); }); });
-b4WhoPatch(ITEMS);
-{ const _reg = registerChapter; registerChapter = function(n, CH, book){ const r = _reg(n, CH, book); if (book === 'hoc' && CH && CH.gear) b4WhoPatch(CH.gear); return r; }; }
+/* ---- v7.2: the gear the Book Four soldiers can wear goes by role (38c TPL_ROLES, ITEM_ROLE); B4_WEARS_LIKE and b4WhoPatch are gone ---- */
 
 /* ---- an old save's Tallow had "Hold, Recruit" (holdline); a slinger takes "Keep Moving" (ghost) instead ---- */
 { const _migrate = migrate; migrate = function(s){ const r = _migrate(s);
@@ -48785,9 +49040,8 @@ function b4Take(id){ if (!b4SpareOk(id) || b4Places() <= 0) return false; const 
   save(); return true; }
 function b4MusterDone(){ if (!b4On()) return; S.f.b4_mustered = 1; S.picksDue = b3PicksDue(S); save(); }
 /* one for one at a fire: the spare comes in where the soldier who goes back stood in the order */
-function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; const i = S.squad.indexOf(out);
-  S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; note(`${NAME(out)} goes back to the company.`);
-  recruit(inn); S.squad = S.squad.filter(x => x !== inn); S.squad.splice(i, 0, inn);
+function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; // v7.2: through the roster (38c): the gear is parked, and comes back
+  if (!rosterSwap(out, inn)) return false;
   if (!Array.isArray(S.f.b4_spareSwaps)) S.f.b4_spareSwaps = []; S.f.b4_spareSwaps.push([out, inn]); save(); return true; }
 /* the fire offer is for a save that came into the book before the muster existed (no b4_musterDue), until the sergeant has had it */
 const b4FillsIn = () => HOC_NEW.filter(b4In);
@@ -58707,6 +58961,7 @@ function backTop(){
   if (picksOpen()) return true; // the level-up choice has to be made
   if (!$('#chars').hidden) { AUDIO.play('click'); closeChars(); return true; }
   if (!$('#settings').hidden) { AUDIO.play('click'); $('#settings').hidden = true; $('#settings').innerHTML = ''; return true; }
+  if (typeof rosterBackOne === 'function' && rosterBackOne()) { AUDIO.play('click'); return true; } // the roster: a half-made choice, then the screen (38c)
   if (!$('#modal').hidden) { AUDIO.play('click'); $('#modal').hidden = true; return true; }
   if (mgOpenNow()) { if (MG.leave) MG.leave(); return true; } // a table game: Back is its Leave (which may ask first)
   return false;
