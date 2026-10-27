@@ -358,7 +358,13 @@ He turns the horse. "Watch your wells. There's going to be a fight about water b
     b3_c5_qm:()=>({sp:'The quartermaster-sergeant', fx:()=>{ S.f.b3_c5_qm = 1; }, again:()=>`The tailboard, the slate, the insult. You have ${S.silver} silver.`, txt:
 `The Seventh's quartermaster-sergeant has set up shop on the tailboard of a wagon that came through the ford without its back wheels, which he takes as a personal insult. He is selling. In the Host this spring everything is sold.
 
-"Forage?" He laughs, once. "There's no forage. They took the seed grain, Sergeant. You know what that means? It means nobody's coming back to plant it. It means they knew we were coming and they made the ground say so." He slaps a crate. "No paymaster this side of the proclamations, so it's silver or nothing. Salves, five. Moranth sharpers, eight. Don't ask me for a cusser. Don't ask me why."`,
+"Forage?" He laughs, once. "There's no forage. They took the seed grain, Sergeant. You know what that means? It means nobody's coming back to plant it. It means they knew we were coming and they made the ground say so." He slaps a crate. "No paymaster this side of the proclamations, so it's silver or nothing. Salves, five. Moranth sharpers, eight. Don't ask me for a cusser. Don't ask me why."${b3In('vell') ? `
+
+Vell reads the slate the way a Guild runner reads a price board, for what isn't on it. "No rope," he says.
+
+"Rope's spoken for," says the quartermaster. "Wells." He looks at the coil on Vell's shoulder with real interest. "I'd give you six for that."
+
+Vell puts a hand on it, and keeps it there, until you have both walked away.` : ''}`,
       ch:[{t:'A salve. Five silver.', tag:'5 silver', req:()=>S.silver >= 5, fx:()=>{ S.silver -= 5; S.inv.salve = (S.inv.salve || 0) + 1; AUDIO.play('coin'); note('A salve, for five silver.', 'good'); }, go:'b3_c5_qm'},
           {t:'A sharper. Eight silver.', tag:'8 silver', req:()=>S.silver >= 8, fx:()=>{ S.silver -= 8; S.inv.sharper = (S.inv.sharper || 0) + 1; AUDIO.play('coin'); note(b3In('kettle') ? 'A sharper, for eight silver. Kettle counts it twice.' : 'A sharper, for eight silver.', 'good'); }, go:'b3_c5_qm'},
           {t:'Leave him to his wheels.'}]}),
@@ -371,7 +377,9 @@ He turns the horse. "Watch your wells. There's going to be a fight about water b
 
 She is older than anyone in the Fourth and weighs less than ${b3In('kettle') ? 'Kettle\'s satchel' : 'a full pack'}. When she looks up her eyes go over the squad without stopping, the way you look at rain.
 
-"The young ones went," she says, in a Daru so old it creaks. "With the priests. The priests said the Seer would feed them." One more grain. "I was too slow to be fed."`,
+"The young ones went," she says, in a Daru so old it creaks. "With the priests. The priests said the Seer would feed them." One more grain. "I was too slow to be fed."${b3In('ellis') ? `
+
+Ellis crouches two rows over and looks along the stubble with her cheek almost to the ground, the way she reads a track at dawn. Then she moves a yard, and picks up three grains, and a yard more, and four. She brings them over in the gloved palm and tips them into the woman's skirt without a word. "The rake skips where the ground dips," she says to you, low. "Left-handed raker. There's more along the dip." The woman looks at the grains, and at the glove, and goes along the dip on her knees.` : ''}`,
       ch:[{t:'Give her a day of the squad\'s rations.', fx:()=>{ S.f.b3_c5_glean = 'fed'; ally(0, -1, 'Bread in a gleaner\'s skirt'); c5Loy('ohl', 1); }, go:'b3_c5_glean_fed'},
           {t:'"Dannet. Tell her about Capustan."', req:()=>b3In('greysword'), fx:()=>{ S.f.b3_c5_glean = 'north'; ally(0, -1, 'A road north for a gleaner'); c5Loy('greysword', 1); }, go:'b3_c5_glean_north'},
           {t:'Leave her to the field.', fx:()=>{ S.f.b3_c5_glean = 'left'; ally(0, 1, 'A woman on her knees in the stubble'); }, go:'b3_c5_glean_left'}]},
@@ -411,7 +419,7 @@ Sohra looks back too, once. She doesn't sing for an hour after.` : ''}`,
 
 The thumb again, and the mutter. "Hold the edge while I say them. Do not let go. And I will teach your hand what to say."`,
       ch:[{t:'Hold the edge.', check:['might', 16], trick:'b3_c5_blood', req:()=>!S.f.b3_c5_bloodTried, fx:()=>{ S.f.b3_c5_bloodTried = 1; },
-            edges:id=>[id === 'brisk' && ['she has held worse, and longer', 2], id === 'greysword' && ['the acolytes drill on cold iron', 1], id === 'sohra' && ['the spirit in the iron knows her songs', 1], id === 'tuft' && ['Meanas shrinks from the cold', -1], id === 'kettle' && ['she wants to ask how it works, and he can tell', -1]],
+            edges:id=>[id === 'brisk' && ['she has held worse, and longer', 2], id === 'greysword' && ['the acolytes drill on cold iron', 1], id === 'sohra' && ['the spirit in the iron knows her songs', 1], id === 'tuft' && ['Meanas shrinks from the cold', -1], id === 'kettle' && ['she wants to ask how it works, and he can tell', -1], id === 'vell' && ['rope burn taught him to hold on when it hurts', 1]],
             go:'b3_c5_shaman_ok', fail:'b3_c5_shaman_miss'},
           {t:'"Another time."'}]}),
     b3_c5_shaman_ok:()=>({sp:'An Ilgres shaman', fx:()=>{ S.f.b3_c5_blood = ROLL().who || 'sgt'; gain('b3_c5_knife'); }, txt:
@@ -654,7 +662,9 @@ Brisk writes in the ledger: *Rations, the squad's. Kept.* She doesn't underline 
 
 Two lines. The Fourth Regiment of the Second has the Host's water detail tonight, with barrels on a cart and a corporal with a list. The Rhivi have their herd, two hundred bhederin lowing in the dark, thirsty from the rain they could not drink. Both lines want the same bucket. Both lines are looking at the other one more than they are looking at the well.
 
-${c5Brisk() ? `"Fourth Regiment," says Brisk. That is all she says. You know whose regiment it is.` : `The Fourth Regiment: Tav's regiment.`}`,
+${c5Brisk() ? `"Fourth Regiment," says Brisk. That is all she says. You know whose regiment it is.` : `The Fourth Regiment: Tav's regiment.`}${b3In('ellis') ? `
+
+Ellis has counted both lines before the first fire is lit. "Thirty-one at the barrels. Forty-odd with the herd," she says. "And one man standing between them who's in neither." She doesn't point. She doesn't need to.` : ''}`,
       ch:[{t:'Walk the halt.'}]}),
     b3_c5_tav:()=>({sp:'Tav', fx:()=>{ S.f.b3_c5_tav = 1; }, txt: S.f.b3_c5_key ?
 `Tav is on a barrel by the trough, singing to the bhederin. He can't sing. The bhederin don't seem to mind. ${S.f.b3_c5_inc === 'cut' ? `His palm is bound up in a strip of somebody's shirt, and he waves it at you like a flag.` : `He waves at you without stopping.`}` : S.f.b3_c5_inc ?
@@ -727,7 +737,7 @@ She and Sohra exchange a few words in Rhivi. Sohra's face does something complic
 
 ${S.f.b3_c5_ev === 1 ? `The calf is on the ground by the well, and the knife with the bright new filing is in your belt.` : S.f.b3_c5_ev === 0 ? `There's a dead calf at the bottom of it. That's all anyone can swear to.` : `Something is dead at the bottom of it. It hasn't been looked at properly yet.`}`,
       ch:[{t:'Have it hauled up and looked at properly.', req:()=>S.f.b3_c5_ev == null, check:['wits', 13],
-            edges:id=>[id === 'ohl' && ['he has looked at worse things in water', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s wells', 2], id === 'sohra' && ['it is a Rhivi calf', 1], id === 'kettle' && ['she can tell a cut from a tear', 1]],
+            edges:id=>[id === 'ohl' && ['he has looked at worse things in water', 2], id === 'greysword' && S.f.b3_c5_wells && ['she knows the Domin\'s wells', 2], id === 'sohra' && ['it is a Rhivi calf', 1], id === 'kettle' && ['she can tell a cut from a tear', 1], id === 'ellis' && ['she reads a carcass like a track', 1], id === 'vell' && ['he sets the grapnel himself, blind, first time', 1]],
             near:{fx:()=>{ const w = ROLL().who || 'sgt';
               if (S.inv.salve > 0) { S.inv.salve--; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water, and a jar of salve goes on them: −1 salve.`, 'bad'); }
               else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but ${NAME(w)} goes down the rope to set the grapnel, and comes up with both hands raw from three days of bad water and nothing to put on them: −1 on the next check.`, 'bad'); } }},
@@ -787,7 +797,9 @@ The water is spoiled either way.`,
 
 She looks past you at the bhederin, and the Rhivi children asleep on their backs.
 
-"Then I thought, the cows will die. The cows did nothing."`,
+"Then I thought, the cows will die. The cows did nothing."${b3In('ellis') ? `
+
+Ellis has gone to look at the ground between the doorway and the well while the old woman talks. She comes back wiping the gloved hand on her leathers. "Good boots, heeled, one man," she says. "Deep going in, with something on his shoulders. Light coming out." She nods at the old woman. "She's right. I'd swear to it, for what a Claw's word is worth out here."` : ''}`,
       ch:[{t:'"Thank you, mother."', fx:()=>{ ally(0, -1, 'An old woman\'s word'); }, go:()=>startExplore()}, {t:'Leave her to her doorway.'}]}),
     b3_c5_confront:()=>({sp:'The man in the fur collar', txt:
 `He is where he was, with his two hired swords behind him, as if none of it had anything to do with him. Perhaps he thinks it hasn't. Men in Kallor's colours do not, as a rule, expect to be asked anything.
@@ -800,7 +812,7 @@ Across the green the old woman in the doorway is watching. He follows your eyes 
 
 Ellis has come up on his left without anyone seeing her do it. She is watching his hands, not his face. The Claw taught her which one lies first.` : ''}`,
       ch:[{t:'"You put the calf down the well. Say it, in front of them."', check:['guile', 14], req:()=>!S.f.b3_c5_pressed, fx:()=>{ S.f.b3_c5_pressed = 1; },
-            edges:()=>[S.f.b3_c5_ev === 1 && ['the knife with the fresh filing', 2], S.f.b3_c5_wit && ['an old woman saw him do it', 2], S.f.b3_c5_inc === 'cut' && ['there is blood on the ground and everyone is watching', 1]],
+            edges:()=>[S.f.b3_c5_ev === 1 && ['the knife with the fresh filing', 2], S.f.b3_c5_wit && ['an old woman saw him do it', 2], S.f.b3_c5_inc === 'cut' && ['there is blood on the ground and everyone is watching', 1], b3In('ellis') && ['Ellis is watching his hands, and he knows it', 1]],
             near:{fx:()=>{ const t0 = b3Trust(); ally(-1, 0, 'Yes, but he takes his time getting there, and on the way he says, pleasantly, for the Rhivi to hear, that Malazans are only tidier thieves than he is');
               if (b3Trust() === t0) { const w = ROLL().who || 'sgt'; S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but he takes his time getting there, and the smile he gives ${NAME(w)} at the end of it stays with them: −1 on the next check.`, 'bad'); } }},
             go:'b3_c5_talked', fail:'b3_c5_draw'},
@@ -849,7 +861,11 @@ Brood listens to all of it. He doesn't move at all while he listens, and when yo
 
 "Korlat," he says.
 
-"It is as the sergeant says, I think." Her voice is low and grave and courteous, as if you had brought her a gift. "We have heard that story at our own fires. We did not hear where it began." She looks at the man on his knees. "Now we have."`,
+"It is as the sergeant says, I think." Her voice is low and grave and courteous, as if you had brought her a gift. "We have heard that story at our own fires. We did not hear where it began." She looks at the man on his knees. "Now we have."${b3In('vell') ? `
+
+Vell stands at the back with his hands where Korlat can see them. The last Tiste Andii he stood this close to was on a roof in the Daru District, with a sword out, and the Fourth between them. He doesn't take his eyes off her shoulder, where a sword would be.` : ''}${b3In('ellis') ? `
+
+Ellis has placed herself where she can see the dark beyond Brood's fire, toward the fur-collared tents. She shakes her head at you, very slightly: nobody coming. Not yet.` : ''}`,
       ch:[{t:'"He\'s yours, sir."', go:'b3_c5_brood_kallor'}]}),
     b3_c5_brood_kallor:()=>({sp:'Kallor', scene:'b3_c5_camp', fx:()=>{ S.f.b3_kallorEnemy = 1; ally(3, 0, 'Brood heard it from the Fourth'); c5Loy('sohra', 1); }, txt:
 `"Mine, I think."
@@ -878,7 +894,7 @@ He sits down on his bucket by the dead tree as if the walk had been nothing, and
 
 ${c5Brisk() ? `Brisk breaks his nose. She does it once, carefully, the way she does everything, and then hands him a rag for it.` : `You break his nose. Once, carefully. Then you hand him a rag for it.`} "Back to your own lines," you tell him. "Tonight. Tell whoever sent you the Malazans and the Rhivi drank from the same bucket. Tell him nobody asked your name."
 
-He goes, holding the rag to his face. ${S.f.b3_c5_caught === 'fought' ? `The one hired sword still on his feet goes with him.` : `His two hired swords go with him, three paces behind, the way men walk behind a man they have just stopped working for.`}
+He goes, holding the rag to his face. ${S.f.b3_c5_caught === 'fought' ? `The one hired sword still on his feet goes with him.` : `His two hired swords go with him, three paces behind, the way men walk behind a man they have just stopped working for.`}${b3In('vell') ? ` Vell held the lantern for all of it, steady. "In the Guild that's the apprentice's job," he says afterward, and doesn't say what else he learned holding it.` : ''}
 
 Then the truth goes round the two fires sideways: a word to the Fourth Regiment's corporal, a word to the herd-mother${b3In('sohra') ? `, Sohra singing it to the bulls in Rhivi so that every herdsman in earshot hears` : ''}, nobody's name in it. By midnight the bad water is poured out in the ditch, the bhederin are drinking out of a trough the Fourth Regiment knocked together from a cart-bed, and Tav is standing on a barrel singing to them, badly.`,
       ch:[{t:'Back toward the fire.', go:'b3_c5_quiet_after'}]}),
@@ -899,6 +915,8 @@ ${c5FireLine()}`,
           {t:'Send to the Grey Swords\' lines for Dannet.', req:()=>b3Waiting('greysword'), go:'b3_c5_swap'},
           {t:'Send to the Rhivi fires for Sohra.', req:()=>b3Waiting('sohra'), go:'b3_c5_swap'},
           {t:'"Kettle. You\'ve been counting something."', req:()=>b3In('kettle') && !S.f.b3_c5_quorls, go:'b3_c5_quorls'},
+          {t:'"Ellis. Who are you asking about, every morning?"', req:()=>b3In('ellis') && !S.f.b3_c5_tEllis, go:'b3_c5_fire_ellis'},
+          {t:'"Vell. That splice has been done three times."', req:()=>b3In('vell') && !S.f.b3_c5_tVell, go:'b3_c5_fire_vell'},
           {t:'Sit the night out.', req:()=>!!S.f.b3_c5_key, go:'b3_c5_close'},
           {t:'Not now.'}]}),
     b3_c5_fire_rest:()=>({sp:'The Fourth\'s fire', fx:()=>{ b3Rest('The Fourth rests in the lee of a broken wall, with the Host round it and the Domin all round that. Wounds close, mostly.'); }, txt:
@@ -920,6 +938,43 @@ She takes out the ledger and writes it down, small and neat, under the munitions
 
 "Somebody'll want that," she says. "One day. You'll see."`,
       ch:[{t:'"Put it in the ledger."'}]}),
+    /* Ellis and Vell at the fire (a Book One import brings one of them, rarely both) */
+    b3_c5_fire_ellis:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c5_tEllis = 1; }, txt:
+`Ellis is sitting just outside the firelight, facing out, with the bow across her knees. When you sit down beside her she moves it over to make room, which from Ellis is a speech of welcome.
+
+"The Host's outriders go out every morning," she says. "South, east, west. I ask them what they saw. Horses, mostly. Shod or unshod, how many, going which way." A pause. "They think I'm keen."
+
+She doesn't say what she is asking about. She doesn't have to. Toc the Younger kept riding, Paran said, and a man on a horse leaves tracks somewhere.
+
+${b3Was('c5_ellisThrough') ? `She turns her wrist to the fire. Kettle's two lengths of trip-cord are still knotted round it, gone the colour of the plain. The grey streak back from her temple has not grown out, and isn't going to. "It was longer, in there," she says. "Every night I think: a little further, and the road would have come back." She shakes her head once. "No. It ran out. I'd like it noted that I know that."` : `"A one-eyed scout on a good horse," she says, to the dark, "could be anywhere by now. Anywhere at all." It has the sound of a thing she says to herself most nights, to see if it still holds.`}`,
+      ch:[{t:'"Keep asking. One of them will have seen something."', fx:()=>{ S.f.b3_c5_ellisAns = 'ask'; c5Loy('ellis', 1); }, go:'b3_c5_fire_ellis2'},
+          {t:'"He\'s a scout. Scouts come back."', fx:()=>{ S.f.b3_c5_ellisAns = 'back'; }, go:'b3_c5_fire_ellis2'}]}),
+    b3_c5_fire_ellis2:()=>({sp:'Ellis', txt: S.f.b3_c5_ellisAns === 'ask' ?
+`"I will." She looks back out at the halt. "I'd have kept on anyway. It's better with leave."
+
+After a while she puts the bow down between you, on the side away from the dark, which is where she keeps the things she trusts.` :
+`"Scouts come back," she says, "or they're reported." She thinks about it. "He'd hate being reported."
+
+It is the nearest thing to a joke you have heard from her about him. She seems surprised by it herself, and lets it stand.`,
+      ch:[{t:'Leave her to the dark.'}]}),
+    b3_c5_fire_vell:()=>({sp:'Vell', fx:()=>{ S.f.b3_c5_tVell = 1; }, txt:
+`Vell is sitting cross-legged with the end of his line in his lap, putting an eye-splice into it by firelight${S.f.b3_c4_vellRope ? `, with the second coil, the Wolves' rope from the gully, beside him on the ground` : ''}. His hands do it without him. He has pulled it out and started again twice since you sat down.
+
+"I worked it out," he says. "From here to the Daru District. Weeks of nothing, two rivers, a plain, and the city wall." He tucks a strand. "Not one roof the whole way. I've never in my life been that far from a roof."
+
+He tests the splice with his weight, sitting down, and it holds, and he looks almost disappointed.
+
+"The Guild will have heard by now that I'm with you. Some of the clans call that a debt paid. Some call it something else." He says it lightly. He says everything that frightens him lightly. "When it's done, Sergeant. Down south. Do I go back?"`,
+      ch:[{t:'"You go back when you want to. Not before."', fx:()=>{ S.f.b3_c5_vellAns = 'want'; c5Loy('vell', 1); }, go:'b3_c5_fire_vell2'},
+          {t:'"The Guild can come and ask the Fourth."', fx:()=>{ S.f.b3_c5_vellAns = 'ask'; }, go:'b3_c5_fire_vell2'}]}),
+    b3_c5_fire_vell2:()=>({sp:'Vell', txt: S.f.b3_c5_vellAns === 'want' ?
+`He thinks about that for a long breath. "The Guild never said *when you want* to me," he says. "Nor did my mother." He coils the line, the Guild way, neat as a ledger. "I'll let you know. It might be a while."
+
+He lies back with the coil under his head. In a little while he is telling ${b3In('kettle') ? 'Kettle' : 'the fire'} how far a hook will carry on a still night, and getting the number larger every time.` :
+`Vell laughs, a short surprised sound. "They'd come up the stairs," he says. "The Guild always comes up the stairs. And ${b3In('brisk') ? 'Brisk' : 'somebody'}'d be standing at the top of them." He shakes his head. "They'd hate that. They'd write it down."
+
+He goes back to the splice. This time he leaves it the way it is.`,
+      ch:[{t:'Leave him to his rope.'}]}),
     b3_c5_close:()=>({sp:'The Fourth\'s fire', html:allyHTML('South of the Catlin · a week into the Domin'), txt:
 `Late. The bhederin have drunk and settled. The Fourth Regiment's cart has gone back to its lines with the barrels full. Somewhere in the dark Tav has stopped singing, which means somebody has finally asked him to.
 
