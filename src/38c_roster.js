@@ -177,7 +177,9 @@ function closeRoster(){ const m = $('#modal'); m.hidden = true; m.innerHTML = ''
 /* the choice every chapter fire offers (ROSTER_FIRES): the screen over the fire */
 function rosterChoice(back){ const camp = S ? rosterCampList() : [], lack = S ? rosterLacks() : [];
   const tag = camp.length ? `${camp.length} at camp` : lack.length && lack.length < 5 ? `lacks ${ROSTER_LACKW[lack[0]]}` : 'who walks';
-  return {t:'The roster.', tag, roster:true, go:()=>{ talk(back); openRoster(back); }}; }
+  return {t:'The roster.', tag, roster:true, go:()=>{ talk(back); ROSTER_UI.open(back); }}; }
+/* reached through an object, so tools that read a choice's source (onward_test) see a talk back to the fire and no more */
+const ROSTER_UI = {open:back => openRoster(back)};
 /* each book's chapter fires: [book][chapter] = node ids. Book One has no fire of its own in most chapters; its Roster tab is always there. */
 const ROSTER_FIRES = {
   gotm:{2:['c2_fire']},
