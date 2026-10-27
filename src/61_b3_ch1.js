@@ -277,6 +277,27 @@ ${b31Say({brisk:`"Sergeant." Brisk, not looking up. "Runner came. Whiskeyjack wa
           {t:'"Kettle. Count."', req:()=>b3In('kettle') && !S.f.b3_c1_askKettle, fx:()=>{ S.f.b3_c1_askKettle = 1; }, go:'b3_c1_start_kettle'},
           {t:'"Ohl. How long is it?"', req:()=>b3In('ohl') && !S.f.b3_c1_askOhl, fx:()=>{ S.f.b3_c1_askOhl = 1; }, go:'b3_c1_start_ohl'},
           {t:'"Tuft. What\'s up there?"', req:()=>b3In('tuft') && !S.f.b3_c1_askTuft, fx:()=>{ S.f.b3_c1_askTuft = 1; }, go:'b3_c1_start_tuft'},
+          b3DeckChoice(1),
+          {t:'"Ellis. What\'s the city say?"', req:()=>b3In('ellis') && !S.f.b3_c1_askEllis, fx:()=>{ S.f.b3_c1_askEllis = 1; }, go:'b3_c1_start_ellis'},
+          {t:'"Vell. Down off the tent."', req:()=>b3In('vell') && !S.f.b3_c1_askVell, fx:()=>{ S.f.b3_c1_askVell = 1; }, go:'b3_c1_start_vell'}]}),
+    /* ---- an import's Ellis or Vell, at the tent (v7.2) ---- */
+    b3_c1_start_ellis:()=>({sp:'Ellis', scene:'b3_pale_camp', txt:
+`She doesn't take her eyes off the wall. "That it was mended by people who didn't think anybody was coming back." She lifts her chin at the east side. "House-stone in the breach. You can see a doorframe in it, on its side. Four on the north gate, and one of them's asleep."
+
+A pause, the length of a count. "And that I'm the only one of us looking at it, Sergeant. Everybody else is looking at a hill." She says it without weight, as a report. ${b3In('tuft') ? `Then, lower: "Somebody should. Tuft's got the hill."` : `Then, lower: "Somebody should look at the thing in front of them. It's what I'm for."`}`,
+      ch:[{t:'Walk the lines.', go:()=>startExplore()},
+          {t:'"Vell. Down off the tent."', req:()=>b3In('vell') && !S.f.b3_c1_askVell, fx:()=>{ S.f.b3_c1_askVell = 1; }, go:'b3_c1_start_vell'},
+          b3DeckChoice(1)]}),
+    b3_c1_start_vell:()=>({sp:'Vell', scene:'b3_pale_camp', txt:
+`"I'm down." He is. He was down before you said it; he just looks like somebody who has recently been up. "I wanted to see it. The city the Fourth took. Everybody in Darujhistan said *Pale* the way you'd say *plague*." He considers the wall. "It's a lot of mud with a town in it."
+
+Then, because it has been on his mind since the north: "I've been on a Moranth now. A quorl. I was sick on it." He lowers his voice. "It didn't say anything. I think that was worse."${b3In('kettle') ? `
+
+"They don't mind," Kettle says, from the satchel. "They're very understanding."
+
+"It didn't look understanding. It looked like it was remembering me."` : ''}`,
+      ch:[{t:'Walk the lines.', go:()=>startExplore()},
+          {t:'"Ellis. What\'s the city say?"', req:()=>b3In('ellis') && !S.f.b3_c1_askEllis, fx:()=>{ S.f.b3_c1_askEllis = 1; }, go:'b3_c1_start_ellis'},
           b3DeckChoice(1)]}),
     b3_c1_start_kettle:()=>({sp:'Kettle', scene:'b3_pale_camp', txt:
 `She snaps the satchel shut. "${b31Count()}. Same as this morning. Same as Darujhistan." She considers. "${b3Was('c5_cusserUsed') ? `The new Maud's at the bottom. She's not the old Maud. She knows it. I've told her she can be Maud anyway.` : b3Was('c7_debt') === 'paid' ? `No Maud. Maud went home to the Moranth. I check for her anyway.` : `Maud's at the bottom, if anyone's asking.`}"
@@ -311,6 +332,7 @@ Then, quieter, and not about the hill at all: "She's over there, Sergeant." She 
 `The cook-fire, with a pot on it. ${b3In('ohl') ? 'Ohl\'s tea, which is technically medicine. ' : ''}The squad could sit an hour, if the morning had an hour in it. It doesn't: Whiskeyjack sent for you.`,
       ch:[{t:'Sit an hour. Patch what needs patching.', req:()=>!!S.f.b3_c1_tunnelsDone && !S.f.b3_c1_restCamp, fx:()=>{ S.f.b3_c1_restCamp = 1; b3Rest(`The Fourth sits an hour by its own fire${b3In('ohl') ? ', and Ohl sees to what the tunnels did' : ''}. Wounds close, mostly.`); }, go:'b3_c1_fire_sat'},
           b3DeckChoice(1),
+          {t:'Sit with Vell. He is at the rope again.', req:()=>b3In('vell') && !S.f.b3_c1_vellTalk, fx:()=>{ S.f.b3_c1_vellTalk = 1; }, go:'b3_c1_vell'},
           {t:'Leave it.'}]}),
     b3_c1_fire_sat:()=>({sp:'The Fourth\'s fire', txt:
 `An hour, then, in the mud by the fire, with the Host going past on its business and nobody's business coming to the Fourth.
@@ -513,7 +535,7 @@ Fresh boot-prints in the mud at the mouth, going down. A Host crate-lid with Pel
 ${b3In('brisk') ? `"Straight down the sap," Brisk says, "or the side gallery." She doesn't say *the one the deserters used, the first time*. She doesn't have to.` : `There are two ways in: straight down the sap, or the side gallery the deserters used, the first time.`}`,
       ch:[{t:'"Straight down. Shields first."', go:()=>startBattle('b3_c1_tunnels', {})},
           {t:'Take the side gallery and come in behind them.', check:['wits',13],
-            edges:id=>[id === 'brisk' && ['she walked it, the first time, at the back', 1], id === 'tuft' && ['she remembers every turn of it, and wishes she didn\'t', 1], id === 'kettle' && ['she remembers where the timbers were bad', 1], id === 'ohl' && ['he remembers the smell, not the turns', -1]],
+            edges:id=>[id === 'brisk' && ['she walked it, the first time, at the back', 1], id === 'tuft' && ['she remembers every turn of it, and wishes she didn\'t', 1], id === 'kettle' && ['she remembers where the timbers were bad', 1], id === 'ohl' && ['he remembers the smell, not the turns', -1], id === 'ellis' && ['she has read the prints: they never use the gallery', 1], id === 'vell' && ['a crawl is a roof-walk with the sky taken away', 1]],
             near:{t:'You come in behind them, but a loose timber goes as you do. Half of them are turning round already.'},
             go:()=>startBattle('b3_c1_tunnels', nearMiss() ? {} : {surprise:'p'}), fail:'b3_c1_mouth_lost'},
           {t:'Kettle rolls a sharper down the sap ahead of you.', tag:'uses 1 sharper', req:()=>b3In('kettle') && (S.inv.sharper || 0) > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c1_tunnels', {pre:true})},
@@ -647,7 +669,7 @@ The youngest of them doesn't cheer. He goes and sits on the far side of the fire
 
 Then the youngest of them steps across the line with a knife out. He is shouting in Barghast; something about Malazans, something about his father, something about ten years. His friends have stopped laughing. So has Sarhul. The knife is very bright and very close to ${by({brisk:'Brisk', sgt:'you', _:'{who}'})}.`,
       ch:[{t:'Talk him down. Slowly.', check:['guile',14],
-            edges:id=>[id === 'ohl' && ['he has talked knives out of a great many boys', 2], id === 'kettle' && ['she talks so much he loses the thread', 1], id === 'brisk' && ['he is pointing the knife at her', -1], id === 'tuft' && ['she speaks no Barghast and her voice is very quiet', -1]],
+            edges:id=>[id === 'ohl' && ['he has talked knives out of a great many boys', 2], id === 'kettle' && ['she talks so much he loses the thread', 1], id === 'brisk' && ['he is pointing the knife at her', -1], id === 'tuft' && ['she speaks no Barghast and her voice is very quiet', -1], id === 'vell' && ['he was that boy once, on a roof, and says so', 1]],
             near:{t:'He puts it away, but he puts it away slowly, looking at you the whole time.', fx:()=>{ S.f.b3_c1_ilgresGrudge = 1; }},
             go:'b3_c1_ilgres_calm', fail:'b3_c1_ilgres_brawl'},
           {t:'"Shields."', go:'b3_c1_ilgres_brawl'}]}),
@@ -780,7 +802,7 @@ Then, without warning, and not looking at you: "The Mhybe was young at midwinter
       ch:[{t:'"Then don\'t. We didn\'t hear it."', fx:()=>{ ally(1, 0, 'Sohra'); b31L('tuft', 1); }, go:'b3_c1_sohra_2'},
           {t:'"What will you tell them we are?"', go:'b3_c1_sohra_what'},
           {t:'"Teach me that whistle you use on the herd."', check:['wits',16], trick:'b3_c1_call', not:['sohra'], req:()=>!S.f.b3_c1_callTried, fx:()=>{ S.f.b3_c1_callTried = 1; },
-            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1]],
+            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1], id === 'ellis' && ['she has lain in Rhivi grass and heard it blown', 1], id === 'vell' && ['the Guild signals roof to roof by whistle', 1]],
             go:'b3_c1_call_ok', fail:'b3_c1_call_miss'}]}),
     b3_c1_sohra_what:()=>({sp:'Sohra', txt:
 `"That you are loud," she says promptly. "That you eat what you are given and say thank you badly. That you count each other." She has noticed that. "All the time. Like herders count at dusk." She tilts her head at you. "The Rhivi say a herder who counts every dusk has lost something once, and remembers."
@@ -788,7 +810,7 @@ Then, without warning, and not looking at you: "The Mhybe was young at midwinter
 ${b3Fallen().length ? `She looks at the space in the squad where ${b3FallenNames()} should be, as if she can see it. Perhaps she can. "Yes," she says quietly. "Like that."` : `She looks at the Fourth, all of it, and nods, as if a number had come out right.`}`,
       ch:[{t:'"Then don\'t tell them that part."', fx:()=>{ ally(1, 0, 'Sohra'); }, go:'b3_c1_sohra_2'},
           {t:'"Teach me that whistle you use on the herd."', check:['wits',16], trick:'b3_c1_call', not:['sohra'], req:()=>!S.f.b3_c1_callTried, fx:()=>{ S.f.b3_c1_callTried = 1; },
-            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1]],
+            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1], id === 'ellis' && ['she has lain in Rhivi grass and heard it blown', 1], id === 'vell' && ['the Guild signals roof to roof by whistle', 1]],
             go:'b3_c1_call_ok', fail:'b3_c1_call_miss'},
           {t:'Thank her for the meat.', go:()=>startExplore()}]}),
     b3_c1_sohra_2:()=>({sp:'Sohra', txt:
@@ -796,7 +818,7 @@ ${b3Fallen().length ? `She looks at the space in the squad where ${b3FallenNames
 
 "Good," she says. "That is a good answer. I will not tell them you said it." She hands ${b3In('tuft') ? 'Tuft' : 'you'} the last of the haunch, which is the best of it. "Come back when it is full dark. I will want to ask the Malazans something. I have not decided yet if I will."`,
       ch:[{t:'"Teach me that whistle you use on the herd."', check:['wits',16], trick:'b3_c1_call', not:['sohra'], req:()=>!S.f.b3_c1_callTried, fx:()=>{ S.f.b3_c1_callTried = 1; },
-            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1]],
+            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1], id === 'ellis' && ['she has lain in Rhivi grass and heard it blown', 1], id === 'vell' && ['the Guild signals roof to roof by whistle', 1]],
             go:'b3_c1_call_ok', fail:'b3_c1_call_miss'},
           {t:'Walk the camp.', go:()=>startExplore()}]}),
     b3_c1_call_ok:()=>({sp:'Sohra', txt:
@@ -821,7 +843,7 @@ ${by({sgt:'You try', _:'{who} tries'})}. The noise that comes out sets every dog
 "I have decided," she says. "I will ask."`,
       ch:[{t:'"Ask."', req:()=>!S.f.b3_c1_key, go:'b3_c1_key'},
           {t:'"Teach me that whistle you use on the herd."', check:['wits',16], trick:'b3_c1_call', not:['sohra'], req:()=>!S.f.b3_c1_callTried && !S.f.b3_c1_key, fx:()=>{ S.f.b3_c1_callTried = 1; },
-            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1]],
+            edges:id=>[id === 'kettle' && ['she has been whistling at quorls for a week', 1], id === 'tuft' && ['she can hear the dead in it', 1], id === 'brisk' && ['she cannot whistle, and never could', -2], id === 'ohl' && ['his teeth are not what they were', -1], id === 'ellis' && ['she has lain in Rhivi grass and heard it blown', 1], id === 'vell' && ['the Guild signals roof to roof by whistle', 1]],
             go:'b3_c1_call_ok', fail:'b3_c1_call_miss'},
           {t:'Not yet.'}]}),
     b3_c1_sohra_late:()=>({sp:'Sohra', txt: S.f.b3_c1_key === 'mhybe' ?
@@ -864,7 +886,7 @@ They watch the Mhybe's tent and nothing else.
 
 ${b3In('sohra') ? `"Kallor's," Sohra says, not quietly. "He has a few of his own. He never says where he finds them."` : `A Rhivi boy going past with a water-skin sees where you're looking. "Kallor's," he says, low. "The High King has a few of his own." He hurries on.`}${b3In('ellis') ? `\n\n"Paid by the year," Ellis says, very low. "Not by the job. The ones paid by the job fidget."` : ''}`,
       ch:[{t:'Walk over and stand near them. Just stand.', check:['might',13],
-            edges:id=>[id === 'brisk' && ['she has stood in front of worse things, and looks it', 2], id === 'kettle' && ['she keeps a hand in the satchel, which helps', 1], id === 'tuft' && ['they do not see her as a threat', -1]],
+            edges:id=>[id === 'brisk' && ['she has stood in front of worse things, and looks it', 2], id === 'kettle' && ['she keeps a hand in the satchel, which helps', 1], id === 'tuft' && ['they do not see her as a threat', -1], id === 'ellis' && ['she stands like the Claw stands, and they know the look', 1]],
             near:{t:'They go, but slowly, and the one with the scar looks back.'},
             go:'b3_c1_kmen_go', fail:'b3_c1_kmen_stay'},
           {t:'Leave them. Note them.'}]}),
@@ -890,7 +912,71 @@ You walk away. Behind you, one of them laughs, softly.`,
 ${b3Mind() ? `The Fourth sits down as if it had been carrying something a long way.` : `It is the most peaceful the Fourth has been since Darujhistan.`}`,
       html:allyHTML('Outside Pale · the night after the parley'),
       ch:[{t:'Sit. Eat what they give you. Sleep an hour.', req:()=>!S.f.b3_c1_restRhivi, fx:()=>{ S.f.b3_c1_restRhivi = 1; b3Rest(`The Fourth sleeps an hour by a Rhivi fire while an old man sings to the herd${b3In('ohl') ? ', and Ohl sees to what the day did' : ''}. Wounds close, mostly.`); }, go:'b3_c1_rfire_slept'},
+          {t:'Sit by Ellis, out past the firelight.', req:()=>b3In('ellis') && !S.f.b3_c1_ellisTalk, fx:()=>{ S.f.b3_c1_ellisTalk = 1; }, go:'b3_c1_ellis'},
+          {t:'Sit with Vell. He is at the rope again.', req:()=>b3In('vell') && !S.f.b3_c1_vellTalk, fx:()=>{ S.f.b3_c1_vellTalk = 1; }, go:'b3_c1_vell'},
           {t:'Leave them to their song.'}]}),
+    /* ---- v7.2: the import's Ellis at the Rhivi fire. She lay up outside a herd-camp with Toc once; she knows some of the song ---- */
+    b3_c1_ellis:()=>({sp:'Ellis', txt:
+`Ellis has sat down just past the old men's light, where it stops being light, with her back to a tent-pole and the gloved hand in her lap. The old man is still singing to the herd. Her lips are moving with it, a word behind, the way you follow a road you half remember.
+
+She stops when you sit. She doesn't pretend she wasn't.
+
+"Toc and I lay up outside a herd-camp on the plain once," she says. "Two nights, north of here, counting horses for a captain who wanted to know how many Brood had. They sang every dusk. This one, or its cousin." She tilts her head at the old man. "You lie in the grass long enough, you get the words. You don't get what they mean. Nobody offers."${b3Was('c7_ellisBack') ? `
+
+The firelight finds the grey streak back from her temple and leaves it alone. "There wasn't any singing in there," she says. "In the grey. I tried, once. You don't know how quiet quiet is till you've been somewhere with no herd in it."` : ''}`,
+      ch:[{t:'"Ask him what it means. I\'ll sit here."', go:'b3_c1_ellis_song'},
+          {t:'"You counted Brood\'s fires at noon. How many?"', fx:()=>{ b31L('ellis', 1); S.f.b3_c1_ellisCount = 1; }, go:'b3_c1_ellis_count'},
+          {t:'Leave her to it.'}]}),
+    b3_c1_ellis_song:()=>({sp:'Ellis', txt:
+`She goes round the fire on her heels and asks him, in a Rhivi that is mostly nouns. The old man answers without stopping the song, between lines, the way you'd answer a child while kneading bread.
+
+She comes back. "Names," she says. "Horses and people. He isn't sorting them; they go in the order they died." She sits with that a while. "Toc never sorted either. He'd tell you the name of every horse he'd lost before he got to the men. He said the horses had less choice."
+
+${b3Was('c7_ellisBack') ? `She turns her wrist over, where the two lengths of Kettle's cord are still knotted. "He's out there," she says. "He kept riding." It is the same voice she brought out of the alley on the Lakefront, carried a long way, and not put down.` : `"He's out there," she says, flatly, the way you'd say the river was high. "Somewhere. He kept riding." Then she listens to the next name, and the next, and her lips follow them again.`}`,
+      ch:[{t:'"You counted Brood\'s fires at noon. How many?"', req:()=>!S.f.b3_c1_ellisCount, fx:()=>{ b31L('ellis', 1); S.f.b3_c1_ellisCount = 1; }, go:'b3_c1_ellis_count'},
+          {t:'Let the song go on.'}]}),
+    b3_c1_ellis_count:()=>({sp:'Ellis', txt:
+`Something happens to her face that on anybody else would be surprise. On Ellis it is a short pause.
+
+"Eleven hundred and forty," she says. "Give or take the ones that are one fire with two pots on it. Brood's lines, the Andii, the Barghast. Not the Rhivi. You can't count Rhivi fires; they move them for the herds." A breath. "Six years I counted for the Claw. Nobody asked for the number. They asked if it was *done*."
+
+Then, before you can say anything about that: "And one up on the Divide hills at dusk that shouldn't be there. Small. I've been watching it instead of the song."${b3In('kettle') ? `
+
+Kettle, across the fire, has heard *eleven hundred and forty* and is visibly trying to count them herself. Ellis lets her.` : ''}`,
+      ch:[{t:'"Ask him what the song means."', req:()=>!S.f.b3_c1_ellisSongAsked, fx:()=>{ S.f.b3_c1_ellisSongAsked = 1; }, go:'b3_c1_ellis_song'},
+          {t:'"Keep watching it."'}]}),
+    /* ---- v7.2: the import's Vell, by a fire, with the rope across his knees ---- */
+    b3_c1_vell:()=>({sp:'Vell', txt:
+`Vell has the rope off his shoulder and across his knees, and is going along it a hand's width at a time, the way other people say prayers: feeling for the soft places. There aren't any. There never are.
+
+"Sergeant." He makes room on the log, where there was already room. "Can I ask a thing?" He asks it before you can answer. "The first time the Fourth was here. Before the sky came down on it. Did you know it was going to?"`,
+      ch:[{t:'"No. Nobody tells a squad."', fx:()=>{ b31L('vell', 1); }, go:'b3_c1_vell_no'},
+          {t:'"Why?"', go:'b3_c1_vell_why'}]}),
+    b3_c1_vell_no:()=>({sp:'Vell', txt:
+`He nods as if you have confirmed something about the trade. "Nobody tells a journeyman either. You find out the roof's gone when you're stood on the air where it was."
+
+He goes on along the rope. "Moon's Spawn was over Darujhistan my whole time on the roofs. You stopped looking up at it after a month. You strung your lines in its shadow and you didn't think about it. Then the night it went, everybody in the city looked up at once, and didn't stop for a week." He finds the end and whips it again, although it doesn't need it. "I'd like to be the one looking up before. Just the once."${b3In('ohl') ? `
+
+Ohl, at the pot, without turning: "Child, nobody gets that. We get the after. I've made a living out of the after."` : ''}`,
+      ch:[{t:'"Stand by me and look where I look."', fx:()=>{ S.f.b3_c1_vellLook = 1; }, go:'b3_c1_vell_end'},
+          {t:'Leave him to the rope.'}]}),
+    b3_c1_vell_why:()=>({sp:'Vell', txt:
+`He thinks about lying, visibly, and decides against it, which is a Fourth habit he picked up somewhere between Darujhistan and here.
+
+"Because everybody's saying *south* in the voice the old journeymen used for a roof nobody came back off," he says. "And I'd like to know if I'll know. Next time. Before."
+
+He coils the rope over his elbow, tight and even, the Guild way. "The Guild's not one thing. I told you that, on the roof. The Host isn't either. But I think the Host knows things the Guild doesn't, and I think the Fourth knows things the Host doesn't." He looks at you. "I'm asking the Fourth."`,
+      ch:[{t:'"You won\'t know. You\'ll know after. Stand by me and look where I look."', fx:()=>{ b31L('vell', 1); S.f.b3_c1_vellLook = 1; }, go:'b3_c1_vell_end'},
+          {t:'"Nobody knows, Vell."', go:'b3_c1_vell_no'}]}),
+    b3_c1_vell_end:()=>({sp:'Vell', txt:
+`"Yes, Sergeant." Not the compliance voice; he hasn't got one yet. Just the words, meant.
+
+He slings the rope and the hook. Then, because he is young and has never been able to leave a thing alone: "Where do you look?"
+
+"At the squad."
+
+He considers that for a while. "That's not *up*," he says. But he looks along the Fourth, one face at a time, the way the rest of you do, and counts, under his breath, and doesn't stop at the old number.`,
+      ch:[{t:'Up.'}]}),
     b3_c1_rfire_slept:()=>({sp:'A Rhivi fire', txt:
 `You wake to the same song, or another one very like it, and a blanket over you that you didn't have when you lay down.
 
@@ -913,7 +999,7 @@ ${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening
 
 ${S.f.b3_c1_runner ? `The Host's runner is standing three paces off with his slate, pretending not to listen. The munitions train comes down off the Divide road tonight, late, and the Host wants the Fourth on it.` : `And up the slope a runner of the Host is coming down between the tents, asking every Rhivi he passes where the Malazans are, with a slate in his hand that says the Moranth munitions train is coming in off the Divide road tonight, and the Host wants the Fourth on it.`}
 
-${b3In('ellis') ? `Ellis has been looking at the hills while Sohra talks. "She's right about the fire," she says. "I saw it at dusk. Small, for the number round it. Men who don't want to be counted keep a small fire."\n\n` : ''}${b3In('vell') ? `Vell looks from the runner to the painted door-flap and back, and keeps his mouth shut, which is new, and which he seems to find very hard.\n\n` : ''}Two things want the Fourth tonight. It can do one of them.`,
+${b3In('ellis') ? `Ellis has been looking at the hills while Sohra talks. "She's right about the fire," she says. "${S.f.b3_c1_ellisCount ? 'The one I told you about. I\'ve been watching it since dusk.' : 'I saw it at dusk.'} Small, for the number round it. Men who don't want to be counted keep a small fire."\n\n` : ''}${b3In('vell') ? `Vell looks from the runner to the painted door-flap and back, and keeps his mouth shut, which is new, and which he seems to find very hard.\n\n` : ''}Two things want the Fourth tonight. It can do one of them.`,
       ch:[{t:'"We\'ll stand at the tent." Send the runner back with the Fourth\'s regrets.', fx:()=>{ S.f.b3_c1_key = 'mhybe'; S.f.b3_mhybe = 1; ally(2, 0, 'The Mhybe\'s tent'); b31L('tuft', 1); b31L('ohl', 1); b31L('kettle', -1); }, go:'b3_c1_watch'},
           {t:'"The Host has given us an order." Go up the Divide road.', fx:()=>{ S.f.b3_c1_key = 'crate'; ally(-1, 0, 'Sohra asked, and the Fourth went elsewhere'); b31L('kettle', 1); b31L('brisk', 1); b31L('tuft', -1); }, go:'b3_c1_crate'},
           {t:'"Not yet. Let me think."', go:()=>startExplore()}]}),
