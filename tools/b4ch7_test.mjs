@@ -113,7 +113,7 @@ const r = await page.evaluate(async () => {
     R.sgt = pages.some(p => p.k === 'fate' && p.id === 'sgt' && /finger bone/.test(p.t));
     out.roads[k] = R; }
   /* the trick and the black bead in a fight */
-  S = JSON.parse(snapK); S.tricks = {b4_c7_deadride:{who:'haddat', ch:7}}; S.gear.haddat = Object.assign({}, S.gear.haddat, {trinket:'b4_c7_tear'}); save();
+  S = JSON.parse(snapK); S.tricks = {b4_c7_deadride:{who:'haddat', ch:7}}; equip('haddat', 'b4_c7_tear'); save();
   startBattle('b4_c7_spur', {}); await wait(60);
   { const hd = B.units.find(u => u.id === 'haddat'), e = B.units.find(u => u.side === 'e'); e.x = hd.x; e.y = Math.max(0, hd.y - 3); const h0 = e.hp;
     out.tr = {tiles:AB.t_b4_c7_deadride.tiles(hd).includes(e), spirit:!!AB.t_b4_c7_deadride.spirit}; AB.t_b4_c7_deadride.run(hd, e.x, e.y); out.tr.dmg = h0 - e.hp;
