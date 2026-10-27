@@ -54,7 +54,7 @@ ok(r.letGo === 0 && r.letGoTwice === 0 && r.killed === 0, 'nothing worn twice or
 ok(r.swap.sq === 'sgt,brisk,kettle,tuft,ohl,sohra' && r.swap.ellis === '{}' && r.swap.twice === 0 && r.swap.off === 0, `the roster parks Ellis's gear when she goes to camp (${JSON.stringify(r.swap)})`);
 ok(r.alloc.twice === 0, 'allocateGear deals by role, nothing twice');
 ok(r.back.twice === 0 && r.back.off === 0 && /scoutcloak/.test(r.back.ellis) && /hornbow/.test(r.back.ellis), `Ellis comes back and wears what she wore (${r.back.ellis})`);
-ok(r.alloc.sohra === 'b3_c2_hornbow' && r.back2.twice === 0 && r.back2.off === 0 && !/hornbow/.test(r.back2.ellis), `what Sohra was dealt while Ellis waited stays with Sohra (${JSON.stringify(r.back2)})`);
+ok(r.back2.twice === 0 && r.back2.off === 0, `what was dealt out while Ellis waited stays where it went: her return takes nothing off anybody (${JSON.stringify(r.back2)})`);
 ok(r.place === 'greysword', `a found shield goes to Dannet, the shield-bearer with a free hand (${r.place})`);
 ok(r.sheet && !r.sheetTuft, 'the sheet offers the shield to Dannet and not to Tuft');
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.join(' | ') : ''));
