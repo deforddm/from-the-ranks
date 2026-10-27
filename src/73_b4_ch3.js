@@ -1,5 +1,5 @@
 /* ============ Book Four, Chapter 3: The Burned Tears ============ */
-/* Days north of Aren, in the Vathar Hills (House of Chains, ch 15). Dust and riders on the ridges, about three thousand, shadowing the
+/* Days north of Aren, on the road north to Vathar Crossing (House of Chains, ch 15; never "the Vathar Hills": Q19, Oct 27). Dust and riders on the ridges, about three thousand, shadowing the
    Fourteenth; a marine squad of the 8th goes out to look (never the squad). The raiders who have harried the column are driven onto the
    9th's flank picket by riders nobody has seen yet, and the riders come over the ridge: Gall's Khundryl Burned Tears. Gall kneels to
    Temul (heard), the broken sword carried past (seen), the Khundryl taken into the Crow Clan. The feast: the army drunk, the shamans'
@@ -61,7 +61,7 @@ const b43RopeOk = () => b4On() && (S.kit || []).includes('b4_c3_ferryrope') && !
 
 /* ---- the Black Tears: a Khundryl mourning-cry, learned at the feast. Spirit-craft: it never sputters. ---- */
 Object.assign(TRICKS, {
-  b4_c3_tears:{name:'The Black Tears', ch:3, use:'fight', ab:'t_b4_c3_tears', spirit:true, where:'the Khundryl feast in the Vathar Hills, at an old woman\'s fire',
+  b4_c3_tears:{name:'The Black Tears', ch:3, use:'fight', ab:'t_b4_c3_tears', spirit:true, where:'the Khundryl feast on the road to the Vathar, at an old woman\'s fire',
     lore:'The Burned Tears grieve out loud, all of them at once, and then they laugh, at the same fire. The cry is the first half. An old woman at the feast taught it to the Third because, she said, the Chain had not had anybody to do it for them, and that was a debt too.',
     get fx(){ return `Once a fight: the bearer gives the Burned Tears' mourning-cry. Every enemy within 2 of the bearer is −2 to hit for the rest of the round, and the next squadmate to strike one of them hits +2. Spirit-craft: it never sputters in the dust.`; }},
 });
@@ -92,7 +92,7 @@ GLOSSX.hoc.push(
   [3, 'Ubaryd', 'A port of Seven Cities that fell in the rising. From the butte north of the Vathar the Fourteenth saw it taken back, Admiral Nok\'s ships crowded in its harbour.', ()=>!!(S.f && S.f.b4_whirlwindSeen)]);
 
 /* ---- the reading at the feast (the chapter's first halt and its fire) ---- */
-B4DECK[3] = {scene:'b4_feast', where:'a pegged hide by a Khundryl fire', set:'Night in the Vathar Hills, the Khundryl grieving and laughing round their fires, and the Fourteenth drunk among them.',
+B4DECK[3] = {scene:'b4_feast', where:'a pegged hide by a Khundryl fire', set:'Night on the road to the Vathar, the Khundryl grieving and laughing round their fires, and the Fourteenth drunk among them.',
   back:'b4_c3_feast', backT:'Back to the fire.',
   say:{marrow:`"Three thousand of them came to say sorry," Marrow says, "and brought the drink to do it with." She lays the hide flat with the flat of her hand. "Sit, child. One card, for the people who rode away, and the people they rode away from."`,
     tallow:`"My grandmother would have read for them," Tallow says, watching a Khundryl rider weep and laugh at the next fire over. "She read for anybody who'd sit." He shuffles badly, twice. "One card, Sergeant. Before I'm too drunk to hold them."`,
@@ -100,7 +100,7 @@ B4DECK[3] = {scene:'b4_feast', where:'a pegged hide by a Khundryl fire', set:'Ni
 
 const B4CH3 = {
   title:'The Burned Tears', number:'Three',
-  intro:{loc:'The Vathar Hills', sub:'Days north of Aren · the Fourteenth on the march', scene:'b4_c3_shadow', cap:'Dry hills under a white sky, the column a league long in the folds of them, and on the far ridges dust that is not the column\'s.',
+  intro:{loc:'The road to the Vathar', sub:'Days north of Aren · the Fourteenth on the march', scene:'b4_c3_shadow', cap:'Dry hills under a white sky, the column a league long in the folds of them, and on the far ridges dust that is not the column\'s.',
     paras:[
 `North of Aren the land gets up off the plain and folds itself into hills: dry grass, scree, and red rock standing out of it like the ribs of something. The Fourteenth goes through the folds in a column a league long, eating its own dust, and every night it camps in a different hollow that looks exactly like the last.`,
 ()=>`You are Sergeant {sgt}, Third squad, 9th Legion. The squad came down out of these hills once before, the other way, with the Chain. At the bottom of them is a river. The Third has not said its name since Aren. ${S.f.b4_news ? 'Since the news from Genabackis went round the camp the recruits have stopped asking the Third questions, which is worse than the questions.' : 'The recruits have stopped asking the Third about the Chain, which is worse than the asking.'}`,
@@ -109,7 +109,7 @@ const B4CH3 = {
 
   areas:[
     /* 16 x 12 (b4_c3_hills, day).  . dry grass  , scree  # rock  W a 9th's wagon  k a cairn on the rise  > east, to the flank picket  < west, the column */
-    { id:'b4_c3_hills', title:'The Vathar Hills · the 9th\'s halt', sub:'Midday · the column halted in a fold', hint:'Tap ground to move · tap a figure to talk · the flank picket is east', decor:'b4_c3_hills',
+    { id:'b4_c3_hills', title:'The road to the Vathar · the 9th\'s halt', sub:'Midday · the column halted in a fold', hint:'Tap ground to move · tap a figure to talk · the flank picket is east', decor:'b4_c3_hills',
       map:[ "##,,,,##,,,,,,##",
             "#,,,,,,#,,k,,,,#",
             ",,,.,,,,,,,,,,,,",
@@ -131,7 +131,7 @@ const B4CH3 = {
         {id:'recruit2', name:'A recruit', kind:'b4_c1_recruit', x:12, y:9, node:()=>S.f.b4_c3_recTold ? 'b4_c3_recruits_again' : 'b4_c3_recruits'} ] },
 
     /* 16 x 12 (b4_c3_hills, night).  . trampled grass  , scree  = tents  F the Third's fire among the Khundryl's  f other fires  h horse lines  > east, toward the river */
-    { id:'b4_c3_camp', title:'The Vathar Hills · the Khundryl fires', sub:'Night · the feast', hint:'Tap ground to move · tap a figure to talk · the Third\'s fire is in the middle; the road to the river is east', decor:'b4_c3_hills', dark:true,
+    { id:'b4_c3_camp', title:'The road to the Vathar · the Khundryl fires', sub:'Night · the feast', hint:'Tap ground to move · tap a figure to talk · the Third\'s fire is in the middle; the road to the river is east', decor:'b4_c3_hills', dark:true,
       map:[ "################",
             "#hhhh..=.=..hhh#",
             "#......f.......#",
@@ -200,7 +200,7 @@ const B4CH3 = {
   battles:{
     /* the 9th's flank picket: the raiders who have harried the column for days, driven down a wash onto the picket by riders nobody has
        seen yet; with the company. The second ground: the wash's mouth, where the riders come over the ridge. */
-    b4_c3_raiders:{title:'The flank picket', style:'b4_c3_hills', open:true, warrenText:'The Vathar Hills · the warrens are thin and dry, but they answer', warren:{meanas:1, denul:1}, music:'battle',
+    b4_c3_raiders:{title:'The flank picket', style:'b4_c3_hills', open:true, warrenText:'The road to the Vathar · the warrens are thin and dry, but they answer', warren:{meanas:1, denul:1}, music:'battle',
       company:{at:[[1, 8], [6, 8], [0, 9]], n:1},
       map:["..#..,..",".,....t.","........","..t..,..","........",".,....,.","...t....","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
@@ -280,7 +280,7 @@ const B4CH3 = {
       line:'A fathom of old hemp rope, black with the river, cut from the post where the ferry used to cross the Vathar before there was anybody to cross it for. Knotted round a wrist, it steadies the hand: once a chapter, +1 to a check. Then it has done its turn until the next stretch of road.'} },
 
   scenes:{
-    b4_c3_shadow:{loc:'The Vathar Hills', sub:'The ridges · dust that is not the column\'s', cap:'Dry hills folding away under a white sky, and on the far ridges a long smear of dust with riders in it, too far to count.', amb:'wind'},
+    b4_c3_shadow:{loc:'The road to the Vathar', sub:'The ridges · dust that is not the column\'s', cap:'Dry hills folding away under a white sky, and on the far ridges a long smear of dust with riders in it, too far to count.', amb:'wind'},
     b4_c3_ford:{loc:'Vathar Crossing', sub:'The ford · dusk', cap:'A wide slow river going red in the last light, dark banks lying under the water across the ford, and on the shore the tribes\' offerings on poles.', amb:'explore'},
     b4_c3_fordnight:{loc:'Vathar Crossing', sub:'The ford · night', cap:'The river black under the stars, the bone-banks blacker under it, lanterns moving on the water where nobody of the 9th is.', amb:'explore'},
     b4_c3_crossing:{loc:'Vathar Crossing', sub:'The crossing · morning', cap:'The ford running fast and clean from bank to bank after the blast, and the army wading it to the waist toward the far trees.', amb:'explore'},

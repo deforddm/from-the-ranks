@@ -3,6 +3,7 @@
 // Q7  Raest: Omtose Phellack is Elder; otataral dust is never offered against him and never stops his ice.
 // Q9  Book Three Ch5: the drowning is Shank's (Coral); the ford's cadre mage stands the river up instead.
 // Q18 Book Two: Bungle is a sergeant, never a captain.
+// Q19 Book Four: the Khundryl join on the road to the Vathar (HoC ch 15); there are no Vathar Hills (v7.3.1).
 import fs from 'fs';
 import path from 'path';
 import { server, browser as launch, openGame, root } from './page.mjs';
@@ -17,6 +18,8 @@ const c5 = src('65_b3_ch5.js');
 ok(!/the cadre drowned|put the river in him|drowned man|cadre mage drowned/i.test(c5), 'Q9: no cadre drowning at the Ch5 ford');
 ok(/the river stand up/.test(c5) && /quarrel/.test(c5), 'Q9: the ford\'s mage stands the river up, and a quarrel kills the Pannion mage');
 ok(/Shank had one of their Seerdomin/.test(src('67_b3_ch7.js')), 'Q9: Coral\'s Bridgeburner tells of Shank\'s drowning');
+const b4 = fs.readdirSync(path.join(root, 'src')).filter(f => /^7\d/.test(f)).map(f => src(f).replace(/never "the Vathar Hills"/g, '')).join('\n');
+ok(!/Vathar Hills/.test(b4), 'Q19: Book Four never says "the Vathar Hills"');
 ok(!/u\.ai === 'raest' && !u\.otat/.test(src('31_battle.js')), 'Q7: the Tyrant\'s lance does not check for otataral');
 
 // ---- in the page ----

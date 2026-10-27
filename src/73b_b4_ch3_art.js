@@ -1,4 +1,4 @@
-/* ============ Book Four, Chapter 3 art: The Burned Tears — the Vathar Hills, the Khundryl feast, Vathar Crossing, the butte over Ubaryd ============ */
+/* ============ Book Four, Chapter 3 art: The Burned Tears — the road to the Vathar, the Khundryl feast, Vathar Crossing, the butte over Ubaryd ============ */
 /* Figures (FIGX) in the ~32px frame of 18/47b/70d, lit from the left: the Burned Tears (Book Two's Khundryl, a year on, the ochre gone and
    black tears inked down the cheeks instead), their war chief, river scavengers and a river-tribe warrior. Two grounds (TILEX): the hills
    on Book Two's Odhan, and the ford on Book Two's Vathar, with its bone-banks lying dark under the water and the tribes' poles on the bank.
@@ -78,7 +78,7 @@ FIGX.b4_c3_headman = (ctx, h, t, o) => { FIGX.b4_c3_tribesman(ctx, h, t, Object.
   for (let i=0;i<3;i++) B2F.line(ctx, i%2 ? '#6a2a1a' : '#2a2014', .8, [[-9.6, -19], [-10.6 - i*.6, -14], [-10.4 - i*.8, -10]]); };
 
 /* ---------------- ground: TILEX ----------------
-   b4_c3_hills: the Vathar Hills on Book Two's Odhan (47b), by day and by night: '.' dry grass (the hardpan, with grass standing in it),
+   b4_c3_hills: the hill country north of the Vathar on Book Two's Odhan (47b), by day and by night: '.' dry grass (the hardpan, with grass standing in it),
      ',' scree, '#' red rock, '=' a hide tent, 'F' and 'f' fires, 'h' the horse lines, 'W' a 9th's wagon (all the Odhan's own); 'k' a
      cairn of grey stones with a horse skull on it.
    b4_c3_ford: Vathar Crossing on Book Two's Vathar (51b): '.' bank, ',' reeds, '~' deep water, '-' shallows, '#' the steep far bank;

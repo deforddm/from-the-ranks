@@ -467,7 +467,7 @@ const B4_SCENE_LIKE = {b4_aren_yard:'b2_camp_night', b4_road_fire:'b2_aren_way_d
 Object.assign(SCENES, {
   b4_aren_yard:{loc:'Aren', sub:'The 9th\'s barracks yard · night', cap:'Lamps in the barracks windows, a legion of recruits failing to sleep, and the old graveyard over the wall.', amb:'explore'},
   b4_road_fire:{loc:'The Aren Way', sub:'Below Coltaine\'s Fall · night', cap:'A fire off the road, the empty trees along it, and the hill above with the pilgrims\' braids on it.', amb:'explore'},
-  b4_feast:{loc:'The Vathar Hills', sub:'The Khundryl fires', cap:'Three thousand riders round their fires, grieving loudly, and the Fourteenth getting drunk among them.', amb:'explore'},
+  b4_feast:{loc:'The road to the Vathar', sub:'The Khundryl fires', cap:'Three thousand riders round their fires, grieving loudly, and the Fourteenth getting drunk among them.', amb:'explore'},
   b4_seti_fire:{loc:'The column\'s camp', sub:'The Seti wounded · night', cap:'Wounded horse-warriors under blankets by a low fire, and the burnt wagons still smoking.', amb:'explore'},
   b4_wall_fire:{loc:'Short of the Wall', sub:'The Whirlwind · night', cap:'A fire in the lee of a rock, and beyond it the Whirlwind, standing up out of the desert like a cliff of sand.', amb:'explore'},
   b4_picket:{loc:'Before Pan\'arak', sub:'The picket line · night', cap:'A line of shallow scrapes in the sand, the rebel fires across the basin, and nothing to do but watch.', amb:'explore'},

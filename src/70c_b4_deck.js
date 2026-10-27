@@ -158,7 +158,7 @@ function b4DeckCard(n){ const D = B4DECK[n] || B4DECK[1], r = b4Rd(), pool = B4P
 
 /* ---- the tables (21b): one per chapter's reading place ----
    1 the 9th Legion's barracks yard in Aren at night; 2 a fire off the Aren Way below Coltaine's Fall; 3 the Khundryl feast fires in the
-   Vathar Hills; 4 the wounded Seti's fire in the column's camp; 5 a fire short of the Whirlwind Wall; 6 the picket line before Pan'arak;
+   road to the Vathar; 4 the wounded Seti's fire in the column's camp; 5 a fire short of the Whirlwind Wall; 6 the picket line before Pan'arak;
    7 the coral island after the flood. */
 Object.assign(READTABLE, {
   'hoc:1':{surf:'stone', p:{base:'#5a5248', dark:'#2a2620', flags:1}, light:'lantern', lp:[.12, .1], lc:'#ffc070', air:'none', dark:'#0a0908', props:[['lantern', .12, .1, 14], ['cup', .86, .16, 12]]},

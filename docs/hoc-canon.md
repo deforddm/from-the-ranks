@@ -254,7 +254,7 @@ The squad never stands in these scenes, never changes their outcome, and never m
 2. Temul's youths: 40 or 41 (ch 5)?
 3. The Seti in ch 19: were the wounded left alive for the Malazans (R19) or all killed (W *Leoman*)?
 4. Whose horse Leoman's oil raid draws off in ch 18.
-5. Is the camp where the Khundryl join called the Vathar Hills (W15 only)?
+5. Is the camp where the Khundryl join called the Vathar Hills (W15 only)? **Answered (David, Oct 27, 2026): no. They join on the approach to Vathar Crossing (W *Khundryl*, W15, R15). The game says "the road to the Vathar" from v7.3.1.**
 6. Coltaine's Fall in ch 11: is anything left standing on the hill (a cross, a marker)?
 7. Tavos Pond: Gesler's squad (R11) or Borduke's (W *Borduke*)?
 

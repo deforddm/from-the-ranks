@@ -267,7 +267,7 @@ const B4CH2 = {
     march:['The column\'s place', 'The Fourteenth marched out of Aren under the empty trees and camped at dusk below the hill where the Chain ended, with the city still in sight. That night the pilgrims\' lamps went up the hill without the Third. The squad kept its place on the 9th\'s line as ordered, and the raiders came to the line in the dark, and then to the wagons. In the morning the news was all through the camp. Radde wrote that the Third had kept its place. Haddat has not said what she thinks of that.'] },
   endScene:'b4_c2_standard',
   endCap:()=> S.f.b4_c2_key === 'fall' ? 'Morning on the Aren Way. The column goes north under its standard, and at the very back of it, in the dust of three legions, the Third, with the hill behind it hung with something new.' : 'Morning on the Aren Way. The column goes north under its standard, and the 9th in the middle of it, and the Third in its place, and the hill behind it with its lamps all out.',
-  tease:'Next: north, into the Vathar Hills, where riders nobody can name are following the army.',
+  tease:'Next: north, toward the Vathar, where riders nobody can name are following the army.',
 
   extras:()=>{ const f = S.f, x = [];
     if (f.b4_c2_key === 'fall') x.push('The Third climbed the Fall at night with the pilgrims and left the names there. Some of the Second Company went up after it.');

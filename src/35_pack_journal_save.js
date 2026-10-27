@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.3.1', ['Book Four, Chapter 3: the country where the Khundryl join the army is now called the road to the Vathar, as in the novel, where they join on the approach to Vathar Crossing. There are no Vathar Hills. Saves carry on as they were.']],
   ['7.3.0', ['Bridgeburner: after every win, a quarter of the health each squadmate lost mends on top of the usual patch-up, so the badly hurt come back further. Wounds still carry until the squad rests.',
     'Book One: the Tyrant\'s ice is Omtose Phellack, an Elder warren, and otataral dust does not touch it. The dust is no longer offered against him.',
     'Book Three, Chapter 5: at the ford the cadre mage no longer drowns the Pannion mage (that deed is Shank\'s, above Coral). She stands the river up against his working, and a quarrel does the rest. At Coral a Bridgeburner tells you about Shank.',

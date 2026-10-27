@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v7.3.0'; // David's answers: Bridgeburner wins mend a quarter of lost health; Raest immune to otataral; the ford's drowning moved to Shank; Sergeant Bungle
+const CACHE = 'ftr-v7.3.1'; // the Khundryl join on the road to the Vathar (no Vathar Hills)
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
