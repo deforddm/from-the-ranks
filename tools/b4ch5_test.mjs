@@ -94,9 +94,9 @@ const r = await page.evaluate(async () => {
   startBattle('b4_c5_wallriders', {}); await wait(60);
   { const tb = B.units.find(u => u.id === 'tebbet'), hd = B.units.find(u => u.id === 'haddat'), mv0 = tb.mv; out.tr = {r0:tb.b4rng0, dusty:tb.rng};
     AB.t_b4_c5_seabed.run(hd); out.tr.clear = tb.rng; out.tr.mv = tb.mv - mv0; squadTurnStart(hd); out.tr.back = tb.rng; out.tr.mvBack = tb.mv - mv0; B.over = true; }
-  S.gear.tebbet = Object.assign({}, S.gear.tebbet, {trinket:'b4_c5_veil'}); startBattle('b4_c5_wallriders', {}); await wait(60);
+  equip('tebbet', 'b4_c5_veil'); startBattle('b4_c5_wallriders', {}); await wait(60);
   { const tb = B.units.find(u => u.id === 'tebbet'); out.tr.veil = tb.rng; B.over = true; }
-  S.gear.tebbet = Object.assign({}, S.gear.tebbet, {trinket:'b4_c5_seaglass'}); startBattle('b4_c5_wallriders', {}); await wait(60);
+  equip('tebbet', 'b4_c5_seaglass'); startBattle('b4_c5_wallriders', {}); await wait(60);
   { const tb = B.units.find(u => u.id === 'tebbet'), e = B.units.find(u => u.side === 'e'); out.tr.glass = tb.rng; e.x = tb.x; e.y = Math.max(0, tb.y - 3); attack(tb, e); out.tr.glassAfter = tb.rng; B.over = true; }
   } catch (e) { out.err = e.stack; }
   /* ================= a Book Two transfer: Haddat dead at the Barrow, Sathi alive, Ramin walking ================= */
@@ -119,7 +119,7 @@ const r = await page.evaluate(async () => {
   out.t.finders.orvas = fnd();
   b4SwapIn('redblade'); out.t.finders.none = fnd();
   S.f.b4_setiSaved = 1; out.t.finders.seti = fnd(); out.t.setiNpc = AREAS.b4_c5_seabed.npcs.find(n => n.id === 'seti').show();
-  delete S.f.b4_setiSaved; S.squad.push('darrut'); migrate(S); out.t.finders.darrut = fnd();
+  delete S.f.b4_setiSaved; S.squad = S.squad.filter(k => k !== 'redblade'); S.squad.push('darrut'); migrate(S); // v7.2: six at most out.t.finders.darrut = fnd();
   talk('b4_c5_key'); take('b4_c5_key', /Show us the seep/); take('b4_c5_seep_chosen', /Off the road/); out.t.seepGo = /Darrut leads/.test(DLG.b4_c5_seep_go().txt);
   out.t.seep = await force('b4_c5_seep'); out.t.water = S.f.b4_seepWater;
   } catch (e) { out.err2 = e.stack; }

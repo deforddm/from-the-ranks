@@ -91,7 +91,7 @@ const r = await page.evaluate(async () => {
   take('b4_c6_outpost_after', /Inside the screen/); take('b4_c6_return', /The fire/); out.w.area = S.area; take('b4_c6_picketfire', /first light/); take('b4_c6_dawn', /Sleep/); await wait(50);
   out.w.end = {view, ch:S.chapters[6], lvl:S.lvl, nerve:S.nerve, net:S.nerve - out.f.n0};
   /* the trick, the badge and the horn in a fight */
-  S = JSON.parse(snap); migrate(S); S.tricks = {b4_c6_listen:{who:'haddat', ch:6}}; S.gear.haddat = Object.assign({}, S.gear.haddat, {trinket:'b4_c6_pickethorn'}); S.gear.tangle = Object.assign({}, S.gear.tangle, {trinket:'b4_c6_dogslayer'}); delete S.f.b4_c6_hornBlown; save();
+  S = JSON.parse(snap); migrate(S); S.tricks = {b4_c6_listen:{who:'haddat', ch:6}}; equip('haddat', 'b4_c6_pickethorn'); equip('tangle', 'b4_c6_dogslayer'); // v7.2: one wearer per piece delete S.f.b4_c6_hornBlown; save();
   startBattle('b4_c6_dusk', {}); await wait(60);
   { const hd = B.units.find(u => u.id === 'haddat'), tg = B.units.find(u => u.id === 'tangle'), mr = B.units.find(u => u.id === 'marrow'), fs = B.units.filter(u => u.side === 'e'), e0 = fs[0], e1 = fs[1];
     out.tr = {hasListen:hd.ab.includes('t_b4_c6_listen'), hasHorn:hd.ab.includes('t_b4_c6_horn')};

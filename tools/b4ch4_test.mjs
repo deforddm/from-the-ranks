@@ -88,7 +88,7 @@ const r = await page.evaluate(async () => {
   take('b4_c4_morning', /Fall in/); await wait(50);
   out.p.end = {view, ch:S.chapters[4], lvl:S.lvl, nerve:S.nerve};
   /* the trick in a fight: the bola bursts on the mark and leaves oil round it, 1d6 + the level step to whoever starts a turn there */
-  S = JSON.parse(snap); S.tricks = {b4_c4_bola:{who:'tangle', ch:4}}; S.kit.push('b4_c4_lampball'); S.gear.marrow = Object.assign({}, S.gear.marrow, {trinket:'b4_c4_lampball'}); S.card = null; save(); startBattle('b4_c4_picket', {}); await wait(60);
+  S = JSON.parse(snap); S.tricks = {b4_c4_bola:{who:'tangle', ch:4}}; if (!S.kit.includes('b4_c4_lampball')) S.kit.push('b4_c4_lampball'); equip('marrow', 'b4_c4_lampball'); // v7.2: one wearer per piece S.card = null; save(); startBattle('b4_c4_picket', {}); await wait(60);
   { const u = B.units.find(x => x.id === 'tangle'), e = B.units.find(x => x.side === 'e'), m = B.units.find(x => x.id === 'marrow');
     out.tr = {ab:u.ab.includes('t_b4_c4_bola'), ok:abOk(u, 't_b4_c4_bola'), lampAb:!!m && m.ab.includes('b4_c4_lampball')};
     const f0 = B.fires.length; B.cur = u; AB.t_b4_c4_bola.run(u, e.x, e.y); await wait(700); out.tr.fires = B.fires.filter(f => f.b4oil).length; out.tr.f0 = f0;
