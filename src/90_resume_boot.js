@@ -82,6 +82,7 @@ function backTop(){
   if (picksOpen()) return true; // the level-up choice has to be made
   if (!$('#chars').hidden) { AUDIO.play('click'); closeChars(); return true; }
   if (!$('#settings').hidden) { AUDIO.play('click'); $('#settings').hidden = true; $('#settings').innerHTML = ''; return true; }
+  if (typeof rosterBackOne === 'function' && rosterBackOne()) { AUDIO.play('click'); return true; } // the roster: a half-made choice, then the screen (38c)
   if (!$('#modal').hidden) { AUDIO.play('click'); $('#modal').hidden = true; return true; }
   if (mgOpenNow()) { if (MG.leave) MG.leave(); return true; } // a table game: Back is its Leave (which may ask first)
   return false;

@@ -105,7 +105,7 @@ ok(c7.ge === 'He kept riding', 'Ellis gone east to Toc gets her own page');
 const pass = await ev(() => { S = newState('Hask'); S.chapter = 5; S.lvl = 5; S.squad = ['sgt','brisk','kettle','tuft','ohl','vell']; S.picksDue = []; migrate(S); S.f.c4_vell = 1; S.f.c4_vellJoined = 1; save(); startExplore(CHAPTERS[5].area.id);
   talk('c5_close'); const c5 = [...document.querySelectorAll('#sheet .choice')].map(b => b.textContent.trim());
   talk('c5_close_vell'); const txt = $('#sheet').innerText.length;
-  const can = ['guildblade','daruknife','blackedblade','clawknife','toccloak','scoutcloak'].filter(k => ITEMS[k] && ITEMS[k].who && ITEMS[k].who.includes('vell'));
+  const can = ['guildblade','daruknife','blackedblade','clawknife','toccloak','scoutcloak'].filter(k => ITEMS[k] && canWear('vell', k)); // v7.2: by role
   S.kit.push('guildblade'); equip('vell', 'guildblade'); const u = mkParty('vell', 1, 1);
   S.chapter = 6; S.f.c6_guildPassed = 1; const q = TPL.vell.quest;
   return {c5, txt, can, worn:S.gear.vell.weapon, atk:u.atk, q}; });

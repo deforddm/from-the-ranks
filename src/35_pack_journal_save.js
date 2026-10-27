@@ -1,5 +1,6 @@
 /* ============ pack / journal / save ============ */
 function openModal(tab){
+  if (tab === 'roster' && S) return openRoster(null); // v7.2: the roster (38c)
   const m = $('#modal'); if (m.hidden) AUDIO.play('open'); m.hidden = false; m.scrollTop = 0;
   const tabs = S ? ['pack','journal','save','deeds'] : ['save','deeds']; routeAnim = null;
   const body = {
@@ -19,7 +20,7 @@ function openModal(tab){
       <div class="row" style="margin-top:8px"><button class="btn primary" id="bLoad">Load code</button></div><p class="fine" id="impMsg"></p>`,
   };
   m.innerHTML = smartq(`<div class="mbox"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><h2 class="m">${S ? ((BOOKS[(S.book) || 'gotm'] || BOOKS.gotm).squad || 'The squad') : tab === 'deeds' ? 'Deeds' : 'Load a game'}</h2><button class="btn" id="bClose">Close</button></div>
-    <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
+    <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button><button class="tab" data-t="roster">Roster</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
     <div>${body[tab]()}</div></div>`);
   m.querySelectorAll('.tab').forEach(b => b.onclick = () => { AUDIO.play('click'); if (b.dataset.t === 'squad') { m.hidden = true; openChars(0); } else openModal(b.dataset.t); });
   $('#bClose').onclick = () => { AUDIO.play('close'); m.hidden = true; };

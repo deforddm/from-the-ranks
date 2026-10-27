@@ -1353,14 +1353,14 @@ ${b3In('tuft') ? `Tuft goes to her. You don't hear what they say. You see the ch
 `The Grey Swords have pitched their camp nearest the barrow. Capan women mostly, the acolytes, shorn, in grey, and among them the few old troopers who came out of Capustan, very quiet. The whole company talks in murmurs.
 
 ${b3c7Waiting('greysword') ? `Dannet is with them. She comes out of the lines when she sees the squad, with the half-painted shield on her arm, and stops in front of you. "Sergeant," she says. "I'm lent to you till the Domin's done." She looks back at the barrow. "The Domin's done." Then: "Ask me anyway."` : b3In('greysword') ? `They know Dannet. They make room for her at the fire without being asked, and she sits, and an old trooper puts his hand on her shoulder and leaves it there.` : `An acolyte looks up at the Fourth's badges, and nods${S.f.b3_c3_key === 'camps' ? ', and you know her: she was in the Camp at Capustan, the day the Fourth went in with the company' : ''}, and says in Daru, "He would have said *sir*. To you. To everyone." She looks at the barrow. "We are learning to say it for him."`}`,
-      ch:[{t:'"Come back to the Fourth, Dannet, if you want it."', req:()=>b3c7Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:()=>startExplore()},
+      ch:[{t:'"Come back to the Fourth, Dannet, if you want it."', req:()=>b3c7Waiting('greysword') && b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:()=>startExplore()},
           b3c7AnvilCh('grey'),
           {t:'Leave them to their dead.', go:()=>startExplore()}]}),
   b3_c7_s_rhivi:()=>({sp:'Rhivi riders', fx:()=>{ S.f.b3_c7_srhivi = 1; }, txt:
 `The Rhivi have brought the herds down to the shore to drink at a stream that comes out of the hill, and the riders are sitting their horses among the bhederin, singing, low, the songs for the dead, and then one more, facing north, slow, the kind you sing to someone who is asleep and will not wake.
 
 ${b3c7Waiting('sohra') ? `Sohra rides out of the herd when she sees the squad, and pulls up, and looks down at you. "The Mhybe sleeps," she says. "For ever. In the sleep she is young." Her face does something. "I watched the Malazans for her, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I am not finished watching."` : b3In('sohra') ? `They call to Sohra in Rhivi as you pass, and she answers, and for a moment she is one of them again, and then she is back in the Fourth's file, walking.` : `A rider looks at your badges and says something in Rhivi, and then in bad Daru: "The Malazans. You don't leave people." It might be a compliment. You decide to take it as one.`}`,
-      ch:[{t:'"Ride with the Fourth again, Sohra."', req:()=>b3c7Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:()=>startExplore()},
+      ch:[{t:'"Ride with the Fourth again, Sohra."', req:()=>b3c7Waiting('sohra') && b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:()=>startExplore()},
           {t:'Leave them to the herds.', go:()=>startExplore()}]}),
 
   /* ---- the road out ---- */

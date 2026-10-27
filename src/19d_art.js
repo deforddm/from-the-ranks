@@ -56,7 +56,7 @@ function itemInfo(key){
       it.stat && Object.entries(it.stat).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)} +${v}`).join(' · ')].filter(Boolean).join(' · ');
     const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null;
     return {name: it.name, kicker: `${it.slot[0].toUpperCase() + it.slot.slice(1)}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
-      who: who ? `Can be used by ${who.length > 1 ? who.slice(0, -1).join(', ') + ' and ' + who[who.length - 1] : who[0]}.` : 'Anyone in the squad can use it.'}; }
+      who: typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.'}; }
   if (kind === 'munitions' && id.startsWith('keep_')) { const w = id.slice(5), c = TPL[w]; if (!c) return null;
     const nm = w === 'sgt' ? (S && S.name ? `Sergeant ${S.name}` : 'The sergeant') : c.name;
     return {name: `What ${nm} carries`, kicker: 'Keepsakes · never sold, never traded', stat: '', text: c.gear.join('. ') + '.', who: c.quest || ''}; }

@@ -35,7 +35,7 @@ ok(await ev(() => ['brackcoin','spawnshard','tyrantmap'].every(k => S.kit.includ
 ok(await ev(() => !!ART['item/hoodrep'] && !!ART['item/tyrantmap']), 'the wares have pictures');
 // the repellent in a fight
 const fight = await ev(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)); $('#sheet').hidden = true;
-  S.gear.brisk.trinket = 'hoodrep'; startBattle('cutpurses', {}); await wait(600);
+  equip('brisk', 'hoodrep'); startBattle('cutpurses', {}); await wait(600);
   const b = B.units.find(u => u.id === 'brisk'); b.hp = 3; hurt(b, 50); const first = b.hp; b.hp = 3; hurt(b, 50); const second = b.hp; return {first, second, used:S.f.hoodRepCh}; });
 ok(fight.first === 1 && fight.second === 0, `the repellent holds once a chapter (first ${fight.first}, then ${fight.second})`);
 await ev(() => { B = null; view = 'explore'; });

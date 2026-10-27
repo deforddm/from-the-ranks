@@ -304,14 +304,18 @@ function b4Import(id){ const o = loadSlot(id); if (!b4Qualifies(o)) return null;
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
   /* what the squad carried, as Book Three's transfer does (60): worn gear and unworn kit, talents and veteran picks, the tricks of anyone who comes across */
   const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
-  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+  who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
     picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  /* v7.2: Ramin and Keth, if they come later, bring what they wore in Book Two (parked for them), their loyalty and their picks */
+  const carry = {}; [['redblade', !!f.b2_raminGone && !dead.redblade], ['warlock', !!f.b2_kethGone && !dead.warlock]].forEach(([k, on]) => { if (!on) return;
+    const g = {}; Object.entries(Object.assign({}, ((o.f || {}).b2_allyGear || {})[k] || {}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it] && (o.kit || []).includes(it) && !worn.has(it)) { g[slot] = it; worn.add(it); } });
+    carry[k] = {gear:g, loy:clamp(((o.loy || {})[k]) || 0, -2, 3), picks:(((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p)))}; });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
   const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
   const inv = Object.assign({sharper:0, burner:0, cusser:0, smoker:0}, ...B2_MUNI.map(k => ({[k]:Math.max(0, ((o.inv || {})[k]) || 0)})), {salve:Math.max(2, ((o.inv || {}).salve) || 0)}); // Tangle's satchel, as Book Two left it
   return {from:o.name, sid:id, road, lvl:o.lvl || 1, mates, loy, dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), deadAt:dead, f:keep, gear, picks, kit, tricks, inv,
-    ramin:!!f.b2_raminGone && !dead.redblade, keth:!!f.b2_kethGone && !dead.warlock}; }
+    ramin:!!f.b2_raminGone && !dead.redblade, keth:!!f.b2_kethGone && !dead.warlock, carry}; }
 /* every Book Four game starts at level 8 (cap 15): the veterans' curve and its picks are Book Three's (60) */
 const B4_START_LVL = 8;
 function newStateHOC(name, importId, sid){
@@ -328,6 +332,7 @@ function newStateHOC(name, importId, sid){
   s.lvl = Math.max(B4_START_LVL, Math.min(15, imp ? imp.lvl : 1)); s.xp = LEVELS[s.lvl - 1];
   if (imp) { s.imported = {from:imp.from, sid:imp.sid, road:imp.road, lvl:imp.lvl, mates:imp.mates.slice(), dead:imp.dead, f:imp.f, ramin:imp.ramin, keth:imp.keth};
     Object.assign(s.loy, imp.loy); s.gear = imp.gear; s.picks = imp.picks; s.kit = imp.kit; s.tricks = imp.tricks; s.inv = imp.inv;
+    s.parked = {}; Object.entries(imp.carry || {}).forEach(([k, c]) => { s.parked[k] = c.gear; s.loy[k] = c.loy; s.picks[k] = c.picks.slice(); }); // v7.2: Ramin's and Keth's Book Two selves wait for them
     imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; s.dead[k] = {ch:d.ch || 7, where:d.where || 'The Barrow', from:'dg'}; }); } // Book Two's dead stay dead: never in the squad, never a recruit
   else s.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start: Sathi fell at the Barrow, and Hackle was not seen again
   s.f.b4_musterDue = fill.length; s.f.b4_fill = fill.slice();
@@ -356,20 +361,16 @@ const b4Recruit_ = () => (S && Array.isArray(S.squad) && B4_RECRUITS.find(k => S
 /* may this recruit be offered at all in this game? */
 const b4CanRecruit = id => !!(b4On() && TPL[id] && !(S.dead && S.dead[id]) && (id === 'orvas' ? true : id === 'redblade' ? !!(S.imported && S.imported.ramin) : id === 'warlock' ? !!(S.imported && S.imported.keth) : false));
 function b4Join(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  /* v7.1 (David, Oct 26): more than one recruit may walk, so long as the squad stays at six */
-  if (b4Room() <= 0) { S.f[B4_DONE[id]] = 2; note(`${NAME(id)} stays with ${B4_HOME[id]} for now. Ask at any fire, and he'll come.`); save(); return false; }
+  /* v7.1 (David, Oct 26): more than one recruit may walk, so long as the squad stays at six; v7.2: no room, and they wait at camp (38c) */
+  if (b4Room() <= 0) { S.f[B4_DONE[id]] = 2; S.camp = [...(S.camp || []).filter(x => x !== id), id]; note(`${NAME(id)} stays with ${B4_HOME[id]} for now: no room in the squad. The roster at any fire can bring him in.`); save(); return false; }
   S.f[B4_DONE[id]] = 1; recruit(id); return true; }
+/* v7.2: through the roster (38c): room, and they come; no room, and the recruit who walks goes back (the roster lets the sergeant choose which) */
 function b4SwapIn(id){ if (!b4CanRecruit(id) || b4In(id)) return false;
-  const out = b4Room() > 0 ? null : b4Recruit_(); // room in the six: they come without anybody going back
-  if (out) { S.f.b4_allyGear ??= {}; S.f.b4_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B4_DONE[out]] = 2;
-    S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B4_HOME[out]}. Ask at any fire, and he'll come.`); }
-  if (b4Room() <= 0) return false;
-  S.f[B4_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b4_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); return true; }
+  if (b4Room() > 0) return rosterIn(id);
+  const out = b4Recruit_(); return !!out && rosterSwap(out, id); }
 const b4Waiting = id => !!(b4On() && S.f && S.f[B4_DONE[id]] === 2 && !b4In(id) && !(S.dead && S.dead[id]));
 /* the recruits who could be asked at a fire, for a swap choice list */
-const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id));
+const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id) && (b4Room() > 0 || !!b4Recruit_())); // v7.2: only those who can come now; the roster has the rest
 
 /* ---- who reads the Deck in Book Four (36b visReader, 21's captions, 70c's readings) ----
    Marrow while she is in the squad and alive (she read for Book Two); otherwise Tallow, from his grandmother's deck; otherwise an old soldier

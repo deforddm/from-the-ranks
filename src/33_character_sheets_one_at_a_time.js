@@ -9,7 +9,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const hp = c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
   const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
-  const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && (!it.who || it.who.includes(id)));
+  const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
   const wearer = g => SQUAD().find(w => Object.values(S.gear[w] || {}).includes(g));
   const kit = kitItems.length ? kitItems.map(it => { const w = wearer(it.id); return `<div class="it">${zoomArt('item/' + it.id, 'ico item', it.name)}<div class="ith"><b>${it.name}</b> <span class="stat">${it.slot}${[it.ac && `armour +${it.ac}`, it.atk && `hit +${it.atk}`, it.hp && `health +${it.hp}`, it.mv && `move +${it.mv}`, it.rng && `range +${it.rng}`, it.stat && Object.entries(it.stat).map(([k,v]) => `${k} +${v}`).join(' ')].filter(Boolean).map(x => ' · ' + x).join('')}</span></div>
     ${w === id ? `<button class="btn" data-uneq="${it.slot}">Remove</button>` : `<button class="btn" data-eq="${it.id}">${w ? `Take from ${NAME(w)}` : 'Equip'}</button>`}<small>${it.line}</small></div>`; }).join('') : `<p class="fine">Nothing found yet that ${id === 'sgt' ? 'you' : c.name} could use.</p>`;

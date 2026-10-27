@@ -280,14 +280,14 @@ const B3_MATES = ['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'];
 const b3Qualifies = o => !!(o && (!o.book || o.book === 'gotm') && o.chapters && o.chapters[7] === 'outlaw');
 function b3Import(id){ const o = loadSlot(id); if (!b3Qualifies(o)) return null;
   const f = o.f || {}, dead = o.dead || {}, follow = f.c7_follow || {};
-  const mates = B3_MATES.filter(k => (o.squad || []).includes(k) && !dead[k] && follow[k] !== false);
+  const mates = B3_MATES.filter(k => ((o.squad || []).includes(k) || (o.camp || []).includes(k)) && !dead[k] && follow[k] !== false); // v7.2: whoever waited at camp comes too
   const keep = {}; B3_KEEP.forEach(k => { if (f[k] != null) keep[k] = f[k]; });
   keep.list = 211 + (f.c2_key === 'light' ? 1 : 0) + (f.c4_key === 'aside' ? 1 : 0) + Object.keys(dead).length + (f.listAdds || 0);
   const loy = {}; mates.forEach(k => { loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
   /* v6.1: the transfer brings what the Fourth carried: the gear each of them wears and the unworn kit, their talents and veteran picks, and every
      trick held by someone who comes across (charges full again). Gear and tricks of the dead and of anyone who stayed behind stay behind. */
   const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
-  who.forEach(k => { gear[k] = {}; Object.entries(((o.gear || {})[k]) || {}).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+  who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
     picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
@@ -329,17 +329,15 @@ const B3_HOME = {sohra:'the Rhivi fires', greysword:'the Grey Swords\' lines'};
 const b3Recruit_ = () => (S && Array.isArray(S.squad) && B3_RECRUITS.find(k => S.squad.includes(k))) || null;
 /* a recruit joins if there is room; otherwise they wait near with their own people (flag 2) and b3SwapIn can bring them in */
 function b3Join(id){ if (!TPL[id] || !B3_RECRUITS.includes(id) || b3In(id)) return false;
-  if (b3Room() <= 0) { S.f[B3_DONE[id]] = 2; note(`${NAME(id)} stays with ${B3_HOME[id]} for now. There is no room in the Fourth, and both of you know it.`); save(); return false; }
+  if (b3Room() <= 0) { S.f[B3_DONE[id]] = 2; S.camp = [...(S.camp || []).filter(x => x !== id), id]; note(`${NAME(id)} stays with ${B3_HOME[id]} for now. There is no room in the Fourth, and both of you know it. The roster at any fire can change that.`); save(); return false; }
   S.f[B3_DONE[id]] = 1; recruit(id); return true; }
-/* swap the recruit who walks with the squad for the one who waits (like b2SwapIn): the one going out keeps their kit for later */
+/* v7.2: through the roster (38c): room, and she comes; no room, and the other recruit who walks goes back. A squad full of the Fourth
+   (an import with Ellis or Vell) has nobody to send back here: b3CanSend says no, and the fire's roster lets the sergeant choose. */
 function b3SwapIn(id){ if (!TPL[id] || !B3_RECRUITS.includes(id) || b3In(id)) return false;
-  const out = b3Recruit_();
-  if (b3Room() <= 0) { if (!out) return false;
-    S.f.b3_allyGear ??= {}; S.f.b3_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; S.f[B3_DONE[out]] = 2;
-    S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(out)} goes back to ${B3_HOME[out]}. Ask at any halt, and she'll come.`); }
-  S.f[B3_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b3_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); return true; }
+  if (b3Room() > 0) return rosterIn(id);
+  const out = b3Recruit_(); return !!out && rosterSwap(out, id); }
+/* can a fire send for her now, without the roster: she waits, and there is room or another recruit to go back */
+const b3CanSend = id => b3Waiting(id) && (b3Room() > 0 || !!b3Recruit_());
 const b3Waiting = id => !!(b3On() && S.f && S.f[B3_DONE[id]] === 2 && !b3In(id) && !(S.dead && S.dead[id]));
 
 /* ---- who reads the Deck in Book Three (36b visReader, 21's captions, 60c's readings) ----

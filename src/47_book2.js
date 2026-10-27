@@ -143,7 +143,9 @@ function newStateDG(name, importId){
 /* only the road out of Darujhistan and who walked it: the empire road's ship can call at Aren (Book Two, Chapter 7) */
 function dgImport(id){ const o = loadSlot(id); if (!o || !o.chapters || o.chapters[7] == null) return null;
   const road = o.chapters[7], follow = (o.f && o.f.c7_follow) || {}, mates = ['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].filter(k => (o.squad || []).includes(k) && !(o.dead && o.dead[k]));
-  return {from:o.name, sid:id, road, lvl:o.lvl || 1, follow, mates, dead:Object.keys(o.dead || {}), loy:Object.assign({}, o.loy || {})}; }
+  /* v7.2: an Old Hand brings what they wore and the picks they made (b2OldHand puts them on) */
+  const gear = {}, picks = {}; mates.forEach(k => { gear[k] = Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {}); picks[k] = (((o.picks || {})[k]) || []).slice(); });
+  return {from:o.name, sid:id, road, lvl:o.lvl || 1, follow, mates, dead:Object.keys(o.dead || {}), loy:Object.assign({}, o.loy || {}), gear, picks}; }
 const dgOldHands = () => { const i = S && S.imported; if (!i || i.road !== 'empire') return []; return i.mates.filter(k => !i.follow || i.follow[k] !== false); };
 
 /* the HUD line on the map: water and the column, beside the silver (Book Two only) */
@@ -350,7 +352,11 @@ function b2LastStandEnd(){ if (!Array.isArray(S.f.b2_wallSquad)) return false; c
 const b2OldHandPick = () => { const h = dgOldHands(), i = S && S.imported; if (!h.length) return null;
   return h.slice().sort((a, b) => ((i.loy || {})[b] || 0) - ((i.loy || {})[a] || 0))[0]; };
 function b2OldHand(id){ if (!TPL[id] || S.squad.includes(id) || ['redblade', 'warlock'].some(k => S.squad.includes(k))) return false;
-  recruit(id); S.f.b2_oldHand = id; S.picks[id] ??= [];
+  S.f.b2_oldHand = id; const i = S.imported || {}; // v7.2: before recruit, so the roster counts them as the book's own bench
+  S.picks[id] = ((i.picks || {})[id] || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][id] || []).some(v => v[0] === p)));
+  if (i.loy && i.loy[id] != null) S.loy[id] = clamp(i.loy[id], -2, 3);
+  S.parked ??= {}; const g = {}; Object.entries((i.gear || {})[id] || {}).forEach(([slot, it]) => { if (!ITEMS[it]) return; if (!S.kit.includes(it)) S.kit.push(it); g[slot] = it; }); S.parked[id] = g;
+  recruit(id); if (!S.squad.includes(id)) return false;
   if (S.lvl >= 5 && !S.picks[id].includes('iron')) S.picks[id].push('iron'); if (S.lvl >= 7 && !S.picks[id].includes('keen')) S.picks[id].push('keen');
   save(); return true; }
 

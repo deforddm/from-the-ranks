@@ -220,6 +220,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
   for (const [iid, it] of Object.entries(ITEMS)) {
     if (!['weapon', 'armour', 'trinket'].includes(it.slot)) err(`item ${iid}: bad slot ${it.slot}`);
     (it.who || []).forEach(w => { if (!TPL[w]) err(`item ${iid}: who ${w} unknown`); });
+    if (typeof gearRolesApply === 'function') { gearRolesApply(); if (!it.role && !(it.who || []).length) err(`item ${iid}: no role and no signature who-list (v7.2: 38c ITEM_ROLE)`); [].concat(it.role || []).forEach(r => { if (!GEAR_TAGW[r]) err(`item ${iid}: role ${r} unknown`); }); }
     if (!it.line) warn(`item ${iid}: no description line`);
     if (typeof ART !== 'undefined' && !ART['item/' + iid]) err(`item ${iid}: no artwork (the standard: every item has a picture; Book Two's are drawn in tools/art_dg_items.py)`);
   }

@@ -102,7 +102,7 @@ const r = await page.evaluate(async () => {
   take('b4_c2_names', /feather/); out.t.feather = S.kit.includes('b4_c2_crowfeather');
   take('b4_c2_names', /Leave .*blue/i); out.t.keepLeft = S.f.b4_c2_keepLeft === 'b2_bluethread' && !S.kit.includes('b2_bluethread');
   /* the trick in a fight: the crows strike the blow again; the whetstone's first blow */
-  S.tricks = {b4_c2_crow:{who:'sathi', ch:2, left:null}}; S.gear.haddat = Object.assign({}, S.gear.haddat, {trinket:'b4_c2_milestone'}); if (!S.kit.includes('b4_c2_milestone')) S.kit.push('b4_c2_milestone');
+  S.tricks = {b4_c2_crow:{who:'sathi', ch:2, left:null}}; equip('haddat', 'b4_c2_milestone'); if (!S.kit.includes('b4_c2_milestone')) S.kit.push('b4_c2_milestone');
   startBattle('b4_c2_hill', {}); await wait(60);
   const bearer = B.units.find(u => u.id === 'sathi'), foe = B.units.find(u => u.side === 'e'); out.t.ab = trickAbs('sathi').includes('t_b4_c2_crow');
   AB.t_b4_c2_crow.run(bearer); out.t.crowOn = !!B.b4crow; let crows = 0; for (let i = 0; i < 30; i++) { bearer.hp = bearer.maxhp; const n0 = B.log.length; attack(foe, bearer); if (B.log.slice(0, B.log.length - n0 + 1).some(l => /The crows/.test(l))) crows++; }
