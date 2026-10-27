@@ -65,7 +65,7 @@ Object.assign(AB, {
 });
 const b3c7AnvilCh = who => ({t:who === 'dannet' ? '"Show me how the acolytes carried each other on the wall."' : '"Show us how the Grey Swords carry each other."', check:['wits', 16], trick:'b3_c7_anvil',
   req:()=>!S.f.b3_c7_anvilTried && !(S.tricks && S.tricks.b3_c7_anvil), fx:()=>{ S.f.b3_c7_anvilTried = 1; S.f.b3_c7_anvilBy = who; },
-  edges:id=>[id === 'greysword' && ['she was on the wall when he taught it', 3], id === 'ohl' && ['a healer knows where the pain sits', 1], id === 'brisk' && ['she has stood in front of things all her life', 1], id === 'kettle' && ['she is watching the quorls, not the hands', -1]],
+  edges:id=>[id === 'greysword' && ['she was on the wall when he taught it', 3], id === 'ohl' && ['a healer knows where the pain sits', 1], id === 'brisk' && ['she has stood in front of things all her life', 1], id === 'kettle' && ['she is watching the quorls, not the hands', -1], id === 'vell' && ['a rope man knows how to take some of a weight', 1]],
   go:'b3_c7_anvil_ok', fail:'b3_c7_anvil_miss'});
 
 /* ---- the kit: the grey mail off a Seerdomin captain (both roads), and a K'ell Hunter's blade (the mortal fight, either road) ---- */
@@ -160,7 +160,10 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'tav7', name:'Tav', kind:'tav', x:3, y:8, node:()=>'b3_c7_tav', fresh:()=>!S.f.b3_c7_tav},
         {id:'art7', name:'The standard bearer', kind:'artanthos', x:10, y:5, node:()=>'b3_c7_art', fresh:()=>!S.f.b3_c7_art},
         {id:'bb7', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:13, y:8, node:()=>'b3_c7_bb', fresh:()=>!S.f.b3_c7_bb},
-        {id:'dannet7', name:'Dannet', kind:'greysword', x:5, y:6, node:()=>'b3_c7_dannet', show:()=>b3In('greysword'), fresh:()=>b3In('greysword') && !S.f.b3_c7_dannet} ] },
+        {id:'dannet7', name:'Dannet', kind:'greysword', x:5, y:6, node:()=>'b3_c7_dannet', show:()=>b3In('greysword'), fresh:()=>b3In('greysword') && !S.f.b3_c7_dannet},
+        /* the Book One recruits, when an import brought them: Ellis facing the dark at the screen's end, Vell watching Coral's roofs */
+        {id:'ellis7', name:'Ellis', kind:'ellis', x:2, y:4, still:true, node:()=>'b3_c7_ellis_night', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eNight},
+        {id:'vell7', name:'Vell', kind:'vell', x:11, y:9, still:true, node:()=>'b3_c7_vell_night', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vNight} ] },
 
     /* 16 x 12. THE RIVER: the alliance's position on the hill outside Coral, the last morning. . churned earth  , grass  # rock  = tent  F fire  x the broken stake line at the foot of the hill */
     { id:'b3_c7_field', title:'Outside Coral · the alliance\'s hill', sub:'Morning · Brood\'s army and Whiskeyjack\'s column', hint:'Tap ground to move · tap a figure to talk · the stake line at the foot of the hill; the fire', decor:'b3_c7_field', amb:'wind',
@@ -186,7 +189,9 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'kallor7', name:'Kallor', kind:'kallor', x:3, y:1, node:()=>'b3_c7_kallor', fresh:()=>!S.f.b3_c7_kallor},
         {id:'brood7', name:'Caladan Brood', kind:'brood', x:9, y:4, node:()=>'b3_c7_brood', fresh:()=>!S.f.b3_c7_brood},
         {id:'itko7', name:'The Shield Anvil', kind:'b3_greysword', x:2, y:6, node:()=>'b3_c7_itko', fresh:()=>!S.f.b3_c7_itko},
-        {id:'herd7', name:'A Rhivi herd-boy', kind:'rhivi', x:13, y:7, node:()=>S.f.b3_c7_gullyDone ? 'b3_c7_herdboy_again' : 'b3_c7_herdboy', fresh:()=>!S.f.b3_c7_herdboy} ] },
+        {id:'herd7', name:'A Rhivi herd-boy', kind:'rhivi', x:13, y:7, node:()=>S.f.b3_c7_gullyDone ? 'b3_c7_herdboy_again' : 'b3_c7_herdboy', fresh:()=>!S.f.b3_c7_herdboy},
+        {id:'ellis7r', name:'Ellis', kind:'ellis', x:3, y:9, still:true, node:()=>'b3_c7_ellis_grass', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eGrass},
+        {id:'vell7r', name:'Vell', kind:'vell', x:11, y:8, still:true, node:()=>'b3_c7_vell_stakes', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vStakes} ] },
 
     /* 16 x 12. THE RIVER, after: the hilltop at dusk. . churned earth  , grass  # rock  = the tent where he lies  F fire  x broken stakes */
     { id:'b3_c7_hill', title:'Outside Coral · the hilltop', sub:'Dusk · after', hint:'Tap ground to move · tap a figure to talk · the tent; the fire', decor:'b3_c7_field', dark:true, amb:'dusk',
@@ -208,7 +213,9 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'hkorlat', name:'Korlat', kind:'korlat', x:9, y:3, node:()=>'b3_c7_h_korlat', fresh:()=>!S.f.b3_c7_hkorlat},
         {id:'hbearer', name:'The standard bearer', kind:'artanthos', x:12, y:5, node:()=>'b3_c7_h_bearer', fresh:()=>!S.f.b3_c7_hbearer},
         {id:'hfox', name:'Silverfox', kind:'silverfox', x:4, y:5, node:()=>'b3_c7_h_fox', fresh:()=>!S.f.b3_c7_hfox},
-        {id:'hbrood', name:'Caladan Brood', kind:'brood', x:6, y:2, node:()=>'b3_c7_h_brood', fresh:()=>!S.f.b3_c7_hbrood} ] },
+        {id:'hbrood', name:'Caladan Brood', kind:'brood', x:6, y:2, node:()=>'b3_c7_h_brood', fresh:()=>!S.f.b3_c7_hbrood},
+        {id:'hellis', name:'Ellis', kind:'ellis', x:13, y:8, still:true, node:()=>'b3_c7_ellis_dusk', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eDusk},
+        {id:'hvell', name:'Vell', kind:'vell', x:2, y:4, still:true, node:()=>'b3_c7_vell_dusk', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vDusk} ] },
 
     /* 16 x 12. Both roads: the shore below the hill, the days after. . churned earth  , grass  # rock  = the Host's lines  F fire  x the old stake line, where the barrow goes up */
     { id:'b3_c7_shore', title:'Coral · the shore', sub:'The days after', hint:'Tap ground to move · tap a figure to talk · the barrow beyond the old stakes; the fire; the Host\'s lines for the road out', decor:'b3_c7_field', amb:'lake',
@@ -254,7 +261,8 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
       npcs:[
         {id:'chur', name:'Hurlochel', kind:'hurlochel', x:3, y:5, node:()=>'b3_c7_news', show:()=>!!S.f.b3_c7_spawn, fresh:()=>!!S.f.b3_c7_spawn && !S.f.b3_c7_news},
         {id:'ctav', name:'Tav', kind:'tav', x:12, y:5, node:()=>'b3_c7_tav_found', show:()=>!!S.f.b3_c7_squareDone && b3In('brisk'), fresh:()=>!!S.f.b3_c7_squareDone && b3In('brisk') && !S.f.b3_c7_tavFound},
-        {id:'cbb', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:9, y:3, node:()=>'b3_c7_bb2', fresh:()=>!S.f.b3_c7_bb2} ] } ],
+        {id:'cbb', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:9, y:3, node:()=>'b3_c7_bb2', fresh:()=>!S.f.b3_c7_bb2},
+        {id:'cvell', name:'Vell', kind:'vell', x:13, y:6, still:true, node:()=>'b3_c7_vell_roofs', show:()=>b3In('vell') && !S.f.b3_c7_squareDone, fresh:()=>b3In('vell') && !S.f.b3_c7_vRoofs && !S.f.b3_c7_squareDone} ] } ],
 
   battles:{
     /* THE LIFT, the night before: the grey sorcery comes down on the forward trench, and the Beklites come up the slope under it. Then the captain. */
@@ -577,6 +585,119 @@ It is not sorcery. The warren does not stir. Something passes anyway, from one h
   : `He shows it, patiently, twice. ${by({sgt:'You', _:'{who}'})} cannot find where the weight is. "It will come or it will not," he says. "Sir. It came to me at a bad time. I would not wish it a better one."`,
       ch:[{t:'Let it be.', go:()=>startExplore()}]}),
 
+  /* ---- the Book One recruits, when an import brought them (Ellis, the tracker; Vell, the Guild journeyman): a night talk and a moment of
+     their trade on each road (the lift: the slope above Coral, the roofs of its streets; the river: the grass below the hill, the stakes), and a
+     word each on the hilltop at dusk. Flags: b3_c7_eNight/eSlope/eSat, vNight/vRoofs, eGrass, vStakes, eDusk, vDusk. ---- */
+  b3_c7_ellis_night:()=> S.f.b3_c7_eNight && (S.f.b3_c7_eSlopeTried || S.f.b3_c7_eSat) ? {sp:'Ellis', txt:
+`Ellis is still at the end of the screen, facing the dark. ${S.f.b3_c7_eSlope === 'ok' ? '"Middle draw," she says, without turning round, in case you had forgotten.' : '"Still three," she says, without turning round.'}`, ch:[{t:'Leave her the dark.', go:()=>startExplore()}]}
+    : {sp:'Ellis', fx:()=>{ S.f.b3_c7_eNight = 1; }, txt:
+`Ellis is at the end of the cedar screen, where it stops and the slope starts, sitting on her heels with her back to the Host and her face to the dark. She has been there since dusk. The sentries have stopped asking her for the word.
+
+"Coral's quiet," she says, without turning round. "Too quiet for a city with an army in it. They know something's up here. They don't know what." ${b3Was('c5_ellisThrough') ? `She turns her wrist over. Kettle's two lengths of fuse-cord are still knotted round it, grey with handling, from the morning she came back out of a shadow on the Lakefront. "The Bridgeburners say grey sorcery's coming down tonight." A pause. "I've been in grey. It had nothing in it. I'd like to know what's in this one before it's in me."` : `She looks down at the burned hand in its glove. "The Bridgeburners say grey sorcery's coming down tonight. Fire at the Pale. Grey at Coral." A pause. "I'd like to see one coming, for once."`}
+
+Below the forward trench the slope breaks into draws, three of them, black on black. She has been watching all three.`,
+      ch:[{t:'"Which draw will they come up?"', check:['wits', 15], req:()=>!S.f.b3_c7_eSlopeTried, fx:()=>{ S.f.b3_c7_eSlopeTried = 1; },
+            near:{t:()=>`Yes, but to be sure, ${NAME(ROLL().who || 'sgt')} has to go out past the screen on ${ROLL().who === 'sgt' || !ROLL().who ? 'your' : b3c7P(ROLL().who).hers} belly and lie an hour on the cold rock with a Pannion picket close enough to hear breathing, and comes back stiff and jumping at shadows: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
+            edges:id=>[id === 'ellis' && ['six years reading ground for the Claw', 3], id === 'sohra' && ['she reads grass, and this is only grass gone to rock', 1], id === 'tuft' && ['she is listening for the grey, not looking at the slope', -1]],
+            go:'b3_c7_ellis_slope_ok', fail:'b3_c7_ellis_slope_miss'},
+          {t:'Sit down beside her, facing the dark.', req:()=>!S.f.b3_c7_eSat, go:'b3_c7_ellis_sit'},
+          {t:'Leave her the dark.', go:()=>startExplore()}]},
+  b3_c7_ellis_slope_ok:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c7_eSlope = 'ok'; }, txt:
+`"The middle one," Ellis says. "The left's too steep for men in mail. The right's got scree on it a child would set going." She points with the gloved hand, not far, so nobody in the city could see it move. "The middle's got a path. Goats made it. Men kept it. There's a cairn halfway up, and goats don't build cairns."
+
+You take it to the legion's officer in the forward trench. He looks at you, and past you at the woman with the gloved hand sitting at the end of the screen, and then he moves two files to the mouth of the middle draw and does not argue about it, which in the legion is a kind of salute.`,
+      ch:[{t:'"Noted."', fx:()=>{ b3c7Loy('ellis', 1); }, go:()=>startExplore()}]}),
+  b3_c7_ellis_slope_miss:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c7_eSlope = 'miss'; }, txt:
+`"All three," Ellis says at last, which is what someone says who doesn't know and won't guess. "I'd want daylight. We won't get any." She turns the glove on the burned hand a quarter-turn, and back. "They'll come up whichever one we aren't watching. That's not tracking. That's just the Domin."`,
+      ch:[{t:'"Watch all three, then."', go:()=>startExplore()}]}),
+  b3_c7_ellis_sit:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c7_eSat = 1; b3c7Loy('ellis', 1); }, txt:
+`You sit down beside her, facing the dark, which is not how sergeants sit. She doesn't move over. There is room.
+
+After a while she takes the glove off and holds the burned hand out toward nothing, toward Coral, as if there were a fire there to warm it at. "The Claw teaches it," she says. "Face the dark, and the dark can't come up behind you." She puts the glove back on. "I stopped believing it at the Pale. I still do it."
+
+Below, the rings of fires round the keep burn down a little, the way fires do at that hour, everywhere, even here.`,
+      ch:[{t:'Stay until the watch changes.', go:()=>startExplore()}]}),
+
+  b3_c7_vell_night:()=> S.f.b3_c7_vNight ? {sp:'Vell', txt:
+`Vell is still on the lip of the trench with his legs over the drop, counting roofs. He has got to a number he is pleased with.`, ch:[{t:'Let him count.', go:()=>startExplore()}]}
+    : {sp:'Vell', fx:()=>{ S.f.b3_c7_vNight = 1; }, txt:
+`Vell is sitting on the lip of the trench where the screen thins, with his legs over the drop and the rope coiled in his lap, looking down at Coral. The keep. The rings of fires. The roofs, packed black and close, running all the way down to the sea.
+
+"Slate," he says, when you sit down. "Most of it. Some tile, down by the harbour. Steep pitch: they get the rain off the sea." He has plainly been working it out since the quorls set the Fourth down. "You could cross half that city without touching a street. A Guild clan would do it in a night and be home for breakfast."${b3Was('c4_vell') ? `
+
+He turns the hook over in his hands. "Somebody held a roof for me once, in Darujhistan, when I was nobody's. I keep thinking I'd like to do that back. For somebody." He looks down at the city. "Tomorrow's got a lot of roofs in it."` : ''}${S.f.b3_c4_vellRope ? ` He has two coils now. The second is the Grey Swords' rope, from the gully west of Capustan. He carries it as carefully as other men carry a letter.` : ''}`,
+      ch:[{t:'"Tomorrow, then. Pick your roof."', fx:()=>{ b3c7Loy('vell', 1); }, go:()=>startExplore()},
+          {t:'"You stay off them unless I say."', go:()=>startExplore()}]},
+  b3_c7_vell_roofs:()=> S.f.b3_c7_vRoofs ? {sp:'Vell', txt:
+`Vell is at the foot of the wall again, rope coiled, ${S.f.b3_c7_vRoofs === 'ok' ? 'rain on his face and the look of a man who has been home for a quarter of an hour.' : S.f.b3_c7_vRoofs === 'miss' ? 'slate-dust on his knees, not looking up.' : 'looking up at the eaves as if they owe him money.'}`, ch:[{t:'On.', go:()=>startExplore()}]}
+    : {sp:'Vell', txt:
+`Vell is at the foot of a house wall where the street narrows, looking up. Slate, steep, wet with the sea air, the eaves an arm's length above a broken shutter.
+
+"Give me a hundred heartbeats," he says. "From up there you'd see the square and the keep road both. Down here you see a wall." He has the hook in his hand already. He is trying very hard to look as if he does not mind either way.`,
+      ch:[{t:'"Go. Look. Come down."', check:['guile', 15], fx:()=>{ S.f.b3_c7_vRoofs = 1; },
+            near:{t:()=>`Yes, but slate in the sea air is slate in the sea air. A tile goes, and the street hears it, and a Beklite archer two roofs over puts an arrow into the eaves a hand from ${NAME(ROLL().who || 'sgt')}'s fingers. It walks back down the wall with ${ROLL().who === 'sgt' || !ROLL().who ? 'you' : b3c7P(ROLL().who).her}: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
+            edges:id=>[id === 'vell' && ['the Guild had him on roofs before it taught him his letters', 3], id === 'ellis' && ['once she is up, she knows where to look', 1], id === 'brisk' && ['she climbs like a shield', -1]],
+            go:'b3_c7_vell_roofs_ok', fail:'b3_c7_vell_roofs_miss'},
+          {t:'"No. We stay together."', fx:()=>{ S.f.b3_c7_vRoofs = 'stayed'; }, go:()=>startExplore()}]},
+  b3_c7_vell_roofs_ok:()=>({sp:'Vell', fx:()=>{ S.f.b3_c7_vRoofs = 'ok'; b3c7Loy('vell', 1); }, txt:
+`${by({vell:'Vell is up the wall and over the eaves before the count gets to forty, and gone along the ridge like a cat along a fence.', sgt:'You go up the wall on Vell\'s line, badly, and he goes up beside you without one, and somehow you are both on the ridge.', _:'{who} goes up the wall on Vell\'s line, and Vell goes up beside without one, and somehow they are both on the ridge.'})} From up there Coral lies open: the square, black and empty; the keep road climbing beyond it; and, in the west street, coming fast and making no sound, something too tall to be a man.
+
+"West street," Vell says, when he is down. He is breathing hard and grinning, and then he stops grinning. "Alone. Fast. It's not coming for us. It's going up the road." He coils the line. "Now you know. That's all a roof is for."`,
+      ch:[{t:'"Good work."', go:()=>startExplore()}]}),
+  b3_c7_vell_roofs_miss:()=>({sp:'Vell', fx:()=>{ S.f.b3_c7_vRoofs = 'miss'; }, txt:
+`The slate is wet, and old, and not laid the way Darujhistan lays it. ${by({vell:'Vell gets as far as the eaves', sgt:'You get as far as the eaves', _:'{who} gets as far as the eaves'})}, and a whole course of tiles slides out from under, and comes down into the street in pieces, very loudly.
+
+Nothing comes. That is worse. ${b3In('vell') ? '"Bad roof," Vell says, picking slate out of his sleeve. "Bad roofs, all of them. Who builds a roof like that." He is angrier than you have ever seen him, and all of it is at himself.' : ''}`,
+      ch:[{t:'On, then. Quietly.', go:()=>startExplore()}]}),
+
+  b3_c7_ellis_grass:()=> S.f.b3_c7_eGrass ? {sp:'Ellis', txt:
+`Ellis is at the foot of the hill where the stakes give out, standing now, bow strung. ${S.f.b3_c7_eGrass === 'ok' ? '"The dry one," she says, as you pass, in case you had forgotten.' : 'She is still reading the grass, and still not getting an answer.'}`, ch:[{t:'On.', go:()=>startExplore()}]}
+    : {sp:'Ellis', txt:
+`Ellis is down at the foot of the hill where the stakes give out, on one knee in the long grass with her bare hand flat beside something, not touching. The glove is tucked in her belt.
+
+"Somebody came up this way in the night," she says. "Not many. Lying down a lot." She looks along the gullies running back toward the city: four of them that you can see, more that you can't. "I could tell you which one they'll use when they come back. Or I could tell you I could, and be wrong."`,
+      ch:[{t:'"Tell me. And be right."', check:['wits', 15], fx:()=>{ S.f.b3_c7_eGrass = 1; },
+            near:{t:()=>`Yes, but walking the gullies to be sure takes the best of the morning, and ${NAME(ROLL().who || 'sgt')} comes back with grass-cuts to the knee and the sun in ${ROLL().who === 'sgt' || !ROLL().who ? 'your' : b3c7P(ROLL().who).hers} eyes: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
+            edges:id=>[id === 'ellis' && ['six years reading ground for the Claw', 3], id === 'sohra' && ['it is Rhivi grass, and she grew up in it', 2], id === 'vell' && ['he keeps looking at the city\'s roofs instead', -1]],
+            go:'b3_c7_ellis_grass_ok', fail:'b3_c7_ellis_grass_miss'},
+          {t:'"Leave it. Whiskeyjack will give us a stretch."', go:()=>startExplore()}]},
+  b3_c7_ellis_grass_ok:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c7_eGrass = 'ok'; b3c7Loy('ellis', 1); }, txt:
+`"The dry one," Ellis says. "That one, ending under the stakes, where the Barghast have been taking firewood. Nobody's mended it. They'll have seen." She stands, and pulls the glove on over the burned hand, finger by finger. "They came close last night to look. They'll come back to the place they looked at. Everybody does."
+
+${b3In('sohra') ? 'Sohra, beside her, looks at the dry gully a long while and then nods, once, which from a Rhivi about grass is a signature. ' : ''}When the Fourth is given its stretch of the stakes, you will find out whether it is that one.`,
+      ch:[{t:'"Noted."', go:()=>startExplore()}]}),
+  b3_c7_ellis_grass_miss:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c7_eGrass = 'miss'; }, txt:
+`"Any of them," Ellis says at last, and stands, and pulls the glove on. "Too many armies have walked this ground. It's all saying something. None of it's saying it to me." She sounds, for Ellis, almost offended.`,
+      ch:[{t:'"Then we watch them all."', go:()=>startExplore()}]}),
+
+  b3_c7_vell_stakes:()=> S.f.b3_c7_vStakes ? {sp:'Vell', txt:
+`${S.f.b3_c7_vStakes === 'lashed' ? 'The Fourth\'s stretch of stakes is lashed the Guild way now, a knot to a stake. Vell walks it once more, tugging each one, and finds nothing to fix, and looks almost disappointed.' : 'Vell has the coil back over his shoulder, and is looking at the broken stakes like a carpenter at somebody else\'s table.'}`, ch:[{t:'On.', go:()=>startExplore()}]}
+    : {sp:'Vell', txt:
+`Vell is at the stake line with a coil over his shoulder, going from stake to stake where the Barghast have pulled some up for firewood, and lashing the broken ones to the whole ones with short ends of rope, quick and tight, a knot to a stake.
+
+"They'll come through where it's broken," he says. "Everybody does. So you make it not broken." He pulls a lashing tight with his teeth. "Won't stop anything big. It'll make it slow down to look, and things that slow down to look get shot." He has done about thirty paces of it. There are three hundred left.`,
+      ch:[{t:'"Show the squad. We\'ll do the Fourth\'s stretch together."', fx:()=>{ S.f.b3_c7_vStakes = 'lashed'; b3c7Loy('vell', 1); }, go:'b3_c7_vell_stakes'},
+          {t:'"Save the rope. You\'ll want it."', fx:()=>{ S.f.b3_c7_vStakes = 'saved'; }, go:()=>startExplore()}]},
+
+  b3_c7_ellis_dusk:()=> S.f.b3_c7_eDusk ? {sp:'Ellis', txt:
+`Ellis is still at the crest's edge with the bow across her knees, unstrung, facing out.`, ch:[{t:'Leave her be.', go:()=>startExplore()}]}
+    : {sp:'Ellis', fx:()=>{ S.f.b3_c7_eDusk = 1; }, txt:
+`Ellis is sitting at the eastern edge of the crest in the near-dark, apart, facing out over the plain. Her bow is across her knees, unstrung. You have seen her unstring it perhaps three times since the Pale.
+
+"Three hundred and twelve," she says, when you sit. "From the stakes to the tent. I counted it running." She doesn't turn round. "I count things. It's what I'm for. It doesn't make them closer."${b3Was('c5_ellisThrough') ? ` She has the fuse-cord on her wrist between finger and thumb, turning it, as other people turn a ring.` : ''}
+
+Down on the plain the gold is still lying over the ground where the Hunters fell, and nothing moves on it.`,
+      ch:[{t:'"Noted."', fx:()=>{ b3c7Loy('ellis', 1); }, go:()=>startExplore()},
+          {t:'"No count would have got there. Not one."', go:()=>startExplore()}]},
+  b3_c7_vell_dusk:()=> S.f.b3_c7_vDusk ? {sp:'Vell', txt:
+`Vell is coiling the rope, and uncoiling it, and coiling it again.`, ch:[{t:'Leave him to it.', go:()=>startExplore()}]}
+    : {sp:'Vell', fx:()=>{ S.f.b3_c7_vDusk = 1; }, txt:
+`Vell is sitting on a rock on the western side of the crest with the rope laid out in the grass in front of him, the whole length of it. A rope man thinks in lengths.
+
+"I did the sum," he says. "From the stakes to the top. There isn't a line long enough. There isn't an anchor. There's nothing to throw at. It's a hill." He starts to coil it, slowly, a turn at a time. "In Darujhistan there's always a way across. Somebody put it there for you a hundred years ago: a chimney, a gutter, a beam. That's what a city is." He finishes the coil. "Out here nobody put anything anywhere."`,
+      ch:[{t:'"Coil it anyway. We\'ll want it."', fx:()=>{ b3c7Loy('vell', 1); }, go:()=>startExplore()},
+          {t:'"Get some sleep."', go:()=>startExplore()}]},
+
   /* ---- the fire under the screen: rest, and the Alliance ---- */
   b3_c7_f_fire:()=>({sp:'The shielded fire', txt:
 `A fire in a pit under a slab, banked so low it gives heat and no light. The squad sits round it close.
@@ -617,7 +738,11 @@ Under the grey, coming up the cut in the dark, there are Beklites.`,
 
 The Seerdomin captain is lying under the cedar screen in his grey mail, which is very fine, and very cold, and fits ${b3In('brisk') ? 'Brisk' : 'somebody in the squad'} better than it fitted him. The question of taking it does not come up. Somebody takes it.
 
-${b3In('ohl') ? `Ohl goes down the line with his kit, not reaching into Denul at all, using needles and gut and complaint, and when he comes back his hands are shaking. "Fourteen of the legion," he says. "I'll want the names." He gets them.` : `The names of the legion's dead get taken down the line, one by one.`} Down the mountain, in the grey light, the Bridgeburners are already gone, unseen, in the dark. The sky over the keep is full of quorls.`,
+${b3In('ohl') ? `Ohl goes down the line with his kit, not reaching into Denul at all, using needles and gut and complaint, and when he comes back his hands are shaking. "Fourteen of the legion," he says. "I'll want the names." He gets them.` : `The names of the legion's dead get taken down the line, one by one.`} ${b3In('ellis') && S.f.b3_c7_eSlope === 'ok' ? `
+
+They came up the middle draw, past the cairn, where the legion had two more files than it would have had. Ellis has let it pass without a word. The legion's officer has mentioned it twice.
+
+` : ' '}Down the mountain, in the grey light, the Bridgeburners are already gone, unseen, in the dark. The sky over the keep is full of quorls.`,
       ch:[{t:'Down into Coral.', fx:()=>{ b3c7List(1); }, go:'b3_c7_descend'},
           {t:'Not yet. A moment on the line.', fx:()=>{ b3c7List(1); }, go:()=>startExplore()}]}),
   b3_c7_descend:()=>({sp:'Down the mountain', scene:'b3_c7_coral', txt:
@@ -648,7 +773,7 @@ It comes into the square from the west street. Taller than a horse, grey, two-le
 
 Above it a quorl is coming down, low, its rider standing in the stirrups with a munition. To the right a side street runs off toward the Beklites' flank, where they are massing to take the square when the Hunter has cleared it.
 
-${b3In('brisk') ? '"If it goes up that street," Brisk says, "it\'s in their backs." She is already looking at it the way she looks at anything she means to stand in front of.' : 'If it goes up that street it is in the Bridgeburners\' backs.'}${b3In('vell') ? (S.f.b3_c4_hunted ? ' Vell has the hook off his shoulder. "We roped one, west of Capustan, with the Grey Swords," he says. He looks round the square. "Not here. Not without a wall at my back."' : ' Vell weighs the hook, and looks at the square, and puts the hook back.') : ''} Whatever falls in front of that thing, everybody here knows, is not going to get up again.`,
+${b3In('brisk') ? '"If it goes up that street," Brisk says, "it\'s in their backs." She is already looking at it the way she looks at anything she means to stand in front of.' : 'If it goes up that street it is in the Bridgeburners\' backs.'}${b3In('vell') ? (S.f.b3_c4_hunted ? ' Vell has the hook off his shoulder. "We roped one, west of Capustan, with the Grey Swords," he says. He looks round the square. "Not here. Not without a wall at my back."' : ' Vell weighs the hook, and looks at the square, and puts the hook back.') : ''}${b3In('vell') && S.f.b3_c7_vRoofs === 'ok' ? ' He saw it from the roof before anyone: west street, alone, fast. The Fourth has the hundred heartbeats he bought it.' : ''}${b3In('ellis') ? ' Ellis has an arrow on the string and has not drawn. "Eyes," she says. "If it has eyes, it\'s the eyes."' : ''} Whatever falls in front of that thing, everybody here knows, is not going to get up again.`,
       html:allyHTML('Coral · the square'),
       ch:[{t:'"Here. We hold the square." (Whoever falls here stays down.)', fx:()=>{ S.f.b3_c7_square = 'hunt'; }, go:()=>startBattle('b3_c7_hunt', {})},
           {t:'Kettle puts the cusser under it as it comes.', tag:'uses 1 cusser · whoever falls stays down', req:()=>b3In('kettle') && S.inv.cusser > 0, fx:()=>{ S.inv.cusser--; S.f.b3_c7_square = 'hunt'; S.f.b3_c7_maud = 1; }, go:()=>startBattle('b3_c7_hunt', {pre:`Kettle says "${b3c7Maud()}" very quietly and rolls the cusser out under its feet.`})},
@@ -862,7 +987,7 @@ ${b3In('tuft') ? 'Tuft has not come within twenty paces of him. She is watching 
       ch:[{t:'Go and stand somewhere.', go:()=>startExplore()},
           {t:'Hold his eye a moment longer than he likes.', check:['might', 15], fx:()=>{ S.f.b3_c7_kallorStare = 1; },
             near:{t:()=>`Yes, but holding it costs ${NAME(ROLL().who || 'sgt')} something. For the length of that look you could see how old he is, and what he has outlived, and it walks back down the hill with you: ${S.f.b3_c7_nearDread ? `dread +${S.f.b3_c7_nearDread}` : 'the Obelisk takes it, and dread holds'}.`, fx:()=>{ b3c7Dread(1); }},
-            edges:id=>[id === 'brisk' && ['she has stared down worse', 1], id === 'tuft' && ['she will not look at him', -2]], go:'b3_c7_kallor_held', fail:'b3_c7_kallor_lost'}]}),
+            edges:id=>[id === 'brisk' && ['she has stared down worse', 1], id === 'ellis' && ['she has stood where she can see all of him', 1], id === 'tuft' && ['she will not look at him', -2]], go:'b3_c7_kallor_held', fail:'b3_c7_kallor_lost'}]}),
   b3_c7_kallor_held:()=>({sp:'Kallor', txt:
 `You hold it. It is like holding a coal. Slowly something in his face becomes very slightly interested, which is worse than the contempt.
 
@@ -923,7 +1048,7 @@ Vell is showing a Rhivi child a Guild knot. The child already knows a better one
     : !S.f.b3_c7_probeDone ? {sp:'The stake line', fx:()=>{ S.f.b3_c7_probeSeen = 1; }, txt:
 `The Fourth's stretch: forty paces of broken stakes where the hill drops into a dry gully, the long grass going away beyond it toward the city.
 
-The grass is moving against the wind. ${b3In('sohra') ? 'Sohra has an arrow on the string before anyone else has seen it. "Men," she says. "In the grass. Not many. Testing."' : b3In('ellis') ? 'Ellis has seen it before anyone else. "Men," she says, flat. "In the grass. Not many. Testing." She has an arrow out already.' : 'Men, in the grass, low, not many. A probe, testing the line.'} A Seerdomin's grey shape rises among them, very calm, and points at the gap in the stakes where the Fourth are.`,
+The grass is moving against the wind. ${b3In('sohra') ? 'Sohra has an arrow on the string before anyone else has seen it. "Men," she says. "In the grass. Not many. Testing."' : b3In('ellis') ? 'Ellis has seen it before anyone else. "Men," she says, flat. "In the grass. Not many. Testing." She has an arrow out already.' : 'Men, in the grass, low, not many. A probe, testing the line.'} A Seerdomin's grey shape rises among them, very calm, and points at the gap in the stakes where the Fourth are.${b3In('ellis') && S.f.b3_c7_eGrass === 'ok' ? ' They are coming up the dry gully. Ellis had it at dawn, and has had the bow strung ever since.' : ''}${b3In('vell') && S.f.b3_c7_vStakes === 'lashed' ? ' The gap is narrower than it was this morning, a knot to a stake, and the grey shape looks at the lashings a breath longer than it means to.' : ''}`,
       ch:[{t:'"Hold the line."', go:()=>startBattle('b3_c7_probe', {})},
           {t:'Kettle rolls a sharper into the grass ahead of them.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c7_probe', {pre:`Kettle bowls a sharper underarm into the long grass and puts her fingers in her ears.`})},
           {t:'Not yet. A moment.', go:()=>startExplore()}]}
@@ -939,7 +1064,9 @@ It cannot hold all of them. On the Fourth's stretch, Hunters are coming round th
 
 "The children," Sohra says. Only that. She is already facing the herd lines.` : ''}${b3In('greysword') ? `
 
-Along the stakes to the left the Grey Swords are forming a shield line on the gap, too few for it. Dannet looks at them, and then at you, and waits for the order like a soldier.` : ''}`,
+Along the stakes to the left the Grey Swords are forming a shield line on the gap, too few for it. Dannet looks at them, and then at you, and waits for the order like a soldier.` : ''}${b3In('ellis') ? `
+
+Ellis is counting them. She stops. "Too many to count," she says, and you have never heard her say it before.` : ''}${b3In('vell') ? `${b3In('ellis') ? ' ' : '\n\n'}Vell has the hook in one hand and the coil in the other, looking at the stakes, at the gap, at the Grey Swords' shield line. "Here's a wall at my back," he says. "Finally."` : ''}`,
       html:allyHTML('Outside Coral · noon'),
       ch:[{t:'"The stakes. Here." (Whoever falls here stays down.)', fx:()=>{ S.f.b3_c7_hunters = 'stakes'; }, go:()=>startBattle('b3_c7_stakes', {})},
           {t:'Kettle puts the cusser in the gap as the first comes through.', tag:'uses 1 cusser · whoever falls stays down', req:()=>b3In('kettle') && S.inv.cusser > 0, fx:()=>{ S.inv.cusser--; S.f.b3_c7_hunters = 'stakes'; S.f.b3_c7_maud = 1; }, go:()=>startBattle('b3_c7_stakes', {pre:`Kettle says "${b3c7Maud()}" very quietly and rolls the cusser into the gap in the stakes.`})},
@@ -958,7 +1085,7 @@ Out on the plain, toward the city, the haze is moving in a way haze does not.`,
 
 ${fell.length ? `${b3c7And(fell)} ${fell.length > 1 ? 'are' : 'is'} lying there too, and ${fell.length > 1 ? 'are' : 'is'} not getting up. You said *here*. Everyone knew what it meant. No word about it now; there will be time for that, and there will never be enough.${b3In('ohl') ? ' Ohl kneels, and takes out the list, and writes, there, in the grass, with his hand shaking.' : ''}` : `Everyone is still breathing. You count them, out loud, in the middle of a battle, and nobody laughs.`}
 
-${S.f.b3_c7_maud && b3In('kettle') ? 'Kettle is sitting in the grass with the empty satchel. "That was what she was for," she says. ' : ''}One of the squad has picked up a broken blade-arm off the first one. It was never forged. It has not been put down since.${b3In('greysword') ? ' Dannet is leaning on her shield among the Grey Swords who came along the stakes to the Fourth\'s gap, and one of them has a hand on her shoulder.' : ''}
+${S.f.b3_c7_maud && b3In('kettle') ? 'Kettle is sitting in the grass with the empty satchel. "That was what she was for," she says. ' : ''}One of the squad has picked up a broken blade-arm off the first one. It was never forged. It has not been put down since.${b3In('greysword') ? ' Dannet is leaning on her shield among the Grey Swords who came along the stakes to the Fourth\'s gap, and one of them has a hand on her shoulder.' : ''}${b3In('vell') && S.f.b3_c7_vStakes === 'lashed' ? ' Vell is sitting against a stake he lashed this morning. The lashing held long enough for the first one to slow down and look. He is looking at it as if it owes him money.' : ''}${b3In('ellis') ? ' Ellis walks the gap once, end to end, reading it, and comes back, and gives you the number of the dead in it without being asked.' : ''}
 
 Then somebody on the hill screams, and it is not a soldier's scream.`,
       ch:[{t:'Look up the hill.', go:'b3_c7_r_hill'}]}; },
@@ -1252,18 +1379,18 @@ The Fourth has to go somewhere. It is your call. It always was.`,
 `The Host, then. Dujek's, whatever the proclamations end up calling it, going where it is sent, which by every rumour on the shore is Seven Cities and the year after this one.
 
 ${b3In('ohl') ? 'Ohl looks up when you say it. Seven Cities is his country. "Ehrlitan," he says, and nothing else, and it is enough. ' : ''}${b3In('kettle') ? 'Kettle looks at the quorl roosts down the shore. "They\'ll be coming," she says. "The Moranth. They always come." ' : ''}${b3In('brisk') ? 'Brisk looks at the Fourth Regiment\'s lines, where Tav is. "Same army," she says. That is all she needs. ' : ''}${b3In('sohra') ? 'Sohra watches the herds going inland without her, and then turns her back on them. "A long way from the grass," she says. "I said I would watch the Malazans. I did not say where." ' : ''}${b3In('greysword') ? 'Dannet looks at the Grey Swords\' camp by the barrow. "I am lent," she says. "No one has asked for me back." ' : ''}${b3In('ellis') ? 'Ellis looks along the coast road. "More roads," she says. From her it might be approval. ' : ''}${b3In('vell') ? 'Vell says, "Seven Cities means ships. Ships have rigging." He has plainly been waiting a long time to say it. ' : ''}`,
-      ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'host'; b3c7Loy('ohl', 1); b3c7Loy('brisk', 1); }, go:'b3_c7_end'},
+      ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'host'; b3c7Loy('ohl', 1); b3c7Loy('brisk', 1); b3c7Loy('vell', 1); }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_road_daru:()=>({sp:'Darujhistan', txt:
 `Darujhistan, then. The long way back over the Domin and the plain to the city of blue fire on its lake, where nobody reads the Empire's ledgers and Kruppe has already, somehow, arranged everything. Not a bar of your own; not anybody else's either. The Phoenix has a door that needs standing in, and the Fourth know what a door is for.
 
 ${b3In('tuft') ? 'Tuft looks west. "It\'s where she was born," she says. "The second time." ' : ''}${b3In('kettle') ? 'Kettle frowns. "No Moranth quartermaster in Darujhistan," she says. Then: "There\'s an alchemist." ' : ''}${b3In('sohra') ? 'Sohra says, "A city," the way you would say *a hole*. Then she shrugs. "The herd goes where the herd goes." ' : ''}${b3In('greysword') ? 'Dannet says the long way goes by Capustan, and that she will want an hour there, at the wall, and does not say which part of it. ' : ''}${b3In('vell') ? 'Vell has gone very still. "Home," he says, and then, more carefully, "the city." Whatever the Guild wrote against his name is still written there. He looks, for a moment, about fifteen. ' : ''}${b3In('ellis') ? 'Ellis says, "The Phoenix," and nothing after it, which is a whole speech. ' : ''}`,
-      ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'daru'; b3c7Loy('tuft', 1); b3c7Loy('kettle', -1); }, go:'b3_c7_end'},
+      ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'daru'; b3c7Loy('tuft', 1); b3c7Loy('kettle', -1); b3c7Loy('ellis', 1); }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_road_stand:()=>({sp:'Stood down', txt:
 `Stood down, then. There is no form for it, in an army the proclamations say is outlawed. You will say the words anyway, on the shore, and they will go: each to their own road, wherever it leads, and the Fourth will be a thing that happened, the way Coral happened.
 
-${b3c7Mates().length ? `${b3c7Mates().length > 1 ? 'They look at each other' : `${NAME(b3c7Mates()[0])} looks at you`}. There is no argument. There is no yes, either.` : 'There is nobody left to stand down but you.'}`,
+${b3c7Mates().length ? `${b3c7Mates().length > 1 ? 'They look at each other' : `${NAME(b3c7Mates()[0])} looks at you`}. There is no argument. There is no yes, either.${b3In('ellis') ? ' Ellis looks down the coast road, and back at you, and down the coast road again, which is the longest she has ever taken over anything.' : ''}${b3In('vell') ? ' Vell says, "Stood down. Is that the same as off?" The answer is yes, and he can see it in your face, and he coils the rope very slowly.' : ''}` : 'There is nobody left to stand down but you.'}`,
       ch:[{t:'This road.', fx:()=>{ S.f.b3_c7_key = 'standdown'; }, go:'b3_c7_end'},
           {t:'Not yet.', go:()=>startExplore()}]}),
   b3_c7_end:()=>{ const k = ['host', 'daru', 'standdown'].includes(S.f.b3_c7_key) ? S.f.b3_c7_key : 'host';
@@ -1362,11 +1489,14 @@ B3FIN7.fate = (id, key) => {
     B3FIN7.loy('greysword', `"Shield up, Sergeant," she says. "Not for you. For me. I like to know where it is."`, `She was lent to the Malazans. She has made it plain she was lent, and nothing more.`, `She says *sir* to you now, the way he did. To everyone. She is learning.`)]);
   if (id === 'ellis') return add('Still looking', [
     `Ellis looked at every face that came out of Coral and down the hill. Not there. She is still looking, down every road that leads anywhere but where the Fourth is going, and she is still with the Fourth. She would like both of those noted.`,
-    key === 'standdown' ? `She rides, when the Fourth stands down. The Fourth does not ask where.` : key === 'daru' ? `In Darujhistan she takes the post across the street from the Phoenix's door, which is not the same as standing in it, and counts everyone who goes in, and everyone who comes out, and the numbers always match.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`,
+    key === 'standdown' ? `She rides, when the Fourth stands down, down the coast road, alone, with the bow strung. The Fourth does not ask where. She looked back once, at the top of the first rise, and counted, and the Fourth saw her do it.` : key === 'daru' ? `In Darujhistan she takes the post across the street from the Phoenix's door, which is not the same as standing in it, and counts everyone who goes in, and everyone who comes out, and the numbers always match.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`,
+    S.f.b3_c7_eSlope === 'ok' ? `The legion that held the forward trench above Coral tells a story about a woman with a gloved hand who named the draw before the grey came down. They have her name wrong. She has not corrected them.` : S.f.b3_c7_eGrass === 'ok' ? `On the last morning she named the dry gully at dawn, and the probe came up it before noon. She has never brought it up. The Fourth has, at every fire since.` : S.f.b3_c7_eDusk ? `Three hundred and twelve paces, from the stakes to the tent. She counted it running, and she has it still, the way she has every number. It does not get smaller.` : '',
+    b3Was('c5_ellisThrough') ? `Kettle's two lengths of fuse-cord are still knotted round her wrist, from the morning she came back out of the grey. ${b3In('kettle') ? 'Kettle has stopped asking for them back.' : 'No one asks for them back.'}` : '',
     B3FIN7.loy('ellis', `She counts you first now, at every halt, before the horses. She has never said so. Kettle told you.`, `She reports to you in one sentence, always the right one, and never a second.`, `"Counted," she says at every halt, and you know it means you as well.`)]);
   if (id === 'vell') return add('Sky', [
     `Vell crossed half a continent with nothing to string a line between, and found he liked the sky. Don't tell the Guild.`,
-    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered.` : key === 'standdown' ? `When the Fourth stands down he goes wherever there is sky, with a coil of rope and a Guild knot nobody else in the Host can tie, and says he will write. He is the only one of them who does.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`,
+    key === 'daru' ? `In Darujhistan he goes back up on the roofs, once, to look, and comes down again, and says the roofs are smaller than he remembered. Whatever the Guild wrote against his name, it has not come to collect. He has decided not to go and ask.` : key === 'standdown' ? `When the Fourth stands down he goes wherever there is sky, with a coil of rope and a Guild knot nobody else in the Host can tie, and says he will write. He is the only one of them who does.` : `He goes where the Fourth goes, with a coil of rope he has not used since Pale, and looks up a great deal.`,
+    S.f.b3_c7_vRoofs === 'ok' ? `He went up a wall in Coral in the sea air, the morning of the square, and saw it coming down the west street before anyone, and came down to say so. Somebody held a roof for him once. He has decided that makes them square.` : S.f.b3_c7_vStakes === 'lashed' ? `He lashed the Fourth's stretch of stakes the Guild way, the last morning, a knot to a stake, and the gap held. He says it was the Fourth that held it. He checks the knots in his head some nights anyway.` : S.f.b3_c7_vDusk ? `He did the sum on the hill: no line long enough, nothing to throw at. He has stopped doing it. He has not stopped coiling the rope at dusk.` : '',
     `${S.f.b3_c7_barrow ? 'He left a length of that rope on the Shield Anvil\'s barrow, tied so it holds. ' : ''}He still asks after the names of the two marines on the hill, wherever he stops. Somebody always knows, he says. No one has, yet.`,
     B3FIN7.loy('vell', `"Off is the hard part," he says, when anyone asks how the Fourth came through it. "The sergeant's good at off." From a rope man there is nothing higher.`, `He keeps his rope coiled and his thoughts with it, and goes up on his own afterwards, to be somewhere you are not.`, `He still checks your knots when he thinks you are not looking. You still let him.`)]);
   return {title:TPL[id] ? TPL[id].role : '', txt:TPL[id] ? TPL[id].quest : ''};
