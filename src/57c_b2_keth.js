@@ -94,12 +94,11 @@ const b2AllyOff = id => !!(S && S.book === 'dg' && S.f && TPL[id] && !b2In(id) &
 const b2SwapOpen = () => !!(S && S.book === 'dg' && ((S.chapter >= 2 && S.chapter <= 5) || (S.chapter === 6 && !S.f.b2_silverDone) || (S.chapter === 7 && !b2Ph7())));
 const B2_HOME = {redblade:'what is left of the Red Blades\' file', warlock:'the Foolish Dog\'s fires'};
 function b2SwapIn(id){ if (!TPL[id] || b2In(id)) return;
-  const out = b2Ally();
-  if (out) { S.f.b2_allyGear ??= {}; S.f.b2_allyGear[out] = Object.assign({}, S.gear[out] || {}); S.squad = S.squad.filter(x => x !== out); S.gear[out] = {};
-    note(`${NAME(out)} goes back to ${B2_HOME[out]}, near the squad's stretch. Ask at any fire.`); }
-  S.f[B2_DONE[id]] = 1; recruit(id);
-  Object.entries(((S.f.b2_allyGear || {})[id]) || {}).forEach(([slot, it]) => { if (ITEMS[it] && S.kit.includes(it) && !SQUAD().some(w => Object.values(S.gear[w] || {}).includes(it))) S.gear[id][slot] = it; });
-  save(); }
+  /* v7.2: through the roster (38c): room in the six, and nobody goes back; otherwise the recruit who walks goes back to their people */
+  S.f[B2_DONE[id]] = 1;
+  if (rosterRoom() > 0) { S.camp = [...(S.camp || []).filter(x => x !== id), id]; rosterIn(id); return; }
+  S.camp = [...(S.camp || []).filter(x => x !== id), id]; const out = b2Ally();
+  if (!out || !rosterSwap(out, id)) note(`No room in the squad: ${NAME(id)} waits with ${B2_HOME[id]}. The roster at any fire can bring him in.`); }
 
 /* where each chapter keeps them: [area, the tile for whichever recruit is with the squad (Ramin's own talk tile), Ramin's fire, Keth's fire] */
 const B2_POSTS = [[3, 'b2_east', [6, 6], [4, 6], [8, 6]], [4, 'b2_carriages', [9, 9], [7, 7], [11, 8]], [5, 'b2_vforest', [13, 8], [11, 7], [13, 6]],

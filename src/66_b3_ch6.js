@@ -505,8 +505,8 @@ Tuft has stopped walking. She stands quite still, the way she always does near h
 
 ${b3In('kettle') ? `Kettle counts the satchel by feel. "${c6Count()}," she says. "Same as this morning." She sounds, for the first time in a month, as if she'd like it not to be.` : 'The satchel is where it always is.'}${b3In('greysword') ? ` Dannet has the pot of grey paint open on her knee and is not painting, only looking at the wolf.` : ''}${b3In('ellis') ? ` Ellis sits facing east, toward the horse lines, with the gloved hand in her lap.` : ''}${b3In('vell') ? ` Vell lies on his back watching the sky over the field, as if something might go across it. Twice tonight, something does.` : ''}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords tonight, three lines over, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is at the Rhivi fires tonight, if the Fourth wants her.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_rest, fx:()=>{ S.f.b3_c6_rest = 1; b3Rest('The Fourth sleeps in its boots by a banked fire, the way the Seventh sleeps tonight. Wounds close, mostly.'); }, go:'b3_c6_rested'},
-        {t:'Send for Dannet.', req:()=>b3Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
-        {t:'Send for Sohra.', req:()=>b3Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
+        {t:'Send for Dannet.', req:()=>b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
+        {t:'Send for Sohra.', req:()=>b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b3_c6_rested:()=>({sp:'The Fourth\'s fire', txt:
 `You sleep, or something near it. Twice in the night the sound of sails filling comes from the east, a long way off, and twice you are awake before it stops.${b3In('ohl') ? ` Ohl does not sleep at all. In the morning he says he did.` : ''}`,
@@ -1149,8 +1149,8 @@ ${c6Told() === 'later' ? `You told somebody you would answer them at the Maurik.
   b3_c6_bank_fire:()=> c6Told() === 'later' && !S.f.b3_c6_riverAsk ? DLG.b3_c6_river_ask() : ({sp:'The Fourth\'s fire', txt:
 `The Fourth's fire, on the bank above the slips, built big, because the order on this road is big fires, three to a squad. You sit by one of them. The other two burn for nobody, very convincingly.${b3In('kettle') ? ` Kettle counts the satchel by feel. "${c6Count()}," she says.` : ''}${b3Waiting('greysword') ? ` Dannet is with the Grey Swords' few who came on the road, further up the bank, if the Fourth wants her.` : ''}${b3Waiting('sohra') ? ` Sohra is with the Rhivi riders who stayed by the column, if the Fourth wants her.` : ''}`,
     ch:[{t:'Rest a while.', req:()=>!S.f.b3_c6_mrest, fx:()=>{ S.f.b3_c6_mrest = 1; b3Rest('The Fourth sleeps by a fire meant for three squads, warm for once all the way through.'); }, go:'b3_c6_bank_rested'},
-        {t:'Send for Dannet.', req:()=>b3Waiting('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
-        {t:'Send for Sohra.', req:()=>b3Waiting('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
+        {t:'Send for Dannet.', req:()=>b3CanSend('greysword'), fx:()=>{ b3SwapIn('greysword'); }, go:'b3_c6_swap'},
+        {t:'Send for Sohra.', req:()=>b3CanSend('sohra'), fx:()=>{ b3SwapIn('sohra'); }, go:'b3_c6_swap'},
         {t:'Leave it.', go:()=>startExplore()}]}),
   b3_c6_bank_rested:()=>({sp:'The Fourth\'s fire', txt:`You sleep to the sound of adzes, which the wrights do not stop for anything, and wake to the sound of the White Face singing, which nobody can stop either.`,
     ch:[{t:'Up.', go:()=>startExplore()}]}),

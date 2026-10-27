@@ -249,8 +249,8 @@ const heldDowns = id => (S && S.f && S.f.holdDowns && S.f.holdDowns[id]) || 0;
 const avgDmg = d => d ? d[0] * (d[1] + 1) / 2 + (d[2] || 0) : 0;
 /* how much a piece of gear is worth on this squadmate: armour for the front, range for the ranged, a stat trinket on whoever rolls that stat */
 function gearValue(id, g){
-  const it = ITEMS[g], t = TPL[id]; if (!it || !t || (it.who && !it.who.includes(id))) return -1;
-  const ranged = t.rng > 1, front = ['brisk', 'sgt', 'haddat', 'redblade', 'hessa', 'darrut'].includes(id);
+  const it = ITEMS[g], t = TPL[id]; if (!it || !t || !canWear(id, g)) return -1; // v7.2: by role (38c), not by name
+  const ranged = t.rng > 1, front = ['shield', 'mail'].some(r => rolesOf(id).includes(r)); // the front line: whoever takes a shield or mail (v7.2: Dannet, Orvas, Rasp and the sappers too)
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
   if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
@@ -259,7 +259,7 @@ function gearValue(id, g){
 /* a new piece goes to whoever it suits best among those with that slot empty */
 function placeGear(g){
   const it = ITEMS[g]; if (!it) return null;
-  const who = (it.who || SQUAD()).filter(w => SQUAD().includes(w) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
+  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
   if (who && gearValue(who, g) > 0) { S.gear[who][it.slot] = g; return who; } return null;
 }
 /* Allocate: everything in the kit, re-dealt for the most good (biggest gains first) */

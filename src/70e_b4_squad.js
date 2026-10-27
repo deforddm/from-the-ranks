@@ -65,11 +65,7 @@ Object.assign(PATRONS, {
     orvas:{mirrel:'Offered to show her how the tears are cut. She gave him a lesson in clean cuts instead.', yorin:'Wants to know if the wind can make a horse run faster. It can. They have not told the sergeant.', rasp:'Keeps the horse on the far side of her. She approves.'}};
   Object.entries(R3).forEach(([id, r]) => { const d = BOOKSNAP.hoc.tpl[id] && BOOKSNAP.hoc.tpl[id].rel; const tgt = d && d.value ? d.value : TPL[id] && TPL[id].rel; if (tgt) Object.assign(tgt, r); }); }
 
-/* ---- the gear the Book Four chapters (and Book Two's kit) let Tangle or Marrow wear, Rasp and Mirrel can wear too; Yorin, what Marrow can ---- */
-const B4_WEARS_LIKE = {rasp:'tangle', mirrel:'marrow', yorin:'marrow'};
-const b4WhoPatch = items => Object.values(items || {}).forEach(it => { if (it && Array.isArray(it.who)) Object.entries(B4_WEARS_LIKE).forEach(([id, like]) => { if (it.who.includes(like) && !it.who.includes(id)) it.who.push(id); }); });
-b4WhoPatch(ITEMS);
-{ const _reg = registerChapter; registerChapter = function(n, CH, book){ const r = _reg(n, CH, book); if (book === 'hoc' && CH && CH.gear) b4WhoPatch(CH.gear); return r; }; }
+/* ---- v7.2: the gear the Book Four soldiers can wear goes by role (38c TPL_ROLES, ITEM_ROLE); B4_WEARS_LIKE and b4WhoPatch are gone ---- */
 
 /* ---- an old save's Tallow had "Hold, Recruit" (holdline); a slinger takes "Keep Moving" (ghost) instead ---- */
 { const _migrate = migrate; migrate = function(s){ const r = _migrate(s);
@@ -197,9 +193,8 @@ function b4Take(id){ if (!b4SpareOk(id) || b4Places() <= 0) return false; const 
   save(); return true; }
 function b4MusterDone(){ if (!b4On()) return; S.f.b4_mustered = 1; S.picksDue = b3PicksDue(S); save(); }
 /* one for one at a fire: the spare comes in where the soldier who goes back stood in the order */
-function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; const i = S.squad.indexOf(out);
-  S.squad = S.squad.filter(x => x !== out); S.gear[out] = {}; note(`${NAME(out)} goes back to the company.`);
-  recruit(inn); S.squad = S.squad.filter(x => x !== inn); S.squad.splice(i, 0, inn);
+function b4SwapNew(out, inn){ if (!b4In(out) || !b4SpareOk(inn)) return false; // v7.2: through the roster (38c): the gear is parked, and comes back
+  if (!rosterSwap(out, inn)) return false;
   if (!Array.isArray(S.f.b4_spareSwaps)) S.f.b4_spareSwaps = []; S.f.b4_spareSwaps.push([out, inn]); save(); return true; }
 /* the fire offer is for a save that came into the book before the muster existed (no b4_musterDue), until the sergeant has had it */
 const b4FillsIn = () => HOC_NEW.filter(b4In);

@@ -896,8 +896,8 @@ Sohra listens to it for a while from the herd-lines and comes back with her mout
 
 ${c5FireLine()}`,
       ch:[{t:'Rest by the fire.', req:()=>!S.f.b3_c5_rested, fx:()=>{ S.f.b3_c5_rested = 1; }, go:'b3_c5_fire_rest'},
-          {t:'Send to the Grey Swords\' lines for Dannet.', req:()=>b3Waiting('greysword'), go:'b3_c5_swap'},
-          {t:'Send to the Rhivi fires for Sohra.', req:()=>b3Waiting('sohra'), go:'b3_c5_swap'},
+          {t:'Send to the Grey Swords\' lines for Dannet.', req:()=>b3CanSend('greysword'), go:'b3_c5_swap'},
+          {t:'Send to the Rhivi fires for Sohra.', req:()=>b3CanSend('sohra'), go:'b3_c5_swap'},
           {t:'"Kettle. You\'ve been counting something."', req:()=>b3In('kettle') && !S.f.b3_c5_quorls, go:'b3_c5_quorls'},
           {t:'Sit the night out.', req:()=>!!S.f.b3_c5_key, go:'b3_c5_close'},
           {t:'Not now.'}]}),

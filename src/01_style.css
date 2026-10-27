@@ -604,3 +604,16 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .wayrow .wk{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brass2);opacity:.8;flex:0 0 auto}
 .wayrow .way{flex:0 0 auto;min-height:36px;border-color:rgba(201,151,63,.6);color:#f1dfb4}
 .wayrow .way.lead{background:linear-gradient(180deg,rgba(201,151,63,.32),rgba(120,84,30,.28));border-color:var(--brass);color:#ffe7b0;box-shadow:0 0 10px rgba(232,192,115,.25)}
+/* v7.2 the roster (38c) */
+.roster .rlack{font-family:var(--label);letter-spacing:.04em;color:var(--brass2);margin:4px 0 10px}
+.roster .rlist{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.roster .rrow{display:flex;align-items:center;gap:8px;justify-content:space-between;border:1px solid var(--line);padding:6px 8px;background:rgba(0,0,0,.18);min-width:0}
+.roster .rrow.sel{border-color:var(--brass2);box-shadow:0 0 0 1px rgba(201,151,63,.35) inset}
+.roster .rwho{min-width:0;flex:1}
+.roster .rwho small{opacity:.75}
+.roster .rmks{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.roster .rmk{font-family:var(--label);font-size:.72rem;letter-spacing:.06em;border:1px solid rgba(201,151,63,.4);color:var(--brass2);padding:0 5px;border-radius:2px}
+.roster .rmk.core{opacity:.6}.roster .rmk.fill{color:#a8d8a0;border-color:rgba(140,200,130,.5)}.roster .rmk.at{opacity:.7}
+.roster .rrow .btn{flex:none}.roster .btn.on{border-color:var(--brass2);color:var(--brass2)}
+.roster .rask{border:1px solid var(--brass2);padding:8px 10px;margin:6px 0 10px;background:rgba(201,151,63,.07)}
+.roster .rask p{margin:0 0 6px}
