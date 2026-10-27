@@ -281,6 +281,8 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     if (f.b3_c4_sarn === 'grey') x.push(`${C4.mother}, a Domin farmer's widow from the other side of the ditch, has shorn her hair and gone into the Grey Swords. Her boy ${C4.boy} carries water for the company.`);
     if (f.b3_c4_sarn === 'camp') x.push(`${C4.mother} and her boy are still on the other side of the ditch. The Fourth knows which shelter.`);
     if (f.b3_c4_ohlBurnt) x.push('Ohl reached into Denul for a sick boy on the wrong side of the stakes, and the warren bit him. He has written that down, and underlined it.');
+    if (f.b3_c4_ellisPriest) x.push('On the cold night Ellis found the priest\'s sentry post across the ditch, back to front, an hour before he stood up.');
+    if (f.b3_c4_ellisRead === 'read' && f.b3_c4_hunted) x.push('At the gully mouth Ellis read where the K\'ell Hunter would step from its tracks, and the Grey Swords put their ropes there.');
     if (f.b3_c4_tav) x.push('Tav passed his bread through the stakes to a ring of children and sang to them, badly. Brisk stood at the edge of the light.');
     return x; },
 
@@ -409,7 +411,9 @@ ${C4.corporal} shows his teeth. "Heavy," he says. "I can hear it." ` : ''}You kn
 
 She sees your uniform and doesn't flinch, which is worse than if she had. "Malazan," she says, in a Daru you can follow. "My name is ${C4.mother}. This is ${C4.boy}." She says it like somebody filling in a ledger. "He has the flux. He has had it nine days. I have nothing to give him."
 
-She doesn't ask for anything. She only tells you, so it will have been told.`,
+She doesn't ask for anything. She only tells you, so it will have been told.${c4In('ellis') ? `
+
+Ellis has crouched at the lip of the ditch, a little way off, and is looking at the woman's feet, and then the boy's. Bound in strips of a blanket, both pairs, the strips black. "South of the Catlin," Ellis says quietly, to you. "That's river mud, dried, under the rest. They've walked every step of it."` : ''}`,
       ch:[{t:'"Ohl."', req:()=>c4In('ohl'), go:'b3_c4_sarn_ohl'},
           {t:'Sohra sings over the boy.', req:()=>c4In('sohra') && !S.f.b3_c4_sung, fx:()=>{ S.f.b3_c4_sung = 1; S.f.b3_c4_tibb = 'sung'; ally(0, -1, 'A song at the gap'); }, go:'b3_c4_sarn_song'},
           {t:'Pass the squad\'s bread through the stakes.', req:()=>!S.f.b3_c4_bread, fx:()=>{ S.f.b3_c4_bread = 1; ally(1, 0, 'The Rhivi on the outer line saw'); if (c4In('brisk')) loy('brisk', 1); }, go:'b3_c4_sarn_bread'},
@@ -487,7 +491,9 @@ Brisk's mouth goes tight. Then she takes the heel of bread out of her own kit, t
     b3_c4_rider:()=>({sp:'A Rhivi rider · the outer line', fx:()=>{ S.f.b3_c4_rider = 1; }, txt:
 `The Rhivi ride the outer line, on the far side of the prisoners' camp and along its ends, on horses as tired as the people they are watching. This one has stopped at the end of your stretch and is sitting his saddle looking at the Malazans on the bank. ${c4In('sohra') ? `He is about Sohra's age. He says something to Sohra in Rhivi, and she answers him, short, and he laughs, and then doesn't.` : ''}
 
-"Malazan." His Daru is good. "Ten years ago your people burned my mother's summer grass. Now you feed the people who would have eaten my mother." He nods at the ditch. "Explain it."`,
+"Malazan." His Daru is good. "Ten years ago your people burned my mother's summer grass. Now you feed the people who would have eaten my mother." He nods at the ditch. "Explain it."${c4In('ellis') ? `
+
+Before you can, his eyes go to the bow on Ellis's back, and stop. He says something in Rhivi. Ellis answers him in three words of Rhivi, flat and exact, the words a scout learns first on the plain: *horses, water, how many*. He looks at her glove, and at the bow again, and some of the edge goes out of his face. Not all of it.` : ''}`,
       ch:[{t:'"Whiskeyjack\'s order."', go:'b3_c4_rider_order'},
           {t:'"They were told to, by a man who isn\'t here. We\'re going to him."', fx:()=>{ ally(1, 0, 'A Rhivi rider on the outer line'); }, go:'b3_c4_rider_ok'},
           {t:'"I can\'t."', fx:()=>{ ally(1, 0, 'A Rhivi rider on the outer line'); }, go:'b3_c4_rider_cant'}]}),
@@ -552,7 +558,11 @@ Tuft has gone very still. "A Malazan captain," she says. "Sick-looking."
 
 "Yes."
 
-Tuft doesn't say *Paran*. She doesn't need to.` : ''}`,
+Tuft doesn't say *Paran*. She doesn't need to.` : ''}${c4In('vell') ? `
+
+"Are they real?" says Vell. "The wolves." It is out before he can stop it.
+
+Dannet looks at him, the rope boy with two coils of nothing much on his shoulder, as if deciding whether the question is an insult. It isn't, and she sees that it isn't. "Ask me at Coral," she says.` : ''}`,
       ch:[c4JoinCh()]}),
     b3_c4_dannet_join:()=>({sp:'Dannet', txt: c4In('greysword') ?
 `She nods once, as if signing for something. "Sergeant." She takes the shield off her back and puts it on her arm, which is apparently how a Grey Sword says *yes*.${c4In('brisk') ? `
@@ -612,7 +622,9 @@ On the fourth throw the hooks go round his shins and the recruits pull and he go
 
 On the steps, a priest in a lacquered mask is shouting at a Barghast woman twice his size, in white paint, with her arms folded. He is telling her that the Thrall is holy ground. She is letting him. When he stops for breath she says, in perfectly good Daru, "It is now," and goes back inside.
 
-${c4In('kettle') ? `"They're taking the floor up," Kettle says, delighted. "The *whole floor*. Why are they taking the floor up?"` : `They are taking the floor up. The whole floor.`}`,
+${c4In('kettle') ? `"They're taking the floor up," Kettle says, delighted. "The *whole floor*. Why are they taking the floor up?"` : `They are taking the floor up. The whole floor.`}${c4In('vell') ? `
+
+Vell is looking up instead, at the dome, where the light comes down through a hole a siege stone made. "In Darujhistan," he says, "if you wanted under a council's floor you'd go in through the roof. Everybody watches the door." He considers the Barghast with their iron bars. "They just went in the door."` : ''}`,
       ch:[{t:'Look inside.', go:'b3_c4_founders'},
           {t:'Leave the Barghast to their floor.', fx:()=>{ S.f.b3_c4_founders = 'heard'; ally(1, 0, 'The White Face saw the Malazans keep their distance'); }, go:'b3_c4_thrall_left'}]},
     b3_c4_thrall_left:()=>({sp:'The Thrall', txt:
@@ -625,7 +637,9 @@ A Barghast at the door watched you go, and nodded, once, as if a Malazan keeping
 
 In the pit, side by side, nine canoes. Dugouts, each one cut from a single tree bigger than any tree you have seen, black with age, split along their lengths, packed with earth. And in the earth, bones. Bones too big to be anyone's. A thigh as long as a tall man. A skull you could sit in. The Barghast are kneeling along the edge of the pit, dozens of them, and nobody is singing now.
 
-Along the canoes' flanks, carved and almost gone, there are pictures: tall figures in boats fighting other figures, grey ones. A Barghast warrior beside you sees you looking and says one word, not to you: "*T'isten'ur.*" He touches his own face where the white paint is. "The Grey-Skinned. The enemy." Then, after a long time: "They came home."${c4In('tuft') ? `
+Along the canoes' flanks, carved and almost gone, there are pictures: tall figures in boats fighting other figures, grey ones. A Barghast warrior beside you sees you looking and says one word, not to you: "*T'isten'ur.*" He touches his own face where the white paint is. "The Grey-Skinned. The enemy." Then, after a long time: "They came home."${c4In('ellis') ? `
+
+Ellis is reading the canoes' flanks, not the bones: the cuts in the wood, where the adze went, how deep. "Somebody carried these," she says, low. "A long way, over land. Look at the keels. Worn flat." She does not say *carried by what*.` : ''}${c4In('tuft') ? `
 
 Tuft has her hand pressed flat against her breastbone. "They're *awake*," she whispers. "Sergeant. Something down there's awake, and it's very old, and it's very angry, and it's very glad."` : ''}${c4In('greysword') ? `
 
@@ -681,7 +695,23 @@ Grey-skinned, two-legged, the height of a mounted man, leaning forward over its 
 
 He puts a coil into Vell's hands without looking at him. "First rope's yours, rope man. Low. Round the legs. And when it's on, you let go of it and get out from under, because the next thing it does is come down the rope at whoever is holding it." Vell weighs the coil, once, the way he weighs a line before a drop, and says nothing at all, which from Vell is a speech.` : ''}`,
       ch:[{t:'"Hold it."', go:()=>startBattle('b3_c4_hunt', {})},
-          {t:'Kettle puts a sharper under its feet.', tag:'uses 1 sharper', req:()=>c4In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c4_hunt', {pre:`Kettle bowls the sharper low and flat across the frost, underarm, and gets her hands over her ears.`})}]}),
+          {t:'Kettle puts a sharper under its feet.', tag:'uses 1 sharper', req:()=>c4In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c4_hunt', {pre:`Kettle bowls the sharper low and flat across the frost, underarm, and gets her hands over her ears.`})},
+          {t:'Ellis reads where it will step, and puts the ropes there first.', req:()=>c4In('ellis') && !S.f.b3_c4_ellisRead, fx:()=>{ S.f.b3_c4_ellisRead = 1; }, check:['wits',15],
+            edges:id=>[id === 'ellis' && ['she has read its tracks already', 3], id === 'sohra' && ['she has tracked on this plain all her life', 2], id === 'greysword' && ['she has heard how the last one moved', 1]],
+            near:{t:()=>`Yes, but reading it means standing in front of it a heartbeat longer than anyone should, and a blade-arm opens ${NAME(ROLL().who || 'ellis')}'s sleeve and the arm under it: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'ellis', bruiseN())},
+            go:'b3_c4_hunt_read', fail:'b3_c4_hunt_misread'}]}),
+    b3_c4_hunt_read:()=>({sp:'The gullies', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_ellisRead = 'read'; }, txt:
+`${by({ellis:`"Heavy at the heel," Ellis says again, quickly, low, "so it turns on the left foot. It came out on the left. It'll go left." She points at a patch of frost three strides off its left side. "There. Hooks there."`, sohra:`"It favours the left," Sohra says, low and quick. "It came out on the left, it will go left. The herd-killers do." She points at the frost three strides off its left side. "There."`, sgt:`You watch it come, and see what Ellis saw in the tracks: heavy at the heel, turning on the left foot. "Left," you say. "There." You point at the frost three strides off its left side.`, _:`{who} watches it come, and sees what Ellis saw in the tracks: heavy at the heel, turning on the left foot. "Left. There." A point at the frost three strides off its left side.`})}
+
+${C4.ropesgt} doesn't argue. Two Grey Swords run their ropes out low across the frost exactly there, and lie flat at either end.
+
+It goes left.`,
+      ch:[{t:'"Hold it."', go:()=>startBattle('b3_c4_hunt', {surprise:'p'})}]}),
+    b3_c4_hunt_misread:()=>({sp:'The gullies', scene:'b3_c4_gathering', txt:
+`${by({ellis:`"Left," Ellis says. "It'll go left."`, sgt:`"Left," you say. "It'll go left."`, _:`"Left," says {who}. "It'll go left."`})}
+
+It goes right. It goes right as if it had heard, and the two Grey Swords lying flat on the left with their ropes are suddenly a long way from where they are needed.${c4In('ellis') ? ` "Hood," Ellis says, flatly, and nocks an arrow. "It's been dead a long time. It's forgotten how it used to walk."` : ''}`,
+      ch:[{t:'"Hold it."', go:()=>startBattle('b3_c4_hunt', {})}]}),
     b3_c4_hunt_after:()=>({sp:'The gully', scene:'b3_c4_gathering', fx:()=>{ S.f.b3_c4_hunted = 1; gain('b3_c4_ropehooks'); if (c4In('vell')) loy('vell', 1); }, txt:
 `It takes a long time to stop moving. Long after it should have, a blade-arm goes on scything slowly at the stones, and the Grey Swords stand clear of it and wait, the way you wait for a fire to burn out, and keep the ropes taut.
 
@@ -702,7 +732,9 @@ Short. Broad. Grey all over, the grey of dust, of old hide gone to dust, of bone
 
 The Grey Swords nearest you have gone very still, the stillness of people who have seen this before and lived because of it.
 
-Then the wind that is not there takes it. It goes to dust from the feet up, and the dust lifts off the rise and goes away south-east, toward the wall of dust on the horizon, and the rise is empty.${c4In('greysword') ? `
+Then the wind that is not there takes it. It goes to dust from the feet up, and the dust lifts off the rise and goes away south-east, toward the wall of dust on the horizon, and the rise is empty.${c4In('vell') ? `
+
+Vell has both coils off his shoulder and in his hands, as if a rope were any use against that. He puts them back, slowly, one and then the other. "Didn't see that," he says. "I'd like that noted. I was looking at the gully."` : ''}${c4In('greysword') ? `
 
 "They will fight the lizards," Dannet says, very low. "Not us. Never us. The Shield Anvil said, after the patrol." She touches the amulet at her throat, and then the wolf on her shield.` : ''}`,
       ch:[{t:'Walk up to where it stood.', go:'b3_c4_flint'},
@@ -720,7 +752,7 @@ ${c4In('tuft') ? `"Don't," Tuft says from the foot of the rise. She hasn't come 
 
 Some time after midnight the howling starts.
 
-It comes from the south-east, from very far off, carried on the wind that isn't there. It is not wolves. It is not any animal anyone in the Host has heard. It goes on for a long time, and stops, and starts again, and it is the most desolate sound you have ever heard, and the Grey Swords ride through it with their heads down.`,
+It comes from the south-east, from very far off, carried on the wind that isn't there. It is not wolves. It is not any animal anyone in the Host has heard. It goes on for a long time, and stops, and starts again, and it is the most desolate sound you have ever heard, and the Grey Swords ride through it with their heads down.${c4In('ellis') ? ` Ellis rides with her head up. Every time it starts she turns in the saddle and marks where it comes from, and every time it is the same place, and every time the place is empty.` : ''}${c4In('vell') ? ` Vell rides badly, on a borrowed horse that knows it, with his knees up and both hands in the mane, and talks to the horse in Daru the whole way, low, so it will have something else to listen to.` : ''}`,
       ch:[{t:'Back to the Fourth\'s stretch.', fx:()=>{ S.f.b3_c4_night = 1; ally(0, 1, 'Howling, far off'); }, go:()=>{ startExplore('b3_c4_night'); talk('b3_c4_night_arrive'); }}]}),
 
     /* ---- the night on the bank ---- */
@@ -729,7 +761,7 @@ It comes from the south-east, from very far off, carried on the wind that isn't 
 
 The howling has stopped. Everyone is waiting for it to start again.
 
-At the gap, ${C4.corporal} and his three lads are standing up, which they were not doing this afternoon. They have cudgels. They are looking at the ditch.`,
+At the gap, ${C4.corporal} and his three lads are standing up, which they were not doing this afternoon. They have cudgels. They are looking at the ditch.${c4In('ellis') ? ` Ellis saw it from the road, before the horses were back: "Four up by the gap. Not ours. Not on watch, either," she said, and nothing else, and has not taken her eyes off them since.` : ''}`,
       ch:[{t:'See what Corporal ' + C4.corporal + ' thinks he\'s doing.', go:'b3_c4_mosk_night'},
           {t:'The fire first.', go:()=>startExplore()}]}),
     b3_c4_mosk_night:()=>({sp:'Corporal ' + C4.corporal, txt:
@@ -739,7 +771,7 @@ He looks at you. He wants you to say something. He isn't sure what.
 
 "You heard him, this afternoon," he says. "So did I. I'm telling you so you'll have been told."`,
       ch:[{t:'"Whiskeyjack\'s order, Corporal. Back to your fire."', check:['guile', 14],
-            edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'kettle' && ['she is talking too fast', -1]],
+            edges:id=>[id === 'sgt' && ['the stripes', 1], id === 'brisk' && ['heavy infantry talking to heavy infantry', 2], id === 'greysword' && ['a Capan who was on the wall, telling him he is wrong', 1], id === 'ellis' && ['the Claw\'s flat voice; men have run from it on this plain', 2], id === 'kettle' && ['she is talking too fast', -1]],
             near:{fx:()=>{ const w = ROLL().who || 'sgt';
               if (w !== 'sgt' && b3In(w)) { note(`Yes, but it was a near thing, and it was ${NAME(w)} who had to face down a man of the Host with his lads watching while you stood by. ${NAME(w)} does not thank you for that: loyalty −1.`, 'bad'); S.loy[w] ??= 0; loy(w, -1); }
               else { S.rattled ??= {}; S.rattled[w] = 1; note(`Yes, but it was nearer than it looked, and afterwards you sit by the fire a long while with your hands between your knees until they stop: −1 on the next check.`, 'bad'); } }},
@@ -748,7 +780,7 @@ He looks at you. He wants you to say something. He isn't sure what.
           {t:'Look the other way.', fx:()=>{ S.f.b3_c4_mosk = 'let'; ally(-2, 2, 'Malazans went over the stakes in the dark'); if (c4In('brisk')) loy('brisk', -1); if (c4In('ohl')) loy('ohl', -2); if (c4In('greysword')) loy('greysword', -1); }, go:'b3_c4_mosk_let'},
           {t:'Not yet. Watch them a moment longer.', go:()=>startExplore()}]}),
     b3_c4_mosk_down:()=>({sp:'Corporal ' + C4.corporal, fx:()=>{ S.f.b3_c4_mosk = 'talked'; ally(1, 0, 'The Rhivi saw the order kept'); }, txt:
-`${by({brisk:`Brisk walks up to him until they are a hand apart, which with the two of them is not far, and says one thing, very quietly, in the voice the heavy regiments use in the line when the line is about to break. You don't hear what. ${C4.corporal} does.`, greysword:`Dannet steps up beside you with her shield on her arm. "I was on the wall on the second day," she says to him. "I saw what they did. I saw who told them to. You are not going over that ditch to find him. He is not there."`, sgt:`You say it once, in the voice you have used maybe four times in eleven years, the one that does not argue because it has already won.`, _:`{who} says it once, in the voice you use when there is no second time.`})}
+`${by({brisk:`Brisk walks up to him until they are a hand apart, which with the two of them is not far, and says one thing, very quietly, in the voice the heavy regiments use in the line when the line is about to break. You don't hear what. ${C4.corporal} does.`, greysword:`Dannet steps up beside you with her shield on her arm. "I was on the wall on the second day," she says to him. "I saw what they did. I saw who told them to. You are not going over that ditch to find him. He is not there."`, ellis:`Ellis says it, one sentence, in the flat exact voice the Claw taught her, the one that gives a count: who gave the order, what it was, what happens to a man who goes over the stakes tonight, in that order. ${C4.corporal} has heard that voice before. Everyone in the Host has, from a distance, and been glad of the distance.`, sgt:`You say it once, in the voice you have used maybe four times in eleven years, the one that does not argue because it has already won.`, _:`{who} says it once, in the voice you use when there is no second time.`})}
 
 ${C4.corporal} looks at the ditch, and at the dark beyond it. Then he lowers the cudgel and lets it hang from his hand.
 
@@ -814,7 +846,46 @@ ${b3Mind() === 'haunted' ? `The squad has not slept since the gully. Everyone ke
           {t:'Send for Sohra.', req:()=>b3Waiting('sohra') && b3Room() > 0, fx:()=>{ S.f.b3_c4_swapIn = 'sohra'; b3SwapIn('sohra'); }, go:'b3_c4_swap'},
           {t:'Corporal ' + C4.corporal + ' first.', req:()=>!S.f.b3_c4_mosk, go:'b3_c4_mosk_night'},
           {t:'Sleep. Or pretend.', req:()=>!!S.f.b3_c4_mosk, go:'b3_c4_heart'},
+          {t:'Go and sit by Ellis, where she watches the gap.', req:()=>c4In('ellis') && !S.f.b3_c4_talkEllis, fx:()=>{ S.f.b3_c4_talkEllis = 1; }, go:'b3_c4_fire_ellis'},
+          {t:'"Vell. You\'re not asleep."', req:()=>c4In('vell') && !S.f.b3_c4_talkVell, fx:()=>{ S.f.b3_c4_talkVell = 1; }, go:'b3_c4_fire_vell'},
           {t:'Not yet.', go:()=>startExplore()}]}),
+    /* v7.2: an imported Ellis or Vell gets a word at the cold fire, the way Tuft and Sohra get theirs */
+    b3_c4_fire_ellis:()=>({sp:'Ellis', txt:
+`She doesn't turn round. "Sit on my left. The right's the gap."
+
+You sit on her left. Out past the stakes the shelters are black lumps on the frost, and between them, now and then, something moves and stops.
+
+"The Claw taught me sentries," she says. "Where they stand, how long they stand, when they piss. Count the sentries and you know the camp." She nods across the ditch. "Two hundred thousand over there and not one sentry. Not one of them watching anything. Not one guarding anyone. I keep looking for the man who's awake, and they're all awake, and none of them is watching." The gloved hand closes on her knee. "${b3Was('c7_ellisBack') ? 'The grey was like that. No one in it watching anything. I didn\'t think I\'d see it twice.' : 'I\'ve never seen a camp like it. I don\'t know how to read it, and I don\'t like not knowing.'}"`,
+      ch:[{t:'"Then read the priest. Someone over there is giving orders."', fx:()=>{ S.f.b3_c4_ellisPriest = 1; if (c4In('ellis')) loy('ellis', 1); }, go:'b3_c4_fire_ellis2'},
+          {t:'"Get some sleep. I\'ll take the gap."', go:'b3_c4_fire_ellis3'}]}),
+    b3_c4_fire_ellis2:()=>({sp:'Ellis', txt:
+`She is quiet for a while. Then she lifts her chin, a fraction, toward a shelter thirty paces in, a little bigger than the rest, with no one lying in front of it.
+
+"That one," she says. "Since the howling started, people have been going into it and coming out. Not many. The same nine or ten. Going in slow and coming out fast." She looks at you for the first time. "That's a sentry post, Sergeant. It took me an hour to see it, because it's back to front. They're not watching us. They're watching their own."
+
+She goes back to the gap. "I'll know him when he stands up," she says.`,
+      ch:[{t:'Back to the fire.', go:'b3_c4_fire'}]}),
+    b3_c4_fire_ellis3:()=>({sp:'Ellis', txt:
+`"You'd watch it wrong." She says it without any heat at all, as a fact about ground. "You'd watch the ditch. The ditch is where they'll come, so it's no use watching. You watch what's behind them."
+
+But she does lie down, after a while, on her side, facing the gap, with the bow under her hand. When you look again her eyes are shut. When you look a third time they are open, and on you, and she shakes her head very slightly: *still awake. Watch behind them.*`,
+      ch:[{t:'Back to the fire.', go:'b3_c4_fire'}]}),
+    b3_c4_fire_vell:()=>({sp:'Vell', txt:
+`"No, Sergeant." He opens one eye. ${S.f.b3_c4_hunted ? `There are two coils in his lap now, the Guild's tarred line and the Grey Swords' grey one, and his fingers have been going from one to the other the whole time he was pretending, tying and untying the same knot in each.` : `The coil is in his lap, and his fingers have been tying and untying the same knot the whole time he was pretending.`}
+
+"${C4.ropesgt} said everything tonight is down," he says. "And it was. You put the hook low and you let go and you get out from under. On a roof you never let go of a line. Letting go is how you die, on a roof." He looks at the knot. "I let go when he said. My hands didn't want to. I had to tell them." He turns it over. "In the Guild they'd say I've gone soft. Ground-soft. That's the worst thing they call you."`,
+      ch:[{t:'"In the Fourth we call it doing what you\'re told. It\'s rarer."', fx:()=>{ if (c4In('vell')) loy('vell', 1); }, go:'b3_c4_fire_vell2'},
+          {t:'"The Guild\'s a long way off, Vell."', go:'b3_c4_fire_vell3'}]}),
+    b3_c4_fire_vell2:()=>({sp:'Vell', txt:
+`That gets a laugh out of him, a short one, quickly stopped, because of the ditch and the howling and everyone lying awake.
+
+"Rarer," he says. "Kettle doesn't." He thinks about it. "Brisk does. Brisk does it like it's a thing you can be good at." He ties the knot one last time and leaves it tied. "I'd like to be good at it. Don't tell her I said that."
+
+He puts his head back against the cart wheel and closes both eyes, and this time, a while later, he is not pretending.`,
+      ch:[{t:'Back to the fire.', go:'b3_c4_fire'}]}),
+    b3_c4_fire_vell3:()=>({sp:'Vell', txt:
+`"It's never a long way off." He says it lightly, the way he says most things that frighten him. "The Guild keeps its debts longer than anyone. You find that out when you're thirteen." He looks south-east, where the howling comes from. "But I don't think it comes out this far. I think out here even the Guild would want somebody to go first." He pulls the knot tight. "Vell," he says, under his breath, three times, and settles back against the wheel.`,
+      ch:[{t:'Back to the fire.', go:'b3_c4_fire'}]}),
     b3_c4_fire_tuft:()=>({sp:'Tuft', txt:
 `She doesn't answer for a while. When she does, she keeps her voice down, as if it could hear.
 
@@ -839,7 +910,7 @@ You sit up. Everybody sits up.
 
 Far off, over the heart of the camp, the night tears. Something comes down out of it that is darker than the night and as big as a hill, and the noise of it reaches the bank a breath later, a wind and a roar and a sound like a forest going over. Then the voices stop. Not all at once. In a long falling-away, like a wave going back down a beach.
 
-On the bank, every face is turned north. ${c4In('tuft') ? `Tuft has both hands over her mouth. ` : ''}${c4In('kettle') ? `Kettle says, very quietly, "That was a dragon. That was the dragon. From the field." ` : ''}Up the line, a long way off, somebody is shouting orders in a voice you know.
+On the bank, every face is turned north. ${c4In('tuft') ? `Tuft has both hands over her mouth. ` : ''}${c4In('kettle') ? `Kettle says, very quietly, "That was a dragon. That was the dragon. From the field." ` : ''}${c4In('vell') ? `Vell is on his feet with the coil in his hands before he knows he has stood up. ` : ''}${c4In('ellis') ? `Ellis is not looking north at all. She is looking at the shelter thirty paces in across the ditch, ${S.f.b3_c4_ellisPriest ? 'the back-to-front sentry post, ' : ''}where a tall man has just come out and is standing very still, listening. ` : ''}Up the line, a long way off, somebody is shouting orders in a voice you know.
 
 And then, on your own stretch, at the gap, the stakes start to move.`,
       ch:[{t:'On your feet.', go:'b3_c4_breach'}]}),
@@ -956,7 +1027,7 @@ Vell is looking at the girl's feet, and then at his own boots, Daru boots, good 
     b3_c4_share:()=>({sp:'The ration cart', txt:
 `The Fourth opens its sacks. ${c4In('brisk') ? `Brisk does it herself, after a moment, because if it is going to be done it is going to be done properly: she breaks the bread into even pieces with her knife and gives them out down the row, one each, and the dried meat after, and writes it in the ledger as she goes: *Six days. Gap. Given.*` : `The bread goes down the row in even pieces, one each, and the dried meat after.`} ${c4In('ohl') ? `Ohl kneels at the end of the row with the salve jars, ${S.f.b3_c4_salvesGiven ? `${S.f.b3_c4_salvesGiven === 1 ? 'the last of them' : 'both of them'}, and unwraps the girl's feet, and does not make a face, and does them properly, with boiled cloth.` : `which are empty already, and does what he can with boiled cloth.`}` : S.f.b3_c4_salvesGiven ? `The salve goes on the worst feet, and the worst hands.` : ''}
 
-It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.${c4In('vell') ? ` Vell lifts the smallest of them up onto the cart's tailboard, one at a time, so they can eat up off the frozen ground.` : ''}
+It is not very much. Six days' bread for ${numw(S.squad.length)} does not go far down a row like that. It goes far enough that the children at the end of it get some.${c4In('vell') ? ` Vell lifts the smallest of them up onto the cart's tailboard, one at a time, so they can eat up off the frozen ground.` : ''}${c4In('ellis') ? ` Ellis gives out the dried meat, and counts it as she goes, out of habit, and stops counting halfway down the row, and goes on giving.` : ''}
 
 Down at the end of the line, by the dead tree, Whiskeyjack has stopped talking to the quartermaster. He is looking at the Fourth's empty sacks. He doesn't come over. After a while he nods, once, to nobody you can see, and walks on up the line, slowly, on the leg.
 
@@ -968,7 +1039,7 @@ ${c4In('kettle') ? `"We're going to be so hungry," Kettle says cheerfully, sitti
       ch:[{t:'Rest. The Catlin in three days.', go:()=>chapterEnd(4, 'share')},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b3_c4_hold:()=>({sp:'The ration cart', txt:
-`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}${c4In('ellis') ? ` Ellis knots the sacks onto the Fourth's packs herself, quick and tight, and is back at her place on the bank before the cart has gone.` : ''}
+`The Fourth keeps its sacks tied. ${c4In('brisk') ? `Brisk ties them again, tighter, and stands next to them, and writes nothing in the ledger. Brisk writes everything in the ledger.` : `The ledger stays shut.`}${c4In('ellis') ? ` Ellis knots the sacks onto the Fourth's packs herself, quick and tight, and is back at her place on the bank before the cart has gone.` : ''}${c4In('vell') ? ` Vell helps her. He ties his sack with a Guild knot, the kind only the one who tied it can open, and then looks along the row by the cart, and unties it again, and ties a plain one.` : ''}
 
 The clerk nods as if you had confirmed a figure, and loads the cart, and takes it over the ditch at the gap with the morning's handful a head, and the row by his wheels watches it go. ${c4In('ohl') ? `Ohl looks at the girl at the end of the row, and then at you, and then he takes a strip of boiled cloth out of his own kit, which is not the squad's, and goes and kneels by her and does her feet with that and nothing else. He doesn't look at you while he does it, or afterward.` : `A Grey Sword recruiter comes along the row later and takes the girl at the end of it, and a few others, to the barracks, where there is meal.`}
 
