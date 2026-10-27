@@ -600,7 +600,7 @@ The Betakullid who could still ride, rode. South. They will tell somebody what t
 From the top of the hill you can see the column, very small, a day off to the west: the wagons, the herds, the two armies, crawling south-east across the grass. A long way to watch it from. A good place to watch it from.
 
 ${b3In('sohra') ? `Sohra is looking at the felled tree, its carved roots in the ashes, and her knuckles are white on the bow.` : `One of the inverted trees lies felled across the fire, its carved roots in the ashes.`}`,
-    ch:[{t:'Stand the tree back on its head.', req:()=>!S.f.b3_c2_tree, check:['might', 13], edges:id=>[id === 'brisk' && ['shoulders like a wall', 2], id === 'sohra' && ['too small for this', -1]],
+    ch:[{t:'Stand the tree back on its head.', req:()=>!S.f.b3_c2_tree, check:['might', 13], edges:id=>[id === 'brisk' && ['shoulders like a wall', 2], id === 'sohra' && ['too small for this', -1], id === 'vell' && ['a turn round the next tree for a block: the Guild way', 1]],
           fx:()=>{ S.f.b3_c2_treeTried = 1; },
           near:{t:()=>`Yes, but the last heave is all ${NAME(ROLL().who || 'sgt')}, and something in the small of the back goes with it, and stays gone: −1 on the next check.`, fx:()=>{ S.rattled ??= {}; S.rattled[ROLL().who || 'sgt'] = 1; }},
           go:'b3_c2_tree', fail:'b3_c2_tree_no'},
@@ -635,14 +635,84 @@ ${b3In('tuft') ? `Tuft looks toward the Rhivi fires the moment the squad gets do
 
   /* the fire: a rest, and a song (dread falls) */
   b3_c2_fire:()=> S.f.b3_c2_rest ? {sp:'The Fourth\'s fire', txt:`Dung and grass, burning low. ${b3In('kettle') ? 'Kettle is asleep with the satchel in her arms.' : 'Somebody is asleep beside it.'} Out past the herds the night is very big.`,
-    ch:[{t:'The herd lines. Take the watch.', go:'b3_c2_herdlines'}, {t:'Leave it.', go:()=>startExplore()}]} : {sp:'The Fourth\'s fire', txt:
+    ch:[{t:'The herd lines. Take the watch.', go:'b3_c2_herdlines'},
+        {t:'Sit with Ellis. She is cleaning the bow by feel.', req:()=>b3In('ellis') && !S.f.b3_c2_ellisTalk, fx:()=>{ S.f.b3_c2_ellisTalk = 1; }, go:'b3_c2_ellis'},
+        {t:'Lie down by Vell and look at what he is looking at.', req:()=>b3In('vell') && !S.f.b3_c2_vellTalk, fx:()=>{ S.f.b3_c2_vellTalk = 1; }, go:'b3_c2_vell'},
+        {t:'Leave it.', go:()=>startExplore()}]} : {sp:'The Fourth\'s fire', txt:
 `A fire of dried dung and dead grass in a scrape, because there is nothing else on the plain to burn, and the Fourth round it, and the stars coming down to the ground on every side.
 
 From the Rhivi fires beyond comes singing, slow, the same few notes over and over. ${b3In('sohra') ? `Sohra sits with her back to the Fourth's fire and her face to the Rhivi ones, and sings with them, under her breath.` : ''}${b3In('vell') ? ` Vell lies flat with his hands under his head, counting stars. He has got to some number nobody believes, and says Darujhistan hasn't got half of them, which everyone does believe.` : ''}
 
 ${b3Mind() ? `The tracks go unmentioned. Everybody is thinking about them. You can tell by the way the squad sits: facing out.` : `Nobody says anything about the tracks. That is how the Fourth talks about things.`}`,
     ch:[{t:'Rest. Let the singing do what it does.', fx:()=>{ S.f.b3_c2_rest = 1; b3Rest('The Fourth sleeps by its fire with the Rhivi singing on every side, and ten thousand people of the Host snoring beyond them. Wounds close, mostly.'); }, go:'b3_c2_fire_rest'},
+        {t:'Sit with Ellis. She is cleaning the bow by feel.', req:()=>b3In('ellis') && !S.f.b3_c2_ellisTalk, fx:()=>{ S.f.b3_c2_ellisTalk = 1; }, go:'b3_c2_ellis'},
+        {t:'Lie down by Vell and look at what he is looking at.', req:()=>b3In('vell') && !S.f.b3_c2_vellTalk, fx:()=>{ S.f.b3_c2_vellTalk = 1; }, go:'b3_c2_vell'},
         {t:'Leave it for now.', go:()=>startExplore()}]},
+  /* ---- v7.2: an import's Ellis at the plain fire. The grass where the Claw finished with her; Paran gone east; the tracks ---- */
+  b3_c2_ellis:()=>({sp:'Ellis', txt:
+`Ellis sits with her back to the fire and the bow across her knees, unstrung, going along the limbs with her bare fingers for cracks. She does it in the dark. She says light lies about wood.
+
+"${b3Was('c2_ellisJoined') ? `This grass," she says, before you've settled. "Toc rode off and left me with the Fourth on it, by some dead horses, a long way from here. Today it was Paran, going east." She finds nothing in the limb and goes on to the next. "I'm getting a lot of practice at watching captains go over a rise."` : `Paran," she says, before you've settled. "Going east. Toc's captain, at the end. I watched him go over the rise." She finds nothing in the limb and goes on to the next. "I've had a lot of practice at watching captains go over a rise."`}
+
+She doesn't look up. The fire does what it can with one side of her face.`,
+    ch:[{t:'"You could have asked him. About Toc."', go:'b3_c2_ellis_paran'},
+        {t:'"The tracks at the wallow. Tell me straight."', fx:()=>{ c2L('ellis', 1); S.f.b3_c2_ellisTracks = 1; }, go:'b3_c2_ellis_tracks'},
+        {t:'Leave her to the bow.'}]}),
+  b3_c2_ellis_paran:()=>({sp:'Ellis', txt:
+`"Asked him what?" Level, not sharp. "If he knew anything, he'd tell me. He's that sort. And then I'd know it." She strings the bow, one movement, the way she does everything she's done ten thousand times. "I'd rather have the line I've got."
+
+${b3Was('c7_ellisBack') ? `She turns her wrist to the fire, where Kettle's two lengths of cord are still knotted, gone grey with the road. "He's out there. He kept riding."` : `"He's out there," she says. "He kept riding." It is somebody else's line, and she says it as if she'd paid for it.`}${b3In('tuft') ? `
+
+Across the fire, Tuft has heard the name, and doesn't look over, and that is a kindness too.` : ''}`,
+    ch:[{t:'"The tracks at the wallow. Tell me straight."', req:()=>!S.f.b3_c2_ellisTracks, fx:()=>{ c2L('ellis', 1); S.f.b3_c2_ellisTracks = 1; }, go:'b3_c2_ellis_tracks'},
+        {t:'"Then keep it."'}]}),
+  b3_c2_ellis_tracks:()=>({sp:'Ellis', txt:
+`She gives it you in the report voice, the one from the plain, because you asked for it straight.
+
+"Two legs. Long ones. Heavier than a horse and lighter than it ought to be for that stride; the prints don't go deep enough." She holds her hands apart, then further apart. "Claws at the front. A drag behind, sometimes, that might be a tail and might be something it was carrying. Walking. Going east, where the riders went."
+
+A pause, the length of a count. "The Claw had a page for everything, Sergeant. Every animal, every army, every kind of man who'd try to kill you on a road. I read all of them. There wasn't a page for that." She lays the bow down. "That's what I don't like, if you're asking. Not the size. That nobody wrote it down."${b3In('ohl') ? `
+
+Ohl, from his blanket, without opening his eyes: "Somebody did, child. Somebody always has. They're just not anybody we've met."` : ''}`,
+    ch:[{t:'"Write it down, then. For the next one."', fx:()=>{ S.f.b3_c2_ellisPage = 1; }, go:'b3_c2_ellis_page'},
+        {t:'Leave her to the dark.'}]}),
+  b3_c2_ellis_page:()=>({sp:'Ellis', txt:
+`She looks at you as if you'd handed her something she hadn't known could be handed.
+
+Then she takes a scrap of oiled hide out of her kit, the back of an old Claw route-map, and a stub of charcoal, and draws a print on it, exactly, to scale, with the stride marked in paces underneath. She doesn't write a name. There isn't one.
+
+"For the next one," she says, and puts it inside her jerkin, where Claw scouts keep the things they'd rather burn than lose.`,
+    ch:[{t:'Sleep.'}]}),
+  /* ---- v7.2: an import's Vell under the plain sky. No roofs; the city; the line he left up ---- */
+  b3_c2_vell:()=>({sp:'Vell', txt:
+`Vell is flat on his back beyond the firelight with his hands under his head and the rope for a pillow, which can't be comfortable, and he doesn't seem to mind.
+
+"Two thousand and something," he says, when you lie down. "I lost the count at a cloud." He points, as if you could follow a finger in that sky. "I've never slept on the ground. Not once, before the Host. Roofs, a loft over a chandler's, a Guild house when it rained. The ground just goes on out here. Nothing to tie off to."
+
+He's quiet a while. The Rhivi are singing.
+
+"Darujhistan's blue at night," he says. "From the roofs. You don't know that unless you've been up. The whole city, blue. I thought every city was."`,
+    ch:[{t:'"Tell me about the roofs."', fx:()=>{ c2L('vell', 1); S.f.b3_c2_vellRoofs = 1; }, go:'b3_c2_vell_roofs'},
+        {t:'"Do you want to go back?"', go:'b3_c2_vell_back'},
+        {t:'Let him count.'}]}),
+  b3_c2_vell_roofs:()=>({sp:'Vell', txt:
+`Vell tells you. Not the Guild's business; he's careful about that even out here, a hundred leagues from anybody who'd care. The roofs.
+
+Which of the Gadrobi chimneys will take a hook and which will come away in your hand with half a pot on it. The lead on the old estates that sings when it's cold. The gap between the Lakefront warehouses that the journeymen call *the Bastard*, because it is one pace wider than anyone wants it to be, and you have to want it. ${b3In('kettle') ? `Kettle, who was asleep, has stopped being asleep, and asks how wide, exactly, and whether it would take a cusser. He says he would rather she didn't.` : `The squad, which was asleep, is listening.`}
+
+"There's a line of mine still up," he says at the end. "Off a chimney in Gadrobi. If nobody's cut it." He thinks. "Somebody will have cut it. I'd have cut it." Then, quieter: "I'd like it to still be up."`,
+    ch:[{t:'"Do you want to go back?"', req:()=>!S.f.b3_c2_vellAsked, fx:()=>{ S.f.b3_c2_vellAsked = 1; }, go:'b3_c2_vell_back'},
+        {t:'Sleep.'}]}),
+  b3_c2_vell_back:()=>({sp:'Vell', fx:()=>{ S.f.b3_c2_vellAsked = 1; }, txt:
+`He takes a long time to answer, for Vell.
+
+"Some nights." Honest, which he still is, mostly, before he's thought not to be. "Then I think about the roof. The night the Fourth stood on it." He sits up and starts coiling the rope, because his hands want something. "The Guild's a lot of frightened people with the same name. I said that. The Fourth's a lot of frightened people with the same name too. Only you say it out loud every morning. You count it."
+
+He tucks the end in. "I'd rather be counted than strung up. Even out here. Even with no roofs."${b3In('sohra') ? `
+
+From the Rhivi side of the fire Sohra says, without turning round, "That is a good answer. I am going to tell the Mhybe a Malazan said it." Vell goes red to the ears, which in that light nobody can see, and everybody knows.` : ''}`,
+    ch:[{t:'"Tell me about the roofs."', req:()=>!S.f.b3_c2_vellRoofs, fx:()=>{ c2L('vell', 1); S.f.b3_c2_vellRoofs = 1; }, go:'b3_c2_vell_roofs'},
+        {t:'Sleep.'}]}),
   b3_c2_fire_rest:()=>({sp:'The Fourth\'s fire', txt:
 `${b3In('sohra') ? `Some time in the night Sohra comes and sits down by the fire, because the Rhivi singing has stopped and she does not like the quiet. "It is for the herd," she says, when you ask her what the songs are. "So the herd knows we are here. So the dead in the grass know we are here." She pokes the fire. "So whatever made those tracks knows we are here." She thinks about it. "That last part I am less sure is good."` : `Some time in the night the Rhivi singing stops, and the quiet after it is very big.`}
 
@@ -723,11 +793,11 @@ ${b3In('sohra') ? `"Brood's second," Sohra says, when he has gone. "The Warlord 
 
 ${b3In('kettle') ? `Kettle is already there. Of course Kettle is already there. She is standing as close to the nearest quorl as a person can stand without being in it, with her hands clasped behind her back so that she won't touch it, and her face is the face of a child at a Fete.
 
-"They're *warm*," she says, without turning round. "Sergeant. Chub said. They're warm."` : `The quorls are warm. You can feel it on your face from three paces, like standing by a banked fire.`}
+"They're *warm*," she says, without turning round. "Sergeant. Chub said. They're warm."` : `The quorls are warm. You can feel it on your face from three paces, like standing by a banked fire.`}${b3In('vell') ? ` Vell stays well back. He and the quorls have an understanding, which is that he was sick on one north of Pale and none of them has mentioned it.` : ''}
 
 The rider has stopped and turned its helmed head toward the Fourth. It makes a small clicking sound. Then, as if it had decided something, it lifts one gloved hand and makes a sign with it: flat, then turned, then two fingers drawn down the chitin of its other forearm.`,
     ch:[{t:'Watch its hands, and try to sign it back.', check:['wits', 16], trick:'b3_c2_hand', req:()=>!S.f.b3_c2_handTried, fx:()=>{ S.f.b3_c2_handTried = 1; },
-          edges:id=>[id === 'kettle' && ['she has watched them since Nathilog', 2], id === 'sohra' && ['herd-signs are hand-signs', 1], id === 'brisk' && ['she does not wave at things', -1]],
+          edges:id=>[id === 'kettle' && ['she has watched them since Nathilog', 2], id === 'sohra' && ['herd-signs are hand-signs', 1], id === 'brisk' && ['she does not wave at things', -1], id === 'ellis' && ['the Claw talks with its hands too', 1], id === 'vell' && ['Guild journeymen sign roof to roof', 1]],
           go:'b3_c2_hand_ok', fail:'b3_c2_hand_miss'},
         {t:'Nod, and leave it to its quorls.', go:()=>startExplore()}]}),
   b3_c2_hand_ok:()=>({sp:'A Black Moranth', txt:
