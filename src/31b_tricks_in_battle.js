@@ -32,9 +32,11 @@ Object.assign(AB, {
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; const ux = u.x, uy = u.y; sparks(ux, uy, 10, '#9a86e0', .4); sparks(t.x, t.y, 10, '#9a86e0', .4);
       u.x = t.x; u.y = t.y; t.x = ux; t.y = uy; AUDIO.play('shadow'); B.moved = true; blog(`${u.name} and ${t.name} are each where the other was. The enemy never saw the rope.`); }},
   t_otataral:{name:TRICKS.otataral.name, trick:'otataral', desc:()=>TRICKS.otataral.fx,
-    tiles:u=>foes().filter(f => cheb(u,f) <= 3 + lvT() && !f.otat && sees(u,f)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.otat = true; AUDIO.play('burner', .4); sparks(t.x, t.y, 18, '#c8644a', .5); float(t, 'otataral', '#e0846a');
-      const lost = []; if (t.ai === 'raest') lost.push('its ice'); if (t.kind === 'stone') lost.push('its slam'); if ((t.attacks || 1) > 1) { t.attacks = 1; lost.push('its second blow'); }
+    tiles:u=>foes().filter(f => cheb(u,f) <= 3 + lvT() && !f.otat && f.ai !== 'raest' && sees(u,f)), // the Tyrant's ice is Elder (David, Oct 27: Q7)
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; AUDIO.play('burner', .4); sparks(t.x, t.y, 18, '#c8644a', .5);
+      if (t.ai === 'raest') { blog(`${u.name} throws a pinch of red dust at ${t.name}. It settles on the rime and lies there. Omtose Phellack is older than otataral, and does not notice it.`); return; }
+      t.otat = true; float(t, 'otataral', '#e0846a');
+      const lost = []; if (t.kind === 'stone') lost.push('its slam'); if ((t.attacks || 1) > 1) { t.attacks = 1; lost.push('its second blow'); }
       if (t.rng > 1 && (t.magic || /shadow|sorcer|bolt|lance|warren|spell/i.test(t.verb || ''))) { t.rng = 1; lost.push('its sorcery'); }
       blog(`${u.name} throws a pinch of red dust at ${t.name}. ${lost.length ? `It loses ${lost.join(', ')} for the rest of the fight.` : 'Nothing about it was magic. It sneezes.'}`); }},
   t_dark:{name:TRICKS.dark.name, trick:'dark', sorcery:true, elder:true, aoe:1, range:5, smoke:true, darkness:true, desc:()=>TRICKS.dark.fx,

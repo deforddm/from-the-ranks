@@ -153,7 +153,7 @@ const GLOSS = [
   [5, 'The Jaghut', 'An ancient race of solitary sorcerers, masters of ice. A few of them made themselves tyrants, and were buried for it.'],
   [5, 'Raest', 'The Jaghut Tyrant in the barrow on the Gadrobi Hills, buried by his own people a very long time ago.', () => S.f.c5_rise || (S.chapter || 0) >= 6],
   [5, "T'lan Imass", 'Undying warriors of bone and flint, bound to hunt the Jaghut for ever. They fought beside the old Emperor.'],
-  [5, 'Otataral', 'A red ore that kills sorcery near it. Nobody with a warren wants to stand close to it. Some say the Elder warrens shrug it off.'],
+  [5, 'Otataral', 'A red ore that kills sorcery near it. Nobody with a warren wants to stand close to it. The Elder warrens shrug it off: Kurald Galain, Tellann, and the Jaghut\'s Omtose Phellack.'],
   [5, 'The Adjunct', "The Empress's own hand, answerable to nobody below the throne."],
   [6, "Gedderone's Fete", "Darujhistan's spring festival: masks, paper lanterns, and winter chased out of the doorways at dawn."],
   [6, 'Omtose Phellack', 'The Jaghut warren: ice, and the cold that keeps.'],
@@ -173,6 +173,10 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.3.0', ['Bridgeburner: after every win, a quarter of the health each squadmate lost mends on top of the usual patch-up, so the badly hurt come back further. Wounds still carry until the squad rests.',
+    'Book One: the Tyrant\'s ice is Omtose Phellack, an Elder warren, and otataral dust does not touch it. The dust is no longer offered against him.',
+    'Book Three, Chapter 5: at the ford the cadre mage no longer drowns the Pannion mage (that deed is Shank\'s, above Coral). She stands the river up against his working, and a quarrel does the rest. At Coral a Bridgeburner tells you about Shank.',
+    'Book Two: Bungle is a sergeant who takes over Mincer\'s sappers, as in the novel, not a captain.']],
   ['7.2.2', ['A squadmate who joins late now comes in at the squad\'s level, in every book: the veteran picks for the levels already passed (+6 health, +1 to hit, +1 move and on, in that order) come with them, and a squadmate back from camp after a level-up catches up too. Saves with a late joiner catch up on load.',
     'Book Four: Ramin (or any recruit) can go to camp for one of the Fourteenth\'s spares, so six still walk.',
     'The Level bar on a squadmate\'s sheet no longer runs past its box above level 8.']],

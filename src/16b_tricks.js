@@ -28,7 +28,7 @@ const TRICKS = {
   otataral:{name:'Otataral Dust', ch:5, use:'chapter', n:2, ab:'t_otataral', not:['tuft','ohl'], where:'the ward-stone the Adjunct\'s sword cut',
     notWhy:{tuft:'won\'t touch it. Meanas goes quiet near it', ohl:'won\'t touch it. Denul goes thin near it'},
     lore:'Red dust mined at the edge of the Otataral Desert, in Seven Cities. The Adjunct\'s sword is made of it. The cut she left in the ward-stone was still shedding it.',
-    get fx(){ return `${trickTimes('otataral')} a chapter: a pinch thrown at an enemy within ${3 + lvT()}. For the rest of the fight its sorcery fails: no lances, no slams, no shadow-bolts, one blow a turn. Grows with level. Tuft and Ohl will not carry it.`; }},
+    get fx(){ return `${trickTimes('otataral')} a chapter: a pinch thrown at an enemy within ${3 + lvT()}. For the rest of the fight its sorcery fails: no lances, no slams, no shadow-bolts, one blow a turn. Elder sorcery shrugs it off: the Jaghut's ice is Omtose Phellack. Grows with level. Tuft and Ohl will not carry it.`; }},
   dark:{name:'A Courtesy of Darkness', ch:6, use:'fight', ab:'t_dark', sorcery:true, elder:true, where:'the terrace at Lady Simtal\'s',
     lore:'A tall guest in a black dragon mask inclined his head, once, the way the Tiste Andii do to someone whose face they know. Something of Kurald Galain came with the nod and has not left.',
     get fx(){ return `Once a fight: a 3×3 of Andii dark within 5, for ${2 + lvAt(5)} rounds. Nothing shoots into it, out of it or through it, and enemies standing in it are −2 to hit. Grows with level. Elder sorcery: otataral does not touch it.`; }},

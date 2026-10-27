@@ -1,5 +1,5 @@
 /* ============ Book Three, Chapter 5: South of the Catlin ============ */
-/* Across the Catlin into the Pannion Domin: a stripped land, a Beklite rearguard at a ford where the Host's cadre drowns a Pannion mage
+/* Across the Catlin into the Pannion Domin: a stripped land, a Beklite rearguard at a ford where the Host's cadre stands the river up against a Pannion mage (the drowning is Shank's, above Coral: Q9, Oct 27)
    (seen from the bank), a burnt town where the Seer's soldiers drive the last of the starving south, and a night at a dead village's well
    where a man in Kallor's colours tries to set the Fourth Regiment and the Rhivi at each other's throats.
    Key (S.f.b3_c5_key): 'brood' (the Fourth walk the man to Caladan Brood's fire and say it in front of Korlat and Kallor: trust +3, and
@@ -170,7 +170,7 @@ const B3CH5 = {
         {id:'witness5', name:'An old woman in a doorway', kind:'b3_c5_villager', x:2, y:6, node:()=>'b3_c5_witness', show:()=>!!S.f.b3_c5_inc, fresh:()=>!!S.f.b3_c5_inc && !S.f.b3_c5_wit && !S.f.b3_c5_caught} ] } ],
 
   battles:{
-    /* the ford: a Beklite rearguard in the water and on the gravel, and behind it the far bank, where the cadre drowns their mage */
+    /* the ford: a Beklite rearguard in the water and on the gravel, and behind it the far bank, where the cadre stands the river up against their mage */
     b3_c5_ford:{title:'The ford', style:'b3_c5_domin', pitTxt:'the river', warrenText:'A ford at noon · the Domin\'s poison in every warren', warren:{denul:1, meanas:1}, music:'battle', hurtMost:true,
       map:[".t....t.","........","o------o","o------o","oo----oo","o------o","........","..t..t..","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
@@ -187,7 +187,7 @@ On it, behind the earthwork, a man in grey has climbed up onto a cart and lifted
 
 Behind you, on the near bank, the cadre mage with the wet sleeves stands up.
 
-You don't see her do anything. You see the man on the cart stop. He puts a hand to his throat. He opens his mouth and water comes out of it, brown river water, a great deal more than a man could hold, and he goes down off the cart onto his knees in the dust and keeps on bringing it up, and then he doesn't.
+You don't see her do anything. You see the river stand up. A thin grey wall of it lifts out of the deep water between the banks, higher than a man, and hangs there, and whatever the man on the cart has made comes down on it and goes into it like hail into a pond. He is still standing on the cart with his hands up, surprised, when a quarrel from somewhere down the near bank takes him under the breastbone. He goes down off the cart onto his knees in the dust, and stays there, and the wall falls back into its bed all at once and soaks the far bank to the earthwork.
 
 The grey goes out of the air. A voice on the far bank shouts an order, and the Seerdomin who stood round the cart come down to the water's edge to meet you, maces up, because there is nothing else left for them to do.${b3In('ohl') ? `
 
@@ -242,7 +242,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
 
   scenes:{
     b3_c5_catlin:{loc:'The Catlin', sub:'The south shore', cap:'The broken bridge on the trader road, its middle span gone, and below it a mile of brown ford churned to mud by two armies.', amb:'plain'},
-    b3_c5_drowned:{loc:'The Domin', sub:'The far bank of a ford', cap:'A far riverbank under a hard sky, a cart, and a man on his knees beside it in a dark wet circle where nothing else is wet.', amb:'wind'},
+    b3_c5_drowned:{loc:'The Domin', sub:'The far bank of a ford', cap:'A river at dusk seen from the near bank: a cart on the far side, a man on his knees beside it, and between the banks the river standing up in a thin grey wall.', amb:'wind'},
     b3_c5_burnt:{loc:'The Domin', sub:'A burnt town · rain', cap:'Black walls without roofs, smoke going up into the rain, and a square round a well where nobody is left to draw water.', amb:'storm'},
     b3_c5_camp:{loc:'The Domin', sub:'The halt at night · Caladan Brood\'s fire', cap:'A great many small fires across a dead village, and one big one with very few people round it.', amb:'camp_night'} },
 
@@ -259,7 +259,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     if (f.b3_c5_key === 'quiet') x.push(`The man in the fur collar went back to his own lines with a broken nose and no names said. The well was shared by midnight. The story about Coral was not stopped.`);
     if (f.b3_c5_inc === 'cut') x.push(`Blood at the well before it stopped: a Rhivi herdsman's arm, a Fourth Regiment man's face, and Tav's palm, which he says is nothing.`);
     if (f.b3_c5_inc === 'calm') x.push(`The well saw no blood. The knives went down before they went in.`);
-    if (f.b3_c5_drowned || f.b3_c5_fordDone) x.push('A cadre mage drowned a Pannion mage at a ford, from a hundred paces off, with water from the river. The Fourth saw him on his knees on the far bank.');
+    if (f.b3_c5_drowned || f.b3_c5_fordDone) x.push('At a ford a cadre mage stood the river up in a wall, and a Pannion mage\'s working went into the water. A quarrel from the Seventh did the rest. The Fourth saw him on his knees on the far bank.');
     if (f.b3_c5_orley) x.push(`${b3In('ohl') ? 'Ohl wrote' : 'The sergeant wrote'} a name at the ford: Orley, the Seventh, nineteen. The list is ${b3ListWords()} now.`);
     if (f.b3_c5_remnants === 'fed') x.push('The Fourth gave the starving in the burnt town what it was carrying, and sent them north toward the Grey Swords.');
     if (f.b3_c5_remnants === 'north') x.push('The Fourth cut the starving loose in the burnt town and pointed them north, and kept its rations.');
@@ -276,7 +276,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     f.b3_c5_key === 'quiet' && `The Fourth settled the well among soldiers: Kallor's man went home with a broken nose and no names. The story about Coral goes on.`,
     f.b3_c5_caught && `A man in Kallor's colours put a dead calf down the well at the halt and told each line the other meant to take the water.`,
     f.b3_c5_townDone && `A burnt town in the rain. The Seer's soldiers were driving the last of its people south ahead of the army. The Fourth cut them loose.`,
-    f.b3_c5_fordDone && `A Beklite rearguard held a ford two days south of the Catlin, and died there. A cadre mage drowned their mage from the near bank.`,
+    f.b3_c5_fordDone && `A Beklite rearguard held a ford two days south of the Catlin, and died there. A cadre mage stood the river up against their mage, and a quarrel did the rest.`,
     f.b3_c5_race && `Hurlochel: Brood's camp says the Host means to take Coral first and keep it for the Empress. Kallor says it loudest.`,
     f.b3_c5_mhybe && `The Mhybe has gone back north to Capustan in a wagon, with the two Daru, to find a temple that can ease her. Her daughter stayed with the army.`,
     `The Fourth crossed the Catlin into the Pannion Domin. The fields are stripped, the villages empty, and the warrens poisoned.`].filter(Boolean); },
@@ -510,7 +510,7 @@ Tuft nods slowly, as if she were writing it down somewhere inside. The two of th
 "In our camp they say the Malazans want Coral for their Empress," he says at last. "Maybe you want this ford for her too." He doesn't move. Neither do the dozen behind him. "We will watch. We are very good at watching."`,
       ch:[{t:'Leave it.'}]}),
     b3_c5_ford:()=> S.f.b3_c5_fordDone ? {sp:'The ford', txt:
-`The gravel is the Host's now. On the far bank the earthwork is a long low heap with nobody behind it, and the man the cadre drowned is still on his knees by the cart, his forehead on the ground. The column has started across behind you, wagons and bhederin and the Rhivi children on their backs.
+`The gravel is the Host's now. On the far bank the earthwork is a long low heap with nobody behind it, and the Pannion mage is still on his knees by the cart, his forehead on the ground. The column has started across behind you, wagons and bhederin and the Rhivi children on their backs.
 
 South of the river the road goes on toward a smudge of smoke on the horizon, three days off, that does not move with the wind.`,
       ch:[{t:'Cross. South.', go:()=>{ startExplore('b3_c5_town'); talk('b3_c5_town_arrive'); }}, {t:'Not yet.'}]} : {sp:'The ford', txt:
@@ -538,17 +538,17 @@ It isn't much. It's the first step, which is the one that matters.`,
       ch:[{t:'Into the water.', go:()=>startBattle('b3_c5_ford')},
           {t:'Kettle\'s sharper, into the river short of their line.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b3_c5_ford', {pre:true})},
           {t:'Not yet.'}]}),
-    b3_c5_after_ford:()=>({sp:'The far bank', scene:'b3_c5_drowned', fx:()=>{ S.f.b3_c5_fordDone = 1; S.f.b3_c5_orley = 1; S.f.b3_listAdds = (S.f.b3_listAdds || 0) + 1; ally(0, 1, 'The drowned man on the far bank'); }, txt:
+    b3_c5_after_ford:()=>({sp:'The far bank', scene:'b3_c5_drowned', fx:()=>{ S.f.b3_c5_fordDone = 1; S.f.b3_c5_orley = 1; S.f.b3_listAdds = (S.f.b3_listAdds || 0) + 1; ally(0, 1, 'The Pannion mage on the far bank'); }, txt:
 `The ford is the Host's. The rearguard died on the gravel and in the water and on the far bank, as ${b3In('greysword') ? 'Dannet said' : 'everyone knew'} they would, and not one of them ran.
 
-The man the cadre drowned is still on his knees in the dust beside the cart, bent forward with his forehead on the ground as if he were praying. The earth round him is wet in a wide dark circle. Nothing else on the far bank is wet. The flies have found him already. The Fourth goes no closer than it has to.
+The Pannion mage is still on his knees in the wet dust beside the cart, bent forward with his forehead on the ground as if he were praying, the quarrel's flights under his chest. The whole far bank is soaked to the earthwork, where the river came down. The flies have found him already. The Fourth goes no closer than it has to.
 
 Downstream the Seventh is pulling a boy out of the deep water at the edge of the ford, where the gravel stops without warning. He went in face-down in his armour and did not come up.${b3In('vell') ? ` Vell's line goes out to them across the deep water, and they take it, and it is good for nothing now but bringing him in.` : ''} ${b3In('ohl') ? `Ohl wades out to him, and turns him over, and does not reach for Denul, because there is nothing for it to do. Then he takes out his book and writes it before the boy is out of the river: *Orley. The Seventh. Nineteen. A ford with no name.* The list is ${b3ListWords()} now. He shuts the book.` : `One of the Seventh says his name was Orley, and that he was nineteen. You write it down, because Ohl would have.`}`,
       ch:[{t:'See to the cadre mage.', go:'b3_c5_drowned'}, {t:'Back across. Leave the far bank to the flies.', go:()=>startExplore()}]}),
     b3_c5_drowned:()=>({sp:'A cadre mage', scene:'b3_c5_drowned', fx:()=>{ S.f.b3_c5_drowned = 1; }, txt:
 `The mage with the wet sleeves is sitting on the near bank again with her feet in the river and her head between her knees, and her partner is holding a cloth to her face, and the cloth is red.
 
-"Don't," she says, when ${b3In('ohl') ? 'Ohl reaches' : 'you reach'} for her. "It's the warren. It wants paying, down here. I paid." She takes the cloth away; the bleeding has slowed. "I put the river in him. Fill a man's chest with water from a hundred paces off and he can't say a word of his own warren back at you. It's quick."
+"Don't," she says, when ${b3In('ohl') ? 'Ohl reaches' : 'you reach'} for her. "It's the warren. It wants paying, down here. I paid." She takes the cloth away; the bleeding has slowed. "I stood the river up in front of him. Whatever he threw went into the water, and the water took it down to the bottom. The Seventh's crossbows did the rest. I only bought them the moment."
 
 She looks across at the man kneeling on the far bank, and away again.
 

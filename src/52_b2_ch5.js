@@ -82,7 +82,7 @@ const B2CH5 = {
         {id:'list5', name:'Corporal List', kind:'list', x:10, y:2, node:()=>S.f.b2_list5 ? 'b2_list5_again' : 'b2_list5', fresh:()=>!S.f.b2_list5},
         {id:'duiker7', name:'Duiker', kind:'duiker', x:11, y:3, node:()=>'b2_duiker7', fresh:()=>!S.f.b2_duiker7},
         {id:'weasel5', name:'A Weasel rider', kind:'weasel', x:2, y:6, node:()=>S.f.b2_weasel5 ? 'b2_weasel5_again' : 'b2_weasel5', show:()=>!!S.f.b2_list5, fresh:()=>!!S.f.b2_list5 && !S.f.b2_weasel5},
-        {id:'bungle5', name:'Captain Bungle', kind:'sapper', x:2, y:4, node:()=>'b2_bungle5', fresh:()=>!S.f.b2_bungle5},
+        {id:'bungle5', name:'Sergeant Bungle', kind:'sapper', x:2, y:4, node:()=>'b2_bungle5', fresh:()=>!S.f.b2_bungle5},
         {id:'ours7', name:'The squad\'s people', kind:'hissari_w', x:5, y:9, node:()=>'b2_ours7', fresh:()=>!S.f.b2_ours7},
         {id:'ramin7', name:'Ramin', kind:'redblade', x:13, y:8, node:()=>'b2_ramin7', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin7} ] },
 
@@ -374,19 +374,19 @@ ${b2In('tangle') ? `Tangle squats by it and looks at the hole a long time. "Ston
 The old woman, out of Keth, very low: "Grey people. The Imass did that, child. The Imass do not stop. Remember it." Keth would rather not remember it, and says so, and she makes him say it again.` : ''}`,
     ch:[{t:'Leave it lie.', go:()=>startExplore()}]}),
 
-  /* ---- Bungle's company, and Mincer in it ---- */
-  b2_bungle5:()=>({sp:'Captain Bungle', fx:()=>{ S.f.b2_bungle5 = S.f.b2_bungle5 || 'met'; }, txt:
-`Bungle's company is digging a latrine trench beside the track, because the Fist wants the camp clean even in a graveyard. Bungle stands over it with Mincer's slate. In the trench, with a spade, stripped to the waist and sweating, is Mincer.
+  /* ---- Bungle's sappers, and Mincer in them ---- */
+  b2_bungle5:()=>({sp:'Sergeant Bungle', fx:()=>{ S.f.b2_bungle5 = S.f.b2_bungle5 || 'met'; }, txt:
+`Bungle's sappers are digging a latrine trench beside the track, because the Fist wants the camp clean even in a graveyard. Bungle stands over it with Mincer's slate. In the trench, with a spade, stripped to the waist and sweating, is Mincer.
 
 He looks up. "Sergeant." No rank on him anywhere. He looks well, for a man in a latrine. He goes back to digging.
 
 "Sergeant." Bungle comes over, the slate held to his chest like a shield. "Quick word. The company's dry. I don't mean water. I mean there's not a sharper left in it, nor a burner, nor anything that goes off. Sappers with nothing to throw are a regiment of ditch-diggers." He looks at the trench. "As you see." ${b2In('tangle') ? `He looks at Tangle's satchel. He doesn't ask. He is asking.` : b2Away() === 'tangle' ? `"Your sapper's on the burned boat with his satchel?" "The satchel's here." He brightens, and then looks at you, and doesn't ask.` : `"You've no sapper. Pity."`}`,
     ch:[{t:'"Tangle. Give the company a sharper."', tag:'1 sharper, for good', req:()=>b2In('tangle') && S.inv.sharper > 0 && S.f.b2_bungle5 !== 'gave', fx:()=>{ S.inv.sharper--; S.f.b2_bungle5 = 'gave'; loy('tangle', 1); }, go:'b2_bungle5_gave'},
-        {t:'"We\'re short ourselves, Captain."', fx:()=>{ if (S.f.b2_bungle5 !== 'gave') S.f.b2_bungle5 = 'kept'; }, go:'b2_bungle5_kept'}]}),
-  b2_bungle5_gave:()=>({sp:'Captain Bungle', txt:`Tangle takes a sharper out of the satchel and holds it a moment, and hums the four notes, and stops, and puts it in Bungle's hand. "${b2Count()}," he says. "Tell Mincer it was me."
+        {t:'"We\'re short ourselves, Bungle."', fx:()=>{ if (S.f.b2_bungle5 !== 'gave') S.f.b2_bungle5 = 'kept'; }, go:'b2_bungle5_kept'}]}),
+  b2_bungle5_gave:()=>({sp:'Sergeant Bungle', txt:`Tangle takes a sharper out of the satchel and holds it a moment, and hums the four notes, and stops, and puts it in Bungle's hand. "${b2Count()}," he says. "Tell Mincer it was me."
 
 In the trench Mincer has stopped digging. He nods to Tangle, once, a captain's nod, and goes back to the spade.`, ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_bungle5_kept:()=>({sp:'Captain Bungle', txt:`"Course you are." Bungle doesn't argue. Sappers never argue about munitions; they only remember. "If it comes to it, Sergeant, and it will, find us. We'll throw rocks. We're good at rocks." In the trench Mincer laughs, once, at the spade.`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_bungle5_kept:()=>({sp:'Sergeant Bungle', txt:`"Course you are." Bungle doesn't argue. Sappers never argue about munitions; they only remember. "If it comes to it, Sergeant, and it will, find us. We'll throw rocks. We're good at rocks." In the trench Mincer laughs, once, at the spade.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- the squad's people, and Ramin, in the trees ---- */
   b2_ours7:()=>({sp:b2Ours5() || 'The squad\'s people', fx:()=>{ S.f.b2_ours7 = 1; }, txt: S.f.b2_key === 'daughters' ?

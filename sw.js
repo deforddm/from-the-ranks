@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v7.2.2'; // late joiners catch up on the level picks; a recruit can go to camp for a spare; the level bar fits
+const CACHE = 'ftr-v7.3.0'; // David's answers: Bridgeburner wins mend a quarter of lost health; Raest immune to otataral; the ford's drowning moved to Shank; Sergeant Bungle
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];

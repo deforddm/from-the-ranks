@@ -49,7 +49,7 @@ Lint's REVIEW list for Book Three: every entry is a node reached only with that 
 
 ## Left open on purpose
 
-- **Ch5's drowned mage.** The brief and moi-canon §1.7 put "Malazan mages drown an enemy mage" on the march. Ch6's re-check (W23) makes that Shank's deed at the entrenchments above Coral. Ch5 keeps an invented, unnamed cadre drowning at an invented ford, seen from the bank. It is not the squad's deed. If the owner prefers canon's placing, Ch5 can change the drowned man to a Pannion mage killed some other way.
+- **Ch5's ford mage** (changed v7.3.0, Q9, David, Oct 27, 2026). The drowning is Shank's, at the entrenchments above Coral (MoI ch 23). At the Ch5 ford the cadre mage now stands the river up as a wall that swallows the Pannion mage's working, and a quarrel from the Seventh kills him; no drowning. At Coral (`b3_c7_bb`) an unnamed Bridgeburner tells the squad of Shank's drowning, as hearsay; the squad never sees it.
 - **Four coppers after Ch2 `wagons`.** There Tav tries to pay and Brisk pushes the coins back ("Not yet. Not for this."). Ch6 and Ch7 go on with "he still won't pay". That reads as the old game resumed, so it is left.
 - **Ohl's offers** vary (a night, five days, three days, a week): each is his guess on the day, and none heals the leg.
 - **Ohl's list and the legion** (Ch7 lift): the legion's fourteen dead count as one entry.

@@ -544,7 +544,7 @@ async function aiTurn(u, turnId){
     if (u.tc % 3 === 0 && adj.length) { blog(`<em>The Stonebound slams the floor.</em> Stone and grief in every direction.`); AUDIO.play('slam'); shakeMap();
       B.fx.push({kind:'boom', x:u.x, y:u.y, r:1, col:'#a08de0', t:performance.now()}); sparks(u.x, u.y, 40, '#9a86e0'); adj.forEach(p => hurt(p, roll(2,6)));
       await wait(900); if (gone()) return; return done(); } }
-  if (u.ai === 'raest' && !u.otat) { u.tc = (u.tc || 0) + 1; // the Tyrant: a lance of Omtose Phellack on odd turns, a slow walk on even ones
+  if (u.ai === 'raest') { u.tc = (u.tc || 0) + 1; // the Tyrant: a lance of Omtose Phellack on odd turns, a slow walk on even ones
     if (u.tc % 2 === 1) { const pool = party(), sq = pool.filter(p => !p.ally), tg = (sq.length ? sq : pool)[R((sq.length ? sq : pool).length)];
       if (tg) { u.facing = tg.x >= u.x ? 1 : -1; blog(`<em>The Tyrant speaks a word of Omtose Phellack.</em> The air around ${tg.name} turns to knives.`); AUDIO.play('shadow'); AUDIO.play('slam');
         B.fx.push({kind:'lance', from:{x:u.x,y:u.y}, to:{x:tg.x,y:tg.y}, col:'#bfe8ff', t:performance.now(), dur:1200}); await wait(420);

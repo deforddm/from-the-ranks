@@ -556,7 +556,9 @@ ${b3In('tuft') ? `Tuft has gone very still beside you. She does not look at him.
   b3_c7_bb:()=>({sp:'A Bridgeburner', fx:()=>{ S.f.b3_c7_bb = 1; }, txt:
 `A Bridgeburner is sitting on a coil of rope at the end of the line with a satchel between his knees, checking munitions by touch, the way sappers do. He looks at your badge and nods. They all know the Seventh. Everybody in this army knows everybody in this army by now.
 
-"You're the marines going down behind us," he says. "Stay behind us. If we turn round, it's because something's turned round with us, and you want to be somewhere else." He buckles the satchel. "First in, last out. That's us. You lot get the middle. The middle's where you live."${b3In('kettle') ? `
+"You're the marines going down behind us," he says. "Stay behind us. If we turn round, it's because something's turned round with us, and you want to be somewhere else." He buckles the satchel. "First in, last out. That's us. You lot get the middle. The middle's where you live."
+
+He jerks his chin along the screen, toward the Bridgeburners' end. "Shank had one of their Seerdomin. Put the water in his chest, and the man drowned on dry stone." He says it the way a man says it rained. "Don't ask Shank about it. He'll tell you."${b3In('kettle') ? `
 
 Kettle looks at his satchel with naked love. He sees it, and grins, and taps it. "Not for you, sapper," he says. "Not tonight."` : ''}${b3In('vell') ? `
 

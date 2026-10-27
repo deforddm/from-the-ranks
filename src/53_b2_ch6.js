@@ -148,7 +148,7 @@ const B2CH6 = {
       quest:()=> !S.f.b2_dojalDone ? 'The spring, before Dom\'s people get to it.' : 'The stretch is drinking. Then on, to the Geleen.',
       npcs:[
         {id:'lull7', name:'Captain Lull', kind:'lull', x:11, y:5, node:()=>'b2_lull7', fresh:()=>!S.f.b2_lull7},
-        {id:'bungle6', name:'Captain Bungle', kind:'sapper', x:3, y:7, node:()=>'b2_bungle6', fresh:()=>!S.f.b2_bungle6},
+        {id:'bungle6', name:'Sergeant Bungle', kind:'sapper', x:3, y:7, node:()=>'b2_bungle6', fresh:()=>!S.f.b2_bungle6},
         {id:'nobles6', name:'A noble\'s carriage', kind:'nethpara', x:12, y:7, node:()=>'b2_nobles6', fresh:()=>!S.f.b2_nobles6},
         {id:'ours12', name:'The squad\'s people', kind:'hissari_w', x:8, y:7, node:()=>'b2_ours12', fresh:()=>!S.f.b2_ours12} ] },
 
@@ -698,8 +698,8 @@ Captain Lull is at the spring with his one eye and a handful of marines. He sees
 `"Sergeant." Lull nods across the pool at the tamarisks, where pike-heads move above the scrub. "Dom's. They mean to sit on this. The Fist means them not to. The column needs an hour at the water. Give it one." He considers. "Two would be generous. I'd remember you in my prayers, if I prayed." He goes back to his marines. His one eye watches you go, so you know he means it.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
-  b2_bungle6:()=>({sp:'Captain Bungle', fx:()=>{ S.f.b2_bungle6 = 1; }, txt:
-`Bungle's company is digging. Of course it is: a ditch across the column's road behind the spring, at a run, with spades, the sappers stripped to the waist and grey with dust. Mincer is in the ditch, at the deep end. He is singing.
+  b2_bungle6:()=>({sp:'Sergeant Bungle', fx:()=>{ S.f.b2_bungle6 = 1; }, txt:
+`Bungle's sappers are digging. Of course they are: a ditch across the column's road behind the spring, at a run, with spades, the sappers stripped to the waist and grey with dust. Mincer is in the ditch, at the deep end. He is singing.
 
 "Rumour," says Bungle, coming over with the slate, "is that the Fist means to cut the column in two before Aren. Send the people on. Keep the army back to hold the door." He looks at the ditch. "If he does, the company stays. Sappers dig the last ditch. That's what we're for, at the end. Mincer says so." In the ditch, Mincer waves his spade. ${b2In('tangle') ? `Bungle looks at Tangle. "You'd be welcome. If it comes to it. Just saying." Tangle doesn't answer. He hums the four notes. He stops on the fourth.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -992,7 +992,7 @@ She takes the Weasel teeth from her throat and holds them a while, and then puts
     return {sp:'Tangle', txt:
 `Tangle is sitting on the squad's tailboard with the satchel in his lap, not counting it. That is how you know.
 
-${lean === 'stay' ? `"Bungle's company is staying," he says. "Last ditch. Mincer's out there already, digging it, singing. He sent a man to ask if I'd be along." He turns the satchel over. "By name. Mincer's never asked for anybody by name.${f.b2_robe === 'mincer' ? ' Not since the ford. Not since what we did in the ford.' : ''}" He looks east. "Sappers dig the last ditch. That's what we're for, at the end. I always thought I'd mind."` : `"The count has to get to Aren," he says. "${b2Count()}." He pats the satchel. "There's a sum in here, and I'm the only one who knows it, and if I'm not there to finish it the sum's wrong. I hate a wrong sum." He looks east, where Bungle's company is forming. "They'll manage. Mincer's got a spade."`}${b2Hurt() === 'tangle' ? `
+${lean === 'stay' ? `"Bungle's sappers are staying," he says. "Last ditch. Mincer's out there already, digging it, singing. He sent a man to ask if I'd be along." He turns the satchel over. "By name. Mincer's never asked for anybody by name.${f.b2_robe === 'mincer' ? ' Not since the ford. Not since what we did in the ford.' : ''}" He looks east. "Sappers dig the last ditch. That's what we're for, at the end. I always thought I'd mind."` : `"The count has to get to Aren," he says. "${b2Count()}." He pats the satchel. "There's a sum in here, and I'm the only one who knows it, and if I'm not there to finish it the sum's wrong. I hate a wrong sum." He looks east, where Bungle's sappers are forming. "They'll manage. Mincer's got a spade."`}${b2Hurt() === 'tangle' ? `
 
 He moves his leg, where the Vathar wound is, and doesn't wince, and you see him not wince. "And this won't do Aren Way at a run. You know it won't."` : ''}`,
       ch:b2PartCh('tangle', {stayNode:'b2_p_tangle_stay', goNode:'b2_p_tangle_go',

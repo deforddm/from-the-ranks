@@ -126,9 +126,9 @@ Object.assign(AB, {
 function carryWounds(){
   if (!DIFF().carry || !B) return;
   const ohl = B.units.find(u => u.id === HEALER() && u.side === 'p' && !u.ally && u.hp > 0), k = ohl ? .2 : .1; S.wounds = {};
-  B.units.filter(u => u.side === 'p' && !u.ally && SQUAD().includes(u.id)).forEach(u => { const base = u.hp > 0 ? u.hp : Math.round(u.maxhp * .25); S.wounds[u.id] = Math.min(u.maxhp, base + Math.round(u.maxhp * k)); S.wounds[u.id + '_max'] = u.maxhp; });
+  B.units.filter(u => u.side === 'p' && !u.ally && SQUAD().includes(u.id)).forEach(u => { const base = u.hp > 0 ? u.hp : Math.round(u.maxhp * .25), mend = Math.round((u.maxhp - base) * .25); /* Q2 (David, Oct 27): a quarter of what was lost mends with the win */ S.wounds[u.id] = Math.min(u.maxhp, base + mend + Math.round(u.maxhp * k)); S.wounds[u.id + '_max'] = u.maxhp; });
   const hurtN = SQUAD().filter(id => S.wounds[id] < S.wounds[id + '_max']).length;
-  if (hurtN) note(`Bridgeburner: ${ohl ? `${ohl.name} patches what ${ohl.id === 'ohl' ? 'he' : 'she'} can` : 'the squad binds its own cuts'}; the rest they carry into the next fight until they rest.`, 'bad');
+  if (hurtN) note(`Bridgeburner: ${ohl ? `${ohl.name} patches what ${ohl.id === 'ohl' ? 'he' : 'she'} can` : 'the squad binds its own cuts'}; a win mends a quarter of the rest, and what's left they carry into the next fight until they rest.`, 'bad');
 }
 function rest(t){ if (S && S.wounds) { S.wounds = null; note(t || 'The Fourth rests. Wounds close, mostly.', 'good'); } }
 const woundOf = id => S && S.wounds && S.wounds[id] != null ? S.wounds[id] : null;

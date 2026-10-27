@@ -219,8 +219,8 @@ SCENEX.b3_c5_burnt = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(30, W*.4/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   ctx.fillStyle = 'rgba(30,34,40,.16)'; ctx.fillRect(0, 0, W, H); vign(ctx, W, H, .8, .5); };
 
-/* the drowning, from our bank: a wide grey river at dusk, the far bank low; a man kneeling at its edge, very small, and the river standing up
-   in a thin arc out of itself to reach him. Our mages on the near bank, hands up. Nothing closer than that. */
+/* the ford, from our bank: a wide grey river at dusk, the far bank low; a man kneeling at its edge, very small, and between the banks the river
+   standing up out of itself in a thin grey wall (Q9, Oct 27: the drowning is Shank's, above Coral). Our mages on the near bank, hands up. */
 SCENEX.b3_c5_drowned = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4, fb = H*.47, nb = H*.76, kx = W*.66;
   ctx.drawImage(sceneLayer('b3c5:drowned', W, H, (x, W, H) => {
     b3c5Sky(x, W, H, hz, '#141820', '#343c48', '#6e727a', 23); glow(x, W*.3, hz - H*.02, W*.34, '#b8a890', .2); // dusk, the last of it down-river
@@ -236,12 +236,14 @@ SCENEX.b3_c5_drowned = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
   const p = (Math.sin(t*mo/900) + 1)/2, ky = fb - 1;
   // the man on the far bank, on his knees, bent forward: a silhouette, no more
   ctx.save(); ctx.translate(kx, ky); ctx.scale(1.5, 1.5); ctx.fillStyle = '#0c0d0e'; ctx.beginPath(); ctx.ellipse(0, -3.4, 2.2, 3.2, .5, 0, 7); ctx.fill(); ell(ctx, 1.8, -6.6, 1.3, 1.3, '#0c0d0e'); ctx.fillRect(-3, -1.4, 5, 1.4); ctx.fillRect(1.4, -4, .9, 4); ctx.restore(); // kneeling, a hand on the ground
-  // the water standing up out of the river in a thin arc to him
-  const ax = kx - W*.06, ay = fb + H*.08; ctx.save(); ctx.lineCap = 'round';
-  for (let s=0;s<3;s++){ ctx.strokeStyle = `rgba(${[170, 200, 230][s]},${[200, 222, 240][s]},${[220, 236, 250][s]},${(.18 + s*.12 + p*.08).toFixed(2)})`; ctx.lineWidth = [5, 2.6, 1][s]; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(ax - W*.01, fb - H*.12 - p*3, kx + 2, ky - 9.9); ctx.stroke(); }
-  for (let i=0;i<5;i++){ const k = ((t*mo/1600 + i/5) % 1), u = 1 - k, bx = (1 - u)*(1 - u)*ax + 2*(1 - u)*u*(ax - W*.01) + u*u*(kx + 2), by = (1 - u)*(1 - u)*ay + 2*(1 - u)*u*(fb - H*.12) + u*u*(ky - 9.9); ell(ctx, bx, by, 1, 1, 'rgba(230,244,255,.7)'); } // drops climbing it
+  // the river standing up out of itself mid-stream in a thin grey wall, between his working and the Host
+  const wx0 = W*.3, wx1 = W*.88, wy = fb + (nb - fb)*.42, wh = H*.15 + p*H*.01; ctx.save();
+  const wg = ctx.createLinearGradient(0, wy - wh, 0, wy); wg.addColorStop(0, 'rgba(200,220,236,.06)'); wg.addColorStop(.25, 'rgba(176,200,220,.26)'); wg.addColorStop(1, 'rgba(120,140,160,.42)');
+  ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(wx0, wy); for (let px=wx0; px<=wx1; px+=6){ const e = Math.sin((px - wx0)/(wx1 - wx0)*Math.PI); ctx.lineTo(px, wy - wh*e*(.8 + .2*Math.sin(px/23 + t*mo/700))); } ctx.lineTo(wx1, wy); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = `rgba(226,240,252,${(.3 + p*.15).toFixed(2)})`; ctx.lineWidth = 1; ctx.beginPath(); for (let px=wx0; px<=wx1; px+=6){ const e = Math.sin((px - wx0)/(wx1 - wx0)*Math.PI), py = wy - wh*e*(.8 + .2*Math.sin(px/23 + t*mo/700)); px === wx0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); } ctx.stroke(); // its lip, catching the last light
+  for (let i=0;i<14;i++){ const k = ((t*mo/1300 + hash(i, 61)) % 1), px = wx0 + hash(i, 62)*(wx1 - wx0), e = Math.sin((px - wx0)/(wx1 - wx0)*Math.PI); ctx.strokeStyle = `rgba(210,228,244,${(.35*(1 - k)).toFixed(2)})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(px, wy - wh*e*(1 - k)); ctx.lineTo(px, wy - wh*e*(1 - k) + 4); ctx.stroke(); } // water running down its face
   ctx.restore();
-  for (let i=0;i<3;i++){ const k = ((t*mo/2400 + i/3) % 1); ctx.strokeStyle = `rgba(200,214,226,${(.3*(1 - k)).toFixed(2)})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.ellipse(ax, ay, 4 + k*W*.06, 1.4 + k*H*.02, 0, 0, 7); ctx.stroke(); } // rings going out from where the river rises
+  for (let i=0;i<3;i++){ const k = ((t*mo/2400 + i/3) % 1); ctx.strokeStyle = `rgba(200,214,226,${(.3*(1 - k)).toFixed(2)})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.ellipse((wx0 + wx1)/2, wy, (wx1 - wx0)*.5 + k*W*.05, 1.6 + k*H*.02, 0, 0, 7); ctx.stroke(); } // rings going out from where the river rises
   glow(ctx, kx - W*.02, fb, W*.06, '#9ac8e8', .1 + p*.06);
   // our mages on the near bank, backs to us, hands up; and a little behind them, the squad, watching
   ctx.save(); ctx.filter = 'brightness(.36) saturate(.5)'; [[.5, 0], [.57, 1], [.64, 2]].forEach(([u, i]) => { const mx = W*u, my = nb + H*.03 + (i%2)*2; drawFigure(ctx, 'b3_c5_mage', mx, my, 1.35, t, {phase:i, dir:1}); }); ctx.restore();

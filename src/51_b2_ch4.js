@@ -1,7 +1,7 @@
 /* ============ Book Two, Chapter 4: The Day of Pure Blood ============ */
 /* The Vathar Crossing. The Silanda at the ford and Gesler's marines; Dom's archers crossing upriver on ropes; Dom's envoys and Coltaine's no;
    the Nobles' Council's secret deal, which the squad finds out and cannot stop; the floating bridges and the slaughter in the ford; Sormo's death;
-   the evening after (Mincer broken to the ranks, Bungle a captain, Marrow at the bottom of her warren).
+   the evening after (Mincer broken to the ranks, Sergeant Bungle given his sappers, Marrow at the bottom of her warren).
    Key (S.f.b2_c4_key): 'silanda' (a hurt squadmate goes aboard the Silanda for Aren: they leave the squad and rejoin in Chapter 7, S.f.b2_silandaWho)
    or 'keep' (the hurt one stays, carrying the Vathar wound: −max health until Aren, S.f.b2_woundWho). Engine for both in 47 (b2Aboard, b2Ashore, b2Wounded).
    Nobody dies here: no mortal fights. The day is carried in the column's count, and kept far off. */
@@ -140,7 +140,7 @@ const B2CH4 = {
       npcs:[
         {id:'marrow4', name:'Marrow', kind:'marrow', x:4, y:4, node:()=>'b2_marrow_end', show:()=>b2In('marrow'), fresh:()=>b2In('marrow') && !S.f.b2_marrowEnd},
         {id:'tangle4', name:'Tangle', kind:'tangle', x:10, y:4, node:()=>'b2_tangle_mincer', show:()=>b2In('tangle'), fresh:()=>b2In('tangle') && !S.f.b2_bungle},
-        {id:'bungle', name:'Captain Bungle', kind:'sapper', x:12, y:2, node:()=>'b2_bungle', show:()=>!b2In('tangle') || !!S.f.b2_bungle, fresh:()=>!S.f.b2_bungleMet},
+        {id:'bungle', name:'Sergeant Bungle', kind:'sapper', x:12, y:2, node:()=>'b2_bungle', show:()=>!b2In('tangle') || !!S.f.b2_bungle, fresh:()=>!S.f.b2_bungleMet},
         {id:'sathi4', name:'Sathi', kind:'sathi', x:2, y:2, node:()=>'b2_sathi_laugh', show:()=>b2In('sathi'), fresh:()=>b2In('sathi') && !S.f.b2_sathiLaugh},
         {id:'duiker6', name:'Duiker', kind:'duiker', x:7, y:2, node:()=>'b2_duiker6', fresh:()=>!S.f.b2_duiker6},
         {id:'ramin5', name:'Ramin', kind:'redblade', x:13, y:6, node:()=>'b2_ramin_count', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_raminCount},
@@ -253,7 +253,7 @@ On the next bridge, the one beyond this, among the officers at the rail, there i
     f.b2_vathar && `About twenty thousand refugees died at the Vathar, and about seven hundred soldiers. The Foolish Dog Clan is fewer than five hundred.`,
     f.b2_sormoDead && `Sormo E'nath, the Seventh's chief warlock, died at the Vathar on the far bank, trying to stop it.`,
     f.b2_gesler && `A burned ship, the Silanda, came up the Vathar with three marines aboard: Sergeant Gesler, Corporal Stormy and a recruit called Truth. She took the Seventh's worst wounded down to Aren. Coltaine broke his hand on Gesler's face.`,
-    f.b2_bungle && `After the Vathar Captain Mincer was broken to the ranks, and his company was given to Bungle.`,
+    f.b2_bungle && `After the Vathar Captain Mincer was broken to the ranks, and his sappers were given to Sergeant Bungle.`,
     f.b2_ropesDone && `Dom's archers crossed the Vathar upriver on ropes before the column reached the ford. Some of the ropes were cut.`].filter(Boolean); },
 
   dlg:{}
@@ -880,14 +880,14 @@ ${S.f.b2_robe === 'mincer' ? `He doesn't say why. You were not there, and he was
 
 He takes the shawl off at last, and folds it, carefully, and puts it in the satchel. "${b2Count()}," he says. "And a shawl."`,
     ch:[{t:'"Who has the company?"', go:'b2_tangle_bungle'}]}),
-  b2_tangle_bungle:()=>({sp:'Tangle', txt:`"Bungle." He says it the way you would say the name of a horse you were not sure of. "Captain Bungle, now. He's over there, wearing it." He nods up the bank. "He'll be all right. He's sensible. That's the worst thing you can say about a sapper and the best thing about a captain."`, ch:[{t:'On.', go:()=>startExplore()}]}),
-  b2_bungle:()=>({sp:'Captain Bungle', fx:()=>{ S.f.b2_bungleMet = 1; S.f.b2_bungle = 1; }, txt:
-`A sapper in a scorched apron with a captain's badge pinned on crooked over it, by somebody in a hurry, sitting on an ammunition chest with Mincer's slate in his hands, looking at it as if it might go off.
+  b2_tangle_bungle:()=>({sp:'Tangle', txt:`"Bungle." He says it the way you would say the name of a horse you were not sure of. "Sergeant Bungle has them now. He's over there, wearing it." He nods up the bank. "He'll be all right. He's sensible. That's the worst thing you can say about a sapper and the best thing about a man in charge."`, ch:[{t:'On.', go:()=>startExplore()}]}),
+  b2_bungle:()=>({sp:'Sergeant Bungle', fx:()=>{ S.f.b2_bungleMet = 1; S.f.b2_bungle = 1; }, txt:
+`A sapper in a scorched apron, with Mincer's sappers round him waiting to be told something, sitting on an ammunition chest with Mincer's slate in his hands, looking at it as if it might go off.
 
-"Sergeant." He doesn't get up. Sappers never get up. "Bungle. Captain, apparently." He holds up the slate. "Mincer's. He gave it me himself. Said I'd need it." He looks at the names on it, a long time. "He's down there. With the company. Digging latrines. He offered."
+"Sergeant." He doesn't get up. Sappers never get up. "Bungle. Sergeant. In charge of this lot, apparently." He holds up the slate. "Mincer's. He gave it me himself. Said I'd need it." He looks at the names on it, a long time. "He's down there. With the company. Digging latrines. He offered."
 
 He puts the slate away inside his apron, very carefully, the way Lull put away the Claw star. "Don't call me *sir*," he says. "Not tonight."`,
-    ch:[{t:'"Captain."', go:()=>startExplore()}]}),
+    ch:[{t:'"Sergeant."', go:()=>startExplore()}]}),
 
   /* ---- Sathi, and the Wickan manners ---- */
   b2_sathi_laugh:()=>({sp:'Sathi', fx:()=>{ S.f.b2_sathiLaugh = 1; loy('sathi', 1); }, txt:
