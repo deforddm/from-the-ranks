@@ -39,7 +39,7 @@ const r = await page.evaluate(() => { const out = {};
   b3Join('sohra'); out.three.join = {sq:S.squad.join(','), waiting:b3Waiting('sohra'), camp:rosterCampList().join(','), canSend:b3CanSend('sohra')};
   const fire = DLG.b3_c6_fire(); out.three.fireSend = fire.ch.filter(c => /Send for Sohra/.test(c.t) && (!c.req || c.req())).length; out.three.fireRoster = (fire.ch.find(c => c.t === 'The roster.') || {}).tag;
   /* the screen: choose Ellis out, Sohra in, do it */
-  startExplore(); talk('b3_c6_fire'); const rc = curCh.find(c => c.t === 'The roster.'); choose(rc);
+  startExplore(); talk('b3_c6_fire'); const rc = curCh.find(c => c.t === 'The roster.'); choose(rc); ROSTER_UI.flush();
   out.three.screen = rosterIsOpen(); out.three.lacks = $('#modal .rlack').textContent;
   out.three.sohraRow = /Sohra/.test($('#modal').textContent) && /at the Rhivi fires/.test($('#modal').textContent);
   out.three.coreBtn = !!document.querySelector('[data-rout="brisk"]');
