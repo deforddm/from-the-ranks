@@ -1605,11 +1605,13 @@ const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel'].find(id => S.squ
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
 function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push(id); S.loy[id] ??= 0; S.gear[id] ??= {}; S.picks[id] ??= [];
-  picksCatchUp();
+  if (S.lvl >= 3 && PICKS[3][id] && !S.picks[id].some(k => PICKS[3][id].some(o => o[0] === k)) && !S.picksDue.includes(3)) S.picksDue.push(3);
+  vetCatchUp(id);
   note(`${NAME(id)} joins the Fourth.`, 'good'); AUDIO.play('up'); save(); }
-/* v7.2.2 (David, Oct 27: a recruit joins at the squad's level and gets its rewards): the squad's level is shared, and what each soldier
-   brings from it is the talent at 3 and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late owes the ones passed;
-   they are chosen at the next conversation (openPicks, 37), in every book. picksOwed(s) is the list of levels someone walking still owes. */
+/* v7.2.2 (David, Oct 27: a recruit joins at the sergeant's level, with its rewards): the squad's level is shared; what each soldier
+   brings from it is the talent at 3 (chosen, openPicks) and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late,
+   or comes back from camp after a level-up, is given the veteran picks for the levels passed at once (Iron, Keen, Fleet… in order), in every
+   book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
 const VET_LVLS = [5,7,9,11,13,15];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
@@ -1618,9 +1620,8 @@ function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
   VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
-/* Book Four's muster keeps its own count until the pick is made (70e b4MusterDone) */
-function picksCatchUp(){ if (!S || !Array.isArray(S.squad)) return; if (S.book === 'hoc' && typeof b4MusterDue === 'function' && b4MusterDue()) return;
-  S.picksDue = picksOwed(S); }
+function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
+  if (have < want) PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, want - have).forEach(k => S.picks[id].push(k)); }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }
@@ -6969,7 +6970,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
-  ['7.2.2', ['A squadmate who joins late now catches up with the squad\'s level: the talent and every veteran pick (+1 to hit, +1 move, +6 health and the rest) for the levels already passed are chosen at the next conversation, in every book. Saves with a late joiner are offered the missing picks on load. The level-up picks now go only to those who owe them.',
+  ['7.2.2', ['A squadmate who joins late now comes in at the squad\'s level, in every book: the veteran picks for the levels already passed (+6 health, +1 to hit, +1 move and on, in that order) come with them, and a squadmate back from camp after a level-up catches up too. Saves with a late joiner catch up on load.',
     'Book Four: Ramin (or any recruit) can go to camp for one of the Fourteenth\'s spares, so six still walk.',
     'The Level bar on a squadmate\'s sheet no longer runs past its box above level 8.']],
   ['7.2.1', ['When Kettle opens a fight with a sharper and something comes down (the dyeing-racks, the eaves in the lane, the spoil-heap at the dig, the young Azath\'s roots, the tunnel timber), it is now drawn where it fell. Before, those squares blocked movement and sight with nothing to show for it. Saves carry on as they were.']],
@@ -8848,7 +8849,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
   if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
-  S.loy[id] ??= 0; S.picks[id] ??= []; rsRestore(id); rsTrail(); picksCatchUp(); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
 const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
@@ -8884,7 +8885,7 @@ equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) r
       /* more than six: the last recruits to come step out to camp (a Book One with Ellis and Vell both, a Book Three import with both) */
       while (s.squad.length > ROSTER_CAP) { const id = [...s.squad].reverse().find(rosterBenchable); if (!id) break; rsOut(id); }
       gearTidy();
-      picksCatchUp(); // v7.2.2: a recruit who joined late owes the picks for the levels passed
+      s.squad.filter(rosterBenchable).forEach(vetCatchUp); // v7.2.2: a recruit who joined late gets the veteran picks for the levels passed
     } finally { S = S0; }
     return r; }; }
 
@@ -35154,7 +35155,7 @@ function newStateMOI(name, importId, sid){
   migrate(s); s.picksDue = b3PicksDue(s);
   return s;
 }
-/* v6.1's automatic veteran picks for a late recruit are gone in v7.2.2: they are owed and chosen (15 picksOwed), as in every book */
+/* v6.1's veteran picks for a late recruit are given in every book from v7.2.2 (15 vetCatchUp) */
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);
@@ -48795,7 +48796,7 @@ function newStateHOC(name, importId, sid){
 { const _recruit = recruit;
   recruit = function(id){ if (!b4On()) return _recruit(id); const was = S.squad.includes(id), n0 = note;
     note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; }
-    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the levels passed are owed and chosen (15 picksOwed)
+    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the veteran picks for the levels passed come with the base recruit (15 vetCatchUp)
 { const _rest = rest; rest = function(t){ return _rest(t || (b4On() ? 'The squad rests inside the 9th\'s lines. Wounds close, mostly.' : t)); }; }
 const b4Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'The squad rests inside the 9th\'s lines, with a legion of recruits snoring round it. Wounds close, mostly.'); if (!had) note('Rested.', 'good'); save(); return true; };
 

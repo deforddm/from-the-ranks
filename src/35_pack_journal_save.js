@@ -173,7 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
-  ['7.2.2', ['A squadmate who joins late now catches up with the squad\'s level: the talent and every veteran pick (+1 to hit, +1 move, +6 health and the rest) for the levels already passed are chosen at the next conversation, in every book. Saves with a late joiner are offered the missing picks on load. The level-up picks now go only to those who owe them.',
+  ['7.2.2', ['A squadmate who joins late now comes in at the squad\'s level, in every book: the veteran picks for the levels already passed (+6 health, +1 to hit, +1 move and on, in that order) come with them, and a squadmate back from camp after a level-up catches up too. Saves with a late joiner catch up on load.',
     'Book Four: Ramin (or any recruit) can go to camp for one of the Fourteenth\'s spares, so six still walk.',
     'The Level bar on a squadmate\'s sheet no longer runs past its box above level 8.']],
   ['7.2.1', ['When Kettle opens a fight with a sharper and something comes down (the dyeing-racks, the eaves in the lane, the spoil-heap at the dig, the young Azath\'s roots, the tunnel timber), it is now drawn where it fell. Before, those squares blocked movement and sight with nothing to show for it. Saves carry on as they were.']],

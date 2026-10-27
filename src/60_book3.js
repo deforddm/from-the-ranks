@@ -313,7 +313,7 @@ function newStateMOI(name, importId, sid){
   migrate(s); s.picksDue = b3PicksDue(s);
   return s;
 }
-/* v6.1's automatic veteran picks for a late recruit are gone in v7.2.2: they are owed and chosen (15 picksOwed), as in every book */
+/* v6.1's veteran picks for a late recruit are given in every book from v7.2.2 (15 vetCatchUp) */
 /* how many may join: the squad is at most six (the sergeant, the four, one recruit); an import that lost squadmates leaves room for more */
 const B3_CAP = 6;
 const b3Room = () => Math.max(0, B3_CAP - ((S && S.squad) || []).length);

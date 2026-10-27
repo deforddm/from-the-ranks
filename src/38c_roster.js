@@ -89,7 +89,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
   if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
-  S.loy[id] ??= 0; S.picks[id] ??= []; rsRestore(id); rsTrail(); picksCatchUp(); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
 const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
@@ -125,7 +125,7 @@ equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) r
       /* more than six: the last recruits to come step out to camp (a Book One with Ellis and Vell both, a Book Three import with both) */
       while (s.squad.length > ROSTER_CAP) { const id = [...s.squad].reverse().find(rosterBenchable); if (!id) break; rsOut(id); }
       gearTidy();
-      picksCatchUp(); // v7.2.2: a recruit who joined late owes the picks for the levels passed
+      s.squad.filter(rosterBenchable).forEach(vetCatchUp); // v7.2.2: a recruit who joined late gets the veteran picks for the levels passed
     } finally { S = S0; }
     return r; }; }
 

@@ -342,7 +342,7 @@ function newStateHOC(name, importId, sid){
 { const _recruit = recruit;
   recruit = function(id){ if (!b4On()) return _recruit(id); const was = S.squad.includes(id), n0 = note;
     note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; }
-    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the levels passed are owed and chosen (15 picksOwed)
+    if (!was && S.squad.includes(id)) { S.picks[id] ??= []; save(); } }; } // v7.2.2: the veteran picks for the levels passed come with the base recruit (15 vetCatchUp)
 { const _rest = rest; rest = function(t){ return _rest(t || (b4On() ? 'The squad rests inside the 9th\'s lines. Wounds close, mostly.' : t)); }; }
 const b4Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'The squad rests inside the 9th\'s lines, with a legion of recruits snoring round it. Wounds close, mostly.'); if (!had) note('Rested.', 'good'); save(); return true; };
 
