@@ -8883,7 +8883,10 @@ function rosterChoice(back){ const camp = S ? rosterCampList() : [], lack = S ? 
   const tag = camp.length ? `${camp.length} at camp` : lack.length && lack.length < 5 ? `lacks ${ROSTER_LACKW[lack[0]]}` : 'who walks';
   return {t:'The roster.', tag, roster:true, go:()=>{ talk(back); ROSTER_UI.open(back); }}; }
 /* reached through an object, so tools that read a choice's source (onward_test) see a talk back to the fire and no more */
-const ROSTER_UI = {open:back => openRoster(back)};
+/* the screen opens a moment after the fire is drawn (one pending open at a time); flush() opens it now (tests) */
+const ROSTER_UI = {want:undefined, t:0,
+  open(back){ this.want = back; if (!this.t) this.t = setTimeout(() => this.flush(), 0); },
+  flush(){ if (this.t) clearTimeout(this.t); this.t = 0; const b = this.want; this.want = undefined; if (b !== undefined && S) openRoster(b); }};
 /* each book's chapter fires: [book][chapter] = node ids. Book One has no fire of its own in most chapters; its Roster tab is always there. */
 const ROSTER_FIRES = {
   gotm:{2:['c2_fire']},
