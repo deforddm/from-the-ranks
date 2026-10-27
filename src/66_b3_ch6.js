@@ -1233,7 +1233,7 @@ She wrings out the end of her braid.
     ch:[{t:'"Not alone. If we go, the Fourth goes."', fx:()=>{ S.f.b3_c6_ellisReeds = 1; loy('ellis', 1); }, go:'b3_c6_bank_ellis2'},
         {t:'"Let them come to us. Tell Oskan."', fx:()=>{ S.f.b3_c6_ellisReeds = 2; }, go:'b3_c6_bank_ellis2'}]}),
   b3_c6_bank_ellis2:()=>({sp:'Ellis', txt: S.f.b3_c6_ellisReeds === 1 ?
-`"The Fourth goes," she repeats. She nods, slowly, as if fitting it into the place where something else used to be. "Toc said that, once. About the Bridgeburners. I thought he was being sentimental." She picks up the bow. "He was. He was right too."
+`"The Fourth goes," she repeats. She nods, slowly, as if fitting it into the place where something else used to be. "Six years, the Claw never once said that to me." She picks up the bow. "I'd have thought it was sentimental. I'd have been wrong."
 
 She goes to sleep with her back to the river and the path in the reeds fixed in her head, ready for whenever it is wanted.` :
 `"Oskan already knows," she says. "Oskan said *pitch*, three times, and then a word in Cawn I won't repeat." She settles by the fire. "They'll come to us. People who leave a path like that always do, in the end."`,

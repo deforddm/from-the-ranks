@@ -942,7 +942,7 @@ She takes out the ledger and writes it down, small and neat, under the munitions
     b3_c5_fire_ellis:()=>({sp:'Ellis', fx:()=>{ S.f.b3_c5_tEllis = 1; }, txt:
 `Ellis is sitting just outside the firelight, facing out, with the bow across her knees. When you sit down beside her she moves it over to make room, which from Ellis is a speech of welcome.
 
-"Hurlochel's outriders go out every morning," she says. "South, east, west. I ask them what they saw. Horses, mostly. Shod or unshod, how many, going which way." A pause. "They think I'm keen."
+"The Host's outriders go out every morning," she says. "South, east, west. I ask them what they saw. Horses, mostly. Shod or unshod, how many, going which way." A pause. "They think I'm keen."
 
 She doesn't say what she is asking about. She doesn't have to. Toc the Younger kept riding, Paran said, and a man on a horse leaves tracks somewhere.
 
@@ -960,7 +960,7 @@ It is the nearest thing to a joke you have heard from her about him. She seems s
     b3_c5_fire_vell:()=>({sp:'Vell', fx:()=>{ S.f.b3_c5_tVell = 1; }, txt:
 `Vell is sitting cross-legged with the end of his line in his lap, putting an eye-splice into it by firelight${S.f.b3_c4_vellRope ? `, with the second coil, the Wolves' rope from the gully, beside him on the ground` : ''}. His hands do it without him. He has pulled it out and started again twice since you sat down.
 
-"I worked it out," he says. "From here to the Daru District. Ninety leagues of nothing, a river, a lake, and the city wall." He tucks a strand. "Not one roof the whole way. I've never in my life been that far from a roof."
+"I worked it out," he says. "From here to the Daru District. Weeks of nothing, two rivers, a plain, and the city wall." He tucks a strand. "Not one roof the whole way. I've never in my life been that far from a roof."
 
 He tests the splice with his weight, sitting down, and it holds, and he looks almost disappointed.
 
