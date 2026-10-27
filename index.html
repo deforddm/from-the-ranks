@@ -653,7 +653,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '7.2.0';
+const VERSION = '7.2.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1512,7 +1512,7 @@ const BATTLES = {
     /* Kettle's sharper (the approach): it brings down the timber they were prying at, and the dust off every beam with it, for a round;
        and the tunnel carries the bang on past the bend, to Moreau's gallery (he picks his ground) and the junction (S.f.noisy: the Stonebound is awake, +10 health) */
     preText:'The timber they were prying at comes down the rest of the way, and the dust comes off every beam with it: nobody shoots into or out of their end of the tunnel this round. The bang goes on without it, down the tunnel and round the bend, further than anyone meant it to.',
-    preFx:B => { preTile(3, 1, '#'); [[3,0],[4,0],[2,1],[4,1],[5,1],[3,2],[4,2]].forEach(([x, y]) => preSmoke(x, y, 1)); },
+    preFx:B => { preTile(3, 1, '#', 'timber'); [[3,0],[4,0],[2,1],[4,1],[5,1],[3,2],[4,2]].forEach(([x, y]) => preSmoke(x, y, 1)); },
     /* the second ground: Moreau's gallery, shored lanes between the posts, a crossbow at the far end, and one of them round behind by the old crawl */
     stage2:{title:'The officers\' gallery',
       text:()=>`Past the timber the tunnel bends into a gallery, shored and dry, where a row of officers came down the night the sky fell to watch the mines laid, and stayed. They have been laid out along the wall, every purse-string cut.${SQUAD().includes('ohl') ? ` Ohl looks along the faces. He knows two of them. He doesn't say which.` : ''}
@@ -4540,8 +4540,10 @@ function fitCanvas(cols, rows){
     cv.onpointercancel = () => { d = null; };
   }
   if (ex) { const a = AREA(); prerender(a.map, cols, rows, !!a.dark || a.decor === 'camp_night' || a.decor === 'plain_night' || a.decor === 'city_night' || a.decor === 'cellar' || a.decor === 'roof_night' || a.decor === 'hills_night' || a.decor === 'estate_night' || a.decor === 'estate_terrace' || a.decor === 'estate_storm', false, a.decor); exploreParticles(); }
-  else if (view === 'battle' && B) prerender(B.def.map, 8, 10, B.def.dark, !B.def.open && !B.def.style, B.def.style || (B.def.open ? 'plain' : ''), true);
+  else if (view === 'battle' && B) repaintBattle();
 }
+/* v7.2.1: paint the battle board from B.def.map (also after a sharper changes tiles: fitCanvas keeps a same-size board, so it can't be relied on) */
+function repaintBattle(){ if (B && G.bctx) prerender(B.def.map, 8, 10, B.def.dark, !B.def.open && !B.def.style, B.def.style || (B.def.open ? 'plain' : ''), true); }
 /* the camera: follow the sergeant (his interpolated position from the last frame), eased; a drag holds it */
 function camStep(t){
   const c = G.cam; if (!c || !G.pannable) { if (c) c.x = c.y = 0; return; }
@@ -4828,6 +4830,32 @@ function drawCrater(ctx, map, T){
   ctx.restore();
   ctx.strokeStyle = 'rgba(190,160,120,.12)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(cx, cy + 1, rx*.97, ry*.97, 0, Math.PI*.1, Math.PI*.9); ctx.stroke(); // the far lip catching a little light
 }
+/* v7.2.1: what a sharper brought down across a battle tile; solid (nobody walks through, nobody sees past), and drawn so it reads as such */
+function drawHeap(ctx, h, T, dark){
+  const {x, y, look} = h, px = x*T, py = y*T, k = dark ? 1.35 : 1.1, c = (r, g, b, a = 1) => `rgba(${Math.min(255, Math.round(r*k))},${Math.min(255, Math.round(g*k))},${Math.min(255, Math.round(b*k))},${a})`; // a touch bright, so it reads in a dark fight too
+  ell(ctx, px + T*.5, py + T*.84, T*.46, T*.12, 'rgba(0,0,0,.55)'); // it sits on the ground
+  const line = (x0, y0, x1, y1, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = Math.max(1, T*w); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px + T*x0, py + T*y0); ctx.lineTo(px + T*x1, py + T*y1); ctx.stroke(); };
+  if (look === 'cloth') { // dyeing-racks down, poles and all, under sodden indigo
+    line(.06, .78, .9, .3, c(92,70,44), .07); line(.12, .3, .94, .74, c(80,60,38), .07);
+    poly(ctx, [[px+T*.08, py+T*.8],[px+T*.2, py+T*.38],[px+T*.42, py+T*.5],[px+T*.62, py+T*.32],[px+T*.9, py+T*.46],[px+T*.94, py+T*.82]], c(38,52,120));
+    poly(ctx, [[px+T*.2, py+T*.38],[px+T*.42, py+T*.5],[px+T*.62, py+T*.32],[px+T*.66, py+T*.46],[px+T*.42, py+T*.62],[px+T*.22, py+T*.5]], c(62,82,170, .9));
+    for (let i=0;i<5;i++) line(.16 + i*.17, .66 + hash(x,y,i)*.08, .16 + i*.17 + .02, .86, c(30,44,110, .8), .04); // the cloth hangs and drips
+    for (let i=0;i<4;i++) ell(ctx, px + T*(.2 + hash(x,y,i+9)*.6), py + T*.9, T*.06, T*.02, c(40,60,150, .5));
+    line(.2, .38, .42, .5, 'rgba(170,190,255,.45)', .025); line(.42, .5, .62, .32, 'rgba(170,190,255,.45)', .025); line(.62, .32, .9, .46, 'rgba(170,190,255,.35)', .025); return; } // wet cloth catches what light there is
+  if (look === 'roots') { // the young Azath's roots, knotted up out of the turf
+    ctx.lineCap = 'round'; for (let i=0;i<7;i++){ const a = hash(x,y,i), b = hash(x,y,i+7); ctx.strokeStyle = i % 2 ? '#3e3050' : '#5a4672'; ctx.lineWidth = Math.max(1, T*(.04 + a*.04)); ctx.beginPath(); ctx.moveTo(px + T*(.1 + a*.8), py + T*.88); ctx.bezierCurveTo(px + T*(.1 + b*.8), py + T*.5, px + T*(.2 + a*.6), py + T*.3, px + T*(.15 + b*.7), py + T*(.12 + a*.2)); ctx.stroke(); }
+    for (let i=0;i<3;i++) ell(ctx, px + T*(.25 + hash(x,y,i+20)*.5), py + T*(.3 + hash(x,y,i+21)*.4), T*.03, T*.03, 'rgba(154,134,224,.35)'); return; }
+  if (look === 'timber') { // the prop they were prying at, down across the tunnel
+    poly(ctx, [[px+T*.04, py+T*.58],[px+T*.96, py+T*.36],[px+T*.98, py+T*.52],[px+T*.06, py+T*.76]], c(74,54,34)); line(.06, .66, .96, .44, c(40,28,18), .02); line(.04, .58, .96, .36, 'rgba(230,190,140,.4)', .02);
+    for (let i=0;i<6;i++){ const a = hash(x,y,i); ell(ctx, px + T*(.15 + a*.7), py + T*(.72 + hash(x,y,i+6)*.12), T*(.05 + a*.05), T*.035, c(90,80,68)); } return; }
+  // 'rubble' (brick and broken eaves) and 'spoil' (the dig's earth): a heap
+  const spoil = look === 'spoil', base = spoil ? [70,56,40] : [92,64,50], top = spoil ? [110,92,68] : [140,100,76];
+  poly(ctx, [[px+T*.04, py+T*.86],[px+T*.18, py+T*.48],[px+T*.4, py+T*.28],[px+T*.62, py+T*.34],[px+T*.84, py+T*.5],[px+T*.96, py+T*.86]], c(...base));
+  poly(ctx, [[px+T*.22, py+T*.5],[px+T*.4, py+T*.3],[px+T*.62, py+T*.36],[px+T*.74, py+T*.48],[px+T*.46, py+T*.52]], c(...top, .8));
+  line(.18, .48, .4, .28, 'rgba(230,200,160,.4)', .02); line(.4, .28, .62, .34, 'rgba(230,200,160,.4)', .02); line(.62, .34, .84, .5, 'rgba(230,200,160,.3)', .02);
+  for (let i=0;i<9;i++){ const a = hash(x,y,i), b = hash(x,y,i+9), bx = px + T*(.14 + a*.66), by = py + T*(.42 + b*.38);
+    if (spoil) ell(ctx, bx, by, T*(.04 + a*.04), T*.03, c(130 + a*30, 112, 84, .7)); else { ctx.fillStyle = c(150 + a*40, 84 + b*20, 60); ctx.fillRect(bx, by, T*.16, T*.08); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; ctx.strokeRect(bx + .5, by + .5, T*.16 - 1, T*.08 - 1); } }
+}
 function prerender(map, cols, rows, dark, tunnel, style, battle){
   const {bctx, T} = G; if (!bctx) return;
   const est = style && style.startsWith('estate');
@@ -4836,6 +4864,7 @@ function prerender(map, cols, rows, dark, tunnel, style, battle){
   for (let y=0;y<rows;y++) for (let x=0;x<cols;x++) { const c = map[y][x], feat = battle && (c === 't' || c === 'o');
     drawTile(bctx, c === '#' ? '#' : tunnel || feat ? (hash(x,y,4) > .8 ? ',' : '.') : c, x, y, T, dark, tunnel, style);
     if (feat) drawFeature(bctx, c, x, y, T, dark, style, map); }
+  if (battle && B && B.heaps) B.heaps.forEach(h => { if ((map[h.y] || '')[h.x] !== '#') return; drawTile(bctx, '.', h.x, h.y, T, dark, tunnel, style); drawHeap(bctx, h, T, dark); }); // what a sharper brought down (31c preTile)
   estateMap = null;
   const earth = !style || style === 'pale' || style === 'camp_night' || style.startsWith('plain') || style.startsWith('hills');
   if (earth) { // broad, soft light and dark across the ground, so the tiles read as one field and not a board
@@ -5493,7 +5522,7 @@ function startBattle(id, opt={}){
   G.disp = {};
   fitBattle();
   if (opt.pre) { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); blog(typeof opt.pre === 'string' ? opt.pre : `${(() => { const k = ['kettle', 'tangle', 'rasp'].find(id => SQUAD().includes(id) && !(S.dead && S.dead[id])); return k ? NAME(k) + '\'s sharper' : 'A sharper'; })()} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
-  if (opt.pre) { S.f.pre ??= {}; S.f.pre[id] = 1; if (def.preText) blog(`<em>${typeof def.preText === 'function' ? def.preText() : def.preText}</em>`); if (def.preFx) { try { def.preFx(B); } catch(e) { console.warn('preFx', e); } } } // what Kettle's opening sharper changed here (31c)
+  if (opt.pre) { S.f.pre ??= {}; S.f.pre[id] = 1; if (def.preText) blog(`<em>${typeof def.preText === 'function' ? def.preText() : def.preText}</em>`); if (def.preFx) { try { def.preFx(B); } catch(e) { console.warn('preFx', e); } } if (B.retile) { B.retile = false; repaintBattle(); } } // what Kettle's opening sharper changed here (31c)
   if (def.nomagic) { blog(`<em>Otataral. The warrens are dead here.</em>${SQUAD().some(id => trickAbs(id).some(k => AB[k] && AB[k].elder)) ? ' Not the older ones: the dark and the cold the squad carries still answer.' : ''}`); if (SQUAD().includes('kettle') && S.inv.burner > 0) blog(`Kettle straps her burners down tight. "Not near that stuff. Burners and otataral don't argue, they just go."`); }
   if (def.nothrow) blog(`<em>Gas in the pipes. Nobody throws anything in here.</em>`);
   if (def.mortal) blog(`<em>Whoever falls here stays down.</em>`);
@@ -6641,7 +6670,11 @@ function gearBonus(id){ const b = {ac:0, atk:0, hp:0, mv:0, rng:0, might:0, wits
 const preUsed = id => !!(S && S.f && S.f.pre && S.f.pre[id]);
 /* helpers for a preFx: more of them come at the noise; a tile changes (a wall comes down, a doorway is blocked); fire; smoke */
 function preWave(round, foes, text){ B.xwaves ??= []; B.xwaves.push({round, foes, text}); }
-function preTile(x, y, ch){ if (!inB(x, y) || unitAt(x, y)) return; const m = B.def.map.slice(); m[y] = m[y].slice(0, x) + ch + m[y].slice(x + 1); B.def = Object.assign({}, B.def, {map:m}); }
+/* v7.2.1: a tile a sharper changes is drawn as what it now is. The board is painted before preFx runs, so preTile asks for a repaint
+   (B.retile, done in startBattle once preFx is through), and a blocked tile with a look ('cloth', 'rubble', 'spoil', 'roots', 'timber')
+   is drawn as that heap (B.heaps, drawHeap in 25_tiles) rather than as plain wall, so the player can see what stops them. */
+function preTile(x, y, ch, look){ if (!inB(x, y) || unitAt(x, y)) return; const m = B.def.map.slice(); m[y] = m[y].slice(0, x) + ch + m[y].slice(x + 1); B.def = Object.assign({}, B.def, {map:m});
+  B.heaps = (B.heaps || []).filter(h => h.x !== x || h.y !== y); if (ch === '#' && look && !dropStyle()) B.heaps.push({x, y, look}); B.retile = true; }
 function preFire(x, y, rounds = 2, txt){ if (!wall(x, y)) B.fires.push({x, y, until:(B.round || 0) + rounds, txt}); }
 function preSmoke(x, y, rounds = 2){ if (!solid(x, y)) B.smoke.push({x, y, until:(B.round || 0) + rounds, g:'pre'}); }
 function preFoe(kind, x, y){ const at = freeNear(x, y); if (!at || !FOES[kind]) return null; const u = mkFoe(kind, at.x, at.y); u.ini = d20() + (u.init || 0); u.arrived = performance.now(); B.units.push(u); B.initOrder.push(u); return u; }
@@ -6922,6 +6955,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.2.1', ['When Kettle opens a fight with a sharper and something comes down (the dyeing-racks, the eaves in the lane, the spoil-heap at the dig, the young Azath\'s roots, the tunnel timber), it is now drawn where it fell. Before, those squares blocked movement and sight with nothing to show for it. Saves carry on as they were.']],
   ['7.2.0', ['One way to change the squad in every book. Up to six walk with the sergeant; whoever else the book has given you waits at camp. Open the Roster from the pack, or choose "The roster." at a chapter\'s fire, and pick who comes in and who goes out, with each one\'s role marked and what the squad lacks shown. Each book\'s own squad always walks; recruits and spares can wait. Gear now goes by kind (armour, shields, blades, bows, satchels, healing kits, charms), so anyone who can carry a kind of gear can wear it, and whoever goes to camp leaves theirs in the pack and gets it back on return. A squad carried into the next book brings everyone\'s gear, loyalty and picks, recruits included. In Book Three, Ellis and Vell from a Book One save now have something to say in every chapter, and a full squad from Book One can make room for Sohra and Dannet. Saves carry on as they were.']],
   ['7.1.0', ['Book Four\'s squad has more to choose from. At the muster in Aren, Radde lines up the company\'s spares and you pick who fills the empty places, with what your squad lacks marked: Mirrel, a Denul healer from Li Heng; Yorin, a squad mage of Serc, the sky, who throws lightning and wind (and hates the dust); and Rasp, a sapper out of the marine school, when Tangle is not with you. Hessa now prays to D\'rek in a fight, a decay that strips armour and a little healing from the Worm. Tallow carries a sling and his grandmother\'s luck. If you are already in Book Four, the next fire offers the spares. The opening sharper in a fight now names your own sapper.']],
   ['7.0.1', ['A skill check is now tried once. Coming back to a cart, a figure or a place no longer offers the same check again, so the munitions cart in Aren stops asking (and stops handing out a sharper every time it comes up). The same holds in every book. Replaying a chapter lets you try its checks again. Saves carry on as they were.']],
@@ -11644,7 +11678,7 @@ A crossbow in the hayloft. A Gadrobi the size of a door with one hand on the bri
       /* v3.13 Kettle's sharper in the dye-shop alley: the Claw takes the flash in the eyes (loses his first turn) and one hired knife runs at the Watch's whistles,
          but the racks come down: wet indigo across the middle of the alley and over the front rank (slowed). And the whole Daru District heard it. */
       preText:'The sharper goes off among the dyeing-racks. Wet cloth doesn\'t burn; it comes down, poles and all, sodden indigo across the alley and over the front rank. At the far end the Claw was looking straight down the alley at the flash. Out in the street the Watch\'s whistles start, one answering another across the Daru District, and one of the hired knives remembers he was only hired.',
-      preFx:B => { preTile(2, 5, '#'); preTile(5, 5, '#');
+      preFx:B => { preTile(2, 5, '#', 'cloth'); preTile(5, 5, '#', 'cloth');
         foes().filter(f => f.kind === 'clawknife').forEach(f => { f.stun = true; float(f, 'dazzled', '#9ab8ff'); });
         const run = foes().filter(f => f.kind === 'knife').sort((a, b) => a.y - b.y)[0];
         if (run) { B.units = B.units.filter(u => u !== run); B.initOrder = B.initOrder.filter(u => u !== run); }
@@ -13320,7 +13354,7 @@ At the far end, where the ridge meets the Daru plank, a crossbow is braced on th
       waves:[{round:2, foes:[['guildknife',2,0]], text:'Another comes down off the roofs.'}],
       // a sharper down a lane two shoulders wide: the eaves come down and pinch the lane to two gaps, but the lane throws the blast back up at the front rank, and the Watch hear it
       preText:()=>`The lane does the rest. Two shoulders wide, with nowhere for the blast to go but along it, both ways: the warehouse eaves come down in the narrow part, and the brick comes back up the lane at you. Somewhere toward the Daru District a Watch rattle starts, and another answers it.`,
-      preFx:B=>{ preTile(2,4,'#'); preTile(5,4,'#');
+      preFx:B=>{ preTile(2,4,'#','rubble'); preTile(5,4,'#','rubble');
         const front = B.units.filter(u => u.side === 'p' && !u.ally && u.hp > 0).sort((a, b) => a.y - b.y || Math.abs(a.x - 3.5) - Math.abs(b.x - 3.5)).slice(0, 2);
         front.forEach(u => hurt(u, roll(1,4))); if (front.length) blog(`${front.map(u => u.name).join(' and ')} ${front.length > 1 ? 'take' : 'takes'} the brick in the face.`); },
       stage2:{title:'The cooperage yard', warrenText:'Barrels and drying-racks · one hooded lamp · Meanas leans into the dark · Denul holds',
@@ -14792,7 +14826,7 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the gap, and then back the way you
       preText:'The lip of the dig goes in. The spoil-heap comes down across the right-hand side and takes the crossbowman with it, to the waist, with his bow under him. Then, under the whole vale: *thud*. The hill knocking back. The spoil at the lip sits up.',
       preFx:B => { const x = foes().find(f => f.id === 'c5_robberbow');
         if (x) { x.stun = true; x.rng = 1; x.sk = (x.sk || []).filter(k => k !== 'pin'); x.dmg = [1,4,1]; x.verb = 'claws a knife free and cuts at'; float(x, 'buried', '#cfc8b8'); }
-        preTile(5, 2, '#'); preTile(6, 2, '#');
+        preTile(5, 2, '#', 'spoil'); preTile(6, 2, '#', 'spoil');
         const d = preFoe('wight', 3, 3); if (d) float(d, 'woken', '#9a86e0'); } },
     the_rent:{title:'The hillside under the rent', warrenText:'A wound in the world · Meanas howls through it · Denul gutters · something smells of Chaos', warren:{meanas:1.6,denul:0.7}, dark:true, music:'dark', open:true,
       map:["...##...","........",".#....#.","........","..,..,..","........","#......#","........","........","........"],
@@ -16430,7 +16464,7 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the arch. Two paces wide, and seve
          the lawn (the Hound has to come round); and the noise carries further than the garden */
       preText:'The sharper goes off in the wet turf between the Hound and the black sapling. The turned earth goes up in a fan, and where it comes down the lawn is full of roots that were not there before: black, thin, reaching, knotting up out of the grass like a hedge grown in a breath. One of them has the Hound by a hind leg.',
       preFx:B => { const h = foes().find(f => f.id === 'houndhurt'); if (h) { h.stun = true; float(h, 'held', '#9a86e0'); }
-        preTile(3, 4, '#'); preTile(4, 4, '#');
+        preTile(3, 4, '#', 'roots'); preTile(4, 4, '#', 'roots');
         preWave(3, [['shade',4,0]], 'Something else heard the sharper. A shadow comes over the wall at the noise, low to the ground.'); } },
     tyrant_garden:{title:'Lady Simtal\'s garden', warrenText:'Omtose Phellack · the lawn freezing in rings · every warren shouldered aside by ice', warren:{meanas:0.8,denul:0.8}, dark:true, music:'dark', style:'storm',
       map:["#......#","...##...",".#....#.","........","..,..,..","#......#","........","..#..#..","........","........"],

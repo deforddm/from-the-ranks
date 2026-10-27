@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v7.2.0'; // one roster in every book, gear by role, Ellis and Vell at home in Book Three
+const CACHE = 'ftr-v7.2.1'; // what a sharper brings down is drawn where it fell
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];

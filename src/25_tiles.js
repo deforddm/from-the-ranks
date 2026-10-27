@@ -271,6 +271,32 @@ function drawCrater(ctx, map, T){
   ctx.restore();
   ctx.strokeStyle = 'rgba(190,160,120,.12)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(cx, cy + 1, rx*.97, ry*.97, 0, Math.PI*.1, Math.PI*.9); ctx.stroke(); // the far lip catching a little light
 }
+/* v7.2.1: what a sharper brought down across a battle tile; solid (nobody walks through, nobody sees past), and drawn so it reads as such */
+function drawHeap(ctx, h, T, dark){
+  const {x, y, look} = h, px = x*T, py = y*T, k = dark ? 1.35 : 1.1, c = (r, g, b, a = 1) => `rgba(${Math.min(255, Math.round(r*k))},${Math.min(255, Math.round(g*k))},${Math.min(255, Math.round(b*k))},${a})`; // a touch bright, so it reads in a dark fight too
+  ell(ctx, px + T*.5, py + T*.84, T*.46, T*.12, 'rgba(0,0,0,.55)'); // it sits on the ground
+  const line = (x0, y0, x1, y1, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = Math.max(1, T*w); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px + T*x0, py + T*y0); ctx.lineTo(px + T*x1, py + T*y1); ctx.stroke(); };
+  if (look === 'cloth') { // dyeing-racks down, poles and all, under sodden indigo
+    line(.06, .78, .9, .3, c(92,70,44), .07); line(.12, .3, .94, .74, c(80,60,38), .07);
+    poly(ctx, [[px+T*.08, py+T*.8],[px+T*.2, py+T*.38],[px+T*.42, py+T*.5],[px+T*.62, py+T*.32],[px+T*.9, py+T*.46],[px+T*.94, py+T*.82]], c(38,52,120));
+    poly(ctx, [[px+T*.2, py+T*.38],[px+T*.42, py+T*.5],[px+T*.62, py+T*.32],[px+T*.66, py+T*.46],[px+T*.42, py+T*.62],[px+T*.22, py+T*.5]], c(62,82,170, .9));
+    for (let i=0;i<5;i++) line(.16 + i*.17, .66 + hash(x,y,i)*.08, .16 + i*.17 + .02, .86, c(30,44,110, .8), .04); // the cloth hangs and drips
+    for (let i=0;i<4;i++) ell(ctx, px + T*(.2 + hash(x,y,i+9)*.6), py + T*.9, T*.06, T*.02, c(40,60,150, .5));
+    line(.2, .38, .42, .5, 'rgba(170,190,255,.45)', .025); line(.42, .5, .62, .32, 'rgba(170,190,255,.45)', .025); line(.62, .32, .9, .46, 'rgba(170,190,255,.35)', .025); return; } // wet cloth catches what light there is
+  if (look === 'roots') { // the young Azath's roots, knotted up out of the turf
+    ctx.lineCap = 'round'; for (let i=0;i<7;i++){ const a = hash(x,y,i), b = hash(x,y,i+7); ctx.strokeStyle = i % 2 ? '#3e3050' : '#5a4672'; ctx.lineWidth = Math.max(1, T*(.04 + a*.04)); ctx.beginPath(); ctx.moveTo(px + T*(.1 + a*.8), py + T*.88); ctx.bezierCurveTo(px + T*(.1 + b*.8), py + T*.5, px + T*(.2 + a*.6), py + T*.3, px + T*(.15 + b*.7), py + T*(.12 + a*.2)); ctx.stroke(); }
+    for (let i=0;i<3;i++) ell(ctx, px + T*(.25 + hash(x,y,i+20)*.5), py + T*(.3 + hash(x,y,i+21)*.4), T*.03, T*.03, 'rgba(154,134,224,.35)'); return; }
+  if (look === 'timber') { // the prop they were prying at, down across the tunnel
+    poly(ctx, [[px+T*.04, py+T*.58],[px+T*.96, py+T*.36],[px+T*.98, py+T*.52],[px+T*.06, py+T*.76]], c(74,54,34)); line(.06, .66, .96, .44, c(40,28,18), .02); line(.04, .58, .96, .36, 'rgba(230,190,140,.4)', .02);
+    for (let i=0;i<6;i++){ const a = hash(x,y,i); ell(ctx, px + T*(.15 + a*.7), py + T*(.72 + hash(x,y,i+6)*.12), T*(.05 + a*.05), T*.035, c(90,80,68)); } return; }
+  // 'rubble' (brick and broken eaves) and 'spoil' (the dig's earth): a heap
+  const spoil = look === 'spoil', base = spoil ? [70,56,40] : [92,64,50], top = spoil ? [110,92,68] : [140,100,76];
+  poly(ctx, [[px+T*.04, py+T*.86],[px+T*.18, py+T*.48],[px+T*.4, py+T*.28],[px+T*.62, py+T*.34],[px+T*.84, py+T*.5],[px+T*.96, py+T*.86]], c(...base));
+  poly(ctx, [[px+T*.22, py+T*.5],[px+T*.4, py+T*.3],[px+T*.62, py+T*.36],[px+T*.74, py+T*.48],[px+T*.46, py+T*.52]], c(...top, .8));
+  line(.18, .48, .4, .28, 'rgba(230,200,160,.4)', .02); line(.4, .28, .62, .34, 'rgba(230,200,160,.4)', .02); line(.62, .34, .84, .5, 'rgba(230,200,160,.3)', .02);
+  for (let i=0;i<9;i++){ const a = hash(x,y,i), b = hash(x,y,i+9), bx = px + T*(.14 + a*.66), by = py + T*(.42 + b*.38);
+    if (spoil) ell(ctx, bx, by, T*(.04 + a*.04), T*.03, c(130 + a*30, 112, 84, .7)); else { ctx.fillStyle = c(150 + a*40, 84 + b*20, 60); ctx.fillRect(bx, by, T*.16, T*.08); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; ctx.strokeRect(bx + .5, by + .5, T*.16 - 1, T*.08 - 1); } }
+}
 function prerender(map, cols, rows, dark, tunnel, style, battle){
   const {bctx, T} = G; if (!bctx) return;
   const est = style && style.startsWith('estate');
@@ -279,6 +305,7 @@ function prerender(map, cols, rows, dark, tunnel, style, battle){
   for (let y=0;y<rows;y++) for (let x=0;x<cols;x++) { const c = map[y][x], feat = battle && (c === 't' || c === 'o');
     drawTile(bctx, c === '#' ? '#' : tunnel || feat ? (hash(x,y,4) > .8 ? ',' : '.') : c, x, y, T, dark, tunnel, style);
     if (feat) drawFeature(bctx, c, x, y, T, dark, style, map); }
+  if (battle && B && B.heaps) B.heaps.forEach(h => { if ((map[h.y] || '')[h.x] !== '#') return; drawTile(bctx, '.', h.x, h.y, T, dark, tunnel, style); drawHeap(bctx, h, T, dark); }); // what a sharper brought down (31c preTile)
   estateMap = null;
   const earth = !style || style === 'pale' || style === 'camp_night' || style.startsWith('plain') || style.startsWith('hills');
   if (earth) { // broad, soft light and dark across the ground, so the tiles read as one field and not a board

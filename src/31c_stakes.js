@@ -280,7 +280,11 @@ function gearBonus(id){ const b = {ac:0, atk:0, hp:0, mv:0, rng:0, might:0, wits
 const preUsed = id => !!(S && S.f && S.f.pre && S.f.pre[id]);
 /* helpers for a preFx: more of them come at the noise; a tile changes (a wall comes down, a doorway is blocked); fire; smoke */
 function preWave(round, foes, text){ B.xwaves ??= []; B.xwaves.push({round, foes, text}); }
-function preTile(x, y, ch){ if (!inB(x, y) || unitAt(x, y)) return; const m = B.def.map.slice(); m[y] = m[y].slice(0, x) + ch + m[y].slice(x + 1); B.def = Object.assign({}, B.def, {map:m}); }
+/* v7.2.1: a tile a sharper changes is drawn as what it now is. The board is painted before preFx runs, so preTile asks for a repaint
+   (B.retile, done in startBattle once preFx is through), and a blocked tile with a look ('cloth', 'rubble', 'spoil', 'roots', 'timber')
+   is drawn as that heap (B.heaps, drawHeap in 25_tiles) rather than as plain wall, so the player can see what stops them. */
+function preTile(x, y, ch, look){ if (!inB(x, y) || unitAt(x, y)) return; const m = B.def.map.slice(); m[y] = m[y].slice(0, x) + ch + m[y].slice(x + 1); B.def = Object.assign({}, B.def, {map:m});
+  B.heaps = (B.heaps || []).filter(h => h.x !== x || h.y !== y); if (ch === '#' && look && !dropStyle()) B.heaps.push({x, y, look}); B.retile = true; }
 function preFire(x, y, rounds = 2, txt){ if (!wall(x, y)) B.fires.push({x, y, until:(B.round || 0) + rounds, txt}); }
 function preSmoke(x, y, rounds = 2){ if (!solid(x, y)) B.smoke.push({x, y, until:(B.round || 0) + rounds, g:'pre'}); }
 function preFoe(kind, x, y){ const at = freeNear(x, y); if (!at || !FOES[kind]) return null; const u = mkFoe(kind, at.x, at.y); u.ini = d20() + (u.init || 0); u.arrived = performance.now(); B.units.push(u); B.initOrder.push(u); return u; }

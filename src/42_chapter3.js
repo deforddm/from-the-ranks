@@ -134,7 +134,7 @@ A crossbow in the hayloft. A Gadrobi the size of a door with one hand on the bri
       /* v3.13 Kettle's sharper in the dye-shop alley: the Claw takes the flash in the eyes (loses his first turn) and one hired knife runs at the Watch's whistles,
          but the racks come down: wet indigo across the middle of the alley and over the front rank (slowed). And the whole Daru District heard it. */
       preText:'The sharper goes off among the dyeing-racks. Wet cloth doesn\'t burn; it comes down, poles and all, sodden indigo across the alley and over the front rank. At the far end the Claw was looking straight down the alley at the flash. Out in the street the Watch\'s whistles start, one answering another across the Daru District, and one of the hired knives remembers he was only hired.',
-      preFx:B => { preTile(2, 5, '#'); preTile(5, 5, '#');
+      preFx:B => { preTile(2, 5, '#', 'cloth'); preTile(5, 5, '#', 'cloth');
         foes().filter(f => f.kind === 'clawknife').forEach(f => { f.stun = true; float(f, 'dazzled', '#9ab8ff'); });
         const run = foes().filter(f => f.kind === 'knife').sort((a, b) => a.y - b.y)[0];
         if (run) { B.units = B.units.filter(u => u !== run); B.initOrder = B.initOrder.filter(u => u !== run); }

@@ -137,7 +137,7 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the gap, and then back the way you
       preText:'The lip of the dig goes in. The spoil-heap comes down across the right-hand side and takes the crossbowman with it, to the waist, with his bow under him. Then, under the whole vale: *thud*. The hill knocking back. The spoil at the lip sits up.',
       preFx:B => { const x = foes().find(f => f.id === 'c5_robberbow');
         if (x) { x.stun = true; x.rng = 1; x.sk = (x.sk || []).filter(k => k !== 'pin'); x.dmg = [1,4,1]; x.verb = 'claws a knife free and cuts at'; float(x, 'buried', '#cfc8b8'); }
-        preTile(5, 2, '#'); preTile(6, 2, '#');
+        preTile(5, 2, '#', 'spoil'); preTile(6, 2, '#', 'spoil');
         const d = preFoe('wight', 3, 3); if (d) float(d, 'woken', '#9a86e0'); } },
     the_rent:{title:'The hillside under the rent', warrenText:'A wound in the world · Meanas howls through it · Denul gutters · something smells of Chaos', warren:{meanas:1.6,denul:0.7}, dark:true, music:'dark', open:true,
       map:["...##...","........",".#....#.","........","..,..,..","........","#......#","........","........","........"],

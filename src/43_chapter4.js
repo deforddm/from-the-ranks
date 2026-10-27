@@ -117,7 +117,7 @@ At the far end, where the ridge meets the Daru plank, a crossbow is braced on th
       waves:[{round:2, foes:[['guildknife',2,0]], text:'Another comes down off the roofs.'}],
       // a sharper down a lane two shoulders wide: the eaves come down and pinch the lane to two gaps, but the lane throws the blast back up at the front rank, and the Watch hear it
       preText:()=>`The lane does the rest. Two shoulders wide, with nowhere for the blast to go but along it, both ways: the warehouse eaves come down in the narrow part, and the brick comes back up the lane at you. Somewhere toward the Daru District a Watch rattle starts, and another answers it.`,
-      preFx:B=>{ preTile(2,4,'#'); preTile(5,4,'#');
+      preFx:B=>{ preTile(2,4,'#','rubble'); preTile(5,4,'#','rubble');
         const front = B.units.filter(u => u.side === 'p' && !u.ally && u.hp > 0).sort((a, b) => a.y - b.y || Math.abs(a.x - 3.5) - Math.abs(b.x - 3.5)).slice(0, 2);
         front.forEach(u => hurt(u, roll(1,4))); if (front.length) blog(`${front.map(u => u.name).join(' and ')} ${front.length > 1 ? 'take' : 'takes'} the brick in the face.`); },
       stage2:{title:'The cooperage yard', warrenText:'Barrels and drying-racks · one hooded lamp · Meanas leans into the dark · Denul holds',

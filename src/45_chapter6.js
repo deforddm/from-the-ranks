@@ -165,7 +165,7 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the arch. Two paces wide, and seve
          the lawn (the Hound has to come round); and the noise carries further than the garden */
       preText:'The sharper goes off in the wet turf between the Hound and the black sapling. The turned earth goes up in a fan, and where it comes down the lawn is full of roots that were not there before: black, thin, reaching, knotting up out of the grass like a hedge grown in a breath. One of them has the Hound by a hind leg.',
       preFx:B => { const h = foes().find(f => f.id === 'houndhurt'); if (h) { h.stun = true; float(h, 'held', '#9a86e0'); }
-        preTile(3, 4, '#'); preTile(4, 4, '#');
+        preTile(3, 4, '#', 'roots'); preTile(4, 4, '#', 'roots');
         preWave(3, [['shade',4,0]], 'Something else heard the sharper. A shadow comes over the wall at the noise, low to the ground.'); } },
     tyrant_garden:{title:'Lady Simtal\'s garden', warrenText:'Omtose Phellack · the lawn freezing in rings · every warren shouldered aside by ice', warren:{meanas:0.8,denul:0.8}, dark:true, music:'dark', style:'storm',
       map:["#......#","...##...",".#....#.","........","..,..,..","#......#","........","..#..#..","........","........"],
