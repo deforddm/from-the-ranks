@@ -157,7 +157,10 @@ console.log(`${L.n && !L.bad.length ? 'ok  ' : 'FAIL'} the unspoken-to line show
 const unused = Object.keys(ALLOW).filter(k => !res.some(o => o.id === k)); if (unused.length) console.log('note: allowed but no longer flagged: ' + unused.join(', '));
 /* the owner's case, in the real sheet: Chapter One, both reports made, Captain Paran not yet spoken to. Pell's wagon offers the
    night and a way to stay, with the reminder; "Not yet." leaves the squad on the map; the burial pits (only a way to stay) say nothing */
-const ui = await page.evaluate(async () => {
+/* v7.1: the sheet check runs in a fresh page. After the audit's tens of thousands of stubbed talks the page's scene loops pile up and
+   a single click can take minutes (seen on v7.0.1 as on v7.1.0); the check is about one node in the real sheet, not about that pile. */
+const { page: page2, errors: errors2 } = await openGame(br, srv.url, {});
+const ui = await page2.evaluate(async () => {
   S = newState('Hask'); S.squad = [...PORDER]; migrate(S); S.chapter = 1; S.f.c1_wj = 1; S.f.c1_reported = 1; S.f.c1_tent = 1; S.f.c1_bones = 1; S.f.c1_claw = 1; S.silver = 3; save(); startExplore('pale_night');
   talk('c1_pell'); const sh = document.getElementById('sheet');
   const r = {line: (sh.querySelector('.unspoken') || {}).textContent || '', ch: [...sh.querySelectorAll('.choice')].map(b => b.textContent)};
@@ -172,5 +175,5 @@ okk(ui.ch.includes('Back to the Fourth\u2019s fire.') || ui.ch.some(t => /Back t
 okk(ui.after.hidden && ui.after.area === 'pale_night' && ui.after.view === 'explore' && !ui.after.raid, '"Not yet." closes the sheet and leaves the squad on the map, the raid not started');
 okk(!ui.pits, 'the burial pits (no way on) never carry the reminder');
 okk(!ui.noFresh, 'nobody left to talk to: no reminder');
-if (errors.length) { console.log('FAIL page errors ' + errors.join(' | ')); fail = 1; }
+if (errors.length || errors2.length) { console.log('FAIL page errors ' + [...errors, ...errors2].join(' | ')); fail = 1; }
 await br.close(); srv.kill(); process.exit(fail);
