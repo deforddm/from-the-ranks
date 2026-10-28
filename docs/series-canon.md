@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Tue Oct 20, 2026, 9:48 PM PDT (Book Four's rules, names and gods added to §(a), §(b) and §(f); against v6.15.0). First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Wed Oct 28, 2026, 10:40 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -60,6 +60,25 @@ The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
 29. **Never print "Bonehunters" before Book Six.** The finger bones and the standard exist from Aren.
 30. **No plague before Book Six**, and Poliel is never a patron. Never "Dancer's Tavern" (rule 13).
 
+### Book Five (*Midnight Tides*), added Oct 28, 2026
+
+The reasons and sources are in the repo's `docs/mt-canon.md`, §10. *Midnight Tides* happens years before *Gardens of the Moon* (§14 there), so Book Five never names a Malazan event as past or present.
+
+31. **Turudal Brizad.** Court gossip may say the Queen's First Consort is the Errant; the narrator never confirms it. Never "Errastas", never "Elder", never his doings in RG or TCG. The Errant who answers the sergeant is Lether's god of chance as the Letherii pray to him.
+32. **Bugg** is Tehol Beddict's manservant, a builder. Never Mael.
+33. **Brys** is dead to those who saw it; never hint he returns. **Tehol** is a ruined man; never king, never his scheme's end.
+34. **Rhulad** is the Emperor who comes back. Never the sword's maker or master, never champions from overseas, never Karsa or Icarium, never how it ends.
+35. **Trull Sengar**: never shorn, never chained, never Seren's, never Sirryn Kanar.
+36. **Yan Tovis** is the Atri-Preda who surrendered Fent Reach. Never royal, never the Shake's queen, never Yedan Derryg, never her desertion. The Shake on the page have no living queen and no Tiste blood.
+37. **Bluerose** is a conquered horse country with officers nobody trusts. Never Tiste Andii, never the Black-Winged Lord. Ahlrada Ahn is never named.
+38. **Kettle, Silchas Ruin, Wither, Sheltatha Lore, Menandore, the Wyval**: at most "a pale giant and a girl seen leaving the city".
+39. **What was freed at Brous** is never named: never a Forkrul Assail, never Serenity, never Kolanse.
+40. **The Seventh Closure.** Characters may believe the King became Emperor and the Closure came; never that the count was two days off, never that Rhulad's coming was the true Closure.
+41. **The tiles** never name their beings. No tile called "Errant", "Saddick" or "Knight of Shadows". Never the Cedance going blank, never the Ceda's ghost.
+42. **Hannan Mosag and the K'risnan**: never the Crippled God by name, never "chaos", never Rhulad's Ceda. The demon under Settle Lake is never seen.
+43. **Reaper's Gale's ground is Book Seven's**: never the Patriotists, Karos Invictad, Tanal Yathvanar, Bivatt, Letur Anict, the Awl war, Kravos Hill, "Tehol the Only", or Malazans in Lether.
+44. **The Edur fleets abroad** are rumour at most, and only in Book Five's finale.
+
 ---
 
 ## (b) Name clashes and their resolutions
@@ -72,7 +91,7 @@ The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
 | **Chains card → the Wain** | Done in name and card text; internal id `chains` stays. The art still shows chains (art worker redraws). | High House Chains enters the Deck in MoI as the Crippled God's House (FC, W). | Never call an Unaligned card "Chains" or "Chain". |
 | **Madryn** | Kept. | Madrun, a masked estate guard in Darujhistan in TtH and OST *(memory; W page returned 402 twice)*. | One letter apart. If the game reaches TtH Darujhistan, keep them in different rooms. |
 
-| **Bungle** (Book Two) | **Open: Q18.** | Bungle is a sapper **sergeant** in DG ch 19 (wiki character list). The game calls him Captain Bungle from Book Two Ch4 on. | Book Four never gives him a rank until Q18 is answered. |
+| **Bungle** (Book Two) | Done (v7.3.0, Q18): Sergeant Bungle throughout. | Bungle is a sapper **sergeant** in DG ch 19 (wiki character list). | Never "Captain Bungle". `answers_test` checks it. |
 | Keth (Book Two) | Kept. | A minor soldier of the Malazan 4th Army in SW, and Fist Rillish Jal Keth's house name there. | Low risk on another continent. Beside a Rillish, write "Keth of the Foolish Dog". |
 | Ibbin (Book Two) | Kept. | Ebbin, an OST viewpoint character; Ibb, a minor HoC marine in Borduke's squad. | Never put Ibbin and Ibb in one scene. |
 | Mosk (Book Three) | Kept. | Moak, a Fourteenth sergeant in HoC; Mock's Hold. | Book Three only. |
@@ -81,6 +100,11 @@ The reasons and sources are in the repo's `docs/hoc-canon.md`, §5 and §10.
 | Mirrel, Yorin, Rasp (Book Four, v7.1) | Clear (supported: the MoI, BH, RG, TtH, DoD and TCG lists did not load). | The nearest found: Mirepool (HoC dramatis personae), Raest. **Gimlet** was rejected: Gamet's nickname in HoC. Ostrey was rejected as too near Osric. | Kept. Detail in `docs/v7.1-squad-brief.md`. |
 | Third squad, 9th Legion (Book Four) | Clear (supported). | No canon third squad in the Fourteenth was found; the numbered canon squads found are in the 8th Legion. | **Never write "3rd Company"**, which is canon in the 8th Legion. |
 | *Unblooded* (Book Four's title) | Kept. | A Tiste Edur word in MT for warriors who have not yet killed. | A canon word, not a canon title. |
+| **Kettle** in Book Five | Book Five never uses the name. | The canon Kettle is the child of the Letheras Azath (MT, RG); Book One has our Kettle. | Book Five is in Letheras and its cast is new: the canon child is a hard limit, and ours is not there. |
+| Tobet, Thegg, Perrit, Ammet, Ruuk, Brune, Finadd Ravel Ennic (Book Five) | Clear (supported: the MT and TCG Dramatis Personae loaded, RG/BH/TtH/DoD did not; site searches found nothing). | — | The full table is in `docs/mt-canon.md` §11. |
+| Pessa (Book Five's refugee) | Kept. | Pella, a Fourteenth soldier in HoC. | Another continent and another decade; never in one scene. |
+| Sixth Company, Whitefinder Battalion (Book Five) | Clear. | The Whitefinder Battalion is canon with no named members. | **Never "Fourth Company"**, which is Iron Bars's in the Crimson Guard. Rejected names: Selva (Selv, TCG), Hesk (Book One), Ivane (Ivanr, DoD), Corle (Corlo, MT). |
+| *Indebted* (Book Five's title) | Kept. | A Letherii word for a class. | A canon word, not a canon title. |
 | Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
@@ -196,6 +220,10 @@ The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later ch
 - **Treach** (the Tiger of Summer). The god of war after Fener. Heboric is made his Destriant in Raraku (HoC ch 13). He answers for the sergeant in Books Three and Four. [R13; W13]
 - **D'rek** (the Worm of Autumn). Her Grand Temple is in Kartool City; she is a soldier's and sailor's oath in HoC (Nok's story). She answers for Hessa in Book Four. [W *D'rek*; R8 HoC]
 - **The Khundryl dead** (an invention, marked so). The dead of a Burned Tears clan ride with Raraku's ghosts in HoC ch 25. They answer for Orvas in Book Four. Nothing canon names a Khundryl god. [R25 HoC]
+- **The Errant** (Lether's god of chance, with a yearly festival: W *Errant*, MT ch 6). Answers for the sergeant in Book Five (David, Oct 28). Rule 31 binds: he is Errastas from TCG and an Elder in DoD, and the game never says so.
+- **The Empty Hold** (the heart of Letherii worship; a Hold of tiles, never a named being). Answers for Book Five's cadre mage. [W *Empty Hold*]
+- **The Tarthenal dead** (an invention, marked so). The Tarthenal's own gods, the Seregahl, are malign and propitiated so they look away (W *Tarthenal*), so never a patron. Answer for Thegg in Book Five.
+- **The Shore** (the Shake faith, the sea that takes back everything: W *Shake*). Answers for Brune in Book Five. Never a queen, never Tiste blood (rule 36).
 
 ---
 
