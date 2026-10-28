@@ -51,7 +51,7 @@ const r = await page.evaluate(async () => {
   out.fight = {ab, tallowRng:U('tallow').rng, tallowVerb:U('tallow').verb, healer:HEALER(), yorinMagic:!!U('yorin').magic, hessaMagic:!!U('hessa').magic};
   // Sky-Fire: a foe made easy to hit
   const [f1, f2] = F(); f1.ac = -40; f1.hp = f1.maxhp = 500; const y = U('yorin'); y.x = 1; y.y = 5;
-  await act('yorin', 'b4_bolt', f1.x, f1.y); out.fight.bolt = {dealt:500 - f1.hp, strain:U('yorin').strain, log:B.log.slice(0, 3).join(' ')};
+  { const rr0 = Math.random; Math.random = () => 0.6; B.cur = U('yorin'); B.over = true; useAb('b4_bolt', f1.x, f1.y); Math.random = rr0; await wait(900); } /* roll pinned mid-range: only a natural 1 misses AC -40, which made this flaky 1 run in 20 */ out.fight.bolt = {dealt:500 - f1.hp, strain:U('yorin').strain, log:B.log.slice(0, 3).join(' ')};
   // the Sky's Shove: f1 at (3,5) and f2 at (4,5), Yorin at (1,5): both thrown east
   f1.x = 3; f1.y = 5; f2.x = 4; f2.y = 5; f1.hp = f1.maxhp = 40; f2.hp = f2.maxhp = 40; f1.boss = false; f2.boss = false;
   await act('yorin', 'b4_gust', 3, 5); await wait(1200); out.fight.gust = {f1:[f1.x, f1.y], f2:[f2.x, f2.y], hurt:f1.hp < 40 && f2.hp < 40};
