@@ -28,6 +28,10 @@ function offerInstall(){
 /* the title: the sergeants saved on this device, last played first; tap one to play. The name prompt only shows for a new sergeant. */
 const agoText = t => { if (!t) return ''; const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(t).setHours(0,0,0,0)) / 864e5);
   return d <= 0 ? 'today' : d === 1 ? 'yesterday' : d < 7 ? `${d} days ago` : new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'}); };
+/* v7.3.3 (David, Oct 27: the credit on the title, summarised now there are four books and more coming): built from the shelf, so a new book
+   joins it without an edit here */
+function titleCredit(){ const bs = shelfBooks().sort((a, b) => a.n - b.n); if (!bs.length) return ''; const last = bs[bs.length - 1];
+  return bs.length === 1 ? `Book One, ${bs[0].name}, beside ${bs[0].title}.` : `${last.word} books so far, each beside one of Erikson's Malazan novels, in order, from ${bs[0].title} to ${last.title}, with more to come.`; }
 const bookCh = (b, n) => ((b || 'gotm') === BOOK ? CHAPTERS : (BOOKSNAP[b] || BOOKSNAP.gotm).ch)[n];
 const chLabel = e => (e.book && BOOKS[e.book] ? `Book ${BOOKS[e.book].word} · ` : '') + (e.done ? 'Finished' : e.ch === 0 ? (e.book ? 'Starting out' : 'The prologue') : `Chapter ${bookCh(e.book, e.ch) ? bookCh(e.book, e.ch).number : e.ch}`) + (e.diff && DIFFS[e.diff] ? ` (${DIFFS[e.diff].name})` : '');
 /* Book One sergeants who have finished the book: Book Two can bring their road along (47: dgImport) */
@@ -92,7 +96,7 @@ function showTitle(fresh, want){
     : `${shelfHTML(list)}${iosNote}
     <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button></div>`}
     <div id="instSlot"></div>
-    <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. Book One, Ashes of the Pale, beside Gardens of the Moon. Book Two, The Chain of Dogs, beside Deadhouse Gates. Book Three, The Fair Exchange, beside Memories of Ice. Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
+    <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. ${titleCredit()} Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
   if (!ARTON()) startTitleBackdrop($('#titlecv'), tb); else titleAnim = null;
   $('#bSet').onclick = () => { AUDIO.play('click'); openSettings(); };
   $('#bVer').onclick = () => { AUDIO.play('click'); openNotes(null); };

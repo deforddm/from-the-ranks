@@ -10,10 +10,10 @@ function startExplore(areaId){
   toTop(); $('#app').innerHTML = `<header class="hud"><div>${kick ? `<div class="kick">${kick}</div>` : ''}<div class="loc">${ttl}</div><div class="sub qline"><span id="quest"></span><span id="silver"></span><span id="chainp"></span></div></div>
     <div class="hudr">${hudButtons()}</div></header>
     <div class="cvwrap"><canvas id="cv" aria-label="Map"></canvas></div>
-    <div class="maprow"><p class="hint">${tapWord(a.hint || 'Tap ground to move · tap a figure to talk')}</p><button class="btn mini" id="bMap"></button></div>
+    <div class="maprow"><p class="hint">${tapWord(a.hint || 'Tap ground to move · tap a figure to talk')}</p>${rosterHud()}<button class="btn mini" id="bMap"></button></div>
     <p class="hint keys" aria-hidden="true"><kbd>\u2190</kbd><kbd>\u2191</kbd><kbd>\u2192</kbd><kbd>\u2193</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk · <kbd>Space</kbd> talk to whoever is beside you · <kbd>J</kbd> journal · <kbd>P</kbd> pack · <kbd>C</kbd> squad · <kbd>Esc</kbd> settings</p>
     <div class="log" id="elog"></div>`;
-  bindHud();
+  bindHud(); { const r = $('#bRoster'); if (r) r.onclick = () => { AUDIO.play('click'); openRoster(null); }; } // v7.3.3 (28)
   G.disp = {};
   $('#bMap').textContent = 'Whole map'; updExplore(); fitCanvas(ACOLS(), AROWS()); // the quest line and a label first: they shape the rows around the map, and those the room it has
   $('#bMap').onclick = () => { AUDIO.play('click'); SET.map = mapClose() ? 'whole' : 'close'; saveSet(); fitCanvas(ACOLS(), AROWS()); mapBtn(); };

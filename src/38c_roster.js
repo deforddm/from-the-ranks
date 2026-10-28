@@ -175,7 +175,8 @@ const rosterIsOpen = () => !$('#modal').hidden && !!$('#modal .mbox.roster');
 function rosterBackOne(){ if (!rosterIsOpen()) return false; if (rosterSel.out || rosterSel.inn) { rosterSel = {out:null, inn:null}; openRoster(); return true; } closeRoster(); return true; }
 function closeRoster(){ const m = $('#modal'); m.hidden = true; m.innerHTML = ''; rosterSel = {out:null, inn:null}; const back = rosterBack; rosterBack = null;
   if (back && DLG[back] && !$('#sheet').hidden && S.node === back) talk(back); // the fire again, with what has changed
-  else if (notes.length && view === 'explore') { /* the notes wait for the next conversation */ } }
+  else if (notes.length && view === 'explore') { /* the notes wait for the next conversation */ }
+  if (typeof rosterBtnSync === 'function') rosterBtnSync(); } // v7.3.3: the map's Roster button and its count follow the change
 /* the choice every chapter fire offers (ROSTER_FIRES): the screen over the fire */
 function rosterChoice(back){ const camp = S ? rosterCampList() : [], lack = S ? rosterLacks() : [];
   const tag = camp.length ? `${camp.length} at camp` : lack.length && lack.length < 5 ? `lacks ${ROSTER_LACKW[lack[0]]}` : 'who walks';

@@ -12,14 +12,14 @@ const bookEnds = b => (b === BOOK ? CHEND : (BOOKSNAP[b] || {}).end) || {};
 const bookOf = s => (s && s.book) || 'gotm';
 const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
-/* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between ---- */
+/* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
 function worldSVG(){
-  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, and the road from Pale to Coral">
+  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku">
   <rect width="640" height="300" fill="#1c1610"/>
   <rect width="640" height="300" fill="#16304a" opacity=".35"/>
   <path d="M20 40 C80 20 170 30 230 60 C260 80 270 120 250 160 C240 200 200 240 150 262 C110 280 60 270 34 240 C10 210 8 150 14 100 Z" fill="#3a2e1e" stroke="#7a6640" stroke-width="1.5"/>
   <path d="M420 30 C480 18 560 30 600 60 C628 90 626 150 606 200 C590 240 548 276 500 284 C452 290 420 262 410 220 C398 170 400 110 404 70 Z" fill="#2e3a24" stroke="#6a7a50" stroke-width="1.5"/>
-  <text x="130" y="150" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#e8d6b0">Seven Cities</text>
+  <text x="120" y="116" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#e8d6b0">Seven Cities</text>
   <text x="515" y="150" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#d8e0c0">Genabackis</text>
   <text x="330" y="160" text-anchor="middle" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="15" fill="#8fb0d0">the Meningalle Ocean</text>
   <path d="M440 60 C380 40 300 60 250 110 C220 150 190 200 150 240" fill="none" stroke="#e8c073" stroke-width="1.6" stroke-dasharray="6 5" opacity=".8"/>
@@ -29,6 +29,7 @@ function worldSVG(){
     <circle cx="520" cy="220" r="4" fill="#c9973f"/><text x="460" y="242">Darujhistan · Book One</text>
     <circle cx="232" cy="78" r="4" fill="#c9973f"/><text x="150" y="70">Hissar</text>
     <circle cx="150" cy="240" r="4" fill="#e8c073"/><text x="42" y="268">Aren · Book Two</text>
+    <path d="M150 240 C140 214 120 190 96 168" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="96" cy="168" r="4" fill="#d8b860"/><text x="104" y="164" font-size="11">Raraku · Book Four</text><text x="112" y="214" text-anchor="end" fill="#d8c88a" font-size="11">the Fourteenth</text>
     <path d="M232 78 C220 120 196 170 150 240" fill="none" stroke="#c94a20" stroke-width="2" opacity=".85"/><text x="200" y="196" fill="#e89a6a" font-size="11">the Chain</text>
     <path d="M480 110 C520 120 548 140 560 160 C572 182 584 196 598 206" fill="none" stroke="#bcd4ee" stroke-width="2" opacity=".85"/><circle cx="560" cy="160" r="3.5" fill="#8fa8c0"/><text x="566" y="156" font-size="11">Capustan</text>
     <circle cx="598" cy="206" r="4" fill="#bcd4ee"/><text x="618" y="196" text-anchor="end" font-size="11">Coral · Book Three</text>
@@ -44,6 +45,8 @@ function whereBooksMeetHTML(open){
       <li>While the Chain walks, Onearm's Host, proclaimed outlaw, is on Genabackis with Caladan Brood. The two stories run side by side, and only a little word passes between them.</li>
       <li>Ships out of Genabaris put in at Aren. That is how word crosses, and sometimes people.</li>
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
+      <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
+      <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }
 
