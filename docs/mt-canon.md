@@ -68,7 +68,7 @@ Wed Oct 28, 2026, 9:16 AM PDT. Built for Book Five of From the Ranks (v8.0.0, no
   - The Edur villages were empty. The Edur, warned by Hull, hid under webs of sorcery and watched them burn; the **Nerek** left behind are presumed killed [H] W15, R15, W *Hull Beddict*.
   - Seren and Buruk drink at the tavern; Buruk drugs her tea, and she wakes on a barge going downriver; at Trate a dockhand wakes her at night [H] W15, R15 (the dockhand: W15).
 - **Fent Reach (ch 15), north of the squad.** Atri-Preda **Yan Tovis** (Twilight) holds Fent Reach. The Preda had ordered the garrison of the unfinished **First Maiden Fort** evacuated to Fent Reach [1] W *Letherii Army*. One fleet lands 5,000 at the abandoned First Maiden Fort, a second shows "three hundred thousand Edur" ready to land, and a third cuts off the escape south to Trate [H] W15, R15, W *Yan Tovis*. **She surrenders Fent Reach and its garrison** [H] W15, R15. R's commentary: "We have never known the population of Edur lands."
-- **The Edur scouts (ch 15).** Trull's party kills a scout of the Letherii army. A Letherii boy of about fifteen [H] R15, Q20 (W15's "Faraed scout" is outvoted). DP lists a "Faraed scout (young member of the Letherii army)" [1]. Either way, tribal scouts serve the army, and the game's Faraed guide is one of their kind, never that scout.
+- **The Edur scouts (ch 15).** Trull's party kills a scout of the Letherii army. **A Faraed boy of about fifteen, serving the Letherii army** [H]: Faraed (W15, DP, Q20b), about fifteen (R15, Q20a, Q20b). Q20b adds that he carried a thread of sorcery to alert High Fort's mages [1], which fits ch 16, where Letherii mages near High Fort learn of Trull's force through a scout killed near a bridge [H] W16, R16. DP lists a "Faraed scout (young member of the Letherii army)" [1]. Either way, tribal scouts serve the army, and the game's Faraed guide is one of their kind, never that scout.
 - **The squad's place [C].** At Kraig's Landing as a guard company on the barges and the dock, among the encamped regiment, watching the fire from a distance (the plan). Its key choice (`watch` or `warn`) changes nothing in canon: the strike goes on regardless.
 - **Deaths:** the Nerek left in the villages, uncounted [H]; a few soldiers at the collapsed building (R15 commentary only, [1]); the scout [H].
 
@@ -142,7 +142,7 @@ Wed Oct 28, 2026, 9:16 AM PDT. Built for Book Five of From the Ranks (v8.0.0, no
 ## 3. Lether: debt, the Holds, the peoples
 
 - **Debt.** Debt "bound the entire kingdom, defining every relationship" [1] R1, quoting the text. The **Indebted** are a class: Udinaas is Indebted and so cannot hope to marry Feather Witch [1] R1; the Nerek hauling Buruk's wagons are Indebted [H] W2, R2. Debts pass to heirs (the soldier's rule, §2) [1]. Debt-collectors in ch 1–5: [O]. The Rat Catchers' Guild is background only, never met [1] DP.
-- **Coins.** The **dock**, the **third** and the **peak** [H] W2, R2. Tehol once turned "a hundred Letherii Docks into a Peak in the space of a year" [1] W2. **CONFLICT on the rate:** R2 says a peak is a million thirds; W2's sums imply about 12,000. **[C]:** the game never gives an exchange rate and counts its silver in docks only. "Levels" and "councils" as coins: [O]; never use them.
+- **Coins.** The **dock**, the **third** and the **peak** [H] W2, R2. Tehol once turned "a hundred Letherii Docks into a Peak in the space of a year" [1] W2. A peak is a million thirds [H] R2, Q20b (W2's sums imply about 12,000; Q20a's "four" is not taken). **[C]:** the game still counts its silver in docks only. "Levels" and "councils" as coins: [O]; never use them.
 - **The Seventh Closure.** "The king who rules at the Seventh Closure shall be transformed and so shall become the First Emperor reborn" [1] W *Seventh Closure*; popular belief takes it as Ezgara's coming [H] W *Seventh Closure*, W2, R2. It has been 7,000 years since the First Empire fell [1]. Lether was a First Empire colony [1] R2. The Ceda doubts the reading (copyists' errors, perhaps a zero or more missing) [H] W *Seventh Closure*, W2.
 - **The Tiles of the Holds.** An ancient, mostly Letherii form of the Deck; a reading shows images of actions, not drawn cards; Hold members can be places or things [1] W *Tiles of the Holds*. Feather witches were for generations the only readers [1]. **The Cedance** is both the dominant set of tiles and the Ceda's chamber: a round room deep below the Old Palace behind copper-sheathed doors, a chain-hung walkway to a disc at the centre, and huge tiles in a spiral on the floor [1] W *Tiles of the Holds*.
   - **Holds and tiles found** [1] each W Hold page, except where marked:
@@ -261,7 +261,7 @@ The squad never stands in these scenes, never changes their outcome, and never m
   - The Letherii ranks include "the conscripted poor" (Udinaas to Hull) [1] W *Hull Beddict*.
 - **Casualties.** "Two, maybe three thousand dead Tiste Edur"; "tens of thousands of dead Letherii" [H] R23, W *Battle*. 50,000–60,000 wraiths destroyed (Udinaas's guess) [1] W *Battle*.
 - **The squad's place [C].** The Whitefinders' right, across the dry channel: **the book's one mortal fight** (the plan), hand to hand and with no sorcery against an Edur army whose leaders the squad never sees by name. The squad sees the left and centre go under the pillars, a pillar turns toward it, and it breaks with its battalion: `stand` (the mortal fight, then the break into the hills with the Jheck hunting) or `fall back` (across the channel toward Dissent). It never stands near the towers, the Preda, the Edur hill, Rhulad's ground, or any Sengar. After the battle, a straggler may be put to the common barrow (inference; the plan's burial scene) [C].
-- **The march to Letheras.** After a day of rest and reorganisation [H] W *Battle*, Q20 (R23's "tomorrow" is outvoted). Brans Keep is two days' ride from the city [1].
+- **The march to Letheras.** "Tomorrow" (R23, Q20b) or after a day of rest (W *Battle*, Q20a): **CONFLICT, two against two.** Brans Keep is two days' ride from the city [1]. **The game never counts the days** between Brans Keep and the fall.
 
 ### 7.3 Game Chapter 7, The Seventh Closure: Letheras falls (novel ch 22, 24–25)
 
@@ -413,7 +413,7 @@ The vision is cast from **tiles** (David's decision): the reader lays tiles of t
 
 David sent answers to Q20 at 9:41 AM PDT. They read as gathered from the web or another assistant, not from pages of his copy (no page numbers, and they offer "exact text quotes" without giving any), so by the playbook's rule (§6, "Answers that come from the web") each counts as **one more source, Q20**, closing an item only where it agrees with one already here. Answers that look stitched together are not added anywhere.
 
-**Closed (Q20 agrees with W or R):** the Whitefinders recalled north from exercises outside First Reach (W *High Fort*); not at High Fort's fighting; on the right across the dry channel at Brans Keep with the Artisans and part of the Riven Brigade (W *Battle*); no strength or commander given. The Queen's Battalion (W). The disarmed simply leave (R18, W). The Kraig's Landing camp is Cold Clay and Snakebelt (W) and **cheers the fire** (W15). The scout is **a Letherii boy of about fifteen** (R15). "Three companies of the frontier army" (R21). The Preda **dies at Brans Keep** (W). The Edur march **after a day's rest** (W). No unit formally lays down arms in Letheras (W25, R25). The "day of suffering" is Rhulad's decree after Mosag's sorcery (R25); the line Q20 quotes for it is not used.
+**Closed (Q20a agrees with W or R):** the Whitefinders recalled north from exercises outside First Reach (W *High Fort*); not at High Fort's fighting; on the right across the dry channel at Brans Keep with the Artisans and part of the Riven Brigade (W *Battle*); no strength or commander given. The Queen's Battalion (W). The disarmed simply leave (R18, W). The Kraig's Landing camp is Cold Clay and Snakebelt (W) and **cheers the fire** (W15). The scout is **a Letherii boy of about fifteen** (R15). "Three companies of the frontier army" (R21). The Preda **dies at Brans Keep** (W). The Edur march **after a day's rest** (W). No unit formally lays down arms in Letheras (W25, R25). The "day of suffering" is Rhulad's decree after Mosag's sorcery (R25); the line Q20 quotes for it is not used.
 
 **Supported (Q20 only, agreeing with Claude's calls):** Lether has no crossbows; Letherii healers are surgeons with no healing sorcery, in MT and RG; "sergeant" is used as a plain rank below Finadd. These stand as the game's rules.
 
@@ -428,6 +428,25 @@ David sent answers to Q20 at 9:41 AM PDT. They read as gathered from the web or 
 - Chronology: still open (Q20 agrees nothing fixes it).
 
 Q20 stays open in `open-questions.md` only for the four the game would like a page for: the Preda's pronoun, the bridge's name, the thirds to a peak, and what the Whitefinders did between ch 14 and ch 23. None blocks the build.
+
+
+### 17b. The second set of answers (Wed Oct 28, 2026, 9:43 AM PDT)
+
+David sent a second set two minutes later, of the same kind (no page numbers), counted as **Q20b**; the first set is now **Q20a**.
+
+**Agrees, and closes or strengthens:** the recall north, and High Fort falling before the battalion arrives; the right across the dry channel; no commander or strength; "three companies of the frontier army"; no crossbows; surgeons with no healing sorcery; "sergeant" as a plain rank; the Queen's Battalion; the disarmed told to leave; Cold Clay and Snakebelt at Kraig's Landing, the outlying building collapsing, the soldiers cheering; 300,000 Edur and 5,000 landed at First Maiden Fort (now [H] with W, R and Q20b against Q20a's "5,000 soldiers"); no formal surrender in Letheras; the bridge unnamed (both sets place it on the way to the Eternal Domicile, and neither W nor R names it). **The scout** is a Faraed boy of about fifteen (above). **The wave** comes in daylight (W6: the sun warmed the spirit; Q20b) [H], not at dusk (Q20a). **A peak is a million thirds** [H] R2, Q20b.
+
+**Now in conflict:**
+- **The Preda's pronoun.** Q20b: "she", quoting "She stood taller than most women..."; Q20a: "he". One each; memory leans "she" [M]. **The game still uses no pronoun for the Preda.** Her death on the page under one of Mosag's pillars is now in both sets and in W [H].
+- **The march on Letheras:** "tomorrow" (R23, Q20b) against a day's rest (W, Q20a). The game never counts the days.
+
+**Supported, new (Q20b only):** Moroch holds the bridge with seventy-three men in a last stand; the gully ramparts held by the Grass Jackets, the Queen's Battalion and the Quillas Brigade (W has the Grass Jackets forward and the royals on their own rampart; compatible); the Whitefinders burning the ground as they fall back to Brans Keep (Q20a says it too, perhaps from the same place; the game may show burned fields on the road south, never the battalion's route).
+
+**Not taken:**
+- Kraig's Landing "on the Brous River": the Brous River is in the south by First Reach (W *Brous*); the Landing is upriver of Trate by the Edur border (W *Kraig's Landing*).
+- The "day of suffering" as Rhulad ordering Mosag's sorcery on the city: R25 has Rhulad stopping the sorcery and decreeing the day after. The game keeps R25.
+
+**Still open, none blocking:** the Preda's pronoun; the march's day count; the bridge's name (the game names none); the Whitefinders between ch 14 and ch 23.
 
 ---
 
