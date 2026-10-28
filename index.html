@@ -59671,7 +59671,7 @@ function b4FeatherPay(r){ if (!r || !r.done || !r.won || S.f.b4_featherPaid) ret
    The names a chapter writer uses are listed in docs/v8.0-notes.md, "For chapter writers". Canon: docs/mt-canon.md (binding). */
 
 const MT_PORDER = ['sgt', 'tobet', 'thegg', 'perrit', 'ammet'];   // the sergeant and the four, in the order they walk
-const B5_RECRUITS = ['ruuk', 'brune', 'pessa'];                  // Ruuk (north, Ch 2-3), Brune (Ch 3), Pessa (Ch 5)
+const B5_RECRUITS = ['ruuk', 'brune', 'pessa'];                  // Brune (Ch 2, at Trate), Ruuk (Ch 3, at Kraig's Landing), Pessa (Ch 5)
 const b5On = () => !!(S && S.book === 'mt');
 const b5In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
 const b5He = id => ['perrit', 'ammet', 'pessa', 'brune'].includes(id) ? 'she' : 'he'; // the sergeant is never gendered: chapters say "you"
@@ -59744,7 +59744,7 @@ Object.assign(TPL, {
     epithet:'"The road is not where your map says. It never was. Come."', origin:'The Faraed hills of the north', age:17, service:'Two summers guiding for the army, paid by the day', height:'Thin, wiry, and always a little ahead of where he was a moment ago.',
     weapon:'A bundle of light throwing-spears and a hunting knife', armour:'Hide over wool, and a hood against the northern rain',
     bio:`One of the Faraed of the northern hills, a people Lether took a long time ago and has mostly forgotten it took. The army pays Faraed boys to find it the roads its maps get wrong. Ruuk has found it a good many, at a dock a day.\n\nHe throws a spear the way the Letherii throw dice: often, cheerfully, and expecting to win.`,
-    bio2:`His clan owes a trader in Trate for a winter's grain, and the trader takes it out of Ruuk's day-rate, a few thirds at a time. He does not complain. He says the trader is a bad man, but the grain was good.\n\nHe likes the Sixth because it pays on the day, and because the big Tarthenal carried him over a river once without being asked.`,
+    bio2:`His clan owes a trader in Trate for a winter's grain, and the trader takes it out of Ruuk's day-rate, a few docks at a time. He does not complain. He says the trader is a bad man, but the grain was good.\n\nHe likes the Sixth because it pays on the day, and because the big Tarthenal carried him over a river once without being asked.`,
     traits:['Walks ahead and waits, and walks ahead again', 'Will not look at the cadre\'s tiles', 'Eats standing up', 'Names every bird, in Faraed, whether anyone asked or not'],
     gear:['Three light throwing-spears', 'A pouch of grain from the trader, for luck', 'A bird-bone whistle'],
     get quest(){ return `The army pays him to find roads. Lately it has asked about the roads into the Edur country, and the roads back, and which are quicker. Ruuk has answered. He has not said what he thinks it means, and he has started sleeping with his spears.`; },
@@ -59926,7 +59926,7 @@ const b5Rest = t => { if (!S) return false; const had = !!S.wounds; rest(t || 'T
 /* Lether has no Moranth munitions: the roster does not count a missing sapper against Book Five's squad */
 { const _rl = rosterLacks; rosterLacks = function(sq){ const r = _rl(sq); return b5On() ? r.filter(k => k !== 'munitions') : r; }; }
 
-/* ---- the three recruits: Ruuk, a Faraed guide (the north, Chapters 2-3); Brune, of the Shake (Chapter 3); Pessa, a refugee pressed into the ranks
+/* ---- the three recruits: Brune, of the Shake (Chapter 2, at Trate); Ruuk, a Faraed guide (Chapter 3, at Kraig's Landing); Pessa, a refugee pressed into the ranks
    (Chapter 5). Through the roster (38c), six at most. S.f.b5_ruukDone / b5_bruneDone / b5_pessaDone: 1 walks, 2 waits with their own people,
    0 sent away (set 0 yourself). b5Join(id) joins, or waits if there is no room; b5SwapIn(id) brings one in from waiting (the roster chooses). ---- */
 const B5_DONE = {ruuk:'b5_ruukDone', brune:'b5_bruneDone', pessa:'b5_pessaDone'};
@@ -59941,6 +59941,44 @@ function b5Join(id){ if (!b5CanRecruit(id) || b5In(id)) return false;
 function b5SwapIn(id){ if (!b5CanRecruit(id) || b5In(id)) return false; if (b5Room() > 0) return rosterIn(id); const out = b5Recruit_(); return !!out && rosterSwap(out, id); }
 const b5Waiting = id => !!(b5On() && S.f && S.f[B5_DONE[id]] === 2 && !b5In(id) && !(S.dead && S.dead[id]));
 const b5Offers = () => B5_RECRUITS.filter(id => b5Waiting(id) && (b5Room() > 0 || !!b5Recruit_()));
+
+/* ---- the pay desk: a shared body for every chapter's b5_c<n>_pay node. For each debtor who owes and while the squad has docks: "10 docks on
+   X's" (or what there is, if less) and "All we can on X's" (when that is more than 10), each through b5Pay and back to the desk; then
+   "Not now." to back. here: the desk's own node id (default: the node showing it). A chapter writes
+     b5_c4_pay: () => ({sp:'The clerk', txt:'…', html:debtHTML('The Sixth Company'), ch:b5PayChoices('b5_c4_fire')}) ---- */
+const B5_PAYSTEP = 10;
+function b5PayChoices(back, here){ let at = here; const desk = () => talk(at || here), mark = () => { at = here || S.node; }, out = [];
+  b5Debtors().forEach(id => { const who = id === 'sgt' ? 'your' : `${NAME(id)}'s`, can = () => Math.min(S.silver || 0, b5Debt(id));
+    out.push({t:`${b5Coin(Math.min(B5_PAYSTEP, Math.max(1, can())))} on ${who} debt.`, req:()=>can() > 0, fx:()=>{ mark(); b5Pay(id, B5_PAYSTEP, 'At the pay desk'); }, go:desk});
+    out.push({t:`All we can on ${who} debt.`, req:()=>can() > B5_PAYSTEP, fx:()=>{ mark(); b5Pay(id, can(), 'At the pay desk'); }, go:desk}); });
+  out.push({t:'"Not now."', go:back});
+  return out; }
+
+/* ---- disarmed and rearmed (Chapter 4 on hold: the surrender at High Fort; Chapter 5: the cache and Brans Keep). b5Disarm() takes every
+   weapon-slot item off every soldier (walking or at camp) and out of the kit into S.f.b5_stash (ids; S.f.b5_stashWho remembers who wore
+   each) and sets S.f.b5_disarmed = 1. Armour and trinkets stay; the squad still fights with its base attacks, which are the knives and
+   staves the Edur let them keep. Idempotent: a second call only sweeps up a weapon gained since. b5Rearm(fallback) clears b5_disarmed,
+   gives back what was stashed (to whoever wore it, if they walk and the slot is free, else where it suits best), or, if the stash is
+   empty (a fresh --from=5 save), the fallback item ids that exist; sets S.f.b5_rearmed = 1 and returns the ids given. Once only: a
+   second call, or a call when not disarmed, gives nothing. ---- */
+const b5IsWeapon = g => !!(g && ITEMS[g] && ITEMS[g].slot === 'weapon');
+function b5Disarm(){ if (!b5On()) return 0;
+  const stash = Array.isArray(S.f.b5_stash) ? S.f.b5_stash : [], who = S.f.b5_stashWho || {}, took = [];
+  Object.entries(S.gear || {}).forEach(([w, g]) => { if (g && b5IsWeapon(g.weapon)) { who[g.weapon] ??= w; if (!took.includes(g.weapon)) took.push(g.weapon); delete g.weapon; } });
+  (S.kit || []).filter(b5IsWeapon).forEach(g => { if (!took.includes(g)) took.push(g); });
+  S.kit = (S.kit || []).filter(g => !b5IsWeapon(g));
+  took.forEach(g => { if (!stash.includes(g)) stash.push(g); });
+  const first = !S.f.b5_disarmed; S.f.b5_stash = stash; S.f.b5_stashWho = who; S.f.b5_disarmed = 1; delete S.f.b5_rearmed;
+  if (first) note(`Swords, spears and bows go on the Edur's pile${took.length ? `, ${took.map(g => ITEMS[g].name.replace(/^An? /, 'the ').replace(/^The /, 'the ')).join(', ')} with them` : ''}. Knives, shields and paybooks stay.`, 'bad');
+  save(); return took.length; }
+function b5Rearm(fallback = []){ if (!b5On() || !S.f.b5_disarmed) return [];
+  const stash = (Array.isArray(S.f.b5_stash) ? S.f.b5_stash : []).filter(g => ITEMS[g]), who = S.f.b5_stashWho || {};
+  const give = (stash.length ? stash : (Array.isArray(fallback) ? fallback : [fallback])).filter(g => ITEMS[g]);
+  delete S.f.b5_disarmed; S.f.b5_rearmed = 1; S.f.b5_stash = []; S.f.b5_stashWho = {}; S.kit ??= [];
+  give.forEach(g => { if (S.kit.includes(g)) return; S.kit.push(g); const w = who[g], sl = ITEMS[g].slot;
+    if (w && SQUAD().includes(w) && S.gear[w] && !S.gear[w][sl] && canWear(w, g)) S.gear[w][sl] = g; else placeGear(g); });
+  note(give.length ? `The squad is armed again: ${give.map(g => ITEMS[g].name).join(', ')}.` : 'The squad is armed again, from what the quartermaster has.', 'good');
+  save(); return give; }
 
 /* ---- who reads the tiles in Book Five (36b visReader, 21's captions, 80c's readings): Perrit, while she walks and lives; otherwise the
    tile-woman, an old camp follower who reads for the company for a dock, whose name nobody has ---- */
@@ -59973,7 +60011,12 @@ Object.assign(FOES, {
   b5_collector:{name:'The collector\'s man', kind:'thug', sig:'C', hp:24, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b5_pressman:{name:'Press-gang soldier', kind:'b5_letherii', sig:'p', hp:13, ac:13, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   b5_presssgt:{name:'Press-gang sergeant', kind:'b5_letherii', sig:'P', hp:22, ac:14, atk:5, dmg:[1,8,2], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
+  /* on the squad's side: a Whitefinder regular, for fights beside the battalion (Chapters 4-7), in a fight's allies:[['b5_regular', x, y]] */
+  b5_regular:{name:'Whitefinder regular', kind:'b5_letherii', sig:'r', hp:15, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, verb:'cuts at'},
 });
+/* the regular grows with the squad, as Book Four's Ninth regular does */
+{ const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
+    if (k === 'b5_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b5reg = true; } return u; }; }
 
 /* ---- the words Book Five throws at you: [chapter, word, meaning, met?]. Bound by mt-canon §10: Bugg, Turudal Brizad and Yan Tovis are
    what the squad could know of them, no more; the Errant is Lether's god of chance; the tiles name no being. ---- */
@@ -60001,8 +60044,8 @@ GLOSSX.mt = [
   [1, 'Tiste Edur', 'The people of the north, across the frontier: grey-skinned, long-lived, six tribes under one king. Lether trades with them, poaches their seals, and is about to find out what that costs.', ()=>(S.chapter || 0) >= 1],
   [1, 'Trate', 'Lether\'s northernmost city, a walled port with a lighthouse over the harbour, and the Tarancede Tower out on its rocks.', ()=>(S.chapter || 0) >= 1 || !!(S.f && S.f.b5_trate)],
   [2, 'Shadow wraiths', 'Shapes in the rigging of the ships that came into Trate. They do what the Edur sorcerers tell them.', ()=>(S.chapter || 0) >= 2],
-  [2, 'The Faraed', 'A people of the northern hills, long under Lether. The army pays Faraed boys to find the roads its maps get wrong.', ()=>b5In('ruuk') || !!(S.f && S.f.b5_ruukDone)],
-  [3, 'The Shake', 'The first people of the central west coast and its islands, much married into. Lether took their coast without a war. Their faith is the Shore, the sea that takes back everything.', ()=>b5In('brune') || !!(S.f && S.f.b5_bruneDone) || godMet('brune')],
+  [3, 'The Faraed', 'A people of the northern hills, long under Lether. The army pays Faraed boys to find the roads its maps get wrong.', ()=>b5In('ruuk') || !!(S.f && S.f.b5_ruukDone)],
+  [2, 'The Shake', 'The first people of the central west coast and its islands, much married into. Lether took their coast without a war. Their faith is the Shore, the sea that takes back everything.', ()=>b5In('brune') || !!(S.f && S.f.b5_bruneDone) || godMet('brune')],
   [3, 'Kraig\'s Landing', 'Three buildings and a dock upriver from Trate, near the Edur border. A regiment camps round it this year, and the Ceda\'s banner flies on the ships.', ()=>(S.chapter || 0) >= 3],
   [3, 'Yan Tovis', 'The Atri-Preda at Fent Reach, on the northern coast.', ()=>!!(S.f && S.f.b5_fentReach) || (S.chapter || 0) >= 4],
   [3, 'The Nerek', 'A people of the eastern mountains, drawn into debt by traders and then into Lether. Many ended on the streets of Letheras.', ()=>(S.chapter || 0) >= 3],

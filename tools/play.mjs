@@ -191,15 +191,25 @@ const SYNTH_HOC = (n) => {
 };
 
 // Book Five (--book=mt --from=N): a synthetic save at the start of Book Five's chapter N, with earlier chapters' keys (S.f.b5_cN_key)
-// from B5KEYS, level N+1 (a new cast on Book Two's curve, cap 8), the debts as they start (now and then one grown, one paid down),
+// Brune with the squad from Chapter 3, Ruuk waiting from Chapter 4, Pessa waiting from Chapter 6; the disarm, holder and fallen flags
 // Ruuk with the squad from Chapter 3, Brune waiting from Chapter 3, Pessa with the squad from Chapter 5
 const SYNTH_MT = (n) => {
   const pick = a => a[Math.floor(Math.random() * a.length)], coin = () => Math.random() < .5;
   setBook('mt'); S = newStateMT('Hask'); S.lvl = Math.min(8, n + 1); S.xp = LEVELS[S.lvl - 1];
   const keys = (typeof B5KEYS !== 'undefined' && B5KEYS) || {};
   S.chapters = {}; for (let i = 1; i < n; i++) { const v = pick(keys[i] || ['a', 'b']); S.f[`b5_c${i}_key`] = v; S.chapters[i] = v; }
-  if (n >= 3) { S.f.b5_ruukDone = 1; if (!S.squad.includes('ruuk')) S.squad.push('ruuk'); S.f.b5_bruneDone = 2; S.camp = ['brune']; }
-  if (n >= 5) { S.f.b5_pessaDone = 2; S.camp = [...(S.camp || []), 'pessa']; }
+  // the brief's recruits (docs/mt-book-brief.md): Brune joins in Chapter 2 and walks; Ruuk joins in Chapter 3 and, with six walking, waits;
+  // Pessa joins in Chapter 5 and waits
+  if (n >= 3) { S.f.b5_bruneDone = 1; if (!S.squad.includes('brune')) S.squad.push('brune'); }
+  if (n >= 4) { S.f.b5_ruukDone = 2; S.camp = [...(S.camp || []), 'ruuk']; }
+  if (n >= 6) { S.f.b5_pessaDone = 2; S.camp = [...(S.camp || []), 'pessa']; }
+  // the flags later chapters read: disarmed after High Fort on hold (Chapter 5), rearmed after it; who holds the paybooks (Chapter 5's key);
+  // who fell at the channel (none, in a synthesised save)
+  if (n === 5 && S.f.b5_c4_key === 'hold') S.f.b5_disarmed = 1;
+  if (n >= 6 && S.f.b5_c4_key === 'hold') S.f.b5_rearmed = 1;
+  if (n >= 6) S.f.b5_holder = S.f.b5_c5_key === 'sign' ? 'house' : 'army';
+  if (n === 7) S.f.b5_c6_fallen = [];
+  [...S.squad, ...(S.camp || [])].forEach(k => { S.loy[k] ??= 0; S.gear[k] ??= {}; S.picks[k] ??= []; });
   migrate(S); Object.keys(S.loy).forEach(k => { S.loy[k] = Math.floor(Math.random() * 5) - 1; });
   if (coin()) S.debt.tobet = Math.round(S.debt.tobet * 1.3); if (coin()) S.debt.ammet = Math.round(S.debt.ammet * .4);
   S.inv = {sharper:0, burner:0, cusser:0, salve:2, smoker:0}; S.silver = 20;

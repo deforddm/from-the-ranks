@@ -70,6 +70,35 @@ const r = await page.evaluate(async () => {
   out.rec.swap = b5SwapIn('pessa'); out.rec.squad3 = S.squad.join(','); out.rec.campAfter = (S.camp || []).join(','); out.rec.core = ROSTER_BOOKS.mt.core.join(',');
   out.rec.cantCore = !rosterCanOut('perrit'); out.rec.lacks = rosterLacks().join(',');
   S.f.b5_bruneDone = 0; out.rec.sentAway = b5CanRecruit('brune');
+  /* disarmed at High Fort, rearmed at the cache: weapons only, to whoever wore them; a fresh save gets the fallback */
+  S = newStateMT('Arms'); S.lvl = 5; S.xp = LEVELS[4]; save();
+  { const ws = Object.keys(ITEMS).filter(k => ITEMS[k].slot === 'weapon'), w1 = ws.find(k => canWear('thegg', k)), w2 = ws.find(k => k !== w1 && canWear('tobet', k)), w3 = ws.find(k => k !== w1 && k !== w2);
+    const tr = Object.keys(ITEMS).find(k => ITEMS[k].slot === 'trinket' && canWear('perrit', k));
+    S.kit = [w1, w2, w3, tr]; S.gear.thegg = {weapon:w1}; S.gear.tobet = {weapon:w2}; S.gear.perrit = {trinket:tr};
+    const n1 = b5Disarm(), st1 = JSON.stringify(S.f.b5_stash), n2 = b5Disarm();
+    out.arms = {n1, n2, stash:S.f.b5_stash.slice().sort().join(','), want:[w1, w2, w3].sort().join(','), same:st1 === JSON.stringify(S.f.b5_stash), flag:S.f.b5_disarmed,
+      kit:S.kit.join(','), tr, worn:!!(S.gear.thegg.weapon || S.gear.tobet.weapon), trinket:S.gear.perrit.trinket === tr};
+    startBattle('__b5', {}); for (let i = 0; i < 40 && !(B && B.cur && B.cur.side === 'p' && !B.busy); i++) await wait(100); B.busy = true; B.over = true;
+    out.arms.fights = B.units.filter(u => u.side === 'p' && !u.ally).every(u => u.atk > 0 && u.dmg && u.dmg[1] > 0);
+    const give = b5Rearm(['b5_nothere']); out.arms.give = give.slice().sort().join(','); out.arms.back = S.gear.thegg.weapon === w1 && S.gear.tobet.weapon === w2;
+    out.arms.flags = `${!!S.f.b5_disarmed}/${S.f.b5_rearmed}`; out.arms.again = b5Rearm([w1]).length; out.arms.kitBack = [w1, w2, w3, tr].every(k => S.kit.includes(k));
+    S = newStateMT('Arms2'); S.kit = []; b5Disarm(); const fb = b5Rearm([w3, 'b5_nothere']); out.arms.fallback = fb.join(',') === w3 && S.kit.includes(w3); out.arms.w3 = w3;
+    S = newStateMT('Arms3'); out.arms.notDisarmed = b5Rearm([w3]).length; }
+  /* a Whitefinder regular on the squad's side, grown with the squad */
+  BATTLES.__b5reg = Object.assign({}, BATTLES.__b5, {allies:[['b5_regular', 6, 8]]});
+  S = newStateMT('Reg'); S.lvl = 6; S.xp = LEVELS[5]; save(); startBattle('__b5reg', {}); for (let i = 0; i < 40 && !(B && B.cur && B.cur.side === 'p' && !B.busy); i++) await wait(100); B.busy = true; B.over = true;
+  { const a = B.units.find(u => u.id === 'ally_b5_regular'); out.reg = a ? {side:a.side, ally:!!a.ally, hp:a.maxhp, base:FOES.b5_regular.hp, lvB:lvB(), atk:a.atk, fig:!!FIGX[FOES.b5_regular.kind], name:a.name} : null; }
+  /* the pay desk: each debtor while the squad has docks, back to the desk; "Not now." to the fire */
+  S = newStateMT('Pay'); S.silver = 25; save();
+  DLG.__b5desk = () => ({sp:'The clerk', txt:'The paybooks.', html:debtHTML('The desk'), ch:b5PayChoices('__b5back')}); DLG.__b5back = () => ({sp:'Back', txt:'The fire.', ch:[{t:'Leave'}]});
+  talk('__b5desk'); await wait(50);
+  { const shown = () => [...document.querySelectorAll('#sheet .choice')].map(b => b.textContent);
+    const c0 = shown(); out.pay = {c0:c0.length, last:c0[c0.length - 1], tobet10:c0.some(t => /^10 docks on Tobet['’]s debt\.$/.test(t)), allSgt:c0.some(t => /^All we can on your debt\.$/.test(t)), html:/The desk/.test(document.querySelector('#sheet').innerHTML)};
+    const t0 = b5Debt('tobet'); [...document.querySelectorAll('#sheet .choice')].find(b => /on Tobet['’]s/.test(b.textContent)).click(); await wait(80);
+    out.pay.tobet = t0 - b5Debt('tobet'); out.pay.silver = S.silver; out.pay.node = S.node;
+    [...document.querySelectorAll('#sheet .choice')].find(b => /^All we can on Ammet['’]s/.test(b.textContent)).click(); await wait(80);
+    out.pay.silver2 = S.silver; const c2 = shown(); out.pay.c2 = c2.join('|');
+    [...document.querySelectorAll('#sheet .choice')].find(b => /Not now/.test(b.textContent)).click(); await wait(80); out.pay.after = S.node; closeSheet(); }
   /* the readers: Perrit, else the tile-woman */
   S = newStateMT('Read'); S.squad = S.squad.filter(x => x !== 'perrit'); out.reader2 = visReader().id; S = newStateMT('Read2');
   /* the tiles */
@@ -154,6 +183,14 @@ const C = R.rec;
 C.can === 'true,true,true' && C.joinR && C.debtR === 40 && C.squad1 === 'sgt,tobet,thegg,perrit,ammet,ruuk' && C.joinB === false && C.joinP === false && C.pWaits && /brune/.test(C.camp) && /pessa/.test(C.offers) ? ok('the recruits: Ruuk walks (with his own debt); with six walking, Brune and Pessa wait at camp') : no('recruits ' + JSON.stringify(C));
 C.swap && /pessa/.test(C.squad3) && !/ruuk/.test(C.squad3) && /ruuk/.test(C.campAfter) && C.core === 'sgt,tobet,thegg,perrit,ammet' && C.cantCore && !C.sentAway ? ok('the roster swaps a recruit for one waiting; the four always walk; a recruit sent away is not offered') : no('swap ' + JSON.stringify(C));
 !/munitions/.test(C.lacks) ? ok('the roster does not count a missing sapper against Lether') : no('lacks ' + C.lacks);
+const A = R.arms;
+A.n1 === 3 && A.n2 === 0 && A.same && A.stash === A.want && A.flag === 1 && A.kit === A.tr && !A.worn && A.trinket ? ok('b5Disarm: every weapon off every soldier and out of the kit into the stash; trinkets stay; a second call changes nothing') : no('disarm ' + JSON.stringify(A));
+A.fights ? ok('disarmed, the squad still fights with its base attacks (knives and staves)') : no('disarmed fight ' + JSON.stringify(A));
+A.give === A.want && A.back && A.kitBack && A.flags === 'false/1' && A.again === 0 && A.fallback && A.notDisarmed === 0 ? ok('b5Rearm: the stash comes back to whoever wore it (not the fallback); an empty stash gives the fallback that exists; once only') : no('rearm ' + JSON.stringify(A));
+const RG = R.reg;
+RG && RG.side === 'p' && RG.ally && RG.hp === RG.base + 3 * RG.lvB && RG.fig && /Whitefinder regular/.test(RG.name) ? ok(`FOES.b5_regular fights on the squad's side and grows with it (${RG.hp} health at level 6)`) : no('regular ' + JSON.stringify(RG));
+const P = R.pay;
+P.tobet10 && P.allSgt && /Not now\./.test(P.last) && P.html && P.tobet === 10 && P.silver === 15 && P.node === '__b5desk' && P.silver2 === 0 && !/on /.test(P.c2.replace(/.Not now\../, '')) && P.after === '__b5back' ? ok('b5PayChoices: 10 docks or all we can on each debt, back to the desk; with no docks only "Not now.", which goes back') : no('pay desk ' + JSON.stringify(P));
 const T = R.tiles;
 T.n === 16 && T.pools === 7 && T.poolOk && T.lean && T.fx ? ok('sixteen tiles of the Holds; seven pools, each leaning to one tile, every tile with words and an effect another card already has') : no('tiles ' + JSON.stringify(T));
 !T.named.length ? ok('rule 41: no tile, and no reader\'s words, names a being or is the Errant, Saddick or the Knight of Shadows') : no('tiles name ' + JSON.stringify(T.named));
@@ -163,7 +200,7 @@ R.offer.go === 'b5_c1_tiles' && R.offer.req && /tiles/.test(R.offer.t) && R.offe
 R.cardNode.sp === 'The Tiles of the Holds' && R.cardNode.html && R.cardNode.after && R.cardNodeName === 'b5_c1_card' && R.keyFlag === 'b5_c1_key' ? ok('the tile node, and Book Five\'s card node and key flag (b5_c1_card, b5_c1_key)') : no('node ' + JSON.stringify([R.cardNode, R.cardNodeName, R.keyFlag]));
 R.tables === 'mt:1,mt:2,mt:3,mt:4,mt:5,mt:6,mt:7:true' && R.vis.kick === 'Through the Tiles' ? ok('seven reading places resolve to their tables; the visions are "Through the Tiles"') : no('tables ' + R.tables + ' ' + JSON.stringify(R.vis));
 R.gods === 'the Empty Hold:hold:true,the Tarthenal dead:tarthenal:true,the Shore:shore:true;the Errant:true' && !R.godsTxt.length ? ok('the gods: the Errant, the Empty Hold, the Tarthenal dead and the Shore, each a boon and a sigil, none named past what Lether knows') : no('gods ' + R.gods + ' ' + JSON.stringify(R.godsTxt));
-R.foes.length === 12 && R.foes.every(f => /true$/.test(f)) ? ok('twelve foes for later chapters (Edur, unblooded, K\'risnan, wraith, Jheck, demon; deserters, bullies, a press-gang), each with a figure') : no('foes ' + R.foes.join(' '));
+R.foes.length === 13 && R.foes.every(f => /true$/.test(f)) ? ok('thirteen foes for later chapters (Edur, unblooded, K\'risnan, wraith, Jheck, demon; deserters, bullies, a press-gang; and the Whitefinder regular on the squad\'s side), each with a figure') : no('foes ' + R.foes.join(' '));
 R.gloss.bugg === 'Tehol Beddict\'s manservant, a builder. People in Letheras know the name the way they know a bridge.' && /^The Queen's First Consort\./.test(R.gloss.brizad) && /^The Atri-Preda at Fent Reach/.test(R.gloss.yan) && !/Errastas|Elder|Consort/.test(R.gloss.errant) ? ok(`the glossary keeps the canon open (Bugg, Turudal Brizad, Yan Tovis, the Errant; ${R.gloss.n} rows)`) : no('gloss ' + JSON.stringify(R.gloss));
 R.keys === JSON.stringify({1:['pay', 'swim'], 2:['salvage', 'dead'], 3:['watch', 'warn'], 4:['hold', 'run'], 5:['sign', 'refuse'], 6:['stand', 'fallback'], 7:['emperor', 'paid', 'ledger']}) && R.scenes && R.route && /Indebted/.test(R.fin.endline) && /Whitefinder/.test(R.fin.role) ? ok('B5KEYS, the reading places\' backdrops, the road map and the finale defaults') : no('keys/scenes ' + JSON.stringify([R.keys, R.scenes, R.route, R.fin]));
 R.art.title === '1600x900' && R.art.patch && R.art.vi && R.art.flameRight && R.art.titleArt === 'title/mt' ? ok('the painted title and the coin-shaped patch (VI, the flame on the right)') : no('art ' + JSON.stringify(R.art));

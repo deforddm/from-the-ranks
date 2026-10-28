@@ -40,8 +40,8 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     moi:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'sohra', from:1, to:7}, {id:'greysword', from:3, to:7}, {id:'ellis', from:1, to:7, imp:1}, {id:'vell', from:1, to:7, imp:1}]},
     // Book Four: Book Two's four and the Fourteenth's four new soldiers; Ramin and Keth (transfer only) and Orvas (from Chapter 3) as recruits
     hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}, {id:'mirrel', from:1, to:7}, {id:'yorin', from:1, to:7}, {id:'rasp', from:1, to:7}]},
-    // Book Five: the four, and Ruuk (Chapters 2-3 on), Brune (Chapter 3 on) and Pessa (Chapter 5 on) as recruits
-    mt:{core:['tobet', 'thegg', 'perrit', 'ammet'], rec:[{id:'ruuk', from:2, to:7}, {id:'brune', from:3, to:7}, {id:'pessa', from:5, to:7}]},
+    // Book Five: the four, and Brune (Chapter 2 on, at Trate), Ruuk (Chapter 3 on, at Kraig's Landing) and Pessa (Chapter 5 on) as recruits
+    mt:{core:['tobet', 'thegg', 'perrit', 'ammet'], rec:[{id:'brune', from:2, to:7}, {id:'ruuk', from:3, to:7}, {id:'pessa', from:5, to:7}]},
   };
   const NUM = {two:2, three:3, four:4, five:5, six:6, seven:7};
   function mk(book, ch, v, withR, without) {
