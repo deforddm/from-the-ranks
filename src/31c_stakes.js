@@ -50,7 +50,7 @@ const SOLDIER_LATE = { // David, Tue Oct 27, 2026, 9:20 PM PDT: capped under Bri
   gotm:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
   dg:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
   moi:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
-  mt:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}}; // v8.0: Book Five is a new cast on Book Two's curve, so Book Two's row (Claude's call; the balance pass may change it with David)
+  mt:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}}; // v8.0: Book Five is a new cast on Book Two's curve, so Book Two's row (David, Wed Oct 28, 2026, 3:34 PM PDT: keep it for now)
 const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
 const soldierLate = () => { if (!S || (S.diff || 'soldier') !== 'soldier') return null;
   const t = SOLDIER_LATE[S.book || 'gotm'], s = t && t[S.chapter || 0];
