@@ -427,3 +427,117 @@ Each game pays once, as the table closes, never in a node's `fx`, as Books Three
 - **Backdrops:** redraw `b5_landing`; `b5_c3_greenfire` (the curtain of green fire over far mountains, the dock and the cheering camp as shapes in front); `b5_c3_tents` (the mages' tents with the banners, seen from the barges); `b5_c3_collapse` (the outlying building fallen in, lanterns, men digging).
 - **Item art.**
 
+## Chapter 4: "High Fort" (`84`, key `hold` | `run`)
+
+**Spine** (§1.4, novel ch 16–18). The Sixth is ordered from the Landing to High Fort, its battalion's station, to wait for the battalion there.
+- **The march** from the Landing, through the forest, with a guide. It leaves before Trate falls (ch 16): the squad never sees the fall.
+- **High Fort:** on pasture just south of a forest that hides the Katter River, guarding the route to the pass into Edur lands. Corner bastions with ballistae and mangonels; earthen ramparts. **Dry Gully**, an old drainage course, about 1,000 paces north, with three ramparts parallel to it: a stone-walled small fort on the easternmost and largest, and the largest bastion tower over the westernmost.
+- **The Sixth arrives ahead of its battalion** (which never comes) and is put under the fort's garrison on **the westernmost rampart, under the bastion tower** (§1.4, Claude's call): the end of the line furthest from the royals, the stone fort and Moroch.
+- The royals come in with the **Queen's Battalion** and the **Quillas Brigade**, and hold their own fortified rampart with the Dresh ballistae: their standards seen from the far rampart. The **Grass Jackets** forward on the gully ramparts, their sorcerers in the stone fort. **Eleven mages** (four with the Queen, three with the Prince, four in the stone fort). Moroch seen far off, the only uneasy man on the royals' rampart (`S.f.b5_c4_moroch = 1`, one line). **No Preda at High Fort.**
+- **The battle** (headline, from the west rampart). The Edur cross the pass first, and the Queen's force falls back on the fort. Letherii sorcery opens and the K'risnan turn it back; a lightning column kills hundreds; wraiths lead, demons come in a wedge behind and vanish and reappear among the Letherii, and the garrison's ballistae fire on them. The charge, far off: thousands die by sorcery round Moroch, at the far end. The Letherii flee or fall back. **The Jheck's wolves kill the wounded** (one line, never shown). **Every one of the eleven mages dies.**
+- **The surrender:** the fort sends a delegation and the Edur accept. Word runs down the ramparts that the fort has surrendered, "and the whole frontier with it", and that the Queen and the Prince are taken (heard, never seen). The terms: the surviving Letherii are disarmed and let go.
+
+**The squad's story.**
+- **The march:** Ruuk guides if he walks; else a Faraed scout from the Landing, unnamed. **The river carry** (Ruuk's bio): if Thegg and Ruuk both walk, at a stream in spate on the march Thegg carries Ruuk over on his shoulders without being asked. Set `S.f.b5_ruukCarried = 1`. Ruuk brings Perrit a stone from a hill and Ammet a herb she knows only half of (their bios), behind `b5In`.
+- **Perrit at High Fort** (Claude's call, binding): she is a battalion cadre mage, **not one of the eleven**, and the fort's cadre-master does not link a junior of a battalion that isn't there. When the K'risnan follow the links back and the eleven die, she is unlinked and lives; she feels it go through the Hold like a door slammed in a long corridor. The narration never calls her the last Letherii mage. On Ch3 `watch`, she knew two of the eleven from the school: her grief, in her own dry words. On Ch3 `warn`, her sheet's line warms: she wrote, the night the runner went, that the Sixth was right (one line, read from her sheet or at the fire).
+- On Ch3 `warn` (`S.f.b5_noted`): Ennic says the garrison has put the noted company "as far from the royals as the fort has".
+- The garrison's **brand-pots** on the west rampart against the Jheck (the trick).
+- **Fights** (levels 5–6):
+  - **`b5_c4_gully`** (optional): a night patrol into Dry Gully the night before; Edur unblooded scouts in the gully (`b5_unblooded` ×3, `b5_edur` ×1). Never a named Edur. About 120 xp.
+  - **`b5_c4_wraiths`** (main): the wraiths come over the west rampart first, ahead of everything. `b5_wraith` ×5, a wave of 2. `stage2` **the bastion's foot**: wraiths and `b5_unblooded` ×2 at the tower's door. With the garrison: two allies, writer foe `b5_c4_garrison` (kind `b5_letherii`) in `allies`. About 160 + 80 xp.
+  - **The key fight** (below). About 170 xp.
+
+**Key `b5_c4_key`** (the rampart), when the line in front breaks and the Grass Jackets come back past the west rampart running.
+- **`hold`**: hold the west rampart to the surrender. A bound demon appears inside the rampart, out of nothing, as they did all along the line. **The key fight is `b5_c4_demon`**: `b5_demon` (boss) and `b5_wraith` ×3; `stage2` **the rampart's back slope**, the demon again with `b5_unblooded` ×2, until the horns sound the surrender and the Edur stop. Before the surrender the squad carries its own wounded, and the company's, in through the fort's gate, out of the Jheck's reach: `S.f.b5_c4_wounded = 1`. Thegg +1, Ammet +1, Ruuk −1 if walking ("We could have been in the trees"). **Then the squad is disarmed with the rest:** call `b5Disarm()` (Engine needs) and set `S.f.b5_disarmed = 1`. Swords, spears and bows go on the Edur's pile; knives, shields and paper stay (the paybooks go south in the clerk's case).
+- **`run`**: break with the Grass Jackets and go west into the forest, into the Jheck's country, before the surrender. The squad keeps its weapons (no `b5Disarm`). Ruuk +2 if walking (his forest), Tobet +1; Thegg −1 ("I stand behind. I do not run. I ran."). **The key fight is `b5_c4_wolves`**: Jheck in the trees west of the fort (`b5_jheck` ×4, a wave of 1), in failing light. Never B'nagga; never the basin itself; the squad is on its edge. They come out on the road south ahead of the disarmed column.
+- **Read later:**
+  - **Ch5**: on `hold`, the squad walks in the disarmed column, never in Moroch's group, and is rearmed at the cache and at Brans Keep (`b5Rearm`). On `run`, it walks armed through the burned country first, and the press-gang check is easier (+2; armed soldiers are not pressed).
+  - **Ch6**: on `hold`, Ennic's account of the west rampart has reached the battalion, and the Sixth is given the front of the crossing on the dry channel (the stand's place). On `run`, the Sixth stands in the second rank, and Thegg has a line about it.
+  - **The finale**: High Fort on every fate page that has room for one line.
+
+**Trick:** *The Brand-Pot* (`b5_c4_brand`), from the High Fort garrison's old hands, who keep pitch-pots and brands on the west rampart because wolves will not cross fire: ✦ wits 16. Ruuk +1, Brune +1, Tobet +1, Thegg −1. **Mechanic: the Oil Bola** (`b4_c4_bola`): once a fight, throw a lit brand-pot within 4; it bursts on the mark (1d6) and burns a 3×3 for 2 rounds (1d6 + level step to anyone who starts a turn there, the squad included). Not sorcery.
+
+**Items** (all of them things a disarmed soldier still keeps: no weapons in this chapter):
+- `b5_c4_helm` (*A Grass Jacket's helm*; trinket, `role:'any'`, `ac:1`): picked up off the rampart where its owner dropped it running. Look: an open iron helm with a strip of faded green cloth tied at the crest.
+- `b5_c4_wolftooth` (*A tooth too big for a wolf*; trinket, `role:'any'`, `stat:{might:1}`): from the wood (on `run`) or the rampart's foot (on `hold`). The squad doesn't discuss why it is too big. Look: a canine tooth as long as a finger, on a thong.
+- `b5_c4_pitchpot` (*A brand-pot from the west rampart*; trinket, `role:'any'`, `atk:1` for whoever carries the trick, or line only): a clay pot sealed with pitch and a rag wick. Look: a squat black-glazed pot, a tarred rag, a scorch mark.
+
+**Tiles:** the lean tile is the Wall (`B5POOL[4]`). **Reading place:** the western rampart at High Fort, on the turf by a fire, with a helm (`mt:4`): the night before the battle.
+
+**The fire:** `b5_c4_fire` (the west rampart's fire; no game). `ROSTER_FIRES.mt[4] = ['b5_c4_fire']`. The pay desk is `b5_c4_pay` (nothing to buy; paying on debts still works, and the clerk says so with some surprise).
+
+**Hard limits (Chapter 4; §5).**
+- **Trate's fall**: never the lighthouse, the tavern, the cellar, the crossroads where Iron Bars kills Rhulad, the gathering at the corpse, the North Gate, or the Old Katter coast. The squad has left Trate. No rumour of Rhulad's death and return reaches it in this chapter.
+- **Never the Queen's rampart with the Dresh ballistae**, the Prince's and the Queen's capture, the stone fort on the eastern rampart, Moroch's fall and the messenger, Trull's mage kills, the healing of the demon Lilac, Fear's tent, the river scene, or Hanradi's governorship.
+- Never Moroch's own group on the road south.
+- Never a named Edur, never Fear or Trull seen to be who they are; Edur and wraiths across the field at most.
+- The surrender is word down the line, never the delegation.
+- Perrit is never one of the eleven and never "the last mage".
+
+**Ground:**
+- `b5_c4_road` (the forest road: `.` road, `,` leaf litter, `T` tree (blocks), `~` stream (blocks), `-` ford, `#` rock (blocks));
+- `b5_c4_rampart` (the west rampart: `.` turf, `,` trampled earth, `=` rampart crest (blocks), `#` bastion wall (blocks), `F` fire, `p` brand-pot store, `g` the gate);
+- `b5_c4_gully` (Dry Gully at night: `.` stones, `,` dry grass, `#` bank (blocks), `x` brush) and, on `run`, `b5_c4_wood` (`.` forest floor, `T` tree (blocks), `,` fern, `#` rock).
+
+**Art (`84b`):**
+- **Figures:** `b5_c4_garrison` (a High Fort garrison soldier), `b5_c4_grassjacket` (a Grass Jacket, green cloth at the crest), `b5_c4_cadremaster` (an older cadre mage, far off), plus the shelf's Edur, wraiths, demon and Jheck.
+- **Backdrops:** redraw `b5_highfort`; `b5_c4_field` (from the west rampart: the gully, the far ramparts with the royals' standards, the stone fort, the Edur across the field as a dark line); `b5_c4_lightning` (a column of white lightning far along the line, the wraiths and demons as shapes); `b5_c4_surrender` (a pile of swords on the turf, soldiers walking south in a long file, Edur watching).
+- **Item art.**
+
+## Chapter 5: "The Retreat" (`85`, key `sign` | `refuse`)
+
+**Spine** (§7.1, novel ch 19–21). South from High Fort, toward Brans Keep.
+- "The fort has surrendered, as has the entire frontier." The Edur follow south. **Trate has fallen** (survivors' stories on the road, headline only; never the lighthouse or the crossroads): set `S.f.b5_trateFell = 1`.
+- **The burned country** (§17c): fields and farms burned to the root on both sides of the road, by Letherii hands, so the Edur would find nothing. The squad learns as it walks that its own battalion did this on its retreat from First Reach, and is at Brans Keep. The narrator never shows the Whitefinders burning.
+- On the road: refugees; **a press-gang at work**; **Bluerose** saddles that fail (a courier's girth-strap goes, and the horse goes on without him); a burned farm with deserters in it (**never** the horse-raising family near Dresh or the grove); the army's **hidden caches** (the first one the squad finds has been emptied by someone who knew exactly where to dig: the squad never learns who); a rumour of **a Finadd upriver who says his garrison answers to nobody now** (never named, never Brous: `S.f.b5_breakaway = 1`); a rumour that Second Maiden's Fort still holds.
+- **Brans Keep**, at the end: the last great work on the approach from the north, against a cliff, Lake Brans on one side and **the dry channel** on the other. The **Whitefinders are there**, and the Sixth rejoins its battalion. High Fort's other survivors are being rearmed and attached to the Artisan Battalion (heard, never seen: that is Moroch's scene).
+
+**The squad's story.**
+- On Ch4 `hold`: disarmed, in the long column of disarmed men, never in Moroch's group. Knives, shields and paybooks. The first fight is with what they carry. **The cache** (the second one, intact; the trick's place) rearms them partly: call `b5Rearm(['b5_c5_cacheblade', 'b5_c5_cachebow'])` (Engine needs), which gives back what the engine stashed or these in its place. Set `S.f.b5_c5_cache = 1`. On Ch4 `run`: armed, ahead of the column; the cache gives salves and the two items as plain finds.
+- **Pessa joins** (the recruit). The press-gang has taken a refugee off a burned canal village's cart and written her name in its ledger, with a debt for the jack and the boots beside it. Node `b5_c5_pessa`, on the road: claim her for the Sixth from the press-gang sergeant (a guile check, DC 14: the sergeant +2, Tobet +1; on Ch2 `dead`, the Trate dockhand's word +2; on Ch4 `run`, +2; "yes, but": the press-gang sergeant takes the sergeant's name and a dock for his trouble), then `fx:()=>b5Join('pessa')` (she joins with her own 120, or waits at "the refugee column" if a recruit already walks, with "Walk with us instead" by `b5SwapIn('pessa')`); or let the press-gang keep her (`S.f.b5_pessaDone = 0`; she is taken to another company, and the narrator says nothing worse); or the fight (below), after which she asks to come anyway. **Whatever happens, the press-gang's debt stands against her name** (her bio).
+- Pessa's first night: she holds the lamp for Ammet without being told (behind `b5In` both). Perrit reads for her dead husband and lies about one tile, and never tells anyone (only if both are present; the narrator never says which tile).
+- On Ch3 `warn`: a Nerek family among the refugees knows the Sixth's name from the river bank. Ammet's scene, quiet; nothing is settled.
+- Thegg carries Pessa's pack the first day without being asked (behind `b5In` both); Chapter 6 gives it back.
+- **Fights** (levels 6–7):
+  - **`b5_c5_farm`** (optional): deserters looting a burned farm (`b5_deserter` ×3, `b5_deserterbow` ×2). On Ch4 `hold`, the squad fights it with knives and staves (the disarmed fight), and it is the place to say so. `stage2` **the barn**: the deserters' leader (writer foe `b5_c5_deserterboss`, kind `b5_letherii`, boss) and two more. About 130 + 60 xp.
+  - **`b5_c5_press`** (main, avoidable by the claim check): the press-gang, over Pessa and the refugees (`b5_presssgt` boss, `b5_pressman` ×4). `objective` non-lethal ("they are Letherii soldiers too; nobody is killed on the King's road"). About 150 xp. On a win, the press-gang's ledger is the squad's to keep or burn; burning it doesn't clear Pessa's line (the army has a copy), but it lets three refugees walk away unwritten.
+  - **The key fight** (below). About 160 xp.
+
+**Key `b5_c5_key`** (the ledger), at Brans Keep's rearming. A factor of a Letheras counting-house (unnamed, "the house") is buying soldiers' paybook debts from the army for coin and kit, to rearm High Fort's survivors and the burned-out companies quickly.
+- **`sign`**: the Sixth's debts are sold to the house. The squad gets +40 docks advance and the house's kit (the better pieces: `b5_c5_housemail` below), and then the house's first interest on every debtor: `b5Owe(id, Math.ceil(b5Debt(id) / 10), 'the house\'s first interest')`. On Ch1 `pay`, the house also buys the court's fine lines at half: `b5Forgive(id, half that soldier's Ch1 share, 'the house bought the fine at half')`. Set `S.f.b5_holder = 'house'`. Tobet −2 ("I have been sold twice now"), Perrit +1 (the terms are, she says, not bad), Pessa −1 if walking. **The key fight is `b5_c5_wagons`**: that night deserters raid the house's kit wagons outside the Whitefinders' lines, and the squad guards them (`b5_deserter` ×4, `b5_deserterbow` ×2, a wave).
+- **`refuse`**: the army keeps the books. The squad rearms from the quartermaster's old stores only (the cache pieces and what's in the battalion's carts; no `b5_c5_housemail`). Set `S.f.b5_holder = 'army'`. Tobet +2, Pessa +1 if walking, Perrit −1. Tobet shows Pessa how to read the ledger line by her name (behind `b5In` both). **The key fight is `b5_c5_factor`**: in the night, the house's hired men come for the Sixth's paybook in the clerk's case, because in Lether a refused offer is an open question. `b5_collector` (boss) and `b5_bully` ×4; `objective` non-lethal, four rounds, until the battalion's provosts come.
+- **Read later:**
+  - **Ch6**: on `sign`, the house's factor is at the edge of the battalion's lines on the eve with a ledger open, writing who is standing where; after the battle he is at the barrow writing the dead's debts to the heirs, with interest. On `refuse`, the army's clerk does the same, without the interest.
+  - **Ch7**: on `sign`, the house's strongroom in Letheras burns in the night's looting (ch 22's disorder, headline): `b5Forgive(id, Math.ceil(b5Debt(id) / 4), 'the house\'s ledgers burned')` on every debtor. On `refuse`, the army's paybook stands, in the clerk's case.
+  - **The finale**: what each debt became.
+
+**Trick:** *The Quartermaster's Mark* (`b5_c5_mark`), at the intact cache, from the battalion's old quartermaster or a cache-keeper's cut-sign on a milestone: the army's caches are marked so that any soldier who knows the cut can find the water, the linen and the salves within a few paces of any road: ✦ wits 16. Ammet has the edge (+2), Pessa +1, Ruuk +1, Tobet +1, Thegg −1. **Mechanic: the Rhivi Spirit-Song** (`song`, `t_song`): once a fight, every squadmate within 4 heals 1d6+2 and 1 more for each squad level past the first, wakes from any daze, and steps out of any fire under them. Words: the bearer gets a cache-jar open and the water and linen go round. Not sorcery.
+
+**Items:**
+- `b5_c5_cacheblade` (*A cache shortsword, still in grease*; weapon, `role:'blade'`): a Letherii issue shortsword out of a buried jar. Look: a shortsword wrapped in greased cloth, a cache's clay seal on the cord.
+- `b5_c5_cachebow` (*A cache bow, unstrung*; weapon, `role:'ranged'`, `atk:1`): a plain yew bow and a waxed string in a tube. Look: an unstrung bow lashed to a bark tube, a cache seal.
+- `b5_c5_housemail` (*The house's scale*; armour, `role:'mail'`, `ac:1`; on `sign`): new scale with a counting-house's stamp inside the collar. Look: bright new scale on a padded coat, a small stamp of a scale-balance at the collar.
+- `b5_c5_girth` (*A Bluerose girth-strap, cut through*; trinket, `role:'any'`, `stat:{guile:1}`): from the courier's saddle; cut, not worn. Look: a leather strap with a buckle, cut most of the way through on the inside.
+
+**Tiles:** the lean tile is the Walker (`B5POOL[5]`). **Reading place:** the road south through the burned country: ash and coals (`mt:5`).
+
+**The fire:** `b5_c5_fire` (a fire in the lee of a burned wall on the road; the Token Auction goes here in `89`). `ROSTER_FIRES.mt[5] = ['b5_c5_fire']`. The pay desk is `b5_c5_pay`. A second fire node is allowed at Brans Keep (`b5_c5_keepfire`); if you add it, put it in `ROSTER_FIRES.mt[5]` too.
+
+**Hard limits (Chapter 5; §9).**
+- **Never Brous**, at any time: not the dig, the barrow, the massacre, or what was freed. The breakaway Finadd is a rumour with no name and no place.
+- Never the murdered horse farm near Dresh, the pursuit, or the Tarthenal grove while Seren or Hunch Arbat is there. Thegg may know such groves exist (one line, never this one).
+- Never the frontier-road meeting with Seren and the three companies.
+- Never the Thetil camp. Never Hull or Udinaas on the road. **Never Moroch's group.**
+- **Never Moroch's recruiting scene at Brans Keep** (ebook p. 735) and never the Artisans' standard.
+- Never say who emptied the first cache.
+
+**Ground:**
+- `b5_c5_road` (the military road: `.` road, `,` ash, `#` burned wall (blocks), `x` burned tree (blocks), `c` cart, `m` milestone);
+- `b5_c5_farm` (a burned farm: `.` yard, `,` ash, `#` wall (blocks), `B` barn door, `w` well);
+- `b5_c5_keep` (Brans Keep's lines on arrival: `.` grass, `,` trodden earth, `=` tent, `w` wagon (blocks), `~` the dry channel's lip (blocks), `F` fire).
+
+**Art (`85b`):**
+- **Figures:** `b5_c5_deserterboss`, `b5_c5_refugee` (refugees with carts, decor), `b5_c5_courier` (a Bluerose-horsed courier, his saddle slipping), `b5_c5_factor` (the house's factor: good coat, a ledger, a clerk with an umbrella), `b5_c5_quartermaster`, `b5_c5_nerek` (a Nerek family, decor; may alias `b5_c3_nerek`).
+- **Backdrops:** redraw `b5_road_south`; `b5_c5_burned` (fields burned to the root on both sides of a straight road, smoke on the horizon); `b5_c5_cache` (a milestone in a burned copse, jars dug up); `b5_c5_arrival` (Brans Keep against its cliff, the lake, the army's tents spread in front, from the north road at dusk).
+- **Item art.**
+
