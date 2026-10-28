@@ -541,3 +541,183 @@ Each game pays once, as the table closes, never in a node's `fx`, as Books Three
 - **Backdrops:** redraw `b5_road_south`; `b5_c5_burned` (fields burned to the root on both sides of a straight road, smoke on the horizon); `b5_c5_cache` (a milestone in a burned copse, jars dug up); `b5_c5_arrival` (Brans Keep against its cliff, the lake, the army's tents spread in front, from the north road at dusk).
 - **Item art.**
 
+## Chapter 6: "Brans Keep" (`86`, key `stand` | `fallback`)
+
+**Spine** (§7.2, novel ch 22–23).
+- **The place:** the squat citadel against its cliff, facing north, barren hills behind; the walled front with east and west corner towers, each with fixed mangonels and a mage; **Lake Brans** closing the east; **the dry channel**, a seasonal drainage course, running north-east; lesser hills and old lake beds to the north-east; a ridgeline west of the keep; the Dissent River beyond the hills' western edge; the town of **Dissent** a few leagues south-west.
+- **The order of battle** (heard as orders, seen as banners): Preda **Unnutal Hebaz** commands (she). The Ceda is absent. The Crimson Rampant Brigade on the extreme left; the Snakebelt and part of the Riven on the left; the King's Battalion at the walls and the Merchants' before the lake in the centre; **the right, across the dry channel: the Artisan Battalion, the Whitefinder Battalion and the other part of the Riven Brigade.** The Sixth is with its battalion on the right.
+- **The eve:** the Edur armies gather. The squad's talk; the drill; the King's bounty.
+- **The day.** The K'risnan raise dark streams of dust; the Letherii answer with a wave of white fire. Huge pillars rise; the wraiths go forward as fodder. The sorceries meet: **both corner towers fall, killing their mages**, the Letherii magic runs wild, and **the pillars come down on the left and the centre**. The Preda's standard goes under (seen far off: never how).
+- **The right:** Tomad and Binadas Sengar's army comes late across the hills and the old lake beds and meets the right **hand to hand, without sorcery**. The right fights. Then it sees what has happened to the rest of the army, and a pillar begins bearing down on it, and it **breaks**. The Jheck hunt survivors in the hills, with a few score wraiths drifting.
+- **After:** the pillars lift, and bones, armour and debris come down out of the sky (headline). The keep burns. From far off, the squad learns that the Emperor has declared the Letherii his subjects and ordered the dead of both armies buried together, in one barrow, ready by midnight: `S.f.b5_barrowSeen = 1` when the squad sees it raised, far off, from the hills or the Dissent road.
+
+**The squad's story.**
+- **The eve:** one short scene each: who they were before the paybook, and what they would do paid up. Thegg gives Pessa her pack back (her bio; behind `b5In` both). The fallen of nobody yet; the heavy reading (the tiles at dawn).
+- **The King's bounty for the stand** (the Preda's order): `b5Forgive(id, 30, 'the King\'s bounty for the stand')` for the sergeant and every walking soldier, with the clerk at his table and the battalion in a line. Set `S.f.b5_bounty = 1`. Tobet: "Thirty docks to stand in a ditch. I have been offered worse." On Ch5 `sign`, the house's factor is at the end of the line with his ledger open, writing down who is standing where.
+- On Ch4 `hold`: the Sixth is given **the front of the crossing** on the dry channel (Ennic's account of the west rampart has reached the battalion). On Ch4 `run`: the second rank, and Thegg has a line about it.
+- **Signpost the mortal fight** in the eve and again at the choice: the right will be hand to hand, and whoever falls there stays down.
+- **Fights** (level 7):
+  - **`b5_c6_shore`** (optional): Jheck outriders on the battalion's foragers by the lake the evening before (`b5_jheck` ×3, a wave of 1). About 130 xp.
+  - **The key fight** (below): the mortal fight on `stand`, or the flight on `fallback`.
+  - **`b5_c6_hills`** (on `stand`, after the mortal fight, **not mortal**): the break into the hills, with the Jheck hunting (`b5_jheck` ×4, `b5_wraith` ×2). About 160 xp.
+
+**Key `b5_c6_key`** (the channel), when the pillar turns toward the right and the battalion begins to break.
+- **`stand`**: hold the crossing on the dry channel while the battalion goes back over it. **The mortal fight is `b5_c6_channel`**: `mortal:true, hurtMost:true`, signposted on the choice the player sees coming (`tag:'mortal'`, text ending "(a mortal fight: whoever falls here stays down)"), as `b4_c7_breakout`. Foes **`b5_edur` and `b5_unblooded` only, no K'risnan, no demon**: the army that fought without sorcery. About five at the start with waves of two; `stage2` **the channel's lip**, the last rush, then the pillar's shadow comes over the field and the Edur themselves fall back from it. About 200 + 100 xp. Then **`b5_c6_hills`**. After it, set `S.f.b5_c6_fallen` to the ids killed in `b5_c6_channel` (empty array if none). Ennic is wounded (Ammet stitches him, or the battalion's surgeons if Ammet fell), and lives. Every survivor +1 loyalty.
+- **`fallback`**: go back over the channel with the first who break, toward Dissent. No mortal fight. **The key fight is `b5_c6_flight`** (not mortal): Jheck and wraiths running down the fleeing on the open ground south-west (`b5_jheck` ×3, `b5_wraith` ×3, a wave). About 170 xp. Thegg −1 ("We left the crossing"), Pessa +1 if walking ("We left the crossing. Good."), Tobet +1. Set `S.f.b5_c6_fallen = []`.
+- **The dead's debts.** For each soldier killed in `b5_c6_channel`, the engine has already passed the debt to the heirs (`S.f.b5_heirs`). Say it once, plainly, at the barrow or the fire: who carries it now (the finale's table below has each soldier's heirs). On Ch5 `sign`, the house's factor is at the barrow, writing the dead's debts to the heirs with interest. On `refuse`, the army's clerk writes them, without.
+- **Read later:**
+  - **Ch7**: who walks (the fallen, and a recruit or two in their places), the names at the fire, Ennic's wound.
+  - **The finale**: the fallen's pages and the heirs.
+
+**Trick:** *The White Finger* (`b5_c6_finger`), from an old drill-sergeant of the battalion on the eve, who says the fingertip on the boss is a drill nobody remembers is a drill: **touch shields boss to boss, and the line can't be opened**. It is only his guess, and the battalion still doesn't know why the mark: ✦ might 16. Thegg has the edge (+3), Brune +1, the sergeant +1, Tobet −2, Perrit −2. **Mechanic: the Line** (`line`, `t_line`): once a fight, the bearer and every squadmate beside them take +3 + level step armour and cannot be flanked until the bearer's next turn. Not sorcery.
+
+**Items:**
+- `b5_c6_edurblade` (*An Edur sword from the channel*; weapon, `role:'blade'`, `atk:1`): picked up in the channel or the hills. Look: a long, slightly curved blade of dark iron, grey leather on the grip.
+- `b5_c6_paint` (*A pot of white paint*; trinket, `role:'any'`, `ac:1`): the battalion's own, for the fingertip; whoever carries it repaints the squad's bosses on the eve. Look: a small clay pot, its rim white, a frayed brush tied to it.
+- `b5_c6_lakestone` (*A stone from the old lake bed*; trinket, `role:'any'`, `hp:3`): smooth, banded, picked up on the way out of the hills or the Dissent road. Look: a flat banded stone, pale grey with a darker ring.
+
+**Tiles:** the lean tile is the Axe (`B5POOL[6]`). **Reading place:** Brans Keep across the dry channel: a shield on the grass at dawn, dust (`mt:6`): the morning of the battle.
+
+**The fire:** `b5_c6_fire` (the Whitefinders' lines across the dry channel, the eve; the Whitefinders' Drill goes here in `89`). `ROSTER_FIRES.mt[6] = ['b5_c6_fire']`. The pay desk is `b5_c6_pay`.
+
+**Hard limits (Chapter 6; §9 and §17c).**
+- **Never the Edur hill** (Udinaas, Feather Witch, Uruth), the corner towers and their mages, **the Preda's command**, the Edur right (the Jheck and demons with Rhulad), Rhulad and Mosag's quarrel, Trull, Ahlrada Ahn or Canarth. **Never Tomad or Binadas in person**, and never by name in narration (the soldiers may say "the Edur who came over the lake beds").
+- **Never Moroch's recruiting scene at Brans Keep, and never the Artisans' standard** (taken by Tomad and Binadas: the squad is never near it and never hears of it).
+- **Never change:** the army destroyed, the Preda's fall (her standard seen to go under, never how), the towers down, the keep burning, the barrow ordered.
+- The squad never sees the Emperor. His declaration is heard.
+- No K'risnan and no demon in the mortal fight. No other mortal fight in the book.
+
+**Ground:**
+- `b5_c6_lines` (the Whitefinders' lines, the eve: `.` grass, `,` trodden earth, `=` tent, `F` fire, `~` the dry channel (blocks), `-` the crossing);
+- `b5_c6_channel` (the dry channel in battle: `.` channel floor, `,` stones, `#` bank (blocks), `-` the crossing, `s` dropped shield (decor));
+- `b5_c6_hills` (`.` scrub, `,` scree, `#` rock (blocks), `x` thorn) and `b5_c6_dissent` (the road south-west: `.` road, `,` grass, `#` wall, `c` abandoned cart).
+
+**Art (`86b`):**
+- **Figures:** `b5_c6_whitefinder` (a Whitefinder soldier with the fingertip on the boss), `b5_c6_drillsgt` (the old drill-sergeant), plus the shelf's Edur, unblooded, Jheck and wraiths.
+- **Backdrops:** redraw `b5_branskeep`; `b5_c6_eve` (the army's fires across the field at night, the keep's towers, the lake); `b5_c6_pillars` (dark pillars rising over the left and centre, seen from across the channel, very far); `b5_c6_break` (the right breaking over the channel, a pillar's shadow on the field); `b5_c6_barrow` (a long mound being raised on the field at night, torches, from the hills).
+- **Item art.**
+
+## Chapter 7: "The Seventh Closure" (`87`, key `emperor` | `paid` | `ledger`) and the end of Book Five
+
+**Spine** (§7.3, novel ch 22, 24–25).
+- **The night:** the Sixth comes into Letheras after Brans Keep with the broken army. The city is in disorder: burned houses, looting, corpses in the streets (headline). Word: **the King has been declared Emperor** in the Eternal Domicile (heard; rule 40, belief). Tens of thousands of starlings round the Azath (seen over the roofs).
+- The City Garrison's bell-stations call the soldiers who are left. Finadd Ennic, wounded, puts what is left of the Sixth at **a footbridge over the Quillas Canal by the Low Walk, in the Drownings District**, two streets from where the sergeant was born (Claude's call; never Main Canal, never Soulan Bridge, never Moroch's bridge).
+- **The day:** citizens stand on the walls and wager on it. The Edur come down the west road. **The Jheck run in the streets as wolves** (fought; never B'nagga, never the Pack's temple). Word along the canal that **a Finadd held the main bridge and fought the Emperor, and both fell, and the Emperor rose**: belief, either way. Settle Lake freezes with a thump somebody hears (one line; never why).
+- **The sorcery:** the K'risnan's sorcery comes down the streets and kills soldiers and watching civilians, even indoors. The squad sees it tear down a street toward the barricade with the lamps going out ahead of it, and **goes into the canal under the footbridge** (Claude's call): the swimmers take the others down the Low Walk's steps and under the arch, and hold. Then it stops: the Emperor orders the killing stopped, and decrees a day of suffering. **Never describe what that day holds** (canon doesn't).
+- **The fall:** no formal surrender is recorded, so the squad's choice is its own: an Edur patrol at the Low Walk in the evening, and the roads. The Chancellor swore fealty (heard afterwards). Eberict was killed in the street (heard afterwards, rumour, never the Sentinel's story).
+
+**The squad's story.**
+- The fallen's names at the fire, once each (`S.f.b5_c6_fallen`), and who carries their debts.
+- On Ch5 `sign`: in the night's looting the house's strongroom **in the Counters' Quarter** burns (headline): `b5Forgive(id, Math.ceil(b5Debt(id) / 4), 'the house\'s ledgers burned')` on every debtor. On `refuse`, the clerk sits in a doorway with the paybook case on his knees all night.
+- **The canal threat.** If `b5DrowningThreat()` is true, the Drownings court's men are still working, even tonight, with a list, and one of the squad's names is on it: **`b5_c7_court`** (below). On Ch1 `pay`, `b5_c1_receipt` shown to them turns them away (a wits check, DC 13, the sergeant +2) without a fight. On Ch1 `swim`, they know Thegg's face: "the one who swam".
+- **Into the canal:** a might check (DC 14) for the squad's swimmers to bring the rest under. The sergeant has the edge (+2); on Ch1 `swim`, Thegg leads (+2: four lungs, and he has been under once with 300 docks on him); Brune +2, Pessa +2. No one dies: a "yes, but" loses armour or kit to the canal (the army's ledger will want it back: `b5Owe(b57Who(), 15, 'kit lost in the canal')`), or leaves someone rattled for the next fight. Set `S.f.b5_c7_canal = 1`. If the green ash (`b5_c3_ash`) is carried, it goes in the water here.
+- **Fights** (levels 7–8):
+  - **`b5_c7_looters`** (optional): looters in the night streets (`b5_deserter` ×3, `b5_deserterbow` ×1, a writer's `b5_c7_looter`, kind `thug`). About 120 xp.
+  - **`b5_c7_court`** (only on the canal threat, optional): the court's men (`b5_collector` boss, `b5_bully` ×3), non-lethal. About 120 xp.
+  - **`b5_c7_wolves`** (main): Jheck wolves loose in the Drownings District (`b5_jheck` ×4, a wave of 2), on the Low Walk and the tiers. `stage2` **the footbridge**: two more and the pack's biggest (writer foe `b5_c7_greatwolf`, kind `b5_jheck`, boss). About 170 + 80 xp.
+  - **`b5_c7_barricade`** (main): the Edur at the barricade before the sorcery (`b5_edur` ×3, `b5_unblooded` ×3, `b5_wraith` ×2). `stage2` **the Low Walk**, until the sorcery comes. About 180 + 90 xp. Not mortal.
+- **No fight at the patrol.** The roads are chosen, not fought.
+
+**The ending `b5_c7_key`** (the road), at the Low Walk in the evening, with an Edur patrol at the end of the street and the squad wet to the bone. All three are open to every squad; the fates read the debts.
+- **`emperor`**: lay down arms to the patrol in the street and be taken back into the army, which is the Emperor's now. **The paybooks don't change**: the debts stand, in the same books, under new seals. The road to Book Seven. Ennic swears with the rest.
+- **`paid`**: lay down arms and take discharge. The squad spends every dock in hand on the debts, smallest first, so the most soldiers go free (`b5Pay` in order). Then every soldier whose standing is `easing` or `free` gets the army's release, which forgives the rest (`b5Forgive(id, b5Debt(id), 'the army\'s release at discharge')`: Claude's call: the army bought the debts cheap and has had its money back). Everyone else walks out of uniform still owing, in Letheras. No road onward.
+- **`ledger`**: out of the ledger. The squad slips away along the canal before the patrol reaches it, and Ennic writes them into the dead roll of the fall in his neat hand (the clerk watches, and blots it). **Listed dead, their debts pass to the heirs**, as the army's rule says (each soldier's heirs are in the table below). No road onward. Desertion is never named on the page as anything but "the dead roll".
+- **Keep-open, for all three roads' words** (rules 31–44): no RG ground or names; Tehol is a ruined man and never king; Bugg is a builder; Brys is dead to those who saw it; Rhulad is the Emperor who comes back, nothing of his sword; no Patriotists; the Edur fleets abroad are at most one line of rumour, in the finale only, on `emperor`.
+
+**The heirs** (fixed, for Ch6's dead and the `ledger` road):
+
+| Soldier | Whose debt it was | Who carries it on |
+|---|---|---|
+| the sergeant | the family's, father to mother to you | a cousin two streets back from the Quillas |
+| Tobet | his grandfather's plough | his family on the tenant farm, Indebted again |
+| Thegg | his mother's tavern tab (she is dead) | nobody living: the tavern writes it to a dead woman's dead son, and the clerk says that is a ledger nobody can collect |
+| Perrit | the cadre school's lent fees | her father, a clerk in the Pursers' District |
+| Ammet | the cutler's note for her tools | the cutler takes the tools back; the note dies with her name |
+| Ruuk | his clan's winter grain | his clan in the Faraed hills |
+| Brune | the harbour master's boat | her village on the coast |
+| Pessa | the press-gang's chit | nobody: her name is spelled wrong, and her husband is gone |
+
+**The finale** (`B5CH7.finale`): read `src/37_chapters.js` (`finPages`, `showFinale`), Book Two's `src/54_b2_ch7.js` and Book Four's `src/77_b4_ch7.js`.
+- The road taken.
+- **A fate page for every squadmate and every recruit**: alive and walking, alive and waiting, sent away, or fallen at Brans Keep. Each page says **what that soldier's debt became** (`b5Standing`, the numbers, the holder: the army or the house, and on `ledger` the heirs) and one line of the book's road for them (High Fort, the canal, the channel).
+- A page for the fallen at Brans Keep: buried with the Edur dead in the barrow the Emperor ordered (Claude's call, from canon's "buried together"), and who carries their debts.
+- The count (`debtHTML`, docks paid down, owed on top, soldiers paid up), and the sergeant's page.
+- The coda: the Edur in the city; the belief that the Closure has come (rule 40); the canal running under the footbridge as it always has; the paybooks.
+- Credits to Steven Erikson and Ian C. Esslemont.
+- "The End of *Indebted*" (the engine's default endline), and the role "Sergeant · Sixth Company, the Whitefinder Battalion".
+- `finale.labels` overrides the book words.
+- **A finished save on `emperor` is the one Book Seven will offer** (no code now).
+
+**Trick:** *The Holed Dock* (`b5_c7_dock`), at the Low Walk after the sorcery stops: canal children drop a holed dock into the Quillas for the drowned, and keep its twin, and the Errant (as Lether prays to him) is said to remember who keeps one: ✦ guile 16. The sergeant has the edge (+2, canal-born), Pessa +2, Brune +1, Tobet +1, Perrit −1. **Mechanic: the Lady's Pull** (`pull`, `t_pull`): a chapter trick, twice a chapter (one more from level 5): after a failed check, roll it again; or before an attack, roll twice and keep the better; the next check is −2. Words: the dock spins on its edge. Not sorcery. Carried to Book Seven.
+
+**Items:**
+- `b5_c7_dock` (*A holed dock from the Low Walk*; trinket, `role:'any'`, `stat:{guile:1}`): the twin of the one that went into the canal. Look: a worn copper dock with a hole bored through it, on a wet cord.
+- `b5_c7_lamp` (*A canal lamp off the Low Walk*; trinket, `role:'any'`, `hp:3`): out, and still in the hand afterwards. Look: a small iron lamp with a horn window, green with canal water.
+- `b5_c7_ledgerpage` (*The Sixth's page from the paybook*; trinket, `role:'any'`, line only; on `ledger`): torn out by the clerk and handed over without a word. Look: a single ruled page, columns of names and numbers, a line through every one.
+
+**Tiles:** the lean tile is the Gate (`B5POOL[7]`). **Reading place:** Letheras, a barricade by a canal: cracked stone, a torch, a dock and a knife (`mt:7`), on the night before the Edur come. Without Perrit, the tile-woman has come down to the Low Walk with the company's followers.
+
+**The fire:** `b5_c7_fire` (the brazier at the footbridge barricade; no game; the roads). `ROSTER_FIRES.mt[7] = ['b5_c7_fire']`. The pay desk is `b5_c7_pay` (it matters on the `paid` road; say so on the button).
+
+**Hard limits (Chapter 7; §9).**
+- **Never Moroch's bridge or the duel.** Never Main Canal, never Soulan Bridge.
+- Never the Pack's temple (the Fulcra temple), the swamp bank, the cavern under Settle Lake, or Settle Lake's bench. The demon under Settle Lake is never seen.
+- Never Tehol's house and roof, the street outside it, or the warehouse. Never the Eternal Domicile, the hall outside the throne room, or the throne room. Never the Azath or its barrow, the crypt under the river, Seren's house, anywhere Mayen runs, or the wall where Bugg stands.
+- **The squad never meets** Brys, the Ceda, Rhulad, Trull, Fear, Mosag, Tehol, Bugg, Eberict, Hull, Udinaas, Seren, the Azath's child or Iron Bars. At most, "a pale giant and a girl seen leaving the city" (rule 38), and only if it is needed at all.
+- Never what the day of suffering held. Never the Errant turning the sorcery (R25): the canal saves them, and the narrator gives no god the credit.
+- Never RG ground in the roads (rule 43): no western gate, Kravos Hill, Merchant Tolls, the Chamber of Contracts, the Patriotists.
+
+**Ground:**
+- `b5_c7_streets` (the Drownings District at night: `.` paving, `,` rubble, `#` burned house (blocks), `c` overturned cart (blocks), `F` brazier);
+- `b5_c7_canal` (the footbridge and the Low Walk: `.` paving, `,` steps, `~` canal (blocks), `=` barricade (blocks), `-` the footbridge, `a` the arch (the way under, a trigger));
+- `b5_c7_walk` (the Low Walk at evening, for the roads: as `b5_c7_canal`, quieter).
+
+**Art (`87b`):**
+- **Figures:** `b5_c7_looter`, `b5_c7_greatwolf` (a Jheck wolf, too big), `b5_c7_courtman` (the Drownings court's man with a list), `b5_c7_patrol` (an Edur patrol at the end of a street, far: silhouettes).
+- **Backdrops:** redraw `b5_letheras`; `b5_c7_night` (the city in disorder, fires over the roofs, starlings round a dark tower); `b5_c7_walls` (citizens on the white walls watching the west road); `b5_c7_sorcery` (a darkness coming down a street with the lamps going out ahead of it, the barricade in front: no figures caught in it); `b5_c7_under` (under the footbridge's arch, green water, light on the stones above); `b5_c7_finale` (the Low Walk at dusk after the fall, the canal, the squad small on the steps).
+- **Item art.**
+
+## Machine limits
+
+The workspace has 2 CPUs and 7 GB.
+- **Every Playwright run goes through one lock:** `flock /tmp/claude-0/pw.lock node tools/play.mjs …`, and the same for any script, contact sheet or test that launches Chromium.
+- **Run `tools/run_all.mjs` only at the end of the chapter session**, detached (`setsid nohup … > /tmp/claude-0/runall-b5.log 2>&1 &`), and poll the log.
+- Close every browser you open; never leave a server running.
+
+## Engine needs
+
+None of these exist in v8.0 yet. The lead adds them to `src/80_book5.js` (or the tools) before the chapter sessions; until then, a chapter that needs one defines it in its own file **under exactly this name, guarded** (`if (typeof b5Disarm === 'undefined')` … as a `var`/function assignment), and says so in its report.
+
+1. **`b5Disarm()` and `b5Rearm(fallback)`** (Ch 4 `hold`, Ch 5). `b5Disarm()` moves every `weapon`-slot item off every squadmate and out of the kit into `S.f.b5_stash` (ids), and sets `S.f.b5_disarmed = 1`; base attacks still work ("knives and staves"). `b5Rearm(fallback)` clears `b5_disarmed` and gives back what was stashed, or the `fallback` item ids if the stash is empty (a fresh `--from=5` save), and sets `S.f.b5_rearmed = 1`. Nothing else in the kit is touched.
+2. **`FOES.b5_regular`**: a Whitefinder regular as an ally (kind `b5_letherii`, about 15/13/4, 1d8+1, scaled by level as `b4_regular` is), for fights with the battalion in Ch 4–7. Until it exists, a chapter defines its own `b5_c<K>_regular`.
+3. **`b5PayChoices(back)`** (wanted, not blocking): a shared pay-desk node body (`debtHTML` and, for each debtor, "10 docks" and "all we can" through `b5Pay`, then "Not now."). Until it exists, each chapter builds `b5_c<K>_pay` in its own file.
+4. **`SYNTH_MT` in `tools/play.mjs`** must follow this brief's recruits: from n ≥ 3, Brune walks (`b5_bruneDone = 1`); from n ≥ 4, Ruuk waits (`b5_ruukDone = 2`, in `S.camp`); from n ≥ 6, Pessa waits; on n = 5 with `b5_c4_key = 'hold'`, `S.f.b5_disarmed = 1`; from n ≥ 6, `S.f.b5_holder` from `b5_c5_key` (`sign` → `'house'`, else `'army'`); on n = 7, `S.f.b5_c6_fallen = []`.
+5. **`tools/recruit_scan.mjs`** `BOOK.mt.rec`: Brune `from:2`, Ruuk `from:3` (it says Ruuk 2, Brune 3).
+6. **Comments and notes:** 80's `B5_RECRUITS` comment, the v8.0 notes' recruit rows ("Ruuk … north, Ch 2–3", "Brune … Ch 3") and `GLOSSX.mt`'s chapter numbers (the Faraed row to 3, the Shake row to 2) to match Brune in Ch 2 and Ruuk in Ch 3. Flags and unlocks are unchanged.
+7. **Ruuk's `bio2`** says the trader takes it "a few thirds at a time": that breaks the docks-only rule. Make it "a few docks at a time".
+
+## Claude's calls (for David to overturn)
+
+1. **Brune joins in Chapter 2, at Trate; Ruuk in Chapter 3, at Kraig's Landing.** Brune's own bio has her hired on at Trate by the Sixth on loan to the harbour, and the Shake are a coast people: the wreck is her scene. Ruuk's people are the northern hills, the army's Faraed scouts are on the frontier in ch 15, and his work is roads, which is what the march to High Fort needs. The plan had Ruuk Ch 2–3 and Brune Ch 3.
+2. **Why the Sixth is in Letheras:** it came south with the battalion's sick and its paybooks for audit and kit, while the battalion went to its summer exercises.
+3. **Thegg is the one fined**, for assault without cause after the pit-town brawl over his mother's tab: 300 docks, canon's fine for a man. **His mother is dead**; her tab passed to him as her heir.
+4. **`pay` puts 300 docks on five paybooks** (80/60/60/60/40) and leaves everyone just short of pressed, on purpose. **`swim`: Thegg swims and lives**, for a court's fee of 40. He swims; he never walks the bed.
+5. **No new named people** in Book Five but Finadd Ennic (already checked). The clerk, the quartermaster, the tile-woman, the factor, the rope-man, the pilot and the drill-sergeant are unnamed.
+6. **Ennic lives to the end**, wounded at Brans Keep, and writes the `ledger` road's dead roll.
+7. **A few wraiths stayed in Trate's hulks**: the squad's first sight of Edur sorcery.
+8. **`warn` is a runner to the Nerek upriver** (Ruuk, or Tobet), too late, never the canon scout; the narrator never says whether anyone got out. The regiment fines the sergeant 30.
+9. **Perrit is not one of High Fort's eleven mages.** Unlinked, she lives when the linked die, and is never called the last mage.
+10. **`hold` is disarmed, `run` keeps its weapons** (and fights the Jheck in the western wood). Hence the disarm and rearm helpers.
+11. **The ledger key is a Letheras counting-house's factor** buying soldiers' paybook debts for kit: +40 docks, better kit, 10% interest, and the Ch1 fine at half on `pay`; on `refuse` the house's men come for the paybook.
+12. **The King's bounty for the stand**: 30 docks off every walking soldier's debt on the eve of Brans Keep.
+13. **`stand` holds the crossing on the dry channel as the battalion breaks** (the mortal fight, Edur warriors and unblooded only); **`fallback` goes toward Dissent** (Jheck and wraiths, not mortal).
+14. **The fallen at Brans Keep are buried in the Emperor's common barrow** (inference from "buried together").
+15. **Chapter 7 is at a footbridge over the Quillas Canal by the Low Walk**, and the squad survives the K'risnan sorcery by going into the canal.
+16. **The roads' debts:** `emperor` keeps the books; `paid` spends the docks smallest-first and releases the half-paid; `ledger` is the dead roll, and the debts go to the heirs in the table.
+17. **The house's strongroom burns in the night's looting** (on `sign`): a quarter of every debt is forgiven.
+18. **The tricks** each copy one existing mechanic: the Rope's Way, the Long Listen, the Claw Hand-Cant, the Oil Bola, the Rhivi Spirit-Song, the Line and the Lady's Pull.
+19. **The games** and their pay (the table above); the Wager Board is headline only.
+20. **The docks economy:** 25–40 docks a chapter plus the game; salves at 6; a "yes, but" debt of 5–20 docks on the roller, never into `drowning`, and no more than a third of a chapter's costs.
+21. **Later chapters read the key flags directly** (`S.f.b5_cK_key`): no mirror flags.
+22. **Item art on a dark canal-slate ground with a dock-gold rim.**
+23. **No separate art brief**: the shared artists' rules here cover Book Five.
