@@ -250,3 +250,180 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
 
 Each game pays once, as the table closes, never in a node's `fx`, as Books Three and Four's do (`docs/v6.13-notes.md`). The games pass wraps the fire nodes from `89`; chapter writers only keep the fire ids. The Wager Board is **headline only**: a chalked list of categories and odds and one line of result the next morning. Never a named swimmer, never the swim itself.
 
+## Chapter 1: "The Drownings" (`81`, key `pay` | `swim`)
+
+**Spine** (canon §1.1, novel ch 2, 4, 6). Letheras, summer, in the year everyone says is the Seventh Closure.
+- Why the Sixth is here (Claude's call): it came down from High Fort with the battalion's sick and its paybooks, to have the books audited by the army's pursers and to draw new kit, while the rest of the Whitefinders left the fort for the summer's exercises. It is billeted in a barracks near the Drownings District.
+- Court news as street and barracks talk only: the Preda and the Queen's faction quarrel; Brys Beddict is the new King's Champion; the delegation to the Edur is being chosen (Prince Quillas, Finadd Moroch Nevath, Finadd Gerun Eberict, the First Eunuch). Eberict's kill list and his King's Leave are what every soldier in the city whispers about.
+- The Errant's festival, and its **Special Drownings** in the Quillas Canal, watched from the Low Walk and the tiers, with frenzied wagering. **No named swimmer.**
+- A builder's board with the name Bugg on scaffolding by the Eternal Domicile, whose clay heave is a city joke: set `S.f.b5_bugg = 1`. Gossip about the Queen's First Consort, Turudal Brizad, in a tavern (gossip only, rule 31): set `S.f.b5_brizad = 1`.
+- **The end:** news comes from the north that a wave out of the sea wrecked Trate's harbour, and ghost-crewed ships rode it in. The Sixth is lent to the Trate Legion to clear the harbour. Set `S.f.b5_trate = 1`. The road north.
+
+**The squad's story.**
+- The yard: the Finadd, the clerk and the paybooks (`debtHTML('The Sixth Company · Letheras')` at the clerk's table), the quartermaster, the tile-woman. Each of the four in one short scene: who they owe and why.
+- **The pit town**, outside the walls, the Tarthenal side. Thegg's mother's tab: the tavern's collector says the army has stopped paying it (a clerk's error, as it turns out) and has added interest. The squad goes to sort it, and it ends in a brawl (the tavern fight). The City Garrison takes the biggest man there, who is Thegg, for **assault without cause: a fine of 300 docks** (the man's fine; canon §1.1). Set `S.f.b5_c1_fine = 300`.
+- **The fines court** on the Low Walk: the key (below).
+- The festival evening: the yard's wager board (the game), and the Special Drownings the next morning, seen from the tiers in a few lines: a rope going taut, the crowd, the chalk wiped. Tobet laughs at the jokes and doesn't mean it.
+- Brys at the festival, far off, on a balcony with the King's party: one line, and only that (optional).
+- **Fights** (levels 1–3):
+  - **`b5_c1_cutpurses`** (optional): festival cutpurses and their minders in the Down Market crowd. Writer foes `b5_c1_cutpurse` (kind `thug`) and `b5_c1_minder` (kind `bruiser`). About 90 xp, no `stage2`.
+  - **`b5_c1_tavern`** (main): the pit-town tavern. `objective:{type:'survive', rounds:4, text:'Fists, stools and cudgels; nobody killed. It is Letheras: the Garrison is coming.'}`. Foes `b5_bully` ×3, plus a writer's `b5_c1_drunk` (kind `bruiser`) in the wave. `stage2` **the back room**: `b5_collector` (the tavern's collector, boss) and two `b5_bully`. About 140 + 70 xp.
+  - **The key fight** (below). About 140 xp.
+
+**Key `b5_c1_key`** (the canal), chosen at the fines court on the Low Walk.
+- **`pay`**: clear Thegg's fine before the Drownings. The clerk puts the 300 docks on five paybooks with the Finadd's signature: `b5Owe('sgt', 80)`, `b5Owe('thegg', 60)`, `b5Owe('perrit', 60)`, `b5Owe('tobet', 60)`, `b5Owe('ammet', 40)`, each with the why "Thegg's fine". The clerk's fee takes up to 10 docks in hand. Every one of them ends just short of `pressed`, on purpose: the book starts poorer and tighter. Thegg +2 loyalty. Perrit −1 (she has done the sums out loud). Gain `b5_c1_receipt`. **The key fight is `b5_c1_lane`**: that night the tavern's collector comes to the barracks lane with his bullies, because a fine paid to the court is not a tab paid to him (`b5_collector`, `b5_bully` ×3; `objective` survive 4 rounds, non-lethal). On a win, the tab's interest is struck out: `b5Forgive('thegg', 20, 'the collector\'s interest, struck out')`.
+- **`swim`**: let him swim it with the coin. The next morning, in an ordinary Drowning before the festival's, Thegg goes into the Quillas Canal weighted with 300 docks on the court's rope, and comes out the far side. Write the swim in four or five lines: the rope, the water closing, the crowd's noise changing, his hand on the far steps. **He swims; he never walks the bed** (that is another man's Drowning). `b5Owe('thegg', 40, 'the court\'s fee for the rope and the weights')`. Tobet −1 (he laughed at the jokes, and now he doesn't). Thegg 0, and the squad owes him: `S.f.b5_c1_swam = 1`. Ammet, on his chest afterwards, says nothing, which is a lot. Gain `b5_c1_weightbag`. **The key fight is `b5_c1_lowwalk`**: on the Low Walk afterwards, the bookmaker's men who laid against a Rising want their losses back from somebody. Writer foe `b5_c1_bookman` (kind `thug`, boss) and `b5_bully` ×3; non-lethal.
+- **The canal threat in Chapter 1.** At the chapter's end, if `b5DrowningThreat()` is true, the court's runner has one of the squad's names on his list: one line, and the road north is the way out of it.
+- **Read later:**
+  - **Ch2**: on `swim`, Thegg is the one who goes down into the flooded hulk ("I have been under once this year already"), +2 on any check to dive. On `pay`, Perrit's sums make the salvage offer tempting: one line at the key.
+  - **Ch5**: on `pay`, the factor's offer includes buying the court's fine lines at half (`sign`).
+  - **Ch7**: the Low Walk again. On `swim`, Thegg's name is in the Drownings' book and the court's men know him; he leads the squad into the canal under the sorcery (+2 edge). On `pay`, `b5_c1_receipt` shown to the court's men turns them away without a fight.
+  - **The finale**: Thegg's fate page.
+
+**Trick:** *The Rope-Man's Haul* (`b5_c1_haul`), from an old rope-man of the Drownings on the Low Walk, who hauls the court's coins back out of the canal and has hauled out a living swimmer or two when nobody was watching: ✦ might 15. The sergeant has the edge (+2, canal-born), Thegg +1, Pessa +1 if ever present, Tobet −1, Perrit −1. **Mechanic: the Rope's Way** (`rope`, `t_rope`): once a fight, and it does not use the bearer's action, swap places with any squadmate within 5 + level step; no free swings. Words: the bearer gets a hand on a strap and hauls. Not sorcery.
+
+**Items:**
+- `b5_c1_hookknife` (*A rope-man's hook-knife*; weapon, `role:'blade'`): the short hooked knife the rope-men use to cut a weight-sack free. +1 to hit. Look: a short blade with a back-turned hook, a cord-wrapped grip, the court's brass tag on the pommel.
+- `b5_c1_chit` (*A wager-chit from the Low Walk*; trinket, `role:'any'`, `stat:{guile:1}`): a stamped wooden chit for a Rising that never paid. Look: a small oblong of pale wood, a stamp of a rope and a wave, a chalk number.
+- `b5_c1_receipt` (*The fines court's receipt*; trinket, `role:'any'`, `stat:{wits:1}`; on `pay`): 300 docks, received, sealed. Chapter 7 reads it. Look: a folded square of heavy paper, a blob of grey wax, a court's cord through it.
+- `b5_c1_weightbag` (*The weight-sack*; trinket, `who:['thegg']`, `ac:1`; on `swim`): the empty canvas sack the court tied the coins in. Thegg ties it to his shield's strap. Chapter 7 reads it. Look: a wet-dark canvas sack, its mouth cord knotted, an iron ring.
+
+**Tiles:** the lean tile is the Empty Throne (`B5POOL[1]`). **Reading place:** the Whitefinders' barracks yard in Letheras at night (`READTABLE['mt:1']`; `B5READ[1]` is written in 80c as the example; keep or replace it).
+
+**The fire:** `b5_c1_yard` (the barracks yard; the Wager Board goes here in `89`). `ROSTER_FIRES.mt[1] = ['b5_c1_yard']`. The pay desk is `b5_c1_pay`, at the clerk's table in the yard.
+
+**Hard limits (Chapter 1; mt-canon §5).**
+- **Ublala Pung's Drowning and Shurq's**: never. The squad's Drowning is another day, with no named swimmer, and Thegg's swim is his own.
+- Never the throne room, the Cedance, the Old Palace, the Eternal Domicile (its scaffolding seen from a street, at most), the Azath and its yard, Tehol's house and roof, Shand's workshop, Huldo's or Rild's, or the Preda's meeting with Brys.
+- Never meets Eberict, Brys, Tehol, Bugg, Shurq, Ublala, the canon child of the Azath, or the Rat Catchers. Never the name Kettle.
+- Never Soulan Bridge, never Main Canal.
+- The poachers' ghost ships are not known in Letheras until the Trate news.
+
+**Ground:**
+- `b5_c1_barracks` (the yard: `.` flagstones, `#` wall (blocks), `=` barrack eaves, `F` fire, `b` bunk-house door, `t` the clerk's table);
+- `b5_c1_canal` (the Drownings District and the Low Walk: `.` paving, `,` steps, `~` canal (blocks), `#` wall (blocks), `s` stall, `-` the Low Walk's edge, `P` mooring post (blocks));
+- `b5_c1_pittown` (the pit town: `.` mud, `,` rubbish, `#` shack wall (blocks), `D` door, `c` cart, `F` brazier).
+
+**Art (`81b`):**
+- **Figures:** `b5_c1_ennic` (the Finadd: blue-grey cloak, a good sword never drawn, a ledger under the arm), `b5_c1_clerk` (the company clerk with the oilskin paybook case), `b5_c1_tilewoman` (an old woman in a shawl with a bag of oiled cloth), `b5_c1_ropeman` (an old rope-man in a tarred apron), `b5_c1_bookman` (a bookmaker in a good coat with a chalk board), `b5_c1_cutpurse`, `b5_c1_drunk`.
+- **Backdrops:** redraw `b5_barracks`; `b5_c1_lowwalk` (the Quillas Canal from the tiers, a rope over dark water, the crowd as shapes); `b5_c1_pittown` (shacks and smoke outside the white walls, night); `b5_c1_court` (a low stone hall by the canal, a clerk's desk, a scale of coins); `b5_c1_festival` (the Errant's festival at night, lanterns, distant towers).
+- **Item art.**
+
+## Chapter 2: "Trate" (`82`, key `salvage` | `dead`)
+
+**Spine** (§1.2, novel ch 6; the Sixth stays on into ch 15). Trate, Lether's northernmost city.
+- Some days after the wave. It came "with the last spears of sunlight" (HC pp. 150–151); the game reads it as a summer evening (§17c, Claude's call). The surge threw water, fish and crustaceans into the crowded docks, and the poachers' "harvest ships" are wrecked against the quays with their dead crews aboard.
+- **No toll, no damage list.** The squad sees wreckage, and the dead being laid out, in a line each.
+- The lighthouse stands over the harbour front, and **Tarancede Tower** stands on its rocks in the south of the harbour: both seen, never entered.
+- The market sells Fent and Nerek curios, and bones and teeth nobody recognises (never name them). The city is known for its flower dancers (one line).
+- The Trate Legion holds the city; its sorceress is seen at most as a figure on a wall, never named on the page, never met.
+- Over the weeks, rumour: the Prince's delegation has sailed north. Then, at the end, **the Edur have declared war** (ch 13). The Sixth is sent up the river by barge to Kraig's Landing, to guard the regiment's barges (Ch 3).
+
+**The squad's story.**
+- Set `S.f.b5_trate = 1` if it is unset.
+- Clearing the harbour for the Trate Legion: dragging the drowned from the water, cutting loose the wrecks, standing watch on the waterfront at night.
+- **First sight of Edur sorcery:** in the first harvest ship's hulk, shapes in the rigging that are not men. A few wraiths stayed aboard the wrecks (Claude's call; canon has "corpses and wraiths" aboard and says nothing of after). Set `S.f.b5_wraithSeen = 1` (glossary: shadow wraiths).
+- **Brune joins** (the recruit, here, because her bio has her hired on at Trate by the Sixth on loan to the harbour; Claude's call, below). The Shake boats have come up the coast for the drowned and the salvage and are drawn up on **the strand**, south of the quays. Brune asks the Sixth for work with her own fish-spear. Node `b5_c2_brune`: `fx:()=>b5Join('brune')` (she joins: `S.f.b5_bruneDone = 1`), or "Stay with your boats for now" (`S.f.b5_bruneDone = 2`; she waits at "the Shake boats on the strand", and the roster at any fire can bring her in), or turn her away (`S.f.b5_bruneDone = 0`). Never a Shake queen, witch or royal line: the Shake on the page have no living queen.
+- **The fish-hook** (her bio): in the first days Brune comes to Ammet with a fish-hook through her palm and asks her not to make a fuss, and Ammet doesn't. Set `S.f.b5_bruneHook = 1`. Only if both are present.
+- **Fights** (levels 3–4):
+  - **`b5_c2_looters`** (optional): looters in the flooded harbour-front sheds. Writer foes `b5_c2_looter` (kind `thug`) and `b5_c2_looterbow` (kind `b5_letherii_bow`; a sling or a bow). About 100 xp.
+  - **`b5_c2_hulk`** (main): the first wreck at dusk, the hold half flooded. `b5_wraith` ×3, then one more in the rigging (a wave). `dark:true`. `stage2` **the deck**: `b5_wraith` ×4 with a writer's `b5_c2_drowned` (kind `b5_wraith`, "a shape in a drowned man's coat"; never a raised corpse fighting). About 150 + 70 xp.
+  - **The key fight** (below). About 150 xp.
+
+**Key `b5_c2_key`** (the wreck). The harbour master posts a bounty on the harvest ships' cargo, with the dead still aboard.
+- **`salvage`**: the harbour's coin first. +40 docks to the squad. If Brune has joined or waits, `b5Forgive('brune', 30, 'the harbour master\'s salvage bounty')` (she owes him for a boat). Tobet +1, Perrit +1; Brune −1 if walking ("The Shore will want them back either way"), Ammet −1. Gain `b5_c2_sealcoat`. **The key fight is `b5_c2_wreckers`**: rival wreckers come for the squad's salvage chests at night on the quay. Writer foes `b5_c2_wrecker` (kind `thug`) ×3 and `b5_c2_wreckboss` (kind `bruiser`, boss), with `b5_deserterbow` ×1.
+- **`dead`**: the drowned first. The squad brings out the dead, the harbour's and the poachers', and lays them on the quay for their people, with the Shake. No docks. Brune +2 (whether walking or waiting; she sees it), Ammet +1, Thegg +1. On Ch1 `swim`, Thegg goes into the hold ("I have been under once this year already"). Gain `b5_c2_shells` (from Brune, or from a Shake woman on the strand). **The key fight is `b5_c2_tide`**: at the evening tide, with the dead laid on the quay, the wraiths come off the second hulk. `objective:{type:'survive', rounds:4, text:'Keep them off the dead until the Legion\'s lamps come.'}`; `b5_wraith` ×4, a wave of 2.
+- **Read later:**
+  - **Ch3**: on `salvage`, the barge crews have heard the Sixth has docks (knucklebones line); on `dead`, Brune's line at the Landing.
+  - **Ch5**: on `dead`, a Trate dockhand among the refugees remembers the Sixth carried the drowned: +2 on the press-gang check.
+  - **The finale**: Brune's fate page.
+
+**Trick:** *The Pilot's Eye* (`b5_c2_pilot`), from an old harbour pilot (unnamed; never the pilot scow's crew) who reads the water off the end of the quay and saw the wave coming before the bell: ✦ wits 16. Brune has the edge (+2), Tobet +1, Ruuk +1 if present, Thegg −1. **Mechanic: the Long Listen** (`b4_c6_listen`): once a fight, the bearer watches the water's shape; the first enemy to move is marked, +2 to hit it for the squad until the end of the next round, and nobody in the squad can be flanked until the bearer's next turn. Not sorcery.
+
+**Items:**
+- `b5_c2_sealcoat` (*A poacher's sealskin coat*; armour, `role:'light'`, `ac:1`; on `salvage`): from a chest in the hulk, still smelling of the north. Look: a short coat of grey sealskin, oiled, with bone toggles.
+- `b5_c2_tooth` (*A tooth nobody can name*; trinket, `role:'any'`, `hp:3`): bought for a dock at a market stall; the stall-keeper doesn't know what it came out of, and neither does anyone. Never say. Look: a long curved tooth, yellowed, bound with copper wire.
+- `b5_c2_gaff` (*A harbour gaff*; weapon, `role:'reach'`): the Legion's long hooked pole for dragging wreckage. +1 range for a reach weapon, or simply a reach weapon (writer's call within the engine's fields). Look: a long ash pole with an iron hook and a spike.
+- `b5_c2_shells` (*A cord of Shake burial shells*; trinket, `role:'any'`, `stat:{wits:1}`; on `dead`): the shells the Shake lay on their drowned. Look: small white shells on a knotted cord, one of them black.
+
+**Tiles:** the lean tile is the Barrow (`B5POOL[2]`). **Reading place:** Trate harbour after the wave, a summer evening, on wet planking with mist and a coil of rope (`mt:2`).
+
+**The fire:** `b5_c2_fire` (a fire on the strand by the Shake boats; Harbour Tiles goes here in `89`). `ROSTER_FIRES.mt[2] = ['b5_c2_fire']`. The pay desk is `b5_c2_pay`.
+
+**Hard limits (Chapter 2; §5).**
+- Never the pilot scow, the Ceda's tile chamber, or Brys's journey through the Dolmen.
+- **Never inside Tarancede Tower or the lighthouse** (the lighthouse falls in ch 16; the squad is long gone).
+- Never the street just in from the riverside warehouses where Buruk lives, never Seren or Buruk.
+- Never in Edur lands: not Hiroth, Calach Bay, the delegation's landing or the audiences.
+- Never name the sea spirit, never say it was worshipped in Trate, and never give a toll.
+- The sorceress is never named, never met, and never shown at the lighthouse.
+
+**Ground:**
+- `b5_c2_quay` (the harbour front: `.` planking, `,` wet stone, `~` harbour (blocks), `w` wreckage (blocks), `#` shed wall (blocks), `c` cart, `f` fish on the cobbles (decor));
+- `b5_c2_hulk` (a wreck's deck and hold: `.` deck, `-` flooded hold, `#` bulkhead (blocks), `m` mast (blocks), `h` hatch);
+- `b5_c2_strand` (the strand: `.` sand, `,` shingle, `~` sea (blocks), `B` drawn-up boat (blocks), `F` fire).
+
+**Art (`82b`):**
+- **Figures:** `b5_c2_looter`, `b5_c2_wrecker`, `b5_c2_wreckboss`, `b5_c2_drowned` (a wraith in a drowned man's coat: shadow, no face), `b5_c2_pilot` (an old pilot), `b5_c2_harbourmaster`, `b5_c2_shake` (Shake fisherfolk on the strand).
+- **Backdrops:** redraw `b5_trate_harbour`; `b5_c2_wrecks` (harvest ships broken on the quays at dusk, the lighthouse and the Tower behind); `b5_c2_hold` (inside a flooded hold, light through a split hull); `b5_c2_strand` (Shake boats drawn up, a fire, the sea).
+- **Item art.**
+
+## Chapter 3: "Kraig's Landing" (`83`, key `watch` | `warn`)
+
+**Spine** (§1.3, novel ch 13–15). Up the river from Trate, near the Edur border.
+- News first: **the Edur have declared war** (ch 13), and "a Letherii went over to them": a rumour, never who (Hull is never named in that rumour).
+- The war council in Letheras (ch 14) as barracks talk: the King wants a strike by the Ceda's mages. The Preda has recalled the Whitefinders north from their exercises (§1.3): the Sixth hears its battalion is coming. **It never comes** (§17c), but nobody knows that yet.
+- **Kraig's Landing:** three ramshackle buildings and a dock, one of them a solid hostel with a tavern below. An encamped regiment round it (the **Cold Clay Battalion**), the **Snakebelt Battalion's cadre** come from Awl, and ships at the dock flying the King's and the Ceda's banners. Barges run down the river to Trate. **The river is never named** (§17c).
+- **The three mages'** tents are seen at a distance. Never named in narration except as the camp names them ("the sorceress from Trate, and two others"); never met.
+- **The green fire:** with the Ceda, they raise an enormous curtain of killing green fire over the mountains against the Edur villages. **The camp cheers.** One of the Landing's outlying buildings collapses in the backlash; a few men are hurt there (Ammet goes).
+- The Edur villages were empty. The squad doesn't know that. The Nerek left in them are presumed killed: the squad hears "there were Nerek up there" and nothing more.
+- **Fent Reach has surrendered** (news at the chapter's end). Set `S.f.b5_fentReach = 1` (glossary: Yan Tovis is "the Atri-Preda at Fent Reach", nothing more).
+- At most one line: a merchant's iron-banded wagons passing on the road (§4). Never Buruk or Seren by name.
+
+**The squad's story.**
+- The barges: tied three deep, the Sixth on guard among the regiment.
+- **Ruuk joins** (the recruit). The army's Faraed scouts keep their own fire above the dock; Ruuk is one of them, paid by the day, and the Sixth pays on the day. Node `b5_c3_ruuk`, at **the Faraed scouts' fire**: `fx:()=>b5Join('ruuk')`. If a recruit already walks (Brune), b5Join leaves him waiting with a note, so the node also offers "Walk with us instead of Brune" (`b5SwapIn('ruuk')`), or "Stay with the scouts for now" (`S.f.b5_ruukDone = 2`), or turn him away (`S.f.b5_ruukDone = 0`). He is **never** the Faraed boy scout Trull's party kills (canon is fifteen, a scout; Ruuk is seventeen, a guide). One line at most that a scout didn't come back, and never who or how.
+- **Ruuk's trader** (if Ruuk has joined or waits): the Trate grain trader's man is at the Landing taking a cut of the scouts' pay. Pay Ruuk's day-rate clear of him (`b5Pay('ruuk', 20, 'the trader\'s cut')`), or let it ride (`b5Owe('ruuk', 15, 'the trader\'s cut')`), or a guile check (DC 14) to talk the man down to nothing, with a "yes, but" of a name taken.
+- On Ch2 `dead`, Brune (if present) looks at the river and says the Shore will have the dead from the fire too, sooner or later.
+- **Fights** (levels 4–5):
+  - **`b5_c3_rivermen`** (main): river thieves cutting barges loose at night, on the barges themselves. Writer foes `b5_c3_riverman` (kind `thug`) ×3 and `b5_c3_pole` (kind `bruiser`: a bargeman's pole); a wave from the water. `stage2` **the drifting barge**, a barge cut loose and going downstream with the thieves' boss on it (`b5_c3_riverboss`, kind `bruiser`, boss). About 150 + 70 xp.
+  - **`b5_c3_deserters`** (optional): two regiment men who walked off before the strike, caught robbing the scouts' fire (`b5_deserter` ×2, `b5_deserterbow` ×1). About 100 xp.
+  - **The key fight** (below). About 150 xp.
+
+**Key `b5_c3_key`** (the fire), the night before the strike, when the squad learns what the mages mean to do and that there are Nerek in the villages.
+- **`watch`**: stay at the barges as ordered. The fire goes up over the mountains; the camp cheers; the squad watches from the dock. Perrit +1 (it is the cadre's work, and it is very fine work, and she hates that she thinks so); Ammet −1. **The key fight is `b5_c3_cheer`**: after the fire, drunk soldiers of the regiment celebrating start on the Nerek haulers at the barge-line. `objective:{type:'survive', rounds:4, text:'Fists and boots, nobody killed. Keep them off the haulers until the provosts come.'}`; writer foes `b5_c3_drunk` (kind `b5_letherii`) ×4.
+- **`warn`**: send a runner up the river bank that night to tell the Nerek in the villages to get out. The runner is **Ruuk** if he walks, else **Tobet**. Set `S.f.b5_c3_runner` to that id. The fire comes before the runner is a league up the bank. The strike goes on regardless, and the narrator never says whether anyone got out. The runner comes back at dawn. The regiment's officer notes the Sixth for a runner sent without leave: `S.f.b5_noted = 1`, and the fine is `b5Owe('sgt', 30, 'a runner sent without leave, the regiment\'s book')`. Ammet +2 (her grandmother was half Nerek), Thegg +1, Perrit −1 (to her face; +1 on her sheet's line in Ch 4, written by Ch 4). **The key fight is `b5_c3_bank`**: the squad goes up the bank after the runner, and something on the far bank is watching the villages too: `b5_wraith` ×3 and `b5_unblooded` ×1, at night among the reeds. Never a named Edur; no K'risnan.
+- **Read later:**
+  - **Ch4**: on `warn` (`b5_noted`), the fort's garrison posts the noted company on the far western rampart, "as far from the royals as the fort has": one line from Ennic. On `watch`, Perrit knew some of High Fort's mages from the school; when they die, that is her grief.
+  - **Ch5**: on `warn`, a Nerek family among the refugees knows the Sixth's name from the bank (Ammet's scene).
+  - **The finale**: Ammet's fate page.
+
+**Trick:** *The Cadre's Link* (`b5_c3_link`), from a young mage of the Snakebelt cadre (unnamed; never Enedictal, never in the ritual circle) who shows Perrit, or whoever will learn it, the sign the cadre uses to link a unit in an instant: ✦ wits 16. Perrit has the edge (+3), Tobet +1, Thegg −2, Ruuk −1 (he won't look). `sorcery:true`: it rides the Hold, but the bearer needn't be a mage. **Mechanic: Claw Hand-Cant** (`cant`, `t_cant`): once a fight, and it does not use the bearer's action, the bearer marks an enemy within 6, and the next hit on it this round is a critical (more from higher levels, as `cant`). Words: the Hold opens a thread between the bearer and the squad, and for a breath they strike as one.
+
+**Items:**
+- `b5_c3_cadretile` (*A cadre's spare tile*; trinket, `role:'focus'`, `stat:{wits:1}`): a plain practice tile of black stone with no face, from the Snakebelt cadre's mage. Look: a small square of black stone, polished, blank, a hairline crack.
+- `b5_c3_spear` (*A Faraed throwing-spear*; weapon, `role:'reach'`): light, fire-hardened, Ruuk's spare (if he joins; else a scout's trade for two docks). Look: a slim spear with a leaf-shaped iron head and a bird-feather tuft.
+- `b5_c3_ash` (*Green ash in a paper twist*; trinket, `role:'any'`, no effect): ash that came down on the dock after the fire, still faintly green. Chapter 7 may name it once at the fire. Look: a twist of brown paper, a pinch of grey-green ash at the open end.
+
+**Tiles:** the lean tile is the Watcher (`B5POOL[3]`). **Reading place:** the barges at Kraig's Landing at night: planking, a lantern, mist (`mt:3`).
+
+**The fire:** `b5_c3_fire` (the barge crews' fire on the dock; Knucklebones goes here in `89`). `ROSTER_FIRES.mt[3] = ['b5_c3_fire']`. The pay desk is `b5_c3_pay`.
+
+**Hard limits (Chapter 3; §5).**
+- Never the mages' ritual circle, and never speaking with the mages.
+- **Never the tavern while Seren and Buruk are in it, and never Buruk's barge.** The squad doesn't go into the hostel's tavern in this chapter at all.
+- Never Trull's scouting party or the scout it kills; never Yan Tovis's council, the Fent Reach surrender, or First Maiden Fort.
+- Never the war council in Letheras.
+- Never in Edur lands: the green fire is seen over the mountains, from the dock.
+- Never name the river, never "the Brous River".
+
+**Ground:**
+- `b5_c3_dock` (the Landing: `.` trampled earth, `,` mud, `#` building wall (blocks), `=` tent, `d` dock planking, `~` river (blocks), `F` fire);
+- `b5_c3_barges` (`.` barge deck, `~` water (blocks), `-` gangplank, `c` cargo (blocks), `r` rope coil);
+- `b5_c3_bank` (the upriver bank at night: `.` path, `,` reeds, `~` river (blocks), `#` rock (blocks), `x` dead tree).
+
+**Art (`83b`):**
+- **Figures:** `b5_c3_riverman`, `b5_c3_pole`, `b5_c3_riverboss`, `b5_c3_drunk` (a celebrating regiment soldier), `b5_c3_nerek` (a Nerek hauler, decor), `b5_c3_faraed` (a Faraed scout at the fire, decor), `b5_c3_cadremage` (a young cadre mage in grey piping), `b5_c3_trader` (the trader's man).
+- **Backdrops:** redraw `b5_landing`; `b5_c3_greenfire` (the curtain of green fire over far mountains, the dock and the cheering camp as shapes in front); `b5_c3_tents` (the mages' tents with the banners, seen from the barges); `b5_c3_collapse` (the outlying building fallen in, lanterns, men digging).
+- **Item art.**
+
