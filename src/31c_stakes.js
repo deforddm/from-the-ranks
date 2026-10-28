@@ -45,10 +45,11 @@ const foeScale = () => { if (DIFF() === DIFFS.story) return {hp:1, atk:0, dmg:0}
    {hp ×, atk +, dmg +} on top of everything else. Never on Story or Bridgeburner, never in Chapters 1-2. Target: the smart bot wins
    ~85-95% of first attempts a fight, losing 30-50% of the squad's health (docs/v7.4-notes.md). Book Four keeps its own Soldier column
    (B4GAP's s, 70). A fight in SOLDIER_SKIP keeps its weight: Book Three's Coral mortal fights (David: as they are). ---- */
-const SOLDIER_LATE = { // tuned Oct 27, 2026 with tools/balance.mjs (the smart bot, 8 runs a fight): see docs/v7.4-notes.md
-  gotm:{3:{hp:1.15, atk:0, dmg:2}, 4:{hp:1.25, atk:1, dmg:2}, 5:{hp:1.55, atk:2, dmg:4}, 6:{hp:1.7, atk:2, dmg:5}, 7:{hp:1.7, atk:2, dmg:5}},
-  dg:{3:{hp:1.2, atk:1, dmg:2}, 4:{hp:1.3, atk:1, dmg:3}, 5:{hp:1.5, atk:2, dmg:4}, 6:{hp:1.5, atk:2, dmg:4}, 7:{hp:1.7, atk:2, dmg:5}},
-  moi:{3:{hp:1.2, atk:1, dmg:3}, 4:{hp:1, atk:0, dmg:1}, 5:{hp:1.2, atk:0, dmg:3}, 6:{hp:1.4, atk:1, dmg:4}, 7:{hp:1.45, atk:1, dmg:4}}};
+const SOLDIER_LATE = { // David, Tue Oct 27, 2026, 9:20 PM PDT: capped under Bridgeburner (health ×1.25, to hit +1, wounds ×1.2), never above it.
+  // The bot-tuned table (up to ×1.7, +2, +5) made late Soldier harder than Bridgeburner and still left health lost under 30%: docs/v7.4-notes.md.
+  gotm:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
+  dg:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
+  moi:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}};
 const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
 const soldierLate = () => { if (!S || (S.diff || 'soldier') !== 'soldier') return null;
   const t = SOLDIER_LATE[S.book || 'gotm'], s = t && t[S.chapter || 0];

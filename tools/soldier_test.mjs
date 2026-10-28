@@ -56,6 +56,9 @@ else {
   }
   for (const { id, e, a, b } of out.skip) ok(live(e) && a.hp === b.hp && a.atk === b.atk && a.dmg === b.dmg, `${id}: the Coral mortal fight keeps its weight on Soldier (${a.hp} hp)`);
 }
+/* David, Oct 27, 9:20 PM PDT: Soldier stays under Bridgeburner (health ×1.25, to hit +1; wounds ×1.2, so at most +1 flat damage) */
+{ const cap = await page.evaluate(() => Object.entries(SOLDIER_LATE).flatMap(([b, t]) => Object.entries(t).filter(([, e]) => e.hp > DIFFS.bridgeburner.hp || e.atk > DIFFS.bridgeburner.atk || e.dmg > 1).map(([c]) => b + ' ch' + c)));
+  ok(!cap.length, 'Soldier\'s late extra never passes Bridgeburner' + (cap.length ? ': ' + cap.join(', ') : '')); }
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.join(' | ') : ''));
 await br.close(); srv.kill();
 console.log(bad ? `${bad} FAILED` : 'all ok');
