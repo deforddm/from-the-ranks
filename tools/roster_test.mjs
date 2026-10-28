@@ -13,12 +13,13 @@ const r = await page.evaluate(() => { const out = {};
   const click = sel => { const b = document.querySelector(sel); if (!b || b.disabled) return false; b.click(); return true; };
   const sheetText = () => $('#sheet').textContent;
   /* ---- the choice at every chapter fire ---- */
-  out.fires = {}; const mk = {gotm:()=>newState('F1'), dg:()=>newStateDG('F2'), moi:()=>newStateMOI('F3'), hoc:()=>newStateHOC('F4')};
+  out.fires = {}; const mk = {gotm:()=>newState('F1'), dg:()=>newStateDG('F2'), moi:()=>newStateMOI('F3'), hoc:()=>newStateHOC('F4'), mt:()=>newStateMT('F5')}; // v8.0: Book Five's fires come with its chapters
   for (const [book, chs] of Object.entries(ROSTER_FIRES)) { setBook(book); S = mk[book](); S.picksDue = []; if (book === 'hoc') { S.f.b4_mustered = 1; delete S.f.b4_musterDue; }
     out.fires[book] = {chapters:Object.keys(chs).map(Number), miss:[]};
     for (const [n, ids] of Object.entries(chs)) for (const id of ids) { S.chapter = +n;
       let has = false; try { const node = DLG[id](); has = node.ch.some(c => c.t === 'The roster.' && (!c.req || c.req())); } catch(e) { has = 'err ' + e.message; }
       if (has !== true) out.fires[book].miss.push(`${n}:${id}:${has}`); } }
+  out.mtCh = Object.keys((BOOKSNAP.mt && BOOKSNAP.mt.ch) || {}).map(Number); // v8.0: Book Five needs a fire for each chapter written
   setBook('gotm');
   /* ---- Book One: six at most; Vell with no room waits at camp and says so; the core can't be benched ---- */
   S = newState('One'); S.chapter = 4; S.picksDue = []; S.squad = ['sgt', 'brisk', 'kettle', 'tuft', 'ohl']; recruit('ellis'); notes = [];
@@ -88,7 +89,7 @@ const r = await page.evaluate(() => { const out = {};
   return out; });
 console.log(JSON.stringify(r, null, 1).slice(0, 4000));
 for (const [book, f] of Object.entries(r.fires)) {
-  const need = book === 'gotm' ? [2] : [1, 2, 3, 4, 5, 6, 7];
+  const need = book === 'gotm' ? [2] : book === 'mt' ? r.mtCh : [1, 2, 3, 4, 5, 6, 7];
   ok(need.every(n => f.chapters.includes(n)) && !f.miss.length, `${book}: the roster choice at every chapter fire (${f.chapters.join(',')}${f.miss.length ? '; missing ' + f.miss.join(' ') : ''})`);
 }
 ok(r.one.sq === 'sgt,brisk,kettle,tuft,ohl,ellis' && r.one.camp === 'vell' && /No room in the squad: Vell waits at camp/.test(r.one.note), `Book One: six at most, and Vell waits at camp and says so (${r.one.note})`);
