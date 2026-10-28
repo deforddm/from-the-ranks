@@ -1,6 +1,6 @@
 # Midnight Tides: canon sheet for Book Five
 
-Wed Oct 28, 2026, 10:05 AM PDT. Built for Book Five of From the Ranks (v8.0.0, not yet built), against v7.4.0. Book Five is a new cast: a Letherii squad of one company of the **Whitefinder Battalion**, from the war's first rumours in Letheras to the city's fall. The plan, with David's decisions, is `ashes-of-the-pale/book5-mt-plan.md`. Part one (§1–§6) covers game Chapters 1–4. Part two (§7–§15) covers Chapters 5–7, the army, the keep-open rules, the name check, the gods, the timeline and the Visions.
+Wed Oct 28, 2026, 9:16 AM PDT. Built for Book Five of From the Ranks (v8.0.0, not yet built), against v7.4.0. Book Five is a new cast: a Letherii squad of one company of the **Whitefinder Battalion**, from the war's first rumours in Letheras to the city's fall. The plan, with David's decisions, is `ashes-of-the-pale/book5-mt-plan.md`. Part one (§1–§6) covers game Chapters 1–4. Part two (§7–§15) covers Chapters 5–7, the army, the keep-open rules, the name check, the gods, the timeline and the Visions.
 
 **Marks.** **[H]** two sources agree (closed). **[1]** one source (supported). **[O]** open: looked, nothing found. **[M]** memory, not checked; a lead only. **[C]** Claude's call, for David to overturn. **[D]** David's ruling. Every line carries its source.
 - **W**: Malazan Wiki (malazan.fandom.com). *W14* is the page *Midnight Tides/Chapter 14*, *W0* the Prologue. *W High Fort* is a named page.
