@@ -126,7 +126,7 @@ r.dress.name === 'The FairExchange' && /outlawed/i.test(r.dress.tag) && /beside 
 r.impShown && r.impOpts === 'No: a fresh start,Sergeant Rusk,Sergeant Dead' || r.impOpts === 'No: a fresh start,Sergeant Dead,Sergeant Rusk' ? ok('the import field lists only the outlaw road') : no(`imp: ${r.impShown} ${r.impOpts}`);
 /the Fourth/.test(r.impLabel) && r.nm.v === 'Rusk' && r.nm.ro && /Tuft did not come out/.test(r.nm.desc) && r.nmFree ? ok('picking one fills and locks the name; a fresh start unlocks it') : no('name: ' + JSON.stringify(r.nm) + ' free ' + r.nmFree + ' label ' + r.impLabel);
 !/still being written/.test(r.noCh) ? ok('Begin with Book Three chapters registered goes past the not-yet message') : no('begin: ' + r.noCh);
-/Book Three, The Fair Exchange/.test(r.footer) ? ok('the credit line lists Book Three') : no('footer: ' + r.footer.slice(0, 200));
+/books so far, each beside one of Erikson's Malazan novels, in order, from Gardens of the Moon to/.test(r.footer) ? ok('the credit line summarises the shelf, Book Three included (v7.3.3)') : no('footer: ' + r.footer.slice(0, 200));
 r.backOne === 'Ashesof the Pale' && r.impHiddenOne ? ok('back to Book One: its dress, no import field') : no(`back: ${r.backOne} ${r.impHiddenOne}`);
 r.deeds.length === (r.hoc ? 4 : 3) && /Book Three/.test(r.deeds[2]) && (!r.hoc || /Book Four/.test(r.deeds[3])) && r.alliance && r.count && r.meet ? ok('Deeds has a Book Three section, the Alliance, the count, and where the books meet') : no('deeds: ' + JSON.stringify([r.deeds, r.alliance, r.count, r.meet]));
 /Book Three · The Fair Exchange/.test(r.jhead) && r.gloss >= 15 ? ok('the journal names Book Three; the glossary is there') : no(`journal: ${r.jhead}, gloss ${r.gloss}`);
