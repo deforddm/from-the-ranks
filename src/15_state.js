@@ -53,8 +53,8 @@ const DIFF = () => DIFFS[(S && S.diff) || 'soldier'] || DIFFS.soldier;
 /* the count, kept on the save: the finale and the Deeds page read it */
 function tally(k, n = 1){ if (!S) return; S.stats ??= {}; S.stats[k] = (S.stats[k] || 0) + n; }
 const SQUAD = () => S.squad;
-/* the squad's healer, if one is with it: Ohl in Book One, Marrow in Book Two */
-const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel'].find(id => S.squad.includes(id)) || null : null;
+/* the squad's healer, if one is with it: Ohl in Book One, Marrow in Book Two, Mirrel in Book Four, Ammet the army surgeon in Book Five */
+const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel', 'ammet'].find(id => S.squad.includes(id)) || null : null;
 /* a squadmate's abilities: the template's, plus Kettle's smokers once she has ever had any */
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */

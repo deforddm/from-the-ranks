@@ -35,6 +35,14 @@ const ROSTER_BOOKS = {
     valid:(sq, was)=>{ const n = a => a.filter(k => !B4_RECRUITS.includes(k)).length; return n(sq) >= Math.min(5, n(was)); },
     in:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 1; },
     out:id=>{ if (B4_DONE[id]) S.f[B4_DONE[id]] = 2; else if (HOC_NEW.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); } }},
+  /* v8.0 Book Five (80): the sergeant and four always walk; Ruuk, Brune and Pessa wait with their own people (flag 2) */
+  mt:{core:['sgt', 'tobet', 'thegg', 'perrit', 'ammet'], bench:()=>(typeof B5_RECRUITS !== 'undefined' ? B5_RECRUITS : []),
+    home:id=>(typeof B5_HOME !== 'undefined' && B5_HOME[id]) || 'the company',
+    wait:id=>typeof B5_DONE !== 'undefined' && !!B5_DONE[id] && S.f[B5_DONE[id]] === 2,
+    gone:id=>typeof b5CanRecruit === 'function' && !b5CanRecruit(id),
+    open:()=>true,
+    in:id=>{ if (typeof B5_DONE !== 'undefined' && B5_DONE[id]) S.f[B5_DONE[id]] = 1; },
+    out:id=>{ if (typeof B5_DONE !== 'undefined' && B5_DONE[id]) S.f[B5_DONE[id]] = 2; }},
 };
 const rosterBook = () => ROSTER_BOOKS[(S && S.book) || 'gotm'] || ROSTER_BOOKS.gotm;
 const rosterDead = id => !!(S && S.dead && S.dead[id]);
@@ -91,7 +99,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
   S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
-const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle'].includes(id) ? 'she' : 'he';
+const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle', 'perrit', 'ammet', 'pessa', 'brune'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
 function rosterOut(id){ if (!rosterCanOut(id)) return false; rsOut(id); note(rsCampNote(id)); save(); return true; }
 function rosterIn(id){ if (!rosterCanIn(id)) return false; rsIn(id); note(`${NAME(id)} comes in from ${rosterBook().home(id)} and falls in.`, 'good'); AUDIO.play('up'); save(); return true; }
@@ -191,6 +199,7 @@ const ROSTER_FIRES = {
   gotm:{2:['c2_fire']},
   dg:{1:['b2_fire'], 2:['b2_road_fire'], 3:['b2_east_fire'], 4:['b2_bank_cart', 'b2_far_wagon'], 5:['b2_kfire'], 6:['b2_hfire', 'b2_gfire'], 7:['b2_bfire']},
   moi:{1:['b3_c1_fire', 'b3_c1_rfire'], 2:['b3_c2_fire'], 3:['b3_c3_fire'], 4:['b3_c4_fire'], 5:['b3_c5_fire'], 6:['b3_c6_fire', 'b3_c6_ledge_fire', 'b3_c6_trench_fire', 'b3_c6_bank_fire', 'b3_c6_landing_fire'], 7:['b3_c7_f_fire', 'b3_c7_r_fire', 'b3_c7_h_fire', 'b3_c7_s_fire']},
+  mt:{}, // v8.0 Book Five: its chapters add their fires here (80, "For chapter writers")
   hoc:{1:['b4_c1_yard'], 2:['b4_c2_fire'], 3:['b4_c3_feast', 'b4_c3_farfire'], 4:['b4_c4_setifire'], 5:['b4_c5_wallfire'], 6:['b4_c6_picketfire'], 7:['b4_c7_isle', 'b4_c7_coldfire']},
 };
 /* the fire nodes get the choice, just before their last (the way out) */
@@ -211,7 +220,9 @@ const TPL_ROLES = {
   sohra:['light', 'ranged', 'blade', 'reach', 'focus'], greysword:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'],
   tallow:['light', 'ranged', 'blade'], hessa:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach', 'focus'], tebbet:['light', 'ranged', 'blade'],
   darrut:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'], orvas:['light', 'mail', 'blade', 'reach'],
-  mirrel:['light', 'healkit', 'focus', 'blade'], yorin:['light', 'focus', 'blade'], rasp:['light', 'mail', 'satchel', 'ranged', 'blade']};
+  mirrel:['light', 'healkit', 'focus', 'blade'], yorin:['light', 'focus', 'blade'], rasp:['light', 'mail', 'satchel', 'ranged', 'blade'],
+  tobet:['light', 'ranged', 'blade'], thegg:['heavy', 'mail', 'shield', 'blade', 'heavyweapon', 'reach'], perrit:['light', 'focus', 'blade'], ammet:['light', 'healkit', 'blade'],
+  ruuk:['light', 'ranged', 'blade', 'reach'], pessa:['light', 'blade', 'reach'], brune:['light', 'mail', 'blade', 'reach']}; // v8.0 Book Five (80): Ammet's kit is a surgeon's, no focus
 /* every piece's role. Not listed: 'any' (trinkets mostly). GEAR_SIG: the pieces that stay with one soldier (the story needs it) */
 const ITEM_ROLE = {
   heater:'shield', cadretoken:'focus', clawknife:'blade', rhivibow:'ranged', toccloak:'light', daruknife:'blade', ropehook:'light', guildblade:'blade', andiicloak:'focus',

@@ -22,8 +22,9 @@ const tables = await ev(() => { const out = {keys:Object.keys(READTABLE), bad:[]
   out.resolved['moi:7a'] = want('moi', 7, () => { setBook('moi'); S = newStateMOI('Hask'); S.chapter = 7; S.f.b3_flew = 1; migrate(S); });
   out.resolved['moi:7b'] = want('moi', 7, () => { setBook('moi'); S = newStateMOI('Hask'); S.chapter = 7; S.f.b3_river = 1; migrate(S); });
   for (let ch = 1; ch <= 7; ch++) out.resolved['hoc:' + ch] = want('hoc', ch, () => { setBook('hoc'); S = newStateHOC('Hask'); S.chapter = ch; migrate(S); }); // v7.0: Book Four's seven places
+  for (let ch = 1; ch <= 7; ch++) out.resolved['mt:' + ch] = want('mt', ch, () => { setBook('mt'); S = newStateMT('Hask'); S.chapter = ch; migrate(S); }); // v8.0: Book Five's seven places
   return out; });
-ok(tables.keys.length >= 31, `${tables.keys.length} tables (Book One 9, Book Two 7, Book Three 8, Book Four 7)`);
+ok(tables.keys.length >= 38, `${tables.keys.length} tables (Book One 9, Book Two 7, Book Three 8, Book Four 7, Book Five 7)`);
 ok(!tables.bad.length, 'every table paints without an error' + (tables.bad.length ? ': ' + tables.bad.join('; ') : ''));
 ok(!tables.flat.length, 'no table is one flat colour' + (tables.flat.length ? ': ' + tables.flat.join(', ') : ''));
 const unresolved = Object.entries(tables.resolved).filter(([k, v]) => v !== k || !tables.keys.includes(v));
@@ -34,6 +35,16 @@ const backs = await ev(() => { const sig = {}; for (const r of ['tuft', 'marrow'
   const sp = {}; for (const r of ['tuft', 'marrow', 'yedda', 'kanese', 'benna', 'sohra', 'tallow', 'oldninth']) { const s = readingSpread(r); sp[r] = {n:s.slots.length, ans:s.slots.filter(x => x.ans).length, bones:!!s.bones, name:READER_SPREAD[r]}; }
   return {sig, sp, nowAfter:DECKBACK_NOW}; });
 ok(new Set(Object.values(backs.sig)).size === 8, 'eight readers, eight different deck backs (Book Four adds Tallow\'s grandmother\'s deck and the old soldier\'s)');
+/* v8.0 Book Five: tiles, not cards. Perrit's black stone and the tile-woman's bone have their own backs; each reader her own spread; every tile face draws */
+const tiles = await ev(() => { const out = {}; setBook('mt'); S = newStateMT('Hask'); migrate(S); const sig = {};
+  for (const r of ['perrit', 'tilewoman']) { const cv = document.createElement('canvas'); cv.width = 120; cv.height = 180; const ctx = cv.getContext('2d'); DECKBACK_NOW = r; drawCardFlip(ctx, null, 0, 0, 120, 180, 0, 0); const d = ctx.getImageData(0, 0, 120, 180).data; let h = 0, top = 0; for (let i = 0; i < d.length; i += 4) h = (h * 31 + d[i] + d[i+1] * 3 + d[i+2] * 7) | 0; for (let i = 0; i < 120 * 6 * 4; i += 4) top += d[i + 3]; sig[r] = h; out['square_' + r] = top === 0; }
+  out.backs = sig; out.faces = []; Object.keys(B5TILES).forEach(id => { const cv = document.createElement('canvas'); cv.width = 120; cv.height = 120; const ctx = cv.getContext('2d'); DECKBACK_NOW = 'perrit'; try { drawHoldTile(ctx, id, 120, true, 0); const d = ctx.getImageData(0, 0, 120, 120).data; const seen = new Set(); for (let i = 0; i < d.length; i += 4 * 37) seen.add(d[i] >> 4); if (seen.size < 3) out.faces.push(id + ':flat'); } catch (e) { out.faces.push(id + ':' + e.message); } });
+  DECKBACK_NOW = 'tuft'; out.sp = {perrit:READER_SPREAD.perrit, tilewoman:READER_SPREAD.tilewoman, pAns:readingSpread('perrit').slots.filter(x => x.ans).length, tAns:readingSpread('tilewoman').slots.filter(x => x.ans).length};
+  out.square = CARDBOOK.square(); out.done = CARDBOOK.done(); out.look = CARDBOOK.look(); S = newState('Hask'); out.squareOff = CARDBOOK.square(); return out; });
+ok(tiles.backs.perrit !== tiles.backs.tilewoman && tiles.square_perrit && tiles.square_tilewoman, `Book Five: Perrit's stone and the tile-woman's bone have their own backs, and they lie square (${JSON.stringify(tiles.backs)})`);
+ok(!tiles.faces.length, 'every tile of the Holds draws a face' + (tiles.faces.length ? ': ' + tiles.faces.join(', ') : ''));
+ok(tiles.sp.perrit === 'spiral5' && tiles.sp.tilewoman === 'row4' && tiles.sp.pAns === 1 && tiles.sp.tAns === 1, `Perrit lays a spiral, the tile-woman a row with one above (${JSON.stringify(tiles.sp)})`);
+ok(tiles.square && tiles.done === 'Gather the tiles' && tiles.look === 'Look into the tile' && !tiles.squareOff, 'the reading lays square tiles in Book Five only, and gathers them');
 ok(backs.sp.tallow.name === 'step3' && backs.sp.oldninth.name === 'pair3', 'Tallow lays them as the old woman did; the old soldier crosses two on the ground');
 ok(Object.values(backs.sp).every(s => s.ans === 1), 'every spread has one card that answers');
 ok(backs.sp.marrow.n === 5 && backs.sp.marrow.name === 'cross5', "Marrow's temple cross: five cards");
@@ -53,6 +64,9 @@ const CASES = [
   ['hoc', 1, 'marrow', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 1; migrate(S); save();", 'b2c_soldier'],
   ['hoc', 3, 'tallow', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 3; S.squad = ['sgt','tallow','tangle']; migrate(S); save();", 'b4c_knightchains'],
   ['hoc', 7, 'oldninth', "setBook('hoc'); S = newStateHOC('Hask'); S.chapter = 7; S.squad = ['sgt','haddat']; migrate(S); save();", 'b4c_leper'],
+  ['mt', 1, 'perrit', "setBook('mt'); S = newStateMT('Hask'); S.chapter = 1; migrate(S); save();", 'b5t_throne'],
+  ['mt', 4, 'perrit', "setBook('mt'); S = newStateMT('Hask'); S.chapter = 4; migrate(S); save();", 'b5t_wall'],
+  ['mt', 6, 'tilewoman', "setBook('mt'); S = newStateMT('Hask'); S.chapter = 6; S.squad = ['sgt','thegg']; migrate(S); save();", 'b5t_axe'],
 ];
 for (const [book, ch, reader, setup, card] of CASES) {
   const r0 = await ev(({ setup, card }) => { eval(setup); S.card = card; AUDIO.setScene('explore'); const want0 = AUDIO._dev.state.want; cardSequence(() => { window.__done = (window.__done || 0) + 1; }, {}); return {reader:readingReader(), key:readingTableKey(), back:DECKBACK_NOW, want0, hidden:$('#cardfx').hidden, text:$('#cfText').classList.contains('show')}; }, { setup, card });
@@ -69,6 +83,7 @@ for (const [book, ch, reader, setup, card] of CASES) {
   ok(r1.want === 'dark', `${tag}: the Deck's music while it is out (was ${r0.want0}, now ${r1.want})`);
   ok(r2.text && r2.shown && r2.btn && /^rgba\(/.test(r2.tbl), `${tag}: the words are up by 6.7 s under the table's dark (${r2.tbl}); the button says "${r2.label}"`);
   ok(reader !== 'sohra' || /Gather the bones/.test(r2.label), `${tag}: Sohra's button gathers the bones`);
+  ok(book !== 'mt' || /Gather the tiles/.test(r2.label), `${tag}: Book Five's button gathers the tiles`);
   ok(!r3.hiddenNow && !r3.inCls && r3.done >= 1, `${tag}: putting the cards away calls back at once and starts the fade`);
   ok(r4.hidden && !r4.anim && r4.back === 'tuft' && r4.html === 0 && r4.want === r0.want0, `${tag}: after the fade the table is gone and the music is back (${r4.want})`);
 }

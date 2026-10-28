@@ -113,11 +113,13 @@ function showTitle(fresh, want){
       const imp = $('#impSel') && !$('#impField').hidden ? $('#impSel').value : '';
       if (book === 'moi' && typeof b3ChCount === 'function' && !b3ChCount()) { msg('Book Three is still being written. Its chapters are on the way.'); return; }
       if (book === 'hoc' && typeof b4ChCount === 'function' && !b4ChCount()) { msg('Book Four is still being written. Its chapters are on the way.'); return; }
+      if (book === 'mt' && typeof b5ChCount === 'function' && !b5ChCount()) { msg('Book Five is still being written. Its chapters are on the way.'); return; }
       const t = (book === 'moi' || book === 'hoc') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
       if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
       if (book === 'moi') { S = newStateMOI(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
       if (book === 'hoc') { S = newStateHOC(n, imp, imp ? (t ? t.id : newSid()) : undefined); S.diff = diff; save(); return startChapter(1); }
+      if (book === 'mt') { S = newStateMT(n); S.diff = diff; save(); return startChapter(1); } // v8.0: a new cast, nothing carried in (80)
       S = newState(n); S.diff = diff; save(); showIntro(); };
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };

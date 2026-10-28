@@ -24,7 +24,7 @@ const render = (what) => page.evaluate(async (what) => {
 }, what);
 
 const names = await page.evaluate(() => AUDIO._dev.names);
-ok(names.voices.length === 4 && names.voices.join() === 'gotm,dg,moi,hoc', 'four voices, one per book: ' + names.voices.join(', '));
+ok(names.voices.length === 5 && names.voices.join() === 'gotm,dg,moi,hoc,mt', 'five voices, one per book: ' + names.voices.join(', '));
 ok(names.sfx.length >= 45, names.sfx.length + ' sound effects');
 ok(names.amb.length >= 38, names.amb.length + ' ambiences');
 
@@ -35,11 +35,11 @@ for (const k of names.sfx) {
   const r = await render({ sfx: k, args, sec: k === 'cusser' || k === 'chapter' || k === 'choice' || k === 'reveal' ? 3.5 : 1.5 });
   ok(r.nan === 0 && r.peak > .002 && r.peak <= 1 && r.rms > 5e-5, `sfx ${k}: peak ${r.peak.toFixed(3)} rms ${r.rms.toFixed(4)}${r.nan ? ' NaN!' : ''}`);
 }
-for (const h of ['High House Dark', 'High House Shadow', 'High House Life', 'High House Light', 'High House Chains', 'Unaligned', '—']) {
-  const r = await render({ sfx: 'house', args: [h], sec: 2.5, voice: h.includes('Chains') ? 'moi' : h.includes('Life') ? 'dg' : 'gotm' });
+for (const h of ['High House Dark', 'High House Shadow', 'High House Life', 'High House Light', 'High House Chains', 'Unaligned', '—', 'The Empty Hold', 'The Fulcra']) { // v8.0: Book Five's tiles of the Holds knock on stone
+  const r = await render({ sfx: 'house', args: [h], sec: 2.5, voice: h.includes('Chains') ? 'moi' : h.includes('Life') ? 'dg' : /Hold|Fulcra/.test(h) ? 'mt' : 'gotm' });
   ok(r.nan === 0 && r.peak > .003 && r.peak <= 1, `house ${h}: peak ${r.peak.toFixed(3)}`);
 }
-for (const v of ['dg', 'moi', 'hoc']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
+for (const v of ['dg', 'moi', 'hoc', 'mt']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
   const r = await render({ sfx: k, sec: 3, voice: v });
   ok(r.nan === 0 && r.peak > .004 && r.peak <= 1, `sfx ${k} in ${v}: peak ${r.peak.toFixed(3)}`);
 }
@@ -83,6 +83,12 @@ ok(voices.moi === 'moi' && voices.gotm === 'gotm' && voices.hoc === 'hoc', `the 
 ok(voices.titleHoc && voices.titleHoc.amb === 'desert' && voices.endHoc && voices.endHoc.amb === 'sea_night', `Book Four's title is the desert and its end the sea at night (${JSON.stringify(voices.titleHoc)}, ${JSON.stringify(voices.endHoc)})`);
 const b4p = await page.evaluate(() => ['b4_aren_yard', 'b4_road_fire', 'b4_feast', 'b4_seti_fire', 'b4_wall_fire', 'b4_picket', 'b4_coral', 'b4_nowhere', 'b4_nowhere_night'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b4p.join() === 'city_night,desert_night,camp_night,column_night,desert_night,desert_night,coral,desert,desert_night', 'Book Four\'s reading places, and b4_ falling to the desert: ' + b4p.join(', '));
+
+/* v8.0 Book Five: the voice, the title (the river at night) and the end (the city at night), the reading places, and b5_ falling to the river */
+const b5v = await page.evaluate(() => { const out = {}; S = newState('Hask'); S.book = 'mt'; AUDIO.revoice(); out.mt = AUDIO._dev.state.voice; out.title = AUDIO._dev.cue('title'); out.end = AUDIO._dev.cue('end'); S.book = 'gotm'; AUDIO.revoice();
+  out.places = ['b5_barracks', 'b5_trate_harbour', 'b5_landing', 'b5_highfort', 'b5_road_south', 'b5_branskeep', 'b5_letheras', 'b5_nowhere', 'b5_nowhere_night'].map(k => AUDIO._dev.placeAmb(k)); return out; });
+ok(b5v.mt === 'mt' && b5v.title && b5v.title.amb === 'river_night' && b5v.end && b5v.end.amb === 'city_night', `Book Five's voice, its title on the river at night and its end in the city at night (${b5v.mt}, ${JSON.stringify(b5v.title)}, ${JSON.stringify(b5v.end)})`);
+ok(b5v.places.join() === 'city_night,sea,river_night,hills,burnt,hills,city,river,river_night', 'Book Five\'s reading places, and b5_ falling to the river country: ' + b5v.places.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));

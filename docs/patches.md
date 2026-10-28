@@ -20,6 +20,7 @@ The patches are a matched set, so these rules hold for every book.
 | Two, The Chain of Dogs | The Third, Hissar garrison, Seventh Army | Heater shield | Sun-faded ochre, sand stitching, scorch mark lower right | Crow Clan feather behind III; chain links across the top | Bottom, below the tally |
 | Four, Unblooded | The Third again: Third squad, 9th Legion, the Fourteenth | Lozenge (a square on its point) | Sun-bleached grey linen, sand stitching | A finger bone on a thong across the tally (the bones the Fourteenth wears from Aren) | Left of III |
 | Three, The Fair Exchange | The Fourth again | Round (Book One's patch, unchanged) | Dark brown, gold stitching | (none beyond the numeral) | Top, above IV |
+| Five, Indebted | The Sixth Company, the Whitefinder Battalion (Letherii army) | A coin: round, with a milled edge | Faded Letherii blue-grey, sand stitching | A coin-sack tied on a rope (the Drownings' weighted coin, the book's debt) | Right of VI |
 
 ## Looking ahead
 - **Book Three can bring the Fourth's patch back** (David, 2026-10-12): if the Fourth return, their round IV patch returns as it is, as a homecoming.
@@ -28,5 +29,6 @@ The patches are a matched set, so these rules hold for every book.
 
 ## Where they live
 - The Fourth: `docs/art/Insignia.dc.html` (built into `src/19c_artwork.js` by `tools/art_build.py`), key `insignia/patch`.
-- The Third: `src/47d_b2_title.js`, key `insignia/dg`.
+- The Third: `src/47d_b2_title.js`, key `insignia/dg`; Book Four's, `src/70b_b4_title.js`, key `insignia/hoc`.
+- The Sixth Company (Book Five): `src/80b_b5_title.js`, key `insignia/mt`.
 - The icon: `icon-*.png`, `apple-touch-icon.png` (the shared four on a round patch with two rank chevrons below).

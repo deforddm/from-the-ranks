@@ -35,6 +35,12 @@ const AUDIO = (() => {
       inst:{title:['reed', 'oud'], calm:['oud', 'reed'], end:['reed', 'oud', 'glass']},
       bpm:{title:56, calm:60, end:50, dread:52, battle:100, dark:86},
       pats:['K..sK..S', 'K...K.S.', 'K.s.K.SS', 'K..SK.s.'], fills:['K.SSK.SS', 'KSKSK.SS'], ost:'X.xX..x.'},
+    /* v8.0 Book Five (Lether: canals, stone, river fog, a kingdom that counts everything): Dorian on B1, lower than every other book, a low
+       horn and a bell, war drums, a pad with water under it (a slow low-passed swell under the saw and triangle), stone-room reverb */
+    mt:{scale:[0, 2, 3, 5, 7, 9, 10], root:61.74, pad:'tide', wet:.36, drum:'war', lead:'lowhorn', bellK:1.2, // B Dorian
+      inst:{title:['bell', 'cello'], calm:['cello', 'glass', 'bell'], end:['bell', 'cello', 'flute']},
+      bpm:{title:52, calm:58, end:48, dread:50, battle:92, dark:82},
+      pats:['K...K.s.', 'K..sK...', 'K.....S.', 'K..k.Ss.'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X..x.X..'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -180,6 +186,7 @@ const AUDIO = (() => {
       else if (/Light/.test(H)) { [7, 11, 14].forEach((d, i) => tone(f(d, 2), {t:t + i * .1, a:.02, d:1.8, v:.05, to:busMus, wet:musSend})); }
       else if (/Chains/.test(H)) { for (let i = 0; i < 4; i++) { const u = t + i * rnd(.14, .2), b = rnd(1500, 2100); [[1, .05, .3], [2.4, .02, .15]].forEach(([r, v, d]) => tone(b * r, {t:u, a:.002, d, v, to:busMus, wet:musSend, pan:P() * .5})); } noise({t, a:.05, d:.5, v:.3, f:200, type:'lowpass', buf:'b', to:busMus}); tone(f(0, 0), {t, type:'sawtooth', a:.1, d:1.6, v:.05, filt:{f:300}, to:busMus, wet:musSend}); }
       else if (/Unaligned/.test(H)) { [[2100, 0], [2650, .11]].forEach(([fr, dt]) => tone(fr * rnd(.98, 1.02), {t:t + dt, a:.002, d:.3, v:.06, to:busMus, wet:musSend})); tone(f(4, 2), {t:t + .3, type:'triangle', a:.05, d:1.1, v:.05, to:busMus, wet:musSend}); }
+      else if (/Hold|Fulcra/.test(H)) { [0, .16, .3].forEach((dt, i) => { noise({t:t + dt, a:.002, d:.06, v:.22 - i * .05, f:1800 - i * 300, q:3, to:busMus, wet:musSend}); tone(f(i ? 4 : 0, 1), {t:t + dt, type:'triangle', a:.003, d:.5, v:.05, to:busMus, wet:musSend}); }); tone(f(0, 0), {t:t + .4, type:'sawtooth', a:.2, d:2, v:.04, filt:{f:320}, to:busMus, wet:musSend}); } // v8.0 a tile of the Holds laid on stone: three knocks and a low note
       else noise({t, a:.4, d:1, v:.03, f:1000, q:2, to:busMus, wet:musSend}); }, // the unpainted card: gesso and grain
     slam(){ const t = now(); tone(60, {t, d:1.1, v:.6, slide:24}); tone(130, {t, type:'triangle', d:.35, v:.25, slide:55}); noise({t, a:.003, d:.9, v:.7, f:1600, slide:70, type:'lowpass', buf:'b', wet:sfxWet}); noise({t, a:.002, d:.12, v:.35, f:900, q:.8});
       for (let i = 0; i < 6; i++) noise({t:t + rnd(.08, .7), d:.03, v:rnd(.05, .12), f:rnd(900, 2200), q:2, pan:P()}); },
@@ -273,12 +280,13 @@ const AUDIO = (() => {
   function pad(L, t, degs, dur, v, cut){ // Book One: detuned saws, spread left and right, the filter opening and closing with the swell. Book Two: thinner, a triangle under the saw. Book Three: sung, through the choir's formants
     const kind = V.pad, g = gn(0, L.near), end = t + dur; let n = 0; const ns = [g];
     if (kind === 'sand') noise({t, a:dur * .45, d:dur * .5, v:v * .45, f:cut * 2.2, q:.5, type:'bandpass', to:L.near, buf:'p'}); // Book Four: the sand under the chord
+    if (kind === 'tide') noise({t, a:dur * .55, d:dur * .45, v:v * .55, f:cut * .7, q:.4, type:'lowpass', to:L.near, buf:'p'}); // Book Five: the canal under the chord
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * (kind === 'choir' ? 1.6 : 1), t + dur * .4); g.gain.linearRampToValueAtTime(0, end);
     let heads;
     if (kind === 'choir') { heads = [F('bandpass', 700, 4, g), F('bandpass', 1150, 5, g), F('lowpass', cut * .8, .5, g)]; }
     else { const fl = F('lowpass', cut * .5, .5, g); fl.frequency.setValueAtTime(cut * .5, t); fl.frequency.linearRampToValueAtTime(cut, t + dur * .45); fl.frequency.linearRampToValueAtTime(cut * .55, end); heads = [fl]; }
     ns.push(...heads);
-    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = (kind === 'thin' || kind === 'sand') && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' || kind === 'sand' ? 7 : 4, kind === 'thin' || kind === 'sand' ? 13 : 8);
+    degs.forEach((d, i) => [-1, 1].forEach(s => { const o = ac.createOscillator(); o.type = (kind === 'thin' || kind === 'sand' || kind === 'tide') && s > 0 ? 'triangle' : 'sawtooth'; o.frequency.value = f(d); o.detune.value = s * rnd(kind === 'thin' || kind === 'sand' ? 7 : 4, kind === 'thin' || kind === 'sand' ? 13 : 8);
       let h = o; if (ac.createStereoPanner) { h = ac.createStereoPanner(); h.pan.value = s * (.25 + .15 * i); o.connect(h); } heads.forEach(x => h.connect(x));
       if (kind === 'choir') { const l = ac.createOscillator(), lg = gn(7); l.frequency.value = rnd(4.2, 5.2); l.connect(lg); lg.connect(o.detune); l.start(t); l.stop(end + .05); ns.push(l, lg); }
       o.start(t); o.stop(end + .05); n++; L.keep.add(o);
@@ -501,6 +509,14 @@ const AUDIO = (() => {
     b4_wall:'storm', b4_wall_fire:'desert_night', b4wall:'storm', b4_raraku:'desert', b4_raraku_night:'desert_night', b4raraku:'desert', b4raraku_night:'desert_night', b4_seep:'oasis',
     b4_picket:'desert_night', b4_panarak:'siege', b4_panarak_night:'siege_night', b4picket:'desert_night', b4_trenches:'siege_night',
     b4_coral:'coral', b4_coral_dawn:'sea', b4coral:'coral', b4_flood:'sea', b4_finale:'sea_night',
+    // Book Five (80): the seven reading places and the decors the chapters will use; anything else b5_ falls to the river country
+    b5_barracks:'city_night', b5_letheras:'city', b5_letheras_night:'city_night', b5_canal:'city', b5_canal_night:'city_night', b5_drownings:'city', b5_market:'city', b5letheras:'city', b5letheras_night:'city_night',
+    b5_trate_harbour:'sea', b5_trate:'sea', b5_trate_night:'sea_night', b5_wreck:'sea', b5_harbour:'sea', b5trate:'sea',
+    b5_landing:'river_night', b5_landing_day:'river', b5_barges:'river', b5_river:'river', b5landing:'river', b5_fire:'river_night',
+    b5_highfort:'hills', b5_rampart:'siege', b5_rampart_night:'siege_night', b5_gully:'hills', b5highfort:'hills',
+    b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
+    b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
+    b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
@@ -509,6 +525,7 @@ const AUDIO = (() => {
     if (/^b2|^dg|odhan|hissar|aren/.test(n)) return dark ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert';
     if (/^b3|^moi/.test(n)) return dark || /night/.test(n) ? 'night' : /dusk/.test(n) ? 'dusk' : 'plain';
     if (/^b4|^hoc/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Four: the Holy Desert
+    if (/^b5|^mt/.test(n)) return dark || /night/.test(n) ? 'river_night' : /dusk/.test(n) ? 'dusk' : 'river'; // Book Five: Lether's river country
     return null;
   }
   const NIGHT = {plain:'night', dusk:'night', hills:'night', city:'city_night', camp:'camp_night', desert:'desert_night', desert_dusk:'desert_night', column:'column_night', river:'river_night', sea:'sea_night', siege:'siege_night', forest:'forest_night', snow:'snow_night', burnt:'burnt_night', herds:'night'};
@@ -525,8 +542,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};

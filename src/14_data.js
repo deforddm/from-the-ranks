@@ -121,7 +121,7 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
 const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210]; // levels 1..15 (Books One and Two stop at 8; Book Three runs 8..15)
-const lvCap = () => (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70)
+const lvCap = () => (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -181,10 +181,13 @@ const BOOKS = {
   /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 70_book4.js */
   hoc:{id:'hoc', n:4, word:'Four', title:'House of Chains', name:'Unblooded', h1:['', 'Unblooded'], squad:'Third Squad', unit:'the squad', tag:'The Adjunct\'s army has never fought. Five who walked the Chain of Dogs are put in its ranks, and it marches north for Raraku.', titleArt:'title/hoc', titleScene:'hoc', patch:'insignia/hoc',
     blurb:'Seven Cities, the year after the Chain, beside House of Chains.'},
+  /* v8.0: Book Five. A new Letherii squad of the Whitefinder Battalion, from Letheras north to High Fort and back. Its blurb, title art and 'coming' are filled in by 80_book5.js */
+  mt:{id:'mt', n:5, word:'Five', title:'Midnight Tides', name:'Indebted', h1:['', 'Indebted'], squad:'Sixth Company', unit:'the squad', tag:'Lether counts everything. The Edur come south, and five soldiers who owe more than they will ever earn are sent north to meet them.', titleArt:'title/mt', titleScene:'mt', patch:'insignia/mt',
+    blurb:'Lether, beside Midnight Tides.'},
 };
 /* the books the title offers: a book whose chapters are not written yet (B.coming) stays off the shelf, the picker and Deeds (70) */
 const shelfBooks = () => Object.values(BOOKS).filter(B => !B.coming);
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}};
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){

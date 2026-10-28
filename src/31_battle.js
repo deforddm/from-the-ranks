@@ -73,7 +73,7 @@ function mkParty(id, x, y){
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
-  if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; // the gods' boons on a fight fought again (31c)
+  if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
@@ -210,7 +210,7 @@ function lose(){
   const others = kept.filter(k => bn && k !== bn.key).map(k => BOON_BY_KEY[k]).filter(Boolean), lapsed = was.filter(k => !kept.includes(k)).map(k => BOON_BY_KEY[k]).filter(Boolean);
   const boonNote = bn ? `<div class="note boonnote"><b>The boon: ${esc(bn.name)}.</b> ${esc(bn.txt)} It lasts the fight, and its second ground.${others.length ? ` It joins ${others.map(b => `${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}'s (${esc(b.name.toLowerCase())})`).join(' and ')}.` : ''}${lapsed.length ? ` On Story two gods hold at once: ${lapsed.map(b => esc(b.name.toLowerCase())).join(' and ')} lapse${lapsed.length > 1 ? '' : 's'}.` : ''}</div>` : '';
   if (P) sh.innerHTML = `${art('patrons/' + (P.sig || who), 'godsig')}<div class="sp godsp">${esc(P.title)}</div><div class="txt god">${fmt(P.txt(who))}</div>
-    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' ? 'The Third\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
+    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' ? 'The Third\'s' : S.book === 'mt' ? 'The squad\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
     <div class="choices"><button class="choice" id="bRetry">Rise, and fight it again</button></div>`;
   else sh.innerHTML = `<div class="sp godsp">No one answers</div><div class="txt god">${fmt(`Every god who had a reason to listen has already spent it this chapter. Hood's gate opens the rest of the way, and it is very quiet on the other side.\n\nAnd then it is morning, and the Fourth is where this chapter began, with all of it still to do, and nobody quite able to say why they are so tired.`)}</div>
     <div class="choices"><button class="choice" id="bRetry">Begin the chapter again</button></div>`;
@@ -346,14 +346,14 @@ function provokes(u, from, to){ if (u.side === 'p' && boon('rope')) return []; /
 /* the gods' boons on a blow (31c): +2 for the Lady, +2 for the Tiger on an enemy a squadmate already stands beside; −2 under Shadow or the Queen's dream, −1 cold, −3 on a shot through the herd */
 function boonHit(a, t, o){
   const mine = a.side === 'p', ranged = cheb(o.from || a, t) > 1 && !a.reachMelee;
-  if (mine) return a.ally ? 0 : (boon('oponn') ? 2 : 0) + (boon('tiger') && B.units.some(b => b !== a && b.side === 'p' && b.hp > 0 && cheb(b, t) === 1) ? 2 : 0);
+  if (mine) return a.ally ? 0 : (boon('oponn') ? 2 : 0) + (boon('errant') ? 2 : 0) + (boon('tiger') && B.units.some(b => b !== a && b.side === 'p' && b.hp > 0 && cheb(b, t) === 1) ? 2 : 0);
   if (t.side !== 'p') return 0;
-  return (boon('shadow') ? -2 : 0) + (boon('dream') ? -2 : 0) + (boon('cold') && a.coldTurn === B.turn ? -1 : 0) + (boon('herd') && ranged ? -3 : 0);
+  return (boon('shadow') ? -2 : 0) + (boon('dream') ? -2 : 0) + (boon('errant') ? -1 : 0) + (boon('cold') && a.coldTurn === B.turn ? -1 : 0) + (boon('herd') && ranged ? -3 : 0);
 }
 /* the numbers behind a blow: the attacker's bonus, the target's armour, the lowest natural roll that crits, and whether it flanks */
 function atkCalc(a, t, o={}){
   const mine = a.side === 'p';
-  const line = lineCovers(t), fl = !o.aoo && !line && !(t.side === 'p' && boon('shadow')) && flanked(a, t, o.from); // The Line: no flanking anyone in it; nor under Shadow's boon
+  const line = lineCovers(t), fl = !o.aoo && !line && !(t.side === 'p' && (boon('shadow') || boon('tarthenal'))) && flanked(a, t, o.from); // The Line: no flanking anyone in it; nor under Shadow's boon, or the Tarthenal dead's (v8.0)
   const wallBonus = t.side === 'p' && friendsOf(t).some(f => !f.ally && has(f.id,'shieldwall') && cheb(f,t) === 1) ? 2 + lvAt(6) : 0;
   const discipline = t.side === 'p' && !t.ally && SQUAD().some(id => has(id,'discipline')) ? 1 + lvAt(8) : 0;
   const aooBonus = o.aoo && !a.ally && a.side === 'p' && (has(a.id,'holdline') || has(a.id,'sappers_eye')) ? 2 + lvAt(6) : 0;
@@ -391,7 +391,7 @@ function attack(a, t, o={}){
   let tagTxt = tags ? ` <span class="stat">[${tags}]</span>` : '';
   const land = o.land != null ? o.land : ranged ? pace(200) : pace(140); // the blow lands when the bolt arrives or the lunge connects
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
-  const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) + (boon('tears') && a.tearsTurn !== B.turn ? (a.tearsTurn = B.turn, 2) : 0) : 0); // the Boar and the Tiger; the Khundryl dead on the first hit of a turn (31c)
+  const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) + (boon('tarthenal') ? 2 : 0) + (boon('tears') && a.tearsTurn !== B.turn ? (a.tearsTurn = B.turn, 2) : 0) : 0); // the Boar and the Tiger; the Khundryl dead on the first hit of a turn (31c)
   if (t.dr && !crit) { const cut = Math.min(t.dr, dmg - 1); if (cut > 0) { dmg -= cut; tagTxt = tagTxt ? tagTxt.replace(/\]<\/span>$/, `, hide −${cut}]</span>`) : ` <span class="stat">[hide −${cut}]</span>`; } } // a hide that turns ordinary iron (v6.10: the K'ell Hunter); a critical goes through
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
   later(() => { if (t.hp <= 0) return; if (crit) sparks(t.x, t.y, 16, '#ffcf7a'); else sparks(t.x, t.y - .1, 5, '#f08a7c', .6);

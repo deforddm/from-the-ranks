@@ -1,6 +1,7 @@
 /* ============ the reading: full-screen card sequence ============ */
 let cardAnim = null;
-/* a later book's reading (47c): CARDBOOK = {txt(id), cap(t, self, second)}, its reader's words for the card and the captions. Book One's reading is Tuft's, as written below */
+/* a later book's reading (47c): CARDBOOK = {txt(id), cap(t, self, second)}, its reader's words for the card and the captions; optional (v8.0, 80c)
+   square() true to lay square tiles, done() the button that ends it, look() the vision button. Book One's reading is Tuft's, as written below */
 let CARDBOOK = null;
 /* v6.11.0: the cards are dealt on a table (21b: one per place), by the reader's own deck and in the reader's own spread; the House's light
    falls on the table after the turn; the way in and out is a fade, and the reading has the Deck's music. The risen card tilts under a finger.
@@ -23,10 +24,11 @@ function cardSequence(done, opt = {}){
   el.style.setProperty('--tbl', rgba(tbl.dark, .94));
   el.innerHTML = `<canvas id="ccv"></canvas><div class="cf" id="cfText"><div class="cn">${esc(c.name)}</div><div class="cfx">${esc(c.fx || '')}</div><div class="ct">${smartq(esc(ctxt || '').replace(/&quot;/g,'"'))}</div>
     ${pc ? `<div class="cfold"><span class="fold">✦ Tattersail's Fold: or keep the first card,</span> <b>${esc(pc.name)}</b> <span>${esc(pc.fx || '')}</span></div>` : ''}
-    <div class="row cfrow"><button class="btn primary" id="cfGo">${second ? `Keep ${esc(c.name)}` : self ? 'Put the card away' : bones ? 'Gather the bones' : S.chapter ? "Put the cards away" : "Descend"}</button>${vis ? `<button class="btn vis" id="cfVis">✦ Look into the card</button>` : ''}${second ? `<button class="btn" id="cfKeep">Keep ${esc(pc.name)}</button>` : ''}${canFold ? `<button class="btn trk" id="cfFold">✦ Draw again · Tattersail's Fold</button>` : ''}</div></div>`;
+    <div class="row cfrow"><button class="btn primary" id="cfGo">${second ? `Keep ${esc(c.name)}` : self ? 'Put the card away' : bones ? 'Gather the bones' : BK && BK.done ? BK.done() : S.chapter ? "Put the cards away" : "Descend"}</button>${vis ? `<button class="btn vis" id="cfVis">✦ ${BK && BK.look ? BK.look() : 'Look into the card'}</button>` : ''}${second ? `<button class="btn" id="cfKeep">Keep ${esc(pc.name)}</button>` : ''}${canFold ? `<button class="btn trk" id="cfFold">✦ Draw again · Tattersail's Fold</button>` : ''}</div></div>`;
   const cv = $('#ccv'), ctx = cv.getContext('2d'); const dpr = Math.min(2, window.devicePixelRatio || 1);
   let img = null, lay = null;
-  const layout = () => { const W = el.clientWidth, H = el.clientHeight, CW = Math.min(160, W*.3, H*.2), CH = CW*1.5; return {W, H, CW, CH, cx:W/2, deckX:W/2 - CW/2, deckY:Math.min(H*.82, H - CH - 10)}; };
+  const sq = !!(BK && BK.square && BK.square()); // v8.0: Book Five lays square tiles of the Holds, not cards (80c)
+  const layout = () => { const W = el.clientWidth, H = el.clientHeight, CW = Math.min(160, W*.3, H*.2) * (sq ? 1.12 : 1), CH = sq ? CW : CW*1.5; return {W, H, CW, CH, cx:W/2, deckX:W/2 - CW/2, deckY:Math.min(H*.82, H - CH - 10)}; };
   const fit = () => { cv.width = el.clientWidth * dpr; cv.height = el.clientHeight * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); lay = layout(); try { img = makeReadingTable(tbl, lay.W, lay.H, dpr, reader, lay); } catch(e) { console.warn('table', e); img = null; } }; fit();
   const t0 = performance.now(); let finished = false, cues = {};
   const cue = (k, f) => { if (!cues[k]) { cues[k] = 1; f(); } };

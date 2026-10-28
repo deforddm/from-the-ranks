@@ -105,7 +105,27 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     S.card = v % 3 === 0 ? null : (typeof B4POOL !== 'undefined' ? B4POOL[1 + (v % 7)][v % 5] : null);
     return S;
   }
-  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : isMOI(id) ? mkMOI(v, chOfMOI(id)) : isHOC(id) ? mkHOC(v, chOfHOC(id)) : mk(ch, v);
+  // Book Five (Midnight Tides): ids carry b5_ and are checked under Book Five states (S.book 'mt', the new Letherii squad, a recruit or not,
+  // random debts: some paid down, some grown past the collectors)
+  const isMT = id => /^b5_/.test(id);
+  const chOfMT = id => { const m = /^b5_c(\d)_/.exec(id); return m ? +m[1] : 1 + (seed % 7); };
+  function mkMT(v, ch = 1) {
+    S = newStateMT('Hask'); S.chapter = ch; S.scene = 'talk';
+    S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
+    if (v % 5 === 3) S.squad = S.squad.filter(x => x !== 'perrit' && x !== 'ammet'); // text must hold up if a squadmate is missing
+    if (v % 7 === 4) S.squad = S.squad.filter(x => x !== 'tobet' && x !== 'thegg');
+    if (v % 3 === 0 && TPL.ruuk) S.squad.push('ruuk'); else if (v % 4 === 1 && TPL.brune) S.squad.push('brune'); else if (v % 4 === 2 && ch >= 5 && TPL.pessa) S.squad.push('pessa'); // a recruit or not
+    migrate(S);
+    S.chapters = {}; Object.keys(S.debt).forEach(k => { S.debt[k] = v % 6 === 0 ? 0 : Math.round(S.debt[k] * (0.3 + rng() * 1.5)); });
+    S.inv = { sharper: 0, burner: 0, cusser: 0, salve: 2, smoker: 0 }; S.silver = Math.floor(rng() * 60);
+    const setF = f => { if (objFlags.includes(f)) S.f[f] = f === 'lastFallen' ? [] : {}; else S.f[f] = flagVals[f] ? flagVals[f][Math.floor(rng() * flagVals[f].length)] : (rng() < .15 ? 2 : 1); };
+    if (v === 1) flags.forEach(f => objFlags.includes(f) ? setF(f) : S.f[f] = (flagVals[f] && flagVals[f][0]) || 1);
+    else if (v > 1) flags.forEach(f => { if (rng() < 0.35) setF(f); });
+    Object.keys(S.loy).forEach(k => { S.loy[k] = (v % 7) - 3; });
+    S.card = v % 3 === 0 ? null : (typeof B5POOL !== 'undefined' ? B5POOL[1 + (v % 7)][v % 5] : null);
+    return S;
+  }
+  const mkFor = (id, ch, v) => isDG(id) ? mkDG(v) : isMOI(id) ? mkMOI(v, chOfMOI(id)) : isHOC(id) ? mkHOC(v, chOfHOC(id)) : isMT(id) ? mkMT(v, chOfMT(id)) : mk(ch, v);
   function mk(ch, v) {
     S = newState('Hask'); S.chapter = ch; S.scene = 'talk';
     S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0;
@@ -213,7 +233,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     b.foes.forEach(f => chkFoe(f, 'start'));
     (b.waves || []).forEach(w => w.foes.forEach(f => chkFoe(f, 'wave' + w.round)));
     (b.allies || []).forEach(f => { if (!FOES[f[0]]) err(`battle ${bid}: ally ${f[0]} missing`); });
-    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style) && !/^b3/.test(b.style)) warn(`battle ${bid}: style ${b.style}`);
+    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style) && !/^b[35]/.test(b.style)) warn(`battle ${bid}: style ${b.style}`); // v8.0: Book Five's chapters bring their own b5 styles
   }
   // items, cards
   const itemIds = Object.keys(ITEMS);
@@ -340,6 +360,46 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     (GLOSSX.hoc || []).forEach(g => { try { if (g[3]) g[3](); } catch (e) { err(`hoc glossary ${g[1]} throws ${e.message}`); } });
     try { const h = nerveHTML('The road'); if (bad.test(h.replace(/<[^>]+>/g, ' '))) err('hoc nerveHTML leaks'); } catch (e) { err('hoc nerveHTML throws ' + e.message); }
     try { const d = b4ImpDesc(''); if (bad.test(d)) err('hoc b4ImpDesc leaks'); } catch (e) { err('hoc b4ImpDesc throws ' + e.message); }
+  }
+  // Book Five: the same check for the Letherii squad and its recruits
+  for (const id of ids.filter(isMT)) {
+    for (const x of ['tobet', 'thegg', 'perrit', 'ammet', 'ruuk', 'brune', 'pessa']) {
+      if (!TPL[x]) continue; const nm = TPL[x].name, re = new RegExp('\\b' + nm + '\\b');
+      for (let v = 0; v < 8; v++) {
+        mkMT(v, chOfMT(id)); S.squad = S.squad.filter(q => q !== x);
+        let n; try { n = DLG[id](); } catch (e) { continue; }
+        const vis = (n.ch || []).filter(c => { try { return !c.req || c.req(); } catch (e) { return false; } });
+        const text = [n.txt || '', ...vis.map(c => c.t)].join(' '); const mm = re.exec(text);
+        if (mm) { const k = id + ' · ' + nm; if (!absent[k]) absent[k] = '…' + text.slice(Math.max(0, mm.index - 90), mm.index + 60).replace(/\s+/g, ' ') + '…'; break; }
+      }
+    }
+  }
+  // Book Five's chapters: the end screen and the journal, under Book Five states
+  for (const [n, CH] of Object.entries((BOOKSNAP.mt && BOOKSNAP.mt.ch) || {})) {
+    for (let v = 0; v < VAR; v++) { mkMT(v, +n);
+      const C = CHAPTERS[n] && CHAPTERS[n].book === 'mt' ? CHAPTERS[n] : CH;
+      for (const k of ['extras', 'journal', 'endCap']) { if (!C[k]) { if (k !== 'endCap' && v === 0) warn(`mt chapter ${n}: no ${k}`); continue; }
+        let r; try { r = C[k](); } catch (e) { err(`mt chapter ${n}: ${k}() throws ${e.message} (variant ${v})`); continue; }
+        const txt = Array.isArray(r) ? r.filter(Boolean).join(' | ') : String(r); if (bad.test(txt)) { err(`mt chapter ${n}: ${k}() leaks (variant ${v}): ${txt.slice(0, 160)}`); } }
+      if (C.end) Object.entries(C.end).forEach(([k, e]) => { if (!Array.isArray(e) || e.length < 2) err(`mt chapter ${n}: end.${k} is not [title, text]`); });
+      if (C.endScene && !SCENES[C.endScene] && v === 0) err(`mt chapter ${n}: endScene ${C.endScene} unknown`);
+      if (C.intro && C.intro.scene && !SCENES[C.intro.scene] && v === 0) err(`mt chapter ${n}: intro.scene ${C.intro.scene} unknown`);
+    }
+  }
+  // Book Five's engine text: every template field, the tile lines and readings, the glossary, the debt widget and the journal line
+  const B5_NEVER = /\b(Tiam|Draconus|Rake|K'rul|Errastas|Saddick|Knight of Shadows|Kettle|Bonehunters|Green Jackets|Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|Mael|Seregahl|Crippled God)\b/;
+  for (let v = 0; v < VAR; v++) { mkMT(v, 1 + (v % 7));
+    for (const id of ['sgt', 'tobet', 'thegg', 'perrit', 'ammet', 'ruuk', 'brune', 'pessa']) { const t = TPL[id]; if (!t) continue;
+      for (const k of ['epithet', 'service', 'bio', 'bio2', 'quest']) { let x; try { x = t[k]; } catch (e) { err(`mt TPL.${id}.${k} throws ${e.message}`); continue; } if (typeof x === 'string' && (bad.test(fmt(x)) || B5_NEVER.test(x))) err(`mt TPL.${id}.${k} leaks or names a never-use name (variant ${v}): ${x.slice(0, 120)}`); }
+      if (id !== 'sgt' && (!Array.isArray(t.banter) || t.banter.length < 3)) err(`mt TPL.${id}: fewer than three banter lines`);
+      if (id !== 'sgt' && t.rel) { const others = ['tobet', 'thegg', 'perrit', 'ammet', 'ruuk', 'brune', 'pessa'].filter(o => o !== id && !t.rel[o]); if (others.length) err(`mt TPL.${id}: no rel to ${others.join(', ')}`); } }
+    if (typeof B5SAY !== 'undefined') Object.keys(B5SAY).forEach(c => { try { const x = b5TileSay(c); if (bad.test(fmt(x)) || B5_NEVER.test(x)) err(`mt tile ${c} leaks or names a being (variant ${v})`); if (!CARDS[c]) err(`mt tile ${c} is not in CARDS`); } catch (e) { err(`mt tile ${c} throws ${e.message}`); } });
+    if (typeof B5POOL !== 'undefined') Object.values(B5POOL).flat().forEach(c => { if (!CARDS[c] || !B5SAY[c]) err(`mt pool tile ${c} has no tile or no reading`); });
+    if (typeof B5READ !== 'undefined') Object.keys(B5READ).forEach(n => { try { const o = b5TileOffer(+n), c = b5TileCard(+n); [o.txt, c.txt, c.after].forEach(x => { if (bad.test(fmt(x))) err(`mt tiles ${n} leaks (variant ${v}): ${String(x).slice(0, 120)}`); }); if (o.scene && !SCENES[o.scene]) err(`mt tiles ${n}: unknown scene ${o.scene}`); } catch (e) { err(`mt tiles ${n} throws ${e.message}`); } });
+    (GLOSSX.mt || []).forEach(g => { try { if (g[3]) g[3](); if (B5_NEVER.test(g[2])) err(`mt glossary ${g[1]} names a never-use name`); } catch (e) { err(`mt glossary ${g[1]} throws ${e.message}`); } });
+    try { const h = debtHTML('The road'); if (bad.test(h.replace(/<[^>]+>/g, ' '))) err('mt debtHTML leaks'); } catch (e) { err('mt debtHTML throws ' + e.message); }
+    try { const j = journalNotes().join(' '); if (bad.test(j)) err('mt journal leaks: ' + j.slice(0, 160)); } catch (e) { err('mt journalNotes throws ' + e.message); }
+    try { Object.keys(B5_ABX).forEach(k => { const d = AB[k].desc(); if (bad.test(d)) err(`mt ability ${k} desc leaks: ${d}`); }); } catch (e) { err('mt ability desc throws ' + e.message); }
   }
   newState('Hask'); // back to Book One for whatever follows
   const orphans = ids.filter(id => !refd.has(id));

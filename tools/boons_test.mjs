@@ -17,7 +17,10 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   S.book = 'moi'; out.sgtMoi = sigOf('sgt') + ':' + !!ART[sigOf('sgt')]; S.book = 'gotm'; out.sgtGotm = sigOf('sgt') + ':' + !!ART[sigOf('sgt')];
   S.book = 'hoc'; out.treachHoc = patronBoon('sgt') && patronBoon('sgt').key; out.sgtHoc = sigOf('sgt'); S.book = 'gotm'; // v7.0: Treach answers in Book Four too
   out.newGods = {hessa:patronBoon('hessa') && patronBoon('hessa').key, orvas:patronBoon('orvas') && patronBoon('orvas').key, hessaSig:!!ART['patrons/hessa'], orvasSig:!!ART['patrons/orvas']};
-  out.distinct = new Set(Object.keys(PATRONS).map(id => id === 'sgt' ? 'patrons/sgt' : sigOf(id)).concat(['patrons/treach'])).size;
+  out.distinct = new Set(Object.keys(PATRONS).map(id => id === 'sgt' ? 'patrons/sgt' : sigOf(id)).concat(['patrons/treach', 'patrons/errant'])).size;
+  // v8.0 Book Five: the Errant for the sergeant; the Empty Hold, the Tarthenal dead and the Shore for Perrit, Thegg and Brune
+  S.book = 'mt'; out.errant = {key:patronBoon('sgt') && patronBoon('sgt').key, sig:sigOf('sgt'), art:!!ART[sigOf('sgt')]}; S.book = 'gotm';
+  out.b5Gods = ['perrit', 'thegg', 'brune'].map(id => `${id}:${patronBoon(id) && patronBoon(id).key}:${!!ART[sigOf(id)]}`).join(',');
   // a two-ground fight; Brisk most loyal (Hood), then Ohl (Soliel)
   S = newState('Hask'); S.chapter = 3; S.lvl = 4; S.squad = ['sgt','brisk','kettle','tuft','ohl']; migrate(S); S.loy.brisk = 2; S.loy.ohl = 1; save();
   BATTLES.__b = Object.assign({}, BATTLES.knives, {after:'__after', stage2:{title:'The courtyard', text:'Further in.', map:BATTLES.knives.map, foes:[['bruiser',3,1],['guildveteran',4,1]], xp:50}});
@@ -81,6 +84,13 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   { S.boons.gods = ['worm']; const ea = e.atk; e.atk = 60; e.hp = e.maxhp = 60; g.hp = g.maxhp = 999; e.x = 4; e.y = 3; for (let i = 0; i < 40 && !attack(e, g, {dmg:[1,1,0]}).hit; i++); await wait(700); out.worm = 60 - e.hp;
     e.hp = 60; e.x = 3; e.y = 6; e.rng = 5; for (let i = 0; i < 40 && !attack(e, g, {dmg:[1,1,0]}).hit; i++); await wait(700); out.wormShot = 60 - e.hp; e.atk = ea; e.x = 4; e.y = 3; e.rng = 1; }
   S.boons.gods = ['oponn']; g.pullRound = -1; B.round++; B.log = []; attack(g, e, {dmg:[1,1,0]}); const pulled1 = B.log.some(l => /The Lady pulls/.test(l)); B.log = []; attack(g, e, {dmg:[1,1,0]}); const pulled2 = B.log.some(l => /The Lady pulls/.test(l)); out.pull = {first:pulled1, second:pulled2, round:g.pullRound === B.round};
+  // v8.0 Book Five's four: the Errant +2 / enemies −1; the Empty Hold +1 armour and heals 2; the Tarthenal dead +2 damage and no flank; the Shore +2 move and 1d4
+  { S.boons.gods = []; const n0 = bon(g, e), en0 = bon(e, g); S.boons.gods = ['errant']; out.errantHit = {mine:bon(g, e) - n0, theirs:bon(e, g) - en0};
+    S.boons.gods = []; const p0 = mkParty('sgt', 0, 0); S.boons.gods = ['hold']; const p1 = mkParty('sgt', 0, 0); S.boons.gods = ['shore']; const p2 = mkParty('sgt', 0, 0); out.holdShore = {ac:p1.ac - p0.ac, mv:p2.mv - p0.mv};
+    S.boons.gods = ['hold']; g.hp = g.maxhp - 10; g.bleed = 0; g.prone = false; g.slowTurn = false; squadTurnStart(g); out.holdHeal = g.maxhp - g.hp;
+    S.boons.gods = []; e2.x = 2; e2.y = 3; const fl0 = atkCalc(e, g).fl; S.boons.gods = ['tarthenal']; out.tarthenalFlank = {before:fl0, after:atkCalc(e, g).fl}; e2.x = 6; e2.y = 6;
+    out.dmgTarthenal = await dmgWith(['tarthenal']);
+    S.boons.gods = ['shore']; e.x = 4; e.y = 3; e.hp = 60; B.turn++; boonFoeTurnStart(e); out.shore = 60 - e.hp; e.x = 7; e.y = 7; e.hp = 60; B.turn++; boonFoeTurnStart(e); out.shoreFar = 60 - e.hp; e.x = 4; e.y = 3; }
   // the grandmother heals 2
   S.boons.gods = ['ground']; g.hp = g.maxhp - 10; g.bleed = 0; g.prone = false; g.slowTurn = false; squadTurnStart(g); out.ground = g.maxhp - g.hp;
   // Story keeps the newest two, and a god answering again moves to the front
@@ -96,7 +106,13 @@ ok(!r.err, 'no error in the page script' + (r.err ? ': ' + r.err : ''));
 ok(r.patrons >= 15 && r.unboonod && r.unboonod.length === 0, `every patron has a boon (${r.patrons} patrons${r.unboonod && r.unboonod.length ? ', missing ' + r.unboonod.join(', ') : ''})`);
 ok(r.treach === 'tiger' && r.fener === 'boar', `the sergeant's god follows the book: Treach in Book Three (${r.treach}), Fener otherwise (${r.fener})`);
 ok(r.noSigil && r.noSigil.length === 0 && r.sgtMoi === 'patrons/treach:true' && r.sgtGotm === 'patrons/sgt:true', `every god has a sigil; Treach's is the tiger, Fener's the boar (${(r.noSigil || []).join(',') || 'none missing'}; ${r.sgtMoi}; ${r.sgtGotm})`);
-ok(r.distinct === 14, `fourteen distinct sigils across the four books (${r.distinct})`);
+ok(r.distinct === 18, `eighteen distinct sigils across the five books (${r.distinct})`);
+ok(r.errant && r.errant.key === 'errant' && r.errant.sig === 'patrons/errant' && r.errant.art, `Book Five: the sergeant's god is the Errant, with a boon and a sigil (${JSON.stringify(r.errant)})`);
+ok(r.b5Gods === 'perrit:hold:true,thegg:tarthenal:true,brune:shore:true', `Book Five's gods: the Empty Hold, the Tarthenal dead, the Shore, each a boon and a sigil (${r.b5Gods})`);
+ok(r.errantHit && r.errantHit.mine === 2 && r.errantHit.theirs === -1, `the Errant: +2 to hit, enemies −1 (${JSON.stringify(r.errantHit)})`);
+ok(r.holdShore && r.holdShore.ac === 1 && r.holdShore.mv === 2 && r.holdHeal === 8, `the Empty Hold +1 armour and heals 2; the Shore +2 move (${JSON.stringify(r.holdShore)}, ${r.holdHeal})`);
+ok(r.tarthenalFlank && r.tarthenalFlank.before === true && r.tarthenalFlank.after === false && r.dmgTarthenal === 3, `the Tarthenal dead: no flank on the squad, +2 damage (${JSON.stringify(r.tarthenalFlank)}, ${r.dmgTarthenal})`);
+ok(r.shore >= 1 && r.shore <= 4 && r.shoreFar === 0, `the Shore: 1d4 on an enemy beside the squad, nothing at a distance (${r.shore}, ${r.shoreFar})`);
 ok(r.treachHoc === 'tiger' && r.sgtHoc === 'patrons/treach', `Book Four: the sergeant's god is Treach (${r.treachHoc}, ${r.sgtHoc})`);
 ok(r.newGods && r.newGods.hessa === 'worm' && r.newGods.orvas === 'tears' && r.newGods.hessaSig && r.newGods.orvasSig, `Book Four's new gods: D'rek and the Khundryl dead, each a boon and a sigil (${JSON.stringify(r.newGods)})`);
 ok(r.tearsMv === 2 && r.tears && r.tears.first === 3 && r.tears.second === 1, `the Khundryl dead: +2 move, +2 on the first hit of a turn only (${r.tearsMv}; ${JSON.stringify(r.tears)})`);

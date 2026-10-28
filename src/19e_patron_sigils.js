@@ -89,4 +89,41 @@ ${body}</svg>`;
 <path d="M92 132 Q90 148 98 160" stroke="#e8dcc2" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
 <g stroke="#e8dcc2" stroke-opacity="0.7" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M60 92 L56 108"></path><path d="M72 96 L70 114"></path><path d="M140 92 L144 108"></path></g>
 <path d="M28 168 Q100 176 172 168" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
+  /* v8.0, Book Five. The Errant, Lether's god of chance (the sergeant): a dock with a hole bored through it, standing on its edge on the
+     lip of a canal wall, about to fall one way or the other; the water dark below, one red glint on the coin's rim */
+  ART['patrons/errant'] = frame('Sigil of the Errant', '#10131a', `
+<circle class="pt-pulse" cx="100" cy="92" r="56" fill="#c9a15a" opacity="0.08"></circle>
+<path d="M30 132 L170 132 L170 140 L30 140 Z" fill="#0a0706"></path>
+<path d="M30 140 Q100 150 170 140 L170 176 Q100 186 30 176 Z" fill="#06080c"></path>
+<g stroke="#e8dcc2" stroke-opacity="0.35" stroke-width="1.6" fill="none"><path d="M44 152 Q60 148 76 152"></path><path d="M96 160 Q114 156 132 160"></path><path d="M60 168 Q80 164 100 168"></path></g>
+<g transform="rotate(-9 100 96)"><ellipse cx="100" cy="94" rx="15" ry="38" fill="#0a0706"></ellipse><ellipse cx="100" cy="94" rx="11" ry="33" fill="none" stroke="#e8dcc2" stroke-opacity="0.8" stroke-width="2"></ellipse>
+<ellipse cx="100" cy="94" rx="4" ry="9" fill="#10131a"></ellipse><g class="pt-eyes"><circle cx="111" cy="70" r="2.4" fill="#c94a2a"></circle></g></g>
+<path d="M98 132 L102 132 L100 128 Z" fill="#e8dcc2" opacity="0.7"></path>`);
+  /* the Empty Hold (Perrit): a tile of black stone, and out of its edge an open hand, held out; an empty high seat cut into the tile behind it */
+  ART['patrons/perrit'] = frame('Sigil of the Empty Hold', '#14121a', `
+<circle class="pt-pulse" cx="100" cy="100" r="58" fill="#b8a8e0" opacity="0.07"></circle>
+<rect x="52" y="46" width="96" height="110" rx="6" fill="#0a0706" transform="rotate(4 100 100)"></rect>
+<rect x="60" y="54" width="80" height="94" rx="4" fill="none" stroke="#c9a15a" stroke-opacity="0.45" stroke-width="1.4" transform="rotate(4 100 100)"></rect>
+<g fill="none" stroke="#e8dcc2" stroke-opacity="0.55" stroke-width="2.2"><path d="M84 66 L84 104 L116 104 L116 66"></path><path d="M80 104 L120 104 L120 116 L80 116 Z"></path></g>
+<path d="M150 128 Q128 124 112 130 Q102 133 96 130 Q90 127 94 122 Q100 118 110 120 L88 116 Q82 114 84 110 Q86 106 92 108 L114 112 L90 104 Q84 102 86 98 Q89 94 95 97 L116 106 L98 94 Q93 90 97 87 Q101 85 106 89 L128 106 Q140 112 150 112 Z" fill="#e8dcc2" opacity="0.92"></path>
+<g class="pt-eyes"><circle cx="100" cy="84" r="2.6" fill="#c94a2a"></circle></g>`);
+  /* the Tarthenal dead (Thegg): a great shape on a barrow, broad as two men, seen from behind and very old; two handprints the size of
+     shields on the barrow's stone */
+  ART['patrons/thegg'] = frame('Sigil of the Tarthenal dead', '#12100c', `
+<circle class="pt-pulse" cx="100" cy="96" r="60" fill="#c9a15a" opacity="0.06"></circle>
+<path d="M22 168 Q100 112 178 168 Z" fill="#0a0706"></path>
+<path d="M62 136 L60 90 Q62 62 82 54 Q92 44 100 44 Q108 44 118 54 Q138 62 140 90 L138 136 Z" fill="#0a0706"></path>
+<ellipse cx="100" cy="42" rx="13" ry="12" fill="#0a0706"></ellipse>
+<g fill="#e8dcc2" opacity="0.6"><path d="M66 150 q-4 -10 2 -12 q2 -6 6 -2 q4 -6 7 0 q5 -3 6 3 q4 8 -4 13 Z"></path><path d="M120 150 q-4 -10 2 -12 q2 -6 6 -2 q4 -6 7 0 q5 -3 6 3 q4 8 -4 13 Z"></path></g>
+<g class="pt-eyes"><ellipse cx="94" cy="40" rx="2.4" ry="1.4" fill="#c94a2a"></ellipse><ellipse cx="106" cy="40" rx="2.4" ry="1.4" fill="#c94a2a"></ellipse></g>
+<path d="M28 172 Q100 178 172 172" stroke="#e8dcc2" stroke-opacity="0.4" stroke-width="2" fill="none"></path>`);
+  /* the Shore, the Shake's faith (Brune): the tide line, a wave coming in over the sand, and what it takes back with it: a shell, a net-float, a boot */
+  ART['patrons/brune'] = frame('Sigil of the Shore', '#0c1216', `
+<circle class="pt-pulse" cx="100" cy="100" r="60" fill="#8ab8c8" opacity="0.08"></circle>
+<path d="M18 120 Q60 76 104 92 Q140 104 150 78 Q160 60 182 66 L182 182 L18 182 Z" fill="#0a0706"></path>
+<path d="M150 78 Q156 92 146 100 Q160 96 166 84" stroke="#e8dcc2" stroke-opacity="0.7" stroke-width="2.4" fill="none"></path>
+<g stroke="#e8dcc2" stroke-opacity="0.5" stroke-width="1.8" fill="none"><path d="M30 120 Q66 96 100 106 Q130 114 146 100"></path><path d="M36 138 Q70 120 104 126 Q132 132 160 116"></path></g>
+<g fill="#e8dcc2" opacity="0.75"><path d="M60 150 q8 -10 16 0 q-8 6 -16 0 Z"></path><circle cx="108" cy="152" r="5"></circle><path d="M134 146 l10 0 l2 8 l-14 2 Z"></path></g>
+<g class="pt-eyes"><circle cx="108" cy="152" r="1.8" fill="#c94a2a"></circle></g>
+<path d="M18 168 Q100 176 182 168" stroke="#e8dcc2" stroke-opacity="0.35" stroke-width="2" fill="none"></path>`);
 }

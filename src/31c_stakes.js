@@ -49,7 +49,8 @@ const SOLDIER_LATE = { // David, Tue Oct 27, 2026, 9:20 PM PDT: capped under Bri
   // The bot-tuned table (up to ×1.7, +2, +5) made late Soldier harder than Bridgeburner and still left health lost under 30%: docs/v7.4-notes.md.
   gotm:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
   dg:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
-  moi:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}};
+  moi:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
+  mt:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}}; // v8.0: Book Five is a new cast on Book Two's curve, so Book Two's row (Claude's call; the balance pass may change it with David)
 const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
 const soldierLate = () => { if (!S || (S.diff || 'soldier') !== 'soldier') return null;
   const t = SOLDIER_LATE[S.book || 'gotm'], s = t && t[S.chapter || 0];
@@ -200,6 +201,11 @@ const BOONS = {
   /* v7.0, Book Four (70): Hessa's goddess and Orvas's dead */
   'D\'rek':             {key:'worm',   name:'The Worm of Autumn',    txt:'An enemy that lands a blow on a squadmate in melee takes 3 rot back.'},
   'the Khundryl dead':  {key:'tears',  name:'The dead ride',         txt:'+2 move, and each squadmate\'s first hit in a turn does +2 damage.'},
+  /* v8.0, Book Five (80): the sergeant's god, and Perrit's, Thegg's and Brune's. Every piece of them is an effect another boon already has */
+  'the Errant':         {key:'errant', name:'The coin falls your way', txt:'+2 to hit, and enemies are −1 to hit.'},
+  'the Empty Hold':     {key:'hold',   name:'The open hand',         txt:'+1 armour, and every squadmate heals 2 at the start of their turn.'},
+  'the Tarthenal dead': {key:'tarthenal', name:'The old dead stand behind', txt:'+2 damage on every hit, and nobody in the squad can be flanked.'},
+  'the Shore':          {key:'shore',  name:'The tide comes in',     txt:'+2 move, and an enemy that starts its turn next to a squadmate takes 1d4.'},
 };
 const BOON_BY_KEY = Object.fromEntries(Object.entries(BOONS).map(([god, b]) => [b.key, Object.assign({god}, b)]));
 /* the boons on the fight being fought (or about to be): keys, newest last */
@@ -218,6 +224,7 @@ const boonsClear = () => { if (S && S.boons) S.boons = null; };
 function boonTurnStart(u){
   if (boon('soliel')) { if (u.bleed > 0) { u.bleed = 0; float(u, 'bleeding stops', '#9fe0b8'); } if (u.hp < u.maxhp) { heal(u, 3); blog(`<em>Temple oil.</em> ${u.name} heals 3.`); } }
   if (boon('ground') && u.hp < u.maxhp) { heal(u, 2); blog(`<em>The ground gives back.</em> ${u.name} heals 2.`); }
+  if (boon('hold') && u.hp < u.maxhp) { heal(u, 2); blog(`<em>The open hand.</em> ${u.name} heals 2.`); } // v8.0 the Empty Hold
 }
 /* what an enemy's turn opens with: the Wickan cold and the Wolves, for anyone standing next to the squad */
 function boonFoeTurnStart(u){
@@ -226,6 +233,7 @@ function boonFoeTurnStart(u){
   const adj = B.units.some(p => p.side === 'p' && p.hp > 0 && cheb(p, u) === 1); if (!adj) return;
   if (boon('cold')) { u.coldTurn = B.turn; u.mvFull = u.mv; u.mv = Math.ceil(u.mv / 2); B.mvLeft = u.mv; blog(`<em>The ground goes cold under ${u.name}.</em> Half pace, −1 to hit.`); float(u, 'slowed', '#bfe8ff'); }
   if (boon('wolves')) { const n = roll(1, 4); blog(`<em>The Wolves' breath.</em> ${u.name} takes ${n} cold.`); sparks(u.x, u.y, 8, '#bfe8ff', .5); hurt(u, n); }
+  if (boon('shore') && u.hp > 0) { const n = roll(1, 4); blog(`<em>The tide comes in.</em> ${u.name} takes ${n}.`); sparks(u.x, u.y, 8, '#8ab8c8', .5); hurt(u, n); } // v8.0 the Shore
 }
 /* the chips under the map, and the log line a fight opens with */
 const boonsHTML = () => boonsOn().map(k => BOON_BY_KEY[k]).filter(Boolean).map(b => `<span class="boon" title="${esc(b.txt)}">✦ ${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}: ${esc(b.name.toLowerCase())}</span>`).join('');

@@ -489,7 +489,10 @@ let VISREADER = null;
 const visReader = () => (VISREADER && S && S.book && S.book !== 'gotm' ? VISREADER() : null) || {id:'tuft', name:'Tuft', he:false};
 /* the reader's name in the middle of a sentence ("the old Kanese"); and the node a reading's card screen comes back to: c4_card in Book One, b2_c4_card in Book Two */
 const visMid = () => { const r = visReader(); return r.mid || r.name; };
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
+/* v8.0: Book Five's readings are tiles of the Holds, not the Deck: its visions are "Through the Tiles" (80c) */
+const visTiles = () => !!(S && S.book === 'mt');
+const visKick = () => visTiles() ? 'Through the Tiles' : 'Through the Deck';
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;
@@ -504,10 +507,10 @@ function visNodes(id){
   const V = VISIONS[id], n = V.steps.length;
   V.steps.forEach((st, i) => { DLG[`vis_${id}_${i}`] = () => { const last = i === n - 1, nx = last ? () => visEnd() : `vis_${id}_${i + 1}`;
     if (visAgain(st)) { const r = visReader(), sh = r.he ? 'He' : 'She', hs = r.he ? 'His' : 'Her';
-      return {sp:visTuftHere() ? r.name : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:'Put the cards away.', go:nx}],
-      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the card go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the card go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : `The card goes still, and dark, and is only paint and wood again.`}; }
+      return {sp:visTuftHere() ? r.name : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:visTiles() ? 'Gather the tiles.' : 'Put the cards away.', go:nx}],
+      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the card go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the card go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : visTiles() ? `The tile goes still, and dark, and is only stone again.` : `The card goes still, and dark, and is only paint and wood again.`}; }
     return {sp:st.sp || V.who, txt:typeof st.txt === 'function' ? st.txt() : st.txt, onshow:() => visStep(id, i),
-      ch:st.ch ? st.ch.map(c => ({t:c.t, fx:() => { S.f[c.set[0]] = c.set[1]; }, go:nx})) : [{t:st.go || (last ? 'Put the cards away.' : 'Go on.'), go:nx}]}; }; });
+      ch:st.ch ? st.ch.map(c => ({t:c.t, fx:() => { S.f[c.set[0]] = c.set[1]; }, go:nx})) : [{t:st.go || (last ? (visTiles() ? 'Gather the tiles.' : 'Put the cards away.') : 'Go on.'), go:nx}]}; }; });
 }
 /* each step: its backdrop and figure; and the save never points at a vision node, so a reload comes back where the vision began */
 function visStep(id, i){
@@ -528,8 +531,8 @@ function playVision(id, done){
   $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null; G.said = null; // a vision between: the card's page comes back whole (16)
   document.body.classList.add('vision');
   view = 'scene'; B = null; G.sceneKind = 'vision'; AUDIO.setScene('dark'); AUDIO.play('reveal');
-  toTop(); $('#app').innerHTML = `<header class="hud vhud"><div><div class="kick">Through the Deck</div><div class="loc">${esc(V.who)}</div><div class="sub warren">${esc(V.where)}</div></div></header>
-    <div class="scene vscene"><canvas id="vcv" width="560" height="240"></canvas><div class="vtitle"><span>Through the Deck</span><b>${esc(V.who)} · ${esc(V.where)}</b></div><div class="cap">${esc(V.cap)}</div></div>`;
+  toTop(); $('#app').innerHTML = `<header class="hud vhud"><div><div class="kick">${visKick()}</div><div class="loc">${esc(V.who)}</div><div class="sub warren">${esc(V.where)}</div></div></header>
+    <div class="scene vscene"><canvas id="vcv" width="560" height="240"></canvas><div class="vtitle"><span>${visKick()}</span><b>${esc(V.who)} · ${esc(V.where)}</b></div><div class="cap">${esc(V.cap)}</div></div>`;
   visPaint();
   talk(`vis_${id}_0`);
 }
@@ -595,7 +598,7 @@ function visionsHTML(){
   const ch = S ? S.chapter || 0 : 0, seen = (S && S.seenVisions) || [];
   const ids = visIds().filter(k => VISIONS[k].ch <= ch); if (!ids.length) return '';
   const can = (view === 'explore' || view === 'scene') && !VIS && !document.body.classList.contains('vision');
-  return `<h4 class="jh">Visions</h4><p class="fine">What the Deck can show ${esc(visMid())} when ${visReader().he ? 'he looks' : 'she looks'} into the card: a glimpse through someone else's eyes. Look into the card when ${visReader().he ? 'he reads' : 'she reads'} for you, or watch them here.${can ? '' : ' (Watch from the map, or a conversation.)'}</p><ul class="jl vlist">${ids.map(k => { const V = VISIONS[k], s = seen.includes(k);
+  return `<h4 class="jh">Visions</h4><p class="fine">What the ${visTiles() ? 'tiles' : 'Deck'} can show ${esc(visMid())} when ${visReader().he ? 'he looks' : 'she looks'} into the ${visTiles() ? 'tile' : 'card'}: a glimpse through someone else's eyes. Look into the ${visTiles() ? 'tile' : 'card'} when ${visReader().he ? 'he reads' : 'she reads'} for you, or watch them here.${can ? '' : ' (Watch from the map, or a conversation.)'}</p><ul class="jl vlist">${ids.map(k => { const V = VISIONS[k], s = seen.includes(k);
     return `<li><span class="vnm"><em>Chapter ${V.ch}</em> · ${esc(V.who)} · ${esc(V.where)}${s ? '' : ' <b class="vnew">unseen</b>'}</span>${can ? ` <button class="btn sm vis" data-vision="${k}">✦ ${s ? 'Watch again' : 'Watch'}</button>` : ''}</li>`; }).join('')}</ul>`;
 }
 function bindVisions(m){ m.querySelectorAll('[data-vision]').forEach(b => b.onclick = () => { AUDIO.play('click'); m.hidden = true; playVision(b.dataset.vision, null); }); }

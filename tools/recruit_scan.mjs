@@ -32,19 +32,23 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
   const chOfFile = f => { const n = parseInt(f, 10);
     if (n >= 39 && n <= 46) return {book:'gotm', ch:n - 39}; if (n >= 48 && n <= 54) return {book:'dg', ch:n - 47};
     if (n >= 61 && n <= 67) return {book:'moi', ch:n - 60}; if (n === 47 || (n >= 55 && n <= 58)) return {book:'dg', ch:0};
-    if (n >= 60 && n <= 69) return {book:'moi', ch:0}; if (n >= 71 && n <= 77) return {book:'hoc', ch:n - 70}; if (n >= 70 && n <= 79) return {book:'hoc', ch:0}; return null; };
+    if (n >= 60 && n <= 69) return {book:'moi', ch:0}; if (n >= 71 && n <= 77) return {book:'hoc', ch:n - 70}; if (n >= 70 && n <= 79) return {book:'hoc', ch:0};
+    if (n >= 81 && n <= 87) return {book:'mt', ch:n - 80}; if (n >= 80 && n <= 89) return {book:'mt', ch:0}; return null; };
   const BOOK = {
     gotm:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'ellis', from:2, to:7}, {id:'vell', from:4, to:7}]},
     dg:{core:['haddat', 'sathi', 'tangle', 'marrow'], rec:[{id:'redblade', from:2, to:7}, {id:'warlock', from:2, to:7}, ...['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].map(id => ({id, from:7, to:7, old:1}))]}, // Book Two: Ramin, Keth, and in Aren an old hand of the Fourth (b2OldHand)
     moi:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'sohra', from:1, to:7}, {id:'greysword', from:3, to:7}, {id:'ellis', from:1, to:7, imp:1}, {id:'vell', from:1, to:7, imp:1}]},
     // Book Four: Book Two's four and the Fourteenth's four new soldiers; Ramin and Keth (transfer only) and Orvas (from Chapter 3) as recruits
     hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}, {id:'mirrel', from:1, to:7}, {id:'yorin', from:1, to:7}, {id:'rasp', from:1, to:7}]},
+    // Book Five: the four, and Ruuk (Chapters 2-3 on), Brune (Chapter 3 on) and Pessa (Chapter 5 on) as recruits
+    mt:{core:['tobet', 'thegg', 'perrit', 'ammet'], rec:[{id:'ruuk', from:2, to:7}, {id:'brune', from:3, to:7}, {id:'pessa', from:5, to:7}]},
   };
   const NUM = {two:2, three:3, four:4, five:5, six:6, seven:7};
   function mk(book, ch, v, withR, without) {
     if (book === 'gotm') { S = newState('Hask'); S.squad = [...PORDER]; }
     else if (book === 'dg') { S = newStateDG('Hask'); }
     else if (book === 'hoc') { S = newStateHOC('Hask'); S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'marrow']; }
+    else if (book === 'mt') { S = newStateMT('Hask'); }
     else { S = newStateMOI('Hask'); }
     S.chapter = ch || 1; S.scene = 'talk'; S.lvl = Math.min(8, 1 + S.chapter); S.xp = LEVELS[S.lvl - 1] || 0;
     if (book === 'dg') { S.chain = {water:6, column:20}; } if (book === 'moi') S.ally = {trust:6, dread:3};

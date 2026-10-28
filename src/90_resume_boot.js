@@ -58,6 +58,8 @@ function start(){
    typeof B3CH5 !== 'undefined' && B3CH5, typeof B3CH6 !== 'undefined' && B3CH6, typeof B3CH7 !== 'undefined' && B3CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'moi'); }); // its chapters are const B3CH1..B3CH7
   [typeof B4CH1 !== 'undefined' && B4CH1, typeof B4CH2 !== 'undefined' && B4CH2, typeof B4CH3 !== 'undefined' && B4CH3, typeof B4CH4 !== 'undefined' && B4CH4, // Book Four: Unblooded (70);
    typeof B4CH5 !== 'undefined' && B4CH5, typeof B4CH6 !== 'undefined' && B4CH6, typeof B4CH7 !== 'undefined' && B4CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'hoc'); }); // its chapters are const B4CH1..B4CH7
+  [typeof B5CH1 !== 'undefined' && B5CH1, typeof B5CH2 !== 'undefined' && B5CH2, typeof B5CH3 !== 'undefined' && B5CH3, typeof B5CH4 !== 'undefined' && B5CH4, // Book Five: Indebted (80);
+   typeof B5CH5 !== 'undefined' && B5CH5, typeof B5CH6 !== 'undefined' && B5CH6, typeof B5CH7 !== 'undefined' && B5CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'mt'); }); // its chapters are const B5CH1..B5CH7 (81-87)
   showTitle();
   requestAnimationFrame(loop);
 }

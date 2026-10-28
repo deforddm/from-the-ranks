@@ -46,6 +46,7 @@ function whereBooksMeetHTML(open){
       <li>Ships out of Genabaris put in at Aren. That is how word crosses, and sometimes people.</li>
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
       <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
+      ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
       <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }
@@ -125,6 +126,7 @@ function bookDeedsHTML(b, all){
     extra = `<h4 class="jh">At the tables</h4><div class="kv">${tables.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
   else if (b === 'moi') extra = typeof b3DeedsExtra === 'function' ? b3DeedsExtra(mine) : ''; // Book Three's Alliance (60)
   else if (b === 'hoc') extra = typeof b4DeedsExtra === 'function' ? b4DeedsExtra(mine) : ''; // Book Four's Nerve and Dust (70)
+  else if (b === 'mt') extra = typeof b5DeedsExtra === 'function' ? b5DeedsExtra(mine) : ''; // Book Five's Debt (80)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
