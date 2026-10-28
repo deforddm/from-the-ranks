@@ -1281,11 +1281,11 @@ Orr looks up at the dragon mask. He doesn't know who's under it; you can see him
 
 They clear the mosaic runner. The guests are herded back to the balustrades. Orr draws his rapier with a little flourish that he's done a thousand times in a hundred courtyards, and the man in the plain coat draws a plain short blade, and they stand.
 
-Orr's free hand moves. You see it: the fingers shaping something in the air, quick and neat and practised, and the air in front of him thickens, the way air does in the moment before a working lands—
+Orr's free hand goes to his collar, to something on a chain under the silk, and closes on it. You see it: quick and neat and practised, a man reaching for what he paid for, and the air in front of him thickens, the way air does in the moment before a working lands: a ward somebody sold him dear, waking—
 
 And nothing happens.
 
-It goes out of him toward the man in the plain coat, whatever it was, and it gets to him, and it *stops*, the way water stops at a dry wall of sand, and there's nothing there. Orr's face changes. He's never in his life seen a working find nothing.
+It goes out from him toward the man in the plain coat, whatever it was, and it gets to him, and it *stops*, the way water stops at a dry wall of sand, and there's nothing there. Orr's face changes. He's never in his life seen a thing he bought find nothing.
 
 ${SQUAD().includes('tuft') ? `"The dust," Tuft breathes, beside you. "Sergeant. It ate it. Whatever he threw, the dust on him just *ate* it."` : ''}
 
@@ -2447,7 +2447,7 @@ Paran gets up. He puts her sword through his belt, beside the empty scabbard. He
 
 The frost is gone. The lawn is wet and trampled and black in rings where it froze. The lanterns hang dead in the trees, and the paper from the broken ones lies all over the grass like the petals of some enormous flower that came out in the night and went over. The fountain is running. A mask has been fished out of it and left on the rim.
 
-Beyond the wall the bells have started, and under the bells, a sound like a hunt: the priestesses of Gedderone running the streets at first light the way they do every year, barefoot, with strips of grey wolf fur in their fists, beating Fander the She-Wolf out of the doorways so that winter will leave the city for another year. Last night winter came into this garden on its own feet. In this garden, this morning, the ritual isn't funny.
+Beyond the wall the bells have started. In the street below it, strips of grey wolf fur lie trodden into the gutters, where the priestesses of Gedderone ran yesterday at the Fete's start, barefoot, beating Fander the She-Wolf out of the doorways so that winter would leave the city for another year. Last night winter came into this garden on its own feet. In this garden, this morning, the ritual isn't funny.
 
 ${S.f.c6_key === 'bridgeburners' ? `And the house is still there.` : `And there's a house.`}
 

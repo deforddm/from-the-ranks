@@ -131,7 +131,7 @@ const CH7 = {
   title:'Outlaws', number:'Seven',
   intro:{loc:'Darujhistan', sub:'The Lakefront · the morning after', cap:'Blue lamps going out along the quay one at a time, gulls on every piling, and over the lake a sky with nothing in it.',
     paras:[
-`The lamps go out along the Lakefront the way they have gone out every morning for three hundred years: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. This morning, for once, nobody watches them go: the whole of Darujhistan is watching something else.`,
+`The lamps go out along the Lakefront the way they have gone out every morning for longer than anyone in the city can say: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. This morning, for once, nobody watches them go: the whole of Darujhistan is watching something else.`,
 `The sky. There is nothing in it. For a month a mountain of black stone hung over the lake with nothing under it, and the city learned not to look up. Now the city looks up and can't stop. Moon's Spawn went west at first light, slow as a barge on a canal, and the sky where it had been is empty, and the morning falls on the water and the roofs and on faces that had forgotten what it was to be lit from above.`,
 `The lake smells of weed and fish and last night's smoke. On the Estate hill a house that was not there yesterday stands in a garden full of mounds. In the Daru District they are carrying people out of doorways on shutters. Darujhistan is counting. So is the Fourth. You have been counting since midnight, and the number is the number, and you count it again.`],
     go:'Morning', node:'c7_start'},

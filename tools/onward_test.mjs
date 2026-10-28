@@ -24,24 +24,29 @@ const src = fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.js')
 const where = id => { const re = new RegExp(`(^|[\\s{,])${id}\\s*:\\s*\\(`); for (const [f, ls] of src) { const i = ls.findIndex(l => re.test(l)); if (i >= 0) return `src/${f}:${i + 1}`; } return '?'; };
 
 const srv = await server(); const br = await launch();
-const { page, errors } = await openGame(br, srv.url, {});
-const res0 = await page.evaluate(() => {
+/* v7.3.2: the audit runs in batches of areas, each in a fresh page. As one evaluate over all 105 areas it built up in the renderer
+   (every stubbed talk still notes, floats and schedules) until the renderer crashed (Oct 27, v7.2.0–v7.3.1, every container). */
+const BATCH = 10, errors = [];
+const AUDIT = (AIDS) => {
   let seed = 7; const rng = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
   const all = Object.values(DLG).map(String).join('\n') + Object.values(AREAS).map(a => (a.npcs || []).map(n => String(n.node) + String(n.show || '')).join('')).join('');
   const flags = [...new Set([...all.matchAll(/S\.f\.([A-Za-z0-9_]+)/g)].map(m => m[1]))];
   /* area -> [book, chapter] */
   const chOf = {}; chOf.pale = ['gotm', 0];
-  for (const [book, CHS] of [['gotm', BOOK === 'gotm' ? CHAPTERS : BOOKSNAP.gotm.ch], ['dg', BOOKSNAP.dg.ch]])
+  for (const [book, CHS] of [['gotm', BOOK === 'gotm' ? CHAPTERS : BOOKSNAP.gotm.ch], ['dg', BOOKSNAP.dg.ch], ['moi', BOOKSNAP.moi.ch], ['hoc', BOOKSNAP.hoc.ch]])
     for (const [n, CH] of Object.entries(CHS)) (CH.areas || (CH.area ? [CH.area] : [])).forEach(a => { chOf[a.id] = [book, +n]; });
   const gating = {};
   for (const [aid, a] of Object.entries(AREAS)) { const t = (a.npcs || []).map(n => String(n.show || '') + String(n.node) + String(n.fresh || '')).join(' ') + Object.values(a.triggers || {}).map(id => String(DLG[id] || '')).join(' ') + String(a.quest || '');
     gating[aid] = [...new Set([...t.matchAll(/S\.f\.([A-Za-z0-9_]+)/g)].map(m => m[1]))]; }
   function mkState(aid, v) {
     const [book, ch] = chOf[aid] || ['gotm', 1];
-    if (book === 'dg') { S = newStateDG('Hask'); if (v % 2 === 0 && TPL.redblade) S.squad.push('redblade'); S.chain = {water: Math.floor(rng() * 13), column: Math.floor(rng() * 40)}; }
+    if (book === 'moi' || book === 'hoc') { setBook(book); S = book === 'moi' ? newStateMOI('Hask') : newStateHOC('Hask'); S.picksDue = []; } // v7.3.2: Books Three and Four's maps in their own states (they had been opened as Book One's Chapter 1)
+    else if (BOOK !== 'gotm') setBook('gotm');
+    if (book === 'moi' || book === 'hoc') {}
+    else if (book === 'dg') { S = newStateDG('Hask'); if (v % 2 === 0 && TPL.redblade) S.squad.push('redblade'); S.chain = {water: Math.floor(rng() * 13), column: Math.floor(rng() * 40)}; }
     else { S = newState('Hask'); S.squad = [...PORDER]; if (v % 2 === 0 && ch >= 2) S.squad.push('ellis'); }
     S.chapter = ch; S.chapters = {}; for (let i = 0; i < ch; i++) S.chapters[i] = 'x';
-    S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0; migrate(S);
+    if (book !== 'moi' && book !== 'hoc') { S.lvl = Math.min(8, 1 + ch); S.xp = LEVELS[S.lvl - 1] || 0; } migrate(S);
     S.area = aid; S.scene = 'explore'; S.silver = 5 + (v % 4) * 10;
     /* the flags that pick who stands on this map and which version of each trigger opens: every combination of them in
        turn (or a random one when there are too many), the rest of the chapter's flags at random */
@@ -108,7 +113,7 @@ const res0 = await page.evaluate(() => {
   const out = {}, VAR = 128, view0 = view, lines = {n: 0, bad: new Set(), ex: []};
   stub(true); view = 'explore'; // opened from the map
   try {
-  for (const [aid, a] of Object.entries(AREAS)) {
+  for (const aid of AIDS) { const a = AREAS[aid]; if (!a) continue;
     for (let v = 0; v < VAR; v++) {
       mkState(aid, v); const base0 = clone(S);
       const entries = []; Object.entries(a.triggers || {}).forEach(([c, id]) => entries.push([id, 'trigger ' + c]));
@@ -141,7 +146,20 @@ const res0 = await page.evaluate(() => {
   }
   } finally { stub(false); view = view0; }
   return {lines: {n: lines.n, bad: [...lines.bad], ex: lines.ex}, thrown: [...THROWN], flagged: Object.values(out).map(o => ({...o, why: [...o.why]}))};
-});
+};
+const res0 = {lines: {n: 0, bad: [], ex: []}, thrown: [], flagged: []}, merged = {};
+let allAids = null;
+for (let i = 0; allAids === null || i < allAids.length; i += BATCH) {
+  const { page, errors: e1 } = await openGame(br, srv.url, {});
+  if (allAids === null) { allAids = await page.evaluate(() => Object.keys(AREAS)); }
+  const part = await page.evaluate(AUDIT, allAids.slice(i, i + BATCH));
+  errors.push(...e1); await page.close();
+  res0.lines.n += part.lines.n; part.lines.bad.forEach(b => { if (!res0.lines.bad.includes(b)) res0.lines.bad.push(b); });
+  part.lines.ex.forEach(x => { if (res0.lines.ex.length < 4) res0.lines.ex.push(x); });
+  part.thrown.forEach(t => { if (!res0.thrown.includes(t)) res0.thrown.push(t); });
+  for (const o of part.flagged) { const m = merged[o.id]; if (!m) merged[o.id] = {...o, why: [...o.why]}; else { o.why.forEach(w => { if (!m.why.includes(w)) m.why.push(w); }); m.v += o.v; if (o.depth < m.depth) { m.depth = o.depth; m.how = o.how; m.area = o.area; } } }
+}
+res0.flagged = Object.values(merged);
 const res = res0.flagged; if (list && res0.thrown.length) console.log('note: nodes that threw under a random state: ' + res0.thrown.slice(0, 20).join(' | '));
 let fail = 0;
 for (const o of res.sort((p, q) => where(p.id).localeCompare(where(q.id), undefined, {numeric: true}))) {
@@ -159,7 +177,6 @@ const unused = Object.keys(ALLOW).filter(k => !res.some(o => o.id === k)); if (u
    night and a way to stay, with the reminder; "Not yet." leaves the squad on the map; the burial pits (only a way to stay) say nothing */
 /* v7.1: the sheet check runs in a fresh page. After the audit's tens of thousands of stubbed talks the page's scene loops pile up and
    a single click can take minutes (seen on v7.0.1 as on v7.1.0); the check is about one node in the real sheet, not about that pile. */
-await page.close(); // free the audit's page first: two at once crashed the renderer (v7.2.0 suite)
 const { page: page2, errors: errors2 } = await openGame(br, srv.url, {});
 const ui = await page2.evaluate(async () => {
   S = newState('Hask'); S.squad = [...PORDER]; migrate(S); S.chapter = 1; S.f.c1_wj = 1; S.f.c1_reported = 1; S.f.c1_tent = 1; S.f.c1_bones = 1; S.f.c1_claw = 1; S.silver = 3; save(); startExplore('pale_night');

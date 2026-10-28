@@ -653,7 +653,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '7.3.1';
+const VERSION = '7.3.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -6972,6 +6972,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.3.2', ['Book One: a few small canon fixes. The Lakefront lamps no longer claim three hundred years; the urchin\'s coin is just a silver one; the dawn after the Fete shows the wolf-fur strips left from the Gedderone priestesses\' run at the Fete\'s start, instead of the run itself; and Turban Orr\'s working at the duel is a ward he bought, not his own sorcery.', 'Under the hood: the test that checks every onward step can be declined runs again (it had been crashing), and now checks Books Three and Four in their own saves. Saves carry on as they were.']],
   ['7.3.1', ['Book Four, Chapter 3: the country where the Khundryl join the army is now called the road to the Vathar, as in the novel, where they join on the approach to Vathar Crossing. There are no Vathar Hills. Saves carry on as they were.']],
   ['7.3.0', ['Bridgeburner: after every win, a quarter of the health each squadmate lost mends on top of the usual patch-up, so the badly hurt come back further. Wounds still carry until the squad rests.',
     'Book One: the Tyrant\'s ice is Omtose Phellack, an Elder warren, and otataral dust does not touch it. The dust is no longer offered against him.',
@@ -12754,7 +12755,7 @@ ${S.f.c3_msg && !S.f.c3_key ? `Then, as you turn to go, very quietly, to his pla
 
     /* ---- the message ---- */
     c3_urchin:()=>({sp:'A Gadrobi child', fx:()=>{S.f.c3_msg=1;}, txt:
-`She's perhaps nine. Barefoot, sharp-elbowed, with a Gadrobi face under a lot of dirt and a Daru coin, a whole silver councillor, held up between two fingers where you can see it, which is not a thing a child in this district does unless she wants it seen.
+`She's perhaps nine. Barefoot, sharp-elbowed, with a Gadrobi face under a lot of dirt and a Daru coin, a whole silver one, held up between two fingers where you can see it, which is not a thing a child in this district does unless she wants it seen.
 
 "You the sergeant? The road-crew sergeant with the mule that bites?" She doesn't wait. "A lady give me this to give you." A folded paper, clean, sealed with blue wax. "And this to not read it." The coin. "I can't read anyhow, but she didn't ask."
 
@@ -17610,11 +17611,11 @@ Orr looks up at the dragon mask. He doesn't know who's under it; you can see him
 
 They clear the mosaic runner. The guests are herded back to the balustrades. Orr draws his rapier with a little flourish that he's done a thousand times in a hundred courtyards, and the man in the plain coat draws a plain short blade, and they stand.
 
-Orr's free hand moves. You see it: the fingers shaping something in the air, quick and neat and practised, and the air in front of him thickens, the way air does in the moment before a working lands—
+Orr's free hand goes to his collar, to something on a chain under the silk, and closes on it. You see it: quick and neat and practised, a man reaching for what he paid for, and the air in front of him thickens, the way air does in the moment before a working lands: a ward somebody sold him dear, waking—
 
 And nothing happens.
 
-It goes out of him toward the man in the plain coat, whatever it was, and it gets to him, and it *stops*, the way water stops at a dry wall of sand, and there's nothing there. Orr's face changes. He's never in his life seen a working find nothing.
+It goes out from him toward the man in the plain coat, whatever it was, and it gets to him, and it *stops*, the way water stops at a dry wall of sand, and there's nothing there. Orr's face changes. He's never in his life seen a thing he bought find nothing.
 
 ${SQUAD().includes('tuft') ? `"The dust," Tuft breathes, beside you. "Sergeant. It ate it. Whatever he threw, the dust on him just *ate* it."` : ''}
 
@@ -18776,7 +18777,7 @@ Paran gets up. He puts her sword through his belt, beside the empty scabbard. He
 
 The frost is gone. The lawn is wet and trampled and black in rings where it froze. The lanterns hang dead in the trees, and the paper from the broken ones lies all over the grass like the petals of some enormous flower that came out in the night and went over. The fountain is running. A mask has been fished out of it and left on the rim.
 
-Beyond the wall the bells have started, and under the bells, a sound like a hunt: the priestesses of Gedderone running the streets at first light the way they do every year, barefoot, with strips of grey wolf fur in their fists, beating Fander the She-Wolf out of the doorways so that winter will leave the city for another year. Last night winter came into this garden on its own feet. In this garden, this morning, the ritual isn't funny.
+Beyond the wall the bells have started. In the street below it, strips of grey wolf fur lie trodden into the gutters, where the priestesses of Gedderone ran yesterday at the Fete's start, barefoot, beating Fander the She-Wolf out of the doorways so that winter would leave the city for another year. Last night winter came into this garden on its own feet. In this garden, this morning, the ritual isn't funny.
 
 ${S.f.c6_key === 'bridgeburners' ? `And the house is still there.` : `And there's a house.`}
 
@@ -19100,7 +19101,7 @@ const CH7 = {
   title:'Outlaws', number:'Seven',
   intro:{loc:'Darujhistan', sub:'The Lakefront · the morning after', cap:'Blue lamps going out along the quay one at a time, gulls on every piling, and over the lake a sky with nothing in it.',
     paras:[
-`The lamps go out along the Lakefront the way they have gone out every morning for three hundred years: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. This morning, for once, nobody watches them go: the whole of Darujhistan is watching something else.`,
+`The lamps go out along the Lakefront the way they have gone out every morning for longer than anyone in the city can say: one at a time, street by street, the blue shrinking back into the glass as if something under the city were breathing in. This morning, for once, nobody watches them go: the whole of Darujhistan is watching something else.`,
 `The sky. There is nothing in it. For a month a mountain of black stone hung over the lake with nothing under it, and the city learned not to look up. Now the city looks up and can't stop. Moon's Spawn went west at first light, slow as a barge on a canal, and the sky where it had been is empty, and the morning falls on the water and the roofs and on faces that had forgotten what it was to be lit from above.`,
 `The lake smells of weed and fish and last night's smoke. On the Estate hill a house that was not there yesterday stands in a garden full of mounds. In the Daru District they are carrying people out of doorways on shutters. Darujhistan is counting. So is the Fourth. You have been counting since midnight, and the number is the number, and you count it again.`],
     go:'Morning', node:'c7_start'},

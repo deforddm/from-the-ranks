@@ -3,6 +3,7 @@
 // Q7  Raest: Omtose Phellack is Elder; otataral dust is never offered against him and never stops his ice.
 // Q9  Book Three Ch5: the drowning is Shank's (Coral); the ford's cadre mage stands the river up instead.
 // Q18 Book Two: Bungle is a sergeant, never a captain.
+// Q12 Book One: the lamps unnumbered, no 'silver councillor', the Fander rite at the Fete's start, Orr's working a bought ward (v7.3.2).
 // Q19 Book Four: the Khundryl join on the road to the Vathar (HoC ch 15); there are no Vathar Hills (v7.3.1).
 import fs from 'fs';
 import path from 'path';
@@ -20,6 +21,10 @@ ok(/the river stand up/.test(c5) && /quarrel/.test(c5), 'Q9: the ford\'s mage st
 ok(/Shank had one of their Seerdomin/.test(src('67_b3_ch7.js')), 'Q9: Coral\'s Bridgeburner tells of Shank\'s drowning');
 const b4 = fs.readdirSync(path.join(root, 'src')).filter(f => /^7\d/.test(f)).map(f => src(f).replace(/never "the Vathar Hills"/g, '')).join('\n');
 ok(!/Vathar Hills/.test(b4), 'Q19: Book Four never says "the Vathar Hills"');
+const c3 = src('42_chapter3.js'), c6 = src('45_chapter6.js'), c7 = src('46_chapter7.js');
+ok(!/three hundred years/.test(c7) && !/silver councillor/.test(c3), 'Q12: the Lakefront lamps carry no year count; no "silver councillor"');
+ok(!/priestesses of Gedderone running the streets at first light/.test(c6) && /ran yesterday at the Fete's start/.test(c6), 'Q12: the Fander rite is the Fete\'s start, seen at dawn as what it left');
+ok(/a ward somebody sold him dear/.test(c6) && !/the fingers shaping something in the air/.test(c6), 'Q12: Orr\'s working at the duel is a bought ward, not his own spellcraft');
 ok(!/u\.ai === 'raest' && !u\.otat/.test(src('31_battle.js')), 'Q7: the Tyrant\'s lance does not check for otataral');
 
 // ---- in the page ----

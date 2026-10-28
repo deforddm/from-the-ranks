@@ -1180,7 +1180,7 @@ ${S.f.c3_msg && !S.f.c3_key ? `Then, as you turn to go, very quietly, to his pla
 
     /* ---- the message ---- */
     c3_urchin:()=>({sp:'A Gadrobi child', fx:()=>{S.f.c3_msg=1;}, txt:
-`She's perhaps nine. Barefoot, sharp-elbowed, with a Gadrobi face under a lot of dirt and a Daru coin, a whole silver councillor, held up between two fingers where you can see it, which is not a thing a child in this district does unless she wants it seen.
+`She's perhaps nine. Barefoot, sharp-elbowed, with a Gadrobi face under a lot of dirt and a Daru coin, a whole silver one, held up between two fingers where you can see it, which is not a thing a child in this district does unless she wants it seen.
 
 "You the sergeant? The road-crew sergeant with the mule that bites?" She doesn't wait. "A lady give me this to give you." A folded paper, clean, sealed with blue wax. "And this to not read it." The coin. "I can't read anyhow, but she didn't ask."
 

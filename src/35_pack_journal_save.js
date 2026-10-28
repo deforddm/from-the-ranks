@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['7.3.2', ['Book One: a few small canon fixes. The Lakefront lamps no longer claim three hundred years; the urchin\'s coin is just a silver one; the dawn after the Fete shows the wolf-fur strips left from the Gedderone priestesses\' run at the Fete\'s start, instead of the run itself; and Turban Orr\'s working at the duel is a ward he bought, not his own sorcery.', 'Under the hood: the test that checks every onward step can be declined runs again (it had been crashing), and now checks Books Three and Four in their own saves. Saves carry on as they were.']],
   ['7.3.1', ['Book Four, Chapter 3: the country where the Khundryl join the army is now called the road to the Vathar, as in the novel, where they join on the approach to Vathar Crossing. There are no Vathar Hills. Saves carry on as they were.']],
   ['7.3.0', ['Bridgeburner: after every win, a quarter of the health each squadmate lost mends on top of the usual patch-up, so the badly hurt come back further. Wounds still carry until the squad rests.',
     'Book One: the Tyrant\'s ice is Omtose Phellack, an Elder warren, and otataral dust does not touch it. The dust is no longer offered against him.',
