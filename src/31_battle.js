@@ -81,8 +81,8 @@ function mkParty(id, x, y){
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
 }
-function mkFoe(k, x, y, extra=0){ const f = FOES[k], fs = foeScale(), hp = Math.max(1, Math.round((f.hp + extra) * DIFF().hp * fs.hp)), sk = foeSkills(k, f), dmg = f.dmg ? [f.dmg[0], f.dmg[1], (f.dmg[2] || 0) + fs.dmg] : f.dmg;
-  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk, maxhp:hp, hp, col:'#d9695a', x, y}; }
+function mkFoe(k, x, y, extra=0){ const f = FOES[k], fs = foeScale(), sl = soldierLate() || {hp:1, atk:0, dmg:0}, hp = Math.max(1, Math.round((f.hp + extra) * DIFF().hp * fs.hp * (sl.hp || 1))), sk = foeSkills(k, f), dmg = f.dmg ? [f.dmg[0], f.dmg[1], (f.dmg[2] || 0) + fs.dmg + (sl.dmg || 0)] : f.dmg;
+  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), maxhp:hp, hp, col:'#d9695a', x, y}; }
 function mkAlly(k, x, y){ const f = FOES[k]; return {id:'ally_' + k, kind:k, side:'p', ally:true, ...f, name:f.name + ' (ally)', maxhp:f.hp, hp:f.hp, col:'#9fb3d9', x, y, ab:[]}; }
 /* the nearest free tile to x,y (itself if free), ring by ring out to 4, the straight neighbours first */
 function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};

@@ -41,6 +41,18 @@ const BTUNE = {
 const foeScale = () => { if (DIFF() === DIFFS.story) return {hp:1, atk:0, dmg:0};
   const c = FSCALE[clamp((S && S.chapter) || 0, 0, FSCALE.length - 1)], t = (B && (BTUNE[B.id + (B.def && B.def.isStage2 ? ':2' : '')] || BTUNE[B.id])) || {};
   return {hp:c.hp * (t.hp || 1), atk:c.atk + (t.atk || 0), dmg:c.dmg + (t.dmg || 0)}; };
+/* ---- v7.4 (David, Oct 27, 2026: "Soldier feels too easy late in each book"): a Soldier-only extra from Chapter 3 on, per book and chapter,
+   {hp ×, atk +, dmg +} on top of everything else. Never on Story or Bridgeburner, never in Chapters 1-2. Target: the smart bot wins
+   ~85-95% of first attempts a fight, losing 30-50% of the squad's health (docs/v7.4-notes.md). Book Four keeps its own Soldier column
+   (B4GAP's s, 70). A fight in SOLDIER_SKIP keeps its weight: Book Three's Coral mortal fights (David: as they are). ---- */
+const SOLDIER_LATE = { // tuned Oct 27, 2026 with tools/balance.mjs (the smart bot, 8 runs a fight): see docs/v7.4-notes.md
+  gotm:{3:{hp:1.15, atk:0, dmg:2}, 4:{hp:1.25, atk:1, dmg:2}, 5:{hp:1.55, atk:2, dmg:4}, 6:{hp:1.7, atk:2, dmg:5}, 7:{hp:1.7, atk:2, dmg:5}},
+  dg:{3:{hp:1.2, atk:1, dmg:2}, 4:{hp:1.3, atk:1, dmg:3}, 5:{hp:1.5, atk:2, dmg:4}, 6:{hp:1.5, atk:2, dmg:4}, 7:{hp:1.7, atk:2, dmg:5}},
+  moi:{3:{hp:1.2, atk:1, dmg:3}, 4:{hp:1, atk:0, dmg:1}, 5:{hp:1.2, atk:0, dmg:3}, 6:{hp:1.4, atk:1, dmg:4}, 7:{hp:1.45, atk:1, dmg:4}}};
+const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
+const soldierLate = () => { if (!S || (S.diff || 'soldier') !== 'soldier') return null;
+  const t = SOLDIER_LATE[S.book || 'gotm'], s = t && t[S.chapter || 0];
+  return s && !(B && B.id && SOLDIER_SKIP.has(B.id)) ? s : null; };
 /* the longer road pays more fights; each pays a little less, so the squad levels about as it did (and not to the cap by Chapter Four) */
 const XPK = .6;
 
