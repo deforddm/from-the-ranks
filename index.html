@@ -8262,8 +8262,9 @@ function visNodes(id){
   const V = VISIONS[id], n = V.steps.length;
   V.steps.forEach((st, i) => { DLG[`vis_${id}_${i}`] = () => { const last = i === n - 1, nx = last ? () => visEnd() : `vis_${id}_${i + 1}`;
     if (visAgain(st)) { const r = visReader(), sh = r.he ? 'He' : 'She', hs = r.he ? 'His' : 'Her';
-      return {sp:visTuftHere() ? r.name : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:visTiles() ? 'Gather the tiles.' : 'Put the cards away.', go:nx}],
-      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the card go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the card go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : visTiles() ? `The tile goes still, and dark, and is only stone again.` : `The card goes still, and dark, and is only paint and wood again.`}; }
+      const cd = visTiles() ? 'tile' : 'card'; // v8.0: Book Five's reader lets a tile go
+      return {sp:visTuftHere() ? r.name : visTiles() ? 'The Tiles of the Holds' : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:visTiles() ? 'Gather the tiles.' : 'Put the cards away.', go:nx}],
+      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the ${cd} go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the ${cd} go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : visTiles() ? `The tile goes still, and dark, and is only stone again.` : `The card goes still, and dark, and is only paint and wood again.`}; }
     return {sp:st.sp || V.who, txt:typeof st.txt === 'function' ? st.txt() : st.txt, onshow:() => visStep(id, i),
       ch:st.ch ? st.ch.map(c => ({t:c.t, fx:() => { S.f[c.set[0]] = c.set[1]; }, go:nx})) : [{t:st.go || (last ? (visTiles() ? 'Gather the tiles.' : 'Put the cards away.') : 'Go on.'), go:nx}]}; }; });
 }
@@ -8736,9 +8737,14 @@ const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
 function worldSVG(){
-  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku">
-  <rect width="640" height="300" fill="#1c1610"/>
-  <rect width="640" height="300" fill="#16304a" opacity=".35"/>
+  return `<svg class="worldmap" viewBox="${BOOKS.mt && !BOOKS.mt.coming ? '-130 0 770 300' : '0 0 640 300'}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}">
+  <rect x="-130" width="770" height="300" fill="#1c1610"/>
+  <rect x="-130" width="770" height="300" fill="#16304a" opacity=".35"/>
+  ${BOOKS.mt && !BOOKS.mt.coming ? `<path d="M-130 70 C-112 64 -92 76 -84 100 C-76 126 -88 150 -80 176 C-72 204 -96 232 -130 240 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
+  <text x="-112" y="128" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="17" fill="#d8dcc8" transform="rotate(-90 -112 128)">Lether</text>
+  <g font-family="Alegreya Sans SC, sans-serif" font-size="11" fill="#e8e0b0"><circle cx="-92" cy="196" r="4" fill="#c8b47a"/><text x="-122" y="218">Letheras · Book Five</text></g>
+  <path d="M-60 40 L-60 260" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
+  <text x="-46" y="150" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="11" fill="#8fb0d0" transform="rotate(-90 -46 150)">oceans away · years before</text>` : ''}
   <path d="M20 40 C80 20 170 30 230 60 C260 80 270 120 250 160 C240 200 200 240 150 262 C110 280 60 270 34 240 C10 210 8 150 14 100 Z" fill="#3a2e1e" stroke="#7a6640" stroke-width="1.5"/>
   <path d="M420 30 C480 18 560 30 600 60 C628 90 626 150 606 200 C590 240 548 276 500 284 C452 290 420 262 410 220 C398 170 400 110 404 70 Z" fill="#2e3a24" stroke="#6a7a50" stroke-width="1.5"/>
   <text x="120" y="116" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#e8d6b0">Seven Cities</text>
@@ -8769,6 +8775,7 @@ function whereBooksMeetHTML(open){
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
       <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
+      ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and no road joins it to the other books yet.</li>` : ''}
       <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }
@@ -68379,6 +68386,567 @@ b57aItem('b5_c7_ledgerpage', 'The Sixth\'s page from the paybook', '<ellipse cx=
   + '<g fill="#3a2e22" opacity=".8">' + [0,1,2,3,4,5,6,7].map(i => `<rect x="${72 + (i % 3)*2}" y="${21 + i*9.4}" width="${30 + (i*7 % 22)}" height="2.4"/><rect x="${146 + (i % 2)*3}" y="${21.6 + i*9.4}" width="${12 + (i*5 % 10)}" height="2.4"/>`).join('') + '</g>'
   + '<g stroke="#2a2018" stroke-width="1.3">' + [0,1,2,3,4,5,6,7].map(i => `<path d="M70 ${22.4 + i*9.4} L168 ${23.6 + i*9.4}"/>`).join('') + '</g>'
   + '<path d="M64 14 L120 16" stroke="#fff8e0" stroke-width="1.4" opacity=".5"/><ellipse cx="150" cy="96" rx="9" ry="5" fill="#4a3a2a" opacity=".25"/>');
+
+/* ============ Book Five: Through the Tiles, the seven visions of Indebted ============
+   One per chapter, played when Book Five's reader (visReader(), 36b; Perrit while she walks and lives, else the tile-woman: 80) turns a
+   tile and looks into it. Each is a scene somewhere the Sixth cannot stand, through the eyes of a canon character the squad never meets.
+   Choices change words, never outcomes (S.f.b5v*_ keys; nothing else reads them). The last step of each is the reader, back at the
+   chapter's reading place (B5READ[n]): its sp, fig and txt are getters/functions of visReader(), so visAgain (36b) still matches it.
+   How it hooks on: 21's tile screen offers "✦ Look into the tile" whenever visionFor(chapter, tile) finds one (36b, by book); the vision
+   comes back to b5_c<n>_card (36b's cardNodeName). Nothing in the chapter files changes.
+   Canon basis: docs/mt-canon.md §12 (viewpoint, scene, sources, stop before), bound by §9, §10 (series-canon §(a) rules 31-44) and rule 13.
+   The tiles never name a being; the Warlock King's power is never named; the darkest canon is headline only. Notes: docs/mt-visions-notes.md.
+   Backdrops are VISBG b5v_* and b5tiles, the new figures FIGX b5v_* (88b, which loads after this file; both are read only when a vision plays). */
+
+/* ---------------- the reader, at the end of each vision ---------------- */
+const b5vWho = r => ['perrit', 'tilewoman'].includes(r.id) ? r.id : 'other';
+const b5vFig = () => { const r = visReader(); return r.id === 'perrit' ? 'perrit' : r.id === 'tilewoman' ? 'b5_c1_tilewoman' : FIGX[r.id] ? r.id : 'b5_c1_tilewoman'; };
+/* o = {perrit:(r) => text, tilewoman:..., other:...}: 80's two readers; other is the fallback */
+const b5vEnd = o => ({get sp(){ return visReader().name; }, get fig(){ return b5vFig(); }, bg:'b5tiles',
+  txt:() => { const r = visReader(); return (o[b5vWho(r)] || o.other)(r); }});
+
+Object.assign(VISIONS, {
+  /* ---- Chapter 1: Letheras, the eve of the festival. Far to the north, in a fog the Warlock King made, the poachers' ships go quiet. ---- */
+  b5v1:{book:'mt', ch:1, who:'Trull Sengar', where:'Calach Bay', fig:'b5v_trull', bg:'b5v_calach', cap:'A bank of fog on a flat grey bay, four black longboats sitting still in it, and somewhere out in the white, the masts of other ships.', steps:[
+    {txt:
+`Trull Sengar sits in the Warlock King's own longboat, in a fog that should not be there, on a sea with no wind on it.
+
+There are four boats. Long, black, high in the prow, four hundred warriors of the tribes at the oars with the oars shipped. No one rows. The fog came up off the water at the Warlock King's word, and it has a weight to it, wet and close, like a cloak hung over a door.
+
+His brother Fear sits beside him on the thwart with his spear across his knees. Between the warriors, crowded along the gunwales, stand the shadow wraiths, more of them than Trull has ever seen in one place. They make no sound. They lean toward the fog.`},
+    {txt:
+`He hears the Letherii before he sees them.
+
+A block creaking. A man calling a name, and another man laughing at him. The slap of a slack sail against a mast, again and again, because there is no wind to fill it. The Warlock King has seen to the wind.
+
+They are seal-hunters, out of Trate, in the Edur's own waters, as they come every year, in more ships every year. A Beneda warrior washed up on the strand at the bay's mouth not long ago, dead of Letherii sorcery. So they have brought mages with them this time.
+
+Out in the white, a darker shape. A hull. Then another beyond it.`,
+     ch:[{t:'Watch the ships.', set:['b5v1_look','ships']},
+         {t:'Watch your brother.', set:['b5v1_look','fear']}]},
+    {txt:()=>`${S.f.b5v1_look === 'fear' ? `Trull watches Fear instead. His brother's face is set, the way it sets before a hunt, and his knuckles are pale on the spear. Fear has said, more than once, that the Letherii must be answered. He does not look as if he is enjoying the answer.` : `Trull watches the ships. Three-masted, broad in the beam, built to carry a great many seals and not to run from anything. A lamp on a stern, yellow in the fog. Someone aboard is cooking.`}
+
+In the bow of the lead boat, Hannan Mosag rises to his feet.
+
+He lifts one hand, and lets it fall.
+
+The longboat rocks under Trull, once, as something passes beneath it in the water. He does not see what. He looks at the fog in front of him, only at the fog, and is glad, all his life, that he did.`,
+     ch:[{t:'Cover your ears.', set:['b5v1_ears','cover']},
+         {t:'Keep your hands on the gunwale.', set:['b5v1_ears','hold']}]},
+    {txt:()=>`${S.f.b5v1_ears === 'hold' ? `Trull keeps his hands on the gunwale, because a warrior does, and so he hears all of it.` : `Trull puts his hands over his ears, and all along the boat the warriors are doing the same, and it is not enough.`}
+
+The screaming comes out of the fog from every side at once. It goes on longer than seems possible.
+
+Then it stops.
+
+The quiet after it is worse. The slack sails have stopped slapping. The block has stopped creaking. There is no voice anywhere on the water, and the fog begins, slowly, to thin.`},
+    {go:'Row for home.', txt:
+`The Letherii ships sit on the flat sea, burned out and wallowing, their masts black, nothing moving on their decks.
+
+The shadow wraiths go over the side. They cross the water without touching it, and climb aboard, and the dead hulls turn, one by one, and their scorched sails fill with a wind that touches nothing else, and they go south. Toward Lether. With their crews still aboard.
+
+"An answer," Fear says, when the oars are out again. "They will read it."
+
+"They read everything," says Trull. "That is what worries me."
+
+Neither of them speaks again the whole way back to the village. Trull finds, when they beach the boat, that he cannot remember the last time he was afraid of his own side.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down. "Edur," she says. "And ships of ours in a fog, a long way north." She squares the tile with the edge of the flagstone, exactly. "The school says the tiles show what is, not what will be. I have always found that a comfort." She moves along the flagstone, a hand's width, so that the canal wall is not quite behind her. "They were sailing south, Sergeant."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "Grey men in black boats," she says, and spits to one side, for manners. "And our ships coming home with nobody at the oars." She tucks the tile back in its cloth. "That's far north, Sergeant. It won't stay there."`,
+      other:(r) => `${r.name} turns the tile face down. "Edur in a fog," she says, "and our ships going quiet."`})]},
+
+  /* ---- Chapter 2: Trate after the wave. On the day it came, an old man in Letheras watched it come, through a tile. ---- */
+  b5v2:{book:'mt', ch:2, who:'Kuru Qan', where:'The Cedance', fig:'b5v_kuruqan', bg:'b5v_cedance', cap:'A dark chamber deep under the palace, a floor of tiles, and in one of them the harbour at Trate, bright with afternoon sun.', steps:[
+    {txt:
+`Kuru Qan, Ceda to the King of Lether, stands in the dark of the Cedance with his hands in his sleeves, and looks down at the floor.
+
+The floor is tiles. Every one of them a window, if you know how to open it, and he has spent a long life learning how. Most of them he keeps shut. Today he has opened one.
+
+It answers to a tower of black basalt out on its rocks in the south of Trate harbour, leagues to the north and west, with no door and no window in it, and a ring of tiles on its top that sees what he asks it to see. Today he has asked it to watch the sea.`},
+    {txt:
+`It is a fine day in Trate. Sun on the water, warm on the quays, gulls over the fish market. A flower dancer on the waterfront, for the crowd. Carts. Children on the harbour wall. A city getting on with its business, which is business.
+
+Out past the breakwater, three ships, coming in.
+
+The pilot scow puts out to meet them, as it should, oars rising and falling, its little flag up. The Ceda has watched that done a thousand times through this tile. He watches it now.`,
+     ch:[{t:'Look closer at the ships.', set:['b5v2_look','ships']},
+         {t:'Look at the harbour.', set:['b5v2_look','harbour']}]},
+    {txt:()=>`${S.f.b5v2_look === 'harbour' ? `He looks at the harbour, because the harbour is what the tile is for. The crowds on the quays. The fishing boats tied three deep. The lighthouse over the front. And then the ships draw his eye anyway, because they are wrong.` : `He brings the tile closer to the ships, and closer, until he can see the rigging. Harvest ships, out of Trate, the seal fleet. They should not be coming home this early in the year. They should not be coming home this fast with no wind in their sails.`}
+
+The pilot scow stops. Its oars falter, and then it is backing water as hard as its crew can pull.
+
+There are shapes in the rigging. Dark, and many, and moving the way no sailor moves.
+
+On the harbour wall a bell begins to ring.`,
+     ch:[{t:'Reach through the tile.', set:['b5v2_reach','reach']},
+         {t:'Keep still, and watch.', set:['b5v2_reach','still']}]},
+    {txt:()=>`${S.f.b5v2_reach === 'reach' ? `He reaches, down through the tile and along the long thread to the tower on its rocks, as far as the Holds will let him. They will not let him far enough. Whatever he might do, from here, he would do too late.` : `He keeps still. He is a long way off, and old, and wise enough to know when a thing is beyond him. He can watch. Someone in Lether must.`}
+
+Under the ships the sea is swelling.
+
+Not a wave, at first. A rising, as of something very large coming up toward the warm light from somewhere very deep. Something old, and bound, and hungry. The sun is on it now, and it grows in the sun, and it lifts the three ships on its back as a man lifts a tray.
+
+Then the whole bay stands up and comes in over Trate.`},
+    {go:'Close the tile.', txt:
+`The water comes down on the ships and the quays and the crowds together. What it does there, the Ceda will read in the reports. He sees enough from here.
+
+Then it goes back. The sea draws off the stones, and what was lifted is set down wherever it falls: the ships on the waterfront, fish in the streets, boats in the market square. The bell has stopped.
+
+Kuru Qan stands in the dark with the bright tile at his feet and his hands still in his sleeves.
+
+The Edur have answered, then. He will have to tell the King. He tries the words over to himself, and does not like any of them, and closes the tile.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down. "The Ceda," she says, and even she is careful with the word. "He saw it come in, from Letheras." She looks out at the harbour in front of her, at what the water left. "So it was watched. Every moment of it, by the best eyes in Lether." She sets the tile square. "It did not help, Sergeant. Write that down somewhere."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "The old man under the palace," she says, and spits to one side, for manners. "Watching. They always are, that sort." She looks at the quay, at the planks still dark with salt. "Didn't stop it coming, did it."`,
+      other:(r) => `${r.name} turns the tile face down. "The Ceda saw it come in," she says. "From Letheras."`})]},
+
+  /* ---- Chapter 3: Kraig's Landing. On the northern coast, the Atri-Preda at Fent Reach stands on her wall and counts. ---- */
+  b5v3:{book:'mt', ch:3, who:'Yan Tovis', where:'Fent Reach', fig:'b5v_yantovis', bg:'b5v_fent', cap:'A grey northern sea under a low sky, a wall over a little harbour, and sails on the water, more of them every time you look.', steps:[
+    {txt:
+`Atri-Preda Yan Tovis stands on the wall at Fent Reach with her helm under her arm, and counts sails.
+
+It is what an officer does. Counts, and writes the count down, and sends it south. Lether runs on counts. The Preda in Letheras will want a number, and a Letherii officer who cannot give a number is no officer at all.
+
+Her garrison is twice the size it was a month ago. The Preda ordered the unfinished fort up the coast at First Maiden emptied, and its soldiers came to her, and they are on her walls now, watching the same sea.`},
+    {txt:
+`The first count came by runner at dawn: a fleet off First Maiden Fort, five thousand Edur put ashore at a fort with no one left in it. She wrote that down.
+
+Now there are sails off the Reach. She counts them, and loses the count, and counts again.
+
+The ships are black, high in the prow, close-packed, and their decks are dark with warriors standing shoulder to shoulder. The water round them is dark too, darker than the sky can account for, as if they were riding something just under the surface of the sea.`,
+     ch:[{t:'Keep counting.', set:['b5v3_count','count']},
+         {t:'Send for the officers.', set:['b5v3_count','send']}]},
+    {txt:()=>`${S.f.b5v3_count === 'send' ? `She sends for her officers. They come up onto the wall one after another, and each of them stops at the top of the stair and looks out, and then looks at her. None of them offers a number.` : `She keeps counting. She is very good at it. Her lips move. She reaches a figure, and checks it, and the figure does not change, and she writes it down.`}
+
+A rider comes in from the south gate, lathered. A third fleet, he says, off the coast below them, between the Reach and Trate.
+
+So there is no road south by sea, and the road south by land runs past five thousand Edur at First Maiden.
+
+She looks at the figure she has written. Three hundred thousand. She looks at it again, in case she has added wrong. She has not.`,
+     ch:[{t:'Ask the officers what they think.', set:['b5v3_ask','ask']},
+         {t:'Decide it yourself.', set:['b5v3_ask','alone']}]},
+    {txt:()=>`${S.f.b5v3_ask === 'ask' ? `"Well?" she says. Her officers look at the sea, and at each other, and the eldest of them says, quietly, "It is your sum, Atri-Preda. It comes out the same however we hold it."` : `She does not ask them. It is her wall, and her sum, and she will not hand either of them to someone else to carry.`}
+
+She knows the walls. She knows the stores, to the sack. She knows how long two garrisons can hold a little coastal fort against three hundred thousand, and the answer is not long enough to matter to anyone.
+
+There is no ledger in Lether in which this comes out in her favour. She has looked for one, all morning. There isn't.`},
+    {go:'Strike the colours.', txt:
+`"Strike the colours," says Yan Tovis.
+
+They hear it all along the wall, and nobody moves, and then the flag-sergeant does, because somebody has to. The standard of Lether comes down the pole at Fent Reach, a hand at a time.
+
+Out on the water, the black ships do not cheer. They only come on.
+
+She puts her helm on, so that the garrison can see an officer and not a face, and goes down the stair to open the gate. Every soldier on that wall will live to curse her for this. That is the point of it. She would rather be cursed by the living.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down. "Fent Reach," she says. "The Atri-Preda." She does the sum herself, aloud, because she cannot help it, and stops halfway. "Three hundred thousand." She looks along the barge at the regiment's fires on the bank. "There is no school in Lether that teaches you what to do with that number, Sergeant. I would have struck the colours too."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "A woman on a wall," she says, and spits over the side, for manners. "Counting." She sniffs. "She counted right, mind. More than the King's lot will." She tucks the tile away. "She'll be called a coward in Letheras by men who never saw a sail."`,
+      other:(r) => `${r.name} turns the tile face down. "The Atri-Preda at Fent Reach," she says, "counting sails, and striking her colours."`})]},
+
+  /* ---- Chapter 4: High Fort. The night the Sixth sits on the rampart, Trate's sorceress climbs her lighthouse. ---- */
+  b5v4:{book:'mt', ch:4, who:'Nekal Bara', where:'The Trate Lighthouse', fig:'b5v_nekal', bg:'b5v_lighthouse', cap:'The top of a lighthouse over a harbour at night, its great lamp lit, and out on the black water, ships waiting with no lights at all.', steps:[
+    {txt:
+`Nekal Bara, sorceress of the Trate Legion, stands at the top of the lighthouse beside the great lamp, and worries.
+
+She has been worrying for days. It is the thing she does best, and she is very good at the other things. The Edur fleet lies off the harbour mouth in the dark, no lamps, waiting. Behind it, under it, in the water, is the thing that brought the harvest ships in on the wave. She has felt it out there every night since she came back from the Landing.
+
+She has a theory about it. She has been over the theory a hundred times. A creature, she thinks, bonded to the Edur, as a hound is bonded to its master. Kill the hound, and the man has to walk.`},
+    {txt:
+`Arahathan, the Cold Clay's mage, is down on the harbour wall with his staff, where she can see the small light of him. He is to draw it. She is to kill it. Between them they have done harder things. She is fairly sure they have done harder things.
+
+The lamp roars at her back. Below, the harbour is black and flat, and the town behind it has put out its lights, street by street, as if that would help.
+
+Out past the breakwater, the water lifts, very slightly, and settles.`,
+     ch:[{t:'"Begin."', set:['b5v4_start','now']},
+         {t:'Wait for Arahathan\'s signal.', set:['b5v4_start','wait']}]},
+    {txt:()=>`${S.f.b5v4_start === 'wait' ? `She waits for his signal, as they agreed. It comes: a flare of white on the harbour wall, and a long line of fire laid out across the water toward the fleet.` : `"Begin," she says, under her breath, and down on the wall Arahathan hears her anyway, or guesses, and lays a long line of white fire out across the water toward the fleet.`}
+
+The sea answers it.
+
+The water heaves up in a slow black hill beyond the breakwater and turns, the whole weight of it, toward the light on the wall. Toward Arahathan. Just as she planned.
+
+Nekal Bara draws on the Holds, all of it, everything the cadre ever taught her and a few things it never did, until the air round the lamp hums and the glass of it cracks. She gathers it. She aims it at the heart of the black hill.`,
+     ch:[{t:'Strike with everything.', set:['b5v4_strike','all']},
+         {t:'Strike, and keep something back.', set:['b5v4_strike','keep']}]},
+    {txt:()=>`${S.f.b5v4_strike === 'keep' ? `She strikes, and keeps a little back, as the school taught, for the second blow. There is no second blow.` : `She strikes with everything she has. It goes out of her like breath going out of a body, and she sways against the rail.`}
+
+The sorcery goes into the sea, and the sea takes it, and is not hurt.
+
+She has it wrong. She understands it all in the time it takes to understand it. Not a creature. Not a hound. Something older than the town's oldest wall: a spirit of this water, that Trate itself once prayed to and then forgot, a long time ago. Hungry, all that time. And someone has fed it.
+
+It is not interested in Arahathan.
+
+It turns toward the lighthouse.`},
+    {go:'Let the lamp go.', txt:
+`Nekal Bara has time to do one thing. She does not run. She reaches south, along the long cold thread every cadre mage carries to the Cedance in Letheras, and calls the Ceda's name.
+
+Then the sea comes up the lighthouse.
+
+The great lamp goes out.
+
+Out on the black water, where the fleet has been waiting all this while, oars run out along every hull, and the ships begin to come in.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down, and holds it down. "Nekal Bara," she says. "She was at the Landing. We saw her tents." She looks out over the rampart toward the north, toward a coast a long way off. "She called the Ceda. Every cadre mage would." Her voice is quite level. "He will have heard her, Sergeant. From Letheras. That is the arrangement."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "The witch in the lighthouse," she says, and spits to one side, for manners, and the rampart takes it. "Trate's gone, then." She looks at the fires across the pasture. "We were there in the summer. Strange to think of it."`,
+      other:(r) => `${r.name} turns the tile face down. "Trate's sorceress," she says, "on the lighthouse. Trate's gone."`})]},
+
+  /* ---- Chapter 5: the road south. Somewhere ahead of the Sixth, among the disarmed, a Finadd limps toward the capital. ---- */
+  b5v5:{book:'mt', ch:5, who:'Moroch Nevath', where:'The Road South', fig:'b5v_moroch', bg:'b5v_road', cap:'A long road south under a hot white sky, black fields to either side, and on it a column of soldiers with no weapons, walking.', steps:[
+    {txt:
+`Finadd Moroch Nevath walks south with no sword, and with one leg that will not do what he tells it.
+
+He felt the tendon go at High Fort, in the charge, when the sorcery came down round him and the ground went out from under the Prince's Guard. He has bound it since with a strip of somebody's cloak. It holds him up, mostly.
+
+The Prince was his to guard. The Prince is in Edur hands now, and so is the Queen. An Edur messenger told him so, quite politely, on the field. The fort had surrendered, the messenger said, as had the entire frontier. Then the Edur took his sword and told him to go home.`},
+    {txt:
+`So he is going home, with everyone else.
+
+The column is thousands long. Garrison men, Grass Jackets, the Queen's Battalion, the Prince's own, mixed together in no order at all, with their weapons on a pile a long way behind them. No one calls the step, or carries a standard. Men walk in twos and threes, and stop when they need to, and start again when someone near them starts.
+
+The road is white with dust. His boot leaves a print, and the bad leg drags a line beside it.`,
+     ch:[{t:'Cut a stick from the hedge.', set:['b5v5_stick','stick']},
+         {t:'Walk without one.', set:['b5v5_stick','none']}]},
+    {txt:()=>`${S.f.b5v5_stick === 'stick' ? `He cuts a stick from the hedge with a borrowed knife and leans on it. It is not a soldier's look. He finds he has stopped caring how he looks, which is new.` : `He walks without a stick. A Finadd of the Prince's Guard does not limp into Letheras on a hedge-stick, he tells himself, and goes on telling himself for a league or two, until the leg stops listening.`}
+
+The days go by the same. Dust, heat, the leg. At night the column lies down in the fields wherever it is.
+
+Then the fields go black.
+
+Farm after farm, burned to the hedges. Their own army did it, falling back ahead of them, so the Edur would find nothing to eat. It was the right thing to do. He keeps telling himself that, too.
+
+Men have begun to walk near him. Then to ask him things. He is the only officer most of them can put a name to.`,
+     ch:[{t:'"Walk to Letheras. Report to your units."', set:['b5v5_tell','report']},
+         {t:'"Go home, if you have one."', set:['b5v5_tell','home']}]},
+    {txt:()=>`${S.f.b5v5_tell === 'home' ? `"Go home," he tells them, "if you have one to go to." Some of them do, there and then, turning off down the farm tracks into the black. More stay. He finds he is glad of it, and does not know why.` : `"Walk to Letheras," he tells them. "Find your units. Report." He has no idea whether their units exist. They nod as if he had given them an order, and walk on, and that is something.`}
+
+He thinks, as he walks, about what he will say. To the Preda. To the King. That he lost the Prince. That he lost his sword. That the frontier went in a day, and all the sorcery in Lether did not stop it.
+
+He tries different words for it, league after league. None of them makes it come out any better.`},
+    {go:'To the gates.', txt:
+`And then, one hot afternoon, there is Letheras.
+
+The towers first, over the haze. Then the walls, and the gates standing open, and the crowds round them, come out to look at the army walking home without its weapons. A man is shouting questions. A woman is selling water.
+
+Moroch stops at the edge of the crowd and leans on his leg, or his stick, and looks at the city.
+
+It looks exactly as it did when he left. He had not expected that, somehow. He straightens his back, as well as he can, and limps in through the gates.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down. "Moroch Nevath," she says. "The Prince's man." She brushes ash off the edge of the tile with her thumb. "He was on this road. Ahead of us somewhere, by a day or two." She looks down the road, at the black fields on either side. "He thought the right thing, about the farms. I would have thought it too. I find I don't, any more, Sergeant."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "A Finadd with a bad leg," she says, and spits to one side, for manners, and the ash takes it. "Walked the whole way." She nods, once. "Most of them do, in the end. It's the walking back that finds out who you are."`,
+      other:(r) => `${r.name} turns the tile face down. "A Finadd on this road," she says, "limping home without his sword."`})]},
+
+  /* ---- Chapter 6: Brans Keep. On the morning the Sixth reads its tiles, the Preda looks out over the whole of her army. ---- */
+  b5v6:{book:'mt', ch:6, who:'Unnutal Hebaz', where:'Brans Keep', fig:'b5v_preda', bg:'b5v_brans', cap:'A wide field below a keep built against a cliff, a lake on one side, the army of Lether drawn up in its lines, and beyond the field, columns of darkness standing up out of the ground.', steps:[
+    {txt:
+`Preda Unnutal Hebaz, who commands the army of Lether, stands with the King's Battalion on the field before Brans Keep and looks at what is left of it.
+
+She stands taller than most women, nearly as tall as a man, fair, in her fortieth year. She has commanded this army for years. She knows its every battalion by its standard and most of its Finadds by name. She ordered this stand, with the King. She does not regret it. There is nowhere left to fall back to that is not the city.
+
+The keep is at her back, against its cliff. The lake to one side. Two towers on the corners, and the army's mages in them, the best that are left.
+
+Across the dry channel, far out on the right, she can see the white fingertips on the shields of the Whitefinder Battalion, come in from the south at last.`},
+    {txt:
+`The Edur come over the far ground in the morning light.
+
+Shadow wraiths first, in their thousands, a grey tide of them, flung forward to be spent. The towers answer. White fire goes out from the corners of the keep in long sheets and the wraiths go down before it, hundreds at a time, and the King's Battalion cheers.
+
+She does not cheer. She counts. The Edur are spending wraiths as a rich man spends coppers, to see where the holes are.`,
+     ch:[{t:'Order the next volley.', set:['b5v6_order','volley']},
+         {t:'Hold the towers back. Wait.', set:['b5v6_order','wait']}]},
+    {txt:()=>`${S.f.b5v6_order === 'wait' ? `"Hold," she sends to the towers. "Let them come closer." The mages hold. The wraiths come on, and the white fire, when it goes out at last, takes them in a single burning line.` : `"Again," she sends to the towers, and the white fire goes out again, and again, until the field in front of the left and centre smokes from end to end.`}
+
+Then, beyond the Edur lines, the ground begins to rise.
+
+Not the ground. Darkness, coming up out of it. Columns of it, turning slowly as they climb, black and wide as towers, then taller than towers, taller than the keep, until they stand over the far end of the field like the pillars of some great hall with no roof.
+
+The cheering stops all along the line.`,
+     ch:[{t:'Send a runner to the towers.', set:['b5v6_runner','send']},
+         {t:'Watch. There is no time for runners.', set:['b5v6_runner','watch']}]},
+    {txt:()=>`${S.f.b5v6_runner === 'send' ? `She sends a runner to the near tower. He is halfway there when it happens.` : `She does not send anyone. There is no time, and she knows it, and she will not spend a runner's life to tell the mages what they can already see.`}
+
+The two sorceries meet over the field.
+
+For a moment it is only light. Then both towers on the corners of the keep go up at once, and the mages in them with them, and what the mages were holding goes loose across the sky.
+
+The pillars lean.
+
+The nearest of them is moving now, across the field, toward the left and the centre. Toward her. The ground shakes under the King's Battalion. Somewhere behind her a horse is screaming.`},
+    {go:'Hold.', txt:
+`Unnutal Hebaz has seen a great many fields, and she knows exactly what she is looking at.
+
+She draws her sword, because an army should see its Preda's sword drawn at the end, and lifts it.
+
+"Hold," she says.
+
+Around her, the King's Battalion holds.
+
+Far out on the right, across the dry channel, the Whitefinders are still fighting, hand to hand, against Edur who have no sorcery with them at all. She watches them for the space of a breath. It is, she finds, a good thing to have watched.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down, quickly, which she has never done. "That is today," she says. "That is this field." She holds the tile against the shield with her whole palm. "The school says the tiles show what is. The school was wrong, Sergeant." Then, quite calmly, because she is Perrit: "Stay on the right. Whatever happens on the left, stay on the right."`,
+      tilewoman:() => `The tile-woman puts her hand flat over the tile and leaves it there. "Black pillars," she says. She does not spit. "That hasn't happened yet." She looks past the shield, at the dust coming up to the north. "It will by noon, Sergeant." She holds out her palm. "Pay me now. There's no settling up after a day like this one."`,
+      other:(r) => `${r.name} turns the tile face down. "The Preda," she says, "and pillars of black over this field. That is today."`})]},
+
+  /* ---- Chapter 7: Letheras falls. Tomorrow, on another bridge over another canal, a Finadd stands across the Emperor's road. ---- */
+  b5v7:{book:'mt', ch:7, who:'Moroch Nevath', where:'Main Canal', fig:'b5v_moroch', bg:'b5v_bridge', cap:'A broad bridge over a canal in a burning city, a wall of shields across it, and at the far end a figure coming on that catches the light.', steps:[
+    {txt:
+`Finadd Moroch Nevath stands on the principal bridge over Main Canal with a sword in his hand again, and seventy-three soldiers behind him.
+
+They are the best of his company, what is left of it, and they have locked their shields across the bridge from rail to rail. He chose them himself. He chose this bridge himself. It is on the way to the palace, and anyone going to the palace today will have to cross it.
+
+His leg is bound tight under the greave. It aches. He has stopped attending to it.
+
+Behind him the city is burning in more places than he can count, and somewhere off toward the river, the wolves are howling in the streets.`},
+    {txt:
+`They come up the far street in the middle of the day.
+
+Edur, a few score, walking. At their head, a little ahead of them, alone, the one the whole city has been whispering about for a week. The Emperor.
+
+He is young. He walks as if every step hurts him. And he shines: his skin is covered in coins, gold coins set into it everywhere like scales, so that he flashes in the sun with every step, and leaves no doubt at all who he is.
+
+Behind Moroch the soldiers begin to shout. "The King's Champion," they shout, across the canal. "Here is the King's Champion."
+
+They know he is not. So does he.`,
+     ch:[{t:'Let them shout.', set:['b5v7_shout','let']},
+         {t:'"Quiet, there."', set:['b5v7_shout','quiet']}]},
+    {txt:()=>`${S.f.b5v7_shout === 'quiet' ? `"Quiet, there," he says, without turning round, and the shouting stops. He would rather the Emperor heard nothing from this bridge but what he has to say himself.` : `He lets them shout. It is a good lie, and they need it more than he does, and the Emperor, at the far end of the bridge, has heard it. He has stopped walking.`}
+
+Moroch has heard the stories, as everyone has. That this Emperor has been killed, and killed again, and gets up each time. That every death costs him, and that he comes back screaming.
+
+He has not believed them. He finds, looking down the bridge at the young man in his coat of coins, that he believes them now.
+
+It makes no difference to what he is going to do.`,
+     ch:[{t:'Step out of the wall, alone.', set:['b5v7_step','alone']},
+         {t:'"Hold the wall. I go alone."', set:['b5v7_step','order']}]},
+    {go:'Step out.', txt:()=>`${S.f.b5v7_step === 'order' ? `"Hold the wall," he says. "Whatever happens. I go alone." Seventy-three shields stay locked behind him.` : `He steps out of the wall without a word, and the shields close behind him.`}
+
+He walks out to the middle of the bridge, on the bad leg, not hurrying. Main Canal is green and slow beneath him. Smoke goes over.
+
+"I am Finadd Moroch Nevath," he says, loud enough for both ends of the bridge, "and this bridge is held. If you want to cross it, Emperor, you will cross it past me."
+
+The Emperor looks at him for a little while, and the coins on his face catch the light.
+
+Then he comes on.
+
+Behind Moroch, seventy-three soldiers hold their shields across the bridge, and watch.`},
+    b5vEnd({
+      perrit:() => `Perrit turns the tile face down and puts the dock and the knife back on top of it, exactly where they were. "Another bridge," she says. "Not ours." She looks out at the Quillas Canal in front of her, black under the torch. "That is tomorrow, Sergeant. That is somebody in the Prince's Guard, tomorrow, on Main Canal." A breath. "The tiles have stopped telling me what is. They only tell me what will be, now."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile, and the dock and the knife with it. "A Finadd on a bridge," she says, and spits to one side, for manners. "Seventy-three behind him. I counted." She looks at the barricade, at the canal. "Brave man. The city will want to know his name, after. Mind you remember it, Sergeant."`,
+      other:(r) => `${r.name} turns the tile face down. "A Finadd on a bridge over Main Canal," she says, "and the Emperor coming. Tomorrow."`})]},
+});
+
+/* ============ Book Five: the visions' art (88) — backdrops VISBG b5v_* and b5tiles, the figures FIGX b5v_* ============
+   Drawn the way Book Four draws its visions (78b): a few strokes per place, figures in the ~32px frame lit from the left, and 36b's
+   drawVision laying the vision's own figure, the motes, the violet and the vignette over each backdrop. Lether's look (80b, 80d):
+   blue-grey, canal-green, lamp-gold and wet stone. Distant and suggestive, never gory: what passes under the longboat is a swell in
+   the fog and nothing more; the wave at Trate is a wall of water seen from far off; the sea spirit is the sea rising, with no face;
+   the pillars at Brans Keep are turning columns of dark; the Emperor is a small figure that catches the light, his sword never drawn.
+   Reused: perrit (80d), b5_c1_tilewoman (81b), b5_edur, b5_wraith, b5_letherii (80d), B4VB (78b), B3VB (68b). */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* Trull Sengar before any of it: a Tiste Edur warrior, tall, grey-skinned, his long black hair braided down his back, a spear */
+  b5v_trull(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.02, 1.16);
+    B2F.line(ctx, '#4a3a2a', 1.2, [[8.6, 12.6], [9.6, -21]]); poly(ctx, [[9.7,-26],[8.7,-20.6],[10.7,-20.6]], '#b8bcc4'); // the spear
+    h.legs('#26262a'); h.torso('#4a4640', '#18161a', 5.8); B2F.line(ctx, '#2a2018', .9, [[-5, -6], [5, 6]]); ctx.fillStyle = '#2a2018'; ctx.fillRect(-5, 3.4, 10, 1.2); // harness, belt
+    ctx.fillStyle = '#7a8088'; ctx.fillRect(-8.2, -5.4, 2.4, 9); ctx.fillRect(5.8, -5.4, 2.4, 9);
+    h.head('#7a8088', 4.2, -11.4); h.look('rgba(10,10,14,.9)', -11.6);
+    B2F.cap(ctx, '#0c0c10', 4.5, -12.8, 1.0, 2.0); B2F.line(ctx, '#0c0c10', 1.6, [[-3.4, -12.4], [-6.2, -4], [-6.8, 4]]); // the hair, long, braided back
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; for (let i=0;i<4;i++) ctx.fillRect(-6.6 + i*.1, -8 + i*3, 1.4, .5);
+    ctx.restore(); },
+  /* Kuru Qan, the Ceda: a small old man in a dark robe gone soft with wear, a skullcap, hands in his sleeves */
+  b5v_kuruqan(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .86, .9);
+    h.legs('#1a1a1e'); B2F.robe(ctx, h, '#3a3a52', '#12121c', 6, 8); ctx.fillStyle = 'rgba(200,180,120,.35)'; ctx.fillRect(-.6, -6, 1.2, 17); // the robe, a thread of gold down it
+    ell(ctx, 0, 1.6, 6, 2.2, '#2a2a40'); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-4.6, 1.2, 9.2, .8); // the hands in the sleeves
+    h.head('#c0a48a', 4, -10.6); h.look('rgba(30,20,14,.85)', -10.9); ctx.fillStyle = 'rgba(90,60,40,.35)'; ctx.fillRect(-2.6, -8.2, 5.6, .5); ctx.fillRect(-2.4, -13, 5, .4); // an old face, lined
+    B2F.cap(ctx, '#2a2a40', 4.2, -11.8, 1.02, 1.98); ctx.fillStyle = 'rgba(220,220,220,.6)'; ctx.fillRect(-4.2, -10.8, 1, 2.4); ctx.fillRect(3.4, -10.8, 1, 2.4); // a skullcap, white at the temples
+    ctx.restore(); },
+  /* Yan Tovis, Atri-Preda: a tall woman in Letherii scale and an officer's blue-grey cloak, her helm under her arm, dark hair cropped */
+  b5v_yantovis(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.12);
+    poly(ctx, [[-5.4,-6],[-8.6,10],[-3,9],[-2,-6]], '#4a5664'); // the cloak
+    h.legs('#2a2a2c'); h.torso('#7a7a76', '#2a2a28', 5.8); ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i=0;i<4;i++){ ctx.moveTo(-5.4, -3.6 + i*2.4); ctx.lineTo(5.4, -3.6 + i*2.4); } ctx.stroke(); // scale
+    ctx.fillStyle = '#c8b47a'; ctx.fillRect(-5.8, -6, 11.6, 1); // an officer's gilt edge
+    ctx.beginPath(); ctx.arc(7.4, 1, 3.2, 0, 7); ctx.fillStyle = h.armor('#9a9a96', '#2a2a28'); ctx.fill(); ctx.fillStyle = '#1a1a1a'; ctx.fillRect(4.6, 1, 5.6, .8); // the helm under her arm
+    h.head('#8a6a52', 4.1, -11.4); h.look('rgba(20,12,8,.85)', -11.6); B2F.cap(ctx, '#141012', 4.3, -12.4, 1.02, 1.98); ctx.fillRect(-4.3, -12.4, 1.2, 3);
+    ctx.restore(); },
+  /* Nekal Bara, sorceress of the Trate Legion: a cadre robe the colour of the sea at night, her hair bound up, sorcery round her hands */
+  b5v_nekal(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1.04); const p = o.still ? .6 : .5 + Math.sin(t/220 + (o.phase || 0))*.3;
+    h.legs('#141820'); B2F.robe(ctx, h, '#2a4a5a', '#0c1820', 5.6, 7.6); ctx.fillStyle = '#a8c0c8'; ctx.fillRect(-5.6, -6, 11.2, .9); // the cadre's edge
+    ctx.fillStyle = '#2a4a5a'; ctx.fillRect(-8.2, -5.2, 2.4, 7); ctx.save(); ctx.translate(7, -5); ctx.rotate(-.9); ctx.fillRect(-1.2, 0, 2.4, 8); ctx.restore(); // one arm raised
+    glow(ctx, 12.4, -10, 7, '#d8f0ff', .5*p); ctx.fillStyle = `rgba(230,246,255,${.7*p})`; ctx.fillRect(11.6, -10.8, 1.6, 1.6);
+    h.head('#c8a890', 4, -11.2); h.look('rgba(20,20,30,.85)', -11.5); B2F.cap(ctx, '#3a2a24', 4.2, -12.4, 1.02, 1.98); ell(ctx, -.6, -16.6, 2.6, 1.8, '#3a2a24'); // hair bound up
+    ctx.restore(); },
+  /* Moroch Nevath, Finadd of the Prince's Guard: a hard man in good scale gone dirty, a red Guard's sash, the right leg bound.
+     o.limp: walking south, no sword, a hedge-stick; otherwise on the bridge with his sword and a greave over the binding */
+  b5v_moroch(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.04, 1.08); const limp = !!o.limp;
+    h.legs('#2a2a2c'); ctx.fillStyle = limp ? '#8a7a64' : '#6a6a6a'; ctx.fillRect(1.1, 6.4, 3.4, 3.6); if (limp) { ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(1.1, 7.4, 3.4, .5); ctx.fillRect(1.1, 8.8, 3.4, .5); } // the bound leg
+    h.torso('#7a7a76', '#262624', 6.4); ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i=0;i<4;i++){ ctx.moveTo(-6, -3.6 + i*2.4); ctx.lineTo(6, -3.6 + i*2.4); } ctx.stroke();
+    B2F.line(ctx, '#7a2a24', 1.6, [[-6, -5.4], [5.6, 4.6]]); // the Guard's sash
+    if (limp) { ctx.fillStyle = 'rgba(90,70,40,.35)'; ctx.fillRect(-6, 2, 12, 5); } // dust
+    h.head('#b08a70', 4.3, -11.2); h.look('rgba(20,12,8,.85)', -11.4); ctx.fillStyle = 'rgba(40,30,24,.5)'; ctx.fillRect(-2.6, -8.4, 6, .9); // a hard mouth, stubble
+    B2F.cap(ctx, '#2a2018', 4.4, -12.4, 1.02, 1.98);
+    if (limp) B2F.line(ctx, '#5a4430', 1.2, [[8.2, 12.6], [7.2, -4]]); else { ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI, 0); ctx.fillStyle = h.armor('#8a8a86', '#2a2a28'); ctx.fill(); h.sword('#d0d0cc'); }
+    ctx.restore(); },
+  /* Preda Unnutal Hebaz: taller than most women, fair, in her fortieth year; plain good armour, a commander's dark cloak, her hair bound back */
+  b5v_preda(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1, 1.18);
+    poly(ctx, [[-5.6,-6],[-9,11],[-2.6,10],[-2,-6]], '#2a2e3a'); // the cloak
+    h.legs('#2a2a2e'); h.torso('#8a8c90', '#2a2c30', 6); ctx.fillStyle = '#c8b47a'; ctx.fillRect(-6, -6, 12, 1.1); ctx.fillRect(-1, -4.6, 2, 2); // a gilt edge, the Preda's badge
+    h.head('#d8bca4', 4.2, -11.4); h.look('rgba(30,40,60,.85)', -11.6); B2F.cap(ctx, '#d0b070', 4.4, -12.6, 1.02, 1.98); ctx.fillStyle = '#d0b070'; ctx.fillRect(-4.6, -12, 1.4, 5); // fair hair, bound back
+    if (o.sword) { B2F.line(ctx, '#d8d8d4', 1.3, [[7, -2], [10.4, -18]]); ctx.fillStyle = '#6b4f2a'; ctx.fillRect(6, -2, 2, 3); } else h.sword('#c8c8c4');
+    ctx.restore(); },
+  /* the Emperor, far off on the bridge: a young Edur covered in gold coins, catching the light; drawn small, never with his sword out */
+  b5v_emperor(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.12); const sh = o.still ? .5 : .5 + Math.sin(t/180 + (o.phase || 0))*.3;
+    h.legs('#6a5a30'); h.torso('#a8903a', '#4a3a18', 5.6); h.head('#a89048', 4.1, -11.4); B2F.cap(ctx, '#0c0c10', 4.3, -12.8, 1.02, 1.98);
+    ctx.fillStyle = `rgba(255,226,130,${.5 + sh*.4})`; for (let i=0;i<22;i++) ctx.fillRect(-5 + hash(i, 91)*10, -14 + hash(i, 92)*26, .9, .9); // the coins
+    glow(ctx, 0, -2, 14, '#ffd870', .18 + sh*.12); ctx.restore(); },
+});
+
+/* ---------------- backdrop helpers ---------------- */
+const B5VB = {
+  /* fog: soft pale banks drifting */
+  fog(ctx, W, H, y0, y1, T, a = .5, seed = 1){ for (let i=0;i<14;i++){ const x = ((hash(i, seed)*W*1.4 + (REDUCE() ? 0 : T*.006*(1 + hash(i, seed + 1)))) % (W*1.4)) - W*.2, y = y0 + hash(i, seed + 2)*(y1 - y0); ell(ctx, x, y, W*(.18 + hash(i, seed + 3)*.2), 10 + hash(i, seed + 4)*16, `rgba(210,214,216,${a*(.25 + hash(i, seed + 5)*.3)})`); } },
+  /* a black Edur longboat, high in the prow, oars shipped; dir 1 faces right */
+  longboat(ctx, x, y, s, dir = 1, col = '#0c0c10'){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); poly(ctx, [[-30,-2],[26,-2],[34,-14],[30,-1],[24,4],[-24,4],[-32,-10]], col); ctx.fillStyle = 'rgba(0,0,0,.4)'; for (let i=0;i<8;i++) ctx.fillRect(-22 + i*6, -6, 2.2, 4); ctx.restore(); },
+  /* a Letherii three-master, sails slack or full; burned: black and broken */
+  ship(ctx, x, y, s, T, burned = false, full = false){ ctx.save(); ctx.translate(x, y); ctx.scale(s, s); const hc = burned ? '#1a1614' : '#3a3026';
+    poly(ctx, [[-22,0],[22,0],[18,7],[-18,7]], hc); [-10, 2, 13].forEach((mx, i) => { B2F.line(ctx, burned ? '#141010' : '#2a2018', 1, [[mx, 0], [mx, burned && i === 1 ? -14 : -26]]);
+      if (!burned) { const bel = full ? 5 : 1 + (REDUCE() ? 0 : Math.sin(T/600 + i)*.8); poly(ctx, [[mx - 6, -24],[mx + 6, -24],[mx + 6 + bel, -10],[mx - 6 + bel, -10]], 'rgba(190,180,160,.75)'); }
+      else if (i !== 1) poly(ctx, [[mx - 4, -22],[mx + 3, -21],[mx + 5, -12],[mx - 2, -14]], 'rgba(30,26,24,.8)'); });
+    if (!burned) { glow(ctx, 20, -3, 6, '#ffc070', .4); } ctx.restore(); },
+  /* a stone city's skyline in a band (towers, roofs), and fires in it */
+  skyline(ctx, W, y, col, seed, fires = 0, T = 0){ ctx.fillStyle = col; for (let i=0;i<24;i++){ const x = i*W/22 - 6, hh = 10 + hash(i, seed)*30, w = W/22 + 3; ctx.fillRect(x, y - hh, w, hh + 2); if (hash(i, seed + 1) > .78) ctx.fillRect(x + w*.3, y - hh - 18, w*.4, 18); }
+    for (let i=0;i<fires;i++){ const x = W*(.1 + hash(i, seed + 2)*.8); glow(ctx, x, y - 12, 40, '#ff7a30', .25 + (REDUCE() ? 0 : Math.sin(T/200 + i)*.05)); ctx.strokeStyle = 'rgba(60,50,46,.5)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x, y - 14); ctx.quadraticCurveTo(x + 10, y - 50, x + 30 + (REDUCE() ? 0 : Math.sin(T/900 + i)*6), y - 90); ctx.stroke(); } },
+  /* a square tile on the ground, seen at a slant: the reader's tile (obsidian for Perrit, bone for the tile-woman) */
+  tile(ctx, x, y, s, bone){ ctx.save(); ctx.translate(x, y); ctx.scale(1, .55); ctx.rotate(.12); ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(-s/2 + 2, -s/2 + 3, s, s);
+    ctx.fillStyle = bone ? '#d8ccb0' : '#141418'; ctx.fillRect(-s/2, -s/2, s, s); ctx.strokeStyle = bone ? 'rgba(90,70,40,.6)' : 'rgba(170,160,220,.55)'; ctx.lineWidth = 1; ctx.strokeRect(-s/2 + 2, -s/2 + 2, s - 4, s - 4);
+    ctx.fillStyle = 'rgba(150,120,220,.4)'; ctx.fillRect(-s/2 + 4, -s/2 + 4, s - 8, s - 8); ctx.restore(); },
+};
+
+Object.assign(VISBG, {
+  /* Calach Bay: grey water, a fog bank, four black longboats sitting still. Step 1 the Letherii hulls dark in the white; step 2 a swell
+     passing under the boats and nothing else; step 3 the fog thick and white (the screaming, seen as nothing); step 4 the fog thinned,
+     the ships burned out and turning south under wraiths. */
+  b5v_calach(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.5, [[0, '#7a7e82'], [1, '#b4b8b8']]);
+    B4VB.sea(ctx, W, H, H*.5, '#6a7072', '#2a3034', T, 5);
+    if (s >= 1) { const burned = s >= 4; for (let i=0;i<3;i++) { const x = W*(.56 + i*.15) + (burned && !REDUCE() ? -((T*.004 + i*8) % (W*.08)) : 0); ctx.save(); ctx.globalAlpha = s >= 4 ? 1 : .45; B5VB.ship(ctx, x, H*(.53 + i*.01), .9 - i*.12, T, burned); ctx.restore();
+      if (burned) for (let k=0;k<3;k++) drawFigure(ctx, 'b5_wraith', x - 8 + k*8, H*(.5 + i*.01), .5, T, {air:true, phase:k + i}); } }
+    if (s === 2) { const sw = REDUCE() ? .5 : (T % 5000)/5000; ell(ctx, W*(.1 + sw*.8), H*.78, 40, 4, 'rgba(10,14,16,.35)'); } // something passing under, only a swell
+    B5VB.longboat(ctx, W*.3, H*.82, 1.6, 1); B5VB.longboat(ctx, W*.1, H*.68, .9, 1, '#16161a'); B5VB.longboat(ctx, W*.62, H*.7, .8, -1, '#18181c');
+    for (let i=0;i<5;i++) drawFigure(ctx, 'b5_wraith', W*(.2 + i*.05), H*.77, 1, T, {air:true, phase:i, still:s === 3});
+    drawFigure(ctx, 'b5_edur', W*.42, H*.76, 1.1, T, {still:true, dir:1}); // Hannan Mosag in the bow, small, a shape
+    B5VB.fog(ctx, W, H, H*.3, H*.8, T, s === 3 ? .95 : s >= 4 ? .25 : .6, 7);
+    if (s === 3) { ctx.fillStyle = 'rgba(220,222,224,.35)'; ctx.fillRect(0, 0, W, H); }
+    return {fx:W*.24, fy:H*.86, fs:2}; },
+
+  /* the Cedance: a dark chamber, a floor of tiles in perspective, one of them lit and in it the harbour at Trate. The picture in the tile
+     changes with the steps: the sunny harbour and three ships; the scow backing off, dark in the rigging; the water rising; the wreck. */
+  b5v_cedance(ctx, W, H, T, v){ const s = v.step || 0;
+    ctx.fillStyle = vgrad(ctx, 0, H, [[0, '#06060a'], [1, '#14121c']]); ctx.fillRect(0, 0, W, H);
+    for (let r=0;r<6;r++) for (let c=-6;c<=6;c++){ const y = H*.5 + r*r*4 + r*12, w = 18 + r*10, x = W*.5 + c*w; ctx.strokeStyle = 'rgba(120,110,160,.18)'; ctx.lineWidth = 1; ctx.strokeRect(x - w/2, y, w, 10 + r*6); }
+    for (let i=0;i<8;i++) glow(ctx, W*(.1 + hash(i, 61)*.8), H*(.55 + hash(i, 62)*.4), 10, '#8a7ad0', .06); // other tiles, shut
+    const tx = W*.62, ty = H*.58, tw = W*.3, th = H*.32; ctx.save(); ctx.beginPath(); ctx.rect(tx - tw/2, ty, tw, th); ctx.clip();
+    const gold = s >= 4 ? '#8aa0b0' : '#a8c8e0'; ctx.fillStyle = vgrad(ctx, ty, ty + th, [[0, gold], [.45, '#e8dcc0'], [.46, '#4a7a94'], [1, '#2a4a5a']]); ctx.fillRect(tx - tw/2, ty, tw, th);
+    const hy = ty + th*.46; ctx.fillStyle = '#5a5248'; ctx.fillRect(tx - tw/2, ty + th*.8, tw, th*.2); ctx.fillStyle = '#3a3a3e'; ctx.fillRect(tx + tw*.3, ty + th*.2, 4, th*.6); // the quay, the lighthouse
+    if (s <= 2) for (let i=0;i<3;i++){ const sx = tx - tw*.3 + i*tw*.12 + (REDUCE() ? 0 : (s ? T*.002 % 10 : 0)); B5VB.ship(ctx, sx, hy - 1, .28, T, false, true); if (s === 2) { ctx.fillStyle = 'rgba(10,10,14,.8)'; for (let k=0;k<4;k++) ctx.fillRect(sx - 3 + k*2, hy - 6 - hash(k, i)*3, 1, 1.6); } }
+    if (s <= 2) { const scx = tx + (s >= 2 ? tw*.04 : -tw*.02); poly(ctx, [[scx - 3, hy + 6],[scx + 3, hy + 6],[scx + 2, hy + 8],[scx - 2, hy + 8]], '#2a2018'); }
+    if (s === 3) { const rise = REDUCE() ? .7 : Math.min(1, (T % 6000)/4000); poly(ctx, [[tx - tw/2, hy + 4],[tx - tw*.2, hy - th*.42*rise],[tx + tw*.2, hy - th*.36*rise],[tx + tw/2, hy + 4]], 'rgba(30,60,74,.92)'); for (let i=0;i<3;i++) B5VB.ship(ctx, tx - tw*.12 + i*tw*.1, hy - th*.4*rise, .26, T, false, true); }
+    if (s >= 4) { for (let i=0;i<3;i++) { ctx.save(); ctx.translate(tx - tw*.1 + i*tw*.12, ty + th*.82); ctx.rotate(.3 - i*.2); B5VB.ship(ctx, 0, 0, .22, T, true); ctx.restore(); } }
+    ctx.restore(); ctx.strokeStyle = 'rgba(220,200,140,.6)'; ctx.lineWidth = 1.4; ctx.strokeRect(tx - tw/2, ty, tw, th); glow(ctx, tx, ty + th/2, tw*.8, '#d8c890', .12); // its light on the dark
+    return {fx:W*.26, fy:H*.9, fs:2.3}; },
+
+  /* Fent Reach: a low grey northern sky, a wall and its harbour below, the sea; sails on it, more with each step; step 4 the flag down */
+  b5v_fent(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.44, [[0, '#5a6066'], [1, '#9aa0a2']]); for (let i=0;i<3;i++) cloud(ctx, W*(.2 + i*.3), H*(.12 + i*.05), W*.32, 3, '#7a8086', .16);
+    B4VB.sea(ctx, W, H, H*.44, '#5a6a70', '#24323a', T, 8);
+    const n = [0, 18, 60, 90, 90][Math.min(s, 4)]; for (let i=0;i<n;i++){ const d = hash(i, 71), x = W*(.08 + hash(i, 72)*.9), y = H*(.45 + d*.14), sc = .3 + d*.5; B5VB.longboat(ctx, x, y, sc*.6, hash(i, 73) > .5 ? 1 : -1, `rgba(10,10,14,${.5 + d*.4})`); }
+    if (s >= 2) { ctx.fillStyle = 'rgba(6,8,10,.25)'; ctx.fillRect(0, H*.5, W, H*.12); } // the sea darker under them
+    ctx.fillStyle = '#4a4844'; ctx.fillRect(0, H*.74, W, H*.26); ctx.fillStyle = '#5a5852'; for (let i=0;i<14;i++) ctx.fillRect(i*W/13, H*.7, W/26, H*.05); // the wall and its merlons
+    const fx0 = W*.86; B2F.line(ctx, '#2a2420', 1.4, [[fx0, H*.72], [fx0, H*.36]]); const fy = s >= 4 ? H*(.36 + (REDUCE() ? .2 : Math.min(.3, (T % 9000)/9000*.4))) : H*.36; poly(ctx, [[fx0, fy],[fx0 + 18, fy + 3 + (REDUCE() ? 0 : Math.sin(T/300)*2)],[fx0, fy + 10]], '#4a5a74'); ctx.fillStyle = '#c8b47a'; ctx.fillRect(fx0 + 3, fy + 3, 4, 3);
+    if (s >= 2) for (let i=0;i<3;i++) drawFigure(ctx, 'b5_letherii', W*(.5 + i*.1), H*.76, 1.4, T, {still:true, dir:i % 2 ? 1 : -1, pick:i});
+    return {fx:W*.3, fy:H*.8, fs:2.2}; },
+
+  /* the Trate lighthouse at night: the gallery and the great lamp, the harbour below, the black fleet beyond. Step 1 Arahathan's small
+     light on the harbour wall; step 2 his line of white fire and the sea heaving up; step 3 the sea turned toward the lighthouse; step 4
+     the lamp out, the ships coming in. */
+  b5v_lighthouse(ctx, W, H, T, v){ const s = v.step || 0, out = s >= 4;
+    B4VB.sky(ctx, W, H*.55, [[0, '#04050a'], [1, '#141826']]); B3VB.stars(ctx, W, H, T, 40, .45, .5, 81);
+    B4VB.sea(ctx, W, H, H*.55, '#14202a', '#060a0e', T, 9);
+    for (let i=0;i<9;i++) B5VB.longboat(ctx, W*(.08 + i*.09) + (out && !REDUCE() ? (T*.003 % 20) : 0), H*(.6 + hash(i, 81)*.04), .45, -1, '#020204');
+    ctx.fillStyle = '#0a0a0e'; ctx.fillRect(0, H*.78, W*.6, 5); // the breakwater
+    if (s >= 1 && s <= 3) { glow(ctx, W*.34, H*.77, 12, '#e8f0ff', .5); }
+    if (s === 2) { ctx.strokeStyle = 'rgba(240,248,255,.8)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.34, H*.77); ctx.lineTo(W*.12, H*.6); ctx.stroke(); glow(ctx, W*.2, H*.66, 40, '#e0f0ff', .15); }
+    if (s >= 2 && s <= 3) { const k = s === 3 ? 1 : .6, cx = s === 3 ? W*.62 : W*.28; ctx.fillStyle = 'rgba(8,16,22,.95)'; ctx.beginPath(); ctx.moveTo(cx - W*.3, H*.8); ctx.quadraticCurveTo(cx, H*(.8 - .5*k), cx + W*.3, H*.8); ctx.fill(); ctx.strokeStyle = 'rgba(150,190,210,.25)'; ctx.lineWidth = 1; ctx.stroke(); }
+    const lx = W*.8; poly(ctx, [[lx - 16, H],[lx - 9, H*.32],[lx + 9, H*.32],[lx + 16, H]], '#1e1e24'); ctx.fillStyle = '#2a2a30'; ctx.fillRect(lx - 14, H*.3, 28, 4); ctx.fillRect(lx - 8, H*.2, 16, H*.1);
+    if (!out) { const f = REDUCE() ? 1 : .9 + Math.sin(T/120)*.06; glow(ctx, lx, H*.25, 70, '#ffc870', .45*f); ctx.fillStyle = '#ffe8b0'; ctx.fillRect(lx - 4, H*.22, 8, 6); }
+    else { ctx.fillStyle = 'rgba(10,20,26,.9)'; ctx.fillRect(lx - 10, H*.18, 20, H*.14); }
+    return {fx:lx - 2, fy:H*.3, fs:1.5, air:true}; },
+
+  /* the road south: a hot white sky, the road white with dust, black fields to either side, the column of the disarmed. Step 3 the
+     burned farms close; step 4 Letheras, its towers over the haze and the gates open. */
+  b5v_road(ctx, W, H, T, v){ const s = v.step || 0, city = s >= 4;
+    B4VB.sky(ctx, W, H*.5, [[0, '#b8b4a8'], [1, '#e8e0cc']]); glow(ctx, W*.7, H*.12, W*.3, '#fff6dc', .25);
+    if (city) { B5VB.skyline(ctx, W, H*.5, 'rgba(90,96,110,.75)', 21); ctx.fillStyle = 'rgba(60,64,76,.9)'; ctx.fillRect(W*.44, H*.4, W*.12, H*.1); ctx.fillStyle = '#1a1a1e'; ctx.fillRect(W*.48, H*.43, W*.04, H*.07); }
+    ctx.fillStyle = s >= 2 ? '#1e1a16' : '#5a5a3a'; ctx.fillRect(0, H*.5, W, H*.5); // the fields; black from step 2
+    if (s >= 2) { for (let i=0;i<4;i++){ const x = W*(.1 + i*.26), y = H*(.56 + hash(i, 91)*.06); ctx.fillStyle = '#0e0c0a'; ctx.fillRect(x, y - 8, 16, 8); poly(ctx, [[x - 2, y - 8],[x + 8, y - 14],[x + 18, y - 8]], '#0e0c0a'); glow(ctx, x + 8, y - 2, 10, '#ff6a30', .12); ctx.strokeStyle = 'rgba(80,70,60,.35)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x + 8, y - 10); ctx.lineTo(x + 14, y - 40); ctx.stroke(); } }
+    poly(ctx, [[W*.42, H*.5],[W*.58, H*.5],[W*.9, H],[W*.1, H]], '#c8bc9a'); // the road
+    for (let i=0;i<26;i++){ const d = i/26, x = W*(.5 + (hash(i, 92) - .5)*(.1 + d*.6)), y = H*(.52 + d*.4); B3VB.walker(ctx, x, y, .5 + d*1.4, `rgba(60,56,52,${.5 + d*.4})`, T, i, hash(i, 93) > .5 ? -1 : 1); }
+    B3VB.dust(ctx, W*.5, H*.6, W*.7, H*.2, T, .14, 9);
+    return {fx:W*.3, fy:H*.92, fs:2.3}; },
+
+  /* Brans Keep: a keep against a cliff, a lake, two corner towers, the army in lines across the field, the dry channel on the right.
+     Step 1 the wraiths and the white fire; step 2 the pillars rising far off; step 3 the towers gone, the pillars leaning; step 4 the
+     same, with the Whitefinders still fighting far out on the right. */
+  b5v_brans(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.5, s >= 2 ? [[0, '#3a3440'], [1, '#8a7a70']] : [[0, '#6a7890'], [1, '#d8c8b0']]);
+    ctx.fillStyle = '#3a3a3e'; poly(ctx, [[0, H*.1],[W*.16, H*.14],[W*.2, H*.56],[0, H*.56]], '#3a3a3e'); // the cliff
+    ctx.fillStyle = '#4a4a4e'; ctx.fillRect(W*.08, H*.3, W*.14, H*.26); // the keep
+    const tw = s >= 3 ? 0 : 1; [[W*.06, H*.24], [W*.22, H*.26]].forEach(([x, y], i) => { if (tw) { ctx.fillStyle = '#56565a'; ctx.fillRect(x - 5, y, 10, H*.32); if (s === 1 && !REDUCE() && (Math.floor(T/700) + i) % 2) { ctx.strokeStyle = 'rgba(250,250,255,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(W*(.5 + i*.2), H*.6); ctx.stroke(); } } else { ctx.fillStyle = '#2a2a2e'; ctx.fillRect(x - 6, y + H*.22, 12, H*.1); glow(ctx, x, y + H*.2, 30, '#ff8a40', .3); } });
+    ctx.fillStyle = '#5a7088'; ctx.fillRect(0, H*.56, W*.08, H*.1); // the lake
+    ctx.fillStyle = vgrad(ctx, H*.56, H, [[0, '#5a5a3a'], [1, '#2e2e20']]); ctx.fillRect(W*.08, H*.56, W, H*.44);
+    ctx.fillStyle = '#2a2418'; ctx.fillRect(W*.74, H*.56, 6, H*.44); // the dry channel
+    if (s >= 1) for (let i=0;i<30;i++){ const x = W*(.36 + hash(i, 101)*.56), y = H*(.6 + hash(i, 102)*.06); drawFigure(ctx, 'b5_wraith', x, y, .5, T, {air:true, phase:i}); }
+    if (s === 1) for (let i=0;i<6;i++) glow(ctx, W*(.4 + hash(i, 103)*.4), H*.62, 20, '#f0f4ff', .2);
+    if (s >= 2) { const lean = s >= 3 ? (REDUCE() ? .3 : .2 + Math.sin(T/3000)*.05) : 0; for (let i=0;i<4;i++){ const bx = W*(.48 + i*.14), top = H*(s === 2 ? .05 : .02); ctx.save(); ctx.translate(bx, H*.62); ctx.rotate(-lean*(i < 2 ? 1 : .4)); const g = ctx.createLinearGradient(-14, 0, 14, 0); g.addColorStop(0, 'rgba(8,6,12,.4)'); g.addColorStop(.5, 'rgba(8,6,12,.95)'); g.addColorStop(1, 'rgba(8,6,12,.4)'); ctx.fillStyle = g; ctx.fillRect(-12 - i*2, top - H*.62, 24 + i*4, H*.62 - top);
+      ctx.strokeStyle = 'rgba(120,100,160,.25)'; ctx.lineWidth = 1; for (let k=0;k<6;k++){ const yy = -((T*.03*(REDUCE() ? 0 : 1) + k*30) % (H*.6)); ctx.beginPath(); ctx.moveTo(-12, yy); ctx.lineTo(12, yy - 8); ctx.stroke(); } ctx.restore(); } }
+    for (let k=0;k<3;k++) for (let i=0;i<9;i++) drawFigure(ctx, 'b5_letherii', W*(.24 + i*.055 + k*.02), H*(.7 + k*.07), .7 + k*.12, T, {still:true, pick:i + k}); // the left and centre, in their lines
+    if (s >= 3) for (let i=0;i<6;i++) { drawFigure(ctx, 'b5_letherii', W*(.8 + i*.03), H*.72, .8, T, {phase:i}); drawFigure(ctx, 'b5_edur', W*(.82 + i*.03), H*.7, .8, T, {phase:i, dir:-1}); } // the right, across the channel, hand to hand
+    else for (let i=0;i<6;i++) drawFigure(ctx, 'b5_letherii', W*(.8 + i*.03), H*.72, .8, T, {still:true, pick:i});
+    return {fx:W*.16, fy:H*.92, fs:2.3}; },
+
+  /* the bridge over Main Canal: the city burning beyond, the canal green below, the shield wall across the bridge; the Emperor at the far
+     end, small and catching the light, coming nearer with the steps; step 3 Moroch out in the middle alone. */
+  b5v_bridge(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.46, [[0, '#2a2026'], [1, '#8a5a40']]); B5VB.skyline(ctx, W, H*.46, '#1a1618', 33, 4, T);
+    ctx.fillStyle = '#2a4a42'; ctx.fillRect(0, H*.72, W, H*.28); ctx.fillStyle = 'rgba(255,140,60,.12)'; for (let i=0;i<12;i++) ctx.fillRect(hash(i, 111)*W, H*(.76 + hash(i, 112)*.2), 14, 1); // Main Canal
+    poly(ctx, [[0, H*.62],[W, H*.5],[W, H*.56],[0, H*.72]], '#5a5450'); ctx.fillStyle = '#3a3634'; for (let i=0;i<5;i++) { const x = W*(.1 + i*.2), y = H*(.68 - i*.035); ctx.fillRect(x, y, 6, H*.08); } // the bridge, going away to the right, its piers
+    B2F.line(ctx, '#6a6460', 2, [[0, H*.6], [W, H*.48]]); // the rail
+    const near = [0, .15, .3, .5][Math.min(s, 3)];
+    if (s >= 1) { const ex = W*(.92 - near*.4), ey = H*(.52 + near*.06), es = 1 + near*.8; for (let i=0;i<5;i++) drawFigure(ctx, 'b5_edur', ex + 10 + i*7, ey - 2, es*.8, T, {still:s >= 2, dir:-1, phase:i}); drawFigure(ctx, 'b5v_emperor', ex, ey, es, T, {still:s >= 2, dir:-1}); }
+    const wx = s >= 3 ? W*.18 : W*.22; for (let i=0;i<7;i++) { drawFigure(ctx, 'b5_letherii', wx - i*9, H*(.66 + i*.01), 1.5, T, {still:true, dir:1, pick:i}); }
+    return {fx:s >= 3 ? W*.42 : W*.3, fy:s >= 3 ? H*.66 : H*.7, fs:2}; },
+
+  /* the reader, back at the chapter's reading place (B5READ): 1 the barracks yard at night; 2 the quay at Trate, mist; 3 the barge at
+     Kraig's Landing, the regiment's fires on the bank; 4 the rampart at High Fort, the fires across the pasture; 5 the ash road, a farm's
+     coals; 6 Brans Keep at first light, a shield on the grass; 7 the barricade by the Quillas Canal, the city burning. The tile lies on
+     whatever they read on: black stone for Perrit, bone for the tile-woman. */
+  b5tiles(ctx, W, H, T, v){ const ch = (VISIONS[v.id] && VISIONS[v.id].ch) || 1, bone = visReader().id !== 'perrit';
+    const SK = {1:['#05060c', '#141828'], 2:['#3a3a44', '#a88a74'], 3:['#04060a', '#121a20'], 4:['#06060a', '#1a1814'], 5:['#2a2420', '#6a5a4a'], 6:['#4a4a5a', '#d8c0a8'], 7:['#140c0e', '#5a2a1e']}[ch];
+    B4VB.sky(ctx, W, H*.64, [[0, SK[0]], [1, SK[1]]]); if (ch === 1 || ch === 3 || ch === 4) B3VB.stars(ctx, W, H, T, 40, .5, .5, 30 + ch);
+    const gnd = {1:'#3a3832', 2:'#3a3028', 3:'#2e261c', 4:'#2a2e1c', 5:'#1e1a16', 6:'#4a4a30', 7:'#2e2e32'}[ch]; ctx.fillStyle = gnd; ctx.fillRect(0, H*.64, W, H*.36);
+    if (ch === 1) { ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i=0;i<8;i++){ ctx.beginPath(); ctx.moveTo(0, H*(.68 + i*.04)); ctx.lineTo(W, H*(.68 + i*.04)); ctx.stroke(); } ctx.fillStyle = '#16141a'; ctx.fillRect(0, H*.3, W, H*.34); B4VB.lamp(ctx, W*.7, H*.58, T, 50, .4); }
+    else if (ch === 2 || ch === 3) { B4VB.sea(ctx, W, H, H*.6, ch === 2 ? '#5a6a70' : '#0e161c', ch === 2 ? '#2a3a40' : '#04080a', T, 11); ctx.fillStyle = gnd; ctx.fillRect(0, H*.76, W, H*.24); ctx.strokeStyle = 'rgba(0,0,0,.4)'; for (let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(0, H*(.78 + i*.045)); ctx.lineTo(W, H*(.78 + i*.045)); ctx.stroke(); }
+      B5VB.fog(ctx, W, H, H*.5, H*.8, T, .35, 13); if (ch === 3) { for (let i=0;i<5;i++) B4VB.fire(ctx, W*(.08 + i*.06), H*.62, T, .4); B4VB.lamp(ctx, W*.7, H*.74, T, 40, .4); } }
+    else if (ch === 4) { for (let i=0;i<14;i++) glow(ctx, W*(.5 + hash(i, 121)*.46), H*(.6 + hash(i, 122)*.03), 5, '#ff9040', .35); ctx.fillStyle = '#0a0a08'; ctx.fillRect(W*.04, H*.2, W*.1, H*.44); B4VB.fire(ctx, W*.68, H*.88, T, 1.6); }
+    else if (ch === 5) { for (let i=0;i<30;i++) ell(ctx, hash(i, 131)*W, H*(.66 + hash(i, 132)*.34), 6 + hash(i, 133)*20, 1.2, 'rgba(90,80,70,.25)'); glow(ctx, W*.7, H*.86, 30, '#ff6a30', .3); for (let i=0;i<6;i++) ell(ctx, W*(.66 + hash(i, 134)*.1), H*.88, 3, 1.6, '#ff7a3a'); }
+    else if (ch === 6) { B3VB.dust(ctx, W*.6, H*.6, W*.7, H*.16, T, .2, 6); ctx.fillStyle = '#3a3a3e'; ctx.fillRect(W*.02, H*.24, W*.1, H*.4); ctx.save(); ctx.translate(W*.5, H*.88); ctx.scale(1, .42); ctx.beginPath(); ctx.arc(0, 0, 22, 0, 7); ctx.fillStyle = '#4a5664'; ctx.fill(); ctx.strokeStyle = '#7a7a76'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#f0ece0'; ctx.fillRect(-2, -20, 4, 8); ctx.restore(); }
+    else if (ch === 7) { B5VB.skyline(ctx, W, H*.6, '#0e0c0e', 41, 3, T); ctx.fillStyle = '#1a2a28'; ctx.fillRect(0, H*.62, W, H*.08); ctx.fillStyle = '#2a201a'; for (let i=0;i<4;i++) ctx.fillRect(W*(.56 + i*.1), H*.6 - 12, W*.08, 14); B4VB.fire(ctx, W*.8, H*.7, T, .8); B4VB.lamp(ctx, W*.8, H*.64, T, 50, .3, '#ff9a50'); }
+    B5VB.tile(ctx, W*.5, H*.88, 22, bone);
+    if (ch === 7) { ctx.fillStyle = '#c8a050'; ctx.beginPath(); ctx.arc(W*.56, H*.9, 2.4, 0, 7); ctx.fill(); B2F.line(ctx, '#a8a8b0', 1, [[W*.42, H*.92], [W*.46, H*.9]]); } // the dock and the knife
+    return {fx:W*.3, fy:H*.86, fs:2.4}; },
+});
+
+/* Moroch walks south with a stick and a bound leg (b5v5's steps); on the bridge (b5v7) he has his sword again */
+{ const _df = drawFigure; drawFigure = function(ctx, kind, x, y, s, t, o = {}){ if (kind === 'b5v_moroch' && VIS && VIS.id === 'b5v5' && o.limp == null) o = Object.assign({}, o, {limp:true}); if (kind === 'b5v_preda' && VIS && VIS.id === 'b5v6' && VIS.step >= 4 && o.sword == null) o = Object.assign({}, o, {sword:true}); return _df(ctx, kind, x, y, s, t, o); }; }
 
 /* ============ Book Five: the games at the fires (v8.0) ============ */
 /* The games pass for Book Five keeps its games here and wraps the chapters' fire nodes from this file, as Book Four's 79 does, so the

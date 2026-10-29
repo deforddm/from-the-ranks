@@ -14,9 +14,14 @@ const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
 function worldSVG(){
-  return `<svg class="worldmap" viewBox="0 0 640 300" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku">
-  <rect width="640" height="300" fill="#1c1610"/>
-  <rect width="640" height="300" fill="#16304a" opacity=".35"/>
+  return `<svg class="worldmap" viewBox="${BOOKS.mt && !BOOKS.mt.coming ? '-130 0 770 300' : '0 0 640 300'}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}">
+  <rect x="-130" width="770" height="300" fill="#1c1610"/>
+  <rect x="-130" width="770" height="300" fill="#16304a" opacity=".35"/>
+  ${BOOKS.mt && !BOOKS.mt.coming ? `<path d="M-130 70 C-112 64 -92 76 -84 100 C-76 126 -88 150 -80 176 C-72 204 -96 232 -130 240 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
+  <text x="-112" y="128" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="17" fill="#d8dcc8" transform="rotate(-90 -112 128)">Lether</text>
+  <g font-family="Alegreya Sans SC, sans-serif" font-size="11" fill="#e8e0b0"><circle cx="-92" cy="196" r="4" fill="#c8b47a"/><text x="-122" y="218">Letheras · Book Five</text></g>
+  <path d="M-60 40 L-60 260" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
+  <text x="-46" y="150" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="11" fill="#8fb0d0" transform="rotate(-90 -46 150)">oceans away · years before</text>` : ''}
   <path d="M20 40 C80 20 170 30 230 60 C260 80 270 120 250 160 C240 200 200 240 150 262 C110 280 60 270 34 240 C10 210 8 150 14 100 Z" fill="#3a2e1e" stroke="#7a6640" stroke-width="1.5"/>
   <path d="M420 30 C480 18 560 30 600 60 C628 90 626 150 606 200 C590 240 548 276 500 284 C452 290 420 262 410 220 C398 170 400 110 404 70 Z" fill="#2e3a24" stroke="#6a7a50" stroke-width="1.5"/>
   <text x="120" y="116" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#e8d6b0">Seven Cities</text>
@@ -47,6 +52,7 @@ function whereBooksMeetHTML(open){
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
       <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
+      ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and no road joins it to the other books yet.</li>` : ''}
       <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }

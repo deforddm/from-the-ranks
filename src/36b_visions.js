@@ -507,8 +507,9 @@ function visNodes(id){
   const V = VISIONS[id], n = V.steps.length;
   V.steps.forEach((st, i) => { DLG[`vis_${id}_${i}`] = () => { const last = i === n - 1, nx = last ? () => visEnd() : `vis_${id}_${i + 1}`;
     if (visAgain(st)) { const r = visReader(), sh = r.he ? 'He' : 'She', hs = r.he ? 'His' : 'Her';
-      return {sp:visTuftHere() ? r.name : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:visTiles() ? 'Gather the tiles.' : 'Put the cards away.', go:nx}],
-      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the card go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the card go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : visTiles() ? `The tile goes still, and dark, and is only stone again.` : `The card goes still, and dark, and is only paint and wood again.`}; }
+      const cd = visTiles() ? 'tile' : 'card'; // v8.0: Book Five's reader lets a tile go
+      return {sp:visTuftHere() ? r.name : visTiles() ? 'The Tiles of the Holds' : 'The Deck of Dragons', onshow:() => visStep(id, i), ch:[{t:visTiles() ? 'Gather the tiles.' : 'Put the cards away.', go:nx}],
+      txt:visTuftHere() ? (VIS.again ? `${r.name} lets the ${cd} go. ${sh} has watched this one before. It doesn't get any easier, and ${sh.toLowerCase()} doesn't say anything.` : `${r.name} lets the ${cd} go. ${sh} doesn't say anything for a long time. ${hs} hands are cold.`) : visTiles() ? `The tile goes still, and dark, and is only stone again.` : `The card goes still, and dark, and is only paint and wood again.`}; }
     return {sp:st.sp || V.who, txt:typeof st.txt === 'function' ? st.txt() : st.txt, onshow:() => visStep(id, i),
       ch:st.ch ? st.ch.map(c => ({t:c.t, fx:() => { S.f[c.set[0]] = c.set[1]; }, go:nx})) : [{t:st.go || (last ? (visTiles() ? 'Gather the tiles.' : 'Put the cards away.') : 'Go on.'), go:nx}]}; }; });
 }
