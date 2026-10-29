@@ -195,9 +195,9 @@ SCENEX.b5_c6_barrow = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
     x.fillStyle = '#0a0a08'; x.beginPath(); x.moveTo(0, H); x.lineTo(0, H*.8); x.quadraticCurveTo(W*.3, H*.7, W*.55, H*.78); x.quadraticCurveTo(W*.8, H*.84, W, H*.76); x.lineTo(W, H); x.fill(); }), 0, 0, W, H); // the slope in front, where the squad is
   ctx.globalCompositeOperation = 'lighter'; const kf = mo ? .7 + Math.sin(t/240)*.3 : .9; glow(ctx, W*.26, hz - H*.05, H*.22, '#ff6a2a', .35*kf); ctx.globalCompositeOperation = 'source-over'; // the keep burning
   for (let i = 0; i < 5; i++) { const fx = W*(.18 + i*.04), fy = hz - H*.08, fl = mo ? Math.sin(t/150 + i*2) : 0; poly(ctx, [[fx - 3, fy], [fx, fy - 8 - fl*3], [fx + 3, fy]], 'rgba(255,140,60,.8)'); }
-  const mx0 = W*.36, mx1 = W*.86, my = hz + H*.08; ctx.fillStyle = '#16140e'; ctx.beginPath(); ctx.moveTo(mx0, my); ctx.quadraticCurveTo((mx0 + mx1)/2, my - H*(done ? .07 : .04), mx1, my); ctx.lineTo(mx1, my + H*.01); ctx.lineTo(mx0, my + H*.01); ctx.fill(); // the mound
+  const mx0 = W*.36, mx1 = W*.86, my = hz + H*.08; ctx.globalCompositeOperation = 'lighter'; glow(ctx, (mx0 + mx1)/2, my - H*.02, W*.28, '#ff9a4a', done ? .08 : .16); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#2a2418'; ctx.beginPath(); ctx.moveTo(mx0, my); ctx.quadraticCurveTo((mx0 + mx1)/2, my - H*(done ? .07 : .04), mx1, my); ctx.lineTo(mx1, my + H*.01); ctx.lineTo(mx0, my + H*.01); ctx.fill(); // the mound
   for (let i = 0; i < 40; i++) { const u = hash(i, 5711), tx = lerp(mx0 - W*.02, mx1 + W*.02, u), ty = my - Math.sin(u*Math.PI)*H*(done ? .07 : .04) - 2 + (hash(i, 5712) - .5)*H*.03, fl = mo ? .6 + Math.sin(t/120 + i*1.9)*.4 : .9; if (done && hash(i, 5713) > .35) continue; ctx.fillStyle = `rgba(255,190,110,${(.9*fl).toFixed(2)})`; ctx.fillRect(tx, ty, 1.4, 1.4); } // torches along it
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.12 + i*17, H*.93, 1.6, t, {phase:i, dir:1, still:true}));
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.9 - i*17, H*.95, 1.6, t, {phase:i, dir:-1, still:true}));
   vign(ctx, W, H, .64, .5); };
 
 /* ---------------- the chapter's gear: ART['item/<key>'] on Book Five's ground ----------------
