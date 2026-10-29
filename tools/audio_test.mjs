@@ -91,6 +91,8 @@ ok(b5v.mt === 'mt' && b5v.title && b5v.title.amb === 'river_night' && b5v.end &&
 ok(b5v.places.join() === 'city_night,sea,river_night,hills,burnt,hills,city,river,river_night', 'Book Five\'s reading places, and b5_ falling to the river country: ' + b5v.places.join(', '));
 const b5c = await page.evaluate(() => ['b5_c1_lowwalk', 'b5_c1_festival', 'b5_c1_court', 'b5_c2_quay', 'b5_c2_wrecks', 'b5_c2_strand', 'b5_c2_hold', 'b5_c3_dock', 'b5_c3_barges', 'b5_c3_greenfire', 'b5_c3_tents'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b5c.join() === 'city,city_night,interior,sea,sea_night,sea_night,interior,river,river_night,river_night,river', 'Book Five\'s chapters: Letheras in the city, Trate on the sea, Kraig\'s Landing on the river: ' + b5c.join(', '));
+const b5d = await page.evaluate(() => ['b5_c4_road', 'b5_c4_rampart', 'b5_c4_field', 'b5_c4_gully', 'b5_c4_lightning', 'b5_c4_wood', 'b5_c4_surrender'].map(k => AUDIO._dev.placeAmb(k)));
+ok(b5d.join() === 'forest,siege,hills,night,siege,forest_night,plain', 'Book Five\'s High Fort: the forest road, the rampart, the field, the gully at night, the battle, the wood, the road south: ' + b5d.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));

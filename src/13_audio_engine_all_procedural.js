@@ -522,6 +522,8 @@ const AUDIO = (() => {
     b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
     // Kraig's Landing (83) on the river: the dock and the camp, the barges and the bank at night
     b5_c3_dock:'river', b5_c3_barges:'river_night', b5_c3_bank:'river_night', b5_c3_greenfire:'river_night', b5_c3_tents:'river', b5_c3_collapse:'river_night',
+    // High Fort (84): the forest road, the west rampart and the field, Dry Gully at night, the battle, the wood, the road south
+    b5_c4_road:'forest', b5_c4_forest:'forest', b5_c4_wood:'forest_night', b5_c4_rampart:'siege', b5_c4_field:'hills', b5_c4_gully:'night', b5_c4_lightning:'siege', b5_c4_surrender:'plain',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
