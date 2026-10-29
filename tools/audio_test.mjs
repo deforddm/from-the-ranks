@@ -95,6 +95,8 @@ const b5d = await page.evaluate(() => ['b5_c4_road', 'b5_c4_rampart', 'b5_c4_fie
 ok(b5d.join() === 'forest,siege,hills,night,siege,forest_night,plain', 'Book Five\'s High Fort: the forest road, the rampart, the field, the gully at night, the battle, the wood, the road south: ' + b5d.join(', '));
 const b5e = await page.evaluate(() => ['b5_c5_road', 'b5_c5_burned', 'b5_c5_farm', 'b5_c5_cache', 'b5_c5_keep', 'b5_c5_arrival'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b5e.join() === 'burnt,burnt,burnt,camp,camp,hills', 'Book Five\'s road south: the burned country, a burned farm, the cache, the camp at Brans Keep, the keep from the north road: ' + b5e.join(', '));
+const b5f = await page.evaluate(() => ['b5_c6_lines', 'b5_c6_eve', 'b5_c6_shore', 'b5_c6_channel', 'b5_c6_pillars', 'b5_c6_break', 'b5_c6_hills', 'b5_c6_dissent', 'b5_c6_barrow'].map(k => AUDIO._dev.placeAmb(k)));
+ok(b5f.join() === 'camp_night,camp_night,lake,siege,siege,siege,hills,plain,barrow', 'Book Five\'s Brans Keep: the lines and the eve at night, the lake shore, the channel and the pillars and the break, the hills, the Dissent road, the barrow: ' + b5f.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));

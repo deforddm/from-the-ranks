@@ -5,7 +5,7 @@
      Chapter One (session 6); headline only: a chalked list of categories and odds, and one line of result the next morning. Never a
      named swimmer, never the swim itself.
    - Harbour Tiles (Ch2) and Knucklebones (Ch3) are written below with their chapters; the Token Auction (Ch5) is written below with its
-     chapter; the Whitefinders' Drill (Ch6): the games pass adds it below.
+     chapter; the Whitefinders' Drill (Ch6) is written below with its chapter.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim), keep their deeds on S.deeds, and pay once a book as the table closes. */
 
 /* ---- the frame: a night sky over Letheras, a lamp, a game's own timers ---- */
@@ -381,6 +381,70 @@ function playTokens(opt = {}){
 /* what the tokens leave behind */
 function b5TokensPay(r){ if (!r) return; S.f.b5_tokens = {wins:(r.wins || []).length, owed:r.owed || 0, resold:!!r.resold, lots:r.lots || 0}; save(); }
 
+/* ============ 5. The Whitefinders' Drill ============
+   At the Sixth's fire on the eve of Brans Keep (Ch6, b5g_drill): the old drill-sergeant has the Sixth in a line on the grass with two of the
+   Second Company swinging drill-poles at it, and calls the count. Book Three's Shield Wall for the engine: a pole comes down, and the shields
+   go boss to boss when it reaches the line, not before and not after. Three counts, each faster. Then the lock, on three: every boss to the
+   boss beside it, white finger to white finger. As the table closes, once a book: 10 docks out of the Finadd's purse for the whole drill, and
+   Thegg +1 loyalty at nine in ten held and a clean lock. */
+function playDrill(opt = {}){
+  const pace = ms => (REDUCE() ? ms * .5 : ms) * Math.max(.4, SET.speed || 1), who = 'The drill-sergeant'; let on = () => true;
+  const COUNTS = [{n:4, gap:900}, {n:5, gap:760}, {n:6, gap:640}];
+  const g = MG.state = {phase:'intro', count:0, poles:[], held:0, total:0, hits:[], up:0, lock:null, locked:null, over:false, talk:''};
+  mgOpen({kick:'Brans Keep · the Whitefinders\' lines, the eve', title:'The Whitefinders\' Drill', leaveText:'Fall out', done:r => opt.after && opt.after(r), leave:() => finish(true)}); on = b5gOn();
+  const draw = () => mgPanel(`<div class="cpbar"><span>Count ${Math.min(g.count + 1, COUNTS.length)} of ${COUNTS.length}</span><span>Boss to boss: <b>${g.held}</b> of ${g.total}</span><span>${g.lock ? 'The lock' : ''}</span></div>
+      ${g.talk}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="drDone" data-bot="1">Fall out</button>` : g.phase === 'intro' || g.phase === 'between' ? `<button class="btn primary" id="drGo" data-bot="1">${g.phase === 'intro' ? 'Shields.' : 'Ready.'}</button>` : `<button class="btn primary" id="drUp" data-bot="1">${g.lock ? 'LOCK' : 'Boss to boss'}</button>`}</div>
+      <p class="fine">Tap when the pole reaches the line (or tap the line itself). Early and the shields are apart again when it lands; late and it is through. Then the lock, on three.</p>
+      <p class="hint keys"><kbd>Space</kbd> boss to boss / lock · <kbd>Esc</kbd> fall out</p>`),
+    bind = () => { if ($('#drGo')) $('#drGo').onclick = () => { AUDIO.play('click'); start(); }; if ($('#drUp')) $('#drUp').onclick = up; if ($('#drDone')) $('#drDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; },
+    redraw = () => { draw(); bind(); };
+  const result = () => ({held:g.held, total:g.total, locked:!!g.locked, done:g.over && g.count >= COUNTS.length});
+  const start = () => { if (g.over) return; const V = COUNTS[g.count]; g.phase = 'count'; const t0 = performance.now(); g.poles = []; for (let i = 0; i < V.n; i++) g.poles.push({at:t0 + pace(1200 + i * V.gap + (hash(i, g.count, 17) - .5) * 160), x:.2 + hash(i, g.count, 19) * .6, done:false, held:false});
+    g.total += V.n; g.talk = mgSay(who, b5gPick(['"Poles!"', '"On the line. Wait for it."', '"Boss to boss. *When it lands.*"'])); redraw(); setTimeout(tick, 50); };
+  const tick = () => { if (!on() || g.phase !== 'count') return; const now = performance.now(); let any = false;
+    g.poles.forEach(a => { if (a.done) return; any = true; if (now > a.at + pace(170)) { a.done = true; a.held = false; g.hits.push(now); AUDIO.play('blunt'); } });
+    if (!any) { setTimeout(endCount, pace(500)); return; } setTimeout(tick, 40); };
+  const up = () => { if (g.over) return; if (g.lock) return lockNow(); if (g.phase !== 'count') return; const now = performance.now(); g.up = now; const a = g.poles.find(a => !a.done && Math.abs(now - a.at) <= pace(170));
+    if (a) { a.done = true; a.held = true; g.held++; AUDIO.play('sword'); } else AUDIO.play('miss'); };
+  const endCount = () => { if (!on() || g.over) return; g.count++; const V = COUNTS[g.count - 1], heldThis = g.poles.filter(a => a.held).length;
+    if (g.count >= COUNTS.length) { g.phase = 'lock'; g.lock = {t0:performance.now(), at:performance.now() + pace(2400)}; g.talk = mgSay(who, `"${heldThis === V.n ? 'Good. ' : ''}Now the lock. Every boss to the boss beside. On three. Not two." A breath. "One."`); redraw();
+      setTimeout(() => { if (on() && g.lock && g.locked === null) { g.talk = mgSay(who, '"Two."'); redraw(); } }, pace(800)); setTimeout(() => { if (on() && g.lock && g.locked === null) { g.talk = mgSay(who, '"*Three.*"'); redraw(); } }, pace(1600)); setTimeout(() => { if (on() && g.lock && g.locked === null) lockNow(true); }, pace(2400 + 350)); return; }
+    g.phase = 'between'; g.talk = mgSay(who, heldThis === V.n ? b5gPick(['"Every one. Again, and faster."', '"Clean. They\'ll swing quicker now."']) : heldThis >= V.n - 1 ? b5gPick(['"One through. One is a soldier down. Again."', '"Nearly. Nearly is a line with a hole in it. Again."']) : b5gPick(['"That line is a fence with the boards off. Again."', `"${numw(V.n - heldThis, true)} through. Boss to boss *when it lands*. Again."`])); redraw(); };
+  const lockNow = late => { if (!g.lock || g.locked !== null) return; const d = performance.now() - g.lock.at; g.locked = !late && Math.abs(d) <= pace(260); g.over = true;
+    AUDIO.play(g.locked ? 'up' : 'blunt'); const frac = g.held / Math.max(1, g.total); mgDeed('b5Drill'); S.f.b5_drillBest = Math.max(S.f.b5_drillBest || 0, Math.round(frac * 100)); if (g.locked && frac >= .9) mgDeed('b5DrillClean');
+    g.talk = mgSay(who, g.locked ? (frac >= .9 ? '"*That* is the finger." He lets his pole down. "Thirty years. That\'s a line I\'d stand behind."' : frac >= .6 ? '"The lock was right. The rest wants work. You\'ve tonight."' : '"The lock was right. The rest of it was a sieve. You\'ve tonight, and that\'s all."') : late ? '"Three was a breath ago. The line locked without you, and there\'s a gap in it the shape of a sergeant."' : (d < 0 ? '"That was two. On two your boss is out in front on its own, and so are you."' : '"Late. The line locked. You followed. Followers get the blade in the gap."')); redraw(); };
+  const finish = early => { if (g.over) return mgClose(result()); g.over = true; mgClose(Object.assign(result(), {left:early})); };
+  const geo = () => { const W = MG.W, H = MG.H; return {W, H, lineY:H * .64}; };
+  MG.cv.onpointerdown = () => up();
+  /* the table: grass at dusk, the line of the Sixth's shields, the Second's drill-poles coming down at it, the drill-sergeant counting */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const {W, H, lineY} = geo(), now = performance.now(), mo = REDUCE() ? 0 : 1;
+    const sk = ctx.createLinearGradient(0, 0, 0, H * .5); sk.addColorStop(0, '#1a1a30'); sk.addColorStop(.7, '#5a4a62'); sk.addColorStop(1, '#b07a5a'); ctx.fillStyle = sk; ctx.fillRect(0, 0, W, H * .5);
+    ctx.fillStyle = '#26222c'; ctx.beginPath(); ctx.moveTo(0, H * .5); for (let i = 0; i <= 12; i++) ctx.lineTo(W * i / 12, H * (.44 + hash(i, 9101) * .04)); ctx.lineTo(W, H * .5); ctx.fill(); // the hills
+    for (let i = 0; i < 18; i++) { const fl = mo ? .6 + Math.sin(t / 220 + i) * .4 : .8; ctx.fillStyle = `rgba(255,160,80,${(.6 * fl).toFixed(2)})`; ctx.fillRect(hash(i, 9102) * W, H * (.45 + hash(i, 9103) * .03), 1.4, 1.4); } // the Edur's fires coming out on the hills
+    ctx.fillStyle = '#3a4a2a'; ctx.fillRect(0, H * .5, W, H); ctx.fillStyle = 'rgba(160,180,90,.18)'; for (let i = 0; i < 40; i++) ctx.fillRect(hash(i, 9104) * W, H * .5 + hash(i, 9105) * H * .5, 1, 3); // the grass
+    ctx.strokeStyle = 'rgba(232,192,115,.5)'; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(W * .08, lineY); ctx.lineTo(W * .92, lineY); ctx.stroke(); ctx.setLineDash([]); // the line
+    const fs = clamp(H / 120, 1.6, 3), ids = SQUAD().slice(0, 5); ids.forEach((id, i) => drawFigure(ctx, id, W * (.2 + i * .15), lineY + fs * 14, fs, t, {still:true, dir:-1}));
+    drawFigure(ctx, 'b5_c6_drillsgt', W * .9, H * .9, fs * .9, t, {still:true, dir:-1});
+    const shut = now - g.up < 180 || g.locked; for (let i = 0; i < 5; i++) { const cx = W * (.2 + i * .15) + (shut ? 0 : (i - 2) * 3), cy = lineY - fs * 4; ell(ctx, cx, cy, fs * 6.4, fs * 5.6, '#2a323a'); ell(ctx, cx, cy, fs * 5.6, fs * 4.8, '#5a6878'); ell(ctx, cx, cy, fs * 1.4, fs * 1.8, '#e8e4d8'); } // the shields, the white fingertips
+    if (shut) { ctx.strokeStyle = 'rgba(232,228,216,.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W * .2, lineY - fs * 4); ctx.lineTo(W * .8, lineY - fs * 4); ctx.stroke(); } // boss to boss
+    ctx.fillStyle = 'rgba(232,192,115,.1)'; ctx.fillRect(W * .08, lineY - 10, W * .84, 20); // the band: boss to boss while the pole is in it
+    g.poles.forEach(a => { const k = clamp((now - (a.at - pace(1200))) / pace(1200), 0, 1.25), y = -24 + k * (lineY + 24), x = a.x * W;
+      if (a.done) { if (now - a.at < 700) b5gText(ctx, a.held ? 'held' : 'through', x, lineY - 16 - (now - a.at) / 25, 13, a.held ? '#9fe0b8' : '#e08070'); if (a.held || now - a.at > 500) return; }
+      ctx.save(); ctx.translate(x, y); ctx.rotate(-.5); ctx.strokeStyle = a.done ? '#6a3a24' : '#9a7a4a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, -46); ctx.lineTo(0, 0); ctx.stroke(); ctx.fillStyle = '#5a4026'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, 7); ctx.fill(); ctx.restore(); }); // the drill-poles
+    g.hits.forEach(h => { if (now - h < 400) { ctx.fillStyle = `rgba(160,40,30,${.3 * (1 - (now - h) / 400)})`; ctx.fillRect(0, 0, W, H); } });
+    if (g.lock) { const k = clamp((now - g.lock.t0) / (g.lock.at - g.lock.t0), 0, 1.3); b5gText(ctx, g.locked === null ? (k < .34 ? 'ONE' : k < .67 ? 'TWO' : 'THREE') : g.locked ? 'THE LINE LOCKS' : 'THE LINE LOCKS WITHOUT YOU', W / 2, H * .3, Math.min(34, W * .07), g.locked ? '#9fe0b8' : 'rgba(232,192,115,.9)'); ctx.fillStyle = 'rgba(232,192,115,.5)'; ctx.fillRect(W * .2, H * .36, W * .6 * Math.min(1, k), 4); }
+  };
+  mgKeys({' ':() => { const b = $('#drGo') || $('#drDone'); if (b) b.click(); else up(); }, Enter:() => { const b = $('#drGo') || $('#drDone'); b && b.click(); }});
+  g.talk = mgSay(who, `The old drill-sergeant has the Sixth in a line on the grass between the tents, with two of the Second Company and a drill-pole each. "Shields," he says. "Boss to boss when the pole lands. Not when you see it coming. When it *lands*. Then the lock, on my count." He looks along the line. "You will not like it. That's how you know it's drill."`) + (b5In('thegg') ? mgSay('', 'Thegg is already in the line, with his shield up and his feet set, waiting.') : '');
+  redraw();
+}
+/* what the drill leaves behind, once a book, as the table closes: 10 docks from the Finadd's purse; Thegg +1 at nine in ten and a clean lock */
+function b5DrillPay(r){ if (!r) return; S.f.b5_drill = {held:r.held, total:r.total, locked:!!r.locked, done:!!r.done};
+  if (r.done && !S.f.b5_drillPaid) { S.f.b5_drillPaid = 1; S.silver = (S.silver || 0) + 10; updSilver(); note('+10 docks: the Finadd\'s purse, for the drill.', 'good');
+    const frac = r.total ? r.held / r.total : 0; if (frac >= .9 && r.locked && b5In('thegg') && S.loy && S.loy.thegg != null) loy('thegg', 1); }
+  save(); }
+
 /* ---- the chapters' fires: the games offered, and what they leave behind ---- */
 { const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
   const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; }; // beside the squad's talk, before the ways on
@@ -421,4 +485,13 @@ function b5TokensPay(r){ if (!r) return; S.f.b5_tokens = {wins:(r.wins || []).le
 `The pot is empty, and the quartermaster writes it all in the clerk's book, by the fire, token by token: ${w.map(x => `${x.name.replace(/^An? /, 'a ').replace(/^The /, 'the ').replace(/^Two /, 'two ').replace(/^Dry /, 'dry ').replace(/^Linen /, 'linen ')}, ${b5Coin(x.bid)} on ${x.who === 'sgt' ? 'your line' : NAME(x.who) + '\'s'}`).join('; ')}.${r.resold ? ' One lot has gone on to a Grass Jacket for ten docks in hand, and the token stays written all the same.' : ''} ${b5In('perrit') ? 'Perrit adds it up out loud, which nobody asked her to do.' : 'The clerk blots it.'}`,
       ch:back('b5_c5_fire')}; };
     const j = B5CH5.journal; if (j) B5CH5.journal = () => { const x = j(), r = S.f.b5_tokensLast; if (r && r.lots) x.unshift((r.wins || []).length ? 'On the road south the quartermaster sold the column\'s spare stores by sealed tokens on the paybook, and the Sixth bought some of them, on its own lines.' : 'On the road south the quartermaster sold the column\'s spare stores by sealed tokens on the paybook. The Sixth bought nothing.'); return x; }; }
+
+  /* Ch6: the old drill-sergeant's drill on the grass at the Sixth's fire, the eve of Brans Keep */
+  if (typeof B5CH6 !== 'undefined') { wrap(B5CH6, 'b5_c6_fire', n => after(n, '^Talk with the squad', [{t:'The old drill-sergeant has two of the Second with drill-poles on the grass. Fall in.', tag:'The Whitefinders\' Drill', req:()=>(S.f.b5_c6_ph || 1) < 2 && !S.f.b5_drill, go:()=>playDrill({after:r => { b5DrillPay(r); S.f.b5_drillLast = r; talk('b5_c6_drill_after'); }})}]));
+    B5CH6.dlg.b5_c6_drill_after = () => { const r = S.f.b5_drillLast || {}, frac = r.total ? r.held / r.total : 0; return {sp:'The Sixth\'s fire', scene:'b5_c6_eve', txt: !r.done ?
+`You fall out of the drill before the lock. The drill-sergeant does not mind. He has a battalion to annoy.` : frac >= .9 && r.locked ?
+`The drill-sergeant lets his pole down and nods, once, which is a great deal from him, and Finadd Ennic, who has been watching from his tent, comes over and puts ten docks from his own purse into your hand without a word. ${b5In('thegg') ? 'Thegg sets his shield down by the fire and looks at it a while, at the white finger on the boss. "Boss to boss," he says. He seems to like it.' : 'The Second Company goes back to its fire talking about the Sixth.'}` :
+`The drill-sergeant says the lock wants work and so does everything else, and Finadd Ennic puts ten docks from his own purse into your hand anyway, for the effort, which he writes down. ${b5In('perrit') ? 'Perrit rubs her shield arm and tells you how many poles got through, by count. You did not ask.' : 'Your shield arm will hate you in the morning. The drill-sergeant said it would.'}`,
+      ch:back('b5_c6_fire')}; };
+    const j = B5CH6.journal; if (j) B5CH6.journal = () => { const x = j(), r = S.f.b5_drillLast; if (r && r.done) x.unshift(r.locked && r.total && r.held / r.total >= .9 ? 'On the eve of Brans Keep the old drill-sergeant drilled the Sixth on the grass, boss to boss, and the line locked right.' : 'On the eve of Brans Keep the old drill-sergeant drilled the Sixth on the grass, boss to boss.'); return x; }; }
 }

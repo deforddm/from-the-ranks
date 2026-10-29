@@ -526,6 +526,8 @@ const AUDIO = (() => {
     b5_c4_road:'forest', b5_c4_forest:'forest', b5_c4_wood:'forest_night', b5_c4_rampart:'siege', b5_c4_field:'hills', b5_c4_gully:'night', b5_c4_lightning:'siege', b5_c4_surrender:'plain',
     // the road south (85): the burned country and its farms, the cache, the camp at Brans Keep
     b5_c5_road:'burnt', b5_c5_burned:'burnt', b5_c5_farm:'burnt', b5_c5_cache:'camp', b5_c5_keep:'camp', b5_c5_arrival:'hills',
+    // Brans Keep (86): the lines on the eve, the lake shore, the dry channel in battle, the hills behind the keep, the Dissent road, the barrow
+    b5_c6_lines:'camp_night', b5_c6_eve:'camp_night', b5_c6_shore:'lake', b5_c6_channel:'siege', b5_c6_pillars:'siege', b5_c6_break:'siege', b5_c6_hills:'hills', b5_c6_dissent:'plain', b5_c6_barrow:'barrow',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
