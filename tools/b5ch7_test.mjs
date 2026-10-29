@@ -88,7 +88,7 @@ const r = await page.evaluate(async () => {
   talk('b5_c7_wager'); out.a.wager = /It's a small bridge/.test(DLG.b5_c7_wager().txt);
   talk('b5_c7_edur'); out.a.edurEarly = !has('b5_c7_edur', /Shields/);
   talk('b5_c7_tiers'); out.a.tiersCheck = vis('b5_c7_tiers').find(c => /Low Walk under the tiers/.test(c.t)).check.join(':');
-  { const sv = S.silver; out.a.wolves = await force('b5_c7_wolves'); out.a.wolves.docks = S.silver - sv; out.a.wolves.done = S.f.b5_c7_wolvesDone; const wa = DLG.b5_c7_wolves_after().txt; out.a.wolves.word = S.f.b5_c7_word === 1 && /A Finadd held the main bridge/.test(wa) && /the Emperor got up/.test(wa) && /Nobody along the canal saw it/.test(wa); out.a.wolves.settle = /Settle Lake/.test(wa) && /Nobody knows what it was/.test(wa); }
+  { const sv = S.silver; out.a.wolves = await force('b5_c7_wolves'); out.a.wolves.docks = S.silver - sv; out.a.wolves.done = S.f.b5_c7_wolvesDone; const wa = DLG.b5_c7_wolves_after().txt; out.a.wolves.word = S.f.b5_c7_word === 1 && /A Finadd held the main bridge/.test(wa) && /the Emperor got up/.test(wa) && /Not a soul along the canal saw it/.test(wa); out.a.wolves.settle = /Settle Lake/.test(wa) && /What it was, he cannot say/.test(wa); }
   /* the barricade, the sorcery, the canal */
   take('b5_c7_wolves_after', /To the barricade/); out.a.brace = vis('b5_c7_edur').find(c => /Brace the carts/.test(c.t)).check.join(':');
   out.a.bar = await force('b5_c7_barricade'); out.a.bar.done = S.f.b5_c7_barricadeDone; out.a.bar.lamps = /The lamps along the street are going out/.test(DLG.b5_c7_barricade_after().txt);

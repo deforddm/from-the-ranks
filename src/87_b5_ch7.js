@@ -501,7 +501,7 @@ The brazier's circle is not drinking.${b57If('ammet', ' Ammet least of all, who 
             {t:'The pay desk, at the clerk\'s case. (On the paid road, the squad\'s docks go on the debts.)', go:'b5_c7_pay'},
             {t:'Talk with the squad.', req:()=>p !== 3, go:'b5_c7_fire_talk'},
             {t:'Say the names.', req:()=>fell.length > 0 && !S.f.b5_c7_named && p !== 3, go:'b5_c7_names'},
-            {t:'Sleep, behind the carts. The morning will come down the street.', req:()=>p === 2, onward:true, go:'b5_c7_night'},
+            {t:'Sleep, behind the carts. The morning will come down the street.', req:()=>p === 2 && S.area !== 'b5_c7_day', onward:true, go:'b5_c7_night'},
             {t:'The patrol is coming. The roads.', req:()=>p >= 4 && !b57Key(), onward:true, go:'b5_c7_roads'},
             {t:'The last of it.', req:()=>p >= 4 && !!b57Key(), onward:true, go:'b5_c7_last'},
             {t:'Not now.', go:()=>startExplore()}]}; },
@@ -723,11 +723,11 @@ Finadd Ennic looks at it. Then at you. "Sergeant," he says. "You said you knew t
 The ones who can swim take the ones who cannot. ${b57Swam() && b5In('thegg') ? 'Thegg goes first, because he has been under once this year already with three hundred docks on him, and four lungs are four lungs, and he takes two of them with him, one under each arm.' : 'You go first, because you were born two streets back from this water and have never once said that you can swim like an eel.'}${b57If('brune', ' Brune goes in like a seal, and comes up under the arch, and turns, and holds out her spear-shaft for whoever is next.')}${b57If('pessa', ' Pessa goes in with her boathook and finds the ledge under the arch with it first time, and hooks it, and holds.')}${b57If('perrit', ' Perrit, who has never stood with her back to water, goes in face first and does not make a sound.')}
 
 The ledge under the arch is a hand wide and a hand under the surface. There is room on it for everybody, if everybody holds on.`,
-      ch:[{t:'Get everybody under the arch, on the ledge, and holding. (the swimmers carry the rest)', req:()=>!S.f.b5_c7_canal, check:['might', 14], again:true,
+      ch:[{t:'Get everybody under the arch, on the ledge, and holding. (the swimmers carry the rest)', req:()=>!S.f.b5_c7_canal && !S.f.b5_c7_hard, check:['might', 14],
             edges:id=>[id === 'sgt' && ['canal-born; a swimmer who never says so', 2], id === 'thegg' && b57Swam() && ['four lungs, and he has been under once with three hundred docks on him', 2], id === 'brune' && ['the Shake swim before they walk', 2], id === 'pessa' && ['she knows every stone under that arch', 2], id === 'perrit' && ['she has never stood with her back to water', -1]],
             near:b57Owe(15, 'Kit lost in the canal', w => `Yes, but ${b57Pos(w)} shield goes down in the green water off the ledge and does not come up, and the army's ledger will want it back: ${b5Coin(15)} against ${b57Pos(w)} line.`, {t:w => `Yes, but ${b57Nm(w)} ${b57V(w, 'go', 'goes')} under twice getting the last of them onto the ledge, and ${b57V(w, 'come', 'comes')} up the second time with ${b57Pos(w)} heart going like a drum: rattled.`, fx:w => b57Rattle(w)}),
             go:'b5_c7_under', fail:'b5_c7_canal_hard'},
-          {t:'Back up the steps.', req:()=>!!S.f.b5_c7_canal, go:'b5_c7_under'}]}),
+          {t:'Under the arch.', req:()=>!!S.f.b5_c7_canal || !!S.f.b5_c7_hard, go:'b5_c7_under'}]}),
     b5_c7_canal_hard:()=>({sp:'Into the canal', scene:'b5_c7_under', fx:()=>{ if (S.f.b5_c7_hard) return; S.f.b5_c7_hard = 1; const w = b57Who(); if (b57Room(w, 15)) b5Owe(w, 15, 'Kit lost in the canal'); b57Rattle(w); }, txt:
 `It goes wrong in the water the way things go wrong in water: all at once, and quietly. A garrison soldier panics and goes under, and ${b57Nm(b57Who())} ${b57V(b57Who(), 'go', 'goes')} down after him, and comes up with him, and goes down again for the shield that went off the ledge, and does not find it. For a while there are too many people and not enough ledge.
 
