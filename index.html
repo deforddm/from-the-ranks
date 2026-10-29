@@ -1238,9 +1238,11 @@ const AUDIO = (() => {
     b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
     b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
     b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
-    // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea
+    // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea, Kraig's Landing (83) on the river
     b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
     b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
+    // Kraig's Landing (83) on the river: the dock and the camp, the barges and the bank at night
+    b5_c3_dock:'river', b5_c3_barges:'river_night', b5_c3_bank:'river_night', b5_c3_greenfire:'river_night', b5_c3_tents:'river', b5_c3_collapse:'river_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
@@ -62987,13 +62989,1020 @@ b52Item('b5_c2_shells', 'A cord of Shake burial shells', '<ellipse cx="120" cy="
   + [[54, 66, 0], [70, 84, 0], [88, 94, 0], [106, 100, 0], [124, 102, 1], [142, 100, 0], [160, 94, 0], [176, 84, 0], [190, 66, 0]].map(([x, y, blk], i) =>
       `<g transform="translate(${x} ${y}) rotate(${(i - 4)*10})"><path d="M-7 -2 Q0 -12 7 -2 Q6 8 0 9 Q-6 8 -7 -2 Z" fill="${blk ? '#1a1a1e' : '#ece6d8'}"/><path d="M-4 -3 Q0 -9 4 -3 M-3 1 Q0 -4 3 1" fill="none" stroke="${blk ? '#4a4a52' : '#b8b0a0'}" stroke-width=".9"/><path d="M-6 -2 Q-2 -9 2 -8" fill="none" stroke="${blk ? '#6a6a72' : '#ffffff'}" stroke-width=".8" opacity=".6"/></g>`).join(''));
 
+/* ============ Book Five, Chapter 3: Kraig's Landing ============ */
+/* Kraig's Landing, three buildings and a dock up the river from Trate, near the Edur border (Midnight Tides ch 13-15; mt-canon §1.3,
+   §17c). A regiment is camped round it (the Cold Clay Battalion), with the Snakebelt Battalion's mage cadre come up from Awl, and ships at
+   the dock fly the King's banner and the Ceda's. The Sixth Company guards the regiment's barges. Phase 1, the first evening: the news (the
+   war, the council in Letheras as barracks talk, the Whitefinders recalled north, a Letherii who went over), the Faraed scouts' fire
+   (Ruuk, the recruit, and the trader's man who takes a cut of his pay), a young cadre mage on the dock (the trick), the Nerek haulers,
+   and the first night on the barges: river thieves cutting them loose (b5_c3_rivermen, the main fight; stage2 the drifting barge).
+   Phase 2, the next day: two regiment men who walked off, at the scouts' fire (b5_c3_deserters, optional), and at evening what the
+   mages mean to do, and that there are Nerek in the villages. The key, S.f.b5_c3_key: 'watch' (stay at the barges as ordered; the fire,
+   the cheering, and drunk soldiers on the Nerek haulers, b5_c3_cheer) or 'warn' (a runner up the bank, too late; the squad goes after
+   him, and something on the far bank is watching too, b5_c3_bank; the regiment notes the Sixth and fines the sergeant). Phase 3, dawn:
+   ash on the dock, Fent Reach's surrender as news, and the road to High Fort. Never the ritual circle, the tavern or Buruk's barge;
+   never a named mage, Seren, Buruk, Hull or any Edur; the river is never named. Notes for later chapters: docs/mt-ch3-notes.md. */
+/* FOR THE ARTIST (83b): names this file uses.
+   Items: ART['item/b5_c3_cadretile'], ['item/b5_c3_spear'], ['item/b5_c3_ash'].
+   Figures: b5_c3_riverman, b5_c3_pole, b5_c3_riverboss, b5_c3_drunk, b5_c3_nerek, b5_c3_faraed, b5_c3_cadremage, b5_c3_trader. Reused:
+   b5_c1_ennic, b5_c1_clerk, b5_c1_tilewoman, b5_letherii (the quartermaster, the regiment), ruuk, b5_wraith, b5_unblooded, b5_deserter.
+   Backdrops (SCENEX): b5_landing (80's, redrawn), b5_c3_greenfire, b5_c3_tents, b5_c3_collapse.
+   Ground (TILEX): b5_c3_dock (. trampled earth , mud # building wall = tent d dock planking ~ river F fire S the scouts' fire T the rise
+   B the barges), b5_c3_barges (. barge deck ~ water - gangplank c cargo r rope coil ^ up to the dock), b5_c3_bank (. path , reeds
+   ~ river # rock x dead tree ^ where the path gives out v back down). In fights 't' is cover (cargo, crates, reeds) and 'o' is the river. */
+
+/* ---- small helpers (b53: Book Five, Chapter Three) ---- */
+const b53L = (id, n) => { if (b5In(id) && S.loy && S.loy[id] != null) loy(id, n); };
+const b53Say = m => { for (const k of Object.keys(m)) if (k !== '_' && (k === 'sgt' || b5In(k))) return typeof m[k] === 'function' ? m[k]() : m[k]; return typeof m._ === 'function' ? m._() : (m._ || ''); };
+const b53If = (id, s) => b5In(id) ? (typeof s === 'function' ? s() : s) : '';
+const b53Who = () => (ROLL() && ROLL().who) || 'sgt';
+const b53Nm = id => id === 'sgt' ? 'you' : NAME(id);
+const b53Pos = id => id === 'sgt' ? 'your' : NAME(id) + '\'s';
+const b53V = (id, you, they) => id === 'sgt' ? you : they;
+const b53Ph = () => S.f.b5_c3_ph || 1;
+const b53Key = () => S.f.b5_c3_key || null;
+const b53KeyDone = () => !!(S.f.b5_c3_cheerDone || S.f.b5_c3_bankDone);
+const b53Docks = (n, why) => { S.silver = (S.silver || 0) + n; updSilver(); note(`+${n} docks: ${why}.`, 'good'); };
+const b53Rattle = id => { S.rattled ??= {}; S.rattled[id] = 1; };
+const b53Here = () => S.squad.filter(id => id !== 'sgt' && b5In(id));
+const b53And = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+/* Ruuk walks with the squad, or waits with the scouts */
+const b53Ruuk = () => b5In('ruuk') || b5Waiting('ruuk');
+/* the runner on 'warn': Ruuk if he walks, else Tobet (the brief) */
+const b53Runner = () => { const r = S.f.b5_c3_runner; return r === 'ruuk' || r === 'tobet' ? r : (b5In('ruuk') ? 'ruuk' : 'tobet'); };
+/* "stay with the scouts for now": what b5Join does when there is no room, done on purpose */
+const b53Wait = () => { S.f.b5_ruukDone = 2; S.camp = [...(S.camp || []).filter(x => x !== 'ruuk'), 'ruuk']; b5DebtInit('ruuk'); S.loy.ruuk ??= 0; S.picks.ruuk ??= []; S.gear.ruuk ??= {};
+  note('Ruuk stays with the Faraed scouts for now. The roster at any fire can bring him in.'); save(); };
+/* a "yes, but" in docks of debt on whoever rolled it (5 to 20), never past what the holder will wait for: if it would push the roller to
+   'pressed', the scene takes another cost (alt: {t(id), fx(id)}). fx runs before t (16, settleRoll), so fx decides. */
+let b53NearOk = true;
+const b53Room = (id, n) => { const d0 = b5DebtStart(id), lim = d0 > 0 ? d0 * B5_PRESS : 50; return b5Debt(id) + n <= lim; };
+const b53Owe = (n, why, line, alt) => ({
+  fx:()=>{ const w = b53Who(); b53NearOk = b53Room(w, n); if (b53NearOk) b5Owe(w, n, why); else if (alt && alt.fx) alt.fx(w); },
+  t:()=>{ const w = b53Who(); return b53NearOk ? line(w) : (alt && alt.t ? alt.t(w) : `Yes, but it costs ${b53Nm(w)} something.`); }});
+
+/* ---- the Cadre's Link: the Claw Hand-Cant (Book One's cant), in Lether's words. From a young mage of the Snakebelt cadre on the dock
+   (never one of the three, never in the ritual circle). It rides the Hold, but the bearer needn't be a mage. The battle half sets the
+   same marks the hand-cant does (cantRound, cantLeft), so 31_battle's critical on the next hits does the rest. ---- */
+Object.assign(TRICKS, {
+  b5_c3_link:{name:'The Cadre\'s Link', ch:3, use:'fight', ab:'t_b5_c3_link', sorcery:true, where:'the dock at Kraig\'s Landing, with a young mage of the Snakebelt cadre',
+    lore:'The cadre links a unit in an instant: a sign made with two fingers and a word under the breath, and the Hold opens a thread between the one who made it and everyone they have marked as theirs. For a breath they strike as one. The cadre uses it to aim a hundred bows. It works for six soldiers and a sword.',
+    get fx(){ const n = 1 + lvT(); return `Once a fight, and it does not use the bearer's action: the bearer marks an enemy within 6, and the Hold opens a thread to the squad. The next ${n > 1 ? ['', '', 'two', 'three'][n] + ' hits' : 'hit'} on it this round ${n > 1 ? 'are criticals' : 'is a critical'}. Grows with level. It rides the Hold.`; }},
+});
+Object.assign(AB, {
+  t_b5_c3_link:{name:TRICKS.b5_c3_link.name, trick:'b5_c3_link', free:true, sorcery:true, desc:()=>TRICKS.b5_c3_link.fx,
+    tiles:u=>foes().filter(f => cheb(u, f) <= 6 && f.cantRound !== B.round && sees(u, f)),
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; t.cantRound = B.round; t.cantLeft = 1 + lvT(); AUDIO.play('magic'); float(t, 'linked', '#9fd8c8'); sparks(t.x, t.y, 8, '#9fd8c8', .35);
+      blog(`${u.name} makes the cadre's sign, two fingers and a word, and for a breath the squad feels the thread: <em>that one, all of us, now.</em>${u.id === 'perrit' ? ' Perrit\'s face does not change. Her hand does.' : ''}`); }},
+});
+
+/* ---- the words this chapter adds to Book Five's glossary ---- */
+GLOSSX.mt.push(
+  [3, 'The Cold Clay Battalion', 'The regiment camped round Kraig\'s Landing this summer, out of Trate. It guards the dock, the ships and the barges, and it cheers when it is told to, and sometimes when it is not.', ()=>(S.chapter || 0) >= 3],
+  [3, 'The Snakebelt Battalion', 'A battalion out of Awl. Its mage cadre came up the river to Kraig\'s Landing with the Ceda\'s business.', ()=>!!(S && S.f && S.f.b5_c3_ph)]);
+
+/* ---- the reading at the first halt: the barges at night ---- */
+B5READ[3] = {scene:'b5_landing', where:'the planking of the outer barge, by a hooded lantern', set:'Night at Kraig\'s Landing, the barges tied three deep at the dock and the mist coming up off the river, with the regiment\'s fires on the bank behind.',
+  back:'b5_c3_tiles_done', backT:'Back to the barges.',
+  say:{get perrit(){ return `"Water on every side," Perrit says, looking at the barge, and at the river all round it, and at you. "Every side, Sergeant." She sits down on the planking exactly in the middle, with the lantern between her and the worst of it, and lays out her calfskin.${b5In('ruuk') ? ' Ruuk, who will not look at her tiles, goes and looks at the river instead.' : ''} "Sit. Quickly. Before I think about it."`; },
+    tilewoman:`"A barge." The old woman spits over the side, for manners, and the river takes it. "Tiles don't float, Sergeant. That's why they tell the truth. A dock."`}};
+
+/* the fire node is a roster fire (38c) */
+ROSTER_FIRES.mt[3] = ['b5_c3_fire'];
+
+const B5CH3 = {
+  title:'Kraig\'s Landing', number:'Three',
+  intro:{loc:'Kraig\'s Landing', sub:'Up the river from Trate · evening', scene:'b5_landing', cap:'Three buildings and a dock, a regiment\'s tents round them, barges tied three deep, and the mountains to the north very close.',
+    paras:[
+`The regiment's barges came up the river from Trate on poles and tow-ropes, against the current, for the better part of a week. Nerek haulers walked the tow-path on the bank with the ropes over their shoulders. The Sixth Company sat on the cargo and was told it was guarding it.`,
+()=>{ const v = b53Here().map(id => TPL[id].name);
+  return `${v.length ? `${b53And(v)} ${v.length > 1 ? 'are' : 'is'} with you, sunburnt on one side from a week of the river going past on the other.` : 'The squad, this month, is you.'} The clerk has the paybooks in the oilskin case on his knees, and has not let go of it since Trate.`; },
+`Kraig's Landing comes round the last bend at evening: three buildings and a dock, and round them the tents of a whole regiment, and past them, to the north, the mountains. Up there is the border, and past the border, the Edur.`],
+    go:'Onto the dock', node:'b5_c3_start'},
+
+  areas:[
+    /* 16 x 12 (b5_c3_dock, evening). The Landing: # the three buildings (the hostel and its tavern top-left, a storehouse, the outlying
+       shed by the water) = the regiment's tents  . trampled earth , mud  d dock planking  ~ the river  F the barge crews' fire
+       S the Faraed scouts' fire, above the dock  T the rise, where you can see the mages' tents  B the gangplank to the barges */
+    { id:'b5_c3_dock', title:'Kraig\'s Landing · the dock', sub:'The Landing and the regiment\'s camp', hint:'Tap ground to move · tap a figure to talk · the barges are down the dock', decor:'b5_c3_dock',
+      map:[ "###..###..==..,,",
+            "###..###.....T,,",
+            "..........==....",
+            "..==..==..==..S,",
+            "..==..==........",
+            "................",
+            ".##.......F.....",
+            ",,,,,,,,,,,,,,,,",
+            "dddddddddddddddd",
+            "~~dd~~~~~~dd~~~~",
+            "~~dB~~~~~~dd~~~~",
+            "~~~~~~~~~~~~~~~~" ],
+      walk:'.,d', triggers:{F:'b5_c3_fire', S:'b5_c3_scouts', T:'b5_c3_rise', B:'b5_c3_to_barges'}, start:{x:8, y:7},
+      quest:()=> b53Ph() === 1 ? (!S.f.b5_c3_ennic ? 'The Finadd, on the dock.' : 'The barges, at nightfall. The first watch is the Sixth\'s.')
+        : b53Ph() === 2 ? (!b53Key() ? 'The day before something. The fire, at evening, for the night\'s orders.' : !b53KeyDone() ? (b53Key() === 'watch' ? 'The barge-line, where the haulers sleep.' : 'Up the bank, after the runner.') : 'The fire.')
+        : 'Dawn. The Finadd has the orders.',
+      npcs:[
+        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:6, y:5, node:()=>b53Ph() >= 3 ? 'b5_c3_dawn' : 'b5_c3_ennic', show:()=>b53Ph() === 1 || b53Ph() >= 3, fresh:()=>b53Ph() >= 3 ? !S.f.b5_c3_dawn : !S.f.b5_c3_ennic},
+        {id:'soldier', name:'A soldier of the Cold Clay', kind:'b5_letherii', x:9, y:2, node:()=>'b5_c3_regiment', fresh:()=>!S.f['b5_c3_reg' + b53Ph()]},
+        {id:'cadre', name:'A young mage in grey piping', kind:'b5_c3_cadremage', x:12, y:5, node:()=>S.f.b5_c3_linkTried ? 'b5_c3_cadre_again' : 'b5_c3_cadre', show:()=>b53Ph() <= 2, fresh:()=>!S.f.b5_c3_linkTried},
+        {id:'ruuk', name:'A Faraed boy with throwing-spears', kind:'ruuk', x:15, y:2, node:()=>S.f.b5_ruukDone == null ? 'b5_c3_ruuk' : 'b5_c3_ruuk_again', show:()=>!b5In('ruuk') && S.f.b5_ruukDone !== 0 && b5CanRecruit('ruuk'), fresh:()=>S.f.b5_ruukDone == null},
+        {id:'trader', name:'The trader\'s man', kind:'b5_c3_trader', x:13, y:4, node:()=>'b5_c3_trader', show:()=>b53Ruuk() && !S.f.b5_c3_traderDone, fresh:()=>true},
+        {id:'nerek', name:'The Nerek haulers', kind:'b5_c3_nerek', x:4, y:7, node:()=>'b5_c3_nerek', fresh:()=>!S.f['b5_c3_ner' + b53Ph()]},
+        {id:'qm', name:'The quartermaster', kind:'b5_letherii', x:14, y:5, node:()=>'b5_c3_qm', fresh:()=>!S.f.b5_c3_qm},
+        {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:1, y:5, node:()=>'b5_c3_clerk', fresh:()=>!S.f.b5_c3_clerk},
+        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:15, y:7, node:()=>'b5_c3_tilewoman', fresh:()=>!S.f.b5_c3_tw} ] },
+
+    /* 16 x 12 (b5_c3_barges, night). Three barges tied three deep off the dock: . deck  ~ the river between them  - the gangplanks
+       c cargo, roped  r rope coils, where the mooring lines are made fast  ^ the plank up to the dock */
+    { id:'b5_c3_barges', title:'Kraig\'s Landing · the barges', sub:'Night · tied three deep', hint:'Tap ground to move · the mooring lines are on the coils · the dock is up the plank', decor:'b5_c3_barges', dark:true,
+      map:[ "~~~~~~~^~~~~~~~~",
+            "~.c....-....c.~~",
+            "~.cc.......r..~~",
+            "~.....-.....c.~~",
+            "~~~~~~-~~~~~~~~~",
+            "~..c..-..cc...~~",
+            "~.........r...~~",
+            "~.cc.....-....~~",
+            "~~~~~~~~~-~~~~~~",
+            "~..r.....-..c.~~",
+            "~.....c.....cc~~",
+            "~~~~~~~~~~~~~~~~" ],
+      walk:'.-', triggers:{r:'b5_c3_rope', '^':'b5_c3_to_dock'}, start:{x:7, y:2},
+      quest:()=> !S.f.b5_c3_riverDone ? 'The mooring lines. Somebody should check them.' : 'Up the plank to the dock.',
+      npcs:[] },
+
+    /* 16 x 12 (b5_c3_bank, night; 'warn' only). The upriver bank: ~ the river on the west  , reeds  . the path  # rock  x a dead tree
+       ^ the top, where the path gives out in the reeds  v back down to the Landing */
+    { id:'b5_c3_bank', title:'The river bank · upriver', sub:'Night · after the runner', hint:'Tap ground to move · the path goes north along the river', decor:'b5_c3_bank', dark:true,
+      map:[ "~~~,,,,..^..##..",
+            "~~~,,,,......#..",
+            "~~~~,,,..,,..##.",
+            "~~~~,,....x.....",
+            "~~~,,,....,,..#.",
+            "~~~,,......,,...",
+            "~~~~,,..##......",
+            "~~~,,,......,,..",
+            "~~~,,..,,.....#.",
+            "~~~~,,..........",
+            "~~~,,,...,,.,...",
+            "~~~~,,....v....." ],
+      walk:'.,', triggers:{x:'b5_c3_deadtree', '^':'b5_c3_bank_edge', v:'b5_c3_bank_back'}, start:{x:9, y:10},
+      quest:()=> S.f.b5_c3_bankDone ? 'Back down the path. It is nearly dawn.' : 'North, up the path, after the runner.',
+      npcs:[] } ],
+
+  battles:{
+    /* the first night: river thieves on the barges, cutting them loose; a skiff more out of the water; then the barge that went */
+    b5_c3_rivermen:{title:'The barges at night', style:'b5_c3_barges', dark:true, pitTxt:'the river', warrenText:'Kraig\'s Landing · the cadre\'s Hold is close tonight, and not for you', warren:{meanas:1, denul:1}, music:'battle',
+      map:[".t..t..o","......oo","..t...oo",".......o","oooo.ooo","......t.","..t.....",".....t..","........","......t."],
+      party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
+      foes:[['b5_c3_riverman',1,1],['b5_c3_riverman',5,0],['b5_c3_riverman',3,2],['b5_c3_pole',4,3]], xp:150, after:'b5_c3_rivermen_after',
+      waves:[{round:2, foes:[['b5_c3_riverman',7,5],['b5_c3_riverman',0,5]], text:'Two more come up out of the river, over the side of the barge, with knives in their teeth and the water running off them.'}],
+      preText:()=>`The thieves are on the near barge and the next one, black shapes against the water, with knives at the mooring lines. One of them has a bargeman's pole, and is using it to keep the barges apart while the others cut.`,
+      stage2:{title:'The drifting barge', xp:70,
+        text:()=>`The last of them on the near barge goes over the side, and the squad hears it before it sees it: the creak of a line giving, and the slap of water. The outer barge is loose. It swings off the others into the current with a lantern on its cargo and three men on its deck, and the one at the stern, the big one, is laughing.\n\nThere is a moment when it is close enough to jump. ${b53Say({thegg:'Thegg jumps first. The barge rocks under him and steadies. "Behind me," he says, and the rest of the squad comes across behind him.', _:'You jump. The squad comes after you.'})}`,
+        map:["oo....oo","o..t...o","o......o","o.t..t.o","o......o","o......o","o..t...o","o......o","o......o","oo....oo"],
+        party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
+        foes:[['b5_c3_riverboss',4,1],['b5_c3_riverman',2,2],['b5_c3_riverman',5,2]]} },
+    /* phase 2 (optional): two regiment men who walked off before the strike, robbing the scouts' fire */
+    b5_c3_deserters:{title:'The scouts\' fire', style:'b5_c3_dock', open:true, warrenText:'Kraig\'s Landing · the camp is busy, and looking the other way', warren:{meanas:1, denul:1}, music:'battle',
+      map:["........","..t.....","......t.","........","...t....","........",".t......","......t.","........","........"],
+      party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
+      foes:[['b5_deserter',2,2],['b5_deserter',5,2],['b5_deserterbow',4,0]], xp:100, after:'b5_c3_deserters_after',
+      preText:()=>`Two of them with the scouts' packs over their shoulders and swords out, and a third further up the slope with a bow. Regiment blue-grey, with the regiment's flash cut off the sleeves.`},
+    /* 'watch': after the fire, drunk soldiers of the regiment start on the Nerek haulers at the barge-line */
+    b5_c3_cheer:{title:'The barge-line', style:'b5_c3_dock', dark:true, pitTxt:'the river', warrenText:'After the fire · the whole camp is singing', warren:{meanas:1, denul:1}, music:'battle',
+      objective:{type:'survive', rounds:4, text:'Fists and boots, nobody killed. Keep them off the haulers until the provosts come.'},
+      map:["........",".t......","......t.","........","..t..t..","...t....","........","........","oo....oo","oooooooo"],
+      party:[[3,7],[4,7],[2,7],[5,7],[1,7],[6,7]],
+      foes:[['b5_c3_drunk',1,0],['b5_c3_drunk',3,1],['b5_c3_drunk',5,0],['b5_c3_drunk',6,1]], xp:150, after:'b5_c3_cheer_after',
+      waves:[{round:2, foes:[['b5_c3_drunk',0,2],['b5_c3_drunk',7,2]], text:'Two more come down from the camp with a jug between them, singing, to see what the noise is about.'}],
+      preText:()=>`They come down from the camp in a crowd, singing, with jugs, and stop at the barge-line where the Nerek haulers sleep under the dock. One of them has a hauler by the collar. "There's some of yours up there," he is saying. "Was. Was some of yours." The others think this is very funny.`},
+    /* 'warn': up the bank after the runner; on this side, among the reeds, something that is watching the villages too */
+    b5_c3_bank:{title:'The reeds', style:'b5_c3_bank', dark:true, pitTxt:'the river', warrenText:'The bank at night · the green light is fading over the mountains, and something else is here', warren:{meanas:1, denul:1}, music:'battle',
+      map:["ooo.t...","oo..t..#","ooot....","oo...t..","ooo.....","oo..t..#","oo......","ooo..t..","oo......","ooo....."],
+      party:[[4,8],[5,8],[3,9],[6,8],[4,9],[5,9]],
+      foes:[['b5_wraith',3,1],['b5_wraith',5,0],['b5_wraith',6,3],['b5_unblooded',4,2]], xp:150, after:'b5_c3_bank_after',
+      preText:()=>`Shapes in the reeds where nothing should stand: three that do not move the reeds as they go, and one that does, tall and grey, with a long knife, crouched at the water's edge looking north the way the runner was looking.`} },
+
+  foes:{
+    /* river thieves, a bargeman's pole, and their boss */
+    b5_c3_riverman:{name:'River thief', sig:'r', kind:'b5_c3_riverman', hp:11, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in low with a knife at'},
+    b5_c3_pole:{name:'Thief with a bargeman\'s pole', sig:'p', kind:'b5_c3_pole', hp:16, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['reach', 'shove'], verb:'drives the end of a barge-pole into'},
+    b5_c3_riverboss:{name:'The river thieves\' boss', sig:'B', kind:'b5_c3_riverboss', hp:26, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a cargo-hook round at'},
+    /* a soldier of the regiment, drunk, celebrating: fists and boots */
+    b5_c3_drunk:{name:'Drunk regiment soldier', sig:'d', kind:'b5_c3_drunk', hp:12, ac:11, atk:3, dmg:[1,6,0], rng:1, mv:4, init:0, sk:['shove'], verb:'swings a fist at'} },
+
+  gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
+    b5_c3_cadretile:{name:'A cadre\'s spare tile', slot:'trinket', role:'focus', who:null, stat:{wits:1},
+      line:'A plain practice tile of black stone with no face, polished, blank, with a hairline crack across one corner: the kind the cadre schools give their students to lay before they are let near a real one. A young mage of the Snakebelt cadre gave it away on the dock at Kraig\'s Landing. Whoever carries it is a little quicker to see a pattern. +1 Wits.'},
+    b5_c3_spear:{name:'A Faraed throwing-spear', slot:'weapon', role:'reach', who:null, atk:1, rng:1,
+      line:'A light spear of fire-hardened wood with a leaf-shaped iron head and a tuft of feathers from a bird only the Faraed have a name for. Made to be thrown, and thrown again. +1 to hit and +1 range: in a hand that fights close, it is a throw at two tiles.'},
+    b5_c3_ash:{name:'Green ash in a paper twist', slot:'trinket', role:'any', who:null,
+      line:'A pinch of grey ash in a twist of brown paper, still faintly green at the open end. It came down on the dock at Kraig\'s Landing in the night after the fire. It does nothing. Somebody in the squad kept it anyway.'} },
+
+  scenes:{
+    b5_c3_greenfire:{loc:'Kraig\'s Landing', sub:'The fire over the mountains · night', cap:'A curtain of green fire hanging over the mountains from one end of the sky to the other, and the whole camp on its feet in front of it.', amb:'explore'},
+    b5_c3_tents:{loc:'Kraig\'s Landing', sub:'The mages\' tents', cap:'Three tents above the camp with guards round them, and on the ships at the dock the King\'s banner and the Ceda\'s.', amb:'explore'},
+    b5_c3_collapse:{loc:'Kraig\'s Landing', sub:'The outlying building · night', cap:'A shed by the water fallen in on itself, lanterns round it, and men digging.', amb:'explore'} },
+
+  end:{
+    watch:['The fire', 'The Sixth went up the river to Kraig\'s Landing to guard a regiment\'s barges, and guarded them, the first night against thieves with knives at the mooring lines. Then the regiment\'s mages and the Ceda put a curtain of green fire over the mountains, on the Edur villages, and there were Nerek up there. The Sixth stayed at the barges as ordered and watched it from the dock with everyone else. The camp cheered. Afterwards the squad stood between the haulers and the celebrating.'],
+    warn:['The runner', 'The Sixth went up the river to Kraig\'s Landing to guard a regiment\'s barges, and guarded them, the first night against thieves with knives at the mooring lines. Then the squad learned what the mages meant to do, and that there were Nerek in the villages, and sent a runner up the bank in the dark to tell them. The fire came before he was a league up. The squad went after him, and found him, and something in the reeds that was watching too. He came back at dawn. The regiment wrote the Sixth down for it.'] },
+  endScene:'b5_landing',
+  endCap:()=> b53Key() === 'warn' ? 'The road north out of the Landing at dawn, the mountains grey again, and in the regiment\'s book a line about the Sixth.' : 'The road north out of the Landing at dawn, the mountains grey again, and ash on the dock behind.',
+  tease:'Next: High Fort. The battalion\'s own station, on the frontier, where the battalion is going to meet the Sixth.',
+
+  extras:()=>{ const f = S.f, x = [];
+    if (f.b5_c3_key === 'watch') x.push(`The squad stayed at the barges as ordered and watched the green fire go up over the mountains.${f.b5_c3_cheerDone ? ' After it, the squad kept the regiment\'s drunks off the Nerek haulers until the provosts came.' : ''}`);
+    if (f.b5_c3_key === 'warn') x.push(`The squad sent ${f.b5_c3_runner === 'ruuk' ? 'Ruuk' : 'Tobet'} up the bank to warn the Nerek in the villages. The fire came first.${f.b5_c3_bankDone ? ' The squad went up after the runner and found something in the reeds watching the villages too.' : ''} The regiment fined the sergeant thirty docks for a runner sent without leave.`);
+    if (f.b5_c3_riverDone) x.push('River thieves came for the regiment\'s barges on the first night and cut one loose. The squad went after it and brought it back.');
+    if (f.b5_ruukDone === 1 && b5In('ruuk')) x.push('Ruuk, a Faraed guide from the scouts\' fire, walks with the squad, a step ahead of it.');
+    else if (f.b5_ruukDone === 2) x.push('Ruuk the Faraed guide stays with the army\'s scouts for now. The roster can bring him in.');
+    if (f.b5_c3_traderDone) x.push(f.b5_c3_trader === 'paid' ? 'The squad paid off the trader\'s cut of Ruuk\'s day-rate.' : f.b5_c3_trader === 'talked' ? 'The squad talked the Trate grain trader\'s man down to nothing.' : 'The Trate grain trader\'s man took his cut of Ruuk\'s pay, and wrote it down.');
+    if (f.b5_c3_linkOk) x.push('A young mage of the Snakebelt cadre showed the squad the sign the cadre uses to link a unit in an instant.');
+    if (f.b5_c3_desDone) x.push('Two regiment men who walked off before the strike were caught robbing the scouts\' fire.');
+    if (f.b5_c3_haulers) x.push('Ammet saw to the Nerek haulers\' rope sores on the dock.');
+    return x; },
+
+  journal:()=>{ const f = S.f; return [
+    f.b5_fentReach && 'News at dawn: Fent Reach has surrendered, the Atri-Preda and her garrison with it. The Sixth goes north to High Fort to wait for the battalion.',
+    f.b5_noted && 'The regiment has noted the Sixth for a runner sent without leave, and fined the sergeant thirty docks in its own book.',
+    f.b5_c3_bankDone && 'Up the bank in the night, after the runner: shapes in the reeds, and one of the Edur\'s own young, watching the villages burn.',
+    f.b5_c3_cheerDone && 'After the fire, the camp celebrated, and some of it went down to the barge-line for the Nerek haulers. The squad held them off until the provosts came.',
+    f.b5_c3_key && (f.b5_c3_key === 'watch' ? 'The night of the strike: the squad stayed at the barges as ordered, and watched the fire go up over the mountains.' : `The night of the strike: the squad sent ${f.b5_c3_runner === 'ruuk' ? 'Ruuk' : 'Tobet'} up the bank to warn the Nerek in the villages.`),
+    f.b5_c3_nerekWord && 'There were Nerek up there, in the villages, the haulers say: the ones who never came down.',
+    f.b5_c3_desDone && 'Two regiment men walked off before the strike, and robbed the scouts\' fire on the way.',
+    f.b5_c3_riverDone && 'River thieves came for the barges on the first night. One barge went down the river with their boss on it. The squad went with it, and brought it back.',
+    f.b5_ruukDone === 1 && 'Ruuk, a Faraed guide paid by the day, walks with the squad.',
+    f.b5_ruukDone === 2 && 'Ruuk, a Faraed guide paid by the day, stays with the scouts for now.',
+    f.b5_c3_news && 'Barracks talk at the Landing: the King wants the Ceda\'s mages to strike first, the Preda has called the Whitefinders back north from their exercises, and a Letherii has gone over to the Edur. Nobody says who.',
+    'The Sixth guards the regiment\'s barges at Kraig\'s Landing, three buildings and a dock near the border, with the Cold Clay Battalion camped round it.'].filter(Boolean); },
+
+  dlg:{
+    /* ---- the first evening: the dock, and the first halt ---- */
+    b5_c3_start:()=>({sp:'Kraig\'s Landing · the dock', scene:'b5_landing', fx:()=>{ S.f.b5_c3_ph ??= 1; },
+      again:()=>`The dock at Kraig's Landing. The barges, the camp, the three buildings, and the mountains.`, txt:
+`Kraig's Landing, at evening.
+
+Three buildings, none of them proud of it. A storehouse with a sagging roof. A shed down by the water that the river has been leaning on for years. And a hostel, solidly built, two storeys, with a tavern below: the only building at the Landing anybody meant to last. Lamps are lit in its windows already, and the noise coming out of it is officers and merchants. The Sixth's docks are spoken for, and the Sixth knows it.
+
+Round the three buildings, a whole regiment's tents in rows: the Cold Clay Battalion, out of Trate, with its fires going up one by one in the dusk. Higher up, on their own patch of ground with their own guards, a cluster of tents with grey piping on the flaps: a battalion's mage cadre, up from Awl. And at the dock, below the barges, two ships, with the King's banner at one masthead and the Ceda's at the other.
+
+The barges are tied three deep along the dock. The Nerek who hauled them are sitting under it, out of the way, with the ropes still across their knees.
+
+${b53Say({perrit:`Perrit has seen the grey piping, and stopped. "Snakebelt cadre," she says, very quietly. "A whole cadre, here." She does not say what a whole cadre is for. She does not need to.`, tobet:`Tobet is looking past the camp at the mountains. "That's the border," he says. "Up there. That's where they are."`, _:'The squad looks at the camp, and then at the mountains.'})}${b53If('thegg', `\n\nThegg looks at the hostel door, and at the low lintel, and turns away before anyone asks.`)}${b53If('brune', `\n\nBrune walks to the end of the dock and puts her feet in the river, and looks downstream, toward the sea.`)}`,
+      ch:[b5TileChoice(3),
+          {t:'Find the Finadd.', go:'b5_c3_ennic'},
+          {t:'Walk the Landing.', go:()=>startExplore()}]}),
+    b5_c3_tiles:()=>b5TileOffer(3),
+    b5_c3_card:()=>b5TileCard(3),
+    b5_c3_tiles_done:()=>({sp:'The Tiles of the Holds', scene:'b5_landing', txt:
+`${S.f.b5_c3_drawn ? (S.f.b5_c3_reader === 'perrit' ? 'Perrit counts the tiles back into the pouch one by one, and ties it twice, and gets off the barge faster than she got on.' : 'The tile-woman wraps the bone tiles in the oiled cloth, and the dock goes somewhere in her shawl, and she climbs back up the plank without looking down.') : 'The tiles stay in the pouch.'} The river goes on going past.`,
+      ch:[{t:'Back to the Landing.', go:()=>startExplore()}]}),
+
+    /* ---- the Finadd: the orders, and the barracks talk ---- */
+    b5_c3_ennic:()=>({sp:B5_FINADD.name, scene:'b5_landing', fx:()=>{ S.f.b5_c3_ennic = 1; S.f.b5_c3_news = 1; },
+      again:()=>`Finadd Ennic, with the regiment's order. "The barges, Sergeant. At night."`, txt:
+`Finadd Ennic has been to see the regiment's officers in the hostel, and has come out again with an order, and a smell of the tavern's wine that he did not drink.
+
+"We are the regiment's until we are not," he says. "The barges are ours at night. The Cold Clay has the camp and the dock by day, and the cadre has its own guards, and nobody is to go near the cadre's tents." He turns the page. "Nobody. They said it twice."
+
+He lowers his voice. "Barracks talk, from the officers' table. There has been a council in Letheras: the King, the Preda, the Ceda. The King wants the Ceda's mages to strike first, before the Edur can." He looks up at the grey piping on the tents. "I think we are standing in it."
+
+And then, more quietly still, and pleased about it: "The Preda has called the Whitefinders back north from their exercises. The battalion is coming, Sergeant. We are to meet it at High Fort, when the regiment lets us go."${b53If('perrit', `\n\nPerrit has gone still. "A strike," she says. "From here. With a cadre." She is working out the sum of it, and you can see her not liking the answer.`)}`,
+      ch:[{t:'"The battalion. Good."', go:'b5_c3_ennic2'},
+          {t:'"Yes, Finadd."', go:()=>startExplore()},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_ennic2:()=>({sp:B5_FINADD.name, scene:'b5_landing', txt:
+`"Good," Ennic agrees. "The battalion's commander can decide things." He seems to find this restful. "Until then, I sign what the regiment puts in front of me. The barges, at night. The first watch is ours tonight."
+
+He closes the book. "The Cold Clay's men say the river thieves come down out of the hills for barges like these, when they think nobody is looking. I said the Sixth would be looking." He hesitates. "I hope that was the right thing to say."`,
+      ch:[{t:'"It was, Finadd."', go:()=>startExplore()},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- a soldier of the Cold Clay: the camp's talk, phase by phase ---- */
+    b5_c3_regiment:()=>{ const ph = b53Ph();
+      return {sp:'A soldier of the Cold Clay', scene:ph >= 2 && !b53KeyDone() ? 'b5_c3_tents' : 'b5_landing', fx:()=>{ S.f['b5_c3_reg' + ph] = 1; S.f.b5_c3_news = 1; },
+        again:()=> ph === 1 ? `The Cold Clay soldier at his fire. "Whitefinders. You're a long way from home."` : ph === 2 ? `The Cold Clay soldier, polishing nothing. "Tonight, they say."` : `The Cold Clay soldier, hoarse from cheering.`, txt: ph === 1 ?
+`A Cold Clay soldier is sitting on an upturned bucket by the nearest tent with a pot on the fire and his boots off, which in an army camp is the mark of a veteran. He looks at the white fingertips on the squad's shields with professional interest.
+
+"Whitefinders," he says. "You're a long way from High Fort." He stirs the pot. "Everybody's a long way from somewhere this summer. The cadre's from Awl. The ships are from Letheras. Us, we're from Trate, which is a long way from nowhere."
+
+He lowers his voice, because that is what you do with the next part. "You'll have heard the war's declared. You won't have heard this. One of ours went over to them. A Letherii. Went up into the Edur country and swore to their king." He shakes his head. "Nobody says who. Everybody says it's true."` : ph === 2 ?
+`The Cold Clay soldier is up early, and polishing a helmet that does not need it. Up the slope the cadre's tents have their flaps tied shut, and there are more guards round them than there were last night.
+
+"Three of them, in there," he says, with his chin, not his hand. "The sorceress from Trate, and two others. Very big. The biggest there is, after the Ceda." He spits, carefully, away from the tents. "Tonight, they say. Over the mountains. On the villages." He polishes. "We're to stay in the lines. Nobody's to go near."` :
+`The Cold Clay soldier is sitting on his bucket with his voice gone from cheering and a cup in his hand, looking at the mountains, which are grey again.
+
+"Did you see it?" he says. "Course you did. Everybody saw it." He drinks. "Over the mountains. I never saw anything like it. Nobody did." He looks into the cup. "Best thing I ever saw," he says. And then, after a while, not looking up: "Nothing came down off them after. Nothing at all."`,
+        ch:[{t:'Not now.', go:()=>startExplore()}]}; },
+
+    /* ---- the rise: the mages' tents, seen at a distance ---- */
+    b5_c3_rise:()=>({sp:'The rise above the dock', scene:'b5_c3_tents', fx:()=>{ S.f.b5_c3_rise = 1; }, txt: b53KeyDone() || b53Ph() >= 3 ?
+`From the rise the cadre's tents look smaller than they did. Two of the flaps are open, and nobody comes out of them. The guards are still there. On the ships at the dock the banners hang, with no wind to lift them.` :
+`From the rise above the dock you can see the whole Landing at once: the three buildings, the regiment's rows, the barges, the ships. And above the camp, on their own ground, the cadre's tents, three of them larger than the rest, with guards round them who face outward.
+
+On the ships at the dock the King's banner and the Ceda's hang side by side. The Ceda is in Letheras. His banner is here.${b53Ph() === 2 ? `\n\nToday there are men in grey piping going in and out of the three large tents with their arms full, and nobody going in or out with them is talking.` : ''}${b53Say({perrit:`\n\nPerrit stands beside you, and looks, and then looks away, deliberately, at the river. "Not ours to look at," she says. "The school is very clear about that."`, ruuk:`\n\nRuuk is looking north, past the tents, at the mountains. "Up there are the villages," he says. "Edur villages. Nerek too, some. The road goes up past the falls."`, _:''})}`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- the cadre mage on the dock: the trick ---- */
+    b5_c3_cadre:()=>({sp:'A young mage in grey piping', scene:'b5_landing', txt:
+`On the dock, out of sight of the cadre's tents and plainly glad of it, a young mage in grey piping is sitting on a bollard eating an apple. She is about Perrit's age, with ink on her fingers and the look of someone who has been told to stay out of the way and is doing so with enthusiasm.
+
+"Whitefinders," she says. "You've a mage?" ${b5In('perrit') ? `She sees Perrit, and the pouch at her hip, and brightens. "Cadre. Which school?" Perrit tells her. "Oh, *them*," the young mage says, with sympathy.` : `She sees there isn't one. "No? Pity. The Whitefinders' cadre is up at High Fort, I suppose."`}
+
+She finishes the apple. "I'm not wanted in there till tonight," she says, with a nod up the slope. "They've three of the biggest there are in those tents, and they don't want the rest of us breathing on their sums. So." She holds up two fingers. "Do you want to see something useful? The cadre's link. It's how we aim a hundred bows at once. It works for a squad. It isn't secret. Nobody bothers to teach it to soldiers, that's all."`,
+      ch:[{t:'"Show us."', check:['wits', 16], trick:'b5_c3_link', req:()=>!S.f.b5_c3_linkTried, fx:()=>{ S.f.b5_c3_linkTried = 1; },
+            edges:id=>[id === 'perrit' && ['the cadre is hers, and the sign is only half new', 3], id === 'tobet' && ['he has watched a hundred bows aimed by somebody else', 1], id === 'thegg' && ['the Hold does not much like Thegg, or he it', -2], id === 'ruuk' && ['he will not look at it', -1]],
+            near:{t:()=>{ const w = b53Who(); return `Yes, but the thread goes through ${b53Nm(w)} like cold water through a cracked tooth, and ${b53Nm(w)} ${b53V(w, 'come', 'comes')} out of it with a nosebleed and a head that rings: rattled.`; }, fx:()=>b53Rattle(b53Who())},
+            go:'b5_c3_cadre_ok', fail:'b5_c3_cadre_no'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_cadre_ok:()=>({sp:'A young mage in grey piping', scene:'b5_landing', fx:()=>{ S.f.b5_c3_linkOk = 1; gain('b5_c3_cadretile'); }, txt:
+`She shows ${by({sgt:'you', _:'{who}'})} the sign: two fingers, a turn of the wrist, a word under the breath that is mostly a breath. ${by({sgt:'You make', _:'{who} makes'})} it wrong three times. The fourth time something opens, a hair's width, between ${by({sgt:'you', _:'{who}'})} and the rest of the squad, and for a breath everybody is looking at the same bollard, and knows it.
+
+"That," the young mage says. "Not much, is it? It's enough." She digs in her satchel and holds out a tile: plain black stone with no face, polished, with a crack across one corner. "A practice tile. The school gives us a sack of them. Lay it when you want to steady your hand. It won't show you anything." She grins. "That's the point of it."${b53If('perrit', `\n\nPerrit looks at the blank tile, and at the young mage, and says, "Thank you," in a voice the squad has not heard her use before.`)}`,
+      ch:[{t:'"Thank you." Back along the dock.', go:()=>startExplore()}]}),
+    b5_c3_cadre_no:()=>({sp:'A young mage in grey piping', scene:'b5_landing', fx:()=>{ if (!(S.kit || []).includes('b5_c3_cadretile')) gain('b5_c3_cadretile'); }, txt:
+`${by({sgt:'You make', _:'{who} makes'})} the sign until the fingers ache, and the word until it is only a word, and nothing opens anywhere.
+
+"Never mind," the young mage says. "It took me a year." She holds out a tile, plain black stone with no face and a crack across one corner. "A practice tile. Lay it when you're bored. Try again when you're not." She looks up the slope at the tents, and stops grinning. "Try again soon, perhaps."`,
+      ch:[{t:'Back along the dock.', go:()=>startExplore()}]}),
+    b5_c3_cadre_again:()=>({sp:'A young mage in grey piping', scene:'b5_landing', again:()=>`The young mage on her bollard. "Not wanted yet."`, txt:
+`The young mage is on her bollard, ${b53Ph() === 2 ? 'not eating anything. She has been sent for, she says, at sundown. She does not say what for, and she has stopped grinning.' : 'with another apple. "Still not wanted," she says, cheerfully. "Ask me tonight."'}`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- the Faraed scouts' fire: Ruuk (the recruit), the spear, and in phase 2 the deserters ---- */
+    b5_c3_scouts:()=>{ const ph = b53Ph();
+      return {sp:'The Faraed scouts\' fire', scene:'b5_landing', fx:()=>{ S.f.b5_c3_scoutsSeen = 1; },
+        again:()=> ph === 2 && !S.f.b5_c3_desDone ? 'The scouts\' fire. Somebody is shouting there.' : 'The scouts\' fire above the dock, small and well made.', txt: ph === 2 && !S.f.b5_c3_desDone ?
+`There is shouting at the scouts' fire. Two men in regiment blue-grey, with the regiment's flash cut off their sleeves, have a scout's pack each over their shoulders and their swords out, and the scouts are on their feet with their spears, and nobody has thrown anything yet. Further up the slope a third man has a bow, and an arrow on the string.
+
+"We're going home," one of the two says, to everyone. "We're not stopping here for tonight. We're not stopping for what they're going to do up there. We'll want food for the road." He nods at the packs. "They won't miss it."${b53If('ruuk', `\n\nRuuk has a spear in his hand already. "That one is my uncle's pack," he says. "My uncle will miss it."`)}` :
+`The army's Faraed scouts keep their own fire above the dock, apart from the regiment's: a small, well-made fire with a ring of stones and nothing wasted in it. A dozen of them, most of them boys, in hide over wool, with bundles of light throwing-spears stuck upright in the ground beside them. The army pays them by the day to find it the roads its maps get wrong.${ph >= 3 ? `\n\nThis morning there is a place left empty at the fire, a blanket rolled and a spear stuck in the ground beside it. One of the scouts up the north road has not come back. The scouts do not say anything about it, and leave the place as it is.` : ''}`,
+        ch:[{t:'"Whitefinders. Put them down."', req:()=>ph === 2 && !S.f.b5_c3_desDone, go:()=>startBattle('b5_c3_deserters', {})},
+            {t:'Come round behind the bowman, up the slope, quiet.', check:['guile', 13], req:()=>ph === 2 && !S.f.b5_c3_desDone,
+              edges:id=>[id === 'ruuk' && ['these are his hills, near enough', 2], id === 'tobet' && ['he was taught to be where the blow is not', 1], id === 'thegg' && ['the slope is all loose stone, and Thegg is all Thegg', -2]],
+              near:b53Owe(8, 'A tent-rope, cut', w => `Yes, but ${b53Nm(w)} ${b53V(w, 'go', 'goes')} through a Cold Clay tent-rope on the way up, and the tent comes down on its owner, and the regiment's quartermaster writes it against ${b53Pos(w)} line: ${b5Coin(8)}.`, {t:w => `Yes, but a stone goes from under ${b53Pos(w)} boot and down the slope, and the bowman turns: bruised on the way up.`, fx:w => bruise(w, bruiseN())}),
+              go:()=>startBattle('b5_c3_deserters', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c3_deserters_seen'},
+            {t:'A Faraed throwing-spear, in trade.', tag:'2 docks', req:()=>ph !== 2 || !!S.f.b5_c3_desDone ? !(S.kit || []).includes('b5_c3_spear') && !b53Ruuk() && (S.silver || 0) >= 2 : false, fx:()=>{ S.silver -= 2; updSilver(); gain('b5_c3_spear'); }, go:'b5_c3_spear_trade'},
+            {t:'The boy with the spears.', req:()=>!b5In('ruuk') && S.f.b5_ruukDone !== 0 && b5CanRecruit('ruuk') && (ph !== 2 || !!S.f.b5_c3_desDone), go:()=>talk(S.f.b5_ruukDone == null ? 'b5_c3_ruuk' : 'b5_c3_ruuk_again')},
+            {t:'Not now.', go:()=>startExplore()}]}; },
+    b5_c3_spear_trade:()=>({sp:'The Faraed scouts\' fire', scene:'b5_landing', txt:
+`A scout with a scar through one eyebrow pulls a spear out of his bundle, weighs it, decides it is not his favourite, and holds it out for two docks. Fire-hardened, a leaf-shaped iron head, a tuft of feathers. "That bird," he says, touching the feathers, and says its name in Faraed, which does not help. "Lucky bird."`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_deserters_seen:()=>({sp:'The Faraed scouts\' fire', scene:'b5_landing', txt:
+`The slope is loose stone. Halfway up, it moves, and keeps moving, all the way down to the fire, and the bowman turns round with the arrow already drawn.`,
+      ch:[{t:'Shields up.', go:()=>startBattle('b5_c3_deserters', {surprise:'e'})}]}),
+    b5_c3_deserters_after:()=>({sp:'The Faraed scouts\' fire', scene:'b5_landing', fx:()=>{ S.f.b5_c3_desDone = 1; b53Docks(8, 'the scouts\' thanks, in docks, which the Faraed do not usually part with'); }, txt:
+`The two who are still on their feet go off up the north road without the packs, and without looking back, and the regiment's provosts come up from the camp too late to do anything but write it down. The bowman goes with the provosts.
+
+The scouts put their packs back where they were, and count what is in them, and then one of them comes and puts eight docks in your hand without saying anything, and goes back to the fire. ${b53Say({ruuk:`"That was my uncle," Ruuk says. "He doesn't like to say thank you. He pays instead. It's quicker."`, _:'The Faraed, the Cold Clay soldier tells you later, do not usually part with docks.'})}${b53If('ammet', `\n\nAmmet looks at the two going up the road. "They'll be hungry by the falls," she says. "And they'll be right about tonight." She does not say what she means by that.`)}`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+
+    /* Ruuk: the recruit. If the squad is full (Brune walks), b5Join leaves him waiting; then "Walk with us instead of Brune" swaps. */
+    b5_c3_ruuk:()=>({sp:'Ruuk, of the Faraed', scene:'b5_landing', fx:()=>{ S.f.b5_c3_metRuuk = 1; },
+      again:()=>`Ruuk, at the scouts' fire, with his spears. "Sergeant."`, txt:
+`A Faraed boy of seventeen or so comes down from the scouts' fire to meet you before you have quite decided to go up to it: thin, wiry, hide over wool, a bundle of light spears over his shoulder, and a grin that has walked a long way ahead of him and is waiting for the rest of him to catch up.
+
+"You are the Whitefinders," he says. "The Sixth. You pay on the day." It is not a question. "I am Ruuk. I am a guide. The army pays me a dock a day to tell it where the roads are, because its maps lie." He jerks his head at the camp. "They will not need guides tonight. After tonight they will go somewhere, and they will want roads. So will you."
+
+He shrugs. "My clan owes a trader in Trate for a winter's grain. He takes it out of my day-rate. Forty docks. The grain was good." The grin comes back. "I would rather owe it walking with somebody who pays on the day."${b53If('thegg', `\n\nRuuk looks up at Thegg, a long way up, and seems delighted with what he finds.`)}${b53If('perrit', `\n\nHe sees the tile pouch at Perrit's hip, and looks somewhere else, politely and at once.`)}${b5In('brune') ? `\n\nBrune is with the squad. There is room on the Sixth's bench for one more who is not a soldier, and Brune is it.` : ''}`,
+      ch:[{t:'"Walk with us."', req:()=>!b5In('brune') || b5Room() > 0, fx:()=>{ b5Join('ruuk'); if (b5In('ruuk')) gain('b5_c3_spear'); }, go:'b5_c3_ruuk_join'},
+          {t:'"Walk with us, instead of Brune. She can wait with the company\'s followers."', req:()=>b5In('brune') && b5Room() <= 0, fx:()=>{ b5Join('ruuk'); b5SwapIn('ruuk'); if (b5In('ruuk')) gain('b5_c3_spear'); }, go:'b5_c3_ruuk_join'},
+          {t:'"Stay with the scouts for now. We know where to find you."', fx:()=>{ if (b5Room() <= 0) b5Join('ruuk'); else b53Wait(); }, go:'b5_c3_ruuk_wait'},
+          {t:'"The Sixth can\'t take you."', fx:()=>{ S.f.b5_ruukDone = 0; }, go:'b5_c3_ruuk_no'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_ruuk_join:()=>({sp:'Ruuk, of the Faraed', scene:'b5_landing', txt: b5In('ruuk') ?
+`"Good," Ruuk says, as if he had arranged it, and pulls one of the spears out of his bundle and gives it to you to carry, because he has three and two hands. "A spare. Mine. Throw it at something. It comes back if you go and get it."
+
+The company clerk, fetched from the dock, writes him into the paybooks by lamplight: a new line, forty docks, a winter's grain. Ruuk watches him do it. "You write everything down," he says, with interest. "My grandmother said the Letherii write everything down so they do not have to remember it." The clerk considers this, and writes it down.${b5Waiting('brune') ? `\n\nBrune shoulders her sealskin roll and goes back along the dock to the company's followers, where the roster can find her. She does not seem to mind. "The river is the same river," she says. "From there or from here."` : ''}` :
+`Ruuk counts the squad, the way the scouts count a patrol, and laughs. "No room," he says. "You have your six. I will be at the fire. Shout."`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+    b5_c3_ruuk_wait:()=>({sp:'Ruuk, of the Faraed', scene:'b5_landing', txt:
+`"For now," Ruuk says, and seems to find it a perfectly good answer. "I will be at the fire. When you want a road, shout." The clerk writes him into the paybooks anyway, on a page of his own, against the day. Ruuk watches him do it with great interest.`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+    b5_c3_ruuk_no:()=>({sp:'Ruuk, of the Faraed', scene:'b5_landing', txt:
+`"Ah," Ruuk says. He does not seem hurt. He seems to be working out which road is next. "Then some other company that pays on the day." He goes back up to the scouts' fire, and by the morning he is not there, and nobody at the fire says where he went.`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+    b5_c3_ruuk_again:()=>({sp:'Ruuk, of the Faraed', scene:'b5_landing', again:()=>`Ruuk, at the scouts' fire. "Sergeant."`, txt:
+`Ruuk is at the scouts' fire with his spears, naming a bird on the slope to anyone who will listen. "Sergeant," he says, and waits.`,
+      ch:[{t:'"Walk with us now."', req:()=>b5Waiting('ruuk') && (b5Room() > 0 || !!b5Recruit_()), fx:()=>{ b5SwapIn('ruuk'); }, go:'b5_c3_ruuk_join'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* the trader's man: the Trate grain trader's cut of Ruuk's pay (if Ruuk walks or waits) */
+    b5_c3_trader:()=>({sp:'The trader\'s man', scene:'b5_landing', again:()=>`The trader's man, with his book. "The cut, Sergeant."`, txt:
+`A man in a good coat that has been up a river is waiting by the scouts' path with a small book and a smaller pencil: the Trate grain trader's man, come up with the regiment's barges to collect. He has the look of somebody who is owed by everyone at the Landing and has written all of it down.
+
+"The Faraed boy," he says, nodding at ${b5In('ruuk') ? 'Ruuk' : 'the scouts\' fire'}. "His clan's grain. My master takes his cut of the boy's day-rate at the paymaster's table, when the army pays." He opens the book. "The army doesn't pay the Sixth's people through the regiment's table, it seems. So I've come to you." He smiles. "Twenty docks clears his day-rate of me, Sergeant, this season. Or I write it on the grain at fifteen more, and he pays it when he can."${b53If('ruuk', `\n\nRuuk does not look at the man at all. "He is a bad man," he says to you, cheerfully. "The grain was good."`)}`,
+      ch:[{t:'"Twenty docks. Clear him."', req:()=>(S.silver || 0) >= 1, fx:()=>{ b5Pay('ruuk', 20, 'The trader\'s cut'); S.f.b5_c3_trader = 'paid'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
+          {t:'"Write it on the grain."', fx:()=>{ b5Owe('ruuk', 15, 'The trader\'s cut'); S.f.b5_c3_trader = 'ride'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
+          {t:'"The army pays its guides itself. Nothing in the regiment\'s book says the trader comes first."', check:['guile', 14], req:()=>!S.f.b5_c3_traderTried, fx:()=>{ S.f.b5_c3_traderTried = 1; },
+            edges:id=>[id === 'sgt' && ['you know a paybook the way he knows his', 2], id === 'perrit' && ['she can read his sums upside down', 1], id === 'pessa' && ['she talks back for a living', 1], id === 'thegg' && ['he is very large and very polite, and the man does not like either', -1]],
+            near:{t:()=>{ const w = b53Who(); return `Yes, but he writes ${b53Pos(w)} name in his book, slowly, spelling it out loud, with "the Sixth, the Whitefinders" after it. A name taken, in Lether, is a name somebody will come back for.`; }, fx:()=>{ S.f.b5_c3_nameTaken = b53Who(); }},
+            go:'b5_c3_trader_talked', fail:'b5_c3_trader_firm'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_trader_talked:()=>({sp:'The trader\'s man', scene:'b5_landing', fx:()=>{ S.f.b5_c3_trader = 'talked'; S.f.b5_c3_traderDone = 1; }, txt:
+`The trader's man reads his own book again, and then the line in the regiment's order that ${by({sgt:'you put', _:'{who} puts'})} in front of him, and then his own book once more. "The army's guides," he says. "Paid by the army." He licks the pencil, and crosses something out, neatly. "My master will not be pleased."
+
+"Your master is in Trate," ${by({sgt:'you say', _:'{who} says'})}.
+
+"So he is." He closes the book. "So he is." He goes off down the dock toward the hostel, to write a letter, by the look of him.${b53If('ruuk', `\n\nRuuk watches him go. "He will want it from somebody," he says. "But not from me. Good."`)}`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+    b5_c3_trader_firm:()=>({sp:'The trader\'s man', scene:'b5_landing', txt:
+`The trader's man listens to all of it, politely, and taps his book. "The grain was delivered," he says. "It's written. Twenty, or fifteen on the grain. I'm not unreasonable, Sergeant. I'm only right."`,
+      ch:[{t:'"Twenty docks. Clear him."', req:()=>(S.silver || 0) >= 1, fx:()=>{ b5Pay('ruuk', 20, 'The trader\'s cut'); S.f.b5_c3_trader = 'paid'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
+          {t:'"Write it on the grain."', fx:()=>{ b5Owe('ruuk', 15, 'The trader\'s cut'); S.f.b5_c3_trader = 'ride'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_trader_done:()=>({sp:'The trader\'s man', scene:'b5_landing', txt: S.f.b5_c3_trader === 'paid' ?
+`The trader's man counts the docks twice and writes a receipt in his small book, and tears it out, and gives it to you, which surprises everyone including him. "Cleared for the season," he says. "Next season is next season." He goes off down the dock.${b53If('ruuk', `\n\nRuuk looks at the receipt for a long while. Then he folds it very small and puts it inside his shirt, against the skin.`)}` :
+`The trader's man writes it on the grain, fifteen docks, in a hand much neater than he is, and shows you the line, and closes the book. "When he can," he says. "My master is a patient man. Interest is very patient too." He goes off down the dock.${b53If('ruuk', `\n\nRuuk shrugs. "It was always going to be on the grain," he says. "Now it is more grain."`)}`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+
+    /* ---- the Nerek haulers under the dock: phase by phase; in phase 2, "there were Nerek up there" ---- */
+    b5_c3_nerek:()=>{ const ph = b53Ph();
+      return {sp:'The Nerek haulers', scene:'b5_landing', fx:()=>{ S.f['b5_c3_ner' + ph] = 1; if (ph >= 2) S.f.b5_c3_nerekWord = 1; },
+        again:()=> ph === 1 ? 'The Nerek haulers, under the dock, with the tow-ropes.' : ph === 2 ? 'The haulers under the dock. The old one is looking at the mountains.' : 'The haulers under the dock, quiet.', txt: ph === 1 ?
+`The Nerek who hauled the barges up from Trate are sitting under the dock out of the regiment's way, a dozen of them, with the tow-ropes still across their knees and their shoulders raw from them. They are Indebted, every one; the barge-master owns their debts, and the debts own the rest. They watch the Sixth come along the dock without much interest, and then with a little more, when they see the squad is not the regiment.${b53If('ammet', `\n\nAmmet has stopped. She is looking at their shoulders, and at the rope sores on them, and her hand has gone to her roll of tools.`)}` : ph === 2 ?
+`Under the dock the haulers are awake and quiet. The oldest of them, a grey woman with a face folded in on itself, is looking north at the mountains, where the road goes up past the falls toward the villages.
+
+"There were Nerek up there," she says, when you crouch down by her. She says it to the mountains. "In the villages. The ones who would not come down to the river when the traders came. Old ones. Some families." She shrugs, a very small shrug. "They work for the Edur, a little. The Edur are not worse than the barge-master." She looks at the cadre's tents on the slope. "My sister's people went up there. Long ago."${b53If('ammet', `\n\nAmmet crouches beside her, and says something in a language that is not Letherii, haltingly, a grandmother's words. The old woman looks at her for the first time.`)}` :
+`The haulers are under the dock, sitting together, closer than they were. Nobody is talking. The old woman has a twist of ash in her hand from the planking, and is holding it, and not looking at it.${b53Key() === 'warn' ? `\n\nShe looks at you once, and at ${NAME(b53Runner())}, and nods. That is all. It is not thanks. It is something like it.` : ''}`,
+        ch:[{t:'Ammet looks at the rope sores.', check:['wits', 13], req:()=>ph === 1 && b5In('ammet') && !S.f.b5_c3_hauledTried, fx:()=>{ S.f.b5_c3_hauledTried = 1; },
+              edges:id=>[id === 'ammet' && ['the sick are hers, and so are the Nerek, a quarter of her', 3], id === 'tobet' && ['he knows what the Indebted will let you see', 1], id === 'thegg' && ['he makes the haulers nervous, being the size of the barge-master\'s man', -1]],
+              near:{t:()=>`Yes, but there are a dozen of them and every shoulder wants dressing: the squad's own salve goes on the last of them, and Ammet does not ask before she uses it.`, fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; else b53Rattle('ammet'); }},
+              go:'b5_c3_nerek_ok', fail:'b5_c3_nerek_no'},
+            {t:'Not now.', go:()=>startExplore()}]}; },
+    b5_c3_nerek_ok:()=>({sp:'The Nerek haulers', scene:'b5_landing', fx:()=>{ S.f.b5_c3_haulers = 1; }, txt:
+`Ammet goes along the line of them with her pot of salve and a roll of clean linen, and does not ask, and does not explain, and says "Hold still" to a man who has not moved. The haulers let her, one after another, the way people do when nobody has asked them in a long time. The old woman at the end watches the whole of it before she lets Ammet near her own shoulders, and then she does.
+
+"Half Nerek," the old woman says, looking at Ammet's hands. "A quarter." Ammet nods. "My grandmother." The old woman nods back, and that is the whole of the conversation, and it seems to be enough for both of them.`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+    b5_c3_nerek_no:()=>({sp:'The Nerek haulers', scene:'b5_landing', txt:
+`Ammet starts along the line of them with her pot of salve, and the first hauler pulls his shoulder away, and the next, and the barge-master's man comes along the dock to see what the soldiers want with his haulers. Ammet stops. "Another time," she says, and puts the pot away, and does not look happy about it.`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+
+    /* ---- the barge crews' fire: a rest, the pay desk, the squad, the way on (the games pass, 89, wraps this node: keep the id) ---- */
+    b5_c3_fire:()=>{ const ph = b53Ph(), k = b53Key();
+      return {sp:'The barge crews\' fire', scene:'b5_landing', again:()=> ph >= 3 ? 'The barge crews\' fire at dawn, burnt down to ash. Somebody has put green-grey ash on it that came out of the sky.' : ph === 2 ? (k ? 'The barge crews\' fire. Nobody at it is talking about anything else.' : 'The barge crews\' fire, the day before something. The Finadd will have the night\'s orders at evening.') : 'The barge crews\' fire on the dock, driftwood and pitch.', txt:
+`${ph >= 3 ? `The barge crews' fire on the dock in the grey before dawn, down to coals. The bargemen are sitting round it with their hoods up, not talking. Something has come down out of the sky in the night and lies on the planking in a fine grey-green dust, and on the coals, and on the bargemen's hoods.` : ph === 2 ? `The barge crews' fire on the dock, by day. The bargemen are mending lines and arguing about what the regiment will do with the barges after tonight, and nobody says what tonight is. Up on the slope the cadre's tents have their flaps tied shut.` : `The barge crews' fire on the dock: driftwood and a lump of pitch, and the bargemen round it with their poles laid on the planking and a pot on the coals. ${S.f.b5_c2_key === 'dead' ? 'They know the Sixth already. Word came up the river with the barges: the company that carried the dead out of the second hulk at Trate and laid them on the quay. They make room at the fire without being asked.' : S.f.b5_c2_key === 'salvage' ? 'They know the Sixth already. Word came up the river with the barges: the company that landed the harvest ships\' cargo at Trate for the harbour master\'s forty. They make room at the fire, and keep an eye on their own cargo.' : 'They make room at the fire for the soldiers who are to guard their barges, and say so.'}`}${b53If('brune', () => ph < 3 ? `\n\nBrune sits at the edge of the dock with her feet in the river, a little apart from the fire.` : '')}${b53If('ruuk', () => ph < 3 ? `\n\nRuuk eats standing up, at the edge of the firelight, looking at the slope.` : '')}`,
+        ch:[b5TileChoice(3),
+            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b5_c3_rest' + ph], fx:()=>{ S.f['b5_c3_rest' + ph] = 1; b5Rest('The squad sits an hour by the barge crews\' fire, with the river going past. Wounds close, mostly.'); }, go:'b5_c3_fire_rest'},
+            {t:'The pay desk, at the clerk\'s crate.', go:'b5_c3_pay'},
+            {t:'Talk with the squad.', go:'b5_c3_fire_talk'},
+            {t:'Nightfall. The first watch on the barges is the Sixth\'s.', req:()=>ph === 1 && !S.f.b5_c3_riverDone, onward:true, go:'b5_c3_watch_start'},
+            {t:'Evening. The Finadd has the night\'s orders.', req:()=>ph === 2 && !k, onward:true, go:'b5_c3_orders'},
+            {t:'The barge-line, where the haulers sleep.', req:()=>ph === 2 && k === 'watch' && !S.f.b5_c3_cheerDone, onward:true, go:'b5_c3_cheer_start'},
+            {t:'Up the bank, after the runner.', req:()=>ph === 2 && k === 'warn' && !S.f.b5_c3_bankDone, onward:true, go:()=>{ startExplore('b5_c3_bank'); talk('b5_c3_bank_arrive'); }},
+            {t:'Dawn. The Finadd has the orders.', req:()=>ph >= 3, onward:true, go:'b5_c3_dawn'},
+            {t:'Not now.', go:()=>startExplore()}]}; },
+    b5_c3_fire_rest:()=>({sp:'The barge crews\' fire', scene:'b5_landing', txt:
+`An hour on the warm planking by the fire, while the river goes past underneath.
+
+${b53Say({ammet:`Ammet goes round the squad and looks at hands and feet, and at the blisters from the barge-poles, and says "still" to anyone who moves, and does not drink the bargemen's spirit when it comes round.`, thegg:`Thegg lies on his back on the dock, which creaks, and goes to sleep at once, and the bargemen step over him.`, _:'One of them sleeps. The others listen to the river.'})}${b53If('tobet', `\n\nTobet cuts a notch in his tally-stick, and then sits with it across his knees, looking at the mountains.`)}${b53If('perrit', `\n\nPerrit sits with her back to the hostel wall, which is the only place on the dock with no water behind it, and reads the Snakebelt cadre's ration list upside down off a crate.`)}`,
+      ch:[{t:'Back to the fire.', go:'b5_c3_fire'}]}),
+    b5_c3_fire_talk:()=>{ const ph = b53Ph(), k = b53Key(), ln = [];
+      if (b5In('tobet')) ln.push(ph >= 3 ? (k === 'warn' && b53Runner() === 'tobet' ? `Tobet has his tally-stick out, and has not cut anything on it. "I didn't get there," he says. "I was a league short. Less." He turns the stick over. "There's no notch for that, Sergeant."` : `Tobet is looking at the mountains, grey again. "They cheered," he says. "Everybody cheered." He cuts a notch, and looks at it, and you do not ask what it was for.`) : `Tobet is watching the slope, and the tents with their flaps tied. "From back here," he says, flat, "everything owes me money." He watches a while longer. "Not them. I don't want anything off them."`);
+      if (b5In('thegg')) ln.push(ph >= 3 ? `Thegg is sitting very still, with his big hands on his knees. When you sit by him he says, low, "My mother's people burned like that. Long ago. The Letherii did it with sorcery too." He says nothing more, and neither do you.` : `Thegg sits with his back against a bollard, which creaks, and talks low in his mother's tongue to nobody at the fire. When he sees you listening he stops. "The river has a great many," he says. "I tell them the way."`);
+      if (b5In('perrit')) ln.push(ph >= 3 ? (k === 'watch' ? `Perrit has not slept. "It was the most beautiful working I have ever seen," she says, very evenly. "Three of them and the Ceda, from a hundred leagues off, on one thread." Her hands are shut in her lap. "I hate that I think so. I am going to go on thinking so."` : `Perrit is sitting very straight. "The regiment's book," she says. "Thirty docks, and a line about the Sixth." She looks at the mountains. "It was the right line." She does not say anything else, and does not unfold her arms.`) : `Perrit is sitting where she can see the cadre's tents, and not looking at them, carefully. "A whole cadre," she says, "and the three biggest there are, and the Ceda's banner on a ship." She does the sum out loud, under her breath, and stops before the end.`);
+      if (b5In('ammet')) ln.push(ph >= 3 ? (k === 'warn' ? `Ammet is washing her hands in the river, and goes on doing it. "My grandmother was half Nerek," she says, without turning round. "She'd have sent the runner." She shakes the water off. "She'd have been too late too."` : `Ammet is washing her hands in the river, and goes on doing it after they are clean. "There were Nerek up there," she says. That is all she says.`) : `Ammet is boiling her needles in a pot of river water. "River's cleaner than the sea for it," she says. "Not by much." She is not drinking.`);
+      if (b5In('brune')) ln.push(ph >= 3 ? (S.f.b5_c2_key === 'dead' ? `Brune is at the edge of the dock with her feet in the river, which is grey with ash this morning. "The Shore will have them too," she says, when you come down to her. "The ones from the fire. Sooner or later. Everything goes downriver." She watches the ash go past. "It is a long way to the sea from here."` : `Brune is at the edge of the dock with her feet in the river, which is grey with ash this morning. "Everything goes downriver," she says. "Eventually." She does not seem to find it a comfort today.`) : `Brune sits on the edge of the dock with her feet in the river. "It is not the sea," she says, when you come down to her. "But it is going there." That seems to settle something for her.`);
+      if (b5In('ruuk')) ln.push(ph >= 3 ? `Ruuk is up at the edge of the firelight looking north, and for once he is not a step ahead of anything. "The birds went up off the hills before it," he says. "All of them. Every bird I know." He is quiet a while. "They knew first."` : `Ruuk eats standing up and points his chin at the slope. "That one is a rain-bird," he says, and names it in Faraed. "That one says rain too. They are both right, and both liars." He grins. "Like maps."`);
+      if (b5In('pessa')) ln.push(`Pessa sits with her boathook upright beside her, looking at the barges. "Good barges," she says. "Somebody's." She thinks about it. "Always somebody's."`);
+      return {sp:'The barge crews\' fire', scene:'b5_landing', txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
+        ch:[{t:'Back to the fire.', go:'b5_c3_fire'}]}; },
+
+    /* the pay desk (80's b5PayChoices), at the clerk's crate */
+    b5_c3_clerk:()=>({sp:'The company clerk', scene:'b5_landing', html:debtHTML('The Sixth Company · Kraig\'s Landing'), fx:()=>{ S.f.b5_c3_clerk = 1; },
+      again:()=>`The clerk's crate. The paybooks are dry, and he is sitting on them.`, txt:
+`The company clerk has found a crate on the dock as far from the water as the dock allows, and set the oilskin case on it, and sits beside it with one hand on the lid. The river makes him nervous. Everything makes him nervous, but the river has the paybooks in reach.
+
+"The regiment pays us by the night," he says, "through its own table, less its own table." A pause. "I have written down what it keeps. It has written down what I wrote." He sounds almost fond of it.${b5In('ruuk') || b5Waiting('ruuk') ? `\n\nHe turns to a new page, in his small hand. "The Faraed boy. Forty docks, a winter's grain, to a trader in Trate." He looks up. "His trader's man has been asking me for the boy's day-rate. I told him the boy's day-rate is the army's business." He swallows. "Was that right?"` : ''}${b5Debt('sgt') > b5DebtStart('sgt') ? `\n\nHe runs his pen down your own line, and it stops further down than it started. He does not say anything about it. He does not have to.` : ''}`,
+      ch:[{t:'The pay desk.', go:'b5_c3_pay'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_pay:()=>({sp:'The clerk\'s crate · the pay desk', scene:'b5_landing', html:debtHTML('The Sixth Company · Kraig\'s Landing'), again:()=>`The pay desk. The clerk's pen is wet, and the squad has ${b5Coin(S.silver || 0)} in hand.`, txt:
+`The clerk wets his pen. "Anything the squad pays down out of its own docks, I write as paid, today, in front of you," he says. "The holders get it at the quarter. From here it goes down the river." He looks at the river. "With the barges. Which we are guarding." This seems to reassure him a little.`,
+      ch:b5PayChoices('b5_c3_fire')}),
+
+    /* the quartermaster: salves at six docks */
+    b5_c3_qm:()=>({sp:'The quartermaster', scene:'b5_landing', fx:()=>{ S.f.b5_c3_qm = 1; }, again:()=>`The quartermaster, counting. "Salves, six. The river doesn't change the price either."`, txt:
+`The quartermaster has set up on the dock behind the company's barrels and is counting them against the regiment's list, which has more barrels on it than he brought, and arguing about it with a Cold Clay quartermaster who has fewer. His salves are in a dry crate: Letherii field salve, in waxed paper.
+
+"Six docks," he says. "Docks. Not the regiment's chits, not a bargeman's promise, not a Faraed spear." He writes something down. "I was offered a Faraed spear. I said no. What would I do with a spear?"`,
+      ch:[{t:'A salve.', tag:'6 docks', req:()=>(S.silver || 0) >= 6, fx:()=>{ S.silver -= 6; S.inv.salve = (S.inv.salve || 0) + 1; updSilver(); note('A salve, for six docks.', 'good'); }, go:'b5_c3_qm'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* the tile-woman: she reads when Perrit doesn't */
+    b5_c3_tilewoman:()=>({sp:'The tile-woman', scene:'b5_landing', fx:()=>{ S.f.b5_c3_tw = 1; }, txt:
+`The tile-woman came up the river on the quartermaster's barge with her bag of oiled cloth in her lap, and sits now on a coil of the regiment's rope at the end of the dock, watching the cadre's tents on the slope. She spits to one side when you come over.
+
+${b5In('perrit') ? `"Grey piping," she says, with her chin. "Your mage has seen it." She considers the tents, professionally. "Tiles is a small trade, next to that. A dock at a time." She does not offer a reading. Your mage does that.` : `"No mage," she says. "Then it's bone, and it's a dock, and we'll do it on the barge, where the tiles like it." She shakes the bag, and it clicks. "Sit, if you want it."`}`,
+      ch:[Object.assign(b5TileChoice(3), {req:()=>!b5In('perrit') && !S.f.b5_c3_drawn && !S.f.b5_c3_noCard}),
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- the ways between the dock and the barges ---- */
+    b5_c3_to_barges:()=>({sp:'The gangplank', scene:'b5_landing', txt: b53Ph() === 1 && !S.f.b5_c3_watch ?
+`The plank goes down from the dock onto the first of the barges. The regiment's own men have the barges until nightfall, and are not interested in sharing them before.` :
+`The plank goes down from the dock onto the first of the barges, and from there to the next, and the next, three deep, with the river between.`,
+      ch:[{t:'Down onto the barges.', req:()=>b53Ph() >= 2 || !!S.f.b5_c3_watch, onward:true, go:()=>startExplore('b5_c3_barges')},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_to_dock:()=>({sp:'The gangplank', scene:'b5_landing', txt:
+`Up the plank from the barges to the dock.${!S.f.b5_c3_riverDone && S.f.b5_c3_watch ? ' The watch is the Sixth\'s until dawn, and the mooring lines are down here.' : ''}`,
+      ch:[{t:'Up to the dock.', onward:true, go:()=>startExplore('b5_c3_dock')},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- the first night: the watch on the barges, and the river thieves ---- */
+    b5_c3_watch_start:()=>({sp:'The barges · nightfall', scene:'b5_landing', fx:()=>{ S.f.b5_c3_watch = 1; }, txt:
+`Nightfall. The regiment's watch comes off the barges and goes up to its fires, and the Sixth goes down the plank and onto them with a hooded lantern and the clerk's best wishes.
+
+Three barges, tied three deep: the near one to the dock, the next to the near one, the outer one to the next, with the river slapping between them in the dark. Cargo roped under tarpaulins. The mooring lines made fast round coils on each deck. Out past the outer barge the river is black, and fast, and makes the sort of noise that is easy to stop hearing.${b53If('perrit', `\n\nPerrit goes down the plank last, and stands in the exact middle of the near barge, and stays there.`)}${b53If('brune', `\n\nBrune goes straight to the outer barge and sits on its edge with her feet over the side.`)}`,
+      ch:[{t:'Down onto the barges.', onward:true, go:()=>startExplore('b5_c3_barges')},
+          {t:'Not yet.', go:()=>startExplore()}]}),
+    b5_c3_rope:()=>({sp:'The mooring lines', scene:'b5_landing', txt: S.f.b5_c3_riverDone ?
+`The mooring line is made fast round its coil, new rope spliced into old where the thieves' knives went in. The bargemen have checked it twice${b5In('thegg') ? ', and so has Thegg' : ''}.` : !S.f.b5_c3_watch ?
+`A mooring line, made fast round its coil. By day the regiment's men have the barges.` :
+`A mooring line, made fast round its coil, wet and taut. You put your hand on it. It is too taut, and then, under your hand, it is not: somewhere further along, on the next barge, it has been cut half through, and is still being cut.
+
+There is a sound out on the water that is not the river. Oars, muffled, very close. And then, on the next barge, a shape gets up from behind the cargo that is not a bargeman.${b53If('tobet', `\n\n"Four," Tobet breathes, behind you. "On the next one and the outer. One with a pole. More on the water."`)}`,
+      ch:[{t:'"Whitefinders." Lantern up, and over onto the next barge.', req:()=>!!S.f.b5_c3_watch && !S.f.b5_c3_riverDone, go:()=>startBattle('b5_c3_rivermen', {})},
+          {t:'Hood the lantern and go along the cargo in the dark, low.', check:['wits', 14], req:()=>!!S.f.b5_c3_watch && !S.f.b5_c3_riverDone,
+            edges:id=>[id === 'brune' && ['she has crossed decks in the dark all her life', 2], id === 'tobet' && ['he sees in the dark, and is where the blow is not', 1], id === 'pessa' && ['she was raised on barges', 1], id === 'thegg' && ['every barge he steps on tells the river about it', -2], id === 'perrit' && ['the water is right there', -1]],
+            near:b53Owe(6, 'A regiment lantern, in the river', w => `Yes, but the hooded lantern goes out of ${b53Pos(w)} hand on the cargo and into the river with a hiss, and it is the regiment's lantern: ${b5Coin(6)} against ${b53Pos(w)} line.`, {t:w => `Yes, but ${b53Nm(w)} ${b53V(w, 'go', 'goes')} into the gap between the barges up to the waist, and the thieves hear the splash: rattled.`, fx:w => b53Rattle(w)}),
+            go:()=>startBattle('b5_c3_rivermen', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c3_rope_seen'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_rope_seen:()=>({sp:'The barges · night', scene:'b5_landing', txt:
+`A tarpaulin flaps on the cargo where a boot catches it. Every shape on the next barge turns at once, with knives out, and the one with the pole swings it round.`,
+      ch:[{t:'Shields.', go:()=>startBattle('b5_c3_rivermen', {surprise:'e'})}]}),
+    b5_c3_rivermen_after:()=>({sp:'The barges · before dawn', scene:'b5_landing', fx:()=>{ S.f.b5_c3_riverDone = 1; }, txt:
+`The boss goes over the stern of the drifting barge into the river and does not come up where anybody is looking, and the last of his men go after him. The barge turns slowly in the current, a long way down from the Landing now, with its lantern still burning on the cargo.
+
+Then the work: poles, and the barge's own sweep, and the current against all of it. ${b53Say({brune:'Brune takes the sweep without being asked and brings the barge across the current to the bank as if she had been doing it all her life, which she has.', pessa:'Pessa takes a pole and shows the squad how, without being asked, and swears at the river in canal cant the whole way.', thegg:'Thegg takes the heaviest pole and leans on it, and the barge goes where he leans it.', _:'It takes the squad the rest of the night to pole it back.'})} By the grey before dawn the outer barge is tied up again, three deep, with new rope spliced into the old where the knives went in.
+
+The barge-master comes down the dock at first light and walks the length of all three barges, counting, and finds nothing missing. He seems almost disappointed.`,
+      ch:[{t:'Up to the dock.', onward:true, go:()=>{ startExplore('b5_c3_dock'); talk('b5_c3_morning'); }}]}),
+    b5_c3_morning:()=>({sp:'Kraig\'s Landing · morning', scene:'b5_landing', fx:()=>{ if (!S.f.b5_c3_paid1) { S.f.b5_c3_paid1 = 1; S.f.b5_c3_ph = Math.max(2, S.f.b5_c3_ph || 1); b53Docks(12, 'the barge-master\'s bounty for three barges kept, less the regiment\'s share'); b53Docks(6, 'the regiment\'s rate for a night on the barges, after deductions'); } }, txt:
+`Morning at the Landing. The regiment is up and about, and the camp smells of porridge and smoke.
+
+The barge-master pays a bounty for barges kept, and counts it into the clerk's hand in front of a Cold Clay officer, who takes the regiment's share before the clerk can close his fingers on it: twelve docks come to the squad. And the regiment pays its rate for the night on the barges, after deductions, which are read out by nobody: six more.
+
+Up on the slope, the cadre's tents have their flaps tied shut this morning, and there are more guards round them than there were last night. ${b53Say({perrit:'Perrit sees it, and goes very still.', tobet:'Tobet sees it, and says nothing about it, and goes on watching.', _:'The squad sees it.'})}`,
+      ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
+
+    /* ---- the evening of the second day: the orders, and what the mages mean to do. The key. ---- */
+    b5_c3_orders:()=>({sp:B5_FINADD.name, scene:'b5_c3_tents', fx:()=>{ S.f.b5_c3_orders = 1; S.f.b5_c3_nerekWord = 1; },
+      again:()=>`Finadd Ennic, with the night's orders. "The barges, Sergeant. All night."`, txt:
+`Evening. Finadd Ennic comes down from the hostel with the night's orders in his book, and reads them to the squad by the fire, in his neat voice, because he has been told to.
+
+"Tonight the regiment stays in its lines," he says. "Every company. No one goes up the slope, no one goes up the river bank, no one leaves the Landing. The Sixth is at the barges, all night." He turns the page. "The cadre, and the three in the tents, and the Ceda from Letheras, are to strike the Edur villages across the mountains. With sorcery. Tonight." He closes the book. "That is all it says."
+
+He stands there with it closed. "The officers say the villages will burn from end to end," he says. "They seemed very pleased."
+
+Down at the barge-line, under the dock, the Nerek haulers have heard it too. The old woman is looking at the mountains. "There were Nerek up there," she says, to nobody, to the mountains. "In the villages. The ones who would not come down."
+
+${b53Say({ammet:`Ammet turns her head and looks at the old woman, and then at you, and does not say anything at all. She does not need to.`, _:'The squad looks at you.'})}`,
+      ch:[{t:'Decide.', onward:true, go:'b5_c3_key'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_key:()=>({sp:'The barge crews\' fire · evening', scene:'b5_c3_tents', again:()=>`The fire, and the mountains going dark. The night's orders, and the haulers under the dock.`, txt: b53Key() ?
+`It is decided. ${b53Key() === 'watch' ? 'The Sixth is at the barges, as ordered.' : `${NAME(b53Runner())} has gone up the bank in the dark.`}` :
+`The mountains go dark against the last of the sky. Up on the slope, lamps are lit in the three large tents, and men in grey piping are going up toward a level place above them, a long way off, with their arms full.
+
+The order is the barges, all night. The road up the river bank goes north past the falls toward the villages, and a runner who knew it could be a long way up it by midnight.
+
+${b5In('ruuk') ? `Ruuk is at your elbow. "I know the bank road," he says, very low. "To the falls, and past. I could be at the first village by morning." He is not grinning. "Maybe before."` : `Tobet is at your elbow, half a step behind, as always. "Sergeant," he says softly. "I can run. I'm the quickest you've got." He does not say what he is offering. He does not need to.`}${b53If('perrit', `\n\nPerrit says, very precisely, "The order is the barges, Sergeant. It is the cadre's work up there, and it is not ours to stop." She sounds as if she is reading it off a page. Her hands are shaking.`)}${b53If('thegg', `\n\nThegg says nothing. He is looking at the haulers under the dock.`)}${b53If('brune', `\n\nBrune is looking at the river. "Everything goes down it," she says. "Whatever you do tonight."`)}`,
+      ch:[{t:'"The barges, as ordered. We watch, and we keep our posts."', req:()=>!b53Key(), fx:()=>{ S.f.b5_c3_key = 'watch'; b53L('perrit', 1); b53L('ammet', -1); }, go:'b5_c3_thefire'},
+          {t:`"${b5In('ruuk') ? 'Ruuk' : 'Tobet'}. Up the bank. Tell them to get out."`, req:()=>!b53Key(), fx:()=>{ S.f.b5_c3_key = 'warn'; S.f.b5_c3_runner = b5In('ruuk') ? 'ruuk' : 'tobet'; b53L('ammet', 2); b53L('thegg', 1); b53L('perrit', -1); }, go:'b5_c3_runner'},
+          {t:'"Not yet."', req:()=>!b53Key(), go:()=>startExplore()},
+          {t:'Not now.', req:()=>!!b53Key(), go:()=>startExplore()}]}),
+
+    /* 'watch': the fire, the cheering, the building that falls, and the drunks at the barge-line */
+    b5_c3_thefire:()=>({sp:'Kraig\'s Landing · the fire', scene:'b5_c3_greenfire', fx:()=>{ S.f.b5_c3_fireSeen = 1; }, txt:
+`The squad goes down onto the barges, and sits, and waits, with the lantern hooded.
+
+Past midnight it begins. There is no sound. There is a light on the slope above the tents, where the men in grey piping went, and then the light is not on the slope, it is over the mountains: a line of green along their tops from one end of the sky to the other, and then a curtain of it, rising, hanging, enormous, lighting the whole Landing green, the tents and the barges and the river and every face on the dock.
+
+It goes down on the far side of the mountains, onto whatever is there. It goes on going down.
+
+And the camp cheers. The whole regiment is on its feet in its lines, roaring, and the bargemen on the dock, and the officers out of the hostel with their cups, and the noise comes down the slope and across the water. Somebody starts a song.${b53If('perrit', `\n\nPerrit is on her feet in the middle of the barge with her face lit green, and she is not cheering. "Look at it," she says. "Three of them and the Ceda, on one thread, from a hundred leagues apart." Her voice is very steady. "It is the finest working I have ever seen. I hate that I think so."`)}${b53If('ammet', `\n\nAmmet sits on the cargo with her hands in her lap, and watches it, and does not move at all.`)}${b53If('brune', `\n\nBrune watches it with her feet in the river. "The Shore will have them," she says. "The ones under that. Sooner or later."`)}${b53If('ruuk', `\n\nRuuk has his face turned away from it, toward the river. "The birds went up," he says. "Before it. All of them."`)}`,
+      ch:[{t:'On.', go:'b5_c3_collapse'}]}),
+    b5_c3_collapse:()=>({sp:'Kraig\'s Landing · the shed by the water', scene:'b5_c3_collapse', fx:()=>{ S.f.b5_c3_collapse = 1; }, txt:
+`Then something comes back the other way. Not light: a push, a long low shove through the ground and the air and the water, that rocks the barges against each other and puts every lantern on the dock out at once.
+
+Down by the water, the old shed the river has been leaning on for years stops leaning, and goes down on itself with a long tearing sound, and the cheering on the dock stops.
+
+There were men in it. Bargemen sleeping out of the wind, two or three of them, and a Cold Clay soldier with a jug. Lanterns come, and men with spades, and the squad is there among them, digging. ${b5In('ammet') ? 'Ammet is in the rubble before anybody else, on her knees, with her roll of tools open. "Hold still," she is saying, to a man under a beam. "Hold still. Here. Lift on three."' : 'The regiment\'s surgeon comes down from the camp with his roll of tools, at a run.'}
+
+Nobody in the shed is killed. Two of them will not walk for a while. By the time they are carried up to the camp the green light over the mountains is fading, and the cheering has started again, further up the slope.`,
+      ch:[{t:'Back to the barge-line.', onward:true, go:'b5_c3_cheer_start'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_cheer_start:()=>({sp:'The barge-line · night', scene:'b5_c3_greenfire', txt:
+`The celebrating comes down the slope in the small hours: a crowd of the regiment, with jugs, singing, the green light gone out of the sky behind them. They are looking for more to cheer. At the barge-line, under the dock, they find the Nerek haulers.
+
+"There's some of yours up there," one of them is telling a hauler, with a fist in the man's collar. "Was. Was some of yours." The others think this is very funny. One of them has picked up a barge-pole.${S.f.b5_c3_haulers ? `\n\nThe old woman Ammet saw to is behind the haulers, and she is looking at you.` : ''}${b53If('thegg', `\n\nThegg puts his shield down on the dock with a sound like a door shutting, and steps in front of the haulers. "Behind me," he says, to them, very politely.`)}`,
+      ch:[{t:'"Whitefinders. Back off." Between them and the haulers.', go:()=>startBattle('b5_c3_cheer', {})},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_cheer_after:()=>({sp:'The barge-line · before dawn', scene:'b5_landing', fx:()=>{ S.f.b5_c3_cheerDone = 1; S.f.b5_c3_ph = 3; }, txt:
+`The provosts come down from the camp at last with lanterns and staves, and the celebrating goes back up the slope with them, mostly upright, still singing, a little less. Nobody is dead. Two of the regiment will have their jaws strapped for a week, and are told by the provosts that they walked into a barge.
+
+The haulers go back under the dock, closer together than they were. ${b53Say({ammet:'Ammet goes in among them with her pot and her linen, and nobody pulls away this time.', thegg:'Thegg sits down on the dock at the end of the barge-line with his back to the haulers and his face to the camp, and stays there till dawn.', _:'The squad sits on the dock at the end of the barge-line till dawn.'})}`,
+      ch:[{t:'Dawn.', onward:true, go:'b5_c3_dawn'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* 'warn': the runner up the bank; the fire comes first; the squad goes after him */
+    b5_c3_runner:()=>{ const r = b53Runner();
+      return {sp:'The river bank · dusk', scene:'b5_c3_tents', fx:()=>{ S.f.b5_c3_ranOut = 1; }, txt:
+`${r === 'ruuk' ? `Ruuk does not wait to be told twice. He leaves his spare spears with you and goes up the bank road at a lope, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before he is out of earshot. He does not look back. He is a step ahead of everyone, as always.` : `Tobet takes nothing but his knife and his tally-stick. "Sergeant," he says, softly, and then he is going up the bank road at a run, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before you can say anything to his back.`}
+
+The squad goes down onto the barges, as ordered, and sits, and waits, with the lantern hooded.
+
+Past midnight it begins. A light on the slope above the tents, and then over the mountains, from one end of the sky to the other: a curtain of green fire, rising, hanging, enormous, lighting the whole Landing green. The camp cheers. The whole regiment is on its feet and roaring.
+
+${NAME(r)} is not a league up the bank. Not yet. Not near.
+
+Then the push comes back through the ground and the water, and rocks the barges, and puts every lantern on the dock out at once, and somewhere down by the water a building goes down with a long tearing sound.${b53If('perrit', `\n\nPerrit, lit green, says, "The bank is open ground under that, Sergeant. All the way to the falls." Her voice is very steady, and very angry, and not with you.`)}${b53If('ammet', `\n\nAmmet is already on her feet.`)}`,
+        ch:[{t:'"Up the bank. After him."', onward:true, go:()=>{ startExplore('b5_c3_bank'); talk('b5_c3_bank_arrive'); }},
+            {t:'Not now.', go:()=>startExplore()}]}; },
+    b5_c3_bank_arrive:()=>({sp:'The river bank · night', scene:'b5_c3_greenfire', txt:
+`The bank road goes north out of the Landing along the river, between the water and the hill: a path, reeds on the river side, rocks on the hill side, and here and there a dead tree the floods have left. The green light is fading over the mountains ahead, and the camp's cheering fades behind.
+
+${NAME(b53Runner())} went this way. ${b53Runner() === 'ruuk' ? 'Somewhere ahead, a step ahead.' : 'Somewhere ahead, running.'}${b53If('thegg', `\n\nThegg goes first, with the shield up, and says "Behind me," and the squad goes behind him.`)}`,
+      ch:[{t:'North.', go:()=>startExplore()}]}),
+    b5_c3_deadtree:()=>({sp:'A dead tree', scene:'b5_c3_greenfire', fx:()=>{ S.f.b5_c3_mark = 1; }, txt:
+`A dead tree the floods left on the bank, white in the last of the green light. On its trunk, at the height of a man's hand, a fresh cut: ${b53Runner() === 'ruuk' ? 'two short strokes and a long one, the Faraed scouts\' mark for *this way, and go quiet*.' : 'a notch, cut with a knife, the same notch Tobet cuts in his tally-stick. He came this way, and he wanted you to know it.'}${b53If('ammet', `\n\nAmmet puts her hand flat on the cut. "Still wet," she says.`)}`,
+      ch:[{t:'On, north.', go:()=>startExplore()}]}),
+    b5_c3_bank_edge:()=>({sp:'The reeds · night', scene:'b5_c3_greenfire', txt: S.f.b5_c3_bankDone ?
+`Where the path gives out in the reeds, the river goes on north into the dark toward the falls. Nothing is watching from the reeds now.` :
+`Where the path gives out, the reeds go up to the water and over a man's head, and in the reeds, flat, looking north, is ${NAME(b53Runner())}. ${b53Runner() === 'ruuk' ? 'Ruuk does not turn his head.' : 'Tobet does not turn his head.'} "Down," ${b5He(b53Runner())} breathes. "Sergeant. Down. There's something here. On this side."
+
+There is. Ahead, at the water's edge, shapes stand in the reeds where nothing should stand: three that do not move the reeds as they go, and one that does, tall and grey-skinned, crouched with a long knife, looking north at the dying green light the way ${NAME(b53Runner())} was looking. Watching the villages. Watching them burn.
+
+It turns its head.`,
+      ch:[{t:'"Shields." Up out of the reeds.', req:()=>!S.f.b5_c3_bankDone, go:()=>startBattle('b5_c3_bank', {})},
+          {t:'Through the reeds, along the water, low.', check:['wits', 14], req:()=>!S.f.b5_c3_bankDone,
+            edges:id=>[id === 'ruuk' && ['he reads ground, and this is his kind of ground', 2], id === 'brune' && ['she knows what water hides', 1], id === 'tobet' && ['he is where the blow is not', 1], id === 'thegg' && ['the reeds were not made for Thegg', -2]],
+            near:{t:()=>{ const w = b53Who(); return `Yes, but the reeds are standing in the river, and ${b53Nm(w)} ${b53V(w, 'go', 'goes')} the last of the way in cold water to the chest: bruised with the cold.`; }, fx:()=>bruise(b53Who(), bruiseN())},
+            go:()=>startBattle('b5_c3_bank', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c3_bank_seen'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_bank_seen:()=>({sp:'The reeds · night', scene:'b5_c3_greenfire', txt:
+`The reeds rattle. The grey shape is on its feet at once, and the three others come round without seeming to move.`,
+      ch:[{t:'Shields.', go:()=>startBattle('b5_c3_bank', {surprise:'e'})}]}),
+    b5_c3_bank_after:()=>({sp:'The river bank · before dawn', scene:'b5_landing', fx:()=>{ S.f.b5_c3_bankDone = 1; }, txt:
+`The shapes go up into nothing. The grey one goes into the river, and across it, and up the far bank into the dark, and is gone.
+
+The squad stays in the reeds a long time after, looking north. The green light is gone from over the mountains. Nothing comes down the bank road. Nothing comes down the river.
+
+${NAME(b53Runner())} gets up at last. "I didn't get there," ${b5He(b53Runner())} says. "I was a league short. Less." ${b53Runner() === 'ruuk' ? `Ruuk looks north a while longer. "I do not know," he says, "if anyone was there to tell." He does not say anything else.` : `Tobet looks north a while longer. "I don't know," he says. "I don't know if there was anybody to tell."`}
+
+At first light the squad comes back down the bank road into the Landing, the runner with it.`,
+      ch:[{t:'Down to the Landing.', onward:true, go:()=>{ startExplore('b5_c3_dock'); talk('b5_c3_noted'); }}]}),
+    b5_c3_bank_back:()=>({sp:'The bank road', scene:'b5_c3_greenfire', txt: S.f.b5_c3_bankDone ?
+`The bank road goes back south to the Landing.` :
+`The bank road goes back south to the Landing. ${NAME(b53Runner())} is somewhere north of here.`,
+      ch:[{t:'Down to the Landing.', req:()=>!!S.f.b5_c3_bankDone, onward:true, go:()=>{ startExplore('b5_c3_dock'); talk('b5_c3_noted'); }},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_noted:()=>({sp:'Kraig\'s Landing · dawn', scene:'b5_landing', fx:()=>{ if (!S.f.b5_noted) { S.f.b5_noted = 1; S.f.b5_c3_ph = 3; b5Owe('sgt', 30, 'A runner sent without leave, the regiment\'s book'); } }, txt:
+`A Cold Clay officer is waiting on the dock when the squad comes down the bank road, with a provost, and a book of his own, and Finadd Ennic beside him looking as if he would rather be anywhere else on the river.
+
+"The Sixth," the officer says. "A soldier of the Sixth was seen going up the bank road in the night, against the order. The regiment's lines were to be kept." He writes. "A runner sent without leave. The regiment's fine is thirty docks, against the sergeant's line." He looks up. "And the Sixth is noted."
+
+He shows Ennic the line. Ennic reads it, and signs under it, because it is put in front of him, and his hand is very neat and very slow. When the officer has gone he stands on the dock with his book shut.
+
+"Noted," he says. He looks at you, and then at ${NAME(b53Runner())}, and something in his face decides. "Good," he says. And then, more quietly, as if signing it: "I would have sent him too. I would have wanted you to tell me first." He goes back up the dock.${b53If('ammet', `\n\nAmmet does not say anything. She puts her hand on ${NAME(b53Runner())}'s shoulder as she goes past, and leaves it there a moment.`)}`,
+      ch:[{t:'Dawn.', onward:true, go:'b5_c3_dawn'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- phase 3, dawn: the ash, the news, and the road ---- */
+    b5_c3_dawn:()=>({sp:B5_FINADD.name, scene:'b5_landing', fx:()=>{ S.f.b5_c3_ph = 3; S.f.b5_c3_dawn = 1; S.f.b5_fentReach = 1; if (!S.f.b5_c3_ashGot) { S.f.b5_c3_ashGot = 1; gain('b5_c3_ash'); } },
+      again:()=>`Ennic, with the order. "High Fort, Sergeant."`, txt:
+`Dawn at the Landing. The mountains are grey again. In the night something came down out of the sky on the whole Landing, a fine grey dust, faintly green, on the tents and the barges and the dock, and the regiment is sweeping it into the river. ${b53Say({tobet:'Tobet has twisted a pinch of it into a scrap of paper, and gives it to you without saying why. You put it away.', ammet:'Ammet has twisted a pinch of it into a scrap of paper, and gives it to you without saying why. You put it away.', _:'Somebody has twisted a pinch of it into a scrap of brown paper and left it on the clerk\'s crate. You put it away.'})}
+
+Finadd Ennic has a runner's paper in his hand, and has read it more than once.
+
+"From the coast," he says. "Through the regiment. Fent Reach has surrendered. The Atri-Preda, and her garrison, and the town, to the Edur, who came by sea." He looks at the word *surrendered* as if he had spelled it wrong. "The officers are not cheering this morning."
+
+He folds it. "We are released to the battalion. The Sixth goes north to High Fort, the battalion's own station, to wait for it there. With a guide. Today." He considers this. "The battalion's commander can decide things," he says, and seems to find it as restful as he did two days ago, and to know he does not.${S.f.b5_noted ? `\n\nHe does not mention the regiment's book. He has put it in his own, under the line about High Fort, in his neat hand.` : ''}${b5In('ruuk') ? `\n\nRuuk is already at the head of the road. "Not that way," he says, to a Cold Clay sergeant who is pointing. "The map lies. Come."` : ''}`,
+      ch:[{t:'"High Fort, Finadd."', onward:true, go:'b5_c3_road'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c3_road:()=>({sp:'The road north · morning', scene:'b5_landing', txt:
+`The Sixth Company goes out of Kraig's Landing by the north road in the morning, with its paybooks in the oilskin case, ${b5In('ruuk') ? 'and Ruuk a step ahead' : 'and a Faraed scout from the fire a step ahead, to show it the road'}.
+
+Behind the company the Landing is sweeping itself: the tents, the barges tied three deep, the hostel with its windows dark, the ships at the dock with their banners hanging, and down by the water a heap of boards where a shed was. On the road a merchant's wagons go past the other way, toward the dock, heavy, iron-banded, with their drivers looking at the mountains.${b53Key() === 'watch' ? '\n\nThe Nerek haulers are under the dock, where they always are. The old woman watches the company go.' : `\n\nThe Nerek haulers are under the dock, where they always are. The old woman watches the company go, and lifts one hand, once.`}
+
+${b5In('brune') ? `Brune walks at the back, looking downriver. "It all goes to the sea," she says, to nobody. "All of it."` : b5Waiting('brune') ? 'Brune walks with the company\'s followers at the back, with her fish-spear. The roster at any fire can bring her in.' : ''}${b5Waiting('ruuk') ? `${b5In('brune') || b5Waiting('brune') ? '\n\n' : ''}Ruuk is with the scouts at the head of the column. He is still in the paybook. The roster at any fire can send for him.` : ''}${b53If('tobet', `\n\nTobet walks half a step behind you, as always, cutting a notch in the tally-stick.`)}${b53If('thegg', `\n\nThegg walks in the middle of the road, where the ground is firmest, and talks low to his mother's people's dead, and this morning there are a great many of them.`)}${b53If('perrit', `\n\nPerrit walks with her back to the river until it is out of sight, and then a little further.`)}${b53If('ammet', `\n\nAmmet walks with her roll of tools under her arm and looks at the mountains once, and not again.`)}
+
+You touch the white fingertip on your shield's boss, for the Errant, and take the road.`,
+      ch:[{t:'North, to High Fort.', onward:true, go:()=>chapterEnd(3, b53Key() || 'watch')},
+          {t:'Not yet.', go:()=>startExplore()}]}),
+  },
+};
+
+/* ============ Book Five, Chapter 3 art: Kraig's Landing — the dock and the regiment's camp, the barges at night, the upriver bank, the fire ============ */
+/* Figures (FIGX) in the ~32px frame of 18/47b/80d/81b/82b, lit from the left: the river thieves, the one with a bargeman's pole and their
+   boss with a cargo-hook; a regiment soldier drunk and celebrating; a Nerek hauler with the tow-rope; a Faraed scout; a young mage of the
+   Snakebelt cadre in grey piping; the Trate grain trader's man; and a bargeman for the knucklebones. Three grounds (TILEX: the Landing,
+   the barges tied three deep, the upriver bank at night); in fights 't' is cover per ground and 'o' is the river. Four backdrops (SCENEX,
+   sceneLayer for the still parts, REDUCE() holding the rest still): b5_landing (80's, redrawn: dusk, day, night or dawn by the chapter's
+   flags), b5_c3_greenfire (the curtain of green fire over the far mountains, the dock and the cheering camp as shapes in front),
+   b5_c3_tents (the mages' tents with the banners, seen from the barges), b5_c3_collapse (the outlying shed fallen in, lanterns, men
+   digging). And the chapter's gear on Book Five's ground: dark canal-slate with a thin dock-gold rim. The river is never named. The fire
+   is a curtain of light over far mountains; what is under it is never shown. The mages are tents, never faces. */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* a river thief: lean, wet to the waist, a dark knitted cap, a short coat, a knife held low */
+  b5_c3_riverman(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .94, .98); const c = b2Pick(o, [['#3a3e3a', '#121412'], ['#44403a', '#16140e'], ['#383a44', '#101218']]);
+    h.legs('#22221e'); ctx.fillStyle = 'rgba(40,70,80,.55)'; ctx.fillRect(-4.5, 5, 3.4, 8); ctx.fillRect(1.1, 5, 3.4, 8); // wet to the waist
+    poly(ctx, [[-5.8,-6],[5.8,-6],[6.2,7],[-6.2,7]], h.armor(c[0], c[1])); ctx.fillStyle = 'rgba(160,200,210,.16)'; ctx.fillRect(-5.4, -5, 1.2, 11); // the short coat, wet
+    ctx.fillStyle = '#2a2018'; ctx.fillRect(-6, 3, 12, 1.2); ctx.fillStyle = '#a8866a'; ctx.fillRect(5.8, -3.4, 2, 6); B2F.line(ctx, '#c4c0b6', 1, [[7, 3], [11, .4]]); // a belt, the knife low
+    h.head('#ae8a6c', 4, -11.2); h.look('rgba(24,14,10,.86)', -11.4); ctx.fillStyle = 'rgba(30,20,14,.5)'; ctx.fillRect(-3.2, -8.6, 6.6, 1.4); // stubble
+    ctx.fillStyle = b2Pick(o, ['#1a1c22', '#2a1e18', '#22261e']); ctx.beginPath(); ctx.arc(0, -12.4, 4.7, Math.PI, 0); ctx.fill(); ctx.fillRect(-4.8, -12.8, 9.6, 1.6); // a knitted cap
+    ctx.restore(); },
+  /* the thief with a bargeman's pole: broad, bare-armed, a long iron-shod pole held across */
+  b5_c3_pole(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.08, 1.04);
+    B2F.line(ctx, '#7a5a38', 1.8, [[-10, 10], [12, -20]]); B2F.line(ctx, '#5a5a5e', 2, [[11, -18.6], [12.6, -21]]); // the pole, iron-shod
+    h.legs('#26241e'); ctx.fillStyle = 'rgba(40,70,80,.5)'; ctx.fillRect(-4.5, 8, 3.4, 5); ctx.fillRect(1.1, 8, 3.4, 5);
+    h.torso('#5a5244', '#1e1a14', 6.8); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-1, -6, 2, 13); ctx.fillRect(-6.4, 2.6, 12.8, 1.4); // a jerkin, a belt
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(-8.6, -4.6, 2.4, 7); ctx.fillRect(6.2, -4.6, 2.4, 6); ell(ctx, -7.4, 2.6, 1.6, 1.4, '#a8866a'); ell(ctx, 7.4, 1.6, 1.6, 1.4, '#a8866a'); // bare arms on the pole
+    h.head('#a88464', 4.5, -11); h.look('rgba(20,10,6,.86)', -11.2); ctx.fillStyle = '#2a1e14'; ctx.fillRect(-4, -8.6, 8, 2.4); // a beard
+    B2F.cap(ctx, '#2a2018', 4.6, -12.2); ctx.restore(); },
+  /* the thieves' boss: big, a long oiled coat, a cargo-hook in one fist, a gold ring in the ear, laughing */
+  b5_c3_riverboss(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.2, 1.12);
+    ctx.fillStyle = '#1a1816'; ctx.fillRect(-4.8, 6, 3.8, 7); ctx.fillRect(1, 6, 3.8, 7); // sea-boots
+    poly(ctx, [[-6.8,-6],[6.8,-6],[8,11],[-8,11]], h.armor('#3a3a34', '#0e0e0c')); ctx.fillStyle = 'rgba(200,210,200,.14)'; ctx.fillRect(-6.4, -5, 1.4, 15); ctx.fillStyle = '#5a4630'; ctx.fillRect(-.8, -6, 1.6, 16); // the long coat, open
+    ctx.fillStyle = '#7a5a3a'; ctx.fillRect(-5, -4, 10, 8); ctx.fillStyle = '#2a1e14'; ctx.fillRect(-5.6, 3, 11.2, 1.6); ctx.fillStyle = '#c9a35a'; ctx.fillRect(-.8, 3, 1.6, 1.6); // a waistcoat, a belt, a brass buckle
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(6.6, -3.4, 2.4, 6); B2F.line(ctx, '#6a4a2a', 1.6, [[8, 3], [9.4, -5]]); B2F.line(ctx, '#6a6a6e', 1.4, [[9.4, -5], [11.6, -8.2], [13.6, -6], [12.6, -3.4]]); // the cargo-hook
+    h.head('#b08a6a', 4.9, -11.2); h.look('rgba(20,10,6,.88)', -11.4); ctx.fillStyle = '#3a2618'; ctx.fillRect(-4.2, -8.8, 8.8, 2.8); ctx.fillStyle = 'rgba(255,240,220,.6)'; ctx.fillRect(-1.6, -8.2, 3.6, .8); // a beard, and teeth: laughing
+    ell(ctx, -4.6, -10.2, .7, .7, '#e8c070'); // a gold ring in the ear
+    ctx.fillStyle = '#1c1a18'; ctx.beginPath(); ctx.arc(0, -13, 5.2, Math.PI, 0); ctx.fill(); ctx.fillRect(-7, -13.4, 14, 1.4); // a wide hat
+    ctx.restore(); },
+  /* a regiment soldier, drunk and celebrating: helm pushed back, coat open, a jug held up, cheering */
+  b5_c3_drunk(ctx, h, t, o){ ctx.save(); const sw = o.still ? 0 : Math.sin(t/300 + (o.phase || 0))*.06; ctx.rotate(sw); const c = b2Pick(o, ['#4a5664', '#4a5248', '#565a62']);
+    h.legs('#2a2a2c'); poly(ctx, [[-6,-6],[6,-6],[6.6,7],[-6.6,7]], h.armor(c, '#16181c')); ctx.fillStyle = '#7a7a76'; ctx.fillRect(-3, -5, 6, 10); ctx.fillStyle = 'rgba(0,0,0,.25)'; for (let i = 0; i < 4; i++) ctx.fillRect(-3, -4 + i*2.4, 6, .5); // the coat open on scale
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(-8.4, -12, 2.2, 8); ell(ctx, -7.4, -12.6, 1.6, 1.6, '#a8866a'); poly(ctx, [[-9.4,-19],[-5.6,-19],[-5,-14],[-10,-14]], '#7a5a3a'); ctx.fillStyle = '#e8dcc0'; ctx.fillRect(-8.4, -20.4, 2, 1.6); // an arm up, a jug in it
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(6, -3, 2, 6);
+    h.head('#b88e70', 4.3, -11); h.look('rgba(24,14,10,.84)', -11.4); ctx.fillStyle = '#3a1a14'; ell(ctx, .8, -8.2, 1.6, 1.1, '#3a1a14'); // mouth open: singing
+    ctx.save(); ctx.translate(1.4, -13.6); ctx.rotate(.5); ctx.beginPath(); ctx.arc(0, 0, 4.6, Math.PI, 0); ctx.fillStyle = h.armor('#8a8a86', '#2a2a28'); ctx.fill(); ctx.restore(); // the helm pushed back
+    ctx.restore(); },
+  /* a Nerek hauler: small and spare, bare feet, a ragged shirt, the tow-rope's broad strap over one shoulder, black hair tied back */
+  b5_c3_nerek(ctx, h, t, o){ ctx.save(); const woman = b2Pick(o, [0, 1, 0, 1, 1]), old = b2Pick(o, [0, 0, 1, 0, 0]), sk = b2Pick(o, ['#8a6248', '#7a5640', '#94684c']); B2F.grow(ctx, .88, old ? .86 : .92);
+    ctx.fillStyle = sk; ctx.fillRect(-4.5, 7, 3.4, 6); ctx.fillRect(1.1, 7, 3.4, 6); ctx.fillStyle = '#3a3026'; ctx.fillRect(-4.5, 4, 3.4, 4); ctx.fillRect(1.1, 4, 3.4, 4); // bare feet, ragged trousers
+    h.torso(woman ? '#6a5a48' : '#5a5040', '#1e1a14', 5.6); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(3, 2, 2, 1); ctx.fillRect(-4, 4, 3, .8); // a ragged shirt
+    poly(ctx, [[-6,-6],[-3.4,-6.4],[5.4,6],[2.8,6.6]], '#8a7650'); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-1, -1, 4, .6); // the tow-rope's strap, across
+    B2F.line(ctx, '#9a8458', 1.2, [[4.6, 6], [11, 8], [14, 6]]); // the rope, trailing
+    ctx.fillStyle = sk; ctx.fillRect(-7.6, -3, 2, 5); ctx.fillRect(5.6, -3, 2, 5);
+    h.head(sk, 4, -11); h.look('rgba(20,12,8,.88)', -11.2); if (old) { ctx.strokeStyle = 'rgba(40,24,16,.5)'; ctx.lineWidth = .4; ctx.beginPath(); ctx.moveTo(-2.6, -9.6); ctx.lineTo(2.6, -9.4); ctx.moveTo(-3, -12.8); ctx.lineTo(3, -12.8); ctx.stroke(); } // lines in an old face
+    B2F.cap(ctx, old ? '#8a8682' : '#0e0a08', 4.2, -12.2); ctx.fillStyle = old ? '#8a8682' : '#0e0a08'; ctx.fillRect(-5, -12, 1.8, woman ? 9 : 4); // hair tied back, grey on the old
+    ctx.restore(); },
+  /* a Faraed scout at the fire: a boy in hide over wool, a hood back, a bundle of light spears, sitting or standing easy */
+  b5_c3_faraed(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .84, .94); const sk = b2Pick(o, ['#9a7050', '#8a6448', '#a27858']);
+    for (let i = 0; i < 2; i++) B2F.line(ctx, '#7a5a34', .8, [[8 + i*.9, 12], [9.6 + i*.9, -18]]); poly(ctx, [[9, -21], [8.6, -17.6], [10, -17.6]], '#c8c0b0'); // spears stuck upright beside him
+    h.legs('#3a2e22'); h.torso(b2Pick(o, ['#8a6a44', '#7a6040', '#6a5a3a']), '#2a1c0e', 5); ctx.fillStyle = 'rgba(220,200,160,.4)'; for (let i = 0; i < 5; i++) ctx.fillRect(-4 + i*1.8, 5.4, .5, 1.6); // hide, fringed
+    ctx.fillStyle = sk; ctx.fillRect(-7, -3, 2, 5); ctx.fillRect(5, -3, 2, 5);
+    h.head(sk, 3.9, -11.2); h.look('rgba(20,10,6,.86)', -11.4); poly(ctx, [[-5,-8],[-4.6,-14],[0,-16],[4.6,-14],[5,-8],[3.8,-12.4],[-3.8,-12.4]], '#5a4a34'); // the hood, back
+    B2F.cap(ctx, '#140c08', 3.8, -12.6, 1.05, 1.95); ctx.fillStyle = '#c8c0b0'; ctx.fillRect(-4.4, -12, 1, 1.6); // a bird-bone in the hair
+    ctx.restore(); },
+  /* a young mage of the Snakebelt cadre: a long grey coat with darker piping down the front and at the cuffs, a satchel, ink on her fingers */
+  b5_c3_cadremage(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1);
+    B2F.robe(ctx, h, '#6a6e72', '#24262a', 6, 7.6); ctx.fillStyle = '#3a3e44'; ctx.fillRect(-1.2, -6, 1.2, 18); ctx.fillRect(-6, 1.6, 12, 1); // the piping, down the front and at the waist
+    poly(ctx, [[-7.6,-2],[-4,-3],[-3.4,5],[-7.2,6]], '#5a4230'); B2F.line(ctx, '#3a2a1a', .8, [[-4.6, -6], [-6.8, -2]]); // a satchel
+    ctx.fillStyle = '#b8967a'; ctx.fillRect(5.4, -3, 2, 5); ctx.fillStyle = '#1a1a2a'; ctx.fillRect(5.6, 1, 1.6, .8); // ink on the fingers
+    h.head('#bc9a7c', 4.1, -11.2); h.look('rgba(24,14,10,.84)', -11.4);
+    ctx.fillStyle = '#4a3020'; B2F.cap(ctx, '#4a3020', 4.4, -12.2); ctx.fillRect(-4.4, -12.4, 1.6, 6); ctx.fillRect(2.8, -12.4, 1.6, 6); // hair to the jaw
+    ctx.fillStyle = '#3a3e44'; ctx.fillRect(-3.6, -7.6, 7.2, 1); // the coat's high collar
+    ctx.restore(); },
+  /* the Trate grain trader's man: a good coat that has been up a river, a small book open in one hand, a pencil, a flat cap */
+  b5_c3_trader(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1);
+    h.legs('#2e2a26'); ctx.fillStyle = '#1a1612'; ctx.fillRect(-4.5, 11, 3.4, 2); ctx.fillRect(1.1, 11, 3.4, 2);
+    poly(ctx, [[-6.2,-6],[6.2,-6],[7,9],[-7,9]], h.armor('#5a4a3a', '#1e1610')); ctx.fillStyle = 'rgba(180,170,150,.25)'; ctx.fillRect(-6, 6, 4, 1); ctx.fillRect(2, 7.4, 3, .8); // river mud at the hem
+    ctx.fillStyle = '#c9a35a'; for (let i = 0; i < 3; i++) ell(ctx, 1.2, -3 + i*3, .5, .5, '#c9a35a');
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(-8.4, -2, 2, 4); poly(ctx, [[-11,-1],[-5,-2],[-5,2.6],[-11,3.4]], '#3a2818'); ctx.fillStyle = '#e8dcc0'; ctx.fillRect(-10.4, -.6, 5, 3); // the small book, open
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(6, -3, 2, 4); B2F.line(ctx, '#4a3a2a', .7, [[7, 1], [9, -2]]); // the pencil
+    h.head('#c09a7a', 4.3, -11.2); h.look('rgba(24,14,10,.84)', -11.4); ctx.fillStyle = 'rgba(30,20,14,.6)'; ctx.fillRect(-1.4, -8.8, 3.4, .8); // a thin moustache
+    ctx.fillStyle = '#3a3430'; ctx.beginPath(); ctx.arc(0, -12.6, 4.8, Math.PI, 0); ctx.fill(); ctx.fillRect(-2, -13, 8.2, 1.4); // a flat cap, the peak forward
+    ctx.restore(); },
+  /* a bargeman: broad, a rolled-sleeve shirt, a leather apron, a scarf at the neck, a hood up against the river damp */
+  b5_c3_bargeman(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.04, 1); const c = b2Pick(o, ['#6a5a48', '#5a5a52', '#6a6052']);
+    h.legs('#2a2622'); h.torso(c, '#1e1a14', 6.4); poly(ctx, [[-5,-2],[5,-2],[5.6,8],[-5.6,8]], h.armor('#4e3a26', '#160e08')); // the apron
+    ctx.fillStyle = '#a8866a'; ctx.fillRect(-8, -4, 2.2, 6.4); ctx.fillRect(5.8, -4, 2.2, 6);
+    ctx.fillStyle = b2Pick(o, ['#7a2a22', '#2a4a5a', '#6a6a2a']); ctx.fillRect(-4, -7.6, 8, 1.6); // a scarf
+    h.head('#b08868', 4.4, -11); h.look('rgba(20,10,6,.86)', -11.2); ctx.fillStyle = 'rgba(40,30,24,.5)'; ctx.fillRect(-3.4, -8.4, 7, 1.6);
+    poly(ctx, [[-5.8,-9],[-5,-15],[0,-17],[5,-15],[5.8,-9],[4.2,-13],[-4.2,-13]], h.armor('#4a463e', '#1a1814')); // the hood
+    ctx.restore(); },
+});
+/* the shared figures, in case Chapter One's art is not loaded yet (the brief's guarded placeholders) */
+FIGX.b5_c1_ennic ??= FIGX.b5_letherii; FIGX.b5_c1_clerk ??= FIGX.b5_letherii; FIGX.b5_c1_tilewoman ??= FIGX.b5_c3_nerek;
+
+/* ---------------- the grounds (TILEX) ---------------- */
+const B53G = {earth:'#5a4a36', earthD:'#2a2219', mud:'#3e3226', mudD:'#1c1712', plank:'#5e4e3c', plankD:'#2a231c', river:'#22383a', riverL:'#2e4a48', riverD:'#0c1618', tent:'#9a9284', tentD:'#3a3832',
+  wall:'#4a4036', wallD:'#221e1a', roof:'#3a3430', roofD:'#1a1816', deck:'#6a5a44', deckD:'#2e271e', reed:'#4a5a34', reedD:'#1a2214', path:'#7a6a50', pathD:'#2e2820', rock:'#4a4a4a', rockD:'#202022', lamp:'255,196,120'};
+/* the river: dark green-grey, glints, a slow line of current */
+function b53River(ctx, x, y, T, dark){ const px = x*T, py = y*T, P = B53G; const g = ctx.createLinearGradient(0, py, 0, py + T); g.addColorStop(0, dark ? P.riverD : P.riverL); g.addColorStop(1, dark ? '#081012' : P.river); ctx.fillStyle = g; ctx.fillRect(px, py, T, T);
+  ctx.fillStyle = dark ? 'rgba(255,200,140,.08)' : 'rgba(200,220,220,.14)'; for (let i = 0; i < 2; i++) ctx.fillRect(px + T*hash(x, y, 701 + i)*.7, py + T*(.25 + i*.4), T*(.2 + hash(x, y, 703 + i)*.2), Math.max(1, T*.03)); }
+/* trampled earth and mud */
+function b53Earth(ctx, x, y, T, dark, mud){ const px = x*T, py = y*T, P = B53G; ctx.fillStyle = mud ? (dark ? P.mudD : P.mud) : (dark ? P.earthD : P.earth); ctx.fillRect(px, py, T, T);
+  b2Mottle(ctx, x, y, T, .05, .14, '220,200,160', 1); if (mud) { ctx.fillStyle = dark ? 'rgba(180,200,210,.06)' : 'rgba(180,200,210,.14)'; ell(ctx, px + T*(.3 + hash(x, y, 711)*.4), py + T*(.4 + hash(x, y, 712)*.3), T*.18, T*.06, ctx.fillStyle); }
+  else { ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 3; i++) ell(ctx, px + T*(.2 + hash(x, y, 713 + i)*.6), py + T*(.2 + hash(x, y, 716 + i)*.6), T*.05, T*.03, ctx.fillStyle); } } // boot-prints
+/* dock planking: boards across, nail-heads, a sheen */
+function b53Planks(ctx, x, y, T, dark, base){ const px = x*T, py = y*T, P = B53G; ctx.fillStyle = dark ? (base === 'deck' ? P.deckD : P.plankD) : (base === 'deck' ? P.deck : P.plank); ctx.fillRect(px, py, T, T);
+  ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(px, py + i*T/4); ctx.lineTo(px + T, py + i*T/4); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(255,240,210,.06)'; ctx.fillRect(px, py + T*.02, T, Math.max(1, T*.04)); ctx.fillStyle = 'rgba(0,0,0,.35)'; for (let i = 0; i < 4; i++) ctx.fillRect(px + T*(hash(x, y, 721 + i) > .5 ? .1 : .86), py + T*(.1 + i*.25), 1.4, 1.4); }
+/* a building, seen from above with its front wall: board walls, a roof of split shingles; the hostel's windows lit */
+const b53WallAt = (x, y) => b2Tile(x, y) === '#';
+function b53Building(ctx, x, y, T, dark){ const px = x*T, py = y*T, P = B53G, front = !b53WallAt(x, y + 1) && y < (tileMap ? tileMap.length - 1 : 99);
+  ctx.fillStyle = dark ? P.roofD : P.roof; ctx.fillRect(px, py, T, front ? T*.5 : T); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(px, py + i*T/5); ctx.lineTo(px + T, py + i*T/5); ctx.stroke(); } // shingle courses
+  if (!b53WallAt(x, y - 1)) { ctx.fillStyle = 'rgba(255,240,210,.08)'; ctx.fillRect(px, py, T, T*.06); }
+  if (front) { ctx.fillStyle = dark ? P.wallD : P.wall; ctx.fillRect(px, py + T*.5, T, T*.5); ctx.strokeStyle = 'rgba(0,0,0,.4)'; for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(px + i*T/4, py + T*.5); ctx.lineTo(px + i*T/4, py + T); ctx.stroke(); } // board walls
+    const hostel = x <= 2 && y <= 1; if (hostel || hash(x, y, 731) > .6) { ctx.fillStyle = hostel ? `rgba(${P.lamp},${dark ? .85 : .55})` : 'rgba(20,16,12,.8)'; ctx.fillRect(px + T*.34, py + T*.6, T*.3, T*.22); if (hostel && dark) glow(ctx, px + T*.5, py + T*.7, T*.6, '#ffc078', .2); } } }
+/* a regiment tent, from above and in front: a ridge, guy-ropes, the flap */
+function b53Tent(ctx, x, y, T, dark){ const px = x*T, py = y*T, P = B53G; b53Earth(ctx, x, y, T, dark, false); const left = b2Tile(x - 1, y) !== '=', right = b2Tile(x + 1, y) !== '=';
+  ctx.fillStyle = dark ? P.tentD : P.tent; ctx.fillRect(px + (left ? T*.08 : 0), py + T*.18, T - (left ? T*.08 : 0) - (right ? T*.08 : 0), T*.66);
+  ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(px + (left ? T*.08 : 0), py + T*.5, T - (left ? T*.08 : 0) - (right ? T*.08 : 0), T*.34); ctx.fillStyle = 'rgba(255,250,235,.12)'; ctx.fillRect(px, py + T*.18, T, T*.04); // the two slopes, the ridge
+  if (left) { B2F.line(ctx, 'rgba(200,190,160,.5)', 1, [[px + T*.08, py + T*.3], [px, py + T*.1]]); } if (right) { B2F.line(ctx, 'rgba(200,190,160,.5)', 1, [[px + T*.92, py + T*.3], [px + T, py + T*.1]]); ctx.fillStyle = dark ? '#1a1814' : '#5a5448'; poly(ctx, [[px + T*.66, py + T*.84], [px + T*.8, py + T*.5], [px + T*.92, py + T*.84]], ctx.fillStyle); } }
+/* a fire: stones, embers, flame (the barge crews' on the dock, the scouts' with a ring of stones on the earth) */
+function b53Fire(ctx, x, y, T, dark, ring){ const px = x*T, py = y*T, cx = px + T*.5, cy = py + T*.6; glow(ctx, cx, cy, T*1.2, '#ff8a3a', dark ? .3 : .16);
+  if (ring) for (let i = 0; i < 8; i++) { const a = i/8*6.283; ell(ctx, cx + Math.cos(a)*T*.3, cy + Math.sin(a)*T*.16, T*.07, T*.05, '#5a5650'); }
+  ell(ctx, cx, cy, T*.22, T*.1, '#1a0e08'); poly(ctx, [[cx - T*.16, cy], [cx - T*.04, cy - T*.4], [cx + T*.02, cy - T*.18], [cx + T*.08, cy - T*.34], [cx + T*.16, cy]], 'rgba(255,150,60,.95)'); poly(ctx, [[cx - T*.07, cy], [cx, cy - T*.2], [cx + T*.07, cy]], '#fff1c2'); }
+TILEX.b5_c3_dock = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => { const px = x*T, py = y*T;
+  if (ch === '~') return b53River(ctx, x, y, T, dark);
+  if (ch === '#') return b53Building(ctx, x, y, T, dark);
+  if (ch === '=') return b53Tent(ctx, x, y, T, dark);
+  if (ch === 'B') { b53River(ctx, x, y, T, dark); ctx.fillStyle = dark ? '#3a3024' : '#6a5a44'; ctx.fillRect(px + T*.3, py, T*.4, T); ctx.fillStyle = '#2a2018'; for (let i = 0; i < 5; i++) ctx.fillRect(px + T*.3, py + T*(.1 + i*.2), T*.4, Math.max(1, T*.03)); return; } // the gangplank down to the barges
+  if (ch === 'd') { b53Planks(ctx, x, y, T, dark); if (b2Tile(x, y + 1) === '~') { ctx.fillStyle = '#2a2018'; ctx.fillRect(px, py + T*.9, T, T*.1); } if (hash(x, y, 741) > .82) { ctx.fillStyle = '#2a2420'; ctx.beginPath(); ctx.arc(px + T*.5, py + T*.5, T*.12, 0, 7); ctx.fill(); ctx.fillStyle = '#4a423a'; ctx.beginPath(); ctx.arc(px + T*.48, py + T*.46, T*.08, 0, 7); ctx.fill(); } return; } // a bollard here and there
+  if (ch === ',') return b53Earth(ctx, x, y, T, dark, true);
+  b53Earth(ctx, x, y, T, dark, false);
+  if (ch === 'F') b53Fire(ctx, x, y, T, dark, false);
+  if (ch === 'S') { b53Fire(ctx, x, y, T, dark, true); for (let i = 0; i < 3; i++) B2F.line(ctx, '#7a5a34', Math.max(1, T*.03), [[px + T*(.78 + i*.06), py + T*.9], [px + T*(.74 + i*.06), py + T*.12]]); } // the scouts' spears stuck upright by their fire
+  if (ch === 'T') { ctx.fillStyle = dark ? 'rgba(60,80,50,.5)' : 'rgba(110,130,80,.6)'; ell(ctx, px + T*.5, py + T*.6, T*.46, T*.3, ctx.fillStyle); ctx.fillStyle = 'rgba(255,250,220,.1)'; ell(ctx, px + T*.42, py + T*.5, T*.3, T*.14, ctx.fillStyle); } }); // the rise: a grassy hump
+/* the barges: decks of boards with a gunwale where they meet the water, cargo under tarpaulin, rope coils, gangplanks between */
+const b53DeckAt = (x, y) => { const c = b2Tile(x, y); return c && c !== '~' && c !== '^' && c !== 'o'; };
+function b53Cargo(ctx, px, py, T, dark){ ell(ctx, px + T*.5, py + T*.86, T*.42, T*.1, 'rgba(0,0,0,.5)'); ctx.fillStyle = dark ? '#3a4036' : '#5a6250'; ctx.beginPath(); ctx.moveTo(px + T*.08, py + T*.84); ctx.lineTo(px + T*.14, py + T*.24); ctx.quadraticCurveTo(px + T*.5, py + T*.1, px + T*.86, py + T*.24); ctx.lineTo(px + T*.92, py + T*.84); ctx.closePath(); ctx.fill(); // a tarpaulin over bales
+  ctx.fillStyle = 'rgba(255,255,240,.08)'; ctx.fillRect(px + T*.16, py + T*.26, T*.3, T*.04); ctx.strokeStyle = '#8a7650'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(px + T*.1, py + T*.56); ctx.lineTo(px + T*.9, py + T*.5); ctx.moveTo(px + T*.5, py + T*.14); ctx.lineTo(px + T*.52, py + T*.86); ctx.stroke(); } // roped
+function b53Coil(ctx, px, py, T){ ctx.strokeStyle = '#9a8458'; ctx.lineWidth = Math.max(1, T*.04); for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.ellipse(px + T*.5, py + T*.55, T*(.28 - k*.07), T*(.16 - k*.04), 0, 0, 7); ctx.stroke(); } B2F.line(ctx, '#9a8458', Math.max(1, T*.04), [[px + T*.78, py + T*.55], [px + T, py + T*.4]]); } // a coil, its line going off to the next barge
+TILEX.b5_c3_barges = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => { const px = x*T, py = y*T;
+  if (ch === '~' || ch === '^' || ch === '#') { b53River(ctx, x, y, T, dark); if (ch === '^') { ctx.fillStyle = dark ? '#3a3024' : '#6a5a44'; ctx.fillRect(px + T*.3, py, T*.4, T); ctx.fillStyle = 'rgba(200,180,140,.2)'; ctx.fillRect(px + T*.3, py, T*.4, T*.3); } return; } // the plank up to the dock
+  if (ch === '-') { const water = b2Tile(x - 1, y) === '~' || b2Tile(x + 1, y) === '~'; if (water) b53River(ctx, x, y, T, dark); else b53Planks(ctx, x, y, T, dark, 'deck');
+    ctx.fillStyle = dark ? '#4a3c2c' : '#7a6650'; ctx.fillRect(px + T*.28, py, T*.44, T); ctx.fillStyle = '#2a2018'; for (let i = 0; i < 4; i++) ctx.fillRect(px + T*.28, py + T*(.12 + i*.25), T*.44, Math.max(1, T*.03)); return; } // a gangplank between barges
+  b53Planks(ctx, x, y, T, dark, 'deck');
+  ctx.fillStyle = dark ? '#2a2218' : '#4a3a28'; if (!b53DeckAt(x, y - 1)) ctx.fillRect(px, py, T, T*.12); if (!b53DeckAt(x, y + 1)) ctx.fillRect(px, py + T*.88, T, T*.12); if (!b53DeckAt(x - 1, y)) ctx.fillRect(px, py, T*.12, T); if (!b53DeckAt(x + 1, y)) ctx.fillRect(px + T*.88, py, T*.12, T); // the gunwale
+  if (ch === 'c') b53Cargo(ctx, px, py, T, dark);
+  if (ch === 'r') b53Coil(ctx, px, py, T); });
+/* the upriver bank at night: a pale path, reeds, rock, a dead tree white in the dark */
+function b53Reeds(ctx, x, y, T, dark){ const px = x*T, py = y*T, P = B53G; ctx.fillStyle = dark ? '#141a10' : '#2a3420'; ctx.fillRect(px, py, T, T);
+  for (let i = 0; i < 9; i++) { const rx = px + T*(.06 + hash(x, y, 751 + i)*.88), top = py + T*(.02 + hash(x, y, 761 + i)*.3); B2F.line(ctx, dark ? P.reedD : P.reed, Math.max(1, T*.035), [[rx, py + T], [rx + T*(hash(x, y, 771 + i) - .5)*.14, top]]); if (hash(x, y, 781 + i) > .6) ell(ctx, rx, top + T*.04, T*.03, T*.07, dark ? '#3a2a1a' : '#5a4228'); } } // reeds, a few bulrush heads
+TILEX.b5_c3_bank = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => { const px = x*T, py = y*T, P = B53G;
+  if (ch === '~') return b53River(ctx, x, y, T, dark);
+  if (ch === ',') return b53Reeds(ctx, x, y, T, dark);
+  ctx.fillStyle = dark ? P.pathD : P.path; ctx.fillRect(px, py, T, T); b2Mottle(ctx, x, y, T, .05, .12, '220,210,180', 1);
+  if (ch === '#') { ell(ctx, px + T*.5, py + T*.84, T*.44, T*.12, 'rgba(0,0,0,.5)'); ctx.fillStyle = dark ? P.rockD : P.rock; ctx.beginPath(); ctx.moveTo(px + T*.06, py + T*.86); ctx.lineTo(px + T*.16, py + T*.3); ctx.lineTo(px + T*.5, py + T*.1); ctx.lineTo(px + T*.86, py + T*.28); ctx.lineTo(px + T*.94, py + T*.86); ctx.closePath(); ctx.fill(); ctx.fillStyle = 'rgba(200,210,220,.1)'; poly(ctx, [[px + T*.16, py + T*.3], [px + T*.5, py + T*.1], [px + T*.5, py + T*.5]], ctx.fillStyle); return; }
+  if (ch === 'x') { ell(ctx, px + T*.5, py + T*.88, T*.3, T*.08, 'rgba(0,0,0,.45)'); B2F.line(ctx, dark ? '#b8b2a4' : '#d8d0bc', Math.max(1.4, T*.08), [[px + T*.5, py + T*.9], [px + T*.46, py + T*.4], [px + T*.56, py + T*.06]]); B2F.line(ctx, dark ? '#a8a294' : '#c8c0ac', Math.max(1, T*.04), [[px + T*.47, py + T*.46], [px + T*.2, py + T*.2]]); B2F.line(ctx, dark ? '#a8a294' : '#c8c0ac', Math.max(1, T*.04), [[px + T*.5, py + T*.3], [px + T*.82, py + T*.16]]); ctx.fillStyle = '#e8c073'; ctx.fillRect(px + T*.44, py + T*.56, T*.08, T*.03); return; } // a dead tree, a fresh cut on its trunk
+  if (ch === '^' || ch === 'v') { ctx.fillStyle = 'rgba(220,200,160,.16)'; ctx.fillRect(px + T*.3, py, T*.4, T); } });
+/* in fights: 't' is cover (cargo on the barges, crates and barrels on the dock, a stand of reeds on the bank), 'o' is the river */
+function b53Cover(ctx, x, y, T, dark, st){ const px = x*T, py = y*T;
+  if (st === 'b5_c3_barges') return b53Cargo(ctx, px, py, T, dark);
+  if (st === 'b5_c3_bank') { ell(ctx, px + T*.5, py + T*.86, T*.4, T*.1, 'rgba(0,0,0,.5)'); for (let i = 0; i < 14; i++) { const rx = px + T*(.12 + hash(x, y, 791 + i)*.76); B2F.line(ctx, dark ? '#2e3a22' : '#4a5a34', Math.max(1, T*.04), [[rx, py + T*.9], [rx + T*(hash(x, y, 811 + i) - .5)*.2, py + T*(.04 + hash(x, y, 801 + i)*.2)]]); } return; }
+  ell(ctx, px + T*.5, py + T*.86, T*.42, T*.1, 'rgba(0,0,0,.5)'); ctx.fillStyle = dark ? '#3a2c1c' : '#5a4428'; ctx.fillRect(px + T*.08, py + T*.4, T*.44, T*.44); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; ctx.strokeRect(px + T*.08 + .5, py + T*.4 + .5, T*.44 - 1, T*.44 - 1); // a crate
+  ctx.fillStyle = dark ? '#2a2a26' : '#4a4a40'; ctx.beginPath(); ctx.ellipse(px + T*.72, py + T*.5, T*.18, T*.08, 0, 0, 7); ctx.fill(); ctx.fillRect(px + T*.54, py + T*.5, T*.36, T*.34); ctx.fillStyle = 'rgba(201,163,90,.5)'; ctx.fillRect(px + T*.54, py + T*.6, T*.36, Math.max(1, T*.03)); ctx.fillRect(px + T*.54, py + T*.76, T*.36, Math.max(1, T*.03)); } // a barrel
+{ const B53ST = ['b5_c3_dock', 'b5_c3_barges', 'b5_c3_bank'], _df = drawFeature;
+  drawFeature = function(ctx, ch, x, y, T, dark, style, map){ if (B53ST.includes(style)) { if (ch === 't') return b53Cover(ctx, x, y, T, dark, style); if (ch === 'o') return b2Clip(ctx, x, y, T, () => b53River(ctx, x, y, T, dark)); } return _df(ctx, ch, x, y, T, dark, style, map); }; }
+
+/* ---------------- backdrops ---------------- */
+/* the mountains to the north, very close: two ranges, the far one paler */
+function b53Mountains(x, W, H, base, near, far){ x.fillStyle = far; x.beginPath(); x.moveTo(0, base); for (let i = 0; i <= 24; i++) x.lineTo(W*i/24, base - H*(.16 + hash(i, 5301)*.12 + Math.sin(i*.7)*.03)); x.lineTo(W, base); x.fill();
+  x.fillStyle = near; x.beginPath(); x.moveTo(0, base + 2); for (let i = 0; i <= 16; i++) x.lineTo(W*i/16, base - H*(.06 + hash(i, 5302)*.08)); x.lineTo(W, base + 2); x.fill(); }
+/* the Landing from the river: the slope with the regiment's tents and the cadre's above, the three buildings, the dock, the ships with their
+   banners. sky: 'dusk', 'day', 'night', 'dawn' */
+function b53Slope(x, W, H, hz, sky){ const lit = sky === 'night' || sky === 'dusk', dk = sky === 'night' ? '#0e1210' : sky === 'dawn' ? '#3a3e3a' : sky === 'day' ? '#4a5038' : '#262420';
+  x.fillStyle = dk; x.beginPath(); x.moveTo(0, hz); x.quadraticCurveTo(W*.4, hz - H*.1, W, hz - H*.04); x.lineTo(W, H*.7); x.lineTo(0, H*.7); x.fill(); // the slope up from the river
+  for (let i = 0; i < 34; i++) { const tx = hash(i, 5311)*W, ty = hz - H*.02 + hash(i, 5312)*H*.16, s = H*(.012 + hash(i, 5313)*.01); x.fillStyle = sky === 'night' ? '#2a2a26' : '#8a8478'; poly(x, [[tx - s*1.6, ty], [tx, ty - s*1.4], [tx + s*1.6, ty]], x.fillStyle); if (lit && hash(i, 5314) > .55) { x.fillStyle = `rgba(255,170,90,${(.5 + hash(i, 5315)*.4).toFixed(2)})`; x.fillRect(tx + s*2, ty - 1.5, 1.6, 1.6); } } // the regiment's tents, and their fires
+  for (let i = 0; i < 3; i++) { const tx = W*(.62 + i*.07), ty = hz - H*.07 + i*H*.008, s = H*.03; poly(x, [[tx - s*1.5, ty], [tx, ty - s*1.3], [tx + s*1.5, ty]], sky === 'night' ? '#30302c' : '#a8a498'); x.fillStyle = sky === 'night' ? '#1a1a1a' : '#5a5e62'; x.fillRect(tx - s*1.5, ty - s*.1, s*3, s*.12); x.fillRect(tx - .5, ty - s*1.3, 1, s*1.3); } } // the cadre's three large tents, grey piping
+function b53Buildings(x, W, H, base, sky, fallen){ const c = sky === 'night' ? '#0c0c0e' : sky === 'dawn' ? '#2a2826' : '#1e1a18', win = sky === 'night' || sky === 'dusk';
+  x.fillStyle = c; x.fillRect(W*.08, base - H*.12, W*.14, H*.12); poly(x, [[W*.07, base - H*.12], [W*.15, base - H*.17], [W*.23, base - H*.12]], c); // the hostel, two storeys
+  if (win) for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) { x.fillStyle = `rgba(255,196,120,${(.6 + hash(r*4 + i, 5321)*.3).toFixed(2)})`; x.fillRect(W*(.095 + i*.032), base - H*(.1 - r*.05), W*.012, H*.02); }
+  x.fillStyle = c; x.fillRect(W*.27, base - H*.07, W*.1, H*.07); poly(x, [[W*.26, base - H*.07], [W*.32, base - H*.1], [W*.38, base - H*.07]], c); // the storehouse, its roof sagging
+  if (fallen) { for (let i = 0; i < 7; i++) { x.save(); x.translate(W*(.42 + hash(i, 5322)*.07), base - H*.01); x.rotate((hash(i, 5323) - .5)*1.6); x.fillStyle = c; x.fillRect(-W*.025, -1.2, W*.05, 2.4); x.restore(); } } // the shed by the water, a heap of boards
+  else { x.fillStyle = c; x.save(); x.translate(W*.41, base); x.rotate(-.12); x.fillRect(0, -H*.05, W*.08, H*.05); poly(x, [[-W*.004, -H*.05], [W*.04, -H*.075], [W*.084, -H*.05]], c); x.restore(); } } // the shed, leaning
+function b53Ships(ctx, W, H, base, sky, t, mo){ const c = sky === 'night' ? '#08080a' : '#1a1a1e';
+  [[.66, .13], [.84, .11]].forEach(([u, w], i) => { const sx = W*u, sw = W*w; ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(sx - sw/2, base - H*.03); ctx.lineTo(sx + sw/2, base - H*.03); ctx.lineTo(sx + sw*.42, base); ctx.lineTo(sx - sw*.42, base); ctx.fill(); ctx.fillRect(sx - 1, base - H*.24, 2, H*.21); ctx.fillRect(sx - sw*.3, base - H*.18, sw*.6, 1.4); // hull, mast, yard
+    const fl = mo ? Math.sin(t/500 + i*2)*1.5 : 0, bx = sx + 1, by = base - H*.24; ctx.fillStyle = i ? '#2a2a3a' : '#6a5420'; ctx.beginPath(); ctx.moveTo(bx, by); ctx.quadraticCurveTo(bx + W*.02, by + fl, bx + W*.04, by + 2 + fl); ctx.lineTo(bx + W*.04, by + H*.035 + fl); ctx.quadraticCurveTo(bx + W*.02, by + H*.035, bx, by + H*.033); ctx.fill(); // the banners: the King's, and the Ceda's
+    ctx.fillStyle = i ? 'rgba(200,200,220,.35)' : 'rgba(255,220,140,.45)'; ctx.fillRect(bx + W*.012, by + H*.012 + fl*.5, W*.012, H*.01); }); }
+/* the barges, tied three deep along the dock, in the foreground */
+function b53Barges(x, W, H, top, sky){ const c = sky === 'night' ? '#16120e' : sky === 'dawn' ? '#3a3228' : '#2a2218', lc = sky === 'night' ? '#241e18' : '#4a3e30';
+  for (let b = 0; b < 3; b++) { const y = top + b*H*.07, x0 = W*(.02 + b*.03), x1 = W*(.92 - b*.02); x.fillStyle = c; x.beginPath(); x.moveTo(x0, y); x.lineTo(x1, y); x.lineTo(x1 - W*.02, y + H*.05); x.lineTo(x0 + W*.02, y + H*.05); x.fill(); x.fillStyle = lc; x.fillRect(x0, y, x1 - x0, 2);
+    for (let i = 0; i < 4; i++) { const cx = x0 + (x1 - x0)*(.12 + i*.22 + hash(b*4 + i, 5331)*.06); x.fillStyle = sky === 'night' ? '#1e221c' : '#3e463a'; x.beginPath(); x.moveTo(cx - W*.05, y); x.quadraticCurveTo(cx, y - H*.05, cx + W*.05, y); x.fill(); } } } // cargo under tarpaulins
+SCENEX.b5_landing = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, ph = f.b5_c3_ph || 1, hz = H*.46;
+  const sky = ph >= 3 ? 'dawn' : (f.b5_c3_key && !(f.b5_c3_cheerDone || f.b5_c3_bankDone)) || (f.b5_c3_watch && !f.b5_c3_riverDone) ? 'night' : ph === 2 ? 'day' : 'dusk', fallen = !!(f.b5_c3_collapse || f.b5_c3_ranOut || ph >= 3);
+  ctx.drawImage(sceneLayer('b53:land' + sky + (fallen ? 'f' : ''), W, H, (x, W, H) => {
+    const st = sky === 'night' ? [[0,'#05070e'],[1,'#141a28']] : sky === 'dawn' ? [[0,'#4a5250'],[.6,'#8a9a8a'],[1,'#b8c4b0']] : sky === 'day' ? [[0,'#6a84a0'],[1,'#c8ccc0']] : [[0,'#2a2a4a'],[.5,'#7a5a6a'],[.85,'#d88a5a'],[1,'#e8a868']];
+    x.fillStyle = vgrad(x, 0, hz, st); x.fillRect(0, 0, W, hz + 2);
+    if (sky === 'night') for (let i = 0; i < 60; i++) { x.fillStyle = `rgba(220,226,250,${(.12 + hash(i, 5341)*.45).toFixed(2)})`; x.fillRect(hash(i, 5342)*W, Math.pow(hash(i, 5343), 1.4)*hz*.6, 1, 1); }
+    if (sky === 'dawn') { x.fillStyle = 'rgba(150,200,160,.12)'; x.fillRect(0, 0, W, hz); } // the green-grey haze of the ash
+    b53Mountains(x, W, H, hz - H*.06, sky === 'night' ? '#080a0c' : sky === 'dawn' ? '#4a524c' : sky === 'day' ? '#4a5462' : '#2a2434', sky === 'night' ? '#121620' : sky === 'dawn' ? '#6a746c' : sky === 'day' ? '#7a8494' : '#4a3e52');
+    b53Slope(x, W, H, hz, sky); b53Buildings(x, W, H, H*.62, sky, fallen);
+    x.fillStyle = vgrad(x, H*.62, H, sky === 'night' ? [[0,'#0c161a'],[1,'#060c0e']] : sky === 'dawn' ? [[0,'#5a6a64'],[1,'#2a3634']] : sky === 'day' ? [[0,'#5a7478'],[1,'#22383a']] : [[0,'#6a5a5a'],[.4,'#2e3e40'],[1,'#162224']]); x.fillRect(0, H*.62, W, H*.38); // the river
+    x.fillStyle = sky === 'night' ? '#1a1612' : '#3a3026'; x.fillRect(0, H*.615, W*.6, H*.02); for (let i = 0; i < 12; i++) x.fillRect(W*i*.05, H*.62, 2, H*.04); // the dock on its piles
+    b53Barges(x, W, H, H*.74, sky);
+    if (sky === 'dawn') for (let i = 0; i < 120; i++) { x.fillStyle = `rgba(190,210,190,${(.15 + hash(i, 5344)*.25).toFixed(2)})`; x.fillRect(hash(i, 5345)*W, H*(.74 + hash(i, 5346)*.24), 1.2, 1); } // ash on the cargo
+  }), 0, 0, W, H);
+  b53Ships(ctx, W, H, H*.63, sky, t, mo);
+  for (let i = 0; i < 20; i++) { const k = hash(i, 5347), y = lerp(H*.64, H*.98, k), xx = ((hash(i, 5348)*W + t*mo*(.008 + k*.01)) % (W + 30)) - 15; ctx.fillStyle = sky === 'night' ? `rgba(255,200,140,${(.06 + .12*hash(i, 5349)).toFixed(2)})` : `rgba(230,236,230,${(.08 + .14*hash(i, 5349)).toFixed(2)})`; ctx.fillRect(xx, y, 5 + 12*hash(i, 5350), 1); } // the river going past
+  if (sky === 'night' || sky === 'dusk') { const lx = W*.5, ly = H*.86, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly, H*.12, '#ffc078', .3*fl); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#2a2018'; ctx.fillRect(lx - 3, ly - 4, 6, 7); ctx.fillStyle = `rgba(255,214,150,${(.8*fl).toFixed(2)})`; ctx.fillRect(lx - 2, ly - 3, 4, 4); } // a hooded lantern on the outer barge
+  if (sky !== 'night') for (let i = 0; i < 4; i++) { const k = mo ? ((t/16000 + i*.25) % 1) : hash(i, 5351), gx = lerp(-20, W + 20, k), gy = H*(.12 + hash(i, 5352)*.16) + (mo ? Math.sin(t/400 + i)*3 : 0), wg = mo ? Math.sin(t/120 + i)*2 : 1; ctx.strokeStyle = 'rgba(30,30,40,.6)'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(gx - 4, gy - wg); ctx.quadraticCurveTo(gx - 1.6, gy - 2, gx, gy); ctx.quadraticCurveTo(gx + 1.6, gy - 2, gx + 4, gy - wg); ctx.stroke(); } // birds over the river
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.22 + i*18, H*.8, 1.7, t, {phase:i, dir:1}));
+  vign(ctx, W, H, sky === 'night' ? .6 : .45, .5); };
+/* the green fire: a curtain of green light hanging over the far mountains from one end of the sky to the other; the camp, the dock and the
+   barges as black shapes in front, the crowd with its arms up; the river lit green. What is under it is never shown. */
+SCENEX.b5_c3_greenfire = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, f = (S && S.f) || {}, fading = !!(f.b5_c3_collapse || f.b5_c3_ranOut);
+  ctx.drawImage(sceneLayer('b53:green', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#020604'],[.6,'#08160e'],[1,'#123222']]); x.fillRect(0, 0, W, hz + 2);
+  }), 0, 0, W, H);
+  // the curtain: vertical bands, rising and hanging, swaying slowly
+  const A = fading ? .5 : 1; ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 42; i++) { const u = i/41, bx = W*u, sw = mo ? Math.sin(t/1600 + i*.5)*W*.01 : 0, top = H*(.04 + hash(i, 5361)*.12 + (mo ? Math.sin(t/2100 + i*.3)*.02 : 0)), bot = hz - H*.1 - hash(i, 5362)*H*.05;
+    const g = ctx.createLinearGradient(0, top, 0, bot); g.addColorStop(0, 'rgba(80,255,150,0)'); g.addColorStop(.35, `rgba(70,240,140,${(.1*A).toFixed(3)})`); g.addColorStop(.9, `rgba(120,255,170,${(.32*A).toFixed(3)})`); g.addColorStop(1, `rgba(200,255,210,${(.5*A).toFixed(3)})`);
+    ctx.fillStyle = g; ctx.fillRect(bx + sw - W*.014, top, W*.028, bot - top); }
+  glow(ctx, W*.5, hz - H*.12, W*.6, '#40e090', .22*A); ctx.globalCompositeOperation = 'source-over';
+  // the mountains, black against it
+  ctx.fillStyle = '#020403'; ctx.beginPath(); ctx.moveTo(0, hz); for (let i = 0; i <= 24; i++) ctx.lineTo(W*i/24, hz - H*(.06 + hash(i, 5363)*.08)); ctx.lineTo(W, hz); ctx.fill();
+  ctx.fillStyle = 'rgba(150,255,190,.5)'; ctx.beginPath(); ctx.moveTo(0, hz - H*.06); for (let i = 0; i <= 24; i++) ctx.lineTo(W*i/24, hz - H*(.06 + hash(i, 5363)*.08)); for (let i = 24; i >= 0; i--) ctx.lineTo(W*i/24, hz - H*(.06 + hash(i, 5363)*.08) + 1.4); ctx.fill(); // the ridge-line, lit
+  // the camp: tents, and the crowd with its arms up
+  ctx.fillStyle = '#030605'; ctx.fillRect(0, hz, W, H*.18); for (let i = 0; i < 26; i++) { const tx = hash(i, 5364)*W, ty = hz + H*(.02 + hash(i, 5365)*.08), s = H*.02; poly(ctx, [[tx - s*1.6, ty], [tx, ty - s*1.4], [tx + s*1.6, ty]], '#060c08'); }
+  for (let i = 0; i < 60; i++) { const px = hash(i, 5366)*W, py = hz + H*(.12 + hash(i, 5367)*.06), up = mo ? Math.sin(t/260 + i)*.7 : 0, s = H*.012; ctx.fillStyle = '#020403'; ctx.fillRect(px - s*.4, py - s*2.4, s*.8, s*2.4); ell(ctx, px, py - s*2.8, s*.45, s*.45, '#020403');
+    if (hash(i, 5368) > .35) { ctx.fillRect(px - s*.9, py - s*(3.6 + up), s*.3, s*1.4); ctx.fillRect(px + s*.6, py - s*(3.4 - up), s*.3, s*1.4); } } // arms up: cheering
+  // the river, lit green; the dock and barges black
+  ctx.fillStyle = vgrad(ctx, H*.68, H, [[0,'#0e2a1c'],[1,'#030a06']]); ctx.fillRect(0, H*.68, W, H*.32);
+  for (let i = 0; i < 26; i++) { const k = hash(i, 5369), y = lerp(H*.7, H*.98, k), xx = ((hash(i, 5370)*W + t*mo*.01) % (W + 30)) - 15; ctx.fillStyle = `rgba(140,255,180,${((.1 + .2*hash(i, 5371))*A).toFixed(2)})`; ctx.fillRect(xx, y, 6 + 14*hash(i, 5372), 1); }
+  ctx.fillStyle = '#020302'; ctx.fillRect(0, H*.67, W*.55, H*.02); for (let b = 0; b < 3; b++) { const y = H*(.78 + b*.07); ctx.beginPath(); ctx.moveTo(W*(.04 + b*.03), y); ctx.lineTo(W*(.9 - b*.02), y); ctx.lineTo(W*(.88 - b*.02), y + H*.045); ctx.lineTo(W*(.06 + b*.03), y + H*.045); ctx.fill(); }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.3 + i*18, H*.84, 1.7, t, {phase:i, dir:1, still:true}));
+  ctx.fillStyle = 'rgba(60,220,130,.08)'; ctx.fillRect(0, 0, W, H); // everything lit green
+  vign(ctx, W, H, .6, .45); };
+/* the mages' tents seen from the barges at evening: three large tents on their own ground above the camp, grey piping, guards facing
+   outward; the ships at the dock with the King's banner and the Ceda's; a barge's deck and a coil of rope in front */
+SCENEX.b5_c3_tents = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, f = (S && S.f) || {}, after = !!(f.b5_c3_cheerDone || f.b5_c3_bankDone || (f.b5_c3_ph || 1) >= 3), night = !!f.b5_c3_key && !after;
+  ctx.drawImage(sceneLayer('b53:tents' + (night ? 'n' : after ? 'a' : ''), W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, night ? [[0,'#04060c'],[1,'#141a26']] : after ? [[0,'#4a5250'],[1,'#a8b4a4']] : [[0,'#3a3a5a'],[.6,'#9a6a6a'],[1,'#e09a62']]); x.fillRect(0, 0, W, hz + 2);
+    b53Mountains(x, W, H, hz, night ? '#06080a' : after ? '#4a524c' : '#2e2838', night ? '#10141c' : after ? '#6a746c' : '#544458');
+    x.fillStyle = night ? '#0a0e0c' : after ? '#3e443e' : '#2e2c24'; x.beginPath(); x.moveTo(0, hz + H*.02); x.quadraticCurveTo(W*.5, hz - H*.06, W, hz + H*.04); x.lineTo(W, H*.7); x.lineTo(0, H*.7); x.fill(); // the slope
+    for (let i = 0; i < 20; i++) { const tx = hash(i, 5381)*W, ty = hz + H*(.12 + hash(i, 5382)*.14), s = H*.022; poly(x, [[tx - s*1.6, ty], [tx, ty - s*1.4], [tx + s*1.6, ty]], night ? '#24241e' : '#7a766a'); } // the regiment's tents below
+    for (let i = 0; i < 3; i++) { const tx = W*(.36 + i*.14), ty = hz + H*.08, s = H*.07; poly(x, [[tx - s*1.5, ty], [tx, ty - s*1.2], [tx + s*1.5, ty]], night ? '#3a3a34' : after ? '#8a8a82' : '#b0aca0'); x.fillStyle = night ? '#1a1a1a' : '#4a4e54'; x.fillRect(tx - s*1.5, ty - s*.14, s*3, s*.12); x.fillRect(tx - .8, ty - s*1.2, 1.6, s*1.2); x.fillRect(tx - s*.2, ty - s*.6, s*.4, s*.6); // the cadre's three large tents, grey piping, a flap
+      if (night) { x.fillStyle = 'rgba(255,200,130,.5)'; x.fillRect(tx - s*.18, ty - s*.55, s*.36, s*.5); } }
+  }), 0, 0, W, H);
+  for (let i = 0; i < 8; i++) { const gx = W*(.28 + i*.065), gy = hz + H*(.13 + (i % 2)*.01); drawFigure(ctx, 'b5_letherii', gx, gy, .7, t, {still:true, dir:i < 4 ? -1 : 1, phase:i}); } // guards, facing outward
+  ctx.fillStyle = vgrad(ctx, H*.68, H, night ? [[0,'#0c161a'],[1,'#060c0e']] : [[0,'#4a5a5a'],[1,'#1a2a2c']]); ctx.fillRect(0, H*.68, W, H*.32); b53Ships(ctx, W, H, H*.68, night ? 'night' : 'day', t, mo); // the river, the ships at the dock
+  ctx.fillStyle = night ? '#16120e' : '#3a3024'; ctx.beginPath(); ctx.moveTo(0, H*.84); ctx.lineTo(W, H*.8); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.4)'; for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(0, H*(.84 + i*.035)); ctx.lineTo(W, H*(.8 + i*.04)); ctx.stroke(); } // the barge's deck, near
+  ctx.strokeStyle = '#8a7650'; ctx.lineWidth = 2; for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.ellipse(W*.82, H*.92, 16 - k*4, 5 - k*1.2, 0, 0, 7); ctx.stroke(); } // a coil of rope
+  vign(ctx, W, H, night ? .6 : .45, .5); };
+/* the outlying shed fallen in on itself at night: boards at angles, lanterns round it, men digging; the green light fading over the
+   mountains behind; nobody shown hurt */
+SCENEX.b5_c3_collapse = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4, fl = b2Fl(t);
+  ctx.drawImage(sceneLayer('b53:coll', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#03060a'],[.7,'#0a1a14'],[1,'#163626']]); x.fillRect(0, 0, W, hz + 2);
+    x.globalCompositeOperation = 'lighter'; glow(x, W*.5, hz - H*.04, W*.5, '#30c080', .16); x.globalCompositeOperation = 'source-over';
+    b53Mountains(x, W, H, hz, '#020403', '#0a1610');
+    x.fillStyle = vgrad(x, hz, H, [[0,'#14120e'],[1,'#0a0806']]); x.fillRect(0, hz, W, H - hz); // the ground by the water
+    x.fillStyle = '#0a1214'; x.fillRect(W*.78, hz, W*.22, H - hz); // the river, at the edge
+    for (let i = 0; i < 16; i++) { x.save(); x.translate(W*(.3 + hash(i, 5391)*.4), H*(.6 + hash(i, 5392)*.14)); x.rotate((hash(i, 5393) - .5)*1.8); x.fillStyle = ['#2a2018', '#1e1812', '#342a1e'][i % 3]; x.fillRect(-W*.06, -2, W*.12, 4); x.restore(); } // the boards, fallen in
+    x.fillStyle = '#1a140e'; x.save(); x.translate(W*.36, H*.58); x.rotate(-.5); x.fillRect(0, 0, W*.02, H*.18); x.restore(); x.save(); x.translate(W*.62, H*.56); x.rotate(.4); x.fillRect(0, 0, W*.02, H*.16); x.restore(); // two posts still standing, leaning
+  }), 0, 0, W, H);
+  [[.3, .66], [.5, .58], [.7, .68], [.42, .8]].forEach(([u, v], i) => { const lx = W*u, ly = H*v; ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly, H*.14, '#ffb060', .3*fl); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#2a2018'; ctx.fillRect(lx - 2, ly - 4, 4, 6); ctx.fillStyle = `rgba(255,214,150,${(.85*fl).toFixed(2)})`; ctx.fillRect(lx - 1.4, ly - 3, 2.8, 3.4); }); // lanterns
+  [[.26, .78, 1], [.38, .7, -1], [.56, .72, 1], [.66, .8, -1], [.48, .86, 1]].forEach(([u, v, d], i) => { const dig = mo ? Math.sin(t/300 + i*1.4) : 0; drawFigure(ctx, i === 2 ? 'b5_letherii' : 'b5_c3_bargeman', W*u, H*v, 1.3, t, {still:true, dir:d, phase:i}); B2F.line(ctx, '#6a4a2a', 1.6, [[W*u + d*8, H*v - 6 + dig*2], [W*u + d*16, H*v + 10 + dig*3]]); }); // men digging, spades going in
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.12 + i*16, H*.96, 1.6, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .65, .55); };
+
+/* ---------------- the chapter's gear: ART['item/<key>'] on Book Five's ground ----------------
+   240×130, the same flat shapes and single highlight as the earlier books, on dark canal-slate with a thin dock-gold rim (Claude's call) */
+function b53Item(key, label, body){ const w = 240, h = 130, id = 'c53-' + key.replace(/[^a-z0-9]/g, '');
+  ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.68"><stop offset="0" stop-color="#34444a"></stop><stop offset=".7" stop-color="#1a2428"></stop><stop offset="1" stop-color="#0e1214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect><rect x="2.5" y="2.5" width="${w - 5}" height="${h - 5}" rx="2" fill="none" stroke="#c9a35a" stroke-width="1" opacity=".7"></rect>\n${body}</svg>`;
+  if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
+/* a cadre's spare tile: a small square of black stone, polished, blank, a hairline crack across one corner */
+b53Item('b5_c3_cadretile', 'A cadre\'s spare tile', '<ellipse cx="120" cy="70" rx="60" ry="34" fill="#a8c0c8" opacity=".05"/>'
+  + '<g transform="rotate(-8 120 64)"><rect x="88" y="34" width="64" height="64" rx="6" fill="#06080a" opacity=".55" transform="translate(4 6)"/>'
+  + '<rect x="88" y="34" width="64" height="64" rx="6" fill="#16181c"/><rect x="88" y="34" width="64" height="64" rx="6" fill="none" stroke="#3a3e46" stroke-width="1.6"/>'
+  + '<path d="M93 40 L140 40 Q132 46 96 72 Z" fill="#ffffff" opacity=".07"/><path d="M92 38 L146 38" stroke="#9aa4b0" stroke-width="1" opacity=".55"/><path d="M90 40 L90 92" stroke="#6a7480" stroke-width=".8" opacity=".5"/>'
+  + '<path d="M131 98 L136 88 L134 82 L141 76 L144 69 L152 64" fill="none" stroke="#5a6068" stroke-width="1" opacity=".9"/><path d="M132 97 L137 87" fill="none" stroke="#c8d0d8" stroke-width=".5" opacity=".5"/></g>');
+/* a Faraed throwing-spear: a slim spear with a leaf-shaped iron head and a bird-feather tuft */
+b53Item('b5_c3_spear', 'A Faraed throwing-spear', '<ellipse cx="120" cy="66" rx="94" ry="24" fill="#d8c8a8" opacity=".05"/><g transform="rotate(-12 120 66)">'
+  + '<rect x="20" y="63" width="168" height="5" rx="2.5" fill="#a07a48"/><rect x="20" y="63" width="168" height="1.8" rx=".9" fill="#d8b480" opacity=".6"/><path d="M30 67 L184 67" stroke="#5a3e22" stroke-width=".8"/>'
+  + '<g fill="#3a2a1a" opacity=".55"><rect x="60" y="63" width="3" height="5"/><rect x="96" y="63" width="2" height="5"/><rect x="132" y="63" width="3" height="5"/></g>'
+  + '<rect x="182" y="61" width="10" height="9" rx="1.5" fill="#6a5034"/><path d="M182 62 L192 62 M182 69 L192 69" stroke="#3a2a18" stroke-width="1"/>'
+  + '<path d="M192 65.5 Q204 56 226 65.5 Q204 75 192 65.5 Z" fill="#7a7c80"/><path d="M194 65.5 Q206 59 224 65.5" fill="none" stroke="#d0d4d8" stroke-width="1" opacity=".7"/><path d="M192 65.5 L226 65.5" stroke="#4a4c50" stroke-width=".8"/>'
+  + '<g transform="translate(26 66)"><path d="M0 0 Q-10 -12 -18 -8 Q-10 -4 0 0" fill="#3a5a6a"/><path d="M0 0 Q-12 -2 -20 6 Q-10 6 0 0" fill="#c8b070"/><path d="M0 0 Q-8 8 -14 14 Q-4 8 0 0" fill="#2a3a4a"/><path d="M-2 -1 Q-10 -8 -16 -7" stroke="#e8e0cc" stroke-width=".6" fill="none" opacity=".6"/></g>'
+  + '<path d="M22 64 Q16 66 22 68" fill="#7a5a34"/></g>');
+/* green ash in a paper twist: a twist of brown paper, a pinch of grey-green ash at the open end */
+b53Item('b5_c3_ash', 'Green ash in a paper twist', '<ellipse cx="120" cy="72" rx="70" ry="28" fill="#9ae0b8" opacity=".05"/>'
+  + '<path d="M70 82 Q96 58 132 54 L152 50 Q166 52 170 62 Q168 74 154 78 L132 80 Q98 92 76 92 Q66 90 70 82 Z" fill="#8a6a46"/>'
+  + '<path d="M72 84 Q98 64 134 58 L152 54" fill="none" stroke="#b8946a" stroke-width="1.4" opacity=".7"/><path d="M78 90 Q104 86 132 78 L152 74" fill="none" stroke="#5a422a" stroke-width="1.2"/>'
+  + '<path d="M70 82 Q62 84 58 90 Q64 94 76 92" fill="#7a5c3c"/><path d="M60 89 L54 92 M62 92 L57 97" stroke="#7a5c3c" stroke-width="2" stroke-linecap="round"/>'
+  + '<g stroke="#5a422a" stroke-width=".8" opacity=".6"><path d="M96 74 L104 64 M112 70 L118 60 M126 66 L130 58"/></g>'
+  + '<ellipse cx="164" cy="64" rx="13" ry="10" fill="#2a2a26"/><ellipse cx="166" cy="62" rx="11" ry="8" fill="#7a8478"/>'
+  + '<g fill="#a8c0a8"><circle cx="160" cy="60" r="1.6"/><circle cx="168" cy="58" r="1.2"/><circle cx="172" cy="64" r="1.4"/><circle cx="163" cy="66" r="1"/></g><g fill="#7ad8a0" opacity=".55"><circle cx="165" cy="61" r="2.2"/><circle cx="170" cy="60" r="1.4"/></g>'
+  + '<g fill="#a8b8a8" opacity=".6"><circle cx="182" cy="72" r="1"/><circle cx="188" cy="78" r=".8"/><circle cx="178" cy="80" r=".9"/><circle cx="194" cy="74" r=".7"/></g>');
+
 /* ============ Book Five: the games at the fires (v8.0) ============ */
 /* The games pass for Book Five keeps its games here and wraps the chapters' fire nodes from this file, as Book Four's 79 does, so the
    chapter files are untouched. The brief's table (docs/mt-book-brief.md, "The fires and the games"):
    - The Wager Board (Ch1, the barracks yard, b5g_wager): the bookmaker's chalk board for tomorrow's Special Drownings. Written with
      Chapter One (session 6); headline only: a chalked list of categories and odds, and one line of result the next morning. Never a
      named swimmer, never the swim itself.
-   - Harbour Tiles (Ch2), Knucklebones (Ch3), the Token Auction (Ch5), the Whitefinders' Drill (Ch6): the games pass adds them below.
+   - Harbour Tiles (Ch2) and Knucklebones (Ch3) are written below with their chapters; the Token Auction (Ch5) and the Whitefinders' Drill
+     (Ch6): the games pass adds them below.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim), keep their deeds on S.deeds, and pay once a book as the table closes. */
 
 /* ---- the frame: a night sky over Letheras, a lamp, a game's own timers ---- */
@@ -63173,6 +64182,112 @@ function playHarbourTiles(opt = {}){
 /* what the tiles leave behind */
 function b5TilesPay(r){ if (!r) return; S.f.b5_tiles = {net:r.net, won:r.won, lost:r.lost, done:!!r.done}; save(); }
 
+/* ============ 3. Knucklebones ============
+   With the barge crews on the dock at Kraig's Landing (Ch3, b5g_bones). Book One's bones (playBones) for the rules, Book Three's voices
+   for the shape: two knucklebones, throw as often as you like and bank when you are scared. The bargemen mark one face of each bone with a
+   lead sinker, the Drownings' weight: a sinker wipes the throw, and two sinkers (a Drowning) wipe everything you have banked. A pair that
+   isn't sinkers counts double. First to thirty takes the stake, a dock to three. Once a sitting the sergeant may touch the white fingertip
+   for the Errant and throw a single sinker again (the Errant is Lether's god of chance as the Letherii pray to him, nothing more). Another
+   game is offered while there are docks; the net is paid as the table closes, at most 15 docks over the book, once. */
+const B5G_BONESCAP = 15, B5G_BONESGOAL = 30;
+const B5G_BARGE = {name:'The bargeman', push:(turn, me, you) => turn < (you >= B5G_BONESGOAL - 8 ? 22 : me < you - 9 ? 18 : 14),
+  start:['"Two bones. A sinker on each. Throw, bank, don\'t weep on my tarpaulin."', '"House rules: the river keeps count. I keep the docks."'],
+  bust:['"Sinker. The river wanted that one."', 'He shrugs. "That\'s bones."'], drown:['A long silence. "A Drowning," he says, and does not laugh. Nobody on the dock laughs.'],
+  bank:['"That\'ll do."', '"Banking. A bargeman knows when to tie up."'], big:['"Watch this. Watch the bones, not me."'],
+  win:['"Pay the river. Me. I\'m the river."', 'He holds out a hand without looking up.'], lose:['He pays without a word, and then one word: "Again?"', '"Well thrown. The river\'ll have it back off you somewhere."']};
+const B5G_CHAT = {meBust:['"Ha. Sinker."', '"That\'s the river, that is."'], meBig:['"Tie up, soldier. Bank it."'], meDrown:['"A Drowning! Oh, that\'s a hard one. Sorry. That\'s a hard one."'], meWin:['"He lost to a Whitefinder. I\'m telling the whole river."']};
+function b5gBone(ctx, x, y, s, face, rot = 0, lift = 0){
+  ctx.save(); ctx.translate(x, y - lift); ctx.rotate(rot);
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.beginPath(); ctx.ellipse(2, s*.55 + lift, s*.5, s*.14, 0, 0, 7); ctx.fill();
+  const r = s*.2, h = s/2; ctx.beginPath(); ctx.moveTo(-h + r, -h); ctx.arcTo(h, -h, h, h, r); ctx.arcTo(h, h, -h, h, r); ctx.arcTo(-h, h, -h, -h, r); ctx.arcTo(-h, -h, h, -h, r); ctx.closePath();
+  const g = ctx.createLinearGradient(-h, -h, h, h); g.addColorStop(0, '#ece2c8'); g.addColorStop(1, '#b0a07c'); ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = 'rgba(60,40,20,.55)'; ctx.lineWidth = 1; ctx.stroke();
+  if (face === 1) { // the sinker: a lead weight on a loop of cord, let into the bone
+    ctx.strokeStyle = '#3a2616'; ctx.lineWidth = Math.max(1, s*.05); ctx.beginPath(); ctx.arc(0, -s*.16, s*.09, Math.PI, 0); ctx.stroke();
+    ctx.fillStyle = '#4a4e56'; ctx.beginPath(); ctx.moveTo(-s*.16, -s*.08); ctx.lineTo(s*.16, -s*.08); ctx.lineTo(s*.22, s*.2); ctx.lineTo(-s*.22, s*.2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(220,226,236,.45)'; ctx.fillRect(-s*.12, -s*.04, s*.05, s*.2); }
+  else ({2:[[-1,-1],[1,1]], 3:[[-1,-1],[0,0],[1,1]], 4:[[-1,-1],[1,-1],[-1,1],[1,1]], 5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]], 6:[[-1,-1],[1,-1],[-1,0],[1,0],[-1,1],[1,1]]}[face] || []).forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a*s*.27, b*s*.27, s*.075, 0, 7); ctx.fillStyle = '#3a2616'; ctx.fill(); });
+  ctx.restore(); }
+function playKnuckles(opt = {}){
+  let on = () => true; const O = B5G_BARGE, pick = b5gPick, sp = () => Math.max(.4, SET.speed || 1), T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * sp());
+  const g = MG.state = {me:0, opp:0, turn:0, who:'me', dice:[1 + R(6), 1 + R(6)], roll:0, busy:false, over:false, stake:null, started:false, talk:'', net:0, games:0, won:0, lost:0, errantUsed:false, errantReady:false, lastTurn:0, last:null};
+  const capLeft = () => Math.max(0, B5G_BONESCAP - (S.f.b5_bonesNet || 0));
+  const purse = () => (S.silver || 0) + g.net;
+  const result = () => ({net:g.net, games:g.games, won:g.won, lost:g.lost, last:g.last, pay:g.pay || 0});
+  const settle = () => { if (g.paid) return; g.paid = true; const pay = g.net > 0 ? Math.min(g.net, capLeft()) : Math.max(g.net, -(S.silver || 0));
+    S.silver = (S.silver || 0) + pay; updSilver(); g.pay = pay; if (pay > 0) S.f.b5_bonesNet = (S.f.b5_bonesNet || 0) + pay; };
+  const close = () => { settle(); mgClose(result()); };
+  mgOpen({kick:'The dock at Kraig\'s Landing · the barge crews\' fire', title:'Knucklebones', leaveText:'Leave the bones', done:r => opt.after && opt.after(r),
+    leave:() => { if (!g.over && g.stake && (g.me || g.opp || g.turn)) { g.net -= g.stake; g.games++; g.lost++; g.last = 'opp'; } g.over = true; settle(); mgClose(Object.assign(result(), {left:true})); }}); on = b5gOn();
+  const say = (who, line) => { g.talk = mgSay(who, line); draw(); };
+  const draw = () => { if (!g.started) return stakePick();
+    const mine = g.who === 'me' && !g.busy && !g.over && !g.errantReady, pct = n => Math.min(100, n / B5G_BONESGOAL * 100);
+    const again = g.over && purse() >= 1 && (S.f.b5_bonesNet || 0) + Math.max(0, g.net) < B5G_BONESCAP;
+    mgPanel(`<div class="bscore"><div class="bs ${g.who === 'me' && !g.over ? 'on' : ''}"><span>${esc(S.name)}</span><b>${g.me}</b><i style="width:${pct(g.me)}%"></i>${g.who === 'me' && g.turn ? `<em>+${g.turn}</em>` : ''}</div>
+      <div class="bs ${g.who === 'opp' && !g.over ? 'on' : ''}"><span>${O.name}</span><b>${g.opp}</b><i style="width:${pct(g.opp)}%"></i>${g.who === 'opp' && g.turn ? `<em>+${g.turn}</em>` : ''}</div></div>
+      <p class="fine bgoal">First to ${B5G_BONESGOAL}. A sinker wipes the throw; two sinkers, a Drowning, wipe your bank; a pair counts double. Stake: ${b5Coin(g.stake)}. ${g.net ? `${g.net > 0 ? 'Up' : 'Down'} ${b5Coin(Math.abs(g.net))} tonight.` : ''}</p>
+      ${g.talk}
+      ${g.over ? `<div class="row mgbtns">${again ? `<button class="btn primary" id="kbAgain" data-bot="1">Another game</button>` : ''}<button class="btn ${again ? '' : 'primary'}" id="kbDone" data-bot="1">Back to the fire</button></div>`
+      : g.errantReady ? `<div class="row mgbtns"><button class="btn on" id="kbErrant" data-bot="1">Touch the white fingertip: throw it again</button><button class="btn" id="kbLet" data-bot="1">Let it go</button></div>`
+      : `<div class="row mgbtns"><button class="btn primary" id="kbThrow" data-bot="1" ${mine ? '' : 'disabled'}>Throw the bones</button><button class="btn" id="kbBank" data-bot="1" ${mine && g.turn ? '' : 'disabled'}>Bank ${g.turn || ''}</button></div>
+        <p class="hint keys"><kbd>Space</kbd> throw · <kbd>B</kbd> bank · <kbd>Esc</kbd> leave</p>`}
+      <p class="fine">The bones pay at most ${b5Coin(B5G_BONESCAP)} over what you sat down with, once.</p>`);
+    if ($('#kbThrow')) $('#kbThrow').onclick = throwMe; if ($('#kbBank')) $('#kbBank').onclick = bank;
+    if ($('#kbErrant')) $('#kbErrant').onclick = () => { AUDIO.play('magic'); g.errantReady = false; g.errantUsed = true; g.turn = g.lastTurn; say('', 'You touch the white fingertip on your shield\'s boss, for the Errant, and pick the sinker up again. The bargeman looks at the shield and decides not to say anything.'); };
+    if ($('#kbLet')) $('#kbLet').onclick = () => { AUDIO.play('click'); g.errantReady = false; pass(); };
+    if ($('#kbAgain')) $('#kbAgain').onclick = () => { AUDIO.play('click'); g.started = false; stakePick(); };
+    if ($('#kbDone')) $('#kbDone').onclick = () => { AUDIO.play('click'); close(); }; };
+  const tumble = cb => { g.busy = true; g.roll = performance.now(); AUDIO.play('shuffle'); draw();
+    T(() => { const a = 1 + R(6), b = 1 + R(6); g.dice = [a, b]; g.roll = 0; AUDIO.play('dice', !(a === 1 || b === 1)); cb(a, b); }, REDUCE() ? 150 : 650); };
+  const score = (a, b) => a === 1 && b === 1 ? 'drown' : a === 1 || b === 1 ? 'bust' : a === b ? (a + b) * 2 : a + b;
+  const throwMe = () => { if (g.who !== 'me' || g.busy || g.over || g.errantReady) return; g.errantReady = false;
+    tumble((a, b) => { g.busy = false; const s = score(a, b);
+      if (s === 'drown') { g.lastTurn = g.turn; g.me = 0; g.turn = 0; say('A bargeman', pick(B5G_CHAT.meDrown)); return pass(); }
+      if (s === 'bust') { g.lastTurn = g.turn; g.turn = 0; if (!g.errantUsed && g.lastTurn >= 6) { g.errantReady = true; say('', `A sinker. ${g.lastTurn} gone, unless the Errant is listening.`); return; } say('A bargeman', pick(B5G_CHAT.meBust)); return pass(); }
+      g.turn += s; if (g.me + g.turn >= B5G_BONESGOAL) { g.me += g.turn; g.turn = 0; return finish('me'); }
+      say(g.turn >= 15 ? 'A bargeman' : '', g.turn >= 15 ? pick(B5G_CHAT.meBig) : a === b ? `A pair of ${a}s, doubled: ${s}. ${g.turn} this turn.` : `${a} and ${b}. ${g.turn} this turn.`); }); };
+  const bank = () => { if (g.who !== 'me' || g.busy || g.over || !g.turn || g.errantReady) return; g.me += g.turn; AUDIO.play('coin'); say('', `You bank ${g.turn}.`); g.turn = 0; pass(); };
+  const pass = () => { if (g.over) return; g.errantReady = false; if (g.who === 'me') { g.who = 'opp'; g.turn = 0; draw(); T(oppTurn, 900); } else { g.who = 'me'; g.turn = 0; draw(); } };
+  const oppTurn = () => { if (g.over || g.who !== 'opp') return;
+    tumble((a, b) => { g.busy = false; const s = score(a, b);
+      if (s === 'drown') { g.opp = 0; g.turn = 0; say(O.name, pick(O.drown)); return T(pass, 1100); }
+      if (s === 'bust') { g.turn = 0; say(O.name, pick(O.bust)); return T(pass, 1000); }
+      g.turn += s; if (g.opp + g.turn >= B5G_BONESGOAL) { g.opp += g.turn; g.turn = 0; return finish('opp'); }
+      if (O.push(g.turn, g.opp, g.me)) { if (g.turn >= 15) say(O.name, pick(O.big)); else draw(); T(oppTurn, 800); }
+      else T(() => { g.opp += g.turn; say(O.name, `${pick(O.bank)} <span class="dim">(${g.turn})</span>`); g.turn = 0; T(pass, 700); }, 600); }); };
+  const finish = w => { g.over = true; g.busy = false; g.games++; const won = w === 'me'; g.last = w;
+    g.net += won ? g.stake : -g.stake; if (won) g.won++; else g.lost++; AUDIO.play(won ? 'coin' : 'click');
+    mgDeed(won ? 'b5BonesWon' : 'b5BonesLost');
+    say(won ? 'A bargeman' : O.name, won ? `You take ${b5Coin(g.stake)}. ` + pick(B5G_CHAT.meWin.concat(O.lose)) : `The bargeman takes ${b5Coin(g.stake)}. ` + pick(O.win)); };
+  const stakePick = () => { g.me = g.opp = g.turn = 0; g.who = 'me'; g.over = false; g.errantUsed = false; g.errantReady = false; g.stake = null;
+    mgPanel(`${g.talk}${mgSay(O.name, pick(O.start))}<p class="fine">What's the stake? You have ${b5Coin(purse())}.</p>
+      <div class="row mgbtns">${[1, 2, 3].map(n => `<button class="btn ${n === 1 ? 'primary' : ''}" data-st="${n}" data-bot="1" ${purse() >= n ? '' : 'disabled'}>${b5Coin(n)}</button>`).join('')}</div>
+      <p class="fine bgoal">First to ${B5G_BONESGOAL}. Throw as often as you like and bank when you're scared. A sinker wipes the throw; two sinkers, a Drowning, wipe everything you've banked. A pair that isn't sinkers counts double. Once a sitting, a single sinker can be thrown again, for the Errant.</p>`);
+    document.querySelectorAll('#mgPanel [data-st]').forEach(b => b.onclick = () => { AUDIO.play('coin'); g.stake = +b.dataset.st; g.started = true; g.talk = mgSay('', 'You throw first.'); draw(); }); };
+  mgKeys({' ':() => { if (g.over) { const b = $('#kbAgain') || $('#kbDone'); b && b.click(); } else if (!g.started) { const b = $('#mgPanel [data-st]:not([disabled])'); b && b.click(); } else if (g.errantReady) { const b = $('#kbErrant'); b && b.click(); } else throwMe(); }, b:bank, Enter:() => { if (g.over) { const b = $('#kbDone'); b && b.click(); } else bank(); }});
+  // the table: the dock at night, the river behind, the bargemen's fire, a tarpaulin on the planking for the bones
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, mo = REDUCE() ? 0 : 1;
+    const sk = ctx.createLinearGradient(0, 0, 0, H); sk.addColorStop(0, '#05070e'); sk.addColorStop(.36, '#121a28'); sk.addColorStop(.37, '#0e1a20'); sk.addColorStop(.52, '#08121a'); sk.addColorStop(.53, '#2a2218'); sk.addColorStop(1, '#14100c'); ctx.fillStyle = sk; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 30; i++) { ctx.fillStyle = `rgba(220,226,250,${(.12 + hash(i, 8931)*.4).toFixed(2)})`; ctx.fillRect(hash(i, 8932)*W, hash(i, 8933)*H*.3, 1, 1); }
+    ctx.fillStyle = '#0a0c12'; ctx.beginPath(); ctx.moveTo(0, H*.36); for (let i = 0; i <= 12; i++) ctx.lineTo(W*i/12, H*(.3 - hash(i, 8934)*.1)); ctx.lineTo(W, H*.36); ctx.fill(); // the mountains
+    for (let i = 0; i < 14; i++) { const y = H*(.38 + hash(i, 8935)*.13), x = ((hash(i, 8936)*W + t*mo*.012) % (W + 30)) - 15; ctx.fillStyle = `rgba(255,200,140,${(.06 + .1*hash(i, 8937)).toFixed(2)})`; ctx.fillRect(x, y, 6 + 10*hash(i, 8938), 1); } // the river going past
+    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(0, H*(.53 + i*.08)); ctx.lineTo(W, H*(.53 + i*.08)); ctx.stroke(); } // the dock's planks
+    const fx = W*.5, fy = H*.5, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy, H*.5, '#ff8a3a', .3*fl); ctx.globalCompositeOperation = 'source-over';
+    poly(ctx, [[fx - 12, fy + 4], [fx - 3, fy - 22*fl], [fx + 2, fy - 9], [fx + 6, fy - 18*fl], [fx + 12, fy + 4]], 'rgba(255,150,60,.95)'); poly(ctx, [[fx - 5, fy + 4], [fx, fy - 10*fl], [fx + 5, fy + 4]], '#fff1c2');
+    const fs = clamp(H/92, 1.6, 3.6); drawFigure(ctx, 'b5_c3_bargeman', W*.18, H*.74, fs, t, {still:!(g.who === 'opp' && g.busy), dir:1, phase:1}); drawFigure(ctx, 'b5_c3_bargeman', W*.84, H*.74, fs*.94, t, {still:true, dir:-1, phase:3});
+    ctx.save(); ctx.translate(W/2, H*.76); ctx.transform(1, 0, -.08, 1, 0, 0); const bw = Math.min(W*.5, 260), bh = Math.min(H*.22, 80); ctx.fillStyle = '#3a4038'; ctx.fillRect(-bw/2, -bh/2, bw, bh); ctx.strokeStyle = '#5a6254'; ctx.lineWidth = 2; ctx.strokeRect(-bw/2 + 4, -bh/2 + 4, bw - 8, bh - 8); ctx.restore(); // the tarpaulin
+    const k = g.roll ? (performance.now() - g.roll) / 650 : 1, s = Math.min(56, W*.1, H*.15);
+    [0, 1].forEach(i => { const face = g.roll ? 1 + (Math.floor(performance.now()/70 + i*3) % 6) : g.dice[i], x = W/2 + (i ? 1 : -1)*s*.8 + (g.roll ? Math.sin(k*9 + i)*10 : 0), lift = g.roll ? Math.abs(Math.sin(k*Math.PI*2.5))*24*(1 - k) : 0;
+      b5gBone(ctx, x, H*.76, s, face, g.roll ? k*6 + i : (i ? .12 : -.08), lift); });
+    if (g.who === 'opp' && !g.over && g.started) b5gText(ctx, 'The bargeman throws', W*.18, H*.74 - 34*fs, Math.min(15, W*.035));
+  };
+  g.talk = mgSay('', `The barge crews have a tarpaulin spread on the planking by their fire, and two knucklebones on it, old and yellow, each with a lead sinker let into one face. "The Drownings' weight," a bargeman says, and taps it. "Throw that, and the river has your throw. Throw two, and it has the lot."`) +
+    (S.f.b5_c2_key === 'dead' ? mgSay('A bargeman', '"The Sixth. You carried them out at Trate. Sit down. We\'ll only take a few docks off you."') : S.f.b5_c2_key === 'salvage' ? mgSay('A bargeman', '"The Sixth. The harbour master\'s forty. Sit down. Let\'s see some of it."') : '') +
+    (b5In('ruuk') ? mgSay('', 'Ruuk squats at the edge of the tarpaulin and watches the bones the way he watches a spear in the air.') : '');
+  stakePick();
+}
+/* what the bones leave behind */
+function b5BonesPay(r){ if (!r) return; S.f.b5_bones = {net:r.net, games:r.games, won:r.won, lost:r.lost, pay:r.pay || 0}; save(); }
+
 /* ---- the chapters' fires: the games offered, and what they leave behind ---- */
 { const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
   const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; }; // beside the squad's talk, before the ways on
@@ -63195,6 +64310,15 @@ function b5TilesPay(r){ if (!r) return; S.f.b5_tiles = {net:r.net, won:r.won, lo
 `You come back up the strand to the fire with exactly what you went down with, which the docker seemed to take personally.`,
       ch:back('b5_c2_fire')}; };
     const j = B5CH2.journal; if (j) B5CH2.journal = () => { const x = j(), r = S.f.b5_tilesLast; if (r && r.turns) x.unshift(r.net > 0 ? 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles, and came out ahead.' : 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles.'); return x; }; }
+  /* Ch3: knucklebones with the barge crews on the dock at Kraig's Landing */
+  if (typeof B5CH3 !== 'undefined') { wrap(B5CH3, 'b5_c3_fire', n => after(n, '^Talk with the squad', [{t:'The bargemen have two knucklebones out on a tarpaulin by their fire. Sit in.', tag:'Knucklebones', req:()=>(S.f.b5_c3_ph || 1) <= 2 && !S.f.b5_bones && (S.silver || 0) >= 1, go:()=>playKnuckles({after:r => { b5BonesPay(r); S.f.b5_bonesLast = r; talk('b5_c3_bones_after'); }})}]));
+    B5CH3.dlg.b5_c3_bones_after = () => { const r = S.f.b5_bonesLast || {}; return {sp:'The barge crews\' fire', scene:'b5_landing', txt: !r.games ?
+`You leave the bones before the first throw. The bargemen do not mind. There is a whole river of bargemen.` : (r.pay || 0) > 0 ?
+`You come back round the fire a few docks heavier. ${b5In('ruuk') ? 'Ruuk looks at the docks with approval. "You throw like a Faraed," he says. "Often, and as if you expect to win." He means it kindly.' : 'The bargemen are already throwing against each other again, louder.'}` : (r.pay || 0) < 0 ?
+`You come back round the fire ${b5Coin(-r.pay)} lighter. ${b5In('perrit') ? 'Perrit tells you the odds of a sinker on two bones, and of two, and how many times you threw past twelve. You did not ask.' : 'The river has it. The bargemen say the river always has it.'}` :
+`You come back round the fire with exactly what you sat down with, which the bargeman seemed to take personally.`,
+      ch:back('b5_c3_fire')}; };
+    const j = B5CH3.journal; if (j) B5CH3.journal = () => { const x = j(), r = S.f.b5_bonesLast; if (r && r.games) x.unshift((r.pay || 0) > 0 ? 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews, and came out ahead.' : 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews.'); return x; }; }
 }
 
 /* ============ resume & boot ============ */

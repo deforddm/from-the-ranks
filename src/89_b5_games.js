@@ -4,7 +4,8 @@
    - The Wager Board (Ch1, the barracks yard, b5g_wager): the bookmaker's chalk board for tomorrow's Special Drownings. Written with
      Chapter One (session 6); headline only: a chalked list of categories and odds, and one line of result the next morning. Never a
      named swimmer, never the swim itself.
-   - Harbour Tiles (Ch2), Knucklebones (Ch3), the Token Auction (Ch5), the Whitefinders' Drill (Ch6): the games pass adds them below.
+   - Harbour Tiles (Ch2) and Knucklebones (Ch3) are written below with their chapters; the Token Auction (Ch5) and the Whitefinders' Drill
+     (Ch6): the games pass adds them below.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim), keep their deeds on S.deeds, and pay once a book as the table closes. */
 
 /* ---- the frame: a night sky over Letheras, a lamp, a game's own timers ---- */
@@ -184,6 +185,112 @@ function playHarbourTiles(opt = {}){
 /* what the tiles leave behind */
 function b5TilesPay(r){ if (!r) return; S.f.b5_tiles = {net:r.net, won:r.won, lost:r.lost, done:!!r.done}; save(); }
 
+/* ============ 3. Knucklebones ============
+   With the barge crews on the dock at Kraig's Landing (Ch3, b5g_bones). Book One's bones (playBones) for the rules, Book Three's voices
+   for the shape: two knucklebones, throw as often as you like and bank when you are scared. The bargemen mark one face of each bone with a
+   lead sinker, the Drownings' weight: a sinker wipes the throw, and two sinkers (a Drowning) wipe everything you have banked. A pair that
+   isn't sinkers counts double. First to thirty takes the stake, a dock to three. Once a sitting the sergeant may touch the white fingertip
+   for the Errant and throw a single sinker again (the Errant is Lether's god of chance as the Letherii pray to him, nothing more). Another
+   game is offered while there are docks; the net is paid as the table closes, at most 15 docks over the book, once. */
+const B5G_BONESCAP = 15, B5G_BONESGOAL = 30;
+const B5G_BARGE = {name:'The bargeman', push:(turn, me, you) => turn < (you >= B5G_BONESGOAL - 8 ? 22 : me < you - 9 ? 18 : 14),
+  start:['"Two bones. A sinker on each. Throw, bank, don\'t weep on my tarpaulin."', '"House rules: the river keeps count. I keep the docks."'],
+  bust:['"Sinker. The river wanted that one."', 'He shrugs. "That\'s bones."'], drown:['A long silence. "A Drowning," he says, and does not laugh. Nobody on the dock laughs.'],
+  bank:['"That\'ll do."', '"Banking. A bargeman knows when to tie up."'], big:['"Watch this. Watch the bones, not me."'],
+  win:['"Pay the river. Me. I\'m the river."', 'He holds out a hand without looking up.'], lose:['He pays without a word, and then one word: "Again?"', '"Well thrown. The river\'ll have it back off you somewhere."']};
+const B5G_CHAT = {meBust:['"Ha. Sinker."', '"That\'s the river, that is."'], meBig:['"Tie up, soldier. Bank it."'], meDrown:['"A Drowning! Oh, that\'s a hard one. Sorry. That\'s a hard one."'], meWin:['"He lost to a Whitefinder. I\'m telling the whole river."']};
+function b5gBone(ctx, x, y, s, face, rot = 0, lift = 0){
+  ctx.save(); ctx.translate(x, y - lift); ctx.rotate(rot);
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.beginPath(); ctx.ellipse(2, s*.55 + lift, s*.5, s*.14, 0, 0, 7); ctx.fill();
+  const r = s*.2, h = s/2; ctx.beginPath(); ctx.moveTo(-h + r, -h); ctx.arcTo(h, -h, h, h, r); ctx.arcTo(h, h, -h, h, r); ctx.arcTo(-h, h, -h, -h, r); ctx.arcTo(-h, -h, h, -h, r); ctx.closePath();
+  const g = ctx.createLinearGradient(-h, -h, h, h); g.addColorStop(0, '#ece2c8'); g.addColorStop(1, '#b0a07c'); ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = 'rgba(60,40,20,.55)'; ctx.lineWidth = 1; ctx.stroke();
+  if (face === 1) { // the sinker: a lead weight on a loop of cord, let into the bone
+    ctx.strokeStyle = '#3a2616'; ctx.lineWidth = Math.max(1, s*.05); ctx.beginPath(); ctx.arc(0, -s*.16, s*.09, Math.PI, 0); ctx.stroke();
+    ctx.fillStyle = '#4a4e56'; ctx.beginPath(); ctx.moveTo(-s*.16, -s*.08); ctx.lineTo(s*.16, -s*.08); ctx.lineTo(s*.22, s*.2); ctx.lineTo(-s*.22, s*.2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(220,226,236,.45)'; ctx.fillRect(-s*.12, -s*.04, s*.05, s*.2); }
+  else ({2:[[-1,-1],[1,1]], 3:[[-1,-1],[0,0],[1,1]], 4:[[-1,-1],[1,-1],[-1,1],[1,1]], 5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]], 6:[[-1,-1],[1,-1],[-1,0],[1,0],[-1,1],[1,1]]}[face] || []).forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a*s*.27, b*s*.27, s*.075, 0, 7); ctx.fillStyle = '#3a2616'; ctx.fill(); });
+  ctx.restore(); }
+function playKnuckles(opt = {}){
+  let on = () => true; const O = B5G_BARGE, pick = b5gPick, sp = () => Math.max(.4, SET.speed || 1), T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * sp());
+  const g = MG.state = {me:0, opp:0, turn:0, who:'me', dice:[1 + R(6), 1 + R(6)], roll:0, busy:false, over:false, stake:null, started:false, talk:'', net:0, games:0, won:0, lost:0, errantUsed:false, errantReady:false, lastTurn:0, last:null};
+  const capLeft = () => Math.max(0, B5G_BONESCAP - (S.f.b5_bonesNet || 0));
+  const purse = () => (S.silver || 0) + g.net;
+  const result = () => ({net:g.net, games:g.games, won:g.won, lost:g.lost, last:g.last, pay:g.pay || 0});
+  const settle = () => { if (g.paid) return; g.paid = true; const pay = g.net > 0 ? Math.min(g.net, capLeft()) : Math.max(g.net, -(S.silver || 0));
+    S.silver = (S.silver || 0) + pay; updSilver(); g.pay = pay; if (pay > 0) S.f.b5_bonesNet = (S.f.b5_bonesNet || 0) + pay; };
+  const close = () => { settle(); mgClose(result()); };
+  mgOpen({kick:'The dock at Kraig\'s Landing · the barge crews\' fire', title:'Knucklebones', leaveText:'Leave the bones', done:r => opt.after && opt.after(r),
+    leave:() => { if (!g.over && g.stake && (g.me || g.opp || g.turn)) { g.net -= g.stake; g.games++; g.lost++; g.last = 'opp'; } g.over = true; settle(); mgClose(Object.assign(result(), {left:true})); }}); on = b5gOn();
+  const say = (who, line) => { g.talk = mgSay(who, line); draw(); };
+  const draw = () => { if (!g.started) return stakePick();
+    const mine = g.who === 'me' && !g.busy && !g.over && !g.errantReady, pct = n => Math.min(100, n / B5G_BONESGOAL * 100);
+    const again = g.over && purse() >= 1 && (S.f.b5_bonesNet || 0) + Math.max(0, g.net) < B5G_BONESCAP;
+    mgPanel(`<div class="bscore"><div class="bs ${g.who === 'me' && !g.over ? 'on' : ''}"><span>${esc(S.name)}</span><b>${g.me}</b><i style="width:${pct(g.me)}%"></i>${g.who === 'me' && g.turn ? `<em>+${g.turn}</em>` : ''}</div>
+      <div class="bs ${g.who === 'opp' && !g.over ? 'on' : ''}"><span>${O.name}</span><b>${g.opp}</b><i style="width:${pct(g.opp)}%"></i>${g.who === 'opp' && g.turn ? `<em>+${g.turn}</em>` : ''}</div></div>
+      <p class="fine bgoal">First to ${B5G_BONESGOAL}. A sinker wipes the throw; two sinkers, a Drowning, wipe your bank; a pair counts double. Stake: ${b5Coin(g.stake)}. ${g.net ? `${g.net > 0 ? 'Up' : 'Down'} ${b5Coin(Math.abs(g.net))} tonight.` : ''}</p>
+      ${g.talk}
+      ${g.over ? `<div class="row mgbtns">${again ? `<button class="btn primary" id="kbAgain" data-bot="1">Another game</button>` : ''}<button class="btn ${again ? '' : 'primary'}" id="kbDone" data-bot="1">Back to the fire</button></div>`
+      : g.errantReady ? `<div class="row mgbtns"><button class="btn on" id="kbErrant" data-bot="1">Touch the white fingertip: throw it again</button><button class="btn" id="kbLet" data-bot="1">Let it go</button></div>`
+      : `<div class="row mgbtns"><button class="btn primary" id="kbThrow" data-bot="1" ${mine ? '' : 'disabled'}>Throw the bones</button><button class="btn" id="kbBank" data-bot="1" ${mine && g.turn ? '' : 'disabled'}>Bank ${g.turn || ''}</button></div>
+        <p class="hint keys"><kbd>Space</kbd> throw · <kbd>B</kbd> bank · <kbd>Esc</kbd> leave</p>`}
+      <p class="fine">The bones pay at most ${b5Coin(B5G_BONESCAP)} over what you sat down with, once.</p>`);
+    if ($('#kbThrow')) $('#kbThrow').onclick = throwMe; if ($('#kbBank')) $('#kbBank').onclick = bank;
+    if ($('#kbErrant')) $('#kbErrant').onclick = () => { AUDIO.play('magic'); g.errantReady = false; g.errantUsed = true; g.turn = g.lastTurn; say('', 'You touch the white fingertip on your shield\'s boss, for the Errant, and pick the sinker up again. The bargeman looks at the shield and decides not to say anything.'); };
+    if ($('#kbLet')) $('#kbLet').onclick = () => { AUDIO.play('click'); g.errantReady = false; pass(); };
+    if ($('#kbAgain')) $('#kbAgain').onclick = () => { AUDIO.play('click'); g.started = false; stakePick(); };
+    if ($('#kbDone')) $('#kbDone').onclick = () => { AUDIO.play('click'); close(); }; };
+  const tumble = cb => { g.busy = true; g.roll = performance.now(); AUDIO.play('shuffle'); draw();
+    T(() => { const a = 1 + R(6), b = 1 + R(6); g.dice = [a, b]; g.roll = 0; AUDIO.play('dice', !(a === 1 || b === 1)); cb(a, b); }, REDUCE() ? 150 : 650); };
+  const score = (a, b) => a === 1 && b === 1 ? 'drown' : a === 1 || b === 1 ? 'bust' : a === b ? (a + b) * 2 : a + b;
+  const throwMe = () => { if (g.who !== 'me' || g.busy || g.over || g.errantReady) return; g.errantReady = false;
+    tumble((a, b) => { g.busy = false; const s = score(a, b);
+      if (s === 'drown') { g.lastTurn = g.turn; g.me = 0; g.turn = 0; say('A bargeman', pick(B5G_CHAT.meDrown)); return pass(); }
+      if (s === 'bust') { g.lastTurn = g.turn; g.turn = 0; if (!g.errantUsed && g.lastTurn >= 6) { g.errantReady = true; say('', `A sinker. ${g.lastTurn} gone, unless the Errant is listening.`); return; } say('A bargeman', pick(B5G_CHAT.meBust)); return pass(); }
+      g.turn += s; if (g.me + g.turn >= B5G_BONESGOAL) { g.me += g.turn; g.turn = 0; return finish('me'); }
+      say(g.turn >= 15 ? 'A bargeman' : '', g.turn >= 15 ? pick(B5G_CHAT.meBig) : a === b ? `A pair of ${a}s, doubled: ${s}. ${g.turn} this turn.` : `${a} and ${b}. ${g.turn} this turn.`); }); };
+  const bank = () => { if (g.who !== 'me' || g.busy || g.over || !g.turn || g.errantReady) return; g.me += g.turn; AUDIO.play('coin'); say('', `You bank ${g.turn}.`); g.turn = 0; pass(); };
+  const pass = () => { if (g.over) return; g.errantReady = false; if (g.who === 'me') { g.who = 'opp'; g.turn = 0; draw(); T(oppTurn, 900); } else { g.who = 'me'; g.turn = 0; draw(); } };
+  const oppTurn = () => { if (g.over || g.who !== 'opp') return;
+    tumble((a, b) => { g.busy = false; const s = score(a, b);
+      if (s === 'drown') { g.opp = 0; g.turn = 0; say(O.name, pick(O.drown)); return T(pass, 1100); }
+      if (s === 'bust') { g.turn = 0; say(O.name, pick(O.bust)); return T(pass, 1000); }
+      g.turn += s; if (g.opp + g.turn >= B5G_BONESGOAL) { g.opp += g.turn; g.turn = 0; return finish('opp'); }
+      if (O.push(g.turn, g.opp, g.me)) { if (g.turn >= 15) say(O.name, pick(O.big)); else draw(); T(oppTurn, 800); }
+      else T(() => { g.opp += g.turn; say(O.name, `${pick(O.bank)} <span class="dim">(${g.turn})</span>`); g.turn = 0; T(pass, 700); }, 600); }); };
+  const finish = w => { g.over = true; g.busy = false; g.games++; const won = w === 'me'; g.last = w;
+    g.net += won ? g.stake : -g.stake; if (won) g.won++; else g.lost++; AUDIO.play(won ? 'coin' : 'click');
+    mgDeed(won ? 'b5BonesWon' : 'b5BonesLost');
+    say(won ? 'A bargeman' : O.name, won ? `You take ${b5Coin(g.stake)}. ` + pick(B5G_CHAT.meWin.concat(O.lose)) : `The bargeman takes ${b5Coin(g.stake)}. ` + pick(O.win)); };
+  const stakePick = () => { g.me = g.opp = g.turn = 0; g.who = 'me'; g.over = false; g.errantUsed = false; g.errantReady = false; g.stake = null;
+    mgPanel(`${g.talk}${mgSay(O.name, pick(O.start))}<p class="fine">What's the stake? You have ${b5Coin(purse())}.</p>
+      <div class="row mgbtns">${[1, 2, 3].map(n => `<button class="btn ${n === 1 ? 'primary' : ''}" data-st="${n}" data-bot="1" ${purse() >= n ? '' : 'disabled'}>${b5Coin(n)}</button>`).join('')}</div>
+      <p class="fine bgoal">First to ${B5G_BONESGOAL}. Throw as often as you like and bank when you're scared. A sinker wipes the throw; two sinkers, a Drowning, wipe everything you've banked. A pair that isn't sinkers counts double. Once a sitting, a single sinker can be thrown again, for the Errant.</p>`);
+    document.querySelectorAll('#mgPanel [data-st]').forEach(b => b.onclick = () => { AUDIO.play('coin'); g.stake = +b.dataset.st; g.started = true; g.talk = mgSay('', 'You throw first.'); draw(); }); };
+  mgKeys({' ':() => { if (g.over) { const b = $('#kbAgain') || $('#kbDone'); b && b.click(); } else if (!g.started) { const b = $('#mgPanel [data-st]:not([disabled])'); b && b.click(); } else if (g.errantReady) { const b = $('#kbErrant'); b && b.click(); } else throwMe(); }, b:bank, Enter:() => { if (g.over) { const b = $('#kbDone'); b && b.click(); } else bank(); }});
+  // the table: the dock at night, the river behind, the bargemen's fire, a tarpaulin on the planking for the bones
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, mo = REDUCE() ? 0 : 1;
+    const sk = ctx.createLinearGradient(0, 0, 0, H); sk.addColorStop(0, '#05070e'); sk.addColorStop(.36, '#121a28'); sk.addColorStop(.37, '#0e1a20'); sk.addColorStop(.52, '#08121a'); sk.addColorStop(.53, '#2a2218'); sk.addColorStop(1, '#14100c'); ctx.fillStyle = sk; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 30; i++) { ctx.fillStyle = `rgba(220,226,250,${(.12 + hash(i, 8931)*.4).toFixed(2)})`; ctx.fillRect(hash(i, 8932)*W, hash(i, 8933)*H*.3, 1, 1); }
+    ctx.fillStyle = '#0a0c12'; ctx.beginPath(); ctx.moveTo(0, H*.36); for (let i = 0; i <= 12; i++) ctx.lineTo(W*i/12, H*(.3 - hash(i, 8934)*.1)); ctx.lineTo(W, H*.36); ctx.fill(); // the mountains
+    for (let i = 0; i < 14; i++) { const y = H*(.38 + hash(i, 8935)*.13), x = ((hash(i, 8936)*W + t*mo*.012) % (W + 30)) - 15; ctx.fillStyle = `rgba(255,200,140,${(.06 + .1*hash(i, 8937)).toFixed(2)})`; ctx.fillRect(x, y, 6 + 10*hash(i, 8938), 1); } // the river going past
+    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(0, H*(.53 + i*.08)); ctx.lineTo(W, H*(.53 + i*.08)); ctx.stroke(); } // the dock's planks
+    const fx = W*.5, fy = H*.5, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy, H*.5, '#ff8a3a', .3*fl); ctx.globalCompositeOperation = 'source-over';
+    poly(ctx, [[fx - 12, fy + 4], [fx - 3, fy - 22*fl], [fx + 2, fy - 9], [fx + 6, fy - 18*fl], [fx + 12, fy + 4]], 'rgba(255,150,60,.95)'); poly(ctx, [[fx - 5, fy + 4], [fx, fy - 10*fl], [fx + 5, fy + 4]], '#fff1c2');
+    const fs = clamp(H/92, 1.6, 3.6); drawFigure(ctx, 'b5_c3_bargeman', W*.18, H*.74, fs, t, {still:!(g.who === 'opp' && g.busy), dir:1, phase:1}); drawFigure(ctx, 'b5_c3_bargeman', W*.84, H*.74, fs*.94, t, {still:true, dir:-1, phase:3});
+    ctx.save(); ctx.translate(W/2, H*.76); ctx.transform(1, 0, -.08, 1, 0, 0); const bw = Math.min(W*.5, 260), bh = Math.min(H*.22, 80); ctx.fillStyle = '#3a4038'; ctx.fillRect(-bw/2, -bh/2, bw, bh); ctx.strokeStyle = '#5a6254'; ctx.lineWidth = 2; ctx.strokeRect(-bw/2 + 4, -bh/2 + 4, bw - 8, bh - 8); ctx.restore(); // the tarpaulin
+    const k = g.roll ? (performance.now() - g.roll) / 650 : 1, s = Math.min(56, W*.1, H*.15);
+    [0, 1].forEach(i => { const face = g.roll ? 1 + (Math.floor(performance.now()/70 + i*3) % 6) : g.dice[i], x = W/2 + (i ? 1 : -1)*s*.8 + (g.roll ? Math.sin(k*9 + i)*10 : 0), lift = g.roll ? Math.abs(Math.sin(k*Math.PI*2.5))*24*(1 - k) : 0;
+      b5gBone(ctx, x, H*.76, s, face, g.roll ? k*6 + i : (i ? .12 : -.08), lift); });
+    if (g.who === 'opp' && !g.over && g.started) b5gText(ctx, 'The bargeman throws', W*.18, H*.74 - 34*fs, Math.min(15, W*.035));
+  };
+  g.talk = mgSay('', `The barge crews have a tarpaulin spread on the planking by their fire, and two knucklebones on it, old and yellow, each with a lead sinker let into one face. "The Drownings' weight," a bargeman says, and taps it. "Throw that, and the river has your throw. Throw two, and it has the lot."`) +
+    (S.f.b5_c2_key === 'dead' ? mgSay('A bargeman', '"The Sixth. You carried them out at Trate. Sit down. We\'ll only take a few docks off you."') : S.f.b5_c2_key === 'salvage' ? mgSay('A bargeman', '"The Sixth. The harbour master\'s forty. Sit down. Let\'s see some of it."') : '') +
+    (b5In('ruuk') ? mgSay('', 'Ruuk squats at the edge of the tarpaulin and watches the bones the way he watches a spear in the air.') : '');
+  stakePick();
+}
+/* what the bones leave behind */
+function b5BonesPay(r){ if (!r) return; S.f.b5_bones = {net:r.net, games:r.games, won:r.won, lost:r.lost, pay:r.pay || 0}; save(); }
+
 /* ---- the chapters' fires: the games offered, and what they leave behind ---- */
 { const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
   const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; }; // beside the squad's talk, before the ways on
@@ -206,4 +313,13 @@ function b5TilesPay(r){ if (!r) return; S.f.b5_tiles = {net:r.net, won:r.won, lo
 `You come back up the strand to the fire with exactly what you went down with, which the docker seemed to take personally.`,
       ch:back('b5_c2_fire')}; };
     const j = B5CH2.journal; if (j) B5CH2.journal = () => { const x = j(), r = S.f.b5_tilesLast; if (r && r.turns) x.unshift(r.net > 0 ? 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles, and came out ahead.' : 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles.'); return x; }; }
+  /* Ch3: knucklebones with the barge crews on the dock at Kraig's Landing */
+  if (typeof B5CH3 !== 'undefined') { wrap(B5CH3, 'b5_c3_fire', n => after(n, '^Talk with the squad', [{t:'The bargemen have two knucklebones out on a tarpaulin by their fire. Sit in.', tag:'Knucklebones', req:()=>(S.f.b5_c3_ph || 1) <= 2 && !S.f.b5_bones && (S.silver || 0) >= 1, go:()=>playKnuckles({after:r => { b5BonesPay(r); S.f.b5_bonesLast = r; talk('b5_c3_bones_after'); }})}]));
+    B5CH3.dlg.b5_c3_bones_after = () => { const r = S.f.b5_bonesLast || {}; return {sp:'The barge crews\' fire', scene:'b5_landing', txt: !r.games ?
+`You leave the bones before the first throw. The bargemen do not mind. There is a whole river of bargemen.` : (r.pay || 0) > 0 ?
+`You come back round the fire a few docks heavier. ${b5In('ruuk') ? 'Ruuk looks at the docks with approval. "You throw like a Faraed," he says. "Often, and as if you expect to win." He means it kindly.' : 'The bargemen are already throwing against each other again, louder.'}` : (r.pay || 0) < 0 ?
+`You come back round the fire ${b5Coin(-r.pay)} lighter. ${b5In('perrit') ? 'Perrit tells you the odds of a sinker on two bones, and of two, and how many times you threw past twelve. You did not ask.' : 'The river has it. The bargemen say the river always has it.'}` :
+`You come back round the fire with exactly what you sat down with, which the bargeman seemed to take personally.`,
+      ch:back('b5_c3_fire')}; };
+    const j = B5CH3.journal; if (j) B5CH3.journal = () => { const x = j(), r = S.f.b5_bonesLast; if (r && r.games) x.unshift((r.pay || 0) > 0 ? 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews, and came out ahead.' : 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews.'); return x; }; }
 }
