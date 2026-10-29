@@ -101,6 +101,89 @@ function playWager(opt = {}){
 function b5WagerPay(r){ if (!r || !r.done) return; const w = (r.res || []).map(i => B5G_WORDS[i] ? B5G_WORDS[i][0] : '').filter(Boolean);
   S.f.b5_wager = {net:r.net, staked:r.staked, line:`${w.length ? `Its chalk says ${w.join(', ')}, and then he wipes it.` : 'He wipes it.'} ${r.staked ? (r.net > 0 ? 'Some of that was yours, and he has paid it.' : 'None of that was yours.') : 'You had nothing on it.'}`}; save(); }
 
+/* ============ 2. Harbour Tiles ============
+   The dockers' game on the strand at Trate (Ch2, b5g_tiles): plain counting-tiles, the bone squares the harbour gangs tally crates with,
+   two of each from one to nine, eighteen in a bag. Nothing of the Holds on them: pips, no faces. The docker turns one up; you put a dock
+   or two down and call the next one higher or lower; a tile the same is the docker's. Eight calls. Every tile turned stays turned, face up
+   in a row, so a soldier who counts can know what is left in the bag. Once a game you may count the bag outright (Wits; Perrit, the
+   sergeant, Brune and Tobet with an edge): the tally of what is left shows for the rest of the game. A near count, and the docker sees it
+   and charges a dock for the lesson. Book Four's hand game for the shape (turns, a read once a game). Docks, net capped at 12 a book,
+   paid as the table closes; played once a chapter. */
+const B5G_TILESCAP = 12;
+function playHarbourTiles(opt = {}){
+  let on = () => true; const TURNS = 8;
+  const bag = []; for (let n = 1; n <= 9; n++) bag.push(n, n); for (let i = bag.length - 1; i > 0; i--) { const j = R(i + 1); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+  const g = MG.state = {turn:0, face:bag.pop(), bag, shown:[], net:0, won:0, lost:0, counted:false, roll:null, talk:'', over:false, last:null, flipT:0};
+  g.shown.push(g.face);
+  const capLeft = () => Math.max(0, B5G_TILESCAP - (S.f.b5_tilesNet || 0));
+  const purse = () => (S.silver || 0) + g.net;
+  const result = () => ({net:g.net, won:g.won, lost:g.lost, turns:g.turn, counted:g.counted, done:g.over && g.turn >= TURNS});
+  const finish = () => { if (g.paid) return; g.paid = true; const pay = g.net > 0 ? Math.min(g.net, capLeft()) : Math.max(g.net, -(S.silver || 0));
+    S.silver = (S.silver || 0) + pay; updSilver(); g.pay = pay; if (pay > 0) S.f.b5_tilesNet = (S.f.b5_tilesNet || 0) + pay; };
+  const close = () => { finish(); mgClose(result()); };
+  mgOpen({kick:'The strand at Trate · the dockers\' fire', title:'Harbour Tiles', leaveText:'Leave the tiles', done:r => opt.after && opt.after(r), leave:() => { g.over = true; finish(); mgClose(Object.assign(result(), {left:true, done:false})); }}); on = b5gOn();
+  const left = () => { const c = {}; g.bag.forEach(n => { c[n] = (c[n] || 0) + 1; }); return c; };
+  const odds = () => { const c = left(), hi = g.bag.filter(n => n > g.face).length, lo = g.bag.filter(n => n < g.face).length, eq = g.bag.filter(n => n === g.face).length; return {hi, lo, eq, c}; };
+  const draw = () => { const o = odds();
+    mgPanel(`<div class="cpbar"><span>${g.over ? 'The tiles are put away' : `Call ${Math.min(g.turn + 1, TURNS)} of ${TURNS}`}</span><span>Purse: <b>${purse()}</b> docks</span><span>${g.net ? `${g.net > 0 ? 'Up' : 'Down'} <b>${Math.abs(g.net)}</b>` : 'Even'}</span></div>
+      ${g.talk}${b5gRollHTML(g.roll)}
+      ${g.counted === true && !g.over ? `<p class="fine">In the bag: ${o.hi} higher than ${g.face}, ${o.lo} lower, ${o.eq} the same (the docker's).</p>` : ''}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="htDone" data-bot="1">Back to the fire</button>`
+        : [['h', 1], ['h', 2], ['l', 1], ['l', 2]].map(([c, n]) => `<button class="btn ${n === 1 ? 'primary' : ''}" data-c="${c}${n}" ${purse() >= n ? '' : 'disabled'} data-bot="1">${c === 'h' ? 'Higher' : 'Lower'} · ${b5Coin(n)}</button>`).join('') + (g.counted ? '' : `<button class="btn" id="htCount" data-bot="1">Count the bag (once)</button>`)}</div>
+      <p class="fine">The docker turns a tile. Call the next one higher or lower, for a dock or two; a tile the same is the docker's. Eight calls. Every tile turned stays face up, so you can count what is left. The tiles pay at most ${b5Coin(B5G_TILESCAP)} over what you sat down with, once.</p>
+      <p class="hint keys"><kbd>↑</kbd> higher · <kbd>↓</kbd> lower (a dock) · <kbd>Shift</kbd> with it for two · <kbd>C</kbd> count · <kbd>Esc</kbd> leave</p>`);
+    document.querySelectorAll('#mgPanel [data-c]').forEach(b => b.onclick = () => { AUDIO.play('click'); call(b.dataset.c[0], +b.dataset.c[1]); });
+    if ($('#htCount')) $('#htCount').onclick = () => { AUDIO.play('click'); count(); };
+    if ($('#htDone')) $('#htDone').onclick = () => { AUDIO.play('click'); close(); }; };
+  const count = () => { if (g.counted || g.over) return; g.counted = true;
+    const r = g.roll = b5gRoll('wits', 13, null, [['she counts for pleasure', 2, 'perrit'], ['you count debts to the dock', 1, 'sgt'], ['she grew up on the Shake beaches, where the dockers play', 1, 'brune'], ['he counts arrows, then debts, then arrows', 1, 'tobet']]);
+    if (r.ok) g.talk = mgSay(r.who === 'sgt' ? '' : NAME(r.who), r.who === 'sgt' ? 'You count the row of turned tiles, and take it from eighteen, and know what is in the bag as well as the docker does.' : `${NAME(r.who)} looks along the row of turned tiles, lips moving. "Eighteen to start, two of each," ${b5He(r.who)} says, very quietly. "So the bag's got this in it." And it does.`);
+    else if (r.tier === 'near') { g.net -= 1; g.talk = mgSay('The docker', `"Counting, soldier?" He grins, and holds out his hand for a dock. "Docker's manners. You pay for the lesson." You pay. You have the count. <span class="dim">(−1)</span>`); }
+    else { g.counted = 'tried'; g.talk = mgSay('', `${NAME(r.who)} tries to count the row and loses it at eleven, when the docker turns a tile over to straighten it.`); }
+    draw(); };
+  const call = (c, n) => { if (g.over || purse() < n) return; const next = g.bag.pop(), right = c === 'h' ? next > g.face : next < g.face;
+    g.last = {from:g.face, to:next, c, right}; g.flipT = performance.now(); g.face = next; g.shown.push(next);
+    if (right) { g.net += n; g.won++; AUDIO.play('coin'); } else { g.net -= n; g.lost++; AUDIO.play('miss'); }
+    g.talk = mgSay('', `${b5Coin(n)} on ${c === 'h' ? 'higher' : 'lower'} than ${g.last.from}. The docker turns it: <b>${next}</b>. ${right ? b5gPick(['He pushes your docks back across with his.', 'He swears, mildly, and pays.', '"Errant\'s luck," he says, and pays.']) : next === g.last.from ? b5gPick(['The same. "Docker\'s," he says, and takes it.', 'A pair. The docker taps it and takes your dock.']) : b5gPick(['He takes the dock without comment.', '"Not tonight," he says, and takes it.'])}`);
+    g.turn++; if (g.turn >= TURNS || !g.bag.length) end(); draw(); };
+  const end = () => { g.over = true; finish(); const W = g.net > 0;
+    mgDeed(W ? 'b5TilesWon' : g.net < 0 ? 'b5TilesLost' : 'b5TilesEven'); AUDIO.play(W ? 'win' : 'lose');
+    g.talk += mgSay('The docker', W ? `"${g.won} calls of ${TURNS}." He sweeps the tiles into the bag. "Whitefinders. I'll not play the Sixth again till you've gone up the river."${g.net > g.pay ? ' He pays what the board pays one soldier, he says, and not a dock more.' : ''}` : g.net < 0 ? `"${g.won} of ${TURNS}." He sweeps the tiles into the bag, and your docks after them. "The harbour always wins. Ask anyone."` : '"Even," he says, and seems to find that the most annoying result of all.'); };
+  const geo = () => { const W = MG.W, H = MG.H, s = Math.min(W * .1, H * .17); return {W, H, s}; };
+  const tile = (ctx, x, y, s, n, face = true, k = 1) => { ctx.save(); ctx.translate(x, y); ctx.scale(k, 1);
+    ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(-s/2 + 2, -s/2 + 3, s, s);
+    ctx.fillStyle = face ? '#e6dcc4' : '#b8a888'; ctx.fillRect(-s/2, -s/2, s, s); ctx.strokeStyle = '#7a6a4a'; ctx.lineWidth = 1; ctx.strokeRect(-s/2 + .5, -s/2 + .5, s - 1, s - 1);
+    ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(-s/2, -s/2, s, Math.max(1, s*.06));
+    if (face) { const P = {1:[[1,1]], 2:[[0,0],[2,2]], 3:[[0,0],[1,1],[2,2]], 4:[[0,0],[2,0],[0,2],[2,2]], 5:[[0,0],[2,0],[1,1],[0,2],[2,2]], 6:[[0,0],[2,0],[0,1],[2,1],[0,2],[2,2]], 7:[[0,0],[2,0],[0,1],[1,1],[2,1],[0,2],[2,2]], 8:[[0,0],[1,0],[2,0],[0,1],[2,1],[0,2],[1,2],[2,2]], 9:[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]]}[n] || [];
+      P.forEach(([i, j]) => { ctx.fillStyle = '#2a2018'; ctx.beginPath(); ctx.arc(-s*.28 + i*s*.28, -s*.28 + j*s*.28, s*.07, 0, 7); ctx.fill(); }); } // pips, scored and blacked: a counting-tile
+    else { ctx.strokeStyle = 'rgba(90,70,40,.5)'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-s*.3, -s*.2 + i*s*.2); ctx.lineTo(s*.3, -s*.2 + i*s*.2); ctx.stroke(); } } // the plain back, scored for grip
+    ctx.restore(); };
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const {W, H, s} = geo(), mo = REDUCE() ? 0 : 1, now = performance.now();
+    const sk = ctx.createLinearGradient(0, 0, 0, H); sk.addColorStop(0, '#060814'); sk.addColorStop(.45, '#141a2c'); sk.addColorStop(.46, '#141e2a'); sk.addColorStop(.6, '#0a121a'); sk.addColorStop(.61, '#2a2620'); sk.addColorStop(1, '#141210'); ctx.fillStyle = sk; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 30; i++) { ctx.fillStyle = `rgba(220,226,250,${(.15 + hash(i, 8921)*.4).toFixed(2)})`; ctx.fillRect(hash(i, 8922)*W, hash(i, 8923)*H*.4, 1, 1); }
+    const wy = H*(.6 + (mo ? Math.sin(t/2200) : 0)*.01); ctx.fillStyle = 'rgba(200,214,230,.2)'; ctx.fillRect(0, wy, W, 2);
+    const fx = W*.86, fy = H*.9, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy, H*.4, '#ff8a3a', .32*fl); ctx.globalCompositeOperation = 'source-over'; poly(ctx, [[fx - 8, fy], [fx - 2, fy - 16*fl], [fx + 1, fy - 7], [fx + 4, fy - 13*fl], [fx + 8, fy]], 'rgba(255,150,60,.95)');
+    const fs = Math.max(1.3, Math.min(2.4, H / 130)); drawFigure(ctx, 'b5_c2_wrecker', W*.84, H*.6, fs, t, {still:true, dir:-1, phase:2}); // the docker, across the board
+    // the board: an upturned crate lid on the shingle
+    ctx.fillStyle = '#3a2c1e'; ctx.fillRect(W*.06, H*.62, W*.68, H*.32); ctx.strokeStyle = '#1e160e'; ctx.lineWidth = 2; ctx.strokeRect(W*.06, H*.62, W*.68, H*.32); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(W*.06, H*(.62 + i*.08)); ctx.lineTo(W*.74, H*(.62 + i*.08)); ctx.stroke(); }
+    // the face tile, big, flipping in when it is turned
+    const k = Math.min(1, (now - g.flipT) / 260), fk = g.flipT && k < 1 ? Math.abs(Math.cos(k * Math.PI)) : 1, showFace = !(g.flipT && k < .5);
+    tile(ctx, W*.4, H*.3, s*1.6, showFace ? g.face : 0, showFace, Math.max(.05, fk));
+    if (g.last && !g.over && k >= 1) b5gText(ctx, g.last.right ? 'paid' : 'the docker\'s', W*.4, H*.3 + s*1.25, Math.max(10, s*.3), g.last.right ? '#9fe0b8' : 'rgba(232,192,115,.75)');
+    tile(ctx, W*.14, H*.3, s*.9, 0, false); b5gText(ctx, `${g.bag.length} in the bag`, W*.14, H*.3 + s*.8, Math.max(9, s*.24), 'rgba(232,192,115,.7)');
+    // the row of turned tiles along the board
+    const row = g.shown.slice(0, -1), rs = Math.min(s*.62, (W*.64) / Math.max(9, row.length + 1)); row.forEach((n, i) => tile(ctx, W*.09 + rs*.6 + i*rs*1.06, H*.7 + (i % 2)*rs*.1, rs, n, true));
+    if (g.counted === true && !g.over) { const c = left(); for (let n = 1; n <= 9; n++) { const x = W*.09 + (n - 1)*W*.07, y = H*.88; b5gText(ctx, `${n}`, x + rs*.3, y, Math.max(9, rs*.36), 'rgba(236,232,220,.85)'); for (let j = 0; j < (c[n] || 0); j++) { ctx.fillStyle = '#e8c073'; ctx.fillRect(x + rs*.3 - 5 + j*6, y + 4, 4, 4); } } }
+  };
+  mgKeys({ArrowUp:e => call('h', e && e.shiftKey ? 2 : 1), ArrowDown:e => call('l', e && e.shiftKey ? 2 : 1), c:() => count(), ' ':() => { const b = $('#htDone'); if (b) b.click(); }});
+  g.talk = mgSay('', `Down the strand from the Sixth's fire the harbour gang has a fire of its own, and an upturned crate lid on the shingle, and a bag of counting-tiles: the plain bone squares the dockers tally crates with, scored with pips, two of each from one to nine. Nothing of the Holds on them. "Nobody reads these," the docker says. "You just count them."`) +
+    mgSay('The docker', `"I turn one. You say the next is higher or lower, a dock or two. Same is mine." He turns the first. It is a ${g.face}. "Sit, soldier."`) +
+    (b5In('perrit') ? mgSay('', 'Perrit sits down behind you, and looks at the bag, and you can see her starting to count.') : '');
+  draw();
+}
+/* what the tiles leave behind */
+function b5TilesPay(r){ if (!r) return; S.f.b5_tiles = {net:r.net, won:r.won, lost:r.lost, done:!!r.done}; save(); }
+
 /* ---- the chapters' fires: the games offered, and what they leave behind ---- */
 { const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
   const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; }; // beside the squad's talk, before the ways on
@@ -114,4 +197,13 @@ function b5WagerPay(r){ if (!r || !r.done) return; const w = (r.res || []).map(i
 `You come back to the fire ${r.net < 0 ? `${b5Coin(-r.net)} lighter` : 'about where you started'}. ${b5In('perrit') ? 'Perrit has already worked out the bookmaker\'s cut, and tells you what it was. You did not ask.' : 'The bookmaker\'s cut is in it somewhere.'}`,
       ch:back('b5_c1_yard')}; };
     const j = B5CH1.journal; if (j) B5CH1.journal = () => { const x = j(), r = S.f.b5_wagerLast; if (r && r.done && r.staked) x.unshift(r.net > 0 ? 'A bookmaker set up a chalk board by the barracks gate on the festival night. The sergeant laid a few docks on the Special list, and came out ahead.' : 'A bookmaker set up a chalk board by the barracks gate on the festival night. The sergeant laid a few docks on the Special list.'); return x; }; }
+  /* Ch2: the dockers' counting-tiles down the strand at Trate */
+  if (typeof B5CH2 !== 'undefined') { wrap(B5CH2, 'b5_c2_fire', n => after(n, '^Talk with the squad', [{t:'Down the strand the harbour gang has a bag of counting-tiles out on a crate lid. Sit in.', tag:'Harbour Tiles', req:()=>(S.f.b5_c2_ph || 1) >= 2 && !S.f.b5_tiles && (S.silver || 0) >= 1, go:()=>playHarbourTiles({after:r => { b5TilesPay(r); S.f.b5_tilesLast = r; talk('b5_c2_tiles_after'); }})}]));
+    B5CH2.dlg.b5_c2_tiles_after = () => { const r = S.f.b5_tilesLast || {}; return {sp:'The Sixth\'s fire on the strand', scene:'b5_c2_strand', txt: !r.turns ?
+`You leave the dockers' tiles before the first call. The docker does not mind. There is a whole harbour gang to play.` : r.net > 0 ?
+`You come back up the strand to the fire a few docks heavier. ${b5In('brune') ? 'Brune looks at the docks, and at the dockers\' fire. "They let you win the last one," she says. "So you will come back." She does not say whether that is a bad thing.' : 'Down the strand the dockers are already playing each other again, louder.'}` : r.net < 0 ?
+`You come back up the strand to the fire ${b5Coin(-r.net)} lighter. ${b5In('perrit') ? 'Perrit tells you which call you should not have made, and why, with the count. You did not ask.' : 'The harbour always wins. Everybody in Trate says so.'}` :
+`You come back up the strand to the fire with exactly what you went down with, which the docker seemed to take personally.`,
+      ch:back('b5_c2_fire')}; };
+    const j = B5CH2.journal; if (j) B5CH2.journal = () => { const x = j(), r = S.f.b5_tilesLast; if (r && r.turns) x.unshift(r.net > 0 ? 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles, and came out ahead.' : 'On the strand at Trate the sergeant sat in on the dockers\' counting-tiles.'); return x; }; }
 }
