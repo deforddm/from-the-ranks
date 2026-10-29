@@ -1796,7 +1796,7 @@ function settleRoll(r, c){
   S.rattled ??= {}; S.lastRoll = {who:r.who, stat:r.stat, tier:r.tier, ok:r.ok, pass:r.pass, margin:r.margin, nat:r.nat}; // first, so a choice's own extras can read ROLL()
   tally(r.pass ? 'checksOk' : 'checksFail'); if (r.tier === 'clean' || r.tier === 'crit') tally('checksClean'); if (r.tier === 'near') tally('checksNear');
   const extra = (x, cls) => { if (!x) return; try { if (x.fx) x.fx(); } catch(e) { console.warn('check extra', e); } if (x.t) note(typeof x.t === 'function' ? x.t() : x.t, cls); };
-  if (r.tier === 'crit') { gainXP(20); note(`A natural 20 for ${NAME(r.who)}. Oponn smiles, for now. +20 xp.`, 'good'); extra(c.crit || c.clean, 'good'); }
+  if (r.tier === 'crit') { gainXP(20); note(`A natural 20 for ${NAME(r.who)}. ${S && S.book === 'mt' ? 'The Errant smiles' : 'Oponn smiles'}, for now. +20 xp.`, 'good'); extra(c.crit || c.clean, 'good'); }
   else if (r.tier === 'clean') { gainXP(10); note(`Clean work from ${NAME(r.who)}. +10 xp.`, 'good'); extra(c.clean, 'good'); }
   else if (r.tier === 'near') {
     if (c.near && (c.near.fx || c.near.t)) extra(c.near, 'bad');
