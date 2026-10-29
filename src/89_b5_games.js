@@ -4,8 +4,8 @@
    - The Wager Board (Ch1, the barracks yard, b5g_wager): the bookmaker's chalk board for tomorrow's Special Drownings. Written with
      Chapter One (session 6); headline only: a chalked list of categories and odds, and one line of result the next morning. Never a
      named swimmer, never the swim itself.
-   - Harbour Tiles (Ch2) and Knucklebones (Ch3) are written below with their chapters; the Token Auction (Ch5) and the Whitefinders' Drill
-     (Ch6): the games pass adds them below.
+   - Harbour Tiles (Ch2) and Knucklebones (Ch3) are written below with their chapters; the Token Auction (Ch5) is written below with its
+     chapter; the Whitefinders' Drill (Ch6): the games pass adds it below.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim), keep their deeds on S.deeds, and pay once a book as the table closes. */
 
 /* ---- the frame: a night sky over Letheras, a lamp, a game's own timers ---- */
@@ -291,6 +291,96 @@ function playKnuckles(opt = {}){
 /* what the bones leave behind */
 function b5BonesPay(r){ if (!r) return; S.f.b5_bones = {net:r.net, games:r.games, won:r.won, lost:r.lost, pay:r.pay || 0}; save(); }
 
+/* ============ 4. The Token Auction ============
+   At the Sixth's fire on the road south (Ch5, b5g_tokens): the quartermaster sells what the column cannot carry and what nobody has
+   signed for, by sealed bids, the old army way. Each bidder drops a clay token with a figure scratched on it into his pot, and the figure
+   is docks written against the bidder's own line in the paybook, not docks in hand: Lether's way of paying for what you have not got.
+   Three lots, one at a time; you choose whose line the token goes on (the roster that walks), or no token. Two soldiers of the column bid
+   against you on every lot, sealed; the highest token takes the lot, and a tie goes to the token in the pot first, which is never yours.
+   Once a game the squad may watch the tokens go in (Wits; Perrit, the sergeant, Pessa and Tobet with an edge) and see the top figure
+   on the lot in hand; a near look costs a dock to the quartermaster for his trouble. No token may take a soldier past what the holder
+   will wait for (the line where the collectors come). As the table closes, every winning token is written as debt (b5Owe) and its lot
+   is handed over; then, once a book, a Grass Jacket will buy one consumable lot off you for 10 docks. Book Two's haggle for the feel. */
+const B5G_TOKENS = [5, 10, 15, 20];
+const B5G_RIVALS = ['A Grass Jacket', 'A garrison man from High Fort', 'A soldier of the Queen\'s Battalion', 'A Trate Legion straggler'];
+function playTokens(opt = {}){
+  let on = () => true;
+  const kitLot = !(S.kit || []).includes('b5_c5_cachebow') ? 'b5_c5_cachebow' : !(S.kit || []).includes('b5_c5_cacheblade') ? 'b5_c5_cacheblade' : null;
+  const LOTS = [
+    {id:'salves', name:'Two salves in a jar', what:'field salve in waxed paper, two of them, in a jar with a cut seal', rv:[3, 12], resell:true, give:() => { S.inv.salve = (S.inv.salve || 0) + 2; }, take:() => { S.inv.salve = Math.max(0, (S.inv.salve || 0) - 2); }},
+    kitLot ? {id:'kit', item:kitLot, name:ITEMS[kitLot].name, what:'out of a jar from somewhere up the road, the quartermaster says, and does not say where', rv:[6, 18], give:() => gain(kitLot)}
+      : {id:'linen', name:'Linen and gut', what:'a roll of boiled linen and a coil of surgeon\'s gut, sealed in wax', rv:[2, 10], resell:true, give:() => { S.inv.salve = (S.inv.salve || 0) + 1; }, take:() => { S.inv.salve = Math.max(0, (S.inv.salve || 0) - 1); }},
+    {id:'boots', name:'Dry boots for the squad', what:'six pairs of dry army boots, nobody\'s, in a sack', rv:[4, 14], give:() => { S.f.b5_c5_boots = 1; b5Rest('Dry boots all round, out of the quartermaster\'s sack, and the squad sits an hour with its feet out of the ash. Wounds close, mostly.'); }}];
+  const rivals = LOTS.map(() => { const a = B5G_RIVALS.slice().sort(() => R(3) - 1).slice(0, 2); return a; });
+  const g = MG.state = {lot:0, who:'sgt', pend:{}, wins:[], seen:[], read:false, peek:{}, roll:null, talk:'', closed:false, resold:false, sale:false};
+  const walkers = () => (S.squad || []).filter(id => id === 'sgt' || (TPL[id] && B5_DEBT0[id] != null));
+  const room = (id, n) => { const d0 = b5DebtStart(id), lim = d0 > 0 ? d0 * B5_PRESS : 50; return b5Debt(id) + (g.pend[id] || 0) + n <= lim; };
+  const line = id => id === 'sgt' ? 'your line' : `${NAME(id)}'s line`;
+  const rivalBid = L => L.rv[0] + R(L.rv[1] - L.rv[0] + 1);
+  const result = () => ({done:g.closed, wins:g.wins.map(w => ({id:w.id, name:w.name, bid:w.bid, who:w.who})), owed:g.wins.reduce((a, w) => a + w.bid, 0), resold:g.resold, lots:g.seen.length});
+  const apply = () => { if (g.applied) return; g.applied = true;
+    g.wins.forEach(w => { b5Owe(w.who, w.bid, `the quartermaster's token auction: ${w.name.replace(/^An? /, 'a ').replace(/^The /, 'the ').replace(/^Two /, 'two ').replace(/^Dry /, 'dry ').replace(/^Linen /, 'linen ')}`); const L = LOTS.find(x => x.id === w.id); if (L && L.give) L.give(); });
+    if (g.wins.length) mgDeed('b5TokensWon', g.wins.length); else mgDeed('b5TokensNone'); };
+  const finish = () => { apply(); g.closed = true; const sell = g.wins.map(w => LOTS.find(x => x.id === w.id)).filter(L => L && L.resell);
+    g.sale = !!sell.length && !S.f.b5_tokensResold; draw(); };
+  mgOpen({kick:'The road south · the quartermaster\'s fire', title:'The Token Auction', leaveText:'Leave the tokens', done:r => opt.after && opt.after(r), leave:() => { apply(); g.closed = true; mgClose(Object.assign(result(), {left:true})); }}); on = b5gOn();
+  const draw = () => { const L = LOTS[g.lot], done = g.closed;
+    mgPanel(`<div class="cpbar"><span>${done ? 'The pot is empty' : `Lot ${g.lot + 1} of ${LOTS.length}`}</span><span>${done ? '' : `On: <b>${esc(line(g.who))}</b>`}</span><span>${g.wins.length ? `Tokens won: <b>${g.wins.length}</b>` : 'Nothing won yet'}</span></div>
+      ${g.talk}${b5gRollHTML(g.roll)}
+      ${!done ? `<p class="fine"><b>${esc(L.name)}</b>: ${esc(L.what)}.${g.peek[g.lot] != null ? ` The top token in the pot says <b>${g.peek[g.lot]}</b>.` : ''}</p>` : ''}
+      <div class="row mgbtns">${done ? (g.sale ? `<button class="btn" id="tkSell" data-bot="1">Sell a lot on to the Grass Jacket for ${b5Coin(10)}</button>` : '') + `<button class="btn primary" id="tkDone" data-bot="1">Back to the fire</button>`
+        : B5G_TOKENS.map(n => `<button class="btn ${n === 10 ? 'primary' : ''}" data-bid="${n}" ${room(g.who, n) ? '' : 'disabled'} data-bot="1">A token for ${n}</button>`).join('') + `<button class="btn" id="tkPass" data-bot="1">No token on this lot</button>`
+          + (walkers().length > 1 ? `<button class="btn" id="tkWho" data-bot="1">Whose line: ${esc(g.who === 'sgt' ? 'yours' : NAME(g.who) + '\'s')}</button>` : '') + (!g.read ? `<button class="btn" id="tkRead" data-bot="1">Watch the tokens go in (once)</button>` : '')}</div>
+      <p class="fine">Sealed bids, the old army way: a figure on a clay token, in docks written against a soldier's line in the paybook, not docks in hand. The highest token takes the lot; a tie goes to the token in the pot first. No token may take a soldier past the line where the collectors come. The tokens are written as the table closes.</p>
+      <p class="hint keys"><kbd>1</kbd>–<kbd>4</kbd> a token · <kbd>0</kbd> no token · <kbd>W</kbd> whose line · <kbd>Esc</kbd> leave</p>`);
+    document.querySelectorAll('#mgPanel [data-bid]').forEach(b => b.onclick = () => { AUDIO.play('coin'); bid(+b.dataset.bid); });
+    if ($('#tkPass')) $('#tkPass').onclick = () => { AUDIO.play('click'); bid(0); };
+    if ($('#tkWho')) $('#tkWho').onclick = () => { AUDIO.play('click'); who(); };
+    if ($('#tkRead')) $('#tkRead').onclick = () => { AUDIO.play('click'); read(); };
+    if ($('#tkSell')) $('#tkSell').onclick = () => { AUDIO.play('coin'); sell(); };
+    if ($('#tkDone')) $('#tkDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; };
+  const who = () => { if (g.closed) return; const w = walkers(); g.who = w[(w.indexOf(g.who) + 1) % w.length] || 'sgt'; draw(); };
+  const read = () => { if (g.read || g.closed) return; g.read = true; const L = LOTS[g.lot];
+    if (g.bidsFor == null || g.bidsFor !== g.lot) { g.rb = rivals[g.lot].map(() => rivalBid(L)); g.bidsFor = g.lot; }
+    const r = g.roll = b5gRoll('wits', 13, null, [['she counts the tokens as they go in', 2, 'perrit'], ['you know a quartermaster\'s pot to the dock', 1, 'sgt'], ['she has watched canal-men bid for a cargo', 1, 'pessa'], ['he counts everything', 1, 'tobet']]);
+    if (r.ok) { g.peek[g.lot] = Math.max(...g.rb); g.talk = mgSay(r.who === 'sgt' ? '' : NAME(r.who), r.who === 'sgt' ? `You watch the tokens go into the pot the way you watched the bookmakers' chalk on the tiers at nine years old, and you see the scratches on the top one before it drops: ${g.peek[g.lot]}.` : `${NAME(r.who)} watches the two soldiers drop their tokens in, and leans to you. "The top one's a ${g.peek[g.lot]}," ${b5He(r.who)} says, very quietly.`); }
+    else if (r.tier === 'near') { g.peek[g.lot] = Math.max(...g.rb); if ((S.silver || 0) > 0) { S.silver -= 1; updSilver(); } g.talk = mgSay('The quartermaster', `"Watching my pot, Sergeant?" He holds out his hand. "A dock, for my trouble. You've seen it now." You have: the top token says ${g.peek[g.lot]}. <span class="dim">(−1 dock)</span>`); }
+    else g.talk = mgSay('', `${NAME(r.who)} watches the tokens go in, and they are clay, and they go in.`);
+    draw(); };
+  const bid = n => { if (g.closed || (n && !room(g.who, n))) return; const L = LOTS[g.lot];
+    if (g.bidsFor !== g.lot) { g.rb = rivals[g.lot].map(() => rivalBid(L)); g.bidsFor = g.lot; }
+    const top = Math.max(...g.rb), ti = g.rb.indexOf(top), mine = n > top;
+    if (n) mgDeed('b5TokensBid');
+    g.seen.push({id:L.id, mine:n, rb:g.rb.slice(), won:mine});
+    if (mine) { g.wins.push({id:L.id, name:L.name, bid:n, who:g.who}); g.pend[g.who] = (g.pend[g.who] || 0) + n; AUDIO.play('win'); }
+    else AUDIO.play(n ? 'lose' : 'click');
+    g.talk = mgSay('The quartermaster', `He tips the pot out on the cloth and turns the tokens over: ${g.rb.map((b, i) => `${rivals[g.lot][i].replace(/^A /, 'a ')}, ${b}`).join('; ')}${n ? `; and ${line(g.who)}, ${n}` : ''}.`) +
+      mgSay('', mine ? `${L.name} is the Sixth's, for ${b5Coin(n)} on ${line(g.who)}. The quartermaster makes a mark, and says he will write it when the pot is empty.` : n && n === top ? `A tie, and the tie goes to the token in the pot first, which was not yours. ${rivals[g.lot][ti]} takes it.` : n ? `${rivals[g.lot][ti]} takes it, for ${top}. Your token goes back in your hand.` : `${rivals[g.lot][ti]} takes it, for ${top}. The Sixth put nothing in.`);
+    g.lot++; if (g.lot >= LOTS.length) { g.lot = LOTS.length - 1; finish(); } else draw(); };
+  const sell = () => { if (!g.sale || g.resold || S.f.b5_tokensResold) return; const w = g.wins.find(x => { const L = LOTS.find(y => y.id === x.id); return L && L.resell; }); if (!w) return;
+    const L = LOTS.find(y => y.id === w.id); if (L.take) L.take(); S.silver = (S.silver || 0) + 10; updSilver(); S.f.b5_tokensResold = 1; g.resold = true; g.sale = false; mgDeed('b5TokensResold');
+    g.talk = mgSay('A Grass Jacket', `"${L.name}? I'll give you ten for it. Docks. Real ones." He counts them out. "The paybook can have the other figure."`) + mgSay('', `${L.name} goes to the Grass Jacket for ${b5Coin(10)} in hand. The token stays written against the line it was on, because that is how tokens work.`); draw(); };
+  /* the table: a burned wall, the fire, the quartermaster at his cart, a pot on a cloth, tokens */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, mo = REDUCE() ? 0 : 1;
+    const sk = ctx.createLinearGradient(0, 0, 0, H); sk.addColorStop(0, '#06070c'); sk.addColorStop(.4, '#161618'); sk.addColorStop(.41, '#1a1714'); sk.addColorStop(1, '#0e0c0a'); ctx.fillStyle = sk; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 24; i++) { ctx.fillStyle = `rgba(220,226,250,${(.1 + hash(i, 8941)*.35).toFixed(2)})`; ctx.fillRect(hash(i, 8942)*W, hash(i, 8943)*H*.32, 1, 1); }
+    ctx.fillStyle = '#242020'; ctx.beginPath(); ctx.moveTo(0, H*.62); for (let i = 0; i <= 8; i++) ctx.lineTo(W*.42*i/8, H*(.3 + hash(i, 8944)*.08)); ctx.lineTo(W*.42, H*.62); ctx.fill(); ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(0, H*.3, W*.42, H*.04); // the burned wall
+    const fx = W*.22, fy = H*.66, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy, H*.5, '#ff8a3a', .3*fl); ctx.globalCompositeOperation = 'source-over'; poly(ctx, [[fx - 10, fy], [fx - 3, fy - 20*fl], [fx + 1, fy - 8], [fx + 5, fy - 16*fl], [fx + 10, fy]], 'rgba(255,150,60,.95)'); poly(ctx, [[fx - 4, fy], [fx, fy - 9*fl], [fx + 4, fy]], '#fff1c2');
+    const fs = clamp(H/92, 1.5, 3.4); drawFigure(ctx, 'b5_c5_quartermaster', W*.84, H*.72, fs, t, {still:true, dir:-1});
+    ctx.fillStyle = '#3a3226'; ctx.fillRect(W*.36, H*.74, W*.36, H*.14); ctx.strokeStyle = '#5a4a32'; ctx.lineWidth = 2; ctx.strokeRect(W*.36 + 3, H*.74 + 3, W*.36 - 6, H*.14 - 6); // the cloth on a crate
+    const px = W*.54, py = H*.66, ps = Math.min(W*.06, H*.1); ell(ctx, px, py + ps*.55, ps*.6, ps*.14, 'rgba(0,0,0,.5)'); ctx.fillStyle = '#8a5a3a'; ctx.beginPath(); ctx.moveTo(px - ps*.36, py - ps*.4); ctx.quadraticCurveTo(px - ps*.6, py + ps*.1, px - ps*.3, py + ps*.55); ctx.lineTo(px + ps*.3, py + ps*.55); ctx.quadraticCurveTo(px + ps*.6, py + ps*.1, px + ps*.36, py - ps*.4); ctx.fill(); ell(ctx, px, py - ps*.42, ps*.32, ps*.1, '#2a1a10'); ctx.fillStyle = 'rgba(255,220,180,.18)'; ctx.fillRect(px - ps*.4, py - ps*.3, ps*.08, ps*.6); // the pot
+    const last = g.seen[g.seen.length - 1]; if (last) { const toks = [...last.rb.map(b => [b, 0]), ...(last.mine ? [[last.mine, 1]] : [])]; toks.forEach(([b, m], i) => { const tx = W*.39 + i*W*.08, ty = H*.81; ell(ctx, tx, ty + 2, 11, 4, 'rgba(0,0,0,.4)'); ell(ctx, tx, ty, 11, 9, m ? '#c89a6a' : '#a87a52'); ctx.strokeStyle = m ? '#e8c073' : '#5a3a22'; ctx.lineWidth = m ? 1.4 : 1; ctx.beginPath(); ctx.ellipse(tx, ty, 11, 9, 0, 0, 7); ctx.stroke(); b5gText(ctx, `${b}`, tx, ty + 4, 11, '#2a1a10', 'center', '\'IM Fell English\', serif', 600); }); }
+    if (!g.closed && mo) { const k = (t % 2400) / 2400; if (k < .4) { const u = k/.4, tx = lerp(W*.2, px, u), ty = lerp(H*.5, py - ps*.4, u) - Math.sin(u*Math.PI)*H*.12; ell(ctx, tx, ty, 4, 3.4, '#a87a52'); } } // a token arcing into the pot
+    b5gText(ctx, g.closed ? 'The pot is empty' : `Lot ${g.lot + 1}: ${LOTS[g.lot].name}`, W*.5, H*.12, Math.max(11, Math.min(16, W*.036)), 'rgba(232,192,115,.9)'); };
+  mgKeys({'1':() => bid(5), '2':() => bid(10), '3':() => bid(15), '4':() => bid(20), '0':() => bid(0), w:() => who(), ' ':() => { const b = $('#tkDone'); if (b) b.click(); }});
+  g.talk = mgSay('', `The quartermaster has set a pot on a cloth on a crate by the Sixth's fire, and a bag of clay tokens beside it, and a list. The column has more on its carts than it can pull, and some of it is nobody's. "Sealed bids," he says. "The old army way. A token each, with a figure on it." He shakes the bag. "In docks against your own line, soldiers. Not in your hand. You haven't got it in your hand."`) +
+    mgSay('The quartermaster', '"Highest token takes the lot. A tie goes to the token in first. I write it all when the pot\'s empty, and not before."') +
+    (b5In('perrit') ? mgSay('', 'Perrit sits down where she can see the pot, and you can see her starting to count.') : b5In('pessa') ? mgSay('', 'Pessa looks at the bag of tokens. "So that is how the army sells you boots," she says.') : '');
+  draw();
+}
+/* what the tokens leave behind */
+function b5TokensPay(r){ if (!r) return; S.f.b5_tokens = {wins:(r.wins || []).length, owed:r.owed || 0, resold:!!r.resold, lots:r.lots || 0}; save(); }
+
 /* ---- the chapters' fires: the games offered, and what they leave behind ---- */
 { const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
   const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; }; // beside the squad's talk, before the ways on
@@ -322,4 +412,13 @@ function b5BonesPay(r){ if (!r) return; S.f.b5_bones = {net:r.net, games:r.games
 `You come back round the fire with exactly what you sat down with, which the bargeman seemed to take personally.`,
       ch:back('b5_c3_fire')}; };
     const j = B5CH3.journal; if (j) B5CH3.journal = () => { const x = j(), r = S.f.b5_bonesLast; if (r && r.games) x.unshift((r.pay || 0) > 0 ? 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews, and came out ahead.' : 'On the dock at Kraig\'s Landing the sergeant threw knucklebones with the barge crews.'); return x; }; }
+
+  /* Ch5: the quartermaster's token auction at the fire on the road south */
+  if (typeof B5CH5 !== 'undefined') { wrap(B5CH5, 'b5_c5_fire', n => after(n, '^Talk with the squad', [{t:'The quartermaster has a pot and a bag of clay tokens out on a crate. Sealed bids, on the paybook.', tag:'The Token Auction', req:()=>(S.f.b5_c5_ph || 1) < 2 && !S.f.b5_tokens, go:()=>playTokens({after:r => { b5TokensPay(r); S.f.b5_tokensLast = r; talk('b5_c5_tokens_after'); }})}]));
+    B5CH5.dlg.b5_c5_tokens_after = () => { const r = S.f.b5_tokensLast || {}, w = r.wins || []; return {sp:'The fire on the road', scene:'b5_road_south', txt: !r.lots ?
+`You leave the quartermaster's pot before the first lot. He does not mind. There is a whole column to sell to.` : !w.length ?
+`The pot is empty, and none of it went to the Sixth. ${b5In('tobet') ? 'Tobet looks at the clay tokens in his hand, unspent. "First time I\'ve come away from the army owing nothing more," he says. "I should do it more often."' : 'The tokens go back in the bag.'}` :
+`The pot is empty, and the quartermaster writes it all in the clerk's book, by the fire, token by token: ${w.map(x => `${x.name.replace(/^An? /, 'a ').replace(/^The /, 'the ').replace(/^Two /, 'two ').replace(/^Dry /, 'dry ').replace(/^Linen /, 'linen ')}, ${b5Coin(x.bid)} on ${x.who === 'sgt' ? 'your line' : NAME(x.who) + '\'s'}`).join('; ')}.${r.resold ? ' One lot has gone on to a Grass Jacket for ten docks in hand, and the token stays written all the same.' : ''} ${b5In('perrit') ? 'Perrit adds it up out loud, which nobody asked her to do.' : 'The clerk blots it.'}`,
+      ch:back('b5_c5_fire')}; };
+    const j = B5CH5.journal; if (j) B5CH5.journal = () => { const x = j(), r = S.f.b5_tokensLast; if (r && r.lots) x.unshift((r.wins || []).length ? 'On the road south the quartermaster sold the column\'s spare stores by sealed tokens on the paybook, and the Sixth bought some of them, on its own lines.' : 'On the road south the quartermaster sold the column\'s spare stores by sealed tokens on the paybook. The Sixth bought nothing.'); return x; }; }
 }
