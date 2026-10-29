@@ -95,7 +95,14 @@ The brief gave the writer foes `thug` and `bruiser` kinds; the chapter's artist 
 
 **Balance** (`tools/balance.mjs`, a scratch `--patch` setting each fight in a fresh Book Five state at level 2, the four, a tile from `B5POOL[1]`, two salves; no rule changed; the harness's smart policy does not know Ammet is a healer, so it under-uses her): see the table below.
 
-BALANCE_TABLE
+| Fight | Soldier, level 2 (win · health lost · downs) | Bridgeburner, level 2 |
+|---|---|---|
+| `b5_c1_cutpurses` | 100% · 12% · 0.06 | 100% · 13% · 0.06 |
+| `b5_c1_tavern` (both grounds) | 100% · 22% · 0.13 | 94% · 47% · 1.44 |
+| `b5_c1_lane` | 100% · 19% · 0.13 | 100% · 33% · 1.06 |
+| `b5_c1_lowwalk` | 100% · 13% · 0.19 | 100% · 31% · 0.69 |
+
+16 smart runs each. Soldier meets the target (a smart player wins every fight). Bridgeburner is easier than the 75–80% target on the three smaller fights (the tavern is about right); that is a balance question for David, not changed here.
 
 ## Left open on purpose
 
