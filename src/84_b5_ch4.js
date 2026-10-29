@@ -325,7 +325,7 @@ ${carry ? `Ruuk is pulling his boots off at the edge, cheerfully, to wade it, wh
               go:'b5_c4_ford_over', fail:'b5_c4_ford_wet'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b5_c4_ford_over:()=>({sp:'The stream', scene:'b5_c4_forest', txt:
-`The company goes over on a rope with the big ones at the deep end, one soldier at a time, and the clerk in the middle with the case held over his head in both hands like an offering. Nothing is lost. The clerk checks the case on the far bank, and then again, and then sits down on a root.${b54If('perrit', `\n\nPerrit comes out of the water white to the lips and very straight, and walks on north without looking behind her. Nobody mentions it, which is the squad's kindness.`)}`,
+`The company goes over on a rope with the big ones at the deep end, one soldier at a time, and the clerk in the middle with the case held over his head in both hands like an offering. Nothing is lost. The clerk checks the case on the far bank, and then again, and then sits down on a root.${b54If('perrit', `\n\nPerrit comes out of the water white to the lips and very straight, and walks on north without looking behind her. Not one of them mentions it, which is the squad's kindness.`)}`,
       ch:[{t:'North.', go:()=>startExplore()}]}),
     b5_c4_ford_wet:()=>({sp:'The stream', scene:'b5_c4_forest', fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; }, txt:
 `The rope goes slack at the wrong moment and half the company goes in to the chest. Everyone comes out. Not everything does: one of the squad's salves goes down the stream in its waxed paper, toward the river, toward Trate, toward the sea. The clerk comes out with the case held up over his head and will not put it down for an hour.`,
@@ -414,7 +414,7 @@ He grins, with three teeth. "Want to see how you throw one without setting your 
             go:'b5_c4_oldhand_ok', fail:'b5_c4_oldhand_no'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c4_oldhand_ok:()=>({sp:'An old hand of the garrison', scene:'b5_highfort', fx:()=>{ S.f.b5_c4_brandOk = 1; gain('b5_c4_pitchpot'); }, txt:
-`He shows ${by({sgt:'you', _:'{who}'})} with a pot that is already cracked: the rag to a coal, a count of three while it catches, underarm and high and away from everyone, and the pot comes down in the ditch beyond the crest and breaks, and burns, a ring of yellow fire on the wet ground that the whole garrison on the tower stops to watch. Nobody claps. The old hand looks satisfied anyway.
+`He shows ${by({sgt:'you', _:'{who}'})} with a pot that is already cracked: the rag to a coal, a count of three while it catches, underarm and high and away from everyone, and the pot comes down in the ditch beyond the crest and breaks, and burns, a ring of yellow fire on the wet ground that the whole garrison on the tower stops to watch. The tower does not clap. The old hand looks satisfied anyway.
 
 "That," he says. "Not sorcery. Not anything. Pitch." He takes a whole pot out of the crate and puts it in ${by({sgt:'your', _:'{who}\'s'})} hands, carefully. "Keep that one. It's had its scorch already. It'll not go off in your pack." He thinks about it. "Probably."${b54If('ruuk', `\n\nRuuk is grinning. "My grandmother kept a fire all night when the wolves were close," he says. "She said they hate it because they remember what it is for."`)}`,
       ch:[{t:'"Thank you." Back along the rampart.', go:()=>startExplore()}]}),
@@ -427,7 +427,7 @@ He grins, with three teeth. "Want to see how you throw one without setting your 
 `The old hand is on his crate under the tower with his empty pipe, looking north. "Nineteen years on this rampart," he says. "First time I've seen their fires from it." He sucks the pipe. "Moroch Nevath's up on the royals' rampart, see him? The Prince's Finadd. Walking up and down." He spits. "Only one up there who looks like he's counted them."`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
     b5_c4_pots:()=>({sp:'Under the bastion tower', scene:'b5_highfort', txt:
-`The garrison's crate under the bastion tower: black-glazed clay pots packed in straw, each with a tarred rag for a wick, and a bucket of sand beside it, and a tin of coals with a lid on. Somebody has chalked on the crate, in a slow hand, *NOT FOR THE QUEEN*.${S.f.b5_c4_brandTried ? '' : `\n\nThe old hand sitting on it watches you read that, and does not explain.`}`,
+`The garrison's crate under the bastion tower: black-glazed clay pots packed in straw, each with a tarred rag for a wick, and a bucket of sand beside it, and a tin of coals with a lid on. On the crate, in a slow hand, someone has chalked *NOT FOR THE QUEEN*.${S.f.b5_c4_brandTried ? '' : `\n\nThe old hand sitting on it watches you read that, and does not explain.`}`,
       ch:[{t:'The old hand on the crate.', req:()=>b54Ph() <= 2, go:()=>talk(S.f.b5_c4_brandTried ? 'b5_c4_oldhand_again' : 'b5_c4_oldhand')},
           {t:'Not now.', go:()=>startExplore()}]}),
 
@@ -478,7 +478,7 @@ He looks at the Sixth's rampart, the tower, the crate under it. "You're at the e
 
 The pasture runs north from the fort a thousand paces to Dry Gully, an old drainage course gone to grass, and along the gully three ramparts of earth, like this one, the Grass Jackets on them in green. On the easternmost and largest a small fort of stone stands up out of the earth. Behind it, nearer the fort, on a rampart of their own, the royal standards, and engines: the Dresh ballistae, long-armed, sighted north.
 
-On the royals' rampart, small with distance, officers in bright cloaks are standing about in the evening light as if it were a feast day. One of them is not. He walks the rampart end to end, and back, and stops at the north edge and looks at the gully every time, and walks again.
+On the royals' rampart, small with distance, officers in bright cloaks are standing about in the evening light as though at a feast. One of them is not. He walks the rampart end to end, and back, and stops at the north edge and looks at the gully every time, and walks again.
 
 Past the gully the grass goes on to the foot of the mountains, and on it, very far off, a dark line that is not a hedge.${b54Say({tobet:`\n\nTobet has his eyes narrowed at the dark line. "Edur," he says. "And something in front of them that doesn't stand still." He counts, and stops counting. "A lot, Sergeant."`, ruuk:`\n\nRuuk looks at the dark line, and at the mountains above it. "The birds are gone off the pass," he says. "All of them."`, _:''})}` : !S.f.b5_c4_wraithsDone ?
 `From the firing step the whole field is moving. Sorcery has gone out from the royals' end of the line and come back along it; somewhere far east a column of white lightning stands on the field, and things in front of it are not standing any more. Shapes of dark come across the pasture ahead of the Edur, fast, and some of them are coming this way.` :
@@ -560,7 +560,7 @@ There is no wind down here. There is no sound but the squad's boots on the stone
       ch:[{t:'East, along the bed.', go:()=>startExplore()}]}),
     b5_c4_tracks:()=>({sp:'Dry Gully · night', scene:'b5_c4_field', txt: S.f.b5_c4_gullyDone ?
 `The gully bed where the Edur were. Nothing here now but their tracks, and the Sixth's, and the stones.` :
-`At the east end of the stretch, where the bank comes down and the gully bends, the tracks stop going anywhere. Somebody is standing in the bend. Four somebodies, tall, in dark leather, looking up at the nearest Grass Jacket rampart the way a buyer looks at a wall he means to have taken down.
+`At the east end of the stretch, where the bank comes down and the gully bends, the tracks stop going anywhere. Four of them are standing in the bend, tall, in dark leather, looking up at the nearest Grass Jacket rampart the way a buyer looks at a wall he means to have taken down.
 
 One of them turns his head.`,
       ch:[{t:'"Whitefinders." Out of the dark at them.', req:()=>!S.f.b5_c4_gullyDone, go:()=>startBattle('b5_c4_gully', {})},
@@ -656,9 +656,9 @@ All along the line, the bound things have been doing what the Grass Jacket said 
 
 The demon on the back slope is simply not there any more, and does not come back.
 
-Out on the field, past the ramparts, the Jheck's wolves are going among the wounded. Nobody on the rampart watches it for long.
+Out on the field, past the ramparts, the Jheck's wolves are going among the wounded. The rampart does not watch it for long.
 
-At the rampart's foot, where the wraiths came over, there is a wolf's tooth in the trampled turf, too long, on a broken thong, as if something wore it. Somebody in the squad picks it up. Nobody asks why it is too big for a wolf.`,
+At the rampart's foot, where the wraiths came over, there is a wolf's tooth in the trampled turf, too long, on a broken thong, as if something wore it. One of the squad picks it up. Not one of them asks why it is too big for a wolf.`,
       ch:[{t:'"Our wounded. In through the gate. Now."', onward:true, go:'b5_c4_wounded'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c4_wounded:()=>({sp:'The fort\'s gate', scene:'b5_highfort', again:()=>`The gate, and the wounded on the turf in front of it.`, txt: S.f.b5_c4_wounded ?
@@ -719,7 +719,7 @@ Behind the Sixth, the garrison is still on its tower. Ahead, the wood.`,
       ch:[{t:'Into the trees.', onward:true, go:()=>{ startExplore('b5_c4_wood'); talk('b5_c4_wood_arrive'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c4_wood_arrive:()=>({sp:'The wood west of the fort', scene:'b5_c4_forest', txt:
-`Under the trees the battle is suddenly a long way off: a noise like weather, through leaves. The Grass Jackets are scattering in every direction, by twos and threes, toward the river, toward the hills, toward anywhere. The Sixth keeps together.
+`Under the trees the battle is suddenly a long way off: a noise like a far river, through leaves. The Grass Jackets are scattering in every direction, by twos and threes, toward the river, toward the hills, toward anywhere. The Sixth keeps together.
 
 The light is failing early under the roof of the wood. The Sixth is on the edge of the Jheck's country here, and knows it, and goes quietly.${b54If('tobet', `\n\n"Something's been along here," Tobet breathes. "Big. Four feet."`)}${b54If('ruuk', `\n\nRuuk is a step ahead, in his own country at last, and for the first time today he is grinning. "Quiet," he says. "Quiet. And then south."`)}`,
       ch:[{t:'West, quietly.', go:()=>startExplore()}]}),
@@ -740,7 +740,7 @@ Ahead, between the trees, three grey shapes get up out of the ferns, unhurried, 
     b5_c4_wolves_after:()=>({sp:'The wood · dusk', scene:'b5_c4_forest', fx:()=>{ S.f.b5_c4_wolvesDone = 1; if (!S.f.b5_c4_toothGot) { S.f.b5_c4_toothGot = 1; gain('b5_c4_wolftooth'); } }, txt:
 `The last of them goes away into the ferns, limping, and as it goes it is for a moment not quite a wolf, and then it is gone, and nobody in the squad says what they saw.
 
-On the moss where the first one fell there is a tooth on a thong, a canine as long as a finger, as if something had been wearing it. ${b54Say({tobet:'Tobet picks it up, and turns it over, and puts it away. "Too big for a wolf," he says. Nobody discusses it.', _:'Somebody in the squad picks it up. Nobody discusses why it is too big for a wolf.'})}${b54If('ruuk', `\n\nRuuk is breathing hard and grinning. "Good," he says. "Now south. Quickly. Before more of them remember they are wolves."`)}`,
+On the moss where the first one fell there is a tooth on a thong, a canine as long as a finger, as if something had been wearing it. ${b54Say({tobet:'Tobet picks it up, and turns it over, and puts it away. "Too big for a wolf," he says. None of them discusses it.', _:'One of the squad picks it up. None of them discusses why it is too big for a wolf.'})}${b54If('ruuk', `\n\nRuuk is breathing hard and grinning. "Good," he says. "Now south. Quickly. Before more of them remember they are wolves."`)}`,
       ch:[{t:'South, out of the trees.', go:()=>startExplore()}]}),
     b5_c4_wood_edge:()=>({sp:'The wood\'s edge', scene:'b5_c4_forest', txt: S.f.b5_c4_wolvesDone ?
 `The trees thin to the south, and through them, the road.` :
