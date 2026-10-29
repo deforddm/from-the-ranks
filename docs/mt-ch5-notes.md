@@ -117,7 +117,16 @@ At the road fire, once, in phase 1. Three lots in turn: two salves in a jar; a c
 
 A playthrough fights two to four: 160–500 base, 96–300 xp. From level 6 (the brief's start for Chapter 5) a full road reaches 7; the chapter test, which forces each fight it walks, ends at level 6.
 
-BALANCE_PLACEHOLDER
+**Balance** (`tools/balance.mjs`, a scratch `--patch` setting each fight in a fresh Book Five state at level 6, Chapter 5, the four, a tile from `B5POOL[5]`, two salves, no gear; both areas of the farm played; no rule changed; 12 smart runs each):
+
+| Fight | Soldier, level 6 (win · health lost · downs) | Bridgeburner, level 6 |
+|---|---|---|
+| `b5_c5_farm` (both grounds) | 100% · 12% · 0.08 | 100% · 13% · 0.08 |
+| `b5_c5_press` (survive) | 100% · 10% · 0.00 | 100% · 12% · 0.00 |
+| `b5_c5_wagons` (with the picket) | 100% · 4% · 0.00 | 100% · 4% · 0.00 |
+| `b5_c5_factor` (survive) | 100% · 12% · 0.00 | 100% · 15% · 0.08 |
+
+Soldier meets the target. **Bridgeburner is far easier than its 75–80% on all four**, as in Chapter 4: the brief's fixed deserters, press-gang and bullies on Book Two's curve (`FSCALE`, `SOLDIER_LATE.mt`) are light foes for a level-6 squad, and the wagons' picket ally carries that fight. No number was tuned (balance goes to David). Levers, if wanted: the wagons' wave at round 1 with two bows, or no picket; the press-gang and the factor's men at five rounds; a fourth deserter and the leader's `rally` on the farm.
 
 ## Left open on purpose
 
@@ -151,4 +160,6 @@ BALANCE_PLACEHOLDER
 
 ## Tests
 
-TESTS_PLACEHOLDER
+- `tools/b5ch5_test.mjs` (16 checks): a fresh Chapter Five after `pay`/`dead`/`warn`/`hold` with Brune walking (disarmed, a spear on the pile): the first halt and the reading (the Walker), the first cache and its spoil, the refugees (Trate's fall; the dockhand), the cart, the Grass Jacket's rumours (no name, no place), the courier's girth (cut), the Nerek family, the way on shut, the claim and Pessa walking instead of Brune (her 120, the pack), salves, the trick and the rearming (the spear back, the cache's two), the farm both grounds and its 12, the fire and its talk (the lamp, the groves line), Perrit's reading for Pessa, the pay desk, **the Token Auction played through in the DOM** (a 20-token wins the salves; the debt written only as the table closes; resold for 10 once), the rear picket and Brans Keep (road-money 10), the factor, the keep fire, the key both ways (sign: loyalties, +40, the scale, the fine at half then the interest by the numbers, the wagons with the picket and the wave, the 10, the morning and the end; refuse: loyalties, no interest, the ledger line, the factor's men, survive, the end); a `run`/`watch`/`salvage`/`swim` road with nobody (armed, the claim +2, the press-gang fought, the ledger burned, Pessa with room, the cache as finds; let them keep her); a `--from=5` style save (every node renders in every phase and both keys, the cache's fallback rearm, the roster offers Ruuk, the Mark heals in a fight).
+- The session's checks: `python3 build.py`; `node --check` on the changed files; `lint` 0 errors (26 warnings, none Chapter 5's); `repeat_scan` (every Ch5 hub reads `again`; the keep's rest folds); `trope_scan --files` (85: the way 2, silence 1, nobody 6, edge 2 in 9,498 words; Book Five within budget); `recruit_scan` (LISTED 0, COUNT 0 new; ABSENT only Pessa in her own recruiting scenes) and `recruit_test` pass; `b5ch1`–`b5ch5`, `b5engine`, `reading`, `audio`, `gear_roles`, `roster`, `shelf`, `access`, `series`, `onward` (after making the key's and the picket's onward steps go by node, so the unspoken-to line never shows on a node that stays), `back`, `fit`, `recheck`, `trope` pass (`yesbut_test` does not exist); `play.mjs 1 --book=mt` plays Chapters 1 to 5 through (level 7, road swim/dead/watch/run/sign); `play.mjs 3 --book=mt --from=5` 3/3 (both Ch4 keys; Pessa walks in two); `play.mjs 1` (Book One) 1/1. `run_all` was not run this session (the lead's instruction).
+- Screenshots at 390px: `/tmp/claude-0/-home-claude/a618115a-4a1c-549c-b1f5-85dc892eec82/scratchpad/mt/shots/ch5/`.
