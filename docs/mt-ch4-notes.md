@@ -93,7 +93,16 @@ Items read later: `b5_c4_helm` and `b5_c4_wolftooth` and `b5_c4_pitchpot` are tr
 
 A playthrough fights two or three: 440–560 base, 264–336 xp, level 5 → 6 (the brief's curve; the chapter test ends at level 6 both ways).
 
-BALANCE_TABLE
+**Balance** (`tools/balance.mjs`, a scratch `--patch` setting each fight in a fresh Book Five state at level 5, Chapter 4, the four, a tile from `B5POOL[4]`, two salves, no gear; both areas of each two-area fight played; no rule changed; the harness's smart policy under-uses Ammet):
+
+| Fight | Soldier, level 5 (win · health lost · downs) | Bridgeburner, level 5 |
+|---|---|---|
+| `b5_c4_gully` | 100% · 13% · 0.13 | 100% · 12% · 0.13 |
+| `b5_c4_wraiths` (both grounds, with the garrison) | 100% · 12% · 0.19 | 100% · 22% · 0.50 |
+| `b5_c4_demon` (both grounds, the survive) | 100% · 15% · 0.44 | 100% · 17% · 0.38 |
+| `b5_c4_wolves` | 100% · 13% · 0.06 | 100% · 12% · 0.06 |
+
+16 smart runs each (the harness prints ch 0 and level 1 in its own columns; the patch sets Chapter 4 and level 5). Soldier meets the target (a smart player wins every fight). **Bridgeburner is easier than its 75–80% on all four**: the fights are the brief's fixed foes on the book's own curve (`FSCALE`, `SOLDIER_LATE.mt`), and the garrison's two allies carry the wraiths. No number was tuned in this chapter (the brief: balance goes to David); the obvious levers, if David wants Bridgeburner harder here, are a third wave on the wraiths, the wolves' wave at round 1, or the demon's back slope at five rounds.
 
 ## Left open on purpose
 
@@ -120,4 +129,4 @@ BALANCE_TABLE
 ## Tests
 
 - `tools/b5ch4_test.mjs` (19 checks): a fresh Chapter Four after a `watch` Chapter Three with Ruuk walking, through the march (Ruuk guides; the north shut until the ford; the carry; the hill's gifts), the arrival and the reading (the Wall), the posting and the rations, the trick and the brand-pot, the cadre-master, the Grass Jacket, the straggler (and the hard limits on his words), the view (Moroch far off), the gate, the fire (no game) and its talk, the pay desk, the gully patrol and its pay, the night, dawn and the eleven (Perrit's grief after `watch`; never "last"), the wraiths with the garrison (both grounds forced, the Brand-Pot thrown and burning inside), the break and the helm; `hold` (the loyalties, the demon both grounds and the survive objective, the tooth, the wolves' line, "Not now" and the fire's resume, the wounded, the word, `b5Disarm` with a spear on the pile and the trinkets kept, the file south, the end at level 6) and `run` from the same moment (the loyalties, the wood, the edge locked, the wolves, the tooth, the road armed, the word, the end at level 6); after a `warn` Chapter Three without Ruuk (the scout, the noted company, Perrit's warmer line); and a `--from=4` style save (Brune walks, Ruuk waits) where every node renders in every phase and both keys and the roster swaps Ruuk in.
-- The session's checks: TESTS_LINE
+- The session's checks: `python3 build.py`; `node --check` on the five changed files; `lint` 0 errors; `repeat_scan` (every Ch4 hub reads `again`); `trope_scan --files` (84: the way 3, silence 4, nobody 7, edge 2 in 8,803 words; Book Five within budget); `recruit_scan` and `recruit_test` pass; `b5ch1`, `b5ch2`, `b5ch3`, `b5ch4`, `b5engine`, `reading`, `audio`, `gear_roles`, `roster`, `shelf`, `access`, `series`, `onward`, `back`, `fit`, `recheck`, `yesbut`, `trope` pass; `play.mjs 1 --book=mt` plays Chapters 1 to 4 through (to `hold`, level 7), `play.mjs 3 --book=mt --from=4` 3/3 (both keys; one `run` road without the optional gully ended at level 5), and `play.mjs 1` (Book One) 1/1. `run_all` was not run this session (the lead's instruction).

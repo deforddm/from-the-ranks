@@ -64808,7 +64808,7 @@ Object.assign(FIGX, {
     h.torso('#6e6e6a', '#262624', 6.2); ctx.strokeStyle = 'rgba(0,0,0,.26)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 5; i++) { ctx.moveTo(-5.8, -4 + i*2.2); ctx.lineTo(5.8, -4 + i*2.2); } ctx.stroke(); // scale
     ctx.fillStyle = '#2a1e14'; ctx.fillRect(-6, 3.2, 12, 1.4);
     h.head(b2Pick(o, ['#b08a6a', '#a8805e', '#ba9272']), 4.3, -11.2); h.look(); ctx.fillStyle = 'rgba(30,20,14,.45)'; ctx.fillRect(-3.4, -8.6, 7, 1.4); // stubble: nineteen years of it, some of them
-    ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI, 0); ctx.fillStyle = h.armor('#8a8a86', '#2a2a28'); ctx.fill(); ctx.fillRect(-5.4, -12.8, 10.8, 1.2); ctx.fillStyle = '#6a6a66'; ctx.fillRect(-.6, -12.4, 1.2, 4); // the helm, a nasal
+    ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI, 0); ctx.fillStyle = h.armor('#8a8a86', '#2a2a28'); ctx.fill(); ctx.fillRect(-5.4, -12.8, 10.8, 1.2); ctx.fillStyle = '#6a6a66'; ctx.fillRect(-.45, -12.4, .9, 2.4); // the helm, a short nasal
     h.shield('#5a6878', '#1c2228', 5.6, -7.4, 0); ctx.strokeStyle = '#7a3a22'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.arc(-6.4, 1.2, 5.2, 0, 7); ctx.stroke(); // the garrison's rim, painted
     h.sword(); ctx.restore(); },
   /* a Grass Jacket: a lighter quilted coat, an open iron helm with a strip of faded green cloth tied at its crest and trailing */
@@ -65017,8 +65017,11 @@ SCENEX.b5_c4_surrender = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RED
     x.fillStyle = '#5a5040'; x.beginPath(); x.moveTo(W*.46, hz); x.lineTo(W*.54, hz); x.lineTo(W*.9, H); x.lineTo(W*.3, H); x.fill(); // the road south, toward the viewer
     x.fillStyle = '#1e1c16'; x.fillRect(W*.02, hz - H*.06, W*.12, H*.06); x.fillRect(W*.04, hz - H*.16, W*.04, H*.1); // the fort and its tower, far behind
     if (run) { x.fillStyle = '#121a0e'; x.beginPath(); x.moveTo(0, hz + H*.04); for (let i = 0; i <= 10; i++) x.lineTo(W*.28*i/10, hz - H*(.06 + hash(i, 5471)*.06)); x.lineTo(W*.3, H); x.lineTo(0, H); x.fill(); } // the wood the Sixth came out of
-    else { const px = W*.2, py = H*.82; for (let i = 0; i < 40; i++) { const a = (hash(i, 5472) - .5)*2.6, l = W*(.03 + hash(i, 5473)*.05); x.strokeStyle = ['#8a8a8a', '#6a5030', '#a8a8a4', '#5a4026'][i % 4]; x.lineWidth = i % 4 === 1 ? 1.8 : 1.2; x.beginPath(); x.moveTo(px + Math.cos(a)*l*.2 - l/2*Math.cos(a), py - hash(i, 5474)*H*.06); x.lineTo(px + Math.cos(a)*l/2, py - hash(i, 5474)*H*.06 + Math.sin(a)*l*.4); x.stroke(); } // the pile: swords, spears, bows
-      x.strokeStyle = '#5a4026'; x.lineWidth = 1.2; for (let i = 0; i < 3; i++) { x.beginPath(); x.arc(px - W*.04 + i*W*.03, py - H*.02, W*.025, Math.PI*1.1, Math.PI*1.9); x.stroke(); } } // bows across the top
+    else { const px = W*.2, py = H*.84, R = W*.11; ell(x, px, py + H*.01, R*1.15, H*.035, 'rgba(0,0,0,.45)'); ell(x, px, py - H*.005, R, H*.04, '#2a261c'); // the pile, a low heap on the turf
+      for (let i = 0; i < 26; i++) { const a = (hash(i, 5472) - .5)*1.3 + (i % 2 ? Math.PI : 0), l = R*(.8 + hash(i, 5473)*.7), cx = px + (hash(i, 5476) - .5)*R*1.1, cy = py - H*.01 - hash(i, 5474)*H*.05, dx = Math.cos(a)*l/2, dy = Math.sin(a)*l*.25;
+        const k = i % 3; x.strokeStyle = k === 0 ? '#b8b8b4' : k === 1 ? '#6a5030' : '#9a9a96'; x.lineWidth = k === 1 ? 2 : 1.6; x.beginPath(); x.moveTo(cx - dx, cy - dy); x.lineTo(cx + dx, cy + dy); x.stroke(); // blades and shafts
+        if (k !== 1) { x.strokeStyle = '#3a2a18'; x.lineWidth = 2.4; x.beginPath(); x.moveTo(cx - dx, cy - dy); x.lineTo(cx - dx*.82, cy - dy*.82); x.stroke(); x.strokeStyle = '#8a7040'; x.lineWidth = 1; x.beginPath(); x.moveTo(cx - dx*.82 - dy*.3, cy - dy*.82 + dx*.08); x.lineTo(cx - dx*.82 + dy*.3, cy - dy*.82 - dx*.08); x.stroke(); } } // hilts and guards
+      x.strokeStyle = '#5a4026'; x.lineWidth = 1.4; for (let i = 0; i < 3; i++) { x.beginPath(); x.arc(px - R*.5 + i*R*.5, py - H*.05, R*.28, Math.PI*1.1, Math.PI*1.9); x.stroke(); } } // bows across the top
   }), 0, 0, W, H);
   for (let i = 0; i < 26; i++) { const k = ((i/26) + (mo ? t/60000 : 0)) % 1, px = lerp(W*.5, W*.62, k), py = lerp(hz + H*.02, H*.84, k), s = lerp(.25, 1.1, k); drawFigure(ctx, i % 5 === 2 ? 'b5_c4_grassjacket' : 'b5_c4_garrison', px + (hash(i, 5475) - .5)*W*.04*s, py, s, t, {still:!mo, phase:i, dir:1}); } // the long file south
   [[.36, .62], [.32, .7], [.76, .6]].forEach(([u, v], i) => drawFigure(ctx, 'b5_edur', W*u, H*v, .9, t, {still:true, dir:u < .5 ? 1 : -1, phase:i})); // the Edur watching
