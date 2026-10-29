@@ -63102,7 +63102,8 @@ const B5CH3 = {
         : b53Ph() === 2 ? (!b53Key() ? 'The day before something. The fire, at evening, for the night\'s orders.' : !b53KeyDone() ? (b53Key() === 'watch' ? 'The barge-line, where the haulers sleep.' : 'Up the bank, after the runner.') : 'The fire.')
         : 'Dawn. The Finadd has the orders.',
       npcs:[
-        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:6, y:5, node:()=>b53Ph() >= 3 ? 'b5_c3_dawn' : 'b5_c3_ennic', show:()=>b53Ph() === 1 || b53Ph() >= 3, fresh:()=>b53Ph() >= 3 ? !S.f.b5_c3_dawn : !S.f.b5_c3_ennic},
+        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:6, y:5, node:()=>b53Ph() >= 3 ? 'b5_c3_dawn' : b53Ph() === 2 ? 'b5_c3_ennic_day' : 'b5_c3_ennic', fresh:()=>b53Ph() >= 3 ? !S.f.b5_c3_dawn : b53Ph() === 2 ? !S.f.b5_c3_ennicDay : !S.f.b5_c3_ennic},
+        {id:'sailor', name:'A sailor off the ships', kind:'b5_c3_bargeman', x:13, y:8, node:()=>'b5_c3_ships', fresh:()=>!S.f.b5_c3_ships},
         {id:'soldier', name:'A soldier of the Cold Clay', kind:'b5_letherii', x:9, y:2, node:()=>'b5_c3_regiment', fresh:()=>!S.f['b5_c3_reg' + b53Ph()]},
         {id:'cadre', name:'A young mage in grey piping', kind:'b5_c3_cadremage', x:12, y:5, node:()=>S.f.b5_c3_linkTried ? 'b5_c3_cadre_again' : 'b5_c3_cadre', show:()=>b53Ph() <= 2, fresh:()=>!S.f.b5_c3_linkTried},
         {id:'ruuk', name:'A Faraed boy with throwing-spears', kind:'ruuk', x:15, y:2, node:()=>S.f.b5_ruukDone == null ? 'b5_c3_ruuk' : 'b5_c3_ruuk_again', show:()=>!b5In('ruuk') && S.f.b5_ruukDone !== 0 && b5CanRecruit('ruuk'), fresh:()=>S.f.b5_ruukDone == null},
@@ -63128,7 +63129,7 @@ const B5CH3 = {
             "~.....c.....cc~~",
             "~~~~~~~~~~~~~~~~" ],
       walk:'.-', triggers:{r:'b5_c3_rope', '^':'b5_c3_to_dock'}, start:{x:7, y:2},
-      quest:()=> !S.f.b5_c3_riverDone ? 'The mooring lines. Somebody should check them.' : 'Up the plank to the dock.',
+      quest:()=> !S.f.b5_c3_riverDone ? 'The mooring lines want checking.' : 'Up the plank to the dock.',
       npcs:[] },
 
     /* 16 x 12 (b5_c3_bank, night; 'warn' only). The upriver bank: ~ the river on the west  , reeds  . the path  # rock  x a dead tree
@@ -63156,7 +63157,7 @@ const B5CH3 = {
       map:[".t..t..o","......oo","..t...oo",".......o","oooo.ooo","......t.","..t.....",".....t..","........","......t."],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
       foes:[['b5_c3_riverman',1,1],['b5_c3_riverman',5,0],['b5_c3_riverman',3,2],['b5_c3_pole',4,3]], xp:150, after:'b5_c3_rivermen_after',
-      waves:[{round:2, foes:[['b5_c3_riverman',7,5],['b5_c3_riverman',0,5]], text:'Two more come up out of the river, over the side of the barge, with knives in their teeth and the water running off them.'}],
+      waves:[{round:2, foes:[['b5_c3_riverman',7,5],['b5_c3_riverman',0,5],['b5_c3_riverman',7,6]], text:'Three more come up out of the river, over the side of the barge, with knives in their teeth and the water running off them.'}],
       preText:()=>`The thieves are on the near barge and the next one, black shapes against the water, with knives at the mooring lines. One of them has a bargeman's pole, and is using it to keep the barges apart while the others cut.`,
       stage2:{title:'The drifting barge', xp:70,
         text:()=>`The last of them on the near barge goes over the side, and the squad hears it before it sees it: the creak of a line giving, and the slap of water. The outer barge is loose. It swings off the others into the current with a lantern on its cargo and three men on its deck, and the one at the stern, the big one, is laughing.\n\nThere is a moment when it is close enough to jump. ${b53Say({thegg:'Thegg jumps first. The barge rocks under him and steadies. "Behind me," he says, and the rest of the squad comes across behind him.', _:'You jump. The squad comes after you.'})}`,
@@ -63186,9 +63187,9 @@ const B5CH3 = {
 
   foes:{
     /* river thieves, a bargeman's pole, and their boss */
-    b5_c3_riverman:{name:'River thief', sig:'r', kind:'b5_c3_riverman', hp:11, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in low with a knife at'},
+    b5_c3_riverman:{name:'River thief', sig:'r', kind:'b5_c3_riverman', hp:12, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in low with a knife at'},
     b5_c3_pole:{name:'Thief with a bargeman\'s pole', sig:'p', kind:'b5_c3_pole', hp:16, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['reach', 'shove'], verb:'drives the end of a barge-pole into'},
-    b5_c3_riverboss:{name:'The river thieves\' boss', sig:'B', kind:'b5_c3_riverboss', hp:26, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a cargo-hook round at'},
+    b5_c3_riverboss:{name:'The river thieves\' boss', sig:'B', kind:'b5_c3_riverboss', hp:30, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a cargo-hook round at'},
     /* a soldier of the regiment, drunk, celebrating: fists and boots */
     b5_c3_drunk:{name:'Drunk regiment soldier', sig:'d', kind:'b5_c3_drunk', hp:12, ac:11, atk:3, dmg:[1,6,0], rng:1, mv:4, init:0, sk:['shove'], verb:'swings a fist at'} },
 
@@ -63235,7 +63236,7 @@ const B5CH3 = {
     f.b5_c3_riverDone && 'River thieves came for the barges on the first night. One barge went down the river with their boss on it. The squad went with it, and brought it back.',
     f.b5_ruukDone === 1 && 'Ruuk, a Faraed guide paid by the day, walks with the squad.',
     f.b5_ruukDone === 2 && 'Ruuk, a Faraed guide paid by the day, stays with the scouts for now.',
-    f.b5_c3_news && 'Barracks talk at the Landing: the King wants the Ceda\'s mages to strike first, the Preda has called the Whitefinders back north from their exercises, and a Letherii has gone over to the Edur. Nobody says who.',
+    f.b5_c3_news && 'Barracks talk at the Landing: the King wants the Ceda\'s mages to strike first, the Preda has called the Whitefinders back north from their exercises, and a Letherii has gone over to the Edur. Which one is anybody\'s guess.',
     'The Sixth guards the regiment\'s barges at Kraig\'s Landing, three buildings and a dock near the border, with the Cold Clay Battalion camped round it.'].filter(Boolean); },
 
   dlg:{
@@ -63280,6 +63281,25 @@ He closes the book. "The Cold Clay's men say the river thieves come down out of 
       ch:[{t:'"It was, Finadd."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
 
+    b5_c3_ennic_day:()=>({sp:B5_FINADD.name, scene:'b5_landing', fx:()=>{ S.f.b5_c3_ennicDay = 1; },
+      again:()=>`Finadd Ennic, with his book shut. "Evening, Sergeant. The orders come at evening."`, txt:
+`Finadd Ennic is walking the dock with his book under his arm and not reading it, which is unusual. He has been to the hostel again, and come out again, with nothing new written down.
+
+"The regiment's officers are very busy today," he says, "and very cheerful, and none of them will tell me why." He looks up the slope at the tied flaps. "I have a feeling I am going to be told this evening, in writing, and that it will not need my signature." He considers that. "I find I mind more than I expected."${S.f.b5_c3_riverDone ? `
+
+He lowers his voice. "The barge-master spoke well of the Sixth. In front of the Cold Clay's officers. I wrote it down before he could take it back."` : ''}`,
+      ch:[{t:'"The orders at evening, Finadd."', go:()=>startExplore()},
+          {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- the ships at the dock: the King's banner and the Ceda's, close ---- */
+    b5_c3_ships:()=>{ const ph = b53Ph();
+      return {sp:'The ships at the dock', scene:'b5_c3_tents', fx:()=>{ S.f.b5_c3_ships = 1; },
+        again:()=>`The two ships at the dock, and a sailor coiling a line. "Not ours to say, soldier."`, txt:
+`Two river ships at the end of the dock, broad and shallow, with oars as well as sails. One flies the King's banner. The other flies the Ceda's, and has guards of its own at the foot of its plank who are not the regiment's and do not look at the white fingertips on anybody's shields.
+
+A sailor is coiling a line on the King's ship, slowly, so as to be seen working. ${ph === 1 ? `"Crates," he says, when you ask what they brought. "For the tents up the slope. Sealed. We carried them up the river from Trate and we carried them up the slope, and nobody told us what was in them, and we didn't ask." He coils. "You don't, with the Ceda's crates."` : ph === 2 ? `"We're to sail at first light tomorrow," he says. "Back down to Trate, or wherever we're told." He looks at the mountains. "After tonight, they say. Everybody says *after tonight* today."` : `He has stopped coiling, and is looking at the ash on the deck. "We sail on the tide," he says. "Whatever that was, we're not to talk about it." He sweeps a little of it over the side with his foot. "So I won't."`}`,
+        ch:[{t:'Not now.', go:()=>startExplore()}]}; },
+
     /* ---- a soldier of the Cold Clay: the camp's talk, phase by phase ---- */
     b5_c3_regiment:()=>{ const ph = b53Ph();
       return {sp:'A soldier of the Cold Clay', scene:ph >= 2 && !b53KeyDone() ? 'b5_c3_tents' : 'b5_landing', fx:()=>{ S.f['b5_c3_reg' + ph] = 1; S.f.b5_c3_news = 1; },
@@ -63288,13 +63308,13 @@ He closes the book. "The Cold Clay's men say the river thieves come down out of 
 
 "Whitefinders," he says. "You're a long way from High Fort." He stirs the pot. "Everybody's a long way from somewhere this summer. The cadre's from Awl. The ships are from Letheras. Us, we're from Trate, which is a long way from nowhere."
 
-He lowers his voice, because that is what you do with the next part. "You'll have heard the war's declared. You won't have heard this. One of ours went over to them. A Letherii. Went up into the Edur country and swore to their king." He shakes his head. "Nobody says who. Everybody says it's true."` : ph === 2 ?
+He lowers his voice, because that is what you do with the next part. "You'll have heard the war's declared. You won't have heard this. One of ours went over to them. A Letherii. Went up into the Edur country and swore to their king." He shakes his head. "No name. Everybody says it's true."` : ph === 2 ?
 `The Cold Clay soldier is up early, and polishing a helmet that does not need it. Up the slope the cadre's tents have their flaps tied shut, and there are more guards round them than there were last night.
 
 "Three of them, in there," he says, with his chin, not his hand. "The sorceress from Trate, and two others. Very big. The biggest there is, after the Ceda." He spits, carefully, away from the tents. "Tonight, they say. Over the mountains. On the villages." He polishes. "We're to stay in the lines. Nobody's to go near."` :
 `The Cold Clay soldier is sitting on his bucket with his voice gone from cheering and a cup in his hand, looking at the mountains, which are grey again.
 
-"Did you see it?" he says. "Course you did. Everybody saw it." He drinks. "Over the mountains. I never saw anything like it. Nobody did." He looks into the cup. "Best thing I ever saw," he says. And then, after a while, not looking up: "Nothing came down off them after. Nothing at all."`,
+"Did you see it?" he says. "Course you did. Everybody saw it." He drinks. "Over the mountains. I never saw anything like it. None of us did." He looks into the cup. "Best thing I ever saw," he says. And then, after a while, not looking up: "Nothing came down off them after. Nothing at all."`,
         ch:[{t:'Not now.', go:()=>startExplore()}]}; },
 
     /* ---- the rise: the mages' tents, seen at a distance ---- */
@@ -63311,7 +63331,7 @@ On the ships at the dock the King's banner and the Ceda's hang side by side. The
 
 "Whitefinders," she says. "You've a mage?" ${b5In('perrit') ? `She sees Perrit, and the pouch at her hip, and brightens. "Cadre. Which school?" Perrit tells her. "Oh, *them*," the young mage says, with sympathy.` : `She sees there isn't one. "No? Pity. The Whitefinders' cadre is up at High Fort, I suppose."`}
 
-She finishes the apple. "I'm not wanted in there till tonight," she says, with a nod up the slope. "They've three of the biggest there are in those tents, and they don't want the rest of us breathing on their sums. So." She holds up two fingers. "Do you want to see something useful? The cadre's link. It's how we aim a hundred bows at once. It works for a squad. It isn't secret. Nobody bothers to teach it to soldiers, that's all."`,
+She finishes the apple. "I'm not wanted in there till tonight," she says, with a nod up the slope. "They've three of the biggest there are in those tents, and they don't want the rest of us breathing on their sums. So." She holds up two fingers. "Do you want to see something useful? The cadre's link. It's how we aim a hundred bows at once. It works for a squad. It isn't secret. The schools just don't bother teaching it to soldiers, that's all."`,
       ch:[{t:'"Show us."', check:['wits', 16], trick:'b5_c3_link', req:()=>!S.f.b5_c3_linkTried, fx:()=>{ S.f.b5_c3_linkTried = 1; },
             edges:id=>[id === 'perrit' && ['the cadre is hers, and the sign is only half new', 3], id === 'tobet' && ['he has watched a hundred bows aimed by somebody else', 1], id === 'thegg' && ['the Hold does not much like Thegg, or he it', -2], id === 'ruuk' && ['he will not look at it', -1]],
             near:{t:()=>{ const w = b53Who(); return `Yes, but the thread goes through ${b53Nm(w)} like cold water through a cracked tooth, and ${b53Nm(w)} ${b53V(w, 'come', 'comes')} out of it with a nosebleed and a head that rings: rattled.`; }, fx:()=>b53Rattle(b53Who())},
@@ -63393,7 +63413,7 @@ The company clerk, fetched from the dock, writes him into the paybooks by lampli
     b5_c3_trader:()=>({sp:'The trader\'s man', scene:'b5_landing', again:()=>`The trader's man, with his book. "The cut, Sergeant."`, txt:
 `A man in a good coat that has been up a river is waiting by the scouts' path with a small book and a smaller pencil: the Trate grain trader's man, come up with the regiment's barges to collect. He has the look of somebody who is owed by everyone at the Landing and has written all of it down.
 
-"The Faraed boy," he says, nodding at ${b5In('ruuk') ? 'Ruuk' : 'the scouts\' fire'}. "His clan's grain. My master takes his cut of the boy's day-rate at the paymaster's table, when the army pays." He opens the book. "The army doesn't pay the Sixth's people through the regiment's table, it seems. So I've come to you." He smiles. "Twenty docks clears his day-rate of me, Sergeant, this season. Or I write it on the grain at fifteen more, and he pays it when he can."${b53If('ruuk', `\n\nRuuk does not look at the man at all. "He is a bad man," he says to you, cheerfully. "The grain was good."`)}`,
+"The Faraed boy," he says, nodding at ${b5In('ruuk') ? 'Ruuk' : 'the scouts\' fire'}. "His clan's grain. My master takes his cut of the boy's day-rate at the paymaster's table, when the army pays." He opens the book. "The army doesn't pay the Sixth's people through the regiment's table, it seems. So I've come to you." He smiles. "Twenty docks clears his day-rate of me, Sergeant, this season. Or I write it on the grain at fifteen more, and he pays it when he can."${b53If('ruuk', `\n\nRuuk is studying a bird on the slope instead of the man. "He is a bad man," he says to you, cheerfully. "The grain was good."`)}`,
       ch:[{t:'"Twenty docks. Clear him."', req:()=>(S.silver || 0) >= 1, fx:()=>{ b5Pay('ruuk', 20, 'The trader\'s cut'); S.f.b5_c3_trader = 'paid'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
           {t:'"Write it on the grain."', fx:()=>{ b5Owe('ruuk', 15, 'The trader\'s cut'); S.f.b5_c3_trader = 'ride'; S.f.b5_c3_traderDone = 1; }, go:'b5_c3_trader_done'},
           {t:'"The army pays its guides itself. Nothing in the regiment\'s book says the trader comes first."', check:['guile', 14], req:()=>!S.f.b5_c3_traderTried, fx:()=>{ S.f.b5_c3_traderTried = 1; },
@@ -63426,7 +63446,7 @@ The company clerk, fetched from the dock, writes him into the paybooks by lampli
 `Under the dock the haulers are awake and quiet. The oldest of them, a grey woman with a face folded in on itself, is looking north at the mountains, where the road goes up past the falls toward the villages.
 
 "There were Nerek up there," she says, when you crouch down by her. She says it to the mountains. "In the villages. The ones who would not come down to the river when the traders came. Old ones. Some families." She shrugs, a very small shrug. "They work for the Edur, a little. The Edur are not worse than the barge-master." She looks at the cadre's tents on the slope. "My sister's people went up there. Long ago."${b53If('ammet', `\n\nAmmet crouches beside her, and says something in a language that is not Letherii, haltingly, a grandmother's words. The old woman looks at her for the first time.`)}` :
-`The haulers are under the dock, sitting together, closer than they were. Nobody is talking. The old woman has a twist of ash in her hand from the planking, and is holding it, and not looking at it.${b53Key() === 'warn' ? `\n\nShe looks at you once, and at ${NAME(b53Runner())}, and nods. That is all. It is not thanks. It is something like it.` : ''}`,
+`The haulers are under the dock, sitting together, closer than they were. No one is talking. The old woman has a twist of ash in her hand from the planking, and is holding it, and not looking at it.${b53Key() === 'warn' ? `\n\nShe looks at you once, and at ${NAME(b53Runner())}, and nods. That is all. It is not thanks. It is something like it.` : ''}`,
         ch:[{t:'Ammet looks at the rope sores.', check:['wits', 13], req:()=>ph === 1 && b5In('ammet') && !S.f.b5_c3_hauledTried, fx:()=>{ S.f.b5_c3_hauledTried = 1; },
               edges:id=>[id === 'ammet' && ['the sick are hers, and so are the Nerek, a quarter of her', 3], id === 'tobet' && ['he knows what the Indebted will let you see', 1], id === 'thegg' && ['he makes the haulers nervous, being the size of the barge-master\'s man', -1]],
               near:{t:()=>`Yes, but there are a dozen of them and every shoulder wants dressing: the squad's own salve goes on the last of them, and Ammet does not ask before she uses it.`, fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; else b53Rattle('ammet'); }},
@@ -63443,8 +63463,8 @@ The company clerk, fetched from the dock, writes him into the paybooks by lampli
 
     /* ---- the barge crews' fire: a rest, the pay desk, the squad, the way on (the games pass, 89, wraps this node: keep the id) ---- */
     b5_c3_fire:()=>{ const ph = b53Ph(), k = b53Key();
-      return {sp:'The barge crews\' fire', scene:'b5_landing', again:()=> ph >= 3 ? 'The barge crews\' fire at dawn, burnt down to ash. Somebody has put green-grey ash on it that came out of the sky.' : ph === 2 ? (k ? 'The barge crews\' fire. Nobody at it is talking about anything else.' : 'The barge crews\' fire, the day before something. The Finadd will have the night\'s orders at evening.') : 'The barge crews\' fire on the dock, driftwood and pitch.', txt:
-`${ph >= 3 ? `The barge crews' fire on the dock in the grey before dawn, down to coals. The bargemen are sitting round it with their hoods up, not talking. Something has come down out of the sky in the night and lies on the planking in a fine grey-green dust, and on the coals, and on the bargemen's hoods.` : ph === 2 ? `The barge crews' fire on the dock, by day. The bargemen are mending lines and arguing about what the regiment will do with the barges after tonight, and nobody says what tonight is. Up on the slope the cadre's tents have their flaps tied shut.` : `The barge crews' fire on the dock: driftwood and a lump of pitch, and the bargemen round it with their poles laid on the planking and a pot on the coals. ${S.f.b5_c2_key === 'dead' ? 'They know the Sixth already. Word came up the river with the barges: the company that carried the dead out of the second hulk at Trate and laid them on the quay. They make room at the fire without being asked.' : S.f.b5_c2_key === 'salvage' ? 'They know the Sixth already. Word came up the river with the barges: the company that landed the harvest ships\' cargo at Trate for the harbour master\'s forty. They make room at the fire, and keep an eye on their own cargo.' : 'They make room at the fire for the soldiers who are to guard their barges, and say so.'}`}${b53If('brune', () => ph < 3 ? `\n\nBrune sits at the edge of the dock with her feet in the river, a little apart from the fire.` : '')}${b53If('ruuk', () => ph < 3 ? `\n\nRuuk eats standing up, at the edge of the firelight, looking at the slope.` : '')}`,
+      return {sp:'The barge crews\' fire', scene:'b5_landing', again:()=> ph >= 3 ? 'The barge crews\' fire at dawn, burnt down to ash. Green-grey ash has come down on it out of the sky.' : ph === 2 ? (k ? 'The barge crews\' fire. Nobody at it is talking about anything else.' : 'The barge crews\' fire, the day before something. The Finadd will have the night\'s orders at evening.') : 'The barge crews\' fire on the dock, driftwood and pitch.', txt:
+`${ph >= 3 ? `The barge crews' fire on the dock in the grey before dawn, down to coals. The bargemen are sitting round it with their hoods up, not talking. Something has come down out of the sky in the night and lies on the planking in a fine grey-green dust, and on the coals, and on the bargemen's hoods.` : ph === 2 ? `The barge crews' fire on the dock, by day. The bargemen are mending lines and arguing about what the regiment will do with the barges after tonight, and every one of them stops short of what tonight is. Up on the slope the cadre's tents have their flaps tied shut.` : `The barge crews' fire on the dock: driftwood and a lump of pitch, and the bargemen round it with their poles laid on the planking and a pot on the coals. ${S.f.b5_c2_key === 'dead' ? 'They know the Sixth already. Word came up the river with the barges: the company that carried the dead out of the second hulk at Trate and laid them on the quay. They make room at the fire without being asked.' : S.f.b5_c2_key === 'salvage' ? 'They know the Sixth already. Word came up the river with the barges: the company that landed the harvest ships\' cargo at Trate for the harbour master\'s forty. They make room at the fire, and keep an eye on their own cargo.' : 'They make room at the fire for the soldiers who are to guard their barges, and say so.'}`}${b53If('brune', () => ph < 3 ? `\n\nBrune sits at the edge of the dock with her feet in the river, a little apart from the fire.` : '')}${b53If('ruuk', () => ph < 3 ? `\n\nRuuk eats standing up, at the edge of the firelight, looking at the slope.` : '')}`,
         ch:[b5TileChoice(3),
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b5_c3_rest' + ph], fx:()=>{ S.f['b5_c3_rest' + ph] = 1; b5Rest('The squad sits an hour by the barge crews\' fire, with the river going past. Wounds close, mostly.'); }, go:'b5_c3_fire_rest'},
             {t:'The pay desk, at the clerk\'s crate.', go:'b5_c3_pay'},
@@ -63463,7 +63483,7 @@ ${b53Say({ammet:`Ammet goes round the squad and looks at hands and feet, and at 
     b5_c3_fire_talk:()=>{ const ph = b53Ph(), k = b53Key(), ln = [];
       if (b5In('tobet')) ln.push(ph >= 3 ? (k === 'warn' && b53Runner() === 'tobet' ? `Tobet has his tally-stick out, and has not cut anything on it. "I didn't get there," he says. "I was a league short. Less." He turns the stick over. "There's no notch for that, Sergeant."` : `Tobet is looking at the mountains, grey again. "They cheered," he says. "Everybody cheered." He cuts a notch, and looks at it, and you do not ask what it was for.`) : `Tobet is watching the slope, and the tents with their flaps tied. "From back here," he says, flat, "everything owes me money." He watches a while longer. "Not them. I don't want anything off them."`);
       if (b5In('thegg')) ln.push(ph >= 3 ? `Thegg is sitting very still, with his big hands on his knees. When you sit by him he says, low, "My mother's people burned like that. Long ago. The Letherii did it with sorcery too." He says nothing more, and neither do you.` : `Thegg sits with his back against a bollard, which creaks, and talks low in his mother's tongue to nobody at the fire. When he sees you listening he stops. "The river has a great many," he says. "I tell them the way."`);
-      if (b5In('perrit')) ln.push(ph >= 3 ? (k === 'watch' ? `Perrit has not slept. "It was the most beautiful working I have ever seen," she says, very evenly. "Three of them and the Ceda, from a hundred leagues off, on one thread." Her hands are shut in her lap. "I hate that I think so. I am going to go on thinking so."` : `Perrit is sitting very straight. "The regiment's book," she says. "Thirty docks, and a line about the Sixth." She looks at the mountains. "It was the right line." She does not say anything else, and does not unfold her arms.`) : `Perrit is sitting where she can see the cadre's tents, and not looking at them, carefully. "A whole cadre," she says, "and the three biggest there are, and the Ceda's banner on a ship." She does the sum out loud, under her breath, and stops before the end.`);
+      if (b5In('perrit')) ln.push(ph >= 3 ? (k === 'watch' ? `Perrit has not slept. "It was the most beautiful working I have ever seen," she says, very evenly. "Three of them and the Ceda, from a hundred leagues off, on one thread." Her hands are shut in her lap. "I hate that I think so. I am going to go on thinking so."` : `Perrit is sitting very straight. "The regiment's book," she says. "Thirty docks, and a line about the Sixth." She looks at the mountains. "It was the right line." Her arms stay folded.`) : `Perrit is sitting where she can see the cadre's tents, and not looking at them, carefully. "A whole cadre," she says, "and the three biggest there are, and the Ceda's banner on a ship." She does the sum out loud, under her breath, and stops before the end.`);
       if (b5In('ammet')) ln.push(ph >= 3 ? (k === 'warn' ? `Ammet is washing her hands in the river, and goes on doing it. "My grandmother was half Nerek," she says, without turning round. "She'd have sent the runner." She shakes the water off. "She'd have been too late too."` : `Ammet is washing her hands in the river, and goes on doing it after they are clean. "There were Nerek up there," she says. That is all she says.`) : `Ammet is boiling her needles in a pot of river water. "River's cleaner than the sea for it," she says. "Not by much." She is not drinking.`);
       if (b5In('brune')) ln.push(ph >= 3 ? (S.f.b5_c2_key === 'dead' ? `Brune is at the edge of the dock with her feet in the river, which is grey with ash this morning. "The Shore will have them too," she says, when you come down to her. "The ones from the fire. Sooner or later. Everything goes downriver." She watches the ash go past. "It is a long way to the sea from here."` : `Brune is at the edge of the dock with her feet in the river, which is grey with ash this morning. "Everything goes downriver," she says. "Eventually." She does not seem to find it a comfort today.`) : `Brune sits on the edge of the dock with her feet in the river. "It is not the sea," she says, when you come down to her. "But it is going there." That seems to settle something for her.`);
       if (b5In('ruuk')) ln.push(ph >= 3 ? `Ruuk is up at the edge of the firelight looking north, and for once he is not a step ahead of anything. "The birds went up off the hills before it," he says. "All of them. Every bird I know." He is quiet a while. "They knew first."` : `Ruuk eats standing up and points his chin at the slope. "That one is a rain-bird," he says, and names it in Faraed. "That one says rain too. They are both right, and both liars." He grins. "Like maps."`);
@@ -63476,7 +63496,7 @@ ${b53Say({ammet:`Ammet goes round the squad and looks at hands and feet, and at 
       again:()=>`The clerk's crate. The paybooks are dry, and he is sitting on them.`, txt:
 `The company clerk has found a crate on the dock as far from the water as the dock allows, and set the oilskin case on it, and sits beside it with one hand on the lid. The river makes him nervous. Everything makes him nervous, but the river has the paybooks in reach.
 
-"The regiment pays us by the night," he says, "through its own table, less its own table." A pause. "I have written down what it keeps. It has written down what I wrote." He sounds almost fond of it.${b5In('ruuk') || b5Waiting('ruuk') ? `\n\nHe turns to a new page, in his small hand. "The Faraed boy. Forty docks, a winter's grain, to a trader in Trate." He looks up. "His trader's man has been asking me for the boy's day-rate. I told him the boy's day-rate is the army's business." He swallows. "Was that right?"` : ''}${b5Debt('sgt') > b5DebtStart('sgt') ? `\n\nHe runs his pen down your own line, and it stops further down than it started. He does not say anything about it. He does not have to.` : ''}`,
+"The regiment pays us by the night," he says, "through its own table, less its own table." A pause. "I have written down what it keeps. It has written down what I wrote." He sounds almost fond of it.${b5In('ruuk') || b5Waiting('ruuk') ? `\n\nHe turns to a new page, in his small hand. "The Faraed boy. Forty docks, a winter's grain, to a trader in Trate." He looks up. "His trader's man has been asking me for the boy's day-rate. I told him the boy's day-rate is the army's business." He swallows. "Was that right?"` : ''}${b5Debt('sgt') > b5DebtStart('sgt') ? `\n\nHe runs his pen down your own line, and it stops further down than it started. He lets the line speak for itself.` : ''}`,
       ch:[{t:'The pay desk.', go:'b5_c3_pay'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c3_pay:()=>({sp:'The clerk\'s crate · the pay desk', scene:'b5_landing', html:debtHTML('The Sixth Company · Kraig\'s Landing'), again:()=>`The pay desk. The clerk's pen is wet, and the squad has ${b5Coin(S.silver || 0)} in hand.`, txt:
@@ -63544,7 +63564,7 @@ The barge-master comes down the dock at first light and walks the length of all 
 
 The barge-master pays a bounty for barges kept, and counts it into the clerk's hand in front of a Cold Clay officer, who takes the regiment's share before the clerk can close his fingers on it: twelve docks come to the squad. And the regiment pays its rate for the night on the barges, after deductions, which are read out by nobody: six more.
 
-Up on the slope, the cadre's tents have their flaps tied shut this morning, and there are more guards round them than there were last night. ${b53Say({perrit:'Perrit sees it, and goes very still.', tobet:'Tobet sees it, and says nothing about it, and goes on watching.', _:'The squad sees it.'})}`,
+Up on the slope, the cadre's tents have their flaps tied shut this morning, and there are more guards round them than there were last night. ${b53Say({perrit:'Perrit sees it, and goes very still.', tobet:'Tobet sees it, and goes on watching.', _:'The squad sees it.'})}`,
       ch:[{t:'Back to the dock.', go:()=>startExplore()}]}),
 
     /* ---- the evening of the second day: the orders, and what the mages mean to do. The key. ---- */
@@ -63567,7 +63587,7 @@ ${b53Say({ammet:`Ammet turns her head and looks at the old woman, and then at yo
 
 The order is the barges, all night. The road up the river bank goes north past the falls toward the villages, and a runner who knew it could be a long way up it by midnight.
 
-${b5In('ruuk') ? `Ruuk is at your elbow. "I know the bank road," he says, very low. "To the falls, and past. I could be at the first village by morning." He is not grinning. "Maybe before."` : `Tobet is at your elbow, half a step behind, as always. "Sergeant," he says softly. "I can run. I'm the quickest you've got." He does not say what he is offering. He does not need to.`}${b53If('perrit', `\n\nPerrit says, very precisely, "The order is the barges, Sergeant. It is the cadre's work up there, and it is not ours to stop." She sounds as if she is reading it off a page. Her hands are shaking.`)}${b53If('thegg', `\n\nThegg says nothing. He is looking at the haulers under the dock.`)}${b53If('brune', `\n\nBrune is looking at the river. "Everything goes down it," she says. "Whatever you do tonight."`)}`,
+${b5In('ruuk') ? `Ruuk is at your elbow. "I know the bank road," he says, very low. "To the falls, and past. I could be at the first village by morning." He is not grinning. "Maybe before."` : `Tobet is at your elbow, half a step behind, as always. "Sergeant," he says softly. "I can run. I'm the quickest you've got." He does not say what he is offering. He does not need to.`}${b53If('perrit', `\n\nPerrit says, very precisely, "The order is the barges, Sergeant. It is the cadre's work up there, and it is not ours to stop." She sounds as if she is reading it off a page. Her hands are shaking.`)}${b53If('thegg', `\n\nThegg is looking at the haulers under the dock, and his jaw is set.`)}${b53If('brune', `\n\nBrune is looking at the river. "Everything goes down it," she says. "Whatever you do tonight."`)}`,
       ch:[{t:'"The barges, as ordered. We watch, and we keep our posts."', req:()=>!b53Key(), fx:()=>{ S.f.b5_c3_key = 'watch'; b53L('perrit', 1); b53L('ammet', -1); }, go:'b5_c3_thefire'},
           {t:`"${b5In('ruuk') ? 'Ruuk' : 'Tobet'}. Up the bank. Tell them to get out."`, req:()=>!b53Key(), fx:()=>{ S.f.b5_c3_key = 'warn'; S.f.b5_c3_runner = b5In('ruuk') ? 'ruuk' : 'tobet'; b53L('ammet', 2); b53L('thegg', 1); b53L('perrit', -1); }, go:'b5_c3_runner'},
           {t:'"Not yet."', req:()=>!b53Key(), go:()=>startExplore()},
@@ -63590,7 +63610,7 @@ Down by the water, the old shed the river has been leaning on for years stops le
 
 There were men in it. Bargemen sleeping out of the wind, two or three of them, and a Cold Clay soldier with a jug. Lanterns come, and men with spades, and the squad is there among them, digging. ${b5In('ammet') ? 'Ammet is in the rubble before anybody else, on her knees, with her roll of tools open. "Hold still," she is saying, to a man under a beam. "Hold still. Here. Lift on three."' : 'The regiment\'s surgeon comes down from the camp with his roll of tools, at a run.'}
 
-Nobody in the shed is killed. Two of them will not walk for a while. By the time they are carried up to the camp the green light over the mountains is fading, and the cheering has started again, further up the slope.`,
+Not one of them in the shed is killed. Two of them will not walk for a while. By the time they are carried up to the camp the green light over the mountains is fading, and the cheering has started again, further up the slope.`,
       ch:[{t:'Back to the barge-line.', onward:true, go:'b5_c3_cheer_start'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c3_cheer_start:()=>({sp:'The barge-line · night', scene:'b5_c3_greenfire', txt:
@@ -63600,7 +63620,7 @@ Nobody in the shed is killed. Two of them will not walk for a while. By the time
       ch:[{t:'"Whitefinders. Back off." Between them and the haulers.', go:()=>startBattle('b5_c3_cheer', {})},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c3_cheer_after:()=>({sp:'The barge-line · before dawn', scene:'b5_landing', fx:()=>{ S.f.b5_c3_cheerDone = 1; S.f.b5_c3_ph = 3; }, txt:
-`The provosts come down from the camp at last with lanterns and staves, and the celebrating goes back up the slope with them, mostly upright, still singing, a little less. Nobody is dead. Two of the regiment will have their jaws strapped for a week, and are told by the provosts that they walked into a barge.
+`The provosts come down from the camp at last with lanterns and staves, and the celebrating goes back up the slope with them, mostly upright, still singing, a little less. No one is dead. Two of the regiment will have their jaws strapped for a week, and are told by the provosts that they walked into a barge.
 
 The haulers go back under the dock, closer together than they were. ${b53Say({ammet:'Ammet goes in among them with her pot and her linen, and nobody pulls away this time.', thegg:'Thegg sits down on the dock at the end of the barge-line with his back to the haulers and his face to the camp, and stays there till dawn.', _:'The squad sits on the dock at the end of the barge-line till dawn.'})}`,
       ch:[{t:'Dawn.', onward:true, go:'b5_c3_dawn'},
@@ -63609,7 +63629,7 @@ The haulers go back under the dock, closer together than they were. ${b53Say({am
     /* 'warn': the runner up the bank; the fire comes first; the squad goes after him */
     b5_c3_runner:()=>{ const r = b53Runner();
       return {sp:'The river bank · dusk', scene:'b5_c3_tents', fx:()=>{ S.f.b5_c3_ranOut = 1; }, txt:
-`${r === 'ruuk' ? `Ruuk does not wait to be told twice. He leaves his spare spears with you and goes up the bank road at a lope, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before he is out of earshot. He does not look back. He is a step ahead of everyone, as always.` : `Tobet takes nothing but his knife and his tally-stick. "Sergeant," he says, softly, and then he is going up the bank road at a run, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before you can say anything to his back.`}
+`${r === 'ruuk' ? `Ruuk does not wait to be told twice. He leaves his spare spears with you and goes up the bank road at a lope, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before he is out of earshot. He never once turns round. He is a step ahead of everyone, as always.` : `Tobet takes nothing but his knife and his tally-stick. "Sergeant," he says, softly, and then he is going up the bank road at a run, past the scouts' fire and the last of the regiment's tents and into the dusk, and the dark takes him before you can say anything to his back.`}
 
 The squad goes down onto the barges, as ordered, and sits, and waits, with the lantern hooded.
 
@@ -63649,7 +63669,7 @@ It turns its head.`,
 
 The squad stays in the reeds a long time after, looking north. The green light is gone from over the mountains. Nothing comes down the bank road. Nothing comes down the river.
 
-${NAME(b53Runner())} gets up at last. "I didn't get there," ${b5He(b53Runner())} says. "I was a league short. Less." ${b53Runner() === 'ruuk' ? `Ruuk looks north a while longer. "I do not know," he says, "if anyone was there to tell." He does not say anything else.` : `Tobet looks north a while longer. "I don't know," he says. "I don't know if there was anybody to tell."`}
+${NAME(b53Runner())} gets up at last. "I didn't get there," ${b5He(b53Runner())} says. "I was a league short. Less." ${b53Runner() === 'ruuk' ? `Ruuk looks north a while longer. "I do not know," he says, "if anyone was there to tell."` : `Tobet looks north a while longer. "I don't know," he says. "I don't know if there was anybody to tell."`}
 
 At first light the squad comes back down the bank road into the Landing, the runner with it.`,
       ch:[{t:'Down to the Landing.', onward:true, go:()=>{ startExplore('b5_c3_dock'); talk('b5_c3_noted'); }}]}),
@@ -63665,7 +63685,7 @@ At first light the squad comes back down the bank road into the Landing, the run
 
 He shows Ennic the line. Ennic reads it, and signs under it, because it is put in front of him, and his hand is very neat and very slow. When the officer has gone he stands on the dock with his book shut.
 
-"Noted," he says. He looks at you, and then at ${NAME(b53Runner())}, and something in his face decides. "Good," he says. And then, more quietly, as if signing it: "I would have sent him too. I would have wanted you to tell me first." He goes back up the dock.${b53If('ammet', `\n\nAmmet does not say anything. She puts her hand on ${NAME(b53Runner())}'s shoulder as she goes past, and leaves it there a moment.`)}`,
+"Noted," he says. He looks at you, and then at ${NAME(b53Runner())}, and something in his face decides. "Good," he says. And then, more quietly, as if signing it: "I would have sent him too. I would have wanted you to tell me first." He goes back up the dock.${b53If('ammet', `\n\nAmmet puts her hand on ${NAME(b53Runner())}'s shoulder as she goes past, and leaves it there a moment.`)}`,
       ch:[{t:'Dawn.', onward:true, go:'b5_c3_dawn'},
           {t:'Not now.', go:()=>startExplore()}]}),
 

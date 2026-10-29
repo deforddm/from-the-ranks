@@ -40,7 +40,7 @@ const r = await page.evaluate(async () => {
   talk('b5_c3_card'); const cd = DLG.b5_c3_card(); out.f.card = {sp:cd.sp, back:cd.ch[0].go}; talk('b5_c3_tiles_done'); out.f.tilesDone = has('b5_c3_tiles_done', /Back to the Landing/);
   /* the Finadd, the barracks talk, the soldier of the Cold Clay, the rise */
   talk('b5_c3_ennic'); const en = DLG.b5_c3_ennic().txt; out.f.ennic = {flag:S.f.b5_c3_ennic, news:S.f.b5_c3_news, recall:/called the Whitefinders back north/.test(en), strike:/strike first/.test(en), again:!!DLG.b5_c3_ennic().again}; take('b5_c3_ennic', /battalion\. Good/);
-  talk('b5_c3_regiment'); const rg = DLG.b5_c3_regiment().txt; out.f.rumour = /went over/.test(rg) && /Nobody says who/.test(rg) && !/Hull|Beddict/.test(rg);
+  talk('b5_c3_regiment'); const rg = DLG.b5_c3_regiment().txt; out.f.rumour = /went over/.test(rg) && /No name/.test(rg) && !/Hull|Beddict/.test(rg);
   talk('b5_c3_rise'); out.f.rise = {scene:DLG.b5_c3_rise().scene, banners:/King's banner and the Ceda's/.test(DLG.b5_c3_rise().txt)};
   /* the trick: the Cadre's Link */
   talk('b5_c3_cadre'); out.f.cadreNotNow = has('b5_c3_cadre', /Not now/); const cc = vis('b5_c3_cadre').find(x => /Show us/.test(x.t)); out.f.linkCheck = cc.check.join(':') + ':' + cc.trick;
@@ -94,7 +94,7 @@ const r = await page.evaluate(async () => {
   /* ================= key: watch ================= */
   { const l0 = L(), d0 = b5Debt('sgt'); take('b5_c3_key', /as ordered/); const l1 = L();
     out.w = {key:S.f.b5_c3_key, loy:Object.fromEntries(Object.keys(l1).map(k => [k, (l1[k] ?? 0) - (l0[k] ?? 0)])), debt:b5Debt('sgt') - d0, node:S.node, scene:DLG.b5_c3_thefire().scene, cheer:/camp cheers/.test(DLG.b5_c3_thefire().txt)};
-    take('b5_c3_thefire', /^On/); out.w.collapse = {flag:S.f.b5_c3_collapse, scene:DLG.b5_c3_collapse().scene, ammet:/Hold still/.test(DLG.b5_c3_collapse().txt), noDead:/Nobody in the shed is killed/.test(DLG.b5_c3_collapse().txt)};
+    take('b5_c3_thefire', /^On/); out.w.collapse = {flag:S.f.b5_c3_collapse, scene:DLG.b5_c3_collapse().scene, ammet:/Hold still/.test(DLG.b5_c3_collapse().txt), noDead:/in the shed is killed/.test(DLG.b5_c3_collapse().txt)};
     take('b5_c3_collapse', /barge-line/); out.w.cheerNotNow = has('b5_c3_cheer_start', /Not now/);
     out.w.cheer = await force('b5_c3_cheer'); out.w.cheer.done = S.f.b5_c3_cheerDone; out.w.ph = S.f.b5_c3_ph; out.w.objText = BATTLES.b5_c3_cheer.objective.text;
     take('b5_c3_cheer_after', /Dawn/); out.w.dawn = {fent:S.f.b5_fentReach, ash:S.kit.includes('b5_c3_ash'), yan:GLOSSX.mt.find(g => g[1] === 'Yan Tovis')[3](), txt:/Fent Reach has surrendered/.test(DLG.b5_c3_dawn().txt), notNow:has('b5_c3_dawn', /Not now/)};
