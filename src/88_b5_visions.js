@@ -73,7 +73,7 @@ Neither of them speaks again the whole way back to the village. Trull finds, whe
 
 The floor is tiles. Every one of them a window, if you know how to open it, and he has spent a long life learning how. Most of them he keeps shut. Today he has opened one.
 
-It answers to a tower of black basalt out on its rocks in the south of Trate harbour, leagues to the north and west, with no door and no window in it, and a ring of tiles on its top that sees what he asks it to see. Today he has asked it to watch the sea.`},
+It answers to a tower of black basalt out on its rocks in the south of Trate harbour, leagues to the north, with no door and no window in it, and a ring of tiles on its top that sees what he asks it to see. Today he has asked it to watch the sea.`},
     {txt:
 `It is the end of a fine summer day in Trate. Low sun on the water, the quays still warm, gulls over the fish market. A flower dancer on the waterfront, for the crowd. Carts. Children on the harbour wall. A city getting on with its business, which is business.
 

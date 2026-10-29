@@ -563,7 +563,7 @@ He pats the post. "A hand on the strap, a hip against the post, and all of you i
     b5_c1_pit_arrive:()=>({sp:'The pit town', scene:'b5_c1_pittown', fx:()=>{ S.f.b5_c1_pit = 1; }, txt:
 `The pit town is built out of what the city threw over its walls: old boards, old canvas, old doors, and on one shack a whole shopfront with the shop's name still on it. Braziers burn in the lanes. The people round them are big, most of them, and slow, and the drink they are drinking is the cheapest thing in Lether that will still burn.
 
-Tarthenal. What is left of them. Lether took their country north-west of here a long time ago, and the pit towns are where the people went who would not go anywhere else.
+Tarthenal. What is left of them. Lether took their country a long time ago, and the pit towns are where the people went who would not go anywhere else.
 
 ${b51Say({thegg:`Thegg walks down the middle of the lane with his shield on his back, turning sideways for nobody now. People look up from the braziers as he passes, at the size of him, and then at the Whitefinder's cloak, and then away.`, _:'The squad walks down the middle of the lane, and the pit town looks at its cloaks, and then away.'})}`,
       ch:[{t:'Walk.', go:()=>startExplore()}]}),
@@ -693,7 +693,7 @@ The gate is open. The yard is full of lanterns somebody has borrowed from the st
 
 By the gate, somebody has let in a bookmaker. He has set up a chalk board on an easel under the lamp, with tomorrow's Special Drownings on it, and the odds, and he is taking the company's docks one at a time and writing every one of them down.
 
-${b51Key() === 'swim' ? `The board has a line of its own at the bottom, in fresh chalk, for the ordinary list at first light. It does not have a name on it. It has a weight: three hundred. The company is not looking at that line, very carefully.` : `The company has heard about the fine. Soldiers come by the squad's fire all evening to look at Thegg, and some of them stand him a cup, and one of them, a corporal of the Fourth Squad, tells you he would have let the big lad swim it. You thank him for his opinion.`}`,
+${b51Key() === 'swim' ? `The board has a line of its own at the bottom, in fresh chalk, for the ordinary list at first light. It does not have a name on it. It has a weight: three hundred. The company is not looking at that line, very carefully.` : `The company has heard about the fine. Soldiers come by the squad's fire all evening to look at Thegg, and some of them stand him a cup, and one of them, a soldier of the Fourth Squad, tells you he would have let the big lad swim it. You thank him for his opinion.`}`,
       ch:[{t:'The fire.', go:'b5_c1_yard'},
           {t:'Walk the yard.', go:()=>startExplore()}]}),
     b5_c1_festival:()=>({sp:'The Errant\'s festival', scene:'b5_c1_festival', fx:()=>{ S.f.b5_c1_brys = 1; }, txt:
