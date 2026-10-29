@@ -115,7 +115,14 @@ The mains give 520 base (312 xp); with both optional fights 760 (456). From leve
 
 **Balance**: see the table below (`tools/balance.mjs`, a scratch `--patch` setting each fight in a fresh Book Five state at level 7, Chapter 7, the four, a tile from `B5POOL[7]`, two salves, no gear; both grounds played; no rule changed; 12 smart runs each).
 
-BALANCE_TABLE
+| Fight | Soldier, level 7 (win · health lost · downs) | Bridgeburner, level 7 |
+|---|---|---|
+| `b5_c7_looters` | 100% · 8% · 0.00 | 100% · 8% · 0.08 |
+| `b5_c7_court` (survive 4) | 100% · 5% · 0.00 | 100% · 7% · 0.00 |
+| `b5_c7_wolves` (both grounds) | 100% · 21% · 0.25 | 100% · 27% · 0.58 |
+| `b5_c7_barricade` (both grounds) | **92%** · 28% · 1.33 | 100% · 26% · 1.50 |
+
+The barricade is the hardest fight in the book (eight foes, then the Low Walk): **one Soldier run in twelve was lost**, against the target of a smart Soldier winning every fight, and four in five fights see a squadmate down. Bridgeburner is easier than its 75–80% on all four (the same 12-run noise as Chapters 4–6; Book Two's curve against a level-7 squad). No number was tuned (balance goes to David). Levers, if wanted: one wraith fewer at the barricade, or a second garrison regular; the wolves' wave at round 3.
 
 ## Left open on purpose
 
@@ -135,7 +142,7 @@ BALANCE_TABLE
 ## Deviations from the brief
 
 - **The reading is at the footbridge, not at the first halt.** The first halt is the streets on the night; the reading's place is "a barricade by a canal … on the night before the Edur come", so `b5TileChoice(7)` is on `b5_c7_bridge` (the barricade's first halt) and on the tile-woman from phase 2 when Perrit is not walking. As Chapter 6 did with its dawn.
-- **Two extra items of ground**: the streets' `b` (bell-station), `x` (the shopfront), `h` (your street), `p` (the fallen shutter), `v` (the way down); the canal's `F` (the brazier: the brief's fire is "the brazier at the footbridge barricade"), `^` (back to the streets), `E` (the street the Edur come down), `J` (the tiers); the walk's `P` (the patrol). The footbridge at night uses `b5_c7_canalnight`, an alias of the brief's `b5_c7_canal`, so the audio can tell night from day.
+- **Extra trigger letters**: the streets' `b` (bell-station), `x` (the shopfront), `h` (your street), `p` (the fallen shutter), `v` (the way down); the canal's `F` (the brazier: the brief's fire is "the brazier at the footbridge barricade"), `^` (back to the streets), `E` (the street the Edur come down), `J` (the tiers); the walk's `P` (the patrol). The footbridge at night uses `b5_c7_canalnight`, an alias of the brief's `b5_c7_canal`, so the audio can tell night from day.
 - **Two extra figures**: `b5_c7_child` (the canal children, the trick's place) and `b5_c7_citizen` (the slate-man).
 - **The dock is given on a failed trick check too** (the children give the twin anyway), so the item is always obtainable; the trick is only learned on a pass.
 - **The `ledger` road's debts are recorded in `S.f.b5_c7_listed`, not added to `S.f.b5_heirs`**, which is the true dead's; both "pass to the heirs" on the page.
