@@ -1,5 +1,5 @@
 // v7.4.0: the Soldier-only late-book extra (David, Oct 27, 2026: "Soldier feels too easy late in each book").
-// Books One-Three: SOLDIER_LATE (31c) from Chapter 3 on; Book Four: B4GAP's s column (70; left as tuned Oct 21, see docs/v7.4-notes.md).
+// Books One-Three and Five: SOLDIER_LATE (31c) from Chapter 3 on (Book Five: Book Two's row, David, Oct 28); Book Four: B4GAP's s column (70; left as tuned Oct 21, see docs/v7.4-notes.md).
 // Checks, with a foe made by mkFoe in every book, chapter and difficulty:
 //   - on Soldier the extra applies in the chapters that carry it, and exactly as the table says;
 //   - it is absent on Story and Bridgeburner (the same foe as with the table emptied);
@@ -13,14 +13,14 @@ const { page, errors } = await openGame(br, srv.url, { fast: true });
 const out = await page.evaluate(() => {
   const rows = [];
   try {
-    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol') };
+    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol'), mt: () => newStateMT('Sol') };
     const foe = (book, ch, diff, bid) => { S = mk[book](); S.chapter = ch; S.diff = diff; B = bid ? { id: bid, def: {} } : null;
       const u = mkFoe('bruiser', 1, 1); B = null; return { hp: u.maxhp, atk: u.atk, dmg: u.dmg[2] }; };
     /* the table entry for (book, ch), and a way to empty it for a moment */
     const entry = (book, ch) => book === 'hoc' ? B4GAP[ch] && B4GAP[ch].s : SOLDIER_LATE[book] && SOLDIER_LATE[book][ch];
     const without = (book, ch, fn) => { const e = entry(book, ch); if (!e) return fn();
       const keep = { ...e }; Object.assign(e, { hp: 1, atk: 0, dmg: 0 }); try { return fn(); } finally { Object.assign(e, keep); } };
-    for (const book of ['gotm', 'dg', 'moi', 'hoc']) for (let ch = 1; ch <= 7; ch++) {
+    for (const book of ['gotm', 'dg', 'moi', 'hoc', 'mt']) for (let ch = 1; ch <= 7; ch++) {
       const e = entry(book, ch) ? { ...entry(book, ch) } : null;
       const r = {};
       for (const diff of ['story', 'soldier', 'bridgeburner']) { r[diff] = foe(book, ch, diff); r[diff + '0'] = without(book, ch, () => foe(book, ch, diff)); }

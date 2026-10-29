@@ -20,8 +20,8 @@
 //   --book=dg / --book=moi  Book Two (b2_ fights, a fresh Book Two squad at level min(8, 1 + chapter), the earlier chapters' gear) or
 //                Book Three (b3_ fights, a fresh Book Three Fourth at chapter + 7, Book Three's veteran picks): see setupDG / setupMOI below.
 //                No recruits (Ramin, Keth, Sohra, Dannet are optional), no dog (Hackle comes only when the squad has the first move).
-//   --book=mt    Book Five (b5_ fights): the fresh Book Five squad (sgt, Tobet, Thegg, Perrit, Ammet) on Book Two's curve (Chapter K at level
-//                min(8, K + 1), as play.mjs --book=mt starts it), the picks, the earlier chapters' gear, Book Five's start satchel (two salves,
+//   --book=mt    Book Five (b5_ fights): the fresh Book Five squad (sgt, Tobet, Thegg, Perrit, Ammet) on Book Two's curve, Chapter K at level
+//                min(7, K + 1) (the brief's "7 after Ch6": Chapter 7 is fought at 7 and ends at the cap; --lvl adds to it), the picks, the earlier chapters' gear, Book Five's start satchel (two salves,
 //                no munitions), a tile from B5POOL; Ammet played as the healer. --squad=a,b (after the sergeant) for the recruits (Brune, Ruuk, Pessa).
 //   --diff=bridgeburner  the difficulty (every book) (default Soldier); --transfer  the Book Two squad instead of the fresh start (hoc only)
 //   --noorvas    hoc: leave Orvas out from Chapter 3 on
@@ -151,7 +151,7 @@ const INIT = () => {
     B = null; notes = []; const mt = spec.book === 'mt', dg = spec.book === 'dg' || mt; W.hoc = dg; // Marrow is Book Two's healer too (Ammet Book Five's); the shield-bash and lance play as in Book Four
     setBook(spec.book); S = mt ? newStateMT('Hask') : spec.book === 'dg' ? newStateDG('Hask') : newStateMOI('Hask'); S.chapter = spec.ch;
     if (mt && spec.squad) { S.squad = ['sgt', ...spec.squad.split(',')]; S.squad.forEach(k => { S.loy[k] ??= 0; }); } // --squad: Book Five's recruits
-    S.lvl = dg ? Math.max(1, Math.min(8, 1 + spec.ch + (spec.lvl || 0))) : Math.min(15, spec.ch + 7 + (spec.lvl || 0)); S.xp = LEVELS[S.lvl - 1];
+    S.lvl = dg ? Math.max(1, Math.min(mt ? 7 : 8, 1 + spec.ch) + (spec.lvl || 0)) : Math.min(15, spec.ch + 7 + (spec.lvl || 0)); S.xp = LEVELS[S.lvl - 1];
     if (spec.diff) S.diff = spec.diff;
     S.chapters = {}; for (let k = 1; k < spec.ch; k++) S.chapters[k] = 'x';
     migrate(S); S.picksDue = [];
@@ -457,7 +457,7 @@ for (const b of battles) {
   if (sm.pstuck) notes.push(`policy loops ${sm.pstuck}`); if (sm.pfail) notes.push(`refused actions ${sm.pfail}`);
   const idle = idleFoes(rs); if (idle.length) notes.push('IDLE: ' + idle.join('; '));
   const pe = pageErrs.filter(p => p.id === b.id); if (pe.length) notes.push(`PAGE ERRORS ×${pe.length}`);
-  const lvl = HOC || BOOK === 'moi' ? Math.min(15, b.ch + 7 + LVL) : Math.max(1, Math.min(8, 1 + b.ch + LVL)); // Books One, Two and Five
+  const lvl = HOC || BOOK === 'moi' ? Math.min(15, b.ch + 7 + LVL) : MT ? Math.max(1, Math.min(7, 1 + b.ch) + LVL) : Math.max(1, Math.min(8, 1 + b.ch + LVL));
   rows.push({ id: b.id, ch: b.ch, sm, nv, ne });
   console.log(`| ${b.id} | ${b.ch} | ${lvl} | ${P(sm.win)} (${sm.n}) | ${P(nv.win)} | ${ne.n ? P(ne.win) : '—'} | ${F(sm.medR, 1)} | ${P(sm.hp)} / ${ne.n ? P(ne.hp) : '—'} / ${P(nv.hp)} | ${F(sm.downs, 2)} / ${F(nv.downs, 2)} | ${P(sm.anyDown)} | ${notes.join(' · ')} |`);
 }

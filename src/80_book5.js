@@ -279,6 +279,12 @@ function b5Join(id){ if (!b5CanRecruit(id) || b5In(id)) return false;
 function b5SwapIn(id){ if (!b5CanRecruit(id) || b5In(id)) return false; if (b5Room() > 0) return rosterIn(id); const out = b5Recruit_(); return !!out && rosterSwap(out, id); }
 const b5Waiting = id => !!(b5On() && S.f && S.f[B5_DONE[id]] === 2 && !b5In(id) && !(S.dead && S.dead[id]));
 const b5Offers = () => B5_RECRUITS.filter(id => b5Waiting(id) && (b5Room() > 0 || !!b5Recruit_()));
+/* who walked at a chapter's key (High Fort, Ch 4; Brans Keep, Ch 6): S.f.b5_c<n>_walked, the ids walking, sergeant included. Set when the key
+   is chosen and again when its fight starts (a "Not now" between the two may bring a waiting recruit in at a fire), so the finale's fate
+   pages credit the rampart and the crossing only to those who were there (87's b57HighFort / b57Channel). */
+function b5MarkWalked(n){ if (!b5On() || !S.f) return; S.f[`b5_c${n}_walked`] = (S.squad || []).filter(id => !(S.dead && S.dead[id])); }
+const B5_WALKED_AT = {b5_c4_demon:4, b5_c4_wolves:4, b5_c6_channel:6, b5_c6_flight:6};
+{ const _sb = startBattle; startBattle = function(id, opt){ if (b5On() && B5_WALKED_AT[id] && !(opt && opt.stage === 2)) b5MarkWalked(B5_WALKED_AT[id]); return _sb.apply(this, arguments); }; }
 
 /* ---- the pay desk: a shared body for every chapter's b5_c<n>_pay node. For each debtor who owes and while the squad has docks: "10 docks on
    X's" (or what there is, if less) and "All we can on X's" (when that is more than 10), each through b5Pay and back to the desk; then
@@ -355,6 +361,24 @@ Object.assign(FOES, {
 /* the regular grows with the squad, as Book Four's Ninth regular does */
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
     if (k === 'b5_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b5reg = true; } return u; }; }
+
+/* ---- Book Five's balance (David, Thu Oct 29, 2026, 1:42 PM PDT; docs/mt-balance.md). Book Five is on Book Two's curve (FSCALE, and
+   SOLDIER_LATE.mt = Book Two's row, kept), and as built its Bridgeburner fights were far easier than the 75-80% won asked. B5GAP carries the
+   difference, per chapter, on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Four's B4GAP and Book Three's B3GAP); a fight may
+   carry its own row in B5GAP_FIGHT. B5SOFT eases one fight on Soldier only (Ch 7's barricade: a smart Soldier wins it every time).
+   Story is never touched, and nothing here runs outside Book Five (S.book === 'mt'). ---- */
+const B5GAP = {1:{ac:0, atk:0, hp:1, dmg:0}, 2:{ac:0, atk:0, hp:1, dmg:0}, 3:{ac:0, atk:0, hp:1, dmg:0}, 4:{ac:0, atk:0, hp:1, dmg:0},
+  5:{ac:0, atk:0, hp:1, dmg:0}, 6:{ac:0, atk:0, hp:1, dmg:0}, 7:{ac:0, atk:0, hp:1, dmg:0}};
+const B5GAP_FIGHT = {};
+const B5SOFT = {};
+const b5Gap = () => { if (!b5On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id;
+  return (id && B5GAP_FIGHT[id]) || B5GAP[clamp(S.chapter || 1, 1, 7)] || null; };
+const b5Soft = () => (b5On() && (S.diff || 'soldier') === 'soldier' && B && B.id && B5SOFT[B.id]) || null;
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b5On()) return u;
+    const g = b5Gap() || b5Soft(); if (!g) return u;
+    u.ac = (u.ac || 10) + (g.ac || 0); u.atk = (u.atk || 0) + (g.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * (g.hp || 1)));
+    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + (g.dmg || 0)]; return u; }; }
 
 /* ---- the words Book Five throws at you: [chapter, word, meaning, met?]. Bound by mt-canon §10: Bugg, Turudal Brizad and Yan Tovis are
    what the squad could know of them, no more; the Errant is Lether's god of chance; the tiles name no being. ---- */

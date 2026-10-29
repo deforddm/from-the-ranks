@@ -83,8 +83,12 @@ const b57Next = () => { const p = b57Ph();
   if (p < 4) return !S.f.b5_c7_wolvesDone ? 'b5_c7_tiers' : !S.f.b5_c7_barricadeDone ? 'b5_c7_edur' : !S.f.b5_c7_canal ? 'b5_c7_sorcery' : 'b5_c7_under';
   return b57Key() ? 'b5_c7_last' : 'b5_c7_roads'; };
 /* a soldier's line in the book of the fall: who they are now, by the books (the finale) */
-const b57HighFort = id => b57Held() ? `${id === 'sgt' ? 'You' : NAME(id)} held the west rampart at High Fort to the surrender, and walked south without a sword.` : `${id === 'sgt' ? 'You' : NAME(id)} went west from High Fort into the Jheck's wood with the Grass Jackets, and came out on the road south with ${id === 'sgt' ? 'your' : b5His(id)} sword.`;
-const b57Channel = id => b57Stood() ? `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} held the crossing on the dry channel while the battalion went back over it.` : `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} went back over the dry channel with the first who broke, toward Dissent.`;
+/* was this soldier walking at that chapter's key (80's b5MarkWalked)? An old save without the record credits everybody, as before */
+const b57Was = (n, id) => { const w = S.f[`b5_c${n}_walked`]; return id === 'sgt' || !Array.isArray(w) || w.includes(id); };
+const b57HighFortThere = id => b57Held() ? `${id === 'sgt' ? 'You' : NAME(id)} held the west rampart at High Fort to the surrender, and walked south without a sword.` : `${id === 'sgt' ? 'You' : NAME(id)} went west from High Fort into the Jheck's wood with the Grass Jackets, and came out on the road south with ${id === 'sgt' ? 'your' : b5His(id)} sword.`;
+const b57ChannelThere = id => b57Stood() ? `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} held the crossing on the dry channel while the battalion went back over it.` : `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} went back over the dry channel with the first who broke, toward Dissent.`;
+const b57HighFort = id => b57Was(4, id) ? b57HighFortThere(id) : `At High Fort ${NAME(id)} was back with the company's followers, not ${b57Held() ? 'on the west rampart' : 'with the squad in the wood'}, and came south after the squad.`;
+const b57Channel = id => b57Was(6, id) ? b57ChannelThere(id) : `At Brans Keep ${b5He(id)} waited behind the lines with the company's followers, and was not ${b57Stood() ? 'at the crossing' : 'with the squad on the channel'}.`;
 
 /* ---- the roads: what each does to the paybooks (the brief's Ch7 row; Claude's calls 16) ---- */
 /* paid: every dock in hand on the debts of the discharged (the sergeant and the squad walking), smallest first, so the most go free; then
