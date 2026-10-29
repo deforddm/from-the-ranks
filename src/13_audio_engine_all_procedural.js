@@ -517,6 +517,9 @@ const AUDIO = (() => {
     b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
     b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
     b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
+    // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea
+    b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
+    b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){

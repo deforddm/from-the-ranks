@@ -1238,6 +1238,9 @@ const AUDIO = (() => {
     b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
     b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
     b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
+    // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea
+    b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
+    b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
     b3_c7_barrow:'barrow', b3_c7_coral:'coral', b3_coral:'coral', b3_c7_finale:'sea', b3_c7_hill:'hills', b3_c7_hill_dusk:'dusk', b3_c7_sea:'sea', b3_c7_shore_night:'sea_night', b3_c7_spawn:'spawn', b3_c7_field:'hills',
   };
   function placeAmb(name, dark){
@@ -62129,7 +62132,7 @@ const B5CH2 = {
 
   end:{
     salvage:['The harbour\'s coin', 'The Sixth went north to Trate to clear a harbour a wave had wrecked, and cleared it, a wreck at a time. There were shapes in the rigging of the harvest ships that were not men, and the squad went into the first hulk at dusk and came out again. When the harbour master posted a bounty on the cargo, the squad landed the cargo, and took the forty docks, and stood over the chests that night against a crew who had a chit for the same ones. The dead in the second hulk waited for somebody else.'],
-    dead:['The drowned first', 'The Sixth went north to Trate to clear a harbour a wave had wrecked, and cleared it, a wreck at a time. There were shapes in the rigging of the harvest ships that were not men, and the squad went into the first hulk at dusk and came out again. When the harbour master posted a bounty on the cargo, the squad brought out the dead instead, and laid them on the quay with the Shake, and stood between them and what came off the hulk at the evening tide. Nobody paid for that.'] },
+    dead:['The drowned first', 'The Sixth went north to Trate to clear a harbour a wave had wrecked, and cleared it, a wreck at a time. There were shapes in the rigging of the harvest ships that were not men, and the squad went into the first hulk at dusk and came out again. When the harbour master posted a bounty on the cargo, the squad brought out the dead instead, and laid them on the quay with the Shake, and stood between them and what came off the hulk at the evening tide. There was no bounty for that.'] },
   endScene:'b5_trate_harbour',
   endCap:()=> b52Key() === 'dead' ? 'The barges going up the river from Trate at first light, and behind them on the quay a row of shells where the dead were laid.' : 'The barges going up the river from Trate at first light, and the squad a few docks heavier, sitting on its kit.',
   tease:'Next: Kraig\'s Landing. Three buildings and a dock upriver, a regiment camped round them, and the mountains very close.',
@@ -62168,7 +62171,7 @@ The harbour front is planking on stone, and the planking is mostly still there. 
 
 And the ships. Three of them, out of the north, lying where the wave put them: one on her side across the end of the long quay, one with her bow up on the stone and her stern under water, one further out on the harbour's rocks. Their masts lean. Their rigging hangs. The Legion calls them the harvest ships, because that is what the poachers called them when they sailed in the spring.
 
-Over all of it the lighthouse stands on the harbour front as if nothing had happened. Out in the south of the harbour, on its island of rocks, the Tarancede Tower stands black and doorless, which is how it has always stood. On the sea wall above the harbour mouth a figure in a long dark robe watches the water, alone. The Legion's sorceress, a docker tells you, and goes back to his shovel.
+Over all of it the lighthouse stands on the harbour front as if nothing had happened. Out in the south of the harbour, on its island of rocks, the Tarancede Tower stands black and doorless, as it has always stood. On the sea wall above the harbour mouth a figure in a long dark robe watches the water, alone. The Legion's sorceress, a docker tells you, and goes back to his shovel.
 
 ${b52Say({tobet:`Tobet is looking at the masts. "There's nobody up there," he says quietly. "Sergeant. There's nobody up there, is there."`, _:'The squad looks at the masts for a while, and then at the work.'})}${b52If('perrit', `\n\nPerrit stops at the top of the quay steps with the town at her back and the water in front of her, where she can see it.`)}${b52If('ammet', `\n\nAmmet has already seen the row along the shed wall under the sailcloth, and is looking at it the way she looks at a queue.`)}`,
       ch:[b5TileChoice(2),
@@ -62227,7 +62230,7 @@ He does not look away from the water while he talks. "I saw it coming before the
     b5_c2_pilot_ok:()=>({sp:'An old harbour pilot', scene:'b5_trate_harbour', fx:()=>{ S.f.b5_c2_pilotOk = 1; }, txt:
 `He makes ${by({sgt:'you', _:'{who}'})} sit on the next bollard and watch the water off the end of the quay, and say when the next swell will break on the rocks, and where. ${by({sgt:'You are', _:'{who} is'})} wrong four times. The fifth time ${by({sgt:'you', _:'{who}'})} ${by({sgt:'see', _:'sees'})} it: before the swell, the water round it leans, a little, the way a man's shoulders go before his feet do.
 
-"That," the pilot says. "Not sorcery. Nobody'll sing about it. Just looking at the right thing." He goes back to his own watching. "Watch the shape. It'll lie to you less than the thing does."`,
+"That," the pilot says. "Not sorcery. There's no song in it. Just looking at the right thing." He goes back to his own watching. "Watch the shape. It'll lie to you less than the thing does."`,
       ch:[{t:'"Thank you." Back along the quay.', go:()=>startExplore()}]}),
     b5_c2_pilot_no:()=>({sp:'An old harbour pilot', scene:'b5_trate_harbour', txt:
 `${by({sgt:'You watch', _:'{who} watches'})} the water off the end of the quay until it is all the same water, and the swells break where they break, and none of them say anything first.
@@ -62241,7 +62244,7 @@ He does not look away from the water while he talks. "I saw it coming before the
     /* ---- the market: curios, bones and teeth, and a tooth for a dock ---- */
     b5_c2_market:()=>({sp:'A market stall', scene:'b5_trate_harbour', fx:()=>{ S.f.b5_c2_market = 1; },
       again:()=>`The curio stall. "Teeth, bones, Fent work, Nerek work. Cheap."`, txt:
-`Lether's markets open the day after anything. A stall has been set up again on the dry stones behind the sheds: Fent carvings, Nerek beadwork, a tray of polished bones and a jar of teeth, long and curved and yellow, that nobody can put a name to. The stall-keeper cannot either. "Out of the ground up north," he says. "Or out of the sea. Somebody digs them up and somebody buys them. I'm the bit in between."
+`Lether's markets open the day after anything. A stall has been set up again on the dry stones behind the sheds: Fent carvings, Nerek beadwork, a tray of polished bones and a jar of teeth, long and curved and yellow, that nobody can put a name to. The stall-keeper cannot either. "Out of the ground up north," he says. "Or out of the sea. One man digs them up and another man buys them. I'm the bit in between."
 
 At the next stall a girl is selling paper flowers on wire for the dancers. Trate is known for its flower dancers, the stall-keeper says, and they have gone on dancing since the wave, in the square by the North Gate, because the town needs it more than it did. ${b52Say({tobet:`Tobet looks at the flowers for a while and does not buy one.`, perrit:`Perrit picks up a Nerek bracelet, turns it over, reads the price scratched on the back, and puts it down.`, _:'The squad looks, and keeps its docks.'})}`,
       ch:[{t:'A tooth from the jar.', tag:'1 dock', req:()=>(S.silver || 0) >= 1 && !(S.kit || []).includes('b5_c2_tooth'), fx:()=>{ S.silver -= 1; updSilver(); gain('b5_c2_tooth'); }, go:'b5_c2_tooth'},
@@ -62265,7 +62268,7 @@ ${b52Say({thegg:`Thegg takes the heavy end every time without being asked, and i
 
     /* ---- the flooded sheds: looters (optional) ---- */
     b5_c2_sheds:()=>({sp:'The flooded sheds', scene:'b5_trate_harbour', txt: S.f.b5_c2_lootDone ?
-`The shed is empty, with water still standing on its floor and the owner's mark freshly painted on the door. Somebody has nailed it shut.` :
+`The shed is empty, with water still standing on its floor and the owner's mark freshly painted on the door. It has been nailed shut.` :
 `The sheds along the back of the quay took the wave through their front doors and out through their back walls. Water still stands a hand deep on the floors. In this one, by the sound of it, somebody is going through what the wave left: nets, oil jars, a merchant's crates, a chest that is not theirs. They are not hurrying. The Legion is busy.${b52If('tobet', `\n\n"Four," Tobet says, low. "One with a sling, up on the crates."`)}`,
       ch:[{t:'"Whitefinders. Put it down." In through the door.', req:()=>!S.f.b5_c2_lootDone, go:()=>startBattle('b5_c2_looters', {})},
           {t:'Round the back, through the hole the wave made, quiet.', check:['guile', 13], req:()=>!S.f.b5_c2_lootDone,
@@ -62274,7 +62277,7 @@ ${b52Say({thegg:`Thegg takes the heavy end every time without being asked, and i
             go:()=>startBattle('b5_c2_looters', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c2_sheds_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c2_sheds_seen:()=>({sp:'The flooded sheds', scene:'b5_trate_harbour', txt:
-`The back of the shed is further into the harbour than it looked. Somebody goes in to the chest, and the looters turn with their knives out and the one on the crates has a stone in his sling already.`,
+`The back of the shed is further into the harbour than it looked. A board gives under the first boot, and the looters turn with their knives out and the one on the crates has a stone in his sling already.`,
       ch:[{t:'Shields up.', go:()=>startBattle('b5_c2_looters', {surprise:'e'})}]}),
     b5_c2_looters_after:()=>({sp:'The flooded sheds', scene:'b5_trate_harbour', fx:()=>{ S.f.b5_c2_lootDone = 1; b52Docks(8, 'the shed-owners, through the harbour master, less his share'); }, txt:
 `The looters go out through the hole in the back wall faster than they came in, and leave what they were holding in the water. The squad carries it out onto the quay and the harbour master writes it in his book, item by item: nets, oil, a chest of tools, a bolt of cloth ruined by the sea and still in the book.
@@ -62285,7 +62288,7 @@ The shed-owners pay the Sixth for it in the evening, through the harbour master,
     /* ---- the first hulk at dusk ---- */
     b5_c2_gangplank:()=>({sp:'The first hulk', scene:'b5_c2_wrecks', txt: S.f.b5_c2_hulkDone ?
 `The first hulk lies across the end of the long quay where the wave put her, and the Legion's men are aboard her by day now, cutting her loose a plank at a time. At night they leave her alone, and so does everything else.` : !S.f.b5_c2_hm ?
-`A plank runs up from the quay to the rail of the ship on her side. A Legion soldier stands at the foot of it. "Harbour master's orders, soldier. Nobody aboard till he says."` :
+`A plank runs up from the quay to the rail of the ship on her side. A Legion soldier stands at the foot of it. "Harbour master's orders, soldier. No one aboard till he says."` :
 `A plank runs up from the quay to the rail of the ship on her side. The tide is going off her. Up in the rigging, against the evening sky, the shapes are where they were.`,
       ch:[{t:'Up the plank. It is near enough to dusk.', req:()=>!!S.f.b5_c2_hm && !S.f.b5_c2_hulkDone, onward:true, go:'b5_c2_board_go'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -62319,7 +62322,7 @@ Below, the water moves, slow, the way water moves when something is in it.`,
       ch:[{t:'Down the ladder, shields first.', req:()=>!S.f.b5_c2_hulkDone, go:()=>startBattle('b5_c2_hulk', {})},
           {t:'Down quiet, with the lamp hooded.', check:['wits', 14], req:()=>!S.f.b5_c2_hulkDone,
             edges:id=>[id === 'tobet' && ['he was taught to be somewhere the blow is not', 2], id === 'ammet' && ['she keeps calm, which is most of being quiet', 1], id === 'sgt' && ['you have gone down into worse cellars', 1], id === 'thegg' && ['the ladder was built for a smaller man', -1], id === 'perrit' && ['the hold is full of water, and she is going into it', -1]],
-            near:b52Owe(6, 'A Legion lamp, lost in a hold', w => `Yes, but the lamp goes out of ${b52Pos(w)} hand and into the water with a hiss, and the Legion's quartermaster will have a word with ${w === 'sgt' ? 'you' : b5Him(w)} about lamps: ${b5Coin(6)} against ${b52Pos(w)} line.`, {t:w => `Yes, but the lamp goes into the water and ${b52Nm(w)} ${b52V(w, 'go', 'goes')} into the dark after it, and comes up shaking: rattled.`, fx:w => b52Rattle(w)}),
+            near:{t:()=>{ const w = b52Who(); return `Yes, but the lamp goes out of ${b52Pos(w)} hand and into the water with a hiss, and ${b52Nm(w)} ${b52V(w, 'go', 'goes')} the rest of the way down in the dark, by feel: rattled.`; }, fx:()=>b52Rattle(b52Who())},
             go:()=>startBattle('b5_c2_hulk', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c2_hatch_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c2_hatch_seen:()=>({sp:'The hold', scene:'b5_c2_hold', txt:
@@ -62386,7 +62389,7 @@ ${b52Say({ammet:`Ammet goes round the squad without asking and looks at hands an
     b5_c2_fire_talk:()=>{ const ph = b52Ph(), k = b52Key(), ln = [];
       if (b5In('tobet')) ln.push(ph >= 4 ? (k === 'salvage' ? `Tobet has worked out his share of the forty. "Eight docks," he says, "if you spread it over the paybooks." He looks at his tally-stick, which is mostly notches. "Eight's a lot of notches. It doesn't look like much."` : `Tobet is looking at the quay, where the shells are still lying in a row on the planks. "Nobody paid us for that," he says. He sounds surprised that he doesn't mind.`) : `Tobet is watching the hulks out on the rocks. "They're still up there," he says. "In the rigging. You can see them when you don't look." He keeps not looking, very carefully.`);
       if (b5In('thegg')) ln.push(ph >= 4 ? `Thegg has his back against a drawn-up boat, which creaks. "Up the river," he says. "Away from the sea." He thinks about it. "I will miss the sea. My mother never saw it."` : `Thegg sits with his back to a drawn-up boat and talks low, in his mother's people's tongue, to nobody at the fire. When he sees you listening he stops. "There are a great many new ones here," he says. "I tell them the way."`);
-      if (b5In('perrit')) ln.push(ph >= 4 ? `Perrit is laying her tiles out and putting them away again without turning them. "War," she says. "The cadre will be sent somewhere. Not with us. Somewhere important." She ties the pouch. "I hope it is very far from water."` : `Perrit sits on the landward side of the fire, so the sea is in front of her where she can see it. "What was in that rigging," she says, "was held. Somebody was holding it. A long way off." She does the sum of how far, and does not like the answer, and says so.`);
+      if (b5In('perrit')) ln.push(ph >= 4 ? `Perrit is laying her tiles out and putting them away again without turning them. "War," she says. "The cadre will be sent somewhere. Not with us. Somewhere important." She ties the pouch. "I hope it is very far from water."` : `Perrit sits on the landward side of the fire, so the sea is in front of her where she can see it. "What was in that rigging," she says, "was held. Held from a long way off." She does the sum of how far, and does not like the answer, and says so.`);
       if (b5In('ammet')) ln.push(ph >= 4 ? `Ammet is packing her roll of tools, each one in its pocket, the same order as always. "Barges," she says. "Good. You can sew on a barge. You can't sew on a horse."` : `Ammet is boiling her needles in a pot of seawater. "Salt's good for it," she says. "So's the fire. So's not drinking." She is not drinking.`);
       if (b5In('brune')) ln.push(ph >= 4 ? `Brune is at the water's edge, as always. "The river runs into the sea," she says, when you come down to her. "So it is the Shore's too. Only further up." She seems content with that.` : `Brune sits at the water's edge with her feet in the wash, a little apart from the fire. "The Shore takes everything back," she says, when you come down to her. "I would just like it to wait."`);
       if (b5In('ruuk')) ln.push(`Ruuk is up on the dune bank, looking inland. "Gulls," he says. "Nothing but gulls. The hills are better. The hills have forty birds."`);
@@ -62497,7 +62500,7 @@ By day the squad drags the drowned out of the water with the Legion's gaffs and 
 
 Rumour comes down the quays from the Legion's officers: the King's delegation has sailed north to the Edur, the Prince and the First Eunuch, with Finadd Moroch Nevath and Finadd Gerun Eberict, to talk about the seals. "About the price of them," a docker says. "Lether always talks about the price."
 
-On the first of the month the Legion pays the Sixth its harbour money: six docks to the squad, after deductions. ${b52Say({perrit:'Perrit reads the deductions out loud, one by one, to the Legion\'s paymaster, who had not planned on anybody reading them.', _:'The deductions are read out loud by nobody, which is how the Legion likes them.'})}`,
+On the first of the month the Legion pays the Sixth its harbour money: six docks to the squad, after deductions. ${b52Say({perrit:'Perrit reads the deductions out loud, one by one, to the Legion\'s paymaster, who had not planned on anybody reading them.', _:'The deductions are read out loud by no one, and the Legion prefers them that way.'})}`,
       ch:[{t:'Take the night watch on the waterfront yourself, one night.', check:['wits', 13], req:()=>!S.f.b5_c2_watchTried, fx:()=>{ S.f.b5_c2_watchTried = 1; },
             edges:id=>[id === 'tobet' && ['he sees far, and he sees in the dark', 2], id === 'brune' && ['she knows what a boat sounds like on a night tide', 2], id === 'sgt' && ['you have stood a hundred watches', 1], id === 'thegg' && ['he is very easy to see', -1]],
             near:{t:()=>`Yes, but it takes the whole night, and ${b52Nm(b52Who())} ${b52V(b52Who(), 'come', 'comes')} back to the strand at dawn with no sleep in ${b52Who() === 'sgt' ? 'you' : b5Him(b52Who())}: no rest at the fire tonight.`, fx:()=>{ S.f.b5_c2_rest3 = 1; }},
@@ -62509,7 +62512,7 @@ On the first of the month the Legion pays the Sixth its harbour money: six docks
 In the morning the tide leaves it on the shingle: a purse, sodden, with five docks in it. The harbour master writes it in his book and hands it back. "Finder's fee," he says. "It's in the book now. That makes it yours."`,
       ch:[{t:'Back to the fire.', go:()=>{ startExplore('b5_c2_strand'); talk('b5_c2_fire'); }}]}),
     b5_c2_watch_no:()=>({sp:'The night watch', scene:'b5_c2_wrecks', txt:
-`A long night with a lamp, and the lighthouse turning, and the sea doing what it does. In the morning a Legion boat finds the hulk on the rocks has been gone over in the night by somebody with a skiff. Nobody on the watch saw a thing.`,
+`A long night with a lamp, and the lighthouse turning, and the sea doing what it does. In the morning a Legion boat finds the hulk on the rocks has been gone over in the night by somebody with a skiff. The watch saw nothing.`,
       ch:[{t:'Back to the fire.', go:()=>{ startExplore('b5_c2_strand'); talk('b5_c2_fire'); }}]}),
 
     /* ---- the key: the harbour master's bounty ---- */
@@ -62518,11 +62521,11 @@ In the morning the tide leaves it on the shingle: a purse, sodden, with five doc
 `The notice is still nailed to the harbour master's board. ${b52Key() === 'salvage' ? 'The cargo line has a chalk mark through it: landed.' : 'Under the second line, in fresh chalk: *Brought out. The Sixth.*'}` :
 `A new notice is nailed to the harbour master's board, in good square paint, with the harbour's seal. *Salvage: the cargo of the harvest ships, by weight, to the harbour, at a bounty. The dead to be landed for burial at the Legion's charge.*
 
-The harbour master taps the first line with his gaff. "The second hulk," he says, "the one with her bow on the stone. Her hold's full: furs, oil, sealskins, tools, a season's catch. Forty docks of bounty to whoever lands it. Today, at the bottom of the tide." He taps the second line. "And the dead. They're still aboard her. The Legion will pay to bury them, when somebody brings them out. Nobody has."
+The harbour master taps the first line with his gaff. "The second hulk," he says, "the one with her bow on the stone. Her hold's full: furs, oil, sealskins, tools, a season's catch. Forty docks of bounty to whoever lands it. Today, at the bottom of the tide." He taps the second line. "And the dead. They're still aboard her. The Legion will pay to bury them, when somebody brings them out. No one has."
 
 He looks at the tide, and does not say which comes first. "One tide, Sergeant. Your squad can do one or the other before it turns. Not both. The other will keep." He considers this. "One of them will keep."
 
-${b52Say({ammet:`"They've been in there since the spring," Ammet says. "Somebody is waiting for them to come home."`, _:''})}${S.f.b5_c1_key === 'pay' ? b52If('perrit', `\n\nPerrit is already doing the sums. "Forty docks," she says. "Over the paybooks, that's eight a line. The first eight anybody's taken off since Letheras." She hates that it is tempting, and says so, which helps nobody.`) : S.f.b5_c1_key === 'swim' ? b52If('thegg', `\n\nThegg is looking at the second hulk's flooded hold. "Somebody will have to go down into her either way," he says. "I have been under once this year already."`) : ''}${b5In('brune') ? `\n\nBrune looks at the hulk for a long time. "The Shore will want them back either way," she says. "The cargo and the crew."` : b5Waiting('brune') ? `\n\nDown on the strand the Shake are standing by their boats, watching the second hulk. Brune is among them, with her fish-spear.` : ''}`,
+${b52Say({ammet:`"They've been in there since the spring," Ammet says. "Their people are waiting for them to come home."`, _:''})}${S.f.b5_c1_key === 'pay' ? b52If('perrit', `\n\nPerrit is already doing the sums. "Forty docks," she says. "Over the paybooks, that's eight a line. The first eight anybody's taken off since Letheras." She hates that it is tempting, and says so, which helps nobody.`) : S.f.b5_c1_key === 'swim' ? b52If('thegg', `\n\nThegg is looking at the second hulk's flooded hold. "One of us will have to go down into her either way," he says. "I have been under once this year already."`) : ''}${b5In('brune') ? `\n\nBrune looks at the hulk. "The Shore will want them back either way," she says. "The cargo and the crew."` : b5Waiting('brune') ? `\n\nDown on the strand the Shake are standing by their boats, watching the second hulk. Brune is among them, with her fish-spear.` : ''}`,
       ch:[{t:'"The harbour\'s coin first. Land the cargo."', req:()=>!b52Key(), fx:()=>{ S.f.b5_c2_key = 'salvage';
               b52Docks(40, 'the harbour master\'s salvage bounty'); if (b52Near()) { b5Forgive('brune', 30, 'The harbour master\'s salvage bounty'); S.f.b5_c2_forgiven = 30; }
               b52L('tobet', 1); b52L('perrit', 1); b52L('brune', -1); b52L('ammet', -1); }, go:'b5_c2_dive'},
@@ -62575,7 +62578,7 @@ Their boss is a big man in a docker's apron with a mallet over his shoulder and 
     b5_c2_wreckers_after:()=>({sp:'The quay · night', scene:'b5_c2_wrecks', fx:()=>{ S.f.b5_c2_wreckDone = 1; S.f.b5_c2_ph = 4; }, txt:
 `The wreckers go back up the quay with their handcart empty, and their boss sits on a bollard with his mallet across his knees and his chit in his hand, bleeding a little, and tells anyone who will listen that he had a chit.
 
-In the morning the harbour master looks at the chit for a long time. It is his seal. It is his hand. "Ah," he says. "That was before the notice." He writes something in his book, and crosses something else out, and does not explain. The chests go up to the harbour's store under the Legion's guard.${b52If('perrit', `\n\n"He sold it twice," Perrit says, flatly. "He sold the same cargo twice, and wrote both down." She sounds, for a moment, almost admiring.`)}${b52If('brune', `\n\nBrune sits on the end of the quay with her feet over the water, and does not look at the second hulk, where the dead still are.`)}`,
+In the morning the harbour master looks at the chit, and then again. It is his seal. It is his hand. "Ah," he says. "That was before the notice." He writes something in his book, and crosses something else out, and does not explain. The chests go up to the harbour's store under the Legion's guard.${b52If('perrit', `\n\n"He sold it twice," Perrit says, flatly. "He sold the same cargo twice, and wrote both down." She sounds, for a moment, almost admiring.`)}${b52If('brune', `\n\nBrune sits on the end of the quay with her feet over the water, and does not look at the second hulk, where the dead still are.`)}`,
       ch:[{t:'To the strand.', onward:true, go:()=>{ startExplore('b5_c2_strand'); talk('b5_c2_fire'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
 
@@ -62599,7 +62602,7 @@ They are coming along the quay toward the row under the sailcloth. Behind it the
     b5_c2_tide_after:()=>({sp:'The quay · night', scene:'b5_c2_wrecks', fx:()=>{ S.f.b5_c2_tideDone = 1; S.f.b5_c2_ph = 4; }, txt:
 `The Legion's lamps come along the quay at last, a whole file of them, at a run. By the time they arrive the shapes have gone back up into the rigging, or into nothing, and the sailcloth on the quay has not been touched.
 
-The Legion's carts take the harbour's dead up the town steps in the morning, to be buried at the Legion's charge, which the harbour master writes down. The Shake take the poachers' dead out in their boats on the morning tide, which the harbour master does not write down, because nobody tells him. Nobody pays the Sixth for any of it.${b52If('brune', `\n\nBrune goes out with the boats. She comes back at noon with her feet wet and sits down by the fire and does not say where she has been. Everybody knows.`)}${b52If('tobet', `\n\nTobet sits on the quay where the row was. "Nobody's going to pay us for that," he says. Then, after a while: "Good."`)}`,
+The Legion's carts take the harbour's dead up the town steps in the morning, to be buried at the Legion's charge, which the harbour master writes down. The Shake take the poachers' dead out in their boats on the morning tide, which the harbour master does not write down, because nobody tells him. The Sixth is paid for none of it.${b52If('brune', `\n\nBrune goes out with the boats. She comes back at noon with her feet wet and sits down by the fire and does not say where she has been. Everybody knows.`)}${b52If('tobet', `\n\nTobet sits on the quay where the row was. "Nobody's going to pay us for that," he says. Then, after a while: "Good."`)}`,
       ch:[{t:'To the strand.', onward:true, go:()=>{ startExplore('b5_c2_strand'); talk('b5_c2_fire'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
 
@@ -62615,7 +62618,7 @@ He folds the order. "A regiment is camped at Kraig's Landing, upriver, near the 
     b5_c2_road:()=>({sp:'The barges · first light', scene:'b5_trate_harbour', txt:
 `At first light the Sixth Company goes aboard the regiment's barges at the stage by the river mouth, with its paybooks in the oilskin case, and the barges push off and pole out into the current, and turn upstream.
 
-Behind the company, Trate is waking up: the lighthouse going pale against the morning, the Tarancede Tower black on its rocks, the cleared quays with the Legion's carts already on them, and on the strand the Shake boats drawn up by their fires. ${b52Key() === 'dead' ? 'On the long quay, where the row was, a few white shells are still lying on the planks. Nobody has swept them up.' : 'On the long quay the second hulk is still on the stone with her bow up, and the shapes are still in her rigging, and the dead are still in her hold.'}
+Behind the company, Trate is waking up: the lighthouse going pale against the morning, the Tarancede Tower black on its rocks, the cleared quays with the Legion's carts already on them, and on the strand the Shake boats drawn up by their fires. ${b52Key() === 'dead' ? 'On the long quay, where the row was, a few white shells are still lying on the planks. They have not been swept up.' : 'On the long quay the second hulk is still on the stone with her bow up, and the shapes are still in her rigging, and the dead are still in her hold.'}
 
 ${b5In('brune') ? `Brune sits in the stern of the barge with her feet over the side, in the river. "It is not the sea," she says. "It will get there."` : b5Waiting('brune') ? `As the barge turns into the current, Brune is standing by her boat on the strand, watching. She lifts the fish-spear, once. She is still in the paybook. The roster at any fire can send for her.` : ''}${b52If('tobet', `\n\nTobet sits half a step behind you on the barge's bench, as always, cutting a notch in the tally-stick.`)}${b52If('thegg', `\n\nThegg sits in the middle of the barge, where his weight keeps it level, and the bargemen thank him for it.`)}${b52If('perrit', `\n\nPerrit sits with her back to the cargo and her face to the river, where she can see it.`)}${b52If('ammet', `\n\nAmmet is asleep, sitting up, with her roll of tools in her lap.`)}
 

@@ -89,6 +89,8 @@ const b5v = await page.evaluate(() => { const out = {}; S = newState('Hask'); S.
   out.places = ['b5_barracks', 'b5_trate_harbour', 'b5_landing', 'b5_highfort', 'b5_road_south', 'b5_branskeep', 'b5_letheras', 'b5_nowhere', 'b5_nowhere_night'].map(k => AUDIO._dev.placeAmb(k)); return out; });
 ok(b5v.mt === 'mt' && b5v.title && b5v.title.amb === 'river_night' && b5v.end && b5v.end.amb === 'city_night', `Book Five's voice, its title on the river at night and its end in the city at night (${b5v.mt}, ${JSON.stringify(b5v.title)}, ${JSON.stringify(b5v.end)})`);
 ok(b5v.places.join() === 'city_night,sea,river_night,hills,burnt,hills,city,river,river_night', 'Book Five\'s reading places, and b5_ falling to the river country: ' + b5v.places.join(', '));
+const b5c = await page.evaluate(() => ['b5_c1_lowwalk', 'b5_c1_festival', 'b5_c1_court', 'b5_c2_quay', 'b5_c2_wrecks', 'b5_c2_strand', 'b5_c2_hold'].map(k => AUDIO._dev.placeAmb(k)));
+ok(b5c.join() === 'city,city_night,interior,sea,sea_night,sea_night,interior', 'Book Five\'s chapters: Letheras in the city, Trate on the sea: ' + b5c.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));
