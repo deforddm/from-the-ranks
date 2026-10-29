@@ -67215,7 +67215,7 @@ GLOSSX.mt.push(
 /* ---- the reading: Letheras, a barricade by a canal: cracked stone, a torch, a dock and a knife (the night before the Edur come) ---- */
 B5READ[7] = {scene:'b5_letheras', where:'a cracked flagstone behind the barricade, by a torch jammed in a cart\'s wheel, with a dock and a knife laid on it', set:'The footbridge over the Quillas Canal at night, behind a barricade of carts, with the city burning in three places over the roofs and the Edur a night\'s march away.',
   back:'b5_c7_tiles_done', backT:'Back to the barricade.',
-  get say(){ return {perrit:`Perrit sits down on the flagstone with her back to the barricade and her face to the canal, which she has never done, and lays the calfskin on the cracked stone. Somebody has left a dock and a knife there already. She moves neither. "They can be in it," she says. "Everything else is."${b5In('pessa') ? ' Pessa sits on the cart\'s shaft above her and watches the water instead.' : ''}`,
+  get say(){ return {perrit:`Perrit sits down on the flagstone with her back to the barricade and her face to the canal, which she has never done, and lays the calfskin on the cracked stone. A dock and a knife lie on it already, left by whoever sat here last. She moves neither. "They can be in it," she says. "Everything else is."${b5In('pessa') ? ' Pessa sits on the cart\'s shaft above her and watches the water instead.' : ''}`,
     tilewoman:`The tile-woman has come down to the Low Walk with the company's followers, the ones who are left, and she sits down on the cracked flagstone behind the barricade without asking whose it is. There is a dock on it already, and a knife. "Somebody paid," she says, and spits to one side, for manners. "A dock, Sergeant, all the same. I'll not read the last night in Letheras on credit."`}; }};
 
 /* the fire is a roster fire (38c): the brazier at the footbridge barricade */
@@ -67374,7 +67374,7 @@ const B5CH7 = {
     b5_c7_dock:{name:'A holed dock from the Low Walk', slot:'trinket', role:'any', who:null, stat:{guile:1},
       line:'A worn copper dock with a hole bored through it, on a cord still wet from the canal: the twin of the one the canal children dropped into the Quillas for the drowned, the evening the city fell. The Errant, they say, remembers who keeps one. It is worth exactly one dock, and nobody in the Sixth would spend it. +1 Guile.'},
     b5_c7_lamp:{name:'A canal lamp off the Low Walk', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. Nobody has lit it since. Nobody has put it down either. +3 health.'},
+      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. It has not been lit since, or put down. +3 health.'},
     b5_c7_ledgerpage:{name:'The Sixth\'s page from the paybook', slot:'trinket', role:'any', who:null,
       line:'A single ruled page out of the Sixth Company\'s paybook: columns of names and numbers in the clerk\'s hand, and a line drawn neatly through every one. The clerk tore it out and handed it over without a word. It is the only receipt the army ever gave anybody in the squad for anything.'} },
 
@@ -67415,7 +67415,7 @@ const B5CH7 = {
     f.b5_c7_key === 'ledger' && 'The Sixth is in the dead roll of the fall. Its debts have gone to the heirs.',
     f.b5_c7_stopped && 'The Emperor stopped the killing in the streets, and decreed a day of suffering.',
     f.b5_c7_canal && 'When the sorcery came down the street, the squad went into the canal under the footbridge, and came up.',
-    f.b5_c7_word && 'Word along the canal: a Finadd held the main bridge and fought the Emperor, and both fell, and the Emperor rose. Nobody who says it saw it.',
+    f.b5_c7_word && 'Word along the canal: a Finadd held the main bridge and fought the Emperor, and both fell, and the Emperor rose. Not one of them saw it.',
     f.b5_c7_burned && 'The house\'s strongroom burned in the night. A quarter of every debt went with it.',
     'The King has been crowned Emperor, they say, by his court. The Seventh Closure has come.',
     'The Sixth is in Letheras, at a footbridge over the Quillas Canal by the Low Walk, two streets from where you were born.'].filter(Boolean); },
@@ -67428,7 +67428,7 @@ const B5CH7 = {
 
 Every City Garrison station in Letheras has a bell, and each district's bell has its own count, and tonight they are all ringing the same count over and over: *any soldier, here*. The Drownings' bell is in a station at the corner of the old fish market, and a garrison sergeant is standing under it with a lamp, writing down whoever comes.
 
-Over the roofs, in three places, there are fires. Nobody is putting them out. And in the dark between them, round a dark tower that stands apart from everything, there are starlings, tens of thousands of them, going round and round at night, which starlings do not do.${b57Say({tobet:`\n\nTobet watches them. "They're counting something," he says, flat. "Everyone in this city is."`, perrit:`\n\nPerrit watches them and does not say what she thinks they are doing, which in Perrit is a great deal.`, _:''})}
+Over the roofs, in three places, there are fires, and they are being left to burn. And in the dark between them, round a dark tower that stands apart from everything, there are starlings, tens of thousands of them, going round and round at night, which starlings do not do.${b57Say({tobet:`\n\nTobet watches them. "They're counting something," he says, flat. "Everyone in this city is."`, perrit:`\n\nPerrit watches them and does not say what she thinks they are doing, which in Perrit is a great deal.`, _:''})}
 
 This is two streets from where you were born. You know the corner. You know the bell.`,
       ch:[{t:'Find the Finadd.', go:'b5_c7_ennic'},
@@ -67450,7 +67450,7 @@ He looks west down the street. "You know this part of the city, Sergeant. Lead o
       again:()=>`The glow over the Counters' Quarter, dying down.`, txt:
 `Over the roofs to the east the sky is orange and rising, and the company clerk has stopped in the street with the oilskin case against his chest to look at it.
 
-"The Counters' Quarter," he says. "That is the house's street. That will be the house." He watches for a while. "Strongrooms are built against thieves. Nobody builds a strongroom against a city."
+"The Counters' Quarter," he says. "That is the house's street. That will be the house." He watches for a while. "Strongrooms are built against thieves. They are not built against a city."
 
 A man comes past with a ledger under each arm, running, and drops one, and does not stop for it. The clerk picks it up and looks inside, and puts it down on a step, carefully.
 
@@ -67474,7 +67474,7 @@ A man comes past with a ledger under each arm, running, and drops one, and does 
 
 They know the Sixth's coats, and they make room. They have news, and they want to give it to soldiers, because soldiers ought to have it. The King has been crowned Emperor in the new palace by his court: they all agree on that, and on the Seventh Closure, and on what it means, which is that it is going to be all right. A woman says the Emperor will come out on the balcony in the morning and the Edur will kneel. A man says the Edur eat what they kill, and is told to be quiet in front of the children. A boy says he has heard that the Edur cannot cross running water, and the canal is running water, and everybody looks at the boy until he stops.
 
-An old man with a slate is taking wagers on which bridge the Edur come over first. He has odds chalked up already. Nobody stops him. It is Letheras.${b57Say({ruuk:`\n\nRuuk stands at the edge of the light, looking up the streets in every direction. "I know every road in the Faraed," he says. "This is not roads. This is a knot." He grins anyway. "Give me a night. I'll know it."`, pessa:`\n\nPessa sniffs the canal on the wind. "That's the Quillas," she says. "I'd know it blind. I poled grain under every bridge on it." She looks at the old man's slate. "He's got the odds wrong on the Low Walk."`, _:''})}`,
+An old man with a slate is taking wagers on which bridge the Edur come over first. He has odds chalked up already, and the crowd lets him. It is Letheras.${b57Say({ruuk:`\n\nRuuk stands where the brazier's light gives out, looking up the streets in every direction. "I know every road in the Faraed," he says. "This is not roads. This is a knot." He grins anyway. "Give me a night. I'll know it."`, pessa:`\n\nPessa sniffs the canal on the wind. "That's the Quillas," she says. "I'd know it blind. I poled grain under every bridge on it." She looks at the old man's slate. "He's got the odds wrong on the Low Walk."`, _:''})}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* the City Garrison's bell-station */
@@ -67575,7 +67575,7 @@ At the end of the street, where the Edur came down, an Edur patrol is going from
 `The brazier is out, in the daylight, and nobody is going to sit at it today.` :
 `The brazier in the gap between the carts, and the City Garrison's soldiers round it, and the Sixth round it with them, a long way from High Fort and as near home as some of them will ever be.
 
-Nobody is drinking.${b57If('ammet', ' Ammet least of all, who never does the night before.')}${b57If('pessa', `\n\nPessa sits on a cart's shaft with her boathook upright, facing the canal, as if she might be asked to pole something under the bridge at any moment.`)}${b57If('brune', `\n\nBrune has gone down the steps and put her feet in the canal, because it is water. She says it is not the sea. She keeps them in.`)}${b57If('ruuk', `\n\nRuuk sits on top of the barricade, watching the street, and every so often he names a street out loud to himself, getting it right.`)}${fell.length && !S.f.b5_c7_named ? `\n\nThere are names the squad has not said since Brans Keep.` : ''}`,
+The brazier's circle is not drinking.${b57If('ammet', ' Ammet least of all, who never does the night before.')}${b57If('pessa', `\n\nPessa sits on a cart's shaft with her boathook upright, facing the canal, as if she might be asked to pole something under the bridge at any moment.`)}${b57If('brune', `\n\nBrune has gone down the steps and put her feet in the canal, because it is water. She says it is not the sea. She keeps them in.`)}${b57If('ruuk', `\n\nRuuk sits on top of the barricade, watching the street, and every so often he names a street out loud to himself, getting it right.`)}${fell.length && !S.f.b5_c7_named ? `\n\nThere are names the squad has not said since Brans Keep.` : ''}`,
         ch:[{t:'Sit an hour. Let the squad rest.', req:()=>p === 2 && !S.f.b5_c7_rest, fx:()=>{ S.f.b5_c7_rest = 1; b5Rest('The squad sits an hour at the brazier behind the carts, with the canal going by. Wounds close, mostly.'); }, go:'b5_c7_fire_rest'},
             {t:'The pay desk, at the clerk\'s case. (On the paid road, the squad\'s docks go on the debts.)', go:'b5_c7_pay'},
             {t:'Talk with the squad.', req:()=>p !== 3, go:'b5_c7_fire_talk'},
@@ -67603,7 +67603,7 @@ ${b57Say({ammet:`Ammet goes round the squad and looks at hands and feet and the 
     /* the fallen of Brans Keep, named once each, and who carries their debts */
     b5_c7_names:()=>{ const fell = b57Fallen();
       return {sp:'The brazier', scene:'b5_letheras', fx:()=>{ S.f.b5_c7_named = 1; }, txt: fell.length ?
-`At the brazier, late, with the garrison soldiers asleep against the carts, the squad says the names. Nobody decides to. Somebody starts.
+`At the brazier, late, with the garrison soldiers asleep against the carts, the squad says the names. It is not decided. One voice starts, and the rest follow.
 
 ${fell.map(id => `*${NAME(id)}*.`).join(' ')}
 
@@ -67694,7 +67694,7 @@ ${b57Ph() >= 4 ? `"Still here," she says. "Both of us." She looks at the water. 
 `Under the arch, the green water, and the squad in it.` :
 `Under the footbridge the Low Walk's steps go right down into the canal, and the arch goes over the water low and dark, and along the stones under it there is a ledge a hand wide, a hand under the surface, that every child in the Drownings District knows and no grown-up has looked at in years. You hung off it as a child, with your nose just out of the water, counting, to see who could stay the longest.
 
-It is still there. You check.${b57If('pessa', ' Pessa leans over and looks too. "The ledge," she says. "Good. Nobody fills them in."')}`,
+It is still there. You check.${b57If('pessa', ' Pessa leans over and looks too. "The ledge," she says. "Good. They never fill them in."')}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
     b5_c7_back:()=>({sp:'The street', scene:'b5_c7_night', again:()=>`The street back up into the district.`, txt:
 `The street goes back up into the Drownings District, toward the bell and the fires. The Sixth's place is here.`,
@@ -67754,9 +67754,9 @@ Then a runner along the canal, shouting as he comes, and everybody along the Low
 
 And then the Emperor got up.
 
-The runner is gone before anybody can ask him how he knows. Nobody along the canal saw it. Everybody along the canal is saying it, already, to everybody else.${b57Say({tobet:`\n\nTobet has gone quiet. "Got up," he says, at last. "He'd want paying for that, in Lether."`, ammet:`\n\nAmmet says, "I'd want to look at that wound," and nothing else.`, _:''})}
+The runner is gone before anybody can ask him how he knows. Not a soul along the canal saw it. Everybody along the canal is saying it, already, to everybody else.${b57Say({tobet:`\n\nTobet has gone quiet. "Got up," he says, at last. "He'd want paying for that, in Lether."`, ammet:`\n\nAmmet says, "I'd want to look at that wound," and nothing else.`, _:''})}
 
-Somewhere to the north-east of the city, a long way off, there is a sound like a great door shutting, a single deep thump, and then nothing. The garrison sergeant says it came from Settle Lake. Nobody knows what it was.`,
+Somewhere to the north-east of the city, a long way off, there is a sound like a great door shutting, a single deep thump, and then nothing. The garrison sergeant says it came from Settle Lake. What it was, he cannot say.`,
       ch:[{t:'To the barricade. The street.', onward:true, go:'b5_c7_edur'},
           {t:'Not now.', go:()=>startExplore()}]}),
 
@@ -67790,7 +67790,7 @@ The lamps along the street are going out.
 
 One after another, from the top of the street down, the lamps along the house-fronts go out, each one a little after the one before, coming this way, and behind the last lit lamp the street is not dark the way a street is dark at night. It is dark the way the bottom of the canal is dark. It is coming down the street at a walk.
 
-A garrison soldier on the barricade looks at it, and drops his spear, and runs, over the footbridge and away. Nobody stops him. At a window above the street a woman is watching it come, and then the window is dark too, and nobody is at it.
+A garrison soldier on the barricade looks at it, and drops his spear, and runs, over the footbridge and away. He is let go. At a window above the street a woman is watching it come, and then the window is dark too, and nobody is at it.
 
 Finadd Ennic looks at it. Then at you. "Sergeant," he says. "You said you knew the way under."`,
       ch:[{t:'"The canal. Everybody down the steps and under the arch. Now."', onward:true, go:'b5_c7_sorcery'}]}),
@@ -67818,15 +67818,15 @@ Then there is enough ledge. Everybody is holding on. It cost something, and it c
 
 Above, through the gap between the arch and the water, you can see the Low Walk's steps in daylight, and then you cannot: the light on the steps goes, and the dark comes down them, and over the water, and across the mouth of the arch, slowly, and stays.
 
-It is very cold. Nobody speaks. Somebody is praying, very quietly, and it might be you. The water is in your mouth and your ears and you can feel your own heart in the stone under your fingers. In the canal under the arch there is nothing at all but the water and the squad, holding on, and the dark across the arch's mouth like a door.
+It is very cold. The squad is silent but for one voice praying, very quietly, and it might be yours. The water is in your mouth and your ears and you can feel your own heart in the stone under your fingers. In the canal under the arch there is nothing at all but the water and the squad, holding on, and the dark across the arch's mouth like a door.
 
 Then it goes. It goes on down the canal, the way it came down the street, at a walk. The light comes back onto the steps.
 
-You stay where you are for a long time anyway.${S.f.b5_c7_ash ? `\n\nWhen at last somebody moves, a twist of brown paper floats out from the ledge into the green water, and comes undone, and a pinch of grey ash, still faintly green, goes out of it onto the canal and away under the arch toward the sea. It came down on the dock at Kraig's Landing a long time ago. Nobody reaches for it.` : ''}${b57Say({thegg:`\n\nThegg is the last to let go of the ledge. "Four lungs," he says, when he can. "I needed five."`, brune:`\n\nBrune lets go of the ledge last. "It held us," she says. "It did not take us. Write that down."`, _:''})}
+You stay where you are anyway, until your hands decide.${S.f.b5_c7_ash ? `\n\nWhen at last somebody moves, a twist of brown paper floats out from the ledge into the green water, and comes undone, and a pinch of grey ash, still faintly green, goes out of it onto the canal and away under the arch toward the sea. It came down on the dock at Kraig's Landing a long time ago. The squad lets it go.` : ''}${b57Say({thegg:`\n\nThegg is the last to let go of the ledge. "Four lungs," he says, when he can. "I needed five."`, brune:`\n\nBrune lets go of the ledge last. "It held us," she says. "It did not take us. Write that down."`, _:''})}
 
 Much later, from the bridge above, a voice in Letherii with a strange edge to it calls along the canal, the same words over and over, going away along the Low Walk: the killing is stopped, by the Emperor's word. Tomorrow is decreed a day of suffering.
 
-The voice does not say what that means. Nobody on the ledge asks.
+The voice does not say what that means. The ledge does not ask.
 
 When the squad climbs out at last, somebody is holding one of the Low Walk's canal lamps, out, green with water, that came off its hook on the way down and never left the hand that grabbed it.`,
       ch:[{t:'Up the steps. Evening.', onward:true, fx:()=>{ S.f.b5_c7_ph = 4; }, go:()=>{ startExplore('b5_c7_walk'); talk('b5_c7_evening'); }}]}),
@@ -67925,7 +67925,7 @@ Finadd Ennic swears with the rest, in the street, because the garrison sergeant 
 
 He puts every dock the squad has on the lines, smallest first, out loud, so the squad can hear the arithmetic: ${b5Coin(S.f.b5_c7_spent || 0)}, down to the last dock. Then he goes through the book again, line by line, and wherever a line is past half, he writes the army's release across it, and blots it. "The army bought these cheap," he says, to nobody in particular. "It has had its money back. That is what the release is for."
 
-${rel.length ? `${b57And(rel.map(id => id === 'sgt' ? 'You' : NAME(id)))} ${rel.length > 1 || rel[0] === 'sgt' ? 'walk' : 'walks'} out of the army owing nothing.` : 'Nobody walks out owing nothing. The docks did not go far enough.'} ${['sgt', ...b57Here()].filter(id => !rel.includes(id)).length ? `${b57Cap(b57And(['sgt', ...b57Here()].filter(id => !rel.includes(id)).map(id => id === 'sgt' ? 'you' : NAME(id))))} ${['sgt', ...b57Here()].filter(id => !rel.includes(id)).length > 1 ? 'walk' : 'walks'} out of uniform still owing, in Letheras, to ${b57Holder()}, with the canal going by.` : ''}${b57If('tobet', rel.includes('tobet') ? `\n\nTobet looks at his line with the release across it for a long time. "Nine hundred docks of plough," he says, "and nobody ever owned it but the debt." He folds his hands over the tally-stick, and then he breaks it.` : `\n\nTobet looks at his line. "Out of uniform," he says, flat. "Still owing. In Letheras." He looks at the canal. "I know how that one ends. I laughed at the jokes."`)}`,
+${rel.length ? `${b57And(rel.map(id => id === 'sgt' ? 'You' : NAME(id)))} ${rel.length > 1 || rel[0] === 'sgt' ? 'walk' : 'walks'} out of the army owing nothing.` : 'Nobody walks out owing nothing. The docks did not go far enough.'} ${['sgt', ...b57Here()].filter(id => !rel.includes(id)).length ? `${b57Cap(b57And(['sgt', ...b57Here()].filter(id => !rel.includes(id)).map(id => id === 'sgt' ? 'you' : NAME(id))))} ${['sgt', ...b57Here()].filter(id => !rel.includes(id)).length > 1 ? 'walk' : 'walks'} out of uniform still owing, in Letheras, to ${b57Holder()}, with the canal going by.` : ''}${b57If('tobet', rel.includes('tobet') ? `\n\nTobet looks at his line with the release across it, and keeps looking. "Nine hundred docks of plough," he says, "and nobody ever owned it but the debt." He folds his hands over the tally-stick, and then he breaks it.` : `\n\nTobet looks at his line. "Out of uniform," he says, flat. "Still owing. In Letheras." He looks at the canal. "I know how that one ends. I laughed at the jokes."`)}`,
         ch:[{t:'Back to the brazier.', go:'b5_c7_fire'},
             {t:'The last of it.', onward:true, go:'b5_c7_last'}]}; },
     b5_c7_ledger:()=>({sp:'Out of the ledger', scene:'b5_c7_finale', fx:()=>{ if (!S.f.b5_c7_pageGot) { S.f.b5_c7_pageGot = 1; gain('b5_c7_ledgerpage'); } }, txt:
@@ -67935,7 +67935,7 @@ The clerk watches him write. When he has finished, the clerk blots it. Then he o
 
 "Listed dead," the clerk says, at last, "the debts pass to the heirs. That is the army's rule." He shuts the case. "I did not make it. I have only ever written it down."
 
-Ennic looks at the patrol, halfway down the street. "The canal, Sergeant," he says. "West, along the Low Walk, and under the next bridge, and the next. Do not come back for anything." He does not offer his hand. Then he does.${b57If('tobet', `\n\nTobet reads his name in the dead roll over Ennic's shoulder. "Dead," he says. "The one thing the army can't buy back." He laughs, flat, and for once he means it.`)}${b57If('thegg', `\n\nThegg looks at the page. "The tavern will write it to my mother's son," he says. "Who is dead. To a dead woman's dead son." He considers it. "Nobody can collect that." He does not sound pleased. He sounds tired.`)}`,
+Ennic looks at the patrol, halfway down the street. "The canal, Sergeant," he says. "West, along the Low Walk, and under the next bridge, and the next. Do not come back for anything." He does not offer his hand. Then he does.${b57If('tobet', `\n\nTobet reads his name in the dead roll over Ennic's shoulder. "Dead," he says. "The one thing the army can't buy back." He laughs, flat, and for once he means it.`)}${b57If('thegg', `\n\nThegg looks at the page. "The tavern will write it to my mother's son," he says. "Who is dead. To a dead woman's dead son." He considers it. "That can't be collected." He does not sound pleased. He sounds tired.`)}`,
       ch:[{t:'Back to the brazier.', go:'b5_c7_fire'},
           {t:'The last of it.', onward:true, go:'b5_c7_last'}]}),
 
@@ -67977,7 +67977,7 @@ B57FIN.ending = key => {
     if (key === 'emperor') P = [
 `In the morning the Edur count the soldiers of Letheras, street by street, and write them down, which surprises everybody: the Edur, it turns out, can be taught to keep books. The Sixth Company of the Whitefinder Battalion is counted on the Low Walk, and marched to a barracks it knows, and given back its swords a week later by a Letherii officer with a new band on his arm. The army is the Emperor's now. It is the same army.`,
 `${mates.length ? `${b57And(mates)} ${mates.length > 1 ? 'are' : 'is'} counted with you.` : 'You are counted alone, and the officer with the band puts two recruits beside you so that it looks like a squad.'} The paybooks come back from the counting-room with the Emperor's seal on the front, and inside them every line is where it was. The clerk checks. Twice.`,
-`Somebody in the barracks says the Edur are sending ships across the sea, a long way off. Nobody knows what for. The Sixth's road goes on, in the army, under the new seals: Book Seven, when it is written, will offer this save.`];
+`There is talk in the barracks of the Edur sending ships across the sea, a long way off, for reasons the barracks does not know. The Sixth's road goes on, in the army, under the new seals: Book Seven, when it is written, will offer this save.`];
     else if (key === 'paid') P = [
 `The Sixth Company of the Whitefinder Battalion is discharged on the Low Walk on the evening of the fall, and walks up off it out of uniform in the dusk, and the Edur patrol lets it by. In the morning the city is the Emperor's, and the Sixth is not anybody's.`,
 `${b57Rel().length ? `${b57And(b57Rel().map(id => id === 'sgt' ? 'You' : NAME(id)))} walked out owing nothing.` : 'Nobody walked out owing nothing.'} ${['sgt', ...b57Here()].filter(id => !b57Rel().includes(id)).length ? 'The rest walked out owing, in Letheras, where the debt goes into the canal with whoever owes it, and the court sits again within the month.' : ''} The squad spent ${b5Coin(S.f.b5_c7_spent || 0)} at discharge, smallest first, which was the arithmetic.`,
@@ -68011,7 +68011,7 @@ B57FIN.fate = (id, key) => {
     b57Swam() ? `In the summer he swam the Quillas weighted with three hundred docks of the court's coin, and came out the far side. Under the footbridge, in the autumn, he used all four lungs. ${b57HighFort('thegg')}` : `In the summer the squad paid his fine at the court so he would not swim the Quillas. Under the footbridge, at the fall, he swam it anyway, carrying two. ${b57HighFort('thegg')}`,
     B57FIN.loy('thegg', `"Behind me, Sergeant," he says, and means you too, now. He did not used to.`, `He stands where you put him, sideways, and does not offer anything more.`, `He turns sideways for doors, and for you.`)]);
   if (id === 'perrit') return add('The sums', [
-    R === 'emperor' ? `Perrit is counted with the Sixth, and the cadre school is the Emperor's too now, and nobody can tell her yet what the Emperor wants with a cadre mage of the Holds. She pays the school on the first of the month anyway, with a face like a closed door. Somebody has to keep the books straight.` :
+    R === 'emperor' ? `Perrit is counted with the Sixth, and the cadre school is the Emperor's too now, and nobody can tell her yet what the Emperor wants with a cadre mage of the Holds. She pays the school on the first of the month anyway, with a face like a closed door. The books have to be kept straight by someone.` :
     R === 'paid' ? `Perrit walks out of uniform to her father's house in the Pursers' District, and copies ledgers for him at three docks a week, and is good at it, and on the side, in the evenings, she teaches two clerks' daughters their sums. And the Holds. Not linking.` :
     `Perrit walks out of the ledger, and her line goes to her father, a clerk in the Pursers' District, who will pay it, a few docks at a time, for the rest of his life. She knows it. She sends him what she can, unsigned, from wherever she is.`,
     D,
@@ -68082,7 +68082,7 @@ B57FIN.sgt = key => {
     D,
     `${b57HighFort('sgt')} ${b57Channel('sgt')} On the last day you took the squad into the Quillas under the footbridge where you learned to swim, and everybody came up.`,
     trickBy('b5_c7_dock') === 'sgt' || b57Has('b5_c7_dock') ? `There is a holed dock on a wet cord round your neck, the twin of one that went into the canal for the drowned. You do not look at it when you spin it.` : '',
-    f.b5_c6_fingerOk ? 'You still touch the white fingertip on your boss before anything. Nobody in the battalion ever learned why the finger. You have decided the drill-sergeant was right, and that it does not matter.' : 'You still touch the white fingertip on your boss before anything, for the Errant. Nobody in the battalion ever learned why the finger.'])};
+    f.b5_c6_fingerOk ? 'You still touch the white fingertip on your boss before anything. The battalion never learned why the finger. You have decided the drill-sergeant was right, and that it does not matter.' : 'You still touch the white fingertip on your boss before anything, for the Errant. The battalion never learned why the finger.'])};
 };
 
 /* the coda: the Edur in the city, the belief, the canal, the paybooks; the count */
