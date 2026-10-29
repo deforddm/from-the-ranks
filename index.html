@@ -63544,7 +63544,7 @@ Three barges, tied three deep: the near one to the dock, the next to the near on
 
 There is a sound out on the water that is not the river. Oars, muffled, very close. And then, on the next barge, a shape gets up from behind the cargo that is not a bargeman.${b53If('tobet', `\n\n"Four," Tobet breathes, behind you. "On the next one and the outer. One with a pole. More on the water."`)}`,
       ch:[{t:'"Whitefinders." Lantern up, and over onto the next barge.', req:()=>!!S.f.b5_c3_watch && !S.f.b5_c3_riverDone, go:()=>startBattle('b5_c3_rivermen', {})},
-          {t:'Hood the lantern and go along the cargo in the dark, low.', check:['wits', 14], req:()=>!!S.f.b5_c3_watch && !S.f.b5_c3_riverDone,
+          {t:'Shutter the lantern and go along the cargo in the dark, low.', check:['wits', 14], req:()=>!!S.f.b5_c3_watch && !S.f.b5_c3_riverDone,
             edges:id=>[id === 'brune' && ['she has crossed decks in the dark all her life', 2], id === 'tobet' && ['he sees in the dark, and is where the blow is not', 1], id === 'pessa' && ['she was raised on barges', 1], id === 'thegg' && ['every barge he steps on tells the river about it', -2], id === 'perrit' && ['the water is right there', -1]],
             near:b53Owe(6, 'A regiment lantern, in the river', w => `Yes, but the hooded lantern goes out of ${b53Pos(w)} hand on the cargo and into the river with a hiss, and it is the regiment's lantern: ${b5Coin(6)} against ${b53Pos(w)} line.`, {t:w => `Yes, but ${b53Nm(w)} ${b53V(w, 'go', 'goes')} into the gap between the barges up to the waist, and the thieves hear the splash: rattled.`, fx:w => b53Rattle(w)}),
             go:()=>startBattle('b5_c3_rivermen', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c3_rope_seen'},

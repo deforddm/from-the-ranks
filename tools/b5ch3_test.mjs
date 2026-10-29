@@ -78,7 +78,7 @@ const r = await page.evaluate(async () => {
     out.f.game.after = S.node; out.f.game.flag = !!S.f.b5_bones; out.f.game.net = S.silver - sw; out.f.game.capOk = (S.f.b5_bonesNet || 0) <= 15 && out.f.game.net <= 15; out.f.game.again = !has('b5_c3_fire', /knucklebones/); }
   /* the first night: the barges, the river thieves */
   talk('b5_c3_fire'); take('b5_c3_fire', /first watch/); out.f.watch = S.f.b5_c3_watch; take('b5_c3_watch_start', /Down onto the barges/); out.f.barges = {area:S.area, dark:!!AREAS.b5_c3_barges.dark};
-  talk('b5_c3_rope'); out.f.ropeNotNow = has('b5_c3_rope', /Not now/); out.f.ropeCheck = vis('b5_c3_rope').find(x => /Hood the lantern/.test(x.t)).check.join(':');
+  talk('b5_c3_rope'); out.f.ropeNotNow = has('b5_c3_rope', /Not now/); out.f.ropeCheck = vis('b5_c3_rope').find(x => /Shutter the lantern/.test(x.t)).check.join(':');
   out.f.river = await force('b5_c3_rivermen', async res => { const u = B.units.find(x => x.side === 'p' && x.id === 'perrit'), e = B.units.find(x => x.side === 'e');
     res.offered = typeof trickOk === 'function' && trickOk(u, AB.t_b5_c3_link); res.tiles = AB.t_b5_c3_link.tiles(u).length > 0; AB.t_b5_c3_link.run(u, e.x, e.y); res.marked = e.cantRound === B.round && e.cantLeft === 1 + lvT(); res.pit = B.def.pitTxt; });
   out.f.riverFlags = {done:S.f.b5_c3_riverDone};
