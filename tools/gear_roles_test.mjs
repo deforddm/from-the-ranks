@@ -43,7 +43,7 @@ console.log(JSON.stringify(r));
 ok(!r.noRole.length, `every item has a role or a signature who-list (${r.noRole.join(',') || 'all'})`);
 ok(!r.badRole.length, `every role is a known one (${r.badRole.join(',') || 'all'})`);
 ok(!r.noRoles.length, `every soldier has roles (${r.noRoles.join(',') || 'all'})`);
-ok(r.sig === 'b2_sealskin,moranthchit,secondbadge', `only the signature pieces keep a name list (${r.sig})`);
+ok(r.sig === 'b2_sealskin,b5_c1_weightbag,moranthchit,secondbadge', `only the signature pieces keep a name list (${r.sig})`); // v8.0: Thegg's weight-sack (the Book Five brief: who:['thegg'])
 ok(r.darrut && r.haddatRelic && r.dannet, 'Darrut can wear the Aren Guard mail, Haddat the relic, Dannet a shield');
 ok(r.raspSpade && r.mirrelLeathers && r.sohraBow && r.ellisB3 && r.vellKnife, 'Rasp the spade, Mirrel light leathers, Sohra and Ellis a Book Three bow, Vell a Book Four knife');
 ok(!r.briskCloak && !r.tuftKnife && !r.badge, 'roles still exclude: no cloak on Brisk, no blade for Tuft, the badge stays Brisk\'s');
