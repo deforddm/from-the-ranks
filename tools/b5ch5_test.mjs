@@ -127,7 +127,7 @@ const r = await page.evaluate(async () => {
     out.n.fight = await force('b5_c5_press'); out.n.fight.done = S.f.b5_c5_pressWon;
     out.n.ledger = {burn:has('b5_c5_press_after', /Burn it/), keep:has('b5_c5_press_after', /Give it to the clerk/)}; take('b5_c5_press_after', /Burn it/); out.n.burned = S.f.b5_c5_ledger === 'burned' && /three refugees watch/.test(DLG.b5_c5_ledger_burn().txt);
     take('b5_c5_ledger_burn', /Walk with us/); out.n.room = {plain:has('b5_c5_pessa', /^"Walk with us\."$/), swap:has('b5_c5_pessa', /instead of/)}; take('b5_c5_pessa', /^"Walk with us\."$/); shut(); out.n.pessa = {walks:b5In('pessa'), done:S.f.b5_pessaDone, debt:b5Debt('pessa')};
-    talk('b5_c5_copse'); take('b5_c5_copse', /^"Dig\."$/); out.n.cache = {flag:S.f.b5_c5_cache, notRearmed:!S.f.b5_c5_rearmed, blade:S.kit.includes('b5_c5_cacheblade'), bow:S.kit.includes('b5_c5_cachebow'), txt:/Somebody there will need them/.test(DLG.b5_c5_cache().txt)};
+    talk('b5_c5_copse'); take('b5_c5_copse', /^"Dig\."$/); out.n.cache = {flag:S.f.b5_c5_cache, notRearmed:!S.f.b5_c5_rearmed, blade:S.kit.includes('b5_c5_cacheblade'), bow:S.kit.includes('b5_c5_cachebow'), txt:/They'll be needed there/.test(DLG.b5_c5_cache().txt)};
     talk('b5_c5_south'); out.n.south = has('b5_c5_south', /South, to Brans Keep/);
     /* let them keep her: Pessa to another company */
     S.f.b5_c5_pressDone = 0; S.f.b5_pessaDone = undefined; S.squad = S.squad.filter(x => x !== 'pessa'); talk('b5_c5_let'); out.n.let = {done:S.f.b5_pessaDone, txt:/another company/.test(DLG.b5_c5_let().txt), canNot:!b5CanRecruit('pessa')}; }

@@ -65209,7 +65209,7 @@ const B5CH5 = {
             ",,#,,,,..,,,,#,,",
             ",,,,,,,ee,,,,,,," ],
       walk:'.,', triggers:{B:'b5_c5_barn', w:'b5_c5_well', e:'b5_c5_farm_back'}, start:{x:7, y:10},
-      quest:()=> !S.f.b5_c5_farmDone ? 'The barn. Somebody is in it.' : 'Back down the lane to the road.',
+      quest:()=> !S.f.b5_c5_farmDone ? 'The barn. There are men in it.' : 'Back down the lane to the road.',
       npcs:[] },
 
     /* 16 x 12 (b5_c5_keep, dusk; night in phase 3). The Whitefinders' lines at Brans Keep, across the dry channel: , trodden earth
@@ -65262,7 +65262,7 @@ const B5CH5 = {
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b5_regular',1,7]],
       foes:[['b5_deserter',2,1],['b5_deserter',5,1],['b5_deserter',3,0],['b5_deserterbow',6,0]], xp:160, after:'b5_c5_wagons_after',
       waves:[{round:2, foes:[['b5_deserter',0,3],['b5_deserterbow',7,2]], text:'Two more come in off the dark field on the flanks, one of them with a bow, going for the wagon at the end.'}],
-      preText:()=>`They come in off the dark field without torches, the way men do who have done it before: blue-grey cloaks with the flashes cut off, swords and two bows, making for the wagons with the house's mark on the canvas. A Whitefinder of the picket is beside you with his shield up, and swearing, quietly, at the house.`},
+      preText:()=>`They come in off the dark field without torches, like men who have done it before: blue-grey cloaks with the flashes cut off, swords and two bows, making for the wagons with the house's mark on the canvas. A Whitefinder of the picket is beside you with his shield up, and swearing, quietly, at the house.`},
     /* 'refuse': the house's hired men come for the Sixth's paybook in the clerk's case; non-lethal, four rounds, until the provosts come */
     b5_c5_factor:{title:'The clerk\'s tent', style:'b5_c5_keep', dark:true, warrenText:'Brans Keep at night · the Holds look the other way', warren:{meanas:1, denul:1}, music:'battle',
       map:["........","..t.....","......t.","........","....t...","........",".t......","......t.","........","........"],
@@ -65283,7 +65283,7 @@ const B5CH5 = {
     b5_c5_housemail:{name:'The house\'s scale', slot:'armour', role:'mail', who:null, ac:1,
       line:'Bright new scale on a padded coat, off the counting-house\'s wagons at Brans Keep, with a small stamp of a scale-balance inside the collar where only the wearer sees it. It is better scale than the army\'s. It was meant to be. +1 armour.'},
     b5_c5_girth:{name:'A Bluerose girth-strap, cut through', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where nobody looks, by somebody who knew where nobody looks. Whoever carries it has learned the same. +1 Guile.'} },
+      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where the eye never goes, by a hand that knew where the eye never goes. Whoever carries it has learned the same. +1 Guile.'} },
 
   scenes:{
     b5_c5_burned:{loc:'The road south', sub:'The burned country', cap:'Fields burned to the root on both sides of a straight road, black to the hedges, and smoke on the horizon.', amb:'explore'},
@@ -65334,7 +65334,7 @@ It was done carefully. The barns are down, the wells are fouled, the granaries a
 
 ${b55Ran() ? `Up the road behind the Sixth, a long way back, the column of the disarmed comes on, and looks at the fields as it comes, and so does the Sixth, with its swords on.` : `The column of the disarmed walks through it in silence, five hundred soldiers without a sword between them, and the Sixth in the middle with its knives and its shields and its paybooks.`}
 
-${b55Say({tobet:'Tobet looks at the boards on the gateposts for a long time. "Army stamp," he says, flat. "Somebody signed for this."', perrit:'Perrit reads the stamp on the nearest gatepost and does not say what she makes of it, which is unlike her.', thegg:'Thegg walks on the crown of the road, where the ash is thinnest, and does not look left or right.', _:'The squad walks.'})}`,
+${b55Say({tobet:'Tobet looks at the boards on the gateposts, board after board. "Army stamp," he says, flat. "Somebody signed for this."', perrit:'Perrit reads the stamp on the nearest gatepost and does not say what she makes of it, which is unlike her.', thegg:'Thegg walks on the crown of the road, where the ash is thinnest, and does not look left or right.', _:'The squad walks.'})}`,
       ch:[b5TileChoice(5),
           {t:'Find the Finadd.', go:'b5_c5_ennic_road'},
           {t:'Walk on.', go:()=>startExplore()}]}),
@@ -65359,7 +65359,7 @@ ${b55Say({tobet:'Tobet looks at the boards on the gateposts for a long time. "Ar
 
 Beside it, four paces off in the ash, somebody has dug. Not a farmer's dig: a square hole, straight-sided, exactly where the cut says, and the clay jars lifted out and set in a row and opened and emptied. Water, linen, salve, kit. All of it gone. The seals are cut, not broken.
 
-The quartermaster looks at the row of jars for a while. "That's the army's cache," he says. "That's the army's cut. Whoever dug it knew exactly where to dig." He does not say who he thinks it was. Nobody asks him.${b55Say({tobet:'\n\n"Neat," Tobet says. "Neater than us." He does not make it sound like a compliment.', ruuk:'\n\nRuuk crouches at the hole and looks at the boot-marks round it, and then at the road, and then stands up. "Many men," he says. "Not long ago. Going south." That is all he will say about it.', _:''})}`,
+The quartermaster looks at the row of jars for a while. "That's the army's cache," he says. "That's the army's cut. Whoever dug it knew exactly where to dig." He does not say who he thinks it was. The squad lets it lie.${b55Say({tobet:'\n\n"Neat," Tobet says. "Neater than us." He does not make it sound like a compliment.', ruuk:'\n\nRuuk crouches at the hole and looks at the boot-marks round it, and then at the road, and then stands up. "Many men," he says. "Not long ago. Going south." That is all he will say about it.', _:''})}`,
       ch:[{t:'Go through the spoil, in case they missed something.', check:['wits', 12], req:()=>!S.f.b5_c5_spoilTried, fx:()=>{ S.f.b5_c5_spoilTried = 1; },
             edges:id=>[id === 'ammet' && ['she knows what a salve-jar looks like in pieces', 2], id === 'ruuk' && ['he reads a dig like a track', 1], id === 'pessa' && ['she has gone through a burned village for what was left', 1], id === 'thegg' && ['his hands are too big for broken clay', -1]],
             near:{t:()=>{ const w = b55Who(); return `Yes, but the jar ${b55Nm(w)} ${b55V(w, 'find', 'finds')} it in is in pieces, and the pieces go into ${b55Pos(w)} palm: cut, and bruised.`; }, fx:()=>bruise(b55Who(), bruiseN())},
@@ -65387,7 +65387,7 @@ There are others behind them on the road, carts and handbarrows and people with 
 `The wheel comes out of the ditch with a noise like a cork, and the cart is on the road again, and the family is round it saying something in canal cant that is either thanks or blame, or both. An old woman on the tailboard gives ${by({sgt:'you', _:'{who}'})} a dried apple out of her apron, solemnly, as if paying a debt. It is the only food on the road that nobody has written down.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
     b5_c5_cart_no:()=>({sp:'Refugees on the road', scene:'b5_road_south', txt:
-`The wheel will not come. In the end a dozen of the column of the disarmed, who have nothing in their hands to carry, come over and lift the cart out by its sides, and set it on the road, and go back to walking. The family says something in canal cant. Nobody on the road has the breath to answer.`,
+`The wheel will not come. In the end a dozen of the column of the disarmed, who have nothing in their hands to carry, come over and lift the cart out by its sides, and set it on the road, and go back to walking. The family says something in canal cant. The road has no breath left to answer it.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* ---- a Grass Jacket on the verge: the breakaway Finadd upriver (never named, never placed); Second Maiden's Fort; three companies ---- */
@@ -65395,7 +65395,7 @@ There are others behind them on the road, carts and handbarrows and people with 
       again:()=>`The Grass Jacket on the verge, with his boots off. "Answers to nobody."`, txt:
 `A Grass Jacket is sitting on the verge with his boots off and his feet in the ash, which is warm. He ran at High Fort, with the rest of the brigade, and he has been walking ever since, and he would like everyone to know he is not proud of either.
 
-"Talk on the road," he says, when you sit. "Want it? It's free. Nothing else is." He counts it off on his fingers. "Second Maiden's Fort still holds, they say. Three companies of the frontier army are waiting on the frontier road for the Edur, like three companies were a wall." He snorts. "And there's a Finadd upriver, somewhere, with a garrison, who's sent word to the capital that his garrison answers to nobody now. Nobody. Not the King, not the Preda." He shakes his head. "Somebody's always got to be first to say it."
+"Talk on the road," he says, when you sit. "Want it? It's free. Nothing else is." He counts it off on his fingers. "Second Maiden's Fort still holds, they say. Three companies of the frontier army are waiting on the frontier road for the Edur, like three companies were a wall." He snorts. "And there's a Finadd upriver, somewhere, with a garrison, who's sent word to the capital that his garrison answers to nobody now. Not the King, not the Preda." He shakes his head. "There's always a first to say it."
 
 He looks at his feet. "Don't ask me where. I don't know where. Upriver. Everybody says upriver."${b55If('thegg', `\n\nThegg looks at the man's helm, with its strip of green cloth. "You ran," he says, not unkindly. "So did I, once." The Grass Jacket looks up at him for a while, and nods, and puts his boots back on.`)}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
@@ -65414,9 +65414,9 @@ He unbuckles the strap and throws it at you. "Keep it. I'll not ride on that aga
             go:'b5_c5_girth_cut', fail:'b5_c5_girth_worn'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c5_girth_cut:()=>({sp:'A courier, on foot', scene:'b5_road_south', fx:()=>{ S.f.b5_c5_cut = 1; }, txt:
-`The strap did not wear through. ${by({sgt:'You turn', _:'{who} turns'})} it over: on the outside it is good leather, oiled. On the inside, where it lies against the horse and nobody looks, it has been cut most of the way through with a sharp knife, a long time ago, so that it would hold for a while, and then not.
+`The strap did not wear through. ${by({sgt:'You turn', _:'{who} turns'})} it over: on the outside it is good leather, oiled. On the inside, where it lies against the horse and no rider ever sees it, it has been cut most of the way through with a sharp knife, a long time ago, so that it would hold for a while, and then not.
 
-The courier looks at it. He goes a little white. "That's not wear," he says. He does not say anything else about Bluerose for the rest of the time he walks with the Sixth, which is until the surgeon's cart, and then he is gone.`,
+The courier looks at it. He goes a little white. "That's not wear," he says. He has nothing more to say about Bluerose for the rest of the time he walks with the Sixth, which is until the surgeon's cart, and then he is gone.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
     b5_c5_girth_worn:()=>({sp:'A courier, on foot', scene:'b5_road_south', txt:
 `It is a girth-strap. It has given. Saddles fail, on long roads. The courier gets up, holding his arm, and goes looking for the surgeon's cart, and the Sixth keeps the strap, because he did not want it.`,
@@ -65427,9 +65427,9 @@ The courier looks at it. He goes a little white. "That's not wear," he says. He 
       again:()=>`The Nerek family by their cart, the grandmother with her hand on the wheel.`, txt:
 `A Nerek family walks beside a handcart with nothing much on it: a grandmother, two women, children, a man with a hauler's shoulders. They do not walk with the other refugees. The other refugees do not walk with them. That is how it has always been on Letherii roads, and the burned country has not changed it.
 
-The grandmother looks at the white fingertips on the Sixth's shields for a long time, and then she says something to the man, and the man comes over. "Whitefinders," he says. "The Sixth?" When you nod, he says, "At the river. A runner came up the bank in the night, before the fire. From the Sixth. Somebody heard." He does not say who heard, or what came of it.
+The grandmother looks at the white fingertips on the Sixth's shields a while, and then she says something to the man, and the man comes over. "Whitefinders," he says. "The Sixth?" When you nod, he says, "At the river. A runner came up the bank in the night, before the fire. From the Sixth. Word goes along a river." He does not say what came of it.
 
-${b5In('ammet') ? `Ammet goes to the grandmother, and kneels in the ash by the wheel, and they talk for a while, very low, in a language Ammet's own grandmother spoke half of. Nobody else in the squad goes near. When Ammet comes back she has her roll of tools under her arm and her face shut. "She had a sister in the villages," she says. "She doesn't know." She does not say anything else, and the squad lets her not.` : `The grandmother looks at the Sixth a while longer, and puts her hand on the cart-wheel, and the family goes on south. Nobody settles anything.`}`,
+${b5In('ammet') ? `Ammet goes to the grandmother, and kneels in the ash by the wheel, and they talk for a while, very low, in a language Ammet's own grandmother spoke half of. The rest of the squad keeps back. When Ammet comes back she has her roll of tools under her arm and her face shut. "She had a sister in the villages," she says. "She doesn't know." That is all, and the squad lets it be all.` : `The grandmother looks at the Sixth a while longer, and puts her hand on the cart-wheel, and the family goes on south. Nothing is settled.`}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the press-gang at work: Pessa, the recruit (the claim, the fight, or let them keep her). Her ledger line stands whatever. ---- */
@@ -65472,7 +65472,7 @@ Three refugees at the edge of the crowd are looking at the ledger very hard, and
 
 Pessa's line is not cleared by it. The army has a copy. She knows it. She watches it burn anyway, with her boathook upright beside her, and when it is ash she turns round to you.
 
-"I'll come," she says. "Since I'm written down either way. I would rather be written down by people who burn books."${b55If('tobet', `\n\nTobet watches the ash for a long time after everyone else has stopped. "That's the first ledger I've seen burn," he says. "It was smaller than I thought."`)}`,
+"I'll come," she says. "Since I'm written down either way. I would rather be written down by people who burn books."${b55If('tobet', `\n\nTobet watches the ash after everyone else has stopped. "That's the first ledger I've seen burn," he says. "It was smaller than I thought."`)}`,
       ch:[{t:'"Walk with us."', go:'b5_c5_pessa'}]}),
     b5_c5_ledger_keep:()=>({sp:'The crossroads', scene:'b5_road_south', txt:
 `The clerk takes the press-gang's ledger in both hands and puts it in the oilskin case with the Sixth's paybooks, where it will be looked after properly, and the three refugees at the edge of the crowd go back to looking at the road.
@@ -65480,7 +65480,7 @@ Pessa's line is not cleared by it. The army has a copy. She knows it. She watche
 Pessa watches it go into the case. "So I'm in two books now," she says. "That's a promotion, on the canal." She turns round to you. "I'll come. Since I'm written down either way."`,
       ch:[{t:'"Walk with us."', go:'b5_c5_pessa'}]}),
     b5_c5_let:()=>({sp:'The crossroads', scene:'b5_road_south', fx:()=>{ S.f.b5_pessaDone = 0; S.f.b5_c5_pressDone = 1; S.f.b5_c5_let = 1; }, txt:
-`The press sergeant finishes writing, and Pessa goes past the cart-tail with a jack over her arm that is two sizes too big, and her boathook upright, and joins a file of the pressed going east toward another company. She does not look round at the Sixth. She has decided the Sixth is not worth it.
+`The press sergeant finishes writing, and Pessa goes past the cart-tail with a jack over her arm that is two sizes too big, and her boathook upright, and joins a file of the pressed going east toward another company. She keeps her face to the road. She has decided the Sixth is not worth it.
 
 The press sergeant blots the line and shuts his book. "Obliged, Sergeant," he says.${b55If('tobet', `\n\nTobet watches the file go. "A hundred and twenty," he says, flat. "For those boots." He looks at the road. "I'd have argued."`)}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
@@ -65500,7 +65500,7 @@ The press sergeant blots the line and shuts his book. "Obliged, Sergeant," he sa
 `"Good," Pessa says, as if she had won an argument, and perhaps she has.
 
 The company clerk writes her into the Sixth's paybooks on the cart-tail, a new line under the others: *Pessa*, spelled right this time, and a hundred and twenty docks beside it, copied from the press-gang's figure. She reads it upside down as he writes it, and reads it again when he turns the book round. "That's my line," she says. "I'll be watching it."${S.f.b5_c5_pack ? `\n\nThegg picks up her pack, which is a sack with a strap, and puts it on his own shoulder with his own, and walks on. He does not ask. Pessa opens her mouth to say something about it, and shuts it again, and walks on beside him with her boathook upright.` : ''}${b5Waiting('brune') ? `\n\nBrune shoulders her sealskin roll and goes back to walk with the company's followers, where the roster can find her. "It is all one road," she says. "From there or from here."` : b5Waiting('ruuk') ? `\n\nRuuk shrugs and goes back to walk with the army's scouts, where the roster can find him. "I will find you a road round the next village anyway," he says. "Shout."` : ''}` :
-`Pessa counts the squad, the way a bargewoman counts a crew, and laughs, short. "No room," she says. "You've your six. I'll be with the refugees. Shout when you want a boathook."`,
+`Pessa counts the squad on her fingers, and laughs, short. "No room," she says. "You've your six. I'll be with the refugees. Shout when you want a boathook."`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
     b5_c5_pessa_wait:()=>({sp:'Pessa', scene:'b5_road_south', txt:
 `"For now," Pessa says. "That's the army's favourite word." She goes back to the refugee column with her boathook upright. The clerk writes her into the paybooks anyway, on a page of her own, against the day, with the hundred and twenty beside her name.`,
@@ -65552,7 +65552,7 @@ He looks round at the squad. "The cut. Every quartermaster knows it. Hardly any 
     b5_c5_mark_ok:()=>({sp:'A burned copse', scene:'b5_c5_cache', fx:()=>{ S.f.b5_c5_markOk = 1; }, txt:
 `He shows ${by({sgt:'you', _:'{who}'})} with his finger in the cut. The line is the road. The notches are paces, fours of them. The hook says which side. "Every road in Lether," he says, "and every one of them marked the same. Water, linen, salve, then kit, in that order, deepest last." He taps the stone. "Get the first jar open and the linen going round, and you can stand up again in a fight. That's what it's for. Not sorcery. Stores."
 
-${by({sgt:'You find', _:'{who} finds'})} the jars by the cut alone, without his help, the second time of asking. He looks satisfied, which on him is a small thing about the eyes.${b55If('ammet', `\n\nAmmet is already counting the linen. "Clean," she says. "Boiled, and dried, and buried. Somebody in the army thinks about wounds." She sounds surprised, and grudging, and pleased.`)}`,
+${by({sgt:'You find', _:'{who} finds'})} the jars by the cut alone, without his help, the second time of asking. He looks satisfied, which on him is a small thing about the eyes.${b55If('ammet', `\n\nAmmet is already counting the linen. "Clean," she says. "Boiled, and dried, and buried. One person in the army thinks about wounds." She sounds surprised, and grudging, and pleased.`)}`,
       ch:[{t:'"Dig."', go:'b5_c5_cache'}]}),
     b5_c5_mark_no:()=>({sp:'A burned copse', scene:'b5_c5_cache', txt:
 `The cut stays a scratch on a stone. Four paces, two to the left, and the hook means something, and none of it adds up in the ash the way it does in his head. The quartermaster takes pity, in the end, and stamps on the place again.
@@ -65564,13 +65564,13 @@ ${by({sgt:'You find', _:'{who} finds'})} the jars by the cut alone, without his 
         gain('b5_c5_cacheblade'); gain('b5_c5_cachebow'); }, txt:
 `The jars come up out of the ash one after another, clay, sealed with clay, the size of a child: water, sweet; linen, boiled and dried; salve in waxed paper; and, deepest, wrapped in greased cloth and lashed to bark tubes, the army's kit. Shortswords. Bows, unstrung, with their strings in the tubes.
 
-${S.f.b5_c5_rearmed ? `The Sixth arms itself out of the jars, standing in a burned copse at the side of a road, one soldier at a time, while the quartermaster writes down every piece against every name, because somebody will want it written down. It is not everything the Edur took. It is enough to stop being a column of men with knives.${b55Say({tobet:`\n\nTobet strings a cache bow, and draws it, and lets it down slowly. "Straight," he says. "Buried straight and came up straight." He sounds as if it is the first good news in a week, which it is.`, thegg:'\n\nThegg takes a shortsword out of its grease and wipes it on the ash, and holds it, and puts it through his belt without a word.', _:''})}` : `The Sixth is armed already. The quartermaster takes the swords and the bows anyway, and the salves and the linen, and writes them all down as "recovered", and loads them on his cart, and looks at the column of the disarmed coming on behind with an expression you have never seen on a quartermaster before, which is generosity. "For Brans Keep," he says. "Somebody there will need them."`}`,
+${S.f.b5_c5_rearmed ? `The Sixth arms itself out of the jars, standing in a burned copse at the side of a road, one soldier at a time, while the quartermaster writes down every piece against every name, because somebody will want it written down. It is not everything the Edur took. It is enough to stop being a column of men with knives.${b55Say({tobet:`\n\nTobet strings a cache bow, and draws it, and lets it down slowly. "Straight," he says. "Buried straight and came up straight." He sounds as if it is the first good news in a week, which it is.`, thegg:'\n\nThegg takes a shortsword out of its grease and wipes it on the ash, and holds it, and puts it through his belt without a word.', _:''})}` : `The Sixth is armed already. The quartermaster takes the swords and the bows anyway, and the salves and the linen, and writes them all down as "recovered", and loads them on his cart, and looks at the column of the disarmed coming on behind with an expression you have never seen on a quartermaster before, which is generosity. "For Brans Keep," he says. "They'll be needed there."`}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* ---- the burned farm, off the road (optional) ---- */
     b5_c5_farmlane:()=>({sp:'A lane off the road', scene:'b5_c5_burned', again:()=>`The lane to the burned farm, and the smoke from its barn.`, txt: S.f.b5_c5_farmDone ?
 `The lane to the burned farm. Nothing moves in it now.` :
-`A lane goes off the road to a farm that the burning did not finish: walls still standing, a barn with its roof fallen in, and smoke from the barn that is not old. Somebody is in there, and has lit a fire, and is not hiding it, which means they do not think anybody will come.${b55If('tobet', `\n\nTobet shades his eyes. "Five in the yard," he says. "Army cloaks. No flashes." He lets his hand down. "Deserters."`)}`,
+`A lane goes off the road to a farm that the burning did not finish: walls still standing, a barn with its roof fallen in, and smoke from the barn that is not old. There are men in there, and they have lit a fire, and is not hiding it, which means they do not think anybody will come.${b55If('tobet', `\n\nTobet shades his eyes. "Five in the yard," he says. "Army cloaks. No flashes." He lets his hand down. "Deserters."`)}`,
       ch:[{t:'Down the lane.', req:()=>!S.f.b5_c5_farmDone, onward:true, go:()=>{ startExplore('b5_c5_farm'); talk('b5_c5_farm_arrive'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c5_farm_arrive:()=>({sp:'A burned farm', scene:'b5_c5_burned', txt:
@@ -65613,7 +65613,7 @@ Behind the barn, under a stone the deserters never lifted, is what the family bu
       again:()=>`The clerk, with the case held to his chest.`, txt:
 `The company clerk walks with the oilskin case held to his chest in both arms, through country where every gatepost has the army's stamp on it, and looks at each stamp as he passes it, as if checking it against something.
 
-"Every farm on this road was on a list," he says, quietly, when you fall in beside him. "Somebody wrote the list. Somebody signed it. Somebody ticked them off." He holds the case tighter. "I would like to think it was not a clerk. It was a clerk." He walks a while. "I can still take a payment on a line, Sergeant. That has not changed."`,
+"Every farm on this road was on a list," he says, quietly, when you fall in beside him. "A hand wrote the list. A hand signed it. A hand ticked them off." He holds the case tighter. "I would like to think it was not a clerk. It was a clerk." He walks a while. "I can still take a payment on a line, Sergeant. That has not changed."`,
       ch:[{t:'The pay desk.', go:'b5_c5_pay'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c5_pay:()=>({sp:'The clerk\'s case · the pay desk', scene:b55Ph() >= 2 ? 'b5_c5_arrival' : 'b5_road_south', html:debtHTML('The Sixth Company · the road south'), again:()=>`The pay desk. The clerk's pen is wet, and the squad has ${b5Coin(S.silver || 0)} in hand.`, txt:
@@ -65639,22 +65639,22 @@ ${b55Say({ammet:`Ammet goes round the squad and looks at feet, and at hands, and
       if (b5In('tobet')) ln.push(`Tobet is looking at the black fields. "My grandfather's plough," he says. "Somewhere in Lether. Nine hundred docks of it." He thinks. "If it was up this road, it's ash. Does the debt burn with it?" He knows the answer. He asks anyway.${b5In('pessa') ? ` Pessa, across the fire, says, "No." He nods. "No," he agrees.` : ''}`);
       if (b5In('thegg')) ln.push(`Thegg is talking low in his mother's tongue at the edge of the firelight, to his mother's people's dead. When he sees you listening he stops. "My mother's people kept groves once," he says. "Old ones in stone, under the trees, off the roads. There are still a few. An old man keeps each one quiet." He looks at the black fields. "I hope they did not burn the groves. Nobody sane wants the old ones woken." He does not say which, or where, and you do not ask.`);
       if (b5In('perrit')) ln.push(`Perrit is doing sums in her small book by the firelight. "Every farm on this road," she says, "a granary, a barn, a house, the fields. The army will pay the holders for them out of the King's purse, at the quarter." She closes the book. "Or it will not, and the holders will want it from the farmers, who are on the road, Indebted to somebody for the ground they are walking on." She looks at the road. "The arithmetic is perfectly clear. That is what I cannot forgive it."`);
-      if (b5In('ammet')) ln.push(b5In('pessa') ? `Ammet is boiling her needles, and Pessa is holding the lamp for her, close and steady, without being asked. Ammet looks at the lamp, and at Pessa, and goes on boiling. Later she says, to nobody, "That one has sense." It is the highest thing she has said about anybody since Letheras.` : `Ammet is boiling her needles over the fire. "Burns," she says. "On the road, all day. Children who went back for something." She does not say anything more about it, and goes on boiling.`);
+      if (b5In('ammet')) ln.push(b5In('pessa') ? `Ammet is boiling her needles, and Pessa is holding the lamp for her, close and steady, without being asked. Ammet looks at the lamp, and at Pessa, and goes on boiling. Later she says, to nobody, "That one has sense." It is the highest thing she has said about anybody since Letheras.` : `Ammet is boiling her needles over the fire. "Burns," she says. "On the road, all day. Children who went back for something." That is all she says about it. She goes on boiling.`);
       if (b5In('ruuk')) ln.push(`Ruuk is on the wall's top, looking north. "No birds," he says. "There is nothing for them to eat now. They have gone south ahead of everybody." He thinks. "Birds know first, then Faraed, then armies." He grins, but not much.`);
       if (b5In('brune')) ln.push(`Brune has her feet in the warm ash. "It is a kind of shore," she says. "Everything on it is going to be taken back. Slowly, by the rain." She considers it. "The Shore is patient. This is too patient for me."`);
-      if (b5In('pessa')) ln.push(`Pessa reads her line in the clerk's book, out loud, from across the fire, upside down: "*Pessa*. A hundred and twenty." She sniffs. "Spelled right, at least. The press-gang had me with two esses at the end." She looks at the fire. "My husband couldn't spell either. It never did him any harm." That is all she says about her husband, and she says it the way you would mention a storm last year.`);
+      if (b5In('pessa')) ln.push(`Pessa reads her line in the clerk's book, out loud, from across the fire, upside down: "*Pessa*. A hundred and twenty." She sniffs. "Spelled right, at least. The press-gang had me with two esses at the end." She looks at the fire. "My husband couldn't spell either. It never did him any harm." That is all she says about her husband, and she says it as plainly as the price of the boots.`);
       return {sp:'The fire on the road', scene:'b5_road_south', fx:()=>{ if (b5In('pessa') && b5In('ammet')) S.f.b5_c5_lamp = 1; }, txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
         ch:[{t:'Back to the fire.', go:'b5_c5_fire'}]}; },
     /* Pessa asks Perrit to read for her dead husband; Perrit lies about one tile, and never tells anyone (only if both are present; the
        narrator never says which tile) */
     b5_c5_husband:()=>({sp:'Perrit and Pessa', scene:'b5_road_south', fx:()=>{ S.f.b5_c5_husband = 1; b55L('pessa', 1); }, txt:
-`Pessa sits down across the fire from Perrit, very straight, the way people sit for a clerk. "You read the tiles," she says. "Read for a man. He's gone. On the canal, before all this." She does not say how. "I'd like to know if he's somewhere."
+`Pessa sits down across the fire from Perrit, very straight, as people sit for a clerk. "You read the tiles," she says. "Read for a man. He's gone. On the canal, before all this." She does not say how. "I'd like to know if he's somewhere."
 
 Perrit looks at her for a while. Then she takes out the calfskin pouch, and lays the black tiles out on a flat stone by the fire, carefully, the way the school lays them, and reads them, one at a time, out loud, in her clerk's voice: what each is, and which Hold, and what it says.
 
 She reads every one of them true but one. You see her hand stop over it, and go on.
 
-"He is somewhere," Perrit says, at the end. "The tiles are quite clear about it." Pessa nods, once, and gets up, and goes to sit with her back to the wall. Perrit puts the tiles back in the pouch one at a time, and does not look at anybody, and never tells anyone which one it was.`,
+"He is somewhere," Perrit says, at the end. "The tiles are quite clear about it." Pessa nods, once, and gets up, and goes to sit with her back to the wall. Perrit puts the tiles back in the pouch one at a time, with her face shut, and never tells anyone which one it was.`,
       ch:[{t:'Back to the fire.', go:'b5_c5_fire'}]}),
 
     /* ---- the way on: south to Brans Keep, once the cache is dug and the press-gang settled ---- */
@@ -65672,8 +65672,9 @@ Whitefinders. The rear picket of the battalion, left on the road to bring in str
 
 "The Sixth," the picket's sergeant says, at last. "From High Fort. You're alive." He looks up at the grey village, and back at you, and says it plainly, because there is no other way to say it. "We were recalled north, from the exercises at First Reach. Then the fort went. We were ordered south to Brans Keep instead, and to leave nothing behind us the Edur could eat." He does not look at the village again. "Orders. We left nothing."
 
-${b55Say({tobet:`Tobet looks at the white fingertip on the picket sergeant's shield, and at the one on his own, for a long time. He does not say anything. Then he does. "Somebody signed for it," he says, flat. "I said so."`, thegg:'Thegg looks at the grey village, and at the picket, and stops talking, which in Thegg is anger.', _:'Nobody in the squad says anything. There is nothing in the arithmetic to say.'})}`,
-      ch:[{t:'On, to Brans Keep, with the picket.', onward:true, go:()=>{ S.f.b5_c5_ph = 2; startExplore('b5_c5_keep'); talk('b5_c5_arrive'); }},
+${b55Say({tobet:`Tobet looks at the white fingertip on the picket sergeant's shield, and at the one on his own, and back. Nothing, for a while. Then: "It was signed for," he says, flat. "I said so."`, thegg:'Thegg looks at the grey village, and at the picket, and stops talking, which in Thegg is anger.', _:'The squad keeps walking. There is nothing in the arithmetic to say.'})}`,
+      ch:[{t:'On, to Brans Keep, with the picket.', req:()=>S.area !== 'b5_c5_keep', onward:true, go:()=>{ S.f.b5_c5_ph = 2; startExplore('b5_c5_keep'); talk('b5_c5_arrive'); }},
+          {t:'On, to Brans Keep, with the picket.', req:()=>S.area === 'b5_c5_keep', onward:true, fx:()=>{ S.f.b5_c5_ph = 2; }, go:'b5_c5_arrive'},
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- phase 2: Brans Keep; the Whitefinders are there; the Sixth rejoins its battalion ---- */
@@ -65687,7 +65688,7 @@ The Whitefinders are at Brans Keep.
 
 The Sixth comes in across the channel at the picket's tail, and is looked at, and counted, and written into the battalion's book by a battalion clerk who seems very surprised to be writing it. The battalion's commander does not come over. Word comes from his tent by a runner: the Sixth is welcome, the Sixth will draw from the battalion's carts, and the battalion's paymaster owes the Sixth three weeks' road-money, which he pays, in docks, into Finadd Ennic's hand, with a receipt.
 
-Down the field, at the carts by the keep's walls, High Fort's other survivors are being rearmed by the hundred and sent wherever a battalion is short. Somebody says the Artisans have taken a whole column of them. The Sixth does not go and look.${b55Say({perrit:`\n\nPerrit looks at the keep, and the lake, and the channel, and the hills, and does a sum, under her breath, and does not finish it.`, ruuk:`\n\nRuuk looks at the hills behind the keep. "Good hills," he says. "For running into." Then, seeing your face: "I only say."`, _:''})}`,
+Down the field, at the carts by the keep's walls, High Fort's other survivors are being rearmed by the hundred and sent wherever a battalion is short. Word along the carts is that the Artisans have taken a whole column of them. The Sixth does not go and look.${b55Say({perrit:`\n\nPerrit looks at the keep, and the lake, and the channel, and the hills, and does a sum, under her breath, and does not finish it.`, ruuk:`\n\nRuuk looks at the hills behind the keep. "Good hills," he says. "For running into." Then, seeing your face: "I only say."`, _:''})}`,
       ch:[{t:'Find the Finadd.', go:'b5_c5_ennic_keep'},
           {t:'Walk the lines.', go:()=>startExplore()}]}),
     b5_c5_ennic_keep:()=>({sp:B5_FINADD.name, scene:'b5_c5_arrival', fx:()=>{ S.f.b5_c5_ennicKeep = 1; },
@@ -65726,7 +65727,7 @@ He smiles. "Everybody in Lether owes somebody, Sergeant. The house only asks to 
     /* the key: sign the paybooks to the house, or refuse */
     b5_c5_key:()=>({sp:'The Finadd and the factor', scene:'b5_c5_arrival', again:()=>`The factor's desk, the clerk's case, and the Finadd waiting with his pen.`, txt: b55Key() ?
 `It is decided. ${b55Key() === 'sign' ? 'The house holds the Sixth\'s paybooks.' : 'The army keeps the Sixth\'s paybooks.'}` :
-`Finadd Ennic stands at the factor's desk with his pen, and the company clerk stands beside him with the oilskin case held to his chest so hard his knuckles are white. "Sergeant," Ennic says, and waits for you to put something in front of him.${b55Say({tobet:`\n\nTobet is at the edge of the lamplight. "The army bought my grandfather's debt," he says, very quietly, "and me with it. Now the army sells it on." He looks at the factor. "I would like it written down somewhere that I noticed."`, _:''})}${b55If('perrit', `\n\nPerrit has read the factor's terms upside down, twice. "Forty in hand, the kit, one part in ten," she says. "${b55Fine() ? 'And the fine at half. ' : ''}The terms are not bad." She sounds annoyed about it. "That is the trouble with them."`)}${b55If('thegg', `\n\nThegg looks at the factor, a long way down, and at the umbrella. "My mother's tab," he says. "Does the house buy that too?" The factor looks at his ledger. "It does," he says. Thegg considers this, and says nothing more.`)}${b55If('pessa', `\n\nPessa has her boathook upright. "Sell me twice in a week," she says. "The press-gang wrote me down for the boots, and now a house buys the boots." She looks at you. "Your call, Sergeant. I'd only say no."`)}${b55If('ruuk', `\n\nRuuk is looking at the wagons. "My grandmother said the Letherii write everything down so they can sell it," he says. He seems to find it interesting rather than anything else.`)}${b55If('brune', `\n\nBrune shrugs. "The harbour took my boat. A house takes the debt for it. It is the same water."`)}`,
+`Finadd Ennic stands at the factor's desk with his pen, and the company clerk stands beside him with the oilskin case held to his chest so hard his knuckles are white. "Sergeant," Ennic says, and waits for you to put something in front of him.${b55Say({tobet:`\n\nTobet is at the edge of the lamplight. "The army bought my grandfather's debt," he says, very quietly, "and me with it. Now the army sells it on." He looks at the factor. "I would like it written down somewhere that I noticed."`, _:''})}${b55If('perrit', `\n\nPerrit has read the factor's terms upside down, twice. "Forty in hand, the kit, one part in ten," she says. "${b55Fine() ? 'And the fine at half. ' : ''}The terms are not bad." She sounds annoyed about it. "That is the trouble with them."`)}${b55If('thegg', `\n\nThegg looks at the factor, a long way down, and at the umbrella. "My mother's tab," he says. "Does the house buy that too?" The factor looks at his ledger. "It does," he says. Thegg considers this, and leaves it there.`)}${b55If('pessa', `\n\nPessa has her boathook upright. "Sell me twice in a week," she says. "The press-gang wrote me down for the boots, and now a house buys the boots." She looks at you. "Your call, Sergeant. I'd only say no."`)}${b55If('ruuk', `\n\nRuuk is looking at the wagons. "My grandmother said the Letherii write everything down so they can sell it," he says. He seems to find it interesting rather than anything else.`)}${b55If('brune', `\n\nBrune shrugs. "The harbour took my boat. A house takes the debt for it. It is the same water."`)}`,
       ch:[{t:'"Sign it, Finadd. Forty docks and new scale, and the house can have the paper."', req:()=>!b55Key(), fx:()=>{ S.f.b5_c5_key = 'sign'; S.f.b5_holder = 'house'; b55L('tobet', -2); b55L('perrit', 1); b55L('pessa', -1); }, go:'b5_c5_sign'},
           {t:'"No. The army keeps the books. We arm from the army\'s stores."', req:()=>!b55Key(), fx:()=>{ S.f.b5_c5_key = 'refuse'; S.f.b5_holder = 'army'; b55L('tobet', 2); b55L('pessa', 1); b55L('perrit', -1); }, go:'b5_c5_refuse'},
           {t:'"Not yet."', req:()=>!b55Key(), go:()=>startExplore()},
@@ -65740,8 +65741,8 @@ He smiles. "Everybody in Lether owes somebody, Sergeant. The house only asks to 
 
 The company clerk opens the oilskin case in front of strangers for the first time since Letheras, and the factor's clerk copies every line in it, name by name, dock by dock, into the house's ledger, while the house's carters unload scale and sword-belts and new boots from the wagons onto the grass. The factor counts forty docks into Ennic's hand${b55Fine() ? ', and writes off half the fines court\'s lines with a single neat stroke, and then, on the next page, writes the house\'s first interest on every line in the book' : ', and then, on the next page, writes the house\'s first interest on every line in the book'}, one part in ten, and blots it.
 
-"A pleasure," he says. "The house is very easy to deal with, once one is dealing with it."${b55If('tobet', `\n\nTobet watches his line go into the house's book. "I have been sold twice now," he says, flat. He does not say it to anybody.`)}${b55If('perrit', `\n\nPerrit reads the house's page over the factor's shoulder. "Not bad," she says. "Not good. Not bad." She writes the figure in her own book anyway.`)}${b55If('pessa', `\n\nPessa watches her line copied across, a hundred and twenty and the house's tenth on top. "They've bought the boots," she says. "I'd like the boots to know."`)}`,
-      ch:[{t:'The house\'s kit, and the night.', onward:true, go:()=>{ S.f.b5_c5_ph = 3; talk('b5_c5_night'); }},
+"A pleasure," he says. "The house is very easy to deal with, once one is dealing with it."${b55If('tobet', `\n\nTobet watches his line go into the house's book. "I have been sold twice now," he says, flat. He says it to the road.`)}${b55If('perrit', `\n\nPerrit reads the house's page over the factor's shoulder. "Not bad," she says. "Not good. Not bad." She writes the figure in her own book anyway.`)}${b55If('pessa', `\n\nPessa watches her line copied across, a hundred and twenty and the house's tenth on top. "They've bought the boots," she says. "I'd like the boots to know."`)}`,
+      ch:[{t:'The house\'s kit, and the night.', onward:true, fx:()=>{ S.f.b5_c5_ph = 3; }, go:'b5_c5_night'},
           {t:'Not now.', go:()=>startExplore()}]}),
     /* 'refuse': the army keeps the books; the quartermaster's old stores; Tobet shows Pessa her ledger line */
     b5_c5_refuse:()=>({sp:'The house\'s factor', scene:'b5_c5_arrival', fx:()=>{ if (S.f.b5_c5_refused) return; S.f.b5_c5_refused = 1; if (b5In('tobet') && b5In('pessa')) S.f.b5_c5_ledgerShown = 1; }, txt:
@@ -65749,8 +65750,8 @@ The company clerk opens the oilskin case in front of strangers for the first tim
 
 The factor looks at the line. He does not seem put out. "As the Sixth wishes," he says, and closes his ledger, and his clerk moves the umbrella. "In Lether, Finadd, a declined offer is only an open question." He tips his hat. "Good evening."
 
-The company clerk closes the oilskin case and holds it to his chest, and it is a while before he lets go of it enough to walk. The Sixth draws its kit from the battalion's carts instead: the cache pieces, what the quartermaster had, and the battalion's old stores, some of them older than Ennic.${S.f.b5_c5_ledgerShown && b5In('tobet') && b5In('pessa') ? `\n\nAfterwards, by the fire, Tobet sits down by Pessa with the clerk's book open across his knees, and shows her how her line is written: the name, the figure, the date, the holder, the column where the payments go. "So you can watch it," he says. "Every pay-day. Out loud, if you like." Pessa looks at the line for a long time. "Out loud," she says.` : ''}`,
-      ch:[{t:'The night.', onward:true, go:()=>{ S.f.b5_c5_ph = 3; talk('b5_c5_night'); }},
+The company clerk closes the oilskin case and holds it to his chest, and it is a while before he lets go of it enough to walk. The Sixth draws its kit from the battalion's carts instead: the cache pieces, what the quartermaster had, and the battalion's old stores, some of them older than Ennic.${S.f.b5_c5_ledgerShown && b5In('tobet') && b5In('pessa') ? `\n\nAfterwards, by the fire, Tobet sits down by Pessa with the clerk's book open across his knees, and shows her how her line is written: the name, the figure, the date, the holder, the column where the payments go. "So you can watch it," he says. "Every pay-day. Out loud, if you like." Pessa reads the line twice. "Out loud," she says.` : ''}`,
+      ch:[{t:'The night.', onward:true, fx:()=>{ S.f.b5_c5_ph = 3; }, go:'b5_c5_night'},
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the battalion's carts, the north road, the wagons ---- */
@@ -65771,7 +65772,7 @@ The company clerk closes the oilskin case and holds it to his chest, and it is a
 `The north road, the way the Sixth came: up the slope from the channel, and over the rise, and back through the burned country to High Fort and the frontier. There is still a file of stragglers coming down it in the dusk, a few at a time. Behind them, somewhere, unhurried, the Edur.`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
     b5_c5_wagonline:()=>({sp:'The wagons', scene:'b5_c5_arrival', again:()=>`The wagons at the edge of the lines.`, txt: b55Key() === 'sign' ?
-`The house's wagons stand in a row outside the Whitefinders' lines, with the house's mark on the canvas: a scale-balance, very neat. They are lighter by the Sixth's kit, and not by much. Somebody will want what is left in them.` :
+`The house's wagons stand in a row outside the Whitefinders' lines, with the house's mark on the canvas: a scale-balance, very neat. They are lighter by the Sixth's kit, and not by much. Whoever is out on the dark field will want what is left in them.` :
 `Wagons at the edge of the lines: the battalion's, and further out, with new canvas and a scale-balance painted on it, the house's.`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
@@ -65782,11 +65783,11 @@ The company clerk closes the oilskin case and holds it to his chest, and it is a
           {t:'The pay desk, at the clerk\'s case.', go:'b5_c5_pay'},
           {t:'Talk with the squad.', go:'b5_c5_keep_talk'},
           {t:'The factor\'s offer. The Finadd is waiting.', req:()=>!b55Key(), onward:true, go:'b5_c5_key'},
-          {t:'The night.', req:()=>!!b55Key() && !S.f.b5_c5_nightDone, onward:true, go:()=>{ S.f.b5_c5_ph = 3; talk('b5_c5_night'); }},
+          {t:'The night.', req:()=>!!b55Key() && !S.f.b5_c5_nightDone, onward:true, fx:()=>{ S.f.b5_c5_ph = 3; }, go:'b5_c5_night'},
           {t:'The morning.', req:()=>!!S.f.b5_c5_nightDone, onward:true, go:'b5_c5_dawn'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c5_keep_rest:()=>({sp:'The Sixth\'s fire at Brans Keep', scene:'b5_c5_arrival', txt:
-`An hour by a fire with the battalion all round it. The Second Company's cook comes over with a pot of something and leaves it, and says nothing about High Fort, which is the kindest thing anybody in the battalion has managed so far.${b55If('ammet', `\n\nAmmet looks at the pot, and smells it, and eats it, which from Ammet is an endorsement.`)}`,
+`An hour by a fire with the battalion all round it. The Second Company's cook comes over with a pot of something and leaves it, and asks nothing about High Fort, which is the kindest thing anybody in the battalion has managed so far.${b55If('ammet', `\n\nAmmet looks at the pot, and smells it, and eats it, which from Ammet is an endorsement.`)}`,
       ch:[{t:'Back to the fire.', go:'b5_c5_keepfire'}]}),
     b5_c5_keep_talk:()=>{ const ln = [], k = b55Key();
       if (b5In('tobet')) ln.push(k === 'sign' ? `Tobet is not talking. He is cutting a notch in his tally-stick, and then another, and then looking at the two notches. "One for the army buying me," he says. "One for the house." He puts it away.` : k === 'refuse' ? `Tobet is almost cheerful, for Tobet. "Nobody bought me today," he says. "I'll write that down. It's the first day in a while."` : `Tobet is looking at the factor's wagons. "Everybody wants to buy the paper," he says. "Nobody wants to buy the plough."`);
@@ -65827,7 +65828,7 @@ The house's man comes out at dawn with his lantern and his purse, and counts ten
     b5_c5_factor_after:()=>({sp:'The clerk\'s tent', scene:'b5_c5_arrival', fx:()=>{ S.f.b5_c5_nightDone = 1; S.f.b5_c5_paybookKept = 1; }, txt:
 `The battalion's provosts come at a run with lanterns, at the end, and the men in good boots are suddenly men who were lost among the tents, looking for a friend, and very sorry. The provosts write their names down. The names are not the house's. Nothing on them is the house's. The provosts let them go at dawn.
 
-The company clerk sits on the ground in front of his tent with the oilskin case in his lap and both arms round it, and does not get up for a long time.
+The company clerk sits on the ground in front of his tent with the oilskin case in his lap and both arms round it, and does not get up till the sun is on the tents.
 
 In the morning the factor comes past the Sixth's lines on his way to the wagons, with his clerk and the umbrella, and stops, and looks at the clerk with the case, and tips his hat. "Good morning, Sergeant," he says pleasantly. "The house hopes the Sixth slept well." He walks on.${b55If('tobet', `\n\nTobet watches him go. "I'd like that written down too," he says.`)}`,
       ch:[{t:'Back to the fire.', go:()=>{ startExplore('b5_c5_keep'); talk('b5_c5_keepfire'); }}]}),
