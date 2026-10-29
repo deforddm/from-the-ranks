@@ -97,6 +97,8 @@ const b5e = await page.evaluate(() => ['b5_c5_road', 'b5_c5_burned', 'b5_c5_farm
 ok(b5e.join() === 'burnt,burnt,burnt,camp,camp,hills', 'Book Five\'s road south: the burned country, a burned farm, the cache, the camp at Brans Keep, the keep from the north road: ' + b5e.join(', '));
 const b5f = await page.evaluate(() => ['b5_c6_lines', 'b5_c6_eve', 'b5_c6_shore', 'b5_c6_channel', 'b5_c6_pillars', 'b5_c6_break', 'b5_c6_hills', 'b5_c6_dissent', 'b5_c6_barrow'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b5f.join() === 'camp_night,camp_night,lake,siege,siege,siege,hills,plain,barrow', 'Book Five\'s Brans Keep: the lines and the eve at night, the lake shore, the channel and the pillars and the break, the hills, the Dissent road, the barrow: ' + b5f.join(', '));
+const b5g = await page.evaluate(() => ['b5_c7_streets', 'b5_c7_night', 'b5_c7_canalnight', 'b5_c7_canal', 'b5_c7_walls', 'b5_c7_sorcery', 'b5_c7_under', 'b5_c7_walk', 'b5_c7_finale'].map(k => AUDIO._dev.placeAmb(k)));
+ok(b5g.join() === 'city_night,burning,city_night,city,city,dark,lake,city_night,city_night', 'Book Five\'s fall of Letheras: the streets at night and the city burning, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after: ' + b5g.join(', '));
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));
