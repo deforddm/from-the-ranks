@@ -34,7 +34,9 @@ const out = await page.evaluate(() => {
     }
     // the barricade: eased on Soldier, not on Story or Bridgeburner, and nowhere outside Book Five
     const bar = {};
-    for (const diff of ['story', 'soldier', 'bridgeburner']) { bar[diff] = foe('mt', 7, diff, 'b5_c7_barricade'); bar[diff + 'x'] = foe('mt', 7, diff, 'b5_c7_wolves'); }
+    const noSoft = fn => { const k = Object.keys(B5SOFT), keep = { ...B5SOFT }; k.forEach(x => delete B5SOFT[x]); try { return fn(); } finally { Object.assign(B5SOFT, keep); } };
+    for (const diff of ['story', 'soldier', 'bridgeburner']) { bar[diff] = foe('mt', 7, diff, 'b5_c7_barricade'); bar[diff + 'x'] = noSoft(() => foe('mt', 7, diff, 'b5_c7_barricade')); }
+    bar.dg = foe('dg', 7, 'soldier', 'b5_c7_barricade'); bar.dgx = noSoft(() => foe('dg', 7, 'soldier', 'b5_c7_barricade'));
     const softKeys = Object.keys(B5SOFT);
     const capRows = []; // Soldier's foe (late extra + B5SOFT) never above Bridgeburner's for the same fight
     for (let ch = 1; ch <= 7; ch++) for (const id of [null, ...softKeys]) { if (id && ch !== 7) continue;
@@ -57,6 +59,7 @@ else {
   const b = out.bar;
   ok(b.soldier.hp < b.soldierx.hp || b.soldier.atk < b.soldierx.atk || b.soldier.dmg < b.soldierx.dmg, `the barricade is eased on Soldier (${b.soldierx.hp}→${b.soldier.hp} hp, ${b.soldierx.atk}→${b.soldier.atk} to hit, ${b.soldierx.dmg}→${b.soldier.dmg} damage)`);
   ok(JSON.stringify(b.story) === JSON.stringify(b.storyx) && JSON.stringify(b.bridgeburner) === JSON.stringify(b.bridgeburnerx), 'the barricade is not eased on Story or Bridgeburner');
+  ok(JSON.stringify(b.dg) === JSON.stringify(b.dgx), 'B5SOFT does nothing outside Book Five');
   const over = out.capRows.filter(r => r.s.hp > r.b.hp || r.s.atk > r.b.atk || r.s.dmg > r.b.dmg + 1 || r.s.ac > r.b.ac);
   ok(!over.length, 'Book Five: Soldier never harder than Bridgeburner, fight for fight' + (over.length ? ': ' + over.map(r => `ch${r.ch}${r.id ? ' ' + r.id : ''}`).join(', ') : ''));
 }

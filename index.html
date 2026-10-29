@@ -59961,6 +59961,12 @@ function b5Join(id){ if (!b5CanRecruit(id) || b5In(id)) return false;
 function b5SwapIn(id){ if (!b5CanRecruit(id) || b5In(id)) return false; if (b5Room() > 0) return rosterIn(id); const out = b5Recruit_(); return !!out && rosterSwap(out, id); }
 const b5Waiting = id => !!(b5On() && S.f && S.f[B5_DONE[id]] === 2 && !b5In(id) && !(S.dead && S.dead[id]));
 const b5Offers = () => B5_RECRUITS.filter(id => b5Waiting(id) && (b5Room() > 0 || !!b5Recruit_()));
+/* who walked at a chapter's key (High Fort, Ch 4; Brans Keep, Ch 6): S.f.b5_c<n>_walked, the ids walking, sergeant included. Set when the key
+   is chosen and again when its fight starts (a "Not now" between the two may bring a waiting recruit in at a fire), so the finale's fate
+   pages credit the rampart and the crossing only to those who were there (87's b57HighFort / b57Channel). */
+function b5MarkWalked(n){ if (!b5On() || !S.f) return; S.f[`b5_c${n}_walked`] = (S.squad || []).filter(id => !(S.dead && S.dead[id])); }
+const B5_WALKED_AT = {b5_c4_demon:4, b5_c4_wolves:4, b5_c6_channel:6, b5_c6_flight:6};
+{ const _sb = startBattle; startBattle = function(id, opt){ if (b5On() && B5_WALKED_AT[id] && !(opt && opt.stage === 2)) b5MarkWalked(B5_WALKED_AT[id]); return _sb.apply(this, arguments); }; }
 
 /* ---- the pay desk: a shared body for every chapter's b5_c<n>_pay node. For each debtor who owes and while the squad has docks: "10 docks on
    X's" (or what there is, if less) and "All we can on X's" (when that is more than 10), each through b5Pay and back to the desk; then
@@ -60037,6 +60043,48 @@ Object.assign(FOES, {
 /* the regular grows with the squad, as Book Four's Ninth regular does */
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
     if (k === 'b5_regular') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b5reg = true; } return u; }; }
+
+/* ---- Book Five's balance (David, Thu Oct 29, 2026, 1:42 PM PDT; docs/mt-balance.md). Book Five is on Book Two's curve (FSCALE, and
+   SOLDIER_LATE.mt = Book Two's row, kept), and as built its Bridgeburner fights were far easier than the 75-80% won asked. B5GAP carries the
+   difference, per chapter, on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Four's B4GAP and Book Three's B3GAP); a fight may
+   carry its own row in B5GAP_FIGHT. B5SOFT eases one fight on Soldier only (Ch 7's barricade: a smart Soldier wins it every time).
+   Story is never touched, and nothing here runs outside Book Five (S.book === 'mt'). ---- */
+const B5GAP = { // tuned Thu Oct 29, 2026 (docs/mt-balance.md): the chapter's row, for the fights without a row of their own below
+  1:{ac:2, atk:1, hp:1.45, dmg:2},
+  2:{ac:3, atk:3, hp:1.7, dmg:3},
+  3:{ac:3, atk:3, hp:2.0, dmg:4},
+  4:{ac:2, atk:2, hp:1.6, dmg:3},
+  5:{ac:3, atk:3, hp:2.0, dmg:4},
+  6:{ac:3, atk:3, hp:1.85, dmg:4},
+  7:{ac:3, atk:3, hp:2.0, dmg:4}};
+const B5GAP_FIGHT = { // a fight's own row instead of its chapter's: the main and key fights sit lower, the small ones carry the chapter's
+  b5_c1_lowwalk:{ac:1, atk:1, hp:1.2, dmg:1},
+  b5_c1_tavern:{ac:0, atk:0, hp:1, dmg:0} /* as built (69% won) */,
+  b5_c2_looters:{ac:3, atk:3, hp:1.7, dmg:3},
+  b5_c2_wreckers:{ac:1, atk:1, hp:1.3, dmg:1},
+  b5_c2_hulk:{ac:1, atk:1, hp:1.15, dmg:1} /* the main fight */,
+  b5_c3_rivermen:{ac:1, atk:1, hp:1.15, dmg:1} /* the main fight */,
+  b5_c3_bank:{ac:2, atk:2, hp:1.5, dmg:3},
+  b5_c4_wraiths:{ac:2, atk:1, hp:1.45, dmg:2},
+  b5_c4_demon:{ac:1, atk:1, hp:1.4, dmg:2} /* the key fight (hold) */,
+  b5_c4_wolves:{ac:2, atk:2, hp:1.6, dmg:3} /* the key fight (run) */,
+  b5_c5_farm:{ac:3, atk:3, hp:1.7, dmg:3},
+  b5_c5_wagons:{ac:2, atk:2, hp:1.6, dmg:3},
+  b5_c6_hills:{ac:1, atk:1, hp:1.4, dmg:2},
+  b5_c6_flight:{ac:2, atk:1, hp:1.45, dmg:2},
+  b5_c6_channel:{ac:1, atk:1, hp:1.4, dmg:2} /* the mortal fight */,
+  b5_c7_looters:{ac:3, atk:3, hp:1.85, dmg:4},
+  b5_c7_wolves:{ac:1, atk:1, hp:1.25, dmg:1},
+  b5_c7_barricade:{ac:0, atk:1, hp:1.1, dmg:0} /* the main fight */};
+const B5SOFT = {b5_c7_barricade:{hp:.85, atk:-1, dmg:-1}}; // Soldier only: the barricade lost 1 run in 12 (no gear, level 7); this takes back about what the Soldier late extra adds
+const b5Gap = () => { if (!b5On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id;
+  return (id && B5GAP_FIGHT[id]) || B5GAP[clamp(S.chapter || 1, 1, 7)] || null; };
+const b5Soft = () => (b5On() && (S.diff || 'soldier') === 'soldier' && B && B.id && B5SOFT[B.id]) || null;
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (!b5On()) return u;
+    const g = b5Gap() || b5Soft(); if (!g) return u;
+    u.ac = (u.ac || 10) + (g.ac || 0); u.atk = (u.atk || 0) + (g.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * (g.hp || 1)));
+    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + (g.dmg || 0)]; return u; }; }
 
 /* ---- the words Book Five throws at you: [chapter, word, meaning, met?]. Bound by mt-canon §10: Bugg, Turudal Brizad and Yan Tovis are
    what the squad could know of them, no more; the Errant is Lether's god of chance; the tiles name no being. ---- */
@@ -64671,8 +64719,8 @@ And then the line in front breaks. The Grass Jackets come back off the gully ram
 `The Grass Jackets go past, and keep going, west, toward the wood: the end of the line is the nearest way out, and the Sixth is standing in it.
 
 The garrison on the tower is not going anywhere. Its Finadd is on the tower stair with his list, and he has stopped writing. Finadd Ennic is beside you with his book shut and a sword in his hand, which you have never seen before. "Sergeant," he says, and nothing else, and waits for you to put something in front of him.${b5In('ruuk') ? `\n\nRuuk is at your elbow. "The trees," he says, very low. "There. Very close. In the trees I can take you anywhere." He is not grinning.` : ''}${b54If('thegg', `\n\nThegg has not moved. He stands at the crest with his shield on his arm, and looks at the Grass Jackets going past, and at you. "I stand behind," he says. "I do not run." Then, quieter: "I ran, once."`)}${b54If('ammet', `\n\nAmmet is on her knees behind the crest with a garrison man's leg across her lap and her hands red to the wrist. She does not look up. "I have four here who cannot walk," she says.`)}${b54If('brune', `\n\nBrune looks west at the trees, and then at the tower. "The Shore takes everything back," she says. "Either way."`)}`,
-      ch:[{t:'"The Sixth holds the west rampart. We stay, and we bring our wounded in."', req:()=>!b54Key(), fx:()=>{ S.f.b5_c4_key = 'hold'; b54L('thegg', 1); b54L('ammet', 1); b54L('ruuk', -1); }, go:'b5_c4_hold'},
-          {t:'"West, with them. Into the trees. Now, while we have our weapons."', req:()=>!b54Key(), fx:()=>{ S.f.b5_c4_key = 'run'; b54L('ruuk', 2); b54L('tobet', 1); b54L('thegg', -1); }, go:'b5_c4_run'},
+      ch:[{t:'"The Sixth holds the west rampart. We stay, and we bring our wounded in."', req:()=>!b54Key(), fx:()=>{ S.f.b5_c4_key = 'hold'; b5MarkWalked(4); b54L('thegg', 1); b54L('ammet', 1); b54L('ruuk', -1); }, go:'b5_c4_hold'},
+          {t:'"West, with them. Into the trees. Now, while we have our weapons."', req:()=>!b54Key(), fx:()=>{ S.f.b5_c4_key = 'run'; b5MarkWalked(4); b54L('ruuk', 2); b54L('tobet', 1); b54L('thegg', -1); }, go:'b5_c4_run'},
           {t:'"Not yet."', req:()=>!b54Key(), go:()=>startExplore()},
           {t:'Not now.', req:()=>!!b54Key(), go:()=>startExplore()}]}),
 
@@ -66664,8 +66712,8 @@ And one of the pillars has turned. It has come off the centre and is crossing th
 The right breaks. It goes at once, all along the lip, Artisans and Riven and Whitefinders, not running yet, going back, down into the dry channel and over it at the crossing, a thousand soldiers on a strip of stones twenty paces wide. The Edur on the lake beds see it and come on.
 
 Finadd Ennic is beside you with his sword out, which you have never seen before. "Sergeant," he says, and waits, as he always waits. Whatever you put in front of him, he will do it with his sword out.${b56Say({thegg:`\n\nThegg looks at the crossing and the soldiers crowding onto it. "Someone has to stand at the end," he says. "That is what the end is for." He does not say it should be him. He sets his shield.`, _:''})}${b56If('tobet', `\n\nTobet has three arrows left. "We could just go," he says, very quietly. "Nobody would write it down."`)}${b56If('perrit', `\n\nPerrit is looking at the pillar. "It is slow," she says. "We have the time it takes to cross the field. That is all we have."`)}${b56If('ammet', `\n\nAmmet has her bag on her back. "If we stand," she says, "I'll want somewhere to put them. If we go, I'll want them walking." She does not say which she wants.`)}${b56If('pessa', `\n\nPessa has her boathook down. "I'm not a soldier," she says. "I'll do what the soldiers do."`)}${b56If('ruuk', `\n\nRuuk is a step ahead already, toward the hills behind the keep. "There is a way up, if we hold," he says. "There is a way south, if we go. Both are roads."`)}${b56If('brune', `\n\nBrune looks at the dark coming across the field. "The Shore takes everything back," she says. "I would just like it to wait."`)}`,
-      ch:[{t:'"Hold the crossing. Let the battalion go back over." (a mortal fight: whoever falls here stays down)', tag:'mortal', req:()=>!b56Key(), onward:true, fx:()=>{ S.f.b5_c6_key = 'stand'; }, go:'b5_c6_stand'},
-          {t:'"Back over the channel, with the first of them. Toward Dissent."', req:()=>!b56Key(), onward:true, fx:()=>{ S.f.b5_c6_key = 'fallback'; S.f.b5_c6_fallen = []; b56L('thegg', -1); b56L('pessa', 1); b56L('tobet', 1); }, go:'b5_c6_fallback'},
+      ch:[{t:'"Hold the crossing. Let the battalion go back over." (a mortal fight: whoever falls here stays down)', tag:'mortal', req:()=>!b56Key(), onward:true, fx:()=>{ S.f.b5_c6_key = 'stand'; b5MarkWalked(6); }, go:'b5_c6_stand'},
+          {t:'"Back over the channel, with the first of them. Toward Dissent."', req:()=>!b56Key(), onward:true, fx:()=>{ S.f.b5_c6_key = 'fallback'; b5MarkWalked(6); S.f.b5_c6_fallen = []; b56L('thegg', -1); b56L('pessa', 1); b56L('tobet', 1); }, go:'b5_c6_fallback'},
           {t:'"Not yet."', req:()=>!b56Key(), go:()=>startExplore()},
           {t:'Not now.', req:()=>!!b56Key(), go:()=>startExplore()}]}),
     b5_c6_lip:()=>({sp:'The far lip', scene:b56Day() >= 3 ? 'b5_c6_break' : 'b5_c6_pillars', again:()=>`The far lip of the dry channel, and the field beyond it.`, txt: b56Key() ?
@@ -67169,8 +67217,12 @@ const b57Next = () => { const p = b57Ph();
   if (p < 4) return !S.f.b5_c7_wolvesDone ? 'b5_c7_tiers' : !S.f.b5_c7_barricadeDone ? 'b5_c7_edur' : !S.f.b5_c7_canal ? 'b5_c7_sorcery' : 'b5_c7_under';
   return b57Key() ? 'b5_c7_last' : 'b5_c7_roads'; };
 /* a soldier's line in the book of the fall: who they are now, by the books (the finale) */
-const b57HighFort = id => b57Held() ? `${id === 'sgt' ? 'You' : NAME(id)} held the west rampart at High Fort to the surrender, and walked south without a sword.` : `${id === 'sgt' ? 'You' : NAME(id)} went west from High Fort into the Jheck's wood with the Grass Jackets, and came out on the road south with ${id === 'sgt' ? 'your' : b5His(id)} sword.`;
-const b57Channel = id => b57Stood() ? `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} held the crossing on the dry channel while the battalion went back over it.` : `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} went back over the dry channel with the first who broke, toward Dissent.`;
+/* was this soldier walking at that chapter's key (80's b5MarkWalked)? An old save without the record credits everybody, as before */
+const b57Was = (n, id) => { const w = S.f[`b5_c${n}_walked`]; return id === 'sgt' || !Array.isArray(w) || w.includes(id); };
+const b57HighFortThere = id => b57Held() ? `${id === 'sgt' ? 'You' : NAME(id)} held the west rampart at High Fort to the surrender, and walked south without a sword.` : `${id === 'sgt' ? 'You' : NAME(id)} went west from High Fort into the Jheck's wood with the Grass Jackets, and came out on the road south with ${id === 'sgt' ? 'your' : b5His(id)} sword.`;
+const b57ChannelThere = id => b57Stood() ? `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} held the crossing on the dry channel while the battalion went back over it.` : `At Brans Keep ${id === 'sgt' ? 'you' : b5He(id)} went back over the dry channel with the first who broke, toward Dissent.`;
+const b57HighFort = id => b57Was(4, id) ? b57HighFortThere(id) : `At High Fort ${NAME(id)} was back with the company's followers, not ${b57Held() ? 'on the west rampart' : 'with the squad in the wood'}, and came south after the squad.`;
+const b57Channel = id => b57Was(6, id) ? b57ChannelThere(id) : `At Brans Keep ${b5He(id)} waited behind the lines with the company's followers, and was not ${b57Stood() ? 'at the crossing' : 'with the squad on the channel'}.`;
 
 /* ---- the roads: what each does to the paybooks (the brief's Ch7 row; Claude's calls 16) ---- */
 /* paid: every dock in hand on the debts of the discharged (the sergeant and the squad walking), smallest first, so the most go free; then

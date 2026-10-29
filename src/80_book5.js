@@ -367,10 +367,34 @@ Object.assign(FOES, {
    difference, per chapter, on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Four's B4GAP and Book Three's B3GAP); a fight may
    carry its own row in B5GAP_FIGHT. B5SOFT eases one fight on Soldier only (Ch 7's barricade: a smart Soldier wins it every time).
    Story is never touched, and nothing here runs outside Book Five (S.book === 'mt'). ---- */
-const B5GAP = {1:{ac:0, atk:0, hp:1, dmg:0}, 2:{ac:0, atk:0, hp:1, dmg:0}, 3:{ac:0, atk:0, hp:1, dmg:0}, 4:{ac:0, atk:0, hp:1, dmg:0},
-  5:{ac:0, atk:0, hp:1, dmg:0}, 6:{ac:0, atk:0, hp:1, dmg:0}, 7:{ac:0, atk:0, hp:1, dmg:0}};
-const B5GAP_FIGHT = {};
-const B5SOFT = {};
+const B5GAP = { // tuned Thu Oct 29, 2026 (docs/mt-balance.md): the chapter's row, for the fights without a row of their own below
+  1:{ac:2, atk:1, hp:1.45, dmg:2},
+  2:{ac:3, atk:3, hp:1.7, dmg:3},
+  3:{ac:3, atk:3, hp:2.0, dmg:4},
+  4:{ac:2, atk:2, hp:1.6, dmg:3},
+  5:{ac:3, atk:3, hp:2.0, dmg:4},
+  6:{ac:3, atk:3, hp:1.85, dmg:4},
+  7:{ac:3, atk:3, hp:2.0, dmg:4}};
+const B5GAP_FIGHT = { // a fight's own row instead of its chapter's: the main and key fights sit lower, the small ones carry the chapter's
+  b5_c1_lowwalk:{ac:1, atk:1, hp:1.2, dmg:1},
+  b5_c1_tavern:{ac:0, atk:0, hp:1, dmg:0} /* as built (69% won) */,
+  b5_c2_looters:{ac:3, atk:3, hp:1.7, dmg:3},
+  b5_c2_wreckers:{ac:1, atk:1, hp:1.3, dmg:1},
+  b5_c2_hulk:{ac:1, atk:1, hp:1.15, dmg:1} /* the main fight */,
+  b5_c3_rivermen:{ac:1, atk:1, hp:1.15, dmg:1} /* the main fight */,
+  b5_c3_bank:{ac:2, atk:2, hp:1.5, dmg:3},
+  b5_c4_wraiths:{ac:2, atk:1, hp:1.45, dmg:2},
+  b5_c4_demon:{ac:1, atk:1, hp:1.4, dmg:2} /* the key fight (hold) */,
+  b5_c4_wolves:{ac:2, atk:2, hp:1.6, dmg:3} /* the key fight (run) */,
+  b5_c5_farm:{ac:3, atk:3, hp:1.7, dmg:3},
+  b5_c5_wagons:{ac:2, atk:2, hp:1.6, dmg:3},
+  b5_c6_hills:{ac:1, atk:1, hp:1.4, dmg:2},
+  b5_c6_flight:{ac:2, atk:1, hp:1.45, dmg:2},
+  b5_c6_channel:{ac:1, atk:1, hp:1.4, dmg:2} /* the mortal fight */,
+  b5_c7_looters:{ac:3, atk:3, hp:1.85, dmg:4},
+  b5_c7_wolves:{ac:1, atk:1, hp:1.25, dmg:1},
+  b5_c7_barricade:{ac:0, atk:1, hp:1.1, dmg:0} /* the main fight */};
+const B5SOFT = {b5_c7_barricade:{hp:.85, atk:-1, dmg:-1}}; // Soldier only: the barricade lost 1 run in 12 (no gear, level 7); this takes back about what the Soldier late extra adds
 const b5Gap = () => { if (!b5On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id;
   return (id && B5GAP_FIGHT[id]) || B5GAP[clamp(S.chapter || 1, 1, 7)] || null; };
 const b5Soft = () => (b5On() && (S.diff || 'soldier') === 'soldier' && B && B.id && B5SOFT[B.id]) || null;
