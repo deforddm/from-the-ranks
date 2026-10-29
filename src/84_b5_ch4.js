@@ -196,7 +196,7 @@ const B5CH4 = {
     b5_c4_gully:{title:'Dry Gully', style:'b5_c4_gully', dark:true, warrenText:'Dry Gully at night · the Holds are uneasy tonight, all along the line', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..x.....","....t...","........",".t....x.","........","...t....","........","#......#","##....##"].map(r => r.replace(/x/g, 't')),
       party:[[3,8],[4,8],[2,7],[5,7],[3,9],[4,9]],
-      foes:[['b5_unblooded',2,1],['b5_unblooded',5,1],['b5_unblooded',6,3],['b5_edur',3,0]], xp:120, after:'b5_c4_gully_after',
+      foes:[['b5_unblooded',1,0],['b5_unblooded',5,1],['b5_unblooded',6,3],['b5_edur',3,0]], xp:120, after:'b5_c4_gully_after',
       preText:()=>`Four of them in the gully bed, where the tracks went: three young ones with spears, lighter on their feet than anything that size should be, and one older, with a long sword, who has turned his head already.`},
     /* the battle: the wraiths come over the west rampart first, ahead of everything; the garrison beside the Sixth; then the bastion's foot */
     b5_c4_wraiths:{title:'The west rampart', style:'b5_c4_rampart', warrenText:'High Fort · the Holds are full of something coming back the other way', warren:{meanas:1, denul:1}, music:'battle',
@@ -221,7 +221,7 @@ const B5CH4 = {
         objective:{type:'survive', rounds:4, text:'Hold the back slope for four rounds, until the horns sound and the Edur stop.'},
         map:["........","..t.....","......t.","........","...t....","........",".t....t.","........","........","##....##"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,7],[4,7]],
-        foes:[['b5_demon',4,1],['b5_unblooded',1,2],['b5_unblooded',6,2]]} },
+        foes:[['b5_demon',4,1],['b5_unblooded',1,2],['b5_unblooded',5,1]]} },
     /* 'run': the Jheck in the trees west of the fort, in failing light */
     b5_c4_wolves:{title:'The wood', style:'b5_c4_wood', dark:true, warrenText:'The wood west of High Fort · something in the trees has been a man today, and is not now', warren:{meanas:1, denul:1}, music:'battle',
       map:["t..t...t","........","..t..t..","........","t......t","...t....","........",".t....t.","........","........"],
