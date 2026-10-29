@@ -52,6 +52,7 @@ const b57Rattle = id => { S.rattled ??= {}; S.rattled[id] = 1; };
 const b57Here = () => S.squad.filter(id => id !== 'sgt' && b5In(id));
 const b57And = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
 const b57Has = id => !!(S.kit && S.kit.includes(id));
+const b57Rel = () => Array.isArray(S.f.b5_c7_released) ? S.f.b5_c7_released : [];
 const b57Cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 /* the earlier keys, each read with a default (a --from=7 save may have taken either; an unset key reads as the quieter road) */
 const b57House = () => S.f.b5_c5_key === 'sign' || S.f.b5_holder === 'house';    // Ch5 'sign': the house holds the paybooks
@@ -195,6 +196,7 @@ const B5CH7 = {
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:10, y:3, node:()=>'b5_c7_ennic_bridge', fresh:()=>!S.f.b5_c7_ennicBridge},
         {id:'garrison', name:'A garrison sergeant', kind:'b5_letherii', x:4, y:1, node:()=>'b5_c7_garrison', fresh:()=>!S.f.b5_c7_garrison},
+        {id:'qm', name:'The quartermaster', kind:'b5_c5_quartermaster', x:13, y:4, node:()=>'b5_c7_qm', fresh:()=>!S.f.b5_c7_qm},
         {id:'court', name:'The Drownings court\'s men', kind:'b5_c7_courtman', x:12, y:9, node:()=>'b5_c7_courtmen', show:()=>b57Ph() === 2 && !S.f.b5_c7_courtDone && (!!S.f.b5_c7_threat || b5DrowningThreat()), fresh:()=>true},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:3, y:9, node:()=>'b5_c7_tilewoman', fresh:()=>false} ] },
 
@@ -217,7 +219,8 @@ const B5CH7 = {
       quest:()=> !S.f.b5_c7_wolvesDone ? 'Wolves on the tiers.' : !S.f.b5_c7_barricadeDone ? 'The barricade. The Edur are in the street.' : 'The canal. Now.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:10, y:3, node:()=>'b5_c7_ennic_day', fresh:()=>false},
-        {id:'citizen', name:'A citizen with a slate', kind:'b5_c7_citizen', x:13, y:1, node:()=>'b5_c7_wager', fresh:()=>!S.f.b5_c7_wager} ] },
+        {id:'citizen', name:'A citizen with a slate', kind:'b5_c7_citizen', x:13, y:1, node:()=>'b5_c7_wager', fresh:()=>!S.f.b5_c7_wager},
+        {id:'garrison', name:'A garrison sergeant', kind:'b5_letherii', x:3, y:3, node:()=>'b5_c7_garrison_day', fresh:()=>!S.f.b5_c7_garrisonDay} ] },
 
     /* 16 x 12 (b5_c7_walk, the evening): the Low Walk after the fall, quieter. P the patrol at the end of the street  F the brazier,
        burned down  a the arch  , the barricade's carts pulled apart */
@@ -240,7 +243,8 @@ const B5CH7 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b5_c7_ennic_eve', fresh:()=>!S.f.b5_c7_ennicEve},
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:5, y:4, node:()=>'b5_c7_clerk_eve', fresh:()=>!S.f.b5_c7_clerkEve},
         {id:'children', name:'Canal children', kind:'b5_c7_child', x:12, y:8, node:()=>'b5_c7_children', fresh:()=>!S.f.b5_c7_dockTried},
-        {id:'news', name:'A garrison sergeant', kind:'b5_letherii', x:2, y:9, node:()=>'b5_c7_news', fresh:()=>!S.f.b5_c7_news} ] } ],
+        {id:'news', name:'A garrison sergeant', kind:'b5_letherii', x:2, y:9, node:()=>'b5_c7_news', fresh:()=>!S.f.b5_c7_news},
+        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:4, y:9, node:()=>'b5_c7_tilewoman', fresh:()=>false} ] } ],
 
   battles:{
     /* the night (optional): looters in a broken shopfront, deserters among them */
@@ -270,7 +274,7 @@ const B5CH7 = {
         foes:[['b5_jheck',3,1],['b5_jheck',5,1],['b5_c7_greatwolf',4,0]]} },
     /* the day (main): the Edur at the barricade, before the sorcery; then the Low Walk, until it comes. Not mortal. */
     b5_c7_barricade:{title:'The barricade', style:'b5_c7_barricade', warrenText:'The footbridge barricade · the Holds are full of something coming down the streets', warren:{meanas:1, denul:1}, music:'battle',
-      map:["#......#","........","...t....","........","t.......","......t.","........","..t..t..","........","........"],
+      map:["........","........","...t....","........","t.......","......t.","........","..t..t..","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b5_regular',1,7]],
       foes:[['b5_edur',3,1],['b5_edur',5,1],['b5_edur',4,0],['b5_unblooded',2,2],['b5_unblooded',6,2],['b5_unblooded',1,1],['b5_wraith',0,0],['b5_wraith',7,0]], xp:180, after:'b5_c7_barricade_after',
       preText:()=>`They come down the street toward the footbridge in no hurry, tall and grey, in dark leather, with long swords, and shapes going ahead of them along the house-fronts that are not anybody's shadows. A garrison soldier at the barricade says a word that would get him flogged in any other week. The carts will not stop them. The carts are not meant to. They are meant to make them come one way.`,
@@ -319,7 +323,7 @@ const B5CH7 = {
     if (f.b5_c7_canal) x.push('When the sorcery came down the street, the swimmers took the squad into the canal under the footbridge, and everybody came up.');
     if (f.b5_c7_dockOk) x.push('The canal children showed the squad the holed dock, and gave it the twin.');
     if (f.b5_c7_key === 'emperor') x.push('This sergeant\'s road goes on: the Emperor\'s army. Book Seven, when it is written, will offer this save.');
-    if (f.b5_c7_key === 'paid') x.push(`The squad spent ${b5Coin(f.b5_c7_spent || 0)} on its debts at discharge. ${(f.b5_c7_released || []).length ? `${b57Cap(b57And(f.b5_c7_released.map(id => id === 'sgt' ? 'you' : NAME(id))))} walked out paid up.` : 'Nobody walked out paid up.'} No road onward.`);
+    if (f.b5_c7_key === 'paid') x.push(`The squad spent ${b5Coin(f.b5_c7_spent || 0)} on its debts at discharge. ${(f.b5_c7_released || []).length ? `${b57Cap(b57And(b57Rel().map(id => id === 'sgt' ? 'you' : NAME(id))))} walked out paid up.` : 'Nobody walked out paid up.'} No road onward.`);
     if (f.b5_c7_key === 'ledger') x.push('The squad is in the dead roll of the fall, and its debts have gone to the heirs. No road onward.');
     if (b5In('pessa')) x.push('Pessa came home to the canals, and argued with them.');
     if (b5In('ruuk')) x.push('Ruuk found the squad every road in a city he had never seen.');
@@ -544,6 +548,19 @@ ${fell.map(b57Heir).join(' ')} It is not the squad's to pay. The army's rule say
 `The garrison sergeant at the barricade is an old man with a spear and the City Garrison's badge on a coat that has been let out twice. He has been at this footbridge for two days, keeping looters off the Low Walk, and he is glad of the Whitefinders and does not pretend not to be.
 
 "They'll be on the walls in the morning," he says. "The whole city. To watch them come down the west road." He spits into the canal. "Taking wagers. My wife will be up there with her sister and a slate." He looks at the street. "Spectators. That's a Letherii talent, that is. We'd watch our own drowning and lay odds on how we'd float."`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+
+    /* the quartermaster, with nothing to sell: no salves in Letheras's last day (the brief) */
+    b5_c7_qm:()=>({sp:'The quartermaster', scene:'b5_letheras', fx:()=>{ S.f.b5_c7_qm = 1; }, again:()=>`The quartermaster on his empty cart.`, txt:
+`The quartermaster has got his cart as far as the footbridge and no further, and is sitting on its tail with the crate open beside him. The crate is empty. He shows you, in case you thought otherwise.
+
+"No salves," he says. "Not tonight. The army's stores in the city are in the looters' hands or the garrison's or nobody's, and I've been to all three." He shuts the lid. "I'd sell you one at six if I had one. I'd sell you one at six tomorrow, if there's a tomorrow with a price in it." He considers the canal. "There's always a price in it. It's Letheras."${b57If('ammet', `\n\nAmmet looks into the empty crate. "Then I'll use what's in my bag," she says, "and what's in my bag is needle and gut." She does not sound worried. She sounds as if she has counted.`)}`,
+      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+    /* the garrison sergeant by day, on the barricade */
+    b5_c7_garrison_day:()=>({sp:'A garrison sergeant', scene:'b5_c7_walls', fx:()=>{ S.f.b5_c7_garrisonDay = 1; }, again:()=>`The garrison sergeant on the barricade, looking at the walls.`, txt:
+`The old garrison sergeant is up on a cart at the barricade, looking over the roofs at the white walls and the people on them. "My wife's up there," he says. "With her sister. And a slate." He shades his eyes. "I can't see her. I know she's there. She'll have odds on this bridge."
+
+He gets down. "${S.f.b5_c7_barricadeDone ? 'Whatever that was in the street,' : S.f.b5_c7_wolvesDone ? 'Wolves on the tiers,' : 'Wolves in the streets, they say,'}" he says, "and the city on the walls watching it like a Drowning. Spectators." He spits into the canal. "That's a Letherii talent. I've always said so."`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the court's men: the canal threat (a drowning debt in Letheras) ---- */
@@ -823,7 +840,7 @@ The weapons go on the handcart. The soldiers do not. In the morning, the Edur sa
 Finadd Ennic swears with the rest, in the street, because the garrison sergeant says everybody is swearing, and writes it in his book afterwards: *The Sixth Company, taken into the army of the Emperor.* The clerk writes nothing at all, because nothing in the paybook has changed. Every line stands, in the same book. Only the seal on the front will be new.${b57If('pessa', `\n\nPessa watches her boathook go onto the handcart. "That's mine," she says, to the Edur. "Not the army's. Mine." The Edur looks at it, and at her, and gives it back. She does not thank him.`)}`,
       ch:[{t:'Back to the brazier.', go:'b5_c7_fire'},
           {t:'The last of it.', onward:true, go:'b5_c7_last'}]}),
-    b5_c7_paid:()=>{ const rel = S.f.b5_c7_released || [];
+    b5_c7_paid:()=>{ const rel = b57Rel();
       return {sp:'Paid out', scene:'b5_c7_finale', html:debtHTML('The Sixth Company · at discharge'), txt:
 `The Sixth lays its weapons down on the Low Walk, and Finadd Ennic writes *Discharged* against every name, in his neat hand, and signs each one, which takes a long time, and the clerk does the other half.
 
@@ -869,7 +886,7 @@ B57FIN.debt = (id, key) => { const sgt = id === 'sgt', nm = sgt ? 'Your' : NAME(
   const burned = S.f.b5_c7_burned ? ` A quarter of it went up in the house's strongroom the night before the fall.` : '';
   if (key === 'ledger') { const L = (S.f.b5_c7_listed || {})[id];
     return L > 0 ? `${nm} line in the paybook, ${b5Coin(L)}, went to ${B57_HEIRS[id] || 'the heirs'} with the dead roll, as the army's rule says.${burned}` : `${nm} line was closed before the dead roll was written: nothing went to the heirs.`; }
-  if (key === 'paid') return (S.f.b5_c7_released || []).includes(id) ? `${nm} line closed at discharge: paid down, and the army's release across the rest. ${sgt ? 'You owe' : `${b5He(id) === 'she' ? 'She owes' : 'He owes'}`} nothing to anybody, which in Lether is very nearly a title.${burned}` : `${sgt ? 'You walked' : `${NAME(id)} walked`} out of uniform still owing ${b5Coin(d)} to ${hold}, of the ${b5Coin(d0)} ${sgt ? 'you' : b5He(id)} started the book with: ${B5_STANDW[st]}. In Letheras, where the canal is.${burned}`;
+  if (key === 'paid') return b57Rel().includes(id) ? `${nm} line closed at discharge: paid down, and the army's release across the rest. ${sgt ? 'You owe' : `${b5He(id) === 'she' ? 'She owes' : 'He owes'}`} nothing to anybody, which in Lether is very nearly a title.${burned}` : `${sgt ? 'You walked' : `${NAME(id)} walked`} out of uniform still owing ${b5Coin(d)} to ${hold}, of the ${b5Coin(d0)} ${sgt ? 'you' : b5He(id)} started the book with: ${B5_STANDW[st]}. In Letheras, where the canal is.${burned}`;
   return `${nm} line stands as it was, ${b5Coin(d)} of the ${b5Coin(d0)} ${sgt ? 'you' : b5He(id)} started the book with (${B5_STANDW[st]}), in the same book under the Emperor's seal, held by ${hold}.${burned}`; };
 
 B57FIN.ending = key => {
@@ -884,7 +901,7 @@ B57FIN.ending = key => {
 `Somebody in the barracks says the Edur are sending ships across the sea, a long way off. Nobody knows what for. The Sixth's road goes on, in the army, under the new seals: Book Seven, when it is written, will offer this save.`];
     else if (key === 'paid') P = [
 `The Sixth Company of the Whitefinder Battalion is discharged on the Low Walk on the evening of the fall, and walks up off it out of uniform in the dusk, and the Edur patrol lets it by. In the morning the city is the Emperor's, and the Sixth is not anybody's.`,
-`${(S.f.b5_c7_released || []).length ? `${b57And(S.f.b5_c7_released.map(id => id === 'sgt' ? 'You' : NAME(id)))} walked out owing nothing.` : 'Nobody walked out owing nothing.'} ${['sgt', ...b57Here()].filter(id => !(S.f.b5_c7_released || []).includes(id)).length ? 'The rest walked out owing, in Letheras, where the debt goes into the canal with whoever owes it, and the court sits again within the month.' : ''} The squad spent ${b5Coin(S.f.b5_c7_spent || 0)} at discharge, smallest first, which was the arithmetic.`,
+`${b57Rel().length ? `${b57And(b57Rel().map(id => id === 'sgt' ? 'You' : NAME(id)))} walked out owing nothing.` : 'Nobody walked out owing nothing.'} ${['sgt', ...b57Here()].filter(id => !b57Rel().includes(id)).length ? 'The rest walked out owing, in Letheras, where the debt goes into the canal with whoever owes it, and the court sits again within the month.' : ''} The squad spent ${b5Coin(S.f.b5_c7_spent || 0)} at discharge, smallest first, which was the arithmetic.`,
 `There is no road onward from here. The Sixth's paybook is closed, and the army that kept it belongs to somebody else.`];
     else P = [
 `In the dead roll of the fall of Letheras, in Finadd Ravel Ennic's neat hand, the squad fell at the footbridge over the Quillas, the Low Walk, every one of them. The clerk blotted it. The army's rule sent every line to the heirs.`,
@@ -902,14 +919,14 @@ B57FIN.fate = (id, key) => {
   if (id === 'sgt') return B57FIN.sgt(key);
   if (id === 'tobet') return add('Everything owes him money', [
     R === 'emperor' ? `Tobet is counted with the Sixth on the Low Walk, and marched back to barracks, and given back a bow by an officer with a new band, and strings it, and counts his arrows, then his debts, then his arrows. "Sold three times now," he says, flat. "It's a career."` :
-    R === 'paid' ? ((S.f.b5_c7_released || []).includes('tobet') ? `Tobet walks out of the army on the evening of the fall with nothing owed, which nobody in his family has done in three generations, and goes looking for the plough. He finds the farm. He does not find the plough. He laughs, and means it.` : `Tobet walks out of uniform in Letheras still owing for a plough he has never seen, and finds work with a bookmaker on the Low Walk, chalking the odds, because he can count. He does not laugh at the Drownings jokes any more. He chalks them.`) :
+    R === 'paid' ? (b57Rel().includes('tobet') ? `Tobet walks out of the army on the evening of the fall with nothing owed, which nobody in his family has done in three generations, and goes looking for the plough. He finds the farm. He does not find the plough. He laughs, and means it.` : `Tobet walks out of uniform in Letheras still owing for a plough he has never seen, and finds work with a bookmaker on the Low Walk, chalking the odds, because he can count. He does not laugh at the Drownings jokes any more. He chalks them.`) :
     `Tobet walks out of the ledger along the canal, dead, and for the first time in his life nobody owns a line of him. The debt goes back to the farm. He knows it. He goes the other way.`,
     D,
     `${b57HighFort('tobet')} ${b57Channel('tobet')} Under the footbridge he held on to the ledge with one hand and his bow with the other.`,
     B57FIN.loy('tobet', `"Sergeant," he says to you, softly, half a step behind, the way he always has. It is the most he says to anybody.`, `He calls you Sergeant still, and nothing else.`, `"From back here," he tells you, "you look like you know where you're going." It is meant kindly.`)]);
   if (id === 'thegg') return add('Behind me', [
     R === 'emperor' ? `Thegg is counted with the Sixth and marched to barracks, and stands in the door of the barracks sideways, out of politeness, while the Edur officer counts the room. In the Emperor's army he is the shield, as he was in the King's. "Behind me," he says, at drill. The recruits get behind him.` :
-    R === 'paid' ? `Thegg walks out of uniform and goes to the pit town outside the white walls, and into his mother's tavern, and sits down in it a whole night and does not carry anything. ${(S.f.b5_c7_released || []).includes('thegg') ? 'He writes *Paid* across her tab in his own hand, slowly, and the tavern-keeper lets him.' : 'The tab is still there. He looks at it a long time.'}` :
+    R === 'paid' ? `Thegg walks out of uniform and goes to the pit town outside the white walls, and into his mother's tavern, and sits down in it a whole night and does not carry anything. ${b57Rel().includes('thegg') ? 'He writes *Paid* across her tab in his own hand, slowly, and the tavern-keeper lets him.' : 'The tab is still there. He looks at it a long time.'}` :
     `Thegg walks out of the ledger along the canal, and his mother's tab goes to a dead woman's dead son, and the clerk was right: nobody can collect it. He talks to her people's dead at night, low, in her tongue, and tells them he is one of them now, on paper.`,
     D,
     b57Swam() ? `In the summer he swam the Quillas weighted with three hundred docks of the court's coin, and came out the far side. Under the footbridge, in the autumn, he used all four lungs. ${b57HighFort('thegg')}` : `In the summer the squad paid his fine at the court so he would not swim the Quillas. Under the footbridge, at the fall, he swam it anyway, carrying two. ${b57HighFort('thegg')}`,
@@ -923,28 +940,28 @@ B57FIN.fate = (id, key) => {
     B57FIN.loy('perrit', `"Your arithmetic is not bad, Sergeant," she tells you once. From Perrit it is a medal.`, `She corrects your sums out loud, still, and nothing else.`, `"Rounded in our favour," she says, of the whole book. "For once."`)]);
   if (id === 'ammet') return add('Hold still', [
     R === 'emperor' ? `Ammet is counted with the Sixth and goes back to the barracks infirmary with her needles boiled twice, and the Edur officer who counts the infirmary asks what she does, and she tells him. "Hold still," she says to him, later, about a cut on his hand. He does.` :
-    R === 'paid' ? `Ammet walks out of uniform with her tools${(S.f.b5_c7_released || []).includes('ammet') ? ', paid for, at last, and the cutler\'s note burned in the cutler\'s own grate, slowly' : ', still on the cutler\'s note'}, and takes a room off the Low Walk with a lamp in the window, and the district's sick find her in a week. Cities are where the sick go to be counted. She does the counting.` :
+    R === 'paid' ? `Ammet walks out of uniform with her tools${b57Rel().includes('ammet') ? ', paid for, at last, and the cutler\'s note burned in the cutler\'s own grate, slowly' : ', still on the cutler\'s note'}, and takes a room off the Low Walk with a lamp in the window, and the district's sick find her in a week. Cities are where the sick go to be counted. She does the counting.` :
     `Ammet walks out of the ledger with her tools in her bag, and the cutler's note dies with her name in the dead roll. The cutler will want the tools back. He can come and find them.`,
     D,
     S.f.b5_c3_key === 'warn' ? `At Kraig's Landing she sent a runner up the bank to the Nerek villages, too late, and on the road south a Nerek family knew the Sixth's name. She has never said whether that was enough. ${b57HighFort('ammet')}` : `At Kraig's Landing she watched the green fire over the villages with the rest, and said nothing then, and has said very little since about the Nerek. ${b57HighFort('ammet')}`,
     B57FIN.loy('ammet', `"Hold still," she tells you, at the end of it, and looks you over, and says, "You'll keep." From Ammet it is a blessing.`, `She stitches you as she stitches everybody, quickly, and moves on.`, `"If a god wanted the work," she tells you, "it could come and hold the lamp." She says you held it, once.`)]);
   if (id === 'ruuk') return add('The map lies', [
     R === 'emperor' ? `Ruuk is counted with the Sixth, a Faraed boy in the Emperor's army, and the Edur officer asks what he is for, and he says roads. They give him roads. He is always a step ahead on them.` :
-    R === 'paid' ? `Ruuk walks out of uniform and out of Letheras by the north road, a step ahead, toward the Faraed hills and his grandmother, ${(S.f.b5_c7_released || []).includes('ruuk') ? 'with forty docks of his clan\'s grain paid and released' : 'still owing his clan\'s grain'}. She will not believe a word of it. He will tell her anyway.` :
+    R === 'paid' ? `Ruuk walks out of uniform and out of Letheras by the north road, a step ahead, toward the Faraed hills and his grandmother, ${b57Rel().includes('ruuk') ? 'with forty docks of his clan\'s grain paid and released' : 'still owing his clan\'s grain'}. She will not believe a word of it. He will tell her anyway.` :
     `Ruuk walks out of the ledger along the canal and out of the city by a road nobody else could find, and his clan in the Faraed hills carries the grain. He knows. He will go and carry it with them.`,
     D,
     `At Kraig's Landing he joined the Sixth to find it roads. ${b57HighFort('ruuk')} In Letheras he learned every street in a night, and the city fell over the next day.`,
     B57FIN.loy('ruuk', `"Not that way," he tells you, at every turning. "The map lies. Come." You have stopped asking which map.`, `He goes ahead, and does not look back to see if you follow.`, `He names birds for you, now and then. Starlings, mostly.`)]);
   if (id === 'brune') return add('The Shore', [
     R === 'emperor' ? `Brune is counted with the Sixth, and the Edur ask what she is, and she says of the Shake, and they write it down. In the Emperor's army she stands on the barracks steps every evening with her face toward the sea, which is not in that direction, and nobody corrects her.` :
-    R === 'paid' ? `Brune walks out of uniform and down the river to the coast, ${(S.f.b5_c7_released || []).includes('brune') ? 'owing nothing, to find a small boat she will not take far' : 'still owing the harbour master for a boat he took'}. The Shore takes everything back. She would just like it to wait, a little longer.` :
+    R === 'paid' ? `Brune walks out of uniform and down the river to the coast, ${b57Rel().includes('brune') ? 'owing nothing, to find a small boat she will not take far' : 'still owing the harbour master for a boat he took'}. The Shore takes everything back. She would just like it to wait, a little longer.` :
     `Brune walks out of the ledger, and her village on the coast carries the harbour master's boat. She goes home to help them carry it. She does not tell them she is dead. She will.`,
     D,
     S.f.b5_c2_key === 'dead' ? `At Trate she carried the drowned off the wrecks with her own people and laid them on the quay. ${b57HighFort('brune')}` : `At Trate the squad took the harbour master's salvage, and she said the Shore would want it back either way. ${b57HighFort('brune')}`,
     B57FIN.loy('brune', `"You can swim," she tells you, at the end of it, as if it settled something. It does.`, `She keeps her feet in the water, and her own counsel.`, `She sits by you at fires, saying nothing, with her feet in whatever water there is.`)]);
   if (id === 'pessa') return add('A woman with a boathook', [
     R === 'emperor' ? `Pessa is counted with the Sixth, and tells the Edur officer she is not a soldier, and he writes down that she is. She keeps the boathook. She reads her line out loud every pay-day, as she always has, and now she reads the seal too.` :
-    R === 'paid' ? `Pessa walks out of uniform and down to the Quillas, and finds out who is poling her barge, and argues with them, and wins. ${(S.f.b5_c7_released || []).includes('pessa') ? 'Her line is closed. She reads it out loud anyway, to the barge.' : 'Her line is not closed. She reads it out loud, to the barge, every pay-day.'}` :
+    R === 'paid' ? `Pessa walks out of uniform and down to the Quillas, and finds out who is poling her barge, and argues with them, and wins. ${b57Rel().includes('pessa') ? 'Her line is closed. She reads it out loud anyway, to the barge.' : 'Her line is not closed. She reads it out loud, to the barge, every pay-day.'}` :
     `Pessa walks out of the ledger along her own canal, and the press-gang's chit goes to nobody: her name is spelled wrong in their book, and her husband is gone. It is the first thing the army ever got wrong in her favour.`,
     D,
     `On the road south the press-gang wrote her kit against her name. ${b57Channel('pessa')} Under the footbridge she found the ledge first time, with the boathook.`,

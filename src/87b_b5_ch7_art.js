@@ -57,7 +57,7 @@ Object.assign(FIGX, {
     ctx.restore(); },
 });
 /* the shared figures, in case an earlier chapter's art is not loaded (the brief's guarded placeholders) */
-FIGX.b5_c1_ennic ??= FIGX.b5_letherii; FIGX.b5_c1_clerk ??= FIGX.b5_letherii; FIGX.b5_c1_tilewoman ??= FIGX.b5_letherii;
+FIGX.b5_c1_ennic ??= FIGX.b5_letherii; FIGX.b5_c1_clerk ??= FIGX.b5_letherii; FIGX.b5_c1_tilewoman ??= FIGX.b5_letherii; FIGX.b5_c5_quartermaster ??= FIGX.b5_letherii;
 
 /* ---------------- the grounds (TILEX) ---------------- */
 const B57G = {sett:'#5a564e', settD:'#24242a', char:'#1a1614', charL:'#2e2620', ember:'255,110,40', wood:'#4a3624', woodD:'#22180e', stone:'#7a766c', stoneD:'#34343a'};
