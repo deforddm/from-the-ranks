@@ -98,7 +98,7 @@ const r = await page.evaluate(async () => {
     const b0 = atkCalc(mr, e0).bonus, b1 = atkCalc(mr, e1).bonus;
     AB.t_b4_c6_listen.run(hd); boonFoeTurnStart(e0); boonFoeTurnStart(e1); out.tr.marked = atkCalc(mr, e0).bonus - b0; out.tr.unmarked = atkCalc(mr, e1).bonus - b1;
     e0.x = hd.x + 1; e0.y = hd.y; e1.x = hd.x - 1; e1.y = hd.y; out.tr.noFlank = !flanked(e0, hd); squadTurnStart(hd); out.tr.flankBack = flanked(e0, hd);
-    { const withB = atkCalc(tg, e0).bonus, g = S.gear.tangle.trinket; S.gear.tangle.trinket = null; out.tr.badge = withB - atkCalc(tg, e0).bonus; S.gear.tangle.trinket = g; }
+    { const withB = atkCalc(tg, e0).bonus, k = wornSlot('tangle', 'b4_c6_dogslayer'), g = S.gear.tangle[k]; S.gear.tangle[k] = null; out.tr.badge = withB - atkCalc(tg, e0).bonus; S.gear.tangle[k] = g; } /* v8.1: whichever trinket place it is in */
     const allies0 = B.units.filter(u => u.b4reg).length; B.cur = hd; AB.t_b4_c6_horn.run(hd); out.tr.horn = B.units.filter(u => u.b4reg).length - allies0; out.tr.blown = S.f.b4_c6_hornBlown; B.over = true; }
   startBattle('b4_c6_dusk', {}); await wait(60); out.tr.hornGone = !B.units.find(u => u.id === 'haddat').ab.includes('t_b4_c6_horn'); B.over = true;
   } catch (e) { out.err = e.stack; }

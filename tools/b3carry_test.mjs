@@ -27,7 +27,8 @@ const r = await page.evaluate(async () => {
   /* Book One still stops at 8 */
   S = newState('One'); gainXP(99999); out.oneCap = S.lvl; out.oneDue = S.picksDue.filter(l => l > 7).join(',');
   /* the transfer: a finished Book One on the outlaw road. Tuft died; Ellis stayed behind */
-  const items = Object.keys(ITEMS).filter(k => !/^b[23]_/.test(k)); const [gB, gK, gE, gLoose] = items;
+  const items = Object.keys(ITEMS).filter(k => !/^b[23]_/.test(k)), bySlot = sl => items.filter(k => ITEMS[k].slot === sl); // v8.1: each piece in its own slot (gearTidy moves one that is not)
+  const [gB, gE] = bySlot('weapon'), [gK, gLoose] = bySlot('trinket');
   const a = newState('Rusk'); Object.assign(a, {chapter:7, chapters:{0:'given', 7:'outlaw'}, lvl:8, xp:1900,
     squad:['sgt', 'brisk', 'kettle', 'ohl', 'ellis'], dead:{tuft:{ch:6, where:'x'}},
     f:{c7_follow:{brisk:true, kettle:true, ohl:true, ellis:false}},

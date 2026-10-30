@@ -96,7 +96,7 @@ const r = await page.evaluate(async () => {
     AB.t_b4_c5_seabed.run(hd); out.tr.clear = tb.rng; out.tr.mv = tb.mv - mv0; squadTurnStart(hd); out.tr.back = tb.rng; out.tr.mvBack = tb.mv - mv0; B.over = true; }
   equip('tebbet', 'b4_c5_veil'); startBattle('b4_c5_wallriders', {}); await wait(60);
   { const tb = B.units.find(u => u.id === 'tebbet'); out.tr.veil = tb.rng; B.over = true; }
-  equip('tebbet', 'b4_c5_seaglass'); startBattle('b4_c5_wallriders', {}); await wait(60);
+  unwear('b4_c5_veil'); equip('tebbet', 'b4_c5_seaglass'); startBattle('b4_c5_wallriders', {}); await wait(60);
   { const tb = B.units.find(u => u.id === 'tebbet'), e = B.units.find(u => u.side === 'e'); out.tr.glass = tb.rng; e.x = tb.x; e.y = Math.max(0, tb.y - 3); attack(tb, e); out.tr.glassAfter = tb.rng; B.over = true; }
   } catch (e) { out.err = e.stack; }
   /* ================= a Book Two transfer: Haddat dead at the Barrow, Sathi alive, Ramin walking ================= */

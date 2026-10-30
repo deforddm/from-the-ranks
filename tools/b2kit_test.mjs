@@ -38,7 +38,7 @@ const buy = await ev(() => { const o = {}; startExplore('b2_karpcamp'); talk('b2
   const c = curCh.find(c => /crossbow/.test(c.t)); choose(c); o.water = S.chain.water; o.has = S.kit.includes('b2_tcrossbow'); o.who = Object.keys(S.gear).find(w => S.gear[w].weapon === 'b2_tcrossbow');
   o.gone = !DLG.b2_trader5().ch.some(c => /crossbow/.test(c.t)); S.chain.water = 1; o.poor = !DLG.b2_trader5().ch.filter(c => !c.req || c.req()).some(c => /Buy/.test(c.t));
   closeSheet(); openModal('pack'); o.pack = /Water/.test($('#modal').innerText) && !/Silver/.test($('#modal').innerText.split('\n').slice(0, 4).join(' ')); $('#modal').hidden = true; return o; });
-ok(/four skins: \+1 to hit/.test(buy.txt) && buy.hud === 'none', 'the trader prices in skins and says what each piece does; the HUD shows no silver in Book Two');
+ok(/four skins: Weapon · 1d8\+2 damage · \+1 hit · range \+1\./.test(buy.txt) && buy.hud === 'none', 'the trader prices in skins and says what each piece does; the HUD shows no silver in Book Two');
 ok(buy.water === 5 && buy.has && buy.who === 'tangle', `buying the crossbow costs four skins and Tangle takes it (${buy.who})`);
 ok(buy.gone && buy.poor && buy.pack, 'it is gone from the box; with one skin left nothing can be bought; the pack counts water');
 await fresh({ch:1});
