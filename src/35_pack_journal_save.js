@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.6', ['Book Five\'s portraits: each soldier now has their own neckline for their kit (the sergeant\'s riveted collar and pinned cloak, Thegg\'s standing collar under his beads, Tobet\'s scarf, Perrit\'s open cadre collar, Ruuk\'s hood, Brune\'s sealskin, Pessa\'s shawl), with the clothes running cleanly into the shoulders and short necks on the heavy ones.']],
   ['8.0.5', ['Book Five\'s portraits, third pass: everyone wears a close high collar like Ammet\'s, up to the jaw, so the necks are short and the clothes sit right.']],
   ['8.0.4', ['Book Five\'s portraits again: shorter necks, with collars, hoods, cheek-guards and hair coming up to meet the jaw, so each head sits in its clothes.']],
   ['8.0.3', ['Erasing a sergeant now takes a press and hold: keep a finger on the × for two seconds while the row fills. Let go early and they stay; a plain tap only says how.', 'Book Five\'s squad have new portraits: the sergeant\'s helm and round shield, Thegg\'s tower shield and beads, Perrit\'s cadre coat and tiles, Ammet\'s apron and instruments, Tobet\'s bow, and the recruits Ruuk, Brune and Pessa each with their own look. Saves are untouched.']],
