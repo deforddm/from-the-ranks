@@ -659,7 +659,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '8.0.19';
+const VERSION = '8.0.20';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7241,6 +7241,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.20', ['Tebbet gets a man\'s shoulders under his veil, and his recurve reads properly: thicker limbs, horn nocks, a brighter string.']],
   ['8.0.19', ['Tebbet redone: a brick-brown head-wrap with a sand veil falling onto his shoulders, his face clear, the recurve held in a gloved fist with a bracer, the quiver on his back.']],
   ['8.0.18', ['Spears, lances, the standard, the fish-spear and the boathook now pass in front of the armour from hand to head instead of through it; Tobet wears his bow slung across his back.']],
   ['8.0.17', ['Shields are a real shield\'s size now, and every hand on a weapon wears something: gauntlets on the heavies (steel, red lacquer, worm-green), leather gloves and bracers on the archers, oiled leather on Brune, cloth wraps on Pessa.']],
@@ -49821,14 +49822,15 @@ Object.assign(POR, {
     ctx.save(); ctx.translate(22, -36); ctx.rotate(.32); ctx.fillStyle = PR.lit(ctx, '#7a5430', '#1a1008', -5, 5); ctx.fillRect(-4.6, -26, 9.2, 50); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.rect(-4.6, -26, 9.2, 50); ctx.moveTo(-4.6, -20); ctx.lineTo(4.6, -20); }); // the quiver on his back
       PR.strands(ctx, 9, ['#e8e0d0', '#6a5a44', '#c8bca4', '#3a3024'], 1.3, 91, (i, r) => { const x = -3.4 + i*.85; return [x, -26, x + (r() - .5), -32, x + (r() - .5)*1.6, -37 - r()*2]; }); ctx.restore(); // grey-goose fletching over his shoulder
     PR.neck(ctx, F, 7.8); BP.throat(ctx, F, -46.6);
-    const B = BP.body(ctx, F, {wide:35, drop:4, trap:2, v:true, nx:10.4, ny:F.cy + 16, cb:-42, c1:'#8a7656', c2:'#1e1810'}); ctx.save(); B.path(); ctx.clip(); // the padded jack, open at the throat
+    const B = BP.body(ctx, F, {wide:42, drop:2, trap:3, v:true, nx:10.4, ny:F.cy + 16, cb:-42, c1:'#8a7656', c2:'#1e1810'}); ctx.save(); B.path(); ctx.clip(); // the padded jack, open at the throat
       for (let x = -38; x < 38; x += 4.6) for (let y = -60; y < 6; y += 4.6){ const k = (x + 38)/76; PR.soft(ctx, x + 2.3, y + 2.3, 2, 1.8, k < .55 ? '#fff0d8' : '#000000', k < .55 ? .16*(1 - k) : .18); } // each quilted square puffed
       PR.stitch(ctx, 'rgba(30,20,10,.6)', .45, () => { for (let x = -38; x < 38; x += 4.6){ ctx.moveTo(x, -60); ctx.lineTo(x, 6); } for (let y = -60; y < 6; y += 4.6){ ctx.moveTo(-40, y); ctx.lineTo(40, y); } });
-      B4P.strap(ctx, 24, -50, -26, 2, '#4a3018', 3); ctx.fillStyle = PR.lit(ctx, '#4a3018', '#120a04', -36, 36); ctx.fillRect(-40, -8, 80, 4.4); ell(ctx, 4, -5.8, 2.4, 2, PR.rad(ctx, 3.4, -6.4, .2, 2.4, [[0, '#e8dcc0'], [1, '#4a4030']])); // the quiver's strap; the belt
+      [-1, 1].forEach(sd => PR.stroke(ctx, 'rgba(20,12,6,.6)', 1, () => { ctx.moveTo(sd*30, -40); ctx.quadraticCurveTo(sd*36, -32, sd*38, -18); })); PR.stitch(ctx, 'rgba(230,200,150,.4)', .35, () => { ctx.moveTo(-31, -41); ctx.quadraticCurveTo(-37, -33, -39, -19); }); // the jack's shoulder seams
+      B4P.strap(ctx, 24, -50, -26, 2, '#4a3018', 3); ctx.fillStyle = PR.lit(ctx, '#4a3018', '#120a04', -42, 42); ctx.fillRect(-46, -8, 92, 4.4); ell(ctx, 4, -5.8, 2.4, 2, PR.rad(ctx, 3.4, -6.4, .2, 2.4, [[0, '#e8dcc0'], [1, '#4a4030']])); // the quiver's strap; the belt
       ctx.restore(); BP.light(ctx, F, B, true); BP.shirt(ctx, B, '#b8a684', '#3a3020', -46);
     F.under = (ctx, F) => { PR.dots(ctx, F, 60, 'rgba(10,6,4,.4)', .45, [9, 19, (x, y) => Math.abs(x) < 4.4 && y > 10.4 && y < 14]); PR.stroke(ctx, 'rgba(10,6,4,.75)', .9, () => { ctx.moveTo(-4.8, F.cy + 10.4); ctx.quadraticCurveTo(0, F.cy + 9.4, 4.8, F.cy + 10.4); }); PR.soft(ctx, 0, F.cy - 12, F.w*.9, 3, '#0a0604', .4); }; // a thin moustache; the wrap's shadow on his brow
     PR.face(ctx, F);
-    const u = F.h/20, top = F.cy - 21*u, W = F.w + 2.4, veil = sd => { ctx.beginPath(); ctx.moveTo(sd*(W - .4), F.cy - 6); ctx.bezierCurveTo(sd*(W + 1.6), F.cy + 8, sd*(W + 2), -50, sd*(sd > 0 ? 30 : 26), -44); ctx.quadraticCurveTo(sd*(sd > 0 ? 34 : 30), -41, sd*(sd > 0 ? 33 : 29), -36);
+    const u = F.h/20, top = F.cy - 21*u, W = F.w + 2.4, veil = sd => { ctx.beginPath(); ctx.moveTo(sd*(W - .4), F.cy - 6); ctx.bezierCurveTo(sd*(W + 1.6), F.cy + 8, sd*(W + 2), -50, sd*(sd > 0 ? 31 : 28), -46); ctx.quadraticCurveTo(sd*(sd > 0 ? 35 : 32), -44, sd*(sd > 0 ? 34 : 31), -40);
       if (sd > 0) { ctx.bezierCurveTo(31, -28, 30, -16, 27, -4); ctx.lineTo(19, -6); ctx.bezierCurveTo(21, -18, 20, -30, 16, -40); } else ctx.quadraticCurveTo(-20, -44, -13, -47);
       ctx.bezierCurveTo(sd*10, -50, sd*(F.w*.86), F.cy + 14, sd*(F.w + .2), F.cy - 2); ctx.closePath(); }; // the veil, framing his face and falling onto his shoulders; the tail over the right one
     [-1, 1].forEach(sd => { ctx.save(); veil(sd); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2; ctx.fillStyle = sd < 0 ? PR.lin(ctx, -34, -60, -10, -40, [[0, '#d8c09a'], [.5, '#a88a60'], [1, '#4a3a24']]) : PR.lin(ctx, 10, 0, 34, 0, [[0, '#6a5438'], [1, '#120c06']]); ctx.fill(); ctx.restore();
@@ -49839,10 +49841,10 @@ Object.assign(POR, {
     ctx.save(); wrap(); ctx.clip(); PR.stroke(ctx, 'rgba(20,10,4,.55)', .9, () => { for (let i = 0; i < 6; i++){ ctx.moveTo(-W - 2, F.cy - 6 - i*3.4); ctx.quadraticCurveTo(0, top - 2 + i*1.6, W + 2, F.cy - 14 - i*2.4); } }); PR.stroke(ctx, 'rgba(255,220,190,.28)', .6, () => { for (let i = 0; i < 6; i++){ ctx.moveTo(-W - 2, F.cy - 7 - i*3.4); ctx.quadraticCurveTo(-4, top - 3 + i*1.6, 4, top - 1 + i*1.4); } }); PR.soft(ctx, W*.6, F.cy - 10, 8, 10, '#000000', .45); ctx.restore(); // its windings
     PR.stroke(ctx, 'rgba(255,220,190,.4)', .5, () => { ctx.moveTo(-F.w + .4, F.cy - 5); ctx.bezierCurveTo(-F.w + .8, F.cy - 12*u, -F.w*.5, F.cy - 13.4*u, 0, F.cy - 13*u); });
     // the recurve, held in his left fist: horn tips turned away, the string toward him, in front of the jack
-    ctx.save(); ctx.translate(-33, -14); ctx.rotate(-.06); ctx.lineCap = 'round'; const bow = () => { ctx.beginPath(); ctx.moveTo(-6.4, -66); ctx.quadraticCurveTo(-1, -64, 1.4, -56); ctx.quadraticCurveTo(6, -30, 1.2, -4); ctx.lineTo(1.2, 4); ctx.quadraticCurveTo(6, 30, 1.4, 52); ctx.quadraticCurveTo(-1, 60, -6.4, 62); };
+    ctx.save(); ctx.translate(-33, -14); ctx.rotate(-.06); ctx.lineCap = 'round'; const bow = () => { ctx.beginPath(); ctx.moveTo(-9, -70); ctx.quadraticCurveTo(-1, -70, 1, -60); ctx.quadraticCurveTo(8, -32, 1.4, -4); ctx.lineTo(1.4, 4); ctx.quadraticCurveTo(8, 30, 1, 56); ctx.quadraticCurveTo(-1, 66, -9, 66); };
       ctx.save(); ctx.filter = 'blur(1.2px)'; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 4; ctx.translate(1.8, 1); bow(); ctx.stroke(); ctx.restore();
-      ctx.strokeStyle = '#140c06'; ctx.lineWidth = 3.8; bow(); ctx.stroke(); ctx.strokeStyle = PR.lin(ctx, -2, 0, 6, 0, [[0, '#d8aa66'], [.5, '#8a5a2a'], [1, '#2a1808']]); ctx.lineWidth = 2.6; bow(); ctx.stroke();
-      [[-6.4, -66], [-6.4, 62]].forEach(([x, y]) => ell(ctx, x, y, 1.5, 1.3, '#efe4c8')); PR.stroke(ctx, 'rgba(240,232,210,.8)', .45, () => { ctx.moveTo(-6, -65); ctx.lineTo(-6, 61); }); ctx.restore(); // the string
+      ctx.strokeStyle = '#140c06'; ctx.lineWidth = 5; bow(); ctx.stroke(); ctx.strokeStyle = PR.lin(ctx, -2, 0, 7, 0, [[0, '#e8b870'], [.5, '#9a6430'], [1, '#2a1808']]); ctx.lineWidth = 3.6; bow(); ctx.stroke(); PR.stroke(ctx, 'rgba(255,236,190,.6)', .6, () => { ctx.moveTo(1.4, -58); ctx.quadraticCurveTo(6.4, -32, .6, -6); });
+      [[-9, -70, -.3], [-9, 66, .3]].forEach(([x, y, a]) => { ell(ctx, x + .4, y + .5, 2.6, 1.7, 'rgba(0,0,0,.5)'); ell(ctx, x, y, 2.5, 1.6, PR.rad(ctx, x - .6, y - .5, .1, 2.6, [[0, '#ffffff'], [.5, '#e8dcc0'], [1, '#8a7a5e']]), a); }); PR.stroke(ctx, 'rgba(255,250,235,.95)', .6, () => { ctx.moveTo(-8.6, -69); ctx.lineTo(-8.6, 65); }); ctx.restore(); // the horn nocks; the string
     BP.fist(ctx, -32.6, -13.6, -.06, {k:'bracer', c:['#8a6a44', '#4a3420', '#120a04']}, 40); // his gloved fist, the bracer worn smooth
     return F; },
   /* Darrut: thirty-four, Aren's Old Quarter; one of the Aren Guard who followed Blistig. Broad, thick in the neck, slower than he can be; a heavy stubbled jaw and a nose broken on the wall; the Guard's mail patched, its helm with the plume cut off, the great round shield with the badge scraped away */
