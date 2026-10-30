@@ -5,6 +5,8 @@ A non-commercial Malazan Book of the Fallen fan RPG series for personal play, to
 - **Book One, Ashes of the Pale**, beside *Gardens of the Moon*: an original marine squad, the Fourth, from the aftermath of the Pale to the Fete in Darujhistan.
 - **Book Two, The Chain of Dogs**, beside *Deadhouse Gates*: a new squad of the Seventh Army on the Chain of Dogs, from the fall of Hissar toward Aren.
 - **Book Three, The Fair Exchange**, beside *Memories of Ice*: the Fourth again, marching with Onearm's Host and Caladan Brood's army from the parley at Pale to Coral. A finished Book One on the outlaw road can carry its Fourth across.
+- **Book Four, Unblooded**, beside *House of Chains*: Book Two's squad, broken up into the Adjunct's Fourteenth Army, on the march from Aren to Raraku. A finished Book Two on the right road can carry its squad across.
+- **Book Five, Indebted**, beside *Midnight Tides*: a new Letherii squad, the Sixth Company of the Whitefinder Battalion, from Letheras north to High Fort and back to the city's fall, every soldier in debt.
 
 Turn-based tactical combat, dialogue skill checks, warren strain, Moranth munitions and a Deck of Dragons reading in every chapter.
 
@@ -21,6 +23,8 @@ The Malazan world was created by Steven Erikson and Ian C. Esslemont, and it and
 - Book One: a prologue and seven chapters, from the tunnels under Pale to a brown hill east of Darujhistan the morning after the Fete, and an epilogue with four roads and a page for every squadmate.
 - Book Two: seven chapters on the Chain of Dogs, with the Chain screen (water and the column), squadmates who may stay with Coltaine for good, and three roads out of Aren.
 - Book Three: seven chapters from Pale to Coral, with the Alliance (trust and dread between the Host and Brood's army), poisoned warrens in the Pannion Domin, two recruits (Sohra the Rhivi spirit-singer and Dannet of the Grey Swords), two roads into Coral, and three roads out.
+- Book Four: seven chapters with the Fourteenth from Aren to Raraku, Nerve and Dust, recruits at the fires, and roads out of the convergence.
+- Book Five: seven chapters in Lether, with Debt in docks, the Tiles of the Holds read by a cadre mage, three recruits, one mortal fight at Brans Keep, and three roads out of the fall of Letheras.
 - Three difficulties (Story, Soldier, Bridgeburner), set for each sergeant and changeable in Settings.
 - Skill checks where you choose who rolls, with the odds shown, and ten tricks to win on the hard ones and carry into battle.
 - When the whole squad goes down, the most loyal squadmate's god may answer, and the fight goes on with that god's boon on it (they stack if more than one answers; two at most on Story).
@@ -57,6 +61,7 @@ Chapters are content modules (`src/40_chapter1.js`, …) registered at boot; eac
 
 Newest first.
 
+- v8.0.0 — Book Five, Midnight Tides, *Indebted* (David, Oct 28–29, 2026): seven chapters and a finale with the Sixth Company of the Whitefinder Battalion, a new Letherii cast (Tobet, Thegg, Perrit, Ammet; recruits Ruuk, Brune, Pessa); Debt in docks; the Tiles of the Holds; one mortal fight at Brans Keep. Engine src/80_book5.js, chapters src/81–87, visions 88, games 89. B5GAP/B5GAP_FIGHT (Bridgeburner ~77–81%) and B5SOFT (the Ch 7 barricade on Soldier). docs/mt-*.md hold the canon sheet, brief, chapter notes, continuity read and balance; docs/v8.0-notes.md the engine.
 - v7.4.0 — Soldier late in each book (David, Oct 27, 2026, Q2): a Soldier-only extra from Chapter 3 in Books One to Three (`SOLDIER_LATE`, `soldierLate()`, src/31c; applied in `mkFoe`), rising to health ×1.2, +1 to hit, +1 damage by Chapter 5, capped under Bridgeburner at David's call; Book Four's own Soldier column unchanged; Book Three's Coral mortal fights exempt. `tools/balance.mjs` learns `--book=dg` and `--book=moi`; `tools/soldier_test.mjs`. Notes: docs/v7.4-notes.md.
 - v7.3.0 — David's answers to the open questions (Oct 27, 2026): Q2, Bridgeburner wins mend a quarter of lost health on top of the patch-up (carryWounds, src/31c); Q7, Raest's Omtose Phellack ignores otataral (src/31, 31b, 16b, 35); Q9, the Book Three Ch5 ford's cadre mage stands the river up instead of drowning the Pannion mage, and Coral's Bridgeburner tells of Shank's drowning (src/65, 65b, 67); Q18, Sergeant Bungle in Book Two (src/51–54). Test tools/answers_test.mjs.
 - v7.2.0 — The recruit overhaul (David, Oct 26–27, 2026): one roster system in every book (src/38c_roster.js; up to six walk, the rest wait at camp; recruits and spares benchable, each book's core always walks; "The roster." at chapter fires and a Roster tab in the pack); gear by role (TPL_ROLES, ITEM_ROLE, canWear; three signature items stay personal); parked gear on leaving; transfers carry every squadmate's gear, loyalty and picks; Book Three's full Book One import can make room for Sohra and Dannet; Ellis and Vell have scenes in every Book Three chapter. tools/roster_test.mjs, tools/gear_roles_test.mjs, docs/v7.2-notes.md.
