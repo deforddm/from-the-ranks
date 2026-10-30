@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.10', ['Book Four\'s own soldiers finish the portrait pass: Tallow, Hessa, Tebbet, Darrut, Orvas, Mirrel, Yorin and Rasp each wear their own collar into the shoulders, and the long necks are gone in every book.']],
   ['8.0.9', ['Book Three\'s own portraits join in: Sohra\'s hide rises to a rolled neck under the jaw, and the Grey Sword wears his mail up as an aventail. The Fourth already had their new collars from Book One.']],
   ['8.0.8', ['Book Two\'s portraits next: the sergeant\'s sand scarf wound to the throat, Sathi\'s hide, Tangle\'s jerkin, Marrow\'s shirt collar, Ramin\'s red scale and Keth\'s coat each rise cleanly into the shoulders, and the long necks are gone. Faces and gear are as they were.']],
   ['8.0.7', ['Book One\'s portraits get the same care: each of the Fourth now wears their own collar running cleanly into the shoulders (the sergeant\'s gambeson under the beard, Brisk\'s scale gorget, Tuft\'s cloak drawn to the throat), and the long necks are gone. Faces and gear are as they were.']],
