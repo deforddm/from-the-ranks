@@ -84,12 +84,14 @@ function rsTrail(){ S.trail = (S.trail || []).slice(0, Math.max(1, S.squad.lengt
 /* a squadmate's gear goes into the pack: remembered, so they get it back */
 function rsPark(id){ S.parked ??= {}; const g = S.gear[id] || {}; if (Object.keys(g).length) S.parked[id] = Object.assign({}, g); S.gear[id] = {}; }
 function rsRestore(id){ S.parked ??= {}; const p = S.parked[id]; S.gear[id] ??= {}; if (!p) return;
-  Object.entries(p).forEach(([slot, it]) => { if (ITEMS[it] && (S.kit || []).includes(it) && !S.gear[id][slot] && !rsWorn(it, id) && canWear(id, it)) S.gear[id][slot] = it; });
+  Object.entries(p).forEach(([slot, it]) => { if (!ITEMS[it] || !(S.kit || []).includes(it) || rsWorn(it, id) || wears(id, it) || !canWear(id, it)) return; const k = !S.gear[id][slot] && slotKeys(it).includes(slot) ? slot : freeSlot(id, it); if (k) S.gear[id][k] = it; });
   delete S.parked[id]; }
 /* one item, one wearer; nobody off the squad wears anything (it is parked for them); a squadmate back gets theirs again */
 function gearTidy(){ if (!S || !S.gear) return; S.parked ??= {}; const seen = new Set();
   Object.keys(S.gear).forEach(id => { if (!(S.squad || []).includes(id) && Object.keys(S.gear[id] || {}).length) { if (!rosterDead(id)) S.parked[id] = Object.assign({}, S.parked[id] || {}, S.gear[id]); S.gear[id] = {}; } });
   (S.squad || []).forEach(id => { const g = S.gear[id] ??= {}; Object.entries(g).forEach(([slot, it]) => { if (seen.has(it)) delete g[slot]; else seen.add(it); }); });
+  /* v8.1: a piece in a slot that is not its own (an old save, a hand edit) moves to a free one of its own, or back to the pack (14b GEAR_SLOTS) */
+  (S.squad || []).forEach(id => { const g = S.gear[id]; Object.entries(g).forEach(([slot, it]) => { if (!ITEMS[it] || slotKeys(it).includes(slot)) return; delete g[slot]; const f = freeSlot(id, it); if (f) g[f] = it; }); });
   (S.squad || []).forEach(id => { if (S.parked[id]) rsRestore(id); }); }
 function rsOut(id){ const i = S.squad.indexOf(id); if (i < 0) return -1; S.squad.splice(i, 1); rsPark(id);
   S.camp = [...(S.camp || []).filter(x => x !== id), id]; const b = rosterBook(); if (b.out) b.out(id); rsTrail(); return i; }
@@ -97,7 +99,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
   if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
-  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); rsTrail(); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); fillEmpty(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
 const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle', 'perrit', 'ammet', 'pessa', 'brune'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
@@ -112,7 +114,7 @@ function rosterSwap(out, inn){ if (!out) return rosterIn(inn); if (!rosterCanSwa
     if (S.squad.length >= ROSTER_CAP && rosterBenchable(id)) { S.camp = [...(S.camp || []).filter(x => x !== id), id]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {};
       const b = rosterBook(); if (b.out) b.out(id);
       note(`No room in the squad: ${NAME(id)} waits at ${b.home(id)}. The roster can bring ${rsHe(id) === 'she' ? 'her' : 'him'} in.`); save(); return; }
-    _recruit(id); if (S.squad.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); rsRestore(id); rsTrail(); } }; }
+    _recruit(id); if (S.squad.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); rsRestore(id); fillEmpty(id); rsTrail(); } }; }
 /* the story's own leavings: gear goes into the pack (remembered), and nobody leaves twice */
 letGo = function(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); rsPark(id); S.camp = (S.camp || []).filter(x => x !== id);
   S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); };
@@ -120,9 +122,8 @@ unrecruit = function(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.s
   S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); };
 { const _kill = kill; kill = function(id){ _kill(id); if (S) { S.camp = (S.camp || []).filter(x => x !== id); if (S.parked) delete S.parked[id]; } }; }
 /* equipping takes the piece off anyone else first, the parked included */
-equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) return; Object.keys(S.gear).forEach(w => { const g = S.gear[w] || {}; Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }); });
-  Object.values(S.parked || {}).forEach(g => Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }));
-  S.gear[who] ??= {}; S.gear[who][it.slot] = id; save(); };
+equip = function(who, id, key){ const it = ITEMS[id]; if (!it || !canWear(who, id)) return; unwear(id); // v8.1: two trinket slots (14b); key picks one
+  S.gear[who] ??= {}; S.gear[who][equipSlot(who, id, key)] = id; save(); };
 
 /* ---- old saves: Book Two/Three/Four kept a recruit's kit in S.f.b2/b3/b4_allyGear and their waiting in flags; the squad was not capped ---- */
 { const _migrate = migrate;

@@ -238,7 +238,8 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
   // items, cards
   const itemIds = Object.keys(ITEMS);
   for (const [iid, it] of Object.entries(ITEMS)) {
-    if (!['weapon', 'armour', 'trinket'].includes(it.slot)) err(`item ${iid}: bad slot ${it.slot}`);
+    if (!['weapon', 'armour', 'trinket'].includes(it.slot) || (typeof GEAR_SLOTS !== 'undefined' && !GEAR_SLOTS[it.slot])) err(`item ${iid}: bad slot ${it.slot}`); // v8.1: a trinket goes in either of two places (14b GEAR_SLOTS)
+    if (typeof itemStatLine === 'function') { const l = itemStatLine(iid); if (!l || /undefined|NaN|null/.test(l)) err(`item ${iid}: its stat line is broken (${l})`); if (it.slot === 'weapon' && !/damage/.test(l)) err(`item ${iid}: a weapon's line must say its damage (${l})`); }
     (it.who || []).forEach(w => { if (!TPL[w]) err(`item ${iid}: who ${w} unknown`); });
     if (typeof gearRolesApply === 'function') { gearRolesApply(); if (!it.role && !(it.who || []).length) err(`item ${iid}: no role and no signature who-list (v7.2: 38c ITEM_ROLE)`); [].concat(it.role || []).forEach(r => { if (!GEAR_TAGW[r]) err(`item ${iid}: role ${r} unknown`); }); }
     if (!it.line) warn(`item ${iid}: no description line`);
@@ -412,6 +413,7 @@ for (const [f, t] of src) {
   for (const m of t.matchAll(/startBattle\('([a-z_0-9]+)'/g)) if (!res.battleIds.includes(m[1])) E.push(`${f}: startBattle('${m[1]}') missing`);
   for (const m of t.matchAll(/\bgain\('([a-z_0-9]+)'\)/g)) if (!res.itemIds.includes(m[1])) E.push(`${f}: gain('${m[1]}') missing item`);
   for (const m of t.matchAll(/S\.card\s*=\s*'([a-z_0-9]+)'/g)) if (!res.cardIds.includes(m[1])) E.push(`${f}: card '${m[1]}' missing`);
+  for (const m of t.matchAll(/S\.gear[^;\n]{0,80}?\.trinket\b(?!2)/g)) E.push(`${f}: reads a trinket slot directly (${m[0].slice(-60)}); there are two: use wears(id, item), wornBy(item) or unwear(item) (14b)`);
   for (const m of t.matchAll(/\btalk\('([a-z_0-9]+)'\)/g)) { /* checked below */ }
 }
 // orphans: node ids that no string literal references at all (computed references are possible)

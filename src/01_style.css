@@ -623,3 +623,12 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 
 /* v7.3.3: the Roster button's count of who waits at camp */
 .rbadge{display:inline-block;min-width:1.2em;padding:0 .3em;margin-left:.25em;border-radius:.6em;background:var(--brass);color:#1a140c;font-size:.75em;line-height:1.3em;text-align:center}
+/* v8.1 items (14b): the Pack's kit by slot, the one stat line, a shop's ware line */
+.packkit h5{margin:10px 0 4px;font-family:var(--label);font-size:.74rem;letter-spacing:.12em;color:var(--mute);font-weight:700;text-transform:uppercase}
+.packkit .pkit{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0;color:inherit;font:inherit;cursor:pointer}
+.packkit div.pkit{cursor:default}
+.packkit .pkit .art.ico.item{margin-right:0}
+.packkit .pkt{display:flex;flex-direction:column;gap:2px;min-width:0;overflow-wrap:anywhere}
+.packkit .pkt small{opacity:.7}.packkit .pkt small.worn{color:var(--brass2);opacity:.9}
+.choice .ware{display:block;margin-top:4px;font-family:var(--label);font-size:.78rem;color:var(--mute);letter-spacing:.02em;overflow-wrap:anywhere}
+.kit .ith .stat,.gearl .stat{overflow-wrap:anywhere}

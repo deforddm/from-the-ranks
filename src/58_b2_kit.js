@@ -57,12 +57,8 @@ function b2Buy(item, price, from){ const it = ITEMS[item]; if (!it || S.kit.incl
   const who = placeGear(item); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good');
   tally('waterSpent', price); save(); return true; }
 /* what a ware does, in a few words, for the trader's list */
-function b2WareSays(item){ const it = ITEMS[item]; if (!it) return ''; const b = [];
-  if (it.atk) b.push(`${it.atk > 0 ? '+' : ''}${it.atk} to hit`); if (it.dmg) b.push(`${it.dmg[0]}d${it.dmg[1]}${it.dmg[2] ? '+' + it.dmg[2] : ''} damage`); if (it.rng) b.push(`+${it.rng} reach`);
-  if (it.ac) b.push(`${it.ac > 0 ? '+' : ''}${it.ac} armour`); if (it.hp) b.push(`+${it.hp} health`); if (it.mv) b.push(`+${it.mv} move`);
-  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => b.push(`+${n} ${STATN[k] || k}`)); if (it.heavy) b.push('heavy: hot at noon');
-  if (B2_SPECIAL[item]) b.push(B2_SPECIAL[item]); return b.join(', '); }
-const B2_SPECIAL = {b2_fetish:'a spoiled spell comes out clean, once a chapter', b2_robe:'no heat in a noon fight', b2_plank:'bites back, once a fight', b2_coldknife:'a blow that lands slows', b2_tskin:'one rest a chapter costs no water'};
+/* v8.1: the one stat line (14b itemStatLine), heavy and specials included; the specials' words are ITEM_SPECIAL's (B2_SPECIAL is gone) */
+function b2WareSays(item){ return ITEMS[item] ? itemStatLine(item) : ''; }
 /* a trader's node: what they have, at what price, and a choice for each thing the squad can afford. o: {sp, txt(), wares:[[item, price]], haggle} */
 function b2Trader(node, o){ return () => { const left = o.wares.filter(([it]) => !S.kit.includes(it)), w = chainW();
   return {sp:o.sp, fx:()=>{ S.f[node] = 1; }, txt:`${typeof o.txt === 'function' ? o.txt() : o.txt}${left.length ? `\n\n${left.map(([it, p]) => `*${ITEMS[it].name}*, ${numw(b2Price(node, it, p))} skin${b2Price(node, it, p) === 1 ? '' : 's'}: ${b2WareSays(it)}.`).join('\n\n')}` : `\n\n${o.empty || 'There is nothing left you could use.'}`}`,

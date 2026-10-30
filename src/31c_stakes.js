@@ -274,22 +274,43 @@ function gearValue(id, g){
   const ranged = t.rng > 1, front = ['shield', 'mail'].some(r => rolesOf(id).includes(r)); // the front line: whoever takes a shield or mail (v7.2: Dannet, Orvas, Rasp and the sappers too)
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
-  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
+  /* v8.1: a check stat the soldier's role leans on (their best Measure, or the one their level grows) outranks a flat +1 */
+  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], top = Math.max(...Object.values(t.st)), best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)), role = mine >= top || (STATUP[id] || []).includes(k);
+    v += n * (role ? 3.2 : mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
+  /* v8.1: a special (14b ITEM_SPECIAL) is worth more than any flat +1, on whoever it works for; one that works from the pack is worth nothing worn */
+  if (itemSpecial(g) && !specialCarried(g) && (!ITEM_SPECIAL_WHO[g] || ITEM_SPECIAL_WHO[g] === id) && (!SPECIAL_SUITS[g] || SPECIAL_SUITS[g](t))) v += 3.5;
   return v + .01; // anything wearable beats nothing
 }
+/* specials that only do anything for some soldiers: a lens for a shot, a fetish for a caster */
+const SPECIAL_SUITS = {b4_c5_seaglass:t => t.rng > 1, b4_c5_veil:t => t.rng > 1 || !!t.magic, b2_fetish:t => !!t.magic, b3_c4_ropehooks:t => t.rng <= 1};
 /* a new piece goes to whoever it suits best among those with that slot empty */
 function placeGear(g){
   const it = ITEMS[g]; if (!it) return null;
-  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
-  if (who && gearValue(who, g) > 0) { S.gear[who][it.slot] = g; return who; } return null;
+  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && freeSlot(w, g)).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
+  if (who && gearValue(who, g) > 0) { S.gear[who][freeSlot(who, g)] = g; return who; } return null;
 }
+/* a piece nobody wears and nobody at camp is waiting for */
+const gearIdle = () => { const parked = new Set(Object.values(S.parked || {}).flatMap(p => Object.values(p || {}))); return [...new Set(S.kit || [])].filter(g => ITEMS[g] && !wornBy(g) && !parked.has(g)); };
+/* a soldier joining: their empty slots take the best of what lies idle in the pack (v8.1) */
+function fillEmpty(id){ if (!S || !S.gear || !TPL[id]) return 0; S.gear[id] ??= {}; let n = 0;
+  gearIdle().filter(g => canWear(id, g)).sort((a, b) => gearValue(id, b) - gearValue(id, a)).forEach(g => { const k = freeSlot(id, g); if (k && gearValue(id, g) > 0) { S.gear[id][k] = g; n++; } });
+  return n; }
+/* nobody goes into a fight with an empty hand while a weapon they can use is in the pack: an idle one, or one passed along from someone who
+   can take another idle one instead (v8.1) */
+function armUnarmed(){ if (!S || !S.gear) return 0; let n = 0;
+  SQUAD().forEach(w => { if (!TPL[w] || (S.gear[w] ??= {}).weapon) return; const idle = gearIdle().filter(g => ITEMS[g].slot === 'weapon');
+    const mine = idle.filter(g => canWear(w, g)).sort((a, b) => gearValue(w, b) - gearValue(w, a))[0];
+    if (mine) { S.gear[w].weapon = mine; n++; return; }
+    for (const x of SQUAD()) { const g = S.gear[x] && S.gear[x].weapon; if (!g || x === w || !canWear(w, g)) continue; const h = idle.find(h => canWear(x, h)); if (h) { S.gear[x].weapon = h; S.gear[w].weapon = g; n++; return; } } });
+  return n; }
 /* Allocate: everything in the kit, re-dealt for the most good (biggest gains first) */
 function allocateGear(){
   const kit = [...new Set(S.kit)].filter(g => ITEMS[g]), sq = SQUAD();
   const before = JSON.stringify(S.gear); sq.forEach(w => { S.gear[w] = {}; });
   const pairs = []; kit.forEach(g => sq.forEach(w => { const v = gearValue(w, g); if (v > 0) pairs.push({w, g, v}); }));
   pairs.sort((a, b) => b.v - a.v); const used = new Set();
-  pairs.forEach(({w, g}) => { const sl = ITEMS[g].slot; if (used.has(g) || S.gear[w][sl]) return; S.gear[w][sl] = g; used.add(g); });
+  pairs.forEach(({w, g}) => { const k = freeSlot(w, g); if (used.has(g) || !k) return; S.gear[w][k] = g; used.add(g); }); // v8.1: both trinket slots (14b)
+  armUnarmed();
   save(); return before !== JSON.stringify(S.gear);
 }
 /* the sheet's numbers: what the gear adds, so it can show the base, the bonus and the total */

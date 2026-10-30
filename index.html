@@ -643,6 +643,15 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 
 /* v7.3.3: the Roster button's count of who waits at camp */
 .rbadge{display:inline-block;min-width:1.2em;padding:0 .3em;margin-left:.25em;border-radius:.6em;background:var(--brass);color:#1a140c;font-size:.75em;line-height:1.3em;text-align:center}
+/* v8.1 items (14b): the Pack's kit by slot, the one stat line, a shop's ware line */
+.packkit h5{margin:10px 0 4px;font-family:var(--label);font-size:.74rem;letter-spacing:.12em;color:var(--mute);font-weight:700;text-transform:uppercase}
+.packkit .pkit{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0;color:inherit;font:inherit;cursor:pointer}
+.packkit div.pkit{cursor:default}
+.packkit .pkit .art.ico.item{margin-right:0}
+.packkit .pkt{display:flex;flex-direction:column;gap:2px;min-width:0;overflow-wrap:anywhere}
+.packkit .pkt small{opacity:.7}.packkit .pkt small.worn{color:var(--brass2);opacity:.9}
+.choice .ware{display:block;margin-top:4px;font-family:var(--label);font-size:.78rem;color:var(--mute);letter-spacing:.02em;overflow-wrap:anywhere}
+.kit .ith .stat,.gearl .stat{overflow-wrap:anywhere}
 </style>
 <style>[hidden]{display:none!important}body{margin:0}</style>
 </head><body>
@@ -1583,6 +1592,104 @@ You are halfway to him when the floor in the middle of the junction stands up.${
 };
 
 
+/* ============ v8.1 items: one stat line for every piece, everywhere; two trinket slots ============
+   Every place that shows a piece of gear (the squad sheet's Kit and Arms, the item view, the Pack, the traders and shops, the
+   "Found" toast) builds its numbers with itemStatLine(g, who), in one order and one set of words:
+     Weapon · 1d10+2 damage · +1 hit · reach 2 · armour −1        Armour · armour +2 · health +3 · heavy (hot at noon)
+     Trinket · Wits +1 · +1 move · Once a fight: …
+   "range" is a bow's or a sling's reach in tiles (it.rng on a ranged piece); "reach" is a spear's or a halberd's (it.reach: it strikes
+   from that many tiles). A weapon with its own damage (it.dmg) shows it; one without says the wearer's own damage, or, for a soldier,
+   their dice. Shown for a soldier, a weapon's damage says what they hit for now if it differs: "1d10+2 damage (now 1d8+2)".
+   A piece's special (what code does for it, by id) is it.special if the item has one, else ITEM_SPECIAL below.
+   Slots: GEAR_SLOTS. A trinket can go in either of two (the trinket and trinket2 keys of S.gear[id]); the same piece is never worn twice.
+   Code that asks "does X wear Y" goes through wears(id, g); "who wears Y" wornBy(g); "take Y off whoever" unwear(g). Never read
+   a trinket key of a soldier's gear directly (the lint fails on it). */
+const GEAR_SLOTS = {weapon:['weapon'], armour:['armour'], trinket:['trinket', 'trinket2']};
+const SLOT_WORD = {weapon:'Weapon', armour:'Armour', trinket:'Trinket'};
+const slotKeys = g => (ITEMS[g] && GEAR_SLOTS[ITEMS[g].slot]) || [];
+const wears = (id, g) => !!(S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(g));
+const wornBy = g => ((S && S.squad) || []).find(w => wears(w, g)) || null;
+const wornSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return Object.keys(gg).find(k => gg[k] === g) || null; };
+const freeSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return slotKeys(g).find(k => !gg[k]) || null; };
+/* take a piece off everyone, the parked included */
+function unwear(g){ if (!S) return; [S.gear, S.parked].forEach(G => Object.values(G || {}).forEach(gg => Object.keys(gg || {}).forEach(k => { if (gg[k] === g) delete gg[k]; }))); }
+/* the dice, as the game writes them */
+const diceW = d => d ? `${d[0]}d${d[1]}${d[2] > 0 ? '+' + d[2] : d[2] < 0 ? '−' + (-d[2]) : ''}` : '';
+const sgnW = n => (n < 0 ? '−' : '+') + Math.abs(n);
+/* what a soldier's weapon hits for, before levels and Edge: the worn weapon's own damage, or their own */
+function baseDmg(id){ const t = TPL[id]; if (!t) return null; const w = S && S.gear && S.gear[id] && S.gear[id].weapon, it = w && ITEMS[w]; return (it && it.dmg) || t.dmg; }
+/* the specials: what the game does for a piece, by id, in one short true line. Kept here, not on the chapters' item blocks; an item's own
+   it.special wins. "Carried" pieces work from the pack; the rest work worn. (Book Two's traders used to keep their own words, B2_SPECIAL.) */
+const ITEM_SPECIAL = {
+  /* Book One */
+  hoodrep:'Once a chapter: a blow that would drop its wearer leaves them standing at 1 health',
+  heater:'+1 to lock shields on the Line, in Chapter One',
+  houndtooth:'+1 reading where the Hounds went, in Chapter Two',
+  clawknife:'In the sergeant\'s hand: +1 on one hard check in Chapter Two',
+  roadleather:'+1 talking past the pikemen in the Chapter Three streets',
+  otatglove:'On the sergeant: +1 holding on against the pull, in Chapter Five',
+  clawpen:'Carried: +2 on one check with the clerk, in Chapter Seven',
+  /* Book Two */
+  b2_fetish:'Once a chapter: a spell the fouled warren would spoil comes out clean',
+  b2_robe:'No heat in a noon fight, mail or no mail',
+  b2_plank:'Once a fight, when its wearer is hit: 3 damage back to whoever struck',
+  b2_coldknife:'A blow it lands up close slows the enemy on its next turn',
+  b2_tskin:'Once a chapter: a rest costs no water',
+  /* Book Three */
+  b3_c1_charm:'Worn by anyone: a rest lowers the dread by 1 more',
+  b3_c2_bundle:'+1 hit while the squad is haunted (shaken: the first two rounds)',
+  b3_c4_ropehooks:'The Wolves\' Rope reaches 1 further for its wearer',
+  b3_c4_flint:'+3 damage against K\'ell Hunters',
+  b3_c5_knife:'+2 damage against Seerdomin and K\'ell Hunters',
+  b3_c5_skin:'Carried: a rest lowers the dread by 1 more',
+  b3_c6_feather:'Worn by anyone: the squad is never taken by surprise',
+  b3_c7_greymail:'The first blow on its wearer in a fight lands 2 lighter',
+  /* Book Four */
+  b4_c1_finger:'Its wearer starts a fight steady (+2 to the first blow) while the company\'s nerve is 5 or more',
+  b4_c1_redsash:() => `On ${TPL.redblade ? TPL.redblade.name : 'Ramin'}: +1 hit`,
+  b4_c1_durhangpipe:'Carried: once a chapter at a fire, the rattled settle and the bruised stop feeling it',
+  b4_c2_milestone:'The first blow its wearer lands in a fight does +1 damage',
+  b4_c3_ferryrope:'Carried: +1 on one check a chapter',
+  b4_c4_lampball:'Once a book: thrown, range 4, it bursts and the ground burns for 3 rounds. Then it is gone',
+  b4_c4_salve:'The first healing its wearer takes in a fight heals 2 more',
+  b4_c5_seaglass:'In the dust: its wearer\'s first shot reaches 1 further',
+  b4_c5_veil:'In the dust: its wearer loses half as much range, and sorcery sputters half as much',
+  b4_c6_dogslayer:'+1 hit against the Dogslayers',
+  b4_c6_pickethorn:'Once a book: blow it, and two regulars of the 9th join the fight',
+  b4_c7_tear:'The first hit its wearer lands in a fight does 2 more',
+};
+/* who a special is for, when it only works on one soldier (Allocate weighs it for them alone) */
+const ITEM_SPECIAL_WHO = {b4_c1_redsash:'redblade', otatglove:'sgt', clawknife:'sgt'};
+function itemSpecial(g){ const it = ITEMS[g]; if (!it) return ''; const s = it.special != null ? it.special : ITEM_SPECIAL[g]; return (typeof s === 'function' ? s() : s) || ''; }
+/* a special that works from the pack, not on the wearer */
+const specialCarried = g => /^Carried:/.test(itemSpecial(g));
+/* the line. who: a soldier's id, to show their damage and what they hit for now */
+function itemStatLine(g, who){ const it = ITEMS[g]; if (!it) return ''; const p = [SLOT_WORD[it.slot] || 'Gear'], t = who && TPL[who] ? TPL[who] : null;
+  if (it.slot === 'weapon') {
+    const mine = it.dmg || (t && t.dmg), now = t ? (wears(who, g) ? mine : baseDmg(who)) : null;
+    p.push(mine ? `${diceW(mine)} damage${now && diceW(now) !== diceW(mine) ? ` (now ${diceW(now)})` : ''}` : 'the wearer\'s own damage'); }
+  else if (it.dmg) p.push(`${diceW(it.dmg)} damage`);
+  if (it.atk) p.push(`${sgnW(it.atk)} hit`);
+  if (it.reach) p.push(`reach ${1 + (it.rng || 0)}`); else if (it.rng) p.push(`range ${sgnW(it.rng)}`);
+  if (it.ac) p.push(`armour ${sgnW(it.ac)}`);
+  if (it.hp) p.push(`health ${sgnW(it.hp)}`);
+  if (it.mv) p.push(`${sgnW(it.mv)} move`);
+  if (it.stat) ['might', 'wits', 'guile'].forEach(k => { if (it.stat[k]) p.push(`${STATN[k]} ${sgnW(it.stat[k])}`); });
+  if (it.heavy) p.push('heavy (hot at noon)');
+  const sp = itemSpecial(g); if (sp) p.push(sp);
+  if (p.length === 1) p.push('a keepsake, nothing more');
+  return p.join(' · '); }
+/* the short form for a toast: the slot and the main number */
+function itemStatShort(g){ const it = ITEMS[g]; if (!it) return ''; const sp = itemSpecial(g), l = itemStatLine(g).split(' · ').slice(1).filter(x => x !== sp && !/^a keepsake/.test(x));
+  return [SLOT_WORD[it.slot], ...l.slice(0, 2), ...(!l.length && sp ? ['something more: look at it in the Pack'] : [])].join(' · '); }
+/* who wears it, in words, for the Pack and the item view */
+function wornWords(g){ const w = wornBy(g); return w ? `worn by ${w === 'sgt' ? 'you' : NAME(w)}` : 'in the pack'; }
+/* the Pack's kit: every piece carried, by slot, with its line and who wears it; a tap opens the item view */
+function packKitHTML(){ const kit = [...new Set((S && S.kit) || [])].filter(g => ITEMS[g]); if (!kit.length) return '';
+  return `<h4 class="jh">Kit</h4><div class="packkit">${['weapon', 'armour', 'trinket'].map(sl => { const these = kit.filter(g => ITEMS[g].slot === sl); if (!these.length) return '';
+    return `<h5>${SLOT_WORD[sl]}s</h5>${these.map(g => { const it = ITEMS[g], tap = ARTON() && ART['item/' + g];
+      return `<${tap ? `button type="button" data-iz="item/${g}" aria-label="Look at ${esc(it.name)}"` : 'div'} class="pkit">${art('item/' + g, 'ico item')}<span class="pkt"><b>${esc(it.name)}</b><span class="stat">${esc(itemStatLine(g))}</span><small class="${wornBy(g) ? 'worn' : ''}">${esc(wornWords(g)[0].toUpperCase() + wornWords(g).slice(1))}</small></span></${tap ? 'button' : 'div'}>`; }).join('')}`; }).join('')}</div>`; }
+
 /* ============ state ============ */
 const KEY = 'from-the-ranks-v1';
 let S = null;          // saved game state
@@ -1673,10 +1780,13 @@ const has = (id, k) => (S.picks[id] || []).includes(k);
 /* the role's Measure, grown at levels 4 and 8 */
 const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
 function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
-function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name}.`, 'good'); AUDIO.play('pick');
+function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name} (${itemStatShort(id)}).`, 'good'); AUDIO.play('pick');
   // auto-equip into an empty slot, on whoever it suits best (31c)
   const who = placeGear(id); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good'); }
-function equip(who, id){ const it = ITEMS[id]; if (!it) return; SQUAD().forEach(w => { if (S.gear[w][it.slot] === id) delete S.gear[w][it.slot]; }); S.gear[who][it.slot] = id; save(); }
+function equip(who, id, key){ const it = ITEMS[id]; if (!it) return; unwear(id); S.gear[who] ??= {}; S.gear[who][equipSlot(who, id, key)] = id; save(); } // 38c's equip replaces this (by role)
+/* the slot a piece goes into: the one asked for, else a free one, else (two trinkets on) the one worth least to this soldier */
+function equipSlot(who, id, key){ const ks = slotKeys(id); if (key && ks.includes(key)) return key; const f = freeSlot(who, id); if (f) return f;
+  return ks.slice().sort((a, b) => (typeof gearValue === 'function' ? gearValue(who, S.gear[who][a]) - gearValue(who, S.gear[who][b]) : 0))[0]; }
 function unequip(who, slot){ delete S.gear[who][slot]; save(); }
 const NAME = id => id === 'sgt' ? S.name : TPL[id].name;
 /* saves: one slot per sergeant, so more than one person can play on the same device. The roster lists them, last played first.
@@ -1898,7 +2008,8 @@ function talk(id){
   sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}${body}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
     <div class="choices">${curCh.map((c,i) => {
       const tag = c.check ? checkTag(c) : c.tag ? `<span class="tagk">${esc(c.tag)}</span>` : '';
-      return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}</button>`; }).join('')}</div>`;
+      const ware = c.ware && typeof itemStatLine === 'function' && ITEMS[c.ware] ? `<small class="ware">${esc(itemStatLine(c.ware))}</small>` : ''; // v8.1: a shop's piece says what it does (14b)
+      return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}${ware}</button>`; }).join('')}</div>`;
   const more = $('#saidMore'); if (more) more.onclick = () => { const t = $('#saidTxt'); if (t) t.classList.remove('said'); more.remove(); };
   sh.scrollTop = 0;
   if (n.oncard) inlineCard($('#icard'), n.oncard[0], n.oncard[1]);
@@ -3170,11 +3281,10 @@ function itemInfo(key){
   const [kind, id] = String(key).split('/');
   if (kind === 'item' && ITEMS[id]) { const it = ITEMS[id];
     const ch = Object.keys(CHAPTERS).find(n => CHAPTERS[n].gear && CHAPTERS[n].gear[id]);
-    const stats = [it.ac && `armour +${it.ac}`, it.atk && `hit +${it.atk}`, it.hp && `health +${it.hp}`, it.mv && `move +${it.mv}`, it.rng && `reach +${it.rng}`,
-      it.stat && Object.entries(it.stat).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)} +${v}`).join(' · ')].filter(Boolean).join(' · ');
-    const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null;
-    return {name: it.name, kicker: `${it.slot[0].toUpperCase() + it.slot.slice(1)}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
-      who: typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.'}; }
+    const stats = itemStatLine(id); // v8.1: the one line (14b), as the sheet, the Pack and the shops show it
+    const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null, worn = S && S.kit && S.kit.includes(id) ? ` Now ${wornWords(id)}.` : '';
+    return {name: it.name, kicker: `${SLOT_WORD[it.slot] || it.slot}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
+      who: (typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.') + worn}; }
   if (kind === 'munitions' && id.startsWith('keep_')) { const w = id.slice(5), c = TPL[w]; if (!c) return null;
     const nm = w === 'sgt' ? (S && S.name ? `Sergeant ${S.name}` : 'The sergeant') : c.name;
     return {name: `What ${nm} carries`, kicker: 'Keepsakes · never sold, never traded', stat: '', text: c.gear.join('. ') + '.', who: c.quest || ''}; }
@@ -6929,22 +7039,43 @@ function gearValue(id, g){
   const ranged = t.rng > 1, front = ['shield', 'mail'].some(r => rolesOf(id).includes(r)); // the front line: whoever takes a shield or mail (v7.2: Dannet, Orvas, Rasp and the sappers too)
   let v = (it.ac || 0) * (front ? 3 : 2) + (it.atk || 0) * 2.5 + (it.hp || 0) * (front ? .6 : .45) + (it.mv || 0) * (ranged ? 1.2 : 2) + (it.rng || 0) * (ranged ? 2.5 : .3);
   if (it.dmg) v += (avgDmg(it.dmg) - avgDmg(t.dmg)) * 1.5;
-  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)); v += n * (mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
+  /* v8.1: a check stat the soldier's role leans on (their best Measure, or the one their level grows) outranks a flat +1 */
+  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => { const mine = t.st[k], top = Math.max(...Object.values(t.st)), best = Math.max(...SQUAD().map(o => TPL[o] ? TPL[o].st[k] : 0)), role = mine >= top || (STATUP[id] || []).includes(k);
+    v += n * (role ? 3.2 : mine >= best ? 2.5 : mine >= best - 1 ? 1 : .3); });
+  /* v8.1: a special (14b ITEM_SPECIAL) is worth more than any flat +1, on whoever it works for; one that works from the pack is worth nothing worn */
+  if (itemSpecial(g) && !specialCarried(g) && (!ITEM_SPECIAL_WHO[g] || ITEM_SPECIAL_WHO[g] === id) && (!SPECIAL_SUITS[g] || SPECIAL_SUITS[g](t))) v += 3.5;
   return v + .01; // anything wearable beats nothing
 }
+/* specials that only do anything for some soldiers: a lens for a shot, a fetish for a caster */
+const SPECIAL_SUITS = {b4_c5_seaglass:t => t.rng > 1, b4_c5_veil:t => t.rng > 1 || !!t.magic, b2_fetish:t => !!t.magic, b3_c4_ropehooks:t => t.rng <= 1};
 /* a new piece goes to whoever it suits best among those with that slot empty */
 function placeGear(g){
   const it = ITEMS[g]; if (!it) return null;
-  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && !S.gear[w][it.slot]).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
-  if (who && gearValue(who, g) > 0) { S.gear[who][it.slot] = g; return who; } return null;
+  const who = SQUAD().filter(w => canWear(w, g) && S.gear[w] && freeSlot(w, g)).sort((a, b) => gearValue(b, g) - gearValue(a, g))[0];
+  if (who && gearValue(who, g) > 0) { S.gear[who][freeSlot(who, g)] = g; return who; } return null;
 }
+/* a piece nobody wears and nobody at camp is waiting for */
+const gearIdle = () => { const parked = new Set(Object.values(S.parked || {}).flatMap(p => Object.values(p || {}))); return [...new Set(S.kit || [])].filter(g => ITEMS[g] && !wornBy(g) && !parked.has(g)); };
+/* a soldier joining: their empty slots take the best of what lies idle in the pack (v8.1) */
+function fillEmpty(id){ if (!S || !S.gear || !TPL[id]) return 0; S.gear[id] ??= {}; let n = 0;
+  gearIdle().filter(g => canWear(id, g)).sort((a, b) => gearValue(id, b) - gearValue(id, a)).forEach(g => { const k = freeSlot(id, g); if (k && gearValue(id, g) > 0) { S.gear[id][k] = g; n++; } });
+  return n; }
+/* nobody goes into a fight with an empty hand while a weapon they can use is in the pack: an idle one, or one passed along from someone who
+   can take another idle one instead (v8.1) */
+function armUnarmed(){ if (!S || !S.gear) return 0; let n = 0;
+  SQUAD().forEach(w => { if (!TPL[w] || (S.gear[w] ??= {}).weapon) return; const idle = gearIdle().filter(g => ITEMS[g].slot === 'weapon');
+    const mine = idle.filter(g => canWear(w, g)).sort((a, b) => gearValue(w, b) - gearValue(w, a))[0];
+    if (mine) { S.gear[w].weapon = mine; n++; return; }
+    for (const x of SQUAD()) { const g = S.gear[x] && S.gear[x].weapon; if (!g || x === w || !canWear(w, g)) continue; const h = idle.find(h => canWear(x, h)); if (h) { S.gear[x].weapon = h; S.gear[w].weapon = g; n++; return; } } });
+  return n; }
 /* Allocate: everything in the kit, re-dealt for the most good (biggest gains first) */
 function allocateGear(){
   const kit = [...new Set(S.kit)].filter(g => ITEMS[g]), sq = SQUAD();
   const before = JSON.stringify(S.gear); sq.forEach(w => { S.gear[w] = {}; });
   const pairs = []; kit.forEach(g => sq.forEach(w => { const v = gearValue(w, g); if (v > 0) pairs.push({w, g, v}); }));
   pairs.sort((a, b) => b.v - a.v); const used = new Set();
-  pairs.forEach(({w, g}) => { const sl = ITEMS[g].slot; if (used.has(g) || S.gear[w][sl]) return; S.gear[w][sl] = g; used.add(g); });
+  pairs.forEach(({w, g}) => { const k = freeSlot(w, g); if (used.has(g) || !k) return; S.gear[w][k] = g; used.add(g); }); // v8.1: both trinket slots (14b)
+  armUnarmed();
   save(); return before !== JSON.stringify(S.gear);
 }
 /* the sheet's numbers: what the gear adds, so it can show the base, the bonus and the total */
@@ -6978,8 +7109,11 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
   const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
   const wearer = g => SQUAD().find(w => Object.values(S.gear[w] || {}).includes(g));
-  const kit = kitItems.length ? kitItems.map(it => { const w = wearer(it.id); return `<div class="it">${zoomArt('item/' + it.id, 'ico item', it.name)}<div class="ith"><b>${it.name}</b> <span class="stat">${it.slot}${[it.ac && `armour +${it.ac}`, it.atk && `hit +${it.atk}`, it.hp && `health +${it.hp}`, it.mv && `move +${it.mv}`, it.rng && `range +${it.rng}`, it.stat && Object.entries(it.stat).map(([k,v]) => `${k} +${v}`).join(' ')].filter(Boolean).map(x => ' · ' + x).join('')}</span></div>
-    ${w === id ? `<button class="btn" data-uneq="${it.slot}">Remove</button>` : `<button class="btn" data-eq="${it.id}">${w ? `Take from ${NAME(w)}` : 'Equip'}</button>`}<small>${it.line}</small></div>`; }).join('') : `<p class="fine">Nothing found yet that ${id === 'sgt' ? 'you' : c.name} could use.</p>`;
+  /* v8.1: one stat line for every piece (14b itemStatLine), for this soldier; a third trinket swaps for the one worth least to them */
+  const shortNm = g => ITEMS[g].name.replace(/^(A|An|The) /, 'the ');
+  const kit = kitItems.length ? kitItems.map(it => { const w = wearer(it.id), full = w !== id && !freeSlot(id, it.id), out = full ? S.gear[id][equipSlot(id, it.id)] : null;
+    return `<div class="it">${zoomArt('item/' + it.id, 'ico item', it.name)}<div class="ith"><b>${it.name}</b> <span class="stat">${esc(itemStatLine(it.id, id))}</span></div>
+    ${w === id ? `<button class="btn" data-uneq="${wornSlot(id, it.id)}">Remove</button>` : `<button class="btn" data-eq="${it.id}">${w ? `Take from ${NAME(w)}` : out ? `Swap for ${shortNm(out)}` : 'Equip'}</button>`}<small>${it.line}</small></div>`; }).join('') : `<p class="fine">Nothing found yet that ${id === 'sgt' ? 'you' : c.name} could use.</p>`;
   const loyN = id === 'sgt' ? null : S.loy[id];
   const gb = gearBonus(id), plus = (total, b) => b ? `${total - b} <span class="gbon">+${b}</span> = <b>${total}</b>` : `${total}`;
   const bar = (k, v, cls='', b=0) => `<div class="stbar"><span>${k}</span><div class="bar ${cls}"><i style="width:${Math.min(1, v/5)*100}%"></i>${b ? `<i class="gb" style="left:${Math.min(1, v/5)*100}%;width:${Math.min(1, (v + b)/5)*100 - Math.min(1, v/5)*100}%"></i>` : ''}</div><span>${b ? `${v}<span class="gbon">+${b}</span>` : v}</span></div>`;
@@ -6988,13 +7122,14 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const banter = c.banter ? c.banter[loyN <= -1 ? 0 : loyN >= 2 ? 2 : 1] : null;
   const rel = c.rel ? Object.entries(c.rel).filter(([k]) => SQ.includes(k)).map(([k,v]) => `<li><b>${TPL[k].name}.</b> ${v}</li>`).join('') : SQ.slice(1).map(k => `<li><b>${TPL[k].name}.</b> ${loyLabel(S.loy[k])}.</li>`).join('');
   const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${Math.min(100, S.lvl / lvCap() * 100)}%"></i></div><span>${S.lvl}</span></div></div></div>
-    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(d => `${d[0]}d${d[1]}${d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0)) ? '+' + (d[2] + (lvDmg() + (has(id,'edge') ? 1 : 0))) : ''}`)(gb.dmg || c.dmg)}${(lvDmg() + (has(id,'edge') ? 1 : 0)) ? ` <span class="gbon">level +${(lvDmg() + (has(id,'edge') ? 1 : 0))}</span>` : ''}${gb.dmg ? ' <span class="gbon">weapon</span>' : ''}</span><span>Reach</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
+    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(() => { const d = gb.dmg || c.dmg, ld = lvDmg() + (has(id,'edge') ? 1 : 0), tot = [d[0], d[1], (d[2] || 0) + ld]; // v8.1: the dice, never the word "weapon"
+      return ld ? `${gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d)} + ${ld} level = <b>${diceW(tot)}</b>` : gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d); })()}</span><span>Reach</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
     <div class="sec"><h4>Field rules</h4><p class="fine">Flanking: +2 to hit when an ally stands next to the target on the far side, melee or ranged. Stepping out of a tile next to an enemy gives that enemy one free swing a turn, wherever you step to. Once you have moved and then acted, your movement for the turn is spent. The squad can move through its own people, but not stop on them. End a turn without acting and you are Steady: +2 to your next attack or save. A ranged squadmate who has not fired yet this fight is Posted up: the first enemy to step into their reach takes a free shot. Gold numbers are what gear adds.</p></div>
     <div class="sec"><h4>Abilities</h4><div class="abl">${abil}</div></div>
     ${talents.length ? `<div class="sec"><h4>Learned</h4><div class="abl">${talents.map(o => `<div><b>${o[1]}</b><span>${o[2]}</span></div>`).join('')}</div></div>` : ''}
     ${S && tricksOf(id).length ? `<div class="sec trks"><h4>✦ Tricks</h4><div class="abl">${tricksOf(id).map(k => { const T = TRICKS[k], left = T.use === 'chapter' ? ` <small>${trickLeft(k)} of ${trickN(k)} left this chapter</small>` : ' <small>once a fight</small>';
       return `<div><b>${esc(T.name)}${left}</b><span>${esc(T.fx)}</span><i>${esc(T.lore)} Won at ${esc(T.where)}.</i></div>`; }).join('')}</div></div>` : ''}
-    <div class="sec"><h4>Arms</h4><p>${c.weapon}.</p><p>${c.armour}.</p>${Object.values(S.gear[id] || {}).filter(g => ITEMS[g]).map(g => `<p class="gearl">${zoomArt('item/' + g, 'ico item', ITEMS[g].name)}<span>${ITEMS[g].line}</span></p>`).join('')}</div>
+    <div class="sec"><h4>Arms</h4><p>${c.weapon}.</p><p>${c.armour}.</p>${['weapon', 'armour', 'trinket', 'trinket2'].map(k => (S.gear[id] || {})[k]).filter(g => ITEMS[g]).map(g => `<p class="gearl">${zoomArt('item/' + g, 'ico item', ITEMS[g].name)}<span><b>${ITEMS[g].name}</b> <span class="stat">${esc(itemStatLine(g, id))}</span><br>${ITEMS[g].line}</span></p>`).join('')}${(() => { const n = ['trinket', 'trinket2'].filter(k => !(S.gear[id] || {})[k]).length; return n ? `<p class="fine">${n === 2 ? 'Two trinket places free' : 'One trinket place free'}.</p>` : ''; })()}</div>
     <div class="sec kit"><h4>Kit</h4>${S.kit.length ? `<div class="row allocrow"><button class="btn" id="bAlloc">Allocate gear</button><span class="fine">Re-deals everything the squad carries to whoever it suits best.</span></div>` : ''}${kit}</div>
     <div class="sec carries"><h4>Carries</h4>${zoomArt('munitions/keep_' + id, 'keep', 'what ' + NAME(id) + ' carries')}<ul>${c.gear.map(g => `<li>${g}</li>`).join('')}</ul></div>`;
   const story = `<div class="sec"><h4>Record</h4><div class="kv"><span>Origin</span><span>${c.origin}</span><span>Age</span><span>${c.age}</span><span>Service</span><span>${c.service}</span><span>Bearing</span><span>${c.height}</span></div></div>
@@ -7075,6 +7210,7 @@ function openModal(tab){
     pack:()=>`<div class="kv">${S.book === 'dg' ? `<span>Water</span><span>${chainW()} skin${chainW() === 1 ? '' : 's'}</span>` : S.book === 'mt' ? `<span>Docks</span><span>${S.silver}</span>${typeof b5DebtTotal === 'function' ? `<span>The squad's debts</span><span>${b5DebtTotal()} docks</span>` : ''}` : `<span>Silver</span><span>${S.silver}</span>`}${S.book === 'mt' ? `<span>${zoomArt('munitions/salve', 'ico', 'Healing salves', true)}</span><span>${S.inv.salve}</span>` : `<span>${zoomArt('munitions/sharper', 'ico', 'Sharpers', true)}</span><span>${S.inv.sharper}</span><span>${zoomArt('munitions/burner', 'ico', 'Burners', true)}</span><span>${S.inv.burner}</span><span>${zoomArt('munitions/cusser', 'ico', 'Cussers', true)}</span><span>${S.inv.cusser}</span>${S.inv.smoker > 0 || S.f.gotSmokers ? `<span>${zoomArt('munitions/smoker', 'ico', 'Smokers', true)}</span><span>${S.inv.smoker}</span>` : ''}<span>${zoomArt('munitions/salve', 'ico', 'Healing salves', true)}</span><span>${S.inv.salve}</span>`}
       <span>Squad level</span><span>${S.lvl} (${S.xp}/${S.lvl < lvCap() ? LEVELS[S.lvl] : '—'} xp)</span>${S.card ? `<span>${S.book === 'mt' ? 'Tile reading' : 'Deck reading'}</span><span>${CARDS[S.card].name}</span>` : ''}</div>
       ${S.card ? `<div class="cardinline" style="margin-top:12px"><canvas id="icard" width="240" height="360"></canvas></div><p class="fine" style="text-align:center">${CARDS[S.card].fx}</p>` : ''}
+      ${packKitHTML()}
       ${S.wounds ? `<h4 class="jh">Wounds carried (Bridgeburner)</h4><div class="kv wounds">${SQUAD().map(id => woundOf(id) == null ? '' : `<span>${esc(NAME(id))}</span><span>${woundOf(id)} / ${S.wounds[id + '_max'] || '?'} health ${S.inv.salve > 0 && woundOf(id) < (S.wounds[id + '_max'] || 0) ? `<button class="btn sm" data-salve="${id}">Salve +8</button>` : ''}</span>`).join('')}</div><p class="fine">Wounds close when the squad rests: at the start of a chapter, or where the story lets them sleep.</p>` : ''}
       <p class="fine" style="margin-top:10px">${S.book === 'mt' ? 'Lether has no Moranth munitions. ' : 'Moranth munitions hit everything in the blast, your own squad included. '}${S.book === 'mt' ? 'Sorcery, and the surgeon\'s hands, build strain' : 'Warren magic builds strain'}; past ${strMax()}, the caster pays in blood (the limit grows at levels 4 and 7).</p>`,
     deeds:()=>deedsHTML(),
@@ -9160,12 +9296,14 @@ function rsTrail(){ S.trail = (S.trail || []).slice(0, Math.max(1, S.squad.lengt
 /* a squadmate's gear goes into the pack: remembered, so they get it back */
 function rsPark(id){ S.parked ??= {}; const g = S.gear[id] || {}; if (Object.keys(g).length) S.parked[id] = Object.assign({}, g); S.gear[id] = {}; }
 function rsRestore(id){ S.parked ??= {}; const p = S.parked[id]; S.gear[id] ??= {}; if (!p) return;
-  Object.entries(p).forEach(([slot, it]) => { if (ITEMS[it] && (S.kit || []).includes(it) && !S.gear[id][slot] && !rsWorn(it, id) && canWear(id, it)) S.gear[id][slot] = it; });
+  Object.entries(p).forEach(([slot, it]) => { if (!ITEMS[it] || !(S.kit || []).includes(it) || rsWorn(it, id) || wears(id, it) || !canWear(id, it)) return; const k = !S.gear[id][slot] && slotKeys(it).includes(slot) ? slot : freeSlot(id, it); if (k) S.gear[id][k] = it; });
   delete S.parked[id]; }
 /* one item, one wearer; nobody off the squad wears anything (it is parked for them); a squadmate back gets theirs again */
 function gearTidy(){ if (!S || !S.gear) return; S.parked ??= {}; const seen = new Set();
   Object.keys(S.gear).forEach(id => { if (!(S.squad || []).includes(id) && Object.keys(S.gear[id] || {}).length) { if (!rosterDead(id)) S.parked[id] = Object.assign({}, S.parked[id] || {}, S.gear[id]); S.gear[id] = {}; } });
   (S.squad || []).forEach(id => { const g = S.gear[id] ??= {}; Object.entries(g).forEach(([slot, it]) => { if (seen.has(it)) delete g[slot]; else seen.add(it); }); });
+  /* v8.1: a piece in a slot that is not its own (an old save, a hand edit) moves to a free one of its own, or back to the pack (14b GEAR_SLOTS) */
+  (S.squad || []).forEach(id => { const g = S.gear[id]; Object.entries(g).forEach(([slot, it]) => { if (!ITEMS[it] || slotKeys(it).includes(slot)) return; delete g[slot]; const f = freeSlot(id, it); if (f) g[f] = it; }); });
   (S.squad || []).forEach(id => { if (S.parked[id]) rsRestore(id); }); }
 function rsOut(id){ const i = S.squad.indexOf(id); if (i < 0) return -1; S.squad.splice(i, 1); rsPark(id);
   S.camp = [...(S.camp || []).filter(x => x !== id), id]; const b = rosterBook(); if (b.out) b.out(id); rsTrail(); return i; }
@@ -9173,7 +9311,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (!S.squad.includes(id)) { const n0 = note; note = () => {}; try { recruit(id); } finally { note = n0; } }
   if (!S.squad.includes(id)) S.squad.push(id); // recruit() refuses nobody the roster lets in; this is belt and braces
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
-  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); rsTrail(); }
+  S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); fillEmpty(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
 const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle', 'perrit', 'ammet', 'pessa', 'brune'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
@@ -9188,7 +9326,7 @@ function rosterSwap(out, inn){ if (!out) return rosterIn(inn); if (!rosterCanSwa
     if (S.squad.length >= ROSTER_CAP && rosterBenchable(id)) { S.camp = [...(S.camp || []).filter(x => x !== id), id]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {};
       const b = rosterBook(); if (b.out) b.out(id);
       note(`No room in the squad: ${NAME(id)} waits at ${b.home(id)}. The roster can bring ${rsHe(id) === 'she' ? 'her' : 'him'} in.`); save(); return; }
-    _recruit(id); if (S.squad.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); rsRestore(id); rsTrail(); } }; }
+    _recruit(id); if (S.squad.includes(id)) { S.camp = (S.camp || []).filter(x => x !== id); rsRestore(id); fillEmpty(id); rsTrail(); } }; }
 /* the story's own leavings: gear goes into the pack (remembered), and nobody leaves twice */
 letGo = function(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); rsPark(id); S.camp = (S.camp || []).filter(x => x !== id);
   S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); };
@@ -9196,9 +9334,8 @@ unrecruit = function(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.s
   S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); };
 { const _kill = kill; kill = function(id){ _kill(id); if (S) { S.camp = (S.camp || []).filter(x => x !== id); if (S.parked) delete S.parked[id]; } }; }
 /* equipping takes the piece off anyone else first, the parked included */
-equip = function(who, id){ const it = ITEMS[id]; if (!it || !canWear(who, id)) return; Object.keys(S.gear).forEach(w => { const g = S.gear[w] || {}; Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }); });
-  Object.values(S.parked || {}).forEach(g => Object.keys(g).forEach(sl => { if (g[sl] === id) delete g[sl]; }));
-  S.gear[who] ??= {}; S.gear[who][it.slot] = id; save(); };
+equip = function(who, id, key){ const it = ITEMS[id]; if (!it || !canWear(who, id)) return; unwear(id); // v8.1: two trinket slots (14b); key picks one
+  S.gear[who] ??= {}; S.gear[who][equipSlot(who, id, key)] = id; save(); };
 
 /* ---- old saves: Book Two/Three/Four kept a recruit's kit in S.f.b2/b3/b4_allyGear and their waiting in flags; the squad was not capped ---- */
 { const _migrate = migrate;
@@ -11029,7 +11166,7 @@ A second figure kneels at the horse's head with both hands on it and her face tu
 Sethand has not come closer. He will not.`,
       ch:[{t:'Go to the man with the bow.', go:'c2_toc'},
           {t:'Look at the ground where the spiral stops.', check:['wits',13], req:()=>!S.f.c2_printsTried, fx:()=>S.f.c2_printsTried=1,
-            edges:id=>[S.f.c1_key === 'line' && ['the cadre row: you have seen Hounds before', 1], S.gear[id] && S.gear[id].trinket === 'houndtooth' && ['the Hound\'s tooth is warm', 1]],
+            edges:id=>[S.f.c1_key === 'line' && ['the cadre row: you have seen Hounds before', 1], wears(id, 'houndtooth') && ['the Hound\'s tooth is warm', 1]],
             near:{t:()=>`${NAME(ROLL().who)} reads it, but reads it on hands and knees in the middle of the spiral, where it stops.`, fx:()=>{ S.f.c2_printsTrod=1; S.f.c2_printsWho=ROLL().who; }},
             clean:{t:'There is one more print beside the hoofprint: a boot.', fx:()=>{ S.f.c2_paranTurned=1; }},
             go:'c2_prints', fail:'c2_prints_miss'},
@@ -12248,10 +12385,10 @@ ${SQUAD().includes('kettle') ? `Kettle is already at the counter. She has picked
 
 *A Map to the Hoard of the Tyrant,* on foxed vellum with sea-serpents in the margins. "Of which I have," says Brack modestly, "a quantity."`,
       ch:[{t:`Tincture of Soliel's Own Tears, ${pr(6)} silver`, tag:`have ${S.inv.salve} salve${S.inv.salve === 1 ? '' : 's'}`, req:()=>S.silver >= pr(6), fx:()=>{ S.silver -= pr(6); S.inv.salve++; S.f.c3_brackVisit=1; tally('brackBought'); AUDIO.play('coin'); note('Bought a Tincture of Soliel\'s Own Tears. It counts as a salve. It is a salve.', 'good'); }, go:'c3_brack_wares'},
-          {t:`Oponn's Own Coin, ${pr(4)} silver`, req:()=>!has('brackcoin') && S.silver >= pr(4), fx:()=>{ S.silver -= pr(4); S.f.c3_brackVisit=1; tally('brackBought'); gain('brackcoin'); }, go:'c3_brack_coin'},
-          {t:`Hood's Repellent, ${pr(12)} silver`, req:()=>!has('hoodrep') && S.silver >= pr(12), fx:()=>{ S.silver -= pr(12); S.f.c3_brackVisit=1; tally('brackBought'); gain('hoodrep'); }, go:'c3_brack_hood'},
-          {t:`A Genuine Shard of Moon's Spawn, ${pr(3)} silver`, req:()=>!has('spawnshard') && S.silver >= pr(3), fx:()=>{ S.silver -= pr(3); S.f.c3_brackVisit=1; tally('brackBought'); gain('spawnshard'); }, go:'c3_brack_shard'},
-          {t:`A Map to the Hoard of the Tyrant, ${pr(2)} silver`, req:()=>!has('tyrantmap') && S.silver >= pr(2), fx:()=>{ S.silver -= pr(2); S.f.c3_brackVisit=1; tally('brackBought'); gain('tyrantmap'); }, go:'c3_brack_map'},
+          {t:`Oponn's Own Coin, ${pr(4)} silver`, ware:'brackcoin', req:()=>!has('brackcoin') && S.silver >= pr(4), fx:()=>{ S.silver -= pr(4); S.f.c3_brackVisit=1; tally('brackBought'); gain('brackcoin'); }, go:'c3_brack_coin'},
+          {t:`Hood's Repellent, ${pr(12)} silver`, ware:'hoodrep', req:()=>!has('hoodrep') && S.silver >= pr(12), fx:()=>{ S.silver -= pr(12); S.f.c3_brackVisit=1; tally('brackBought'); gain('hoodrep'); }, go:'c3_brack_hood'},
+          {t:`A Genuine Shard of Moon's Spawn, ${pr(3)} silver`, ware:'spawnshard', req:()=>!has('spawnshard') && S.silver >= pr(3), fx:()=>{ S.silver -= pr(3); S.f.c3_brackVisit=1; tally('brackBought'); gain('spawnshard'); }, go:'c3_brack_shard'},
+          {t:`A Map to the Hoard of the Tyrant, ${pr(2)} silver`, ware:'tyrantmap', req:()=>!has('tyrantmap') && S.silver >= pr(2), fx:()=>{ S.silver -= pr(2); S.f.c3_brackVisit=1; tally('brackBought'); gain('tyrantmap'); }, go:'c3_brack_map'},
           {t:'Haggle.', check:['guile', 13], req:()=>!S.f.c3_brackHaggled, fx:()=>{ S.f.c3_brackHaggled=1; },
             near:{t:()=>ROLL().paid ? 'Yes, but the discount comes with a condition: two silver on the counter first, "to seal the friendship", which he pockets without counting: −2 silver.' : `Yes, but he makes you listen to the whole history of the Hoard of the Tyrant before he'll say "two off", and ${NAME(ROLL().who || 'sgt')} comes away from it dazed: −1 on the next check.`, fx:()=>{ const r = ROLL(); if (S.silver >= 2) { S.silver -= 2; r.paid = 1; } else { S.rattled ??= {}; S.rattled[r.who || 'sgt'] = 1; } }},
             go:'c3_brack_haggle_ok', fail:'c3_brack_haggle_bad'},
@@ -16184,7 +16321,7 @@ Vell has the hook in his fist and the line paid out, and nowhere to throw it. He
       ch:[{t:'"Let her go."', req:()=>SQUAD().includes('ellis'), fx:()=>{ S.f.c5_key='through'; }, go:'c5_through_ellis'},
           {t:'"Ellis — no!"', req:()=>SQUAD().includes('ellis') && SQUAD().includes('brisk') && S.loy.brisk >= 2, fx:()=>{ S.f.c5_key='hold'; }, go:'c5_hold_brisk'},
           {t:'Get your arms round her before she reaches it.', req:()=>SQUAD().includes('ellis') && !(SQUAD().includes('brisk') && S.loy.brisk >= 2), fx:()=>{ S.f.c5_key='hold'; }, check:['might',13,'sgt'],
-            edges:() => [((S.gear && S.gear.sgt) || {}).trinket === 'otatglove' && ['the Adjunct\'s glove: the pull slides off it', 1], C5H.red() === 'sgt' && ['red dust in your seams', 1], (S.loy.ellis || 0) >= 2 && ['Ellis half-turns at your voice', 1], (S.loy.ellis || 0) <= -2 && ['Ellis stopped listening to you a while ago', -1]],
+            edges:() => [wears('sgt', 'otatglove') && ['the Adjunct\'s glove: the pull slides off it', 1], C5H.red() === 'sgt' && ['red dust in your seams', 1], (S.loy.ellis || 0) >= 2 && ['Ellis half-turns at your voice', 1], (S.loy.ellis || 0) <= -2 && ['Ellis stopped listening to you a while ago', -1]],
             near:{t:'Yes, but she comes out of her cloak to get free, and the grey takes the cloak.', fx:()=>{ S.f.c5_cloakGone=1; }},
             go:'c5_hold_ok', fail:'c5_hold_fail'},
           {t:'"Go. The threshold. No further."', req:()=>!SQUAD().includes('ellis'), fx:()=>{ S.f.c5_key='through'; }, go:'c5_through_tuft'},
@@ -17267,7 +17404,7 @@ ${S.f.c2_key === 'light' ? `He's looking at her collar. At the badge on it: silv
 
 ${SQUAD().includes('tuft') ? `Tuft goes very still. It's the stillness she has when somebody says *High Mage*, and nobody has said it.` : ''}`,
       ch:[{t:'"What does that mean?"', go:'c6_qb_glove'}]}),
-    c6_qb_glove:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt'; return {sp:'Quick Ben', scene:'cellar', fx:()=>{ S.f.c6_qbCollar=1; }, txt:
+    c6_qb_glove:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt'; return {sp:'Quick Ben', scene:'cellar', fx:()=>{ S.f.c6_qbCollar=1; }, txt:
 `"Every cadre badge that was ever sewn has a bit of him in it." Quick Ben keeps his voice down. "Not much. A thread. It's how he keeps his mages. It's how he always knows where they are. And when he wants to, which isn't often, he looks out of them. The way you'd look out of a window in a house you own."
 
 You remember a cadre mage in the cold outside a tent at the Pale, looking at the cadre row as if it were a line of graves she knew the names on. *He doesn't let people leave, Sergeant. He let her. I'd like to know what he thinks he still has of hers.*
@@ -17304,7 +17441,7 @@ ${SQUAD().includes('ellis') ? `Ellis has seen something at the east end of the s
 Over the lake, over the lanterns, over every mask in the city: the Moon's Spawn, dark, without so much as a ribbon.`,
       ch:[{t:'The street.', go:()=>startExplore()}]}),
 
-    c6_kruppe:()=>{ const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet'); const ring = S.kit.includes('collsignet') && !S.f.c6_collRing;
+    c6_kruppe:()=>{ const rw = wornBy('collsignet'); const ring = S.kit.includes('collsignet') && !S.f.c6_collRing;
       return {sp:'Kruppe', fx:()=>{ S.f.c6_kruppe=1; }, txt: S.f.c6_kruppe ?
 `Kruppe has moved four paces up the street and acquired a second honey-cake. He raises it to you, gravely, like a toast.` :
 `He is standing in the middle of the street eating a honey-cake, in a mask of green silk that covers exactly none of him, and the Fete parts round him on both sides the way water parts round a stone.
@@ -17337,7 +17474,7 @@ ${SQUAD().includes('tuft') && S.f.c3_innMur && S.f.c2_key === 'light' ? `His eye
 Tuft doesn't answer him. Her hand is at her collar, and she doesn't take it away.` : ''}`,
       ch:[{t:'Take the mask.'}]}),
 
-    c6_coll:()=>{ const ring = S.kit.includes('collsignet') && !S.f.c6_collRing; const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet');
+    c6_coll:()=>{ const ring = S.kit.includes('collsignet') && !S.f.c6_collRing; const rw = wornBy('collsignet');
       return {sp: S.f.c3_innColl ? 'Coll' : 'A big man in plain brown', fx:()=>{ S.f.c6_coll=1; }, txt: S.f.c6_coll && !ring ?
 `He's where he was, against the wall, with his arms folded, looking at the house. ${S.f.c6_collRing ? `Every so often he turns the ring on his finger, as if checking it's still there.` : `His arms stay folded.`}` :
 `A very big man in plain brown clothes is standing across the street from Lady Simtal's gate with his back to a wall and his arms folded, looking at the house the way you'd look at a dog that used to be yours and has since been taught to bite you.
@@ -17351,7 +17488,7 @@ ${S.f.c3_innColl ? `You know him, and then you don't. The Phoenix. The jug. The 
 ${ring ? `His eyes go to ${rw ? (rw === 'sgt' ? 'your hand' : `${NAME(rw)}'s hand`) : 'your belt-pouch, where the shape of it shows through the leather'}. To the ring. His face does nothing at all, very deliberately. "You've still got it," he says. "It didn't get lost in a ditch."` : S.f.c3_collTalk && !S.f.c3_coll ? `He turns a heavy gold ring on his finger: the one you pushed back across the table at the Phoenix. "Still got it," he says. "You wouldn't take it, and I couldn't lose it. It's been a long week for the pair of us."` : ''}`,
       ch:[{t:'Give him back his ring.', req:()=>S.kit.includes('collsignet') && !S.f.c6_collRing, go:'c6_coll_ring'},
           {t:'Leave him to his house.'}]}; },
-    c6_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c6_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); Object.keys(S.gear).forEach(w => { if (S.gear[w].trinket === 'collsignet') delete S.gear[w].trinket; }); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+    c6_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c6_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); unwear('collsignet'); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
 `You hold it out to him. It's heavy. It was always heavier than gold should be; that's the history.
 
 He doesn't take it at once. He looks at it on your palm the way he looked at the house.
@@ -17482,7 +17619,7 @@ Beyond the gate a man in Simtal's blue and silver is handing halberds out of a b
 ${ring ? `And inside the gate, with his thumbs in his sword-belt, a big grey-templed man in blue with a captain's silver at the shoulder is counting the guards through as a farmer counts sheep through a gap, and looking for the lame one.` : ''}`,
       ch:[{t:'Through the gate.', req:()=>S.kit.includes('collsignet') && !S.f.c6_collRing, go:'c6_signet'},
           {t:'Through the gate.', req:()=>!(S.kit.includes('collsignet') && !S.f.c6_collRing), go:'c6_terrace_arrive'}]}; },
-    c6_signet:()=>{ const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet'); return {sp:'The captain of the house', scene:'fete_street', fx:()=>{ S.f.c6_signetSeen=1; }, txt:
+    c6_signet:()=>{ const rw = wornBy('collsignet'); return {sp:'The captain of the house', scene:'fete_street', fx:()=>{ S.f.c6_signetSeen=1; }, txt:
 `His eyes go over the Fourth, and over the armbands, and over ${rw ? (rw === 'sgt' ? 'your hands' : `${NAME(rw)}'s hands`) : 'your belt, where the pouch has come open under the halberd strap'}, and stop.
 
 On the ring.
@@ -17981,7 +18118,7 @@ ${SQUAD().includes('kettle') ? `Kettle, very quietly: "Is anyone going to *do* a
       ch:[{t:'Not yet.'}]},
 
     /* ---- the garden ---- */
-    c6_garden_arrive:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt'; return {sp:'Lady Simtal\'s garden', scene:'fete_garden', fx:()=>{ S.f.c6_gardenSeen=1; }, txt:
+    c6_garden_arrive:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt'; return {sp:'Lady Simtal\'s garden', scene:'fete_garden', fx:()=>{ S.f.c6_gardenSeen=1; }, txt:
 `Down the white steps, off the marble, onto grass.
 
 The garden is bigger than the house. Lawns going down toward the lake in long dark shelves, with gravel paths raked into waves between them, and clipped hedges, and trees hung with lanterns so that every tree is a little lit room. A fountain throwing water up into the lantern-light and letting it fall. A pond with lilies. Statues. The music comes down the steps from the hall like water down a drain, thin and far off.
@@ -18309,7 +18446,7 @@ Then she looks at you. Properly. It's been a while.
 ${S.f.c1_plantMarine ? `*When she does*, a cadre mage told you once, in the cold outside a tent, *be standing next to her.*` : ''}`,
       ch:[{t:'Stand next to her.', fx:()=>{ S.f.c6_selfDrawn=1; }, go:()=>cardSequence(()=>talk('c6_tuft_card'), {card:'blank', self:true})},
           {t:'"No. Do what he says."', req:()=>!S.f.c6_badgeCold, fx:()=>{ S.f.c6_keptHow='refused'; }, go:'c6_tuft_kept'}]}),
-    c6_tuft_card:()=>{ const c = CARDS.blank || {name:'The unpainted card', fx:''}; const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt';
+    c6_tuft_card:()=>{ const c = CARDS.blank || {name:'The unpainted card', fx:''}; const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt';
       return {sp:'The unpainted card', scene:'fete_garden', txt:
 `She draws it standing up, in the dark by the fountain where the lantern went out, with you at her shoulder close enough to feel her shaking, and the grey cloak three paces off with his hands folded, and the Fete going on over all your heads, loud and gold and nothing to do with you.
 
@@ -18343,7 +18480,7 @@ ${S.f.c6_badgeCold ? `"And it's *cold*," she says. "It's been cold since the ter
           {t:'"Go with him, Tuft."', req:()=>!S.f.c6_badgeCold, fx:()=>{ S.f.c6_keptHow='handed'; }, go:'c6_tuft_kept'}]}; },
 
     /* ---- the four roads for the badge ---- */
-    c6_tuft_glove:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt';
+    c6_tuft_glove:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt';
       return {sp:'The otataral glove', scene:'fete_garden', fx:()=>{ S.f.c6_tuft='glove'; if (SQUAD().includes('tuft')) loy('tuft',2); if (gw === 'brisk' && SQUAD().includes('brisk')) loy('brisk',1); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('kettle')) loy('kettle',1); }, txt:
 `${gw === 'brisk' ? `Brisk takes the glove off her belt without a word, and pulls it open, and holds it out at arm's length on the flat of her palm, a bowl for the pin.` : `You take the glove out of your belt, and pull it open, and hold it out on the flat of your palm, open.`}
 
@@ -20062,7 +20199,7 @@ ${S.f.c6_collRing ? `He holds up his hand. The ring is on it: heavy gold, the cr
       ch:[{t:'Give him the ring.', req:()=>!!S.f.c3_coll && !S.f.c6_collRing && S.kit.includes('collsignet') && !S.f.c7_collRing && !S.f.c7_collKept, go:'c7_coll_ring'},
           {t:'Keep the ring.', req:()=>!!S.f.c3_coll && !S.f.c6_collRing && S.kit.includes('collsignet') && !S.f.c7_collRing && !S.f.c7_collKept, go:'c7_coll_keep'},
           {t:'Leave him.'}]}),
-    c7_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c7_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); Object.keys(S.gear).forEach(w => { if (S.gear[w].trinket === 'collsignet') delete S.gear[w].trinket; }); if (C7H.has('ohl')) loy('ohl',1); }, txt:
+    c7_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c7_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); unwear('collsignet'); if (C7H.has('ohl')) loy('ohl',1); }, txt:
 `You hold it out to him on your palm. Heavy gold, the crest ground off, only the shape of a house left and not its name.
 
 He looks at it, and doesn't take it.
@@ -20315,7 +20452,7 @@ He goes along the Lakefront without hurrying, and the shapes by the fish-crates 
 
 ${C7H.has('kettle') ? `Kettle watches him go. "I stopped those timers," she says. "With my *hands*. Under his people. And he just — " She doesn't finish. She doesn't have to. She's grinning, and it's a terrible grin, and it's the best thing you've seen all morning.` : ''}`,
       ch:[{t:'Let him go.'}]}),
-    c7_tuft_glove:()=>{ const hill = S.area === 'quorl_hill', gone = !!S.f.c7_clawGone, b = C7H.has('brisk') && !!(S.gear && S.gear.brisk && S.gear.brisk.trinket === 'otatglove');
+    c7_tuft_glove:()=>{ const hill = S.area === 'quorl_hill', gone = !!S.f.c7_clawGone, b = C7H.has('brisk') && wears('brisk', 'otatglove');
       return {sp:'Tuft', fx:()=>{ S.f.c7_tuftCut=1; if (hill) S.f.c7_tuftCutHill=1; if (C7H.has('tuft')) loy('tuft',2); }, txt:
 `"Tuft," you say. "Now."
 
@@ -34662,12 +34799,8 @@ function b2Buy(item, price, from){ const it = ITEMS[item]; if (!it || S.kit.incl
   const who = placeGear(item); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good');
   tally('waterSpent', price); save(); return true; }
 /* what a ware does, in a few words, for the trader's list */
-function b2WareSays(item){ const it = ITEMS[item]; if (!it) return ''; const b = [];
-  if (it.atk) b.push(`${it.atk > 0 ? '+' : ''}${it.atk} to hit`); if (it.dmg) b.push(`${it.dmg[0]}d${it.dmg[1]}${it.dmg[2] ? '+' + it.dmg[2] : ''} damage`); if (it.rng) b.push(`+${it.rng} reach`);
-  if (it.ac) b.push(`${it.ac > 0 ? '+' : ''}${it.ac} armour`); if (it.hp) b.push(`+${it.hp} health`); if (it.mv) b.push(`+${it.mv} move`);
-  if (it.stat) Object.entries(it.stat).forEach(([k, n]) => b.push(`+${n} ${STATN[k] || k}`)); if (it.heavy) b.push('heavy: hot at noon');
-  if (B2_SPECIAL[item]) b.push(B2_SPECIAL[item]); return b.join(', '); }
-const B2_SPECIAL = {b2_fetish:'a spoiled spell comes out clean, once a chapter', b2_robe:'no heat in a noon fight', b2_plank:'bites back, once a fight', b2_coldknife:'a blow that lands slows', b2_tskin:'one rest a chapter costs no water'};
+/* v8.1: the one stat line (14b itemStatLine), heavy and specials included; the specials' words are ITEM_SPECIAL's (B2_SPECIAL is gone) */
+function b2WareSays(item){ return ITEMS[item] ? itemStatLine(item) : ''; }
 /* a trader's node: what they have, at what price, and a choice for each thing the squad can afford. o: {sp, txt(), wares:[[item, price]], haggle} */
 function b2Trader(node, o){ return () => { const left = o.wares.filter(([it]) => !S.kit.includes(it)), w = chainW();
   return {sp:o.sp, fx:()=>{ S.f[node] = 1; }, txt:`${typeof o.txt === 'function' ? o.txt() : o.txt}${left.length ? `\n\n${left.map(([it, p]) => `*${ITEMS[it].name}*, ${numw(b2Price(node, it, p))} skin${b2Price(node, it, p) === 1 ? '' : 's'}: ${b2WareSays(it)}.`).join('\n\n')}` : `\n\n${o.empty || 'There is nothing left you could use.'}`}`,
@@ -50680,7 +50813,7 @@ ${b41Say({haddat:`Haddat stops walking.`, marrow:`Marrow hears it, and her mouth
 "Coltaine's," says the seller, an Aren man with good teeth and a good coat. He has seen the squad's faces and has misread them. "Off the cross, the day after. My cousin was on the wall. Twelve silver, to a soldier of the Chain. Eight, to a sergeant."
 
 ${b41Say({haddat:`Haddat looks at the phials for a long breath. "There were crows," she says in Malazan, flat, to the seller. "Crows took him. All of him. I was on the wall." It is not true; she was on the road. It does not matter. The seller keeps smiling.`, marrow:`"A goat's," says Marrow, looking at the nearest phial. "Or a dog's toe. Not even a man's, child." The seller keeps smiling.`, _:`The seller keeps smiling.`})}${b4In('darrut') ? `\n\nDarrut has gone a dark colour. "I was on the wall," he says. "There were no cousins on the wall. Only us."` : ''}${b4In('mirrel') && !b4In('marrow') ? `\n\nMirrel picks up the nearest phial and turns it to the light. "Goat," she says, and puts it down. She picks up the next. "Goat. And this one is a candle-end with a nail in it." The seller keeps smiling.` : ''}${b41R({redblade:`\n\nRamin's hand is on his sword's hilt. He takes it off again with an effort you can see.`, warlock:`\n\nKeth looks at the feathers, and his face does something old and not his. "Crow," the grandmother says out of his mouth, in Wickan, very quietly. "Did anyone ask the Crow?"`})}`,
-      ch:[{t:'Buy the finger, to bury it.', tag:'8 silver', req:()=>(S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); S.f.b4_c1_relic = 'bought'; gain('b4_c1_relic'); b41L('haddat', 1); }, go:'b4_c1_stall_buy'},
+      ch:[{t:'Buy the finger, to bury it.', tag:'8 silver', ware:'b4_c1_relic', req:()=>(S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); S.f.b4_c1_relic = 'bought'; gain('b4_c1_relic'); b41L('haddat', 1); }, go:'b4_c1_stall_buy'},
           {t:'Put the trestle over. (break the stall)', check:['might', 14],
             edges:id=>[id === 'haddat' && ['she has wanted to since she saw it', 2], id === 'darrut' && ['he knows how the Guard turns over a stall', 1], id === 'hessa' && ['she does not lose her temper; she decides', 1], id === 'tallow' && ['he is very sure it is wrong and not at all sure he is allowed', -1], id === 'mirrel' && ['she has turned over a hospice cot with a man on it; a trestle is easy', 1]],
             near:{t:'Yes, but the trestle goes over with a crash that brings the Red Blades up the street at a run, and their officer takes the sergeant\'s name and the squad\'s number before he lets it go.', fx:()=>{ S.f.b4_c1_redName = 1; }},
@@ -60298,6 +60431,7 @@ function b5Rearm(fallback = []){ if (!b5On() || !S.f.b5_disarmed) return [];
   delete S.f.b5_disarmed; S.f.b5_rearmed = 1; S.f.b5_stash = []; S.f.b5_stashWho = {}; S.kit ??= [];
   give.forEach(g => { if (S.kit.includes(g)) return; S.kit.push(g); const w = who[g], sl = ITEMS[g].slot;
     if (w && SQUAD().includes(w) && S.gear[w] && !S.gear[w][sl] && canWear(w, g)) S.gear[w][sl] = g; else placeGear(g); });
+  armUnarmed(); // v8.1 (31c): nobody walks on with an empty hand while a spear or a bow they could carry lies in the pack
   note(give.length ? `The squad is armed again: ${give.map(g => ITEMS[g].name).join(', ')}.` : 'The squad is armed again, from what the quartermaster has.', 'good');
   save(); return give; }
 
@@ -61814,7 +61948,7 @@ He pats the post. "A hand on the strap, a hip against the post, and all of you i
       ch:[{t:'On along the Walk.', go:()=>startExplore()}]}),
     b5_c1_ropeman_again:()=>({sp:'An old rope-man', scene:'b5_c1_lowwalk', again:()=>`The rope-man, at his post. "Soldiers."`, txt:
 `The rope-man is at his post, coiling, uncoiling, coiling. ${S.f.b5_c1_swam ? 'He nods at Thegg as the squad comes up. "I hauled your coins out," he says. "Three hundred, every one. You didn\'t need me for the rest." He sounds almost sorry.' : b51Ph() >= 4 ? 'This morning the court\'s rope is out across the canal, and he is minding it.' : '"Tomorrow," he says, of the Special list. "Tomorrow there\'s work."'}`,
-      ch:[{t:'Buy a hook-knife off him.', tag:'8 docks', req:()=>!S.f.b5_c1_ropeOk && !(S.kit || []).includes('b5_c1_hookknife') && (S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_hookknife'); }, go:'b5_c1_ropeman_knife'},
+      ch:[{t:'Buy a hook-knife off him.', tag:'8 docks', ware:'b5_c1_hookknife', req:()=>!S.f.b5_c1_ropeOk && !(S.kit || []).includes('b5_c1_hookknife') && (S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_hookknife'); }, go:'b5_c1_ropeman_knife'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c1_ropeman_knife:()=>({sp:'An old rope-man', scene:'b5_c1_lowwalk', txt:
 `He unhooks a short hooked knife from his apron and takes the eight docks and bites one, which is a thing people only do in stories, and does it anyway. "The court will dock me for it," he says. "The court docks me for everything."`,
@@ -62768,7 +62902,7 @@ He does not look away from the water while he talks. "I saw it coming before the
 `Lether's markets open the day after anything. A stall has been set up again on the dry stones behind the sheds: Fent carvings, Nerek beadwork, a tray of polished bones and a jar of teeth, long and curved and yellow, that nobody can put a name to. The stall-keeper cannot either. "Out of the ground up north," he says. "Or out of the sea. One man digs them up and another man buys them. I'm the bit in between."
 
 At the next stall a girl is selling paper flowers on wire for the dancers. Trate is known for its flower dancers, the stall-keeper says, and they have gone on dancing since the wave, in the square by the North Gate, because the town needs it more than it did. ${b52Say({tobet:`Tobet looks at the flowers for a while and does not buy one.`, perrit:`Perrit picks up a Nerek bracelet, turns it over, reads the price scratched on the back, and puts it down.`, _:'The squad looks, and keeps its docks.'})}`,
-      ch:[{t:'A tooth from the jar.', tag:'1 dock', req:()=>(S.silver || 0) >= 1 && !(S.kit || []).includes('b5_c2_tooth'), fx:()=>{ S.silver -= 1; updSilver(); gain('b5_c2_tooth'); }, go:'b5_c2_tooth'},
+      ch:[{t:'A tooth from the jar.', tag:'1 dock', ware:'b5_c2_tooth', req:()=>(S.silver || 0) >= 1 && !(S.kit || []).includes('b5_c2_tooth'), fx:()=>{ S.silver -= 1; updSilver(); gain('b5_c2_tooth'); }, go:'b5_c2_tooth'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c2_tooth:()=>({sp:'A market stall', scene:'b5_trate_harbour', txt:
 `He picks one out of the jar for you, the longest, and binds the root with copper wire so it can hang from a cord, and takes the dock. "What is it?" somebody asks, and he says, "A tooth," and that is all anyone in Trate ever knows about it.${b52If('ammet', `\n\nAmmet holds it up to the light and runs her thumb along it. "Not a fish," she says. "Not a horse. Not anything I've stitched." She gives it back.`)}`,
@@ -63883,7 +64017,7 @@ She finishes the apple. "I'm not wanted in there till tonight," she says, with a
               edges:id=>[id === 'ruuk' && ['these are his hills, near enough', 2], id === 'tobet' && ['he was taught to be where the blow is not', 1], id === 'thegg' && ['the slope is all loose stone, and Thegg is all Thegg', -2]],
               near:b53Owe(8, 'A tent-rope, cut', w => `Yes, but ${b53Nm(w)} ${b53V(w, 'go', 'goes')} through a Cold Clay tent-rope on the way up, and the tent comes down on its owner, and the regiment's quartermaster writes it against ${b53Pos(w)} line: ${b5Coin(8)}.`, {t:w => `Yes, but a stone goes from under ${b53Pos(w)} boot and down the slope, and the bowman turns: bruised on the way up.`, fx:w => bruise(w, bruiseN())}),
               go:()=>startBattle('b5_c3_deserters', nearMiss() ? {} : {surprise:'p'}), fail:'b5_c3_deserters_seen'},
-            {t:'A Faraed throwing-spear, in trade.', tag:'2 docks', req:()=>ph !== 2 || !!S.f.b5_c3_desDone ? !(S.kit || []).includes('b5_c3_spear') && !b53Ruuk() && (S.silver || 0) >= 2 : false, fx:()=>{ S.silver -= 2; updSilver(); gain('b5_c3_spear'); }, go:'b5_c3_spear_trade'},
+            {t:'A Faraed throwing-spear, in trade.', tag:'2 docks', ware:'b5_c3_spear', req:()=>ph !== 2 || !!S.f.b5_c3_desDone ? !(S.kit || []).includes('b5_c3_spear') && !b53Ruuk() && (S.silver || 0) >= 2 : false, fx:()=>{ S.silver -= 2; updSilver(); gain('b5_c3_spear'); }, go:'b5_c3_spear_trade'},
             {t:'The boy with the spears.', req:()=>!b5In('ruuk') && S.f.b5_ruukDone !== 0 && b5CanRecruit('ruuk') && (ph !== 2 || !!S.f.b5_c3_desDone), go:()=>talk(S.f.b5_ruukDone == null ? 'b5_c3_ruuk' : 'b5_c3_ruuk_again')},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b5_c3_spear_trade:()=>({sp:'The Faraed scouts\' fire', scene:'b5_landing', txt:

@@ -1144,7 +1144,7 @@ Vell has the hook in his fist and the line paid out, and nowhere to throw it. He
       ch:[{t:'"Let her go."', req:()=>SQUAD().includes('ellis'), fx:()=>{ S.f.c5_key='through'; }, go:'c5_through_ellis'},
           {t:'"Ellis — no!"', req:()=>SQUAD().includes('ellis') && SQUAD().includes('brisk') && S.loy.brisk >= 2, fx:()=>{ S.f.c5_key='hold'; }, go:'c5_hold_brisk'},
           {t:'Get your arms round her before she reaches it.', req:()=>SQUAD().includes('ellis') && !(SQUAD().includes('brisk') && S.loy.brisk >= 2), fx:()=>{ S.f.c5_key='hold'; }, check:['might',13,'sgt'],
-            edges:() => [((S.gear && S.gear.sgt) || {}).trinket === 'otatglove' && ['the Adjunct\'s glove: the pull slides off it', 1], C5H.red() === 'sgt' && ['red dust in your seams', 1], (S.loy.ellis || 0) >= 2 && ['Ellis half-turns at your voice', 1], (S.loy.ellis || 0) <= -2 && ['Ellis stopped listening to you a while ago', -1]],
+            edges:() => [wears('sgt', 'otatglove') && ['the Adjunct\'s glove: the pull slides off it', 1], C5H.red() === 'sgt' && ['red dust in your seams', 1], (S.loy.ellis || 0) >= 2 && ['Ellis half-turns at your voice', 1], (S.loy.ellis || 0) <= -2 && ['Ellis stopped listening to you a while ago', -1]],
             near:{t:'Yes, but she comes out of her cloak to get free, and the grey takes the cloak.', fx:()=>{ S.f.c5_cloakGone=1; }},
             go:'c5_hold_ok', fail:'c5_hold_fail'},
           {t:'"Go. The threshold. No further."', req:()=>!SQUAD().includes('ellis'), fx:()=>{ S.f.c5_key='through'; }, go:'c5_through_tuft'},

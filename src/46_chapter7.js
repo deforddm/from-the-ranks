@@ -772,7 +772,7 @@ ${S.f.c6_collRing ? `He holds up his hand. The ring is on it: heavy gold, the cr
       ch:[{t:'Give him the ring.', req:()=>!!S.f.c3_coll && !S.f.c6_collRing && S.kit.includes('collsignet') && !S.f.c7_collRing && !S.f.c7_collKept, go:'c7_coll_ring'},
           {t:'Keep the ring.', req:()=>!!S.f.c3_coll && !S.f.c6_collRing && S.kit.includes('collsignet') && !S.f.c7_collRing && !S.f.c7_collKept, go:'c7_coll_keep'},
           {t:'Leave him.'}]}),
-    c7_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c7_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); Object.keys(S.gear).forEach(w => { if (S.gear[w].trinket === 'collsignet') delete S.gear[w].trinket; }); if (C7H.has('ohl')) loy('ohl',1); }, txt:
+    c7_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c7_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); unwear('collsignet'); if (C7H.has('ohl')) loy('ohl',1); }, txt:
 `You hold it out to him on your palm. Heavy gold, the crest ground off, only the shape of a house left and not its name.
 
 He looks at it, and doesn't take it.
@@ -1025,7 +1025,7 @@ He goes along the Lakefront without hurrying, and the shapes by the fish-crates 
 
 ${C7H.has('kettle') ? `Kettle watches him go. "I stopped those timers," she says. "With my *hands*. Under his people. And he just — " She doesn't finish. She doesn't have to. She's grinning, and it's a terrible grin, and it's the best thing you've seen all morning.` : ''}`,
       ch:[{t:'Let him go.'}]}),
-    c7_tuft_glove:()=>{ const hill = S.area === 'quorl_hill', gone = !!S.f.c7_clawGone, b = C7H.has('brisk') && !!(S.gear && S.gear.brisk && S.gear.brisk.trinket === 'otatglove');
+    c7_tuft_glove:()=>{ const hill = S.area === 'quorl_hill', gone = !!S.f.c7_clawGone, b = C7H.has('brisk') && wears('brisk', 'otatglove');
       return {sp:'Tuft', fx:()=>{ S.f.c7_tuftCut=1; if (hill) S.f.c7_tuftCutHill=1; if (C7H.has('tuft')) loy('tuft',2); }, txt:
 `"Tuft," you say. "Now."
 

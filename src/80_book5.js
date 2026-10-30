@@ -321,6 +321,7 @@ function b5Rearm(fallback = []){ if (!b5On() || !S.f.b5_disarmed) return [];
   delete S.f.b5_disarmed; S.f.b5_rearmed = 1; S.f.b5_stash = []; S.f.b5_stashWho = {}; S.kit ??= [];
   give.forEach(g => { if (S.kit.includes(g)) return; S.kit.push(g); const w = who[g], sl = ITEMS[g].slot;
     if (w && SQUAD().includes(w) && S.gear[w] && !S.gear[w][sl] && canWear(w, g)) S.gear[w][sl] = g; else placeGear(g); });
+  armUnarmed(); // v8.1 (31c): nobody walks on with an empty hand while a spear or a bow they could carry lies in the pack
   note(give.length ? `The squad is armed again: ${give.map(g => ITEMS[g].name).join(', ')}.` : 'The squad is armed again, from what the quartermaster has.', 'good');
   save(); return give; }
 

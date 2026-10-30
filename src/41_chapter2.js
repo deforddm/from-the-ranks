@@ -462,7 +462,7 @@ A second figure kneels at the horse's head with both hands on it and her face tu
 Sethand has not come closer. He will not.`,
       ch:[{t:'Go to the man with the bow.', go:'c2_toc'},
           {t:'Look at the ground where the spiral stops.', check:['wits',13], req:()=>!S.f.c2_printsTried, fx:()=>S.f.c2_printsTried=1,
-            edges:id=>[S.f.c1_key === 'line' && ['the cadre row: you have seen Hounds before', 1], S.gear[id] && S.gear[id].trinket === 'houndtooth' && ['the Hound\'s tooth is warm', 1]],
+            edges:id=>[S.f.c1_key === 'line' && ['the cadre row: you have seen Hounds before', 1], wears(id, 'houndtooth') && ['the Hound\'s tooth is warm', 1]],
             near:{t:()=>`${NAME(ROLL().who)} reads it, but reads it on hands and knees in the middle of the spiral, where it stops.`, fx:()=>{ S.f.c2_printsTrod=1; S.f.c2_printsWho=ROLL().who; }},
             clean:{t:'There is one more print beside the hoofprint: a boot.', fx:()=>{ S.f.c2_paranTurned=1; }},
             go:'c2_prints', fail:'c2_prints_miss'},

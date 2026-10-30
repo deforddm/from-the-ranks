@@ -617,7 +617,7 @@ ${S.f.c2_key === 'light' ? `He's looking at her collar. At the badge on it: silv
 
 ${SQUAD().includes('tuft') ? `Tuft goes very still. It's the stillness she has when somebody says *High Mage*, and nobody has said it.` : ''}`,
       ch:[{t:'"What does that mean?"', go:'c6_qb_glove'}]}),
-    c6_qb_glove:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt'; return {sp:'Quick Ben', scene:'cellar', fx:()=>{ S.f.c6_qbCollar=1; }, txt:
+    c6_qb_glove:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt'; return {sp:'Quick Ben', scene:'cellar', fx:()=>{ S.f.c6_qbCollar=1; }, txt:
 `"Every cadre badge that was ever sewn has a bit of him in it." Quick Ben keeps his voice down. "Not much. A thread. It's how he keeps his mages. It's how he always knows where they are. And when he wants to, which isn't often, he looks out of them. The way you'd look out of a window in a house you own."
 
 You remember a cadre mage in the cold outside a tent at the Pale, looking at the cadre row as if it were a line of graves she knew the names on. *He doesn't let people leave, Sergeant. He let her. I'd like to know what he thinks he still has of hers.*
@@ -654,7 +654,7 @@ ${SQUAD().includes('ellis') ? `Ellis has seen something at the east end of the s
 Over the lake, over the lanterns, over every mask in the city: the Moon's Spawn, dark, without so much as a ribbon.`,
       ch:[{t:'The street.', go:()=>startExplore()}]}),
 
-    c6_kruppe:()=>{ const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet'); const ring = S.kit.includes('collsignet') && !S.f.c6_collRing;
+    c6_kruppe:()=>{ const rw = wornBy('collsignet'); const ring = S.kit.includes('collsignet') && !S.f.c6_collRing;
       return {sp:'Kruppe', fx:()=>{ S.f.c6_kruppe=1; }, txt: S.f.c6_kruppe ?
 `Kruppe has moved four paces up the street and acquired a second honey-cake. He raises it to you, gravely, like a toast.` :
 `He is standing in the middle of the street eating a honey-cake, in a mask of green silk that covers exactly none of him, and the Fete parts round him on both sides the way water parts round a stone.
@@ -687,7 +687,7 @@ ${SQUAD().includes('tuft') && S.f.c3_innMur && S.f.c2_key === 'light' ? `His eye
 Tuft doesn't answer him. Her hand is at her collar, and she doesn't take it away.` : ''}`,
       ch:[{t:'Take the mask.'}]}),
 
-    c6_coll:()=>{ const ring = S.kit.includes('collsignet') && !S.f.c6_collRing; const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet');
+    c6_coll:()=>{ const ring = S.kit.includes('collsignet') && !S.f.c6_collRing; const rw = wornBy('collsignet');
       return {sp: S.f.c3_innColl ? 'Coll' : 'A big man in plain brown', fx:()=>{ S.f.c6_coll=1; }, txt: S.f.c6_coll && !ring ?
 `He's where he was, against the wall, with his arms folded, looking at the house. ${S.f.c6_collRing ? `Every so often he turns the ring on his finger, as if checking it's still there.` : `His arms stay folded.`}` :
 `A very big man in plain brown clothes is standing across the street from Lady Simtal's gate with his back to a wall and his arms folded, looking at the house the way you'd look at a dog that used to be yours and has since been taught to bite you.
@@ -701,7 +701,7 @@ ${S.f.c3_innColl ? `You know him, and then you don't. The Phoenix. The jug. The 
 ${ring ? `His eyes go to ${rw ? (rw === 'sgt' ? 'your hand' : `${NAME(rw)}'s hand`) : 'your belt-pouch, where the shape of it shows through the leather'}. To the ring. His face does nothing at all, very deliberately. "You've still got it," he says. "It didn't get lost in a ditch."` : S.f.c3_collTalk && !S.f.c3_coll ? `He turns a heavy gold ring on his finger: the one you pushed back across the table at the Phoenix. "Still got it," he says. "You wouldn't take it, and I couldn't lose it. It's been a long week for the pair of us."` : ''}`,
       ch:[{t:'Give him back his ring.', req:()=>S.kit.includes('collsignet') && !S.f.c6_collRing, go:'c6_coll_ring'},
           {t:'Leave him to his house.'}]}; },
-    c6_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c6_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); Object.keys(S.gear).forEach(w => { if (S.gear[w].trinket === 'collsignet') delete S.gear[w].trinket; }); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+    c6_coll_ring:()=>({sp:'Coll', fx:()=>{ S.f.c6_collRing=1; S.kit = S.kit.filter(k => k !== 'collsignet'); unwear('collsignet'); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
 `You hold it out to him. It's heavy. It was always heavier than gold should be; that's the history.
 
 He doesn't take it at once. He looks at it on your palm the way he looked at the house.
@@ -832,7 +832,7 @@ Beyond the gate a man in Simtal's blue and silver is handing halberds out of a b
 ${ring ? `And inside the gate, with his thumbs in his sword-belt, a big grey-templed man in blue with a captain's silver at the shoulder is counting the guards through as a farmer counts sheep through a gap, and looking for the lame one.` : ''}`,
       ch:[{t:'Through the gate.', req:()=>S.kit.includes('collsignet') && !S.f.c6_collRing, go:'c6_signet'},
           {t:'Through the gate.', req:()=>!(S.kit.includes('collsignet') && !S.f.c6_collRing), go:'c6_terrace_arrive'}]}; },
-    c6_signet:()=>{ const rw = Object.keys(S.gear).find(w => SQUAD().includes(w) && S.gear[w] && S.gear[w].trinket === 'collsignet'); return {sp:'The captain of the house', scene:'fete_street', fx:()=>{ S.f.c6_signetSeen=1; }, txt:
+    c6_signet:()=>{ const rw = wornBy('collsignet'); return {sp:'The captain of the house', scene:'fete_street', fx:()=>{ S.f.c6_signetSeen=1; }, txt:
 `His eyes go over the Fourth, and over the armbands, and over ${rw ? (rw === 'sgt' ? 'your hands' : `${NAME(rw)}'s hands`) : 'your belt, where the pouch has come open under the halberd strap'}, and stop.
 
 On the ring.
@@ -1331,7 +1331,7 @@ ${SQUAD().includes('kettle') ? `Kettle, very quietly: "Is anyone going to *do* a
       ch:[{t:'Not yet.'}]},
 
     /* ---- the garden ---- */
-    c6_garden_arrive:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt'; return {sp:'Lady Simtal\'s garden', scene:'fete_garden', fx:()=>{ S.f.c6_gardenSeen=1; }, txt:
+    c6_garden_arrive:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt'; return {sp:'Lady Simtal\'s garden', scene:'fete_garden', fx:()=>{ S.f.c6_gardenSeen=1; }, txt:
 `Down the white steps, off the marble, onto grass.
 
 The garden is bigger than the house. Lawns going down toward the lake in long dark shelves, with gravel paths raked into waves between them, and clipped hedges, and trees hung with lanterns so that every tree is a little lit room. A fountain throwing water up into the lantern-light and letting it fall. A pond with lilies. Statues. The music comes down the steps from the hall like water down a drain, thin and far off.
@@ -1659,7 +1659,7 @@ Then she looks at you. Properly. It's been a while.
 ${S.f.c1_plantMarine ? `*When she does*, a cadre mage told you once, in the cold outside a tent, *be standing next to her.*` : ''}`,
       ch:[{t:'Stand next to her.', fx:()=>{ S.f.c6_selfDrawn=1; }, go:()=>cardSequence(()=>talk('c6_tuft_card'), {card:'blank', self:true})},
           {t:'"No. Do what he says."', req:()=>!S.f.c6_badgeCold, fx:()=>{ S.f.c6_keptHow='refused'; }, go:'c6_tuft_kept'}]}),
-    c6_tuft_card:()=>{ const c = CARDS.blank || {name:'The unpainted card', fx:''}; const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt';
+    c6_tuft_card:()=>{ const c = CARDS.blank || {name:'The unpainted card', fx:''}; const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt';
       return {sp:'The unpainted card', scene:'fete_garden', txt:
 `She draws it standing up, in the dark by the fountain where the lantern went out, with you at her shoulder close enough to feel her shaking, and the grey cloak three paces off with his hands folded, and the Fete going on over all your heads, loud and gold and nothing to do with you.
 
@@ -1693,7 +1693,7 @@ ${S.f.c6_badgeCold ? `"And it's *cold*," she says. "It's been cold since the ter
           {t:'"Go with him, Tuft."', req:()=>!S.f.c6_badgeCold, fx:()=>{ S.f.c6_keptHow='handed'; }, go:'c6_tuft_kept'}]}; },
 
     /* ---- the four roads for the badge ---- */
-    c6_tuft_glove:()=>{ const gw = (SQUAD().includes('brisk') && S.gear.brisk && S.gear.brisk.trinket === 'otatglove') ? 'brisk' : 'sgt';
+    c6_tuft_glove:()=>{ const gw = (SQUAD().includes('brisk') && wears('brisk', 'otatglove')) ? 'brisk' : 'sgt';
       return {sp:'The otataral glove', scene:'fete_garden', fx:()=>{ S.f.c6_tuft='glove'; if (SQUAD().includes('tuft')) loy('tuft',2); if (gw === 'brisk' && SQUAD().includes('brisk')) loy('brisk',1); if (SQUAD().includes('ohl')) loy('ohl',1); if (SQUAD().includes('kettle')) loy('kettle',1); }, txt:
 `${gw === 'brisk' ? `Brisk takes the glove off her belt without a word, and pulls it open, and holds it out at arm's length on the flat of her palm, a bowl for the pin.` : `You take the glove out of your belt, and pull it open, and hold it out on the flat of your palm, open.`}
 

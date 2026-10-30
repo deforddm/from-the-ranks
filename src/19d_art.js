@@ -52,11 +52,10 @@ function itemInfo(key){
   const [kind, id] = String(key).split('/');
   if (kind === 'item' && ITEMS[id]) { const it = ITEMS[id];
     const ch = Object.keys(CHAPTERS).find(n => CHAPTERS[n].gear && CHAPTERS[n].gear[id]);
-    const stats = [it.ac && `armour +${it.ac}`, it.atk && `hit +${it.atk}`, it.hp && `health +${it.hp}`, it.mv && `move +${it.mv}`, it.rng && `reach +${it.rng}`,
-      it.stat && Object.entries(it.stat).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)} +${v}`).join(' · ')].filter(Boolean).join(' · ');
-    const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null;
-    return {name: it.name, kicker: `${it.slot[0].toUpperCase() + it.slot.slice(1)}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
-      who: typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.'}; }
+    const stats = itemStatLine(id); // v8.1: the one line (14b), as the sheet, the Pack and the shops show it
+    const who = it.who ? it.who.map(w => w === 'sgt' ? 'the sergeant' : TPL[w].name) : null, worn = S && S.kit && S.kit.includes(id) ? ` Now ${wornWords(id)}.` : '';
+    return {name: it.name, kicker: `${SLOT_WORD[it.slot] || it.slot}${ch != null ? ` · found in ${chWord(+ch)}` : ''}`, stat: stats, text: it.line,
+      who: (typeof wearWords === 'function' ? wearWords(id) : who ? `Can be used by ${who.join(', ')}.` : 'Anyone in the squad can use it.') + worn}; }
   if (kind === 'munitions' && id.startsWith('keep_')) { const w = id.slice(5), c = TPL[w]; if (!c) return null;
     const nm = w === 'sgt' ? (S && S.name ? `Sergeant ${S.name}` : 'The sergeant') : c.name;
     return {name: `What ${nm} carries`, kicker: 'Keepsakes · never sold, never traded', stat: '', text: c.gear.join('. ') + '.', who: c.quest || ''}; }

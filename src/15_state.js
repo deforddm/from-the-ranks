@@ -88,10 +88,13 @@ const has = (id, k) => (S.picks[id] || []).includes(k);
 /* the role's Measure, grown at levels 4 and 8 */
 const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
 function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
-function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name}.`, 'good'); AUDIO.play('pick');
+function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name} (${itemStatShort(id)}).`, 'good'); AUDIO.play('pick');
   // auto-equip into an empty slot, on whoever it suits best (31c)
   const who = placeGear(id); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good'); }
-function equip(who, id){ const it = ITEMS[id]; if (!it) return; SQUAD().forEach(w => { if (S.gear[w][it.slot] === id) delete S.gear[w][it.slot]; }); S.gear[who][it.slot] = id; save(); }
+function equip(who, id, key){ const it = ITEMS[id]; if (!it) return; unwear(id); S.gear[who] ??= {}; S.gear[who][equipSlot(who, id, key)] = id; save(); } // 38c's equip replaces this (by role)
+/* the slot a piece goes into: the one asked for, else a free one, else (two trinkets on) the one worth least to this soldier */
+function equipSlot(who, id, key){ const ks = slotKeys(id); if (key && ks.includes(key)) return key; const f = freeSlot(who, id); if (f) return f;
+  return ks.slice().sort((a, b) => (typeof gearValue === 'function' ? gearValue(who, S.gear[who][a]) - gearValue(who, S.gear[who][b]) : 0))[0]; }
 function unequip(who, slot){ delete S.gear[who][slot]; save(); }
 const NAME = id => id === 'sgt' ? S.name : TPL[id].name;
 /* saves: one slot per sergeant, so more than one person can play on the same device. The roster lists them, last played first.

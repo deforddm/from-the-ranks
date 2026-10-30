@@ -548,7 +548,7 @@ He pats the post. "A hand on the strap, a hip against the post, and all of you i
       ch:[{t:'On along the Walk.', go:()=>startExplore()}]}),
     b5_c1_ropeman_again:()=>({sp:'An old rope-man', scene:'b5_c1_lowwalk', again:()=>`The rope-man, at his post. "Soldiers."`, txt:
 `The rope-man is at his post, coiling, uncoiling, coiling. ${S.f.b5_c1_swam ? 'He nods at Thegg as the squad comes up. "I hauled your coins out," he says. "Three hundred, every one. You didn\'t need me for the rest." He sounds almost sorry.' : b51Ph() >= 4 ? 'This morning the court\'s rope is out across the canal, and he is minding it.' : '"Tomorrow," he says, of the Special list. "Tomorrow there\'s work."'}`,
-      ch:[{t:'Buy a hook-knife off him.', tag:'8 docks', req:()=>!S.f.b5_c1_ropeOk && !(S.kit || []).includes('b5_c1_hookknife') && (S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_hookknife'); }, go:'b5_c1_ropeman_knife'},
+      ch:[{t:'Buy a hook-knife off him.', tag:'8 docks', ware:'b5_c1_hookknife', req:()=>!S.f.b5_c1_ropeOk && !(S.kit || []).includes('b5_c1_hookknife') && (S.silver || 0) >= 8, fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_hookknife'); }, go:'b5_c1_ropeman_knife'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c1_ropeman_knife:()=>({sp:'An old rope-man', scene:'b5_c1_lowwalk', txt:
 `He unhooks a short hooked knife from his apron and takes the eight docks and bites one, which is a thing people only do in stories, and does it anyway. "The court will dock me for it," he says. "The court docks me for everything."`,

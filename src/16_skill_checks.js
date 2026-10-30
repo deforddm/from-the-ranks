@@ -166,7 +166,8 @@ function talk(id){
   sh.innerHTML = `<div class="sp">${esc(n.sp || '')}</div>${noteHtml}${body}${unspoken ? `<div class="txt unspoken">${fmt(unspoken)}</div>` : ''}
     <div class="choices">${curCh.map((c,i) => {
       const tag = c.check ? checkTag(c) : c.tag ? `<span class="tagk">${esc(c.tag)}</span>` : '';
-      return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}</button>`; }).join('')}</div>`;
+      const ware = c.ware && typeof itemStatLine === 'function' && ITEMS[c.ware] ? `<small class="ware">${esc(itemStatLine(c.ware))}</small>` : ''; // v8.1: a shop's piece says what it does (14b)
+      return `<button class="choice" id="ch${i}" data-i="${i}">${tag}${smartq(esc(c.t).replace(/&quot;/g,'"'))}${ware}</button>`; }).join('')}</div>`;
   const more = $('#saidMore'); if (more) more.onclick = () => { const t = $('#saidTxt'); if (t) t.classList.remove('said'); more.remove(); };
   sh.scrollTop = 0;
   if (n.oncard) inlineCard($('#icard'), n.oncard[0], n.oncard[1]);
