@@ -243,14 +243,13 @@ POR.sohra = function(ctx){ const F = {cy:-75, w:11.2, h:19.2, jaw:.72, chin:4.4,
   ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = PR.lin(ctx, 26, 0, 40, 0, [[0,'#e0ceaa'], [.5,'#b49a6e'], [1,'#4a3a24']]); ctx.lineWidth = 3.2; ctx.beginPath(); ctx.moveTo(24, 4); ctx.quadraticCurveTo(44, -40, 30, -86); ctx.quadraticCurveTo(27, -96, 33, -104); ctx.stroke();
   ctx.strokeStyle = '#1e140c'; ctx.lineWidth = 3.4; ctx.beginPath(); ctx.moveTo(31, -100); ctx.lineTo(33, -104); ctx.stroke(); PR.stroke(ctx, 'rgba(230,220,196,.6)', .5, () => { ctx.moveTo(33, -104); ctx.lineTo(20, 4); }); ctx.restore();
   // the tunic: soft hide, a fringed yoke, open at the throat
-  PR.torsoPath(ctx, 31, 5); ctx.fillStyle = PR.lit(ctx, '#a07a52', '#2e1c0c', -31, 24); ctx.fill();
-  ctx.save(); PR.torsoPath(ctx, 31, 5); ctx.clip();
+  PR.neck(ctx, F, 7.6); const B = BP.body(ctx, F, {wide:31, drop:5, trap:1, ny:F.cy + 15.4, cb:F.cy + 20.6, c1:'#a07a52', c2:'#2e1c0c'});
+  ctx.save(); B.path(); ctx.clip();
   ctx.fillStyle = PR.lit(ctx, '#8a6440', '#24160a', -30, 26); PR.path(ctx, [[-34, -30], [34, -30], [34, -24], [-34, -24]]); ctx.fill(); // the yoke's seam
   PR.strands(ctx, 40, ['rgba(220,196,150,.65)', 'rgba(150,108,70,.6)', 'rgba(60,34,16,.6)'], .7, 41, (i, r) => { const x = lerp(-31, 31, i/39), y = -26 + (1 - Math.pow((i/39 - .5)*2, 2))*4; return [x, y, x + (r() - .5), y + 3, x + (r() - .5)*1.4, y + 6 + r()*3]; });
   ctx.fillStyle = '#5a3a1e'; ctx.fillRect(-34, -4, 68, 3); ctx.fillStyle = '#b8402a'; ctx.fillRect(-3, -4.6, 6, 4.2); // the belt and its red knot
   PR.soft(ctx, 22, -18, 16, 14, '#000000', .45); PR.soft(ctx, -20, -36, 12, 7, '#ffe0b0', .1);
-  ctx.restore();
-  PR.neck(ctx, F, 5.4);
+  ctx.restore(); BP.light(ctx, F, B); BP.band(ctx, B, -.6, 2.2); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#1e1208', -B.nx - 2, B.nx + 2); ctx.fill(); // the hide's rolled neck
   // three strands of bone beads, long, short and between
   [[-46, 10, 9], [-43, 7, 13], [-40, 5, 17]].forEach(([y0, w, n], j) => { for (let i=0;i<n;i++){ const k = i/(n - 1), x = lerp(-w*1.6, w*1.6, k), y = y0 + Math.sin(k*Math.PI)*w*.9; ell(ctx, x, y, 1.2, 1.1, PR.rad(ctx, x - .4, y - .4, .1, 1.4, [[0, j === 1 ? '#f4ecd8' : '#e8dcc0'], [1, '#6a5e48']])); } });
   F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 7, 4, 2, '#4a3018', .2); };
@@ -284,15 +283,14 @@ POR.greysword = function(ctx){ const F = {cy:-77, w:12.6, h:19.8, jaw:.86, chin:
   PR.soft(ctx, 12, 12, 18, 14, '#000000', .4); ctx.restore();
   ctx.strokeStyle = PR.lin(ctx, -26, -28, 26, 28, [[0,'#a8a294'], [.5,'#5a5650'], [1,'#161412']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.ellipse(0, 0, 25.8, 27.8, 0, 0, 7); ctx.stroke(); ctx.restore();
   // mail, and the grey surcoat over it
-  PR.torsoPath(ctx, 38, 3); ctx.fillStyle = PR.lit(ctx, '#8e8c86', '#2e2c2a', -38, 30); ctx.fill();
-  ctx.save(); PR.torsoPath(ctx, 38, 3); ctx.clip(); PR.mail(ctx, -40, 40, -48, 4, '#8e8c86', 1.9);
+  PR.neck(ctx, F, 9.6); const B = BP.body(ctx, F, {wide:38, drop:3, trap:5, ny:F.cy + 15.6, cb:F.cy + 21, c1:'#8e8c86', c2:'#2e2c2a'});
+  ctx.save(); B.path(); ctx.clip(); PR.mail(ctx, -40, 40, -66, 4, '#8e8c86', 1.9); // the mail, an aventail up to the jaw
   ctx.fillStyle = PR.lit(ctx, '#8a8c90', '#26282c', -26, 30); PR.path(ctx, [[-26, -46], [-11, -49], [-6, -36], [0, -30], [6, -36], [11, -49], [26, -46], [30, 4], [-30, 4]]); ctx.fill(); // the surcoat, its neck cut deep
   PR.stroke(ctx, 'rgba(20,20,22,.5)', .7, () => { ctx.moveTo(-11, -49); ctx.lineTo(-6, -36); ctx.lineTo(0, -30); ctx.lineTo(6, -36); ctx.lineTo(11, -49); });
   PR.stroke(ctx, 'rgba(0,0,0,.1)', 1.4, () => { for (let i=0;i<4;i++){ ctx.moveTo(-18 + i*12, -38); ctx.quadraticCurveTo(-20 + i*12.5, -16, -21 + i*13, 4); } }); // its folds
   ctx.fillStyle = '#3a2a1c'; ctx.fillRect(-32, -6, 64, 3); ctx.fillStyle = '#9a9488'; ctx.fillRect(-2.4, -6.4, 4.8, 3.8); // the belt
   PR.soft(ctx, 26, -18, 20, 20, '#000000', .45); PR.soft(ctx, -20, -38, 12, 7, '#ffe8c8', .1);
-  ctx.restore();
-  PR.neck(ctx, F, 7);
+  ctx.restore(); BP.light(ctx, F, B);
   F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 7, 4, 2, '#5a3a24', .18); };
   PR.face(ctx, F);
   // hair shorn close: a dark cap fitted to the skull, the scalp showing through at the edges
