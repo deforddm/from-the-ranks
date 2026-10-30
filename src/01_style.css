@@ -292,6 +292,8 @@ body.reduce::before{animation:none!important}
 .sgtrow .load:disabled{opacity:1}
 .sgtrow .del{min-height:58px;font-size:1.3rem;color:var(--mute)}
 .sgtrow .del.warn{color:#f0c9c2}
+.sgtrow .del{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.sgtrow .del.holding{border-color:var(--blood2);background:#3a1a17}
+.sgtrow .load.warn{background:linear-gradient(90deg,rgba(150,36,28,.6) calc(var(--hold,0)*100%),transparent calc(var(--hold,0)*100%)),linear-gradient(180deg,#3a1a17,#241110)} /* v8.0.3: the row fills while the × is held */
 .fine .ver{white-space:nowrap;color:var(--dim);display:inline-block;margin:-12px 0 -12px 2px;background:none;border:0;padding:12px 6px;min-width:44px;min-height:44px;box-sizing:border-box;font:inherit;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
 .gloss{margin-top:16px;border-top:1px solid var(--line)}
 .gloss summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-family:var(--label);font-weight:700;letter-spacing:.14em;color:var(--brass);font-size:.78rem;list-style:none}

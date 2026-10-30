@@ -74,7 +74,7 @@ function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
   const list = roster().list, form = !!(fresh || want), tb = want && BOOKS[want] ? want : titleBookOf(list), TB = BOOKS[tb];
   /* v8.0.2 (David, Oct 29: five books): the title shows only the sergeant played last; the rest wait on their book's page, where each can carry on or be erased */
-  const rowsOf = (L, main) => L.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !main ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e, main), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button></div>`).join('');
+  const rowsOf = (L, main) => L.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !main ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e, main), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)} (press and hold)">×</button></div>`).join('');
   const rows = rowsOf(list.slice(0, 1), true), more = list.length - 1;
   const bookRows = b => { const L = list.filter(e => onShelf(e, b)); return L.length ? `<div class="roster"><div class="rh">Carry on in Book ${BOOKS[b].word}${L.length > 1 ? `: ${L.length} sergeants` : ''}</div>${rowsOf(L, false)}</div>` : ''; };
   const taken = n => list.find(e => sameName(e.name, n));
@@ -149,11 +149,20 @@ function showTitle(fresh, want){
     bindLoads(document); bindDels(document, () => null);
   }
   maybeNotes(list.length > 0); offerInstall();
-  /* erasing a sergeant asks twice: the first tap says who goes; on a book page the page comes back */
-  function bindDels(root, back){ root.querySelectorAll('.sgtrow .del').forEach(el => el.onclick = () => { AUDIO.play('click'); const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id);
-      if (el.dataset.arm) { dropSlot(el.dataset.id); const b = back(); return b ? showTitle(false, b) : showTitle(); }
-      el.dataset.arm = 1; el.classList.add('warn'); ld.classList.add('warn'); const was = ld.innerHTML; ld.innerHTML = `<b>${tapWord('Tap')} × again to erase Sergeant ${esc(e.name)}</b><small>Their save on this device is gone for good. A save code brings them back.</small>`; ld.disabled = true;
-      setTimeout(() => { if (el.isConnected) { delete el.dataset.arm; el.classList.remove('warn'); ld.classList.remove('warn'); ld.innerHTML = was; ld.disabled = false; } }, 4000); }); }
+  /* erasing a sergeant (v8.0.3, David, Oct 29: make it harder): press and hold the × for two seconds; the row fills as you hold, letting go
+     keeps them, and a plain tap only says how. On a book page the page comes back afterwards. */
+  function bindDels(root, back){ root.querySelectorAll('.sgtrow .del').forEach(el => { const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id); if (!e) return;
+      const HOLD = 2000, was = ld.innerHTML; let tm = null, t0 = 0, raf = 0, hintT = null;
+      const face = (k, html) => { el.classList.toggle('warn', k); ld.classList.toggle('warn', k); ld.disabled = k; ld.innerHTML = html || was; if (!k) ld.style.removeProperty('--hold'); };
+      const start = ev => { if (ev && ev.preventDefault) ev.preventDefault(); if (tm) return; clearTimeout(hintT); try { if (ev && ev.pointerId != null) el.setPointerCapture(ev.pointerId); } catch (_) {} AUDIO.play('click'); t0 = performance.now(); el.classList.add('holding');
+        face(true, `<b>Keep holding to erase ${esc(e.name)}</b><small>Let go to keep them. Their save on this device goes for good; a save code brings them back.</small>`);
+        const step = () => { const k = Math.min(1, (performance.now() - t0) / HOLD); ld.style.setProperty('--hold', k.toFixed(3)); if (k < 1 && tm) raf = requestAnimationFrame(step); }; tm = setTimeout(() => { tm = null; cancelAnimationFrame(raf);
+          dropSlot(e.id); const b = back(); return b ? showTitle(false, b) : showTitle(); }, HOLD); step(); };
+      const stop = () => { if (!tm) return; clearTimeout(tm); tm = null; cancelAnimationFrame(raf); el.classList.remove('holding'); ld.style.removeProperty('--hold');
+        face(true, `<b>Hold × two seconds to erase ${esc(e.name)}</b><small>A tap keeps them. Their save on this device goes for good once erased.</small>`);
+        hintT = setTimeout(() => { if (el.isConnected && !tm) face(false); }, 3000); };
+      el.onpointerdown = start; el.onpointerup = el.onpointerleave = el.onpointercancel = stop; el.oncontextmenu = ev => ev.preventDefault(); el.onclick = ev => ev.preventDefault();
+      el.onkeydown = ev => { if ((ev.key === 'Enter' || ev.key === ' ') && !ev.repeat) start(ev); }; el.onkeyup = ev => { if (ev.key === 'Enter' || ev.key === ' ') stop(); }; el.onblur = stop; }); }
 }
 function showIntro(){
   view = 'intro'; S.scene = 'intro'; save(); titleAnim = null; AUDIO.setScene('explore');

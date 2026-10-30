@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v8.0.2'; // the title shows the sergeant played last
+const CACHE = 'ftr-v8.0.3'; // hold to erase; Book Five's faces repainted
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
