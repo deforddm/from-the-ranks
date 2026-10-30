@@ -6,8 +6,6 @@
    go in that half's special-text table; the numbers are listed in docs/items-pass.md.
    Once a fight = B.used (it carries into a fight's second ground); once a chapter = S.f keyed by book and chapter.
    spawnshard stays what it is: Brack's joke. It does nothing, on purpose. */
-if (typeof wears === 'undefined') globalThis.wears = (u, item) => { const id = typeof u === 'string' ? u : u && !u.ally && u.side !== 'e' ? u.id : null;
-  return !!(id && typeof S !== 'undefined' && S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(item)); };
 const ixMine = u => !!(u && u.side === 'p' && !u.ally && TPL[u.id]);
 const ixChKey = k => 'ix_' + k + '_' + BOOK + (S.chapter || 0);
 const ixOnce = k => !!(B && B.used && B.used[k]);

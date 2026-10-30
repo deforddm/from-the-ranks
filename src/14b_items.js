@@ -13,7 +13,8 @@
 const GEAR_SLOTS = {weapon:['weapon'], armour:['armour'], trinket:['trinket', 'trinket2']};
 const SLOT_WORD = {weapon:'Weapon', armour:'Armour', trinket:'Trinket'};
 const slotKeys = g => (ITEMS[g] && GEAR_SLOTS[ITEMS[g].slot]) || [];
-const wears = (id, g) => !!(S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(g));
+const wears = (u, g) => { const id = typeof u === 'string' ? u : u && !u.ally && u.side !== 'e' ? u.id : null; // a soldier id, or a unit in a fight
+  return !!(id && typeof S !== 'undefined' && S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(g)); };
 const wornBy = g => ((S && S.squad) || []).find(w => wears(w, g)) || null;
 const wornSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return Object.keys(gg).find(k => gg[k] === g) || null; };
 const freeSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return slotKeys(g).find(k => !gg[k]) || null; };
@@ -53,9 +54,7 @@ const ITEM_SPECIAL = {
   /* Book Four */
   b4_c1_finger:'Its wearer starts a fight steady (+2 to the first blow) while the company\'s nerve is 5 or more',
   b4_c1_redsash:() => `On ${TPL.redblade ? TPL.redblade.name : 'Ramin'}: +1 hit`,
-  b4_c1_durhangpipe:'Carried: once a chapter at a fire, the rattled settle and the bruised stop feeling it',
   b4_c2_milestone:'The first blow its wearer lands in a fight does +1 damage',
-  b4_c3_ferryrope:'Carried: +1 on one check a chapter',
   b4_c4_lampball:'Once a book: thrown, range 4, it bursts and the ground burns for 3 rounds. Then it is gone',
   b4_c4_salve:'The first healing its wearer takes in a fight heals 2 more',
   b4_c5_seaglass:'In the dust: its wearer\'s first shot reaches 1 further',
@@ -66,7 +65,7 @@ const ITEM_SPECIAL = {
 };
 /* who a special is for, when it only works on one soldier (Allocate weighs it for them alone) */
 const ITEM_SPECIAL_WHO = {b4_c1_redsash:'redblade', otatglove:'sgt', clawknife:'sgt'};
-function itemSpecial(g){ const it = ITEMS[g]; if (!it) return ''; const s = it.special != null ? it.special : ITEM_SPECIAL[g]; return (typeof s === 'function' ? s() : s) || ''; }
+function itemSpecial(g){ const it = ITEMS[g]; if (!it) return ''; const s = it.special != null ? it.special : [ITEM_SPECIAL[g], typeof IX_SPECIAL !== 'undefined' ? IX_SPECIAL[g] : null].map(t => typeof t === 'function' ? t() : t).filter(Boolean).map(t => String(t).replace(/\.$/, '')).join('; '); return (typeof s === 'function' ? s() : s) || ''; }
 /* a special that works from the pack, not on the wearer */
 const specialCarried = g => /^Carried:/.test(itemSpecial(g));
 /* the line. who: a soldier's id, to show their damage and what they hit for now */

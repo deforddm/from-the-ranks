@@ -1610,7 +1610,8 @@ You are halfway to him when the floor in the middle of the junction stands up.${
 const GEAR_SLOTS = {weapon:['weapon'], armour:['armour'], trinket:['trinket', 'trinket2']};
 const SLOT_WORD = {weapon:'Weapon', armour:'Armour', trinket:'Trinket'};
 const slotKeys = g => (ITEMS[g] && GEAR_SLOTS[ITEMS[g].slot]) || [];
-const wears = (id, g) => !!(S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(g));
+const wears = (u, g) => { const id = typeof u === 'string' ? u : u && !u.ally && u.side !== 'e' ? u.id : null; // a soldier id, or a unit in a fight
+  return !!(id && typeof S !== 'undefined' && S && S.gear && S.gear[id] && Object.values(S.gear[id]).includes(g)); };
 const wornBy = g => ((S && S.squad) || []).find(w => wears(w, g)) || null;
 const wornSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return Object.keys(gg).find(k => gg[k] === g) || null; };
 const freeSlot = (id, g) => { const gg = (S && S.gear && S.gear[id]) || {}; return slotKeys(g).find(k => !gg[k]) || null; };
@@ -1650,9 +1651,7 @@ const ITEM_SPECIAL = {
   /* Book Four */
   b4_c1_finger:'Its wearer starts a fight steady (+2 to the first blow) while the company\'s nerve is 5 or more',
   b4_c1_redsash:() => `On ${TPL.redblade ? TPL.redblade.name : 'Ramin'}: +1 hit`,
-  b4_c1_durhangpipe:'Carried: once a chapter at a fire, the rattled settle and the bruised stop feeling it',
   b4_c2_milestone:'The first blow its wearer lands in a fight does +1 damage',
-  b4_c3_ferryrope:'Carried: +1 on one check a chapter',
   b4_c4_lampball:'Once a book: thrown, range 4, it bursts and the ground burns for 3 rounds. Then it is gone',
   b4_c4_salve:'The first healing its wearer takes in a fight heals 2 more',
   b4_c5_seaglass:'In the dust: its wearer\'s first shot reaches 1 further',
@@ -1663,7 +1662,7 @@ const ITEM_SPECIAL = {
 };
 /* who a special is for, when it only works on one soldier (Allocate weighs it for them alone) */
 const ITEM_SPECIAL_WHO = {b4_c1_redsash:'redblade', otatglove:'sgt', clawknife:'sgt'};
-function itemSpecial(g){ const it = ITEMS[g]; if (!it) return ''; const s = it.special != null ? it.special : ITEM_SPECIAL[g]; return (typeof s === 'function' ? s() : s) || ''; }
+function itemSpecial(g){ const it = ITEMS[g]; if (!it) return ''; const s = it.special != null ? it.special : [ITEM_SPECIAL[g], typeof IX_SPECIAL !== 'undefined' ? IX_SPECIAL[g] : null].map(t => typeof t === 'function' ? t() : t).filter(Boolean).map(t => String(t).replace(/\.$/, '')).join('; '); return (typeof s === 'function' ? s() : s) || ''; }
 /* a special that works from the pack, not on the wearer */
 const specialCarried = g => /^Carried:/.test(itemSpecial(g));
 /* the line. who: a soldier's id, to show their damage and what they hit for now */
@@ -9446,7 +9445,8 @@ const ITEM_ROLE = {
   b2_auxtulwar:'heavyweapon', b2_auxmail:'mail', b2_horsebow:'ranged', b2_semkaxe:'heavyweapon', b2_wickanhide:'light', b2_tithlance:'reach', b2_noblesabre:'blade',
   b2_officerscale:'heavy', b2_coldknife:'blade', b2_tcrossbow:'ranged', b2_tleathers:'light', b2_khundrylblade:'blade', b2_arensword:'heavyweapon', b2_arenmail:'mail',
   b3_c2_hornbow:'ranged', b3_c2_mace:'heavyweapon', b3_c3_shield:'shield', b3_c3_spear:'reach', b3_c4_flint:'blade', b3_c6_axe:'heavyweapon', b3_c7_hunterblade:'heavyweapon',
-  b4_c1_relic:'any', b4_c3_khundrylknife:'blade', b4_c4_setibow:'ranged', b4_c6_trenchspade:'satchel', b4_c7_dogslayerblade:'blade'};
+  b4_c1_relic:'any', b4_c3_khundrylknife:'blade', b4_c4_setibow:'ranged', b4_c6_trenchspade:'satchel', b4_c7_dogslayerblade:'blade',
+  secondhalberd:'reach', darucrossbow:'ranged', darusword:'heavyweapon', b4_c1_issuemail:'mail', b4_c4_setijack:'light', b4_c6_dogscale:'heavy', b5_c1_issuesword:'blade', b5_c1_tarthclub:'heavyweapon'}; // the items pass (v8.1)
 const GEAR_SIG = {secondbadge:['brisk', 'sgt'], moranthchit:['kettle'], b2_sealskin:['haddat']}; // Tav's regiment; Kettle's Moranth; the water-sellers' seal Haddat took
 const rolesOf = id => { const t = TPL[id]; if (!t) return []; if (!t.roles) t.roles = (TPL_ROLES[id] || ['light', 'blade']).slice(); return t.roles; };
 /* give every item its role (and drop the old name lists), every TPL its roles: run as chapters register, and once more on first use */
@@ -9939,7 +9939,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
     heater:{name:'Second Army heater shield', slot:'armour', who:['brisk','sgt'], ac:1, line:'A heater shield with the Second\'s sigil burned off. Brisk did not ask whose.'},
     houndtooth:{name:'Hound\'s tooth', slot:'trinket', who:null, atk:1, line:'A tooth the length of a finger, snapped off in a tent pole. It is warm. It stays warm.'},
     cadretoken:{name:'Cadre token', slot:'trinket', who:['tuft','ohl'], hp:2, line:'A bone disc on a cord, the kind the cadre give to people they intend to remember. Tattersail did not say whose it had been.'},
-    clawknife:{name:'Grey cloak\'s knife', slot:'weapon', who:['sgt','kettle','vell'], atk:1, line:'A short blade with no maker\'s mark and no blood on it, which is not the same as never having had any.'} },
+    clawknife:{name:'Grey cloak\'s knife', slot:'weapon', who:['sgt','kettle','vell'], atk:2, dmg:[1,6,1], line:'A short blade with no maker\'s mark and no blood on it, which is not the same as never having had any.'} },
 
   card:{ id:'hounds', name:'Hounds of Shadow', house:'High House Shadow', hue:'#7a6a9a',
     txt:`Seven shapes running under a moon that isn't there. Tuft looks at it for a long time. "They're not coming for us," she says, and then, quieter, "I don't think."`,
@@ -10879,7 +10879,8 @@ ${SQUAD().includes('ellis') ? `Ellis: "Two gaps in the thorn. He's standing in t
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     barrowtorc:{name:'Barrow torc', slot:'trinket', who:null, hp:2, line:'A twist of black iron from a dead man\'s neck. It is heavier than it looks and colder than it should be. Tuft would not touch it.'},
     secondbadge:{name:'Second Army badge, wrong regiment', slot:'trinket', who:['brisk','sgt'], ac:1, line:'A bronze badge of the Second, the Ninth Regiment\'s. Tav was the Fourth Regiment. Brisk knows the difference and carries it anyway.'},
-    rhivibow:{name:'Rhivi horn bow', slot:'weapon', who:['ellis','kettle'], rng:1, atk:1, line:'A short recurve of horn and sinew, unstrung and given. Sethand said it was a bad bow. He did not say whose.'},
+    secondhalberd:{name:'A Second Army halberd', slot:'weapon', who:null, rng:1, reach:true, ac:-1, dmg:[1,10,1], line:'Seven feet of issue ash with an issue blade on it, the Second Army\'s stamp burnt into the haft and somebody\'s tally of days cut under the stamp, stopping. It reaches over the man in front, and it takes both hands, so the shield goes on the back. The deserters carried it four days south and never once used it on anybody who could use one back.'},
+    rhivibow:{name:'Rhivi horn bow', slot:'weapon', who:['ellis','kettle'], rng:1, atk:1, dmg:[1,8,0], line:'A short recurve of horn and sinew, unstrung and given. Sethand said it was a bad bow. He did not say whose.'},
     toccloak:{name:'Toc\'s spare cloak', slot:'armour', who:['ellis','tuft','sgt','vell'], ac:1, line:'A Claw\'s field cloak, grey going brown, with the shoulder cut for a bow. Toc left it on the wagon\'s tailboard and did not look back at it.'} },
 
   /* inside the barrow on the wagon road (it was 'dark', which is headed "Under the Pale" and tinted with Kurald Galain) */
@@ -11458,8 +11459,8 @@ Brisk watches them until there's nothing to watch. "Ten silver, to deserters, fo
 
 Ohl, from the driver's board: "Cheap. I have priced the other thing, Sergeant. Many times."` : ''}`,
       ch:[{t:'Up the ridge. Make camp.', go:()=>{ startExplore('ridge'); talk('c2_ridge_arrive'); }}]}),
-    c2_after_deserters:()=>({sp:'The crest', scene:'plain_dusk', fx:()=>{S.f.c2_desFought=1;}, txt:
-`It's done before the last of the light is. Eight men who walked out of the Pale and four days south, and stopped here, on a hill, over a wagon.${SQUAD().includes('brisk') ? `
+    c2_after_deserters:()=>({sp:'The crest', scene:'plain_dusk', fx:()=>{S.f.c2_desFought=1; if (!S.f.c2_halberd) { S.f.c2_halberd = 1; gain('secondhalberd'); }}, txt:
+`It's done before the last of the light is. Eight men who walked out of the Pale and four days south, and stopped here, on a hill, over a wagon. One of them carried a Second Army halberd the whole way and never got it level. It goes on the wagon with the squad's kit.${SQUAD().includes('brisk') ? `
 
 Brisk goes from one to the next with her shield still up and turns their collars over. Where the badges were there are only holes, cut and then frayed, and you can't tell a regiment from a hole. She does it anyway. She does all eight.${S.f.c2_badge ? ` The Ninth's badge is inside her gorget, with the letter. She doesn't take it out.` : ''}` : ''}${c2Moreau() ? `
 
@@ -12203,10 +12204,10 @@ Inside, steam, and a sour mineral stink, and vats sunk in the floor like wells, 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     /* Doctor Brack's wares (v3.18): mostly nonsense. Mostly. */
     brackcoin:{name:'Oponn\'s Own Coin', slot:'trinket', who:null, stat:{guile:1}, line:'A Daru copper with a head on both sides. "Touched by the Twins themselves," says Doctor Brack. It has never once lost a toss, which is the most honest thing about it.'},
-    hoodrep:{name:'Hood\'s Repellent', slot:'trinket', who:null, line:'A stoppered blue bottle on a thong. "Keeps the Lord of Death at arm\'s length. No customer has ever come back to complain." Once a chapter, the first time whoever wears it would go down in a fight, they stay up at 1 health instead. Ohl has tasted it. He will not say what it is. He will not say it doesn\'t work.'},
+    hoodrep:{name:'Hood\'s Repellent', slot:'trinket', who:null, line:'A stoppered blue bottle on a thong. "Keeps the Lord of Death at arm\'s length. No customer has ever come back to complain." Once a chapter, the first time whoever wears it would go down in a fight, they don\'t. Ohl has tasted it. He will not say what it is. He will not say it doesn\'t work.'},
     spawnshard:{name:'Genuine Shard of Moon\'s Spawn', slot:'trinket', who:null, line:'A lump of black glassy stone in a velvet bag, with a certificate. Tuft says it is forge slag from somebody\'s back yard. Kettle says that is what they would want you to think. It does nothing. It does it beautifully.'},
     tyrantmap:{name:'Map to the Tyrant\'s Hoard', slot:'trinket', who:null, line:'Vellum, foxed, with sea-serpents in the margins of a country that has no sea. The Gadrobi Hills, roughly, and an X, and in a flourishing hand: *Here Lieth the Hoard of the Tyrant, Asleep*. Doctor Brack sells a great many of them. He says the X is not to scale.'},
-    daruknife:{name:'Daru duelling knife', slot:'weapon', who:['sgt','ellis','vell'], atk:1, line:'Long, thin, with a basket of brass wire round the grip. Far too good for the man who was carrying it. He had not stolen it recently; he had stolen it well.'},
+    daruknife:{name:'Daru duelling knife', slot:'weapon', who:['sgt','ellis','vell'], atk:2, dmg:[1,6,2], line:'Long, thin, with a basket of brass wire round the grip. Far too good for the man who was carrying it. He had not stolen it recently; he had stolen it well.'},
     roadleather:{name:'Gadrobi road-crew leather', slot:'armour', who:null, ac:1, line:'A crew jerkin of oiled leather with the Guild of Paviors\' mark burned into the back. It smells of gas and wet stone. It fits nobody and everybody, which is the point.'},
     lampchip:{name:'Blue-glass lamp-chip', slot:'trinket', who:null, stat:{might:1,wits:1,guile:1}, line:'A thumbnail of blue glass from a broken street lamp, drilled and hung on a cord. Daru knives wear them for luck. This one\'s luck ran out, which some would say makes it due.'},
     collsignet:{name:'Coll\'s old signet', slot:'trinket', who:null, stat:{guile:1}, line:'A heavy gold ring with the device ground off, so that only the shape of a house is left and not its name. It was worth a council seat once. It bought a round.'} },
@@ -13875,7 +13876,8 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     guildtoken:{name:'Guild token', slot:'trinket', who:null, stat:{guile:1}, line:'A disc of black horn the size of a thumbnail, with a hole through it and nothing carved on it at all. Vell says it opens a door. He does not say which door, or who is behind it, or what they will think of a Malazan holding it.'},
     ropehook:{name:'Journeyman\'s rope-and-hook', slot:'trinket', who:['ellis','sgt','kettle'], mv:1, line:'Thirty feet of tarred line and a three-pronged hook, wrapped in rag so it does not ring on slate. A Guild journeyman\'s kit. The rag is new. The journeyman is not going to need it.'},
-    guildblade:{name:'Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, line:'A short straight blade blackened with lamp-soot, the edge left bright. No guard to catch on a gutter. Made to be carried up a drainpipe in the teeth, and it has been.'},
+    darucrossbow:{name:'A Daru roof-crossbow', slot:'weapon', who:null, atk:1, dmg:[1,10,1], line:'A short, stout crossbow of black wood and brass, with a belt-hook for the cocking and a quiver of quarrels strapped under the stock. Daru-made, for the roofs, where nobody has room to wind a windlass. The man on the Daru ridge left it on the tiles when he stopped being there.'},
+    guildblade:{name:'Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, dmg:[1,8,1], line:'A short straight blade blackened with lamp-soot, the edge left bright. No guard to catch on a gutter. Made to be carried up a drainpipe in the teeth, and it has been.'},
     andiicloak:{name:'Andii-grey cloak', slot:'armour', who:['tuft'], ac:1, line:'Grey, the grey of ash on a cold hearth, and lighter than cloth should be. It does not quite take the lamplight. Only Tuft will put it on. The rest have not been asked, and have not offered.'} },
 
   // the chapter's own lines on the end screen, after the engine's
@@ -14808,8 +14810,8 @@ ${SQUAD().includes('ellis') ? `Ellis, at the hatch, not looking back: "Nobody th
 
 By the time it shifts, the first of them is on it.`,
       ch:[{t:'"Hold the plank."', go:()=>startBattle('c4_clan',{surprise:'e'})}]}),
-    c4_after_clan:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_clanFought=1; }, txt:
-`It's decided on the planks, the way Fiddler said roof fights are: one at a time, and nobody waits in the middle. Two of them come off the planks the short way. The crossbow on the Daru side gets off what he can and then isn't there. And the one who led them is sitting on the far edge of the gap with his knife across his knees, not getting up, not coming on, looking at the ridge behind him where his master isn't.
+    c4_after_clan:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_clanFought=1; if (!S.f.c4_xbow) { S.f.c4_xbow = 1; gain('darucrossbow'); } }, txt:
+`It's decided on the planks, the way Fiddler said roof fights are: one at a time, and nobody waits in the middle. Two of them come off the planks the short way. The crossbow on the Daru side gets off what he can and then isn't there. His crossbow is: on the tiles of the Daru ridge, still cocked, and it comes back across the planks with you. And the one who led them is sitting on the far edge of the gap with his knife across his knees, not getting up, not coming on, looking at the ridge behind him where his master isn't.
 
 He's left where he sits.${preUsed('c4_clan') ? `
 
@@ -15338,7 +15340,7 @@ ${SQUAD().includes('brisk') ? `Brisk looks at the gap, and then back the way you
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     rhivicharm:{name:'Rhivi bone charm', slot:'trinket', who:null, stat:{wits:1}, line:'A knuckle-bone, a horse\'s, bored through and strung on plaited hair, with a single blue bead. The Rhivi hang them on children so the grass will know whose they are. Sethand did not say whose this was. He tied it on your wrist himself, and pulled the knot tight with his teeth.'},
-    barrowflint:{name:'Barrow-flint blade', slot:'weapon', who:['sgt','brisk','kettle','ellis'], atk:1, line:'A leaf of grey flint the length of a forearm, knapped so fine the edge is translucent, bound to an antler haft with sinew that should have rotted before the Empire had a name. It came up out of a barrow on the ridge in a dead hand. It still cuts. It cuts better than your sword.'},
+    barrowflint:{name:'Barrow-flint blade', slot:'weapon', who:['sgt','brisk','kettle','ellis'], atk:1, dmg:[1,8,2], line:'A leaf of grey flint the length of a forearm, knapped so fine the edge is translucent, bound to an antler haft with sinew that should have rotted before the Empire had a name. It came up out of a barrow on the ridge in a dead hand. It still cuts. It cuts better than your sword.'},
     otatglove:{name:'Otataral-dusted glove', slot:'trinket', who:['sgt','brisk'], ac:1, line:'A plain riding glove, left on a stone where the Adjunct\'s tent stood. There is a fine red dust worked into the seams that will not brush out. Sorcery slides off the hand in it like rain off oilcloth: a mage\'s working will find the glove and forget what it was for. Tuft will not stand on the same side of the fire as it.'},
     scoutcloak:{name:'Malazan scout\'s cloak', slot:'armour', who:['ellis','kettle','sgt','vell'], ac:1, line:'Second Army issue, grey-green, rolled tight behind a saddle and strapped with a scout\'s knot. Toc\'s. The horse came back without him before dawn, lathered, and stood by the Fourth\'s fire because it had nowhere else to stand.'} },
 
@@ -17032,9 +17034,10 @@ ${SQUAD().includes('kettle') ? `"A *lantern*," Kettle says. "In *there*." She's 
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     fetemask:{name:'Fete mask', slot:'trinket', who:null, stat:{guile:1}, line:'A half-mask of dark red silk over stiffened linen, with a fringe of tiny brass bells along the lower edge that somebody has stuffed with wax so they will not ring. Murillio bought too many and could not choose. Guards do not wear masks. It is for after.'},
-    simtalhalberd:{name:'House guard\'s halberd', slot:'weapon', who:['brisk','sgt'], atk:1, rng:1, reach:true, ac:-1, line:'Reach: strikes an enemy two tiles off, the way Simtal\'s own guards did, but it takes both hands, so the shield goes on the back (−1 armour). Seven feet of ash with a blade on the end polished for show and sharpened by somebody who did not trust the show, handed out of a barrel at Lady Simtal\'s gate like an oar. You were not expected to use it. Brisk calls it a hat you hold, and uses it.'},
+    darusword:{name:'A Daru house-guard\'s sword', slot:'weapon', who:null, atk:1, dmg:[1,10,2], line:'A straight Daru longsword with a house\'s crest on the pommel and a guard of plain steel, made for a man who stands at a door all night and is paid to mean it. Heavier than a marine\'s blade and longer in the reach. Its owner left it in the straw of Simtal\'s stable yard, and did not ask for it back.'},
+    simtalhalberd:{name:'House guard\'s halberd', slot:'weapon', who:['brisk','sgt'], atk:1, rng:1, reach:true, ac:-1, dmg:[1,10,2], line:'It reaches over the front rank the way Simtal\'s own guards meant it to, and it takes both hands, so the shield goes on the back. Seven feet of ash with a blade on the end polished for show and sharpened by somebody who did not trust the show, handed out of a barrel at Lady Simtal\'s gate like an oar. You were not expected to use it. Brisk calls it a hat you hold, and uses it.'},
     bbstrap:{name:'Sapper\'s satchel strap', slot:'trinket', who:null, hp:2, line:'A Bridgeburner\'s spare strap, double-stitched, oiled, with a buckle filed smooth so it will not strike a spark. Hedge wore it through Mott Wood and Pale. For carrying something close to the ribs where it cannot swing. He did not say what. He did not need to.'},
-    blackedblade:{name:'Blacked Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, stat:{guile:1}, line:'Longer than the roof knives, soot-black from point to pommel so that not even the edge catches a lantern. A Guild blade made for a party: for walking into lamplight and out of it again without anyone remembering you were there.'} },
+    blackedblade:{name:'Blacked Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, stat:{guile:1}, dmg:[1,8,2], line:'Longer than the roof knives, soot-black from point to pommel so that not even the edge catches a lantern. A Guild blade made for a party: for walking into lamplight and out of it again without anyone remembering you were there.'} },
 
   card:{ id:'chains', name:'The Wain', house:'Unaligned', hue:'#9a9aa6',
     txt:`A wagon, huge and black, coming out of a dark that has no top to it, and chains running back from it into the dark, every link catching a light that isn't there. Across its bed, where the chains run out of the picture, the shadow of something long and straight. Tuft turns it twice. "Bound," she says. "At both ends. Whatever holds this doesn't let go of what it takes." She doesn't like it. She doesn't put it back.`,
@@ -17682,8 +17685,8 @@ Round the back is a stable yard: straw, a horse trough, lanterns on hooks, and a
 ${SQUAD().includes('kettle') ? `Kettle's hand is on her satchel. "Stables," she says. "Straw." She takes the hand away again. "No. *No.*"` : ''}`,
       ch:[{t:'"Close up."', go:()=>startBattle('house_guards',{})},
           {t:'Kettle rolls a sharper across the cobbles, well away from the straw.', tag:'uses 1 sharper', req:()=>SQUAD().includes('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('house_guards',{pre:true})}]}),
-    c6_after_guards:()=>{ const pre = preUsed('house_guards'); return {sp:'The stable yard', scene:'fete_street', fx:()=>{ S.f.c6_guardsFought=1; }, txt:
-`${pre ? `It isn't short, and it isn't quiet. Kettle's sharper saw to that, and the horses after it: a whole stable of guests' carriage pairs going up at once, and the stall doors coming out into the yard, and Simtal's halberds under the hooves before they'd got them level. The Fete on the other side of the wall heard it. Then it swallows the rest: the yard, and the arch, and the kitchen court beyond it,` : `It isn't short, and it's loud for a while, and then not, because the Fete on the other side of the wall swallows everything: the yard, and the arch, and the kitchen court beyond it,`} where the farrier sits down at last against the well with his hammer in his lap and won't get up again for anyone. When it's done you walk back through the arch, and the captain is still sitting in the straw against the horse trough with a hand pressed to his ribs, breathing in short pulls, and his men are down around him and through the arch, and none of them is dead, though one of them is thinking about it.
+    c6_after_guards:()=>{ const pre = preUsed('house_guards'); return {sp:'The stable yard', scene:'fete_street', fx:()=>{ S.f.c6_guardsFought=1; if (!S.f.c6_sword) { S.f.c6_sword = 1; gain('darusword'); } }, txt:
+`${pre ? `It isn't short, and it isn't quiet. Kettle's sharper saw to that, and the horses after it: a whole stable of guests' carriage pairs going up at once, and the stall doors coming out into the yard, and Simtal's halberds under the hooves before they'd got them level. The Fete on the other side of the wall heard it. Then it swallows the rest: the yard, and the arch, and the kitchen court beyond it,` : `It isn't short, and it's loud for a while, and then not, because the Fete on the other side of the wall swallows everything: the yard, and the arch, and the kitchen court beyond it,`} where the farrier sits down at last against the well with his hammer in his lap and won't get up again for anyone. When it's done you pick a good Daru sword with a house's crest on the pommel out of the straw, because nobody is coming back for it, and walk back through the arch, and the captain is still sitting in the straw against the horse trough with a hand pressed to his ribs, breathing in short pulls, and his men are down around him and through the arch, and none of them is dead, though one of them is thinking about it.
 
 The captain looks at the ring. He looks at you.
 
@@ -21883,6 +21886,23 @@ C7H.coda = key => {
 `In Darujhistan they light the lamps at dusk, street by street, blue, as if something under the city were breathing out. In a garden on the Estate hill a small wrong house keeps its door shut and its guests in. At the bottom of the lake a coin lies in the mud on neither face. Somewhere over water, a mountain drifts with a lord in it who was interested once, and is no longer. The gods don't say what they made of any of it. Nobody ever asks the gods anything, in the end, but marines, and marines don't wait for the answer.`,
 `Three days after the Pale fell, a sergeant came into a tent on the cadre row with ${S.ending === 'claw' ? `empty hands and all five, and a mage heard the sergeant out without looking up from her cards` : `a satchel and all five, and a mage looked up from her cards and said it was a nice touch`}. East on the Rhivi road, a child in good red wool is going to grow up too fast and remember a great many things. One of them, perhaps, will be that. ${last} Somebody noticed. It was enough.`];
 };
+
+/* ---- the items pass (v8.1): Book One's three new weapons, drawn in the Arms board's style (200×150 on the leather-dark radial,
+   lit from the upper left), so the lint's "every item has a picture" holds without rebuilding the canvas boards ---- */
+function b1xItem(key, label, body){ const w = 200, h = 150, id = 'b1x-' + key.replace(/[^a-z0-9]/g, '');
+  ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#3a2c1e"></stop><stop offset="1" stop-color="#0f0c0a"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect>\n${body}</svg>`;
+  if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
+/* the Second Army halberd: issue ash, an issue blade, a tally cut under the stamp */
+b1xItem('secondhalberd', 'A Second Army halberd', '<path d="M34 140 L166 20" stroke="#7a5a36" stroke-width="5" stroke-linecap="round"/><path d="M36 138 L164 22" stroke="#a07a4c" stroke-width="1.4" opacity=".7"/>'
+  + '<path d="M150 26 Q168 4 186 14 Q176 30 170 48 Q160 38 150 36 Z" fill="#b8bcc2"/><path d="M152 28 Q168 10 182 16" stroke="#eef0f2" stroke-width="1.2" fill="none"/><path d="M160 20 L176 2 L170 18 Z" fill="#d0d4d8"/><path d="M146 40 L136 54 L150 44 Z" fill="#9a9ea4"/>'
+  + '<rect x="88" y="78" width="14" height="6" fill="#2a1a0e" transform="rotate(-42 95 81)"/><path d="M70 104 L76 98 M74 108 L80 102 M78 112 L84 106" stroke="#3a2614" stroke-width="1.4"/><circle cx="160" cy="18" r="6" fill="#ffffff" opacity=".07"/>');
+/* the Daru roof-crossbow: black wood and brass, a belt-hook, a quarrel laid */
+b1xItem('darucrossbow', 'A Daru roof-crossbow', '<ellipse cx="100" cy="128" rx="64" ry="6" fill="#000" opacity=".35"/><path d="M40 82 L150 70 L156 80 L46 94 Z" fill="#2a1e16"/><path d="M42 84 L150 72" stroke="#5a4430" stroke-width="1.2"/>'
+  + '<path d="M140 40 Q154 74 140 110" stroke="#1a1410" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M141 42 Q152 74 141 108" stroke="#c9a24a" stroke-width="1.4" fill="none" opacity=".7"/><path d="M140 40 L112 76 L140 110" stroke="#d8d0c0" stroke-width="1" fill="none"/>'
+  + '<rect x="100" y="72" width="16" height="8" rx="2" fill="#b8902a"/><path d="M60 98 L68 116 L76 114 L70 96 Z" fill="#b8902a"/><path d="M112 76 L176 70" stroke="#c9ccd0" stroke-width="2"/><path d="M176 66 L186 70 L176 74 Z" fill="#c9ccd0"/><circle cx="66" cy="80" r="5" fill="#ffffff" opacity=".06"/>');
+/* the Daru house-guard's sword: a straight longsword, a plain guard, a house's crest on the pommel */
+b1xItem('darusword', 'A Daru house-guard\'s sword', '<path d="M60 112 L164 26 L170 30 L68 118 Z" fill="#c9ccd0"/><path d="M62 112 L166 28" stroke="#f4f6f8" stroke-width="1"/><path d="M48 98 L76 128" stroke="#9a9ea4" stroke-width="6" stroke-linecap="round"/>'
+  + '<path d="M58 120 L40 138" stroke="#3a2a1c" stroke-width="7" stroke-linecap="round"/><path d="M44 134 L50 128 M48 138 L54 132" stroke="#c9a24a" stroke-width="1.4"/><circle cx="36" cy="142" r="6" fill="#c9a24a"/><circle cx="36" cy="142" r="2.4" fill="#5a3a18"/><circle cx="150" cy="40" r="6" fill="#ffffff" opacity=".07"/>');
 
 /* ============ Book Two: Deadhouse Gates — the squad, the Chain, Hackle ============ */
 /* Book Two is its own campaign: a new squad of the Seventh on the Chain of Dogs, from the fall of Hissar toward Aren.
@@ -34760,28 +34780,28 @@ const B2_ITEMS = {
   b2_auxtulwar:{name:'An auxiliary\'s tulwar', slot:'weapon', who:B2W.front, atk:1, dmg:[1,8,3], line:'A Hissari auxiliary\'s tulwar from the garrison racks, the blue cord on the grip faded white. Heavier at the tip than a Malazan blade, and it wants to be swung, not pointed.'},
   b2_auxmail:{name:'Auxiliary mail', slot:'armour', who:['sgt', 'haddat', 'redblade', 'tangle'], ac:2, hp:2, heavy:true, line:'A long auxiliary mail shirt off the garrison racks, oiled against the sand. Good mail. Heavy mail: at noon in the heat it is an oven, unless the wearer drank first.'},
   /* Chapter 2: a Weasel horse-boy at Dryj Spring; Semk loot on the Sekala's west bank, sold by a camp follower for water */
-  b2_horsebow:{name:'A Weasel horse-bow', slot:'weapon', who:['sathi', 'sgt'], atk:1, rng:1, line:'A Weasel Clan horse-bow, short and doubled back on itself, horn and sinew, with a fresh string. The boy who gave it to you had a better one. He made a point of saying so.'},
+  b2_horsebow:{name:'A Weasel horse-bow', slot:'weapon', who:['sathi', 'sgt'], atk:1, rng:1, dmg:[1,8,0], line:'A Weasel Clan horse-bow, short and doubled back on itself, horn and sinew, with a fresh string. The boy who gave it to you had a better one. He made a point of saying so.'},
   b2_semkaxe:{name:'A Semk war-axe', slot:'weapon', who:B2W.front, dmg:[1,10,2], line:'A broad-bladed Semk axe with the god\'s marks burnt into the haft. It came up off the west bank after the ford. It is heavy in the head and does not care what it hits.'},
   b2_fetish:{name:'A Semk god-fetish', slot:'trinket', who:null, stat:{wits:1}, line:'A knot of hair, bone and painted clay off a dead Semk on the west bank: the god they wore, before the spirits ate it. Held by a squadmate who casts, a spell the fouled warren would spoil comes out clean instead, once a chapter. Marrow says not to ask it why.'},
   b2_wickanhide:{name:'Wickan hardened hide', slot:'armour', who:B2W.light, ac:1, mv:1, line:'A Wickan rider\'s hide coat, boiled and hardened, fringed at the yoke. It turns a knife and it does not cook you. The Wickans laugh at Malazans in mail.'},
   /* Chapter 3: a Kanese tinker at the P'atha; the column's stragglers at the Shallows */
-  b2_tithlance:{name:'A Tithansi lance', slot:'weapon', who:['redblade', 'haddat', 'sgt'], atk:1, rng:1, ac:-1, reach:true, line:'A Tithansi lance, cut down to a long spear. It reaches over a shield to the man behind it, and leaves the one holding it a little open.'},
+  b2_tithlance:{name:'A Tithansi lance', slot:'weapon', who:['redblade', 'haddat', 'sgt'], atk:1, rng:1, ac:-1, reach:true, dmg:[1,10,1], line:'A Tithansi lance, cut down to a long spear. It reaches over a shield to the man behind it, and leaves the one holding it a little open.'},
   b2_robe:{name:'A desert robe', slot:'trinket', who:null, line:'A pale Odhan robe worn over whatever else you wear, the way the tribes wear them. Whoever wears it never feels the heat in a noon fight, mail or no mail. The Malazans laughed at the tribes for these. The Malazans have stopped laughing.'},
   /* Chapter 4: the Council's carriages. A noble's man sells what his master will not miss, for the water his master wants */
-  b2_noblesabre:{name:'A noble\'s sabre', slot:'weapon', who:B2W.blade, atk:2, line:'A Falari-steel sabre with a silver basket hilt and a crest somebody has scratched off. It has never been used. It is much the best blade in the squad.'},
+  b2_noblesabre:{name:'A noble\'s sabre', slot:'weapon', who:B2W.blade, atk:2, dmg:[1,8,1], line:'A Falari-steel sabre with a silver basket hilt and a crest somebody has scratched off. It has never been used. It is much the best blade in the squad.'},
   b2_officerscale:{name:'An officer\'s scale', slot:'armour', who:B2W.front, ac:3, heavy:true, line:'A dead officer\'s scale coat, Malazan, the plates still bright. The best armour on the Chain. In a noon fight it is also the hottest thing on the Chain.'},
   /* Chapter 4, the far bank: a Foolish Dog who crossed on the Silanda */
-  b2_plank:{name:'A plank of the Silanda', slot:'trinket', who:null, hp:2, line:'A splinter of black wood off the Silanda, the burnt ship that should not float, with something carved in it nobody can read. Once a fight, when the bearer is hit, the wood bites back: 3 damage to whoever struck. Do not leave it on the ground at night.'},
+  b2_plank:{name:'A plank of the Silanda', slot:'trinket', who:null, hp:2, line:'A splinter of black wood off the Silanda, the burnt ship that should not float, with something carved in it nobody can read. Once a fight, when the bearer is hit, the wood bites back at whoever struck. Do not leave it on the ground at night.'},
   /* Chapter 5: the Jaghut tower; the Trygalle Trade Guild, who trade in anything, and in water like everyone else */
-  b2_coldknife:{name:'A cold iron knife', slot:'weapon', who:['marrow', 'warlock', 'tangle', 'sathi', 'sgt'], atk:1, line:'A knife found in the ice of the Jaghut tower, cold to hold and never warmer. A blow it lands leaves the wound cold: the enemy is slowed on its next turn. Keth\'s grandmother will not touch it.'},
-  b2_tcrossbow:{name:'A Trygalle crossbow', slot:'weapon', who:['tangle', 'sgt', 'sathi'], atk:1, rng:1, dmg:[1,8,2], line:'A shareholder\'s crossbow, Trygalle-made, with a windlass that winds itself if you speak to it nicely. Tangle says it is the best crossbow on two continents and will not let anybody else oil it.'},
+  b2_coldknife:{name:'A cold iron knife', slot:'weapon', who:['marrow', 'warlock', 'tangle', 'sathi', 'sgt'], atk:2, dmg:[1,6,2], line:'A knife found in the ice of the Jaghut tower, cold to hold and never warmer. A blow it lands leaves the wound cold: the enemy is slowed on its next turn. Keth\'s grandmother will not touch it.'},
+  b2_tcrossbow:{name:'A Trygalle crossbow', slot:'weapon', who:['tangle', 'sgt', 'sathi'], atk:1, dmg:[1,10,2], line:'A shareholder\'s crossbow, Trygalle-made, with a windlass that winds itself if you speak to it nicely. Tangle says it is the best crossbow on two continents and will not let anybody else oil it.'},
   b2_tleathers:{name:'Trygalle leathers', slot:'armour', who:B2W.light, ac:2, line:'Shareholder\'s leathers, layered and stitched with something that is not thread, scuffed by roads that are not on any map.'},
   b2_tskin:{name:'A Trygalle skin', slot:'trinket', who:null, line:'A Trygalle waterskin, with a stopper on a chain. It holds more than it should. Carried by a squadmate, it means one rest a chapter costs no water. The shareholder said not to look inside. Nobody has.'},
   /* Chapter 6: the Khundryl, at Sanimon */
   b2_horsehair:{name:'A Khundryl horsehair cloak', slot:'armour', who:null, ac:1, stat:{guile:1}, line:'A Khundryl cloak of black horsehair, oiled, that sheds the dust and the rain and most of the arrows. The Khundryl wear them painted for their own funerals. This one is not painted. Yet.'},
   b2_khundrylblade:{name:'A Khundryl blade', slot:'weapon', who:B2W.blade, atk:1, dmg:[1,8,3], line:'A Khundryl horseman\'s curved blade, long for a man on foot. The warrior who traded it said it had been in three wars and wanted a fourth.'},
   /* Chapter 7: Aren. The stores, open to the Seventh's squads before the wall; and on the quay, after the crows, a feather */
-  b2_arensword:{name:'An Aren longsword', slot:'weapon', who:B2W.front, atk:2, dmg:[1,8,2], line:'A longsword from the Aren stores, never drawn, still in its grease. Ten thousand men in this city have one just like it and have not used it either.'},
+  b2_arensword:{name:'An Aren longsword', slot:'weapon', who:B2W.front, atk:1, dmg:[1,10,3], line:'A longsword from the Aren stores, never drawn, still in its grease. Ten thousand men in this city have one just like it and have not used it either.'},
   b2_arenmail:{name:'Aren Guard mail', slot:'armour', who:['sgt', 'haddat', 'redblade', 'tangle'], ac:3, hp:2, heavy:true, line:'Clean mail from the Aren stores, oiled, every ring whole. In a noon fight it is an oven, like all mail. In Aren it has never been in a noon fight.'},
   b2_crowfeather:{name:'A crow\'s feather', slot:'trinket', who:null, stat:{might:1, wits:1, guile:1}, line:'A black feather the length of a hand, from the cloak of feathers the Fist wore, that a Wickan child picked up off the quay and gave to the sergeant without a word. The Wickans do not say whose it was. They do not need to.'},
 };
@@ -38261,8 +38281,8 @@ Sohra makes a sound you have never heard from her, and goes up the gully at a ru
     b3_c2_heavy:{name:'Fourth Regiment heavy', sig:'h', kind:'b2soldier', hp:22, ac:16, atk:4, dmg:[1,8,2], rng:1, mv:3, init:1, verb:'puts a shortsword into'} },
 
   gear:{
-    b3_c2_hornbow:{name:'A bhederin-horn bow', slot:'weapon', who:['sohra', 'kettle', 'ellis'], atk:1, rng:1, line:'A Rhivi bow of bhederin horn and sinew, short and doubled back on itself, the grip wrapped in hide worn dark by one hand. It belonged to a rider who went down by a stream in the far grass. It pulls like a mule.'},
-    b3_c2_bundle:{name:'A Rhivi spirit-bundle', slot:'trinket', who:null, stat:{wits:1}, line:'A knot of grass, bone beads and a lock of bhederin hair, tied in red thread, the way the old women of the Mhybe\'s clan tie them for riders going into bad country. Whoever carries it is never shaken by the dread at a fight\'s start: no −1 to hit from it. Sohra says the spirits in it are not strong. She says they are stubborn, which is better.'},
+    b3_c2_hornbow:{name:'A bhederin-horn bow', slot:'weapon', who:['sohra', 'kettle', 'ellis'], atk:1, rng:1, dmg:[1,8,1], line:'A Rhivi bow of bhederin horn and sinew, short and doubled back on itself, the grip wrapped in hide worn dark by one hand. It belonged to a rider who went down by a stream in the far grass. It pulls like a mule.'},
+    b3_c2_bundle:{name:'A Rhivi spirit-bundle', slot:'trinket', who:null, stat:{wits:1}, line:'A knot of grass, bone beads and a lock of bhederin hair, tied in red thread, the way the old women of the Mhybe\'s clan tie them for riders going into bad country. Whoever carries it is never shaken by the dread at a fight\'s start. Sohra says the spirits in it are not strong. She says they are stubborn, which is better.'},
     b3_c2_mace:{name:'A Seerdomin\'s grey mace', slot:'weapon', who:['sgt', 'brisk', 'greysword', 'vell'], dmg:[1,10,2], line:'A long-hafted mace of grey iron off the Seerdomin on the Barghast hill, flanged, heavy in the head, with a hand-grip worn smooth by somebody who used it more than he prayed with it. It is colder to hold than iron ought to be. Tuft will not say why.'} },
 
   scenes:{
@@ -39832,7 +39852,7 @@ Dannet, beside you, says one word in Capan. You do not need it translated.`,
   gear:{
     b3_c3_shield:{name:'A Capan round shield', slot:'armour', who:['brisk', 'sgt', 'greysword'], ac:2, line:'A Capan round shield, boards under painted leather, dark red with the city\'s gold dome on it and a bronze boss. A Gidrath carried it on the Thrall\'s steps for nine days. It has the marks of all nine.'},
     b3_c3_surcoat:{name:'A Grey Sword\'s surcoat', slot:'armour', who:null, ac:1, hp:3, line:'Grey wool, split at the hem and torn, with the boar\'s head on the breast picked out in black thread and the thread cut through where Fener was. The wolf is not on it yet. It belonged to an acolyte who will not want it back.'},
-    b3_c3_spear:{name:'A Beklite\'s spear', slot:'weapon', who:['brisk', 'sgt', 'greysword', 'kettle'], atk:1, rng:1, ac:-1, reach:true, line:'A long ash spear with a broad leaf blade of black iron and a grey rag knotted under it. It reaches over a shield to the man behind, and leaves the one holding it a little open. The Pannions fought that way, and that is why so many of them are dead.'},
+    b3_c3_spear:{name:'A Beklite\'s spear', slot:'weapon', who:['brisk', 'sgt', 'greysword', 'kettle'], atk:1, rng:1, ac:-1, reach:true, dmg:[1,8,2], line:'A long ash spear with a broad leaf blade of black iron and a grey rag knotted under it. It reaches over a shield to the man behind, and leaves the one holding it a little open. The Pannions fought that way, and that is why so many of them are dead.'},
     b3_c3_stripe:{name:'Treach\'s stripe', slot:'trinket', who:null, atk:1, line:'A strip of old tawny hide barred with black, on a thong with a bone bead, cut from the tiger skin that hung over the altar of Trake\'s temple in Capustan. It is warm. It should not be.'} },
 
   scenes:{
@@ -41448,7 +41468,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b3_c4_ropehooks:{name:'Grey Sword rope-and-hooks', slot:'trinket', who:null, atk:1, line:'A coil of grey rope with two iron hooks back to back at the end of it and a strip of grey cloth at the knot. The Grey Swords gave it after the gully. Whoever carries it throws the Wolves\' Rope one pace further.'},
-    b3_c4_flint:{name:'T\'lan Imass flint blade', slot:'weapon', who:['sgt', 'brisk', 'greysword', 'kettle', 'ohl'], atk:1, line:'A long flint blade, knapped to an edge you could shave with, on a haft of antler bound in hide gone to dust. It was lying where something had stood and watched, and was not there before. It goes cold near the K\'Chain Che\'Malle: +3 damage against them.'},
+    b3_c4_flint:{name:'T\'lan Imass flint blade', slot:'weapon', who:['sgt', 'brisk', 'greysword', 'kettle', 'ohl'], atk:1, dmg:[1,8,2], line:'A long flint blade, knapped to an edge you could shave with, on a haft of antler bound in hide gone to dust. It was lying where something had stood and watched, and was not there before. It goes cold near the K\'Chain Che\'Malle, and bites deeper into them.'},
     b3_c4_token:{name:'Capan temple token', slot:'trinket', who:null, stat:{wits:1}, line:'A worn bronze disc on a knotted cord, stamped with a domed temple and a ring of marks, green in the hollows. Burn\'s, the old healer said: the Sleeping Goddess, whose blood runs in every warren, and something in it now. "Somebody should still pray to her," she said.'} },
 
   scenes:{
@@ -42859,9 +42879,9 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     b3_c5_ksword:{name:'Hired sword', sig:'h', kind:'b3_c5_kallorman', hp:20, ac:13, atk:5, dmg:[1,8,3], rng:1, mv:4, init:2, verb:'swings at'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b3_c5_knife:{name:'Blood-iron knife', slot:'trinket', who:null, atk:1, line:'An Ilgres shaman\'s long knife, darker than iron ought to be, with a rime along the fuller that does not melt in the Domin\'s heat. It has had a Malazan\'s blood and wants nobody else\'s. Whoever wears it strikes Seerdomin and K\'ell Hunters for 2 more.'},
+    b3_c5_knife:{name:'Blood-iron knife', slot:'trinket', who:null, atk:1, line:'An Ilgres shaman\'s long knife, darker than iron ought to be, with a rime along the fuller that does not melt in the Domin\'s heat. It has had a Malazan\'s blood and wants nobody else\'s. Whoever wears it strikes Seerdomin and K\'ell Hunters harder.'},
     b3_c5_chain:{name:'A Pannion chain of office', slot:'trinket', who:null, stat:{guile:1}, line:'Grey iron links and a disc of bone carved with an open eye, taken off a dead Seerdomin on a temple step in a burnt town. People from the Domin look at whoever wears it differently. The Fourth would rather not know how differently.'},
-    b3_c5_skin:{name:'A Rhivi water-skin', slot:'trinket', who:null, hp:2, line:'A bhederin-bladder skin stitched with sinew and hung with one bone bead, from a herd-mother at a well in the Domin. Water kept in it stays sweet. While the squad carries it, a rest at a fire lowers dread by 1 more.'} },
+    b3_c5_skin:{name:'A Rhivi water-skin', slot:'trinket', who:null, hp:2, line:'A bhederin-bladder skin stitched with sinew and hung with one bone bead, from a herd-mother at a well in the Domin. Water kept in it stays sweet. While the squad carries it, a rest at a fire lowers dread a little further.'} },
 
   scenes:{
     b3_c5_catlin:{loc:'The Catlin', sub:'The south shore', cap:'The broken bridge on the trader road, its middle span gone, and below it a mile of brown ford churned to mud by two armies.', amb:'plain'},
@@ -44227,7 +44247,7 @@ ${b3In('greysword') ? `
 
   gear:{
     b3_c6_vambrace:{name:'A Moranth chitin vambrace', slot:'trinket', who:null, ac:1, line:'A forearm guard of black chitin in overlapping plates, lighter than leather and harder than iron. A Moranth flier unbuckled it from its own arm and held it out without a word, the way the Moranth do everything. It was warm. It still is, a little.'},
-    b3_c6_axe:{name:'A barge-builder\'s axe', slot:'weapon', who:['brisk', 'sgt'], dmg:[1,10,2], line:'A broad, thin, bearded blade on a long ash haft, for squaring timber, not men. It squares men. Oskan the wright keeps one like it for every barge he has built and gave this one away, which he says he has never done.'},
+    b3_c6_axe:{name:'A barge-builder\'s axe', slot:'weapon', who:['brisk', 'sgt'], dmg:[1,12,2], line:'A broad, thin, bearded blade on a long ash haft, for squaring timber, not men. It squares men. Oskan the wright keeps one like it for every barge he has built and gave this one away, which he says he has never done.'},
     b3_c6_feather:{name:'A Condor feather', slot:'trinket', who:null, line:'A long black flight feather, ragged at the barbs, ivory at the quill. It is cold to hold, colder than it should be, and now and then it lifts in a wind that is not there. Whoever wears it is never taken by surprise: it lifts first.'} },
 
   scenes:{
@@ -46093,7 +46113,7 @@ const b3c7AnvilCh = who => ({t:who === 'dannet' ? '"Show me how the acolytes car
 
 /* ---- the kit: the grey mail off a Seerdomin captain (both roads), and a K'ell Hunter's blade (the mortal fight, either road) ---- */
 const B3C7_GEAR = {
-  b3_c7_greymail:{name:'Seerdomin grey mail', slot:'armour', who:null, ac:1, hp:2, line:'Fine grey links off a Seerdomin captain, cold to the touch however long you wear it. The first blow in each fight lands 2 lighter: the links take it, and ring.'},
+  b3_c7_greymail:{name:'Seerdomin grey mail', slot:'armour', who:null, ac:1, hp:2, line:'Fine grey links off a Seerdomin captain, cold to the touch however long you wear it. The first blow in each fight lands lighter: the links take it, and ring.'},
   b3_c7_hunterblade:{name:'A K\'ell Hunter\'s blade', slot:'weapon', who:['sgt', 'brisk', 'greysword'], dmg:[2, 6, 2], line:'A blade as long as a man\'s arm, broken off at the wrist of the thing that grew it. It was never forged. Nobody who carries it says it is light, and nobody who carries it puts it down.'},
 };
 /* the grey mail: the first blow on its wearer in a fight lands 2 lighter (Book Three only) */
@@ -50592,10 +50612,12 @@ const B4CH1 = {
     b4_c1_ringleader:{name:'The ringleader', sig:'L', kind:'b4_c1_tough', hp:22, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a bunk-leg down on'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b4_c1_finger:{name:'A finger bone on a thong', slot:'trinket', who:null, line:'A finger bone, small and very white, drilled and tied on a leather thong the way the Adjunct\'s order says: the same way, every soldier, so nobody can say whose idea it was. Whoever wears it starts every fight steady while the company holds its nerve (Nerve 5 or more).'},
+    b4_c1_issuemail:{name:'Fourteenth issue mail', slot:'armour', role:'mail', who:null, ac:2,
+      line:'A shirt of new Malazan issue mail, knee-length and still stiff with the armourer\'s oil, the Fourteenth\'s mark stamped on a tin tag at the collar. The clerk signed it over with the water because the pass said "and kit". It has never been hit. The Third has, and knows which of the two matters more.'},
+    b4_c1_finger:{name:'A finger bone on a thong', slot:'trinket', who:null, line:'A finger bone, small and very white, drilled and tied on a leather thong the way the Adjunct\'s order says: the same way, every soldier, so nobody can say whose idea it was. Whoever wears it starts every fight steady while the company holds its nerve.'},
     b4_c1_relic:{name:'"Coltaine\'s finger"', slot:'trinket', who:['sgt', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas', 'redblade', 'warlock'], stat:{guile:1},
       line:'A dried finger in a glass phial with a wax seal and a scrap of red cloth tied round the neck. The seller swore it was Coltaine\'s. It is a dog\'s toe, Marrow says, or a goat\'s. Whoever carries it is a little better at lying, which says something. Haddat will not touch it.'},
-    b4_c1_redsash:{name:'A Red Blade\'s cast-off sash', slot:'trinket', who:null, ac:1, line:'A red silk sash, frayed at one end where somebody cut a badge off it. A Red Blade threw it down in the street. On anyone it is a little armour, and a statement. On Ramin it is more than that: he hits +1 wearing it.'},
+    b4_c1_redsash:{name:'A Red Blade\'s cast-off sash', slot:'trinket', who:null, ac:1, line:'A red silk sash, frayed at one end where somebody cut a badge off it. A Red Blade threw it down in the street. On anyone it is a little armour, and a statement. On Ramin it is more than that: he hits truer wearing it.'},
     b4_c1_durhangpipe:{name:'A confiscated durhang pipe', slot:'trinket', who:null, line:'A short clay pipe with a brass bowl-cap, still smelling of the resin. Once a chapter, at a fire, it can be passed round: the rattled settle and the sore stop feeling it. Marrow disapproves. The quartermaster\'s clerk would buy it.'} },
 
   scenes:{
@@ -50870,8 +50892,8 @@ The horse he leaves with the company. "There is no room for a horse in a squad o
     b4_c1_sweep_again:()=>({sp:'The Red Blades', txt:
 `The Red Blades are three taverns further down the street, carrying out casks. ${b4In('redblade') ? `One of them sees Ramin with the squad and raises a hand. Ramin raises his back.` : S.f.b4_raminDone === 2 ? `Ramin, among them, raises a hand.` : `The soldiers have stopped calling them names. It is too hot.`}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_to_quay:()=>({sp:'The quay', scene:'b4_c1_quay', fx:()=>{ S.f.b4_c1_quay = 1; S.f.b4_c1_water = 1; }, txt:
-`The quay stores are a long low shed at the head of the quay, and the quartermaster's clerk is sitting in its door with his book, and he signs the Second Company's water and rations over to Hollet's pass with the air of a man giving away his own children. The company's carts are already waiting. It takes a quarter of an hour.
+    b4_c1_to_quay:()=>({sp:'The quay', scene:'b4_c1_quay', fx:()=>{ S.f.b4_c1_quay = 1; S.f.b4_c1_water = 1; if (!S.f.b4_c1_mail) { S.f.b4_c1_mail = 1; gain('b4_c1_issuemail'); } }, txt:
+`The quay stores are a long low shed at the head of the quay, and the quartermaster's clerk is sitting in its door with his book, and he signs the Second Company's water and rations over to Hollet's pass with the air of a man giving away his own children. The company's carts are already waiting. It takes a quarter of an hour. Hollet's pass says *and kit*, so the clerk adds a shirt of new issue mail to the Third's line, sighing, and signs for that too.
 
 The quay is not watching the carts. It is watching the ships.
 
@@ -51573,6 +51595,10 @@ function b41Item(key, label, body){ const w = 240, h = 130, id = 'c41-' + key.re
   ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.66"><stop offset="0" stop-color="#5a4a34"></stop><stop offset=".7" stop-color="#2a2218"></stop><stop offset="1" stop-color="#121214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect>\n${body}</svg>`;
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* the finger bone, drilled and tied on a leather thong the way the order says */
+/* Fourteenth issue mail: new links, still oiled, a tin tag at the collar */
+b41Item('b4_c1_issuemail', 'Fourteenth issue mail', '<defs><pattern id="c41imr" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.8" fill="none" stroke="#c8ccd2" stroke-width=".9"/></pattern></defs><ellipse cx="120" cy="114" rx="56" ry="7" fill="#000" opacity=".35"/>'
+  + '<path d="M92 18 L108 14 Q120 24 132 14 L148 18 L176 44 L162 56 L156 50 L156 110 L84 110 L84 50 L78 56 L64 44 Z" fill="#5a5e66"/><path d="M92 18 L108 14 Q120 24 132 14 L148 18 L176 44 L162 56 L156 50 L156 110 L84 110 L84 50 L78 56 L64 44 Z" fill="url(#c41imr)"/>'
+  + '<rect x="112" y="20" width="16" height="9" rx="1" fill="#c8c0a8"/><path d="M114 24 L126 24" stroke="#6a6250" stroke-width="1.2"/><path d="M84 104 L156 104" stroke="#3a3e44" stroke-width="2"/><circle cx="100" cy="36" r="8" fill="#fff" opacity=".07"/>');
 b41Item('b4_c1_finger', 'A finger bone on a thong', '<g transform="translate(120 66) scale(1.4) translate(-120 -66)"><ellipse cx="120" cy="72" rx="70" ry="34" fill="#f0e0b0" opacity=".06"/><path d="M40 30 Q80 62 112 66 M200 30 Q160 62 128 66" stroke="#6a4626" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M40 30 Q80 62 112 66" stroke="#9a7048" stroke-width="1" fill="none" opacity=".7"/>'
   + '<g transform="rotate(-8 120 80)"><path d="M104 66 Q100 60 106 58 Q114 57 118 62 L146 64 Q154 60 160 64 Q164 70 158 76 Q154 80 146 76 L118 78 Q112 84 104 80 Q98 74 104 66 Z" fill="#e8dcc0"/><path d="M118 66 L146 67" stroke="#fff8e8" stroke-width="2" opacity=".7"/><path d="M118 75 L146 74" stroke="#a8987a" stroke-width="1.6"/>'
   + '<circle cx="110" cy="70" r="3.4" fill="#2a1c10"/><path d="M112 64 Q116 70 112 76" stroke="#c8b898" stroke-width="1" fill="none"/></g><path d="M112 66 Q116 72 110 74 Q104 72 108 66" stroke="#6a4626" stroke-width="2.4" fill="none"/></g>');
@@ -51842,11 +51868,11 @@ const B4CH2 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c2_crowfeather:{name:'A crow feather from the Fall', slot:'trinket', who:null, stat:{wits:1},
-      line:'A long black flight feather from the hill where the Fist died, taken by leave of an old woman of the Crow, tied with a twist of red wool. On the Chain\'s bone it sits as if it had always been meant to. Whoever wears it notices things a moment sooner: +1 wits.'},
+      line:'A long black flight feather from the hill where the Fist died, taken by leave of an old woman of the Crow, tied with a twist of red wool. On the Chain\'s bone it sits as if it had always been meant to. Whoever wears it notices things a moment sooner.'},
     b4_c2_fetish:{name:'A braided fetish off the trees', slot:'trinket', who:null, ac:1,
-      line:'A plait of horsehair and red thread with a small painted soldier knotted into it, fallen from one of the empty trees on the Aren Way into the road, where the wagons would have had it. Not cut: picked up. Haddat ties it to a shield rim the Hissari way. On anyone it turns a blow now and then: +1 armour.'},
+      line:'A plait of horsehair and red thread with a small painted soldier knotted into it, fallen from one of the empty trees on the Aren Way into the road, where the wagons would have had it. Not cut: picked up. Haddat ties it to a shield rim the Hissari way. On anyone it turns a blow now and then.'},
     b4_c2_milestone:{name:'A chip of the last milestone', slot:'trinket', who:null,
-      line:'A flat chip of grey stone knocked off the last milestone on the Aren Way, the one the Aren Guard counted the city from. It takes an edge like a temple whetstone. Whoever carries it puts a better edge on before a fight: the first blow that lands in a fight does +1 damage.'} },
+      line:'A flat chip of grey stone knocked off the last milestone on the Aren Way, the one the Aren Guard counted the city from. It takes an edge like a temple whetstone. Whoever carries it puts a better edge on before a fight: the first blow that lands in a fight bites deeper.'} },
 
   scenes:{
     b4_c2_trees:{loc:'The Aren Way', sub:'The empty trees · the first day out', cap:'The trees along the Way, every one empty, every one hung with braids and painted soldiers, and the column going north under them in its own dust.', amb:'explore'},
@@ -53120,14 +53146,14 @@ const B4CH3 = {
     b4_c3_headman:{name:'The headman', sig:'H', kind:'b4_c3_headman', hp:32, ac:13, atk:6, dmg:[1,10,2], rng:1, mv:3, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a skull-hung staff down on'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b4_c3_khundrylknife:{name:'A Khundryl knife', slot:'weapon', who:['sgt', 'haddat', 'sathi', 'tangle', 'tallow', 'darrut', 'orvas', 'redblade', 'warlock'], atk:1,
-      line:'A long curved knife with a horn grip wound in horsehair and a black bead on a thong at the pommel. The Khundryl give them to people they mean to see again. On anyone it is a good knife: +1 to hit. Orvas says it is a better promise.'},
+    b4_c3_khundrylknife:{name:'A Khundryl knife', slot:'weapon', who:['sgt', 'haddat', 'sathi', 'tangle', 'tallow', 'darrut', 'orvas', 'redblade', 'warlock'], atk:2, dmg:[1,6,2],
+      line:'A long curved knife with a horn grip wound in horsehair and a black bead on a thong at the pommel. The Khundryl give them to people they mean to see again. On anyone it is a good knife. Orvas says it is a better promise.'},
     b4_c3_bonebead:{name:'A bead from the ford', slot:'trinket', who:null, hp:3,
-      line:'A small bead of bone, drilled, worn smooth by the river, that came up out of Vathar Crossing in somebody\'s hand. Some woman of the Chain wore it in her hair. Whoever wears it has a little more in them before they go down: +3 health. Haddat would rather it were hers to carry.'},
+      line:'A small bead of bone, drilled, worn smooth by the river, that came up out of Vathar Crossing in somebody\'s hand. Some woman of the Chain wore it in her hair. Whoever wears it has a little more in them before they go down. Haddat would rather it were hers to carry.'},
     b4_c3_cup:{name:'A Khundryl horn cup', slot:'trinket', who:null, stat:{guile:1},
-      line:'A drinking horn cut short and capped with copper, a little dented, that a Khundryl war chief filled at the feast and did not ask for back. Whoever carries it is a little better at talk: +1 guile. It still smells of what was in it.'},
+      line:'A drinking horn cut short and capped with copper, a little dented, that a Khundryl war chief filled at the feast and did not ask for back. Whoever carries it is a little better at talk. It still smells of what was in it.'},
     b4_c3_ferryrope:{name:'A length of the old ferry rope', slot:'trinket', who:null,
-      line:'A fathom of old hemp rope, black with the river, cut from the post where the ferry used to cross the Vathar before there was anybody to cross it for. Knotted round a wrist, it steadies the hand: once a chapter, +1 to a check. Then it has done its turn until the next stretch of road.'} },
+      line:'A fathom of old hemp rope, black with the river, cut from the post where the ferry used to cross the Vathar before there was anybody to cross it for. Knotted round a wrist, it steadies the hand: once a chapter, a check goes a little better for it. Then it has done its turn until the next stretch of road.'} },
 
   scenes:{
     b4_c3_shadow:{loc:'The road to the Vathar', sub:'The ridges · dust that is not the column\'s', cap:'Dry hills folding away under a white sky, and on the far ridges a long smear of dust with riders in it, too far to count.', amb:'wind'},
@@ -54277,12 +54303,14 @@ const B4CH4 = {
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c4_lampball:{name:'An unbroken oil bola', slot:'trinket', who:null,
       line:'Two clay lamps of oil on a plaited cord, the wicks black, the seals unbroken: one of the riders\' bolas that came down in the ashes of the 9th\'s wagons and did not break. Whoever carries it can throw it, once in the whole road: it bursts and burns as the riders\' did. Then it is gone. Tangle would like it carried a long way from his satchel.'},
-    b4_c4_setibow:{name:'A Seti horn bow', slot:'weapon', who:['tebbet', 'sathi', 'sgt'], atk:1, rng:1,
-      line:'A short recurved bow of horn and sinew, lacquered dark, with a Seti woman\'s marks burnt into the grip. It was made to be shot from a horse, and it throws further than a bow that size should: +1 to hit, +1 range. She gave it to the Third because her hand will not hold it again.'},
+    b4_c4_setijack:{name:'A Seti hide jack', slot:'armour', role:'light', who:null, ac:1, hp:3,
+      line:'A rider\'s jacket of boiled horsehide, stitched with horsehair, the Seti marks burnt in a band across the chest, and a lance-hole through the left shoulder stitched shut with a cutter\'s neat hand. It is light, and it turns a blade, and it smells of horse whatever is done to it. Its owner does not need it now.'},
+    b4_c4_setibow:{name:'A Seti horn bow', slot:'weapon', who:['tebbet', 'sathi', 'sgt'], atk:1, rng:1, dmg:[1,8,1],
+      line:'A short recurved bow of horn and sinew, lacquered dark, with a Seti woman\'s marks burnt into the grip. It was made to be shot from a horse, and it throws further than a bow that size should. She gave it to the Third because her hand will not hold it again.'},
     b4_c4_helm:{name:'An empty helm from the barrows', slot:'trinket', who:null, ac:1,
-      line:'A Malazan helm, dented, with nobody in it, picked up off a barrow on the morning after the barrow night. The marines set them out on the mounds in the dark; this one rolled. The 9th calls it the marines\' spare. Worn on a thong at the belt, or on the head when it rains: +1 armour.'},
+      line:'A Malazan helm, dented, with nobody in it, picked up off a barrow on the morning after the barrow night. The marines set them out on the mounds in the dark; this one rolled. The 9th calls it the marines\' spare. Worn on a thong at the belt, or on the head when it rains.'},
     b4_c4_salve:{name:'A pot of Seti horse-salve', slot:'trinket', who:null,
-      line:'A small clay pot of grey grease that smells of tar and sheep and something green, the Seti\'s salve for horses, which their cutters use on people when the horses are done with it. Whoever carries it heals better the first time: the first heal they take in a fight heals +2.'} },
+      line:'A small clay pot of grey grease that smells of tar and sheep and something green, the Seti\'s salve for horses, which their cutters use on people when the horses are done with it. Whoever carries it heals better the first time: the first heal they take in a fight goes further.'} },
 
   scenes:{
     b4_c4_sun:{loc:'North of the Vathar', sub:'The column · the hottest sun of the year', cap:'A column a league long under a white sun, wagons crawling in their own dust, and beside them, far off, a small boy walking.', amb:'wind'},
@@ -54614,10 +54642,10 @@ The Seti cutters, going down the rows, find their wounded under the 9th's wagons
       ch:[{t:'Back into the camp.', go:()=>startExplore()}]}),
     b4_c4_healer:()=> S.f.b4_c4_salve ? ({sp:'A Seti cutter', scene:'b4_seti_fire', txt:
 `The old Seti cutter is back down the rows, on her knees beside a boy with a lance-wound, her grey braids tied up out of the blood, busy. "More salve when it's gone," she says. "Not before."`,
-      ch:[{t:'Leave her to it.', go:()=>startExplore()}]}) : ({sp:'A Seti cutter', scene:'b4_seti_fire', fx:()=>{ if (!S.f.b4_c4_salve) { S.f.b4_c4_salve = 1; gain('b4_c4_salve'); } }, txt:
+      ch:[{t:'Leave her to it.', go:()=>startExplore()}]}) : ({sp:'A Seti cutter', scene:'b4_seti_fire', fx:()=>{ if (!S.f.b4_c4_salve) { S.f.b4_c4_salve = 1; gain('b4_c4_salve'); } if (!S.f.b4_c4_jack) { S.f.b4_c4_jack = 1; gain('b4_c4_setijack'); } }, txt:
 `The old Seti cutter with the grey braids is sitting on an upturned saddle between two rows, eating, fast, with her bloody hands, because she has not eaten since the gorge and will not again until it is done. She looks up at the squad, at ${S.f.b4_bone === 'chain' ? 'what is tied to the bones at your throats' : 'the bones at your throats'}, at the way you stand, and knows what she is looking at. ${S.f.b4_c4_carried === 'all' ? '"You put them under the wagons," she says, in a Quon Malazan with the Seti hills in it. "All of them."' : '"Chain," she says, in a Quon Malazan with the Seti hills in it. "You walked it. All the way, they say."'}
 
-She reaches behind her into a saddlebag and brings out a small clay pot, plugged with a twist of rag, and holds it out. "Horse-salve," she says. "For the horses, when they are cut. We use it on the riders when the horses are done with it." She shrugs. "Tar, and sheep, and a weed from home. It stinks. It works." She puts it in your hand. "Use it on whoever is hurt first. Then come back for more. I will be here." She looks along the rows. "I will be here a long time."${b44Say({marrow:`\n\nMarrow, passing with a bowl of water, stops and smells the pot over your shoulder, and her eyebrows go up. "Child," she says to the old woman, with deep respect.`, _:''})}${b4In('mirrel') ? `\n\nMirrel takes the pot from you, unplugs it, smells it, and dabs a little on the back of her own hand, where it stings. "Tar for the flies. Fat to keep it in. And the weed is..." She looks at the old woman. The old woman tells her, in Seti, and shows her with her hands how it grows. Mirrel nods, and writes it inside the flap of her bag with a burnt stick. Two cutters, comparing notes over a few hundred wounded. It is the friendliest thing in the camp.` : ''}`,
+She reaches behind her into a saddlebag and brings out a small clay pot, plugged with a twist of rag, and holds it out. "Horse-salve," she says. "For the horses, when they are cut. We use it on the riders when the horses are done with it." She shrugs. "Tar, and sheep, and a weed from home. It stinks. It works." She puts it in your hand. "Use it on whoever is hurt first. Then come back for more. I will be here." She looks along the rows. "I will be here a long time." Then she lifts a stiff hide jacket off the saddle beside her, a lance-hole through the shoulder stitched shut, and puts that in your hands too. "His," she says, of nobody you can see. "He does not need it now."${b44Say({marrow:`\n\nMarrow, passing with a bowl of water, stops and smells the pot over your shoulder, and her eyebrows go up. "Child," she says to the old woman, with deep respect.`, _:''})}${b4In('mirrel') ? `\n\nMirrel takes the pot from you, unplugs it, smells it, and dabs a little on the back of her own hand, where it stings. "Tar for the flies. Fat to keep it in. And the weed is..." She looks at the old woman. The old woman tells her, in Seti, and shows her with her hands how it grows. Mirrel nods, and writes it inside the flap of her bag with a burnt stick. Two cutters, comparing notes over a few hundred wounded. It is the friendliest thing in the camp.` : ''}`,
       ch:[{t:'"Thank you, mother."', go:()=>startExplore()}]}),
     b4_c4_archer:()=> S.f.b4_c4_shot ? ({sp:'A Seti archer', scene:'b4_seti_fire', txt:
 `The Seti archer is asleep against her saddle under the women's awning, with her bound hand on her chest and her good one open in her lap, where the bow was.`,
@@ -55127,6 +55155,10 @@ function b44Item(key, label, body){ const w = 240, h = 130, id = 'c44-' + key.re
   ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.66"><stop offset="0" stop-color="#5a4a34"></stop><stop offset=".7" stop-color="#2a2218"></stop><stop offset="1" stop-color="#121214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect>\n${body}</svg>`;
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* an unbroken oil bola: two clay lamps on a plaited horsehair cord, the wicks black, the wax seals whole; a faint sheen of oil */
+/* the Seti hide jack: boiled horsehide, a burnt band of marks, a lance-hole stitched shut */
+b44Item('b4_c4_setijack', 'A Seti hide jack', '<ellipse cx="120" cy="114" rx="56" ry="7" fill="#000" opacity=".35"/><path d="M94 18 L110 14 Q120 22 130 14 L146 18 L172 42 L158 54 L154 50 L154 108 L86 108 L86 50 L82 54 L68 42 Z" fill="#7a5232"/>'
+  + '<path d="M94 18 L110 14 Q120 22 130 14 L146 18" stroke="#9a6e46" stroke-width="2" fill="none"/><path d="M86 62 L154 62 L154 72 L86 72 Z" fill="#3a2414"/><path d="M92 67 L100 64 L108 70 L116 64 L124 70 L132 64 L140 70 L148 66" stroke="#c89a5a" stroke-width="1.4" fill="none"/>'
+  + '<circle cx="101" cy="35" r="3" fill="#2a1a0e"/><path d="M96 30 L106 40 M98 40 L106 30" stroke="#e8d8b0" stroke-width="1.2"/><path d="M120 24 L120 106" stroke="#5a3a20" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="104" cy="26" r="7" fill="#fff" opacity=".06"/>');
 b44Item('b4_c4_lampball', 'An unbroken oil bola', '<ellipse cx="120" cy="72" rx="86" ry="34" fill="#e8b070" opacity=".07"/>'
   + '<path d="M70 70 Q96 34 120 46 Q146 58 168 74" stroke="#2a1e12" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 70 Q96 34 120 46 Q146 58 168 74" stroke="#7a6446" stroke-width="3" fill="none" stroke-dasharray="2.4 2.2" stroke-linecap="round"/>'
   + '<g transform="translate(62 78)"><ellipse cx="0" cy="8" rx="24" ry="7" fill="#000" opacity=".35"/><path d="M-20 0 Q-22 -16 0 -18 Q22 -16 20 0 Q18 12 0 13 Q-18 12 -20 0 Z" fill="#a8784a"/><path d="M-16 -4 Q-14 -14 -2 -15" stroke="#e0b888" stroke-width="2" fill="none" opacity=".7"/><path d="M-20 2 Q0 8 20 2" stroke="#6a4424" stroke-width="1.4" fill="none"/>'
@@ -55437,7 +55469,7 @@ const B4CH5 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c5_conch:{name:'A conch from the sea bed', slot:'trinket', who:null, stat:{wits:1},
-      line:'A big spiral shell the colour of old cream inside, pink as a mouth, picked up off a bank of thousands on the floor of a sea that went away. Hold it to the ear and there is the sea in it, the Quon coast says. Whoever carries it listens a little harder: +1 wits. Tallow\'s grandmother would have known what it meant to find one this far from water.'},
+      line:'A big spiral shell the colour of old cream inside, pink as a mouth, picked up off a bank of thousands on the floor of a sea that went away. Hold it to the ear and there is the sea in it, the Quon coast says. Whoever carries it listens a little harder. Tallow\'s grandmother would have known what it meant to find one this far from water.'},
     b4_c5_seaglass:{name:'A lens of old sea-glass', slot:'trinket', who:null,
       line:'A disc of thick green glass, clouded at the edge and clear at the heart, prised out of the stern-light of a ship turned to stone. Held to the eye it cuts through haze. In the dust, the bearer\'s first shot in a fight reaches one further. After that it is only a pretty stone.'},
     b4_c5_veil:{name:'A desert rider\'s veil', slot:'trinket', who:null,
@@ -56644,11 +56676,13 @@ const B4CH6 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c6_dogslayer:{name:'A Dogslayer\'s cut-off badge', slot:'trinket', who:null,
-      line:'A square of cloth cut off a Dogslayer\'s sleeve with a knife, the threads still hanging: a dog\'s head stitched in black on red, and a bar of black across its throat. Dom\'s soldiers wear it where the Empire\'s badges were. The squad knows what it is for. Whoever carries it hits Dom\'s soldiers +1.'},
+      line:'A square of cloth cut off a Dogslayer\'s sleeve with a knife, the threads still hanging: a dog\'s head stitched in black on red, and a bar of black across its throat. Dom\'s soldiers wear it where the Empire\'s badges were. The squad knows what it is for. Whoever carries it hits Dom\'s soldiers truer.'},
+    b4_c6_dogscale:{name:'A Dogslayer\'s scale shirt', slot:'armour', role:'heavy', who:null, ac:3,
+      line:'Malazan scale, a heavy infantryman\'s, the legion\'s marks scraped off every plate the eye can reach and a dog\'s head painted on the breast in black. Off one of Dom\'s soldiers who went down in front of the screen and did not get up. It is good scale. It was the Empire\'s, and then his, and now it is the Third\'s, which is where the Third thinks it always belonged.'},
     b4_c6_trenchspade:{name:'A sapper\'s short spade', slot:'trinket', who:['tangle'], ac:1,
-      line:'A Malazan sapper\'s short spade, the blade a hand and a half across and ground sharp on one edge, the haft worn dark where somebody\'s grip went. Dom\'s people dug the trenches on the ramps with spades like it. The squad\'s sapper carries it across the back, where it turns a blow: +1 armour. Sappers have been known to talk to them.'},
+      line:'A Malazan sapper\'s short spade, the blade a hand and a half across and ground sharp on one edge, the haft worn dark where somebody\'s grip went. Dom\'s people dug the trenches on the ramps with spades like it. The squad\'s sapper carries it across the back, where it turns a blow. Sappers have been known to talk to them.'},
     b4_c6_pickethorn:{name:'The picket\'s horn', slot:'trinket', who:null,
-      line:'A cow\'s horn with a brass mouthpiece and a thong, scratched with the 9th\'s number and years of tallies, handed down from picket to picket. Once a book, in a fight, its bearer blows it, and two regulars of the 9th come up beside them. After that the 9th knows the sound, and it is only a horn.'} },
+      line:'A cow\'s horn with a brass mouthpiece and a thong, scratched with the 9th\'s number and years of tallies, handed down from picket to picket. Once a book, in a fight, its bearer blows it, and a pair of the 9th\'s regulars come up beside them. After that the 9th knows the sound, and it is only a horn.'} },
 
   scenes:{
     b4_c6_trenches:{loc:'Before Pan\'arak', sub:'The ramps · dusk', cap:'Three long ramps going up out of a basin to the trenches, the dead city pale behind them, and the dust coming down red.', amb:'explore'},
@@ -57165,8 +57199,8 @@ The crickets stop on the left. Then in the middle. Then, a long throw out in the
     b4_c6_patrol_seen:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', txt:
 `The dark is full of small sounds and every one of them is coming from somewhere else. ${by({sgt:'You call', _:'{who} calls'})} the left, and they come through the middle, at the gap, by the fire, over the screen, with the whistle going.`,
       ch:[{t:'Shields.', go:()=>startBattle('b4_c6_patrol', {surprise:'e'})}]}),
-    b4_c6_patrol_after:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_patrolDone = 1; }, txt:
-`They go back into the grey the way they came, fewer, and the whistle with them, going short and sharp and then not going at all. The crickets start again on the left.
+    b4_c6_patrol_after:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_patrolDone = 1; if (!S.f.b4_c6_scale) { S.f.b4_c6_scale = 1; gain('b4_c6_dogscale'); } }, txt:
+`They go back into the grey the way they came, fewer, and the whistle with them, going short and sharp and then not going at all. One of them stays in front of the screen in good Malazan scale with a dog painted on it, and in the morning the scale comes inside the screen without him. The crickets start again on the left.
 
 The gap in the screen is still a gap. The fire behind it is still a fire. The company's regulars along the screen are on their feet, breathing, looking at the basin and at each other. ${b4Mood() === 'steady' ? 'They held, and they know it, and one of them laughs out loud and is told to shut up by four people at once.' : 'They held. They are not sure how, and they are not going to ask.'}
 
@@ -57251,8 +57285,8 @@ The outpost sees them. That was always going to happen. It is a long way back.${
     b4_c6_outpost_shout:()=>({sp:'The outpost at the foot', scene:'b4_c6_close', fx:()=>{ S.f.b4_c6_seen = 'early'; }, txt:
 `The one who stood up shouts before anybody reaches him, one word, and the whistle answers it from the trench above, and the outpost comes up off its fire with its crossbows already spanned.`,
       ch:[{t:'Over the wall anyway.', go:()=>startBattle('b4_c6_outpost', {surprise:'e'})}]}),
-    b4_c6_outpost_after:()=>({sp:'Back across the basin', scene:'b4_c6_close', fx:()=>{ if (!S.f.b4_c6_outpostDone) { S.f.b4_c6_outpostDone = 1; if (!S.f.b4_c6_downed) b4Nerve(1, 'The Chain squad came back from the ramps, every one'); } }, txt:
-`They break off at last, the Dogslayers who came down the ramp after them, and go back up it in good order, the way a drilled company goes, because the officers in the trench have whistled them back and nobody up there wants a night fight in the basin with the whole Fourteenth awake behind it.
+    b4_c6_outpost_after:()=>({sp:'Back across the basin', scene:'b4_c6_close', fx:()=>{ if (!S.f.b4_c6_outpostDone) { S.f.b4_c6_outpostDone = 1; if (!S.f.b4_c6_downed) b4Nerve(1, 'The Chain squad came back from the ramps, every one'); } if (!S.f.b4_c6_scale) { S.f.b4_c6_scale = 1; gain('b4_c6_dogscale'); } }, txt:
+`They break off at last, the Dogslayers who came down the ramp after them, and go back up it in good order, the way a drilled company goes, because the officers in the trench have whistled them back and nobody up there wants a night fight in the basin with the whole Fourteenth awake behind it. They leave one of theirs in the basin, in good Malazan scale with a dog painted on it, and the scale comes back across with the squad.
 
 The squad goes on, back across the basin in the dark, the last of it at a walk, because nobody can run any more. ${S.f.b4_c6_downed ? 'Some of them are being carried, or held up, an arm over a shoulder.' : 'Every one of them on their own feet.'} The screen comes up out of the dark, and the gap in it, and Radde standing in the gap with the book.
 
@@ -57548,6 +57582,10 @@ function b46Item(key, label, body){ const w = 240, h = 130, id = 'c46-' + key.re
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* a Dogslayer's cut-off badge: a square of red wool cut off a sleeve, a dog's head stitched in black, a black bar across its throat,
    the cut edge ragged with threads hanging, a corner of the sleeve's sand-coloured cloth still on it */
+/* a Dogslayer's scale shirt: the legion's marks scraped off, a dog's head painted on the breast */
+b46Item('b4_c6_dogscale', 'A Dogslayer\'s scale shirt', '<defs><pattern id="c46dsc" width="8" height="7" patternUnits="userSpaceOnUse"><path d="M0 0 Q4 7 8 0" fill="none" stroke="#a8a090" stroke-width="1"/></pattern></defs><ellipse cx="120" cy="114" rx="58" ry="7" fill="#000" opacity=".35"/>'
+  + '<path d="M90 16 L108 12 Q120 22 132 12 L150 16 L178 42 L164 56 L158 50 L158 110 L82 110 L82 50 L76 56 L62 42 Z" fill="#5a5448"/><path d="M90 16 L108 12 Q120 22 132 12 L150 16 L178 42 L164 56 L158 50 L158 110 L82 110 L82 50 L76 56 L62 42 Z" fill="url(#c46dsc)"/>'
+  + '<path d="M108 50 L114 42 L118 50 L124 50 L128 42 L134 50 Q138 62 128 70 L112 70 Q102 62 108 50 Z" fill="#141210"/><path d="M110 64 L130 60" stroke="#141210" stroke-width="3"/><circle cx="100" cy="30" r="8" fill="#fff" opacity=".06"/>');
 b46Item('b4_c6_dogslayer', 'A Dogslayer\'s cut-off badge', '<ellipse cx="120" cy="70" rx="70" ry="40" fill="#e0a080" opacity=".05"/><g transform="rotate(-6 120 64)">'
   + '<path d="M80 30 L164 28 L166 102 L84 104 Z" fill="#a8946a"/><path d="M80 30 L164 28 L163 34 L81 36 Z" fill="#c8b48a" opacity=".7"/>'
   + '<path d="M88 36 L158 34 L160 96 L90 98 Z" fill="#8a2418"/><path d="M88 36 L158 34 L158 40 L88 42 Z" fill="#b84a34" opacity=".6"/>'
@@ -57872,7 +57910,7 @@ const B4CH7 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c7_coral:{name:'A piece of coral stone', slot:'trinket', who:null, stat:{wits:1},
-      line:'A knuckle of pale coral the size of a fist, pitted and light, broken off the island the Fourteenth ran to when the desert became a sea. It was a reef once, and then a stone in the sand for longer than anybody has had a name, and now it is a reef again. Whoever carries it keeps their head: +1 wits.'},
+      line:'A knuckle of pale coral the size of a fist, pitted and light, broken off the island the Fourteenth ran to when the desert became a sea. It was a reef once, and then a stone in the sand for longer than anybody has had a name, and now it is a reef again. Whoever carries it keeps their head.'},
     b4_c7_dogslayerblade:{name:'A Dogslayer\'s sword', slot:'weapon', who:['sgt', 'haddat', 'tangle', 'tallow', 'hessa', 'darrut', 'redblade'], atk:1, dmg:[1,10,2],
       line:'A Malazan short sword, longer in the blade than issue and heavier, the regimental marks on the hilt filed off and the leather rewound by somebody who meant to keep it. Picked up off the sand at the foot of the ramps the morning after. The 9th does not ask whose it was. It knows.'},
     b4_c7_tear:{name:'A black bead', slot:'trinket', who:null,
@@ -61628,14 +61666,18 @@ const B5CH1 = {
     b5_c1_bookman:{name:'The bookmaker', sig:'K', kind:'b5_c1_bookman', hp:22, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cracks a weighted cane across'} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c1_hookknife:{name:'A rope-man\'s hook-knife', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'The short hooked knife the rope-men of the Drownings carry, for cutting a weight-sack free of the rope. A short blade with a back-turned hook, a cord-wrapped grip, and the court\'s brass tag on the pommel. +1 to hit.'},
+    b5_c1_issuesword:{name:'A Letherii issue sword', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,8,1],
+      line:'A Letherii army sword, straight and plain, with a wire-bound grip and the regiment\'s number stamped in the ricasso, and an inventory tag on the guard with the price on it. The army issues every soldier a sword, and then sells them a better one. This is the better one. It is still owed for somewhere.'},
+    b5_c1_tarthclub:{name:'A Tarthenal war-club', slot:'weapon', role:'heavyweapon', who:null, dmg:[1,10,2],
+      line:'A club of black root-wood as long as a man\'s leg, the head studded with old iron nails driven in and clinched, the grip wound with plaited hide gone smooth. The old man by the brazier says it was made for a hand the size of Thegg\'s, which is the only size the Tarthenal made them. He did not say whose hand. He did not have to.'},
+    b5_c1_hookknife:{name:'A rope-man\'s hook-knife', slot:'weapon', role:'blade', who:null, atk:2, dmg:[1,6,1],
+      line:'The short hooked knife the rope-men of the Drownings carry, for cutting a weight-sack free of the rope. A short blade with a back-turned hook, a cord-wrapped grip, and the court\'s brass tag on the pommel.'},
     b5_c1_chit:{name:'A wager-chit from the Low Walk', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A stamped oblong of pale wood with a rope and a wave burned into it and a chalk number on the back: a wager on a Rising that never paid. Whoever carries it is a little better at talking, which is what a chit like this is for. +1 Guile.'},
+      line:'A stamped oblong of pale wood with a rope and a wave burned into it and a chalk number on the back: a wager on a Rising that never paid. Whoever carries it is a little better at talking, which is what a chit like this is for.'},
     b5_c1_receipt:{name:'The fines court\'s receipt', slot:'trinket', role:'any', who:null, stat:{wits:1},
-      line:'A folded square of heavy paper, a blob of grey wax, the court\'s cord through it: three hundred docks, received, for Thegg\'s fine. The clerk says to keep it somewhere dry. The court has a long memory and a bad filing system. +1 Wits.'},
+      line:'A folded square of heavy paper, a blob of grey wax, the court\'s cord through it: three hundred docks, received, for Thegg\'s fine. The clerk says to keep it somewhere dry. The court has a long memory and a bad filing system.'},
     b5_c1_weightbag:{name:'The weight-sack', slot:'trinket', role:'any', who:['thegg'], ac:1,
-      line:'The empty canvas sack the court tied its three hundred docks in, wet-dark, with its mouth cord knotted and an iron ring for the rope. Thegg ties it to his shield\'s strap and will not say why. +1 armour on Thegg.'} },
+      line:'The empty canvas sack the court tied its three hundred docks in, wet-dark, with its mouth cord knotted and an iron ring for the rope. Thegg ties it to his shield\'s strap and will not say why.'} },
 
   scenes:{
     b5_c1_lowwalk:{loc:'Letheras', sub:'The Low Walk · the Quillas Canal', cap:'The Quillas Canal from the tiers, a hundred paces of dark water, a rope out over it, and the crowd above in a long curve of shapes.', amb:'explore'},
@@ -61808,6 +61850,7 @@ ${b51Key() === 'pay' ? `"Five signatures," he says. "In one night. I have never 
 
 "Six docks," he says, without looking up. "Docks, Sergeant. Not paybook, not promises, not the Finadd's signature. I have the Finadd's signature on eleven things this week and I can't eat one of them."`,
       ch:[{t:'A salve.', tag:'6 docks', req:()=>(S.silver || 0) >= 6, fx:()=>{ S.silver -= 6; S.inv.salve = (S.inv.salve || 0) + 1; updSilver(); note('A salve, for six docks.', 'good'); }, go:'b5_c1_qm'},
+          {t:'A sword off the rack, a better one than issue.', tag:'8 docks', ware:'b5_c1_issuesword', req:()=>(S.silver || 0) >= 8 && !(S.kit || []).includes('b5_c1_issuesword'), fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_issuesword'); note('A Letherii sword, for eight docks. The tag stays on.', 'good'); }, go:'b5_c1_qm'},
           {t:'Talk him down to four. ("Who counted those barrels, if not us?")', check:['guile', 12], req:()=>(S.silver || 0) >= 4 && !S.f.b5_c1_haggle,
             edges:id=>[id === 'sgt' && ['you have watched him count for five years', 1], id === 'tobet' && ['he knows what the quartermaster skims, and how', 2], id === 'pessa' && ['canal cant, and a grievance', 2], id === 'thegg' && ['he asks too politely to haggle', -1], id === 'ammet' && ['she would rather have the salve than the argument', -1]],
             near:{t:()=>`Yes, but he makes ${b51Nm(b51Who())} count the spare boots for him while he wraps it, and the boots take the hour the squad would have spent by the fire. No rest at this fire.`, fx:()=>{ S.f['b5_c1_rest' + b51Ph()] = 1; }},
@@ -61984,10 +62027,12 @@ ${b51Say({thegg:`Thegg walks down the middle of the lane with his shield on his 
             near:{t:()=>`Yes, but the old man wants a drink for every answer, and ${b51Nm(b51Who())} ${b51Who() === 'sgt' ? 'have' : 'has'} to match him: rattled, and slower in the head for it.`, fx:()=>b51Rattle(b51Who())},
             go:'b5_c1_oldman_ok', fail:'b5_c1_oldman_no'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b5_c1_oldman_ok:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', fx:()=>{ S.f.b5_c1_warned = 1; }, txt:
+    b5_c1_oldman_ok:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', fx:()=>{ S.f.b5_c1_warned = 1; if (!S.f.b5_c1_club) { S.f.b5_c1_club = 1; gain('b5_c1_tarthclub'); } }, txt:
 `"Three bullies," the old man says. "Letherii, from inside the walls. Cudgels. The collector keeps the book in the back room, behind the curtain, and he never comes out from behind his table himself." He drinks. "And there's always a drunk on the corner bench who thinks a fight is his. Don't hit that one. He has a family."
 
-He looks at Thegg. "She paid every month," he says. "Every month she could. That's in no book of theirs."`,
+He looks at Thegg. "She paid every month," he says. "Every month she could. That's in no book of theirs."
+
+Then he reaches down beside the crate and lifts out a club of black root-wood with old nails in the head, and holds it out to Thegg by the wrong end, so that he has to take it. "Her people's," he says. "Not mine to keep."`,
       ch:[{t:'"Thank you, grandfather."', go:()=>startExplore()}]}),
     b5_c1_oldman_no:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', txt:
 `The old man looks at the squad's cloaks and decides, slowly, that he has said enough to soldiers for one night. "Go and ask them," he says. "They'll tell you. They love telling."`,
@@ -62531,6 +62576,14 @@ function b51Item(key, label, body){ const w = 240, h = 130, id = 'c51-' + key.re
   ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.68"><stop offset="0" stop-color="#34444a"></stop><stop offset=".7" stop-color="#1a2428"></stop><stop offset="1" stop-color="#0e1214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect><rect x="2.5" y="2.5" width="${w - 5}" height="${h - 5}" rx="2" fill="none" stroke="#c9a35a" stroke-width="1" opacity=".7"></rect>\n${body}</svg>`;
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* a rope-man's hook-knife: a short blade with a back-turned hook, a cord-wrapped grip, the court's brass tag on the pommel */
+/* the Letherii issue sword, the better one, with its price tag still on the guard */
+b51Item('b5_c1_issuesword', 'A Letherii issue sword', '<ellipse cx="120" cy="104" rx="80" ry="6" fill="#000" opacity=".35"/><path d="M60 64 L196 60 L206 64 L196 68 L60 70 Z" fill="#c8ccd2"/><path d="M62 65 L196 62" stroke="#f4f6f8" stroke-width="1"/>'
+  + '<rect x="52" y="52" width="8" height="30" rx="2" fill="#8a8e94"/><rect x="26" y="62" width="26" height="9" rx="3" fill="#3a2a1c"/><path d="M30 62 L30 71 M36 62 L36 71 M42 62 L42 71" stroke="#b8a888" stroke-width="1"/><circle cx="22" cy="66" r="5" fill="#8a8e94"/>'
+  + '<path d="M56 82 L60 96" stroke="#c8b898" stroke-width="1"/><rect x="54" y="96" width="16" height="11" rx="1" fill="#e8dcc0" transform="rotate(-8 62 101)"/><path d="M58 101 L66 100" stroke="#6a5a40" stroke-width="1"/>');
+/* the Tarthenal war-club: black root-wood, old nails clinched in the head, a hide-wound grip */
+b51Item('b5_c1_tarthclub', 'A Tarthenal war-club', '<ellipse cx="120" cy="108" rx="80" ry="6" fill="#000" opacity=".35"/><path d="M40 100 L150 46 Q176 30 192 42 Q200 58 180 70 L60 112 Q44 116 40 100 Z" fill="#2a1e16"/><path d="M60 98 L160 50" stroke="#4a3a2a" stroke-width="2"/>'
+  + '<path d="M40 100 L74 84 L80 98 L50 112 Z" fill="#6a4a2a"/><path d="M48 98 L52 106 M56 94 L60 102 M64 90 L68 98" stroke="#9a7048" stroke-width="1.4"/>'
+  + '<circle cx="160" cy="48" r="2.4" fill="#8a8e94"/><circle cx="172" cy="42" r="2.4" fill="#8a8e94"/><circle cx="184" cy="46" r="2.4" fill="#8a8e94"/><circle cx="178" cy="58" r="2.4" fill="#8a8e94"/><circle cx="166" cy="60" r="2.4" fill="#8a8e94"/><circle cx="154" cy="56" r="2.4" fill="#8a8e94"/><circle cx="170" cy="40" r="6" fill="#fff" opacity=".06"/>');
 b51Item('b5_c1_hookknife', 'A rope-man\'s hook-knife', '<ellipse cx="120" cy="70" rx="80" ry="30" fill="#c8d8d0" opacity=".05"/><g transform="rotate(-16 120 66)">'
   + '<path d="M120 60 L170 56 Q186 55 190 62 Q192 68 186 72 L180 70 Q184 66 180 63 Q176 62 170 64 L120 72 Z" fill="#b8b8b4"/><path d="M122 61 L170 57 Q184 56 188 62" stroke="#f0f0ec" stroke-width="1.6" fill="none" opacity=".7"/><path d="M120 71 L170 64" stroke="#6a6a68" stroke-width="1.2"/>'
   + '<rect x="112" y="58" width="9" height="16" rx="2" fill="#5a4a34"/><rect x="62" y="60" width="52" height="12" rx="4" fill="#4a3a26"/>'
@@ -62775,13 +62828,13 @@ const B5CH2 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c2_sealcoat:{name:'A poacher\'s sealskin coat', slot:'armour', role:'light', who:null, ac:1,
-      line:'A short coat of grey sealskin, oiled, with bone toggles, out of a chest in the second hulk\'s hold. It still smells of the north. The poachers went a long way for the skins, and the skins came home. +1 armour.'},
+      line:'A short coat of grey sealskin, oiled, with bone toggles, out of a chest in the second hulk\'s hold. It still smells of the north. The poachers went a long way for the skins, and the skins came home.'},
     b5_c2_tooth:{name:'A tooth nobody can name', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A long curved tooth, yellowed, bound at the root with copper wire, bought for a dock off a market stall in Trate. The stall-keeper did not know what it came out of. Neither does anyone the squad has shown it to. Whoever carries it seems harder to kill, which nobody can explain either. +3 health.'},
-    b5_c2_gaff:{name:'A harbour gaff', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, ac:-1,
-      line:'The Trate Legion\'s long hooked pole for dragging wreckage, and the drowned, out of the harbour: a long ash pole with an iron hook and a spike. Reach: it strikes an enemy two tiles off, but it takes both hands, so the shield goes on the back (−1 armour).'},
+      line:'A long curved tooth, yellowed, bound at the root with copper wire, bought for a dock off a market stall in Trate. The stall-keeper did not know what it came out of. Neither does anyone the squad has shown it to. Whoever carries it seems harder to kill, which nobody can explain either.'},
+    b5_c2_gaff:{name:'A harbour gaff', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, ac:-1, dmg:[1,8,1],
+      line:'The Trate Legion\'s long hooked pole for dragging wreckage, and the drowned, out of the harbour: a long ash pole with an iron hook and a spike. It reaches past the front rank, and it takes both hands, so the shield goes on the back.'},
     b5_c2_shells:{name:'A cord of Shake burial shells', slot:'trinket', role:'any', who:null, stat:{wits:1},
-      line:'Small white shells on a knotted cord, one of them black: the shells the Shake lay on their drowned, given to the squad on the quay at Trate for carrying the dead out. Whoever wears it thinks a little more slowly before doing something stupid. +1 Wits.'} },
+      line:'Small white shells on a knotted cord, one of them black: the shells the Shake lay on their drowned, given to the squad on the quay at Trate for carrying the dead out. Whoever wears it thinks a little more slowly before doing something stupid.'} },
 
   scenes:{
     b5_c2_wrecks:{loc:'Trate', sub:'The harvest ships on the quays · dusk', cap:'Ships broken on the quays at dusk, their masts leaning, and shapes in the rigging that do not move when the gulls do.', amb:'explore'},
@@ -63851,9 +63904,9 @@ const B5CH3 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c3_cadretile:{name:'A cadre\'s spare tile', slot:'trinket', role:'focus', who:null, stat:{wits:1},
-      line:'A plain practice tile of black stone with no face, polished, blank, with a hairline crack across one corner: the kind the cadre schools give their students to lay before they are let near a real one. A young mage of the Snakebelt cadre gave it away on the dock at Kraig\'s Landing. Whoever carries it is a little quicker to see a pattern. +1 Wits.'},
-    b5_c3_spear:{name:'A Faraed throwing-spear', slot:'weapon', role:'reach', who:null, atk:1, rng:1,
-      line:'A light spear of fire-hardened wood with a leaf-shaped iron head and a tuft of feathers from a bird only the Faraed have a name for. Made to be thrown, and thrown again. +1 to hit and +1 range: in a hand that fights close, it is a throw at two tiles.'},
+      line:'A plain practice tile of black stone with no face, polished, blank, with a hairline crack across one corner: the kind the cadre schools give their students to lay before they are let near a real one. A young mage of the Snakebelt cadre gave it away on the dock at Kraig\'s Landing. Whoever carries it is a little quicker to see a pattern.'},
+    b5_c3_spear:{name:'A Faraed throwing-spear', slot:'weapon', role:'reach', who:null, atk:1, rng:1, dmg:[1,8,1],
+      line:'A light spear of fire-hardened wood with a leaf-shaped iron head and a tuft of feathers from a bird only the Faraed have a name for. Made to be thrown, and thrown again. In a hand that fights close, it is a throw over the front rank.'},
     b5_c3_ash:{name:'Green ash in a paper twist', slot:'trinket', role:'any', who:null,
       line:'A pinch of grey ash in a twist of brown paper, still faintly green at the open end. It came down on the dock at Kraig\'s Landing in the night after the fire. It does nothing. Somebody in the squad kept it anyway.'} },
 
@@ -64909,9 +64962,9 @@ const B5CH4 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each. No weapons in this chapter: everything here a disarmed soldier still keeps.
     b5_c4_helm:{name:'A Grass Jacket\'s helm', slot:'trinket', role:'any', who:null, ac:1,
-      line:'An open iron helm with a strip of faded green cloth tied at the crest, dented once over the left ear. It was lying on the west rampart at High Fort where its owner dropped it, running. Whoever wears it is a little harder to hit. +1 armour.'},
+      line:'An open iron helm with a strip of faded green cloth tied at the crest, dented once over the left ear. It was lying on the west rampart at High Fort where its owner dropped it, running. Whoever wears it is a little harder to hit.'},
     b5_c4_wolftooth:{name:'A tooth too big for a wolf', slot:'trinket', role:'any', who:null, stat:{might:1},
-      line:'A canine tooth as long as a finger, yellowed, on a thong. It came from the wolves at High Fort. Nobody in the squad discusses why it is too big for a wolf. Whoever wears it pulls a little harder. +1 Might.'},
+      line:'A canine tooth as long as a finger, yellowed, on a thong. It came from the wolves at High Fort. Nobody in the squad discusses why it is too big for a wolf. Whoever wears it pulls a little harder.'},
     b5_c4_pitchpot:{name:'A brand-pot from the west rampart', slot:'trinket', role:'any', who:null,
       line:'A squat black-glazed clay pot, sealed with pitch, a tarred rag for a wick, a scorch mark down one side where somebody tried it too early. An old hand of the High Fort garrison gave it to the Sixth on the west rampart. The wolves will not cross fire. Neither, it turns out, will anyone sensible.'} },
 
@@ -65928,14 +65981,14 @@ const B5CH5 = {
     b5_c5_deserterboss:{name:'The deserters\' leader', sig:'L', kind:'b5_c5_deserterboss', hp:24, ac:14, atk:5, dmg:[1,8,2], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c5_cacheblade:{name:'A cache shortsword, still in grease', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'A Letherii issue shortsword out of a buried jar, wrapped in greased cloth with the cache\'s clay seal still on the cord. It has never been drawn in anger, and it is sharper than anything that has. +1 to hit.'},
-    b5_c5_cachebow:{name:'A cache bow, unstrung', slot:'weapon', role:'ranged', who:null, atk:1,
-      line:'A plain yew bow lashed to a bark tube with a waxed string inside it, and the cache\'s seal on the lashing. The army buries them dry and unstrung, and they come up straight. A bow, not a crossbow: Lether has no crossbows. +1 to hit.'},
+    b5_c5_cacheblade:{name:'A cache shortsword, still in grease', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,8,2],
+      line:'A Letherii issue shortsword out of a buried jar, wrapped in greased cloth with the cache\'s clay seal still on the cord. It has never been drawn in anger, and it is sharper than anything that has.'},
+    b5_c5_cachebow:{name:'A cache bow, unstrung', slot:'weapon', role:'ranged', who:null, atk:1, rng:1, dmg:[1,8,1],
+      line:'A plain yew bow lashed to a bark tube with a waxed string inside it, and the cache\'s seal on the lashing. The army buries them dry and unstrung, and they come up straight. A bow, not a crossbow: Lether has no crossbows.'},
     b5_c5_housemail:{name:'The house\'s scale', slot:'armour', role:'mail', who:null, ac:1,
-      line:'Bright new scale on a padded coat, off the counting-house\'s wagons at Brans Keep, with a small stamp of a scale-balance inside the collar where only the wearer sees it. It is better scale than the army\'s. It was meant to be. +1 armour.'},
+      line:'Bright new scale on a padded coat, off the counting-house\'s wagons at Brans Keep, with a small stamp of a scale-balance inside the collar where only the wearer sees it. It is better scale than the army\'s. It was meant to be.'},
     b5_c5_girth:{name:'A Bluerose girth-strap, cut through', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where the eye never goes, by a hand that knew where the eye never goes. Whoever carries it has learned the same. +1 Guile.'} },
+      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where the eye never goes, by a hand that knew where the eye never goes. Whoever carries it has learned the same.'} },
 
   scenes:{
     b5_c5_burned:{loc:'The road south', sub:'The burned country', cap:'Fields burned to the root on both sides of a straight road, black to the hedges, and smoke on the horizon.', amb:'explore'},
@@ -67013,12 +67066,12 @@ const B5CH6 = {
   foes:{},
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c6_edurblade:{name:'An Edur sword from the channel', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'A long blade of dark iron, slightly curved, with grey leather on the grip worn to the shape of a hand bigger than yours. It came off the stones of the dry channel at Brans Keep, where its owner left it. The Edur make better swords than Lether does, and Lether has always known it. +1 to hit.'},
+    b5_c6_edurblade:{name:'An Edur sword from the channel', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,10,2],
+      line:'A long blade of dark iron, slightly curved, with grey leather on the grip worn to the shape of a hand bigger than yours. It came off the stones of the dry channel at Brans Keep, where its owner left it. The Edur make better swords than Lether does, and Lether has always known it.'},
     b5_c6_paint:{name:'A pot of white paint', slot:'trinket', role:'any', who:null, ac:1,
-      line:'A small clay pot with a white rim and a frayed brush tied to its neck with string: the battalion\'s own paint, for the fingertip on the boss. Whoever carries it repaints the squad\'s bosses on the eve of a fight, and the squad stands a little straighter for it. Why the finger, the battalion cannot say. +1 armour.'},
+      line:'A small clay pot with a white rim and a frayed brush tied to its neck with string: the battalion\'s own paint, for the fingertip on the boss. Whoever carries it repaints the squad\'s bosses on the eve of a fight, and the squad stands a little straighter for it. Why the finger, the battalion cannot say.'},
     b5_c6_lakestone:{name:'A stone from the old lake bed', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A flat stone, pale grey with a darker ring, worn smooth by water that has not been there for longer than Lether has. Picked up on the way out of Brans Keep. It is a good weight in the hand, and it is the only thing anybody brought out of that field that nobody owes for. +3 health.'} },
+      line:'A flat stone, pale grey with a darker ring, worn smooth by water that has not been there for longer than Lether has. Picked up on the way out of Brans Keep. It is a good weight in the hand, and it is the only thing anybody brought out of that field that nobody owes for.'} },
 
   scenes:{
     b5_c6_eve:{loc:'Brans Keep', sub:'The eve · the army\'s fires', cap:'The army\'s fires across the field at night, the keep\'s towers black against the cliff, the lake still, and the Edur\'s fires on the hills to the north.', amb:'explore'},
@@ -68024,9 +68077,9 @@ const B5CH7 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c7_dock:{name:'A holed dock from the Low Walk', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A worn copper dock with a hole bored through it, on a cord still wet from the canal: the twin of the one the canal children dropped into the Quillas for the drowned, the evening the city fell. The Errant, they say, remembers who keeps one. It is worth exactly one dock, and nobody in the Sixth would spend it. +1 Guile.'},
+      line:'A worn copper dock with a hole bored through it, on a cord still wet from the canal: the twin of the one the canal children dropped into the Quillas for the drowned, the evening the city fell. The Errant, they say, remembers who keeps one. It is worth exactly one dock, and nobody in the Sixth would spend it.'},
     b5_c7_lamp:{name:'A canal lamp off the Low Walk', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. It has not been lit since, or put down. +3 health.'},
+      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. It has not been lit since, or put down.'},
     b5_c7_ledgerpage:{name:'The Sixth\'s page from the paybook', slot:'trinket', role:'any', who:null,
       line:'A single ruled page out of the Sixth Company\'s paybook: columns of names and numbers in the clerk\'s hand, and a line drawn neatly through every one. The clerk tore it out and handed it over without a word. It is the only receipt the army ever gave anybody in the squad for anything.'} },
 
@@ -70090,6 +70143,123 @@ function b5DrillPay(r){ if (!r) return; S.f.b5_drill = {held:r.held, total:r.tot
       ch:back('b5_c6_fire')}; };
     const j = B5CH6.journal; if (j) B5CH6.journal = () => { const x = j(), r = S.f.b5_drillLast; if (r && r.done) x.unshift(r.locked && r.total && r.held / r.total >= .9 ? 'On the eve of Brans Keep the old drill-sergeant drilled the Sixth on the grass, boss to boss, and the line locked right.' : 'On the eve of Brans Keep the old drill-sergeant drilled the Sixth on the grass, boss to boss.'); return x; }; }
 }
+
+/* ============ the items pass (v8.1): trinket effects ============
+   Small real effects for the trinkets that had none (the pitch-pot, the Tyrant's map, the green ash, the paybook page, the durhang
+   pipe and the ferry rope worn) and for ten of the plain "+1 to a stat" trinkets whose lore asks for more. Each is a wrapper keyed
+   on the item id, the way Books Two to Four do theirs, and each asks wears(unit or soldier id, item id) whether it is worn.
+   The display half (33/19d/38c) owns wears(); until it lands this file carries a shim of the same name. The words for each effect
+   go in that half's special-text table; the numbers are listed in docs/items-pass.md.
+   Once a fight = B.used (it carries into a fight's second ground); once a chapter = S.f keyed by book and chapter.
+   spawnshard stays what it is: Brack's joke. It does nothing, on purpose. */
+const ixMine = u => !!(u && u.side === 'p' && !u.ally && TPL[u.id]);
+const ixChKey = k => 'ix_' + k + '_' + BOOK + (S.chapter || 0);
+const ixOnce = k => !!(B && B.used && B.used[k]);
+const ixSpend = k => { if (B) (B.used ??= {})[k] = 1; };
+/* the specials this file adds, by item id: what the special-text table should say (the display half may use or replace these) */
+const IX_SPECIAL = {
+  houndtooth:'+1 initiative.',
+  lampchip:'Once a fight, the first blow it lands dazzles the target: −3 to hit through the round.',
+  fetemask:'In the first round of a fight, enemies take −2 to hit whoever wears it.',
+  tyrantmap:'+1 to Wits checks in the Gadrobi Hills (Book One, Chapter Five). Roughly right.',
+  b2_dogtooth:'Once a fight, the first blow aimed at whoever wears it meets +2 armour.',
+  b2_crowfeather:'Once a fight, the first attack it misses is rolled again.',
+  b3_c3_stripe:'+2 damage while whoever wears it is below half health.',
+  b4_c1_durhangpipe:'Worn: whoever wears it goes into a fight without the soreness of a "yes, but". Also, once a chapter at a fire, it can be passed round.',
+  b4_c3_ferryrope:'Worn: +1 to hit with the first attack of each fight. Carried: once a chapter, +1 to a check.',
+  b4_c5_conch:'+1 initiative.',
+  b5_c2_shells:'Whoever wears it is never rattled on a check.',
+  b5_c3_ash:'Once a chapter, the first time fire would burn whoever wears it, it does not.',
+  b5_c4_pitchpot:'Once a fight: throw it, range 4. 1d6 to a 3×3, and the pitch burns there for 2 rounds.',
+  b5_c4_wolftooth:'+1 damage against an enemy already wounded.',
+  b5_c7_dock:'Once a chapter, a check whoever wears it fails is rolled again.',
+  b5_c7_ledgerpage:'+1 to a check about debts, pay or the paybooks.'};
+
+/* ---- in the hand: initiative (the Hound's tooth, the conch), the pitch-pot as an action ---- */
+{ const _mkParty = mkParty;
+  mkParty = function(id, x, y){ const u = _mkParty(id, x, y);
+    if (wears(id, 'houndtooth')) u.init += 1; // the Hounds are faster than anything they hunt
+    if (wears(id, 'b4_c5_conch')) u.init += 1; // listening harder: they hear it coming
+    if (wears(id, 'b5_c4_pitchpot') && !u.ab.includes('ix_pitchpot')) u.ab.splice(Math.max(0, u.ab.length - 1), 0, 'ix_pitchpot');
+    return u; }; }
+Object.assign(AB, {
+  ix_pitchpot:{name:'The brand-pot', boom:true, aoe:1, range:4, ok:u => !!(u && B && !ixOnce('ix_pot_' + u.id)),
+    desc:()=>`Once a fight: throw the brand-pot from the west rampart, range 4. It bursts on the mark (1d6), and the pitch burns round it, a 3×3, for 2 rounds, the squad included.`,
+    run(u, x, y){ ixSpend('ix_pot_' + u.id); const pt = scatter(u, x, y, 1, 1);
+      throwArc(u, pt, () => { for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (!wall(pt.x + dx, pt.y + dy)) B.fires.push({x:pt.x + dx, y:pt.y + dy, until:B.round + 2, txt:'the burning pitch'});
+        blast(pt, [[1,6,0]], '#ff7a2a'); AUDIO.play('burner'); sparks(pt.x, pt.y, 26, '#ff9a3a', .7); });
+      blog(`${u.name} lights the rag in the brand-pot's neck off the nearest flame and throws it the way the old hand on the rampart said: high, so it comes down on them and not short.`); }},
+});
+
+/* ---- to hit: the Fete mask in the first round, the dog's tooth on the first blow, the ferry rope's first attack ---- */
+{ const _atkCalc = atkCalc;
+  atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o);
+    if (B && t && ixMine(t) && a && a.side === 'e') {
+      if (B.round <= 1 && wears(t, 'fetemask')) c.ac += 2; // a face nobody can read, for as long as nobody has had time to
+      if (t.ixGuard) c.ac += 2; }
+    if (B && a && ixMine(a) && a.ixRope) c.bonus += 1;
+    return c; }; }
+{ const _attack = attack;
+  attack = function(a, t, o = {}){
+    if (!B || !a || !t) return _attack(a, t, o);
+    /* the dog's tooth: the first blow aimed at its wearer each fight */
+    const dog = a.side === 'e' && ixMine(t) && wears(t, 'b2_dogtooth') && !ixOnce('ix_dog_' + t.id);
+    if (dog) { ixSpend('ix_dog_' + t.id); t.ixGuard = true; }
+    const mine = ixMine(a);
+    /* the ferry rope, worn: the first attack of each fight, steadied */
+    const rope = mine && wears(a, 'b4_c3_ferryrope') && !ixOnce('ix_rope_' + a.id); if (rope) { ixSpend('ix_rope_' + a.id); a.ixRope = true; }
+    /* damage riders: the stripe below half health, the wolf's tooth on the wounded */
+    let o2 = o; const dd = o.dmg || a.dmg;
+    if (mine && dd) { let add = 0;
+      if (wears(a, 'b3_c3_stripe') && a.hp * 2 < a.maxhp) add += 2;
+      if (wears(a, 'b5_c4_wolftooth') && t.side === 'e' && t.hp > 0 && t.hp < t.maxhp) add += 1;
+      if (add) o2 = Object.assign({}, o, {dmg:[dd[0], dd[1], (dd[2] || 0) + add]}); }
+    let r;
+    try { r = _attack(a, t, o2); } finally { if (dog) t.ixGuard = false; if (rope) a.ixRope = false; }
+    if (dog) { float(t, 'the dog\'s tooth', '#e8c073'); }
+    /* the crow's feather: the first miss each fight, a second look */
+    if (mine && r && !r.hit && t.hp > 0 && wears(a, 'b2_crowfeather') && !ixOnce('ix_crow_' + a.id)) { ixSpend('ix_crow_' + a.id);
+      blog(`<em>A crow's feather.</em> ${a.name} looks again, the way the crows look, and strikes again.`); r = _attack(a, t, o2); }
+    /* the lamp-chip: the first blow it lands each fight throws Darujhistan's blue light in their eyes */
+    if (mine && r && r.hit && wears(a, 'lampchip') && !ixOnce('ix_lamp_' + a.id)) { ixSpend('ix_lamp_' + a.id);
+      t.dazzleUntil = Math.max(t.dazzleUntil || 0, B.round); later(() => { if (t.hp > 0) float(t, 'dazzled', '#9fd0ff'); }, pace(220));
+      blog(`The blue glass at ${a.name}'s throat catches the light, and ${t.name} gets it in the eyes.`); }
+    return r; }; }
+
+/* ---- fire: the green ash, once a chapter, the first time fire would burn its wearer ---- */
+const ixLog = blog; // the ash's own line goes straight to the log, past the watcher below
+const ixAshOk = u => ixMine(u) && wears(u, 'b5_c3_ash') && !S.f[ixChKey('ash')];
+{ const _blog = blog;
+  blog = function(m){ if (B && typeof m === 'string') { const f = /^(.+?) (?:is burning|is caught in |goes through )/.exec(m);
+      if (f) { const u = B.units.find(v => v.name === f[1] && v.hp > 0); if (u && ixAshOk(u)) B.ixAshNext = u; } }
+    return _blog(m); }; }
+{ const _hurt = hurt;
+  hurt = function(u, n, crit){ if (B && B.ixAshNext) { const w = B.ixAshNext; B.ixAshNext = null;
+      if (w === u && ixAshOk(u)) { S.f[ixChKey('ash')] = 1; u.burnTurns = 0; float(u, 'the green ash', '#9ae0b8'); ixLog(`<em>The green ash.</em> The fire comes up round ${u.name} and does not take. Not this time.`); return; } }
+    return _hurt(u, n, crit); }; }
+
+/* ---- going in: the durhang pipe worn, and the soreness of a "yes, but" not felt ---- */
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const dulled = [];
+    if (!opt.carry && S && S.bruised) Object.keys(S.bruised).forEach(k => { if (S.bruised[k] > 0 && wears(k, 'b4_c1_durhangpipe')) { delete S.bruised[k]; dulled.push(k); } });
+    const r = _startBattle(id, opt);
+    if (B && dulled.length) dulled.forEach(k => { const u = B.units.find(v => v.id === k && ixMine(v)); if (u) blog(`${u.name} is still sore from the last close thing, and does not feel it. The pipe.`); });
+    return r; }; }
+
+/* ---- checks: the map in the hills, the paybook page on a debt, the shells against the rattle ---- */
+const IX_DEBT = /debt|paybook|pay desk|the pay\b|ledger|owe|owed|fine\b|tab\b|docks|sums|clerk|interest/i;
+{ const _ef = edgesFor;
+  edgesFor = function(c, id){ let out = _ef(c, id);
+    if (wears(id, 'b5_c2_shells') && S.rattled && S.rattled[id]) out = out.filter(e => e[0] !== 'rattled'); // slower to do the stupid thing, even shaken
+    if (c && c.check && wears(id, 'tyrantmap') && BOOK === 'gotm' && (S.chapter || 0) === 5 && c.check[0] === 'wits') out.push(['the Tyrant\'s map, roughly right', 1]);
+    if (c && c.check && wears(id, 'b5_c7_ledgerpage') && IX_DEBT.test(`${typeof c.t === 'string' ? c.t : ''} ${typeof c.tag === 'string' ? c.tag : ''}`)) out.push(['the Sixth\'s page from the paybook', 1]);
+    return out; }; }
+/* the holed dock: once a chapter, a failed check is rolled again (the Errant remembers who keeps one) */
+{ const _ck = check;
+  check = function(stat, dc, who, c){ const r = _ck(stat, dc, who, c);
+    if (r && !r.pass && r.who && wears(r.who, 'b5_c7_dock') && !S.f[ixChKey('dock')]) { S.f[ixChKey('dock')] = 1;
+      const r2 = rollAgain(r); note(`The holed dock turns over in ${NAME(r.who)}'s fingers. The Errant looks this way, once.`); return Object.assign(r2, {ixDock:true}); }
+    return r; }; }
 
 /* ============ resume & boot ============ */
 function resume(){
