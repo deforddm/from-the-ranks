@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.8', ['Book Two\'s portraits next: the sergeant\'s sand scarf wound to the throat, Sathi\'s hide, Tangle\'s jerkin, Marrow\'s shirt collar, Ramin\'s red scale and Keth\'s coat each rise cleanly into the shoulders, and the long necks are gone. Faces and gear are as they were.']],
   ['8.0.7', ['Book One\'s portraits get the same care: each of the Fourth now wears their own collar running cleanly into the shoulders (the sergeant\'s gambeson under the beard, Brisk\'s scale gorget, Tuft\'s cloak drawn to the throat), and the long necks are gone. Faces and gear are as they were.']],
   ['8.0.6', ['Book Five\'s portraits: each soldier now has their own neckline for their kit (the sergeant\'s riveted collar and pinned cloak, Thegg\'s standing collar under his beads, Tobet\'s scarf, Perrit\'s open cadre collar, Ruuk\'s hood, Brune\'s sealskin, Pessa\'s shawl), with the clothes running cleanly into the shoulders and short necks on the heavy ones.']],
   ['8.0.5', ['Book Five\'s portraits, third pass: everyone wears a close high collar like Ammet\'s, up to the jaw, so the necks are short and the clothes sit right.']],

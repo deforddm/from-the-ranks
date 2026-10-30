@@ -81,8 +81,8 @@ POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'
   ctx.strokeStyle = PR.lin(ctx, -22, -30, 22, 30, [[0,'#a8a294'], [.5,'#4e4a44'], [1,'#121110']]); ctx.lineWidth = 2.6; sh(); ctx.stroke();
   ell(ctx, -2, -1, 4.6, 4.8, PR.rad(ctx, -3, -2.2, .4, 5, [[0,'#c8c0b0'], [.4,'#6a665e'], [1,'#1a1816']])); ctx.restore(); // the boss
   // boiled leather over quilting, bleached pale at the shoulders by six summers
-  PR.torsoPath(ctx, 44); ctx.fillStyle = PR.lit(ctx, '#86704e', '#30261a', -44, 30); ctx.fill(); // the quilting
-  ctx.save(); PR.torsoPath(ctx, 44); ctx.clip();
+  PR.neck(ctx, F, 9.2); const B = BP.body(ctx, F, {wide:44, trap:5, nx:12.6, ny:-54, cb:-50.4, c1:'#86704e', c2:'#30261a'}); // the quilting
+  ctx.save(); B.path(); ctx.clip();
   PR.stroke(ctx, 'rgba(60,44,24,.4)', .6, () => { for (let i=0;i<8;i++){ ctx.moveTo(-46 + i*12, -48); ctx.lineTo(-46 + i*12, 2); } });
   PR.path(ctx, [[-29, 2], [-27, -35], [-12, -41], [12, -41], [27, -35], [29, 2]]); ctx.fillStyle = PR.lit(ctx, '#8a6038', '#2e1c0e', -29, 26); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.lineWidth = 1; ctx.stroke(); // the cuirass
   PR.soft(ctx, -14, -32, 14, 8, '#f0d8a8', .14); for (let i=0;i<12;i++){ const r = PR.rng(i + 140); ell(ctx, -24 + r()*46, -32 + r()*30, 1 + r()*3, .5 + r(), 'rgba(240,220,180,.12)'); } // sun-bleached, salt-stained
@@ -91,8 +91,7 @@ POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'
   PR.soft(ctx, 30, -18, 22, 22, '#000000', .45);
   // the sword's baldric, and Ressan's token on its cord at the breast, worn smooth
   ctx.strokeStyle = PR.lit(ctx, '#5a3e24', '#1a1008', -30, 30); ctx.lineWidth = 3.4; ctx.beginPath(); ctx.moveTo(-26, -42); ctx.lineTo(22, 2); ctx.stroke();
-  ctx.restore();
-  PR.neck(ctx, F, 7.2);
+  ctx.restore(); BP.light(ctx, F, B);
   // the scarf: wound round the throat, up over the head, and the tail down over the near shoulder
   const u = F.h/20, cy = F.cy, top = cy - 21*u;
   ctx.save(); ctx.beginPath(); ctx.moveTo(-15, -52); ctx.bezierCurveTo(-24, -46, -30, -42, -34, -36); ctx.lineTo(-24, -30); ctx.bezierCurveTo(-18, -38, -10, -42, 0, -42); ctx.bezierCurveTo(10, -42, 16, -44, 17, -50); ctx.bezierCurveTo(12, -56, -10, -57, -15, -52); ctx.closePath();
@@ -128,9 +127,9 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   PR.path(ctx, [[0, -140], [3.8, -124], [2, -110], [-2, -110], [-3.8, -124]]); ctx.fillStyle = PR.lin(ctx, -4, 0, 4, 0, [[0,'#ece6da'], [.45,'#9a968c'], [1,'#242220']]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.45)', .5, () => { ctx.moveTo(0, -138); ctx.lineTo(0, -111); });
   ctx.fillStyle = PR.lin(ctx, -6, 0, 6, 0, [[0,'#e05a40'], [.5,'#a8302a'], [1,'#3a0a06']]); PR.path(ctx, [[-2.2, -109], [2.2, -109], [5, -96], [1.4, -100], [-1, -92], [-2.6, -102]]); ctx.fill(); ctx.restore(); // the rag
   // the scale: red enamel, polished every night
-  PR.torsoPath(ctx, 40, 3); ctx.fillStyle = PR.lit(ctx, '#7a2018', '#220604', -40, 30); ctx.fill();
-  ctx.save(); PR.torsoPath(ctx, 40, 3); ctx.clip();
-  PR.scales(ctx, -46, 46, -48, 15, 5.2, '#8e2a1e'); PR.soft(ctx, -10, -8, 30, 14, '#000000', .25);
+  PR.neck(ctx, F, 8.8); const B = BP.body(ctx, F, {wide:40, drop:3, trap:4, ny:F.cy + 16, cb:F.cy + 21.4, c1:'#7a2018', c2:'#220604'});
+  ctx.save(); B.path(); ctx.clip();
+  PR.scales(ctx, -46, 46, -64, 21, 5.2, '#8e2a1e'); PR.soft(ctx, -10, -8, 30, 14, '#000000', .25);
   PR.soft(ctx, 28, -18, 26, 24, '#000000', .5); PR.soft(ctx, -22, -34, 14, 9, '#ffe0d0', .22); // the shine he keeps on it
   // the saddle-cloth, rolled tight and slung over the near shoulder and across: cream wool, the company's red stripe
   ctx.save(); ctx.translate(-6, -22); ctx.rotate(.8); const rl = () => { ctx.beginPath(); ctx.moveTo(-40, -4.6); ctx.lineTo(40, -4.6); ctx.quadraticCurveTo(42.6, 0, 40, 4.6); ctx.lineTo(-40, 4.6); ctx.closePath(); };
@@ -141,8 +140,7 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   // the bridle over the far shoulder: a cheek-strap and an iron bit-ring, hanging
   ctx.strokeStyle = PR.lin(ctx, 10, 0, 34, 0, [[0,'#5a3a22'], [1,'#120a04']]); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(14, -46); ctx.bezierCurveTo(22, -42, 26, -30, 24, -18); ctx.stroke();
   ctx.strokeStyle = '#6a6458'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(24, -14.6, 3.4, 0, 7); ctx.stroke(); ell(ctx, 19.4, -38, 2.2, 2.2, '#6a5020');
-  ctx.restore();
-  PR.neck(ctx, F, 6.8);
+  ctx.restore(); BP.light(ctx, F, B); BP.band(ctx, B, -1, 3.6); ctx.fillStyle = PR.lit(ctx, '#5a2a1a', '#1a0604', -B.nx - 3, B.nx + 3); ctx.fill(); PR.stitch(ctx, 'rgba(230,180,140,.4)', .35, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 2); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3, '#0a0604', .5); // the leather the scale is laced to
   // a cord at the throat and his father's toll seal on it: square brass, the Empire's mark and the Old Quarter gate
   PR.stroke(ctx, '#1a0e08', .8, () => { ctx.moveTo(-5.8, -47); ctx.quadraticCurveTo(-4, -40, -1.2, -36.4); ctx.moveTo(5.8, -47); ctx.quadraticCurveTo(4, -40, 1.2, -36.4); });
   ctx.save(); ctx.translate(0, -33); ctx.rotate(.12); ctx.fillStyle = PR.lin(ctx, -4, -4, 4, 4, [[0,'#fff0c0'], [.35,'#d8a84a'], [1,'#3a2408']]); ctx.fillRect(-4, -4, 8, 8); ctx.strokeStyle = 'rgba(60,34,6,.8)'; ctx.lineWidth = .5; ctx.strokeRect(-2.6, -2.6, 5.2, 5.2); PR.stroke(ctx, 'rgba(60,34,6,.7)', .5, () => { ctx.moveTo(-1.4, 2.4); ctx.lineTo(-1.4, -.6); ctx.arc(0, -.6, 1.4, Math.PI, 0); ctx.lineTo(1.4, 2.4); }); ctx.restore(); // a little arch: the gate
