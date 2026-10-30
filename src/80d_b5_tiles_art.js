@@ -284,15 +284,16 @@ Object.assign(POR, {
       const hy = -104 + i*4; PR.path(ctx, [[0, hy - 13], [2.2, hy - 5], [.8, hy], [-.8, hy], [-2.2, hy - 5]]); ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#f0ece4'], [.45, '#a09c94'], [1, '#2a2826']]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.4)', .3, () => { ctx.moveTo(0, hy - 12); ctx.lineTo(0, hy); });
       PR.stroke(ctx, '#d8c8a0', .5, () => { for (let k = 0; k < 3; k++){ ctx.moveTo(-1.1, hy + 1 + k*.9); ctx.lineTo(1.1, hy + 1.4 + k*.9); } }); ctx.restore(); }
     PR.stroke(ctx, '#3a2614', 1.2, () => { ctx.moveTo(11, -46); ctx.quadraticCurveTo(26, -50, 34, -44); }); // the bundle's thong
-    PR.neck(ctx, F, 8.6);
-    const B = B5P.body(ctx, F, {wide:34, drop:3, trap:3.5, ny:F.cy + 15.4, cb:F.cy + 20.8, c1:'#a4845a', c2:'#1a1008'}); ctx.save(); B.path(); ctx.clip(); // the hide hood, pushed back, lying in folds round his shoulders
+    ctx.beginPath(); ctx.moveTo(-18, -42); ctx.bezierCurveTo(-21, -56, -15, -65, 0, -64); ctx.bezierCurveTo(15, -65, 21, -56, 18, -42); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a6c46', '#120a04', -18, 14); ctx.fill(); // the hood, pushed back, bunched behind his neck
+    PR.stroke(ctx, 'rgba(0,0,0,.5)', .8, () => { ctx.moveTo(-15, -46); ctx.quadraticCurveTo(-14, -58, -6, -62); ctx.moveTo(15, -46); ctx.quadraticCurveTo(14, -58, 6, -62); });
+    PR.neck(ctx, F, 8.8); BP.throat(ctx, F, -47.6);
+    const B = B5P.body(ctx, F, {wide:34, drop:3, trap:3.5, nx:11.4, ny:F.cy + 18.6, cb:-47.6, c1:'#a4845a', c2:'#1a1008'}); ctx.save(); B.path(); ctx.clip(); // the hide hood, pushed back, lying in folds round his shoulders
       ctx.fillStyle = PR.lit(ctx, '#5e5444', '#14100a', -8, 8); PR.path(ctx, [[-6, -34], [6, -34], [9, 6], [-9, 6]]); ctx.fill(); // wool, where the hide is laced
       PR.stroke(ctx, '#2a1808', .6, () => { for (let i = 0; i < 5; i++){ const y = -32 + i*6; ctx.moveTo(-6.6, y); ctx.lineTo(6.6, y + 3); ctx.moveTo(6.6, y); ctx.lineTo(-6.6, y + 3); } }); PR.stroke(ctx, 'rgba(230,200,150,.35)', .3, () => { for (let i = 0; i < 5; i++){ const y = -32 + i*6; ctx.moveTo(-6.6, y - .3); ctx.lineTo(0, y + 1.2); } });
       const r = PR.rng(53); for (let i = 0; i < 16; i++) PR.soft(ctx, -28 + r()*56, -38 + r()*40, 1 + r()*2.4, .8 + r()*1.4, '#2a1808', .35); // the hide's marks
-      [3, 7, 11.5].forEach((off, j) => { PR.stroke(ctx, 'rgba(20,10,4,.55)', 1, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, off); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } [-1, 1].forEach(sd => { const [x, y] = B.pt(sd, off); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sd*(5 + j*3), y + 2, sd*(18 + j*5), -40 + j*2); }); });
-        PR.stroke(ctx, 'rgba(255,230,180,.22)', .6, () => { for (let i = 0; i <= 10; i++){ const [x, y] = B.pt(-1 + i/10, off - 1.2); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); }); // the hood's folds
+      [3, 7, 11.5].forEach((off, j) => { PR.stroke(ctx, 'rgba(20,10,4,.55)', 1, () => { [-1, 1].forEach(sd => { const [x, y] = B.pt(sd, off); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sd*(5 + j*3), y + 2, sd*(18 + j*5), -40 + j*2); }); }); }); // the folds of hide over his shoulders
       PR.stroke(ctx, 'rgba(230,206,160,.55)', .6, () => { for (let i = 0; i < 18; i++){ const x = -28 + i*3.3, y = -6 + Math.abs(x)*.05; ctx.moveTo(x, y); ctx.lineTo(x + .4, y + 6 + (i%2)*2); } }); // the fringe
-      ctx.restore(); B5P.light(ctx, F, B);
+      ctx.restore(); B5P.light(ctx, F, B, true);
     B5P.band(ctx, B, -.6, 2); ctx.fillStyle = PR.lit(ctx, '#6a5236', '#1a1008', -B.nx, B.nx); ctx.fill(); // the fur trim
     { const r = PR.rng(57); ctx.lineCap = 'round'; for (let i = 0; i < 130; i++){ const [x, y] = B.pt(-1.04 + r()*2.08, .8), c = x < 0 && i%5 === 0 ? '#c8b494' : ['#6a5236', '#4a3420', '#2a1c10', '#8a6c48'][i%4]; PR.stroke(ctx, c, .55, () => { ctx.moveTo(x, y + 1.6); ctx.lineTo(x + (r() - .5)*1.6, y - .4 - r()*1.2); }); } }
     PR.face(ctx, F);
@@ -306,16 +307,16 @@ Object.assign(POR, {
       PR.stroke(ctx, '#c8b890', .6, () => { for (let k = 0; k < 7; k++){ ctx.moveTo(-1.6, -96 + k*1.1); ctx.lineTo(1.6, -95.4 + k*1.1); } });
       ctx.fillStyle = PR.lin(ctx, -4, 0, 4, 0, [[0, '#f0ece4'], [.45, '#a09c94'], [1, '#22201e']]); PR.path(ctx, [[-1.2, -98], [1.2, -98], [.9, -118], [0, -124], [-.9, -118]]); ctx.fill(); // the tine
       [[-1, -106], [1, -112]].forEach(([sd, y]) => { PR.path(ctx, [[sd*.6, y + 2], [sd*.8, y - 1], [sd*4.4, y + 3.6], [sd*1, y + .4]]); ctx.fill(); }); PR.stroke(ctx, 'rgba(255,255,255,.5)', .3, () => { ctx.moveTo(-.4, -99); ctx.lineTo(-.3, -121); }); ctx.restore(); // the barbs
-    B5P.back(ctx, F, '#3a2e26', '#120c0a', 18, 1.8); PR.neck(ctx, F, 8.8);
-    const B = B5P.body(ctx, F, {wide:36, drop:4, trap:1.5, ny:F.cy + 16.6, cb:F.cy + 21.6, c1:'#5a6c70', c2:'#0a1012'}); ctx.save(); B.path(); ctx.clip(); // oiled sealskin, drawn up round the neck
+    B5P.back(ctx, F, '#3a2e26', '#120c0a', 18, 1.8); PR.neck(ctx, F, 8.8); BP.throat(ctx, F, -47.4);
+    const B = B5P.body(ctx, F, {wide:36, drop:4, trap:1.5, nx:11.2, ny:-53.2, cb:-47.4, c1:'#5a6c70', c2:'#0a1012'}); ctx.save(); B.path(); ctx.clip(); // oiled sealskin, drawn up round the neck
       PR.stitch(ctx, 'rgba(200,220,220,.35)', .4, () => { ctx.moveTo(-34, -24); ctx.quadraticCurveTo(-24, -34, -14, -46); ctx.moveTo(34, -24); ctx.quadraticCurveTo(24, -34, 14, -46); ctx.moveTo(-6, -46); ctx.quadraticCurveTo(-10, -20, -8, 6); });
       PR.stroke(ctx, 'rgba(0,0,0,.4)', .8, () => { ctx.moveTo(-6.6, -46); ctx.quadraticCurveTo(-10.6, -20, -8.6, 6); });
       PR.soft(ctx, -20, -44, 11, 3.4, '#ffffff', .42, -.45); PR.soft(ctx, -28, -32, 5, 9, '#e0f4ff', .22, .3); PR.soft(ctx, -14, -14, 5, 12, '#d0e8f0', .12, .2); PR.soft(ctx, 20, -44, 8, 3, '#bfe0e8', .14, .4); // wet, on the shoulders
       PR.stroke(ctx, 'rgba(255,255,255,.55)', .45, () => { ctx.moveTo(-30, -38); ctx.quadraticCurveTo(-22, -46, -13, -49); ctx.moveTo(-33, -30); ctx.quadraticCurveTo(-31, -34, -28, -37); });
       const r = PR.rng(97); for (let i = 0; i < 9; i++){ const x = -32 + r()*20, y = -46 + r()*20; ell(ctx, x, y, .5, .7, 'rgba(10,20,24,.5)'); ell(ctx, x - .15, y - .25, .2, .25, 'rgba(255,255,255,.8)'); } // drops
-      for (let i = 0; i <= 26; i++){ const t = -1 + i/13, [x0, y0] = B.pt(t, -.4), [x1, y1] = B.pt(t, 3.4); PR.stroke(ctx, i%2 ? 'rgba(0,0,0,.45)' : 'rgba(220,240,240,.25)', .5, () => { ctx.moveTo(x0, y0); ctx.lineTo(x1 + (i%2 ? .3 : -.3), y1); }); } // gathered by the drawstring
-      ctx.restore(); B5P.light(ctx, F, B);
-    PR.stroke(ctx, '#c8b890', .8, () => { for (let i = 0; i <= 26; i++){ const [x, y] = B.pt(-1 + i/13, 2.4); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the drawstring, and its ends
+      for (let i = 0; i <= 26; i++){ const t = -1 + i/13, [x0, y0] = B.pt(t, -.4), [x1, y1] = B.pt(t, 2.2); PR.stroke(ctx, i%2 ? 'rgba(0,0,0,.45)' : 'rgba(220,240,240,.25)', .5, () => { ctx.moveTo(x0, y0); ctx.lineTo(x1 + (i%2 ? .3 : -.3), y1); }); } // gathered by the drawstring
+      ctx.restore(); B5P.light(ctx, F, B, true);
+    PR.stroke(ctx, '#c8b890', .8, () => { for (let i = 0; i <= 26; i++){ const [x, y] = B.pt(-1 + i/13, 1.4); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the drawstring, and its ends
     { const [x, y] = B.pt(-.3, 2.6); PR.stroke(ctx, '#c8b890', .7, () => { ctx.moveTo(x, y); ctx.quadraticCurveTo(x - 1.6, y + 4, x - 1.2, y + 8); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 1.4, y + 5, x + 1.6, y + 9.6); }); ell(ctx, x - 1.2, y + 8.4, .8, .9, '#a8986c'); ell(ctx, x + 1.6, y + 10, .8, .9, '#a8986c'); ell(ctx, x, y, 1, .8, '#b8a87c'); }
     const sh = k => B.pt(-1 + k*2, 8.4 - Math.abs(k - .5)*2); PR.stroke(ctx, '#3a2c1c', .6, () => { for (let i = 0; i <= 20; i++){ const [x, y] = sh(.06 + i/20*.88); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } });
     for (let i = 0; i < 9; i++){ const [x, y] = sh(.1 + i/8*.8), blk = i === 5; ctx.save(); ctx.translate(x, y + 1.4); ctx.rotate((i/8 - .5)*-.9); ell(ctx, .4, .5, 1.3, 1.9, 'rgba(0,0,0,.5)'); ell(ctx, 0, 0, 1.25, 1.85, PR.rad(ctx, -.4, -.6, .1, 2, blk ? [[0, '#5a5650'], [1, '#08080a']] : [[0, '#ffffff'], [.6, '#e0d8c4'], [1, '#8a806a']])); PR.stroke(ctx, blk ? 'rgba(160,160,170,.5)' : 'rgba(90,70,50,.6)', .3, () => { ctx.moveTo(0, -1.4); ctx.lineTo(0, 1.4); }); ctx.restore(); } // the burial shells, one of them black
@@ -334,19 +335,18 @@ Object.assign(POR, {
       ctx.strokeStyle = PR.lin(ctx, -10, 0, 2, 0, [[0, '#d8d8d0'], [.6, '#7a7a74'], [1, '#2a2a28']]); ctx.lineWidth = 1.8; hook(); ctx.stroke(); PR.stroke(ctx, 'rgba(255,255,255,.55)', .4, () => { ctx.moveTo(-.5, -119); ctx.lineTo(-.5, -106); ctx.moveTo(-9.4, -114); ctx.quadraticCurveTo(-10, -121, -7, -121.4); });
       PR.stroke(ctx, '#b8a074', .6, () => { for (let k = 0; k < 6; k++){ ctx.moveTo(-1.8, -96 + k*1.1); ctx.lineTo(1.8, -95.2 + k*1.1); } }); ctx.restore(); // a twist of tarred line under the socket
     PR.strands(ctx, 30, ['#4a3020', '#2a1a10', '#6a4a30'], .8, 79, (i, r) => { const sd = i%2 ? 1 : -1, x = sd*(F.w - 1 + r()*3); return [x, F.cy - 4, x + sd*(2 + r()*2), F.cy + 12, x + sd*(1 + r()*4), -46 + r()*6]; }); // her hair, loose under the kerchief, down to the shoulders
-    PR.neck(ctx, F, 9.4);
-    const B = B5P.body(ctx, F, {wide:41, drop:5, trap:1.5, ny:F.cy + 16.4, cb:F.cy + 21.2, c1:'#5e6444', c2:'#12140a'}); ctx.save(); B.path(); ctx.clip(); // an old oilskin jacket, not hers
+    PR.neck(ctx, F, 9.4); BP.throat(ctx, F, -45);
+    const B = B5P.body(ctx, F, {wide:41, drop:5, trap:1.5, v:true, nx:11.6, ny:F.cy + 17.6, cb:-38, c1:'#5e6444', c2:'#12140a'}); ctx.save(); B.path(); ctx.clip(); // an old oilskin jacket, not hers
       PR.stroke(ctx, 'rgba(0,0,0,.45)', .9, () => { ctx.moveTo(-3, -30); ctx.quadraticCurveTo(-6, -12, -5, 6); ctx.moveTo(5, -30); ctx.quadraticCurveTo(8, -12, 8, 6); }); ctx.fillStyle = PR.lit(ctx, '#6a5a44', '#1a140c', -6, 8); PR.path(ctx, [[-3.4, -30], [5, -30], [8, 6], [-5, 6]]); ctx.fill(); // open on a jerkin
       PR.soft(ctx, -26, -26, 9, 4, '#f0f4d8', .26, -.6); ctx.save(); ctx.translate(-28, -12); ctx.rotate(.2); ctx.fillStyle = PR.lit(ctx, '#7a5a3a', '#2a1a0c', -5, 5); ctx.fillRect(-5, -4, 10, 8); PR.stitch(ctx, 'rgba(230,210,170,.6)', .35, () => { ctx.rect(-4.4, -3.4, 8.8, 6.8); }); ctx.restore(); // a patch, sewn on with what there was
       const lo = x => -27 - Math.pow(1 - Math.min(1, Math.abs(x - 3)/42), 1.4)*12, sw = () => { ctx.beginPath(); ctx.moveTo(-B.nx, B.ny); B.topIn(); ctx.lineTo(60, -70); ctx.lineTo(60, lo(60)); for (let x = 60; x >= -60; x -= 4) ctx.lineTo(x, lo(x)); ctx.lineTo(-60, -70); ctx.closePath(); }; // the shawl, wrapped round and knotted
       sw(); ctx.fillStyle = PR.lit(ctx, '#7c8288', '#14161a', -42, 34); ctx.fill(); ctx.save(); sw(); ctx.clip();
         PR.stroke(ctx, 'rgba(120,60,50,.55)', 1.4, () => { for (let x = 60; x >= -60; x -= 4) x === 60 ? ctx.moveTo(x, lo(x) - 2.6) : ctx.lineTo(x, lo(x) - 2.6); }); // a border stripe, once red
-        PR.stroke(ctx, 'rgba(0,0,0,.4)', .9, () => { [-1, 1].forEach(sd => { for (let i = 0; i < 3; i++){ ctx.moveTo(sd*(B.nx + 1 + i*3), B.ny + 3 + i*2); ctx.quadraticCurveTo(sd*(14 + i*6), -42 + i*2, sd*(5 + i*7), -36 + i); } }); }); PR.soft(ctx, -20, -46, 12, 5, '#f0f4ff', .14, -.4);
-        PR.stroke(ctx, 'rgba(220,226,230,.08)', .5, () => { for (let i = -14; i <= 14; i++){ ctx.moveTo(i*4, -70); ctx.lineTo(i*4 + 3, -20); } }); ctx.restore(); // the weave
+        PR.stroke(ctx, 'rgba(0,0,0,.4)', .9, () => { [-1, 1].forEach(sd => { for (let i = 0; i < 3; i++){ ctx.moveTo(sd*(B.nx + 1 + i*3), B.ny + 3 + i*2); ctx.quadraticCurveTo(sd*(14 + i*6), -42 + i*2, sd*(5 + i*7), -36 + i); } }); }); PR.soft(ctx, -20, -46, 12, 5, '#f0f4ff', .14, -.4); ctx.restore();
       PR.stroke(ctx, 'rgba(150,154,160,.75)', .5, () => { const r = PR.rng(91); for (let x = -40; x <= 40; x += 1.6){ const y = lo(x); ctx.moveTo(x, y); ctx.lineTo(x + (r() - .5)*1.2, y + 1.4 + r()*2.4); } }); // frayed
       ell(ctx, 3, -38, 3.2, 2.5, PR.lit(ctx, '#8a9096', '#1e2024', 0, 6)); PR.stroke(ctx, 'rgba(0,0,0,.45)', .5, () => { ctx.ellipse(3, -38, 3.2, 2.5, 0, .2, 2.6); }); // the knot
       [[-1, 9], [1, 12]].forEach(([sd, l]) => { ctx.fillStyle = PR.lit(ctx, '#7c8288', '#1e2024', -2, 8); ctx.beginPath(); ctx.moveTo(3 + sd*1.6, -36.4); ctx.quadraticCurveTo(3 + sd*4, -36 + l*.5, 3 + sd*2.4, -36 + l); ctx.lineTo(3 + sd*.2, -36 + l - .6); ctx.quadraticCurveTo(3 + sd*1.6, -36 + l*.5, 3, -36); ctx.fill(); PR.stroke(ctx, 'rgba(150,154,160,.7)', .4, () => { for (let i = 0; i < 4; i++){ const x = 3 + sd*(.6 + i*.5); ctx.moveTo(x, -36 + l - .4); ctx.lineTo(x, -36 + l + 1.6); } }); });
-    ctx.restore(); B5P.light(ctx, F, B);
+    ctx.restore(); B5P.light(ctx, F, B, true); BP.shirt(ctx, B, '#6e5c46', '#1a140c', -46); ell(ctx, 1, -37.6, 3.4, 2.6, PR.lit(ctx, '#8a9096', '#1e2024', -2, 4));
     F.under = (ctx, F) => { const u = F.h/20, x = -F.w*.5, y = F.cy + 5.4*u, r = PR.rng(83); ctx.fillStyle = 'rgba(178,104,92,.38)'; ctx.beginPath(); ctx.moveTo(x - 3.8, y - 1.6); ctx.bezierCurveTo(x - 2, y - 3.6, x + 2.4, y - 3, x + 3.2, y - 1); ctx.bezierCurveTo(x + 3.6, y + 1.6, x + 1, y + 3.6, x - 1.6, y + 3); ctx.bezierCurveTo(x - 4, y + 2.4, x - 4.6, y, x - 3.8, y - 1.6); ctx.fill(); // the burn-scar
       for (let i = 0; i < 7; i++) PR.soft(ctx, x - 2.6 + r()*5, y - 2 + r()*4.4, .8 + r()*1.2, .6 + r(), i%2 ? '#ffe4d8' : '#7a3428', i%2 ? .42 : .2); PR.stroke(ctx, 'rgba(255,220,200,.35)', .35, () => { ctx.moveTo(x - 3, y - 1.4); ctx.quadraticCurveTo(x, y - 2.6, x + 2.6, y - .8); }); }; // shiny where it healed, puckered where it didn't
     PR.face(ctx, F);

@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v8.0.11'; // Book Four's eight repainted
+const CACHE = 'ftr-v8.0.12'; // every bust its own neckline again
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];

@@ -127,7 +127,7 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   PR.path(ctx, [[0, -140], [3.8, -124], [2, -110], [-2, -110], [-3.8, -124]]); ctx.fillStyle = PR.lin(ctx, -4, 0, 4, 0, [[0,'#ece6da'], [.45,'#9a968c'], [1,'#242220']]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.45)', .5, () => { ctx.moveTo(0, -138); ctx.lineTo(0, -111); });
   ctx.fillStyle = PR.lin(ctx, -6, 0, 6, 0, [[0,'#e05a40'], [.5,'#a8302a'], [1,'#3a0a06']]); PR.path(ctx, [[-2.2, -109], [2.2, -109], [5, -96], [1.4, -100], [-1, -92], [-2.6, -102]]); ctx.fill(); ctx.restore(); // the rag
   // the scale: red enamel, polished every night
-  PR.neck(ctx, F, 8.8); const B = BP.body(ctx, F, {wide:40, drop:3, trap:4, ny:F.cy + 16, cb:F.cy + 21.4, c1:'#7a2018', c2:'#220604'});
+  PR.neck(ctx, F, 8.8); const B = BP.body(ctx, F, {wide:40, drop:3, trap:4, ny:F.cy + 16, cb:F.cy + 23.4, c1:'#7a2018', c2:'#220604'});
   ctx.save(); B.path(); ctx.clip();
   PR.scales(ctx, -46, 46, -64, 21, 5.2, '#8e2a1e'); PR.soft(ctx, -10, -8, 30, 14, '#000000', .25);
   PR.soft(ctx, 28, -18, 26, 24, '#000000', .5); PR.soft(ctx, -22, -34, 14, 9, '#ffe0d0', .22); // the shine he keeps on it
@@ -140,7 +140,7 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   // the bridle over the far shoulder: a cheek-strap and an iron bit-ring, hanging
   ctx.strokeStyle = PR.lin(ctx, 10, 0, 34, 0, [[0,'#5a3a22'], [1,'#120a04']]); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(14, -46); ctx.bezierCurveTo(22, -42, 26, -30, 24, -18); ctx.stroke();
   ctx.strokeStyle = '#6a6458'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(24, -14.6, 3.4, 0, 7); ctx.stroke(); ell(ctx, 19.4, -38, 2.2, 2.2, '#6a5020');
-  ctx.restore(); BP.light(ctx, F, B); BP.band(ctx, B, -1, 3.6); ctx.fillStyle = PR.lit(ctx, '#5a2a1a', '#1a0604', -B.nx - 3, B.nx + 3); ctx.fill(); PR.stitch(ctx, 'rgba(230,180,140,.4)', .35, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 2); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3, '#0a0604', .5); // the leather the scale is laced to
+  ctx.restore(); BP.light(ctx, F, B); PR.stroke(ctx, '#2a0e06', 1.4, B.top); BP.throat(ctx, F, B.cb + 1); // the leather the scale is laced to
   // a cord at the throat and his father's toll seal on it: square brass, the Empire's mark and the Old Quarter gate
   PR.stroke(ctx, '#1a0e08', .8, () => { ctx.moveTo(-5.8, -47); ctx.quadraticCurveTo(-4, -40, -1.2, -36.4); ctx.moveTo(5.8, -47); ctx.quadraticCurveTo(4, -40, 1.2, -36.4); });
   ctx.save(); ctx.translate(0, -33); ctx.rotate(.12); ctx.fillStyle = PR.lin(ctx, -4, -4, 4, 4, [[0,'#fff0c0'], [.35,'#d8a84a'], [1,'#3a2408']]); ctx.fillRect(-4, -4, 8, 8); ctx.strokeStyle = 'rgba(60,34,6,.8)'; ctx.lineWidth = .5; ctx.strokeRect(-2.6, -2.6, 5.2, 5.2); PR.stroke(ctx, 'rgba(60,34,6,.7)', .5, () => { ctx.moveTo(-1.4, 2.4); ctx.lineTo(-1.4, -.6); ctx.arc(0, -.6, 1.4, Math.PI, 0); ctx.lineTo(1.4, 2.4); }); ctx.restore(); // a little arch: the gate

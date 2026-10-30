@@ -243,13 +243,13 @@ POR.sohra = function(ctx){ const F = {cy:-75, w:11.2, h:19.2, jaw:.72, chin:4.4,
   ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = PR.lin(ctx, 26, 0, 40, 0, [[0,'#e0ceaa'], [.5,'#b49a6e'], [1,'#4a3a24']]); ctx.lineWidth = 3.2; ctx.beginPath(); ctx.moveTo(24, 4); ctx.quadraticCurveTo(44, -40, 30, -86); ctx.quadraticCurveTo(27, -96, 33, -104); ctx.stroke();
   ctx.strokeStyle = '#1e140c'; ctx.lineWidth = 3.4; ctx.beginPath(); ctx.moveTo(31, -100); ctx.lineTo(33, -104); ctx.stroke(); PR.stroke(ctx, 'rgba(230,220,196,.6)', .5, () => { ctx.moveTo(33, -104); ctx.lineTo(20, 4); }); ctx.restore();
   // the tunic: soft hide, a fringed yoke, open at the throat
-  PR.neck(ctx, F, 7.6); const B = BP.body(ctx, F, {wide:31, drop:5, trap:1, ny:F.cy + 15.4, cb:F.cy + 20.6, c1:'#a07a52', c2:'#2e1c0c'});
+  PR.neck(ctx, F, 7.6); BP.throat(ctx, F, -48); const B = BP.body(ctx, F, {wide:31, drop:5, trap:1, nx:10.4, ny:-54, cb:-48, c1:'#a07a52', c2:'#2e1c0c'});
   ctx.save(); B.path(); ctx.clip();
   ctx.fillStyle = PR.lit(ctx, '#8a6440', '#24160a', -30, 26); PR.path(ctx, [[-34, -30], [34, -30], [34, -24], [-34, -24]]); ctx.fill(); // the yoke's seam
   PR.strands(ctx, 40, ['rgba(220,196,150,.65)', 'rgba(150,108,70,.6)', 'rgba(60,34,16,.6)'], .7, 41, (i, r) => { const x = lerp(-31, 31, i/39), y = -26 + (1 - Math.pow((i/39 - .5)*2, 2))*4; return [x, y, x + (r() - .5), y + 3, x + (r() - .5)*1.4, y + 6 + r()*3]; });
   ctx.fillStyle = '#5a3a1e'; ctx.fillRect(-34, -4, 68, 3); ctx.fillStyle = '#b8402a'; ctx.fillRect(-3, -4.6, 6, 4.2); // the belt and its red knot
   PR.soft(ctx, 22, -18, 16, 14, '#000000', .45); PR.soft(ctx, -20, -36, 12, 7, '#ffe0b0', .1);
-  ctx.restore(); BP.light(ctx, F, B); BP.band(ctx, B, -.6, 2.2); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#1e1208', -B.nx - 2, B.nx + 2); ctx.fill(); // the hide's rolled neck
+  ctx.restore(); BP.light(ctx, F, B, true); BP.band(ctx, B, -.4, 1.2); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#1e1208', -B.nx - 2, B.nx + 2); ctx.fill(); // the hide's edge, low on the throat
   // three strands of bone beads, long, short and between
   [[-46, 10, 9], [-43, 7, 13], [-40, 5, 17]].forEach(([y0, w, n], j) => { for (let i=0;i<n;i++){ const k = i/(n - 1), x = lerp(-w*1.6, w*1.6, k), y = y0 + Math.sin(k*Math.PI)*w*.9; ell(ctx, x, y, 1.2, 1.1, PR.rad(ctx, x - .4, y - .4, .1, 1.4, [[0, j === 1 ? '#f4ecd8' : '#e8dcc0'], [1, '#6a5e48']])); } });
   F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 7, 4, 2, '#4a3018', .2); };
