@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.18', ['Spears, lances, the standard, the fish-spear and the boathook now pass in front of the armour from hand to head instead of through it; Tobet wears his bow slung across his back.']],
   ['8.0.17', ['Shields are a real shield\'s size now, and every hand on a weapon wears something: gauntlets on the heavies (steel, red lacquer, worm-green), leather gloves and bracers on the archers, oiled leather on Brune, cloth wraps on Pessa.']],
   ['8.0.16', ['Shields are held in front now, not floating over a shoulder, and spears, standards, the fish-spear and the boathook have a hand on them; crossbows, bows and spear bundles hang from straps. Thegg\'s pauldrons are proper articulated iron.']],
   ['8.0.15', ['Thegg now wears heavy hammered-iron pauldrons, dented, bronze-rimmed and buckled on; the Letherii sergeant polished steel ones with a brass rim and a brass boss.']],

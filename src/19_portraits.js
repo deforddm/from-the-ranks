@@ -199,8 +199,9 @@ const BP = {
       if (o.emblem) o.emblem(ctx, sd, sd*wd*.84, -38 + dr - rs); }); },
   /* a hand gripping a haft low in the frame, in the haft's own frame (translate tx, ty; rotate rot; the haft runs up local x = 0): the haft's near stretch redrawn in front
      of the body and the fist round it at local y v, in its handwear (see fist). w = 0 draws the fist alone (a bow's grip). Every held weapon is held */
-  grip(ctx, tx, ty, rot, v, w, cols, wear, sleeve, x = 0){ ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot);
-    if (w) { ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lin(ctx, x - w/2, 0, x + w/2, 0, [[0, cols[0]], [.5, cols[1]], [1, cols[2]]]); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, v - 14); ctx.stroke(); }
+  grip(ctx, tx, ty, rot, v, w, cols, wear, sleeve, x = 0, top = v - 14){ ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot);
+    if (w) { ctx.lineCap = 'butt'; ctx.save(); ctx.filter = 'blur(1.2px)'; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = w + 1.4; ctx.beginPath(); ctx.moveTo(x + 1.6, 8); ctx.lineTo(x + 1.6, top + 2); ctx.stroke(); ctx.restore(); // its shadow on whatever is behind it
+      ctx.strokeStyle = PR.lin(ctx, x - w/2, 0, x + w/2, 0, [[0, cols[0]], [.5, cols[1]], [1, cols[2]]]); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, top); ctx.stroke(); PR.stroke(ctx, 'rgba(255,240,210,.35)', .5, () => { ctx.moveTo(x - w*.3, 6); ctx.lineTo(x - w*.3, top); }); } // the haft, in front of the armour all the way up
     BP.fist(ctx, x, v, 0, wear, 18 - v); if (w) { ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lin(ctx, x - w/2, 0, x + w/2, 0, [[0, cols[0]], [.5, cols[1]], [1, cols[2]]]); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, v - 5.4); ctx.lineTo(x, v - 14); ctx.stroke(); }
     ctx.restore(); },
   /* a gripping fist at (x, y), turned by rot, in handwear: wear {k: 'gaunt' (plate fingers, knuckle plate, a flared cuff) | 'mail' | 'glove' | 'bracer' (glove and a laced bracer) |
@@ -327,7 +328,7 @@ const POR = {
     PR.stroke(ctx, 'rgba(30,10,6,.55)', .8, () => { for (let i=0;i<9;i++){ const r = PR.rng(i + 31); const x = -20 + r()*34, y = -22 + r()*40; ctx.moveTo(x, y); ctx.lineTo(x + 2 + r()*4, y + 1 + r()*3); } }); // gouges through the paint
     ell(ctx, 7, 2, 6, 6.6, PR.rad(ctx, 5.4, .4, .5, 6.4, [[0,'#e8e4d8'], [.4,'#8e8a82'], [1,'#262420']])); ctx.restore(); // the boss
     ctx.restore();
-    BP.grip(ctx, 41, 4, -.028, -18.0, 3.4, ['#9a7a50', '#5a4428', '#1e160c'], {k:'gaunt', c:['#e8eaec', '#9a9c9e', '#2a2c2e'], trim:'rgba(180,60,40,.9)'}, '#6a6660'); // her hand on the spear
+    BP.grip(ctx, 41, 4, -.028, -18.0, 3.4, ['#9a7a50', '#5a4428', '#1e160c'], {k:'gaunt', c:['#e8eaec', '#9a9c9e', '#2a2c2e'], trim:'rgba(180,60,40,.9)'}, '#6a6660', 0, -102); // her hand on the spear
     return F; },
   kettle(ctx){ const F = {cy:-71, w:13.4, h:19, jaw:.76, chin:4.8, skin:'#c29a7e', iris:'#6a7a3a', lip:'#b0645a', browCol:'#8a3a1c', browW:1.1, arch:1.4, browL:.9, browR:-.1, rim:'#e07a45', nose:.95, smileL:-.1, smileR:1.1, teeth:true, look:.1, flush:'#d0685a'};
     PR.neck(ctx, F, 8); BP.throat(ctx, F, -47.6); const B = BP.body(ctx, F, {wide:36, drop:4, trap:1.5, nx:10.8, ny:-53.6, cb:-47.4, c1:'#9a5230', c2:'#3a1c0e'});

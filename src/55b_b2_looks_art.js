@@ -167,5 +167,5 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   ell(ctx, -F.w - 2.6, cy - 8, 3.6, 3, PR.rad(ctx, -F.w - 3.6, cy - 9, .4, 4, [[0,'#f08060'], [.5,'#b03a2c'], [1,'#3a0a06']])); // the knot
   ctx.beginPath(); ctx.moveTo(-F.w - 4.6, cy - 6.4); ctx.bezierCurveTo(-F.w - 9, cy + 6, -F.w - 6, -54, -F.w - 12, -44); ctx.lineTo(-F.w - 6.4, -44); ctx.bezierCurveTo(-F.w - 3, -54, -F.w - 4, cy + 4, -F.w - 1.4, cy - 6); ctx.closePath(); ctx.fillStyle = PR.lin(ctx, -F.w - 12, 0, -F.w, 0, [[0,'#e86a50'], [.6,'#a8362a'], [1,'#4a0e08']]); ctx.fill(); // the tail
   ctx.fillStyle = '#d8a84a'; ctx.fillRect(-F.w - 12, -45, 5.8, 1.2); // its fringed end, a brass bead in it
-  BP.grip(ctx, 31, 0, .1, -16.0, 3.6, ['#a07a50', '#5a4026', '#1a1008'], {k:'gaunt', c:['#e06a50', '#9a2a1e', '#2a0604'], trim:'rgba(240,200,120,.9)'}, '#7a2018'); // his hand on the lance
+  BP.grip(ctx, 31, 0, .1, -16.0, 3.6, ['#a07a50', '#5a4026', '#1a1008'], {k:'gaunt', c:['#e06a50', '#9a2a1e', '#2a0604'], trim:'rgba(240,200,120,.9)'}, '#7a2018', 0, -106); // his hand on the lance
     return F; };

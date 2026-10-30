@@ -201,7 +201,7 @@ Object.assign(POR, {
         ctx.strokeStyle = 'rgba(220,226,190,.4)'; ctx.lineWidth = .7; ctx.stroke(); ctx.restore();
       ctx.strokeStyle = PR.lin(ctx, -17, -40, 17, 40, [[0, '#b0aa98'], [.5, '#5a5648'], [1, '#121210']]); ctx.lineWidth = 2; sh(); ctx.stroke(); ctx.restore();
     ctx.restore();
-    BP.grip(ctx, -30, 4, -.05, -19.0, 3, ['#a07a50', '#5a4028', '#1a1008'], {k:'gaunt', c:['#b8c49c', '#6a7656', '#141c0e'], trim:'rgba(200,160,80,.9)'}, '#46503a'); // her hand on the temple spear
+    BP.grip(ctx, -30, 4, -.05, -19.0, 3, ['#a07a50', '#5a4028', '#1a1008'], {k:'gaunt', c:['#b8c49c', '#6a7656', '#141c0e'], trim:'rgba(200,160,80,.9)'}, '#46503a', 0, -90); // her hand on the temple spear
     return F; },
   /* Tebbet: twenty-six, Dal Hon's hill country; long in the arm and narrow, very still before he looses. A cloth hood against the sun, wound round the head and the jaw; a padded jack, a bracer worn smooth; the recurve his uncle made, rebuilt twice */
   tebbet(ctx){ const F = {cy:-73, w:11.8, h:20, jaw:.7, chin:4.6, skin:'#6a4630', iris:'#1e140c', lip:'#5a3428', browCol:'#0a0604', browW:1.4, arch:.7, rim:'#b7895a', rimA:.24, nose:1.05, look:-.3, open:.82, smileL:.1, smileR:.05, mouthW:3.6};
@@ -259,7 +259,7 @@ Object.assign(POR, {
     BP.hair(ctx, F, {c:['#3a2c22', '#120c08', '#040302'], v:2.6, wx:1.4, hl:13.4, ey:1, n:70, sw:.55, s:['#2a1e16', '#0a0604', '#4a3a2c'], seed:111, sh:'#c8a890', shA:.3, part:-1, wisp:5}); // black, pulled back
     ctx.fillStyle = '#c8a050'; ctx.fillRect(-F.w - 3.2, F.cy - 5, 3, 1.6); // the tie
     ctx.lineCap = 'round'; ctx.fillStyle = PR.lin(ctx, -40, 0, -F.w, 0, [[0, '#0a0604'], [.6, '#1a120c'], [1, '#2a1e16']]); ctx.beginPath(); ctx.moveTo(-F.w - 1, F.cy - 6); ctx.bezierCurveTo(-F.w - 10, F.cy - 2, -28, F.cy + 6, -38, F.cy + 4); ctx.bezierCurveTo(-30, F.cy + 12, -20, F.cy + 10, -F.w - 1, F.cy - 2); ctx.closePath(); ctx.fill(); // the tail, blown back
-    PR.strands(ctx, 24, ['#2a1e16', '#4a3a2c', '#0a0604'], .5, 113, (i, r) => { const k = r(); return [-F.w - 1, F.cy - 4, -F.w - 10 - k*8, F.cy + k*4, -30 - k*10, F.cy + 3 + r()*6]; }); BP.grip(ctx, 30, 4, .049, -19.0, 2.6, ['#8a6440', '#4a3220', '#140c06'], {k:'gaunt', c:['#e07a50', '#a03a20', '#2a0804'], trim:'rgba(240,200,120,.9)'}, '#7a2a16'); // his hand on his father's standard
+    PR.strands(ctx, 24, ['#2a1e16', '#4a3a2c', '#0a0604'], .5, 113, (i, r) => { const k = r(); return [-F.w - 1, F.cy - 4, -F.w - 10 - k*8, F.cy + k*4, -30 - k*10, F.cy + 3 + r()*6]; }); BP.grip(ctx, 30, 4, .049, -19.0, 2.6, ['#8a6440', '#4a3220', '#140c06'], {k:'gaunt', c:['#e07a50', '#a03a20', '#2a0804'], trim:'rgba(240,200,120,.9)'}, '#7a2a16', 0, -108); // his hand on his father's standard
     return F; },
   /* Mirrel: thirty-four, Li Heng; a Denul healer, small, quick, always slightly ahead. A warm, tired face; dark hair up in a knot, bound with a strip of linen; a padded jack with the sleeves cut off at the elbow, rolled linen at her shoulder, the hospice bag with the red hand on the flap */
   mirrel(ctx){ const F = {cy:-73, w:12, h:19.2, jaw:.72, chin:4.4, skin:'#caa282', iris:'#4a3a24', lip:'#a05e4e', browCol:'#2a1810', browW:1.25, arch:1, browL:.6, browR:.3, rim:'#8fbfa0', rimA:.24, nose:.98, look:-.25, open:1, smileL:.35, smileR:.15, mouthW:3.5, bags:.6, age:.3, flush:'#c87a6a'};
