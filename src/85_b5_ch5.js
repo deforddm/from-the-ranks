@@ -217,14 +217,14 @@ const B5CH5 = {
     b5_c5_deserterboss:{name:'The deserters\' leader', sig:'L', kind:'b5_c5_deserterboss', hp:24, ac:14, atk:5, dmg:[1,8,2], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c5_cacheblade:{name:'A cache shortsword, still in grease', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'A Letherii issue shortsword out of a buried jar, wrapped in greased cloth with the cache\'s clay seal still on the cord. It has never been drawn in anger, and it is sharper than anything that has. +1 to hit.'},
-    b5_c5_cachebow:{name:'A cache bow, unstrung', slot:'weapon', role:'ranged', who:null, atk:1,
-      line:'A plain yew bow lashed to a bark tube with a waxed string inside it, and the cache\'s seal on the lashing. The army buries them dry and unstrung, and they come up straight. A bow, not a crossbow: Lether has no crossbows. +1 to hit.'},
+    b5_c5_cacheblade:{name:'A cache shortsword, still in grease', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,8,2],
+      line:'A Letherii issue shortsword out of a buried jar, wrapped in greased cloth with the cache\'s clay seal still on the cord. It has never been drawn in anger, and it is sharper than anything that has.'},
+    b5_c5_cachebow:{name:'A cache bow, unstrung', slot:'weapon', role:'ranged', who:null, atk:1, rng:1, dmg:[1,8,1],
+      line:'A plain yew bow lashed to a bark tube with a waxed string inside it, and the cache\'s seal on the lashing. The army buries them dry and unstrung, and they come up straight. A bow, not a crossbow: Lether has no crossbows.'},
     b5_c5_housemail:{name:'The house\'s scale', slot:'armour', role:'mail', who:null, ac:1,
-      line:'Bright new scale on a padded coat, off the counting-house\'s wagons at Brans Keep, with a small stamp of a scale-balance inside the collar where only the wearer sees it. It is better scale than the army\'s. It was meant to be. +1 armour.'},
+      line:'Bright new scale on a padded coat, off the counting-house\'s wagons at Brans Keep, with a small stamp of a scale-balance inside the collar where only the wearer sees it. It is better scale than the army\'s. It was meant to be.'},
     b5_c5_girth:{name:'A Bluerose girth-strap, cut through', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where the eye never goes, by a hand that knew where the eye never goes. Whoever carries it has learned the same. +1 Guile.'} },
+      line:'A leather girth-strap with an iron buckle, from a Letherii courier\'s Bluerose saddle on the road south. It did not wear through. It was cut most of the way through on the inside, where the eye never goes, by a hand that knew where the eye never goes. Whoever carries it has learned the same.'} },
 
   scenes:{
     b5_c5_burned:{loc:'The road south', sub:'The burned country', cap:'Fields burned to the root on both sides of a straight road, black to the hedges, and smoke on the horizon.', amb:'explore'},

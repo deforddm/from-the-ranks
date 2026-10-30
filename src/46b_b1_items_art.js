@@ -1,0 +1,16 @@
+/* ---- the items pass (v8.1): Book One's three new weapons, drawn in the Arms board's style (200×150 on the leather-dark radial,
+   lit from the upper left), so the lint's "every item has a picture" holds without rebuilding the canvas boards ---- */
+function b1xItem(key, label, body){ const w = 200, h = 150, id = 'b1x-' + key.replace(/[^a-z0-9]/g, '');
+  ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#3a2c1e"></stop><stop offset="1" stop-color="#0f0c0a"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect>\n${body}</svg>`;
+  if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
+/* the Second Army halberd: issue ash, an issue blade, a tally cut under the stamp */
+b1xItem('secondhalberd', 'A Second Army halberd', '<path d="M34 140 L166 20" stroke="#7a5a36" stroke-width="5" stroke-linecap="round"/><path d="M36 138 L164 22" stroke="#a07a4c" stroke-width="1.4" opacity=".7"/>'
+  + '<path d="M150 26 Q168 4 186 14 Q176 30 170 48 Q160 38 150 36 Z" fill="#b8bcc2"/><path d="M152 28 Q168 10 182 16" stroke="#eef0f2" stroke-width="1.2" fill="none"/><path d="M160 20 L176 2 L170 18 Z" fill="#d0d4d8"/><path d="M146 40 L136 54 L150 44 Z" fill="#9a9ea4"/>'
+  + '<rect x="88" y="78" width="14" height="6" fill="#2a1a0e" transform="rotate(-42 95 81)"/><path d="M70 104 L76 98 M74 108 L80 102 M78 112 L84 106" stroke="#3a2614" stroke-width="1.4"/><circle cx="160" cy="18" r="6" fill="#ffffff" opacity=".07"/>');
+/* the Daru roof-crossbow: black wood and brass, a belt-hook, a quarrel laid */
+b1xItem('darucrossbow', 'A Daru roof-crossbow', '<ellipse cx="100" cy="128" rx="64" ry="6" fill="#000" opacity=".35"/><path d="M40 82 L150 70 L156 80 L46 94 Z" fill="#2a1e16"/><path d="M42 84 L150 72" stroke="#5a4430" stroke-width="1.2"/>'
+  + '<path d="M140 40 Q154 74 140 110" stroke="#1a1410" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M141 42 Q152 74 141 108" stroke="#c9a24a" stroke-width="1.4" fill="none" opacity=".7"/><path d="M140 40 L112 76 L140 110" stroke="#d8d0c0" stroke-width="1" fill="none"/>'
+  + '<rect x="100" y="72" width="16" height="8" rx="2" fill="#b8902a"/><path d="M60 98 L68 116 L76 114 L70 96 Z" fill="#b8902a"/><path d="M112 76 L176 70" stroke="#c9ccd0" stroke-width="2"/><path d="M176 66 L186 70 L176 74 Z" fill="#c9ccd0"/><circle cx="66" cy="80" r="5" fill="#ffffff" opacity=".06"/>');
+/* the Daru house-guard's sword: a straight longsword, a plain guard, a house's crest on the pommel */
+b1xItem('darusword', 'A Daru house-guard\'s sword', '<path d="M60 112 L164 26 L170 30 L68 118 Z" fill="#c9ccd0"/><path d="M62 112 L166 28" stroke="#f4f6f8" stroke-width="1"/><path d="M48 98 L76 128" stroke="#9a9ea4" stroke-width="6" stroke-linecap="round"/>'
+  + '<path d="M58 120 L40 138" stroke="#3a2a1c" stroke-width="7" stroke-linecap="round"/><path d="M44 134 L50 128 M48 138 L54 132" stroke="#c9a24a" stroke-width="1.4"/><circle cx="36" cy="142" r="6" fill="#c9a24a"/><circle cx="36" cy="142" r="2.4" fill="#5a3a18"/><circle cx="150" cy="40" r="6" fill="#ffffff" opacity=".07"/>');

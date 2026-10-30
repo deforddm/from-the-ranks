@@ -70,7 +70,7 @@ const b3c7AnvilCh = who => ({t:who === 'dannet' ? '"Show me how the acolytes car
 
 /* ---- the kit: the grey mail off a Seerdomin captain (both roads), and a K'ell Hunter's blade (the mortal fight, either road) ---- */
 const B3C7_GEAR = {
-  b3_c7_greymail:{name:'Seerdomin grey mail', slot:'armour', who:null, ac:1, hp:2, line:'Fine grey links off a Seerdomin captain, cold to the touch however long you wear it. The first blow in each fight lands 2 lighter: the links take it, and ring.'},
+  b3_c7_greymail:{name:'Seerdomin grey mail', slot:'armour', who:null, ac:1, hp:2, line:'Fine grey links off a Seerdomin captain, cold to the touch however long you wear it. The first blow in each fight lands lighter: the links take it, and ring.'},
   b3_c7_hunterblade:{name:'A K\'ell Hunter\'s blade', slot:'weapon', who:['sgt', 'brisk', 'greysword'], dmg:[2, 6, 2], line:'A blade as long as a man\'s arm, broken off at the wrist of the thing that grew it. It was never forged. Nobody who carries it says it is light, and nobody who carries it puts it down.'},
 };
 /* the grey mail: the first blow on its wearer in a fight lands 2 lighter (Book Three only) */

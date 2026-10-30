@@ -236,9 +236,9 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     b3_c5_ksword:{name:'Hired sword', sig:'h', kind:'b3_c5_kallorman', hp:20, ac:13, atk:5, dmg:[1,8,3], rng:1, mv:4, init:2, verb:'swings at'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b3_c5_knife:{name:'Blood-iron knife', slot:'trinket', who:null, atk:1, line:'An Ilgres shaman\'s long knife, darker than iron ought to be, with a rime along the fuller that does not melt in the Domin\'s heat. It has had a Malazan\'s blood and wants nobody else\'s. Whoever wears it strikes Seerdomin and K\'ell Hunters for 2 more.'},
+    b3_c5_knife:{name:'Blood-iron knife', slot:'trinket', who:null, atk:1, line:'An Ilgres shaman\'s long knife, darker than iron ought to be, with a rime along the fuller that does not melt in the Domin\'s heat. It has had a Malazan\'s blood and wants nobody else\'s. Whoever wears it strikes Seerdomin and K\'ell Hunters harder.'},
     b3_c5_chain:{name:'A Pannion chain of office', slot:'trinket', who:null, stat:{guile:1}, line:'Grey iron links and a disc of bone carved with an open eye, taken off a dead Seerdomin on a temple step in a burnt town. People from the Domin look at whoever wears it differently. The Fourth would rather not know how differently.'},
-    b3_c5_skin:{name:'A Rhivi water-skin', slot:'trinket', who:null, hp:2, line:'A bhederin-bladder skin stitched with sinew and hung with one bone bead, from a herd-mother at a well in the Domin. Water kept in it stays sweet. While the squad carries it, a rest at a fire lowers dread by 1 more.'} },
+    b3_c5_skin:{name:'A Rhivi water-skin', slot:'trinket', who:null, hp:2, line:'A bhederin-bladder skin stitched with sinew and hung with one bone bead, from a herd-mother at a well in the Domin. Water kept in it stays sweet. While the squad carries it, a rest at a fire lowers dread a little further.'} },
 
   scenes:{
     b3_c5_catlin:{loc:'The Catlin', sub:'The south shore', cap:'The broken bridge on the trader road, its middle span gone, and below it a mile of brown ford churned to mud by two armies.', amb:'plain'},

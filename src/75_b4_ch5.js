@@ -276,7 +276,7 @@ const B4CH5 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c5_conch:{name:'A conch from the sea bed', slot:'trinket', who:null, stat:{wits:1},
-      line:'A big spiral shell the colour of old cream inside, pink as a mouth, picked up off a bank of thousands on the floor of a sea that went away. Hold it to the ear and there is the sea in it, the Quon coast says. Whoever carries it listens a little harder: +1 wits. Tallow\'s grandmother would have known what it meant to find one this far from water.'},
+      line:'A big spiral shell the colour of old cream inside, pink as a mouth, picked up off a bank of thousands on the floor of a sea that went away. Hold it to the ear and there is the sea in it, the Quon coast says. Whoever carries it listens a little harder. Tallow\'s grandmother would have known what it meant to find one this far from water.'},
     b4_c5_seaglass:{name:'A lens of old sea-glass', slot:'trinket', who:null,
       line:'A disc of thick green glass, clouded at the edge and clear at the heart, prised out of the stern-light of a ship turned to stone. Held to the eye it cuts through haze. In the dust, the bearer\'s first shot in a fight reaches one further. After that it is only a pretty stone.'},
     b4_c5_veil:{name:'A desert rider\'s veil', slot:'trinket', who:null,

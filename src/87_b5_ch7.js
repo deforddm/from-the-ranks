@@ -297,9 +297,9 @@ const B5CH7 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c7_dock:{name:'A holed dock from the Low Walk', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A worn copper dock with a hole bored through it, on a cord still wet from the canal: the twin of the one the canal children dropped into the Quillas for the drowned, the evening the city fell. The Errant, they say, remembers who keeps one. It is worth exactly one dock, and nobody in the Sixth would spend it. +1 Guile.'},
+      line:'A worn copper dock with a hole bored through it, on a cord still wet from the canal: the twin of the one the canal children dropped into the Quillas for the drowned, the evening the city fell. The Errant, they say, remembers who keeps one. It is worth exactly one dock, and nobody in the Sixth would spend it.'},
     b5_c7_lamp:{name:'A canal lamp off the Low Walk', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. It has not been lit since, or put down. +3 health.'},
+      line:'A small iron lamp with a horn window, green with canal water, off its hook on the Low Walk. It went under the footbridge with the squad, out, in somebody\'s fist, and came up still in it. It has not been lit since, or put down.'},
     b5_c7_ledgerpage:{name:'The Sixth\'s page from the paybook', slot:'trinket', role:'any', who:null,
       line:'A single ruled page out of the Sixth Company\'s paybook: columns of names and numbers in the clerk\'s hand, and a line drawn neatly through every one. The clerk tore it out and handed it over without a word. It is the only receipt the army ever gave anybody in the squad for anything.'} },
 

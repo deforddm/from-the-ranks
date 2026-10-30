@@ -172,7 +172,8 @@ ${SQUAD().includes('ellis') ? `Ellis: "Two gaps in the thorn. He's standing in t
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     barrowtorc:{name:'Barrow torc', slot:'trinket', who:null, hp:2, line:'A twist of black iron from a dead man\'s neck. It is heavier than it looks and colder than it should be. Tuft would not touch it.'},
     secondbadge:{name:'Second Army badge, wrong regiment', slot:'trinket', who:['brisk','sgt'], ac:1, line:'A bronze badge of the Second, the Ninth Regiment\'s. Tav was the Fourth Regiment. Brisk knows the difference and carries it anyway.'},
-    rhivibow:{name:'Rhivi horn bow', slot:'weapon', who:['ellis','kettle'], rng:1, atk:1, line:'A short recurve of horn and sinew, unstrung and given. Sethand said it was a bad bow. He did not say whose.'},
+    secondhalberd:{name:'A Second Army halberd', slot:'weapon', who:null, rng:1, reach:true, ac:-1, dmg:[1,10,1], line:'Seven feet of issue ash with an issue blade on it, the Second Army\'s stamp burnt into the haft and somebody\'s tally of days cut under the stamp, stopping. It reaches over the man in front, and it takes both hands, so the shield goes on the back. The deserters carried it four days south and never once used it on anybody who could use one back.'},
+    rhivibow:{name:'Rhivi horn bow', slot:'weapon', who:['ellis','kettle'], rng:1, atk:1, dmg:[1,8,0], line:'A short recurve of horn and sinew, unstrung and given. Sethand said it was a bad bow. He did not say whose.'},
     toccloak:{name:'Toc\'s spare cloak', slot:'armour', who:['ellis','tuft','sgt','vell'], ac:1, line:'A Claw\'s field cloak, grey going brown, with the shoulder cut for a bow. Toc left it on the wagon\'s tailboard and did not look back at it.'} },
 
   /* inside the barrow on the wagon road (it was 'dark', which is headed "Under the Pale" and tinted with Kurald Galain) */
@@ -751,8 +752,8 @@ Brisk watches them until there's nothing to watch. "Ten silver, to deserters, fo
 
 Ohl, from the driver's board: "Cheap. I have priced the other thing, Sergeant. Many times."` : ''}`,
       ch:[{t:'Up the ridge. Make camp.', go:()=>{ startExplore('ridge'); talk('c2_ridge_arrive'); }}]}),
-    c2_after_deserters:()=>({sp:'The crest', scene:'plain_dusk', fx:()=>{S.f.c2_desFought=1;}, txt:
-`It's done before the last of the light is. Eight men who walked out of the Pale and four days south, and stopped here, on a hill, over a wagon.${SQUAD().includes('brisk') ? `
+    c2_after_deserters:()=>({sp:'The crest', scene:'plain_dusk', fx:()=>{S.f.c2_desFought=1; if (!S.f.c2_halberd) { S.f.c2_halberd = 1; gain('secondhalberd'); }}, txt:
+`It's done before the last of the light is. Eight men who walked out of the Pale and four days south, and stopped here, on a hill, over a wagon. One of them carried a Second Army halberd the whole way and never got it level. It goes on the wagon with the squad's kit.${SQUAD().includes('brisk') ? `
 
 Brisk goes from one to the next with her shield still up and turns their collars over. Where the badges were there are only holes, cut and then frayed, and you can't tell a regiment from a hole. She does it anyway. She does all eight.${S.f.c2_badge ? ` The Ninth's badge is inside her gorget, with the letter. She doesn't take it out.` : ''}` : ''}${c2Moreau() ? `
 

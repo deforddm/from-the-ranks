@@ -258,6 +258,10 @@ function b46Item(key, label, body){ const w = 240, h = 130, id = 'c46-' + key.re
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* a Dogslayer's cut-off badge: a square of red wool cut off a sleeve, a dog's head stitched in black, a black bar across its throat,
    the cut edge ragged with threads hanging, a corner of the sleeve's sand-coloured cloth still on it */
+/* a Dogslayer's scale shirt: the legion's marks scraped off, a dog's head painted on the breast */
+b46Item('b4_c6_dogscale', 'A Dogslayer\'s scale shirt', '<defs><pattern id="c46dsc" width="8" height="7" patternUnits="userSpaceOnUse"><path d="M0 0 Q4 7 8 0" fill="none" stroke="#a8a090" stroke-width="1"/></pattern></defs><ellipse cx="120" cy="114" rx="58" ry="7" fill="#000" opacity=".35"/>'
+  + '<path d="M90 16 L108 12 Q120 22 132 12 L150 16 L178 42 L164 56 L158 50 L158 110 L82 110 L82 50 L76 56 L62 42 Z" fill="#5a5448"/><path d="M90 16 L108 12 Q120 22 132 12 L150 16 L178 42 L164 56 L158 50 L158 110 L82 110 L82 50 L76 56 L62 42 Z" fill="url(#c46dsc)"/>'
+  + '<path d="M108 50 L114 42 L118 50 L124 50 L128 42 L134 50 Q138 62 128 70 L112 70 Q102 62 108 50 Z" fill="#141210"/><path d="M110 64 L130 60" stroke="#141210" stroke-width="3"/><circle cx="100" cy="30" r="8" fill="#fff" opacity=".06"/>');
 b46Item('b4_c6_dogslayer', 'A Dogslayer\'s cut-off badge', '<ellipse cx="120" cy="70" rx="70" ry="40" fill="#e0a080" opacity=".05"/><g transform="rotate(-6 120 64)">'
   + '<path d="M80 30 L164 28 L166 102 L84 104 Z" fill="#a8946a"/><path d="M80 30 L164 28 L163 34 L81 36 Z" fill="#c8b48a" opacity=".7"/>'
   + '<path d="M88 36 L158 34 L160 96 L90 98 Z" fill="#8a2418"/><path d="M88 36 L158 34 L158 40 L88 42 Z" fill="#b84a34" opacity=".6"/>'

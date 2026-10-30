@@ -247,7 +247,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b3_c4_ropehooks:{name:'Grey Sword rope-and-hooks', slot:'trinket', who:null, atk:1, line:'A coil of grey rope with two iron hooks back to back at the end of it and a strip of grey cloth at the knot. The Grey Swords gave it after the gully. Whoever carries it throws the Wolves\' Rope one pace further.'},
-    b3_c4_flint:{name:'T\'lan Imass flint blade', slot:'weapon', who:['sgt', 'brisk', 'greysword', 'kettle', 'ohl'], atk:1, line:'A long flint blade, knapped to an edge you could shave with, on a haft of antler bound in hide gone to dust. It was lying where something had stood and watched, and was not there before. It goes cold near the K\'Chain Che\'Malle: +3 damage against them.'},
+    b3_c4_flint:{name:'T\'lan Imass flint blade', slot:'weapon', who:['sgt', 'brisk', 'greysword', 'kettle', 'ohl'], atk:1, dmg:[1,8,2], line:'A long flint blade, knapped to an edge you could shave with, on a haft of antler bound in hide gone to dust. It was lying where something had stood and watched, and was not there before. It goes cold near the K\'Chain Che\'Malle, and bites deeper into them.'},
     b3_c4_token:{name:'Capan temple token', slot:'trinket', who:null, stat:{wits:1}, line:'A worn bronze disc on a knotted cord, stamped with a domed temple and a ring of marks, green in the hollows. Burn\'s, the old healer said: the Sleeping Goddess, whose blood runs in every warren, and something in it now. "Somebody should still pray to her," she said.'} },
 
   scenes:{

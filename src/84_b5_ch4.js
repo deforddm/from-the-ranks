@@ -236,9 +236,9 @@ const B5CH4 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each. No weapons in this chapter: everything here a disarmed soldier still keeps.
     b5_c4_helm:{name:'A Grass Jacket\'s helm', slot:'trinket', role:'any', who:null, ac:1,
-      line:'An open iron helm with a strip of faded green cloth tied at the crest, dented once over the left ear. It was lying on the west rampart at High Fort where its owner dropped it, running. Whoever wears it is a little harder to hit. +1 armour.'},
+      line:'An open iron helm with a strip of faded green cloth tied at the crest, dented once over the left ear. It was lying on the west rampart at High Fort where its owner dropped it, running. Whoever wears it is a little harder to hit.'},
     b5_c4_wolftooth:{name:'A tooth too big for a wolf', slot:'trinket', role:'any', who:null, stat:{might:1},
-      line:'A canine tooth as long as a finger, yellowed, on a thong. It came from the wolves at High Fort. Nobody in the squad discusses why it is too big for a wolf. Whoever wears it pulls a little harder. +1 Might.'},
+      line:'A canine tooth as long as a finger, yellowed, on a thong. It came from the wolves at High Fort. Nobody in the squad discusses why it is too big for a wolf. Whoever wears it pulls a little harder.'},
     b5_c4_pitchpot:{name:'A brand-pot from the west rampart', slot:'trinket', role:'any', who:null,
       line:'A squat black-glazed clay pot, sealed with pitch, a tarred rag for a wick, a scorch mark down one side where somebody tried it too early. An old hand of the High Fort garrison gave it to the Sixth on the west rampart. The wolves will not cross fire. Neither, it turns out, will anyone sensible.'} },
 

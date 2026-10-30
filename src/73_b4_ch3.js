@@ -270,14 +270,14 @@ const B4CH3 = {
     b4_c3_headman:{name:'The headman', sig:'H', kind:'b4_c3_headman', hp:32, ac:13, atk:6, dmg:[1,10,2], rng:1, mv:3, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a skull-hung staff down on'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b4_c3_khundrylknife:{name:'A Khundryl knife', slot:'weapon', who:['sgt', 'haddat', 'sathi', 'tangle', 'tallow', 'darrut', 'orvas', 'redblade', 'warlock'], atk:1,
-      line:'A long curved knife with a horn grip wound in horsehair and a black bead on a thong at the pommel. The Khundryl give them to people they mean to see again. On anyone it is a good knife: +1 to hit. Orvas says it is a better promise.'},
+    b4_c3_khundrylknife:{name:'A Khundryl knife', slot:'weapon', who:['sgt', 'haddat', 'sathi', 'tangle', 'tallow', 'darrut', 'orvas', 'redblade', 'warlock'], atk:2, dmg:[1,6,2],
+      line:'A long curved knife with a horn grip wound in horsehair and a black bead on a thong at the pommel. The Khundryl give them to people they mean to see again. On anyone it is a good knife. Orvas says it is a better promise.'},
     b4_c3_bonebead:{name:'A bead from the ford', slot:'trinket', who:null, hp:3,
-      line:'A small bead of bone, drilled, worn smooth by the river, that came up out of Vathar Crossing in somebody\'s hand. Some woman of the Chain wore it in her hair. Whoever wears it has a little more in them before they go down: +3 health. Haddat would rather it were hers to carry.'},
+      line:'A small bead of bone, drilled, worn smooth by the river, that came up out of Vathar Crossing in somebody\'s hand. Some woman of the Chain wore it in her hair. Whoever wears it has a little more in them before they go down. Haddat would rather it were hers to carry.'},
     b4_c3_cup:{name:'A Khundryl horn cup', slot:'trinket', who:null, stat:{guile:1},
-      line:'A drinking horn cut short and capped with copper, a little dented, that a Khundryl war chief filled at the feast and did not ask for back. Whoever carries it is a little better at talk: +1 guile. It still smells of what was in it.'},
+      line:'A drinking horn cut short and capped with copper, a little dented, that a Khundryl war chief filled at the feast and did not ask for back. Whoever carries it is a little better at talk. It still smells of what was in it.'},
     b4_c3_ferryrope:{name:'A length of the old ferry rope', slot:'trinket', who:null,
-      line:'A fathom of old hemp rope, black with the river, cut from the post where the ferry used to cross the Vathar before there was anybody to cross it for. Knotted round a wrist, it steadies the hand: once a chapter, +1 to a check. Then it has done its turn until the next stretch of road.'} },
+      line:'A fathom of old hemp rope, black with the river, cut from the post where the ferry used to cross the Vathar before there was anybody to cross it for. Knotted round a wrist, it steadies the hand: once a chapter, a check goes a little better for it. Then it has done its turn until the next stretch of road.'} },
 
   scenes:{
     b4_c3_shadow:{loc:'The road to the Vathar', sub:'The ridges · dust that is not the column\'s', cap:'Dry hills folding away under a white sky, and on the far ridges a long smear of dust with riders in it, too far to count.', amb:'wind'},
