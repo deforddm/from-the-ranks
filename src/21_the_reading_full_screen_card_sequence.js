@@ -6,6 +6,22 @@ let CARDBOOK = null;
 /* v6.11.0: the cards are dealt on a table (21b: one per place), by the reader's own deck and in the reader's own spread; the House's light
    falls on the table after the turn; the way in and out is a fade, and the reading has the Deck's music. The risen card tilts under a finger.
    Sohra throws the bones instead, and the card rises out of the smoke. The timings are the old ones: the text at 5.6 s, a tap hurries it. */
+/* v8.0.1 (David, Oct 29: Marrow's cross of five said "two refuse her, the third does not"): the words follow the spread on the table,
+   how many cards are laid, how many refuse, and which is turning. READ_NOW is the spread while a reading plays; opt.spread lays another. */
+const RD_NUM = ['no', 'one', 'two', 'three', 'four', 'five', 'six'], RD_ORD = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth'];
+let READ_NOW = null;
+const rdUp = s => s.charAt(0).toUpperCase() + s.slice(1);
+function readCount(sp){ sp = sp || READ_NOW || readingSpread(readingReader()); const ref = sp.slots.filter(s => !s.ans);
+  return {all:sp.slots.length, ref:ref.length, flips:ref.map(s => s.flip || 0), bones:!!sp.bones}; }
+/* the line after a reading: "Two cards refuse her. The third does not." */
+function readRefuseLine(obj, noun = 'cards', sp){ const c = readCount(sp); return `${rdUp(RD_NUM[c.ref])} ${noun} refuse ${obj}. The ${RD_ORD[c.ref]} does not.`; }
+/* where the reading is at t: shuffle, lay, ref (i: the refused card turning), ans, or done ('') */
+function readStep(t){ const c = readCount(); if (t < 1500) return {k:'shuffle', ...c}; if (t < c.flips[0]) return {k:'lay', ...c};
+  if (t < 4900) { let i = 0; c.flips.forEach((f, j) => { if (t >= f) i = j; }); return {k:'ref', i, ...c}; } return {k:t < 5800 ? 'ans' : '', ...c}; }
+/* a book's captions in one place: lines = {shuffle, lay, first (the first refusal), nth(i) (a later one; two refusals keep their old words), ans} */
+function readCaps(t, L){ const st = readStep(t);
+  return st.k === 'shuffle' ? L.shuffle : st.k === 'lay' ? L.lay : st.k === 'ans' ? (L.ans ? L.ans(st) : `The ${RD_ORD[st.ref]} does not.`)
+    : st.k === 'ref' ? (st.i === 0 ? L.first : L.nth ? L.nth(st.i, st) : `And the ${RD_ORD[st.i]}.`) : ''; }
 /* opt.card: show that card and leave S.card alone. opt.self: Tuft draws for herself; the flanking cards never turn. */
 function cardSequence(done, opt = {}){
   const el = $('#cardfx'), wasOpen = !el.hidden; el.hidden = false; delete el.dataset.shown;
@@ -20,7 +36,7 @@ function cardSequence(done, opt = {}){
   /* Through the Deck: a card with a vision this chapter can be looked into (not Tuft's own draw, a shown card, or the Fold's second card) */
   const vis = !self && !opt.card && !second && typeof visionFor === 'function' ? visionFor(S.chapter, cid) : null;
   /* the table, the reader, the deck and the spread (21b) */
-  const reader = readingReader(), spread = readingSpread(reader), bones = !!spread.bones, tbl = readingTable(opt); DECKBACK_NOW = reader;
+  const reader = readingReader(), spread = (opt.spread && SPREADS[opt.spread]) || readingSpread(reader), bones = !!spread.bones, tbl = readingTable(opt); DECKBACK_NOW = reader; READ_NOW = spread;
   el.style.setProperty('--tbl', rgba(tbl.dark, .94));
   el.innerHTML = `<canvas id="ccv"></canvas><div class="cf" id="cfText"><div class="cn">${esc(c.name)}</div><div class="cfx">${esc(c.fx || '')}</div><div class="ct">${smartq(esc(ctxt || '').replace(/&quot;/g,'"'))}</div>
     ${pc ? `<div class="cfold"><span class="fold">✦ Tattersail's Fold: or keep the first card,</span> <b>${esc(pc.name)}</b> <span>${esc(pc.fx || '')}</span></div>` : ''}
@@ -36,7 +52,7 @@ function cardSequence(done, opt = {}){
   AUDIO.play('shuffle');
   if (wasOpen) el.classList.add('in'); else requestAnimationFrame(() => { if (!el.hidden) el.classList.add('in'); });
   /* the way out: the page behind is ready while the table fades (quick for a vision, which has its own reveal) */
-  const leave = (after, quick) => { if (finished) return; finished = true; window.removeEventListener('resize', fit); DECKBACK_NOW = 'tuft';
+  const leave = (after, quick) => { if (finished) return; finished = true; window.removeEventListener('resize', fit); DECKBACK_NOW = 'tuft'; READ_NOW = null;
     const ms = REDUCE() ? 0 : quick ? 250 : 550; el.classList.remove('in');
     setTimeout(() => { if (cardAnim === frame) cardAnim = null; if (!el.classList.contains('in')) { el.hidden = true; el.innerHTML = ''; } }, ms);
     if (!quick && prevScene) AUDIO.setScene(prevScene); after(); };
@@ -45,7 +61,7 @@ function cardSequence(done, opt = {}){
   if (vis) $('#cfVis').onclick = () => leave(() => playVision(vis, done), true);
   if (second) $('#cfKeep').onclick = () => { S.card = second.prev; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = S.card; save(); end(); };
   if (canFold) $('#cfFold').onclick = () => { if (finished) return; finished = true; cardAnim = null; window.removeEventListener('resize', fit); spendTrick('fold'); AUDIO.play('shuffle');
-    const nk = foldPool[R(foldPool.length)]; S.card = nk; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = nk; save(); cardSequence(done, {second:{prev:cid}, scene:prevScene}); };
+    const nk = foldPool[R(foldPool.length)]; S.card = nk; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = nk; save(); cardSequence(done, {second:{prev:cid}, scene:prevScene, spread:opt.spread}); };
   let skipTo = null; el.onclick = e => { if (e.target.id === 'cfGo' || e.target.id === 'cfVis' || e.target.id === 'cfKeep' || e.target.id === 'cfFold') return; if (dragged) { dragged = false; return; } if (performance.now() - t0 < 6200) skipTo = 6200; };
   /* the risen card tilts under a finger (or the mouse held down) and settles back when let go */
   const tilt = {x:0, y:0, tx:0, ty:0}; let down = false, dragged = false, d0 = null;
@@ -108,8 +124,8 @@ function cardSequence(done, opt = {}){
     ctx.fillStyle = '#d8c8a8'; ctx.textAlign = 'center'; ctx.font = `italic ${Math.round(Math.min(20, W*.045))}px 'IM Fell English', serif`; ctx.shadowColor = 'rgba(0,0,0,.9)'; ctx.shadowBlur = 8;
     const cap = bones && !second ? (t < 1500 ? (BK ? BK.cap(t, self, second) : 'Sohra breathes on the bones and throws them into the smoke.') : t < 2900 ? 'The bones roll, and settle.' : t < 3900 ? 'She frowns, and gathers them, and throws again.' : t < 4900 ? 'Again.' : t < 5800 ? 'This time they stay. Something comes up out of the smoke.' : '')
       : BK ? BK.cap(t, self, second) : self ? (t < 1500 ? 'Tuft shuffles. Her hands are not steady.' : t < 2900 ? 'One card. For herself. The first time.' : t < 4900 ? 'The cards on either side stay face down.' : t < 5800 ? 'She turns it over.' : '')
-      : second ? (t < 1500 ? 'Tuft folds the card back into the spread, the way Tattersail did it.' : t < 2900 ? 'Three again. The Deck lets her, mostly.' : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '')
-      : t < 1500 ? 'Tuft shuffles without looking at her hands.' : t < 2900 ? 'Three cards. She never draws for herself.' : t < 3900 ? 'The first card refuses her.' : t < 4900 ? 'The second card refuses her.' : t < 5800 ? 'The third does not.' : '';
+      : second ? (t < 1500 ? 'Tuft folds the card back into the spread, the way Tattersail did it.' : t < 2900 ? `${rdUp(RD_NUM[spread.slots.length])} again. The Deck lets her, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '')
+      : readCaps(t, {shuffle:'Tuft shuffles without looking at her hands.', lay:`${rdUp(RD_NUM[spread.slots.length])} cards. She never draws for herself.`, first:'The first card refuses her.', nth:(i, st) => st.ref === 2 ? 'The second card refuses her.' : `And the ${RD_ORD[i]}.`});
     if (cap) ctx.fillText(cap, cx, H*.74); ctx.shadowColor = 'transparent';
     if (t >= 6200) el.dataset.shown = '1';
     if (t > 5600) { cue('flash', () => { const f = $('#flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }); $('#cfText').classList.add('show');

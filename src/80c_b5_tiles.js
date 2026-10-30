@@ -148,7 +148,7 @@ const b5TileSay = id => { const s = B5SAY[id], r = b5Rd().id, v = s && (typeof s
       const r = b5Rd(), n = r.name, first = {perrit:'Perrit turns the tiles face down and stirs them with two fingers.', tilewoman:'The tile-woman shakes the bone tiles in her two hands.'}[r.id] || `${n} lays out the tiles.`;
       const spread = {perrit:'A spiral of tiles, as the school lays them.', tilewoman:'Three tiles in a row, and one above.'}[r.id] || 'The tiles go down.';
       if (second) return t < 1500 ? `${n} gathers them back.` : t < 2900 ? 'Again. The tiles allow it.' : t < 4900 ? '' : t < 5800 ? 'Another turns up.' : '';
-      return t < 1500 ? first : t < 2900 ? spread : t < 3900 ? 'The first tile shows nothing she wants.' : t < 4900 ? 'Nor the next.' : t < 5800 ? 'The last tile does.' : ''; },
+      return readCaps(t, {shuffle:first, lay:spread, first:`The first tile shows nothing ${r.he ? 'he' : 'she'} wants.`, nth:i => i === 1 ? 'Nor the next.' : `Nor the ${RD_ORD[i]}.`, ans:() => 'The last tile does.'}); },
     square:() => b5On(),
     done:() => b5On() ? 'Gather the tiles' : 'Put the cards away',
     look:() => b5On() ? 'Look into the tile' : 'Look into the card',
@@ -178,7 +178,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:'Let her lay them.', deck:true, fx:()=>{ S.f[`b5_c${n}_drawn`] = 1; S.f[`b5_c${n}_reader`] = r.id; S.card = dealCard(B5POOL[n] || B5POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
         {t:'"Not now."', fx:()=>{ S.f[`b5_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b5TileCard(n){ const D = B5READ[n] || B5READ[1], r = b5Rd(), pool = B5POOL[n] || B5POOL[1], id = S.card && B5TILES[S.card] ? S.card : pool[0], c = CARDS[id];
-  return {sp:'The Tiles of the Holds', scene:D.scene, txt:`${r.name} lays the tiles out on ${D.where}. The first two show ${r.he ? 'him' : 'her'} nothing. The last one does.`,
+  return {sp:'The Tiles of the Holds', scene:D.scene, txt:`${r.name} lays the tiles out on ${D.where}. The first ${RD_NUM[readCount().ref]} show ${r.he ? 'him' : 'her'} nothing. The last one does.`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)} · ${esc(c.house)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b5TileSay(id),
     ch:[{t:D.backT, go:D.back}]}; }

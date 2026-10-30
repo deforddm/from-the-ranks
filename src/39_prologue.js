@@ -141,7 +141,7 @@ Tuft doesn't let her breath go until the rubble line.`, _:''})}`, ch:[{t:'Move o
 
 "For luck," she says, which is not what a Deck is for.`,
     ch: S.card || S.f.noCard ? [{t:'Descend', go:'approach'},{t:'Not yet'}] :
-      [{t:'Let her draw a card.', go:()=>cardSequence(()=>talk('card'))},
+      [{t:'Let her draw a card.', go:()=>cardSequence(()=>talk('card'), S.f.p_foldFail ? {spread:'row4'} : {})}, // the Deck noticed: one more refuses her (v8.0.1)
        {t:'"No readings. We go."', fx:()=>{S.f.noCard=1; loy('brisk',1); loy('tuft',-1);}, go:'approach'},
        {t:'Not yet'}]}),
   card:()=>{ if (!S.card) S.card = dealCard(['oponn','obelisk','knight','assassin']); const c = CARDS[S.card];

@@ -137,7 +137,7 @@ const b4CardSay = id => { const s = B4SAY[id], r = b4Rd().id, v = s && (typeof s
       const first = {marrow:'Marrow shuffles the temple deck, slowly.', tallow:'Tallow shuffles the way his grandmother did, badly.', oldninth:'The old soldier shuffles one-handed.'}[r.id] || `${n} shuffles.`;
       const three = {marrow:'The temple cross, and the card in the middle.', tallow:'Two down, one up.', oldninth:'Three cards, and the rum beside them.'}[r.id] || 'Three cards.';
       if (second) return t < 1500 ? `${n} gathers it back in.` : t < 2900 ? `Again. It lets ${b4RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-      return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first refuses ${b4RdObj()}.` : t < 4900 ? `The second refuses ${b4RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+      return readCaps(t, {shuffle:first, lay:three, first:`The first refuses ${b4RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second refuses ${b4RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
   }; }
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -151,7 +151,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:`Let ${b4RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b4_c${n}_drawn`] = 1; S.f[`b4_c${n}_reader`] = r.id; S.card = dealCard(B4POOL[n] || B4POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
         {t:'"Not now."', fx:()=>{ S.f[`b4_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b4DeckCard(n){ const D = B4DECK[n] || B4DECK[1], r = b4Rd(), pool = B4POOL[n] || B4POOL[1], id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
-  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. Two cards refuse ${b4RdObj()}. The third does not.`,
+  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. ${readRefuseLine(b4RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b4CardSay(id),
     ch:[{t:D.backT, go:D.back}]}; }

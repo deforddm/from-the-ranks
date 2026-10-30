@@ -161,7 +161,7 @@ const b3CardSay = id => { const s = B3SAY[id], r = b3Rd().id, v = s && (typeof s
       const first = {tuft:'Tuft shuffles without looking at her hands.', sohra:'Sohra breathes on the bones and throws them into the smoke.', benna:'Old Benna shuffles like she is wringing out a shirt.'}[r.id] || `${n} shuffles.`;
       const three = {tuft:'Three cards.', sohra:'The bones roll, and settle, and roll again.', benna:'Three cards, and a copper on the shield.'}[r.id] || 'Three cards.';
       if (second) return t < 1500 ? `${n} gathers it back in.` : t < 2900 ? `Again. It lets ${b3RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-      return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first refuses ${b3RdObj()}.` : t < 4900 ? `The second refuses ${b3RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+      return readCaps(t, {shuffle:first, lay:three, first:`The first refuses ${b3RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second refuses ${b3RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
   }; }
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -178,7 +178,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
 function b3DeckCard(n){ const D = B3DECK[n] || B3DECK[1], r = b3Rd(), pool = B3POOL[n] || B3POOL[1], id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
   return {sp:'The Deck of Dragons', scene:D.scene, txt:r.id === 'sohra'
     ? `Sohra reads the bones on ${D.where}. Two throws she sweeps away without a word. The third she lets lie.`
-    : `${r.name} lays the reading out on ${D.where}. Two cards refuse ${b3RdObj()}. The third does not.`,
+    : `${r.name} lays the reading out on ${D.where}. ${readRefuseLine(b3RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b3CardSay(id),
     ch:[{t:D.backT, go:D.back}]}; }

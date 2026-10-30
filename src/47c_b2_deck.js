@@ -155,9 +155,9 @@ CARDBOOK = {
   txt:id => { const s = B2SAY[id]; return s ? s.d : ((CARDS[id] && CARDS[id].txt) || ''); },
   cap(t, self, second){ const r = b2Rd(), n = r.name, she = b2RdShe(), her = b2RdHer(), Her = b2RdHer(true);
     const first = {marrow:'Marrow shuffles sitting down, the way she does everything.', yedda:'Yedda shuffles like a rope-walker paying out line.', kanese:'The old Kanese shuffles with his eyes shut.'}[r.id] || `${n} shuffles.`;
-    const three = {marrow:'Three cards. She reads for the squad, never for herself.', yedda:'Three cards, and she doesn\'t charge you.', kanese:'Three cards. He says something over them in Kanese.'}[r.id] || 'Three cards.';
-    if (second) return t < 1500 ? `${n} folds the card back into the spread.` : t < 2900 ? `Three again. The Deck lets ${b2RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-    return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first card refuses ${b2RdObj()}.` : t < 4900 ? `The second card refuses ${b2RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+    const three = {marrow:'Five cards, in Soliel\'s cross. She reads for the squad, never for herself.', yedda:'Three cards, and she doesn\'t charge you.', kanese:'Three cards. He says something over them in Kanese.'}[r.id] || 'Three cards.';
+    if (second) return t < 1500 ? `${n} folds the card back into the spread.` : t < 2900 ? `${rdUp(RD_NUM[readCount().all])} again. The Deck lets ${b2RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
+    return readCaps(t, {shuffle:first, lay:three, first:`The first card refuses ${b2RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second card refuses ${b2RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
 };
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -173,7 +173,7 @@ ${D.set} ${D[r.id] || ''}`,
         {t:'"Not now."', fx:()=>{ S.f[`b2_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b2DeckCard(n){ const D = B2DECK[n], r = b2Rd(), id = S.card && CARDS[S.card] ? S.card : B2POOL[n][0], c = CARDS[id];
   return {sp:'The Deck of Dragons', scene:D.scene, txt:
-`${r.name} lays the reading out on ${D.on}. Two cards refuse ${b2RdObj()}. The third does not.`,
+`${r.name} lays the reading out on ${D.on}. ${readRefuseLine(b2RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:`${b2CardSay(id)}${id === 'b2c_queen' && typeof b2In === 'function' && b2In('redblade') ? `\n\nRamin, watching over ${r.he ? 'his' : 'her'} shoulder, says the Ehrlitan prayer to the Queen of Dreams under his breath, the one his mother said at the toll-gate.` : ''}`,
     ch:[{t:D.backT, go:D.back}]}; }

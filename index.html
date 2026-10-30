@@ -657,7 +657,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '8.0.0';
+const VERSION = '8.0.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3401,6 +3401,22 @@ let CARDBOOK = null;
 /* v6.11.0: the cards are dealt on a table (21b: one per place), by the reader's own deck and in the reader's own spread; the House's light
    falls on the table after the turn; the way in and out is a fade, and the reading has the Deck's music. The risen card tilts under a finger.
    Sohra throws the bones instead, and the card rises out of the smoke. The timings are the old ones: the text at 5.6 s, a tap hurries it. */
+/* v8.0.1 (David, Oct 29: Marrow's cross of five said "two refuse her, the third does not"): the words follow the spread on the table,
+   how many cards are laid, how many refuse, and which is turning. READ_NOW is the spread while a reading plays; opt.spread lays another. */
+const RD_NUM = ['no', 'one', 'two', 'three', 'four', 'five', 'six'], RD_ORD = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth'];
+let READ_NOW = null;
+const rdUp = s => s.charAt(0).toUpperCase() + s.slice(1);
+function readCount(sp){ sp = sp || READ_NOW || readingSpread(readingReader()); const ref = sp.slots.filter(s => !s.ans);
+  return {all:sp.slots.length, ref:ref.length, flips:ref.map(s => s.flip || 0), bones:!!sp.bones}; }
+/* the line after a reading: "Two cards refuse her. The third does not." */
+function readRefuseLine(obj, noun = 'cards', sp){ const c = readCount(sp); return `${rdUp(RD_NUM[c.ref])} ${noun} refuse ${obj}. The ${RD_ORD[c.ref]} does not.`; }
+/* where the reading is at t: shuffle, lay, ref (i: the refused card turning), ans, or done ('') */
+function readStep(t){ const c = readCount(); if (t < 1500) return {k:'shuffle', ...c}; if (t < c.flips[0]) return {k:'lay', ...c};
+  if (t < 4900) { let i = 0; c.flips.forEach((f, j) => { if (t >= f) i = j; }); return {k:'ref', i, ...c}; } return {k:t < 5800 ? 'ans' : '', ...c}; }
+/* a book's captions in one place: lines = {shuffle, lay, first (the first refusal), nth(i) (a later one; two refusals keep their old words), ans} */
+function readCaps(t, L){ const st = readStep(t);
+  return st.k === 'shuffle' ? L.shuffle : st.k === 'lay' ? L.lay : st.k === 'ans' ? (L.ans ? L.ans(st) : `The ${RD_ORD[st.ref]} does not.`)
+    : st.k === 'ref' ? (st.i === 0 ? L.first : L.nth ? L.nth(st.i, st) : `And the ${RD_ORD[st.i]}.`) : ''; }
 /* opt.card: show that card and leave S.card alone. opt.self: Tuft draws for herself; the flanking cards never turn. */
 function cardSequence(done, opt = {}){
   const el = $('#cardfx'), wasOpen = !el.hidden; el.hidden = false; delete el.dataset.shown;
@@ -3415,7 +3431,7 @@ function cardSequence(done, opt = {}){
   /* Through the Deck: a card with a vision this chapter can be looked into (not Tuft's own draw, a shown card, or the Fold's second card) */
   const vis = !self && !opt.card && !second && typeof visionFor === 'function' ? visionFor(S.chapter, cid) : null;
   /* the table, the reader, the deck and the spread (21b) */
-  const reader = readingReader(), spread = readingSpread(reader), bones = !!spread.bones, tbl = readingTable(opt); DECKBACK_NOW = reader;
+  const reader = readingReader(), spread = (opt.spread && SPREADS[opt.spread]) || readingSpread(reader), bones = !!spread.bones, tbl = readingTable(opt); DECKBACK_NOW = reader; READ_NOW = spread;
   el.style.setProperty('--tbl', rgba(tbl.dark, .94));
   el.innerHTML = `<canvas id="ccv"></canvas><div class="cf" id="cfText"><div class="cn">${esc(c.name)}</div><div class="cfx">${esc(c.fx || '')}</div><div class="ct">${smartq(esc(ctxt || '').replace(/&quot;/g,'"'))}</div>
     ${pc ? `<div class="cfold"><span class="fold">✦ Tattersail's Fold: or keep the first card,</span> <b>${esc(pc.name)}</b> <span>${esc(pc.fx || '')}</span></div>` : ''}
@@ -3431,7 +3447,7 @@ function cardSequence(done, opt = {}){
   AUDIO.play('shuffle');
   if (wasOpen) el.classList.add('in'); else requestAnimationFrame(() => { if (!el.hidden) el.classList.add('in'); });
   /* the way out: the page behind is ready while the table fades (quick for a vision, which has its own reveal) */
-  const leave = (after, quick) => { if (finished) return; finished = true; window.removeEventListener('resize', fit); DECKBACK_NOW = 'tuft';
+  const leave = (after, quick) => { if (finished) return; finished = true; window.removeEventListener('resize', fit); DECKBACK_NOW = 'tuft'; READ_NOW = null;
     const ms = REDUCE() ? 0 : quick ? 250 : 550; el.classList.remove('in');
     setTimeout(() => { if (cardAnim === frame) cardAnim = null; if (!el.classList.contains('in')) { el.hidden = true; el.innerHTML = ''; } }, ms);
     if (!quick && prevScene) AUDIO.setScene(prevScene); after(); };
@@ -3440,7 +3456,7 @@ function cardSequence(done, opt = {}){
   if (vis) $('#cfVis').onclick = () => leave(() => playVision(vis, done), true);
   if (second) $('#cfKeep').onclick = () => { S.card = second.prev; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = S.card; save(); end(); };
   if (canFold) $('#cfFold').onclick = () => { if (finished) return; finished = true; cardAnim = null; window.removeEventListener('resize', fit); spendTrick('fold'); AUDIO.play('shuffle');
-    const nk = foldPool[R(foldPool.length)]; S.card = nk; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = nk; save(); cardSequence(done, {second:{prev:cid}, scene:prevScene}); };
+    const nk = foldPool[R(foldPool.length)]; S.card = nk; const fk = 'c' + S.chapter + '_drawnCard'; if (S.f[fk]) S.f[fk] = nk; save(); cardSequence(done, {second:{prev:cid}, scene:prevScene, spread:opt.spread}); };
   let skipTo = null; el.onclick = e => { if (e.target.id === 'cfGo' || e.target.id === 'cfVis' || e.target.id === 'cfKeep' || e.target.id === 'cfFold') return; if (dragged) { dragged = false; return; } if (performance.now() - t0 < 6200) skipTo = 6200; };
   /* the risen card tilts under a finger (or the mouse held down) and settles back when let go */
   const tilt = {x:0, y:0, tx:0, ty:0}; let down = false, dragged = false, d0 = null;
@@ -3503,8 +3519,8 @@ function cardSequence(done, opt = {}){
     ctx.fillStyle = '#d8c8a8'; ctx.textAlign = 'center'; ctx.font = `italic ${Math.round(Math.min(20, W*.045))}px 'IM Fell English', serif`; ctx.shadowColor = 'rgba(0,0,0,.9)'; ctx.shadowBlur = 8;
     const cap = bones && !second ? (t < 1500 ? (BK ? BK.cap(t, self, second) : 'Sohra breathes on the bones and throws them into the smoke.') : t < 2900 ? 'The bones roll, and settle.' : t < 3900 ? 'She frowns, and gathers them, and throws again.' : t < 4900 ? 'Again.' : t < 5800 ? 'This time they stay. Something comes up out of the smoke.' : '')
       : BK ? BK.cap(t, self, second) : self ? (t < 1500 ? 'Tuft shuffles. Her hands are not steady.' : t < 2900 ? 'One card. For herself. The first time.' : t < 4900 ? 'The cards on either side stay face down.' : t < 5800 ? 'She turns it over.' : '')
-      : second ? (t < 1500 ? 'Tuft folds the card back into the spread, the way Tattersail did it.' : t < 2900 ? 'Three again. The Deck lets her, mostly.' : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '')
-      : t < 1500 ? 'Tuft shuffles without looking at her hands.' : t < 2900 ? 'Three cards. She never draws for herself.' : t < 3900 ? 'The first card refuses her.' : t < 4900 ? 'The second card refuses her.' : t < 5800 ? 'The third does not.' : '';
+      : second ? (t < 1500 ? 'Tuft folds the card back into the spread, the way Tattersail did it.' : t < 2900 ? `${rdUp(RD_NUM[spread.slots.length])} again. The Deck lets her, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '')
+      : readCaps(t, {shuffle:'Tuft shuffles without looking at her hands.', lay:`${rdUp(RD_NUM[spread.slots.length])} cards. She never draws for herself.`, first:'The first card refuses her.', nth:(i, st) => st.ref === 2 ? 'The second card refuses her.' : `And the ${RD_ORD[i]}.`});
     if (cap) ctx.fillText(cap, cx, H*.74); ctx.shadowColor = 'transparent';
     if (t >= 6200) el.dataset.shown = '1';
     if (t > 5600) { cue('flash', () => { const f = $('#flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }); $('#cfText').classList.add('show');
@@ -7084,6 +7100,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.1', ['A reading\'s words now match the cards on the table, in every book. Marrow lays five in her cross, so four refuse her and the fifth answers; Perrit\'s spiral turns four tiles before the one that speaks, the tile-woman three. Tuft\'s first reading, when the Deck noticed you watching Tattersail, lays four, as the words always said. Nothing else changes; saves are untouched.']],
   ['8.0.0', ['Book Five, Indebted, beside Midnight Tides. A new squad: a sergeant and four soldiers of the Sixth Company, Whitefinder Battalion, in the Letherii army, from the Drownings in Letheras north to Trate, Kraig\'s Landing and High Fort, back down the burned road to Brans Keep, and home to the city on the day the Edur come. Seven chapters and a finale with three roads out and a page for every soldier.', 'Everyone owes. Debt in docks is this book\'s own system: pay it down and your soldiers grow freer and more loyal; let it grow and the collectors come, and in Letheras the canal.', 'Readings are the Tiles of the Holds, cast by Perrit, the squad\'s cadre mage, with seven visions through the tiles. Three recruits, five games at the fires, and one fight where the fallen stay down.', 'On Bridgeburner Book Five has its own tougher numbers; on Soldier a careful squad wins every fight. Books One to Four and their saves are unchanged.']],
   ['7.4.1', ['The Deck reading fills the screen on a phone: the dark panel under the card now runs to both edges and the bottom, with no strip of table showing round it.']],
   ['7.4.0', ['Soldier is tougher late in Books One to Three. From Chapter 3 the enemy has a little more health, hits a little more often and a little harder, rising to its height by Chapter 5. It never passes Bridgeburner, which is unchanged, as is Story. Book Four already had its own late Soldier tuning and is unchanged. The Coral fights where the fallen stay down keep their weight.', 'Saves carry on as they were; the change applies to the next fight.']],
@@ -9298,7 +9315,7 @@ Tuft doesn't let her breath go until the rubble line.`, _:''})}`, ch:[{t:'Move o
 
 "For luck," she says, which is not what a Deck is for.`,
     ch: S.card || S.f.noCard ? [{t:'Descend', go:'approach'},{t:'Not yet'}] :
-      [{t:'Let her draw a card.', go:()=>cardSequence(()=>talk('card'))},
+      [{t:'Let her draw a card.', go:()=>cardSequence(()=>talk('card'), S.f.p_foldFail ? {spread:'row4'} : {})}, // the Deck noticed: one more refuses her (v8.0.1)
        {t:'"No readings. We go."', fx:()=>{S.f.noCard=1; loy('brisk',1); loy('tuft',-1);}, go:'approach'},
        {t:'Not yet'}]}),
   card:()=>{ if (!S.card) S.card = dealCard(['oponn','obelisk','knight','assassin']); const c = CARDS[S.card];
@@ -19645,7 +19662,7 @@ ${C7H.has('ellis') ? `Ellis has stopped. She's looking at the door, not the man.
 
 ${S.f.c5_ellisThrough && !C7H.isDead('ellis') ? (sp ? `${NAME(sp)} stops dead. ${He}'s looking at the mouth of an alley between two warehouses, where the dawn hasn't got to yet. "Sergeant," ${she} says. "Sergeant, there's somebody in the dark."` : `You stop dead. There's an alley between two warehouses where the dawn hasn't got to yet, and there's somebody standing in the dark of it.`) : ''}
 
-${C7H.has('tuft') ? `At the foot of the stair Tuft has the Deck out of her sleeve. She isn't shuffling. She's holding it the way you'd hold a bird. "One card," she says. "For the squad. The last one, I think." A pause. "I'd like to be the one who says when it's the last."` : `The Deck is in Tuft's pack, and the pack is on ${C7H.has('brisk') ? `Brisk's back` : C7H.has('ohl') ? `Ohl's back` : `your back`}, and nobody has opened it. You feel it there at the top of the stair, a small square weight, like a held breath. There's nobody to draw.`}`,
+${C7H.has('tuft') ? `At the foot of the stair Tuft has the Deck out of her sleeve. She isn't shuffling. She's holding it the way you'd hold a bird. "One reading," she says. "For the squad. The last one, I think." A pause. "I'd like to be the one who says when it's the last."` : `The Deck is in Tuft's pack, and the pack is on ${C7H.has('brisk') ? `Brisk's back` : C7H.has('ohl') ? `Ohl's back` : `your back`}, and nobody has opened it. You feel it there at the top of the stair, a small square weight, like a held breath. There's nobody to draw.`}`,
       ch:[{t:'Let her draw.', req:()=>C7H.has('tuft') && !S.f.c7_drawn && !S.f.c7_noCard, fx:()=>{ S.f.c7_drawn=1; const pool = ['crown','crown','obelisk','oponn','chains','knight'].filter(k => CARDS[k]); S.card = pool.length ? dealCard(pool) : 'crown'; }, go:()=>cardSequence(()=>talk('c7_card'))},
           {t:'"No readings. Not this morning."', req:()=>C7H.has('tuft') && !S.f.c7_drawn && !S.f.c7_noCard, fx:()=>{ S.f.c7_noCard=1; loy('tuft',-1); if (C7H.has('brisk')) loy('brisk',1); }, go:'c7_card_no'},
           {t:'The quay.', req:()=>!C7H.has('tuft') || S.f.c7_drawn || S.f.c7_noCard, go:()=>startExplore()}]}; },
@@ -22738,9 +22755,9 @@ CARDBOOK = {
   txt:id => { const s = B2SAY[id]; return s ? s.d : ((CARDS[id] && CARDS[id].txt) || ''); },
   cap(t, self, second){ const r = b2Rd(), n = r.name, she = b2RdShe(), her = b2RdHer(), Her = b2RdHer(true);
     const first = {marrow:'Marrow shuffles sitting down, the way she does everything.', yedda:'Yedda shuffles like a rope-walker paying out line.', kanese:'The old Kanese shuffles with his eyes shut.'}[r.id] || `${n} shuffles.`;
-    const three = {marrow:'Three cards. She reads for the squad, never for herself.', yedda:'Three cards, and she doesn\'t charge you.', kanese:'Three cards. He says something over them in Kanese.'}[r.id] || 'Three cards.';
-    if (second) return t < 1500 ? `${n} folds the card back into the spread.` : t < 2900 ? `Three again. The Deck lets ${b2RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-    return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first card refuses ${b2RdObj()}.` : t < 4900 ? `The second card refuses ${b2RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+    const three = {marrow:'Five cards, in Soliel\'s cross. She reads for the squad, never for herself.', yedda:'Three cards, and she doesn\'t charge you.', kanese:'Three cards. He says something over them in Kanese.'}[r.id] || 'Three cards.';
+    if (second) return t < 1500 ? `${n} folds the card back into the spread.` : t < 2900 ? `${rdUp(RD_NUM[readCount().all])} again. The Deck lets ${b2RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
+    return readCaps(t, {shuffle:first, lay:three, first:`The first card refuses ${b2RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second card refuses ${b2RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
 };
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -22756,7 +22773,7 @@ ${D.set} ${D[r.id] || ''}`,
         {t:'"Not now."', fx:()=>{ S.f[`b2_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b2DeckCard(n){ const D = B2DECK[n], r = b2Rd(), id = S.card && CARDS[S.card] ? S.card : B2POOL[n][0], c = CARDS[id];
   return {sp:'The Deck of Dragons', scene:D.scene, txt:
-`${r.name} lays the reading out on ${D.on}. Two cards refuse ${b2RdObj()}. The third does not.`,
+`${r.name} lays the reading out on ${D.on}. ${readRefuseLine(b2RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:`${b2CardSay(id)}${id === 'b2c_queen' && typeof b2In === 'function' && b2In('redblade') ? `\n\nRamin, watching over ${r.he ? 'his' : 'her'} shoulder, says the Ehrlitan prayer to the Queen of Dreams under his breath, the one his mother said at the toll-gate.` : ''}`,
     ch:[{t:D.backT, go:D.back}]}; }
@@ -35698,7 +35715,7 @@ const b3CardSay = id => { const s = B3SAY[id], r = b3Rd().id, v = s && (typeof s
       const first = {tuft:'Tuft shuffles without looking at her hands.', sohra:'Sohra breathes on the bones and throws them into the smoke.', benna:'Old Benna shuffles like she is wringing out a shirt.'}[r.id] || `${n} shuffles.`;
       const three = {tuft:'Three cards.', sohra:'The bones roll, and settle, and roll again.', benna:'Three cards, and a copper on the shield.'}[r.id] || 'Three cards.';
       if (second) return t < 1500 ? `${n} gathers it back in.` : t < 2900 ? `Again. It lets ${b3RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-      return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first refuses ${b3RdObj()}.` : t < 4900 ? `The second refuses ${b3RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+      return readCaps(t, {shuffle:first, lay:three, first:`The first refuses ${b3RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second refuses ${b3RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
   }; }
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -35715,7 +35732,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
 function b3DeckCard(n){ const D = B3DECK[n] || B3DECK[1], r = b3Rd(), pool = B3POOL[n] || B3POOL[1], id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
   return {sp:'The Deck of Dragons', scene:D.scene, txt:r.id === 'sohra'
     ? `Sohra reads the bones on ${D.where}. Two throws she sweeps away without a word. The third she lets lie.`
-    : `${r.name} lays the reading out on ${D.where}. Two cards refuse ${b3RdObj()}. The third does not.`,
+    : `${r.name} lays the reading out on ${D.where}. ${readRefuseLine(b3RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b3CardSay(id),
     ch:[{t:D.backT, go:D.back}]}; }
@@ -49373,7 +49390,7 @@ const b4CardSay = id => { const s = B4SAY[id], r = b4Rd().id, v = s && (typeof s
       const first = {marrow:'Marrow shuffles the temple deck, slowly.', tallow:'Tallow shuffles the way his grandmother did, badly.', oldninth:'The old soldier shuffles one-handed.'}[r.id] || `${n} shuffles.`;
       const three = {marrow:'The temple cross, and the card in the middle.', tallow:'Two down, one up.', oldninth:'Three cards, and the rum beside them.'}[r.id] || 'Three cards.';
       if (second) return t < 1500 ? `${n} gathers it back in.` : t < 2900 ? `Again. It lets ${b4RdObj()}, mostly.` : t < 4900 ? '' : t < 5800 ? 'Another comes up.' : '';
-      return t < 1500 ? first : t < 2900 ? three : t < 3900 ? `The first refuses ${b4RdObj()}.` : t < 4900 ? `The second refuses ${b4RdObj()}.` : t < 5800 ? 'The third does not.' : ''; },
+      return readCaps(t, {shuffle:first, lay:three, first:`The first refuses ${b4RdObj()}.`, nth:(i, st) => st.ref === 2 ? `The second refuses ${b4RdObj()}.` : `And the ${RD_ORD[i]}.`}); },
   }; }
 
 /* ---- the chapter's reading: a choice on the chapter's first halt, the offer, and the card ---- */
@@ -49387,7 +49404,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:`Let ${b4RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b4_c${n}_drawn`] = 1; S.f[`b4_c${n}_reader`] = r.id; S.card = dealCard(B4POOL[n] || B4POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
         {t:'"Not now."', fx:()=>{ S.f[`b4_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b4DeckCard(n){ const D = B4DECK[n] || B4DECK[1], r = b4Rd(), pool = B4POOL[n] || B4POOL[1], id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
-  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. Two cards refuse ${b4RdObj()}. The third does not.`,
+  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. ${readRefuseLine(b4RdObj())}`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b4CardSay(id),
     ch:[{t:D.backT, go:D.back}]}; }
@@ -60504,7 +60521,7 @@ const b5TileSay = id => { const s = B5SAY[id], r = b5Rd().id, v = s && (typeof s
       const r = b5Rd(), n = r.name, first = {perrit:'Perrit turns the tiles face down and stirs them with two fingers.', tilewoman:'The tile-woman shakes the bone tiles in her two hands.'}[r.id] || `${n} lays out the tiles.`;
       const spread = {perrit:'A spiral of tiles, as the school lays them.', tilewoman:'Three tiles in a row, and one above.'}[r.id] || 'The tiles go down.';
       if (second) return t < 1500 ? `${n} gathers them back.` : t < 2900 ? 'Again. The tiles allow it.' : t < 4900 ? '' : t < 5800 ? 'Another turns up.' : '';
-      return t < 1500 ? first : t < 2900 ? spread : t < 3900 ? 'The first tile shows nothing she wants.' : t < 4900 ? 'Nor the next.' : t < 5800 ? 'The last tile does.' : ''; },
+      return readCaps(t, {shuffle:first, lay:spread, first:`The first tile shows nothing ${r.he ? 'he' : 'she'} wants.`, nth:i => i === 1 ? 'Nor the next.' : `Nor the ${RD_ORD[i]}.`, ans:() => 'The last tile does.'}); },
     square:() => b5On(),
     done:() => b5On() ? 'Gather the tiles' : 'Put the cards away',
     look:() => b5On() ? 'Look into the tile' : 'Look into the card',
@@ -60534,7 +60551,7 @@ ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
     ch:[{t:'Let her lay them.', deck:true, fx:()=>{ S.f[`b5_c${n}_drawn`] = 1; S.f[`b5_c${n}_reader`] = r.id; S.card = dealCard(B5POOL[n] || B5POOL[1]); }, go:()=>cardSequence(()=>talk(card))},
         {t:'"Not now."', fx:()=>{ S.f[`b5_c${n}_noCard`] = 1; }, go:D.back}]}; }
 function b5TileCard(n){ const D = B5READ[n] || B5READ[1], r = b5Rd(), pool = B5POOL[n] || B5POOL[1], id = S.card && B5TILES[S.card] ? S.card : pool[0], c = CARDS[id];
-  return {sp:'The Tiles of the Holds', scene:D.scene, txt:`${r.name} lays the tiles out on ${D.where}. The first two show ${r.he ? 'him' : 'her'} nothing. The last one does.`,
+  return {sp:'The Tiles of the Holds', scene:D.scene, txt:`${r.name} lays the tiles out on ${D.where}. The first ${RD_NUM[readCount().ref]} show ${r.he ? 'him' : 'her'} nothing. The last one does.`,
     html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)} · ${esc(c.house)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
     after:b5TileSay(id),
     ch:[{t:D.backT, go:D.back}]}; }
