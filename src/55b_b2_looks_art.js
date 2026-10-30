@@ -140,7 +140,8 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   // the bridle over the far shoulder: a cheek-strap and an iron bit-ring, hanging
   ctx.strokeStyle = PR.lin(ctx, 10, 0, 34, 0, [[0,'#5a3a22'], [1,'#120a04']]); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(14, -46); ctx.bezierCurveTo(22, -42, 26, -30, 24, -18); ctx.stroke();
   ctx.strokeStyle = '#6a6458'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(24, -14.6, 3.4, 0, 7); ctx.stroke(); ell(ctx, 19.4, -38, 2.2, 2.2, '#6a5020');
-  ctx.restore(); BP.light(ctx, F, B); PR.stroke(ctx, '#2a0e06', 1.4, B.top); BP.throat(ctx, F, B.cb + 1); // the leather the scale is laced to
+  ctx.restore(); BP.light(ctx, F, B); BP.spaulder(ctx, {wide:40, drop:3, n:3, rise:3, c:['#d05040', '#9a2a1e', '#3a0a06'], style:'scale', sw:3, trim:'rgba(240,200,120,.75)'}); // red-lacquered scale spaulders, gold-edged
+  PR.stroke(ctx, '#2a0e06', 1.4, B.top); BP.throat(ctx, F, B.cb + 1); // the leather the scale is laced to
   // a cord at the throat and his father's toll seal on it: square brass, the Empire's mark and the Old Quarter gate
   PR.stroke(ctx, '#1a0e08', .8, () => { ctx.moveTo(-5.8, -47); ctx.quadraticCurveTo(-4, -40, -1.2, -36.4); ctx.moveTo(5.8, -47); ctx.quadraticCurveTo(4, -40, 1.2, -36.4); });
   ctx.save(); ctx.translate(0, -33); ctx.rotate(.12); ctx.fillStyle = PR.lin(ctx, -4, -4, 4, 4, [[0,'#fff0c0'], [.35,'#d8a84a'], [1,'#3a2408']]); ctx.fillRect(-4, -4, 8, 8); ctx.strokeStyle = 'rgba(60,34,6,.8)'; ctx.lineWidth = .5; ctx.strokeRect(-2.6, -2.6, 5.2, 5.2); PR.stroke(ctx, 'rgba(60,34,6,.7)', .5, () => { ctx.moveTo(-1.4, 2.4); ctx.lineTo(-1.4, -.6); ctx.arc(0, -.6, 1.4, Math.PI, 0); ctx.lineTo(1.4, 2.4); }); ctx.restore(); // a little arch: the gate

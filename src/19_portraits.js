@@ -178,6 +178,25 @@ const BP = {
   /* an open-necked shirt in a V: its own shallower V, its collar edge lit; depth is where its opening ends */
   shirt(ctx, B, c1, c2, depth){ const k = .3, sx = B.nx*(1 - k)*1.02, sy = B.ny + (B.cb - B.ny)*k; ctx.beginPath(); ctx.moveTo(-sx, sy); ctx.lineTo(0, depth); ctx.lineTo(sx, sy); ctx.lineTo(B.nx*.06, B.cb); ctx.lineTo(-B.nx*.06, B.cb); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, c1, c2, -sx, sx); ctx.fill();
     PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.moveTo(-sx, sy); ctx.lineTo(0, depth); ctx.lineTo(sx, sy); }); PR.stroke(ctx, 'rgba(255,240,220,.35)', .4, () => { ctx.moveTo(-sx + .4, sy - .4); ctx.lineTo(-.3, depth - .5); }); PR.soft(ctx, 1, depth + 2, 3, 1.4, '#000000', .3); },
+  /* a shoulder piece (epaulet, pauldron, spaulder) on each shoulder, over the garment and clear of the neck: lames from the arm up, the top one over the rest.
+     o: {wide, drop, n: lames, c:[light, mid, dark], trim, style:'plate'|'scale'|'lam'|'leather', rivet, hair:[cols], fur, emblem(ctx, sd, x, y), rise}. Lantern left: the lit edge
+     on the near shoulder, a cast shadow onto the arm and chest under each */
+  spaulder(ctx, o){ const wd = o.wide, dr = o.drop || 0, n = o.n ?? 3, rs = o.rise ?? 0;
+    [-1, 1].forEach(sd => { const lit = sd < 0, shp = k => { const y0 = -45 + dr - rs + k*3.4, x0 = sd*wd*.34; ctx.beginPath(); ctx.moveTo(x0, y0 + 1.4); ctx.bezierCurveTo(sd*wd*.72, y0 - 3.4, sd*(wd + 3.4), y0 + 2.6, sd*(wd + 4.2), y0 + 15 + k*1.6);
+        ctx.quadraticCurveTo(sd*(wd + 3.6), y0 + 19 + k*1.6, sd*(wd + 1.2), y0 + 19.6 + k*1.2); ctx.bezierCurveTo(sd*(wd*.98), y0 + 10, sd*wd*.74, y0 + 6.4, x0 + sd*1, y0 + 6.2); ctx.closePath(); };
+      ctx.save(); shp(n - 1); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 5; ctx.shadowOffsetX = sd*1.4; ctx.shadowOffsetY = 3; ctx.fillStyle = '#000'; ctx.fill(); ctx.restore(); // its shadow on the arm and chest
+      for (let k = n - 1; k >= 0; k--){ shp(k); const g = lit ? PR.lin(ctx, -wd - 4, -50 + dr, -wd*.4, -26 + dr, [[0, o.c[0]], [.55, o.c[1]], [1, o.c[2]]]) : PR.lin(ctx, wd*.4, 0, wd + 4, 0, [[0, o.c[2]], [1, '#060505']]); ctx.fillStyle = g; ctx.fill();
+        if (o.style === 'scale' || o.style === 'lam') { ctx.save(); shp(k); ctx.clip(); if (o.style === 'scale') BP.scales(ctx, sd < 0 ? -wd - 6 : wd*.3, sd < 0 ? -wd*.3 : wd + 6, -52 + dr - rs + k*3.4, -18 + dr, o.sw ?? 3.4, lit ? o.c[1] : o.c[2], 7 + k);
+          else { for (let x = -wd - 6; x < wd + 6; x += 3) PR.stroke(ctx, 'rgba(0,0,0,.45)', .4, () => { ctx.moveTo(x, -60); ctx.lineTo(x + sd*1.2, -10); }); for (let x = -wd - 6; x < wd + 6; x += 3) ell(ctx, x + 1.4, -45 + dr - rs + k*3.4 + 6 + Math.abs(x)*.12, .3, .3, '#e8d8b0'); } ctx.restore(); }
+        if (o.style === 'leather') { ctx.save(); shp(k); ctx.clip(); PR.soft(ctx, sd*wd*.8, -40 + dr + k*3, 5, 2.6, '#000000', .25); ctx.restore(); }
+        ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = .6; shp(k); ctx.stroke();
+        ctx.save(); shp(k); ctx.clip(); ctx.lineCap = 'round'; ctx.strokeStyle = o.trim || (lit ? 'rgba(255,240,215,.5)' : 'rgba(255,240,215,.12)'); ctx.lineWidth = o.trim ? 1.6 : .7; ctx.beginPath(); const y0 = -45 + dr - rs + k*3.4; ctx.moveTo(sd*wd*.38, y0 + 1.4); ctx.bezierCurveTo(sd*wd*.72, y0 - 3.4, sd*(wd + 3.4), y0 + 2.6, sd*(wd + 4.2), y0 + 15 + k*1.6); ctx.stroke();
+          if (o.trim && !lit) { ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.stroke(); } ctx.restore();
+        if (o.rivet) for (let i = 0; i < 3; i++){ const t = .25 + i*.25, y0 = -45 + dr - rs + k*3.4, x = sd*lerp(wd*.5, wd + 2.6, t), y = y0 + 1.6 + t*t*12 + 1.4; ell(ctx, x, y, .6, .6, lit ? o.rivet : '#3a3630'); } }
+      if (lit) PR.soft(ctx, -wd*.86, -40 + dr - rs, 6, 2.4, '#fff4e0', .3, -.5);
+      if (o.hair) PR.strands(ctx, 26, lit ? o.hair : o.hair.map(c => shade(c, -.55)), .55, 31 + sd, (i, r) => { const t = r(), x = sd*lerp(wd*.62, wd + 4, t), y = -45 + dr - rs + (n - 1)*3.4 + 6 + t*t*13 + 6; return [x, y, x + sd*(.6 + r()), y + 4, x + sd*(.4 + r()*1.6), y + 8 + r()*4]; });
+      if (o.fur) PR.strands(ctx, 40, lit ? o.fur : o.fur.map(c => shade(c, -.55)), .5, 41 + sd, (i, r) => { const t = r(), y0 = -45 + dr - rs, x = sd*lerp(wd*.4, wd*.9, t), y = y0 + 1.4 - Math.sin(t*3)*2.2; return [x, y + 1, x + (r() - .5)*1.4, y - 1, x + (r() - .5)*2, y - 2.4 - r()*1.4]; });
+      if (o.emblem) o.emblem(ctx, sd, sd*wd*.84, -38 + dr - rs); }); },
   /* the garment's light: the lit trapezius, the dark side, the jaw's shadow (not on an open neck, where PR.neck has it), a dark top edge and a lit one on the lantern side */
   light(ctx, F, B, open){ ctx.save(); B.path(); ctx.clip(); PR.soft(ctx, -B.nx - 7, B.ny + 9, 9, 4, '#fff0d8', .14, -.6); PR.soft(ctx, B.nx + 9, B.ny + 10, 12, 8, '#000000', .42); PR.soft(ctx, B.wd*.62, -16, B.wd*.5, 24, '#000000', .5);
     if (!open) PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3.2, '#0a0604', .6); ctx.restore();
@@ -208,6 +227,7 @@ const POR = {
     ctx.strokeStyle = PR.lit(ctx, '#4a3422', '#1a1008', -20, 30); ctx.lineWidth = 3.6; ctx.beginPath(); ctx.moveTo(24, -42); ctx.lineTo(-18, 2); ctx.stroke(); ell(ctx, 8, -24, 2, 1.6, '#8a8276'); ell(ctx, 8, -24, 1, .8, '#2a2622'); // the shield strap and its buckle
     PR.stroke(ctx, 'rgba(180,170,150,.5)', .35, () => { ctx.moveTo(-4, -46); ctx.quadraticCurveTo(-8, -30, -12, -22); }); ctx.fillStyle = '#8a8276'; ctx.save(); ctx.translate(-12.4, -21); ctx.rotate(.5); ctx.fillRect(-.8, 0, 1.6, 4.4); ctx.restore(); // the Second Army whistle, no longer used
     ctx.restore(); BP.light(ctx, F, B);
+    BP.spaulder(ctx, {wide:44, n:2, rise:3, c:['#a07850', '#6a4a2c', '#2a1a0c'], style:'leather', rivet:'#d8c8a8', emblem: (ctx, sd, x, y) => { if (sd < 0) { ctx.lineCap = 'round'; ctx.strokeStyle = PR.lin(ctx, x - 6, 0, x + 6, 0, [[0,'#f4c878'], [1,'#7a5418']]); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + 6, y - 3); ctx.bezierCurveTo(x, y - 4, x - 5, y, x - 6.4, y + 7); ctx.stroke(); } }}); // boiled-leather pauldrons, riveted, the sergeant's gold braided on the near one
     BP.band(ctx, B, -1, 6.6); ctx.fillStyle = PR.lit(ctx, '#8a8272', '#3a362e', -B.nx - 3, B.nx + 3); ctx.fill(); ctx.save(); BP.band(ctx, B, -1, 6.6); ctx.clip(); BP.quilt(ctx, -B.nx - 6, B.nx + 6, B.ny - 2, B.cb + 9, 3.4, 'rgba(0,0,0,.45)'); ctx.restore(); // the gambeson collar, up under the beard
     PR.stroke(ctx, 'rgba(0,0,0,.5)', .6, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1.05 + i/20*2.1, 6.6); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } });
     F.under = (ctx, F) => { const u = F.h/20, r = PR.rng(77), cy = F.cy, w = F.w; ctx.lineCap = 'round'; // a short dark beard, kept with a knife, grey coming in at the chin
@@ -247,6 +267,7 @@ const POR = {
     ctx.save(); B.path(); ctx.clip(); PR.mail(ctx, -58, 58, -66, 2, '#8e8a82', 2.1); PR.soft(ctx, 32, -20, 30, 26, '#000000', .5); PR.soft(ctx, -28, -32, 22, 12, '#e8dcc0', .12);
     ctx.fillStyle = PR.lit(ctx, '#7a2a1e', '#240c08', -58, 40); ctx.fillRect(-60, -9, 120, 12); PR.stroke(ctx, 'rgba(0,0,0,.5)', .6, () => { ctx.moveTo(-60, -9); ctx.lineTo(60, -9); }); // the tunic below the mail's hem
     ctx.fillStyle = PR.lit(ctx, '#5a4028', '#241810', -30, 30); PR.path(ctx, [[-32, -41], [-27, -44], [36, 2], [28, 2]]); ctx.fill(); ctx.fillStyle = '#9a9488'; ctx.fillRect(4, -21, 4.4, 4.4); ctx.fillStyle = '#34322e'; ctx.fillRect(5.1, -19.9, 2.2, 2.2); ctx.restore(); BP.light(ctx, F, B); // the baldric and its buckle
+    BP.spaulder(ctx, {wide:56, drop:2, rise:3.4, n:4, c:['#e0e2e4', '#9a9c9e', '#3a3c3e'], style:'plate', rivet:'#fff4e0', trim:'rgba(180,60,40,.8)'}); // riveted steel spaulders over the mail, edged in her oxblood
     // the scale gorget: a collar round the neck in one piece with the mail, each row hanging over the one below like slates
     { BP.band(ctx, B, -1, 12); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2; ctx.fillStyle = '#2a2722'; ctx.fill(); ctx.restore();
       ctx.save(); BP.band(ctx, B, -1, 12); ctx.clip(); BP.scales(ctx, -B.nx*1.7, B.nx*1.7, B.ny - 2, B.cb + 12, 4.4, '#8a8274', 17); PR.soft(ctx, B.nx, B.ny + 8, 14, 10, '#000000', .4); PR.soft(ctx, -B.nx*.7, B.ny + 4, 7, 4, '#e8dcc0', .12); PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3.2, '#0a0604', .55); ctx.restore();

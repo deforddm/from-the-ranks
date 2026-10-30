@@ -236,6 +236,7 @@ Object.assign(POR, {
     ctx.fillStyle = PR.lit(ctx, '#3a2a1a', '#120c06', -50, 40); ctx.fillRect(-52, -10, 104, 4); // the belt
     ell(ctx, 16, -26, 3.6, 3.6, PR.rad(ctx, 15, -27, .4, 3.8, [[0,'#fff0c0'], [.4,'#c9a44a'], [1,'#4a3410']])); PR.stroke(ctx, 'rgba(60,40,10,.6)', .45, () => { ctx.arc(16, -26, 2.2, 0, 7); }); // the auxiliary's brass badge, polished every night
     ctx.restore();
+    BP.spaulder(ctx, {wide:50, drop:2, n:3, rise:1.6, c:['#b89064', '#7a5634', '#2a1a0c'], style:'leather', rivet:'#e8dcc0', emblem: (ctx, sd, x, y) => { ell(ctx, x, y + 3, 3.4, 2.6, PR.rad(ctx, x - 1, y + 2, .3, 3.6, sd < 0 ? [[0,'#f0f0e8'], [.5,'#9a9a94'], [1,'#3a3a36']] : [[0,'#6a6a64'], [1,'#1a1a18']])); }}); // leather shoulder cops with a steel plate on each, under the head-cloth
     F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy - 14, F.w*1.1, 5, '#120806', .45); PR.soft(ctx, 9, F.cy + 6, 4, 4, '#140806', .3); }; // the cloth's shadow on her brow
     PR.face(ctx, F);
     // the head-cloth: over the head, round the face, under the jaw, down over the shoulders

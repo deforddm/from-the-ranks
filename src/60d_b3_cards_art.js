@@ -290,7 +290,7 @@ POR.greysword = function(ctx){ const F = {cy:-77, w:12.6, h:19.8, jaw:.86, chin:
   PR.stroke(ctx, 'rgba(0,0,0,.1)', 1.4, () => { for (let i=0;i<4;i++){ ctx.moveTo(-18 + i*12, -38); ctx.quadraticCurveTo(-20 + i*12.5, -16, -21 + i*13, 4); } }); // its folds
   ctx.fillStyle = '#3a2a1c'; ctx.fillRect(-32, -6, 64, 3); ctx.fillStyle = '#9a9488'; ctx.fillRect(-2.4, -6.4, 4.8, 3.8); // the belt
   PR.soft(ctx, 26, -18, 20, 20, '#000000', .45); PR.soft(ctx, -20, -38, 12, 7, '#ffe8c8', .1);
-  ctx.restore(); BP.light(ctx, F, B);
+  ctx.restore(); BP.light(ctx, F, B); BP.spaulder(ctx, {wide:38, drop:3, n:3, rise:3.4, c:['#eef0f2', '#a8acb0', '#3a3e42'], style:'plate', rivet:'#ffffff', emblem: (ctx, sd, x, y) => { if (sd > 0) return; ctx.fillStyle = 'rgba(40,44,48,.7)'; ctx.beginPath(); ctx.moveTo(x - 2.6, y + 4); ctx.lineTo(x - 2.2, y - 1.4); ctx.lineTo(x - .8, y + 1); ctx.lineTo(x + .6, y - 1.6); ctx.lineTo(x + 1.6, y + 1.6); ctx.lineTo(x + 3, y + 2.6); ctx.lineTo(x + 2.4, y + 4.4); ctx.closePath(); ctx.fill(); }}); // Grey Swords steel pauldrons, the wolf's head on the near one
   F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 7, 4, 2, '#5a3a24', .18); };
   PR.face(ctx, F);
   // hair shorn close: a dark cap fitted to the skull, the scalp showing through at the edges
