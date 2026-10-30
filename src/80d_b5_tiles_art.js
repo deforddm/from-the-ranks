@@ -193,7 +193,7 @@ Object.assign(POR, {
     PR.stroke(ctx, 'rgba(255,240,210,.35)', .5, () => { ctx.ellipse(0, capY, R - .8, 13.8, 0, Math.PI*1.08, Math.PI*1.4); });
     ctx.fillStyle = PR.lin(ctx, -R, 0, R, 0, [[0, '#f0d08a'], [.4, '#b8862e'], [.8, '#4a300c'], [1, '#140c04']]); ctx.beginPath(); ctx.moveTo(-R - .6, capY - 2.4); ctx.quadraticCurveTo(0, capY - 4, R + .6, capY - 2.4); ctx.lineTo(R + .6, capY + 1.4); ctx.quadraticCurveTo(0, capY, -R - .6, capY + 1.4); ctx.closePath(); ctx.fill(); // the brass brow-band
     for (let i = 0; i < 9; i++){ const x = -R + 1.6 + i*(R*2 - 3.2)/8; ell(ctx, x, capY - .6 - (1 - Math.abs(x)/R)*1.2, .55, .55, x < 4 ? '#fff0c0' : '#3a2808'); }
-    PR.soft(ctx, 0, capY + 3, F.w*.9, 2.6, '#000000', .4); B5P.shield(ctx, -25, -14, 21, 23, '#4e6072'); // the round shield, held in front
+    PR.soft(ctx, 0, capY + 3, F.w*.9, 2.6, '#000000', .4); B5P.shield(ctx, -20, -4, 32, 35, '#4e6072'); // the round shield, held in front
     return F; },
   /* Tobet: twenty-two, Indebted, narrow and quick; shaggy straw hair, a quilted jack, the company cloak cut down, his yew bow and the tally-stick */
   tobet(ctx){ const F = {cy:-73, w:12.2, h:19.4, jaw:.72, chin:4.3, skin:'#c8a282', iris:'#5a6a48', lip:'#a06c5c', browCol:'#6a4626', browW:1.15, arch:1.2, browL:.7, browR:.3, rim:'#b8a070', rimA:.22, nose:.95, look:-.35, open:1.05, smileL:-.1, smileR:.25, mouthW:3.4, flush:'#d08070'};
@@ -216,7 +216,7 @@ Object.assign(POR, {
     PR.stroke(ctx, '#2a1a10', .45, () => { ctx.moveTo(3, -46); ctx.quadraticCurveTo(3, -40, 2.6, -36.6); }); ctx.save(); ctx.translate(2.6, -36.6); ctx.rotate(.05); ctx.fillStyle = PR.lit(ctx, '#d8c49a', '#6a5634', -1, 1); ctx.fillRect(-.9, 0, 1.8, 8.6); PR.stroke(ctx, 'rgba(40,24,10,.8)', .3, () => { for (let i = 0; i < 6; i++){ ctx.moveTo(-.9, 1.2 + i*1.2); ctx.lineTo(.3, 1.2 + i*1.2); } }); ctx.restore(); // the tally-stick on its thong
     PR.face(ctx, F);
     B5P.hair(ctx, F, {c:['#b08a52', '#6a4a24', '#22160a'], v:4.2, wx:2.2, hl:13, ey:4, n:70, sw:.6, s:['#c09858', '#5a3c1c', '#8a6634', '#3a2410'], spiky:9, seed:13, sh:'#ffe0a0', shA:.3, part:2, wisp:4});
-    PR.strands(ctx, 30, ['#a07a44', '#6a4a24', '#c09858', '#4a3018'], .7, 17, (i, r) => { const x = -10 + r()*18, y = F.cy - 19; return [x, y, x - 1 + r()*2, y + 4, x - 2.5 + r()*2.6, y + 8 + r()*3]; }); BP.grip(ctx, -38, -8, -.06, 0, 0, null, '#c8a282', '#9a8250', -1.1); // his hand on the bow's grip
+    PR.strands(ctx, 30, ['#a07a44', '#6a4a24', '#c09858', '#4a3018'], .7, 17, (i, r) => { const x = -10 + r()*18, y = F.cy - 19; return [x, y, x - 1 + r()*2, y + 4, x - 2.5 + r()*2.6, y + 8 + r()*3]; }); BP.grip(ctx, -38, -8, -.06, 0, 0, null, {k:'bracer', c:['#b08a58', '#6a4a2a', '#1e140a']}, '#9a8250', -1.1); // his hand on the bow's grip
     return F; }, // the fringe, in his eyes
   /* Thegg: half Tarthenal, huge and calm; a heavy jaw, black hair dragged back, two sets of scale riveted into one, his mother's clay beads, the tower shield */
   thegg(ctx){ const F = {cy:-75, w:16.2, h:21.4, jaw:1.04, chin:7.6, skin:'#a27c5c', iris:'#3a2a1a', lip:'#7e4c3c', browCol:'#1a100a', browW:2.4, arch:.25, rim:'#9a8466', rimA:.18, nose:1.4, age:.35, look:-.05, open:.76, smileL:.1, smileR:.15, mouthW:5, earS:1.15};
@@ -253,7 +253,7 @@ Object.assign(POR, {
     F.under = (ctx, F) => { PR.dots(ctx, F, 260, 'rgba(26,16,10,.32)', .5, [7, 19, (x, y) => (Math.abs(x) < 4.6 && y > 10 && y < 14.6)]); PR.soft(ctx, 0, F.cy - 6, F.w*.9, 2.6, '#140806', .35); }; // stubble; the heavy brow's shadow
     PR.face(ctx, F);
     B5P.hair(ctx, F, {c:['#4a3a2e', '#1c140e', '#070504'], v:5, wx:2, hl:12, ey:1, n:90, sw:.6, s:['#3a2c22', '#120c08', '#5a4838'], seed:29, sh:'#c0a890', shA:.28});
-    ctx.save(); ctx.translate(-30, 2); ctx.rotate(-0.08); ctx.scale(0.85, 0.85); ctx.translate(56, 52); // the tower shield, held in front of him
+    ctx.save(); ctx.translate(-26, 14); ctx.rotate(-0.08); ctx.scale(1.1, 1.1); ctx.translate(56, 52); // the tower shield, held in front of him
     ctx.save(); ctx.translate(-56, -52); ctx.rotate(-.05); const ts = () => { ctx.beginPath(); ctx.moveTo(-22, -54); ctx.quadraticCurveTo(0, -60, 22, -54); ctx.lineTo(22, 56); ctx.lineTo(-22, 56); ctx.closePath(); };
       ts(); ctx.fillStyle = PR.lin(ctx, -22, -50, 22, 40, [[0, '#647688'], [.45, '#3e4c5a'], [1, '#0a0c10']]); ctx.fill(); ctx.save(); ts(); ctx.clip(); // the tower shield behind his left shoulder, made twice
       PR.stroke(ctx, 'rgba(0,0,0,.35)', .6, () => { for (let i = -2; i <= 2; i++){ ctx.moveTo(i*8.8, -60); ctx.lineTo(i*8.8, 60); } }); const r = PR.rng(19); for (let i = 0; i < 12; i++) PR.soft(ctx, -20 + r()*36, -50 + r()*100, 2 + r()*5, 1 + r()*2, '#6a4a2c', .6, r()*3);
@@ -351,7 +351,7 @@ Object.assign(POR, {
     const lock = () => { ctx.beginPath(); ctx.moveTo(-F.w - 1, F.cy - 6); ctx.bezierCurveTo(-F.w - 6.4, F.cy + 8, -F.w - 3.6, F.cy + 26, -F.w - 7, F.cy + 46); ctx.quadraticCurveTo(-F.w - 4.4, F.cy + 50, -F.w - 1.4, F.cy + 46); ctx.bezierCurveTo(-F.w + 2, F.cy + 26, -F.w - .4, F.cy + 8, -F.w + 1.4, F.cy - 4); ctx.closePath(); }; // the long lock over her shoulder
     lock(); ctx.fillStyle = PR.lin(ctx, -F.w - 6, 0, -F.w + 2, 0, [[0, '#5a4a3e'], [.5, '#2a2018'], [1, '#0a0806']]); ctx.fill();
     PR.strands(ctx, 26, ['#7a6656', '#2a2018', '#4a3a30', '#0e0a08'], .5, 71, (i, r) => { const d = -2.6 + r()*4.4; return [-F.w + d*.4, F.cy - 4, -F.w - 4.4 + d, F.cy + 18 + r()*6, -F.w - 4.6 + d*.6, F.cy + 44 + r()*4]; });
-    ctx.fillStyle = '#c8b890'; ctx.fillRect(-F.w - 4.6, F.cy + 24, 4.2, 1.6); ell(ctx, -F.w - 2.6, F.cy + 27.4, 1, 1.5, '#f0e8d8'); BP.grip(ctx, 33, 4, .05, -10, 3, ['#a8865a', '#5a4228', '#1a1208'], '#a88262', '#3e4e52'); // her hand on the fish-spear
+    ctx.fillStyle = '#c8b890'; ctx.fillRect(-F.w - 4.6, F.cy + 24, 4.2, 1.6); ell(ctx, -F.w - 2.6, F.cy + 27.4, 1, 1.5, '#f0e8d8'); BP.grip(ctx, 33, 4, .05, -19.0, 3, ['#a8865a', '#5a4228', '#1a1208'], {k:'glove', c:['#7a8c90', '#3e4e52', '#0a1012']}, '#3e4e52'); // her hand on the fish-spear
     return F; }, // tied with a cord and a shell
   /* Pessa: thirty-three, pressed on the road south; a boatwoman's face under a faded kerchief, a burn-scar on her cheek, a jack two sizes too big under her own oilskin, the canal boathook held like a pole */
   pessa(ctx){ const F = {cy:-73, w:12.8, h:19.6, jaw:.8, chin:4.8, skin:'#c09676', iris:'#4a3a2a', lip:'#8a5646', browCol:'#3a2418', browW:1.5, arch:.6, browL:-.2, browR:.5, rim:'#a8907a', rimA:.24, nose:1.1, look:.3, open:.9, smileL:-.3, smileR:.2, mouthW:3.6, bags:.5, age:.25};
@@ -382,6 +382,6 @@ Object.assign(POR, {
     ctx.save(); kf(); ctx.clip(); PR.stroke(ctx, 'rgba(30,12,10,.45)', .7, () => { for (let i = 0; i < 5; i++){ ctx.moveTo(-F.w + i*2, F.cy - 4 - i*1.6); ctx.quadraticCurveTo(-4 + i*3, top - 2 + i, 6 + i*2, top - 3 + i*.4); } });
       PR.stroke(ctx, 'rgba(240,200,180,.18)', .5, () => { for (let i = 0; i < 6; i++){ ctx.moveTo(-F.w - 2 + i*3.6, top + 8); ctx.lineTo(-F.w - 1 + i*3.6, top - 6); } }); PR.soft(ctx, -6, top - 1, 7, 2.4, '#ffe0d0', .26, -.3); PR.soft(ctx, F.w*.6, F.cy - 6, 8, 10, '#000000', .45);
       ctx.fillStyle = 'rgba(90,70,60,.7)'; ctx.fillRect(3, top - 1, 4, 3); PR.stitch(ctx, 'rgba(220,200,180,.5)', .3, () => { ctx.rect(3, top - 1, 4, 3); }); ctx.restore(); // darned
-    PR.stroke(ctx, 'rgba(180,140,120,.5)', .5, () => { ctx.moveTo(-F.w + .4, F.cy - 4); ctx.bezierCurveTo(-F.w + 1, F.cy - 13.4*u, -F.w*.5, F.cy - 15.4*u, 0, F.cy - 15.2*u); }); BP.grip(ctx, -35, 4, -.04, -10, 3.4, ['#a88a62', '#5a4630', '#1a140c'], '#c09676', '#5e6444'); // her hand on the boathook
+    PR.stroke(ctx, 'rgba(180,140,120,.5)', .5, () => { ctx.moveTo(-F.w + .4, F.cy - 4); ctx.bezierCurveTo(-F.w + 1, F.cy - 13.4*u, -F.w*.5, F.cy - 15.4*u, 0, F.cy - 15.2*u); }); BP.grip(ctx, -35, 4, -.04, -19.0, 3.4, ['#a88a62', '#5a4630', '#1a140c'], {k:'wrap', c:['#c8bca8', '#8a7e6a', '#2a241a']}, '#5e6444'); // her hand on the boathook
     return F; },
 });

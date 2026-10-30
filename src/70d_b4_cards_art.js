@@ -194,14 +194,14 @@ Object.assign(POR, {
     PR.face(ctx, F);
     const hs = BP.hair(ctx, F, {c:['#3a2c20', '#140c08', '#050302'], v:1.2, wx:.8, hl:14.6, ey:-3, n:30, sw:.4, seed:81, sh:'#a0a088', shA:.18, wisp:0}); // cropped to the skull, the temple's way
     { const r = PR.rng(83); ctx.save(); hs(); ctx.clip(); for (let i = 0; i < 200; i++){ const x = (r() - .5)*2*(F.w + 1), y = F.cy - 22 + r()*14; ell(ctx, x, y, .3, .3, r() < .5 ? 'rgba(10,6,4,.6)' : 'rgba(80,64,50,.4)'); } ctx.restore(); }
-    ctx.save(); ctx.translate(26, -6); ctx.rotate(0.12); ctx.scale(0.82, 0.82); ctx.translate(-36, 42); // the tall shield, held in front of her
+    ctx.save(); ctx.translate(28, 4); ctx.rotate(0.12); ctx.scale(1.2, 1.2); ctx.translate(-36, 42); // the tall shield, held in front of her
     ctx.save(); ctx.translate(36, -42); const sh = () => { ctx.beginPath(); ctx.moveTo(-17, -42); ctx.quadraticCurveTo(0, -46, 17, -42); ctx.lineTo(17, 30); ctx.quadraticCurveTo(8, 42, 0, 46); ctx.quadraticCurveTo(-8, 42, -17, 30); ctx.closePath(); }; // the tall shield behind her
       sh(); ctx.fillStyle = PR.lin(ctx, -17, -40, 17, 40, [[0, '#7a8462'], [.45, '#46503a'], [1, '#0e100a']]); ctx.fill(); ctx.save(); sh(); ctx.clip(); PR.soft(ctx, -8, -24, 8, 18, '#e8f0d8', .14);
         ctx.lineCap = 'round'; ctx.strokeStyle = 'rgba(30,36,22,.8)'; ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= 40; i++){ const t = i/40, y = -40 + t*80, x = -12.6 + Math.sin(t*28)*1.4; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); // the worm, carved round the rim and painted over
         ctx.strokeStyle = 'rgba(220,226,190,.4)'; ctx.lineWidth = .7; ctx.stroke(); ctx.restore();
       ctx.strokeStyle = PR.lin(ctx, -17, -40, 17, 40, [[0, '#b0aa98'], [.5, '#5a5648'], [1, '#121210']]); ctx.lineWidth = 2; sh(); ctx.stroke(); ctx.restore();
     ctx.restore();
-    BP.grip(ctx, -30, 4, -.05, -10, 3, ['#a07a50', '#5a4028', '#1a1008'], '#9e7656', '#46503a'); // her hand on the temple spear
+    BP.grip(ctx, -30, 4, -.05, -19.0, 3, ['#a07a50', '#5a4028', '#1a1008'], {k:'gaunt', c:['#b8c49c', '#6a7656', '#141c0e'], trim:'rgba(200,160,80,.9)'}, '#46503a'); // her hand on the temple spear
     return F; },
   /* Tebbet: twenty-six, Dal Hon's hill country; long in the arm and narrow, very still before he looses. A cloth hood against the sun, wound round the head and the jaw; a padded jack, a bracer worn smooth; the recurve his uncle made, rebuilt twice */
   tebbet(ctx){ const F = {cy:-73, w:11.8, h:20, jaw:.7, chin:4.6, skin:'#6a4630', iris:'#1e140c', lip:'#5a3428', browCol:'#0a0604', browW:1.4, arch:.7, rim:'#b7895a', rimA:.24, nose:1.05, look:-.3, open:.82, smileL:.1, smileR:.05, mouthW:3.6};
@@ -237,7 +237,7 @@ Object.assign(POR, {
     PR.strands(ctx, 26, ['#3a2a1e', '#1a120c', '#5a4434'], .7, 101, (i, r) => { const sd = i%2 ? 1 : -1, x = sd*(F.w - 1.4 + r()*1.6), y = F.cy - 8; return [x, y, x + sd*.6, y + 3, x + sd*(.4 + r()), y + 6 + r()*4]; }); // dark at the temples, going grey
     PR.strands(ctx, 6, ['#9a948a'], .6, 103, (i, r) => { const sd = i%2 ? 1 : -1, x = sd*(F.w - 1 + r()), y = F.cy - 7; return [x, y, x + sd*.4, y + 3, x + sd*.6, y + 6]; });
     B4P.helm(ctx, F, {c:['#d4d0c4', '#8a867c', '#2e2c28'], b:['#c8b890', '#6a5a3a'], r:2.4, y:6.6, h:15.4, n:11, stub:1, ridge:1});
-    ctx.save(); ctx.translate(-26, -8); ctx.rotate(-0.15); ctx.scale(0.85, 0.85); ctx.translate(34, 36); // the great round shield, held in front
+    ctx.save(); ctx.translate(-20, 2); ctx.rotate(-0.15); ctx.scale(1.15, 1.15); ctx.translate(34, 36); // the great round shield, held in front
     ctx.save(); ctx.translate(-34, -36); ell(ctx, 2, 2, 37, 39, 'rgba(0,0,0,.5)'); ell(ctx, 0, 0, 35, 37, '#141210'); ell(ctx, 0, 0, 32.6, 34.6, PR.lin(ctx, -32, -34, 30, 34, [[0, '#c0aa7a'], [.45, '#7a6640'], [1, '#1a160e']])); // the great round shield
       ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 32.6, 34.6, 0, 0, 7); ctx.clip(); PR.stroke(ctx, 'rgba(0,0,0,.3)', .6, () => { for (let i = -4; i <= 4; i++){ ctx.moveTo(i*8, -36); ctx.lineTo(i*8 + 1, 36); } }); ell(ctx, -6, -8, 11, 11, 'rgba(240,226,190,.35)'); PR.stroke(ctx, 'rgba(60,46,20,.5)', .5, () => { for (let i = 0; i < 12; i++){ const a = i*.5; ctx.moveTo(-6 + Math.cos(a)*4, -8 + Math.sin(a)*4); ctx.lineTo(-6 + Math.cos(a)*10, -8 + Math.sin(a)*10); } }); ctx.restore(); // the bright patch where the badge was scraped off
       ctx.strokeStyle = PR.lin(ctx, -34, -34, 34, 34, [[0, '#c8c4b8'], [.5, '#5a5850'], [1, '#121210']]); ctx.lineWidth = 2.4; ctx.beginPath(); ctx.ellipse(0, 0, 33.6, 35.6, 0, 0, 7); ctx.stroke(); for (let i = 0; i < 14; i++){ const a = i/14*6.283; ell(ctx, Math.cos(a)*33.6, Math.sin(a)*35.6, .7, .7, a > 1.8 && a < 4.4 ? '#e8e4da' : '#4a4640'); }
@@ -259,7 +259,7 @@ Object.assign(POR, {
     BP.hair(ctx, F, {c:['#3a2c22', '#120c08', '#040302'], v:2.6, wx:1.4, hl:13.4, ey:1, n:70, sw:.55, s:['#2a1e16', '#0a0604', '#4a3a2c'], seed:111, sh:'#c8a890', shA:.3, part:-1, wisp:5}); // black, pulled back
     ctx.fillStyle = '#c8a050'; ctx.fillRect(-F.w - 3.2, F.cy - 5, 3, 1.6); // the tie
     ctx.lineCap = 'round'; ctx.fillStyle = PR.lin(ctx, -40, 0, -F.w, 0, [[0, '#0a0604'], [.6, '#1a120c'], [1, '#2a1e16']]); ctx.beginPath(); ctx.moveTo(-F.w - 1, F.cy - 6); ctx.bezierCurveTo(-F.w - 10, F.cy - 2, -28, F.cy + 6, -38, F.cy + 4); ctx.bezierCurveTo(-30, F.cy + 12, -20, F.cy + 10, -F.w - 1, F.cy - 2); ctx.closePath(); ctx.fill(); // the tail, blown back
-    PR.strands(ctx, 24, ['#2a1e16', '#4a3a2c', '#0a0604'], .5, 113, (i, r) => { const k = r(); return [-F.w - 1, F.cy - 4, -F.w - 10 - k*8, F.cy + k*4, -30 - k*10, F.cy + 3 + r()*6]; }); BP.grip(ctx, 30, 4, .049, -10, 2.6, ['#8a6440', '#4a3220', '#140c06'], '#8e5e3e', '#7a2a16'); // his hand on his father's standard
+    PR.strands(ctx, 24, ['#2a1e16', '#4a3a2c', '#0a0604'], .5, 113, (i, r) => { const k = r(); return [-F.w - 1, F.cy - 4, -F.w - 10 - k*8, F.cy + k*4, -30 - k*10, F.cy + 3 + r()*6]; }); BP.grip(ctx, 30, 4, .049, -19.0, 2.6, ['#8a6440', '#4a3220', '#140c06'], {k:'gaunt', c:['#e07a50', '#a03a20', '#2a0804'], trim:'rgba(240,200,120,.9)'}, '#7a2a16'); // his hand on his father's standard
     return F; },
   /* Mirrel: thirty-four, Li Heng; a Denul healer, small, quick, always slightly ahead. A warm, tired face; dark hair up in a knot, bound with a strip of linen; a padded jack with the sleeves cut off at the elbow, rolled linen at her shoulder, the hospice bag with the red hand on the flap */
   mirrel(ctx){ const F = {cy:-73, w:12, h:19.2, jaw:.72, chin:4.4, skin:'#caa282', iris:'#4a3a24', lip:'#a05e4e', browCol:'#2a1810', browW:1.25, arch:1, browL:.6, browR:.3, rim:'#8fbfa0', rimA:.24, nose:.98, look:-.25, open:1, smileL:.35, smileR:.15, mouthW:3.5, bags:.6, age:.3, flush:'#c87a6a'};

@@ -197,15 +197,37 @@ const BP = {
       if (o.hair) PR.strands(ctx, 26, lit ? o.hair : o.hair.map(c => shade(c, -.55)), .55, 31 + sd, (i, r) => { const t = r(), x = sd*lerp(wd*.62, wd + 4, t), y = -45 + dr - rs + (n - 1)*3.4 + 6 + t*t*13 + 6; return [x, y, x + sd*(.6 + r()), y + 4, x + sd*(.4 + r()*1.6), y + 8 + r()*4]; });
       if (o.fur) PR.strands(ctx, 40, lit ? o.fur : o.fur.map(c => shade(c, -.55)), .5, 41 + sd, (i, r) => { const t = r(), y0 = -45 + dr - rs, x = sd*lerp(wd*.4, wd*.9, t), y = y0 + 1.4 - Math.sin(t*3)*2.2; return [x, y + 1, x + (r() - .5)*1.4, y - 1, x + (r() - .5)*2, y - 2.4 - r()*1.4]; });
       if (o.emblem) o.emblem(ctx, sd, sd*wd*.84, -38 + dr - rs); }); },
-  /* a hand gripping a haft low in the frame, in the haft's own frame (translate tx, ty; rotate rot; the haft runs up local x = 0): the haft's near stretch redrawn in front of the body,
-     the fist round it at local y v, the sleeve running down out of frame. w = 0 draws the fist alone (a bow's grip). Every held weapon is held */
-  grip(ctx, tx, ty, rot, v, w, cols, skin, sleeve, x = 0){ ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot);
+  /* a hand gripping a haft low in the frame, in the haft's own frame (translate tx, ty; rotate rot; the haft runs up local x = 0): the haft's near stretch redrawn in front
+     of the body and the fist round it at local y v, in its handwear (see fist). w = 0 draws the fist alone (a bow's grip). Every held weapon is held */
+  grip(ctx, tx, ty, rot, v, w, cols, wear, sleeve, x = 0){ ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot);
     if (w) { ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lin(ctx, x - w/2, 0, x + w/2, 0, [[0, cols[0]], [.5, cols[1]], [1, cols[2]]]); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, v - 14); ctx.stroke(); }
-    ctx.fillStyle = PR.lit(ctx, sleeve, '#0a0806', x - 6, x + 6); PR.path(ctx, [[x - 5.4, v + 2], [x + 4.6, v + 2], [x + 6, 10], [x - 6.4, 10]]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.moveTo(x - 5.6, v + 3); ctx.lineTo(x + 4.8, v + 3); }); // the sleeve
-    const fist = () => { ctx.beginPath(); ctx.moveTo(x - 4.6, v - 3.4); ctx.quadraticCurveTo(x - 4.8, v - 4.6, x - 2, v - 4.4); ctx.lineTo(x + 3, v - 4); ctx.quadraticCurveTo(x + 4.8, v - 3.6, x + 4.6, v); ctx.quadraticCurveTo(x + 4.6, v + 3.6, x + 2, v + 3.8); ctx.lineTo(x - 3, v + 3.6); ctx.quadraticCurveTo(x - 5, v + 3, x - 4.8, v); ctx.closePath(); };
-    ctx.save(); fist(); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 3; ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 1.4; ctx.fillStyle = PR.lin(ctx, x - 5, v - 4, x + 5, v + 4, [[0, shade(skin, .18)], [.5, skin], [1, shade(skin, -.6)]]); ctx.fill(); ctx.restore();
-    PR.stroke(ctx, 'rgba(40,16,8,.55)', .45, () => { for (let i = 0; i < 3; i++){ ctx.moveTo(x - 3.6, v - 1.6 + i*1.9); ctx.quadraticCurveTo(x, v - 1 + i*1.9, x + 4, v - 1.8 + i*1.9); } }); // the fingers round it
-    ell(ctx, x - 2.4, v - 3.6, 2.6, 1.3, PR.lin(ctx, x - 5, 0, x, 0, [[0, shade(skin, .25)], [1, shade(skin, -.2)]]), -.25); PR.soft(ctx, x - 2.6, v - 2.6, 3, 1.4, '#fff0d8', .18); // the thumb over, the knuckles lit
+    BP.fist(ctx, x, v, 0, wear, 18 - v); if (w) { ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lin(ctx, x - w/2, 0, x + w/2, 0, [[0, cols[0]], [.5, cols[1]], [1, cols[2]]]); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, v - 5.4); ctx.lineTo(x, v - 14); ctx.stroke(); }
+    ctx.restore(); },
+  /* a gripping fist at (x, y), turned by rot, in handwear: wear {k: 'gaunt' (plate fingers, knuckle plate, a flared cuff) | 'mail' | 'glove' | 'bracer' (glove and a laced bracer) |
+     'wrap' (cloth strips), c:[light, mid, dark], trim}; the forearm runs down arm units, out of frame */
+  fist(ctx, x, y, rot, wear, arm = 18){ const c = wear.c, k = wear.k; ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(1.3, 1.3); arm /= 1.3;
+    const gl = (x0, x1) => PR.lin(ctx, x0, 0, x1, 0, [[0, c[0]], [.5, c[1]], [1, c[2]]]);
+    // the forearm and its cuff
+    const cw = k === 'gaunt' ? 6.4 : 5.2, cb = k === 'gaunt' ? 8.4 : (k === 'bracer' ? 6.2 : 6);
+    ctx.fillStyle = gl(-cb, cb); PR.path(ctx, [[-cw, 3], [cw - .6, 3], [cb, arm], [-cb - .6, arm]]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .5; ctx.stroke();
+    if (k === 'gaunt') { PR.stroke(ctx, wear.trim || 'rgba(255,240,210,.5)', 1, () => { ctx.moveTo(-cw - .2, 3.4); ctx.lineTo(cw - .8, 3.4); }); PR.stroke(ctx, 'rgba(0,0,0,.45)', .5, () => { for (let i = 1; i < 3; i++){ ctx.moveTo(-cw - i*.6, 3 + i*4.4); ctx.lineTo(cw - .6 + i*.5, 3 + i*4.4); } }); PR.soft(ctx, -cw*.5, 8, 2, 6, '#ffffff', .25); }
+    if (k === 'bracer') { PR.stroke(ctx, 'rgba(0,0,0,.6)', .5, () => { ctx.moveTo(-cw, 4); ctx.lineTo(cw, 4); }); PR.stroke(ctx, 'rgba(230,200,150,.6)', .45, () => { for (let i = 0; i < 4; i++){ ctx.moveTo(-1.6, 6 + i*3); ctx.lineTo(1.6, 7.6 + i*3); ctx.moveTo(1.6, 6 + i*3); ctx.lineTo(-1.6, 7.6 + i*3); } }); }
+    if (k === 'wrap') PR.stroke(ctx, 'rgba(0,0,0,.35)', .5, () => { for (let i = 0; i < 5; i++){ ctx.moveTo(-cw, 4 + i*3); ctx.lineTo(cw, 2 + i*3); } });
+    // the fist: the back of the hand toward us, fingers curled round the haft, the thumb over them
+    const fs = () => { ctx.beginPath(); ctx.moveTo(-5.2, -3.6); ctx.quadraticCurveTo(-5.4, -5.4, -2.6, -5.2); ctx.lineTo(3.4, -4.8); ctx.quadraticCurveTo(5.6, -4.4, 5.4, 0); ctx.quadraticCurveTo(5.4, 4.4, 2.4, 4.6); ctx.lineTo(-3.4, 4.2); ctx.quadraticCurveTo(-5.6, 3.6, -5.4, 0); ctx.closePath(); };
+    ctx.save(); fs(); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 3; ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 1.4; ctx.fillStyle = PR.lin(ctx, -5, -5, 5, 5, [[0, c[0]], [.55, c[1]], [1, c[2]]]); ctx.fill(); ctx.restore();
+    ctx.save(); fs(); ctx.clip();
+    if (k === 'gaunt') { for (let i = 0; i < 4; i++){ const yy = -4.2 + i*2.3; ctx.fillStyle = PR.lin(ctx, -5, yy, 5, yy + 2, [[0, shade(c[0], .15)], [.5, c[1]], [1, c[2]]]); ctx.fillRect(-6, yy, 12, 2.1); PR.stroke(ctx, 'rgba(0,0,0,.6)', .4, () => { ctx.moveTo(-6, yy + 2.1); ctx.lineTo(6, yy + 2.1); }); PR.stroke(ctx, 'rgba(255,245,225,.55)', .3, () => { ctx.moveTo(-5, yy + .3); ctx.lineTo(1, yy + .3); }); } // the finger lames
+      ctx.fillStyle = PR.lin(ctx, -6, 0, 6, 0, [[0, shade(c[0], .25)], [.5, c[1]], [1, c[2]]]); ctx.fillRect(-6, -5.6, 12, 2.6); [-3, 0, 3].forEach(xx => ell(ctx, xx, -4.3, .5, .5, '#fff4e0')); } // the knuckle plate
+    else if (k === 'mail') { PR.mail(ctx, -6, 6, -6, 6, c[1], 1.3); }
+    else if (k === 'wrap') { PR.stroke(ctx, 'rgba(0,0,0,.4)', .5, () => { for (let i = 0; i < 4; i++){ ctx.moveTo(-6, -4 + i*3); ctx.lineTo(6, -6 + i*3); } }); PR.stroke(ctx, 'rgba(255,250,235,.3)', .4, () => { for (let i = 0; i < 4; i++){ ctx.moveTo(-6, -3.4 + i*3); ctx.lineTo(0, -4.4 + i*3); } }); }
+    else { PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 3; i++){ ctx.moveTo(-1, -2.6 + i*2.4); ctx.quadraticCurveTo(3, -2.2 + i*2.4, 6, -2.8 + i*2.4); } }); PR.stitch(ctx, 'rgba(230,200,150,.5)', .3, () => { ctx.moveTo(-4.4, -4.4); ctx.quadraticCurveTo(-2, -5.2, 1, -4.8); }); } // the fingers' seams; the glove's stitching
+    PR.soft(ctx, -2.6, -3.4, 3.4, 1.6, '#ffffff', k === 'gaunt' ? .35 : .16); ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = .5; fs(); ctx.stroke();
+    // the thumb, over the fingers
+    ctx.save(); ctx.translate(-2.6, -4.6); ctx.rotate(-.2); ell(ctx, .4, .5, 3.2, 1.6, 'rgba(0,0,0,.4)'); ell(ctx, 0, 0, 3.2, 1.5, PR.lin(ctx, -3, -1.5, 3, 1.5, [[0, shade(c[0], k === 'gaunt' ? .2 : .1)], [1, c[2]]])); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .4; ctx.beginPath(); ctx.ellipse(0, 0, 3.2, 1.5, 0, 0, 7); ctx.stroke();
+      if (k === 'gaunt') ell(ctx, 1.4, 0, .45, .45, '#fff4e0'); ctx.restore();
+    if (wear.trim && k === 'gaunt') PR.stroke(ctx, wear.trim, .7, () => { ctx.moveTo(-5.4, -5.6); ctx.lineTo(5.4, -5.2); });
     ctx.restore(); },
   /* a sling strap from one point to another, stitched along its lit edge */
   sling(ctx, x0, y0, x1, y1, c, w = 3){ ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lit(ctx, c, '#120a04', -24, 26); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); PR.stitch(ctx, 'rgba(230,200,150,.42)', .3, () => { ctx.moveTo(x0 - .3, y0 - w*.36); ctx.lineTo(x1 - .3, y1 - w*.36); }); },
@@ -251,7 +273,7 @@ const POR = {
     PR.soft(ctx, -7, capY - 10, 6, 3, '#e8e0d0', .28, -.5); PR.soft(ctx, 4, capY - 6, 2.5, 1.5, '#000000', .35); PR.stroke(ctx, 'rgba(0,0,0,.4)', .5, () => { ctx.arc(3, capY - 5, 3, 3.6, 4.6); ctx.moveTo(0, capY - 16.4); ctx.lineTo(0, capY); });
     ctx.fillStyle = PR.lin(ctx, -17, 0, 17, 0, [[0,'#7a766e'], [.5,'#44413c'], [1,'#121110']]); ctx.fillRect(-17.2, capY - 1.6, 34.4, 3.6); for (let i=0;i<9;i++){ const x = -15 + i*3.75; ell(ctx, x, capY + .2, .6, .6, i < 5 ? '#b0aa9e' : '#4a4640'); }
     ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-16, capY + 2, 32, .8);
-    ctx.save(); ctx.translate(24, -20); ctx.rotate(0.2); ctx.scale(0.95, 0.95); ctx.translate(-35, 46); // the shield from Nathilog, held in front
+    ctx.save(); ctx.translate(22, -10); ctx.rotate(0.2); ctx.scale(1.3, 1.3); ctx.translate(-35, 46); // the shield from Nathilog, held in front
     ctx.save(); ctx.translate(35, -46); ctx.rotate(.14);
     const hs = () => { ctx.beginPath(); ctx.moveTo(-21, -25); ctx.lineTo(21, -25); ctx.lineTo(21, 2); ctx.bezierCurveTo(21, 19, 8, 33, 0, 41); ctx.bezierCurveTo(-8, 33, -21, 19, -21, 2); ctx.closePath(); };
     hs(); ctx.fillStyle = PR.lin(ctx, -21, -25, 21, 30, [[0,'#5e4632'], [.5,'#2e2218'], [1,'#0a0806']]); ctx.fill();
@@ -296,7 +318,7 @@ const POR = {
     ctx.lineCap = 'round'; ctx.strokeStyle = '#4a3818'; ctx.lineWidth = 5.2; ctx.beginPath(); for (let i=0;i<=24;i++){ const [x, y] = cb(i/24); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
     for (let i=0;i<24;i++){ const [x, y, a] = cb((i + .5)/24), th = a - Math.PI/2, sd = i%2 ? 1 : -1, lit = x < 5, ox = Math.cos(a)*sd*.85, oy = -Math.sin(a)*sd*.85;
       ctx.save(); ctx.translate(x + ox, y + oy); ctx.rotate(th + sd*.95); ell(ctx, 0, 0, 2.2, 1.55, PR.lin(ctx, -2.5, -1.2, 2.5, 1.2, lit ? [[0,'#f2dfae'], [.55,'#bc9c60'], [1,'#5a4622']] : [[0,'#a08450'], [.6,'#62502c'], [1,'#1e160a']])); ctx.restore(); }
-    ctx.save(); ctx.translate(-26, -12); ctx.rotate(-0.2); ctx.scale(0.9, 0.9); ctx.translate(36, 30); // her shield, held across the front
+    ctx.save(); ctx.translate(-20, -2); ctx.rotate(-0.2); ctx.scale(1.25, 1.25); ctx.translate(36, 30); // her shield, held across the front
     ctx.save(); ctx.translate(-36, -30); ell(ctx, 0, 0, 30, 33, '#141210');
     ell(ctx, 0, 0, 27.4, 30.4, PR.lin(ctx, -26, -30, 22, 30, [[0,'#9a3a2c'], [.45,'#6a2418'], [1,'#1c0a06']]));
     ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 27.4, 30.4, 0, 0, 7); ctx.clip(); ctx.rotate(-.5); ctx.fillStyle = PR.lin(ctx, -30, 0, 30, 0, [[0,'#d8ccb0'], [.5,'#9a8e76'], [1,'#3a3428']]); ctx.fillRect(-40, -4.5, 80, 9); ctx.restore(); // the bone band
@@ -305,7 +327,7 @@ const POR = {
     PR.stroke(ctx, 'rgba(30,10,6,.55)', .8, () => { for (let i=0;i<9;i++){ const r = PR.rng(i + 31); const x = -20 + r()*34, y = -22 + r()*40; ctx.moveTo(x, y); ctx.lineTo(x + 2 + r()*4, y + 1 + r()*3); } }); // gouges through the paint
     ell(ctx, 7, 2, 6, 6.6, PR.rad(ctx, 5.4, .4, .5, 6.4, [[0,'#e8e4d8'], [.4,'#8e8a82'], [1,'#262420']])); ctx.restore(); // the boss
     ctx.restore();
-    BP.grip(ctx, 41, 4, -.028, -9, 3.4, ['#9a7a50', '#5a4428', '#1e160c'], '#c49c80', '#6a6660'); // her hand on the spear
+    BP.grip(ctx, 41, 4, -.028, -18.0, 3.4, ['#9a7a50', '#5a4428', '#1e160c'], {k:'gaunt', c:['#e8eaec', '#9a9c9e', '#2a2c2e'], trim:'rgba(180,60,40,.9)'}, '#6a6660'); // her hand on the spear
     return F; },
   kettle(ctx){ const F = {cy:-71, w:13.4, h:19, jaw:.76, chin:4.8, skin:'#c29a7e', iris:'#6a7a3a', lip:'#b0645a', browCol:'#8a3a1c', browW:1.1, arch:1.4, browL:.9, browR:-.1, rim:'#e07a45', nose:.95, smileL:-.1, smileR:1.1, teeth:true, look:.1, flush:'#d0685a'};
     PR.neck(ctx, F, 8); BP.throat(ctx, F, -47.6); const B = BP.body(ctx, F, {wide:36, drop:4, trap:1.5, nx:10.8, ny:-53.6, cb:-47.4, c1:'#9a5230', c2:'#3a1c0e'});
@@ -388,9 +410,7 @@ const POR = {
     // the horn bow, held; and the glove
     ctx.lineCap = 'round'; ctx.strokeStyle = PR.lin(ctx, -40, 0, -26, 0, [[0,'#d8c8a0'], [1,'#6a5a3a']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(-30, -98); ctx.bezierCurveTo(-44, -76, -36, -40, -34, -24); ctx.bezierCurveTo(-32, -8, -40, 4, -38, 12); ctx.stroke();
     PR.stroke(ctx, 'rgba(230,220,200,.55)', .4, () => { ctx.moveTo(-30, -98); ctx.lineTo(-38, 12); });
-    ctx.fillStyle = PR.lin(ctx, -40, 0, -28, 0, [[0,'#3a2a1c'], [.5,'#1e1610'], [1,'#0a0806']]); ctx.beginPath(); ctx.moveTo(-40, -26); ctx.bezierCurveTo(-41, -30, -35, -32, -30, -30); ctx.bezierCurveTo(-27, -28, -27, -20, -30, -18); ctx.bezierCurveTo(-34, -16, -40, -18, -40, -22); ctx.closePath(); ctx.fill(); // the gloved fist on the grip
-    PR.stroke(ctx, 'rgba(120,100,80,.5)', .4, () => { for (let i=0;i<3;i++){ ctx.moveTo(-31, -28 + i*3); ctx.quadraticCurveTo(-33, -27 + i*3, -36, -28 + i*3); } }); PR.soft(ctx, -36, -28, 3, 1.6, '#ffe0b0', .2);
-    ctx.fillStyle = '#1a120c'; PR.path(ctx, [[-42, -20], [-30, -19], [-28, -10], [-40, -8]]); ctx.fill(); PR.stitch(ctx, 'rgba(160,130,90,.45)', .35, () => { ctx.moveTo(-41, -12); ctx.lineTo(-29.5, -13.5); });
+    BP.fist(ctx, -34.6, -24, .12, {k:'bracer', c:['#6a5440', '#3a2a1c', '#0a0806']}, 34); // her gloved fist on the grip, the bracer
     return F; },
   /* Vell: seventeen, Daru, Ocelot's rope boy. Soot, a stitched cut along the cheekbone, a mop of black curls, and the tarred line coiled over his shoulder with the hook on the end of it */
   vell(ctx){ const F = {cy:-73, w:12.2, h:18.6, jaw:.66, chin:4, skin:'#c9a48a', iris:'#5a4a3a', lip:'#a06a5a', browCol:'#1a120c', browW:1.25, arch:.9, browL:.1, rim:'#b0a0c8', rimA:.14, nose:.9, look:.55, smileL:.15, smileR:.35, mouthW:3.6};

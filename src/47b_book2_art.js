@@ -183,9 +183,7 @@ Object.assign(POR, {
       ell(ctx, x - sd*.6*(i%2 ? 1 : -1), y, rr, 1.9, PR.lin(ctx, x - 2, y - 2, x + 2, y + 2, lit ? [[0,'#4a4040'], [.6,'#1a1414'], [1,'#060404']] : [[0,'#2a2222'], [1,'#040303']]), (i%2 ? .6 : -.6)*sd); }
       ctx.fillStyle = PR.lit(ctx, '#e0c060', '#6a4a14', sd*12 - 3, sd*12 + 3); ctx.fillRect(sd*(12.6 + Math.sin(2.4)*3.6) - 2.2, F.cy + 44, 4.4, 2.4); // tied with yellow cord
       PR.strands(ctx, 7, ['#141010', '#2a2222'], .5, 80 + sd, (i, r) => { const x = sd*(12.6 + Math.sin(2.4)*3.6) + (r() - .5)*3, y = F.cy + 46.4; return [x, y, x + (r() - .5)*2, y + 3, x + (r() - .5)*3, y + 5 + r()*3]; }); });
-    // the fist on the grip, bare and brown
-    ctx.fillStyle = PR.lin(ctx, -42, 0, -30, 0, [[0,'#b88a64'], [.6,'#7a5438'], [1,'#2a1a10']]); ctx.beginPath(); ctx.moveTo(-41.4, -44); ctx.bezierCurveTo(-42.6, -49, -36, -50, -32, -47.4); ctx.bezierCurveTo(-30, -45, -30, -37, -32.4, -35.4); ctx.bezierCurveTo(-36, -33.4, -41.6, -35.6, -41.4, -40); ctx.closePath(); ctx.fill();
-    PR.stroke(ctx, 'rgba(50,26,14,.5)', .45, () => { for (let i=0;i<3;i++){ ctx.moveTo(-32.6, -45 + i*3); ctx.quadraticCurveTo(-34.4, -44 + i*3, -37.4, -45 + i*3); } }); PR.soft(ctx, -38, -45, 3, 1.6, '#ffd8a8', .26);
+    BP.fist(ctx, -36.6, -41, .18, {k:'bracer', c:['#b8946a', '#7a5434', '#1e140a']}, 50); // her fist on the grip, a hide bracer
     return F; },
   /* Tangle: a long Kanese face that has stood too near too many fuses; an ear Marrow stitched; fuse-cord coiled round his wrist and over his shoulder; the crossbow and its tally */
   tangle(ctx){ const F = {cy:-75, w:11.8, h:21, jaw:.74, chin:4.4, skin:'#b4947a', iris:'#4e5a48', lip:'#8a5a4a', browCol:'#4a3620', browW:1.25, arch:1.25, browL:.7, browR:.15, rim:'#e07a45', nose:1.2, age:.45, bags:.9, look:.15, smileL:-.2, smileR:.3, mouthW:3.8, earS:1.12};
@@ -246,7 +244,7 @@ Object.assign(POR, {
     PR.stroke(ctx, 'rgba(110,40,30,.45)', 1.6, () => { ctx.moveTo(-13.6, top + 7); ctx.quadraticCurveTo(-8, top + 1, -2, top + 2); }); ctx.restore(); // an old stain where it was a bandage once
     PR.stroke(ctx, 'rgba(20,14,10,.5)', .8, () => { ctx.moveTo(0, cy - 15.6); ctx.bezierCurveTo(8.6, cy - 15.6, 12.4, cy - 9, 12.4, cy - 2.4); ctx.bezierCurveTo(12.4, cy + 6, 10.4, cy + 13, 6.4, cy + 17); ctx.quadraticCurveTo(3, cy + 20.2, 0, cy + 20.2); });
     PR.stroke(ctx, '#3a5a8a', .7, () => { ctx.moveTo(-42, 2); ctx.quadraticCurveTo(-46, -6, -44, -12); }); // the blue thread from her mother's veil
-    ctx.save(); ctx.translate(-25, -12); ctx.rotate(-0.18); ctx.scale(0.9, 0.9); ctx.translate(38, 32); // her shield, held in front
+    ctx.save(); ctx.translate(-20, -4); ctx.rotate(-0.18); ctx.scale(1.3, 1.3); ctx.translate(38, 32); // her shield, held in front
     ctx.save(); ctx.translate(-38, -32); ell(ctx, 0, 0, 29, 31, '#121416');
     ell(ctx, 0, 0, 26.4, 28.4, PR.lin(ctx, -26, -28, 22, 28, [[0,'#7a96aa'], [.45,'#4a6478'], [1,'#141c24']]));
     ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 26.4, 28.4, 0, 0, 7); ctx.clip(); for (let i=0;i<16;i++){ const r = PR.rng(i + 50); PR.soft(ctx, -22 + r()*40, -24 + r()*46, 3 + r()*7, 2 + r()*4, i%2 ? '#c8c0a8' : '#1a1410', .18); } // the paint gone in patches

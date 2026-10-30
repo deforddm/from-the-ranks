@@ -291,7 +291,7 @@ POR.greysword = function(ctx){ const F = {cy:-77, w:12.6, h:19.8, jaw:.86, chin:
   ctx.fillStyle = PR.lin(ctx, -F.w, 0, F.w, 0, [[0,'#5a4432'], [.45,'#2e2218'], [1,'#0e0a06']]); ctx.fill(); ctx.clip();
   ctx.fillStyle = 'rgba(196,154,122,.22)'; for (let i=0;i<220;i++){ const r = PR.rng(i + 300), x = (r() - .5)*F.w*2.2, y = top - 1 + r()*(F.cy - top); ctx.fillRect(x, y, .45, .45); } // the scalp through the stubble
   ctx.restore();
-    ctx.save(); ctx.translate(-25, -14); ctx.rotate(-0.18); ctx.scale(0.9, 0.9); ctx.translate(40, 38); // her shield, held in front, the wolf showing
+    ctx.save(); ctx.translate(-20, -4); ctx.rotate(-0.18); ctx.scale(1.35, 1.35); ctx.translate(40, 38); // her shield, held in front, the wolf showing
   ctx.save(); ctx.translate(-40, -38); ell(ctx, 0, 0, 27, 29, '#141210'); ell(ctx, 0, 0, 24.6, 26.6, PR.lin(ctx, -24, -26, 20, 26, [[0,'#8a8274'], [.5,'#5a5448'], [1,'#1a1814']]));
   ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 24.6, 26.6, 0, 0, 7); ctx.clip();
   PR.soft(ctx, -6, 2, 14, 10, '#7a4a2a', .5); PR.stroke(ctx, 'rgba(190,176,150,.45)', .5, () => { for (let i=0;i<26;i++){ const r = PR.rng(i + 77), x = -16 + r()*20, y = -8 + r()*18; ctx.moveTo(x, y); ctx.lineTo(x + 2 + r()*5, y + (r() - .5)*2); } }); // where the boar was, scraped to the wood
