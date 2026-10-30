@@ -20,9 +20,9 @@ await page.evaluate(() => {
 });
 await page.goto(srv.url); await page.waitForTimeout(800);
 const r = await page.evaluate(() => ({ keys: Object.keys(localStorage).sort(), list: roster().list.map(e => e.name + ':' + (e.book || 'gotm')), art: SET.art,
-  ashes: Object.keys(localStorage).filter(k => k.startsWith('ashes-of-the-pale-')).length, rows: document.querySelectorAll('.sgtrow').length, tag: (document.querySelector('#tTag') || {}).textContent || '' }));
+  ashes: Object.keys(localStorage).filter(k => k.startsWith('ashes-of-the-pale-')).length, rows: document.querySelectorAll('.sgtrow').length, more: /One more sergeant waits/.test((document.querySelector('.rmore') || {}).textContent || ''), tag: (document.querySelector('#tTag') || {}).textContent || '' }));
 r.list.join() === 'Vesh:dg,Hask:gotm' ? ok('both sergeants came across, last played first') : no('roster after import: ' + r.list.join());
-r.rows === 2 ? ok('the title lists both') : no(`title rows: ${r.rows}`);
+r.rows === 1 && r.more ? ok('the title shows the last played, and says one more waits') : no(`title rows: ${r.rows}, more: ${r.more}`); // v8.0.2
 r.art === false ? ok('settings came across') : no('settings did not come across');
 r.keys.includes('from-the-ranks-seen') ? ok('seen-notes came across') : no('seen-notes missing');
 !r.keys.includes('from-the-ranks-install') ? ok('the install mark stays with Ashes') : no('install mark was copied');

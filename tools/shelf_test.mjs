@@ -34,8 +34,9 @@ for (const [w, h, mobile] of [[360, 780, true], [1280, 800, false]]) {
   await page.evaluate(() => { save(); S = null; if (typeof VIS !== 'undefined' && VIS) visEnd(); document.querySelectorAll('#modal,#chars,#settings,#sheet,#cardfx').forEach(e => e.hidden = true); S = newState('Hask'); save(); S = null; showTitle(); document.querySelectorAll('#modal').forEach(e => e.hidden = true); });
   await wait(page, 300);
   r = await page.evaluate(() => { const ro = document.querySelector('.roster'), sh = document.querySelector('.shelf');
-    return { rows: document.querySelectorAll('.roster .sgtrow').length, order: !!(ro && sh && (ro.compareDocumentPosition(sh) & Node.DOCUMENT_POSITION_FOLLOWING)), badge: [...document.querySelectorAll('.cover em')].map(e => e.textContent).join('|'), newSgt: !!document.querySelector('#bNewSgt') }; });
-  ok(r.rows === 2 && r.order, `${tag} returning: sergeants first, shelf under them`);
+    return { rows: document.querySelectorAll('.roster .sgtrow').length, last: [...document.querySelectorAll('.roster .load b')].map(b => b.textContent).join('|'), more: (document.querySelector('.rmore') || {}).textContent || '', order: !!(ro && sh && (ro.compareDocumentPosition(sh) & Node.DOCUMENT_POSITION_FOLLOWING)), badge: [...document.querySelectorAll('.cover em')].map(e => e.textContent).join('|'), newSgt: !!document.querySelector('#bNewSgt') }; });
+  ok(r.rows === 1 && /Hask/.test(r.last) && r.order, `${tag} returning: only the sergeant played last (${r.last}), shelf under them`); // v8.0.2: the rest wait on their book's page
+  ok(/One more sergeant waits/.test(r.more), `${tag} the title says one more sergeant waits (${r.more})`);
   ok(r.badge === '1 sergeant|1 sergeant', `${tag} covers count each book's sergeants (${r.badge})`);
   ok(!r.newSgt, `${tag} no separate New sergeant step`);
   await shot(page, `${w}-return`);
@@ -50,6 +51,11 @@ for (const [w, h, mobile] of [[360, 780, true], [1280, 800, false]]) {
   r = await page.evaluate(() => ({ rows: document.querySelectorAll('#bookRows .sgtrow').length, begin: document.querySelector('#bNew').textContent, lab: document.querySelector('#nmLab').textContent }));
   ok(!r.rows && r.begin === 'Begin Book Three' && /Your sergeant/.test(r.lab), `${tag} Book Three: no sergeants yet, Begin Book Three`);
   await shot(page, `${w}-moi`);
+  // erase from a book page (v8.0.2): the × asks twice, and the page comes back without them
+  await page.evaluate(() => { S = newStateDG('Tarn'); save(); S = null; showTitle(false, 'dg'); document.querySelectorAll('#modal').forEach(e => e.hidden = true); }); await wait(page);
+  r = await page.evaluate(() => { const row = [...document.querySelectorAll('#bookRows .sgtrow')].find(x => /Tarn/.test(x.textContent)); const d = row && row.querySelector('.del'); if (d) { d.click(); d.click(); }
+    return { had: !!d, rows: [...document.querySelectorAll('#bookRows .load b')].map(b => b.textContent).join('|'), on: (document.querySelector('.bseg .on') || {}).dataset?.book, left: roster().list.map(e => e.name).join(',') }; });
+  ok(r.had && /Vesh/.test(r.rows) && !/Tarn/.test(r.rows) && r.on === 'dg' && !/Tarn/.test(r.left), `${tag} erase on a book page: Tarn gone, Book Two's page back (${r.rows})`);
   // carry on from a book page
   await page.click('.bseg [data-book="dg"]'); await wait(page); await page.click('#bookRows .load'); await wait(page, 500);
   r = await page.evaluate(() => ({ name: S && S.name, view }));

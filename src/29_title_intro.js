@@ -33,7 +33,8 @@ const agoText = t => { if (!t) return ''; const d = Math.floor((new Date().setHo
 function titleCredit(){ const bs = shelfBooks().sort((a, b) => a.n - b.n); if (!bs.length) return ''; const last = bs[bs.length - 1];
   return bs.length === 1 ? `Book One, ${bs[0].name}, beside ${bs[0].title}.` : `${last.word} books so far, each beside one of Erikson's Malazan novels, in order, from ${bs[0].title} to ${last.title}, with more to come.`; }
 const bookCh = (b, n) => ((b || 'gotm') === BOOK ? CHAPTERS : (BOOKSNAP[b] || BOOKSNAP.gotm).ch)[n];
-const chLabel = e => (e.book && BOOKS[e.book] ? `Book ${BOOKS[e.book].word} · ` : '') + (e.done ? 'Finished' : e.ch === 0 ? (e.book ? 'Starting out' : 'The prologue') : `Chapter ${bookCh(e.book, e.ch) ? bookCh(e.book, e.ch).number : e.ch}`) + (e.diff && DIFFS[e.diff] ? ` (${DIFFS[e.diff].name})` : '');
+const rdUpT = n => ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'][n] || String(n);
+const chLabel = (e, book = true) => (book && BOOKS[e.book || 'gotm'] ? `Book ${BOOKS[e.book || 'gotm'].word} · ` : '') + (e.done ? 'Finished' : e.ch === 0 ? (e.book ? 'Starting out' : 'The prologue') : `Chapter ${bookCh(e.book, e.ch) ? bookCh(e.book, e.ch).number : e.ch}`) + (e.diff && DIFFS[e.diff] ? ` (${DIFFS[e.diff].name})` : '');
 /* Book One sergeants who have finished the book: Book Two can bring their road along (47: dgImport) */
 /* iPhone and iPad keep each home-screen app's saves apart, so sergeants from Ashes of the Pale come across by save code (Ashes 4.9.2 offers
    one for each sergeant on its title). A fresh From the Ranks on an iPhone says so. */
@@ -64,7 +65,7 @@ function coverSrc(key){ if (!ARTON() || !ART[key]) return '';
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 const onShelf = (e, b) => (e.book || 'gotm') === b;
 function shelfHTML(list){
-  return `<div class="shelf"><div class="rh">${list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
+  return `<div class="shelf"><div class="rh">${list.length > 1 ? 'Choose a book: its sergeants, or a new one' : list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
     const n = list.filter(e => onShelf(e, B.id)).length, src = coverSrc(B.titleArt || 'title/key');
     return `<button class="cover" data-shelf="${B.id}" aria-label="Book ${B.word}: ${esc(B.name)}, beside ${esc(B.title)}${n ? `; ${n} sergeant${n > 1 ? 's' : ''}` : ''}">
       <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false">` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
@@ -72,9 +73,10 @@ function shelfHTML(list){
 function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
   const list = roster().list, form = !!(fresh || want), tb = want && BOOKS[want] ? want : titleBookOf(list), TB = BOOKS[tb];
-  const rowsOf = (L, del) => L.map((e, i) => `<div class="sgtrow${del ? '' : ' nodel'}"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !del ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button>${del ? `<button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button>` : ''}</div>`).join('');
-  const rows = rowsOf(list, true);
-  const bookRows = b => { const L = list.filter(e => onShelf(e, b)); return L.length ? `<div class="roster"><div class="rh">Carry on in Book ${BOOKS[b].word}</div>${rowsOf(L, false)}</div>` : ''; };
+  /* v8.0.2 (David, Oct 29: five books): the title shows only the sergeant played last; the rest wait on their book's page, where each can carry on or be erased */
+  const rowsOf = (L, main) => L.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !main ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e, main), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)}">×</button></div>`).join('');
+  const rows = rowsOf(list.slice(0, 1), true), more = list.length - 1;
+  const bookRows = b => { const L = list.filter(e => onShelf(e, b)); return L.length ? `<div class="roster"><div class="rh">Carry on in Book ${BOOKS[b].word}${L.length > 1 ? `: ${L.length} sergeants` : ''}</div>${rowsOf(L, false)}</div>` : ''; };
   const taken = n => list.find(e => sameName(e.name, n));
   const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : '';
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
@@ -89,7 +91,7 @@ function showTitle(fresh, want){
     <p class="fine tmsg" id="nmMsg" role="status"></p>
     <div class="tbtns"><button class="btn primary" id="bNew">Begin Book ${TB.word}</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
       <div class="row2"><button class="btn" id="bBack">All books</button>${list.length ? '' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
-    : list.length ? `<div class="roster"><div class="rh">${list.length > 1 ? 'Sergeants on this device' : 'Your sergeant'}</div>${rows}</div>
+    : list.length ? `<div class="roster"><div class="rh">${more ? 'Last played' : 'Your sergeant'}</div>${rows}${more ? `<small class="fine rmore">${more === 1 ? 'One more sergeant waits' : `${rdUpT(more)} more sergeants wait`} on this device. Open their book to carry on.</small>` : ''}</div>
     ${shelfHTML(list)}
     <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
       <div class="row2"><button class="btn" id="bDeeds">Deeds</button></div></div>`
@@ -125,7 +127,7 @@ function showTitle(fresh, want){
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
     document.querySelectorAll('.bseg [data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('.bseg [data-book]').forEach(y => y.classList.toggle('on', y === x));
       $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); bindImp();
-      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; disarm(); });
+      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; disarm(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
@@ -135,7 +137,7 @@ function showTitle(fresh, want){
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
-    bindImp(); bindLoads($('#bookRows'));
+    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book);
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
   } else {
@@ -144,14 +146,14 @@ function showTitle(fresh, want){
     document.querySelectorAll('[data-shelf]').forEach(el => { el.onclick = () => { AUDIO.play('click'); showTitle(false, el.dataset.shelf); };
       el.onpointerenter = el.onfocus = () => titleDress(el.dataset.shelf); });
     const sh = $('.shelf'); if (sh) sh.onpointerleave = () => titleDress(tb);
-    bindLoads(document);
-    // erasing a sergeant asks twice: the first tap says who goes
-    document.querySelectorAll('.sgtrow .del').forEach(el => el.onclick = () => { AUDIO.play('click'); const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id);
-      if (el.dataset.arm) { dropSlot(el.dataset.id); return showTitle(); }
-      el.dataset.arm = 1; el.classList.add('warn'); ld.classList.add('warn'); const was = ld.innerHTML; ld.innerHTML = `<b>${tapWord('Tap')} × again to erase Sergeant ${esc(e.name)}</b><small>Their save on this device is gone for good. A save code brings them back.</small>`; ld.disabled = true;
-      setTimeout(() => { if (el.isConnected) { delete el.dataset.arm; el.classList.remove('warn'); ld.classList.remove('warn'); ld.innerHTML = was; ld.disabled = false; } }, 4000); });
+    bindLoads(document); bindDels(document, () => null);
   }
   maybeNotes(list.length > 0); offerInstall();
+  /* erasing a sergeant asks twice: the first tap says who goes; on a book page the page comes back */
+  function bindDels(root, back){ root.querySelectorAll('.sgtrow .del').forEach(el => el.onclick = () => { AUDIO.play('click'); const row = el.parentNode, ld = row.querySelector('.load'), e = list.find(x => x.id === el.dataset.id);
+      if (el.dataset.arm) { dropSlot(el.dataset.id); const b = back(); return b ? showTitle(false, b) : showTitle(); }
+      el.dataset.arm = 1; el.classList.add('warn'); ld.classList.add('warn'); const was = ld.innerHTML; ld.innerHTML = `<b>${tapWord('Tap')} × again to erase Sergeant ${esc(e.name)}</b><small>Their save on this device is gone for good. A save code brings them back.</small>`; ld.disabled = true;
+      setTimeout(() => { if (el.isConnected) { delete el.dataset.arm; el.classList.remove('warn'); ld.classList.remove('warn'); ld.innerHTML = was; ld.disabled = false; } }, 4000); }); }
 }
 function showIntro(){
   view = 'intro'; S.scene = 'intro'; save(); titleAnim = null; AUDIO.setScene('explore');
