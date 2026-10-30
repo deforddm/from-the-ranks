@@ -251,11 +251,11 @@ const B4CH2 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c2_crowfeather:{name:'A crow feather from the Fall', slot:'trinket', who:null, stat:{wits:1},
-      line:'A long black flight feather from the hill where the Fist died, taken by leave of an old woman of the Crow, tied with a twist of red wool. On the Chain\'s bone it sits as if it had always been meant to. Whoever wears it notices things a moment sooner: +1 wits.'},
+      line:'A long black flight feather from the hill where the Fist died, taken by leave of an old woman of the Crow, tied with a twist of red wool. On the Chain\'s bone it sits as if it had always been meant to. Whoever wears it notices things a moment sooner.'},
     b4_c2_fetish:{name:'A braided fetish off the trees', slot:'trinket', who:null, ac:1,
-      line:'A plait of horsehair and red thread with a small painted soldier knotted into it, fallen from one of the empty trees on the Aren Way into the road, where the wagons would have had it. Not cut: picked up. Haddat ties it to a shield rim the Hissari way. On anyone it turns a blow now and then: +1 armour.'},
+      line:'A plait of horsehair and red thread with a small painted soldier knotted into it, fallen from one of the empty trees on the Aren Way into the road, where the wagons would have had it. Not cut: picked up. Haddat ties it to a shield rim the Hissari way. On anyone it turns a blow now and then.'},
     b4_c2_milestone:{name:'A chip of the last milestone', slot:'trinket', who:null,
-      line:'A flat chip of grey stone knocked off the last milestone on the Aren Way, the one the Aren Guard counted the city from. It takes an edge like a temple whetstone. Whoever carries it puts a better edge on before a fight: the first blow that lands in a fight does +1 damage.'} },
+      line:'A flat chip of grey stone knocked off the last milestone on the Aren Way, the one the Aren Guard counted the city from. It takes an edge like a temple whetstone. Whoever carries it puts a better edge on before a fight: the first blow that lands in a fight bites deeper.'} },
 
   scenes:{
     b4_c2_trees:{loc:'The Aren Way', sub:'The empty trees · the first day out', cap:'The trees along the Way, every one empty, every one hung with braids and painted soldiers, and the column going north under them in its own dust.', amb:'explore'},

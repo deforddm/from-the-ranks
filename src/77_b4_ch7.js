@@ -297,7 +297,7 @@ const B4CH7 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c7_coral:{name:'A piece of coral stone', slot:'trinket', who:null, stat:{wits:1},
-      line:'A knuckle of pale coral the size of a fist, pitted and light, broken off the island the Fourteenth ran to when the desert became a sea. It was a reef once, and then a stone in the sand for longer than anybody has had a name, and now it is a reef again. Whoever carries it keeps their head: +1 wits.'},
+      line:'A knuckle of pale coral the size of a fist, pitted and light, broken off the island the Fourteenth ran to when the desert became a sea. It was a reef once, and then a stone in the sand for longer than anybody has had a name, and now it is a reef again. Whoever carries it keeps their head.'},
     b4_c7_dogslayerblade:{name:'A Dogslayer\'s sword', slot:'weapon', who:['sgt', 'haddat', 'tangle', 'tallow', 'hessa', 'darrut', 'redblade'], atk:1, dmg:[1,10,2],
       line:'A Malazan short sword, longer in the blade than issue and heavier, the regimental marks on the hilt filed off and the leather rewound by somebody who meant to keep it. Picked up off the sand at the foot of the ramps the morning after. The 9th does not ask whose it was. It knows.'},
     b4_c7_tear:{name:'A black bead', slot:'trinket', who:null,

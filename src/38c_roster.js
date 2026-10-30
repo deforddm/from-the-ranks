@@ -231,7 +231,8 @@ const ITEM_ROLE = {
   b2_auxtulwar:'heavyweapon', b2_auxmail:'mail', b2_horsebow:'ranged', b2_semkaxe:'heavyweapon', b2_wickanhide:'light', b2_tithlance:'reach', b2_noblesabre:'blade',
   b2_officerscale:'heavy', b2_coldknife:'blade', b2_tcrossbow:'ranged', b2_tleathers:'light', b2_khundrylblade:'blade', b2_arensword:'heavyweapon', b2_arenmail:'mail',
   b3_c2_hornbow:'ranged', b3_c2_mace:'heavyweapon', b3_c3_shield:'shield', b3_c3_spear:'reach', b3_c4_flint:'blade', b3_c6_axe:'heavyweapon', b3_c7_hunterblade:'heavyweapon',
-  b4_c1_relic:'any', b4_c3_khundrylknife:'blade', b4_c4_setibow:'ranged', b4_c6_trenchspade:'satchel', b4_c7_dogslayerblade:'blade'};
+  b4_c1_relic:'any', b4_c3_khundrylknife:'blade', b4_c4_setibow:'ranged', b4_c6_trenchspade:'satchel', b4_c7_dogslayerblade:'blade',
+  secondhalberd:'reach', darucrossbow:'ranged', darusword:'heavyweapon', b4_c1_issuemail:'mail', b4_c4_setijack:'light', b4_c6_dogscale:'heavy', b5_c1_issuesword:'blade', b5_c1_tarthclub:'heavyweapon'}; // the items pass (v8.1)
 const GEAR_SIG = {secondbadge:['brisk', 'sgt'], moranthchit:['kettle'], b2_sealskin:['haddat']}; // Tav's regiment; Kettle's Moranth; the water-sellers' seal Haddat took
 const rolesOf = id => { const t = TPL[id]; if (!t) return []; if (!t.roles) t.roles = (TPL_ROLES[id] || ['light', 'blade']).slice(); return t.roles; };
 /* give every item its role (and drop the old name lists), every TPL its roles: run as chapters register, and once more on first use */

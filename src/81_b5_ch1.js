@@ -225,14 +225,18 @@ const B5CH1 = {
     b5_c1_bookman:{name:'The bookmaker', sig:'K', kind:'b5_c1_bookman', hp:22, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cracks a weighted cane across'} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c1_hookknife:{name:'A rope-man\'s hook-knife', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'The short hooked knife the rope-men of the Drownings carry, for cutting a weight-sack free of the rope. A short blade with a back-turned hook, a cord-wrapped grip, and the court\'s brass tag on the pommel. +1 to hit.'},
+    b5_c1_issuesword:{name:'A Letherii issue sword', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,8,1],
+      line:'A Letherii army sword, straight and plain, with a wire-bound grip and the regiment\'s number stamped in the ricasso, and an inventory tag on the guard with the price on it. The army issues every soldier a sword, and then sells them a better one. This is the better one. It is still owed for somewhere.'},
+    b5_c1_tarthclub:{name:'A Tarthenal war-club', slot:'weapon', role:'heavyweapon', who:null, dmg:[1,10,2],
+      line:'A club of black root-wood as long as a man\'s leg, the head studded with old iron nails driven in and clinched, the grip wound with plaited hide gone smooth. The old man by the brazier says it was made for a hand the size of Thegg\'s, which is the only size the Tarthenal made them. He did not say whose hand. He did not have to.'},
+    b5_c1_hookknife:{name:'A rope-man\'s hook-knife', slot:'weapon', role:'blade', who:null, atk:2, dmg:[1,6,1],
+      line:'The short hooked knife the rope-men of the Drownings carry, for cutting a weight-sack free of the rope. A short blade with a back-turned hook, a cord-wrapped grip, and the court\'s brass tag on the pommel.'},
     b5_c1_chit:{name:'A wager-chit from the Low Walk', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A stamped oblong of pale wood with a rope and a wave burned into it and a chalk number on the back: a wager on a Rising that never paid. Whoever carries it is a little better at talking, which is what a chit like this is for. +1 Guile.'},
+      line:'A stamped oblong of pale wood with a rope and a wave burned into it and a chalk number on the back: a wager on a Rising that never paid. Whoever carries it is a little better at talking, which is what a chit like this is for.'},
     b5_c1_receipt:{name:'The fines court\'s receipt', slot:'trinket', role:'any', who:null, stat:{wits:1},
-      line:'A folded square of heavy paper, a blob of grey wax, the court\'s cord through it: three hundred docks, received, for Thegg\'s fine. The clerk says to keep it somewhere dry. The court has a long memory and a bad filing system. +1 Wits.'},
+      line:'A folded square of heavy paper, a blob of grey wax, the court\'s cord through it: three hundred docks, received, for Thegg\'s fine. The clerk says to keep it somewhere dry. The court has a long memory and a bad filing system.'},
     b5_c1_weightbag:{name:'The weight-sack', slot:'trinket', role:'any', who:['thegg'], ac:1,
-      line:'The empty canvas sack the court tied its three hundred docks in, wet-dark, with its mouth cord knotted and an iron ring for the rope. Thegg ties it to his shield\'s strap and will not say why. +1 armour on Thegg.'} },
+      line:'The empty canvas sack the court tied its three hundred docks in, wet-dark, with its mouth cord knotted and an iron ring for the rope. Thegg ties it to his shield\'s strap and will not say why.'} },
 
   scenes:{
     b5_c1_lowwalk:{loc:'Letheras', sub:'The Low Walk · the Quillas Canal', cap:'The Quillas Canal from the tiers, a hundred paces of dark water, a rope out over it, and the crowd above in a long curve of shapes.', amb:'explore'},
@@ -405,6 +409,7 @@ ${b51Key() === 'pay' ? `"Five signatures," he says. "In one night. I have never 
 
 "Six docks," he says, without looking up. "Docks, Sergeant. Not paybook, not promises, not the Finadd's signature. I have the Finadd's signature on eleven things this week and I can't eat one of them."`,
       ch:[{t:'A salve.', tag:'6 docks', req:()=>(S.silver || 0) >= 6, fx:()=>{ S.silver -= 6; S.inv.salve = (S.inv.salve || 0) + 1; updSilver(); note('A salve, for six docks.', 'good'); }, go:'b5_c1_qm'},
+          {t:'A sword off the rack, a better one than issue.', tag:'8 docks', req:()=>(S.silver || 0) >= 8 && !(S.kit || []).includes('b5_c1_issuesword'), fx:()=>{ S.silver -= 8; updSilver(); gain('b5_c1_issuesword'); note('A Letherii sword, for eight docks. The tag stays on.', 'good'); }, go:'b5_c1_qm'},
           {t:'Talk him down to four. ("Who counted those barrels, if not us?")', check:['guile', 12], req:()=>(S.silver || 0) >= 4 && !S.f.b5_c1_haggle,
             edges:id=>[id === 'sgt' && ['you have watched him count for five years', 1], id === 'tobet' && ['he knows what the quartermaster skims, and how', 2], id === 'pessa' && ['canal cant, and a grievance', 2], id === 'thegg' && ['he asks too politely to haggle', -1], id === 'ammet' && ['she would rather have the salve than the argument', -1]],
             near:{t:()=>`Yes, but he makes ${b51Nm(b51Who())} count the spare boots for him while he wraps it, and the boots take the hour the squad would have spent by the fire. No rest at this fire.`, fx:()=>{ S.f['b5_c1_rest' + b51Ph()] = 1; }},
@@ -581,10 +586,12 @@ ${b51Say({thegg:`Thegg walks down the middle of the lane with his shield on his 
             near:{t:()=>`Yes, but the old man wants a drink for every answer, and ${b51Nm(b51Who())} ${b51Who() === 'sgt' ? 'have' : 'has'} to match him: rattled, and slower in the head for it.`, fx:()=>b51Rattle(b51Who())},
             go:'b5_c1_oldman_ok', fail:'b5_c1_oldman_no'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b5_c1_oldman_ok:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', fx:()=>{ S.f.b5_c1_warned = 1; }, txt:
+    b5_c1_oldman_ok:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', fx:()=>{ S.f.b5_c1_warned = 1; if (!S.f.b5_c1_club) { S.f.b5_c1_club = 1; gain('b5_c1_tarthclub'); } }, txt:
 `"Three bullies," the old man says. "Letherii, from inside the walls. Cudgels. The collector keeps the book in the back room, behind the curtain, and he never comes out from behind his table himself." He drinks. "And there's always a drunk on the corner bench who thinks a fight is his. Don't hit that one. He has a family."
 
-He looks at Thegg. "She paid every month," he says. "Every month she could. That's in no book of theirs."`,
+He looks at Thegg. "She paid every month," he says. "Every month she could. That's in no book of theirs."
+
+Then he reaches down beside the crate and lifts out a club of black root-wood with old nails in the head, and holds it out to Thegg by the wrong end, so that he has to take it. "Her people's," he says. "Not mine to keep."`,
       ch:[{t:'"Thank you, grandfather."', go:()=>startExplore()}]}),
     b5_c1_oldman_no:()=>({sp:'An old Tarthenal', scene:'b5_c1_pittown', txt:
 `The old man looks at the squad's cloaks and decides, slowly, that he has said enough to soldiers for one night. "Go and ask them," he says. "They'll tell you. They love telling."`,

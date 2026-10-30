@@ -266,10 +266,12 @@ const B4CH1 = {
     b4_c1_ringleader:{name:'The ringleader', sig:'L', kind:'b4_c1_tough', hp:22, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a bunk-leg down on'} },
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
-    b4_c1_finger:{name:'A finger bone on a thong', slot:'trinket', who:null, line:'A finger bone, small and very white, drilled and tied on a leather thong the way the Adjunct\'s order says: the same way, every soldier, so nobody can say whose idea it was. Whoever wears it starts every fight steady while the company holds its nerve (Nerve 5 or more).'},
+    b4_c1_issuemail:{name:'Fourteenth issue mail', slot:'armour', role:'mail', who:null, ac:2,
+      line:'A shirt of new Malazan issue mail, knee-length and still stiff with the armourer\'s oil, the Fourteenth\'s mark stamped on a tin tag at the collar. The clerk signed it over with the water because the pass said "and kit". It has never been hit. The Third has, and knows which of the two matters more.'},
+    b4_c1_finger:{name:'A finger bone on a thong', slot:'trinket', who:null, line:'A finger bone, small and very white, drilled and tied on a leather thong the way the Adjunct\'s order says: the same way, every soldier, so nobody can say whose idea it was. Whoever wears it starts every fight steady while the company holds its nerve.'},
     b4_c1_relic:{name:'"Coltaine\'s finger"', slot:'trinket', who:['sgt', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut', 'orvas', 'redblade', 'warlock'], stat:{guile:1},
       line:'A dried finger in a glass phial with a wax seal and a scrap of red cloth tied round the neck. The seller swore it was Coltaine\'s. It is a dog\'s toe, Marrow says, or a goat\'s. Whoever carries it is a little better at lying, which says something. Haddat will not touch it.'},
-    b4_c1_redsash:{name:'A Red Blade\'s cast-off sash', slot:'trinket', who:null, ac:1, line:'A red silk sash, frayed at one end where somebody cut a badge off it. A Red Blade threw it down in the street. On anyone it is a little armour, and a statement. On Ramin it is more than that: he hits +1 wearing it.'},
+    b4_c1_redsash:{name:'A Red Blade\'s cast-off sash', slot:'trinket', who:null, ac:1, line:'A red silk sash, frayed at one end where somebody cut a badge off it. A Red Blade threw it down in the street. On anyone it is a little armour, and a statement. On Ramin it is more than that: he hits truer wearing it.'},
     b4_c1_durhangpipe:{name:'A confiscated durhang pipe', slot:'trinket', who:null, line:'A short clay pipe with a brass bowl-cap, still smelling of the resin. Once a chapter, at a fire, it can be passed round: the rattled settle and the sore stop feeling it. Marrow disapproves. The quartermaster\'s clerk would buy it.'} },
 
   scenes:{
@@ -544,8 +546,8 @@ The horse he leaves with the company. "There is no room for a horse in a squad o
     b4_c1_sweep_again:()=>({sp:'The Red Blades', txt:
 `The Red Blades are three taverns further down the street, carrying out casks. ${b4In('redblade') ? `One of them sees Ramin with the squad and raises a hand. Ramin raises his back.` : S.f.b4_raminDone === 2 ? `Ramin, among them, raises a hand.` : `The soldiers have stopped calling them names. It is too hot.`}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
-    b4_c1_to_quay:()=>({sp:'The quay', scene:'b4_c1_quay', fx:()=>{ S.f.b4_c1_quay = 1; S.f.b4_c1_water = 1; }, txt:
-`The quay stores are a long low shed at the head of the quay, and the quartermaster's clerk is sitting in its door with his book, and he signs the Second Company's water and rations over to Hollet's pass with the air of a man giving away his own children. The company's carts are already waiting. It takes a quarter of an hour.
+    b4_c1_to_quay:()=>({sp:'The quay', scene:'b4_c1_quay', fx:()=>{ S.f.b4_c1_quay = 1; S.f.b4_c1_water = 1; if (!S.f.b4_c1_mail) { S.f.b4_c1_mail = 1; gain('b4_c1_issuemail'); } }, txt:
+`The quay stores are a long low shed at the head of the quay, and the quartermaster's clerk is sitting in its door with his book, and he signs the Second Company's water and rations over to Hollet's pass with the air of a man giving away his own children. The company's carts are already waiting. It takes a quarter of an hour. Hollet's pass says *and kit*, so the clerk adds a shirt of new issue mail to the Third's line, sighing, and signs for that too.
 
 The quay is not watching the carts. It is watching the ships.
 

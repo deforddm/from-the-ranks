@@ -204,9 +204,9 @@ const B5CH3 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c3_cadretile:{name:'A cadre\'s spare tile', slot:'trinket', role:'focus', who:null, stat:{wits:1},
-      line:'A plain practice tile of black stone with no face, polished, blank, with a hairline crack across one corner: the kind the cadre schools give their students to lay before they are let near a real one. A young mage of the Snakebelt cadre gave it away on the dock at Kraig\'s Landing. Whoever carries it is a little quicker to see a pattern. +1 Wits.'},
-    b5_c3_spear:{name:'A Faraed throwing-spear', slot:'weapon', role:'reach', who:null, atk:1, rng:1,
-      line:'A light spear of fire-hardened wood with a leaf-shaped iron head and a tuft of feathers from a bird only the Faraed have a name for. Made to be thrown, and thrown again. +1 to hit and +1 range: in a hand that fights close, it is a throw at two tiles.'},
+      line:'A plain practice tile of black stone with no face, polished, blank, with a hairline crack across one corner: the kind the cadre schools give their students to lay before they are let near a real one. A young mage of the Snakebelt cadre gave it away on the dock at Kraig\'s Landing. Whoever carries it is a little quicker to see a pattern.'},
+    b5_c3_spear:{name:'A Faraed throwing-spear', slot:'weapon', role:'reach', who:null, atk:1, rng:1, dmg:[1,8,1],
+      line:'A light spear of fire-hardened wood with a leaf-shaped iron head and a tuft of feathers from a bird only the Faraed have a name for. Made to be thrown, and thrown again. In a hand that fights close, it is a throw over the front rank.'},
     b5_c3_ash:{name:'Green ash in a paper twist', slot:'trinket', role:'any', who:null,
       line:'A pinch of grey ash in a twist of brown paper, still faintly green at the open end. It came down on the dock at Kraig\'s Landing in the night after the fire. It does nothing. Somebody in the squad kept it anyway.'} },
 

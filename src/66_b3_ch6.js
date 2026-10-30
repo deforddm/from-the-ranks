@@ -281,7 +281,7 @@ ${b3In('greysword') ? `
 
   gear:{
     b3_c6_vambrace:{name:'A Moranth chitin vambrace', slot:'trinket', who:null, ac:1, line:'A forearm guard of black chitin in overlapping plates, lighter than leather and harder than iron. A Moranth flier unbuckled it from its own arm and held it out without a word, the way the Moranth do everything. It was warm. It still is, a little.'},
-    b3_c6_axe:{name:'A barge-builder\'s axe', slot:'weapon', who:['brisk', 'sgt'], dmg:[1,10,2], line:'A broad, thin, bearded blade on a long ash haft, for squaring timber, not men. It squares men. Oskan the wright keeps one like it for every barge he has built and gave this one away, which he says he has never done.'},
+    b3_c6_axe:{name:'A barge-builder\'s axe', slot:'weapon', who:['brisk', 'sgt'], dmg:[1,12,2], line:'A broad, thin, bearded blade on a long ash haft, for squaring timber, not men. It squares men. Oskan the wright keeps one like it for every barge he has built and gave this one away, which he says he has never done.'},
     b3_c6_feather:{name:'A Condor feather', slot:'trinket', who:null, line:'A long black flight feather, ragged at the barbs, ivory at the quill. It is cold to hold, colder than it should be, and now and then it lifts in a wind that is not there. Whoever wears it is never taken by surprise: it lifts first.'} },
 
   scenes:{

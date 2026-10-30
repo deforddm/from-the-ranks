@@ -147,7 +147,8 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     guildtoken:{name:'Guild token', slot:'trinket', who:null, stat:{guile:1}, line:'A disc of black horn the size of a thumbnail, with a hole through it and nothing carved on it at all. Vell says it opens a door. He does not say which door, or who is behind it, or what they will think of a Malazan holding it.'},
     ropehook:{name:'Journeyman\'s rope-and-hook', slot:'trinket', who:['ellis','sgt','kettle'], mv:1, line:'Thirty feet of tarred line and a three-pronged hook, wrapped in rag so it does not ring on slate. A Guild journeyman\'s kit. The rag is new. The journeyman is not going to need it.'},
-    guildblade:{name:'Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, line:'A short straight blade blackened with lamp-soot, the edge left bright. No guard to catch on a gutter. Made to be carried up a drainpipe in the teeth, and it has been.'},
+    darucrossbow:{name:'A Daru roof-crossbow', slot:'weapon', who:null, atk:1, dmg:[1,10,1], line:'A short, stout crossbow of black wood and brass, with a belt-hook for the cocking and a quiver of quarrels strapped under the stock. Daru-made, for the roofs, where nobody has room to wind a windlass. The man on the Daru ridge left it on the tiles when he stopped being there.'},
+    guildblade:{name:'Guild blade', slot:'weapon', who:['sgt','ellis','kettle','vell'], atk:1, dmg:[1,8,1], line:'A short straight blade blackened with lamp-soot, the edge left bright. No guard to catch on a gutter. Made to be carried up a drainpipe in the teeth, and it has been.'},
     andiicloak:{name:'Andii-grey cloak', slot:'armour', who:['tuft'], ac:1, line:'Grey, the grey of ash on a cold hearth, and lighter than cloth should be. It does not quite take the lamplight. Only Tuft will put it on. The rest have not been asked, and have not offered.'} },
 
   // the chapter's own lines on the end screen, after the engine's
@@ -1080,8 +1081,8 @@ ${SQUAD().includes('ellis') ? `Ellis, at the hatch, not looking back: "Nobody th
 
 By the time it shifts, the first of them is on it.`,
       ch:[{t:'"Hold the plank."', go:()=>startBattle('c4_clan',{surprise:'e'})}]}),
-    c4_after_clan:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_clanFought=1; }, txt:
-`It's decided on the planks, the way Fiddler said roof fights are: one at a time, and nobody waits in the middle. Two of them come off the planks the short way. The crossbow on the Daru side gets off what he can and then isn't there. And the one who led them is sitting on the far edge of the gap with his knife across his knees, not getting up, not coming on, looking at the ridge behind him where his master isn't.
+    c4_after_clan:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_clanFought=1; if (!S.f.c4_xbow) { S.f.c4_xbow = 1; gain('darucrossbow'); } }, txt:
+`It's decided on the planks, the way Fiddler said roof fights are: one at a time, and nobody waits in the middle. Two of them come off the planks the short way. The crossbow on the Daru side gets off what he can and then isn't there. His crossbow is: on the tiles of the Daru ridge, still cocked, and it comes back across the planks with you. And the one who led them is sitting on the far edge of the gap with his knife across his knees, not getting up, not coming on, looking at the ridge behind him where his master isn't.
 
 He's left where he sits.${preUsed('c4_clan') ? `
 

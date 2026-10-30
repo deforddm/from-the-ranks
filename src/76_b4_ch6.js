@@ -290,11 +290,13 @@ const B4CH6 = {
 
   gear:{ // slot ∈ weapon|armour|trinket. who = ids that can wear it, or null for anyone.
     b4_c6_dogslayer:{name:'A Dogslayer\'s cut-off badge', slot:'trinket', who:null,
-      line:'A square of cloth cut off a Dogslayer\'s sleeve with a knife, the threads still hanging: a dog\'s head stitched in black on red, and a bar of black across its throat. Dom\'s soldiers wear it where the Empire\'s badges were. The squad knows what it is for. Whoever carries it hits Dom\'s soldiers +1.'},
+      line:'A square of cloth cut off a Dogslayer\'s sleeve with a knife, the threads still hanging: a dog\'s head stitched in black on red, and a bar of black across its throat. Dom\'s soldiers wear it where the Empire\'s badges were. The squad knows what it is for. Whoever carries it hits Dom\'s soldiers truer.'},
+    b4_c6_dogscale:{name:'A Dogslayer\'s scale shirt', slot:'armour', role:'heavy', who:null, ac:3,
+      line:'Malazan scale, a heavy infantryman\'s, the legion\'s marks scraped off every plate the eye can reach and a dog\'s head painted on the breast in black. Off one of Dom\'s soldiers who went down in front of the screen and did not get up. It is good scale. It was the Empire\'s, and then his, and now it is the Third\'s, which is where the Third thinks it always belonged.'},
     b4_c6_trenchspade:{name:'A sapper\'s short spade', slot:'trinket', who:['tangle'], ac:1,
-      line:'A Malazan sapper\'s short spade, the blade a hand and a half across and ground sharp on one edge, the haft worn dark where somebody\'s grip went. Dom\'s people dug the trenches on the ramps with spades like it. The squad\'s sapper carries it across the back, where it turns a blow: +1 armour. Sappers have been known to talk to them.'},
+      line:'A Malazan sapper\'s short spade, the blade a hand and a half across and ground sharp on one edge, the haft worn dark where somebody\'s grip went. Dom\'s people dug the trenches on the ramps with spades like it. The squad\'s sapper carries it across the back, where it turns a blow. Sappers have been known to talk to them.'},
     b4_c6_pickethorn:{name:'The picket\'s horn', slot:'trinket', who:null,
-      line:'A cow\'s horn with a brass mouthpiece and a thong, scratched with the 9th\'s number and years of tallies, handed down from picket to picket. Once a book, in a fight, its bearer blows it, and two regulars of the 9th come up beside them. After that the 9th knows the sound, and it is only a horn.'} },
+      line:'A cow\'s horn with a brass mouthpiece and a thong, scratched with the 9th\'s number and years of tallies, handed down from picket to picket. Once a book, in a fight, its bearer blows it, and a pair of the 9th\'s regulars come up beside them. After that the 9th knows the sound, and it is only a horn.'} },
 
   scenes:{
     b4_c6_trenches:{loc:'Before Pan\'arak', sub:'The ramps · dusk', cap:'Three long ramps going up out of a basin to the trenches, the dead city pale behind them, and the dust coming down red.', amb:'explore'},
@@ -811,8 +813,8 @@ The crickets stop on the left. Then in the middle. Then, a long throw out in the
     b4_c6_patrol_seen:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', txt:
 `The dark is full of small sounds and every one of them is coming from somewhere else. ${by({sgt:'You call', _:'{who} calls'})} the left, and they come through the middle, at the gap, by the fire, over the screen, with the whistle going.`,
       ch:[{t:'Shields.', go:()=>startBattle('b4_c6_patrol', {surprise:'e'})}]}),
-    b4_c6_patrol_after:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_patrolDone = 1; }, txt:
-`They go back into the grey the way they came, fewer, and the whistle with them, going short and sharp and then not going at all. The crickets start again on the left.
+    b4_c6_patrol_after:()=>({sp:'The screen after midnight', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_patrolDone = 1; if (!S.f.b4_c6_scale) { S.f.b4_c6_scale = 1; gain('b4_c6_dogscale'); } }, txt:
+`They go back into the grey the way they came, fewer, and the whistle with them, going short and sharp and then not going at all. One of them stays in front of the screen in good Malazan scale with a dog painted on it, and in the morning the scale comes inside the screen without him. The crickets start again on the left.
 
 The gap in the screen is still a gap. The fire behind it is still a fire. The company's regulars along the screen are on their feet, breathing, looking at the basin and at each other. ${b4Mood() === 'steady' ? 'They held, and they know it, and one of them laughs out loud and is told to shut up by four people at once.' : 'They held. They are not sure how, and they are not going to ask.'}
 
@@ -897,8 +899,8 @@ The outpost sees them. That was always going to happen. It is a long way back.${
     b4_c6_outpost_shout:()=>({sp:'The outpost at the foot', scene:'b4_c6_close', fx:()=>{ S.f.b4_c6_seen = 'early'; }, txt:
 `The one who stood up shouts before anybody reaches him, one word, and the whistle answers it from the trench above, and the outpost comes up off its fire with its crossbows already spanned.`,
       ch:[{t:'Over the wall anyway.', go:()=>startBattle('b4_c6_outpost', {surprise:'e'})}]}),
-    b4_c6_outpost_after:()=>({sp:'Back across the basin', scene:'b4_c6_close', fx:()=>{ if (!S.f.b4_c6_outpostDone) { S.f.b4_c6_outpostDone = 1; if (!S.f.b4_c6_downed) b4Nerve(1, 'The Chain squad came back from the ramps, every one'); } }, txt:
-`They break off at last, the Dogslayers who came down the ramp after them, and go back up it in good order, the way a drilled company goes, because the officers in the trench have whistled them back and nobody up there wants a night fight in the basin with the whole Fourteenth awake behind it.
+    b4_c6_outpost_after:()=>({sp:'Back across the basin', scene:'b4_c6_close', fx:()=>{ if (!S.f.b4_c6_outpostDone) { S.f.b4_c6_outpostDone = 1; if (!S.f.b4_c6_downed) b4Nerve(1, 'The Chain squad came back from the ramps, every one'); } if (!S.f.b4_c6_scale) { S.f.b4_c6_scale = 1; gain('b4_c6_dogscale'); } }, txt:
+`They break off at last, the Dogslayers who came down the ramp after them, and go back up it in good order, the way a drilled company goes, because the officers in the trench have whistled them back and nobody up there wants a night fight in the basin with the whole Fourteenth awake behind it. They leave one of theirs in the basin, in good Malazan scale with a dog painted on it, and the scale comes back across with the squad.
 
 The squad goes on, back across the basin in the dark, the last of it at a walk, because nobody can run any more. ${S.f.b4_c6_downed ? 'Some of them are being carried, or held up, an arm over a shoulder.' : 'Every one of them on their own feet.'} The screen comes up out of the dark, and the gap in it, and Radde standing in the gap with the book.
 

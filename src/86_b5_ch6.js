@@ -240,12 +240,12 @@ const B5CH6 = {
   foes:{},
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
-    b5_c6_edurblade:{name:'An Edur sword from the channel', slot:'weapon', role:'blade', who:null, atk:1,
-      line:'A long blade of dark iron, slightly curved, with grey leather on the grip worn to the shape of a hand bigger than yours. It came off the stones of the dry channel at Brans Keep, where its owner left it. The Edur make better swords than Lether does, and Lether has always known it. +1 to hit.'},
+    b5_c6_edurblade:{name:'An Edur sword from the channel', slot:'weapon', role:'blade', who:null, atk:1, dmg:[1,10,2],
+      line:'A long blade of dark iron, slightly curved, with grey leather on the grip worn to the shape of a hand bigger than yours. It came off the stones of the dry channel at Brans Keep, where its owner left it. The Edur make better swords than Lether does, and Lether has always known it.'},
     b5_c6_paint:{name:'A pot of white paint', slot:'trinket', role:'any', who:null, ac:1,
-      line:'A small clay pot with a white rim and a frayed brush tied to its neck with string: the battalion\'s own paint, for the fingertip on the boss. Whoever carries it repaints the squad\'s bosses on the eve of a fight, and the squad stands a little straighter for it. Why the finger, the battalion cannot say. +1 armour.'},
+      line:'A small clay pot with a white rim and a frayed brush tied to its neck with string: the battalion\'s own paint, for the fingertip on the boss. Whoever carries it repaints the squad\'s bosses on the eve of a fight, and the squad stands a little straighter for it. Why the finger, the battalion cannot say.'},
     b5_c6_lakestone:{name:'A stone from the old lake bed', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A flat stone, pale grey with a darker ring, worn smooth by water that has not been there for longer than Lether has. Picked up on the way out of Brans Keep. It is a good weight in the hand, and it is the only thing anybody brought out of that field that nobody owes for. +3 health.'} },
+      line:'A flat stone, pale grey with a darker ring, worn smooth by water that has not been there for longer than Lether has. Picked up on the way out of Brans Keep. It is a good weight in the hand, and it is the only thing anybody brought out of that field that nobody owes for.'} },
 
   scenes:{
     b5_c6_eve:{loc:'Brans Keep', sub:'The eve · the army\'s fires', cap:'The army\'s fires across the field at night, the keep\'s towers black against the cliff, the lake still, and the Edur\'s fires on the hills to the north.', amb:'explore'},

@@ -217,13 +217,13 @@ const B5CH2 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b5_c2_sealcoat:{name:'A poacher\'s sealskin coat', slot:'armour', role:'light', who:null, ac:1,
-      line:'A short coat of grey sealskin, oiled, with bone toggles, out of a chest in the second hulk\'s hold. It still smells of the north. The poachers went a long way for the skins, and the skins came home. +1 armour.'},
+      line:'A short coat of grey sealskin, oiled, with bone toggles, out of a chest in the second hulk\'s hold. It still smells of the north. The poachers went a long way for the skins, and the skins came home.'},
     b5_c2_tooth:{name:'A tooth nobody can name', slot:'trinket', role:'any', who:null, hp:3,
-      line:'A long curved tooth, yellowed, bound at the root with copper wire, bought for a dock off a market stall in Trate. The stall-keeper did not know what it came out of. Neither does anyone the squad has shown it to. Whoever carries it seems harder to kill, which nobody can explain either. +3 health.'},
-    b5_c2_gaff:{name:'A harbour gaff', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, ac:-1,
-      line:'The Trate Legion\'s long hooked pole for dragging wreckage, and the drowned, out of the harbour: a long ash pole with an iron hook and a spike. Reach: it strikes an enemy two tiles off, but it takes both hands, so the shield goes on the back (−1 armour).'},
+      line:'A long curved tooth, yellowed, bound at the root with copper wire, bought for a dock off a market stall in Trate. The stall-keeper did not know what it came out of. Neither does anyone the squad has shown it to. Whoever carries it seems harder to kill, which nobody can explain either.'},
+    b5_c2_gaff:{name:'A harbour gaff', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, ac:-1, dmg:[1,8,1],
+      line:'The Trate Legion\'s long hooked pole for dragging wreckage, and the drowned, out of the harbour: a long ash pole with an iron hook and a spike. It reaches past the front rank, and it takes both hands, so the shield goes on the back.'},
     b5_c2_shells:{name:'A cord of Shake burial shells', slot:'trinket', role:'any', who:null, stat:{wits:1},
-      line:'Small white shells on a knotted cord, one of them black: the shells the Shake lay on their drowned, given to the squad on the quay at Trate for carrying the dead out. Whoever wears it thinks a little more slowly before doing something stupid. +1 Wits.'} },
+      line:'Small white shells on a knotted cord, one of them black: the shells the Shake lay on their drowned, given to the squad on the quay at Trate for carrying the dead out. Whoever wears it thinks a little more slowly before doing something stupid.'} },
 
   scenes:{
     b5_c2_wrecks:{loc:'Trate', sub:'The harvest ships on the quays · dusk', cap:'Ships broken on the quays at dusk, their masts leaning, and shapes in the rigging that do not move when the gulls do.', amb:'explore'},
