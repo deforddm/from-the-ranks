@@ -267,21 +267,13 @@ POR.sohra = function(ctx){ const F = {cy:-75, w:11.2, h:19.2, jaw:.72, chin:4.4,
   ell(ctx, 1, top - 8.6, 1.4, 1.4, '#e8dcc0');
   for (let i=0;i<9;i++){ const k = i/8, x = lerp(-11, -19, k) + Math.sin(i*1.3)*.6, y = lerp(F.cy + 2, F.cy + 42, k); ell(ctx, x, y, 3 - k*.6, 3, PR.lin(ctx, x - 3, 0, x + 3, 0, [[0,'#3a3232'], [.5,'#141010'], [1,'#040303']]), .5); PR.stroke(ctx, 'rgba(110,100,110,.35)', .4, () => { ctx.moveTo(x - 2, y - 1); ctx.lineTo(x + 1.6, y + 1); }); } // the braid
   ell(ctx, -19.4, F.cy + 46, 1.6, 1.8, '#e8dcc0');
-  return F; };
+  BP.sling(ctx, 24, -48, -22, 0, '#5a3a1e', 2.4); // the bow's sling
+    return F; };
 
 /* Dannet: a Capan second daughter, twenties, a Grey Sword acolyte; hair shorn close, a strong plain face, a grey surcoat over mail,
    and the rim of the round shield, the boar scraped off it and the wolf's head half painted over */
 POR.greysword = function(ctx){ const F = {cy:-77, w:12.6, h:19.8, jaw:.86, chin:5.6, skin:'#c49a7a', iris:'#5a4a36', lip:'#8e5a4e', browCol:'#3a2a1c', browW:1.5, arch:.6, rim:'#b8c0c8', rimA:.18, nose:1.1, look:.1, smileL:-.2, smileR:0, mouthW:3.9, age:.1};
   // the shield behind her left shoulder
-  ctx.save(); ctx.translate(-40, -38); ell(ctx, 0, 0, 27, 29, '#141210'); ell(ctx, 0, 0, 24.6, 26.6, PR.lin(ctx, -24, -26, 20, 26, [[0,'#8a8274'], [.5,'#5a5448'], [1,'#1a1814']]));
-  ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 24.6, 26.6, 0, 0, 7); ctx.clip();
-  PR.soft(ctx, -6, 2, 14, 10, '#7a4a2a', .5); PR.stroke(ctx, 'rgba(190,176,150,.45)', .5, () => { for (let i=0;i<26;i++){ const r = PR.rng(i + 77), x = -16 + r()*20, y = -8 + r()*18; ctx.moveTo(x, y); ctx.lineTo(x + 2 + r()*5, y + (r() - .5)*2); } }); // where the boar was, scraped to the wood
-  const wolf = () => { ctx.beginPath(); [[-6, -4], [-3, -18], [2, -9], [5, -17], [8, -7], [12, -6], [20, -1], [21, 2.4], [16, 4.4], [9, 6], [4, 14], [-7, 15]].forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); };
-  wolf(); ctx.strokeStyle = 'rgba(220,224,226,.65)'; ctx.lineWidth = .8; ctx.stroke(); // the wolf, drawn in charcoal-white...
-  ctx.save(); ctx.beginPath(); ctx.rect(4, -30, 30, 60); ctx.clip(); wolf(); ctx.fillStyle = PR.lin(ctx, 4, 0, 22, 0, [[0,'#e4e8ea'], [1,'#9aa0a4']]); ctx.fill(); ctx.restore(); // ...and the front of it painted
-  ell(ctx, 11.6, -3.4, 1.4, 1, '#141414'); PR.stroke(ctx, 'rgba(20,20,20,.6)', .6, () => { ctx.moveTo(16, 3); ctx.lineTo(10, 4.4); });
-  PR.soft(ctx, 12, 12, 18, 14, '#000000', .4); ctx.restore();
-  ctx.strokeStyle = PR.lin(ctx, -26, -28, 26, 28, [[0,'#a8a294'], [.5,'#5a5650'], [1,'#161412']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.ellipse(0, 0, 25.8, 27.8, 0, 0, 7); ctx.stroke(); ctx.restore();
   // mail, and the grey surcoat over it
   PR.neck(ctx, F, 9.6); const B = BP.body(ctx, F, {wide:38, drop:3, trap:5, ny:F.cy + 15.6, cb:F.cy + 21, c1:'#8e8c86', c2:'#2e2c2a'});
   ctx.save(); B.path(); ctx.clip(); PR.mail(ctx, -40, 40, -66, 4, '#8e8c86', 1.9); // the mail, an aventail up to the jaw
@@ -299,6 +291,17 @@ POR.greysword = function(ctx){ const F = {cy:-77, w:12.6, h:19.8, jaw:.86, chin:
   ctx.fillStyle = PR.lin(ctx, -F.w, 0, F.w, 0, [[0,'#5a4432'], [.45,'#2e2218'], [1,'#0e0a06']]); ctx.fill(); ctx.clip();
   ctx.fillStyle = 'rgba(196,154,122,.22)'; for (let i=0;i<220;i++){ const r = PR.rng(i + 300), x = (r() - .5)*F.w*2.2, y = top - 1 + r()*(F.cy - top); ctx.fillRect(x, y, .45, .45); } // the scalp through the stubble
   ctx.restore();
+    ctx.save(); ctx.translate(-25, -14); ctx.rotate(-0.18); ctx.scale(0.9, 0.9); ctx.translate(40, 38); // her shield, held in front, the wolf showing
+  ctx.save(); ctx.translate(-40, -38); ell(ctx, 0, 0, 27, 29, '#141210'); ell(ctx, 0, 0, 24.6, 26.6, PR.lin(ctx, -24, -26, 20, 26, [[0,'#8a8274'], [.5,'#5a5448'], [1,'#1a1814']]));
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 24.6, 26.6, 0, 0, 7); ctx.clip();
+  PR.soft(ctx, -6, 2, 14, 10, '#7a4a2a', .5); PR.stroke(ctx, 'rgba(190,176,150,.45)', .5, () => { for (let i=0;i<26;i++){ const r = PR.rng(i + 77), x = -16 + r()*20, y = -8 + r()*18; ctx.moveTo(x, y); ctx.lineTo(x + 2 + r()*5, y + (r() - .5)*2); } }); // where the boar was, scraped to the wood
+  const wolf = () => { ctx.beginPath(); [[-6, -4], [-3, -18], [2, -9], [5, -17], [8, -7], [12, -6], [20, -1], [21, 2.4], [16, 4.4], [9, 6], [4, 14], [-7, 15]].forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); };
+  wolf(); ctx.strokeStyle = 'rgba(220,224,226,.65)'; ctx.lineWidth = .8; ctx.stroke(); // the wolf, drawn in charcoal-white...
+  ctx.save(); ctx.beginPath(); ctx.rect(4, -30, 30, 60); ctx.clip(); wolf(); ctx.fillStyle = PR.lin(ctx, 4, 0, 22, 0, [[0,'#e4e8ea'], [1,'#9aa0a4']]); ctx.fill(); ctx.restore(); // ...and the front of it painted
+  ell(ctx, 11.6, -3.4, 1.4, 1, '#141414'); PR.stroke(ctx, 'rgba(20,20,20,.6)', .6, () => { ctx.moveTo(16, 3); ctx.lineTo(10, 4.4); });
+  PR.soft(ctx, 12, 12, 18, 14, '#000000', .4); ctx.restore();
+  ctx.strokeStyle = PR.lin(ctx, -26, -28, 26, 28, [[0,'#a8a294'], [.5,'#5a5650'], [1,'#161412']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.ellipse(0, 0, 25.8, 27.8, 0, 0, 7); ctx.stroke(); ctx.restore();
+    ctx.restore();
   return F; };
 
 /* ---------------- Book Three's cards: the picture panels (20 drawCard calls CARDART[id]) ----------------

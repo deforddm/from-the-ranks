@@ -173,6 +173,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.0.16', ['Shields are held in front now, not floating over a shoulder, and spears, standards, the fish-spear and the boathook have a hand on them; crossbows, bows and spear bundles hang from straps. Thegg\'s pauldrons are proper articulated iron.']],
   ['8.0.15', ['Thegg now wears heavy hammered-iron pauldrons, dented, bronze-rimmed and buckled on; the Letherii sergeant polished steel ones with a brass rim and a brass boss.']],
   ['8.0.14', ['The heavies get shoulder armour, each in their own style: the Fourth\'s sergeant\'s riveted leather and Brisk\'s steel, Haddat\'s shoulder cops, Ramin\'s red scale, the Grey Sword\'s wolf pauldron, Hessa\'s worm-green scale, Darrut\'s Aren Guard caps, Orvas\'s lacquered flaps with horsehair, the Letherii sergeant\'s brass-edged scale and Thegg\'s, the biggest of all.']],
   ['8.0.13', ['No lace at Kettle\'s or Ellis\'s throat: Kettle\'s jerkin has a plain leather neck with a buckled strap, and Ellis\'s tunic two knotted rawhide thongs.']],

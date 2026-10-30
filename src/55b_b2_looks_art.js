@@ -68,18 +68,6 @@ Object.assign(FIGX, {
 /* ---------------- portraits ---------------- */
 POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'#7e5638', iris:'#3a2816', lip:'#7a4a3c', browCol:'#1a100a', browW:1.7, arch:.45, rim:'#d6a24a', nose:1.05, smileL:-.2, smileR:-.1, mouthW:4, bags:.5, age:.65, look:.3, open:.78, ears:false};
   // the shield behind the left shoulder: tall, curved, three regiments of paint flaking through each other
-  ctx.save(); ctx.translate(-41, -44); ctx.rotate(-.12);
-  const sh = () => { const w = 22, hh = 34, r = 5; ctx.beginPath(); ctx.moveTo(-w + r, -hh); ctx.lineTo(w - r, -hh); ctx.quadraticCurveTo(w, -hh, w, -hh + r); ctx.lineTo(w, hh - r); ctx.quadraticCurveTo(w, hh, w - r, hh); ctx.lineTo(-w + r, hh); ctx.quadraticCurveTo(-w, hh, -w, hh - r); ctx.lineTo(-w, -hh + r); ctx.quadraticCurveTo(-w, -hh, -w + r, -hh); ctx.closePath(); };
-  sh(); ctx.fillStyle = PR.lin(ctx, -22, -30, 22, 30, [[0,'#9a8a62'], [.45,'#5e5038'], [1,'#14100a']]); ctx.fill();
-  ctx.save(); sh(); ctx.clip(); const r = PR.rng(212);
-  const flake = (cx, cy, rx, ry, col) => { const n = 9; ctx.beginPath(); for (let k=0;k<n;k++){ const a = k/n*Math.PI*2, j = .65 + r()*.5; k ? ctx.lineTo(cx + Math.cos(a)*rx*j, cy + Math.sin(a)*ry*j) : ctx.moveTo(cx + Math.cos(a)*rx*j, cy + Math.sin(a)*ry*j); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
-  [[-12, -24, 9, 7], [8, 14, 10, 8], [-14, 22, 6, 5], [12, -12, 5, 4]].forEach(([x, y, a, b]) => flake(x, y, a, b, '#6e2a20')); // the oldest coat, red, where both the others came off
-  [[-4, -24, 6, 4], [8, 18, 6, 4], [-10, 12, 8, 6], [10, -26, 6, 5]].forEach(([x, y, a, b]) => flake(x, y, a, b, '#38506a')); PR.soft(ctx, -10, -10, 16, 20, '#e8d8b0', .12); // the blue over it; the lantern on the dun
-  ctx.fillStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'rgba(240,190,100,.55)'], [.6,'rgba(214,162,74,.4)'], [1,'rgba(60,40,10,.3)']]); ctx.fillRect(-22, -3.6, 44, 7.2); // a band of gold, painted on last
-  PR.stroke(ctx, 'rgba(20,10,4,.5)', .7, () => { for (let i=0;i<10;i++){ const x = -18 + r()*34, y = -30 + r()*58; ctx.moveTo(x, y); ctx.lineTo(x + 1 + r()*4, y + .5 + r()*2.5); } }); // gouges
-  ctx.fillStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'rgba(0,0,0,0)'], [.55,'rgba(0,0,0,.2)'], [1,'rgba(0,0,0,.65)']]); ctx.fillRect(-22, -34, 44, 68); ctx.restore(); // the curve, away from the lantern
-  ctx.strokeStyle = PR.lin(ctx, -22, -30, 22, 30, [[0,'#a8a294'], [.5,'#4e4a44'], [1,'#121110']]); ctx.lineWidth = 2.6; sh(); ctx.stroke();
-  ell(ctx, -2, -1, 4.6, 4.8, PR.rad(ctx, -3, -2.2, .4, 5, [[0,'#c8c0b0'], [.4,'#6a665e'], [1,'#1a1816']])); ctx.restore(); // the boss
   // boiled leather over quilting, bleached pale at the shoulders by six summers
   PR.neck(ctx, F, 9.2); const B = BP.body(ctx, F, {wide:44, trap:5, nx:12.6, ny:-54, cb:-50.4, c1:'#86704e', c2:'#30261a'}); // the quilting
   ctx.save(); B.path(); ctx.clip();
@@ -115,6 +103,20 @@ POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'
   // Ressan's token, on its cord over the scarf: brass, worn smooth, a water-jar stamped in it
   PR.stroke(ctx, '#2a1a0e', .7, () => { ctx.moveTo(-6, -46); ctx.quadraticCurveTo(-4, -34, -1, -28); ctx.moveTo(6, -46); ctx.quadraticCurveTo(4, -34, 1, -28); });
   ell(ctx, 0, -25, 4.2, 4.2, PR.rad(ctx, -1.2, -26.4, .5, 4.6, [[0,'#fff0c0'], [.35,'#e2b85a'], [1,'#4a3008']])); PR.stroke(ctx, 'rgba(70,40,8,.6)', .5, () => { ctx.moveTo(-1.2, -27); ctx.quadraticCurveTo(-2, -24, 0, -22.6); ctx.quadraticCurveTo(2, -24, 1.2, -27); ctx.closePath(); });
+    ctx.save(); ctx.translate(-26, -10); ctx.rotate(-0.15); ctx.scale(0.85, 0.85); ctx.translate(41, 44); // the shield, held in front
+  ctx.save(); ctx.translate(-41, -44); ctx.rotate(-.12);
+  const sh = () => { const w = 22, hh = 34, r = 5; ctx.beginPath(); ctx.moveTo(-w + r, -hh); ctx.lineTo(w - r, -hh); ctx.quadraticCurveTo(w, -hh, w, -hh + r); ctx.lineTo(w, hh - r); ctx.quadraticCurveTo(w, hh, w - r, hh); ctx.lineTo(-w + r, hh); ctx.quadraticCurveTo(-w, hh, -w, hh - r); ctx.lineTo(-w, -hh + r); ctx.quadraticCurveTo(-w, -hh, -w + r, -hh); ctx.closePath(); };
+  sh(); ctx.fillStyle = PR.lin(ctx, -22, -30, 22, 30, [[0,'#9a8a62'], [.45,'#5e5038'], [1,'#14100a']]); ctx.fill();
+  ctx.save(); sh(); ctx.clip(); const r = PR.rng(212);
+  const flake = (cx, cy, rx, ry, col) => { const n = 9; ctx.beginPath(); for (let k=0;k<n;k++){ const a = k/n*Math.PI*2, j = .65 + r()*.5; k ? ctx.lineTo(cx + Math.cos(a)*rx*j, cy + Math.sin(a)*ry*j) : ctx.moveTo(cx + Math.cos(a)*rx*j, cy + Math.sin(a)*ry*j); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
+  [[-12, -24, 9, 7], [8, 14, 10, 8], [-14, 22, 6, 5], [12, -12, 5, 4]].forEach(([x, y, a, b]) => flake(x, y, a, b, '#6e2a20')); // the oldest coat, red, where both the others came off
+  [[-4, -24, 6, 4], [8, 18, 6, 4], [-10, 12, 8, 6], [10, -26, 6, 5]].forEach(([x, y, a, b]) => flake(x, y, a, b, '#38506a')); PR.soft(ctx, -10, -10, 16, 20, '#e8d8b0', .12); // the blue over it; the lantern on the dun
+  ctx.fillStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'rgba(240,190,100,.55)'], [.6,'rgba(214,162,74,.4)'], [1,'rgba(60,40,10,.3)']]); ctx.fillRect(-22, -3.6, 44, 7.2); // a band of gold, painted on last
+  PR.stroke(ctx, 'rgba(20,10,4,.5)', .7, () => { for (let i=0;i<10;i++){ const x = -18 + r()*34, y = -30 + r()*58; ctx.moveTo(x, y); ctx.lineTo(x + 1 + r()*4, y + .5 + r()*2.5); } }); // gouges
+  ctx.fillStyle = PR.lin(ctx, -22, 0, 22, 0, [[0,'rgba(0,0,0,0)'], [.55,'rgba(0,0,0,.2)'], [1,'rgba(0,0,0,.65)']]); ctx.fillRect(-22, -34, 44, 68); ctx.restore(); // the curve, away from the lantern
+  ctx.strokeStyle = PR.lin(ctx, -22, -30, 22, 30, [[0,'#a8a294'], [.5,'#4e4a44'], [1,'#121110']]); ctx.lineWidth = 2.6; sh(); ctx.stroke();
+  ell(ctx, -2, -1, 4.6, 4.8, PR.rad(ctx, -3, -2.2, .4, 5, [[0,'#c8c0b0'], [.4,'#6a665e'], [1,'#1a1816']])); ctx.restore(); // the boss
+    ctx.restore();
   return F; };
 
 /* Ramin: twenty-six, lean, very straight. Bareheaded under a red head-wrap; the slit-visored helm is somewhere else; an oiled moustache,
@@ -165,4 +167,5 @@ POR.redblade = (ctx) => { const F = {cy:-75, w:12.2, h:20.6, jaw:.8, chin:4.6, s
   ell(ctx, -F.w - 2.6, cy - 8, 3.6, 3, PR.rad(ctx, -F.w - 3.6, cy - 9, .4, 4, [[0,'#f08060'], [.5,'#b03a2c'], [1,'#3a0a06']])); // the knot
   ctx.beginPath(); ctx.moveTo(-F.w - 4.6, cy - 6.4); ctx.bezierCurveTo(-F.w - 9, cy + 6, -F.w - 6, -54, -F.w - 12, -44); ctx.lineTo(-F.w - 6.4, -44); ctx.bezierCurveTo(-F.w - 3, -54, -F.w - 4, cy + 4, -F.w - 1.4, cy - 6); ctx.closePath(); ctx.fillStyle = PR.lin(ctx, -F.w - 12, 0, -F.w, 0, [[0,'#e86a50'], [.6,'#a8362a'], [1,'#4a0e08']]); ctx.fill(); // the tail
   ctx.fillStyle = '#d8a84a'; ctx.fillRect(-F.w - 12, -45, 5.8, 1.2); // its fringed end, a brass bead in it
-  return F; };
+  BP.grip(ctx, 31, 0, .1, -7, 3.6, ['#a07a50', '#5a4026', '#1a1008'], '#8a6448', '#7a2018'); // his hand on the lance
+    return F; };

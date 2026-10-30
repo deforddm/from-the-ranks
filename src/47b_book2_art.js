@@ -218,16 +218,11 @@ Object.assign(POR, {
     ctx.fillStyle = PR.lit(ctx, '#4e3e2c', '#1a120a', -46, -20); PR.path(ctx, [[-46, 4], [-36, 4], [-24, -14], [-31, -19]]); ctx.fill(); // the sleeve
     ctx.fillStyle = PR.lin(ctx, -34, 0, -20, 0, [[0,'#c8a48a'], [.6,'#8a6650'], [1,'#3a2418']]); ctx.beginPath(); ctx.ellipse(-26, -22, 5.2, 6.4, -.5, 0, 7); ctx.fill(); PR.stroke(ctx, 'rgba(60,30,20,.45)', .45, () => { for (let i=0;i<3;i++){ ctx.moveTo(-28 + i*2, -27.6 + i*.6); ctx.lineTo(-25 + i*2, -23 + i*.6); } });
     for (let i=0;i<4;i++){ ctx.strokeStyle = i%2 ? '#9a7a48' : '#d8b880'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(-30 + i*1.2, -15.6 - i*1.4, 5.2, 2, -.6, 0, 7); ctx.stroke(); }
+    BP.sling(ctx, 24, -50, -24, 2, '#3a2a18', 2.6); // the crossbow's sling, across him
     return F; },
   /* Haddat: the head-cloth that is also a bandage, framing a face that has decided something; mail over a long coat; the auxiliary's faded blue on the shield behind her */
   haddat(ctx){ const F = {cy:-76, w:13, h:20.4, jaw:.84, chin:5, skin:'#8e6a4c', iris:'#2a1a0e', lip:'#7a4636', browCol:'#100806', browW:1.6, arch:.6, rim:'#cfc6b4', rimA:.15, nose:1.15, look:.15, smileL:-.35, smileR:-.3, mouthW:4, ears:false};
     // the round shield behind her left shoulder: faded blue, iron rim, the boss; a blue thread at the grip
-    ctx.save(); ctx.translate(-38, -32); ell(ctx, 0, 0, 29, 31, '#121416');
-    ell(ctx, 0, 0, 26.4, 28.4, PR.lin(ctx, -26, -28, 22, 28, [[0,'#7a96aa'], [.45,'#4a6478'], [1,'#141c24']]));
-    ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 26.4, 28.4, 0, 0, 7); ctx.clip(); for (let i=0;i<16;i++){ const r = PR.rng(i + 50); PR.soft(ctx, -22 + r()*40, -24 + r()*46, 3 + r()*7, 2 + r()*4, i%2 ? '#c8c0a8' : '#1a1410', .18); } // the paint gone in patches
-    PR.stroke(ctx, 'rgba(210,220,230,.18)', 1.4, () => { ctx.ellipse(0, 0, 18, 19.6, 0, 0, 7); }); ctx.restore();
-    ctx.strokeStyle = PR.lin(ctx, -28, -30, 28, 30, [[0,'#aaa498'], [.5,'#54504a'], [1,'#141210']]); ctx.lineWidth = 2.8; ctx.beginPath(); ctx.ellipse(0, 0, 27.6, 29.6, 0, 0, 7); ctx.stroke();
-    ell(ctx, 6, 3, 5.6, 6, PR.rad(ctx, 4.6, 1.6, .5, 6, [[0,'#e0dccc'], [.4,'#8a867c'], [1,'#22201c']])); ctx.restore();
     // a long coat under a mail shirt
     PR.torsoPath(ctx, 50, 2); ctx.fillStyle = PR.lit(ctx, '#5a4e42', '#1a1612', -50, 36); ctx.fill();
     ctx.save(); PR.torsoPath(ctx, 50, 2); ctx.clip();
@@ -251,6 +246,14 @@ Object.assign(POR, {
     PR.stroke(ctx, 'rgba(110,40,30,.45)', 1.6, () => { ctx.moveTo(-13.6, top + 7); ctx.quadraticCurveTo(-8, top + 1, -2, top + 2); }); ctx.restore(); // an old stain where it was a bandage once
     PR.stroke(ctx, 'rgba(20,14,10,.5)', .8, () => { ctx.moveTo(0, cy - 15.6); ctx.bezierCurveTo(8.6, cy - 15.6, 12.4, cy - 9, 12.4, cy - 2.4); ctx.bezierCurveTo(12.4, cy + 6, 10.4, cy + 13, 6.4, cy + 17); ctx.quadraticCurveTo(3, cy + 20.2, 0, cy + 20.2); });
     PR.stroke(ctx, '#3a5a8a', .7, () => { ctx.moveTo(-42, 2); ctx.quadraticCurveTo(-46, -6, -44, -12); }); // the blue thread from her mother's veil
+    ctx.save(); ctx.translate(-25, -12); ctx.rotate(-0.18); ctx.scale(0.9, 0.9); ctx.translate(38, 32); // her shield, held in front
+    ctx.save(); ctx.translate(-38, -32); ell(ctx, 0, 0, 29, 31, '#121416');
+    ell(ctx, 0, 0, 26.4, 28.4, PR.lin(ctx, -26, -28, 22, 28, [[0,'#7a96aa'], [.45,'#4a6478'], [1,'#141c24']]));
+    ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, 26.4, 28.4, 0, 0, 7); ctx.clip(); for (let i=0;i<16;i++){ const r = PR.rng(i + 50); PR.soft(ctx, -22 + r()*40, -24 + r()*46, 3 + r()*7, 2 + r()*4, i%2 ? '#c8c0a8' : '#1a1410', .18); } // the paint gone in patches
+    PR.stroke(ctx, 'rgba(210,220,230,.18)', 1.4, () => { ctx.ellipse(0, 0, 18, 19.6, 0, 0, 7); }); ctx.restore();
+    ctx.strokeStyle = PR.lin(ctx, -28, -30, 28, 30, [[0,'#aaa498'], [.5,'#54504a'], [1,'#141210']]); ctx.lineWidth = 2.8; ctx.beginPath(); ctx.ellipse(0, 0, 27.6, 29.6, 0, 0, 7); ctx.stroke();
+    ell(ctx, 6, 3, 5.6, 6, PR.rad(ctx, 4.6, 1.6, .5, 6, [[0,'#e0dccc'], [.4,'#8a867c'], [1,'#22201c']])); ctx.restore();
+    ctx.restore();
     return F; },
   /* Marrow: forty, Napan, sun-cracked, a dry mouth; the wide straw hat, the coat with too many pockets, the faceless wooden Soliel on a cord at her breast, the tally-string */
   marrow(ctx){ const F = {cy:-71, w:12.4, h:19.2, jaw:.72, chin:4.2, skin:'#a48a7c', iris:'#5a5236', lip:'#7a5a5e', browCol:'#5a544e', browW:1.2, arch:1, browL:.6, rim:'#7fb394', rimA:.2, nose:1.05, age:.9, bags:1.1, open:.88, look:-.2, smileL:.25, smileR:-.05, mouthW:3.6};
