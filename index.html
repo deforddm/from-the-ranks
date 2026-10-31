@@ -671,7 +671,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '8.1.0';
+const VERSION = '8.1.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7379,6 +7379,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.1.1', ['Every item in all five books redrawn: lit from the upper left, real steel, leather, wood and bone, a shadow underneath. Bows are strung with no arrow through them; crossbow bolts sit in the groove.']],
   ['8.1.0', ['Every item now shows its numbers the same way, in the sheet, the item view, the Pack and every trader, and every weapon says the damage it does.', 'Each weapon hits its own way: knives quick, axes heavy, spears with reach, crossbows hard.', 'Two trinket places a soldier. Book Four has armour at last; Books One and Five have new weapons.', 'Sixteen trinkets that only looked nice now do something. The spawn shard still does nothing.', 'Allocate gear weighs what a piece does, and nobody is left empty-handed with a blade in the pack. The Pack tab lists the kit and who wears it.']],
   ['8.0.20', ['Tebbet gets a man\'s shoulders under his veil, and his recurve reads properly: thicker limbs, horn nocks, a brighter string.']],
   ['8.0.19', ['Tebbet redone: a brick-brown head-wrap with a sand veil falling onto his shoulders, his face clear, the recurve held in a gloved fist with a bracer, the quiver on his back.']],
@@ -70262,6 +70263,459 @@ const IX_DEBT = /debt|paybook|pay desk|the pay\b|ledger|owe|owed|fine\b|tab\b|do
       const r2 = rollAgain(r); note(`The holed dock turns over in ${NAME(r.who)}'s fingers. The Errant looks this way, once.`); return Object.assign(r2, {ixDock:true}); }
     return r; }; }
 
+/* ---- the item art pass (v8.1.x): every Book One item redrawn to the shared look (see the brief): Book One's warm leather vignette,
+   light from the upper left, a dark outline, a drop shadow and a soft ground shadow, materials that read at 64 px.
+   OVERRIDES of the Arms board (19c_artwork.js) and 46b_b1_items_art.js; those files stay as generated. Each SVG's ids carry its
+   item id (b1i-<id>-…) so nothing bleeds between pictures on one page. ---- */
+(function(){
+  const f = n => Math.round(n * 10) / 10;
+  /* palettes: four stops, lit to dark; 'x' is lit from the upper left, 'xV' top-lit (for pieces drawn in a rotated frame) */
+  const PAL = {
+    steel: ['#f4f6f8', '#c4c9cf', '#8a9098', '#4a4f56'], iron: ['#7a756e', '#48443f', '#272523', '#121110'],
+    wood: ['#a87b4e', '#7a5532', '#4f341c', '#2a1b0e'], ash: ['#d2ad78', '#a8834f', '#7a5a33', '#4a3419'],
+    leather: ['#b07d48', '#85592f', '#5a3a1d', '#2e1d0e'], leatherd: ['#7a5534', '#55391f', '#33210f', '#1a1007'],
+    bone: ['#f6eedb', '#e2d3b2', '#b8a37e', '#7d6a4b'], antler: ['#e2d2ae', '#bba57c', '#8a7350', '#4e3f28'],
+    gold: ['#fbe7a0', '#d8b04c', '#a07a22', '#5a420e'], brass: ['#f0d08a', '#c09a4a', '#86662a', '#4a3812'],
+    bronze: ['#e8b878', '#b58548', '#7e5628', '#43290f'], copper: ['#f0b080', '#c27a46', '#8a4a22', '#4a220c'],
+    toc: ['#97948b', '#77716a', '#5c5244', '#3a3024'], ashgrey: ['#86878a', '#68696d', '#4a4b4f', '#2c2d30'],
+    green: ['#8a9670', '#66734f', '#475234', '#262c1b'], black: ['#4a4a4e', '#2a2a2e', '#151517', '#060607'],
+    blackwood: ['#5a4636', '#33271d', '#1b140e', '#0a0705'], horn: ['#4a3e36', '#2a221d', '#16110e', '#070505'],
+    red: ['#c4473c', '#8e2620', '#5c1410', '#2c0806'], glass: ['#d6ecff', '#6aa0e0', '#2c5ea8', '#0f2a55'],
+    vellum: ['#f0e2bc', '#dcc795', '#b8a06a', '#7d6a40'], tar: ['#6a5840', '#45382a', '#2a2118', '#140f0a'],
+    flint: ['#cfcfca', '#9c9c98', '#6e6f6c', '#3e3f3d'], chitin: ['#56645f', '#232b29', '#0e1211', '#030404'],
+    rag: ['#ddd2b8', '#b9ac8c', '#8c7f62', '#5a4f3a'], velvet: ['#8a3a6a', '#5e1e48', '#3a0e2c', '#1c0414'],
+    pewter: ['#b4b6b4', '#8a8c8a', '#5e605e', '#343634'], blue: ['#5a7ab8', '#2c4a7a', '#1a2e52', '#0c1628'] };
+  const lin = (id, s, v) => `<linearGradient id="${id}" x1="0" y1="0" x2="${v ? 0 : .75}" y2="1">${s.map((c, i) => `<stop offset="${[0, .35, .7, 1][i]}" stop-color="${c}"/>`).join('')}</linearGradient>`;
+  const BASE = {
+    bg: id => `<radialGradient id="${id}" cx=".46" cy=".42" r=".72"><stop offset="0" stop-color="#3a2c1e"/><stop offset="1" stop-color="#120d08"/></radialGradient>`,
+    sh: id => `<radialGradient id="${id}"><stop offset="0" stop-color="#000" stop-opacity=".62"/><stop offset=".55" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`,
+    ds: id => `<filter id="${id}" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="3" dy="5" stdDeviation="2.4" flood-color="#000" flood-opacity=".55"/></filter>` };
+  /* the object's outline: thin, dark, so it reads on the dark ground when small */
+  const O = 'stroke="#0b0806" stroke-opacity=".6" stroke-width="1.2" stroke-linejoin="round"';
+  const sh = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#@sh)"/>`;
+  /* curves: a cubic sampled to points; a band of tapering width along points; a line offset from them */
+  const bez = (a, b, c, d, n = 18) => { const r = []; for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t;
+    r.push([0, 1].map(k => u * u * u * a[k] + 3 * u * u * t * b[k] + 3 * u * t * t * c[k] + t * t * t * d[k])); } return r; };
+  const norms = P => P.map((p, i) => { const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1; return [-dy / l, dx / l]; });
+  const band = (P, w0, w1) => { const N = norms(P), L = P.length - 1, w = i => (w0 + (w1 - w0) * i / L) / 2;
+    const A = P.map((p, i) => [p[0] + N[i][0] * w(i), p[1] + N[i][1] * w(i)]), B = P.map((p, i) => [p[0] - N[i][0] * w(i), p[1] - N[i][1] * w(i)]).reverse();
+    return 'M' + A.concat(B).map(p => f(p[0]) + ' ' + f(p[1])).join(' L') + ' Z'; };
+  const offl = (P, d) => { const N = norms(P); return 'M' + P.map((p, i) => f(p[0] + N[i][0] * d) + ' ' + f(p[1] + N[i][1] * d)).join(' L'); };
+  const join = (...S) => S.reduce((a, s) => a.concat(a.length ? s.slice(1) : s), []);
+
+  function mk(key, label, ground, body, extra){
+    const P = 'b1i-' + key + '-', W = 200, H = 150, defs = {};
+    const src = ground + body;
+    (src.match(/#@[A-Za-z0-9]+/g) || []).concat(['#@bg', '#@ds']).forEach(m => { const n = m.slice(2); if (defs[n]) return;
+      if (BASE[n]) defs[n] = BASE[n](P + n);
+      else if (extra && extra[n]) defs[n] = extra[n].replace('ID', P + n);
+      else if (/V$/.test(n) && PAL[n.slice(0, -1)]) defs[n] = lin(P + n, PAL[n.slice(0, -1)], 1);
+      else if (PAL[n]) defs[n] = lin(P + n, PAL[n], 0); });
+    ART['item/' + key] = (`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}"><defs>${Object.values(defs).join('')}</defs>`
+      + `<rect width="${W}" height="${H}" fill="url(#@bg)"/>${ground}<g filter="url(#@ds)">${body}</g></svg>`).replace(/@/g, P);
+    if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [W, H];
+  }
+  /* long pieces lie on the one diagonal, grip lower left */
+  const diag = (s, body, t = 'translate(100 78)', a = -36) => `<g transform="${t} rotate(${a})${s !== 1 ? ` scale(${s})` : ''}">${body}</g>`;
+
+  /* ======== armour ======== */
+  mk('heater', "Second Army heater shield", sh(102, 139, 54, 7),
+    `<path d="M52 20 Q100 12 148 20 Q152 70 140 98 Q126 124 100 138 Q74 124 60 98 Q48 70 52 20 Z" fill="url(#@wood)" ${O}/>`
+    + `<path d="M76 18 L78 128 M100 15 L100 137 M124 18 L122 128" stroke="#1a1008" stroke-opacity=".55" stroke-width="1.1"/>`
+    + `<path d="M66 40 q4 20 0 40 M88 30 q-3 25 1 50 M112 40 q3 22 -1 44 M134 34 q-4 20 0 42 M70 92 q3 10 8 18" stroke="#d2a870" stroke-opacity=".22" fill="none"/>`
+    + `<path d="M100 15 Q130 14 148 20 Q152 70 140 98 Q126 124 100 138 Z" fill="#000" opacity=".2"/>`
+    + `<path d="M78 54 Q84 38 102 41 Q122 38 126 56 Q132 72 120 85 Q104 98 87 89 Q72 78 78 54 Z" fill="url(#@burn)"/>`
+    + `<path d="M80 50 l-4 -3 M124 60 l5 1 M118 86 l3 4 M86 90 l-3 4" stroke="#8a2e1c" stroke-width="2" opacity=".55" stroke-linecap="round"/>`
+    + `<path d="M52 20 Q100 12 148 20 Q152 70 140 98 Q126 124 100 138 Q74 124 60 98 Q48 70 52 20 Z" fill="none" stroke="url(#@steel)" stroke-width="5"/>`
+    + `<path d="M55 24 Q52 66 62 96" stroke="#fff" stroke-opacity=".6" stroke-width="1.1" fill="none"/><path d="M56 22 Q100 15 144 22" stroke="#fff" stroke-opacity=".45" stroke-width="1" fill="none"/>`
+    + `<path d="M145 30 Q148 70 137 97 Q124 120 100 133" stroke="#000" stroke-opacity=".45" stroke-width="1.2" fill="none"/>`
+    + [[60, 27], [100, 20], [140, 27], [57, 62], [143, 62], [70, 108], [130, 108], [100, 128]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.3" fill="url(#@steel)" ${O}/>`).join('')
+    + `<path d="M146 48 l-4 3 M64 116 l3 -2" stroke="#2a2e33" stroke-width="1.6"/>`,
+    {burn: '<radialGradient id="ID" cx=".48" cy=".48" r=".55"><stop offset="0" stop-color="#050302" stop-opacity=".95"/><stop offset=".6" stop-color="#1a0f07" stop-opacity=".85"/><stop offset="1" stop-color="#3a2412" stop-opacity="0"/></radialGradient>'});
+
+  mk('toccloak', "Toc's spare cloak", sh(100, 139, 64, 6),
+    `<path d="M78 22 Q100 17 124 22 Q138 30 146 44 Q156 84 162 130 Q150 136 138 131 Q126 137 112 132 Q100 138 88 132 Q74 137 62 131 Q50 136 40 129 Q46 92 52 62 Q62 60 66 48 Q68 32 78 22 Z" fill="url(#@tocV)" ${O}/>`
+    + `<path d="M84 34 Q80 84 76 134 L86 133 Q88 84 90 34 Z M108 30 Q110 84 106 136 L116 133 Q116 84 112 30 Z M130 40 Q138 86 140 132 L148 133 Q144 84 134 40 Z M64 70 Q58 100 56 132 L64 132 Q64 100 68 70 Z" fill="#000" opacity=".26"/>`
+    + `<path d="M92 32 Q94 84 94 134 L98 134 Q98 84 96 32 Z M118 34 Q124 84 126 132 L130 132 Q128 84 122 34 Z M72 64 Q68 100 68 132 L71 132 Q71 100 75 64 Z" fill="#fff" opacity=".1"/>`
+    + `<path d="M124 22 Q138 30 146 44 Q156 84 162 130 Q150 136 138 131 Q140 84 132 40 Z" fill="#000" opacity=".22"/>`
+    + `<path d="M78 22 Q100 17 124 22 L126 30 Q100 25 76 30 Z" fill="#3a3024"/><path d="M78 22 Q100 17 124 22" stroke="#c8c4b8" stroke-opacity=".45" fill="none"/>`
+    + `<path d="M52 62 Q62 60 66 48" stroke="#c8c4b8" stroke-opacity=".5" fill="none"/><path d="M53 64 Q64 62 68 49" stroke="#2a2016" stroke-opacity=".6" stroke-width="1.6" fill="none"/>`
+    + `<circle cx="101" cy="28" r="3.6" fill="url(#@iron)" ${O}/><path d="M99 26.5 l2 -1" stroke="#cfcac2" stroke-width=".8"/>`
+    + `<path d="M46 126 l-2 5 M70 132 l1 5 M96 134 l-1 5 M122 132 l2 5 M150 130 l3 4" stroke="#3a3024" stroke-width="1.2"/>`
+    + `<ellipse cx="116" cy="104" rx="9" ry="5" fill="#2a2016" opacity=".35"/>`);
+
+  mk('roadleather', "Gadrobi road-crew leather", sh(100, 138, 58, 6),
+    `<path d="M70 26 Q100 36 130 26 L152 36 Q161 46 158 62 L144 65 L142 128 Q100 135 58 128 L56 65 L42 62 Q39 46 48 36 Z" fill="url(#@leather)" ${O}/>`
+    + `<path d="M70 26 Q100 36 130 26 L127 32 Q100 42 73 32 Z" fill="#3a2412"/>`
+    + `<path d="M142 40 Q152 46 154 60 M144 65 L142 128 Q120 132 100 132" stroke="#000" stroke-opacity=".3" stroke-width="5" fill="none"/>`
+    + `<path d="M73 33 Q100 43 127 33 M47 40 Q43 50 45 59 M153 40 Q157 50 155 59 M61 70 L61 124 M139 70 L139 124 M62 123 Q100 129 138 123" stroke="#e0b080" stroke-opacity=".55" stroke-width=".9" stroke-dasharray="2 2.4" fill="none"/>`
+    + `<path d="M58 66 Q66 72 64 86 M142 66 Q134 72 136 86 M66 108 Q100 114 134 108" stroke="#2a1808" stroke-opacity=".55" stroke-width="1.4" fill="none"/>`
+    + `<ellipse cx="78" cy="56" rx="16" ry="10" fill="#f0c890" opacity=".14"/>`
+    + `<circle cx="100" cy="84" r="24" fill="url(#@scorch)"/>`
+    + `<g fill="#140a04" opacity=".88">${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect x="${87 + c * 9 + (r % 2) * 2}" y="${71 + r * 9}" width="7.5" height="7.5" rx="1"/>`).join('')).join('')}</g>`
+    + `<rect x="84" y="68" width="32" height="31" rx="2" fill="none" stroke="#140a04" stroke-width="1.6" opacity=".85"/>`,
+    {scorch: '<radialGradient id="ID"><stop offset="0" stop-color="#2a1406" stop-opacity=".9"/><stop offset=".7" stop-color="#3a1e0a" stop-opacity=".5"/><stop offset="1" stop-color="#5a3a1d" stop-opacity="0"/></radialGradient>'});
+
+  mk('andiicloak', "Andii-grey cloak", `<ellipse cx="100" cy="78" rx="80" ry="66" fill="url(#@dark)"/>` + sh(100, 139, 62, 6),
+    `<path d="M84 18 Q100 12 116 18 Q126 24 128 36 Q146 62 156 130 Q140 136 124 131 Q100 137 76 131 Q60 136 44 130 Q54 62 72 36 Q74 24 84 18 Z" fill="url(#@ashgreyV)" ${O}/>`
+    + `<path d="M84 18 Q100 30 116 18 Q114 40 100 46 Q86 40 84 18 Z" fill="#2c2d30"/><path d="M86 20 Q100 31 114 20" stroke="#9a9b9e" stroke-opacity=".35" fill="none"/>`
+    + `<path d="M80 50 Q72 92 66 132 L76 131 Q80 92 86 50 Z M100 48 Q102 92 98 136 L108 134 Q108 92 104 48 Z M118 48 Q128 92 132 132 L140 132 Q136 92 124 48 Z" fill="#000" opacity=".24"/>`
+    + `<path d="M90 50 Q88 92 86 134 L90 134 Q92 92 94 50 Z M110 50 Q116 92 118 134 L121 134 Q119 92 113 50 Z" fill="#c8cacc" opacity=".08"/>`
+    + `<path d="M116 18 Q126 24 128 36 Q146 62 156 130 Q140 136 124 131 Q132 80 120 40 Z" fill="#000" opacity=".2"/>`
+    + `<path d="M44 130 Q60 136 76 131 Q100 137 124 131 Q140 136 156 130" stroke="#86878a" stroke-opacity=".25" fill="none"/>`,
+    {dark: '<radialGradient id="ID"><stop offset="0" stop-color="#000" stop-opacity=".5"/><stop offset=".7" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>'});
+
+  mk('scoutcloak', "Malazan scout's cloak", sh(100, 120, 76, 8),
+    `<g transform="translate(98 80) rotate(-14)">`
+    + `<ellipse cx="-66" cy="0" rx="9" ry="22" fill="#3a4428" ${O}/>`
+    + `<rect x="-66" y="-22" width="128" height="44" fill="url(#@greenV)"/><path d="M-66 -22 L62 -22 M-66 22 L62 22" stroke="#0b0806" stroke-opacity=".6" stroke-width="1.2"/>`
+    + `<path d="M-50 -21 Q-46 0 -52 21 M-14 -21 Q-10 0 -16 21 M10 -21 Q14 0 8 21 M44 -21 Q48 0 42 21" stroke="#262c1b" stroke-opacity=".55" stroke-width="1.6" fill="none"/>`
+    + `<path d="M-60 -18 L56 -18" stroke="#c8d0b0" stroke-opacity=".35" stroke-width="1.4"/>`
+    + `<ellipse cx="62" cy="0" rx="9" ry="22" fill="url(#@green)" ${O}/>`
+    + `<path d="M62 0 q3 -2 3 -6 q-1 -8 -6 -8 q-6 2 -6 12 q1 12 8 13 q8 -2 8 -14 q-1 -14 -8 -17" stroke="#262c1b" stroke-width="1.2" fill="none" opacity=".8"/>`
+    + [-34, 28].map(x => `<path d="M${x} -23.5 Q${x + 3} 0 ${x} 23.5 L${x + 7} 23.5 Q${x + 10} 0 ${x + 7} -23.5 Z" fill="url(#@leather)" ${O}/><path d="M${x + 1} -22 Q${x + 4} 0 ${x + 1} 22" stroke="#e0b080" stroke-opacity=".4" stroke-width=".8" stroke-dasharray="2 2" fill="none"/>`).join('')
+    + `<rect x="-35.5" y="-6" width="10" height="8" rx="1.5" fill="none" stroke="url(#@iron)" stroke-width="2"/>`
+    + `<path d="M31 -24 q-6 -8 2 -10 q8 0 2 10 q8 -6 10 0 q-2 6 -10 2" fill="none" stroke="url(#@leather)" stroke-width="2.6"/>`
+    + `<path d="M34 -24 q-4 14 -12 22 M36 -24 q2 12 8 20" stroke="#5a3a1d" stroke-width="2.2" fill="none" stroke-linecap="round"/></g>`);
+
+  /* ======== weapons ======== */
+  mk('clawknife', "Grey cloak's knife", sh(98, 126, 62, 6), diag(1,
+    `<path d="M-68 -5 L-25 -5 L-25 5 L-68 5 Z" fill="url(#@leatherdV)" ${O}/>`
+    + `<path d="M-64 -5 l4 10 M-58 -5 l4 10 M-52 -5 l4 10 M-46 -5 l4 10 M-40 -5 l4 10 M-34 -5 l4 10" stroke="#0b0806" stroke-opacity=".55" stroke-width="1"/>`
+    + `<circle cx="-72" cy="0" r="6" fill="url(#@iron)" ${O}/><path d="M-75 -3 a4 4 0 0 1 4 -2" stroke="#b0aaa2" stroke-width=".9" fill="none"/>`
+    + `<rect x="-26" y="-11" width="5" height="22" rx="1.5" fill="url(#@iron)" ${O}/>`
+    + `<path d="M-21 -6 L52 -6 Q64 -4 74 0 Q62 5 50 6 L-21 6 Z" fill="url(#@steelV)" ${O}/>`
+    + `<path d="M-19 -5 L52 -5 Q62 -3.6 72 0" stroke="#fff" stroke-opacity=".75" stroke-width="1" fill="none"/>`
+    + `<path d="M-19 0.8 L58 0.8" stroke="#4a4f56" stroke-opacity=".55" stroke-width="1.2"/><path d="M-19 4.2 L50 4.2 Q60 3.4 70 0.6" stroke="#dfe3e8" stroke-opacity=".35" fill="none"/>`));
+
+  mk('secondhalberd', "A Second Army halberd", sh(96, 132, 72, 6), diag(.9,
+    `<rect x="-96" y="-3" width="152" height="6" rx="2" fill="url(#@ashV)" ${O}/>`
+    + `<path d="M-88 -1.2 L50 -1.4 M-60 1.4 L20 1.2 M-30 -0.2 L44 0" stroke="#4a3419" stroke-opacity=".5" stroke-width=".7"/><path d="M-90 -2.4 L52 -2.4" stroke="#f0d0a0" stroke-opacity=".45" stroke-width=".8"/>`
+    + `<rect x="-98" y="-4" width="10" height="8" rx="1.5" fill="url(#@ironV)" ${O}/>`
+    + `<rect x="-7" y="-2.8" width="12" height="5.6" fill="#1a0e06" opacity=".85"/><path d="M-4 -1.6 L2 1.6 M-4 1.6 L2 -1.6" stroke="#5a3a1d" stroke-width=".7"/>`
+    + `<path d="M9 -2.4 v4.8 M12 -2.4 v4.8 M15 -2.4 v4.8 M18 -2.4 v4.8 M23 -2.4 v4.8 M26 -2.4 v4.8 M29 -2.4 v4.8 M8 0 L19 -0.6" stroke="#1a0e06" stroke-width=".8" opacity=".9"/>`
+    + `<path d="M54 -4 L50 -16 Q44 -30 46 -38 Q66 -34 86 -36 Q82 -24 76 -16 L72 -4 Z" fill="url(#@steel)" ${O}/>`
+    + `<path d="M47 -37 Q66 -33 85 -35" stroke="#fff" stroke-opacity=".75" stroke-width="1.3" fill="none"/><path d="M56 -6 L52 -18 Q50 -26 52 -32" stroke="#4a4f56" stroke-opacity=".6" fill="none"/>`
+    + `<path d="M66 -34.4 l1 2.4 l1.6 -2.2" fill="#2a1b0e"/>`
+    + `<path d="M58 4 L60 14 Q62 22 70 26 Q64 16 66 4 Z" fill="url(#@steel)" ${O}/>`
+    + `<path d="M66 -3 L100 0 L66 3 Z" fill="url(#@steelV)" ${O}/><path d="M66 -2 L98 -0.2" stroke="#fff" stroke-opacity=".7" stroke-width=".8"/>`
+    + `<rect x="50" y="-5" width="17" height="10" rx="1.5" fill="url(#@ironV)" ${O}/><circle cx="55" cy="0" r="1.3" fill="#c4c9cf"/><circle cx="62" cy="0" r="1.3" fill="#c4c9cf"/>`, 'translate(100 82)', -38));
+
+  {
+    /* the horn bow, strung: string straight between the points where it leaves the recurves, limbs taper, tips curl away from the string */
+    const R = join(bez([0, -14], [30, -14], [60, 2], [80, 14.5]), bez([80, 14.5], [86, 15.5], [90, 12], [93, 6], 8));
+    const Lf = R.map(p => [-p[0], p[1]]);
+    const limb = P => `<path d="${band(P, 11, 3)}" fill="url(#@leatherd)" ${O}/><path d="${band(P.map(p => [p[0], p[1] + 2]), 5.6, 1.6)}" fill="url(#@hornb)"/><path d="${offl(P.slice(2, -6), -3.4)}" stroke="#c8a070" stroke-opacity=".45" stroke-width=".9" fill="none"/>`;
+    mk('rhivibow', "Rhivi horn bow", sh(100, 128, 72, 6), diag(1,
+      `<path d="M-80 16.4 L80 16.4 M80 16.4 C86 17 90 13.6 93.4 7.6 M-80 16.4 C-86 17 -90 13.6 -93.4 7.6" stroke="#e8dcc0" stroke-width="1" fill="none"/>`
+      + limb(R) + limb(Lf)
+      + `<path d="M93 6 l2.6 -3.6 l-0.6 5.2 Z M-93 6 l-2.6 -3.6 l0.6 5.2 Z" fill="url(#@bone)" ${O}/>`
+      + `<rect x="-10" y="-19.5" width="20" height="11" rx="2.5" fill="url(#@leatherV)" ${O}/>`
+      + `<path d="M-7 -19 l3 10 M-3 -19 l3 10 M1 -19 l3 10 M5 -19 l3 10" stroke="#2e1d0e" stroke-opacity=".7" stroke-width=".9"/>`
+      + `<path d="M-9 -18.6 L9 -18.6" stroke="#e0b080" stroke-opacity=".5" stroke-width=".8"/>`, 'translate(100 80)', -34),
+      {hornb: '<linearGradient id="ID" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cdb98e"/><stop offset=".5" stop-color="#efe2c4"/><stop offset="1" stop-color="#cdb98e"/></linearGradient>'});
+  }
+
+  mk('daruknife', "Daru duelling knife", sh(100, 128, 66, 6), diag(1,
+    `<rect x="-58" y="-4" width="38" height="8" rx="2" fill="url(#@leatherdV)" ${O}/>`
+    + `<path d="M-56 -4 l3 8 M-51 -4 l3 8 M-46 -4 l3 8 M-41 -4 l3 8 M-36 -4 l3 8 M-31 -4 l3 8 M-26 -4 l3 8" stroke="#c09a4a" stroke-opacity=".6" stroke-width=".7"/>`
+    + `<circle cx="-62" cy="0" r="5.4" fill="url(#@brass)" ${O}/>`
+    + `<path d="M-20 -5 C-28 -24 -50 -24 -60 -5 M-20 -5 C-30 -17 -48 -17 -58 -4 M-20 5 C-28 22 -50 22 -60 5 M-20 4 C-30 15 -48 15 -58 4" stroke="#2a1d08" stroke-width="2.6" fill="none" opacity=".6"/>`
+    + `<path d="M-20 -5 C-28 -24 -50 -24 -60 -5 M-20 -5 C-30 -17 -48 -17 -58 -4 M-20 5 C-28 22 -50 22 -60 5 M-20 4 C-30 15 -48 15 -58 4 M-34 -19 L-36 19 M-46 -19 L-46 18" stroke="url(#@brass)" stroke-width="1.5" fill="none"/>`
+    + `<path d="M-26 -21 C-34 -24 -46 -23 -54 -16" stroke="#fff4d0" stroke-opacity=".6" stroke-width=".7" fill="none"/>`
+    + `<rect x="-21" y="-8" width="4" height="16" rx="1.4" fill="url(#@brass)" ${O}/>`
+    + `<path d="M-17 -3.6 L70 -2 L88 0 L70 2 L-17 3.6 Z" fill="url(#@steelV)" ${O}/>`
+    + `<path d="M-15 -2.8 L70 -1.4 L86 -0.2" stroke="#fff" stroke-opacity=".8" stroke-width=".8" fill="none"/><path d="M-15 0.4 L80 0.3" stroke="#5a6068" stroke-opacity=".6" stroke-width=".8"/>`, 'translate(100 80)', -36));
+
+  {
+    /* the Daru roof-crossbow, cocked: prod square across the stock, string back to the nut, the quarrel resting in the groove on top */
+    const PR = bez([58, 0], [61, 14], [58, 30], [46, 43], 12), PL = PR.map(p => [p[0], -p[1]]);
+    mk('darucrossbow', "A Daru roof-crossbow", sh(98, 130, 74, 7), diag(.95,
+      `<path d="M-52 7 L-2 7 L-2 17 L-52 17 Z" fill="url(#@leatherdV)" ${O}/>`
+      + [9.5, 12, 14.5].map(y => `<path d="M-50 ${y} L-62 ${y}" stroke="#a8834f" stroke-width="1.2"/><path d="M-54 ${y} L-62 ${y - 1.8} L-62 ${y} Z" fill="#e0d4b4" stroke="#0b0806" stroke-opacity=".5" stroke-width=".4"/>`).join('')
+      + `<path d="M-42 6 v12 M-12 6 v12" stroke="#2e1d0e" stroke-width="3"/>`
+      + `<path d="M-90 -9 L-60 -7 L-20 -5 L60 -5 L66 -3 L66 3 L60 5 L-20 5 L-60 8.5 L-90 10.5 Q-95 0 -90 -9 Z" fill="url(#@blackwoodV)" ${O}/>`
+      + `<path d="M-88 -7.6 L-60 -5.8 L-20 -4 L60 -4" stroke="#a88a6a" stroke-opacity=".4" stroke-width=".8" fill="none"/><path d="M-70 -2 Q-50 -3 -30 -1 M-80 4 Q-60 3 -40 4" stroke="#6a5240" stroke-opacity=".35" stroke-width=".6" fill="none"/>`
+      + `<path d="M-91 -9 L-87 -9 L-86 10.6 L-91 10.6 Q-95 0 -91 -9 Z" fill="url(#@brass)"/>`
+      + `<path d="M-16 5 Q-30 14 -54 13" stroke="url(#@brass)" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
+      + `<path d="M-30 -7 L-33 -16 Q-35 -21 -30 -21 Q-26 -21 -27 -17" stroke="url(#@iron)" stroke-width="2" fill="none"/>`
+      + `<path d="M-14 -5 L60 -5" stroke="#000" stroke-opacity=".0"/><path d="M-12 0 L64 0" stroke="#050403" stroke-width="1.8"/><path d="M-12 -1.4 L64 -1.4" stroke="#a88a6a" stroke-opacity=".35" stroke-width=".5"/>`
+      + `<rect x="-16" y="-5.5" width="11" height="11" rx="1.5" fill="url(#@brass)" ${O}/><circle cx="-8.5" cy="0" r="3.2" fill="url(#@brass)" ${O}/>`
+      + `<rect x="52" y="-5.6" width="6" height="11.2" fill="url(#@brass)" ${O}/>`
+      + `<path d="M46 -43 L-8 -2.6 M46 43 L-8 2.6" stroke="#e2d6ba" stroke-width="1"/>`
+      + `<path d="${band(PR, 6.5, 2.6)}" fill="url(#@steel)" ${O}/><path d="${band(PL, 6.5, 2.6)}" fill="url(#@steel)" ${O}/>`
+      + `<path d="${offl(PL, 2.2)}" stroke="#d8dde2" stroke-opacity=".6" stroke-width=".9" fill="none"/><path d="${offl(PR.slice(0, 9), -2.2)}" stroke="#d8dde2" stroke-opacity=".35" stroke-width=".8" fill="none"/>`
+      + `<path d="M54 -7 L62 -5 M54 -4 L62 -2 M54 2 L62 4 M54 5 L62 7" stroke="#5a3a1d" stroke-width="1.4"/>`
+      + `<path d="M-6 1.6 L66 1.6" stroke="#000" stroke-opacity=".5" stroke-width="1.6"/>`
+      + `<rect x="-6" y="-1" width="72" height="2" fill="url(#@ashV)"/>`
+      + `<path d="M-6 -1 L4 -1 L-2 -5 Z M-6 1 L4 1 L-2 5 Z" fill="#cdbf9c" ${O}/>`
+      + `<path d="M66 -2.8 L78 0 L66 2.8 Z" fill="url(#@steelV)" ${O}/><path d="M66.5 -2 L77 0" stroke="#fff" stroke-opacity=".7" stroke-width=".6"/>`, 'translate(98 80)', -30));
+  }
+
+  mk('guildblade', "Guild blade", sh(100, 126, 58, 6), diag(1,
+    `<rect x="-62" y="-4" width="38" height="8" rx="2" fill="url(#@blackV)" ${O}/>`
+    + `<path d="M-60 -4 l3 8 M-55 -4 l3 8 M-50 -4 l3 8 M-45 -4 l3 8 M-40 -4 l3 8 M-35 -4 l3 8 M-30 -4 l3 8" stroke="#3e3a34" stroke-width="1"/>`
+    + `<circle cx="-64" cy="0" r="4.2" fill="url(#@iron)" ${O}/>`
+    + `<path d="M-24 -6 L44 -6 Q56 -4 66 0 Q56 4 44 6 L-24 6 Z" fill="url(#@blackV)" ${O}/>`
+    + `<path d="M-22 -5.4 L44 -5.4 Q55 -3.8 64 -0.3" stroke="#e8ecf0" stroke-opacity=".85" stroke-width="1.1" fill="none"/>`
+    + `<path d="M-22 5.4 L44 5.4 Q55 3.8 64 0.3" stroke="#b8bec6" stroke-opacity=".6" stroke-width="1" fill="none"/>`
+    + `<path d="M-14 -6 l1.4 1.6 l1.2 -1.6 M-6 -6 l1.4 1.8 l1.2 -1.8" stroke="#0b0806" stroke-width=".9" fill="none"/>`
+    + `<ellipse cx="10" cy="1" rx="12" ry="2" fill="#4a4a4e" opacity=".35"/>`, 'translate(100 80)', -36));
+
+  mk('barrowflint', "Barrow-flint blade", sh(100, 128, 66, 6), diag(1,
+    `<path d="M-86 -5 Q-60 -8 -14 -6 L-14 6 Q-60 8 -86 6 Q-93 0 -86 -5 Z" fill="url(#@antlerV)" ${O}/>`
+    + `<path d="M-70 -6 Q-74 -14 -70 -18 Q-64 -16 -64 -7 Z" fill="url(#@antler)" ${O}/>`
+    + `<path d="M-86 -6 q-3 3 -1 6 q-3 3 1 6 M-80 -4 q6 1 10 0 M-58 3 q8 1 14 -1 M-46 -4 q10 1 18 -1" stroke="#4e3f28" stroke-opacity=".7" stroke-width=".8" fill="none"/>`
+    + `<path d="M-84 -4.4 Q-60 -7 -16 -5.2" stroke="#fff8e6" stroke-opacity=".5" stroke-width=".8" fill="none"/>`
+    + `<path d="M-10 -5 Q20 -16 50 -12 Q72 -6 88 0 Q72 7 50 12 Q20 16 -10 5 Z" fill="#dcd8cc" opacity=".75" ${O}/>`
+    + `<path d="M-8 -3.4 Q20 -12.4 50 -9 Q70 -4 84 0 Q70 4.6 50 9 Q20 12.4 -8 3.4 Z" fill="url(#@flint)"/>`
+    + [0, 12, 24, 36, 48, 60, 70].map(x => `<path d="M${x} ${-12 + Math.abs(x - 30) * .12} q5 5 10 0" stroke="#585956" stroke-opacity=".55" stroke-width=".8" fill="none"/><path d="M${x + 4} ${12 - Math.abs(x - 34) * .12} q5 -5 10 0" stroke="#585956" stroke-opacity=".55" stroke-width=".8" fill="none"/>`).join('')
+    + `<path d="M-6 -0.5 Q30 -2 84 0" stroke="#efefe8" stroke-opacity=".5" stroke-width=".8" fill="none"/><path d="M-8 -4.6 Q20 -15 50 -11.2 Q72 -5.4 86 -0.4" stroke="#fff" stroke-opacity=".55" stroke-width=".7" fill="none"/>`
+    + `<path d="M-22 -6.4 L-6 -6.4 L-6 6.4 L-22 6.4 Z" fill="url(#@ragV)" opacity=".9"/>`
+    + `<path d="M-22 -6 l4 12 M-18 -6 l4 12 M-14 -6 l4 12 M-10 -6 l4 12 M-22 -2 l16 3" stroke="#6a5a3c" stroke-width=".9"/>`, 'translate(100 80)', -36));
+
+  mk('darusword', "A Daru house-guard's sword", sh(98, 134, 72, 6), diag(.92,
+    `<rect x="-88" y="-4.5" width="32" height="9" rx="2" fill="url(#@leatherdV)" ${O}/>`
+    + `<path d="M-86 -4.5 l3 9 M-81 -4.5 l3 9 M-76 -4.5 l3 9 M-71 -4.5 l3 9 M-66 -4.5 l3 9 M-61 -4.5 l3 9" stroke="#8a9098" stroke-opacity=".55" stroke-width=".8"/>`
+    + `<circle cx="-95" cy="0" r="9" fill="url(#@steel)" ${O}/><circle cx="-95" cy="0" r="6.4" fill="none" stroke="#4a4f56" stroke-width=".8"/>`
+    + `<path d="M-98 -3.5 L-92 -3.5 L-92 1 Q-95 4 -98 1 Z" fill="#5a6068"/><path d="M-96.5 -2 h3" stroke="#e8ecf0" stroke-width=".6"/>`
+    + `<rect x="-57" y="-20" width="5" height="40" rx="2" fill="url(#@steel)" ${O}/><path d="M-56 -19 v38" stroke="#fff" stroke-opacity=".6" stroke-width=".7"/>`
+    + `<path d="M-52 -6 L82 -5 Q94 -3 104 0 Q94 3 82 5 L-52 6 Z" fill="url(#@steelV)" ${O}/>`
+    + `<rect x="-48" y="-1.4" width="100" height="2.8" rx="1.4" fill="#5e646c"/><path d="M-48 -1.4 L52 -1.4" stroke="#2e3238" stroke-width=".6"/>`
+    + `<path d="M-50 -5.2 L82 -4.2 Q93 -2.6 102 -0.2" stroke="#fff" stroke-opacity=".8" stroke-width="1" fill="none"/><path d="M-50 4.4 L82 3.6 Q92 2.4 100 0.4" stroke="#dfe3e8" stroke-opacity=".3" fill="none"/>`, 'translate(100 80)', -38));
+
+  mk('simtalhalberd', "House guard's halberd", sh(96, 132, 72, 6), diag(.9,
+    `<rect x="-96" y="-3" width="150" height="6" rx="2" fill="url(#@woodV)" ${O}/>`
+    + `<path d="M-90 -2.2 L50 -2.2" stroke="#f0c890" stroke-opacity=".5" stroke-width=".8"/><path d="M-80 1 L20 0.8 M-40 -0.6 L40 -0.4" stroke="#2a1b0e" stroke-opacity=".45" stroke-width=".6"/>`
+    + `<rect x="-98" y="-4" width="9" height="8" rx="1.5" fill="url(#@brassV)" ${O}/>`
+    + `<path d="M40 2 Q36 14 30 24 L36 24 Q42 14 44 3 Z M44 2 Q44 16 42 28 L47 26 Q48 14 47 3 Z" fill="url(#@blue)" ${O}/>`
+    + `<rect x="38" y="-4" width="9" height="8" rx="1.6" fill="url(#@blueV)" ${O}/><path d="M40 -4 v8 M44 -4 v8" stroke="#a8b8d8" stroke-opacity=".5" stroke-width=".6"/>`
+    + `<path d="M54 -4 Q42 -18 46 -40 Q60 -30 86 -38 Q78 -20 74 -4 Z" fill="url(#@steel)" ${O}/>`
+    + `<circle cx="64" cy="-20" r="4.2" fill="#140e08" ${O}/><path d="M60 -20 a4.2 4.2 0 0 1 4.2 -4.2" stroke="#fff" stroke-opacity=".5" stroke-width=".7" fill="none"/>`
+    + `<path d="M52 -10 q4 -4 8 0 q4 4 8 0 M70 -30 q-4 2 -6 -2" stroke="#6a7078" stroke-width=".7" fill="none"/>`
+    + `<path d="M47 -39 Q60 -29 85 -37" stroke="#fff" stroke-opacity=".85" stroke-width="1.4" fill="none"/>`
+    + `<path d="M58 4 L64 18 L70 4 Z" fill="url(#@steel)" ${O}/>`
+    + `<path d="M66 -3 L102 0 L66 3 Z" fill="url(#@steelV)" ${O}/><path d="M66 -2 L100 -0.2" stroke="#fff" stroke-opacity=".75" stroke-width=".8"/>`
+    + `<rect x="50" y="-5" width="17" height="10" rx="1.5" fill="url(#@brassV)" ${O}/><path d="M52 -3.6 h13" stroke="#fff4d0" stroke-opacity=".5" stroke-width=".7"/>`, 'translate(100 82)', -38));
+
+  mk('blackedblade', "Blacked Guild blade", sh(98, 132, 70, 6), diag(.92,
+    `<rect x="-84" y="-4.5" width="32" height="9" rx="2" fill="url(#@blackV)" ${O}/>`
+    + `<path d="M-82 -4.5 l3 9 M-77 -4.5 l3 9 M-72 -4.5 l3 9 M-67 -4.5 l3 9 M-62 -4.5 l3 9 M-57 -4.5 l3 9" stroke="#3a3836" stroke-width="1"/>`
+    + `<circle cx="-89" cy="0" r="6" fill="url(#@black)" ${O}/><rect x="-53" y="-11" width="4" height="22" rx="1.5" fill="url(#@black)" ${O}/>`
+    + `<path d="M-49 -5.5 L80 -4.5 Q92 -2.6 100 0 Q92 2.6 80 4.5 L-49 5.5 Z" fill="url(#@blackV)" ${O}/>`
+    + `<path d="M-47 -4.8 L80 -3.8 Q91 -2.2 98 -0.2" stroke="#5a5c62" stroke-opacity=".6" stroke-width=".8" fill="none"/><path d="M-46 0 L86 0" stroke="#000" stroke-opacity=".7" stroke-width=".9"/>`
+    + `<ellipse cx="-10" cy="-1" rx="20" ry="2.2" fill="#3a3a3e" opacity=".35"/><ellipse cx="40" cy="1.4" rx="14" ry="1.6" fill="#3a3a3e" opacity=".3"/>`, 'translate(100 80)', -38));
+
+  /* ======== trinkets ======== */
+  mk('houndtooth', "Hound's tooth", `<ellipse cx="102" cy="76" rx="70" ry="42" fill="url(#@warm)"/>` + sh(100, 124, 62, 7), diag(1,
+    `<path d="M-58 -24 Q-10 -30 26 -16 Q52 -4 64 30 Q46 10 24 6 Q-12 4 -58 22 L-51 12 L-60 5 L-50 -2 L-59 -12 Z" fill="url(#@boneV)" ${O}/>`
+    + `<path d="M-58 -24 Q-48 -25 -40 -25 L-40 17 Q-50 19 -58 22 L-51 12 L-60 5 L-50 -2 L-59 -12 Z" fill="#8a6d44" opacity=".6"/>`
+    + `<path d="M-40 -25 Q-38 -4 -40 17" stroke="#6d5838" stroke-opacity=".7" stroke-width="1.2" fill="none"/>`
+    + `<path d="M-32 -25 Q4 -27 28 -14 Q50 -2 61 24" stroke="#fffaf0" stroke-opacity=".75" stroke-width="1.4" fill="none"/>`
+    + `<path d="M-30 -6 Q6 -10 36 2" stroke="#fff" stroke-opacity=".25" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    + `<path d="M-30 12 Q4 4 34 10 Q48 16 58 26" stroke="#7d6a4b" stroke-opacity=".55" stroke-width="1.2" fill="none"/><path d="M-8 -22 l3 7 M12 -18 l2 6" stroke="#b8a37e" stroke-width=".8"/>`, 'translate(102 70)', -18),
+    {warm: '<radialGradient id="ID"><stop offset="0" stop-color="#ff9a40" stop-opacity=".16"/><stop offset="1" stop-color="#ff9a40" stop-opacity="0"/></radialGradient>'});
+
+  mk('cadretoken', "Cadre token", sh(100, 130, 40, 6),
+    `<path d="M97 62 C68 44 58 14 96 12 C134 10 132 42 103 62" stroke="#2e1d0e" stroke-width="3.6" fill="none" stroke-linecap="round"/>`
+    + `<path d="M96 60 C70 42 62 16 96 14" stroke="#8a6040" stroke-width="1" fill="none" opacity=".7"/><path d="M96 12 l-3 -5 M98 12 l4 -5" stroke="#2e1d0e" stroke-width="2.6" stroke-linecap="round"/>`
+    + `<circle cx="101" cy="96" r="33" fill="url(#@boneedge)" ${O}/>`
+    + `<circle cx="99" cy="93" r="32" fill="url(#@bone)" ${O}/>`
+    + `<path d="M74 78 A30 30 0 0 1 112 64" stroke="#fffaf0" stroke-opacity=".7" stroke-width="1.4" fill="none"/>`
+    + `<circle cx="99" cy="95" r="21" fill="none" stroke="#5a4a32" stroke-width="1.6"/><circle cx="99.7" cy="95.7" r="21" fill="none" stroke="#fffaf0" stroke-opacity=".45" stroke-width=".7"/>`
+    + `<path d="M99 80 L99 110 M92 88 L106 88 M90 102 L99 110 L108 102" stroke="#5a4a32" stroke-width="1.8" fill="none" stroke-linecap="round"/>`
+    + `<path d="M99.7 80.7 L99.7 110.7 M92.7 88.7 L106.7 88.7" stroke="#fffaf0" stroke-opacity=".45" stroke-width=".6" fill="none"/>`
+    + `<circle cx="99" cy="66" r="3.6" fill="#1a1008"/><path d="M99 62.4 C98 60 98 58 97 56 M99 62.4 C100 60 101 58 103 56" stroke="#2e1d0e" stroke-width="3" fill="none"/>`
+    + `<path d="M120 112 l4 3 M78 110 l-3 2" stroke="#8f7c5c" stroke-width="1"/>`,
+    {boneedge: '<linearGradient id="ID" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9c8762"/><stop offset="1" stop-color="#4e3f28"/></linearGradient>'});
+
+  mk('barrowtorc', "Barrow torc", sh(100, 120, 66, 9),
+    `<path d="M79.5 106 A60 34 0 1 1 120.5 106" stroke="#0b0806" stroke-opacity=".7" stroke-width="13" fill="none" stroke-linecap="round"/>`
+    + `<path d="M79.5 106 A60 34 0 1 1 120.5 106" stroke="url(#@iron)" stroke-width="10.4" fill="none"/>`
+    + `<path d="M79.5 106 A60 34 0 1 1 120.5 106" stroke="#a09a90" stroke-opacity=".26" stroke-width="10" stroke-dasharray="2.4 4.6" fill="none"/>`
+    + `<path d="M79.5 106 A60 34 0 1 1 120.5 106" stroke="#000" stroke-opacity=".45" stroke-width="10" stroke-dasharray="2.4 4.6" stroke-dashoffset="3.6" fill="none"/>`
+    + `<path d="M46 66 A57 30 0 0 1 128 44" stroke="#c8d4dc" stroke-opacity=".4" stroke-width="1.4" fill="none"/>`
+    + `<path d="M156 70 A58 32 0 0 1 128 104" stroke="#000" stroke-opacity=".35" stroke-width="3" fill="none"/>`
+    + `<circle cx="78" cy="108" r="7.6" fill="url(#@iron)" ${O}/><circle cx="122" cy="108" r="7.6" fill="url(#@iron)" ${O}/>`
+    + `<path d="M74 104 a5 5 0 0 1 6 -2 M118 104 a5 5 0 0 1 6 -2" stroke="#c8d4dc" stroke-opacity=".55" stroke-width="1" fill="none"/>`
+    + `<circle cx="78" cy="108" r="3" fill="none" stroke="#121110" stroke-width="1"/><circle cx="122" cy="108" r="3" fill="none" stroke="#121110" stroke-width="1"/>`);
+
+  mk('secondbadge', "Second Army badge, wrong regiment", sh(102, 128, 38, 6),
+    `<g transform="rotate(-8 100 74)"><path d="M68 32 Q100 22 132 32 L132 70 Q130 100 100 118 Q70 100 68 70 Z" fill="url(#@bronze)" ${O}/>`
+    + `<path d="M74 37 Q100 29 126 37 L126 70 Q124 95 100 111 Q76 95 74 70 Z" fill="none" stroke="#43290f" stroke-opacity=".7" stroke-width="1.4"/>`
+    + `<path d="M70 34 Q100 24 130 34 M70 36 L70 70 Q72 96 96 114" stroke="#fde0a8" stroke-opacity=".6" stroke-width="1.2" fill="none"/>`
+    + `<path d="M132 34 L132 70 Q130 100 100 118" stroke="#2a1806" stroke-opacity=".5" stroke-width="1.6" fill="none"/>`
+    + `<text x="101.2" y="84.2" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="30" fill="#3a2208" opacity=".85">IX</text>`
+    + `<text x="99.2" y="82.2" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="30" fill="#f6d8a0" opacity=".7">IX</text>`
+    + `<text x="100" y="83" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="30" fill="#a06e36">IX</text>`
+    + `<path d="M88 48 L100 42 L112 48" stroke="#43290f" stroke-width="1.6" fill="none"/>`
+    + `<ellipse cx="80" cy="98" rx="4" ry="2.6" fill="#5a8a6a" opacity=".45"/><ellipse cx="124" cy="52" rx="3" ry="2" fill="#5a8a6a" opacity=".4"/>`
+    + `<path d="M132 58 L142 56" stroke="url(#@steel)" stroke-width="1.6" stroke-linecap="round"/></g>`);
+
+  mk('brackcoin', "Oponn's Own Coin", sh(108, 126, 66, 7),
+    `<ellipse cx="156" cy="92" rx="14" ry="32" fill="#4a220c" transform="rotate(14 156 92)" ${O}/>`
+    + `<ellipse cx="152" cy="91" rx="13" ry="32" fill="url(#@copper)" transform="rotate(14 152 91)" ${O}/>`
+    + `<g transform="rotate(14 152 91)"><ellipse cx="152" cy="91" rx="10" ry="27" fill="none" stroke="#8a4a22" stroke-width="1"/><path d="M149 102 Q148 92 150 86 Q149 80 152 76 Q156 72 157 78 L158 82 Q157 88 156 92 Q155 98 157 102 Z" fill="#a85e30" stroke="#5e3218" stroke-width=".6"/></g>`
+    + `<circle cx="84" cy="80" r="40" fill="#4a220c" transform="translate(2 2)"/>`
+    + `<circle cx="84" cy="80" r="40" fill="url(#@copper)" ${O}/>`
+    + `<circle cx="84" cy="80" r="34" fill="none" stroke="#5e3218" stroke-opacity=".7" stroke-width="1.2"/>`
+    + `<path d="M50 70 A36 36 0 0 1 98 45" stroke="#ffd8b0" stroke-opacity=".7" stroke-width="1.4" fill="none"/><path d="M120 92 A36 36 0 0 1 86 116" stroke="#2a1006" stroke-opacity=".55" stroke-width="1.4" fill="none"/>`
+    + Array.from({length: 28}, (_, i) => { const a = i / 28 * Math.PI * 2; return `<circle cx="${f(84 + Math.cos(a) * 37)}" cy="${f(80 + Math.sin(a) * 37)}" r=".9" fill="#5e3218" opacity=".7"/>`; }).join('')
+    + `<path d="M72 104 Q70 90 74 80 Q71 72 77 64 Q86 54 98 58 Q105 62 103 69 L108 75 L102 77 Q104 83 99 87 Q96 95 103 104 Z" fill="#b06a3a" stroke="#4a220c" stroke-opacity=".7" stroke-width="1"/>`
+    + `<path d="M74 80 Q71 72 77 64 Q86 54 98 58" stroke="#ffd0a0" stroke-opacity=".75" stroke-width="1.2" fill="none"/><path d="M102 77 Q104 83 99 87 Q96 95 103 104" stroke="#3a1606" stroke-opacity=".6" stroke-width="1.2" fill="none"/>`
+    + `<circle cx="93" cy="68" r="1.4" fill="#5e3218"/><path d="M80 66 q6 -4 12 -4" stroke="#7a3e18" stroke-width="1" fill="none"/>`);
+
+  mk('hoodrep', "Hood's Repellent", sh(102, 126, 38, 6),
+    `<path d="M112 48 C140 42 160 24 146 14 C132 6 108 10 96 20 C88 28 86 40 89 48" stroke="#2e1d0e" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    + `<path d="M112 48 C140 42 160 24 146 14" stroke="#8a6040" stroke-width="1" fill="none" opacity=".6"/>`
+    + `<path d="M84 62 Q70 72 70 96 Q70 122 100 124 Q130 122 130 96 Q130 72 116 62 L112 52 L112 42 L88 42 L88 52 Z" fill="url(#@glass)" opacity=".95" ${O}/>`
+    + `<path d="M74 98 Q74 120 100 121 Q126 120 126 98 Q114 104 100 100 Q86 96 74 98 Z" fill="#0a1a3a" opacity=".55"/>`
+    + `<path d="M120 70 Q128 82 126 104 Q120 116 108 120" stroke="#0a1a3a" stroke-opacity=".5" stroke-width="3" fill="none"/>`
+    + `<path d="M80 74 Q75 92 80 110" stroke="#fff" stroke-opacity=".6" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="84" cy="68" r="2" fill="#fff" opacity=".7"/>`
+    + `<rect x="85" y="37" width="30" height="7" rx="2.5" fill="url(#@glass)" ${O}/>`
+    + `<rect x="89" y="23" width="22" height="15" rx="3" fill="url(#@wood)" ${O}/><path d="M92 28 h3 M101 32 h2 M95 34 h2 M104 26 h2" stroke="#2a1b0e" stroke-width="1"/>`
+    + `<ellipse cx="100" cy="48" rx="13" ry="3.4" fill="none" stroke="url(#@leather)" stroke-width="2.6"/>`
+    + `<path d="M86 48 q-6 6 -4 14" stroke="#5a3a1d" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    + `<path d="M88 82 L114 80 L115 100 L89 102 Z" fill="url(#@vellum)" ${O}/><path d="M92 87 h18 M92 92 h14 M92 97 h17" stroke="#3a2a14" stroke-width=".9" opacity=".7"/>`);
+
+  mk('spawnshard', "Genuine Shard of Moon's Spawn", sh(104, 126, 78, 8),
+    `<path d="M24 112 Q20 92 34 80 Q42 70 52 74 Q60 70 66 78 Q80 90 76 112 Q50 122 24 112 Z" fill="url(#@velvet)" ${O}/>`
+    + `<path d="M36 78 Q48 86 62 78" stroke="#c8a060" stroke-width="1.6" fill="none"/><path d="M52 82 q-6 12 -14 16 M54 82 q4 10 2 18" stroke="#c8a060" stroke-width="1.2" fill="none"/>`
+    + `<path d="M30 96 Q40 104 50 100 M58 106 Q66 100 70 92" stroke="#000" stroke-opacity=".35" stroke-width="2" fill="none"/>`
+    + `<path d="M96 40 L124 32 L148 52 L152 82 L134 106 L104 110 L84 90 L82 60 Z" fill="#0a0a0c" ${O}/>`
+    + `<path d="M96 40 L124 32 L118 56 L94 62 Z" fill="#3a3a44"/><path d="M82 60 L94 62 L104 86 L84 90 Z" fill="#1c1c22"/>`
+    + `<path d="M124 32 L148 52 L130 66 L118 56 Z" fill="#26262e"/><path d="M118 56 L130 66 L126 90 L104 86 L94 62 Z" fill="#131318"/>`
+    + `<path d="M148 52 L152 82 L134 106 L126 90 L130 66 Z" fill="#08080a"/><path d="M104 86 L126 90 L134 106 L104 110 Z" fill="#0e0e12"/>`
+    + `<path d="M96 40 L124 32 L148 52 M82 60 L96 40 M94 62 L118 56 L124 32" stroke="#e8ecf4" stroke-opacity=".55" stroke-width=".9" fill="none"/>`
+    + `<path d="M100 44 L112 41" stroke="#fff" stroke-opacity=".85" stroke-width="1.6" stroke-linecap="round"/>`
+    + `<g transform="rotate(-10 150 116)"><rect x="124" y="102" width="52" height="30" rx="1.5" fill="url(#@vellum)" ${O}/>`
+    + `<path d="M130 110 h36 M130 115 h40 M130 120 h28" stroke="#3a2a14" stroke-width=".9" opacity=".7"/><path d="M136 107 q4 -3 8 0 q4 3 8 0 q4 -3 8 0" stroke="#3a2a14" stroke-width=".9" fill="none"/>`
+    + `<path d="M166 126 l-3 10 M168 126 l3 9" stroke="#8e2620" stroke-width="2"/><circle cx="167" cy="125" r="5.4" fill="url(#@red)" ${O}/><circle cx="166" cy="124" r="2" fill="#e0726a" opacity=".5"/></g>`);
+
+  mk('tyrantmap', "Map to the Tyrant's Hoard", sh(102, 132, 84, 8),
+    `<path d="M24 30 L172 22 Q182 22 180 32 L184 118 L22 126 Q18 80 24 30 Z" fill="url(#@vellum)" ${O}/>`
+    + `<path d="M172 22 Q182 22 180 32 Q172 34 170 26 Z" fill="#b8a06a" ${O}/>`
+    + `<path d="M30 36 L166 29 L172 112 L30 119 Z" fill="none" stroke="#5a3e1e" stroke-opacity=".6" stroke-width="1"/><path d="M33 39 L163 32 L169 109 L33 116 Z" fill="none" stroke="#5a3e1e" stroke-opacity=".4" stroke-width=".6"/>`
+    + `<path d="M58 84 l8 -12 l8 12 M70 86 l9 -15 l9 15 M90 80 l7 -10 l7 10 M62 78 l3 2 M75 76 l3 2" stroke="#4a3418" stroke-width="1.3" fill="none"/>`
+    + `<path d="M106 92 Q120 86 134 92" stroke="#4a3418" stroke-width=".9" stroke-dasharray="2 2" fill="none"/>`
+    + `<path d="M132 74 l10 10 M142 74 l-10 10" stroke="#8e2620" stroke-width="2.6" stroke-linecap="round"/>`
+    + `<path d="M38 104 q6 -8 12 0 q6 8 12 0 q6 -8 12 0 M38 104 l-4 -3 l1 5" stroke="#2c5a5a" stroke-opacity=".8" stroke-width="1.3" fill="none"/><circle cx="35" cy="102" r=".9" fill="#2c5a5a"/>`
+    + `<path d="M150 46 q5 -6 10 0 q5 6 10 0" stroke="#2c5a5a" stroke-opacity=".7" stroke-width="1.1" fill="none"/>`
+    + `<path d="M44 48 q6 -8 10 0 q2 6 8 -2 q4 -6 8 2 q4 4 8 -4 M84 46 q8 -4 14 0 q4 4 10 -2 q6 -4 10 2 M44 58 h50 M44 62 h36" stroke="#3a2a14" stroke-width="1" fill="none" opacity=".75"/>`
+    + `<circle cx="150" cy="100" r="7" fill="none" stroke="#4a3418" stroke-width=".9"/><path d="M150 90 L150 110 M140 100 L160 100" stroke="#4a3418" stroke-width=".8"/>`
+    + [[60, 40, 4], [128, 60, 3], [46, 92, 3.5], [112, 108, 5], [160, 76, 2.6], [96, 66, 2]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#8a5a28" opacity=".28"/>`).join('')
+    + `<path d="M180 32 L184 118 L120 121 Q160 116 176 108 Z" fill="#000" opacity=".12"/>`);
+
+  mk('lampchip', "Blue-glass lamp-chip", `<ellipse cx="106" cy="126" rx="26" ry="5" fill="#3c7ad0" opacity=".14"/>` + sh(100, 126, 34, 5),
+    `<path d="M102 70 C96 50 82 32 66 16 M102 70 C110 48 124 30 136 16" stroke="#2e1d0e" stroke-width="2.4" fill="none"/>`
+    + `<path d="M86 70 L112 63 L126 82 L117 107 L94 113 L79 94 L82 82 Z" fill="url(#@glass)" opacity=".9" ${O}/>`
+    + `<path d="M86 70 L112 63 L104 86 Z" fill="#e8f4ff" opacity=".35"/><path d="M104 86 L126 82 L117 107 Z" fill="#0a1a3a" opacity=".4"/><path d="M104 86 L94 113 L79 94 Z" fill="#2c5ea8" opacity=".3"/>`
+    + `<path d="M86 70 L112 63 M82 82 L86 70" stroke="#fff" stroke-opacity=".8" stroke-width="1.1" fill="none"/>`
+    + `<path d="M117 107 L94 113 L79 94" stroke="#cfe8ff" stroke-opacity=".45" stroke-width=".7" stroke-dasharray="1.6 1.2" fill="none"/>`
+    + `<circle cx="102" cy="72" r="3.2" fill="#0a1a3a"/><path d="M99.5 70.5 a3 3 0 0 1 4 -1" stroke="#fff" stroke-opacity=".5" stroke-width=".7" fill="none"/>`
+    + `<path d="M102 70 C101 66 100 64 99 62 M102 70 C104 66 105 64 107 62" stroke="#2e1d0e" stroke-width="2.4" fill="none"/>`);
+
+  mk('collsignet', "Coll's old signet", sh(100, 136, 42, 6),
+    `<ellipse cx="100" cy="94" rx="36" ry="40" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="12.4"/>`
+    + `<ellipse cx="100" cy="94" rx="36" ry="40" fill="none" stroke="url(#@gold)" stroke-width="10"/>`
+    + `<ellipse cx="100" cy="94" rx="31" ry="35" fill="none" stroke="#5a420e" stroke-opacity=".7" stroke-width="1.4"/>`
+    + `<path d="M68 82 A36 40 0 0 1 90 55" stroke="#fff6d0" stroke-opacity=".75" stroke-width="1.6" fill="none"/><path d="M134 104 A36 40 0 0 1 104 133" stroke="#3a2806" stroke-opacity=".55" stroke-width="2" fill="none"/>`
+    + `<path d="M72 54 L128 54 L124 64 Q100 70 76 64 Z" fill="url(#@gold)" ${O}/>`
+    + `<path d="M76 54 L76 61 Q100 68 124 61 L124 54" fill="#8a6418" opacity=".6"/>`
+    + `<ellipse cx="100" cy="52" rx="28" ry="11" fill="url(#@goldm)" ${O}/>`
+    + `<path d="M80 50 l14 -4 M84 56 l20 -6 M96 58 l18 -6 M108 48 l10 -2" stroke="#8a6a20" stroke-opacity=".45" stroke-width=".6"/>`
+    + `<path d="M93 56 L93 50.5 L100 46.5 L107 50.5 L107 56 Z" fill="none" stroke="#6a4a10" stroke-opacity=".55" stroke-width=".8"/>`
+    + `<path d="M74 50 Q86 42 104 41.6" stroke="#fff6d0" stroke-opacity=".7" stroke-width="1" fill="none"/>`,
+    {goldm: '<linearGradient id="ID" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8cc80"/><stop offset="1" stop-color="#a88430"/></linearGradient>'});
+
+  mk('guildtoken', "Guild token", sh(100, 118, 50, 7),
+    `<ellipse cx="100" cy="81" rx="46" ry="32" fill="#050404" ${O}/>`
+    + `<path d="M54 76 L54 81 A46 32 0 0 0 146 81 L146 76" fill="#1a1512"/>`
+    + `<ellipse cx="100" cy="74" rx="46" ry="32" fill="url(#@horn)" ${O}/>`
+    + `<path d="M64 70 Q80 52 112 50 M62 82 Q84 64 120 62 M72 94 Q96 80 132 76 M86 102 Q112 92 138 88" stroke="#6a5a4c" stroke-opacity=".28" stroke-width="1" fill="none"/>`
+    + `<path d="M58 66 A44 30 0 0 1 104 43" stroke="#a8988a" stroke-opacity=".55" stroke-width="1.4" fill="none"/>`
+    + `<ellipse cx="100" cy="74" rx="8" ry="5.6" fill="#0a0705"/><path d="M92.4 75 A8 5.6 0 0 0 107.6 75" stroke="#5a4a3c" stroke-width="1.2" fill="none"/>`);
+
+  mk('ropehook', "Journeyman's rope-and-hook", sh(102, 128, 76, 8),
+    [0, 1, 2, 3, 4, 5].map(i => `<ellipse cx="${80 + i * .6}" cy="${104 - i * 3.4}" rx="${50 - i * 1.2}" ry="${19 - i * .4}" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="6.4"/><ellipse cx="${80 + i * .6}" cy="${104 - i * 3.4}" rx="${50 - i * 1.2}" ry="${19 - i * .4}" fill="none" stroke="url(#@tar)" stroke-width="4.8"/><ellipse cx="${80 + i * .6}" cy="${104 - i * 3.4}" rx="${50 - i * 1.2}" ry="${19 - i * .4}" fill="none" stroke="#a08a68" stroke-opacity=".35" stroke-width="4.6" stroke-dasharray="1.4 3"/>`).join('')
+    + `<ellipse cx="83" cy="87" rx="38" ry="10" fill="#140f0a"/><path d="M40 82 A44 16 0 0 1 100 70" stroke="#c8b08a" stroke-opacity=".35" stroke-width="1.2" fill="none"/>`
+    + `<path d="M112 76 Q132 60 136 40 Q140 26 148 24" stroke="#0b0806" stroke-opacity=".6" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M112 76 Q132 60 136 40 Q140 26 148 24" stroke="url(#@tar)" stroke-width="4.6" fill="none" stroke-linecap="round"/>`
+    + `<circle cx="150" cy="28" r="5" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="4"/><circle cx="150" cy="28" r="5" fill="none" stroke="url(#@iron)" stroke-width="2.6"/>`
+    + `<rect x="147" y="32" width="6" height="70" rx="2" fill="url(#@ironV)" ${O}/><path d="M148.4 34 v66" stroke="#b0aaa2" stroke-opacity=".6" stroke-width=".8"/>`
+    + [['M150 100 Q128 104 122 84', 'M122 84 L119 74'], ['M150 100 Q172 104 178 84', 'M178 84 L181 74'], ['M150 102 Q152 120 138 122', 'M138 122 L130 116']].map(([arm, tip]) => `<path d="${arm}" stroke="#0b0806" stroke-opacity=".6" stroke-width="10" fill="none" stroke-linecap="round"/><path d="${arm}" stroke="url(#@rag)" stroke-width="8" fill="none" stroke-linecap="round"/><path d="${arm}" stroke="#6a5a3c" stroke-width="8" stroke-dasharray="1 3.4" fill="none" opacity=".6"/><path d="${tip}" stroke="url(#@iron)" stroke-width="3.6" stroke-linecap="round"/>`).join('')
+    + `<circle cx="150" cy="101" r="5.4" fill="url(#@rag)" ${O}/>`);
+
+  mk('rhivicharm', "Rhivi bone charm", sh(100, 126, 40, 6),
+    `<path d="M96 72 C82 46 66 26 82 16 C96 8 118 12 122 26 C126 40 112 56 104 72" stroke="#1e140c" stroke-width="4.4" fill="none" stroke-linecap="round"/>`
+    + `<path d="M96 72 C82 46 66 26 82 16 C96 8 118 12 122 26 C126 40 112 56 104 72" stroke="#7a5a3a" stroke-width="2.4" stroke-dasharray="2.6 2.6" fill="none"/>`
+    + `<path d="M96 72 C82 46 66 26 82 16 C96 8 118 12 122 26 C126 40 112 56 104 72" stroke="#3a281a" stroke-width="2.4" stroke-dasharray="2.6 2.6" stroke-dashoffset="2.6" fill="none" opacity=".8"/>`
+    + `<circle cx="81" cy="40" r="5.6" fill="url(#@glass)" ${O}/><circle cx="79.4" cy="38.4" r="1.6" fill="#fff" opacity=".75"/>`
+    + `<path d="M72 80 Q74 66 88 68 Q96 74 104 70 Q118 62 128 72 Q137 84 129 98 Q133 112 118 116 Q104 110 96 116 Q80 121 72 108 Q65 94 72 80 Z" fill="url(#@bone)" ${O}/>`
+    + `<path d="M90 82 Q100 94 114 84" stroke="#7d6a4b" stroke-opacity=".55" stroke-width="1.6" fill="none"/><ellipse cx="104" cy="102" rx="9" ry="5" fill="#8f7c5c" opacity=".35"/>`
+    + `<path d="M74 82 Q76 70 88 70 M106 70 Q118 64 126 72" stroke="#fffaf0" stroke-opacity=".7" stroke-width="1.2" fill="none"/>`
+    + `<path d="M130 98 Q132 110 118 115 M96 116 Q82 120 74 110" stroke="#5a4a32" stroke-opacity=".55" stroke-width="1.4" fill="none"/>`
+    + `<ellipse cx="100" cy="76" rx="4" ry="3" fill="#2a1d10"/><path d="M96 72 Q97 75 98 77 M104 72 Q103 75 102 77" stroke="#1e140c" stroke-width="2.4"/>`);
+
+  mk('otatglove', "Otataral-dusted glove", `<ellipse cx="100" cy="78" rx="56" ry="62" fill="url(#@dust)"/>` + sh(100, 138, 42, 6),
+    `<path d="M80 133 L78 106 Q74 92 76 70 L76 40 Q76 32 82 32 Q88 32 88 40 L89 62 L90 30 Q90 22 96 22 Q102 22 102 30 L103 60 L104 28 Q104 20 110 20 Q116 20 116 28 L116 62 L118 38 Q118 30 124 30 Q130 30 130 38 L128 76 Q128 92 124 106 L124 133 Z" fill="url(#@leather)" ${O}/>`
+    + `<path d="M78 90 Q64 84 57 68 Q54 58 60 55 Q66 52 70 60 L80 74 Z" fill="url(#@leather)" ${O}/>`
+    + `<path d="M124 30 Q130 30 130 38 L128 76 Q128 92 124 106 L124 133 L114 133 Q118 100 116 62 L118 38 Q118 30 124 30 Z" fill="#000" opacity=".2"/>`
+    + `<path d="M78 34 L78 66 M92 26 L92 58 M106 24 L106 58 M59 58 Q64 56 68 62" stroke="#f0c890" stroke-opacity=".4" stroke-width="1.1" fill="none"/>`
+    + `<path d="M88 40 L89 64 M102 30 L103 62 M116 28 L116 64 M78 106 L124 106 M80 112 L124 112" stroke="#b8402a" stroke-opacity=".75" stroke-width="1.1" stroke-dasharray="1 1.4"/>`
+    + `<path d="M82 46 q3 2 6 0 M96 42 q3 2 6 0 M110 44 q3 2 6 0 M80 86 Q100 92 122 84" stroke="#2e1d0e" stroke-opacity=".5" stroke-width="1" fill="none"/>`
+    + [[86, 68], [101, 66], [114, 70], [92, 100], [110, 98], [84, 118], [120, 120], [70, 72]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#d0583a" opacity=".8"/>`).join(''),
+    {dust: '<radialGradient id="ID"><stop offset="0" stop-color="#c0402a" stop-opacity=".14"/><stop offset="1" stop-color="#c0402a" stop-opacity="0"/></radialGradient>'});
+
+  mk('fetemask', "Fete mask", sh(100, 124, 64, 6),
+    `<path d="M40 62 Q22 70 18 88 M160 62 Q178 70 182 88" stroke="url(#@red)" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    + `<path d="M40 60 Q60 40 100 50 Q140 40 160 60 Q162 82 146 92 Q124 100 108 86 Q100 80 92 86 Q76 100 54 92 Q38 82 40 60 Z" fill="url(#@red)" ${O}/>`
+    + `<path d="M46 60 Q62 46 96 54 M106 52 Q130 44 150 54" stroke="#f0a098" stroke-opacity=".45" stroke-width="1.6" fill="none"/>`
+    + `<path d="M146 92 Q124 100 108 86 Q100 80 92 86 Q76 100 54 92" stroke="#d8c8a0" stroke-opacity=".55" stroke-width="1.2" fill="none"/>`
+    + `<path d="M58 70 Q72 58 86 68 Q74 80 58 70 Z M114 68 Q128 58 142 70 Q126 80 114 68 Z" fill="#100604" ${O}/>`
+    + `<path d="M60 70 Q72 60 84 67 M116 67 Q128 60 140 69" stroke="#e07a70" stroke-opacity=".5" fill="none"/>`
+    + `<path d="M150 64 Q156 76 148 88" stroke="#000" stroke-opacity=".3" stroke-width="3" fill="none"/>`
+    + [[46, 84], [54, 92], [66, 96], [78, 95], [88, 89], [154, 84], [146, 92], [134, 96], [122, 95], [112, 89]].map(([x, y]) => `<path d="M${x} ${y} v3" stroke="#4a3812" stroke-width=".8"/><path d="M${x - 3.2} ${y + 8} Q${x - 3.2} ${y + 2.6} ${x} ${y + 2.6} Q${x + 3.2} ${y + 2.6} ${x + 3.2} ${y + 8} Z" fill="url(#@brass)" ${O}/><ellipse cx="${x}" cy="${y + 8}" rx="2.6" ry="1" fill="#e8dca0"/>`).join(''));
+
+  mk('bbstrap', "Sapper's satchel strap", sh(100, 120, 78, 7), (() => {
+    const P = join(bez([22, 104], [60, 126], [82, 62], [118, 74]), bez([118, 74], [150, 86], [160, 52], [182, 58]));
+    return `<path d="${band(P, 15, 15)}" fill="url(#@leather)" ${O}/>`
+      + `<path d="${offl(P, -6.6)}" stroke="#e0b080" stroke-opacity=".6" stroke-width=".9" stroke-dasharray="2 2" fill="none"/><path d="${offl(P, -4.6)}" stroke="#e0b080" stroke-opacity=".45" stroke-width=".9" stroke-dasharray="2 2" fill="none"/>`
+      + `<path d="${offl(P, 6.6)}" stroke="#2e1d0e" stroke-opacity=".8" stroke-width=".9" stroke-dasharray="2 2" fill="none"/><path d="${offl(P, 4.6)}" stroke="#2e1d0e" stroke-opacity=".6" stroke-width=".9" stroke-dasharray="2 2" fill="none"/>`
+      + `<path d="${offl(P.slice(4, 30), -1)}" stroke="#f0c890" stroke-opacity=".22" stroke-width="3" fill="none"/>`
+      + [[150, 72], [160, 66], [170, 61]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="#1a1007"/>`).join('')
+      + `<rect x="108" y="64" width="20" height="20" rx="5" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="5.4" transform="rotate(22 118 74)"/>`
+      + `<rect x="108" y="64" width="20" height="20" rx="5" fill="none" stroke="url(#@iron)" stroke-width="3.6" transform="rotate(22 118 74)"/>`
+      + `<path d="M118 74 L130 79" stroke="url(#@iron)" stroke-width="2" stroke-linecap="round"/><path d="M109 66 Q114 62 120 63" stroke="#c4c0b8" stroke-opacity=".6" stroke-width=".9" fill="none" transform="rotate(22 118 74)"/>`; })());
+
+  mk('moranthchit', "Moranth chit", sh(106, 124, 56, 7),
+    `<path d="M70 92 C56 60 60 30 76 14 M70 92 C84 64 104 40 116 22" stroke="#2e1d0e" stroke-width="2.6" fill="none"/>`
+    + `<path d="M56 98 Q66 46 124 38 Q156 36 166 58 Q146 52 124 58 Q90 68 80 108 Q64 112 56 98 Z" fill="url(#@chitin)" ${O}/>`
+    + `<path d="M80 108 Q90 68 124 58 Q146 52 166 58 L164 63 Q146 58 126 64 Q94 74 86 110 Z" fill="#000" opacity=".55"/>`
+    + `<path d="M66 92 Q74 56 120 48 M74 98 Q84 66 122 54 M64 80 Q76 50 116 44" stroke="#6a8a84" stroke-opacity=".35" stroke-width=".9" fill="none"/>`
+    + `<path d="M58 94 Q66 48 122 40 Q150 38 162 54" stroke="#e0f4ee" stroke-opacity=".65" stroke-width="1.4" fill="none"/>`
+    + `<path d="M56 98 Q66 46 124 38 Q156 36 166 58 Q146 52 124 58 Q90 68 80 108 Q64 112 56 98 Z" fill="url(#@iri)"/>`
+    + `<path d="M118 39 L122 46 L127 38.4 Z" fill="#120d08" stroke="#a8c0b8" stroke-opacity=".6" stroke-width=".7"/>`
+    + `<circle cx="70" cy="94" r="3.2" fill="#0a0604"/><path d="M70 91 Q69 90 68 88 M70 91 Q72 90 73 88" stroke="#2e1d0e" stroke-width="2.6"/>`,
+    {iri: '<linearGradient id="ID" x1="0" y1="0" x2="1" y2=".4"><stop offset="0" stop-color="#40a090" stop-opacity=".3"/><stop offset=".5" stop-color="#6040a0" stop-opacity=".24"/><stop offset="1" stop-color="#40a090" stop-opacity=".06"/></linearGradient>'});
+
+  mk('phoenixkey', "Key to a door that does not exist", sh(100, 126, 66, 6), diag(1,
+    `<circle cx="-70" cy="0" r="15" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="9"/><circle cx="-70" cy="0" r="15" fill="none" stroke="url(#@iron)" stroke-width="7"/>`
+    + `<path d="M-83 -6 A15 15 0 0 1 -66 -14.6" stroke="#b0aaa2" stroke-opacity=".6" stroke-width="1.2" fill="none"/>`
+    + `<rect x="-56" y="-5" width="8" height="10" rx="1.5" fill="url(#@ironV)" ${O}/>`
+    + `<rect x="-50" y="-3" width="118" height="6" rx="2.6" fill="url(#@ironV)" ${O}/><path d="M-48 -2 L66 -2" stroke="#a8a29a" stroke-opacity=".55" stroke-width=".8"/>`
+    + `<path d="M46 3 L66 3 L66 14 L61 14 L60 21 L56 17 L53 24 L49 20 L46 22 Z" fill="url(#@iron)" ${O}/>`
+    + `<path d="M46 4 L66 4" stroke="#a8a29a" stroke-opacity=".4" stroke-width=".7"/>`
+    + [[-30, -1], [-6, 1], [20, -1], [34, 1], [56, 10]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#5a3a20" opacity=".7"/>`).join(''), 'translate(102 76)', -34));
+
+  mk('clawpen', "A neat hand's pen", sh(100, 124, 62, 6), diag(1,
+    `<rect x="-82" y="-4.2" width="120" height="8.4" rx="4" fill="url(#@pewterV)" ${O}/>`
+    + `<path d="M-78 -2.6 L36 -2.6" stroke="#e6e8e6" stroke-opacity=".55" stroke-width=".9"/>`
+    + `<path d="M38 -4.2 L48 -3.2 L48 3.2 L38 4.2 Z" fill="url(#@steelV)" ${O}/>`
+    + `<path d="M48 -3.6 L70 -2 L84 0 L70 2 L48 3.6 Z" fill="url(#@steelV)" ${O}/>`
+    + `<path d="M49 -2.8 L70 -1.4 L82 -0.2" stroke="#fff" stroke-opacity=".7" stroke-width=".7" fill="none"/>`
+    + `<path d="M66 -1.8 L84 0 L66 1.8 Z" fill="#12141e" opacity=".85"/><path d="M60 0 L84 0" stroke="#060608" stroke-width=".9"/><circle cx="60" cy="0" r="1.3" fill="#060608"/>`, 'translate(100 78)', -36));
+})();
+
 /* ============ the item art pass (v8.1.x): Book Two's kit, redrawn ============
    Overrides ART['item/b2_*'] (first drawn by tools/art_dg_items.py into the boards; the boards stay as they are). One look for the
    series: 200×150, a sand-dark vignette, light from the upper left, a soft ground shadow, thin dark outlines, materials that read.
@@ -70666,6 +71120,1093 @@ const IX_DEBT = /debt|paybook|pay desk|the pay\b|ledger|owe|owed|fine\b|tab\b|do
     + rep(10, i => { const x = -48 + i * 13; return `<path d="M${x} -.4 Q${x + 6} ${-8 - (i % 3)} ${x + 16} ${-14 + (i > 6 ? (i - 6) * 2.4 : 0)}" fill="none" stroke="#2a2834" stroke-width="1"/><path d="M${x} 0 Q${x + 6} 5 ${x + 14} 7" fill="none" stroke="#242230" stroke-width="1"/>`; })
     + '<path d="M-62 0 Q10 -1 96 -2" fill="none" stroke="#5a5664" stroke-width="1.3"/><path d="M-40 -9 Q10 -16 70 -10" fill="none" stroke="#3a6ab0" stroke-width="1.6" opacity=".45"/><path d="M-30 -11 Q10 -16 50 -13" fill="none" stroke="#5ab0a0" stroke-width=".8" opacity=".35"/>'
     + '<path d="M20 -17 l3 4 l2 -4 M-10 10 l2 -3" stroke="#120e14" stroke-width="1.4"/>', 102, 76, -26, .96, 1.45));
+})();
+
+/* ============ The item art pass (v8.1.x): Books Three and Five, redrawn ============
+   David, Oct 30 2026: "do a pass on the item art. make it better in general and be sure to fix the bows that have arrows sticking
+   awkwardly out of them." This file overrides ART['item/b3_*'] (first drawn in 61b-67b) and ART['item/b5_*'] (81b-87b) with the
+   series' one look: a book-tinted vignette (Book Three cold slate, Book Five harbour slate), light from the upper left, a soft ground
+   shadow, a thin dark outline on every silhouette, materials that read (steel bevels, leather stitching, wood grain, horn, mail and
+   scale), long weapons on the same diagonal, grip lower left. Book Five's gold inner frame is gone. The hornbow is strung with
+   nothing through it; the cache bow is unstrung, a gentle curve, its waxed string coiled in the bark tube.
+   Every gradient, pattern and filter id is prefixed with the item id ('@' in the bodies below), so nothing bleeds between pictures. */
+(() => { if (typeof ART === 'undefined') return;
+  const BG = { 3: ['#26303c', '#0b0f14'], 5: ['#233039', '#0a1014'] };
+  const OL = 'stroke="#0b0806" stroke-opacity=".6" stroke-width="1.2" stroke-linejoin="round"';
+  /* materials, lit from above (the light falls from the upper left once a shape is on the diagonal) */
+  const MAT = {
+    st: ['#e6ecf0', '#aab3bb', '#6c747d', '#30353b'], ir: ['#9a9ea4', '#62666c', '#2c2f33'], bk: ['#6a6e76', '#34373c', '#141518'],
+    dx: ['#4a4c54', '#24262c', '#0c0d10'], di: ['#8a8e96', '#4a4e56', '#1a1c20'], nb: ['#eef2f4', '#aeb8c0', '#5a646c'],
+    rs: ['#8a6a56', '#5a4034', '#2a1a14'], wd: ['#c8aa7c', '#9a7a4e', '#5a4228'], dw: ['#5a4636', '#2e221a', '#120d0a'],
+    fh: ['#8a6640', '#5a3e22', '#2a1a0c'], yw: ['#c8804a', '#9a5228', '#5a2a10'], bb: ['#ece6da', '#b8b0a0', '#6a6252'],
+    lt: ['#9a6a40', '#6a4426', '#34200f'], dl: ['#5e4634', '#36281c', '#18110b'], gl: ['#8e9092', '#5c5e60', '#2a2c2e'],
+    bn: ['#f2ead6', '#d0c29e', '#8e7c58'], an: ['#d8ccb0', '#a8987a', '#5e523e'], hn: ['#7a6a56', '#423528', '#1c150f'],
+    yt: ['#f0e2b0', '#c8b072', '#7a6436'], cl: ['#9a9ea2', '#686c71', '#34373b'], br: ['#d8b070', '#9a7638', '#4a3616'],
+    ab: ['#b89058', '#7a5a2e', '#3a2a12'], cu: ['#d89a6a', '#9a5a34', '#4a2814'], sn: ['#a8aaa6', '#74766f', '#3c3e3a'],
+    ls: ['#cfd1cb', '#9a9c96', '#5e605a'], pp: ['#efe8d2', '#d8cca8', '#a8986e'], kp: ['#b08a5a', '#846238', '#4a3418'],
+    pw: ['#e2cfa4', '#c4a874', '#8a6c40'], cy: ['#c07a50', '#8a4a2a', '#44200f'], gz: ['#5a5c62', '#1e1f22', '#08080a'],
+    ch: ['#3c444c', '#16191d', '#050607'], fl: ['#a0988a', '#665e4e', '#2e2a22'], sk: ['#8e9496', '#5a5f62', '#2a2c2e'],
+    cv: ['#7a7464', '#4e4a3e', '#24221c'], hd: ['#dca454', '#b07a30', '#6a4418'], rd: ['#8e2a20', '#5e1812', '#2a0a08'],
+    mg: ['#a8b0b8', '#6e767e', '#343a40'], wx: ['#a4a6a6', '#6e7070', '#3a3c3c'], fe: ['#4e5462', '#22252c', '#0a0b0d'],
+    kb: ['#7a746c', '#3e3936', '#141210'], gc: ['#c0ac80', '#8a7650', '#4a3e26'], sw: ['#fbf8f0', '#ddd6c6', '#9a9284'],
+    sb: ['#5a5a5e', '#26262a', '#0a0a0c'], bs: ['#3a3e46', '#16181c', '#050506'], hw: ['#efdfae', '#c0a060', '#6a5228'],
+    pc: ['#8a7a5e', '#5e5038', '#2e2618'], bl: ['#c89458', '#8a5a2e', '#3e2410'], gs: ['#d6c286', '#a08c50', '#5e5028'] };
+  const lin = (k, c) => `<linearGradient id="@${k}" x1="0" y1="0" x2="0" y2="1">${c.map((s, i) => `<stop offset="${(i / (c.length - 1)).toFixed(2)}" stop-color="${s}"/>`).join('')}</linearGradient>`;
+  const EXTRA = {
+    gf: '<filter id="@gf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>',
+    lo: '<radialGradient id="@lo" cx=".28" cy=".22" r=".95"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient>',
+    ml: '<pattern id="@ml" width="4" height="3.6" patternUnits="userSpaceOnUse">' + [[2, 1.8], [0, 0], [4, 0], [0, 3.6], [4, 3.6]].map(([x, y]) =>
+      `<circle cx="${x + .4}" cy="${y + .5}" r="1.35" fill="none" stroke="#0e1216" stroke-opacity=".55" stroke-width=".6"/><circle cx="${x}" cy="${y}" r="1.35" fill="none" stroke="#eef4fa" stroke-opacity=".42" stroke-width=".55"/>`).join('') + '</pattern>',
+    sc: '<pattern id="@sc" width="7" height="8" patternUnits="userSpaceOnUse">' + [[0, 0], [-3.5, 4], [3.5, 4]].map(([x, y]) =>
+      `<path d="M${x} ${y} Q${x} ${y + 6} ${x + 3.5} ${y + 6.6} Q${x + 7} ${y + 6} ${x + 7} ${y}" fill="#fff" fill-opacity=".07" stroke="#1a2026" stroke-opacity=".6" stroke-width=".75"/><path d="M${x + 1} ${y + 2} Q${x + 1.4} ${y + 4.6} ${x + 3} ${y + 5.4}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width=".6"/>`).join('') + '</pattern>',
+    wv: '<pattern id="@wv" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 1.5 H3 M1.5 0 V3" stroke="#000" stroke-opacity=".14" stroke-width=".6"/></pattern>' };
+  const card = (key, book, label, body, sh = [100, 130, 58, 6]) => {
+    const refs = new Set([...body.matchAll(/@([a-z]{2})\b/g)].map(m => m[1]));
+    let defs = `<radialGradient id="@bg" cx=".46" cy=".42" r=".74"><stop offset="0" stop-color="${BG[book][0]}"/><stop offset="1" stop-color="${BG[book][1]}"/></radialGradient>`
+      + '<filter id="@sf" x="-40%" y="-300%" width="180%" height="700%"><feGaussianBlur stdDeviation="3.2"/></filter>';
+    refs.forEach(r => { if (MAT[r]) defs += lin(r, MAT[r]); else if (EXTRA[r]) defs += EXTRA[r]; });
+    const shadow = !sh ? '' : typeof sh === 'string' ? sh : `<ellipse cx="${sh[0]}" cy="${sh[1]}" rx="${sh[2]}" ry="${sh[3]}" fill="#000" opacity=".55" filter="url(#@sf)"/>`;
+    ART['item/' + key] = (`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="${label}"><defs>${defs}</defs>`
+      + `<rect width="200" height="150" rx="3" fill="url(#@bg)"/>${shadow}${body}</svg>`).replace(/~/g, OL).replace(/@/g, key + '-');
+    if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [200, 150]; };
+  /* the diagonal: draw a long thing along +x (grip at -x), and this lays it lower-left to upper-right */
+  const D = (b, k = 1, cx = 100, cy = 72, a = -32) => `<g transform="translate(${cx} ${cy}) rotate(${a}) scale(${k})">${b}</g>`;
+  const S32 = Math.sin(32 * Math.PI / 180), C32 = Math.cos(32 * Math.PI / 180);
+  const W = (x, y, k = 1, cx = 100, cy = 72) => [+(cx + k * (x * C32 + y * S32)).toFixed(1), +(cy + k * (-x * S32 + y * C32)).toFixed(1)];
+  const ln = (d, c, w = 1, op = 1, extra = '') => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-opacity="${op}" stroke-linecap="round" ${extra}/>`;
+  const cord = (d, c = '#3a2a1c', w = 2) => ln(d, '#0b0806', w + 1.5, .6) + ln(d, c, w) + ln(d, '#fff', w * .3, .12, 'transform="translate(-.4 -.5)"');
+  const r1 = n => +n.toFixed(1);
+  const q = (p0, p1, p2, t) => [(1 - t) ** 2 * p0[0] + 2 * t * (1 - t) * p1[0] + t * t * p2[0], (1 - t) ** 2 * p0[1] + 2 * t * (1 - t) * p1[1] + t * t * p2[1]];
+  const qd = (p0, p1, p2, t) => [2 * (1 - t) * (p1[0] - p0[0]) + 2 * t * (p2[0] - p1[0]), 2 * (1 - t) * (p1[1] - p0[1]) + 2 * t * (p2[1] - p1[1])];
+  const steelGrip = (x0, x1, h, wire = '#b8bcc0') => { let s = `<rect x="${x0}" y="${-h}" width="${x1 - x0}" height="${2 * h}" rx="2" fill="#3a2e24" ~/>`;
+    for (let x = x0 + 1.5; x < x1 - 1; x += 2.2) s += ln(`M${r1(x)} ${h - .6} L${r1(x + 1.6)} ${-h + .6}`, wire, .9, .8);
+    return s + ln(`M${x0 + 1} ${-h + .9} L${x1 - 1} ${-h + .9}`, '#fff', .8, .25); };
+
+  /* ======================= Book Three: cold slate ======================= */
+
+  /* a Second Army whetstone: grey hone, leather sleeve, the Second's stamp worn nearly off */
+  card('b3_c1_whetstone', 3, 'A Second Army whetstone', `<g transform="rotate(-14 100 76)">
+    <rect x="26" y="62" width="146" height="28" rx="12" fill="url(#@sn)" ~/>
+    ${ln('M40 64.5 Q76 69 108 65', '#d8dad4', 1.4, .7)}${ln('M36 70 Q70 74 100 71', '#c8cac4', 4, .18)}
+    <circle cx="48" cy="78" r=".9" fill="#4a4c48"/><circle cx="62" cy="82" r="1.1" fill="#4a4c48"/><circle cx="74" cy="76" r=".8" fill="#c0c2bc"/><circle cx="86" cy="84" r="1" fill="#4a4c48"/>
+    ${ln('M30 84 Q60 89 98 86', '#26282a', 1.2, .6)}
+    <rect x="96" y="58" width="80" height="36" rx="8" fill="url(#@lt)" ~/>
+    ${ln('M100 61.6 L172 61.6', '#c89a68', 1, .75, 'stroke-dasharray="2.6 2.4"')}${ln('M100 90.6 L172 90.6', '#c89a68', 1, .45, 'stroke-dasharray="2.6 2.4"')}
+    ${ln('M104 59.2 L170 59.2', '#d8a678', 1, .5)}${ln('M98 61 Q94 76 98 92', '#140a04', 2.2, .8)}
+    ${ln('M126 60 Q130 76 126 93', '#2a160a', 1.6, .7)}${ln('M152 60 Q149 76 153 93', '#2a160a', 1.2, .5)}
+    <circle cx="140" cy="76" r="8" fill="none" stroke="#2a1608" stroke-width="1.4" stroke-opacity=".4"/>${ln('M137 72 L137 80 M143 72.5 L143 79', '#2a1608', 1.3, .3)}
+    <rect x="96" y="58" width="80" height="36" rx="8" fill="url(#@lo)"/></g>`, [100, 112, 74, 6]);
+
+  /* an Ilgres iron torc: heavy twisted iron neck-ring, open at the front, knobbed ends wound with sinew */
+  { const ring = 'M84 110.6 A62 40 0 1 1 116 110.6';
+    let wind = ''; [112, 117, 122, 127].forEach(f => { const a = f * Math.PI / 180, x = 100 + 62 * Math.cos(a), y = 72 + 40 * Math.sin(a);
+      let nx = Math.cos(a) / 62, ny = Math.sin(a) / 40; const l = Math.hypot(nx, ny); nx /= l; ny /= l;
+      [[x, nx], [200 - x, -nx]].forEach(([cx, mx]) => { const d = `M${r1(cx - mx * 7.5)} ${r1(y - ny * 7.5)} L${r1(cx + mx * 7.5)} ${r1(y + ny * 7.5)}`; wind += ln(d, '#0b0806', 3.6, .6) + ln(d, '#c8b082', 2.2) + ln(d, '#f0e0b8', .6, .5); }); });
+    card('b3_c1_torc', 3, 'An Ilgres iron torc', `
+    <path d="${ring}" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="16"/>
+    <path d="${ring}" fill="none" stroke="url(#@ir)" stroke-width="13.5"/>
+    <path d="${ring}" fill="none" stroke="#16181b" stroke-width="13.5" stroke-dasharray="2.2 4.4" stroke-opacity=".6"/>
+    <path d="${ring}" fill="none" stroke="#dde2e6" stroke-width="1.6" stroke-dasharray="3.4 3.2" stroke-opacity=".55" transform="translate(-1.6 -3)"/>
+    <circle cx="70" cy="38" r="2" fill="#6a3a1e" opacity=".55"/><circle cx="150" cy="96" r="2.6" fill="#6a3a1e" opacity=".5"/><circle cx="160" cy="58" r="1.6" fill="#6a3a1e" opacity=".5"/>
+    ${wind}
+    <circle cx="84" cy="111" r="8.5" fill="url(#@ir)" ~/><circle cx="116" cy="111" r="8.5" fill="url(#@ir)" ~/>
+    <circle cx="81.5" cy="108" r="2.8" fill="#d0d4da" opacity=".55"/><circle cx="113.5" cy="108" r="2.8" fill="#d0d4da" opacity=".55"/>`,
+    `<path d="${ring}" transform="translate(5 8)" fill="none" stroke="#000" stroke-width="15" opacity=".5" filter="url(#@sf)"/>`); }
+
+  /* a Rhivi bone charm: a small bhederin in bone, red ochre in the cuts, on a thong with two blue beads */
+  { const body = 'M50 96 Q46 82 56 74 Q66 64 84 62 Q100 44 120 46 Q136 48 141 62 Q150 68 152 78 Q160 84 158 96 Q155 102 147 100 Q143 100 141 98 L139 112 Q135 114 131 112 L129 101 Q110 104 92 102 L89 112 Q85 114 81 112 L79 101 Q66 101 58 102 Q52 102 50 96 Z';
+    card('b3_c1_charm', 3, 'A Rhivi bone charm', `
+    ${cord('M14 14 Q60 50 110 57', '#4a3222', 2.2)}${cord('M118 56 Q154 46 188 12', '#4a3222', 2.2)}
+    <circle cx="64" cy="45" r="5.2" fill="#3e6e9e" ~/><circle cx="62.4" cy="43.2" r="1.6" fill="#cfe2f4" opacity=".7"/>
+    <circle cx="154" cy="40" r="5.2" fill="#3e6e9e" ~/><circle cx="152.4" cy="38.2" r="1.6" fill="#cfe2f4" opacity=".7"/>
+    <path d="${body}" fill="url(#@bn)" ~/>
+    ${ln('M148 70 Q156 62 151 55', '#0b0806', 4.4, .6)}${ln('M148 70 Q156 62 151 55', '#f2ead6', 3)}
+    ${ln('M60 74 Q76 60 96 54 Q110 48 124 49', '#fffaf0', 1.3, .7)}
+    <g stroke-linecap="round">${['M84 70 L80 90', 'M96 62 L92 88', 'M108 56 L104 84', 'M120 54 L118 80', 'M70 78 L76 72 L82 78 L88 70', 'M136 66 L140 74 L144 68']
+      .map(d => ln(d, '#5a2a14', 2.6, .5, 'transform="translate(.6 .8)"') + ln(d, '#9a321c', 1.8, .9)).join('')}</g>
+    <circle cx="150" cy="82" r="1.7" fill="#3a2a1a"/><circle cx="114" cy="54" r="3" fill="#2a1e14"/>
+    <path d="${body}" fill="url(#@lo)"/>`, [104, 118, 52, 5]); }
+
+  /* a bhederin-horn bow: short, recurved, horn belly and sinew back, the grip wrapped in dark hide. Strung; nothing through it */
+  { const limb = 'M0 -29 C32 -29 54 -18 64 -8 C70 -3 76 0 83 1 L83 4.5 C75 4 68 2 61 -1 C50 -10 30 -19 0 -19 Z';
+    const half = `<path d="${limb}" fill="url(#@hn)" ~/>${ln('M8 -27.4 C34 -27 54 -17 63 -8', '#c4ae84', 2.2, .75)}${ln('M14 -22 C34 -21 50 -13 60 -4', '#9a8a70', .8, .45)}
+      <path d="M78.6 .4 L84 1 L84 5 L78.6 4.4 Z" fill="#e6dcc0" ~/>`;
+    let wrap = ''; for (let x = -7.5; x <= 7.5; x += 3) wrap += ln(`M${x} -30.4 L${x + 1.6} -17.6`, '#0e0906', 1, .85);
+    card('b3_c2_hornbow', 3, 'A bhederin-horn bow', D(`
+    ${ln('M-82.5 3.6 L82.5 3.6', '#0b0806', 2.6, .6)}${ln('M-82.5 3.6 L82.5 3.6', '#ddd2b0', 1.1)}
+    ${half}<g transform="scale(-1 1)">${half}</g>
+    <rect x="-10" y="-31" width="20" height="14" rx="3" fill="url(#@dl)" ~/>${wrap}${ln('M-8 -29.6 L6 -29.6', '#9a7a5c', 1.2, .55)}`, 1.06, 100, 74), [100, 130, 62, 6]); }
+
+  /* a Rhivi spirit-bundle: grass, bone beads and a lock of bhederin hair, tied in red thread */
+  { let stalks = ''; for (let i = -7; i <= 7; i++) { const d = `M${r1(100 + i * 1.5)} 26 Q${r1(100 + i * 2.2)} 70 ${r1(100 + i * 3.5)} 118`;
+      stalks += ln(d, ['#d6c286', '#a8945a', '#7a6a3c'][(i + 7) % 3], 2.1); }
+    card('b3_c2_bundle', 3, 'A Rhivi spirit-bundle', `
+    <path d="M88 24 L112 24 L127 119 L73 119 Z" fill="#2a2416" ~/>${stalks}
+    ${[-6, -2, 3, 6].map(i => `<ellipse cx="${100 + i * 1.5}" cy="24" rx="1.8" ry="4" fill="#e2d4a0" ~/>`).join('')}
+    ${cord('M108 48 Q132 60 136 86', '#4a3222', 1.4)}
+    ${[[121, 55], [130, 66], [135, 78]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.6" ry="4.6" fill="url(#@bn)" ~/>`).join('')}
+    <path d="M84 77 Q70 92 74 112 Q76 122 68 132 Q82 122 85 108 Q89 94 91 79 Z" fill="#3a2618" ~/>
+    ${ln('M83 82 Q75 96 78 114 Q78 122 73 128', '#6a4a30', .9, .7)}${ln('M87 84 Q82 98 82 110', '#6a4a30', .8, .6)}
+    <path d="M90.5 44 Q100 48 109.5 44 L110.5 51 Q100 55 89.5 51 Z" fill="#9a2a1c" ~/>
+    <path d="M80.5 71 Q100 76 119.5 71 L120.5 79 Q100 84 79.5 79 Z" fill="#9a2a1c" ~/>
+    ${ln('M82 73.5 Q100 78 118 73.5 M82 76.5 Q100 81 118 76.5', '#5a140c', .8, .8)}${ln('M82 72 Q100 76.5 118 72', '#d8584a', .8, .5)}
+    ${cord('M119 79 Q127 90 123 106', '#9a2a1c', 1.2)}`, [100, 124, 36, 5]); }
+
+  /* a Seerdomin's grey mace: long-hafted, flanged, grey iron, the hand-grip worn smooth; colder than iron ought to be */
+  { let wrap = ''; for (let x = -82; x < -52; x += 4) wrap += ln(`M${x} 4.2 L${x + 3} -4.2`, '#120c08', .9, .6);
+    card('b3_c2_mace', 3, "A Seerdomin's grey mace", D(`
+    <rect x="-86" y="-3.2" width="140" height="6.4" rx="2" fill="url(#@ir)" ~/>${ln('M-50 -2 L50 -2', '#d0d8e0', .8, .5)}
+    <rect x="-84" y="-4.8" width="34" height="9.6" rx="3" fill="url(#@dl)" ~/>${wrap}${ln('M-78 -3.4 L-58 -3.4', '#a8886c', 1.6, .5)}
+    <circle cx="-88" cy="0" r="5.6" fill="url(#@ir)" ~/><circle cx="-89.6" cy="-1.8" r="1.6" fill="#e0e6ec" opacity=".5"/>
+    <rect x="45" y="-5" width="6" height="10" rx="1" fill="url(#@ir)" ~/>
+    <path d="M54 6 L60 22 Q70 24.5 79 22 L84 6 Z" fill="url(#@bk)" ~/>
+    <rect x="51" y="-7.5" width="35" height="15" rx="3" fill="url(#@ir)" ~/>
+    <path d="M54 -6 L60 -22 Q70 -24.5 79 -22 L84 -6 Z" fill="url(#@ir)" ~/>
+    ${ln('M60.6 -21.2 Q70 -23.4 78.6 -21.2', '#e4ebf2', 1, .75)}${ln('M58 -14 L64 -14', '#b4d0e6', 1.2, .35)}
+    <path d="M56 -3 L82 -3 L84.6 0 L82 3 L56 3 L53.4 0 Z" fill="#8a9098" ~/>${ln('M57 -2.3 L81 -2.3', '#eef3f8', 1, .8)}
+    <path d="M67 -24 L69 -21 L71 -24 Z" fill="#1a222a"/><circle cx="87" cy="0" r="4.2" fill="url(#@ir)" ~/>
+    ${ln('M54 -8 L84 -8', '#a8c8e0', .7, .3)}`, 1.04), [100, 130, 62, 6]); }
+
+  /* a Capan round shield: painted leather over boards, dark red, the city's gold dome, a bronze boss, and the marks of nine days */
+  { const cuts = [[52, 50, 62, 57], [136, 38, 146, 48], [152, 82, 141, 89], [58, 104, 71, 100], [118, 114, 129, 119], [82, 28, 89, 39], [44, 76, 55, 74], [141, 108, 150, 97], [108, 58, 116, 51]];
+    card('b3_c3_shield', 3, 'A Capan round shield', `
+    <ellipse cx="104" cy="76" rx="62" ry="60" fill="#1a0c08" ~/>
+    <ellipse cx="100" cy="72" rx="62" ry="60" fill="#3a1a12" ~/>
+    <ellipse cx="100" cy="72" rx="58" ry="56" fill="url(#@rd)"/>
+    <ellipse cx="100" cy="72" rx="54" ry="52" fill="none" stroke="#c88a6a" stroke-opacity=".4" stroke-width=".9" stroke-dasharray="2 3"/>
+    <g fill="#c09a38" opacity=".88"><path d="M70 96 L70 88 Q70 52 100 50 Q130 52 130 88 L130 96 Z"/><rect x="65" y="96" width="70" height="6"/><circle cx="100" cy="38" r="2.8"/></g>
+    ${ln('M100 50 L100 40', '#c09a38', 2.4, .88)}${ln('M100 51 Q88 70 86 96 M100 51 Q112 70 114 96', '#6a4a14', 1.2, .6)}
+    <g fill="#5e1812" opacity=".75"><path d="M76 60 q4 -2 6 2 q-3 3 -6 -2Z"/><path d="M122 84 q5 -1 6 4 q-4 2 -6 -4Z"/><path d="M92 99 h6 v2 h-6Z"/></g>
+    ${cuts.map(([a, b, c, d]) => ln(`M${a} ${b} L${c} ${d}`, '#1a0806', 2.4, .7, 'transform="translate(.8 .8)"') + ln(`M${a} ${b} L${c} ${d}`, '#c8a070', 1.3, .9)).join('')}
+    <circle cx="100" cy="76" r="14" fill="url(#@br)" ~/>${ln('M90 70 Q94 64 101 63', '#f6dca4', 2, .75)}${ln('M110 82 Q106 88 98 89', '#2a1a08', 1.6, .55)}
+    <path d="M38 62 L45 66 L39 70 Z" fill="#0e1014"/><path d="M151 106 L156 99 L158 108 Z" fill="#0e1014"/>
+    <ellipse cx="100" cy="72" rx="62" ry="60" fill="url(#@lo)"/>`, [106, 134, 58, 6]); }
+
+  /* a Grey Sword's surcoat: grey wool, split at the hem and torn, the boar's head in black thread cut through */
+  { const coat = 'M76 22 Q100 30 124 22 L146 30 L150 52 Q148 90 156 128 L144 131 L136 126 L126 132 L114 128 L104 129 L100 100 L96 129 L86 131 L76 126 L64 132 L44 128 Q52 90 50 52 L54 30 Z';
+    card('b3_c3_surcoat', 3, "A Grey Sword's surcoat", `
+    <path d="${coat}" fill="url(#@cl)" ~/>
+    <path d="M68 40 Q64 90 60 128 L70 128 Q72 90 76 40 Z" fill="#2a2c30" opacity=".45"/><path d="M130 42 Q136 90 142 130 L133 130 Q128 92 123 42 Z" fill="#2a2c30" opacity=".4"/>
+    ${ln('M88 40 Q86 80 84 126', '#c8ccd0', 3, .22)}${ln('M114 44 Q116 84 118 124', '#c8ccd0', 2, .16)}${ln('M58 34 L74 26', '#d8dce0', 1.4, .5)}
+    <path d="M80 24 Q100 40 120 24 Q100 32 80 24 Z" fill="#141618"/>
+    <path d="M58 106 L67 111 L60 118 L64 112 Z" fill="#141618"/>
+    <path d="M80 56 Q86 53 92 51 Q100 47 108 47 L111 40 L113 49 Q119 54 119 62 Q118 70 112 72 L100 72 Q90 70 82 66 Z" fill="#121214"/>
+    ${ln('M92 51 l2 -3 l2 3 l2 -3.4 l2 3.4 l2 -3.6 l2 3.6', '#121214', 1.2)}${ln('M86 66 Q81 62 84.6 57', '#d8d4c8', 1.6, .85)}<circle cx="103" cy="56.6" r="1.3" fill="#9a9ea2"/>${ln('M81 58 L81 64', '#4a4c50', .8, .8)}
+    ${ln('M80 49 L121 77', '#8a8e92', 2.2)}${ln('M80 49 q-4 2 -3 6 M121 77 q4 -1 5 3 M95 59 q-2 4 1 6', '#121214', .8, .8)}
+    <path d="${coat}" fill="url(#@lo)"/>`, [100, 138, 52, 5]); }
+
+  /* a Beklite's spear: long ash, a broad leaf blade of black iron, a grey rag knotted under it */
+  { const [kx, ky] = W(52, 0);
+    card('b3_c3_spear', 3, "A Beklite's spear", D(`
+    <rect x="-92" y="-2.4" width="146" height="4.8" rx="2" fill="url(#@wd)" ~/>
+    ${ln('M-80 -.6 L-20 -.4 M-10 .9 L40 .6', '#6a4e2e', .7, .6)}${ln('M-88 -1.6 L50 -1.6', '#f0dcb0', .8, .5)}
+    <rect x="-96" y="-3" width="6" height="6" rx="1.5" fill="url(#@bk)" ~/>
+    <path d="M50 -3.6 L64 -2.6 L64 2.6 L50 3.6 Z" fill="url(#@bk)" ~/>
+    <path d="M62 0 Q68 -11 80 -10 Q90 -6 97 0 Q90 6 80 10 Q68 11 62 0 Z" fill="url(#@bk)" ~/>
+    ${ln('M64 0 L95 0', '#0e0f11', 1.2)}${ln('M65 -4 Q70 -10 80 -9.3 Q89 -6 95.5 -.6', '#ccd4dc', .9, .75)}${ln('M66 5 Q74 9.6 82 9', '#8a929a', .7, .4)}`), [100, 130, 64, 6]);
+    ART['item/b3_c3_spear'] = ART['item/b3_c3_spear'].replace('</svg>', `<path d="M${kx - 4} ${ky} Q${kx - 12} ${ky + 10} ${kx - 13} ${ky + 20} L${kx - 10} ${ky + 18} L${kx - 9} ${ky + 23} Q${kx - 5} ${ky + 14} ${kx - 2} ${ky + 8} Q${kx - 2} ${ky + 18} ${kx + 1} ${ky + 28} L${kx + 3} ${ky + 25} L${kx + 5} ${ky + 29} Q${kx + 6} ${ky + 14} ${kx + 4} ${ky} Z" fill="#8c867a" ${OL}/>`
+      + `<path d="M${kx - 5} ${ky + 5} Q${kx - 9} ${ky + 12} ${kx - 10} ${ky + 18} M${kx + 2} ${ky + 8} Q${kx + 2} ${ky + 18} ${kx + 3} ${ky + 24}" fill="none" stroke="#3a3c40" stroke-width="1" stroke-opacity=".6"/><path d="M${kx - 3} ${ky + 3} Q${kx - 7} ${ky + 9} ${kx - 9} ${ky + 15}" fill="none" stroke="#d8dce0" stroke-width=".8" stroke-opacity=".4"/><ellipse cx="${kx}" cy="${ky}" rx="5.4" ry="4.4" fill="#7a746a" ${OL}/><path d="M${kx - 3} ${ky - 1} q3 2 6 0" fill="none" stroke="#3a3c40" stroke-width=".8"/></svg>`)
+      ; }
+
+  /* Treach's stripe: tawny hide barred with black, on a thong with a bone bead; warm, which it should not be */
+  { const strip = 'M88 40 Q100 36 114 40 Q118 70 120 100 Q122 114 118 121 L112 118 L108 126 L102 120 L96 126 L92 119 Q86 104 86 80 Q84 58 88 40 Z';
+    const bar = (y, x0, x1, w) => `<path d="M${x0} ${y} Q${(x0 + x1) / 2} ${y - 4} ${x1} ${y + 2} L${x1} ${y + 2 + w * .6} Q${(x0 + x1) / 2} ${y + w} ${x0} ${y + w} Z" fill="#1a120a" opacity=".9"/>`;
+    let hair = ''; for (let i = 0; i < 16; i++) { const x = 90 + (i * 7) % 26, y = 46 + i * 4.6; hair += ln(`M${x} ${r1(y)} l2 5`, '#f0c878', .7, .35); }
+    card('b3_c3_stripe', 3, "Treach's stripe", `
+    <ellipse cx="104" cy="82" rx="34" ry="46" fill="#d88a30" opacity=".13" filter="url(#@gf)"/>
+    ${cord('M28 16 Q72 50 105 46', '#3a2818', 2)}${cord('M109 46 Q144 42 174 14', '#3a2818', 2)}
+    <ellipse cx="82" cy="45" rx="5.2" ry="3.8" fill="url(#@bn)" ~/>
+    <g transform="rotate(8 102 82)"><path d="${strip}" fill="url(#@hd)" ~/>${hair}
+    ${bar(52, 87, 116, 6)}${bar(68, 86, 108, 7)}${bar(72, 110, 118, 4)}${bar(88, 87, 119, 6)}${bar(105, 89, 112, 6)}
+    ${ln('M90 42 Q86 70 88 100', '#f8d498', 1.2, .5)}<circle cx="102" cy="46" r="2.6" fill="#1a120a"/>
+    <path d="${strip}" fill="url(#@lo)"/></g>`, [106, 130, 30, 5]); }
+
+  /* Grey Sword rope-and-hooks: a coil of grey rope, two iron hooks back to back, a strip of grey cloth at the knot */
+  { const rope = d => ln(d, '#0b0806', 7.6, .6) + ln(d, '#7c8084', 6) + ln(d, '#3a3e42', 6, .6, 'stroke-dasharray="1.6 2.6"') + ln(d, '#dfe3e6', 1.2, .5, 'stroke-dasharray="2 2.2" transform="translate(-.6 -1.4)"');
+    const ell = (rx, ry) => `M${82 - rx} 92 A${rx} ${ry} 0 1 0 ${82 + rx} 92 A${rx} ${ry} 0 1 0 ${82 - rx} 92`;
+    const iron = d => ln(d, '#0b0806', 7, .6) + ln(d, '#5a5e64', 5) + ln(d, '#c8ced4', 1.2, .7, 'transform="translate(-1 -1)"');
+    card('b3_c4_ropehooks', 3, 'Grey Sword rope-and-hooks', `
+    <ellipse cx="82" cy="92" rx="22" ry="9" fill="#0a0d10"/>
+    ${[[50, 24], [42, 20], [34, 16], [26, 12.5]].map(([a, b]) => rope(ell(a, b))).join('')}
+    ${rope('M131 96 Q146 98 150 84')}
+    ${iron('M151 73 L151 30')}${iron('M151 30 Q132 28 128.5 46')}${iron('M151 30 Q170 28 173.5 46')}
+    <path d="M125.6 44 L128.4 53 L131.4 44 Z" fill="#5a5e64" ~/><path d="M170.6 44 L173.6 53 L176.4 44 Z" fill="#5a5e64" ~/>
+    <circle cx="151" cy="75" r="4.4" fill="none" stroke="#5a5e64" stroke-width="2.6"/>
+    <ellipse cx="150" cy="81" rx="7.4" ry="6.2" fill="#7c8084" ~/>${ln('M145 78 L155 84 M145 84 L155 78', '#3a3e42', 1.2, .8)}
+    <path d="M155 79 Q167 83 171 96 Q165 93 160 99 Q160 89 152 85 Z" fill="url(#@cl)" ~/>${ln('M158 84 Q164 88 165 95', '#3a3c40', 1, .6)}`,
+    `<ellipse cx="88" cy="99" rx="56" ry="24" fill="#000" opacity=".5" filter="url(#@sf)"/><path d="M155 34 L155 78 M155 34 Q136 32 132 50 M155 34 Q174 32 178 50" stroke="#000" stroke-width="6" fill="none" opacity=".45" filter="url(#@sf)"/>`); }
+
+  /* T'lan Imass flint blade: knapped flint, an antler haft, the hide binding gone to dust */
+  { const hw = x => x < 20 ? 5.5 + (x + 2) * 3.5 / 22 : x < 50 ? 9 - (x - 20) * .5 / 30 : x < 76 ? 8.5 - (x - 50) * 2.5 / 26 : 6 - (x - 76) * 6 / 20;
+    let flakes = ''; for (let x = 0; x < 86; x += 6.5) { const a = hw(x), b = hw(x + 6.5);
+      flakes += ln(`M${r1(x)} ${r1(-a + .4)} Q${r1(x + 3.2)} ${r1(-a + 5)} ${r1(x + 6.5)} ${r1(-b + .4)}`, '#ddd6c6', .8, .5);
+      flakes += ln(`M${r1(x + 3)} ${r1(a - .4)} Q${r1(x + 6.2)} ${r1(a - 5)} ${r1(x + 9.5)} ${r1(hw(x + 9.5) - .4)}`, '#1e1a14', .8, .6); }
+    let pearls = ''; [[-84, -2], [-76, 3], [-66, -3], [-56, 2], [-46, -2.5], [-36, 2.4], [-28, -3]].forEach(([x, y]) => pearls += `<circle cx="${x}" cy="${y}" r="1" fill="#6a5e48" opacity=".6"/>`);
+    card('b3_c4_flint', 3, "T'lan Imass flint blade", D(`
+    <path d="M-70 -6 Q-66 -15 -59 -17 Q-59 -11 -62 -6 Z" fill="url(#@an)" ~/>
+    <path d="M-92 -2 Q-80 -7 -60 -6 Q-40 -5 -22 -6 L-12 -5 L-12 5 L-22 6 Q-40 7 -60 6 Q-78 8 -90 5 Q-96 2 -92 -2 Z" fill="url(#@an)" ~/>${pearls}
+    ${ln('M-88 -3.4 Q-60 -5 -24 -4.6', '#f2ead8', 1, .5)}
+    <path d="M-2 -5.5 Q20 -9 50 -8.5 Q76 -6 96 0 Q76 6 50 8 Q20 9 -2 5.5 Z" fill="url(#@fl)" ~/>${flakes}
+    ${ln('M2 -5 Q22 -8.2 50 -7.8 Q74 -5.6 93 -.4', '#efe8d8', .7, .6)}<ellipse cx="28" cy="2" rx="9" ry="2.6" fill="#c0b69c" opacity=".35"/>
+    <rect x="-17" y="-6.8" width="20" height="13.6" rx="2" fill="#7a6a52" ~/>
+    ${ln('M-14 -6.6 L-12 6.6 M-9 -6.6 L-7 6.6 M-4 -6.6 L-3 2 M0 -6.6 L1 6.6', '#4a3e2c', 1, .75)}
+    <circle cx="-6" cy="4" r="1.6" fill="#2e2a22"/><circle cx="-11" cy="-3" r=".9" fill="#a89a7e"/><circle cx="-2" cy="-4" r=".8" fill="#a89a7e"/>
+    ${ln('M-2 6.6 q2 4 0 7 M-10 6.6 q-1 3 1 5', '#7a6a52', .8, .7)}`), [100, 130, 62, 6]); }
+
+  /* a Capan temple token: worn bronze, a domed temple and a ring of marks, green in the hollows */
+  { let ticks = ''; for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2, x = 100 + 30 * Math.cos(a), y = 86 + 27.5 * Math.sin(a), x2 = 100 + 26 * Math.cos(a), y2 = 86 + 24 * Math.sin(a);
+      ticks += ln(`M${r1(x)} ${r1(y)} L${r1(x2)} ${r1(y2)}`, i % 3 ? '#3a2a12' : '#4e8a6a', 1.6, i % 3 ? .55 : .65); }
+    const emb = (d, w = 1.3) => ln(d, '#2a1c0a', w, .6, 'transform="translate(.8 .8)"') + ln(d, '#f0d49a', w * .8, .55, 'transform="translate(-.5 -.5)"');
+    card('b3_c4_token', 3, 'Capan temple token', `
+    ${cord('M22 14 Q66 30 97 48', '#5a4630', 2)}${cord('M103 48 Q138 30 178 14', '#5a4630', 2)}
+    <ellipse cx="58" cy="29" rx="4" ry="3.2" fill="#5a4630" ~/><ellipse cx="142" cy="29" rx="4" ry="3.2" fill="#5a4630" ~/>
+    <ellipse cx="103" cy="89" rx="40" ry="37" fill="#3a2a12" ~/>
+    <ellipse cx="100" cy="86" rx="40" ry="37" fill="url(#@ab)" ~/>
+    <ellipse cx="100" cy="86" rx="34" ry="31" fill="none" stroke="#3a2a12" stroke-opacity=".5"/><ellipse cx="99.4" cy="85.3" rx="34" ry="31" fill="none" stroke="#e8c88a" stroke-opacity=".3"/>
+    ${ticks}
+    ${emb('M86 94 Q86 74 100 72 Q114 74 114 94')}${emb('M100 72 L100 66')}${emb('M88 94 L88 100 M94 94 L94 100 M100 94 L100 100 M106 94 L106 100 M112 94 L112 100')}${emb('M83 101 L117 101', 1.6)}
+    <ellipse cx="90" cy="102.5" rx="6" ry="1.4" fill="#4e8a6a" opacity=".55"/><ellipse cx="111" cy="102" rx="5" ry="1.4" fill="#4e8a6a" opacity=".5"/>
+    ${ln('M122 104 Q112 113 98 114', '#5a9a78', 2.2, .45)}<circle cx="88" cy="81" r="1.4" fill="#4e8a6a" opacity=".5"/>
+    <ellipse cx="90" cy="74" rx="15" ry="8" fill="#f0d8a0" opacity=".14"/>
+    <circle cx="100" cy="54" r="3.4" fill="#0e0a06"/>
+    <ellipse cx="100" cy="86" rx="40" ry="37" fill="url(#@lo)"/>`, [108, 128, 42, 5]); }
+
+  /* a blood-iron knife: Ilgres, darker than iron, a rime along the fuller that does not melt */
+  { let rime = ''; for (let x = 4; x < 60; x += 3.4) { const a = (x * 37) % 180, l = 1.6 + (x % 3) * .5;
+      rime += ln(`M${r1(x - l * Math.cos(a))} ${r1(-1 - l * Math.sin(a) * .6)} L${r1(x + l * Math.cos(a))} ${r1(-1 + l * Math.sin(a) * .6)}`, '#e4f4ff', .8, .85); }
+    card('b3_c5_knife', 3, 'Blood-iron knife', D(`
+    ${ln('M-4 -1 L64 -1', '#a8d4f0', 6, .22, 'filter="url(#@gf)"')}
+    <path d="M-6 -6.5 L62 -6.5 Q78 -5 88 0 Q74 7 56 7.5 L-6 6.5 Z" fill="url(#@dx)" ~/>
+    ${ln('M-4 -5.8 L62 -5.8 Q76 -4.6 86 -.4', '#c8d2dc', .9, .6)}${ln('M-4 5.6 L56 6.4 Q72 6 86 .5', '#8a96a2', .8, .5)}
+    ${ln('M2 -1 L60 -1', '#060708', 2.2)}${rime}
+    <path d="M64 4.6 Q72 4 78 1.6 L80 3.4 Q72 6.4 62 6.6 Z" fill="#4a1410" opacity=".4"/>
+    <rect x="-10" y="-9.5" width="5" height="19" rx="1.2" fill="url(#@ir)" ~/>
+    <rect x="-66" y="-5" width="56" height="10" rx="2" fill="url(#@dl)" ~/>
+    ${[-58, -40, -22].map(x => `<rect x="${x}" y="-5.4" width="5" height="10.8" rx="1" fill="#c8b48a" ~/>${ln(`M${x + 1.6} -5 L${x + 1.6} 5 M${x + 3.3} -5 L${x + 3.3} 5`, '#7a6a48', .6, .8)}`).join('')}
+    <circle cx="-70" cy="0" r="6" fill="url(#@ir)" ~/><circle cx="-71.8" cy="-2" r="1.8" fill="#dfe6ec" opacity=".5"/>`, 1.02, 96), [98, 128, 56, 6]); }
+
+  /* a Pannion chain of office: grey iron links and a bone disc carved with an open eye */
+  { const links = (p0, p1, p2, n) => { let s = ''; for (let i = 0; i <= n; i++) { const t = i / n, [x, y] = q(p0, p1, p2, t), [dx, dy] = qd(p0, p1, p2, t), a = r1(Math.atan2(dy, dx) * 180 / Math.PI);
+      s += i % 2 ? `<g transform="translate(${r1(x)} ${r1(y)}) rotate(${a})"><rect x="-4.6" y="-1.3" width="9.2" height="2.6" rx="1.3" fill="#5a5e64" ~/>${ln('M-3.6 -.6 L3.6 -.6', '#c8ced4', .6, .6)}</g>`
+        : `<g transform="translate(${r1(x)} ${r1(y)}) rotate(${a})"><ellipse rx="4.8" ry="2.9" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="3.2"/><ellipse rx="4.8" ry="2.9" fill="none" stroke="#7a7e84" stroke-width="1.8"/><path d="M-3.6 -2 Q0 -3.2 3.6 -2" fill="none" stroke="#d8dee4" stroke-width=".7" stroke-opacity=".7"/></g>`; } return s; };
+    card('b3_c5_chain', 3, 'A Pannion chain of office', `
+    ${links([22, 12], [54, 72], [96, 70], 15)}${links([104, 70], [146, 72], [178, 12], 15)}
+    <circle cx="100" cy="70" r="4.4" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="3.6"/><circle cx="100" cy="70" r="4.4" fill="none" stroke="#7a7e84" stroke-width="2.2"/>
+    <circle cx="102.5" cy="97" r="25" fill="#6a5c40" ~/><circle cx="100" cy="95" r="25" fill="url(#@bn)" ~/>
+    <circle cx="100" cy="95" r="21" fill="none" stroke="#5a4a30" stroke-opacity=".35"/>
+    <path d="M80 95 Q100 79 120 95 Q100 111 80 95 Z" fill="none" stroke="#fffaf0" stroke-width="1.2" stroke-opacity=".5" transform="translate(.8 .9)"/>
+    <path d="M80 95 Q100 79 120 95 Q100 111 80 95 Z" fill="none" stroke="#3a2e1e" stroke-width="2"/>
+    <circle cx="100" cy="95" r="7" fill="#c8b890" stroke="#3a2e1e" stroke-width="1.6"/><circle cx="100" cy="95" r="3" fill="#2a1e12"/><circle cx="98.6" cy="93.6" r="1" fill="#f6efe0"/>
+    <circle cx="100" cy="95" r="25" fill="url(#@lo)"/>`, [104, 128, 30, 4]); }
+
+  /* a Rhivi water-skin: a bhederin bladder stitched with sinew, one bone bead */
+  { const sk = 'M44 86 Q42 58 72 50 Q104 42 134 54 Q160 64 160 86 Q158 110 126 116 Q92 122 64 114 Q44 106 44 86 Z';
+    let st = ''; for (let i = 1; i < 12; i++) { const [x, y] = q([50, 92], [100, 106], [152, 84], i / 12); st += ln(`M${r1(x - 1.6)} ${r1(y - 2.6)} L${r1(x + 1.6)} ${r1(y + 2.6)}`, '#d8c49a', 1.2, .9); }
+    card('b3_c5_skin', 3, 'A Rhivi water-skin', `
+    ${cord('M160 70 Q118 18 60 54', '#3a2616', 2)}
+    <path d="M150 66 Q162 58 170 48 L180 55 Q172 66 160 79 Z" fill="url(#@bl)" ~/>
+    <path d="${sk}" fill="url(#@bl)" ~/>
+    ${ln('M50 92 Q100 106 152 84', '#2e1a0c', 1.4)}${st}
+    ${ln('M70 74 Q90 66 114 70 M62 100 Q86 108 112 104', '#3e2410', 1, .45)}
+    <ellipse cx="84" cy="63" rx="24" ry="8" fill="#fff" opacity=".17" transform="rotate(-10 84 63)"/><circle cx="74" cy="62" r="2.2" fill="#fff" opacity=".4"/>
+    <path d="M161 63 L169 72" stroke="#2e1a0c" stroke-width="5" stroke-opacity=".9"/>${ln('M159 64 L167 73 M162 61 L170 70', '#c8b48a', .9, .8)}
+    <rect x="171" y="45" width="9" height="7" rx="2" fill="url(#@bn)" transform="rotate(38 175 48)" ~/>
+    ${cord('M166 72 Q172 82 168 92', '#3a2616', 1.4)}<ellipse cx="168" cy="96" rx="3.6" ry="4.6" fill="url(#@bn)" ~/>
+    <path d="${sk}" fill="url(#@lo)"/>`, [104, 120, 64, 6]); }
+
+  /* a Moranth chitin vambrace: black chitin in overlapping plates, two straps */
+  { const top = x => 50 + (x - 40) * .07, bot = x => 106 - (x - 40) * .1;
+    let plates = ''; [40, 60, 80, 100, 120, 140].forEach(xa => { const xb = xa + 24, ta = r1(top(xa)), tb = r1(top(xb)), ba = r1(bot(xa)), bb = r1(bot(xb)), mb = r1((tb + bb) / 2);
+      plates += `<path d="M${xa} ${ta} L${xb} ${tb} Q${xb + 7} ${mb} ${xb} ${bb} L${xa} ${ba} Z" fill="url(#@ch)" ~/>`
+        + ln(`M${xb} ${tb} Q${xb + 7} ${mb} ${xb} ${bb}`, '#5e7a88', 1.1, .7) + ln(`M${xa + 2} ${r1(ta + 3)} L${xb - 1} ${r1(tb + 3)}`, '#8aa6b4', 1.2, .45)
+        + ln(`M${xa + 3} ${r1(ta + (ba - ta) * .3)} L${xb} ${r1(tb + (bb - tb) * .3)}`, '#b0ccd8', 2, .22); });
+    const strap = x => `<path d="M${x} ${r1(top(x) - 1)} L${x + 6} ${r1(top(x + 6) - 1)} L${x + 6} ${r1(bot(x + 6) + 1)} L${x} ${r1(bot(x) + 1)} Z" fill="url(#@dl)" ~/>`
+      + `<rect x="${x - 1.5}" y="${r1(top(x) - 6)}" width="9" height="7" rx="1" fill="none" stroke="#7a7e84" stroke-width="1.8"/>` + cord(`M${x + 3} ${r1(bot(x) + 1)} Q${x + 9} ${r1(bot(x) + 12)} ${x + 4} ${r1(bot(x) + 20)}`, '#3a2a1c', 3.4);
+    card('b3_c6_vambrace', 3, 'A Moranth chitin vambrace', `
+    ${plates}<ellipse cx="40" cy="78" rx="8" ry="28" fill="#050607" ~/><ellipse cx="41" cy="78" rx="5" ry="23" fill="#14181c"/>${ln('M34 58 Q32 78 35 98', '#6a8a9a', 1, .55)}
+    ${strap(70)}${strap(128)}`, [104, 124, 68, 6]); }
+
+  /* a barge-builder's axe: broad, thin, bearded, on a long ash haft; for squaring timber */
+  card('b3_c6_axe', 3, "A barge-builder's axe", D(`
+    <path d="M-90 -3 Q-20 -5.4 52 -3.6 L52 3.6 Q-20 4.6 -90 4.2 Q-94 .6 -90 -3 Z" fill="url(#@wd)" ~/>
+    ${ln('M-84 -.8 Q-40 -2 0 -1.4 M-60 1.8 Q-20 1 30 1.6', '#6a4e2e', .7, .6)}${ln('M-86 -2 Q-30 -4 48 -2.6', '#f0dcb0', .8, .45)}
+    <path d="M24 -6 L42 -6 Q44 -14 50 -22 Q56 -32 56 -44 Q34 -48 8 -44 Q0 -42 -4 -34 Q8 -30 16 -22 Q22 -14 24 -6 Z" fill="url(#@ir)" ~/>
+    <path d="M56 -44 Q34 -48 8 -44 Q0 -42 -4 -34 Q2 -37.5 9 -40 Q33 -43.4 55 -40 Z" fill="#c4ccd2" opacity=".9"/>
+    ${ln('M56 -44 Q34 -48 8 -44 Q0 -42 -4 -34', '#f4f8fa', .9, .9)}
+    <path d="M30 -47 L32.6 -43.6 L35 -46.8 Z" fill="#1a222a"/>
+    <ellipse cx="34" cy="-28" rx="2.4" ry="1.4" fill="#1e2024" opacity=".3"/><ellipse cx="22" cy="-34" rx="2" ry="1.2" fill="#1e2024" opacity=".3"/><ellipse cx="42" cy="-20" rx="1.8" ry="1.2" fill="#1e2024" opacity=".3"/>
+    <path d="M22 -7 L44 -7 L46 0 L44 7 L22 7 L20 0 Z" fill="url(#@ir)" ~/>${ln('M23 -6.2 L43 -6.2', '#dfe6ec', .9, .6)}
+    <path d="M44 -3 L50 -2 L50 2 L44 3 Z" fill="#3a2a18" ~/>`, 1, 110, 80), [104, 134, 58, 6]);
+
+  /* a Condor feather: long, black, ragged at the barbs, ivory at the quill; cold, and it lifts */
+  { const w2 = x => x < -56 ? 0 : x > 90 ? 0 : 22 * Math.sin(Math.PI * (x + 56) / 146) ** .8, w1 = x => x < -50 ? 0 : 9 * Math.sin(Math.PI * (x + 50) / 140) ** .9;
+    const cutsB = [12, -22, 50], cutsT = [30, -10];
+    let bot = 'M90 0', tp = 'M-56 0';
+    for (let x = 88; x >= -56; x -= 3) { const c = cutsB.find(k => Math.abs(k - x) < 2); bot += ` L${x} ${r1(c !== undefined ? w2(x) * .35 : w2(x) - ((x / 3) % 2 ? 0 : 1.4))}`; }
+    for (let x = -54; x <= 88; x += 3) { const c = cutsT.find(k => Math.abs(k - x) < 2); tp += ` L${x} ${r1(-(c !== undefined ? w1(x) * .3 : w1(x)))}`; }
+    let barbs = ''; for (let x = -50; x < 86; x += 3.2) { barbs += ln(`M${r1(x)} .5 L${r1(x - 6)} ${r1(w2(x - 6) - 1)}`, '#3c4454', .6, .55); if (x > -44) barbs += ln(`M${r1(x)} -.5 L${r1(x - 4)} ${r1(-w1(x - 4) + .6)}`, '#56607a', .5, .5); }
+    card('b3_c6_feather', 3, 'A Condor feather', D(`
+    <path d="${tp} L90 0 Z" fill="url(#@fe)" ~/><path d="${bot} L-56 0 Z" fill="url(#@fe)" ~/>${barbs}
+    ${ln('M-40 -4 Q10 -9.6 70 -4.4', '#9ab4d4', 1.1, .45)}${ln('M-50 12 Q0 22 60 11', '#9ab8d8', .9, .25)}
+    ${ln('M-64 2 q-2 6 2 9 M-60 3 q2 6 -1 10 M-62 -2 q-3 -4 0 -7', '#5a5e66', 1, .6)}
+    ${ln('M-88 0 L-54 0', '#0b0806', 4.4, .6)}${ln('M-88 0 L-54 0', '#e8dcc0', 3)}${ln('M-54 0 L20 0', '#0b0806', 3, .5)}${ln('M-54 0 L20 0', '#ddd2b6', 1.8)}${ln('M20 0 L90 0', '#cfc4a8', 1)}
+    ${ln('M-86 -.9 L-56 -.9', '#fffaf0', .8, .6)}`, 1, 100, 72), [100, 128, 60, 5]); }
+
+  /* Seerdomin grey mail: fine grey links, cold however long it is worn */
+  { const shirt = 'M70 26 Q100 34 130 26 L162 38 L170 72 L150 78 L144 60 L142 124 L134 128 L126 124 L118 129 L110 125 L100 130 L90 125 L82 129 L74 124 L66 128 L58 124 L56 60 L50 78 L30 72 L38 38 Z';
+    card('b3_c7_greymail', 3, 'Seerdomin grey mail', `
+    <path d="${shirt}" fill="url(#@mg)" ~/><path d="${shirt}" fill="url(#@ml)"/>
+    <path d="M66 46 Q62 90 64 124 L74 124 Q72 88 74 46 Z" fill="#1a1e22" opacity=".35"/><path d="M128 44 Q134 88 132 126 L124 124 Q124 86 120 44 Z" fill="#1a1e22" opacity=".32"/>
+    <path d="M90 44 Q88 84 92 124 L98 126 Q94 84 96 44 Z" fill="#fff" opacity=".07"/><path d="M38 40 L56 60 L50 78 L30 72 Z" fill="#1a1e22" opacity=".2"/>
+    <ellipse cx="100" cy="31" rx="17" ry="5.4" fill="#101316"/>
+    ${ln('M83 30 Q100 38 117 30', '#c8d2dc', 1.4, .55)}${ln('M40 40 L68 28', '#e4ecf4', 1.3, .5)}
+    <path d="${shirt}" fill="#a8c8e8" opacity=".07"/><path d="${shirt}" fill="url(#@lo)"/>`, [100, 136, 56, 5]); }
+
+  /* a K'ell Hunter's blade: as long as a man's arm, broken off at the wrist of the thing that grew it; never forged */
+  card('b3_c7_hunterblade', 3, "A K'ell Hunter's blade", D(`
+    <path d="M-62 -9 Q20 -12 70 -22 Q84 -26 95 -33 Q84 -18 70 -11 Q20 7 -62 9 Z" fill="url(#@kb)" ~/>
+    ${ln('M-60 -8.2 Q20 -11.2 70 -21.2 Q84 -25.4 93 -32', '#e2dace', 1, .7)}
+    ${ln('M-56 -2 Q10 -4 60 -12 Q78 -17 88 -25', '#141210', 1.4, .55)}${ln('M-56 3 Q10 2 60 -6', '#9a948a', .7, .35)}
+    ${[-46, -34, -22, -10, 2].map(x => ln(`M${x} -8 q2 4 0 8`, '#1e1a16', .8, .45)).join('')}
+    <path d="M-62 -9 L-67 -12 L-71 -6 L-77 -9 L-75 -2 L-81 2 L-74 5 L-77 11 L-67 8.5 L-62 9 Z" fill="#4e3a2c" ~/>
+    <ellipse cx="-70" cy="0" rx="3.2" ry="5.2" fill="#d8ccb0" ~/><path d="M-73 -3 L-76 -6 L-72 -1 Z M-72 3 L-76 5 L-71 4.4 Z" fill="#e8dcc4"/>
+    <path d="M-40 4 Q-30 8 -18 6 Q-28 4 -40 4 Z" fill="#2a0e0a" opacity=".5"/>`, .95, 100, 82), [100, 132, 64, 6]);
+
+  /* ======================= Book Five: harbour slate ======================= */
+
+  /* a Letherii issue sword: straight, plain, wire-bound grip, the regiment's number in the ricasso, an inventory tag on the guard */
+  { const [tx, ty] = W(-13.5, 13);
+    card('b5_c1_issuesword', 5, 'A Letherii issue sword', D(`
+    <path d="M-12 -6 L74 -5.5 L93 0 L74 5.5 L-12 6 Z" fill="url(#@st)" ~/>
+    ${ln('M4 0 L64 0', '#4a525a', 2.4)}${ln('M4 -1.4 L64 -1.4', '#eef3f6', .6, .5)}
+    ${ln('M-12 -5.2 L74 -4.8 L91.6 0', '#f6fafc', .9, .8)}${ln('M-12 5.3 L74 4.9', '#3a4048', .8, .6)}
+    ${ln('M-9 -2.6 L-6 2.6 M-6 -2.6 L-9 2.6 M-3.5 -2.6 L-3.5 2.6 M-1 -2.6 L-1 2.6', '#262a30', .9, .85)}
+    <rect x="-16" y="-14" width="5" height="28" rx="1.5" fill="url(#@ir)" ~/>${ln('M-15 -13 L-15 13', '#dfe6ec', .7, .5)}
+    ${steelGrip(-46, -16, 4.4)}
+    <ellipse cx="-50" cy="0" rx="5" ry="7" fill="url(#@ir)" ~/><ellipse cx="-51.4" cy="-2.4" rx="1.6" ry="2" fill="#e0e6ec" opacity=".5"/>`),
+    [100, 130, 62, 6]);
+    ART['item/b5_c1_issuesword'] = ART['item/b5_c1_issuesword'].replace('</svg>', `<path d="M${tx} ${ty} Q${tx - 2} ${ty + 7} ${tx + 3} ${ty + 13}" fill="none" stroke="#c8b48a" stroke-width="1"/>`
+      + `<g transform="translate(${tx + 3} ${ty + 13}) rotate(10)"><path d="M0 0 L22 0 L22 13 L0 13 L-4 6.5 Z" fill="url(#b5_c1_issuesword-pp)" ${OL}/><circle cx="-.6" cy="6.5" r="1.2" fill="#3a3a36"/>`
+      + `<path d="M4 4 l3 -1.6 l2 3 l3 -2.6 M4 9 h3 M9 9 q2 -3 4 0 t4 0" fill="none" stroke="#3a3028" stroke-width=".8"/></g></svg>`).replace('<defs>', '<defs>' + lin('pp', MAT.pp).replace(/@/g, 'b5_c1_issuesword-')); }
+
+  /* a Tarthenal war-club: black root-wood, the head studded with clinched iron nails, the grip plaited hide */
+  { const nails = [[38, -6], [48, -10], [58, -13], [70, -13], [82, -11], [44, 4], [56, 7], [68, 9], [80, 7], [62, -2], [76, -1], [88, -3], [50, -2]];
+    let plait = ''; for (let x = -85; x < -55; x += 4) plait += ln(`M${x} -5.6 L${x + 3} 0 L${x} 5.6`, '#2a1a0c', 1, .8) + ln(`M${x + 1.2} -5 L${x + 3.8} 0`, '#c8946a', .6, .45);
+    card('b5_c1_tarthclub', 5, 'A Tarthenal war-club', D(`
+    <path d="M-88 -5 Q-60 -5.5 -30 -7 Q10 -10 40 -14 Q60 -17 74 -19 Q90 -19 94 -6 Q97 5 90 15 Q80 19 66 17 Q40 13 10 9 Q-30 6 -60 5.5 Q-84 5.5 -88 5 Q-92 0 -88 -5 Z" fill="url(#@dw)" ~/>
+    <circle cx="20" cy="-9.5" r="4" fill="url(#@dw)"/><circle cx="54" cy="14" r="4" fill="url(#@dw)"/>
+    ${ln('M-50 -2 Q0 -4 40 -8 Q60 -10 80 -8 M-40 2 Q0 3 30 6 Q50 10 70 10', '#6a5442', .8, .5)}${ln('M-30 -6 Q20 -9.6 60 -15.4 Q80 -18 90 -12', '#8a7460', 1, .45)}
+    ${nails.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.8" fill="#6a3418" opacity=".35"/><circle cx="${x}" cy="${y}" r="2.6" fill="#5a524c" ~/><circle cx="${x - .8}" cy="${y - .8}" r=".9" fill="#d0c8c0" opacity=".8"/>`).join('')}
+    ${ln('M66 -17.6 L67 -22 L71 -23', '#0b0806', 3, .6)}${ln('M66 -17.6 L67 -22 L71 -23', '#5a524c', 1.6)}${ln('M86 16 L88 20 L92 20', '#0b0806', 3, .6)}${ln('M86 16 L88 20 L92 20', '#5a524c', 1.6)}
+    <rect x="-87" y="-6.4" width="33" height="12.8" rx="2.4" fill="url(#@lt)" ~/>${plait}${ln('M-84 -4.6 L-58 -4.6', '#d8a878', 1, .35)}`, .96, 100, 74), [100, 130, 62, 6]); }
+
+  /* a rope-man's hook-knife: a short blade with a back-turned hook, a cord-wrapped grip, the court's brass tag on the pommel */
+  { let wrap = ''; for (let x = -56; x < -13; x += 2.6) wrap += ln(`M${r1(x)} -5.6 L${r1(x + .6)} 5.6`, '#4a3e2a', 1, .9);
+    card('b5_c1_hookknife', 5, "A rope-man's hook-knife", `<g transform="translate(104 76) rotate(-24) scale(1.22)">
+    <path d="M-8 -6 L36 -6 Q58 -6 66 2 Q72 10 66 18 Q62 22 55 20 Q60 14 56 10 Q52 6.4 44 6 L-8 6 Z" fill="url(#@st)" ~/>
+    ${ln('M-8 -5.2 L36 -5.2 Q56 -5.2 64 2', '#f6fafc', .9, .8)}${ln('M56.5 19 Q61 14 57 9.6 Q52 6.6 44 6.6', '#e4eaee', .9, .75)}
+    ${ln('M0 -1 L34 -1', '#5a626a', 1.2, .45)}
+    <rect x="-12" y="-7" width="5" height="14" rx="1" fill="url(#@br)" ~/>
+    <rect x="-58" y="-6" width="46" height="12" rx="3" fill="#9a8a62" ~/>${wrap}${ln('M-56 -4.4 L-14 -4.4', '#e8dcb8', .9, .4)}
+    <rect x="-62" y="-6.4" width="5" height="12.8" rx="2" fill="url(#@br)" ~/>
+    <circle cx="-66" cy="0" r="3.6" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="2.8"/><circle cx="-66" cy="0" r="3.6" fill="none" stroke="#a8823e" stroke-width="1.6"/>
+    <g transform="translate(-66 3.4) rotate(24)"><rect x="-5.6" y="0" width="11.2" height="15" rx="2" fill="url(#@br)" ~/><circle cx="0" cy="3" r="1.3" fill="#1a1208"/>
+    ${ln('M-3 7 L3 7 M-3 10 L1.6 10', '#4a3616', .8, .8)}${ln('M-4.6 1 L-4.6 13', '#f6dca4', .7, .5)}</g></g>`, [104, 122, 62, 6]); }
+
+  /* a wager-chit from the Low Walk: pale wood, a rope and a wave burned in, a chalk number on the back */
+  card('b5_c1_chit', 5, 'A wager-chit from the Low Walk', `<g transform="rotate(-10 100 75)">
+    <rect x="48" y="51" width="112" height="58" rx="6" fill="#6a4e2c" ~/>
+    <rect x="44" y="46" width="112" height="58" rx="6" fill="url(#@pw)" ~/>
+    ${ln('M50 58 Q90 55 150 59 M50 74 Q100 77 150 72 M54 94 Q100 91 150 96', '#a8885a', .7, .55)}
+    <rect x="50" y="52" width="100" height="46" rx="4" fill="none" stroke="#6a4a26" stroke-opacity=".4"/>
+    ${ln('M58 66 Q100 58 142 66', '#6a3a18', 6, .3)}${ln('M58 66 Q100 58 142 66', '#3a1e0c', 3.2, .9, 'stroke-dasharray="3 1.4"')}
+    ${ln('M58 86 Q68 76 78 86 T98 86 T118 86 T138 86', '#6a3a18', 5.4, .3)}${ln('M58 86 Q68 76 78 86 T98 86 T118 86 T138 86', '#3a1e0c', 2.6, .9)}
+    ${ln('M46 48 L154 48', '#fff6e0', 1.2, .5)}${ln('M120 107.6 q10 1.4 22 -1', '#ecece4', 2, .5)}
+    <rect x="44" y="46" width="112" height="58" rx="6" fill="url(#@lo)"/></g>`, [104, 120, 60, 5]);
+
+  /* the fines court's receipt: a folded square of heavy paper, a blob of grey wax, the court's cord through it */
+  card('b5_c1_receipt', 5, "The fines court's receipt", `
+    ${cord('M26 122 Q60 106 97 96', '#6a5a3a', 2)}
+    <path d="M52 40 L146 34 L154 112 L58 118 Z" fill="url(#@pp)" ~/>
+    <path d="M100 37 L106 115 L58 118 L55 79 Z" fill="#000" opacity=".05"/>
+    ${ln('M100 37 L106 115', '#8a7a58', 1, .6)}${ln('M101.2 37 L107.2 115', '#fffaf0', .8, .6)}${ln('M55 79 L150 73', '#8a7a58', 1, .6)}${ln('M55 80.2 L150 74.2', '#fffaf0', .8, .6)}
+    ${ln('M60 48 q4 -2 8 0 t8 0 t8 0 M60 55 q4 -2 8 0 t8 0 t8 0 t8 0 M60 62 q4 -2 8 0 t8 0 M112 48 q4 -2 8 0 t8 0 t8 0 M112 56 q4 -2 8 0 t8 0', '#4a4238', .9, .55)}
+    ${ln('M114 64 q2 -4 4 0 q2 4 4 0 M126 60 q2 -2 4 0 q-2 4 0 6 M134 60 a2.6 3 0 1 0 .1 0', '#3a3028', 1, .7)}
+    <ellipse cx="128" cy="98" rx="14" ry="8" fill="#8a6a3a" opacity=".16"/>
+    ${cord('M107 96 Q140 104 174 128', '#6a5a3a', 2)}
+    <path d="M92 90 Q94 82 103 83 Q112 82 113 90 Q115 99 106 101 Q99 104 94 99 Q89 96 92 90 Z" fill="url(#@wx)" ~/>
+    <circle cx="102.6" cy="92" r="5.6" fill="none" stroke="#3a3c3c" stroke-opacity=".55"/>${ln('M100 90 L105 94 M105 90 L100 94', '#3a3c3c', .8, .5)}${ln('M95 87 Q99 84 103 84.4', '#e4e6e6', 1, .6)}
+    <path d="M52 40 L146 34 L154 112 L58 118 Z" fill="url(#@lo)"/>`, [106, 126, 54, 5]);
+
+  /* the weight-sack: an empty canvas sack, wet-dark, its mouth cord knotted, an iron ring for the rope */
+  { const sack = 'M42 98 Q38 74 60 66 Q80 60 104 64 Q132 60 152 70 Q170 80 164 100 Q158 116 126 118 Q90 122 62 116 Q42 112 42 98 Z';
+    card('b5_c1_weightbag', 5, 'The weight-sack', `
+    <path d="${sack}" fill="url(#@cv)" ~/><path d="${sack}" fill="url(#@wv)"/>
+    <ellipse cx="120" cy="96" rx="26" ry="12" fill="#14130f" opacity=".35"/><ellipse cx="74" cy="104" rx="16" ry="7" fill="#14130f" opacity=".3"/>
+    ${ln('M66 76 Q90 84 118 76 Q140 72 156 82', '#1e1c16', 1.6, .6)}${ln('M64 74 Q90 82 118 74', '#b8b0a0', 1, .3)}${ln('M84 92 Q100 100 128 106', '#1e1c16', 1.4, .5)}${ln('M60 68 Q80 62 104 66', '#c8c0b0', 1.2, .4)}
+    <path d="M60 66 Q50 54 41 47 L50 40 Q62 50 72 62 Z" fill="url(#@cv)" ~/>${ln('M50 52 L58 60 M47 49 L55 57', '#1e1c16', 1, .6)}
+    <path d="M46 52 L56 44" stroke="#0b0806" stroke-opacity=".6" stroke-width="7.4"/><path d="M46 52 L56 44" stroke="#5a4a32" stroke-width="5.6" stroke-dasharray="1.4 1.4"/>
+    ${cord('M50 50 Q44 58 46 66 M52 50 Q58 56 56 64', '#5a4a32', 1.4)}
+    <circle cx="40" cy="38" r="8" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="4.6"/><circle cx="40" cy="38" r="8" fill="none" stroke="#5e6268" stroke-width="3"/>${ln('M33.6 34 Q36 30.4 40.6 30', '#d0d6dc', 1, .7)}
+    <path d="${sack}" fill="url(#@lo)"/>`, [106, 122, 66, 6]); }
+
+  /* a poacher's sealskin coat: short, grey, oiled, bone toggles */
+  { const coat = 'M74 24 Q100 32 126 24 L150 34 Q164 42 170 66 L172 98 L156 100 L152 74 L150 118 Q100 126 50 118 L48 74 L44 100 L28 98 L30 66 Q36 42 50 34 Z';
+    const spots = [[66, 54, 5, 3], [84, 96, 6, 3.5], [126, 60, 5, 3], [136, 98, 6, 3.4], [40, 80, 4, 2.6], [160, 82, 4, 2.6], [110, 108, 5, 3], [60, 108, 4.6, 3]];
+    card('b5_c2_sealcoat', 5, "A poacher's sealskin coat", `
+    <path d="${coat}" fill="url(#@sk)" ~/>
+    ${spots.map(([x, y, a, b]) => `<ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" fill="#2a2e30" opacity=".35"/>`).join('')}
+    <path d="M56 40 L60 116 L50 117 L48 74 Z" fill="#1a1c1e" opacity=".25"/><path d="M140 40 L136 116 L148 117 L150 70 Z" fill="#1a1c1e" opacity=".3"/>
+    ${ln('M40 50 Q52 38 70 34', '#e6edf0', 2, .35)}${ln('M78 44 Q74 76 78 110', '#e6edf0', 1.6, .2)}${ln('M36 60 Q34 76 34 92', '#e6edf0', 1.4, .22)}
+    <path d="M74 24 Q100 32 126 24 L120 40 Q100 34 80 40 Z" fill="#6a7072" ~/>
+    ${ln('M100 33 L101 121', '#121416', 1.6, .9)}${ln('M102 33 L103 121', '#a8b0b4', .7, .4)}
+    ${[50, 68, 86, 104].map(y => cord(`M100 ${y} Q109 ${y - 3} 113 ${y}`, '#3a2a1c', 1.2) + `<rect x="91" y="${y - 2.2}" width="14" height="4.4" rx="2.2" fill="url(#@bn)" ~/>`).join('')}
+    <path d="M52 112 Q100 120 148 112 L150 118 Q100 126 50 118 Z" fill="#1e2022" opacity=".5"/>
+    <path d="${coat}" fill="url(#@lo)"/>`, [100, 132, 60, 5]); }
+
+  /* a tooth nobody can name: long, curved, yellowed, bound at the root with copper wire */
+  { let wire = ''; [1.2, 2.2, 3.2, 4.2].forEach(k => { const cx = 61 + k * 5 * .35, cy = 111 - k * 5 * .94, d = `M${r1(cx - 28 * .94)} ${r1(cy - 28 * .35)} L${r1(cx + 28 * .94)} ${r1(cy + 28 * .35)}`;
+      wire += ln(d, '#0b0806', 3.8, .6) + ln(d, '#b8683a', 2.4) + ln(d, '#f6b088', .8, .7, 'transform="translate(-.4 -.6)"'); });
+    const tooth = 'M40 104 Q62 46 158 26 Q106 54 82 118 Q60 122 40 104 Z';
+    card('b5_c2_tooth', 5, 'A tooth nobody can name', `
+    <defs><clipPath id="@cp"><path d="${tooth}"/></clipPath></defs>
+    <path d="${tooth}" fill="url(#@yt)" ~/>
+    <g clip-path="url(#@cp)"><path d="M20 100 L100 130 L100 150 L20 150 Z" fill="#6a5232" opacity=".45" transform="rotate(0)"/><path d="M30 78 L110 108 L110 150 L30 150 Z" fill="#6a5232" opacity=".3"/>${wire}</g>
+    ${ln('M50 88 Q76 46 150 28.4', '#fffae8', 1.4, .65)}${ln('M84 108 Q100 66 150 32', '#5a4626', 1, .4)}
+    ${ln('M96 62 l6 3 l2 5 M118 46 l4 3', '#5a4626', .7, .55)}
+    <path d="${tooth}" fill="none" ~/>
+    <circle cx="58" cy="122" r="6" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="3.6"/><circle cx="58" cy="122" r="6" fill="none" stroke="#b8683a" stroke-width="2.2"/>`, [100, 130, 56, 5]); }
+
+  /* a harbour gaff: a long ash pole, an iron hook and a spike, for dragging wreckage and the drowned out of the harbour */
+  { const hook = 'M63 -3 Q68 -22 56 -28 Q47 -31 41 -24';
+    card('b5_c2_gaff', 5, 'A harbour gaff', D(`
+    <rect x="-94" y="-2.8" width="152" height="5.6" rx="2.2" fill="url(#@wd)" ~/><rect x="24" y="-2.8" width="32" height="5.6" fill="#1e140c" opacity=".35"/>
+    ${ln('M-84 -.8 L-20 -.6 M-50 1.2 L10 1', '#6a4e2e', .7, .6)}${ln('M-90 -1.8 L54 -1.8', '#f0dcb0', .8, .45)}
+    ${ln(hook, '#0b0806', 6.6, .6)}${ln(hook, '#5e6268', 4.4)}${ln(hook, '#c4cad0', 1, .7, 'transform="translate(-.6 -1)"')}
+    <path d="M38.6 -27 L41 -24 L44.6 -26.6 Z" fill="#5e6268" ~/>
+    <circle cx="60" cy="-16" r="1.6" fill="#7a4a2a" opacity=".7"/><circle cx="50" cy="-28" r="1.4" fill="#7a4a2a" opacity=".6"/>
+    <path d="M52 -4 L68 -3.2 L68 3.2 L52 4 Z" fill="url(#@rs)" ~/><circle cx="56" cy="0" r="1" fill="#1a1210"/><circle cx="63" cy="0" r="1" fill="#1a1210"/>
+    <path d="M68 -2.6 L97 0 L68 2.6 Z" fill="url(#@ir)" ~/>${ln('M69 -1.8 L95 -.2', '#e6ecf0', .7, .7)}`, 1, 100, 76), [100, 132, 64, 6]); }
+
+  /* a cord of Shake burial shells: small white shells on a knotted cord, one of them black */
+  { const P0 = [14, 18], P1 = [100, 138], P2 = [186, 18]; let shells = '', knots = '';
+    [.22, .3, .38, .46, .54, .62, .7, .78].forEach((t, i) => { const [x, y] = q(P0, P1, P2, t), blk = i === 5, cx = r1(x), cy = r1(y + 10);
+      shells += ln(`M${cx} ${r1(y)} L${cx} ${cy - 7}`, '#6a5a40', 1, .9) + `<ellipse cx="${cx}" cy="${cy}" rx="5.6" ry="7.6" fill="url(#@${blk ? 'sb' : 'sw'})" ~/>`
+        + ln(`M${cx} ${cy - 5} Q${cx + 1.2} ${cy} ${cx} ${cy + 5}`, blk ? '#c8c4bc' : '#5a5248', 1.2, .9) + ln(`M${cx - 2.6} ${cy - 4} Q${cx - 3.6} ${cy - 1} ${cx - 3} ${cy + 1}`, '#fff', .9, blk ? .35 : .7); });
+    [.18, .26, .34, .42, .5, .58, .66, .74, .82].forEach(t => { const [x, y] = q(P0, P1, P2, t); knots += `<ellipse cx="${r1(x)}" cy="${r1(y)}" rx="2.6" ry="2" fill="#5a4a32" ~/>`; });
+    card('b5_c2_shells', 5, 'A cord of Shake burial shells', `${cord('M14 18 Q100 138 186 18', '#6a5a40', 1.8)}${knots}${shells}`, [100, 120, 50, 4]); }
+
+  /* a cadre's spare tile: black stone, polished, blank, a hairline crack across one corner */
+  card('b5_c3_cadretile', 5, "A cadre's spare tile", `
+    <path d="M44 66 L82 104 L82 114 L44 76 Z" fill="#121418" ~/><path d="M82 104 L160 78 L160 88 L82 114 Z" fill="#08090a" ~/>
+    <path d="M44 66 L122 42 L160 78 L82 104 Z" fill="url(#@bs)" ~/>
+    <path d="M58 62 L110 46 L120 54 L68 70 Z" fill="#c8d4e0" opacity=".13"/>
+    ${ln('M45 65.4 L122 42', '#9aa8b8', 1, .65)}${ln('M45 66.6 L82 103.4', '#5a6878', .8, .5)}
+    ${ln('M140 58 L145.6 66 L143.6 72 L151 78.6', '#a8b8c8', .7, .75)}`, [106, 114, 64, 7]);
+
+  /* a Faraed throwing-spear: fire-hardened wood, a leaf iron head, a tuft of feathers of a bird only the Faraed can name */
+  { const [kx, ky] = W(50, 0, 1, 100, 72);
+    card('b5_c3_spear', 5, 'A Faraed throwing-spear', D(`
+    <rect x="-92" y="-2.2" width="146" height="4.4" rx="2" fill="url(#@fh)" ~/>
+    ${[[-70, 0], [-44, .4], [-10, -.4], [20, .2]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="7" ry="2" fill="#140c06" opacity=".5"/>`).join('')}
+    ${ln('M-88 -1.4 L50 -1.4', '#d8b088', .7, .4)}
+    <path d="M50 -3 L62 -2.4 L62 2.4 L50 3 Z" fill="#3a2a1a" ~/>${ln('M52 -3 L53 3 M55 -3 L56 3 M58 -2.6 L59 2.6', '#c8b48a', .7, .8)}
+    <path d="M60 0 Q66 -8 78 -7 Q88 -4 95 0 Q88 4 78 7 Q66 8 60 0 Z" fill="url(#@ir)" ~/>${ln('M62 0 L93 0', '#26282c', .9)}${ln('M63 -3 Q68 -7 78 -6.4 Q88 -3.6 93.6 -.4', '#e6ecf0', .8, .75)}`), [100, 130, 62, 6]);
+    ART['item/b5_c3_spear'] = ART['item/b5_c3_spear'].replace('</svg>', [
+      [`M${kx - 1} ${ky} Q${kx - 11} ${ky + 14} ${kx - 11} ${ky + 32} Q${kx - 5} ${ky + 16} ${kx + 1} ${ky + 2} Z`, '#2e6a64'],
+      [`M${kx} ${ky + 1} Q${kx - 1} ${ky + 18} ${kx + 3} ${ky + 36} Q${kx + 5} ${ky + 18} ${kx + 3} ${ky + 1} Z`, '#3e7a72'],
+      [`M${kx + 2} ${ky} Q${kx + 12} ${ky + 12} ${kx + 16} ${ky + 28} Q${kx + 10} ${ky + 12} ${kx + 4} ${ky} Z`, '#1e3a3a']].map(([d, c]) => `<path d="${d}" fill="${c}" ${OL}/>`).join('')
+      + `<path d="M${kx - 10} ${ky + 26} l3 -2 M${kx + 2} ${ky + 30} l3 0 M${kx + 13} ${ky + 22} l3 -1" stroke="#a0522a" stroke-width="2.4"/>`
+      + `<path d="M${kx} ${ky + 2} L${kx + 2} ${ky + 34}" fill="none" stroke="#d8e4e0" stroke-width=".6" stroke-opacity=".6"/><ellipse cx="${kx + 1}" cy="${ky + 1}" rx="3.6" ry="2.8" fill="#c8b48a" ${OL}/></svg>`); }
+
+  /* green ash in a paper twist: grey ash, still faintly green at the open end */
+  card('b5_c3_ash', 5, 'Green ash in a paper twist', `
+    <ellipse cx="142" cy="78" rx="20" ry="28" fill="#6ac088" opacity=".12" filter="url(#@gf)"/>
+    <path d="M62 75 Q50 69 40 73 Q46 79 36 86 Q50 86 62 85 Z" fill="url(#@kp)" ~/>${ln('M42 74 L52 84 M48 72 L56 84', '#3a2a14', .9, .6)}
+    <path d="M60 76 L134 52 Q148 70 136 102 L60 85 Z" fill="url(#@kp)" ~/>
+    ${ln('M70 77 L132 58 M74 81 L136 90 M96 70 L104 92', '#3a2a14', .9, .5)}${ln('M64 76 L130 54', '#e8c898', 1, .5)}
+    <ellipse cx="137" cy="77" rx="8.6" ry="25" fill="#2a1e10" ~/>
+    <ellipse cx="138.4" cy="79" rx="6.6" ry="19" fill="#8a8c88"/><ellipse cx="138.4" cy="79" rx="6.6" ry="19" fill="none" stroke="#7ac08e" stroke-width="2" stroke-opacity=".55"/>
+    <circle cx="137" cy="72" r="1" fill="#c8cac4"/><circle cx="140" cy="84" r=".9" fill="#5a5c58"/>
+    <path d="M138 106 Q144 100 150 101 Q156 97 162 101 Q170 103 175 107 Q156 111 138 106 Z" fill="#7a7c78" ~/><circle cx="152" cy="103" r="1" fill="#8ac898" opacity=".8"/><circle cx="160" cy="104" r=".8" fill="#c8cac4"/>`, [104, 110, 58, 5]);
+
+  /* a Grass Jacket's helm: open iron, faded green cloth at the crest, dented once over the left ear */
+  { const dome = 'M48 96 Q46 40 100 34 Q154 40 152 96 Z';
+    card('b5_c4_helm', 5, "A Grass Jacket's helm", `
+    <path d="M46 102 Q100 114 154 102 Q100 122 46 102 Z" fill="#050607"/>
+    <path d="${dome}" fill="url(#@ir)" ~/>${ln('M62 54 Q96 32 136 44', '#f0f4f6', 1.6, .55)}${ln('M60 60 Q56 76 58 92', '#dfe6ec', 1.2, .35)}
+    <path d="M132 62 Q143 70 139 84 Q135 74 132 62 Z" fill="#141618" opacity=".7"/>${ln('M131.4 62 Q127.6 72 132 84', '#d8dee4', 1, .55)}
+    ${ln('M78 70 l10 -3 M110 80 l8 4', '#2a2c30', .7, .5)}
+    <path d="M46 92 Q100 104 154 92 L154 102 Q100 114 46 102 Z" fill="url(#@ir)" ~/>${ln('M47 93 Q100 105 153 93', '#e4eaee', .9, .6)}
+    ${[56, 72, 88, 104, 120, 136].map(x => `<circle cx="${x}" cy="${r1(99 + 5 * Math.sin(Math.PI * (x - 46) / 108))}" r="1.6" fill="#a8aeb4" ~/>`).join('')}
+    <path d="${dome}" fill="url(#@lo)"/>
+    <circle cx="104" cy="35" r="3.6" fill="url(#@ir)" ~/>
+    <path d="M106 38 Q122 50 128 66 Q120 62 112 57 Q108 48 104 40 Z" fill="#56683e" ~/>
+    <path d="M104 33 Q130 25 150 31 Q160 35 170 29 Q164 41 150 41 Q128 39 106 39 Z" fill="#6e8058" ~/>${ln('M110 35 Q130 31 150 36', '#3e4e2c', 1, .6)}${ln('M108 34 Q128 28 148 31', '#a8b890', .9, .5)}
+    <ellipse cx="105" cy="37" rx="4.6" ry="3.6" fill="#5e7048" ~/>`, [100, 122, 60, 6]); }
+
+  /* a tooth too big for a wolf: a canine as long as a finger, yellowed, on a thong */
+  card('b5_c4_wolftooth', 5, 'A tooth too big for a wolf', `
+    ${cord('M18 14 Q60 50 96 56', '#3a2818', 2)}${cord('M104 56 Q140 50 182 14', '#3a2818', 2)}
+    <path d="M88 54 Q85 76 91 100 Q97 122 104 130 Q108 104 112 88 Q116 70 112 54 Z" fill="url(#@yt)" ~/>
+    <path d="M88 54 L112 54 Q114 64 113 74 Q100 78 88 72 Z" fill="#6a5232" opacity=".5"/>
+    ${ln('M92 74 Q94 100 102 122', '#fffae8', 1.3, .6)}${ln('M108 80 Q106 100 104 120', '#5a4626', .9, .4)}${ln('M98 92 l3 4', '#5a4626', .6, .5)}
+    ${[57, 61, 65].map(y => ln(`M86.6 ${y} Q100 ${y + 3} 113.4 ${y}`, '#0b0806', 3.2, .6) + ln(`M86.6 ${y} Q100 ${y + 3} 113.4 ${y}`, '#4a3222', 2)).join('')}
+    <ellipse cx="100" cy="54" rx="6" ry="3.4" fill="#4a3222" ~/>`, [106, 136, 18, 3]);
+
+  /* a brand-pot from the west rampart: black-glazed clay, sealed with pitch, a tarred rag wick, scorched down one side */
+  { const pot = 'M58 74 Q54 54 76 48 L80 40 L120 40 L124 48 Q146 54 142 74 Q146 104 124 118 Q100 126 76 118 Q54 104 58 74 Z';
+    card('b5_c4_pitchpot', 5, 'A brand-pot from the west rampart', `
+    <path d="${pot}" fill="url(#@gz)" ~/>
+    <path d="M130 54 Q142 74 133 106 Q126 92 124 74 Q124 60 130 54 Z" fill="#6a3a18" opacity=".55"/>${ln('M132 62 Q136 80 131 98', '#9a6a3a', 1.6, .35)}
+    <ellipse cx="76" cy="70" rx="9" ry="17" fill="#fff" opacity=".14" transform="rotate(-18 76 70)"/><circle cx="73" cy="62" r="2.4" fill="#fff" opacity=".55"/>
+    ${ln('M78 112 Q100 120 122 112', '#5a5c62', 1, .35)}
+    <ellipse cx="100" cy="41" rx="21" ry="5" fill="#1a1a1c" ~/>
+    <path d="M78 40 Q80 30 100 30 Q120 30 122 40 Q122 46 116 46 Q114 55 110 46 Q100 48 92 46 Q88 53 86 46 Q78 46 78 40 Z" fill="#120e0a" ~/>${ln('M84 36 Q96 31.6 110 33', '#6a5a4a', 1, .5)}
+    <path d="M97 33 Q93 20 100 9 Q107 15 104 22 Q111 24 106 33 Z" fill="#2e2418" ~/>${ln('M100 10 l-3 -3 M103 12 l3 -4 M98 18 q4 2 6 0', '#4a3a28', .8, .8)}${ln('M98 26 q3 -6 2 -12', '#8a7a68', .7, .4)}
+    <path d="${pot}" fill="url(#@lo)"/>`, [102, 124, 50, 6]); }
+
+  /* a cache shortsword, still in grease: a Letherii issue shortsword in greased cloth, the cache's clay seal on the cord */
+  { const [kx, ky] = W(24, 9, 1, 100, 74);
+    let wraps = ''; for (let x = -20; x < 58; x += 8.5) wraps += ln(`M${x} -8 L${x + 6} 8`, '#5a4a2e', 1.2, .7) + ln(`M${x + 1.4} -8 L${x + 7.4} 8`, '#f0e2b4', .7, .35);
+    card('b5_c5_cacheblade', 5, 'A cache shortsword, still in grease', D(`
+    <path d="M-20 -6 L70 -6 L92 0 L70 6 L-20 6 Z" fill="url(#@st)" ~/>${ln('M60 -5.3 L70 -5.3 L90.6 -.4', '#f8fbfc', .9, .9)}${ln('M60 0 L80 0', '#4a525a', 1.2, .5)}
+    <path d="M-22 -8 L58 -8 Q64 -6 66 0 Q64 6 58 8 L-22 8 Z" fill="url(#@gc)" ~/>${wraps}
+    ${ln('M-18 -6.4 L60 -6.4', '#fff6d0', 2.4, .25)}${ln('M56 -7.6 Q63 -5 64 0', '#1e1a10', .8, .5)}
+    ${ln('M20 -9 L23 9 M24 -9 L27 9', '#0b0806', 3, .6)}${ln('M20 -9 L23 9 M24 -9 L27 9', '#6a5634', 1.6)}
+    <rect x="-27" y="-12" width="5" height="24" rx="1.4" fill="url(#@ir)" ~/>
+    ${steelGrip(-56, -27, 4.2)}<ellipse cx="-60" cy="0" rx="4.6" ry="6.4" fill="url(#@ir)" ~/>`, 1, 100, 74), [100, 130, 60, 6]);
+    ART['item/b5_c5_cacheblade'] = ART['item/b5_c5_cacheblade'].replace('</svg>', `<path d="M${kx} ${ky} Q${kx + 4} ${ky + 8} ${kx + 4} ${ky + 15}" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="3"/><path d="M${kx} ${ky} Q${kx + 4} ${ky + 8} ${kx + 4} ${ky + 15}" fill="none" stroke="#6a5634" stroke-width="1.6"/>`
+      + `<circle cx="${kx + 4}" cy="${ky + 21}" r="7" fill="url(#b5_c5_cacheblade-cy)" ${OL}/><circle cx="${kx + 4}" cy="${ky + 21}" r="4" fill="none" stroke="#44200f" stroke-opacity=".6"/><path d="M${kx + 2} ${ky + 19} l4 4 M${kx + 6} ${ky + 19} l-4 4" stroke="#44200f" stroke-opacity=".6" stroke-width=".8"/><path d="M${kx} ${ky + 17} q2 -2 5 -2" fill="none" stroke="#f0b088" stroke-opacity=".6"/></svg>`)
+      .replace('<defs>', '<defs>' + lin('cy', MAT.cy).replace(/@/g, 'b5_c5_cacheblade-')); }
+
+  /* a cache bow, unstrung: plain yew, a gentle single curve, lashed to a bark tube with its waxed string coiled inside; the seal on the lashing */
+  { const [kx, ky] = W(24, 17, 1, 100, 76);
+    const lash = x => ln(`M${x} -10 L${x + 2} 17 M${x + 3} -10 L${x + 5} 17`, '#0b0806', 3, .6) + ln(`M${x} -10 L${x + 2} 17 M${x + 3} -10 L${x + 5} 17`, '#6a5434', 1.6) + ln(`M${x} -10 L${x + .6} -2`, '#d8c49a', .6, .6);
+    card('b5_c5_cachebow', 5, 'A cache bow, unstrung', D(`
+    <rect x="-36" y="2" width="72" height="14" rx="6" fill="url(#@bb)" ~/>
+    ${ln('M-30 6 h6 M-14 5 h4 M2 7 h7 M18 5.4 h5 M-24 12 h5 M-4 13 h6 M14 11.4 h4 M26 12.6 h4', '#3a342a', 1, .7)}${ln('M-34 4 L32 4', '#fffaf0', 1, .5)}
+    <ellipse cx="36" cy="9" rx="3.2" ry="7" fill="#1a1610" ~/>
+    ${ln('M36 6 q8 -2 10 4 q2 6 -6 6 q-8 0 -6 -6 q2 -5 10 -3 M44 13 Q52 18 60 13', '#0b0806', 2.6, .6)}${ln('M36 6 q8 -2 10 4 q2 6 -6 6 q-8 0 -6 -6 q2 -5 10 -3 M44 13 Q52 18 60 13', '#e6d8a0', 1.3)}
+    <path d="M-90 -1 Q0 -16 90 -1 L90 2 Q0 -6 -90 2 Z" fill="url(#@yw)" ~/>
+    <path d="M-88 -1 Q0 -15.6 88 -1 L88 -.2 Q0 -12.2 -88 -.2 Z" fill="#e8cc96"/>${ln('M-60 -3.4 Q0 -10.4 60 -3.4', '#6a3010', .7, .5)}
+    ${ln('M-87 -1.6 L-87 1.6 M87 -1.6 L87 1.6', '#2a1408', 1.2, .9)}
+    ${lash(-22)}${lash(22)}`, 1, 100, 76), [100, 128, 64, 6]);
+    ART['item/b5_c5_cachebow'] = ART['item/b5_c5_cachebow'].replace('</svg>', `<path d="M${kx} ${ky} Q${kx + 3} ${ky + 8} ${kx + 2} ${ky + 14}" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="3"/><path d="M${kx} ${ky} Q${kx + 3} ${ky + 8} ${kx + 2} ${ky + 14}" fill="none" stroke="#6a5434" stroke-width="1.6"/>`
+      + `<circle cx="${kx + 2}" cy="${ky + 20}" r="7" fill="url(#b5_c5_cachebow-cy)" ${OL}/><circle cx="${kx + 2}" cy="${ky + 20}" r="4" fill="none" stroke="#44200f" stroke-opacity=".6"/><path d="M${kx} ${ky + 18} l4 4 M${kx + 4} ${ky + 18} l-4 4" stroke="#44200f" stroke-opacity=".6" stroke-width=".8"/><path d="M${kx - 2} ${ky + 16} q2 -2 5 -2" fill="none" stroke="#f0b088" stroke-opacity=".6"/></svg>`)
+      .replace('<defs>', '<defs>' + lin('cy', MAT.cy).replace(/@/g, 'b5_c5_cachebow-')); }
+
+  /* the house's scale: bright new scale on a padded coat, a small scale-balance stamped inside the collar */
+  { const coat = 'M72 26 Q100 34 128 26 L156 36 L166 70 L148 76 L142 58 L142 120 Q100 128 58 120 L58 58 L52 76 L34 70 L44 36 Z';
+    let quilt = ''; for (let x = 62; x < 140; x += 6) quilt += ln(`M${x} ${r1(117 + 4 * Math.sin(Math.PI * (x - 58) / 84))} l0 6`, '#2e2618', .7, .7);
+    card('b5_c5_housemail', 5, "The house's scale", `
+    <path d="${coat}" fill="url(#@nb)" ~/><path d="${coat}" fill="url(#@sc)"/>
+    <path d="M62 44 Q60 84 62 118 L72 120 Q70 84 72 44 Z" fill="#1a2026" opacity=".28"/><path d="M128 44 Q132 84 132 120 L124 121 Q124 84 120 44 Z" fill="#1a2026" opacity=".26"/>
+    ${ln('M46 40 L70 30', '#fff', 1.6, .6)}${ln('M84 46 Q82 80 86 112', '#fff', 2, .18)}
+    <path d="M58 114 Q100 122 142 114 L142 122 Q100 130 58 122 Z" fill="url(#@pc)" ~/>${quilt}
+    <path d="M34 70 L52 76 L54 70 L36 64 Z" fill="url(#@pc)" ~/><path d="M166 70 L148 76 L146 70 L164 64 Z" fill="url(#@pc)" ~/>
+    <path d="M80 27 Q100 52 120 27 Q100 34 80 27 Z" fill="#4e4230" ~/>
+    ${ln('M96 36.4 L104 36.4 M100 34.4 L100 41', '#d8c078', .7, .9)}${ln('M95 37 q1 2.4 2 0 M103 37 q1 2.4 2 0', '#d8c078', .6, .9)}
+    <path d="${coat}" fill="url(#@lo)"/>`, [100, 132, 56, 5]); }
+
+  /* a Bluerose girth-strap, cut through: leather, an iron buckle, cut most of the way through on the inside */
+  { const P = [[46, 62], [84, 28], [120, 126], [172, 66]], N = 48;
+    const bz = t => { const u = 1 - t; return [u ** 3 * P[0][0] + 3 * u * u * t * P[1][0] + 3 * u * t * t * P[2][0] + t ** 3 * P[3][0], u ** 3 * P[0][1] + 3 * u * u * t * P[1][1] + 3 * u * t * t * P[2][1] + t ** 3 * P[3][1]]; };
+    const pts = [...Array(N + 1)].map((_, i) => { const t = i / N, [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + .01)), [x1, y1] = bz(Math.max(0, t - .01)); let nx = -(y2 - y1), ny = x2 - x1; const l = Math.hypot(nx, ny); nx /= l; ny /= l;
+      const w = 8 * (1 ); return { t, x, y, nx, ny, w }; });
+    const band = (a, b) => { const s = pts.filter(p => p.t >= a - 1e-9 && p.t <= b + 1e-9); return 'M' + s.map(p => `${r1(p.x + p.nx * p.w)} ${r1(p.y + p.ny * p.w)}`).join(' L') + ' L' + s.reverse().map(p => `${r1(p.x - p.nx * p.w)} ${r1(p.y - p.ny * p.w)}`).join(' L') + ' Z'; };
+    const side = (a, b, off) => 'M' + pts.filter(p => p.t >= a && p.t <= b).map(p => `${r1(p.x + p.nx * (p.w - off))} ${r1(p.y + p.ny * (p.w - off))}`).join(' L');
+    const sideN = (a, b, off) => 'M' + pts.filter(p => p.t >= a && p.t <= b).map(p => `${r1(p.x - p.nx * (p.w - off))} ${r1(p.y - p.ny * (p.w - off))}`).join(' L');
+    const cut = pts[24], holes = pts.filter((p, i) => i >= 40 && i <= 46 && i % 2 === 0);
+    const ang = r1(Math.atan2(P[1][1] - P[0][1], P[1][0] - P[0][0]) * 180 / Math.PI);
+    card('b5_c5_girth', 5, 'A Bluerose girth-strap, cut through', `
+    <path d="${band(0, 1)}" fill="url(#@lt)" ~/>${ln(sideN(.36, .64, 1.2), '#c8a27a', 2.2, .9)}
+    ${ln(side(.02, .98, 2.2), '#e0b484', .9, .65, 'stroke-dasharray="2.2 2"')}${ln(sideN(.02, .98, 2.6), '#e0b484', .9, .35, 'stroke-dasharray="2.2 2"')}${ln(side(0, 1, .5), '#d8a878', .9, .5)}
+        ${ln(`M${r1(cut.x + cut.nx * cut.w * .52)} ${r1(cut.y + cut.ny * cut.w * .52)} L${r1(cut.x - cut.nx * cut.w * .98)} ${r1(cut.y - cut.ny * cut.w * .98)}`, '#140804', 3)}
+    ${ln(`M${r1(cut.x + cut.nx * cut.w * .52 + .9)} ${r1(cut.y + cut.ny * cut.w * .52 + .6)} L${r1(cut.x - cut.nx * cut.w * .98 + .9)} ${r1(cut.y - cut.ny * cut.w * .98 + .6)}`, '#e8c8a0', .7, .7)}
+    ${holes.map(p => `<ellipse cx="${r1(p.x)}" cy="${r1(p.y)}" rx="1.8" ry="1.4" fill="#1a0e06"/>`).join('')}
+    <g transform="translate(40.6 66.4) rotate(${ang})"><rect x="-6" y="-12" width="12" height="24" rx="2.4" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="4.4"/><rect x="-6" y="-12" width="12" height="24" rx="2.4" fill="none" stroke="#6a6e74" stroke-width="3"/>
+    ${ln('M-6 0 L8 0', '#0b0806', 3, .6)}${ln('M-6 0 L8 0', '#7a7e84', 1.8)}${ln('M-6.6 -10 L-6.6 10', '#dfe6ec', .8, .6)}</g>`, [108, 120, 66, 6]); }
+
+  /* an Edur sword from the channel: dark iron, long, slightly curved, grey leather worn to a bigger hand than yours */
+  card('b5_c6_edurblade', 5, 'An Edur sword from the channel', D(`
+    <path d="M-16 -6 Q40 -8 70 -13 Q84 -16 95 -22 Q86 -10 72 -4 Q40 6 -16 6 Z" fill="url(#@di)" ~/>
+    <path d="M-16 6 Q40 6 72 -4 Q86 -10 95 -22 Q84 -12.6 72 -7.4 Q40 2.4 -16 2.6 Z" fill="#b8c0c8" opacity=".5"/>
+    ${ln('M-14 -5.4 Q40 -7.4 70 -12.4 Q84 -15.4 92 -20.4', '#dfe6ec', .9, .55)}
+    ${ln('M-10 -1 Q30 -3 60 -7 M-6 1.4 Q30 0 64 -4', '#c8d0d8', .6, .15, 'stroke-dasharray="6 3"')}
+    <ellipse cx="-19" cy="0" rx="3.2" ry="10" fill="url(#@ir)" ~/>
+    <rect x="-61" y="-5.6" width="40" height="11.2" rx="3" fill="url(#@gl)" ~/>
+    ${ln('M-56 -5 L-52 5 M-46 -5 L-42 5 M-36 -5 L-32 5 M-26 -5 L-23 5', '#2a2c2e', .7, .5)}
+    <ellipse cx="-50" cy="-1" rx="6" ry="3" fill="#c8cacc" opacity=".22"/><ellipse cx="-34" cy="-1" rx="6" ry="3" fill="#c8cacc" opacity=".22"/>
+    <path d="M-61 -6 L-69 -4 L-71 0 L-69 4 L-61 6 Z" fill="url(#@ir)" ~/>`, 1, 100, 76), [100, 130, 62, 6]);
+
+  /* a pot of white paint: a small clay pot, a white rim, a frayed brush tied to its neck; the battalion's fingertip */
+  { const pot = 'M76 58 L124 58 Q126 66 132 74 Q140 98 126 114 Q100 126 74 114 Q60 98 68 74 Q74 66 76 58 Z';
+    card('b5_c6_paint', 5, 'A pot of white paint', `
+    ${ln('M116 64 L150 22', '#0b0806', 5.8, .6)}${ln('M116 64 L150 22', '#8a6a40', 4.2)}${ln('M115 62.6 L148.6 21', '#d8b888', 1, .5)}
+    <path d="M147 26 L155 8 L159 9 L164 13 L153 28 Z" fill="#ddd8cc" ~/>${ln('M150 22 L156 9 M152 24 L161 11 M154 26 L164 14 M156 8 l-2 -3 M163 12 l3 -2', '#9a948a', .6, .8)}
+    <path d="M146 24 L150 28 L154 25 L150 21 Z" fill="#5a4a32"/>
+    <path d="${pot}" fill="url(#@cy)" ~/>
+    <path d="M86 62 L86 76 Q88 80 90 76 L90 63 Z M106 63 L106 70 Q108 73 110 70 L110 63 Z M118 62 L119 84 Q121 88 123 84 L122 62 Z" fill="#ecebe6"/>
+    <ellipse cx="110" cy="94" rx="5" ry="6.5" fill="#ecebe6" opacity=".92" transform="rotate(10 110 94)"/>${ln('M107.4 92 q2.6 -3 5 0 M107 95 q3 -3.6 6 0 M108 98 q2 -2 4 0', '#b8b4a8', .5, .7)}
+    <ellipse cx="100" cy="58" rx="26" ry="7" fill="#e8e6e0" ~/><ellipse cx="100" cy="58" rx="20" ry="4.6" fill="#f6f4ee"/>${ln('M84 56.6 Q92 54.6 100 54.6', '#fff', 1, .8)}
+    ${cord('M75 63 Q100 71 125 63', '#6a5a3c', 1.4)}${ln('M114 61 L120 67 M117 60 L122 65', '#6a5a3c', 1.2)}
+    <path d="${pot}" fill="url(#@lo)"/>`, [100, 124, 46, 5]); }
+
+  /* a stone from the old lake bed: flat, pale grey with a darker ring, worn smooth by water */
+  { const stone = 'M38 78 Q40 56 86 50 Q140 46 160 66 Q168 84 146 98 Q110 110 70 104 Q38 96 38 78 Z';
+    card('b5_c6_lakestone', 5, 'A stone from the old lake bed', `
+    <path d="${stone}" transform="translate(2 7)" fill="#3e403c" ~/>
+    <path d="${stone}" fill="url(#@ls)" ~/>
+    <ellipse cx="101" cy="78" rx="40" ry="18" fill="none" stroke="#6a6c66" stroke-width="11" stroke-opacity=".3"/><ellipse cx="101" cy="78" rx="40" ry="18" fill="none" stroke="#5e605a" stroke-width="5" stroke-opacity=".6"/>
+    <ellipse cx="80" cy="64" rx="26" ry="7" fill="#fff" opacity=".16" transform="rotate(-8 80 64)"/>${ln('M46 70 Q60 54 92 51', '#f2f4ee', 1.2, .55)}
+    <path d="${stone}" fill="url(#@lo)"/>`, [106, 112, 66, 7]); }
+
+  /* a holed dock from the Low Walk: a worn copper dock, a hole bored through, on a cord still wet from the canal */
+  card('b5_c7_dock', 5, 'A holed dock from the Low Walk', `
+    ${cord('M28 12 Q60 46 96 74', '#2e2a24', 2.2)}${cord('M104 74 Q140 46 172 12', '#2e2a24', 2.2)}
+    ${ln('M40 24 Q60 42 80 58', '#9ab0b8', .7, .45)}<circle cx="70" cy="50" r="1.4" fill="#b8d0dc" opacity=".7"/><circle cx="142" cy="40" r="1.2" fill="#b8d0dc" opacity=".7"/>
+    <ellipse cx="103" cy="90" rx="32" ry="29" fill="#4a2614" ~/>
+    <ellipse cx="100" cy="86" rx="32" ry="29" fill="url(#@cu)" ~/>
+    <ellipse cx="100" cy="86" rx="26.6" ry="24" fill="none" stroke="#5a2e14" stroke-opacity=".45"/><ellipse cx="99.4" cy="85.4" rx="26.6" ry="24" fill="none" stroke="#f0b888" stroke-opacity=".3"/>
+    ${ln('M86 98 Q90 88 96 90 Q98 82 106 84 Q112 86 112 96', '#5a2e14', 1.4, .35)}${ln('M84 100 L116 100', '#5a2e14', 1.2, .3)}
+    <circle cx="118" cy="102" r="3" fill="#4a8a6a" opacity=".4"/><circle cx="82" cy="96" r="2" fill="#4a8a6a" opacity=".35"/>
+    <ellipse cx="88" cy="76" rx="12" ry="7" fill="#fff" opacity=".12"/>
+    <ellipse cx="100" cy="74" rx="4.6" ry="4.2" fill="#0a0604"/>${ln('M103.6 76 Q101 79 97 78', '#e8a070', .8, .7)}
+    <path d="M104 115 Q101 120 104 123 Q107 120 104 115 Z" fill="#9ab8c8" opacity=".6"/>
+    <ellipse cx="100" cy="86" rx="32" ry="29" fill="url(#@lo)"/>`, [104, 128, 32, 4]);
+
+  /* a canal lamp off the Low Walk: small, iron, a horn window, green with canal water; unlit */
+  card('b5_c7_lamp', 5, 'A canal lamp off the Low Walk', `
+    <circle cx="100" cy="19" r="7.4" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="4.4"/><circle cx="100" cy="19" r="7.4" fill="none" stroke="#5e6268" stroke-width="2.8"/>
+    <path d="M126 48 L138 44 L138 106 L126 112 Z" fill="#202326" ~/><path d="M128.6 54 L135.6 51.4 L135.6 100 L128.6 104 Z" fill="#6a5228" opacity=".75"/>
+    <path d="M72 48 L100 26 L138 44 L126 48 Z" fill="url(#@ir)" ~/>${ln('M76 47 L100 27.6', '#dfe6ec', 1, .55)}
+    <circle cx="94" cy="40" r="1.4" fill="#0a0c0e"/><circle cx="104" cy="40" r="1.4" fill="#0a0c0e"/><circle cx="114" cy="42" r="1.4" fill="#0a0c0e"/>
+    <rect x="74" y="48" width="52" height="64" fill="url(#@ir)" ~/>
+    <rect x="80" y="54" width="40" height="52" fill="url(#@hw)" opacity=".82"/><ellipse cx="94" cy="68" rx="10" ry="14" fill="#fff" opacity=".12"/>
+    <path d="M97 92 Q100 84 103 92 Z" fill="#2a2016" opacity=".7"/>${ln('M80 80 L120 80 M100 54 L100 106', '#2c2f33', 2)}
+    <rect x="70" y="112" width="60" height="8" rx="1.5" fill="url(#@ir)" ~/><path d="M130 112 L140 106 L140 114 L130 120 Z" fill="#1a1c1f" ~/>
+    <path d="M74 98 Q80 102 78 112 L74 112 Z M122 92 Q126 100 124 112 L120 112 Q122 102 122 92 Z M84 112 Q96 108 112 112 Q100 120 84 120 Z" fill="#4a7a4a" opacity=".5"/>
+    ${ln('M80 106 L81 111 M118 104 L118 110', '#6a9a5a', .8, .6)}
+    <path d="M90 121 Q88 125 90 127 Q92 125 90 121 Z" fill="#9ab8c8" opacity=".6"/>`, [102, 126, 42, 5]);
+
+  /* the Sixth's page from the paybook: ruled, names and numbers, and a line drawn neatly through every one */
+  { let rows = ''; for (let i = 0; i < 11; i++) { const y = 42 + i * 8, nw = 22 + ((i * 17) % 22), dw = 10 + ((i * 7) % 12);
+      rows += ln(`M64 ${y} l${nw * .25} -2 l${nw * .25} 2 l${nw * .25} -2 l${nw * .25} 2`, '#3a3028', .9, .75)
+        + ln(`M122 ${y} l${dw * .33} -2 l${dw * .33} 2 l${dw * .34} -1.4`, '#3a3028', .9, .75) + ln(`M62 ${y - 1} L148 ${y - 1}`, '#2a2420', .8, .85); }
+    card('b5_c7_ledgerpage', 5, "The Sixth's page from the paybook", `<g transform="rotate(-6 100 76)">
+    <path d="M54 22 L146 18 Q150 20 150 24 L154 128 Q150 132 146 132 L58 134 L56 128 L59 122 L55 116 L58 110 L54 104 L58 98 L55 92 L59 86 L54 80 L58 74 L55 68 L59 62 L54 56 L58 50 L55 44 L59 38 L54 32 L57 26 Z" fill="url(#@pp)" ~/>
+    ${[...Array(12)].map((_, i) => ln(`M60 ${44 + i * 8} L150 ${44 + i * 8}`, '#7a96aa', .5, .45)).join('')}${ln('M116 26 L118 130', '#a05040', .6, .5)}
+    ${ln('M64 32 l6 -3 l4 3 M78 32 l3 -3 l3 3 M90 30 h10', '#2a2420', 1.1, .8)}
+    ${rows}
+    <path d="M146 132 L154 128 L146 122 Z" fill="#c8bc98" ~/>
+    ${ln('M56 24 L146 20', '#fffaf0', 1, .5)}</g>`, [102, 138, 54, 4]); }
+})();
+
+/* ============ the item art pass (v8.1.x): Book Four's gear, redrawn ============
+   David, Oct 30 2026: "do a pass on the item art. make it better in general and be sure to fix the bows."
+   Every b4_ item is redrawn here as an override of the chapter art files (71b–77b), to the series look:
+   200×150, Book Four's dust vignette (#3a3022→#110d09), light from the upper left, a soft ground shadow,
+   materials that read (steel bevel, stitched leather, horn, cloth folds, ring and scale texture), a thin dark outline,
+   long things on the lower-left to upper-right diagonal. Ids inside each picture are prefixed with the item id ("@" below). */
+(function(){
+  if (typeof ART === 'undefined') return;
+  const O = 'stroke="#0b0806" stroke-opacity=".6" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"';
+  const sh = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#@sh)"/>`;
+  /* a silhouette: fill, the shared upper-left light over it, the outline on top */
+  const S = (d, fill, lit = '@lit') => `<path d="${d}" fill="${fill}"/><path d="${d}" fill="url(#${lit})"/><path d="${d}" fill="none" ${O}/>`;
+  const ol = d => `<path d="${d}" fill="none" ${O}/>`;
+  const lin = (id, stops, x2 = 1, y2 = 1) => `<linearGradient id="@${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}"${a != null ? ` stop-opacity="${a}"` : ''}/>`).join('')}</linearGradient>`;
+  const BASE = `<radialGradient id="@bg" cx=".44" cy=".42" r=".78"><stop offset="0" stop-color="#3a3022"/><stop offset=".62" stop-color="#211a12"/><stop offset="1" stop-color="#110d09"/></radialGradient>`
+    + `<radialGradient id="@sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".55" stop-color="#000" stop-opacity=".32"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`
+    + lin('lit', [[0, '#fff', .2], [.45, '#fff', 0], [.6, '#000', 0], [1, '#000', .42]])
+    + lin('litv', [[0, '#fff', .24], [.4, '#fff', 0], [.6, '#000', 0], [1, '#000', .45]], 0, 1)
+    + lin('st', [[0, '#e9edf0'], [.35, '#a9b1b8'], [.7, '#69717a'], [1, '#353b42']], 0, 1)
+    + lin('lt', [[0, '#9a6a40'], [.55, '#6c4527'], [1, '#3a2313']])
+    + lin('wd', [[0, '#9c7649'], [.5, '#6e4f2e'], [1, '#3c2916']], 0, 1)
+    + lin('bn', [[0, '#f6eedc'], [.5, '#dccfb2'], [1, '#9a8866']])
+    + lin('brs', [[0, '#f2d58f'], [.45, '#bb8e3e'], [1, '#634416']]);
+  function put(key, label, defs, body){
+    const P = key.replace(/[^a-z0-9]/g, '') + '-';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="${label.replace(/"/g, '&quot;')}"><defs>${BASE}${defs}</defs><rect width="200" height="150" fill="url(#@bg)"/>${body}</svg>`;
+    ART['item/' + key] = svg.replace(/@/g, P);
+    if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [200, 150];
+  }
+
+  /* ---------- chapter one ---------- */
+  /* Fourteenth issue mail: knee-length, new and oiled, never hit; a tin tag at the collar with the Fourteenth's mark */
+  { const d = 'M78 22 L92 15 Q100 25 108 15 L122 22 L150 38 L160 64 L143 69 L134 50 L137 124 Q100 131 63 124 L66 50 L57 69 L40 64 L50 38 Z';
+    put('b4_c1_issuemail', 'Fourteenth issue mail',
+      `<pattern id="@rg" width="5" height="4" patternUnits="userSpaceOnUse"><g fill="none" stroke="#8e969e" stroke-width=".8" stroke-opacity=".62"><circle cx="0" cy="0" r="1.7"/><circle cx="5" cy="0" r="1.7"/><circle cx="0" cy="4" r="1.7"/><circle cx="5" cy="4" r="1.7"/><circle cx="2.5" cy="2" r="1.7"/></g></pattern>`
+      + lin('tin', [[0, '#d6dadc'], [.5, '#9aa0a4'], [1, '#585e63']]),
+      sh(100, 129, 54, 6)
+      + `<path d="${d}" fill="#2c3036"/><path d="${d}" fill="url(#@rg)"/><path d="${d}" fill="url(#@lit)"/>`
+      + `<path d="M84 40 Q80 80 82 122 M118 40 Q122 84 118 124 M100 30 Q98 80 100 128" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="5"/>`
+      + `<path d="M70 52 Q72 86 70 118" fill="none" stroke="#f3e4c0" stroke-opacity=".16" stroke-width="4"/>`
+      + `<path d="M64 123 Q100 130 136 123" fill="none" stroke="#dfe4e8" stroke-opacity=".7" stroke-width="1.6" stroke-dasharray="2 1.4"/>`
+      + `<path d="M41 63 L57 68 M143 68 L159 63" stroke="#dfe4e8" stroke-opacity=".6" stroke-width="1.4" stroke-dasharray="2 1.4"/>`
+      + `<path d="M92 16 Q100 28 108 16 Q100 21 92 16 Z" fill="#14171a"/>` + ol(d)
+      + `<path d="M104 22 L106 30" stroke="#2a2a2a" stroke-width=".9"/><g transform="rotate(8 109 33)"><rect x="102" y="29" width="15" height="10" rx="1.5" fill="url(#@tin)" ${O}/><text x="109.5" y="36.6" font-family="Georgia,serif" font-size="5.4" text-anchor="middle" fill="#2e3236" letter-spacing=".3">XIV</text></g>`);
+  }
+
+  /* the finger bone, small and very white, drilled and tied on a leather thong the way the order says */
+  put('b4_c1_finger', 'A finger bone on a thong', '',
+    sh(102, 104, 54, 6)
+    + `<path d="M64 81 C70 100 120 108 178 24" fill="none" stroke="#2a180c" stroke-width="3.6" stroke-linecap="round"/><path d="M64 81 C70 100 120 108 178 24" fill="none" stroke="#8a5a32" stroke-width="2" stroke-linecap="round"/><path d="M66 84 C78 98 112 104 172 34" fill="none" stroke="#c48f5a" stroke-opacity=".5" stroke-width=".7"/>`
+    + `<path d="M24 22 C34 52 46 72 61 78" fill="none" stroke="#2a180c" stroke-width="3.6" stroke-linecap="round"/><path d="M24 22 C34 52 46 72 61 78" fill="none" stroke="#8a5a32" stroke-width="2" stroke-linecap="round"/>`
+    + S('M56 75 Q60 67 68 70 L92 71 Q99 66 103 72 Q106 79 103 85 Q99 91 92 86 L68 87 Q60 91 56 83 Q53 79 56 75 Z', 'url(#@bn)')
+    + S('M107 74 Q111 69 116 72 L124 72 Q130 69 132 75 Q134 80 131 84 Q128 88 123 85 L116 85 Q111 88 107 84 Q104 79 107 74 Z', 'url(#@bn)')
+    + S('M135 75 Q139 71 143 74 L150 76 Q156 79 150 83 L143 85 Q138 87 135 83 Q133 79 135 75 Z', 'url(#@bn)')
+    + `<path d="M70 74 L90 74.5 M117 75 L123 75" stroke="#fff" stroke-opacity=".55" stroke-width="1.1" stroke-linecap="round"/><path d="M70 84 L90 83 M117 83 L123 83" stroke="#7d6a4a" stroke-opacity=".6" stroke-width="1"/>`
+    + `<ellipse cx="64" cy="79" rx="2.6" ry="2.4" fill="#1a120a"/>`
+    + `<circle cx="63" cy="86" r="3.6" fill="#7a4e2a" ${O}/><path d="M61 88 L57 100 M64 89 L65 101" stroke="#6a4224" stroke-width="1.6" stroke-linecap="round"/>`);
+
+  /* "Coltaine's finger": a dried finger in a glass phial, wax seal, a scrap of red cloth round the neck */
+  put('b4_c1_relic', '"Coltaine\'s finger"',
+    lin('gl', [[0, '#e8f2ee', .32], [.5, '#a9c4ba', .12], [1, '#5f7c72', .3]], 0, 1)
+    + lin('wx', [[0, '#b0302a'], [.5, '#7a1814'], [1, '#3c0a08']])
+    + lin('fg', [[0, '#9a7650'], [.6, '#5e4228'], [1, '#2e1e10']], 0, 1),
+    sh(98, 118, 62, 6)
+    + `<g transform="translate(96 78) rotate(-28)">`
+    + `<path d="M-48 -4 Q-40 -8 -30 -5 Q-24 -9 -16 -5 L8 -5 Q14 -8 20 -4 L30 -3 Q36 -2 36 1 Q36 4 30 4 L20 5 Q14 8 8 5 L-16 6 Q-24 9 -30 5 Q-40 8 -48 4 Q-51 0 -48 -4 Z" fill="url(#@fg)"/><path d="M-44 -1 L28 0" stroke="#000" stroke-opacity=".3" stroke-width=".8"/><path d="M28 -2 Q33 -1 34 1" stroke="#c9a888" stroke-opacity=".6" stroke-width="1"/>`
+    + `<path d="M-60 -16 L38 -16 Q46 -16 50 -9 L52 -8 L62 -8 L62 8 L52 8 L50 9 Q46 16 38 16 L-60 16 Q-68 16 -68 0 Q-68 -16 -60 -16 Z" fill="url(#@gl)" ${O}/>`
+    + `<path d="M-60 -13 L38 -13 Q44 -13 47 -8" fill="none" stroke="#f4fbf8" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/><path d="M-62 13 L36 13" stroke="#0b0806" stroke-opacity=".35" stroke-width="1.4"/><path d="M-50 -9 L-20 -9" stroke="#fff" stroke-opacity=".35" stroke-width="2.4" stroke-linecap="round"/>`
+    + `<rect x="61" y="-10" width="5" height="20" rx="1.5" fill="#b9d0c8" fill-opacity=".35" ${O}/><rect x="65" y="-7" width="8" height="14" fill="#8a6a44"/>`
+    + `<path d="M64 -12 Q72 -15 79 -10 Q83 -4 81 3 Q83 10 78 13 Q72 16 66 12 Q62 13 63 7 Q61 0 63 -6 Q62 -10 64 -12 Z" fill="url(#@wx)" ${O}/><path d="M68 -10 Q74 -12 78 -8" fill="none" stroke="#e07060" stroke-opacity=".5" stroke-width="1.2"/><path d="M66 12 L65 18" stroke="#6a1410" stroke-width="2.4" stroke-linecap="round"/>`
+    + `<path d="M52 -10 L57 -10 L57 10 L52 10 Z" fill="#9a1c18" ${O}/></g>`
+    + `<path d="M143 58 Q144 72 139 84 L144 85 Q147 72 147 60 Z" fill="#8a1814" ${O}/><path d="M146 59 Q150 70 153 80 L157 78 Q153 68 149 58 Z" fill="#a8241e" ${O}/><path d="M139 84 l-1 4 M141 85 l0 4 M154 80 l1 4" stroke="#a8241e" stroke-width=".8"/>`);
+
+  /* a Red Blade's cast-off sash: red silk, frayed at the end where somebody cut a badge off it */
+  put('b4_c1_redsash', 'A Red Blade\'s cast-off sash',
+    lin('rd', [[0, '#d23a3c'], [.5, '#981c22'], [1, '#4c0a0e']], 0, 1),
+    sh(102, 120, 78, 7)
+    + S('M20 46 C48 36 76 48 100 62 L94 82 C72 70 46 60 18 66 Z', 'url(#@rd)')
+    + `<path d="M100 62 L116 69 L108 88 L94 82 Z" fill="#3e080b" ${O}/>`
+    + S('M112 69 C136 76 156 78 176 73 L180 95 C156 101 132 99 108 88 Z', 'url(#@rd)')
+    + `<path d="M26 46 C50 40 74 50 96 64 M118 74 C138 80 156 81 174 77" fill="none" stroke="#ffb0a8" stroke-opacity=".38" stroke-width="1.6" stroke-linecap="round"/>`
+    + `<path d="M24 60 C46 56 70 66 90 76 M116 86 C136 93 156 95 176 91" fill="none" stroke="#2a0406" stroke-opacity=".45" stroke-width="2"/>`
+    + `<g transform="rotate(4 158 86)"><rect x="148" y="78" width="18" height="15" fill="#e06a66" fill-opacity=".28"/><path d="M148 78 h18 v15 h-18 Z" fill="none" stroke="#2a0406" stroke-opacity=".7" stroke-width=".9" stroke-dasharray="1.2 1.6"/></g>`
+    + `<path d="M177 74 l9 -2 M178 78 l10 1 M178 82 l8 3 M179 86 l9 1 M179 90 l7 4 M179 94 l9 2" stroke="#b02a2e" stroke-width=".9" stroke-linecap="round"/>`
+    + `<path d="M18 66 l-2 2 M20 46 l-2 -1" stroke="#0b0806" stroke-opacity=".5"/>`);
+
+  /* a confiscated durhang pipe: short clay, a brass bowl-cap, the resin still in it */
+  put('b4_c1_durhangpipe', 'A confiscated durhang pipe',
+    lin('cl', [[0, '#f0e6d0'], [.5, '#cfbf9e'], [1, '#86765a']]),
+    sh(98, 110, 66, 6)
+    + S('M26 108 Q24 104 28 102 L124 72 L130 84 L32 112 Q28 112 26 108 Z', 'url(#@cl)')
+    + `<path d="M26 108 Q24 104 28 102 L36 100 L38 110 L32 112 Q28 112 26 108 Z" fill="#5a4630" fill-opacity=".7"/>`
+    + `<path d="M36 101 L122 74" stroke="#fff" stroke-opacity=".45" stroke-width="1.2"/>`
+    + S('M122 62 Q120 80 130 88 Q143 95 156 86 Q164 76 162 52 L124 52 Z', 'url(#@cl)')
+    + `<path d="M126 58 Q128 78 138 84" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.6"/><path d="M150 58 Q154 76 146 88" fill="none" stroke="#3a2a1a" stroke-opacity=".35" stroke-width="3"/>`
+    + `<path d="M124 52 L162 52 L161 57 Q143 60 125 57 Z" fill="#3a2414" fill-opacity=".8"/><path d="M128 60 Q130 66 129 70 M156 60 Q157 64 155 67" stroke="#4a2c14" stroke-opacity=".55" stroke-width="1.4" stroke-linecap="round"/>`
+    + `<path d="M120 52 Q143 32 166 52 Z" fill="url(#@brs)" ${O}/><ellipse cx="143" cy="52" rx="23" ry="4" fill="#8a6428" ${O}/>`
+    + `<circle cx="136" cy="45" r="1.2" fill="#2a1a08"/><circle cx="143" cy="43" r="1.2" fill="#2a1a08"/><circle cx="150" cy="45" r="1.2" fill="#2a1a08"/><circle cx="143" cy="48" r="1.1" fill="#2a1a08"/><path d="M126 47 Q136 38 148 38" fill="none" stroke="#fff3c8" stroke-opacity=".6" stroke-width="1.2"/>`
+    + `<rect x="161" y="48" width="6" height="6" rx="1" fill="#8a6428" ${O}/>`);
+
+  /* ---------- chapter two ---------- */
+  /* a crow feather from the Fall, tied with a twist of red wool */
+  put('b4_c2_crowfeather', 'A crow feather from the Fall',
+    lin('fe', [[0, '#3c424c'], [.45, '#16181d'], [1, '#050506']], 0, 1)
+    + lin('ir', [[0, '#3a6a7a', 0], [.4, '#3a6a7a', .35], [.7, '#5a3a7a', .3], [1, '#5a3a7a', 0]], 1, 0),
+    sh(100, 124, 74, 6)
+    + `<g transform="translate(103 74) rotate(-33)">`
+    + `<path d="M-54 -1 C-24 -11 34 -13 88 -1 C34 -6 -20 -3 -54 -1 Z" fill="url(#@fe)" ${O}/>`
+    + `<path d="M-54 1 C-40 10 -20 16 -2 18 L4 12 L8 19 C30 20 46 17 58 13 L62 8 L66 12 C76 9 82 5 88 1 Z" fill="url(#@fe)" ${O}/>`
+    + `<path d="M-40 -5 C-10 -10 40 -11 80 -3" fill="none" stroke="url(#@ir)" stroke-width="3"/><path d="M-30 6 C0 12 40 12 70 6" fill="none" stroke="url(#@ir)" stroke-width="5"/>`
+    + `<path d="M-30 1 l8 9 M-14 1 l9 11 M2 1 l9 11 M20 1 l9 10 M38 1 l8 8 M56 1 l7 6 M-24 -1 l6 -5 M0 -1 l6 -6 M30 -1 l6 -5" stroke="#5a606a" stroke-opacity=".5" stroke-width=".6"/>`
+    + `<path d="M-84 0 L-54 -1 C0 -1.5 50 -1 90 0 C50 1 0 1.5 -54 1 Z" fill="#cfc6b4"/><path d="M-84 0 L-54 0.6" stroke="#6a604e" stroke-width=".8"/>`
+    + `<g fill="#b8282a" ${O}><rect x="-70" y="-3.5" width="3" height="7" rx="1"/><rect x="-66" y="-3.5" width="3" height="7" rx="1"/><rect x="-62" y="-3.5" width="3" height="7" rx="1"/></g>`
+    + `<path d="M-64 3 Q-66 12 -72 16 M-63 3 Q-60 12 -62 18" fill="none" stroke="#b8282a" stroke-width="1.4" stroke-linecap="round"/></g>`);
+
+  /* a braided fetish off the trees: horsehair and red thread, a small painted soldier knotted in */
+  { const br = 'M24 24 Q100 106 176 24';
+    put('b4_c2_fetish', 'A braided fetish off the trees',
+      lin('pw', [[0, '#c9a679'], [1, '#7a5a38']]),
+      sh(100, 140, 26, 4)
+      + `<path d="${br}" fill="none" stroke="#0b0806" stroke-opacity=".7" stroke-width="9" stroke-linecap="round"/><path d="${br}" fill="none" stroke="#2c2219" stroke-width="7" stroke-linecap="round"/>`
+      + `<path d="${br}" fill="none" stroke="#5c4a36" stroke-width="3" stroke-dasharray="3.5 3.5" transform="translate(-1.2 -1.2)"/><path d="${br}" fill="none" stroke="#4a3a2a" stroke-width="3" stroke-dasharray="3.5 3.5" stroke-dashoffset="3.5" transform="translate(1.2 1.2)"/>`
+      + `<path d="${br}" fill="none" stroke="#c0302c" stroke-width="1.4" stroke-dasharray="2 7"/>`
+      + `<path d="M24 24 l-6 -8 M24 24 l-2 -10 M24 24 l-9 -4 M176 24 l6 -8 M176 24 l2 -10 M176 24 l9 -4" stroke="#3a2c20" stroke-width="1" stroke-linecap="round"/>`
+      + `<path d="M100 65 L100 76" stroke="#c0302c" stroke-width="1.8"/><circle cx="100" cy="65" r="4.6" fill="#2c2219" ${O}/><g transform="translate(100 65) scale(1.35) translate(-100 -72)">`
+      + S('M93 89 L107 89 L109 116 L104 116 L102 126 L98 126 L96 116 L91 116 Z', '#5a6a7a')
+      + `<path d="M93 100 L107 100 L107.7 104 L92.3 104 Z" fill="#3a2a1c"/><path d="M100 104 L100 116" stroke="#2a2e34" stroke-width=".8"/>`
+      + `<path d="M101 110 l4 1 l-1 4 Z M95 92 l3 0 l0 3 Z" fill="url(#@pw)"/>`
+      + S('M100 79 C95 79 93 83 93 86 C93 90 96 92 100 92 C104 92 107 90 107 86 C107 83 105 79 100 79 Z', 'url(#@pw)')
+      + `<path d="M93 85 Q100 76 107 85 Q100 82 93 85 Z" fill="#7a7e82" ${O}/><circle cx="98" cy="87" r=".7" fill="#2a1a10"/><circle cx="102" cy="87" r=".7" fill="#2a1a10"/>`
+      + `<path d="M92 91 Q100 95 108 91" fill="none" stroke="#c0302c" stroke-width="1.4"/></g>`);
+  }
+
+  /* a chip of the last milestone: grey stone, a carved stroke of the count, one face worn to a whetstone polish */
+  put('b4_c2_milestone', 'A chip of the last milestone',
+    `<pattern id="@gr" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".45" fill="#000" fill-opacity=".35"/><circle cx="4" cy="3.5" r=".4" fill="#fff" fill-opacity=".2"/><circle cx="2.5" cy="5" r=".35" fill="#000" fill-opacity=".3"/></pattern>`,
+    sh(102, 116, 74, 7)
+    + `<g transform="translate(100 78) scale(1.18) translate(-102 -76)">`
+    + `<path d="M40 70 L70 46 L132 40 L166 56 L152 80 L64 90 Z" fill="#8e8f8c"/><path d="M40 70 L64 90 L66 108 L44 92 Z" fill="#5f605e"/><path d="M64 90 L152 80 L150 102 L66 108 Z" fill="#6c6d6a"/><path d="M152 80 L166 56 L164 76 L150 102 Z" fill="#3e3f3d"/>`
+    + `<path d="M40 70 L70 46 L132 40 L166 56 L164 76 L150 102 L66 108 L44 92 Z" fill="url(#@gr)"/><path d="M40 70 L70 46 L132 40 L166 56 L164 76 L150 102 L66 108 L44 92 Z" fill="url(#@lit)"/>`
+    + `<path d="M74 96 Q90 92 108 96 M80 102 Q100 96 128 98 M118 92 Q134 88 148 92" fill="none" stroke="#2a2b29" stroke-opacity=".55" stroke-width="1"/>`
+    + `<path d="M40 70 L70 46 L132 40 L166 56 M40 70 L64 90 L152 80 L166 56" fill="none" stroke="#c9cac6" stroke-opacity=".45" stroke-width="1"/>`
+    + `<ellipse cx="122" cy="62" rx="24" ry="9" transform="rotate(-8 122 62)" fill="#b6bcc0" fill-opacity=".35"/><path d="M104 64 L138 58 M106 67 L140 61 M108 70 L136 65" stroke="#e6ecef" stroke-opacity=".35" stroke-width=".6"/>`
+    + `<path d="M74 58 L80 78 M84 56 L88 66 L96 52" fill="none" stroke="#2c2d2b" stroke-width="3.2" stroke-linecap="round"/><path d="M75.4 59 L81.4 79 M85.4 57 L89 66" fill="none" stroke="#c9cac6" stroke-opacity=".5" stroke-width=".8"/>`
+    + `<path d="M40 70 L70 46 L132 40 L166 56 L164 76 L150 102 L66 108 L44 92 Z" fill="none" ${O}/></g>`);
+
+  /* ---------- chapter three ---------- */
+  /* a Khundryl knife: long and curved, horn grip wound in horsehair, a black bead on a thong at the pommel */
+  put('b4_c3_khundrylknife', 'A Khundryl knife',
+    lin('hg', [[0, '#e2d6bc'], [.5, '#a8987a'], [1, '#5a4c38']], 0, 1),
+    sh(100, 122, 74, 6)
+    + `<path d="M40 108 C36 116 34 122 34 128" fill="none" stroke="#3a2414" stroke-width="1.6"/><circle cx="34" cy="130" r="3.6" fill="#0c0c0e" ${O}/><circle cx="32.8" cy="128.8" r="1" fill="#fff" fill-opacity=".6"/>`
+    + `<g transform="translate(110 70) rotate(-30)">`
+    + S('M-80 -5 Q-84 0 -80 5 L-76 5 L-76 -5 Z', '#2a2018')
+    + S('M-76 -5 L-36 -4 L-36 4 L-76 5 Z', 'url(#@hg)', '@litv')
+    + `<path d="M-72 -5 l-3 10 M-66 -5 l-3 10 M-60 -5 l-3 10 M-54 -4.6 l-3 9.4 M-48 -4.4 l-3 9 M-42 -4.2 l-3 8.6" stroke="#121010" stroke-width="2"/>`
+    + S('M-37 -7 L-31 -7 L-31 7 L-37 7 Z', 'url(#@brs)')
+    + S('M-31 -5 C10 -7 50 -9 86 -22 C70 -6 34 8 -31 6 Z', 'url(#@st)')
+    + `<path d="M-28 -3.4 C12 -5 50 -7.6 80 -18" fill="none" stroke="#4a5058" stroke-opacity=".6" stroke-width="1.6"/>`
+    + `<path d="M-28 4.4 C26 3 60 -6 82 -19" fill="none" stroke="#fbfdff" stroke-opacity=".8" stroke-width="1"/></g>`);
+
+  /* a bead from the ford: bone, drilled, worn smooth by the river; a few dark hairs still through it */
+  put('b4_c3_bonebead', 'A bead from the ford',
+    `<radialGradient id="@bb" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#f8f1e2"/><stop offset=".5" stop-color="#d6c6a4"/><stop offset="1" stop-color="#7c6a4c"/></radialGradient>`,
+    sh(100, 112, 50, 6)
+    + `<path d="M40 80 C30 70 26 50 22 26 M40 80 C28 76 20 60 14 40" fill="none" stroke="#1a130c" stroke-width="1.3" stroke-linecap="round"/><path d="M40 80 C32 74 28 62 26 48" fill="none" stroke="#2c2016" stroke-width=".9"/>`
+    + `<path d="M136 78 C156 80 170 60 178 30 M136 80 C158 86 174 70 184 42" fill="none" stroke="#1a130c" stroke-width="1.3" stroke-linecap="round"/><path d="M137 79 C154 84 166 72 174 52" fill="none" stroke="#2c2016" stroke-width=".9"/>`
+    + `<path d="M70 50 C84 44 118 44 132 52 C142 60 142 96 132 104 C118 112 84 112 70 106 Z" fill="url(#@bb)" ${O}/>`
+    + `<path d="M84 48 C82 70 82 90 84 109 M100 46 C99 70 99 90 100 111 M116 48 C118 70 118 90 116 109" fill="none" stroke="#a8946e" stroke-opacity=".25" stroke-width=".8"/>`
+    + `<path d="M112 60 Q118 70 115 80" fill="none" stroke="#5a4a32" stroke-opacity=".5" stroke-width=".8"/><circle cx="96" cy="94" r="1" fill="#6a5838" fill-opacity=".5"/><circle cx="124" cy="88" r=".8" fill="#6a5838" fill-opacity=".5"/>`
+    + `<ellipse cx="70" cy="78" rx="10" ry="28" fill="#c8b690" ${O}/><ellipse cx="68" cy="76" rx="7" ry="23" fill="#e8dcc0"/><ellipse cx="70" cy="79" rx="4" ry="7" fill="#1a120a"/><path d="M67 73 Q66 79 68 85" fill="none" stroke="#8a7656" stroke-width=".8"/>`
+    + `<path d="M70 79 C60 84 48 88 40 80" fill="none" stroke="#1a130c" stroke-width="1.3"/>`
+    + `<path d="M86 52 C96 48 112 48 120 50" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/>`);
+
+  /* a Khundryl horn cup: a drinking horn cut short and capped with copper, a little dented */
+  put('b4_c3_cup', 'A Khundryl horn cup',
+    lin('hc', [[0, '#2a1a10'], [.35, '#6a4a2e'], [.75, '#d8c49a'], [1, '#efe2c2']], 1, 0)
+    + lin('cu', [[0, '#f0a878'], [.45, '#b8653a'], [1, '#5a2a12']]),
+    sh(100, 114, 66, 6)
+    + S('M36 98 C62 112 112 106 156 76 L142 34 C112 76 68 94 36 98 Z', 'url(#@hc)')
+    + `<path d="M58 99 C66 97 70 96 74 94 M84 100 C92 96 98 94 102 90 M108 92 C116 86 120 82 124 76" fill="none" stroke="#2a1a10" stroke-opacity=".35" stroke-width="1"/>`
+    + `<path d="M44 96 C80 92 112 76 138 42" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.6"/>`
+    + `<path d="M30 97 L40 95 L42 103 L33 103 Q28 101 30 97 Z" fill="url(#@cu)" ${O}/>`
+    + `<path d="M138 37 L144 33 L160 77 L153 81 Z" fill="url(#@cu)" ${O}/><path d="M146 52 l3 1 l1 4 Z" fill="#3a1808"/><path d="M140 37 L145 34" stroke="#ffd2b0" stroke-opacity=".7" stroke-width="1"/>`
+    + `<ellipse cx="152" cy="56" rx="22" ry="9" transform="rotate(68 152 56)" fill="#1c120a" ${O}/><ellipse cx="153" cy="58" rx="16" ry="5.5" transform="rotate(68 153 58)" fill="#3a1e10" fill-opacity=".8"/>`
+    + `<path d="M144 37 Q164 48 160 76" fill="none" stroke="#f0a878" stroke-opacity=".6" stroke-width="1"/>`);
+
+  /* a length of the old ferry rope: a fathom of hemp, black with the river, cut and knotted */
+  { const rope = (d, w = 7) => `<path d="${d}" fill="none" stroke="#0b0806" stroke-opacity=".7" stroke-width="${w + 2}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#2a251e" stroke-width="${w}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#463e32" stroke-width="${w - 1.5}" stroke-dasharray="2 2.4" stroke-linecap="butt"/><path d="${d}" fill="none" stroke="#a8987a" stroke-opacity=".55" stroke-width="1.2" transform="translate(-.8 -1.6)"/><path d="${d}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="1.2" transform="translate(.6 2)"/>`;
+    put('b4_c3_ferryrope', 'A length of the old ferry rope', '',
+      sh(98, 112, 68, 7)
+      + rope('M54 92 C40 80 60 64 98 64 C136 64 156 76 144 90 C132 102 70 104 54 92 Z')
+      + rope('M58 86 C46 74 66 58 100 58 C134 58 152 70 140 84 C128 96 74 98 58 86 Z')
+      + rope('M62 80 C52 68 70 52 102 52 C132 52 148 64 136 78 C124 90 78 92 62 80')
+      + rope('M136 78 C150 90 160 100 168 108')
+      + `<circle cx="172" cy="111" r="6.5" fill="#2a251e" ${O}/><path d="M168 108 Q176 106 176 114" fill="none" stroke="#5e5444" stroke-width="2"/>`
+      + `<path d="M176 114 l7 6 M175 116 l4 9 M178 113 l9 3 M174 117 l1 8" stroke="#6e624c" stroke-width="1.1" stroke-linecap="round"/>`);
+  }
+
+  /* ---------- chapter four ---------- */
+  /* an unbroken oil bola: two clay lamps of oil on a plaited cord, wicks black, seals unbroken */
+  { const lamp = (x, y, f) => `<g transform="translate(${x} ${y}) scale(${f} 1)">`
+      + S('M-22 0 C-22 -14 -10 -18 0 -18 C12 -18 20 -12 22 -6 L34 -8 Q38 -4 34 0 L22 2 C20 10 10 14 0 14 C-12 14 -22 10 -22 0 Z', 'url(#@tc)')
+      + `<path d="M33 -6 Q38 -9 37 -4" fill="none" stroke="#141010" stroke-width="2.4" stroke-linecap="round"/><path d="M26 -6 L34 -6" stroke="#1a120c" stroke-opacity=".6" stroke-width="3"/>`
+      + `<ellipse cx="-2" cy="-17" rx="7" ry="2.6" fill="#c08a3a" ${O}/><path d="M-7 -18 Q-2 -20 3 -18" fill="none" stroke="#f0c878" stroke-opacity=".7" stroke-width=".8"/>`
+      + `<path d="M-18 -6 Q-10 -14 2 -14" fill="none" stroke="#f8d0a0" stroke-opacity=".35" stroke-width="1.6"/></g>`;
+    const cord = 'M40 84 C46 30 150 22 154 74';
+    put('b4_c4_lampball', 'An unbroken oil bola',
+      lin('tc', [[0, '#d8925a'], [.5, '#a0602e'], [1, '#4c2810']]),
+      sh(58, 112, 34, 5) + sh(150, 104, 34, 5)
+      + `<path d="${cord}" fill="none" stroke="#0b0806" stroke-opacity=".6" stroke-width="4.6"/><path d="${cord}" fill="none" stroke="#6a5236" stroke-width="3"/><path d="${cord}" fill="none" stroke="#a88a5e" stroke-width="1.6" stroke-dasharray="2.5 2.5"/>`
+      + lamp(56, 96, -1) + lamp(146, 88, 1)
+      + `<circle cx="40" cy="80" r="3" fill="#6a5236" ${O}/><circle cx="154" cy="72" r="3" fill="#6a5236" ${O}/>`);
+  }
+
+  /* a Seti hide jack: boiled horsehide, horsehair stitching, the marks burnt across the chest, a lance-hole in the left shoulder stitched shut */
+  { const d = 'M80 20 L92 16 L100 26 L108 16 L120 20 L148 36 L162 72 L146 78 L134 50 L136 122 Q100 128 64 122 L66 50 L54 78 L38 72 L52 36 Z';
+    put('b4_c4_setijack', 'A Seti hide jack',
+      lin('hj', [[0, '#a87848'], [.5, '#7a5230'], [1, '#3e2614']]),
+      sh(100, 126, 52, 6)
+      + `<path d="${d}" fill="url(#@hj)"/><path d="${d}" fill="url(#@lit)"/>`
+      + `<path d="M78 30 Q74 70 80 118 M124 34 Q128 80 120 120" fill="none" stroke="#2a180a" stroke-opacity=".35" stroke-width="5"/><path d="M60 58 Q66 52 72 70 M140 58 Q134 56 130 72" fill="none" stroke="#2a180a" stroke-opacity=".35" stroke-width="3"/>`
+      + `<path d="M100 26 L100 124" stroke="#2a180a" stroke-width="1.6"/><path d="M103 28 L103 122" stroke="#d8b080" stroke-opacity=".5" stroke-width="1" stroke-dasharray="2 2.4"/>`
+      + `<path d="M67 121 Q100 126 133 121 M54 75 L40 70 M146 75 L160 70 M68 52 L67 118 M132 52 L133 118" fill="none" stroke="#d8b080" stroke-opacity=".55" stroke-width="1" stroke-dasharray="2 2.4"/>`
+      + `<path d="M66 56 L134 56 L134 68 L66 68 Z" fill="#2a1608" fill-opacity=".55"/><g fill="none" stroke="#120804" stroke-width="1.6" stroke-linecap="round"><path d="M70 59 l4 3.5 l-4 3.5 M80 58 v8 M77 62 h6 M88 66 l3 -8 l3 8 M100 58 v8 M97 60 l3 2 l3 -2 M108 66 l3 -8 l3 8 M117 58 v8 M114 62 h6 M126 59 l4 3.5 l-4 3.5"/></g><circle cx="93" cy="62" r="1" fill="#120804"/><circle cx="105" cy="62" r="1" fill="#120804"/>`
+      + `<path d="M118 29 L127 39" stroke="#1a0c04" stroke-width="2.6" stroke-linecap="round"/><path d="M117 32 l5 -2 M119 34.5 l5 -2 M121 37 l5 -2 M123 39.5 l5 -2" stroke="#d8c098" stroke-width=".9" stroke-linecap="round"/>`
+      + `<path d="M92 16 L100 26 L108 16 L104 14 L100 20 L96 14 Z" fill="#4a2c16" ${O}/>` + ol(d));
+  }
+
+  /* a Seti horn bow: short, recurved, horn and sinew lacquered dark, her marks burnt into the grip. Strung; no arrow on it.
+     Drawn upright in its own frame (string at x=-11 between the nocks) and turned onto the diagonal. */
+  put('b4_c4_setibow', 'A Seti horn bow',
+    lin('hb', [[0, '#8e5a38'], [.4, '#5a3420'], [.8, '#2e1a0e'], [1, '#1a0e08']], 1, 0)
+    + lin('gw', [[0, '#a07850'], [1, '#4a3018']], 1, 0),
+    sh(100, 132, 66, 6)
+    + `<g transform="translate(124 84) rotate(40) scale(1.22)">`
+    + `<path d="M-11 -57 L-11 57" stroke="#0b0806" stroke-opacity=".6" stroke-width="2"/><path d="M-11 -57 L-11 57" stroke="#d8ccb0" stroke-width=".9"/>`
+    + S('M-20 -69 L-16 -57 C-21 -40 -38 -22 -41 0 C-38 22 -21 40 -16 57 L-20 69 L-15.5 70.5 L-10.5 57 C-14 40 -28 22 -30 0 C-28 -22 -14 -40 -10.5 -57 L-15.5 -70.5 Z', 'url(#@hb)')
+    + `<path d="M-20 -69 L-18 -63 L-13.5 -64.5 L-15.5 -70.5 Z M-20 69 L-18 63 L-13.5 64.5 L-15.5 70.5 Z" fill="#d8c8a4" ${O}/>`
+    + `<path d="M-18 -58 C-23 -40 -38 -22 -40 -8 M-40 8 C-38 22 -23 40 -18 58" fill="none" stroke="#d8a06a" stroke-opacity=".7" stroke-width="1.2"/>`
+    + `<path d="M-13 -55 C-17 -40 -28 -22 -30 -10 M-30 10 C-28 22 -17 40 -13 55" fill="none" stroke="#d8b878" stroke-opacity=".28" stroke-width="1.1"/>`
+    + S('M-42 -11 L-30 -10 L-29 10 L-42 11 Q-44 0 -42 -11 Z', '#4a2c18')
+    + `<path d="M-42 -11 L-30 -10 L-30 -7 L-42 -8 Z M-42 8 L-30 7 L-29 10 L-42 11 Z" fill="url(#@gw)"/><path d="M-41 -10 l11 0.6 M-41 -9 l11 0.6 M-41 9 l11 -0.6 M-41 10 l11 -0.6" stroke="#2a180a" stroke-width=".5"/>`
+    + `<path d="M-39 -4 l4 3 l-4 3 M-34 -4 l0 8 M-37 0 h5" fill="none" stroke="#120804" stroke-width="1.1" stroke-linecap="round"/>`
+    + `<path d="M-13 -57 Q-11 -60 -9 -57 M-13 57 Q-11 60 -9 57" fill="none" stroke="#d8ccb0" stroke-width="1"/></g>`);
+
+  /* an empty helm from the barrows: Malazan, dented, nobody in it; a thong for the belt */
+  put('b4_c4_helm', 'An empty helm from the barrows',
+    `<radialGradient id="@hd" cx=".32" cy=".26" r=".85"><stop offset="0" stop-color="#d8dde0"/><stop offset=".35" stop-color="#8d959c"/><stop offset=".75" stop-color="#4a5056"/><stop offset="1" stop-color="#23272b"/></radialGradient>`,
+    sh(104, 126, 60, 6)
+    + `<path d="M140 96 Q154 104 156 118 L144 116 Q140 106 134 100 Z" fill="#3c4247" ${O}/>`
+    + S('M54 90 C52 44 76 24 102 24 C128 24 152 44 150 92 Z', 'url(#@hd)')
+    + `<path d="M102 25 C100 50 100 70 101 90" fill="none" stroke="#2a2e32" stroke-width="3"/><path d="M99 26 C97 50 97 70 98 90" fill="none" stroke="#e6eaec" stroke-opacity=".55" stroke-width="1"/>`
+    + `<path d="M124 40 Q134 46 136 58 Q128 52 120 50 Z" fill="#1f2326" fill-opacity=".75"/><path d="M121 51 Q129 52 136 59" fill="none" stroke="#e6eaec" stroke-opacity=".6" stroke-width="1.1"/>`
+    + `<path d="M70 50 l10 6 M64 66 l14 -2 M118 70 l10 4" stroke="#e6eaec" stroke-opacity=".35" stroke-width=".7"/>`
+    + S('M50 86 Q102 78 154 88 L154 98 Q102 88 50 96 Z', '#5a6268')
+    + `<path d="M52 88 Q102 80 152 90" fill="none" stroke="#e6eaec" stroke-opacity=".5" stroke-width="1"/>`
+    + `<circle cx="64" cy="91" r="1.6" fill="#c9ced2"/><circle cx="84" cy="88" r="1.6" fill="#c9ced2"/><circle cx="120" cy="88" r="1.6" fill="#c9ced2"/><circle cx="140" cy="91" r="1.6" fill="#c9ced2"/>`
+    + S('M60 96 L78 93 L78 112 Q72 122 64 120 Q58 110 60 96 Z', '#6a7278')
+    + `<path d="M76 110 C80 122 94 128 106 122" fill="none" stroke="#3a2414" stroke-width="2.4" stroke-linecap="round"/><path d="M106 122 l4 8 M106 122 l8 4" stroke="#3a2414" stroke-width="1.8" stroke-linecap="round"/>`);
+
+  /* a pot of Seti horse-salve: grey grease, tar and sheep and something green; a hide cover tied on */
+  put('b4_c4_salve', 'A pot of Seti horse-salve',
+    `<radialGradient id="@pt" cx=".34" cy=".3" r=".85"><stop offset="0" stop-color="#b48a62"/><stop offset=".55" stop-color="#7a583a"/><stop offset="1" stop-color="#2e1e10"/></radialGradient>`,
+    sh(100, 128, 48, 6)
+    + S('M84 52 L116 52 L118 60 C140 66 144 84 142 98 C140 116 124 126 100 126 C76 126 60 116 58 98 C56 84 60 66 82 60 Z', 'url(#@pt)')
+    + `<path d="M64 80 Q100 88 136 80 M62 100 Q100 108 138 100" fill="none" stroke="#2a1a0c" stroke-opacity=".3" stroke-width="1"/>`
+    + `<path d="M70 70 Q66 86 70 102" fill="none" stroke="#e8c8a0" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>`
+    + `<path d="M116 58 Q120 70 118 80 Q121 84 124 78 Q124 68 120 60 Z" fill="#8c9088" ${O}/>`
+    + S('M78 54 Q76 38 100 34 Q124 38 122 54 Q118 60 100 60 Q82 60 78 54 Z', '#6a5a40')
+    + `<path d="M82 46 Q92 38 104 38" fill="none" stroke="#c8b088" stroke-opacity=".5" stroke-width="1.4"/>`
+    + `<path d="M79 54 Q100 61 121 54" fill="none" stroke="#2a1a0a" stroke-width="2.4"/><path d="M79 54 Q100 61 121 54" fill="none" stroke="#a88a5a" stroke-width="1.2"/>`
+    + `<path d="M120 55 Q130 60 128 72 M121 56 Q134 58 138 66" fill="none" stroke="#a88a5a" stroke-width="1.3" stroke-linecap="round"/>`);
+
+  /* ---------- chapter five ---------- */
+  /* a conch from the sea bed: a big spiral, old cream outside, pink as a mouth inside */
+  put('b4_c5_conch', 'A conch from the sea bed',
+    lin('sc', [[0, '#f6ecd6'], [.5, '#d6c29c'], [1, '#8a7452']])
+    + lin('pk', [[0, '#f8c4b4'], [.5, '#e08a82'], [1, '#9a4a4a']]),
+    sh(104, 122, 66, 6)
+    + S('M26 56 L50 44 C80 30 132 30 164 52 C180 64 180 88 166 102 C146 120 110 124 86 116 C66 108 56 92 50 78 L26 60 Z', 'url(#@sc)')
+    + `<path d="M30 57 L50 50 M38 52 C44 58 46 66 50 74 M50 46 C56 56 58 66 60 80 M62 40 C70 54 72 74 76 98" fill="none" stroke="#6a5638" stroke-opacity=".55" stroke-width="1.1"/>`
+    + `<path d="M66 40 q4 -7 8 -1 M90 37 q4 -8 8 -1 M114 37.5 q4 -8 8 -.5 M138 42 q4 -7 8 1" fill="#e8dcc0" ${O}/>`
+    + `<path d="M84 60 Q120 56 156 66 M80 84 Q118 82 150 92" fill="none" stroke="#9a7a52" stroke-opacity=".4" stroke-width="2.2"/>`
+    + S('M96 112 C118 96 150 82 174 64 C182 84 172 106 150 116 C130 124 110 122 96 112 Z', 'url(#@pk)')
+    + `<path d="M108 112 C128 100 152 88 168 74 C170 92 160 106 144 112 C130 117 118 117 108 112 Z" fill="#7a3434" fill-opacity=".55"/>`
+    + `<path d="M100 112 C120 98 150 84 172 66" fill="none" stroke="#fde2d6" stroke-opacity=".7" stroke-width="1.4"/>`
+    + `<path d="M58 46 C80 36 120 34 150 44" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.6"/>`);
+
+  /* a lens of old sea-glass: thick green, clouded at the edge and clear at the heart, prised from a stone ship's stern-light */
+  put('b4_c5_seaglass', 'A lens of old sea-glass',
+    `<radialGradient id="@sg" cx=".46" cy=".44" r=".55"><stop offset="0" stop-color="#9ed8b4" stop-opacity=".55"/><stop offset=".55" stop-color="#5a9a76" stop-opacity=".75"/><stop offset=".85" stop-color="#7aa892" stop-opacity=".92"/><stop offset="1" stop-color="#c2d8cc" stop-opacity=".95"/></radialGradient>`,
+    sh(102, 118, 54, 7) + `<ellipse cx="108" cy="114" rx="30" ry="5" fill="#7ad0a0" fill-opacity=".12"/>`
+    + ``
+    + `<ellipse cx="102" cy="78" rx="48" ry="40" fill="#2c4a3a" ${O}/>`
+    + `<path d="M98 32 C126 32 146 50 146 72 C146 94 126 112 98 112 C70 112 50 94 50 72 C50 56 60 42 76 36 L80 42 L88 34 Z" fill="url(#@sg)" ${O}/>`
+    + `<ellipse cx="96" cy="70" rx="24" ry="20" fill="#d8f4e2" fill-opacity=".12"/>`
+    + `<path d="M62 56 Q74 38 98 34" fill="none" stroke="#f4fff8" stroke-opacity=".75" stroke-width="2.2" stroke-linecap="round"/><path d="M128 98 Q136 90 140 78" fill="none" stroke="#f4fff8" stroke-opacity=".3" stroke-width="1.4"/>`
+    + `<circle cx="88" cy="80" r="1.4" fill="none" stroke="#e8fff0" stroke-opacity=".5" stroke-width=".6"/><circle cx="110" cy="62" r="1" fill="none" stroke="#e8fff0" stroke-opacity=".5" stroke-width=".6"/><circle cx="104" cy="88" r=".8" fill="none" stroke="#e8fff0" stroke-opacity=".5" stroke-width=".6"/>`);
+
+  /* a desert rider's veil: a long strip of fine grey cotton, loosely folded, a loop of red thread at one end */
+  put('b4_c5_veil', 'A desert rider\'s veil',
+    lin('vg', [[0, '#dcd6ca'], [.5, '#aaa498'], [1, '#6a665c']], 0, 1),
+    sh(102, 126, 78, 7)
+    + S('M44 94 C80 96 130 100 168 106 L166 124 C128 118 80 114 42 110 Z', 'url(#@vg)')
+    + `<path d="M44 70 C28 76 28 100 44 110 L50 100 C42 96 42 92 46 88 Z" fill="#4a463e" ${O}/>`
+    + S('M156 62 C120 58 70 60 44 70 L46 90 C72 82 120 80 160 82 Z', 'url(#@vg)')
+    + `<path d="M156 36 C178 44 180 72 160 84 L150 76 C160 68 160 62 156 60 Z" fill="#4a463e" ${O}/>`
+    + S('M28 30 C62 26 120 28 158 38 L156 58 C118 50 62 48 30 50 Z', 'url(#@vg)')
+    + `<path d="M34 34 C70 30 120 32 152 41 M52 66 C80 60 120 60 152 64 M50 97 C90 100 130 104 164 109" fill="none" stroke="#f6f2ea" stroke-opacity=".5" stroke-width="1.2" stroke-linecap="round"/>`
+    + `<path d="M60 38 Q66 44 76 42 M104 38 Q112 46 122 42 M70 70 Q78 76 88 72 M118 68 Q126 74 136 70 M76 102 Q84 108 94 104 M126 106 Q134 112 144 108" fill="none" stroke="#3a3630" stroke-opacity=".4" stroke-width="1.1"/>`
+    + `<path d="M29 31 l-6 -1 M29 36 l-7 1 M29 41 l-6 2 M30 46 l-7 3 M30 50 l-5 4" stroke="#a8a294" stroke-width=".8" stroke-linecap="round"/>`
+    + `<path d="M167 107 l6 0 M167 112 l7 2 M166 117 l6 3 M166 122 l5 4" stroke="#a8a294" stroke-width=".8" stroke-linecap="round"/>`
+    + `<path d="M166 122 C176 128 182 138 174 141 C166 144 162 134 168 128" fill="none" stroke="#0b0806" stroke-opacity=".5" stroke-width="2.6"/><path d="M166 122 C176 128 182 138 174 141 C166 144 162 134 168 128" fill="none" stroke="#c0302c" stroke-width="1.5"/>`);
+
+  /* ---------- chapter six ---------- */
+  /* a Dogslayer's cut-off badge: dog's head in black on red, a bar across its throat, the threads still hanging where the knife went */
+  put('b4_c6_dogslayer', 'A Dogslayer\'s cut-off badge',
+    `<pattern id="@wv" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 1.5 h3 M1.5 0 v3" stroke="#000" stroke-opacity=".18" stroke-width=".6"/></pattern>`
+    + lin('bd', [[0, '#c03a32'], [.55, '#8e1c1c'], [1, '#4a0c0c']]),
+    `<path d="M58 34 L150 28 L156 120 L62 126 Z" transform="translate(4 5)" fill="#000" fill-opacity=".45"/>`
+    + `<path d="M58 34 L150 28 L152 50 L154 72 L153 96 L156 120 L130 121 L104 124 L80 123 L62 126 Z" fill="url(#@bd)"/><path d="M58 34 L150 28 L156 120 L62 126 Z" fill="url(#@wv)"/>`
+    + `<path d="M58 34 L150 28 L152 50 L154 72 L153 96 L156 120 L130 121 L104 124 L80 123 L62 126 Z" fill="none" ${O}/>`
+    + `<path d="M62 38 L146 32 M62 38 L66 122" fill="none" stroke="#2a0606" stroke-width="2" stroke-dasharray="2 1.2"/>`
+    + `<path d="M154 58 l9 2 M153 78 l11 -1 M155 100 l8 4 M154 110 l10 1 M120 122 l1 9 M96 124 l-2 10 M78 124 l2 7 M140 121 l2 8" stroke="#a8282a" stroke-width=".9" stroke-linecap="round"/><path d="M153 68 l8 3 M110 123 l0 8" stroke="#141010" stroke-width=".9" stroke-linecap="round"/>`
+    + `<path d="M80 108 C76 92 78 76 86 66 L86 44 L96 58 L104 42 L108 60 C116 64 124 68 134 70 L142 72 Q146 76 142 80 L126 82 L134 88 Q124 92 112 90 C110 98 106 104 102 110 Z" fill="#141010"/>`
+    + `<path d="M82 100 l6 -18 M90 104 l6 -20 M98 104 l6 -20 M106 96 l5 -16 M114 86 l4 -10 M122 80 l3 -6" stroke="#3a3434" stroke-opacity=".6" stroke-width=".7"/><circle cx="114" cy="69" r="1.7" fill="#c03a32"/><circle cx="143" cy="75" r="1.4" fill="#3a3434"/>`
+    + `<path d="M72 106 L132 90 L135 100 L75 116 Z" fill="#141010"/><path d="M74 107 L132 92" stroke="#4a4444" stroke-opacity=".5" stroke-width=".8"/>`);
+
+  /* a Dogslayer's scale shirt: Malazan heavy scale, the legion's marks scraped off, a dog's head painted on the breast in black */
+  { const d = 'M76 22 L90 16 Q100 26 110 16 L124 22 L150 36 L160 62 L144 68 L136 50 L138 118 Q100 126 62 118 L64 50 L56 68 L40 62 L50 36 Z';
+    put('b4_c6_dogscale', 'A Dogslayer\'s scale shirt',
+      `<pattern id="@sc" width="8" height="8" patternUnits="userSpaceOnUse"><g stroke="#141618" stroke-width=".6"><path d="M-4 4 L4 4 L4 7.5 Q4 11 0 11.4 Q-4 11 -4 7.5 Z" fill="#676d73"/><path d="M4 4 L12 4 L12 7.5 Q12 11 8 11.4 Q4 11 4 7.5 Z" fill="#676d73"/><path d="M0 0 L8 0 L8 3.5 Q8 7 4 7.4 Q0 7 0 3.5 Z" fill="#7b8187"/><path d="M-4 -4 L4 -4 L4 -0.5 Q4 3 0 3.4000000000000004 Q-4 3 -4 -0.5 Z" fill="#71777d"/><path d="M4 -4 L12 -4 L12 -0.5 Q12 3 8 3.4000000000000004 Q4 3 4 -0.5 Z" fill="#71777d"/></g><path d="M1.2 1.2 Q1.6 4.6 4 5.6 M5.2 -2.8 Q5.6 0.6 8 1.6 M-2.8 5.2 Q-2.4 8.6 0 9.6" fill="none" stroke="#e6eaee" stroke-opacity=".35" stroke-width=".6"/></pattern>`,
+      sh(100, 124, 54, 6)
+      + `<path d="${d}" fill="#3a3e42"/><path d="${d}" fill="url(#@sc)"/><path d="${d}" fill="url(#@lit)"/>`
+      + `<path d="M84 40 Q80 80 82 116 M118 40 Q122 84 118 118" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="5"/>`
+      + `<path d="M62 117 Q100 125 138 117" fill="none" stroke="#4a2e18" stroke-width="3"/><path d="M41 61 L56 67 M144 67 L159 61" stroke="#4a2e18" stroke-width="3"/><path d="M90 17 Q100 28 110 17 Q100 22 90 17 Z" fill="#14100c" stroke="#4a2e18" stroke-width="2"/>`
+      + `<path d="M84 76 C82 64 88 54 96 50 L97 40 L104 48 L110 42 L110 52 C118 56 124 60 126 66 C124 70 118 72 112 70 C108 76 104 80 98 82 Z" fill="#0e0c0a" fill-opacity=".88"/><path d="M86 72 q-3 6 -1 10 M98 82 q0 6 -3 9" stroke="#0e0c0a" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/>`
+      + `<path d="M72 92 l6 -1 M120 96 l7 -2 M70 60 l5 0 M128 64 l6 1 M90 104 l6 -1 M110 108 l5 0" stroke="#f0f2f4" stroke-opacity=".75" stroke-width=".9" stroke-linecap="round"/>` + ol(d));
+  }
+
+  /* a sapper's short spade: blade a hand and a half across, one edge ground sharp, the haft worn dark at the grip */
+  put('b4_c6_trenchspade', 'A sapper\'s short spade',
+    lin('ir2', [[0, '#a8aeb2'], [.4, '#6a7074'], [1, '#2e3236']], 0, 1),
+    sh(100, 124, 72, 6)
+    + `<g transform="translate(102 72) rotate(-32)">`
+    + S('M-88 -11 L-82 -11 L-82 11 L-88 11 Z', 'url(#@wd)', '@litv')
+    + S('M-82 -3.6 L22 -3.6 L22 3.6 L-82 3.6 Z', 'url(#@wd)', '@litv')
+    + `<path d="M-82 -3.6 L-56 -3.6 L-56 3.6 L-82 3.6 Z" fill="#1a1008" fill-opacity=".5"/><path d="M-50 -1 L18 -1.5 M-30 1.6 L10 1.2" stroke="#2a1a0c" stroke-opacity=".5" stroke-width=".6"/><path d="M-80 -2.6 L20 -2.6" stroke="#e8c898" stroke-opacity=".3" stroke-width=".8"/>`
+    + S('M14 -5 L30 -6 L30 6 L14 5 Z', 'url(#@ir2)', '@litv') + `<circle cx="20" cy="0" r="1.3" fill="#c8ccd0"/>`
+    + S('M28 -18 L74 -16 Q90 -8 92 0 Q90 8 74 16 L28 18 Q24 0 28 -18 Z', 'url(#@ir2)', '@litv')
+    + `<path d="M30 -16 L74 -14 Q88 -7 90 0" fill="none" stroke="#f4f8fa" stroke-opacity=".85" stroke-width="1.2"/>`
+    + `<path d="M40 -6 Q56 -4 70 -6 M44 6 Q58 8 74 4" fill="none" stroke="#1e2124" stroke-opacity=".35" stroke-width="1.2"/>`
+    + `<circle cx="52" cy="8" r="2.4" fill="#6a3a1a" fill-opacity=".6"/><circle cx="66" cy="-4" r="1.6" fill="#6a3a1a" fill-opacity=".5"/><path d="M76 10 Q86 6 90 2 L92 4 Q86 12 76 14 Z" fill="#4a3a26" fill-opacity=".7"/></g>`);
+
+  /* the picket's horn: a cow's horn, brass mouthpiece, a thong; the 9th's number and years of tallies scratched in */
+  put('b4_c6_pickethorn', 'The picket\'s horn',
+    lin('ph', [[0, '#3a2414'], [.3, '#8a6a46'], [.7, '#dccaa2'], [1, '#f2e6c8']], 1, 0),
+    sh(100, 118, 74, 6)
+    + `<path d="M58 96 C64 120 130 126 148 98" fill="none" stroke="#2a180a" stroke-width="3.2"/><path d="M58 96 C64 120 130 126 148 98" fill="none" stroke="#7a4e2a" stroke-width="1.8"/>`
+    + S('M30 86 C60 100 120 98 160 70 L170 100 C126 118 66 112 30 94 Z', 'url(#@ph)')
+    + `<path d="M34 87 C70 100 122 96 160 72" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="1.4"/>`
+    + `<ellipse cx="165" cy="85" rx="16" ry="7" transform="rotate(72 165 85)" fill="#1c140c" ${O}/><ellipse cx="164" cy="85" rx="15" ry="5" transform="rotate(72 164 85)" fill="none" stroke="#f2e6c8" stroke-opacity=".5" stroke-width="1"/>`
+    + `<path d="M18 86 L32 84 L32 96 L18 94 Q14 90 18 86 Z" fill="url(#@brs)" ${O}/><path d="M12 85 Q10 90 12 95 L18 94 L18 86 Z" fill="#8a6428" ${O}/>`
+    + `<text x="98" y="104" font-family="Georgia,serif" font-size="8" fill="#3a2614" fill-opacity=".8" transform="rotate(-10 98 104)">IX</text>`
+    + `<path d="M62 98 l1 -6 M65 98 l1 -6 M68 98.4 l1 -6 M71 98.6 l1 -6 M60 95 l13 2 M78 100 l1 -6 M81 100 l1 -6 M84 100 l1 -6 M116 102 l2 -7 M119 101 l2 -7 M122 100 l2 -7 M126 98 l2 -7 M129 97 l2 -7" stroke="#3a2614" stroke-opacity=".7" stroke-width=".7"/>`
+    + `<circle cx="58" cy="96" r="2.4" fill="url(#@brs)" ${O}/><circle cx="148" cy="98" r="2.4" fill="url(#@brs)" ${O}/>`);
+
+  /* ---------- chapter seven ---------- */
+  /* a piece of coral stone: a knuckle of pale coral the size of a fist, pitted and light */
+  { const d = 'M44 86 C38 66 52 46 72 44 C80 32 102 30 114 38 C130 32 152 40 156 58 C170 66 168 90 154 98 C150 112 128 118 112 112 C98 120 74 118 64 106 C50 106 42 98 44 86 Z';
+    put('b4_c7_coral', 'A piece of coral stone',
+      `<pattern id="@cp" width="9" height="8" patternUnits="userSpaceOnUse"><ellipse cx="4.5" cy="4" rx="1.6" ry="1.3" fill="#6a5a46" fill-opacity=".38"/><path d="M2.5 3.6 Q4.5 2 6.5 3.6" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".6"/><circle cx="0" cy="0" r=".9" fill="#6a5a46" fill-opacity=".4"/></pattern><pattern id="@cq" width="13" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(23)"><ellipse cx="3" cy="7" rx="2.4" ry="1.8" fill="#5a4a36" fill-opacity=".45"/><ellipse cx="9" cy="2" rx="1.4" ry="1.2" fill="#5a4a36" fill-opacity=".4"/></pattern>`
+      + lin('co', [[0, '#f4ecdc'], [.55, '#d6c6a8'], [1, '#8a7656']]),
+      sh(102, 118, 62, 7)
+      + `<path d="${d}" fill="url(#@co)"/><path d="${d}" fill="url(#@cp)"/><path d="${d}" fill="url(#@cq)"/><path d="${d}" fill="url(#@lit)"/>`
+      + `<ellipse cx="96" cy="78" rx="5" ry="4" fill="#4a3a28" fill-opacity=".55"/><ellipse cx="128" cy="62" rx="4" ry="3" fill="#4a3a28" fill-opacity=".5"/><ellipse cx="74" cy="94" rx="3.4" ry="2.6" fill="#4a3a28" fill-opacity=".5"/><ellipse cx="136" cy="94" rx="3" ry="2.4" fill="#4a3a28" fill-opacity=".45"/>`
+      + `<path d="M72 44 C76 56 74 70 66 80 M114 38 C110 50 112 62 122 70 M156 58 C146 66 142 78 146 90" fill="none" stroke="#6a5840" stroke-opacity=".35" stroke-width="1.6"/>`
+      + `<path d="M52 66 C58 52 68 46 76 46 M86 36 C96 32 106 34 112 40" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round"/>` + ol(d));
+  }
+
+  /* a Dogslayer's sword: a Malazan short sword, long and heavy in the blade, the hilt's marks filed off, the leather rewound */
+  put('b4_c7_dogslayerblade', 'A Dogslayer\'s sword',
+    lin('gp', [[0, '#8a5c34'], [.5, '#5a3a1e'], [1, '#2a180a']], 0, 1),
+    sh(100, 124, 76, 6)
+    + `<g transform="translate(104 72) rotate(-32)">`
+    + S('M-90 -6 Q-95 0 -90 6 L-84 5 L-84 -5 Z', 'url(#@st)')
+    + S('M-84 -4.4 L-56 -4 L-56 4 L-84 4.4 Z', 'url(#@gp)', '@litv')
+    + `<path d="M-82 -4.2 l3 8.6 M-77 -4.1 l3 8.4 M-72 -4 l3 8.2 M-67 -4 l3 8.1 M-62 -4 l3 8" stroke="#1a0e06" stroke-width="1.1"/><path d="M-58 -4 l3 8 l3 -1" fill="none" stroke="#8a5c34" stroke-width="1"/>`
+    + S('M-57 -14 L-51 -14 L-50 14 L-56 14 Z', 'url(#@st)', '@litv')
+    + `<path d="M-55 -11 l2 3 M-55 -6 l2 3 M-55 6 l2 3 M-54 10 l2 2" stroke="#f4f8fa" stroke-opacity=".8" stroke-width=".6"/>`
+    + S('M-50 -7.5 L70 -6.5 L94 0 L70 6.5 L-50 7.5 Z', 'url(#@st)', '@litv')
+    + `<path d="M-46 0 L66 0" stroke="#3e444a" stroke-opacity=".7" stroke-width="2"/><path d="M-48 -6 L70 -5 L90 0" fill="none" stroke="#fbfdff" stroke-opacity=".85" stroke-width=".9"/>`
+    + `<path d="M10 6 l1 1.4 M36 5.4 l1.4 1.2" stroke="#1e2226" stroke-width="1"/></g>`);
+
+  /* a black bead: black glass the shape of a tear, smooth with handling, on a thong */
+  put('b4_c7_tear', 'A black bead',
+    `<radialGradient id="@tg" cx=".38" cy=".6" r=".7"><stop offset="0" stop-color="#3c3a44"/><stop offset=".55" stop-color="#121116"/><stop offset="1" stop-color="#050406"/></radialGradient>`,
+    sh(102, 128, 30, 5)
+    + `<path d="M22 22 C40 50 70 62 96 60 M104 60 C130 62 160 50 178 22" fill="none" stroke="#2a180c" stroke-width="3.6" stroke-linecap="round"/><path d="M22 22 C40 50 70 62 96 60 M104 60 C130 62 160 50 178 22" fill="none" stroke="#8a5a32" stroke-width="2" stroke-linecap="round"/>`
+    + `<path d="M100 54 C108 72 128 88 128 104 C128 120 116 128 100 128 C84 128 72 120 72 104 C72 88 92 72 100 54 Z" fill="url(#@tg)" ${O}/>`
+    + `<ellipse cx="100" cy="62" rx="3" ry="2" fill="#000"/><path d="M96 60 Q100 56 104 60" fill="none" stroke="#8a5a32" stroke-width="2.2"/>`
+    + `<path d="M84 96 Q88 84 96 76" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="86" cy="106" rx="3" ry="5" transform="rotate(20 86 106)" fill="#fff" fill-opacity=".22"/>`
+    + `<path d="M118 112 Q122 104 120 96" fill="none" stroke="#9a96a8" stroke-opacity=".35" stroke-width="1.6"/>`);
 })();
 
 /* ============ resume & boot ============ */
