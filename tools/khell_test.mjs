@@ -22,9 +22,9 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   S.f.b3_c4_vellRope = 1; out.vellAfterRope = /put a line on it in the open/.test(txt('b3_c4_hunt_after')); delete S.f.b3_c4_vellRope;
   const loy0 = S.loy.vell || 0; DLG.b3_c4_hunt_after().fx(); out.loyUp = (S.loy.vell || 0) - loy0; out.coil = S.kit.includes('b3_c4_ropehooks');
   // the hunt: the Hunter's numbers in the fight, the hide on a blow, a sharper at half, a cusser at half again, Vell's rope
-  setup(true); startBattle('b3_c4_hunt', {}); await settle(); B.busy = true; B.over = true;
+  setup(true); startBattle('b3_c4_hunt', {}); const parry0 = (foes().find(f => f.kind === 'khell') || {}).parryLeft; await settle(); B.busy = true; B.over = true; // the parry read as the fight opens: a first turn may spend it before settle()
   const kh = foes().find(f => f.kind === 'khell'), v = B.units.find(u => u.id === 'vell'), b = B.units.find(u => u.id === 'brisk');
-  out.inFight = {attacks:kh.attacks, rng:kh.rng, parry:kh.parryLeft, dr:kh.dr, boss:!!kh.boss};
+  out.inFight = {attacks:kh.attacks, rng:kh.rng, parry:parry0, dr:kh.dr, boss:!!kh.boss};
   // a plain blow of 10 lands for 5
   B.units.forEach(u => { u.x = 0; u.y = 0; }); b.x = 3; b.y = 3; kh.x = 4; kh.y = 3; kh.hp = kh.maxhp; b.atk = 60; let res; for (let i = 0; i < 40; i++) { B.log = []; res = attack(b, kh, {dmg:[1,1,9]}); if (res.hit && !B.log.some(l => /critical|Parried/.test(String(l)))) break; } out.blow = res.dmg;
   // a sharper's 10 does 5 to it and 10 to a squadmate beside it; a cusser's 10 does 15
