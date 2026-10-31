@@ -78,7 +78,7 @@ function showTitle(fresh, want){
   const rows = rowsOf(list.slice(0, 1), true), more = list.length - 1;
   const bookRows = b => { const L = list.filter(e => onShelf(e, b)); return L.length ? `<div class="roster"><div class="rh">Carry on in Book ${BOOKS[b].word}${L.length > 1 ? `: ${L.length} sergeants` : ''}</div>${rowsOf(L, false)}</div>` : ''; };
   const taken = n => list.find(e => sameName(e.name, n));
-  const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a save code</b> here and paste it.</p>` : '';
+  const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a backup or save code</b> here and paste it.</p>` : '';
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
     <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
@@ -90,13 +90,14 @@ function showTitle(fresh, want){
     ${iosNote}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
     <div class="tbtns"><button class="btn primary" id="bNew">Begin Book ${TB.word}</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
-      <div class="row2"><button class="btn" id="bBack">All books</button>${list.length ? '' : '<button class="btn" id="bImp">Load a save code</button>'}</div></div>`
+      <div class="row2"><button class="btn" id="bBack">All books</button>${list.length ? '' : '<button class="btn" id="bImp">Load a backup or save code</button>'}</div></div>`
     : list.length ? `<div class="roster"><div class="rh">${more ? 'Last played' : 'Your sergeant'}</div>${rows}${more ? `<small class="fine rmore">${more === 1 ? 'One more sergeant waits' : `${rdUpT(more)} more sergeants wait`} on this device. Open their book to carry on.</small>` : ''}</div>
     ${shelfHTML(list)}
-    <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
+    ${backupLine()}
+    <div class="tbtns"><button class="btn" id="bImp">Backups and save codes</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>
       <div class="row2"><button class="btn" id="bDeeds">Deeds</button></div></div>`
     : `${shelfHTML(list)}${iosNote}
-    <div class="tbtns"><button class="btn" id="bImp">Load a save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button></div>`}
+    <div class="tbtns"><button class="btn" id="bImp">Load a backup or save code</button><button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button></div>`}
     <div id="instSlot"></div>
     <p class="fine">From the Ranks: Malazan fan tales told by ordinary soldiers, for personal play. The world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. ${titleCredit()} Sound on for the full effect. <button class="ver" id="bVer" aria-label="What's new in this version">v${VERSION}</button></p></div>`;
   if (!ARTON()) startTitleBackdrop($('#titlecv'), tb); else titleAnim = null;
@@ -104,6 +105,7 @@ function showTitle(fresh, want){
   $('#bVer').onclick = () => { AUDIO.play('click'); openNotes(null); };
   if ($('#bFullT')) $('#bFullT').onclick = () => { AUDIO.play('click'); toggleFull(); };
   if ($('#bImp')) $('#bImp').onclick = () => { AUDIO.play('click'); openModal('save'); };
+  bindBackupLine(); // v8.2: the backup reminder under the roster (35b)
   const bindLoads = root => root.querySelectorAll('.sgtrow .load').forEach(el => el.onclick = () => { AUDIO.play('click'); const s = loadSlot(el.dataset.id);
     if (!s) { dropSlot(el.dataset.id); return showTitle(); } S = s; resume(); });
   if (form) {

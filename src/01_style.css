@@ -635,3 +635,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .kit .ith .stat,.gearl .stat{display:block;margin-top:2px;line-height:1.35}
 .gearl > span > b{display:block}
 .kit .ith .swapw{display:block;font-size:.8rem;color:var(--brass2);opacity:.85}
+/* v8.2: the backup reminder (35b), on the title and at a chapter's end */
+.bkline{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0 4px;padding:8px 10px;border:1px solid var(--line2);border-radius:2px;background:rgba(20,16,13,.55)}
+.bkline.due{border-color:var(--brass)}
+.bkline .fine{flex:1 1 180px}

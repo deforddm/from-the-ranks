@@ -13,14 +13,21 @@ function openModal(tab){
     deeds:()=>deedsHTML(),
     journal:()=>`${journalHead()}<div class="route sm"><canvas id="jRoute"></canvas></div><h4 class="jh">Notes</h4><ul class="jl">${journalNotes().map(l => `<li>${l}</li>`).join('')}</ul>${artJournalHTML()}${typeof visionsHTML === 'function' ? visionsHTML() : ''}${glossHTML()}${typeof whereBooksMeetHTML === 'function' ? whereBooksMeetHTML(false) : ''}`,
     save:()=>`${S ? `<p class="fine">Playing as <b class="who">Sergeant ${esc(S.name)}</b>. The game saves itself on this device as you play, under your sergeant's name. Anyone else can start their own sergeant from the title, and each keeps a save of their own.</p>
-      <div class="row" style="margin:8px 0 16px"><button class="btn" id="bSwitch">Switch sergeant</button></div>
-      <label class="fine" for="exp">Sergeant ${esc(S.name)}'s save code. Copy it somewhere safe to move them to another device, or to keep them from a cleared browser.</label>
+      <div class="row" style="margin:8px 0 16px"><button class="btn" id="bSwitch">Switch sergeant</button></div>` : ''}
+      <h4 class="jh">Keep your saves safe</h4>
+      <p class="fine">Saves live in this browser's storage for this site. <b>Clearing the browser's data (cache, cookies, site data) erases every sergeant on this device.</b> A backup file does not: it holds every sergeant here${roster().list.length ? ` (${roster().list.length === 1 ? 'one' : roster().list.length})` : ''}, with your settings, and loads back in with one tap. Keep one after every chapter or two.</p>
+      <p class="fine" id="bkWhen">${backupMark() ? `Last backed up ${agoText(backupMark().at) || 'today'}.` : roster().list.length ? 'Never backed up on this device.' : ''}</p>
+      ${roster().list.length ? `<div class="row" style="margin:8px 0 16px"><button class="btn primary" id="bDown">Save a backup file</button>${canShareBackup() ? `<button class="btn" id="bShare">Send it on (Drive, mail…)</button>` : ''}</div>` : ''}
+      <label class="fine" for="bkFile">Load a backup file to bring its sergeants back</label>
+      <div class="row" style="margin:8px 0 16px"><input type="file" id="bkFile" accept=".json,application/json,text/plain" hidden><button class="btn" id="bRestore">Load a backup file</button></div><p class="fine" id="bkMsg" role="status"></p>
+      <h4 class="jh">Save codes</h4>
+      ${S ? `<label class="fine" for="exp">Sergeant ${esc(S.name)}'s save code: one sergeant as text, for moving them to another device.</label>
       <textarea id="exp" readonly>${saveCode()}</textarea><div class="row" style="margin:8px 0 16px"><button class="btn" id="bCopy">Copy code</button></div>`
-      : `<p class="fine">Each sergeant saves on this device as they play. A save code brings one here from another device, or back from a cleared browser.</p>`}
+      : `<p class="fine">A save code is one sergeant as text, for moving them from another device.</p>`}
       <label class="fine" for="imp">Paste a save code to load it</label><textarea id="imp" placeholder="Paste code here"></textarea>
       <div class="row" style="margin-top:8px"><button class="btn primary" id="bLoad">Load code</button></div><p class="fine" id="impMsg"></p>`,
   };
-  m.innerHTML = smartq(`<div class="mbox"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><h2 class="m">${S ? ((BOOKS[(S.book) || 'gotm'] || BOOKS.gotm).squad || 'The squad') : tab === 'deeds' ? 'Deeds' : 'Load a game'}</h2><button class="btn" id="bClose">Close</button></div>
+  m.innerHTML = smartq(`<div class="mbox"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><h2 class="m">${S ? ((BOOKS[(S.book) || 'gotm'] || BOOKS.gotm).squad || 'The squad') : tab === 'deeds' ? 'Deeds' : 'Saves and backups'}</h2><button class="btn" id="bClose">Close</button></div>
     <div class="tabs">${S ? `<button class="tab" data-t="squad">Squad</button><button class="tab" data-t="roster">Roster</button>` : ''}${tabs.map(k => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
     <div>${body[tab]()}</div></div>`);
   m.querySelectorAll('.tab').forEach(b => b.onclick = () => { AUDIO.play('click'); if (b.dataset.t === 'squad') { m.hidden = true; openChars(0); } else openModal(b.dataset.t); });
@@ -38,11 +45,23 @@ function openModal(tab){
       const old = () => { try { done(document.execCommand('copy')); } catch(e) { done(false); } }; // older browsers, and pages without clipboard permission
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(() => done(true), old); else old(); };
     if ($('#bSwitch')) $('#bSwitch').onclick = () => { AUDIO.play('click'); save(); m.hidden = true; showTitle(); };
+    // v8.2: the backup file (35b). Download or share; restore merges, and asks twice before replacing a sergeant already here.
+    const bkSaid = t => { $('#bkWhen').textContent = `Last backed up ${agoText(Date.now()) || 'today'}.`; $('#bkMsg').textContent = t; };
+    if ($('#bDown')) $('#bDown').onclick = () => { AUDIO.play('click'); bkSaid(downloadBackup() ? `Saved as ${backupName()}. Keep it somewhere the browser can't clear: Files, Drive, or mail it to yourself.` : 'The file could not be made here. Copy the save code below instead.'); };
+    if ($('#bShare')) $('#bShare').onclick = () => { AUDIO.play('click'); shareBackup().then(ok => { if (ok) bkSaid('Sent.'); }); };
+    const br = $('#bRestore'), bf = $('#bkFile'); let pending = null;
+    const unarmBk = () => { pending = null; br.classList.remove('warn'); br.textContent = 'Load a backup file'; };
+    const applyBk = b => { const n = restoreBackup(b); unarmBk(); $('#bkMsg').textContent = n ? `${n === 1 ? 'One sergeant' : `${n} sergeants`} back on this device.` : 'Nothing in that file could be loaded.'; if (n) { m.hidden = true; if (S) { const me = roster().list.find(e => e.id === S.sid); if (me) { const s = loadSlot(S.sid); if (s) S = s; } } showTitle(); } };
+    br.onclick = () => { AUDIO.play('click'); if (pending) return applyBk(pending); bf.value = ''; bf.click(); };
+    bf.onchange = () => { const f = bf.files && bf.files[0]; if (!f) return; f.text().then(t => { const b = parseBackup(t); if (!b || !b.sergeants.length) { unarmBk(); $('#bkMsg').textContent = 'That file didn\'t load. It should be a From the Ranks backup (a .json file saved from this page).'; return; }
+      const cl = backupClashes(b); if (!cl.length) return applyBk(b);
+      pending = b; br.classList.add('warn'); br.textContent = `Replace ${cl.length === 1 ? `Sergeant ${cl[0]}` : `${cl.length} sergeants`}`; $('#bkMsg').textContent = tapWord(`${cl.length === 1 ? `Sergeant ${cl[0]} already has` : `${cl.join(', ')} already have`} a save on this device. Tap again to replace ${cl.length === 1 ? 'it' : 'them'} with the file's copy; the file's other sergeants are added either way.`); }, () => { $('#bkMsg').textContent = 'That file could not be read.'; }); };
     // a code for a sergeant already on this device asks twice: the second tap replaces that sergeant's save
     const bl = $('#bLoad'), unarm = () => { if (bl.dataset.arm) { delete bl.dataset.arm; bl.classList.remove('warn'); bl.textContent = 'Load code'; $('#impMsg').textContent = ''; } };
     $('#imp').oninput = unarm;
     bl.onclick = () => { let s = null; try { s = JSON.parse(decodeURIComponent(escape(atob($('#imp').value.trim())))); } catch(e) {}
-      if (!s || s.v !== 1) { unarm(); $('#impMsg').textContent = 'That code didn\'t load. Check that it was copied in full.'; return; }
+      if (!s || s.v !== 1) { const b = parseBackup($('#imp').value); if (b && b.sergeants.length > 1) { unarm(); $('#impMsg').textContent = 'That is a whole backup, not one sergeant\'s code: load it with Load a backup file above.'; return; } // v8.2
+        unarm(); $('#impMsg').textContent = 'That code didn\'t load. Check that it was copied in full.'; return; }
       s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameName(e.name, s.name));
       if (ex && !bl.dataset.arm) { bl.dataset.arm = 1; bl.classList.add('warn'); bl.textContent = `Replace Sergeant ${ex.name}`; $('#impMsg').textContent = tapWord(`Sergeant ${ex.name} already has a save on this device. Tap again to replace it with the one in this code.`); return; }
       AUDIO.play('click'); s.sid = ex ? ex.id : newSid(); S = migrate(s); save(); m.hidden = true; resume(); };
@@ -174,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.2.0', ['Your saves can now outlive a cleared browser. Saves live in the browser\'s storage for this site, and clearing its data (cache, cookies, site data) has always erased every sergeant on the device. There is now a backup file: under Backups on the title, or from the Squad\'s Save tab, Save a backup file writes every sergeant and your settings to one file you can keep in Files or Drive, mail to yourself, or send straight on from the phone\'s share sheet. Load a backup file brings them all back, on this device or another.', 'A reminder on the title and at the end of every chapter says when you last backed up, and speaks up once you are a few chapters past it.', 'The game also asks the browser to keep this site\'s storage out of its automatic clean-ups. That does not stop a clear done by hand; only a backup does.', 'Save codes still work as before, one sergeant at a time. Nothing about the saves themselves has changed, and old saves carry on as they are.']],
   ['8.1.1', ['Every item in all five books redrawn: lit from the upper left, real steel, leather, wood and bone, a shadow underneath. Bows are strung with no arrow through them; crossbow bolts sit in the groove.']],
   ['8.1.0', ['Every item now shows its numbers the same way, in the sheet, the item view, the Pack and every trader, and every weapon says the damage it does.', 'Each weapon hits its own way: knives quick, axes heavy, spears with reach, crossbows hard.', 'Two trinket places a soldier. Book Four has armour at last; Books One and Five have new weapons.', 'Sixteen trinkets that only looked nice now do something. The spawn shard still does nothing.', 'Allocate gear weighs what a piece does, and nobody is left empty-handed with a blade in the pack. The Pack tab lists the kit and who wears it.']],
   ['8.0.20', ['Tebbet gets a man\'s shoulders under his veil, and his recurve reads properly: thicker limbs, horn nocks, a brighter string.']],
