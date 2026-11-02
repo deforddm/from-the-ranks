@@ -675,7 +675,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '8.2.2';
+const VERSION = '8.2.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7412,6 +7412,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.2.3', ['The Barrow\'s lines no longer count fight turns or rounds, and Blistig\'s rounds on the wall are back as before.']],
   ['8.2.2', ['A fight that opens with a burner or a smoker now does what the story says it does. A burner bursts on the middle of them, a 3×3 of 1d6 that leaves the ground burning for two rounds. A smoker lays a 3×3 of smoke for two rounds, and does no damage. Before, every opener, whatever was thrown, was the sharper\'s blast.']],
   ['8.2.1', ['Story text no longer says "rounds": the Barrow reads "pushes", and Blistig is on his patrol.']],
   ['8.2.0', ['Your saves can now outlive a cleared browser. Saves live in the browser\'s storage for this site, and clearing its data (cache, cookies, site data) has always erased every sergeant on the device. There is now a backup file: under Backups on the title, or from the Squad\'s Save tab, Save a backup file writes every sergeant and your settings to one file you can keep in Files or Drive, mail to yourself, or send straight on from the phone\'s share sheet. Load a backup file brings them all back, on this device or another.', 'A reminder on the title and at the end of every chapter says when you last backed up, and speaks up once you are a few chapters past it.', 'The game also asks the browser to keep this site\'s storage out of its automatic clean-ups. That does not stop a clear done by hand; only a backup does.', 'Save codes still work as before, one sergeant at a time. Nothing about the saves themselves has changed, and old saves carry on as they are.']],
@@ -31691,7 +31692,7 @@ const B2CH7 = {
       walk:'.,', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
       quest:()=> b2Ph7() <= 1 ? (!S.f.b2_blistig1 ? 'The commander of the Aren Guard, at the foot of the stair.' : 'Up on the north wall. Something is coming down Aren Way.') :
         b2Ph7() === 2 ? (!S.f.b2_blistig2 ? 'Blistig. He wants a word with every squad of the Seventh.' : 'Dawn. The stair to the wall, when the city stirs.') :
-        b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his patrol.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
+        b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his rounds.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
       npcs:[
         {id:'blistig1', name:'Blistig', kind:'blistig', x:10, y:2, node:()=>b2Ph7() >= 3 ? 'b2_blistig3' : b2Ph7() === 2 ? 'b2_blistig2' : 'b2_blistig1', show:()=>b2Ph7() < 4,
           fresh:()=>b2Ph7() <= 1 ? !S.f.b2_blistig1 : b2Ph7() === 2 ? !S.f.b2_blistig2 : b2Ph7() === 3 && !S.f.b2_blistig3},
@@ -32257,7 +32258,7 @@ Dom's army comes up the mound.`,
 
   b2_after_barrow:()=>{ const rg = b2Rearguard(), held = !!S.f.b2_barrowHeld;
     return {sp:'The Barrow', scene:'b2_barrow', txt:
-`${held ? 'They hold. Four pushes, and three more at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
+`${held ? 'They hold through all of that, and three more pushes at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
 
 Bult goes down under the lances at the foot of the standard, cursing his nephew. List holds the standard until he cannot, and then the standard goes down, and List with it, and nobody sees his face, but the ones near him say afterwards, if there were an afterwards, that he looked like a man who had found what he was looking for. Lull's marines close round their captain and then there is no north face. Bent goes into the front of them with his teeth and does not come back.
 

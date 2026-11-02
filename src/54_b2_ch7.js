@@ -134,7 +134,7 @@ const B2CH7 = {
       walk:'.,', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
       quest:()=> b2Ph7() <= 1 ? (!S.f.b2_blistig1 ? 'The commander of the Aren Guard, at the foot of the stair.' : 'Up on the north wall. Something is coming down Aren Way.') :
         b2Ph7() === 2 ? (!S.f.b2_blistig2 ? 'Blistig. He wants a word with every squad of the Seventh.' : 'Dawn. The stair to the wall, when the city stirs.') :
-        b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his patrol.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
+        b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his rounds.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
       npcs:[
         {id:'blistig1', name:'Blistig', kind:'blistig', x:10, y:2, node:()=>b2Ph7() >= 3 ? 'b2_blistig3' : b2Ph7() === 2 ? 'b2_blistig2' : 'b2_blistig1', show:()=>b2Ph7() < 4,
           fresh:()=>b2Ph7() <= 1 ? !S.f.b2_blistig1 : b2Ph7() === 2 ? !S.f.b2_blistig2 : b2Ph7() === 3 && !S.f.b2_blistig3},
@@ -700,7 +700,7 @@ Dom's army comes up the mound.`,
 
   b2_after_barrow:()=>{ const rg = b2Rearguard(), held = !!S.f.b2_barrowHeld;
     return {sp:'The Barrow', scene:'b2_barrow', txt:
-`${held ? 'They hold. Four pushes, and three more at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
+`${held ? 'They hold through all of that, and three more pushes at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
 
 Bult goes down under the lances at the foot of the standard, cursing his nephew. List holds the standard until he cannot, and then the standard goes down, and List with it, and nobody sees his face, but the ones near him say afterwards, if there were an afterwards, that he looked like a man who had found what he was looking for. Lull's marines close round their captain and then there is no north face. Bent goes into the front of them with his teeth and does not come back.
 
