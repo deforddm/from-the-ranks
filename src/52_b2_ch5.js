@@ -713,7 +713,7 @@ ${S.f.b2_dry ? `Your mouth is dust. Everybody's is. ${b2In('haddat') ? 'Haddat p
 Three of the Seventh's regulars come trotting down the line with their shields up, sent by Bult, because word has gone round that your squad is short${S.f.b2_dry ? ', and where its water went' : ''}. "Sergeant," says the older one. "Where do you want us?"` : ''}`,
     ch:[{t:'To the carts.', go:()=>startBattle('b2_dryraid', {})},
         {t:'Tangle: a burner into them as they come, first.', tag:'uses 1 burner', req:()=>b2In('tangle') && S.inv.burner > 0, fx:()=>{ S.inv.burner--; },
-          go:()=>startBattle('b2_dryraid', {pre:'Tangle lobs a burner out over the carts underarm, and it bursts on the clay in front of the Tregyn, and the clay burns, and the Tregyn who run through it are not running the same way afterwards.'})}]}),
+          go:()=>startBattle('b2_dryraid', {mun:'burner', pre:'Tangle lobs a burner out over the carts underarm, and it bursts on the clay in front of the Tregyn, and the clay burns, and the Tregyn who run through it are not running the same way afterwards.'})}]}),
 
   b2_after_dryraid:()=>({sp:'The carts', fx:()=>{ if (!S.f.b2_dryDone) { S.f.b2_dryDone = 1; chain(2, 0, 'The water-carrier\'s skins'); } }, txt:
 `The water-carrier goes down on the clay with his mantle over him like a tent, and his guard runs, and the Tregyn on the pan see him go and break, all at once, into the shimmer.

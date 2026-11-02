@@ -554,7 +554,7 @@ Keth is on his knees with both palms on the old stones. "The barrows are listeni
     ch:[
       {t:'Hold the road. Let the stretch run past.', go:()=>startBattle('b2_runway', {})},
       {t:'Tangle: a smoker across the road behind the carts, so their bows are blind.', tag:'uses 1 smoker', req:()=>b2In('tangle') && S.inv.smoker > 0, fx:()=>{ S.inv.smoker--; },
-        go:()=>startBattle('b2_runway', {pre:'Tangle lobs a smoker into the road behind the last cart, and the paving goes white from barrow to barrow, and the riders in it are shooting at nothing.'})},
+        go:()=>startBattle('b2_runway', {mun:'smoker', pre:'Tangle lobs a smoker into the road behind the last cart, and the paving goes white from barrow to barrow, and the riders in it are shooting at nothing.'})},
       {t:'Sathi and Hackle up the barrow, the Weasel way, round behind them.', check:['guile', 15], req:()=>b2In('sathi'),
         edges:id=>[id === 'sathi' && ['Hackle knows a barrow-side', 2], id === 'haddat' && ['mail', -1], id === 'redblade' && ['spurs', -2]],
         near:{t:()=>`Yes, but the far side of the barrow is steeper than the near, and ${NAME(ROLL().who || 'sathi')} comes down it faster than meant and meets the paving with a shoulder: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'sathi', bruiseN())},
@@ -997,7 +997,7 @@ Out in the dark below the wall, along the foot of it, there is movement. Ladders
 ${NAME(b2OH())} is beside you, the way the Fourth stands beside its own. ${b2OH() === 'brisk' ? '"Sergeant," Brisk says. That is the whole of it.' : b2OH() === 'kettle' ? `"${S.inv.sharper || 0} sharpers between the pair of us," Kettle says, with a look at ${b2In('tangle') ? 'Tangle' : 'the satchel'}. "Same as this morning. Don't make me say it twice."` : b2OH() === 'tuft' ? 'Tuft is looking at the dark the way she looks at a card she has not turned yet.' : b2OH() === 'ohl' ? '"I\'ll be behind you," Ohl says. "With the needle. Try to need it as little as possible."' : b2OH() === 'ellis' ? 'Ellis has her bow strung and her gloved hand flat on the wall, feeling for footsteps.' : 'Vell has a coil of rope over his shoulder. "Ladders," he says, as if it were a professional insult.'}` : ''}`,
     ch:[{t:'Hold the postern.', go:()=>startBattle('b2_postern', {})},
         {t:'Tangle: a burner down onto the ladders before they reach the top.', tag:'uses 1 burner', req:()=>b2In('tangle') && S.inv.burner > 0, fx:()=>{ S.inv.burner--; },
-          go:()=>startBattle('b2_postern', {pre:'Tangle leans out over the parapet, hums four notes, and drops a burner onto the foot of the ladders, and the night goes orange, and the men on the ladders come down them a great deal faster than they went up.'})},
+          go:()=>startBattle('b2_postern', {mun:'burner', pre:'Tangle leans out over the parapet, hums four notes, and drops a burner onto the foot of the ladders, and the night goes orange, and the men on the ladders come down them a great deal faster than they went up.'})},
         {t:'Kettle: a sharper over the wall into the dark.', tag:'uses 1 sharper', req:()=>b2In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; },
           go:()=>startBattle('b2_postern', {pre:'Kettle drops a sharper over the wall into the dark below the postern, and the dark below the postern lights up and comes apart. "Like old times," she says.'})}]}),
   b2_after_postern:()=>({sp:'The north gate · before dawn', fx:()=>{ if (b2Ph7() < 4) { S.f.b2_ph7 = 4; S.f.b2_posternDone = 1; } }, txt:

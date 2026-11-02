@@ -874,7 +874,7 @@ The Rhivi are only now getting to their horses. The Fourth is between the riders
 
 ${b3In('brisk') ? `"Hold it," Brisk says. Not to you. To herself. To the shield.` : `Hold until the Rhivi are mounted.`}`,
     ch:[{t:'Hold the herd lines.', go:()=>startBattle('b3_c2_night', {})},
-        {t:'Kettle\'s smoker across the grass between them and the herd.', tag:'uses 1 smoker', req:()=>b3In('kettle') && S.inv.smoker > 0, fx:()=>{ S.inv.smoker--; S.f.b3_c2_smoke = 1; }, go:()=>startBattle('b3_c2_night', {pre:true, surprise:'p'})}]}),
+        {t:'Kettle\'s smoker across the grass between them and the herd.', tag:'uses 1 smoker', req:()=>b3In('kettle') && S.inv.smoker > 0, fx:()=>{ S.inv.smoker--; S.f.b3_c2_smoke = 1; }, go:()=>startBattle('b3_c2_night', {pre:true, mun:'smoker', surprise:'p'})}]}),
   b3_c2_after_night:()=>({sp:'The herd lines · before dawn', scene:'b3_c2_herds_dawn', fx:()=>{ S.f.b3_c2_nightDone = 1; if (B && B.def && (B.def.b3Came || []).length) ally(1, 0, 'The herd lines held, together'); }, txt:
 `The man in grey goes down in the grass with his long mace under him, and his riders take what is left of their horses south into the dark, and do not take a single calf with them.
 

@@ -736,8 +736,8 @@ Then the water comes. Not a wave: a grey sheet of it sliding over the white floo
 
 Ahead, the nearest island is a long hump of coral with a spur running out from it toward the army, and on the spur, between the Third and the high ground, there are men. Whirlwind men, by the robes: a band cut off from somewhere by the water, coming the other way along the spur to get onto the same island, and seeing the 9th, and seeing the water, and drawing.`,
       ch:[{t:'"Through them. There\'s no other way up."', go:()=>startBattle('b4_c7_spur', {})},
-          {t:'Tangle puts a burner on the spur in front of them.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c7_spur', {pre:true})},
-          {t:'Rasp puts a burner on the spur in front of them.', tag:'uses 1 burner', req:()=>!b4In('tangle') && b4In('rasp') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c7_spur', {pre:true})},
+          {t:'Tangle puts a burner on the spur in front of them.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c7_spur', {pre:true, mun:'burner'})},
+          {t:'Rasp puts a burner on the spur in front of them.', tag:'uses 1 burner', req:()=>!b4In('tangle') && b4In('rasp') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c7_spur', {pre:true, mun:'burner'})},
           {t:'Shout to them in the desert tongue: the island is big enough for everybody.', check:['guile', 15],
             edges:id=>[id === 'haddat' && ['the tongues of the Holy Desert are hers', 3], id === 'redblade' && ['a Seven Cities voice they might hear', 1], id === 'orvas' && ['the Khundryl trade with desert tribes', 1], id === 'darrut' && ['he shouted at the Whirlwind from the Aren walls, and they never listened', -1]],
             near:{t:'Yes, but they only half believe it, and the half that does not comes at the squad anyway; the rest hang back on the spur to see who wins.'},

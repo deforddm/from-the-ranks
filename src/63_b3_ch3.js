@@ -643,7 +643,7 @@ ${b3Mind() ? 'Your hands are not quite steady, and you are not alone in that. Yo
 On your right, Tav's file sets its shields. "Bris," says Tav. "Tav," says Brisk.` : ''}`,
     ch:[{t:'"Hold."', go:()=>startBattle('b3_c3_hold', {})},
         {t:'Kettle\'s burner across the gap in the stakes, where they\'ll come thickest.', tag:'uses 1 burner', req:()=>b3In('kettle') && S.inv.burner > 0, fx:()=>{ S.inv.burner--; },
-          go:()=>startBattle('b3_c3_hold', {pre:'Kettle\'s burner goes into the gap in the stakes where they are coming thickest, and the gap is fire, a wall of it, for as long as the oil lasts. The ones making for it go round, and round is longer.'})},
+          go:()=>startBattle('b3_c3_hold', {mun:'burner', pre:'Kettle\'s burner goes into the gap in the stakes where they are coming thickest, and the gap is fire, a wall of it, for as long as the oil lasts. The ones making for it go round, and round is longer.'})},
         {t:'"Shields. Lock with the Fourth Regiment."', check:['might',14], req:()=>c3Brisk(),
           edges:id=>[id === 'brisk' && ['her brother is the next shield', 2], id === 'sgt' && ['you drilled this on the plain', 1], id === 'tuft' && ['her shield arm is not her good arm', -1]],
           near:{t:()=>`Yes, but to close the last gap in time ${NAME(ROLL().who || 'brisk')} has to throw the shield across it, and the rim comes back into the shoulder like a slammed door: ${bruiseN()} health down at the start of the fight.`, fx:()=>bruise(ROLL().who || 'brisk', bruiseN())},

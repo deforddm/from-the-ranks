@@ -1015,7 +1015,7 @@ Somewhere past the middle of the night the singing stops.
 Then the far herd screams: horses, high and terrible, and men's voices in the dark, and the drum of a great many hooves going the wrong way. Up on the slope, shapes are coming down through the herd lines with ropes and knives, and some of them are coming this way.`,
       ch:[{t:'"Shields. Hold the tent and the herd."', go:()=>startBattle('b3_c1_herds', {})},
           {t:'Blow the Herd-Call. Stop the stampede before it starts.', req:()=>!!trickBy('b3_c1_call'), go:'b3_c1_watch_call'},
-          {t:'Kettle puts a burner into the gap between the herd and the dark.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_herds', {pre:true})}]}),
+          {t:'Kettle puts a burner into the gap between the herd and the dark.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_herds', {pre:true, mun:'burner'})}]}),
     b3_c1_watch_call:()=>({sp:'The herd lines', scene:'b3_c1_rhivi', txt:
 `${NAME(trickBy('b3_c1_call') || 'sgt')} puts two fingers to the teeth and blows: low, then high. Up on the slope Sohra hears it, and turns, and blows the same two notes back, louder, and then every herder in the camp is doing it, low then high, from every fire.
 
@@ -1055,7 +1055,7 @@ Something goes over, high up, with a sound like a struck string. ${b3In('kettle'
 
 The lead driver clicks at you, once, which might be a greeting, and the train starts down through the cutting at a walk.${b3In('ellis') ? ` Ellis, walking at the lead wagon's wheel, looks up at the scree and keeps looking. "Too even," she says, quietly, to you. "Scree's never even."` : ''}${b3In('vell') ? ` Vell has his hook off his shoulder, for no reason he could give.` : ''} Halfway through it, somebody on the scree above starts a little avalanche of pebbles, and then a bigger one, and then a voice says something in the Divide's ugly dialect and the dark on both banks stands up.`,
       ch:[{t:'"To the wagons."', go:()=>startBattle('b3_c1_train', {})},
-          {t:'Kettle lights up the cutting wall with a burner.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_train', {pre:true})}]}),
+          {t:'Kettle lights up the cutting wall with a burner.', tag:'uses 1 burner', req:()=>b3In('kettle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b3_c1_train', {pre:true, mun:'burner'})}]}),
     b3_c1_train_after:()=>({sp:'The Divide road', scene:'b3_pale_grey', fx:()=>{ S.f.b3_c1_trainDone = 1; S.inv.sharper = (S.inv.sharper || 0) + 2; S.inv.cusser = (S.inv.cusser || 0) + 1; note('The Moranth quartermaster signs two sharpers and a cusser over to the Fourth, for the road.', 'good'); }, txt:
 `The man with the cut ear is down on the road, and the rest of them are gone back over the ridge into the dark, and the train is in: six wagons creaking into the Host's lines an hour before dawn with every crate still under its hide.
 

@@ -588,8 +588,8 @@ Harbour boys, quick and thin, are passing small clay pipes and twists of black r
 
 A man in a long coat with a weighted cosh on a cord at his wrist sees the squad, and the carts, and the company's regulars walking with them, and smiles. "Malazans," he says. "Off you go round the side. We're doing business."${b41Say({tangle:`\n\n"Smoker," says Tangle, under his breath, with his hand already in the satchel. "One smoker, Sergeant. They'd never see us coming."`, rasp:`\n\n"Smoker," says Rasp, in her ruined voice, with the satchel already open. "Against the bars. Don't look at it, Sergeant, look at them."`, darrut:`\n\n"In the Guard," Darrut says, "we'd have had the bars down on their fingers by now."`, _:''})}${b4In('yorin') ? `\n\n"I could put lightning on the bars," Yorin offers. He looks at the iron, and at the recruits holding it on the far side. "I'd rather not. Iron's got opinions."` : ''}`,
       ch:[{t:'"Off you go yourself." Shields up.', go:()=>startBattle('b4_c1_runners', {})},
-          {t:'Tangle drops a smoker against the gate.', tag:'uses 1 smoker', req:()=>b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_runners', {pre:true})},
-          {t:'Rasp drops a smoker against the gate.', tag:'uses 1 smoker', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_runners', {pre:true})},
+          {t:'Tangle drops a smoker against the gate.', tag:'uses 1 smoker', req:()=>b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_runners', {pre:true, mun:'smoker'})},
+          {t:'Rasp drops a smoker against the gate.', tag:'uses 1 smoker', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_runners', {pre:true, mun:'smoker'})},
           {t:'Come at them along the wall, behind the carts.', check:['wits', 13],
             edges:id=>[id === 'darrut' && ['he has walked this street on a beat for twelve years', 2], id === 'haddat' && ['she reads a Seven Cities street without trying', 1], id === 'tallow' && ['he is a fishing boy in a city', -1], id === 'yorin' && ['the wind is off the harbour, and he keeps the squad downwind', 1]],
             near:{t:'Yes, but a cart wheel squeals on the cobbles as you come round it, and the men at the gate are half turned by the time you are on them.'},
@@ -792,8 +792,8 @@ ${(() => { const f = b4Fallen(); return f.length ? `One of the boards, half pull
 
 ${b41Say({haddat:`Haddat's shield comes up without her seeming to lift it.`, marrow:`Marrow's face does something you have not seen it do since the Vathar.`, _:`The squad's shields come up.`})}${b4In('yorin') ? `\n\nYorin wets a finger and holds it up. "Wind's in off the sea," he whispers. "Toward us. They'll not hear a thing."` : ''}${b4In('rasp') ? `\n\nRasp's hand is already in the satchel. ${b4In('tangle') ? '' : '"Burner," she says. "In the hole they\'re standing round. They\'ll come up out of it blind."'}` : ''}`,
       ch:[{t:'"Get out of those graves." Shields up.', go:()=>startBattle('b4_c1_dig', {})},
-          {t:'Tangle puts a burner in the open grave.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_dig', {pre:true})},
-          {t:'Rasp puts a burner in the open grave.', tag:'uses 1 burner', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_dig', {pre:true})},
+          {t:'Tangle puts a burner in the open grave.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_dig', {pre:true, mun:'burner'})},
+          {t:'Rasp puts a burner in the open grave.', tag:'uses 1 burner', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_dig', {pre:true, mun:'burner'})},
           {t:'Get round them through the tombs, quiet.', check:['guile', 14],
             edges:id=>[id === 'haddat' && ['she has been quiet in worse places than this', 1], id === 'tebbet' && ['he prefers distance, and knows how to get it', 2], id === 'darrut' && ['he is broad and the tombs are close', -1], id === 'tallow' && ['his new leather creaks', -2], id === 'yorin' && ['he keeps the squad downwind of them', 1], id === 'rasp' && ['her satchel clinks if she hurries', -1]],
             near:{t:'Yes, but a loose stone goes under a boot at the last tomb, and the man with the crossbow turns.'},
@@ -874,8 +874,8 @@ The landward gate on the far side of the cemetery is shut. Radde locked it himse
 
 There is a sound from the path, and then another, and then the soft clink of a gate chain that should be locked.${b4In('yorin') ? `\n\nYorin holds up a wet finger. "Off the land now," he whispers. "Toward them. Put the lantern out and they'll not smell our smoke either."` : ''}${b4In('rasp') && !b4In('tangle') ? `\n\nRasp has a burner in her hand already, the fuse pinched between two fingers. "Say when," she says. "Say it soon."` : ''}`,
       ch:[{t:'"Shields. Between them and the detail."', go:()=>startBattle('b4_c1_watch', {})},
-          {t:'Tangle puts a burner up the path.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_watch', {pre:true})},
-          {t:'Rasp puts a burner up the path.', tag:'uses 1 burner', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_watch', {pre:true})},
+          {t:'Tangle puts a burner up the path.', tag:'uses 1 burner', req:()=>b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_watch', {pre:true, mun:'burner'})},
+          {t:'Rasp puts a burner up the path.', tag:'uses 1 burner', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.burner || 0) > 0, fx:()=>{ S.inv.burner--; }, go:()=>startBattle('b4_c1_watch', {pre:true, mun:'burner'})},
           {t:'Douse the lantern and wait for them in the dark.', check:['wits', 14],
             edges:id=>[id === 'tebbet' && ['he is good in the dark, and quiet in it', 2], id === 'haddat' && ['night watches from Hissar to Aren', 1], id === 'tallow' && ['he has never stood a night watch that mattered', -1], id === 'yorin' && ['he knows which way the wind will carry a sound', 1], id === 'mirrel' && ['she sat up nights in the hospice, and keeps still', 1]],
             near:{t:'Yes, but one of the detail drops a spade on a stone as the lantern goes out, and the path goes very quiet, all at once.'},
@@ -903,8 +903,8 @@ ${b41Say({haddat:`Haddat stands up with her shield. "Nobody told the Red Blades 
 
 Fists, then. Staves. No one wants a dead recruit the night before the march.`,
       ch:[{t:'"Shields. No blades." Hold them.', go:()=>startBattle('b4_c1_brawl', {})},
-          {t:'Tangle drops a smoker in the middle of them.', tag:'uses 1 smoker', req:()=>b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_brawl', {pre:true})},
-          {t:'Rasp drops a smoker in the middle of them.', tag:'uses 1 smoker', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_brawl', {pre:true})},
+          {t:'Tangle drops a smoker in the middle of them.', tag:'uses 1 smoker', req:()=>b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_brawl', {pre:true, mun:'smoker'})},
+          {t:'Rasp drops a smoker in the middle of them.', tag:'uses 1 smoker', req:()=>b4In('rasp') && !b4In('tangle') && (S.inv.smoker || 0) > 0, fx:()=>{ S.inv.smoker--; }, go:()=>startBattle('b4_c1_brawl', {pre:true, mun:'smoker'})},
           {t:'Talk them down. ("The Red Blades took the drink, not us.")', check:['guile', 15],
             edges:id=>[id === 'tallow' && ['he was off the transports with half of them', 2], id === 'darrut' && ['he has talked down a hundred Aren drunks', 1], id === 'haddat' && ['she is the Chain to them, and Seven Cities', -2], id === 'redblade' && ['he is wearing red scale', -3], id === 'mirrel' && ['she has talked drunks off a hospice ward', 1], id === 'yorin' && ['he came off the transports too', 1]],
             near:{t:'Yes, but the ringleader has already swung once before he stops to listen, and somebody is holding their jaw.', fx:()=>{ const w = ROLL().who || 'sgt'; bruise(w, 3 + lvT()); }},

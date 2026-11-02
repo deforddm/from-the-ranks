@@ -731,7 +731,7 @@ It is noon. ${chainW() > 0 ? `There are ${numw(chainW())} skin${chainW() === 1 ?
     ch:[{t:'Drink first, all of you, from the skins. Then take the spring.', tag:'1 water', req:()=>!S.f.b2_dojalDone && chainW() > 0, fx:()=>{ b2Drink('b2_dojal'); }, go:()=>startBattle('b2_dojal', {})},
         {t:'Take the spring. Drink after.', req:()=>!S.f.b2_dojalDone, go:()=>startBattle('b2_dojal', {})},
         {t:'Tangle: a smoker over the pool first, so their bows are blind.', tag:'uses 1 smoker', req:()=>!S.f.b2_dojalDone && b2In('tangle') && S.inv.smoker > 0, fx:()=>{ S.inv.smoker--; },
-          go:()=>startBattle('b2_dojal', {pre:'Tangle lobs a smoker over the pool and it bursts in the tamarisks, and the far bank goes white, and the bows in it are shooting at sounds.'})},
+          go:()=>startBattle('b2_dojal', {mun:'smoker', pre:'Tangle lobs a smoker over the pool and it bursts in the tamarisks, and the far bank goes white, and the bows in it are shooting at sounds.'})},
         {t:'Leave it.', go:()=>startExplore()}]}),
 
   b2_after_dojal:()=>({sp:'Dojal Spring', fx:()=>{ if (!S.f.b2_dojalDone) { S.f.b2_dojalDone = 1; chain(4, 0, 'Dojal Spring'); } }, txt:
