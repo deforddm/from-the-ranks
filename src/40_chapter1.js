@@ -717,7 +717,7 @@ Something the size of a horse goes over the picket line without touching it. Som
 
 Two voices reach you at once.
 
-Tattersail, from her tent, through the canvas, hoarse: *"Sergeant! The line. Hold the line by the cadre row. Give me four rounds and I'll give you a way out."*
+Tattersail, from her tent, through the canvas, hoarse: *"Sergeant! The line. Hold the line by the cadre row. Give me a little time and I'll give you a way out."*
 
 And from the dark to your left, the grey cloak, unhurried, close enough to touch: "Leave the mage, Sergeant. She'll live or she won't. Seal the cadre tent and hold the crate. My people will hold with you. Three rounds. Then we're gone and so are you."${S.f.c1_clawTentAsked ? ` A beat. "You asked me what I wanted with the cadre tent. I took your advice, Sergeant. I noticed it."` : ''}${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` He says it to you. He is looking at ${NAME(pWho('c1_clawNoticed'))}.` : ''}
 
@@ -738,7 +738,7 @@ The first Hound comes through the tents like a wave through a fence. It's the co
 
 Two figures come out of the dark on your flanks, grey, quiet, with knives already out and faces you'll never be able to describe. They came into the camp after the city fell, and they aren't the Host's. They don't look at you. They look at the tent, and the crate in it, and the flames.
 
-The grey cloak, to nobody: "Three rounds, Sergeant. Then we tidy."
+The grey cloak, to nobody: "Not long, Sergeant. Then we tidy."
 
 The first Hound comes through the tents like a wave through a fence. It's the colour of a bruise. It's called Gear, though you won't know that till later, and it does not care whose people are holding what.`,
       ch:[{t:'Seal the tent.', go:()=>startBattle('hounds_claw',{surprise:'e'})}, c1LineTrick('tent mouth')]}),
@@ -854,7 +854,7 @@ The grey cloak is inside the tent. You didn't see him go in. He comes out with h
 ${S.ending === 'given' || S.ending === 'told' ? `It's a page. One page, oilcloth-wrapped, in a small careful hand you'd know from a lantern-lit junction under the north quarter. Varrow's.${S.f.p_pageTorn ? ` Torn along its fold. You know the tear; it happened by your lantern.` : ''} "A loose leaf," he says. "The cadre keep things badly. I said." He tucks it away.` :
   `It's a crate lid. The crate lid. He carries it flat on one palm. Resin and old bandage and a smell like a cellar. "Luggage," he says. "It should have been declared." He tucks it under his arm.`}
 
-"Three rounds, Sergeant. You held them. That's been noted, and by better people than me."${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` A nod to ${NAME(pWho('c1_clawNoticed'))}. "You watch eyes. Keep at it. It'll get you killed less often than not."` : ''} He puts something in your hand: a short knife, no maker's mark. "For the road. The wagon's a long way round, and the plain's not friendly."`,
+"You held, Sergeant. That's been noted, and by better people than me."${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` A nod to ${NAME(pWho('c1_clawNoticed'))}. "You watch eyes. Keep at it. It'll get you killed less often than not."` : ''} He puts something in your hand: a short knife, no maker's mark. "For the road. The wagon's a long way round, and the plain's not friendly."`,
       ch:[{t:'Take it.', fx:()=>{gain('clawknife');}, go:'c1_after_claw_tat'},
           {t:'"Keep it."', fx:()=>{loy('brisk',1); S.f.c1_refusedKnife=1;}, go:'c1_after_claw_tat'}]}),
     c1_after_claw_tat:()=>({sp:'Tattersail', scene:'camp_night', txt:

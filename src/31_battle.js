@@ -125,13 +125,21 @@ function startBattle(id, opt={}){
   G.disp = {};
   fitBattle();
   if (opt.pre) { const mun = opt.mun === 'burner' || opt.mun === 'smoker' ? opt.mun : 'sharper'; const named = (() => { const k = ['kettle', 'tangle', 'rasp'].find(id => SQUAD().includes(id) && !(S.dead && S.dead[id])); return k ? NAME(k) + '\'s ' + mun : 'A ' + mun; })();
-    const fsP = foes(), cxP = fsP.length ? Math.round(fsP.reduce((a, f) => a + f.x, 0) / fsP.length) : 3, cyP = fsP.length ? Math.round(fsP.reduce((a, f) => a + f.y, 0) / fsP.length) : 1; // v8.3: the opener does what its munition does: a sharper bursts on the ground (1d10+2 to everything), a burner burns a 3x3 round the middle of them (1d6, then fire for 2 rounds), a smoker lays a 3x3 of smoke for 2 rounds, no damage
+    /* v8.2.2: the opener does what its munition does: a sharper goes off among them (1d10 to every foe, as before), a burner burns a 3x3 (1d6, then fire for 2 rounds),
+       a smoker lays a 3x3 of smoke for 2 rounds and does no damage. v8.2.4: the sapper aims: the 3x3 is centred on the foe with the most of its side round it
+       (ties: the one nearest the middle of them), not on the average of their tiles, which could be empty ground. A fight whose preFx already lays the fire or
+       smoke where the scene says it landed (the gap in the stakes at b3_c3_hold) keeps its own, and the 3x3 adds none. */
+    const fsP = foes(), mxP = fsP.length ? fsP.reduce((a, f) => a + f.x, 0) / fsP.length : 3, myP = fsP.length ? fsP.reduce((a, f) => a + f.y, 0) / fsP.length : 1;
+    const nearP = c => fsP.filter(f => Math.abs(f.x - c.x) <= 1 && Math.abs(f.y - c.y) <= 1).length;
+    const aimP = fsP.slice().sort((a, b) => nearP(b) - nearP(a) || Math.hypot(a.x - mxP, a.y - myP) - Math.hypot(b.x - mxP, b.y - myP))[0];
+    const cxP = aimP ? aimP.x : 3, cyP = aimP ? aimP.y : 1, ownP = !!def.preFx;
     if (mun === 'sharper') { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); }
     else if (mun === 'burner') { AUDIO.play('burner'); B.fx.push({kind:'boom', x:cxP, y:cyP, r:1, col:'#ff7a3a', t:performance.now()}); sparks(cxP, cyP, 30, '#ff9a3a', .6); shakeMap();
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preFire(cxP + dx, cyP + dy, 2);
+      if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preFire(cxP + dx, cyP + dy, 2);
       foes().filter(f => Math.abs(f.x - cxP) <= 1 && Math.abs(f.y - cyP) <= 1).forEach(f => { const n = roll(1,6); hurt(f, f.resist && f.resist.burner ? Math.max(1, Math.round(n * f.resist.burner)) : n); }); }
-    else { AUDIO.play('smoker'); sparks(cxP, cyP, 18, '#9a968e', .35); for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preSmoke(cxP + dx, cyP + dy, 2); }
-    blog(typeof opt.pre === 'string' ? opt.pre : mun === 'burner' ? `${named} goes off in the middle of them. The whole ${placeWord(def)} fills with orange light.` : mun === 'smoker' ? `${named} breaks in the middle of them. Grey rolls out across the ${placeWord(def)} and sits there like a held breath.` : `${named} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
+    else { AUDIO.play('smoker'); sparks(cxP, cyP, 18, '#9a968e', .35); if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preSmoke(cxP + dx, cyP + dy, 2); }
+    /* v8.2.4: a burner or smoker opener whose fight has its own preText already tells the throw in the scene's words; the general line would tell it twice, in the wrong place */
+    if (typeof opt.pre === 'string' || mun === 'sharper' || !def.preText) blog(typeof opt.pre === 'string' ? opt.pre : mun === 'burner' ? `${named} goes off in the middle of them. The whole ${placeWord(def)} fills with orange light.` : mun === 'smoker' ? `${named} breaks in the middle of them. Grey rolls out across the ${placeWord(def)} and sits there like a held breath.` : `${named} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
   if (opt.pre) { S.f.pre ??= {}; S.f.pre[id] = 1; if (def.preText) blog(`<em>${typeof def.preText === 'function' ? def.preText() : def.preText}</em>`); if (def.preFx) { try { def.preFx(B); } catch(e) { console.warn('preFx', e); } } if (B.retile) { B.retile = false; repaintBattle(); } } // what Kettle's opening sharper changed here (31c)
   if (def.nomagic) { blog(`<em>Otataral. The warrens are dead here.</em>${SQUAD().some(id => trickAbs(id).some(k => AB[k] && AB[k].elder)) ? ' Not the older ones: the dark and the cold the squad carries still answer.' : ''}`); if (SQUAD().includes('kettle') && S.inv.burner > 0) blog(`Kettle straps her burners down tight. "Not near that stuff. Burners and otataral don't argue, they just go."`); }
   if (def.nothrow) blog(`<em>Gas in the pipes. Nobody throws anything in here.</em>`);

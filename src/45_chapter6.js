@@ -2270,7 +2270,7 @@ Nobody who falls in this alley is getting up again. Everybody in the Fourth know
     c6_after_alley:()=>{ const fell = (S.f.lastFallen || []).filter(id => id !== 'sgt'); const names = fell.map(id => NAME(id)); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
       const pre = !!S.f.c6_alleyPre || preUsed('lorn_alley'), knelt = heldDowns('lorn_alley') > 0;
       return {sp:'The alley', scene:'alley_crimson', fx:()=>{ if (knelt) S.f.c6_lornKnelt=1; }, txt:
-`Three rounds. You'll never be able to say how.
+`You hold. You'll never be able to say how.
 
 It comes in pieces, and the pieces have edges. No Meanas. No Denul. No shadow round anybody's hands. Iron, and brick, and bodies, and the Adjunct in the middle of it cutting twice for every blow that reaches her, and the blows that reach her don't seem to matter. She fights like the thing she is: the Empress's own hand, closing.
 ${pre ? `

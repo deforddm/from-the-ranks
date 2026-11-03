@@ -94,7 +94,7 @@ const C7H = {
   /* the Fourth's report to Whiskeyjack on the hill, in order: the whole road, prologue to this morning */
   wjReportTxt:() => { const f = S.f, d = C7H.dead();
     const bits = [`The north quarter under the Pale, and a dead mage's journal in a satchel, ${({given:'given to Tattersail unread', told:'read, and told to Tattersail', burned:'burned in Tattersail\'s candle', claw:'handed to a man in a grey cloak'})[S.ending || (S.chapters && S.chapters[0])] || 'carried up out of the dark'}.`,
-      f.c1_key === 'line' ? `A line of shields across the cadre row, with a Hound on the other side of it.` : `A tent held for three rounds, for the Claw, while the cadre row burned.`,
+      f.c1_key === 'line' ? `A line of shields across the cadre row, with a Hound on the other side of it.` : `A tent held for the Claw while the cadre row burned.`,
       f.c2_key === 'light' ? `A day lost on the plain, west, for a light in the dark, on your order.` : `The road kept on the plain, and his crate on it.`,
       f.c3_key === 'report' ? `A dye-shop, and tea, and forty silver, and what you gave for it, all of it, from your own mouth this time.` : f.c3_lied ? `A dye-shop, and a count that was wrong on purpose, and an alley after.` : `A dye-shop, and a door walked out of.`,
       f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside on a roof, as ordered, and what it cost.`,
@@ -1081,7 +1081,7 @@ ${C7H.has('kettle') ? `"He'll tell Hedge," Kettle says, when the trader is only 
 
 *Fourth Squad, Seventh Company, marines. Sgt. {sgt}.*
 
-Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for three rounds.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, where a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
+Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for the Claw.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, where a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
 
 Near the foot, in ink fresher than the rest, the line he wrote on the quay: *${C7H.nm(S.f.c7_clawNoted, 'The sergeant')}, this morning: the Host is outlawed and the book has no reader. True. Noted.*` : ''}
 

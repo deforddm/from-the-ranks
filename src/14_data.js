@@ -215,7 +215,7 @@ const BATTLES = {
     foes:[['deserter',1,1],['deserter',4,1],['deserter',6,1],['xbow',3,0]],xp:100,after:'deep1',
     /* Kettle's sharper (the approach): it brings down the timber they were prying at, and the dust off every beam with it, for a round;
        and the tunnel carries the bang on past the bend, to Moreau's gallery (he picks his ground) and the junction (S.f.noisy: the Stonebound is awake, +10 health) */
-    preText:'The timber they were prying at comes down the rest of the way, and the dust comes off every beam with it: nobody shoots into or out of their end of the tunnel this round. The bang goes on without it, down the tunnel and round the bend, further than anyone meant it to.',
+    preText:'The timber they were prying at comes down the rest of the way, and the dust comes off every beam with it: nobody shoots into or out of their end of the tunnel until it settles. The bang goes on without it, down the tunnel and round the bend, further than anyone meant it to.',
     preFx:B => { preTile(3, 1, '#', 'timber'); [[3,0],[4,0],[2,1],[4,1],[5,1],[3,2],[4,2]].forEach(([x, y]) => preSmoke(x, y, 1)); },
     /* the second ground: Moreau's gallery, shored lanes between the posts, a crossbow at the far end, and one of them round behind by the old crawl */
     stage2:{title:'The officers\' gallery',

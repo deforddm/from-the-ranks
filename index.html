@@ -675,7 +675,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '8.2.3';
+const VERSION = '8.2.4';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1566,7 +1566,7 @@ const BATTLES = {
     foes:[['deserter',1,1],['deserter',4,1],['deserter',6,1],['xbow',3,0]],xp:100,after:'deep1',
     /* Kettle's sharper (the approach): it brings down the timber they were prying at, and the dust off every beam with it, for a round;
        and the tunnel carries the bang on past the bend, to Moreau's gallery (he picks his ground) and the junction (S.f.noisy: the Stonebound is awake, +10 health) */
-    preText:'The timber they were prying at comes down the rest of the way, and the dust comes off every beam with it: nobody shoots into or out of their end of the tunnel this round. The bang goes on without it, down the tunnel and round the bend, further than anyone meant it to.',
+    preText:'The timber they were prying at comes down the rest of the way, and the dust comes off every beam with it: nobody shoots into or out of their end of the tunnel until it settles. The bang goes on without it, down the tunnel and round the bend, further than anyone meant it to.',
     preFx:B => { preTile(3, 1, '#', 'timber'); [[3,0],[4,0],[2,1],[4,1],[5,1],[3,2],[4,2]].forEach(([x, y]) => preSmoke(x, y, 1)); },
     /* the second ground: Moreau's gallery, shored lanes between the posts, a crossbow at the far end, and one of them round behind by the old crawl */
     stage2:{title:'The officers\' gallery',
@@ -5904,13 +5904,21 @@ function startBattle(id, opt={}){
   G.disp = {};
   fitBattle();
   if (opt.pre) { const mun = opt.mun === 'burner' || opt.mun === 'smoker' ? opt.mun : 'sharper'; const named = (() => { const k = ['kettle', 'tangle', 'rasp'].find(id => SQUAD().includes(id) && !(S.dead && S.dead[id])); return k ? NAME(k) + '\'s ' + mun : 'A ' + mun; })();
-    const fsP = foes(), cxP = fsP.length ? Math.round(fsP.reduce((a, f) => a + f.x, 0) / fsP.length) : 3, cyP = fsP.length ? Math.round(fsP.reduce((a, f) => a + f.y, 0) / fsP.length) : 1; // v8.3: the opener does what its munition does: a sharper bursts on the ground (1d10+2 to everything), a burner burns a 3x3 round the middle of them (1d6, then fire for 2 rounds), a smoker lays a 3x3 of smoke for 2 rounds, no damage
+    /* v8.2.2: the opener does what its munition does: a sharper goes off among them (1d10 to every foe, as before), a burner burns a 3x3 (1d6, then fire for 2 rounds),
+       a smoker lays a 3x3 of smoke for 2 rounds and does no damage. v8.2.4: the sapper aims: the 3x3 is centred on the foe with the most of its side round it
+       (ties: the one nearest the middle of them), not on the average of their tiles, which could be empty ground. A fight whose preFx already lays the fire or
+       smoke where the scene says it landed (the gap in the stakes at b3_c3_hold) keeps its own, and the 3x3 adds none. */
+    const fsP = foes(), mxP = fsP.length ? fsP.reduce((a, f) => a + f.x, 0) / fsP.length : 3, myP = fsP.length ? fsP.reduce((a, f) => a + f.y, 0) / fsP.length : 1;
+    const nearP = c => fsP.filter(f => Math.abs(f.x - c.x) <= 1 && Math.abs(f.y - c.y) <= 1).length;
+    const aimP = fsP.slice().sort((a, b) => nearP(b) - nearP(a) || Math.hypot(a.x - mxP, a.y - myP) - Math.hypot(b.x - mxP, b.y - myP))[0];
+    const cxP = aimP ? aimP.x : 3, cyP = aimP ? aimP.y : 1, ownP = !!def.preFx;
     if (mun === 'sharper') { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); }
     else if (mun === 'burner') { AUDIO.play('burner'); B.fx.push({kind:'boom', x:cxP, y:cyP, r:1, col:'#ff7a3a', t:performance.now()}); sparks(cxP, cyP, 30, '#ff9a3a', .6); shakeMap();
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preFire(cxP + dx, cyP + dy, 2);
+      if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preFire(cxP + dx, cyP + dy, 2);
       foes().filter(f => Math.abs(f.x - cxP) <= 1 && Math.abs(f.y - cyP) <= 1).forEach(f => { const n = roll(1,6); hurt(f, f.resist && f.resist.burner ? Math.max(1, Math.round(n * f.resist.burner)) : n); }); }
-    else { AUDIO.play('smoker'); sparks(cxP, cyP, 18, '#9a968e', .35); for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preSmoke(cxP + dx, cyP + dy, 2); }
-    blog(typeof opt.pre === 'string' ? opt.pre : mun === 'burner' ? `${named} goes off in the middle of them. The whole ${placeWord(def)} fills with orange light.` : mun === 'smoker' ? `${named} breaks in the middle of them. Grey rolls out across the ${placeWord(def)} and sits there like a held breath.` : `${named} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
+    else { AUDIO.play('smoker'); sparks(cxP, cyP, 18, '#9a968e', .35); if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preSmoke(cxP + dx, cyP + dy, 2); }
+    /* v8.2.4: a burner or smoker opener whose fight has its own preText already tells the throw in the scene's words; the general line would tell it twice, in the wrong place */
+    if (typeof opt.pre === 'string' || mun === 'sharper' || !def.preText) blog(typeof opt.pre === 'string' ? opt.pre : mun === 'burner' ? `${named} goes off in the middle of them. The whole ${placeWord(def)} fills with orange light.` : mun === 'smoker' ? `${named} breaks in the middle of them. Grey rolls out across the ${placeWord(def)} and sits there like a held breath.` : `${named} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
   if (opt.pre) { S.f.pre ??= {}; S.f.pre[id] = 1; if (def.preText) blog(`<em>${typeof def.preText === 'function' ? def.preText() : def.preText}</em>`); if (def.preFx) { try { def.preFx(B); } catch(e) { console.warn('preFx', e); } } if (B.retile) { B.retile = false; repaintBattle(); } } // what Kettle's opening sharper changed here (31c)
   if (def.nomagic) { blog(`<em>Otataral. The warrens are dead here.</em>${SQUAD().some(id => trickAbs(id).some(k => AB[k] && AB[k].elder)) ? ' Not the older ones: the dark and the cold the squad carries still answer.' : ''}`); if (SQUAD().includes('kettle') && S.inv.burner > 0) blog(`Kettle straps her burners down tight. "Not near that stuff. Burners and otataral don't argue, they just go."`); }
   if (def.nothrow) blog(`<em>Gas in the pipes. Nobody throws anything in here.</em>`);
@@ -7412,6 +7420,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.2.4', ['A burner or smoker that opens a fight is aimed where the enemy stand thickest, so it always reaches someone. Before, it landed in the middle of their line and could fall on empty ground.', 'The opening throw is told once, in the scene\'s own words.', 'Book One no longer counts the fight in rounds: Tattersail, the grey cloak, the alley after the Fete, the chapter page and the last letter all say it another way.']],
   ['8.2.3', ['The Barrow\'s lines no longer count fight turns or rounds, and Blistig\'s rounds on the wall are back as before.']],
   ['8.2.2', ['A fight that opens with a burner or a smoker now does what the story says it does. A burner bursts on the middle of them, a 3×3 of 1d6 that leaves the ground burning for two rounds. A smoker lays a 3×3 of smoke for two rounds, and does no damage. Before, every opener, whatever was thrown, was the sharper\'s blast.']],
   ['8.2.1', ['Story text no longer says "rounds": the Barrow reads "pushes", and Blistig is on his patrol.']],
@@ -8781,7 +8790,7 @@ const CHEND = {
     report:['You told the Claw','A grey-haired woman in a dye-shop asked what the Bridgeburners were doing under the city, and the Fourth told her, for silver and the Empire\'s regard. Whiskeyjack does not know. Brisk does. So does the sergeant, every time the crew goes down the hole.'],
     refuse:['You walked out','A grey-haired woman in a dye-shop asked what the Bridgeburners were doing under the city, and the Fourth gave her nothing, and paid for it in an alley. The Claw has the sergeant\'s name in a neat hand now. Whiskeyjack, told or not, has the squad.'] },
   4:{
-    shield:['You held the roof','A Guild boy came over the parapet with a Tiste Andii behind him and the Fourth stood in between, which is what a line is for, and held three rounds against something that does not lose. Something in Quick Ben\'s sack laughed, and the silver-haired shapes went elsewhere. The boy is alive. The Guild knows which squad did that.'],
+    shield:['You held the roof','A Guild boy came over the parapet with a Tiste Andii behind him and the Fourth stood in between, which is what a line is for, and held against something that does not lose. Something in Quick Ben\'s sack laughed, and the silver-haired shapes went elsewhere. The boy is alive. The Guild knows which squad did that.'],
     aside:['You stepped aside','A Guild boy came over the parapet with a Tiste Andii behind him and the Fourth let it through. It killed him in one motion, looked at the sergeant, and nodded. Tuft looked into Kurald Galain and it looked back. Ohl\'s list has a name on it he did not put there.'] },
   5:{
     /* v3.16: Ellis went through after him (c5_ellisThrough); on the Tuft path nobody followed, and Tuft went only to the threshold (if she died before Ch6, the sergeant held the edge) */
@@ -10608,7 +10617,7 @@ Something the size of a horse goes over the picket line without touching it. Som
 
 Two voices reach you at once.
 
-Tattersail, from her tent, through the canvas, hoarse: *"Sergeant! The line. Hold the line by the cadre row. Give me four rounds and I'll give you a way out."*
+Tattersail, from her tent, through the canvas, hoarse: *"Sergeant! The line. Hold the line by the cadre row. Give me a little time and I'll give you a way out."*
 
 And from the dark to your left, the grey cloak, unhurried, close enough to touch: "Leave the mage, Sergeant. She'll live or she won't. Seal the cadre tent and hold the crate. My people will hold with you. Three rounds. Then we're gone and so are you."${S.f.c1_clawTentAsked ? ` A beat. "You asked me what I wanted with the cadre tent. I took your advice, Sergeant. I noticed it."` : ''}${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` He says it to you. He is looking at ${NAME(pWho('c1_clawNoticed'))}.` : ''}
 
@@ -10629,7 +10638,7 @@ The first Hound comes through the tents like a wave through a fence. It's the co
 
 Two figures come out of the dark on your flanks, grey, quiet, with knives already out and faces you'll never be able to describe. They came into the camp after the city fell, and they aren't the Host's. They don't look at you. They look at the tent, and the crate in it, and the flames.
 
-The grey cloak, to nobody: "Three rounds, Sergeant. Then we tidy."
+The grey cloak, to nobody: "Not long, Sergeant. Then we tidy."
 
 The first Hound comes through the tents like a wave through a fence. It's the colour of a bruise. It's called Gear, though you won't know that till later, and it does not care whose people are holding what.`,
       ch:[{t:'Seal the tent.', go:()=>startBattle('hounds_claw',{surprise:'e'})}, c1LineTrick('tent mouth')]}),
@@ -10745,7 +10754,7 @@ The grey cloak is inside the tent. You didn't see him go in. He comes out with h
 ${S.ending === 'given' || S.ending === 'told' ? `It's a page. One page, oilcloth-wrapped, in a small careful hand you'd know from a lantern-lit junction under the north quarter. Varrow's.${S.f.p_pageTorn ? ` Torn along its fold. You know the tear; it happened by your lantern.` : ''} "A loose leaf," he says. "The cadre keep things badly. I said." He tucks it away.` :
   `It's a crate lid. The crate lid. He carries it flat on one palm. Resin and old bandage and a smell like a cellar. "Luggage," he says. "It should have been declared." He tucks it under his arm.`}
 
-"Three rounds, Sergeant. You held them. That's been noted, and by better people than me."${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` A nod to ${NAME(pWho('c1_clawNoticed'))}. "You watch eyes. Keep at it. It'll get you killed less often than not."` : ''} He puts something in your hand: a short knife, no maker's mark. "For the road. The wagon's a long way round, and the plain's not friendly."`,
+"You held, Sergeant. That's been noted, and by better people than me."${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` A nod to ${NAME(pWho('c1_clawNoticed'))}. "You watch eyes. Keep at it. It'll get you killed less often than not."` : ''} He puts something in your hand: a short knife, no maker's mark. "For the road. The wagon's a long way round, and the plain's not friendly."`,
       ch:[{t:'Take it.', fx:()=>{gain('clawknife');}, go:'c1_after_claw_tat'},
           {t:'"Keep it."', fx:()=>{loy('brisk',1); S.f.c1_refusedKnife=1;}, go:'c1_after_claw_tat'}]}),
     c1_after_claw_tat:()=>({sp:'Tattersail', scene:'camp_night', txt:
@@ -19153,7 +19162,7 @@ Nobody who falls in this alley is getting up again. Everybody in the Fourth know
     c6_after_alley:()=>{ const fell = (S.f.lastFallen || []).filter(id => id !== 'sgt'); const names = fell.map(id => NAME(id)); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
       const pre = !!S.f.c6_alleyPre || preUsed('lorn_alley'), knelt = heldDowns('lorn_alley') > 0;
       return {sp:'The alley', scene:'alley_crimson', fx:()=>{ if (knelt) S.f.c6_lornKnelt=1; }, txt:
-`Three rounds. You'll never be able to say how.
+`You hold. You'll never be able to say how.
 
 It comes in pieces, and the pieces have edges. No Meanas. No Denul. No shadow round anybody's hands. Iron, and brick, and bodies, and the Adjunct in the middle of it cutting twice for every blow that reaches her, and the blows that reach her don't seem to matter. She fights like the thing she is: the Empress's own hand, closing.
 ${pre ? `
@@ -19618,7 +19627,7 @@ const C7H = {
   /* the Fourth's report to Whiskeyjack on the hill, in order: the whole road, prologue to this morning */
   wjReportTxt:() => { const f = S.f, d = C7H.dead();
     const bits = [`The north quarter under the Pale, and a dead mage's journal in a satchel, ${({given:'given to Tattersail unread', told:'read, and told to Tattersail', burned:'burned in Tattersail\'s candle', claw:'handed to a man in a grey cloak'})[S.ending || (S.chapters && S.chapters[0])] || 'carried up out of the dark'}.`,
-      f.c1_key === 'line' ? `A line of shields across the cadre row, with a Hound on the other side of it.` : `A tent held for three rounds, for the Claw, while the cadre row burned.`,
+      f.c1_key === 'line' ? `A line of shields across the cadre row, with a Hound on the other side of it.` : `A tent held for the Claw while the cadre row burned.`,
       f.c2_key === 'light' ? `A day lost on the plain, west, for a light in the dark, on your order.` : `The road kept on the plain, and his crate on it.`,
       f.c3_key === 'report' ? `A dye-shop, and tea, and forty silver, and what you gave for it, all of it, from your own mouth this time.` : f.c3_lied ? `A dye-shop, and a count that was wrong on purpose, and an alley after.` : `A dye-shop, and a door walked out of.`,
       f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside on a roof, as ordered, and what it cost.`,
@@ -20605,7 +20614,7 @@ ${C7H.has('kettle') ? `"He'll tell Hedge," Kettle says, when the trader is only 
 
 *Fourth Squad, Seventh Company, marines. Sgt. {sgt}.*
 
-Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for three rounds.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, where a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
+Under it, a long page. The north quarter, and a satchel. ${S.f.c1_key === 'line' ? `A line of shields on the cadre row.` : `A tent held for the Claw.`} A wagon, ${S.f.c2_late ? 'a day late' : 'on time'}. ${S.f.c3_key === 'report' ? `A dye-shop, and forty silver, and a report.` : S.f.c3_lied ? `A dye-shop, and a count that was wrong.` : `A dye-shop, and a door walked out of.`} ${S.f.c4_key === 'shield' ? `A roof held for a Guild boy.` : `A step aside, on a roof.`} ${S.f.c5_key === 'through' ? `A hillside, and somebody let go.` : `A hillside, and somebody held.`} And beside the first line of all, small, in the margin, where a clerk marks a column he means to come back to: *all five*.${S.f.c7_clawNoted ? `
 
 Near the foot, in ink fresher than the rest, the line he wrote on the quay: *${C7H.nm(S.f.c7_clawNoted, 'The sergeant')}, this morning: the Host is outlawed and the book has no reader. True. Noted.*` : ''}
 
