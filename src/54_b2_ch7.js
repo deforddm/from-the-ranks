@@ -700,7 +700,7 @@ Dom's army comes up the mound.`,
 
   b2_after_barrow:()=>{ const rg = b2Rearguard(), held = !!S.f.b2_barrowHeld;
     return {sp:'The Barrow', scene:'b2_barrow', txt:
-`${held ? 'They hold through all of that, and three more pushes at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
+`${held ? 'They hold through all of it, and three more pushes at the crest, longer than anyone on the walls would have said a few hundred could hold anything against all of that. It makes no difference. It makes all of it.' : 'They do not hold to the end of it. Nothing could. On the mound, nobody is counting any more.'}
 
 Bult goes down under the lances at the foot of the standard, cursing his nephew. List holds the standard until he cannot, and then the standard goes down, and List with it, and nobody sees his face, but the ones near him say afterwards, if there were an afterwards, that he looked like a man who had found what he was looking for. Lull's marines close round their captain and then there is no north face. Bent goes into the front of them with his teeth and does not come back.
 
