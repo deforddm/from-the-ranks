@@ -1,6 +1,6 @@
 # Book Three, Chapter 6 — "The Night Lift": continuity notes
 
-Tue Oct 13, 2026. File `src/66_b3_ch6.js` (`B3CH6`); art `src/66b_b3_ch6_art.js` (the artist's). MoI ch. 21–23: Dujek's secret split.
+Tue Oct 13, 2026. File `src/066_b3_ch6.js` (`B3CH6`); art `src/066b_b3_ch6_art.js` (the artist's). MoI ch. 21–23: Dujek's secret split.
 
 ## Shape
 

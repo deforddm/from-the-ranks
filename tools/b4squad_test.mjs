@@ -1,4 +1,4 @@
-// v7.1: the Fourteenth's spares (src/70e_b4_squad.js). The muster at Chapter 1's start (the pick, and its marks: a squad of the sergeant,
+// v7.1: the Fourteenth's spares (src/070e_b4_squad.js). The muster at Chapter 1's start (the pick, and its marks: a squad of the sergeant,
 // Haddat and Ramin lacks a healer, a bow, a sapper and sorcery; a fresh start with Marrow and Tangle lacks only a bow and sorcery, and is not
 // offered Rasp); the three new soldiers and Tallow's and Hessa's new abilities in a fight (Sky-Fire hits, the Sky's Shove throws, the Worm
 // heals, Autumn's Touch strips armour, the sling shoots at range, the Twins reroll a miss and a failed save); the Dust on Yorin and not on

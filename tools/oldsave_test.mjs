@@ -1,7 +1,7 @@
 // Saves made by v3.15.3 load through the real path (the title's sergeant roster → loadSlot → resume) and show the renames:
 // the gate clerk is Pennick and the card 'chains' is The Wain, never "Pallick" or "Chains" as the card's name.
-// The save format (15_state.js): one slot per sergeant at 'from-the-ranks-v1:<sid>', listed in 'from-the-ranks-roster'.
-// v3.15.3's newState/migrate (git show 192f075:src/15_state.js) wrote the same fields, so the saves are built from newState
+// The save format (015_state.js): one slot per sergeant at 'from-the-ranks-v1:<sid>', listed in 'from-the-ranks-roster'.
+// v3.15.3's newState/migrate (git show 192f075:src/015_state.js) wrote the same fields, so the saves are built from newState
 // with the flags and ids v3.15.3 used (internal ids like 'chains' and c3_pallickDoubt never changed).
 // Usage: node tools/oldsave_test.mjs   (exit 1 on a failure)
 import { server, browser, openGame } from './page.mjs';

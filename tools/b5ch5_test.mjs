@@ -1,4 +1,4 @@
-// Book Five, Chapter 5 (The Retreat, src/85_b5_ch5.js): the road south through the burned country (the first halt and the reading, the
+// Book Five, Chapter 5 (The Retreat, src/085_b5_ch5.js): the road south through the burned country (the first halt and the reading, the
 // emptied cache, the refugees and Trate's fall, the Grass Jacket's rumours, the Bluerose courier's girth, the Nerek family on a Ch3
 // 'warn'), the press-gang and Pessa (the claim and the swap for a walking recruit; the fight, the ledger, and the join with room; let
 // them keep her), the second cache and the trick (taught, and its battle half), the rearming on Ch4 'hold' (b5Rearm with a stash), the

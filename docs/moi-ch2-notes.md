@@ -1,6 +1,6 @@
 # Book Three, Chapter 2: "The Rhivi Plain" — continuity notes
 
-Tue Oct 13, 2026. File `src/62_b3_ch2.js` (`B3CH2`), art `src/62b_b3_ch2_art.js`. Ids carry `b3_c2_`.
+Tue Oct 13, 2026. File `src/062_b3_ch2.js` (`B3CH2`), art `src/062b_b3_ch2_art.js`. Ids carry `b3_c2_`.
 
 ## Shape
 

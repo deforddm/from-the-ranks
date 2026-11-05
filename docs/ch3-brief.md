@@ -2,12 +2,12 @@
 
 *Historical: a past work order (v3.2); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/42_chapter3.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
+You are writing the content module `src/042_chapter3.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
 
-1. `src/14_data.js` — TPL (the squadmates), FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
-2. `src/16_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
-3. `src/41_chapter2.js` — Chapter 2, the module you are matching in shape and voice. Read every node. Note the `areas:[]` list, exit tiles, `scene:` moves, the `fresh`/`show`/`node` functions on npcs, how gear/battles/foes/card are declared, the card node pattern, and how the chapter closes (`chapterEnd(2, key)`).
-4. `src/40_chapter1.js` — skim for Whiskeyjack, Quick Ben and Kalam's voices (the fire scene) and the `S.f.wjRegard` handling.
+1. `src/014_data.js` — TPL (the squadmates), FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
+2. `src/016_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
+3. `src/041_chapter2.js` — Chapter 2, the module you are matching in shape and voice. Read every node. Note the `areas:[]` list, exit tiles, `scene:` moves, the `fresh`/`show`/`node` functions on npcs, how gear/battles/foes/card are declared, the card node pattern, and how the chapter closes (`chapterEnd(2, key)`).
+4. `src/040_chapter1.js` — skim for Whiskeyjack, Quick Ben and Kalam's voices (the fire scene) and the `S.f.wjRegard` handling.
 5. `docs/outline.md` — the campaign outline.
 
 ## What Chapter 3 is
@@ -47,7 +47,7 @@ Also honour `S.f.c2_late`: at the first meeting Whiskeyjack says the day out lou
 - Quest-line text per area is in the engine (`QUESTS.worry_gate`, `QUESTS.gadrobi_cross`, `QUESTS.daru_street`) and reads these flags — set them: `c3_gate` (talked to Pallick), `c3_gateFought`, `c3_reported` (first meeting with Whiskeyjack done), `c3_workDone`, `c3_inn` (been to the Phoenix), `c3_msg`, `c3_madryn` (met her), `c3_key`, `c3_knivesFought`, `c3_wjTold`, `c3_done`.
 - Chapter-end extras are in the engine and read: `c3_key`, `c3_lied`, `c3_told`, `c3_wjTold`, `c3_kruppe` (Kruppe said the thing to Tuft), `c3_sorry` (the sergeant spoke to Sorry), `c3_coll` (Coll's signet taken), `c3_paid` (paid the gate toll), `c3_ellisMsg` (the message came through Ellis).
 
-## Schema — produce exactly this in `src/42_chapter3.js`
+## Schema — produce exactly this in `src/042_chapter3.js`
 
 ```js
 /* ============ chapter 3: Blue Fire ============ */
@@ -69,4 +69,4 @@ Rules for `dlg` nodes: same as Chapter 2. Exit tiles: walking onto `>`/`<` fires
 
 Length: 65–85 nodes. Every canon character present (Whiskeyjack, Fiddler, Hedge, Mallet, Trotts, Sorry, Quick Ben, Kalam, Kruppe, Crokus, Murillio, Coll) gets at least one line that could only be theirs — Kruppe's must be in his voice (third person, "Kruppe", ornate, and secretly exact). Madryn, Pallick and the urchin are originals: give each a voice. Brisk gets a beat about the ledger and a beat about the Claw. Kettle opens the crate. Ohl's list gets the Phoenix Inn. Tuft's arc: Kruppe's sentence about the plain; plant, don't resolve. Ellis, if present: the city, the dye-shop, the boy from the training yard, and what refusing or reporting does to her — she says one sentence either way and it is the right one.
 
-Do not touch any other file. Do not invent helpers or scenes or sprite kinds that are not listed. Do not let any canon character die or be harmed. Output only `src/42_chapter3.js`; syntax-check with `node --check` before you finish.
+Do not touch any other file. Do not invent helpers or scenes or sprite kinds that are not listed. Do not let any canon character die or be harmed. Output only `src/042_chapter3.js`; syntax-check with `node --check` before you finish.

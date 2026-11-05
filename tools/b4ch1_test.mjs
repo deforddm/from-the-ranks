@@ -1,4 +1,4 @@
-// Book Four, Chapter 1 (The Muster, src/71_b4_ch1.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
+// Book Four, Chapter 1 (The Muster, src/071_b4_ch1.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
 // of each), the trick, the fire and the swap; from a fresh start, and from a Book Two transfer with Sathi alive and Ramin walking.
 // Usage: node tools/b4ch1_test.mjs   (build first; exit 1 on a failure)
 import { server, browser as launch, openGame } from './page.mjs';

@@ -42,7 +42,7 @@ const c1Home = {t:'Back to the Fourth\'s fire.', req:c1Ready, onward:true, go:()
 const c1Raiders = () => S.f.p_garrowCrossed ? `One of them you've seen before, by lamplight, forty paces into the north tunnels, running for the surface with Garrow's name. He's stopped running. He's found something worth stopping for.` :
   S.f.garrowWord ? `None of them is Moreau. Moreau's section heard Garrow's word two nights ago and went deeper. These ones never heard it.` :
   `None of them is Moreau's. What's left of Moreau's section is under the north quarter, where you left it. These are new. The Host makes new ones every night.`;
-/* Hedge's five at the bones, settled after the game (bonesSettle in 36_minigames.js leaves S.f.bonesSpotLast) */
+/* Hedge's five at the bones, settled after the game (bonesSettle in 036_minigames.js leaves S.f.bonesSpotLast) */
 const c1Spot = () => { const k = S.f.bonesSpotLast; if (!k) return '';
   return k.back >= k.lent ? `\n\nHedge has his hand out before you're up off the blanket. Five silver go back into his boot. "Pleasure doing business," he says. "Fid. Fid, look. A marine paid me back."`
     : k.back > 0 ? `\n\nHedge takes back what's left of his five, ${k.back} silver, counts it twice, and tucks it in his boot. "The rest's on the Bridgeburners' slate," he says. Fiddler: "We haven't got a slate." Hedge: "We have now."`

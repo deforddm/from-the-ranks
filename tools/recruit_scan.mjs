@@ -14,7 +14,7 @@ import fs from 'fs'; import path from 'path'; import { fileURLToPath } from 'url
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = k => (process.argv.find(a => a.startsWith('--' + k + '=')) || '').split('=').slice(1).join('=');
 // which src file defines each node, so each node is played in its own chapter
-const files = fs.readdirSync(path.join(root, 'src')).filter(f => /^\d\d[a-z]?_.*\.js$/.test(f) && !/_art|art\.js/.test(f));
+const files = fs.readdirSync(path.join(root, 'src')).filter(f => /^\d{3}[a-z]?_.*\.js$/.test(f) && !/_art|art\.js/.test(f));
 const fileOf = {};
 for (const f of files) { const t = fs.readFileSync(path.join(root, 'src', f), 'utf8');
   for (const m of t.matchAll(/(?:^|[\s,{])((?:b[23]_)?c?\d?_?[A-Za-z0-9_]+)\s*:\s*\(\s*\)\s*=>/gm)) fileOf[m[1]] ??= f; }

@@ -1,4 +1,4 @@
-// Book Five, Chapter 4 (High Fort, src/84_b5_ch4.js): the march (the ford and the river carry, the hill's gifts), the first halt at High
+// Book Five, Chapter 4 (High Fort, src/084_b5_ch4.js): the march (the ford and the river carry, the hill's gifts), the first halt at High
 // Fort and the reading, the posting (and the noted company on a Ch3 'warn'), the fire (no game) and the pay desk, the trick (taught, and
 // its battle half: the pitch burns), the cadre-master who does not link Perrit, the view (Moroch far off), the night patrol in Dry Gully,
 // the battle (the eleven die; the wraiths with the garrison, both grounds), the key both ways (hold: the demon to the horns, the

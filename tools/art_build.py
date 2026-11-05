@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build src/19c_artwork.js from the artwork canvas boards in docs/art/*.dc.html.
+"""Build src/019c_artwork.js from the artwork canvas boards in docs/art/*.dc.html.
 
 The boards are the "Ashes of the Pale — Artwork" design canvas. Each picture on a board is an
 <svg role="img" aria-label="…">. This pulls out every picture the game shows as a standalone SVG it can
@@ -14,7 +14,7 @@ import re, os, json
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ART = os.path.join(ROOT, 'docs', 'art')
-OUT = os.path.join(ROOT, 'src', '19c_artwork.js')
+OUT = os.path.join(ROOT, 'src', '019c_artwork.js')
 
 ITEM = {"Grey cloak's knife": 'clawknife', 'Rhivi horn bow': 'rhivibow', 'Daru duelling knife': 'daruknife', 'Guild blade': 'guildblade',
         'Barrow-flint blade': 'barrowflint', "House guard's halberd": 'simtalhalberd', 'Blacked Guild blade': 'blackedblade',

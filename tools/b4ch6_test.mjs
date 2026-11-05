@@ -1,4 +1,4 @@
-// Book Four, Chapter 6 (Pan'arak, src/76_b4_ch6.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
+// Book Four, Chapter 6 (Pan'arak, src/076_b4_ch6.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
 // of each), the trick, the badge and the horn, the fire and the swap, the eve; from a fresh start at level 13 (with Ch5's seep water), and
 // from a Book Two transfer with Sathi alive and Keth walking, on Ch4's seti and picket roads (the Seti archer, asked for by name).
 // Usage: node tools/b4ch6_test.mjs   (build first; exit 1 on a failure)

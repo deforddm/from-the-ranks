@@ -34,7 +34,7 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
      - Never say why the Khundryl's tears are black.
      - Duiker's tree is empty, and nobody knows why.
      - Topper's news is belief, never narration.
-2. `docs/v7.0-notes.md`, Book Four's engine: every helper, flag and table you will use. Then `src/70_book4.js` and `src/70c_b4_deck.js`. The "For chapter writers" section is your toolbox:
+2. `docs/v7.0-notes.md`, Book Four's engine: every helper, flag and table you will use. Then `src/070_book4.js` and `src/070c_b4_deck.js`. The "For chapter writers" section is your toolbox:
    - `b4Nerve`, `nerveHTML`, `b4Mood`;
    - `S.dust`, `def.dust`, `def.company`;
    - `b4Join`, `b4SwapIn`, `b4Offers`, `b4In`, `b4Was`, `b4Fresh`, `b4Fallen`, `b4FallenNames`;
@@ -43,14 +43,14 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
    - the `b4_regular` ally, and the placeholder backdrops.
 3. `docs/moi-book-brief.md` and `docs/dg-book-brief.md`: how Books Two and Three were built (schema, areas, fights with `stage2`, keys, tricks, tests). Everything there holds unless this brief changes it. Translate `b3_` → `b4_`, the Alliance → Nerve, and the Fourth → the Third.
 4. **The squad's own voice.**
-   - Book Two's chapters `src/48_b2_ch1.js`, `src/53_b2_ch6.js` and `src/54_b2_ch7.js`, and `docs/dg-continuity.md` (each squadmate's arc, and where Book Two left them).
-   - Book Three's `src/61_b3_ch1.js`, for a level-8 chapter's shape.
+   - Book Two's chapters `src/048_b2_ch1.js`, `src/053_b2_ch6.js` and `src/054_b2_ch7.js`, and `docs/dg-continuity.md` (each squadmate's arc, and where Book Two left them).
+   - Book Three's `src/061_b3_ch1.js`, for a level-8 chapter's shape.
    - The Third are old friends to a player who carried them across. To a fresh player they are veterans of a disaster. Write them as the same people, a season older and quieter.
 5. The engine files every chapter leans on:
-   - `src/16_skill_checks.js` (`talk`, `check`, edges, tiers);
-   - `src/16b_tricks.js` and `src/31b_tricks_in_battle.js` (tricks);
-   - `src/31c_stakes.js` (`battleDef`, `stage2`, waves, objectives, hold-outs);
-   - `src/14_data.js` (`registerChapter`).
+   - `src/016_skill_checks.js` (`talk`, `check`, edges, tiers);
+   - `src/016b_tricks.js` and `src/031b_tricks_in_battle.js` (tricks);
+   - `src/031c_stakes.js` (`battleDef`, `stage2`, waves, objectives, hold-outs);
+   - `src/014_data.js` (`registerChapter`).
 
 **Voice.**
 - Short paragraphs, dry soldier humour, grimdark restraint, and no exclamation marks in narration.
@@ -86,7 +86,7 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
   - **Ramin** (Red Blade) and **Keth** (Wickan warlock and his grandmother's second voice), transfers only, as Book Two wrote them.
 
 **Your files.**
-- `src/7K_b4_chK.js` exports **`B4CHK`** (Ch1 = `71_b4_ch1.js`/`B4CH1` … Ch7 = `77_b4_ch7.js`/`B4CH7`). `src/90` already registers it; don't edit 90. Use `number:'One'` and so on.
+- `src/7K_b4_chK.js` exports **`B4CHK`** (Ch1 = `071_b4_ch1.js`/`B4CH1` … Ch7 = `077_b4_ch7.js`/`B4CH7`). `src/90` already registers it; don't edit 90. Use `number:'One'` and so on.
 - Your art goes in `src/7Kb_b4_chK_art.js`.
 - **Every id carries `b4_c<K>_`**: nodes, areas, fights, foes, items, scenes. Flags are `S.f.b4_*` as named below; shared flags have no chapter infix.
 - Never reuse an engine id (`b4_regular` and the rest).
@@ -172,16 +172,16 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
 - `node tools/trope_test.mjs`, `node tools/recruit_test.mjs`, `node tools/b4carry_test.mjs`;
 - **a chapter test, `tools/b4chK_test.mjs`**, that walks the chapter's halts, both keys, every fight's start and win, the trick and the fire, from a fresh start and from a transfer with Sathi alive and Ramin walking.
 
-**Commit to `book4`**, but don't touch `sw.js` or `src/10_preamble.js`.
+**Commit to `book4`**, but don't touch `sw.js` or `src/010_preamble.js`.
 
 **Report** (under 500 words): what the chapter contains (areas, nodes, fights and xp, the key and its consequences), the flags set, file sizes, the test numbers, any edits outside your files, and the canon points you were unsure of.
 
 ## Shared rules (artists)
 
 **Your file and what to study.** Your file is `src/7Kb_b4_chK_art.js`: figures, ground, backdrops and item art. Study the established art and match it exactly in scale, palette, line weight and light:
-- `src/18_figure_sprites.js`, `src/19_portraits.js`, `src/25_tiles.js` and the scene file;
-- Book Two's `src/47b_book2_art.js` and `src/5*b_b2_*_art.js` (Seven Cities);
-- above all Book Four's own `src/70b_b4_title.js` and `src/70d_b4_cards_art.js`, with its five new soldiers.
+- `src/018_figure_sprites.js`, `src/019_portraits.js`, `src/025_tiles.js` and the scene file;
+- Book Two's `src/047b_book2_art.js` and `src/5*b_b2_*_art.js` (Seven Cities);
+- above all Book Four's own `src/070b_b4_title.js` and `src/070d_b4_cards_art.js`, with its five new soldiers.
 
 **Hooks:**
 - `FIGX[kind]`, `POR[id]`
@@ -509,7 +509,7 @@ Tue Oct 20, 2026, 11:05 PM PDT. Against the Book Four engine on branch `book4` (
 - **`horse`**: ride with Temul's Wickans or Gall's Khundryl, who are also with the Fourteenth (to Book Six). Orvas or Keth leads it. Sathi +2 if alive, Tangle "I'll walk".
 - **`ledger`**: out of the ledger. The squad walks away from the new sea into Seven Cities; Darrut goes home to Aren. No road onward. Desertion is forbidden in canon, so they are "listed dead in the flood", and the narrator never says how.
 
-**The finale** (`B4CH7.finale`): read `src/37_chapters.js` `finPages`/`showFinale`, Book Two's `src/54_b2_ch7.js` and Book Three's `src/67_b3_ch7.js`.
+**The finale** (`B4CH7.finale`): read `src/037_chapters.js` `finPages`/`showFinale`, Book Two's `src/054_b2_ch7.js` and Book Three's `src/067_b3_ch7.js`.
 - The road.
 - A fate page for every squadmate at the end: alive, fallen (Book Four's mortal dead), and gone (a recruit back with their people).
 - A page for the Barrow dead seen among the riders.

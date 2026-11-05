@@ -2,17 +2,17 @@
 
 *Historical: a past work order (v3.6); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/46_chapter7.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG following an original marine squad (the Fourth) through Gardens of the Moon. The player plays the Sergeant. Chapters 1–5 are done. **Chapter 6 (The Fete) is being written at the same time by another writer from `docs/ch6-brief.md`**; you will not be able to read its module, so read its brief closely — its **flag contract** is what you build on. This is the last chapter of the book. It ends the game: four squad endings, a page per squadmate, a campaign summary.
+You are writing the content module `src/046_chapter7.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG following an original marine squad (the Fourth) through Gardens of the Moon. The player plays the Sergeant. Chapters 1–5 are done. **Chapter 6 (The Fete) is being written at the same time by another writer from `docs/ch6-brief.md`**; you will not be able to read its module, so read its brief closely — its **flag contract** is what you build on. This is the last chapter of the book. It ends the game: four squad endings, a page per squadmate, a campaign summary.
 
 Read these first, in this order:
 
 1. `docs/story-bible.md` — everything the squad has lived through, every flag, every open thread, voices, and the inconsistencies not to repeat. **Read all of it.** §6 (open threads) is your checklist.
 2. `docs/ch6-brief.md` — what happens the night before your chapter, and the flags it sets.
-3. `src/14_data.js` — TPL (the squad: read every squadmate's `bio2`, `quest`, `traits`, `rel`), FOES, CARDS, PICKS, `registerChapter`.
-4. `src/44_chapter5.js` — read every node. This is the module you are matching in shape and voice (second person, present tense, grimdark but humane, dry humour, short declaratives, canon characters in their own voices). Its close (`c5_close_*`) is the model for your squad goodbyes.
-5. `src/42_chapter3.js` and `src/43_chapter4.js` — Darujhistan; Kruppe, Coll, Murillio, Crokus; Madryn and the grey cloak; the Claw's neat hand; Whiskeyjack's debrief style.
-6. `src/37_chapters.js` — `CHEND` (the key titles you will see in the campaign summary), the end screen, `QUESTS`.
-7. `src/16_skill_checks.js` — the prologue: Varrow's journal, Tattersail, the grey cloak's first appearance. The game began here; the finale should rhyme with it (the Fourth came up out of the dark "all five").
+3. `src/014_data.js` — TPL (the squad: read every squadmate's `bio2`, `quest`, `traits`, `rel`), FOES, CARDS, PICKS, `registerChapter`.
+4. `src/044_chapter5.js` — read every node. This is the module you are matching in shape and voice (second person, present tense, grimdark but humane, dry humour, short declaratives, canon characters in their own voices). Its close (`c5_close_*`) is the model for your squad goodbyes.
+5. `src/042_chapter3.js` and `src/043_chapter4.js` — Darujhistan; Kruppe, Coll, Murillio, Crokus; Madryn and the grey cloak; the Claw's neat hand; Whiskeyjack's debrief style.
+6. `src/037_chapters.js` — `CHEND` (the key titles you will see in the campaign summary), the end screen, `QUESTS`.
+7. `src/016_skill_checks.js` — the prologue: Varrow's journal, Tattersail, the grey cloak's first appearance. The game began here; the finale should rhyme with it (the Fourth came up out of the dark "all five").
 
 ## Canon for this chapter (verified against the book — keep it)
 
@@ -128,4 +128,4 @@ Battle `last_accounting` (`style:'dock'`, the Lakefront at dawn; `greycloak` + 2
 
 60–80 dialogue nodes, plus the finale text. Every squadmate who is alive gets a real farewell beat; the four endings each get three paragraphs that land.
 
-Do not touch any other file. Do not invent helpers, scenes, tile letters, sprite kinds or battle fields not listed. Output only `src/46_chapter7.js`. Verify with a small node script in your scratch space: maps 16×12 and battle maps 8×10; `start`, npc and trigger tiles walkable/reachable (trigger tiles count as walkable; npc tiles block); every `go`/`fail`/`talk('…')` target exists in `CH7.dlg`; battle `after` nodes exist; foe ids exist in `CH7.foes` or among `assassin clawknife clawmage`; no `*` or `{sgt}` in choice labels; then call `CH7.finale.fate(id, key)` and `gone(id, key)` for every id in `['sgt','brisk','kettle','tuft','ohl','ellis']` × every key under a handful of stub states (all loyalties −3, 0, +3; Ellis present/absent/dead; Tuft each `c6_tuft`; someone dead) and check nothing throws and no `undefined` appears in the text; then `node --check src/46_chapter7.js`. Report the node count, the flags you set, and anything you had to decide that the brief didn't cover.
+Do not touch any other file. Do not invent helpers, scenes, tile letters, sprite kinds or battle fields not listed. Output only `src/046_chapter7.js`. Verify with a small node script in your scratch space: maps 16×12 and battle maps 8×10; `start`, npc and trigger tiles walkable/reachable (trigger tiles count as walkable; npc tiles block); every `go`/`fail`/`talk('…')` target exists in `CH7.dlg`; battle `after` nodes exist; foe ids exist in `CH7.foes` or among `assassin clawknife clawmage`; no `*` or `{sgt}` in choice labels; then call `CH7.finale.fate(id, key)` and `gone(id, key)` for every id in `['sgt','brisk','kettle','tuft','ohl','ellis']` × every key under a handful of stub states (all loyalties −3, 0, +3; Ellis present/absent/dead; Tuft each `c6_tuft`; someone dead) and check nothing throws and no `undefined` appears in the text; then `node --check src/046_chapter7.js`. Report the node count, the flags you set, and anything you had to decide that the brief didn't cover.

@@ -12,20 +12,20 @@ let bad = 0; const ok = (c, m) => { console.log(`${c ? 'ok' : 'FAIL'} ${m}`); if
 
 // ---- static: the text says what David ruled ----
 const src = f => fs.readFileSync(path.join(root, 'src', f), 'utf8');
-const b2 = ['51_b2_ch4.js', '52_b2_ch5.js', '53_b2_ch6.js', '54_b2_ch7.js'].map(src).join('\n');
+const b2 = ['051_b2_ch4.js', '052_b2_ch5.js', '053_b2_ch6.js', '054_b2_ch7.js'].map(src).join('\n');
 ok(!/Captain Bungle|Bungle\. Captain|Bungle's company/.test(b2), 'Q18: no Captain Bungle and no "Bungle\'s company" in Book Two');
 ok((b2.match(/Sergeant Bungle/g) || []).length >= 6, 'Q18: Sergeant Bungle names his scenes');
-const c5 = src('65_b3_ch5.js');
+const c5 = src('065_b3_ch5.js');
 ok(!/the cadre drowned|put the river in him|drowned man|cadre mage drowned/i.test(c5), 'Q9: no cadre drowning at the Ch5 ford');
 ok(/the river stand up/.test(c5) && /quarrel/.test(c5), 'Q9: the ford\'s mage stands the river up, and a quarrel kills the Pannion mage');
-ok(/Shank had one of their Seerdomin/.test(src('67_b3_ch7.js')), 'Q9: Coral\'s Bridgeburner tells of Shank\'s drowning');
-const b4 = fs.readdirSync(path.join(root, 'src')).filter(f => /^7\d/.test(f)).map(f => src(f).replace(/never "the Vathar Hills"/g, '')).join('\n');
+ok(/Shank had one of their Seerdomin/.test(src('067_b3_ch7.js')), 'Q9: Coral\'s Bridgeburner tells of Shank\'s drowning');
+const b4 = fs.readdirSync(path.join(root, 'src')).filter(f => /^07\d/.test(f)).map(f => src(f).replace(/never "the Vathar Hills"/g, '')).join('\n');
 ok(!/Vathar Hills/.test(b4), 'Q19: Book Four never says "the Vathar Hills"');
-const c3 = src('42_chapter3.js'), c6 = src('45_chapter6.js'), c7 = src('46_chapter7.js');
+const c3 = src('042_chapter3.js'), c6 = src('045_chapter6.js'), c7 = src('046_chapter7.js');
 ok(!/three hundred years/.test(c7) && !/silver councillor/.test(c3), 'Q12: the Lakefront lamps carry no year count; no "silver councillor"');
 ok(!/priestesses of Gedderone running the streets at first light/.test(c6) && /ran yesterday at the Fete's start/.test(c6), 'Q12: the Fander rite is the Fete\'s start, seen at dawn as what it left');
 ok(/a ward somebody sold him dear/.test(c6) && !/the fingers shaping something in the air/.test(c6), 'Q12: Orr\'s working at the duel is a bought ward, not his own spellcraft');
-ok(!/u\.ai === 'raest' && !u\.otat/.test(src('31_battle.js')), 'Q7: the Tyrant\'s lance does not check for otataral');
+ok(!/u\.ai === 'raest' && !u\.otat/.test(src('031_battle.js')), 'Q7: the Tyrant\'s lance does not check for otataral');
 
 // ---- in the page ----
 const srv = await server(); const br = await launch();

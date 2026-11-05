@@ -1,4 +1,4 @@
-Wed Oct 28, 2026, PDT. Book Five, Chapter 3, "Kraig's Landing" (`src/83_b5_ch3.js`, art `src/83b_b5_ch3_art.js`, Knucklebones in `src/89_b5_games.js`), against v8.0.0 on `book5` (not shipped).
+Wed Oct 28, 2026, PDT. Book Five, Chapter 3, "Kraig's Landing" (`src/083_b5_ch3.js`, art `src/083b_b5_ch3_art.js`, Knucklebones in `src/089_b5_games.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 3 notes: Kraig's Landing
 
@@ -130,7 +130,7 @@ The brief gave the writer foes `thug` and `bruiser` kinds; this chapter's artist
 
 ## Deviations from the brief
 
-- **Knucklebones is built here, in `src/89_b5_games.js`**, as Chapters 1 and 2 built theirs: the session's order asked for the fire's game, its test and its screenshot. It follows Book One's `playBones` rules but is its own function, because `playBones` speaks in silver and in Hood and Oponn; Book Five's has docks, the sinker and the Errant.
+- **Knucklebones is built here, in `src/089_b5_games.js`**, as Chapters 1 and 2 built theirs: the session's order asked for the fire's game, its test and its screenshot. It follows Book One's `playBones` rules but is its own function, because `playBones` speaks in silver and in Hood and Oponn; Book Five's has docks, the sinker and the Errant.
 - `B5READ[3].back` is a small node (`b5_c3_tiles_done`), as Chapter 2's.
 - The dock's `S`, `T` and `B`, the barges' `^` and the bank's `^` and `v` are extra trigger letters beyond the brief's ground keys, as Chapters 1 and 2 added theirs.
 - **The runner is in the bank fight.** The squad finds him in the reeds before the fight, and he comes back at dawn with it; the engine has no way to leave a soldier out of a fight, and this keeps the brief's "the runner comes back at dawn".

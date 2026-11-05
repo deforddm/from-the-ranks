@@ -1,7 +1,7 @@
 /* ============ v6.9.2 the gods' sigils for Books Two and Three ============
    The painted set's six sigils (patrons/brisk, kettle, tuft, ohl, ellis, sgt) are drawn on the Patrons board (docs/art/Patrons.dc.html
    → 19c). The gods who answer only in Books Two to Four are drawn here, in the same frame: a dark disc, the gold ring, a black
-   silhouette, pale accents, red eyes. Keyed by the squadmate whose god it is (PATRONS[id].sig or the id itself, 31_battle.js lose()). */
+   silhouette, pale accents, red eyes. Keyed by the squadmate whose god it is (PATRONS[id].sig or the id itself, 031_battle.js lose()). */
 {
   const frame = (label, bg, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="${label}">
 <circle cx="100" cy="100" r="98" fill="${bg}"></circle>

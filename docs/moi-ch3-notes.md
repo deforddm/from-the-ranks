@@ -1,6 +1,6 @@
 # Book Three, Chapter 3 — "Capustan": continuity notes
 
-Tue Oct 13, 2026. Writer's notes for `src/63_b3_ch3.js` (`B3CH3`), art in `src/63b_b3_ch3_art.js`. For the writers of Chapters 4–7 and the lead.
+Tue Oct 13, 2026. Writer's notes for `src/063_b3_ch3.js` (`B3CH3`), art in `src/063b_b3_ch3_art.js`. For the writers of Chapters 4–7 and the lead.
 
 ## Shape
 

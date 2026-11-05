@@ -1,8 +1,8 @@
 # Book Two: Deadhouse Gates — continuity
 
-What each chapter set up, for the chapters after it. Every writer appends their chapter's section when done. Shared helpers in `src/48_b2_ch1.js` are global: `B2` (names), `b2Chain()`, `b2In(id)` (squadmate present), `numw()`.
+What each chapter set up, for the chapters after it. Every writer appends their chapter's section when done. Shared helpers in `src/048_b2_ch1.js` are global: `B2` (names), `b2Chain()`, `b2In(id)` (squadmate present), `numw()`.
 
-## Chapter 1 — Hissar Burns (v4.0.0, `src/48_b2_ch1.js`)
+## Chapter 1 — Hissar Burns (v4.0.0, `src/048_b2_ch1.js`)
 
 **Key `S.f.b2_key`** (`S.chapters[1]`):
 - `daughters`: the sergeant went back for Ressan's daughters, **Imra** (19) and **Dessi** (9); −3 water; they walk in the squad's stretch of the column (+2); `b2_ressanOut`, `b2_girlsOut` set. Ressan stayed with his wells (alive in Hissar when last seen). Haddat and Sathi approved; Tangle disapproved.
@@ -25,7 +25,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_street` 100 (+40 stage 2), `b2_cistern` 60, `b2_gate` 110 (+50), `b2_batrol` 150 (+80). Squad ends about level 3.
 
-## Chapter 2 — The Odhan (v4.1.0, `src/49_b2_ch2.js`)
+## Chapter 2 — The Odhan (v4.1.0, `src/049_b2_ch2.js`)
 
 **Key `S.f.b2_c2_key`** (`S.chapters[2]`):
 - `spring`: the squad held Dryj Spring while the Wickans rode (fight `b2_spring`). Column +5 in all (3 strays, 2 families), no extra water. Marrow and Haddat approved, Sathi disapproved (her clan rode without her; she half-forgives it after). Flag `b2_springHeld`.
@@ -55,7 +55,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_spring` 100 (+40) or `b2_tithwell` 100 (+40), `b2_tail` 60 (survive 3), `b2_westbank` 150 (+80, two Red Blade allies). The squad ends Ch2 at about level 4.
 
-## Chapter 3 — The Ridge (v4.2.0, `src/50_b2_ch3.js`)
+## Chapter 3 — The Ridge (v4.2.0, `src/050_b2_ch3.js`)
 
 **Key `S.f.b2_c3_key`** (`S.chapters[3]`):
 - `bait`: the squad herded its own stretch out onto the open Shallows, as the Weasel captain ordered. The column drops by 6, or by 8 if the people broke and ran (`b2_baitHeld` is 0, 1, or 2 for a clean hold). The trap closed clean. The captain touched Sathi's shoulder with his lance-butt (`b2_weaselHonour`), and that night she sat at the clan's fire. Sathi and Ramin approved; Haddat and Marrow disapproved. The fight is `b2_bait`, with two Weasel allies.
@@ -83,7 +83,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_raid` 100 (+40, survive 3 against the immortal god-ridden), `b2_bait` or `b2_pull` 150 (+70), `b2_ring` 110 (+50). The squad ends Ch3 at about level 5 (the bot reaches 5–6). Balance (smart squad, level 4–5, Tangle away where he is): Soldier raid 100%, bait 100%, pull 96%, ring 95%; Bridgeburner 75 / 75 / 38 / 75%.
 
-## Chapter 4 — The Day of Pure Blood (v4.3.0, `src/51_b2_ch4.js`)
+## Chapter 4 — The Day of Pure Blood (v4.3.0, `src/051_b2_ch4.js`)
 
 **Key `S.f.b2_c4_key`** (`S.chapters[4]`), chosen at the *Silanda*'s plank after the ropes fight, before the parley:
 - `silanda`: a hurt squadmate went down the Vathar to Aren on the *Silanda* with the Seventh's wounded. **`b2_silandaWho`** = their id (never `sgt`, never `redblade`: "the company carries its own"). They are out of `S.squad` (by `letGo`) from here until Chapter 7; their kit is kept in `b2_silandaGear`. **Chapter 7: call `b2Ashore()` (47) in Aren** to bring them back with their kit (sets `b2_silandaBack`). They miss any level-up picks taken while away. Default choice is the worst hurt (`b2_hurtMost`, set by the ropes fight); `b2_silandaOther` = the player sent someone else. If Sathi went, Hackle went with her (no dog until she is back). If Tangle went, the satchel stayed with the squad; if Marrow went, there is no healer. Parting lines: Haddat asks the sergeant to say the column's names at night; Sathi says "tell the clan I did not ride away, I was carried"; Tangle counts the satchel; Marrow "bring me some knots".
@@ -115,7 +115,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_ropes` 90 (+30, hold the stakes 3 rounds; `hurtMost`), `b2_envoy` 70, `b2_bridge` 160 (+80, the bridge; Tangle away if `b2_robe` = `mincer`). No mortal fights. The squad ends Ch4 at about level 6 (the bot reaches 6–7). Balance (smart squad, level 5 for the ropes, 6 after): Soldier ropes 100%, envoy 100%, bridge 100% (whole squad), 100% at level 6 and 95% at level 5 with Marrow on the *Silanda*; Bridgeburner ropes 93%, envoy 100%, bridge 93% at level 6 and 29% at level 5.
 
-## Chapter 5 — The Dry March (v4.4.0, `src/52_b2_ch5.js`)
+## Chapter 5 — The Dry March (v4.4.0, `src/052_b2_ch5.js`)
 
 **Key `S.f.b2_c5_key`** (`S.chapters[5]`), chosen at Bult's water ration on the Nenoth, after the herd and before the Tregyn:
 - `squad`: the squad kept its skins. The stretch lost about a fifth (`b2_marchLost`, at least 2) in the night. The squad drank before the Tregyn raid (`b2_drank` = `'b2_dryraid'`), except Ramin, who gave his share to a child (`b2_drankSkip` = `'redblade'`, Ramin +1) and fought in scale with nothing in him. Tangle and Sathi approved ("the riders drink first"); Haddat and Marrow disapproved, and Haddat sat at the stretch's fire that night, not the squad's. In the camp the stretch took the Trygalle's water from the sergeant's hands "without looking at you".
@@ -150,7 +150,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_mounds` 100, `b2_herd` 120 (+50, heat, hold the gap 3 rounds), `b2_dryraid` 150 (+80, heat). No mortal fights. The squad ends Ch5 at about level 7 (the bot reaches 7). Balance (smart squad, level 6, 16 runs each): Soldier mounds 100% (94% one short), herd 94–100% (100% short or with Sathi riding), carts 100% undrunk, drank or dry, and 100% short with the regulars; Bridgeburner mounds 75%, herd 88–94%, carts 56–69% (38% dry).
 
-## Chapter 6 — Sanimon (v4.5.0, `src/53_b2_ch6.js`)
+## Chapter 6 — Sanimon (v4.5.0, `src/053_b2_ch6.js`)
 
 **Key `S.f.b2_c6_key`** (`S.chapters[6]`), set at the split by count of who stayed: **`whole`** (nobody stayed), **`some`** (one, or fewer than half of those who could choose), **`many`** (two or more, and at least half). The per-squadmate truth is the map below; read that, not the key, for who is where.
 
@@ -194,7 +194,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_sanimon` 140 (+70, "Pushed back": heat, hold the fold 4 rounds), `b2_dojal` 120 (+50, heat), `b2_silver` 90 (+30). No mortal fights. Short squads (three or fewer squadmates) get two Seventh regulars in each. The squad ends Ch6 at about level 7, near 8.
 
-## Chapter 7 — Aren Way, and the end of Book Two (v4.6.0, `src/54_b2_ch7.js`)
+## Chapter 7 — Aren Way, and the end of Book Two (v4.6.0, `src/054_b2_ch7.js`)
 
 **Key `S.f.b2_c7_key`** (`S.chapters[7]`), the book's road out, chosen on Aren's quay on the last morning (after the *Silanda* is in):
 - `guard`: the Aren Guard with Blistig and Keneb (Blistig offers a sash on the quay). The finale: the Adjunct's fleet comes in, the Fourteenth forms at Aren and the squad is in it. Tangle, Marrow and an Old Hand approve; Sathi disapproves.
@@ -226,7 +226,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Fights (base xp):** `b2_runway` 150 (+60, the last barrow), `b2_barrow` 100 (+50, only with a rearguard; two Seventh regulars and Bent always), `b2_postern` 170 (+80; Hackle if he came home). Short squads: with three or fewer squadmates the run and the postern send fewer foes and two hands (Wickan youths on the road, the Aren Guard on the walls); the sergeant alone gets three hands and fewer still (a rider and a bow, then the captain alone). The squad ends Book Two at level 8 (the bot reaches 8). Balance (smart squad, level 7 on the road, 8 at the postern, 12 runs each): Soldier run 92–100% / postern 100% (whole squad), 100% / 100% (three hands), 83% / 75% (the sergeant alone); the Barrow held 100% by a rearguard of four, never by one (it goes on either way); Bridgeburner run 58%, postern 50% (whole squad), 67% / 92% (three hands).
 
-## The Deck of Dragons in Book Two (v4.7, `src/47c_b2_deck.js`, art `src/57b_b2_cards_art.js`)
+## The Deck of Dragons in Book Two (v4.7, `src/047c_b2_deck.js`, art `src/057b_b2_cards_art.js`)
 
 **The reader (`VISREADER` in 47; `visReader()` / `visMid()` in 36b):** **Marrow** while she is in `S.squad` and not in `S.dead` (temple deck from Nap; Soliel's priests read for the sick). Without her (the *Silanda* since Ch4, the rearguard since the split, the Barrow), **Yedda** the ropemaker's widow if `S.f.b2_yedda` (a cheap gate-market deck in rope-walk sacking), otherwise **the old Kanese** (`{id:'kanese', name:'The old Kanese', mid:'the old Kanese', he:true}`), an unnamed old man in the squad's stretch with a prayer-cloth. The card screen's captions and the card's words come from `CARDBOOK` (21; Book One's are Tuft's, unchanged). Never Tuft in Book Two.
 
@@ -242,7 +242,7 @@ What each chapter set up, for the chapters after it. Every writer appends their 
 
 **Tests:** `tools/b2deck_test.mjs`; the play bot weights `deck:true` choices high (`tools/play.mjs`).
 
-## Visions in Book Two (`src/56_b2_visions.js`)
+## Visions in Book Two (`src/056_b2_visions.js`)
 
 Seven, one per chapter (`book:'dg'`, no `cards` key, so any card but the blank opens the chapter's): `b2v1` Lostara Yil, the Holy Desert (Sha'ik shot at dawn); `b2v2` Felisin, the fouled spring (Fener pulled down); `b2v3` Minala, the Imperial Warren (Kalam takes Keneb's family to Aren); `b2v4` Mappo, the road to Tremorlor (he tells Icarium the truth; the five Hounds); `b2v5` Leoman, Sha'ik's camp (Sha'ik Reborn, the Whirlwind, "one Holy City" left); `b2v6` Fiddler, Tremorlor (the door, Moby, Karpolan's delivery from Quick Ben); `b2v7` Kalam, Mock's Hold (the Empress in the dark; the knife put away; Fiddler at the gate). Canon basis: `dg-canon.md`, "Visions".
 - **The reader's step** is a getter (`b2vEnd` in 56): `sp` and `fig` read `visReader()` at play time, and `txt` has words for Marrow, Yedda and the old Kanese (and a fallback for any other name), so 36b's `visAgain` matches it on a replay. The figure is `FIGX[reader id]` if one exists, else a Hissari woman or man. No change to 36b was needed.

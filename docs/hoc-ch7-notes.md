@@ -1,4 +1,4 @@
-Wed Oct 21, 2026, 6:12 AM PDT. Book Four, Chapter 7, "The Convergence", and the end of Book Four (`src/77_b4_ch7.js`, art `src/77b_b4_ch7_art.js`, test `tools/b4ch7_test.mjs`), against v7.0.0 on `b4-ch7` (not shipped).
+Wed Oct 21, 2026, 6:12 AM PDT. Book Four, Chapter 7, "The Convergence", and the end of Book Four (`src/077_b4_ch7.js`, art `src/077b_b4_ch7_art.js`, test `tools/b4ch7_test.mjs`), against v7.0.0 on `b4-ch7` (not shipped).
 
 # Chapter 7 notes: The Convergence, and the end of *Unblooded*
 

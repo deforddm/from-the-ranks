@@ -1,6 +1,6 @@
 # Book Three, *The Fair Exchange*: continuity pass
 
-Tue Oct 13, 2026, 5:25 PM PDT. One editor read the seven chapters (written at the same time by seven writers) as one book and fixed the seams. Only `src/61_b3_ch1.js` … `src/67_b3_ch7.js` and the `moi-chK-notes` files changed. Every fix is the smallest edit that works; each writer's voice is kept.
+Tue Oct 13, 2026, 5:25 PM PDT. One editor read the seven chapters (written at the same time by seven writers) as one book and fixed the seams. Only `src/061_b3_ch1.js` … `src/067_b3_ch7.js` and the `moi-chK-notes` files changed. Every fix is the smallest edit that works; each writer's voice is kept.
 
 ## 1. Flags
 

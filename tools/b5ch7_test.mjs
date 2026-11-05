@@ -1,4 +1,4 @@
-// Book Five, Chapter 7 (The Seventh Closure, src/87_b5_ch7.js) and the end of Book Five: the night in the Drownings District (the first
+// Book Five, Chapter 7 (The Seventh Closure, src/087_b5_ch7.js) and the end of Book Five: the night in the Drownings District (the first
 // halt, the bell, Ennic's orders, the house's strongroom burning on Ch5 'sign' (a quarter of every debt, once) or the clerk in a doorway
 // on 'refuse', the looters' fight and its docks, the rubble, your street); the footbridge at night (the barricade, the reading on the
 // cracked flagstone, the brazier fire: rest, pay desk, a line each, the fallen named once with their heirs, the roster; the court's men

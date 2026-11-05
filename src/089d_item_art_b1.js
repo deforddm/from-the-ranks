@@ -1,6 +1,6 @@
 /* ---- the item art pass (v8.1.x): every Book One item redrawn to the shared look (see the brief): Book One's warm leather vignette,
    light from the upper left, a dark outline, a drop shadow and a soft ground shadow, materials that read at 64 px.
-   OVERRIDES of the Arms board (19c_artwork.js) and 46b_b1_items_art.js; those files stay as generated. Each SVG's ids carry its
+   OVERRIDES of the Arms board (019c_artwork.js) and 046b_b1_items_art.js; those files stay as generated. Each SVG's ids carry its
    item id (b1i-<id>-…) so nothing bleeds between pictures on one page. ---- */
 (function(){
   const f = n => Math.round(n * 10) / 10;

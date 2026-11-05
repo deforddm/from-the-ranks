@@ -1,4 +1,4 @@
-Wed Oct 21, 2026, 6:39 AM PDT. Book Four, the seven "Through the Deck" visions (`src/78_b4_visions.js`, art `src/78b_b4_visions_art.js`, test `tools/b4visions_test.mjs`), against v7.0.0 on `b4-vis` (not shipped).
+Wed Oct 21, 2026, 6:39 AM PDT. Book Four, the seven "Through the Deck" visions (`src/078_b4_visions.js`, art `src/078b_b4_visions_art.js`, test `tools/b4visions_test.mjs`), against v7.0.0 on `b4-vis` (not shipped).
 
 # Book Four visions notes
 

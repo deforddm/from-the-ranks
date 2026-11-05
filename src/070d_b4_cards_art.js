@@ -130,7 +130,7 @@ Object.assign(FIGX, {
 });
 
 /* ---------------- their busts (POR): in bust units, shoulders at y = 0, the face about y = −74 ----------------
-   Repainted to Book Five's standard with the shared bust helpers (BP, 19_portraits.js): hair with volume, the garment rising to the jaw
+   Repainted to Book Five's standard with the shared bust helpers (BP, 019_portraits.js): hair with volume, the garment rising to the jaw
    in one piece, textured kit. Two of Book Four's own: a helm (Tallow's too big, Darrut's with the Guard's plume cut off) and lacquered lamellar (Orvas) */
 const B4P = {
   /* an open bowl helm: o {c:[light, mid, dark], b:[brim light, brim dark], r: past the temples, y: brim height (u above cy), h: bowl height, n: rivets, stub: the plume's socket, dent} */

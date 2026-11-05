@@ -2,7 +2,7 @@
 
 *Historical: a past work order (v3.12); the game has moved on — see docs/story-bible.md.*
 
-David asked for combat with real stakes. The balance tester (`tools/balance.mjs`) shows why: with sensible play the squad wins all 23 fights 100% of the time, losing 4–27% of its health. The engine work is done (`src/31c_stakes.js`, `src/31_battle.js`); your job is the **content** in your chapter file(s):
+David asked for combat with real stakes. The balance tester (`tools/balance.mjs`) shows why: with sensible play the squad wins all 23 fights 100% of the time, losing 4–27% of its health. The engine work is done (`src/031c_stakes.js`, `src/031_battle.js`); your job is the **content** in your chapter file(s):
 
 1. **A second area on most fights** in your chapter.
 2. **One new fight** in your chapter, at a moment the story already has.
@@ -13,7 +13,7 @@ Read this brief, then `docs/story-bible.md` §5 (voice) and your `docs/chN-brief
 ## What the engine now does
 
 - **Second areas.** A battle with a `stage2` field goes on after its first map is cleared: a banner ("The way on"), a short breath sheet with your text and a "Push on" button, then a new map with new enemies. **Wounds, Tuft's and Ohl's strain, spent munitions and salves, and once-a-fight abilities all carry over**; a squadmate who went down is dragged up at a quarter of their health. XP is paid once, at the end (the first area's `xp` plus `stage2.xp`, which defaults to half the first area's). A defeat in the second area retries the second area.
-- **Enemy tricks** (Soldier and Bridgeburner only; off on Story), by enemy kind: crossbows **pin** (−2 move next turn), shades **drain** (heal what they deal), knives/assassins/warrenspawn **bleed** (1d4 at the start of the next two turns), hounds **pounce** (leap in, +2 to hit, knock down) and **howl** (the squad −1 to hit for a round), Claw assassins **shadow-step** behind the weakest squadmate once a fight, Guild veterans and the grey cloak **parry** one hit a fight, the grey cloak **marks** a target (+2 for every enemy against it), wights and rime-dead **chill** (−2 move), the barrow ward **holds** (no move next turn), Rhivi riders and cutpurses **hit and run**, bruisers **shove** (into fire, if there is fire), house guards' halberds **reach 2**, the house captain **rallies** (+2 to hit for the household at half health), the Claw mage **dazes** at range, the Andii hunter wraps itself in **darkness** (−2 to hit it). A new foe you declare in `CH.foes` may carry `sk:['bleed','parry']` etc. from that list (names exactly as in `FOE_SK` in `src/31c_stakes.js`); without `sk` it gets its kind's tricks, if any.
+- **Enemy tricks** (Soldier and Bridgeburner only; off on Story), by enemy kind: crossbows **pin** (−2 move next turn), shades **drain** (heal what they deal), knives/assassins/warrenspawn **bleed** (1d4 at the start of the next two turns), hounds **pounce** (leap in, +2 to hit, knock down) and **howl** (the squad −1 to hit for a round), Claw assassins **shadow-step** behind the weakest squadmate once a fight, Guild veterans and the grey cloak **parry** one hit a fight, the grey cloak **marks** a target (+2 for every enemy against it), wights and rime-dead **chill** (−2 move), the barrow ward **holds** (no move next turn), Rhivi riders and cutpurses **hit and run**, bruisers **shove** (into fire, if there is fire), house guards' halberds **reach 2**, the house captain **rallies** (+2 to hit for the household at half health), the Claw mage **dazes** at range, the Andii hunter wraps itself in **darkness** (−2 to hit it). A new foe you declare in `CH.foes` may carry `sk:['bleed','parry']` etc. from that list (names exactly as in `FOE_SK` in `src/031c_stakes.js`); without `sk` it gets its kind's tricks, if any.
 - **Ohl** now has **Denul Wash** (strain 4: Ohl and every squadmate within 2 heal 1d6+1) and **Stanch** (strain 2: a squadmate within 3 can't drop below 1 until Ohl's next turn) besides Mend.
 - **Salves:** the squad starts with 1, Pell charges 5 silver, and one jar turns up as loot in each chapter from Chapter Two (the engine does it on the chapter's first won fight).
 - **Bridgeburner** carries wounds from fight to fight until the squad rests (a new chapter, or `rest()` — your task 3). Story and Soldier patch everyone up after each fight, as before.
@@ -53,7 +53,7 @@ Call `rest('A line about the squad sleeping, in the chapter\'s voice.')` in the 
 ## Rules
 
 - Keep every existing node id, flag, battle id and chapter-key contract. New ids/flags prefixed with your chapter (`c3_…`, prologue `p_…`).
-- Edit only your own chapter file(s) (the prologue writer may also edit the `deserters` and `stone` entries in `BATTLES` in `src/14_data.js`, and nothing else there).
+- Edit only your own chapter file(s) (the prologue writer may also edit the `deserters` and `stone` entries in `BATTLES` in `src/014_data.js`, and nothing else there).
 - A node's `fx` runs once per node id, ever. Choice labels: no `*…*`, no `{sgt}`. Guard squadmate lines with `SQUAD().includes(id)`.
 - Battle maps are 8 wide × 10 tall. Foe and party tiles must be walkable and not overlap; party tiles near the bottom rows unless the story says otherwise.
 

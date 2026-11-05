@@ -1,4 +1,4 @@
-Thu Oct 29, 2026, PDT. Book Five, Chapter 4, "High Fort" (`src/84_b5_ch4.js`, art `src/84b_b5_ch4_art.js`), against v8.0.0 on `book5` (not shipped).
+Thu Oct 29, 2026, PDT. Book Five, Chapter 4, "High Fort" (`src/084_b5_ch4.js`, art `src/084b_b5_ch4_art.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 4 notes: High Fort
 

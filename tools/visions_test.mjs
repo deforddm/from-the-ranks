@@ -1,4 +1,4 @@
-// Every vision (36b_visions.js), opened the way a player does from the journal's Visions list, stepped to the end; every
+// Every vision (036b_visions.js), opened the way a player does from the journal's Visions list, stepped to the end; every
 // choice is picked at least once across runs. No page errors, no undefined/NaN/${ in the text, no bare "—" continue
 // button, the vision is recorded in S.seenVisions, and the player comes back to the map.
 // Usage: node tools/visions_test.mjs   (exit 1 on a failure)

@@ -6,7 +6,7 @@ const c3KnivesOpt = pre => { const f = S.f, o = pre ? {pre:true} : {};
 /* up the alley from the crossing: on the second night the big Gadrobi from the gate is waiting at the dogleg, once */
 const c3Arrive = to => { if (to === 'lane') { startExplore('daru_lane'); if (!S.f.c3_lane) talk('c3_lane_arrive'); } else { startExplore('daru_street'); talk('c3_daru_arrive'); } };
 const c3Up = to => () => { if (S.f.c3_workDone && !S.f.c3_cousins) { S.f.c3_upTo = to; return talk('c3_cousins'); } c3Arrive(to); };
-/* Fiddler's five at the bones, settled after the game (bonesSettle in 36_minigames.js leaves S.f.bonesSpotLast) */
+/* Fiddler's five at the bones, settled after the game (bonesSettle in 036_minigames.js leaves S.f.bonesSpotLast) */
 const c3Spot = () => { const k = S.f.bonesSpotLast; if (!k) return '';
   return k.back >= k.lent ? `\n\nFiddler holds out his hand, palm up, without looking, and you put his five in it. He counts them by weight. "That's the first time my silver's come back from a game Hedge was in," he says. "I'll have it framed."`
     : k.back > 0 ? `\n\nFiddler takes back what's left of his five, ${k.back} silver, and doesn't ask for the rest. "Call it tuition," he says. Hedge, through the onion: "Call it *mine.*"`

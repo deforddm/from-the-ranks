@@ -2,12 +2,12 @@
 
 *Historical: a past work order (v3.3); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/43_chapter4.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
+You are writing the content module `src/043_chapter4.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
 
-1. `src/14_data.js` — TPL, FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
-2. `src/16_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
-3. `src/42_chapter3.js` — Chapter 3, the module you are matching in shape and voice. Read every node: `areas:[]`, exit tiles, `scene:` moves, npc `fresh`/`show`/`node`, gear/battles/foes/card, the card node, the `check:[stat,dc], go, fail` pattern, and the close (`chapterEnd(3, key)`).
-4. `src/40_chapter1.js` — the two `hounds_*` battles: `objective:{type:'survive', rounds:N, text}`, `waves:[{round, foes, text}]`, `allies:[[kind,x,y]]`. You will use all three.
+1. `src/014_data.js` — TPL, FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
+2. `src/016_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
+3. `src/042_chapter3.js` — Chapter 3, the module you are matching in shape and voice. Read every node: `areas:[]`, exit tiles, `scene:` moves, npc `fresh`/`show`/`node`, gear/battles/foes/card, the card node, the `check:[stat,dc], go, fail` pattern, and the close (`chapterEnd(3, key)`).
+4. `src/040_chapter1.js` — the two `hounds_*` battles: `objective:{type:'survive', rounds:N, text}`, `waves:[{round, foes, text}]`, `allies:[[kind,x,y]]`. You will use all three.
 5. `docs/outline.md` — the campaign outline.
 
 ## What Chapter 4 is
@@ -46,7 +46,7 @@ Deck: one draw, Tuft on the Gadrobi roof before the crossing (same pattern: `car
 - Card: none new this chapter (omit `card:`; the draw uses existing cards).
 - Helpers: as Chapter 3. Flags the engine reads: `c4_briefed`, `c4_roofsFought`, `c4_crokus`, `c4_sawSorry`, `c4_rallick`, `c4_meet`, `c4_key` (`shield`|`aside`), `c4_vell`, `c4_guildKnows`, `c4_seen`, `c4_tuftDark`, `c4_kalamLook`, `c4_reprisalFought`, `c4_done`. Quest lines: `QUESTS.roofs_gadrobi`, `QUESTS.roofs_daru` read `c4_roofsFought`, `c4_meet`, `c4_key`.
 
-## Schema — produce exactly this in `src/43_chapter4.js`
+## Schema — produce exactly this in `src/043_chapter4.js`
 
 ```js
 /* ============ chapter 4: Assassins ============ */
@@ -66,4 +66,4 @@ const CH4 = {
 
 Length: 60–80 nodes. Whiskeyjack, Kalam, Quick Ben, Fiddler, Rallick, Crokus (no dialogue — he doesn't stop), Vell, the Andii (no dialogue — they never speak) each get what is theirs. Brisk: a line about what a shield-wall is for. Kettle: a cusser she does *not* throw on a roof and says why. Ohl's list: a name on it he did not put there (aside) or one crossed off (shield). Tuft: Kurald Galain, up close; plant, don't resolve. Ellis: she has been on these roofs before, with the Claw, and knows which planks hold.
 
-Do not touch any other file. Do not invent helpers, scenes, tile letters or sprite kinds not listed. Do not let any canon character die, be wounded by the player, or fail to do what the book has them do. Output only `src/43_chapter4.js`; verify maps (16×12; battles 8×10; start/npc/trigger tiles walkable and reachable; every `go`/`fail`/`talk()` target exists in `CH4.dlg`; every foe id exists) with a small node script, then `node --check`.
+Do not touch any other file. Do not invent helpers, scenes, tile letters or sprite kinds not listed. Do not let any canon character die, be wounded by the player, or fail to do what the book has them do. Output only `src/043_chapter4.js`; verify maps (16×12; battles 8×10; start/npc/trigger tiles walkable and reachable; every `go`/`fail`/`talk()` target exists in `CH4.dlg`; every foe id exists) with a small node script, then `node --check`.

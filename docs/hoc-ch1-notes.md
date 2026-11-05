@@ -1,4 +1,4 @@
-Wed Oct 21, 2026. Book Four, Chapter 1, "The Muster" (`src/71_b4_ch1.js`, art `src/71b_b4_ch1_art.js`), against v7.0.0 on `book4` (not shipped).
+Wed Oct 21, 2026. Book Four, Chapter 1, "The Muster" (`src/071_b4_ch1.js`, art `src/071b_b4_ch1_art.js`), against v7.0.0 on `book4` (not shipped).
 
 # Chapter 1 notes: The Muster
 

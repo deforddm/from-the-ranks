@@ -1,4 +1,4 @@
-// Book Three's seven Deck visions (68_b3_visions.js, art 68b): each is reached the way a player reaches it, from its chapter's reading in
+// Book Three's seven Deck visions (068_b3_visions.js, art 68b): each is reached the way a player reaches it, from its chapter's reading in
 // Book Three (b3_c<n>_deck → the card screen → "✦ Look into the card"), played to the end, and lands back on that chapter's card node
 // (b3_c<n>_card), counted as the reader's; and each is played from the journal with every choice picked at least once. Each run is done
 // with each of Book Three's readers, set up the real way (60's VISREADER): Tuft in the squad; Tuft out and Sohra in; neither (Old Benna).

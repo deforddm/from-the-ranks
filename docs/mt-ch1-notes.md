@@ -1,4 +1,4 @@
-Wed Oct 28, 2026, 6:50 PM PDT. Book Five, Chapter 1, "The Drownings" (`src/81_b5_ch1.js`, art `src/81b_b5_ch1_art.js`, the Wager Board in `src/89_b5_games.js`), against v8.0.0 on `book5` (not shipped).
+Wed Oct 28, 2026, 6:50 PM PDT. Book Five, Chapter 1, "The Drownings" (`src/081_b5_ch1.js`, art `src/081b_b5_ch1_art.js`, the Wager Board in `src/089_b5_games.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 1 notes: The Drownings
 
@@ -78,7 +78,7 @@ Items read later: `b5_c1_receipt` (pay; Ch7's court's men), `b5_c1_weightbag` (s
 - `TRICKS.b5_c1_haul` and `AB.t_b5_c1_haul`: the Rope's Way (`rope` / `t_rope`), copied: once a fight, free, swap with a squadmate within 5 + level step, no free swings. Not sorcery.
 - `drawFeature` is wrapped (81b) so battle cover `t` on this chapter's four grounds is a stall, a tavern table, barrels or a mooring post; other styles pass through.
 - `GLOSSX.mt` gains three rows (the Low Walk, the fines court, the pit towns), each unlocked by a chapter flag.
-- **89 is new:** `src/89_b5_games.js`, the games file the brief names, holds the Wager Board (`playWager`, `b5WagerPay`, `B5G_*`, `b5g*` helpers) and wraps `b5_c1_yard` from there, as Book Four's 79 does. The games pass adds the other four games to it.
+- **89 is new:** `src/089_b5_games.js`, the games file the brief names, holds the Wager Board (`playWager`, `b5WagerPay`, `B5G_*`, `b5g*` helpers) and wraps `b5_c1_yard` from there, as Book Four's 79 does. The games pass adds the other four games to it.
 
 ## Fights (base xp; the game pays ×0.6)
 
@@ -120,7 +120,7 @@ The brief gave the writer foes `thug` and `bruiser` kinds; the chapter's artist 
 
 ## Deviations from the brief
 
-- **The Wager Board is built here, in a new `src/89_b5_games.js`**, because this session's order asked for the fire's game, its test and its screenshot; it is where the brief puts the games (89) and wraps the fire from there, so the chapter file only keeps the id.
+- **The Wager Board is built here, in a new `src/089_b5_games.js`**, because this session's order asked for the fire's game, its test and its screenshot; it is where the brief puts the games (89) and wraps the fire from there, so the chapter file only keeps the id.
 - The tavern node is `b5_c1_taverndoor` (the battle keeps the brief's `b5_c1_tavern`), so a dialogue node and a fight never share an id.
 - Two Low Walk areas (day and night) instead of one.
 - Writer foes' kinds, above.

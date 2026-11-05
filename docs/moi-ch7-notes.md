@@ -1,6 +1,6 @@
 # Book Three, Chapter 7 — "Coral" and the end of Book Three: continuity notes
 
-Tue Oct 13, 2026 2:00 PM PDT. File `src/67_b3_ch7.js` (exports `B3CH7`, `B3CH7.finale`; helper object `B3FIN7`). Art in `src/67b_b3_ch7_art.js` (the artist's).
+Tue Oct 13, 2026 2:00 PM PDT. File `src/067_b3_ch7.js` (exports `B3CH7`, `B3CH7.finale`; helper object `B3FIN7`). Art in `src/067b_b3_ch7_art.js` (the artist's).
 
 ## Two roads in
 

@@ -1,4 +1,4 @@
-// v7.2: the roster (src/38c_roster.js). In every book the choice is at each chapter fire; the squad is at most six; the core always walks;
+// v7.2: the roster (src/038c_roster.js). In every book the choice is at each chapter fire; the squad is at most six; the core always walks;
 // recruits and spares can be sent to camp and brought back, choosing both sides on one screen; gear is parked and given back; the Book Three
 // full import (sergeant, four, Ellis) can bench Ellis for Sohra, Sohra waiting is offered, and no fire claims she came when there was no room;
 // Book Four chooses which recruit goes and keeps its five; transfers carry Ramin into Book Four and Ellis into Book Three with gear, loyalty

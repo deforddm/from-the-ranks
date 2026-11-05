@@ -2,11 +2,11 @@
 
 *Historical: a past work order (v3.1); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/41_chapter2.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
+You are writing the content module `src/041_chapter2.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
 
-1. `src/14_data.js` — TPL (the five squadmates), FOES, CARDS, the prologue map and NPCS, BATTLES, AREAS, PICKS.
-2. `src/16_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
-3. `src/40_chapter1.js` — Chapter 1, the module you are matching in shape and voice. Read every node. Note how it reads prologue flags, how `scene:` moves between backdrops, how battles/foes/gear/card/dlg are declared, and how the chapter closes (`chapterEnd(1, key)`; Whiskeyjack's last orders: "Wagon leaves at dawn. Baggage, Rhivi guide, the Fourth. South, then east, then Darujhistan. We'll be there a week before you. Try not to be interesting on the way.").
+1. `src/014_data.js` — TPL (the five squadmates), FOES, CARDS, the prologue map and NPCS, BATTLES, AREAS, PICKS.
+2. `src/016_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
+3. `src/040_chapter1.js` — Chapter 1, the module you are matching in shape and voice. Read every node. Note how it reads prologue flags, how `scene:` moves between backdrops, how battles/foes/gear/card/dlg are declared, and how the chapter closes (`chapterEnd(1, key)`; Whiskeyjack's last orders: "Wagon leaves at dawn. Baggage, Rhivi guide, the Fourth. South, then east, then Darujhistan. We'll be there a week before you. Try not to be interesting on the way.").
 4. `docs/outline.md` — the campaign outline.
 
 ## What Chapter 2 is
@@ -31,7 +31,7 @@ Ellis's numbers (already defined in the engine as `TPL.ellis`; you only *write* 
 
 Deck: one draw, offered by Tuft at the ridge fire before the light (same pattern as Chapter 1: a node calling `cardSequence(()=>talk('c2_card'))`; `S.card` from `['raven','raven','raven','oponn','obelisk','knight']`).
 
-## Schema — produce exactly this in `src/41_chapter2.js`
+## Schema — produce exactly this in `src/041_chapter2.js`
 
 ```js
 /* ============ chapter 2: The Rhivi Plain ============ */
@@ -61,4 +61,4 @@ Exit tiles: walking onto `>` fires its trigger node; that node should have a one
 
 Length: 60–80 nodes. Every canon character (Toc, Crone, the Andii) gets at least one line that could only be theirs. Sethand and Ellis are originals: give each a voice. Brisk gets a beat about her brother (a Second Army badge in the barrow, wrong regiment). Kettle names something. Ohl's list gets a line at the ashes. Tuft's arc: she recognises the light for what it is before the guide says it; plant, don't resolve.
 
-Do not touch any other file. Do not invent helpers that are not listed. Do not let Paran or Toc die. Output only `src/41_chapter2.js`; syntax-check with `node --check` before you finish.
+Do not touch any other file. Do not invent helpers that are not listed. Do not let Paran or Toc die. Output only `src/041_chapter2.js`; syntax-check with `node --check` before you finish.

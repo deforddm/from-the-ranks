@@ -1,6 +1,6 @@
 # Book Three: the shelf — engine and title brief (v6.0)
 
-Tue Oct 13, 2026. The work order for Book Three's engine (`src/60_book3.js`, `src/60c_b3_deck.js`) and its title art (`src/60b_b3_title.js`). Chapter writers build on what this file promises, so build exactly these names.
+Tue Oct 13, 2026. The work order for Book Three's engine (`src/060_book3.js`, `src/060c_b3_deck.js`) and its title art (`src/060b_b3_title.js`). Chapter writers build on what this file promises, so build exactly these names.
 
 ## The book
 
@@ -14,12 +14,12 @@ Tue Oct 13, 2026. The work order for Book Three's engine (`src/60_book3.js`, `sr
 
 ## What already exists (read it)
 
-Book Two is the model for everything: `src/47_book2.js` (squad, systems, import, glossary, VISREADER), `src/47c_b2_deck.js` (a book's own Deck), `src/47d_b2_title.js` (painted title SVG, classic canvas title, patch), `src/56_b2_visions.js`, `src/38b_series.js` (journal and deeds per book), `src/29_title_intro.js` (the Book picker and import field), `src/15_state.js` (`setBook`, `migrate`), `src/14_data.js` (`BOOKS`, `BOOKSNAP`, `registerChapter`), `src/90_resume_boot.js` (registration), `docs/v4.0-notes.md`, `docs/dg-ch1-brief.md`, `tools/play.mjs` (`--book=dg`, `SYNTH_DG`), `tools/lint.mjs`.
+Book Two is the model for everything: `src/047_book2.js` (squad, systems, import, glossary, VISREADER), `src/047c_b2_deck.js` (a book's own Deck), `src/047d_b2_title.js` (painted title SVG, classic canvas title, patch), `src/056_b2_visions.js`, `src/038b_series.js` (journal and deeds per book), `src/029_title_intro.js` (the Book picker and import field), `src/015_state.js` (`setBook`, `migrate`), `src/014_data.js` (`BOOKS`, `BOOKSNAP`, `registerChapter`), `src/990_resume_boot.js` (registration), `docs/v4.0-notes.md`, `docs/dg-ch1-brief.md`, `tools/play.mjs` (`--book=dg`, `SYNTH_DG`), `tools/lint.mjs`.
 
 ## The squad: the Fourth comes back
 
 - **Order `['sgt','brisk','kettle','tuft','ohl']`** — Book One's own templates, stats, abilities, picks, portraits and sprites. They keep their Book One looks and hands; Book Three changes their *lives*.
-- **Per-book biography.** Book One's `TPL.brisk` etc. read Book One flags (`squadQuest`, `get quest()`), and `TPL.sgt` is already swapped per book. Extend `setBook` (wrap it in `60_book3.js`; do not rewrite 15) so that in `moi` the Fourth's `bio2`, `quest`, `banter`, `rel`, `epithet` and `service` come from `BOOKSNAP.moi.tpl[id]` and Book One's come back when the book changes (save/restore property descriptors the way `BOOKSNAP.*.sgt` does). Write those Book Three texts yourself, from `docs/story-bible.md` §1 (the end of each arc) and the canon sheet, in the established voice:
+- **Per-book biography.** Book One's `TPL.brisk` etc. read Book One flags (`squadQuest`, `get quest()`), and `TPL.sgt` is already swapped per book. Extend `setBook` (wrap it in `060_book3.js`; do not rewrite 15) so that in `moi` the Fourth's `bio2`, `quest`, `banter`, `rel`, `epithet` and `service` come from `BOOKSNAP.moi.tpl[id]` and Book One's come back when the book changes (save/restore property descriptors the way `BOOKSNAP.*.sgt` does). Write those Book Three texts yourself, from `docs/story-bible.md` §1 (the end of each arc) and the canon sheet, in the established voice:
   - **The sergeant** (`BOOKSNAP.moi.sgt`): the same Untan sergeant, after the Fete, on the outlaw road; Dujek noticed ("You came up out of the Pale with all five"); the count. Quest: Whiskeyjack's leg (Mallet wanted a week flat on his back; he won't give it). Never heal it (rule 7).
   - **Brisk**: Tav (Tavrin, Fourth Regiment of the Second) is alive and *in the Host* — she can walk to his cook-fire now. The letter is opened ("four coppers"). Quest: two of them in one army, marching into a war; "we don't leave people".
   - **Kettle**: the Moranth debt settled or carried; the quorls are *here*, the Black Moranth fly for Dujek. Quest: the quorls, and Maud.
@@ -30,7 +30,7 @@ Book Two is the model for everything: `src/47_book2.js` (squad, systems, import,
   - **`sohra` — Sohra**, a Rhivi herd-rider and spirit-singer, about twenty, met in Chapter 1 or 2 (horn bow, `mark`; plus **`b3_song`**, *Spirit-Song of the Herds*: once a fight, every squadmate within 3 heals 2+level/2 and gets +1 to hit through the next round; spirit-craft, it never burns). The Rhivi lend her to the Fourth to keep an eye on the Malazans for the Mhybe. God: the Rhivi spirits (the herds' dead).
   - **`greysword` — Dannet**, a Capan second daughter who became a Grey Sword acolyte; Fener is gone and the company is turning to the Wolves. Shield and sword (`bash`), plus **`b3_howl`**, *The Wolf's Howl*: enemies within 2 take −2 to hit until her next turn; recharges after 3 rounds. Lent to the Malazans as a guide through the Domin after Capustan (Chapter 3 or 4). God: Togg and Fanderay, the Wolves of Winter.
   - Check both names against `docs/moi-canon.md` §7 and the whole series (they were checked by the lead, but look again); report any clash.
-- **Recruit cap.** The squad is at most six (the sergeant, the four, and one recruit). `b3Room()` returns how many may join: `6 − S.squad.length`; an import that lost squadmates leaves room for both recruits at once. `b3SwapIn(id)` swaps the walking recruit for the waiting one (like `b2SwapIn`, in `src/57c_b2_keth.js`; read it).
+- **Recruit cap.** The squad is at most six (the sergeant, the four, and one recruit). `b3Room()` returns how many may join: `6 − S.squad.length`; an import that lost squadmates leaves room for both recruits at once. `b3SwapIn(id)` swaps the walking recruit for the waiting one (like `b2SwapIn`, in `src/057c_b2_keth.js`; read it).
 - **Gods.** Brisk Hood, Kettle Oponn, Tuft Shadowthrone, Ohl Soliel as in Book One. **The sergeant's god in Book Three is Treach**, the Tiger of Summer: Fener has been torn down this year (DG) and does not answer; write Treach's patron text (`PATRONS` is keyed by id, so make the sergeant's entry per-book: Fener in `gotm`/`dg`, Treach in `moi`). Sohra the Rhivi spirits, Dannet the Wolves.
 
 ## Import from Book One
@@ -44,7 +44,7 @@ Book Two is the model for everything: `src/47_book2.js` (squad, systems, import,
 
 ## Systems
 
-All Book Three code is guarded by `S.book === 'moi'` and sits in `src/60_book3.js`. Ids carry **`b3_`** (areas, nodes, fights, foes, gear, scenes, tricks, flags `S.f.b3_*`).
+All Book Three code is guarded by `S.book === 'moi'` and sits in `src/060_book3.js`. Ids carry **`b3_`** (areas, nodes, fights, foes, gear, scenes, tricks, flags `S.f.b3_*`).
 
 1. **The Alliance** — `S.ally = {trust, dread}`, both 0..12, new game `{trust:5, dread:1}`.
    - `ally(dTrust, dDread, why)` changes them and notes it (like `chain()`), tallies, updates the HUD pill (`#chainp`, like `updChain`: "Trust **n** · Dread **n**").
@@ -56,9 +56,9 @@ All Book Three code is guarded by `S.book === 'moi'` and sits in `src/60_book3.j
 4. **The squad away for one fight** (`def.away`), **hurtMost**, and **lastStand** — Book Two has these; give Book Three the same three behaviours (guard on `S.book === 'moi'`, or generalise Book Two's guards to `S.book !== 'gotm'` where safe).
 5. **Mortal fights** — Book One's `mortal:true` (permanent death, `kill(id)`) must work in Book Three (check it does).
 
-## The Deck in Book Three (`src/60c_b3_deck.js`)
+## The Deck in Book Three (`src/060c_b3_deck.js`)
 
-- Model it on `src/47c_b2_deck.js`. **The reader is Tuft** while she is in the squad and alive (she read for Book One: use her voice); without her, Sohra reads the Rhivi way (bones and smoke, not cards, but the same cards come up); without both, "Old Benna", a Host laundress who reads cards for coppers. `VISREADER` must return the right one in `moi`.
+- Model it on `src/047c_b2_deck.js`. **The reader is Tuft** while she is in the squad and alive (she read for Book One: use her voice); without her, Sohra reads the Rhivi way (bones and smoke, not cards, but the same cards come up); without both, "Old Benna", a Host laundress who reads cards for coppers. `VISREADER` must return the right one in `moi`.
 - **Cards** (`B3CARDS`, ids `b3c_*`), with art by the title artist, each with an engine-wide effect while `S.card` is it (effects in this file, like 47c):
   - **Knight of High House Dark** (b3c_knight) — the squad's first hit each fight does +3.
   - **Hood's Herald** — no. Use instead **Soldier of High House Life** (b3c_lifesoldier) — healing on the squad's side heals +2.
@@ -77,7 +77,7 @@ All Book Three code is guarded by `S.book === 'moi'` and sits in `src/60_book3.j
 
 - **Title picker**: three books in the segmented control (it is generated from `BOOKS`, so check layout at 360 px wide: three buttons must fit; shrink the small subtitle text if needed). `titleDress('moi')` wears Book Three's art, patch, name and tag. The footer credit line lists Book Three with its chapter progress. Roster rows say "Book Three".
 - **Begin** in `moi`: `S = newStateMOI(name, importId); S.diff = diff; save(); startChapter(1)` (no prologue, no intro screen unless you add one as Book Two did not).
-- **`38b_series.js`**: journal head and Deeds already go per book; make sure a `moi` save gets its own Deeds section ("Book Three"), its own route map (a simple route drawing for Book Three: Pale → the Rhivi Plain → Capustan → the Catlin → the Maurik → Coral; draw it in the series map style; nothing fancy), the alliance numbers in the count, and the fallen. "Where the books meet": add Book Three's row (concurrent with Book Two: the spring and summer after the Fete; Genabackis).
+- **`038b_series.js`**: journal head and Deeds already go per book; make sure a `moi` save gets its own Deeds section ("Book Three"), its own route map (a simple route drawing for Book Three: Pale → the Rhivi Plain → Capustan → the Catlin → the Maurik → Coral; draw it in the series map style; nothing fancy), the alliance numbers in the count, and the fallen. "Where the books meet": add Book Three's row (concurrent with Book Two: the spring and summer after the Fete; Genabackis).
 - **Glossary** `GLOSSX.moi`: the Host, Onearm's Host outlawed (as rumour only), Caladan Brood, the Rhivi, the Barghast, the Tiste Andii, Moon's Spawn, the Pannion Domin, the Seer, Tenescowri (headline), K'Chain Che'Malle (unlocked by a flag), Capustan, the Grey Swords, Treach, the Black Moranth and quorls, warrens poisoned. Some unlocked by `S.f.b3_*` flags the chapters set; list those flag names in your notes.
 - **Ambience**: map Book Three's scene/area names to the existing ambience beds in `13_audio…js` (plain, camp, city, rain, wind, night); add names, not new synthesis, unless trivial.
 
@@ -91,4 +91,4 @@ Book Three shares Book One's squad ids, so Book One's own logic keyed on those i
 - `tools/play.mjs`: add `--book=moi` (picks Book Three on the form; the run ends at the last written chapter's end screen) and `SYNTH_MOI` for `--from=N` (start of Book Three's chapter N, built with `newStateMOI` and plausible earlier keys: `S.f.b3_cN_key` values from `docs/moi-book-brief.md`, level ≈ N+1, trust 6, dread 3, `b3_domin` from Ch3, Sohra in the squad from Ch2, Dannet waiting from Ch4). Until chapters exist, `--book=moi` cannot play; make that a clean skip with a message, not a crash.
 - **A new `tools/moi_test.mjs`** (headless Playwright, `executablePath:'/opt/pw-browsers/chromium'`, like the other tests): fresh Book Three state has the right squad, trust/dread, pill; `setBook` swaps the Fourth's bios and back (Book One bios unchanged after a round-trip); the import picks only outlaw-road saves and brings name, squad, loyalty and dead; a dead import leaves room for both recruits; ally aid joins at trust ≥ need and not below; shaken/haunted apply; poisoned warrens burn only with `b3_domin` and never on spirit/elder; the sergeant's god is Treach in `moi` and Fener in `gotm`; the title picker shows three books and dresses Book Three; Deeds has a Book Three section; a `b3c_*` card's effect works.
 - `node tools/play.mjs 2` (Book One) 2/2 and `node tools/play.mjs 2 --book=dg` 2/2, then `node tools/run_all.mjs` PASS.
-- Don't commit or push; don't touch `sw.js` or `src/10_preamble.js`. Write `docs/v6.0-notes.md` (what you built, every function and flag name a chapter writer will use, every Book One guard you added, open questions).
+- Don't commit or push; don't touch `sw.js` or `src/010_preamble.js`. Write `docs/v6.0-notes.md` (what you built, every function and flag name a chapter writer will use, every Book One guard you added, open questions).

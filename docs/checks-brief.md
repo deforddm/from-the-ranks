@@ -2,7 +2,7 @@
 
 *Historical: a past work order (v3.11); the game has moved on — see docs/story-bible.md.*
 
-David (the player) asked to make skill checks feel meaningful. The engine work is done (`src/16_skill_checks.js`, `src/16b_tricks.js`, `src/31b_tricks_in_battle.js`). Your job is the **content**: every check in your chapter file, plus the new hard checks assigned to you. Read this whole brief, then `docs/story-bible.md` §5 (voice) and your chapter's `docs/chN-brief.md` for canon rules, then your chapter file.
+David (the player) asked to make skill checks feel meaningful. The engine work is done (`src/016_skill_checks.js`, `src/016b_tricks.js`, `src/031b_tricks_in_battle.js`). Your job is the **content**: every check in your chapter file, plus the new hard checks assigned to you. Read this whole brief, then `docs/story-bible.md` §5 (voice) and your chapter's `docs/chN-brief.md` for canon rules, then your chapter file.
 
 ## What changed in the engine (what the player now sees)
 
@@ -50,20 +50,20 @@ Odds today: the best stat in the squad is +3 (might: Brisk; wits: Ohl; guile: Tu
 
 ## New hard checks (✦ tricks), by chapter
 
-Each is an **optional extra choice** in an existing conversation (never blocking the road), **one attempt per playthrough** (`req:()=>!S.f.cN_xTried`, `fx:()=>{S.f.cN_xTried=1;}`), with a `trick:'key'`, DC as listed, and a success and a failure node. The engine grants the trick on success (don't call `earnTrick`), shows "✦ X learns …", and lists it on the squad sheet. Your success scene shows *how* the roller came by it, in their voice (by-variants for the likely rollers); the failure is short, characterful, and changes something small. The trick's name, lore and effect are in `src/16b_tricks.js` — match them. Put the trick choice where the fiction offers it naturally; the player should be able to see the ✦ and choose not to.
+Each is an **optional extra choice** in an existing conversation (never blocking the road), **one attempt per playthrough** (`req:()=>!S.f.cN_xTried`, `fx:()=>{S.f.cN_xTried=1;}`), with a `trick:'key'`, DC as listed, and a success and a failure node. The engine grants the trick on success (don't call `earnTrick`), shows "✦ X learns …", and lists it on the squad sheet. Your success scene shows *how* the roller came by it, in their voice (by-variants for the likely rollers); the failure is short, characterful, and changes something small. The trick's name, lore and effect are in `src/016b_tricks.js` — match them. Put the trick choice where the fiction offers it naturally; the player should be able to see the ✦ and choose not to.
 
 | File | Key | Stat · DC | Scene |
 |---|---|---|---|
-| 39_prologue.js | `fold` | Wits 15 | Tattersail's tent: watch (or ask) how she folds a turned card back into the spread |
-| 40_chapter1.js | `line` | Might 16 | The Hound night on the cadre row: lock shields across the row |
-| 41_chapter2.js | `song` | Wits 16 | The Rhivi outriders: answer them with the Rhivi words for the dead (an `edges` bonus if Sethand trusts the squad) |
-| 42_chapter3.js | `pull` | Wits 16 | The Phoenix Inn: watch the boy (Crokus) spin his coin, and catch it at the right moment (Oponn, the Lady pulls / the Lord pushes) |
-| 42_chapter3.js | `bluefire` | Wits 15 | Hedge's cellar under the gas mains: get Hedge to show you how he bottles the lamp-gas |
-| 43_chapter4.js | `cant` | Guile 16 | Kalam's roof: get Kalam to show the Claw's hand-cant (he will say he didn't) |
-| 43_chapter4.js | `rope` | Might 16 | The rope-line strung between chimneys over the roofs: cross it the way the Guild does (Cotillion, the Rope) |
-| 44_chapter5.js | `otataral` | Wits 16 | The ward-stone the Adjunct's sword cut: scrape the red dust from the cut (Tuft and Ohl cannot try: the engine already greys them out) |
-| 45_chapter6.js | `dark` | Guile 17 | The terrace: the tall guest in the black dragon mask; meet his eyes and bow the way the Andii do (edges if `c4_seen` / `c4_tuftDark`). Canon: he changes nothing, says at most a word, never names himself |
-| 45_chapter6.js | `rime` | Might 17 | The garden as the Tyrant's frost comes across the lawn in rings, before `c6_choice`: stand in its path / pull someone out of it, and a little of the ice stays |
+| 039_prologue.js | `fold` | Wits 15 | Tattersail's tent: watch (or ask) how she folds a turned card back into the spread |
+| 040_chapter1.js | `line` | Might 16 | The Hound night on the cadre row: lock shields across the row |
+| 041_chapter2.js | `song` | Wits 16 | The Rhivi outriders: answer them with the Rhivi words for the dead (an `edges` bonus if Sethand trusts the squad) |
+| 042_chapter3.js | `pull` | Wits 16 | The Phoenix Inn: watch the boy (Crokus) spin his coin, and catch it at the right moment (Oponn, the Lady pulls / the Lord pushes) |
+| 042_chapter3.js | `bluefire` | Wits 15 | Hedge's cellar under the gas mains: get Hedge to show you how he bottles the lamp-gas |
+| 043_chapter4.js | `cant` | Guile 16 | Kalam's roof: get Kalam to show the Claw's hand-cant (he will say he didn't) |
+| 043_chapter4.js | `rope` | Might 16 | The rope-line strung between chimneys over the roofs: cross it the way the Guild does (Cotillion, the Rope) |
+| 044_chapter5.js | `otataral` | Wits 16 | The ward-stone the Adjunct's sword cut: scrape the red dust from the cut (Tuft and Ohl cannot try: the engine already greys them out) |
+| 045_chapter6.js | `dark` | Guile 17 | The terrace: the tall guest in the black dragon mask; meet his eyes and bow the way the Andii do (edges if `c4_seen` / `c4_tuftDark`). Canon: he changes nothing, says at most a word, never names himself |
+| 045_chapter6.js | `rime` | Might 17 | The garden as the Tyrant's frost comes across the lawn in rings, before `c6_choice`: stand in its path / pull someone out of it, and a little of the ice stays |
 
 **Chapters 5–7 also need more hard checks at the big moments** (they have only two checks each today). Add **2–3 more hard checks (DC 15–17) per chapter** in Ch5 and Ch6 besides the tricks, and **3–4 in Ch7**, each with a real consequence: a flag that changes a later scene, the close round, `CH.extras`, or (Ch7) the finale/fate pages; loyalty; an item; silver. Ch7's hard checks have no tricks; their rewards are in the ending. Make them choices the player can decline.
 

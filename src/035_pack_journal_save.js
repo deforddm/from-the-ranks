@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['8.2.6', ['Housekeeping before Book Six: the game\'s source files renumbered to make room for five more books. Nothing changes in play, and saves are untouched.']],
   ['8.2.5', ['Book One: the east road out of Darujhistan is Jatem\'s Worry, as the novel\'s text names it. The game had used the glossary\'s spelling, Jammit\'s.']],
   ['8.2.4', ['A burner or smoker that opens a fight is aimed where the enemy stand thickest, so it always reaches someone. Before, it landed in the middle of their line and could fall on empty ground.', 'The opening throw is told once, in the scene\'s own words.', 'Book One no longer counts the fight in rounds: Tattersail, the grey cloak, the alley after the Fete, the chapter page and the last letter all say it another way.']],
   ['8.2.3', ['The Barrow\'s lines no longer count fight turns or rounds, and Blistig\'s rounds on the wall are back as before.']],

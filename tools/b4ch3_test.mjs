@@ -1,4 +1,4 @@
-// Book Four, Chapter 3 (The Burned Tears, src/73_b4_ch3.js): the chapter's halts, both keys, every fight's start and a forced win (both
+// Book Four, Chapter 3 (The Burned Tears, src/073_b4_ch3.js): the chapter's halts, both keys, every fight's start and a forced win (both
 // grounds of each), the trick, the ferry rope, the fire and the swap, Orvas's join; from a fresh start at level 10, and from a Book Two
 // transfer with Sathi alive and Ramin walking.
 // Usage: node tools/b4ch3_test.mjs   (build first; exit 1 on a failure)

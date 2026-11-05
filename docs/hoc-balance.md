@@ -7,7 +7,7 @@ Wed Oct 21, 2026, 2:38 PM PDT. Book Four balance on v7.0.0 (not shipped): TUNED 
 David: the measured book "sounds too easy overall, death should still be a possibility even on soldier." Targets: Soldier, the smart bot wins ~85–95% of first attempts a fight, losing 30–50% health; Bridgeburner ~65–75%; Ch7's mortal fight kills a squadmate in ~15–25% of Soldier runs, and on Bridgeburner on the forward road ≤ 0.8 dead a won fight.
 
 **What changed.**
-1. **`B4GAP` rows** (src/70_book4.js), Bridgeburner's side:
+1. **`B4GAP` rows** (src/070_book4.js), Bridgeburner's side:
 
 | Ch | armour | to hit | health | damage | Soldier-only extra (`s`) |
 |---|---|---|---|---|---|
@@ -20,7 +20,7 @@ David: the measured book "sounds too easy overall, death should still be a possi
 | 7 | +5 | +1 | ×1.25 → **×1.5** | +4 → **+6** | health ×1.2, to hit +1, damage +2 |
 
 2. **A Book-Four-only Soldier adjustment** (the `s` column): applied in the `B4GAP` `mkFoe` wrap only when `S.diff` is Soldier, so Books One–Three and the global `DIFFS` are untouched. Why: as built Bridgeburner was near its old target and Soldier trivial, and the global Soldier/Bridgeburner gap (×1.25 health, ×1.2 wounds, +1 to hit) is too wide for David's new pair of targets; one `B4GAP` row cannot put both in band.
-3. **Ch7's `b4_c7_breakout` on the forward road** (`b4_saw` close, src/77_b4_ch7.js): the extra `b4_c7_fleer` is dropped and "nearer" is one row, not two; it still begins a round sooner. With the tuned rows, the old wrap killed 3.5 a won fight on Soldier (13% won) and 5 on Bridgeburner (6% won).
+3. **Ch7's `b4_c7_breakout` on the forward road** (`b4_saw` close, src/077_b4_ch7.js): the extra `b4_c7_fleer` is dropped and "nearer" is one row, not two; it still begins a round sooner. With the tuned rows, the old wrap killed 3.5 a won fight on Soldier (13% won) and 5 on Bridgeburner (6% won).
 
 **Final numbers** (16 runs a fight a difficulty, the method below; "lost" is over won fights):
 
@@ -68,7 +68,7 @@ David: the measured book "sounds too easy overall, death should still be a possi
 
 **Where it is off target, honestly.** Soldier wins sit in band (85–98% a chapter; single fights 69–100%), but health lost is 20–25% from Ch5 on, under the 30–50% asked: the late gear (see "How much the gear does") flattens it, and pushing it up would cost more Soldier wins first. Ch3 and Ch6 are easy on Bridgeburner (91% and 83%); Ch5's rearguard (31%) and Ch4's picket (50%) are hard outliers. The mortal fight's deaths are inverted from what David asked: none on the normal road, too many on the forward road (Bridgeburner 1.9 a won fight against ≤ 0.8 asked). These were left at the time budget; next levers, untested: Ch3 health ×1.75 → ×1.85 and Ch6 ×1.47 → ×1.55; one fewer foe in the rearguard; on the forward road, drop "a round sooner" for the wave too (keep the nearer row); for Soldier deaths on the normal road, a Ch7-only Soldier `s` damage +3.
 
-**Follow-up, 2026-10-21 afternoon (Claude's call, under David's targets).** Remeasured at 20 runs: the "no deaths on the normal road" above did not hold up. With the tuned rows the breakout killed on both roads alike (Soldier: a death in 45–50% of runs; Bridgeburner: 1.7–1.9 dead a won fight), so the road was never the cause. Changes in src/77_b4_ch7.js: the centre `b4_c7_fleer` (3,1) is dropped from the fight on both roads; on the forward road the wave no longer comes a round early and only the two flank fleers start a row nearer. Result (20 runs a cell):
+**Follow-up, 2026-10-21 afternoon (Claude's call, under David's targets).** Remeasured at 20 runs: the "no deaths on the normal road" above did not hold up. With the tuned rows the breakout killed on both roads alike (Soldier: a death in 45–50% of runs; Bridgeburner: 1.7–1.9 dead a won fight), so the road was never the cause. Changes in src/077_b4_ch7.js: the centre `b4_c7_fleer` (3,1) is dropped from the fight on both roads; on the forward road the wave no longer comes a round early and only the two flank fleers start a row nearer. Result (20 runs a cell):
 
 | road | Soldier won | Soldier runs with a death | Soldier dead a won fight | Bridgeburner won | Bridgeburner dead a won fight |
 |---|---|---|---|---|---|
@@ -210,7 +210,7 @@ Not measured: the chapters' optional helpers (the Seti archer, the picket's horn
 
 After the squad-variety work (the muster pick, Mirrel, Yorin, Rasp; Hessa's prayers, Tallow's sling and Twins) and David's rule that a recruit walks on top of the five (cap six), the smart bot (now using every new ability) won, at 12 runs a fight: the tuned five-strong start (sgt, Haddat, Tangle, Marrow, Tallow; Orvas from Ch3) 94% Soldier / 85% Bridgeburner; a six-strong transfer with a healer (Haddat, Ramin, Tallow, Hessa, Mirrel) 99% / 97%. Five-strong transfers without the sixth had won 74–78% / 57–65%.
 
-Tried (8 runs a fight, three line-ups, both difficulties): every foe ×1.25 health +2 damage (start 56%/33%, too hard); ×1.12 +1 (start 74%/67%, six 92–98%/84–93%); then **only against a squad of six: ×1.15 health, +1 damage** (`B4SIX`, src/70_book4.js). David chose the last, Oct 26, 7:46 PM PDT:
+Tried (8 runs a fight, three line-ups, both difficulties): every foe ×1.25 health +2 damage (start 56%/33%, too hard); ×1.12 +1 (start 74%/67%, six 92–98%/84–93%); then **only against a squad of six: ×1.15 health, +1 damage** (`B4SIX`, src/070_book4.js). David chose the last, Oct 26, 7:46 PM PDT:
 
 | Line-up | Soldier | Bridgeburner |
 |---|---|---|

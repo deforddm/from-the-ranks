@@ -1,4 +1,4 @@
-// Book Four, Chapter 5 (The Wall, src/75_b4_ch5.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
+// Book Four, Chapter 5 (The Wall, src/075_b4_ch5.js): the chapter's halts, both keys, every fight's start and a forced win (both grounds
 // of each), the trick, the veil and the sea-glass, the fire and the swap; from a fresh start at level 12, and from a Book Two transfer
 // with Haddat dead and Sathi alive, so the seep's fallback finders (Orvas, a Seti scout, Darrut) are each tried.
 // Usage: node tools/b4ch5_test.mjs   (build first; exit 1 on a failure)

@@ -14,7 +14,7 @@ What each chapter set up, for the books after it. Later books read this doc, not
 - **The bones.** From Ch1 every soldier wears a finger bone on a thong at the throat, the same way, by the Adjunct's order. Never named ("there is no name for it yet", finale). **The standard**: a thin figure holding up a bone before a sandstorm, Fist Gamet's, raised on the Aren Way (Ch2), seen far off.
 - **Book Two's dead.** One quiet line per chapter (`b4NBarrow()` from `b4Fallen()[0]`; fresh start: Sathi, and Hackle not seen again).
 
-## Chapter 1 — The Muster (`src/71_b4_ch1.js`)
+## Chapter 1 — The Muster (`src/071_b4_ch1.js`)
 
 Aren, two days before the march: the review from the 9th's line (the flash in the 8th, the boy with the bone far off), Hollet's errand in the harbour streets (relic stall, Red Blades' drink sweep, the Crow ships, durhang runners at the barracks gate), the first night (barracks yard, cemetery over the wall), the order at noon, the second night, dawn on the Aren Way.
 
@@ -35,7 +35,7 @@ Aren, two days before the march: the review from the 9th's line (the flash in th
 
 **Fights:** `b4_c1_runners` 130 (company), `b4_c1_dig` 160+80, `b4_c1_watch` 160+80 (`grave`, company) or `b4_c1_brawl` 160+80 (`chain`). Level 8 → 9.
 
-## Chapter 2 — Coltaine's Fall (`src/72_b4_ch2.js`)
+## Chapter 2 — Coltaine's Fall (`src/072_b4_ch2.js`)
 
 The first day out on the Aren Way: the empty trees (Pormqual's army was crucified on them after the Chain was inside Aren; the squad watched it from the wall, and walks under them now for the first time; braids, painted soldiers; the Adjunct forbids cutting), the standard raised far up the column, the camp at dusk barely past the hill with Aren's walls still in sight ("the shortest day's march in the history of the Empire"), robbers stripping the hill, the night (key), the news by morning.
 
@@ -54,7 +54,7 @@ The first day out on the Aren Way: the empty trees (Pormqual's army was crucifie
 
 **Fights:** `b4_c2_robbers` 170+85, then `b4_c2_hill` 200+100 (`fall`) or `b4_c2_probe` 200+100 (`march`). Level 10.
 
-## Chapter 3 — The Burned Tears (`src/73_b4_ch3.js`)
+## Chapter 3 — The Burned Tears (`src/073_b4_ch3.js`)
 
 The Vathar Hills: three thousand riders on the ridges; the raiders driven onto the 9th's flank picket by Khundryl who then show themselves; Gall kneels to Temul (heard), the broken sword carried past (seen); the feast; Vathar Crossing; the blast; the butte over Ubaryd.
 
@@ -74,7 +74,7 @@ The Vathar Hills: three thousand riders on the ridges; the raiders driven onto t
 
 **Fights:** `b4_c3_raiders` 160+80 (company; Burned Tear allies in stage 2), `b4_c3_brawl` 140, key fight 160+80. Level 11.
 
-## Chapter 4 — Leoman's Raids (`src/74_b4_ch4.js`)
+## Chapter 4 — Leoman's Raids (`src/074_b4_ch4.js`)
 
 North of the Vathar: the boy with the bone walking in the hottest sun (Marrow: "Five, maybe. Six."; Hollet sends his straw hat "for the boy, from the 9th"); the oil raid on the ring of wagons (two hundred riders, lamps on cords, a dozen wagons, half the column's horse drawn off); days of raids; the Seti ambushed in a gorge (more than three hundred dead, the wounded left for the Malazans; the Adjunct's "Wounded Malazans are better than dead ones", once, through Hollet via an officer of the 10th); the wounded camp inside the 9th's wagons; the barrow night; the morning.
 
@@ -93,7 +93,7 @@ North of the Vathar: the boy with the bone walking in the hottest sun (Marrow: "
 
 **Fights:** `b4_c4_wagons` 200+100 (company), `b4_c4_lancers_brawl` 140 (avoidable), key fight 160+100. Level 12.
 
-## Chapter 5 — The Wall (`src/75_b4_ch5.js`)
+## Chapter 5 — The Wall (`src/075_b4_ch5.js`)
 
 Dust from here (`B4DUST` 5:1). The camp a mile short of the Whirlwind Wall (new, raised with the rising: nobody's father saw it; Raraku under it is old, and Haddat's mother's people walked in over open sand to sell water); the reshuffle across the hollow (Keneb reads medium squads onto the marines' rolls, "Greymane's way", a young officer of good family = Ranal unnamed; "not the 9th"); the marine mage "playing with dolls" (queue talk); Neffarias Bredd (rumour); **an officer walks to the Wall alone and back** (never named: Gamet); the picket at the Wall's edge; the Wall draws back a mile off before "a grey shape on a grey horse" (no sword); Temul's scouts with Khundryl go in; the old sea floor; Blistig's bandage ("Fist Gamet's taken the 8th back... broke his nose for him"); seven days of water, foul wells (Fist Gamet suspects Dom's people); the canal city at dusk.
 
@@ -112,7 +112,7 @@ Dust from here (`B4DUST` 5:1). The camp a mile short of the Whirlwind Wall (new,
 
 **Fights:** `b4_c5_wallriders` 160+80 (company, Dust 2), key fight 160+80, `b4_c5_deserters` 150+75. Level 13.
 
-## Chapter 6 — Pan'arak (`src/76_b4_ch6.js`)
+## Chapter 6 — Pan'arak (`src/076_b4_ch6.js`)
 
 Dust 2. The lines face the Dogslayers' trenches on three ramps across a basin. One unnamed legion, a third of the army, goes round to block the way out; **the Third is lent from the 9th to the flank pickets at the end of its line**, where it runs into rock ("Not the 9th... which legion, the orders don't say"). On `b4_blistigNoticed` the Fist asked for them by name; else Radde volunteered. The horse held back. Nil and Nether walk the lines at dusk, barefoot, holding hands. The spur (a Dogslayer post); dusk skirmishers; the eve; the key at midnight. Gamet is not mentioned.
 
@@ -133,7 +133,7 @@ Dust 2. The lines face the Dogslayers' trenches on three ramps across a basin. O
 
 **Fights:** `b4_c6_nest` 140+70, `b4_c6_dusk` 160+80 (company), key fight 170+85. Level 14.
 
-## Chapter 7 — The Convergence, and the end of Book Four (`src/77_b4_ch7.js`)
+## Chapter 7 — The Convergence, and the end of Book Four (`src/077_b4_ch7.js`)
 
 Dust 3 until the duel, then `S.dust = 1`. The flank picket of the block at dusk; outriders in the scrub; the night (all of it out of sight): a sound like a battle on the far side of a hill (Nerve −1), the dark over the oasis thinning, butterflies over the trenches, a Wickan standard on the shoulder of the nearest ramp with nobody holding it, a sound a league off; then grey light and dust and riders with no sound of hooves — Wickan braids, crow feathers, Khundryl tears, the old Seventh's helms, the Chain's cloaks, the army that hung in the trees, older riders out of the sand — going up into the trenches; the fires go out one by one. Never the deaths.
 
@@ -169,7 +169,7 @@ Labels: "The Third", "The fallen", "Gone back to their people", "The roll", no p
 
 Readers (`visReader()`): **Marrow** (ivory temple deck from Nap, "child") → **Tallow** (his grandmother's deck in oilcloth; "she read for fishermen; they mostly came back") → **the old soldier of the 9th** (rum cup). Reading places: the barracks yard (1), a fire below the Fall (2), the Khundryl feast (3), the wounded Seti's fire (4), a fire short of the Wall (5), the picket before Pan'arak (6), the coral island (7). `B4DECK[n]` from each chapter file; `b4DeckChoice(n)` on the first halt (Ch7: on the island) and at the fire. Lean cards: soldier, King, **Knight of Chains**, Queen, Assassin (the Rope, after Bottle's doll), **Leper**, Herald. Any Chains card drawn sets `b4_chains`; both are faceless and "not in her deck". Ch7 rewrites the Herald's words for the island only. Flags `b4_c<n>_drawn`, `_reader`, `_noCard`.
 
-## The visions (`src/78_b4_visions.js`)
+## The visions (`src/078_b4_visions.js`)
 
 One per chapter, `book:'hoc'`, any card but the blank: `b4v1` Trull Sengar and Onrack on the Nascent's wall ("I was once among enemies"; why Shorned never said); `b4v2` Lostara Yil in the Imperial Warren (the crucified dragon, otataral kills Pearl's warren, Olar Shayn's head); `b4v3` Karsa on the Jhag Odhan, the stallion Havok (dun, white mane); `b4v4` Leoman outside the Malazan camp, the oil raid "as he meant" (Corabb unnamed); `b4v5` Heboric's jade giants dream, Treach's stripes (the fallen god unnamed); `b4v6` Sha'ik in her tent puts on her predecessor's armour; "her sister" once, as a face in a doorway — never Felisin, never tied to the army; `b4v7` Gamet among the dead, the Burned Tears' blue-eyed woman, Grub's "Up the main ramp, Fist", butterflies, a sound a league off. Words-only flags `b4vN_*`. Ends on the reader (`b4vEnd`).
 

@@ -1,4 +1,4 @@
-Thu Oct 29, 2026, 11:05 AM PDT. Book Five, Chapter 7, "The Seventh Closure", and the end of Book Five (`src/87_b5_ch7.js`, art `src/87b_b5_ch7_art.js`), against v8.0.0 on `book5` (not shipped).
+Thu Oct 29, 2026, 11:05 AM PDT. Book Five, Chapter 7, "The Seventh Closure", and the end of Book Five (`src/087_b5_ch7.js`, art `src/087b_b5_ch7_art.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 7 notes: The Seventh Closure
 

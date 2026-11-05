@@ -1,4 +1,4 @@
-// Book Four, Chapter 4 (Leoman's Raids, src/74_b4_ch4.js): the chapter's halts, both keys, every fight's start and a forced win (both
+// Book Four, Chapter 4 (Leoman's Raids, src/074_b4_ch4.js): the chapter's halts, both keys, every fight's start and a forced win (both
 // grounds of each), the trick, the unbroken lamp, the salve, the fire and the swap; from a fresh start at level 11, and from a Book Two
 // transfer with Sathi alive and a recruit walking (Ramin, with Orvas near).
 // Usage: node tools/b4ch4_test.mjs   (build first; exit 1 on a failure)

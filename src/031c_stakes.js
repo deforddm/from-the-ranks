@@ -81,7 +81,7 @@ function foeRiders(a, t, dmg){
   if (hasSk(a, 'root') && t.hp > 0) { t.prone = true; float(t, 'held', '#9a86e0'); }
   if (hasSk(a, 'drain') && a.hp > 0 && dmg > 0) { heal(a, dmg); blog(`${a.name} drinks something out of ${t.name} and is whole again.`); }
   if (hasSk(a, 'shove') && t.hp > 0) { const dx = Math.sign(t.x - a.x), dy = Math.sign(t.y - a.y), nx = t.x + dx, ny = t.y + dy;
-    if ((dx || dy) && pitAt(nx, ny)) { blog(`${a.name} shoves ${t.name} back toward the edge.`); overEdge(t, {x:nx, y:ny}, 'shoved'); } // the pit, the drop, the lake (31_battle.js)
+    if ((dx || dy) && pitAt(nx, ny)) { blog(`${a.name} shoves ${t.name} back toward the edge.`); overEdge(t, {x:nx, y:ny}, 'shoved'); } // the pit, the drop, the lake (031_battle.js)
     else if ((dx || dy) && free(nx, ny, t)) { t.x = nx; t.y = ny; blog(`${a.name} shoves ${t.name} back a pace.`); float(t, 'shoved', '#cfc8b8'); enterFire(t); } }
 }
 /* the squad's own state at the start of its turn: bleeding, slowed, held down. Returns false if the turn is lost to it. */
@@ -184,7 +184,7 @@ function chapterAgain(){
 
 /* ---- v6.9 the gods' boons: every answer leaves a boon on the fight, by god, so the fight you rise into is not the one you lost.
    They stack when more than one god answers (at most two on Story, the newest kept), and last the fight and its second area.
-   S.boons = {fight, gods:[keys], spared:{id}} is set on the retry (31_battle.js lose) and cleared when the fight is won. ---- */
+   S.boons = {fight, gods:[keys], spared:{id}} is set on the retry (031_battle.js lose) and cleared when the fight is won. ---- */
 const BOONS = {
   'Hood':               {key:'hood',   name:'The gate stays shut',   txt:'The first time each squadmate would go down, they stay up at 1 health.'},
   'Oponn':              {key:'oponn',  name:'The Lady pulls',        txt:'+2 to hit, and each squadmate rolls twice and keeps the better on their first attack each round.'},

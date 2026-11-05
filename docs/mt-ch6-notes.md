@@ -1,4 +1,4 @@
-Thu Oct 29, 2026, 3:49 AM PDT. Book Five, Chapter 6, "Brans Keep" (`src/86_b5_ch6.js`, art `src/86b_b5_ch6_art.js`, its game in `src/89_b5_games.js`), against v8.0.0 on `book5` (not shipped).
+Thu Oct 29, 2026, 3:49 AM PDT. Book Five, Chapter 6, "Brans Keep" (`src/086_b5_ch6.js`, art `src/086b_b5_ch6_art.js`, its game in `src/089_b5_games.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 6 notes: Brans Keep
 

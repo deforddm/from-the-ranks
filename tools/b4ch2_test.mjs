@@ -1,4 +1,4 @@
-// Book Four, Chapter 2 (Coltaine's Fall, src/72_b4_ch2.js): the chapter's halts, both keys, every fight's start and a forced win (both
+// Book Four, Chapter 2 (Coltaine's Fall, src/072_b4_ch2.js): the chapter's halts, both keys, every fight's start and a forced win (both
 // grounds of each), the trick, the fire and the swap; from a fresh start, and from a Book Two transfer with Sathi alive and Ramin walking.
 // Usage: node tools/b4ch2_test.mjs   (build first; exit 1 on a failure)
 import { server, browser as launch, openGame } from './page.mjs';

@@ -62,6 +62,6 @@ function camStep(t){
   if (c.snap || REDUCE()) { c.x = tx; c.y = ty; c.snap = false; return; }
   const k = 1 - Math.pow(.88, dt / 16.7); c.x = lerp(c.x, tx, k); c.y = lerp(c.y, ty, k); if (Math.abs(c.x - tx) < .3) c.x = tx; if (Math.abs(c.y - ty) < .3) c.y = ty;
 }
-window.addEventListener('resize', () => { if (view === 'explore') { fitCanvas(ACOLS(),AROWS()); if (typeof mapBtn === 'function') mapBtn(); } }); // the battle has its own resize handling in 31_battle.js
+window.addEventListener('resize', () => { if (view === 'explore') { fitCanvas(ACOLS(),AROWS()); if (typeof mapBtn === 'function') mapBtn(); } }); // the battle has its own resize handling in 031_battle.js
 function shakeMap(){ if (!SET.shake || REDUCE()) return; const w = $('.cvwrap'); if (!w) return; w.classList.remove('shake'); void w.offsetWidth; w.classList.add('shake'); }
 function redFlash(){ const r = $('#red'); r.classList.add('hurt'); setTimeout(() => r.classList.remove('hurt'), 250); }

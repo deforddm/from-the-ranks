@@ -12,7 +12,7 @@ Tue Oct 6, 2026, 8:04 PM PDT. Read-only look-over of commit d4ec571 (game v3.15.
 
 ### 1.1 The Genabackis map is the wrong way round (high)
 
-The 3.15.0 redraw put Darujhistan south-south-WEST of Pale with Lake Azur to Pale's south-west (`src/19c_artwork.js:85`, `docs/art/MapGenabackis.dc.html`; its label says "from Pale south-west to Darujhistan"). The official map in the Ashes folder (`Map_Genabackis_from_GotM.webp`) has the city south and a little EAST of Pale, Lake Azur due south of Pale, and the city on the lake's south-east corner. The game's own text already agrees with the official map ("three days south-east of Pale", 41:34; "South-east across the plain, over the Gadrobi Hills", 40:889). The "south-west" lines in Ch2 are spoken from out on the plain, where the city really is south-west.
+The 3.15.0 redraw put Darujhistan south-south-WEST of Pale with Lake Azur to Pale's south-west (`src/019c_artwork.js:85`, `docs/art/MapGenabackis.dc.html`; its label says "from Pale south-west to Darujhistan"). The official map in the Ashes folder (`Map_Genabackis_from_GotM.webp`) has the city south and a little EAST of Pale, Lake Azur due south of Pale, and the city on the lake's south-east corner. The game's own text already agrees with the official map ("three days south-east of Pale", 41:34; "South-east across the plain, over the Gadrobi Hills", 40:889). The "south-west" lines in Ch2 are spoken from out on the plain, where the city really is south-west.
 
 Target geography (official map plus the existing text):
 - Pale at the top, Tahlyn Mountains to its east, Lake Azur due south of it, Darujhistan on the lake's south-east corner.
@@ -26,12 +26,12 @@ Also on the maps:
 - **Darujhistan** (`19c:86`, `MapDaru.dc.html`), against `Map_Darujhistan.webp`: the wall round the Estate District is the Third Tier Wall, not "the second tier wall"; Worrytown sits directly outside the east gate along the road (the game's own 44:31 says so), not to the south-east; along the east wall the order north to south is Majesty Hill, Despot's Barbican, K'rul's Hill, High Gallows Hill; the city fill covers Daru Bay so the bay reads as dry land; pin 4 (the Blue Hand) sits in the Marsh District but 42:1068 says Daru District.
 - **Pale** (`19c:87`): the tunnel mouth is drawn south-west outside the walls; the text says the north wall (39:76, 39:138, 14_data:138).
 - **Gadrobi** (`19c:88`): "a brown hill · VII" is on the barrow's field map three days out, but Ch7 has the city "small and blue behind" (46:262); the blue arc bottom-left is unlabelled.
-- **Old route map** (`src/38_deeds.js:18-27`, journal and Deeds): puts Lake Azur south of the city; it is north-west. The journal currently shows two maps that disagree.
+- **Old route map** (`src/038_deeds.js:18-27`, journal and Deeds): puts Lake Azur south of the city; it is north-west. The journal currently shows two maps that disagree.
 - 46:1362 "The quay runs east to the Gadrobi District" disagrees with the game's own city map (medium).
 - 44:782 says the city road runs "north-west" from the barrow; everything else says west.
 - `docs/ch2-brief.md:28` still says "far south-east".
 
-### 1.2 The Deck visions (`src/36b_visions.js`) have never had a canon pass
+### 1.2 The Deck visions (`src/036b_visions.js`) have never had a canon pass
 
 | # | Where | Game | Novel | Conf. |
 |---|---|---|---|---|
@@ -76,12 +76,12 @@ House style: the visions spell it "Fête" (3 times); the rest of the game says "
 
 ### 1.5 Data and terms
 
-- `14_data.js:35`, Tuft's bio: "the night the Claw came through the Quarter killing every mage". The Mouse Quarter purge was the new mage cadre enforcing the ban on sorcery. "The Claw" → "the cadre mages" (high).
+- `014_data.js:35`, Tuft's bio: "the night the Claw came through the Quarter killing every mage". The Mouse Quarter purge was the new mage cadre enforcing the ban on sorcery. "The Claw" → "the cadre mages" (high).
 - 43:1002, Kalam on the Andii: "I've watched them for a month". The Bridgeburners arrived about a week before the Fourth (medium).
 - Moon's Spawn: 43:1226 and 45:2516 put the dawn "behind it" while it sits west of the city; 46:129 says "the sun came up where it had been". Pick one sky.
 - Tattersail's "tent" on the "cadre row" (40:391, :764) against the novel's rooms in Pale, which vision 1 follows (36b:54). Leave the chapter; make the vision not contradict it.
 - Deck: "Chains" and "the Great Raven" are not Gardens of the Moon cards, and the novel's card is "Hound", not "Hounds of Shadow". Invented on purpose; record as deliberate.
-- `35_pack_journal_save.js:79` glossary: "Onearm's Host: The Second Army" (it is three armies; low). `31c_stakes.js:148` Soliel's title (unverified).
+- `035_pack_journal_save.js:79` glossary: "Onearm's Host: The Second Army" (it is three armies; low). `031c_stakes.js:148` Soliel's title (unverified).
 - "otataral" is lower-case 35 times and capitalised 20. README:63 still says "squad of nine".
 
 ### 1.6 Checked and clean
@@ -115,7 +115,7 @@ Chapters 39–44 have not changed since the bible was written, so every item it 
 
 ### 2.2 New since the bible
 
-- Item viewer, `19d_art.js:45`: "Chub's is called Maud, and Kettle keeps her out of ordinary fights" still shows after Maud is thrown at the barrow or handed back.
+- Item viewer, `019d_art.js:45`: "Chub's is called Maud, and Kettle keeps her out of ordinary fights" still shows after Maud is thrown at the barrow or handed back.
 - The Rations ledger paper (`19c:133`, shown to everyone from Ch7 by `19d:90`) is one fixed page listing branch-only entries ("One day lost, west", "One vault. Forty and twelve. Not fired.", "In line before they stood"), and "Ten silver. Alley." has no source line.
 - Journal maps unlock early and show later chapters: Genabackis (from Ch2) shows seals V and VII and "Moon's Spawn, until it moved"; Darujhistan (from Ch3) lists the Fete and "the last accounting" (`19d:84-85`). The "Tool" face unlocks at Ch2, three chapters before he is named (`19c:7`).
 - Claw file paper (`19c:134`) says "all five" and lists four.
@@ -148,7 +148,7 @@ Seen in renders, most noticeable first.
 12. The quorls in the Outlaws and Stood Down pictures read as four-point stars; the painted Hounds read as crows.
 13. Classic Hounds card (`20_deck…js:52`) draws two hounds; the text says "Seven shapes".
 
-Leftovers from the removed Artwork page: `tools/art_build.py:27-47, 111-113` still builds whole boards and discards them; 21 pictures (about 20 KB) are generated and never shown (`squad/*`, `motifs/*`, three insignia, two papers); `munitions/acid` and the no-save branch of `artReach()` (`19d:20, :47, :54`) are unreachable; comments at `90_resume_boot.js:57, :65` still mention the board viewer.
+Leftovers from the removed Artwork page: `tools/art_build.py:27-47, 111-113` still builds whole boards and discards them; 21 pictures (about 20 KB) are generated and never shown (`squad/*`, `motifs/*`, three insignia, two papers); `munitions/acid` and the no-save branch of `artReach()` (`19d:20, :47, :54`) are unreachable; comments at `990_resume_boot.js:57, :65` still mention the board viewer.
 
 Clean: all 27 gear items have a picture and every picture has an item; chapter titles, patrons, sigils, munition texts and face quotes match the game; the Classic switch falls back everywhere.
 
@@ -157,8 +157,8 @@ Clean: all 27 gear items have a picture and every picture has an item; chapter t
 ## 4. Screens and upkeep
 
 **Likely real bugs**
-- **What's new shows only the newest three notes** (`35_pack_journal_save.js:199`). Anyone updating from 3.14 or earlier never sees the painted-set note or the visions note, and is told "the Art tab is gone" about a tab they never saw. The 3.15.0 note (:120) still advertises the Art tab.
-- **Reduced motion leaves the vision title card up.** `.reduce *{animation:none!important}` (`01_style.css:199`) kills the fade that hides `.vtitle` (:447-452), so the dark card should sit over the picture for the whole vision. Read in the CSS, not seen on screen: reproduce first.
+- **What's new shows only the newest three notes** (`035_pack_journal_save.js:199`). Anyone updating from 3.14 or earlier never sees the painted-set note or the visions note, and is told "the Art tab is gone" about a tab they never saw. The 3.15.0 note (:120) still advertises the Art tab.
+- **Reduced motion leaves the vision title card up.** `.reduce *{animation:none!important}` (`001_style.css:199`) kills the fade that hides `.vtitle` (:447-452), so the dark card should sit over the picture for the whole vision. Read in the CSS, not seen on screen: reproduce first.
 - `openNotes` (35:200) and `openPicks` (37:216) reuse the modal without resetting its scroll, so level-up picks can open part-way down.
 - Vision steps without a label get a continue button reading only "—" (36b:481).
 
@@ -179,7 +179,7 @@ Clean: all 27 gear items have a picture and every picture has an item; chapter t
 - A phone held sideways gets the portrait layout in about 390px of height.
 
 **Prose mechanics**
-- Apostrophes stay straight in all prose beside curly double quotes (`16_skill_checks.js:101` only curls doubles).
+- Apostrophes stay straight in all prose beside curly double quotes (`016_skill_checks.js:101` only curls doubles).
 - Interrupted speech uses a closed dash in Ch1–4 and Ch6 and a spaced one in Ch5 and Ch7.
 - "afterward" twice against 23 "afterwards"; "backward" once against 9; one "..." at 36b:461.
 
@@ -188,7 +188,7 @@ Clean: all 27 gear items have a picture and every picture has an item; chapter t
 - The manifest locks an installed copy to portrait and has no `id`. The three store screenshots predate the painted set. No social-share tags.
 
 **Dead code**
-- `herald`, `crown` and `chains` are defined in `14_data.js:103-108` and again in their chapters, which win. Six dead `QUESTS` entries (37:198-212). Unused: `SKN`, `showEnd`, `loadSave`, `.hpbar`, the `S.scene === 'end'` branch, the hot-reload hooks at `90_resume_boot.js:53-54`. `32_ending.js` is one helper.
+- `herald`, `crown` and `chains` are defined in `014_data.js:103-108` and again in their chapters, which win. Six dead `QUESTS` entries (37:198-212). Unused: `SKN`, `showEnd`, `loadSave`, `.hpbar`, the `S.scene === 'end'` branch, the hot-reload hooks at `990_resume_boot.js:53-54`. `32_ending.js` is one helper.
 
 ---
 

@@ -175,13 +175,13 @@ const BOOKS = {
     blurb:'Genabackis, beside Gardens of the Moon. The Fourth Squad under Onearm\'s Host, from the Pale to the Fete in Darujhistan.'},
   dg:{id:'dg', n:2, word:'Two', title:'Deadhouse Gates', name:'The Chain of Dogs', h1:['The Chain', 'of Dogs'], squad:'Third Squad', unit:'the squad', tag:'Hissar burns. Coltaine\'s Seventh turns for Aren with forty thousand refugees at its back. Five soldiers walk the Chain.', titleArt:'title/dg', titleScene:'chain', patch:'insignia/dg',
     blurb:'Seven Cities, a few months after the Fete and an ocean west of Darujhistan, beside Deadhouse Gates. A new squad of the Seventh on the Chain of Dogs, from the fall of Hissar toward Aren. Plays on its own.'},
-  /* v6.0: Book Three. The Fourth again, on the road south with Onearm's Host and Brood. Its blurb and title art are filled in by 60_book3.js */
+  /* v6.0: Book Three. The Fourth again, on the road south with Onearm's Host and Brood. Its blurb and title art are filled in by 060_book3.js */
   moi:{id:'moi', n:3, word:'Three', title:'Memories of Ice', name:'The Fair Exchange', h1:['The Fair', 'Exchange'], squad:'Fourth Squad', unit:'the Fourth', tag:'Outlawed, the Empress says, the Host marches beside the enemy it fought for ten years. Five marines go south with it, into a country that has eaten itself.', titleArt:'title/moi', titleScene:'moi', patch:'insignia/patch',
     blurb:'Genabackis, the spring after the Fete, beside Memories of Ice.'},
-  /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 70_book4.js */
+  /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 070_book4.js */
   hoc:{id:'hoc', n:4, word:'Four', title:'House of Chains', name:'Unblooded', h1:['', 'Unblooded'], squad:'Third Squad', unit:'the squad', tag:'The Adjunct\'s army has never fought. Five who walked the Chain of Dogs are put in its ranks, and it marches north for Raraku.', titleArt:'title/hoc', titleScene:'hoc', patch:'insignia/hoc',
     blurb:'Seven Cities, the year after the Chain, beside House of Chains.'},
-  /* v8.0: Book Five. A new Letherii squad of the Whitefinder Battalion, from Letheras north to High Fort and back. Its blurb, title art and 'coming' are filled in by 80_book5.js */
+  /* v8.0: Book Five. A new Letherii squad of the Whitefinder Battalion, from Letheras north to High Fort and back. Its blurb, title art and 'coming' are filled in by 080_book5.js */
   mt:{id:'mt', n:5, word:'Five', title:'Midnight Tides', name:'Indebted', h1:['', 'Indebted'], squad:'Sixth Company', unit:'the squad', tag:'Lether counts everything. The Edur come south, and five soldiers who owe more than they will ever earn are sent north to meet them.', titleArt:'title/mt', titleScene:'mt', patch:'insignia/mt',
     blurb:'Lether, beside Midnight Tides.'},
 };

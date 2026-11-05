@@ -1,4 +1,4 @@
-// v8.1 items (src/14b_items.js): one stat line for every piece, everywhere; two trinket slots; smarter Allocate; the Pack's kit.
+// v8.1 items (src/014b_items.js): one stat line for every piece, everywhere; two trinket slots; smarter Allocate; the Pack's kit.
 // Every item in every book formats with no "undefined" or NaN and every weapon says its damage; the same piece reads the same on the
 // sheet, the item view, the Pack and a shop; two trinkets both count in a fight; an old save's one trinket stays in the first place;
 // Allocate leaves nobody unarmed while a weapon they can use is in the pack (Book Five's Pessa and the spear); the Pack lists the kit.

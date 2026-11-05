@@ -45,7 +45,7 @@ David asked for "the entire game some polishing". Treat it like a senior studio 
   - `talk(id)` renders a node. `fx` runs once per node per save (`S.fxd`).
   - `go` can be a node id, a function (it closes the sheet and runs it), or undefined (it just closes the sheet, which is fine on an explore map).
   - `*text*` becomes italic, a blank line starts a new paragraph, and `{sgt}` becomes the sergeant's name.
-- **Chapters:** `src/40_chapter1.js` … `src/46_chapter7.js`. Each is a module `{title, number, intro, areas|area, battles, foes, gear, card, dlg, scenes, quests, end, tease, extras, endCap, finale…}` registered at boot by `registerChapter`.
+- **Chapters:** `src/040_chapter1.js` … `src/046_chapter7.js`. Each is a module `{title, number, intro, areas|area, battles, foes, gear, card, dlg, scenes, quests, end, tease, extras, endCap, finale…}` registered at boot by `registerChapter`.
 - **Areas:** 16×12 char maps. `walk` holds the walkable chars, `triggers` maps a tile char to a node, and `npcs` entries look like `{id, name, kind, x, y, node(), show(), fresh(), still}`.
 - **Battles:** 8×10 maps; party slots, foes, `waves`, `allies`, `objective:{type:'survive', rounds}`, `mortal`, `nomagic`.
 - **Art:**
@@ -67,12 +67,12 @@ David asked for "the entire game some polishing". Treat it like a senior studio 
 
 | Worker | Owns |
 |---|---|
-| combat | `src/31_battle.js`, `src/27_pathfinding.js`, `src/26_display_interpolation.js` |
-| ui | `src/00_head.html`, `src/01_style.css`, `src/02_body.html`, `src/11_utilities.js`, `src/12_settings.js`, `src/15_state.js`, `src/16_skill_checks.js`, `src/24_canvas_setup.js`, `src/28_hud.js`, `src/29_title_intro.js`, `src/30_explore.js`, `src/32_ending.js`, `src/33_character_sheets_one_at_a_time.js`, `src/34_settings.js`, `src/35_pack_journal_save.js`, `src/37_chapters.js`, `src/90_resume_boot.js`, `src/99_boot2.js`, `sw.js`, `manifest.webmanifest` |
-| art | `src/17_drawing_helpers.js`, `src/18_figure_sprites.js`, `src/19_portraits.js`, `src/20_deck_of_dragons_card_art.js`, `src/21_the_reading_full_screen_card_sequence.js`, `src/22_title_backdrop_moon_s_spawn_over_the_pale.js`, `src/23_tunnel_scene_backdrop_talk_nodes_away_from_the_map.js`, `src/25_tiles.js` |
-| audio | `src/13_audio_engine_all_procedural.js` |
-| prologue | `src/39_prologue.js`, `src/14_data.js` (squad data, the prologue's foes, cards, picks, the Pale map) |
-| ch1 … ch7 | `src/40_chapter1.js` … `src/46_chapter7.js`, one each |
+| combat | `src/031_battle.js`, `src/027_pathfinding.js`, `src/026_display_interpolation.js` |
+| ui | `src/000_head.html`, `src/001_style.css`, `src/002_body.html`, `src/011_utilities.js`, `src/012_settings.js`, `src/015_state.js`, `src/016_skill_checks.js`, `src/024_canvas_setup.js`, `src/028_hud.js`, `src/029_title_intro.js`, `src/030_explore.js`, `src/32_ending.js`, `src/033_character_sheets_one_at_a_time.js`, `src/034_settings.js`, `src/035_pack_journal_save.js`, `src/037_chapters.js`, `src/990_resume_boot.js`, `src/999_boot2.js`, `sw.js`, `manifest.webmanifest` |
+| art | `src/017_drawing_helpers.js`, `src/018_figure_sprites.js`, `src/019_portraits.js`, `src/020_deck_of_dragons_card_art.js`, `src/021_the_reading_full_screen_card_sequence.js`, `src/022_title_backdrop_moon_s_spawn_over_the_pale.js`, `src/023_tunnel_scene_backdrop_talk_nodes_away_from_the_map.js`, `src/025_tiles.js` |
+| audio | `src/013_audio_engine_all_procedural.js` |
+| prologue | `src/039_prologue.js`, `src/014_data.js` (squad data, the prologue's foes, cards, picks, the Pale map) |
+| ch1 … ch7 | `src/040_chapter1.js` … `src/046_chapter7.js`, one each |
 
 The integrator (the lead) merges all branches, applies the cross-file patches from the reports, bumps the version and publishes.
 

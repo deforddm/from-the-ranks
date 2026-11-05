@@ -1,4 +1,4 @@
-Wed Oct 28, 2026, PDT. Book Five, Chapter 2, "Trate" (`src/82_b5_ch2.js`, art `src/82b_b5_ch2_art.js`, Harbour Tiles in `src/89_b5_games.js`), against v8.0.0 on `book5` (not shipped).
+Wed Oct 28, 2026, PDT. Book Five, Chapter 2, "Trate" (`src/082_b5_ch2.js`, art `src/082b_b5_ch2_art.js`, Harbour Tiles in `src/089_b5_games.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 2 notes: Trate
 
@@ -123,7 +123,7 @@ The brief gave the writer foes `thug` and `bruiser` kinds; this chapter's artist
 
 ## Deviations from the brief
 
-- **Harbour Tiles is built here, in `src/89_b5_games.js`**, as Chapter 1 built the Wager Board: the session's order asked for the fire's game, its test and its screenshot. It wraps the fire from 89, so the chapter file only keeps the id.
+- **Harbour Tiles is built here, in `src/089_b5_games.js`**, as Chapter 1 built the Wager Board: the session's order asked for the fire's game, its test and its screenshot. It wraps the fire from 89, so the chapter file only keeps the id.
 - `B5READ[2].back` is a small node of its own (`b5_c2_tiles_done`), not the fire, because the first halt (the quay) and the fire (the strand) are on different maps.
 - The quay's `D`, `M`, `H` and `<` and the hulk's `<` are extra trigger letters beyond the brief's ground keys, as Chapter 1 added its own.
 - Writer foes' kinds, above.

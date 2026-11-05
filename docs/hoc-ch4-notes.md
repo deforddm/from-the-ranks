@@ -1,4 +1,4 @@
-Wed Oct 21, 2026, 3:49 AM PDT. Book Four, Chapter 4, "Leoman's Raids" (`src/74_b4_ch4.js`, art `src/74b_b4_ch4_art.js`), against v7.0.0 on `book4` (not shipped).
+Wed Oct 21, 2026, 3:49 AM PDT. Book Four, Chapter 4, "Leoman's Raids" (`src/074_b4_ch4.js`, art `src/074b_b4_ch4_art.js`), against v7.0.0 on `book4` (not shipped).
 
 # Chapter 4 notes: Leoman's Raids
 

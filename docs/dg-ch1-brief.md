@@ -1,16 +1,16 @@
 # Book Two, Chapter 1 — "Hissar Burns" — content brief (v4.0)
 
-You are writing `src/48_b2_ch1.js`: the first chapter of **Book Two: Deadhouse Gates**, a standalone campaign inside *Ashes of the Pale* (a Malazan Book of the Fallen fan RPG for phones). Book One (Gardens of the Moon) is finished and must keep working exactly as it does.
+You are writing `src/048_b2_ch1.js`: the first chapter of **Book Two: Deadhouse Gates**, a standalone campaign inside *Ashes of the Pale* (a Malazan Book of the Fallen fan RPG for phones). Book One (Gardens of the Moon) is finished and must keep working exactly as it does.
 
 Read first, in this order:
 1. `docs/dg-canon.md` — the sourced canon sheet for Deadhouse Gates, with **hard limits** (§8). Break none.
-2. `src/47_book2.js` — Book Two's engine: the new squad (`TPL.sathi`, `tangle`, `haddat`, `marrow`, and the sergeant's Book Two history), Hackle the dog, the Chain (`chain()`, `chainHTML()`, `dgRest()`), `newStateDG()`, the glossary (`GLOSSX.dg`, whose rows unlock on `S.f.b2_duiker`, `b2_bult`, `b2_reloe`).
-3. `src/40_chapter1.js` and `src/41_chapter2.js` — the schema and, above all, **the voice**. Match it: short paragraphs, dry soldier humour, grimdark restraint, no exclamation marks in narration, second person for the sergeant (gender never stated), `{sgt}` for the sergeant's name, italics with `*asterisks*`. Canon characters speak in their own book voices.
-4. `docs/story-bible.md` §0 and "Systems since v3.11" — how checks, tricks, gods, second areas, hold-outs and flags work. `src/16_skill_checks.js` (`talk`, `check`, edges, near/clean/crit tiers), `src/31c_stakes.js` (`battleDef`, `stage2`, waves, objectives), `src/14_data.js` (`registerChapter`, BATTLES shape).
+2. `src/047_book2.js` — Book Two's engine: the new squad (`TPL.sathi`, `tangle`, `haddat`, `marrow`, and the sergeant's Book Two history), Hackle the dog, the Chain (`chain()`, `chainHTML()`, `dgRest()`), `newStateDG()`, the glossary (`GLOSSX.dg`, whose rows unlock on `S.f.b2_duiker`, `b2_bult`, `b2_reloe`).
+3. `src/040_chapter1.js` and `src/041_chapter2.js` — the schema and, above all, **the voice**. Match it: short paragraphs, dry soldier humour, grimdark restraint, no exclamation marks in narration, second person for the sergeant (gender never stated), `{sgt}` for the sergeant's name, italics with `*asterisks*`. Canon characters speak in their own book voices.
+4. `docs/story-bible.md` §0 and "Systems since v3.11" — how checks, tricks, gods, second areas, hold-outs and flags work. `src/016_skill_checks.js` (`talk`, `check`, edges, near/clean/crit tiers), `src/031c_stakes.js` (`battleDef`, `stage2`, waves, objectives), `src/014_data.js` (`registerChapter`, BATTLES shape).
 
 ## How Book Two plugs in
 
-- Export one constant, `B2CH1`, shaped like `CH1`/`CH2` (`title`, `number:'One'`, `intro`, `areas`, `battles`, `foes`, `gear`?, `scenes`, `dlg`, `end`, `tease`, `extras`, `journal`, `endCap`, `endScene`). `src/90_resume_boot.js` already registers it with `registerChapter(1, B2CH1, 'dg')`. Do **not** define `CH1`..`CH7` or touch Book One files.
+- Export one constant, `B2CH1`, shaped like `CH1`/`CH2` (`title`, `number:'One'`, `intro`, `areas`, `battles`, `foes`, `gear`?, `scenes`, `dlg`, `end`, `tease`, `extras`, `journal`, `endCap`, `endScene`). `src/990_resume_boot.js` already registers it with `registerChapter(1, B2CH1, 'dg')`. Do **not** define `CH1`..`CH7` or touch Book One files.
 - **Every id carries the `b2_` prefix**: areas, dialogue nodes, battles, foes, gear, scenes, flags (`S.f.b2_*`). Areas, nodes, fights and foes are global and shared with Book One, so a clash breaks Book One.
 - A new Book Two game runs `newStateDG(name)` then `startChapter(1)`: squad `['sgt','haddat','sathi','tangle','marrow']`, level 1, water 8, column 0, satchel `{sharper:3, burner:2, cusser:2, salve:2, smoker:2}`, 12 silver. There is no prologue and no Deck reading in Book Two's Chapter 1 (no `card`).
 - **The squad** (read their TPL entries; write to them, not past them):
@@ -43,7 +43,7 @@ Feel free to add a small scene or two, a hold-out fight, or a check that changes
 
 **Fights.** Styles: `'hissar'` for the city (set `dark:true` at night), `'odhan'` for the basin by day, `'odhan_night'` for the camp at night. Use `warren:{denul:.85, meanas:.85}` (Marrow's warren is fouled) with a `warrenText` that says so plainly. Difficulty at Book One's pitch for a five-person squad plus a dog. Total experience for the chapter about 500–600 (the squad should end the chapter around level 3). Foes (define them in `foes`, ids `b2_*`) must use these sprite kinds as `kind`: `rebel` (green-cloth townsman with a blade), `rebel_bow` (rebel archer), `tithansi` (Odhan tribesman, lance or spear), `semk` (a painted holy man of the Apocalypse who casts), `b2soldier` (a Malazan regular), `wickan` (a Wickan rider on foot). Use Book One's foe skills (`sk`: bleed, pin, shove, howl, parry, reach…) where they fit.
 
-**Sprite kinds for NPCs** (drawn by the art pass in `src/47b_book2_art.js`; use exactly these): `coltaine`, `bult`, `duiker`, `sormo`, `wickan`, `b2soldier`, `hissari_m`, `hissari_w`, `child`, `noble`, `rebel`, `rebel_bow`, `tithansi`, `semk`, `ressan`, `priest` (the Mael priest), plus the squad's own ids and `hackle`.
+**Sprite kinds for NPCs** (drawn by the art pass in `src/047b_book2_art.js`; use exactly these): `coltaine`, `bult`, `duiker`, `sormo`, `wickan`, `b2soldier`, `hissari_m`, `hissari_w`, `child`, `noble`, `rebel`, `rebel_bow`, `tithansi`, `semk`, `ressan`, `priest` (the Mael priest), plus the squad's own ids and `hackle`.
 
 **Map tiles** (the art pass draws these; use only these characters):
 - `hissar`: `.` packed street, `,` ash and rubble, `#` building wall (blocks), `F` fire (blocks), `w` well or cistern (blocks), `c` cart, `p` palm, `=` market awning, `g` gate stones, `D` doorway, `~` water channel.
@@ -59,4 +59,4 @@ Set `decor` on each area to its style (`'hissar'`, `'odhan'`, `'odhan_night'`), 
 - `python3 build.py`, `node --check` on your file, and `node tools/lint.mjs` with **0 errors** (warnings explained or fixed). The lint builds random states for Book One's squad; extend it so Book Two's areas and nodes (ids starting `b2_`) are checked under Book Two states (`S.book='dg'`, the Book Two squad, a `chain`), without weakening any Book One check.
 - `tools/play.mjs`: add `--book=dg` (pick Book Two on the new-sergeant form before Begin; the run succeeds when it reaches Chapter 1's end screen, since there is no Chapter 2 yet). Run `node tools/play.mjs 3 --book=dg` until 3/3 pass, and `node tools/play.mjs 2` (Book One) must still pass.
 - Then `node tools/run_all.mjs` must pass.
-- Don't edit `src/47_book2.js`, `src/47b_book2_art.js` or any Book One file except where a bug blocks you; if you must, say exactly what and why in your report.
+- Don't edit `src/047_book2.js`, `src/047b_book2_art.js` or any Book One file except where a bug blocks you; if you must, say exactly what and why in your report.

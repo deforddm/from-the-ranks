@@ -1,6 +1,6 @@
 /* ============ Book Two, Chapter 2 art: The Odhan — Dryj Spring, Sekala Crossing, the warlocks' night ============ */
 /* Figures (FIGX), the Red Blade's bust (POR), the river and the spring (TILEX) and three backdrops (SCENEX), drawn the way
-   src/47b_book2_art.js draws: lantern low on the left, glare by day, blue-black by night, dust over everything. */
+   src/047b_book2_art.js draws: lantern low on the left, glare by day, blue-black by night, dust over everything. */
 
 /* ---------------- figures: FIGX[kind](ctx, h, t, o), the same ~32px frame as 47b ---------------- */
 /* overlapping scales over a torso, row by row, lit from the left */

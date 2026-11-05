@@ -1,6 +1,6 @@
 # Book Three, Chapter 5 — "South of the Catlin": continuity notes
 
-Tue Oct 13, 2026. File `src/65_b3_ch5.js` (exports `B3CH5`, `number:'Five'`); art in `src/65b_b3_ch5_art.js`. All ids carry `b3_c5_`.
+Tue Oct 13, 2026. File `src/065_b3_ch5.js` (exports `B3CH5`, `number:'Five'`); art in `src/065b_b3_ch5_art.js`. All ids carry `b3_c5_`.
 
 ## Shape
 

@@ -1,6 +1,6 @@
 # Book Three, Chapter 1 — "The Parley": continuity notes
 
-Tue Oct 13, 2026. For the writers of Chapters 2–7. File: `src/61_b3_ch1.js` (`B3CH1`); art `src/61b_b3_ch1_art.js`.
+Tue Oct 13, 2026. For the writers of Chapters 2–7. File: `src/061_b3_ch1.js` (`B3CH1`); art `src/061b_b3_ch1_art.js`.
 
 ## Shape
 

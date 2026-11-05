@@ -2,15 +2,15 @@
 
 *Historical: a past work order (v3.5); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/45_chapter6.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG following an original marine squad (the Fourth) through Gardens of the Moon. The player plays the Sergeant. Chapters 1–5 are done. This is the second-to-last chapter; Chapter 7 (Outlaws, the finale) is being written **at the same time by another writer from `docs/ch7-brief.md`** and reads the flags you set — the **flag contract** below is binding.
+You are writing the content module `src/045_chapter6.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG following an original marine squad (the Fourth) through Gardens of the Moon. The player plays the Sergeant. Chapters 1–5 are done. This is the second-to-last chapter; Chapter 7 (Outlaws, the finale) is being written **at the same time by another writer from `docs/ch7-brief.md`** and reads the flags you set — the **flag contract** below is binding.
 
 Read these first, in this order:
 
 1. `docs/story-bible.md` — everything the squad has lived through, every flag, every open thread, voices, and the inconsistencies not to repeat. **Read all of it.**
-2. `src/14_data.js` — TPL (the squad), FOES, CARDS, PICKS, `registerChapter`.
-3. `src/44_chapter5.js` — read every node. This is the module you are matching in shape, length and voice (second person, present tense, grimdark but humane, dry humour, short declaratives, canon characters in their own voices).
-4. `src/43_chapter4.js` and `src/42_chapter3.js` — the city chapters: Darujhistan's voice, Kruppe, Murillio, Coll, Crokus, Rallick, the Guild, Madryn and the grey cloak, Vell, the roof choice, Whiskeyjack's debrief style.
-5. `src/37_chapters.js` — `CHEND`, `CHTEASE`, `QUESTS`, the end screen.
+2. `src/014_data.js` — TPL (the squad), FOES, CARDS, PICKS, `registerChapter`.
+3. `src/044_chapter5.js` — read every node. This is the module you are matching in shape, length and voice (second person, present tense, grimdark but humane, dry humour, short declaratives, canon characters in their own voices).
+4. `src/043_chapter4.js` and `src/042_chapter3.js` — the city chapters: Darujhistan's voice, Kruppe, Murillio, Coll, Crokus, Rallick, the Guild, Madryn and the grey cloak, Vell, the roof choice, Whiskeyjack's debrief style.
+5. `src/037_chapters.js` — `CHEND`, `CHTEASE`, `QUESTS`, the end screen.
 6. `docs/outline.md` — the campaign outline.
 
 ## Canon for this chapter (verified against the book — keep it exactly)
@@ -133,7 +133,7 @@ lorn:{name:'The Adjunct', sig:'L', kind:'lorn', hp:90, ac:18, atk:9, dmg:[2,6,4]
 
 **Node rules** (bible §7): a node's `fx` runs once per node id, ever, and after its text is built. Choice labels (`t`) are escaped: **no `*…*` and no `{sgt}` in choice labels.** Guard every squadmate line with `SQUAD().includes(...)` — Ellis may be absent; after the alley anybody but the sergeant may be absent. Prefer `S.loy.x >= 2` thresholds for special beats.
 
-## Schema — produce exactly this in `src/45_chapter6.js`
+## Schema — produce exactly this in `src/045_chapter6.js`
 
 ```js
 /* ============ chapter 6: The Fete ============ */
@@ -151,7 +151,7 @@ const CH6 = {
   quests:{ fete_street:()=>'…', simtal_terrace:()=>'…', simtal_garden:()=>'…' },   // the HUD line per area, from flags
   end:{ bridgeburners:['<title>','<one paragraph>'], cellars:['…','…'], alley:['…','…'] },   // the end-of-chapter headline per key, like CHEND[5]
   endCap:()=>'…',          // the caption under the end-screen picture (it may mention a death)
-  extras:()=>[ … ],         // end-screen bullet lines from flags, like the n===5 block in 37_chapters.js (include wjRegard lines, deaths, Tuft's resolution, the Guild, the signet)
+  extras:()=>[ … ],         // end-screen bullet lines from flags, like the n===5 block in 037_chapters.js (include wjRegard lines, deaths, Tuft's resolution, the Guild, the signet)
   tease:'Next: …',          // one line teasing Chapter 7 (Outlaws: dawn on the Lakefront, the Host outlawed, the Claw's last accounting, and where the Fourth goes)
   dlg:{ c6_start:()=>({…}), … }
 };
@@ -175,4 +175,4 @@ const CH6 = {
 
 80–100 nodes. Chapter 5 is the model for density. Every squadmate who is present gets at least one real beat; Tuft gets the chapter.
 
-Do not touch any other file. Do not invent helpers, scenes, tile letters, sprite kinds or battle fields not listed. Output only `src/45_chapter6.js`. Then verify with a small node script (write it in your scratch space, not in the repo): maps 16×12 and battle maps 8×10; `start`, npc and trigger tiles walkable and reachable from `start` (treat trigger tiles as walkable; npc tiles block); every `go`/`fail`/`talk('…')` target string exists in `CH6.dlg`; every battle `after` exists; every foe id in battles exists in `CH6.foes` or among `hound assassin clawknife guildknife guildveteran`; no `*` or `{sgt}` in any choice `t`; then `node --check src/45_chapter6.js`. To evaluate the module in node, stub the globals it touches at load time (`S`, `SQUAD`, etc. are only used inside functions, so a plain `eval` of the file with `const CH6` replaced works — the Ch5 writer did this). Report the node count, the flags you set, and anything you had to decide that the brief didn't cover.
+Do not touch any other file. Do not invent helpers, scenes, tile letters, sprite kinds or battle fields not listed. Output only `src/045_chapter6.js`. Then verify with a small node script (write it in your scratch space, not in the repo): maps 16×12 and battle maps 8×10; `start`, npc and trigger tiles walkable and reachable from `start` (treat trigger tiles as walkable; npc tiles block); every `go`/`fail`/`talk('…')` target string exists in `CH6.dlg`; every battle `after` exists; every foe id in battles exists in `CH6.foes` or among `hound assassin clawknife guildknife guildveteran`; no `*` or `{sgt}` in any choice `t`; then `node --check src/045_chapter6.js`. To evaluate the module in node, stub the globals it touches at load time (`S`, `SQUAD`, etc. are only used inside functions, so a plain `eval` of the file with `const CH6` replaced works — the Ch5 writer did this). Report the node count, the flags you set, and anything you had to decide that the brief didn't cover.

@@ -1,4 +1,4 @@
-// Book Five's seven "Through the Tiles" visions (88_b5_visions.js, art 88b): each is reached the way a player reaches it, from its chapter's
+// Book Five's seven "Through the Tiles" visions (088_b5_visions.js, art 88b): each is reached the way a player reaches it, from its chapter's
 // tile reading (b5_c<n>_tiles → "Let her lay them." → the tile screen → "✦ Look into the tile"), played to the end, and lands back on
 // that chapter's tile node (b5_c<n>_card), counted as the reader's; and each is played from the journal with every choice picked at
 // least once. Each run is done with both of Book Five's readers, set up the real way (80's VISREADER): Perrit in the squad; Perrit out

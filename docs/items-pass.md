@@ -8,7 +8,7 @@ shows them). Munitions are untouched (they never grow). The lead re-balances aft
 
 ## The weapon profiles
 
-A weapon's damage **replaces** the soldier's own (`mkParty`, 31_battle.js); level and Edge add on top. Before this pass only 9 of 37
+A weapon's damage **replaces** the soldier's own (`mkParty`, 031_battle.js); level and Edge add on top. Before this pass only 9 of 37
 weapons had damage, so the rest (the "+1 to hit" pieces) kept the soldier's base: front line 1d8+2, the others 1d8+0/+1 or 1d6+0/+1.
 
 | Kind | Profile | Against the base |
@@ -83,10 +83,10 @@ Each is a line in a node that already gives loot or ends a fight; no new nodes.
 | b5_c1_issuesword | Book Five Ch1, `b5_c1_qm` | A choice at the quartermaster's: 8 docks, "a better one than issue". |
 | b5_c1_tarthclub | Book Five Ch1, `b5_c1_oldman_ok` | The old Tarthenal hands it to Thegg by the wrong end: "Her people's." (A reward for the Wits check.) |
 
-Artwork: Book One's three in `src/46b_b1_items_art.js` (the Arms board's 200×150 frame, so the canvas boards need no rebuild); Book Four's
+Artwork: Book One's three in `src/046b_b1_items_art.js` (the Arms board's 200×150 frame, so the canvas boards need no rebuild); Book Four's
 and Book Five's in their chapter art files with the chapter's own helper. Roles are in `ITEM_ROLE` (38c) and inline.
 
-## Trinket effects (`src/89c_item_specials.js`)
+## Trinket effects (`src/089c_item_specials.js`)
 
 Wrappers keyed on the item id, as Books Two to Four do theirs. "Worn" goes through `wears(unit or id, item)`; the display half adds it,
 and this file carries a shim of the same name until then. `IX_SPECIAL` in the same file has the words for each; the display half's

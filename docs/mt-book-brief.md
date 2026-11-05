@@ -36,7 +36,7 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
      - The Errant is Lether's god of chance as the Letherii pray to him, nothing more (rule 31). Court gossip about Turudal Brizad stays gossip, and the narrator never confirms it.
      - Rule 40: characters may believe the King became Emperor and that the Closure came. Never say the count was off.
      - Rule 43: no RG ground or names (the Patriotists, Karos Invictad, Tanal Yathvanar, Bivatt, Letur Anict, the Awl war, Kravos Hill, "Tehol the Only", the Malazans in Lether).
-2. `docs/v8.0-notes.md`, Book Five's engine: every helper, flag and table you will use. Then `src/80_book5.js` and `src/80c_b5_tiles.js`. **Use only names that exist there.** What this brief once listed as missing is under "Done in the engine" at the end, and exists now.
+2. `docs/v8.0-notes.md`, Book Five's engine: every helper, flag and table you will use. Then `src/080_book5.js` and `src/080c_b5_tiles.js`. **Use only names that exist there.** What this brief once listed as missing is under "Done in the engine" at the end, and exists now.
    - State: `b5On`, `b5In`, `b5He/b5His/b5Him`, `B5_FINADD`, `b5Coin`, `S.dead`, `b5Rest`.
    - Debt: `b5Debt`, `b5DebtStart`, `b5DebtTotal`, `b5Debtors`, `b5Owe`, `b5Pay`, `b5Forgive`, `b5Standing`, `B5_STANDW`, `b5Collectors`, `b5DrowningThreat`, `debtHTML(road)`; the flags `b5_collectors`, `b5_drownRisk`, `b5_freed_<id>`, `b5_eased_<id>`, `b5_pressed_<id>`, `b5_drown_<id>`, `b5_heirs`.
    - Recruits: `b5CanRecruit`, `b5Join`, `b5SwapIn`, `b5Waiting`, `b5Offers`, `b5Recruit_`, `b5Room`; the flags `b5_ruukDone`, `b5_bruneDone`, `b5_pessaDone` (1 walks, 2 waits, 0 sent away).
@@ -45,13 +45,13 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
    - Backdrops: `b5_barracks`, `b5_trate_harbour`, `b5_landing`, `b5_highfort`, `b5_road_south`, `b5_branskeep`, `b5_letheras`, `b5_march`, `b5_march_dusk`.
    - Keys: `B5KEYS` (don't change it).
 3. `docs/dg-book-brief.md` and `docs/hoc-book-brief.md`: how Books Two and Four were built (schema, areas, fights with `stage2`, keys, tricks, tests). Everything there holds unless this brief changes it. **Book Five is on Book Two's curve** (a new cast, level 1, cap 8), so take Book Two's sizes and Book Four's conventions.
-4. **Conventions from a shipped chapter:** skim `src/71_b4_ch1.js` for the node, area, fight, check, `again:`, "Not now" and "yes, but" patterns. A "yes, but" is the check's `near:{t:'Yes, but …', fx}`. A trick check is `check:['wits', 16], trick:'<id>', edges:id=>[…]`. A hub is `again:()=>…`. An onward step offers `{t:'Not now.', go:()=>startExplore()}`.
+4. **Conventions from a shipped chapter:** skim `src/071_b4_ch1.js` for the node, area, fight, check, `again:`, "Not now" and "yes, but" patterns. A "yes, but" is the check's `near:{t:'Yes, but …', fx}`. A trick check is `check:['wits', 16], trick:'<id>', edges:id=>[…]`. A hub is `again:()=>…`. An onward step offers `{t:'Not now.', go:()=>startExplore()}`.
 5. The engine files every chapter leans on:
-   - `src/16_skill_checks.js` (`talk`, `check`, edges, tiers);
-   - `src/16b_tricks.js` and `src/31b_tricks_in_battle.js` (tricks, and the battle halves you will copy);
-   - `src/31c_stakes.js` (`battleDef`, `stage2`, waves, objectives, hold-outs);
-   - `src/14_data.js` (`registerChapter`);
-   - `src/38c_roster.js` (`ROSTER_FIRES`, gear roles).
+   - `src/016_skill_checks.js` (`talk`, `check`, edges, tiers);
+   - `src/016b_tricks.js` and `src/031b_tricks_in_battle.js` (tricks, and the battle halves you will copy);
+   - `src/031c_stakes.js` (`battleDef`, `stage2`, waves, objectives, hold-outs);
+   - `src/014_data.js` (`registerChapter`);
+   - `src/038c_roster.js` (`ROSTER_FIRES`, gear roles).
 
 **Voice.**
 - Short paragraphs, dry soldier humour, grimdark restraint, and **no exclamation marks in narration**.
@@ -68,7 +68,7 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
 
   Hard caps per book: "weather" (as a simile) 3; "goes unsaid" 2. **Run `node tools/trope_scan.mjs --files` on your chapter before reporting**, and fix any hit by cutting it, making it concrete, saying it straight or naming who. Never trade one tic for another.
 - **Canon voices, seen or heard from a distance only:** the Preda (she: tall, blunt, an army's commander, heard as orders "from the Preda"); Brys (the best sword in Lether, quiet, seen far off); Moroch (a hard Finadd, seen far off at High Fort, heard of on the bridge); the Ceda (a banner, never a man); the King (a feast-day figure on a balcony, at most).
-- **The squad's voices** (consistent with the bios and banter in `src/80_book5.js`; read them):
+- **The squad's voices** (consistent with the bios and banter in `src/080_book5.js`; read them):
   - **The sergeant** (you): born two streets back from the Quillas Canal, a swimmer who never says so, owes 340 docks and knows it to the dock. Prays to the Errant before everything. Touches the white fingertip on the shield before a fight. Runs the Sixth for a Finadd who signs.
   - **Tobet** (he, 22, the Indebted bowman): quiet, half a step behind, says "Sergeant" softly. Counts arrows, then debts, then arrows. Bitter jokes said flat ("From back here, everything owes me money"). Laughs at the Drownings jokes and doesn't mean it. Owes 900 on a plough he has never seen. Keeps a tally-stick.
   - **Thegg** (he, 29, the Tarthenal half-blood shield): very big, very calm, polite, says "Behind me." Turns sideways for doors and for people. Never raises his voice; when he is angry he stops talking. Talks to his mother's dead at night, low, in her tongue. Never prays to the Seregahl, and the narrator never brings them in as anything but "his mother's people's gods, whom nobody sane prays to".
@@ -82,7 +82,7 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
   - **The company clerk** (he, no name): Indebted himself, ink to the wrist, keeps the Sixth's paybooks in an oilskin case and never lets go of it. Polite, exact, quietly appalled.
 
 **Your files.**
-- `src/8K_b5_chK.js` exports **`B5CHK`** (Ch1 = `81_b5_ch1.js`/`B5CH1` … Ch7 = `87_b5_ch7.js`/`B5CH7`). `src/90` already registers it; don't edit 90. Use `number:'One'` and so on, and the titles below.
+- `src/8K_b5_chK.js` exports **`B5CHK`** (Ch1 = `081_b5_ch1.js`/`B5CH1` … Ch7 = `087_b5_ch7.js`/`B5CH7`). `src/90` already registers it; don't edit 90. Use `number:'One'` and so on, and the titles below.
 - Your art goes in `src/8Kb_b5_chK_art.js`.
 - **Every id carries `b5_c<K>_`**: nodes, areas, fights, foes, items, scenes, flags. Shared flags named in this brief have no chapter infix and are set only where this brief says.
 - **Every top-level helper carries `b5<K>`** (`b51Say`, `b53Rec`…), as Book Four's `b41` did. The files are concatenated: two chapters' `const say = …` would break the build.
@@ -177,16 +177,16 @@ Wed Oct 28, 2026, 3:47 PM PDT. Against the Book Five engine on branch `book5` (8
 - `node tools/trope_test.mjs`, `node tools/recruit_test.mjs`, `node tools/b5engine_test.mjs`, `node tools/roster_test.mjs`, `node tools/reading_test.mjs`;
 - **a chapter test, `tools/b5chK_test.mjs`**, that walks the chapter's halts, both keys (all three in Ch 7), every fight's start and win, the trick, the fire and the pay desk, the reading, and the recruit's join, from a fresh state and from the `--from=K` synthetic save.
 
-**Commit to `book5`**, never `main`, and don't touch `sw.js` or `src/10_preamble.js`.
+**Commit to `book5`**, never `main`, and don't touch `sw.js` or `src/010_preamble.js`.
 
 **Report** (under 500 words): what the chapter contains (areas, nodes, fights and xp, the key and its consequences, the debt moves), the flags set, file sizes, the test numbers, any edits outside your files, and the canon points you were unsure of.
 
 ## Shared rules (artists)
 
 **Your file and what to study.** Your file is `src/8Kb_b5_chK_art.js`: figures, ground, backdrops and item art. Study the established art and match it exactly in scale, palette, line weight and light:
-- `src/18_figure_sprites.js`, `src/19_portraits.js`, `src/25_tiles.js` and the scene file;
-- Book Two's `src/47b_book2_art.js` and Book Four's `src/7*b_b4_*_art.js` for how a chapter's art is laid out;
-- above all Book Five's own `src/80b_b5_title.js` (Letheras at dusk, the palette) and `src/80d_b5_tiles_art.js` (the squad, the sergeant's `sgt_mt`, the foes, the tiles).
+- `src/018_figure_sprites.js`, `src/019_portraits.js`, `src/025_tiles.js` and the scene file;
+- Book Two's `src/047b_book2_art.js` and Book Four's `src/7*b_b4_*_art.js` for how a chapter's art is laid out;
+- above all Book Five's own `src/080b_b5_title.js` (Letheras at dusk, the palette) and `src/080d_b5_tiles_art.js` (the squad, the sergeant's `sgt_mt`, the foes, the tiles).
 
 **Book Five's look.** Lether is blue-grey, canal-green, lamp-gold and wet stone. The army is blue-grey cloaks, scale over padded coats, round shields with a **white fingertip on the boss**, and bows, **never crossbows**. The Edur are grey-skinned and tall, in dark leather. Item art sits on a **dark canal-slate ground with a thin dock-gold rim** (Claude's call), in the established item style.
 
@@ -637,7 +637,7 @@ Each game pays once, as the table closes, never in a node's `fx`, as Books Three
 | Brune | the harbour master's boat | her village on the coast |
 | Pessa | the press-gang's chit | nobody: her name is spelled wrong, and her husband is gone |
 
-**The finale** (`B5CH7.finale`): read `src/37_chapters.js` (`finPages`, `showFinale`), Book Two's `src/54_b2_ch7.js` and Book Four's `src/77_b4_ch7.js`.
+**The finale** (`B5CH7.finale`): read `src/037_chapters.js` (`finPages`, `showFinale`), Book Two's `src/054_b2_ch7.js` and Book Four's `src/077_b4_ch7.js`.
 - The road taken.
 - **A fate page for every squadmate and every recruit**: alive and walking, alive and waiting, sent away, or fallen at Brans Keep. Each page says **what that soldier's debt became** (`b5Standing`, the numbers, the holder: the army or the house, and on `ledger` the heirs) and one line of the book's road for them (High Fort, the canal, the channel).
 - A page for the fallen at Brans Keep: buried with the Edur dead in the barrow the Emperor ordered (Claude's call, from canon's "buried together"), and who carries their debts.
@@ -686,7 +686,7 @@ The workspace has 2 CPUs and 7 GB.
 
 ## Done in the engine (Wed Oct 28, 2026, 4:11 PM PDT)
 
-These were the brief's engine needs; they are in `src/80_book5.js` and the tools now, tested in `tools/b5engine_test.mjs`, and listed in `docs/v8.0-notes.md`. **Use them; do not define them in a chapter file.**
+These were the brief's engine needs; they are in `src/080_book5.js` and the tools now, tested in `tools/b5engine_test.mjs`, and listed in `docs/v8.0-notes.md`. **Use them; do not define them in a chapter file.**
 
 1. **`b5Disarm()` and `b5Rearm(fallback)`** (Ch 4 `hold`, Ch 5). `b5Disarm()` moves every `weapon`-slot item off every soldier and out of the kit into `S.f.b5_stash` (ids), and sets `S.f.b5_disarmed = 1`; base attacks still work ("knives and staves"); armour and trinkets stay; a second call changes nothing. `b5Rearm(fallback)` clears `b5_disarmed`, gives back what was stashed (to whoever wore it), or the `fallback` item ids that exist if the stash is empty (a fresh `--from=5` save), and sets `S.f.b5_rearmed = 1`. Nothing else in the kit is touched.
 2. **`FOES.b5_regular`**: a Whitefinder regular as an ally (kind `b5_letherii`, 15/13/4, 1d8+1, grown by level as `b4_regular` is), in a fight's `allies:[['b5_regular', x, y]]`, for fights with the battalion in Ch 4–7. A chapter may still add its own (Ch 4's `b5_c4_garrison`).

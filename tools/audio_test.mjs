@@ -56,7 +56,7 @@ for (const a of names.amb) {
 }
 
 /* the plumbing: every place the source names resolves to a real ambience */
-const src = fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.js') && !f.startsWith('13_')).map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+const src = fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.js') && !f.startsWith('013_')).map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
 const uniq = re => [...new Set([...src.matchAll(re)].map(m => m[1]))];
 const scenes = uniq(/scene:'([a-z_0-9]+)'/g).filter(s => s !== 'explore' && s !== 'intro'), decors = uniq(/decor:'([a-z_0-9]+)'/g), styles = uniq(/style:'([a-z_0-9]+)'/g), ambs = uniq(/amb:'([a-z_0-9]+)'/g).filter(a => a !== 'explore');
 const resolve = await page.evaluate(({ scenes, decors, styles, ambs }) => {

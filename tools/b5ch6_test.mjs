@@ -1,4 +1,4 @@
-// Book Five, Chapter 6 (Brans Keep, src/86_b5_ch6.js): the eve in the Whitefinders' lines (the first halt and where the Sixth stands by
+// Book Five, Chapter 6 (Brans Keep, src/086_b5_ch6.js): the eve in the Whitefinders' lines (the first halt and where the Sixth stands by
 // Ch4's key, the mortal fight signposted, the King's bounty: thirty off every walking soldier's line and the quarter's pay, the house's
 // factor at the line's end on Ch5 'sign', salves at six, the old drill-sergeant and the trick (taught, and its battle half), the paint,
 // the foragers and the lake shore fight, the crossing, the fire: a rest, the pay desk, one scene each, Thegg gives Pessa her pack back,

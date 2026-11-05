@@ -15,7 +15,7 @@ preText:'One log line, in voice: what the blast did beyond the damage.',   // or
 preFx:B => { /* the in-fight consequence, applied after the blast lands */ },
 ```
 
-and these helpers for a `preFx` (all in `src/31c_stakes.js`):
+and these helpers for a `preFx` (all in `src/031c_stakes.js`):
 - `preWave(round, [[kind,x,y],…], 'text')` — more of them come at the noise (or the Watch, or something worse).
 - `preTile(x, y, '#')` — the map changes: a chimney comes down, a doorway is blocked, a plank goes (`'#'` blocks; `'.'` opens).
 - `preFire(x, y, rounds)` / `preSmoke(x, y, rounds)` — burning tiles; smoke nobody shoots through.
@@ -34,7 +34,7 @@ In the survive-N-rounds fights, the Fourth sometimes brings an enemy down even t
 
 David found real slips that come from talking to people **in a different order** than the writer expected, and from **who is shown on the map vs what the text says**. Read your chapter's dialogue through and fix what you find. Known ones:
 - **Ch3:** talking to Sorry at the crossing recalls "the feeling Hedge mentioned" even if you haven't talked to Hedge yet. Characters are said to be **down the hole** at the crossing while their figure stands above ground in plain view (fix the NPC `show:` conditions, or the text). **Ellis and the letter:** it's hard to tell she is waiting for you to start that conversation — make it unmistakable (the quest line, her NPC's `fresh:` marker, a line from her or a squadmate pointing at her).
-- Everywhere: look for lines that assume an earlier conversation or flag the player may not have (guard with the flag, or write a variant), NPCs present on the map while the text has them elsewhere (asleep, gone, down a ladder, dead), revisits of a node that contradict the first visit, quest lines (`QUESTS` in `src/37_chapters.js` are engine — tell me if one is wrong rather than editing it) that send the player to the wrong place, `fresh:` markers that never clear, names used before the squad has learned them.
+- Everywhere: look for lines that assume an earlier conversation or flag the player may not have (guard with the flag, or write a variant), NPCs present on the map while the text has them elsewhere (asleep, gone, down a ladder, dead), revisits of a node that contradict the first visit, quest lines (`QUESTS` in `src/037_chapters.js` are engine — tell me if one is wrong rather than editing it) that send the player to the wrong place, `fresh:` markers that never clear, names used before the squad has learned them.
 
 Fix with flags (`fx:()=>{ S.f.c3_hedgeTalked = 1; }` and a guard where it's read), variant text, or `show:` conditions. Don't rewrite good scenes; make them true in every order.
 

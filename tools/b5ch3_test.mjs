@@ -1,4 +1,4 @@
-// Book Five, Chapter 3 (Kraig's Landing, src/83_b5_ch3.js; Knucklebones in src/89_b5_games.js): the chapter's halts, both keys and their
+// Book Five, Chapter 3 (Kraig's Landing, src/083_b5_ch3.js; Knucklebones in src/089_b5_games.js): the chapter's halts, both keys and their
 // debt moves, the reading, the fire and the pay desk, Knucklebones, the trick (taught, and its battle half), Ruuk's join (walking in
 // Brune's place, walking with room, waiting with the scouts, turned away) and his trader's man (paid, let ride, talked down), every
 // fight's start and a forced win (both grounds of the barges), and the chapter's end; from a fresh start of Chapter Three after a 'dead'

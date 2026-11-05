@@ -18,7 +18,7 @@ What each chapter set up, for the books after it. Later books read this doc, not
 - **The sergeant's street**: two streets back from the Quillas, the fourth house on the left, the family tally cut on the lintel; the mother's cousin has it now (Ch7; the brief's heir).
 - **Thegg's mother** is dead; her tab in the pit town outside the east gate passed to him as heir. The old Tarthenal by the third brazier knew her. Thegg "ran, once" (said Ch4 and Ch5; never explained: open).
 
-## Chapter 1 — The Drownings (`src/81_b5_ch1.js`)
+## Chapter 1 — The Drownings (`src/081_b5_ch1.js`)
 
 Letheras in summer, the eve and first days of the Errant's festival. The Sixth is in the barracks near the Drownings District with the battalion's sick and its paybooks for the pursers' audit. The yard (the clerk, each soldier's paybook line, the Finadd's court news, the quartermaster, the tile-woman, the reading); the Low Walk by day (the rope-man and the trick, the cutpurses, the builder's board *Bugg*, the eel stall's Eberict talk); the pit town at dusk (the old Tarthenal, the carter, the tavern brawl over Thegg's mother's tab); the fines court that night (the key); the festival night (the Wager Board, the lanterns, the King's party far off); the morning (the Special Drownings from the tiers, the Trate news, the road north).
 
@@ -39,7 +39,7 @@ Letheras in summer, the eve and first days of the Errant's festival. The Sixth i
 
 **Fights:** `b5_c1_cutpurses` 100 (optional), `b5_c1_tavern` 160+80 (survive 4), key fight 160. Level 1 → 3.
 
-## Chapter 2 — Trate (`src/82_b5_ch2.js`)
+## Chapter 2 — Trate (`src/082_b5_ch2.js`)
 
 Some days after the wave ("the last spears of sunlight", read as a summer evening). The quays (the harbour master's board, the old pilot and the trick, the curio market and the tooth, the Legion's cart for the drowned, the flooded sheds); the first hulk at dusk (the squad's first sight of Edur sorcery: shapes in the rigging; one in a drowned man's coat); the strand by the Shake boats (the Sixth's lines, Brune, the fish-hook); weeks of the harbour (the delegation's rumour, the night watch); the bounty (the key); the war declared; the barges up the river.
 
@@ -60,7 +60,7 @@ Some days after the wave ("the last spears of sunlight", read as a summer evenin
 
 **Fights:** `b5_c2_looters` 110 (optional), `b5_c2_hulk` 170+80, key fight 170. Level 4.
 
-## Chapter 3 — Kraig's Landing (`src/83_b5_ch3.js`)
+## Chapter 3 — Kraig's Landing (`src/083_b5_ch3.js`)
 
 Three buildings and a dock up "the river" from Trate, the Cold Clay Battalion camped round it, the Snakebelt cadre up from Awl, two ships with the King's banner and the Ceda's. The news (the war; the council in Letheras as officers' talk; the Whitefinders recalled north: "the battalion is coming"; a Letherii went over, no name); the Faraed scouts' fire and Ruuk; the trader's man; the young cadre mage and the trick; the Nerek haulers; the first night (river thieves); the next day (deserters at the scouts' fire; the night's orders; "There were Nerek up there"); the key; the green fire; dawn (the ash, Fent Reach, the road to High Fort). The squad never enters the hostel or its tavern.
 
@@ -81,7 +81,7 @@ Three buildings and a dock up "the river" from Trate, the Cold Clay Battalion ca
 
 **Fights:** `b5_c3_rivermen` 150+70, `b5_c3_deserters` 100 (optional), key fight 150. Level 5.
 
-## Chapter 4 — High Fort (`src/84_b5_ch4.js`)
+## Chapter 4 — High Fort (`src/084_b5_ch4.js`)
 
 The forest road north (Ruuk or a Faraed scout guides; the stream took the bridge; Thegg carries Ruuk over; Ruuk's stone for Perrit and herb for Ammet); High Fort, the Whitefinders' station, without the Whitefinders: the Queen, the Prince, the Queen's Battalion and the Quillas Brigade fell back on it yesterday. The Sixth is put under the garrison on the westernmost rampart under the bastion tower. The reading at the arrival; the old hand and the brand-pots (*NOT FOR THE QUEEN*); the cadre-master who does not link Perrit; a Grass Jacket ("Wraiths first… wolves at the back. For after."); a Trate Legion straggler (Trate gone "from the sea, in a night"); the view (Moroch far off, the one uneasy officer); the gully patrol; the night; the battle from the west rampart (the eleven die, the lightning column, the wraiths over the west rampart first, the charge taken apart, the Grass Jackets break).
 
@@ -100,7 +100,7 @@ The forest road north (Ruuk or a Faraed scout guides; the stream took the bridge
 
 **Fights:** `b5_c4_gully` 120 (optional, +8 docks), `b5_c4_wraiths` 170+90 (garrison allies), key fight `b5_c4_demon` 110+70 (survive 4) or `b5_c4_wolves` 180. Level 6. No money moves (the brief's row).
 
-## Chapter 5 — The Retreat (`src/85_b5_ch5.js`)
+## Chapter 5 — The Retreat (`src/085_b5_ch5.js`)
 
 South from High Fort through country burned to the root by Letherii hands. The first cache at a milestone, dug out neatly (never who; the quartermaster pockets a cut seal); refugees (Trate has fallen: `b5_trateFell`; on Ch2 `dead` the Trate dockhand); a Grass Jacket's road talk (a Finadd upriver whose garrison "answers to nobody now": `b5_breakaway`; Second Maiden's Fort holds; three companies on the frontier road); the Bluerose courier's girth, cut not worn; on Ch3 `warn` the Nerek family; the press-gang at the crossroads and Pessa; the burned farm and its deserters (optional); the second cache in a burned copse (the trick; `b5Rearm` on `hold`); the road fire (the Token Auction; Pessa and Perrit's reading); the battalion's rear picket below a village burned a day before ("We were ordered south to Brans Keep… and to leave nothing behind us the Edur could eat"); Brans Keep, the Whitefinders there; the factor; the key; the night; the morning in the lines.
 
@@ -121,7 +121,7 @@ South from High Fort through country burned to the root by Letherii hands. The f
 
 **Fights:** `b5_c5_farm` 130+60 (optional, +12), `b5_c5_press` 150 (avoidable by the claim; survive 4), key fight 160. Level 6–7.
 
-## Chapter 6 — Brans Keep (`src/86_b5_ch6.js`)
+## Chapter 6 — Brans Keep (`src/086_b5_ch6.js`)
 
 The eve in the Whitefinders' lines across the dry channel (the order of battle from the Preda; no Ceda; the front of the crossing on Ch4 `hold`, the second rank behind the Second on `run`); the King's bounty at the clerk's table; the drill-sergeant and the trick; the foragers by the lake (optional); the fire (one scene each: before the paybook, and paid up); Thegg gives Pessa her pack back; the night. Dawn and the reading on a shield. The day from the channel: the dust, the white fire, the pillars, both corner towers down, the pillars on the left and the centre, a standard everybody knows going under ("That was the Preda's"); the Edur who came over the lake beds, hand to hand, without sorcery; the break.
 
@@ -142,7 +142,7 @@ The eve in the Whitefinders' lines across the dry channel (the order of battle f
 
 **Fights:** `b5_c6_shore` 130 (optional, +10), `stand`: `b5_c6_channel` 200+100 (mortal) and `b5_c6_hills` 160; `fallback`: `b5_c6_flight` 170. Level 7 (the fallback road is light on xp).
 
-## Chapter 7 — The Seventh Closure, and the end of Book Five (`src/87_b5_ch7.js`)
+## Chapter 7 — The Seventh Closure, and the end of Book Five (`src/087_b5_ch7.js`)
 
 The night after Brans Keep: the broken army in at the main gate; burned houses, looting, the dead (headline); "the King has been crowned Emperor, by his own court, in the new palace. The Seventh Closure has come" (belief); starlings round a dark tower apart; the bell-station at the old fish market; Ennic's orders: the footbridge over the Quillas by the Low Walk, two streets from the sergeant's birth. On Ch5 `sign` the house's strongroom in the Counters' Quarter burns (`b57Burn`: `b5Forgive(⌈debt/4⌉)` on every debtor, once; `b5_c7_burned`); on `refuse` the clerk sits in a doorway all night. The streets (the cooper's shop, the purse in the rubble, your street). The footbridge at night: the barricade, the brazier, the reading, the names, the court's men (if `b5DrowningThreat()`: the receipt on `pay`, Thegg's face on `swim`, else the fight). The day: citizens on the white walls with slates; the Jheck on the tiers and the footbridge; the runner's word of the main bridge ("seventy or so", the Finadd and the Emperor both fell, "and then the Emperor got up"; nobody along the canal saw it); Settle Lake's thump; the Edur at the barricade; the sorcery down the street with the lamps going out; the squad into the canal under the arch on the ledge a hand wide; it passes; the Emperor's word: the killing stopped, a day of suffering decreed (never what it holds). The evening: the rumours (Eberict dead in a street, the King's Champion dead in the throne room, the Chancellor sworn), the canal children's holed dock, the Edur patrol, the roads.
 
@@ -169,7 +169,7 @@ Labels: Epilogue, The squad, "Fallen at Brans Keep", "Not on the Low Walk", the 
 
 Readers (`visReader()`): **Perrit** (black stone, the school's spiral of five) while she walks and lives, else **the tile-woman** (bone, a row of four, a dock). Reading places: the barracks yard (1), the quay at Trate (2), the outer barge at Kraig's Landing (3), the west rampart by a helm (4), the ash at the road's edge (5), a shield on the grass at dawn (6), a cracked flagstone behind the barricade with a dock and a knife (7). Chapters 4, 6 and 7 put the choice at the reading's place, not the chapter's first halt (each chapter's notes say why). Lean tiles: the Empty Throne, the Barrow, the Watcher, the Wall, the Walker, the Axe, the Gate. No tile names its being (rule 41).
 
-## The visions (`src/88_b5_visions.js`)
+## The visions (`src/088_b5_visions.js`)
 
 `b5v1` Trull in Mosag's longboat on Calach Bay (what was summoned is a swell under the boat); `b5v2` Kuru Qan in the Cedance through the tile that answers Tarancede Tower, the end of a summer day (the spirit "something old, and bound, and hungry"); `b5v3` Yan Tovis on the wall at Fent Reach, three hundred thousand, the colours struck (no blood, no Shake, no "Twilight"); `b5v4` Nekal Bara at the Trate lighthouse, her mistake, the Ceda's name, the lamp out; `b5v5` Moroch on the road south to the gates (no Errant); `b5v6` the Preda ("she") with the King's Battalion, "Hold", the Whitefinders still fighting on the right (no word of her death); `b5v7` Moroch on the principal bridge over Main Canal (unnamed), seventy-three behind him, the Emperor coming on (never the duel, nothing of the sword). Words-only flags `b5vN_*`.
 

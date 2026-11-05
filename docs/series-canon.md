@@ -11,7 +11,7 @@ Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a),
 
 Books: GotM *Gardens of the Moon*, DG *Deadhouse Gates*, MoI *Memories of Ice*, HoC *House of Chains*, MT *Midnight Tides*, BH *The Bonehunters*, RG *Reaper's Gale*, TtH *Toll the Hounds*, DoD *Dust of Dreams*, TCG *The Crippled God* (Erikson); NoK *Night of Knives*, RotCG *Return of the Crimson Guard*, SW *Stonewielder*, OST *Orb Sceptre Throne*, B&B *Blood and Bone*, *Assail* (Esslemont).
 
-Line numbers (`46:2267` = `src/46_chapter7.js` line 2267) are for commit 7b9647d (v3.15.4 plus the lead's renames). Other v3.16 branches move some of them.
+Line numbers (`46:2267` = `src/046_chapter7.js` line 2267) are for commit 7b9647d (v3.15.4 plus the lead's renames). Other v3.16 branches move some of them.
 
 ---
 
@@ -209,7 +209,7 @@ Never print a BS year in game text (rule 13). This is for writers only.
 
 ## (f) The gods who answer a wipe
 
-The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later chapter can keep or replace them.
+The game's patrons (`src/031c_stakes.js`) and what becomes of each, so a later chapter can keep or replace them.
 
 - **Hood** (Death). Active through BH and RG. **TtH: Rake beheads him with Dragnipur**; after Dragnipur falls, Whiskeyjack and the Bridgeburners become the Guardians of the Gate. DoD: Hood returns to his frozen body on the Ice Throne and leads his fourteen undead Jaghut. TCG: active again at the Spire. Not available as a patron for scenes set after TtH; a sequel should answer with the Guardians of the Gate. [W *Hood*]
 - **Oponn** (the Twins of Chance). MoI: they have let Paran go. BH: in Malaz City the night Tavore arrives; something terrifies them and Shadowthrone throws them out of Obo's tower. DoD: revealed as heirs of Sechul Lath. B&B: taunt T'riss. Still about, diminished and scared. [W *Oponn*, *Ammanas*]
@@ -292,12 +292,12 @@ Forward-canon §6 and its medium, low and *memory* items, re-checked. **Closed**
 Findings that would change game text or the bible. Lines at 7b9647d.
 
 1. **The bible's §8.49 is wrong: Hedge does not die in GotM** (`docs/story-bible.md:145`, §9 Ch7 row `:171`). He dies at Coral in MoI (W *Hedge*; FC's own table). The game's living Hedge (`c6_mines_kettle`, `c7_hedge`) is canon; nothing to change in `src`. Fiddler mourning Hedge in E.3 is not in W's Epilogue.
-2. **The bible's §8.50 may overstate the departure slip** (`docs/story-bible.md:146`). W's Epilogue sets all three scenes on Lake Azur, with Circle Breaker watching the coin go in, and gives no coast. The game's lake departure may be right; "the morning tide" (`src/46_chapter7.js:495`) is still wrong for a lake.
-3. **T'lan Imass: do not apply FC's medium fix yet** (`src/44_chapter5.js:210`, `src/35_pack_journal_save.js:100` "They fight beside the Empire."). Tool serves Lorn under Laseen in GotM, and Tattersail says they came back at half strength. "The Empire has an army of them" is shaky; "They fight beside the Empire" is defensible.
-4. **Otataral exemption** (`src/16b_tricks.js:33`, `:36`): Kurald Galain's immunity has one source; Omtose Phellack's has none. If the rules change, exempt A Courtesy of Darkness only, or wait.
-5. **Seasons on the outlaw road** (`src/46_chapter7.js:2267` "all winter", `:2302` "the whole first winter"): closed by three sources. "That season" / "that first campaign".
-6. **The Fander rite** (`src/45_chapter6.js:2348`, priestesses at first light the morning after): both sources put the rite before or at the Fête's start.
-7. **Lamps** (`src/46_chapter7.js:128` "three hundred years"): one source says nine hundred.
-8. **Turban Orr's spell in the duel** (`src/45_chapter6.js:1205`–`1210`): one source says swordsman only, one suggests wards. If kept, it reads as a ward firing, not a spell he shapes.
+2. **The bible's §8.50 may overstate the departure slip** (`docs/story-bible.md:146`). W's Epilogue sets all three scenes on Lake Azur, with Circle Breaker watching the coin go in, and gives no coast. The game's lake departure may be right; "the morning tide" (`src/046_chapter7.js:495`) is still wrong for a lake.
+3. **T'lan Imass: do not apply FC's medium fix yet** (`src/044_chapter5.js:210`, `src/035_pack_journal_save.js:100` "They fight beside the Empire."). Tool serves Lorn under Laseen in GotM, and Tattersail says they came back at half strength. "The Empire has an army of them" is shaky; "They fight beside the Empire" is defensible.
+4. **Otataral exemption** (`src/016b_tricks.js:33`, `:36`): Kurald Galain's immunity has one source; Omtose Phellack's has none. If the rules change, exempt A Courtesy of Darkness only, or wait.
+5. **Seasons on the outlaw road** (`src/046_chapter7.js:2267` "all winter", `:2302` "the whole first winter"): closed by three sources. "That season" / "that first campaign".
+6. **The Fander rite** (`src/045_chapter6.js:2348`, priestesses at first light the morning after): both sources put the rite before or at the Fête's start.
+7. **Lamps** (`src/046_chapter7.js:128` "three hundred years"): one source says nine hundred.
+8. **Turban Orr's spell in the duel** (`src/045_chapter6.js:1205`–`1210`): one source says swordsman only, one suggests wards. If kept, it reads as a ward firing, not a spell he shapes.
 9. **The bible's 3.2/8.1 Green Moranth and boat**, 15.9 Hound names (Doan, Ganrod), 19.4 "Whiskeyjack and Dujek", 21.12 (tiger mask, Baruk presiding, D'Arle seconding), 22.8 terrace and the Black Moranth in 24.3 are not in the summaries read. Treat as unconfirmed.
 10. **Paran later lives in the Finnest House** (MoI, BH: W *Raest*, *Bridgeburners*). Rule 6 still holds for the game, but a sequel set in Darujhistan will need it.

@@ -31,11 +31,11 @@ ok(d.has, `Dryj Spring's gully check carries its own "yes, but" (${JSON.stringif
 
 // every check on a choice carries its own "yes, but" (v6.2.0), except tricks, which never have one
 { const fs = await import('fs'); const missing = [];
-  for (const f of fs.readdirSync('src').filter(f => f.endsWith('.js') && !f.startsWith('16'))) { const s = fs.readFileSync('src/' + f, 'utf8'); let i = -1;
+  for (const f of fs.readdirSync('src').filter(f => f.endsWith('.js') && !f.startsWith('016'))) { const s = fs.readFileSync('src/' + f, 'utf8'); let i = -1;
     while ((i = s.indexOf('check:[', i + 1)) >= 0) { const st = s.lastIndexOf('{t:', i); if (st < 0) continue; let d = 0, j = st;
       for (; j < s.length; j++) { if (s[j] === '{') d++; else if (s[j] === '}' && --d === 0) break; }
       const body = s.slice(st, j); if (!/near:|trick:/.test(body) && !/near:\s*\w+\.\w*[Nn]ear/.test(body)) missing.push(f + ':' + (s.slice(0, i).split('\n').length)); } }
-  const known = ['43_chapter4.js:5', '43_chapter4.js:11', '46_chapter7.js:90']; // helpers whose near: sits beside the check, outside a {t:} choice
+  const known = ['043_chapter4.js:5', '043_chapter4.js:11', '046_chapter7.js:90']; // helpers whose near: sits beside the check, outside a {t:} choice
   const left = missing.filter(m => !known.includes(m));
   ok(!left.length, `every check has its own "yes, but" (${left.length ? left.join(', ') : 'all'})`); }
 

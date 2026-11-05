@@ -1,6 +1,6 @@
 // v7.0.1 (David, Oct 26: the munitions cart in Book Four Ch1 "keeps looping"): a check is rolled once. Every book's every check is
 // taken both ways (made and missed) from a fresh state of its book, its result node's effect run, and the node shown again: the same
-// check must not be offered a second time (S.rolled, src/16_skill_checks.js). Then the cart itself through the real sheet.
+// check must not be offered a second time (S.rolled, src/016_skill_checks.js). Then the cart itself through the real sheet.
 // Allowed: nodes the story never shows twice (their way in is a flag or a one-way scene). Usage: node tools/recheck_test.mjs
 import { server, browser as launch, openGame } from './page.mjs';
 const ALLOW = {b2_fever:'the grandmother is b2_fever_again once the fever is settled', b2_bait_wait:'one way in, from the Shallows bait'};

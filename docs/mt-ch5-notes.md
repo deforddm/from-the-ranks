@@ -1,4 +1,4 @@
-Thu Oct 29, 2026, 2:31 AM PDT. Book Five, Chapter 5, "The Retreat" (`src/85_b5_ch5.js`, art `src/85b_b5_ch5_art.js`, its game in `src/89_b5_games.js`), against v8.0.0 on `book5` (not shipped).
+Thu Oct 29, 2026, 2:31 AM PDT. Book Five, Chapter 5, "The Retreat" (`src/085_b5_ch5.js`, art `src/085b_b5_ch5_art.js`, its game in `src/089_b5_games.js`), against v8.0.0 on `book5` (not shipped).
 
 # Chapter 5 notes: The Retreat
 

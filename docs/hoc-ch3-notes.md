@@ -1,4 +1,4 @@
-Wed Oct 21, 2026. Book Four, Chapter 3, "The Burned Tears" (`src/73_b4_ch3.js`, art `src/73b_b4_ch3_art.js`), against v7.0.0 on `book4` (not shipped).
+Wed Oct 21, 2026. Book Four, Chapter 3, "The Burned Tears" (`src/073_b4_ch3.js`, art `src/073b_b4_ch3_art.js`), against v7.0.0 on `book4` (not shipped).
 
 # Chapter 3 notes: The Burned Tears
 

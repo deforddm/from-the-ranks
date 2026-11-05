@@ -246,7 +246,7 @@ Sources: malazan.fandom.com/wiki/Deadhouse_Gates/Chapter_21, /Chapter_22, /Chapt
 
 ## Visions (Mon Oct 12, 2026 9:55 AM PDT)
 
-Book Two's seven "Through the Deck" visions (`src/56_b2_visions.js`), one per chapter, each through the eyes of a canon character the squad never meets, somewhere the squad cannot see, at the same point of the story. The game chapters map onto the novel roughly as: Ch1 = DG ch. 5–7, Ch2 = 7–10, Ch3 = 12–13, Ch4 = 14–16, Ch5 = 17–19, Ch6 = 19–20, Ch7 = 21–23. Sources: Malazan Wiki chapter pages *Deadhouse Gates/Chapter 4* to *Chapter 20* and *Chapter 23*, and the pages *Lostara Yil*, *Leoman*, *Sha'ik*, *Felisin Paran*, *Fener*, *Mappo Runt*, *Icarium*, *Minala*. The Reactor re-read pages came back empty again; *Heboric* and *Sha'ik Elder* refused the fetch. Marks as above.
+Book Two's seven "Through the Deck" visions (`src/056_b2_visions.js`), one per chapter, each through the eyes of a canon character the squad never meets, somewhere the squad cannot see, at the same point of the story. The game chapters map onto the novel roughly as: Ch1 = DG ch. 5–7, Ch2 = 7–10, Ch3 = 12–13, Ch4 = 14–16, Ch5 = 17–19, Ch6 = 19–20, Ch7 = 21–23. Sources: Malazan Wiki chapter pages *Deadhouse Gates/Chapter 4* to *Chapter 20* and *Chapter 23*, and the pages *Lostara Yil*, *Leoman*, *Sha'ik*, *Felisin Paran*, *Fener*, *Mappo Runt*, *Icarium*, *Minala*. The Reactor re-read pages came back empty again; *Heboric* and *Sha'ik Elder* refused the fetch. Marks as above.
 
 | id · Ch | Viewpoint · where | Canon basis (DG chapter) | Not confirmed / kept vague |
 |---|---|---|---|

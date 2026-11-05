@@ -11,7 +11,7 @@ Thu Oct 29, 2026, 3:55 PM PDT. Book Five balance on v8.0.0 (branch `book5`, not 
 
 ## What changed
 
-1. **`B5GAP`** (src/80_book5.js): Bridgeburner only, Book Five only (`S.book === 'mt'`), on top of everything else (`FSCALE`, `DIFFS`): a row per chapter, `{ac +, atk +, hp ×, dmg +}`, and **`B5GAP_FIGHT`**, a fight's own row in place of its chapter's. Book Four's table is per chapter; Book Five needs both, because its chapters mix small fights the squad walks through with one or two main fights: one row per chapter left the small fights at 100% and broke the main ones (trial A below).
+1. **`B5GAP`** (src/080_book5.js): Bridgeburner only, Book Five only (`S.book === 'mt'`), on top of everything else (`FSCALE`, `DIFFS`): a row per chapter, `{ac +, atk +, hp ×, dmg +}`, and **`B5GAP_FIGHT`**, a fight's own row in place of its chapter's. Book Four's table is per chapter; Book Five needs both, because its chapters mix small fights the squad walks through with one or two main fights: one row per chapter left the small fights at 100% and broke the main ones (trial A below).
 
 | Ch | chapter row (the fights without their own) | fights with their own row |
 |---|---|---|
@@ -24,7 +24,7 @@ Thu Oct 29, 2026, 3:55 PM PDT. Book Five balance on v8.0.0 (branch `book5`, not 
 | 7 | +3, +3, ×2.0, +4 (court) | looters +3, +3, ×1.85, +4 · wolves +1, +1, ×1.25, +1 · barricade +0, +1, ×1.05, +0 |
 
    The tavern (Ch 1) was the one fight already under the band as built (about 62% won over six measurements with no row); its row eases it a little, and measured 90% after it (20 runs), so it now sits at the band's top.
-2. **`B5SOFT`** (src/80_book5.js): Soldier only, Book Five only, per fight. One entry: **`b5_c7_barricade` health ×0.85, to hit −1, damage −1** (both grounds), which takes back about what Soldier's late extra (×1.2, +1, +1) adds there. `SOLDIER_LATE.mt` is unchanged.
+2. **`B5SOFT`** (src/080_book5.js): Soldier only, Book Five only, per fight. One entry: **`b5_c7_barricade` health ×0.85, to hit −1, damage −1** (both grounds), which takes back about what Soldier's late extra (×1.2, +1, +1) adds there. `SOLDIER_LATE.mt` is unchanged.
 3. Nothing else: Story, `DIFFS`, `FSCALE`, `SOLDIER_LATE`, Books One to Four and every fight's foes are as they were. `b5balance_test` proves the B5 rows touch no foe outside Book Five and none on Story or Soldier (bar the barricade), and `soldier_test` now covers Book Five's Soldier row and the cap.
 
 ## How it was measured
@@ -106,7 +106,7 @@ Its row went through five measurements at or near this weight (63–90% won, at 
 
 ## The fate pages (Ch 7 finale)
 
-`b5MarkWalked(n)` (src/80_book5.js) writes `S.f.b5_c4_walked` / `S.f.b5_c6_walked`, the ids walking (sergeant included, the dead left out), when Chapter 4's or Chapter 6's key is chosen (84, 86) and again when the key's fight starts (`B5_WALKED_AT`: `b5_c4_demon`, `b5_c4_wolves`, `b5_c6_channel`, `b5_c6_flight`; a "Not now" between key and fight may bring a waiting recruit in at a fire). In 87, `b57HighFort` / `b57Channel` credit the rampart (or the wood) and the crossing (or the fallback) only to those in the record; anyone else gets "At High Fort {name} was back with the company's followers, not on the west rampart (with the squad in the wood), and came south after the squad." / "At Brans Keep {he/she} waited behind the lines with the company's followers, and was not at the crossing (with the squad on the channel)." A save from before this change has no record and credits everyone, as before.
+`b5MarkWalked(n)` (src/080_book5.js) writes `S.f.b5_c4_walked` / `S.f.b5_c6_walked`, the ids walking (sergeant included, the dead left out), when Chapter 4's or Chapter 6's key is chosen (84, 86) and again when the key's fight starts (`B5_WALKED_AT`: `b5_c4_demon`, `b5_c4_wolves`, `b5_c6_channel`, `b5_c6_flight`; a "Not now" between key and fight may bring a waiting recruit in at a fire). In 87, `b57HighFort` / `b57Channel` credit the rampart (or the wood) and the crossing (or the fallback) only to those in the record; anyone else gets "At High Fort {name} was back with the company's followers, not on the west rampart (with the squad in the wood), and came south after the squad." / "At Brans Keep {he/she} waited behind the lines with the company's followers, and was not at the crossing (with the squad on the channel)." A save from before this change has no record and credits everyone, as before.
 
 ## Trials (12 runs a fight unless said, Bridgeburner)
 

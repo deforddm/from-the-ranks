@@ -1,4 +1,4 @@
-// Book Four, Chapter 7 (The Convergence, src/77_b4_ch7.js) and the end of Book Four: the chapter's halts; the night and the one face
+// Book Four, Chapter 7 (The Convergence, src/077_b4_ch7.js) and the end of Book Four: the chapter's halts; the night and the one face
 // among the riders (Sathi on a fresh start, a different Barrow dead on a transfer; b4_saw far and close); every fight's start and a
 // forced win, both grounds; the mortal fight fought (a squadmate's death recorded) and let go (Nerve −2, no fight); the trick and the
 // black bead in a fight; the fire and the swap; all three roads to the finale with every finale page rendered.

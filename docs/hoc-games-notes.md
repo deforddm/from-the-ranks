@@ -1,6 +1,6 @@
 Wed Oct 21, 2026. Against branch `b4-games` (Book Four, v7.0.0, not shipped).
 
-# Book Four's games at the fires (src/79_b4_games.js)
+# Book Four's games at the fires (src/079_b4_games.js)
 
 Five games, one at each chapter's fire, on the tables' frame (36: `mgOpen`, `mgPanel`, `mgKeys`, `MG.anim`), built the way Book Three's are (69, docs/v6.13-notes.md). The chapters' fire nodes are wrapped from 79 (`wrap`, `after`): each game's choice goes in right after "Talk with the squad.", so the fire keeps its rest, its talk, the swap, the pipe, the ways on and "Not now", and its `again:` line is untouched. Each game's after-node is added to the chapter's `dlg`, ending "Back to the fire.". No chapter file is changed.
 

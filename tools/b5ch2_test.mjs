@@ -1,4 +1,4 @@
-// Book Five, Chapter 2 (Trate, src/82_b5_ch2.js; Harbour Tiles in src/89_b5_games.js): the chapter's halts, both keys and their debt
+// Book Five, Chapter 2 (Trate, src/082_b5_ch2.js; Harbour Tiles in src/089_b5_games.js): the chapter's halts, both keys and their debt
 // moves, the reading, the fire and the pay desk, Harbour Tiles, the trick (taught, and its battle half), Brune's join (walking, and
 // waiting with the boats), every fight's start and a forced win (both grounds of the hulk), and the chapter's end; from a fresh start of
 // Chapter Two after a 'swim' Chapter One, and from a --from=2 style save after 'pay', where every node must still render.

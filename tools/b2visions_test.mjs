@@ -1,4 +1,4 @@
-// Book Two's seven Deck visions (56_b2_visions.js): each is played start to end from the journal with each kind of reader (Marrow; Yedda, a
+// Book Two's seven Deck visions (056_b2_visions.js): each is played start to end from the journal with each kind of reader (Marrow; Yedda, a
 // column woman with no squad sheet; the old Kanese, who is a he; and a stranger, for the fallback words), every choice picked at least once across runs. No page errors, no
 // undefined/NaN/${ in the text, no bare "—" button; the closing step is spoken by the reader (visReader().name) and draws the reader's figure,
 // and a second watching gets 36b's replay line in the reader's name. The journal lists Book Two's visions only in Book Two (one per chapter

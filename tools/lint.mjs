@@ -28,9 +28,9 @@ for (const m of all.matchAll(/S\.f\.([A-Za-z0-9_]+)\s*=\s*'([^']+)'/g)) (flagVal
 for (const m of all.matchAll(/S\.f\.([A-Za-z0-9_]+)\s*===?\s*'([^']+)'/g)) (flagVals[m[1]] ||= new Set()).add(m[2]);
 for (const m of setPairs) (flagVals[m[1]] ||= new Set()).add(m[2]);
 const flagValsObj = Object.fromEntries(Object.entries(flagVals).map(([k, v]) => [k, [...v]]));
-const spriteKinds = [...new Set([...fs.readFileSync(path.join(root, 'src/18_figure_sprites.js'), 'utf8').matchAll(/case '([a-z_0-9]+)'/g)].map(m => m[1])
+const spriteKinds = [...new Set([...fs.readFileSync(path.join(root, 'src/018_figure_sprites.js'), 'utf8').matchAll(/case '([a-z_0-9]+)'/g)].map(m => m[1])
   .concat([...all.matchAll(/\bFIGX\.([a-z_0-9]+)\s*=/g)].map(m => m[1])))]; // later books add theirs to FIGX (47b)
-const portraitSrc = fs.readFileSync(path.join(root, 'src/19_portraits.js'), 'utf8');
+const portraitSrc = fs.readFileSync(path.join(root, 'src/019_portraits.js'), 'utf8');
 
 const srv = await server(); const browser = await launch();
 const { page, errors: pageErrors } = await openGame(browser, srv.url, {});

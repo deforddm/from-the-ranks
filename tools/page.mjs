@@ -13,7 +13,7 @@ export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
    1. $ASHES_FONTS if set;  2. tools/.fonts/ (gitignored), built on first run from the npm @fontsource
    packages (installed into a cache outside the repo, ~/.cache/ashes-fonts);  3. none: one warning, and
    the browser falls back to its own fonts (fit measurements may shift). */
-const FONT_SET = { // the families and weights src/00_head.html asks Google for
+const FONT_SET = { // the families and weights src/000_head.html asks Google for
   'im-fell-english': ['400', '400-italic'], 'im-fell-english-sc': ['400'],
   'alegreya-sans': ['400', '500', '700', '400-italic'], 'alegreya-sans-sc': ['500', '700'] };
 function findFonts() {

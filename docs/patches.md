@@ -28,7 +28,7 @@ The patches are a matched set, so these rules hold for every book.
 - A new squad gets a new number, shape, cloth and symbol, and keeps the shared four.
 
 ## Where they live
-- The Fourth: `docs/art/Insignia.dc.html` (built into `src/19c_artwork.js` by `tools/art_build.py`), key `insignia/patch`.
-- The Third: `src/47d_b2_title.js`, key `insignia/dg`; Book Four's, `src/70b_b4_title.js`, key `insignia/hoc`.
-- The Sixth Company (Book Five): `src/80b_b5_title.js`, key `insignia/mt`.
+- The Fourth: `docs/art/Insignia.dc.html` (built into `src/019c_artwork.js` by `tools/art_build.py`), key `insignia/patch`.
+- The Third: `src/047d_b2_title.js`, key `insignia/dg`; Book Four's, `src/070b_b4_title.js`, key `insignia/hoc`.
+- The Sixth Company (Book Five): `src/080b_b5_title.js`, key `insignia/mt`.
 - The icon: `icon-*.png`, `apple-touch-icon.png` (the shared four on a round patch with two rank chevrons below).

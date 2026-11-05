@@ -1,4 +1,4 @@
-Wed Oct 21, 2026. Book Four, Chapter 2, "Coltaine's Fall" (`src/72_b4_ch2.js`, art `src/72b_b4_ch2_art.js`), against v7.0.0 on `book4` (not shipped).
+Wed Oct 21, 2026. Book Four, Chapter 2, "Coltaine's Fall" (`src/072_b4_ch2.js`, art `src/072b_b4_ch2_art.js`), against v7.0.0 on `book4` (not shipped).
 
 # Chapter 2 notes: Coltaine's Fall
 

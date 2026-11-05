@@ -1,4 +1,4 @@
-// v7.2: gear by role (src/38c_roster.js). Every item has a role or a signature name list; every soldier has roles; the old odd
+// v7.2: gear by role (src/038c_roster.js). Every item has a role or a signature name list; every soldier has roles; the old odd
 // exclusions are gone (Darrut wears the Aren Guard mail, Haddat the relic, Dannet a shield, Rasp what Tangle can); the sheet, placeGear and
 // allocateGear go by role; and no piece is ever worn by two squadmates after unrecruit, letGo, kill or a roster move.
 // Usage: node tools/gear_roles_test.mjs   (build first; exit 1 on a failure)

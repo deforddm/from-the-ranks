@@ -2,12 +2,12 @@
 
 *Historical: a past work order (v3.4); the game has moved on — see docs/story-bible.md.*
 
-You are writing the content module `src/44_chapter5.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
+You are writing the content module `src/044_chapter5.js` for *Ashes of the Pale*, a Malazan Book of the Fallen fan RPG (Gardens of the Moon). Read these first, in this order:
 
-1. `src/14_data.js` — TPL, FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
-2. `src/16_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
-3. `src/43_chapter4.js` — Chapter 4, the module you are matching in shape and voice. Read every node: `areas:[]`, exit tiles, `scene:` moves, npc `fresh`/`show`/`node`, gear/battles/foes, the card node, `check:[stat,dc], go, fail`, survive battles with `objective`/`waves`/`allies`, and the close (`chapterEnd(4, key)`).
-4. `src/41_chapter2.js` — Sethand's voice (the Rhivi guide) and Toc's; both return here. Also how the open-plain areas and `plain*` scenes were used.
+1. `src/014_data.js` — TPL, FOES, CARDS, ITEMS/gear shape, BATTLES, AREAS, PICKS.
+2. `src/016_skill_checks.js` — the prologue dialogue tree (`DLG`) and the helpers. This is the voice.
+3. `src/043_chapter4.js` — Chapter 4, the module you are matching in shape and voice. Read every node: `areas:[]`, exit tiles, `scene:` moves, npc `fresh`/`show`/`node`, gear/battles/foes, the card node, `check:[stat,dc], go, fail`, survive battles with `objective`/`waves`/`allies`, and the close (`chapterEnd(4, key)`).
+4. `src/041_chapter2.js` — Sethand's voice (the Rhivi guide) and Toc's; both return here. Also how the open-plain areas and `plain*` scenes were used.
 5. `docs/outline.md` — the campaign outline.
 
 ## What Chapter 5 is
@@ -41,7 +41,7 @@ Deck: one draw, Tuft on the ridge at dusk before the vale (`cardSequence(()=>tal
 - Gear: 3–4 items (a Rhivi bone charm trinket +1 wits, a barrow-flint blade weapon +1 atk, an otataral-dusted glove trinket for the sergeant/Brisk that gives +2 armour vs magic — engine has no such stat; make it `ac:1` and say the rest in the line, Toc's eye-patch cord? no — a Malazan scout's cloak armour +1 for ellis/kettle/sgt).
 - Helpers: as before, plus `unrecruit(id)`. Flags the engine reads: `c5_seth`, `c5_crone`, `c5_spotted`, `c5_wardsFought`, `c5_cusserUsed`, `c5_paran`, `c5_night`, `c5_key` (`through`|`hold`), `c5_ellisThrough`, `c5_ellisHeld`, `c5_tuftMarked`, `c5_rentFought`, `c5_toolSaw`, `c5_done`. Quest lines: `QUESTS.hills_ridge`, `QUESTS.barrow_vale` read `c5_seth`, `c5_wardsFought`, `c5_night`, `c5_key`.
 
-## Schema — produce exactly this in `src/44_chapter5.js`
+## Schema — produce exactly this in `src/044_chapter5.js`
 
 ```js
 /* ============ chapter 5: The Gadrobi Hills ============ */
@@ -60,4 +60,4 @@ const CH5 = {
 
 Length: 60–80 nodes. Lorn is never spoken to; Tool speaks once, to the hill, and once, maybe, to the sergeant if `S.f.c5_spotted` ("You are very small. Stay that way."); Hairlock speaks like a man who has forgotten he is not a man; Paran and Toc are theirs; Sethand and Crone return in their own voices; Ellis, if present, gets the reunion and the choice. Brisk: what "we don't leave people" costs. Kettle: the cusser, at last, and what it felt like. Ohl's list: a name that closes from the other side. Tuft: otataral, the rent, and Shadow's attention; plant, don't resolve.
 
-Do not touch any other file. Do not invent helpers, scenes, tile letters or sprite kinds not listed. No canon character dies, is wounded by the player, or fails to do what the book has them do. Output only `src/44_chapter5.js`; verify maps (16×12; battles 8×10; start/npc/trigger tiles walkable and reachable; every `go`/`fail`/`talk()` target exists in `CH5.dlg`; every foe id exists in `CH5.foes` or the engine's `FOES` for `wight`/`shade`) with a small node script, then `node --check`.
+Do not touch any other file. Do not invent helpers, scenes, tile letters or sprite kinds not listed. No canon character dies, is wounded by the player, or fails to do what the book has them do. Output only `src/044_chapter5.js`; verify maps (16×12; battles 8×10; start/npc/trigger tiles walkable and reachable; every `go`/`fail`/`talk()` target exists in `CH5.dlg`; every foe id exists in `CH5.foes` or the engine's `FOES` for `wight`/`shade`) with a small node script, then `node --check`.

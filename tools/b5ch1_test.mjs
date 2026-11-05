@@ -1,4 +1,4 @@
-// Book Five, Chapter 1 (The Drownings, src/81_b5_ch1.js; the Wager Board in src/89_b5_games.js): the chapter's halts, both keys and
+// Book Five, Chapter 1 (The Drownings, src/081_b5_ch1.js; the Wager Board in src/089_b5_games.js): the chapter's halts, both keys and
 // their debt moves, the reading, the fire and the pay desk, the Wager Board, the trick (taught, and its battle half), every fight's start
 // and a forced win (both grounds of the tavern), and the chapter's end; from a fresh start, and from a --from=1 style save (level 2) with
 // a recruit walking, where every node must still render and the recruit has a line at the fire.

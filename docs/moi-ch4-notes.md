@@ -1,6 +1,6 @@
 # Book Three, Chapter 4: "The Prisoners" — continuity notes
 
-`src/64_b3_ch4.js` (exports `B3CH4`, `number:'Four'`), art in `src/64b_b3_ch4_art.js`. West of Capustan, two days after the relief: the Fourth hold a stretch of the stake line round about 200,000 Tenescowri, collect Dannet from the Grey Swords in the city, ride out at dusk with Grey Swords and ropes after a K'ell Hunter under the Gathering's dust, and hold their stretch on the night a Pannion priest drives the starving at the stakes. Ends at dawn by the ration cart, with the key.
+`src/064_b3_ch4.js` (exports `B3CH4`, `number:'Four'`), art in `src/064b_b3_ch4_art.js`. West of Capustan, two days after the relief: the Fourth hold a stretch of the stake line round about 200,000 Tenescowri, collect Dannet from the Grey Swords in the city, ride out at dusk with Grey Swords and ropes after a K'ell Hunter under the Gathering's dust, and hold their stretch on the night a Pannion priest drives the starving at the stakes. Ends at dawn by the ration cart, with the key.
 
 ## Shape
 

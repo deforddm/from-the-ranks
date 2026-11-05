@@ -162,7 +162,7 @@ Object.assign(FIGX, {
 });
 
 /* ---------------- the busts (POR): in bust units, shoulders at y = 0, the face about y = −74 ---------------- */
-const B5P = BP; // the bust helpers live in 19_portraits.js now (BP), for every book
+const B5P = BP; // the bust helpers live in 019_portraits.js now (BP), for every book
 Object.assign(POR, {
   /* the Letherii sergeant: never gendered, so a face that could be either and no beard; scale over a padded coat, the blue-grey cloak, an open helm with cheek-guards, the round shield */
   sgt_mt(ctx){ const F = {cy:-73, w:13.2, h:20, jaw:.82, chin:5, skin:'#b48c6c', iris:'#4a4a54', lip:'#8e5c4c', browCol:'#2a1e16', browW:1.6, arch:.7, rim:'#d6a24a', nose:1.05, smileL:0, smileR:.15, mouthW:3.9, bags:.45, age:.45, look:.25, open:.92, flush:'#c07060'};

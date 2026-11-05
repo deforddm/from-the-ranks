@@ -1,4 +1,4 @@
-// Book Four's seven Deck visions (78_b4_visions.js, art 78b): each is reached the way a player reaches it, from its chapter's reading in
+// Book Four's seven Deck visions (078_b4_visions.js, art 78b): each is reached the way a player reaches it, from its chapter's reading in
 // Book Four (b4_c<n>_deck → the card screen → "✦ Look into the card"), played to the end, and lands back on that chapter's card node
 // (b4_c<n>_card), counted as the reader's; and each is played from the journal with every choice picked at least once. Each run is done
 // with each of Book Four's readers, set up the real way (70's VISREADER): Marrow in the squad; Marrow out and Tallow in; neither (the old
