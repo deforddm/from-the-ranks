@@ -197,3 +197,43 @@ const b6SgtLook = () => b6On() && b6Thread() === 'r'; // the Fourteenth's sergea
 
 /* the chapter's keys (the brief fixes them; plan "Key choices") */
 const B6KEYS = {1:['bury', 'leave'], 2:['burn', 'pass'], 3:['in', 'line'], 4:['vote', 'out'], 5:['wait', 'sail'], 6:['letgo', 'report'], 7:['adjunct', 'jetty', 'wickans']};
+
+/* ---- the backdrops: each borrows an earlier book's drawing until the chapter art replaces it (Book Five's pattern, 80) ---- */
+const B6_SCENE_LIKE = {b6_odhan_night:'b4_road_fire', b6_ghatan_walls:'b3_c3_walls_night', b6_ghatan_fire:'b2_hissar_burning', b6_barrows:'b2_geleen_moon',
+  b6_coast:'b2_harbour_night', b6_plague_village:'b3_c5_burnt', b6_gdanisban_rain:'b3_c2_herds_rain', b6_kokakal:'b4_c1_quay', b6_sky:'b3_c4_cold_night',
+  b6_hanar_ara:'b2_geleen', b6_sea:'b2_harbour_night', b6_malaz:'b2_aren_city_dusk', b6_camp_night:'b3_c2_camp_night'};
+Object.assign(SCENES, {
+  b6_odhan_night:{loc:'The Lato Odhan', sub:'The Fourteenth\'s camp · night', cap:'Cook-fires in a long line across the scrub, the picket horses stamping, and somewhere ahead an old city waiting.', amb:'explore'},
+  b6_ghatan_walls:{loc:'Y\'Ghatan', sub:'Under the walls · dusk', cap:'Walls the colour of old bone, the siege lines dug in, and the barrows of the Empire\'s dead along the road.', amb:'explore'},
+  b6_ghatan_fire:{loc:'Y\'Ghatan', sub:'The city burning', cap:'A city on fire from the inside, and the sky above it gone the wrong colour.', amb:'battle'},
+  b6_barrows:{loc:'Y\'Ghatan', sub:'The barrow field · the night after', cap:'Old mounds and one new one, long, and the city behind them still smoking.', amb:'explore'},
+  b6_coast:{loc:'The north coast', sub:'The Host\'s camp by the sea · night', cap:'Rain on the sea, the Host\'s tents in rows above the beach, and the lamps of a city that has gone quiet.', amb:'explore'},
+  b6_plague_village:{loc:'Inland from the coast', sub:'A village · rain', cap:'Doors open, nobody in the doorways, and a dog that will not come near.', amb:'explore'},
+  b6_gdanisban_rain:{loc:'Before G\'danisban', sub:'The Host\'s camp · rain', cap:'Mud, canvas, rain that does not stop, and the city\'s walls grey behind it.', amb:'explore'},
+  b6_kokakal:{loc:'The Kokakal shore', sub:'Nok\'s transports at anchor', cap:'Ships offshore as far as the eye goes, boats at the waterline, and an army waiting to leave a continent.', amb:'explore'},
+  b6_sky:{loc:'North-east of G\'danisban', sub:'The column halted · night', cap:'A row of lights coming down out of the sky below the moon, and the whole column stopped to watch them.', amb:'explore'},
+  b6_hanar_ara:{loc:'Hanar Ara', sub:'Outside the City of the Fallen', cap:'A city of tents and shrines on a plain, and a rebel army coming out of it to lay down its arms.', amb:'explore'},
+  b6_sea:{loc:'At sea', sub:'A transport\'s deck', cap:'Grey water, a grey sky, the fleet strung out behind, and every soldier aboard looking at the horizon.', amb:'explore'},
+  b6_malaz:{loc:'Malaz City', sub:'The waterfront', cap:'Mock\'s Hold on its rock over the harbour, the jetties crowded, and a city that has turned on someone.', amb:'explore'},
+  b6_camp_night:{loc:'The camp', sub:'Night', cap:'A soldier\'s camp at night, fires low, sentries walking.', amb:'explore'},
+});
+Object.entries(B6_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
+
+/* ---- the journal, the count and Deeds ---- */
+{ const _jn = journalNotes; journalNotes = function(){ const out = _jn(); if (!b6On()) return out;
+    const f = b6FeverList(), o = S.th && S.th[b6Other()];
+    out.unshift(`${b6Unit() === 'the Third' ? 'The Third, with the Fourteenth' : 'The Fourth, with Onearm\'s Host'}. ${f.length ? `Fever: ${f.map(id => id === 'sgt' ? 'you' : esc(NAME(id))).join(', ')}.` : 'Nobody has the fever.'}${o ? ` ${b6Other() === 'r' ? 'The Third' : 'The Fourth'} (Sergeant ${esc(o.name)}) is elsewhere in Seven Cities, at level ${o.lvl}.` : ''}`);
+    return out; }; }
+{ const _sr = statsRows; statsRows = function(s){ const r = _sr(s); if (!s || s.book !== 'bh') return r; const st = s.stats || {};
+    r.push(['Fevers caught', st.b6Caught || 0], ['Fevers broken', st.b6Cured || 0]); return r; }; }
+function b6DeedsExtra(mine){ const caught = mine.reduce((a, {s}) => a + (((s.stats || {}).b6Caught) || 0), 0), cured = mine.reduce((a, {s}) => a + (((s.stats || {}).b6Cured) || 0), 0);
+  const rows = [['Fevers caught, across every sergeant', caught || 'None yet'], ['Fevers broken', cured || 'None yet'], ['Finished', mine.filter(({s}) => bookDone(s)).length || 'Not yet']];
+  return `<h4 class="jh">Fever</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
+
+/* ---- the gods: both sergeants have Treach (Books Three and Four); the recruits' gods ---- */
+{ const prev = Object.getOwnPropertyDescriptor(PATRONS, 'sgt');
+  Object.defineProperty(PATRONS, 'sgt', {configurable:true, enumerable:true, get(){ return S && S.book === 'bh' ? PATRON_TREACH : prev.get ? prev.get() : prev.value; }, set(v){ /* kept per book */ }}); }
+Object.assign(PATRONS, {
+  ottar:{sig:'greysword', god:'Togg and Fanderay', title:'Togg and Fanderay', txt:id => `Ottar goes down with his shield still up, and says the name of his god into the dirt.\n\nThe answer is a sound like wolves a long way off, and then not a long way off.`},
+  ressa:{sig:'ohl', god:'Soliel', title:'Soliel, Mistress of Healing', txt:id => `Ressa, on her knees, laughs once. "You again," she says, to nobody the squad can see.\n\nA warmth goes through the squad like the first dry day after rain.`},
+});

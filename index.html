@@ -611,7 +611,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 /* v4.0: the Book picker on the new-sergeant form */
 .bseg .btn{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.15;min-height:52px}
 .bseg .btn small{font-size:.68rem;opacity:.75;font-style:italic}
-#impSel{width:100%;min-height:44px;background:#100d0b;color:inherit;border:1px solid rgba(201,151,63,.45);border-radius:2px;padding:6px 8px;font:inherit}
+#impSel,#impSel2{width:100%;min-height:44px;background:#100d0b;color:inherit;border:1px solid rgba(201,151,63,.45);border-radius:2px;padding:6px 8px;font:inherit}
 /* v4.0: the Chain (Book Two): water and the column, on the map header and in march conversations */
 .chainpill{display:inline-flex;gap:8px;align-items:center;font-size:.78rem;color:#e8d8b8;white-space:nowrap}
 .chainpill b{font-weight:600;color:#ffe0a0}.chainpill .dry b{color:#f08a7c}
@@ -780,6 +780,12 @@ const AUDIO = (() => {
       inst:{title:['bell', 'cello'], calm:['cello', 'glass', 'bell'], end:['bell', 'cello', 'flute']},
       bpm:{title:52, calm:58, end:48, dread:50, battle:92, dark:82},
       pats:['K...K.s.', 'K..sK...', 'K.....S.', 'K..k.Ss.'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X..x.X..'},
+    /* v9.0 Book Six (Seven Cities for the last time: fire, fever and the sea home): Locrian on D#2, the only book with a flattened fifth, so it
+       never quite rests; reed over a sand pad, frame drums sparse and heavy, more room than Book Four (the sea is in it) */
+    bh:{scale:[0, 1, 3, 5, 6, 8, 10], root:77.78, pad:'sand', wet:.26, drum:'frame', lead:'reed', bellK:.6, // D# Locrian
+      inst:{title:['reed', 'glass'], calm:['oud', 'reed', 'glass'], end:['reed', 'glass', 'cello']},
+      bpm:{title:52, calm:58, end:48, dread:50, battle:98, dark:84},
+      pats:['K...K.S.', 'K..sK..S', 'K.....S.', 'K..SK...'], fills:['K.S.K.SS', 'KSKSK.SS'], ost:'X..xX...'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -1256,6 +1262,9 @@ const AUDIO = (() => {
     b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
     b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
     b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
+    // Book Six (100): the backdrops the engine borrows; chapters add their own
+    b6_odhan_night:'desert_night', b6_ghatan_walls:'siege', b6_ghatan_fire:'burning', b6_barrows:'barrow', b6_coast:'sea_night', b6_plague_village:'rain', b6_gdanisban_rain:'rain',
+    b6_kokakal:'sea', b6_sky:'night', b6_hanar_ara:'plain', b6_sea:'sea', b6_malaz:'city', b6_camp_night:'night',
     // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea, Kraig's Landing (83) on the river
     b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
     b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
@@ -1278,6 +1287,7 @@ const AUDIO = (() => {
     if (/^b3|^moi/.test(n)) return dark || /night/.test(n) ? 'night' : /dusk/.test(n) ? 'dusk' : 'plain';
     if (/^b4|^hoc/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Four: the Holy Desert
     if (/^b5|^mt/.test(n)) return dark || /night/.test(n) ? 'river_night' : /dusk/.test(n) ? 'dusk' : 'river'; // Book Five: Lether's river country
+    if (/^b6|^bh/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Six: the Odhans, until a place says otherwise
     return null;
   }
   const NIGHT = {plain:'night', dusk:'night', hills:'night', city:'city_night', camp:'camp_night', desert:'desert_night', desert_dusk:'desert_night', column:'column_night', river:'river_night', sea:'sea_night', siege:'siege_night', forest:'forest_night', snow:'snow_night', burnt:'burnt_night', herds:'night'};
@@ -1294,8 +1304,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};
@@ -5349,11 +5359,20 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
 /* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
 const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : b === 'hoc' && typeof b4Finished === 'function' ? b4Finished() : [];
-const impShow = b => impList(b).length > 0;
+const impShow = b => b === 'bh' || impList(b).length > 0; // v9.0: Book Six always asks for its second sergeant's name (100)
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+  if (b === 'bh' && typeof b6ImpList === 'function') { const o = t => b6ImpList(t).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+    return `<label for="impSel">Bring Book Four's squad (the Third, with the Fourteenth)</label><select id="impSel"><option value="">No: a fresh start</option>${o('r')}</select>
+      <small class="fine" id="impDesc">Only a finished Book Four on the line road: that squad is still with the Adjunct.</small>`; }
   if (b === 'hoc') return `<label for="impSel">Bring a Book Two sergeant and the squad</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book Two on the Aren Guard or the Wickan road: that squad was in Aren when the Adjunct came. The desert road leads elsewhere.</small>`;
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
+/* v9.0: Book Six's second sergeant, under the first's name (100): the Fourth's name, and a Book Three squad to bring */
+function impInner2(b){ if (b !== 'bh' || typeof b6ImpList !== 'function') return '';
+  const o = b6ImpList('h').map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
+  return `<label for="nm2">The Fourth's sergeant (with Onearm's Host)</label><input type="text" id="nm2" maxlength="18" value="Brann" placeholder="Name the Fourth's sergeant" autocomplete="off" autocapitalize="words" spellcheck="false">
+    <label for="impSel2">Bring Book Three's squad (the Fourth)</label><select id="impSel2"><option value="">No: a fresh start</option>${o}</select>
+    <small class="fine">Only a finished Book Three on the host road: that Fourth marched on with Onearm's Host.</small>`; }
 /* Choose your book (v6.3): the title shows the three books as covers. A returning player sees their sergeants first and the
    shelf under them; a new device sees the shelf alone. A cover opens that book's page: its sergeants to carry on, and a new
    sergeant for it (name, difficulty, a Book One road to bring). The book row on that page flips between books in place. */
@@ -5385,6 +5404,7 @@ function showTitle(fresh, want){
     <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
+    <div class="field" id="impField2" ${tb === 'bh' ? '' : 'hidden'}>${impInner2(tb)}</div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
     ${iosNote}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
@@ -5417,6 +5437,12 @@ function showTitle(fresh, want){
       if (book === 'moi' && typeof b3ChCount === 'function' && !b3ChCount()) { msg('Book Three is still being written. Its chapters are on the way.'); return; }
       if (book === 'hoc' && typeof b4ChCount === 'function' && !b4ChCount()) { msg('Book Four is still being written. Its chapters are on the way.'); return; }
       if (book === 'mt' && typeof b5ChCount === 'function' && !b5ChCount()) { msg('Book Five is still being written. Its chapters are on the way.'); return; }
+      if (book === 'bh' && typeof b6ChCount === 'function' && !b6ChCount()) { msg('Book Six is still being written. Its chapters are on the way.'); return; }
+      if (book === 'bh') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' ');
+        if (!n2) { msg('Give the Fourth\'s sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
+        if (sameName(n2, n)) { msg('Two sergeants, two names.'); $('#nm2').focus(); return; }
+        const t6 = taken(n); if (t6 && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t6.name} over`; msg(tapWord(`Sergeant ${t6.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
+        S = newStateBH(n, n2, imp, $('#impSel2') ? $('#impSel2').value : '', t6 ? t6.id : undefined); S.diff = diff; save(); return startChapter(1); } // v9.0: two squads (100)
       const t = (book === 'moi' || book === 'hoc') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
       if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
@@ -5427,8 +5453,8 @@ function showTitle(fresh, want){
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
     document.querySelectorAll('.bseg [data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('.bseg [data-book]').forEach(y => y.classList.toggle('on', y === x));
-      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); bindImp();
-      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; disarm(); });
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); const f2 = $('#impField2'); if (f2) { f2.hidden = book !== 'bh'; f2.innerHTML = impInner2(book); } bindImp();
+      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; disarm(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
@@ -5437,8 +5463,10 @@ function showTitle(fresh, want){
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
-        else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; }; }
-    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book);
+        else if (book === 'bh') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; };
+      const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = !!o; n2.classList.toggle('locked', !!o); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
+    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)';
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
   } else {
@@ -9274,6 +9302,7 @@ function bookDeedsHTML(b, all){
   else if (b === 'moi') extra = typeof b3DeedsExtra === 'function' ? b3DeedsExtra(mine) : ''; // Book Three's Alliance (60)
   else if (b === 'hoc') extra = typeof b4DeedsExtra === 'function' ? b4DeedsExtra(mine) : ''; // Book Four's Nerve and Dust (70)
   else if (b === 'mt') extra = typeof b5DeedsExtra === 'function' ? b5DeedsExtra(mine) : ''; // Book Five's Debt (80)
+  else if (b === 'bh') extra = typeof b6DeedsExtra === 'function' ? b6DeedsExtra(mine) : ''; // Book Six's Fever (100)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
@@ -72508,6 +72537,189 @@ const b6SgtLook = () => b6On() && b6Thread() === 'r'; // the Fourteenth's sergea
 
 /* the chapter's keys (the brief fixes them; plan "Key choices") */
 const B6KEYS = {1:['bury', 'leave'], 2:['burn', 'pass'], 3:['in', 'line'], 4:['vote', 'out'], 5:['wait', 'sail'], 6:['letgo', 'report'], 7:['adjunct', 'jetty', 'wickans']};
+
+/* ---- the backdrops: each borrows an earlier book's drawing until the chapter art replaces it (Book Five's pattern, 80) ---- */
+const B6_SCENE_LIKE = {b6_odhan_night:'b4_road_fire', b6_ghatan_walls:'b3_c3_walls_night', b6_ghatan_fire:'b2_hissar_burning', b6_barrows:'b2_geleen_moon',
+  b6_coast:'b2_harbour_night', b6_plague_village:'b3_c5_burnt', b6_gdanisban_rain:'b3_c2_herds_rain', b6_kokakal:'b4_c1_quay', b6_sky:'b3_c4_cold_night',
+  b6_hanar_ara:'b2_geleen', b6_sea:'b2_harbour_night', b6_malaz:'b2_aren_city_dusk', b6_camp_night:'b3_c2_camp_night'};
+Object.assign(SCENES, {
+  b6_odhan_night:{loc:'The Lato Odhan', sub:'The Fourteenth\'s camp · night', cap:'Cook-fires in a long line across the scrub, the picket horses stamping, and somewhere ahead an old city waiting.', amb:'explore'},
+  b6_ghatan_walls:{loc:'Y\'Ghatan', sub:'Under the walls · dusk', cap:'Walls the colour of old bone, the siege lines dug in, and the barrows of the Empire\'s dead along the road.', amb:'explore'},
+  b6_ghatan_fire:{loc:'Y\'Ghatan', sub:'The city burning', cap:'A city on fire from the inside, and the sky above it gone the wrong colour.', amb:'battle'},
+  b6_barrows:{loc:'Y\'Ghatan', sub:'The barrow field · the night after', cap:'Old mounds and one new one, long, and the city behind them still smoking.', amb:'explore'},
+  b6_coast:{loc:'The north coast', sub:'The Host\'s camp by the sea · night', cap:'Rain on the sea, the Host\'s tents in rows above the beach, and the lamps of a city that has gone quiet.', amb:'explore'},
+  b6_plague_village:{loc:'Inland from the coast', sub:'A village · rain', cap:'Doors open, nobody in the doorways, and a dog that will not come near.', amb:'explore'},
+  b6_gdanisban_rain:{loc:'Before G\'danisban', sub:'The Host\'s camp · rain', cap:'Mud, canvas, rain that does not stop, and the city\'s walls grey behind it.', amb:'explore'},
+  b6_kokakal:{loc:'The Kokakal shore', sub:'Nok\'s transports at anchor', cap:'Ships offshore as far as the eye goes, boats at the waterline, and an army waiting to leave a continent.', amb:'explore'},
+  b6_sky:{loc:'North-east of G\'danisban', sub:'The column halted · night', cap:'A row of lights coming down out of the sky below the moon, and the whole column stopped to watch them.', amb:'explore'},
+  b6_hanar_ara:{loc:'Hanar Ara', sub:'Outside the City of the Fallen', cap:'A city of tents and shrines on a plain, and a rebel army coming out of it to lay down its arms.', amb:'explore'},
+  b6_sea:{loc:'At sea', sub:'A transport\'s deck', cap:'Grey water, a grey sky, the fleet strung out behind, and every soldier aboard looking at the horizon.', amb:'explore'},
+  b6_malaz:{loc:'Malaz City', sub:'The waterfront', cap:'Mock\'s Hold on its rock over the harbour, the jetties crowded, and a city that has turned on someone.', amb:'explore'},
+  b6_camp_night:{loc:'The camp', sub:'Night', cap:'A soldier\'s camp at night, fires low, sentries walking.', amb:'explore'},
+});
+Object.entries(B6_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
+
+/* ---- the journal, the count and Deeds ---- */
+{ const _jn = journalNotes; journalNotes = function(){ const out = _jn(); if (!b6On()) return out;
+    const f = b6FeverList(), o = S.th && S.th[b6Other()];
+    out.unshift(`${b6Unit() === 'the Third' ? 'The Third, with the Fourteenth' : 'The Fourth, with Onearm\'s Host'}. ${f.length ? `Fever: ${f.map(id => id === 'sgt' ? 'you' : esc(NAME(id))).join(', ')}.` : 'Nobody has the fever.'}${o ? ` ${b6Other() === 'r' ? 'The Third' : 'The Fourth'} (Sergeant ${esc(o.name)}) is elsewhere in Seven Cities, at level ${o.lvl}.` : ''}`);
+    return out; }; }
+{ const _sr = statsRows; statsRows = function(s){ const r = _sr(s); if (!s || s.book !== 'bh') return r; const st = s.stats || {};
+    r.push(['Fevers caught', st.b6Caught || 0], ['Fevers broken', st.b6Cured || 0]); return r; }; }
+function b6DeedsExtra(mine){ const caught = mine.reduce((a, {s}) => a + (((s.stats || {}).b6Caught) || 0), 0), cured = mine.reduce((a, {s}) => a + (((s.stats || {}).b6Cured) || 0), 0);
+  const rows = [['Fevers caught, across every sergeant', caught || 'None yet'], ['Fevers broken', cured || 'None yet'], ['Finished', mine.filter(({s}) => bookDone(s)).length || 'Not yet']];
+  return `<h4 class="jh">Fever</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
+
+/* ---- the gods: both sergeants have Treach (Books Three and Four); the recruits' gods ---- */
+{ const prev = Object.getOwnPropertyDescriptor(PATRONS, 'sgt');
+  Object.defineProperty(PATRONS, 'sgt', {configurable:true, enumerable:true, get(){ return S && S.book === 'bh' ? PATRON_TREACH : prev.get ? prev.get() : prev.value; }, set(v){ /* kept per book */ }}); }
+Object.assign(PATRONS, {
+  ottar:{sig:'greysword', god:'Togg and Fanderay', title:'Togg and Fanderay', txt:id => `Ottar goes down with his shield still up, and says the name of his god into the dirt.\n\nThe answer is a sound like wolves a long way off, and then not a long way off.`},
+  ressa:{sig:'ohl', god:'Soliel', title:'Soliel, Mistress of Healing', txt:id => `Ressa, on her knees, laughs once. "You again," she says, to nobody the squad can see.\n\nA warmth goes through the squad like the first dry day after rain.`},
+});
+
+/* ============ Book Six's title: Y'Ghatan at dusk, the bones in its walls, and smoke (v9.0, 100b) ============
+   The painted title (ART 'title/bh', drawn by Claude for this game from a seeded generator): a smoke-red dusk over the Odhan; the walls of
+   Y'Ghatan the colour of old bone, with the bones of the older cities in them, as the novel's epigraph has it ("the bones in the walls, the bones
+   beneath the floor"); one tower down and a breach; smoke rising behind the walls; the barrows of the Empire's dead along the road in front; a
+   file of soldiers on the road; and in the foreground a finger bone on a thong hanging from a spear, the Bonehunters' mark.
+   The patch (ART 'insignia/bh'): the two squads' own patches side by side, the Third's (Book Four's, already with its finger bone) and the
+   Fourth's with a finger bone stitched under the flame (series-patches.md; plan question 6).
+   Motion: the .k6-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
+{
+  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
+  const W = 1600, H = 900, WALL = 520; // the foot of the walls
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+<style>.k6-smoke{animation:k6-smoke 14s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}.k6-ember{animation:k6-ember 2.4s ease-in-out infinite}
+.k6-march{animation:k6-march 1.3s ease-in-out infinite}.k6-bone{animation:k6-bone 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+@keyframes k6-smoke{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-14px,-10px) scale(1.04)}}
+@keyframes k6-ember{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes k6-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
+@keyframes k6-bone{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.k6-smoke,.k6-ember,.k6-march,.k6-bone{animation:none}}.reduce .k6-smoke,.reduce .k6-ember,.reduce .k6-march,.reduce .k6-bone{animation:none}</style>
+<defs><linearGradient id="k6sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1014"/><stop offset=".45" stop-color="#5a2418"/><stop offset=".8" stop-color="#b0502a"/><stop offset="1" stop-color="#d88a4a"/></linearGradient>
+<linearGradient id="k6wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8b08a"/><stop offset="1" stop-color="#7a6248"/></linearGradient>
+<linearGradient id="k6ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4430"/><stop offset="1" stop-color="#1e1610"/></linearGradient>
+<radialGradient id="k6glow" cx=".5" cy="1" r=".6"><stop offset="0" stop-color="#ff8a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient></defs>
+<rect width="${W}" height="${H}" fill="url(#k6sky)"/>
+<ellipse cx="860" cy="${WALL}" rx="620" ry="260" fill="url(#k6glow)"/>`;
+  /* smoke behind the walls: three columns leaning west */
+  [[640, 1.0], [880, 1.25], [1080, .9]].forEach(([x, k], i) => { let d = `M${x - 40} ${WALL - 60}`;
+    for (let j = 0; j < 7; j++) { const y = WALL - 80 - j * 70 * k, w = 50 + j * 26; d += ` Q${f1(x - j * 34 - w)} ${f1(y - 20)} ${f1(x - j * 40)} ${f1(y - 60)}`; }
+    s += `<path class="k6-smoke" style="animation-delay:-${i * 4}s" d="${d} L${x + 60} ${WALL - 60} Z" fill="#2a1a16" opacity="${.55 - i * .08}"/>`; });
+  /* the walls: bone-coloured, a crenellated line, towers, one tower down and a breach */
+  let wall = `M0 ${WALL - 120}`; for (let x = 0; x <= W; x += 40) { const hgt = WALL - 120 - (Math.floor(x / 40) % 2 ? 0 : 14); wall += ` L${x} ${hgt} L${x + 20} ${hgt}`; }
+  s += `<path d="${wall} L${W} ${WALL} L0 ${WALL} Z" fill="url(#k6wall)"/>`;
+  [180, 470, 1240, 1480].forEach((x, i) => s += `<rect x="${x - 50}" y="${WALL - 220 - (i % 2) * 30}" width="100" height="${220 + (i % 2) * 30}" fill="#b49a76"/><rect x="${x - 56}" y="${WALL - 232 - (i % 2) * 30}" width="112" height="16" fill="#8a7458"/>`);
+  s += `<path d="M780 ${WALL - 120} L820 ${WALL - 40} L860 ${WALL - 70} L900 ${WALL - 20} L950 ${WALL - 90} L990 ${WALL - 120} L990 ${WALL} L780 ${WALL} Z" fill="#3a2a20"/>`; // the breach
+  s += `<path d="M900 ${WALL - 30} l-60 12 l90 8 l-40 10 l70 -4 Z" fill="#9a8264"/>`; // tumbled stone
+  /* the bones in the walls: skulls and long bones set in the courses, picked from a seed */
+  for (let i = 0; i < 46; i++) { const x = 20 + h(i, 61) * (W - 40), y = WALL - 110 + h(i, 62) * 100; if (x > 770 && x < 1000) continue;
+    if (h(i, 63) > .6) s += `<g opacity=".55"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="7" ry="8" fill="#e8dcc4"/><circle cx="${f1(x - 2.5)}" cy="${f1(y - 1)}" r="1.8" fill="#3a2a20"/><circle cx="${f1(x + 2.5)}" cy="${f1(y - 1)}" r="1.8" fill="#3a2a20"/></g>`;
+    else s += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(14 + h(i, 64) * 16)}" height="3.2" rx="1.6" fill="#ece0c8" opacity=".5" transform="rotate(${f1((h(i, 65) - .5) * 30)} ${f1(x)} ${f1(y)})"/>`; }
+  /* embers in the breach */
+  for (let i = 0; i < 14; i++) s += `<circle class="k6-ember" style="animation-delay:-${f1(h(i, 66) * 2.4)}s" cx="${f1(800 + h(i, 67) * 170)}" cy="${f1(WALL - 20 - h(i, 68) * 80)}" r="${f1(1.5 + h(i, 69) * 2)}" fill="#ffb060"/>`;
+  /* the ground, the road and the barrows */
+  s += `<rect y="${WALL}" width="${W}" height="${H - WALL}" fill="url(#k6ground)"/>`;
+  s += `<path d="M880 ${WALL} L760 ${H} L1080 ${H} L920 ${WALL} Z" fill="#6a5238" opacity=".7"/>`;
+  [[260, 640, 150], [470, 600, 110], [1260, 610, 130], [1440, 660, 170], [120, 740, 190], [1360, 780, 160]].forEach(([x, y, w]) =>
+    s += `<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${f1(w * .28)}" fill="#3e2e20"/><ellipse cx="${x}" cy="${f1(y - w * .06)}" rx="${f1(w * .8)}" ry="${f1(w * .18)}" fill="#4e3a28"/>`);
+  /* a file of soldiers on the road, small, spears up */
+  let col = ''; for (let i = 0; i < 16; i++) { const t = i / 16, x = 900 - t * 90 + (i % 2) * 6, y = WALL + 30 + t * 210, k = .5 + t * .9;
+    col += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})"><rect x="-4" y="-22" width="8" height="18" fill="#1a120c"/><circle cx="0" cy="-26" r="4.5" fill="#1a120c"/><rect x="5" y="-40" width="1.6" height="36" fill="#1a120c"/><rect x="-4" y="-4" width="3" height="10" fill="#1a120c"/><rect x="1" y="-4" width="3" height="10" fill="#1a120c"/></g>`; }
+  s += `<g class="k6-march">${col}</g>`;
+  /* the foreground: a spear planted in the ground with a finger bone hanging from its thong */
+  s += `<rect x="1300" y="380" width="8" height="${H - 380}" fill="#2a1c12"/><path d="M1296 384 L1304 330 L1312 384 Z" fill="#8a8a88"/>
+<g class="k6-bone"><path d="M1304 420 L1290 500" stroke="#3a2a1a" stroke-width="2.5"/><g transform="translate(1290 500) rotate(-10)"><rect x="-6" y="0" width="12" height="44" rx="6" fill="#efe4cc"/><circle cx="0" cy="2" r="7" fill="#efe4cc"/><circle cx="0" cy="44" r="6" fill="#efe4cc"/><rect x="-1.2" y="8" width="2.4" height="30" fill="#c8b898" opacity=".6"/></g></g>`;
+  s += `</svg>`;
+  ART['title/bh'] = s; ART_SIZE['title/bh'] = [W, H];
+
+  /* the patch: the Third's (Book Four's) and the Fourth's (Book One's) side by side; the Fourth's with a finger bone under it */
+  const inner = (k, x) => (ART[k] || '').replace(/^<svg /, `<svg x="${x}" y="0" width="290" height="330" `);
+  ART['insignia/bh'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-label="The two squads' patches, Book Six: the Third's and the Fourth's, each with a finger bone">
+${inner('insignia/hoc', 0)}${inner('insignia/patch', 310)}
+<g transform="translate(455 352) rotate(90)"><rect x="-6" y="-24" width="12" height="48" rx="6" fill="#efe4cc" stroke="#5a4a32" stroke-width="2"/><circle cx="0" cy="-24" r="7" fill="#efe4cc" stroke="#5a4a32" stroke-width="2"/><circle cx="0" cy="24" r="6" fill="#efe4cc" stroke="#5a4a32" stroke-width="2"/></g></svg>`;
+}
+/* Settings › Artwork off: the title's canvas backdrop borrows Book Four's desert until Book Six has its own */
+{ const _stb = startTitleBackdrop; startTitleBackdrop = function(cv, b){ return _stb(cv, b === 'bh' ? 'hoc' : b); }; }
+
+/* ============ Book Six: the Deck of Dragons, read by each squad's own reader (v9.0, 100c) ============
+   The Third reads as in Book Four (70c): Marrow while she walks, else Tallow, else the old soldier of the 9th. The Fourth reads as in
+   Book Three (60c): Tuft, else Sohra, else old Benna. b6As(fn) runs fn with S.book set to the squad's own book for a moment, so the reader
+   chain (VISREADER), the card screen's captions (CARDBOOK) and the cards' words (B3SAY, B4SAY) are each book's own, unchanged.
+   The cards are canon Deck cards the earlier books already hold; their effects are engine-wide and keyed on S.card.
+
+   How a chapter uses it (Book Four's pattern):
+     - fill B6DECK[n] from the chapter's file: {scene, where, set, back, backT, say:{<reader id>:'…'}}
+     - put b6DeckChoice(n) among the chapter's first halt choices;
+     - register two nodes:  b6_c<n>_deck: () => b6DeckOffer(n),  b6_c<n>_card: () => b6DeckCard(n).
+   "Let him/her draw" sets S.f.b6_c<n>_drawn = 1 and S.f.b6_c<n>_reader; "Not now" sets S.f.b6_c<n>_noCard = 1. */
+
+function b6As(fn){ if (!b6On()) return fn(); const was = S.book; S.book = B6_TH[b6Thread()].book;
+  try { return fn(); } finally { S.book = was; } }
+{ const _vr = VISREADER; VISREADER = () => b6On() ? b6As(() => _vr ? _vr() : null) : (_vr ? _vr() : null); }
+{ const _cb = CARDBOOK;
+  CARDBOOK = {
+    txt:id => b6On() ? b6As(() => _cb.txt(id)) : _cb.txt(id),
+    cap(t, self, second){ return b6On() ? b6As(() => _cb.cap(t, self, second)) : _cb.cap(t, self, second); },
+  };
+  ['square', 'done', 'look'].forEach(k => { if (_cb && typeof _cb[k] === 'function') CARDBOOK[k] = (...a) => b6On() ? b6As(() => _cb[k](...a)) : _cb[k](...a); }); }
+
+/* each chapter's pool leans to one card (three of it), with two others. The Third's chapters draw from Book Four's deck, the Fourth's from Book Three's. */
+const B6POOL = {
+  1:['b2c_soldier', 'b2c_soldier', 'b2c_soldier', 'oponn', 'herald'],            // the Lato Odhan: an army on the march to an old city of the dead
+  2:['b3c_leper', 'b3c_leper', 'b3c_leper', 'b3c_obelisk', 'b3c_knight'],         // the north coast: the plague walks the roads
+  3:['herald', 'herald', 'herald', 'b4c_knightchains', 'b2c_soldier'],            // Y'Ghatan: the door held open
+  4:['b3c_consort', 'b3c_consort', 'b3c_consort', 'b3c_leper', 'b3c_gate'],       // G'danisban: a goddess in the city
+  5:['b2c_queen', 'b2c_queen', 'b2c_queen', 'oponn', 'b4c_leper'],                // the Kokakal shore: somebody mends; the survivors walk in
+  6:['b3c_gate', 'b3c_gate', 'b3c_gate', 'b3c_obelisk', 'b3c_kingchains'],        // the falling sky
+  7:['b4c_knightchains', 'b4c_knightchains', 'b4c_knightchains', 'assassin', 'b2c_king'], // Malaz City
+};
+const b6Pool = n => (B6POOL[n] || B6POOL[1]).filter(id => CARDS[id]);
+const b6Rd = () => visReader();
+const b6RdObj = () => b6Rd().he ? 'him' : 'her';
+const b6RdWords = (id, again) => b6Thread() === 'r' ? ((again ? B4RD_AGAIN : B4RD_DECK)[id]) : ((again ? B3RD_AGAIN : B3RD_DECK)[id]);
+const b6CardSay = id => b6As(() => { const s = (b6Thread() === 'r' ? B4SAY : B3SAY)[id], r = b6Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
+  return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); });
+
+/* per chapter: the writers fill 2..7 (Chapter 1's is the worked example, the Lato Odhan's first night) */
+const B6DECK = {
+  1:{scene:'b6_odhan_night', where:'a flat stone by the cook-fire', set:'The Fourteenth\'s first night camp on the Lato Odhan, with Leoman somewhere ahead of it.', back:'b6_c1_fire', backT:'Back to the fire.',
+     say:{marrow:'"Y\'Ghatan," Marrow says, before she has turned a card. "I know. Sit down."', tallow:'"My grandmother said never read on the road to a city of the dead," Tallow says. "She said a lot of things."',
+          oldninth:'"One finger of rum," the old soldier says. "Two if it\'s Y\'Ghatan. It\'s Y\'Ghatan."'}},
+};
+
+function b6DeckChoice(n){ const r = b6Rd();
+  return {t:`Sit with ${r.mid || r.name} and the Deck.`, deck:true, req:()=>!S.f[`b6_c${n}_drawn`] && !S.f[`b6_c${n}_noCard`], go:`b6_c${n}_deck`}; }
+function b6DeckOffer(n, card = `b6_c${n}_card`){ const D = B6DECK[n] || B6DECK[1], r = b6Rd(), seen = S.f['b6_rd_' + r.id];
+  return {sp:r.mid ? r.name : r.name, scene:D.scene, fx:()=>{ S.f['b6_rd_' + r.id] = 1; }, txt:
+`${b6RdWords(r.id, seen) || ''}
+
+${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
+    ch:[{t:`Let ${b6RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b6_c${n}_drawn`] = 1; S.f[`b6_c${n}_reader`] = r.id; S.card = dealCard(b6Pool(n)); }, go:()=>cardSequence(()=>talk(card))},
+        {t:'"Not now."', fx:()=>{ S.f[`b6_c${n}_noCard`] = 1; }, go:D.back}]}; }
+function b6DeckCard(n){ const D = B6DECK[n] || B6DECK[1], r = b6Rd(), pool = b6Pool(n), id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id];
+  return {sp:'The Deck of Dragons', scene:D.scene, txt:`${r.name} lays the reading out on ${D.where}. ${readRefuseLine(b6RdObj())}`,
+    html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
+    after:b6CardSay(id), ch:[{t:D.backT, go:D.back}]}; }
+/* a Book Six fight opens with the card's word in the log */
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt);
+    if (b6On() && B && B.log && CARDS[S.card] && CARDS[S.card].fx) blog(`<em>${CARDS[S.card].name}:</em> ${CARDS[S.card].fx}`);
+    return r; }; }
+
+/* ---- the tables (21b): one per chapter's reading place ----
+   1 a fire on the Lato Odhan; 2 a wet camp on the north coast; 3 the barrow field outside Y'Ghatan the night after; 4 a tent before G'danisban in
+   the rain; 5 the Kokakal shore by the transports; 6 the Host's column halted under a burning sky; 7 a transport's deck at sea. */
+Object.assign(READTABLE, {
+  'bh:1':{surf:'ground', p:{base:'#8a7650', dark:'#4a3a24', stones:24, cracks:3}, light:'fire', lp:[.9, .9], lc:'#ffa050', air:'sparks', dark:'#100c08', props:[['cup', .12, .14, 12]]},
+  'bh:2':{surf:'cloth', p:{base:'#4a4a44', dark:'#22221e', under:{base:'#4a4436', dark:'#201c14', stones:16}, rot:.04, folds:3}, light:'lantern', lp:[.12, .1], lc:'#ffc070', air:'mist', dark:'#0a0a0a', props:[['lantern', .12, .1, 14]]},
+  'bh:3':{surf:'ground', p:{base:'#5a4a3a', dark:'#2a2018', stones:30, ash:200, cracks:5}, light:'coals', lp:[.5, .96], lc:'#ff6a30', air:'ash', dark:'#0a0806', props:[]},
+  'bh:4':{surf:'cloth', p:{base:'#3e4038', dark:'#1c1e1a', under:{base:'#3a3a30', dark:'#1a1a14', stones:10}, rot:.06, stains:4, stain:'#2a2a20', folds:4}, light:'lantern', lp:[.88, .12], lc:'#ffc070', air:'none', dark:'#08090a', props:[['lantern', .88, .12, 14], ['helm', .12, .84, 16]]},
+  'bh:5':{surf:'ground', p:{base:'#a89a7a', dark:'#5a5040', stones:10}, light:'dusk', lp:[.5, 0], lc:'#d09070', air:'dust', dark:'#120e0c', props:[]},
+  'bh:6':{surf:'shield', p:{base:'#5a5044', dark:'#2a2420', under:{base:'#5a4e3a', dark:'#2a2418', stones:18}}, light:'fire', lp:[.5, 0], lc:'#ffb060', air:'sparks', dark:'#0c0806', props:[]},
+  'bh:7':{surf:'stone', p:{base:'#6a5a46', dark:'#2e261c', cracks:2}, light:'lantern', lp:[.12, .1], lc:'#ffc070', air:'mist', dark:'#0a0a0c', props:[['lantern', .12, .1, 14], ['jug', .88, .84, 14]]},
+});
 
 /* ============ resume & boot ============ */
 function resume(){

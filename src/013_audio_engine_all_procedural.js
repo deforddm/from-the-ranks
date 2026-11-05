@@ -41,6 +41,12 @@ const AUDIO = (() => {
       inst:{title:['bell', 'cello'], calm:['cello', 'glass', 'bell'], end:['bell', 'cello', 'flute']},
       bpm:{title:52, calm:58, end:48, dread:50, battle:92, dark:82},
       pats:['K...K.s.', 'K..sK...', 'K.....S.', 'K..k.Ss.'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X..x.X..'},
+    /* v9.0 Book Six (Seven Cities for the last time: fire, fever and the sea home): Locrian on D#2, the only book with a flattened fifth, so it
+       never quite rests; reed over a sand pad, frame drums sparse and heavy, more room than Book Four (the sea is in it) */
+    bh:{scale:[0, 1, 3, 5, 6, 8, 10], root:77.78, pad:'sand', wet:.26, drum:'frame', lead:'reed', bellK:.6, // D# Locrian
+      inst:{title:['reed', 'glass'], calm:['oud', 'reed', 'glass'], end:['reed', 'glass', 'cello']},
+      bpm:{title:52, calm:58, end:48, dread:50, battle:98, dark:84},
+      pats:['K...K.S.', 'K..sK..S', 'K.....S.', 'K..SK...'], fills:['K.S.K.SS', 'KSKSK.SS'], ost:'X..xX...'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -517,6 +523,9 @@ const AUDIO = (() => {
     b5_road_south:'burnt', b5_road:'plain', b5_road_night:'night', b5_burnt:'burnt', b5_cache:'camp', b5road:'plain', b5_march:'column', b5_march_dusk:'column_night',
     b5_branskeep:'hills', b5_channel:'siege', b5_keep:'siege', b5_keep_night:'siege_night', b5branskeep:'hills', b5_barrow:'barrow',
     b5_letheras_fall:'siege', b5_bridge:'city', b5_finale:'city_night',
+    // Book Six (100): the backdrops the engine borrows; chapters add their own
+    b6_odhan_night:'desert_night', b6_ghatan_walls:'siege', b6_ghatan_fire:'burning', b6_barrows:'barrow', b6_coast:'sea_night', b6_plague_village:'rain', b6_gdanisban_rain:'rain',
+    b6_kokakal:'sea', b6_sky:'night', b6_hanar_ara:'plain', b6_sea:'sea', b6_malaz:'city', b6_camp_night:'night',
     // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea, Kraig's Landing (83) on the river
     b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
     b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',
@@ -539,6 +548,7 @@ const AUDIO = (() => {
     if (/^b3|^moi/.test(n)) return dark || /night/.test(n) ? 'night' : /dusk/.test(n) ? 'dusk' : 'plain';
     if (/^b4|^hoc/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Four: the Holy Desert
     if (/^b5|^mt/.test(n)) return dark || /night/.test(n) ? 'river_night' : /dusk/.test(n) ? 'dusk' : 'river'; // Book Five: Lether's river country
+    if (/^b6|^bh/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Six: the Odhans, until a place says otherwise
     return null;
   }
   const NIGHT = {plain:'night', dusk:'night', hills:'night', city:'city_night', camp:'camp_night', desert:'desert_night', desert_dusk:'desert_night', column:'column_night', river:'river_night', sea:'sea_night', siege:'siege_night', forest:'forest_night', snow:'snow_night', burnt:'burnt_night', herds:'night'};
@@ -555,8 +565,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};

@@ -45,8 +45,24 @@ const r = await page.evaluate(() => {
   out.qual = {line:!!b6ImpR(line), horse:!!b6ImpR(horse), host:!!b6ImpH(host), daru:!!b6ImpH(daru), list:b6ImpList('r').length + '/' + b6ImpList('h').length};
   S = newStateBH('Vor', 'Brisk2', line, host); setBook('bh');
   out.imp = {lvl:S.lvl, squad:S.squad.join(','), marrowDead:!!S.dead.marrow, sword:(S.gear.haddat || {}).weapon, loy:S.loy.haddat, hLvl:S.th.h.lvl, hSquad:S.th.h.squad.join(','), hCusser:S.th.h.inv.cusser};
+  /* the Deck: each squad's own reader, words and captions; the seven tables; the offer node */
+  S = newStateBH('Hask', 'Brann'); setBook('bh');
+  out.deck = {r:visReader().id, cap:typeof CARDBOOK.cap(100, false, false), offer:!!(b6DeckOffer(1).ch || []).length, tables:[1,2,3,4,5,6,7].every(n => !!READTABLE['bh:' + n]),
+    pool:[1,2,3,4,5,6,7].every(n => b6Pool(n).length === 5), key:(S.chapter = 1, readingTableKey())};
+  b6Use('h'); out.deck.h = visReader().id; out.deck.say = b6CardSay('b3c_leper').length > 20;
+  /* the art and the voice */
+  out.art = {title:/<svg/.test(ART['title/bh'] || ''), patch:(ART['insignia/bh'] || '').split('<svg').length - 1, scenes:['b6_odhan_night', 'b6_ghatan_fire', 'b6_gdanisban_rain', 'b6_malaz'].every(k => SCENES[k] && SCENEX[k])};
   } catch(e) { out.err = String(e && e.stack || e); }
   return out; });
+/* the new-sergeant screen for Book Six (with a stand-in chapter so it is on the shelf) */
+const ui = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)); const o = {};
+  try { registerChapter(1, {number:1, title:'Test', area:AREAS.pale ? {id:'pale', start:{x:5, y:8}} : null, intro:{loc:'', sub:'', cap:'', paras:[], go:'Go'}}, 'bh'); showTitle(false, 'bh'); await wait(300);
+    o.fields = !!document.getElementById('nm2') && !!document.getElementById('impSel2') && !document.getElementById('impField2').hidden;
+    document.getElementById('nm').value = 'Corlo'; document.getElementById('nm2').value = 'Corlo'; document.getElementById('bNew').click(); await wait(100);
+    o.same = /Two sergeants/.test(document.getElementById('nmMsg').textContent);
+    document.getElementById('nm2').value = 'Pell'; document.getElementById('bNew').click(); await wait(300);
+    o.made = S && S.book === 'bh' && S.name === 'Corlo' && S.th && S.th.h && S.th.h.name === 'Pell';
+  } catch(e) { o.err = String(e); } return o; });
 if (r.err) no('threw: ' + r.err); else {
   r.caps === 'gotm:8 dg:8 moi:15 hoc:15 mt:8 bh:18' ? ok('caps: ' + r.caps) : no('caps: ' + r.caps);
   !r.shelf.includes('bh') && r.coming ? ok('Book Six stays off the shelf until a chapter exists') : no('shelf: ' + r.shelf);
@@ -63,6 +79,9 @@ if (r.err) no('threw: ' + r.err); else {
   const i = r.imp; i.lvl === 14 && i.squad === 'sgt,haddat,tangle,hessa,mirrel' && i.marrowDead && i.sword === 'b2_arensword' && i.loy === 2 && i.hLvl === 15 && i.hSquad === 'sgt,brisk,kettle,ohl,sohra' && i.hCusser === 2
     ? ok('a transfer carries level, squad, dead, gear, loyalty and munitions, for both squads') : no('import: ' + JSON.stringify(i));
 }
+  const d = r.deck || {}; d.r === 'marrow' && d.h === 'tuft' && d.cap === 'string' && d.offer && d.tables && d.pool && d.key === 'bh:1' && d.say ? ok('the Deck: Marrow reads for the Third, Tuft for the Fourth, their own words; seven tables and pools') : no('deck: ' + JSON.stringify(d));
+  const a = r.art || {}; a.title && a.patch >= 3 && a.scenes ? ok('the title art, the two-squad patch and the borrowed backdrops') : no('art: ' + JSON.stringify(a));
+ui.fields && ui.same && ui.made ? ok('the new-sergeant screen: two names (not the same one), and Begin makes both squads') : no('screen: ' + JSON.stringify(ui));
 errors.length ? no('page errors: ' + errors.slice(0, 3).join(' | ')) : ok('no page errors');
 await br.close(); srv.close && srv.close();
 console.log(bad.length ? `\n${bad.length} FAIL` : '\nERRORS: none'); process.exit(bad.length ? 1 : 0);

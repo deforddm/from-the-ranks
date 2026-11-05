@@ -591,7 +591,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 /* v4.0: the Book picker on the new-sergeant form */
 .bseg .btn{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.15;min-height:52px}
 .bseg .btn small{font-size:.68rem;opacity:.75;font-style:italic}
-#impSel{width:100%;min-height:44px;background:#100d0b;color:inherit;border:1px solid rgba(201,151,63,.45);border-radius:2px;padding:6px 8px;font:inherit}
+#impSel,#impSel2{width:100%;min-height:44px;background:#100d0b;color:inherit;border:1px solid rgba(201,151,63,.45);border-radius:2px;padding:6px 8px;font:inherit}
 /* v4.0: the Chain (Book Two): water and the column, on the map header and in march conversations */
 .chainpill{display:inline-flex;gap:8px;align-items:center;font-size:.78rem;color:#e8d8b8;white-space:nowrap}
 .chainpill b{font-weight:600;color:#ffe0a0}.chainpill .dry b{color:#f08a7c}
