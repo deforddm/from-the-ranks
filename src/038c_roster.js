@@ -101,7 +101,7 @@ function rsIn(id, at){ S.camp = (S.camp || []).filter(x => x !== id); const b = 
   if (at != null && at >= 0) { S.squad = S.squad.filter(k => k !== id); S.squad.splice(Math.min(at, S.squad.length), 0, id); }
   S.loy[id] ??= 0; S.picks[id] ??= []; vetCatchUp(id); rsRestore(id); fillEmpty(id); rsTrail(); }
 const rsCampNote = id => `${NAME(id)} goes back to ${rosterBook().home(id)}, with what ${rsHe(id)} wore left in the pack.`;
-const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle', 'perrit', 'ammet', 'pessa', 'brune'].includes(id) ? 'she' : 'he';
+const rsHe = id => ['sathi', 'marrow', 'haddat', 'ellis', 'sohra', 'greysword', 'hessa', 'mirrel', 'rasp', 'brisk', 'kettle', 'perrit', 'ammet', 'pessa', 'brune', 'ressa'].includes(id) ? 'she' : 'he';
 /* the three moves the screen and the books use; each returns false (and changes nothing) if the book would not allow it */
 function rosterOut(id){ if (!rosterCanOut(id)) return false; rsOut(id); note(rsCampNote(id)); save(); return true; }
 function rosterIn(id){ if (!rosterCanIn(id)) return false; rsIn(id); note(`${NAME(id)} comes in from ${rosterBook().home(id)} and falls in.`, 'good'); AUDIO.play('up'); save(); return true; }
