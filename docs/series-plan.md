@@ -1,6 +1,6 @@
 # From the Ranks: the series plan (squads return where possible)
 
-Thu Nov 5, 2026, 9:45 AM PST (the Book Six row: shipped as v9.0.0; the Book Seven row: the Fourth's road corrected, as the Book Six plan said). Before that Thu Oct 29, 2026, 5:58 PM PDT (the Book Five row). First written Tue Oct 13, 2026, 8:45 PM PDT. David's direction: no skipping ahead (one book per novel, in order), each book playable on its own, and the squads come back wherever the novel gives them a place. A returning squad carries its level, gear, picks and tricks across on a transfer (Book Three set the pattern in v6.1.0). Canon placements below are from the novels as I know them; each book's canon sheet re-checks them before any writing.
+Thu Nov 5, 2026, 9:10 AM PST (the Book Six row: shipped as v9.0.0; the Book Seven row: the Fourth's road corrected, as the Book Six plan said). Before that Thu Oct 29, 2026, 5:58 PM PDT (the Book Five row). First written Tue Oct 13, 2026, 8:45 PM PDT. David's direction: no skipping ahead (one book per novel, in order), each book playable on its own, and the squads come back wherever the novel gives them a place. A returning squad carries its level, gear, picks and tricks across on a transfer (Book Three set the pattern in v6.1.0). Canon placements below are from the novels as I know them; each book's canon sheet re-checks them before any writing.
 
 | Book | Novel | Where it happens | Who can return |
 |---|---|---|---|
