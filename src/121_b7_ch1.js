@@ -174,7 +174,7 @@ const B7CH1 = {
       foes:[['b7_factorman',2,1],['b7_factorman',5,1],['b7_factorman',4,3],['b7_lethsoldier',3,2],['b7_lethxbow',6,0]], xp:300, after:'b7_c1_tally_after',
       preText:()=>`The factor's men come out of the yard with cudgels and a lantern, and the two soldiers the factor pays to stand behind them come out behind them, as they are paid to.`,
       stage2:{title:'The shed door', xp:150,
-        text:()=>`The yard is the Third's. The shed door is not. Somebody inside has barred it, and somebody inside is shouting orders in Letherii at people who are mostly lying in the yard, and then the door comes open and the shed's sergeant comes out of it with a sword and the last of his soldiers, because a shed with a lamp in it is the worst place in the world to be when the other side has munitions.${b71If('tangle', `\n\nTangle, with a hand in the satchel: "I was going to knock," he says.`)}`,
+        text:()=>`The yard is the Third's. The shed door is not. It is barred from inside, and someone inside is shouting orders in Letherii at people who are mostly lying in the yard, and then the door comes open and the shed's sergeant comes out of it with a sword and the last of his soldiers, because a shed with a lamp in it is the worst place in the world to be when the other side has munitions.${b71If('tangle', `\n\nTangle, with a hand in the satchel: "I was going to knock," he says.`)}`,
         map:["##.##.##","#......#","..t..t..","........","........","...t....","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['b7_c1_shedsgt',3,1],['b7_lethsoldier',1,2],['b7_lethsoldier',6,2],['b7_factorman',4,3]]} } },
@@ -261,7 +261,7 @@ Up the beach a voice is calling the squads by name, and one of the names is not 
 
 "Edur," he says, before you have said anything. "The sailors who chased their fleet say they fight in fours, and the dark helps them. Grey as ash. Long spears." He turns the cup. "Never fought one. Don't mean to start. That's your end of it now."`,
       ch:[{t:'Ask him what the sailors said about fighting them.', check:['wits', 15], req:()=>!S.f.b7_c1_oldTried,
-            edges:id=>[id === 'sgt' && ['you have bought his rum before', 1], id === 'haddat' && ['she listens politely, and old soldiers talk to polite people', 1], id === 'rasp' && ['marine-trained: she knows what to ask a man about ground', 2], id === 'mehet' && ['he listens to an old man the way a townsman does', 1], id === 'tallow' && ['he talks over the answers', -1], id === 'sathi' && ['she grins at him, and he loses the thread', -1]],
+            edges:id=>[id === 'sgt' && ['you have bought his rum before', 1], id === 'haddat' && ['she listens politely, and old soldiers talk to polite people', 1], id === 'rasp' && ['marine-trained: she knows what to ask a man about ground', 2], id === 'mehet' && ['a townsman knows how to let an old man talk', 1], id === 'tallow' && ['he talks over the answers', -1], id === 'sathi' && ['she grins at him, and he loses the thread', -1]],
             near:{t:()=>`Yes, but he wants a story back for every one he gives, and ${b71Nm(b71Who())} ${b71V(b71Who(), 'are', 'is')} still telling them when the lamp goes up: rattled.`, fx:()=>b71Rattle(b71Who())},
             fx:()=>{ S.f.b7_c1_oldTried = 1; }, go:'b7_c1_old_ok', fail:'b7_c1_old_no'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -390,7 +390,7 @@ ${b71Say({marrow:`Marrow goes round the squad with her hands, and stops at each 
       ch:[{t:'Back to the fire.', go:'b7_c1_fire'}]}),
     b7_c1_fire_talk:()=>{ const ph = b71Ph(), camp = ph >= 5, ln = [];
       if (b7In('haddat')) ln.push(camp ? `Haddat is looking out under the hedge at the fields. "My mother said a farm is a debt you can stand on," she says. "I did not know what she meant. I think they would know what she meant, here."` : `Haddat is looking down at the ships. "My mother said you never burn a boat you might need," she says. "She sold water. She knew about needing things." She turns her back on the light. "The Adjunct did not ask my mother."`);
-      if (b7In('sathi')) ln.push(camp ? `Sathi is lying in the hedge-bottom with her filed teeth showing. "Sleeping in the day," she says. "Weasels did it for years. Nobody else in this army knows how. Watch them twitch."` : `Sathi is watching the ships go down and grinning at them. "No way back," she says. "Good. I never liked going back. It's the same road."`);
+      if (b7In('sathi')) ln.push(camp ? `Sathi is lying in the hedge-bottom with her filed teeth showing. "Sleeping in the day," she says. "Weasels did it for years. The rest of this army never learned. Watch them twitch."` : `Sathi is watching the ships go down and grinning at them. "No way back," she says. "Good. I never liked going back. It's the same road."`);
       if (b7In('tangle')) ln.push(camp ? `Tangle has the satchel open in his lap and is counting by daylight, which he finds restful. "${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}," he says. "${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}." He touches the Kanese bead at his wrist. "No resupply. I keep saying it so I'll believe it."` : `Tangle is counting the satchel by the light of the ships. "${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}," he says. "${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}." He closes it. "That's all there is in the world now. That and the marines', and they won't share."`);
       if (b7In('marrow')) ln.push(camp ? `Marrow is tying a slow knot in her string. "The column's mages are at it again, child," she says. "Mockra. Somebody is telling the whole countryside we are a hedge." She draws the knot tight. "It is a good lie. I would believe it."` : `Marrow is warming her knuckles at the fire. "Soliel has no temple on this shore, child," she says. "I asked the warren. It was polite. It was far away." She sniffs. "We will manage. We always have."`);
       if (b7In('mirrel')) ln.push(camp ? `Mirrel is rolling her linen. "Sleep by day, march by night, eat cold," she says. "In Li Heng that was a fever ward. Here it's an army." She ties the roll. "I don't see the difference yet."` : `Mirrel is looking at the jar of salve, then at the squad, then at the jar. "There's no hospice in the next town," she says. "There's no next town that's ours." She puts the jar away. "Don't get cut."`);
@@ -405,7 +405,7 @@ ${b71Say({marrow:`Marrow goes round the squad with her hands, and stops at each 
       if (b7In('warlock')) ln.push(`Keth sits facing the burning with his knees drawn up. "*Fire on the water,*" the grandmother says, out of his mouth. "*My mother's mother told of that, boy. It ended badly for everybody.*"`);
       if (b7In('mehet')) ln.push(`Mehet is turning his ring of keys over, one at a time. "In Y'Ghatan we burned the city behind us," he says. "Here they burn the ships." He holds up a key to the firelight. "Malazans are very thorough about doors."`);
       if (b7In('ottar')) ln.push(`Ottar is cleaning the wolf on his shield with a thumb. "Today's word," he says, "is *unwitnessed*. The lieutenant's runner said it." He tries it again, slowly. "In Perish we have a better word. It means the same, and it is longer."`);
-      if (b7In('doss')) ln.push(`Doss is watching the squad, one by one, the way he might watch new cattle. "Do Malazans own their own boots?" he asks. Somebody says yes. He thinks about that. "Then that's the first thing," he says.`);
+      if (b7In('doss')) ln.push(`Doss is watching the squad, one by one, the way he might watch new cattle. "Do Malazans own their own boots?" he asks. He is told yes. He thinks about that. "Then that's the first thing," he says.`);
       return {sp:camp ? 'The lie-up' : 'The Third\'s fire', scene:ph === 1 ? 'b7_c1_landing' : ph >= 5 ? 'b7_camp_night' : ph >= 3 ? 'b7_march_night' : 'b7_coast_night', txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
         ch:[{t:'Back to the fire.', go:'b7_c1_fire'}]}; },
 
@@ -658,13 +658,13 @@ At dusk the pickets bring word down the hedge: there is a man at the pickets, as
     b7_c1_lt5:()=>({sp:'The lieutenant', scene:'b7_camp_night', fx:()=>{ S.f.b7_c1_lt5 = 1; }, again:()=>'The lieutenant, rolling her blanket. "Dusk soon."', txt:
 `The lieutenant is rolling her blanket under the hedge-end with the speed of long practice. "The Fist's word," she says. "Inland, a long way. Farms, villages, the factors' houses. Hit what the Edur and the factors use, and leave the rest." She ties the roll. "The Adjunct wants the Letherii on our side. The Letherii haven't been asked yet. We're the asking."
 
-She looks back toward the shed, where a thin smoke still stands up from the coast road in the evening air. "That was a good bit of asking, Sergeant. They'll have seen it for leagues."${b7Rising() >= 3 ? `\n\n"There's talk in the column already. A farm put a bucket of water out by the road this morning, where the marines would pass. Nobody made it do that."` : ''}`,
+She looks back toward the shed, where a thin smoke still stands up from the coast road in the evening air. "That was a good bit of asking, Sergeant. They'll have seen it for leagues."${b7Rising() >= 3 ? `\n\n"There's talk in the column already. A farm put a bucket of water out by the road this morning, where the marines would pass. It was not asked to."` : ''}`,
       ch:[{t:'"Inland. Yes, Lieutenant."', go:()=>startExplore()}]}),
 
     /* Doss: an Indebted farmhand who watched the book burn */
     b7_c1_doss:()=>{ const d = S.f.b7_dossDone;
       if (d === 2) return {sp:'Doss', scene:'b7_camp_night', txt:
-`Doss is still at the pickets with the camp followers, sitting on his heels with the flail across his knees, watching the Malazans get ready to go. He has the look of a man who has decided to wait exactly as long as it takes, and not a day longer.`,
+`Doss is still at the pickets with the camp followers, sitting on his heels with the flail across his knees, watching the Malazans get ready to go. He has plainly decided to wait exactly as long as it takes, and not a day longer.`,
         ch:[{t:'"Walk with us, Doss."', fx:()=>{ b7Join('doss'); b71L('haddat', 1); }, go:'b7_c1_doss_join'},
             {t:'Not now.', go:()=>startExplore()}]};
       return {sp:'A man at the pickets', scene:'b7_camp_night', again:()=>'The farmhand at the pickets, with his flail, waiting for an answer.', txt:
@@ -690,7 +690,7 @@ She looks back toward the shed, where a thin smoke still stands up from the coas
     b7_c1_doss_pay:()=>({sp:'Doss', scene:'b7_camp_night', txt:
 `He considers that for a while.
 
-"More than nothing," he says. "Nothing is what I have." He shifts the flail on his shoulder. "On the holding you are paid in what you owe. Every quarter-day the clerk reads your line and it is longer. I have worked twenty-six harvests and I owe the factor more than I did when I was born. My father died owing. His father." He looks at the Third. "You burned it. I watched you. I have been waiting my whole life for somebody to do that."${b71If('haddat', `\n\nHaddat is watching him with her head on one side. She does not say anything, but she has stopped looking at the flail.`)}${b71If('tangle', `\n\n"He's a farmer," Tangle says, aside. "We're heavies. We march." He considers Doss's shoulders. "He'd march."`)}`,
+"More than nothing," he says. "Nothing is what I have." He shifts the flail on his shoulder. "On the holding you are paid in what you owe. Every quarter-day the clerk reads your line and it is longer. I have worked twenty-six harvests and I owe the factor more than I did when I was born. My father died owing. His father." He looks at the Third. "You burned it. I watched you. I have been waiting my whole life for somebody to do that."${b71If('haddat', `\n\nHaddat is watching him with her head on one side. She has stopped looking at the flail.`)}${b71If('tangle', `\n\n"He's a farmer," Tangle says, aside. "We're heavies. We march." He considers Doss's shoulders. "He'd march."`)}`,
       ch:[{t:'"Then walk with us, Doss."', fx:()=>{ b7Join('doss'); b71L('haddat', 1); }, go:'b7_c1_doss_join'},
           {t:'"Wait with the camp followers. We will see how it goes."', fx:()=>{ S.f.b7_dossDone = 2; }, go:'b7_c1_doss_wait'},
           {t:'"Go home, Doss. This is no road for a farmhand."', fx:()=>{ S.f.b7_dossDone = 0; b71L('haddat', -1); }, go:'b7_c1_doss_home'},
@@ -698,7 +698,7 @@ She looks back toward the shed, where a thin smoke still stands up from the coas
     b7_c1_doss_join:()=>({sp:'Doss', scene:'b7_camp_night', txt:
 `${b7In('doss') ? `He takes the cap off, and looks at it, and puts it back on, which seems to be the Indebted way of saying a great many things at once.
 
-"Where are we going?" he asks. Somebody tells him: inland. He nods as if that were an answer. "I've never been anywhere the factor didn't own," he says. "That'll be most places, then."` : `He nods, and goes to wait with the camp followers: six already walk with the Third, and a farmhand can count. "When there's room," he says.`}`,
+"Where are we going?" he asks. He is told: inland. He nods as if that were an answer. "I've never been anywhere the factor didn't own," he says. "That'll be most places, then."` : `He nods, and goes to wait with the camp followers: six already walk with the Third, and a farmhand can count. "When there's room," he says.`}`,
       ch:[{t:'Show him the page out of the book.', req:()=>b7In('doss') && !!(S.kit || []).includes('b7_c1_tallyash') && !S.f.b7_c1_dossPage, go:'b7_c1_doss_page'},
           {t:'Back to the lie-up.', go:()=>startExplore()}]}),
     b7_c1_doss_page:()=>({sp:'Doss', scene:'b7_camp_night', fx:()=>{ S.f.b7_c1_dossPage = 1; b71L('doss', 2); }, txt:
@@ -709,14 +709,14 @@ She looks back toward the shed, where a thin smoke still stands up from the coas
 He watches it go back into the kit. "Burnt at the edges," he says. "That's right. That's how it should look."`,
       ch:[{t:'Back to the lie-up.', go:()=>startExplore()}]}),
     b7_c1_doss_wait:()=>({sp:'Doss', scene:'b7_camp_night', txt:
-`He nods slowly, as if he had expected that, and goes and sits on his heels among the camp followers at the column's tail: the sutlers, a marine's wife, two boys with a goat. He does not look disappointed. He looks like a man who has waited twenty-six years and can wait a few days more.
+`He nods slowly, as if he had expected that, and goes and sits on his heels among the camp followers at the column's tail: the sutlers, a marine's wife, two boys with a goat. He does not look disappointed. He has waited twenty-six years. He can wait a few days more.
 
 "When you want me," he says, "I'm at the back. The back is where I'm used to."`,
       ch:[{t:'Back to the lie-up.', go:()=>startExplore()}]}),
     b7_c1_doss_home:()=>({sp:'Doss', scene:'b7_camp_night', txt:
 `He looks at you for a while, and then at the road east, and then back the way he came.
 
-"Home," he says, as if it were a word in a language he had nearly learned. "Yes, Sergeant." He goes off across the field toward the factor's holding with the flail on his shoulder. He walks like a man going to work.${b71If('haddat', `\n\nHaddat watches him go, and keeps what she thinks of it to herself. It shows anyway.`)}`,
+"Home," he says, like a word in a language he had nearly learned. "Yes, Sergeant." He goes off across the field toward the factor's holding with the flail on his shoulder. He walks like a man going to work.${b71If('haddat', `\n\nHaddat watches him go, and keeps what she thinks of it to herself. It shows anyway.`)}`,
       ch:[{t:'Back to the lie-up.', go:()=>startExplore()}]}),
 
     /* the end: dusk, and inland */
