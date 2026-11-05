@@ -110,7 +110,7 @@ Newest first.
   - New names where the old ones clashed with the books: the gate clerk is Pennick, Brisk's brother is Tavrin, and the Chains card is the Wain, Dragnipur's wagon.
   - The reborn Tattersail grows as she should, carried by the Mhybe; Whiskeyjack's leg could mend if he would give it the time; the High Mage himself is never placed, only his staff.
   - The Fete as the book has it: the tall guest leaves before the Tyrant, the dragon rises off a bell-tower, the kill falls in the Estate District; Rallick in a tiger mask; Blues with two blades.
-  - The maps follow the official ones: the Gadrobi District by the harbour in the west, Jammit's Worry east from the Worry Gate, Darujhistan south of Pale.
+  - The maps follow the official ones: the Gadrobi District by the harbour in the west, Jatem's Worry east from the Worry Gate, Darujhistan south of Pale.
   - Tool and Ellis go south, and Moon's Spawn goes west at first light, then south.
   - Continuity: Tuft can be kept only while her badge is live; Hedge's forty and twelve agree everywhere; Ohl's count never drops; Chapter Five's ending fits the Tuft path; Hairlock's end is one account.
   - The seven Deck visions checked against the novel, and Tuft remembers what she has seen in them.

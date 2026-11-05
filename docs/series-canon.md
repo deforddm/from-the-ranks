@@ -282,7 +282,7 @@ Forward-canon §6 and its medium, low and *memory* items, re-checked. **Closed**
 
 ### The two named questions
 
-- **Jammit's Worry or Jatem's Worry.** F (the Darujhistan worksheet) gives "Jammit's Worry, the east road", citing the GotM glossary. The official map gives "Jatem's Worry". No second source for either spelling was found (web search; W pages 402). **Unconfirmed. Keep "Jammit's Worry"** per the lead's settled decision.
+- **Jammit's Worry or Jatem's Worry.** F (the Darujhistan worksheet) gives "Jammit's Worry, the east road", citing the GotM glossary. The official map gives "Jatem's Worry". No second source for either spelling was found (web search; W pages 402). **Settled Nov 4, 2026 (v8.2.5): "Jatem's Worry".** The story text says it twice (GotM, Tor 2004, p. 176, Google Books preview); "Jammit's" is only in the glossary. Open question Q5.
 - **Moon's Spawn before the Fete.** W alone puts it south of the city, hedged "possibly over the Dwelling Plain". **Keep it over the lake** per the lead's ruling.
 
 ---

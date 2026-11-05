@@ -167,8 +167,8 @@ const CH7 = {
              {id:'harl', name:'An old man in a Guild coat', kind:'guildveteran', x:12, y:9, still:true, node:()=>'c7_harl', show:()=>C7H.has('vell'), fresh:()=>!S.f.c7_vell},
              {id:'veteran', name:'An old man mending a net', kind:'guildveteran', x:12, y:9, still:true, node:()=>'c7_veteran', show:()=>S.f.c4_key === 'aside' && !S.f.c4_vell, fresh:()=>!S.f.c7_veteran} ] },
 
-    /* . grass  , scrub and Jammit's Worry (the road east)  r rock  M barrow stone  x Rhivi stake  # drop  < the road back west to the city */
-    { id:'quorl_hill', title:'East of the city · the quorl hill', sub:'Late morning · Jammit\'s Worry', hint:'Tap ground to move · tap a figure to talk · Whiskeyjack is on the litter · the Rhivi are on the road', decor:'hills',
+    /* . grass  , scrub and Jatem's Worry (the road east)  r rock  M barrow stone  x Rhivi stake  # drop  < the road back west to the city */
+    { id:'quorl_hill', title:'East of the city · the quorl hill', sub:'Late morning · Jatem\'s Worry', hint:'Tap ground to move · tap a figure to talk · Whiskeyjack is on the litter · the Rhivi are on the road', decor:'hills',
       map:[ "################",
             "#,,..r......,.M#",
             "#.........r....#",
@@ -266,13 +266,13 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
 
   scenes:{
     lakefront_dawn:{loc:'Darujhistan', sub:'The Lakefront · dawn', cap:'Blue lamps going out along the quay, a coastal trader at the long pier, gulls, and over the lake a sky with nothing in it.', amb:'explore'},
-    quorl_hill:{loc:'East of Darujhistan', sub:'A hill on Jammit\'s Worry · noon', cap:'Quorls on the brown grass like dragonflies the size of barges, Black Moranth standing among them, and the city small and blue behind.', amb:'explore'},
-    quorl_sky:{loc:'Over Jammit\'s Worry', sub:'North, on a quorl', cap:'The hill dropping away, the city tilting small and blue on the rim of its lake, the Host\'s quorls strung out north like geese, and far off in the brown grass one figure walking alone.', amb:'explore'},
+    quorl_hill:{loc:'East of Darujhistan', sub:'A hill on Jatem\'s Worry · noon', cap:'Quorls on the brown grass like dragonflies the size of barges, Black Moranth standing among them, and the city small and blue behind.', amb:'explore'},
+    quorl_sky:{loc:'Over Jatem\'s Worry', sub:'North, on a quorl', cap:'The hill dropping away, the city tilting small and blue on the rim of its lake, the Host\'s quorls strung out north like geese, and far off in the brown grass one figure walking alone.', amb:'explore'},
     road_east:{loc:'Genabackis', sub:'North · the Host outside Pale', cap:'A camp so far off it could be an anthill: wagons, banners, cook-smoke, and an outlawed army outside Pale, waiting on a conversation.', amb:'explore'},
     ship:{loc:'The lake, and after it the sea', sub:'A coastal trader, westbound', cap:'A deck, a rail, a grey sail filling, and the city of blue fire going down behind the stern like a lamp turned low.', amb:'explore'} },
 
   quests:{
-    lakefront:()=> S.f.c5_ellisThrough && !S.f.c7_ellisBack && !S.f.c7_ellisLeft && !C7H.isDead('ellis') ? 'Somebody in the alley' : (!S.f.c7_clawDone && !S.f.c7_clawAvoided) ? 'Goodbyes on the quay. A green door, and a man in a grey cloak.' : (S.f.c2_ellisRefused && !S.f.c7_ellisJoined && !S.f.c7_ellisWalked && !S.f.c7_ledgerIn) ? 'Ellis is waiting on a cask by the green door. Then east, to the hill.' : 'East, to the hill on Jammit\'s Worry. The quorls leave at noon.',
+    lakefront:()=> S.f.c5_ellisThrough && !S.f.c7_ellisBack && !S.f.c7_ellisLeft && !C7H.isDead('ellis') ? 'Somebody in the alley' : (!S.f.c7_clawDone && !S.f.c7_clawAvoided) ? 'Goodbyes on the quay. A green door, and a man in a grey cloak.' : (S.f.c2_ellisRefused && !S.f.c7_ellisJoined && !S.f.c7_ellisWalked && !S.f.c7_ledgerIn) ? 'Ellis is waiting on a cask by the green door. Then east, to the hill.' : 'East, to the hill on Jatem\'s Worry. The quorls leave at noon.',
     quorl_hill:()=> S.f.c7_key ? 'Noon. The squad.' : 'Whiskeyjack, on the litter. Where does the Fourth go?' },
 
   end:{
@@ -301,8 +301,8 @@ ${preUsed('c7_worrygate') ? `Behind you, back through the arch, the two from the
     if (f.c7_tocNeither) x.push('Toc the Younger is on neither of the Moranth\'s rolls. They have a mark for it. They do not use it often.');
     if (f.c7_moranthMark) x.push(`There is a mark against ${C7H.nm(f.c7_moranthMark, 'the sergeant')}'s name on a Moranth slate. ${C7H.has('kettle') ? 'Kettle says it means "asked".' : 'The Fourth has nobody who can read it.'}`);
     if (f.c7_wjReport) x.push({ok:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He took the Fourth as his.', near:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He took the Fourth as his, and said he\'d put them where it\'s worst.', heard:'The sergeant gave Whiskeyjack the Fourth\'s report on the hill, in order. He heard it out. It didn\'t change the sum.'}[f.c7_wjReport] || '');
-    if (f.c7_tattersail) x.push(C7H.isDead('tuft') ? 'A raven told the Fourth on Jammit\'s Worry what Tuft did not live to: the child in the Rhivi red wool is Tattersail.' : 'Tuft kept her promise on Jammit\'s Worry: the child in the Rhivi red wool is Tattersail.');
-    if (f.c7_tuftCut) x.push(`The working in Tuft's badge died in an otataral glove ${f.c7_tuftCutHill ? 'on Jammit\'s Worry, with the Rhivi going by' : 'on the Lakefront'}.`); else if (C7H.has('tuft') && C7H.leashed()) x.push('The window in Tuft\'s collar is still open.');
+    if (f.c7_tattersail) x.push(C7H.isDead('tuft') ? 'A raven told the Fourth on Jatem\'s Worry what Tuft did not live to: the child in the Rhivi red wool is Tattersail.' : 'Tuft kept her promise on Jatem\'s Worry: the child in the Rhivi red wool is Tattersail.');
+    if (f.c7_tuftCut) x.push(`The working in Tuft's badge died in an otataral glove ${f.c7_tuftCutHill ? 'on Jatem\'s Worry, with the Rhivi going by' : 'on the Lakefront'}.`); else if (C7H.has('tuft') && C7H.leashed()) x.push('The window in Tuft\'s collar is still open.');
     if (f.c7_ohlTat) x.push('Tattersail is crossed off Ohl\'s list. She went east.');
     if (f.c7_key) x.push(C7H.wjTrust() ? 'Whiskeyjack would have had the Fourth as his.' : 'Whiskeyjack would not have the Fourth as his.');
     if (f.c7_paranToc) x.push('Paran has heard that Toc kept riding.');
@@ -492,7 +492,7 @@ Quick Ben winds the wire back round the bone, slowly, turn by turn. He looks up 
 
 Whiskeyjack shifts his weight on the bench, and his mouth goes thin, and goes back.
 
-"You heard," he says. "The Host's outlawed. I'm his second. Paran has the Bridgeburners. The Moranth are putting down on a hill east of the city, on Jammit's Worry, to fly us north. Noon."
+"You heard," he says. "The Host's outlawed. I'm his second. Paran has the Bridgeburners. The Moranth are putting down on a hill east of the city, on Jatem's Worry, to fly us north. Noon."
 
 "You're not Bridgeburners." Flat. Not unkind. "You never were. You're marines, Seventh Company, Onearm's Host, which as of this morning is a thing the Empress has written a death sentence for." He looks at the sword across his knees. "The outlawry reads *the Host*. Not the Bridgeburners by name. Not the Fourth. The Host. And the Host is a word with some give in it, Sergeant. It'll stretch to cover a squad that flies north with it. It'll stretch to cover a squad that doesn't."
 
@@ -863,7 +863,7 @@ He doesn't seem surprised. He writes a line. He doesn't hurry. He closes the led
 
 "Then you're outlaws too, Sergeant, by your own hand. I'll write it so. It'll read better than most."
 
-${tell ? `He tucks the ledger under his arm. "You'll want to know, before you go up that hill, that Whiskeyjack has a copy of your evening at the dye-shop. In my hand. It went up Jammit's Worry an hour ago with the quorls' water." A small, precise pause. "${C7H.madryn()}"` : `"I'd meant to send Whiskeyjack a copy of your evening at the dye-shop," he says. "In my hand. I'm told you got there first, on a bench, in a garden, before the bone." A small, precise pause. "That was unexpected. I've written that down too."`}
+${tell ? `He tucks the ledger under his arm. "You'll want to know, before you go up that hill, that Whiskeyjack has a copy of your evening at the dye-shop. In my hand. It went up Jatem's Worry an hour ago with the quorls' water." A small, precise pause. "${C7H.madryn()}"` : `"I'd meant to send Whiskeyjack a copy of your evening at the dye-shop," he says. "In my hand. I'm told you got there first, on a bench, in a garden, before the bone." A small, precise pause. "That was unexpected. I've written that down too."`}
 
 ${C7H.has('tuft') && C7H.leashed() ? `His eyes go to Tuft. "The mage will come when she's called," he says, pleasantly. "She always has. That was never yours to refuse, Sergeant. The High Mage only lent her to you."` : ''}
 
@@ -939,7 +939,7 @@ He hasn't written any of it down. His pen is lifted, the way it was lifted over 
 
 "The offer was for a report, Sergeant. You've shown me you know what one is. That's worth knowing about a soldier." He tucks the book under his arm. "It's withdrawn."
 
-${tell ? `"You'll want to know, before you go up that hill, that Whiskeyjack has a copy of your evening at the dye-shop. In my hand. It went up Jammit's Worry an hour ago with the quorls' water." A small, precise pause. "${C7H.madryn()}"` : ''}
+${tell ? `"You'll want to know, before you go up that hill, that Whiskeyjack has a copy of your evening at the dye-shop. In my hand. It went up Jatem's Worry an hour ago with the quorls' water." A small, precise pause. "${C7H.madryn()}"` : ''}
 
 ${lsh ? `His eyes go to Tuft. "The mage will come when she's called," he says, pleasantly. "That was never in anybody's report."` : ''}
 
@@ -1516,7 +1516,7 @@ ${C7H.has('kettle') ? `"It was *one sharper*," says Kettle, wounded. "If it had 
       ch:[{t:'East, to the hill.', go:()=>{ startExplore('quorl_hill'); talk('c7_hill_arrive'); }}]}),
 
     /* ---- the quorl hill ---- */
-    c7_hill_arrive:()=>{ const pend = C7H.pendingTell(); return {sp:'Jammit\'s Worry · a hill east of the city', scene:'quorl_hill', fx:()=>{ S.f.c7_hill=1; }, txt:
+    c7_hill_arrive:()=>{ const pend = C7H.pendingTell(); return {sp:'Jatem\'s Worry · a hill east of the city', scene:'quorl_hill', fx:()=>{ S.f.c7_hill=1; }, txt:
 `${S.f.c7_worryDone ? `Out through Worrytown, past the tanneries and the goat-pens and the shrine to a god whose face somebody chiselled off with care.` : `East along the quay and out through the Worry Gate you came in by from the hills, through Worrytown, past the tanneries and the goat-pens and the shrine to a god whose face somebody chiselled off with care.`} The road climbs into brown hills. An hour out, from the top of a rise, you see them.
 
 Quorls.
@@ -2318,7 +2318,7 @@ The Host's lines are a city of tents with no Empire in it. The Fourth Regiment i
       k === 'empire' ? `Tuft goes home with the Fourth, into an Empire whose High Mage ${st === 'glove' ? `can't find her any more: she could stand among his staff and nobody would look twice` : st === 'shadow' ? `would find somebody else's thumb on her if he looked, and doesn't look` : st === 'dark' ? `would find that Kurald Galain looked at her once and didn't forget, and doesn't care to look` : `hasn't yet decided what to do about her`}. ${stLine}` :
       `Tuft stays in Darujhistan. The High Alchemist has doors that need watching, and one of them is a door only she can see. Kruppe takes her to the Phoenix whenever he is in the city, and watches her face, not her cards, and pays for her wine, and never once asks what she saw. ${stLine}`;
     const drew = f.c6_selfDrawn ? ` She drew for herself once, on the night of the Fete, with you beside her, and it was the unpainted card: nobody's yet. She keeps it inside her tunic, against her chest, the way Brisk keeps a letter.` : '';
-    const p2 = (f.c7_tattersail ? (f.c3_askedTuft ? `She kept her promise. On Jammit's Worry she told you first.` : `On Jammit's Worry she told you what she'd known since the plain, and you were the first.`) : f.c3_askedTuft ? `She never did tell you what Kruppe meant, at the door of the Phoenix. The Rhivi went east with it. She'd promised you'd be the first, and you would have been.` : f.c3_kruppe ? `She never did tell you what Kruppe meant, at the door of the Phoenix. The Rhivi went east with it.` : '') + drew;
+    const p2 = (f.c7_tattersail ? (f.c3_askedTuft ? `She kept her promise. On Jatem's Worry she told you first.` : `On Jatem's Worry she told you what she'd known since the plain, and you were the first.`) : f.c3_askedTuft ? `She never did tell you what Kruppe meant, at the door of the Phoenix. The Rhivi went east with it. She'd promised you'd be the first, and you would have been.` : f.c3_kruppe ? `She never did tell you what Kruppe meant, at the door of the Phoenix. The Rhivi went east with it.` : '') + drew;
     const p3 = (lsh && (k === 'empire' || k === 'disband')) ? '' : {glove:`She sleeps in the dark now, some nights.`, shadow:`She sleeps with the lamp out. The dark is somebody's now, and she knows whose.`, dark:`She still sleeps with a lamp lit, but she turns it down.`, kept:`She sleeps with two lamps lit.`}[st] || `She sleeps with a lamp lit.`;
     const p4 = l >= 2 ? `"The cards say nothing about you, Sergeant," she tells you at the end. "I checked." A pause. "They never did. That was the compliment. I'm explaining it now, because I promised to explain things."` : l <= -2 ? `She doesn't say goodbye. She says, "Yes, Sergeant," in the flat voice she keeps for orders she hates, and it's the last thing she says to you.` : C7H.has('kettle') ? `She laughs at exactly one thing, still. It's still Kettle.` : `She hasn't laughed since the alley. Then one morning she does, at nothing, and looks startled, and does it again.`;
     return {title: east ? 'The long road east' : west ? 'West, to him' : ({glove:'Nobody\'s', shadow:'Polite', dark:'The window', kept:'A letter that says nothing'}[st] || 'The Deck'), txt:C7H.join([p1, p2, p3, p4])};
@@ -2331,7 +2331,7 @@ The Host's lines are a city of tents with no Empire in it. The Fourth Regiment i
       k === 'city' && fol ? `Ohl stays in Darujhistan and takes a room at the Phoenix Inn: the one by the stair, where the lamp doesn't reach. Jeth Arrow's room. He lives in it now, and it writes itself. He treats thieves for nothing and nobles for a great deal, and Kruppe pays for his wine and never mentions it.` :
       `Ohl goes north with the Host, to the hospital tents${k === 'outlaw' ? ', and not to the Fourth\'s fire' : ''}. Dujek gives him a tent the size of a barn and more work than Hood has time for. He sends tea. It's technically medicine.`;
     const parts = [`The list is ${C7H.num(C7H.lc())} names.`];
-    if (f.c7_ohlTat) parts.push(`He crossed Tattersail off it on Jammit's Worry. She went east.`);
+    if (f.c7_ohlTat) parts.push(`He crossed Tattersail off it on Jatem's Worry. She went east.`);
     if (f.c7_ohlEllis) parts.push(f.c7_ellisLeft ? `He crossed out the space he'd kept for Ellis, the morning she walked out of the dark on the Lakefront and went her own way. Not dead; not his.` : `He crossed out the space he'd kept for Ellis, the morning she walked out of the dark on the Lakefront.`);
     parts.push(f.c7_tocNeither ? `The space for Toc is still there, and beside it, in charcoal, a small Moranth mark: a stroke with a hook at each end. *Neither.* "He kept riding," he says. "Now it's written. I'll wait."` : `The space for Toc is still there. He has decided to leave it. "He kept riding," he says. "I'll wait."`);
     if (f.c4_key === 'shield') parts.push(`The line for the boy on the Daru roof is still crossed out. He knows the name now. He hasn't written it in.`); else if (f.c4_key === 'aside') parts.push(`There's a mark beside Vell, small, that he has never explained.`);
