@@ -6,7 +6,7 @@ Thu Nov 5, 2026, 1:30 PM PST (David's answers). First written 1:26 PM PST. Plan 
 - 4: the Rising.
 - 6: the title is ***Unwitnessed***.
 
-**Settled (David, Thu Nov 5, 2026, about 2:40 PM PST), after the canon sheet (`rg-canon.md`, correction 1):**
+**Settled (David, Thu Nov 5, 2026, about 2:23 PM PST), after the canon sheet (`rg-canon.md`, correction 1):**
 - Canon sends only Keneb's marines inland; Blistig's regulars stay with the Adjunct.
 - So the Third is **lent to Keneb's column as a squad of heavies**, as Hellian and Urb were moved into the marines in *The Bonehunters*.
 - The chapters stay as drafted.
