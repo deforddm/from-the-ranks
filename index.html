@@ -72835,7 +72835,7 @@ const B6CH1 = {
       walk:'.,', triggers:{F:'b6_c1_fire', c:'b6_c1_qm', k:'b6_c1_oldsoldier', '>':'b6_c1_east'}, start:{x:7, y:6},
       quest:()=> !S.f.b6_c1_orders1 ? 'The captain, by the tents.' : 'The fire, and then sleep. The column moves at first light.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:11, y:3, node:()=>'b6_c1_captain', fresh:()=>!S.f.b6_c1_orders1},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:11, y:3, node:()=>'b6_c1_captain', fresh:()=>!S.f.b6_c1_orders1},
         {id:'oldsoldier', name:'An old soldier of the 9th', kind:'b2soldier', x:5, y:10, node:()=>'b6_c1_oldsoldier', fresh:()=>!S.f.b6_c1_oldTried} ] },
 
     /* 16 x 12 (odhan, day). , scrub  . the track  # rock  o the well  b a thorn bush  < west, back toward the column  > east, the road ahead */
@@ -72875,7 +72875,7 @@ const B6CH1 = {
       walk:'.,', triggers:{f:'b6_c1_fire', '<':'b6_c1_edge', '>':'b6_c1_to_barrows'}, start:{x:7, y:5},
       quest:()=> !S.f.b6_c1_orders3 ? 'The captain, in the 9th\'s lines.' : !S.f.b6_c1_edgeDone ? 'The camp\'s west edge, where the townsfolk who stayed are camped.' : 'The barrow road, east, under the walls. The captain\'s picket.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:8, y:5, node:()=>'b6_c1_captain_camp', fresh:()=>!S.f.b6_c1_orders3},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:8, y:5, node:()=>'b6_c1_captain_camp', fresh:()=>!S.f.b6_c1_orders3},
         {id:'diggers', name:'The 9th\'s diggers', kind:'b2soldier', x:4, y:8, node:()=>'b6_c1_dig', fresh:()=>!S.f.b6_c1_digTried},
         {id:'column', name:'A column coming in', kind:'b2soldier', x:13, y:2, node:()=>'b6_c1_column', fresh:()=>!S.f.b6_c1_sortSeen},
         {id:'surgeon', name:'The 9th\'s surgeon', kind:'b2soldier', x:2, y:8, node:()=>'b6_c1_surgeon', fresh:()=>b6FeverList().length > 0},
@@ -73044,8 +73044,8 @@ ${can && h ? `${NAME(h)} looks, and puts a hand flat to a forehead, and frowns. 
             {t:'Not now.', go:'b6_c1_fire'}]}; },
 
     /* ---- the captain, the first night ---- */
-    b6_c1_captain:()=>({sp:'The captain', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_orders1 = 1; }, again:()=>`The captain, by the tents, with the orders in his hand. "Sergeant."`, txt:
-`The 9th's company captain is a thin man who coughs into his fist before he says anything, as if clearing the way for it. He keeps the numbers, and he is better at the numbers than at the rest of it, and he knows that, which is more than most captains know.
+    b6_c1_captain:()=>({sp:'Captain Hollet', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_orders1 = 1; }, again:()=>`The captain, by the tents, with the orders in his hand. "Sergeant."`, txt:
+`Captain Hollet of the 9th's Second Company is still a thin man who coughs into his fist before he says anything, as if clearing the way for it. He keeps the numbers, and he is better at the numbers than at the rest of it, and he knows that, which is more than most captains know.
 
 "Sergeant." The cough. "The column moves at first light. The water wagons are a day behind and the Fist wants the 9th's skins full before the next halt." He shows you a scrap of hide with a scout's marks on it. "There's a well here, half a day east of the track. Old. The scouts say it's sweet. Take the Third ahead and hold it till the wagons come up."
 
@@ -73053,7 +73053,7 @@ He folds the hide. "The bandits out here know every well on the Odhan. Mind they
       ch:[{t:'"What\'s ahead of us, Captain?"', go:'b6_c1_captain_news'},
           {t:'"The well. Yes, Captain."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c1_captain_news:()=>({sp:'The captain', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_capNews = 1; }, txt:
+    b6_c1_captain_news:()=>({sp:'Captain Hollet', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_capNews = 1; }, txt:
 `"Leoman," the captain says, "and whatever he got out of Raraku with him. The scouts think three or four thousand." He coughs. "They think he's making for Y'Ghatan. It's the only city out here with walls worth the name."
 
 He looks east along the track. "The Fist says we'll catch him before he gets there. The Fist also says the Adjunct will march us into the ground doing it." He considers which of the two to believe, and does not choose. "Fill your skins at the well, Sergeant. Whatever happens, it'll happen thirsty."${b61If('darrut', `\n\nDarrut, behind you, says under his breath, "The Fist said the same at Aren." He does not say what the Fist said at Aren.`)}`,
@@ -73269,7 +73269,7 @@ At the head of it walks a woman captain, square and weathered, who walks like so
 
 Further back in the column a sergeant from Kartool is telling the world what she thinks of it, at length, and a very large corporal behind her is carrying her pack as well as his own.${b61If('hessa', `\n\nHessa watches the Kartool sergeant go by. "City watch," she says. "I know the walk." She does not say if that is good.`)}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
-    b6_c1_captain_camp:()=>({sp:'The captain', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
+    b6_c1_captain_camp:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
 `The captain is standing at the end of the 9th's trench with a slate in his hand, counting spades. He coughs, and puts the slate under his arm.
 
 "Sergeant. The Third has the picket on the barrow road tonight, east, under the walls. The Fist wants to know if anything comes out of the city that way after dark." He looks up at the walls. "Leoman has a few thousand in there, and the city empty round them. He'll want to know what we're doing as much as we want to know what he is."
@@ -73278,7 +73278,7 @@ He lowers his voice. "And the townsfolk at the camp's west edge. A few of them d
       ch:[{t:'"What\'s on the barrow road, Captain?"', go:'b6_c1_captain_barrows'},
           {t:'"Yes, Captain."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c1_captain_barrows:()=>({sp:'The captain', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_barrowsTold = 1; }, txt:
+    b6_c1_captain_barrows:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_barrowsTold = 1; }, txt:
 `"The barrows." The cough. "The Empire's dead, from the first siege. A long time ago." He looks at the slate as if the answer were on it. "Before we came up, the rebels went out and dug into them. Looking for iron, or for something to say to us. The Fist rode past this afternoon and looked."
 
 He does not say what the Fist said. "The orders are to watch the road. Not to do anything else on it." He looks at you. "Those are the orders, Sergeant."${b61If('haddat', `\n\nHaddat, beside you, has gone very still.`)}`,
@@ -73866,7 +73866,7 @@ const B6CH2 = {
 `Onearm's Host has crossed the sea to Seven Cities to finish a rebellion the Empire says is already finished. The ships put the army ashore on the north coast, near Ehrlitan, in rain, and the army went up the slope from the beach and dug in, and has been digging in ever since.`,
 ()=>{ const v = b62Here().map(id => TPL[id].name);
   return `You are Sergeant {sgt}, Fourth Squad, Seventh Company. ${v.length ? `${b62And(v)} ${v.length > 1 ? 'are' : 'is'} with you, wet to the knees and not complaining about it yet.` : 'The Fourth, this season, is you.'} The Seventh is short of hands since Coral, like every company in the Host, and nobody has sent any.`; },
-`Somewhere south of here the rebellion's last army is running from the Adjunct's. Somewhere inland, the camp says, a fever is walking from village to village. The camp says a great many things. This one it says quietly.`],
+`Somewhere south of here the rebellion's last army is running from the Adjunct's. Somewhere inland, the camp says, a fever is walking from village to village. Most of what the camp says it says loudly. This it says quietly.`],
     go:'Up to the lines', node:'b6_c2_start'},
 
   areas:[
@@ -74854,7 +74854,7 @@ const B6CH3 = {
       quest:()=> b63Ph() === 1 ? (!S.f.b6_c3_orders ? 'The captain, on the line.' : !S.f.b6_c3_sallyDone ? 'The forward lip, by the spoil. The walls.' : 'Dusk. The assault goes in at dusk.')
         : !S.f.b6_c3_order ? 'The walls.' : 'North, to the gate.',
       npcs:[
-        {id:'capt', name:'The captain', kind:'b4_c1_hollet', x:9, y:5, node:()=> S.f.b6_c3_wallSeen && !S.f.b6_c3_order ? 'b6_c3_order' : S.f.b6_c3_orders ? 'b6_c3_capt_again' : 'b6_c3_capt', show:()=>b63Ph() <= 2, fresh:()=>!S.f.b6_c3_orders || (!!S.f.b6_c3_wallSeen && !S.f.b6_c3_order)},
+        {id:'capt', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:5, node:()=> S.f.b6_c3_wallSeen && !S.f.b6_c3_order ? 'b6_c3_order' : S.f.b6_c3_orders ? 'b6_c3_capt_again' : 'b6_c3_capt', show:()=>b63Ph() <= 2, fresh:()=>!S.f.b6_c3_orders || (!!S.f.b6_c3_wallSeen && !S.f.b6_c3_order)},
         {id:'old', name:'An old soldier of the 9th', kind:'b2soldier', x:4, y:7, node:()=>'b6_c3_old', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_oldMet},
         {id:'sapper', name:'A sapper on the forward trench', kind:'b2soldier', x:11, y:3, node:()=>S.f.b6_c3_breathTried ? 'b6_c3_sapper_again' : 'b6_c3_sapper', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_breathTried},
         {id:'rider', name:'A Khundryl rider', kind:'b4_c3_khundryl', x:14, y:7, node:()=>'b6_c3_rider', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_rider},
@@ -74879,7 +74879,7 @@ const B6CH3 = {
       walk:'.,', triggers:{D:'b6_c3_breach', G:'b6_c3_gatedoor', c:'b6_c3_burned', w:'b6_c3_well', v:'b6_c3_to_line'}, start:{x:7, y:10},
       quest:()=> !b63Key() ? 'The captain, under the walls, with the order.' : !b63KeyDone() ? (b63Key() === 'in' ? 'The breach. Into the streets.' : 'The gate.') : 'The night. The captain.',
       npcs:[
-        {id:'capt', name:'The captain', kind:'b4_c1_hollet', x:9, y:7, node:()=> b63KeyDone() ? 'b6_c3_night' : 'b6_c3_key', fresh:()=>!b63Key() || b63KeyDone()},
+        {id:'capt', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:7, node:()=> b63KeyDone() ? 'b6_c3_night' : 'b6_c3_key', fresh:()=>!b63Key() || b63KeyDone()},
         {id:'surgeon', name:'The 9th\'s surgeon', kind:'b2soldier', x:3, y:8, node:()=>'b6_c3_surgeon', fresh:()=>!S.f.b6_c3_surgeon} ] },
 
     /* 16 x 12 (b6_c3_barrows, the night after; odhan_night with this file's barrows). The barrow field by the road, south-west of the
@@ -74901,7 +74901,7 @@ const B6CH3 = {
       walk:'.,', triggers:{F:'b6_c3_fire', M:'b6_c3_long', o:'b6_c3_oldbarrow', b:'b6_c3_far', x:'b6_c3_city'}, start:{x:7, y:9},
       quest:()=> !S.f.b6_c3_long ? 'The new barrow.' : !S.f.b6_c3_capt3 ? 'The captain. The army has orders.' : 'The road to Sotka, tomorrow night.',
       npcs:[
-        {id:'capt', name:'The captain', kind:'b4_c1_hollet', x:9, y:6, node:()=>'b6_c3_capt3', fresh:()=>!S.f.b6_c3_capt3},
+        {id:'capt', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:6, node:()=>'b6_c3_capt3', fresh:()=>!S.f.b6_c3_capt3},
         {id:'old', name:'The old soldier of the 9th', kind:'b2soldier', x:4, y:6, node:()=>'b6_c3_count', fresh:()=>!S.f.b6_c3_count} ] } ],
 
   battles:{
@@ -74970,7 +74970,7 @@ const B6CH3 = {
     if (f.b6_c3_sallyDone) x.push('Leoman\'s people came up out of an old drain at dusk to fire the reserve\'s wagons. The Third stopped them at the drain mouth.');
     if (f.b6_c3_breathOk) x.push('A sapper of the 9th showed the squad how to breathe in a fire.');
     if (f.b6_c3_strays) x.push('On the night after, strays from the city were found among the far barrows.');
-    if (b63K1() === 'bury') x.push('The old barrows were whole again when the new one was raised beside them. The Third had seen to that, the night before the siege.');
+    if (b63K1() === 'bury') x.push('The old barrows were whole again when the new one was raised beside them. The Third had seen to that, on its last night under the walls.');
     if (b63K1() === 'leave') x.push('The new barrow was raised beside old ones still standing open.');
     return x; },
 
@@ -74997,7 +74997,7 @@ ${b63Say({mehet:`Mehet is standing on the spoil with his hand over his eyes, loo
           {t:'Walk the line.', go:()=>startExplore()}]}),
 
     /* ---- the captain: the orders ---- */
-    b6_c3_capt:()=>({sp:'The captain', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_orders = 1; },
+    b6_c3_capt:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_orders = 1; },
       again:()=>`The captain, with the day's orders. "The reserve, Sergeant. Until we're not."`, txt:
 `The company's captain is sitting on an upturned crate behind the tents with the orders on his knee, reading them for the third time as if they might have changed.
 
@@ -75009,12 +75009,12 @@ He looks along the line toward a knot of horsemen far down it, where a banner ha
       ch:[{t:'"And if we are wanted?"', go:'b6_c3_capt2'},
           {t:'"Yes, Captain."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c3_capt2:()=>({sp:'The captain', scene:'b6_ghatan_walls', txt:
+    b6_c3_capt2:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', txt:
 `"Then we will be told by somebody running," the captain says. "That is how the reserve is told things."
 
 He looks at the walls. "There are a great many of them in there, and it is a great many streets. The marines will go in hard. The Fist thinks it will be over by midnight." He considers that. "The Fist has been wrong before. So have I. I would rather be wrong in the reserve."`,
       ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
-    b6_c3_capt_again:()=>({sp:'The captain', scene:'b6_ghatan_walls', again:()=>`The captain, watching the sun.`, txt: S.f.b6_c3_sallyDone ?
+    b6_c3_capt_again:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', again:()=>`The captain, watching the sun.`, txt: S.f.b6_c3_sallyDone ?
 `The captain has watched the drain mouth being filled in by the sappers, and does not look happy about it. "There will be others," he says. "Old cities are like that. All holes." He looks at the sun. "Dusk soon. The marines are forming up."` :
 `The captain is watching the sun, which is not going down fast enough for anyone. "The forward lip, Sergeant," he says. "Leoman knows what ladders are for."`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
@@ -75205,7 +75205,7 @@ Then the sound. Not fighting. Fire, the noise of a whole city burning, and in it
 
 Nearly three thousand of the Fourteenth went in through the breach. A third of the army. They are in there.${b6In('mehet') ? `\n\nMehet has gone the colour of the spoil. "The oil," he says. "The maethgara. It was never for the ladders."` : ''}${b63If('marrow', `\n\nMarrow is on her feet. "Gods below," she says. "All of them. All at once."`)}`,
       ch:[{t:'Find the captain.', fx:()=>{ if (b6In('mehet')) S.f.b6_c3_oil = 1; }, go:'b6_c3_order'}]}),
-    b6_c3_order:()=>({sp:'The captain', scene:'b6_ghatan_fire', fx:()=>{ S.f.b6_c3_wallSeen = 1; },
+    b6_c3_order:()=>({sp:'Captain Hollet', scene:'b6_ghatan_fire', fx:()=>{ S.f.b6_c3_wallSeen = 1; },
       again:()=>`The captain, with the order. "The gate, Sergeant. Then we see."`, txt:
 `A runner comes down the line from the banner, and then another, and the captain listens to the second one with his face lit orange, and then turns round.
 
@@ -75285,7 +75285,7 @@ This is the Third's place.` : S.f.b6_c3_gateDone ?
             {t:'Not now.', go:()=>startExplore()}]}; },
 
     /* ---- the key: the captain under the walls ---- */
-    b6_c3_key:()=>({sp:'The captain', scene:'b6_ghatan_fire', again:()=>`The captain, under the walls. The breach north, the gate east.`, txt: b63Key() ?
+    b6_c3_key:()=>({sp:'Captain Hollet', scene:'b6_ghatan_fire', again:()=>`The captain, under the walls. The breach north, the gate east.`, txt: b63Key() ?
 `It is decided. ${b63Key() === 'in' ? 'The Third goes in, through the breach, to the mouth of the way.' : 'The Third holds the gate.'}` :
 `The captain is standing between the breach and the gate with his sword out, though there is nothing near to use it on. Squads of the reserve are coming up past him in the orange light, and he is sending them on, one to the breach and the next to the gate, with a word each.
 
@@ -75300,13 +75300,13 @@ ${b63Say({mehet:'Mehet is looking at the breach. "I know those streets," he says
           {t:'Into the streets.', req:()=>b63Key() === 'in' && !S.f.b6_c3_streetsDone, onward:true, go:'b6_c3_streets_start'},
           {t:'The gate.', req:()=>b63Key() === 'line' && !S.f.b6_c3_gateDone, onward:true, go:'b6_c3_gate_start'},
           {t:'Not now.', req:()=>!!b63Key(), go:()=>startExplore()}]}),
-    b6_c3_in:()=>({sp:'The captain', scene:'b6_ghatan_fire', txt:
+    b6_c3_in:()=>({sp:'Captain Hollet', scene:'b6_ghatan_fire', txt:
 `The captain looks at you for a moment longer than he looks at the others. Then he nods. "The breach," he says. "Hold the mouth of it. When the ones inside are out, or when you can't, come back." He does not say which he expects.
 
 ${b63Say({mehet:'Mehet is already tying a wet cloth over his face. "Follow me," he says. "I know where the street goes."', haddat:'Haddat goes first, because she always goes first.', _:'The squad ties wet cloths over its faces.'})}${b63If('marrow', `\n\nMarrow ties her cloth on without a word, and checks her bag, and checks it again.`)}`,
       ch:[{t:'Into the streets.', onward:true, go:'b6_c3_streets_start'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c3_line:()=>({sp:'The captain', scene:'b6_ghatan_fire', txt:
+    b6_c3_line:()=>({sp:'Captain Hollet', scene:'b6_ghatan_fire', txt:
 `"The gate," the captain says, and nods, and sends the next squad to the breach.
 
 At the gate the burned are coming out, and along the foot of the wall, out of the smoke, there are shapes coming too that are not the Fourteenth's.${b63If('mehet', `\n\nMehet looks at the breach once, a long look, and then turns his back on it.`)}`,
@@ -75395,7 +75395,7 @@ Now it is night again. The city is still smoking. The barrow field is full of so
 ${fell.length ? `${b63And(fell.map(NAME))} ${fell.length > 1 ? 'are' : 'is'} in it. The Third put ${fell.length > 1 ? 'them' : (b63He(fell[0]) === 'she' ? 'her' : 'him')} there with its own hands this afternoon, near the end, where the squad can find the place again.\n\n${b63Say({haddat:`Haddat says the ${fell.length > 1 ? 'names' : 'name'}, and then all the names she has, from the Chain on, with ${fell.length > 1 ? 'these' : 'this one'} at the end.`, marrow:`Marrow ties a knot in her string, and another, and puts it away.`, tangle:`Tangle lays a coil of fuse-cord on the earth, and does not explain it.`, _:'The squad stands at the place a while.'})}` : `None of the Third is in it. You stand at the end of it anyway, because the squad is still here and that is not nothing, and because nearly everyone else in the barrow field is standing somewhere along it too.`}${b63If('mehet', `\n\nMehet stands at the barrow with his ring of keys in his hand. "They came to take my city," he says. "I know. I am still sorry."`)}`,
         ch:[{t:'Not now.', go:()=>startExplore()}]}; },
     b6_c3_oldbarrow:()=>({sp:'The old barrows', scene:'b6_barrows', fx:()=>{ S.f.b6_c3_oldSeen = 1; }, again:()=>`The old barrows, low and long.`, txt:
-`The old barrows are low and long and grassed over with scrub, older than anyone in the army. The Empire's dead from the last time it took this city. ${b63K1() === 'bury' ? `This one the Third put back, the night before the siege: the earth still shows where, darker than the rest. Whoever is in it is in it again. The new dead have old neighbours who were let lie.` : b63K1() === 'leave' ? `This one stands open, the way Leoman's people left it, the stones pulled out of its side and the dark inside it. The new barrow is fifty paces off. The old dead and the new are close enough to talk, if dead men talk, and one lot has a roof and the other has not.` : `Leoman's people dug into some of them, when they came. This one has been put to rights since.`}${b63If('hessa', `\n\nHessa puts her palm on the old earth. "Patient," she says. "These ones have been patient a long time."`)}`,
+`The old barrows are low and long and grassed over with scrub, older than anyone in the army. The Empire's dead from the last time it took this city. ${b63K1() === 'bury' ? `This one the Third put back with its own spades: the earth still shows where, darker than the rest. Whoever is in it is in it again. The new dead have old neighbours who were let lie.` : b63K1() === 'leave' ? `This one stands open, the way Leoman's people left it, the stones pulled out of its side and the dark inside it. The new barrow is fifty paces off. The old dead and the new are close enough to talk, if dead men talk, and one lot has a roof and the other has not.` : `Leoman's people dug into some of them, when they came. This one has been put to rights since.`}${b63If('hessa', `\n\nHessa puts her palm on the old earth. "Patient," she says. "These ones have been patient a long time."`)}`,
       ch:[{t:'Put the stones back in its side.', req:()=>b63K1() === 'leave' && !S.f.b6_c3_mended, fx:()=>{ S.f.b6_c3_mended = 1; b63L('haddat', 1); }, go:'b6_c3_old_mend'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b6_c3_old_mend:()=>({sp:'The old barrows', scene:'b6_barrows', txt:
@@ -75440,7 +75440,7 @@ ${b63Say({haddat:'Haddat looks at each of their faces in the light of the city, 
       ch:[{t:'Back to the fire.', go:()=>startExplore()}]}),
 
     /* ---- the captain: the march for Sotka (the chapter's end) ---- */
-    b6_c3_capt3:()=>({sp:'The captain', scene:'b6_barrows', fx:()=>{ S.f.b6_c3_capt3 = 1; }, again:()=>`The captain, by the long barrow. "Sotka. Tomorrow night."`, txt:
+    b6_c3_capt3:()=>({sp:'Captain Hollet', scene:'b6_barrows', fx:()=>{ S.f.b6_c3_capt3 = 1; }, again:()=>`The captain, by the long barrow. "Sotka. Tomorrow night."`, txt:
 `The captain is standing at the end of the long barrow with his helm under his arm, which is the first time the Third has seen him without it.
 
 "Orders," he says. "The army marches tomorrow night. For Sotka, and the coast." He turns the helm round in his hands. "The plague is on the roads behind us, and closing. The Adjunct is not waiting to meet it."
@@ -75690,7 +75690,7 @@ const B6CH4 = {
 `Onearm's Host has come inland from the coast through the plague country and stopped in front of G'danisban, east of Raraku, in a rain that started three days ago and has not been told to stop.`,
 ()=>{ const v = b64Here().map(id => TPL[id].name);
   return `${v.length ? `${b64And(v)} ${v.length > 1 ? 'are' : 'is'} with you in the Seventh Company's lines, ankle-deep, under canvas that leaks at the seams.` : 'The Fourth, this week, is you, in the Seventh Company\'s lines, ankle-deep, under canvas that leaks at the seams.'} ${b64C2() === 'pass' ? 'The village the squad went round on the road inland has come with it, the way a cough comes with a cold.' : b64C2() === 'burn' ? 'The village the squad burned on the road inland is three days behind. The smell of it is not.' : 'The villages on the road inland are three days behind. Their quiet is not.'}`; },
-`The High Fist is in the field hospital, the camp says, and has been for days. The camp says a great many things in the rain. It is the only thing it has to do.`],
+`The High Fist is in the field hospital, the camp says, and has been for days. There is not much else to do in the rain but say things.`],
     go:'Into the lines', node:'b6_c4_start'},
 
   areas:[
@@ -76617,7 +76617,7 @@ const B6CH5 = {
       walk:'.,', triggers:{F:'b6_c5_start', W:'b6_c5_carts', c:'b6_c5_shrine', L:'b6_c5_lookout', '<':'b6_c5_waystation', '>':'b6_c5_road_on', v:'b6_c5_villagelane'}, start:{x:8, y:4},
       quest:()=> !S.f.b6_c5_capSaid ? 'The captain, by the tents.' : !b65RoadDone() ? 'Back up the road, west, to the way-station.' : 'Down to the shore, east.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
         {id:'oldsoldier', name:'The old soldier of the 9th', kind:'b2soldier', x:3, y:7, node:()=>'b6_c5_rumour', fresh:()=>!S.f.b6_c5_rumour},
         {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial} ] },
 
@@ -76658,7 +76658,7 @@ const B6CH5 = {
       walk:'.,', triggers:{F:'b6_c5_fire', B:'b6_c5_boatline', S:'b6_c5_surgeons'}, start:{x:7, y:9},
       quest:()=> !S.f.b6_c5_capShore ? 'The captain, on the beach.' : !S.f.b6_c5_boatsDone ? 'The boats, tonight.' : !b65Key() ? 'The fire. There is talk along the beach.' : !S.f.b6_c5_survivors ? 'Morning.' : 'The boats, and the transport.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:6, y:6, node:()=>S.f.b6_c5_capShore ? (S.f.b6_c5_boatsDone && !b65Key() ? 'b6_c5_key' : 'b6_c5_captain_shore_again') : 'b6_c5_captain_shore', fresh:()=>!S.f.b6_c5_capShore || (!!S.f.b6_c5_boatsDone && !b65Key())},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:6, node:()=>S.f.b6_c5_capShore ? (S.f.b6_c5_boatsDone && !b65Key() ? 'b6_c5_key' : 'b6_c5_captain_shore_again') : 'b6_c5_captain_shore', fresh:()=>!S.f.b6_c5_capShore || (!!S.f.b6_c5_boatsDone && !b65Key())},
         {id:'wickans', name:'Wickan riders at their horse lines', kind:'wickan', x:11, y:7, node:()=>S.f.b6_c5_wickans ? 'b6_c5_wickans_again' : 'b6_c5_wickans', fresh:()=>!S.f.b6_c5_wickans},
         {id:'nokmate', name:'The loading master', kind:'b2soldier', x:8, y:4, node:()=>'b6_c5_nokmate', fresh:()=>!S.f.b6_c5_nokmate},
         {id:'heavy', name:'A heavy of the 10th', kind:'b2soldier', x:10, y:5, node:()=>'b6_c5_bone', show:()=>!!S.f.b6_c5_survivors && b65Key() !== 'sail', fresh:()=>!!S.f.b6_c5_survivors && !S.f.b6_c5_boneSaid} ] } ],
@@ -76779,11 +76779,11 @@ ${b65Say({haddat:`Haddat stands at the bluff's edge with the blue shield grounde
 
 Admiral Nok's fleet. Come to take the Fourteenth off Seven Cities.
 
-Where to, the army has not been told. The camp says Quon Tali, and home, and the camp says a great many things. The ships ride at anchor and keep their counsel. A bell rings on one of them, very small and very clear across the water, and then on another, and another, down the line, as the watch changes.${b65Say({tebbet:`\n\nTebbet has counted. "Sixty-one I can see," he says. "Dal Hon has no sea. I don't like it already."`, darrut:`\n\nDarrut looks at the ships with his helm under his arm. "Aren had a harbour," he says. "Ships went out of it. Mostly they came back."`, _:''})}${b65R({orvas:`\n\nOrvas has come to the edge with you, and is not looking at the ships. He is looking north along the coast, where the Khundryl horse lines are. "The Burned Tears will not get on a boat," he says. "We have never got on a boat." He thinks about it. "I may be the first."`, warlock:`\n\n"*Ships,*" the grandmother says, out of Keth's mouth, with great disgust. "*Wickans on ships.*" Keth, in his own voice: "She was sick on a river once."`, redblade:`\n\nRamin looks at the ships for a while. Then: "My father said the Empire came over the sea in ships like those. He said they would leave the same way." He puts his helm on. "He did not say with me on them."`})}`,
+Where to, the army has not been told. The camp says Quon Tali, and home, and the camp has been wrong before. The ships ride at anchor and keep their counsel. A bell rings on one of them, very small and very clear across the water, and then on another, and another, down the line, as the watch changes.${b65Say({tebbet:`\n\nTebbet has counted. "Sixty-one I can see," he says. "Dal Hon has no sea. I don't like it already."`, darrut:`\n\nDarrut looks at the ships with his helm under his arm. "Aren had a harbour," he says. "Ships went out of it. Mostly they came back."`, _:''})}${b65R({orvas:`\n\nOrvas has come to the edge with you, and is not looking at the ships. He is looking north along the coast, where the Khundryl horse lines are. "The Burned Tears will not get on a boat," he says. "We have never got on a boat." He thinks about it. "I may be the first."`, warlock:`\n\n"*Ships,*" the grandmother says, out of Keth's mouth, with great disgust. "*Wickans on ships.*" Keth, in his own voice: "She was sick on a river once."`, redblade:`\n\nRamin looks at the ships for a while. Then: "My father said the Empire came over the sea in ships like those. He said they would leave the same way." He puts his helm on. "He did not say with me on them."`})}`,
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
 
     /* ---- the captain: the deserters at the way-station ---- */
-    b6_c5_captain:()=>({sp:'The captain · the 9th', scene:'b6_c5_road', txt:
+    b6_c5_captain:()=>({sp:'Captain Hollet · Second Company', scene:'b6_c5_road', txt:
 `The captain is sitting on an upturned crate by the company's tents with a wax tablet on his knee and his helm off, which he never does in front of the company. His eyes are red. The whole 9th's eyes are red. It is the smoke, and it has been the smoke for days.
 
 "Sergeant." He finds his place on the tablet. "Six of the 10th went off the column two nights back. And a sergeant. With a mule, and the mule had the 9th's spare salves on it, which is why it's my business and not the 10th's." He rubs his eyes. "There's an old way-station a few miles back up the road, west. A picket saw smoke there this morning."
@@ -76792,7 +76792,7 @@ He looks at the tablet, and not at you. "They were in the city, some of them. In
       ch:[{t:'"We\'ll fetch them, sir."', fx:()=>{ S.f.b6_c5_capSaid = 1; }, go:'b6_c5_captain_2'},
           {t:'"And when we bring them in, sir?"', req:()=>!S.f.b6_c5_capWhy, fx:()=>{ S.f.b6_c5_capWhy = 1; }, go:'b6_c5_captain_why'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_captain_why:()=>({sp:'The captain', scene:'b6_c5_road', txt:
+    b6_c5_captain_why:()=>({sp:'Captain Hollet', scene:'b6_c5_road', txt:
 `The captain puts the stylus down.
 
 "The army will want them," he says. "On the shore, in front of the legions, so everybody sees what it costs. That's how it's done. I didn't write it." He looks west up the road, toward the city you cannot see from here and can still smell. "Three thousand went into that city, Sergeant. I watched them go in. I don't know what I'd have done, if I'd been one of the ones who came out."
@@ -76800,10 +76800,10 @@ He looks at the tablet, and not at you. "They were in the city, some of them. In
 He picks the stylus up again. "Bring them in. That's the order. I've given it."`,
       ch:[{t:'"Sir."', fx:()=>{ S.f.b6_c5_capSaid = 1; }, go:'b6_c5_captain_2'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_captain_2:()=>({sp:'The captain', scene:'b6_c5_road', txt:
+    b6_c5_captain_2:()=>({sp:'Captain Hollet', scene:'b6_c5_road', txt:
 `"Good." He writes the Third against something. "West, back up the road. A few miles. You'll see the walls." He looks up. "Go careful. They have crossbows, and they were soldiers last week."${b65Say({haddat:`\n\nHaddat, behind you, says quietly: "They are still soldiers, Captain. That is what makes it hard."\n\nThe captain looks at her for a while, and nods, and does not write that down.`, tebbet:`\n\nTebbet, behind you: "Crossbows. Ours." He checks his string.`, _:''})}${b65If('mehet', `\n\nMehet, at your shoulder: "The way-station on the Sotka road has a well that has been dry since my grandfather's time. They will be short of water." He shrugs. "Men short of water are not patient."`)}`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b6_c5_captain_again:()=>({sp:'The captain', scene:'b6_c5_road', again:()=> b65RoadDone() ? 'The captain, writing. "Down to the shore, Sergeant."' : 'The captain, writing. "West, Sergeant. The way-station."', txt: b65RoadDone() ?
+    b6_c5_captain_again:()=>({sp:'Captain Hollet', scene:'b6_c5_road', again:()=> b65RoadDone() ? 'The captain, writing. "Down to the shore, Sergeant."' : 'The captain, writing. "West, Sergeant. The way-station."', txt: b65RoadDone() ?
 `The captain has the salves counted already, and written down. "Down to the shore with the rest of us, Sergeant," he says. "The fleet won't wait for ever. It says it will. It won't."` :
 `The captain is still on his crate, still writing. "West, Sergeant," he says, without looking up. "Back up the road to the way-station. The salves, and the men."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
@@ -77001,7 +77001,7 @@ The Kokakal shore is a long camp. The Fourteenth is strung out along it as far a
 It takes days to put an army on ships. The 9th is told two. It does not believe it.${b65Say({tallow:`\n\nTallow stands at the waterline and lets the surf come over his boots and go out again. "Cold," he says, astonished. "It's cold. They never said it'd be cold."`, darrut:`\n\nDarrut looks at the boats going out through the surf. "Every one of those comes back empty," he says. "I've been watching. Every one." He seems comforted.`, _:''})}${b65If('mehet', `\n\nMehet walks down to where the sand goes wet and stops, exactly, at the line, with the toes of his boots on dry sand. The next wave comes up and over them anyway. He does not step back.`)}`,
       ch:[{t:'Find the captain.', go:()=>startExplore()},
           {t:'The Third\'s fire, in the dunes.', go:'b6_c5_fire'}]}),
-    b6_c5_captain_shore:()=>({sp:'The captain', scene:'b6_kokakal', fx:()=>{ S.f.b6_c5_capShore = 1; }, txt:
+    b6_c5_captain_shore:()=>({sp:'Captain Hollet', scene:'b6_kokakal', fx:()=>{ S.f.b6_c5_capShore = 1; }, txt:
 `The captain is on the beach with his tablet, watching the lighters, and counting them, and writing the count down, and counting again.
 
 "Two days," he says. "The 9th goes aboard in two days, by companies. Ours is the third transport from the point, the one with the patched foresail." He points with the stylus. "Until then the stores sit on the sand by the boats, and the coast villages know it. There were men at the stores last night. Tonight the Third has the boats." He looks at you. "Not a sack goes off this beach that the Fourteenth doesn't hand over."
@@ -77009,12 +77009,12 @@ It takes days to put an army on ships. The 9th is told two. It does not believe 
 Up the beach, a knot of officers on horseback is riding slowly along the waterline. One of them is the Fist. He is looking out at the empty sea past the transports, as if he were counting something out there that is not there yet.${b65Say({haddat:`\n\nHaddat follows the captain's eye to the riders, and away from them. "The Fist does not like the sea," she says. "Nor do I. That is the only thing we have in common."`, _:''})}`,
       ch:[{t:'"The Third has the boats, sir."', go:()=>startExplore()},
           {t:'"Two days, sir?"', go:'b6_c5_captain_shore_2'}]}),
-    b6_c5_captain_shore_2:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_captain_shore_2:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"Two days." He writes something. "The Admiral's people say two days. The Fist says two days is a sailor's two days. The Adjunct keeps her own counsel." He shuts the tablet on the stylus. "So, two days."
 
 He looks at the transports. "I've never been on a ship further than Malaz to Kan, Sergeant. I was sick the whole way." He seems to think that is useful information. "Tonight, the boats."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b6_c5_captain_shore_again:()=>({sp:'The captain', scene:'b6_kokakal', again:()=> !S.f.b6_c5_boatsDone ? 'The captain, counting lighters. "Tonight, Sergeant. The boats."' : 'The captain, counting lighters.', txt: !S.f.b6_c5_boatsDone ?
+    b6_c5_captain_shore_again:()=>({sp:'Captain Hollet', scene:'b6_kokakal', again:()=> !S.f.b6_c5_boatsDone ? 'The captain, counting lighters. "Tonight, Sergeant. The boats."' : 'The captain, counting lighters.', txt: !S.f.b6_c5_boatsDone ?
 `The captain is still counting lighters. "Tonight, Sergeant," he says. "The boats. I'll sleep better knowing it's the Third."` : S.f.b6_c5_survivors ?
 `The captain is not counting anything. He is standing on the beach looking at the ones who walked in, and his tablet is shut. "I wrote them off," he says, to nobody. "I wrote them all off, by name."` :
 `The captain has his tablet open and the stylus in his hand and is not writing. "The boats held," he says. "Good." He looks at the transports.`,
@@ -77197,7 +77197,7 @@ The squad drags the boat back up the sand and puts the sacks back under the canv
 He gets up. "I don't know what Sepik is," he says. "Some island. I'd as soon not find out by drowning near it." He goes on along the beach to the next fire.${b65Say({tallow:`\n\nTallow has gone white. "A boy," he says. "My grandmother would have listened to a boy like that. She always listened to the strange ones."`, darrut:`\n\n"A boy," Darrut says. "We're putting off an army's sailing for a boy." He thinks about it. "The Fist won't."`, _:''})}`,
       ch:[{t:'Go and find the captain.', onward:true, go:'b6_c5_key'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_key:()=>({sp:'The captain', scene:'b6_kokakal', again:()=>'The captain, with his tablet, and a choice.', txt: b65Key() ?
+    b6_c5_key:()=>({sp:'Captain Hollet', scene:'b6_kokakal', again:()=>'The captain, with his tablet, and a choice.', txt: b65Key() ?
 `The captain has the Third written down already. ${b65Key() === 'wait' ? '"The last boat, Sergeant. Tomorrow."' : '"Aboard at first light, Sergeant."'}` :
 `The captain is awake, of course. He is sitting on a chest by the company's stores with his tablet on his knee and a lamp beside him.
 
@@ -77207,7 +77207,7 @@ He does not say *on a boy's word*. He does not have to. "I'll write down whichev
       ch:[{t:'"The Third will stay with the last boat, sir."', req:()=>!b65Key(), fx:()=>{ S.f.b6_c5_key = 'wait'; b65L('tallow', 1); b65L('mehet', 1); b65L('marrow', 1); b65L('tebbet', -1); }, go:'b6_c5_wait'},
           {t:'"The Third goes aboard with the company, sir. As ordered."', req:()=>!b65Key(), fx:()=>{ S.f.b6_c5_key = 'sail'; b65L('tebbet', 1); b65L('darrut', 1); b65L('tallow', -1); }, go:'b6_c5_sail'},
           {t:'Not yet.', go:()=>startExplore()}]}),
-    b6_c5_wait:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_wait:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"The last boat." He writes it. "The Third, with the stores and the company's last boat, till the end." He looks up. "I'll tell the Fist it's how the company loads. Last off is always a squad." He shuts the tablet. "It is, too."
 
 At first light the company goes aboard without you, filing down the sand to the lighters with its kit on its back and its eyes on the water, and the transport with the patched foresail takes them up its side one by one. The Third stands by the last boat with the stores and watches them go.
@@ -77215,7 +77215,7 @@ At first light the company goes aboard without you, filing down the sand to the 
 It is a long day on the sand. There is not much to do on it but wait.${b65Say({tallow:`\n\nTallow sits on the last boat's gunwale with his deck in its oilcloth on his knee. "Thank you," he says, to nobody in particular, and then, to the sea: "Thank you."`, mehet:`\n\nMehet sits on the dry sand above the waterline, and does not look as if he minds waiting at all.`, _:''})}`,
       ch:[{t:'The day.', onward:true, go:'b6_c5_morning'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_sail:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_sail:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"Aboard, then." He writes it. "First light, with the company. Third transport, patched foresail." He shuts the tablet. "I'll find another squad for the last boat. There's always another squad."
 
 At first light the Third goes down the sand to the lighters with the company, its kit on its back and its eyes on the water, and the lighter takes it out through the surf, wet to the knees, and the transport with the patched foresail takes it up its side on a net.
@@ -77499,7 +77499,7 @@ const B66_FATE = {
     : r === 'hanarara' ? `Brisk stands the picket on the Hanar Ara road every day the Fourth is left there, and nobody sees her sit down in any of them. When the Fourth comes back to the Host the captain asks her what happened on the road. "Nothing," Brisk says, and it was true, and she makes it sound like a thing she did on purpose.${k === 'report' ? ' The captain does not ask about the city. Brisk does not offer.' : ''}`
     : `Brisk takes the ship west with the shield slung and an unreasonable quantity of hardtack in her pack. On the jetty at the coast she lifts two fingers to her brow, to Hood, out of habit, and then to the sea, which she has decided is the same thing with more water.${l >= 2 ? ' She asks you, at the rail, where you will be. It is the first question she has asked you in years.' : ''}`}),
   kettle:(r, k, l) => ({title:'The sapper', txt:
-    r === 'highfist' ? `Kettle counts the satchel every morning on the march, two sharpers, a burner, and the cusser at the bottom she will not throw at anything that doesn't matter. She has stopped being able to say what would. Sweetcreek's Falari have found out she is Falari and give her the end of every song, and she sings it, badly, louder than they do.`
+    r === 'highfist' ? `Kettle counts the satchel every morning on the march, two sharpers, a burner, and the cusser at the bottom she will not throw at anything that doesn't matter. She has stopped being able to say what would. Sweetcreek's Falari know she is Falari and give her the end of every song, and she sings it, badly, louder than they do.`
     : r === 'hanarara' ? `Kettle strings trip-cord round the picket on the Hanar Ara road the first night, with a tin cup on each line, and the cups ring at goats, at the wind, at a stray dog, and never once at anything that matters. She writes each ring in the munitions ledger. "So there's a record," she says. "Of nothing. The Moranth would want a record."`
     : `The ship west calls at Falar, the master says, or near it. Kettle has not decided whether she will get off. She sits on the deck with the munitions ledger on her knees and counts the satchel twice a day, and the sailors give her a great deal of room, which she says is the first sensible thing anyone has done since Pale.`}),
   tuft:(r, k, l) => ({title:'The reader', txt:
@@ -78485,7 +78485,7 @@ const B6CH7 = {
       walk:'.', triggers:{R:'b6_c7_rail', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_bow'}, start:{x:7, y:8},
       quest:()=> !S.f.b6_c7_ambushDone ? 'The lookout is shouting. The rail.' : !S.f.b6_c7_sepik ? 'An island to the west. The rail.' : !S.f.b6_c7_ottarMet ? 'Grey ships coming up astern. The rail.' : 'The fleet is turning into something. The bow.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>!S.f.b6_c7_captain},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>!S.f.b6_c7_captain},
         {id:'master', name:'The transport\'s master', kind:'b5_c2_pilot', x:13, y:2, node:()=>'b6_c7_master', fresh:()=>!S.f.b6_c7_master},
         {id:'oldninth', name:'An old soldier of the 9th', kind:'b2soldier', x:2, y:5, node:()=>'b6_c7_oldsoldier', fresh:()=>!S.f.b6_c7_oldsoldier},
         {id:'ottar', name:'A Grey Helm', kind:'greysword', x:9, y:4, node:()=>'b6_c7_ottar', show:()=>b67Ph() === 2 && !!S.f.b6_c7_perish && !S.f.b6_c7_ottarMet, fresh:()=>true} ] },
@@ -78507,7 +78507,7 @@ const B6CH7 = {
       walk:'.', triggers:{R:'b6_c7_ice', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_wolves'}, start:{x:7, y:8},
       quest:()=> !S.f.b6_c7_wolvesHeard ? 'Something is howling a long way off. The bow.' : 'Out of here. The bow.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>false},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>false},
         {id:'master', name:'The transport\'s master', kind:'b5_c2_pilot', x:13, y:2, node:()=>'b6_c7_master', fresh:()=>!S.f.b6_c7_masterCold} ] },
 
     /* 16 x 12 (b6_c7_quay): Malaz City's waterfront, a jetty along from the marines'. ~ harbour  H the plank to the transport  X the main
@@ -78529,7 +78529,7 @@ const B6CH7 = {
       walk:'.,', triggers:{H:'b6_c7_plank', X:'b6_c7_shouts', W:'b6_c7_wickans_fam', F:'b6_c7_fire', A:'b6_c7_alley', K:'b6_c7_holdview', M:'b6_c7_mob', '<':'b6_c7_tolanes'}, start:{x:4, y:5},
       quest:()=> !S.f.b6_c7_mobDone ? 'The city is coming down to the water. The street mouth.' : !S.f.b6_c7_guardDone ? 'The City Guard, for the Wickans.' : !b67Key() ? (S.f.b6_c7_signal ? 'The roads.' : 'Horns from the harbour.') : b67Key() === 'wickans' && !S.f.b6_c7_streetsDone ? 'Into the streets, west.' : 'The last of it.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:6, y:4, node:()=>S.f.b6_c7_guardDone ? 'b6_c7_signal' : 'b6_c7_orders', fresh:()=>!S.f.b6_c7_orders || (!!S.f.b6_c7_guardDone && !S.f.b6_c7_signal)},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:4, node:()=>S.f.b6_c7_guardDone ? 'b6_c7_signal' : 'b6_c7_orders', fresh:()=>!S.f.b6_c7_orders || (!!S.f.b6_c7_guardDone && !S.f.b6_c7_signal)},
         {id:'guard', name:'The City Guard', kind:'b2soldier', x:12, y:9, node:()=>'b6_c7_guard_come', show:()=>!!S.f.b6_c7_mobDone && !S.f.b6_c7_guardDone, fresh:()=>true},
         {id:'sailor', name:'A sailor off a dispatch boat', kind:'b5_c3_bargeman', x:1, y:6, node:()=>'b6_c7_news', fresh:()=>!S.f.b6_c7_news},
         {id:'grandmother', name:'A Wickan grandmother', kind:'b5_c1_tilewoman', x:10, y:6, node:()=>'b6_c7_grandmother', show:()=>!!S.f.b6_c7_famMet, fresh:()=>!S.f.b6_c7_gran} ] },
@@ -78618,7 +78618,7 @@ const B6CH7 = {
   tease:'The epilogue: where each squad\'s road goes, a page for every soldier of both, and where the books meet.',
 
   extras:()=>{ const f = S.f, x = [];
-    x.push(b67Sailed() ? 'The squad was aboard from the first day of the loading, and a day longer at sea than most.' : 'The squad held its transport a day on the shore, on a boy\'s word.');
+    x.push(b67Sailed() ? 'The squad was aboard from the first day of the loading, a day longer on its transport than most.' : 'The squad held its transport a day on the shore, on a boy\'s word.');
     if (f.b6_c7_ambushDone) x.push('From a transport\'s rail the squad saw the Edur lines, a wall of water, and a wall of earth that could not be there.');
     if (f.b6_c7_ottarMet) x.push(b6In('ottar') ? 'A Grey Helm of the Perish came across to the transport, and walks with the Third.' : (S.camp || []).includes('ottar') || f.b6_ottarDone === 2 ? 'A Grey Helm of the Perish came across to the transport, and waits with the Grey Helms.' : 'A Grey Helm of the Perish came across to the transport, and went to stand with his own.');
     if (f.b6_c7_alleyDone) x.push('The squad took a Wickan boy off the mob in a fish-shed alley.');
@@ -78686,7 +78686,7 @@ The Edur lines turn away. Not fast. Then faster.
 
 Behind the earth there is nothing but sea, when the spray clears. It may never have been there at all. On the next transport over, the marines are shouting that it was the High Mage's work, and then that it was illusion, and then that it was something more than illusion by the end, and then they stop shouting, because they do not know either.${b67Say({tangle:'\n\nTangle has his hands on the rail and the satchel between his feet. "That was a lot of earth," he says, at last, "to put in the sea." He sounds envious.', yorin:'\n\nYorin is white to the lips and holding his copper vane, which is spinning. "That was not Serc," he says. "That was not anything I know." He makes it stop.', _:''})}
 
-${b67Sailed() ? 'You have been aboard since the first day of the loading. A day longer at sea, and you would have been two days past Sepik with all of this in front of you. The boy said so, on the shore. There is no laughing at boys on this deck today.' : 'You held the transport a day on the shore, on a boy\'s word. The crew laughed then. The deck is not laughing now, and the master has been looking at the 9th with something like respect.'}`,
+${b67Sailed() ? 'You have been aboard since the first day of the loading, at anchor while the 8th sat a day on the shore on a boy\'s word. Two days past Sepik, the boy said. There is no laughing at boys on this deck today.' : 'You held the transport a day on the shore, on a boy\'s word. The crew laughed then. The deck is not laughing now, and the master has been looking at the 9th with something like respect.'}`,
       ch:[{t:'Breathe.', onward:true, go:'b6_c7_ambush_after'}]}),
     b6_c7_ambush_after:()=>({sp:'At sea', scene:'b6_sea', again:()=>`The fleet re-forming.`, txt:
 `The fleet comes back together over an afternoon, the warships herding, the transports wallowing back into their places. The deck is quiet. The 9th goes back to its dice and finds it has forgotten whose throw it was.
@@ -78822,7 +78822,7 @@ That afternoon another fleet finds them: Malazan warships, out of Jakatakan, und
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* the captain, unnamed (the 9th's company captain, as in Book Four) */
-    b6_c7_captain:()=>({sp:'The captain', scene:b67Scene(), fx:()=>{ S.f.b6_c7_captain = 1; }, again:()=>`The captain, with the company's book.`, txt:
+    b6_c7_captain:()=>({sp:'Captain Hollet', scene:b67Scene(), fx:()=>{ S.f.b6_c7_captain = 1; }, again:()=>`The captain, with the company's book.`, txt:
 `The captain has the company's book open on a coil of rope and is writing the sea into it, day by day, because a book has to have something in it.
 
 "The Adjunct's taking us to Malaz City," the captain says. "That's the word from the flagship. Malaz, then wherever the Empress says." The captain does not say the Empress's name; nobody in the 9th does, out of an old habit nobody can explain. "Resupply. Reinforcements. Orders." A pause. "I've been to Malaz. It's a city that likes soldiers best when they're leaving."${b67Fell3().length ? `\n\nThe captain turns back a page, to Y'Ghatan, and looks at a line there, and turns forward again. "${b67And(b67Fell3().map(NAME))}," the captain says. "I wrote ${b67Fell3().length > 1 ? 'them' : b67Him(b67Fell3()[0])} properly."` : ''}`,
@@ -78895,7 +78895,7 @@ The city has turned on its Wickans. Not one of the harbour-men will say who star
 At the jetty's end, with the water at their backs, there are Wickan families: forty or so, women and children and old men, who came down to the harbour when they saw the fleet because the fleet was the only thing in Malaz City that might not be against them.${b67Say({sathi:'\n\nSathi looks at the families and her face goes very still. "Wickans," she says. "Theirs. This city\'s." She draws her knife.', warlock:'\n\nKeth stops dead on the planks. The grandmother says something out of his mouth, very fast and very low, and then nothing at all.', rasp:'\n\nRasp has stopped at the top of the plank. "My city," she says. "This is my city." She does not sound proud of it.', _:''})}`,
       ch:[{t:'The captain.', go:'b6_c7_orders'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c7_orders:()=>({sp:'The captain', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_orders = 1; }, again:()=>`The captain at the jetty's head.`, txt:
+    b6_c7_orders:()=>({sp:'Captain Hollet', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_orders = 1; }, again:()=>`The captain at the jetty's head.`, txt:
 `The captain has the company on the jetty, in a line across it at the landward end, and is looking at the street mouth across the waterfront, where the noise is coming from.
 
 "No orders," the captain says. "The flagship's sent none. The Fist's at the main jetty and hasn't sent any either." The captain looks back at the Wickan families. "So these are the orders. No one comes down this jetty who isn't the Fourteenth. No one goes into the water." A breath. "The Third has the jetty's foot. Hold it."`,
@@ -78911,7 +78911,7 @@ Most of them have never seen the Wickan plains. They are the grandchildren of ri
     b6_c7_grandmother:()=>({sp:'A Wickan grandmother', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_gran = 1; if (!S.f.b6_c7_cloakGot && S.f.b6_c7_mobDone) { S.f.b6_c7_cloakGot = 1; gain('b6_c7_malazcloak'); } }, again:()=>`The grandmother, with her bundle.`, txt: !S.f.b6_c7_mobDone ?
 `An old Wickan woman with a bundle on her knee and a long dun cloak round her shoulders is sitting on a bollard at the jetty's end, watching the street mouth. She speaks Malazan with a fishwife's waterfront voice.
 
-"My husband sold rope on this jetty for forty years," she says. "They bought it from him on Tuesday. On Friday they burned his shop." She looks at the soldiers. "He's dead. Before all this. I'm glad of it. That's what this city's done to me."` :
+"My husband sold rope on this jetty for forty years," she says. "They bought rope from him at the start of the week. By the end of it they had burned his shop." She looks at the soldiers. "He's dead. Before all this. I'm glad of it. That's what this city's done to me."` :
 `The old woman stands up off her bollard when the squad comes back down the jetty, and takes the long dun cloak off her shoulders, and puts it round ${b67Here().length ? `${NAME(b67Here()[0])}'s` : 'your'} shoulders without asking.
 
 "His," she says. "My husband's. Harbour wool, oiled. It'll keep the sea out." She settles it. "He'd want it to go with a soldier. He was one, once, for the old Emperor." She sits down again. "Don't argue. I'm too old for it."`,
@@ -79140,9 +79140,10 @@ B67FIN.key = k => B67FIN.KEYS.includes(k) ? k : B67FIN.KEYS.includes(S.f.b6_c7_k
 B67FIN.join = ps => ps.filter(p => p && String(p).trim()).join('\n\n');
 B67FIN.loy = (id, warm, cold, mid) => { const l = (S.loy && S.loy[id]) || 0; return l >= 2 ? warm : l <= -2 ? cold : mid; };
 /* the Third's Book Six, in one line per soldier: Ch1's barrows, Ch3's fire, Ch5's bone (each read with a default) */
-B67FIN.barrows = id => b67Buried() ? `At Y'Ghatan, the night before the siege, ${id === 'sgt' ? 'you' : b67He(id)} put the old dead back in their barrows with the squad.` : `At Y'Ghatan the squad rested the night before the siege, and the barrows stayed open.`;
-B67FIN.fire = id => b67WentIn() ? `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} went into the streets with the squad to hold Sinn's way open, and came out by it.` : `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} held the gate with the squad and pulled the burned out of the smoke.`;
-B67FIN.bone = id => b67Bone() ? `${id === 'sgt' ? 'You wear' : `${b67Cap(b67He(id))} wears`} the finger bone from Y'Ghatan, as the soldiers who walked out of it do.` : '';
+/* Ottar came aboard at sea: Y'Ghatan, its barrows and its bones are not his */
+B67FIN.barrows = id => id === 'ottar' ? '' : b67Buried() ? `At Y'Ghatan, the last night before the assault, ${id === 'sgt' ? 'you' : b67He(id)} put the old dead back in their barrows with the squad.` : S.f.b6_c1_key === 'leave' ? `At Y'Ghatan the squad rested under the walls, and the barrows stayed open.` : '';
+B67FIN.fire = id => id === 'ottar' ? '' : b67WentIn() ? `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} went into the streets with the squad to hold Sinn's way open, and came out by it.` : `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} held the gate with the squad and pulled the burned out of the smoke.`;
+B67FIN.bone = id => b67Bone() && id !== 'ottar' ? `${id === 'sgt' ? 'You wear' : `${b67Cap(b67He(id))} wears`} the finger bone from Y'Ghatan, as the soldiers who walked out of it do.` : '';
 
 B67FIN.ending = key => {
   const T = {adjunct:['Out with the fleet', 'b6_c7_finale'], jetty:['Left on the jetty', 'b6_c7_finale'], wickans:['With the Wickans', 'b6_c7_finale']}[key] || ['Out with the fleet', 'b6_c7_finale'];
@@ -79215,7 +79216,7 @@ B67FIN.gone = (id, key) => {
   if (S.dead && S.dead[id]) { const d = S.dead[id];
     if (d.ch === 3 && !d.from) return {title:'Fallen', txt:B67FIN.join([
       `${NAME(id)} fell at Y'Ghatan, in the burning streets, holding Sinn's way open while the others came out by it. Whoever fell there stayed down.`,
-      `${b67Cap(b67He(id))} is in the long new barrow outside the walls, with the rest of the Fourteenth's dead from the fire, ${b67Buried() ? 'beside the old barrows the squad put back the night before the siege' : 'beside the old barrows the rebels opened'}.`,
+      `${b67Cap(b67He(id))} is in the long new barrow outside the walls, with the rest of the Fourteenth's dead from the fire, ${b67Buried() ? 'beside the old barrows the squad put back' : 'beside the old barrows the rebels opened'}.`,
       `The squad said the name at the barrow, and on the deck at sea, and at the jetty's foot in Malaz City. The Third carried it the rest of the way.`])};
     return {title:'Fallen', txt:B67FIN.join([`${NAME(id)} fell before this book, ${d.where ? `at ${d.where}` : 'on an earlier road'}, and did not come to Y'Ghatan.`, `The Third carried the name all the way to Malaz City, and says it at night with the others.`])}; }
   const done = S.f[B6_DONE[id]], waits = (S.camp || []).includes(id) || done === 2;
@@ -79248,12 +79249,12 @@ B67FIN.sgt = key => {
 const b67AsH = fn => { if (!(S && S.th && S.th.h) || b6Thread() !== 'r') return fn(); b6Use('h'); try { return fn(); } finally { b6Use('r'); } };
 const b67H = () => (S && S.th && S.th.h) || null;
 const B67_FT = {brisk:'Four coppers', kettle:'The count', tuft:'The Deck', ohl:'The list', sohra:'The herd-mother', greysword:'The Wolves of Winter', ellis:'Still looking', vell:'Sky', brannoc:'The whistle', ressa:'Blue fingers', sgt:'Fourth squad'};
-const B67_FR = {highfist:'With the High Fist', hanarara:'At Hanar Ara', home:'The road home'};
+const B67_FR = {highfist:'With the High Fist', hanarara:'The Hanar Ara road', home:'The road home'};
 /* the generic line per Fourth soldier per road, when Chapter 6 has not written one */
 B67FIN.fourthFallback = (id, road) => {
   const nm = id === 'sgt' ? 'You' : NAME(id), he = b67He(id);
-  const r = road === 'hanarara' ? `${id === 'sgt' ? 'You stayed' : `${nm} stayed`} with the Fourth at Hanar Ara, the City of the Fallen, after the surrender, among the plague-marked, where the Host was not.` :
-    road === 'home' ? `${id === 'sgt' ? 'You went' : `${nm} went`} home with the Fourth, out of Seven Cities and its plague, on the first boats that would take soldiers.` :
+  const r = road === 'hanarara' ? `${id === 'sgt' ? 'You stood' : `${nm} stood`} the picket on the Hanar Ara road with the Fourth after the surrender, short of the outer shrines, until the Host sent for it.` :
+    road === 'home' ? `${id === 'sgt' ? 'You went' : `${nm} went`} home with the Fourth on the time-served list, out of Seven Cities and its plague, on a ship west.` :
     `${id === 'sgt' ? 'You marched' : `${nm} marched`} on with the Fourth in the Host, behind the High Fist the army chose in the rain, to wherever he takes it.`;
   const w = {brisk:'She still stands in front of things.', kettle:'She still counts the munitions every dusk, by name.', tuft:'She still reads the Deck on an upturned shield.', ohl:'His list is longer by a book of plague.',
     sohra:'She sings to the dead of every field the Host crosses.', greysword:'The wolf on her shield is nearer finished.', ellis:'She still counts the horses first.', vell:'He still coils the rope at dusk.',
@@ -79261,13 +79262,17 @@ B67FIN.fourthFallback = (id, road) => {
   return B67FIN.join([r, w, id === 'sgt' ? 'The Fourth came through the plague year in Seven Cities. That is its part. It is small.' : `${b67Cap(he)} came through the plague year.`]);
 };
 B67FIN.fourthText = (id, road) => { let v = null;
-  try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates; const e = F && F[id]; v = typeof e === 'function' ? e(id, road) : e; } catch(e) { v = null; }
+  try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates;
+    /* Chapter 6 shipped its fates as an object with page(id) -> {title, txt} (docs/bh-ch6-notes.md); read that first, then the per-id shape */
+    if (F && typeof F.page === 'function') { const pg = F.page(id); v = pg && pg.txt; }
+    else { const e = F && F[id]; v = typeof e === 'function' ? e(id, road) : e; } } catch(e) { v = null; }
   return typeof v === 'string' && v.trim() ? v : B67FIN.fourthFallback(id, road); };
+B67FIN.fourthTitle = id => { try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates; const pg = F && typeof F.page === 'function' && F.page(id); if (pg && pg.title) return pg.title; } catch(e) { /* fall through */ } return B67_FT[id] || ''; };
 /* the Fourth's road page */
 B67FIN.fourthRoad = () => { const road = b67FRoad(), h = b67H(), f = S.f;
   const P = [
-    road === 'hanarara' ? `The Host went on north-east from Hanar Ara with its High Fist. The Fourth did not. It stayed at the City of the Fallen after the surrender, among the plague-marked, for reasons ${h ? `Sergeant ${esc(h.name)}` : 'its sergeant'} wrote down and nobody else has read.` :
-    road === 'home' ? `The Fourth went home. Out of Seven Cities and its plague, on the first boats that would take soldiers, with the High Fist's leave or without it, and the Host went on without it.` :
+    road === 'hanarara' ? `The Host went on from Hanar Ara with its High Fist. The Fourth did not, for a while. It stayed behind as the picket on the Hanar Ara road, short of the outer shrines, to see Mathok's people clear, and ${h ? `Sergeant ${esc(h.name)}` : 'its sergeant'} wrote down every day of it for a captain who will read none of them.` :
+    road === 'home' ? `The Fourth went home. Its names went on the time-served list, and it went down to the coast and onto a ship west, out of Seven Cities and its plague, and the Host went on without it.` :
     `The Fourth marched on with Onearm's Host, which is the High Fist's Host now: the army chose him in the rain before G'danisban, from the ranks, by shouting, after Onearm died. Where he takes it, the Seventh Company does not know.`,
     `${f.b6_c2_key === 'burn' ? 'On the north coast it burned a plague village on orders.' : f.b6_c2_key === 'pass' ? 'On the north coast it went round a plague village, and left a family its roofs.' : 'On the north coast it marched inland through the empty villages.'} ${f.b6_c4_key === 'vote' ? 'Before G\'danisban it stood for the High Fist from the back of the ranks.' : f.b6_c4_key === 'out' ? 'Before G\'danisban it stayed out of the vote, on picket.' : 'Before G\'danisban it stood in the rain while the army chose.'} ${f.b6_c6_key === 'report' ? 'At Hanar Ara it named the city\'s cult to its captain, and nothing came of it.' : f.b6_c6_key === 'letgo' ? 'At Hanar Ara it let the surrender stand as the High Fist gave it.' : 'At Hanar Ara it watched the rebels lay down their arms.'}`,
     `It never met the Third. It never will. They were in the same plague year, in the same country, a few hundred leagues apart, and that is all.`];
@@ -79290,7 +79295,7 @@ B67FIN.meet = () => [
 /* the coda: both squads, the fire, the sea, the city */
 B67FIN.coda = key => { const fell = b67Fell3(), h = b67H(), hDead = h ? Object.keys(h.dead || {}).filter(id => h.dead[id] && !h.dead[id].from && TPL[id]) : [];
   return [
-`Y'Ghatan burned with three thousand of the Fourteenth inside it, and seven hundred and ninety-one came out by Sinn's way through the fire. The plague went across Seven Cities, and Dujek Onearm died of it before G'danisban, and the Host chose its own High Fist in the rain. The Fourteenth sailed from the Kokakal shore through an ambush and a sea that was not any sea, and came to Malaz City, and found the city turned on its Wickans, and was told from a jetty that it was the Adjunct's army now.`,
+`Y'Ghatan burned with nearly three thousand of the Fourteenth inside it, and seven hundred and ninety-one came out by Sinn's way through the fire. The plague went across Seven Cities, and Dujek Onearm died of it before G'danisban, and the Host chose its own High Fist in the rain. The Fourteenth sailed from the Kokakal shore through an ambush and a sea that was not any sea, and came to Malaz City, and found the city turned on its Wickans, and was told from a jetty that it was the Adjunct's army now.`,
 `The Third was there. It ${b67WentIn() ? 'went into the burning streets to hold the way open' : 'held the gate and pulled the burned out of the smoke'}, and held a jetty along from the marines' in Malaz City. ${fell.length ? `${b67And(fell.map(NAME))} did not come out of the fire.` : 'Every one of the Third who went to Y\'Ghatan came out of it.'} The Fourth was in the rain before G'danisban, and under the falling sky. ${hDead.length ? `${b67And(hDead.map(NAME))} did not come through the plague year.` : 'Every one of the Fourth came through the plague year.'} That is each squad's part. It is small. It is the only part anybody will tell right.`,
 `Out on the sea, west of Quon Tali, there is a fleet with an army aboard that has been given a name by its own soldiers, from the bones they took up. Behind it, in Seven Cities, the plague is burning itself out. ${b67Here().length ? 'The Third counts itself, and gets the number, and checks it.' : 'The sergeant counts, and gets one, and checks it.'}`]; };
 
@@ -79328,7 +79333,7 @@ B6CH7.finale = {
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const id = pg.id, sgt = id === 'sgt', gone = pg.k === 'b67gone4';
       const info = b67AsH(() => { const nm = sgt ? S.name : NAME(id), role = sgt ? 'Sergeant · Fourth Squad, Seventh Company, Onearm\'s Host' : (TPL[id] ? TPL[id].role : ''), loyv = sgt ? '' : loyLabel((S.loy || {})[id] || 0);
-        let title = B67_FT[id] || role, txt = '', where = '';
+        let title = B67FIN.fourthTitle(id) || role, txt = '', where = '';
         if (gone && pg.dead) { const d = S.dead[id] || {}; title = 'Fallen'; where = d.from ? (d.where || '') : [d.where, d.ch ? `Chapter ${d.ch}` : ''].filter(Boolean).join(' · ');
           txt = B67FIN.join([d.from ? `${nm} fell before this book${d.where ? `, at ${d.where}` : ''}, and did not come to the north coast.` : `${nm} fell in the plague year${d.where ? `, at ${d.where}` : ''}. Whoever fell there stayed down.`, 'The Fourth carried the name the rest of the way.']); }
         else if (gone && pg.wait) { title = id === 'brannoc' ? 'With the Falari' : id === 'ressa' ? 'With the surgeons' : 'Waiting';
