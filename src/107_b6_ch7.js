@@ -555,7 +555,7 @@ At the jetty's end, with the water at their backs, there are Wickan families: fo
 `The captain has the company on the jetty, in a line across it at the landward end, and is looking at the street mouth across the waterfront, where the noise is coming from.
 
 "No orders," the captain says. "The flagship's sent none. The Fist's at the main jetty and hasn't sent any either." The captain looks back at the Wickan families. "So these are the orders. No one comes down this jetty who isn't the Fourteenth. No one goes into the water." A breath. "The Third has the jetty's foot. Hold it."`,
-      ch:[{t:'"The jetty\'s foot."', onward:true, go:()=>startExplore()},
+      ch:[{t:'"The jetty\'s foot."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* the Wickan families at the jetty's end */
@@ -708,7 +708,7 @@ There are three roads off this jetty.
           {t:'"We hold the jetty\'s foot. Let them sail." (left on the jetty)', req:()=>!b67Key(), fx:()=>{ S.f.b6_c7_key = 'jetty'; b67L('haddat', 1); b67L('hessa', 1); b67L('darrut', 1); b67L('mirrel', 1); b67L('ottar', -1); b67L('tangle', -1); }, go:'b6_c7_jetty_road'},
           {t:'"Into the lanes. After the singing." (with the Wickans)', req:()=>!b67Key(), fx:()=>{ S.f.b6_c7_key = 'wickans'; b67L('sathi', 2); b67L('warlock', 2); b67L('orvas', 1); b67L('marrow', 1); b67L('ottar', -1); b67L('rasp', -1); }, go:'b6_c7_wickans_road'},
           {t:'"Not yet."', req:()=>!b67Key(), go:()=>startExplore()},
-          {t:'On.', req:()=>!!b67Key(), onward:true, go:()=>talk(b67Next())},
+          {t:'On.', req:()=>!!b67Key(), onward:true, go:b67Next()},
           {t:'Not now.', req:()=>!!b67Key(), go:()=>startExplore()}]}),
     b6_c7_adjunct:()=>({sp:'With the fleet', scene:'b6_c7_finale', txt:
 `Up the plank at a run, the squad and the rest of the 9th, with the master hauling it in behind the last boot, and the transport is off the jetty before anybody has found a place to stand.

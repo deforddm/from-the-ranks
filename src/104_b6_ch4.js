@@ -481,7 +481,7 @@ Then ${who === 'sgt' ? 'your' : NAME(who) + '\'s'} fever breaks, all at once, in
 `Dusk comes early under the rain, a grey going darker. In the city, lamps come on behind the walls, a few, and then a great many, and then the gate opens a crack and the lamps start to come out of it, one at a time, onto the open ground.
 
 The captain comes down the lines in his dripping helmet. "There they are," he says. "Every night. The Fourth has the edge till dawn. The gap stays shut." He looks at the squad. "And nobody touches them. I mean that, Sergeant. Not with a hand."${b64Fev().length ? `\n\nHe looks at ${b64FevNames()}, and away. "Keep the fevered back from the ditch."` : ''}`,
-      ch:[{t:'To the edge.', onward:true, go:()=>{ S.f.b6_c4_ph = 2; startExplore('b6_c4_edge'); talk('b6_c4_edge_arrive'); }},
+      ch:[S.area === 'b6_c4_edge' ? {t:'To the edge.', onward:true, fx:()=>{ S.f.b6_c4_ph = 2; }, go:'b6_c4_edge_arrive'} : {t:'To the edge.', onward:true, go:()=>{ S.f.b6_c4_ph = 2; startExplore('b6_c4_edge'); talk('b6_c4_edge_arrive'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- phase 2: the night at the edge ---- */
