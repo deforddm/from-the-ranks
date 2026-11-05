@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Thu Nov 5, 2026, 9:50 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -11,7 +11,7 @@ Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a),
 
 Books: GotM *Gardens of the Moon*, DG *Deadhouse Gates*, MoI *Memories of Ice*, HoC *House of Chains*, MT *Midnight Tides*, BH *The Bonehunters*, RG *Reaper's Gale*, TtH *Toll the Hounds*, DoD *Dust of Dreams*, TCG *The Crippled God* (Erikson); NoK *Night of Knives*, RotCG *Return of the Crimson Guard*, SW *Stonewielder*, OST *Orb Sceptre Throne*, B&B *Blood and Bone*, *Assail* (Esslemont).
 
-Line numbers (`46:2267` = `src/046_chapter7.js` line 2267) are for commit 7b9647d (v3.15.4 plus the lead's renames). Other v3.16 branches move some of them.
+Line numbers (`46:2267` = `src/46_chapter7.js` line 2267) are for commit 7b9647d (v3.15.4 plus the lead's renames). Other v3.16 branches move some of them.
 
 ---
 
@@ -79,6 +79,21 @@ The reasons and sources are in the repo's `docs/mt-canon.md`, §10. *Midnight Ti
 43. **Reaper's Gale's ground is Book Seven's**: never the Patriotists, Karos Invictad, Tanal Yathvanar, Bivatt, Letur Anict, the Awl war, Kravos Hill, "Tehol the Only", or Malazans in Lether.
 44. **The Edur fleets abroad** are rumour at most, and only in Book Five's finale.
 
+### Book Six (*The Bonehunters*), added Nov 5, 2026
+
+The reasons and sources are in `bh-canon.md` §7 (project copy) and the repo's `docs/bh-canon.md`. Rules 29 and 30 (the Bonehunters' name and the plague) are lifted for Book Six on; the rest of Book Four's stand where Book Six didn't close them.
+
+45. **Kalam and Quick Ben** after Malaz City: never say whether Kalam lived (RG) or where Quick Ben went.
+46. **Leoman and Dunsparrow** went through the gate at Y'Ghatan: never where. That Dunsparrow is Whiskeyjack's sister is the marines' talk, never the narrator's.
+47. **Felisin Younger at Hanar Ara:** nothing after BH ch 21.
+48. **Mallick Rel and Korbolo Dom** (Laseen's Jhistal and her First Sword): the narrator never calls them false or true, and never their end.
+49. **Tene Baralta and the House of Chains** (Gethol): never on the page past his grumbling.
+50. **Grub, Sandalath and Withal:** seen boarding at most.
+51. **The Perish:** never their purpose or their Destriant's god.
+52. **What Paran promised Hood** (BH ch 20) is never said.
+53. **The Bonehunters' name** is the soldiers' own, from Aren and Y'Ghatan; the narrator never explains it as more.
+54. **Poliel never answers** for anyone, as a patron or a boon (`bh-canon.md` §9).
+
 ---
 
 ## (b) Name clashes and their resolutions
@@ -105,6 +120,9 @@ The reasons and sources are in the repo's `docs/mt-canon.md`, §10. *Midnight Ti
 | Pessa (Book Five's refugee) | Kept. | Pella, a Fourteenth soldier in HoC. | Another continent and another decade; never in one scene. |
 | Sixth Company, Whitefinder Battalion (Book Five) | Clear. | The Whitefinder Battalion is canon with no named members. | **Never "Fourth Company"**, which is Iron Bars's in the Crimson Guard. Rejected names: Selva (Selv, TCG), Hesk (Book One), Ivane (Ivanr, DoD), Corle (Corlo, MT). |
 | *Indebted* (Book Five's title) | Kept. | A Letherii word for a class. | A canon word, not a canon title. |
+| Mehet, Ottar, Brannoc, Ressa (Book Six's recruits) | Clear (Nov 4: Malazan Wiki page search, no pages). | — | Ressa is "she". |
+| Tallow (Book Four) | Kept. | Found Nov 4: a canon Tallow has a wiki page. | Keep Book Four's sling skirmisher; never in a scene with the canon one. |
+| *Bones in the Walls* (Book Six's title) | Kept. | The novel's opening epigraph's image, not a canon title. | — |
 | Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
@@ -209,7 +227,7 @@ Never print a BS year in game text (rule 13). This is for writers only.
 
 ## (f) The gods who answer a wipe
 
-The game's patrons (`src/031c_stakes.js`) and what becomes of each, so a later chapter can keep or replace them.
+The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later chapter can keep or replace them.
 
 - **Hood** (Death). Active through BH and RG. **TtH: Rake beheads him with Dragnipur**; after Dragnipur falls, Whiskeyjack and the Bridgeburners become the Guardians of the Gate. DoD: Hood returns to his frozen body on the Ice Throne and leads his fourteen undead Jaghut. TCG: active again at the Spire. Not available as a patron for scenes set after TtH; a sequel should answer with the Guardians of the Gate. [W *Hood*]
 - **Oponn** (the Twins of Chance). MoI: they have let Paran go. BH: in Malaz City the night Tavore arrives; something terrifies them and Shadowthrone throws them out of Obo's tower. DoD: revealed as heirs of Sechul Lath. B&B: taunt T'riss. Still about, diminished and scared. [W *Oponn*, *Ammanas*]
@@ -223,6 +241,7 @@ The game's patrons (`src/031c_stakes.js`) and what becomes of each, so a later c
 - **The Errant** (Lether's god of chance, with a yearly festival: W *Errant*, MT ch 6). Answers for the sergeant in Book Five (David, Oct 28). Rule 31 binds: he is Errastas from TCG and an Elder in DoD, and the game never says so.
 - **The Empty Hold** (the heart of Letherii worship; a Hold of tiles, never a named being). Answers for Book Five's cadre mage. [W *Empty Hold*]
 - **The Tarthenal dead** (an invention, marked so). The Tarthenal's own gods, the Seregahl, are malign and propitiated so they look away (W *Tarthenal*), so never a patron. Answer for Thegg in Book Five.
+- **Book Six** (Nov 5): Book Three's and Four's patrons stand for their squads. **Poliel never answers** (rule 54). **Soliel** reads stronger from Chapter 4 on (W15). **Hood** answers as before. **The Queen of Dreams** is Leoman's ally in BH (W7): if she answers for a squadmate, she never helps against Leoman. **Togg and Fanderay's** realm carries the fleet (W21); their boon stands.
 - **The Shore** (the Shake faith, the sea that takes back everything: W *Shake*). Answers for Brune in Book Five. Never a queen, never Tiste blood (rule 36).
 
 ---
@@ -282,7 +301,7 @@ Forward-canon §6 and its medium, low and *memory* items, re-checked. **Closed**
 
 ### The two named questions
 
-- **Jammit's Worry or Jatem's Worry.** F (the Darujhistan worksheet) gives "Jammit's Worry, the east road", citing the GotM glossary. The official map gives "Jatem's Worry". No second source for either spelling was found (web search; W pages 402). **Settled Nov 4, 2026 (v8.2.5): "Jatem's Worry".** The story text says it twice (GotM, Tor 2004, p. 176, Google Books preview); "Jammit's" is only in the glossary. Open question Q5.
+- **Jammit's Worry or Jatem's Worry.** F (the Darujhistan worksheet) gives "Jammit's Worry, the east road", citing the GotM glossary. The official map gives "Jatem's Worry". No second source for either spelling was found (web search; W pages 402). **Unconfirmed. Keep "Jammit's Worry"** per the lead's settled decision.
 - **Moon's Spawn before the Fete.** W alone puts it south of the city, hedged "possibly over the Dwelling Plain". **Keep it over the lake** per the lead's ruling.
 
 ---
@@ -292,12 +311,12 @@ Forward-canon §6 and its medium, low and *memory* items, re-checked. **Closed**
 Findings that would change game text or the bible. Lines at 7b9647d.
 
 1. **The bible's §8.49 is wrong: Hedge does not die in GotM** (`docs/story-bible.md:145`, §9 Ch7 row `:171`). He dies at Coral in MoI (W *Hedge*; FC's own table). The game's living Hedge (`c6_mines_kettle`, `c7_hedge`) is canon; nothing to change in `src`. Fiddler mourning Hedge in E.3 is not in W's Epilogue.
-2. **The bible's §8.50 may overstate the departure slip** (`docs/story-bible.md:146`). W's Epilogue sets all three scenes on Lake Azur, with Circle Breaker watching the coin go in, and gives no coast. The game's lake departure may be right; "the morning tide" (`src/046_chapter7.js:495`) is still wrong for a lake.
-3. **T'lan Imass: do not apply FC's medium fix yet** (`src/044_chapter5.js:210`, `src/035_pack_journal_save.js:100` "They fight beside the Empire."). Tool serves Lorn under Laseen in GotM, and Tattersail says they came back at half strength. "The Empire has an army of them" is shaky; "They fight beside the Empire" is defensible.
-4. **Otataral exemption** (`src/016b_tricks.js:33`, `:36`): Kurald Galain's immunity has one source; Omtose Phellack's has none. If the rules change, exempt A Courtesy of Darkness only, or wait.
-5. **Seasons on the outlaw road** (`src/046_chapter7.js:2267` "all winter", `:2302` "the whole first winter"): closed by three sources. "That season" / "that first campaign".
-6. **The Fander rite** (`src/045_chapter6.js:2348`, priestesses at first light the morning after): both sources put the rite before or at the Fête's start.
-7. **Lamps** (`src/046_chapter7.js:128` "three hundred years"): one source says nine hundred.
-8. **Turban Orr's spell in the duel** (`src/045_chapter6.js:1205`–`1210`): one source says swordsman only, one suggests wards. If kept, it reads as a ward firing, not a spell he shapes.
+2. **The bible's §8.50 may overstate the departure slip** (`docs/story-bible.md:146`). W's Epilogue sets all three scenes on Lake Azur, with Circle Breaker watching the coin go in, and gives no coast. The game's lake departure may be right; "the morning tide" (`src/46_chapter7.js:495`) is still wrong for a lake.
+3. **T'lan Imass: do not apply FC's medium fix yet** (`src/44_chapter5.js:210`, `src/35_pack_journal_save.js:100` "They fight beside the Empire."). Tool serves Lorn under Laseen in GotM, and Tattersail says they came back at half strength. "The Empire has an army of them" is shaky; "They fight beside the Empire" is defensible.
+4. **Otataral exemption** (`src/16b_tricks.js:33`, `:36`): Kurald Galain's immunity has one source; Omtose Phellack's has none. If the rules change, exempt A Courtesy of Darkness only, or wait.
+5. **Seasons on the outlaw road** (`src/46_chapter7.js:2267` "all winter", `:2302` "the whole first winter"): closed by three sources. "That season" / "that first campaign".
+6. **The Fander rite** (`src/45_chapter6.js:2348`, priestesses at first light the morning after): both sources put the rite before or at the Fête's start.
+7. **Lamps** (`src/46_chapter7.js:128` "three hundred years"): one source says nine hundred.
+8. **Turban Orr's spell in the duel** (`src/45_chapter6.js:1205`–`1210`): one source says swordsman only, one suggests wards. If kept, it reads as a ward firing, not a spell he shapes.
 9. **The bible's 3.2/8.1 Green Moranth and boat**, 15.9 Hound names (Doan, Ganrod), 19.4 "Whiskeyjack and Dujek", 21.12 (tiger mask, Baruk presiding, D'Arle seconding), 22.8 terrace and the Black Moranth in 24.3 are not in the summaries read. Treat as unconfirmed.
 10. **Paran later lives in the Finnest House** (MoI, BH: W *Raest*, *Bridgeburners*). Rule 6 still holds for the game, but a sequel set in Darujhistan will need it.
