@@ -272,13 +272,13 @@ const B6CH6 = {
         text:()=>`The bandits break, and run, and some of them run out past the lamps into the scrub. And out there, in the dark under the lights, there are others: people walking toward the lights from wherever they were, ragged, singing, some of them, and when they see soldiers between them and the sky they stop singing. They have been marked by the fever and not taken, and they think the sky has opened for them, and they have decided the Host is in the way.\n\nThe last of the bandits are among them, using them for cover.${b66Say({ohl:'\n\nOhl says something in Ehrlii, low, that is not a prayer. "They are sick," he says. "Remember that, after."', tuft:'\n\nTuft looks up once, at the lights, and then down at her boots, and stays there.', _:''})}`,
         map:["........","..t..t..","........","........","..#..#..","........",".t....t.","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b6_cultist',2,1],['b6_cultist',5,1],['b6_cultist',3,2],['b6_bandit',6,3],['b6_bandit',1,3]],
+        foes:[['b6_cultist',1,1],['b6_cultist',6,1],['b6_cultist',3,2],['b6_bandit',6,3],['b6_bandit',1,3]],
         waves:[{round:2, foes:[['b6_cultist',4,0]], text:'One more comes out of the dark at a run, arms wide, face up to the sky, and only sees the squad at the last.'}]} },
     /* phase 2, optional: Sweetcreek's Falari water party at the last well, held off it by plague-road bandits */
     b6_c6_wells:{title:'The last well', style:'odhan', warrenText:'The Odhan at dusk · the warrens fouled with the plague, and they may give back mud', warren:{meanas:.85, denul:.85}, music:'battle',
       map:["........","..t.....","........","....t...","........","..#..#..","........","......t.","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]], allies:[['b6_c6_falari',6,7]],
-      foes:[['b6_bandit',2,1],['b6_bandit',5,1],['b6_c6_banditbow',4,0],['b6_bandit',3,3]], xp:160, after:'b6_c6_wells_after',
+      foes:[['b6_bandit',1,1],['b6_bandit',5,1],['b6_c6_banditbow',4,0],['b6_bandit',3,3]], xp:160, after:'b6_c6_wells_after',
       waves:[{round:3, foes:[['b6_bandit',7,2]], text:'Another comes up out of the dry wash beyond the well, late, with a stolen Falari water-skin over his shoulder.'}],
       preText:()=>`The Falari water party is pinned behind its own carts at the well, two wounded, the mules gone, and the bandits who drove them off are on the low ground round the well-head with their faces wrapped.${b66If('kettle', ' Kettle looks at the carts. "Falari," she says. "Of course they stopped to argue about who drew first."')}`},
     /* phase 3: the city's cult comes out at the Seventh's picket on Hanar Ara's edge at dusk; it spreads the fever (the engine gives it

@@ -213,7 +213,7 @@ const B6CH5 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b6_c5_fingerbone:{name:'A finger bone on a thong', slot:'trinket', role:'any', who:null, hp:4,
-      line:'A small bone, a finger\'s length, bored through and hung on a leather thong. Soldiers who walked out of Y\'Ghatan wear them, and then soldiers who did not. Ask what it is for and the answer changes. Whoever wears it stands a little longer: +4 health. The healers say that is the point of it.'},
+      line:'A small bone, a finger\'s length, bored through and hung on a leather thong. Soldiers who walked out of Y\'Ghatan wear them, and then soldiers who did not. Ask what it is for and the answer changes. Whoever wears it stands a little longer. The healers say that is the point of it.'},
     b6_c5_nokrope:{name:'A hank of Nok\'s tarred rope', slot:'trinket', role:'any', who:null, stat:{might:1},
       line:'An arm\'s length of black tarred hawser off one of Admiral Nok\'s lighters, cut where it frayed and whipped at both ends with twine. It smells of the sea and the pitch-pot. The loading master gave it for a turn on the line. Whoever carries it has learned to put a back into a pull.'} },
 

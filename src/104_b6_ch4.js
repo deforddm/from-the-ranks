@@ -172,14 +172,14 @@ const B6CH4 = {
     b6_c4_cult:{title:'The camp\'s edge', style:'b3camp_night', dark:true, feverRisk:'the Mistress\'s followers at the ditch', warrenText:'Night at the ditch · the warrens are sick with the plague tonight, worse than by day', warren:{denul:.85, meanas:.85}, music:'battle',
       map:["........","..t...,.","........",".,....t.","###..###","........","..t.....","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b6_c4_mourner',2,1],['b6_c4_mourner',5,1],['b6_c4_mourner',3,3],['b6_c4_plaguepriest',4,0]], xp:220, after:'b6_c4_cult_after',
+      foes:[['b6_c4_mourner',1,1],['b6_c4_mourner',5,1],['b6_c4_mourner',3,3],['b6_c4_plaguepriest',4,0]], xp:220, after:'b6_c4_cult_after',
       waves:[{round:2, foes:[['b6_c4_mourner',7,6]], text:'One more comes along the inside of the ditch from the next company\'s stretch, low and quick, and nobody there has stopped her.'}],
       preText:()=>`They come in through the gap in the ditch in a line, singing, a dozen lamps behind them on the open ground and more of them still out there. The one in front wears a grey robe gone black with rain and has his hands out, palms up, to show the squad what is on them. The squad does not need to look.`,
       stage2:{title:'The rag shrine', xp:120,
         text:()=>`The priest goes down in the gap with his hands still open. The singing out on the open ground does not stop. It gets louder.\n\nPast the ditch, round a post hung with rags and a dead dog's collar and a hundred little clay bowls, the rest of them are waiting, and they have stopped singing to look at the Fourth.\n\n${b64Say({brisk:'"Shields," Brisk says, to nobody, and walks out through the gap, and the squad goes with her.', ohl:'"Don\'t let them touch you," Ohl says. "Not your skin. Anywhere else." He goes through the gap behind the shields.', _:'The squad goes out through the gap.'})}`,
         map:["...t....","........",".t....t.","........","...,....","........","..t..t..","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b6_c4_mourner',1,1],['b6_c4_mourner',6,1],['b6_c4_mourner',3,0],['b6_c4_mourner',4,2]]} },
+        foes:[['b6_c4_mourner',1,1],['b6_c4_mourner',6,1],['b6_c4_mourner',2,0],['b6_c4_mourner',4,2]]} },
     /* phase 2: the forward picket's post in the streets outside the walls, overrun from the gate-ward. It spreads the fever (feverRisk;
        v9.0-notes: "the G'danisban streets") */
     b6_c4_streets:{title:'The forward picket', style:'b3_c3_city_night', dark:true, feverRisk:'the streets outside the walls', warrenText:'Outside G\'danisban · the warrens reek of the plague here, by the walls', warren:{denul:.85, meanas:.85}, music:'battle',

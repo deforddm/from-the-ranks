@@ -200,7 +200,7 @@ const B6CH1 = {
     b6_c1_edge:{title:'The camp\'s edge', style:'b4_c4_camp', dark:true, open:true, warrenText:'Night under Y\'Ghatan · the warrens are close and uneasy', warren:{meanas:1, denul:1}, music:'battle',
       map:["#..t...#","........","..#..t..","........",".t....t.","........","...##...","........","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b6_c1_knife',2,1],['b6_c1_knife',5,1],['b6_rebel',4,3],['b6_fanatic',1,4]], xp:150, after:'b6_c1_edge_after',
+      foes:[['b6_c1_knife',2,1],['b6_c1_knife',5,1],['b6_rebel',4,3],['b6_fanatic',2,4]], xp:150, after:'b6_c1_edge_after',
       preText:()=>`The lamps by the townsfolk's blankets go over, and in the dark that comes after there are more people than there were.`},
     /* 'bury': a rebel patrol out of the walls, come to see who is putting the Empire's dead back */
     b6_c1_patrol:{title:'The barrow road', style:'b4_c4_hills', dark:true, open:true, warrenText:'Night on the barrow road · something in the warrens is listening', warren:{meanas:1, denul:1}, music:'battle',
@@ -219,7 +219,7 @@ const B6CH1 = {
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b6_c1_odhanveil:{name:'An Odhan veil', slot:'armour', role:'light', who:null, ac:1,
-      line:'A long veil of the Odhan\'s double weave, the colour of the scrub, wound over the head and shoulders and across the face. The bandit at the well wore it for the dust. It turns the sun, and a little of an arrow, which is more than most cloth will do. +1 armour, and +1 more against shots.'},
+      line:'A long veil of the Odhan\'s double weave, the colour of the scrub, wound over the head and shoulders and across the face. The bandit at the well wore it for the dust. It turns the sun, and a little of an arrow, which is more than most cloth will do.', special:'+1 more armour against shots from beyond arm\'s reach.'},
     b6_c1_wellrope:{name:'The well\'s rope', slot:'trinket', role:'any', who:null, stat:{might:1},
       line:'A coil of the well\'s own rope, plaited hide, dark and stiff with years of water and sun, with a knot at one end that somebody tied a long time ago and nobody since has been able to undo. Whoever carries it hauls a little harder.'},
     b6_c1_rebeltulwar:{name:'A rebel captain\'s tulwar', slot:'weapon', role:'heavyweapon', who:null, atk:1, dmg:[1,10,3],
