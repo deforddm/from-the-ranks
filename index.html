@@ -1471,8 +1471,8 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   orb:{name:'Orb',house:'Unaligned',hue:'#bdb3a3',txt:'A grey sphere hanging in the dark, with a point of light in it that isn\'t the lamp\'s.',fx:'None. It refuses her.'},
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
-const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210]; // levels 1..15 (Books One and Two stop at 8; Book Three runs 8..15)
-const lvCap = () => (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
+const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210,4540,4870,5200]; // levels 1..18 (Books One, Two and Five stop at 8; Books Three and Four run 8..15; Book Six 12..18)
+const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'bh') ? 18 : (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -1538,7 +1538,7 @@ const BOOKS = {
 };
 /* the books the title offers: a book whose chapters are not written yet (B.coming) stays off the shelf, the picker and Deeds (70) */
 const shelfBooks = () => Object.values(BOOKS).filter(B => !B.coming);
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}};
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}, bh:{ch:{}, end:{}, tease:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){
@@ -1764,7 +1764,7 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    brings from it is the talent at 3 (chosen, openPicks) and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late,
    or comes back from camp after a level-up, is given the veteran picks for the levels passed at once (Iron, Keen, Fleet… in order), in every
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
-const VET_LVLS = [5,7,9,11,13,15];
+const VET_LVLS = [5,7,9,11,13,15,17];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
@@ -1832,14 +1832,14 @@ function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
   S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15,17].includes(k)) S.picksDue.push(k); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
    Levels 4 and 8: +1 armour. And the squad's own hands get better at it: the heals and Rally grow with lvB() (31). */
 const lvB = () => Math.max(0, ((S && S.lvl) || 1) - 1);
-const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13].filter(k => l >= k).length; // 10 and 13: Book Three's veterans
-const lvAc = (l = (S && S.lvl) || 1) => [4,8,12].filter(k => l >= k).length;
+const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13,16].filter(k => l >= k).length; // 10 and 13: Book Three's veterans; 16: Book Six's
+const lvAc = (l = (S && S.lvl) || 1) => [4,8,12,16].filter(k => l >= k).length;
 /* tiers for the rest of the skills and spells: reach, duration, how hard a boss must roll to shrug it off. lvT: +1 at levels 4 and 7; lvAt(n): from level n */
 const lvT = (l = (S && S.lvl) || 1) => [4,7,11,14].filter(k => l >= k).length;
 const lvAt = n => ((S && S.lvl) || 1) >= n ? 1 : 0;
@@ -2036,7 +2036,7 @@ function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === '
    Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
 const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
 /* the chapter's key flag (c3_key, b2_c3_key, b3_c3_key); when a choice sets it, a low chord marks the moment (v6.8.0) */
-const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
+const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : S.book === 'bh' ? 'b6_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
 function keyWatch(fn){ const k = keyFlag(), was = k && S.f ? S.f[k] : undefined; fn(); if (k && S && S.f && !was && S.f[k]) AUDIO.play('choice'); }
 function runFx(c){
   if (!c.fx) return;
@@ -2215,7 +2215,7 @@ function drawHound(ctx, o = {}){
 /* ============ figure sprites ============ */
 /* draws a ~32px-tall figure centred at (cx, baseline cy). s = scale, dir = facing */
 function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
-  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc') && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && BOOK === 'mt' && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
+  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook())) && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && BOOK === 'mt' && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
   const dir = o.dir || 1, bob = o.still ? 0 : Math.sin(t/420 + (o.phase||0)) * .6 * s;
   ctx.save(); ctx.translate(cx, cy); ctx.scale(dir * s, s); ctx.translate(0, bob);
   ctx.globalAlpha = o.alpha ?? 1;
@@ -2860,7 +2860,7 @@ const POR = {
 };
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
-  (id === 'sgt' && BOOK === 'mt' && POR.sgt_mt ? POR.sgt_mt : id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc') && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
+  (id === 'sgt' && BOOK === 'mt' && POR.sgt_mt ? POR.sgt_mt : id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook())) && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
   ctx.restore();
 }
 
@@ -6004,7 +6004,7 @@ function lose(){
   const others = kept.filter(k => bn && k !== bn.key).map(k => BOON_BY_KEY[k]).filter(Boolean), lapsed = was.filter(k => !kept.includes(k)).map(k => BOON_BY_KEY[k]).filter(Boolean);
   const boonNote = bn ? `<div class="note boonnote"><b>The boon: ${esc(bn.name)}.</b> ${esc(bn.txt)} It lasts the fight, and its second ground.${others.length ? ` It joins ${others.map(b => `${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}'s (${esc(b.name.toLowerCase())})`).join(' and ')}.` : ''}${lapsed.length ? ` On Story two gods hold at once: ${lapsed.map(b => esc(b.name.toLowerCase())).join(' and ')} lapse${lapsed.length > 1 ? '' : 's'}.` : ''}</div>` : '';
   if (P) sh.innerHTML = `${art('patrons/' + (P.sig || who), 'godsig')}<div class="sp godsp">${esc(P.title)}</div><div class="txt god">${fmt(P.txt(who))}</div>
-    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' ? 'The Third\'s' : S.book === 'mt' ? 'The squad\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
+    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' || (S.book === 'bh' && S.thread !== 'h') ? 'The Third\'s' : S.book === 'mt' ? 'The squad\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
     <div class="choices"><button class="choice" id="bRetry">Rise, and fight it again</button></div>`;
   else sh.innerHTML = `<div class="sp godsp">No one answers</div><div class="txt god">${fmt(`Every god who had a reason to listen has already spent it this chapter. Hood's gate opens the rest of the way, and it is very quiet on the other side.\n\nAnd then it is morning, and the Fourth is where this chapter began, with all of it still to do, and nobody quite able to say why they are so tired.`)}</div>
     <div class="choices"><button class="choice" id="bRetry">Begin the chapter again</button></div>`;
@@ -8663,7 +8663,7 @@ const visMid = () => { const r = visReader(); return r.mid || r.name; };
 /* v8.0: Book Five's readings are tiles of the Holds, not the Deck: its visions are "Through the Tiles" (80c) */
 const visTiles = () => !!(S && S.book === 'mt');
 const visKick = () => visTiles() ? 'Through the Tiles' : 'Through the Deck';
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : S && S.book === 'bh' ? 'b6_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;
@@ -72309,6 +72309,206 @@ const IX_DEBT = /debt|paybook|pay desk|the pay\b|ledger|owe|owed|fine\b|tab\b|do
     + `<path d="M118 112 Q122 104 120 96" fill="none" stroke="#9a96a8" stroke-opacity=".35" stroke-width="1.6"/>`);
 })();
 
+/* ============ Book Six: Bones in the Walls, beside The Bonehunters (v9.0 engine, 100) ============
+   Two squads take turns: the Third of Blistig's 9th in the Fourteenth (thread 'r', Book Two's and Four's squad) plays Chapters 1, 3, 5, 7;
+   the Fourth of Onearm's Host (thread 'h', Books One and Three) plays Chapters 2, 4, 6. One save holds both. The squad not playing waits in
+   S.th[thread] (its own name, level, gear, picks, kit, tricks, munitions, dead, loyalty, fever); startChapter swaps it in. Fever is the book's
+   own system (Poliel's plague). Levels: a fresh start is 12, transfers keep theirs, the cap is 18. Notes: docs/v9.0-notes.md. Plan:
+   ashes-of-the-pale/book6-bh-plan.md (David, Nov 4, 2026). Canon: docs/bh-canon.md. */
+
+const b6On = () => !!(S && S.book === 'bh');
+const B6_CH = {1:'r', 2:'h', 3:'r', 4:'h', 5:'r', 6:'h', 7:'r'};  // which squad plays each chapter (plan question 1)
+const B6_TH = {
+  r:{book:'hoc', unit:'the Third', squad:'Third Squad, 9th Legion', army:'the Fourteenth', who:'Book Two\'s squad, with the Adjunct\'s Fourteenth',
+     core:['sgt', 'haddat', 'sathi', 'tangle', 'marrow'], fresh:['haddat', 'tangle', 'marrow', 'mirrel'], recruits:['mehet', 'ottar']},
+  h:{book:'moi', unit:'the Fourth', squad:'Fourth Squad, Seventh Company', army:'Onearm\'s Host', who:'the Fourth, with Onearm\'s Host',
+     core:['sgt', 'brisk', 'kettle', 'tuft', 'ohl'], fresh:['brisk', 'kettle', 'tuft', 'ohl'], recruits:['brannoc', 'ressa']}};
+const B6_KEYS = ['name', 'squad', 'camp', 'loy', 'gear', 'picks', 'kit', 'tricks', 'inv', 'lvl', 'xp', 'dead', 'parked', 'wounds', 'silver', 'picksDue', 'fever', 'imported', 'trail'];
+const B6_START_LVL = 12, B6_CAP = 18;
+const b6Thread = () => (S && S.book === 'bh' && S.thread) || 'r';
+const b6Other = () => b6Thread() === 'r' ? 'h' : 'r';
+const b6Unit = (t = b6Thread()) => B6_TH[t].unit;
+const b6In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
+const b6OtherName = () => (S && S.th && S.th[b6Other()] && S.th[b6Other()].name) || 'the other sergeant';
+
+/* the sergeant's own history follows the squad playing: Book Four's sergeant for the Fourteenth, Book Three's for the Fourth */
+function b6SgtFor(t){ const snap = BOOKSNAP[B6_TH[t].book] && BOOKSNAP[B6_TH[t].book].sgt; if (snap) TPL.sgt = Object.defineProperties({}, snap);
+  if (typeof PORTRAIT_CACHE !== 'undefined') PORTRAIT_CACHE.clear(); }
+/* swap the squad playing. Idempotent. The waiting squad's fields go into S.th[other]; nothing is shared but the book's own flags and count. */
+function b6Use(t){ if (!b6On() || !B6_TH[t]) return; S.th ??= {}; const cur = S.thread || 'r';
+  if (cur !== t && S.th[t]) { const out = {}; B6_KEYS.forEach(k => { out[k] = S[k]; }); S.th[cur] = out;
+    B6_KEYS.forEach(k => { S[k] = S.th[t][k]; }); delete S.th[t]; }
+  S.thread = t; b6SgtFor(t); }
+{ const _setBook = setBook; setBook = function(b){ _setBook(b); if (b === 'bh' && S && S.book === 'bh') b6SgtFor(b6Thread()); }; }
+{ const _sc = startChapter; startChapter = function(n){ if (b6On() && B6_CH[n]) b6Use(B6_CH[n]); return _sc(n); }; }
+
+/* ---- the shelf ---- */
+BOOKS.bh = {id:'bh', n:6, word:'Six', title:'The Bonehunters', name:'Bones in the Walls', h1:['Bones', 'in the Walls'], squad:'Two squads', unit:'the squad',
+  tag:'Seven Cities burns its last rebels and catches its last plague. Two squads, one with the Adjunct and one with the Host, march into both.', titleArt:'title/bh', titleScene:'bh', patch:'insignia/bh',
+  blurb:'Seven Cities and the sea to Quon Tali, weeks after Raraku, beside The Bonehunters.'};
+/* BOOKSNAP.bh is declared in 014 with the other books */
+const b6ChCount = () => Object.keys(BOOK === 'bh' ? CHAPTERS : BOOKSNAP.bh.ch).length;
+Object.defineProperty(BOOKS.bh, 'coming', {configurable:true, get(){ return b6ChCount() === 0; }});
+Object.defineProperty(BOOKS.bh, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/bh'] ? 'title/bh' : 'title/hoc'; }}); // until 100b paints the walls
+
+/* ---- the transfers: a finished Book Four on the 'line' road (still in the Fourteenth), a finished Book Three on the 'host' road ---- */
+const b6Road = (o, pre) => o && o.chapters ? (o.chapters[7] ?? (o.f && o.f[pre + 'c7_key'])) : null;
+const b6QualR = o => !!(o && o.book === 'hoc' && b6Road(o, 'b4_') === 'line');
+const b6QualH = o => !!(o && o.book === 'moi' && b6Road(o, 'b3_') === 'host');
+/* what a squad carries across, as every book's transfer does (60, 70; v7.2 every soldier on the roster): worn gear and unworn kit, talents and
+   veteran picks, loyalty, the tricks of anyone who comes, the munitions and salves left. The dead stay dead. */
+function b6Carry(o){ const dead = o.dead || {}, alive = k => k !== 'sgt' && TPL[k] && !dead[k];
+  const mates = [...new Set([...(o.squad || []), ...(o.camp || [])])].filter(alive);
+  const who = ['sgt', ...mates], gear = {}, picks = {}, loy = {}, worn = new Set();
+  who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p)));
+    if (k !== 'sgt') loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
+  const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
+  const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
+  const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
+  const inv = {}; ['sharper', 'burner', 'cusser', 'smoker', 'salve'].forEach(k => { inv[k] = Math.max(0, ((o.inv || {})[k]) || 0); }); inv.salve = Math.max(2, inv.salve);
+  return {from:o.name, sid:o.sid, lvl:o.lvl || 1, mates, core:mates.filter(k => !['mehet', 'ottar', 'brannoc', 'ressa'].includes(k)), loy, gear, picks, kit, tricks, inv,
+    dead:Object.keys(dead).filter(k => TPL[k] && k !== 'sgt'), deadAt:dead}; }
+const b6ImpR = id => { const o = id && loadSlot(id); return b6QualR(o) ? b6Carry(o) : null; };
+const b6ImpH = id => { const o = id && loadSlot(id); return b6QualH(o) ? b6Carry(o) : null; };
+const b6ImpList = t => roster().list.filter(e => { const o = loadSlot(e.id); return t === 'r' ? b6QualR(o) : b6QualH(o); });
+
+/* one squad's half of the save */
+function b6Half(t, name, imp){ const T = B6_TH[t];
+  const mates = imp ? imp.mates.slice(0, 5) : T.fresh.slice(), squad = ['sgt', ...mates];
+  const lvl = clamp(Math.max(B6_START_LVL, imp ? imp.lvl : 1), 1, B6_CAP);
+  const half = {name, squad, camp:imp ? imp.mates.slice(5) : [], loy:{}, gear:imp ? imp.gear : {}, picks:imp ? imp.picks : {}, kit:imp ? imp.kit : [],
+    tricks:imp ? imp.tricks : {}, inv:imp ? imp.inv : {sharper:2, burner:1, cusser:1, smoker:1, salve:3}, lvl, xp:LEVELS[lvl - 1] || 0, dead:{}, parked:{}, wounds:null,
+    silver:20, picksDue:[], fever:{}, imported:imp ? {from:imp.from, sid:imp.sid, lvl:imp.lvl, mates:imp.mates.slice()} : null,
+    trail:[{x:4, y:8}, {x:6, y:8}, {x:4, y:9}, {x:5, y:9}]};
+  squad.forEach(k => { if (k !== 'sgt') half.loy[k] = imp ? (imp.loy[k] || 0) : 0; });
+  if (imp) imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; half.dead[k] = {ch:d.ch || 7, where:d.where || '', from:T.book}; });
+  else if (t === 'r') half.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start, as Book Four's: Sathi fell at the Barrow
+  return half; }
+/* a new Book Six save. nameR: the Fourteenth's sergeant; nameH: the Fourth's. impR, impH: slot ids of the transfers, or empty. */
+function newStateBH(nameR, nameH, impR, impH, sid){
+  nameR = nameR || 'Hask'; nameH = nameH || 'Brann';
+  const r = b6Half('r', nameR, b6ImpR(impR)), h = b6Half('h', nameH, b6ImpH(impH));
+  const s = Object.assign({v:1, book:'bh', sid:sid || sidFor(nameR), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+    battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'r', th:{h}}, r);
+  migrate(s); s.picksDue = picksOwed(s); s.th.h.picksDue = picksOwed(Object.assign({}, s, s.th.h));
+  return s; }
+
+/* ---- levels 12 to 18 ---- */
+/* (014 lvCap, LEVELS to 18; 015 VET_LVLS and gainXP's pick levels carry 17; lvDmg and lvAc add 16. Only Book Six reaches past 15.) */
+
+/* ---- Fever: Poliel's plague (plan question 4; bh-canon §8). A fevered soldier fights at −4 health and −1 to hit until treated. ----
+   b6Catch(id, why): a fight, a corpse, a well. b6Cure(id, how): a healer, the surgeons, or after Chapter 4 a carrier's touch (Soliel, S.f.b6_soliel).
+   Never lurid: the words are the soldier's, short. */
+const b6Fevered = id => !!(b6On() && S.fever && S.fever[id] && !(S.dead && S.dead[id]));
+const b6FeverList = () => b6On() ? (S.squad || []).filter(b6Fevered) : [];
+function b6Catch(id, why = ''){ if (!b6On() || !TPL[id] || (S.dead && S.dead[id]) || b6Fevered(id)) return false;
+  S.fever ??= {}; S.fever[id] = S.chapter || 1; tally('b6Caught');
+  note(`${id === 'sgt' ? 'You have' : NAME(id) + ' has'} the fever${why ? ` (${why})` : ''}. −4 health and −1 to hit until it is treated.`, 'bad'); save(); return true; }
+function b6Cure(id, how = ''){ if (!b6Fevered(id)) return false; delete S.fever[id]; tally('b6Cured');
+  note(`${id === 'sgt' ? 'Your' : NAME(id) + '\'s'} fever breaks${how ? ` (${how})` : ''}.`, 'good'); save(); return true; }
+const b6CanCure = () => !!(b6On() && (HEALER() || (S.f && S.f.b6_soliel)));
+{ const _mkParty = mkParty; mkParty = function(id, x, y){ const u = _mkParty(id, x, y); if (!b6Fevered(id)) return u;
+    u.maxhp = Math.max(1, u.maxhp - 4); u.hp = Math.min(u.hp, u.maxhp); u.atk -= 1; u.fevered = true; return u; }; }
+function feverHTML(){ if (!b6On()) return ''; const f = b6FeverList();
+  return `<div class="note">${f.length ? `Fever: ${f.map(id => id === 'sgt' ? 'you' : esc(NAME(id))).join(', ')}.${b6CanCure() ? ' Someone here can treat it.' : ' Nobody here can treat it yet.'}` : 'Nobody in the squad has the fever.'}</div>`; }
+
+/* ---- the recruits (plan question 7; names checked, bh-canon §11). Base numbers; the roster brings them to the squad's level. ---- */
+Object.assign(TPL, {
+  mehet:{name:'Mehet', role:'Townsman of Y\'Ghatan', sig:'M', col:'#c2a27a', hp:16, ac:12, atk:4, dmg:[1,6,1], rng:5, mv:5, init:2, st:{might:1, wits:2, guile:2}, ab:['mark', 'salve'],
+    epithet:'"Leoman sent the city to Lothal. I stayed. Somebody had to know where the cisterns are."', origin:'Y\'Ghatan, the street of the potters', age:31, service:'None. A sling, and every alley in the city',
+    weapon:'A sling and a pouch of fired-clay shot, and a potter\'s knife', armour:'A quilted coat and a scarf over the mouth',
+    bio:'A potter\'s son who stayed when the Falah\'d sent the city out. He knows the old wells, the drains and which walls are newer than they look. He does not say why he stayed, and the squad stops asking.',
+    traits:['Knows the city under the city', 'Counts the Malazans the way they count him', 'Never stands with his back to a wall'], gear:['A sling', 'A ring of keys to doors that are no longer there'],
+    get quest(){ return 'Out of the city before it burns, if the squad will have him.'; }},
+  ottar:{name:'Ottar', role:'Grey Helm of the Perish', sig:'O', col:'#8f9aa6', hp:24, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+    epithet:'"Our Destriant speaks to your Adjunct. I speak to you. That is how it is done."', origin:'Perish, across the sea', age:38, service:'Nineteen years, a Grey Helm',
+    weapon:'A long single-edged sword and a tall shield with the wolf on it', armour:'Grey plate over mail, and a helm with a wolf\'s brow',
+    bio:'A Grey Helm sent across to the Malazan ships when the Perish fleet came alongside. He says little about his god and less about why the Perish came. He fights as if he has done it for a long time, which he has.',
+    traits:['Prays before eating, briefly', 'Keeps his shield-rim sharp', 'Learns Malazan words one a day'], gear:['A wolf\'s tooth on a thong', 'A whetstone'],
+    get quest(){ return 'Wherever his Destriant sends him. This season, with you.'; }},
+  brannoc:{name:'Brannoc', role:'Falari soldier', sig:'B', col:'#c26a3a', hp:22, ac:14, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash', 'salve'],
+    epithet:'"Captain Sweetcreek says I talk too much. Captain Sweetcreek says that to everyone."', origin:'Falar, the islands', age:27, service:'Seven years with the Host, under Captain Sweetcreek',
+    weapon:'A Falari axe, broad in the blade', armour:'Mail, and a red Falari beard he is proud of',
+    bio:'One of the Falari in Sweetcreek\'s command, loaned to the Seventh Company to make up its numbers on the north coast. Red-haired, loud, and better in a fight than anyone expects from someone who sings that badly.',
+    traits:['Sings on the march', 'Trusts sailors, not maps', 'Thinks the plague is a Seven Cities thing and will not touch Falari'], gear:['A tin whistle', 'His mother\'s copper ring'],
+    get quest(){ return 'Back to Sweetcreek\'s line when the Seventh has its numbers. Or not.'; }},
+  ressa:{name:'Ressa', role:'Survivor of G\'danisban', sig:'R', col:'#9a8aa8', hp:15, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, st:{might:0, wits:2, guile:3}, ab:['mark', 'salve'],
+    epithet:'"It took my street and left me. I have stopped asking it why."', origin:'G\'danisban', age:24, service:'None. She walked out of the city and kept walking until the Host\'s pickets stopped her',
+    weapon:'Two long knives', armour:'A dyer\'s apron over a quilted coat',
+    bio:'She had the fever and lived. Her street did not. She walked out of G\'danisban to the Host\'s lines in the rain and asked for work. The surgeons say she cannot catch it again. She says nothing about it at all.',
+    traits:['Does not catch the fever', 'Knows the city\'s streets and its temples', 'Sleeps sitting up'], gear:['Two knives', 'A dyer\'s blue on her fingers that will not wash out'],
+    get quest(){ return 'Away from the city. The Host is going away from the city.'; }},
+});
+Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings the Falari axe at', ressa:'cuts at'});
+Object.assign(STATUP, {mehet:['guile', 'wits'], ottar:['might', 'wits'], brannoc:['might', 'guile'], ressa:['guile', 'wits']});
+Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
+/* Ressa has had the fever, and does not catch it again (her bio; bh-canon §8) */
+{ const _c = b6Catch; b6Catch = function(id, why){ return id === 'ressa' ? false : _c(id, why); }; }
+
+const B6_DONE = {mehet:'b6_mehetDone', ottar:'b6_ottarDone', brannoc:'b6_brannocDone', ressa:'b6_ressaDone'};
+const B6_HOME = {mehet:'the Y\'Ghatan townsfolk at the camp\'s edge', ottar:'the Grey Helms\' ship', brannoc:'Sweetcreek\'s Falari', ressa:'the surgeons\' tents'};
+const b6Recruits = () => B6_TH[b6Thread()].recruits;
+const b6CanRecruit = id => !!(b6On() && TPL[id] && b6Recruits().includes(id) && !(S.dead && S.dead[id]) && S.f[B6_DONE[id]] !== 0);
+function b6Join(id){ if (!b6CanRecruit(id) || b6In(id)) return false;
+  if ((S.squad || []).length < ROSTER_CAP) { recruit(id); S.f[B6_DONE[id]] = 1; }
+  else { S.camp = [...new Set([...(S.camp || []), id])]; S.f[B6_DONE[id]] = 2; note(`${NAME(id)} waits with ${B6_HOME[id]}: six walk already.`); }
+  save(); return true; }
+{ const _recruit = recruit; recruit = function(id){ if (!b6On()) return _recruit(id); const n0 = note;
+    note = (t, c) => n0(String(t).replace('joins the Fourth', `joins ${b6Unit()}`), c); try { _recruit(id); } finally { note = n0; } save(); }; }
+
+ROSTER_BOOKS.bh = {
+  get core(){ return B6_TH[b6Thread()].core; },
+  bench:()=>[...B6_TH[b6Thread()].recruits, ...(b6Thread() === 'r' ? [...B4_RECRUITS, ...HOC_NEW] : ['sohra', 'greysword', 'ellis', 'vell'])],
+  home:id=>B6_HOME[id] || (b6Thread() === 'r' ? 'the company' : 'the baggage train'),
+  wait:id=>(S.camp || []).includes(id) || (!!B6_DONE[id] && S.f[B6_DONE[id]] === 2),
+  gone:id=>!!B6_DONE[id] && !b6CanRecruit(id),
+  open:()=>true,
+  in:id=>{ if (B6_DONE[id]) S.f[B6_DONE[id]] = 1; },
+  out:id=>{ if (B6_DONE[id]) S.f[B6_DONE[id]] = 2; }};
+
+/* ---- the foes (bh-canon §2, §3; bodies borrowed from Book Four's desert and Book Two's soldiers until the chapter art) ---- */
+Object.assign(FOES, {
+  b6_rebel:{name:'Leoman\'s rebel', sig:'r', kind:'b4_c7_fleer', hp:30, ac:14, atk:10, dmg:[1,8,3], rng:1, mv:4, init:2, verb:'slashes at'},
+  b6_rebelbow:{name:'Rebel bowman', sig:'b', kind:'b4_c7_fleerbow', hp:24, ac:13, atk:10, dmg:[1,8,3], rng:5, mv:4, init:2, sk:['pin'], verb:'shoots at'},
+  b6_fanatic:{name:'Fanatic with a torch', sig:'f', kind:'b4_c7_fleer', hp:22, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:5, init:3, verb:'thrusts a torch at'},
+  b6_rebelchief:{name:'Rebel captain', sig:'C', kind:'b4_c5_rider', hp:56, ac:15, atk:11, dmg:[1,10,4], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'brings a tulwar down on'},
+  b6_bandit:{name:'Plague-road bandit', sig:'d', kind:'b4_c7_fleer', hp:26, ac:13, atk:9, dmg:[1,8,2], rng:1, mv:4, init:2, verb:'cuts at'},
+  b6_cultist:{name:'Follower of the Chosen', sig:'c', kind:'b4_c7_fleer', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:4, init:2, verb:'claws at'},
+  b6_rioter:{name:'Rioter', sig:'m', kind:'b2soldier', hp:18, ac:11, atk:8, dmg:[1,6,2], rng:1, mv:4, init:1, verb:'swings a club at'},
+  b6_cityguard:{name:'City Guard of Malaz', sig:'g', kind:'b2soldier', hp:30, ac:15, atk:10, dmg:[1,8,3], rng:1, mv:4, init:1, verb:'cuts at'},
+  b6_edur:{name:'Tiste Edur warrior', sig:'e', kind:'b2soldier', hp:36, ac:15, atk:11, dmg:[1,10,3], rng:1, mv:4, init:2, verb:'cuts at'},
+  b6_regular:{name:'Regular of the line', kind:'b2soldier', sig:'n', hp:20, ac:14, atk:8, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'cuts at'},
+});
+/* a fight can pass the fever on: a fight def with feverRisk:'<why>' gives it, after a win or a loss, to one squadmate who walked and has not had it
+   (the chapter writers mark the fights: the plague villages, the cultists, the G'danisban streets) */
+{ const _endBeat = endBeat; endBeat = function(won){ const r = _endBeat(won);
+    if (b6On() && B && B.def && B.def.feverRisk && !B.b6fever) { B.b6fever = 1;
+      const who = (S.squad || []).filter(id => !b6Fevered(id) && id !== 'ressa' && !(S.dead && S.dead[id]));
+      if (who.length) b6Catch(who[(S.chapter + who.length) % who.length], B.def.feverRisk); }
+    return r; }; }
+
+/* ---- the words Book Six throws at you ---- */
+GLOSSX.bh = [
+  [0, 'Y\'Ghatan', 'An old fortress city of the Odhans, ringed with barrows of Malazan dead from the last time the Empire took it. Dassem Ultor fell here.'],
+  [0, 'The Fourteenth', 'The Adjunct\'s army: three legions, the Wickans and the Khundryl beside it. It won at Raraku without much of a fight, and has not stopped arguing about that since.'],
+  [0, 'Onearm\'s Host', 'High Fist Dujek Onearm\'s army, back in the Empire\'s favour and landed on the north coast of Seven Cities to finish the rebellion.'],
+  [0, 'Poliel', 'The Mistress of Pestilence. This year she is in Seven Cities, and so is her plague.'],
+  [0, 'The fever', 'What soldiers call Poliel\'s plague. It takes some and leaves others marked. A healer can break it. So, later, can stranger things.'],
+  [0, 'Leoman of the Flails', 'The last rebel leader with an army, riding for Y\'Ghatan with the Fourteenth behind him.'],
+  [2, 'G\'danisban', 'A city east of Raraku. The Host camps before it in the rain.', ()=>(S.chapter || 0) >= 2],
+  [5, 'The Kokakal Sea', 'Where the Fourteenth waits on the coast for Admiral Nok\'s transports.', ()=>(S.chapter || 0) >= 5],
+  [7, 'The Perish', 'A people from across the sea, with great grey ships and a god of wolves. Their Grey Helms join the fleet at sea.', ()=>(S.chapter || 0) >= 7],
+  [7, 'Malaz City', 'The Empire\'s oldest city, on its island under Mock\'s Hold.', ()=>(S.chapter || 0) >= 7],
+];
+
+/* ---- the shelf hooks the shared files need: each sits beside the earlier books' line in 016, 018, 019, 031, 036b, 990 ---- */
+const b6KeyPre = 'b6_';
+const b6SgtLook = () => b6On() && b6Thread() === 'r'; // the Fourteenth's sergeant wears Book Two's look (sgt_dg); the Fourth's, Book One's
+
+/* the chapter's keys (the brief fixes them; plan "Key choices") */
+const B6KEYS = {1:['bury', 'leave'], 2:['burn', 'pass'], 3:['in', 'line'], 4:['vote', 'out'], 5:['wait', 'sail'], 6:['letgo', 'report'], 7:['adjunct', 'jetty', 'wickans']};
+
 /* ============ resume & boot ============ */
 function resume(){
   $('#sheet').hidden = true; $('#modal').hidden = true; notes = []; titleAnim = null;
@@ -72371,6 +72571,8 @@ function start(){
    typeof B4CH5 !== 'undefined' && B4CH5, typeof B4CH6 !== 'undefined' && B4CH6, typeof B4CH7 !== 'undefined' && B4CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'hoc'); }); // its chapters are const B4CH1..B4CH7
   [typeof B5CH1 !== 'undefined' && B5CH1, typeof B5CH2 !== 'undefined' && B5CH2, typeof B5CH3 !== 'undefined' && B5CH3, typeof B5CH4 !== 'undefined' && B5CH4, // Book Five: Indebted (80);
    typeof B5CH5 !== 'undefined' && B5CH5, typeof B5CH6 !== 'undefined' && B5CH6, typeof B5CH7 !== 'undefined' && B5CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'mt'); }); // its chapters are const B5CH1..B5CH7 (81-87)
+  [typeof B6CH1 !== 'undefined' && B6CH1, typeof B6CH2 !== 'undefined' && B6CH2, typeof B6CH3 !== 'undefined' && B6CH3, typeof B6CH4 !== 'undefined' && B6CH4, // Book Six: Bones in the Walls (100);
+   typeof B6CH5 !== 'undefined' && B6CH5, typeof B6CH6 !== 'undefined' && B6CH6, typeof B6CH7 !== 'undefined' && B6CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'bh'); }); // its chapters are const B6CH1..B6CH7 (101-107)
   showTitle();
   requestAnimationFrame(loop);
 }

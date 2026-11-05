@@ -60,6 +60,8 @@ function start(){
    typeof B4CH5 !== 'undefined' && B4CH5, typeof B4CH6 !== 'undefined' && B4CH6, typeof B4CH7 !== 'undefined' && B4CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'hoc'); }); // its chapters are const B4CH1..B4CH7
   [typeof B5CH1 !== 'undefined' && B5CH1, typeof B5CH2 !== 'undefined' && B5CH2, typeof B5CH3 !== 'undefined' && B5CH3, typeof B5CH4 !== 'undefined' && B5CH4, // Book Five: Indebted (80);
    typeof B5CH5 !== 'undefined' && B5CH5, typeof B5CH6 !== 'undefined' && B5CH6, typeof B5CH7 !== 'undefined' && B5CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'mt'); }); // its chapters are const B5CH1..B5CH7 (81-87)
+  [typeof B6CH1 !== 'undefined' && B6CH1, typeof B6CH2 !== 'undefined' && B6CH2, typeof B6CH3 !== 'undefined' && B6CH3, typeof B6CH4 !== 'undefined' && B6CH4, // Book Six: Bones in the Walls (100);
+   typeof B6CH5 !== 'undefined' && B6CH5, typeof B6CH6 !== 'undefined' && B6CH6, typeof B6CH7 !== 'undefined' && B6CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'bh'); }); // its chapters are const B6CH1..B6CH7 (101-107)
   showTitle();
   requestAnimationFrame(loop);
 }

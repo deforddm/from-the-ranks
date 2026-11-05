@@ -33,7 +33,8 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     if (n >= 39 && n <= 46) return {book:'gotm', ch:n - 39}; if (n >= 48 && n <= 54) return {book:'dg', ch:n - 47};
     if (n >= 61 && n <= 67) return {book:'moi', ch:n - 60}; if (n === 47 || (n >= 55 && n <= 58)) return {book:'dg', ch:0};
     if (n >= 60 && n <= 69) return {book:'moi', ch:0}; if (n >= 71 && n <= 77) return {book:'hoc', ch:n - 70}; if (n >= 70 && n <= 79) return {book:'hoc', ch:0};
-    if (n >= 81 && n <= 87) return {book:'mt', ch:n - 80}; if (n >= 80 && n <= 89) return {book:'mt', ch:0}; return null; };
+    if (n >= 81 && n <= 87) return {book:'mt', ch:n - 80}; if (n >= 80 && n <= 89) return {book:'mt', ch:0};
+    if (n >= 101 && n <= 107) return {book:'bh', ch:n - 100}; if (n >= 100 && n <= 119) return {book:'bh', ch:0}; return null; };
   const BOOK = {
     gotm:{core:['brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'ellis', from:2, to:7}, {id:'vell', from:4, to:7}]},
     dg:{core:['haddat', 'sathi', 'tangle', 'marrow'], rec:[{id:'redblade', from:2, to:7}, {id:'warlock', from:2, to:7}, ...['brisk', 'kettle', 'tuft', 'ohl', 'ellis', 'vell'].map(id => ({id, from:7, to:7, old:1}))]}, // Book Two: Ramin, Keth, and in Aren an old hand of the Fourth (b2OldHand)

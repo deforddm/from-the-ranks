@@ -492,7 +492,7 @@ const visMid = () => { const r = visReader(); return r.mid || r.name; };
 /* v8.0: Book Five's readings are tiles of the Holds, not the Deck: its visions are "Through the Tiles" (80c) */
 const visTiles = () => !!(S && S.book === 'mt');
 const visKick = () => visTiles() ? 'Through the Tiles' : 'Through the Deck';
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : S && S.book === 'bh' ? 'b6_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;
