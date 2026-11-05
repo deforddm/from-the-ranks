@@ -13,7 +13,7 @@ const r = await page.evaluate(() => { const out = {};
   const click = sel => { const b = document.querySelector(sel); if (!b || b.disabled) return false; b.click(); return true; };
   const sheetText = () => $('#sheet').textContent;
   /* ---- the choice at every chapter fire ---- */
-  out.fires = {}; const mk = {gotm:()=>newState('F1'), dg:()=>newStateDG('F2'), moi:()=>newStateMOI('F3'), hoc:()=>newStateHOC('F4'), mt:()=>newStateMT('F5'), bh:()=>newStateBH('F6', 'F7')}; // v8.0: Book Five's fires come with its chapters
+  out.fires = {}; const mk = {gotm:()=>newState('F1'), dg:()=>newStateDG('F2'), moi:()=>newStateMOI('F3'), hoc:()=>newStateHOC('F4'), mt:()=>newStateMT('F5'), bh:()=>newStateBH('F6', 'F7'), rg:()=>newStateRG('F8', 'F9')}; // v8.0: Book Five's fires come with its chapters
   for (const [book, chs] of Object.entries(ROSTER_FIRES)) { setBook(book); S = mk[book](); S.picksDue = []; if (book === 'hoc') { S.f.b4_mustered = 1; delete S.f.b4_musterDue; }
     out.fires[book] = {chapters:Object.keys(chs).map(Number), miss:[]};
     for (const [n, ids] of Object.entries(chs)) for (const id of ids) { S.chapter = +n;

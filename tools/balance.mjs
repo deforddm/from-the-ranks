@@ -49,7 +49,7 @@ const ONLY = (opt('only', '') || '').split(',').filter(Boolean), LEAN = args.inc
 const JSONOUT = opt('json', '/tmp/ashes-balance.json'), QUIET = args.includes('--quiet');
 const PATCH = opt('patch', '') ? fs.readFileSync(opt('patch', ''), 'utf8') : ''; // JS run in each page after boot, to try a tuning in memory
 const MAXR = 40;
-const BOOK = opt('book', 'gotm'), HOC = BOOK === 'hoc', MT = BOOK === 'mt', LATER = ['hoc', 'dg', 'moi', 'mt', 'bh'].includes(BOOK), DIFF = opt('diff', ''), TRANSFER = args.includes('--transfer'), NOORVAS = args.includes('--noorvas'), NOGEAR = args.includes('--nogear');
+const BOOK = opt('book', 'gotm'), HOC = BOOK === 'hoc', MT = BOOK === 'mt', LATER = ['hoc', 'dg', 'moi', 'mt', 'bh', 'rg'].includes(BOOK), DIFF = opt('diff', ''), TRANSFER = args.includes('--transfer'), NOORVAS = args.includes('--noorvas'), NOGEAR = args.includes('--nogear');
 const FLAGS = Object.fromEntries((opt('flags', '') || '').split(',').filter(Boolean).map(kv => { const [k, v] = kv.split(':'); return [k, isNaN(+v) ? v : +v]; }));
 
 /* how each fight is entered on the plain path through the story (no sharper thrown first) */
@@ -107,6 +107,7 @@ const INIT = () => {
   W.setup = spec => {
     if (spec.book === 'hoc') return W.setupHOC(spec);
     if (spec.book === 'bh') return W.setupBH(spec);
+    if (spec.book === 'rg') return W.setupRG(spec);
     if (spec.book === 'dg' || spec.book === 'moi' || spec.book === 'mt') return W.setupLater(spec);
     B = null; notes = [];
     const n = spec.ch;
@@ -118,6 +119,28 @@ const INIT = () => {
     for (let k = 1; k < n; k++) Object.keys((CHAPTERS[k] && CHAPTERS[k].gear) || {}).forEach(g => gain(g));
     S.inv = Object.assign({}, spec.inv); if (S.inv.smoker > 0) S.f.gotSmokers = 1;
     S.card = spec.card || null; notes = [];
+    startBattle(spec.id, spec.opt || {});
+  };
+
+  /* Book Seven (--book=rg): both squads in one save (newStateRG), the chapter's squad swapped in by startChapter; levels as play.mjs's
+     SYNTH_RG (the Third 16-19 across Ch 1,3,5,7; the Letherii 8-10 across Ch 2,4,6); recruits by then; the Rising at 4; the squad's earlier chapters' kit */
+  W.setupRG = spec => {
+    B = null; notes = []; W.hoc = true; const n = spec.ch;
+    setBook('rg'); S = newStateRG('Hask', 'Brann'); if (spec.diff) S.diff = spec.diff;
+    S.chapters = {}; for (let i = 1; i < n; i++) { const v = (B7KEYS[i] || ['x'])[0]; S.f[`b7_c${i}_key`] = v; S.chapters[i] = v; }
+    const lvT = ({1:16, 2:17, 3:17, 4:18, 5:18, 6:19, 7:19}[n] || 16) + (spec.lvl || 0), lvL = ({1:8, 2:8, 3:9, 4:9, 5:10, 6:10, 7:11}[n] || 8) + (spec.lvl || 0);
+    S.lvl = lvT; S.xp = LEVELS[lvT - 1]; S.th.l.lvl = lvL; S.th.l.xp = LEVELS[lvL - 1]; S.b7 = {rise:4, file:2, hi:4};
+    if (n >= 2) { S.f.b7_dossDone = 1; if (!S.squad.includes('doss')) S.squad.push('doss'); }
+    if (n >= 3) { S.f.b7_ilsaDone = 1; if (!S.th.l.squad.includes('ilsa')) S.th.l.squad.push('ilsa'); }
+    if (n >= 4) { S.f.b7_wennaDone = 1; if (!S.squad.includes('wenna')) S.squad.push('wenna'); }
+    const fill = o => { o.squad.forEach(k => { o.loy[k] ??= 0; o.gear[k] ??= {}; o.picks[k] ??= []; }); o.picksDue = []; };
+    fill(S); fill(S.th.l); migrate(S);
+    const vets = o => o.squad.forEach(id => { const t = PICKS[3][id]; if (t && !o.picks[id].some(p => t.some(x => x[0] === p))) o.picks[id].push(t[0][0]);
+      VET_LVLS.filter(l => o.lvl >= l).forEach((l, i) => { const v = PICKS.vet[i]; if (v && !o.picks[id].includes(v[0])) o.picks[id].push(v[0]); }); });
+    vets(S); vets(S.th.l); startChapter(n); S.picksDue = [];
+    S.kit ??= []; if (!spec.nogear) for (let k = 1; k < n; k++) if (B7_CH[k] === B7_CH[n]) Object.keys((CHAPTERS[k] && CHAPTERS[k].gear) || {}).forEach(g => { if (!S.kit.includes(g)) S.kit.push(g); });
+    allocateGear(); if (spec.inv) S.inv = Object.assign({}, spec.inv); Object.assign(S.f, spec.flags || {});
+    const pool = b7Pool(n); S.card = pool[Math.floor(Math.random() * pool.length)] || null; notes = [];
     startBattle(spec.id, spec.opt || {});
   };
 
@@ -404,8 +427,8 @@ async function newPage() {
 }
 async function prep(page) { await page.evaluate(INIT); if (PATCH) await page.evaluate(code => (0, eval)(code), PATCH); }
 const first = await newPage();
-const PREFIX = { hoc: 'b4_', dg: 'b2_', moi: 'b3_', mt: 'b5_', bh: 'b6_' };
-const meta = await first.page.evaluate(([bk, pre]) => { if (pre) setBook(bk); return Object.keys(BATTLES).filter(id => pre ? id.startsWith(pre) : !/^b[23456]_/.test(id)) /* Book One: its own fights only, not the later books' (they sit in BATTLES too) */.map(id => {
+const PREFIX = { hoc: 'b4_', dg: 'b2_', moi: 'b3_', mt: 'b5_', bh: 'b6_', rg: 'b7_' };
+const meta = await first.page.evaluate(([bk, pre]) => { if (pre) setBook(bk); return Object.keys(BATTLES).filter(id => pre ? id.startsWith(pre) : !/^b[234567]_/.test(id)) /* Book One: its own fights only, not the later books' (they sit in BATTLES too) */.map(id => {
   const ch = +(Object.keys(CHAPTERS).find(n => CHAPTERS[n].battles && id in CHAPTERS[n].battles) || 0), d = BATTLES[id];
   return { id, ch, foes: d.foes.map(f => f[0]), waves: (d.waves || []).map(w => w.round + ':' + w.foes.map(f => f[0]).join('+')), allies: (d.allies || []).map(a => a[0]),
     survive: d.objective && d.objective.type === 'survive' ? d.objective.rounds : 0, mortal: !!d.mortal, nomagic: !!d.nomagic, nothrow: !!d.nothrow, style: d.style || '',
@@ -465,7 +488,7 @@ function idleFoes(rs) {
   return Object.entries(by).filter(([k, b]) => b.turns && (b.idle / b.turns > .25 || b.never)).map(([k, b]) => `${k} idle ${Math.round(b.idle / b.turns * 100)}% of turns${b.never ? `, never acted in ${b.never}/${b.n}` : ''}`);
 }
 const rows = [];
-console.log(`\nAshes of the Pale · balance ·${LATER ? ` ${{ hoc: 'Book Four', dg: 'Book Two', moi: 'Book Three', mt: 'Book Five', bh: 'Book Six' }[BOOK]} · ${DIFF || 'soldier'}${TRANSFER ? ' · transfer squad' : ''}${NOORVAS ? ' · no Orvas' : ''}${NOGEAR ? ' · no gear' : ''} ·` : ''} smart ${RUNS}${LATER ? '' : `, no-Ellis ${NOE}`}, naive ${LATER ? +opt('naive', 0) : NAIVE} runs a battle${Object.keys(FLAGS).length ? ' · flags ' + JSON.stringify(FLAGS) : ''}${LVL ? ` · level +${LVL}` : ''}${LEAN ? ' · lean (no munitions/salves)' : ''}${RICH ? ' · rich (no munition cap)' : ''}${PATCH ? ' · PATCHED: ' + opt('patch', '') : ''} · ${((Date.now() - t0) / 60000).toFixed(1)} min\n`);
+console.log(`\nAshes of the Pale · balance ·${LATER ? ` ${{ hoc: 'Book Four', dg: 'Book Two', moi: 'Book Three', mt: 'Book Five', bh: 'Book Six', rg: 'Book Seven' }[BOOK]} · ${DIFF || 'soldier'}${TRANSFER ? ' · transfer squad' : ''}${NOORVAS ? ' · no Orvas' : ''}${NOGEAR ? ' · no gear' : ''} ·` : ''} smart ${RUNS}${LATER ? '' : `, no-Ellis ${NOE}`}, naive ${LATER ? +opt('naive', 0) : NAIVE} runs a battle${Object.keys(FLAGS).length ? ' · flags ' + JSON.stringify(FLAGS) : ''}${LVL ? ` · level +${LVL}` : ''}${LEAN ? ' · lean (no munitions/salves)' : ''}${RICH ? ' · rich (no munition cap)' : ''}${PATCH ? ' · PATCHED: ' + opt('patch', '') : ''} · ${((Date.now() - t0) / 60000).toFixed(1)} min\n`);
 console.log('| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |');
 console.log('|---|---|---|---|---|---|---|---|---|---|---|');
 for (const b of battles) {
@@ -480,7 +503,7 @@ for (const b of battles) {
   if (sm.pstuck) notes.push(`policy loops ${sm.pstuck}`); if (sm.pfail) notes.push(`refused actions ${sm.pfail}`);
   const idle = idleFoes(rs); if (idle.length) notes.push('IDLE: ' + idle.join('; '));
   const pe = pageErrs.filter(p => p.id === b.id); if (pe.length) notes.push(`PAGE ERRORS ×${pe.length}`);
-  const lvl = BOOK === 'bh' ? ({1:12, 2:12, 3:13, 4:13, 5:15, 6:15, 7:16}[b.ch] || 12) + LVL : HOC || BOOK === 'moi' ? Math.min(15, b.ch + 7 + LVL) : MT ? Math.max(1, Math.min(7, 1 + b.ch) + LVL) : Math.max(1, Math.min(8, 1 + b.ch + LVL));
+  const lvl = BOOK === 'rg' ? ((B7_CH_N => ({1:16, 2:8, 3:17, 4:9, 5:18, 6:10, 7:19}[B7_CH_N] || 16))(b.ch)) + LVL : BOOK === 'bh' ? ({1:12, 2:12, 3:13, 4:13, 5:15, 6:15, 7:16}[b.ch] || 12) + LVL : HOC || BOOK === 'moi' ? Math.min(15, b.ch + 7 + LVL) : MT ? Math.max(1, Math.min(7, 1 + b.ch) + LVL) : Math.max(1, Math.min(8, 1 + b.ch + LVL));
   rows.push({ id: b.id, ch: b.ch, sm, nv, ne });
   console.log(`| ${b.id} | ${b.ch} | ${lvl} | ${P(sm.win)} (${sm.n}) | ${P(nv.win)} | ${ne.n ? P(ne.win) : '—'} | ${F(sm.medR, 1)} | ${P(sm.hp)} / ${ne.n ? P(ne.hp) : '—'} / ${P(nv.hp)} | ${F(sm.downs, 2)} / ${F(nv.downs, 2)} | ${P(sm.anyDown)} | ${notes.join(' · ')} |`);
 }

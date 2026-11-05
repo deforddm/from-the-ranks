@@ -24,7 +24,7 @@ const render = (what) => page.evaluate(async (what) => {
 }, what);
 
 const names = await page.evaluate(() => AUDIO._dev.names);
-ok(names.voices.length === 6 && names.voices.join() === 'gotm,dg,moi,hoc,mt,bh', 'six voices, one per book: ' + names.voices.join(', '));
+ok(names.voices.length === 7 && names.voices.join() === 'gotm,dg,moi,hoc,mt,bh,rg', 'seven voices, one per book: ' + names.voices.join(', '));
 ok(names.sfx.length >= 45, names.sfx.length + ' sound effects');
 ok(names.amb.length >= 38, names.amb.length + ' ambiences');
 
@@ -39,7 +39,7 @@ for (const h of ['High House Dark', 'High House Shadow', 'High House Life', 'Hig
   const r = await render({ sfx: 'house', args: [h], sec: 2.5, voice: h.includes('Chains') ? 'moi' : h.includes('Life') ? 'dg' : /Hold|Fulcra/.test(h) ? 'mt' : 'gotm' });
   ok(r.nan === 0 && r.peak > .003 && r.peak <= 1, `house ${h}: peak ${r.peak.toFixed(3)}`);
 }
-for (const v of ['dg', 'moi', 'hoc', 'mt', 'bh']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
+for (const v of ['dg', 'moi', 'hoc', 'mt', 'bh', 'rg']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
   const r = await render({ sfx: k, sec: 3, voice: v });
   ok(r.nan === 0 && r.peak > .004 && r.peak <= 1, `sfx ${k} in ${v}: peak ${r.peak.toFixed(3)}`);
 }

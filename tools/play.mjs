@@ -7,6 +7,7 @@
 //   --book=hoc  pick Book Four (House of Chains) the same way; with no Book Four chapter written yet the run is skipped cleanly (exit 0)
 //   --book=mt   pick Book Five (Midnight Tides) the same way; with no Book Five chapter written yet the run is skipped cleanly (exit 0)
 //   --book=bh   pick Book Six (The Bonehunters) the same way (the form's second name is filled by default); skipped cleanly with no chapter yet
+//   --book=rg   pick Book Seven (Reaper's Gale) the same way (two squads, as Book Six); skipped cleanly with no chapter yet
 //   --cheat     win every battle instantly (flow testing only)
 //   --from=N    start from a synthetic save at the start of chapter N (with --book=dg, Book Two's chapter N: SYNTH_DG; with --book=moi, SYNTH_MOI)
 //   --shots=dir screenshot on every new view/area and on any problem
@@ -238,6 +239,27 @@ const SYNTH_BH = (n) => {
   vets(S); vets(S.th.h); save(); startChapter(n);
 };
 
+// Book Seven (--book=rg --from=N): a synthetic save at the start of Book Seven's chapter N (docs/rg-book-brief.md): both squads, the levels the
+// brief gives (the Third 16, 17, 18, 19-20 at Chapters 1, 3, 5, 7; the Letherii 8, 9-10, 11 at Chapters 2, 4, 6), earlier keys, the Rising by then, the recruits joined
+const SYNTH_RG = (n) => {
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  setBook('rg'); S = newStateRG('Hask', 'Brann'); const keys = (typeof B7KEYS !== 'undefined' && B7KEYS) || {};
+  S.chapters = {}; for (let i = 1; i < n; i++) { const v = pick(keys[i] || ['a', 'b']); S.f[`b7_c${i}_key`] = v; S.chapters[i] = v; }
+  const lvT = {1:16, 2:17, 3:17, 4:18, 5:18, 6:19, 7:19}[n] || 16, lvL = {1:8, 2:8, 3:9, 4:9, 5:10, 6:10, 7:11}[n] || 8;
+  S.lvl = lvT; S.xp = LEVELS[lvT - 1]; S.th.l.lvl = lvL; S.th.l.xp = LEVELS[lvL - 1];
+  S.b7 = {rise:Math.min(10, 2 + Math.floor(Math.random() * n)), file:Math.floor(Math.random() * Math.max(1, n - 1)), hi:0}; S.b7.hi = S.b7.rise;
+  if (n >= 2) { S.f.b7_dossDone = 1; if (!S.squad.includes('doss')) S.squad.push('doss'); S.loy.doss = 0; }
+  if (n >= 3) { S.f.b7_ilsaDone = 1; if (!S.th.l.squad.includes('ilsa')) S.th.l.squad.push('ilsa'); S.th.l.loy.ilsa = 0; }
+  if (n >= 4) { S.f.b7_wennaDone = 1; if (!S.squad.includes('wenna')) S.squad.push('wenna'); S.loy.wenna = 0; }
+  if (n >= 5) { S.f.b7_sorvanDone = 2; S.th.l.camp = [...(S.th.l.camp || []), 'sorvan']; }
+  if (n >= 7) S.f.b7_lethRoad = pick(B7_LETHROADS);
+  const fill = (o) => { [...o.squad, ...(o.camp || [])].forEach(k => { o.loy[k] ??= 0; o.gear[k] ??= {}; o.picks[k] ??= []; }); o.picksDue = []; };
+  fill(S); fill(S.th.l); migrate(S);
+  const vets = (o) => o.squad.forEach(id => { const t = PICKS[3][id]; if (t && !o.picks[id].some(p => t.some(x => x[0] === p))) o.picks[id].push(t[0][0]);
+    VET_LVLS.filter(l => o.lvl >= l).forEach((l, i) => { const v = PICKS.vet[i]; if (v && !o.picks[id].includes(v[0])) o.picks[id].push(v[0]); }); });
+  vets(S); vets(S.th.l); save(); startChapter(n);
+};
+
 let bad = 0, skipped = 0;
 async function run(i) {
   const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768 } : { fast: true });
@@ -253,7 +275,9 @@ async function run(i) {
     console.log(`run ${i}: SKIP (Book Five has no chapter registered yet)`); skipped++; await ctx.close(); return; }
   if (book === 'bh' && !(await page.evaluate(() => Object.keys((BOOKSNAP.bh && BOOKSNAP.bh.ch) || {}).length))) { // nothing to play yet
     console.log(`run ${i}: SKIP (Book Six has no chapter registered yet)`); skipped++; await ctx.close(); return; }
-  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : book === 'bh' ? SYNTH_BH : SYNTH, from);
+  if (book === 'rg' && !(await page.evaluate(() => Object.keys((BOOKSNAP.rg && BOOKSNAP.rg.ch) || {}).length))) { // nothing to play yet
+    console.log(`run ${i}: SKIP (Book Seven has no chapter registered yet)`); skipped++; await ctx.close(); return; }
+  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : book === 'bh' ? SYNTH_BH : book === 'rg' ? SYNTH_RG : SYNTH, from);
   const t0 = Date.now();
   let last = '', same = 0, status = '', ticks = 0, chapterSeen = -1, areaSeen = '', viewSeen = '', errShot = 0;
   const problems = [];
@@ -288,5 +312,5 @@ const par = Math.min(runs, 4);
 let next = 0;
 await Promise.all(Array.from({ length: par }, async () => { while (next < runs) { const i = next++; await run(i); } }));
 await browser.close(); srv.kill();
-if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'bh' ? 'Six' : book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
+if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'rg' ? 'Seven' : book === 'bh' ? 'Six' : book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
 process.exit(bad ? 1 : 0);
