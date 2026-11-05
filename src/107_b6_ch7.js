@@ -141,7 +141,7 @@ const B6CH7 = {
       walk:'.', triggers:{R:'b6_c7_rail', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_bow'}, start:{x:7, y:8},
       quest:()=> !S.f.b6_c7_ambushDone ? 'The lookout is shouting. The rail.' : !S.f.b6_c7_sepik ? 'An island to the west. The rail.' : !S.f.b6_c7_ottarMet ? 'Grey ships coming up astern. The rail.' : 'The fleet is turning into something. The bow.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>!S.f.b6_c7_captain},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>!S.f.b6_c7_captain},
         {id:'master', name:'The transport\'s master', kind:'b5_c2_pilot', x:13, y:2, node:()=>'b6_c7_master', fresh:()=>!S.f.b6_c7_master},
         {id:'oldninth', name:'An old soldier of the 9th', kind:'b2soldier', x:2, y:5, node:()=>'b6_c7_oldsoldier', fresh:()=>!S.f.b6_c7_oldsoldier},
         {id:'ottar', name:'A Grey Helm', kind:'greysword', x:9, y:4, node:()=>'b6_c7_ottar', show:()=>b67Ph() === 2 && !!S.f.b6_c7_perish && !S.f.b6_c7_ottarMet, fresh:()=>true} ] },
@@ -163,7 +163,7 @@ const B6CH7 = {
       walk:'.', triggers:{R:'b6_c7_ice', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_wolves'}, start:{x:7, y:8},
       quest:()=> !S.f.b6_c7_wolvesHeard ? 'Something is howling a long way off. The bow.' : 'Out of here. The bow.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>false},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>false},
         {id:'master', name:'The transport\'s master', kind:'b5_c2_pilot', x:13, y:2, node:()=>'b6_c7_master', fresh:()=>!S.f.b6_c7_masterCold} ] },
 
     /* 16 x 12 (b6_c7_quay): Malaz City's waterfront, a jetty along from the marines'. ~ harbour  H the plank to the transport  X the main
@@ -185,7 +185,7 @@ const B6CH7 = {
       walk:'.,', triggers:{H:'b6_c7_plank', X:'b6_c7_shouts', W:'b6_c7_wickans_fam', F:'b6_c7_fire', A:'b6_c7_alley', K:'b6_c7_holdview', M:'b6_c7_mob', '<':'b6_c7_tolanes'}, start:{x:4, y:5},
       quest:()=> !S.f.b6_c7_mobDone ? 'The city is coming down to the water. The street mouth.' : !S.f.b6_c7_guardDone ? 'The City Guard, for the Wickans.' : !b67Key() ? (S.f.b6_c7_signal ? 'The roads.' : 'Horns from the harbour.') : b67Key() === 'wickans' && !S.f.b6_c7_streetsDone ? 'Into the streets, west.' : 'The last of it.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:6, y:4, node:()=>S.f.b6_c7_guardDone ? 'b6_c7_signal' : 'b6_c7_orders', fresh:()=>!S.f.b6_c7_orders || (!!S.f.b6_c7_guardDone && !S.f.b6_c7_signal)},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:4, node:()=>S.f.b6_c7_guardDone ? 'b6_c7_signal' : 'b6_c7_orders', fresh:()=>!S.f.b6_c7_orders || (!!S.f.b6_c7_guardDone && !S.f.b6_c7_signal)},
         {id:'guard', name:'The City Guard', kind:'b2soldier', x:12, y:9, node:()=>'b6_c7_guard_come', show:()=>!!S.f.b6_c7_mobDone && !S.f.b6_c7_guardDone, fresh:()=>true},
         {id:'sailor', name:'A sailor off a dispatch boat', kind:'b5_c3_bargeman', x:1, y:6, node:()=>'b6_c7_news', fresh:()=>!S.f.b6_c7_news},
         {id:'grandmother', name:'A Wickan grandmother', kind:'b5_c1_tilewoman', x:10, y:6, node:()=>'b6_c7_grandmother', show:()=>!!S.f.b6_c7_famMet, fresh:()=>!S.f.b6_c7_gran} ] },
@@ -274,7 +274,7 @@ const B6CH7 = {
   tease:'The epilogue: where each squad\'s road goes, a page for every soldier of both, and where the books meet.',
 
   extras:()=>{ const f = S.f, x = [];
-    x.push(b67Sailed() ? 'The squad was aboard from the first day of the loading, and a day longer at sea than most.' : 'The squad held its transport a day on the shore, on a boy\'s word.');
+    x.push(b67Sailed() ? 'The squad was aboard from the first day of the loading, a day longer on its transport than most.' : 'The squad held its transport a day on the shore, on a boy\'s word.');
     if (f.b6_c7_ambushDone) x.push('From a transport\'s rail the squad saw the Edur lines, a wall of water, and a wall of earth that could not be there.');
     if (f.b6_c7_ottarMet) x.push(b6In('ottar') ? 'A Grey Helm of the Perish came across to the transport, and walks with the Third.' : (S.camp || []).includes('ottar') || f.b6_ottarDone === 2 ? 'A Grey Helm of the Perish came across to the transport, and waits with the Grey Helms.' : 'A Grey Helm of the Perish came across to the transport, and went to stand with his own.');
     if (f.b6_c7_alleyDone) x.push('The squad took a Wickan boy off the mob in a fish-shed alley.');
@@ -342,7 +342,7 @@ The Edur lines turn away. Not fast. Then faster.
 
 Behind the earth there is nothing but sea, when the spray clears. It may never have been there at all. On the next transport over, the marines are shouting that it was the High Mage's work, and then that it was illusion, and then that it was something more than illusion by the end, and then they stop shouting, because they do not know either.${b67Say({tangle:'\n\nTangle has his hands on the rail and the satchel between his feet. "That was a lot of earth," he says, at last, "to put in the sea." He sounds envious.', yorin:'\n\nYorin is white to the lips and holding his copper vane, which is spinning. "That was not Serc," he says. "That was not anything I know." He makes it stop.', _:''})}
 
-${b67Sailed() ? 'You have been aboard since the first day of the loading. A day longer at sea, and you would have been two days past Sepik with all of this in front of you. The boy said so, on the shore. There is no laughing at boys on this deck today.' : 'You held the transport a day on the shore, on a boy\'s word. The crew laughed then. The deck is not laughing now, and the master has been looking at the 9th with something like respect.'}`,
+${b67Sailed() ? 'You have been aboard since the first day of the loading, at anchor while the 8th sat a day on the shore on a boy\'s word. Two days past Sepik, the boy said. There is no laughing at boys on this deck today.' : 'You held the transport a day on the shore, on a boy\'s word. The crew laughed then. The deck is not laughing now, and the master has been looking at the 9th with something like respect.'}`,
       ch:[{t:'Breathe.', onward:true, go:'b6_c7_ambush_after'}]}),
     b6_c7_ambush_after:()=>({sp:'At sea', scene:'b6_sea', again:()=>`The fleet re-forming.`, txt:
 `The fleet comes back together over an afternoon, the warships herding, the transports wallowing back into their places. The deck is quiet. The 9th goes back to its dice and finds it has forgotten whose throw it was.
@@ -478,7 +478,7 @@ That afternoon another fleet finds them: Malazan warships, out of Jakatakan, und
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* the captain, unnamed (the 9th's company captain, as in Book Four) */
-    b6_c7_captain:()=>({sp:'The captain', scene:b67Scene(), fx:()=>{ S.f.b6_c7_captain = 1; }, again:()=>`The captain, with the company's book.`, txt:
+    b6_c7_captain:()=>({sp:'Captain Hollet', scene:b67Scene(), fx:()=>{ S.f.b6_c7_captain = 1; }, again:()=>`The captain, with the company's book.`, txt:
 `The captain has the company's book open on a coil of rope and is writing the sea into it, day by day, because a book has to have something in it.
 
 "The Adjunct's taking us to Malaz City," the captain says. "That's the word from the flagship. Malaz, then wherever the Empress says." The captain does not say the Empress's name; nobody in the 9th does, out of an old habit nobody can explain. "Resupply. Reinforcements. Orders." A pause. "I've been to Malaz. It's a city that likes soldiers best when they're leaving."${b67Fell3().length ? `\n\nThe captain turns back a page, to Y'Ghatan, and looks at a line there, and turns forward again. "${b67And(b67Fell3().map(NAME))}," the captain says. "I wrote ${b67Fell3().length > 1 ? 'them' : b67Him(b67Fell3()[0])} properly."` : ''}`,
@@ -551,7 +551,7 @@ The city has turned on its Wickans. Not one of the harbour-men will say who star
 At the jetty's end, with the water at their backs, there are Wickan families: forty or so, women and children and old men, who came down to the harbour when they saw the fleet because the fleet was the only thing in Malaz City that might not be against them.${b67Say({sathi:'\n\nSathi looks at the families and her face goes very still. "Wickans," she says. "Theirs. This city\'s." She draws her knife.', warlock:'\n\nKeth stops dead on the planks. The grandmother says something out of his mouth, very fast and very low, and then nothing at all.', rasp:'\n\nRasp has stopped at the top of the plank. "My city," she says. "This is my city." She does not sound proud of it.', _:''})}`,
       ch:[{t:'The captain.', go:'b6_c7_orders'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c7_orders:()=>({sp:'The captain', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_orders = 1; }, again:()=>`The captain at the jetty's head.`, txt:
+    b6_c7_orders:()=>({sp:'Captain Hollet', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_orders = 1; }, again:()=>`The captain at the jetty's head.`, txt:
 `The captain has the company on the jetty, in a line across it at the landward end, and is looking at the street mouth across the waterfront, where the noise is coming from.
 
 "No orders," the captain says. "The flagship's sent none. The Fist's at the main jetty and hasn't sent any either." The captain looks back at the Wickan families. "So these are the orders. No one comes down this jetty who isn't the Fourteenth. No one goes into the water." A breath. "The Third has the jetty's foot. Hold it."`,
@@ -567,7 +567,7 @@ Most of them have never seen the Wickan plains. They are the grandchildren of ri
     b6_c7_grandmother:()=>({sp:'A Wickan grandmother', scene:'b6_c7_jetty', fx:()=>{ S.f.b6_c7_gran = 1; if (!S.f.b6_c7_cloakGot && S.f.b6_c7_mobDone) { S.f.b6_c7_cloakGot = 1; gain('b6_c7_malazcloak'); } }, again:()=>`The grandmother, with her bundle.`, txt: !S.f.b6_c7_mobDone ?
 `An old Wickan woman with a bundle on her knee and a long dun cloak round her shoulders is sitting on a bollard at the jetty's end, watching the street mouth. She speaks Malazan with a fishwife's waterfront voice.
 
-"My husband sold rope on this jetty for forty years," she says. "They bought it from him on Tuesday. On Friday they burned his shop." She looks at the soldiers. "He's dead. Before all this. I'm glad of it. That's what this city's done to me."` :
+"My husband sold rope on this jetty for forty years," she says. "They bought rope from him at the start of the week. By the end of it they had burned his shop." She looks at the soldiers. "He's dead. Before all this. I'm glad of it. That's what this city's done to me."` :
 `The old woman stands up off her bollard when the squad comes back down the jetty, and takes the long dun cloak off her shoulders, and puts it round ${b67Here().length ? `${NAME(b67Here()[0])}'s` : 'your'} shoulders without asking.
 
 "His," she says. "My husband's. Harbour wool, oiled. It'll keep the sea out." She settles it. "He'd want it to go with a soldier. He was one, once, for the old Emperor." She sits down again. "Don't argue. I'm too old for it."`,
@@ -796,9 +796,10 @@ B67FIN.key = k => B67FIN.KEYS.includes(k) ? k : B67FIN.KEYS.includes(S.f.b6_c7_k
 B67FIN.join = ps => ps.filter(p => p && String(p).trim()).join('\n\n');
 B67FIN.loy = (id, warm, cold, mid) => { const l = (S.loy && S.loy[id]) || 0; return l >= 2 ? warm : l <= -2 ? cold : mid; };
 /* the Third's Book Six, in one line per soldier: Ch1's barrows, Ch3's fire, Ch5's bone (each read with a default) */
-B67FIN.barrows = id => b67Buried() ? `At Y'Ghatan, the night before the siege, ${id === 'sgt' ? 'you' : b67He(id)} put the old dead back in their barrows with the squad.` : `At Y'Ghatan the squad rested the night before the siege, and the barrows stayed open.`;
-B67FIN.fire = id => b67WentIn() ? `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} went into the streets with the squad to hold Sinn's way open, and came out by it.` : `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} held the gate with the squad and pulled the burned out of the smoke.`;
-B67FIN.bone = id => b67Bone() ? `${id === 'sgt' ? 'You wear' : `${b67Cap(b67He(id))} wears`} the finger bone from Y'Ghatan, as the soldiers who walked out of it do.` : '';
+/* Ottar came aboard at sea: Y'Ghatan, its barrows and its bones are not his */
+B67FIN.barrows = id => id === 'ottar' ? '' : b67Buried() ? `At Y'Ghatan, the last night before the assault, ${id === 'sgt' ? 'you' : b67He(id)} put the old dead back in their barrows with the squad.` : S.f.b6_c1_key === 'leave' ? `At Y'Ghatan the squad rested under the walls, and the barrows stayed open.` : '';
+B67FIN.fire = id => id === 'ottar' ? '' : b67WentIn() ? `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} went into the streets with the squad to hold Sinn's way open, and came out by it.` : `When the city burned, ${id === 'sgt' ? 'you' : b67He(id)} held the gate with the squad and pulled the burned out of the smoke.`;
+B67FIN.bone = id => b67Bone() && id !== 'ottar' ? `${id === 'sgt' ? 'You wear' : `${b67Cap(b67He(id))} wears`} the finger bone from Y'Ghatan, as the soldiers who walked out of it do.` : '';
 
 B67FIN.ending = key => {
   const T = {adjunct:['Out with the fleet', 'b6_c7_finale'], jetty:['Left on the jetty', 'b6_c7_finale'], wickans:['With the Wickans', 'b6_c7_finale']}[key] || ['Out with the fleet', 'b6_c7_finale'];
@@ -871,7 +872,7 @@ B67FIN.gone = (id, key) => {
   if (S.dead && S.dead[id]) { const d = S.dead[id];
     if (d.ch === 3 && !d.from) return {title:'Fallen', txt:B67FIN.join([
       `${NAME(id)} fell at Y'Ghatan, in the burning streets, holding Sinn's way open while the others came out by it. Whoever fell there stayed down.`,
-      `${b67Cap(b67He(id))} is in the long new barrow outside the walls, with the rest of the Fourteenth's dead from the fire, ${b67Buried() ? 'beside the old barrows the squad put back the night before the siege' : 'beside the old barrows the rebels opened'}.`,
+      `${b67Cap(b67He(id))} is in the long new barrow outside the walls, with the rest of the Fourteenth's dead from the fire, ${b67Buried() ? 'beside the old barrows the squad put back' : 'beside the old barrows the rebels opened'}.`,
       `The squad said the name at the barrow, and on the deck at sea, and at the jetty's foot in Malaz City. The Third carried it the rest of the way.`])};
     return {title:'Fallen', txt:B67FIN.join([`${NAME(id)} fell before this book, ${d.where ? `at ${d.where}` : 'on an earlier road'}, and did not come to Y'Ghatan.`, `The Third carried the name all the way to Malaz City, and says it at night with the others.`])}; }
   const done = S.f[B6_DONE[id]], waits = (S.camp || []).includes(id) || done === 2;
@@ -904,12 +905,12 @@ B67FIN.sgt = key => {
 const b67AsH = fn => { if (!(S && S.th && S.th.h) || b6Thread() !== 'r') return fn(); b6Use('h'); try { return fn(); } finally { b6Use('r'); } };
 const b67H = () => (S && S.th && S.th.h) || null;
 const B67_FT = {brisk:'Four coppers', kettle:'The count', tuft:'The Deck', ohl:'The list', sohra:'The herd-mother', greysword:'The Wolves of Winter', ellis:'Still looking', vell:'Sky', brannoc:'The whistle', ressa:'Blue fingers', sgt:'Fourth squad'};
-const B67_FR = {highfist:'With the High Fist', hanarara:'At Hanar Ara', home:'The road home'};
+const B67_FR = {highfist:'With the High Fist', hanarara:'The Hanar Ara road', home:'The road home'};
 /* the generic line per Fourth soldier per road, when Chapter 6 has not written one */
 B67FIN.fourthFallback = (id, road) => {
   const nm = id === 'sgt' ? 'You' : NAME(id), he = b67He(id);
-  const r = road === 'hanarara' ? `${id === 'sgt' ? 'You stayed' : `${nm} stayed`} with the Fourth at Hanar Ara, the City of the Fallen, after the surrender, among the plague-marked, where the Host was not.` :
-    road === 'home' ? `${id === 'sgt' ? 'You went' : `${nm} went`} home with the Fourth, out of Seven Cities and its plague, on the first boats that would take soldiers.` :
+  const r = road === 'hanarara' ? `${id === 'sgt' ? 'You stood' : `${nm} stood`} the picket on the Hanar Ara road with the Fourth after the surrender, short of the outer shrines, until the Host sent for it.` :
+    road === 'home' ? `${id === 'sgt' ? 'You went' : `${nm} went`} home with the Fourth on the time-served list, out of Seven Cities and its plague, on a ship west.` :
     `${id === 'sgt' ? 'You marched' : `${nm} marched`} on with the Fourth in the Host, behind the High Fist the army chose in the rain, to wherever he takes it.`;
   const w = {brisk:'She still stands in front of things.', kettle:'She still counts the munitions every dusk, by name.', tuft:'She still reads the Deck on an upturned shield.', ohl:'His list is longer by a book of plague.',
     sohra:'She sings to the dead of every field the Host crosses.', greysword:'The wolf on her shield is nearer finished.', ellis:'She still counts the horses first.', vell:'He still coils the rope at dusk.',
@@ -917,13 +918,17 @@ B67FIN.fourthFallback = (id, road) => {
   return B67FIN.join([r, w, id === 'sgt' ? 'The Fourth came through the plague year in Seven Cities. That is its part. It is small.' : `${b67Cap(he)} came through the plague year.`]);
 };
 B67FIN.fourthText = (id, road) => { let v = null;
-  try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates; const e = F && F[id]; v = typeof e === 'function' ? e(id, road) : e; } catch(e) { v = null; }
+  try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates;
+    /* Chapter 6 shipped its fates as an object with page(id) -> {title, txt} (docs/bh-ch6-notes.md); read that first, then the per-id shape */
+    if (F && typeof F.page === 'function') { const pg = F.page(id); v = pg && pg.txt; }
+    else { const e = F && F[id]; v = typeof e === 'function' ? e(id, road) : e; } } catch(e) { v = null; }
   return typeof v === 'string' && v.trim() ? v : B67FIN.fourthFallback(id, road); };
+B67FIN.fourthTitle = id => { try { const F = typeof B6CH6 !== 'undefined' && B6CH6 && B6CH6.fates; const pg = F && typeof F.page === 'function' && F.page(id); if (pg && pg.title) return pg.title; } catch(e) { /* fall through */ } return B67_FT[id] || ''; };
 /* the Fourth's road page */
 B67FIN.fourthRoad = () => { const road = b67FRoad(), h = b67H(), f = S.f;
   const P = [
-    road === 'hanarara' ? `The Host went on north-east from Hanar Ara with its High Fist. The Fourth did not. It stayed at the City of the Fallen after the surrender, among the plague-marked, for reasons ${h ? `Sergeant ${esc(h.name)}` : 'its sergeant'} wrote down and nobody else has read.` :
-    road === 'home' ? `The Fourth went home. Out of Seven Cities and its plague, on the first boats that would take soldiers, with the High Fist's leave or without it, and the Host went on without it.` :
+    road === 'hanarara' ? `The Host went on from Hanar Ara with its High Fist. The Fourth did not, for a while. It stayed behind as the picket on the Hanar Ara road, short of the outer shrines, to see Mathok's people clear, and ${h ? `Sergeant ${esc(h.name)}` : 'its sergeant'} wrote down every day of it for a captain who will read none of them.` :
+    road === 'home' ? `The Fourth went home. Its names went on the time-served list, and it went down to the coast and onto a ship west, out of Seven Cities and its plague, and the Host went on without it.` :
     `The Fourth marched on with Onearm's Host, which is the High Fist's Host now: the army chose him in the rain before G'danisban, from the ranks, by shouting, after Onearm died. Where he takes it, the Seventh Company does not know.`,
     `${f.b6_c2_key === 'burn' ? 'On the north coast it burned a plague village on orders.' : f.b6_c2_key === 'pass' ? 'On the north coast it went round a plague village, and left a family its roofs.' : 'On the north coast it marched inland through the empty villages.'} ${f.b6_c4_key === 'vote' ? 'Before G\'danisban it stood for the High Fist from the back of the ranks.' : f.b6_c4_key === 'out' ? 'Before G\'danisban it stayed out of the vote, on picket.' : 'Before G\'danisban it stood in the rain while the army chose.'} ${f.b6_c6_key === 'report' ? 'At Hanar Ara it named the city\'s cult to its captain, and nothing came of it.' : f.b6_c6_key === 'letgo' ? 'At Hanar Ara it let the surrender stand as the High Fist gave it.' : 'At Hanar Ara it watched the rebels lay down their arms.'}`,
     `It never met the Third. It never will. They were in the same plague year, in the same country, a few hundred leagues apart, and that is all.`];
@@ -946,7 +951,7 @@ B67FIN.meet = () => [
 /* the coda: both squads, the fire, the sea, the city */
 B67FIN.coda = key => { const fell = b67Fell3(), h = b67H(), hDead = h ? Object.keys(h.dead || {}).filter(id => h.dead[id] && !h.dead[id].from && TPL[id]) : [];
   return [
-`Y'Ghatan burned with three thousand of the Fourteenth inside it, and seven hundred and ninety-one came out by Sinn's way through the fire. The plague went across Seven Cities, and Dujek Onearm died of it before G'danisban, and the Host chose its own High Fist in the rain. The Fourteenth sailed from the Kokakal shore through an ambush and a sea that was not any sea, and came to Malaz City, and found the city turned on its Wickans, and was told from a jetty that it was the Adjunct's army now.`,
+`Y'Ghatan burned with nearly three thousand of the Fourteenth inside it, and seven hundred and ninety-one came out by Sinn's way through the fire. The plague went across Seven Cities, and Dujek Onearm died of it before G'danisban, and the Host chose its own High Fist in the rain. The Fourteenth sailed from the Kokakal shore through an ambush and a sea that was not any sea, and came to Malaz City, and found the city turned on its Wickans, and was told from a jetty that it was the Adjunct's army now.`,
 `The Third was there. It ${b67WentIn() ? 'went into the burning streets to hold the way open' : 'held the gate and pulled the burned out of the smoke'}, and held a jetty along from the marines' in Malaz City. ${fell.length ? `${b67And(fell.map(NAME))} did not come out of the fire.` : 'Every one of the Third who went to Y\'Ghatan came out of it.'} The Fourth was in the rain before G'danisban, and under the falling sky. ${hDead.length ? `${b67And(hDead.map(NAME))} did not come through the plague year.` : 'Every one of the Fourth came through the plague year.'} That is each squad's part. It is small. It is the only part anybody will tell right.`,
 `Out on the sea, west of Quon Tali, there is a fleet with an army aboard that has been given a name by its own soldiers, from the bones they took up. Behind it, in Seven Cities, the plague is burning itself out. ${b67Here().length ? 'The Third counts itself, and gets the number, and checks it.' : 'The sergeant counts, and gets one, and checks it.'}`]; };
 
@@ -984,7 +989,7 @@ B6CH7.finale = {
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const id = pg.id, sgt = id === 'sgt', gone = pg.k === 'b67gone4';
       const info = b67AsH(() => { const nm = sgt ? S.name : NAME(id), role = sgt ? 'Sergeant · Fourth Squad, Seventh Company, Onearm\'s Host' : (TPL[id] ? TPL[id].role : ''), loyv = sgt ? '' : loyLabel((S.loy || {})[id] || 0);
-        let title = B67_FT[id] || role, txt = '', where = '';
+        let title = B67FIN.fourthTitle(id) || role, txt = '', where = '';
         if (gone && pg.dead) { const d = S.dead[id] || {}; title = 'Fallen'; where = d.from ? (d.where || '') : [d.where, d.ch ? `Chapter ${d.ch}` : ''].filter(Boolean).join(' · ');
           txt = B67FIN.join([d.from ? `${nm} fell before this book${d.where ? `, at ${d.where}` : ''}, and did not come to the north coast.` : `${nm} fell in the plague year${d.where ? `, at ${d.where}` : ''}. Whoever fell there stayed down.`, 'The Fourth carried the name the rest of the way.']); }
         else if (gone && pg.wait) { title = id === 'brannoc' ? 'With the Falari' : id === 'ressa' ? 'With the surgeons' : 'Waiting';

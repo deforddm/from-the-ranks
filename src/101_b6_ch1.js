@@ -111,7 +111,7 @@ const B6CH1 = {
       walk:'.,', triggers:{F:'b6_c1_fire', c:'b6_c1_qm', k:'b6_c1_oldsoldier', '>':'b6_c1_east'}, start:{x:7, y:6},
       quest:()=> !S.f.b6_c1_orders1 ? 'The captain, by the tents.' : 'The fire, and then sleep. The column moves at first light.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:11, y:3, node:()=>'b6_c1_captain', fresh:()=>!S.f.b6_c1_orders1},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:11, y:3, node:()=>'b6_c1_captain', fresh:()=>!S.f.b6_c1_orders1},
         {id:'oldsoldier', name:'An old soldier of the 9th', kind:'b2soldier', x:5, y:10, node:()=>'b6_c1_oldsoldier', fresh:()=>!S.f.b6_c1_oldTried} ] },
 
     /* 16 x 12 (odhan, day). , scrub  . the track  # rock  o the well  b a thorn bush  < west, back toward the column  > east, the road ahead */
@@ -151,7 +151,7 @@ const B6CH1 = {
       walk:'.,', triggers:{f:'b6_c1_fire', '<':'b6_c1_edge', '>':'b6_c1_to_barrows'}, start:{x:7, y:5},
       quest:()=> !S.f.b6_c1_orders3 ? 'The captain, in the 9th\'s lines.' : !S.f.b6_c1_edgeDone ? 'The camp\'s west edge, where the townsfolk who stayed are camped.' : 'The barrow road, east, under the walls. The captain\'s picket.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:8, y:5, node:()=>'b6_c1_captain_camp', fresh:()=>!S.f.b6_c1_orders3},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:8, y:5, node:()=>'b6_c1_captain_camp', fresh:()=>!S.f.b6_c1_orders3},
         {id:'diggers', name:'The 9th\'s diggers', kind:'b2soldier', x:4, y:8, node:()=>'b6_c1_dig', fresh:()=>!S.f.b6_c1_digTried},
         {id:'column', name:'A column coming in', kind:'b2soldier', x:13, y:2, node:()=>'b6_c1_column', fresh:()=>!S.f.b6_c1_sortSeen},
         {id:'surgeon', name:'The 9th\'s surgeon', kind:'b2soldier', x:2, y:8, node:()=>'b6_c1_surgeon', fresh:()=>b6FeverList().length > 0},
@@ -320,8 +320,8 @@ ${can && h ? `${NAME(h)} looks, and puts a hand flat to a forehead, and frowns. 
             {t:'Not now.', go:'b6_c1_fire'}]}; },
 
     /* ---- the captain, the first night ---- */
-    b6_c1_captain:()=>({sp:'The captain', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_orders1 = 1; }, again:()=>`The captain, by the tents, with the orders in his hand. "Sergeant."`, txt:
-`The 9th's company captain is a thin man who coughs into his fist before he says anything, as if clearing the way for it. He keeps the numbers, and he is better at the numbers than at the rest of it, and he knows that, which is more than most captains know.
+    b6_c1_captain:()=>({sp:'Captain Hollet', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_orders1 = 1; }, again:()=>`The captain, by the tents, with the orders in his hand. "Sergeant."`, txt:
+`Captain Hollet of the 9th's Second Company is still a thin man who coughs into his fist before he says anything, as if clearing the way for it. He keeps the numbers, and he is better at the numbers than at the rest of it, and he knows that, which is more than most captains know.
 
 "Sergeant." The cough. "The column moves at first light. The water wagons are a day behind and the Fist wants the 9th's skins full before the next halt." He shows you a scrap of hide with a scout's marks on it. "There's a well here, half a day east of the track. Old. The scouts say it's sweet. Take the Third ahead and hold it till the wagons come up."
 
@@ -329,7 +329,7 @@ He folds the hide. "The bandits out here know every well on the Odhan. Mind they
       ch:[{t:'"What\'s ahead of us, Captain?"', go:'b6_c1_captain_news'},
           {t:'"The well. Yes, Captain."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c1_captain_news:()=>({sp:'The captain', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_capNews = 1; }, txt:
+    b6_c1_captain_news:()=>({sp:'Captain Hollet', scene:'b6_odhan_night', fx:()=>{ S.f.b6_c1_capNews = 1; }, txt:
 `"Leoman," the captain says, "and whatever he got out of Raraku with him. The scouts think three or four thousand." He coughs. "They think he's making for Y'Ghatan. It's the only city out here with walls worth the name."
 
 He looks east along the track. "The Fist says we'll catch him before he gets there. The Fist also says the Adjunct will march us into the ground doing it." He considers which of the two to believe, and does not choose. "Fill your skins at the well, Sergeant. Whatever happens, it'll happen thirsty."${b61If('darrut', `\n\nDarrut, behind you, says under his breath, "The Fist said the same at Aren." He does not say what the Fist said at Aren.`)}`,
@@ -545,7 +545,7 @@ At the head of it walks a woman captain, square and weathered, who walks like so
 
 Further back in the column a sergeant from Kartool is telling the world what she thinks of it, at length, and a very large corporal behind her is carrying her pack as well as his own.${b61If('hessa', `\n\nHessa watches the Kartool sergeant go by. "City watch," she says. "I know the walk." She does not say if that is good.`)}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
-    b6_c1_captain_camp:()=>({sp:'The captain', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
+    b6_c1_captain_camp:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
 `The captain is standing at the end of the 9th's trench with a slate in his hand, counting spades. He coughs, and puts the slate under his arm.
 
 "Sergeant. The Third has the picket on the barrow road tonight, east, under the walls. The Fist wants to know if anything comes out of the city that way after dark." He looks up at the walls. "Leoman has a few thousand in there, and the city empty round them. He'll want to know what we're doing as much as we want to know what he is."
@@ -554,7 +554,7 @@ He lowers his voice. "And the townsfolk at the camp's west edge. A few of them d
       ch:[{t:'"What\'s on the barrow road, Captain?"', go:'b6_c1_captain_barrows'},
           {t:'"Yes, Captain."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c1_captain_barrows:()=>({sp:'The captain', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_barrowsTold = 1; }, txt:
+    b6_c1_captain_barrows:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_barrowsTold = 1; }, txt:
 `"The barrows." The cough. "The Empire's dead, from the first siege. A long time ago." He looks at the slate as if the answer were on it. "Before we came up, the rebels went out and dug into them. Looking for iron, or for something to say to us. The Fist rode past this afternoon and looked."
 
 He does not say what the Fist said. "The orders are to watch the road. Not to do anything else on it." He looks at you. "Those are the orders, Sergeant."${b61If('haddat', `\n\nHaddat, beside you, has gone very still.`)}`,

@@ -92,7 +92,7 @@ const B6CH4 = {
 `Onearm's Host has come inland from the coast through the plague country and stopped in front of G'danisban, east of Raraku, in a rain that started three days ago and has not been told to stop.`,
 ()=>{ const v = b64Here().map(id => TPL[id].name);
   return `${v.length ? `${b64And(v)} ${v.length > 1 ? 'are' : 'is'} with you in the Seventh Company's lines, ankle-deep, under canvas that leaks at the seams.` : 'The Fourth, this week, is you, in the Seventh Company\'s lines, ankle-deep, under canvas that leaks at the seams.'} ${b64C2() === 'pass' ? 'The village the squad went round on the road inland has come with it, the way a cough comes with a cold.' : b64C2() === 'burn' ? 'The village the squad burned on the road inland is three days behind. The smell of it is not.' : 'The villages on the road inland are three days behind. Their quiet is not.'}`; },
-`The High Fist is in the field hospital, the camp says, and has been for days. The camp says a great many things in the rain. It is the only thing it has to do.`],
+`The High Fist is in the field hospital, the camp says, and has been for days. There is not much else to do in the rain but say things.`],
     go:'Into the lines', node:'b6_c4_start'},
 
   areas:[
