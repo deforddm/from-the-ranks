@@ -5380,7 +5380,7 @@ const coverSrcs = {};
 function coverSrc(key){ if (!ARTON() || !ART[key]) return '';
   if (!coverSrcs[key]) { const [w, h] = ART_SIZE[key] || [1600, 900]; coverSrcs[key] = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ART[key].replace('<svg ', `<svg width="${w}" height="${h}" `)); }
   return coverSrcs[key]; }
-const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 const onShelf = (e, b) => (e.book || 'gotm') === b;
 function shelfHTML(list){
   return `<div class="shelf"><div class="rh">${list.length > 1 ? 'Choose a book: its sergeants, or a new one' : list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
