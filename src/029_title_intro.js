@@ -50,16 +50,23 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
 /* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
 const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : b === 'hoc' && typeof b4Finished === 'function' ? b4Finished() : [];
-const impShow = b => b === 'bh' || impList(b).length > 0; // v9.0: Book Six always asks for its second sergeant's name (100)
+const impShow = b => b === 'bh' || b === 'rg' || impList(b).length > 0; // v9.0: Book Six always asks for its second sergeant's name (100)
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
   if (b === 'bh' && typeof b6ImpList === 'function') { const o = t => b6ImpList(t).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
     return `<label for="impSel">Bring Book Four's squad (the Third, with the Fourteenth)</label><select id="impSel"><option value="">No: a fresh start</option>${o('r')}</select>
       <small class="fine" id="impDesc">Only a finished Book Four on the line road: that squad is still with the Adjunct.</small>`; }
+  if (b === 'rg' && typeof b7ImpList === 'function') { const o = b7ImpList('t').map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join(''); // v10.0: Book Seven (120)
+    return `<label for="impSel">Bring Book Six's squad (the Third)</label><select id="impSel"><option value="">No: a fresh start</option>${o}</select>
+      <small class="fine" id="impDesc">Only a finished Book Six on the adjunct road: that Third sailed on with the fleet.</small>`; }
   if (b === 'hoc') return `<label for="impSel">Bring a Book Two sergeant and the squad</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book Two on the Aren Guard or the Wickan road: that squad was in Aren when the Adjunct came. The desert road leads elsewhere.</small>`;
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
 /* v9.0: Book Six's second sergeant, under the first's name (100): the Fourth's name, and a Book Three squad to bring */
-function impInner2(b){ if (b !== 'bh' || typeof b6ImpList !== 'function') return '';
+function impInner2(b){ if (b === 'rg' && typeof b7ImpList === 'function') { const o = b7ImpList('l').map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join(''); // v10.0: Book Seven's Letherii (120)
+    return `<label for="nm2">The Letherii sergeant (the Sixth Company)</label><input type="text" id="nm2" maxlength="18" value="Brann" placeholder="Name the Letherii sergeant" autocomplete="off" autocapitalize="words" spellcheck="false">
+    <label for="impSel2">Bring Book Five's squad (the Sixth Company)</label><select id="impSel2"><option value="">No: a fresh start</option>${o}</select>
+    <small class="fine">Only a finished Book Five on the emperor road: that squad stayed in the army under the Edur.</small>`; }
+  if (b !== 'bh' || typeof b6ImpList !== 'function') return '';
   const o = b6ImpList('h').map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
   return `<label for="nm2">The Fourth's sergeant (with Onearm's Host)</label><input type="text" id="nm2" maxlength="18" value="Brann" placeholder="Name the Fourth's sergeant" autocomplete="off" autocapitalize="words" spellcheck="false">
     <label for="impSel2">Bring Book Three's squad (the Fourth)</label><select id="impSel2"><option value="">No: a fresh start</option>${o}</select>
@@ -95,7 +102,7 @@ function showTitle(fresh, want){
     <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
-    <div class="field" id="impField2" ${tb === 'bh' ? '' : 'hidden'}>${impInner2(tb)}</div>
+    <div class="field" id="impField2" ${tb === 'bh' || tb === 'rg' ? '' : 'hidden'}>${impInner2(tb)}</div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
     ${iosNote}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
@@ -129,11 +136,12 @@ function showTitle(fresh, want){
       if (book === 'hoc' && typeof b4ChCount === 'function' && !b4ChCount()) { msg('Book Four is still being written. Its chapters are on the way.'); return; }
       if (book === 'mt' && typeof b5ChCount === 'function' && !b5ChCount()) { msg('Book Five is still being written. Its chapters are on the way.'); return; }
       if (book === 'bh' && typeof b6ChCount === 'function' && !b6ChCount()) { msg('Book Six is still being written. Its chapters are on the way.'); return; }
-      if (book === 'bh') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' ');
-        if (!n2) { msg('Give the Fourth\'s sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
+      if (book === 'rg' && typeof b7ChCount === 'function' && !b7ChCount()) { msg('Book Seven is still being written. Its chapters are on the way.'); return; }
+      if (book === 'bh' || book === 'rg') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' ');
+        if (!n2) { msg(book === 'rg' ? 'Give the Letherii sergeant a name too.' : 'Give the Fourth\'s sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
         if (sameName(n2, n)) { msg('Two sergeants, two names.'); $('#nm2').focus(); return; }
         const t6 = taken(n); if (t6 && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t6.name} over`; msg(tapWord(`Sergeant ${t6.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
-        S = newStateBH(n, n2, imp, $('#impSel2') ? $('#impSel2').value : '', t6 ? t6.id : undefined); S.diff = diff; save(); return startChapter(1); } // v9.0: two squads (100)
+        S = (book === 'rg' ? newStateRG : newStateBH)(n, n2, imp, $('#impSel2') ? $('#impSel2').value : '', t6 ? t6.id : undefined); S.diff = diff; save(); return startChapter(1); } // v9.0: two squads (100); v10.0 Book Seven (120)
       const t = (book === 'moi' || book === 'hoc') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
       if (book === 'dg') { S = newStateDG(n, imp); S.diff = diff; save(); return startChapter(1); }
@@ -144,8 +152,8 @@ function showTitle(fresh, want){
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
     document.querySelectorAll('.bseg [data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('.bseg [data-book]').forEach(y => y.classList.toggle('on', y === x));
-      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); const f2 = $('#impField2'); if (f2) { f2.hidden = book !== 'bh'; f2.innerHTML = impInner2(book); } bindImp();
-      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; disarm(); });
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); const f2 = $('#impField2'); if (f2) { f2.hidden = book !== 'bh' && book !== 'rg'; f2.innerHTML = impInner2(book); } bindImp();
+      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)'; disarm(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
@@ -154,10 +162,10 @@ function showTitle(fresh, want){
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
-        else if (book === 'bh') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        else if (book === 'bh' || book === 'rg') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; };
       const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = !!o; n2.classList.toggle('locked', !!o); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
-    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)';
+    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)';
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
   } else {
