@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['9.1.0', ['Book Six: five games at the fires. Bones with the new draft out of Aren (Chapter 1), Falari Tide against a Falari corporal (Chapter 2), Who\'s Next, the Seventh\'s duty board (Chapter 4), the Jetty Race on the Kokakal shore (Chapter 5) and the Grey Helms\' signs at sea (Chapter 7).', 'Each is offered at that chapter\'s fire, can be passed with Not now, and pays once a book: silver at the bones, a squadmate\'s trust, a salve, a sharper, or a fever broken.', 'Nothing else changes, and saves carry on as they were.']],
   ['9.0.0', ['Book Six, Bones in the Walls, beside The Bonehunters. Both squads come back and take turns: Book Two\'s squad with the Fourteenth, across the Odhans to Y\'Ghatan and the sea; the Fourth with Onearm\'s Host, through the plague on the north coast to G\'danisban. Seven chapters and a finale.',
     'Start fresh at level 12, or bring a finished Book Four save that held the line and a finished Book Three save that stayed with the Host. Levels now run to 18.',
     'New this book: Fever, caught on the plague roads and treated by a healer; four recruits (Mehet, Brannoc, Ressa, Ottar); a reading and a vision in every chapter; one mortal fight inside Y\'Ghatan.',
