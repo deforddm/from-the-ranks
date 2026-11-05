@@ -43,6 +43,8 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     hoc:{core:['haddat', 'sathi', 'tangle', 'marrow', 'tallow', 'hessa', 'tebbet', 'darrut'], rec:[{id:'redblade', from:1, to:7, imp:1}, {id:'warlock', from:1, to:7, imp:1}, {id:'orvas', from:3, to:7}, {id:'mirrel', from:1, to:7}, {id:'yorin', from:1, to:7}, {id:'rasp', from:1, to:7}]},
     // Book Five: the four, and Brune (Chapter 2 on, at Trate), Ruuk (Chapter 3 on, at Kraig's Landing) and Pessa (Chapter 5 on) as recruits
     mt:{core:['tobet', 'thegg', 'perrit', 'ammet'], rec:[{id:'brune', from:2, to:7}, {id:'ruuk', from:3, to:7}, {id:'pessa', from:5, to:7}]},
+    // Book Six: two squads by chapter (B6_CH): Mehet with the Third (Ch 1, 3, 5, 7), Ottar (Ch 7); Brannoc with the Fourth (Ch 2, 4, 6), Ressa (Ch 4, 6)
+    bh:{core:['haddat', 'tangle', 'marrow', 'mirrel', 'brisk', 'kettle', 'tuft', 'ohl'], rec:[{id:'mehet', from:1, to:7, chs:[1, 3, 5, 7]}, {id:'ottar', from:7, to:7}, {id:'brannoc', from:2, to:6, chs:[2, 4, 6]}, {id:'ressa', from:4, to:6, chs:[4, 6]}]},
   };
   const NUM = {two:2, three:3, four:4, five:5, six:6, seven:7};
   function mk(book, ch, v, withR, without) {
@@ -50,6 +52,7 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     else if (book === 'dg') { S = newStateDG('Hask'); }
     else if (book === 'hoc') { S = newStateHOC('Hask'); S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'marrow']; }
     else if (book === 'mt') { S = newStateMT('Hask'); }
+    else if (book === 'bh') { S = newStateBH('Hask', 'Brann'); if (B6_CH[ch || 1] === 'h') b6Use('h'); }
     else { S = newStateMOI('Hask'); }
     S.chapter = ch || 1; S.scene = 'talk'; S.lvl = Math.min(8, 1 + S.chapter); S.xp = LEVELS[S.lvl - 1] || 0;
     if (book === 'dg') { S.chain = {water:6, column:20}; } if (book === 'moi') S.ally = {trust:6, dread:3};
@@ -74,7 +77,7 @@ const out = await page.evaluate(({ fileOf, flags, fv }) => {
     if (typeof DLG[id] !== 'function') continue; const loc = chOfFile(f); if (!loc) continue;
     const B = BOOK[loc.book];
     for (const r of B.rec) {
-      if (!TPL[r.id]) continue; if (loc.ch && (loc.ch < r.from || loc.ch > r.to)) continue;
+      if (!TPL[r.id]) continue; if (loc.ch && (loc.ch < r.from || loc.ch > r.to)) continue; if (r.chs && loc.ch && !r.chs.includes(loc.ch)) continue;
       const rn = TPL[r.id].name, rre = new RegExp('\\b' + rn + '\\b');
       const squadNames = names([...B.core, ...B.rec.map(x => x.id)]).filter(([x]) => x !== r.id);
       for (let v = 0; v < 6; v++) {
