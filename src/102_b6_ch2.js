@@ -82,7 +82,7 @@ const B6CH2 = {
 `Onearm's Host has crossed the sea to Seven Cities to finish a rebellion the Empire says is already finished. The ships put the army ashore on the north coast, near Ehrlitan, in rain, and the army went up the slope from the beach and dug in, and has been digging in ever since.`,
 ()=>{ const v = b62Here().map(id => TPL[id].name);
   return `You are Sergeant {sgt}, Fourth Squad, Seventh Company. ${v.length ? `${b62And(v)} ${v.length > 1 ? 'are' : 'is'} with you, wet to the knees and not complaining about it yet.` : 'The Fourth, this season, is you.'} The Seventh is short of hands since Coral, like every company in the Host, and nobody has sent any.`; },
-`Somewhere south of here the rebellion's last army is running from the Adjunct's. Somewhere inland, the camp says, a fever is walking from village to village. The camp says a great many things. This one it says quietly.`],
+`Somewhere south of here the rebellion's last army is running from the Adjunct's. Somewhere inland, the camp says, a fever is walking from village to village. Most of what the camp says it says loudly. This it says quietly.`],
     go:'Up to the lines', node:'b6_c2_start'},
 
   areas:[

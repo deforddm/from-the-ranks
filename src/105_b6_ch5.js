@@ -121,7 +121,7 @@ const B6CH5 = {
       walk:'.,', triggers:{F:'b6_c5_start', W:'b6_c5_carts', c:'b6_c5_shrine', L:'b6_c5_lookout', '<':'b6_c5_waystation', '>':'b6_c5_road_on', v:'b6_c5_villagelane'}, start:{x:8, y:4},
       quest:()=> !S.f.b6_c5_capSaid ? 'The captain, by the tents.' : !b65RoadDone() ? 'Back up the road, west, to the way-station.' : 'Down to the shore, east.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
         {id:'oldsoldier', name:'The old soldier of the 9th', kind:'b2soldier', x:3, y:7, node:()=>'b6_c5_rumour', fresh:()=>!S.f.b6_c5_rumour},
         {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial} ] },
 
@@ -162,7 +162,7 @@ const B6CH5 = {
       walk:'.,', triggers:{F:'b6_c5_fire', B:'b6_c5_boatline', S:'b6_c5_surgeons'}, start:{x:7, y:9},
       quest:()=> !S.f.b6_c5_capShore ? 'The captain, on the beach.' : !S.f.b6_c5_boatsDone ? 'The boats, tonight.' : !b65Key() ? 'The fire. There is talk along the beach.' : !S.f.b6_c5_survivors ? 'Morning.' : 'The boats, and the transport.',
       npcs:[
-        {id:'captain', name:'The captain', kind:'b4_c1_hollet', x:6, y:6, node:()=>S.f.b6_c5_capShore ? (S.f.b6_c5_boatsDone && !b65Key() ? 'b6_c5_key' : 'b6_c5_captain_shore_again') : 'b6_c5_captain_shore', fresh:()=>!S.f.b6_c5_capShore || (!!S.f.b6_c5_boatsDone && !b65Key())},
+        {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:6, node:()=>S.f.b6_c5_capShore ? (S.f.b6_c5_boatsDone && !b65Key() ? 'b6_c5_key' : 'b6_c5_captain_shore_again') : 'b6_c5_captain_shore', fresh:()=>!S.f.b6_c5_capShore || (!!S.f.b6_c5_boatsDone && !b65Key())},
         {id:'wickans', name:'Wickan riders at their horse lines', kind:'wickan', x:11, y:7, node:()=>S.f.b6_c5_wickans ? 'b6_c5_wickans_again' : 'b6_c5_wickans', fresh:()=>!S.f.b6_c5_wickans},
         {id:'nokmate', name:'The loading master', kind:'b2soldier', x:8, y:4, node:()=>'b6_c5_nokmate', fresh:()=>!S.f.b6_c5_nokmate},
         {id:'heavy', name:'A heavy of the 10th', kind:'b2soldier', x:10, y:5, node:()=>'b6_c5_bone', show:()=>!!S.f.b6_c5_survivors && b65Key() !== 'sail', fresh:()=>!!S.f.b6_c5_survivors && !S.f.b6_c5_boneSaid} ] } ],
@@ -283,11 +283,11 @@ ${b65Say({haddat:`Haddat stands at the bluff's edge with the blue shield grounde
 
 Admiral Nok's fleet. Come to take the Fourteenth off Seven Cities.
 
-Where to, the army has not been told. The camp says Quon Tali, and home, and the camp says a great many things. The ships ride at anchor and keep their counsel. A bell rings on one of them, very small and very clear across the water, and then on another, and another, down the line, as the watch changes.${b65Say({tebbet:`\n\nTebbet has counted. "Sixty-one I can see," he says. "Dal Hon has no sea. I don't like it already."`, darrut:`\n\nDarrut looks at the ships with his helm under his arm. "Aren had a harbour," he says. "Ships went out of it. Mostly they came back."`, _:''})}${b65R({orvas:`\n\nOrvas has come to the edge with you, and is not looking at the ships. He is looking north along the coast, where the Khundryl horse lines are. "The Burned Tears will not get on a boat," he says. "We have never got on a boat." He thinks about it. "I may be the first."`, warlock:`\n\n"*Ships,*" the grandmother says, out of Keth's mouth, with great disgust. "*Wickans on ships.*" Keth, in his own voice: "She was sick on a river once."`, redblade:`\n\nRamin looks at the ships for a while. Then: "My father said the Empire came over the sea in ships like those. He said they would leave the same way." He puts his helm on. "He did not say with me on them."`})}`,
+Where to, the army has not been told. The camp says Quon Tali, and home, and the camp has been wrong before. The ships ride at anchor and keep their counsel. A bell rings on one of them, very small and very clear across the water, and then on another, and another, down the line, as the watch changes.${b65Say({tebbet:`\n\nTebbet has counted. "Sixty-one I can see," he says. "Dal Hon has no sea. I don't like it already."`, darrut:`\n\nDarrut looks at the ships with his helm under his arm. "Aren had a harbour," he says. "Ships went out of it. Mostly they came back."`, _:''})}${b65R({orvas:`\n\nOrvas has come to the edge with you, and is not looking at the ships. He is looking north along the coast, where the Khundryl horse lines are. "The Burned Tears will not get on a boat," he says. "We have never got on a boat." He thinks about it. "I may be the first."`, warlock:`\n\n"*Ships,*" the grandmother says, out of Keth's mouth, with great disgust. "*Wickans on ships.*" Keth, in his own voice: "She was sick on a river once."`, redblade:`\n\nRamin looks at the ships for a while. Then: "My father said the Empire came over the sea in ships like those. He said they would leave the same way." He puts his helm on. "He did not say with me on them."`})}`,
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
 
     /* ---- the captain: the deserters at the way-station ---- */
-    b6_c5_captain:()=>({sp:'The captain · the 9th', scene:'b6_c5_road', txt:
+    b6_c5_captain:()=>({sp:'Captain Hollet · Second Company', scene:'b6_c5_road', txt:
 `The captain is sitting on an upturned crate by the company's tents with a wax tablet on his knee and his helm off, which he never does in front of the company. His eyes are red. The whole 9th's eyes are red. It is the smoke, and it has been the smoke for days.
 
 "Sergeant." He finds his place on the tablet. "Six of the 10th went off the column two nights back. And a sergeant. With a mule, and the mule had the 9th's spare salves on it, which is why it's my business and not the 10th's." He rubs his eyes. "There's an old way-station a few miles back up the road, west. A picket saw smoke there this morning."
@@ -296,7 +296,7 @@ He looks at the tablet, and not at you. "They were in the city, some of them. In
       ch:[{t:'"We\'ll fetch them, sir."', fx:()=>{ S.f.b6_c5_capSaid = 1; }, go:'b6_c5_captain_2'},
           {t:'"And when we bring them in, sir?"', req:()=>!S.f.b6_c5_capWhy, fx:()=>{ S.f.b6_c5_capWhy = 1; }, go:'b6_c5_captain_why'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_captain_why:()=>({sp:'The captain', scene:'b6_c5_road', txt:
+    b6_c5_captain_why:()=>({sp:'Captain Hollet', scene:'b6_c5_road', txt:
 `The captain puts the stylus down.
 
 "The army will want them," he says. "On the shore, in front of the legions, so everybody sees what it costs. That's how it's done. I didn't write it." He looks west up the road, toward the city you cannot see from here and can still smell. "Three thousand went into that city, Sergeant. I watched them go in. I don't know what I'd have done, if I'd been one of the ones who came out."
@@ -304,10 +304,10 @@ He looks at the tablet, and not at you. "They were in the city, some of them. In
 He picks the stylus up again. "Bring them in. That's the order. I've given it."`,
       ch:[{t:'"Sir."', fx:()=>{ S.f.b6_c5_capSaid = 1; }, go:'b6_c5_captain_2'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_captain_2:()=>({sp:'The captain', scene:'b6_c5_road', txt:
+    b6_c5_captain_2:()=>({sp:'Captain Hollet', scene:'b6_c5_road', txt:
 `"Good." He writes the Third against something. "West, back up the road. A few miles. You'll see the walls." He looks up. "Go careful. They have crossbows, and they were soldiers last week."${b65Say({haddat:`\n\nHaddat, behind you, says quietly: "They are still soldiers, Captain. That is what makes it hard."\n\nThe captain looks at her for a while, and nods, and does not write that down.`, tebbet:`\n\nTebbet, behind you: "Crossbows. Ours." He checks his string.`, _:''})}${b65If('mehet', `\n\nMehet, at your shoulder: "The way-station on the Sotka road has a well that has been dry since my grandfather's time. They will be short of water." He shrugs. "Men short of water are not patient."`)}`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b6_c5_captain_again:()=>({sp:'The captain', scene:'b6_c5_road', again:()=> b65RoadDone() ? 'The captain, writing. "Down to the shore, Sergeant."' : 'The captain, writing. "West, Sergeant. The way-station."', txt: b65RoadDone() ?
+    b6_c5_captain_again:()=>({sp:'Captain Hollet', scene:'b6_c5_road', again:()=> b65RoadDone() ? 'The captain, writing. "Down to the shore, Sergeant."' : 'The captain, writing. "West, Sergeant. The way-station."', txt: b65RoadDone() ?
 `The captain has the salves counted already, and written down. "Down to the shore with the rest of us, Sergeant," he says. "The fleet won't wait for ever. It says it will. It won't."` :
 `The captain is still on his crate, still writing. "West, Sergeant," he says, without looking up. "Back up the road to the way-station. The salves, and the men."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
@@ -505,7 +505,7 @@ The Kokakal shore is a long camp. The Fourteenth is strung out along it as far a
 It takes days to put an army on ships. The 9th is told two. It does not believe it.${b65Say({tallow:`\n\nTallow stands at the waterline and lets the surf come over his boots and go out again. "Cold," he says, astonished. "It's cold. They never said it'd be cold."`, darrut:`\n\nDarrut looks at the boats going out through the surf. "Every one of those comes back empty," he says. "I've been watching. Every one." He seems comforted.`, _:''})}${b65If('mehet', `\n\nMehet walks down to where the sand goes wet and stops, exactly, at the line, with the toes of his boots on dry sand. The next wave comes up and over them anyway. He does not step back.`)}`,
       ch:[{t:'Find the captain.', go:()=>startExplore()},
           {t:'The Third\'s fire, in the dunes.', go:'b6_c5_fire'}]}),
-    b6_c5_captain_shore:()=>({sp:'The captain', scene:'b6_kokakal', fx:()=>{ S.f.b6_c5_capShore = 1; }, txt:
+    b6_c5_captain_shore:()=>({sp:'Captain Hollet', scene:'b6_kokakal', fx:()=>{ S.f.b6_c5_capShore = 1; }, txt:
 `The captain is on the beach with his tablet, watching the lighters, and counting them, and writing the count down, and counting again.
 
 "Two days," he says. "The 9th goes aboard in two days, by companies. Ours is the third transport from the point, the one with the patched foresail." He points with the stylus. "Until then the stores sit on the sand by the boats, and the coast villages know it. There were men at the stores last night. Tonight the Third has the boats." He looks at you. "Not a sack goes off this beach that the Fourteenth doesn't hand over."
@@ -513,12 +513,12 @@ It takes days to put an army on ships. The 9th is told two. It does not believe 
 Up the beach, a knot of officers on horseback is riding slowly along the waterline. One of them is the Fist. He is looking out at the empty sea past the transports, as if he were counting something out there that is not there yet.${b65Say({haddat:`\n\nHaddat follows the captain's eye to the riders, and away from them. "The Fist does not like the sea," she says. "Nor do I. That is the only thing we have in common."`, _:''})}`,
       ch:[{t:'"The Third has the boats, sir."', go:()=>startExplore()},
           {t:'"Two days, sir?"', go:'b6_c5_captain_shore_2'}]}),
-    b6_c5_captain_shore_2:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_captain_shore_2:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"Two days." He writes something. "The Admiral's people say two days. The Fist says two days is a sailor's two days. The Adjunct keeps her own counsel." He shuts the tablet on the stylus. "So, two days."
 
 He looks at the transports. "I've never been on a ship further than Malaz to Kan, Sergeant. I was sick the whole way." He seems to think that is useful information. "Tonight, the boats."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b6_c5_captain_shore_again:()=>({sp:'The captain', scene:'b6_kokakal', again:()=> !S.f.b6_c5_boatsDone ? 'The captain, counting lighters. "Tonight, Sergeant. The boats."' : 'The captain, counting lighters.', txt: !S.f.b6_c5_boatsDone ?
+    b6_c5_captain_shore_again:()=>({sp:'Captain Hollet', scene:'b6_kokakal', again:()=> !S.f.b6_c5_boatsDone ? 'The captain, counting lighters. "Tonight, Sergeant. The boats."' : 'The captain, counting lighters.', txt: !S.f.b6_c5_boatsDone ?
 `The captain is still counting lighters. "Tonight, Sergeant," he says. "The boats. I'll sleep better knowing it's the Third."` : S.f.b6_c5_survivors ?
 `The captain is not counting anything. He is standing on the beach looking at the ones who walked in, and his tablet is shut. "I wrote them off," he says, to nobody. "I wrote them all off, by name."` :
 `The captain has his tablet open and the stylus in his hand and is not writing. "The boats held," he says. "Good." He looks at the transports.`,
@@ -701,7 +701,7 @@ The squad drags the boat back up the sand and puts the sacks back under the canv
 He gets up. "I don't know what Sepik is," he says. "Some island. I'd as soon not find out by drowning near it." He goes on along the beach to the next fire.${b65Say({tallow:`\n\nTallow has gone white. "A boy," he says. "My grandmother would have listened to a boy like that. She always listened to the strange ones."`, darrut:`\n\n"A boy," Darrut says. "We're putting off an army's sailing for a boy." He thinks about it. "The Fist won't."`, _:''})}`,
       ch:[{t:'Go and find the captain.', onward:true, go:'b6_c5_key'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_key:()=>({sp:'The captain', scene:'b6_kokakal', again:()=>'The captain, with his tablet, and a choice.', txt: b65Key() ?
+    b6_c5_key:()=>({sp:'Captain Hollet', scene:'b6_kokakal', again:()=>'The captain, with his tablet, and a choice.', txt: b65Key() ?
 `The captain has the Third written down already. ${b65Key() === 'wait' ? '"The last boat, Sergeant. Tomorrow."' : '"Aboard at first light, Sergeant."'}` :
 `The captain is awake, of course. He is sitting on a chest by the company's stores with his tablet on his knee and a lamp beside him.
 
@@ -711,7 +711,7 @@ He does not say *on a boy's word*. He does not have to. "I'll write down whichev
       ch:[{t:'"The Third will stay with the last boat, sir."', req:()=>!b65Key(), fx:()=>{ S.f.b6_c5_key = 'wait'; b65L('tallow', 1); b65L('mehet', 1); b65L('marrow', 1); b65L('tebbet', -1); }, go:'b6_c5_wait'},
           {t:'"The Third goes aboard with the company, sir. As ordered."', req:()=>!b65Key(), fx:()=>{ S.f.b6_c5_key = 'sail'; b65L('tebbet', 1); b65L('darrut', 1); b65L('tallow', -1); }, go:'b6_c5_sail'},
           {t:'Not yet.', go:()=>startExplore()}]}),
-    b6_c5_wait:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_wait:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"The last boat." He writes it. "The Third, with the stores and the company's last boat, till the end." He looks up. "I'll tell the Fist it's how the company loads. Last off is always a squad." He shuts the tablet. "It is, too."
 
 At first light the company goes aboard without you, filing down the sand to the lighters with its kit on its back and its eyes on the water, and the transport with the patched foresail takes them up its side one by one. The Third stands by the last boat with the stores and watches them go.
@@ -719,7 +719,7 @@ At first light the company goes aboard without you, filing down the sand to the 
 It is a long day on the sand. There is not much to do on it but wait.${b65Say({tallow:`\n\nTallow sits on the last boat's gunwale with his deck in its oilcloth on his knee. "Thank you," he says, to nobody in particular, and then, to the sea: "Thank you."`, mehet:`\n\nMehet sits on the dry sand above the waterline, and does not look as if he minds waiting at all.`, _:''})}`,
       ch:[{t:'The day.', onward:true, go:'b6_c5_morning'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c5_sail:()=>({sp:'The captain', scene:'b6_kokakal', txt:
+    b6_c5_sail:()=>({sp:'Captain Hollet', scene:'b6_kokakal', txt:
 `"Aboard, then." He writes it. "First light, with the company. Third transport, patched foresail." He shuts the tablet. "I'll find another squad for the last boat. There's always another squad."
 
 At first light the Third goes down the sand to the lighters with the company, its kit on its back and its eyes on the water, and the lighter takes it out through the surf, wet to the knees, and the transport with the patched foresail takes it up its side on a net.
