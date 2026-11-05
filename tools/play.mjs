@@ -6,6 +6,7 @@
 //   --book=moi  pick Book Three (Memories of Ice) the same way; with no Book Three chapter written yet the run is skipped cleanly (exit 0)
 //   --book=hoc  pick Book Four (House of Chains) the same way; with no Book Four chapter written yet the run is skipped cleanly (exit 0)
 //   --book=mt   pick Book Five (Midnight Tides) the same way; with no Book Five chapter written yet the run is skipped cleanly (exit 0)
+//   --book=bh   pick Book Six (The Bonehunters) the same way (the form's second name is filled by default); skipped cleanly with no chapter yet
 //   --cheat     win every battle instantly (flow testing only)
 //   --from=N    start from a synthetic save at the start of chapter N (with --book=dg, Book Two's chapter N: SYNTH_DG; with --book=moi, SYNTH_MOI)
 //   --shots=dir screenshot on every new view/area and on any problem
@@ -218,6 +219,25 @@ const SYNTH_MT = (n) => {
   save(); startChapter(n);
 };
 
+// Book Six (--book=bh --from=N): a synthetic save at the start of Book Six's chapter N (docs/bh-book-brief.md): both squads, the levels the
+// brief gives (the Third 12, 13, 15, 16-17 at Chapters 1, 3, 5, 7; the Fourth 12, 13-14, 15 at Chapters 2, 4, 6), earlier keys, the recruits joined
+const SYNTH_BH = (n) => {
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  setBook('bh'); S = newStateBH('Hask', 'Brann'); const keys = (typeof B6KEYS !== 'undefined' && B6KEYS) || {};
+  S.chapters = {}; for (let i = 1; i < n; i++) { const v = pick(keys[i] || ['a', 'b']); S.f[`b6_c${i}_key`] = v; S.chapters[i] = v; }
+  const lvR = {1:12, 2:13, 3:13, 4:15, 5:15, 6:16, 7:16}[n] || 12, lvH = {1:12, 2:12, 3:13, 4:13, 5:14, 6:15, 7:16}[n] || 12;
+  S.lvl = lvR; S.xp = LEVELS[lvR - 1]; S.th.h.lvl = lvH; S.th.h.xp = LEVELS[lvH - 1];
+  if (n >= 2) { S.f.b6_mehetDone = 1; if (!S.squad.includes('mehet')) S.squad.push('mehet'); S.loy.mehet = 0; }
+  if (n >= 3) { S.f.b6_brannocDone = 1; if (!S.th.h.squad.includes('brannoc')) S.th.h.squad.push('brannoc'); S.th.h.loy.brannoc = 0; }
+  if (n >= 5) { S.f.b6_ressaDone = 2; S.th.h.camp = [...(S.th.h.camp || []), 'ressa']; S.f.b6_soliel = 1; }
+  if (n >= 7) S.f.b6_fourthRoad = pick(['highfist', 'hanarara', 'home']);
+  const fill = (o) => { [...o.squad, ...(o.camp || [])].forEach(k => { o.loy[k] ??= 0; o.gear[k] ??= {}; o.picks[k] ??= []; }); o.picksDue = []; };
+  fill(S); fill(S.th.h); migrate(S);
+  const vets = (o) => o.squad.forEach(id => { const t = PICKS[3][id]; if (t && !o.picks[id].some(p => t.some(x => x[0] === p))) o.picks[id].push(t[0][0]);
+    VET_LVLS.filter(l => o.lvl >= l).forEach((l, i) => { const v = PICKS.vet[i]; if (v && !o.picks[id].includes(v[0])) o.picks[id].push(v[0]); }); });
+  vets(S); vets(S.th.h); save(); startChapter(n);
+};
+
 let bad = 0, skipped = 0;
 async function run(i) {
   const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768 } : { fast: true });
@@ -231,7 +251,9 @@ async function run(i) {
     console.log(`run ${i}: SKIP (Book Four has no chapter registered yet)`); skipped++; await ctx.close(); return; }
   if (book === 'mt' && !(await page.evaluate(() => Object.keys((BOOKSNAP.mt && BOOKSNAP.mt.ch) || {}).length))) { // nothing to play yet
     console.log(`run ${i}: SKIP (Book Five has no chapter registered yet)`); skipped++; await ctx.close(); return; }
-  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : SYNTH, from);
+  if (book === 'bh' && !(await page.evaluate(() => Object.keys((BOOKSNAP.bh && BOOKSNAP.bh.ch) || {}).length))) { // nothing to play yet
+    console.log(`run ${i}: SKIP (Book Six has no chapter registered yet)`); skipped++; await ctx.close(); return; }
+  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : book === 'bh' ? SYNTH_BH : SYNTH, from);
   const t0 = Date.now();
   let last = '', same = 0, status = '', ticks = 0, chapterSeen = -1, areaSeen = '', viewSeen = '', errShot = 0;
   const problems = [];
@@ -266,5 +288,5 @@ const par = Math.min(runs, 4);
 let next = 0;
 await Promise.all(Array.from({ length: par }, async () => { while (next < runs) { const i = next++; await run(i); } }));
 await browser.close(); srv.kill();
-if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
+if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'bh' ? 'Six' : book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
 process.exit(bad ? 1 : 0);
