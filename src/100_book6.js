@@ -169,10 +169,10 @@ Object.assign(FOES, {
   b6_edur:{name:'Tiste Edur warrior', sig:'e', kind:'b2soldier', hp:36, ac:15, atk:11, dmg:[1,10,3], rng:1, mv:4, init:2, verb:'cuts at'},
   b6_regular:{name:'Regular of the line', kind:'b2soldier', sig:'n', hp:20, ac:14, atk:8, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'cuts at'},
 });
-/* a fight can pass the fever on: a fight def with feverRisk:'<why>' gives it, after a win or a loss, to one squadmate who walked and has not had it
+/* a fight can pass the fever on: a fight def with feverRisk:'<why>' gives it, after a win or a loss, to one squadmate who walked and has not had it (once per fight: a stage2 never passes it again)
    (the chapter writers mark the fights: the plague villages, the cultists, the G'danisban streets) */
 { const _endBeat = endBeat; endBeat = function(won){ const r = _endBeat(won);
-    if (b6On() && B && B.def && B.def.feverRisk && !B.b6fever) { B.b6fever = 1;
+    if (b6On() && B && B.def && B.def.feverRisk && !B.def.isStage2 && !B.b6fever) { B.b6fever = 1;
       const who = (S.squad || []).filter(id => !b6Fevered(id) && id !== 'ressa' && !(S.dead && S.dead[id]));
       if (who.length) b6Catch(who[(S.chapter + who.length) % who.length], B.def.feverRisk); }
     return r; }; }

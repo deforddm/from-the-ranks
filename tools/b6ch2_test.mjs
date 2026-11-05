@@ -21,7 +21,7 @@ const r = await page.evaluate(async () => {
   const force = async (id, also) => { const res = {id};
     startBattle(id, {}); await wait(60); res.started = !!B && B.id === id; res.foes = B.units.filter(u => u.side === 'e').length; res.waves = (B.def.waves || []).length; res.fever = B.def.feverRisk || null;
     if (also) await also(res);
-    if (BATTLES[id].stage2) { B.units.filter(u => u.side === 'e').forEach(u => u.hp = 0); B.over = true; stageBreak(); await wait(30); const on = document.getElementById('bOn'); res.stage2 = !!on; if (on) on.click(); await wait(60); res.inStage2 = !!B && !!B.def.isStage2; res.foes2 = B.units.filter(u => u.side === 'e').map(u => u.kind).join(','); }
+    if (BATTLES[id].stage2) { B.units.filter(u => u.side === 'e').forEach(u => u.hp = 0); B.over = true; endBeat(true); for (let i = 0; i < 60 && !document.getElementById("bOn"); i++) await wait(50); const on = document.getElementById('bOn'); res.stage2 = !!on; if (on) on.click(); await wait(60); res.inStage2 = !!B && !!B.def.isStage2; res.foes2 = B.units.filter(u => u.side === 'e').map(u => u.kind).join(','); }
     const xp0 = S.xp, B0 = B; B.units.filter(u => u.side === 'e').forEach(u => u.hp = 0); B.over = true; endBeat(true); for (let i = 0; i < 100 && B === B0 && S.xp === xp0; i++) await wait(50); await wait(60); res.xp = S.xp - xp0; // endBeat, as play does: the fever hook lives there
     if (S.picksDue && S.picksDue.length) { res.picks = S.picksDue.join(','); closeModal(); talk(BATTLES[id].after); }
     res.after = S.node; return res; };

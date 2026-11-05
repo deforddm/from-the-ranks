@@ -66,7 +66,7 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    brings from it is the talent at 3 (chosen, openPicks) and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late,
    or comes back from camp after a level-up, is given the veteran picks for the levels passed at once (Iron, Keen, Fleet… in order), in every
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
-const VET_LVLS = [5,7,9,11,13,15,17];
+const VET_LVLS = [5,7,9,11,13,15];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
@@ -134,7 +134,7 @@ function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
   S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15,17].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15].includes(k)) S.picksDue.push(k); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
