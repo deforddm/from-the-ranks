@@ -33,4 +33,6 @@ Bridgeburner as built, 10 runs: every fight 100% but Ch2's road (70%). Proposed:
 | b6_c7_guard | 95% (20) | 23% / — / — |
 | b6_c7_streets | 75% (20) | 39% / — / — |
 
-Outlier: b6_c6_cult 25% (to ease to hp ×1.65 when built); b6_c3_streets, the mortal fight, 65%.
+Built Thu Nov 5 (David: "Build it") as B6GAP in src/100_book6.js. b6_c6_cult was 25% in the trial; eased to {ac 1, atk 1, hp ×1.3, dmg 1→2}: 90% won (20 runs). b6_c3_streets, the mortal fight, 65%.
+
+David, Nov 5: no seventh veteran pick (levels 16–18 bring stats only); the plague weakens Denul and Meanas in Chapters 4 and 5 only.

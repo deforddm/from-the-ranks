@@ -72579,6 +72579,41 @@ Object.assign(PATRONS, {
   ressa:{sig:'ohl', god:'Soliel', title:'Soliel, Mistress of Healing', txt:id => `Ressa, on her knees, laughs once. "You again," she says, to nobody the squad can see.\n\nA warmth goes through the squad like the first dry day after rain.`},
 });
 
+/* ---- Book Six's balance (David, Thu Nov 5, 2026: "Build it"; docs/bh-balance.md). As built every Bridgeburner fight was won about 100%;
+   B6GAP gives each fight its own boost on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Five's B5GAP), tuned to about 75% won
+   (20 runs a fight, mean 75%). Soldier is untouched (every fight 100%). Nothing here runs outside Book Six. ---- */
+const B6GAP_ROW = {ac:3, atk:3, hp:2.0, dmg:4}; // a fight without its own row
+const B6GAP = {
+  b6_c1_well:{ac:3,atk:3,hp:2.5,dmg:4},
+  b6_c1_rearguard:{ac:1,atk:1,hp:1.3,dmg:2},
+  b6_c1_edge:{ac:4,atk:4,hp:2.75,dmg:5},
+  b6_c1_patrol:{ac:2,atk:2,hp:1.8,dmg:3},
+  b6_c2_shrine:{ac:2,atk:2,hp:1.8,dmg:3},
+  b6_c2_village:{ac:1,atk:1,hp:1.3,dmg:1},
+  b6_c2_road:{ac:0,atk:0,hp:1,dmg:0},
+  b6_c3_sally:{ac:1,atk:1,hp:1.2,dmg:1},
+  b6_c3_streets:{ac:2,atk:2,hp:1.6,dmg:3},
+  b6_c3_gate:{ac:3,atk:3,hp:2.4,dmg:4},
+  b6_c3_strays:{ac:4,atk:4,hp:3.0,dmg:5},
+  b6_c4_carts:{ac:4,atk:4,hp:2.4,dmg:5},
+  b6_c4_cult:{ac:3,atk:3,hp:2.6,dmg:4},
+  b6_c4_streets:{ac:2,atk:2,hp:1.9,dmg:3},
+  b6_c5_village:{ac:4,atk:4,hp:2.4,dmg:5},
+  b6_c5_deserters:{ac:2,atk:2,hp:1.7,dmg:3},
+  b6_c5_boats:{ac:1,atk:1,hp:1.4,dmg:2},
+  b6_c6_night:{ac:1,atk:1,hp:1.45,dmg:2},
+  b6_c6_wells:{ac:4,atk:4,hp:2.8,dmg:5},
+  b6_c6_cult:{ac:1,atk:1,hp:1.3,dmg:2},
+  b6_c7_alley:{ac:5,atk:5,hp:3.2,dmg:6},
+  b6_c7_jetty:{ac:3,atk:3,hp:2.0,dmg:4},
+  b6_c7_guard:{ac:2,atk:2,hp:1.65,dmg:3},
+  b6_c7_streets:{ac:3,atk:3,hp:2.6,dmg:4}};
+const b6Gap = () => { if (!b6On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B6GAP[id]) || (id && /^b6_/.test(id) ? B6GAP_ROW : null); };
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b6Gap(); if (!g) return u;
+    u.ac = (u.ac || 10) + g.ac; u.atk = (u.atk || 0) + g.atk; u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * g.hp));
+    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + g.dmg]; return u; }; }
+
 /* ============ Book Six's title: Y'Ghatan at dusk, the bones in its walls, and smoke (v9.0, 100b) ============
    The painted title (ART 'title/bh', drawn by Claude for this game from a seeded generator): a smoke-red dusk over the Odhan; the walls of
    Y'Ghatan the colour of old bone, with the bones of the older cities in them, as the novel's epigraph has it ("the bones in the walls, the bones
