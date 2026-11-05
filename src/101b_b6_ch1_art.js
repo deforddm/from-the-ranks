@@ -71,6 +71,59 @@ Object.assign(FIGX, {
 /* the engine's foes wear them (100 borrowed Book Four's runner until this file) */
 if (typeof FOES !== 'undefined') { if (FOES.b6_rebel) FOES.b6_rebel.kind = 'b6_rebel'; if (FOES.b6_fanatic) FOES.b6_fanatic.kind = 'b6_fanatic'; }
 
+/* the rest of the rebels and the Odhan's bandits (added on the lead's ask): the archer and the captain share the rebel's body (b61Rebel);
+   the bandit is his own, rougher thing */
+function b61Rebel(ctx, h, t, o, kind){ ctx.save(); const chief = kind === 'chief';
+  const rb = chief ? ['#7a2e22', '#2a0e0a'] : b2Pick(o, [['#a68a62', '#3e2c18'], ['#8a7252', '#2e2216'], ['#b49a72', '#4a3820'], ['#7a6a52', '#2a2018']]),
+    wr = chief ? '#e0d4b8' : b2Pick(o, ['#2a2422', '#5a4a3a', '#3a2a22', '#6a2a1e']), sk = b2Pick(o, ['#7a5438', '#8a6244', '#6a4a32']), sa = chief ? '#c9a35a' : b2Pick(o, ['#6a2a1e', '#3a3a2a', '#5a4020']);
+  const br = o.still ? 0 : Math.sin(t/380 + (o.phase || 0)*1.3)*.5;
+  if (chief) B2F.grow(ctx, 1.12, 1.08);
+  if (kind === 'bow') { ctx.fillStyle = '#4a3420'; ctx.fillRect(-7.4, -7, 2.6, 9); for (let i = 0; i < 3; i++) { B2F.line(ctx, '#6a5434', .5, [[-6.8 + i*.8, -7], [-7.4 + i*.8, -10.4]]); ctx.fillStyle = '#d8ccb0'; ctx.fillRect(-7.8 + i*.8, -11.4, .9, 1.2); } } // the quiver, behind
+  ctx.fillStyle = sk; ctx.fillRect(-4.4, 8.4, 3.2, 3.4); ctx.fillRect(1.2, 8.4, 3.2, 3.4); ctx.fillStyle = chief ? '#3a2a1a' : '#2a1c10'; ctx.fillRect(-4.6, chief ? 9 : 11.6, 3.6, chief ? 4 : 1.4); ctx.fillRect(1, chief ? 9 : 11.6, 3.6, chief ? 4 : 1.4); // sandals; the captain's boots
+  poly(ctx, [[-6.2,-6],[6,-6],[7.4,9],[2,8.4],[-2,9],[-7.6,9.4]], h.armor(rb[0], rb[1]));
+  ctx.fillStyle = 'rgba(255,236,200,.13)'; ctx.fillRect(-5.8, -5.4, 1.6, 13); ctx.strokeStyle = 'rgba(0,0,0,.22)'; ctx.lineWidth = .6; ctx.beginPath(); ctx.moveTo(-2, -3); ctx.lineTo(-3.4, 8.6); ctx.moveTo(2.6, -3); ctx.lineTo(3.4, 8.4); ctx.stroke();
+  if (chief) { ctx.fillStyle = 'rgba(170,170,176,.7)'; for (let r = 0; r < 4; r++) for (let i = 0; i < 5; i++) ctx.fillRect(-4.6 + i*2 + (r % 2)*.8, -5.2 + r*1.5, 1.2, .8); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-.5, -6, 1, 15); } // mail at the breast, the coat open over it
+  ctx.fillStyle = sa; ctx.fillRect(-6.6, 1.2, 13, 1.8); if (!chief) ctx.fillRect(-3.6, 3, 1.4, 3.4);
+  if (kind === 'bow') { ctx.fillStyle = rb[0]; ctx.fillRect(-7.4, -4, 2.2, 5.4); ell(ctx, -6.3, 1.4, 1.1, 1.1, sk); ctx.fillStyle = rb[0]; ctx.fillRect(5.4, -4.6, 2.2, 5); ell(ctx, 6.6, .6, 1.1, 1.1, sk);
+    B2F.bow(ctx, 8.4, -11.4, 6.6); B2F.line(ctx, '#d8ccb0', .55, [[6.6, -2.4], [11.6, -2.4]]); } // the horn bow, an arrow on the string
+  else { ctx.beginPath(); ctx.arc(-7.6, -.4 + br, chief ? 5.8 : 4.6, 0, 7); ctx.fillStyle = chief ? h.armor('#8a3a2a', '#2a0e08') : h.armor('#a08058', '#3a2814'); ctx.fill(); ctx.strokeStyle = chief ? '#8a7a5a' : '#1a120a'; ctx.lineWidth = chief ? 1.2 : .9; ctx.stroke(); ell(ctx, -7.6, -.4 + br, chief ? 1.8 : 1.2, chief ? 1.8 : 1.2, chief ? '#c9a35a' : '#8a7a5a'); // the captain's round shield, a brass boss
+    ctx.fillStyle = rb[0]; ctx.fillRect(5.4, -4.4, 2.2, 5.4); ell(ctx, 6.6, 1.4, 1.1, 1.1, sk); ctx.save(); ctx.translate(0, br); B2F.curved(ctx, chief ? '#e4dccc' : '#cfc6b2', chief ? 1.15 : 1.05); ctx.restore(); }
+  h.head(sk, 4.4, -11.2);
+  if (chief) { h.look('rgba(16,8,4,.92)', -11.6); poly(ctx, [[-3.6,-9.4],[4.4,-9.4],[4,-6.4],[1.6,-4.6],[-1.4,-5],[-3.4,-7]], '#1a120c'); // a black beard, cut square
+    ctx.fillStyle = wr; ctx.beginPath(); ctx.arc(0, -12.6, 5.6, Math.PI*.9, Math.PI*2.1); ctx.fill(); ctx.fillRect(-5.6, -13, 11.2, 2.2); ctx.fillStyle = 'rgba(120,100,70,.4)'; for (let i = 0; i < 3; i++) ctx.fillRect(-5 + i*.6, -15.6 + i*1.4, 10, .5); // a wound head-cloth, pale
+    poly(ctx, [[-5.4,-11],[-8.8,-6],[-7.6,-3.6],[-4.6,-8.6]], shade(wr, -.25)); ell(ctx, 1.4, -14.6, .9, .9, '#c9a35a'); } // its tail; a brass pin
+  else { ctx.fillStyle = wr; ctx.beginPath(); ctx.arc(0, -11.8, 5.3, Math.PI*.92, Math.PI*2.08); ctx.fill(); ctx.fillRect(-5.3, -12.2, 10.6, 3);
+    poly(ctx, [[-5,-10],[5.2,-10],[4.8,-6],[2.6,-4.6],[-3,-4.6],[-5.2,-6.4]], wr); poly(ctx, [[-4.8,-9.6],[-8.4,-6.4],[-7.6,-4],[-4.4,-6.8]], shade(wr, -.2));
+    ctx.fillStyle = sk; ctx.fillRect(-2.6, -12.4, 6.2, 2); h.look('rgba(16,8,4,.92)', -11.8); }
+  ctx.fillStyle = 'rgba(255,240,210,.12)'; ctx.fillRect(-4.6, -15.4, 3, .8);
+  ctx.restore(); }
+Object.assign(FIGX, {
+  /* a rebel archer: the rebel's robes and face-wrap, a horn bow with an arrow on the string, a quiver on the back */
+  b6_rebelbow(ctx, h, t, o){ b61Rebel(ctx, h, t, o, 'bow'); },
+  /* a rebel captain: bigger; a red coat open over mail, a pale head-cloth with a brass pin, a square black beard, boots, a red round shield
+     with a brass boss and the good tulwar */
+  b6_rebelchief(ctx, h, t, o){ b61Rebel(ctx, h, t, o, 'chief'); },
+  /* a plague-road bandit of the Odhan: no army's colours; a patched hooded cloak over bare arms, a scavenged iron cap on one in three, a
+     dirty scarf, a waterskin, a heavy-bladed hatchet, and a stoop. Rougher and greyer than the rebels */
+  b6_bandit(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.02, .97); const cl = b2Pick(o, [['#5a5046', '#1e1a16'], ['#6a5a44', '#241c12'], ['#4a463e', '#181612']]), sk = b2Pick(o, ['#8a6244', '#6a4a32', '#9a7454']), cap = b2Pick(o, [1, 0, 0]),
+      sw = o.still ? 0 : Math.sin(t/340 + (o.phase || 0)*1.5)*.6;
+    ctx.translate(0, 13); ctx.rotate(.06); ctx.translate(0, -13); // a stoop
+    h.legs('#3a3026'); ctx.fillStyle = '#5a4a36'; ctx.fillRect(-4.8, 6, 3.8, 1.2); ctx.fillRect(1, 7.4, 3.8, 1.2); // rag-wrapped legs
+    poly(ctx, [[-6.6,-6],[6.2,-6],[7.6,7.6],[4,8.6],[1.4,7],[-2,8.8],[-5,7.2],[-8,8.4]], h.armor(cl[0], cl[1])); // the cloak, torn at the hem
+    ctx.fillStyle = 'rgba(140,110,70,.35)'; ctx.fillRect(-4, -1, 3, 3); ctx.fillRect(2, 3.4, 2.6, 2.4); ctx.strokeStyle = 'rgba(20,14,8,.5)'; ctx.lineWidth = .35; ctx.strokeRect(-4, -1, 3, 3); ctx.strokeRect(2, 3.4, 2.6, 2.4); // patches
+    ctx.fillStyle = '#2a1e12'; ctx.fillRect(-6.2, 1.6, 12.4, 1.2); // a rope belt
+    ell(ctx, -5.4, 5, 2, 2.8, '#6a4a2a'); ctx.fillStyle = 'rgba(255,230,190,.18)'; ctx.fillRect(-6.6, 3.4, .8, 3); // a waterskin at the hip
+    ctx.fillStyle = sk; ctx.fillRect(-8, -4.4, 2.2, 6.4); ell(ctx, -6.9, 2, 1.2, 1.2, sk); // bare arms
+    ctx.fillStyle = sk; ctx.save(); ctx.translate(6, -4.4); ctx.rotate(-.5 + sw*.3); ctx.fillRect(-1.1, 0, 2.4, 6.6); ell(ctx, .1, 6.8, 1.2, 1.2, shade(sk, -.1));
+    B2F.line(ctx, '#4a3420', 1.3, [[.1, 8.6], [.1, -4]]); poly(ctx, [[.1, -4.6], [4, -5.6], [4.6, -1.6], [.1, -1.6]], '#8a8478'); ctx.fillStyle = 'rgba(255,250,240,.4)'; ctx.fillRect(3.8, -5.2, .6, 3.4); ctx.restore(); // the hatchet, raised
+    h.head(sk, 4.3, -10.8); h.look('rgba(16,8,4,.92)', -11.2);
+    poly(ctx, [[-4.6,-9.6],[4.6,-9.6],[4.2,-6],[2.4,-5],[-2.8,-5],[-4.6,-6.4]], '#7a6a52'); ctx.fillStyle = 'rgba(40,30,20,.3)'; ctx.fillRect(-4, -7.6, 8, .6); // a dirty scarf over the mouth
+    if (cap) { ctx.beginPath(); ctx.arc(0, -12, 5.2, Math.PI, 0); ctx.fillStyle = '#4a4640'; ctx.fill(); ctx.fillStyle = '#3a3630'; ctx.fillRect(-5.8, -12.4, 11.6, 1.4); ctx.fillStyle = 'rgba(140,60,30,.45)'; ctx.fillRect(1, -15, 2.4, 1.6); } // a dead soldier's iron cap, rusting
+    else { poly(ctx, [[-6.4,-4],[-5,-15],[0,-17.6],[5,-15],[6.4,-4],[4.4,-9.6],[4,-13.4],[-4,-13.4],[-4.4,-9.6]], shade(cl[0], -.08)); } // the hood up
+    ctx.restore(); },
+});
+if (typeof FOES !== 'undefined') ['b6_rebelbow', 'b6_rebelchief', 'b6_bandit'].forEach(k => { if (FOES[k]) FOES[k].kind = k; });
+
 /* ---------------- the bust ---------------- */
 /* Mehet: thirty-one, a narrow watchful face, burnt brown, close black hair, a few days' beard; the quilted coat of the potters' street
    in faded madder and dust, the dark indigo scarf pulled down round his throat for once, its end over the shoulder; the sling's cords
