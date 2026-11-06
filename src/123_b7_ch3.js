@@ -509,7 +509,7 @@ In the mage's pack there is a jar of the cadre's own salve, sealed, which the Th
       return {sp:'Letherii prisoners', scene:'b7_farm_night', html:risingHTML(), again:()=>'The three crossbowmen, kneeling by the hedge, waiting.', txt:
 `They are sitting by the hedge now, hands tied in front, while the marines on the track look over at them and then at the Third, waiting to see.
 
-The oldest is perhaps twenty. He does the talking, in Letherii and then in a soldier's trade-tongue. "We were told to," he says. "The Edur came to the garrison and said, the Malazans are here, go and kill them, and the Finadd said yes." He swallows. "We're Indebted, two of us. The army pays down the debt. A little. If you live."
+The oldest is perhaps twenty. He does the talking, in Letherii and then in a soldier's trade-tongue. "We were told to," he says. "The Edur came to the garrison and said, the Malazans are here, go and kill them, and the Finadd said yes." He swallows. "I'm Indebted. So's he. The army pays down the debt. A little. If you live."
 
 He looks at the farm. "My mother's people farm three valleys east. If you let us go, I'll go there. I won't go back to the garrison. They'd send me out again."
 
