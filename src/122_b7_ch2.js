@@ -626,7 +626,7 @@ On the near side, between two blind walls, an alley goes north off the canal int
         ch:[{t:'"Sixth! In!" Straight down it.', go:()=>startBattle('b7_c2_alley', {})},
             {t:'Over the wall from the canal side, and down on them from above.', check:['guile', 15],
               edges:id=>[id === 'pessa' && ['canal people go over walls from boats all their lives', 2], id === 'ruuk' && ['he climbs anything, grinning', 2], id === 'tobet' && ['a bowman wants height', 1], S.f.b7_c2_marginOk && id === 'sgt' && ['the margin: you know which side they will be watching', 2], id === 'ilsa' && ['she knows where agents stand: it is in the training', 2], id === 'thegg' && ['a very large man on a wall is a very loud man on a wall', -2], id === 'ammet' && ['her knees are forty-one', -1]],
-              near:{t:()=>`Yes, but the coping on the canal wall is green with slime, and ${b72Nm(b72Who())} ${b72V(b72Who(), 'come', 'comes')} down off it on ${b72V(b72Who(), 'your', 'a')} hip. ${b72Nmc(b72Who())}'ll feel it in the fight.`, fx:()=>bruise(b72Who(), bruiseN())},
+              near:{t:()=>`Yes, but the coping on the canal wall is green with slime, and ${b72Nm(b72Who())} ${b72V(b72Who(), 'come', 'comes')} down off it on ${b72V(b72Who(), 'your', 'a')} hip. ${b72Nmc(b72Who())}'ll be a step slow for a while.`, fx:()=>bruise(b72Who(), bruiseN())},
               go:()=>startBattle('b7_c2_alley', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c2_alley_seen'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b7_c2_alley_seen:()=>({sp:'The alley', scene:'b7_c2_alley', txt:
@@ -723,7 +723,7 @@ ${hot ? `The agent with the list looks at the squad, and at the list, and at the
         ch:[{t:'"Sixth! Through them!" Straight over.', go:()=>b72Bridge({})},
             {t:'Walk up to them as clerks of the battalion, papers out, and take them at the parapet.', check:['guile', 15], rise:true,
               edges:id=>[id === 'ilsa' && ['she has walked past agents in that coat for six years', 2], id === 'perrit' && ['she can talk like a purser\'s clerk, because her mother was one', 1], id === 'pessa' && ['she has lied to canal wardens all her life', 1], id === 'sgt' && ['you have the Finadd\'s seal on the lists', 1], id === 'thegg' && ['nobody believes a clerk that size', -2], id === 'ruuk' && ['he grins, and clerks do not grin', -1]],
-              near:{t:()=>`Yes, but the agent with the list takes the papers out of ${b72Nm(b72Who())}'s hand and reads the first line before ${b72Nm(b72Who())} can move, and gets an elbow into ${b72V(b72Who(), 'your', 'a')} ribs for it, and gives one back. ${b72Nmc(b72Who())}'ll feel it in the fight.`, fx:()=>bruise(b72Who(), bruiseN())},
+              near:{t:()=>`Yes, but the agent with the list takes the papers out of ${b72Nm(b72Who())}'s hand and reads the first line before ${b72Nm(b72Who())} can move, and gets an elbow into ${b72V(b72Who(), 'your', 'a')} ribs for it, and gives one back. ${b72Nmc(b72Who())}'ll carry that into the next fight.`, fx:()=>bruise(b72Who(), bruiseN())},
               go:()=>b72Bridge(nearMiss() ? {} : {surprise:'p'}), fail:'b7_c2_bridge_seen'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b7_c2_bridge_seen:()=>({sp:'The bridge', scene:'b7_c2_bridge', txt:

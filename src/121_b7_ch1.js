@@ -539,7 +539,7 @@ The marines in the fields let them come. The marines are watching the Third, to 
       ch:[{t:'"Third! Into the road!" Take them.', go:()=>startBattle('b7_c1_riders', {})},
           {t:'Down into the ditch, and take them as they pass.', check:['guile', 15],
             edges:id=>[id === 'tebbet' && ['a bowman knows how to wait', 1], id === 'sathi' && ['she ambushed riders for the Weasels', 2], id === 'orvas' && ['a rider knows where a rider looks', 1], id === 'rasp' && ['marine-trained', 1], S.f.b7_c1_fingerOk && id === 'sgt' && ['the night signs: the squad moves without a word', 2], id === 'ottar' && ['grey plate in a ditch still shines', -2], id === 'darrut' && ['he is not built for ditches', -1]],
-            near:{t:()=>`Yes, but the ditch is half full of water, and ${b71Nm(b71Who())} ${b71V(b71Who(), 'come', 'comes')} up out of it cold to the bone. ${b71Nmc(b71Who())}'ll feel it in the fight.`, fx:()=>bruise(b71Who(), bruiseN())},
+            near:{t:()=>`Yes, but the ditch is half full of water, and ${b71Nm(b71Who())} ${b71V(b71Who(), 'come', 'comes')} up out of it cold to the bone. ${b71Nmc(b71Who())}'ll be a step slow for a while.`, fx:()=>bruise(b71Who(), bruiseN())},
             go:()=>startBattle('b7_c1_riders', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c1_riders_seen'},
           {t:'Let them pass. The shed matters more.', req:()=>!b71Strip(), fx:()=>{ S.f.b7_c1_ridersPassed = 1; }, go:'b7_c1_riders_pass'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -573,7 +573,7 @@ Inside, somewhere, a clerk keeps the factor's book. Every debt for a day's ride 
         ch:[{t:'"Third! Through the gate!" Straight in.', go:()=>startBattle('b7_c1_tally', {})},
           {t:'Round by the seaward wall, and over it.', check:['wits', 15],
             edges:id=>[id === 'tangle' && ['a sapper reads a wall for its weak course', 1], id === 'rasp' && ['marine-trained: walls are what she was taught on', 2], id === 'mehet' && ['he has been over a great many walls', 1], S.f.b7_c1_fingerOk && id === 'sgt' && ['the night signs: the squad goes over without a word', 2], id === 'haddat' && ['a shield is no help on a wall', -1], id === 'ottar' && ['grey plate and a wall disagree', -2]],
-            near:{t:()=>`Yes, but the coping-stone turns under ${b71Nm(b71Who())} at the top, and ${b71Nm(b71Who())} ${b71V(b71Who(), 'land', 'lands')} on the far side on ${b71V(b71Who(), 'your', 'a')} knee. ${b71Nmc(b71Who())}'ll feel it in the fight.`, fx:()=>bruise(b71Who(), bruiseN())},
+            near:{t:()=>`Yes, but the coping-stone turns under ${b71Nm(b71Who())} at the top, and ${b71Nm(b71Who())} ${b71V(b71Who(), 'land', 'lands')} on the far side on ${b71V(b71Who(), 'your', 'a')} knee. ${b71Nmc(b71Who())}'ll carry that into the next fight.`, fx:()=>bruise(b71Who(), bruiseN())},
             go:()=>startBattle('b7_c1_tally', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c1_shed_seen'},
           {t:'Not now.', go:()=>startExplore()}]}; },
     b7_c1_shed_seen:()=>({sp:'The tally-shed', scene:'b7_c1_shed', txt:
