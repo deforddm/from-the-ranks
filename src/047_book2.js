@@ -226,7 +226,7 @@ SORC.push('sbolt');
       const t = party().filter(p => !p.ally && cheb(u, p) <= 5 && cheb(u, p) > 1 && canShoot(u, p)).sort((a, b) => a.hp - b.hp)[0];
       if (t && R(2) === 0) { u.cd.sbolt = B.round + 2; const far = boon('dream'), sp = far || R(100) < Math.round(b2Sputter() * 100); // the Queen's boon: the fire comes from far away, at half (31c)
         if (sp) blog(far ? `<em>${u.name} calls on the Semk god, and the fire arrives from a long way off.</em>` : `<em>${u.name} calls on the Semk god. ${b2Mud()}</em>`);
-        AUDIO.play('shadow'); attack(u, t, {dmg:sp ? [1,6,0] : [2,6,1], verb:sp ? 'spits half a curse at' : 'throws the god\'s fire at'}); await wait(650); return true; } }
+        AUDIO.play('shadow'); attack(u, t, {sorc:true, dmg:sp ? [1,6,0] : [2,6,1], verb:sp ? 'spits half a curse at' : 'throws the god\'s fire at'}); await wait(650); return true; } }
     const dazeReady = hasSk(u, 'daze') && !(u.cd.daze > B.round), before = new Set(party().filter(p => p.stun));
     const r = await _foeSpecial(u, gone);
     if (dazeReady && u.cd.daze > B.round && B && (boon('dream') || R(100) < Math.round(b2Sputter() * 100))) {

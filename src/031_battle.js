@@ -54,6 +54,8 @@ function float(u, txt, col, big){ const now = performance.now(), n = B.fx.filter
   B.fx.push({kind:'txt', x:u.x, y:u.y, txt, col, big, t:now + n*140}); }
 function hurt(u, n, crit){ if (u.hp <= 0) return; // already down: a second blast or a late blow does nothing
   if (u.side === 'p' && !u.ally && DIFF().dmg !== 1) n = Math.max(1, Math.round(n * DIFF().dmg)); // the difficulty, on every wound the squad takes
+  if (u.soakNext) { const cut = Math.min(u.soakNext, n - 1); u.soakNext = 0; if (cut > 0) { n -= cut; blog(`<em>The blow skids off ${soakWord(u)}</em> (−${cut}).`); } } // v10.2 soak: armour, after the difficulty (31c)
+  if (u.ward > 0 && n > 0) { const a = Math.min(u.ward, n); u.ward -= a; n -= a; float(u, 'ward −' + a, '#dfe8f0'); blog(`${u.name}'s ward takes ${a}${u.ward ? `; ${u.ward} of it left` : ' and is gone'}.`); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // v10.2 ward: after soak, against anything (31c)
   if (u.side === 'p' && !u.ally && u.hp - n <= 0 && S.f && S.f.hoodRepCh !== (S.chapter || 0) && Object.values((S.gear && S.gear[u.id]) || {}).includes('hoodrep')) { S.f.hoodRepCh = S.chapter || 0; n = u.hp - 1; blog(`<em>The little black bottle at ${u.name}'s throat cracks.</em> ${u.name} does not go down. Nobody can explain it. Doctor Brack could, at length.`); float(u, 'repelled', '#9fb3d9'); } // Doctor Brack's Hood's Repellent: once a chapter
   if (u.side === 'p' && !u.ally && S.card === 'herald' && u.hp - n <= 0 && !B.used.herald) { B.used.herald = true; n = u.hp - 1; blog(`<em>The Herald turns its head.</em> ${u.name} stays standing at 1 health.`); float(u, 'spared', '#8fa38a'); }
   if (u.side === 'p' && !u.ally && u.hp - n <= 0 && boon('hood') && !(S.boons.spared && S.boons.spared[u.id])) { (S.boons.spared ??= {})[u.id] = 1; n = u.hp - 1; blog(`<em>The gate stays shut.</em> ${u.name} stays up at 1 health.`); float(u, 'the gate holds', '#8fa38a'); } // Hood's boon: once each, for the fight (31c)
@@ -63,7 +65,7 @@ function hurt(u, n, crit){ if (u.hp <= 0) return; // already down: a second blas
   u.hp = Math.max(0, u.hp - n); if (u.hp === 0 && u.side === 'e') { tally('kills'); holdDown(u); } if (u.immortal && u.hp === 1 && u.side === 'e' && !u.knelt) { u.knelt = true; holdDown(u, true); } if (!(u.immortal && u.hp === 1)) float(u, '−' + n + (crit ? '!' : ''), crit ? '#ffcf7a' : '#f08a7c', crit); u.flash = performance.now(); bloodDecal(u.x, u.y, n >= 8);
   if (u.side === 'p' && !u.ally) redFlash(); if (n >= 8 || crit) shakeMap();
   if (u.hp === 0) { u.deadAt = performance.now(); AUDIO.play('death'); sparks(u.x, u.y, 14, u.side === 'p' ? '#d6a24a' : '#9a3a30', .6); blog(u.side === 'p' ? `<em>${u.name} goes down!</em>` : `${u.name} falls.`); } else AUDIO.play('hurt'); }
-function heal(u, n){ const before = u.hp; u.hp = Math.min(u.maxhp, u.hp + n); if (u.side === 'p' && !u.ally) tally('healed', u.hp - before); if (u.hp > before) float(u, '+'+(u.hp-before), '#9fe0b8'); u.healed = performance.now(); }
+function heal(u, n){ const before = u.hp; wardFrom(u, before, n); u.hp = Math.min(u.maxhp, u.hp + n); /* v10.2: the overflow is a ward (31c) */ if (u.side === 'p' && !u.ally) tally('healed', u.hp - before); if (u.hp > before) float(u, '+'+(u.hp-before), '#9fe0b8'); u.healed = performance.now(); }
 function sparks(x, y, n, col, spd = 1){ if (REDUCE()) return; for (let i=0;i<n;i++){ const a = Math.random()*7, s = (Math.random()*.6 + .3)*spd; B.parts.push({x:x + .5, y:y + .5, vx:Math.cos(a)*s, vy:Math.sin(a)*s - .3, life:1, decay:.02 + Math.random()*.03, col, size:1 + Math.random()*2}); } }
 
 function mkParty(id, x, y){
@@ -78,12 +80,13 @@ function mkParty(id, x, y){
   trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
+  u.soak = squadSoak(id); // v10.2 (31c)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
 }
 function mkFoe(k, x, y, extra=0){ const f = FOES[k], fs = foeScale(), sl = soldierLate() || {hp:1, atk:0, dmg:0}, hp = Math.max(1, Math.round((f.hp + extra) * DIFF().hp * fs.hp * (sl.hp || 1))), sk = foeSkills(k, f), dmg = f.dmg ? [f.dmg[0], f.dmg[1], (f.dmg[2] || 0) + fs.dmg + (sl.dmg || 0)] : f.dmg;
-  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), maxhp:hp, hp, col:'#d9695a', x, y}; }
-function mkAlly(k, x, y){ const f = FOES[k]; return {id:'ally_' + k, kind:k, side:'p', ally:true, ...f, name:f.name + ' (ally)', maxhp:f.hp, hp:f.hp, col:'#9fb3d9', x, y, ab:[]}; }
+  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), maxhp:hp, hp, col:'#d9695a', x, y, soak:foeSoak(k), pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // v10.2 soak, from the armour it was made with (31c)
+function mkAlly(k, x, y){ const f = FOES[k]; return {id:'ally_' + k, kind:k, side:'p', ally:true, ...f, name:f.name + ' (ally)', maxhp:f.hp, hp:f.hp, col:'#9fb3d9', x, y, ab:[], pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // an ally's crossbow or sorcery goes past soak too; allies have no soak of their own (v10.2)
 /* the nearest free tile to x,y (itself if free), ring by ring out to 4, the straight neighbours first */
 function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};
   for (let r=1;r<=4;r++) { let best = null, bd = 9;
@@ -102,7 +105,7 @@ function startBattle(id, opt={}){
   view = 'battle'; AUDIO.setScene(def.music || 'battle');
   B = {def, id, opt, snap, warren:def.warren || {meanas:1, denul:1}, units:[], order:[], idx:-1, round:0, fires:[], smoke:[], fx:[], parts:[], log:[], used:Object.assign({}, opt.used || {}), cur:null, moved:false, acted:false, mode:null, aim:null, busy:true, over:false, turn:0, anim:null};
   SQUAD().forEach((pid,i) => { const p = def.party[i] || def.party[def.party.length - 1]; const at = freeNear(p[0], p[1]) || {x:p[0], y:p[1]}; B.units.push(mkParty(pid, at.x, at.y)); });
-  if (opt.carry) B.units.forEach(u => { if (u.side === 'p' && opt.carry[u.id] != null) { u.hp = clamp(opt.carry[u.id], 1, u.maxhp); u.strain = (opt.strain && opt.strain[u.id]) || 0; } }); // into the second area as they came out of the first
+  if (opt.carry) B.units.forEach(u => { if (u.side === 'p' && opt.carry[u.id] != null) { u.hp = clamp(opt.carry[u.id], 1, u.maxhp); u.strain = (opt.strain && opt.strain[u.id]) || 0; u.ward = (opt.wards && opt.wards[u.id]) || 0; } }); // into the second area as they came out of the first
   if (!opt.carry && S.bruised) { B.units.forEach(u => { const n = S.bruised[u.id]; if (u.side === 'p' && n > 0) { u.hp = Math.max(1, u.hp - n); B.log.push(`${u.name} comes into it still sore from the last close thing: ${n} health down.`); } }); S.bruised = {}; } // a "yes, but" paid in skin (16)
   (def.allies || []).forEach(a => { const at = freeNear(a[1], a[2]); if (at) B.units.push(mkAlly(a[0], at.x, at.y)); });
   def.foes.forEach((f,i) => { if (opt.drop && opt.drop.includes(i)) return; B.units.push(mkFoe(f[0], f[1], f[2], f[0]==='stone' && S.f.noisy ? 10 : 0)); });
@@ -121,7 +124,7 @@ function startBattle(id, opt={}){
     <div class="log" id="blog" aria-live="polite"></div>`;
   bindHud();
   $('#bWarren').onclick = e => e.currentTarget.classList.toggle('open'); // the warren line is cut to one row on a phone; tap to read it all
-  $('#order').onclick = e => { const c = e.target.closest('[data-u]'); if (!c || !B) return; const u = B.units[+c.dataset.u]; if (!u) return; B.ping = {u, t:performance.now()}; if (u.hp > 0) blog(`${esc(u.name)}: ${u.hp}/${u.maxhp} health, armour ${u.ac}${u.rng > 1 ? `, range ${u.rng}` : ''}.`); };
+  $('#order').onclick = e => { const c = e.target.closest('[data-u]'); if (!c || !B) return; const u = B.units[+c.dataset.u]; if (!u) return; B.ping = {u, t:performance.now()}; if (u.hp > 0) blog(`${esc(u.name)}: ${u.hp}/${u.maxhp} health, armour ${u.ac}${u.soak ? `, soak ${u.soak}` : ''}${u.ward ? `, ward ${u.ward}` : ''}${u.rng > 1 ? `, range ${u.rng}` : ''}.`); };
   G.disp = {};
   fitBattle();
   if (opt.pre) { const mun = opt.mun === 'burner' || opt.mun === 'smoker' ? opt.mun : 'sharper'; const named = (() => { const k = ['kettle', 'tangle', 'rasp'].find(id => SQUAD().includes(id) && !(S.dead && S.dead[id])); return k ? NAME(k) + '\'s ' + mun : 'A ' + mun; })();
@@ -408,9 +411,11 @@ function attack(a, t, o={}){
   if (!hit) { blog(dark ? `${a.name} ${verb} ${t.name} and hits a phantom instead: the blow goes into the dark${tagTxt}${math}.` : `${a.name} ${verb} ${t.name} and misses${tagTxt}${math}.`); later(() => { float(t, dark ? 'into the dark' : 'miss', dark ? '#9a86e0' : '#a99a88'); if (!ranged) sparks(t.x, t.y - .2, 4, '#cfc8b8', .5); }, land); return {hit:false}; }
   const dd = o.dmg || a.dmg; let dmg = roll(crit ? dd[0]*2 : dd[0], dd[1], dd[2]) + (t.markedUntil >= B.round ? (t.markDmg || 2) : 0) + (t.rimeUntil >= B.round ? (t.rimeDmg || 2) : 0) + (a.side === 'p' && a.rallyUntil >= B.round ? 2 : 0) + (mine && !a.ally ? (boon('boar') ? 3 : 0) + (boon('tiger') ? 2 : 0) + (boon('tarthenal') ? 2 : 0) + (boon('tears') && a.tearsTurn !== B.turn ? (a.tearsTurn = B.turn, 2) : 0) : 0); // the Boar and the Tiger; the Khundryl dead on the first hit of a turn (31c)
   if (t.dr && !crit) { const cut = Math.min(t.dr, dmg - 1); if (cut > 0) { dmg -= cut; tagTxt = tagTxt ? tagTxt.replace(/\]<\/span>$/, `, hide −${cut}]</span>`) : ` <span class="stat">[hide −${cut}]</span>`; } } // a hide that turns ordinary iron (v6.10: the K'ell Hunter); a critical goes through
+  const past = t.soak ? soakPast(a, t, o, ranged, fl) : null; // v10.2: what goes past armour (31c)
+  if (past && past !== 'flank') { const w = {sorcery:'sorcery', aimed:'aimed', pierce:'pierces'}[past]; tagTxt = tagTxt ? tagTxt.replace(/\]<\/span>$/, `, ${w}]</span>`) : ` <span class="stat">[${w}]</span>`; }
   blog(`${a.name} ${verb} ${t.name}${crit ? ', <em>critical</em>' : ''}: ${dmg} damage${tagTxt}${math}.`);
   later(() => { if (t.hp <= 0) return; if (crit) sparks(t.x, t.y, 16, '#ffcf7a'); else sparks(t.x, t.y - .1, 5, '#f08a7c', .6);
-    hurt(t, dmg, crit); foeRiders(a, t, dmg);
+    t.soakNext = past ? 0 : (t.soak || 0); hurt(t, dmg, crit); t.soakNext = 0; foeRiders(a, t, dmg);
     if (S.card === 'chains' && a.side === 'e' && t.side === 'p' && !t.ally && a.hp > 0) { hurt(a, 2); sparks(a.x, a.y, 10, '#9a9aa6', .5); blog(`<em>The chains bite back.</em> ${a.name} takes 2.`); }
     if (boon('worm') && a.side === 'e' && t.side === 'p' && !t.ally && a.hp > 0 && !ranged) { hurt(a, 3); sparks(a.x, a.y, 10, '#8a7a3a', .4); blog(`<em>The Worm of Autumn.</em> Rot comes up the blade into ${a.name}: 3.`); } // D'rek's boon: a blow struck in melee rots the hand that struck it (31c)
     updBattleUI(); }, land);
@@ -438,7 +443,7 @@ function battleTap(x, y){
     B.mode = 'act'; return updBattleUI();
   }
   if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); later(() => { B.busy = false; afterAct(); }, pace(380)); updBattleUI(); return; }
-  if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
+  if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.soak ? `, soak ${t.soak}` : ''}${t.ward ? `, ward ${t.ward}` : ''}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
   if (!B.moved && B.reach && B.reach.has(K(x,y)) && !(x === u.x && y === u.y)) moveCur(x, y);
 }
 async function moveCur(x, y){
@@ -512,7 +517,7 @@ function useAb(k, x, y){
   if (a.trick) { if (TRICKS[a.trick].use === 'chapter') spendTrick(a.trick); else { B.used[k] = 1; tally('tricksUsed'); } }
   if (!a.free) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; } B.mode = 'act'; B.aim = null; B.busy = true;
   B.blastKind = a.item || (k === 'quorl' ? 'sharper' : null); // what a blast() that lands later was thrown with (v6.10: a foe may resist or fear a munition)
-  const ran = a.run(u, x, y); castStrain(u, a.strain && u.id === 'tuft' && S.card === 'magi' ? a.strain - 1 : a.strain);
+  B.healSrc = k; let ran; try { ran = a.run(u, x, y); } finally { B.healSrc = null; } castStrain(u, a.strain && u.id === 'tuft' && S.card === 'magi' ? a.strain - 1 : a.strain);
   if (a.aoe) { updBattleUI(); return; } // blast() resumes the turn when it lands
   if (ran && ran.then) { updBattleUI(); ran.catch(e => console.warn(k, e)).then(() => later(() => { if (!B) return; B.busy = false; afterAct(); }, pace(250))); return; } // the hook and the drive: the turn resumes when the movement is done
   later(() => { B.busy = false; afterAct(); }, pace(350)); updBattleUI();
@@ -627,7 +632,10 @@ function battleStyle(){
 .ubar .tag.ally{color:#cfdcf5;border-color:#2a3a56}
 .abil .btn small{opacity:.85;margin-left:4px;font-size:.92em}
 .abil #bEnd{margin-left:auto;transition:opacity .25s}
-.abil #bEnd.arming{opacity:.45;pointer-events:none}`;
+.abil #bEnd.arming{opacity:.45;pointer-events:none}
+.ubar .chip.soak,.ubar .chip.ward,.ubar .chip.wound{font-family:var(--label);font-size:.74rem;letter-spacing:.05em;padding:0 6px;border:1px solid var(--line2);border-radius:2px;color:var(--mute);white-space:nowrap}
+.ubar .chip.ward{color:#dfe8f0;border-color:#5a6670;background:rgba(223,232,240,.08)}
+.ubar .chip.wound{color:#f0b8a8;border-color:#6a3a30}`;
   document.head.appendChild(st);
 }
 /* size the map to the screen: full width, but on a short phone shrink it (not below a thumb-sized tile) so the unit bar
@@ -699,7 +707,7 @@ function updBattleUI(){
   const u = B.cur, ub = $('#ubar');
   B.reach = null; B.hl = {atk:new Set(), tgt:new Set(), aoo:new Set(), flank:new Set(), pct:new Map()};
   if (!u || B.over) { ub.innerHTML = `<div class="bhint">${B.over ? 'The fighting stops.' : 'Rolling initiative…'}</div>`; return; }
-  if (u.side === 'e' || u.ally) { ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag ${u.ally ? 'ally' : 'foe'}">${u.ally ? 'ally' : 'enemy turn'}</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.stun ? '<span class="stat">dazed</span>' : ''}</div><div class="bhint">${u.ally ? (u.dog ? 'Sathi\'s dog. He goes where she points, and a little further.' : 'They fight for themselves. It happens to help.') : 'Watch the one ringed in red.'}</div>`; return; }
+  if (u.side === 'e' || u.ally) { ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag ${u.ally ? 'ally' : 'foe'}">${u.ally ? 'ally' : 'enemy turn'}</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.soak ? `<span class="chip soak">soak ${u.soak}</span>` : ''}${u.stun ? '<span class="stat">dazed</span>' : ''}</div><div class="bhint">${u.ally ? (u.dog ? 'Sathi\'s dog. He goes where she points, and a little further.' : 'They fight for themselves. It happens to help.') : 'Watch the one ringed in red.'}</div>`; return; }
   const mvLeft = B.mvLeft ?? u.mv;
   if (!B.moved && !B.busy) { B.reach = reachSafe(u.x, u.y, (x,y) => passFriend(x,y,u), mvLeft, (x,y) => leaveCost(u, x, y)); B.reach.forEach((n, k) => { if (n.d && !free(n.x, n.y, u)) B.reach.delete(k); }); } // through the squad, never ending on it
   // enemies in reach: ringed, with the chance to hit (and whether it flanks)
@@ -721,7 +729,7 @@ function updBattleUI(){
         hint = `Tap the marked tile again to throw. ${theirs ? `It catches ${theirs === 1 ? 'one enemy' : theirs + ' enemies'}.` : 'No enemy in the blast.'}${mine.length ? ` <span class="warn">And ${mine.map(v => esc(v.name)).join(', ')}.</span>` : ''}`; } } }
   const buffs = [u.veilUntil >= B.round ? 'veiled' : '', u.rallyUntil >= B.round ? 'rallied (+2 hit, +2 damage)' : '', lineCovers(u) ? 'in the line' : '', u.luckyTurn === B.turn ? 'the Lady pulls' : '', u.dazzleUntil >= B.round ? 'dazzled' : '', u.bleed > 0 ? 'bleeding' : '', u.burnTurns > 0 ? `on fire (${u.burnTurns} turn${u.burnTurns > 1 ? 's' : ''})` : '', u.steady ? 'steady (+2)' : '', postedUp(u) ? 'posted up' : '', u.clawMarkUntil >= B.round ? 'marked by the Claw' : '', u.stanch ? 'stanched' : '', u.turned ? 'turned on its own' : '', u.blindTurns > 0 ? `blinded by shadow (−50% to hit, ${u.blindTurns} turn${u.blindTurns > 1 ? 's' : ''})` : '', B.howlUntil >= B.round ? 'shaken by the howl' : ''].filter(Boolean).join(' · ');
   const endHot = B.acted || (B.moved && !inReach); // nothing much left: make End turn the obvious button
-  ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag you">your turn</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.magic ? `<span class="stat st">strain ${u.strain}/${strMax()}</span>` : ''}<span class="stat">${u.rng > 1 ? `range ${u.rng}` : 'melee'} · move ${mvLeft}/${u.mv}</span>${buffs ? `<span class="stat">${buffs}</span>` : ''}</div>
+  ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag you">your turn</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.ward ? `<span class="chip ward">ward ${u.ward}</span>` : ''}${u.soak ? `<span class="chip soak">soak ${u.soak}</span>` : ''}${u.magic ? `<span class="stat st">strain ${u.strain}/${strMax()}</span>` : ''}<span class="stat">${u.rng > 1 ? `range ${u.rng}` : 'melee'} · move ${mvLeft}/${u.mv}</span>${buffs ? `<span class="stat">${buffs}</span>` : ''}</div>
     <div class="bhint">${tapWord(hint)}</div>
     <div class="abil">${u.ab.map(k => { const a = AB[k]; const cnt = a.item ? `<small>×${itemLeft(a.item)}</small>` : a.trick && TRICKS[a.trick].use === 'chapter' ? `<small>×${trickLeft(a.trick)}</small>` : ''; const dis = (B.acted && !a.free) || !abOk(u,k);
       return `<button class="btn ${B.mode === k ? 'on' : ''} ${a.trick ? 'trk' : ''}" id="ab_${k}" data-k="${k}" ${dis ? 'disabled' : ''}>${a.trick ? '✦ ' : ''}${a.name}${cnt}</button>`; }).join('')}
@@ -888,6 +896,7 @@ function drawBattle(t){
       labels.push({x:cx, y:cy - T*(u.boss ? 1.18 : .98), txt:`${B.hl.pct.get(k)}%${B.hl.flank.has(k) ? ' · flank' : ''}`, col:B.hl.flank.has(k) ? '#f2c46b' : '#f4c2b8'}); }
     const w = T*.7, px = cx - w/2, py = cy + T*.3; ctx.fillStyle = '#0d0b09'; ctx.fillRect(px, py, w, Math.max(3, T*.08));
     ctx.fillStyle = u.side === 'p' ? (u.ally ? '#8fa6cf' : '#7fb394') : '#d9695a'; ctx.fillRect(px, py, w * u.hp / u.maxhp, Math.max(3, T*.08));
+    if (u.ward > 0) { const bh = Math.max(3, T*.08), ww = w * Math.min(1, u.ward / u.maxhp); ctx.fillStyle = 'rgba(223,232,240,.85)'; ctx.fillRect(px, py - bh*.6, ww, bh*.6); ctx.fillStyle = 'rgba(223,232,240,.25)'; ctx.fillRect(px, py, ww, bh); } // v10.2: the ward, a pale band over the health bar
     if (u.stun) { ctx.fillStyle = '#e9dfc9'; ctx.font = `${Math.round(T*.3)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('z', cx + T*.3, cy - T*.7 + Math.sin(t/300)*2); }
     if (u.blindTurns > 0) { const hx = cx, hy = cy - T*.62; for (let i=0;i<3;i++){ const ph = t/420 + i*2.1; ctx.fillStyle = `rgba(28,18,52,${.5 - i*.1})`; ctx.beginPath(); ctx.ellipse(hx + Math.cos(ph)*T*.07, hy + Math.sin(ph*1.3)*T*.03, T*(.3 - i*.05), T*(.1 + i*.02), Math.sin(ph)*.2, 0, 7); ctx.fill(); } ctx.strokeStyle = 'rgba(154,134,224,.55)'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.ellipse(hx, hy, T*.3, T*.1, 0, 0, 7); ctx.stroke(); } // Phantom: shadow over the eyes
     if (u.turned) { ctx.fillStyle = '#e0a8d8'; ctx.font = `bold ${Math.round(T*.32)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('?', cx + T*.3, cy - T*.7 + Math.sin(t/260)*2); }

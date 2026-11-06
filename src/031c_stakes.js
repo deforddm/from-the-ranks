@@ -13,11 +13,11 @@ function battleDef(id, stage){
 /* the breath between the two areas: a line of story, then on */
 function stageBreak(){
   if (!B) return; const id = B.id, d = BATTLES[id], s2 = d && d.stage2; if (!s2) return win();
-  const carry = {}, used = Object.assign({}, B.used), strain = {};
-  B.units.filter(u => u.side === 'p' && !u.ally).forEach(u => { carry[u.id] = u.hp > 0 ? u.hp : Math.max(1, Math.round(u.maxhp * .25)); strain[u.id] = u.strain || 0; });
+  const carry = {}, used = Object.assign({}, B.used), strain = {}, wards = {};
+  B.units.filter(u => u.side === 'p' && !u.ally).forEach(u => { carry[u.id] = u.hp > 0 ? u.hp : Math.max(1, Math.round(u.maxhp * .25)); strain[u.id] = u.strain || 0; if (u.hp > 0 && u.ward > 0) wards[u.id] = u.ward; }); // v10.2: a ward carries into the second area
   const downed = B.units.filter(u => u.side === 'p' && !u.ally && u.hp <= 0).map(u => u.name);
   S.binv = Object.assign({}, S.inv); // the satchel goes on as it is now, not as it was when the first area began
-  const opt = Object.assign({}, B.opt, {stage:2, carry, used, strain, pre:null, surprise:s2.surprise || null, drop:null});
+  const opt = Object.assign({}, B.opt, {stage:2, carry, used, strain, wards, pre:null, surprise:s2.surprise || null, drop:null});
   S.bopt = opt; save();
   const sh = $('#sheet'); sh.hidden = false;
   sh.innerHTML = `<div class="sp">${esc(s2.title || d.title)}</div><div class="note">The first ground is taken. Wounds, strain and spent munitions carry into the next.${downed.length ? ` ${downed.join(' and ')} ${downed.length > 1 ? 'are' : 'is'} dragged back up at a quarter of their health.` : ''}</div>
@@ -26,6 +26,50 @@ function stageBreak(){
   sh.scrollTop = 0;
   $('#bOn').onclick = () => { AUDIO.play('click'); sh.hidden = true; startBattle(id, opt); };
 }
+
+/* ---- v10.2 soak (spec §1, David, Nov 6, 2026): a blow that lands loses the target's soak in damage, down to 1. Squad: 1 for a base
+   armour of 15+, +1 for body armour of armour 3; enemies: 1 at armour 16-17, 2 at 18+ and for the K'Chain Che'Malle; never above 2.
+   It is armour, not difficulty: hurt() takes it off after the difficulty and the gap rows have scaled the blow. Only blows and shots
+   (attack()) meet it; munitions, sorcery, crossbows and aimed shots, and any blow with the flanking bonus go past it. ---- */
+const SOAK_CAP = 2, SOAK_PIERCE_ITEMS = new Set(['darucrossbow', 'b2_tcrossbow', 'b7_c3_letherxbow']);
+const SOAK_KCHAIN = k => /K'ell|K'Chain|Che'Malle|Ve'Gath/i.test(((FOES[k] || {}).name || '') + ' ' + k);
+const FOE_SORC = new Set(['clawmage', 'b5_krisnan', 'b7_krisnan', 'b7_lethmage', 'b3_c6_ridden', 'b3_c6_greymage', 'b3_c7_greymage']); // their blow is sorcery
+const foePierce = k => { const f = FOES[k] || {}; return !FOE_SORC.has(k) && (/xbow|crossbow/i.test(k + ' ' + (f.name || '')) || /quarrel|a bolt\b/i.test(f.verb || '')); }; // the enemy crossbowmen
+const soakArmour = id => Object.values((S && S.gear && S.gear[id]) || {}).map(g => ITEMS[g]).find(it => it && it.slot === 'armour' && (it.ac || 0) >= 3) || null;
+function squadSoak(id){ const t = TPL[id]; if (!t) return 0; return Math.min(SOAK_CAP, (t.ac >= 15 ? 1 : 0) + (soakArmour(id) ? 1 : 0)); }
+function foeSoak(k){ const f = FOES[k]; if (!f) return 0; return Math.min(SOAK_CAP, SOAK_KCHAIN(k) || f.ac >= 18 ? 2 : f.ac >= 16 ? 1 : 0); }
+const crossbowIn = id => id === 'kettle' || Object.values((S && S.gear && S.gear[id]) || {}).some(g => SOAK_PIERCE_ITEMS.has(g)); // Kettle's crossbow and its cradle
+/* what turns the blow, for the log line */
+function soakWord(u){ if (u.side === 'e') return `${u.name}'s ${SOAK_KCHAIN(u.kind) ? 'hide' : 'armour'}`;
+  const it = soakArmour(u.id), n = it ? it.name : '', w = /scale/i.test(n) ? 'scale' : /mail/i.test(n) ? 'mail' : /shield/i.test(n) ? 'shield' : 'armour';
+  return `${u.name}'s ${w}`; }
+/* why a blow goes past soak (null if it doesn't): the tag in the log */
+function soakPast(a, t, o, ranged, fl){
+  if (fl) return 'flank';
+  if (o.sorc || o.ground || (a.kind === 'tuft' && !B.def.nomagic) || a.sorcShot) return 'sorcery';
+  if (t.markedUntil >= B.round) return 'aimed';
+  if (a.pierceShot && ranged) return 'pierce';
+  if (a.side === 'p' && !a.ally && !o.dmg && a.rng > 1 && crossbowIn(a.id)) return 'pierce';
+  return null; }
+
+/* ---- v10.2 wards (spec §2): healing past full health becomes a ward, up to a quarter of max health. One ward at a time: a new one
+   replaces the old only if it is bigger, never adds to it (David). It takes damage after soak, everything included, lasts the fight
+   and its second area, and is gone when the fight ends (it lives on the unit, never on the save). ---- */
+const wardCap = u => Math.round(u.maxhp * .25);
+const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek'};
+function wardSource(){ const k = B && B.healSrc; if (!k) return 'plain'; if (WARD_SRC[k]) return WARD_SRC[k]; if (k === 'soliel' || k === 'drek' || k === 'spirits' || k === 'denul') return k;
+  const a = AB[k]; return a && a.spirit ? 'spirits' : 'plain'; }
+const WARD_LINE = {
+  denul:(u, w) => `Clean skin closes over ${u.name}, over where the next cut will be. <em>A ward of ${w}.</em>`,
+  drek:(u, w) => `Something earth-dark settles over ${u.name}, like dried mud. <em>A ward of ${w}.</em>`,
+  soliel:(u, w) => `The oil stays warm on ${u.name}. <em>A ward of ${w}.</em>`,
+  spirits:(u, w) => `The ground stays close to ${u.name}. <em>A ward of ${w}.</em>`,
+  plain:(u, w) => `${u.name} is past whole, and the rest of it holds. <em>A ward of ${w}.</em>`};
+function wardFrom(u, before, n){
+  if (!B || !u || u.side !== 'p' || u.ally || before <= 0 || !(n > 0)) return;
+  const over = before + n - u.maxhp; if (over <= 0) return;
+  const w = Math.min(wardCap(u), over); if (w <= (u.ward || 0)) return; // never stacks; a smaller one changes nothing
+  u.ward = w; float(u, 'ward ' + w, '#dfe8f0'); blog(WARD_LINE[wardSource()](u, w)); }
 
 /* ---- the road gets harder: enemies scale with the chapter (Soldier and Bridgeburner; Story keeps the old pitch).
    Tuned with tools/balance.mjs against a squad at the level the road brings it to. ---- */
@@ -222,8 +266,8 @@ function boonGrant(fight, b){
 const boonsClear = () => { if (S && S.boons) S.boons = null; };
 /* what a squadmate's turn opens with under the gods */
 function boonTurnStart(u){
-  if (boon('soliel')) { if (u.bleed > 0) { u.bleed = 0; float(u, 'bleeding stops', '#9fe0b8'); } if (u.hp < u.maxhp) { heal(u, 3); blog(`<em>Temple oil.</em> ${u.name} heals 3.`); } }
-  if (boon('ground') && u.hp < u.maxhp) { heal(u, 2); blog(`<em>The ground gives back.</em> ${u.name} heals 2.`); }
+  if (boon('soliel')) { if (u.bleed > 0) { u.bleed = 0; float(u, 'bleeding stops', '#9fe0b8'); } if (u.hp < u.maxhp) { B.healSrc = 'soliel'; heal(u, 3); B.healSrc = null; blog(`<em>Temple oil.</em> ${u.name} heals 3.`); } }
+  if (boon('ground') && u.hp < u.maxhp) { B.healSrc = 'spirits'; heal(u, 2); B.healSrc = null; blog(`<em>The ground gives back.</em> ${u.name} heals 2.`); }
   if (boon('hold') && u.hp < u.maxhp) { heal(u, 2); blog(`<em>The open hand.</em> ${u.name} heals 2.`); } // v8.0 the Empty Hold
 }
 /* what an enemy's turn opens with: the Wickan cold and the Wolves, for anyone standing next to the squad */

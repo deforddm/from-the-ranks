@@ -639,3 +639,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .bkline{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0 4px;padding:8px 10px;border:1px solid var(--line2);border-radius:2px;background:rgba(20,16,13,.55)}
 .bkline.due{border-color:var(--brass)}
 .bkline .fine{flex:1 1 180px}
+
+/* v10.2: soak and wound chips on the character sheet */
+.csheet .chip.soak,.csheet .chip.wound{display:inline-block;font-size:.74rem;padding:0 6px;margin-left:6px;vertical-align:1px;letter-spacing:.05em}
+.csheet .chip.wound{color:#f0b8a8;border-color:#6a3a30}
