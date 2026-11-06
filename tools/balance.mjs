@@ -382,7 +382,8 @@ const INIT = () => {
       if (B.over) {
         // a second area: wait for the breath between, push on, and keep playing the same fight
         if (b0.def.stage2 && !b0.def.isStage2 && b0.banner && b0.banner.txt === 'The way on') {
-          let on = null; for (let i = 0; i < 400 && !(on = document.getElementById('bOn')); i++) await new Promise(r => setTimeout(r, 10));
+          let on = null; const live = () => { const b = document.getElementById('bOn'); return b && !document.getElementById('sheet').hidden ? b : null; }; // not a stale button left in the hidden sheet by an earlier fight's break (it would start that fight's second area)
+          for (let i = 0; i < 400 && !(on = live()); i++) await new Promise(r => setTimeout(r, 10));
           if (!on) { end = 'stage-stuck'; break; }
           if (W.open && B === b0) closeTurn(); rounds0 += b0.round; on.click(); await new Promise(r => setTimeout(r, 30));
           if (B === b0 || !B) { end = 'stage-stuck'; break; }
