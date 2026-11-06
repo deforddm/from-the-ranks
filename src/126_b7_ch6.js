@@ -231,6 +231,7 @@ const B7CH6 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b7_c6_ennic', fresh:()=>!S.f.b7_c6_ennic},
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:3, y:5, node:()=>'b7_c6_clerk', fresh:()=>!S.f.b7_c6_clerk},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:13, y:8, node:()=>'b7_c6_tilewoman', fresh:()=>!S.f.b7_c6_tw},
+        {id:'fifth', name:'The Fifth\'s sergeant', kind:'b5_letherii', x:14, y:3, node:()=>'b7_c6_fifth', fresh:()=>!S.f.b7_c6_fifth},
         {id:'levy', name:'A levy at the next fire', kind:'b5_c5_refugee', x:11, y:6, node:()=>'b7_c6_levy', fresh:()=>!S.f.b7_c6_levyTried},
         {id:'grey', name:'A grey coat at a fire across the lane', kind:'b7_agent', x:9, y:2, node:()=>'b7_c6_watcher', show:()=>b76Watched() && !S.f.b7_c6_watcherGone, fresh:()=>!S.f.b7_c6_watcherTried},
         {id:'visitE', name:'The eldest Edur', kind:'b5_edur', x:6, y:6, node:()=>'b7_c6_visit', show:()=>b76K4() === 'edur' && !S.f.b7_c6_visitDone, fresh:()=>!S.f.b7_c6_visitDone},
@@ -254,6 +255,7 @@ const B7CH6 = {
       quest:()=> !S.f.b7_c6_dawnEnnic ? 'The Finadd, by the standard.' : !S.f.b7_c6_dome ? 'The stakes, and the plain beyond them. Something on the ridge is nearly finished.' : !S.f.b7_c6_homeDone ? 'The Edur are coming back across the plain.' : !S.f.b7_c6_orders ? 'The Finadd. A rider has come down from the hill.' : 'The fire. The army marches for the river.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>!S.f.b7_c6_dawnEnnic ? 'b7_c6_dawn_ennic' : S.f.b7_c6_homeDone ? 'b7_c6_orders' : 'b7_c6_dawn_ennic', fresh:()=>!S.f.b7_c6_dawnEnnic || (!!S.f.b7_c6_homeDone && !S.f.b7_c6_orders)},
+        {id:'fifth', name:'The Fifth\'s sergeant', kind:'b5_letherii', x:14, y:3, node:()=>'b7_c6_fifth_dawn', show:()=>!!S.f.b7_c6_dome, fresh:()=>!S.f.b7_c6_fifthDawn},
         {id:'escort', name:'The cadre\'s old escort', kind:'b5_letherii', x:7, y:1, node:()=>'b7_c6_ward', show:()=>b76Teach() === 'escort' && !S.f.b7_c6_wardTried && !S.f.b7_c6_orders, fresh:()=>!S.f.b7_c6_wardTried},
         {id:'homeE', name:'The eldest Edur, going home', kind:'b5_edur', x:8, y:9, node:()=>'b7_c6_home', show:()=>b76K4() === 'edur' && !!S.f.b7_c6_dome && !S.f.b7_c6_homeDone, fresh:()=>!S.f.b7_c6_homeDone},
         {id:'homeL', name:'The captain', kind:'b5_letherii', x:8, y:9, node:()=>'b7_c6_home', show:()=>b76K4() === 'letherii' && !!S.f.b7_c6_dome && !S.f.b7_c6_homeDone, fresh:()=>!S.f.b7_c6_homeDone},
@@ -443,6 +445,18 @@ At the north end of the crest there is a carriage with its horses out of the tra
 
 Between the line and the ring, nearer, the Edur's forward camp: no fires at all, and a long grey shape on the ground that is the Edur sleeping in their ranks. ${b76K4() === 'edur' ? 'At the near edge of it, a picket line of stakes of their own, with a gap in it the width of a squad.' : 'Not one soldier from the Letherii line has walked out to it tonight.'}${b76Say({tobet:`\n\nTobet, half a step behind you, counting the foreign fires under his breath. He stops at forty. "Not many," he says. "For all of them."`, thegg:`\n\nThegg looks out at the Edur camp a while. "They sleep in their ranks," he says. "My mother's people did that, before."`, _:''})}`,
         ch:[{t:'Back to the line.', go:()=>startExplore()}]}; },
+
+    /* the Fifth's sergeant, the next stretch of the line: before, and after the light */
+    b7_c6_fifth:()=>({sp:'The Fifth\'s sergeant', scene:'b7_field', fx:()=>{ S.f.b7_c6_fifth = 1; }, again:()=>'The Fifth\'s sergeant, at the Fifth\'s fire, polishing a helmet that does not need it.', txt:
+`The Fifth Company's sergeant is a heavy Letherii of forty with a broken nose, polishing a helmet at the Fifth's fire that has been polished enough. The Fifth and the Sixth have shared a barracks wall for eleven years and a joke for most of them.
+
+"Watching," he says, when you ask what the Fifth has been told. "Same as you. Stand in the line and watch the Edur do it." He spits on the helmet and rubs. "First time in my life the hill has asked me to do less. I keep looking for the catch."${b76If('thegg', `\n\nHe nods up at Thegg. "Still growing?" It is the joke. Thegg nods back, gravely. It is the answer.`)}`,
+      ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
+    b7_c6_fifth_dawn:()=>({sp:'The Fifth\'s sergeant', scene:'b7_field', fx:()=>{ S.f.b7_c6_fifthDawn = 1; }, again:()=>'The Fifth\'s sergeant, sitting down at last.', txt:
+`The Fifth's sergeant is sitting on his helmet at the Fifth's cold fire, with his back to the ridge, looking at the burned plain.
+
+"That was the catch," he says. "That was what the hill wanted us watching for." He rubs his broken nose. "My lot are saying the foreigners did it. Some mage of theirs." He looks at the round unburned patch far out at the end of the black. "I've told them to shut up. I don't know what I've told them to shut up about. I just know I don't want it said in front of the Edur."${S.f.b7_c6_homeDone ? `\n\n"The Edur are gone," he adds. "So I suppose it doesn't matter now. I'll go on telling them anyway."` : ''}`,
+      ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
 
     /* a levy at the next fire (rise:true): he carried water up the ridge all week. The other squad's one line of news */
     b7_c6_levy:()=>({sp:'A levy at the next fire', scene:'b7_field', again:()=>'The levy boy at the next fire, with his spear across his knees.', txt:
