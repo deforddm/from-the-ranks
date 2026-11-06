@@ -188,18 +188,19 @@ SCENEX.b7_c7_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   /* a Letherii officer's cloak: a long grey-blue riding cloak folded in a heap as it was handed over, the oiled-silk lining showing at the
      turned edge, and at the throat the Finadd's clasp, two gold fish nose to tail */
   put('b7_c7_lethcloak', 'A Letherii officer\'s cloak',
-    lin('wl', [[0, '#7a8ca0'], [.5, '#4a5a6e'], [1, '#222a36']], 0, 1) + lin('sk', [[0, '#c8c0a8'], [1, '#7a7260']], 1, 0),
-    sh(100, 132, 78, 7)
-    + S('M30 118 C34 96 46 78 62 68 C80 58 120 56 140 64 C160 72 172 96 170 120 Z', 'url(#@wl)')
-    + S('M44 112 C52 92 70 80 96 76 C122 74 146 82 156 104 C140 98 120 96 100 98 C78 100 58 106 44 112 Z', 'url(#@sk)')
-    + `<path d="M64 74 C70 90 72 104 70 118 M100 66 C102 84 104 100 102 120 M136 70 C134 88 136 104 140 120" fill="none" stroke="#141a24" stroke-opacity=".45" stroke-width="1.6"/>`
-    + S('M30 118 C60 122 140 124 170 120 L168 126 C140 130 60 128 32 124 Z', '#2a3240')
-    // the clasp: two gold fish nose to tail, on a ring
-    + `<g transform="translate(100 60)"><circle r="11" fill="none" stroke="url(#@gd)" stroke-width="3" ${O}/>`
+    lin('wl', [[0, '#7a8ca0'], [.5, '#4a5a6e'], [1, '#222a36']], 1, 0) + lin('sk', [[0, '#d8d0b8'], [1, '#8a8270']], 0, 1),
+    sh(100, 136, 74, 6)
+    // the cloak hung from its clasp: narrow at the collar, falling wide to a wavy hem, the right front turned back to show the lining
+    + S('M84 30 Q100 24 116 30 L132 40 Q150 80 166 128 Q150 134 136 128 Q122 136 108 129 Q94 136 80 129 Q66 136 52 128 Q40 133 34 128 Q50 80 68 40 Z', 'url(#@wl)')
+    + S('M116 30 L132 40 Q150 80 166 128 Q150 134 136 128 Q132 96 124 64 Q120 46 116 30 Z', 'url(#@sk)')
+    + `<path d="M84 44 Q76 86 66 128 M96 40 Q94 86 92 130 M106 40 Q110 86 116 128" fill="none" stroke="#141a24" stroke-opacity=".45" stroke-width="1.6"/>`
+    + `<path d="M84 30 Q100 38 116 30" fill="none" stroke="#1a2230" stroke-width="5" stroke-linecap="round"/>` // the collar
+    // the clasp: two gold fish nose to tail, on a ring, at the throat
+    + `<g transform="translate(100 34) scale(.9)"><circle r="11" fill="none" stroke="url(#@gd)" stroke-width="3" ${O}/>`
     + S('M-9 -2 C-5 -7 3 -7 6 -2 L10 -6 L10 2 L6 -1 C3 3 -5 3 -9 -2 Z', 'url(#@gd)')
     + S('M9 4 C5 9 -3 9 -6 4 L-10 8 L-10 0 L-6 3 C-3 -1 5 -1 9 4 Z', 'url(#@gd)')
     + `<circle cx="-6" cy="-3" r=".9" fill="#2a1a08"/><circle cx="6" cy="5" r=".9" fill="#2a1a08"/></g>`
-    + `<path d="M58 72 Q90 58 130 62" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="3"/>`);
+    + `<path d="M70 50 Q64 80 56 110" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="3"/>`);
 
   /* a coin with no face: two new-struck Letherii coins, one showing the city's towers and a canal under them, the other turned to show its
      other face, bright and blank; a milled rim on both */

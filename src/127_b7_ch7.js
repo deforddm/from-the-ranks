@@ -106,6 +106,9 @@ GLOSSX.rg.push(
   [7, 'The crowd', 'What held Letheras on its last day as anyone knew it: not the garrison, not the Edur, who had gone, and not the Patriotists, who were running. The crowd shouted two words, Saviour and Emperor, and some of the men starting the shouting were paid to.', ()=>!!(S && S.f && (S.f.b7_c7_ph || 0) >= 3)],
   [7, 'A blank coin', 'Letheras struck coin in the weeks after the city turned over before anyone was sure whose face to put on it. Some came out of the mint with the old emperor\'s face filed off, and some with nothing on that side at all.', ()=>!!(S && S.f && (S.f.b7_c7_ph || 0) >= 4)]);
 
+/* 120's caption for the city names the white light; before the ground moves it is not there yet (a getter, from this file) */
+if (SCENES.b7_city_burning) { const cap0 = SCENES.b7_city_burning.cap; Object.defineProperty(SCENES.b7_city_burning, 'cap', {configurable:true, enumerable:true, get(){ return S && S.f && S.f.b7_c7_quake ? cap0 : 'Smoke over the towers, the shutters closed in the middle of the morning, and the crowd in the streets shouting a name.'; }}); }
+
 /* the fire is a roster fire (38c) */
 ROSTER_FIRES.rg = ROSTER_FIRES.rg || {}; ROSTER_FIRES.rg[7] = ['b7_c7_fire'];
 
