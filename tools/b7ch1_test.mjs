@@ -115,7 +115,7 @@ const r = await page.evaluate(async () => {
   talk('b7_c1_doss'); take('b7_c1_doss', /Walk with us/); out.doss.wait.joined = b7In('doss') && S.f.b7_dossDone === 1;
   S = JSON.parse(snapD); save(); setBook('rg'); startExplore('b7_c1_road');
   take('b7_c1_doss_roads', /soldier's pay/); take('b7_c1_doss_pay', /Then walk with us/); out.doss.join = {in:b7In('doss'), flag:S.f.b7_dossDone, fire:/Doss/.test(DLG.b7_c1_fire_talk().txt), lvl:S.lvl};
-  take('b7_c1_doss_join', /page/); out.doss.page = S.f.b7_c1_dossPage;
+  S.picksDue = []; { const m = document.getElementById('modal'); if (m) m.hidden = true; } take('b7_c1_doss_join', /page/); out.doss.page = S.f.b7_c1_dossPage;
   /* the end */
   talk('b7_c1_fire'); out.end = {onward:has('b7_c1_fire', /On with the column/)}; take('b7_c1_fire', /On with the column/);
   out.end.dossLine = /Doss/.test(DLG.b7_c1_onward().txt); out.end.notYet = has('b7_c1_onward', /Not yet/);
