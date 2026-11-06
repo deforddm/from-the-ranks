@@ -272,7 +272,7 @@ const B7GAP = {
   b7_c1_riders:{ac:3,atk:3,hp:2.0,dmg:4},
   b7_c1_tally:{ac:3,atk:3,hp:2.0,dmg:4},
   b7_c2_gate:{ac:4,atk:4,hp:2.45,dmg:5},
-  b7_c2_alley:{ac:2,atk:2,hp:1.55,dmg:3},
+  b7_c2_alley:{ac:2,atk:2,hp:1.5,dmg:3},
   b7_c2_bridge:{ac:2,atk:3,hp:1.6,dmg:3},
   b7_c3_farm:{ac:4,atk:4,hp:2.25,dmg:4},
   b7_c3_road:{ac:6,atk:6,hp:3.0,dmg:6},
@@ -288,7 +288,7 @@ const B7GAP = {
   b7_c6_landing:{ac:2,atk:2,hp:1.45,dmg:2},
   b7_c6_stand:{ac:3,atk:3,hp:1.6,dmg:3},
   b7_c6_break:{ac:3,atk:3,hp:1.65,dmg:3},
-  b7_c7_gate:{ac:2,atk:2,hp:1.8,dmg:4},
+  b7_c7_gate:{ac:2,atk:3,hp:1.7,dmg:4},
   b7_c7_streets:{ac:2,atk:2,hp:1.9,dmg:4},
   b7_c7_bridge:{ac:4,atk:4,hp:2.6,dmg:5}};
 const b7Gap = () => { if (!b7On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B7GAP[id]) || (id && /^b7_/.test(id) ? B7GAP_ROW : null); };
