@@ -36,7 +36,7 @@ Object.assign(FIGX, {
     ctx.fillStyle = '#4a6a9a'; ctx.fillRect(5.4, -5, 2.4, 3.4); ctx.fillStyle = '#3e362e'; ctx.fillRect(5.6, -1.6, 2.2, 2.4); ell(ctx, 7, .6, 1.1, 1.1, '#b89878');
     B2F.line(ctx, '#6a4a2a', 1.3, [[7.6, 10.6], [7.6, -16]]); poly(ctx, [[6.6,-16],[8.6,-16],[7.6,-21.4]], '#c8ccd4'); ctx.fillStyle = '#e8ecf4'; ctx.fillRect(7.4, -20, .5, 3.6); // the lance, sawn short, its head keen
     h.head('#b8946e', 4, -11.4); h.look('rgba(24,14,10,.86)', -11.6);
-    B2F.cap(ctx, '#2a2420', 4.2, -12.6, 1.0, 1.4); ctx.fillStyle = 'rgba(190,190,196,.55)'; ctx.fillRect(-4.1, -13.2, 1, 2.2); ctx.fillRect(3.1, -13.2, 1, 2.2); // short dark hair, grey at the sides
+    ell(ctx, 0, -14.6, 4.3, 2.1, '#2a2420'); ctx.fillRect(-4.3, -14.6, 1.2, 3.2); ctx.fillRect(3.1, -14.6, 1.2, 3.2); ctx.fillStyle = 'rgba(190,190,196,.55)'; ctx.fillRect(-4.1, -13.2, 1, 2.2); ctx.fillRect(3.1, -13.2, 1, 2.2); // short dark hair, grey at the sides
     ctx.fillStyle = 'rgba(40,28,20,.6)'; ctx.fillRect(-1.6, -8.6, 3.2, .7); // a soldier's moustache, close-cut
     ctx.restore(); },
 });
@@ -44,17 +44,16 @@ Object.assign(FIGX, {
 /* ---------------- the bust ---------------- */
 POR.sorvan = function(ctx){ const F = {cy:-74, w:12.4, h:19.8, jaw:.88, chin:4.6, skin:'#b89470', iris:'#3a4250', lip:'#8a5a4c', browCol:'#2a2420', browW:1.35, arch:.4, browL:.6, browR:.7, rim:'#a8b8d8', rimA:.26, nose:1.1, look:.15, open:.86, smileL:-.15, smileR:-.05, mouthW:3.4, bags:.7, age:.45};
   PR.neck(ctx, F, 8.4);
-  const B = BP.body(ctx, F, {wide:35, drop:2, v:false, nx:F.w*.7 + 2.6, ny:F.cy + 14, cb:-46.4, c1:'#4e6e9e', c2:'#141c2c'}); ctx.save(); B.path(); ctx.clip(); // the blue scale over the shoulders
+  const B = BP.body(ctx, F, {wide:36, drop:5, trap:3, nx:11.6, ny:F.cy + 15, cb:-44, c1:'#4e6e9e', c2:'#141c2c'}); ctx.save(); B.path(); ctx.clip(); // the blue scale over the shoulders
     for (let r = 0; r < 9; r++) { const y = -44 + r*6.2; for (let k = -6; k <= 6; k++) { const x = k*6 + (r % 2)*3; ctx.beginPath(); ctx.moveTo(x - 3, y); ctx.quadraticCurveTo(x, y + 5, x + 3, y); ctx.lineWidth = .8; ctx.strokeStyle = 'rgba(8,12,24,.6)'; ctx.stroke();
         ctx.fillStyle = 'rgba(190,210,250,.10)'; ctx.fillRect(x - 2.2, y + .6, 1.2, 1.6); } } // the plates, laced in rows, each with a glint
     PR.stroke(ctx, 'rgba(60,40,24,.7)', 1.2, () => { for (let r = 0; r < 9; r++) { ctx.moveTo(-36, -41 + r*6.2); ctx.lineTo(36, -41 + r*6.2); } }); // the lacing
     PR.soft(ctx, -18, -36, 10, 6, '#dce8ff', .12); ctx.restore(); BP.light(ctx, F, B, false);
-  // the riding coat's collar turned up round the throat, brown wool over the scale
-  [-1, 1].forEach(sd => { ctx.beginPath(); ctx.moveTo(sd*3, -46.4); ctx.quadraticCurveTo(sd*(F.w*.66), -49, sd*(F.w*.66 + 2), -55); ctx.lineTo(sd*(F.w*.66 + 4.6), -45); ctx.quadraticCurveTo(sd*10, -42, sd*3, -43.6); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#5a4a3a', '#1e1812', -F.w, F.w); ctx.fill(); });
+  BP.collar(ctx, F, '#5a4a3a', '#1e1812', 'rgba(20,14,8,.5)', {style:'fold', sw:22, sy:-42}); // the riding coat's collar turned up over the scale
   PR.face(ctx, F);
   PR.soft(ctx, -F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); PR.soft(ctx, F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); // the close-cut moustache
   PR.soft(ctx, -F.w*.62, F.cy - 1, 1.6, 3.2, '#8a6a50', .35); // an old scar by the eye, faded
-  BP.hair(ctx, F, {c:['#3a322a', '#14100c', '#060504'], v:.9, wx:.5, hl:7.4, ey:-3.2, n:70, sw:.35, s:['#5a524a', '#1a1612', '#8a8a8e'], seed:124, sh:'#c8ccd8', shA:.24});
+  BP.hair(ctx, F, {c:['#3a322a', '#14100c', '#060504'], v:1.6, wx:1, hl:12, ey:-1.2, n:60, sw:.4, s:['#5a524a', '#1a1612', '#8a8a8e'], seed:124, sh:'#c8ccd8', shA:.24});
   PR.soft(ctx, -F.w*.82, F.cy - 6, 2.4, 4, '#9a9aa2', .55); PR.soft(ctx, F.w*.82, F.cy - 6, 2.4, 4, '#9a9aa2', .5); // grey at the sides
   return F; };
 
