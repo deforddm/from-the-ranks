@@ -180,13 +180,13 @@ const B7CH5 = {
     b7_c5_road:{title:'The river road', style:'b5_c5_road', dark:true, open:true, warrenText:'Night on the river road · the shadows by the hedge are deeper than the hedge explains', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edurspear',2,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:200, after:'b7_c5_road_after',
+      foes:[['b7_edurspear',2,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:80, after:'b7_c5_road_after',
       preText:()=>`Three Edur with spears, walking the road as if they owned it, which they do, and with them, at the edges where the starlight goes thin, two things that are not men and do not walk so much as come along.`},
     /* the bailiff and the factor's men on the north lane, riding to sell the village to the Edur (optional) */
     b7_c5_bailiff:{title:'The north lane', style:'b5_c5_road', open:true, warrenText:'Afternoon on a farm lane · hot, dusty, and nobody about who means you well', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","........","..t..t..","........","........","...t....","........",".t....t.","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_factorman',2,1],['b7_factorman',5,1],['b7_factorman',3,0],['b7_lethxbow',6,0]], xp:150, after:'b7_c5_bailiff_after',
+      foes:[['b7_factorman',2,1],['b7_factorman',5,1],['b7_factorman',3,0],['b7_lethxbow',6,0]], xp:60, after:'b7_c5_bailiff_after',
       preText:()=>`The bailiff is on a cob, in a good coat, with a letter in it. Round him walk the factor's men with cudgels, and one with a crossbow who was a soldier once and has not forgotten how it goes.`},
     /* 'hold': THE BOOK'S MORTAL FIGHT. An Edur band comes into the village at dusk for the Malazans the village hid. The street is held
        four rounds while the Indebted get down to the river behind; then the square, where the relief the Third made for itself (a cusser
@@ -196,11 +196,11 @@ const B7CH5 = {
       objective:{type:'survive', rounds:4, text:'Hold the street four rounds, while the village gets down to the river behind you.'},
       map:["#......#","#......#","...t....","#......#","#.t..t.#","#......#","...tt...","#......#","#......#","#......#"],
       party:[[3,7],[4,7],[2,8],[5,8],[3,8],[4,8]],
-      foes:[['b7_edur',2,1],['b7_edur',5,1],['b7_edurspear',1,0],['b7_edurspear',6,0],['b7_krisnan',3,0],['b7_wraith',4,0]], xp:320, after:'b7_c5_hold_after',
+      foes:[['b7_edur',2,1],['b7_edur',5,1],['b7_edurspear',1,0],['b7_edurspear',6,0],['b7_krisnan',3,0],['b7_wraith',4,0]], xp:130, after:'b7_c5_hold_after',
       waves:[{round:2, foes:[['b7_edur',0,2],['b7_wraith',7,2]], text:'More of them come over the garden walls on both sides, grey in the dusk, without a sound.'},
              {round:3, foes:[['b7_edurspear',3,0],['b7_wraith',4,1]], text:'Two more at the top of the street. They have been waiting for the first ones to find out how hard the Third is.'}],
       preText:()=>`They come down the village street in the last of the light, grey and unhurried, the way the Edur go into a place they mean to take: warriors in front with long blades, spearmen at the walls, and behind them a K'risnan with the dark gathering on his hands like smoke round a lamp. Behind the Third, the village is going down to the river as fast as old people and children can go.`,
-      stage2:{title:'The square by the mill', xp:160,
+      stage2:{title:'The square by the mill', xp:60,
         get text(){ return S.f.b7_c5_roof ?
 `The street is held. The village is at the river. And now the war-leader comes, a tall Edur with a long blade, up the street into the square with the rest of his band at his back, straight for the factor's house where the Malazans hid. Straight under the factor's roof.\n\n${b75SapN()} ${b75Sap() ? 'has' : 'have'} the fuse-cord in ${b75Sap() ? (b75He(b75Sap()) === 'she' ? 'her' : 'his') : 'your'} fist. ${b75Say({tangle:'"Now," Tangle says, to nobody, and pulls.', rasp:'"Now," Rasp says, to nobody, and pulls.', _:'You pull.'})}\n\nThe factor's roof comes down into the square in one piece, slates and beams and the stone gable, with a sound like the end of the world, on the ones who were under it. When the dust thins, the war-leader is still standing. Fewer of his band are.` :
 `The street is held. The village is at the river. And now the war-leader comes, a tall Edur with a long blade, up the street into the square with the whole of his band at his back, straight for the factor's house where the Malazans hid.\n\nNobody rigged the roof. There is nothing over the square but the evening, and nothing between the Third and the Edur but the Third.${b75If('haddat', `\n\nHaddat sets the blue shield. "Well," she says, in Hissari. "Here we are."`)}`; },
@@ -214,10 +214,10 @@ const B7CH5 = {
       objective:{type:'survive', rounds:3, text:'Keep moving: three rounds to the reeds.'},
       map:["o.......","o..t....","o.......","o....t..","o.......","o.t.....","o.......","o...t...","o.......","o......."], pitTxt:'the river',
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edurspear',2,0],['b7_edurspear',5,0],['b7_wraith',1,1],['b7_wraith',6,1],['b7_edurspear',4,1]], xp:260, after:'b7_c5_slip_after',
+      foes:[['b7_edurspear',2,0],['b7_edurspear',5,0],['b7_wraith',1,1],['b7_wraith',6,1],['b7_edurspear',4,1]], xp:110, after:'b7_c5_slip_after',
       waves:[{round:2, foes:[['b7_wraith',7,3]], text:'Something comes along the bank from the east as well, low and quick, out of a shadow that was only a shadow.'}],
       preText:()=>`The path runs along the river under the willows, a cart wide, with the water on the left and the fields on the right, and the Edur have found it too. They come along it at a lope, spears low, and the shadow-things with them go through the reeds as if the reeds were not there.`,
-      stage2:{title:'The ford', xp:130,
+      stage2:{title:'The ford', xp:50,
         text:()=>`The reeds, and past them the ford: a gravel bar across a backwater, knee-deep, where the village drives its cattle. On the far side the fields go up to a wood, and the column is somewhere beyond the wood.\n\nOn the bar, waiting, with the water round their knees, three Edur who came round by the fields to be there first.${b75If('wenna', `\n\nWenna looks at the water and then at the Edur in it. "They don't know rivers," she says. "Look how they stand."`)}`,
         map:["oo....oo","o......o","o..t...o","o......o","o......o","o.t..t.o","o......o","o......o","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
