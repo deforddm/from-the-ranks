@@ -83309,10 +83309,10 @@ const B7CH3 = {
             "T,.........T...T",
             "T....,.........T",
             "T..T.......,...T",
-            "T,.....T.......T",
+            "T,.....T....s..T",
             "TT,,........,TTT",
             "TTTTTTTTTTTTTTTT" ],
-      walk:'.,', triggers:{H:'b7_c3_fire', '>':'b7_c3_out'}, start:{x:3, y:3},
+      walk:'.,', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
       quest:()=> !S.f.b7_c3_orders1 ? 'The lieutenant, under the trees.' : !b73WennaSettled() ? 'A Shake fisher at the column\'s edge, who knows the ground.' : 'East, down into the valley. The column moves at full dark.',
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
@@ -83342,7 +83342,7 @@ const B7CH3 = {
         : S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone ? 'The old road round the village, and whatever is on it.'
         : 'East, to the factor\'s house.',
       npcs:[
-        {id:'lt', name:'The lieutenant', kind:'b2soldier', x:6, y:3, node:()=>'b7_c3_lt2', fresh:()=>!S.f.b7_c3_orders2},
+        {id:'lt', name:'The lieutenant', kind:'b2soldier', x:6, y:3, node:()=>S.f.b7_c3_prisoners ? 'b7_c3_lt2b' : 'b7_c3_lt2', fresh:()=>!S.f.b7_c3_orders2 || (!!S.f.b7_c3_prisoners && !S.f.b7_c3_lt2b)},
         {id:'ditch', name:'Marines in a ditch', kind:'b2soldier', x:11, y:7, node:()=>'b7_c3_ditch', fresh:()=>!S.f.b7_c3_drum},
         {id:'pris', name:'Letherii prisoners', kind:'b5_letherii', x:4, y:4, node:()=>'b7_c3_prisoners', show:()=>!!S.f.b7_c3_farmDone && !S.f.b7_c3_prisoners, fresh:()=>true},
         {id:'road', name:'Fires on the old road', kind:'b5_edur', x:14, y:5, node:()=>'b7_c3_road_start', show:()=>S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone, fresh:()=>true} ] },
@@ -83393,7 +83393,7 @@ const B7CH3 = {
       foes:[['b7_factorman',2,1],['b7_factorman',5,1],['b7_factorman',3,3],['b7_factorman',1,2],['b7_factorman',6,2]], xp:240, after:'b7_c3_factor_after',
       preText:()=>`The factor's men come out of the house with cudgels and lanterns and the confidence of men who have only ever had to beat farmers. The marine the lieutenant sent to hold the gate settles in behind the Third with her crossbow, and says, mildly, "Heavies first."`,
       stage2:{title:'The counting-room door', xp:130,
-        text:()=>`The yard is the Third's. The house door is not. Behind it, in the passage to the counting room, there is a Letherii officer in mail that is not Letherii: long, close-linked, dark as wet slate. Edur work. A gift, from people who give few. He has two of the factor's men with him and a crossbow on the stair, and he does not look like a man who means to run.${b73If('haddat', `\n\nHaddat sets the blue shield. "It is a doorway," she says. "Somebody else is standing in it."`)}`,
+        text:()=>`The yard is the Third's. The house door is not. Behind it, in the passage to the counting room, there is a Letherii officer in mail that is not Letherii: long, close-linked, dark as wet slate. Edur work. A gift, from people who give few. He has two of the factor's men with him and a crossbow on the stair, and he does not look like a man who means to run.${b73If('haddat', `\n\nHaddat sets the blue shield. "It is a doorway," she says. "He is standing in it."`)}`,
         map:["#..##..#","#......#","..t..t..","........","........","...t....","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['b7_lethofficer',3,1],['b7_factorman',1,2],['b7_factorman',6,2],['b7_lethxbow',5,1]]} } },
@@ -83404,7 +83404,7 @@ const B7CH3 = {
     b7_c3_edurmail:{name:'The Finadd\'s Edur mail', slot:'armour', role:'mail', who:null, ac:3, hp:2,
       line:'A long shirt of close-linked mail, dark as wet slate, made by Edur smiths for Edur shoulders and cut down by somebody careful for a Letherii officer. A gift, the steward said, from the Edur, for loyalty. The Finadd who wore it was loyal to the end. It is lighter than Malazan mail, and better, and nobody in the Third is going to say so out loud.'},
     b7_c3_ledgerash:{name:'A corner of the debt-roll', slot:'trinket', role:'any', who:null, stat:{guile:1},
-      line:'A charred corner off the factor\'s great debt-roll, the one that burned in his counting room: three lines of a steward\'s hand, three families, and the figures beside them gone to brown smoke-stain and then to nothing. Nobody can read what they owed now. Whoever carries it is a little harder to read too.'} },
+      line:'A charred corner off the factor\'s great debt-roll, the one that burned in his counting room: three lines of a steward\'s hand, three families, and the figures beside them gone to brown smoke-stain and then to nothing. What they owed is past reading now. Whoever carries it is a little harder to read too.'} },
 
   scenes:{
     b7_c3_floor:{loc:'Inland', sub:'An empty farmhouse · dusk', cap:'A bare farmhouse room with the shutters closed, a cold hearth, no lamp, and a squad of soldiers waking on the boards.', amb:'explore'},
@@ -83437,7 +83437,7 @@ const B7CH3 = {
     f.b7_c3_key && (f.b7_c3_key === 'ledger' ? 'The Third burned the debt-rolls of a factor\'s holding in his counting room. The smoke was seen for leagues.' : 'The Third took a factor\'s silver and his medicine chest, and left his rolls on their shelves.'),
     f.b7_c3_factorDone && 'A factor\'s house inland, guarded by his men and a Letherii Finadd in Edur mail.',
     f.b7_c3_roadDone && 'An Edur camp on the old road round a shut village, with a K\'risnan at its fire.',
-    f.b7_c3_village && (f.b7_c3_village === 'open' ? 'A village in the valley opened its gate to the Third. Word had got there first.' : 'A village in the valley kept its gate barred. Nobody inside wanted to be seen opening it.'),
+    f.b7_c3_village && (f.b7_c3_village === 'open' ? 'A village in the valley opened its gate to the Third. Word had got there first.' : 'A village in the valley kept its gate barred. Every family inside was afraid to be the one who opened it.'),
     f.b7_c3_prisoners && (f.b7_c3_prisoners === 'freed' ? 'The Third let the crossbowmen from the farm go home, without their crossbows.' : 'The Third handed the crossbowmen from the farm to the column.'),
     f.b7_c3_farmDone && 'Letherii crossbowmen and a cadre mage lay in wait at a farm in the valley. They had been killing marines for a month.',
     f.b7_c3_drum && 'Something went up on a road to the north, louder than any cusser. The marines grinned and would not say whose.',
@@ -83535,6 +83535,13 @@ She bites off the cord. "And the Shake have a queen again this year. Did you hea
 The lieutenant's map, then.`,
       ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
 
+    /* the spring Wenna found in the wood */
+    b7_c3_spring:()=>({sp:'A spring in the wood', scene:'b7_camp_night', txt:
+`A spring comes up between the roots of a beech into a stone basin somebody set there long ago, and runs off downhill into the valley in a thread of water nobody would notice. ${S.f.b7_wennaDone === 1 ? 'Wenna found it the moment the column came into the wood, and put her feet in it.' : 'There are wet footprints on the basin\'s rim, small and bare: one of the Shake fishers found it first.'}
+
+The water is cold and sweet and tastes of stone. The squad fills its skins, and drinks, and fills them again.${b73If('marrow', `\n\nMarrow puts her fingers in it, and holds them there, and takes them out. "Old, child," she says. "Older than the farms. It remembers somebody who said a word over it once."`)}`,
+      ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
+
     /* marines under the trees: camp talk (the ten smokes) */
     b7_c3_marines:()=>({sp:'Marines under the trees', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_marines = 1; }, again:()=>'The marines under the trees, sharpening, whispering, counting smokes.', txt:
 `A squad of marines is sitting in a ring under a beech, sharpening, and whispering, which they are not supposed to do.
@@ -83574,9 +83581,9 @@ ${b73Say({marrow:`Marrow goes round the squad with her hands, and stops at each 
       ch:[{t:'Back to the fire.', go:'b7_c3_fire'}]}),
     b7_c3_fire_talk:()=>{ const ph = b73Ph(), late = ph >= 3, ln = [];
       if (b7In('haddat')) ln.push(late ? `Haddat is looking at the house. "My mother said a rich man's house always has one more room than you can see," she says. "That is where he keeps what he owes." She considers. "She meant it about the water-sellers' guild. I think it is true here."` : `Haddat is looking at the cold hearth. "They took the pots," she says. "They left the table." She runs a hand along it. "You cannot carry a table and run. They knew they would run."`);
-      if (b7In('sathi')) ln.push(late ? `Sathi is lying on her back with her filed teeth showing. "Crossbowmen in a barn," she says. "Weasels would have burned it with them in. You heavies are soft." She seems to approve of it, a little.` : `Sathi is cleaning under her nails with a knife. "Night raids," she says. "Weasels did it for years. Nobody gave us a lieutenant with a slate."`);
+      if (b7In('sathi')) ln.push(late ? `Sathi is lying on her back with her filed teeth showing. "Crossbowmen in a barn," she says. "Weasels would have burned it with them in. You heavies are soft." She seems to approve of it, a little.` : `Sathi is cleaning under her nails with a knife. "Night raids," she says. "Weasels did it for years. We never had a lieutenant with a slate."`);
       if (b7In('tangle')) ln.push(`Tangle has the satchel open, counting. "${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}," he says. "${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}." He touches the Kanese bead at his wrist. "${late ? 'The marines went through more last night than we have. I heard one go off up north. Biggest thing I ever heard.' : 'The marines are counting smokes. I count these. Mine go down.'}"`);
-      if (b7In('marrow')) ln.push(late ? `Marrow is warming her knuckles in her armpits. "Somebody up north called something last night, child," she says. "Not a cadre mage. Older. I felt it in my teeth." She sniffs. "Something that does not belong in a farmhouse. The marines will hear about it. So will we."` : `Marrow is tying a slow knot in her string. "The column's mages are tired, child," she says. "Weeks of Mockra every night. It frays." She draws the knot tight. "So do they."`);
+      if (b7In('marrow')) ln.push(late ? `Marrow is warming her knuckles in her armpits. "A mage up north called something last night, child," she says. "Not a cadre mage. Older. I felt it in my teeth." She sniffs. "Something that does not belong in a farmhouse. The marines will hear about it. So will we."` : `Marrow is tying a slow knot in her string. "The column's mages are tired, child," she says. "Weeks of Mockra every night. It frays." She draws the knot tight. "So do they."`);
       if (b7In('mirrel')) ln.push(late ? `Mirrel is rolling her linen. "A crossbow bolt doesn't care how heavy you are," she says. "I've taken four out of marines this week. Their shields stop arrows." She ties the roll. "These aren't arrows."` : `Mirrel is counting the salves into her bag in threes. "${numw(S.inv.salve || 0, true)}," she says. "No hospice. No next town that's ours." She closes the bag. "Don't get cut."`);
       if (b7In('tallow')) ln.push(`Tallow is turning his grandmother's deck in its oilcloth without opening it. "She said a farmhouse with no one in it is a bad place to read," he says. "The cards want somebody to have been happy there." He looks round the room. "I'll not ask them."`);
       if (b7In('hessa')) ln.push(`Hessa sits straight with the spear upright. "D'rek is under the fields here too," she says. "Further down, but there. The worm turns the soil." She puts her palm flat on the ground. "The Letherii think they own it because they wrote it in a book."`);
@@ -83589,7 +83596,7 @@ ${b73Say({marrow:`Marrow goes round the squad with her hands, and stops at each 
       if (b7In('warlock')) ln.push(`Keth sits with his knees drawn up, very still. "*Men who owe their own children,*" the grandmother says, out of his mouth. "*My mother's country had a word for that, boy. It was not a kind word.*"`);
       if (b7In('mehet')) ln.push(`Mehet is turning his ring of keys over. "The factor's house will have a counting room," he says. "Every rich man's house in Y'Ghatan did. Two locks, always. One for the thief, one for the son." He holds up a key. "I have opened both kinds."`);
       if (b7In('ottar')) ln.push(`Ottar is cleaning the wolf on his shield with a thumb. "Today's word," he says, "is *culvert*. Wenna taught it." He tries it again. "In Perish a culvert is where you put a dead enemy so the river takes him. Here, I see, it is a road."`);
-      if (b7In('doss')) ln.push(late ? `Doss is looking at the factor's house with an expression the squad has not seen on him before. "Every holding has one," he says. "The big house in stone. You go to the back door on quarter-days with your board, and a man reads you your line." He wipes his hands on his jerkin, slowly. "I never went in the front."` : `Doss is watching the barley through the shutter. "Somebody owes for every row of that," he says. "Seed, and the plough, and the hire of the ox. Wrote it down in the big house before it was ever sown." He says it as a man reads out a list he has heard too often.`);
+      if (b7In('doss')) ln.push(late ? `Doss is looking at the factor's house with an expression the squad has not seen on him before. "Every holding has one," he says. "The big house in stone. You go to the back door on quarter-days with your board, and a man reads you your line." He wipes his hands on his jerkin, slowly. "I never went in the front."` : `Doss is watching the barley through the shutter. "There's a debt on every row of that," he says. "Seed, and the plough, and the hire of the ox. Wrote it down in the big house before it was ever sown." He says it as a man reads out a list he has heard too often.`);
       if (b7In('wenna')) ln.push(late ? `Wenna has her bare feet in the water-trough. "On the coast we owe nobody," she says. "The Shake were here first. The factors never worked out how to write that down." She wriggles her toes. "So they leave us alone and call us dirty. It is a fair trade."` : `Wenna is mending cord with her teeth. "The Letherii," she says, round it, "count everything. Fish, nets, boats, children. Write it all in a book." She bites the cord off. "We count tides. You can't write a tide in a book. It goes out while you're writing."`);
       return {sp:ph >= 3 ? 'The factor\'s barn' : ph === 2 ? 'The farm valley' : 'The farmhouse floor', scene:ph >= 3 ? 'b7_c3_house' : ph === 2 ? 'b7_march_night' : 'b7_c3_floor', txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
         ch:[{t:'Back to the fire.', go:'b7_c3_fire'}]}; },
@@ -83636,7 +83643,7 @@ West, the long farm the lieutenant wants is dark behind its wall, but there is a
 
 The marines in the ditch look at each other and grin. They do not look surprised.
 
-"That'll be the road north," one of them says. "Somebody's been digging all week." She will not say who. "Ask your sapper what a drum sounds like, heavies, when you hit it hard enough."${b73Say({tangle:`\n\nTangle has gone quite still with his mouth open. "That's not a cusser," he says. "That's a lot of cussers. Somebody stacked them." He sounds like a man in church.`, rasp:`\n\nRasp lets out a breath. "Stacked," she says. "They stacked them. I heard them say it."`, _:''})}`,
+"That'll be the road north," one of them says. "There's been digging up there all week." She will not say whose. "Ask your sapper what a drum sounds like, heavies, when you hit it hard enough."${b73Say({tangle:`\n\nTangle has gone quite still with his mouth open. "That's not a cusser," he says. "That's a lot of cussers. Stacked." He sounds like a man in church.`, rasp:`\n\nRasp lets out a breath. "Stacked," she says. "They stacked them. I heard them say it."`, _:''})}`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
 
     /* the Shake track: the trick (Wenna; else Doss; else an old Shake fisher) */
@@ -83669,14 +83676,15 @@ ${b73Teacher() === 'wenna' ? '"Took me a childhood," Wenna says. "You had an hou
     b7_c3_farm_view:()=>{ const done = !!S.f.b7_c3_farmDone, g = b73Guide();
       if (done) return {sp:'The farm', scene:'b7_farm_night', again:()=>'The farm, its barn open, its yard quiet.', txt:
 `The farm is the Third's. Its barn stands open on the dark, and the smell of the mage's lightning is still in it, like hot iron.`,
-        ch:[{t:'Back to the fields.', go:()=>startExplore()}]};
+        ch:[{t:'Search the farmhouse.', req:()=>!S.f.b7_c3_searched, go:'b7_c3_farm_search'},
+            {t:'Back to the fields.', go:()=>startExplore()}]};
       if (!S.f.b7_c3_orders2) return {sp:'The farm', scene:'b7_farm_night', txt:
 `A long farm behind a stone wall, west along the valley floor, a barn and a cart shed and a house, all dark. Somewhere inside the wall there is a banked fire. The lieutenant, in the hedge-bottom, will want a word before the Third goes over that wall.`,
         ch:[{t:'Back to the fields.', go:()=>startExplore()}]};
       return {sp:'The farm', scene:'b7_farm_night', txt:
 `The farm lies dark behind its wall: a long house, a cart shed with a ridged roof, a barn with its doors a hand's width open. Nothing moves. That is the worst of it. Crossbowmen who have been killing marines for a month do not move.
 
-${g === 'wenna' ? `Wenna is lying beside you in the barley. "Ditch," she breathes, and points: a dry ditch under the hedge that runs right up behind the barn wall. "They watch the gate and the track. Nobody watches a ditch."` : g === 'doss' ? `Doss is lying beside you in the barley. "There's a drain," he breathes. "There always is. Behind the barn." He points. "They'll watch the gate."` : `The lieutenant's map shows a gate and a track, and the gate and the track are exactly what the crossbows will be watching. There might be a ditch behind the barn. There usually is.`}${b73If('marrow', `\n\nMarrow's lips are pressed thin. "The mage is in the barn, child," she says. "Awake."`)}`,
+${g === 'wenna' ? `Wenna is lying beside you in the barley. "Ditch," she breathes, and points: a dry ditch under the hedge that runs right up behind the barn wall. "They watch the gate and the track. They never watch a ditch."` : g === 'doss' ? `Doss is lying beside you in the barley. "There's a drain," he breathes. "There always is. Behind the barn." He points. "They'll watch the gate."` : `The lieutenant's map shows a gate and a track, and the gate and the track are exactly what the crossbows will be watching. There might be a ditch behind the barn. There usually is.`}${b73If('marrow', `\n\nMarrow's lips are pressed thin. "The mage is in the barn, child," she says. "Awake."`)}`,
         ch:[{t:'"Third! Over the wall!" Straight at them.', go:()=>startBattle('b7_c3_farm', {})},
             {t:g === 'wenna' ? 'Wenna\'s way: down the dry ditch and in behind the barn.' : g === 'doss' ? 'Doss\'s way: the drain behind the barn.' : 'Find the ditch behind the barn, and go in that way.', check:['wits', 15], rise:true,
               edges:id=>[id === 'wenna' && ['the Shake tracks are hers', 3], id === 'doss' && ['he knows field-drains with his feet', 2], S.f.b7_c1_dossRoads && id === 'doss' && ['he drew you these tracks in the dirt on the coast', 1], S.f.b7_c3_tracksOk && id === 'sgt' && ['the Shake track: the squad goes in under the hedge', 2], g === 'wenna' && id === 'sgt' && ['Wenna is in the ditch in front of you', 1], id === 'sathi' && ['she went in under Odhan camps for the Weasels', 1], id === 'ottar' && ['grey plate in a ditch is a bell', -2], id === 'darrut' && ['an Aren Guard\'s kit was not made for ditches', -1]],
@@ -83693,6 +83701,15 @@ The crossbows lie where they fell. One of them is better than the others, short 
 
 And three of the crossbowmen are alive, on their knees in the yard with their hands on their heads and their spanning-hooks thrown down in front of them. They are Letherii, not Edur: young, frightened, and in the same blue-grey the Letherii regulars wear. They threw their crossbows down. The lieutenant said: take anyone who does.${b73If('mirrel', `\n\nMirrel is already looking them over for wounds. "One's cut," she says. "Not deep. Sit. Still. Good."`)}`,
       ch:[{t:'The prisoners.', go:'b7_c3_prisoners'}]}),
+
+    /* the farmhouse at the farm, after the fight */
+    b7_c3_farm_search:()=>({sp:'The farmhouse', scene:'b7_farm_night', fx:()=>{ if (!S.f.b7_c3_searched) { S.f.b7_c3_searched = 1; S.inv.salve = (S.inv.salve || 0) + 1; note('In the mage\'s pack: a jar of the cadre\'s salve, as good as one of Mirrel\'s.', 'good'); } }, txt:
+`The farmhouse is where the crossbowmen slept by day: blankets on the floor in rows, bolts in bundles by the door, a pot of something cold on the hearth. The family that farmed here is not here. A child's wooden horse on the windowsill says they were, once.
+
+On the table, under a stone, an order in a Letherii clerk's hand with an Edur mark pressed into the wax at its foot: the garrison at some town north of here to send *crossbowmen and one mage of the cadre* into the valleys *to clear the invaders from the farms*. The Edur mark is above the Finadd's signature, not below it.${b73Say({tangle:`\n\nTangle reads it over your shoulder. "Edur say go," he says, "and the Letherii go." He sniffs. "Captain Sort's lot had it right."`, haddat:`\n\nHaddat looks at the Edur mark a long while. "Above," she says. "Not below."`, _:'\n\nCaptain Sort\'s word, written down: the Letherii fight beside the Edur because the Edur say so.'})}
+
+In the mage's pack there is a jar of the cadre's own salve, sealed, which the Third takes, and nothing else anybody wants.`,
+      ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
 
     /* the prisoners from the farm: let go or kept (the Rising, once) */
     b7_c3_prisoners:()=>{ const c2 = S.f.b7_c2_key;
@@ -83717,10 +83734,17 @@ On the track, the lieutenant watches it too, and keeps whatever she thinks of it
     b7_c3_pris_keep:()=>({sp:'Letherii prisoners', scene:'b7_farm_night', html:risingHTML(), txt:
 `Two marines come down off the track and take them, a cord from wrist to wrist, and march them off into the dark after the column. The oldest one looks back once, at the farm, and then he is gone into the hedges with the others.
 
-${b73Say({mirrel:'Mirrel watches them go. "They\'ll slow the column," she says. "Somebody will have to feed them." She does not say what happens if somebody won\'t.', haddat:'Haddat watches them go and says nothing, and then says, "They were boys," to the dark.', _:'The column will feed them, or it won\'t. It is the lieutenant\'s to decide now.'})}
+${b73Say({mirrel:'Mirrel watches them go. "They\'ll slow the column," she says. "Somebody will have to feed them." She does not say what happens if somebody won\'t.', haddat:'Haddat watches them go, and after a while says, "They were boys," to the dark.', _:'The column will feed them, or it won\'t. It is the lieutenant\'s to decide now.'})}
 
 The farms along the valley will hear that the Malazans take men off farms and march them away. Farms always hear.`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
+
+    /* the lieutenant after the farm: her word on the prisoners and the village */
+    b7_c3_lt2b:()=>({sp:'The lieutenant', scene:'b7_march_night', fx:()=>{ S.f.b7_c3_lt2b = 1; }, again:()=>'The lieutenant, in the hedge-bottom. "The house, Sergeant. East."', txt:
+`The lieutenant is still in her hedge-bottom with the slate. ${S.f.b7_c3_prisoners === 'freed' ? `"You let them go," she says. Not a question. She writes something. "The Fist will hear of it. He'll hear of it from the farms before he hears it from me." She looks up. "That's not a complaint, Sergeant. That's how you'd want him to hear it."` : `"Two of mine are walking three boys behind the column on a cord," she says. "They'll eat our food and slow our march." She writes something. "You did what I said. I said take them." She looks at the slate a while longer than the writing needs.`}
+
+"${S.f.b7_c3_village ? (S.f.b7_c3_village === 'open' ? 'The village opened. To you. I\'ll take that' : 'The village stayed shut. I don\'t blame it') : 'Now the village. Let\'s see if it opens'}. Then the house."`,
+      ch:[{t:'"The house. Yes, Lieutenant."', go:()=>startExplore()}]}),
 
     /* the village: it opens its gate if the Rising has reached it (b7Open), or keeps it shut */
     b7_c3_village:()=>{ const v = S.f.b7_c3_village;
@@ -83750,6 +83774,14 @@ A voice through the wattle, a man's, low: "Go round. Go round by the old road. W
 `Inside the wall, a square of beaten earth with a well in it, and the doors round it shut, but not barred. Faces at the shutter-cracks. The old woman puts a loaf in your hands, and then another, and a crock of something that is mostly onions.
 
 "The factor's house," she says, nodding east. "You'll be going there. Everybody goes there in the end." She tells you how: not the lane, which the factor's men watch, but the orchard wall on the north side, where the stones are loose because nobody in the village has been let into the orchard in thirty years to mend them. "His steward reads us our lines on quarter-days at the back door," she says. "My grandson's line is longer than he is tall."${b73If('doss', `\n\nDoss is standing by the well with his cap in his hands. "Same here," he says to her. "Same everywhere." She looks at the flail, and then at his face, and nods.`)}${b73If('wenna', `\n\nWenna is drinking from the well bucket without asking, which seems to be the Shake way with wells. The old woman lets her.`)}`,
+      ch:[{t:'The well, and the faces at the shutters.', req:()=>!S.f.b7_c3_well2, go:'b7_c3_village_well'},
+          {t:'Back to the fields.', go:()=>startExplore()}]}),
+    b7_c3_village_well:()=>({sp:'The village well', scene:'b7_c3_gate', fx:()=>{ S.f.b7_c3_well2 = 1; }, txt:
+`The well in the square is brackish, the old woman says: it goes brackish every summer, and the factor's well, a league east, never does, and the village is not let draw from the factor's well. The squad drinks anyway.
+
+At the shutters, the faces watch. A boy of ten or so comes out of a door in a man's jerkin to the knees and stands by the well looking at ${b73Say({haddat:'Haddat\'s blue shield', tangle:'Tangle\'s satchel', _:'the Third\'s kit'})} as if it were treasure.
+
+"That's my grandson," the old woman says. "The one with the line longer than he is." The boy does not know what she means, or he does, and has decided not to mind. "His uncle went for a soldier, to pay it down. The army pays down a debt a little, if you live." She takes the boy's shoulder. "He went with the crossbows."${S.f.b7_c3_prisoners === 'freed' ? `\n\nShe does not say which crossbows, or which farm. She does not need to. She looks at you for a moment longer than she has to, and then takes the boy indoors.` : `\n\nShe does not ask which crossbows, or which farm, or where the three boys on the cord are going. She takes the boy indoors.`}`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
     b7_c3_village_shut:()=>({sp:'The village', scene:'b7_c3_gate', txt:
 `The lamp stays out. Behind the wattle, somebody is breathing very quietly, and a child is being told to hush, in a whisper that carries.
@@ -83774,7 +83806,7 @@ The old road goes round the east side of the wall. There are fires on it.`,
     b7_c3_road_after:()=>({sp:'The old road', scene:'b7_march_night', fx:()=>{ if (!S.f.b7_c3_roadDone) { S.f.b7_c3_roadDone = 1; S.silver = (S.silver || 0) + 6; updSilver(); note('Off the Edur camp: six silver in Letherii coin, a soldier\'s pay.', 'good'); } }, txt:
 `The road is the Third's. The Edur fire has gone out, as if something had put it out from the inside, and the hollow is very dark.
 
-The K'risnan lies a little apart from the others, as he sat. Nobody goes near him for a while, and then ${b73Say({haddat:'Haddat', mirrel:'Mirrel', _:'somebody'})} does, because somebody has to, and comes back and says only, "He's dead." In the Edur packs there is a purse of Letherii coin, a soldier's pay, which seems to be what the Edur pay their Letherii and do not bother to give them.${b73Say({haddat:`\n\nHaddat kneels by the nearest Edur and says *a soldier*, as she does, and gets up.`, _:''})}
+The K'risnan lies a little apart from the others, as he sat. The squad leaves him be a while, and then ${b73Say({haddat:'Haddat', mirrel:'Mirrel', _:'somebody'})} does, because somebody has to, and comes back and says only, "He's dead." In the Edur packs there is a purse of Letherii coin, a soldier's pay, which seems to be what the Edur pay their Letherii and do not bother to give them.${b73Say({haddat:`\n\nHaddat kneels by the nearest Edur and says *a soldier*, as she does, and gets up.`, _:''})}
 
 Behind the village wall, a shutter opens a crack, and closes.`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
@@ -83788,7 +83820,7 @@ Behind the village wall, a shutter opens a crack, and closes.`,
       return {sp:'The factor\'s house', scene:'b7_c3_house', txt:
 `A house of dressed stone behind a yard wall, two floors, a slate roof, a lamp in every window: the only stone house in the valley, and the only lit one. A long barn beside it. An orchard behind. In the yard, through the gate, the factor's men are standing about with cudgels and lanterns, talking loudly, as men do who have heard a very big noise from the north and been told it was nothing.
 
-${S.f.b7_c3_villageIn ? 'The orchard wall on the north side, the old woman said. Where the stones are loose.' : 'There is an orchard wall on the north side. Walls have weak courses, usually.'}${b73If('doss', `\n\nDoss is looking at the house. He does not say anything. His hands are white on the flail.`)}${b73If('mehet', `\n\nMehet looks at the upper windows. "Counting room's on the ground floor," he says. "Back of the house. They always are. Money's heavy."`)}`,
+${S.f.b7_c3_villageIn ? 'The orchard wall on the north side, the old woman said. Where the stones are loose.' : 'There is an orchard wall on the north side. Walls have weak courses, usually.'}${b73If('doss', `\n\nDoss is looking at the house. His hands are white on the flail.`)}${b73If('mehet', `\n\nMehet looks at the upper windows. "Counting room's on the ground floor," he says. "Back of the house. They always are. Money's heavy."`)}`,
         ch:[{t:'"Third! Through the gate!" Straight in.', go:()=>startBattle('b7_c3_factor', {})},
             {t:'Round by the orchard wall, and over it.', check:['wits', 15],
               edges:id=>[S.f.b7_c3_villageIn && id === 'sgt' && ['the old woman told you where the stones are loose', 2], id === 'tangle' && ['a sapper reads a wall for its weak course', 1], id === 'mehet' && ['he has been over a great many walls', 1], id === 'doss' && ['he has climbed a factor\'s orchard wall before, for apples', 1], id === 'wenna' && ['barefoot on a wall is easy', 1], id === 'haddat' && ['a shield is no help on a wall', -1], id === 'ottar' && ['grey plate and a wall disagree', -2]],
@@ -83796,7 +83828,7 @@ ${S.f.b7_c3_villageIn ? 'The orchard wall on the north side, the old woman said.
               go:()=>startBattle('b7_c3_factor', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c3_house_seen'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b7_c3_house_seen:()=>({sp:'The factor\'s house', scene:'b7_c3_house', txt:
-`The orchard has geese in it. Nobody told anybody about the geese. The factor's men come round the corner of the house with their lanterns up, shouting, and somebody in an upper window is shouting louder.`,
+`The orchard has geese in it, which no map shows and no one thought to mention. The factor's men come round the corner of the house with their lanterns up, shouting, and somebody in an upper window is shouting louder.`,
       ch:[{t:'Shields up.', go:()=>startBattle('b7_c3_factor', {surprise:'e'})}]}),
     b7_c3_factor_after:()=>({sp:'The factor\'s house', scene:'b7_c3_house', fx:()=>{ if (!S.f.b7_c3_factorDone) { S.f.b7_c3_factorDone = 1; gain('b7_c3_edurmail'); } S.f.b7_c3_ph = Math.max(3, S.f.b7_c3_ph || 1); }, txt:
 `The yard is quiet. The factor's men who could run have run, out through the orchard and away across the fields, and the lanterns lie where they dropped them, still burning.
@@ -83870,12 +83902,12 @@ ${b73Strip() ? 'The squad still has some of what it took off the transport. Not 
 
 The smoke goes out of the high window and up into the grey before dawn, straight up in the still air, and stands there over the valley like a post.
 
-A corner of the great roll lifts off on the heat and goes up toward the ceiling, and ${b73Say({doss:'Doss', haddat:'Haddat', _:'somebody'})} catches it out of the air. Three lines of the steward's hand, three families, and the figures beside them already brown and going. It goes in the kit. Nobody can read what they owed now.${b73If('doss', `\n\nDoss stands in the doorway and watches it burn to the end, every roll, every ribbon. When it is done he takes his cap off, and holds it, and does not put it back on for some time. "Twenty-six harvests," he says. "Not mine, this one. Somebody's." He swallows. "That's right. That's how it should look."`)}${b73If('wenna', `\n\nWenna watches with her arms folded. "Fish don't buy themselves," she says again, but softer. "Still." She watches the ribbons go. "Still."`)}`,
+A corner of the great roll lifts off on the heat and goes up toward the ceiling, and ${b73Say({doss:'Doss', haddat:'Haddat', _:'somebody'})} catches it out of the air. Three lines of the steward's hand, three families, and the figures beside them already brown and going. It goes in the kit. What they owed is ash.${b73If('doss', `\n\nDoss stands in the doorway and watches it burn to the end, every roll, every ribbon. When it is done he takes his cap off, and holds it, and does not put it back on for some time. "Twenty-six harvests," he says. "Not mine, this one. Somebody's." He swallows. "That's right. That's how it should look."`)}${b73If('wenna', `\n\nWenna watches with her arms folded. "Fish don't buy themselves," she says again, but softer. "Still." She watches the ribbons go. "Still."`)}`,
       ch:[{t:'Out into the yard. Dawn is coming.', go:'b7_c3_dawn'}]}),
     b7_c3_loot:()=>({sp:'The counting room', scene:'b7_c3_house', html:risingHTML(), txt:
 `The strongbox comes up from under the table between ${b73Say({haddat:'Haddat and you', tangle:'Tangle and you', _:'two of the squad'})}, and the lock comes off it with ${b73Say({mehet:'one of Mehet\'s keys', tangle:'a fuse-spike and some language', _:'a sword-hilt and some language'})}: Letherii silver, enough to feed a squad for a month off a farm that will sell. The medicine chest has jars of the factor's own salves in it, sealed with wax, better than the column's.
 
-The rolls stay on their shelves in their ribbons. Nobody touches them. There is no time, and no fire, and the squad has to eat.${b73If('doss', `\n\nDoss stands in the doorway and looks at the rolls, and then at you, and then at the strongbox, and is quiet for some time. Then he says, "Right," as a man says it when something has been decided for him, again. He goes out to the barn.`)}${b73If('wenna', `\n\nWenna weighs a handful of the silver. "Fish," she says. "And a boat, one day." She seems content${b7In('doss') ? ', and then, looking at the door Doss went out of, a little less' : ''}.`)}
+The rolls stay on their shelves in their ribbons, untouched. There is no time, and no fire, and the squad has to eat.${b73If('doss', `\n\nDoss stands in the doorway and looks at the rolls, and then at you, and then at the strongbox, and is quiet for some time. Then he says, "Right," as a man says it when something has been decided for him, again. He goes out to the barn.`)}${b73If('wenna', `\n\nWenna weighs a handful of the silver. "Fish," she says. "And a boat, one day." She seems content${b7In('doss') ? ', and then, looking at the door Doss went out of, a little less' : ''}.`)}
 
 Outside, the house's Indebted watch the strongbox go across the yard. They know which shelf their rolls are on.`,
       ch:[{t:'Out into the yard. Dawn is coming.', go:'b7_c3_dawn'}]}),
@@ -83884,9 +83916,30 @@ Outside, the house's Indebted watch the strongbox go across the yard. They know 
     b7_c3_dawn:()=>({sp:'The factor\'s yard', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_ph = 4; }, again:()=>'The factor\'s yard at dawn, the column going to ground in the barn and the orchard.', txt:
 `Dawn. The column goes to ground in the factor's barn and orchard, marines in the hay, pickets in the trees, the mages' Mockra laid over all of it, worn thin, so that the valley sees a factor's house with its lamps gone out and nothing more. ${b73Key() === 'ledger' ? 'Except the smoke, which the valley sees very well.' : 'The valley sees nothing. The factor\'s house looks as it always has, but quieter.'}
 
-In the barn, the marines have news, the way marines always do at dawn. Up north, a mage of the Letherii called something at a farmhouse that was not a cadre's lightning: demons, they say, things out of a warren, and a marine named Uru Hela did not come back from it. Somebody else's squad. The marines say the name once, and then do not say it again.${b73If('marrow', `\n\nMarrow nods slowly, hearing it. "I felt it, child," she says. "In my teeth."`)}`,
+In the barn, the marines have news, the way marines always do at dawn. Up north, a mage of the Letherii called something at a farmhouse that was not a cadre's lightning: demons, they say, things out of a warren, and a marine named Uru Hela did not come back from it. Another company's squad. The marines say the name once, and then do not say it again.${b73If('marrow', `\n\nMarrow nods slowly, hearing it. "I felt it, child," she says. "In my teeth."`)}`,
       ch:[{t:'The barn.', go:'b7_c3_fire'},
+          {t:'Doss, by the counting-room window.', req:()=>b7In('doss') && !S.f.b7_c3_dossDawn, go:'b7_c3_doss_dawn'},
+          {t:'Wenna, at the water-trough.', req:()=>b7In('wenna') && !S.f.b7_c3_wennaDawn, go:'b7_c3_wenna_dawn'},
           {t:'Walk the yard.', go:()=>startExplore()}]}),
+    b7_c3_doss_dawn:()=>({sp:b7In('doss') ? 'Doss' : 'The counting-room window', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_dossDawn = 1; }, txt: !b7In('doss') ?
+`The counting room's high window looks out on the yard. ${b73Key() === 'ledger' ? 'A thin smoke still comes out of it.' : 'Behind it the rolls sit on their shelves in their ribbons.'}` : b73Key() === 'ledger' ?
+`Doss is sitting on the mounting-block under the counting-room window with the flail across his knees, watching the last of the smoke come out of it. He has not slept. He does not look as if he wants to.
+
+"On quarter-days," he says, "you stood here. Under this window. The steward read your line out of it, and you said yes, and went home." He looks up at it. "I always wondered what was in there. Shelves, it turns out." He nearly laughs. "Just shelves."${(S.kit || []).includes('b7_c3_ledgerash') ? `
+
+You show him the corner of the roll. He turns it to the light, the three lines and the brown stain where the figures were, and gives it back. "Somebody's grandmother," he says. "Somebody's son. Owing nothing." He puts his cap back on. "Keep it with the other one."` : ''}` :
+`Doss is sitting on the mounting-block under the counting-room window with the flail across his knees. He has not slept. Behind the window the rolls are still on their shelves, every ribbon in its place.
+
+"I know," he says, before you have said anything. "The squad has to eat." He looks at his hands. "On the holding, they said that too. The factor has to eat. The steward has to eat." He stands, and shoulders the flail. "I'll march, Sergeant. I said I would." He leaves it there, which is worse.`,
+      ch:[{t:'Back to the yard.', go:()=>startExplore()}]}),
+    b7_c3_wenna_dawn:()=>({sp:b7In('wenna') ? 'Wenna' : 'The water-trough', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_wennaDawn = 1; }, txt: !b7In('wenna') ?
+`The factor's water-trough, stone, full, with a skin of dawn light on it.` :
+`Wenna has her bare feet in the factor's water-trough and her eyes shut, and her lips are moving. Her gaff leans on the trough beside her.
+
+"The Shore," she says, when she has finished, without opening her eyes. "A trough isn't the sea. It's water, though. She hears through water." She opens one eye. "I told her about the farm, and the ditch. She likes ditches. They go to the sea in the end, all of them."
+
+${b73Key() === 'ledger' ? `She looks at the smoke. "My brother would have liked that," she says. "He owed nobody. He said it was the only thing the Shake had the Letherii wanted."` : `She looks at the strongbox the marines are dividing. "My share's a boat," she says. "One day. Clinker-built." She shuts the eye again. "Not owed."`}`,
+      ch:[{t:'Back to the yard.', go:()=>startExplore()}]}),
     /* the lieutenant at dawn: her look by the key, and the Rising as the column sees it */
     b7_c3_lt4:()=>({sp:'The lieutenant', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_lt4 = 1; }, again:()=>'The lieutenant, in the orchard with her slate. "Dusk, Sergeant."', txt:
 `The lieutenant is sitting under an apple tree in the factor's orchard with the slate on her knee, writing in the first light. ${b73Key() === 'ledger' ? 'She looks at the smoke over the house, a long time, and then at you, and makes a mark.' : 'She looks at the strongbox the marines are dividing, and then at you, and makes a mark. It is hard to say what kind.'}
@@ -83903,6 +83956,301 @@ ${b73Key() === 'ledger' ? `The Third walks light, with the factor's silver still
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
 };
+
+/* ============ Book Seven, Chapter 3 art: Night Raids — farm country inland under no moon, a column in the ditches, a factor's house ============ */
+/* Figures (FIGX) in the ~32px frame of 18/47b/80d, lit from the left: Wenna, the Shake fisher who guides the Third (the recruit): lean and
+   brown, oiled sealskin over blue-grey wool, a cord of shells at the throat, bare feet, dark hair tied back with tarred cord, a gaff on a
+   line over the shoulder and a coil of cord at the hip. The bust (POR.wenna), as Book Six's women: lamp low left, a cool sea-rim right.
+   Six backdrops (SCENEX, sceneLayer for the still parts, REDUCE() holding the rest still), in 120b's night palette (blue-black sky, no moon,
+   the barley grey-green, plaster pale, lamp-gold where a window is lit):
+     b7_camp_night   the column's lie-up in a wood: tall trunks, soldiers asleep in their cloaks, a sentry, no fire
+     b7_march_night  a file of soldiers on a farm track between hedges in the dark, a far farm, stars
+     b7_farm_night   a dark farm behind a stone wall: house, barn, cart shed, a banked glow, the barley
+     b7_c3_floor     inside an empty farmhouse at dusk: plank floor, closed shutters with light at the cracks, a cold hearth, a heavy table
+     b7_c3_gate      a village's wattle wall and split-pole gate, thatch behind, one lamp behind the gate (out once the village shuts)
+     b7_c3_house     a factor's house of dressed stone behind a yard wall, lamps in every window, a long barn, an orchard; at dawn after
+                     the key the lamps are out, and on 'ledger' a column of smoke stands up from the back of the house
+   Nothing burns close; no bodies, ever.
+   The chapter's gear in the series' 200×150 item style (089g), on Book Six's smoke-umber ground (the Third's items). */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* Wenna: thirty, lean and brown, oiled sealskin jerkin over a blue-grey wool smock to the knee, bare feet, a cord of white shells at the
+     throat, dark hair tied back with tarred cord; the gaff's pole over the right shoulder with its iron hook behind, the line looped down;
+     a coil of tarred cord at the left hip, a short fish-knife in the belt */
+  wenna(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1.02); const sw = o.still ? 0 : Math.sin(t/380 + (o.phase || 0));
+    h.legs('#7a5a40'); ctx.fillStyle = '#8a6448'; ctx.fillRect(-4.6, 10.8, 3.6, 1.8); ctx.fillRect(1, 10.8, 3.6, 1.8); // bare feet, brown
+    poly(ctx, [[-6,-6],[6,-6],[6.8 + sw*.2,9.4],[-6.8 + sw*.2,9.4]], h.armor('#5e6a74', '#22282e')); // the wool smock
+    poly(ctx, [[-5.8,-5.6],[5.8,-5.6],[5.2,3.6],[-5.2,3.6]], h.armor('#4a3e32', '#141008')); // the sealskin jerkin
+    ctx.fillStyle = 'rgba(220,230,240,.22)'; ctx.fillRect(-5, -5, 1, 8); ctx.fillRect(2.4, -4.4, .8, 6); // the oil's sheen
+    ctx.fillStyle = '#1e160e'; ctx.fillRect(-6, 2.6, 12, 1.1); // the belt
+    B2F.line(ctx, '#c8c8c0', .7, [[3.6, 2.4], [4.4, 5.6]]); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(3.2, 1.6, 1, 1.2); // the fish-knife
+    // the coil of tarred cord at the left hip
+    ctx.strokeStyle = '#2a2014'; ctx.lineWidth = .8; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.ellipse(-5.6, 5.2, 2 - i*.3, 1.4 - i*.2, .2, 0, 7); ctx.stroke(); }
+    // arms: the back arm bare to the elbow, down; the front arm up to the shoulder, holding the gaff
+    ctx.fillStyle = '#4a3e32'; ctx.fillRect(-8, -5, 2.2, 3.6); ctx.fillStyle = '#9a6c4a'; ctx.fillRect(-7.8, -1.6, 2, 4.2); ell(ctx, -6.8, 3, 1.1, 1.1, '#8a6040');
+    ctx.fillStyle = '#4a3e32'; ctx.fillRect(5, -5.2, 2.2, 3.2); ctx.fillStyle = '#9a6c4a'; ctx.fillRect(5.2, -2.2, 2, 2.4); ell(ctx, 6.2, -.2, 1.2, 1.2, '#8a6040');
+    // the gaff: the pole up over the shoulder and back, the iron hook behind the head, the line looping down
+    B2F.line(ctx, '#8a7050', 1.1, [[6.6, 1.2], [-3.6, -18.4]]);
+    ctx.strokeStyle = '#7a7a78'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(-4.4, -16.6, 2, Math.PI*1.25, Math.PI*.4, true); ctx.stroke(); // the hook
+    ctx.strokeStyle = 'rgba(40,30,18,.8)'; ctx.lineWidth = .5; ctx.beginPath(); ctx.moveTo(-3.6, -18.2); ctx.quadraticCurveTo(-8 + sw, -6, -6.4, 3.8); ctx.stroke(); // the line
+    h.head('#9a6c4a', 3.9, -11.4); h.look('rgba(20,12,6,.86)', -11.6);
+    B2F.cap(ctx, '#1a120c', 4.1, -12.6, 1.02, 1.8); ell(ctx, -1, -9, 1.3, 2.2, '#1a120c'); B2F.line(ctx, '#3a2a14', .6, [[-2, -10], [0, -10]]); // dark hair, tied back with cord
+    for (let i = 0; i < 5; i++) ell(ctx, -2.4 + i*1.2, -6.4 + Math.abs(i - 2)*.3, .45, .4, '#e8e4d8'); // the cord of shells
+    ctx.restore(); },
+});
+
+/* ---------------- the bust ---------------- */
+POR.wenna = function(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.74, chin:4.3, skin:'#9a6c4c', iris:'#2a2018', lip:'#7a4a3a', browCol:'#1e140e', browW:1.3, arch:.7, browL:.2, browR:.35, rim:'#9ab8c8', rimA:.28, nose:1.1, look:.25, open:.9, smileL:.05, smileR:.15, mouthW:3.3, bags:.3, age:.2};
+  PR.neck(ctx, F, 7.6);
+  const B = BP.body(ctx, F, {wide:32, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#4e4236', c2:'#120e08'}); ctx.save(); B.path(); ctx.clip(); // the oiled sealskin
+    for (let i = 0; i < 26; i++) { const r = PR.rng(i + 731); PR.soft(ctx, -30 + r()*60, -44 + r()*46, 2 + r()*5, 1 + r()*2, '#d8e4ee', .06 + r()*.06); } // the oil's sheen
+    PR.stroke(ctx, 'rgba(0,0,0,.45)', .9, () => { ctx.moveTo(-14, -40); ctx.quadraticCurveTo(-16, -16, -13, 6); ctx.moveTo(16, -40); ctx.quadraticCurveTo(18, -16, 15, 6); }); // the seams
+    ctx.fillStyle = 'rgba(94,106,116,.75)'; ctx.fillRect(-7, -46, 14, 52); // the wool smock showing at the opening
+    PR.soft(ctx, 20, -16, 14, 12, '#000000', .4); PR.soft(ctx, -18, -34, 10, 6, '#e8f0f8', .1);
+    ctx.restore(); BP.light(ctx, F, B, false);
+  // the cord of shells at the throat
+  for (let i = 0; i < 9; i++) { const a = Math.PI*(.18 + i*.08), x = Math.cos(a)*-14, y = -44 + Math.sin(a)*4; ell(ctx, x*.9 + 0, y + 2, 1.8, 1.4, PR.rad(ctx, x - .5, y + 1.5, .1, 2, [[0, '#f8f4ea'], [1, '#8a8478']])); }
+  // the gaff's pole over the right shoulder
+  PR.stroke(ctx, '#3a2a18', 3, () => { ctx.moveTo(32, 4); ctx.lineTo(16, -116); }); PR.stroke(ctx, '#8a7050', 2, () => { ctx.moveTo(32, 4); ctx.lineTo(16, -116); }); PR.stroke(ctx, 'rgba(255,240,210,.3)', .6, () => { ctx.moveTo(30.6, 4); ctx.lineTo(14.8, -114); });
+  F.under = (ctx, F) => { PR.dots(ctx, F, 30, 'rgba(18,10,6,.25)', .45, [5, 18]); PR.soft(ctx, -5, F.cy + 3, 3.4, 2, '#8a3a28', .1); PR.soft(ctx, 5, F.cy + 3, 3.4, 2, '#8a3a28', .1); };
+  PR.face(ctx, F);
+  const u = F.h/20, top = F.cy - 21*u;
+  BP.hair(ctx, F, {c:['#2a1e14', '#120c08', '#040302'], v:1.4, wx:.9, hl:12.4, ey:-2.4, n:70, sw:.45, s:['#1e1610', '#0a0604', '#3a2c20'], seed:733, sh:'#a8b8c0', shA:.2});
+  ell(ctx, -F.w*.15, top + F.h*.92, 3.4, 2.4, PR.rad(ctx, -F.w*.25, top + F.h*.86, .4, 4, [[0, '#2a1e14'], [1, '#060403']])); // the knot, tied back
+  PR.stroke(ctx, '#3a2a14', 1, () => { ctx.moveTo(-F.w*.15 - 3.4, top + F.h*.92); ctx.lineTo(-F.w*.15 + 3.4, top + F.h*.92); }); // the tarred cord round it
+  return F; };
+
+/* ---------------- shared drawing for the valley ---------------- */
+/* a night sky with no moon: blue-black, stars, a faint greyness at the horizon */
+function b73aSky(x, W, hz, seed, warm){ x.fillStyle = vgrad(x, 0, hz, [[0,'#03050a'],[.7,'#0c1220'],[1, warm ? '#1e1a1e' : '#161c28']]); x.fillRect(0, 0, W, hz + 2);
+  for (let i = 0; i < 120; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, seed)*.55).toFixed(2)})`; const sz = hash(i, seed + 3) > .94 ? 1.4 : 1; x.fillRect(hash(i, seed + 1)*W, Math.pow(hash(i, seed + 2), 1.3)*hz*.92, sz, sz); } }
+/* low hills along the horizon */
+function b73aHills(x, W, H, hz, col, amp, seed){ x.fillStyle = col; x.beginPath(); x.moveTo(0, hz + 2); for (let i = 0; i <= 24; i++) { const u = i/24; x.lineTo(u*W, hz - H*(amp + amp*.8*Math.sin(u*5 + seed) + amp*.4*Math.sin(u*13 + seed*2))); } x.lineTo(W, hz + 2); x.closePath(); x.fill(); }
+/* the barley: grey-green strokes, denser and taller toward the viewer */
+function b73aBarley(x, W, H, y0, y1, n, seed){ for (let i = 0; i < n; i++) { const yy = y0 + Math.pow(hash(i, seed), 1.2)*(y1 - y0), d = (yy - y0)/(y1 - y0); x.strokeStyle = `rgba(${70 + Math.round(d*20)},${78 + Math.round(d*20)},${52},${(.3 + d*.45).toFixed(2)})`; x.lineWidth = .6 + d*1.1; const gx = hash(i, seed + 1)*W; x.beginPath(); x.moveTo(gx, yy); x.lineTo(gx + 1 + d*2, yy - 3 - d*11); x.stroke(); } }
+/* a hedge: a long dark mound with lumps along its top */
+function b73aHedge(x, x0, x1, y, h, col, seed){ x.fillStyle = col; x.beginPath(); x.moveTo(x0, y); for (let i = 0; i <= 18; i++) { const u = i/18; x.lineTo(x0 + (x1 - x0)*u, y - h*(.7 + .3*Math.sin(u*9 + seed) + .2*hash(i, seed))); } x.lineTo(x1, y + 2); x.lineTo(x0, y + 2); x.closePath(); x.fill(); }
+/* a plaster-and-thatch building: pale wall, a dark thatch roof, a door and shuttered windows; lit gives a window of lamp-gold */
+function b73aCot(x, bx, by, w, h, lit, pale){ x.fillStyle = pale || '#3a3a36'; x.fillRect(bx, by - h, w, h); x.fillStyle = 'rgba(255,255,240,.06)'; x.fillRect(bx, by - h, w*.2, h);
+  poly(x, [[bx - w*.08, by - h], [bx + w*.5, by - h - h*.9], [bx + w*1.08, by - h]], '#141410'); x.strokeStyle = 'rgba(80,74,56,.35)'; x.lineWidth = .6; x.beginPath(); for (let i = 1; i < 5; i++) { const k = i/5; x.moveTo(bx - w*.08 + w*.58*k, by - h - h*.9*k); x.lineTo(bx + w*1.08 - w*.58*k, by - h - h*.9*k); } x.stroke(); // thatch courses
+  x.fillStyle = '#0c0a08'; x.fillRect(bx + w*.42, by - h*.62, w*.16, h*.62); // the door
+  x.fillStyle = lit ? 'rgba(255,200,110,.85)' : '#121210'; x.fillRect(bx + w*.12, by - h*.7, w*.16, h*.22); x.fillRect(bx + w*.72, by - h*.7, w*.16, h*.22); }
+
+/* ---------------- backdrops ---------------- */
+/* the column's lie-up in a wood (120's caption): tall trunks against a sky with no moon, soldiers asleep in their cloaks between the roots,
+   a sentry standing, no fire */
+SCENEX.b7_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.6;
+  ctx.drawImage(sceneLayer('b73:camp', W, H, (x, W, H) => {
+    b73aSky(x, W, hz, 7310, false);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#10120c'],[1,'#060604']]); x.fillRect(0, hz, W, H - hz); // the wood floor
+    for (let i = 0; i < 90; i++) { const yy = hz + Math.pow(hash(i, 7311), 1.2)*(H - hz), d = (yy - hz)/(H - hz); ell(x, hash(i, 7312)*W, yy, 3 + d*8, 1 + d*2, `rgba(${40 + Math.round(d*20)},${36 + Math.round(d*14)},${22},${(.3 + d*.3).toFixed(2)})`); } // leaf litter
+    // trunks, far to near: thin and grey far, thick and black near; the canopy a black mass across the top
+    for (let layer = 0; layer < 3; layer++) { const n = 9 - layer*2; for (let i = 0; i < n; i++) { const tx = W*(hash(i + layer*20, 7313)*1.04 - .02), tw = W*(.012 + layer*.018 + hash(i, 7314 + layer)*.01), base = hz + H*(.02 + layer*.12 + hash(i, 7315)*.04);
+      x.fillStyle = ['#161a1c', '#0e1010', '#050606'][layer]; x.fillRect(tx - tw/2, 0, tw, base); ell(x, tx, base, tw*.9, tw*.25, x.fillStyle); // the trunk, its root-flare
+      if (layer === 2) { x.fillStyle = 'rgba(160,170,190,.07)'; x.fillRect(tx - tw/2, 0, tw*.18, base); } } }
+    x.fillStyle = '#040505'; x.beginPath(); x.moveTo(0, 0); x.lineTo(W, 0); x.lineTo(W, H*.12); for (let i = 24; i >= 0; i--) { const u = i/24; x.lineTo(u*W, H*(.1 + .08*Math.sin(u*7) + .05*hash(i, 7316))); } x.closePath(); x.fill(); // the canopy
+    // soldiers asleep between the roots: long dark lumps of cloak, a helm, a pack
+    for (let i = 0; i < 9; i++) { const sx = W*(.06 + hash(i, 7317)*.88), sy = hz + H*(.08 + hash(i, 7318)*.2), s = .7 + (sy - hz)/(H - hz)*1.4;
+      ell(x, sx, sy, 16*s, 4.6*s, '#1a1e18'); ell(x, sx - 12*s, sy - 1.6*s, 3.4*s, 3*s, '#22261e'); ell(x, sx + 4*s, sy - 2.6*s, 9*s, 2.2*s, 'rgba(110,130,100,.08)'); }
+  }), 0, 0, W, H);
+  // a sentry standing at the wood's edge, breathing; starlight on his helm
+  const sx = W*.8, sy = H*.66, br = mo ? Math.sin(t/900)*.6 : 0; ctx.fillStyle = '#08090a'; ctx.fillRect(sx - 3, sy - 22 + br, 6, 22); ell(ctx, sx, sy - 25 + br, 3.2, 3.2, '#08090a'); B2F.line(ctx, '#08090a', 1.2, [[sx + 3, sy - 16], [sx + 6, sy - 34]]); ctx.fillStyle = 'rgba(180,190,210,.25)'; ctx.fillRect(sx - 2, sy - 28 + br, 2, 1);
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.14 + i*Math.min(.075, .46/sq.length)), H*.97 - (i % 2)*2, 1.8, t, {phase:i, dir:1, still:true}));
+  vign(ctx, W, H, .75, .55); };
+
+/* the column on the move (120's caption): a farm track pale under the stars between two hedges, running away to a far farm; a file of
+   soldiers in the ditch beside it, dark, no lamps; the barley either side */
+SCENEX.b7_march_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46;
+  ctx.drawImage(sceneLayer('b73:march', W, H, (x, W, H) => {
+    b73aSky(x, W, hz, 7330, false);
+    b73aHills(x, W, H, hz, '#0a0c10', .02, 1.3);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#12140e'],[1,'#070806']]); x.fillRect(0, hz, W, H - hz);
+    // the far farm on the track, a dark cluster
+    b73aCot(x, W*.58, hz + 2, W*.05, H*.03, false, '#1e1e1c'); b73aCot(x, W*.64, hz + 3, W*.035, H*.024, false, '#1a1a18');
+    // the track: a pale band narrowing to the farm
+    x.fillStyle = 'rgba(150,140,110,.2)'; x.beginPath(); x.moveTo(W*.3, H); x.lineTo(W*.6, hz + 4); x.lineTo(W*.62, hz + 4); x.lineTo(W*.78, H); x.closePath(); x.fill();
+    b73aBarley(x, W, H, hz + 4, H, 260, 7331);
+    // the hedges either side of the track, converging
+    for (let i = 0; i < 2; i++) { const sd = i ? 1 : -1; x.fillStyle = '#060805'; x.beginPath(); x.moveTo(W*(.5 + sd*.62), H); for (let k = 0; k <= 16; k++) { const u = k/16, px = W*(.5 + sd*(.62 - .5*u)), py = H - (H - hz - 4)*u; x.lineTo(px, py - H*(.08 - .06*u)*(.8 + .4*hash(k + i*17, 7332))); } x.lineTo(W*(.5 + sd*.12), hz + 4); x.lineTo(W*(.5 + sd*.62), H); x.closePath(); x.fill(); }
+  }), 0, 0, W, H);
+  // the file in the ditch along the left hedge, small and dark, moving
+  for (let i = 0; i < 11; i++) { const k = i/10, u = .62 - .5*k, mx = W*(.5 - u + .04) + (mo ? ((t/90) % 6) : 0)*(1 - k)*.4, my = H - (H - hz - 4)*k + 2, s = (1 - k*.75)*H/360; ctx.fillStyle = '#050605'; ctx.fillRect(mx - 2.2*s, my - 12*s, 4.4*s, 10*s); ell(ctx, mx, my - 14*s, 2.4*s, 2.4*s, '#050605'); B2F.line(ctx, '#050605', Math.max(.5, .9*s), [[mx + 2*s, my - 7*s], [mx + 3*s, my - 21*s]]); }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.56 + i*Math.min(.07, .38/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .75, .55); };
+
+/* a farm off the road (120's caption): a long dark farm behind a fieldstone wall, a house, a barn with its doors a hand's width open and a
+   banked red glow inside, a cart shed with a ridged roof, the barley in front; no light anywhere else */
+SCENEX.b7_farm_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5;
+  ctx.drawImage(sceneLayer('b73:farm', W, H, (x, W, H) => {
+    b73aSky(x, W, hz, 7350, false);
+    b73aHills(x, W, H, hz, '#0b0d10', .025, 2.1);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#14160f'],[1,'#080906']]); x.fillRect(0, hz, W, H - hz);
+    // the house (left), the cart shed (middle), the barn (right, big)
+    b73aCot(x, W*.14, hz + H*.1, W*.2, H*.1, false, '#2a2a26');
+    x.fillStyle = '#1a1a16'; x.fillRect(W*.4, hz + H*.04, W*.14, H*.06); poly(x, [[W*.39, hz + H*.04], [W*.47, hz - H*.01], [W*.55, hz + H*.04]], '#0e0e0c'); x.fillStyle = '#050505'; x.fillRect(W*.42, hz + H*.06, W*.1, H*.04); // the cart shed, open-fronted
+    x.fillStyle = '#22221e'; x.fillRect(W*.6, hz - H*.02, W*.3, H*.14); poly(x, [[W*.58, hz - H*.02], [W*.75, hz - H*.13], [W*.92, hz - H*.02]], '#101010'); // the barn
+    x.fillStyle = '#050404'; x.fillRect(W*.72, hz + H*.04, W*.06, H*.08); // its doors, ajar
+    // the fieldstone wall across the front
+    const wy = hz + H*.16; x.fillStyle = vgrad(x, wy - H*.05, wy, [[0,'#3a3832'],[1,'#1a1916']]); x.fillRect(0, wy - H*.05, W, H*.05);
+    for (let i = 0; i < 80; i++) ell(x, hash(i, 7351)*W, wy - H*.05 + hash(i, 7352)*H*.05, 3 + hash(i, 7353)*4, 1.4 + hash(i, 7354), 'rgba(100,96,86,.3)');
+    b73aBarley(x, W, H, wy + 2, H, 240, 7355);
+  }), 0, 0, W, H);
+  // the banked fire inside the barn, a red breath at the gap
+  const lf = mo ? .7 + .3*Math.sin(t/800) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.75, H*.58, H*.05, '#ff4a20', .35*lf); ctx.globalCompositeOperation = 'source-over';
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.1 + i*Math.min(.07, .4/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .72, .5); };
+
+/* the farmhouse floor (this file's scene; B7READ[3]'s table scene): a bare room at dusk, the shutters closed with gold-grey light at their
+   cracks, a heavy table nobody could carry, a cold hearth with no oven door, plank floor; the squad on the boards */
+SCENEX.b7_c3_floor = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fy = H*.62;
+  ctx.drawImage(sceneLayer('b73:floor', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, fy, [[0,'#141210'],[1,'#22201c']]); x.fillRect(0, 0, W, fy); // the plaster wall in near-dark
+    for (let i = 0; i < 40; i++) ell(x, hash(i, 7370)*W, hash(i, 7371)*fy, 8 + hash(i, 7372)*20, 3 + hash(i, 7373)*8, 'rgba(0,0,0,.12)'); // damp, smoke
+    x.fillStyle = '#0c0a08'; x.fillRect(0, H*.06, W, H*.04); for (let i = 0; i < 5; i++) x.fillRect(W*(.1 + i*.2), 0, W*.03, H*.1); // the ceiling beams
+    x.fillStyle = vgrad(x, fy, H, [[0,'#2a2016'],[1,'#120e0a']]); x.fillRect(0, fy, W, H - fy); // the plank floor
+    x.strokeStyle = 'rgba(0,0,0,.45)'; x.lineWidth = 1; for (let i = 0; i < 9; i++) { const k = i/8; x.beginPath(); x.moveTo(W*.5 + (k - .5)*W*.5, fy); x.lineTo(W*.5 + (k - .5)*W*2.2, H); x.stroke(); } // planks, in perspective
+    // the hearth, left: a stone surround, a black mouth, the oven beside it with no door
+    x.fillStyle = '#2e2a24'; x.fillRect(W*.04, fy - H*.3, W*.24, H*.3); x.fillStyle = '#050403'; x.fillRect(W*.07, fy - H*.18, W*.12, H*.18); x.fillStyle = '#0a0806'; x.fillRect(W*.2, fy - H*.14, W*.06, H*.07);
+    for (let i = 0; i < 20; i++) ell(x, W*(.04 + hash(i, 7374)*.24), fy - H*.3 + hash(i, 7375)*H*.3, 3 + hash(i, 7376)*3, 1.6, 'rgba(90,84,74,.3)');
+    ell(x, W*.13, fy - H*.01, W*.04, H*.01, '#1a1612'); // cold ash
+    // the heavy table, right
+    x.fillStyle = '#2a1e12'; x.fillRect(W*.6, fy - H*.06, W*.3, H*.03); x.fillStyle = '#1a120a'; x.fillRect(W*.62, fy - H*.03, W*.02, H*.12); x.fillRect(W*.86, fy - H*.03, W*.02, H*.12); x.fillStyle = 'rgba(255,220,160,.08)'; x.fillRect(W*.6, fy - H*.06, W*.3, H*.006);
+  }), 0, 0, W, H);
+  // the shutters, closed, the dusk at their cracks going from gold to grey
+  const g = mo ? .75 + .25*Math.sin(t/3000) : .9;
+  [[.36, .2], [.5, .2]].forEach(([u, v]) => { const sx = W*u, sy = H*v, sw = W*.1, sh = H*.2; ctx.fillStyle = '#1a140e'; ctx.fillRect(sx, sy, sw, sh); ctx.fillStyle = '#0e0a06'; ctx.fillRect(sx + sw*.48, sy, sw*.04, sh);
+    ctx.fillStyle = `rgba(220,180,120,${(.55*g).toFixed(2)})`; ctx.fillRect(sx + sw*.47, sy + 2, 1, sh - 4); ctx.fillRect(sx, sy + sh*.5, sw, 1); ctx.fillRect(sx + 2, sy, 1, sh); ctx.fillRect(sx + sw - 3, sy, 1, sh);
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, sx + sw*.5, sy + sh*.5, H*.14, '#c8a070', .07*g); ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = `rgba(200,170,120,${(.05*g).toFixed(2)})`; ctx.beginPath(); ctx.moveTo(sx + sw*.47, sy + sh); ctx.lineTo(sx + sw*.53, sy + sh); ctx.lineTo(sx + sw*.9, H); ctx.lineTo(sx + sw*.1, H); ctx.closePath(); ctx.fill(); }); // a thin blade of light on the floor
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.08, .5/sq.length)), H*.96 - (i % 2)*3, 1.9, t, {phase:i, dir:i % 2 ? 1 : -1, still:true}));
+  vign(ctx, W, H, .82, .6); };
+
+/* a village gate (this file's scene): a wattle wall on stakes round plaster-and-thatch houses, a gate of split poles, one lamp behind the gate
+   (out once the village has shut against the Third), the barley and the track in front */
+SCENEX.b7_c3_gate = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, wy = H*.68;
+  ctx.drawImage(sceneLayer('b73:gate', W, H, (x, W, H) => {
+    b73aSky(x, W, hz, 7390, false);
+    b73aHills(x, W, H, hz, '#0a0c10', .02, .7);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#14160f'],[1,'#080906']]); x.fillRect(0, hz, W, H - hz);
+    // the houses behind the wall, roofs showing over it
+    [[.08, .1, .07], [.2, .12, .09], [.36, .09, .06], [.62, .11, .08], [.76, .13, .1], [.9, .09, .06]].forEach(([u, w, h], i) => b73aCot(x, W*u, wy - H*.02, W*w, H*h, false, i % 2 ? '#2c2c28' : '#32322e'));
+    // the wattle wall: stakes and woven withies
+    x.fillStyle = '#1a160e'; x.fillRect(0, wy - H*.1, W, H*.1);
+    x.strokeStyle = 'rgba(80,66,40,.5)'; x.lineWidth = 1; for (let r = 0; r < 6; r++) { x.beginPath(); for (let i = 0; i <= 60; i++) { const u = i/60; x.lineTo(u*W, wy - H*.1 + H*(.012 + r*.016) + Math.sin(u*120 + r)*1.2); } x.stroke(); }
+    for (let i = 0; i < 40; i++) { const sx = i/39*W; x.fillStyle = '#0e0a06'; x.fillRect(sx - 1.2, wy - H*.12 - hash(i, 7391)*H*.02, 2.4, H*.12); }
+    // the gate: split poles, bound, in the middle
+    const gx = W*.46, gw = W*.08; x.fillStyle = '#0a0806'; x.fillRect(gx - 2, wy - H*.14, gw + 4, H*.14);
+    for (let i = 0; i < 7; i++) { x.fillStyle = i % 2 ? '#2a2216' : '#241c12'; x.fillRect(gx + i*gw/7, wy - H*.13, gw/7 - 1, H*.13); }
+    x.fillStyle = '#3a2e1c'; x.fillRect(gx, wy - H*.1, gw, H*.01); x.fillRect(gx, wy - H*.04, gw, H*.01); // the cross-bars
+    // the track to the gate, pale
+    x.fillStyle = 'rgba(150,140,110,.18)'; x.beginPath(); x.moveTo(gx, wy); x.lineTo(gx + gw, wy); x.lineTo(W*.72, H); x.lineTo(W*.28, H); x.closePath(); x.fill();
+    b73aBarley(x, W, H, wy + 2, H, 180, 7392);
+  }), 0, 0, W, H);
+  // the lamp behind the gate, through the poles: lit unless the village has shut
+  if (!(S && S.f && S.f.b7_c3_village === 'shut')) { const lf = mo ? .8 + .2*Math.sin(t/600) + .05*Math.sin(t/47) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.5, H*.6, H*.1, '#ffb060', .3*lf); glow(ctx, W*.5, H*.6, 2, '#ffe0a0', .9*lf); ctx.globalCompositeOperation = 'source-over'; }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.12 + i*Math.min(.07, .3/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .72, .5); };
+
+/* a factor's house (this file's scene): two floors of dressed stone with a slate roof behind a yard wall, every window lit; a long barn to
+   the right, an orchard of round black trees to the left; at dawn after the key the lamps are out and the sky is grey, and on 'ledger' a
+   column of smoke stands straight up from the back of the house */
+SCENEX.b7_c3_house = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.54, dawn = !!(S && S.f && S.f.b7_c3_key), smoke = !!(S && S.f && S.f.b7_c3_key === 'ledger');
+  ctx.drawImage(sceneLayer('b73:house' + (dawn ? 'd' : 'n'), W, H, (x, W, H) => {
+    if (dawn) { x.fillStyle = vgrad(x, 0, hz, [[0,'#1a2030'],[.6,'#3a4048'],[1,'#6a6058']]); x.fillRect(0, 0, W, hz + 2); } else b73aSky(x, W, hz, 7410, false);
+    b73aHills(x, W, H, hz, dawn ? '#22262a' : '#0b0d10', .02, 1.7);
+    x.fillStyle = vgrad(x, hz, H, dawn ? [[0,'#2a2c22'],[1,'#121410']] : [[0,'#14160f'],[1,'#080906']]); x.fillRect(0, hz, W, H - hz);
+    // the orchard, left: round dark trees in rows
+    for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) { const ox = W*(.02 + i*.07 + r*.02), oy = hz + H*(.02 + r*.04), s = .8 + r*.3; B2F.line(x, dawn ? '#1a1a14' : '#0a0a08', 1.4*s, [[ox, oy], [ox, oy - 8*s]]); ell(x, ox, oy - 12*s, 9*s, 7*s, dawn ? '#1e2418' : '#0a0e08'); }
+    // the house: two floors, a slate roof, a chimney
+    const hx0 = W*.36, hx1 = W*.68, hb = hz + H*.06, ht = hb - H*.2; x.fillStyle = vgrad(x, ht, hb, dawn ? [[0,'#5a5850'],[1,'#3a3832']] : [[0,'#3e3c36'],[1,'#1e1d1a']]); x.fillRect(hx0, ht, hx1 - hx0, hb - ht);
+    x.strokeStyle = dawn ? 'rgba(30,28,24,.35)' : 'rgba(0,0,0,.35)'; x.lineWidth = .6; for (let r = 1; r < 10; r++) { x.beginPath(); x.moveTo(hx0, ht + (hb - ht)*r/10); x.lineTo(hx1, ht + (hb - ht)*r/10); x.stroke(); } // the courses of dressed stone
+    poly(x, [[hx0 - W*.02, ht], [hx0 + W*.05, ht - H*.08], [hx1 - W*.05, ht - H*.08], [hx1 + W*.02, ht]], dawn ? '#2a2e34' : '#14161a');
+    x.fillStyle = dawn ? '#2e2c28' : '#121210'; x.fillRect(hx0 + (hx1 - hx0)*.7, ht - H*.12, W*.02, H*.06); // the chimney
+    x.fillStyle = '#0c0a08'; x.fillRect(hx0 + (hx1 - hx0)*.46, hb - H*.07, W*.025, H*.07); // the door
+    // the barn, right, long and low
+    x.fillStyle = dawn ? '#3a3830' : '#1c1c18'; x.fillRect(W*.72, hz - H*.02, W*.26, H*.1); poly(x, [[W*.71, hz - H*.02], [W*.85, hz - H*.1], [W*.99, hz - H*.02]], dawn ? '#24241e' : '#0e0e0c');
+    // the yard wall across the front, the gate in it
+    const wy = hz + H*.14; x.fillStyle = vgrad(x, wy - H*.05, wy, dawn ? [[0,'#5a564c'],[1,'#3a3630']] : [[0,'#3a3832'],[1,'#1a1916']]); x.fillRect(0, wy - H*.05, W, H*.05);
+    for (let i = 0; i < 80; i++) ell(x, hash(i, 7411)*W, wy - H*.05 + hash(i, 7412)*H*.05, 3 + hash(i, 7413)*4, 1.4 + hash(i, 7414), dawn ? 'rgba(120,114,100,.3)' : 'rgba(100,96,86,.3)');
+    x.fillStyle = '#0a0908'; x.fillRect(W*.5, wy - H*.05, W*.06, H*.05); // the gate
+    x.fillStyle = 'rgba(150,140,110,.16)'; x.beginPath(); x.moveTo(W*.5, wy); x.lineTo(W*.56, wy); x.lineTo(W*.74, H); x.lineTo(W*.32, H); x.closePath(); x.fill(); // the lane
+  }), 0, 0, W, H);
+  // the windows: every one lit by night; dark at dawn
+  if (!dawn) { const lf = mo ? .85 + .15*Math.sin(t/700) : 1, hx0 = W*.36, hx1 = W*.68, hb = H*.54 + H*.06, ht = hb - H*.2;
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) { if (r === 1 && i === 2) continue; const wx = hx0 + (hx1 - hx0)*(.08 + i*.19), wyy = ht + (hb - ht)*(.18 + r*.46);
+      ctx.fillStyle = `rgba(255,${196 + Math.round(lf*24)},110,${(.85*lf).toFixed(2)})`; ctx.fillRect(wx, wyy, W*.024, H*.04); ctx.fillStyle = 'rgba(40,24,10,.7)'; ctx.fillRect(wx + W*.011, wyy, 1, H*.04);
+      ctx.globalCompositeOperation = 'lighter'; glow(ctx, wx + W*.012, wyy + H*.02, H*.05, '#ffb060', .12*lf); ctx.globalCompositeOperation = 'source-over'; } }
+  // the smoke from the counting room on 'ledger', straight up in the still dawn air, slowly widening
+  if (smoke) { const sx = W*.6, sy = H*.4; for (let i = 0; i < 14; i++) { const k = ((mo ? t/9000 : 0) + i/14) % 1, r = H*(.02 + k*.07); ctx.fillStyle = `rgba(80,78,76,${(.35*(1 - k)).toFixed(2)})`; ell(ctx, sx + Math.sin(k*4 + i)*W*.01, sy - k*H*.42, r, r*.8, ctx.fillStyle); } }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.1 + i*Math.min(.07, .3/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .72, .5); };
+
+/* ---------------- the chapter's gear: ART['item/<key>'] in the series' 200×150 item style (089g), on Book Six's smoke-umber ground ---------------- */
+(function(){
+  if (typeof ART === 'undefined') return;
+  const O = 'stroke="#0b0806" stroke-opacity=".6" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"';
+  const sh = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#@sh)"/>`;
+  const S = (d, fill, lit = '@lit') => `<path d="${d}" fill="${fill}"/><path d="${d}" fill="url(#${lit})"/><path d="${d}" fill="none" ${O}/>`;
+  const lin = (id, stops, x2 = 1, y2 = 1) => `<linearGradient id="@${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}"${a != null ? ` stop-opacity="${a}"` : ''}/>`).join('')}</linearGradient>`;
+  const BASE = `<radialGradient id="@bg" cx=".44" cy=".42" r=".78"><stop offset="0" stop-color="#40291f"/><stop offset=".62" stop-color="#22150f"/><stop offset="1" stop-color="#100907"/></radialGradient>`
+    + `<radialGradient id="@sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".55" stop-color="#000" stop-opacity=".32"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`
+    + lin('lit', [[0, '#fff', .2], [.45, '#fff', 0], [.6, '#000', 0], [1, '#000', .42]])
+    + lin('st', [[0, '#e9edf0'], [.35, '#a9b1b8'], [.7, '#69717a'], [1, '#353b42']], 0, 1)
+    + lin('wd', [[0, '#9c7649'], [.5, '#6e4f2e'], [1, '#3c2916']], 0, 1);
+  function put(key, label, defs, body){
+    const P = key.replace(/[^a-z0-9]/g, '') + '-';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="${label.replace(/"/g, '&quot;')}"><defs>${BASE}${defs}</defs><rect width="200" height="150" fill="url(#@bg)"/>${body}</svg>`;
+    ART['item/' + key] = svg.replace(/@/g, P);
+    if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [200, 150];
+  }
+
+  /* the Letherii field crossbow: a short heavy stock of oiled ash seen side-on, a steel prod across the fore-end, the string spanned, a
+     crank-hook hung from it on a thong; notches cut all along the stock */
+  { let notches = ''; for (let i = 0; i < 18; i++) notches += `<path d="M${(70 + i*4.2).toFixed(1)} 84 l1 5" stroke="#1a1006" stroke-width="1" stroke-opacity=".8"/>`;
+    put('b7_c3_letherxbow', 'A Letherii field crossbow', '',
+      sh(100, 120, 80, 7)
+      + `<g transform="rotate(-6 100 80)">`
+      + S('M30 82 L150 78 L156 84 L150 92 L64 94 Q50 104 36 100 Q28 92 30 82 Z', 'url(#@wd)')
+      + notches
+      + `<path d="M40 86 L148 82" stroke="#fff" stroke-opacity=".18" stroke-width="1"/>`
+      + S('M150 56 Q160 80 150 104 L146 104 Q155 80 146 56 Z', 'url(#@st)')
+      + `<path d="M148 58 L96 81 L148 102" fill="none" stroke="#d8d0b8" stroke-width="1"/>`
+      + `<rect x="92" y="78" width="10" height="7" rx="1.5" fill="#3a3e44" ${O}/><path d="M98 85 L101 96" stroke="#2a2a2e" stroke-width="2.4" stroke-linecap="round"/>`
+      + S('M100 80 L148 79 L148 82 L100 83 Z', '#5a4428')
+      + `<path d="M118 80.5 L142 80" stroke="#c8c8c0" stroke-width="1.2"/><path d="M142 78.6 L147 80 L142 81.6 Z" fill="#a8acb0"/>`
+      + `</g>`
+      + `<path d="M150 40 Q154 52 148 62" fill="none" stroke="#3a2a18" stroke-width="1.2"/><path d="M144 62 Q150 70 156 62 Q158 56 154 52" fill="none" stroke="url(#@st)" stroke-width="3"/>`);
+  }
+
+  /* the Finadd's Edur mail: a long shirt of close-linked mail, dark as wet slate with a faint blue-grey sheen, laid flat, short sleeves,
+     laced at the side where somebody cut it down for Letherii shoulders */
+  { const d = 'M64 30 L136 30 L160 44 L152 60 L140 54 L142 128 L58 128 L60 54 L48 60 L40 44 Z';
+    let rings = ''; for (let r = 0; r < 18; r++) for (let c = 0; c < 16; c++) { const x = 60 + c*5.4 + (r % 2)*2.7, y = 34 + r*5.2; if (x < 58 || x > 142) continue; rings += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.9" fill="none" stroke="#7a8a98" stroke-opacity="${(.22 + ((r + c) % 3)*.08).toFixed(2)}" stroke-width=".7"/>`; }
+    put('b7_c3_edurmail', 'The Finadd\'s Edur mail',
+      lin('ml', [[0, '#4a5462'], [.5, '#2a3038'], [1, '#14181e']], 0, 1),
+      sh(100, 134, 66, 6)
+      + S(d, 'url(#@ml)')
+      + `<g clip-path="none">${rings}</g>`
+      + `<path d="M84 30 Q100 40 116 30" fill="none" stroke="#0a0c10" stroke-width="3"/>`
+      + Array.from({length: 6}, (_, i) => `<path d="M140 ${66 + i*10} l5 3 l-5 3" fill="none" stroke="#8a6a40" stroke-width="1.2"/>`).join('')
+      + `<path d="M70 40 Q90 34 104 38" fill="none" stroke="#c8d8e8" stroke-opacity=".22" stroke-width="2"/>`);
+  }
+
+  /* a corner of the debt-roll: a charred triangle of parchment, three ruled lines in a steward's hand, the figures beside them gone to
+     brown stain; a scrap of faded ribbon still tied through a hole at the corner */
+  { const d = 'M50 34 L156 40 Q160 42 158 48 L120 118 Q114 124 108 118 L46 46 Q44 38 50 34 Z';
+    let lines = ''; for (let i = 0; i < 3; i++) { const y = 52 + i*12; lines += `<path d="M${62 + i*10} ${y} L${146 - i*16} ${y + 2}" stroke="#5a3a1c" stroke-opacity=".35" stroke-width=".6"/><path d="M${64 + i*10} ${y - 2} q4 -2 8 0 t8 0 t7 0 t6 0" fill="none" stroke="#2a1608" stroke-opacity=".7" stroke-width=".8"/><ellipse cx="${132 - i*16}" cy="${y - 1}" rx="${8 - i}" ry="3" fill="#4a2a10" fill-opacity=".45"/>`; }
+    put('b7_c3_ledgerash', 'A corner of the debt-roll',
+      `<radialGradient id="@pg" cx=".45" cy=".35" r=".7"><stop offset="0" stop-color="#e0c898"/><stop offset=".5" stop-color="#b08850"/><stop offset=".8" stop-color="#4a2a12"/><stop offset="1" stop-color="#120804"/></radialGradient>`,
+      sh(104, 126, 52, 5)
+      + `<g transform="rotate(6 100 76)">${S(d, 'url(#@pg)')}${lines}`
+      + `<path d="M120 118 Q130 100 128 92 Q138 80 140 72 L158 48 L120 118 Z" fill="#0e0602"/><path d="M108 118 Q98 110 96 100 Q86 94 84 86 L46 46 L108 118 Z" fill="#0e0602" fill-opacity=".85"/>`
+      + Array.from({length: 4}, (_, i) => `<circle cx="${(124 + i*8).toFixed(1)}" cy="${(108 - i*14).toFixed(1)}" r="1" fill="#ff7a30" fill-opacity=".7"/>`).join('')
+      + `<circle cx="56" cy="40" r="2.6" fill="#120804"/><path d="M56 40 Q46 30 38 34 M56 40 Q50 52 40 54" fill="none" stroke="#8a5a6a" stroke-width="3" stroke-linecap="round"/><path d="M56 40 Q46 30 38 34" fill="none" stroke="#c8a0a8" stroke-opacity=".3" stroke-width="1"/>`
+      + `</g>`);
+  }
+})();
 
 /* ============ resume & boot ============ */
 function resume(){

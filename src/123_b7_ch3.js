@@ -572,7 +572,7 @@ A voice through the wattle, a man's, low: "Go round. Go round by the old road. W
     b7_c3_village_well:()=>({sp:'The village well', scene:'b7_c3_gate', fx:()=>{ S.f.b7_c3_well2 = 1; }, txt:
 `The well in the square is brackish, the old woman says: it goes brackish every summer, and the factor's well, a league east, never does, and the village is not let draw from the factor's well. The squad drinks anyway.
 
-At the shutters, the faces watch. A boy of ten or so comes out of a door in a man's jerkin to the knees and stands by the well looking at ${b73Say({haddat:'Haddat\'s blue shield', tangle:'Tangle\'s satchel', _:'the Third\'s kit'})} as if it were treasure.
+At the shutters, the faces watch. A boy of ten or so comes out of a door in a man's jerkin to the knees and stands by the well looking at ${b73Say({haddat:'Haddat\'s blue shield', tangle:'Tangle\'s satchel', _:'the Third\'s kit'})} with the whole of his face.
 
 "That's my grandson," the old woman says. "The one with the line longer than he is." The boy does not know what she means, or he does, and has decided not to mind. "His uncle went for a soldier, to pay it down. The army pays down a debt a little, if you live." She takes the boy's shoulder. "He went with the crossbows."${S.f.b7_c3_prisoners === 'freed' ? `\n\nShe does not say which crossbows, or which farm. She does not need to. She looks at you for a moment longer than she has to, and then takes the boy indoors.` : `\n\nShe does not ask which crossbows, or which farm, or where the three boys on the cord are going. She takes the boy indoors.`}`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
