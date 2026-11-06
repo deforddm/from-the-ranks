@@ -43,6 +43,9 @@ const b76Ph = () => S.f.b7_c6_ph || 1;
 const b76Key = () => S.f.b7_c6_key || null;
 const b76Road = () => S.f.b7_lethRoad || null;
 /* Chapter 4's key decides where the Sixth stands and who it trusts; unset reads as 'edur' (Chapter 4's own default) */
+/* the Finadd on the bank (continuity read): after the key he leads on, so a "Not now" at the key's fight or its after-node is never a dead end */
+const b76BankNode = () => !S.f.b7_c6_landingDone ? 'b7_c6_bank_ennic' : !b76Key() ? 'b7_c6_key'
+  : b76Key() === 'stand' ? (S.f.b7_c6_standDone ? 'b7_c6_stand_after' : 'b7_c6_key_stand') : (S.f.b7_c6_breakDone ? 'b7_c6_break_after' : 'b7_c6_key_break');
 const b76K4 = () => S.f.b7_c4_key === 'letherii' ? 'letherii' : 'edur';
 const b76Mates = () => (S.squad || []).filter(id => id !== 'sgt' && b7In(id));
 /* the night before: a squad whose file is watched or wanted has the man in the grey coat at the next fire */
@@ -278,7 +281,7 @@ const B7CH6 = {
       walk:'.,', triggers:{'^':'b7_c6_ships'}, start:{x:7, y:10},
       quest:()=> !S.f.b7_c6_landingDone ? 'The water\'s edge. The boats are coming in.' : !b76Key() ? 'The Finadd. The line either side is going.' : 'The road to the city.',
       npcs:[
-        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:6, node:()=>S.f.b7_c6_landingDone && !b76Key() ? 'b7_c6_key' : 'b7_c6_bank_ennic', fresh:()=>!S.f.b7_c6_bankEnnic || (!!S.f.b7_c6_landingDone && !b76Key())},
+        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:6, node:()=>b76BankNode(), fresh:()=>!S.f.b7_c6_bankEnnic || (!!S.f.b7_c6_landingDone && !b76Key()) || (!!b76Key() && (S.f.b7_c6_ph || 0) < 4)},
         {id:'boats', name:'Soldiers off the boats', kind:'b7_malregular', x:7, y:3, node:()=>'b7_c6_boats', show:()=>!S.f.b7_c6_landingDone, fresh:()=>!S.f.b7_c6_landingDone} ] },
 
     /* 16 x 12 (b7_c6_field, night). W the walls of Letheras  G a gate  , grass  . the road  = a tent  F the Sixth's fire */
@@ -660,7 +663,7 @@ ${e ? `The eldest stops at the Sixth's picket. He is grey with ash to the knees,
     b7_c6_home_eldest:()=>({sp:'The eldest Edur', scene:'b7_field', fx:()=>{ if (!S.f.b7_c6_homeDone) { S.f.b7_c6_homeDone = 1; S.f.b7_c6_edurWord = 1; b76L('thegg', 1); b76L('perrit', 1); } }, txt:
 `"We looked back," he says. "You were standing." He looks past you at the crest. "Your ridge was for us as well, Sergeant. The foreigners and the Edur, in one place, and one fire for both. Something of theirs held it over all of us. I do not know what. It is not holding now."
 
-He is quiet a moment. "We sheltered under a foreigner's fire from a Letherii one. I will remember that longer than I will remember the empire." He turns toward the road east. "We are going home. Your emperor is yours. Your ridge is yours. Have them."
+He is quiet a moment. "We sheltered under a foreigner's fire from a Letherii one. I will remember that longer than I will remember the empire." He turns toward the north. "We are going home. Your emperor is yours. Your ridge is yours. Have them."
 
 He goes. At the road he looks back once, at the Sixth's gap in the stakes, and lifts a hand, and then he is one more grey back among a great many, going away.${b76Say({thegg:`\n\nThegg watches him all the way to the road. "He looked up at me at Kravos," he says. "I'm glad it was us he looked back at."`, perrit:`\n\nPerrit wipes the blood off her lip. "He's right," she says. "It was for everyone."`, _:''})}${b7In('sorvan') ? `\n\nSorvan says something in Bluerose that is not a prayer.` : ''}`,
       ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
