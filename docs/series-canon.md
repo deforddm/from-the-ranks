@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -94,6 +94,26 @@ The reasons and sources are in `bh-canon.md` §7 (project copy) and the repo's `
 53. **The Bonehunters' name** is the soldiers' own, from Aren and Y'Ghatan; the narrator never explains it as more.
 54. **Poliel never answers** for anyone, as a patron or a boon (`bh-canon.md` §9).
 
+### Book Seven (*Reaper's Gale*), added Nov 6, 2026
+
+Rule 43 ends here: Book Seven prints the Patriotists, Karos Invictad, Tanal Yathvanar, Bivatt, Kravos Hill and the Malazans in Lether. Rules 33 and 34 close where the city sees it (Tehol proclaimed, Brys back, Rhulad not rising). Rule 35 closes with Trull's death, seen only as news. "Tehol the Only" is unchecked: write "the new emperor". Detail and sources in `rg-canon.md` §7.
+
+55. **The Adjunct's purpose:** never her thoughts, never where she leads next beyond "east" (DoD, TCG). Tavore is never a viewpoint.
+56. **Bugg is never Mael** (rule 32 continues). Nothing he does in RG is shown: the crowd sent to safety, the snare, the canal.
+57. **The Errant** (rule 31 continues). His cult among slaves and the Indebted is rumour at most (W20). Never his hand in Trull's death or Feather Witch's.
+58. **Karsa and the sword.** The city sees the Toblakai fight, and then Karsa is gone. Never the Crippled God's beach, the refusal, or Withal breaking the sword.
+59. **Icarium's machine:** an earthquake and white fire under Scale House, unexplained. Never what it was or where Icarium went.
+60. **Kettle, Silchas Ruin, the Refugium, the Azath seed, Rud Elalle, Menandore and her sisters:** never. Ruin over the city is "a white dragon, driven off". Book Seven never writes the name Kettle.
+61. **Twilight:** the Shake have a queen, said openly (W17). Never their Andii blood, never Yedan as the Watch, never their road in DoD.
+62. **Quick Ben and Hedge:** may be seen at a distance in Ch 7, alive. Rule 45 holds for Kalam. Hedge's return is never explained; rule 19 holds.
+63. **Beak:** the Letherii see a dome of light; the Third, under (A), hears of a mage who burned. Never Hood receiving him (W22).
+64. **The Awl, Redmask and Toc:** headline only. Never the K'Chain Che'Malle by name ("demons" in rumour), never Toc, never Tool and the White Face Barghast.
+65. **The Perish and Khundryl** go east on their own campaign (R24.1 S10). Never the Bolkando war or the Wastelands.
+66. **The Letherii army after RG:** the `army` road may say Malazan sergeants train it, and that some of it will march east with the Bonehunters under Brys. Never the Wastes, the K'Chain Nah'ruk, or Aranict.
+67. **Seren and Trull:** never their marriage or her child (WE).
+68. **Hannan Mosag's end and the demon under Settle Lake:** never seen; rule 42 holds.
+69. **Who drained the treasury:** Karos claims it (W18), and it was Tehol and Bugg (W15, W18). Characters may believe either; the narrator never settles it.
+
 ---
 
 ## (b) Name clashes and their resolutions
@@ -124,6 +144,8 @@ The reasons and sources are in `bh-canon.md` §7 (project copy) and the repo's `
 | Tallow (Book Four) | Kept. | Found Nov 4: a canon Tallow has a wiki page. | Keep Book Four's sling skirmisher; never in a scene with the canon one. |
 | *Bones in the Walls* (Book Six's title) | Kept. | The novel's opening epigraph's image, not a canon title. | — |
 | Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |
+| Doss, Wenna, Ilsa, Sorvan (Book Seven's recruits) | Clear (Nov 5: wiki page lookups and the RG, BH, TtH and DoD Dramatis Personae). | — | Wenna and Ilsa are "she". Rejected: **Fenn** and **Pell** (both have pages). Book Seven never writes the name Kettle (rule 60). |
+| *Unwitnessed* (Book Seven's title) | Kept. | Tavore's word (RG), and "The Unwitnessed Dance", Fisher kel Tath's poem heading RG ch 24. | A canon word and poem title, not a novel's title (as *Unblooded*). |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
 
@@ -242,6 +264,7 @@ The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later ch
 - **The Empty Hold** (the heart of Letherii worship; a Hold of tiles, never a named being). Answers for Book Five's cadre mage. [W *Empty Hold*]
 - **The Tarthenal dead** (an invention, marked so). The Tarthenal's own gods, the Seregahl, are malign and propitiated so they look away (W *Tarthenal*), so never a patron. Answer for Thegg in Book Five.
 - **Book Six** (Nov 5): Book Three's and Four's patrons stand for their squads. **Poliel never answers** (rule 54). **Soliel** reads stronger from Chapter 4 on (W15). **Hood** answers as before. **The Queen of Dreams** is Leoman's ally in BH (W7): if she answers for a squadmate, she never helps against Leoman. **Togg and Fanderay's** realm carries the fleet (W21); their boon stands.
+- **Book Seven** (Nov 6): the Third's patrons carry over from Book Six, the Letherii's from Book Five. **Hood** answers (he receives Beak, never shown). **Never** the Crippled God, Poliel, Mael (rule 56) or Scabandari. **The Errant**, if he answers the Letherii sergeant in Ch 4 or Ch 6, gives a boon with a twist, never a gift. **The Shore** answers Brune more strongly (the Shake have a queen again). Detail in `rg-canon.md` §9.
 - **The Shore** (the Shake faith, the sea that takes back everything: W *Shake*). Answers for Brune in Book Five. Never a queen, never Tiste blood (rule 36).
 
 ---
