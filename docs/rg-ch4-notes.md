@@ -91,7 +91,7 @@ Defaults: this chapter reads `b7_c2_key` (the list; unset reads as `refuse`), `b
 
 Paid xp: 468 with the Edur, 348 without. A `--from=4` save at 9 (2230) ends at 10 either way (the test saw 2738 with every fight). Foes are the engine's `b7_` numbers under 31c's chapter curve; no own foe.
 
-**Balance:** see "Tests" below.
+**Balance** (`balance.mjs --book=rg`, smart, 12 runs, level 9): Soldier — riot 100% (3 rounds, 2% HP lost), Edur 100% (3, 3%), patriots 100% (6 over both grounds, 8%). Bridgeburner — riot 100% (3, 2%), Edur 100% (4, 8%, a down in 8% of fights), patriots 100% (8, 14%, a down in 8%, 0.3 salves). **Under the 75–80% Bridgeburner target**, like Chapters 1–3: `B7GAP` (or the foes' base numbers) is the balance pass's, with David. No rule changed here.
 
 ## Canon used, and calls
 
@@ -126,3 +126,7 @@ Paid xp: 468 with the Edur, 348 without. A `--from=4` save at 9 (2230) ends at 1
 ## Tests
 
 `tools/b7ch4_test.mjs` (19 checks): a `--from=4` start (level 9; every node renders in all four phases, both keys and before/after the patriots, no leak, no exclamation mark, no Bolkando/Redmask/K'Chain; items, Sorvan, the ground and four backdrops drawn; `B7READ[4]`), the first night (the Finadd's news, the clerk's list with the sergeant's name, the tile-woman, the hill with Hanradi's banner and no Sirryn), the reading (Perrit, back `b7_c4_fire`), the Edur (four, a forced win), the fire (rest, a line each, the Rising and file box, the roster, sleep, Not now), the gate (no fire, the badge, the sutler's rumour on `ledger`, salve at 7), the riot (rise:true; the "yes, but" a bruise; five rioters after the talk with a Whitefinder ally; the levies let go +1 once or handed back −1), Sorvan (the lance; wait then join; go; join at once with a fire line), dusk (the gates on the way back), the grooms (rise:true; the "yes, but" files +1), the trick and its battle half (a heal), the patriots (the sergeant's name; the way between the horses; both grounds; the scale), the key's three choices, `edur` (−1/−1) and `letherii` (+1/+1) from the same moment, the end (level 10), the arrest (wanted: the wagon, no cell; out by the Finadd after a failed talk, by Sorvan, by the talk; then the fight), and a synthetic save (Perrit and Tobet dead; Ruuk, Brune, Ilsa walking; Chapter 2 `name`: the tile-woman reads, Ruuk teaches, the list names Ilsa; Sorvan waits and teaches from the pickets; Ilsa reads the warrant).
+
+Results (Thu Nov 5, 2026, PST): `python3 build.py`; `node --check` on the three files; `node tools/lint.mjs` 0 errors (35 warnings; this chapter's are `b7_c4_card` and `b7_c4_arrest` in the orphan list, see Engine notes); `b7ch4_test` 19/19 three times; `play.mjs 2 --book=rg --from=4` 2/2 (`edur` and `letherii`, both end at level 10, no fight lost); `b7engine_test`, `roster_test`, `reading_test`, `trope_test`, `recruit_test`, `audio_test` pass; `trope_scan` B7 inside budget (this file: nobody 2).
+
+**Tool edits outside my files:** none. Contact sheets: `/tmp/claude-0/shots/b7/ch4/` (the four backdrops, Kravos at dawn, the figures, the bust, the items, the three maps, at 390 px).
