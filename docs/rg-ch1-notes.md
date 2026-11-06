@@ -105,4 +105,10 @@ Paid xp: about 498 with the riders, 390 without. A fresh start at 16 (4870) ends
 
 ## Tests
 
-(filled in after the runs; see the final report)
+`tools/b7ch1_test.mjs` (17 checks): a fresh start (level 16, Sathi dead, the Rising at 2, every node renders, the Third never called marines, items/figure/backdrops drawn), the landing (orders, "unwitnessed", the quartermaster, the old soldier), the key's three choices, `strip` (stores, loyalty, the farm's −1, the riders required, the shed gated) and `burn` from the same moment, the reading (Marrow), the fire (rest, a line each, Rising box, roster, Not now), the trick and its battle half, the dunes, the road (let pass, or the ditch's "yes, but" and the fight), the tally-shed's two grounds, the book (+1 once, the page), the lie-up, Doss's rise:true edge, waiting then joining or joining at once, the page, the end at 17 with the Rising at 3, and a synthetic save (Sathi, Tallow, Ottar, Mehet; Tallow reads).
+
+Results (Thu Nov 5, 2026, PST): `python3 build.py`; `node --check` on the three files; `node tools/lint.mjs` 0 errors (35 warnings, none in this chapter); `b7ch1_test` 17/17 three times; `play.mjs 2 --book=rg --from=1` 2/2 (both `burn`), and a third run 1/1 on `strip`; no fight lost (each won in 4–5 rounds by the bot); `b7engine_test`, `roster_test`, `reading_test`, `trope_test`, `recruit_test`, `audio_test` pass; `trope_scan` B7 inside budget.
+
+**Tool edits outside my files:** `roster_test` now wants a Book Seven fire only for the chapters registered (as Book Five's `mtCh`); `b7engine_test`'s shelf check accepts "on the shelf" once a chapter is registered. Both tests were written before any chapter existed.
+
+Not done: Playwright contact sheets of the art at phone width (the art passed the lint and the chapter test's draw checks only).
