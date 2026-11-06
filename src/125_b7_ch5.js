@@ -106,7 +106,7 @@ const B7CH5 = {
 
   areas:[
     /* 16 x 12 (plain_night). , grass  . the road  # hedge  r rock  x a post  F the halt  < back west, toward the column  > east, to the village by the river */
-    { id:'b7_c5_lane', title:'The river road', sub:'Night · the funnel', hint:'Tap ground to move · tap a figure to talk · the village is east, by the river', decor:'plain_night', dark:true,
+    { id:'b7_c5_lane', title:'The river road', sub:'Night · the funnel', hint:'Tap ground to move · tap a figure to talk · the village is east, the river\'s edge south-east', decor:'plain_night', dark:true,
       map:[ "################",
             "#,,,,,,#,,,,,,,#",
             "#,,r,,,,,,,,#,,#",
@@ -117,9 +117,9 @@ const B7CH5 = {
             "#,,,,,,,,#,,,,,#",
             "#,#,,,F,,,,,,,,#",
             "#,,,,,,,,,,,,#,#",
-            "#,,,,,,,,,,,,,,#",
+            "#,,,,,,,,,,,,,R#",
             "################" ],
-      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east'}, start:{x:1, y:4},
+      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east', R:'b7_c5_reeds'}, start:{x:1, y:4},
       quest:()=> !S.f.b7_c5_orders ? 'The lieutenant, in the ditch by the road.'
         : !S.f.b7_c5_roadDone ? 'Something on the road ahead, between the Third and the river.'
         : !S.f.b7_c5_boy ? 'Somebody small in the hedge, waiting.'
@@ -143,15 +143,16 @@ const B7CH5 = {
             "#..............#",
             "###...........##",
             "#,,...........,#",
-            "#,,,,.......,,,#",
+            "#,,,,.m.....,,,#",
             "########>>######" ],
-      walk:'.,', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square'}, start:{x:8, y:9},
+      walk:'.,', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square', m:'b7_c5_mill'}, start:{x:8, y:9},
       quest:()=> b75Ph() >= 3 && !b75Key() ? 'The mill-woman, in the square. The Edur are coming.'
         : b75Ph() >= 3 ? (b75Key() === 'hold' ? 'The square. Hold it.' : 'South, to the mill-race and the river path.')
         : !S.f.b7_c5_miller ? 'The mill-woman, who hid the Third.'
         : 'The village by day. At dusk the Edur will be wherever they are going.',
       npcs:[
         {id:'miller', name:'The mill-woman', kind:'b5_c5_refugee', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
+        {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c5_refugee', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
         {id:'women', name:'Women at the well', kind:'b5_c5_refugee', x:6, y:5, node:()=>'b7_c5_well', show:()=>b75Ph() === 2, fresh:()=>!!S.f.b7_c5_lane && !S.f.b7_c5_shortTried && !S.f.b7_c5_bailiffDone} ] },
 
     /* 16 x 12 (b5_c3_bank, night). ~ the river  , reeds  . the path  # rock  x a stake  F the lie-up in the reeds (the fire)  < west, the village across the fields */
@@ -171,7 +172,8 @@ const B7CH5 = {
       walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_across', x:'b7_c5_water'}, start:{x:2, y:3},
       quest:()=> !S.f.b7_c5_lt3 ? 'The lieutenant, on the path.' : 'The lie-up in the reeds. At first light, on with the column.',
       npcs:[
-        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:6, y:2, node:()=>'b7_c5_lt3', fresh:()=>!S.f.b7_c5_lt3} ] } ],
+        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:6, y:2, node:()=>'b7_c5_lt3', fresh:()=>!S.f.b7_c5_lt3},
+        {id:'marines4', name:'Marines in the reeds', kind:'b2soldier', x:11, y:5, node:()=>'b7_c5_marines4', fresh:()=>!S.f.b7_c5_marines4} ] } ],
 
   battles:{
     /* Edur scouts on the road in: spearmen and the shadow-things that walk with them */
@@ -179,7 +181,7 @@ const B7CH5 = {
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
       foes:[['b7_edurspear',2,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:200, after:'b7_c5_road_after',
-      preText:()=>`Three Edur with spears, walking the road the way men walk a road they own, and with them, at the edges where the starlight goes thin, two things that are not men and do not walk so much as come along.`},
+      preText:()=>`Three Edur with spears, walking the road as if they owned it, which they do, and with them, at the edges where the starlight goes thin, two things that are not men and do not walk so much as come along.`},
     /* the bailiff and the factor's men on the north lane, riding to sell the village to the Edur (optional) */
     b7_c5_bailiff:{title:'The north lane', style:'b5_c5_road', open:true, warrenText:'Afternoon on a farm lane · hot, dusty, and nobody about who means you well', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","........","..t..t..","........","........","...t....","........",".t....t.","........","........"],
@@ -261,11 +263,11 @@ const B7CH5 = {
   dlg:{
     /* ======== phase 1: the river road at night ======== */
     b7_c5_start:()=>({sp:'The river road', scene:'b7_c5_lane', fx:()=>{ S.f.b7_c5_ph = S.f.b7_c5_ph || 1; }, again:()=>'The river road at night, the column scattered, the fires on the ridge.', txt:
-`The column is not a column any more. Somewhere in the last two nights it came apart into its squads, the way a shoal comes apart when something big swims into it, and now the squads are everywhere and nowhere along the river road, in ditches, in orchards, in the backs of barns, going east in the dark by ones and twos.
+`The column is not a column any more. Somewhere in the last two nights it came apart into its squads, like a shoal when something big swims into it, and now the squads are everywhere and nowhere along the river road, in ditches, in orchards, in the backs of barns, going east in the dark by ones and twos.
 
 To the north, on the long ridge above the fields, there are fires. Small ones, a great many, in a line that goes on further than you can see. Edur. To the south, beyond a last hedge and a strip of reeds, the river: very wide, very black, very quiet, and nothing on it.
 
-${b75Say({haddat:'Haddat is looking at the fires. "Hundreds," she says. She does not say it like a complaint. She says it the way her mother counted water-skins.', tangle:'Tangle is looking at the fires. "That\'s a lot of Edur," he says. "That\'s more than a lot."', _:'The squad looks at the fires, and then at the river, and then at you.'})}${b75If('doss', `\n\nDoss is crouched at the hedge, looking at the fields. "Good land," he says. "Somebody's." He means a factor.`)}${b75If('wenna', `\n\nWenna is looking at the river and nothing else. "No boats," she says. "Not one. Somebody took them all."`)}
+${b75Say({haddat:'Haddat is looking at the fires. "Hundreds," she says. It is not a complaint. It is a count, as her mother counted water-skins.', tangle:'Tangle is looking at the fires. "That\'s a lot of Edur," he says. "That\'s more than a lot."', _:'The squad looks at the fires, and then at the river, and then at you.'})}${b75If('doss', `\n\nDoss is crouched at the hedge, looking at the fields. "Good land," he says. "A factor's." He would know.`)}${b75If('wenna', `\n\nWenna is looking at the river and nothing else. "No boats," she says. "Not one. They've all been taken."`)}
 
 Down in the ditch by the road somebody is whistling the lieutenant's two notes, very softly.`,
       ch:[{t:'Down into the ditch, to the lieutenant.', go:'b7_c5_lt'},
@@ -282,7 +284,7 @@ She taps the slate. "Yours is the village by the river with the mill, east along
           {t:'"The village with the mill. Yes, Lieutenant."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
     b7_c5_lt_more:()=>({sp:'The lieutenant', scene:'b7_c5_lane', fx:()=>{ S.f.b7_c5_ltMore = 1; }, txt:
-`"Ask the ridge." She does not look at it. "They're moving on a village up the road where marine squads are holding, and I'd say they mean to take it house by house. That's most of them. The rest are in bands, out hunting whoever's in the other villages."
+`"Ask the ridge." She is still looking at the stars. "They're moving on a village up the road where marine squads are holding, and I'd say they mean to take it house by house. That's most of them. The rest are in bands, out hunting whoever's in the other villages."
 
 She is quiet a moment. "Captain Sort says the Letherii won't rise for us. Not all at once. But a village that hides a squad has risen, Sergeant, as far as the Edur are concerned. Whatever happens to us, happens to them twice." She rolls onto her side, toward the road. "There's scouts on the road ahead. Clear them, or go round. Your choice. I'd clear them."${b75Strip() ? `\n\nShe glances at the Third's packs out of an old habit, as she has since the beach. "Still carrying the transport, I see." It is nearly approval.` : ''}`,
       ch:[{t:'"Clear them. Yes, Lieutenant."', go:()=>startExplore()}]}),
@@ -311,7 +313,7 @@ She is up and gone before anybody can answer, after her squad, into the dark.${b
     b7_c5_road_after:()=>({sp:'The river road', scene:'b7_c5_lane', fx:()=>{ S.f.b7_c5_roadDone = 1; }, txt:
 `The shadow-things come apart when they are finished, the way smoke does, and there is nothing in the road where they were. The Edur do not. The Third drags them into the ditch and pulls the hedge over them, which is all there is time for.
 
-On the ridge to the north the fires have not moved. Nobody up there heard. Probably.${b75Say({haddat:'\n\nHaddat says three names under her breath, which she does not know, and then the ones she does, and then she is done.', tangle:'\n\nTangle counts the satchel by feel in the dark, and nods to himself.', _:''})}
+On the ridge to the north the fires have not moved. Up there, it seems, they heard nothing. Probably.${b75Say({haddat:'\n\nHaddat says three names under her breath, which she does not know, and then the ones she does, and then she is done.', tangle:'\n\nTangle counts the satchel by feel in the dark, and nods to himself.', _:''})}
 
 In the hedge further along, something small moves, and stops, and waits to see if it has been seen.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
@@ -320,7 +322,7 @@ In the hedge further along, something small moves, and stops, and waits to see i
     b7_c5_boy:()=>({sp:'Somebody in the hedge', scene:'b7_c5_lane', fx:()=>{ S.f.b7_c5_boy = 1; }, again:()=>'The boy from the village, waiting in the hedge to take you in.', txt:
 `It is a boy of ten or so, barefoot, in a shirt that was his father's, crouched in the hedge with his knees under his chin. He has been watching the whole fight. He does not seem frightened of the Third. He seems frightened of being late.
 
-"You're the ones for the mill," he says, in Letherii, and then, when nobody answers, very carefully, in a soldier's trade-tongue somebody taught him that afternoon: "Mill. Come. Hide." He points east. "My gran says."
+"You're the ones for the mill," he says, in Letherii, and then, when the Third only looks at him, very carefully, in a soldier's trade-tongue somebody taught him that afternoon: "Mill. Come. Hide." He points east. "My gran says."
 
 ${b75Word() ? `He looks at the Third with frank interest. "Are you the ones that burned the rolls?" he asks. "In the valley? Everyone says." He does not wait for an answer. "Gran says if you're them, the whole village will hide you. She says the bailiff can go and drown."` : `He looks at the Third, and at the road, and back. "Gran says you're to come. The rest are scared. Gran isn't scared of anything." He seems to think that settles it. "Except the bailiff. A bit."`}${b75If('doss', `\n\nDoss crouches down to the boy's height. "Whose fields?" he asks, in Letherii. The boy names a factor, and Doss nods. He does not need to ask anything else.`)}`,
       ch:[{t:'"Take us in."', go:'b7_c5_boy_more'},
@@ -345,14 +347,14 @@ ${b75Word() ? `He looks at the Third with frank interest. "Are you the ones that
     b7_c5_arrive:()=>({sp:'The mill village', scene:'b7_village', txt:
 `The village comes out of the grey as the Third comes into it: a street of plaster and thatch, a square with a well, a meeting house with a bell it does not ring, and the mill, turning slowly on its race with nobody to grind for. The only house of stone is the factor's, at the top of the square, with its shutters closed and its door standing a hand's width open.
 
-${b75Word() ? 'There are people at every door. They do not come out. They watch the Third go by in the half-light, and one woman holds up a loaf as the squad passes, and another a jug, and a man takes his cap off and puts it back on again as if he had not meant to.' : 'Every door is shut. Behind some of the shutters there are eyes. Nobody comes out.'}
+${b75Word() ? 'There are people at every door. They do not come out. They watch the Third go by in the half-light, and one woman holds up a loaf as the squad passes, and another a jug, and a man takes his cap off and puts it back on again as if he had not meant to.' : 'Every door is shut. Behind some of the shutters there are eyes. Not one door opens.'}
 
 The mill-woman is waiting in the factor's doorway with a rushlight. She is sixty or more, broad, floury to the elbow, with a face like a fist. "In," she says. "Down. The factor went to the city with his horses a month since. He won't miss his cellar." She looks the Third up and down. "Heavier than I was told. You'll fit."`,
       ch:[{t:'Down into the cellar.', go:'b7_c5_cellar'}]}),
     b7_c5_cellar:()=>({sp:'The factor\'s cellar', scene:'b7_c5_cellar', fx:()=>{ S.f.b7_c5_cellarSeen = 1; }, again:()=>'The factor\'s cellar, the barrels, the rushlight, daylight at the trapdoor\'s edge.', txt:
 `The factor's cellar is cut into the rock under his house, vaulted, cool, smelling of old wine and apples. Barrels along one wall, sacks along another, a rack of the factor's bottles that the village has not touched, and a rushlight on a barrel-head. At the top of the steps, the trapdoor, with a line of daylight round its edge going from grey to gold.
 
-The Third goes down into it, and puts its packs against the barrels, and sits, and for the first time in two nights nobody is looking at the ridge.${b75Say({haddat:`\n\nHaddat sets the blue shield against the steps, facing up, where she can reach it. "A door with one way in," she says. "My mother would have liked it."`, marrow:`\n\nMarrow sits down on a sack of meal with a long breath. "A roof, child," she says. "Somebody else's. I will take it."`, _:''})}${b75If('doss', `\n\nDoss stands at the bottom of the steps looking at the bottles. "The factor's," he says. He does not touch one. He looks as if he would like to break every one of them, and also as if he would like to read the labels.`)}`,
+The Third goes down into it, and puts its packs against the barrels, and sits, and for the first time in two nights nobody is looking at the ridge.${b75Say({haddat:`\n\nHaddat sets the blue shield against the steps, facing up, where she can reach it. "A door with one way in," she says. "My mother would have liked it."`, marrow:`\n\nMarrow sits down on a sack of meal with a long breath. "A roof, child," she says. "Another man's. I will take it."`, _:''})}${b75If('doss', `\n\nDoss stands at the bottom of the steps looking at the bottles. "The factor's," he says. He does not touch one. He looks as if he would like to break every one of them, and also as if he would like to read the labels.`)}`,
       ch:[b7ReadChoice(5),
           {t:'The cellar. Sit a while.', go:'b7_c5_fire'},
           {t:'Up into the village.', go:()=>startExplore()}]}),
@@ -364,7 +366,23 @@ The Third goes down into it, and puts its packs against the barrels, and sits, a
 `The factor's house stands at the top of the square, door open, the cellar under it empty now. ${S.f.b7_c5_roof ? `In the roof-space, over the square side, ${b75SapN()} ${b75Sap() ? 'has' : 'have'} left something wedged against the gable beam with a fuse-cord running down the wall.` : ''}` :
 `The factor's house, dressed stone, the shutters closed. The cellar under it is the Third's for the day.`,
       ch:[{t:'Down into the cellar.', req:()=>b75Ph() <= 3, go:'b7_c5_fire'},
+          {t:'Up into the factor\'s rooms.', req:()=>b75Ph() === 2, go:'b7_c5_house'},
           {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* the factor's rooms upstairs (phase 2): his desk, and his orders to the bailiff */
+    b7_c5_house:()=>({sp:'The factor\'s rooms', scene:'b7_village', again:()=>'The factor\'s rooms, the sheets, the painted factor.', txt:
+`Up the stair, the factor's rooms: good furniture under dust-sheets, a carpet rolled against the wall, a cold hearth with a brass fender the village has not touched, and over it a painting of the factor, a man in a blue coat painted a good deal thinner than the coat suggests. He took the horses and the plate. He left himself on the wall.
+
+In the window, a desk with its pigeonholes empty: he took his books to the city too. The drawers are still in it.${b75Say({mehet:`\n\nMehet is already looking at the desk's lock. "Two locks," he says. "One for the thief, one for the son." He sounds almost fond of it.`, haddat:`\n\nHaddat looks at the painting a long time. "My mother would have said he had a water-seller's face," she says. "It was not a compliment."`, _:''})}${b75If('doss', `\n\nDoss stops at the top of the stair and does not come into the room. "I never went in the front," he says. "On the holding." He comes in anyway, slowly, and stands on the carpet's edge.`)}`,
+      ch:[{t:'Search the desk.', req:()=>!S.f.b7_c5_desk, go:'b7_c5_house_desk'},
+          {t:'Back down to the square.', go:()=>startExplore()}]}),
+    b7_c5_house_desk:()=>({sp:'The factor\'s desk', scene:'b7_village', fx:()=>{ if (!S.f.b7_c5_desk) { S.f.b7_c5_desk = 1; S.inv.salve = (S.inv.salve || 0) + 1; note('In the factor\'s desk: a jar of his good salve, sealed with wax.', 'good'); } }, txt:
+`${b75If('mehet', 'Mehet opens both locks, one with a pin and one with patience. ')}In the drawers: sealing wax, a broken pen, a jar of the factor's own salve, sealed, which the Third takes, and a copy of a letter in the bailiff's careful hand, kept because a factor keeps copies of everything.
+
+*Should any foreigners come into the valley, the honoured warriors on the ridge are to be told at once, and the names of any who shelter them. By order.*
+
+The factor's mark at the foot of it is a mill-wheel. He has signed it himself, above the bailiff's copy, in a different ink. He wanted to be sure.`,
+      ch:[{t:'Back down to the square.', go:()=>startExplore()}]}),
 
     /* the fire: by phase. 1 the road (no fire); 2 the cellar by day; 3 dusk (no time); 4 the riverbank lie-up after.
        The games pass wraps this node: keep the id */
@@ -380,7 +398,7 @@ The Third goes down into it, and puts its packs against the barrels, and sits, a
       const bank = ph >= 4, rk = 'b7_c5_rest' + (bank ? 4 : 2);
       return {sp:bank ? 'The lie-up in the reeds' : 'The factor\'s cellar', scene:bank ? 'b7_c5_river' : 'b7_c5_cellar', html:risingHTML(),
         again:()=> bank ? 'The reeds by the river, the squad in a ring round no fire, the village across the fields.' : 'The factor\'s cellar, the rushlight, the day going over above.', txt:
-`${bank ? `A hollow in the reeds above the water, with a willow over it. No fire. The column is coming together along the bank all round, squad by squad out of the dark, and nobody is lighting anything.${b75Key() === 'hold' ? `\n\n${fell.length ? `The Third sits in a ring with a gap in it. Nobody closes the gap. ${b75And(fell.map(NAME))} ${fell.length > 1 ? 'are' : 'is'} back in the village, by the mill-race, under the earth the village dug with its own spades before the Third came away.` : 'The Third sits in a ring, all of it. You count twice, in the dark, and get the same number both times.'}` : `\n\nAcross the fields, over the trees where the village was, the sky has a light in it that is not the dawn. Nobody in the Third looks at it for long.`}` : `The rushlight on its barrel-head, the barrels, the sacks, and the day going over above with the sound of the mill turning. No fire: there is never a fire now. The squad sits in a ring on the factor's flags round where one would be.`}${b75Say({marrow:'\n\nMarrow has her knotted string out and is running it through her fingers.', haddat:'\n\nHaddat is oiling the blue shield\'s straps.', _:''})}`,
+`${bank ? `A hollow in the reeds above the water, with a willow over it. No fire. The column is coming together along the bank all round, squad by squad out of the dark, and nobody is lighting anything.${b75Key() === 'hold' ? `\n\n${fell.length ? `The Third sits in a ring with a gap in it, and leaves the gap where it is. ${b75And(fell.map(NAME))} ${fell.length > 1 ? 'are' : 'is'} back in the village, by the mill-race, under the earth the village dug with its own spades before the Third came away.` : 'The Third sits in a ring, all of it. You count twice, in the dark, and get the same number both times.'}` : `\n\nAcross the fields, over the trees where the village was, the sky has a light in it that is not the dawn. The Third watches the water instead.`}` : `The rushlight on its barrel-head, the barrels, the sacks, and the day going over above with the sound of the mill turning. No fire: there is never a fire now. The squad sits in a ring on the factor's flags round where one would be.`}${b75Say({marrow:'\n\nMarrow has her knotted string out and is running it through her fingers.', haddat:'\n\nHaddat is oiling the blue shield\'s straps.', _:''})}`,
         ch:[...(bank ? [] : [b7ReadChoice(5)]),
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(bank ? 'The squad sleeps an hour in the reeds. Wounds close, mostly.' : 'The squad sleeps the morning through on the factor\'s flags. Wounds close, mostly.'); }, go:'b7_c5_fire_rest'},
             {t:'Talk with the squad.', go:'b7_c5_fire_talk'},
@@ -393,10 +411,10 @@ The Third goes down into it, and puts its packs against the barrels, and sits, a
 ${b75Say({marrow:`Marrow goes round the squad with her hands and stops at each of them long enough to frown. "Sleep, child," she says. "That is the medicine. I am only the bottle."`, mirrel:`Mirrel goes round with the water skin, one mouthful each, and watches each one swallow. "Drink. Good."`, _:'Some of them sleep. The rest sit with their backs to the wall and do not.'})}${b75If('haddat', `\n\nHaddat lies down with her head on her pack and says names under her breath${b75Fell().length ? `, and at the end of them, new ones` : ''}.`)}`,
       ch:[{t:'Back.', go:'b7_c5_fire'}]}),
     b7_c5_fire_talk:()=>{ const ph = b75Ph(), late = ph >= 4, k = b75Key(), fell = b75Fell(), ln = [];
-      if (b7In('haddat')) ln.push(late ? (k === 'hold' ? `Haddat has the blue shield across her knees, and her hand flat on it. "The village is still there," she says. "I looked back. The mill was still turning." She does not say anything else for a while. "That is what a shield is for."` : `Haddat is not looking at the light over the trees. She is looking very carefully at the river instead. "My mother said a door you go out of stays open behind you," she says. "I never knew what she meant." She stops. "I know."`) : `Haddat is looking at the trapdoor. "These people," she says. "They have hidden us under their master's floor. If the Edur come, the floor will not hide them." She runs a thumb along the shield's rim. "I would like to be standing on it when they come."`);
+      if (b7In('haddat')) ln.push(late ? (k === 'hold' ? `Haddat has the blue shield across her knees, and her hand flat on it. "The village is still there," she says. "I looked back. The mill was still turning." A while goes by. "That is what a shield is for."` : `Haddat is not looking at the light over the trees. She is looking very carefully at the river instead. "My mother said a door you go out of stays open behind you," she says. "I never knew what she meant." She stops. "I know."`) : `Haddat is looking at the trapdoor. "These people," she says. "They have hidden us under their master's floor. If the Edur come, the floor will not hide them." She runs a thumb along the shield's rim. "I would like to be standing on it when they come."`);
       if (b7In('sathi')) ln.push(late ? `Sathi is cleaning her knife on a reed. "${k === 'hold' ? 'You stayed,' : 'You went,'}" she says. "Weasels would have ${k === 'hold' ? 'gone. And lived to say so. Maybe you\'re not so soft.' : 'gone too. Weasels always go.'}" She does not seem to know whether she approves.` : `Sathi is lying on a sack with her filed teeth showing. "A cellar with one door," she says. "Weasels called that a grave with a lid."`);
       if (b7In('tangle')) ln.push(late ? `Tangle has the satchel open in his lap, counting by feel. "${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}," he says. "${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}." ${S.f.b7_c5_roof ? 'He touches the Kanese bead. "Put a roof on a war-leader tonight. I\'ll tell my grandchildren. If I have any. If they believe me."' : 'He closes it. "Not much. Enough for the city, maybe. If the city\'s small."'}` : `Tangle has the satchel open, counting. "${numw(S.inv.sharper || 0, true)} sharper${(S.inv.sharper || 0) === 1 ? '' : 's'}. ${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}." He looks up at the vault. "Good stone, this. The factor's roof's not stone, though. I looked."`);
-      if (b7In('marrow')) ln.push(late ? `Marrow has her string out, and is tying knots in it, one after another, slowly. ${fell.length ? `"One for each, child," she says, without looking up. "So my hands know. My head knows already."` : `"Nobody to tie for tonight, child," she says. "I am tying anyway. For the ones up the road."`}` : `Marrow is warming her knuckles in her armpits. "The Edur bring the dark with them, child," she says. "Their K'risnan. It sits in the warrens like a stone in a stream. Mine goes round it." She sniffs. "Slower."`);
+      if (b7In('marrow')) ln.push(late ? `Marrow has her string out, and is tying knots in it, one after another, slowly. ${fell.length ? `"One for each, child," she says, without looking up. "So my hands know. My head knows already."` : `"None to tie for tonight, child," she says. "I am tying anyway. For the ones up the road."`}` : `Marrow is warming her knuckles in her armpits. "The Edur bring the dark with them, child," she says. "Their K'risnan. It sits in the warrens like a stone in a stream. Mine goes round it." She sniffs. "Slower."`);
       if (b7In('mirrel')) ln.push(late ? `Mirrel is counting the salves back into her bag in threes. "${numw(S.inv.salve || 0, true)}," she says. ${k === 'hold' ? '"I used most of them in the square. On ours. On theirs, after, the village ones." She closes the bag. "Good."' : '"I didn\'t use any." She closes the bag, and keeps her hand on it.'}` : `Mirrel is rolling her linen on the factor's flags. "A cellar keeps a wound clean," she says. "Cool. Dark. No flies." She ties the roll. "If we have to fight up there, bring them down here. I'll be here."`);
       if (b7In('tallow')) ln.push(`Tallow is turning his grandmother's deck over in his hands without opening it. "She said every village has one door the soldiers don't know about," he says. "${late ? 'I hope this one had it.' : 'I asked the boy. He showed me. It\'s the mill-race.'}"`);
       if (b7In('hessa')) ln.push(`Hessa sits straight with the spear upright. "D'rek is in the river here," she says. "The worm goes under all water." She puts her palm flat on the ${late ? 'bank' : 'flags'}. "${late ? 'It took what we gave it tonight. It always does.' : 'If the Edur come, I will ask it to be slow for them.'}"`);
@@ -409,7 +427,7 @@ ${b75Say({marrow:`Marrow goes round the squad with her hands and stops at each o
       if (b7In('warlock')) ln.push(`Keth sits with his knees drawn up, very still. "*A people who hide soldiers under their master's floor,*" the grandmother says, out of his mouth. "*${late && k === 'slip' ? 'And soldiers who leave them there. I have seen that before, boy. I have seen it end.' : 'My mother\'s country had a word for such people. It was not a word for slaves.'}*"`);
       if (b7In('mehet')) ln.push(`Mehet is turning his ring of keys over. "${late ? 'There was a door in the mill to the race,' : 'The mill has a door to the race,'}" he says. "Every mill in Y'Ghatan did. For the miller, when the tax-men came." He holds one key up to the light. "${late ? 'I hope she used it.' : 'I showed the old woman how to bar it from the inside. She knew already.'}"`);
       if (b7In('ottar')) ln.push(`Ottar is cleaning the wolf on his shield with a thumb. "Today's word," he says, "is *mill-race*." He tries it again. "${late && k === 'hold' ? 'We held a square with a mill-race behind it. In Perish we would make a song. Here, I think, they will tell it in a kitchen. It is better.' : 'In Perish we do not have mills. We have wolves. Wolves do not need a race.'}"`);
-      if (b7In('doss')) ln.push(late ? (k === 'hold' ? `Doss is looking back across the fields at the village. He has not stopped looking since the bank. "They hid us," he says. "Under the factor's own floor. And we stood up for them." He wipes his face with the back of his hand. "Nobody ever stood up for us on the holding. Not once. Twenty-six harvests."` : `Doss is not looking back at the village. He is looking at his hands, which have the flail in them, and are very still. "They hid us," he says. "Under the factor's floor." That is all he says. It is enough. He does not look at you.`) : `Doss is sitting by the barrels. "On the holding," he says, "if you hid a man from the overseer, you went in the rolls for his debt too." He looks up at the trapdoor. "Everyone up there knows that. They hid us anyway."`);
+      if (b7In('doss')) ln.push(late ? (k === 'hold' ? `Doss is looking back across the fields at the village. He has not stopped looking since the bank. "They hid us," he says. "Under the factor's own floor. And we stood up for them." He wipes his face with the back of his hand. "Not one soul ever stood up for us on the holding. Not once. Twenty-six harvests."` : `Doss is not looking back at the village. He is looking at his hands, which have the flail in them, and are very still. "They hid us," he says. "Under the factor's floor." That is all he says. It is enough. He turns the flail over in his hands.`) : `Doss is sitting by the barrels. "On the holding," he says, "if you hid a man from the overseer, you went in the rolls for his debt too." He looks up at the trapdoor. "Everyone up there knows that. They hid us anyway."`);
       if (b7In('wenna')) ln.push(late ? `Wenna has her bare feet in the river and her eyes shut. "${k === 'hold' ? 'The Shore heard,' : 'The Shore saw,'}" she says, after a while. "${k === 'hold' ? 'She liked it. She doesn\'t like much.' : 'She doesn\'t say anything. She never does, when she\'s angry.'}"` : `Wenna is listening to the mill-race through the wall. "That goes to the river," she says. "The river goes to the sea. Past the city, but it gets there." She shrugs. "Everything does, if you're patient."`);
       if (late && fell.length) ln.push(`${fell.length > 1 ? 'There are gaps' : 'There is a gap'} in the ring where ${b75And(fell.map(NAME))} ${fell.length > 1 ? 'would sit' : 'would sit'}. The squad sits round ${fell.length > 1 ? 'them' : 'it'}, and does not close ${fell.length > 1 ? 'them' : 'it'} up.`);
       return {sp:ph >= 4 ? 'The lie-up in the reeds' : ph === 1 ? 'The river road' : 'The factor\'s cellar', scene:ph >= 4 ? 'b7_c5_river' : ph === 1 ? 'b7_c5_lane' : 'b7_c5_cellar', txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
@@ -417,7 +435,7 @@ ${b75Say({marrow:`Marrow goes round the squad with her hands and stops at each o
 
     /* the mill-woman: who hid the Third, and the bailiff */
     b7_c5_miller:()=>({sp:'The mill-woman', scene:'b7_village', fx:()=>{ S.f.b7_c5_miller = 1; }, again:()=>'The mill-woman in the square, floury to the elbow, watching the north road.', txt:
-`The mill-woman is standing by the well with her arms folded, watching the north road, which is empty. She does not look round when you come up.
+`The mill-woman is standing by the well with her arms folded, watching the north road, which is empty. She keeps watching it when you come up.
 
 "The factor's had this village forty years," she says. "His father before him. Every family in it owes him, and the mill owes him, and I owe him for the stones in it, which my husband's grandfather bought." She spits, neatly, into the dust. "${b75Word() ? 'Then word came down the valleys that Malazans were burning the rolls. Burning them. In the factor\'s own house.' : 'Then word came down the valleys that there were Malazans in the country, and the Edur hunting them.'} So when your lieutenant's runner came asking who'd hide a squad, I said I would." She looks at you at last. "${b75Word() ? 'And the rest said they would too, before I\'d finished saying it.' : 'The rest shut their doors. They\'re not bad. They\'re frightened. So am I.'}"
 
@@ -457,7 +475,7 @@ She wipes the drawing out with her foot before anybody else can see it.`,
       ch:[{t:'Out by the north gate, by the short way.', go:'b7_c5_gate'},
           {t:'Back to the square.', go:()=>startExplore()}]}),
     b7_c5_well_no:()=>({sp:'The well in the square', scene:'b7_village', txt:
-`The women look at each other, and at their jars, and nobody says anything. One of them picks up her jar and goes home. Then another.
+`The women look at each other, and at their jars, and the well is very quiet. One of them picks up her jar and goes home. Then another.
 
 It is not unfriendly. It is only that the bailiff has a board on his door with all their names on it, and the Third does not.`,
       ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
@@ -467,7 +485,7 @@ It is not unfriendly. It is only that the bailiff has a board on his door with a
       return {sp:'The north gate', scene:'b7_village', txt: ph >= 3 ?
 `The north gate stands open on the lane and the orchards and, above them, the ridge, going dark. That is where they will come from.` : S.f.b7_c5_bailiffDone ?
 `The north gate, and the lane up through the orchards, empty now. ${S.f.b7_c5_bailiff === 'village' ? 'The bailiff is in the mill, with the door barred.' : 'The bailiff is tied in the factor\'s stable for the column.'}` : !S.f.b7_c5_lane ?
-`The north gate: two posts and a hurdle, and the lane going up through the orchards toward the ridge. Nobody on it. Somebody in the village will know who went up it last.` :
+`The north gate: two posts and a hurdle, and the lane going up through the orchards toward the ridge. Empty. The village will know who went up it last.` :
 `The north gate, and the lane going up through the orchards toward the ridge. ${S.f.b7_c5_short ? 'The boy\'s mother\'s way goes off to the left, through the orchard, by the barley ditch.' : 'Somewhere up there, a bailiff on a cob, going slow.'}`,
         ch:[{t:S.f.b7_c5_short ? 'The short way: the orchard, the ditch, the stone cross.' : 'Up the lane after the bailiff.', req:()=>ph === 2 && !!S.f.b7_c5_lane && !S.f.b7_c5_bailiffDone, go:'b7_c5_bailiff_view'},
             {t:'Not now.', go:()=>startExplore()}]}; },
@@ -488,21 +506,21 @@ The letter is in his coat. It is short, and well written, in a bailiff's careful
     b7_c5_bailiff_village:()=>({sp:'The mill-woman', scene:'b7_village', html:risingHTML(), txt:
 `The mill-woman reads the letter standing in the square, all of it, every name, with her lips moving. Then she folds it and puts it in her apron.
 
-"In the mill," she says, to two men who have come out of their doors. They take the bailiff by the arms, not roughly, and put him in the mill, and bar the door. What the village means to do with him after, nobody says. The Third does not ask.
+"In the mill," she says, to two men who have come out of their doors. They take the bailiff by the arms, not roughly, and put him in the mill, and bar the door. What the village means to do with him after, it keeps to itself. The Third does not ask.
 
-"He was at my wedding," the mill-woman says. She goes back to the well.${b75If('doss', `\n\nDoss watches the mill door for a long time. "On the holding," he says, "nobody ever got to decide anything." He does not say whether he is glad.`)}`,
+"He was at my wedding," the mill-woman says. She goes back to the well.${b75If('doss', `\n\nDoss watches the mill door a while. "On the holding," he says, "nobody ever got to decide anything." He does not say whether he is glad.`)}`,
       ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
     b7_c5_bailiff_column:()=>({sp:'The factor\'s stable', scene:'b7_village', txt:
 `The bailiff goes into the factor's empty stable without being pushed and sits down in the straw, and thanks you when the rope is tied. ${b75Say({mehet:'Mehet ties it, and then, out of habit, checks the knot twice.', tangle:'Tangle ties it with fuse-cord. "Comes off with a good pull," he says, "if you know where." The bailiff does not know where.', _:'The knots are good ones.'})}
 
-The mill-woman watches from the square, and says nothing, and goes back to the well. The letter goes in your coat.`,
+The mill-woman watches from the square, and goes back to the well. The letter goes in your coat.`,
       ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
 
     /* the bailiff's door: the quarter-day board (Doss) */
     b7_c5_board:()=>({sp:'The bailiff\'s door', scene:'b7_village', fx:()=>{ S.f.b7_c5_board = 1; }, again:()=>'The bailiff\'s door, and the board on it.', txt:
 `The bailiff's house is next to the factor's and a size smaller, as if it had been told to stand there. On its door, nailed at the height of a man's eyes, is a board of planed wood with every family's name burned into it, and beside each name a row of notches cut with a knife, and every so often one of the notches filled in with red.
 
-${b7In('doss') ? `Doss stands in front of it for a long time.
+${b7In('doss') ? `Doss stands in front of it until the squad shifts its feet.
 
 "Quarter-day board," he says at last. "Same as ours. You come on the day and the bailiff reads you your line off the book inside, and then he cuts the notch, so you can see it every time you go by." He touches one of the red ones. "That's when you missed. You can't read the book. You can read the red."
 
@@ -519,7 +537,7 @@ The women at the well look at it a while. Then one of them laughs, once, and put
     b7_c5_hall:()=>({sp:'The meeting house', scene:'b7_village', again:()=>'The meeting house, its one chair, the pale place on the wall.', txt:
 `The meeting house is one room with benches round the walls and one chair at the end, for whoever is speaking. ${S.f.b7_c5_shield ? 'Above the chair, on the wall, there is a pale oval where the old shield hung.' : 'Above the chair, on two pegs, hangs a shield: a wide oval of oak planks bound in iron and faced with hide, with a heron painted on it in a blue that was bright once.'}
 
-${S.f.b7_c5_shield ? 'The mill-woman sweeps the floor round the chair, and does not look at the wall.' : `The mill-woman has followed you in. "From a war," she says, "before my grandmother. Nobody in the village was in it. A soldier left it here, going home, and nobody ever came back for it." She looks at it. "It's done nothing on that wall but get dusty."`}`,
+${S.f.b7_c5_shield ? 'The mill-woman sweeps the floor round the chair, and keeps her back to the wall.' : `The mill-woman has followed you in. "From a war," she says, "before my grandmother. Not one of us was in it. A soldier left it here, going home, and nobody ever came back for it." She looks at it. "It's done nothing on that wall but get dusty."`}`,
       ch:[{t:'"Will the village lend it to the Third?"', req:()=>!S.f.b7_c5_shield, fx:()=>{ S.f.b7_c5_shield = 1; gain('b7_c5_villageshield'); b75L('haddat', 1); }, go:'b7_c5_hall_take'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b7_c5_hall_take:()=>({sp:'The meeting house', scene:'b7_village', txt:
@@ -533,7 +551,7 @@ ${S.f.b7_c5_shield ? 'The mill-woman sweeps the floor round the chair, and does 
       return {sp:te === 'sgt' ? 'The square' : NAME(te), scene:'b7_village', again:()=> S.f.b7_c5_squareOk ? 'The square, where the Third learned the step.' : 'The square at noon, the shutters closed, the dust hot.', txt:
 `The square at noon, the shutters closed against the heat and the Third against the eyes, and nobody on the north road. ${te === 'haddat' ? `Haddat walks out into the middle of it and stands there with the blue shield, looking at the four streets that come into it.
 
-"My first sergeant in the Hissar garrison taught us the square," she says. "Everyone knows the square. Four shields out, corners locked, nobody looks behind." She sets the shield. "He taught the other part too. Nobody else did. On the word, the square does not stand. It steps. All four faces, three paces, at once." She looks round. "It is hard. You need to hear the word with your feet."` : te === 'ottar' ? `Ottar walks out into the middle of it with his tall shield and stands there, considering the four streets.
+"My first sergeant in the Hissar garrison taught us the square," she says. "Everyone knows the square. Four shields out, corners locked, nobody looks behind." She sets the shield. "He taught the other part too. No other sergeant did. On the word, the square does not stand. It steps. All four faces, three paces, at once." She looks round. "It is hard. You need to hear the word with your feet."` : te === 'ottar' ? `Ottar walks out into the middle of it with his tall shield and stands there, considering the four streets.
 
 "The Grey Helms have a wall that goes forward," he says. "You saw it at sea, perhaps." He sets the shield. "With four faces it is a square. With four faces that go forward at the same breath, it is a thing the enemy does not expect, because he thinks a square is a box. It is not a box. It is a fist." He looks round. "It is hard. In Perish the children practise it with wooden shields."` : te === 'darrut' ? `Darrut walks out into the middle of it with his helm under his arm and stands there, looking at the four streets.
 
@@ -556,6 +574,38 @@ Behind one of the shutters, somebody claps, twice, and stops.`,
 ${b75Teacher() === 'haddat' ? '"It took us a year," Haddat says, not unkindly. "You had an afternoon."' : b75Teacher() === 'ottar' ? '"The children in Perish take a winter," Ottar says. "And they are good children."' : b75Teacher() === 'darrut' ? '"It took us a year," Darrut says, "and we did nothing else."' : 'Perhaps the old man did make it up.'}`,
       ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
 
+    /* the mill-woman's grandson (phase 2): the race door */
+    b7_c5_grandson:()=>({sp:'The boy', scene:'b7_village', fx:()=>{ S.f.b7_c5_grandson = 1; }, again:()=>'The boy, with a sack of flour bigger than he is.', txt:
+`The boy who brought the Third in is crossing the square with a sack of flour on his back that is nearly as big as he is, because the mill does not stop for Malazans. He puts it down to look at the Third properly in daylight.
+
+"You're bigger in the day," he says. He considers this. "Gran says if the Edur come, you're to go out by the race door. In the back of the mill. That's what it's for. My great-grandad made it for when the tax-men came." He picks the sack up again. "The tax-men are the factor's now. It still works."
+
+"Is it true in your country nobody owes anybody?" he asks, at the corner, and does not wait for an answer, which is as well.${b75If('tallow', `\n\nTallow watches him go. "He showed me the door this morning," he says. "Proud of it. Every village has one."`)}${b75If('doss', `\n\nDoss watches him go with the flour. "I carried sacks like that at his age," he says. "On my back. Twenty years." He rolls a shoulder, remembering.`)}`,
+      ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
+
+    /* the mill (phase 2 and after) */
+    b7_c5_mill:()=>({sp:'The mill', scene:'b7_village', again:()=>'The mill, its stones turning, the race loud under the floor.', txt:
+`Inside, the mill is all noise and flour: the great wheel turning outside on the race, the shaft coming in through the wall, and the stones grinding on each other with a sound like a giant chewing, slowly, for ever. There is nothing between them. The mill-woman keeps them turning so the factor's men will hear the mill and think nothing has changed.
+
+"My husband's grandfather bought those stones," she says, from the hopper, without turning round. "From the factor's father. We still owe for them." She brushes flour off her arm. "Three lifetimes, a pair of stones. You'd think they'd be paid for."
+
+In the back wall, down by the water, there is a low door with a bar on the inside. Beyond it, the race and the river path.${b75If('mehet', `\n\nMehet tries the bar, and lifts it, and sets it again. "Every mill in Y'Ghatan had one," he says. "For the miller, when the tax-men came." He nods to the mill-woman. She nods back, as one tradesman nods to another.`)}`,
+      ch:[{t:'Back to the square.', go:()=>startExplore()}]}),
+
+    /* the river's edge on the road (phase 1) */
+    b7_c5_reeds:()=>({sp:'The river\'s edge', scene:'b7_c5_lane', again:()=>'The river\'s edge, the posts with nothing tied to them.', txt:
+`Down through the reeds the river comes right up to the road's edge, black and slow and very wide. There is a landing-stage here, three planks on posts, and the posts have ropes on them, cut, and nothing at the ends. In the reeds beside it lies a keel with the ribs burned off it, black, half under the water.
+
+Whoever it was, they wanted the boats gone from this bank. The Edur, or the Letherii, or the people who owned them, before either could take them.${b75If('wenna', `\n\nWenna crouches and touches the burned keel. "Clinker," she says. "A good one. My brother's was like this." She stands up and does not touch anything else.`)}${b75If('tangle', `\n\nTangle looks at the river, and then at his satchel, and then at the river. "Can't swim," he says. "Never could. Just so everybody knows."`)}`,
+      ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
+
+    /* marines in the reeds (phase 4): the bank's news */
+    b7_c5_marines4:()=>({sp:'Marines in the reeds', scene:'b7_c5_river', fx:()=>{ S.f.b7_c5_marines4 = 1; }, again:()=>'The marines in the reeds, passing a skin, telling the night over.', txt:
+`A marine squad is sitting in the reeds next to the Third with its boots off, passing a skin and telling the night over to itself, the way squads do.
+
+"The big village held," one of them says. "Up the road. House to house, all evening. They say a cusser took the factor's house and the whole street with it." He drinks. "They say a lot of things. Some of them didn't come out. They say that too."${b75Key() === 'hold' ? `\n\nAnother looks at the Third. "There's a story going up the bank," she says, "about heavies in a mill village and a roof." She looks at the Third's shields. "That you?" The Third lets the question go by. She nods as if it had been answered.` : `\n\nAnother looks across the fields at the light over the trees, and then at the Third, and passes the skin the other way.`}`,
+      ch:[{t:'Back to the bank.', go:()=>startExplore()}]}),
+
     /* the mill-race, south: the river, and the way out (slip) */
     b7_c5_race:()=>({sp:'The mill-race', scene:'b7_c5_river', again:()=>'The mill-race, the wheel, the river beyond.', txt: b75Ph() >= 3 && b75Key() === 'slip' && !S.f.b7_c5_slipDone ?
 `The mill-race runs out under the wheel to the river, and the river path goes off east under the willows into the dark. That is the way out.` :
@@ -569,24 +619,24 @@ ${b75Teacher() === 'haddat' ? '"It took us a year," Haddat says, not unkindly. "
 
 Children are running in from the north fields, three of them, four, the boy in front, and none of them shouting, because somebody told them not to. The boy goes straight to the mill-woman and says something with his whole body. She listens, and nods, and turns to you across the square.
 
-"Edur," she says. "Off the ridge. Coming down the north lane, a band of them. Forty, the boy says. Fifty. With one of their priests." She looks at the light. "Not yet. Soon. Before full dark." The children have been in the fields all afternoon, it seems, every one of them, watching the lane, because the whole village decided they should. Nobody asked the Third.
+"Edur," she says. "Off the ridge. Coming down the north lane, a band of them. Forty, the boy says. Fifty. With one of their priests." She looks at the light. "Not yet. Soon. Before full dark." The children have been in the fields all afternoon, it seems, every one of them, watching the lane, because the whole village decided they should. The Third was not asked.
 
 There is time. Not much. Enough to choose.` :
 `Dusk, and the Third comes up out of the factor's cellar into a village that has gone very still.
 
-There is somebody running down the north lane, through the orchards: a man of the village, coming home from the fields too late, and running the way a man runs when he has seen something behind him. He comes in through the north gate and does not stop, and the mill-woman catches his arm, and he says one word, and she lets him go.
+There is somebody running down the north lane, through the orchards: a man of the village, coming home from the fields too late, and running as if something were behind him. He comes in through the north gate and does not stop, and the mill-woman catches his arm, and he says one word, and she lets him go.
 
 "Edur," she says, across the square. "On the lane. A band of them. With one of their priests." She looks north, where the orchards are going dark. "They're at the top orchard. They'll be at the gate before the light's gone."`,
       ch:[{t:'The mill-woman, in the square.', go:'b7_c5_key'}]}),
     b7_c5_key:()=>({sp:'The mill-woman', scene:'b7_village', html:risingHTML(), again:()=> b75Key() ? (b75Key() === 'hold' ? 'The square, and the street, and the Edur coming. The Third holds.' : 'The mill-race and the river path. The Third goes.') : 'The mill-woman in the square, and the north lane going dark.', txt: b75Key() ?
 `It is decided. ${b75Key() === 'hold' ? 'The Third holds the village.' : 'The Third goes out by the river path.'}` :
-`The mill-woman stands in the middle of the square with her floury arms folded and her grandson beside her, and behind her the village is at its doors: old men, women, children, a dog. They are looking at the Third. Nobody says anything.
+`The mill-woman stands in the middle of the square with her floury arms folded and her grandson beside her, and behind her the village is at its doors: old men, women, children, a dog. They are looking at the Third. The square is silent.
 
 The Edur do not leave a village that has hidden Malazans. Everybody in the square knows it. The mill-woman knew it this morning when she opened the factor's door.
 
 The river path runs east from the mill-race under the willows, a cart wide, toward the ford and the column, and in the dark a squad might go along it and be gone before the Edur are through the gate. Or the Third can stand in the street, between the gate and the square, while the village goes down to the river by the mill, and hold it, for as long as that takes, against whatever comes down the lane.
 
-${b75Say({haddat:`Haddat has the blue shield on her arm. "Wherever you say, Sergeant," she says, in Hissari. She is looking at the children.`, _:'The squad waits for you.'})}${b75If('doss', `\n\nDoss is looking at the mill-woman. "They hid us," he says. "Under the factor's floor." He does not say anything else. He does not need to.`)}${b75If('mirrel', `\n\nMirrel is counting the salves in her bag without taking them out. "Forty Edur," she says. "And a priest. And us." She does not say which she wants. She is a counter. She is saying what she counted.`)}${b75If('tangle', `\n\n${b75CanRoof() ? `Tangle is looking up at the factor's roof. "Slate on oak," he says. "Heavy. If somebody put the right thing in the right beam." He does not finish.` : `Tangle has the satchel on his back. "Not much left in it," he says. "I'm only saying."`}`)}${b75If('wenna', `\n\nWenna is looking at the river. Then she looks at the Edur end of the street, and her hand goes to her gaff. "I didn't come inland to run from Edur," she says. "But it's your crew."`)}
+${b75Say({haddat:`Haddat has the blue shield on her arm. "Wherever you say, Sergeant," she says, in Hissari. She is looking at the children.`, _:'The squad waits for you.'})}${b75If('doss', `\n\nDoss is looking at the mill-woman. "They hid us," he says. "Under the factor's floor." He leaves it there. He does not need to say more.`)}${b75If('mirrel', `\n\nMirrel is counting the salves in her bag without taking them out. "Forty Edur," she says. "And a priest. And us." She does not say which she wants. She is a counter. She is saying what she counted.`)}${b75If('tangle', `\n\n${b75CanRoof() ? `Tangle is looking up at the factor's roof. "Slate on oak," he says. "Heavy. If somebody put the right thing in the right beam." He does not finish.` : `Tangle has the satchel on his back. "Not much left in it," he says. "I'm only saying."`}`)}${b75If('wenna', `\n\nWenna is looking at the river. Then she looks at the Edur end of the street, and her hand goes to her gaff. "I didn't come inland to run from Edur," she says. "But it's your crew."`)}
 
 The mill-woman says, "Well, Malazan?" She does not beg. She asks.`,
       ch:[{t:'"We hold the village." (a mortal fight: whoever falls here stays down)', tag:'mortal', req:()=>!b75Key(), fx:()=>{ if (!S.f.b7_c5_key) { S.f.b7_c5_key = 'hold'; b7Rise(2, 'the Third held a village that hid it'); b75L('haddat', 1); b75L('doss', 2); b75L('wenna', 1); b75L('mirrel', -1); b75L('marrow', -1); } }, go:'b7_c5_hold'},
@@ -598,7 +648,7 @@ The mill-woman says, "Well, Malazan?" She does not beg. She asks.`,
 
     /* ---- 'hold': the street, the roof, the square (the mortal fight) ---- */
     b7_c5_hold:()=>({sp:'The mill-woman', scene:'b7_village', html:risingHTML(), txt:
-`The mill-woman nods once, as if you had told her the price of flour, and turns to the village. "The mill," she says. "The race door. Down to the river and along the bank to the willows. Now." They go. Old men carrying children, women carrying old men, a dog carrying nothing and in everyone's way. Nobody runs. They have done this in their heads all day.
+`The mill-woman nods once, as if you had told her the price of flour, and turns to the village. "The mill," she says. "The race door. Down to the river and along the bank to the willows. Now." They go. Old men carrying children, women carrying old men, a dog carrying nothing and in everyone's way. Not one of them runs. They have done this in their heads all day.
 
 She is the last. At the corner of the mill she stops and looks back at the Third in the square, all of it, one by one, the way she looked at the squad in the factor's doorway this morning, weighing.
 
@@ -632,7 +682,7 @@ Whoever falls here stays down.`,
       return {sp:'The square by the mill', scene:'b7_village', fx:()=>{ if (!S.f.b7_c5_holdDone) { S.f.b7_c5_holdDone = 1; gain('b7_c5_edurblade'); } }, txt:
 `The war-leader goes down in the middle of the square${S.f.b7_c5_roof ? ', in the dust of the factor\'s roof,' : ''} with the long blade still in his hand, and what is left of his band looks at him, and at the Third, and goes back up the street and out of the gate and into the orchards, without hurrying, the way the Edur do everything. The K'risnan's dark goes with them. It is very quiet.
 
-${fell.length ? `${b75And(fell.map(NAME))} did not get up.\n\n${b75Say({haddat:`Haddat kneels by ${fell.length > 1 ? 'them' : b75Him(fell[0])} with the blue shield still on her arm, and says the ${fell.length > 1 ? 'names' : 'name'} in Hissari, and then all the names she has, from the Chain on, with ${fell.length > 1 ? 'these' : 'this one'} at the end.`, marrow:`Marrow kneels with one hand on ${fell.length > 1 ? 'the nearest' : b75Him(fell[0])}, as if the warren could still do something. It cannot. She keeps the hand there.`, _:'The squad stands round in the dark, and nobody says anything for a while.'})}` : `Everyone in the Third got up. You count them twice, in the dark, and get the same number both times, and let your breath go.`}
+${fell.length ? `${b75And(fell.map(NAME))} did not get up.\n\n${b75Say({haddat:`Haddat kneels by ${fell.length > 1 ? 'them' : b75Him(fell[0])} with the blue shield still on her arm, and says the ${fell.length > 1 ? 'names' : 'name'} in Hissari, and then all the names she has, from the Chain on, with ${fell.length > 1 ? 'these' : 'this one'} at the end.`, marrow:`Marrow kneels with one hand on ${fell.length > 1 ? 'the nearest' : b75Him(fell[0])}, as if the warren could still do something. It cannot. She keeps the hand there.`, _:'The squad stands round in the dark a while.'})}` : `Everyone in the Third got up. You count them twice, in the dark, and get the same number both times, and let your breath go.`}
 
 The village comes back up from the river by the mill-race in ones and twos, the old and the children first, and stands at the corner of the square looking at it. The mill-woman comes last. She looks at the war-leader, and at the Third, and at the factor's house${S.f.b7_c5_roof ? ' with no roof on it' : ''}.
 
@@ -643,16 +693,16 @@ The war-leader's long blade lies in the dust where he fell. ${b75Say({haddat:'Ha
     b7_c5_hold_out:()=>({sp:'The mill village', scene:'b7_village', txt:
 `Toward midnight a marine comes down the river road with word: the Fist is pulling the column together on the riverbank below the village, squad by squad out of the dark. Heavies to the bank.
 
-The mill-woman gives the Third a sack of bread at the race door, and will not take a silver for it. ${b75Fell().length ? `"We'll keep the place by the race," she says. "We'll put a stone. We can't cut letters. We'll know."` : `"Go on, then," she says. "Before I start liking you."`}${b75If('doss', `\n\nDoss is the last to go through the race door. He stops in it, and looks back at the village, at the mill-woman and the boy and the square, for a long moment, as if he were learning it.`)}`,
+The mill-woman gives the Third a sack of bread at the race door, and will not take a silver for it. ${b75Fell().length ? `"We'll keep the place by the race," she says. "We'll put a stone. We can't cut letters. We'll know."` : `"Go on, then," she says. "Before I start liking you."`}${b75If('doss', `\n\nDoss is the last to go through the race door. He stops in it, and looks back at the village, at the mill-woman and the boy and the square, as if he were learning it by heart.`)}`,
       ch:[{t:'Down to the riverbank.', onward:true, fx:()=>{ S.f.b7_c5_ph = 4; }, go:()=>{ startExplore('b7_c5_bank'); talk('b7_c5_bank_arrive'); }}]}),
 
     /* ---- 'slip': out by the river path at night ---- */
     b7_c5_slip:()=>({sp:'The mill-woman', scene:'b7_village', html:risingHTML(), txt:
-`The mill-woman looks at you for a long moment. Then she nods, once, as if you had told her the price of flour, and it was more than she had.
+`The mill-woman looks at you. Then she nods, once, as if you had told her the price of flour, and it was more than she had.
 
-"The race door," she says. "Then the path east under the willows to the ford. You'll find it." She does not say anything else. She turns to the village at its doors, and says something to them in Letherii, quietly, and they go in, and the doors close one after another all along the street.
+"The race door," she says. "Then the path east under the willows to the ford. You'll find it." That is all. She turns to the village at its doors, and says something to them in Letherii, quietly, and they go in, and the doors close one after another all along the street.
 
-Her grandson stays by her a moment longer, looking at the Third, and then she takes his hand and they go into the mill together.${b75If('doss', `\n\nDoss stands in the square a long time after the mill door has shut. Then he comes, because he said he would march, and he keeps his word. He does not look at you.`)}${b75If('haddat', `\n\nHaddat looks at the children's doors, one after another. She does not say anything. It is very loud.`)}`,
+Her grandson stays by her a moment longer, looking at the Third, and then she takes his hand and they go into the mill together.${b75If('doss', `\n\nDoss stands in the square a long time after the mill door has shut. Then he comes, because he said he would march, and he keeps his word. He walks at the back.`)}${b75If('haddat', `\n\nHaddat looks at the children's doors, one after another. Her silence is very loud.`)}`,
       ch:[{t:'The mill-race and the river path.', onward:true, go:'b7_c5_slip_start'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b7_c5_slip_start:()=>({sp:'The river path', scene:'b7_c5_river', txt:
@@ -668,7 +718,7 @@ And ahead on the path, coming the other way out of the dusk, spears: the Edur we
 
 The Third crosses the ford, knee-deep, cold, and goes up into the wood on the far side, and nobody follows.
 
-Behind, across the fields, the village is quiet for a while. Then it is not. Then, over the trees, where the village is, there is a light in the sky that grows, slowly, and does not go out.${b75Say({haddat:`\n\nHaddat stops at the edge of the wood and looks back at the light. She stands there until somebody touches her arm. Then she comes.`, doss:`\n\nDoss does not look back. He walks into the wood with the flail on his shoulder and his face to the front, and says nothing at all.`, _:'\n\nNobody in the Third looks back at it for long.'})}`,
+Behind, across the fields, the village is quiet for a while. Then it is not. Then, over the trees, where the village is, there is a light in the sky that grows, slowly, and does not go out.${b75Say({haddat:`\n\nHaddat stops at the edge of the wood and looks back at the light. She stands there until somebody touches her arm. Then she comes.`, doss:`\n\nDoss walks into the wood with the flail on his shoulder and his face to the front, and keeps it there.`, _:'\n\nThe Third keeps its eyes on the wood ahead.'})}`,
       ch:[{t:'Through the wood, to the riverbank. The column is gathering.', onward:true, fx:()=>{ S.f.b7_c5_ph = 4; }, go:()=>{ startExplore('b7_c5_bank'); talk('b7_c5_bank_arrive'); }}]}),
 
     /* ======== phase 4: the riverbank at night, the column pulling together ======== */
@@ -677,7 +727,7 @@ Behind, across the fields, the village is quiet for a while. Then it is not. The
 
 ${b75Key() === 'hold' ? `Across the fields, the village is dark. Its mill is still turning. ${b75Fell().length ? 'By the race, there is a lantern, and people round it with spades.' : 'Somebody in the square is singing, very quietly, and stops.'}` : `Across the fields, over the trees where the village was, the sky is lit from underneath, a long low red that does not move, and a smoke going up into it.`}
 
-Further up the river, toward the big village with the tavern, there is fighting still: a far noise, and a glow, and once, a long way off, a cusser.${b75Say({marrow:'\n\nMarrow listens to it. "Up the road, child," she says. "Somebody else\'s night."', _:''})}`,
+Further up the river, toward the big village with the tavern, there is fighting still: a far noise, and a glow, and once, a long way off, a cusser.${b75Say({marrow:'\n\nMarrow listens to it. "Up the road, child," she says. "Another squad\'s night."', _:''})}`,
       ch:[{t:'The lie-up in the reeds.', go:'b7_c5_fire'},
           {t:'Doss, at the water.', req:()=>b7In('doss') && !S.f.b7_c5_dossBank, go:'b7_c5_doss_bank'},
           {t:'Wenna, on the bank.', req:()=>b7In('wenna') && !S.f.b7_c5_wennaBank, go:'b7_c5_wenna_bank'},
@@ -696,7 +746,7 @@ ${b75Key() === 'hold' ? 'The village\'s light, across the fields, is a lantern b
       ch:[{t:'Back to the bank.', go:()=>startExplore()}]}),
     b7_c5_across:()=>({sp:'Across the fields', scene:'b7_c5_river', txt: b75Key() === 'hold' ?
 `Back across the fields, the village is dark, its mill turning, and by the race a lantern with people round it. ${b75Fell().length ? 'They are digging. They said they would.' : 'They are standing at their doors, watching the river, where the Malazans are.'} There is nothing for the Third to go back for. The village has what it needs.` :
-`Back across the fields, over the trees where the village was, the light. Nobody in the Third goes that way. There is nothing to go back for that anyone could carry.`,
+`Back across the fields, over the trees where the village was, the light. The Third does not go that way. There is nothing to go back for that anyone could carry.`,
       ch:[{t:'Back to the bank.', go:()=>startExplore()}]}),
     b7_c5_doss_bank:()=>({sp:b7In('doss') ? 'Doss' : 'The water', scene:'b7_c5_river', fx:()=>{ S.f.b7_c5_dossBank = 1; }, txt: !b7In('doss') ?
 `The water at the edge of the reeds, black and quiet.` : b75Key() === 'hold' ?
@@ -722,7 +772,7 @@ ${b75Key() === 'hold' ? `She looks across the fields at the dark village. "My br
 
 ${b75Key() === 'hold' ? `Behind it, across the fields, the mill village sits in the grey with its factor's ${S.f.b7_c5_roof ? 'roof in its square' : 'house shut up and empty'} and its mill turning, and its people at their doors, watching the Malazans go. Some of them lift a hand. The mill-woman does not. She stands by the well with her arms folded until the Third is out of sight.` : `Behind it, across the fields, there is a smoke where the village was, going straight up in the still air, and nobody at any door to watch the Malazans go.`}
 
-${b75Fell().length ? `The Third's line is shorter by ${b75Num(b75Fell().length)}. It closes up without being told.` : 'The Third walks in the middle of the lieutenant\'s lot, all of it, heavy and slow, the way the borrowed heavies go.'}${b7In('wenna') ? `\n\nWenna walks at the head of the Third along the river path, barefoot. "Three days to the city," she says. "If nobody stops us." She does not sound as if she expects that.` : ''}${b7In('doss') ? `\n\nDoss walks at the back with the flail on his shoulder${b75Key() === 'hold' ? ', and every so often he looks back at the village, until it is gone.' : ', and faces front, and does not look back at all.'}` : ''}${b75Say({haddat:`\n\nHaddat says the names under her breath as she walks${b75Fell().length ? `, and at the end, new ones: ${b75And(b75Fell().map(NAME))}` : ''}${b75Key() === 'slip' ? ', and after them, very quietly, *the mill village*' : ''}. Then she is done.`, _:''})}`,
+${b75Fell().length ? `The Third's line is shorter by ${b75Num(b75Fell().length)}. It closes up without being told.` : 'The Third walks in the middle of the lieutenant\'s lot, all of it, heavy and slow, the way the borrowed heavies go.'}${b7In('wenna') ? `\n\nWenna walks at the head of the Third along the river path, barefoot. "Three days to the city," she says. "If nobody stops us." She does not sound as if she expects that.` : ''}${b7In('doss') ? `\n\nDoss walks at the back with the flail on his shoulder${b75Key() === 'hold' ? ', and every so often he looks back at the village, until it is gone.' : ', and faces front the whole way.'}` : ''}${b75Say({haddat:`\n\nHaddat says the names under her breath as she walks${b75Fell().length ? `, and at the end, new ones: ${b75And(b75Fell().map(NAME))}` : ''}${b75Key() === 'slip' ? ', and after them, very quietly, *the mill village*' : ''}. Then she is done.`, _:''})}`,
       ch:[{t:'On, with the column.', onward:true, go:()=>chapterEnd(5, b75Key() || 'hold')},
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
