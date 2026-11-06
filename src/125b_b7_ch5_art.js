@@ -57,20 +57,20 @@ SCENEX.b7_village = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
     for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) { const wx = hx0 + (hx1 - hx0)*(.1 + i*.22), wy = ht + (hb - ht)*(.16 + r*.46); x.fillStyle = '#100e0c'; x.fillRect(wx, wy, W*.026, H*.04); x.fillStyle = 'rgba(0,0,0,.4)'; x.fillRect(wx + W*.012, wy, 1, H*.04); } // the shutters, closed
     x.fillStyle = '#0a0806'; x.fillRect(hx0 + (hx1 - hx0)*.45, hb - H*.06, W*.024, H*.06); // the door
     // the houses either side of the square, plaster and thatch
-    [[.04, .13, .11], [.18, .11, .09], [.66, .1, .09], [.8, .14, .12]].forEach(([u, w, h], i) => b75aCot(x, W*u, hz + H*(.18 + (i % 2)*.03), W*w, H*h, !day && i === 3 && !dusk, wallC, thC));
+    [[.22, .12, .09], [.8, .14, .12]].forEach(([u, w, h], i) => b75aCot(x, W*u, hz + H*(.2 + i*.02), W*w, H*h, !day && i === 1 && !dusk, wallC, thC));
     // the meeting house with its bell-cote, right of the factor's
     { const mx = W*.66, mb = hz + H*.13, mw = W*.1, mh = H*.08; b75aCot(x, mx, mb, mw, mh, false, wallC, thC); x.fillStyle = thC; x.fillRect(mx + mw*.44, mb - mh - mh*.85 - H*.04, mw*.12, H*.04); ell(x, mx + mw*.5, mb - mh - mh*.85 - H*.025, W*.005, H*.008, day ? '#8a6a3a' : '#2a2010'); }
     // the mill on its race, left: a tall plaster mill with a thatch, the race running under it, the wheel drawn live
-    { const mx = W*.12, mb = hz + H*.12; b75aCot(x, mx, mb, W*.12, H*.13, false, wallC, thC); x.fillStyle = day ? 'rgba(90,110,120,.6)' : 'rgba(20,30,40,.7)'; x.fillRect(0, mb + 2, W*.3, H*.025); }
+    { const mx = W*.02, mb = hz + H*.12; b75aCot(x, mx, mb, W*.12, H*.13, false, wallC, thC); x.fillStyle = day ? 'rgba(90,110,120,.6)' : 'rgba(20,30,40,.7)'; x.fillRect(0, mb + 2, W*.24, H*.025); }
     // the well in the square, front middle: a stone head and a windlass
-    { const wx = W*.5, wy = H*.84; ell(x, wx, wy + H*.02, W*.08, H*.025, 'rgba(0,0,0,.35)'); x.fillStyle = day ? '#7a746a' : dusk ? '#4a423c' : '#24221e'; x.fillRect(wx - W*.06, wy - H*.04, W*.12, H*.06); ell(x, wx, wy - H*.04, W*.06, H*.015, day ? '#8a847a' : '#2e2c28'); ell(x, wx, wy - H*.04, W*.045, H*.01, '#050404');
+    { const wx = W*.74, wy = H*.84; ell(x, wx, wy + H*.02, W*.08, H*.025, 'rgba(0,0,0,.35)'); x.fillStyle = day ? '#7a746a' : dusk ? '#4a423c' : '#24221e'; x.fillRect(wx - W*.06, wy - H*.04, W*.12, H*.06); ell(x, wx, wy - H*.04, W*.06, H*.015, day ? '#8a847a' : '#2e2c28'); ell(x, wx, wy - H*.04, W*.045, H*.01, '#050404');
       B2F.line(x, '#1a140c', 2, [[wx - W*.055, wy - H*.04], [wx - W*.05, wy - H*.13]]); B2F.line(x, '#1a140c', 2, [[wx + W*.055, wy - H*.04], [wx + W*.05, wy - H*.13]]); B2F.line(x, '#2a2016', 1.6, [[wx - W*.05, wy - H*.12], [wx + W*.05, wy - H*.12]]); B2F.line(x, '#1a140c', .8, [[wx, wy - H*.12], [wx, wy - H*.06]]); }
   }), 0, 0, W, H);
   // the mill wheel, turning slowly on the race
-  { const cx = W*.27, cy = H*.42 + H*.1, r = H*.06, a = mo ? t/2200 : 0; ctx.strokeStyle = day ? '#3a2a18' : dusk ? '#2a1c12' : '#120c08'; ctx.lineWidth = Math.max(1.2, H*.006); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  { const cx = W*.165, cy = H*.42 + H*.1, r = H*.055, a = mo ? t/2200 : 0; ctx.strokeStyle = day ? '#3a2a18' : dusk ? '#2a1c12' : '#120c08'; ctx.lineWidth = Math.max(1.2, H*.006); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
     for (let i = 0; i < 8; i++) { const k = a + i*Math.PI/4; B2F.line(ctx, ctx.strokeStyle, Math.max(1, H*.004), [[cx, cy], [cx + Math.cos(k)*r, cy + Math.sin(k)*r]]); ctx.fillStyle = ctx.strokeStyle; ctx.fillRect(cx + Math.cos(k)*r - 2, cy + Math.sin(k)*r - 2, 4, 4); } }
   // the light: a lantern by the race at night after 'hold'; the window at dusk going gold; a thin smoke from the roofless house
-  if (md === 'night' && f.b7_c5_holdDone) { const lf = mo ? .8 + .2*Math.sin(t/500) + .05*Math.sin(t/41) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.3, H*.58, H*.08, '#ffb060', .3*lf); glow(ctx, W*.3, H*.58, 2, '#ffe0a0', .9*lf); ctx.globalCompositeOperation = 'source-over'; }
+  if (md === 'night' && f.b7_c5_holdDone) { const lf = mo ? .8 + .2*Math.sin(t/500) + .05*Math.sin(t/41) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.2, H*.58, H*.08, '#ffb060', .3*lf); glow(ctx, W*.2, H*.58, 2, '#ffe0a0', .9*lf); ctx.globalCompositeOperation = 'source-over'; }
   if (dusk) { const lf = mo ? .85 + .15*Math.sin(t/700) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.85, H*.5, H*.05, '#ffa050', .2*lf); ctx.globalCompositeOperation = 'source-over'; }
   if (roofless) { const sx = W*.5, sy = H*.3; for (let i = 0; i < 12; i++) { const k = ((mo ? t/9000 : 0) + i/12) % 1, r = H*(.015 + k*.05); ell(ctx, sx + Math.sin(k*4 + i)*W*.012, sy - k*H*.28, r, r*.8, `rgba(70,70,74,${(.3*(1 - k)).toFixed(2)})`); } }
   const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.14 + i*Math.min(.07, .3/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
@@ -190,12 +190,12 @@ SCENEX.b7_c5_river = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
       + [52, 76, 100, 124, 148].map(x => `<path d="M${x} ${x === 52 || x === 148 ? 34 : 20} L${x} ${x === 52 || x === 148 ? 118 : 132}" stroke="#2a1a0c" stroke-opacity=".4" stroke-width="1"/>`).join('') // the plank seams under the hide
       + `<path d="${ov}" fill="none" stroke="url(#@ir)" stroke-width="6"/><path d="${ov}" fill="none" ${O}/>`
       + `<path d="M34 76 L166 76" stroke="url(#@ir)" stroke-width="4" stroke-opacity=".85"/>`
-      + `<path d="M118 26 L114 60 L122 62 L120 30 Z" fill="url(#@ir)" ${O}/>` // the iron mend
+      + `<path d="M58 92 L84 96 L83 100 L57 97 Z" fill="url(#@ir)" ${O}/>` // the iron mend
       // the heron, faded blue: a long neck in an S, the bill, one leg down, the other tucked
       + `<g fill="none" stroke="#6a8aa8" stroke-opacity=".75" stroke-linecap="round" stroke-linejoin="round">`
       + `<path d="M92 104 Q80 96 86 84 Q92 72 104 74 Q112 76 108 66 Q104 56 94 54" stroke-width="5"/>`
       + `<path d="M94 54 L76 50" stroke-width="2.4"/>`
-      + `<path d="M88 104 Q100 112 116 104 Q122 96 112 90 Q100 88 92 96 Z" fill="#6a8aa8" fill-opacity=".55" stroke-width="2"/>`
+      + `<path d="M84 106 Q100 116 124 104 Q128 94 114 88 Q98 86 88 96 Z" fill="#6a8aa8" fill-opacity=".7" stroke-width="2"/><path d="M124 104 L136 110" stroke-width="2"/>`
       + `<path d="M104 108 L104 124 M104 124 L98 128 M104 124 L110 127" stroke-width="2"/>`
       + `</g>`
       + `<circle cx="93" cy="55" r="1.4" fill="#1a1410"/>`
