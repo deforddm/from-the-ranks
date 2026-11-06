@@ -6030,6 +6030,7 @@ function endBeat(won){
 function win(){
   if (!B) return;
   boonsClear(); // the gods' boons end with the fight (31c)
+  if (S.bopt) delete S.bopt.wards; // v10.2: a ward ends with the fight (31c)
   tally('won'); const xp = Math.round((B.def.xp || 0) * XPK), up = gainXP(xp), head = `${B.def.objective ? 'Held' : 'Victory'}. +${xp} experience.`;
   if (B.def.mortal) { // the fallen stay down: the sergeant gets up with a scar, everyone else is dead
     const fallen = B.units.filter(u => u.side === 'p' && !u.ally && u.hp <= 0).map(u => u.id);
