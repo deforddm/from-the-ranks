@@ -429,10 +429,11 @@ Object.assign(SCENES, {
 SCENEX.b3_pale_camp ??= (cv, t) => drawCamp(cv, t, false);
 SCENEX.b3_pale_night ??= (cv, t) => drawCamp(cv, t, true);
 
-/* ---- the Book picker holds three books now: a little less padding, so they fit at 360px ---- */
+/* ---- the Book picker holds three books now: a little less padding, so they fit at 360px. Seven books (Book Seven, v10.0): too many for
+   one row at 360px, so the picker wraps, at least 70px a book: four and three at phone width, one row on a wide screen ---- */
 if (typeof document !== 'undefined' && document.head && !document.getElementById('b3css')) {
   const st = document.createElement('style'); st.id = 'b3css';
-  st.textContent = '.bseg .btn{padding:4px 4px;min-width:0}.bseg .btn small{font-size:.62rem;white-space:normal;text-align:center}.allypill .dry{color:#c9b6e8}#nm.locked{opacity:.8;font-style:italic}';
+  st.textContent = '.bseg{flex-wrap:wrap}.bseg .btn{padding:4px 4px;min-width:70px}.bseg .btn small{font-size:.62rem;white-space:normal;text-align:center}.allypill .dry{color:#c9b6e8}#nm.locked{opacity:.8;font-style:italic}';
   document.head.appendChild(st); }
 
 /* ---- Book One safety: engine text that reads Book One's flags, given Book Three's own words while S.book is 'moi' ----
