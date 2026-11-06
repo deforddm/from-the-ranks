@@ -194,7 +194,7 @@ const B76FATES = {
 };
 
 /* the other squad, one line: the Third's village (Chapter 5's key), as a levy from the river villages heard it */
-const b76Third = () => S.f.b7_c5_key === 'hold' ? 'the foreigners held a mill village on the river against an Edur band, a whole night, and the village went down the river with them in the morning'
+const b76Third = () => S.f.b7_c5_key === 'hold' ? 'the foreigners held a mill village on the river against an Edur band, a whole night, and in the morning the village was still standing and the Edur were not'
   : S.f.b7_c5_key === 'slip' ? 'the foreigners hid in a mill village on the river and slipped out of it by night, and the Edur came in after them and found only the villagers'
   : 'the foreigners are in the river villages, a squad here and a squad there, and the villages hide them';
 
@@ -652,7 +652,7 @@ All along the Letherii line there is no sound at all, and then there is a great 
       return {sp:e ? 'The eldest Edur' : 'The captain', scene:'b7_field', txt:
 `The Edur come back across the burned plain in the middle of the morning, walking, in no order at all, and come to the Letherii line, and walk through it.
 
-They do not stop for the stakes. They do not stop for the companies. Letherii soldiers get out of their way without being asked, and the Edur go through the line and past the foot of the ridge and away east along the road, toward the river and the sea, every one of them, without looking up at the crest. They are going home. It is in the way they walk. An empire does not walk like that. People going home do.
+They do not stop for the stakes. They do not stop for the companies. Letherii soldiers get out of their way without being asked, and the Edur go through the line and past the foot of the ridge and away north off the plain, toward their own villages a long way up the coast, every one of them, without looking up at the crest. They are going home. It is in the way they walk. An empire does not walk like that. People going home do.
 
 ${e ? `The eldest stops at the Sixth's picket. He is grey with ash to the knees, and there is a burn on one side of his face that has taken the eyebrow, and he looks at the Sixth in its gap in the stakes for a long breath.` : `When they have gone, the captain comes along the lane from the levy battalion's standard, alone, with his hands behind his back, and stops at the Sixth.`}`,
         ch:[{t:e ? '"You looked back."' : '"You knew."', go:e ? 'b7_c6_home_eldest' : 'b7_c6_home_captain'},
@@ -807,7 +807,7 @@ The Sixth walks. The Finadd takes the standard out of the mud and carries it, an
     b7_c6_break_after:()=>({sp:'The reeds', scene:'b7_river', fx:()=>{ if (!S.f.b7_c6_breakDone) S.f.b7_c6_breakDone = 1; }, txt:
 `The reeds close over the Sixth's heads, and the noise of the bank goes muffled and far, and for a long way there is only the water to the knee and the reeds and somebody's breathing, and then the reeds thin and there is a ditch, and a field, and a road, and the city's towers ahead in the haze.
 
-The Sixth comes out onto the road all of it, by some arithmetic Perrit could not do, and the Finadd counts it twice to be sure.
+The Sixth comes out onto the road all of it, by an arithmetic that would not stand an audit, and the Finadd counts it twice to be sure.
 
 Behind, along the bank and the flats, the foreigners are giving no quarter to the ones who ran. You heard it in the reeds. You will hear it again, some nights. The Sixth keeps its face to the road.${b76Say({pessa:`\n\nPessa wrings out her shirt. "Canal," she says. "Told you. Never trust a soldier who can't wade."`, tobet:`\n\nTobet is shaking. "Ran," he says. "Ran, and lived. I've wanted to do that since I was born."`, _:''})}${b76If('thegg', `\n\nThegg comes out of the reeds last. He keeps whatever he saw back there to himself.`)}`,
       ch:[{t:'The road to the city.', onward:true, fx:()=>{ S.f.b7_c6_ph = 4; }, go:()=>{ startExplore('b7_c6_walls'); talk('b7_c6_walls'); }},
@@ -870,7 +870,7 @@ The Finadd writes it on the Sixth's page, and blots it, and then, after a moment
       return {sp:'The gate of Letheras', scene:'b7_c6_walls', html:risingHTML(), txt:
 `Grey light along the battlements. Up on the wall the guard calls down that it is first light, and that soldiers with officers may come in, and the gate grinds open a man's width and stays there.
 
-The Finadd stands up from the fire and brushes his coat. ${k === 'stand' ? 'He takes up the battalion standard.' : 'He has no standard to take up, and does not look for one.'} The Sixth falls in behind him, ${k === 'stand' ? 'in its file, in step, as it came off the bank' : 'all of it, which is more than the road can say'}, and goes in through the gate of Letheras into a city that is deciding what it is.
+The Finadd stands up from the fire and brushes his coat. ${k === 'stand' ? 'He takes up the battalion standard.' : 'He has no standard to take up, and does not look for one.'} The Sixth falls in behind him, ${k === 'stand' ? 'in its file, in step, as it came off the bank' : 'all of it, which is more than the road can say'}, and goes in through the river gate of Letheras, the one that faces the way the army went, into a city that is deciding what it is.
 
 ${r === 'army' ? 'Whatever army Lether has after, the Sixth means to be a company of it.' : r === 'palace' ? 'Whoever sits the throne after, the Sixth means to stand at a door of it.' : 'Whatever Lether is after, the Sixth means to be out of its army, and in it.'} Behind them, on the road, the foreigners are coming.${b7In('sorvan') ? `\n\nSorvan goes in last but one, with the blue scale on, looking up at the gate-arch as a man looks at a stable he has been told is his.` : ''}${b7In('ilsa') ? `\n\nIlsa goes in with the grey coat over her arm, not on. "Home," she says. "Whatever that is now."` : ''}`,
         ch:[{t:'Into the city.', onward:true, go:()=>chapterEnd(6, k)},
