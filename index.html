@@ -675,7 +675,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '10.0.2';
+const VERSION = '10.0.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7463,6 +7463,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.0.3', ['Book Seven: Perrit and the tile-woman read the tiles for this book now: the barracks under the Patriotists\' eye, the muster at the horse lines, and the field before the walls.', 'Nothing else changes.']],
   ['10.0.2', ['Book Six: the readers speak for this book now. Marrow, Tallow and the old soldier read for the Lato Odhan, Y\'Ghatan, the Kokakal shore and the sea; Tuft, Sohra and old Benna for the north coast, G\'danisban and the night road.', 'Fixed: in Book Six the Fourth\'s readers said nothing after a card, and in Book Seven neither did the Letherii\'s. They speak now.', 'Nothing else changes.']],
   ['10.0.1', ['Book Seven: Marrow, Tallow and the old soldier read the Deck for Lether now, not Raraku. Nine cards have new lines for the burned ships, the night raids, the village and the city.', 'Nothing else changes.']],
   ['10.0.0', ['Book Seven, Unwitnessed, beside Reaper\'s Gale: the Malazan invasion of Lether, played from both sides.', 'Book Two\'s squad, lent to Keneb\'s marines, lands with the Fourteenth and marches on Letheras (Chapters 1, 3, 5 and 7). Book Five\'s Letherii, the Sixth Company, are sent out against them (Chapters 2, 4 and 6). Each squad keeps its own levels.', 'The Rising: villages that turn against the Edur open roads and guides. The Patriotists keep a file on the Letherii.', 'Four recruits, a Deck reading and a vision every chapter, one mortal fight, games at the fires, and a fate page for every soldier of both squads.', 'A finished Book Six on the adjunct road, or a finished Book Five on the emperor road, carries its squad across. Older saves carry on as they were.']],
@@ -81274,7 +81275,39 @@ const B7SAY = {
     tallow:`"The bell," Tallow says. "So you know he's coming." He listens to the city a while: shouting, a long way off, and something that might be bells. "I can hear that one."`,
     oldninth:`"Leper," the old man says. "Chains." He taps his own temple. "Mages walk clean, but they walk short." He drinks, a lot.`},
 };
-const b7CardSay = id => { const tt = b7Thread() === 't'; return b7As(() => { const s = (tt ? (B7SAY[id] ? B7SAY : B4SAY) : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
+/* The Letherii's own tile words for Book Seven (Nov 6, David): the barracks under the Patriotists' eye, the muster at the horse lines,
+   and the field before the walls. The descriptions stay Book Five's. Perrit reads, else the tile-woman. The Saviour never names whose hand
+   (rule 33: Brys is seen back only in Chapter 7), and the Throne never says who will sit in it. */
+const B7SAY_L = {
+  b5t_watcher:{d:B5SAY.b5t_watcher.d,
+    perrit:`"The Watcher." Perrit's hand moves to turn it face down, and stops. "Someone at a window, looking." She glances at the barracks wall, and at the lamp over the gate. "In this city, this year, that is not a reading. It is the weather. Keep your heads down."`,
+    tilewoman:`"The one at the window," the old woman says. "Means you are seen." She does not look round. "You were seen before you sat down, soldier. The tile is only being polite."`},
+  b5t_betrayer:{d:B5SAY.b5t_betrayer.d,
+    perrit:`"The Betrayer." Perrit lays it down the way you lay down a blade. "Two walking together, and a knife." She does not look at anyone in the squad, which is worse than looking. "Somebody is writing names down. Finish what you start, and don't say it out loud."`,
+    tilewoman:`"The knife behind the back," the old woman says, and laughs, short. "Every reader in Letheras turns this one twice a night now. Somebody is lying, and somebody else is paid to listen."`},
+  b5t_throne:{d:B5SAY.b5t_throne.d,
+    perrit:`"The Empty Throne," Perrit says. "The seat that knew no king." She taps it once. "There is a man on the real one who cannot stay dead, and a fleet on the coast. The tile does not care. Strike first, it says. Somebody will."`,
+    tilewoman:`"The empty chair," says the old woman. "Turns up every year. More this year." She looks toward the palace over the roofs. "It has never been so full and looked so empty. Hit hard, soldier, while they argue."`},
+  b5t_wall:{d:B5SAY.b5t_wall.d,
+    perrit:`"The Wall." Perrit squares it with the edge of the spread. "Stone on stone, and no gate." She looks down the horse lines at the Edur pickets. "Stand behind something. Stand behind each other. Not behind them."`,
+    tilewoman:()=>`"Stone on stone," says the old woman. "Your shields will hold."${b7In('thegg') ? ' She looks at Thegg for a long moment. "That one is a wall already. They will put him in the front, so."' : ' "They will need to. They will put you in the front."'}`},
+  b5t_hunter:{d:B5SAY.b5t_hunter.d,
+    perrit:()=>`"The Hunter." Perrit lays it flat. "Long grass, and a spear in it." She glances ${b7In('tobet') ? 'at Tobet\'s bow, and then ' : ''}out past the camp, toward wherever the foreigners are tonight. "They hunt at night, I hear. So can we. Aim well."`,
+    tilewoman:`"The spear in the grass," the old woman says. "Means your blows land." She sniffs. "The foreigners drew it first, from what I hear. Land yours anyway."`},
+  b5t_walker:{d:B5SAY.b5t_walker.d,
+    perrit:`"The Walker," Perrit says. "A long road, and no prints." She looks at the muster rolls being read out by the lamps. "They will march us somewhere. I would rather we chose the road than the Edur did."`,
+    tilewoman:`"The walking one. No tracks." The old woman nods. "Means a long way. Means somebody wants you gone from the city." She shrugs. "Feet first, soldier."`},
+  b5t_gate:{d:B5SAY.b5t_gate.d,
+    perrit:`"The Gate," Perrit says. "The Dragon Hold." She looks up at the ridge, at the lamps the cadre keeps burning all night, and her voice does not change, but she sits back. "Fire, and the fire going somewhere. We go through something tomorrow. Quickly, I would say."`,
+    tilewoman:`"The stones with the fire," the old woman says. She looks at the field in the dark. "A door. Through it fast, soldier, and do not stop to see what comes after you."`},
+  b5t_barrow:{d:B5SAY.b5t_barrow.d,
+    perrit:`Perrit turns the Barrow and sits back. "The Azath Hold," she says. "A grave with nothing on the stone." She looks out at the plain, cleared of its crops for the morning. "They have cleared the field already. Finish what is falling. Do not wait to see it fall."`,
+    tilewoman:`"The long mound," says the old woman, and spits to one side, which is manners. "The dead are close. Closer than this morning." She covers the tile with her hand. "Hit what is going down."`},
+  b5t_saviour:{d:B5SAY.b5t_saviour.d,
+    perrit:()=>`"The Saviour." Perrit is very still. "The open hand." She does not say whose; nobody who reads the tiles properly ever does. "Wounds close, tomorrow. ${b7In('ammet') ? 'Tell Ammet. She will say she does not need the help.' : 'Somebody will have to close them.'}" She looks at the tile a moment longer than she needs to.`,
+    tilewoman:`"The hand," says the old woman, and touches her own chest. "A kind tile, in a bad week." She looks at it a long time. "Somebody is reaching for this city. You will bleed less than you should."`},
+};
+const b7CardSay = id => { const tt = b7Thread() === 't'; return b7As(() => { const s = (tt ? (B7SAY[id] ? B7SAY : B4SAY) : (B7SAY_L[id] ? B7SAY_L : B5SAY))[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
   return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); }); };
 
 /* per chapter: the writers fill 3..7. Chapter 1 (the Third, the coast) and Chapter 2 (the Letherii, the barracks) are the worked examples. */
