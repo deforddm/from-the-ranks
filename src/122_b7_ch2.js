@@ -68,7 +68,7 @@ Object.assign(AB, {
 /* ---- the clerk's grey coat: +1 on a Guile check among the people (c.rise) for whoever wears it (Claude's call, the brief's small effect).
    Book Seven only; the edge names itself. ---- */
 { const _ef = edgesFor; edgesFor = function(c, id){ const out = _ef(c, id);
-    if (b7On() && c && c.rise && c.check && c.check[0] === 'guile' && id && typeof wears === 'function' && wears(id, 'b7_c2_greycoat')) out.push(['a clerk\'s grey coat: nobody looks at a clerk', 1]);
+    if (b7On() && c && c.rise && c.check && c.check[0] === 'guile' && id && typeof wears === 'function' && wears(id, 'b7_c2_greycoat')) out.push(['a clerk\'s grey coat: a clerk is not looked at', 1]);
     return out; }; }
 
 /* ---- the Patriotists' agents wear the grey coat drawn for them (122b) from this chapter on; until it is drawn they borrow Book Five's soldier ---- */
@@ -218,7 +218,7 @@ const B7CH2 = {
     b7_c2_agentknife:{name:'A Patriotist\'s sleeve-knife', slot:'weapon', role:'blade', who:null, atk:2, dmg:[1,6,2],
       line:'A thin, plain, very sharp knife that lives in a sleeve on a spring clip and comes out of it faster than seems reasonable. No maker\'s mark. The Patriotists issue them by the crate, and write each one down.'},
     b7_c2_greycoat:{name:'A clerk\'s grey coat', slot:'armour', role:'light', who:null, ac:1,
-      line:'A Patriotist clerk\'s grey coat, good wool gone shiny at the elbows, ink on both cuffs, padded at the shoulders against long days at a desk. Nobody looks at a clerk. Whoever wears it is looked at less, among the people, and lies to them a little easier.'} },
+      line:'A Patriotist clerk\'s grey coat, good wool gone shiny at the elbows, ink on both cuffs, padded at the shoulders against long days at a desk. A clerk is not looked at. Whoever wears it is looked at less, among the people, and lies to them a little easier.'} },
 
   scenes:{
     b7_c2_greymorning:{loc:'Letheras', sub:'The Whitefinders\' barracks · morning', cap:'The yard by a grey morning, the gate open, and a man in a good grey coat standing in it as if he owned the flagstones.', amb:'explore'},
@@ -246,7 +246,7 @@ const B7CH2 = {
     return x; },
 
   journal:()=>{ const f = S.f; return [
-    f.b7_c2_key && (f.b7_c2_key === 'name' ? 'A man in a grey coat wanted a name for the file, and got one. Somebody else\'s.' : 'A man in a grey coat wanted a name for the file, and did not get one. He wrote in the margin instead.'),
+    f.b7_c2_key && (f.b7_c2_key === 'name' ? 'A man in a grey coat wanted a name for the file, and got one. Not one of the squad\'s.' : 'A man in a grey coat wanted a name for the file, and did not get one. He wrote in the margin instead.'),
     f.b7_c2_filepage && 'A page of the squad\'s own file, off a Patriotist captain in an alley: names, debts, where the squad eats. A column of marks down the margin.',
     f.b7_ilsaDone != null && 'Ilsa, a Patriotist clerk, copied the squad\'s file for six years of files and came to the squad with what she knew.',
     f.b7_c2_quarrel && 'The barracks say the Patriotists arrested the First Concubine, and an Edur walked into the Invigilator\'s office and walked out again, and now the Chancellor has his hand bound up.',
@@ -295,7 +295,7 @@ Finadd Ennic's lamp is lit under the east eaves. The company clerk is at his tab
 
 "The second book is what the Patriotists' clerk copied out of the first," he says. "A woman came for it in the spring. Grey coat, ink to the wrist, very polite. I wrote down everything she copied, so that I would know." He touches his own ink-stained cuff. "We are all clerks, Sergeant. I wanted to know what she knew."
 
-"Also, the coin is short. The purser pays the company in docks that are lighter than last year's and fewer of them, and the market wants more for eels. Nobody can say where the coin has gone. Everybody says it anyway."${day && pg && !S.f.b7_c2_marginTried && b72Teach() === 'clerk' ? `\n\nHe looks at the page you have brought out of the alley, and his eyebrows go up. "Margin marks," he says. "I know these. I was made to learn them once, for the audit."` : ''}`,
+"Also, the coin is short. The purser pays the company in docks that are lighter than last year's and fewer of them, and the market wants more for eels. Where the coin has gone, no one can say. Everybody says anyway."${day && pg && !S.f.b7_c2_marginTried && b72Teach() === 'clerk' ? `\n\nHe looks at the page you have brought out of the alley, and his eyebrows go up. "Margin marks," he says. "I know these. I was made to learn them once, for the audit."` : ''}`,
         ch:[{t:'Ask what the Patriotists\' clerk copied.', check:['wits', 14], req:()=>!S.f.b7_c2_clerkTried,
               edges:id=>[id === 'perrit' && ['a clerk\'s daughter reads another clerk\'s hand', 2], id === 'tobet' && ['he keeps a tally-stick; he knows what a list is for', 1], id === 'pessa' && ['she reads her own ledger line out loud every pay-day', 1], id === 'sgt' && ['you have stood at this table every pay-day for years', 1], id === 'thegg' && ['the clerk is frightened of very large men, even polite ones', -1], id === 'ruuk' && ['he will not look at writing', -1]],
               near:{t:()=>`Yes, but he reads the whole second book out, page by page, every name and debt in the company, and ${b72Nm(b72Who())} ${b72V(b72Who(), 'go', 'goes')} to bed with the Sixth's arithmetic going round: rattled.`, fx:()=>b72Rattle(b72Who())},
@@ -364,7 +364,7 @@ When you come close the taller one speaks, in good Letherii with the vowels left
       const home = ph >= 5, rk = 'b7_c2_rest' + (home ? 5 : 1);
       return {sp:'The Sixth\'s brazier', scene:'b7_barracks', html:risingHTML(),
         again:()=> home ? 'The brazier in the yard, built up again, and the squad round it, home.' : 'The Sixth\'s brazier in the middle of the yard, coals and a kettle.', txt:
-`${home ? `The brazier is built up again, and the squad is round it, home, with the gate shut behind them and the Edur on the far side of it. Somewhere across the canal a page of a roll is missing, and a man in a grey coat has not noticed yet.${S.f.b7_ilsaDone === 1 && b7In('ilsa') ? `\n\nIlsa sits a little back from the coals with her grey coat folded on her knees and her hands open on top of it. She looks at the squad round the fire as if it were a file she has not been given yet.` : ''}` : `The Sixth's brazier is in the middle of the yard where it has always been, coals and a kettle and the bench with the split in it. The squad sits round it with its back to the gate, which is not what soldiers do, and does it anyway, so as not to see the gate.`}${b72Say({tobet:`\n\nTobet is cutting a notch in his tally-stick, carefully, by the light of the coals.`, ammet:`\n\nAmmet is rolling bandage, and will not drink tonight, and says so.`, _:''})}`,
+`${home ? `The brazier is built up again, and the squad is round it, home, with the gate shut behind them and the Edur on the far side of it. Somewhere across the canal a page of a roll is missing, and a man in a grey coat has not noticed yet.${S.f.b7_ilsaDone === 1 && b7In('ilsa') ? `\n\nIlsa sits a little back from the coals with her grey coat folded on her knees and her hands open on top of it. She looks at the squad round the fire like a file she has not been given yet.` : ''}` : `The Sixth's brazier is in the middle of the yard where it has always been, coals and a kettle and the bench with the split in it. The squad sits round it with its back to the gate, which is not what soldiers do, and does it anyway, so as not to see the gate.`}${b72Say({tobet:`\n\nTobet is cutting a notch in his tally-stick, carefully, by the light of the coals.`, ammet:`\n\nAmmet is rolling bandage, and will not drink tonight, and says so.`, _:''})}`,
         ch:[...(home ? [] : [b7ReadChoice(2)]),
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(home ? 'The squad sleeps the rest of the night through, gate shut. Wounds close, mostly.' : 'The squad sits an hour at the brazier. Wounds close, mostly.'); }, go:'b7_c2_fire_rest'},
             {t:'Talk with the squad.', go:'b7_c2_fire_talk'},
@@ -379,7 +379,7 @@ ${b72Say({ammet:`Ammet goes round the squad with her roll of tools and her lamp.
     b7_c2_fire_talk:()=>{ const late = b72Ph() >= 4, ln = [];
       if (b7In('tobet')) ln.push(late ? `Tobet is turning the tally-stick over. "Everybody in Letheras has a file," he says. "I always thought nobody would bother with mine. Indebted. A plough I never saw." He puts the stick away. "Turns out they bother. It's nearly flattering."` : `Tobet is looking at the gate from half a step behind you, as ever. "From back here," he says, "the Edur look like they owe me money." He considers. "So does everybody. It's the angle."`);
       if (b7In('thegg')) ln.push(late ? `Thegg is sitting very still. "The cook gave me double," he says, after a while. "Always. She said a big man needs it. She never wrote the second bowl down." He looks at his hands. "I want to know who wrote her down."` : `Thegg has his back against the bench and his eyes on the coals. "My mother's people had a word for men who stand at your door and do not come in," he says. "I will not say it here. They might know it."`);
-      if (b7In('perrit')) ln.push(late ? `Perrit is doing sums on her knee with a stick of charcoal. "A file is only a ledger," she says. "Debits, credits, and a balance someone else decides." She rubs a line out. "The Holds don't keep files. They're not gods. They're where the gods were, and nobody wrote anything down there either."` : `Perrit has her back to the wall and her tiles in their calfskin pouch. "The coin's short," she says. "Everyone says so. I counted the company's pay twice. It's short by a seventh, near enough." She frowns. "Nobody steals a seventh of an empire's coin. You'd need a very large pocket."`);
+      if (b7In('perrit')) ln.push(late ? `Perrit is doing sums on her knee with a stick of charcoal. "A file is only a ledger," she says. "Debits, credits, and a balance someone else decides." She rubs a line out. "The Holds don't keep files. They're not gods. They're where the gods were, and nobody wrote anything down there either."` : `Perrit has her back to the wall and her tiles in their calfskin pouch. "The coin's short," she says. "Everyone says so. I counted the company's pay twice. It's short by a seventh, near enough." She frowns. "You do not steal a seventh of an empire's coin. You'd need a very large pocket."`);
       if (b7In('ammet')) ln.push(late ? `Ammet is sharpening a needle on a stone. "I've stitched three Patriotist enforcers this year," she says. "On the battalion's account. They tip." She tests the point. "I didn't ask what they'd been doing. You don't, in my trade. You hold still."` : `Ammet is rolling bandage. "In the old days I'd have a drink before a quiet night," she says. "Now there are no quiet nights. Only ones where nothing happens yet." She ties the roll off. "Hold still, Sergeant. You've got that look."`);
       if (b7In('ruuk')) ln.push(`Ruuk is perched on the wall-end, cheerful, swinging his heels. "In Faraed nobody writes anything down," he says. "We just remember who to throw spears at." He grins. "Simpler. Not better. Simpler."`);
       if (b7In('brune')) ln.push(`Brune has her boots off and her feet on the wet flags by the cistern, as near to water as the yard allows. "The Shore takes everything back," she says, a long while after anyone spoke. "Files too. I would just like it to hurry."`);
@@ -447,7 +447,7 @@ It does not help her. It is not meant to. In Lether a debt is a thing you can st
     b7_c2_board:()=>({sp:'A broadsheet', scene:'b7_letheras', fx:()=>{ S.f.b7_c2_board = 1; }, again:()=>'The torn broadsheet on the canal wall, and the chalk rat under it.', txt:
 `A broadsheet pasted to the canal wall and half torn off, in the big black type the Patriotists like. *THE LOYAL AND THE DISLOYAL.* Underneath, in smaller type, what every citizen of the empire owes the Emperor and the empire, which is a great deal, and what a loyal citizen tells the Patriotists, which is everything. At the foot, a name: *Karos Invictad, Invigilator.*
 
-Somebody has torn the corner off where the name was, and somebody else has pasted a new corner over it with the name again.
+The corner where the name was has been torn off, and a new corner pasted over it with the name again.
 
 Below the broadsheet, low on the stones where a child could reach, somebody has chalked a small rat with its tail curled. The Rat Catchers' Guild is outlawed, the clerk said, and gone under the streets. The rat is very well drawn.${b72If('pessa', `\n\nPessa looks at the rat for some time. "Under the streets," she says. "Huh."`)}`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
@@ -490,7 +490,7 @@ He used to say all of it at the cook's tables too, of an evening. The cook used 
       ch:[{t:'Ask about the carriage on the far bank.', go:'b7_c2_carriage'},
           {t:'Back to the street.', go:()=>startExplore()}]}),
     b7_c2_carriage:()=>({sp:'The eel-seller', scene:'b7_letheras', txt:
-`On the far side of the canal a black carriage with a grey team has stopped at the top of the opposite steps, its curtains drawn. Nobody gets out. Nobody gets in. It simply waits there, as if the street were a page it was reading.
+`On the far side of the canal a black carriage with a grey team has stopped at the top of the opposite steps, its curtains drawn. No one gets out, and no one gets in. It simply waits there, as if the street were a page it was reading.
 
 "Ah," says the eel-seller, much more quietly, and then not at all. He looks at his eels. After a while the carriage moves on, and he lets out his breath.
 
@@ -521,7 +521,7 @@ ${S.f.b7_c2_gateDone ? `The taller one, the one who gave the lesson, speaks with
 
 She stands up when she sees the white fingertip on your shield, and does not come closer.
 
-"Sergeant {sgt}," she says. "Sixth Company. You were born two streets back from the Quillas and you swim and you never say so. You owe the purser what you owe him to the dock. You pray to the Errant before everything." She says it the way a clerk reads back a line. "I'm sorry. I'm a clerk at the Patriotists. I copy the files. I copied yours."`,
+"Sergeant {sgt}," she says. "Sixth Company. You were born two streets back from the Quillas and you swim and you never say so. You owe the purser what you owe him to the dock. You pray to the Errant before everything." She says it as a clerk reads back a line. "I'm sorry. I'm a clerk at the Patriotists. I copy the files. I copied yours."`,
       ch:[{t:'"Go on."', go:'b7_c2_ilsa_file'},
           {t:'Not now.', go:()=>startExplore()}]}; },
     b7_c2_ilsa_file:()=>({sp:'Ilsa', scene:'b7_letheras', fx:()=>{ if (!S.f.b7_c2_ilsaMet) { S.f.b7_c2_ilsaMet = 1; gain('b7_c2_greycoat'); } }, txt:
@@ -595,7 +595,7 @@ ${b72Teach() === 'ilsa' ? '"Good," Ilsa says. "Now you know more than an agent d
     b7_c2_dusk:()=>({sp:'Along the canal', scene:'b7_c2_alley', txt:
 `Dusk on the canal. The lamps are lit along the walk and doubled in the water. Across the canal a stone bridge goes over to the Pursers' quarter, with lanterns at its far end and men in grey at the lanterns, stopping people.
 
-On the near side, between two blind walls, an alley goes north off the canal into the dark, with one lamp at the bend. The two men in grey went into it a little while ago. Nobody has come out.${b72Say({tobet:`\n\nTobet has an arrow on the string, held low. "Both ends," he says. "She said."`, ammet:`\n\nAmmet loosens the roll of tools at her belt. "Hold still afterwards," she says. "Whoever's left."`, _:''})}`,
+On the near side, between two blind walls, an alley goes north off the canal into the dark, with one lamp at the bend. The two men in grey went into it a little while ago. Neither has come out.${b72Say({tobet:`\n\nTobet has an arrow on the string, held low. "Both ends," he says. "She said."`, ammet:`\n\nAmmet loosens the roll of tools at her belt. "Hold still afterwards," she says. "Whoever's left."`, _:''})}`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
     /* a lamplighter: the one line of the other squad's news, as rumour */
     b7_c2_lamplighter:()=>({sp:'A lamplighter', scene:'b7_c2_alley', fx:()=>{ S.f.b7_c2_lamp = 1; }, again:()=>'The lamplighter, with his pole, going along the canal.', txt:
@@ -619,10 +619,10 @@ On the near side, between two blind walls, an alley goes north off the canal int
     /* the alley: the main fight */
     b7_c2_alley_view:()=>{ const done = !!S.f.b7_c2_alleyDone;
       if (b72Ph() >= 5 || done) return {sp:'The alley', scene:'b7_c2_alley', txt:
-`The alley off the canal, with its one lamp at the bend. ${done ? 'Quiet now. Somebody has washed the stones, very thoroughly, the way only the Patriotists bother to.' : 'Dark.'}`,
+`The alley off the canal, with its one lamp at the bend. ${done ? 'Quiet now. The stones have been washed, very thoroughly. Only the Patriotists bother.' : 'Dark.'}`,
         ch:[{t:'Back to the walk.', go:()=>startExplore()}]};
       return {sp:'The alley', scene:'b7_c2_alley', txt:
-`The alley goes north between two blind walls, narrow enough that Thegg would have to turn sideways in it, with one lamp at the bend and the dark past it. At the mouth there is a smell of eels and wet stone. Inside, somewhere, a man coughs politely, the way a clerk coughs to let you know he is waiting.${b7In('ilsa') ? `\n\nIlsa, at your shoulder: "Two at the mouth, out of the lamp. More at the bend. And whoever sent them, at the end, with the folder. There's always a folder."` : ''}${b72If('thegg', `\n\n"Behind me," Thegg says, and turns sideways, and goes first.`)}`,
+`The alley goes north between two blind walls, narrow enough that Thegg would have to turn sideways in it, with one lamp at the bend and the dark past it. At the mouth there is a smell of eels and wet stone. Inside, somewhere, a man coughs politely, as a clerk coughs to let you know he is waiting.${b7In('ilsa') ? `\n\nIlsa, at your shoulder: "Two at the mouth, out of the lamp. More at the bend. And whoever sent them, at the end, with the folder. There's always a folder."` : ''}${b72If('thegg', `\n\n"Behind me," Thegg says, and turns sideways, and goes first.`)}`,
         ch:[{t:'"Sixth! In!" Straight down it.', go:()=>startBattle('b7_c2_alley', {})},
             {t:'Over the wall from the canal side, and down on them from above.', check:['guile', 15],
               edges:id=>[id === 'pessa' && ['canal people go over walls from boats all their lives', 2], id === 'ruuk' && ['he climbs anything, grinning', 2], id === 'tobet' && ['a bowman wants height', 1], S.f.b7_c2_marginOk && id === 'sgt' && ['the margin: you know which side they will be watching', 2], id === 'ilsa' && ['she knows where agents stand: it is in the training', 2], id === 'thegg' && ['a very large man on a wall is a very loud man on a wall', -2], id === 'ammet' && ['her knees are forty-one', -1]],
@@ -674,7 +674,7 @@ The Finadd has his pen in his hand and nothing in front of him to sign. When he 
 
 He writes it down in a small neat hand, and blots it on his sleeve, and thanks you. "There," he says. "Settled." He ties the grey tape round the folder in a bow. "Your page goes in a drawer, Sergeant. I shall shut it myself." He nods to the Finadd, and to you, and to the bunk-house windows, and goes out past the Edur with the enforcers behind him.
 
-Nobody in the yard says anything for some time.${b72Say({thegg:`\n\nThegg gets up and goes into the bunk-house, sideways, and shuts the door behind him very gently.`, tobet:`\n\n"From back here," Tobet says, quietly, "that looked easy." He does not say it as a compliment.`, _:''})}${b72If('perrit', `\n\nPerrit closes her eyes. "The sum was right," she says. "I hate that it was right."`)}`,
+The yard is quiet for some time.${b72Say({thegg:`\n\nThegg gets up and goes into the bunk-house, sideways, and shuts the door behind him very gently.`, tobet:`\n\n"From back here," Tobet says, quietly, "that looked easy." It is not a compliment.`, _:''})}${b72If('perrit', `\n\nPerrit closes her eyes. "The sum was right," she says. "I hate that it was right."`)}`,
       ch:[{t:'The Finadd.', go:'b7_c2_patriot_after'}]}),
     b7_c2_refuse:()=>({sp:'The Patriotist', scene:'b7_c2_greymorning', html:risingHTML(), txt:
 `"No name, sir."
@@ -732,7 +732,7 @@ ${hot ? `The agent with the list looks at the squad, and at the list, and at the
     b7_c2_bridge_after:()=>({sp:'The bridge', scene:'b7_c2_bridge', fx:()=>{ S.f.b7_c2_bridgeDone = 1; }, txt:
 `The bridge is the squad's. The enforcers who could run have run, over to the Pursers' quarter, shouting for the watch, which in this part of Letheras takes a long time to come and is not paid enough to hurry.
 
-The battalion office is a dark doorway on the far side with a slot in it. The Finadd's lists go through the slot, a page short, and drop into a clerk's tray with a soft sound, as of a drawer shutting.${b7In('ilsa') ? `\n\nIlsa watches the slot. "Somebody will copy that tomorrow," she says. "Somebody like me. They won't notice the page. They'll notice the Finadd's hand. It's very neat."` : ''}${b72Say({tobet:`\n\nTobet retrieves his arrows from the parapet, one by one, and counts them twice. "All there," he says. "Unlike the page."`, thegg:`\n\nThegg leans on the parapet and looks down at the canal for a while. "Behind me, going home," he says.`, _:''})}`,
+The battalion office is a dark doorway on the far side with a slot in it. The Finadd's lists go through the slot, a page short, and drop into a clerk's tray with a soft sound, as of a drawer shutting.${b7In('ilsa') ? `\n\nIlsa watches the slot. "A clerk will copy that tomorrow," she says. "A clerk like me. They won't notice the page. They'll notice the Finadd's hand. It's very neat."` : ''}${b72Say({tobet:`\n\nTobet retrieves his arrows from the parapet, one by one, and counts them twice. "All there," he says. "Unlike the page."`, thegg:`\n\nThegg leans on the parapet and looks down at the canal for a while. "Behind me, going home," he says.`, _:''})}`,
       ch:[{t:'Home to the barracks.', onward:true, go:'b7_c2_home'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b7_c2_home:()=>({sp:'The barracks', scene:'b7_barracks', txt:
@@ -754,7 +754,7 @@ The yard is dark but for the brazier, built up, and the Finadd's lamp, which is 
     b7_c2_onward:()=>({sp:'The barracks', scene:'b7_barracks', html:risingHTML(), txt:
 `The lamps go out along the bunk-house row. The canal smell comes over the wall. At the gate the Edur stand as they have stood since spring, and in the lane beyond them there are no wheels tonight, or none that stop.
 
-${b72Key() === 'refuse' ? `Across the city, in a building nobody in the squad will ever see the inside of, there is a file with the Sixth's names in it and two marks in its margin now. Somebody will read it in the morning. Somebody will copy it.` : `Across the city, in a building nobody in the squad will ever see the inside of, there is a drawer with the Sixth's page in it, shut. And by the canal steps there is a door standing open that was shut yesterday.`}${b7In('ilsa') ? `\n\nIlsa sleeps in a borrowed cot at the end of the row with her grey coat over her for a blanket, and her hand open on top of it. She sleeps like somebody who has not slept in a while, and means to make up for it.` : ''}${b72Say({thegg:`\n\nIn the dark, low, Thegg talks to his mother's dead in her tongue. Tonight there is one more name in it, and it is the cook's.`, _:''})}`,
+${b72Key() === 'refuse' ? `Across the city, in a building nobody in the squad will ever see the inside of, there is a file with the Sixth's names in it and two marks in its margin now. It will be read in the morning, and copied.` : `Across the city, in a building nobody in the squad will ever see the inside of, there is a drawer with the Sixth's page in it, shut. And by the canal steps there is a door standing open that was shut yesterday.`}${b7In('ilsa') ? `\n\nIlsa sleeps in a borrowed cot at the end of the row with her grey coat over her for a blanket, and her hand open on top of it. She sleeps like somebody who has not slept in a while, and means to make up for it.` : ''}${b72Say({thegg:`\n\nIn the dark, low, Thegg talks to his mother's dead in her tongue. Tonight there is one more name in it, and it is the cook's.`, _:''})}`,
       ch:[{t:'Sleep. The city will still be watching in the morning.', onward:true, go:()=>chapterEnd(2, b72Key() || 'refuse')},
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
