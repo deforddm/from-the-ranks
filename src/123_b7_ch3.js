@@ -177,7 +177,7 @@ const B7CH3 = {
     b7_c3_road:{title:'The old road', style:'b5_c5_road', dark:true, open:true, warrenText:'Night on the old road · the shadows by the Edur fire are deeper than the fire explains', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edur',2,1],['b7_edur',5,1],['b7_edurspear',4,2],['b7_krisnan',3,0]], xp:160, after:'b7_c3_road_after',
+      foes:[['b7_edur',1,1],['b7_edur',5,1],['b7_edurspear',4,2],['b7_krisnan',3,0]], xp:160, after:'b7_c3_road_after',
       preText:()=>`They are on their feet before the squad is close, the way Edur always are, grey in the light of their own small fire, and behind them the K'risnan stands up last and slowest, with the dark gathering round his hands.`},
     /* the factor's house and its guard: the main fight, two grounds */
     b7_c3_factor:{title:'The factor\'s house', style:'b5_c5_farm', dark:true, warrenText:'Night in a factor\'s yard · lamps in every window, and the warrens thin', warren:{meanas:1, denul:1}, music:'battle',

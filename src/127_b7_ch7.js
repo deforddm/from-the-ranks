@@ -247,7 +247,7 @@ const B7CH7 = {
         text:()=>`Through the barricade, and into the counting-house, and up its stair, where the grey coats have gone to make their stand among the broker's ledgers. At the top, with his back to a window and a long knife in each hand, the one the others look at.\n\nHe has a list in his coat. He has always had a list in his coat. He has just found out that nobody is going to read it.`,
         map:["#......#","#..t...#","#......#","#......#","#.t..t.#","#......#","#......#","#......#","#......#","#......#"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b7_c7_patcaptain',3,1],['b7_c7_patriot',2,2],['b7_c7_patriot',5,2],['b7_lethxbow',4,0]]} },
+        foes:[['b7_c7_patcaptain',2,1],['b7_c7_patriot',2,2],['b7_c7_patriot',5,2],['b7_lethxbow',4,0]]} },
     /* the bridge (optional): garrison crossbowmen who have not surrendered, holding a bridge against the crowd */
     b7_c7_bridge:{title:'The bridge', style:'b5_c7_lowwalk', warrenText:'A bridge in Letheras · the canal slow and brown below, the crowd at both ends', warren:{meanas:1, denul:1}, music:'battle',
       map:["#.......","#..t....","#.......","#.....t.","#.......","#..t....","#.......","#.......","#.......","#......."],

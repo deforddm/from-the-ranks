@@ -81400,7 +81400,7 @@ const B7CH1 = {
     b7_c1_riders:{title:'The coast road', style:'plain', dark:true, open:true, warrenText:'Night on the coast road · the column\'s mages have the air muddied for a league', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_lethsoldier',2,1],['b7_lethsoldier',5,1],['b7_lethsoldier',4,2],['b7_lethxbow',1,0],['b7_lethxbow',6,0]], xp:180, after:'b7_c1_riders_after',
+      foes:[['b7_lethsoldier',1,1],['b7_lethsoldier',5,1],['b7_lethsoldier',4,2],['b7_lethxbow',1,0],['b7_lethxbow',6,0]], xp:180, after:'b7_c1_riders_after',
       preText:()=>`The horses smell the smoke off the coast and will not come on. The riders come down off them and come on without them, which is braver, and slower.`},
     /* the factor's tally-shed and its guards: the main fight, two grounds */
     b7_c1_tally:{title:'The tally-shed', style:'b5_c5_farm', dark:true, warrenText:'Night at the factor\'s shed · a lamp in the window, and the warrens thin', warren:{meanas:1, denul:1}, music:'battle',
@@ -83420,7 +83420,7 @@ const B7CH3 = {
     b7_c3_road:{title:'The old road', style:'b5_c5_road', dark:true, open:true, warrenText:'Night on the old road · the shadows by the Edur fire are deeper than the fire explains', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edur',2,1],['b7_edur',5,1],['b7_edurspear',4,2],['b7_krisnan',3,0]], xp:160, after:'b7_c3_road_after',
+      foes:[['b7_edur',1,1],['b7_edur',5,1],['b7_edurspear',4,2],['b7_krisnan',3,0]], xp:160, after:'b7_c3_road_after',
       preText:()=>`They are on their feet before the squad is close, the way Edur always are, grey in the light of their own small fire, and behind them the K'risnan stands up last and slowest, with the dark gathering round his hands.`},
     /* the factor's house and its guard: the main fight, two grounds */
     b7_c3_factor:{title:'The factor\'s house', style:'b5_c5_farm', dark:true, warrenText:'Night in a factor\'s yard · lamps in every window, and the warrens thin', warren:{meanas:1, denul:1}, music:'battle',
@@ -84484,7 +84484,7 @@ const B7CH4 = {
     b7_c4_riot:{title:'The muster gate', style:'b5_c6_dissent', warrenText:'Day at the gate · the Holds are quiet, and the crowd is not', warren:{meanas:1, denul:1}, music:'battle',
       map:["###..###","........","..t.....","........",".....t..","........","...t....","........","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b7_whitefinder',6,8]],
-      foes:[['b7_rioter',3,1],['b7_rioter',4,1],['b7_rioter',2,2],['b7_rioter',6,2],['b7_rioter',1,3],['b7_rioter',5,3],['b7_rioter',4,0]], xp:180, after:'b7_c4_riot_after',
+      foes:[['b7_rioter',3,1],['b7_rioter',4,1],['b7_rioter',1,2],['b7_rioter',6,2],['b7_rioter',1,3],['b7_rioter',5,3],['b7_rioter',4,0]], xp:180, after:'b7_c4_riot_after',
       preText:()=>`Staves and stones and the press-gang's own ropes, and a great many people who have decided that if they must be killed for Lether they would rather it happened here, in front of their mothers, than in a field in the west. Blades flat, the Finadd said. Blades flat.`},
     /* the Edur from the hill test what Lether has left: a lesson, to the first who cannot stand */
     b7_c4_edurcamp:{title:'Below the hill', style:'b5_c6_lines', dark:true, open:true, warrenText:'Dusk below Kravos Hill · the shadows lean toward the Edur', warren:{meanas:1, denul:1}, music:'battle',
@@ -84496,13 +84496,13 @@ const B7CH4 = {
     b7_c4_patriots:{title:'The horse lines', style:'b5_c6_lines', dark:true, warrenText:'Night at the horse lines · the remounts screaming, and somebody counting', warren:{meanas:1, denul:1}, music:'battle',
       map:["........","..t..t..","........","........","...t....","........","......t.","........","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b7_agent',2,1],['b7_agent',5,1],['b7_agent',3,0],['b7_enforcer',4,2],['b7_enforcer',1,2]], xp:250, after:'b7_c4_patriots_after',
+      foes:[['b7_agent',1,1],['b7_agent',4,1],['b7_agent',3,0],['b7_enforcer',4,2],['b7_enforcer',1,2]], xp:250, after:'b7_c4_patriots_after',
       preText:()=>`Grey coats among the horse pickets, and knives out of sleeves, and the remounts going wild on their tethers between the two sides. Behind the agents, the enforcers with their clubs. Behind the enforcers, the wagon with its barred door, standing open, waiting for ${b74ListNm()}.`,
       stage2:{title:'The provost\'s wagon', xp:150,
         text:()=>`The pickets are the squad's. Past them, at the wagon, a man in a better grey coat with the list in his hand, and two more agents and two enforcers who were waiting to put whoever was brought them behind the bar. The provost has gone to look for his supper and is taking his time about finding it.${b74If('thegg', `\n\nThegg looks at the wagon's door and then at the man with the list. "Behind me," he says.`)}`,
         map:["....t...","........","..t..t..","........","........","...t....","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b7_agentchief',4,0],['b7_agent',2,1],['b7_agent',6,1],['b7_enforcer',3,2],['b7_enforcer',5,2]]} } },
+        foes:[['b7_agentchief',3,0],['b7_agent',2,1],['b7_agent',6,1],['b7_enforcer',3,2],['b7_enforcer',4,2]]} } },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b7_c4_bluelance:{name:'A Bluerose lance, cut down', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, dmg:[1,10,1],
@@ -85452,7 +85452,7 @@ const B7CH5 = {
     b7_c5_road:{title:'The river road', style:'b5_c5_road', dark:true, open:true, warrenText:'Night on the river road · the shadows by the hedge are deeper than the hedge explains', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edurspear',2,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:80, after:'b7_c5_road_after',
+      foes:[['b7_edurspear',1,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:80, after:'b7_c5_road_after',
       preText:()=>`Three Edur with spears, walking the road as if they owned it, which they do, and with them, at the edges where the starlight goes thin, two things that are not men and do not walk so much as come along.`},
     /* the bailiff and the factor's men on the north lane, riding to sell the village to the Edur (optional) */
     b7_c5_bailiff:{title:'The north lane', style:'b5_c5_road', open:true, warrenText:'Afternoon on a farm lane · hot, dusty, and nobody about who means you well', warren:{meanas:1, denul:1}, music:'battle',
@@ -87640,7 +87640,7 @@ const B7CH7 = {
         text:()=>`Through the barricade, and into the counting-house, and up its stair, where the grey coats have gone to make their stand among the broker's ledgers. At the top, with his back to a window and a long knife in each hand, the one the others look at.\n\nHe has a list in his coat. He has always had a list in his coat. He has just found out that nobody is going to read it.`,
         map:["#......#","#..t...#","#......#","#......#","#.t..t.#","#......#","#......#","#......#","#......#","#......#"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b7_c7_patcaptain',3,1],['b7_c7_patriot',2,2],['b7_c7_patriot',5,2],['b7_lethxbow',4,0]]} },
+        foes:[['b7_c7_patcaptain',2,1],['b7_c7_patriot',2,2],['b7_c7_patriot',5,2],['b7_lethxbow',4,0]]} },
     /* the bridge (optional): garrison crossbowmen who have not surrendered, holding a bridge against the crowd */
     b7_c7_bridge:{title:'The bridge', style:'b5_c7_lowwalk', warrenText:'A bridge in Letheras · the canal slow and brown below, the crowd at both ends', warren:{meanas:1, denul:1}, music:'battle',
       map:["#.......","#..t....","#.......","#.....t.","#.......","#..t....","#.......","#.......","#.......","#......."],

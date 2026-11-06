@@ -165,7 +165,7 @@ const B7CH1 = {
     b7_c1_riders:{title:'The coast road', style:'plain', dark:true, open:true, warrenText:'Night on the coast road · the column\'s mages have the air muddied for a league', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_lethsoldier',2,1],['b7_lethsoldier',5,1],['b7_lethsoldier',4,2],['b7_lethxbow',1,0],['b7_lethxbow',6,0]], xp:180, after:'b7_c1_riders_after',
+      foes:[['b7_lethsoldier',1,1],['b7_lethsoldier',5,1],['b7_lethsoldier',4,2],['b7_lethxbow',1,0],['b7_lethxbow',6,0]], xp:180, after:'b7_c1_riders_after',
       preText:()=>`The horses smell the smoke off the coast and will not come on. The riders come down off them and come on without them, which is braver, and slower.`},
     /* the factor's tally-shed and its guards: the main fight, two grounds */
     b7_c1_tally:{title:'The tally-shed', style:'b5_c5_farm', dark:true, warrenText:'Night at the factor\'s shed · a lamp in the window, and the warrens thin', warren:{meanas:1, denul:1}, music:'battle',

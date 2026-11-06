@@ -180,7 +180,7 @@ const B7CH5 = {
     b7_c5_road:{title:'The river road', style:'b5_c5_road', dark:true, open:true, warrenText:'Night on the river road · the shadows by the hedge are deeper than the hedge explains', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b7_edurspear',2,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:80, after:'b7_c5_road_after',
+      foes:[['b7_edurspear',1,1],['b7_edurspear',5,1],['b7_edurspear',4,0],['b7_wraith',1,0],['b7_wraith',6,0]], xp:80, after:'b7_c5_road_after',
       preText:()=>`Three Edur with spears, walking the road as if they owned it, which they do, and with them, at the edges where the starlight goes thin, two things that are not men and do not walk so much as come along.`},
     /* the bailiff and the factor's men on the north lane, riding to sell the village to the Edur (optional) */
     b7_c5_bailiff:{title:'The north lane', style:'b5_c5_road', open:true, warrenText:'Afternoon on a farm lane · hot, dusty, and nobody about who means you well', warren:{meanas:1, denul:1}, music:'battle',

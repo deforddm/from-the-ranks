@@ -194,7 +194,7 @@ const B7CH4 = {
     b7_c4_riot:{title:'The muster gate', style:'b5_c6_dissent', warrenText:'Day at the gate · the Holds are quiet, and the crowd is not', warren:{meanas:1, denul:1}, music:'battle',
       map:["###..###","........","..t.....","........",".....t..","........","...t....","........","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b7_whitefinder',6,8]],
-      foes:[['b7_rioter',3,1],['b7_rioter',4,1],['b7_rioter',2,2],['b7_rioter',6,2],['b7_rioter',1,3],['b7_rioter',5,3],['b7_rioter',4,0]], xp:180, after:'b7_c4_riot_after',
+      foes:[['b7_rioter',3,1],['b7_rioter',4,1],['b7_rioter',1,2],['b7_rioter',6,2],['b7_rioter',1,3],['b7_rioter',5,3],['b7_rioter',4,0]], xp:180, after:'b7_c4_riot_after',
       preText:()=>`Staves and stones and the press-gang's own ropes, and a great many people who have decided that if they must be killed for Lether they would rather it happened here, in front of their mothers, than in a field in the west. Blades flat, the Finadd said. Blades flat.`},
     /* the Edur from the hill test what Lether has left: a lesson, to the first who cannot stand */
     b7_c4_edurcamp:{title:'Below the hill', style:'b5_c6_lines', dark:true, open:true, warrenText:'Dusk below Kravos Hill · the shadows lean toward the Edur', warren:{meanas:1, denul:1}, music:'battle',
@@ -206,13 +206,13 @@ const B7CH4 = {
     b7_c4_patriots:{title:'The horse lines', style:'b5_c6_lines', dark:true, warrenText:'Night at the horse lines · the remounts screaming, and somebody counting', warren:{meanas:1, denul:1}, music:'battle',
       map:["........","..t..t..","........","........","...t....","........","......t.","........","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b7_agent',2,1],['b7_agent',5,1],['b7_agent',3,0],['b7_enforcer',4,2],['b7_enforcer',1,2]], xp:250, after:'b7_c4_patriots_after',
+      foes:[['b7_agent',1,1],['b7_agent',4,1],['b7_agent',3,0],['b7_enforcer',4,2],['b7_enforcer',1,2]], xp:250, after:'b7_c4_patriots_after',
       preText:()=>`Grey coats among the horse pickets, and knives out of sleeves, and the remounts going wild on their tethers between the two sides. Behind the agents, the enforcers with their clubs. Behind the enforcers, the wagon with its barred door, standing open, waiting for ${b74ListNm()}.`,
       stage2:{title:'The provost\'s wagon', xp:150,
         text:()=>`The pickets are the squad's. Past them, at the wagon, a man in a better grey coat with the list in his hand, and two more agents and two enforcers who were waiting to put whoever was brought them behind the bar. The provost has gone to look for his supper and is taking his time about finding it.${b74If('thegg', `\n\nThegg looks at the wagon's door and then at the man with the list. "Behind me," he says.`)}`,
         map:["....t...","........","..t..t..","........","........","...t....","........","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b7_agentchief',4,0],['b7_agent',2,1],['b7_agent',6,1],['b7_enforcer',3,2],['b7_enforcer',5,2]]} } },
+        foes:[['b7_agentchief',3,0],['b7_agent',2,1],['b7_agent',6,1],['b7_enforcer',3,2],['b7_enforcer',4,2]]} } },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b7_c4_bluelance:{name:'A Bluerose lance, cut down', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, dmg:[1,10,1],
