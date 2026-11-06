@@ -142,7 +142,8 @@ const B7CH2 = {
       npcs:[
         {id:'ilsa', name:'A woman in a grey coat', kind:'ilsa', x:9, y:5, node:()=>'b7_c2_ilsa', show:()=>!S.f.b7_c2_ilsaMet || b72IlsaWaits(), fresh:()=>!S.f.b7_c2_ilsaMet},
         {id:'neigh', name:'A neighbour at a window', kind:'b5_c5_refugee', x:13, y:2, node:()=>'b7_c2_neighbours', fresh:()=>!S.f.b7_c2_neighTried},
-        {id:'agents', name:'Two men by the eel stall', kind:'b7_agent', x:4, y:6, node:()=>'b7_c2_agents', fresh:()=>!S.f.b7_c2_agents} ] },
+        {id:'agents', name:'Two men by the eel stall', kind:'b7_agent', x:4, y:6, node:()=>'b7_c2_agents', fresh:()=>!S.f.b7_c2_agents},
+        {id:'eel', name:'The eel-seller', kind:'b5_letherii', x:5, y:1, node:()=>'b7_c2_eelseller', fresh:()=>!S.f.b7_c2_eel} ] },
 
     /* 16 x 12 (b5_c7_canal, night). . setts  # wall  ~ the canal  - the bridge deck  A the alley mouth  B the bridge's far end  P a post
        < west, back toward the barracks */
@@ -182,6 +183,7 @@ const B7CH2 = {
       walk:'.', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_yard_gate'}, start:{x:8, y:7},
       quest:()=> !b72Key() ? 'The man in the grey coat, with the Finadd. He wants a word.' : 'The Finadd\'s lists, over the canal at dusk. The gate.',
       npcs:[
+        {id:'edur', name:'The Edur at the gate', kind:'b5_edur', x:14, y:5, node:()=>'b7_c2_edur_day', fresh:()=>!S.f.b7_c2_edurDay},
         {id:'pat', name:'A man in a grey coat', kind:'b7_agent', x:11, y:5, node:()=>'b7_c2_patriot', show:()=>!b72Key(), fresh:()=>!b72Key()},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:12, y:4, node:()=>b72Key() ? 'b7_c2_patriot_after' : 'b7_c2_ennic_day', fresh:()=>!!b72Key() && !S.f.b7_c2_errand} ] } ],
 
@@ -224,14 +226,14 @@ const B7CH2 = {
     b7_c2_bridge:{loc:'Letheras', sub:'A canal bridge · night', cap:'A stone bridge over the canal at night, lanterns at its far end, and men in grey turning out a stranger\'s satchel on the parapet.', amb:'explore'} },
 
   end:{
-    name:['A name given', 'In Letheras the Patriotists wanted a name for their file, and the sergeant of the Sixth gave them one. It was not one of the squad\'s. A door on the Low Walk stood open the next night, and the squad\'s page went into a drawer, and Lether kept its head a little lower. A clerk who had copied the squad\'s file came to it with what she knew, and the Finadd\'s lists went over the canal a page short.'],
+    name:['A name given', 'In Letheras the Patriotists wanted a name for their file, and the sergeant of the Sixth gave them one. It was not one of the squad\'s. A door by the canal steps stood open the next night, and the squad\'s page went into a drawer, and Lether kept its head a little lower. A clerk who had copied the squad\'s file came to it with what she knew, and the Finadd\'s lists went over the canal a page short.'],
     refuse:['No name', 'In Letheras the Patriotists wanted a name for their file, and the sergeant of the Sixth would not give one. The man in the grey coat wrote something in the margin and thanked the sergeant for the answer, and the squad\'s file grew, and word went round the canal that the Sixth had said no. A clerk who had copied the squad\'s file came to it with what she knew, and the Finadd\'s lists went over the canal a page short.'] },
   endScene:'b7_barracks',
   endCap:()=> b72Key() === 'refuse' ? 'The barracks by night, the Edur at the gate, and a file across the city with a new mark in its margin.' : 'The barracks by night, the Edur at the gate, and a file across the city put away in a drawer.',
   tease:'Next: inland. The Third, the column, night raids on the farms, and a guide who knows the roads the maps leave out.',
 
   extras:()=>{ const f = S.f, x = [];
-    if (f.b7_c2_key === 'name') x.push('The sergeant gave the Patriotists a name. Not one of the squad\'s. A door on the Low Walk stood open the next night.');
+    if (f.b7_c2_key === 'name') x.push('The sergeant gave the Patriotists a name. Not one of the squad\'s. A door by the canal steps stood open the next night.');
     if (f.b7_c2_key === 'refuse') x.push('The sergeant gave the Patriotists no name. The squad\'s file grew a mark in its margin.');
     if (f.b7_ilsaDone === 1) x.push(b7In('ilsa') ? 'Ilsa, a clerk who copied the squad\'s file for the Patriotists, walks with the squad now, with her knives.' : 'Ilsa, a clerk who copied the squad\'s file for the Patriotists, walks with the squad.');
     if (f.b7_ilsaDone === 2) x.push('Ilsa, a clerk who copied the squad\'s file for the Patriotists, waits in a safe room off the Quillas Canal.');
@@ -478,6 +480,28 @@ The shutter closes. A bar goes across behind it.`,
 They have been there since the bells, the eel-seller says, in a voice that wants it known he did not say so.`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
 
+    /* the eel-seller at the canal steps, who talks: the name the sergeant may give */
+    b7_c2_eelseller:()=>({sp:'The eel-seller', scene:'b7_letheras', fx:()=>{ S.f.b7_c2_eel = 1; }, again:()=>'The eel-seller, talking, to everybody, about everything.', txt:
+`The eel-seller has his tray of eels at the head of the canal steps and his voice turned up to carry across the water, as it has been every morning for as long as the Sixth has bought his eels, which are not good.
+
+"Champions," he is telling a woman with a basket, and the street, and the canal. "Off the Edur ships, from across the world. One a week, they say. Fights the Emperor, kills the Emperor, and the Emperor gets up." He slaps an eel on the board. "You want to know what I think? I'll tell you what I think." He does. He thinks a great deal, about the Emperor, the Chancellor, the price of salt and the Invigilator's mother, at the top of his voice, with a street of shut shutters listening.
+
+He used to say all of it at the cook's tables too, of an evening. The cook used to tell him to keep it down.`,
+      ch:[{t:'Ask about the carriage on the far bank.', go:'b7_c2_carriage'},
+          {t:'Back to the street.', go:()=>startExplore()}]}),
+    b7_c2_carriage:()=>({sp:'The eel-seller', scene:'b7_letheras', txt:
+`On the far side of the canal a black carriage with a grey team has stopped at the top of the opposite steps, its curtains drawn. Nobody gets out. Nobody gets in. It simply waits there, as if the street were a page it was reading.
+
+"Ah," says the eel-seller, much more quietly, and then not at all. He looks at his eels. After a while the carriage moves on, and he lets out his breath.
+
+"The Invigilator's," he says, under it. "People say. I never said." Then, louder, to the woman with the basket: "Eels."`,
+      ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
+    /* the Edur on the gate, by day, on the Patriotists */
+    b7_c2_edur_day:()=>({sp:'The Edur at the gate', scene:'b7_c2_greymorning', fx:()=>{ S.f.b7_c2_edurDay = 1; }, again:()=>'The Edur at the gate, stood aside, watching the grey coat.', txt:
+`The two Edur on the gate have stood aside to let the man in the grey coat in, because they were told to, and they are watching him the way a cat watches somebody else's dog.
+
+${S.f.b7_c2_gateDone ? `The taller one, the one who gave the lesson, speaks without turning his head. "That one has a file on our people too, Sergeant. On the Edur. Can you imagine it." He very nearly smiles. "An Edur walked into his master's house and showed him what we think of files. The Chancellor says we may not do it again. The Chancellor has one hand to say it with, now."` : `The taller one glances at you, and then back at the grey coat, and says something in his own tongue to the other one, short and contemptuous. It is not about the Sixth. It is the first thing the Edur on the gate and the Sixth have ever agreed on.`}`,
+      ch:[{t:'Back to the yard.', go:()=>startExplore()}]}),
     /* the apothecary's barrow: the coin short */
     b7_c2_stall:()=>({sp:'An apothecary\'s barrow', scene:'b7_letheras', again:()=>'The apothecary\'s barrow. "Six docks. It was four."', txt:
 `An apothecary's barrow at the head of the steps, with jars of salve and twists of willow bark and a woman behind it who tells you the price before you ask, because everyone asks.
@@ -646,7 +670,7 @@ The Finadd has his pen in his hand and nothing in front of him to sign. When he 
           {t:'"No name, sir."', fx:()=>{ if (!S.f.b7_c2_key) { S.f.b7_c2_key = 'refuse'; b72L('thegg', 1); b72L('tobet', 1); b72L('perrit', -1); b72L('ilsa', 1); b7Rise(1, 'the Sixth refused the Patriotists a name'); b7Filed(2, 'no name given'); } }, go:'b7_c2_refuse'},
           {t:'Not yet. "Give me a moment, sir."', go:()=>startExplore()}]}),
     b7_c2_name:()=>({sp:'The Patriotist', scene:'b7_c2_greymorning', html:risingHTML(), txt:
-`You give him a name. Not one of yours. The eel-seller on the Low Walk, who sold the Sixth bad eel for three summers and talked, loudly, at the cook's tables among others, about everything. It comes out easier than it should.
+`You give him a name. Not one of yours. The eel-seller at the head of the canal steps, who sold the Sixth bad eel for three summers and talked, loudly, at the cook's tables among others, about everything. It comes out easier than it should.
 
 He writes it down in a small neat hand, and blots it on his sleeve, and thanks you. "There," he says. "Settled." He ties the grey tape round the folder in a bow. "Your page goes in a drawer, Sergeant. I shall shut it myself." He nods to the Finadd, and to you, and to the bunk-house windows, and goes out past the Edur with the enforcers behind him.
 
@@ -681,7 +705,7 @@ He looks at his pen, capped. "I have never decided anything in my life," he says
     b7_c2_bridge_dusk:()=>({sp:'Along the canal', scene:'b7_c2_bridge', txt:
 `Dusk again, and the lamps along the walk, and the alley off the canal with its stones washed clean.
 
-${b72Key() === 'name' ? `On the way the squad passes the head of the Low Walk, where the eel-seller's stall is. It is shut. The shutter is down and the stool is gone, and past it the door of the house behind is standing open on an empty room, and nobody on the walk is looking at it.` : `On the way the squad passes the head of the Low Walk. An old woman at the eel stall looks at the white fingertips on the squad's shields and, without a word, puts a twist of eels in ${b72Say({thegg:'Thegg\'s', tobet:'Tobet\'s', _:'your'})} hand, and will not take a dock for it.`}
+${b72Key() === 'name' ? `On the way the squad passes the head of the canal steps, where the eel-seller's stall is. It is shut. The shutter is down and the stool is gone, and past it the door of the house behind is standing open on an empty room, and nobody on the walk is looking at it.` : `On the way the squad passes the head of the canal steps. An old woman at the eel stall looks at the white fingertips on the squad's shields and, without a word, puts a twist of eels in ${b72Say({thegg:'Thegg\'s', tobet:'Tobet\'s', _:'your'})} hand, and will not take a dock for it.`}
 
 South across the canal the bridge to the Pursers' quarter has its lanterns lit at the far end, and men in grey at the lanterns, and enforcers, turning out satchels on the parapet.`,
       ch:[{t:'Walk on.', go:()=>startExplore()}]}),
@@ -730,7 +754,7 @@ The yard is dark but for the brazier, built up, and the Finadd's lamp, which is 
     b7_c2_onward:()=>({sp:'The barracks', scene:'b7_barracks', html:risingHTML(), txt:
 `The lamps go out along the bunk-house row. The canal smell comes over the wall. At the gate the Edur stand as they have stood since spring, and in the lane beyond them there are no wheels tonight, or none that stop.
 
-${b72Key() === 'refuse' ? `Across the city, in a building nobody in the squad will ever see the inside of, there is a file with the Sixth's names in it and two marks in its margin now. Somebody will read it in the morning. Somebody will copy it.` : `Across the city, in a building nobody in the squad will ever see the inside of, there is a drawer with the Sixth's page in it, shut. And on the Low Walk there is a door standing open that was shut yesterday.`}${b7In('ilsa') ? `\n\nIlsa sleeps in a borrowed cot at the end of the row with her grey coat over her for a blanket, and her hand open on top of it. She sleeps like somebody who has not slept in a while, and means to make up for it.` : ''}${b72Say({thegg:`\n\nIn the dark, low, Thegg talks to his mother's dead in her tongue. Tonight there is one more name in it, and it is the cook's.`, _:''})}`,
+${b72Key() === 'refuse' ? `Across the city, in a building nobody in the squad will ever see the inside of, there is a file with the Sixth's names in it and two marks in its margin now. Somebody will read it in the morning. Somebody will copy it.` : `Across the city, in a building nobody in the squad will ever see the inside of, there is a drawer with the Sixth's page in it, shut. And by the canal steps there is a door standing open that was shut yesterday.`}${b7In('ilsa') ? `\n\nIlsa sleeps in a borrowed cot at the end of the row with her grey coat over her for a blanket, and her hand open on top of it. She sleeps like somebody who has not slept in a while, and means to make up for it.` : ''}${b72Say({thegg:`\n\nIn the dark, low, Thegg talks to his mother's dead in her tongue. Tonight there is one more name in it, and it is the cook's.`, _:''})}`,
       ch:[{t:'Sleep. The city will still be watching in the morning.', onward:true, go:()=>chapterEnd(2, b72Key() || 'refuse')},
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
