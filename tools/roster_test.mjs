@@ -19,7 +19,7 @@ const r = await page.evaluate(() => { const out = {};
     for (const [n, ids] of Object.entries(chs)) for (const id of ids) { S.chapter = +n;
       let has = false; try { const node = DLG[id](); has = node.ch.some(c => c.t === 'The roster.' && (!c.req || c.req())); } catch(e) { has = 'err ' + e.message; }
       if (has !== true) out.fires[book].miss.push(`${n}:${id}:${has}`); } }
-  out.mtCh = Object.keys((BOOKSNAP.mt && BOOKSNAP.mt.ch) || {}).map(Number); // v8.0: Book Five needs a fire for each chapter written
+  out.mtCh = Object.keys((BOOKSNAP.mt && BOOKSNAP.mt.ch) || {}).map(Number); out.rgCh = Object.keys((BOOKSNAP.rg && BOOKSNAP.rg.ch) || {}).map(Number); // Book Seven: a fire for each chapter written so far // v8.0: Book Five needs a fire for each chapter written
   setBook('gotm');
   /* ---- Book One: six at most; Vell with no room waits at camp and says so; the core can't be benched ---- */
   S = newState('One'); S.chapter = 4; S.picksDue = []; S.squad = ['sgt', 'brisk', 'kettle', 'tuft', 'ohl']; recruit('ellis'); notes = [];
@@ -89,7 +89,7 @@ const r = await page.evaluate(() => { const out = {};
   return out; });
 console.log(JSON.stringify(r, null, 1).slice(0, 4000));
 for (const [book, f] of Object.entries(r.fires)) {
-  const need = book === 'gotm' ? [2] : book === 'mt' ? r.mtCh : [1, 2, 3, 4, 5, 6, 7];
+  const need = book === 'gotm' ? [2] : book === 'mt' ? r.mtCh : book === 'rg' ? r.rgCh : [1, 2, 3, 4, 5, 6, 7];
   ok(need.every(n => f.chapters.includes(n)) && !f.miss.length, `${book}: the roster choice at every chapter fire (${f.chapters.join(',')}${f.miss.length ? '; missing ' + f.miss.join(' ') : ''})`);
 }
 ok(r.one.sq === 'sgt,brisk,kettle,tuft,ohl,ellis' && r.one.camp === 'vell' && /No room in the squad: Vell waits at camp/.test(r.one.note), `Book One: six at most, and Vell waits at camp and says so (${r.one.note})`);

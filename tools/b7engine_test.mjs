@@ -15,7 +15,7 @@ const r = await page.evaluate(() => {
   /* the other books' caps, and Book Seven's by thread */
   out.caps = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh'].map(b => { S = {book:b}; return b + ':' + lvCap(); }).join(' ');
   S = {book:'rg', thread:'t'}; out.capT = lvCap(); S = {book:'rg', thread:'l'}; out.capL = lvCap();
-  out.shelf = shelfBooks().map(b => b.id).join(','); out.coming = !!BOOKS.rg.coming; out.book = {n:BOOKS.rg.n, word:BOOKS.rg.word, name:BOOKS.rg.name, title:BOOKS.rg.title, tag:BOOKS.rg.tag};
+  out.shelf = shelfBooks().map(b => b.id).join(','); out.coming = !!BOOKS.rg.coming; out.rgCh = Object.keys((BOOKSNAP.rg && BOOKSNAP.rg.ch) || {}).length; out.book = {n:BOOKS.rg.n, word:BOOKS.rg.word, name:BOOKS.rg.name, title:BOOKS.rg.title, tag:BOOKS.rg.tag};
   /* a fresh Book Seven */
   S = newStateRG('Hask', 'Brann'); save(); setBook('rg');
   out.fresh = {book:S.book, thread:S.thread, name:S.name, lvl:S.lvl, squad:S.squad.join(','), lName:S.th.l.name, lLvl:S.th.l.lvl, lSquad:S.th.l.squad.join(','),
@@ -86,7 +86,7 @@ const ui = await page.evaluate(async () => { const wait = ms => new Promise(r =>
   } catch(e) { o.err = String(e); } return o; });
 if (r.err) no('threw: ' + r.err); else {
   r.caps === 'gotm:8 dg:8 moi:15 hoc:15 mt:8 bh:18' && r.capT === 21 && r.capL === 12 ? ok(`caps: ${r.caps}; Book Seven's Third 21, its Letherii 12`) : no('caps: ' + r.caps + ' ' + r.capT + '/' + r.capL);
-  r.coming && !r.shelf.includes('rg') && r.book.n === 7 && r.book.word === 'Seven' && r.book.name === 'Unwitnessed' && r.book.title === 'Reaper\'s Gale' && /burn their ships/.test(r.book.tag)
+  (r.rgCh ? !r.coming && r.shelf.includes('rg') : r.coming && !r.shelf.includes('rg')) && r.book.n === 7 && r.book.word === 'Seven' && r.book.name === 'Unwitnessed' && r.book.title === 'Reaper\'s Gale' && /burn their ships/.test(r.book.tag)
     ? ok('the shelf: Book Seven, Unwitnessed, beside Reaper\'s Gale, coming until a chapter registers') : no('shelf: ' + r.shelf + ' ' + JSON.stringify(r.book) + ' coming ' + r.coming);
   const f = r.fresh; f.book === 'rg' && f.thread === 't' && f.name === 'Hask' && f.lvl === 16 && f.squad === 'sgt,haddat,tangle,marrow,mirrel' && f.lName === 'Brann' && f.lLvl === 8 && f.lSquad === 'sgt,tobet,thegg,perrit,ammet' && f.sathi && f.cap === 21
     ? ok('fresh start: the Third at 16 (Sathi fell at the Barrow), the Letherii at 8, canon defaults') : no('fresh: ' + JSON.stringify(f));
