@@ -84,8 +84,8 @@ const B7SAY = {
     tallow:`"The bell," Tallow says. "So you know he's coming." He listens to the city a while: shouting, a long way off, and something that might be bells. "I can hear that one."`,
     oldninth:`"Leper," the old man says. "Chains." He taps his own temple. "Mages walk clean, but they walk short." He drinks, a lot.`},
 };
-const b7CardSay = id => b7As(() => { const s = (b7Thread() === 't' ? (B7SAY[id] ? B7SAY : B4SAY) : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
-  return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); });
+const b7CardSay = id => { const tt = b7Thread() === 't'; return b7As(() => { const s = (tt ? (B7SAY[id] ? B7SAY : B4SAY) : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
+  return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); }); };
 
 /* per chapter: the writers fill 3..7. Chapter 1 (the Third, the coast) and Chapter 2 (the Letherii, the barracks) are the worked examples. */
 const B7READ = {
