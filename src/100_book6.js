@@ -240,7 +240,9 @@ Object.assign(PATRONS, {
 
 /* ---- Book Six's balance (David, Thu Nov 5, 2026: "Build it"; docs/bh-balance.md). As built every Bridgeburner fight was won about 100%;
    B6GAP gives each fight its own boost on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Five's B5GAP), tuned to about 75% won
-   (20 runs a fight, mean 75%). Soldier is untouched (every fight 100%). Nothing here runs outside Book Six. ---- */
+   (20 runs a fight, mean 75%). Soldier is untouched (every fight 100%). Nothing here runs outside Book Six.
+   Re-tuned Fri Nov 6, 2026 (David: "even it out"): the harness's stale Push-on bug had misread the second-area fights. Re-measured clean,
+   nine rows moved so every fight sits about 70-95% (docs/bh-balance.md). ---- */
 const B6GAP_ROW = {ac:3, atk:3, hp:2.0, dmg:4}; // a fight without its own row
 const B6GAP = {
   b6_c1_well:{ac:3,atk:3,hp:2.5,dmg:4},
