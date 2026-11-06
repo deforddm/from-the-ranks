@@ -201,13 +201,13 @@ const B7CH5 = {
              {round:3, foes:[['b7_edurspear',3,0],['b7_wraith',4,1]], text:'Two more at the top of the street. They have been waiting for the first ones to find out how hard the Third is.'}],
       preText:()=>`They come down the village street in the last of the light, grey and unhurried, the way the Edur go into a place they mean to take: warriors in front with long blades, spearmen at the walls, and behind them a K'risnan with the dark gathering on his hands like smoke round a lamp. Behind the Third, the village is going down to the river as fast as old people and children can go.`,
       stage2:{title:'The square by the mill', xp:60,
-        get text(){ return S.f.b7_c5_roof ?
+        get text(){ return (S && S.f && S.f.b7_c5_roof) ?
 `The street is held. The village is at the river. And now the war-leader comes, a tall Edur with a long blade, up the street into the square with the rest of his band at his back, straight for the factor's house where the Malazans hid. Straight under the factor's roof.\n\n${b75SapN()} ${b75Sap() ? 'has' : 'have'} the fuse-cord in ${b75Sap() ? (b75He(b75Sap()) === 'she' ? 'her' : 'his') : 'your'} fist. ${b75Say({tangle:'"Now," Tangle says, to nobody, and pulls.', rasp:'"Now," Rasp says, to nobody, and pulls.', _:'You pull.'})}\n\nThe factor's roof comes down into the square in one piece, slates and beams and the stone gable, with a sound like the end of the world, on the ones who were under it. When the dust thins, the war-leader is still standing. Fewer of his band are.` :
 `The street is held. The village is at the river. And now the war-leader comes, a tall Edur with a long blade, up the street into the square with the whole of his band at his back, straight for the factor's house where the Malazans hid.\n\nNobody rigged the roof. There is nothing over the square but the evening, and nothing between the Third and the Edur but the Third.${b75If('haddat', `\n\nHaddat sets the blue shield. "Well," she says, in Hissari. "Here we are."`)}`; },
         map:["##....##","#......#","..t..t..","........","...tt...","........",".t....t.","........","........","#......#"],
         party:[[3,7],[4,7],[2,8],[5,8],[3,8],[4,8]],
-        get foes(){ return S.f.b7_c5_roof ? [['b7_edurchief',3,1],['b7_edur',1,2],['b7_edur',6,2]] : [['b7_edurchief',3,1],['b7_edur',1,2],['b7_edur',6,2],['b7_edur',4,0],['b7_krisnan',2,0]]; },
-        get surprise(){ return S.f.b7_c5_roof ? 'p' : null; }} },
+        get foes(){ return (S && S.f && S.f.b7_c5_roof) ? [['b7_edurchief',3,1],['b7_edur',1,2],['b7_edur',6,2]] : [['b7_edurchief',3,1],['b7_edur',1,2],['b7_edur',6,2],['b7_edur',4,0],['b7_krisnan',2,0]]; },
+        get surprise(){ return (S && S.f && S.f.b7_c5_roof) ? 'p' : null; }} },
     /* 'slip': out by night along the river path, leaving the village. A running fight: keep moving three rounds to the reeds, then the ford.
        Not mortal. The last foe is the bailiff's word, dropped when the Third stopped him on the lane. */
     b7_c5_slip:{title:'The river path', style:'b5_c3_bank', dark:true, warrenText:'Night on the river path · the water loud on the left, the Edur louder behind', warren:{meanas:1, denul:1}, music:'battle',
