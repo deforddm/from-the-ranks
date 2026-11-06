@@ -37,7 +37,13 @@ const B7POOL = {
 const b7Pool = n => (B7POOL[n] || B7POOL[B7_CH[n] === 'l' ? 2 : 1]).filter(id => CARDS[id]);
 const b7Rd = () => visReader();
 const b7RdObj = () => b7Rd().he ? 'him' : 'her';
-const b7RdWords = (id, again) => b7Thread() === 't' ? ((again ? B4RD_AGAIN : B4RD_DECK)[id]) : ((again ? B5RD_AGAIN : B5RD_SET)[id]);
+/* The 9th's old soldier goes home on the last pinnace in Chapter 1 (rg-ch1-notes); from Chapter 3 the chain's third reader is an old marine of the column.
+   His own once-a-book line and his "again" line, so Book Four's "of the 9th" description is not shown after Chapter 1 (continuity read, Nov 5). */
+const B7RD_OLDMARINE = {deck:'An old marine of the column reads for whoever asks, for a finger of rum: a grey man with a soldier\'s deck that has been to more wars than he has. Nobody in the Third knows his name. Nobody has asked yet.',
+  again:'The old marine has his deck out, and his cup out for the rum.'};
+const b7OldMarine = () => b7Thread() === 't' && (S.chapter || 0) > 1;
+const b7RdWords = (id, again) => b7Thread() === 't' ? (id === 'oldninth' && b7OldMarine() ? (S.f.b7_rd_oldmarine ? B7RD_OLDMARINE.again : B7RD_OLDMARINE.deck)
+  : ((again ? B4RD_AGAIN : B4RD_DECK)[id])) : ((again ? B5RD_AGAIN : B5RD_SET)[id]);
 const b7CardSay = id => b7As(() => { const s = (b7Thread() === 't' ? B4SAY : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
   return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); });
 
@@ -52,9 +58,9 @@ const B7READ = {
 };
 
 function b7ReadChoice(n){ const r = b7Rd(), t = b7Thread() === 'l';
-  return {t:`Sit with ${r.mid || r.name} and the ${t ? 'tiles' : 'Deck'}.`, deck:true, req:()=>!S.f[`b7_c${n}_drawn`] && !S.f[`b7_c${n}_noCard`], go:`b7_c${n}_read`}; }
+  return {t:`Sit with ${r.id === 'oldninth' && b7OldMarine() ? 'the old marine' : (r.mid || r.name)} and the ${t ? 'tiles' : 'Deck'}.`, deck:true, req:()=>!S.f[`b7_c${n}_drawn`] && !S.f[`b7_c${n}_noCard`], go:`b7_c${n}_read`}; }
 function b7ReadOffer(n, card = `b7_c${n}_card`){ const D = B7READ[n] || B7READ[B7_CH[n] === 'l' ? 2 : 1], r = b7Rd(), seen = S.f['b7_rd_' + r.id], tiles = b7Thread() === 'l';
-  return {sp:r.id === 'tilewoman' ? 'The tile-woman' : r.name, scene:D.scene, fx:()=>{ S.f['b7_rd_' + r.id] = 1; }, txt:
+  return {sp:r.id === 'tilewoman' ? 'The tile-woman' : r.id === 'oldninth' && b7OldMarine() ? 'The old marine' : r.name, scene:D.scene, fx:()=>{ S.f['b7_rd_' + r.id] = 1; if (r.id === 'oldninth' && b7OldMarine()) S.f.b7_rd_oldmarine = 1; }, txt:
 `${b7RdWords(r.id, seen) || ''}
 
 ${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
