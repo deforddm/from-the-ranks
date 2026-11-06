@@ -102,10 +102,10 @@ const B7CH3 = {
             "T,.........T...T",
             "T....,.........T",
             "T..T.......,...T",
-            "T,.....T.......T",
+            "T,.....T....s..T",
             "TT,,........,TTT",
             "TTTTTTTTTTTTTTTT" ],
-      walk:'.,', triggers:{H:'b7_c3_fire', '>':'b7_c3_out'}, start:{x:3, y:3},
+      walk:'.,', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
       quest:()=> !S.f.b7_c3_orders1 ? 'The lieutenant, under the trees.' : !b73WennaSettled() ? 'A Shake fisher at the column\'s edge, who knows the ground.' : 'East, down into the valley. The column moves at full dark.',
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
@@ -135,7 +135,7 @@ const B7CH3 = {
         : S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone ? 'The old road round the village, and whatever is on it.'
         : 'East, to the factor\'s house.',
       npcs:[
-        {id:'lt', name:'The lieutenant', kind:'b2soldier', x:6, y:3, node:()=>'b7_c3_lt2', fresh:()=>!S.f.b7_c3_orders2},
+        {id:'lt', name:'The lieutenant', kind:'b2soldier', x:6, y:3, node:()=>S.f.b7_c3_prisoners ? 'b7_c3_lt2b' : 'b7_c3_lt2', fresh:()=>!S.f.b7_c3_orders2 || (!!S.f.b7_c3_prisoners && !S.f.b7_c3_lt2b)},
         {id:'ditch', name:'Marines in a ditch', kind:'b2soldier', x:11, y:7, node:()=>'b7_c3_ditch', fresh:()=>!S.f.b7_c3_drum},
         {id:'pris', name:'Letherii prisoners', kind:'b5_letherii', x:4, y:4, node:()=>'b7_c3_prisoners', show:()=>!!S.f.b7_c3_farmDone && !S.f.b7_c3_prisoners, fresh:()=>true},
         {id:'road', name:'Fires on the old road', kind:'b5_edur', x:14, y:5, node:()=>'b7_c3_road_start', show:()=>S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone, fresh:()=>true} ] },
@@ -328,6 +328,13 @@ She bites off the cord. "And the Shake have a queen again this year. Did you hea
 The lieutenant's map, then.`,
       ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
 
+    /* the spring Wenna found in the wood */
+    b7_c3_spring:()=>({sp:'A spring in the wood', scene:'b7_camp_night', txt:
+`A spring comes up between the roots of a beech into a stone basin somebody set there long ago, and runs off downhill into the valley in a thread of water nobody would notice. ${S.f.b7_wennaDone === 1 ? 'Wenna found it the moment the column came into the wood, and put her feet in it.' : 'There are wet footprints on the basin\'s rim, small and bare: one of the Shake fishers found it first.'}
+
+The water is cold and sweet and tastes of stone. The squad fills its skins, and drinks, and fills them again.${b73If('marrow', `\n\nMarrow puts her fingers in it, and holds them there, and takes them out. "Old, child," she says. "Older than the farms. It remembers somebody who said a word over it once."`)}`,
+      ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
+
     /* marines under the trees: camp talk (the ten smokes) */
     b7_c3_marines:()=>({sp:'Marines under the trees', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_marines = 1; }, again:()=>'The marines under the trees, sharpening, whispering, counting smokes.', txt:
 `A squad of marines is sitting in a ring under a beech, sharpening, and whispering, which they are not supposed to do.
@@ -462,7 +469,8 @@ ${b73Teacher() === 'wenna' ? '"Took me a childhood," Wenna says. "You had an hou
     b7_c3_farm_view:()=>{ const done = !!S.f.b7_c3_farmDone, g = b73Guide();
       if (done) return {sp:'The farm', scene:'b7_farm_night', again:()=>'The farm, its barn open, its yard quiet.', txt:
 `The farm is the Third's. Its barn stands open on the dark, and the smell of the mage's lightning is still in it, like hot iron.`,
-        ch:[{t:'Back to the fields.', go:()=>startExplore()}]};
+        ch:[{t:'Search the farmhouse.', req:()=>!S.f.b7_c3_searched, go:'b7_c3_farm_search'},
+            {t:'Back to the fields.', go:()=>startExplore()}]};
       if (!S.f.b7_c3_orders2) return {sp:'The farm', scene:'b7_farm_night', txt:
 `A long farm behind a stone wall, west along the valley floor, a barn and a cart shed and a house, all dark. Somewhere inside the wall there is a banked fire. The lieutenant, in the hedge-bottom, will want a word before the Third goes over that wall.`,
         ch:[{t:'Back to the fields.', go:()=>startExplore()}]};
@@ -486,6 +494,15 @@ The crossbows lie where they fell. One of them is better than the others, short 
 
 And three of the crossbowmen are alive, on their knees in the yard with their hands on their heads and their spanning-hooks thrown down in front of them. They are Letherii, not Edur: young, frightened, and in the same blue-grey the Letherii regulars wear. They threw their crossbows down. The lieutenant said: take anyone who does.${b73If('mirrel', `\n\nMirrel is already looking them over for wounds. "One's cut," she says. "Not deep. Sit. Still. Good."`)}`,
       ch:[{t:'The prisoners.', go:'b7_c3_prisoners'}]}),
+
+    /* the farmhouse at the farm, after the fight */
+    b7_c3_farm_search:()=>({sp:'The farmhouse', scene:'b7_farm_night', fx:()=>{ if (!S.f.b7_c3_searched) { S.f.b7_c3_searched = 1; S.inv.salve = (S.inv.salve || 0) + 1; note('In the mage\'s pack: a jar of the cadre\'s salve, as good as one of Mirrel\'s.', 'good'); } }, txt:
+`The farmhouse is where the crossbowmen slept by day: blankets on the floor in rows, bolts in bundles by the door, a pot of something cold on the hearth. The family that farmed here is not here. A child's wooden horse on the windowsill says they were, once.
+
+On the table, under a stone, an order in a Letherii clerk's hand with an Edur mark pressed into the wax at its foot: the garrison at some town north of here to send *crossbowmen and one mage of the cadre* into the valleys *to clear the invaders from the farms*. The Edur mark is above the Finadd's signature, not below it.${b73Say({tangle:`\n\nTangle reads it over your shoulder. "Edur say go," he says, "and the Letherii go." He sniffs. "Captain Sort's lot had it right."`, haddat:`\n\nHaddat looks at the Edur mark a long while. "Above," she says. "Not below."`, _:'\n\nCaptain Sort\'s word, written down: the Letherii fight beside the Edur because the Edur say so.'})}
+
+In the mage's pack there is a jar of the cadre's own salve, sealed, which the Third takes, and nothing else anybody wants.`,
+      ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
 
     /* the prisoners from the farm: let go or kept (the Rising, once) */
     b7_c3_prisoners:()=>{ const c2 = S.f.b7_c2_key;
@@ -515,6 +532,13 @@ ${b73Say({mirrel:'Mirrel watches them go. "They\'ll slow the column," she says. 
 The farms along the valley will hear that the Malazans take men off farms and march them away. Farms always hear.`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
 
+    /* the lieutenant after the farm: her word on the prisoners and the village */
+    b7_c3_lt2b:()=>({sp:'The lieutenant', scene:'b7_march_night', fx:()=>{ S.f.b7_c3_lt2b = 1; }, again:()=>'The lieutenant, in the hedge-bottom. "The house, Sergeant. East."', txt:
+`The lieutenant is still in her hedge-bottom with the slate. ${S.f.b7_c3_prisoners === 'freed' ? `"You let them go," she says. Not a question. She writes something. "The Fist will hear of it. He'll hear of it from the farms before he hears it from me." She looks up. "That's not a complaint, Sergeant. That's how you'd want him to hear it."` : `"Two of mine are walking three boys behind the column on a cord," she says. "They'll eat our food and slow our march." She writes something. "You did what I said. I said take them." She looks at the slate a while longer than the writing needs.`}
+
+"${S.f.b7_c3_village ? (S.f.b7_c3_village === 'open' ? 'The village opened. To you. I\'ll take that' : 'The village stayed shut. I don\'t blame it') : 'Now the village. Let\'s see if it opens'}. Then the house."`,
+      ch:[{t:'"The house. Yes, Lieutenant."', go:()=>startExplore()}]}),
+
     /* the village: it opens its gate if the Rising has reached it (b7Open), or keeps it shut */
     b7_c3_village:()=>{ const v = S.f.b7_c3_village;
       if (v === 'open') return {sp:'The village', scene:'b7_c3_gate', again:()=>'The village gate, open a hand\'s width, and the lamp behind it.', txt:
@@ -543,6 +567,14 @@ A voice through the wattle, a man's, low: "Go round. Go round by the old road. W
 `Inside the wall, a square of beaten earth with a well in it, and the doors round it shut, but not barred. Faces at the shutter-cracks. The old woman puts a loaf in your hands, and then another, and a crock of something that is mostly onions.
 
 "The factor's house," she says, nodding east. "You'll be going there. Everybody goes there in the end." She tells you how: not the lane, which the factor's men watch, but the orchard wall on the north side, where the stones are loose because nobody in the village has been let into the orchard in thirty years to mend them. "His steward reads us our lines on quarter-days at the back door," she says. "My grandson's line is longer than he is tall."${b73If('doss', `\n\nDoss is standing by the well with his cap in his hands. "Same here," he says to her. "Same everywhere." She looks at the flail, and then at his face, and nods.`)}${b73If('wenna', `\n\nWenna is drinking from the well bucket without asking, which seems to be the Shake way with wells. The old woman lets her.`)}`,
+      ch:[{t:'The well, and the faces at the shutters.', req:()=>!S.f.b7_c3_well2, go:'b7_c3_village_well'},
+          {t:'Back to the fields.', go:()=>startExplore()}]}),
+    b7_c3_village_well:()=>({sp:'The village well', scene:'b7_c3_gate', fx:()=>{ S.f.b7_c3_well2 = 1; }, txt:
+`The well in the square is brackish, the old woman says: it goes brackish every summer, and the factor's well, a league east, never does, and the village is not let draw from the factor's well. The squad drinks anyway.
+
+At the shutters, the faces watch. A boy of ten or so comes out of a door in a man's jerkin to the knees and stands by the well looking at ${b73Say({haddat:'Haddat\'s blue shield', tangle:'Tangle\'s satchel', _:'the Third\'s kit'})} as if it were treasure.
+
+"That's my grandson," the old woman says. "The one with the line longer than he is." The boy does not know what she means, or he does, and has decided not to mind. "His uncle went for a soldier, to pay it down. The army pays down a debt a little, if you live." She takes the boy's shoulder. "He went with the crossbows."${S.f.b7_c3_prisoners === 'freed' ? `\n\nShe does not say which crossbows, or which farm. She does not need to. She looks at you for a moment longer than she has to, and then takes the boy indoors.` : `\n\nShe does not ask which crossbows, or which farm, or where the three boys on the cord are going. She takes the boy indoors.`}`,
       ch:[{t:'Back to the fields.', go:()=>startExplore()}]}),
     b7_c3_village_shut:()=>({sp:'The village', scene:'b7_c3_gate', txt:
 `The lamp stays out. Behind the wattle, somebody is breathing very quietly, and a child is being told to hush, in a whisper that carries.
@@ -679,7 +711,28 @@ Outside, the house's Indebted watch the strongbox go across the yard. They know 
 
 In the barn, the marines have news, the way marines always do at dawn. Up north, a mage of the Letherii called something at a farmhouse that was not a cadre's lightning: demons, they say, things out of a warren, and a marine named Uru Hela did not come back from it. Another company's squad. The marines say the name once, and then do not say it again.${b73If('marrow', `\n\nMarrow nods slowly, hearing it. "I felt it, child," she says. "In my teeth."`)}`,
       ch:[{t:'The barn.', go:'b7_c3_fire'},
+          {t:'Doss, by the counting-room window.', req:()=>b7In('doss') && !S.f.b7_c3_dossDawn, go:'b7_c3_doss_dawn'},
+          {t:'Wenna, at the water-trough.', req:()=>b7In('wenna') && !S.f.b7_c3_wennaDawn, go:'b7_c3_wenna_dawn'},
           {t:'Walk the yard.', go:()=>startExplore()}]}),
+    b7_c3_doss_dawn:()=>({sp:b7In('doss') ? 'Doss' : 'The counting-room window', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_dossDawn = 1; }, txt: !b7In('doss') ?
+`The counting room's high window looks out on the yard. ${b73Key() === 'ledger' ? 'A thin smoke still comes out of it.' : 'Behind it the rolls sit on their shelves in their ribbons.'}` : b73Key() === 'ledger' ?
+`Doss is sitting on the mounting-block under the counting-room window with the flail across his knees, watching the last of the smoke come out of it. He has not slept. He does not look as if he wants to.
+
+"On quarter-days," he says, "you stood here. Under this window. The steward read your line out of it, and you said yes, and went home." He looks up at it. "I always wondered what was in there. Shelves, it turns out." He nearly laughs. "Just shelves."${(S.kit || []).includes('b7_c3_ledgerash') ? `
+
+You show him the corner of the roll. He turns it to the light, the three lines and the brown stain where the figures were, and gives it back. "Somebody's grandmother," he says. "Somebody's son. Owing nothing." He puts his cap back on. "Keep it with the other one."` : ''}` :
+`Doss is sitting on the mounting-block under the counting-room window with the flail across his knees. He has not slept. Behind the window the rolls are still on their shelves, every ribbon in its place.
+
+"I know," he says, before you have said anything. "The squad has to eat." He looks at his hands. "On the holding, they said that too. The factor has to eat. The steward has to eat." He stands, and shoulders the flail. "I'll march, Sergeant. I said I would." He leaves it there, which is worse.`,
+      ch:[{t:'Back to the yard.', go:()=>startExplore()}]}),
+    b7_c3_wenna_dawn:()=>({sp:b7In('wenna') ? 'Wenna' : 'The water-trough', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_wennaDawn = 1; }, txt: !b7In('wenna') ?
+`The factor's water-trough, stone, full, with a skin of dawn light on it.` :
+`Wenna has her bare feet in the factor's water-trough and her eyes shut, and her lips are moving. Her gaff leans on the trough beside her.
+
+"The Shore," she says, when she has finished, without opening her eyes. "A trough isn't the sea. It's water, though. She hears through water." She opens one eye. "I told her about the farm, and the ditch. She likes ditches. They go to the sea in the end, all of them."
+
+${b73Key() === 'ledger' ? `She looks at the smoke. "My brother would have liked that," she says. "He owed nobody. He said it was the only thing the Shake had the Letherii wanted."` : `She looks at the strongbox the marines are dividing. "My share's a boat," she says. "One day. Clinker-built." She shuts the eye again. "Not owed."`}`,
+      ch:[{t:'Back to the yard.', go:()=>startExplore()}]}),
     /* the lieutenant at dawn: her look by the key, and the Rising as the column sees it */
     b7_c3_lt4:()=>({sp:'The lieutenant', scene:'b7_c3_house', fx:()=>{ S.f.b7_c3_lt4 = 1; }, again:()=>'The lieutenant, in the orchard with her slate. "Dusk, Sergeant."', txt:
 `The lieutenant is sitting under an apple tree in the factor's orchard with the slate on her knee, writing in the first light. ${b73Key() === 'ledger' ? 'She looks at the smoke over the house, a long time, and then at you, and makes a mark.' : 'She looks at the strongbox the marines are dividing, and then at you, and makes a mark. It is hard to say what kind.'}
