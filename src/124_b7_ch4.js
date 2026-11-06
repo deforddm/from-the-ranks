@@ -635,21 +635,21 @@ It is a wagon with a bench and a bar across the door. You sit on the bench. The 
             near:{t:'Yes, but the provost keeps the squad\'s salve-jar for his knee, as the price of his name on the release: one salve fewer.', fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; }},
             go:'b7_c4_arrest_talk', fail:'b7_c4_arrest_no'},
           {t:'Send for the Finadd.', go:'b7_c4_arrest_ennic'}]}),
-    b7_c4_arrest_ilsa:()=>({sp:'Ilsa', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_out = S.f.b7_c4_out || 'ilsa'; b74L('ilsa', 1); }, txt:
+    b7_c4_arrest_ilsa:()=>({sp:'Ilsa', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_arrest = 1; S.f.b7_c4_out = S.f.b7_c4_out || 'ilsa'; b74L('ilsa', 1); }, txt:
 `Ilsa takes the warrant out of the provost's hand as a clerk takes a page off a desk, without asking, and he lets her because she is in a grey coat, and reads it at the lantern.
 
 "It's a warrant to bring in," she says, loud enough for the provost. "Not to hold. To bring in, to the Invigilator, in Letheras. The camp has no standing to keep anybody on it overnight. It's in the margin." She taps it. "Somebody new wrote it. They used the hook when they meant the ring." She hands it back. "If you keep the sergeant in your wagon on this, provost, it's your name on the hold, not theirs. I used to file the complaints."
 
 The provost reads the margin for some time. Then he takes the bar off the door.`,
       ch:[{t:'Out.', go:'b7_c4_arrest_out'}]}),
-    b7_c4_arrest_sorvan:()=>({sp:'Sorvan', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_out = S.f.b7_c4_out || 'sorvan'; b74L('sorvan', 1); }, txt:
+    b7_c4_arrest_sorvan:()=>({sp:'Sorvan', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_arrest = 1; S.f.b7_c4_out = S.f.b7_c4_out || 'sorvan'; b74L('sorvan', 1); }, txt:
 `Sorvan comes back from the provost's tent with the provost's second, a lancer's son by his walk, and the two of them talk low by the wheel in a Bluerose voice for a while, about horses.
 
 Then the provost's second goes and talks to the provost, and the provost looks at the grey coats on his tailboard, and at the horse lines, which are his, and the grooms, who are his, and the fifty remounts, which are his too and would go through his wagon like a flood if somebody untied the wrong rope.
 
 "The lockup's needed," he says. "For a drunk." He takes the bar off the door. "Sorry, Sergeant. Somewhere else for you."${b7In('sorvan') ? `\n\nSorvan, as you come out: "His father rode with mine. In Lether they never ask who rode with whom."` : ''}`,
       ch:[{t:'Out.', go:'b7_c4_arrest_out'}]}),
-    b7_c4_arrest_talk:()=>({sp:'The provost', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_out = S.f.b7_c4_out || 'talk'; }, txt:
+    b7_c4_arrest_talk:()=>({sp:'The provost', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_arrest = 1; S.f.b7_c4_out = S.f.b7_c4_out || 'talk'; }, txt:
 `You talk to him through the bars about his knee, and the army, and the last time anybody thanked a provost for anything, and what the Patriotists will say about him in their file if the sergeant of a squad of the line is found in his wagon in the morning with the Edur watching from the hill.
 
 He listens to all of it, rubbing the knee. Then he gets up, slowly, and takes the bar off the door.
@@ -659,7 +659,7 @@ He listens to all of it, rubbing the knee. Then he gets up, slowly, and takes th
     b7_c4_arrest_no:()=>({sp:'The provost', scene:'b7_c4_horselines', txt:
 `He hears you out, and shakes his head, and rubs his knee. "Warrant's a warrant, Sergeant," he says. "I'd need a signature over mine to undo it. An officer's." He sits down on the tailboard by the grey coats. "I'm not going anywhere."`,
       ch:[{t:'Send for the Finadd.', go:'b7_c4_arrest_ennic'}]}),
-    b7_c4_arrest_ennic:()=>({sp:B5_FINADD.name, scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_out = S.f.b7_c4_out || 'ennic'; S.f.b7_c4_ennicSigned = 1; }, txt:
+    b7_c4_arrest_ennic:()=>({sp:B5_FINADD.name, scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_arrest = 1; S.f.b7_c4_out = S.f.b7_c4_out || 'ennic'; S.f.b7_c4_ennicSigned = 1; }, txt:
 `The Finadd comes down the lane at a walk, with his pen in his hand and the cap off it, which in Finadd Ennic is a run.
 
 He reads the warrant at the lantern. Then he takes the provost's paper, and turns it over, and writes on the back in his neat hand, and signs it, and blots it on his sleeve. "Released into my keeping," he says. "On my signature. The Sixth is needed in the line in the morning, by order of the Preda, and I am the officer who says so." He gives the paper back. "You may send my name to the Invigilator, provost. I gather he has it already."${S.f.b7_c2_ennicEve ? ' His other hand goes to his coat as he says it.' : ''}
@@ -668,7 +668,7 @@ The provost takes the bar off the door. The Finadd caps his pen.
 
 "I have now signed two things in my life that I read first," he says to you, quietly, on the way out. "I find I could get used to it."`,
       ch:[{t:'Out.', go:'b7_c4_arrest_out'}]}),
-    b7_c4_arrest_out:()=>({sp:'The provost\'s wagon', scene:'b7_c4_horselines', txt:
+    b7_c4_arrest_out:()=>({sp:'The provost\'s wagon', scene:'b7_c4_horselines', fx:()=>{ S.f.b7_c4_arrest = 1; S.f.b7_c4_listName = 'sgt'; }, txt:
 `You come down off the wagon's step into the dark, among the squad, and the grey coats on the tailboard stand up.
 
 "That is irregular," says the one with the paper. He looks at the provost, who is looking at the horses, and at the squad, and at the dark between the pickets. "Very well." He takes his hand out of his sleeve, and there is a knife in it. "Then we will take you to Letheras ourselves."`,
