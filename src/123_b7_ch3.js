@@ -400,7 +400,8 @@ ${b73Say({marrow:`Marrow kneels by each of them in turn and lays two fingers on 
 `The valley lies below the wood in the dusk, fields and hedges and a long walled farm to the west, a village with a wattle wall to the north-east, and further east, where the valley narrows, a house in stone with lamps already lit. ${!S.f.b7_c3_orders1 ? 'The lieutenant has the night\'s orders, under the trees.' : 'The lieutenant said: a guide, if one will come. The Shake fishers are at the wood\'s edge.'}` :
 `Full dark. The column goes down out of the wood into the valley without a word, squad by squad, by the hedge-bottoms and the field-drains, and over all of it the mages lay their tired Mockra, so that a farmer at his door sees his own hedges and nothing in them.${b7In('wenna') ? `\n\nWenna goes first, barefoot, the gaff on her shoulder. She never once turns to see if the Third is following. The Shake, it seems, assume.` : b7In('doss') ? `\n\nDoss goes first, because somebody has to, and because he knows field-drains with his feet.` : `\n\nThe lieutenant's map goes first, in your head, and is wrong almost at once.`}`,
         ch: !ok ? [{t:'Back to the wood.', go:()=>startExplore()}] :
-          [{t:'Down into the valley.', onward:true, fx:()=>{ S.f.b7_c3_ph = 2; }, go:()=>{ startExplore('b7_c3_fields'); talk('b7_c3_fields_arrive'); }},
+          [S.area === 'b7_c3_fields' ? {t:'Down into the valley.', fx:()=>{ S.f.b7_c3_ph = Math.max(2, S.f.b7_c3_ph || 1); }, go:'b7_c3_fields_arrive'} // already in the valley: it stays
+           : {t:'Down into the valley.', onward:true, fx:()=>{ S.f.b7_c3_ph = 2; }, go:()=>{ startExplore('b7_c3_fields'); talk('b7_c3_fields_arrive'); }},
            {t:'Not now.', go:()=>startExplore()}]}; },
 
     /* ======== phase 2: the fields at night ======== */

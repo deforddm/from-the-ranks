@@ -575,7 +575,8 @@ ${b76Say({ammet:`Ammet goes round the squad with her roll of tools. "Hold still.
 `The squad lies down in its place in the line, in its cloaks, with its weapons by it.
 
 ${h === 'clean' ? 'The night is quiet. Up on the ridge the cadre\'s lamps burn steadily and somebody up there is chanting, so low it is more a feeling in the ground than a sound. The Sixth sleeps anyway, mostly, as soldiers sleep before a battle they have been told they will only watch.' : h === 'noted' ? 'Some time after midnight a lantern comes along the lane, slowly, held low, and stops at the Sixth, and goes along the row of sleepers face by face, and goes on. The Sixth sleeps very little after that, though everybody pretends.' : bad ? 'The man in the grey coat sits at his fire across the lane all night, with his hands in his sleeves, watching the Sixth sleep, and so the Sixth does not. By the time the sky goes grey every one of them has counted his breaths a thousand times.' : 'The grey coat\'s fire across the lane is cold, and the lane is empty. Up on the ridge the cadre\'s lamps burn, and the Sixth, for once, sleeps.'}${b76If('thegg', `\n\nIn the dark Thegg sits up once, and looks at the ridge, and lies down again.`)}`,
-        ch:[{t:'First light. The field.', onward:true, fx:()=>{ S.f.b7_c6_ph = 2; if (bad && !S.f.b7_c6_badNight) { S.f.b7_c6_badNight = 1; b76Mates().slice(0, 2).forEach(b76Rattle); } }, go:()=>{ startExplore('b7_c6_dawn'); talk('b7_c6_dawn'); }},
+        ch:[S.area === 'b7_c6_dawn' ? {t:'First light. The field.', fx:()=>{ S.f.b7_c6_ph = Math.max(2, S.f.b7_c6_ph || 1); }, go:'b7_c6_dawn'} // already on the field at dawn: it stays
+            : {t:'First light. The field.', onward:true, fx:()=>{ S.f.b7_c6_ph = 2; if (bad && !S.f.b7_c6_badNight) { S.f.b7_c6_badNight = 1; b76Mates().slice(0, 2).forEach(b76Rattle); } }, go:()=>{ startExplore('b7_c6_dawn'); talk('b7_c6_dawn'); }},
             {t:'Not now.', go:()=>startExplore()}]}; },
 
     /* ======== phase 2: dawn on the field ======== */
@@ -789,14 +790,16 @@ Either side of the Sixth there is nobody now. Down the bank to the east the fore
 The Finadd nods once, and pulls the standard out of the reeds and plants it again a pace forward, in the mud, where the foreign sergeant can see it.
 
 "From the tree to the rock," he says. "I shall stand by the standard, which is what Finadds are for, I am told." He looks at his sword, and then at you. "Sergeant. I have never done this."${b76Say({thegg:`\n\nThegg sets his shield beside the Finadd's standard. "I have," he says. "Behind me, sir."`, sorvan:`\n\nSorvan sets the lance. "Good," he says. "Now we are a line."`, _:''})}${b76If('tobet', `\n\nTobet steps up beside you, not behind. For once, not behind.`)}`,
-      ch:[{t:'The sergeant with the whistle.', go:()=>startBattle('b7_c6_stand', {})}]}),
+      ch:[{t:'The sergeant with the whistle.', go:()=>startBattle('b7_c6_stand', {})},
+          {t:'Not now.', go:()=>startExplore()}]}),
     b7_c6_key_break:()=>({sp:B5_FINADD.name, scene:'b7_river', html:risingHTML(), txt:
 `"With the rest. Into the reeds. Now."
 
 The Finadd nods once, and pulls the standard out of the reeds, and looks at it, and gives it to the nearest levy running past, who takes it out of sheer surprise and keeps running with it.
 
 "Then we run," he says. "Together, Sergeant, if you please. Not the way they are." He points with the sword along the bank to the west, to where the reeds go on head-high to the bend. "There. And do not stop for anybody until there are reeds over our heads."${b76Say({pessa:`\n\nPessa is already moving. "Reeds," she says. "Water. Follow me and don't splash."`, ammet:`\n\nAmmet slings her roll of tools. "I'll stitch you all when we stop," she says. "Run first."`, _:''})}${b76If('thegg', `\n\nThegg looks at the foreign sergeant a moment longer, and then turns, and runs, last, behind everyone.`)}`,
-      ch:[{t:'Run.', go:()=>startBattle('b7_c6_break', {})}]}),
+      ch:[{t:'Run.', go:()=>startBattle('b7_c6_break', {})},
+          {t:'Not now.', go:()=>startExplore()}]}),
     b7_c6_stand_after:()=>({sp:'The Sixth\'s stretch of the bank', scene:'b7_river', fx:()=>{ if (!S.f.b7_c6_standDone) S.f.b7_c6_standDone = 1; }, txt:
 `The foreign sergeant's squad pulls back down the bank, in order, the ones who can, and the sergeant with the whistle stands at the water's edge and looks at the Sixth for a long breath over the rim of a shield with three quarrels in it.
 
