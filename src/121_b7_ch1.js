@@ -77,7 +77,7 @@ const B7CH1 = {
     paras:[
 `A month at sea behind an Edur fleet, sleeping by day and standing watches by night, until the whole Fourteenth has forgotten what noon looks like. The marines did it first. The rest of the army did it because the marines were doing it and nobody wanted to be asked why not.`,
 ()=>{ const v = b71Mates().map(id => TPL[id].name);
-  return `You are Sergeant {sgt}, Third squad, 9th Legion. ${v.length ? `${b71And(v)} ${v.length > 1 ? 'are' : 'is'} the Third this year, and ${v.length > 1 ? 'have' : 'has'} been seasick in your company since Malaz City.` : 'The Third, this year, is you.'} At dusk the captain came down into the hold with his slate and his cough and told you where the Third was going. Not with the 9th. "Ashore with the marines tonight, Sergeant. Lent to the Fist's column, as heavies. The way the City Garrison lot were moved into the marines last year." He coughed. "The 9th stays with the fleet. You don't."`; },
+  return `You are Sergeant {sgt}, Third squad, 9th Legion. ${v.length ? `${b71And(v)} ${v.length > 1 ? 'are' : 'is'} the Third this year, and ${v.length > 1 ? 'have' : 'has'} been seasick in your company since Malaz City.` : 'The Third, this year, is you.'} At dusk Captain Hollet came down into the hold with his slate and his cough and told you where the Third was going. Not with the 9th. "Ashore with the marines tonight, Sergeant. Lent to the Fist's column, as heavies. The way the City Garrison lot were moved into the marines last year." He coughed. "The 9th stays with the fleet. You don't."`; },
 `Tonight the boats go in.`],
     go:'Into the boats', node:'b7_c1_start'},
 
