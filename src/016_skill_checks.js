@@ -16,9 +16,16 @@ function checkers(c){
   const T = c.trick && TRICKS[c.trick], no = [...(c.not || []), ...((T && T.not) || [])];
   const ids = SQUAD().filter(id => !no.includes(id) && !mateAway(id)); return ids.length ? ids : ['sgt'];
 }
+/* v10.2 §4 (David, Nov 6, 2026, option A): the second stat backs someone up. The one other squadmate in the walking squad (not at camp,
+   away, or dead) whose second stat (STATUP[id][1]) is the stat being rolled, the highest in it, adds +2. Never on a ✦ trick check. */
+function backupFor(c, id){
+  if (!c || !c.check || c.trick || !S) return null; const st = c.check[0];
+  const hs = SQUAD().filter(h => h !== id && TPL[h] && STATUP[h] && STATUP[h][1] === st && !mateAway(h) && !(S.dead && S.dead[h]));
+  return hs.length ? hs.reduce((b, h) => statOf(h, st) > statOf(b, st) ? h : b) : null; }
 /* the named bonuses one roller brings to one check */
 function edgesFor(c, id){
   const out = [];
+  { const h = backupFor(c, id); if (h) out.push([`with ${NAME(h)}`, 2]); }
   if (id !== 'sgt' && (S.loy[id] || 0) >= 2) out.push([`${NAME(id)} trusts you`, 1]);
   if (id !== 'sgt' && (S.loy[id] || 0) <= -2) out.push([`${NAME(id)} is sore at you`, -1]);
   if (S.rattled && S.rattled[id]) out.push(['rattled', -1]);
@@ -42,7 +49,7 @@ function check(stat, dc, who, c){
   const bare = !c; c = c || {check:[stat, dc, who]};
   const id = who || roller(stat, null, c), D = dcOf(c), edges = edgesFor(c, id), base = statOf(id, stat), mod = base + sumEdges(edges);
   if (S.rattled) delete S.rattled[id]; if (S.push) S.push = 0;
-  const r = rollAgain({stat, label:STATN[stat] || stat, dc:D, who:id, base, edges, mod, trick:c.trick || null, near:c.near !== false && !c.trick});
+  const r = rollAgain({stat, label:STATN[stat] || stat, dc:D, who:id, help:backupFor(c, id), base, edges, mod, trick:c.trick || null, near:c.near !== false && !c.trick});
   if (bare) { note(SET.dice ? `${r.label} check (DC ${D}): ${NAME(id)} rolls ${r.nat} + ${mod} = ${r.tot} · ${r.ok ? 'success' : 'failure'}` : `${r.label} check: ${NAME(id)} · ${r.ok ? 'success' : 'failure'}`, r.ok ? 'good' : 'bad'); tally(r.ok ? 'checksOk' : 'checksFail'); }
   return r;
 }
@@ -86,7 +93,7 @@ function rollDice(r, done, spun){
   const sh = $('#sheet'); const old = $('#dice'); if (old) old.remove();
   const el = document.createElement('div'); el.id = 'dice'; el.className = 'dice' + (r.trick ? ' trk' : '');
   const eds = SET.dice ? [`${r.label.toLowerCase()} ${r.base >= 0 ? '+' : '−'}${Math.abs(r.base)}`, ...r.edges.map(e => `${e[0]} ${e[1] > 0 ? '+' : '−'}${Math.abs(e[1])}`)].join(' · ') : '';
-  el.innerHTML = `<div class="dwho">${esc(NAME(r.who))} · ${r.label} ${r.dc}${r.trick ? ` · <span class="dtrk">✦ ${esc(TRICKS[r.trick].name)}</span>` : ''}</div><div class="d20"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 92,28 92,72 50,96 8,72 8,28" fill="#1a1613" stroke="#c9973f" stroke-width="2"/><polygon points="50,4 92,28 50,40 8,28" fill="rgba(201,151,63,.12)"/><polygon points="50,40 92,28 92,72 50,96 8,72 8,28" fill="none" stroke="rgba(201,151,63,.5)" stroke-width="1"/><line x1="50" y1="40" x2="50" y2="96" stroke="rgba(201,151,63,.5)"/></svg><span class="dn">20</span></div><div class="dres"></div>${eds ? `<div class="deds">${esc(eds)}</div>` : ''}<div class="dact"></div>`;
+  el.innerHTML = `<div class="dwho">${esc(NAME(r.who))}${r.help ? `, with ${esc(NAME(r.help))} (+2)` : ''} · ${r.label} ${r.dc}${r.trick ? ` · <span class="dtrk">✦ ${esc(TRICKS[r.trick].name)}</span>` : ''}</div><div class="d20"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 92,28 92,72 50,96 8,72 8,28" fill="#1a1613" stroke="#c9973f" stroke-width="2"/><polygon points="50,4 92,28 50,40 8,28" fill="rgba(201,151,63,.12)"/><polygon points="50,40 92,28 92,72 50,96 8,72 8,28" fill="none" stroke="rgba(201,151,63,.5)" stroke-width="1"/><line x1="50" y1="40" x2="50" y2="96" stroke="rgba(201,151,63,.5)"/></svg><span class="dn">20</span></div><div class="dres"></div>${eds ? `<div class="deds">${esc(eds)}</div>` : ''}<div class="dact"></div>`;
   sh.appendChild(el); el.scrollIntoView({block:'nearest'});
   const n = el.querySelector('.dn'), res = el.querySelector('.dres'), die = el.querySelector('.d20'), act = el.querySelector('.dact');
   const t0 = performance.now(), dur = REDUCE() ? 200 : 950; let fin = false, gone = false;
