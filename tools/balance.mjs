@@ -296,6 +296,8 @@ const INIT = () => {
     if (!B.acted) {
       // Ohl: a downed squadmate up, then Denul on the worst hurt
       if (can(u, 'argument') && strainOk(u, 3)) { const t = AB.argument.tiles(u)[0]; if (t) return tryAb('argument', t.x, t.y); }
+      // v10.2: a downed squadmate beside you, still rolling: Stabilise (no wound)
+      if (typeof deathRolling === 'function' && abOk(u, 'stabilise')) { const t = AB.stabilise.tiles(u)[0]; if (t) return () => { B.mode = 'stabilise'; B.aim = null; updBattleUI(); battleTap(t.x, t.y); if (!B.busy) { B.mode = 'act'; updBattleUI(); return false; } return true; }; }
       if (can(u, 'mend')) { const t = AB.mend.tiles(u).filter(p => !p.ally && pct(p) < .45).sort((a, b) => pct(a) - pct(b))[0];
         if (t && (strainOk(u, 3) || (pct(t) < .25 && u.strain + 3 <= strMax() + 1 && u.hp > 8))) return tryAb('mend', t.x, t.y); }
       // Denul Wash when two or more close by are hurt; Stanch on someone about to drop with enemies on them

@@ -56,7 +56,7 @@ function soakPast(a, t, o, ranged, fl){
    replaces the old only if it is bigger, never adds to it (David). It takes damage after soak, everything included, lasts the fight
    and its second area, and is gone when the fight ends (it lives on the unit, never on the save). ---- */
 const wardCap = u => Math.round(u.maxhp * .25);
-const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek'};
+const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek', t_song:'spirits'}; // and any ability marked spirit (the Herds' song, the Bargain, the Anvil)
 function wardSource(){ const k = B && B.healSrc; if (!k) return 'plain'; if (WARD_SRC[k]) return WARD_SRC[k]; if (k === 'soliel' || k === 'drek' || k === 'spirits' || k === 'denul') return k;
   const a = AB[k]; return a && a.spirit ? 'spirits' : 'plain'; }
 const WARD_LINE = {
@@ -70,6 +70,53 @@ function wardFrom(u, before, n){
   const over = before + n - u.maxhp; if (over <= 0) return;
   const w = Math.min(wardCap(u), over); if (w <= (u.ward || 0)) return; // never stacks; a smaller one changes nothing
   u.ward = w; float(u, 'ward ' + w, '#dfe8f0'); blog(WARD_LINE[wardSource()](u, w)); }
+
+/* ---- v10.2 death checks (spec §3, David, Nov 6, 2026, 3:25 PM PST). Not in mortal fights (they keep their rule) and not on Story.
+   Elsewhere a downed squadmate stays down for the fight, and at the start of each of their turns rolls a d20 (+1 at level 8, +1 more at 16)
+   against 10 (Soldier) or 11 (Bridgeburner): a natural 20 gets them up at 1 health and they act; a natural 1 is two slips; three
+   successes and they are steady (still down, no wound); three slips and they carry a wound. A squadmate beside them can Stabilise
+   them (their action): no more rolls, no wound, still down. A fight's second area stands them up at a quarter (stageBreak) and the
+   count starts again; a wound already earned stays. ---- */
+const deathOn = () => !!(B && B.def && !B.def.mortal && DIFF() !== DIFFS.story);
+const deathDC = () => (S && S.diff) === 'bridgeburner' ? 11 : 10;
+const deathBonus = () => (((S && S.lvl) || 1) >= 8 ? 1 : 0) + (((S && S.lvl) || 1) >= 16 ? 1 : 0);
+const deathRolling = u => !!(u && u.side === 'p' && !u.ally && u.hp <= 0 && deathOn() && !(u.dc && u.dc.done));
+/* the wounds (Claude's call on the five and their order, worst last): each −3 max health or −1 to hit, one at a time, until the next fire */
+const INJURIES = {
+  cut:{name:'a deep cut', word:'that cut', hp:3, sev:1},
+  head:{name:'a ringing head', word:'that ringing head', hit:1, sev:2},
+  knee:{name:'a bad knee', word:'that knee', hit:1, sev:3},
+  rib:{name:'a cracked rib', word:'that rib', hp:3, sev:4},
+  shoulder:{name:'a wrenched shoulder', word:'that shoulder', hit:1, sev:5}};
+const injuryOf = id => { const k = S && S.injury && S.injury[id]; return k && INJURIES[k] ? Object.assign({key:k}, INJURIES[k]) : null; };
+const injuryFx = w => w.hp ? `−${w.hp} max health` : `−${w.hit} to hit`;
+function giveInjury(u, pick){ const keys = Object.keys(INJURIES), k = pick && INJURIES[pick] ? pick : keys[R(keys.length)], old = injuryOf(u.id);
+  const keep = old && old.sev >= INJURIES[k].sev ? old.key : k, w = INJURIES[keep]; // a second wound: the worse of the two
+  (S.injury ??= {})[u.id] = keep; save();
+  blog(`<em>${u.name} will be carrying ${w.word} a while.</em> ${w.name[0].toUpperCase() + w.name.slice(1)}: ${injuryFx(w)} until the next fire.`); float(u, 'wounded', '#f0b8a8');
+  return keep; }
+/* the fire (or any rest) sees to them. Returns the names mended. */
+function injuryClear(){ if (!S || !S.injury) return []; const ids = Object.keys(S.injury).filter(id => INJURIES[S.injury[id]]); S.injury = null;
+  if (ids.length) note(`By the fire, ${ids.map(NAME).join(' and ')} ${ids.length > 1 ? 'get' : 'gets'} the wound seen to properly.`, 'good'); return ids; }
+/* one roll at the start of a downed squadmate's turn: false if none is due, 'up' on a natural 20, else 'rolled' */
+function deathCheck(u){
+  if (!deathRolling(u)) return false;
+  const d = u.dc ??= {s:0, f:0}, nat = d20(), bon = deathBonus(), dc = deathDC(), tot = nat + bon;
+  const math = SET.dice ? ` <span class="stat">(${nat}${bon ? '+' + bon : ''} vs ${dc})</span>` : '';
+  if (nat === 20) { const at = freeNear(u.x, u.y, u);
+    if (at) { u.x = at.x; u.y = at.y; u.hp = 1; u.deadAt = null; u.dc = null; u.healed = performance.now(); sparks(u.x, u.y, 14, '#9fe0b8', .4); float(u, 'up!', '#9fe0b8');
+      blog(`<em>${u.name} drags in a breath, and another, and gets up.</em> 1 health${math}.`); return 'up'; }
+    d.s++; } // nowhere to stand: it counts as holding on
+  else if (nat === 1) d.f += 2; else if (tot >= dc) d.s++; else d.f++;
+  const count = `${Math.min(3, d.s)} held, ${Math.min(3, d.f)} slipped`;
+  if (d.f >= 3) { d.done = 'wound'; blog(`${u.name} fights for breath and loses the fight for it: three slips${math}.`); giveInjury(u); }
+  else if (d.s >= 3) { d.done = 'steady'; float(u, 'steady', '#9fe0b8'); blog(`${u.name} is steady: still down, still breathing, and no wound${math}.`); }
+  else blog(`${u.name} fights for breath: ${nat === 1 ? 'a bad one, two slips' : tot >= dc ? 'holds on' : 'slips'} (${count})${math}.`);
+  return 'rolled'; }
+AB.stabilise = {name:'Stabilise', desc:()=>'A downed squadmate next to you, still fighting for breath: they stop rolling, with no wound, and stay down. It takes your action.',
+  tiles:u => B.units.filter(p => p !== u && cheb(u, p) === 1 && deathRolling(p)),
+  run(u, x, y){ const t = B.units.find(p => p.x === x && p.y === y && deathRolling(p)); if (!t) return; (t.dc ??= {s:0, f:0}).done = 'stable'; AUDIO.play('heal');
+    float(t, 'stabilised', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3); blog(`${u.name} gets down beside ${t.name}, packs the wound and holds on. ${t.name} stops fighting for breath: still down, no wound.`); }};
 
 /* ---- the road gets harder: enemies scale with the chapter (Soldier and Bridgeburner; Story keeps the old pitch).
    Tuned with tools/balance.mjs against a squad at the level the road brings it to. ---- */
@@ -188,7 +235,7 @@ function carryWounds(){
   const hurtN = SQUAD().filter(id => S.wounds[id] < S.wounds[id + '_max']).length;
   if (hurtN) note(`Bridgeburner: ${ohl ? `${ohl.name} patches what ${ohl.id === 'ohl' ? 'he' : 'she'} can` : 'the squad binds its own cuts'}; a win mends a quarter of the rest, and what's left they carry into the next fight until they rest.`, 'bad');
 }
-function rest(t){ if (S && S.wounds) { S.wounds = null; note(t || 'The Fourth rests. Wounds close, mostly.', 'good'); } }
+function rest(t){ injuryClear(); /* v10.2: any rest sees to a wound too */ if (S && S.wounds) { S.wounds = null; note(t || 'The Fourth rests. Wounds close, mostly.', 'good'); } }
 const woundOf = id => S && S.wounds && S.wounds[id] != null ? S.wounds[id] : null;
 /* a salve out of the fight, from the pack: only matters when wounds carry */
 function salveOut(id){ if (!S.wounds || !(S.inv.salve > 0) || S.wounds[id] == null) return; S.inv.salve--; tally('thrown_salve');

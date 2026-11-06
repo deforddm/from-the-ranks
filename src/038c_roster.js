@@ -205,7 +205,7 @@ const ROSTER_FIRES = {
 };
 /* the fire nodes get the choice, just before their last (the way out) */
 function rosterWrapFires(){ Object.values(ROSTER_FIRES).forEach(chs => Object.values(chs).flat().forEach(id => { const f = DLG[id]; if (!f || f._roster) return;
-  const w = function(){ const n = f.apply(this, arguments); if (n && Array.isArray(n.ch) && S && !n.ch.some(c => c && c.roster)) { const c = rosterChoice(id); n.ch = n.ch.slice(); n.ch.splice(Math.max(0, n.ch.length - 1), 0, c); } return n; };
+  const w = function(){ if (S && S.injury) injuryClear(); /* v10.2: the fire sees to a wound */ const n = f.apply(this, arguments); if (n && Array.isArray(n.ch) && S && !n.ch.some(c => c && c.roster)) { const c = rosterChoice(id); n.ch = n.ch.slice(); n.ch.splice(Math.max(0, n.ch.length - 1), 0, c); } return n; };
   w._roster = true; DLG[id] = w; })); }
 
 /* ============ gear by role ============ */

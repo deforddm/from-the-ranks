@@ -5899,6 +5899,7 @@ function mkParty(id, x, y){
   const u = {id, side:'p', name:NAME(id), sig:t.sig, col:t.col, maxhp:t.hp + L*4 + (S.card === 'obelisk' ? 4 : 0), ac:t.ac, atk:t.atk + L, dmg:t.dmg, rng:t.rng, mv:t.mv + (S.card === 'hounds' ? 1 : 0), init:t.init, ab:kitAb(id), magic:t.magic, strain:0, verb:VERB[id], x, y, kind:id};
   // gear
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
+  { const w = injuryOf(id); if (w) { if (w.hp) u.maxhp = Math.max(1, u.maxhp - w.hp); if (w.hit) u.atk -= w.hit; } } // v10.2: a wound carried from a bad fall (31c)
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
@@ -5998,7 +5999,8 @@ function nextTurn(){
   B.idx++;
   if (B.idx >= B.order.length) { newRound(); if (B.over) return; } // the objective was just met
   const u = B.order[B.idx];
-  if (!u || u.hp <= 0) return nextTurn();
+  if (!u) return nextTurn();
+  if (u.hp <= 0) { const dc = deathCheck(u); if (!dc) return nextTurn(); if (dc !== 'up') { B.busy = true; return later(nextTurn, pace(500)); } } // v10.2: a downed squadmate fights for breath (31c); a natural 20 gets up and acts
   if (B.line && (B.line.u === u || B.line.u.hp <= 0)) B.line = null; // The Line holds until its bearer's next turn
   B.cur = u; B.moved = false; B.mvLeft = u.mv; B.acted = false; B.mode = null; B.aim = null; B.turn++; B.turnAt = performance.now();
   boonFoeTurnStart(u); // the gods' boons on an enemy's turn: the Wickan cold, the Wolves (31c)
@@ -6156,7 +6158,7 @@ const AB = {
   argument:{name:'Argument with Hood', strain:3, desc:()=>`Once a fight: a downed squadmate within 2 stands up at ${6 + 2*lvB()} health. Strain 3.`, ok:()=>!B.used.argument,
     tiles:u=>B.units.filter(p => p.side === 'p' && !p.ally && p.hp <= 0 && cheb(u,p) <= 2 && freeNear(p.x, p.y, p)),
     run(u,x,y){ const t = B.units.find(p => p.side === 'p' && !p.ally && p.hp <= 0 && p.x === x && p.y === y); if (!t) return; const at = freeNear(t.x, t.y, t); if (!at) return; // someone may be standing over the body
-      B.used.argument = 1; AUDIO.play('heal'); t.x = at.x; t.y = at.y; t.hp = Math.min(t.maxhp, 6 + 2*lvB()); t.deadAt = null; t.healed = performance.now(); sparks(t.x, t.y, 20, '#9fe0b8', .5); blog(`${u.name} argues with Hood in Ehrlii. ${t.name} gets up, which settles it for now.`); }},
+      B.used.argument = 1; AUDIO.play('heal'); t.x = at.x; t.y = at.y; t.dc = null; t.hp = Math.min(t.maxhp, 6 + 2*lvB()); t.deadAt = null; t.healed = performance.now(); sparks(t.x, t.y, 20, '#9fe0b8', .5); blog(`${u.name} argues with Hood in Ehrlii. ${t.name} gets up, which settles it for now.`); }},
 };
 /* Chub's cusser, Maud: Kettle carries her "for the one that matters" and won't fire her in an ordinary fight. The story spends her (the barrow in Chapter 5, or Ch'kess in Chapter 7). */
 const maudKept = () => !!(S && S.f && BOOK === 'gotm' && !S.f.c5_cusserUsed && S.f.c7_debt !== 'paid');
@@ -6398,6 +6400,7 @@ async function aiTurn(u, turnId){
         if (gone() || B.over) return; shakeMap(); sparks(tg.x, tg.y, 34, '#bfe8ff', 1.1); B.fx.push({kind:'boom', x:tg.x, y:tg.y, r:1, col:'#bfe8ff', t:performance.now()});
         hurt(tg, roll(2,8,2)); party().filter(p => p !== tg && cheb(p, tg) === 1).forEach(p => { hurt(p, roll(1,8,0)); sparks(p.x, p.y, 12, '#bfe8ff', .7); });
         updBattleUI(); await wait(800); if (gone()) return; return done(); } } }
+  if (u.side === 'p' && !u.ally && !B.acted && abOk(u, 'stabilise')) { const t = AB.stabilise.tiles(u)[0]; B.acted = true; AB.stabilise.run(u, t.x, t.y); updBattleUI(); await wait(400); if (gone()) return; return done(); } // v10.2: the play bot's squad keeps a friend from a wound
   if (u.side === 'e' && u.sk && u.sk.length) { if (await foeSpecial(u, gone)) { if (gone()) return; return done(); } if (gone()) return; }
   const opp = foesOf(u);
   if (opp.length) {
@@ -6554,12 +6557,13 @@ function updBattleUI(){
       else if (a.smoke) { const cov = B.units.filter(v => v.hp > 0 && cheb(v, B.aim) <= a.aoe); hint = `Tap the marked tile again to ${a.darkness ? 'call it' : 'throw'}. ${cov.length ? `The ${a.darkness ? 'dark' : 'smoke'} covers ${cov.map(v => esc(v.name)).join(', ')}.` : `The ${a.darkness ? 'dark' : 'smoke'} covers empty ground.`} Nobody shoots into it, out of it or through it.`; }
       else { const caught = B.units.filter(v => v.hp > 0 && cheb(v, B.aim) <= a.aoe), mine = caught.filter(v => v.side === 'p'), theirs = caught.length - mine.length;
         hint = `Tap the marked tile again to throw. ${theirs ? `It catches ${theirs === 1 ? 'one enemy' : theirs + ' enemies'}.` : 'No enemy in the blast.'}${mine.length ? ` <span class="warn">And ${mine.map(v => esc(v.name)).join(', ')}.</span>` : ''}`; } } }
-  const buffs = [u.veilUntil >= B.round ? 'veiled' : '', u.rallyUntil >= B.round ? 'rallied (+2 hit, +2 damage)' : '', lineCovers(u) ? 'in the line' : '', u.luckyTurn === B.turn ? 'the Lady pulls' : '', u.dazzleUntil >= B.round ? 'dazzled' : '', u.bleed > 0 ? 'bleeding' : '', u.burnTurns > 0 ? `on fire (${u.burnTurns} turn${u.burnTurns > 1 ? 's' : ''})` : '', u.steady ? 'steady (+2)' : '', postedUp(u) ? 'posted up' : '', u.clawMarkUntil >= B.round ? 'marked by the Claw' : '', u.stanch ? 'stanched' : '', u.turned ? 'turned on its own' : '', u.blindTurns > 0 ? `blinded by shadow (−50% to hit, ${u.blindTurns} turn${u.blindTurns > 1 ? 's' : ''})` : '', B.howlUntil >= B.round ? 'shaken by the howl' : ''].filter(Boolean).join(' · ');
+  const wnd = injuryOf(u.id), buffs = [wnd ? `${wnd.name.replace(/^an? /, '')} (${injuryFx(wnd)})` : '', u.veilUntil >= B.round ? 'veiled' : '', u.rallyUntil >= B.round ? 'rallied (+2 hit, +2 damage)' : '', lineCovers(u) ? 'in the line' : '', u.luckyTurn === B.turn ? 'the Lady pulls' : '', u.dazzleUntil >= B.round ? 'dazzled' : '', u.bleed > 0 ? 'bleeding' : '', u.burnTurns > 0 ? `on fire (${u.burnTurns} turn${u.burnTurns > 1 ? 's' : ''})` : '', u.steady ? 'steady (+2)' : '', postedUp(u) ? 'posted up' : '', u.clawMarkUntil >= B.round ? 'marked by the Claw' : '', u.stanch ? 'stanched' : '', u.turned ? 'turned on its own' : '', u.blindTurns > 0 ? `blinded by shadow (−50% to hit, ${u.blindTurns} turn${u.blindTurns > 1 ? 's' : ''})` : '', B.howlUntil >= B.round ? 'shaken by the howl' : ''].filter(Boolean).join(' · ');
   const endHot = B.acted || (B.moved && !inReach); // nothing much left: make End turn the obvious button
   ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag you">your turn</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.ward ? `<span class="chip ward">ward ${u.ward}</span>` : ''}${u.soak ? `<span class="chip soak">soak ${u.soak}</span>` : ''}${u.magic ? `<span class="stat st">strain ${u.strain}/${strMax()}</span>` : ''}<span class="stat">${u.rng > 1 ? `range ${u.rng}` : 'melee'} · move ${mvLeft}/${u.mv}</span>${buffs ? `<span class="stat">${buffs}</span>` : ''}</div>
     <div class="bhint">${tapWord(hint)}</div>
     <div class="abil">${u.ab.map(k => { const a = AB[k]; const cnt = a.item ? `<small>×${itemLeft(a.item)}</small>` : a.trick && TRICKS[a.trick].use === 'chapter' ? `<small>×${trickLeft(a.trick)}</small>` : ''; const dis = (B.acted && !a.free) || !abOk(u,k);
       return `<button class="btn ${B.mode === k ? 'on' : ''} ${a.trick ? 'trk' : ''}" id="ab_${k}" data-k="${k}" ${dis ? 'disabled' : ''}>${a.trick ? '✦ ' : ''}${a.name}${cnt}</button>`; }).join('')}
+      ${!B.acted && abOk(u, 'stabilise') ? `<button class="btn stab ${B.mode === 'stabilise' ? 'on' : ''}" id="ab_stabilise" data-k="stabilise">Stabilise</button>` : ''}
       <button class="btn ${endHot ? 'primary' : ''} ${endArming(u) ? 'arming' : ''}" id="bEnd">End turn</button></div>
     <p class="hint keys" aria-hidden="true">${u.ab.length > 1 ? `<kbd>1</kbd>–<kbd>${u.ab.length}</kbd>` : '<kbd>1</kbd>'} ${u.ab.length > 1 ? 'abilities' : 'ability'} · <kbd>Space</kbd> end turn · <kbd>Esc</kbd> cancel</p>`;
   ub.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
@@ -6902,7 +6906,7 @@ function soakPast(a, t, o, ranged, fl){
    replaces the old only if it is bigger, never adds to it (David). It takes damage after soak, everything included, lasts the fight
    and its second area, and is gone when the fight ends (it lives on the unit, never on the save). ---- */
 const wardCap = u => Math.round(u.maxhp * .25);
-const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek'};
+const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek', t_song:'spirits'}; // and any ability marked spirit (the Herds' song, the Bargain, the Anvil)
 function wardSource(){ const k = B && B.healSrc; if (!k) return 'plain'; if (WARD_SRC[k]) return WARD_SRC[k]; if (k === 'soliel' || k === 'drek' || k === 'spirits' || k === 'denul') return k;
   const a = AB[k]; return a && a.spirit ? 'spirits' : 'plain'; }
 const WARD_LINE = {
@@ -6916,6 +6920,53 @@ function wardFrom(u, before, n){
   const over = before + n - u.maxhp; if (over <= 0) return;
   const w = Math.min(wardCap(u), over); if (w <= (u.ward || 0)) return; // never stacks; a smaller one changes nothing
   u.ward = w; float(u, 'ward ' + w, '#dfe8f0'); blog(WARD_LINE[wardSource()](u, w)); }
+
+/* ---- v10.2 death checks (spec §3, David, Nov 6, 2026, 3:25 PM PST). Not in mortal fights (they keep their rule) and not on Story.
+   Elsewhere a downed squadmate stays down for the fight, and at the start of each of their turns rolls a d20 (+1 at level 8, +1 more at 16)
+   against 10 (Soldier) or 11 (Bridgeburner): a natural 20 gets them up at 1 health and they act; a natural 1 is two slips; three
+   successes and they are steady (still down, no wound); three slips and they carry a wound. A squadmate beside them can Stabilise
+   them (their action): no more rolls, no wound, still down. A fight's second area stands them up at a quarter (stageBreak) and the
+   count starts again; a wound already earned stays. ---- */
+const deathOn = () => !!(B && B.def && !B.def.mortal && DIFF() !== DIFFS.story);
+const deathDC = () => (S && S.diff) === 'bridgeburner' ? 11 : 10;
+const deathBonus = () => (((S && S.lvl) || 1) >= 8 ? 1 : 0) + (((S && S.lvl) || 1) >= 16 ? 1 : 0);
+const deathRolling = u => !!(u && u.side === 'p' && !u.ally && u.hp <= 0 && deathOn() && !(u.dc && u.dc.done));
+/* the wounds (Claude's call on the five and their order, worst last): each −3 max health or −1 to hit, one at a time, until the next fire */
+const INJURIES = {
+  cut:{name:'a deep cut', word:'that cut', hp:3, sev:1},
+  head:{name:'a ringing head', word:'that ringing head', hit:1, sev:2},
+  knee:{name:'a bad knee', word:'that knee', hit:1, sev:3},
+  rib:{name:'a cracked rib', word:'that rib', hp:3, sev:4},
+  shoulder:{name:'a wrenched shoulder', word:'that shoulder', hit:1, sev:5}};
+const injuryOf = id => { const k = S && S.injury && S.injury[id]; return k && INJURIES[k] ? Object.assign({key:k}, INJURIES[k]) : null; };
+const injuryFx = w => w.hp ? `−${w.hp} max health` : `−${w.hit} to hit`;
+function giveInjury(u, pick){ const keys = Object.keys(INJURIES), k = pick && INJURIES[pick] ? pick : keys[R(keys.length)], old = injuryOf(u.id);
+  const keep = old && old.sev >= INJURIES[k].sev ? old.key : k, w = INJURIES[keep]; // a second wound: the worse of the two
+  (S.injury ??= {})[u.id] = keep; save();
+  blog(`<em>${u.name} will be carrying ${w.word} a while.</em> ${w.name[0].toUpperCase() + w.name.slice(1)}: ${injuryFx(w)} until the next fire.`); float(u, 'wounded', '#f0b8a8');
+  return keep; }
+/* the fire (or any rest) sees to them. Returns the names mended. */
+function injuryClear(){ if (!S || !S.injury) return []; const ids = Object.keys(S.injury).filter(id => INJURIES[S.injury[id]]); S.injury = null;
+  if (ids.length) note(`By the fire, ${ids.map(NAME).join(' and ')} ${ids.length > 1 ? 'get' : 'gets'} the wound seen to properly.`, 'good'); return ids; }
+/* one roll at the start of a downed squadmate's turn: false if none is due, 'up' on a natural 20, else 'rolled' */
+function deathCheck(u){
+  if (!deathRolling(u)) return false;
+  const d = u.dc ??= {s:0, f:0}, nat = d20(), bon = deathBonus(), dc = deathDC(), tot = nat + bon;
+  const math = SET.dice ? ` <span class="stat">(${nat}${bon ? '+' + bon : ''} vs ${dc})</span>` : '';
+  if (nat === 20) { const at = freeNear(u.x, u.y, u);
+    if (at) { u.x = at.x; u.y = at.y; u.hp = 1; u.deadAt = null; u.dc = null; u.healed = performance.now(); sparks(u.x, u.y, 14, '#9fe0b8', .4); float(u, 'up!', '#9fe0b8');
+      blog(`<em>${u.name} drags in a breath, and another, and gets up.</em> 1 health${math}.`); return 'up'; }
+    d.s++; } // nowhere to stand: it counts as holding on
+  else if (nat === 1) d.f += 2; else if (tot >= dc) d.s++; else d.f++;
+  const count = `${Math.min(3, d.s)} held, ${Math.min(3, d.f)} slipped`;
+  if (d.f >= 3) { d.done = 'wound'; blog(`${u.name} fights for breath and loses the fight for it: three slips${math}.`); giveInjury(u); }
+  else if (d.s >= 3) { d.done = 'steady'; float(u, 'steady', '#9fe0b8'); blog(`${u.name} is steady: still down, still breathing, and no wound${math}.`); }
+  else blog(`${u.name} fights for breath: ${nat === 1 ? 'a bad one, two slips' : tot >= dc ? 'holds on' : 'slips'} (${count})${math}.`);
+  return 'rolled'; }
+AB.stabilise = {name:'Stabilise', desc:()=>'A downed squadmate next to you, still fighting for breath: they stop rolling, with no wound, and stay down. It takes your action.',
+  tiles:u => B.units.filter(p => p !== u && cheb(u, p) === 1 && deathRolling(p)),
+  run(u, x, y){ const t = B.units.find(p => p.x === x && p.y === y && deathRolling(p)); if (!t) return; (t.dc ??= {s:0, f:0}).done = 'stable'; AUDIO.play('heal');
+    float(t, 'stabilised', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3); blog(`${u.name} gets down beside ${t.name}, packs the wound and holds on. ${t.name} stops fighting for breath: still down, no wound.`); }};
 
 /* ---- the road gets harder: enemies scale with the chapter (Soldier and Bridgeburner; Story keeps the old pitch).
    Tuned with tools/balance.mjs against a squad at the level the road brings it to. ---- */
@@ -7034,7 +7085,7 @@ function carryWounds(){
   const hurtN = SQUAD().filter(id => S.wounds[id] < S.wounds[id + '_max']).length;
   if (hurtN) note(`Bridgeburner: ${ohl ? `${ohl.name} patches what ${ohl.id === 'ohl' ? 'he' : 'she'} can` : 'the squad binds its own cuts'}; a win mends a quarter of the rest, and what's left they carry into the next fight until they rest.`, 'bad');
 }
-function rest(t){ if (S && S.wounds) { S.wounds = null; note(t || 'The Fourth rests. Wounds close, mostly.', 'good'); } }
+function rest(t){ injuryClear(); /* v10.2: any rest sees to a wound too */ if (S && S.wounds) { S.wounds = null; note(t || 'The Fourth rests. Wounds close, mostly.', 'good'); } }
 const woundOf = id => S && S.wounds && S.wounds[id] != null ? S.wounds[id] : null;
 /* a salve out of the fight, from the pack: only matters when wounds carry */
 function salveOut(id){ if (!S.wounds || !(S.inv.salve > 0) || S.wounds[id] == null) return; S.inv.salve--; tally('thrown_salve');
@@ -7229,7 +7280,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const id = SQ[charIdx], c = TPL[id], L = S.lvl - 1, m = $('#chars'); m.hidden = false;
   const gearOf = Object.values(S.gear[id] || {}).map(g => ITEMS[g]).filter(Boolean);
   const sum = k => gearOf.reduce((a,it) => a + (it[k] || 0), 0);
-  const hp = c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
+  const wnd = injuryOf(id), hp = Math.max(1, c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0) - (wnd && wnd.hp || 0)), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0) - (wnd && wnd.hit || 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
   const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
   const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
@@ -7248,7 +7299,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const rel = c.rel ? Object.entries(c.rel).filter(([k]) => SQ.includes(k)).map(([k,v]) => `<li><b>${TPL[k].name}.</b> ${v}</li>`).join('') : SQ.slice(1).map(k => `<li><b>${TPL[k].name}.</b> ${loyLabel(S.loy[k])}.</li>`).join('');
   const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${Math.min(100, S.lvl / lvCap() * 100)}%"></i></div><span>${S.lvl}</span></div></div></div>
     <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}${squadSoak(id) ? ` <span class="chip soak" title="Every blow that lands loses ${squadSoak(id)}, down to 1. Munitions, sorcery, crossbows, aimed shots and blows from the flank go past it.">soak ${squadSoak(id)}</span>` : ''}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(() => { const d = gb.dmg || c.dmg, ld = lvDmg() + (has(id,'edge') ? 1 : 0), tot = [d[0], d[1], (d[2] || 0) + ld]; // v8.1: the dice, never the word "weapon"
-      return ld ? `${gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d)} + ${ld} level = <b>${diceW(tot)}</b>` : gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d); })()}</span><span>${rng > 1 && !gearOf.some(it => it.reach) ? 'Range' : 'Reach'}</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
+      return ld ? `${gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d)} + ${ld} level = <b>${diceW(tot)}</b>` : gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d); })()}</span><span>${rng > 1 && !gearOf.some(it => it.reach) ? 'Range' : 'Reach'}</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${wnd ? `<span>Wound</span><span><span class="chip wound">${esc(wnd.name.replace(/^an? /, ''))}</span> ${injuryFx(wnd)}, until the next fire</span>` : ''}${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
     <div class="sec"><h4>Field rules</h4><p class="fine">Flanking: +2 to hit when an ally stands next to the target on the far side, melee or ranged. Stepping out of a tile next to an enemy gives that enemy one free swing a turn, wherever you step to. Once you have moved and then acted, your movement for the turn is spent. The squad can move through its own people, but not stop on them. End a turn without acting and you are Steady: +2 to your next attack or save. A ranged squadmate who has not fired yet this fight is Posted up: the first enemy to step into their reach takes a free shot. Gold numbers are what gear adds.</p></div>
     <div class="sec"><h4>Abilities</h4><div class="abl">${abil}</div></div>
     ${talents.length ? `<div class="sec"><h4>Learned</h4><div class="abl">${talents.map(o => `<div><b>${o[1]}</b><span>${o[2]}</span></div>`).join('')}</div></div>` : ''}
@@ -9012,7 +9063,7 @@ function showChapterEnd(){
 }
 function startChapter(n){
   const CH = CHAPTERS[n]; if (!CH) return showTitle();
-  S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.gods = {ch:n, used:[]}; S.boons = null; S.rolled = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
+  S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.injury = null; S.gods = {ch:n, used:[]}; S.boons = null; S.rolled = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
   if (n >= 1) { const c = JSON.parse(JSON.stringify(S)); delete c.chsnap; c.log = []; S.chsnap ??= {}; S.chsnap[n] = c; } // replays start from here
   S.area = CH.area.id; S.pos = {...CH.area.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:S.pos.x+dx, y:S.pos.y+dy})); S.log = [];
   save(); showChapterIntro();
@@ -9636,7 +9687,7 @@ const ROSTER_FIRES = {
 };
 /* the fire nodes get the choice, just before their last (the way out) */
 function rosterWrapFires(){ Object.values(ROSTER_FIRES).forEach(chs => Object.values(chs).flat().forEach(id => { const f = DLG[id]; if (!f || f._roster) return;
-  const w = function(){ const n = f.apply(this, arguments); if (n && Array.isArray(n.ch) && S && !n.ch.some(c => c && c.roster)) { const c = rosterChoice(id); n.ch = n.ch.slice(); n.ch.splice(Math.max(0, n.ch.length - 1), 0, c); } return n; };
+  const w = function(){ if (S && S.injury) injuryClear(); /* v10.2: the fire sees to a wound */ const n = f.apply(this, arguments); if (n && Array.isArray(n.ch) && S && !n.ch.some(c => c && c.roster)) { const c = rosterChoice(id); n.ch = n.ch.slice(); n.ch.splice(Math.max(0, n.ch.length - 1), 0, c); } return n; };
   w._roster = true; DLG[id] = w; })); }
 
 /* ============ gear by role ============ */

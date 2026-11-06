@@ -73,6 +73,7 @@ function mkParty(id, x, y){
   const u = {id, side:'p', name:NAME(id), sig:t.sig, col:t.col, maxhp:t.hp + L*4 + (S.card === 'obelisk' ? 4 : 0), ac:t.ac, atk:t.atk + L, dmg:t.dmg, rng:t.rng, mv:t.mv + (S.card === 'hounds' ? 1 : 0), init:t.init, ab:kitAb(id), magic:t.magic, strain:0, verb:VERB[id], x, y, kind:id};
   // gear
   Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (!it) return; if (it.reach) u.reachMelee = true; u.ac += it.ac || 0; u.atk += it.atk || 0; u.maxhp += it.hp || 0; u.mv += it.mv || 0; u.rng += it.rng || 0; if (it.dmg) u.dmg = it.dmg; });
+  { const w = injuryOf(id); if (w) { if (w.hp) u.maxhp = Math.max(1, u.maxhp - w.hp); if (w.hit) u.atk -= w.hit; } } // v10.2: a wound carried from a bad fall (31c)
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
@@ -172,7 +173,8 @@ function nextTurn(){
   B.idx++;
   if (B.idx >= B.order.length) { newRound(); if (B.over) return; } // the objective was just met
   const u = B.order[B.idx];
-  if (!u || u.hp <= 0) return nextTurn();
+  if (!u) return nextTurn();
+  if (u.hp <= 0) { const dc = deathCheck(u); if (!dc) return nextTurn(); if (dc !== 'up') { B.busy = true; return later(nextTurn, pace(500)); } } // v10.2: a downed squadmate fights for breath (31c); a natural 20 gets up and acts
   if (B.line && (B.line.u === u || B.line.u.hp <= 0)) B.line = null; // The Line holds until its bearer's next turn
   B.cur = u; B.moved = false; B.mvLeft = u.mv; B.acted = false; B.mode = null; B.aim = null; B.turn++; B.turnAt = performance.now();
   boonFoeTurnStart(u); // the gods' boons on an enemy's turn: the Wickan cold, the Wolves (31c)
@@ -330,7 +332,7 @@ const AB = {
   argument:{name:'Argument with Hood', strain:3, desc:()=>`Once a fight: a downed squadmate within 2 stands up at ${6 + 2*lvB()} health. Strain 3.`, ok:()=>!B.used.argument,
     tiles:u=>B.units.filter(p => p.side === 'p' && !p.ally && p.hp <= 0 && cheb(u,p) <= 2 && freeNear(p.x, p.y, p)),
     run(u,x,y){ const t = B.units.find(p => p.side === 'p' && !p.ally && p.hp <= 0 && p.x === x && p.y === y); if (!t) return; const at = freeNear(t.x, t.y, t); if (!at) return; // someone may be standing over the body
-      B.used.argument = 1; AUDIO.play('heal'); t.x = at.x; t.y = at.y; t.hp = Math.min(t.maxhp, 6 + 2*lvB()); t.deadAt = null; t.healed = performance.now(); sparks(t.x, t.y, 20, '#9fe0b8', .5); blog(`${u.name} argues with Hood in Ehrlii. ${t.name} gets up, which settles it for now.`); }},
+      B.used.argument = 1; AUDIO.play('heal'); t.x = at.x; t.y = at.y; t.dc = null; t.hp = Math.min(t.maxhp, 6 + 2*lvB()); t.deadAt = null; t.healed = performance.now(); sparks(t.x, t.y, 20, '#9fe0b8', .5); blog(`${u.name} argues with Hood in Ehrlii. ${t.name} gets up, which settles it for now.`); }},
 };
 /* Chub's cusser, Maud: Kettle carries her "for the one that matters" and won't fire her in an ordinary fight. The story spends her (the barrow in Chapter 5, or Ch'kess in Chapter 7). */
 const maudKept = () => !!(S && S.f && BOOK === 'gotm' && !S.f.c5_cusserUsed && S.f.c7_debt !== 'paid');
@@ -572,6 +574,7 @@ async function aiTurn(u, turnId){
         if (gone() || B.over) return; shakeMap(); sparks(tg.x, tg.y, 34, '#bfe8ff', 1.1); B.fx.push({kind:'boom', x:tg.x, y:tg.y, r:1, col:'#bfe8ff', t:performance.now()});
         hurt(tg, roll(2,8,2)); party().filter(p => p !== tg && cheb(p, tg) === 1).forEach(p => { hurt(p, roll(1,8,0)); sparks(p.x, p.y, 12, '#bfe8ff', .7); });
         updBattleUI(); await wait(800); if (gone()) return; return done(); } } }
+  if (u.side === 'p' && !u.ally && !B.acted && abOk(u, 'stabilise')) { const t = AB.stabilise.tiles(u)[0]; B.acted = true; AB.stabilise.run(u, t.x, t.y); updBattleUI(); await wait(400); if (gone()) return; return done(); } // v10.2: the play bot's squad keeps a friend from a wound
   if (u.side === 'e' && u.sk && u.sk.length) { if (await foeSpecial(u, gone)) { if (gone()) return; return done(); } if (gone()) return; }
   const opp = foesOf(u);
   if (opp.length) {
@@ -728,12 +731,13 @@ function updBattleUI(){
       else if (a.smoke) { const cov = B.units.filter(v => v.hp > 0 && cheb(v, B.aim) <= a.aoe); hint = `Tap the marked tile again to ${a.darkness ? 'call it' : 'throw'}. ${cov.length ? `The ${a.darkness ? 'dark' : 'smoke'} covers ${cov.map(v => esc(v.name)).join(', ')}.` : `The ${a.darkness ? 'dark' : 'smoke'} covers empty ground.`} Nobody shoots into it, out of it or through it.`; }
       else { const caught = B.units.filter(v => v.hp > 0 && cheb(v, B.aim) <= a.aoe), mine = caught.filter(v => v.side === 'p'), theirs = caught.length - mine.length;
         hint = `Tap the marked tile again to throw. ${theirs ? `It catches ${theirs === 1 ? 'one enemy' : theirs + ' enemies'}.` : 'No enemy in the blast.'}${mine.length ? ` <span class="warn">And ${mine.map(v => esc(v.name)).join(', ')}.</span>` : ''}`; } } }
-  const buffs = [u.veilUntil >= B.round ? 'veiled' : '', u.rallyUntil >= B.round ? 'rallied (+2 hit, +2 damage)' : '', lineCovers(u) ? 'in the line' : '', u.luckyTurn === B.turn ? 'the Lady pulls' : '', u.dazzleUntil >= B.round ? 'dazzled' : '', u.bleed > 0 ? 'bleeding' : '', u.burnTurns > 0 ? `on fire (${u.burnTurns} turn${u.burnTurns > 1 ? 's' : ''})` : '', u.steady ? 'steady (+2)' : '', postedUp(u) ? 'posted up' : '', u.clawMarkUntil >= B.round ? 'marked by the Claw' : '', u.stanch ? 'stanched' : '', u.turned ? 'turned on its own' : '', u.blindTurns > 0 ? `blinded by shadow (−50% to hit, ${u.blindTurns} turn${u.blindTurns > 1 ? 's' : ''})` : '', B.howlUntil >= B.round ? 'shaken by the howl' : ''].filter(Boolean).join(' · ');
+  const wnd = injuryOf(u.id), buffs = [wnd ? `${wnd.name.replace(/^an? /, '')} (${injuryFx(wnd)})` : '', u.veilUntil >= B.round ? 'veiled' : '', u.rallyUntil >= B.round ? 'rallied (+2 hit, +2 damage)' : '', lineCovers(u) ? 'in the line' : '', u.luckyTurn === B.turn ? 'the Lady pulls' : '', u.dazzleUntil >= B.round ? 'dazzled' : '', u.bleed > 0 ? 'bleeding' : '', u.burnTurns > 0 ? `on fire (${u.burnTurns} turn${u.burnTurns > 1 ? 's' : ''})` : '', u.steady ? 'steady (+2)' : '', postedUp(u) ? 'posted up' : '', u.clawMarkUntil >= B.round ? 'marked by the Claw' : '', u.stanch ? 'stanched' : '', u.turned ? 'turned on its own' : '', u.blindTurns > 0 ? `blinded by shadow (−50% to hit, ${u.blindTurns} turn${u.blindTurns > 1 ? 's' : ''})` : '', B.howlUntil >= B.round ? 'shaken by the howl' : ''].filter(Boolean).join(' · ');
   const endHot = B.acted || (B.moved && !inReach); // nothing much left: make End turn the obvious button
   ub.innerHTML = `<div class="uhead"><b>${esc(u.name)}</b><span class="tag you">your turn</span><span class="stat hp">${u.hp}/${u.maxhp} health</span>${u.ward ? `<span class="chip ward">ward ${u.ward}</span>` : ''}${u.soak ? `<span class="chip soak">soak ${u.soak}</span>` : ''}${u.magic ? `<span class="stat st">strain ${u.strain}/${strMax()}</span>` : ''}<span class="stat">${u.rng > 1 ? `range ${u.rng}` : 'melee'} · move ${mvLeft}/${u.mv}</span>${buffs ? `<span class="stat">${buffs}</span>` : ''}</div>
     <div class="bhint">${tapWord(hint)}</div>
     <div class="abil">${u.ab.map(k => { const a = AB[k]; const cnt = a.item ? `<small>×${itemLeft(a.item)}</small>` : a.trick && TRICKS[a.trick].use === 'chapter' ? `<small>×${trickLeft(a.trick)}</small>` : ''; const dis = (B.acted && !a.free) || !abOk(u,k);
       return `<button class="btn ${B.mode === k ? 'on' : ''} ${a.trick ? 'trk' : ''}" id="ab_${k}" data-k="${k}" ${dis ? 'disabled' : ''}>${a.trick ? '✦ ' : ''}${a.name}${cnt}</button>`; }).join('')}
+      ${!B.acted && abOk(u, 'stabilise') ? `<button class="btn stab ${B.mode === 'stabilise' ? 'on' : ''}" id="ab_stabilise" data-k="stabilise">Stabilise</button>` : ''}
       <button class="btn ${endHot ? 'primary' : ''} ${endArming(u) ? 'arming' : ''}" id="bEnd">End turn</button></div>
     <p class="hint keys" aria-hidden="true">${u.ab.length > 1 ? `<kbd>1</kbd>–<kbd>${u.ab.length}</kbd>` : '<kbd>1</kbd>'} ${u.ab.length > 1 ? 'abilities' : 'ability'} · <kbd>Space</kbd> end turn · <kbd>Esc</kbd> cancel</p>`;
   ub.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
