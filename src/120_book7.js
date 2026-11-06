@@ -260,14 +260,42 @@ Object.assign(FOES, {
 /* the allies grow with the squad, as Book Five's regular does */
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
     if (k === 'b7_marine' || k === 'b7_whitefinder') { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b7reg = true; } return u; }; }
-/* Book Seven's balance: per fight on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as B6GAP). Empty until the balance pass, which David runs
-   before it is built (project standards). Nothing here runs outside Book Seven. */
-const B7GAP = {};
-const b7Gap = () => { if (!b7On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B7GAP[id]) || null; };
+/* ---- Book Seven's balance (David, Thu Nov 5, 2026, ~11:20 PM PST: "build B7GAP"; docs/rg-balance.md). As built every Bridgeburner fight
+   was won 100% (the 80% and 60% first read for Ch4's horse lines and Ch6's landing were a harness fault, fixed in tools/balance.mjs).
+   B7GAP gives each fight its own boost on Bridgeburner only ({ac +, atk +, hp ×, dmg +}, as Book Six's B6GAP; mv + only on Ch5's running
+   fight, where the Edur must catch a squad that keeps moving), tuned to about 75-80% won (20 runs a fight). Two scales: the Third's
+   fights (levels 16-19) carry big rows, the Letherii's (8-10) small ones; a fight with a second area carries less, the area after
+   is the harder half. Soldier is untouched (every fight 100%). Nothing here runs outside Book Seven. ---- */
+const B7GAP_ROW = {ac:3, atk:3, hp:2.0, dmg:4}; // a b7_ fight without its own row
+const B7GAP = {
+  b7_c1_dunes:{ac:3,atk:3,hp:2.4,dmg:4},
+  b7_c1_riders:{ac:3,atk:3,hp:2.0,dmg:4},
+  b7_c1_tally:{ac:3,atk:3,hp:2.0,dmg:4},
+  b7_c2_gate:{ac:4,atk:4,hp:2.45,dmg:5},
+  b7_c2_alley:{ac:2,atk:2,hp:1.55,dmg:3},
+  b7_c2_bridge:{ac:2,atk:3,hp:1.6,dmg:3},
+  b7_c3_farm:{ac:4,atk:4,hp:2.25,dmg:4},
+  b7_c3_road:{ac:6,atk:6,hp:3.0,dmg:6},
+  b7_c3_factor:{ac:4,atk:4,hp:2.9,dmg:5},
+  b7_c4_riot:{ac:4,atk:4,hp:2.8,dmg:5},
+  b7_c4_edurcamp:{ac:4,atk:4,hp:2.3,dmg:4},
+  b7_c4_patriots:{ac:3,atk:3,hp:1.5,dmg:3},
+  b7_c5_road:{ac:5,atk:5,hp:2.6,dmg:5},
+  b7_c5_bailiff:{ac:8,atk:8,hp:4.8,dmg:8},
+  b7_c5_village:{ac:1,atk:2,hp:1.35,dmg:2} /* the mortal fight: the square after the street is the hard half */,
+  b7_c5_slip:{ac:5,atk:5,hp:2.5,dmg:5,mv:1} /* the running fight */,
+  b7_c6_deserters:{ac:4,atk:4,hp:2.1,dmg:4},
+  b7_c6_landing:{ac:2,atk:2,hp:1.45,dmg:2},
+  b7_c6_stand:{ac:3,atk:3,hp:1.55,dmg:2},
+  b7_c6_break:{ac:3,atk:3,hp:1.65,dmg:3},
+  b7_c7_gate:{ac:2,atk:2,hp:1.8,dmg:4},
+  b7_c7_streets:{ac:2,atk:2,hp:1.9,dmg:4},
+  b7_c7_bridge:{ac:4,atk:4,hp:2.6,dmg:5}};
+const b7Gap = () => { if (!b7On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B7GAP[id]) || (id && /^b7_/.test(id) ? B7GAP_ROW : null); };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b7Gap(); if (!g) return u;
     u.ac = (u.ac || 10) + (g.ac || 0); u.atk = (u.atk || 0) + (g.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * (g.hp || 1)));
-    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + (g.dmg || 0)]; return u; }; }
+    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + (g.dmg || 0)]; if (g.mv) u.mv = (u.mv || 4) + g.mv; return u; }; }
 
 /* ---- the words Book Seven throws at you. Bound by rg-canon §7: "the new emperor" (not a name), the Errant as the Letherii pray to him,
    the Shake's queen said openly and nothing more, the Edur leaving as the city sees it ---- */
