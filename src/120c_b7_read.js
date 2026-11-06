@@ -44,7 +44,47 @@ const B7RD_OLDMARINE = {deck:'An old marine of the column reads for whoever asks
 const b7OldMarine = () => b7Thread() === 't' && (S.chapter || 0) > 1;
 const b7RdWords = (id, again) => b7Thread() === 't' ? (id === 'oldninth' && b7OldMarine() ? (S.f.b7_rd_oldmarine ? B7RD_OLDMARINE.again : B7RD_OLDMARINE.deck)
   : ((again ? B4RD_AGAIN : B4RD_DECK)[id])) : ((again ? B5RD_AGAIN : B5RD_SET)[id]);
-const b7CardSay = id => b7As(() => { const s = (b7Thread() === 't' ? B4SAY : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
+/* The Third's own card words in Lether (Nov 6, David: Book Four's lines spoke of Raraku and the sand). The descriptions stay Book Four's;
+   the readers' lines are new. 'oldninth' is the 9th's old soldier in Chapter 1 and the old marine of the column after, so its lines name neither. */
+const B7SAY = {
+  b2c_soldier:{d:B4SAY.b2c_soldier.d,
+    marrow:`"Soldier of High House Death," Marrow says. "Armour, child, and a gate behind it." She looks down the beach at the black ribs of the transports. "There's no gate behind us now. So it's armour."`,
+    tallow:`"The grey soldier," Tallow says. "Grandmother said he meant a long watch." He looks at the finger bone on his thong, then at the dark country past the dunes. "She never said how long."`,
+    oldninth:`"Death's soldier," says the old man. "Means you'll stand where you're put." He drinks. "Long way from anywhere to be put, this."`},
+  herald:{d:B4SAY.herald.d,
+    marrow:`"The Herald," Marrow says. "Holding the door." She does not look at the squad while she says it. "Somebody walks through before this is done, child. I'd rather it was one of theirs."`,
+    tallow:`"The door man," Tallow says. "She'd turn him face down if the boats were out." He turns it face down. Nobody tells him the boats are gone.`,
+    oldninth:`"Herald," the old man says, and he isn't drinking now. "Door's open. Somebody goes through it." He looks at the fire and not at you. "Never know who till after."`},
+  oponn:{d:B4SAY.oponn.d,
+    marrow:`"The Twins," Marrow says. "Spinning the coin over a strange country." She leaves it face up. "Don't thank them, child. And don't spend it before it lands."`,
+    tallow:`"Twins," Tallow says. "They don't care whose coin it is." He glances toward the city, or toward where somebody said the city is. "Theirs or ours."`,
+    oldninth:`"Luck," the old man says. "Push or pull, no telling." He shrugs. "I've had both in one night. Twice."`},
+  assassin:{d:B4SAY.assassin.d,
+    marrow:`"The Rope," Marrow says. "Somebody walking where nobody sees him." She almost smiles. "That's us, this month, child. We're the ones in the dark."`,
+    tallow:`"The rope man," Tallow says. "She said he meant a stranger in the boat." He looks out at the farms with no lights in them. "Here, the stranger's us."`,
+    oldninth:`"Shadow's knife," says the old man. "Hit and gone before they've found their boots." He nods at the fields. "That's the whole war, this one. Card knows it."`},
+  obelisk:{d:B4SAY.obelisk.d,
+    marrow:`"Something lasts," Marrow says. "The priests said it, and then said not to be pleased." She looks round at the marines asleep in the ditch. "Something. Not everything."`,
+    tallow:`"The stone," Tallow says. "For the old men." He puts it down carefully on the turf. "It means you'll last. It doesn't say where."`,
+    oldninth:`"Obelisk," the old man says. "You'll last." He taps the card twice. "Doesn't say you'll like it."`},
+  b4c_knightchains:{d:B4SAY.b4c_knightchains.d,
+    marrow:`Marrow holds it a long time. "Chains. Still don't know this House, child," she says. "A knight who stands alone." She looks at the village wall, and the door in it. "Somebody holds a door alone tonight. The Deck's sure of that much."`,
+    tallow:`"The one that wasn't in her deck," Tallow says. He doesn't turn it over this time. "It keeps coming up. That means something, doesn't it." It isn't a question.`,
+    oldninth:`"That new one again," the old man says. "Stands on his own." He looks at the wall. "Somebody'll have to, here. Don't let it be you if you can help it."`},
+  b2c_queen:{d:B4SAY.b2c_queen.d,
+    marrow:`"The Queen of High House Life," Marrow says. "Water into dry ground." She looks at the wounded laid along the wall. "There's mending to do, child, and the Deck says it takes. Some of it."`,
+    tallow:`"The lady with the cup," Tallow says. "A good catch, Grandmother said." He looks at the village well, and the bucket by it. "We could use one."`,
+    oldninth:`"Queen with the cup," the old man says. "Healers heal more." He pours a drop on the ground, which for him is a prayer. "Tell yours."`},
+  b2c_king:{d:B4SAY.b2c_king.d,
+    marrow:`Marrow looks at it a while. "The King of High House Death," she says. "On his seat, with the gate open." She looks past the fire at the towers and the smoke. "There's a throne in that city, child. Somebody gets off it."`,
+    tallow:`"The hooded man," Tallow says. "She wouldn't read him." He reads him. "He means somebody's done," he says. "Not who."`,
+    oldninth:`"Hood's own," the old man says, and touches his bone. "Means the dead are close, and the falling's half done." He looks at the city. "Hit what's already falling."`},
+  b4c_leper:{d:B4SAY.b4c_leper.d,
+    marrow:()=>`"The Leper," Marrow says. "Chains again. Walks through the bad places and catches nothing." She holds a hand up to the city's smoke. "Your mages won't choke on what's in the air, child. They won't get as much, either."`,
+    tallow:`"The bell," Tallow says. "So you know he's coming." He listens to the city a while: shouting, a long way off, and something that might be bells. "I can hear that one."`,
+    oldninth:`"Leper," the old man says. "Chains." He taps his own temple. "Mages walk clean, but they walk short." He drinks, a lot.`},
+};
+const b7CardSay = id => b7As(() => { const s = (b7Thread() === 't' ? (B7SAY[id] ? B7SAY : B4SAY) : B5SAY)[id], r = b7Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
   return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); });
 
 /* per chapter: the writers fill 3..7. Chapter 1 (the Third, the coast) and Chapter 2 (the Letherii, the barracks) are the worked examples. */
