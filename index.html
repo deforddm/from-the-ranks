@@ -7007,6 +7007,26 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  stone:{hp:1.1}, // gotm 95% won, 45% health lost
+  accounting:{hp:0.84, dmg:-1}, // gotm 85% won, 55% health lost
+  barrow:{hp:1.3, dmg:1}, // gotm 95% won, 32% health lost
+  outriders:{atk:1, hp:1.75, dmg:3}, // gotm 85% won, 40% health lost
+  c2_deserters:{hp:1.4, dmg:2}, // gotm 95% won, 33% health lost
+  cutpurses:{hp:1.21, dmg:1}, // gotm 95% won, 30% health lost
+  c3_toughs:{hp:1.32, dmg:2}, // gotm 90% won, 37% health lost
+  guild_roofs:{atk:1, hp:1.44, dmg:2}, // gotm 95% won, 33% health lost
+  guild_roofs_2:{atk:1, hp:1.61, dmg:3}, // gotm 100% won, 12% health lost
+  reprisal:{atk:1, hp:1.44, dmg:2}, // gotm 100% won, 31% health lost
+  c4_clan:{atk:2, hp:1.72, dmg:3}, // gotm 85% won, 42% health lost
+  barrow_wards:{atk:1, hp:1.5, dmg:2}, // gotm 100% won, 30% health lost
+  c5_dig:{atk:1, hp:1.62, dmg:2}, // gotm 85% won, 34% health lost
+  house_guards:{atk:2, hp:2.1, dmg:4}, // gotm 100% won, 34% health lost
+  terrace_knives:{atk:2, hp:2.1, dmg:4}, // gotm 95% won, 29% health lost
+  terrace_knives_2:{atk:2, hp:1.8, dmg:3}, // gotm 90% won, 37% health lost
+  the_mines:{atk:2, hp:1.92, dmg:4}, // gotm 95% won, 38% health lost
+  c6_bonfire:{atk:2, hp:1.92, dmg:4}, // gotm 100% won, 35% health lost
+  last_accounting:{atk:2, hp:1.8, dmg:3}, // gotm 85% won, 40% health lost
+  c7_worrygate:{atk:2, hp:1.8, dmg:3}, // gotm 100% won, 30% health lost
   b3_c1_brawl:{hp:1.4, dmg:2}, // moi 95% won, 16% health lost
   b3_c1_herds:{atk:1, hp:1.5, dmg:2}, // moi 85% won, 41% health lost
   b3_c2_hill:{hp:1.1}, // moi 85% won, 35% health lost
@@ -7052,6 +7072,35 @@ const SOLDIER_FIGHT = {
   b4_c7_spur:{hp:0.84, dmg:-1}, // hoc 93% won, 43% health lost
 };
 const B1GAP = { // Book One, Bridgeburner
+  deserters:{hp:1.2, dmg:1}, // 65% won, 63% health lost
+  stone:{hp:0.92, dmg:-1}, // 85% won, 53% health lost
+  hounds_line:{hp:1.4, dmg:2}, // 95% won, 58% health lost
+  hounds_claw:{hp:1.4, dmg:2}, // 100% won, 27% health lost
+  accounting:{atk:-1, hp:0.64, dmg:-2}, // 75% won, 63% health lost
+  c1_wagon:{hp:0.88, dmg:-1}, // 75% won, 65% health lost
+  barrow:{hp:1.15}, // 75% won, 51% health lost
+  outriders:{hp:1.45, dmg:2}, // 80% won, 47% health lost
+  c2_deserters:{hp:1.25, dmg:1}, // 85% won, 53% health lost
+  knives:{hp:0.92, dmg:-1}, // 85% won, 49% health lost
+  c3_toughs:{hp:1.15}, // 85% won, 54% health lost
+  guild_roofs:{hp:1.45, dmg:2}, // 65% won, 59% health lost
+  guild_roofs_2:{atk:3, hp:2.65, dmg:8}, // 70% won, 58% health lost
+  andii_roof:{hp:1.4, dmg:2}, // 100% won, 27% health lost
+  reprisal:{hp:1.15}, // 85% won, 45% health lost
+  c4_clan:{hp:1.45, dmg:2}, // 90% won, 39% health lost
+  barrow_wards:{hp:1.45, dmg:2}, // 87% won, 48% health lost
+  c5_dig:{hp:1.4, dmg:2}, // 75% won, 53% health lost
+  the_rent:{hp:1.4, dmg:2}, // 100% won, 27% health lost
+  house_guards:{atk:1, hp:1.65, dmg:3}, // 85% won, 47% health lost
+  terrace_knives:{atk:1, hp:1.8, dmg:4}, // 70% won, 59% health lost
+  terrace_knives_2:{atk:1, hp:1.5, dmg:2}, // 75% won, 55% health lost
+  garden_hound:{hp:1.4, dmg:2}, // 100% won, 14% health lost
+  tyrant_garden:{hp:1.4, dmg:2}, // 100% won, 25% health lost
+  the_mines:{atk:1, hp:1.65, dmg:3}, // 70% won, 52% health lost
+  c6_bonfire:{atk:1, hp:1.8, dmg:4}, // 75% won, 65% health lost
+  lorn_alley:{hp:1.4, dmg:2}, // 100% won, 5% health lost
+  last_accounting:{hp:1.45, dmg:2}, // 90% won, 35% health lost
+  c7_worrygate:{atk:1, hp:1.7, dmg:3}, // 75% won, 49% health lost
 };
 const B2GAP = { // Book Two, Bridgeburner
 };
