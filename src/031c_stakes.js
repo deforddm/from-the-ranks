@@ -143,7 +143,27 @@ const SOLDIER_LATE = { // David, Tue Oct 27, 2026, 9:20 PM PDT: capped under Bri
   moi:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}},
   mt:{3:{hp:1.1, atk:0, dmg:1}, 4:{hp:1.15, atk:1, dmg:1}, 5:{hp:1.2, atk:1, dmg:1}, 6:{hp:1.2, atk:1, dmg:1}, 7:{hp:1.2, atk:1, dmg:1}}}; // v8.0: Book Five is a new cast on Book Two's curve, so Book Two's row (David, Wed Oct 28, 2026, 3:34 PM PDT: keep it for now)
 const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
+/* ---- v10.2 balance (David, Fri Nov 6, 2026, 10:49 PM PST; docs/v10.2-balance.md): per fight, measured as the smart bot's first-try win.
+   Soldier about 90% (the first fight of each book and every survive-N-rounds fight near 100%); Bridgeburner about 75-80%, none under 60%.
+   A row is keyed by fight id, or 'id:2' for a fight's second area (falls back to the id). {hp ×, atk +, dmg +, ac +}.
+   SOLDIER_FIGHT: Soldier only, every book; a fight's own row instead of its chapter's SOLDIER_LATE row (Book Four's B4GAP s still applies).
+   B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
+   their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
+const SOLDIER_FIGHT = {
+};
+const B1GAP = { // Book One, Bridgeburner
+};
+const B2GAP = { // Book Two, Bridgeburner
+};
+const B3GAP_FIGHT = { // Book Three, Bridgeburner, on top of B3GAP
+};
+const B4GAP_FIGHT = { // Book Four, Bridgeburner, on top of B4GAP
+};
+const fightRow = t => { if (!t || !B || !B.id) return null; return (B.def && B.def.isStage2 && t[B.id + ':2']) || t[B.id] || null; };
+const bbFight = () => { if (!S || (S.diff || 'soldier') !== 'bridgeburner') return null;
+  return fightRow({gotm:B1GAP, dg:B2GAP, moi:B3GAP_FIGHT, hoc:B4GAP_FIGHT}[S.book || 'gotm']); };
 const soldierLate = () => { if (!S || (S.diff || 'soldier') !== 'soldier') return null;
+  const own = fightRow(SOLDIER_FIGHT); if (own) return own;
   const t = SOLDIER_LATE[S.book || 'gotm'], s = t && t[S.chapter || 0];
   return s && !(B && B.id && SOLDIER_SKIP.has(B.id)) ? s : null; };
 /* the longer road pays more fights; each pays a little less, so the squad levels about as it did (and not to the cap by Chapter Four) */
