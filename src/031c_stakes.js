@@ -150,6 +150,26 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  b5_c1_lowwalk:{hp:1.55, dmg:2}, // mt 85% won, 43% health lost
+  b5_c2_looters:{atk:1, hp:2.35, dmg:6}, // mt 95% won, 36% health lost
+  b5_c2_hulk:{hp:1.3, dmg:1}, // mt 95% won, 29% health lost
+  b5_c2_wreckers:{atk:1, hp:1.7, dmg:3}, // mt 90% won, 40% health lost
+  b5_c3_rivermen:{hp:1.38, dmg:2}, // mt 100% won, 31% health lost
+  b5_c3_deserters:{hp:1.54, dmg:3}, // mt 100% won, 5% health lost
+  b5_c3_bank:{atk:1, hp:2.25, dmg:6}, // mt 90% won, 30% health lost
+  b5_c4_gully:{atk:2, hp:2.13, dmg:5}, // mt 100% won, 34% health lost
+  b5_c4_wraiths:{atk:2, hp:2.07, dmg:5}, // mt 95% won, 26% health lost
+  b5_c4_demon:{atk:1, hp:1.72, dmg:3}, // mt 95% won, 39% health lost
+  b5_c4_wolves:{atk:2, hp:2.18, dmg:5}, // mt 90% won, 39% health lost
+  b5_c5_farm:{atk:2, hp:2.28, dmg:5}, // mt 95% won, 40% health lost
+  b5_c5_wagons:{atk:2, hp:2.28, dmg:5}, // mt 90% won, 36% health lost
+  b5_c6_shore:{atk:2, hp:2.58, dmg:6}, // mt 95% won, 35% health lost
+  b5_c6_channel:{atk:1, hp:1.8, dmg:3}, // mt 90% won, 42% health lost
+  b5_c6_hills:{atk:1, hp:1.8, dmg:3}, // mt 95% won, 33% health lost
+  b5_c6_flight:{atk:1, hp:1.74, dmg:3}, // mt 90% won, 36% health lost
+  b5_c7_looters:{atk:2, hp:2.28, dmg:5}, // mt 90% won, 32% health lost
+  b5_c7_wolves:{atk:1, hp:1.5, dmg:2}, // mt 90% won, 41% health lost
+  b5_c7_barricade:{atk:1, hp:1.56, dmg:2}, // mt 90% won, 38% health lost
   b2_cistern:{atk:1, hp:1.55, dmg:2}, // dg 95% won, 20% health lost
   b2_batrol:{hp:1.05}, // dg 90% won, 46% health lost
   b2_spring:{hp:1.3, dmg:1}, // dg 100% won, 29% health lost

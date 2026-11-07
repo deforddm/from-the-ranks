@@ -3,7 +3,8 @@
 //     chapter and difficulty, is exactly what it was; in Book Five, Story and Soldier foes are untouched by it (bar B5SOFT's fight);
 //   - every Book Five chapter has a Bridgeburner row that makes foes harder, and the Soldier cap still holds (Soldier never harder than
 //     Bridgeburner: the late Soldier extra and B5SOFT both sit under Bridgeburner's DIFFS + B5GAP);
-//   - B5SOFT eases Ch 7's barricade on Soldier only, and nowhere else;
+//   - B5SOFT is empty since v10.2 (David, Nov 6, 2026: the barricade comes back to about 90% on Soldier, through SOLDIER_FIGHT, 31c),
+//     so it eases nothing anywhere;
 //   - the fate pages: a recruit waiting (not walking) at High Fort (Ch 4) or Brans Keep (Ch 6) is not credited with the rampart or the
 //     crossing; one who walked is; the record is set when the key fight starts; an old save without the record credits as before.
 import { server, browser as launch, openGame } from './page.mjs';
@@ -55,10 +56,9 @@ else {
       `Book Five ch${r.ch}: Bridgeburner foe carries it (${r.bridgeburner0.hp}→${r.bridgeburner.hp} hp, +${r.bridgeburner.atk - r.bridgeburner0.atk} to hit, +${r.bridgeburner.dmg - r.bridgeburner0.dmg} damage, +${r.bridgeburner.ac - r.bridgeburner0.ac} armour)`);
     ok(JSON.stringify(r.story) === JSON.stringify(r.story0) && JSON.stringify(r.soldier) === JSON.stringify(r.soldier0), `Book Five ch${r.ch}: Story and Soldier untouched by B5GAP`);
   }
-  ok(out.softKeys.length === 1 && out.softKeys[0] === 'b5_c7_barricade', `B5SOFT eases only the barricade (${out.softKeys.join(', ')})`);
+  ok(out.softKeys.length === 0, `B5SOFT is empty (v10.2: the barricade is no longer eased) (${out.softKeys.join(', ')})`);
   const b = out.bar;
-  ok(b.soldier.hp < b.soldierx.hp || b.soldier.atk < b.soldierx.atk || b.soldier.dmg < b.soldierx.dmg, `the barricade is eased on Soldier (${b.soldierx.hp}→${b.soldier.hp} hp, ${b.soldierx.atk}→${b.soldier.atk} to hit, ${b.soldierx.dmg}→${b.soldier.dmg} damage)`);
-  ok(JSON.stringify(b.story) === JSON.stringify(b.storyx) && JSON.stringify(b.bridgeburner) === JSON.stringify(b.bridgeburnerx), 'the barricade is not eased on Story or Bridgeburner');
+  ok(JSON.stringify(b.soldier) === JSON.stringify(b.soldierx) && JSON.stringify(b.story) === JSON.stringify(b.storyx) && JSON.stringify(b.bridgeburner) === JSON.stringify(b.bridgeburnerx), 'B5SOFT eases the barricade on no difficulty');
   ok(JSON.stringify(b.dg) === JSON.stringify(b.dgx), 'B5SOFT does nothing outside Book Five');
   const over = out.capRows.filter(r => r.s.hp > r.b.hp || r.s.atk > r.b.atk || r.s.dmg > r.b.dmg + 1 || r.s.ac > r.b.ac);
   ok(!over.length, 'Book Five: Soldier never harder than Bridgeburner, fight for fight' + (over.length ? ': ' + over.map(r => `ch${r.ch}${r.id ? ' ' + r.id : ''}`).join(', ') : ''));
