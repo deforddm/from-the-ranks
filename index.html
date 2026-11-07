@@ -7007,6 +7007,25 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  b4_c1_dig:{hp:1.1}, // hoc 85% won, 43% health lost
+  b4_c1_watch:{hp:1.2, dmg:1}, // hoc 95% won, 36% health lost
+  b4_c2_robbers:{hp:0.92, dmg:-1}, // hoc 95% won, 32% health lost
+  b4_c2_probe:{hp:1.3, dmg:1}, // hoc 93% won, 38% health lost
+  b4_c3_scavengers:{hp:0.8, dmg:-1}, // hoc 95% won, 43% health lost
+  b4_c3_poles:{hp:0.84, dmg:-1}, // hoc 90% won, 47% health lost
+  b4_c4_wagons:{hp:0.92, dmg:-1}, // hoc 100% won, 40% health lost
+  b4_c4_wounded:{atk:-1, hp:0.76, dmg:-2}, // hoc 100% won, 25% health lost
+  b4_c4_picket:{atk:-1, hp:0.68, dmg:-2}, // hoc 95% won, 26% health lost
+  b4_c5_wallriders:{hp:0.96}, // hoc 90% won, 41% health lost
+  b4_c5_seep:{atk:-1, hp:0.76, dmg:-2}, // hoc 95% won, 30% health lost
+  b4_c5_rearguard:{hp:0.84, dmg:-1}, // hoc 95% won, 41% health lost
+  b4_c5_deserters:{hp:0.84, dmg:-1}, // hoc 100% won, 42% health lost
+  b4_c6_nest:{hp:0.8, dmg:-1}, // hoc 90% won, 43% health lost
+  b4_c6_dusk:{hp:1.1}, // hoc 93% won, 40% health lost
+  b4_c6_outpost:{hp:0.88, dmg:-1}, // hoc 100% won, 33% health lost
+  b4_c7_outriders:{hp:0.96}, // hoc 90% won, 53% health lost
+  b4_c7_breakout:{hp:1.15}, // hoc 90% won, 35% health lost
+  b4_c7_spur:{hp:0.84, dmg:-1}, // hoc 93% won, 43% health lost
 };
 const B1GAP = { // Book One, Bridgeburner
 };
@@ -7015,6 +7034,32 @@ const B2GAP = { // Book Two, Bridgeburner
 const B3GAP_FIGHT = { // Book Three, Bridgeburner, on top of B3GAP
 };
 const B4GAP_FIGHT = { // Book Four, Bridgeburner, on top of B4GAP
+  b4_c1_runners:{hp:1.15}, // 80% won, 49% health lost
+  b4_c1_dig:{hp:0.96}, // 75% won, 62% health lost
+  b4_c1_watch:{hp:1.05}, // 70% won, 52% health lost
+  b4_c1_brawl:{hp:1.2, dmg:1}, // 70% won, 62% health lost
+  b4_c2_robbers:{hp:0.96}, // 80% won, 49% health lost
+  b4_c2_probe:{hp:1.35, dmg:1}, // 70% won, 57% health lost
+  b4_c2_hill:{hp:1.1}, // 75% won, 56% health lost
+  b4_c3_raiders:{hp:0.96}, // 65% won, 56% health lost
+  b4_c3_brawl:{hp:1.4, dmg:2}, // 100% won, 63% health lost
+  b4_c3_scavengers:{hp:0.88, dmg:-1}, // 65% won, 74% health lost
+  b4_c3_poles:{hp:0.84, dmg:-1}, // 60% won, 67% health lost
+  b4_c4_wagons:{hp:0.96}, // 75% won, 66% health lost
+  b4_c4_lancers_brawl:{hp:1.4, dmg:2}, // 100% won, 57% health lost
+  b4_c4_wounded:{hp:0.84, dmg:-1}, // 80% won, 62% health lost
+  b4_c4_picket:{atk:-1, hp:0.76, dmg:-2}, // 80% won, 55% health lost
+  b4_c5_wallriders:{hp:0.96}, // 75% won, 56% health lost
+  b4_c5_seep:{hp:0.88, dmg:-1}, // 75% won, 63% health lost
+  b4_c5_rearguard:{hp:0.84, dmg:-1}, // 80% won, 47% health lost
+  b4_c5_deserters:{hp:0.92, dmg:-1}, // 80% won, 61% health lost
+  b4_c6_nest:{hp:0.8, dmg:-1}, // 80% won, 58% health lost
+  b4_c6_dusk:{hp:1.1}, // 80% won, 49% health lost
+  b4_c6_patrol:{hp:1.1}, // 67% won, 68% health lost
+  b4_c6_outpost:{hp:0.84, dmg:-1}, // 85% won, 50% health lost
+  b4_c7_outriders:{hp:0.96}, // 65% won, 62% health lost
+  b4_c7_breakout:{hp:1.15}, // 95% won, 42% health lost
+  b4_c7_spur:{hp:0.88, dmg:-1}, // 70% won, 61% health lost
 };
 const fightRow = t => { if (!t || !B || !B.id) return null; return (B.def && B.def.isStage2 && t[B.id + ':2']) || t[B.id] || null; };
 const bbFight = () => { if (!S || (S.diff || 'soldier') !== 'bridgeburner') return null;
