@@ -1,4 +1,4 @@
-// v10.2 wards (docs/v10.2-spec.md §2): overheal on a squadmate becomes a ward, capped at 25% of max health; one ward only,
+// v10.2 wards (docs/v10.2-spec.md §2): overheal on a squadmate becomes a ward, capped at 15% of max health; one ward only,
 // replaced only by a bigger one, never added to; it takes damage after soak (sorcery and munitions included); it carries
 // into a fight's second area and is gone when the fight ends, and never reaches the save.
 import { server, browser as launch, openGame } from './page.mjs';
@@ -46,7 +46,7 @@ const o = await page.evaluate(async () => {
   B.over = true; B = null; view = 'title';
   return r;
 });
-ok(o.cap.sgt === Math.round(o.cap.max * .25), `cap is 25% of max health, rounded: ${o.cap.sgt} of ${o.cap.max}`);
+ok(o.cap.sgt === Math.round(o.cap.max * .15), `cap is 15% of max health, rounded: ${o.cap.sgt} of ${o.cap.max}`);
 ok(o.small === 2, `a heal of 4 at 2 below full leaves a ward of 2: ${o.small}`);
 ok(/past whole.*A ward of 2/.test(o.plainLine), `the plain line: ${o.plainLine}`);
 ok(o.noStack === 2, `a second overheal of 2 does not add (David: never stacks): ${o.noStack}`);

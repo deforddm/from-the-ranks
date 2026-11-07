@@ -6909,10 +6909,10 @@ function soakPast(a, t, o, ranged, fl){
   if (a.side === 'p' && !a.ally && !o.dmg && a.rng > 1 && crossbowIn(a.id)) return 'pierce';
   return null; }
 
-/* ---- v10.2 wards (spec §2): healing past full health becomes a ward, up to a quarter of max health. One ward at a time: a new one
+/* ---- v10.2 wards (spec §2): healing past full health becomes a ward, up to 15% of max health (was a quarter; David, Nov 6). One ward at a time: a new one
    replaces the old only if it is bigger, never adds to it (David). It takes damage after soak, everything included, lasts the fight
    and its second area, and is gone when the fight ends (it lives on the unit, never on the save). ---- */
-const wardCap = u => Math.round(u.maxhp * .25);
+const wardCap = u => Math.round(u.maxhp * .15); // David, Fri Nov 6, 2026: 25% -> 15% (docs/v10.2-balance.md)
 const WARD_SRC = {mend:'denul', wash:'denul', stanch:'denul', b4_rot:'drek', b4_wormgift:'drek', t_song:'spirits'}; // and any ability marked spirit (the Herds' song, the Bargain, the Anvil)
 function wardSource(){ const k = B && B.healSrc; if (!k) return 'plain'; if (WARD_SRC[k]) return WARD_SRC[k]; if (k === 'soliel' || k === 'drek' || k === 'spirits' || k === 'denul') return k;
   const a = AB[k]; return a && a.spirit ? 'spirits' : 'plain'; }
