@@ -6572,7 +6572,7 @@ function updBattleUI(){
       return `<button class="btn ${B.mode === k ? 'on' : ''} ${a.trick ? 'trk' : ''}" id="ab_${k}" data-k="${k}" ${dis ? 'disabled' : ''}>${a.trick ? '✦ ' : ''}${a.name}${cnt}</button>`; }).join('')}
       ${!B.acted && abOk(u, 'stabilise') ? `<button class="btn stab ${B.mode === 'stabilise' ? 'on' : ''}" id="ab_stabilise" data-k="stabilise">Stabilise</button>` : ''}
       <button class="btn ${endHot ? 'primary' : ''} ${endArming(u) ? 'arming' : ''}" id="bEnd">End turn</button></div>
-    <p class="hint keys" aria-hidden="true">${u.ab.length > 1 ? `<kbd>1</kbd>–<kbd>${u.ab.length}</kbd>` : '<kbd>1</kbd>'} ${u.ab.length > 1 ? 'abilities' : 'ability'} · <kbd>Space</kbd> end turn · <kbd>Esc</kbd> cancel</p>`;
+    <p class="hint keys" aria-hidden="true">${(() => { const n = u.ab.length + (!B.acted && abOk(u, 'stabilise') ? 1 : 0); return `${n > 1 ? `<kbd>1</kbd>–<kbd>${n}</kbd>` : '<kbd>1</kbd>'} ${n > 1 ? 'abilities' : 'ability'}`; })()} · <kbd>Space</kbd> end turn · <kbd>Esc</kbd> cancel</p>`;
   ub.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
     if (!B || B.busy || B.cur !== u) return; const k = b.dataset.k; AUDIO.play('click');
     if (B.mode === k) { B.mode = 'act'; B.aim = null; return updBattleUI(); }
