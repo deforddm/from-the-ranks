@@ -150,6 +150,30 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  b3_c1_brawl:{hp:1.4, dmg:2}, // moi 95% won, 16% health lost
+  b3_c1_herds:{atk:1, hp:1.5, dmg:2}, // moi 85% won, 41% health lost
+  b3_c2_hill:{hp:1.1}, // moi 85% won, 35% health lost
+  b3_c2_herdfight:{hp:1.15}, // moi 85% won, 36% health lost
+  b3_c2_wagonfight:{hp:1.25, dmg:1}, // moi 95% won, 30% health lost
+  b3_c3_picket:{atk:1, hp:1.98, dmg:5}, // moi 95% won, 18% health lost
+  b3_c3_camps:{atk:1, hp:1.76, dmg:4}, // moi 95% won, 33% health lost
+  b3_c3_granary:{atk:1, hp:1.81, dmg:4}, // moi 90% won, 24% health lost
+  b3_c4_breakout:{hp:0.83, dmg:-1}, // moi 90% won, 41% health lost
+  b3_c4_brawl:{atk:3, hp:2.47, dmg:6}, // moi 95% won, 37% health lost
+  b3_c5_ford:{atk:1, hp:1.01}, // moi 95% won, 45% health lost
+  b3_c5_town:{atk:1, hp:1.01}, // moi 85% won, 47% health lost
+  b3_c5_wellfight:{atk:1, hp:1.74, dmg:3}, // moi 95% won, 27% health lost
+  b3_c6_field:{atk:1, hp:1.62, dmg:2}, // moi 95% won, 22% health lost
+  b3_c6_landing:{atk:2, hp:2.04, dmg:4}, // moi 90% won, 36% health lost
+  b3_c6_condors:{atk:1, hp:1.68, dmg:3}, // moi 90% won, 34% health lost
+  b3_c6_raid:{atk:1, hp:1.5, dmg:2}, // moi 95% won, 31% health lost
+  b3_c6_ambush:{atk:1, hp:1.68, dmg:3}, // moi 95% won, 30% health lost
+  b3_c7_trenchfight:{atk:1, hp:1.44, dmg:2}, // moi 85% won, 47% health lost
+  b3_c7_stairs:{atk:3, hp:2.7, dmg:7}, // moi 95% won, 20% health lost
+  b3_c7_side:{atk:1, hp:1.15, dmg:1}, // moi 90% won, 46% health lost
+  b3_c7_probe:{atk:1, hp:1.38, dmg:1}, // moi 95% won, 32% health lost
+  b3_c7_gully:{atk:3, hp:2.88, dmg:8}, // moi 95% won, 31% health lost
+  b3_c7_herds:{atk:1, hp:1.26, dmg:1}, // moi 85% won, 49% health lost
   b4_c1_dig:{hp:1.1}, // hoc 85% won, 43% health lost
   b4_c1_watch:{hp:1.2, dmg:1}, // hoc 95% won, 36% health lost
   b4_c2_robbers:{hp:0.92, dmg:-1}, // hoc 95% won, 32% health lost
@@ -175,6 +199,35 @@ const B1GAP = { // Book One, Bridgeburner
 const B2GAP = { // Book Two, Bridgeburner
 };
 const B3GAP_FIGHT = { // Book Three, Bridgeburner, on top of B3GAP
+  b3_c1_tunnels:{hp:1.35, dmg:1}, // 85% won, 45% health lost
+  b3_c1_brawl:{atk:1, hp:1.55, dmg:2}, // 70% won, 49% health lost
+  b3_c1_herds:{hp:1.1}, // 80% won, 44% health lost
+  b3_c1_train:{hp:1.45, dmg:2}, // 70% won, 53% health lost
+  b3_c2_hill:{hp:0.88, dmg:-1}, // 70% won, 62% health lost
+  b3_c2_night:{hp:0.92, dmg:-1}, // 75% won, 49% health lost
+  b3_c2_herdfight:{hp:0.8, dmg:-1}, // 65% won, 54% health lost
+  b3_c2_wagonfight:{hp:0.96}, // 80% won, 43% health lost
+  b3_c3_picket:{atk:1, hp:1.6, dmg:3}, // 65% won, 57% health lost
+  b3_c3_camps:{hp:1.45, dmg:2}, // 90% won, 39% health lost
+  b3_c3_granary:{atk:1, hp:1.75, dmg:3}, // 80% won, 38% health lost
+  b3_c4_hunt:{hp:1.2, dmg:1}, // 70% won, 69% health lost
+  b3_c4_breakout:{atk:-1, hp:0.68, dmg:-2}, // 80% won, 53% health lost
+  b3_c4_brawl:{atk:2, hp:2.0, dmg:5}, // 90% won, 35% health lost
+  b3_c5_ford:{hp:0.88, dmg:-1}, // 75% won, 57% health lost
+  b3_c5_town:{hp:0.8, dmg:-1}, // 80% won, 52% health lost
+  b3_c5_wellfight:{atk:1, hp:1.5, dmg:2}, // 70% won, 52% health lost
+  b3_c6_field:{hp:1.45, dmg:2}, // 80% won, 36% health lost
+  b3_c6_landing:{atk:1, hp:1.55, dmg:2}, // 65% won, 49% health lost
+  b3_c6_condors:{hp:1.4, dmg:2}, // 70% won, 54% health lost
+  b3_c6_raid:{hp:1.3, dmg:1}, // 80% won, 40% health lost
+  b3_c6_ambush:{hp:1.35, dmg:1}, // 80% won, 42% health lost
+  b3_c7_trenchfight:{hp:1.2, dmg:1}, // 65% won, 53% health lost
+  b3_c7_stairs:{atk:2, hp:2.45, dmg:7}, // 75% won, 41% health lost
+  b3_c7_hunt:{atk:-1, hp:0.68, dmg:-2}, // 70% won, 54% health lost
+  b3_c7_probe:{hp:1.15}, // 70% won, 54% health lost
+  b3_c7_gully:{atk:3, hp:2.55, dmg:7}, // 75% won, 48% health lost
+  b3_c7_stakes:{hp:1.05}, // 70% won, 44% health lost
+  b3_c7_herds:{hp:0.96}, // 85% won, 52% health lost
 };
 const B4GAP_FIGHT = { // Book Four, Bridgeburner, on top of B4GAP
   b4_c1_runners:{hp:1.15}, // 80% won, 49% health lost
@@ -185,11 +238,11 @@ const B4GAP_FIGHT = { // Book Four, Bridgeburner, on top of B4GAP
   b4_c2_probe:{hp:1.35, dmg:1}, // 70% won, 57% health lost
   b4_c2_hill:{hp:1.1}, // 75% won, 56% health lost
   b4_c3_raiders:{hp:0.96}, // 65% won, 56% health lost
-  b4_c3_brawl:{hp:1.4, dmg:2}, // 100% won, 63% health lost
+  b4_c3_brawl:{hp:1.4, dmg:2}, // 100% won, 49% health lost
   b4_c3_scavengers:{hp:0.88, dmg:-1}, // 65% won, 74% health lost
   b4_c3_poles:{hp:0.84, dmg:-1}, // 60% won, 67% health lost
   b4_c4_wagons:{hp:0.96}, // 75% won, 66% health lost
-  b4_c4_lancers_brawl:{hp:1.4, dmg:2}, // 100% won, 57% health lost
+  b4_c4_lancers_brawl:{hp:1.4, dmg:2}, // 100% won, 32% health lost
   b4_c4_wounded:{hp:0.84, dmg:-1}, // 80% won, 62% health lost
   b4_c4_picket:{atk:-1, hp:0.76, dmg:-2}, // 80% won, 55% health lost
   b4_c5_wallriders:{hp:0.96}, // 75% won, 56% health lost
