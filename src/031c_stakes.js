@@ -150,6 +150,28 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  b6_c1_rearguard:{ac:1, atk:1, hp:1.95, dmg:4}, // bh 90% won, 25% health lost
+  b6_c1_edge:{ac:4, atk:4, hp:3.58, dmg:6}, // bh 90% won, 33% health lost
+  b6_c1_patrol:{ac:2, atk:2, hp:2.87, dmg:5}, // bh 85% won, 41% health lost
+  b6_c2_shrine:{ac:2, atk:2, hp:2.61, dmg:5}, // bh 85% won, 45% health lost
+  b6_c2_village:{ac:1, atk:1, hp:2.02, dmg:3}, // bh 85% won, 45% health lost
+  b6_c2_road:{hp:1.47, dmg:2}, // bh 95% won, 44% health lost
+  b6_c3_sally:{ac:1, atk:1, hp:1.96, dmg:3}, // bh 95% won, 21% health lost
+  b6_c3_streets:{ac:2, atk:2, hp:2.1, dmg:4}, // bh 95% won, 36% health lost
+  b6_c3_strays:{ac:4, atk:4, hp:4.05, dmg:6}, // bh 95% won, 32% health lost
+  b6_c4_carts:{ac:4, atk:4, hp:3.38, dmg:6}, // bh 95% won, 30% health lost
+  b6_c4_cult:{ac:3, atk:3, hp:3.31, dmg:5}, // bh 90% won, 33% health lost
+  b6_c4_streets:{ac:2, atk:2, hp:2.18, dmg:3}, // bh 95% won, 19% health lost
+  b6_c5_village:{ac:4, atk:4, hp:3.24, dmg:6}, // bh 95% won, 35% health lost
+  b6_c5_deserters:{ac:2, atk:2, hp:2.0, dmg:4}, // bh 95% won, 21% health lost
+  b6_c5_boats:{ac:1, atk:1, hp:2.38, dmg:4}, // bh 90% won, 31% health lost
+  b6_c6_night:{ac:1, atk:1, hp:1.96, dmg:3}, // bh 95% won, 32% health lost
+  b6_c6_wells:{ac:4, atk:4, hp:3.5, dmg:6}, // bh 90% won, 27% health lost
+  b6_c6_cult:{ac:1, atk:1, hp:1.89, dmg:4}, // bh 100% won, 38% health lost
+  b6_c7_alley:{ac:5, atk:5, hp:4.48, dmg:8}, // bh 90% won, 38% health lost
+  b6_c7_jetty:{ac:3, atk:3, hp:2.8, dmg:6}, // bh 85% won, 41% health lost
+  b6_c7_guard:{ac:2, atk:2, hp:2.64, dmg:6}, // bh 85% won, 34% health lost
+  b6_c7_streets:{ac:3, atk:3, hp:3.64, dmg:6}, // bh 95% won, 27% health lost
   b5_c1_lowwalk:{hp:1.55, dmg:2}, // mt 85% won, 43% health lost
   b5_c2_looters:{atk:1, hp:2.35, dmg:6}, // mt 95% won, 36% health lost
   b5_c2_hulk:{hp:1.3, dmg:1}, // mt 95% won, 29% health lost
