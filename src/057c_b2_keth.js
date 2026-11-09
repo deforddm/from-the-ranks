@@ -69,7 +69,7 @@ Object.assign(AB, {
     ok:()=>(B.used.b2_bargain || 0) < 1 + lvAt(6), tiles:u=>party().filter(p => p.hp > 0 && p.hp < p.maxhp && cheb(u, p) <= 4 && sees(u, p)),
     run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b2_bargain = (B.used.b2_bargain || 0) + 1;
       const n = Math.min(roll(2, 6, 2 + lvB()), t.maxhp - t.hp), e = foes().filter(f => f.hp > 0 && cheb(f, t) <= 3).sort((a, b) => cheb(a, t) - cheb(b, t) || a.hp - b.hp)[0];
-      AUDIO.play('heal'); heal(t, n); t.bleed = 0; sparks(t.x, t.y, 12, '#c8d8b8', .4);
+      AUDIO.play('heal'); healW(t, n); t.bleed = 0; sparks(t.x, t.y, 12, '#c8d8b8', .4);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own breastbone' : t.name + '\'s back'}, and an old woman's voice says, out of a boy's mouth: <em>Give it here. I know someone who wants it.</em>`);
       if (e && n > 0) { later(() => { if (!B || e.hp <= 0) return; B.fx.push({kind:'bolt', from:{x:t.x, y:t.y}, to:{x:e.x, y:e.y}, col:'#8aa86a', t:performance.now(), dur:320, wob:true}); AUDIO.play('step');
           blog(`The ground under ${e.name} opens its mouth and gives it the wound: ${n} damage.`); hurt(e, n); sparks(e.x, e.y, 10, '#6a7a4a', .5); updBattleUI(); }, pace(320)); }

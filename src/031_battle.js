@@ -78,7 +78,7 @@ function mkParty(id, x, y){
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
-  trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
+  trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
@@ -277,9 +277,9 @@ const AB = {
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
   mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); heal(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
+    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
-    run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); heal(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
+    run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); healW(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
   mark:{name:'Tracker\'s Mark', free:true, desc:()=>`It does not use the action: an enemy within 5 is marked, and every hit on it does +${2 + lvT()} damage for two rounds. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdMark >= B.round), tiles:u=>foes().filter(f => cheb(u,f) <= 5 && canShoot(u,f) && !(f.markedUntil >= B.round)),
     run(u,x,y){ const t = unitAt(x,y); u.cdMark = B.round + 2 - lvAt(6); t.markedUntil = B.round + 2; t.markDmg = 2 + lvT(); AUDIO.play('click'); float(t,'marked','#f2c46b'); blog(`${u.name} marks ${t.name}: a nick of chalk on the ground, a word to the squad, and it is a target.`); }},
@@ -337,7 +337,7 @@ const AB = {
 /* Chub's cusser, Maud: Kettle carries her "for the one that matters" and won't fire her in an ordinary fight. The story spends her (the barrow in Chapter 5, or Ch'kess in Chapter 7). */
 const maudKept = () => !!(S && S.f && BOOK === 'gotm' && !S.f.c5_cusserUsed && S.f.c7_debt !== 'paid');
 const itemLeft = k => Math.max(0, (S.inv[k] || 0) - (k === 'cusser' && maudKept() ? 1 : 0));
-function abOk(u, k){ const a = AB[k]; if (!a) return false; if (a.trick && !trickOk(u, a)) return false; if (a.sorcery && !a.elder && B && B.def.nomagic) return false; /* Elder warrens shrug off otataral */ if (a.strain && B && B.def.nomagic) return false; if (a.boom && B && B.def.nothrow) return false; if (a.item === 'cusser' && B && B.def.style === 'roof') return false; /* Fiddler's order: no cussers on the roofs */ if (a.item === 'burner' && B && B.def.nomagic) return false; /* burners and otataral: Kettle won't */ if (a.item && !(itemLeft(a.item) > 0)) return false; if (a.ok && !a.ok(u)) return false; if (a.tiles && !a.tiles(u).length) return false; return true; }
+function abOk(u, k){ const a = AB[k]; if (!a) return false; if (a.passive) return false; if (a.trick && !trickOk(u, a)) return false; if (a.trick && a.free && B && u.freeTrick === B.turn) return false; /* v10.3: one free trick a turn */ if (a.sorcery && !a.elder && B && B.def.nomagic) return false; /* Elder warrens shrug off otataral */ if (a.strain && B && B.def.nomagic) return false; if (a.boom && B && B.def.nothrow) return false; if (a.item === 'cusser' && B && B.def.style === 'roof') return false; /* Fiddler's order: no cussers on the roofs */ if (a.item === 'burner' && B && B.def.nomagic) return false; /* burners and otataral: Kettle won't */ if (a.item && !(itemLeft(a.item) > 0)) return false; if (a.ok && !a.ok(u)) return false; if (a.tiles && !a.tiles(u).length) return false; return true; }
 function scatter(u, x, y, failOn, dist){
   const nat = d20() + (S.card === 'oponn' ? 1 : 0);
   if (nat <= failOn && !has(u.id,'longfuse')) { const [dx,dy] = DIRS[R(8)]; let nx = x, ny = y;
@@ -517,6 +517,7 @@ function useAb(k, x, y){
   const u = B.cur, a = AB[k];
   if (a.item) { S.inv[a.item]--; tally('thrown_' + a.item); }
   if (a.boom || k === 'quickshot' || k === 'mark' || k === 'bash') u.fired = true;
+  if (a.trick && a.free) u.freeTrick = B.turn;
   if (a.trick) { if (TRICKS[a.trick].use === 'chapter') spendTrick(a.trick); else { B.used[k] = 1; tally('tricksUsed'); } }
   if (!a.free) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; } B.mode = 'act'; B.aim = null; B.busy = true;
   B.blastKind = a.item || (k === 'quorl' ? 'sharper' : null); // what a blast() that lands later was thrown with (v6.10: a foe may resist or fear a munition)

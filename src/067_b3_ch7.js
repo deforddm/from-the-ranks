@@ -59,7 +59,7 @@ Object.assign(AB, {
   t_b3_c7_anvil:{name:'The Shield Anvil\'s Weight', trick:'b3_c7_anvil', spirit:true, desc:()=>TRICKS.b3_c7_anvil.fx,
     tiles:u=>party().filter(p => p !== u && !p.ally && p.hp > 0 && p.hp < p.maxhp && cheb(u, p) <= 1),
     run(u, x, y){ const t = unitAt(x, y); if (!t) return; const want = Math.min(6 + 2 * lvT(), t.maxhp - t.hp), cost = Math.min(Math.ceil(want / 2), Math.max(0, u.hp - 1));
-      heal(t, want); if (cost > 0) { u.hp -= cost; float(u, '−' + cost + ' carried', '#c8d4e0'); u.flash = performance.now(); }
+      healW(t, want); if (cost > 0) { u.hp -= cost; float(u, '−' + cost + ' carried', '#c8d4e0'); u.flash = performance.now(); }
       AUDIO.play('heal'); sparks(t.x, t.y, 12, '#c8d4e0', .4); sparks(u.x, u.y, 8, '#9aa4ac', .3);
       blog(`${u.name} steps in and puts a hand flat on ${t.name}'s, the way the Grey Swords showed, and takes some of it. ${t.name} stands up straighter. ${u.name} does not, for a moment.`); }},
 });

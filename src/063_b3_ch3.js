@@ -35,7 +35,7 @@ Object.assign(TRICKS, {
 });
 Object.assign(AB, {
   t_b3_c3_stripe:{name:TRICKS.b3_c3_stripe.name, trick:'b3_c3_stripe', self:true, free:true, spirit:true, desc:()=>TRICKS.b3_c3_stripe.fx,
-    run(u){ u.stripeUntil = B.round + 1; heal(u, 2 + lvT()); AUDIO.play('growl'); sparks(u.x, u.y, 16, '#e8a040', .5); float(u, 'striped', '#e8a040');
+    run(u){ u.stripeUntil = B.round + 1; healW(u, 2 + lvT()); AUDIO.play('growl'); sparks(u.x, u.y, 16, '#e8a040', .5); float(u, 'striped', '#e8a040');
       blog(`${u.name} closes a fist on the strip of tiger hide, and for a breath something long and low and striped looks out through ${u.name}'s eyes. It does not want the fight to be over.`); }},
 });
 { const _atkCalc = atkCalc;

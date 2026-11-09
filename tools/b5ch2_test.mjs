@@ -50,7 +50,7 @@ const r = await page.evaluate(async () => {
   talk('b5_c2_gangplank'); take('b5_c2_gangplank', /Up the plank/); take('b5_c2_board_go', /Aboard/); out.f.hulk0 = {area:S.area, seen:S.f.b5_wraithSeen, node:S.node};
   talk('b5_c2_rigging'); talk('b5_c2_hatch'); out.f.hatchNotNow = has('b5_c2_hatch', /Not now/);
   out.f.hulk = await force('b5_c2_hulk', async res => { const u = B.units.find(x => x.side === 'p' && x.id === 'tobet') || B.units.find(x => x.side === 'p'), e = B.units.find(x => x.side === 'e'), p2 = B.units.find(x => x.side === 'p' && x !== u);
-    res.offered = typeof trickOk === 'function' && trickOk(u, AB.t_b5_c2_pilot); AB.t_b5_c2_pilot.run(u); res.on = !!(B.b52eye && B.b52eye.on); res.noFlank = flanked(e, p2) === false;
+    res.offered = AB.t_b5_c2_pilot.passive === true && !u.ab.includes('t_b5_c2_pilot'); /* v10.3: passive, no button */ AB.t_b5_c2_pilot.run(u); res.on = !!(B.b52eye && B.b52eye.on); res.noFlank = flanked(e, p2) === false;
     boonFoeTurnStart(e); res.marked = B.b52eye.marked === e; const c = atkCalc(p2, e); const keep = e.b52markUntil; e.b52markUntil = -1; const c0 = atkCalc(p2, e); e.b52markUntil = keep; res.bonus = c.bonus - c0.bonus;
     squadTurnStart(u); res.off = !B.b52eye.on; });
   out.f.hulkFlags = {done:S.f.b5_c2_hulkDone, ph:S.f.b5_c2_ph};

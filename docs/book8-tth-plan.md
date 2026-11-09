@@ -21,6 +21,28 @@ Sun Nov 8, 2026, 8:21 PM PST (the calendar, after the canon sheet). Before that 
 - **Ch 5** is the road back west during the Fête, reaching the city on its last day. The news from K'rul's meets them at the gate.
 - **Ch 6** (the last night) and **Ch 7** (the morning after) stay as drafted, with the corrections below.
 
+**Settled (David, Sun Nov 8, 2026, 9:03 PM PST): kelyk runs through the book, with the jug.**
+- **Ch 2:** the merchant the Fourth guard is carrying kelyk east in his wagons, out of sight. The Ch 2 key turns on what the squad does about it.
+- **Ch 3–4:** pilgrims drinking it. Kelyk-mad pilgrims are foes on the camp's bad night. `burn` burns the camp edge's kelyk stores.
+- **Ch 5:** a peddler on the road west trying to take it toward Darujhistan, whom the squad can stop. The canon sheet confirms kelyk never reaches the city in canon.
+- **The jug of kelyk (item, with art):** drunk before a fight, it heals and gives +2 to hit for that fight. Afterwards the drinker carries a "kelyk-sick" wound until the next fire, in the v10.2 wound slot. The squad has lines about it. Never made to look good; headline only.
+
+**Settled (David, Sun Nov 8, 2026, 9:09 PM PST): the running threads.**
+- **Neffarias Bredd** (canon spelling): one rumour in every book where Malazan soldiers gather. Each telling is bigger, always secondhand, and he is never seen. In Book Eight a retired Malazan in a Daru tavern tells it, "from the Seven Cities lot".
+- **Backfill Bredd** into Books Six and Seven: one fireside rumour for the Third in each, shipped with v11.0.0.
+- **Rumjugs and Sweetlard:** in Book Eight the same two painted women hang on a Daru tavern sign, and nobody knows who they are. Rule 16 holds. The real meeting is saved for Book Nine.
+
+**Settled (David, Sun Nov 8, 2026, 9:13 PM PST): the callbacks, all of them.**
+1. **The Fête, full circle.** Book One ended at Gedderone's Fête. Book Eight's last night is another Fête: masks in the streets, someone remembers the last one, a line for the sergeant.
+2. **The barrow and the Shield Anvil's Weight.** At the Redeemer's barrow (Ch 3), whoever carries the Book Three trick gets their own scene. If nobody does, the sergeant does the remembering.
+3. **Mallet.** The Ch 5 news from K'rul's lands as the death of a man the Fourth knew (Book Three's "Mallet's week").
+4. **Vell and the Guild.** If Vell walks with the squad, the contract makes him face what the Guild wrote against his name. It is never tied to the K'rul's contract (rule 70).
+5. **Tuft and Tufty.** A rumour about the Azath's Jaghut and his dead white cat called Tufty. Tuft is not amused. They are never in one scene (§(b)).
+6. **The old historian at K'rul's.** An old man there walked the Chain and wrote it down. He is never named (rule 17).
+7. **The wreck in the bay** at Black Coral: what's left of the fortress the Fourth saw over Pale. Never named (rule 80).
+8. **The Guardians of the Gate** (Ch 7): a soldier who answers for the dead says something only Whiskeyjack would have said to the Fourth. Never his name (rule 75).
+- **For later books:** Kettle's name, when the Fourth first hear of the Azath child: ours says her parents had good taste. Hedge's return: Brisk always knew he was too stubborn.
+
 **Claude's calls from the canon sheet** (David may overturn any; sources in `docs/tth-canon.md`):
 - **Ch 1's title** becomes *Before the Fête*. The keys stay `hunt` / `quiet`.
 - **The contract:** the Fourth's knives are a second paper. Who paid is never said, and the narrator never ties it to K'rul's (rule 70).
