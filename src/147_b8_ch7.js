@@ -188,13 +188,13 @@ const B8CH7 = {
     b8_c7_looters:{title:'The dyers\' row', style:'city', open:true, warrenText:'A grey morning in the Gadrobi District · every bell in the city ringing · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","........","..t..t..","........","#......#","........","...tt...","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,2],['b8_bravo',5,2],['b8_bravo',4,1],['b8_bravocaptain',3,0]], xp:260, after:'b8_c7_looters_after',
+      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,1],['b8_bravocaptain',3,0]], xp:260, after:'b8_c7_looters_after',
       preText:()=>`They are not Guild, and not hungry. They are men with good boots and empty sacks who have worked out that a city listening to its bells is not watching its shutters, and their leader has a name he would like the Fourth to have heard of.`,
       stage2:{title:'The dyers\' yard', xp:130,
         text:()=>`The row is the Fourth's. The yard behind Orsa's is not: two more of them came over the back wall with a handcart while the front went badly, and they have the den's strongbox on it and the gate shut.${b87Say({brisk:`\n\nBrisk looks at the gate, and at her shield, and the gate does not stay shut much longer.`, kettle:`\n\nKettle looks at the handcart. "That's Orsa's," she says. "She'll want it back in one piece. Pity."`, _:''})}`,
         map:["#..##..#","........","..t..t..","........","........","........","..t..t..","........","........","##....##"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_raider',4,0]]} },
+        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_raider',5,0]]} },
     /* whoever is still on the roofs: b8Roofs(7) on the contract tiles (one fewer than the last night; nobody if the Ch 6 knives went down) */
     b8_c7_roofs:{title:'The roofs over the street', style:'roof', open:true, guild:true, warrenText:'The Gadrobi roofs in a grey light · the bells loud up here · warrens steady', warren:{meanas:1, denul:1}, music:'dark',
       contract:[[2,1],[5,1],[4,0]],
@@ -206,7 +206,7 @@ const B8CH7 = {
     b8_c7_doorway:{title:'The Fourth\'s door', style:'cellar', open:true, warrenText:'A narrow room up the street from the Phoenix · the fire out · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["########","#......#","#.t..t.#","#......#","#......#","#..t...#","#......#","#......#","#......#","###..###"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,2],['b8_bravo',5,2],['b8_bravo',3,1]], xp:150, after:'b8_c7_door_after',
+      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',3,1]], xp:150, after:'b8_c7_door_after',
       preText:()=>`Three of them, in the Fourth's own room, with the Fourth's own chairs. They had heard nobody was coming back. They are finding out about that the slow way.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each

@@ -91168,7 +91168,7 @@ const B8CH1 = {
     b8_c1_alley:{title:'The alley behind the door', style:'city', dark:true, guild:true, warrenText:'Night in a Gadrobi alley · fog off the lake, gas-light at the far end · warrens steady', warren:{meanas:1, denul:1}, music:'dark',
       map:["##....##","#......#","..t..t..","........","#..##..#","........","..t..t..","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_knife',2,1],['b8_knife',5,2],['b8_guildbow',4,0]], xp:300, after:'b8_c1_alley_after',
+      foes:[['b8_knife',2,1],['b8_knife',5,1],['b8_guildbow',4,0]], xp:300, after:'b8_c1_alley_after',
       preText:()=>`They are dark on dark, quilted, quick, with the blades blackened so the gas-light will not find them. Two in the alley. One somewhere higher, by the sound of the slate.`,
       stage2:{title:'The roofs', xp:150, style:'roof',
         text:()=>`The alley is the Fourth's. The roof is not. The crossbow went up a drainpipe when the first knife went down, and another shape has come over the ridge to stand beside it, and the two of them are looking down into the alley with a sapper's interest in a fuse: curious, not worried.${b81Say({kettle:`\n\nKettle is already at the drainpipe. "Up," she says. "I hate up."`, brisk:`\n\nBrisk looks at the drainpipe, and then at her shield, and then at you. She goes up anyway.`, _:''})}`,
@@ -91179,7 +91179,7 @@ const B8CH1 = {
     b8_c1_den:{title:'Orsa\'s dice den', style:'cellar', warrenText:'A cellar under the Gadrobi lanes · lamp-smoke, spilt wine · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t..t..","........","...tt...","........","........",".t....t.","........","........","#......#"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:150, after:'b8_c1_den_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,0],['b8_bravo',4,2]], xp:150, after:'b8_c1_den_after',
       preText:()=>`The table goes over, and the dice with it, and somebody's wine. Orsa says a word that is not in any polite dialect of Daru and gets her lamps out of the way, which is what she always does first.`},
     /* on 'hunt': the go-between's courtyard and the bravos he pays; the second ground is his stair */
     b8_c1_hunt:{title:'The go-between\'s courtyard', style:'city', dark:true, warrenText:'Night below the Daru tier · a brazier, a shut door · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
@@ -91196,7 +91196,7 @@ const B8CH1 = {
     b8_c1_chancers:{title:'The Fourth\'s street', style:'city', dark:true, warrenText:'Night in the Gadrobi District · the lamps hiss · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:200, after:'b8_c1_chancers_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,1],['b8_bravo',4,2]], xp:200, after:'b8_c1_chancers_after',
       preText:()=>`Three of them, with rapiers and a borrowed confidence. Not the Guild. The Guild does not send men who talk this much on the way in.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
@@ -93247,13 +93247,13 @@ const B8CH3 = {
     b8_c3_road:{title:'The pilgrims\' road', style:'b3_c5_domin_night', dark:true, warrenText:'Outside Black Coral · a grey that never finishes · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b8_raider',2,1],['b8_raider',5,1],['b8_raider',4,2],['b8_bravo',3,0]], xp:280, after:'b8_c3_road_after',
+      foes:[['b8_raider',2,0],['b8_raider',5,1],['b8_raider',4,2],['b8_bravo',3,0]], xp:280, after:'b8_c3_road_after',
       preText:()=>`Plains raiders, three of them, in hides and road-dust, quick on their feet, and a sellsword in a good coat behind them who does the deciding. They have done this to pilgrims before. They have not done it to soldiers.`,
       stage2:{title:'The cart', xp:140,
         text:()=>`The road is the Fourth's. The cart is not, yet. Two more of them have come up the ditch on the far side while the first lot kept the squad busy, and a second sellsword with them, and they are at the pilgrims behind the cart, where the man in grey scale is holding them off alone.${b83Say({brisk:`\n\nBrisk is already moving. "Him," she says. "On him."`, kettle:`\n\nKettle has a sharper out. "Not near the cart," she says, to herself, and puts it back. "Never near the cart."`, _:''})}`,
         map:["#......#","..t..t..","........","...tt...","........","........",".t....t.","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_raider',2,1],['b8_raider',5,1],['b8_bravo',4,2]]} },
+        foes:[['b8_raider',2,0],['b8_raider',5,0],['b8_bravo',4,2]]} },
     /* the raiders' camp on the ridge: optional, after the road (Edrem's ask, or the pilgrims') */
     b8_c3_ridge:{title:'The raiders\' camp', style:'b3_c5_domin_night', dark:true, warrenText:'A ridge over the pilgrims\' road · a cookfire, stolen packs · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","........","..t..t..","........","...#....","........",".t....t.","........","........","##....##"],
@@ -94255,18 +94255,18 @@ const B8CH4 = {
         text:()=>`The last of the drinkers are down in the mud or sitting with their heads in their hands, and the carriers are already coming out from behind the line with the cups. The men who walked behind them are not down. There are three of them in the open ground past the last tent, and they have stopped pointing, and drawn.${b84Say({edrem:`\n\nEdrem rolls his shoulders under the old grey scale. "These ones I know," he says. "These ones have always been the same."`, brisk:`\n\nBrisk looks at the three of them, and at her shield, and says something to Hood that is not polite.`, _:''})}`,
         map:["........","..t.....","........",".....t..","........","........","..t..t..","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_cultist',2,1],['b8_cultist',5,1],['b8_pilgrim',4,2]]} },
+        foes:[['b8_cultist',2,0],['b8_cultist',5,1],['b8_pilgrim',4,2]]} },
     /* key 'burn': the edge's own kelyk stores in the yard, and their keepers. Never the camp's heart; never anybody's hut. */
     b8_c4_stores:{title:'The store-yard', style:'b8_c4_camp', open:true, dark:true, warrenText:'The bad night · a stake fence, the smell of fruit gone over · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#.#..#.#","........","..t..t..","........","........","...t....","........",".t....t.","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_cultist',2,2],['b8_cultist',5,2],['b8_kelykpriest',4,0]], xp:260, after:'b8_c4_stores_after',
+      foes:[['b8_cultist',2,1],['b8_cultist',5,1],['b8_kelykpriest',4,0]], xp:260, after:'b8_c4_stores_after',
       preText:()=>`The keepers do not run. The priest among them puts down the jug he was stoppering and turns, unhurried, and when he breathes out the air in the yard goes sweet and thick, and the lamps on the fence seem to lean toward him.`,
       stage2:{title:'The sheds', xp:130,
         text:()=>`The yard is the Fourth's. The sheds at the back are not: two more of the keepers have got in among the lean-tos with a pair of the ones who have drunk, and they are standing between the squad and the jugs as if the jugs were children.${b84Say({kettle:`\n\nKettle looks at the oiled cloth and the dry wood under it with professional interest. "After," she says, to herself. "After."`, ohl:`\n\nOhl looks at the stacked jugs, and then at the drinkers in front of them, and his mouth goes thin. "That's the whole price of it," he says. "Standing there."`, _:''})}`,
         map:["#t#tt#t#","........","..t..t..","........","........","........","..t..t..","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_cultist',3,1],['b8_pilgrim',2,2],['b8_pilgrim',5,2]]} } },
+        foes:[['b8_cultist',3,1],['b8_pilgrim',2,1],['b8_pilgrim',5,1]]} } },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b8_c4_camphook:{name:'The camp\'s fire-hook', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, dmg:[1,10,2],
@@ -96163,7 +96163,7 @@ const B8CH6 = {
     b8_c6_masks:{title:'The dyers\' row', style:'city', dark:true, warrenText:'The Fete\'s last evening · lanterns, a brazier, the crowd gone back to the corners · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:180, after:'b8_c6_masks_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,1],['b8_bravo',4,2]], xp:180, after:'b8_c6_masks_after',
       preText:()=>`Three of them, in good coats and better masks, a cat's face, a bird's and a sun's. The masks do not make them anybody else. Under the lanterns the rapiers come out together, the way they practised it.`},
     /* key 'wall': an unnamed stretch of the broken wall, with the watch. Looters from the city and men in off the plain through the gap. */
     b8_c6_wall:{title:'The breach', style:'city', dark:true, warrenText:'The last night · the wall down, smoke over the Gadrobi roofs, the moon in pieces · the warrens are loud tonight', warren:{meanas:1, denul:1}, music:'battle',
@@ -96190,7 +96190,7 @@ const B8CH6 = {
         text:()=>`The street is the Fourth's, for now. The Hound has gone on, somewhere toward the upper city, and there is a long quiet place where it went by. But three of the ones with sacks have come round by the alley, and they are at the Fourth's door with a beam, and behind the door are the neighbours.${b86Say({ohl:`\n\nOhl hears a child behind the door, and his face does something. "Right," he says. "Right."`, vasso:`\n\nVasso is already moving. "The alley," he says. "I know the alley. I came down it once with a knife for you."`, tuft:`\n\nTuft is looking at the place where the Hound went by. She makes herself stop. "The door," she says. "The door."`, _:''})}`,
         map:["#..##..#","#......#","........","..t..t..","........","........","...tt...","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravocaptain',4,0]]} },
+        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravocaptain',5,0]]} },
     /* THE BOOK'S MORTAL FIGHT: the Guild's knives, come for the Fourth under cover of the night. One in the street, and whoever the Contract
        has on the roofs (140's contract hook: b8Roofs(6) onto the four tiles in order). One ground: a second would drag the fallen back up.
        Whoever falls stays down; the sergeant gets up with a scar; no death checks (031c deathOn). A won Guild fight is +1 to the Contract (140). */
@@ -97069,13 +97069,13 @@ const B8CH7 = {
     b8_c7_looters:{title:'The dyers\' row', style:'city', open:true, warrenText:'A grey morning in the Gadrobi District · every bell in the city ringing · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","........","..t..t..","........","#......#","........","...tt...","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,2],['b8_bravo',5,2],['b8_bravo',4,1],['b8_bravocaptain',3,0]], xp:260, after:'b8_c7_looters_after',
+      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,1],['b8_bravocaptain',3,0]], xp:260, after:'b8_c7_looters_after',
       preText:()=>`They are not Guild, and not hungry. They are men with good boots and empty sacks who have worked out that a city listening to its bells is not watching its shutters, and their leader has a name he would like the Fourth to have heard of.`,
       stage2:{title:'The dyers\' yard', xp:130,
         text:()=>`The row is the Fourth's. The yard behind Orsa's is not: two more of them came over the back wall with a handcart while the front went badly, and they have the den's strongbox on it and the gate shut.${b87Say({brisk:`\n\nBrisk looks at the gate, and at her shield, and the gate does not stay shut much longer.`, kettle:`\n\nKettle looks at the handcart. "That's Orsa's," she says. "She'll want it back in one piece. Pity."`, _:''})}`,
         map:["#..##..#","........","..t..t..","........","........","........","..t..t..","........","........","##....##"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_raider',4,0]]} },
+        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_raider',5,0]]} },
     /* whoever is still on the roofs: b8Roofs(7) on the contract tiles (one fewer than the last night; nobody if the Ch 6 knives went down) */
     b8_c7_roofs:{title:'The roofs over the street', style:'roof', open:true, guild:true, warrenText:'The Gadrobi roofs in a grey light · the bells loud up here · warrens steady', warren:{meanas:1, denul:1}, music:'dark',
       contract:[[2,1],[5,1],[4,0]],
@@ -97087,7 +97087,7 @@ const B8CH7 = {
     b8_c7_doorway:{title:'The Fourth\'s door', style:'cellar', open:true, warrenText:'A narrow room up the street from the Phoenix · the fire out · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["########","#......#","#.t..t.#","#......#","#......#","#..t...#","#......#","#......#","#......#","###..###"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,2],['b8_bravo',5,2],['b8_bravo',3,1]], xp:150, after:'b8_c7_door_after',
+      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',3,1]], xp:150, after:'b8_c7_door_after',
       preText:()=>`Three of them, in the Fourth's own room, with the Fourth's own chairs. They had heard nobody was coming back. They are finding out about that the slow way.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each

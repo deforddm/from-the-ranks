@@ -195,18 +195,18 @@ const B8CH4 = {
         text:()=>`The last of the drinkers are down in the mud or sitting with their heads in their hands, and the carriers are already coming out from behind the line with the cups. The men who walked behind them are not down. There are three of them in the open ground past the last tent, and they have stopped pointing, and drawn.${b84Say({edrem:`\n\nEdrem rolls his shoulders under the old grey scale. "These ones I know," he says. "These ones have always been the same."`, brisk:`\n\nBrisk looks at the three of them, and at her shield, and says something to Hood that is not polite.`, _:''})}`,
         map:["........","..t.....","........",".....t..","........","........","..t..t..","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_cultist',2,1],['b8_cultist',5,1],['b8_pilgrim',4,2]]} },
+        foes:[['b8_cultist',2,0],['b8_cultist',5,1],['b8_pilgrim',4,2]]} },
     /* key 'burn': the edge's own kelyk stores in the yard, and their keepers. Never the camp's heart; never anybody's hut. */
     b8_c4_stores:{title:'The store-yard', style:'b8_c4_camp', open:true, dark:true, warrenText:'The bad night · a stake fence, the smell of fruit gone over · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#.#..#.#","........","..t..t..","........","........","...t....","........",".t....t.","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_cultist',2,2],['b8_cultist',5,2],['b8_kelykpriest',4,0]], xp:260, after:'b8_c4_stores_after',
+      foes:[['b8_cultist',2,1],['b8_cultist',5,1],['b8_kelykpriest',4,0]], xp:260, after:'b8_c4_stores_after',
       preText:()=>`The keepers do not run. The priest among them puts down the jug he was stoppering and turns, unhurried, and when he breathes out the air in the yard goes sweet and thick, and the lamps on the fence seem to lean toward him.`,
       stage2:{title:'The sheds', xp:130,
         text:()=>`The yard is the Fourth's. The sheds at the back are not: two more of the keepers have got in among the lean-tos with a pair of the ones who have drunk, and they are standing between the squad and the jugs as if the jugs were children.${b84Say({kettle:`\n\nKettle looks at the oiled cloth and the dry wood under it with professional interest. "After," she says, to herself. "After."`, ohl:`\n\nOhl looks at the stacked jugs, and then at the drinkers in front of them, and his mouth goes thin. "That's the whole price of it," he says. "Standing there."`, _:''})}`,
         map:["#t#tt#t#","........","..t..t..","........","........","........","..t..t..","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_cultist',3,1],['b8_pilgrim',2,2],['b8_pilgrim',5,2]]} } },
+        foes:[['b8_cultist',3,1],['b8_pilgrim',2,1],['b8_pilgrim',5,1]]} } },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
     b8_c4_camphook:{name:'The camp\'s fire-hook', slot:'weapon', role:'reach', who:null, atk:1, rng:1, reach:true, dmg:[1,10,2],

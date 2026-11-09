@@ -182,7 +182,7 @@ const B8CH1 = {
     b8_c1_alley:{title:'The alley behind the door', style:'city', dark:true, guild:true, warrenText:'Night in a Gadrobi alley · fog off the lake, gas-light at the far end · warrens steady', warren:{meanas:1, denul:1}, music:'dark',
       map:["##....##","#......#","..t..t..","........","#..##..#","........","..t..t..","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_knife',2,1],['b8_knife',5,2],['b8_guildbow',4,0]], xp:300, after:'b8_c1_alley_after',
+      foes:[['b8_knife',2,1],['b8_knife',5,1],['b8_guildbow',4,0]], xp:300, after:'b8_c1_alley_after',
       preText:()=>`They are dark on dark, quilted, quick, with the blades blackened so the gas-light will not find them. Two in the alley. One somewhere higher, by the sound of the slate.`,
       stage2:{title:'The roofs', xp:150, style:'roof',
         text:()=>`The alley is the Fourth's. The roof is not. The crossbow went up a drainpipe when the first knife went down, and another shape has come over the ridge to stand beside it, and the two of them are looking down into the alley with a sapper's interest in a fuse: curious, not worried.${b81Say({kettle:`\n\nKettle is already at the drainpipe. "Up," she says. "I hate up."`, brisk:`\n\nBrisk looks at the drainpipe, and then at her shield, and then at you. She goes up anyway.`, _:''})}`,
@@ -193,7 +193,7 @@ const B8CH1 = {
     b8_c1_den:{title:'Orsa\'s dice den', style:'cellar', warrenText:'A cellar under the Gadrobi lanes · lamp-smoke, spilt wine · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t..t..","........","...tt...","........","........",".t....t.","........","........","#......#"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:150, after:'b8_c1_den_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,0],['b8_bravo',4,2]], xp:150, after:'b8_c1_den_after',
       preText:()=>`The table goes over, and the dice with it, and somebody's wine. Orsa says a word that is not in any polite dialect of Daru and gets her lamps out of the way, which is what she always does first.`},
     /* on 'hunt': the go-between's courtyard and the bravos he pays; the second ground is his stair */
     b8_c1_hunt:{title:'The go-between\'s courtyard', style:'city', dark:true, warrenText:'Night below the Daru tier · a brazier, a shut door · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
@@ -210,7 +210,7 @@ const B8CH1 = {
     b8_c1_chancers:{title:'The Fourth\'s street', style:'city', dark:true, warrenText:'Night in the Gadrobi District · the lamps hiss · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:200, after:'b8_c1_chancers_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,1],['b8_bravo',4,2]], xp:200, after:'b8_c1_chancers_after',
       preText:()=>`Three of them, with rapiers and a borrowed confidence. Not the Guild. The Guild does not send men who talk this much on the way in.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each

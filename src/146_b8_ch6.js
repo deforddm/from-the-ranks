@@ -176,7 +176,7 @@ const B8CH6 = {
     b8_c6_masks:{title:'The dyers\' row', style:'city', dark:true, warrenText:'The Fete\'s last evening · lanterns, a brazier, the crowd gone back to the corners · warrens steady', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","........","....t...","........",".t....t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravo',4,2]], xp:180, after:'b8_c6_masks_after',
+      foes:[['b8_bravo',2,0],['b8_bravo',5,1],['b8_bravo',4,2]], xp:180, after:'b8_c6_masks_after',
       preText:()=>`Three of them, in good coats and better masks, a cat's face, a bird's and a sun's. The masks do not make them anybody else. Under the lanterns the rapiers come out together, the way they practised it.`},
     /* key 'wall': an unnamed stretch of the broken wall, with the watch. Looters from the city and men in off the plain through the gap. */
     b8_c6_wall:{title:'The breach', style:'city', dark:true, warrenText:'The last night · the wall down, smoke over the Gadrobi roofs, the moon in pieces · the warrens are loud tonight', warren:{meanas:1, denul:1}, music:'battle',
@@ -203,7 +203,7 @@ const B8CH6 = {
         text:()=>`The street is the Fourth's, for now. The Hound has gone on, somewhere toward the upper city, and there is a long quiet place where it went by. But three of the ones with sacks have come round by the alley, and they are at the Fourth's door with a beam, and behind the door are the neighbours.${b86Say({ohl:`\n\nOhl hears a child behind the door, and his face does something. "Right," he says. "Right."`, vasso:`\n\nVasso is already moving. "The alley," he says. "I know the alley. I came down it once with a knife for you."`, tuft:`\n\nTuft is looking at the place where the Hound went by. She makes herself stop. "The door," she says. "The door."`, _:''})}`,
         map:["#..##..#","#......#","........","..t..t..","........","........","...tt...","........","........","........"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravocaptain',4,0]]} },
+        foes:[['b8_bravo',2,1],['b8_bravo',5,1],['b8_bravocaptain',5,0]]} },
     /* THE BOOK'S MORTAL FIGHT: the Guild's knives, come for the Fourth under cover of the night. One in the street, and whoever the Contract
        has on the roofs (140's contract hook: b8Roofs(6) onto the four tiles in order). One ground: a second would drag the fallen back up.
        Whoever falls stays down; the sergeant gets up with a scar; no death checks (031c deathOn). A won Guild fight is +1 to the Contract (140). */
