@@ -90602,7 +90602,7 @@ Object.assign(SOLDIER_FIGHT, B8SOLDIER);
 const B8GAP_ROW = {ac:5, atk:5, hp:3.5, dmg:7}; // a b8_ fight without its own row
 const B8GAP = {
   b8_c1_alley:{ac:5, atk:5, hp:3.5, dmg:7},
-  b8_c1_den:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c1_den:{ac:5, atk:6, hp:3.75, dmg:8},
   b8_c1_hunt:{ac:4, atk:4, hp:3.0, dmg:6},
   b8_c1_chancers:{ac:6, atk:6, hp:4.0, dmg:8},
   b8_c2_raid:{ac:8, atk:8, hp:5.75, dmg:10},
@@ -90624,7 +90624,7 @@ const B8GAP = {
   b8_c6_knives:{ac:4, atk:4, hp:3.0, dmg:6},
   b8_c7_looters:{ac:3, atk:3, hp:2.5, dmg:5},
   b8_c7_roofs:{ac:12, atk:13, hp:7.25, dmg:15},
-  b8_c7_doorway:{ac:6, atk:7, hp:4.25, dmg:9},
+  b8_c7_doorway:{ac:6, atk:6, hp:4.0, dmg:8},
 };
 const b8Gap = () => { if (!b8On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B8GAP[id]) || (id && /^b8_/.test(id) ? B8GAP_ROW : null); };
 { const _mkFoe = mkFoe;
