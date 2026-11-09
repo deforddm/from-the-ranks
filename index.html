@@ -90746,8 +90746,9 @@ ${[[84, 1], [116, -1]].map(([x, d]) => `<g transform="translate(${x} 104)"><path
    the neck, its sheath on a strap across the chest (slung); the knotted cord that is a map round his neck */
 POR.vasso = function(ctx){ const F = {cy:-76, w:12, h:19.6, jaw:.74, chin:4.2, skin:'#b88a68', iris:'#2a2018', lip:'#8a5444', browCol:'#1a120c', browW:1.4, arch:.6, browL:.25, rim:'#8a7aa0', rimA:.24, nose:1.1, look:-.25, smileL:.15, smileR:-.05, mouthW:3.6, age:0, open:.84};
   // the knife's hilt over the right shoulder, behind the head: the sheath sits down the back under the jack
-  PR.stroke(ctx, '#0e0c10', 4.2, () => { ctx.moveTo(18, -40); ctx.lineTo(26, -96); }); PR.stroke(ctx, '#3a3240', 2.6, () => { ctx.moveTo(18, -40); ctx.lineTo(26, -96); });
-  ctx.fillStyle = '#5a5060'; ctx.fillRect(21.4, -100, 7, 3); PR.stroke(ctx, 'rgba(220,214,230,.4)', .6, () => { ctx.moveTo(22.6, -60); ctx.lineTo(25.4, -94); });
+  PR.stroke(ctx, '#0e0c10', 4.2, () => { ctx.moveTo(12, -44); ctx.lineTo(17, -74); }); PR.stroke(ctx, '#3a3240', 2.6, () => { ctx.moveTo(12, -44); ctx.lineTo(17, -74); }); // the grip, over the shoulder
+  ctx.save(); ctx.translate(17.4, -75); ctx.rotate(.16); ctx.fillStyle = '#5a5060'; ctx.fillRect(-4, -1.4, 8, 2.8); ell(ctx, 0, -4, 1.8, 1.8, '#4a4250'); ctx.restore(); // the guard and pommel
+  PR.stroke(ctx, 'rgba(220,214,230,.4)', .6, () => { ctx.moveTo(12.4, -48); ctx.lineTo(16, -71); });
   PR.neck(ctx, F, 7.6);
   const B = BP.body(ctx, F, {wide:34, drop:6, trap:3, nx:10.6, ny:F.cy + 14.4, cb:F.cy + 19.6, c1:'#3e3848', c2:'#121016'});
   ctx.save(); B.path(); ctx.clip(); BP.quilt(ctx, -40, 40, -50, 4, 6, 'rgba(10,8,14,.55)');
