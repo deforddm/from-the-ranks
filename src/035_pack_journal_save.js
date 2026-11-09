@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.2', ['Book Four opening: with one squadmate off the Chain, the line now reads "was dealt with you".']],
   ['10.3.1', ['A sergeant carried into a new book can be renamed there: the name is filled in for you, and you can change it.']],
   ['10.3.0', ['Tricks that don\'t strike no longer cost the turn: the shield calls, the battle cries, the dark and the smoke, the curses. One free trick each a turn.', 'Barghast Blood-Iron, the Long Listen and the Pilot\'s Eye now work by themselves at the start of every fight.', 'Only a heal aimed at one soldier leaves a ward now. Group heals and the gods\' small mercies heal, and that is all.', 'Saves carry on as they were.']],
   ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],

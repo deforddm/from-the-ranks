@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '10.3.1';
+const VERSION = '10.3.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7853,6 +7853,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.2', ['Book Four opening: with one squadmate off the Chain, the line now reads "was dealt with you".']],
   ['10.3.1', ['A sergeant carried into a new book can be renamed there: the name is filled in for you, and you can change it.']],
   ['10.3.0', ['Tricks that don\'t strike no longer cost the turn: the shield calls, the battle cries, the dark and the smoke, the curses. One free trick each a turn.', 'Barghast Blood-Iron, the Long Listen and the Pilot\'s Eye now work by themselves at the start of every fight.', 'Only a heal aimed at one soldier leaves a ward now. Group heals and the gods\' small mercies heal, and that is all.', 'Saves carry on as they were.']],
   ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],
@@ -51002,7 +51003,7 @@ const B4CH1 = {
 `Aren has been looking at soldiers all year. It watched the Chain come in under its walls, and what was left of it come in through the north gate, and it watched the High Fist march out the other way. Now the Empress has sent it an army by sea, and the city has gone up on its roofs to look at that one too.`,
 ()=>{ const v = b41Vets().map(id => TPL[id].name), n = b41New(), fill = {tallow:'a fishing boy off the Quon transports called Tallow, with a sling', hessa:'a battle-priest of D\'rek out of Kartool called Hessa, who stood the temple\'s door for six years and does not say why she stopped', tebbet:'a Dal Honese bowman called Tebbet', darrut:'Darrut, one of the Aren Guard who followed Blistig into the 9th', mirrel:'a healer from Li Heng called Mirrel', yorin:'a mage of Serc from Cawn called Yorin', rasp:'a marine-trained sapper out of Malaz City called Rasp'};
   const owed = typeof b4MusterDue === 'function' && b4MusterDue() ? (S.f.b4_musterDue || 1) : 0; // v7.1: the empty places are the sergeant's pick at the muster (70e)
-  return `You are Sergeant {sgt}, Third squad, 9th Legion, the Fourteenth Army. The army broke the Chain's survivors up when it took them in and dealt them out across its three legions like cards, so the recruits would have somebody to copy. You were dealt to Blistig's 9th, to its Second Company. ${v.length ? `${b4And(v)} came off the Chain with you and were dealt with you.` : 'Nobody else from the Chain was dealt with you.'} ${owed ? `The Fourteenth owes the squad ${numw(owed)} soldier${owed > 1 ? 's' : ''} to make it five, and the company's sergeant has the roll.` : n.length ? `The Fourteenth made the squad up to five with ${b4And(n.map(id => fill[id]))}.` : 'The Fourteenth looked at the squad, counted it, and left it as it was.'}`; },
+  return `You are Sergeant {sgt}, Third squad, 9th Legion, the Fourteenth Army. The army broke the Chain's survivors up when it took them in and dealt them out across its three legions like cards, so the recruits would have somebody to copy. You were dealt to Blistig's 9th, to its Second Company. ${v.length ? `${b4And(v)} came off the Chain with you and ${v.length > 1 ? 'were' : 'was'} dealt with you.` : 'Nobody else from the Chain was dealt with you.'} ${owed ? `The Fourteenth owes the squad ${numw(owed)} soldier${owed > 1 ? 's' : ''} to make it five, and the company's sergeant has the roll.` : n.length ? `The Fourteenth made the squad up to five with ${b4And(n.map(id => fill[id]))}.` : 'The Fourteenth looked at the squad, counted it, and left it as it was.'}`; },
 `This morning the Adjunct is reviewing her army on the marshaling ground. Half of it came off the transports from Quon Tali a month ago and has never heard a sword drawn in anger. The other half is trying not to show it. The 9th is drawn up on the far side of the ground from the Adjunct, which Radde, the company's sergeant, says is the best place in any army to be.`],
     go:'Into the line', get node(){ return typeof b4MusterDue === 'function' && b4MusterDue() ? 'b4_muster' : 'b4_c1_start'; }}, // v7.1: the muster first, while the squad has places to fill (70e)
 
