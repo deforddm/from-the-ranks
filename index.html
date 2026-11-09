@@ -90412,9 +90412,12 @@ function b8Join(id){ if (!b8CanRecruit(id) || b8In(id)) return false;
   if ((S.squad || []).length < ROSTER_CAP) { recruit(id); S.f[B8_DONE[id]] = 1; }
   else { S.camp = [...new Set([...(S.camp || []), id])]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {}; S.f[B8_DONE[id]] = 2; note(`${NAME(id)} waits at ${B8_HOME[id]}: six walk already.`); }
   save(); return true; }
+const b8Away = () => [3, 4].includes((S && S.chapter) || 0);
+const b8Here = id => id === 'edrem' ? b8Away() : id === 'vasso' ? !b8Away() : true;
 ROSTER_BOOKS.tth = {core:B8_CORE, bench:()=>[...B8_RECRUITS, ...B8_OLD],
   home:id=>B8_HOME[id] || 'the Fourth\'s door',
-  wait:id=>(S.camp || []).includes(id) || (!!B8_DONE[id] && S.f[B8_DONE[id]] === 2),
+  /* a waiting recruit is called in only where he waits: Vasso at the Fourth's door (the city, not Ch 3-4), Edrem on the pilgrims' road (Ch 3-4) */
+  wait:id=>b8Here(id) && ((S.camp || []).includes(id) || (!!B8_DONE[id] && S.f[B8_DONE[id]] === 2)),
   gone:id=>!!B8_DONE[id] && !b8CanRecruit(id),
   open:()=>true,
   in:id=>{ if (B8_DONE[id]) S.f[B8_DONE[id]] = 1; },
@@ -91702,7 +91705,7 @@ There is no next time, this winter.`,
 
 There are two things an old soldier can do about a paper. ${S.f.b8_c1_vetGuild ? 'Orsa hears most of what is brokered in the Gadrobi, the old soldier said. ' : ''}You could go after whoever is paying: up the hill, through Orsa's den, to whichever go-between carried it, and knock. The city would notice. The Guild would notice more. Or you could lie low: the bar across the door at dusk, the lamp out, nobody asking anything, and let a city that has a great deal else to think about forget there was ever a paper.${b81Say({brisk:`\n\n"They came to our door," Brisk says. That is her vote.`, _:''})}${b81Say({ohl:`\n\n"I've been on a list before," Ohl says. "The way off it is to be dull." That is his.`, _:''})}${b81Say({kettle:`\n\nKettle keeps her mouth shut, which is unlike her, and turns a sharper over in her fingers, which is not.`, tuft:`\n\nTuft has the Deck out, and puts it away again without drawing. "It doesn't matter what it says," she says. "You'll choose anyway."`, _:''})}`,
       ch:[{t:'"We go and find out who\'s paying." Hunt.', fx:()=>{ S.f.b8_c1_key = 'hunt'; S.f.b8_c1_ph = 4; b8Con(2, 'names asked'); b81L('brisk', 1); b81L('ohl', -1); }, go:'b8_c1_hunt_go'},
-          {t:'"We lie low. Let them forget." Quiet.', fx:()=>{ S.f.b8_c1_key = 'quiet'; S.f.b8_c1_ph = 4; b8Con(-1, 'kept quiet'); b81L('ohl', 1); b81L('brisk', -1); }, go:'b8_c1_quiet'},
+          {t:'"We lie low. Let them forget." Quiet.', fx:()=>{ S.f.b8_c1_key = 'quiet'; S.f.b8_c1_ph = 4; b8Con(-2, 'kept quiet, and the alley let go'); b81L('ohl', 1); b81L('brisk', -1); }, go:'b8_c1_quiet'},
           {t:'Not yet.', go:'b8_c1_fire'}]}),
     b8_c1_hunt_go:()=>({sp:'The Fourth\'s door', scene:'b8_door', html:contractHTML(), txt:
 `So the Fourth goes asking.
@@ -93333,7 +93336,7 @@ It is a long way. It is still a book with your name in it.`,
           {t:'Back to the street.', go:()=>startExplore()}]}),
 
     /* Calder, with the wagons: what Ch 2's key left between him and the Fourth */
-    b8_c3_calder:()=>({sp:'Calder', scene:'b8_blackcoral', fx:()=>{ S.f.b8_c3_calder = 1; if (b83Kelyk() === 'passed') S.f.b8_c3_wagon = 1; }, again:()=>'Calder, with the wagons, counting crates.', txt: b83Kelyk() === 'burned' ?
+    b8_c3_calder:()=>({sp:'Calder', scene:'b8_blackcoral', fx:()=>{ if (!S.f.b8_c3_calder) { /* the second half of the road's pay: a light purse after a burned wagon, in full and a silver a head after a passed one */ const pay = b83Kelyk() === 'burned' ? 5 : 20 + (S.squad || []).length; S.silver = (S.silver || 0) + pay; S.f.b8_c3_pay = pay; updSilver(); } S.f.b8_c3_calder = 1; if (b83Kelyk() === 'passed') S.f.b8_c3_wagon = 1; }, again:()=>'Calder, with the wagons, counting crates.', txt: b83Kelyk() === 'burned' ?
 `Calder is at the wagons in the harbour street with a tally-board, counting crates off onto the cobbles. He sees you, and goes on counting.
 
 "Your pay," he says at last, and holds out a purse without looking up. It is light. It is meant to be. "Less what the merchant lost on the road. He's not pleased, Sergeant. He'll be less pleased in Darujhistan." He makes a mark on the board. "The wagons go west when they go. I'll want guards. I'll ask somebody else first."${b83If('kettle', `\n\nKettle looks at the light purse, and then at Calder, and keeps her opinion to herself, loudly.`)}`

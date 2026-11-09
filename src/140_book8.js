@@ -164,9 +164,12 @@ function b8Join(id){ if (!b8CanRecruit(id) || b8In(id)) return false;
   if ((S.squad || []).length < ROSTER_CAP) { recruit(id); S.f[B8_DONE[id]] = 1; }
   else { S.camp = [...new Set([...(S.camp || []), id])]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {}; S.f[B8_DONE[id]] = 2; note(`${NAME(id)} waits at ${B8_HOME[id]}: six walk already.`); }
   save(); return true; }
+const b8Away = () => [3, 4].includes((S && S.chapter) || 0);
+const b8Here = id => id === 'edrem' ? b8Away() : id === 'vasso' ? !b8Away() : true;
 ROSTER_BOOKS.tth = {core:B8_CORE, bench:()=>[...B8_RECRUITS, ...B8_OLD],
   home:id=>B8_HOME[id] || 'the Fourth\'s door',
-  wait:id=>(S.camp || []).includes(id) || (!!B8_DONE[id] && S.f[B8_DONE[id]] === 2),
+  /* a waiting recruit is called in only where he waits: Vasso at the Fourth's door (the city, not Ch 3-4), Edrem on the pilgrims' road (Ch 3-4) */
+  wait:id=>b8Here(id) && ((S.camp || []).includes(id) || (!!B8_DONE[id] && S.f[B8_DONE[id]] === 2)),
   gone:id=>!!B8_DONE[id] && !b8CanRecruit(id),
   open:()=>true,
   in:id=>{ if (B8_DONE[id]) S.f[B8_DONE[id]] = 1; },

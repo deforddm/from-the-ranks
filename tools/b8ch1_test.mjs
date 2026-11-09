@@ -1,7 +1,7 @@
 // Book Eight, Chapter 1 (Before the Fete, src/141_b8_ch1.js): the halts, both keys from the same moment at the fire, the reading at the
 // table (Tuft; and the card node the visions pass hooks onto), the fire (the Contract shown, a rest, a line each, the roster, Not now),
 // every fight's start and a forced win (both grounds of the alley and of the go-between's house), the trick behind a hard check (taught,
-// free, and its battle half), the items (each with art), the Contract moves (the alley +1 by the engine, hunt +2, quiet −1, the go-between
+// free, and its battle half), the items (each with art), the Contract moves (the alley +1 by the engine, hunt +2, quiet −2, the go-between
 // check's "yes, but" +1 once), the recruit (Vasso on 'hunt': waits, then joins; or joins at once), the callbacks (the painted sign, Bredd,
 // the old historian at K'rul's, Vell's mark), "Not now" on every onward step and a "yes, but" on every check, from a fresh start and from a
 // --from=1 style save with a transfer's squad (Tuft dead, Vell and Ellis walking).
@@ -181,8 +181,8 @@ h.key === 'hunt' && h.ph === 4 && h.con === 2 && h.daruShut && h.ask && h.contra
 v.words && v.notNow && v.who && v.wait && v.wait.flag === 2 && v.wait.roster && v.wait.npc && v.wait.joined && v.join && v.join.in && v.join.flag === 1 && v.join.fire && v.join.god === 'K\'rul' && v.lines === v.here
   ? ok('Vasso: "The paper said Malazans. The Guild doesn\'t ask which."; nobody on the roofs knows who paid; he waits at the door, then joins; or joins at once, with his line at the fire') : no('vasso ' + JSON.stringify(v));
 e.onward && e.notYet && e.vassoLine && e.view === 'end' && e.ch === 'hunt' && e.lvl >= 17 && e.con === 6 && e.extras >= 6 && e.journal >= 8 && e.endText === 'Names asked' ? ok(`the end on hunt: east at winter's end (Not yet offered); level ${e.lvl} (${e.xp} xp), the Contract at ${e.con}`) : no('end ' + JSON.stringify(e));
-q.key === 'quiet' && q.ph === 4 && q.con === -1 && q.burned && q.html && q.npc && q.noVasso && q.daruShut && q.endShut && q.notNow && q.near && q.fight && q.fight.started && !q.fight.guild && q.fightCon === 0 && q.done === 1 && q.ph2 === 5 && q.onward && q.end && q.end.view === 'end' && q.end.ch === 'quiet' && q.end.con === 3 && q.end.vasso
-  ? ok(`key quiet, from the same moment: the Contract −1; the paper burned; chancers at the door (a "yes, but" on facing them down; not the Guild); no Vasso; the end on quiet with the Contract at ${q.end.con}`) : no('quiet ' + JSON.stringify(q));
+q.key === 'quiet' && q.ph === 4 && q.con === -2 && q.burned && q.html && q.npc && q.noVasso && q.daruShut && q.endShut && q.notNow && q.near && q.fight && q.fight.started && !q.fight.guild && q.fightCon === 0 && q.done === 1 && q.ph2 === 5 && q.onward && q.end && q.end.view === 'end' && q.end.ch === 'quiet' && q.end.con === 2 && q.end.vasso
+  ? ok(`key quiet, from the same moment: the Contract −2; the paper burned; chancers at the door (a "yes, but" on facing them down; not the Guild); no Vasso; the end on quiet with the Contract at ${q.end.con}`) : no('quiet ' + JSON.stringify(q));
 y.renderErr && !y.renderErr.length && y.reader !== 'tuft' && y.lines === y.here && y.lines3 === y.here && y.vell && y.ellis && y.phoenix && y.oldNews && y.vellChoice && y.vellMark && y.vell.flag === 'cut' && y.vell.loy === 2 && y.vell.gone && !y.audit.noNear.length && !y.audit.noStay.length
   ? ok(`a --from=1 style save (Tuft dead; Vell and Ellis walking): every node renders, ${y.reader} reads, a line each at the fire in both halves (${y.lines}), the Phoenix had other ideas, five strokes of old news, Vell's mark cut out of the cord`) : no('synthetic ' + JSON.stringify(y).slice(0, 900));
 errors.length ? no('page errors: ' + errors.join(' | ').slice(0, 600)) : ok('no page errors');

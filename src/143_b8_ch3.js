@@ -309,7 +309,7 @@ It is a long way. It is still a book with your name in it.`,
           {t:'Back to the street.', go:()=>startExplore()}]}),
 
     /* Calder, with the wagons: what Ch 2's key left between him and the Fourth */
-    b8_c3_calder:()=>({sp:'Calder', scene:'b8_blackcoral', fx:()=>{ S.f.b8_c3_calder = 1; if (b83Kelyk() === 'passed') S.f.b8_c3_wagon = 1; }, again:()=>'Calder, with the wagons, counting crates.', txt: b83Kelyk() === 'burned' ?
+    b8_c3_calder:()=>({sp:'Calder', scene:'b8_blackcoral', fx:()=>{ if (!S.f.b8_c3_calder) { /* the second half of the road's pay: a light purse after a burned wagon, in full and a silver a head after a passed one */ const pay = b83Kelyk() === 'burned' ? 5 : 20 + (S.squad || []).length; S.silver = (S.silver || 0) + pay; S.f.b8_c3_pay = pay; updSilver(); } S.f.b8_c3_calder = 1; if (b83Kelyk() === 'passed') S.f.b8_c3_wagon = 1; }, again:()=>'Calder, with the wagons, counting crates.', txt: b83Kelyk() === 'burned' ?
 `Calder is at the wagons in the harbour street with a tally-board, counting crates off onto the cobbles. He sees you, and goes on counting.
 
 "Your pay," he says at last, and holds out a purse without looking up. It is light. It is meant to be. "Less what the merchant lost on the road. He's not pleased, Sergeant. He'll be less pleased in Darujhistan." He makes a mark on the board. "The wagons go west when they go. I'll want guards. I'll ask somebody else first."${b83If('kettle', `\n\nKettle looks at the light purse, and then at Calder, and keeps her opinion to herself, loudly.`)}`
