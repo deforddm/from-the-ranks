@@ -94,7 +94,7 @@ const r = await page.evaluate(async () => {
   S = JSON.parse(snap); migrate(S); S.tricks = {b4_c6_listen:{who:'haddat', ch:6}}; equip('haddat', 'b4_c6_pickethorn'); equip('tangle', 'b4_c6_dogslayer'); /* v7.2: one wearer per piece */ delete S.f.b4_c6_hornBlown; save();
   startBattle('b4_c6_dusk', {}); await wait(60);
   { const hd = B.units.find(u => u.id === 'haddat'), tg = B.units.find(u => u.id === 'tangle'), mr = B.units.find(u => u.id === 'marrow'), fs = B.units.filter(u => u.side === 'e'), e0 = fs[0], e1 = fs[1];
-    out.tr = {hasListen:hd.ab.includes('t_b4_c6_listen'), hasHorn:hd.ab.includes('t_b4_c6_horn')};
+    out.tr = {hasListen:!hd.ab.includes('t_b4_c6_listen') && AB.t_b4_c6_listen.passive === true, /* v10.3: passive, no button */ hasHorn:hd.ab.includes('t_b4_c6_horn')};
     const b0 = atkCalc(mr, e0).bonus, b1 = atkCalc(mr, e1).bonus;
     AB.t_b4_c6_listen.run(hd); boonFoeTurnStart(e0); boonFoeTurnStart(e1); out.tr.marked = atkCalc(mr, e0).bonus - b0; out.tr.unmarked = atkCalc(mr, e1).bonus - b1;
     e0.x = hd.x + 1; e0.y = hd.y; e1.x = hd.x - 1; e1.y = hd.y; out.tr.noFlank = !flanked(e0, hd); squadTurnStart(hd); out.tr.flankBack = flanked(e0, hd);
