@@ -139,7 +139,7 @@ The reasons and sources are in the repo's `docs/tth-canon.md`, §5 and the plan 
 74. **Hood falls; he never dies.** Never his beheading shown, never the Ice Throne, his Jaghut or his penance (DoD). Death "didn't answer" on the last night.
 75. **The Guardians of the Gate** are nameless dead, from the morning after on. Never Whiskeyjack's name, Toc as Herald, or the Gate's arbiters (DoD).
 76. **Dragnipur:** "the black sword is gone" at most. Never Brood's hammer, Draconus, the Chained, Apsal'ara, Ditch or Kadaspala.
-77. **Black Coral after the night:** Mother Dark per rule 11. "A young lord in Black Coral" at most: never Nimander's name, Aranatha, Clip, or the Eleint blood.
+77. **Black Coral after the night:** Mother Dark per rule 11. "A young lord in Black Coral" at most: never that Nimander is that lord, and never Aranatha, Clip, or the Eleint blood. Nimander may be named as a vision's eyes on the road, before any of it (Claude's call, Nov 9, Book Eight vision 2).
 78. **The Redeemer and the Dying God:** never the embrace, never Salind's or the Seerdomin's end. The camp ends in "fire from the sky", seen from far off or told after. Never Bastion or the Dying God's body.
 79. **Karsa and the gods of war:** "a giant in the street". Never Toc's message, "torc-bearer", Karsa's daughters, or what he will do (DoD, TCG). Rule 24 continues.
 80. **OST's ground:** never the Legate, the Seguleh coming, the Spawns (never by that name), the Malazan ambassador, Humble Measure's rise, Taya, or Tayschrenn as T'renn. The `daru` road may say "Malazans may come back one day", nothing more.
