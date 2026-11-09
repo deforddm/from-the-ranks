@@ -15,8 +15,8 @@ const srv = await server(); const br = await launch();
 const { page, errors } = await openGame(br, srv.url, { fast: true });
 const out = await page.evaluate(() => {
   try {
-    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol'), mt: () => newStateMT('Sol'), bh: () => newStateBH('Sol'), rg: () => newStateRG('Sol') };
-    const bookOf = id => ({ b2: 'dg', b3: 'moi', b4: 'hoc', b5: 'mt', b6: 'bh', b7: 'rg' })[id.slice(0, 2)] || 'gotm';
+    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol'), mt: () => newStateMT('Sol'), bh: () => newStateBH('Sol'), rg: () => newStateRG('Sol'), tth: () => newStateTTH('Sol') };
+    const bookOf = id => ({ b2: 'dg', b3: 'moi', b4: 'hoc', b5: 'mt', b6: 'bh', b7: 'rg', b8: 'tth' })[id.slice(0, 2)] || 'gotm';
     const chOf = id => +(Object.keys(CHAPTERS).find(n => CHAPTERS[n].battles && id in CHAPTERS[n].battles) || 0);
     const foe = (book, ch, diff, bid) => { if (typeof setBook === 'function') setBook(book); S = mk[book](); S.chapter = ch; S.diff = diff; B = { id: bid, def: {} };
       const u = mkFoe('bruiser', 1, 1); B = null; return { hp: u.maxhp, atk: u.atk, dmg: u.dmg[2], ac: u.ac, avg: u.dmg[0] * (u.dmg[1] + 1) / 2 + u.dmg[2] }; };

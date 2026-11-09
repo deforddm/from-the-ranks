@@ -106,7 +106,7 @@ ok(!r.err, 'no error in the page script' + (r.err ? ': ' + r.err : ''));
 ok(r.patrons >= 15 && r.unboonod && r.unboonod.length === 0, `every patron has a boon (${r.patrons} patrons${r.unboonod && r.unboonod.length ? ', missing ' + r.unboonod.join(', ') : ''})`);
 ok(r.treach === 'tiger' && r.fener === 'boar', `the sergeant's god follows the book: Treach in Book Three (${r.treach}), Fener otherwise (${r.fener})`);
 ok(r.noSigil && r.noSigil.length === 0 && r.sgtMoi === 'patrons/treach:true' && r.sgtGotm === 'patrons/sgt:true', `every god has a sigil; Treach's is the tiger, Fener's the boar (${(r.noSigil || []).join(',') || 'none missing'}; ${r.sgtMoi}; ${r.sgtGotm})`);
-ok(r.distinct === 18, `eighteen distinct sigils across the five books (${r.distinct})`);
+ok(r.distinct === 19, `nineteen distinct sigils across the books (${r.distinct}; v11.0: K'rul for Book Eight's Vasso)`);
 ok(r.errant && r.errant.key === 'errant' && r.errant.sig === 'patrons/errant' && r.errant.art, `Book Five: the sergeant's god is the Errant, with a boon and a sigil (${JSON.stringify(r.errant)})`);
 ok(r.b5Gods === 'perrit:hold:true,thegg:tarthenal:true,brune:shore:true', `Book Five's gods: the Empty Hold, the Tarthenal dead, the Shore, each a boon and a sigil (${r.b5Gods})`);
 ok(r.errantHit && r.errantHit.mine === 2 && r.errantHit.theirs === -1, `the Errant: +2 to hit, enemies −1 (${JSON.stringify(r.errantHit)})`);

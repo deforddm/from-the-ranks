@@ -123,7 +123,8 @@ const B6CH5 = {
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
         {id:'oldsoldier', name:'The old soldier of the 9th', kind:'b2soldier', x:3, y:7, node:()=>'b6_c5_rumour', fresh:()=>!S.f.b6_c5_rumour},
-        {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial} ] },
+        {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial},
+        {id:'bredd', name:'A regular of the 8th', kind:'b2soldier', x:13, y:6, node:()=>'b6_c5_bredd', fresh:()=>!S.f.b6_c5_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
 
     /* 16 x 12 (odhan, day; optional). A village off the road the plague went through: # walls  H the doors of the houses  w the well
        . the lane  , dust  e back up the lane to the road */
@@ -313,6 +314,14 @@ He picks the stylus up again. "Bring them in. That's the order. I've given it."`
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
 
     /* ---- the camp on the bluff: the old soldier's talk (the 791, the Host), the burial detail, the carts, the cairn ---- */
+    /* v11.0 (David, Nov 8: Neffarias Bredd, one rumour in every book where Malazan soldiers gather, bigger each time, never seen; Book Four's
+       is b4_c5_bredd). Optional; it sets b6_c5_bredd and nothing else. */
+    b6_c5_bredd:()=>({sp:'A regular of the 8th', scene:'b6_c5_road', fx:()=>{ S.f.b6_c5_bredd = 1; }, again:()=>'The regular of the 8th, still telling it to whoever sits down.', txt:
+`A regular of the 8th is sitting on his pack by the road with a skin of something that is not water, telling the same story to whoever stops. You stop.
+
+"Neffarias Bredd," he says. "You heard? He was in Y'Ghatan. Went back in after the fire, on his own, for a sapper's satchel he'd left, and came out the far side with the satchel, two wounded and a mule." He drinks. "The mule was on fire. He put it out with his hands." He passes the skin. "Never seen him. Nobody has. That's how good he is."${b65Say({tangle:`\n\n"A sapper's satchel," Tangle says, with real interest. "Whose?"\n\n"His," the regular says. "He's a sapper too, now. Did I not say?"`, marrow:`\n\nMarrow takes the skin, smells it, and hands it back. "Burnt hands," she says. "He'll want those seen to, child. Tell him to come by."`, _:''})}${b65Say({haddat:`\n\nHaddat says nothing at all, which from Haddat is a review.`, mirrel:`\n\n"Two wounded," Mirrel says. "I'd like their names. For the list." The regular finds he has somewhere else to be.`, _:''})}`,
+      ch:[{t:'Drink to Neffarias Bredd.', go:()=>startExplore()},
+          {t:'"Next time it\'ll be two mules."', go:()=>startExplore()}]}),
     b6_c5_rumour:()=>({sp:'The old soldier of the 9th', scene:'b6_c5_road', fx:()=>{ S.f.b6_c5_rumour = 1; }, again:()=>'The old soldier, with his deck and his rum.', txt:
 `The old soldier of the 9th is sitting with his back to a cart wheel with a cup of something in one hand and his deck in the other, doing neither.
 

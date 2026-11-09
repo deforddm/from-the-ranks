@@ -201,7 +201,7 @@ PATRONS.vasso = PATRON_KRUL;
 Object.assign(BOONS, {
   'the dead':                 {key:'b8dead', name:'The dead march past', txt:'Every squadmate starts the fight with a ward of a tenth of their health, and enemies are −1 to hit.'},
   'the Guardians of the Gate':{key:'b8gate', name:'The Gate is held',     txt:'The first time each squadmate would go down, they stay up at 1 health and take a ward of a tenth of their health.'},
-  'K\'rul':                   {key:'krul',   name:'The bell hums',        txt:'+1 to hit, and every squadmate heals 1 at the start of their turn (past full health, a ward).'},
+  'K\'rul':                   {key:'krul',   name:'The bell hums',        txt:'+1 to hit, and every squadmate heals 1 at the start of their turn.'},
 });
 Object.entries(BOONS).forEach(([god, b]) => { BOON_BY_KEY[b.key] ??= Object.assign({god}, b); });
 { const _atkCalc = atkCalc;
@@ -248,13 +248,33 @@ function b8CharmAfter(u, before){
   blog(`<em>The charm at ${u.name}'s throat goes colder.</em> The wound comes off ${u.name} and goes to ${t.name}, who was nearer the gate already: ${d}.`);
   sparks(t.x, t.y, 12, '#b8c0b0', .5); const s0 = t.soakNext, w0 = t.ward; t.soakNext = 0; t.ward = 0; hurt(t, d); t.ward = w0; t.soakNext = s0; }
 if (typeof ART !== 'undefined' && ART['item/hoodrep']) { ART['item/b8_hoodcharm'] ??= ART['item/hoodrep']; if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/b8_hoodcharm'] ??= ART_SIZE['item/hoodrep']; } // 140b paints its own
+/* The jug of kelyk (an item, b8_kelykjug; plan, David, Nov 8, 9:03 PM PST). Worn as a trinket it gives its wearer an action on their first
+   turn of a fight, Drink: it heals 2d6 plus the squad's level bonus (a plain heal: no ward, v10.3) and gives +2 to hit for the rest of that
+   fight. Afterwards the drinker carries the kelyk-sickness (S.injury, the v10.2 wound slot: −1 to hit) until the next fire; a real wound
+   is worse and replaces it. It does not use the action. Never made to look good: the words are short, sour, and the squad's. */
+ITEMS.b8_kelykjug = {name:'A jug of kelyk', slot:'trinket', role:'any', who:null,
+  line:'A stoppered clay jug, sticky at the neck, that smells of fruit gone over and something underneath the fruit. The pilgrims drink it and stop being frightened. Then they stop being much of anything. Ohl says it is a poor trade at any price, and he has seen most of the prices.'};
+ITEM_SPECIAL.b8_kelykjug = 'Drink, on its wearer\'s first turn of a fight: heal 2d6 and +2 to hit for that fight; afterwards the kelyk-sickness (−1 to hit) until the next fire';
+INJURIES.kelyk = {name:'the kelyk-sickness', word:'the kelyk-sickness', hit:1, sev:0};
+{ const _gi = giveInjury; giveInjury = function(u, pick){ if (!pick) { const ks = Object.keys(INJURIES).filter(k => k !== 'kelyk'); pick = ks[R(ks.length)]; } return _gi(u, pick); }; } // a bad fall is never the kelyk
+AB.b8_drink = {name:'Drink the kelyk', self:true, free:true, desc:()=>`On your first turn of a fight, and it does not use the action: heal 2d6+${lvB()} and +2 to hit for the rest of the fight. Afterwards, the kelyk-sickness: −1 to hit until the next fire.`,
+  ok:u=>!!(B && u && (B.round || 1) <= 1 && !B.used['b8drink_' + u.id] && wears(u, 'b8_kelykjug')),
+  run(u){ B.used['b8drink_' + u.id] = 1; u.b8kelyk = true; heal(u, roll(2, 6, lvB())); AUDIO.play('heal'); sparks(u.x, u.y, 10, '#8a4a6a', .4); float(u, '+2 to hit', '#c8a0b8');
+    blog(`${u.name} drinks from the jug. It is sweet, and then it is not.${b8In('ohl') && u.id !== 'ohl' ? ' Ohl watches, and says nothing, which is worse than anything he could have said.' : ''}`);
+    const was = injuryOf(u.id); if (!was) { (S.injury ??= {})[u.id] = 'kelyk'; save(); } }};
+{ const _mkParty = mkParty; mkParty = function(id, x, y){ const u = _mkParty(id, x, y); if (wears(id, 'b8_kelykjug') && !u.ab.includes('b8_drink')) u.ab.splice(Math.max(0, u.ab.length - 1), 0, 'b8_drink');
+    if (B && B.used && B.used['b8drink_' + id]) { u.b8kelyk = true; if (S.injury && S.injury[id] === 'kelyk') u.atk += 1; } // a fight's second area: still drunk, and not sick yet
+    return u; }; }
+{ const _atkCalc = atkCalc; atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (a && a.b8kelyk && a.side === 'p') c.bonus += 2; return c; }; }
+if (typeof ART !== 'undefined' && ART['item/b6_c1_wellrope']) { ART['item/b8_kelykjug'] ??= ART['item/b6_c1_wellrope']; } // 140b paints its own
 /* The Kurald Galain shroud (a trick, b8_shroud): Black Coral, Chapter 3, behind a hard check. Once a fight, the bearer or a squadmate within
    4 (further as the squad levels) takes a ward at full size, 15% of their health, at once, with no heal needed (wards never stack: a
-   bigger one already there stays). The darkness takes the next blow. Elder sorcery: otataral does not touch it. */
-TRICKS.b8_shroud = {name:'A Fold of Night', ch:3, use:'fight', ab:'t_b8_shroud', sorcery:true, elder:true, where:'Black Coral, under the Andii\'s night',
+   bigger one already there stays). The darkness takes the next blow. Elder sorcery: otataral does not touch it. v10.3: it does not
+   strike, so it is free (one free trick a turn); it is not a heal, so healW does not come into it: the ward is set directly. */
+TRICKS.b8_shroud = {name:'A Fold of Night', ch:3, use:'fight', ab:'t_b8_shroud', sorcery:true, elder:true, free:true, where:'Black Coral, under the Andii\'s night',
   lore:'In Black Coral the dark is kept, the way a lamp is kept elsewhere: somebody in the city holds it over the streets, and it does not lift at noon. A little of it can be folded and carried, if you know how to ask, and if the dark agrees.',
-  get fx(){ return `Once a fight: the bearer or a squadmate within ${4 + lvT()} takes a ward of a full 15% of their health at once, no heal needed. Wards never stack. Grows with level. Elder sorcery: otataral does not touch it.`; }};
-AB.t_b8_shroud = {name:TRICKS.b8_shroud.name, trick:'b8_shroud', sorcery:true, elder:true, desc:()=>TRICKS.b8_shroud.fx,
+  get fx(){ return `Once a fight: the bearer or a squadmate within ${4 + lvT()} takes a ward of a full 15% of their health at once, no heal needed. Wards never stack. Grows with level. Elder sorcery: otataral does not touch it. It does not use the action (one free trick a turn).`; }};
+AB.t_b8_shroud = {name:TRICKS.b8_shroud.name, trick:'b8_shroud', sorcery:true, elder:true, free:true, desc:()=>TRICKS.b8_shroud.fx,
   tiles:u=>party().filter(p => !p.ally && p.hp > 0 && cheb(u, p) <= 4 + lvT()),
   run(u, x, y){ const t = unitAt(x, y); if (!t) return; const w = wardCap(t); AUDIO.play('shadow'); sparks(t.x, t.y, 18, '#3a3070', .5);
     if (w > (t.ward || 0)) { t.ward = w; float(t, 'ward ' + w, '#dfe8f0'); blog(`${u.name} folds a piece of the Andii night over ${t === u ? 'their own shoulders' : t.name}. The darkness will take the next blow. <em>A ward of ${w}.</em>`); }

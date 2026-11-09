@@ -77163,7 +77163,8 @@ const B6CH5 = {
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
         {id:'oldsoldier', name:'The old soldier of the 9th', kind:'b2soldier', x:3, y:7, node:()=>'b6_c5_rumour', fresh:()=>!S.f.b6_c5_rumour},
-        {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial} ] },
+        {id:'burial', name:'A burial detail', kind:'b2soldier', x:11, y:8, node:()=>'b6_c5_burial', fresh:()=>!S.f.b6_c5_burial},
+        {id:'bredd', name:'A regular of the 8th', kind:'b2soldier', x:13, y:6, node:()=>'b6_c5_bredd', fresh:()=>!S.f.b6_c5_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
 
     /* 16 x 12 (odhan, day; optional). A village off the road the plague went through: # walls  H the doors of the houses  w the well
        . the lane  , dust  e back up the lane to the road */
@@ -77353,6 +77354,14 @@ He picks the stylus up again. "Bring them in. That's the order. I've given it."`
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
 
     /* ---- the camp on the bluff: the old soldier's talk (the 791, the Host), the burial detail, the carts, the cairn ---- */
+    /* v11.0 (David, Nov 8: Neffarias Bredd, one rumour in every book where Malazan soldiers gather, bigger each time, never seen; Book Four's
+       is b4_c5_bredd). Optional; it sets b6_c5_bredd and nothing else. */
+    b6_c5_bredd:()=>({sp:'A regular of the 8th', scene:'b6_c5_road', fx:()=>{ S.f.b6_c5_bredd = 1; }, again:()=>'The regular of the 8th, still telling it to whoever sits down.', txt:
+`A regular of the 8th is sitting on his pack by the road with a skin of something that is not water, telling the same story to whoever stops. You stop.
+
+"Neffarias Bredd," he says. "You heard? He was in Y'Ghatan. Went back in after the fire, on his own, for a sapper's satchel he'd left, and came out the far side with the satchel, two wounded and a mule." He drinks. "The mule was on fire. He put it out with his hands." He passes the skin. "Never seen him. Nobody has. That's how good he is."${b65Say({tangle:`\n\n"A sapper's satchel," Tangle says, with real interest. "Whose?"\n\n"His," the regular says. "He's a sapper too, now. Did I not say?"`, marrow:`\n\nMarrow takes the skin, smells it, and hands it back. "Burnt hands," she says. "He'll want those seen to, child. Tell him to come by."`, _:''})}${b65Say({haddat:`\n\nHaddat says nothing at all, which from Haddat is a review.`, mirrel:`\n\n"Two wounded," Mirrel says. "I'd like their names. For the list." The regular finds he has somewhere else to be.`, _:''})}`,
+      ch:[{t:'Drink to Neffarias Bredd.', go:()=>startExplore()},
+          {t:'"Next time it\'ll be two mules."', go:()=>startExplore()}]}),
     b6_c5_rumour:()=>({sp:'The old soldier of the 9th', scene:'b6_c5_road', fx:()=>{ S.f.b6_c5_rumour = 1; }, again:()=>'The old soldier, with his deck and his rum.', txt:
 `The old soldier of the 9th is sitting with his back to a cart wheel with a cup of something in one hand and his deck in the other, doing neither.
 
@@ -83911,7 +83920,8 @@ const B7CH3 = {
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
         {id:'wenna', name:'A Shake fisher', kind:'wenna', x:12, y:7, node:()=>'b7_c3_wenna', show:()=>S.f.b7_wennaDone == null || S.f.b7_wennaDone === 2, fresh:()=>S.f.b7_wennaDone == null},
-        {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines} ] },
+        {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines},
+        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
        field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
@@ -84137,6 +84147,14 @@ The water is cold and sweet and tastes of stone. The squad fills its skins, and 
       ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
 
     /* marines under the trees: camp talk (the ten smokes) */
+    /* v11.0 (David, Nov 8: Neffarias Bredd, one rumour in every book where Malazan soldiers gather, bigger each time, never seen; Book Four's
+       is b4_c5_bredd, Book Six's b6_c5_bredd). Optional; it sets b7_c3_bredd and nothing else. */
+    b7_c3_bredd:()=>({sp:'A marine with a skin', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_bredd = 1; }, again:()=>'The marine with the skin, still whispering about Bredd.', txt:
+`A marine is lying under a hedge with a skin of something that is not water, and whispers to the Third as you go past, because the column does not talk out loud by day.
+
+"Neffarias Bredd," she whispers. "You heard? The night the ships burned. He swam out and put three of them out with his helmet, on his own, and then the Adjunct looked at him, and he swam back out and lit them again." She passes the skin. "He's inland now. Ahead of us. They say the Edur have stopped posting sentries on the roads he might use, because they keep finding them asleep, and nobody can say who put them to sleep." She takes the skin back. "Never seen him. That's how good he is."${b73Say({tangle:`\n\n"With his helmet," Tangle whispers. "Not a sharper."\n\n"He doesn't need a sharper," the marine whispers back, with contempt. "He's Neffarias Bredd."`, doss:`\n\nDoss is listening with his whole face. "Is he Indebted?" he whispers. Nobody knows. By morning, along the hedge, he is.`, _:''})}`,
+      ch:[{t:'Drink to Neffarias Bredd, quietly.', go:()=>startExplore()},
+          {t:'"Three ships is plenty."', go:()=>startExplore()}]}),
     b7_c3_marines:()=>({sp:'Marines under the trees', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_marines = 1; }, again:()=>'The marines under the trees, sharpening, whispering, counting smokes.', txt:
 `A squad of marines is sitting in a ring under a beech, sharpening, and whispering, which they are not supposed to do.
 
@@ -90430,7 +90448,7 @@ PATRONS.vasso = PATRON_KRUL;
 Object.assign(BOONS, {
   'the dead':                 {key:'b8dead', name:'The dead march past', txt:'Every squadmate starts the fight with a ward of a tenth of their health, and enemies are −1 to hit.'},
   'the Guardians of the Gate':{key:'b8gate', name:'The Gate is held',     txt:'The first time each squadmate would go down, they stay up at 1 health and take a ward of a tenth of their health.'},
-  'K\'rul':                   {key:'krul',   name:'The bell hums',        txt:'+1 to hit, and every squadmate heals 1 at the start of their turn (past full health, a ward).'},
+  'K\'rul':                   {key:'krul',   name:'The bell hums',        txt:'+1 to hit, and every squadmate heals 1 at the start of their turn.'},
 });
 Object.entries(BOONS).forEach(([god, b]) => { BOON_BY_KEY[b.key] ??= Object.assign({god}, b); });
 { const _atkCalc = atkCalc;
@@ -90477,13 +90495,33 @@ function b8CharmAfter(u, before){
   blog(`<em>The charm at ${u.name}'s throat goes colder.</em> The wound comes off ${u.name} and goes to ${t.name}, who was nearer the gate already: ${d}.`);
   sparks(t.x, t.y, 12, '#b8c0b0', .5); const s0 = t.soakNext, w0 = t.ward; t.soakNext = 0; t.ward = 0; hurt(t, d); t.ward = w0; t.soakNext = s0; }
 if (typeof ART !== 'undefined' && ART['item/hoodrep']) { ART['item/b8_hoodcharm'] ??= ART['item/hoodrep']; if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/b8_hoodcharm'] ??= ART_SIZE['item/hoodrep']; } // 140b paints its own
+/* The jug of kelyk (an item, b8_kelykjug; plan, David, Nov 8, 9:03 PM PST). Worn as a trinket it gives its wearer an action on their first
+   turn of a fight, Drink: it heals 2d6 plus the squad's level bonus (a plain heal: no ward, v10.3) and gives +2 to hit for the rest of that
+   fight. Afterwards the drinker carries the kelyk-sickness (S.injury, the v10.2 wound slot: −1 to hit) until the next fire; a real wound
+   is worse and replaces it. It does not use the action. Never made to look good: the words are short, sour, and the squad's. */
+ITEMS.b8_kelykjug = {name:'A jug of kelyk', slot:'trinket', role:'any', who:null,
+  line:'A stoppered clay jug, sticky at the neck, that smells of fruit gone over and something underneath the fruit. The pilgrims drink it and stop being frightened. Then they stop being much of anything. Ohl says it is a poor trade at any price, and he has seen most of the prices.'};
+ITEM_SPECIAL.b8_kelykjug = 'Drink, on its wearer\'s first turn of a fight: heal 2d6 and +2 to hit for that fight; afterwards the kelyk-sickness (−1 to hit) until the next fire';
+INJURIES.kelyk = {name:'the kelyk-sickness', word:'the kelyk-sickness', hit:1, sev:0};
+{ const _gi = giveInjury; giveInjury = function(u, pick){ if (!pick) { const ks = Object.keys(INJURIES).filter(k => k !== 'kelyk'); pick = ks[R(ks.length)]; } return _gi(u, pick); }; } // a bad fall is never the kelyk
+AB.b8_drink = {name:'Drink the kelyk', self:true, free:true, desc:()=>`On your first turn of a fight, and it does not use the action: heal 2d6+${lvB()} and +2 to hit for the rest of the fight. Afterwards, the kelyk-sickness: −1 to hit until the next fire.`,
+  ok:u=>!!(B && u && (B.round || 1) <= 1 && !B.used['b8drink_' + u.id] && wears(u, 'b8_kelykjug')),
+  run(u){ B.used['b8drink_' + u.id] = 1; u.b8kelyk = true; heal(u, roll(2, 6, lvB())); AUDIO.play('heal'); sparks(u.x, u.y, 10, '#8a4a6a', .4); float(u, '+2 to hit', '#c8a0b8');
+    blog(`${u.name} drinks from the jug. It is sweet, and then it is not.${b8In('ohl') && u.id !== 'ohl' ? ' Ohl watches, and says nothing, which is worse than anything he could have said.' : ''}`);
+    const was = injuryOf(u.id); if (!was) { (S.injury ??= {})[u.id] = 'kelyk'; save(); } }};
+{ const _mkParty = mkParty; mkParty = function(id, x, y){ const u = _mkParty(id, x, y); if (wears(id, 'b8_kelykjug') && !u.ab.includes('b8_drink')) u.ab.splice(Math.max(0, u.ab.length - 1), 0, 'b8_drink');
+    if (B && B.used && B.used['b8drink_' + id]) { u.b8kelyk = true; if (S.injury && S.injury[id] === 'kelyk') u.atk += 1; } // a fight's second area: still drunk, and not sick yet
+    return u; }; }
+{ const _atkCalc = atkCalc; atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (a && a.b8kelyk && a.side === 'p') c.bonus += 2; return c; }; }
+if (typeof ART !== 'undefined' && ART['item/b6_c1_wellrope']) { ART['item/b8_kelykjug'] ??= ART['item/b6_c1_wellrope']; } // 140b paints its own
 /* The Kurald Galain shroud (a trick, b8_shroud): Black Coral, Chapter 3, behind a hard check. Once a fight, the bearer or a squadmate within
    4 (further as the squad levels) takes a ward at full size, 15% of their health, at once, with no heal needed (wards never stack: a
-   bigger one already there stays). The darkness takes the next blow. Elder sorcery: otataral does not touch it. */
-TRICKS.b8_shroud = {name:'A Fold of Night', ch:3, use:'fight', ab:'t_b8_shroud', sorcery:true, elder:true, where:'Black Coral, under the Andii\'s night',
+   bigger one already there stays). The darkness takes the next blow. Elder sorcery: otataral does not touch it. v10.3: it does not
+   strike, so it is free (one free trick a turn); it is not a heal, so healW does not come into it: the ward is set directly. */
+TRICKS.b8_shroud = {name:'A Fold of Night', ch:3, use:'fight', ab:'t_b8_shroud', sorcery:true, elder:true, free:true, where:'Black Coral, under the Andii\'s night',
   lore:'In Black Coral the dark is kept, the way a lamp is kept elsewhere: somebody in the city holds it over the streets, and it does not lift at noon. A little of it can be folded and carried, if you know how to ask, and if the dark agrees.',
-  get fx(){ return `Once a fight: the bearer or a squadmate within ${4 + lvT()} takes a ward of a full 15% of their health at once, no heal needed. Wards never stack. Grows with level. Elder sorcery: otataral does not touch it.`; }};
-AB.t_b8_shroud = {name:TRICKS.b8_shroud.name, trick:'b8_shroud', sorcery:true, elder:true, desc:()=>TRICKS.b8_shroud.fx,
+  get fx(){ return `Once a fight: the bearer or a squadmate within ${4 + lvT()} takes a ward of a full 15% of their health at once, no heal needed. Wards never stack. Grows with level. Elder sorcery: otataral does not touch it. It does not use the action (one free trick a turn).`; }};
+AB.t_b8_shroud = {name:TRICKS.b8_shroud.name, trick:'b8_shroud', sorcery:true, elder:true, free:true, desc:()=>TRICKS.b8_shroud.fx,
   tiles:u=>party().filter(p => !p.ally && p.hp > 0 && cheb(u, p) <= 4 + lvT()),
   run(u, x, y){ const t = unitAt(x, y); if (!t) return; const w = wardCap(t); AUDIO.play('shadow'); sparks(t.x, t.y, 18, '#3a3070', .5);
     if (w > (t.ward || 0)) { t.ward = w; float(t, 'ward ' + w, '#dfe8f0'); blog(`${u.name} folds a piece of the Andii night over ${t === u ? 'their own shoulders' : t.name}. The darkness will take the next blow. <em>A ward of ${w}.</em>`); }
@@ -90687,6 +90725,17 @@ ${[[84, 1], [116, -1]].map(([x, d]) => `<g transform="translate(${x} 104)"><path
 <circle cx="102" cy="84" r="5" fill="#0a0a0c"/><circle cx="102" cy="84" r="5" fill="none" stroke="#9ab0c8" stroke-width="1" opacity=".5"/>
 <path d="M84 80 Q90 76 96 78" stroke="#fff" stroke-width="1.4" fill="none" opacity=".45"/><ellipse cx="102" cy="88" rx="30" ry="22" fill="#9ab0c8" opacity=".07"/></svg>`;
   ART_SIZE['item/b8_hoodcharm'] = [200, 150];
+  /* the jug of kelyk: a stoppered clay jug, sticky at the neck, a dark drip down its side; nothing about it inviting */
+  ART['item/b8_kelykjug'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="A jug of kelyk"><defs><radialGradient id="b8kj-bg" cx=".44" cy=".42" r=".78"><stop offset="0" stop-color="#2e2830"/><stop offset=".62" stop-color="#18141a"/><stop offset="1" stop-color="#0a080c"/></radialGradient>
+<radialGradient id="b8kj-sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<linearGradient id="b8kj-cl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b08a62"/><stop offset=".45" stop-color="#8a6644"/><stop offset="1" stop-color="#3a2a1c"/></linearGradient></defs>
+<rect width="200" height="150" fill="url(#b8kj-bg)"/><ellipse cx="100" cy="128" rx="44" ry="8" fill="url(#b8kj-sh)"/>
+<path d="M84 34 L116 34 L114 46 Q140 56 140 88 Q140 124 100 126 Q60 124 60 88 Q60 56 86 46 Z" fill="url(#b8kj-cl)" stroke="#1a120a" stroke-width="1.4"/>
+<path d="M138 70 Q156 70 154 88 Q152 104 136 104" stroke="#5a4028" stroke-width="7" fill="none"/>
+<rect x="86" y="24" width="28" height="12" rx="3" fill="#4a3424" stroke="#1a120a" stroke-width="1.2"/>
+<path d="M90 46 Q88 64 92 80 Q94 92 90 104" stroke="#3a1428" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/><circle cx="90" cy="108" r="3.4" fill="#3a1428"/>
+<path d="M68 70 Q72 60 82 56" stroke="#fff" stroke-width="1.4" fill="none" opacity=".3"/><path d="M64 96 Q100 104 136 96" stroke="#1a120a" stroke-width="1" fill="none" opacity=".5"/></svg>`;
+  ART_SIZE['item/b8_kelykjug'] = [200, 150];
 }
 /* Settings › Artwork off: the title's canvas backdrop borrows Book Three's until Book Eight has its own */
 { const _stb = startTitleBackdrop; startTitleBackdrop = function(cv, b){ return _stb(cv, b === 'tth' ? 'moi' : b); }; }

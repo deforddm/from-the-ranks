@@ -260,6 +260,23 @@ const SYNTH_RG = (n) => {
   vets(S); vets(S.th.l); save(); startChapter(n);
 };
 
+// Book Eight (--book=tth --from=N): a synthetic save at the start of Book Eight's chapter N (docs/tth-book-brief.md): the Fourth at the
+// brief's levels (16, 16, 17, 17, 18, 19, 19), earlier keys, the Contract by then, Vasso from Ch 2 and Edrem from Ch 4
+const SYNTH_TTH = (n) => {
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  setBook('tth'); S = newStateTTH('Hask'); const keys = (typeof B8KEYS !== 'undefined' && B8KEYS) || {};
+  S.chapters = {}; for (let i = 1; i < n; i++) { const v = pick(keys[i] || ['a', 'b']); S.f[`b8_c${i}_key`] = v; S.chapters[i] = v; }
+  const lv = {1:16, 2:16, 3:17, 4:17, 5:18, 6:19, 7:19}[n] || 16; S.lvl = lv; S.xp = LEVELS[lv - 1];
+  S.b8 = {con:Math.max(0, Math.min(10, 3 + Math.floor(Math.random() * 4) - (n > 3 ? 1 : 0))), hi:3, lo:3};
+  if (n >= 2) { S.f.b8_vassoDone = 1; if (!S.squad.includes('vasso')) S.squad.push('vasso'); }
+  if (n >= 4) { S.f.b8_edremDone = 2; S.camp = [...new Set([...(S.camp || []), 'edrem'])]; }
+  if (n >= 4) { S.f.b8_away3 = 1; } if (n >= 5) S.f.b8_away4 = 1;
+  [...S.squad, ...(S.camp || [])].forEach(k => { S.loy[k] ??= 0; S.gear[k] ??= {}; S.picks[k] ??= []; }); S.picksDue = []; migrate(S);
+  S.squad.forEach(id => { const t = PICKS[3][id]; if (t && !S.picks[id].some(p => t.some(x => x[0] === p))) S.picks[id].push(t[0][0]);
+    VET_LVLS.filter(l => S.lvl >= l).forEach((l, i) => { const v = PICKS.vet[i]; if (v && !S.picks[id].includes(v[0])) S.picks[id].push(v[0]); }); });
+  save(); startChapter(n);
+};
+
 let bad = 0, skipped = 0;
 async function run(i) {
   const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768 } : { fast: true });
@@ -277,7 +294,9 @@ async function run(i) {
     console.log(`run ${i}: SKIP (Book Six has no chapter registered yet)`); skipped++; await ctx.close(); return; }
   if (book === 'rg' && !(await page.evaluate(() => Object.keys((BOOKSNAP.rg && BOOKSNAP.rg.ch) || {}).length))) { // nothing to play yet
     console.log(`run ${i}: SKIP (Book Seven has no chapter registered yet)`); skipped++; await ctx.close(); return; }
-  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : book === 'bh' ? SYNTH_BH : book === 'rg' ? SYNTH_RG : SYNTH, from);
+  if (book === 'tth' && !(await page.evaluate(() => Object.keys((BOOKSNAP.tth && BOOKSNAP.tth.ch) || {}).length))) { // nothing to play yet
+    console.log(`run ${i}: SKIP (Book Eight has no chapter registered yet)`); skipped++; await ctx.close(); return; }
+  if (from) await page.evaluate(book === 'dg' ? SYNTH_DG : book === 'moi' ? SYNTH_MOI : book === 'hoc' ? SYNTH_HOC : book === 'mt' ? SYNTH_MT : book === 'bh' ? SYNTH_BH : book === 'rg' ? SYNTH_RG : book === 'tth' ? SYNTH_TTH : SYNTH, from);
   const t0 = Date.now();
   let last = '', same = 0, status = '', ticks = 0, chapterSeen = -1, areaSeen = '', viewSeen = '', errShot = 0;
   const problems = [];
@@ -312,5 +331,5 @@ const par = Math.min(runs, 4);
 let next = 0;
 await Promise.all(Array.from({ length: par }, async () => { while (next < runs) { const i = next++; await run(i); } }));
 await browser.close(); srv.kill();
-if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'rg' ? 'Seven' : book === 'bh' ? 'Six' : book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
+if (skipped) console.log(`${skipped} run${skipped === 1 ? '' : 's'} skipped: Book ${book === 'tth' ? 'Eight' : book === 'rg' ? 'Seven' : book === 'bh' ? 'Six' : book === 'mt' ? 'Five' : book === 'hoc' ? 'Four' : 'Three'} has no chapters yet.`);
 process.exit(bad ? 1 : 0);

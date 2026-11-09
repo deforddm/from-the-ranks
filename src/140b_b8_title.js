@@ -104,6 +104,17 @@ ${[[84, 1], [116, -1]].map(([x, d]) => `<g transform="translate(${x} 104)"><path
 <circle cx="102" cy="84" r="5" fill="#0a0a0c"/><circle cx="102" cy="84" r="5" fill="none" stroke="#9ab0c8" stroke-width="1" opacity=".5"/>
 <path d="M84 80 Q90 76 96 78" stroke="#fff" stroke-width="1.4" fill="none" opacity=".45"/><ellipse cx="102" cy="88" rx="30" ry="22" fill="#9ab0c8" opacity=".07"/></svg>`;
   ART_SIZE['item/b8_hoodcharm'] = [200, 150];
+  /* the jug of kelyk: a stoppered clay jug, sticky at the neck, a dark drip down its side; nothing about it inviting */
+  ART['item/b8_kelykjug'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="A jug of kelyk"><defs><radialGradient id="b8kj-bg" cx=".44" cy=".42" r=".78"><stop offset="0" stop-color="#2e2830"/><stop offset=".62" stop-color="#18141a"/><stop offset="1" stop-color="#0a080c"/></radialGradient>
+<radialGradient id="b8kj-sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<linearGradient id="b8kj-cl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b08a62"/><stop offset=".45" stop-color="#8a6644"/><stop offset="1" stop-color="#3a2a1c"/></linearGradient></defs>
+<rect width="200" height="150" fill="url(#b8kj-bg)"/><ellipse cx="100" cy="128" rx="44" ry="8" fill="url(#b8kj-sh)"/>
+<path d="M84 34 L116 34 L114 46 Q140 56 140 88 Q140 124 100 126 Q60 124 60 88 Q60 56 86 46 Z" fill="url(#b8kj-cl)" stroke="#1a120a" stroke-width="1.4"/>
+<path d="M138 70 Q156 70 154 88 Q152 104 136 104" stroke="#5a4028" stroke-width="7" fill="none"/>
+<rect x="86" y="24" width="28" height="12" rx="3" fill="#4a3424" stroke="#1a120a" stroke-width="1.2"/>
+<path d="M90 46 Q88 64 92 80 Q94 92 90 104" stroke="#3a1428" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/><circle cx="90" cy="108" r="3.4" fill="#3a1428"/>
+<path d="M68 70 Q72 60 82 56" stroke="#fff" stroke-width="1.4" fill="none" opacity=".3"/><path d="M64 96 Q100 104 136 96" stroke="#1a120a" stroke-width="1" fill="none" opacity=".5"/></svg>`;
+  ART_SIZE['item/b8_kelykjug'] = [200, 150];
 }
 /* Settings › Artwork off: the title's canvas backdrop borrows Book Three's until Book Eight has its own */
 { const _stb = startTitleBackdrop; startTitleBackdrop = function(cv, b){ return _stb(cv, b === 'tth' ? 'moi' : b); }; }

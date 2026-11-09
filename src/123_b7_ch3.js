@@ -110,7 +110,8 @@ const B7CH3 = {
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
         {id:'wenna', name:'A Shake fisher', kind:'wenna', x:12, y:7, node:()=>'b7_c3_wenna', show:()=>S.f.b7_wennaDone == null || S.f.b7_wennaDone === 2, fresh:()=>S.f.b7_wennaDone == null},
-        {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines} ] },
+        {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines},
+        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
        field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
@@ -336,6 +337,14 @@ The water is cold and sweet and tastes of stone. The squad fills its skins, and 
       ch:[{t:'Back to the wood.', go:()=>startExplore()}]}),
 
     /* marines under the trees: camp talk (the ten smokes) */
+    /* v11.0 (David, Nov 8: Neffarias Bredd, one rumour in every book where Malazan soldiers gather, bigger each time, never seen; Book Four's
+       is b4_c5_bredd, Book Six's b6_c5_bredd). Optional; it sets b7_c3_bredd and nothing else. */
+    b7_c3_bredd:()=>({sp:'A marine with a skin', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_bredd = 1; }, again:()=>'The marine with the skin, still whispering about Bredd.', txt:
+`A marine is lying under a hedge with a skin of something that is not water, and whispers to the Third as you go past, because the column does not talk out loud by day.
+
+"Neffarias Bredd," she whispers. "You heard? The night the ships burned. He swam out and put three of them out with his helmet, on his own, and then the Adjunct looked at him, and he swam back out and lit them again." She passes the skin. "He's inland now. Ahead of us. They say the Edur have stopped posting sentries on the roads he might use, because they keep finding them asleep, and nobody can say who put them to sleep." She takes the skin back. "Never seen him. That's how good he is."${b73Say({tangle:`\n\n"With his helmet," Tangle whispers. "Not a sharper."\n\n"He doesn't need a sharper," the marine whispers back, with contempt. "He's Neffarias Bredd."`, doss:`\n\nDoss is listening with his whole face. "Is he Indebted?" he whispers. Nobody knows. By morning, along the hedge, he is.`, _:''})}`,
+      ch:[{t:'Drink to Neffarias Bredd, quietly.', go:()=>startExplore()},
+          {t:'"Three ships is plenty."', go:()=>startExplore()}]}),
     b7_c3_marines:()=>({sp:'Marines under the trees', scene:'b7_camp_night', fx:()=>{ S.f.b7_c3_marines = 1; }, again:()=>'The marines under the trees, sharpening, whispering, counting smokes.', txt:
 `A squad of marines is sitting in a ring under a beech, sharpening, and whispering, which they are not supposed to do.
 
