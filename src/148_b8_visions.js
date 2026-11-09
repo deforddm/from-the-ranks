@@ -39,7 +39,7 @@ The streets are full. The city is in a mood to celebrate something, and has hung
 
 Not close. Never close. A man in a plain brown cloak who stops when she stops, and finds something else very interesting whenever she turns her head. He is good. In a crowd like this one, good is nearly enough.
 
-She thinks about the bar, because it is easier than thinking about him. About Mallet upstairs, who has taken to retirement like a man taking to his bed with a fever. About Antsy, who will want to shout. About the old historian at the corner table, who will want to write it all down.`,
+She thinks about the bar, because it is easier than thinking about him. About Mallet upstairs, who has taken to retirement like a man taking to his bed with a fever. About Antsy, who will want to shout. About the old historian, who will want to write it all down.`,
      ch:[{t:'"Not a cutpurse."', set:['b8v1_read','purse']},
          {t:'"Guild."', set:['b8v1_read','guild']}]},
     {txt:()=>`${S.f.b8v1_read === 'guild' ? `Guild. She knows that walk now. It belongs to a man who is paid by the job, and is thinking about the job and not about her, which is his mistake.` : `Not a cutpurse. A cutpurse would have tried by now, and been sorry by now. This one is waiting for somewhere quiet.`}

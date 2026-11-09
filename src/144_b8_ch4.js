@@ -379,7 +379,7 @@ The oldest carrier listens to the last verse with her head on one side and nods 
           {t:'"Keep your road. We\'ll send if we need you."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
     b8_c4_edrem_join:()=>({sp:'Edrem', scene:'b8_camp_night', txt:
-`${b8In('edrem') ? `He nods once and falls in, at the end of the line, where a heavy goes. "I wore the grey once," he says, to nobody in particular. "It is good to stand in a line that is not his."` : `He nods, and stays where he is. "Six walk already," he says. "I can count. When there is room, I will be on the road."`}`,
+`${b8In('edrem') ? `He nods once and falls in, at the end of the line, where a heavy goes. "I wore the grey once," he says, to the dark past the tents. "It is good to stand in a line that is not his."` : `He nods, and stays where he is. "Six walk already," he says. "I can count. When there is room, I will be on the road."`}`,
       ch:[{t:'Back to the edge.', go:()=>startExplore()}]}),
 
     /* the fire: the camp's edge, by phase. The games pass wraps this node: keep the id */
@@ -392,7 +392,7 @@ The oldest carrier listens to the last verse with her head on one side and nods 
         again:()=>'The Fourth\'s fire at the camp\'s edge, the open dark behind it.', txt:
 `${ph === 1 ? `The fire is small and the dark round it is very large. The city's bells, far off, have said evening, and nothing else about the sky agrees.` : ph === 2 ? `The bells say it is day. There is no day. The camp goes about its business by lamplight, and the sweet smell is stronger than it was.${b84KeyOpen() ? ' Down the rows, people are tying their tent flaps shut.' : ''}` : ph === 3 ? (b84NightDone() ? `It is over, for tonight. The fire is still in. No one at the edge is sleeping, but some of them are lying down, which is a start.` : `The bad night. The fire is banked low so it will not show the squad to the rows. Somewhere in the camp a lot of people are singing something that is not the carriers' song.`) : `The bells say morning. The dark says what it always says. The fire has gone to embers, and the edge is still here.`}${b84Say({kettle:`\n\nKettle is counting munitions on a flat stone by the fire.`, ohl:`\n\nOhl is boiling the camp's water before anyone drinks it.`, _:''})}`,
         ch:[...(ph === 1 ? [b8ReadChoice(4)] : []),
-            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && (ph > 1 || !!S.f.b8_c4_waterDone), fx:()=>{ S.f[rk] = 1; rest('The Fourth sits an hour by its fire at the edge. Wounds close, mostly. Whatever the sweet stuff left in anyone goes out of them in a sweat.'); }, go:'b8_c4_fire_rest'},
+            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && (ph > 1 || !!S.f.b8_c4_waterDone), fx:()=>{ S.f[rk] = 1; rest('An hour by the fire at the edge, one of the squad always awake. The cuts close. Whatever the sweet stuff left in anyone goes out of them in a sweat.'); }, go:'b8_c4_fire_rest'},
             {t:'Talk with the squad.', go:'b8_c4_fire_talk'},
             ...(way ? [way] : []),
             {t:'Not now.', go:()=>startExplore()}]}; },

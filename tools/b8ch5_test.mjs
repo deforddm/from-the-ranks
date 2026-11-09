@@ -146,7 +146,7 @@ const r = await page.evaluate(async () => {
   out.fa.gateShut = !has('b8_c5_gate_in', /Through|Talk the wagons/);
   talk('b8_c5_benlo'); out.fa.benloNot = has('b8_c5_benlo', /Not now/); take('b8_c5_benlo', /Heard what/);
   const nt = DLG.b8_c5_news().txt; out.fa.news = /Mallet/.test(nt) && /Bluepearl/.test(nt) && /Guild, people say/.test(nt) && !/raid|Picker|Blend|Antsy|cellar/.test(nt);
-  take('b8_c5_news', /Mallet/); const mt = DLG.b8_c5_mallet().txt; out.fa.mallet = S.f.b8_c5_mallet === 1 && /a week/.test(mt) && /Whiskeyjack/.test(mt) && /better than me/.test(mt) && /Hood/.test(mt);
+  take('b8_c5_news', /Mallet/); const mt = DLG.b8_c5_mallet().txt; out.fa.mallet = S.f.b8_c5_mallet === 1 && /a week/.test(mt) && /the commander/.test(mt) && !/Whiskeyjack/.test(mt) && /better than me/.test(mt) && /Hood/.test(mt);
   talk('b8_c5_calder_end'); out.fa.calder = S.f.b8_c5_calderEnd === 1 && /merchant'll want you again/.test(DLG.b8_c5_calder_end().txt);
   talk('b8_c5_benna_end'); out.fa.benna = S.f.b8_c5_bennaEnd === 1 && /Bar it/.test(DLG.b8_c5_benna_end().txt);
   talk('b8_c5_wall'); out.fa.wall = /masks/.test(DLG.b8_c5_wall().txt);
