@@ -43,6 +43,17 @@ Sun Nov 8, 2026, 8:21 PM PST (the calendar, after the canon sheet). Before that 
 8. **The Guardians of the Gate** (Ch 7): a soldier who answers for the dead says something only Whiskeyjack would have said to the Fourth. Never his name (rule 75).
 - **For later books:** Kettle's name, when the Fourth first hear of the Azath child: ours says her parents had good taste. Hedge's return: Brisk always knew he was too stubborn.
 
+**Claude's calls from the engine (Mon Nov 9, 2026, 12:12 AM PST; `docs/v11.0-notes.md` has every one):**
+- **On-screen spelling is "Fete"**, matching the 154 uses already in the game, so Ch 1 reads *Before the Fete*. The plan keeps "Fête".
+- **The Contract** runs 0 to 10 and starts at 3. It rises by 1 for each Guild fight won and falls by 1 at the start of Ch 3 and of Ch 4.
+- **Ch 6's way out** depends on the Contract: `quiet` (0–1), `roofs` (2–4), `word` (5–7, only if Vasso walks), none (8–10).
+- **The Hood-touched charm** goes cold on the last night (Ch 6), when Hood falls.
+- **A Book Six save** transfers only if the whole book is finished.
+- **The flavour line:** "Five old soldiers in Darujhistan, years out of the army. Somebody has written their names on a paper, and paid for it."
+- **The kelyk jug:** drunk on the first turn, it heals 2d6 and gives +2 to hit. Afterwards the drinker carries "kelyk-sickness" (−1 to hit) until the next fire.
+- **Ch 5's passive** is `b8_c5_grass`.
+- **The Bredd backfill** is `b6_c5_bredd` (Book Six Ch 5) and `b7_c3_bredd` (Book Seven Ch 3).
+
 **Claude's calls from the canon sheet** (David may overturn any; sources in `docs/tth-canon.md`):
 - **Ch 1's title** becomes *Before the Fête*. The keys stay `hunt` / `quiet`.
 - **The contract:** the Fourth's knives are a second paper. Who paid is never said, and the narrator never ties it to K'rul's (rule 70).
