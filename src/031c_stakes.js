@@ -150,6 +150,25 @@ const SOLDIER_SKIP = new Set(['b3_c7_hunt', 'b3_c7_stakes']);
    B1GAP / B2GAP / B3GAP_FIGHT / B4GAP_FIGHT: Bridgeburner only, Books One to Four, on top of everything else (Books Three and Four keep
    their chapter rows, B3GAP and B4GAP, on both difficulties). Books Five to Seven keep their own per-fight rows (B5GAP_FIGHT, B6GAP, B7GAP). ---- */
 const SOLDIER_FIGHT = {
+  b7_c1_riders:{ac:3, atk:3, hp:3.0, dmg:6}, // rg 85% won, 34% health lost
+  b7_c1_tally:{ac:3, atk:3, hp:2.7, dmg:5}, // rg 100% won, 15% health lost
+  b7_c2_gate:{ac:4, atk:4, hp:3.06, dmg:6}, // rg 95% won, 32% health lost
+  b7_c2_alley:{ac:2, atk:2, hp:2.03, dmg:4}, // rg 100% won, 35% health lost
+  b7_c2_bridge:{ac:2, atk:3, hp:2.24, dmg:5}, // rg 100% won, 33% health lost
+  b7_c3_farm:{ac:4, atk:4, hp:3.04, dmg:5}, // rg 90% won, 24% health lost
+  b7_c3_road:{ac:6, atk:6, hp:3.75, dmg:7}, // rg 95% won, 19% health lost
+  b7_c3_factor:{ac:4, atk:4, hp:4.06, dmg:7}, // rg 90% won, 32% health lost
+  b7_c4_riot:{ac:4, atk:4, hp:3.65, dmg:5}, // rg 95% won, 27% health lost
+  b7_c4_edurcamp:{ac:4, atk:4, hp:2.86, dmg:5}, // rg 85% won, 44% health lost
+  b7_c4_patriots:{ac:3, atk:3, hp:1.88, dmg:4}, // rg 100% won, 32% health lost
+  b7_c5_road:{ac:5, atk:5, hp:3.51, dmg:6}, // rg 95% won, 21% health lost
+  b7_c5_bailiff:{ac:8, atk:8, hp:7.2, dmg:10}, // rg 85% won, 35% health lost
+  b7_c6_deserters:{ac:4, atk:4, hp:2.97, dmg:5}, // rg 90% won, 36% health lost
+  b7_c6_landing:{ac:2, atk:2, hp:1.81, dmg:3}, // rg 95% won, 37% health lost
+  b7_c6_stand:{ac:3, atk:3, hp:2.0, dmg:4}, // rg 95% won, 37% health lost
+  b7_c7_gate:{ac:2, atk:3, hp:2.21, dmg:5}, // rg 85% won, 30% health lost
+  b7_c7_streets:{ac:2, atk:2, hp:2.56, dmg:5}, // rg 90% won, 24% health lost
+  b7_c7_bridge:{ac:4, atk:4, hp:3.51, dmg:6}, // rg 95% won, 26% health lost
   b6_c1_rearguard:{ac:1, atk:1, hp:1.95, dmg:4}, // bh 90% won, 25% health lost
   b6_c1_edge:{ac:4, atk:4, hp:3.58, dmg:6}, // bh 90% won, 33% health lost
   b6_c1_patrol:{ac:2, atk:2, hp:2.87, dmg:5}, // bh 85% won, 41% health lost
