@@ -79,7 +79,7 @@ function b81Upper(x, W, H, base, seed, k = 1){ x.fillStyle = '#05070c'; x.beginP
     x.beginPath(); x.arc(cx, top, r, Math.PI, 0); x.lineTo(cx + r, base); x.lineTo(cx - r, base); x.closePath(); x.fill(); }
   for (let i = 0; i < 5; i++) { const tx = W*(.08 + hash(i, seed + 6)*.84), th = H*(.1 + hash(i, seed + 7)*.08)*k; x.fillRect(tx, base - th, W*.008*k + 1, th); } // towers
   for (let i = 0; i < 160; i++) { x.fillStyle = `rgba(110,180,255,${(.35 + hash(i, seed + 8)*.55).toFixed(2)})`; x.fillRect(hash(i, seed + 9)*W, base - hash(i, seed + 10)*H*.09*k, 1, 1); }
-  glow(x, W*.5, base, W*.6, '#3a7ad0', .14); }
+  glow(x, W*.5, base, W*.5, '#3a7ad0', .08); }
 /* fog lying in a street, drifting */
 function b81Fog(ctx, W, H, y, t, mo, a = .16){ for (let i = 0; i < 5; i++) { const dx = mo ? Math.sin(t/(5200 + i*900) + i)*W*.04 : 0; ctx.fillStyle = `rgba(150,170,200,${(a - i*.02).toFixed(3)})`;
   ctx.beginPath(); ctx.ellipse(W*(.2 + i*.16) + dx, y + (i % 2)*H*.02, W*.32, H*.035, 0, 0, 7); ctx.fill(); } }
@@ -118,7 +118,7 @@ function b81Sign(ctx, x, y, s, swing = 0){ ctx.save(); ctx.translate(x, y); ctx.
    the roofs black against the sky and, far above them, the upper city's blue fire; the squad small in the street */
 SCENEX.b8_daru_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42;
   ctx.drawImage(sceneLayer('b81:street', W, H, (x, W, H) => {
-    b81Sky(x, W, H, hz, 8101); b81Upper(x, W, H, hz, 8110, .9);
+    b81Sky(x, W, H, hz, 8101); x.fillStyle = '#0c0e14'; x.fillRect(0, hz, W, H - hz); b81Upper(x, W, H, hz, 8110, .9);
     x.fillStyle = vgrad(x, hz, H, [[0,'#141820'],[1,'#06070a']]); x.fillRect(0, hz, W, H - hz); // the street's floor
     for (let i = 0; i < 90; i++) { const d = hash(i, 8120), yy = hz + Math.pow(d, .7)*(H - hz), cx = W*.5 + (hash(i, 8121) - .5)*W*(.2 + d*.9); ell(x, cx, yy, 2 + d*5, 1 + d*1.8, `rgba(${40 + Math.round(d*30)},${54 + Math.round(d*40)},${80 + Math.round(d*60)},.35)`); } // cobbles, wet
     b81Front(x, -4, W*.3, H*.86, H*.18, 8130, true); b81Front(x, W*.3, W*.4, H*.62, H*.3, 8131, false); // the near and far fronts, left
@@ -243,8 +243,9 @@ SCENEX.b8_c1_den = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
 SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4;
   ctx.drawImage(sceneLayer('b81:roofs', W, H, (x, W, H) => {
     b81Sky(x, W, H, hz, 8180); glow(x, W*.78, H*.12, H*.2, '#dfe6f0', .2); ell(x, W*.78, H*.12, H*.04, H*.04, '#e8e4d6'); ell(x, W*.774, H*.114, H*.012, H*.01, 'rgba(160,156,140,.4)'); // the moon
+    x.fillStyle = vgrad(x, hz, H, [[0,'#141a26'],[1,'#06070a']]); x.fillRect(0, hz, W, H - hz); // the city under the fog, below the skyline
     b81Upper(x, W, H, hz, 8186, 1.1);
-    x.fillStyle = 'rgba(140,160,190,.2)'; x.fillRect(0, hz, W, H*.08); // fog in the city below the skyline
+    x.fillStyle = vgrad(x, hz - H*.02, hz + H*.12, [[0,'rgba(140,160,190,0)'],[.4,'rgba(140,160,190,.12)'],[1,'rgba(140,160,190,0)']]); x.fillRect(0, hz - H*.02, W, H*.14); // fog in the city below the skyline
     // the roofs: three ridges, near to far
     [[.56, '#16181e', 8190], [.7, '#101216', 8191], [.86, '#0a0b0e', 8192]].forEach(([v, c, sd], k) => { x.fillStyle = c; x.beginPath(); x.moveTo(0, H);
       for (let i = 0; i <= 12; i++) { const u = i/12, yy = H*v - (i % 2 ? H*.06 : 0) + hash(i, sd)*H*.02; x.lineTo(u*W, yy); } x.lineTo(W, H); x.closePath(); x.fill();
@@ -254,7 +255,7 @@ SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
     x.fillStyle = '#0e0f12'; x.fillRect(W*.14, H*.5, W*.05, H*.38); x.fillRect(W*.78, H*.58, W*.045, H*.3); x.fillStyle = '#1e2026'; x.fillRect(W*.135, H*.49, W*.06, H*.02); x.fillRect(W*.775, H*.57, W*.055, H*.02);
   }), 0, 0, W, H);
   // the Guild's line, taut, with a glint running along it
-  const ax = W*.19, ay = H*.54, bx = W*.78, by = H*.6; B2F.line(ctx, '#1a1814', 1.1, [[ax, ay], [bx, by]]); ctx.fillStyle = '#4a4a50'; ctx.fillRect(ax - 2, ay - 1.5, 3, 3); ctx.fillRect(bx - 1, by - 1.5, 3, 3);
+  const ax = W*.19, ay = H*.54, bx = W*.78, by = H*.6; B2F.line(ctx, '#5a5a64', 1.2, [[ax, ay], [bx, by]]); ctx.fillStyle = '#4a4a50'; ctx.fillRect(ax - 2, ay - 1.5, 3, 3); ctx.fillRect(bx - 1, by - 1.5, 3, 3);
   if (mo) { const k = (t/3000) % 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, ax + (bx - ax)*k, ay + (by - ay)*k, 6, '#8ab8ff', .5); ctx.globalCompositeOperation = 'source-over'; }
   for (let i = 1; i < 6; i++) { const u = i/6; ell(ctx, ax + (bx - ax)*u, ay + (by - ay)*u, 1.2, 1.2, '#2a2620'); } // the knots
   b81Fog(ctx, W, H, H*.62, t, mo, .12);
@@ -265,7 +266,7 @@ SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
    a house with its door shut and no light behind it; the Daru tier's better lamps on the terraces above */
 SCENEX.b8_c1_house = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), hz = H*.34;
   ctx.drawImage(sceneLayer('b81:house', W, H, (x, W, H) => {
-    b81Sky(x, W, H, hz, 8200); b81Upper(x, W, H, hz, 8206, 1.3);
+    b81Sky(x, W, H, hz, 8200); x.fillStyle = vgrad(x, hz, H, [[0,'#12161e'],[1,'#06070a']]); x.fillRect(0, hz, W, H - hz); b81Upper(x, W, H, hz, 8206, 1.3);
     x.fillStyle = '#0c0d10'; x.fillRect(0, hz, W, H*.08); for (let i = 0; i < 30; i++) { x.fillStyle = 'rgba(232,200,130,.5)'; x.fillRect(hash(i, 8210)*W, hz + hash(i, 8211)*H*.07, 1, 1); } // the Daru terraces, warmer lamps
     // the house: tall, quiet, stone; the door at the top of three steps, shut; the windows dark
     x.fillStyle = vgrad(x, H*.3, H*.7, [[0,'#1e2026'],[1,'#0e0f12']]); x.fillRect(W*.3, H*.3, W*.4, H*.4); x.fillStyle = '#07080a'; x.fillRect(W*.28, H*.28, W*.44, H*.025);

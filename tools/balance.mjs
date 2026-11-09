@@ -449,7 +449,7 @@ async function newPage() {
 }
 async function prep(page) { await page.evaluate(INIT); if (PATCH) await page.evaluate(code => (0, eval)(code), PATCH); }
 const first = await newPage();
-const PREFIX = { hoc: 'b4_', dg: 'b2_', moi: 'b3_', mt: 'b5_', bh: 'b6_', rg: 'b7_' };
+const PREFIX = { hoc: 'b4_', dg: 'b2_', moi: 'b3_', mt: 'b5_', bh: 'b6_', rg: 'b7_', tth: 'b8_' };
 const meta = await first.page.evaluate(([bk, pre]) => { if (pre) setBook(bk); return Object.keys(BATTLES).filter(id => pre ? id.startsWith(pre) : !/^b[234567]_/.test(id)) /* Book One: its own fights only, not the later books' (they sit in BATTLES too) */.map(id => {
   const ch = +(Object.keys(CHAPTERS).find(n => CHAPTERS[n].battles && id in CHAPTERS[n].battles) || 0), d = BATTLES[id];
   return { id, ch, foes: d.foes.map(f => f[0]), waves: (d.waves || []).map(w => w.round + ':' + w.foes.map(f => f[0]).join('+')), allies: (d.allies || []).map(a => a[0]),
