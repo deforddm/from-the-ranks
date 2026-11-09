@@ -233,7 +233,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     b.foes.forEach(f => chkFoe(f, 'start'));
     (b.waves || []).forEach(w => w.foes.forEach(f => chkFoe(f, 'wave' + w.round)));
     (b.allies || []).forEach(f => { if (!FOES[f[0]]) err(`battle ${bid}: ally ${f[0]} missing`); });
-    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style) && !/^b[35]/.test(b.style)) warn(`battle ${bid}: style ${b.style}`); // v8.0: Book Five's chapters bring their own b5 styles
+    if (b.style && !['city', 'terrace', 'garden', 'storm', 'cellar', 'roof', 'plain', 'hills', 'estate', 'lake', 'dock', 'street', 'hissar', 'odhan', 'odhan_night', 'river', 'ridge', 'b2tunnel', 'vathar', 'forest', 'jaghut', 'geleen', 'aren', 'barrow'].includes(b.style) && !/^b[358]/.test(b.style)) warn(`battle ${bid}: style ${b.style}`); // v8.0: Book Five's chapters bring their own b5 styles
   }
   // items, cards
   const itemIds = Object.keys(ITEMS);
