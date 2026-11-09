@@ -353,7 +353,7 @@ Object.defineProperty(BOOKS.moi, 'titleArt', {configurable:true, get(){ return t
 const b3Finished = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done && b3Qualifies(loadSlot(e.id)));
 function b3ImpDesc(id){ const i = id && b3Import(id); if (!i) return 'A fresh start: the Fourth all came out of Darujhistan, and marched north with the Host.';
   const dead = i.dead.map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name);
-  return `Sergeant ${esc(i.from)}'s Fourth, as they left Darujhistan: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come out; there is room for a recruit where they were` : ''}. The sergeant's name comes with them.`; }
+  return `Sergeant ${esc(i.from)}'s Fourth, as they left Darujhistan: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come out; there is room for a recruit where they were` : ''}. The sergeant's name comes with them; change it if you like.`; }
 
 /* ---- the words Book Three throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.moi = [

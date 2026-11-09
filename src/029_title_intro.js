@@ -157,14 +157,14 @@ function showTitle(fresh, want){
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
-    /* picking a Book One sergeant for Book Three fills and locks the name (a fresh start unlocks it) */
-    const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
+    /* picking a sergeant to carry over fills in their name; it stays editable (David, Nov 9, 2026: change the name when carrying it over) */
+    const lockName = on => { nm.readOnly = false; nm.classList.remove('locked'); if (on) { nm.value = on; nm.oninput(); } };
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else if (book === 'bh' || book === 'rg') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; };
-      const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = !!o; n2.classList.toggle('locked', !!o); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
+      const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = false; n2.classList.remove('locked'); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
     bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)';
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
