@@ -97795,6 +97795,1016 @@ SCENEX.b8_c7_street = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   ART_SIZE['item/b8_c7_mourningband'] = [200, 150];
 }
 
+/* ============ Book Eight: the seven visions of Time Served ============
+   One per chapter, played when Book Eight's reader turns a card (or throws the bones) and looks into it. Book Eight reads through Book
+   Three's chain (140c's b8As wraps VISREADER): Tuft while she walks, else Sohra (bones and smoke), else Old Benna. visReader() (36b) gives
+   the right one, and 36b's visionFor finds these by book 'tth' (visionFor runs outside b8As, so S.book is 'tth' there).
+   Each vision is a scene the Fourth cannot stand in (tth-canon §4), through the eyes of a canon character the Fourth never speaks with.
+   Choices change words, never outcomes (S.f.b8v*_ keys; nothing else reads them). The last step of each is the reader, back at the
+   chapter's reading place (B8READ[n]): its sp, fig and txt are getters/functions of visReader(), so visAgain (36b) still matches it on a
+   replay.
+   How it hooks on: 21's card screen offers "✦ Look into the card" whenever visionFor(chapter, card) finds one; the vision comes back to
+   b8_c<n>_card (36b's cardNodeName, 'b8_c' for 'tth'), whose one button goes to B8READ[n].back. No chapter file changes.
+   Canon basis: docs/tth-canon.md §9, bound by §4, §5 and series-canon §(a), rules 70-83 above all. Picker's walk (Ch 1) is a vision of
+   what is coming (fix A); who paid is never said (70). Nimander is named only as the vision's eyes; his kin, the stranger with them and
+   the Eleint blood are not (77); no Bastion, no body (78). The Seerdomin is never given an end, the priestess no name (78). The young
+   woman in Spinnock's tavern is unnamed in the text. The crossroads stops as the swords come out (83). Karsa is a giant at a wall; the
+   one who has arrived is never named (74, 79); the swordsman is a swordsman (73); the moon is never explained (81). Iskar Jarak's place
+   is "a place that is ending": no sword, no wagon, no chains, no god at the head of the dead (72, 74, 75, 76); never his old name (7).
+   Backdrops are VISBG b8v_* and b8deck, the new figures FIGX b8v_* (148b, which loads after this file; both are read only when a
+   vision plays). Notes: docs/tth-visions-notes.md. */
+
+/* ---------------- the reader, at the end of each vision ---------------- */
+const b8vP = r => r.he ? {S:'He', s:'he', H:'His', h:'his'} : {S:'She', s:'she', H:'Her', h:'her'};
+const b8vWho = r => ['tuft', 'sohra', 'benna'].includes(r.id) ? r.id : 'other';
+const b8vFig = () => { const r = visReader(); return r.id === 'tuft' || r.id === 'sohra' ? r.id : r.id === 'benna' ? 'b3v_benna' : FIGX[r.id] ? r.id : r.he ? 'b3_c5_villager' : 'b3v_benna'; };
+/* o = {tuft:(r, p) => text, sohra:..., benna:..., other:...}: 60's readers, as Book Eight keeps them (140c); other is the fallback */
+const b8vEnd = o => ({get sp(){ return visReader().name; }, get fig(){ return b8vFig(); }, bg:'b8deck',
+  txt:() => { const r = visReader(), p = b8vP(r); return (o[b8vWho(r)] || o.other)(r, p); }});
+
+Object.assign(VISIONS, {
+  /* ---- Chapter 1: the winter before the Fete. Across the city, a retired marine walking home from the market, and a man behind her. ---- */
+  b8v1:{book:'tth', ch:1, who:'Picker', where:'A Daru street', fig:'b8v_picker', bg:'b8v_market', cap:'A crowded Daru street at dusk, the blue lamps coming on along it, and a lane going off between blind walls toward the lake.', steps:[
+    {txt:
+`Picker walks back from the market with a basket on her arm and a list in her head, and every item on the list is somebody else's errand.
+
+Blend should be doing this. Blend has a sprained ankle. Blend has had a sprained ankle for some days now, and keeps it up on a stool at the bar, and has never once been seen to wince when she forgets which one it is.
+
+The streets are full. The city is in a mood to celebrate something, and has hung it from every balcony. Picker shoulders through. She has been retired long enough to stop saluting, and not nearly long enough to stop counting the exits.`},
+    {txt:
+`He picked her up three streets back, at the fishmonger's.
+
+Not close. Never close. A man in a plain brown cloak who stops when she stops, and finds something else very interesting whenever she turns her head. He is good. In a crowd like this one, good is nearly enough.
+
+She thinks about the bar, because it is easier than thinking about him. About Mallet upstairs, who has taken to retirement like a man taking to his bed with a fever. About Antsy, who will want to shout. About the old historian at the corner table, who will want to write it all down.`,
+     ch:[{t:'"Not a cutpurse."', set:['b8v1_read','purse']},
+         {t:'"Guild."', set:['b8v1_read','guild']}]},
+    {txt:()=>`${S.f.b8v1_read === 'guild' ? `Guild. She knows that walk now. It belongs to a man who is paid by the job, and is thinking about the job and not about her, which is his mistake.` : `Not a cutpurse. A cutpurse would have tried by now, and been sorry by now. This one is waiting for somewhere quiet.`}
+
+Somewhere quiet is coming. The lane past the tannery runs between blind walls down to the lake road, and she always takes it, and he will know that she always takes it. That is what he has been paid to know.
+
+She shifts the basket to her left arm.`},
+    {txt:
+`Picker has been a soldier for most of her life, and a fair part of that life she has spent being followed by people who wanted her dead. She has a rule about it. It is not a complicated rule.
+
+She doesn't hurry. She doesn't look back. She turns into the lane past the tannery the way she always does, and three steps in, where the wall makes a corner and the lamp doesn't reach, she stops being a woman walking home.`,
+     ch:[{t:'Set the basket down.', set:['b8v1_basket','down']},
+         {t:'Keep hold of the basket.', set:['b8v1_basket','keep']}]},
+    {go:'Walk home.', txt:()=>`${S.f.b8v1_basket === 'keep' ? `She keeps the basket. It is a good basket, and he will be looking at it.` : `She sets the basket down by the wall, carefully, because the eggs were dear.`}
+
+He comes round the corner quickly, a blade already out and low along his leg, and finds her there, which is not where he was told she would be.
+
+It is over in the time it takes a lamp to gutter. Picker is not proud of it. She is not anything about it yet. Later, maybe.
+
+She looks at him a moment: the hands, the knife, the plain good cloak. A professional, and not a cheap one. Somebody is spending real money on old Malazans.
+
+She picks up the basket and walks the rest of the way a good deal faster than she walked the first part. Ahead, the lamp over the bar's door is already lit.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go. "A woman with a basket," she says, "and a man who thought she'd be easy." She looks up at the ceiling, at the roof, where something is not the wind. "That hasn't happened yet, Sergeant. It will." She lays the card face down between the cups. "She saw him three streets off. I'd like us to be that good." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together with the side of her hand. "A woman walking home with eggs," she says, "and a knife behind her." She listens to the roof a moment. "She turned round first. The bones liked that. It has not happened yet." Her hands are cold.`,
+      benna:() => `Old Benna puts the card down and wipes her fingers on her apron. "Marine," she says. "You can tell by the walk. Retired, and nobody's told her feet." She glances at the bar across the door. "Whoever follows that one home will wish he'd picked another basket. Not yet. Soon." Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "A woman walking home," ${p.s} says, "and a knife behind her. Not yet."`})]},
+
+  /* ---- Chapter 2: the old Domin road. Far ahead of the caravan, young Tiste Andii come over a rise to the scarecrow fields. ---- */
+  b8v2:{book:'tth', ch:2, who:'Nimander', where:'The scarecrow fields', fig:'b8v_nimander', bg:'b8v_fields', cap:'Low green rows under a pale sky, and on poles among them, as far as the land goes, shapes wrapped in rags.', steps:[
+    {txt:
+`Nimander walks at the front because the others expect it of him, and because at the front there is no one to watch his face.
+
+The road has been empty for days. Old Domin country: walls that were farms once, ditches nobody clears, a sky the colour of thin milk. Then, over a low rise, the fields begin, and his kin stop talking.
+
+Green. After so much grey, so much green it hurts to look at. Rows of it, planted straight, the plants low and broad-leaved, each one sitting on a swollen root as big as a head, set out in lines as neat as children waiting to be counted.`},
+    {txt:
+`And on poles among the rows, the scarecrows.
+
+They are not straw. He sees that at the first one, and makes himself go on seeing it. Shapes wrapped in rags, bound upright, and from the hem of each a dark stain runs down the pole into the ground at its foot. The green is thickest there.
+
+There are thousands. Field after field of them, to where the land meets the sky.
+
+Behind him one of his cousins says something low and sharp. Another only breathes out, slowly.`,
+     ch:[{t:'Keep walking.', set:['b8v2_walk','walk']},
+         {t:'Stop, and look properly.', set:['b8v2_walk','look']}]},
+    {txt:()=>`${S.f.b8v2_walk === 'look' ? `He stops, and looks properly, because someone should. It is the least he can give them, whoever they were. It is not much.` : `He keeps walking. If he stops they will all stop, and then they will have to decide something, and he is not ready to be the one who decides.`}
+
+The voices come then, as they do when he is tired or afraid. The dead he carries have opinions about the fields. He doesn't answer them. He learned long ago not to answer them out loud.
+
+Instead he thinks, as he has been thinking all down this road, about gods: how many there are, and how few of them are any use. If there is one true god, he decides, it is not any of the ones with temples. It is time. Time takes everything, and asks nobody's leave, and never once pretends to be kind.`},
+    {txt:
+`At the far side of the fields there is a town, or the start of one: new walls going up on old foundations, smoke, people at work. A man comes out to meet them on the road in a robe the colour of the leaves, smiling as if he had been told to.
+
+He is a priest, and very glad to see them. Traders, he supposes, come from Black Coral to see the old cities rise. The towns of the Pannion are waking, he tells them, in a new age, and the fields feed them.
+
+He talks of a god. A dying god, who gives. The fields are the god's gift. Everything here is the god's gift.`,
+     ch:[{t:'"We are traders."', set:['b8v2_said','trade']},
+         {t:'Let him think it.', set:['b8v2_said','quiet']}]},
+    {go:'Walk on.', txt:()=>`${S.f.b8v2_said === 'trade' ? `"We are traders," Nimander says. It is the first lie he has told on this road. It will not be the last, and he finds he minds that more than the lie.` : `Nimander lets him think it. A priest who has already decided what you are saves you the trouble of saying.`}
+
+The priest walks them to the edge of his town, talking all the way, and leaves them there with a blessing Nimander does not want and cannot give back.
+
+From the next rise he looks back once. The green, and the poles, and the shapes on them, going on and on under the pale sky. Somewhere ahead is whatever all of this is feeding. He would like very much to turn aside before they find it.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go. "Fields," she says. "East of here, on this road." She doesn't look out past the wagons. "Andii, a handful of them, young, and walking the way we're going." She wipes her palm on her knee. "We'll see that green, Sergeant. When we do, breathe through your sleeve."`,
+      sohra:() => `Sohra sweeps the bones together. "Green that drinks," she says. "And young Andii walking through it, who did not like what they saw." She throws a pinch of something on the fire and watches it burn. "The bones say we walk the same road. Not on the same day."`,
+      benna:() => `Old Benna puts the card down. "Scarecrows," she says. "Not the straw kind." She looks east past the wagons, then back at her own red hands. "I've washed for the dead before. Not that many. Never that many."`,
+      other:(r, p) => `${r.name} lets the card go. "Fields of green," ${p.s} says, "fed on the dead. East, on this road."`})]},
+
+  /* ---- Chapter 3: Black Coral. Outside the city, at the Great Barrow, a man who wore the Pannion's iron kneels and asks for nothing. ---- */
+  b8v3:{book:'tth', ch:3, who:'The Seerdomin', where:'The Great Barrow', fig:'b8v_seerdomin', bg:'b8v_barrow', cap:'A long mound outside a city under a night that does not lift, heaped with offerings, and a big man on his knees a little apart from the rest.', steps:[
+    {txt:
+`He comes every day. That is the whole of it, and he does not pretend it is more.
+
+Black Coral is behind him with its lamps lit at what ought to be noon. The night here does not lift; the city has stopped expecting it to. Ahead is the barrow, a long hill of earth raised over a man who took more sorrow into himself than any one man should, and did not give it back.
+
+Pilgrims kneel all along its sides. The offerings are heaped against it: coins and trinkets, cloth and small carved things. The poorer the giver, he has noticed, the more the gift seems to cost.`},
+    {txt:
+`He was a Seerdomin once. He wore the Pannion's iron and did what the Pannion asked, and some of what it asked he will carry until he dies. He knows that. He does not come here to put it down.
+
+He kneels where he always kneels, a little apart. He does not ask to be forgiven. Redemption, he has decided, is a dream for the deluded, and he has been a great many things but never that.
+
+What he offers instead is what he has: his company. It is a poor gift, and he knows it. But the one under this hill took in more grief than anyone can count, and it seems to the Seerdomin that such a one must be very much alone in there.`,
+     ch:[{t:'"I am here again."', set:['b8v3_pray','here']},
+         {t:'Say it without words.', set:['b8v3_pray','silent']}]},
+    {txt:()=>`${S.f.b8v3_pray === 'silent' ? `He says it without words, as he has most days. A soldier learns to report without opening his mouth.` : `"I am here again," he says, under his breath. It is not a prayer, quite. It is a soldier reporting for duty.`}
+
+Then the other thing, the only thing he ever asks: peace for them. For the ones on their knees along the mound, come from every corner of the land with their offerings and their sickness and their hope. Let them have peace. Whatever else.
+
+No answer comes. None ever has. He finds he doesn't mind. It was never the answer he came for.`},
+    {txt:
+`When he gets up there is a young woman in a priestess's plain robe standing between him and the road, as if she has been waiting for some while.
+
+"Benighted," she says, and he stiffens, until he understands she means it kindly: it is a title, she tells him, and a mark of respect. The Redeemer has seen him here, she says, day after day. There is a thing to be done, and he has been chosen for it.`,
+     ch:[{t:'"No."', set:['b8v3_no','no']},
+         {t:'"Find someone else."', set:['b8v3_no','else']}]},
+    {go:'Walk back.', txt:()=>`${S.f.b8v3_no === 'else' ? `"Find someone else," he says. "Anyone else."` : `"No," he says.`}
+
+She does not argue. That is worse. She only looks at him with a young face that is far too sure of itself, and steps aside to let him by.
+
+He walks back toward the city under the lamps. On either side of the road the pilgrims' camp spreads out, bigger every time he passes, and there is a sweet smell over parts of it now that he does not like.
+
+Some stains, he thinks, never wash out. He believes it. He has built what is left of his life on believing it. He walks a little faster all the same.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go. "The man on his knees at the barrow," she says. "Every day, and not asking for anything." She looks out of the window at the lamps, toward the barrow. "We stood there when they raised it, Sergeant. I never thought anyone would kneel to it like that."`,
+      sohra:() => `Sohra sweeps the bones together. "A soldier of the Pannion," she says, "keeping company with the one under the hill, and not believing anything will come of it." She pinches the smoke out. "The bones believe it for him. He does not have to."`,
+      benna:() => `Old Benna puts the card down. "Pannion," she says. "I'd know those shoulders anywhere. Washed enough of their blood out of our coats at Coral." She sniffs. "He's still wearing it. Under everything."`,
+      other:(r, p) => `${r.name} lets the card go. "A man at the barrow," ${p.s} says, "asking for nothing for himself."`})]},
+
+  /* ---- Chapter 4: Black Coral, another night. An Andii at a game in a tavern; his friend yields; a young woman from the camp comes in. ---- */
+  b8v4:{book:'tth', ch:4, who:'Spinnock Durav', where:'A tavern in Black Coral', fig:'b8v_spinnock', bg:'b8v_tavern', cap:'A low tavern in Black Coral, a lamp on every table, a game board between two cups, and the door standing open on the night.', steps:[
+    {txt:
+`Spinnock Durav has been alive for a very long time, and has found that the trick of it is to have somewhere to be on certain evenings.
+
+This is one. A tavern in the city, low-beamed, where the human drinkers have stopped staring at the Tiste Andii in the corner because he has been coming for so long. Across the board from him sits his friend: big, grey, careful, once a Seerdomin of the Pannion, who plays as if every piece were a soldier he would have to answer for.
+
+Spinnock likes him. It surprised him, at first, how much.`},
+    {txt:
+`The city is changing, and he can watch it from the corner table. Kelyk has come into Black Coral like water into a hull, slow and then everywhere, and he has begun to see its stains on everything: on sleeves, at the corners of mouths, in the glaze of a man's eyes at the next table.
+
+He moves a piece. His friend studies the board.`,
+     ch:[{t:'Press the attack.', set:['b8v4_play','press']},
+         {t:'Play it slow.', set:['b8v4_play','slow']}]},
+    {txt:()=>`${S.f.b8v4_play === 'slow' ? `Spinnock plays it slow. They have all night, and he has had a great many nights, and has learned to spend them carefully.` : `Spinnock presses, because he is curious what the big man will do with a hard position. Usually something clever, and slow, and annoying.`}
+
+Then his friend says, quietly, that he yields.
+
+Spinnock looks at the board. The position was not lost. It was nowhere near lost. Three moves, four, and the Seerdomin would have had him, and they both know it.
+
+"Why?" Spinnock asks.
+
+His friend gives no reason. He only sits back and looks at the board as if it belonged to someone else.`},
+    {txt:
+`The door opens.
+
+A young woman comes in from the street, slight, in plain pilgrim's clothes with the dust of the camp still on them, and comes straight to their table. She knows the big man; that much is plain from his face, which goes first white and then dark.
+
+This is his refuge, he tells her. His one place. She should not have come here.
+
+She does not leave. She waits, very calmly, for him to finish.`,
+     ch:[{t:'Stay where you are.', set:['b8v4_go','stay']},
+         {t:'Go and wait outside.', set:['b8v4_go','out']}]},
+    {go:'Go out into the night.', txt:()=>`${S.f.b8v4_go === 'stay' ? `Spinnock means to stay. Then his friend looks at him, once, and Spinnock gets up and goes out, because that look was one soldier asking another for room.` : `Spinnock gets up and goes out to give them room. A friend should know when he has become furniture.`}
+
+He waits in the street under the lamps, in the night that does not end.
+
+After a while the door opens and she comes out alone. On her way past she looks up at him, briefly, as if she had known him a long while and was glad to find him unchanged, and then she goes on down the street toward the camp.
+
+Something in Spinnock that has slept for a very long time opens one eye.
+
+It surprises him so much that he almost laughs. He stands there in the lamplight feeling ridiculous, and old, and for the first time in longer than he can easily count, not bored at all.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go. "An Andii in a tavern," she says, "and a man from the Pannion who gave a game away." She looks down the rows toward the sweet smell. "And a girl from this camp. From here." She puts the card face down on the mat. "He liked her. I don't think he meant to."`,
+      sohra:() => `Sohra sweeps the bones together. "The tall dark one," she says, "older than the hills here, and tired of all of it. Then he was not tired." She almost smiles. "The bones like him. They do not like the smell in this camp."`,
+      benna:() => `Old Benna puts the card down. "One of their Andii," she says, "sat in a tavern like a man." She shakes her head. "And some girl walks in off the road and he goes soft as wet bread. Older than the city." She sniffs. "They're all the same in the end, Sergeant."`,
+      other:(r, p) => `${r.name} lets the card go. "An Andii at a game," ${p.s} says, "and a girl from this camp."`})]},
+
+  /* ---- Chapter 5: the Lamatath. At a crossroads, four torches on poles and an Andii waiting; a tall old man comes out of the dark. ---- */
+  b8v5:{book:'tth', ch:5, who:'Spinnock Durav', where:'A crossroads', fig:'b8v_spinnock', bg:'b8v_crossroads', cap:'A crossroads in open grass at night, four torches on tall poles at its corners, and a figure waiting where the roads meet.', steps:[
+    {txt:
+`Spinnock Durav has set four torches on tall poles at the corners of the crossroads, and lit them, so that whoever comes down the road will see him from far off and know that he is meant to be seen.
+
+He was asked to come here, and wait. So he has come, and he waits.
+
+The grass goes away on every side under the dark. The wind moves in it and nothing else does. He has brought a jug of wine, which seemed only courteous.`},
+    {txt:
+`The old man comes out of the dark on the far road a little after midnight.
+
+He is tall, and grey, and walks like someone who has been walking since before there were roads. Plain armour, much mended. A great two-handed sword on his back. His face is the face of every king who outlived his kingdom, and he has outlived a good many.
+
+He stops at the edge of the torchlight and looks at Spinnock, and at the torches, and Spinnock watches him understand all of it at once.`,
+     ch:[{t:'Offer the wine.', set:['b8v5_wine','offer']},
+         {t:'Hold the jug, and wait.', set:['b8v5_wine','wait']}]},
+    {txt:()=>`${S.f.b8v5_wine === 'wait' ? `Spinnock holds the jug and waits. The old man looks at it, and at him, and Spinnock understands that no one will be drinking any wine tonight.` : `Spinnock holds out the jug. "It is a long road," he says. "Drink, at least." The old man looks at the jug for a while, and does not take it.`}
+
+Then Spinnock tells him, gently, because there is no use in being anything else. The city is not for him. He cannot pass.
+
+"Step aside," says the old man. It is not a threat. It is a tired man asking for a door to be held.`},
+    {txt:
+`He means it. Spinnock can see that he means it. He would walk round, if there were a way round; he would rather not do this. For a moment the old man tries every way there is not to do this, and Spinnock watches him try, and is sorry for him, a little.
+
+There is no way round, and they both know it. In the end the old man reaches back over his shoulder, slowly, and draws.
+
+Spinnock sets the jug down at the foot of a torch pole, where it will not be broken. Then he draws too.`,
+     ch:[{t:'"I am sorry for this."', set:['b8v5_last','sorry']},
+         {t:'Say nothing more.', set:['b8v5_last','none']}]},
+    {go:'Look away.', txt:()=>`${S.f.b8v5_last === 'none' ? `Spinnock says nothing more. Everything that would make any difference has been said.` : `"I am sorry for this," Spinnock says, and is.`}
+
+Four torches. Two shadows, long on the trampled grass. The wind has dropped.
+
+The card shows no more than that: the old king's blade coming up, and the Andii stepping in to meet it, and the torchlight shaking on the poles.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go, quickly. "Four torches on poles," she says, "where two roads cross. An Andii with a jug, and an old man with a sword as long as a door." She looks out across the grass, west, where the light is going. "That's not tonight. It's soon." She puts the deck away. "If we see those torches, Sergeant, we go round."`,
+      sohra:() => `Sohra sweeps the bones together. "Four fires on sticks," she says, "and two old ones who did not want to fight, fighting." She looks into the grass a while. "The bones went still. They do not do that."`,
+      benna:() => `Old Benna puts the card down and taps the old man with the sword. "Him," she says. "I saw that face once, at Pale, on the far side of the field." She pockets the copper. "The Andii's brave. Brave and stupid are cousins, Sergeant."`,
+      other:(r, p) => `${r.name} lets the card go. "Four torches at a crossroads," ${p.s} says, "and two who did not want to fight."`})]},
+
+  /* ---- Chapter 6: the Fete's last night. At a broken stretch of the wall, a giant tells a witch to build walls in her mind. ---- */
+  b8v6:{book:'tth', ch:6, who:'Karsa Orlong', where:'The broken wall', fig:'b4_c7_karsa', bg:'b8v_wall', cap:'A city wall broken open at night, rubble down into the street, fires beyond it, and over everything the moon in pieces.', steps:[
+    {txt:
+`Karsa Orlong stands in the gap where the wall used to be, with rubble to his knees and the stone sword over his shoulder, and breathes in the city.
+
+It smells of smoke. Of fear. Of a festival gone wrong in the middle of its last night, with the masks still on. Something with paws the size of shields came through this wall ahead of him, more than one of them, and the broken stone still remembers it.
+
+Beside him, Samar Dev is holding her head in both hands.`},
+    {txt:
+`She is a witch of Ugarat, and clever, and she feels things he does not trouble to feel. Tonight that cleverness is hurting her. Something has come into the city. Not through the wall: into it, all at once and everywhere, like cold into a room when a door is opened. And it is pressing on her mind like a thumb on a bruise.
+
+Karsa feels it too. It does not frighten him. Very little does. But he can see what it is doing to her.`,
+     ch:[{t:'"Look at me, witch."', set:['b8v6_say','look']},
+         {t:'Take her by the shoulder.', set:['b8v6_say','hold']}]},
+    {txt:()=>`${S.f.b8v6_say === 'hold' ? `He takes her by the shoulder, which steadies her, mostly because it is like being held up by a building.` : `"Look at me, witch," he says. She does, after a moment, with tears running out of her eyes from the pressure.`}
+
+Build walls, he tells her. In your mind. Stone on stone, the way his people build. Make them high, make them thick, and put the one who has arrived on the outside of them.
+
+"It is not that simple," she says through her teeth.
+
+"It is exactly that simple," says Karsa.`},
+    {txt:
+`She does it. He watches her face while she does: the jaw setting, the breathing slowing, the wall going up course by course behind her eyes. When it is done she lets go of her head, stands up straight, and swears at him comprehensively in three languages.
+
+Karsa grins. He can still feel the one who has come, out there in the burning city, vast and cold and somehow blazing. Let it blaze. It has not come for him.
+
+Ahead, the swordsman they have travelled with has already gone on into the streets without a word. He does that.`},
+    {go:'Look up.', txt:
+`They go after him. At the top of the rubble Samar Dev stops, and Karsa stops beside her, because she has looked up and made a small sound he has never heard her make.
+
+The moon is in pieces.
+
+Not cracked, not clouded. Broken, like a dropped plate, the pieces hanging apart from one another in the black with the light still coming off every one of them. As they watch, one piece begins, very slowly, to slide east.
+
+"Well," says Karsa, after a while. "That is new."
+
+Then he hitches up the stone sword and goes down into the city, and Samar Dev, because there is nothing else to be done, goes with him.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go and looks straight up, past the lanterns, at the moon with the crack across it. "Tonight," she says. "In pieces." She puts the card face down on the step. "A giant in a broken wall, and a witch with him. Whatever came into the city with them, Sergeant, it isn't here for us. That's the only good news in it."`,
+      sohra:() => `Sohra sweeps the bones together. "The moon," she says, "broken like a pot." She looks up at it, at the thin dark line across it, and away. "A giant at a broken wall, telling a witch to build walls of her own." She ties the pouch shut. "That is good advice. Take it, Sergeant."`,
+      benna:() => `Old Benna puts the card down and looks up at the moon over the roofs. "Cracked tonight," she says. "Broken, that card says." She folds her arms. "I've seen a lot of nights I didn't like, Sergeant. I'll not pretend I like this one."`,
+      other:(r, p) => `${r.name} lets the card go. "A giant at a broken wall," ${p.s} says, "and the moon in pieces. Tonight."`})]},
+
+  /* ---- Chapter 7: the morning after. In a place that is ending, the dead stand in their lines under a lame captain. ---- */
+  b8v7:{book:'tth', ch:7, who:'Iskar Jarak', where:'A place that is ending', fig:'b8v_iskar', bg:'b8v_dead', cap:'A grey plain going soft at its edges, a storm the colour of nothing on the far side of it, and coming across it in good order, an army of the dead.', steps:[
+    {txt:
+`Iskar Jarak walks at the head of the dead, and limps a little, because he limped before, and the dead keep what they were.
+
+The ground under him is grey and cracked and going soft at the edges, like a page left out in the rain. The sky is worse. Over the far side of everything a storm is coming that has no colour and makes no sound, and where it passes there is nothing left at all. This place is ending. He was told so. He came anyway.
+
+Behind him they come too. Thousands. Soldiers, all of them, from more wars than he has names for.`},
+    {txt:
+`No one ordered them here. He wants that clear, in his own head at least. They were asked, and they came of their own free will, every one, and he will not forget it.
+
+At the point of the column, closest to him, walk his own. A company he led a long time ago and lost piece by piece, in tunnels under one city and on the walls of another. They march the way they always marched, as if the ground owed them money. Somebody at the back is complaining. Somebody always is. He would worry if they stopped.`,
+     ch:[{t:'"Close it up back there."', set:['b8v7_order','close']},
+         {t:'Let them complain.', set:['b8v7_order','let']}]},
+    {txt:()=>`${S.f.b8v7_order === 'let' ? `He lets them complain. A soldier who has stopped complaining has stopped hoping, and he needs every scrap of hope these ones have left.` : `"Close it up back there," he says, not loudly. The complaining stops. The column closes up. Some things death doesn't change, and he is glad of every one of them.`}
+
+On his left walks a big man in grey armour, the Grey Swords' old commander, Brukhalian, his face as calm as a field before harvest. They have not spoken much. They have not needed to. Each knows what the other is for.
+
+Further back come the others: riders, marines, pikemen, men in armour nobody has forged in a thousand years.`},
+    {txt:
+`The storm reaches the far edge of the grey plain and does not stop.
+
+He sets them in their lines. His own at the point, because that is where they have always been. Brukhalian's on a flank, because there is nothing anywhere that will move Brukhalian once he has decided to stand. The rest where they can do the most good and last the longest.
+
+Then he walks the front of the line once, the way he used to before a fight, and stops at the end of it.
+
+"Anything else," says Iskar Jarak, "ask it now."
+
+No one does. They know him.`,
+     ch:[{t:'"Hold."', set:['b8v7_word','hold']},
+         {t:'"With me."', set:['b8v7_word','with']}]},
+    {go:'Stand.', txt:()=>`${S.f.b8v7_word === 'with' ? `"With me," says Iskar Jarak, and all down the line, the dead come with him.` : `"Hold," says Iskar Jarak, and all down the line, the dead hold.`}
+
+The storm comes in. The card shows no more than the first of it: grey light breaking on a line of shields, and the line not breaking. The very old dead, the ones with hardly anything left, go down like dry grass. Not his. His stand. Brukhalian, at the flank, does not move at all.
+
+Somewhere a long way from here, in a city by a lake, the bells are beginning.`},
+    b8vEnd({
+      tuft:() => `Tuft lets the card go. For a while there is only the bells, all the way across the water. "That was him," she says at last. "Sergeant. You heard. That voice." She turns the card over, slowly, face down on the shingle. "Wherever they were, they stood. All of them." Her hands are cold.`,
+      sohra:() => `Sohra sweeps the bones together, slowly. "The dead," she says, "in their lines, under a sky that was breaking. A lame man at the front." She listens to the bells. "You knew him, Sergeant. I saw it in your face." She closes her hand on the bones. Her hands are cold.`,
+      benna:() => `Old Benna puts the card down and leaves her hand on it. "I washed his shirts," she says. "At Pale. Him and his lot, up out of the tunnels, mud to the eyebrows." She does not take the copper. "Still at the front, then." The bells go on. Her hands are cold.`,
+      other:(r, p) => `${r.name} lets the card go. "The dead in their lines," ${p.s} says, "and a voice you knew, Sergeant."`})]},
+});
+
+/* ============ Book Eight: the visions' art (148) — backdrops VISBG b8v_* and b8deck, the figures FIGX b8v_* ============
+   Drawn the way Books Three to Seven draw their visions (68b, 78b, 88b, 108b, 128b): a few strokes per place, figures in the ~32px frame
+   lit from the left, and 36b's drawVision laying the vision's own figure, the motes, the violet and the vignette over each backdrop.
+   Book Eight's look: Darujhistan's blue lamps and lake mist; the Domin's pale sky and the hard green of the fields; Black Coral's night
+   that does not lift, with its lamps on iron arms; the Lamatath's grass under torchlight; the last night's fires and the broken moon; a
+   grey place going soft at the edges.
+   Headline only: what falls in Picker's lane is never drawn, the lane is empty when it happens; the scarecrows are rag shapes on poles at
+   a distance, a dark streak down each pole and nothing else; the barrow is a long mound with offerings; the crossroads stops with two
+   blades up; the storm in the last vision is a grey wall of nothing, the old dead fading where it touches them.
+   Reused: b4_c7_karsa (77b), kallor and greysword (60d), b3_c7_bridgeburner (67b), b3_c4_priest (64b), b3_andii (60d), b3v_benna and the
+   readers tuft and sohra; the helpers B3VB (68b), B4VB (78b), B5VB (88b), B6VB (108b), B7VB (128b). */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* Picker, retired: a broad-shouldered woman in a plain shirt and a leather vest, sleeves rolled, cropped brown hair, a knife at her belt,
+     a market basket on her arm. No torcs and no Bridgeburner green any more */
+  b8v_picker(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.02);
+    h.legs('#2e2a24'); ctx.fillStyle = '#3a2e22'; ctx.fillRect(-4.5, 9, 3.4, 4); ctx.fillRect(1.1, 9, 3.4, 4);
+    ctx.fillStyle = '#9a7656'; ctx.fillRect(-8.6, -4.4, 2.6, 7); ctx.fillRect(6, -4.4, 2.6, 7); // forearms, sleeves rolled
+    ctx.fillStyle = '#b8ac94'; ctx.fillRect(-8.8, -6, 3, 2); ctx.fillRect(5.8, -6, 3, 2); // the rolled sleeves
+    poly(ctx, [[-6,-6],[6,-6],[6,6.6],[-6,6.6]], h.armor('#a89a80', '#4a4232')); poly(ctx, [[-6,-6],[-2,-6],[-2.6,6.6],[-6,6.6]], h.armor('#5a4430', '#22180e')); poly(ctx, [[2,-6],[6,-6],[6,6.6],[2.6,6.6]], h.armor('#5a4430', '#22180e')); // shirt under a vest
+    ctx.fillStyle = '#1e140c'; ctx.fillRect(-6, 3, 12, 1.2); ctx.fillStyle = '#6a6a70'; ctx.fillRect(4, 3.6, 1, 4); // the belt, a knife
+    h.head('#b48a6a', 4.2, -11.4); h.look('rgba(22,12,8,.9)', -11.7); B2F.cap(ctx, '#3a2414', 4.5, -12.6, 1, 2); ctx.fillStyle = '#3a2414'; ctx.fillRect(-4.5, -12.6, 1.2, 2.6);
+    if (!(VIS && VIS.id === 'b8v1' && VIS.step === 4 && S && S.f && S.f.b8v1_basket !== 'keep')) { ctx.strokeStyle = '#6a4a28'; ctx.lineWidth = .9; ctx.beginPath(); ctx.arc(-8.4, 1.6, 3.2, Math.PI, 0); ctx.stroke(); poly(ctx, [[-12,2],[-4.8,2],[-5.6,6.4],[-11.2,6.4]], '#8a6a3a'); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-11.6, 3.8, 6.4, .5); ell(ctx, -9.6, 1.8, 1, .8, '#e8dcc4'); ell(ctx, -7.4, 1.6, 1, .8, '#e8dcc4'); } // the basket, eggs
+    ctx.restore(); },
+  /* Nimander: a young Tiste Andii, tall and slight, black-skinned, long black hair loose, a travel-worn dark cloak over a plain tunic,
+     a sword at his hip. o.phase gives the kin behind him a different cloak */
+  b8v_nimander(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .94, 1.14); const sw = o.still ? 0 : Math.sin(t/700 + (o.phase || 0))*.4, k = b2Pick(o, [['#2a2830', '#0c0b10'], ['#30282a', '#100c0c'], ['#262c2c', '#0a0e0e']]);
+    poly(ctx, [[-6,-6.4],[5.6,-6.4],[6.8,11.4 + sw],[-8.4 - sw,11.8]], h.armor(k[0], k[1])); // the cloak, road-worn
+    h.legs('#1a1a20'); h.torso('#3a3840', '#141418', 5.4); ctx.fillStyle = 'rgba(160,140,110,.25)'; ctx.fillRect(-5.4, 8, 10.8, 1.4); // dust at the hem
+    B2F.line(ctx, '#8a8e98', 1, [[5.2, 3.4], [8.4, 11.6]]); // the sword
+    h.head('#2a2630', 4, -11.6); h.look('rgba(200,200,220,.55)', -11.8); B2F.cap(ctx, '#050508', 4.2, -12.8);
+    ctx.fillStyle = '#050508'; ctx.fillRect(-4.6, -12.8, 1.6, 9.6); ctx.fillRect(3, -12.8, 1.4, 8.4); // the hair, long and loose
+    ctx.restore(); },
+  /* the Seerdomin: a big man past his prime, grey-stubbled, heavy-shouldered, in a plain grey-brown coat with no badge, a cloak over it;
+     o.kneel: on his knees, head bowed */
+  b8v_seerdomin(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.1, o.kneel ? .78 : 1.06); if (o.kneel) ctx.translate(0, 2.8);
+    poly(ctx, [[-7,-6.4],[6.6,-6.4],[7.8,11.6],[-8.6,12]], h.armor('#4a4438', '#1a1814')); // the cloak
+    h.legs('#2a2620'); h.torso('#6a5e4a', '#2a2418', 7); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-6, -1.6, 2.4, 1.6); // a darker patch where a badge was cut off
+    ctx.fillStyle = '#2a2016'; ctx.fillRect(-6.4, 3.2, 12.8, 1.4);
+    const hy = o.kneel ? -10.4 : -11.4; h.head('#a88a6c', 4.6, hy); if (!o.kneel) h.look('rgba(20,14,10,.9)', hy - .2);
+    ctx.fillStyle = 'rgba(140,134,124,.75)'; ctx.fillRect(-3.6, hy + 2.2, 8, 2); ctx.fillStyle = '#5a5248'; ctx.beginPath(); ctx.arc(0, hy - 1.2, 4.6, Math.PI*1.05, Math.PI*1.95); ctx.fill(); // grey stubble, cropped grey hair
+    if (o.kneel) { ell(ctx, 3.4, 9.6, 2.2, 1.4, '#a88a6c'); ell(ctx, -2.4, 9.8, 2.2, 1.4, '#a88a6c'); }
+    ctx.restore(); },
+  /* Spinnock Durav: a tall Tiste Andii warrior, black-skinned, iron-grey hair tied back, a long dark leather coat over mail, a long sword;
+     o.draw: the sword up in both hands */
+  b8v_spinnock(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1, 1.2); const sw = o.still ? 0 : Math.sin(t/800 + (o.phase || 0))*.3;
+    poly(ctx, [[-6.4,-6.4],[6,-6.4],[7,11.4 + sw],[-7.8 - sw,11.8]], h.armor('#2a2420', '#0c0a08')); // the long coat
+    h.legs('#18161a'); h.torso('#4a4e56', '#1a1c22', 5.8); ctx.fillStyle = 'rgba(200,210,230,.15)'; for (let i=0;i<4;i++) ctx.fillRect(-4.6, -4 + i*2.4, 9.2, .5); // the mail
+    ctx.fillStyle = '#1a1210'; ctx.fillRect(-5.8, 3.4, 11.6, 1.2);
+    if (o.draw) { B2F.line(ctx, '#c8ccd4', 1.3, [[3, 0], [9, -16]]); B2F.line(ctx, '#3a2a1a', 1.8, [[2.2, 2], [3.4, -.6]]); }
+    else { B2F.line(ctx, '#8a8e98', 1.1, [[-5.4, 3], [-9.4, 13]]); } // the sword: up, or sheathed
+    h.head('#22202a', 4.1, -11.6); h.look('rgba(210,210,230,.55)', -11.8); B2F.cap(ctx, '#6a6a70', 4.3, -12.8);
+    B2F.line(ctx, '#6a6a70', 1.6, [[-3.8, -11.4], [-5.6, -5.4]]); // the iron-grey hair, tied back
+    ctx.restore(); },
+  /* Samar Dev: a dark-haired woman of Seven Cities in a travel-stained robe and a long vest, hands to her temples (o.hands) */
+  b8v_samar(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, .98);
+    h.legs('#3a3028'); B2F.robe(ctx, h, '#8a6a48', '#3a2a18', 5.8, 7.6); poly(ctx, [[-5.8,-6],[-2,-6],[-3,11],[-7.2,11]], '#4a3a2a'); poly(ctx, [[2,-6],[5.8,-6],[7.2,11],[3,11]], '#4a3a2a'); // the vest
+    h.head('#a07656', 4, -11.2); h.look('rgba(20,10,6,.9)', -11.4); B2F.cap(ctx, '#140c08', 4.3, -12.4); ctx.fillStyle = '#140c08'; ctx.fillRect(-4.3, -12.4, 1.6, 7.6); ctx.fillRect(2.8, -12.4, 1.4, 6.4);
+    if (o.hands) { ell(ctx, -4.6, -11, 1.6, 1.8, '#a07656'); ell(ctx, 4.6, -11, 1.6, 1.8, '#a07656'); B2F.line(ctx, '#8a6a48', 2, [[-5, -5], [-4.6, -9.4]]); B2F.line(ctx, '#8a6a48', 2, [[5, -5], [4.6, -9.4]]); }
+    else { ctx.fillStyle = '#a07656'; ctx.fillRect(-7.6, -2, 2.2, 5); ctx.fillRect(5.4, -2, 2.2, 5); }
+    ctx.restore(); },
+  /* a young woman from the pilgrims' camp: slight, in plain undyed pilgrim's clothes with the dust on them, hair under a cloth */
+  b8v_pilgrimgirl(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .84, .9);
+    h.legs('#4a4038'); B2F.robe(ctx, h, '#a89a82', '#5a5040', 5.4, 7); ctx.fillStyle = 'rgba(120,100,70,.35)'; ctx.fillRect(-6.4, 8.6, 12.8, 2.4); // dust at the hem
+    h.head('#c09c7e', 3.8, -11.2); h.look('rgba(30,18,12,.85)', -11.4); B2F.cloth(ctx, '#8a7e6a', 'rgba(40,34,26,.5)');
+    ctx.restore(); },
+  /* Iskar Jarak: a soldier in old campaign kit gone grey with dust, a short grey beard, a helm, a sword at his hip, the weight on one leg
+     (he limps); the colour washed out of all of it, a little of the background through him */
+  b8v_iskar(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.02, 1.06); ctx.globalAlpha *= .9; const lean = o.still ? .04 : .04 + Math.sin(t/900 + (o.phase || 0))*.02; ctx.rotate(lean);
+    h.legs('#4a4a4c'); ctx.fillStyle = '#5a5a5c'; ctx.fillRect(1.1, 9, 3.4, 4); // one leg bearing less
+    h.torso('#7a7a76', '#3a3a3a', 6.2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-6.2, -1, 12.4, .6); ctx.fillRect(-5.8, 3.2, 11.6, 1.2);
+    B2F.line(ctx, '#9a9a96', 1.1, [[5.6, 3.4], [9, 12.4]]); // the sword, sheathed
+    h.head('#a8a29a', 4.2, -11.2); h.look('rgba(30,30,34,.85)', -11.4); poly(ctx, [[-3.4,-9.4],[4.2,-9.4],[3.6,-6.6],[.6,-5.6],[-2.2,-6.2],[-3.2,-7.6]], '#8a8680'); // the beard, grey
+    B2F.cap(ctx, '#5e5e60', 4.6, -12.2, 1, 2); ctx.fillStyle = '#4e4e50'; ctx.fillRect(-4.8, -12.6, 9.6, 1.4); // the helm
+    ctx.restore(); },
+});
+
+/* ---------------- backdrop helpers ---------------- */
+const B8VB = {
+  /* a torch on a tall pole, burning */
+  torch(ctx, x, y, h, T, seed = 0){ ctx.fillStyle = '#2a1e14'; ctx.fillRect(x - 1, y - h, 2, h); const f = REDUCE() ? 1 : .85 + Math.sin(T/70 + seed)*.1 + Math.sin(T/27 + seed*2)*.05;
+    glow(ctx, x, y - h - 3, 40, '#ff9a40', .35*f); B4VB.fire(ctx, x, y - h + 1, T, .45); },
+  /* a scarecrow: a pole, a cross-bar, a rag-wrapped shape, and the dark streak down to the ground */
+  scarecrow(ctx, x, y, s, col = '#3a3428'){ ctx.fillStyle = '#2a2218'; ctx.fillRect(x - .6*s, y - 22*s, 1.2*s, 22*s); ctx.fillRect(x - 5*s, y - 18*s, 10*s, 1*s);
+    poly(ctx, [[x - 3*s, y - 19*s],[x + 3*s, y - 19*s],[x + 2.4*s, y - 8*s],[x - 2.4*s, y - 8*s]], col); ell(ctx, x, y - 20.6*s, 2*s, 2.2*s, col);
+    ctx.fillStyle = 'rgba(14,10,8,.55)'; ctx.fillRect(x - .4*s, y - 8*s, .8*s, 8*s); },
+  /* a lamp on an iron arm, Black Coral */
+  armlamp(ctx, x, y, T, r = 26, dir = 1){ ctx.strokeStyle = '#141418'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x, y + 30); ctx.lineTo(x, y); ctx.lineTo(x + 7*dir, y); ctx.stroke(); B4VB.lamp(ctx, x + 7*dir, y + 3, T, r, .4, '#9ab8ff'); ctx.fillStyle = '#d8e4ff'; ctx.fillRect(x + 7*dir - 1.2, y + 1.6, 2.4, 3); },
+  /* a broken moon: pieces apart in the dark, one sliding east (right) */
+  moon(ctx, x, y, r, T, broken){ if (!broken) { glow(ctx, x, y, r*3, '#e8e8f0', .18); ell(ctx, x, y, r, r, '#d8d8e0'); B2F.line(ctx, 'rgba(40,40,60,.7)', .8, [[x - r*.6, y - r*.7], [x - r*.1, y], [x + r*.3, y + r*.8]]); return; }
+    glow(ctx, x, y, r*3.4, '#e8e8f0', .14); const slide = REDUCE() ? 3 : (T/400) % 30;
+    [[-.5, -.4, .55, 0], [.45, -.5, .45, 0], [-.3, .5, .5, 0], [.5, .45, .4, 1]].forEach(([dx, dy, k, mv], i) => { const px = x + dx*r*1.5 + (mv ? slide : 0), py = y + dy*r*1.5 + (mv ? slide*.3 : 0);
+      poly(ctx, [[px - k*r, py - k*r*.3],[px - k*r*.2, py - k*r],[px + k*r*.9, py - k*r*.4],[px + k*r*.6, py + k*r*.8],[px - k*r*.6, py + k*r*.7]], i % 2 ? '#cfd0d8' : '#e0e0e8'); }); },
+  /* the storm that is the end of a place: a grey wall without colour, eating the far edge */
+  storm(ctx, W, H, x, T, a = 1){ const g = ctx.createLinearGradient(x - W*.2, 0, x + W*.1, 0); g.addColorStop(0, 'rgba(140,140,148,0)'); g.addColorStop(.6, `rgba(150,150,158,${.55*a})`); g.addColorStop(1, `rgba(196,196,204,${.95*a})`);
+    ctx.fillStyle = g; ctx.fillRect(x - W*.2, 0, W, H); ctx.fillStyle = `rgba(200,200,208,${.95*a})`; ctx.fillRect(x + W*.1, 0, W, H);
+    for (let i=0;i<10;i++){ const y = H*hash(i, 801), w = 30 + hash(i, 802)*60; ctx.fillStyle = `rgba(230,230,236,${.25*a})`; ctx.fillRect(x - w*.5 + (REDUCE() ? 0 : Math.sin(T/600 + i)*8), y, w, 1.4); } },
+};
+
+Object.assign(VISBG, {
+  /* a Daru street at dusk: the lake-blue sky, the roofline with the blue gas lamps coming on, the crowd, a garland across the street; the
+     lane past the tannery opens on the right. Steps 0-2 the crowd and the brown cloak behind; step 3 the lane, the corner, no lamp;
+     step 4 the lane empty, then the bar's lamp far up the street */
+  b8v_market(ctx, W, H, T, v){ const s = v.step || 0, lane = s >= 3;
+    B4VB.sky(ctx, W, H*.6, [[0, '#0a0c1c'], [.7, '#2a2a4a'], [1, '#4a3a4a']]); B3VB.stars(ctx, W, H, T, 18, .3, .4, 811);
+    B6VB.roofs(ctx, W, H*.5, '#0c0c14', 812, 8, T);
+    for (let i=0;i<7;i++) { const x = W*(.06 + i*.15); ctx.fillStyle = '#16141c'; ctx.fillRect(x, H*.5, 1.4, H*.3); glow(ctx, x, H*.5, 18, '#6aa0ff', .35 + (REDUCE() ? 0 : Math.sin(T/500 + i)*.04)); ctx.fillStyle = '#bcd6ff'; ctx.fillRect(x - 1.2, H*.5 - 1.6, 2.4, 2.4); } // the blue lamps
+    ctx.fillStyle = '#2a2630'; ctx.fillRect(0, H*.8, W, H*.2);
+    if (!lane) { ctx.strokeStyle = 'rgba(180,120,90,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, H*.36); ctx.quadraticCurveTo(W*.5, H*.48, W, H*.36); ctx.stroke(); for (let i=0;i<12;i++){ const x = W*(i/11), y = H*.36 + Math.sin(i/11*Math.PI)*H*.1; ell(ctx, x, y + 2, 2, 2.6, ['#a04a3a', '#c8a050', '#5a7a4a'][i % 3]); } // a garland
+      for (let i=0;i<16;i++) B7VB.mark(ctx, W*(.04 + hash(i, 813)*.92), H*(.86 + hash(i, 814)*.08), 1.2 + hash(i, 815)*.4, `rgba(16,14,22,${.7 + hash(i, 816)*.3})`); // the crowd
+      if (s >= 1) drawFigure(ctx, 'b2soldier', W*.74, H*.94, 1.5, T, {still:true, dir:-1, alpha:.75}); } // the brown cloak, behind
+    else { ctx.fillStyle = '#0c0a10'; ctx.fillRect(W*.62, H*.36, W*.38, H*.64); ctx.fillStyle = '#121018'; ctx.fillRect(W*.62, H*.36, 6, H*.64); // the lane's blind wall, the corner
+      if (s === 4) { glow(ctx, W*.12, H*.62, 30, '#ffc070', .3); ctx.fillStyle = '#ffd890'; ctx.fillRect(W*.12 - 1.2, H*.62, 2.4, 3.6); } } // the bar's lamp, far up the street
+    return lane ? {fx:W*.58, fy:H*.92, fs:2.4} : {fx:W*.36, fy:H*.92, fs:2.3}; },
+
+  /* the scarecrow fields: a thin milk sky, the rows of green running away, scarecrows on poles to the horizon; the kin on the rise behind
+     (steps 0-2); the half-built town and the priest on the road (steps 3-4) */
+  b8v_fields(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.46, [[0, '#a8aab0'], [1, '#d8d6cc']]);
+    ctx.fillStyle = '#4a5a30'; ctx.fillRect(0, H*.44, W, H*.56);
+    for (let r=0;r<9;r++){ const y = H*(.46 + r*r*.0068), k = .3 + r*.09; ctx.fillStyle = `rgba(${40 + r*4},${90 + r*6},${30 + r*2},.9)`; for (let i=0;i<24;i++) ell(ctx, (i + (r % 2)*.5)/23*W, y, 3*k*2, 1.6*k*2, ctx.fillStyle); } // the rows, nearer and bigger
+    for (let i=0;i<40;i++){ const r = hash(i, 821), y = H*(.46 + r*r*.5), x = W*hash(i, 822); B8VB.scarecrow(ctx, x, y, .25 + r*.9, '#3a3428'); } // the scarecrows, thousands
+    if (s >= 3) { ctx.fillStyle = '#6a6252'; ctx.fillRect(W*.7, H*.38, W*.24, H*.07); for (let i=0;i<5;i++) ctx.fillRect(W*(.71 + i*.05), H*(.34 - hash(i, 823)*.04), W*.03, H*.06); B7VB.smoke(ctx, W, H*.3, T, .15, 824, 4); // the town, going up
+      drawFigure(ctx, 'b3_c4_priest', W*.62, H*.8, 1.6, T, {still:s === 4, dir:-1}); }
+    if (s <= 2) for (let i=0;i<3;i++) drawFigure(ctx, 'b8v_nimander', W*(.12 + i*.07), H*(.86 + i*.02), 1.6, T, {still:true, dir:1, phase:i + 1}); // his kin behind him
+    return {fx:W*.34, fy:H*.92, fs:2.3}; },
+
+  /* the Great Barrow: Black Coral's night, the city's lamps behind, the long mound heaped with offerings, pilgrims kneeling along it;
+     the Seerdomin kneels (steps 1-2); the priestess stands on the road (step 3); the camp's fires along the road (step 4) */
+  b8v_barrow(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.6, [[0, '#020208'], [1, '#0c0e1c']]); B3VB.stars(ctx, W, H, T, 8, .3, .25, 831);
+    B5VB.skyline(ctx, W, H*.42, '#06060c', 832, 0, T); for (let i=0;i<9;i++) B4VB.lamp(ctx, W*(.04 + hash(i, 833)*.5), H*(.32 + hash(i, 834)*.08), T, 10, .4, '#9ab8ff'); // the city behind, its lamps
+    ctx.fillStyle = '#0e0e14'; ctx.fillRect(0, H*.48, W, H*.52);
+    ctx.fillStyle = vgrad(ctx, H*.46, H*.76, [[0, '#3a3a40'], [1, '#1a1a1e']]); ctx.beginPath(); ctx.moveTo(W*.3, H*.74); ctx.quadraticCurveTo(W*.62, H*.36, W*1.05, H*.6); ctx.lineTo(W*1.05, H*.76); ctx.fill(); // the barrow
+    ctx.strokeStyle = 'rgba(154,184,255,.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W*.32, H*.73); ctx.quadraticCurveTo(W*.62, H*.37, W*1.05, H*.6); ctx.stroke(); // lamp-light along its back
+    for (let i=0;i<60;i++){ const x = W*(.32 + hash(i, 835)*.7), y = H*(.66 + hash(i, 836)*.1); ctx.fillStyle = ['#8a7a4a', '#6a5a4a', '#a89a7a', '#4a4a5a'][i % 4]; ctx.fillRect(x, y, 1.6 + hash(i, 837)*2, 1.4); } // the offerings
+    for (let i=0;i<8;i++) B7VB.mark(ctx, W*(.36 + i*.08), H*(.8 + hash(i, 838)*.04), .9, 'rgba(20,20,26,.9)'); // pilgrims kneeling
+    if (s >= 4) for (let i=0;i<7;i++) B4VB.fire(ctx, W*(.04 + i*.08), H*(.84 + hash(i, 839)*.06), T, .4); // the camp, along the road
+    if (s === 3) drawFigure(ctx, 'b8_c3_priestess', W*.5, H*.92, 2.1, T, {still:true, dir:-1});
+    return s === 3 || s >= 4 ? {fx:W*.24, fy:H*.92, fs:2.4} : {fx:W*.22, fy:H*.9, fs:2.4}; },
+
+  /* a tavern in Black Coral: low beams, a lamp on every table, the corner table with the board between two cups, the door on the night;
+     the friend across the board (steps 0-3); the young woman in the door (step 3); the street under the lamps (step 4) */
+  b8v_tavern(ctx, W, H, T, v){ const s = v.step || 0;
+    if (s >= 4) { B4VB.sky(ctx, W, H, [[0, '#020208'], [1, '#0e1020']]); ctx.fillStyle = '#0a0a10'; ctx.fillRect(0, H*.2, W*.3, H*.7); ctx.fillRect(W*.7, H*.24, W*.3, H*.66); ctx.fillStyle = '#16161c'; ctx.fillRect(0, H*.86, W, H*.14);
+      B8VB.armlamp(ctx, W*.28, H*.36, T, 34, 1); B8VB.armlamp(ctx, W*.72, H*.4, T, 30, -1); ctx.fillStyle = 'rgba(255,200,120,.5)'; ctx.fillRect(W*.06, H*.5, W*.1, H*.3); // the street, the tavern's lit door
+      const k = REDUCE() ? .5 : ((T/14000) % 1); drawFigure(ctx, 'b8v_pilgrimgirl', W*(.5 + k*.4), H*(.9 - k*.12), 1.6 - k*.8, T, {dir:1}); return {fx:W*.34, fy:H*.94, fs:2.4}; }
+    ctx.fillStyle = '#16120e'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#0e0a08'; for (let i=0;i<4;i++) ctx.fillRect(0, H*(.04 + i*.07), W, 5);
+    ctx.fillStyle = '#221a12'; ctx.fillRect(0, H*.78, W, H*.22);
+    ctx.fillStyle = '#04040a'; ctx.fillRect(W*.82, H*.3, W*.14, H*.5); B4VB.lamp(ctx, W*.89, H*.36, T, 10, .3, '#9ab8ff'); // the door, the night beyond it and a lamp on its arm
+    for (let i=0;i<3;i++){ const x = W*(.12 + i*.2); ctx.fillStyle = '#2a2016'; ctx.fillRect(x - 12, H*.7, 24, 4); B4VB.lamp(ctx, x, H*.68, T, 18, .3); ctx.fillStyle = '#ffd890'; ctx.fillRect(x - 1, H*.67, 2, 3); } // the other tables
+    ctx.fillStyle = '#3a2a1a'; ctx.fillRect(W*.42, H*.8, W*.24, 5); ctx.fillStyle = '#5a4a32'; ctx.fillRect(W*.47, H*.775, W*.14, 4); // the corner table, the board
+    ctx.fillStyle = s >= 2 ? 'rgba(20,16,12,.9)' : '#c8b88a'; for (let i=0;i<6;i++) ctx.fillRect(W*(.48 + (i % 3)*.04), H*(.765 - (i > 2 ? .01 : 0)), 2, 3); // the pieces (yielded, after)
+    B4VB.lamp(ctx, W*.54, H*.74, T, 30, .35); ctx.fillStyle = '#7a6a4a'; ctx.fillRect(W*.44, H*.77, 3, 4); ctx.fillRect(W*.64, H*.77, 3, 4); // the lamp, the cups
+    drawFigure(ctx, 'b8v_seerdomin', W*.72, H*.94, 2.1, T, {still:true, dir:-1});
+    if (s === 3) drawFigure(ctx, 'b8v_pilgrimgirl', W*.86, H*.82, 1.9, T, {still:true, dir:-1});
+    return {fx:W*.36, fy:H*.94, fs:2.3}; },
+
+  /* a crossroads in the grass at night: two roads, four torches on tall poles, the wind in the grass; the old man on the far road (step
+     1 on, nearer by step 3); the jug at the foot of a pole (step 3 on); both blades up (step 4) */
+  b8v_crossroads(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.5, [[0, '#020206'], [1, '#14121c']]); B3VB.stars(ctx, W, H, T, 60, .45, .6, 841);
+    ctx.fillStyle = '#16140c'; ctx.fillRect(0, H*.46, W, H*.54); B7VB.grass(ctx, W, H*.48, H, 200, 'rgba(90,84,50,.55)', s >= 4 ? 0 : .3, T, 842);
+    ctx.fillStyle = '#3a3426'; ctx.beginPath(); ctx.moveTo(W*.48, H*.47); ctx.lineTo(W*.52, H*.47); ctx.lineTo(W*.78, H); ctx.lineTo(W*.22, H); ctx.fill(); ctx.beginPath(); ctx.moveTo(0, H*.7); ctx.lineTo(W, H*.62); ctx.lineTo(W, H*.7); ctx.lineTo(0, H*.8); ctx.fill(); // the roads
+    [[.26, .74], [.74, .66], [.3, .96], [.76, .9]].forEach(([x, y], i) => B8VB.torch(ctx, W*x, H*y, H*(.3 + y*.12), T, i));
+    if (s >= 3) { ell(ctx, W*.78, H*.9, 2.6, 3.6, '#5a3a24'); ctx.fillStyle = '#3a2416'; ctx.fillRect(W*.78 - 1, H*.9 - 5, 2, 2); } // the jug
+    if (s >= 1) { const near = s >= 3, x = W*(near ? .62 : .51), y = H*(near ? .86 : .5); drawFigure(ctx, 'kallor', x, y, near ? 2.2 : .8, T, {still:true, dir:-1});
+      if (s >= 4) { B2F.line(ctx, '#c8ccd4', 2, [[x - 4, y - 18], [x - 26, y - 46]]); } } // the old man; his blade up
+    return {fx:W*.4, fy:H*.88, fs:2.3}; },
+
+  /* the broken wall on the last night: a black sky, the moon cracked and then in pieces (step 4), the wall's gap and the rubble, fires in
+     the city beyond, smoke; Samar Dev holding her head (steps 0-2), straight again (step 3 on) */
+  b8v_wall(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.6, [[0, '#04030a'], [.7, '#1a0e14'], [1, '#4a1e14']]); B3VB.stars(ctx, W, H, T, 30, .35, .5, 851);
+    B8VB.moon(ctx, W*.74, H*.16, H*.07, T, s >= 4);
+    B5VB.skyline(ctx, W, H*.6, '#0c080a', 852, 6, T); B7VB.smoke(ctx, W, H*.4, T, .35, 853, 6);
+    ctx.fillStyle = '#2a2624'; ctx.fillRect(0, H*.36, W*.3, H*.4); ctx.fillRect(W*.7, H*.36, W*.3, H*.4); // the wall, either side of the gap
+    for (let i=0;i<5;i++){ ctx.fillStyle = '#1a1816'; ctx.fillRect(W*(.3 - i*.012), H*(.36 + i*.06), 6, 8); ctx.fillRect(W*(.7 + i*.012) - 6, H*(.36 + i*.07), 6, 8); } // broken edges
+    ctx.fillStyle = '#3a3430'; ctx.beginPath(); ctx.moveTo(W*.18, H); ctx.quadraticCurveTo(W*.5, H*.62, W*.84, H); ctx.fill(); for (let i=0;i<30;i++) ell(ctx, W*(.22 + hash(i, 854)*.58), H*(.78 + hash(i, 855)*.2), 3 + hash(i, 856)*5, 2 + hash(i, 857)*3, '#4a4440'); // the rubble
+    for (let i=0;i<3;i++){ const x = W*(.36 + i*.12), y = H*(.8 + hash(i, 858)*.06); ell(ctx, x, y, 10, 4, 'rgba(10,8,8,.6)'); } // the prints, in the stone
+    drawFigure(ctx, 'b8v_samar', W*.62, H*.9, 2, T, {still:true, dir:-1, hands:s <= 2});
+    return {fx:W*.42, fy:H*.92, fs:2.6}; },
+
+  /* a place that is ending: a grey plain cracking and going soft, a storm without colour on the far side; the column of the dead behind
+     Iskar Jarak (steps 0-2), set in lines (step 3), the storm on the line (step 4: the oldest dead fading where it touches) */
+  b8v_dead(ctx, W, H, T, v){ const s = v.step || 0, near = s >= 3;
+    B4VB.sky(ctx, W, H*.55, [[0, '#4a4a52'], [1, '#7a7a80']]);
+    ctx.fillStyle = '#5a5a5c'; ctx.fillRect(0, H*.5, W, H*.5); ctx.strokeStyle = 'rgba(30,30,34,.5)'; ctx.lineWidth = .8; ctx.beginPath(); for (let i=0;i<14;i++){ const x = W*hash(i, 861), y = H*(.55 + hash(i, 862)*.4); ctx.moveTo(x, y); ctx.lineTo(x + 20*(hash(i, 863) - .5), y + 6); ctx.lineTo(x + 30*(hash(i, 864) - .5), y + 14); } ctx.stroke(); // the cracks
+    B8VB.storm(ctx, W, H, W*(s >= 4 ? .78 : near ? .9 : .98), T, s >= 4 ? 1 : .8);
+    if (!near) for (let i=0;i<26;i++){ const r = hash(i, 865); drawFigure(ctx, i < 8 ? 'b3_c7_bridgeburner' : i % 3 ? 'b2soldier' : 'greysword', W*(.06 + r*.5), H*(.62 + hash(i, 866)*.28), .7 + hash(i, 866)*.7, T, {phase:i, dir:1, alpha:.55}); } // the column
+    else for (let row=0;row<3;row++) for (let i=0;i<10;i++){ const x = W*(.18 + i*.055 + row*.02), y = H*(.62 + row*.1), fade = s >= 4 && row === 2 ? .2 : .6; drawFigure(ctx, row === 0 ? 'b3_c7_bridgeburner' : 'b2soldier', x, y, .9 + row*.2, T, {still:true, dir:1, alpha:fade, phase:i}); } // in their lines
+    drawFigure(ctx, 'greysword', W*(near ? .2 : .44), H*(near ? .92 : .9), 2, T, {still:near, dir:1, alpha:.7}); // Brukhalian
+    return {fx:W*(near ? .66 : .3), fy:H*.94, fs:2.4}; },
+
+  /* the reader, back at the chapter's reading place (B8READ[n]): 1 the table at the Fourth's door, winter, the bar across it; 2 a wagon's
+     tailboard by the caravan fire; 3 a stone sill under Black Coral's lamps; 4 a pilgrim's mat at the camp's edge; 5 the grass at dusk;
+     6 the Fourth's step on the Fete's last evening, lanterns and the cracked moon; 7 the shingle by the lake at first light. A card on the
+     surface; for Sohra, the bones */
+  b8deck(ctx, W, H, T, v){ const ch = (VISIONS[v.id] && VISIONS[v.id].ch) || 1;
+    const SK = {1:['#08060a', '#1e1410'], 2:['#04040a', '#1a1620'], 3:['#020208', '#0e1020'], 4:['#04040a', '#14101a'], 5:['#2a2a3a', '#a07060'], 6:['#06060e', '#2a1a1e'], 7:['#3a3a46', '#a8a0a8']}[ch];
+    B4VB.sky(ctx, W, H*.64, [[0, SK[0]], [1, SK[1]]]);
+    const gnd = {1:'#3a2a1c', 2:'#4a3a28', 3:'#2e3038', 4:'#3a3024', 5:'#5a5236', 6:'#3a3c44', 7:'#6a665c'}[ch]; ctx.fillStyle = gnd; ctx.fillRect(0, H*.64, W, H*.36);
+    if (ch === 1) { ctx.fillStyle = '#1a120c'; ctx.fillRect(0, 0, W, H*.64); ctx.fillStyle = '#2a1e14'; ctx.fillRect(W*.74, H*.14, W*.16, H*.5); ctx.fillStyle = '#4a3a24'; ctx.fillRect(W*.72, H*.36, W*.2, 4); B4VB.fire(ctx, W*.12, H*.62, T, .9); B4VB.lamp(ctx, W*.12, H*.56, T, 60, .3); } // the door, barred; the fire
+    else if (ch === 2) { B3VB.stars(ctx, W, H, T, 40, .45, .5, 871); for (let i=0;i<3;i++) B3VB.wagon(ctx, W*(.62 + i*.14), H*.62, .8, '#2a2016', '#5a5040', '#1a140e'); B4VB.fire(ctx, W*.18, H*.7, T, 1.2); ctx.fillStyle = '#5a4a36'; ctx.fillRect(W*.3, H*.8, W*.4, 6); } // the ring of wagons, the fire, the tailboard
+    else if (ch === 3) { ctx.fillStyle = '#0a0a10'; ctx.fillRect(0, 0, W, H*.64); ctx.fillStyle = '#04040a'; ctx.fillRect(W*.2, H*.1, W*.6, H*.5); B8VB.armlamp(ctx, W*.34, H*.24, T, 30, 1); B8VB.armlamp(ctx, W*.66, H*.28, T, 26, -1); ctx.fillStyle = '#3a3c44'; ctx.fillRect(W*.16, H*.6, W*.68, 6); } // the window, the lamps, the sill
+    else if (ch === 4) { B3VB.stars(ctx, W, H, T, 10, .3, .3, 872); for (let i=0;i<6;i++) B3VB.tent(ctx, W*(.08 + i*.17), H*.64, .7 + hash(i, 873)*.3, '#2a2420'); for (let i=0;i<3;i++) B4VB.fire(ctx, W*(.2 + i*.3), H*.7, T, .5); ctx.save(); ctx.translate(W*.5, H*.86); ctx.rotate(.04); ctx.fillStyle = '#5a4a3a'; ctx.fillRect(-W*.2, -8, W*.4, 16); ctx.restore(); } // tents, small fires, the mat
+    else if (ch === 5) { B7VB.grass(ctx, W, H*.64, H, 220, 'rgba(110,104,60,.6)', .4, T, 874); ctx.fillStyle = '#3a3426'; ctx.fillRect(0, H*.6, W, 3); for (let i=0;i<4;i++){ const x = W*(.84 + i*.02); ctx.fillStyle = '#1a140c'; ctx.fillRect(x, H*.5, .8, H*.1); glow(ctx, x, H*.5, 5, '#ff9a40', .3); } } // the grass, the road, four tiny torches far off
+    else if (ch === 6) { B3VB.stars(ctx, W, H, T, 20, .3, .4, 875); B8VB.moon(ctx, W*.78, H*.16, H*.06, T, false); B6VB.roofs(ctx, W, H*.5, '#0c0a10', 876, 6, T); ctx.strokeStyle = 'rgba(200,160,100,.6)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(0, H*.3); ctx.quadraticCurveTo(W*.5, H*.42, W, H*.3); ctx.stroke(); for (let i=0;i<9;i++){ const x = W*(i/8), y = H*.3 + Math.sin(i/8*Math.PI)*H*.1; glow(ctx, x, y + 4, 10, '#ffb060', .4); ell(ctx, x, y + 4, 2.4, 3, '#e8a050'); } ctx.fillStyle = '#4a4c54'; ctx.fillRect(W*.2, H*.8, W*.6, 6); } // the moon, cracked; lanterns; the step
+    else if (ch === 7) { B4VB.sea(ctx, W, H, H*.46, '#6a6a74', '#3a3a44', T, 877); B7VB.smoke(ctx, W, H*.3, T, .3, 878, 4); for (let i=0;i<2;i++) B6VB.boat(ctx, W*(.7 + i*.12), H*.66, .6, false); for (let i=0;i<40;i++) ell(ctx, W*hash(i, 879), H*(.7 + hash(i, 880)*.28), 1.6, 1, '#8a8478'); } // the lake, smoke from the Gadrobi side, boats, the shingle
+    if (visReader().id === 'sohra') { for (let i=0;i<7;i++){ const x = W*(.44 + hash(i, 881)*.12), y = H*(.86 + hash(i, 882)*.06); ell(ctx, x, y, 2.2, 1.2, '#e8e0cc'); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(x - 1, y, 2, .5); } ctx.fillStyle = 'rgba(200,200,210,.08)'; ctx.fillRect(W*.48, H*.5, 6, H*.36); } // the bones, a thread of smoke
+    else B6VB.card(ctx, W*.5, H*.88);
+    return {fx:W*.3, fy:H*.86, fs:2.4}; },
+});
+
+/* the Seerdomin kneels at the barrow (b8v3 steps 1-2); Spinnock's sword comes up at the crossroads (b8v5 steps 3-4) */
+{ const _df = drawFigure; drawFigure = function(ctx, kind, x, y, s, t, o = {}){
+    if (kind === 'b8v_seerdomin' && VIS && VIS.id === 'b8v3' && o.kneel == null) o = Object.assign({}, o, {kneel:VIS.step >= 1 && VIS.step <= 2});
+    if (kind === 'b8v_spinnock' && VIS && VIS.id === 'b8v5' && o.draw == null) o = Object.assign({}, o, {draw:VIS.step >= 3});
+    return _df(ctx, kind, x, y, s, t, o); }; }
+
+/* ============ Book Eight: the games at the fires (v11.0) ============ */
+/* Book Eight keeps its games here and wraps the chapters' fire nodes from this file, as Books Six and Seven do (109, 129), so the chapter
+   files 141-147 are untouched. Five games, one at each place the book's people gather (plan, Claude's calls; docs/tth-games-notes.md):
+   - Orsa's Cup (Ch1, b8_c1_fire): a single die in Orsa's cup in her Gadrobi dice den. Throw and add, bank when you like; a one loses the
+     round. First to twenty. Silver, because a dice den is where money is the scene. Net capped at 8.
+   - The Last Peg (Ch2, b8_c2_fire): fifteen pegs on a wagon's tailboard at the caravan's fire; take one to three; whoever takes the last
+     peg stands the carters' dog watch. Best of three. The carter's watch-money: 2 silver.
+   - Lamp and Stone (Ch3, b8_c3_fire): the game the Andii play in the dark, taught by Thessaly at the lodging. The lamp is unshuttered for
+     a breath over a cloth of sixteen squares; then dark; touch where the stones lie. Tuft's regard, or Edrem's, or a salve.
+   - Keep the Fire (Ch4, b8_c4_fire): with Hurrin and the pilgrims at the camp's edge, feed a small fire against the dark until the bells
+     say morning. Edrem's regard, or a salve.
+   - Stones on the Water (Ch7, b8_c7_fire): the night after, on the shingle, with Benlo. Three stones each across the lake; most skips.
+     The regard of whichever squadmate needed the evening most, or a salve.
+   Each is declinable (the fire's own choices stay), played once a book, pays once as the table closes, and keeps its deeds on S.deeds.
+   None moves the Contract: its moves are fixed by the brief's table. They use the tables' frame (36), the in-game check (89: b5gRoll and
+   its tiers), Book Six's night sky (109: b6gNight), and Book Seven's fire and die (129: b7gFire, b7gDie). */
+
+const b8gOn = () => b5gOn(), b8gPick = a => b5gPick(a), b8gRoll = (s, dc, who, e) => b5gRoll(s, dc, who, e), b8gRollHTML = r => b5gRollHTML(r);
+const b8gText = (...a) => b5gText(...a);
+const B8G_SHE = ['brisk', 'kettle', 'tuft', 'sohra', 'greysword', 'ellis', 'ressa'];
+const b8gHe = id => id === 'sgt' ? 'you' : B8G_SHE.includes(id) ? 'she' : 'he';
+const b8gHim = id => id === 'sgt' ? 'you' : B8G_SHE.includes(id) ? 'her' : 'him';
+const b8gWho = r => r.who === 'sgt' ? 'You' : NAME(r.who);
+const b8gV = (r, you, they) => r.who === 'sgt' ? you : they;
+const b8gSp = () => Math.max(.4, SET.speed || 1);
+const B8G_DC = 15; // the games' own checks: at levels 16 to 19 a 13 is no check at all (Claude's call)
+const b8gAfter = (sp, scene, back, txt) => ({sp, scene, txt, ch:[{t:'Back to the fire.', go:back}]});
+/* a squadmate's line, the first who walks, else the default */
+const b8gSay = (m) => { for (const k of Object.keys(m)) if (k !== '_' && b8In(k)) return typeof m[k] === 'function' ? m[k]() : m[k]; return m._ || ''; };
+/* regard: +1 to the first named squadmate who walks, else a salve; returns who, or 'salve' */
+function b8gRegard(ids, salveWhy){ const id = ids.find(k => b8In(k) && S.loy && S.loy[k] != null);
+  if (id) { loy(id, 1); return id; } S.inv.salve = (S.inv.salve || 0) + 1; note('+1 salve: ' + salveWhy, 'good'); return 'salve'; }
+
+/* ============ 1. Orsa's Cup, in the dice den ============
+   Down the steps under the cobbler's, Orsa keeps her den. Her house game is one die in a leather cup. On your turn you throw as often as
+   you like, adding up the throws; bank the round whenever you like. A one, and the round's count is gone and the cup goes across. First to
+   twenty banked takes the stake. Once a game, when a one comes up, you may say the die hit the wall (Guile; Kettle, who counts dice as
+   they fall, with an edge): made, it is thrown again; "yes, but", thrown again, and Orsa takes a silver for the house. Silver, net capped
+   at 8 over the book, paid as the cup is put away; played once. Leaving with the stake down loses it. */
+const B8G_CUPCAP = 8, B8G_CUPWIN = 20;
+function playB8Cup(opt = {}){
+  let on = () => true; const T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * b8gSp());
+  const g = MG.state = {me:0, opp:0, run:0, die:0, who:'me', phase:'stake', stake:null, net:0, talk:'', check:null, argued:false, roll:0, paid:false, won:null};
+  const capLeft = () => Math.max(0, B8G_CUPCAP - (S.f.b8_cupNet || 0));
+  const result = () => ({net:g.net, stake:g.stake, won:g.won, me:g.me, opp:g.opp, pay:g.pay || 0, done:g.phase === 'over'});
+  const settle = () => { if (g.paid) return; g.paid = true; const pay = g.net > 0 ? Math.min(g.net, capLeft()) : Math.max(g.net, -(S.silver || 0));
+    S.silver = (S.silver || 0) + pay; updSilver(); g.pay = pay; if (pay > 0) S.f.b8_cupNet = (S.f.b8_cupNet || 0) + pay; };
+  const live = () => ['me', 'opp', 'call'].includes(g.phase);
+  mgOpen({kick:'The Gadrobi lanes · Orsa\'s den', title:'Orsa\'s Cup', leaveText:'Leave the table', done:r => opt.after && opt.after(r),
+    leave:() => { if (g.stake && live()) { g.net -= g.stake; g.won = false; g.phase = 'over'; mgDeed('b8CupLost'); } settle(); mgClose(Object.assign(result(), {left:true})); }}); on = b8gOn();
+  const say = (who, line) => { g.talk = mgSay(who, line); draw(); };
+  const draw = () => { if (g.phase === 'stake') return stakePick();
+    mgPanel(`<div class="cpbar"><span>Orsa <b>${g.opp}</b></span><span>You <b>${g.me}</b></span><span>${g.phase === 'over' ? `Stake ${g.stake}` : `This round <b>${g.run}</b>`}</span></div>
+      ${g.talk}${b8gRollHTML(g.check)}
+      ${g.phase === 'over' ? `<div class="row mgbtns"><button class="btn primary" id="cuDone" data-bot="1">Back to the fire</button></div>`
+      : g.phase === 'call' ? `<div class="row mgbtns"><button class="btn on" id="cuCall" data-bot="1">That die hit the wall</button><button class="btn" id="cuLet" data-bot="1">Let it go</button></div>`
+      : `<div class="row mgbtns"><button class="btn primary" id="cuThrow" data-bot="1" ${g.phase === 'me' && !g.roll ? '' : 'disabled'}>Throw</button><button class="btn" id="cuBank" data-bot="1" ${g.phase === 'me' && !g.roll && g.run ? '' : 'disabled'}>Bank ${g.run}</button></div>
+        <p class="hint keys"><kbd>Space</kbd> throw · <kbd>B</kbd> bank · <kbd>Esc</kbd> leave</p>`}
+      <p class="fine">Throw as often as you like and add it up. Bank it whenever you like. A one, and the round's count is gone. First to ${B8G_CUPWIN} takes the stake. The cup pays at most ${B8G_CUPCAP} silver over what you sat down with, once.</p>`);
+    if ($('#cuThrow')) $('#cuThrow').onclick = throwMe; if ($('#cuBank')) $('#cuBank').onclick = bank;
+    if ($('#cuCall')) $('#cuCall').onclick = call; if ($('#cuLet')) $('#cuLet').onclick = () => { if (g.phase !== 'call') return; AUDIO.play('click'); bust('me'); };
+    if ($('#cuDone')) $('#cuDone').onclick = () => { AUDIO.play('click'); settle(); mgClose(result()); }; };
+  const tumble = (who, cb) => { g.roll = performance.now(); g.who = who; AUDIO.play('shuffle'); draw(); T(() => { g.roll = 0; AUDIO.play('dice', true); cb(); }, REDUCE() ? 120 : 450); };
+  const throwMe = () => { if (g.phase !== 'me' || g.roll) return; g.check = null;
+    tumble('me', () => { const d = g.die = 1 + R(6);
+      if (d === 1) { if (!g.argued) { g.phase = 'call'; return say('', `A one. The round's ${g.run} is gone, unless that die hit the wall on its way down. It is a very near wall.`); } return bust('me'); }
+      g.run += d; if (g.me + g.run >= B8G_CUPWIN) return bank();
+      say('', `A ${numw(d)}. ${g.run} this round${g.me ? `, on top of ${g.me} banked` : ''}.`); }); };
+  const bank = () => { if (g.phase !== 'me' || g.roll || !g.run) return; AUDIO.play('coin'); g.me += g.run;
+    if (g.me >= B8G_CUPWIN) return finish(true);
+    say('', `You bank ${g.run}. ${g.me} to Orsa's ${g.opp}, and the cup goes across.`); g.run = 0; g.phase = 'opp'; draw(); T(oppTurn, 600); };
+  const bust = who => { const lost = g.run; g.run = 0; AUDIO.play('miss');
+    if (who === 'me') { g.phase = 'opp'; say('Orsa', `${lost ? `"There goes ${lost}," she says.` : '"A one first throw," she says.'} ${b8gPick(['"The cup giveth."', 'She holds out her hand for the cup.', '"The lanes are full of ones this winter."'])}`); T(oppTurn, 700); }
+    else { g.phase = 'me'; say('Orsa', `A one. ${lost ? `"${lost} gone. Hood's teeth." ` : ''}She slides the cup back across the table to you.`); } };
+  /* Orsa throws until she likes the round: seven, or the win, or more when she is behind */
+  const oppTurn = () => { if (g.phase !== 'opp') return; tumble('opp', () => { const d = g.die = 1 + R(6);
+      if (d === 1) return bust('opp');
+      g.run += d; const want = g.opp + g.run >= B8G_CUPWIN || g.run >= (g.me - g.opp >= 8 ? 11 : 7);
+      if (want) { g.opp += g.run; const r = g.run; g.run = 0; if (g.opp >= B8G_CUPWIN) return finish(false);
+        g.phase = 'me'; say('Orsa', `${b8gPick([`"${r}. I'll keep that."`, `She banks ${r} with a tap of the cup on the table.`, `"${r}, and a den to run." She banks it.`])} ${g.opp} to your ${g.me}. Your cup.`); }
+      else { say('Orsa', b8gPick([`A ${numw(d)}. She throws again without looking.`, `"${g.run}," she says, and throws again.`, `A ${numw(d)}. "Again," she tells the cup.`])); T(oppTurn, 650); } }); };
+  /* the check: the die hit the wall (Guile). Made: thrown again. Yes, but: thrown again, and a silver for the house. */
+  const call = () => { if (g.phase !== 'call') return; g.argued = true; AUDIO.play('click');
+    const r = g.check = b8gRoll('guile', B8G_DC, null, [['she has counted dice as they fall since the Pale', 2, 'kettle'], ['he knows how Orsa\'s cups throw', 1, 'vasso'], ['he learned his hands on the Guild\'s roofs', 1, 'vell'], ['you have sat at worse tables than this one', 1, 'sgt']]);
+    if (r.ok) { g.phase = 'me'; say('', `${b8gWho(r)} ${b8gV(r, 'point', 'points')} at the scuff on the wall at the table's end, fresh, at about the height a die would hit it. Orsa looks at the scuff, and at ${r.who === 'sgt' ? 'you' : NAME(r.who)}. "Throw it again," she says. "And mind my wall."`); }
+    else if (r.tier === 'near') { g.phase = 'me'; g.net -= 1; say('Orsa', `"Throw it again, then." She holds out her hand. "A silver for the house, for the argument. The house always has a wall." <span class="dim">(−1)</span>`); }
+    else { say('Orsa', '"It hit the table, friend. Everybody saw it hit the table." Everybody did.'); T(() => bust('me'), 700); } };
+  const finish = mine => { g.phase = 'over'; g.won = mine; g.run = 0;
+    if (mine) { g.net += g.stake; mgDeed('b8CupWon'); AUDIO.play('win'); g.talk = mgSay('Orsa', `${g.me} to ${g.opp}. She counts ${g.stake} silver across the table. "Malazans," she says. "You never know when to stop. Sometimes it pays."`) +
+        (b8In('kettle') ? mgSay('Kettle', `"Six ones in the whole game," Kettle says. "I counted. The die's honest. I was nearly disappointed."`) : ''); }
+    else { g.net -= g.stake; mgDeed('b8CupLost'); AUDIO.play('lose'); g.talk = mgSay('Orsa', `${g.opp} to ${g.me}. She takes ${g.stake} silver off the table. "The cup's not your friend tonight, Sergeant. It isn't anybody's. That's why I own it."`) +
+        (b8In('vasso') ? mgSay('Vasso', '"She banks at seven," Vasso says, low. "Always seven. Everybody in the lanes knows. Not one of them can wait that long."') : ''); }
+    draw(); };
+  const stakePick = () => { g.me = g.opp = g.run = 0; g.argued = false; g.check = null; g.won = null; const purse = (S.silver || 0) + g.net;
+    mgPanel(`${g.talk}<p class="fine">What's the stake? You have ${purse} silver.</p>
+      <div class="row mgbtns">${[1, 3, 5].map((n, i) => `<button class="btn ${i ? '' : 'primary'}" data-st="${n}" data-bot="1" ${purse >= n ? '' : 'disabled'}>${n} silver</button>`).join('')}</div>
+      <p class="fine">One die, one cup. On your turn, throw as often as you like and add it up; bank it whenever you like. A one, and the round's count is gone. First to ${B8G_CUPWIN} banked. Once a game, a one can be argued.</p>`);
+    document.querySelectorAll('#mgPanel [data-st]').forEach(b => b.onclick = () => { AUDIO.play('coin'); g.stake = +b.dataset.st; g.phase = 'me'; g.talk = mgSay('Orsa', '"Guest throws first. I like to see what I\'m dealing with."'); draw(); }); };
+  mgKeys({' ':() => { if (g.phase === 'over') { const b = $('#cuDone'); b && b.click(); } else if (g.phase === 'stake') { const b = $('#mgPanel [data-st]:not([disabled])'); b && b.click(); } else if (g.phase === 'call') call(); else throwMe(); }, b:bank});
+  /* the den: a cellar under the lanes, lamp-smoke, the long table, the steps up to the winter night, Orsa at the far end */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, mo = REDUCE() ? 0 : 1;
+    const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#120e0c'); bg.addColorStop(1, '#0a0806'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#1e1814'; for (let i = 0; i < 9; i++) ctx.fillRect(W*(i/9) + 2, H*.06, W/9 - 4, H*.4); // the cellar's brick bays
+    ctx.fillStyle = '#2a3038'; ctx.fillRect(W*.02, H*.04, W*.14, H*.22); ctx.fillStyle = 'rgba(120,160,220,.25)'; ctx.fillRect(W*.03, H*.05, W*.12, H*.06); // the steps up, and the blue lane-light at the top of them
+    for (let i = 0; i < 3; i++) { const x = W*(.3 + i*.22), y = H*.16, fl = mo ? .85 + .15*Math.sin(t/140 + i*2) : .9; ctx.globalCompositeOperation = 'lighter'; glow(ctx, x, y, H*.22, '#ffb860', .28*fl); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#ffd890'; ctx.fillRect(x - 3, y - 4, 6, 7); } // Orsa's lamps
+    ctx.fillStyle = 'rgba(70,60,56,.35)'; for (let i = 0; i < 3; i++) { const x = (W*(.2 + i*.3) + (mo ? t*.004*(i + 1) : 0)) % W; ell(ctx, x, H*.3 + i*6, W*.16, H*.03, 'rgba(70,60,56,.25)'); } // the smoke
+    ctx.fillStyle = '#4a3020'; ctx.fillRect(W*.08, H*.62, W*.84, H*.07); ctx.fillStyle = '#2e1e14'; ctx.fillRect(W*.12, H*.69, 6, H*.2); ctx.fillRect(W*.86, H*.69, 6, H*.2); // the long table
+    const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b8_c1_orsa', W*.84, H*.62, fs, t, {still:!(g.who === 'opp' && g.roll), dir:-1}); drawFigure(ctx, 'sgt', W*.15, H*.66, fs, t, {still:!(g.who === 'me' && g.roll), dir:1});
+    const mate = ['kettle', 'vasso', 'brisk'].find(k => b8In(k)); if (mate) drawFigure(ctx, mate, W*.28, H*.64, fs*.92, t, {still:true, dir:1, phase:2});
+    const s = Math.min(30, W*.07, H*.1), cx = W*.5, cy = H*.6, k = g.roll ? (performance.now() - g.roll) / 450 : 1;
+    ell(ctx, W*.62, cy - 2, s*.5, s*.3, '#5a3a22'); ctx.fillStyle = '#3a2416'; ctx.fillRect(W*.62 - s*.45, cy - s*.9, s*.9, s*.88); // the cup
+    if (g.die || g.roll) b7gDie(ctx, cx, cy - s*.2, s, g.roll ? 1 + (Math.floor(performance.now()/70) % 6) : g.die, g.roll ? k*5 : 0, g.roll ? Math.abs(Math.sin(k*7))*10 : 0, g.die === 1 && !g.roll);
+    const bar = (x, v, col) => { ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(x, H*.94, W*.36, 5); ctx.fillStyle = col; ctx.fillRect(x, H*.94, W*.36*Math.min(1, v/B8G_CUPWIN), 5); };
+    bar(W*.08, g.me, '#9fd0e8'); bar(W*.56, g.opp, '#e8c073');
+    if (g.phase === 'opp') b8gText(ctx, 'Orsa throws', W*.84, H*.62 - 30*fs, Math.min(15, W*.035)); };
+  g.talk = mgSay('', `Down the steps under the cobbler's, out of the wind, Orsa's den is warm and smells of lamp-oil and wine. The long table${S.f.b8_c1_denDone ? ' is new, and she makes sure you notice it' : ' has a groove worn down the middle of it by years of dice'}. At the far end, Orsa has a leather cup and a single die, and an empty stool across from her.`) +
+    mgSay('Orsa', '"House game, Sergeant. One die. You throw till you like it, or till it bites you." She rolls the die between two fingers. "Ones bite."') +
+    b8gSay({kettle:() => mgSay('', 'Kettle takes the stool at your elbow and folds her hands on the table, ready to count.'), vasso:() => mgSay('Vasso', '"She banks early," Vasso says, under the noise. "Don\'t."'), _:''});
+  stakePick();
+}
+function b8CupPay(r){ if (!r || !r.done) return; S.f.b8_cup = {net:r.net, stake:r.stake, won:!!r.won, pay:r.pay || 0, done:true}; save(); }
+
+/* ============ 2. The Last Peg, at the caravan's fire ============
+   The carters settle the dog watch with fifteen pegs on a tailboard. Turn about, each takes one, two or three; whoever takes the last peg
+   stands the watch. Best of three. Once a game you may palm a fourth (Guile; Brannoc, who talks while he does it, with an edge): made, you
+   take four; "yes, but", four, and the carter watches every peg after that; failed, he catches your wrist and you take one. Won, he pays
+   you his watch-money, two silver, once a book. Lost, the Fourth stands the dog watch, which it would have done anyway. */
+const B8G_PEGS = 15, B8G_PEGWIN = 2, B8G_PEGPAY = 2;
+function playB8Peg(opt = {}){
+  let on = () => true; const T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * b8gSp());
+  const g = MG.state = {n:B8G_PEGS, round:0, mine:0, his:0, turn:'me', phase:'intro', talk:'', check:null, palmed:false, sharp:false, over:false, busy:false, last:null};
+  const result = () => ({mine:g.mine, his:g.his, won:g.over && g.mine >= B8G_PEGWIN, done:g.over});
+  mgOpen({kick:'The caravan\'s fire · a carter\'s tailboard', title:'The Last Peg', leaveText:'Leave the tailboard', done:r => opt.after && opt.after(r), leave:() => mgClose(g.over ? result() : Object.assign(result(), {left:true, done:false, won:false}))}); on = b8gOn();
+  const draw = () => { const mine = g.phase === 'mine';
+    mgPanel(`<div class="cpbar"><span>${g.over ? 'The pegs are back in the bag' : `Round ${g.round + 1}: <b>${g.n}</b> peg${g.n === 1 ? '' : 's'}`}</span><span>You <b>${g.mine}</b> · the carter <b>${g.his}</b></span><span>Best of three</span></div>
+      ${g.talk}${b8gRollHTML(g.check)}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="pgDone" data-bot="1">Back to the fire</button>`
+        : g.phase === 'intro' ? `<button class="btn primary" id="pgGo" data-bot="1">Set out the pegs</button>`
+        : mine ? `${[1, 2, 3].map(k => `<button class="btn ${k === 1 ? 'primary' : ''}" data-pg="${k}" data-bot="1" ${k <= g.n ? '' : 'disabled'}>Take ${numw(k)}</button>`).join('')}${!g.palmed && g.n > 4 ? `<button class="btn" id="pgPalm" data-bot="1">Palm a fourth (once)</button>` : ''}`
+        : `<button class="btn" disabled data-bot="1">The carter is counting</button>`}</div>
+      <p class="fine">Take one, two or three pegs in turn. Whoever takes the last peg stands the dog watch. Best of three; you start the first round and the third, he starts the second.</p>
+      <p class="hint keys"><kbd>1</kbd>–<kbd>3</kbd> take · <kbd>P</kbd> palm · <kbd>Esc</kbd> leave</p>`);
+    document.querySelectorAll('#mgPanel [data-pg]').forEach(b => b.onclick = () => take('me', +b.dataset.pg));
+    if ($('#pgGo')) $('#pgGo').onclick = () => { AUDIO.play('click'); start(); }; if ($('#pgPalm')) $('#pgPalm').onclick = () => palm();
+    if ($('#pgDone')) $('#pgDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; };
+  const start = () => { if (g.over) return; g.n = B8G_PEGS; g.check = null; g.sharp = false; g.turn = g.round % 2 ? 'him' : 'me';
+    if (g.turn === 'me') { g.phase = 'mine'; g.talk = mgSay('The carter', b8gPick(['"Fifteen. Your hand first, soldier."', '"Fifteen pegs. You first. I like to watch."'])); draw(); }
+    else { g.phase = 'his'; g.talk = mgSay('The carter', '"My hand first, this one."'); draw(); T(carter, 700); } };
+  const take = (w, k) => { if (g.over || (w === 'me' && g.phase !== 'mine') || k > g.n || k < 1) return; g.n -= k; g.last = w; AUDIO.play('click');
+    if (g.n <= 0) return endRound(w);
+    if (w === 'me') { g.phase = 'his'; g.talk = mgSay('', `You take ${numw(k)}. ${g.n} left on the tailboard.`); draw(); T(carter, 700); }
+    else { g.phase = 'mine'; g.talk = mgSay('The carter', `He takes ${numw(k)}. ${g.n} left. ${b8gPick(['"Yours."', 'He spits into the fire.', '"Mind the dog watch, soldier."'])}`); draw(); } };
+  /* the carter: leaves you a losing count most of the time (one more than a four), and every time once he has seen a palm */
+  const carter = () => { if (g.over || g.phase !== 'his') return; const best = (g.n - 1) % 4, sharp = g.sharp || Math.random() < .7;
+    take('him', best && sharp ? best : g.n === 1 ? 1 : Math.min(g.n, 1 + R(3))); };
+  /* the check: palm a fourth (Guile). Made: four. Yes, but: four, and he plays every peg true after. Failed: one, and his turn. */
+  const palm = () => { if (g.over || g.phase !== 'mine' || g.palmed || g.n <= 4) return; g.palmed = true; AUDIO.play('click');
+    const r = g.check = b8gRoll('guile', B8G_DC, null, [['he talks about Falar the whole time he does it', 2, 'brannoc'], ['he has palmed a Guild token in a crowd', 1, 'vasso'], ['his hands were quicker than a clan\'s roof', 1, 'vell'], ['you have watched carters cheat each other for a living', 1, 'sgt']]);
+    if (r.ok) { g.n -= 4; g.last = 'me'; g.phase = 'his'; g.talk = mgSay('', `${b8gWho(r)} ${b8gV(r, 'take', 'takes')} three, and a fourth goes up a sleeve while the carter is looking at the fire. ${g.n} left on the tailboard.`); draw(); T(carter, 700); }
+    else if (r.tier === 'near') { g.n -= 4; g.last = 'me'; g.sharp = true; g.phase = 'his'; g.talk = mgSay('The carter', `"Four," he says, and taps the tailboard where the fourth was. "I can count, soldier." He lets it stand. He watches every peg from now on. <span class="dim">(he plays every peg true after this)</span>`); draw(); T(carter, 700); }
+    else { g.talk = mgSay('The carter', 'He has your wrist before the fourth peg is off the board. "One," he says, kindly, and puts three back.'); g.n -= 1; g.last = 'me'; if (g.n <= 0) return endRound('me'); g.phase = 'his'; draw(); T(carter, 900); } };
+  const endRound = w => { g.round++; const iWon = w === 'him'; if (iWon) g.mine++; else g.his++; AUDIO.play(iWon ? 'coin' : 'miss');
+    const line = iWon ? b8gPick(['The carter takes the last peg, looks at it, and swears at it.', 'The last peg is his. He holds it up to the fire as if it might be somebody else\'s.']) : b8gPick(['The last peg is yours.', 'You take the last peg. The carter grins at it.']);
+    if (g.mine >= B8G_PEGWIN || g.his >= B8G_PEGWIN) return end(line);
+    g.phase = 'between'; g.talk = mgSay('', `${line} ${g.mine} to ${g.his}.`); draw(); T(start, 900); };
+  const end = line => { g.over = true; g.phase = 'over'; const W = g.mine >= B8G_PEGWIN; mgDeed(W ? 'b8PegWon' : 'b8PegLost'); AUDIO.play(W ? 'win' : 'lose');
+    g.talk = mgSay('', line) + mgSay('The carter', W ? `"${g.mine} to ${g.his}." He fishes in his boot and puts ${numw(B8G_PEGPAY)} silver on the tailboard. "Calder pays a silver a night for the dog watch. I'll stand it. You'll have my pay." He does not look pleased about either half.` : `"${g.his} to ${g.mine}." He sweeps the pegs into the bag. "Dog watch is yours, soldier. Wake me if the old Domin gets up and walks."`) +
+      b8gSay({brannoc:() => mgSay('Brannoc', W ? '"In Falar," Brannoc says, "they play it with oars. It takes longer."' : '"In Falar," Brannoc says, "the one who takes the last oar is the one who rows. It is fairer. No one ever believes me."'), kettle:() => mgSay('Kettle', W ? '"Leave him one more than four," Kettle says. "Every time. It\'s only counting."' : '"I could have told you that," Kettle says. "Count backwards from the last peg in fours. I\'ll teach you on the road."'), _:''}); draw(); };
+  mgKeys({'1':() => take('me', 1), '2':() => take('me', 2), '3':() => take('me', 3), p:() => palm(), ' ':() => { const b = $('#pgDone') || $('#pgGo'); b && b.click(); }});
+  /* the tailboard: the old Domin flat and dark, the wagons in their ring, the fire, the pegs in a row on a lowered tailboard */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H;
+    b6gNight(ctx, W, H, t, {top:'#05070c', mid:'#1a1e26', cut:.42, low:'#100e0c', seed:9801});
+    ctx.fillStyle = '#0c0e12'; ctx.fillRect(0, H*.4, W, H*.06); // the Domin, flat to the edge of the world
+    for (let i = 0; i < 4; i++) { const x = W*(.05 + i*.26); ctx.fillStyle = '#1e1a16'; ctx.fillRect(x, H*.3, W*.18, H*.12); ctx.fillStyle = '#2e2a24'; ctx.beginPath(); ctx.ellipse(x + W*.09, H*.3, W*.09, H*.06, 0, Math.PI, 0); ctx.fill(); ell(ctx, x + W*.03, H*.43, H*.025, H*.025, '#0e0c0a'); ell(ctx, x + W*.15, H*.43, H*.025, H*.025, '#0e0c0a'); } // the wagons' ring, covered
+    ctx.fillStyle = '#161410'; ctx.fillRect(0, H*.46, W, H*.54); b7gFire(ctx, W*.5, H*.52, t, H);
+    const tx = W*.16, tw = W*.68, ty = H*.72; ctx.fillStyle = '#5a4430'; ctx.fillRect(tx, ty, tw, H*.07); ctx.fillStyle = '#3a2a1c'; ctx.fillRect(tx, ty + H*.07, tw, 3); // the tailboard
+    for (let i = 0; i < B8G_PEGS; i++) { const x = tx + tw*(i + .5)/B8G_PEGS, have = i < g.n; ctx.fillStyle = have ? '#d8c08a' : 'rgba(216,192,138,.12)'; ctx.fillRect(x - 2, ty - (have ? 12 : 3), 4, have ? 14 : 4); if (have) ell(ctx, x, ty - 12, 2.5, 1.5, '#f0dca8'); }
+    const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b8_c2_carter', W*.88, H*.86, fs, t, {still:g.phase !== 'his', dir:-1}); drawFigure(ctx, 'sgt', W*.1, H*.88, fs, t, {still:g.phase !== 'mine', dir:1});
+    const mate = ['brannoc', 'kettle', 'vasso'].find(k => b8In(k)); if (mate) drawFigure(ctx, mate, W*.22, H*.9, fs*.9, t, {still:true, dir:1, phase:2});
+    for (let i = 0; i < g.mine; i++) ell(ctx, W*.1 + i*10, H*.97, 3, 3, '#9fd0e8'); for (let i = 0; i < g.his; i++) ell(ctx, W*.9 - i*10, H*.97, 3, 3, '#e8c073'); };
+  g.talk = mgSay('', `At the caravan's fire, with the wagons in their ring and the old Domin flat and dark all round, a carter has dropped a tailboard and set out a row of pegs from a bag. The dog watch wants standing. The carters settle it this way.`) +
+    mgSay('The carter', '"Last Peg, soldier. Fifteen. One, two or three a hand. Whoever takes the last one sits up with the dark." He looks out at it. "There\'s a lot of dark."') +
+    b8gSay({brannoc:() => mgSay('', 'Brannoc sits down on the next wagon\'s shaft, already talking.'), kettle:() => mgSay('', 'Kettle looks at the row of pegs, and then at the carter, and then at the pegs again, counting.'), _:''});
+  draw();
+}
+/* what the tailboard leaves behind, once a book: the carter's watch-money */
+function b8PegPay(r){ if (!r) return; S.f.b8_peg = {mine:r.mine, his:r.his, won:!!r.won, done:!!r.done};
+  if (r.won && !S.f.b8_pegPaid) { S.f.b8_pegPaid = 1; S.silver = (S.silver || 0) + B8G_PEGPAY; updSilver(); note(`+${B8G_PEGPAY} silver: a carter's watch-money, paid.`, 'good'); }
+  save(); }
+
+/* ============ 3. Lamp and Stone, at the lodging ============
+   Thessaly, the clerk sworn to the Andii, comes off her ledger with a cloth of sixteen squares, a bag of black stones and a shuttered lamp.
+   It is a game the Andii play, she says, to pass a night that does not pass. She lays the stones; the lamp is open for a breath; then dark,
+   and you touch where the stones lie. One wrong touch is forgiven; a second loses the round. Three rounds, of three, four and five stones;
+   two rounds take it. Once a game, before a round, you may let your eyes go to the dark (Wits; Tuft, who has walked in shadows, with an
+   edge): made, the lamp stays open twice as long; "yes, but", twice as long, and Thessaly lays one more stone. Won: Tuft's regard if she
+   walks, else Edrem's, else a salve. This is not the game played in the tavern by the harbour, and it is never called by its name. */
+const B8G_LAMPN = [3, 4, 5], B8G_LAMPWIN = 2, B8G_LAMPSHOW = 1300, B8G_GRID = 16;
+function playB8Lamp(opt = {}){
+  let on = () => true; const T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * b8gSp());
+  const g = MG.state = {round:0, mine:0, lost:0, stones:[], found:[], miss:[], phase:'intro', talk:'', check:null, dark:false, eyes:false, extra:0, used:false, over:false, shown:0};
+  const result = () => ({mine:g.mine, lost:g.lost, rounds:g.round, won:g.over && g.mine >= B8G_LAMPWIN, done:g.over});
+  mgOpen({kick:'Black Coral · the room over the chandler\'s', title:'Lamp and Stone', leaveText:'Leave the cloth', done:r => opt.after && opt.after(r), leave:() => mgClose(g.over ? result() : Object.assign(result(), {left:true, done:false, won:false}))}); on = b8gOn();
+  const cell = i => { const st = g.stones.includes(i), f = g.found.includes(i), m = g.miss.includes(i), lit = g.phase === 'show' && st;
+    return `<button class="btn${f ? ' on' : ''}" data-cl="${i}" data-bot="1" style="min-width:0;width:100%;padding:0;height:46px;font-size:20px" ${g.phase === 'dark' && !f && !m ? '' : 'disabled'}>${lit || (f) ? '●' : m ? '×' : (g.phase === 'over' || g.phase === 'between') && st ? '○' : '·'}</button>`; };
+  const draw = () => { mgPanel(`<div class="cpbar"><span>${g.over ? 'The lamp is open' : `Round ${g.round + 1} of 3: <b>${g.stones.length || B8G_LAMPN[g.round]}</b> stones`}</span><span>Rounds <b>${g.mine}</b> · Thessaly <b>${g.lost}</b></span><span>${g.phase === 'dark' ? `Found ${g.found.length} · wrong ${g.miss.length}` : ''}</span></div>
+      ${g.talk}${b8gRollHTML(g.check)}
+      ${g.phase !== 'intro' ? `<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;max-width:280px;margin:6px auto;box-sizing:border-box">${Array.from({length:B8G_GRID}, (_, i) => cell(i)).join('')}</div>` : ''}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="lmDone" data-bot="1">Back to the fire</button>`
+        : g.phase === 'intro' || g.phase === 'ready' ? `<button class="btn primary" id="lmOpen" data-bot="1">Lay the stones. Open the lamp</button>${!g.used ? `<button class="btn" id="lmEyes" data-bot="1">Let your eyes go to the dark first (once)</button>` : ''}`
+        : g.phase === 'show' ? `<button class="btn" disabled data-bot="1">The lamp is open</button>` : g.phase === 'between' ? `<button class="btn" disabled data-bot="1">Thessaly gathers the stones</button>` : ''}</div>
+      <p class="fine">The lamp opens for a breath on the stones, then shuts. Touch where they lie. One wrong touch is forgiven; a second loses the round. Two rounds of three take it.</p>
+      <p class="hint keys"><kbd>Space</kbd> open the lamp · <kbd>E</kbd> eyes to the dark · <kbd>Esc</kbd> leave</p>`);
+    document.querySelectorAll('#mgPanel [data-cl]').forEach(b => b.onclick = () => touch(+b.dataset.cl));
+    if ($('#lmOpen')) $('#lmOpen').onclick = () => open(); if ($('#lmEyes')) $('#lmEyes').onclick = () => eyes();
+    if ($('#lmDone')) $('#lmDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; };
+  /* the check: eyes to the dark (Wits). Made: the lamp twice as long. Yes, but: twice as long, and one more stone. */
+  const eyes = () => { if (g.used || g.over || !(g.phase === 'intro' || g.phase === 'ready')) return; g.used = true; AUDIO.play('click');
+    const r = g.check = b8gRoll('wits', B8G_DC, null, [['she has walked in shadows, and Meanas taught her to look', 2, 'tuft'], ['he lived under this night with the Domin\'s grey on', 1, 'edrem'], ['she learned to see in the dark the Claw\'s way', 1, 'ellis'], ['you have stood a lot of night watches', 1, 'sgt']]);
+    if (r.ok) { g.eyes = true; g.talk = mgSay(r.who === 'tuft' ? 'Tuft' : '', r.who === 'tuft' ? '"Don\'t look at the lamp," Tuft says, very quietly. "Look where it isn\'t. It stays longer there." She sounds surprised to know it.' : `${b8gWho(r)} ${b8gV(r, 'sit', 'sits')} a while with ${r.who === 'sgt' ? 'your' : B8G_SHE.includes(r.who) ? 'her' : 'his'} eyes open on the dark until the dark has shapes in it. The lamp will last twice as long, after that.`); }
+    else if (r.tier === 'near') { g.eyes = true; g.extra = 1; g.talk = mgSay('Thessaly', '"You\'ve been sitting in the dark," she says, and smiles, and puts another stone in her palm. "They do that too. They lay one more for it." <span class="dim">(the lamp twice as long; one more stone)</span>'); }
+    else g.talk = mgSay('', `${b8gWho(r)} ${b8gV(r, 'sit', 'sits')} in the dark a while, and the dark stays the dark. Black Coral's is not a dark that gets used to anyone.`);
+    draw(); };
+  const open = () => { if (g.over || !(g.phase === 'intro' || g.phase === 'ready')) return; const n = B8G_LAMPN[g.round] + g.extra; g.extra = 0;
+    const cells = Array.from({length:B8G_GRID}, (_, i) => i); g.stones = []; while (g.stones.length < n) g.stones.push(cells.splice(R(cells.length), 1)[0]);
+    g.found = []; g.miss = []; g.phase = 'show'; g.shown = performance.now(); AUDIO.play('shuffle');
+    g.talk = mgSay('Thessaly', `${numw(n, true)} stones. She opens the shutter for a breath.`); draw();
+    T(() => { g.phase = 'dark'; g.eyes = false; AUDIO.play('click'); g.talk = mgSay('', 'The shutter closes. Touch where they lie.'); draw(); }, B8G_LAMPSHOW * (g.eyes ? 2 : 1)); };
+  const touch = i => { if (g.phase !== 'dark' || g.over || g.found.includes(i) || g.miss.includes(i)) return;
+    if (g.stones.includes(i)) { g.found.push(i); AUDIO.play('coin'); if (g.found.length === g.stones.length) return endRound(true); g.talk = mgSay('', b8gPick(['Cold stone under your finger.', 'A stone.', 'There.'])); }
+    else { g.miss.push(i); AUDIO.play('miss'); if (g.miss.length >= 2) return endRound(false); g.talk = mgSay('Thessaly', '"Cloth," she says. "Once is forgiven."'); }
+    draw(); };
+  const endRound = ok => { g.round++; if (ok) g.mine++; else g.lost++; g.phase = 'between';
+    g.talk = mgSay('Thessaly', ok ? b8gPick(['"All of them." She opens the lamp to show you, and nods.', '"Every one," she says. "They would have been pleased with you. They would not have said so."']) : b8gPick(['"Cloth, twice." She opens the lamp on the stones you missed.', '"The dark wins that one," she says. "It usually does. That is the point of playing."']));
+    if (g.mine >= B8G_LAMPWIN || g.lost > B8G_LAMPN.length - B8G_LAMPWIN) { draw(); return T(end, 600); } draw(); T(() => { g.phase = 'ready'; g.stones = []; draw(); }, 900); };
+  const end = () => { g.over = true; g.phase = 'over'; const W = g.mine >= B8G_LAMPWIN; mgDeed(W ? 'b8LampWon' : 'b8LampLost'); AUDIO.play(W ? 'win' : 'lose');
+    g.talk = mgSay('Thessaly', W ? `"${g.mine} rounds." She puts the stones back in the bag one at a time. "I have played this a long while under their night, Sergeant. You learn to see what is there when there is nothing to see it by. Most of the Malazans who come through do not try."` : `"The dark has it." She puts the stones away. "I have played it as long as I have kept the ledger, and they still beat me without looking. It is not a game you win. It is a game you keep playing."`) +
+      b8gSay({tuft:() => mgSay('Tuft', W ? '"It\'s cold, the dark here," Tuft says, when Thessaly has gone. "But it\'s not empty. I keep thinking it ought to be." She does not say what she thinks it is full of.' : '"Shadows are easier," Tuft says. "Shadows are only light, somewhere else. This isn\'t."'), edrem:() => mgSay('Edrem', '"The Andii play it all night," Edrem says. "I used to watch them through a tavern window, the year after. I never asked to sit."'), _:''}); draw(); };
+  mgKeys({e:() => eyes(), ' ':() => { const b = $('#lmDone') || $('#lmOpen'); b && b.click(); }});
+  /* the room: night at noon through the shutters, the street lamps outside, the cloth on the floor, the shuttered lamp, Thessaly */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, now = performance.now();
+    const open = g.phase === 'show', k = open ? Math.min(1, (now - g.shown) / 180) : 0;
+    ctx.fillStyle = '#07080c'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#0e1016'; ctx.fillRect(W*.62, H*.08, W*.3, H*.3); for (let i = 0; i < 4; i++) { ctx.fillStyle = '#05060a'; ctx.fillRect(W*(.62 + i*.08), H*.08, 3, H*.3); } // the shutters, half open on the street
+    for (let i = 0; i < 3; i++) glow(ctx, W*(.68 + i*.09), H*(.16 + hash(i, 9811)*.1), H*.05, '#e8c070', .35); // the lamps outside, burning at noon
+    const cx = W*.45, cy = H*.66, cs = Math.min(W*.13, H*.11); ctx.fillStyle = '#121418'; ctx.fillRect(cx - cs*2.1, cy - cs*1.35, cs*4.2, cs*2.7); // the cloth
+    if (open) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy, cs*3.4, '#ffd890', .32*k); ctx.globalCompositeOperation = 'source-over'; }
+    for (let i = 0; i < B8G_GRID; i++) { const x = cx - cs*1.5 + (i % 4)*cs, y = cy - cs*.98 + Math.floor(i / 4)*cs*.65;
+      ctx.strokeStyle = open ? `rgba(200,180,140,${.35*k})` : 'rgba(80,90,110,.12)'; ctx.strokeRect(x - cs*.45, y - cs*.28, cs*.9, cs*.56);
+      if (g.stones.includes(i) && (open || g.phase === 'between' || g.phase === 'over' || g.found.includes(i))) ell(ctx, x, y, cs*.22, cs*.13, open || g.phase !== 'dark' ? '#1a1a20' : '#2a2e38');
+      if (g.stones.includes(i) && open) { ctx.strokeStyle = `rgba(255,230,180,${.5*k})`; ctx.beginPath(); ctx.ellipse(x, y, cs*.22, cs*.13, 0, Math.PI, 0); ctx.stroke(); } }
+    const lx = W*.78, ly = H*.62; ctx.fillStyle = '#3a3026'; ctx.fillRect(lx - 9, ly - 16, 18, 22); ctx.fillStyle = open ? '#ffe2a0' : '#1a1610'; ctx.fillRect(lx - 6, ly - 12, 12, 12); // the lamp, its shutter
+    const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b8_c3_thessaly', W*.9, H*.92, fs, t, {still:true, dir:-1}); drawFigure(ctx, 'sgt', W*.1, H*.92, fs, t, {still:true, dir:1});
+    const mate = ['tuft', 'edrem'].find(k => b8In(k)); if (mate) drawFigure(ctx, mate, W*.22, H*.9, fs*.92, t, {still:true, dir:1, phase:2}); };
+  g.talk = mgSay('', 'Thessaly comes up the chandler\'s stair when her ledger is closed, with a square of black cloth, a bag of stones and a lamp with a shutter on it. She sits on the floor and spreads the cloth between you.') +
+    mgSay('Thessaly', '"A game they play, here. The Andii. To pass a night that does not pass." She lays a hand flat on the cloth. "I open the lamp for a breath. You remember. Then you find the stones in the dark. That is all of it. They have not tired of it yet. They have had an age to try."') +
+    b8gSay({tuft:() => mgSay('', 'Tuft sits down on the far side of the cloth with her back to the lamps, which is not how she ever sits.'), edrem:() => mgSay('', 'Edrem stays standing by the door, the way he does, and watches the cloth.'), _:''});
+  draw();
+}
+/* what the cloth leaves behind, once a book: Tuft's regard, or Edrem's, or a salve */
+function b8LampPay(r){ if (!r) return; S.f.b8_lamp = {mine:r.mine, lost:r.lost, won:!!r.won, done:!!r.done};
+  if (r.won && !S.f.b8_lampPaid) S.f.b8_lampPaid = b8gRegard(['tuft', 'edrem'], 'Thessaly leaves a pot of the chandler\'s wax salve on the sill.');
+  save(); }
+
+/* ============ 4. Keep the Fire, at the camp's edge ============
+   Hurrin and a few of the frightened pilgrims keep a fire at the edge, between the tents and the open dark. The bells say night; the fire
+   says how much of it can come in. Feed a stick when the flame falls; let it fall out and the dark is at the tents. There are only so many
+   sticks, and a stick on a roaring fire is wasted. Last until the bells say morning. Once a game you may bank the fire with turf (Wits;
+   Edrem, who held the pilgrims' road, with an edge): made, it burns slow and the gusts can't reach it for a while; "yes, but", the same,
+   and it costs a stick to set. Won: Edrem's regard if he walks, else a salve from the pilgrims. Kelyk is a smell from the rows, nothing more. */
+const B8G_FIREN = 30, B8G_STICKS = 10, B8G_STICK = 20, B8G_DECAY = 5.2, B8G_GUST = 10, B8G_TURF = 10;
+function playB8Fire(opt = {}){
+  let on = () => true;
+  const unit = () => 1000 * b8gSp();
+  const g = MG.state = {flame:60, sticks:B8G_STICKS, el:0, last:0, phase:'intro', talk:'', check:null, turf:0, used:false, over:false, gust:0, nextGust:3 + R(3), wasted:0, fed:0};
+  const result = () => ({el:g.el, sticks:g.sticks, won:g.over && g.flame > 0 && g.el >= B8G_FIREN, done:g.over});
+  mgOpen({kick:'The camp\'s edge · the pilgrims\' fire', title:'Keep the Fire', leaveText:'Leave it to them', done:r => opt.after && opt.after(r), leave:() => { if (!g.over) g.phase = 'gone'; mgClose(g.over ? result() : Object.assign(result(), {left:true, done:false, won:false})); }}); on = b8gOn();
+  const draw = () => mgPanel(`<div class="cpbar"><span>${g.over ? (g.flame > 0 ? 'Morning, by the bells' : 'The fire is out') : `Night <b>${Math.min(B8G_FIREN, Math.floor(g.el))}</b> of ${B8G_FIREN}`}</span><span>Sticks <b>${g.sticks}</b></span><span>Flame <b>${Math.max(0, Math.round(g.flame))}</b>${g.turf > 0 ? ' · banked' : ''}</span></div>
+      ${g.talk}${b8gRollHTML(g.check)}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="kfDone" data-bot="1">Back to the fire</button>`
+        : g.phase === 'intro' ? `<button class="btn primary" id="kfGo" data-bot="1">Sit down with them</button>${!g.used ? `<button class="btn" id="kfTurf" data-bot="1">Bank it with turf first (once)</button>` : ''}`
+        : `<button class="btn primary" id="kfStick" data-bot="1" ${g.sticks > 0 ? '' : 'disabled'}>A stick on the fire</button>${!g.used ? `<button class="btn" id="kfTurf" data-bot="1">Bank it with turf (once)</button>` : ''}`}</div>
+      <p class="fine">The flame falls on its own, faster when a gust comes off the open dark. A stick lifts it; a stick on a roaring fire is wasted. Let it go out and the dark is at the tents. Last until the bells say morning.</p>
+      <p class="hint keys"><kbd>Space</kbd> a stick · <kbd>T</kbd> turf · <kbd>Esc</kbd> leave</p>`),
+    bind = () => { if ($('#kfGo')) $('#kfGo').onclick = () => go(); if ($('#kfStick')) $('#kfStick').onclick = () => stick(); if ($('#kfTurf')) $('#kfTurf').onclick = () => turf();
+      if ($('#kfDone')) $('#kfDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; },
+    redraw = () => { draw(); bind(); };
+  const go = () => { if (g.phase !== 'intro') return; g.phase = 'night'; g.last = performance.now(); AUDIO.play('click');
+    g.talk = mgSay('Hurrin', '"The bells will say morning," Hurrin says. "They always do. Then we can stop."'); redraw(); setTimeout(tick, 60); };
+  let shown = -1;
+  const tick = () => { if (!on() || g.phase !== 'night') return; const now = performance.now(), dt = Math.min(.5, (now - g.last) / unit()); g.last = now; g.el += dt;
+    g.flame -= B8G_DECAY * dt * (g.turf > 0 ? .5 : 1); if (g.turf > 0) g.turf -= dt;
+    if (g.el >= g.nextGust) { g.nextGust = g.el + 2.5 + Math.random()*3; if (g.turf <= 0) { g.flame -= B8G_GUST; g.gust = now; AUDIO.play('miss'); g.talk = mgSay('', b8gPick(['A gust comes off the open dark and lays the flame flat.', 'The wind off the plain, cold. The fire leans away from it.', 'Something moves out past the light. Only wind, Hurrin says.'])); redraw(); } }
+    if (g.flame <= 0) return end(false); if (g.el >= B8G_FIREN) return end(true);
+    const s = Math.floor(g.el); if (s !== shown) { shown = s; redraw(); } setTimeout(tick, 60); };
+  const stick = () => { if (g.phase !== 'night' || g.sticks <= 0) return; g.sticks--; g.fed++; const before = g.flame; g.flame = Math.min(100, g.flame + B8G_STICK); g.wasted += B8G_STICK - (g.flame - before); AUDIO.play('click');
+    g.talk = mgSay('', before > 85 ? 'The fire is roaring already. The stick goes up in sparks and is gone.' : b8gPick(['The stick catches. The dark steps back a pace.', 'A stick on, and the tents behind come back into the light.', 'You feed it. Hurrin nods.'])); redraw(); };
+  /* the check: bank it with turf (Wits). Made: slow, and out of the gusts' reach. Yes, but: the same, and a stick to set it. */
+  const turf = () => { if (g.used || g.over || !(g.phase === 'intro' || g.phase === 'night')) return; g.used = true; AUDIO.play('click');
+    const r = g.check = b8gRoll('wits', B8G_DC, null, [['he kept fires for the pilgrims on the road for years', 2, 'edrem'], ['she has kept a fire on the Pale in wind', 1, 'sohra'], ['she counts what a fire will take', 1, 'kettle'], ['you have banked a camp fire before', 1, 'sgt']]);
+    if (r.ok) { g.turf = B8G_TURF; g.talk = mgSay(r.who === 'edrem' ? 'Edrem' : '', r.who === 'edrem' ? 'Edrem cuts turf from the verge with the edge of his mace and banks the fire on the windward side, the way the pilgrims\' road taught him. "Slow," he says. "Slow lasts."' : `${b8gWho(r)} ${b8gV(r, 'cut', 'cuts')} turf from the verge and ${b8gV(r, 'bank', 'banks')} the fire on the windward side. It settles, and burns slow, and the wind goes round it.`); }
+    else if (r.tier === 'near') { g.turf = B8G_TURF; g.sticks = Math.max(0, g.sticks - 1); g.talk = mgSay('Hurrin', '"Turf," Hurrin says, approving. "But you want a dry stick under it, to set it." One stick goes under the turf. <span class="dim">(a stick to set it)</span>'); }
+    else g.talk = mgSay('', `${b8gWho(r)} ${b8gV(r, 'cut', 'cuts')} turf from the verge, and it is wet through, and smokes, and the pilgrims cough, and it does nothing else.`);
+    redraw(); };
+  const end = W => { g.over = true; g.phase = 'over'; if (!W) g.flame = 0; mgDeed(W ? 'b8FireWon' : 'b8FireLost'); AUDIO.play(W ? 'win' : 'lose');
+    g.talk = mgSay('', W ? 'Far off, the city\'s bells say morning. It looks exactly like the night. The fire is still in.' : 'The fire goes down to embers, and then to nothing, and for a breath the dark is right there at the first tent. Then someone along the edge brings a brand from their own fire, and it is lit again, and the pilgrims at this one let it pass.') +
+      mgSay('Hurrin', W ? '"Morning," Hurrin says. He puts out a hand, and after a moment you see it is for you to take. "Up north, at home, we kept the fire all winter. No one ever thanked anyone for it. I thought somebody should."' : '"It goes out," Hurrin says. "It goes out up north too. You light it again." He does not seem to blame anyone. That is somehow worse.') +
+      b8gSay({edrem:() => mgSay('Edrem', W ? '"They will remember who sat up," Edrem says, of the pilgrims. "They always do. They never say."' : '"Next time, turf first," Edrem says. He is not unkind about it.'), ohl:() => mgSay('Ohl', '"Not one of them drank tonight, at this fire," Ohl says, low, looking at the rows behind, where the sweet smell comes from. "That\'s worth a fire."'), _:''}); redraw(); };
+  mgKeys({t:() => turf(), ' ':() => { const b = $('#kfDone') || $('#kfGo') || $('#kfStick'); b && !b.disabled && b.click(); }});
+  /* the edge: the open dark, the tents behind, Hurrin and two pilgrims round a small fire whose size is the flame, the woodpile */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, now = performance.now(), f = clamp(g.flame, 0, 100) / 100;
+    ctx.fillStyle = '#040508'; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 7; i++) { const x = W*(.04 + i*.14), h = H*(.1 + hash(i, 9821)*.06); ctx.fillStyle = '#121418'; poly(ctx, [[x, H*.5], [x + W*.06, H*.5 - h], [x + W*.12, H*.5]], '#121418'); } // the tents behind
+    ctx.fillStyle = '#0c0d10'; ctx.fillRect(0, H*.5, W, H*.5);
+    const fx = W*.5, fy = H*.74, gs = g.gust && now - g.gust < 600 ? 1 - (now - g.gust) / 600 : 0;
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, fx, fy - 6, H*(.1 + f*.4), '#ff9a40', .15 + f*.35); ctx.globalCompositeOperation = 'source-over';
+    if (f > 0) { const fl = b2Fl(t), hgt = (8 + f*40) * fl, lean = gs*18; poly(ctx, [[fx - 12 - f*8, fy], [fx - 4 + lean, fy - hgt], [fx + 2 + lean*.6, fy - hgt*.5], [fx + 6 + lean, fy - hgt*.8], [fx + 12 + f*8, fy]], `rgba(255,${140 + f*40 | 0},60,.92)`); poly(ctx, [[fx - 5, fy], [fx + lean*.5, fy - hgt*.45], [fx + 5, fy]], '#fff1c2'); }
+    ctx.fillStyle = '#2a2420'; ctx.fillRect(fx - 16, fy, 32, 5);
+    if (g.turf > 0) { ctx.fillStyle = '#2a2a1a'; ctx.beginPath(); ctx.ellipse(fx - 18, fy - 2, 10, 7, 0, Math.PI, 0); ctx.fill(); }
+    for (let i = 0; i < g.sticks; i++) { ctx.save(); ctx.translate(W*.2 + (i % 5)*7, H*.9 - Math.floor(i / 5)*5); ctx.rotate(-.2 + (i % 3)*.15); ctx.fillStyle = '#5a4230'; ctx.fillRect(-12, -1.5, 24, 3); ctx.restore(); } // the woodpile
+    const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b8_c4_hurrin', W*.72, H*.8, fs, t, {still:true, dir:-1}); drawFigure(ctx, 'b8_c4_hurrin', W*.86, H*.76, fs*.85, t, {still:true, dir:-1, phase:3});
+    drawFigure(ctx, 'sgt', W*.3, H*.82, fs, t, {still:true, dir:1}); const mate = ['edrem', 'ohl'].find(k => b8In(k)); if (mate) drawFigure(ctx, mate, W*.14, H*.8, fs*.92, t, {still:true, dir:1, phase:2});
+    const dk = 1 - f; ctx.fillStyle = `rgba(2,3,6,${(.15 + dk*.55).toFixed(2)})`; ctx.fillRect(0, 0, W*.06 + dk*W*.2, H); ctx.fillRect(W - W*.06 - dk*W*.2, 0, W*.06 + dk*W*.2, H); // the dark, closing in from both sides as the flame falls
+    const bx = W*.08, bw = W*.84; ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(bx, H*.04, bw, 4); ctx.fillStyle = '#9fd0e8'; ctx.fillRect(bx, H*.04, bw*Math.min(1, g.el / B8G_FIREN), 4); }; // the bells' night, passing
+  g.talk = mgSay('', 'At the far end of the edge, past the Fourth\'s own fire, Hurrin and two of the frightened ones have a small fire going between the last tents and the open dark. They have a pile of sticks someone carried in from the road, and not many.') +
+    mgSay('Hurrin', '"Sit, if you like. We keep it in till the bells say morning. If it goes out, the dark comes up to the tents." He feeds it a stick, carefully. "Not too much. There isn\'t much."') +
+    mgSay('', 'Behind you, in the rows, the sweet smell is stronger tonight. Hurrin keeps his face turned away from it.');
+  redraw();
+}
+/* what the edge leaves behind, once a book: Edrem's regard, or a salve */
+function b8FirePay(r){ if (!r) return; S.f.b8_fire = {won:!!r.won, done:!!r.done, sticks:r.sticks};
+  if (r.won && !S.f.b8_firePaid) S.f.b8_firePaid = b8gRegard(['edrem'], 'the pilgrims press a twist of willow bark on the Fourth for its cuts.');
+  save(); }
+
+/* ============ 5. Stones on the Water, the night after ============
+   On the shingle, the evening after the Hounds, Benlo comes down from the street with his cold brazier on his barrow and a pocket of flat
+   stones. Three throws each across the lake, toward the blue lamps coming on along the shore. Each throw is two taps: the angle (flat
+   is best) as the arm swings, then the strength (the mark near the top). Most skips over three throws wins; a tie is nobody's. Once a game,
+   pick a flat stone (Wits; Brannoc, who grew up on boats, with an edge): made, the next throw skips two more; "yes, but", two more, and
+   Benlo picks a flat one too. Won: the regard of whichever squadmate needed the evening most (the lowest loyalty who walks), or a salve. */
+const B8G_SKIPN = 3;
+const b8gSkips = (a, p) => { const flat = 1 - Math.min(1, Math.abs(a)), str = 1 - Math.min(1, Math.abs(p - .82) * 2.6); return Math.max(0, Math.round(flat * str * 9 + Math.random() * 1.2 - .4)); };
+function playB8Skip(opt = {}){
+  let on = () => true; const T = (f, ms) => setTimeout(() => { if (on()) f(); }, ms * b8gSp());
+  const g = MG.state = {throw:0, mine:[], his:[], phase:'intro', talk:'', check:null, used:false, plus:0, hisPlus:0, a:null, t0:0, over:false, fly:null, force:null};
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const result = () => ({mine:sum(g.mine), his:sum(g.his), won:g.over && sum(g.mine) > sum(g.his), tie:g.over && sum(g.mine) === sum(g.his), done:g.over});
+  mgOpen({kick:'The lake shore · the night after', title:'Stones on the Water', leaveText:'Leave the shingle', done:r => opt.after && opt.after(r), leave:() => mgClose(g.over ? result() : Object.assign(result(), {left:true, done:false, won:false}))}); on = b8gOn();
+  const swing = () => Math.sin((performance.now() - g.t0) / (700 * Math.max(.6, b8gSp()))); // the arm, -1..1 (0 is flat)
+  const power = () => (1 - Math.cos((performance.now() - g.t0) / (520 * Math.max(.6, b8gSp())))) / 2; // the strength, 0..1
+  const draw = () => mgPanel(`<div class="cpbar"><span>${g.over ? 'The stones are thrown' : `Throw ${g.throw + 1} of ${B8G_SKIPN}`}</span><span>You <b>${sum(g.mine)}</b> · Benlo <b>${sum(g.his)}</b></span><span>Most skips</span></div>
+      ${g.talk}${b8gRollHTML(g.check)}
+      <div class="row mgbtns">${g.over ? `<button class="btn primary" id="skDone" data-bot="1">Back to the fire</button>`
+        : g.phase === 'intro' || g.phase === 'ready' ? `<button class="btn primary" id="skUp" data-bot="1">Pick up a stone</button>${!g.used ? `<button class="btn" id="skPick" data-bot="1">Look for a flat one first (once)</button>` : ''}`
+        : g.phase === 'angle' ? `<button class="btn primary" id="skSet" data-bot="1">Now: the angle</button>`
+        : g.phase === 'power' ? `<button class="btn primary" id="skSet" data-bot="1">Now: throw</button>`
+        : `<button class="btn" disabled data-bot="1">${g.phase === 'benlo' ? 'Benlo throws' : 'The stone is going'}</button>`}</div>
+      <p class="fine">Tap once as the arm comes flat, then again as the strength nears its mark. Three throws each; most skips wins.</p>
+      <p class="hint keys"><kbd>Space</kbd> pick up / set / throw · <kbd>F</kbd> a flat stone · <kbd>Esc</kbd> leave</p>`),
+    bind = () => { if ($('#skUp')) $('#skUp').onclick = () => up(); if ($('#skPick')) $('#skPick').onclick = () => pick(); if ($('#skSet')) $('#skSet').onclick = () => set();
+      if ($('#skDone')) $('#skDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; },
+    redraw = () => { draw(); bind(); };
+  const up = () => { if (g.over || !(g.phase === 'intro' || g.phase === 'ready')) return; g.phase = 'angle'; g.t0 = performance.now(); AUDIO.play('click');
+    g.talk = mgSay('', 'A stone in your hand, cold off the shingle. Your arm goes back.'); redraw(); };
+  const set = () => { if (g.over) return;
+    if (g.phase === 'angle') { g.a = g.force ? g.force[0] : swing(); g.phase = 'power'; g.t0 = performance.now(); AUDIO.play('click'); g.talk = mgSay('', Math.abs(g.a) < .2 ? 'Flat. Now the strength.' : Math.abs(g.a) < .5 ? 'Near enough flat. Now the strength.' : 'Steep. It will want luck. Now the strength.'); return redraw(); }
+    if (g.phase !== 'power') return; const p = g.force ? g.force[1] : power(), n = b8gSkips(g.a, p) + g.plus; g.plus = 0; g.force = null;
+    g.mine.push(n); g.phase = 'fly'; g.fly = {t:performance.now(), n, me:true}; AUDIO.play('shuffle');
+    g.talk = mgSay('', n ? `${numw(n, true)} skip${n === 1 ? '' : 's'}, out toward the lamps${n >= 6 ? ', and the last of them in the dark where you can only hear it' : ''}.` : 'It goes in with a plop, first touch. The lake keeps it.'); redraw();
+    T(benlo, 1100); };
+  const benlo = () => { if (g.over) return; g.phase = 'benlo'; redraw();
+    T(() => { const n = Math.max(0, 2 + R(5) + (Math.random() < .25 ? 2 : 0) - (Math.random() < .2 ? 2 : 0)) + g.hisPlus; g.hisPlus = 0; g.his.push(n); g.fly = {t:performance.now(), n, me:false}; AUDIO.play('shuffle');
+      g.talk = mgSay('Benlo', n ? `${numw(n, true)}. ${b8gPick(['"The lake likes me," he says. "I sell it chestnuts."', '"Not bad for a chestnut man."', 'He watches the rings go out, and nods.'])}` : '"Hood\'s teeth." Straight in. He laughs, which is the first laugh you have heard all day.');
+      g.throw++; if (g.throw >= B8G_SKIPN) T(end, 900); else { g.phase = 'ready'; } redraw(); }, 700); };
+  /* the check: a flat stone (Wits). Made: two more skips. Yes, but: two more, and Benlo finds a flat one too. */
+  const pick = () => { if (g.used || g.over || !(g.phase === 'intro' || g.phase === 'ready')) return; g.used = true; AUDIO.play('click');
+    const r = g.check = b8gRoll('wits', B8G_DC, null, [['he grew up skipping stones off Falari jetties', 2, 'brannoc'], ['he has known this shore since he was a boy', 1, 'vasso'], ['she knows which stones the water has worked longest', 1, 'sohra'], ['you have a soldier\'s eye for a good stone', 1, 'sgt']]);
+    if (r.ok) { g.plus = 2; g.talk = mgSay(r.who === 'brannoc' ? 'Brannoc' : '', r.who === 'brannoc' ? '"This one," Brannoc says, and puts a stone in your hand as thin as a coin and as round. "In Falar we would not sell this. We would marry it."' : `${b8gWho(r)} ${b8gV(r, 'find', 'finds')} a stone on the shingle as thin as a coin, worn flat by the lake. <span class="dim">(two more skips, next throw)</span>`); }
+    else if (r.tier === 'near') { g.plus = 2; g.hisPlus = 1; g.talk = mgSay('Benlo', '"That\'s a good one," Benlo says, watching. He bends and finds its brother. "I know this shore too." <span class="dim">(two more skips for you; one more for him)</span>'); }
+    else g.talk = mgSay('', `${b8gWho(r)} ${b8gV(r, 'turn', 'turns')} over half the shingle in the dark and ${b8gV(r, 'come', 'comes')} up with a stone that is flat on one side only, which is the wrong number of sides.`);
+    redraw(); };
+  const end = () => { g.over = true; g.phase = 'over'; const a = sum(g.mine), b = sum(g.his), W = a > b; mgDeed(W ? 'b8SkipWon' : 'b8SkipLost'); AUDIO.play(W ? 'win' : a === b ? 'click' : 'lose');
+    g.talk = mgSay('Benlo', W ? `"${a} to my ${b}." He shakes his head. "Soldiers. Eh. Good arm." He looks out at the lake, and the lamps along it, and not at the city behind. "Good to throw something, tonight. Into something that just takes it."` : a === b ? `"${a} each." He shrugs. "The lake can't make its mind up. Nor can I, tonight."` : `"${b} to your ${a}." He wipes his hands on his apron. "All my life on this shore. I would have been ashamed to lose. Tonight I'd not have minded." He means it.`) +
+      b8gSay({brannoc:() => mgSay('Brannoc', '"Nine, in Falar, is a poor throw," Brannoc says. No one believes him, and he looks pleased about that.'), vasso:() => mgSay('Vasso', '"I used to come down here as a boy," Vasso says. "Before the Guild. I\'d forgotten." He picks up a stone, and holds it, and does not throw it.'), _:() => mgSay('', 'Along the shore the bells are still going, one at a time, for the dead.')}); redraw(); };
+  mgKeys({f:() => pick(), ' ':() => { const b = $('#skDone') || $('#skUp') || $('#skSet'); b && !b.disabled && b.click(); }});
+  /* the shore: the lake black and wide, the blue lamps coming on along it, the shingle, the arm and its marks, the rings of a stone going out */
+  MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, now = performance.now(), mo = REDUCE() ? 0 : 1;
+    b6gNight(ctx, W, H, t, {top:'#060810', mid:'#1a2230', cut:.38, low:'#0a0c10', seed:9831});
+    ctx.fillStyle = '#0a0e16'; ctx.fillRect(0, H*.38, W, H*.34); // the lake
+    for (let i = 0; i < 9; i++) { const x = W*(.04 + i*.12), y = H*(.37 + hash(i, 9832)*.02); glow(ctx, x, y, 6, '#8ab8ff', .7); ctx.fillStyle = 'rgba(120,170,255,.18)'; for (let k = 1; k < 5; k++) ctx.fillRect(x - 2 + Math.sin(t/400 + k + i)*mo*2, y + k*H*.03, 4, 1); } // the blue lamps along the far shore, and their light on the water
+    ctx.fillStyle = '#2a2a2e'; ctx.beginPath(); ctx.moveTo(0, H*.72); for (let i = 0; i <= 8; i++) ctx.lineTo(W*i/8, H*(.71 + hash(i, 9833)*.03)); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill(); // the shingle
+    if (g.fly) { const k = Math.min(1, (now - g.fly.t) / 1000), n = g.fly.n, x0 = g.fly.me ? W*.24 : W*.7;
+      for (let i = 0; i < n; i++) { const fx = x0 + (W*.82 - x0) * (i + 1) / (n + 1) * (g.fly.me ? 1 : -.9), fy = H*(.66 - .26*(i + 1)/(n + 1)), at = (i + 1) / (n + 1);
+        if (k >= at) { const r = (k - at) * 40 + 3; ctx.strokeStyle = `rgba(160,200,255,${(.6*(1 - k*.6)).toFixed(2)})`; ctx.beginPath(); ctx.ellipse(fx, fy, r, r*.25, 0, 0, 7); ctx.stroke(); } } }
+    const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b8_c1_benlo', W*.84, H*.88, fs, t, {still:g.phase !== 'benlo', dir:-1}); drawFigure(ctx, 'sgt', W*.16, H*.9, fs, t, {still:!(g.phase === 'angle' || g.phase === 'power'), dir:1});
+    const mate = ['brannoc', 'vasso', 'brisk'].find(k => b8In(k)); if (mate) drawFigure(ctx, mate, W*.3, H*.9, fs*.9, t, {still:true, dir:1, phase:2});
+    if (g.phase === 'angle' || g.phase === 'power') { const cx = W*.5, cy = H*.86, R0 = Math.min(W*.18, H*.12); // the gauge: the arm's angle, then the strength
+      ctx.strokeStyle = 'rgba(232,192,115,.35)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, R0, Math.PI*1.1, Math.PI*1.9); ctx.stroke();
+      const a = g.phase === 'angle' ? swing() : g.a, ang = Math.PI*1.5 + a*Math.PI*.4; ctx.strokeStyle = g.phase === 'angle' ? '#f2d488' : 'rgba(242,212,136,.5)'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ang)*R0, cy + Math.sin(ang)*R0); ctx.stroke();
+      ctx.fillStyle = '#9fd0e8'; ctx.fillRect(cx - 1, cy - R0 - 6, 2, 6); // flat
+      if (g.phase === 'power') { const bw = W*.4, bx = cx - bw/2, by = H*.96, p = power(); ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(bx, by, bw, 6); ctx.fillStyle = '#e8c073'; ctx.fillRect(bx, by, bw*p, 6); ctx.fillStyle = '#9fd0e8'; ctx.fillRect(bx + bw*.82 - 1, by - 4, 2, 14); } } };
+  g.talk = mgSay('', 'Benlo comes down off the street with his barrow and his cold brazier, and sits on the shingle by the Fourth\'s fire without asking, as everybody is doing tonight. He has a pocket full of flat stones. He does not say what they are for. Then he throws one.') +
+    mgSay('Benlo', '"Three each, Sergeant. Most skips. I have done this on this shore every bad night since I was a boy." He weighs a stone. "There have been a few."') +
+    b8gSay({brisk:() => mgSay('', 'Brisk sits down on the shingle with her shield beside her, and for once keeps her back to the roofs.'), _:''});
+  redraw();
+}
+/* what the shingle leaves behind, once a book: the regard of the one who needed the evening most, or a salve */
+function b8SkipPay(r){ if (!r) return; S.f.b8_skip = {mine:r.mine, his:r.his, won:!!r.won, done:!!r.done};
+  if (r.won && !S.f.b8_skipPaid) { const low = S.squad.filter(k => k !== 'sgt' && b8In(k) && S.loy && S.loy[k] != null).sort((a, b) => S.loy[a] - S.loy[b])[0];
+    S.f.b8_skipPaid = b8gRegard(low ? [low] : [], 'Benlo leaves a pot of goose-grease for the squad\'s hands. "For the cold," he says.'); }
+  save(); }
+
+/* ---- the Deeds page: Book Eight's fires, under the Contract ---- */
+{ const _de = b8DeedsExtra; b8DeedsExtra = function(mine){ const out = _de(mine), d = k => mine.reduce((a, {s}) => a + (((s.deeds || {})[k]) || 0), 0);
+    const rows = [['Orsa\'s Cup', d('b8CupWon') ? 'The cup paid' : d('b8CupLost') ? 'The ones bit' : 'Not yet'],
+      ['The Last Peg', d('b8PegWon') ? 'The carter stood the dog watch' : d('b8PegLost') ? 'The dog watch was yours' : 'Not yet'],
+      ['Lamp and Stone', d('b8LampWon') ? 'Found them in the dark' : d('b8LampLost') ? 'The dark had them' : 'Not yet'],
+      ['Keep the Fire', d('b8FireWon') ? 'Kept in till morning' : d('b8FireLost') ? 'It went out, and was lit again' : 'Not yet'],
+      ['Stones on the Water', d('b8SkipWon') ? 'Most skips, the night after' : d('b8SkipLost') ? 'Benlo\'s lake' : 'Not yet']];
+    return out + `<h4 class="jh">At the fires</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }; }
+
+/* ---- the chapters' fires: the games offered beside the squad's talk, and what they leave behind ---- */
+{ const wrap = (CH, id, f) => { const _n = CH.dlg[id]; if (!_n) return; CH.dlg[id] = () => { const n = _n(); return f(n) || n; }; };
+  const after = (n, t, ch) => { const i = n.ch.findIndex(c => typeof c.t === 'string' && new RegExp(t).test(c.t)); n.ch = n.ch.slice(); n.ch.splice(i < 0 ? n.ch.length - 1 : i + 1, 0, ...ch); return n; };
+  const jn = (CH, fn) => { const j = CH.journal; if (j) CH.journal = () => { const x = j(), l = fn(); if (l) x.unshift(l); return x; }; };
+  /* Ch1: Orsa's Cup, down the steps under the cobbler's, once the lanes are open (phase 3 on) */
+  if (typeof B8CH1 !== 'undefined') { wrap(B8CH1, 'b8_c1_fire', n => after(n, '^Talk with the squad', [{t:'Down the steps to Orsa\'s den, for one die in a leather cup.', tag:'Orsa\'s Cup', req:()=>(S.f.b8_c1_ph || 1) >= 3 && !(S.f.b8_cup && S.f.b8_cup.done) && (S.silver || 0) >= 1, go:()=>playB8Cup({after:r => { b8CupPay(r); S.f.b8_cupLast = r; talk('b8_c1_cup_after'); }})}]));
+    B8CH1.dlg.b8_c1_cup_after = () => { const r = S.f.b8_cupLast || {}; return b8gAfter('The Fourth\'s door', 'b8_door', 'b8_c1_fire', !r.done ?
+`You leave Orsa's table before the stake is down. She does not mind. The den is full, and there is always someone who thinks the cup likes them.` : (r.pay || 0) > 0 ?
+`You come back up the steps into the winter dark ${r.pay} silver heavier. ${b8In('kettle') ? 'Kettle writes it in the ledger under a column she has headed "Luck", and underlines it twice, and then crosses out the heading.' : 'Behind you, down in the den, the cup is already going round again.'}` : (r.pay || 0) < 0 ?
+`You come back up the steps into the winter dark ${-r.pay} silver lighter. ${b8In('brisk') ? 'Brisk looks at your purse, and then at the steps. "Every winter," she says. "That woman."' : 'The lanes are quiet, and the lamps are blue, and the cup has your silver.'}` :
+`You come back up the steps with what you went down with, which in the Gadrobi lanes is a kind of winning.`); };
+    jn(B8CH1, () => { const r = S.f.b8_cupLast; return r && r.done ? (r.won ? 'Down the steps in the Gadrobi lanes, the sergeant played Orsa\'s cup, and banked to twenty first.' : 'Down the steps in the Gadrobi lanes, the sergeant played Orsa\'s cup. The ones bit.') : ''; }); }
+  /* Ch2: the Last Peg, on a carter's tailboard at the caravan's fire, before the last wagon is decided */
+  if (typeof B8CH2 !== 'undefined') { wrap(B8CH2, 'b8_c2_fire', n => after(n, '^Talk with the squad', [{t:'A carter has fifteen pegs on a tailboard and the dog watch to lose. The Last Peg.', tag:'The Last Peg', req:()=>(S.f.b8_c2_ph || 1) <= 5 && !(S.f.b8_peg && S.f.b8_peg.done), go:()=>playB8Peg({after:r => { b8PegPay(r); S.f.b8_pegLast = r; talk('b8_c2_peg_after'); }})}]));
+    B8CH2.dlg.b8_c2_peg_after = () => { const r = S.f.b8_pegLast || {}; return b8gAfter('The caravan\'s fire', 'b8_caravan_night', 'b8_c2_fire', !r.done ?
+`You leave the tailboard with the pegs still on it. The carter does not mind. He plays the rest against himself, and loses, and complains about it to the dark.` : r.won ?
+`${r.mine} rounds to ${r.his}, and ${numw(B8G_PEGPAY)} silver of the carter's watch-money in your hand. Later, when you wake, he is up on the wagon box with a blanket round him, glaring at the old Domin. ${b8In('brannoc') ? 'Brannoc says he would have won in Falar too, and goes back to sleep before anybody can argue.' : 'The Fourth sleeps the night through, which it has not done since the city.'}` :
+`${r.his} rounds to ${r.mine}. The dog watch is the Fourth's. ${b8In('kettle') ? 'Kettle sits it with you, and explains the pegs, in fours, backwards, twice, until the dark is less interesting than the counting.' : 'You sit up with the dark. It does not do much. Out in the rows, very faint, something sings.'}`); };
+    jn(B8CH2, () => { const r = S.f.b8_pegLast; return r && r.done ? (r.won ? 'At the caravan\'s fire the sergeant played the Last Peg with a carter, and won his watch-money off him.' : 'At the caravan\'s fire the sergeant played the Last Peg with a carter, and stood the dog watch.') : ''; }); }
+  /* Ch3: Lamp and Stone with Thessaly, at the lodging, once she has been met at the gate */
+  if (typeof B8CH3 !== 'undefined') { wrap(B8CH3, 'b8_c3_fire', n => after(n, '^Talk with the squad', [{t:'Thessaly is off her ledger, with a bag of black stones and a shuttered lamp. An Andii game of the dark.', tag:'Lamp and Stone', req:()=>!!S.f.b8_c3_thessaly && !(S.f.b8_lamp && S.f.b8_lamp.done), go:()=>playB8Lamp({after:r => { b8LampPay(r); S.f.b8_lampLast = r; talk('b8_c3_lamp_after'); }})}]));
+    B8CH3.dlg.b8_c3_lamp_after = () => { const r = S.f.b8_lampLast || {}, p = S.f.b8_lampPaid; return b8gAfter('The lodging', 'b8_c3_lodging', 'b8_c3_fire', !r.done ?
+`You leave the cloth with stones still on it. Thessaly does not mind. She plays a round by herself, with the lamp shut, and finds them all, and goes down the stair without saying whether she did.` : r.won ?
+`${r.mine} rounds to the dark's ${r.lost}. ${p === 'tuft' ? 'Tuft sits on at the sill when Thessaly has gone, with the shutters open on the lamps, looking at the dark between them as if it might look back. She seems easier for it.' : p === 'edrem' ? 'Edrem walks Thessaly down the stair with a lamp, which is not done in Black Coral, and comes back up looking pleased with himself in a quiet way.' : 'Thessaly leaves a pot of the chandler\'s wax salve on the sill, for the Fourth\'s cuts. "Winnings," she says. "They would not have paid. I am not them."'}` :
+`The dark's, ${r.lost} rounds to ${r.mine}. ${b8In('tuft') ? 'Tuft says she will get the next one. There will not be a next one, and she knows it, and says it anyway.' : 'Outside the lamps burn on, at noon, at midnight, at whatever it is.'}`); };
+    jn(B8CH3, () => { const r = S.f.b8_lampLast; return r && r.done ? (r.won ? 'In Black Coral, Thessaly taught the Fourth a game the Andii play in the dark, and the sergeant found the stones.' : 'In Black Coral, Thessaly taught the Fourth a game the Andii play in the dark. The dark had the stones.') : ''; }); }
+  /* Ch4: Keep the Fire with Hurrin and the pilgrims, the day after the water line (Hurrin met) and the morning after; never the bad night */
+  if (typeof B8CH4 !== 'undefined') { wrap(B8CH4, 'b8_c4_fire', n => after(n, '^Talk with the squad', [{t:'Hurrin and a few of the pilgrims are feeding a small fire against the dark. Sit up with them.', tag:'Keep the Fire', req:()=>{ const ph = S.f.b8_c4_ph || 1; return ((ph === 2 && !!S.f.b8_c4_hurrinMet) || ph === 4) && !(S.f.b8_fire && S.f.b8_fire.done); }, go:()=>playB8Fire({after:r => { b8FirePay(r); S.f.b8_fireLast = r; talk('b8_c4_fire_after'); }})}]));
+    B8CH4.dlg.b8_c4_fire_after = () => { const r = S.f.b8_fireLast || {}, p = S.f.b8_firePaid; return b8gAfter('The camp\'s edge', 'b8_camp_night', 'b8_c4_fire', !r.done ?
+`You leave Hurrin's fire to Hurrin. He does not mind. He has kept fires on his own before, up north, all winter.` : r.won ?
+`The bells said morning, and the fire was still in. ${p === 'edrem' ? 'Edrem sits by the Fourth\'s own fire after, with his back to the rows and his face to the dark, the way he does. "That was a good thing," he says. It is the most he has said all day.' : 'One of the pilgrims brings a twist of willow bark to the Fourth\'s fire, for the cuts, and goes away again before anyone can thank her.'}` :
+`It went out, and somebody lit it again, and the dark went back where it was. ${b8In('ohl') ? 'Ohl says a fire is only wood, and the pilgrims will be all right, and does not sound as though he is sure of either.' : 'Whose fire it was that went out, the edge keeps to itself. Everybody knows.'}`); };
+    jn(B8CH4, () => { const r = S.f.b8_fireLast; return r && r.done ? (r.won ? 'At the camp\'s edge the sergeant sat up with Hurrin and the pilgrims and kept their fire in until the bells said morning.' : 'At the camp\'s edge the sergeant sat up with Hurrin and the pilgrims. Their fire went out, and was lit again.') : ''; }); }
+  /* Ch7: Stones on the Water with Benlo, on the shingle the evening after, before the roads */
+  if (typeof B8CH7 !== 'undefined') { wrap(B8CH7, 'b8_c7_fire', n => after(n, '^Talk with the squad', [{t:'Benlo has come down to the shingle with a pocket of flat stones. Stones on the water.', tag:'Stones on the Water', req:()=>(S.f.b8_c7_ph || 1) === 3 && !S.f.b8_c7_key && !(S.f.b8_skip && S.f.b8_skip.done), go:()=>playB8Skip({after:r => { b8SkipPay(r); S.f.b8_skipLast = r; talk('b8_c7_skip_after'); }})}]));
+    B8CH7.dlg.b8_c7_skip_after = () => { const r = S.f.b8_skipLast || {}, p = S.f.b8_skipPaid; return b8gAfter('The lake shore', 'b8_lakeshore', 'b8_c7_fire', !r.done ?
+`You put the stone down on the shingle. Benlo does not mind. He throws the rest himself, one at a time, and watches each one go.` : r.won ?
+`${r.mine} skips to Benlo's ${r.his}. ${p && p !== 'salve' && b8In(p) ? `${NAME(p)} threw the last of Benlo's stones, after, badly, and laughed, and then looked surprised at having laughed. ${b8gHe(p) === 'she' ? 'She' : 'He'} sits closer to the fire after that.` : 'Benlo leaves a pot of goose-grease on the shingle for the squad\'s hands when he goes. "For the cold," he says.'}` :
+`${r.his} skips to your ${r.mine}${r.tie ? '. Nobody\'s' : '. Benlo\'s'}. He goes back up to the street with his barrow, slowly, and the bells go on over the water.`); };
+    jn(B8CH7, () => { const r = S.f.b8_skipLast; return r && r.done ? (r.won ? 'The night after, on the shingle, the sergeant skipped stones across the lake with Benlo, and threw the most.' : 'The night after, on the shingle, the sergeant skipped stones across the lake with Benlo.') : ''; }); }
+}
+
 /* ============ v10.3 (David, Sun Nov 8, 2026, 8:50 PM PST): tricks that don't strike are free; three tricks become passive ============
    Loaded after every book's tricks (14x-12x) and before the boot (990).
    - FREE: a trick that doesn't strike a foe or take its turn away no longer uses the bearer's action. One free trick a squadmate a
