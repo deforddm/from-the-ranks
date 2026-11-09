@@ -6,7 +6,7 @@
      into: no button (031's trickAbs filter), nothing to spend. */
 const V103_FREE = ['line', 'dark', 'otataral', 'b2_drop', 'b2_earth', 'b2_paint', 'b2_squint', 'b3_c4_wolfrope', 'b4_c1_gate',
   'b4_c2_crow', 'b4_c3_tears', 'b4_c5_seabed', 'b5_c6_finger', 'b6_c1_map', 'b6_c4_vinegar', 'b7_c2_margin', 'b7_c6_ward'];
-const V103_PASSIVE = ['b3_c5_blood', 'b4_c6_listen', 'b5_c2_pilot'];
+const V103_PASSIVE = ['b3_c5_blood', 'b4_c6_listen', 'b5_c2_pilot', 'b8_c5_grass']; // v11.0: Book Eight's Ch 5 Grass-Running (docs/tth-book-brief.md), defined by its chapter
 const V103_FREE_LINE = ' It does not use the action (one free trick a turn).';
 const V103_PASSIVE_LINE = ' Always on: it works by itself at the start of every fight the bearer is in. Nothing to press.';
 /* a trick's own words, said its new way: Once a fight now reads as a free trick or a passive one */

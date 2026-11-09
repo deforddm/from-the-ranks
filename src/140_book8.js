@@ -36,10 +36,10 @@ BOOKSNAP.tth.sgt = Object.getOwnPropertyDescriptors({
   epithet:'Fourth Squad, once of the Seventh Company. Time served.', origin:'Unta, Quon Tali', age:39, service:'Eleven years, marines, and the years since, which do not count and will not stop', height:'Middling. Stands like something taller, still.',
   weapon:'The Malazan longsword, notched three times now, and the knife nobody has seen drawn', armour:'Boiled leather over quilting, kept oiled out of habit, and an iron cap on a nail by the door',
   get bio(){ return `Eleven years in the marines and some years out of them, in Darujhistan, which is long enough to learn the price of bread and not long enough to stop counting the exits in a room. ${b8ArriveWords()}`; },
-  get bio2(){ return `Came up through the Untan garrison, out of the Pale with all five, through Coral with whoever was left. Keeps a ledger still, for the squad's rent and the squad's debts and a column for the names that are not owed anything any more.\n\nThe city has been kind to the Fourth, in the way a city is kind to anyone who pays on time and does not start things. The sergeant has not started anything. Somebody else, this winter, has.`; },
+  get bio2(){ return `Came up through the Untan garrison, out of the Pale with all five, through Coral with whoever was left. Keeps a ledger still, for the squad's rent and the squad's debts and a column for the names that are not owed anything any more.\n\nThe city has been kind to the Fourth, in the way a city is kind to anyone who pays on time and does not start things. The sergeant has not started anything. This winter, someone else has.`; },
   traits:['Reads every paper twice', 'Never sits with a back to a door', 'Remembers the names of the dead, all of them', 'Drinks only after, never during, even now'],
   gear:['The squad\'s ledger, waterproofed', 'A Second Army whistle, kept in a drawer', 'A key to a door up the street from the Phoenix'],
-  get quest(){ const c = b8Contract(); return c >= 6 ? 'The Guild has stopped pretending. There are knives on the roofs most nights now, and the sergeant has started sleeping in boots again. Somebody paid for this. The sergeant would like a word with whoever it was, and knows better than to go looking.'
+  get quest(){ const c = b8Contract(); return c >= 6 ? 'The Guild has stopped pretending. There are knives on the roofs most nights now, and the sergeant has started sleeping in boots again. This was paid for. The sergeant would like a word with whoever it was, and knows better than to go looking.'
     : c >= 3 ? 'Somebody has put the Fourth on a paper. The Guild does not say who, and the sergeant has stopped asking out loud. The question stays in the room anyway, like smoke.'
     : 'The paper, if there is still a paper, has gone quiet. Quiet is not the same as gone. The sergeant knows the difference, and checks the roofs anyway.'; },
 });
@@ -49,7 +49,7 @@ const B8_ROADS = {daru:'moi', standdown:'moi', highfist:'bh', hanarara:'bh', hom
 const b8Road = () => (S && S.imported && S.imported.road) || null;           // null on a fresh start
 const b8Story = () => b8Road() || 'daru';                                    // what the Fourth's years look like to a writer
 function b8ArriveWords(r = b8Story()){
-  return r === 'standdown' ? 'The Fourth stood itself down on a hill outside the city after Coral and scattered, and the city, one by one, put most of it back together again. Nobody planned that. Nobody has complained.'
+  return r === 'standdown' ? 'The Fourth stood itself down on a hill outside the city after Coral and scattered, and the city, one by one, put most of it back together again. It was not planned. No one has complained.'
     : r === 'highfist' || r === 'hanarara' ? 'The Fourth came back across the ocean from Seven Cities on the Host\'s time-served list, years on, with a paper that said they were done and a purse that agreed for about a month.'
     : r === 'home' ? 'The Fourth went home from Seven Cities, found that home had moved on without them, and took ship west again to the one city that had ever let them sit down.'
     : 'The Fourth stayed in Darujhistan the season after Coral, and stayed after that, and keeps a door now, up the street from the Phoenix, which had other ideas about doors.'; }
@@ -236,7 +236,7 @@ Object.entries(BOONS).forEach(([god, b]) => { BOON_BY_KEY[b.key] ??= Object.assi
    the dying. On the last night (Chapter 6) Hood has fallen and the charm is cold: it does nothing (Claude's call). */
 const B8_CHARM_COLD = 6;
 ITEMS.b8_hoodcharm = {name:'A Hood-touched charm', slot:'trinket', role:'any', who:null,
-  line:'A knucklebone on a black cord, worn smooth, with a hole bored through it that nobody bored. It is always cold. Old soldiers say a thing like this has been held by Hood, or near enough, and that he does not like to give things back. It is not for sale, which is how you know it is real.'};
+  line:'A knucklebone on a black cord, worn smooth, with a hole bored through it that nobody bored. It is always cold. Old soldiers say a thing like this has been held by Hood, or near enough, and that he does not like to give things back. It is not for sale. That is the only proof anyone has ever had.'};
 ITEM_SPECIAL.b8_hoodcharm = () => b8On() && (S.chapter || 0) === B8_CHARM_COLD ? 'Cold tonight. Hood is not answering' : 'Once a fight, the first blow that drops its wearer to half health is taken off them and laid on the nearest enemy already at half or below';
 function b8CharmAfter(u, before){
   if (!B || !u || u.side !== 'p' || u.ally || u.hp <= 0 || !wears(u, 'b8_hoodcharm')) return;
@@ -335,8 +335,8 @@ GLOSSX.tth = [
   [3, 'The Redeemer', 'The god of the barrow outside Black Coral. The Fourth saw the man in it go under the gifts, years ago. He takes the weight. He does not answer.', b8Saw(3)],
   [4, 'The pilgrims\' camp', 'Tents and shacks round the barrow, people come from every road to kneel. Some of them have started drinking something besides water.', b8Saw(4)],
   [5, 'The Lamatath', 'The plains between Black Coral and Darujhistan\'s east road. Long grass, few roads, and this season something running through it at night.', b8Saw(5)],
-  [6, 'Hounds of Shadow', 'Shadowthrone\'s Hounds. On the last night of the Fete they are in the city. Nobody in the Fourth wants to know why.', b8Saw(6)],
-  [7, 'The Guardians of the Gate', 'Soldiers who stand at Hood\'s gate now, the morning after. Nobody can say whose. The old soldiers salute anyway.', b8Saw(7)],
+  [6, 'Hounds of Shadow', 'Shadowthrone\'s Hounds. On the last night of the Fete they are in the city. The Fourth would rather not know why.', b8Saw(6)],
+  [7, 'The Guardians of the Gate', 'Soldiers who stand at Hood\'s gate now, the morning after. Whose, no one can say. The old soldiers salute anyway.', b8Saw(7)],
 ];
 
 /* ---- the journal, the count and Deeds ---- */

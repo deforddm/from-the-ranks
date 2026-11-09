@@ -90283,10 +90283,10 @@ BOOKSNAP.tth.sgt = Object.getOwnPropertyDescriptors({
   epithet:'Fourth Squad, once of the Seventh Company. Time served.', origin:'Unta, Quon Tali', age:39, service:'Eleven years, marines, and the years since, which do not count and will not stop', height:'Middling. Stands like something taller, still.',
   weapon:'The Malazan longsword, notched three times now, and the knife nobody has seen drawn', armour:'Boiled leather over quilting, kept oiled out of habit, and an iron cap on a nail by the door',
   get bio(){ return `Eleven years in the marines and some years out of them, in Darujhistan, which is long enough to learn the price of bread and not long enough to stop counting the exits in a room. ${b8ArriveWords()}`; },
-  get bio2(){ return `Came up through the Untan garrison, out of the Pale with all five, through Coral with whoever was left. Keeps a ledger still, for the squad's rent and the squad's debts and a column for the names that are not owed anything any more.\n\nThe city has been kind to the Fourth, in the way a city is kind to anyone who pays on time and does not start things. The sergeant has not started anything. Somebody else, this winter, has.`; },
+  get bio2(){ return `Came up through the Untan garrison, out of the Pale with all five, through Coral with whoever was left. Keeps a ledger still, for the squad's rent and the squad's debts and a column for the names that are not owed anything any more.\n\nThe city has been kind to the Fourth, in the way a city is kind to anyone who pays on time and does not start things. The sergeant has not started anything. This winter, someone else has.`; },
   traits:['Reads every paper twice', 'Never sits with a back to a door', 'Remembers the names of the dead, all of them', 'Drinks only after, never during, even now'],
   gear:['The squad\'s ledger, waterproofed', 'A Second Army whistle, kept in a drawer', 'A key to a door up the street from the Phoenix'],
-  get quest(){ const c = b8Contract(); return c >= 6 ? 'The Guild has stopped pretending. There are knives on the roofs most nights now, and the sergeant has started sleeping in boots again. Somebody paid for this. The sergeant would like a word with whoever it was, and knows better than to go looking.'
+  get quest(){ const c = b8Contract(); return c >= 6 ? 'The Guild has stopped pretending. There are knives on the roofs most nights now, and the sergeant has started sleeping in boots again. This was paid for. The sergeant would like a word with whoever it was, and knows better than to go looking.'
     : c >= 3 ? 'Somebody has put the Fourth on a paper. The Guild does not say who, and the sergeant has stopped asking out loud. The question stays in the room anyway, like smoke.'
     : 'The paper, if there is still a paper, has gone quiet. Quiet is not the same as gone. The sergeant knows the difference, and checks the roofs anyway.'; },
 });
@@ -90296,7 +90296,7 @@ const B8_ROADS = {daru:'moi', standdown:'moi', highfist:'bh', hanarara:'bh', hom
 const b8Road = () => (S && S.imported && S.imported.road) || null;           // null on a fresh start
 const b8Story = () => b8Road() || 'daru';                                    // what the Fourth's years look like to a writer
 function b8ArriveWords(r = b8Story()){
-  return r === 'standdown' ? 'The Fourth stood itself down on a hill outside the city after Coral and scattered, and the city, one by one, put most of it back together again. Nobody planned that. Nobody has complained.'
+  return r === 'standdown' ? 'The Fourth stood itself down on a hill outside the city after Coral and scattered, and the city, one by one, put most of it back together again. It was not planned. No one has complained.'
     : r === 'highfist' || r === 'hanarara' ? 'The Fourth came back across the ocean from Seven Cities on the Host\'s time-served list, years on, with a paper that said they were done and a purse that agreed for about a month.'
     : r === 'home' ? 'The Fourth went home from Seven Cities, found that home had moved on without them, and took ship west again to the one city that had ever let them sit down.'
     : 'The Fourth stayed in Darujhistan the season after Coral, and stayed after that, and keeps a door now, up the street from the Phoenix, which had other ideas about doors.'; }
@@ -90483,7 +90483,7 @@ Object.entries(BOONS).forEach(([god, b]) => { BOON_BY_KEY[b.key] ??= Object.assi
    the dying. On the last night (Chapter 6) Hood has fallen and the charm is cold: it does nothing (Claude's call). */
 const B8_CHARM_COLD = 6;
 ITEMS.b8_hoodcharm = {name:'A Hood-touched charm', slot:'trinket', role:'any', who:null,
-  line:'A knucklebone on a black cord, worn smooth, with a hole bored through it that nobody bored. It is always cold. Old soldiers say a thing like this has been held by Hood, or near enough, and that he does not like to give things back. It is not for sale, which is how you know it is real.'};
+  line:'A knucklebone on a black cord, worn smooth, with a hole bored through it that nobody bored. It is always cold. Old soldiers say a thing like this has been held by Hood, or near enough, and that he does not like to give things back. It is not for sale. That is the only proof anyone has ever had.'};
 ITEM_SPECIAL.b8_hoodcharm = () => b8On() && (S.chapter || 0) === B8_CHARM_COLD ? 'Cold tonight. Hood is not answering' : 'Once a fight, the first blow that drops its wearer to half health is taken off them and laid on the nearest enemy already at half or below';
 function b8CharmAfter(u, before){
   if (!B || !u || u.side !== 'p' || u.ally || u.hp <= 0 || !wears(u, 'b8_hoodcharm')) return;
@@ -90582,8 +90582,8 @@ GLOSSX.tth = [
   [3, 'The Redeemer', 'The god of the barrow outside Black Coral. The Fourth saw the man in it go under the gifts, years ago. He takes the weight. He does not answer.', b8Saw(3)],
   [4, 'The pilgrims\' camp', 'Tents and shacks round the barrow, people come from every road to kneel. Some of them have started drinking something besides water.', b8Saw(4)],
   [5, 'The Lamatath', 'The plains between Black Coral and Darujhistan\'s east road. Long grass, few roads, and this season something running through it at night.', b8Saw(5)],
-  [6, 'Hounds of Shadow', 'Shadowthrone\'s Hounds. On the last night of the Fete they are in the city. Nobody in the Fourth wants to know why.', b8Saw(6)],
-  [7, 'The Guardians of the Gate', 'Soldiers who stand at Hood\'s gate now, the morning after. Nobody can say whose. The old soldiers salute anyway.', b8Saw(7)],
+  [6, 'Hounds of Shadow', 'Shadowthrone\'s Hounds. On the last night of the Fete they are in the city. The Fourth would rather not know why.', b8Saw(6)],
+  [7, 'The Guardians of the Gate', 'Soldiers who stand at Hood\'s gate now, the morning after. Whose, no one can say. The old soldiers salute anyway.', b8Saw(7)],
 ];
 
 /* ---- the journal, the count and Deeds ---- */
@@ -90841,7 +90841,7 @@ const B8SAY = {
     sohra:`The bones fall in a line, and one of them rolls off the edge and keeps going. "Someone walking above you," Sohra says. "On the roofs. You will strike first, the bones say. They do not say who is striking you."`,
     benna:`"Rope and knives," says Benna. "In this city? That's not a reading, Sergeant, that's the weather." She taps it. "Your blows land true. So do theirs."`},
   b3c_gate:{d:B3SAY.b3c_gate.d,
-    tuft:`"Hood's gate," Tuft says. "Open." She looks at it longer than she needs to. "Somebody gets up again who shouldn't. I'd like it to be one of us."`,
+    tuft:`"Hood's gate," Tuft says. "Open." She looks at it longer than she needs to. "One of us gets up again who shouldn't. I'd like it to be one of us."`,
     sohra:`Two lines and a bar across. Sohra is quiet a while. "A door," she says. "The dead stand in it. Many of them, and close." She does not look up. "Once, they will decide for you."`,
     benna:`"The door," says Benna. "One of you goes down and gets back up." She sniffs. "Don't ask me which. I've never done which."`},
   b3c_knight:{d:B3SAY.b3c_knight.d,
@@ -90853,11 +90853,11 @@ const B8SAY = {
     sohra:`"Someone walking alone through sickness," Sohra says, "and not sickening." She does not breathe the smoke this time. "Your mages will walk clean through this. Thinner. The bones say both."`,
     benna:`"The bell man," says Benna. "So you know he's coming." She looks at the green rows and spits, which is manners. "Your mages'll be all right. Won't give much, mind."`},
   b3c_lifesoldier:{d:B3SAY.b3c_lifesoldier.d,
-    tuft:()=>(S.chapter || 0) >= 3 ? `"Soldier of High House Life," Tuft says. "Kneeling over someone." She looks toward the barrow, and the people on their knees in front of it. "We saw him do that, once. He's still doing it." She lays the card down gently. "Healing takes, this chapter."` : `"Soldier of High House Life," Tuft says. "Kneeling over somebody we can't see." She almost smiles. "Somebody mends. The Deck says it takes."`,
-    sohra:`"Someone kneeling," Sohra says. "Holding someone else's weight." She lets the bones lie. "Your healing will go further. Somebody is paying for it. It is not you."`,
+    tuft:()=>(S.chapter || 0) >= 3 ? `"Soldier of High House Life," Tuft says. "Kneeling over someone." She looks toward the barrow, and the people on their knees in front of it. "We saw him do that, once. He's still doing it." She lays the card down gently. "Healing takes, this chapter."` : `"Soldier of High House Life," Tuft says. "Kneeling over somebody we can't see." She almost smiles. "There's mending. The Deck says it takes."`,
+    sohra:`"Someone kneeling," Sohra says. "Holding someone else's weight." She lets the bones lie. "Your healing will go further. Someone else is paying for it."`,
     benna:`"The kneeling one," says Benna. "Healers heal more." She pours a drop of something on the ground for him. "Tell yours."`},
   b3c_consort:{d:B3SAY.b3c_consort.d,
-    tuft:`"Chains again," Tuft says. "The one beside the King, smiling." She puts it face down fast. "Somebody in this camp is smiling like that. Watch the ones who step in close."`,
+    tuft:`"Chains again," Tuft says. "The one beside the King, smiling." She puts it face down fast. "There's a smile like that in this camp. Watch the ones who step in close."`,
     sohra:`"Someone fond," Sohra says. "Too close, and fond." She wrinkles her nose at the smell over the camp. "Sweet. The bones do not like sweet."`,
     benna:`"The Consort," says Benna. "Means the ones who swing at your back miss." She looks down the rows of tents. "Stand together. Stand upwind."`},
   oponn:{d:'The jesters of chance, back to back.',
@@ -90869,9 +90869,9 @@ const B8SAY = {
     sohra:`The bones scatter, all of them, as if something had run through the smoke. Sohra puts the cup down. "Something running," she says. "Many. Not after you." She listens to the grass. "You will be fast. Be fast."`,
     benna:`Benna looks at it and puts her copper back in her own purse. "Not that one," she says. "I'll not take money for that one." Then, because she is Benna: "You'll be light on your feet. Go."`},
   b3c_mason:{d:B3SAY.b3c_mason.d,
-    tuft:()=>(S.chapter || 0) >= 7 ? `"The Mason," Tuft says. "A long stone, for a long hole." She looks at the road out of the city, full of people walking. "Somebody's cutting it today." She does not say who for.` : `"The Mason," Tuft says. "High House Death, cutting a long stone to fit a long hole." She puts it down carefully. "Kettle will like it. Munitions hit harder. I don't like who it's cutting for."`,
+    tuft:()=>(S.chapter || 0) >= 7 ? `"The Mason," Tuft says. "A long stone, for a long hole." She looks at the road out of the city, full of people walking. "It's being cut today." She does not say who for.` : `"The Mason," Tuft says. "High House Death, cutting a long stone to fit a long hole." She puts it down carefully. "Kettle will like it. Munitions hit harder. I don't like who it's cutting for."`,
     sohra:`"Someone building a grave," Sohra says. "Slowly, and well." She looks at Kettle's satchel. "What you throw will bite deeper. The bones are not pleased about it."`,
-    benna:`"The stone-cutter," says Benna. "Your sapper's lucky week." She looks at the card a moment longer. "Somebody's not."`},
+    benna:`"The stone-cutter," says Benna. "Your sapper's lucky week." She looks at the card a moment longer. "Not everyone's."`},
   b2c_soldier:{d:'A soldier in grey armour with no badge on it, standing at a gate with the shield up, and behind the visor something that is not quite a face.',
     tuft:()=>(S.chapter || 0) >= 7 ? `"Soldier of High House Death," Tuft says. "At the gate." She looks at it a long time. "There are more of them at the gate this morning. Not his. Somebody's." Brisk, across the fire, salutes no one in particular.` : `"Soldier of High House Death," Tuft says. "Armour, and a gate behind it." She glances at the wall. "Armour, then. Stand where you're put."`,
     sohra:`"A soldier at a door," Sohra says. "Grey, and standing." She nods at the squad. "Like you. The bones say you will stand harder."`,
@@ -90927,7 +90927,7 @@ Object.assign(READTABLE, {
      into: no button (031's trickAbs filter), nothing to spend. */
 const V103_FREE = ['line', 'dark', 'otataral', 'b2_drop', 'b2_earth', 'b2_paint', 'b2_squint', 'b3_c4_wolfrope', 'b4_c1_gate',
   'b4_c2_crow', 'b4_c3_tears', 'b4_c5_seabed', 'b5_c6_finger', 'b6_c1_map', 'b6_c4_vinegar', 'b7_c2_margin', 'b7_c6_ward'];
-const V103_PASSIVE = ['b3_c5_blood', 'b4_c6_listen', 'b5_c2_pilot'];
+const V103_PASSIVE = ['b3_c5_blood', 'b4_c6_listen', 'b5_c2_pilot', 'b8_c5_grass']; // v11.0: Book Eight's Ch 5 Grass-Running (docs/tth-book-brief.md), defined by its chapter
 const V103_FREE_LINE = ' It does not use the action (one free trick a turn).';
 const V103_PASSIVE_LINE = ' Always on: it works by itself at the start of every fight the bearer is in. Nothing to press.';
 /* a trick's own words, said its new way: Once a fight now reads as a free trick or a passive one */
