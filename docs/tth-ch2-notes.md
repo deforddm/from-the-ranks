@@ -114,4 +114,14 @@ Paid xp: about 540 with the raid, 450 without. A fresh 16 (4540) ends at 17 (the
 
 `tools/b8ch2_test.mjs` (19 checks): a fresh start after Ch 1 on `quiet` (every node renders with no never-name, year, count of weeks or "!" in narration; the items with art, the figures, five grounds and five backdrops drawn without error), an audit under every phase and key (every check has its own "yes, but"; every onward step has "Not now" or "Not yet"), the first halt and the reading (Tuft; `cardNodeName()` is `b8_c2_card`), the fire before Vasso is settled, Vasso's three answers, Calder and the mail, the last wagon (its "yes, but", the peek), the road and the riders (faced down with its "yes, but"; the raid, not the Guild), the trick (✦ wits 17, free, sets `B.line`), the town (back door, cups, tithe, its "yes, but", both grounds), the fields (pollen on both grounds, the goad), the night (the rest clears the kelyk-sickness; the loading with its "yes, but"; the jug; Calder's answer with its "yes, but"), the key (`fields` −20 and `burned`; `pass` +20 and `passed`, from the same moment; the Contract unmoved), and a `--from=2` style save (Vasso walking off `hunt`, Tuft dead, Ohl at the door, Vell and Ellis: Benna reads, a line each at the fire in both halves).
 
-Results: see the report at the foot of this file.
+Results (Mon Nov 9, 2026 2:46 AM PST): `python3 build.py`; `node --check` on the three files; `node tools/lint.mjs` 0 errors (38 warnings: Ch 1's 35 and this chapter's three style warnings; `b8_c2_card` is an orphan by design); `b8ch2_test` 19/19; `b8ch1_test`, `b8engine_test`, `trope_test` (B8 18,649 words, inside every budget), `recruit_test`, `onward_test`, `yesbut_test` pass. Not run here: `run_all` (the lead's) and `play.mjs`. Art looked at in a 390×844 browser: the five backdrops, the four maps, the three battle grounds, both items; the mail's mended patches redrawn after looking.
+
+**Balance** (`node tools/balance.mjs --book=tth --only=…`, 12 smart runs each, level 16):
+
+| Fight | Soldier | Bridgeburner | median rounds (S / BB) | HP lost (S / BB) |
+|---|---|---|---|---|
+| `b8_c2_raid` | 100% | 100% | 3 / 4 | 1% / 2% |
+| `b8_c2_town` | 100% | 100% | 6 / 7 | 3% / 4% (the priest idle 34% of turns on BB) |
+| `b8_c2_fields` | 100% | 100% | 6 / 7 | 5% / 8% |
+
+All three are far easier than the v10.2 targets (Soldier ~90%, Bridgeburner 75–80%), as Ch 1's are: the engine's Book Eight foes against a level-16 Fourth with `B8GAP` empty. Left as written for the balance step that goes to David. Levers: more cultists or a second wave in the square, the priest placed nearer (he idles at range 4 behind the steps), a `b8_raider` wave in the rows, `B8GAP` rows.

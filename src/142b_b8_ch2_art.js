@@ -247,7 +247,7 @@ SCENEX.b8_c2_rows = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
 { const bg = id => `<defs><radialGradient id="${id}-bg" cx=".44" cy=".42" r=".78"><stop offset="0" stop-color="#2a3038"/><stop offset=".62" stop-color="#161a20"/><stop offset="1" stop-color="#0a0c10"/></radialGradient><radialGradient id="${id}-sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`;
   /* the caravan mail: a riveted shirt on a quilted backing, short-sleeved, the rings dull iron; three mended patches in brighter rings;
      a quilted collar; the gas-blue rim on its lit edge */
-  const rings = (() => { let r = ''; for (let y = 34; y < 120; y += 5) for (let x = 52; x < 150; x += 5) { const inBody = x > 62 && x < 138 || (y < 62 && x > 40 && x < 160); if (!inBody) continue; const p = (x - 52)*(y - 34) % 7 === 0;
+  const rings = (() => { let r = ''; for (let y = 34; y < 120; y += 5) for (let x = 52; x < 150; x += 5) { const inBody = true; if (!inBody) continue; const p = (x > 70 && x < 92 && y > 68 && y < 88) || (x > 110 && x < 130 && y > 90 && y < 108) || (x > 44 && x < 62 && y > 48 && y < 62);
       r += `<circle cx="${x + (y % 10 ? 2.5 : 0)}" cy="${y}" r="2.1" fill="none" stroke="${p ? '#8a8e96' : '#4a4e56'}" stroke-width="1"/>`; } return r; })();
   ART['item/b8_c2_caravanmail'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" role="img" aria-label="A coat of caravan mail">${bg('b82cm')}
 <clipPath id="b82cm-c"><path d="M64 30 L136 30 L162 46 L156 70 L138 62 L138 120 L62 120 L62 62 L44 70 L38 46 Z"/></clipPath></defs>
