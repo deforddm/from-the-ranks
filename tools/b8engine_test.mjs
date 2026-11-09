@@ -13,7 +13,7 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   try {
   out.caps = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh'].map(b => { S = {book:b}; return b + ':' + lvCap(); }).join(' ');
   S = {book:'tth'}; out.cap = lvCap();
-  out.shelf = shelfBooks().map(b => b.id).join(','); out.coming = !!BOOKS.tth.coming; out.book = {n:BOOKS.tth.n, word:BOOKS.tth.word, name:BOOKS.tth.name, title:BOOKS.tth.title, tag:BOOKS.tth.tag};
+  out.shelf = shelfBooks().map(b => b.id).join(','); out.coming = !!BOOKS.tth.coming; out.tthCh = Object.keys((BOOKSNAP.tth && BOOKSNAP.tth.ch) || {}).length; out.book = {n:BOOKS.tth.n, word:BOOKS.tth.word, name:BOOKS.tth.name, title:BOOKS.tth.title, tag:BOOKS.tth.tag};
   /* fresh */
   setBook('tth'); S = newStateTTH('Hask'); save();
   out.fresh = {book:S.book, lvl:S.lvl, squad:S.squad.join(','), con:b8Contract(), tier:b8ConTier(), key:keyFlag(), core:rosterBook().core.join(','), patron:PATRONS.sgt.god, sgt:/years/.test(TPL.sgt.bio || ''), road:b8Story()};
@@ -105,7 +105,7 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   } catch(e) { out.err = String(e && e.stack || e); }
   return out; });
 const ui = await page.evaluate(async () => { const wait = ms => new Promise(res => setTimeout(res, ms)); const o = {};
-  try { showTitle(false, 'tth'); await wait(300); document.getElementById('nm').value = 'Empt'; o.msgEmpty = (document.getElementById('bNew').click(), await wait(100), document.getElementById('nmMsg').textContent);
+  try { o.empty = !!BOOKS.tth.coming; if (o.empty) { showTitle(false, 'tth'); await wait(300); document.getElementById('nm').value = 'Empt'; o.msgEmpty = (document.getElementById('bNew').click(), await wait(100), document.getElementById('nmMsg').textContent); } // once a chapter registers there is no empty screen to see
     registerChapter(1, {number:1, title:'Test', area:{id:'b8_test', map:['....'], start:{x:1, y:0}}, intro:{loc:'', sub:'', cap:'', paras:[], go:'Go'}}, 'tth'); showTitle(false, 'tth'); await wait(300);
     o.shelf = !BOOKS.tth.coming && shelfBooks().some(b => b.id === 'tth'); o.h1 = document.getElementById('tName').textContent;
     o.imp = !document.getElementById('impField').hidden && /Book Three or Book Six/.test(document.getElementById('impField').textContent);
@@ -115,7 +115,7 @@ const ui = await page.evaluate(async () => { const wait = ms => new Promise(res 
   } catch(e) { o.err = String(e); } return o; });
 if (r.err) ok(false, 'threw: ' + r.err); else {
   ok(r.caps === 'gotm:8 dg:8 moi:15 hoc:15 mt:8 bh:18' && r.cap === 21, `caps: ${r.caps}; Book Eight 21`);
-  ok(r.coming && !r.shelf.includes('tth') && r.book.n === 8 && r.book.word === 'Eight' && r.book.name === 'Time Served' && r.book.title === 'Toll the Hounds' && /paper/.test(r.book.tag), 'the shelf: Book Eight, Time Served, beside Toll the Hounds, coming until a chapter registers');
+  ok((r.tthCh ? !r.coming && r.shelf.includes('tth') : r.coming && !r.shelf.includes('tth')) && r.book.n === 8 && r.book.word === 'Eight' && r.book.name === 'Time Served' && r.book.title === 'Toll the Hounds' && /paper/.test(r.book.tag), 'the shelf: Book Eight, Time Served, beside Toll the Hounds, coming until a chapter registers');
   const f = r.fresh; ok(f.book === 'tth' && f.lvl === 16 && f.squad === 'sgt,brisk,kettle,tuft,ohl' && f.con === 3 && f.tier === 'paper' && f.key === 'b8_c0_key' && f.core === 'sgt,brisk,kettle,tuft,ohl' && f.patron === 'Treach' && f.sgt && f.road === 'daru' && r.top === 21, 'fresh start: the four at 16, Treach, b8_ keys, the Contract at 3, the daru years; the cap is 21: ' + JSON.stringify(f) + ' top ' + r.top);
   const c = r.con; ok(!c.e0 && c.e1 === -1 && !c.e1p && c.top === 10 && c.eTop === -3 && c.low === 0 && c.noted && c.hi === 10 && c.lo === 0 && c.html, 'the Contract: noted, clamped 0..10, its edge on contract:true checks only (−1 at 6, −3 at 10): ' + JSON.stringify(c));
   ok(r.roofs === '0:0 2:0 3:0 3:0 3:0 3:1' && r.roofs5 === 'b8_knife,b8_knife,b8_knife' && r.roofs7 === 0 && r.roofs7b === 2, `the roofs by the Contract (${r.roofs}); Ch 5 knives only (${r.roofs5}); Ch 7 one fewer, none after the Ch 6 win (${r.roofs7b}/${r.roofs7})`);
@@ -135,7 +135,7 @@ if (r.err) ok(false, 'threw: ' + r.err); else {
   const d = r.read; ok(d.who === 'tuft' && d.choice && d.offer && d.node === 'b8_c1_card' && d.key === 'tth:1' && d.tables && d.pools && d.said && !d.host && d.benna === 'benna' && d.bennaWords, 'the reader: Book Three\'s chain (Tuft, else Benna, now a Daru washerwoman), seven tables and pools, every card said: ' + JSON.stringify(d));
   const a = r.art; ok(a.title && a.patch && a.titleArt === 'title/tth' && a.patchKey === 'insignia/tth' && a.scenes && a.foes && a.soak === '0,1,2' && a.sorc && a.pierce && a.gloss >= 12 && a.keys === 7 && a.defaults && a.gap === 0 && a.voice, 'title art, the patch with its bell, the backdrops, the foes with soak, the glossary, keys, empty balance tables, the voice: ' + JSON.stringify(a));
 }
-ok(/still being written/.test(ui.msgEmpty || '') && ui.shelf && /Time/.test(ui.h1 || '') && ui.imp && ui.picker === 8 && ui.fit && ui.meet && ui.made, 'the new-sergeant screen: still being written while empty; eight books fit at 390px; a transfer picker; Where the books meet; Begin makes a level-16 Fourth: ' + JSON.stringify(ui));
+ok((!ui.empty || /still being written/.test(ui.msgEmpty || '')) && ui.shelf && /Time/.test(ui.h1 || '') && ui.imp && ui.picker === 8 && ui.fit && ui.meet && ui.made, 'the new-sergeant screen: still being written while empty; eight books fit at 390px; a transfer picker; Where the books meet; Begin makes a level-16 Fourth: ' + JSON.stringify(ui));
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
 await br.close(); srv.close && srv.close();
 console.log(bad.length ? `\n${bad.length} FAIL` : '\nERRORS: none'); process.exit(bad.length ? 1 : 0);
