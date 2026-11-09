@@ -595,7 +595,7 @@ It is not sorcery. The warren does not stir. Something passes anyway, from one h
     : {sp:'Ellis', fx:()=>{ S.f.b3_c7_eNight = 1; }, txt:
 `Ellis is at the end of the cedar screen, where it stops and the slope starts, sitting on her heels with her back to the Host and her face to the dark. She has been there since dusk. The sentries have stopped asking her for the word.
 
-"Coral's quiet," she says, without turning round. "Too quiet for a city with an army in it. They know something's up here. They don't know what." ${b3Was('c5_ellisThrough') ? `She turns her wrist over. Kettle's two lengths of fuse-cord are still knotted round it, grey with handling, from the morning she came back out of a shadow on the Lakefront. "The Bridgeburners say grey sorcery's coming down tonight." A pause. "I've been in grey. It had nothing in it. I'd like to know what's in this one before it's in me."` : `She looks down at the burned hand in its glove. "The Bridgeburners say grey sorcery's coming down tonight. Fire at the Pale. Grey at Coral." A pause. "I'd like to see one coming, for once."`}
+"Coral's quiet," she says, without turning round. "Too quiet for a city with an army in it. They know something's up here. They don't know what." ${b3Was('c5_ellisThrough') ? `She turns her wrist over. Kettle's two lengths of trip cord are still knotted round it, grey with handling, from the morning she came back out of a shadow on the Lakefront. "The Bridgeburners say grey sorcery's coming down tonight." A pause. "I've been in grey. It had nothing in it. I'd like to know what's in this one before it's in me."` : `She looks down at the burned hand in its glove. "The Bridgeburners say grey sorcery's coming down tonight. Fire at the Pale. Grey at Coral." A pause. "I'd like to see one coming, for once."`}
 
 Below the forward trench the slope breaks into draws, three of them, black on black. She has been watching all three.`,
       ch:[{t:'"Which draw will they come up?"', check:['wits', 15], req:()=>!S.f.b3_c7_eSlopeTried, fx:()=>{ S.f.b3_c7_eSlopeTried = 1; },
@@ -686,7 +686,7 @@ ${b3In('sohra') ? 'Sohra, beside her, looks at the dry gully a long while and th
     : {sp:'Ellis', fx:()=>{ S.f.b3_c7_eDusk = 1; }, txt:
 `Ellis is sitting at the eastern edge of the crest in the near-dark, apart, facing out over the plain. Her bow is across her knees, unstrung. You have seen her unstring it perhaps three times since the Pale.
 
-"Three hundred and twelve," she says, when you sit. "From the stakes to the tent. I counted it running." She doesn't turn round. "I count things. It's what I'm for. It doesn't make them closer."${b3Was('c5_ellisThrough') ? ` She has the fuse-cord on her wrist between finger and thumb, turning it, as other people turn a ring.` : ''}
+"Three hundred and twelve," she says, when you sit. "From the stakes to the tent. I counted it running." She doesn't turn round. "I count things. It's what I'm for. It doesn't make them closer."${b3Was('c5_ellisThrough') ? ` She has the trip cord on her wrist between finger and thumb, turning it, as other people turn a ring.` : ''}
 
 Down on the plain the gold is still lying over the ground where the Hunters fell, and nothing moves on it.`,
       ch:[{t:'"Noted."', fx:()=>{ b3c7Loy('ellis', 1); }, go:()=>startExplore()},
@@ -1211,7 +1211,7 @@ Then the soldiers started. All night, from every army, one at a time, a gift eac
 
 ${b3In('greysword') ? `Dannet is standing at the foot of it with her shield in both hands. She has not moved since dusk.\n\n` : ''}It is the Fourth's turn.`,
       ch:[{t:'The sergeant\'s old Second Army whistle, no longer used.', fx:()=>{ S.f.b3_c7_barrow = 1; S.f.b3_c7_gift = 'the sergeant\'s old Second Army whistle'; }, go:'b3_c7_barrow2'},
-          {t:'One of Kettle\'s sharpers, fuse drawn.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c7_barrow = 1; S.f.b3_c7_gift = 'one of Kettle\'s sharpers, fuse drawn'; b3c7Loy('kettle', 1); }, go:'b3_c7_barrow2'},
+          {t:'One of Kettle\'s sharpers, unbroken.', tag:'uses 1 sharper', req:()=>b3In('kettle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; S.f.b3_c7_barrow = 1; S.f.b3_c7_gift = 'one of Kettle\'s sharpers, unbroken'; b3c7Loy('kettle', 1); }, go:'b3_c7_barrow2'},
           {t:'A stone off the shore, polished on a sleeve, like most of them.', fx:()=>{ S.f.b3_c7_barrow = 1; S.f.b3_c7_gift = 'a stone off the shore, polished on a sleeve'; }, go:'b3_c7_barrow2'},
           {t:'Not yet.', go:()=>startExplore()}]},
   b3_c7_barrow2:()=>({sp:'The barrow', scene:'b3_c7_barrow', fx:()=>{ ally(1, -2, 'The barrow'); }, txt:
@@ -1493,7 +1493,7 @@ B3FIN7.fate = (id, key) => {
     `Ellis looked at every face that came out of Coral and down the hill. Not there. She is still looking, down every road that leads anywhere but where the Fourth is going, and she is still with the Fourth. She would like both of those noted.`,
     key === 'standdown' ? `She rides, when the Fourth stands down, down the coast road, alone, with the bow strung. The Fourth does not ask where. She looked back once, at the top of the first rise, and counted, and the Fourth saw her do it.` : key === 'daru' ? `In Darujhistan she takes the post across the street from the Phoenix's door, which is not the same as standing in it, and counts everyone who goes in, and everyone who comes out, and the numbers always match.` : `She scouts for the Fourth, and counts the horses first, and comes back every time.`,
     S.f.b3_c7_eSlope === 'ok' ? `The legion that held the forward trench above Coral tells a story about a woman with a gloved hand who named the draw before the grey came down. They have her name wrong. She has not corrected them.` : S.f.b3_c7_eGrass === 'ok' ? `On the last morning she named the dry gully at dawn, and the probe came up it before noon. She has never brought it up. The Fourth has, at every fire since.` : S.f.b3_c7_eDusk ? `Three hundred and twelve paces, from the stakes to the tent. She counted it running, and she has it still, the way she has every number. It does not get smaller.` : '',
-    b3Was('c5_ellisThrough') ? `Kettle's two lengths of fuse-cord are still knotted round her wrist, from the morning she came back out of the grey. ${b3In('kettle') ? 'Kettle has stopped asking for them back.' : 'No one asks for them back.'}` : '',
+    b3Was('c5_ellisThrough') ? `Kettle's two lengths of trip cord are still knotted round her wrist, from the morning she came back out of the grey. ${b3In('kettle') ? 'Kettle has stopped asking for them back.' : 'No one asks for them back.'}` : '',
     B3FIN7.loy('ellis', `She counts you first now, at every halt, before the horses. She has never said so. Kettle told you.`, `She reports to you in one sentence, always the right one, and never a second.`, `"Counted," she says at every halt, and you know it means you as well.`)]);
   if (id === 'vell') return add('Sky', [
     `Vell crossed half a continent with nothing to string a line between, and found he liked the sky. Don't tell the Guild.`,

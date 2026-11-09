@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.5', ['No more lit fuses, in any book. Moranth munitions go off when the shell breaks, or when an acid timer eats through its wax, so the sappers now talk of timers, wax and trip cord. Tangle\'s wrists are wound with trip cord.', 'Book Four\'s fire game is now The Timer and Book Seven\'s is the Timer-Count: same play, acid instead of flame. Old saves and deeds carry over.']],
   ['10.3.4', ['The cusser artwork no longer shows a lit spark: Moranth munitions have no fuse. They go off when the shell breaks, or when an acid timer eats through its wax plug.']],
   ['10.3.3', ['The cusser artwork carries the Moranth seal, not Maud\'s name: Maud is the one cusser Kettle named.']],
   ['10.3.2', ['Book Four opening: with one squadmate off the Chain, the line now reads "was dealt with you".']],

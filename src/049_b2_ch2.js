@@ -13,7 +13,7 @@ const b2Ours = () => S.f.b2_key === 'daughters' ? `${B2.elder} and ${B2.younger}
 /* Mincer's Drop: sapper's lore from the Sekala ford. Everyone near the bearer goes flat in a fold of ground: hard to shoot, hard to hit with a throw. */
 Object.assign(TRICKS, {
   b2_drop:{name:'Mincer\'s Drop', ch:2, use:'fight', ab:'t_b2_drop', where:'the Sekala ford, with Mincer\'s sappers',
-    lore:'When the fuse is lit, you drop. Not crouch, not duck: drop, flat, into whatever fold the ground has, and the ground always has one if you know how to look. Mincer\'s sappers can be flat before the word is finished.',
+    lore:'When the timer is bitten, you drop. Not crouch, not duck: drop, flat, into whatever fold the ground has, and the ground always has one if you know how to look. Mincer\'s sappers can be flat before the word is finished.',
     get fx(){ return `Once a fight: the bearer shouts it, and the bearer and every squadmate within 2 go flat. Until the bearer's next turn, shots and sorcery from more than a step away are −${3 + lvT()} to hit them. Grows with level.`; }},
 });
 Object.assign(AB, {
@@ -761,7 +761,7 @@ Tangle is looking at the river, not the hill. He has the expression of a man who
 He jerks his head at the river. "Stones. Flat ones, out of every wall and grave for a league round, laid edge to edge on the bottom, under the water, all the way over, in the dark, while the warlocks kept the fog on it. A road." He says it the way another man would say *my daughter*. "You can drive a wagon across that ford now at a trot. You couldn't yesterday. Nobody on that hill knows it."
 
 ${S.f.b2_cusser ? `He taps the slate. "And under the stones, fifty-five cussers. Fifty-five. I was one short till this morning, and then a sapper of yours waded out of the river with the last one in both hands." There it is on the slate, *Tangle*, in a careful hand beside the last mark. "When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."` : `He taps the slate. "And under the stones, fifty-four cussers. Fifty-five when I find the last.${S.f.b2_cusserKept ? ` Some fool's kit, some dead wagon. I always find one.` : ''} When the column's over and Reloe's peasants come after it, the road goes away." He looks at you with no expression at all. "You didn't hear that from me. You'll hear it from the river."`}`,
-    ch:[{t:'"How do your people get flat so fast when the fuse is lit?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
+    ch:[{t:'"How do your people get flat so fast when the timer is bitten?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
           edges:id=>[id === 'tangle' && ['his own captain', 2], id === 'sathi' && ['she fights from a saddle, not a ditch', -1]],
           go:'b2_mincer_drop', fail:'b2_mincer_miss'},
         {t:'"Who lights it?"', go:'b2_mincer_who'},
@@ -769,7 +769,7 @@ ${S.f.b2_cusser ? `He taps the slate. "And under the stones, fifty-five cussers.
   b2_mincer_drop:()=>({sp:'Captain Mincer', txt:
 `Mincer looks at ${by({sgt:'you', _:'{who}'})} as if somebody had finally asked the right question.
 
-"You don't get flat," he says. "You *are* flat. You were flat before the fuse was lit; you just hadn't lain down yet." He stands up, for the first time, and points at the bank. "Look at it. Not at the river. At the ground. Every bit of ground has a fold in it somewhere, a rut, a hoof-print, a hollow where a stone was. You walk on a battlefield, you're always looking for your fold. Always. So when somebody shouts, you're already in it."
+"You don't get flat," he says. "You *are* flat. You were flat before the timer was bitten; you just hadn't lain down yet." He stands up, for the first time, and points at the bank. "Look at it. Not at the river. At the ground. Every bit of ground has a fold in it somewhere, a rut, a hoof-print, a hollow where a stone was. You walk on a battlefield, you're always looking for your fold. Always. So when somebody shouts, you're already in it."
 
 He sits back down. "Then you shout it for the people who weren't looking. *Down.* Not *duck*. Not *get down*. One word. They hear one word." He goes back to his slate. "That's the whole of it. Took me twenty years and half my face."
 
@@ -783,7 +783,7 @@ ${by({tangle:`Tangle has gone red to the ears. "Sir," he says. It is the most he
     ch:[{t:'"Who lights it?"', go:'b2_mincer_who'},
         {t:'Leave him to it.', go:()=>startExplore()}]}),
   b2_mincer_who:()=>({sp:'Captain Mincer', txt:
-`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the fuse. Cuttle always has the fuse. When Cuttle's got the fuse, I sleep." His eyes say he hasn't slept in a month. "${b2In('tangle') && !S.f.b2_fordWork ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
+`"Cuttle." He nods down the bank, at a sapper you can't pick out from the others, all of them wet and filthy and moving crates. "Cuttle's got the timers. Cuttle always has the timers. When Cuttle's got the timers, I sleep." His eyes say he hasn't slept in a month. "${b2In('tangle') && !S.f.b2_fordWork ? `And your Tangle's going to help us lay the last of the stones. Aren't you, Tangle.` : `Your squad crosses when it's called. Don't be early. Don't be late.`}"
 
 ${b2In('tangle') && !S.f.b2_fordWork ? `"Sir," says Tangle. He has already taken his boots off.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
@@ -793,7 +793,7 @@ ${b2In('tangle') && !S.f.b2_fordWork ? `"Sir," says Tangle. He has already taken
 "Fifty-five," he says. "Your sapper's. I wrote his name next to it." He taps the slate: there it is, *Tangle*, in a careful hand, beside the last mark. "When Cuttle lights it, that's the one that goes under the far end, where they'll bunch. I'll tell him whose it was. Cuttle likes to know." He goes back to his counting, and then, without looking up again: "Sergeant. Thank you. That one cost him. I could see it."` : S.f.b2_cusserKept ?
 `Mincer is counting something on the slate, lips moving. "Fifty-four," he says, to nobody, and then, to you, without heat: "I'll find one. Some fool's kit, some dead wagon. I always find one."` :
 `Mincer is counting something on the slate, lips moving. "Fifty-four," he says, to nobody, and makes a mark.`,
-    ch:[{t:'"How do your people get flat so fast when the fuse is lit?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
+    ch:[{t:'"How do your people get flat so fast when the timer is bitten?"', check:['wits',16], trick:'b2_drop', req:()=>!S.f.b2_dropTried, fx:()=>{ S.f.b2_dropTried = 1; },
           edges:id=>[id === 'tangle' && ['his own captain', 2], id === 'sathi' && ['she fights from a saddle, not a ditch', -1]],
           go:'b2_mincer_drop', fail:'b2_mincer_miss'},
         {t:'Leave him.', go:()=>startExplore()}]}),

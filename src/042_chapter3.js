@@ -594,7 +594,7 @@ ${S.f.c3_sorry ? `"And Sergeant. Her." He doesn't point. He doesn't need to. "Yo
           {t:'"Bones? I haven\'t a coin."', tag:'Bones', req:()=>!!S.f.c3_workDone && S.silver < 1 && (S.f.c3_bonesNet || 0) < 15, go:'c3_bones'},
           {t:'Leave him.'}]}),
     c3_bones:()=>({sp:'Fiddler', txt:
-`"Bones." Fiddler considers the word as if it were a fuse. Then he whistles, two notes, and Hedge comes round the hole from the far side with his onion. "Sergeant wants a game."
+`"Bones." Fiddler considers the word as if it were a timer. Then he whistles, two notes, and Hedge comes round the hole from the far side with his onion. "Sergeant wants a game."
 
 "*Does* she." Hedge is already sitting. "Does he. Does the Sergeant." He produces the bones from somewhere under his cap. "My deal. Fid keeps the count. Fid, keep the count honest, the Sergeant's watching."
 
@@ -686,7 +686,7 @@ Somebody good, and somebody who had given the subject a great deal of thought. T
 
 "Who are they?"
 
-"There's a tent behind every army, Sergeant, with a red lamp over the door. Somebody painted the sign." He does look up then, at the lid, a long look, the way he looks at a fuse he didn't cut himself. "Never met 'em. Funny thing," he says. "Feel like I'm going to."
+"There's a tent behind every army, Sergeant, with a red lamp over the door. Somebody painted the sign." He does look up then, at the lid, a long look, the way he looks at a timer he didn't wax himself. "Never met 'em. Funny thing," he says. "Feel like I'm going to."
 
 ${SQUAD().includes('kettle') ? `Kettle has stopped in front of it with her hands clasped behind her back and her head tipped up. "Look at her *arm*," she says.${SQUAD().includes('brisk') ? `
 
@@ -698,7 +698,7 @@ Kettle looks at the lid again, fairly, top to bottom, and takes her time about i
 
 "I'd follow the cake into a breach."` : ''}
 
-` : ''}Fiddler, passing with a coil of fuse: "Whoever painted that put the fuse in the cake. Bun'll go off in her hand."
+` : ''}Fiddler, passing with a roll of timer-wax: "Whoever painted that put a fuse in the cake. Never handled a Moranth bun, then."
 
 "That's the joke, Fid," says Hedge.
 
@@ -982,7 +982,7 @@ The coin falls. Crokus catches it without looking. For a moment, Tuft is watchin
 ${by({
   ohl:`Ohl watches it the way he watches a fever: patiently, without hope, waiting for the turn. When it comes (the coin leans, and wobbles, and walks off the edge of the table) his hand is already under it, palm up, and it drops in flat and lies there.`,
   tuft:`Tuft watches it the way she watches a card she hasn't turned. When it leans, she leans; when it walks off the edge of the table her hand is under it, and it drops into her palm as if it had been aimed there.`,
-  kettle:`Kettle watches it with her tongue between her teeth, the way she watches a fuse burn down. When it walks off the edge of the table she has it, two-handed, against her chest, like a cusser somebody threw her without warning.`,
+  kettle:`Kettle watches it with her tongue between her teeth, the way she watches acid eat through wax. When it walks off the edge of the table she has it, two-handed, against her chest, like a cusser somebody threw her without warning.`,
   ellis:`Ellis watches it with her gloved hand flat on the table, very still. When it walks off the edge she catches it in the other hand without looking down.`,
   sgt:`You watch it. Not the coin: the spin, the hum, the moment it starts to lean. When it walks off the edge of the table your hand is under it, and it drops into your palm flat, and it is heavier than a coin.`,
   _:`{who} watches it, and nothing else. When it walks off the edge of the table, {who}'s hand is under it, and it drops in flat, and lies there.`})}
@@ -1627,7 +1627,7 @@ Fiddler does. He comes over from the hole and stops in front of Kettle, and look
 
 Kettle, after a moment: "There was a Claw at the end of the alley. He was looking right at it."
 
-Fiddler considers that for about the length of a fuse. "Then yes," he says. "Don't tell Hedge I said."` : ''}
+Fiddler considers that for about as long as a timer takes. "Then yes," he says. "Don't tell Hedge I said."` : ''}
 
 ${SQUAD().includes('ellis') ? `Ellis stops beside you. "Tell him," she says, very low. "Or don't. But if you don't, don't do it because of me."` : `Tuft stops beside you. "He won't ask," she says. "That's why you'd have to tell him."`}`,
       ch:[{t:'Tell him. All of it: the paper, the dye-shop, the woman with blue hands, the alley.', go:'c3_wj_good'},

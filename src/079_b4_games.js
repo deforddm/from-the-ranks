@@ -5,7 +5,7 @@
      catch the palm.
    - The Burned Tears' cup (Ch3, the feast): a horn round the fire, drunk level, and a boast after it that the Khundryl must believe.
    - The hand game (Ch4, the Seti fire): which hand holds the marked bone, against the wounded's archers, for tally sticks.
-   - The Fuse (Ch5, the Wall's fire): a length of cord cut to a called count against the company's sapper, in the blown sand.
+   - The Timer (Ch5, the Wall's fire): a waxed channel cut shut on a called count against the company's sapper, in the blown sand (Moranth timers are acid eating through wax; no fuse is ever lit).
    - The feather (Ch6, the picket): a crow feather snatched off a stake at the gallop with Temul's youths.
    They use the tables' frame (36: mgOpen, mgPanel, mgKeys, MG.anim), keep their deeds on S.deeds, pay once a book as the table closes,
    and wrap the chapters' fire nodes from here, so the chapter files are untouched. */
@@ -266,16 +266,16 @@ function playHands(opt = {}){
   draw();
 }
 
-/* ============ 4. The Fuse ============
-   The Second Company's sapper calls a count; the cord comes off the reel along the board, faster each length; cut it on the count.
-   The blown sand hides the board's marks in gusts. Tangle keeps his thumb on the right mark if his read of the cord holds (Wits).
+/* ============ 4. The Timer ============
+   The Second Company's sapper calls a count; acid eats along a waxed channel in the board, faster each length; cut the channel shut on the count.
+   The blown sand hides the board's marks in gusts. Tangle keeps his thumb on the right mark if his read of the wax holds (Wits).
    Five lengths each; nearer in all than the company's sapper takes it. */
 function playFuse(opt = {}){
   let on = () => true; const CUTS = 5, dust = Math.max(1, b4DustNow() || S.dust || 1), sapper = b4In('tangle') ? 'tangle' : null;
   const g = MG.state = {cut:0, err:[], theirs:[], want:0, phase:'intro', t0:0, speed:1.6, len:0, cutAt:null, burnT:0, thumb:false, roll:null, over:false, talk:'', checked:false};
   const result = () => { const mine = g.err.reduce((a, b) => a + b, 0), theirs = g.theirs.reduce((a, b) => a + b, 0), done = g.over && g.cut >= CUTS;
     return {done, mine, theirs, won:done && mine < theirs, clean:done && mine < theirs && g.err.every(e => e <= .25)}; };
-  mgOpen({kick:'The lee of the rock · the Second Company\'s sappers', title:'The Fuse', leaveText:'Give the knife back', done:r => opt.after && opt.after(r), leave:() => { g.over = true; mgClose(Object.assign(result(), {left:true, done:false, won:false, clean:false})); }}); on = b4gOn();
+  mgOpen({kick:'The lee of the rock · the Second Company\'s sappers', title:'The Timer', leaveText:'Give the knife back', done:r => opt.after && opt.after(r), leave:() => { g.over = true; mgClose(Object.assign(result(), {left:true, done:false, won:false, clean:false})); }}); on = b4gOn();
   const counts = () => g.phase === 'reel' ? Math.min(10.2, (performance.now() - g.t0) / 1000 * g.speed / b4gPace(1)) : g.len;
   const draw = () => { const p = g.phase, r = result();
     mgPanel(`<div class="cpbar"><span>Length ${Math.min(g.cut + 1, CUTS)} of ${CUTS}</span><span>Off by: you <b>${r.mine.toFixed(1)}</b> · ${r.theirs.toFixed(1)} the sapper</span><span>${g.want ? `A ${numw(g.want)} count` : ''}</span></div>
@@ -283,16 +283,16 @@ function playFuse(opt = {}){
       <div class="row mgbtns">${g.over ? `<button class="btn primary" id="fuDone" data-bot="1">Back to the fire</button>`
         : p === 'intro' || p === 'between' ? `<button class="btn primary" id="fuGo" data-bot="1">${p === 'intro' ? 'Take the knife' : 'The next length'}</button>`
         : p === 'reel' ? `<button class="btn primary" id="fuCut" data-bot="1">Cut</button>` : `<span class="fine">The sapper counts it out.</span>`}</div>
-      <p class="fine">The board is marked in counts. The sapper calls a count, the cord runs off the reel along the board, and you cut it when its end reaches the mark. The sand hides the marks in gusts${sapper ? '; Tangle keeps his thumb on the right one, if he has read the cord right' : ''}.</p>
+      <p class="fine">The board is marked in counts. The sapper calls a count and breaks a bead of acid at the head of a waxed channel along the board; cut the channel shut with the knife when the acid reaches the mark. The sand hides the marks in gusts${sapper ? '; Tangle keeps his thumb on the right one, if he has read the wax right' : ''}.</p>
       <p class="hint keys"><kbd>Space</kbd> cut / go on · <kbd>Esc</kbd> give the knife back</p>`);
     if ($('#fuGo')) $('#fuGo').onclick = () => { AUDIO.play('click'); start(); };
     if ($('#fuCut')) $('#fuCut').onclick = () => cut();
     if ($('#fuDone')) $('#fuDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; };
   const start = () => { if (g.over) return; g.roll = null;
     if (!g.checked && sapper) { g.checked = true; const r = g.roll = b4gRoll('wits', 12, 'tangle', [['a sapper', 3]]);
-      if (r.ok) { g.thumb = true; g.talkPre = mgSay('Tangle', '"Old Moranth cord," Tangle says, running it through his fingers twice. "Dry. It runs true, though." He puts his thumb on the board. "I\'ll show you where. Cut at my thumb."'); }
-      else if (r.tier === 'near') { g.thumb = true; const n = bruiseN(); bruise('tangle', n); g.talkPre = mgSay('Tangle', `"Let me see it burn," Tangle says, and touches a coal to an inch of it to read the rate, and it reads him back: it takes the skin off his thumb. He puts the thumb on the board anyway. (Yes, but Tangle starts the next fight ${n} health down.)`); }
-      else g.talkPre = mgSay('Tangle', '"Can\'t tell," Tangle says. "Sand in the wrap. It could run any way. Count, Sergeant. Count in your head and trust it."'); }
+      if (r.ok) { g.thumb = true; g.talkPre = mgSay('Tangle', '"Old Moranth wax," Tangle says, pressing it with a thumbnail twice. "Hard. It eats true, though." He puts his thumb on the board. "I\'ll show you where. Cut at my thumb."'); }
+      else if (r.tier === 'near') { g.thumb = true; const n = bruiseN(); bruise('tangle', n); g.talkPre = mgSay('Tangle', `"Let me see it eat," Tangle says, and puts a drop of the acid on an inch of it to read the rate, and it reads him back: it takes the skin off his thumb. He puts the thumb on the board anyway. (Yes, but Tangle starts the next fight ${n} health down.)`); }
+      else g.talkPre = mgSay('Tangle', '"Can\'t tell," Tangle says. "Sand in the wax. It could eat any way. Count, Sergeant. Count in your head and trust it."'); }
     g.want = 3 + R(6); g.speed = 1.6 + g.cut * .42; g.t0 = performance.now(); g.phase = 'reel'; g.cutAt = null; AUDIO.play('pick');
     g.talk = (g.talkPre || '') + mgSay('The company\'s sapper', `"${numw(g.want, true)} count."`); g.talkPre = ''; draw();
     setTimeout(function watch(){ if (!on() || g.phase !== 'reel') return; if (counts() >= 10.2) return cut(true); setTimeout(watch, 60); }, 60); };
@@ -300,7 +300,7 @@ function playFuse(opt = {}){
     const th = Math.round(Math.min(1.2, (.08 + Math.random() * .42) * (1 + g.cut * .12)) * 100) / 100; g.theirs.push(th);
     g.phase = 'burn'; g.burnT = performance.now(); AUDIO.play(over ? 'miss' : 'blunt'); draw();
     setTimeout(() => { if (!on()) return; g.cut++; const d = g.len - g.want;
-      const said = over ? 'The cord runs off the end of the board into the sand, and the sapper picks it up and looks at you.' : e <= .15 ? b4gPick([`"${numw(g.want, true)}," the sapper says, as the flame goes out at the end. "On the count." She sounds put out.`, 'Out on the count, to the breath. The sapper writes a mark in the sand with her finger.']) : e <= .5 ? `A ${numw(g.want)} count and ${d < 0 ? 'a breath short' : 'a breath over'}. "Near," the sapper says. "Near kills sappers. Mostly it kills the ones next to them."` : `${d < 0 ? 'Short' : 'Long'}, by most of a count. "${d < 0 ? 'Short fuse. You\'re still running when it goes.' : 'Long fuse. The man you threw it at has time to throw it back.'}"`;
+      const said = over ? 'The acid runs off the end of the board into the sand, and the sapper looks at it, and at you.' : e <= .15 ? b4gPick([`"${numw(g.want, true)}," the sapper says, as the acid stops at the cut. "On the count." She sounds put out.`, 'Stopped on the count, to the breath. The sapper writes a mark in the sand with her finger.']) : e <= .5 ? `A ${numw(g.want)} count and ${d < 0 ? 'a breath short' : 'a breath over'}. "Near," the sapper says. "Near kills sappers. Mostly it kills the ones next to them."` : `${d < 0 ? 'Short' : 'Long'}, by most of a count. "${d < 0 ? 'Thin wax. You\'re still running when it goes.' : 'Thick wax. The man you threw it at has time to throw it back.'}"`;
       g.talk = mgSay('', said) + mgSay('', `The company's sapper cuts hers: off by ${th <= .15 ? 'nothing you could measure' : th <= .5 ? 'a breath' : 'most of a count'}.`);
       if (g.cut >= CUTS) { g.over = true; const r = result(); mgDeed(r.won ? 'b4FuseWon' : 'b4FuseLost'); if (r.clean) mgDeed('b4FuseClean'); S.f.b4_fuseBest = Math.min(S.f.b4_fuseBest != null ? S.f.b4_fuseBest : 99, Math.round(r.mine * 10) / 10); AUDIO.play(r.won ? 'win' : 'lose');
         g.talk += mgSay('The company\'s sapper', r.won ? `"${r.clean ? 'All five on the count. In this.' : 'Better than me, tonight.'}" She wipes the knife on her sleeve and hands it back to you hilt first. ${r.clean ? '"Take a sharper. Don\'t tell the quartermaster. Don\'t tell anyone."' : '"Take a smoker. You\'ve earned something that hides you."'}` : `"Not bad, for the 9th." She takes her knife back. "Come and cut cord with me on a still night. There aren't any. Come anyway."`); }
@@ -316,14 +316,14 @@ function playFuse(opt = {}){
     ctx.globalAlpha = 1 - gust; for (let i = 0; i <= 10; i++) { ctx.fillStyle = i === g.want && g.phase === 'reel' ? '#ffe3a0' : '#2a1a0c'; ctx.fillRect(bx + i * cw - 1, by - 10, 2, i % 5 ? 10 : 16); b4gText(ctx, String(i), bx + i * cw, by + 34, 11, 'rgba(232,192,115,.75)'); } ctx.globalAlpha = 1;
     if (gust > .3) { ctx.fillStyle = `rgba(200,160,110,${gust * .55})`; ctx.fillRect(bx - 6, by - 14, bw + 12, 52); }
     if (g.thumb && g.phase === 'reel') { const tx = bx + g.want * cw; ctx.fillStyle = '#c49c80'; ctx.beginPath(); ctx.ellipse(tx, by - 16, 6, 9, 0, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(40,20,10,.6)'; ctx.stroke(); }
-    // the cord off the reel, and the flame on a cut length
+    // the acid along the waxed channel, and the bite on a cut length
     const n = g.phase === 'reel' ? counts() : g.len; ctx.fillStyle = '#3a2a1a'; ctx.beginPath(); ctx.arc(bx - 2, by + 4, 9, 0, 7); ctx.fill();
     if (g.phase === 'reel' || g.phase === 'burn') { ctx.strokeStyle = '#d8c090'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(bx, by + 4); ctx.lineTo(bx + Math.min(10.2, n) * cw, by + 4); ctx.stroke();
-      if (g.phase === 'burn') { const k = clamp((now - g.burnT) / b4gPace(800), 0, 1), fx = bx + Math.min(10.2, n) * cw * (1 - k); ctx.strokeStyle = '#2a2018'; ctx.beginPath(); ctx.moveTo(fx, by + 4); ctx.lineTo(bx + Math.min(10.2, n) * cw, by + 4); ctx.stroke(); glow(ctx, fx, by + 4, 14, '#ffb050', .7); } }
+      if (g.phase === 'burn') { const k = clamp((now - g.burnT) / b4gPace(800), 0, 1), fx = bx + Math.min(10.2, n) * cw * (1 - k); ctx.strokeStyle = '#2a2018'; ctx.beginPath(); ctx.moveTo(fx, by + 4); ctx.lineTo(bx + Math.min(10.2, n) * cw, by + 4); ctx.stroke(); glow(ctx, fx, by + 4, 14, '#b8e070', .7); } }
     if (g.phase === 'reel') b4gText(ctx, `${numw(g.want, true)} count`, W / 2, H * .9, Math.min(18, W * .05));
   };
   mgKeys({' ':() => { const b = $('#fuGo') || $('#fuDone'); if (b) b.click(); else cut(); }});
-  g.talk = mgSay('', `In the lee of the rock the Second Company's sapper, a woman with sand in her eyebrows and a burn on every finger, is cutting fuse for the morning against a count, and losing to nobody. She holds out the knife.`) + mgSay('The company\'s sapper', '"Cord off the reel along the board. I call the count. You cut it. Nearest in five takes a munition off me, and I don\'t lose munitions."') + (sapper ? mgSay('', 'Tangle sits down on the other side of the board with both wrists wrapped in cord of his own, and looks at hers as if it might be stolen.') : '');
+  g.talk = mgSay('', `In the lee of the rock the Second Company's sapper, a woman with sand in her eyebrows and a burn on every finger, is cutting timers for the morning against a count, and losing to nobody. She holds out the knife.`) + mgSay('The company\'s sapper', '"Acid down the wax. I call the count. You cut it shut. Nearest in five takes a munition off me, and I don\'t lose munitions."') + (sapper ? mgSay('', 'Tangle sits down on the other side of the board with trip cord round both wrists, and looks at her wax as if it might be stolen.') : '');
   draw();
 }
 
@@ -426,13 +426,13 @@ function playFeather(opt = {}){
       ch:back('b4_c4_setifire')}; };
     const j = B4CH4.journal; if (j) B4CH4.journal = () => { const x = j(), r = S.f.b4_handsLast; if (r && r.done) x.unshift(r.won ? 'At the Seti fire the sergeant played the wounded archers\' hand game, and took the sticks.' : 'At the Seti fire the sergeant played the wounded archers\' hand game, and the archers kept the sticks.'); return x; }; }
   /* Ch5: the company's sappers in the lee of the rock */
-  if (typeof B4CH5 !== 'undefined') { wrap(B4CH5, 'b4_c5_wallfire', n => after(n, '^Talk with the squad', [{t:'The Second Company\'s sapper is cutting fuse against a count in the lee of the rock. Cut a length.', tag:'The Fuse', go:()=>playFuse({after:r => { S.f.b4_fuseLast = r; b4FusePay(r); talk('b4_c5_fuse_after'); }})}]));
+  if (typeof B4CH5 !== 'undefined') { wrap(B4CH5, 'b4_c5_wallfire', n => after(n, '^Talk with the squad', [{t:'The Second Company\'s sapper is cutting timers against a count in the lee of the rock. Cut one.', tag:'The Timer', go:()=>playFuse({after:r => { S.f.b4_fuseLast = r; b4FusePay(r); talk('b4_c5_fuse_after'); }})}]));
     B4CH5.dlg.b4_c5_fuse_after = () => { const r = S.f.b4_fuseLast || {}; return {sp:'The Third\'s fire', scene:'b4_wall_fire', txt: !r.done ?
-`You give the knife back before the fifth length. The sapper goes on cutting without you, and does not seem to miss the company.` : r.won ?
+`You give the knife back before the fifth timer. The sapper goes on cutting without you, and does not seem to miss the company.` : r.won ?
 `You come back round the rock with sand in your teeth and ${r.clean ? 'a sharper' : 'a smoker'} the company's sapper swears she never had. ${b4In('tangle') ? 'Tangle takes it off you and counts it into the satchel, and then counts the satchel, twice. "Off *her*," he says. "No one gets anything off her."' : 'The squad looks at it as if you had walked out of the Wall with it.'}` :
 `You come back round the rock with sand in your teeth and nothing else. ${b4In('tangle') ? '"She cuts in her sleep," Tangle says. "I\'ve seen her. Cut, snore, cut."' : 'The company\'s sapper is still cutting when the fire burns down.'}`,
       ch:back('b4_c5_wallfire')}; };
-    const j = B4CH5.journal; if (j) B4CH5.journal = () => { const x = j(), r = S.f.b4_fuseLast; if (r && r.done) x.unshift(r.won ? 'Short of the Wall the sergeant cut fuse against the Second Company\'s sapper, in the blown sand, and won a munition off her.' : 'Short of the Wall the sergeant cut fuse against the Second Company\'s sapper, in the blown sand. She kept her munitions.'); return x; }; }
+    const j = B4CH5.journal; if (j) B4CH5.journal = () => { const x = j(), r = S.f.b4_fuseLast; if (r && r.done) x.unshift(r.won ? 'Short of the Wall the sergeant cut timers against the Second Company\'s sapper, in the blown sand, and won a munition off her.' : 'Short of the Wall the sergeant cut timers against the Second Company\'s sapper, in the blown sand. She kept her munitions.'); return x; }; }
   /* Ch6: Temul's youths behind the horse lines, by day */
   if (typeof B4CH6 !== 'undefined') { wrap(B4CH6, 'b4_c6_picketfire', n => after(n, '^Talk with the squad', [{t:()=>b4FeatherLead() ? 'Keth is over at the horse lines with Temul\'s youths, who are taking a crow feather off a stake at the gallop. Ride for it.' : 'Temul\'s youths are taking a crow feather off a stake at the gallop behind the horse lines. Ride for it.', tag:'The feather', req:()=>b46Ph() < 2, go:()=>playFeather({after:r => { S.f.b4_featherLast = r; b4FeatherPay(r); talk('b4_c6_feather_after'); }})}].map(c => Object.assign(c, {t:typeof c.t === 'function' ? c.t() : c.t}))));
     B4CH6.dlg.b4_c6_feather_after = () => { const r = S.f.b4_featherLast || {}, keth = b4FeatherLead(); return {sp:'The Third\'s fire', scene:b46Ph() >= 2 ? 'b4_c6_eve' : 'b4_picket', txt: !r.done ?
@@ -460,6 +460,6 @@ function b4FeatherPay(r){ if (!r || !r.done || !r.won || S.f.b4_featherPaid) ret
     const fires = [['Shells', d('b4ShellsWon') || d('b4ShellsLost') ? `${d('b4ShellsWon')} won, ${d('b4ShellsLost')} lost${d('b4ShellsPalm') ? `, the palm called ${d('b4ShellsPalm') === 1 ? 'once' : d('b4ShellsPalm') + ' times'}` : ''}` : 'Not yet'],
       ['The Burned Tears\' cup', d('b4CupWon') || d('b4CupLost') ? `${d('b4CupWon') ? 'The cup, ' + (d('b4CupWon') === 1 ? 'once' : d('b4CupWon') + ' times') : 'Not the cup'}; best regard ${cup}` : 'Not yet'],
       ['The hand game', d('b4HandsWon') || d('b4HandsLost') || d('b4HandsEven') ? `${d('b4HandsWon')} won, ${d('b4HandsLost')} lost${d('b4HandsEven') ? `, ${d('b4HandsEven')} even` : ''}` : 'Not yet'],
-      ['The Fuse', d('b4FuseWon') || d('b4FuseLost') ? `${d('b4FuseWon')} won, ${d('b4FuseLost')} lost; off by ${fuse.toFixed(1)} at best${d('b4FuseClean') ? ', all five on the count' : ''}` : 'Not yet'],
+      ['The Timer', d('b4FuseWon') || d('b4FuseLost') ? `${d('b4FuseWon')} won, ${d('b4FuseLost')} lost; off by ${fuse.toFixed(1)} at best${d('b4FuseClean') ? ', all five on the count' : ''}` : 'Not yet'],
       ['The feather', d('b4FeatherWon') || d('b4FeatherLost') ? `${d('b4Feathers')} feather${d('b4Feathers') === 1 ? '' : 's'} taken; ${d('b4FeatherWon')} won, ${d('b4FeatherLost')} lost` : 'Not yet']];
     return base + `<h4 class="jh">At the fires</h4><div class="kv">${fires.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }; }

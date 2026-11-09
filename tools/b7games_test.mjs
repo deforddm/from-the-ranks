@@ -2,7 +2,7 @@
 // talk, Not now), opens on the tables' frame, plays to a win and to a loss from the panel and the keys, closes to its after-node, pays once a
 // book, is not offered again once finished, and leaves its deed; a game left early pays nothing and can be come back to. Ships (Ch1, the
 // Third): silver won, a die argued out of the sand (Guile, its "yes, but"). Pass the Debt (Ch2, the Letherii): a line off the roll (the
-// file −1), Perrit +1, or a salve; the dock spun by hand (Guile, its "yes, but"). The Fuse-Count (Ch3, the Third): a burner; the fuse notched
+// file −1), Perrit +1, or a salve; the dock spun by hand (Guile, its "yes, but"). The Timer-Count (Ch3, the Third): a burner; the fuse notched
 // at the half (Wits, its "yes, but"). The Horse-Trade (Ch4, the Letherii): Sorvan +1 or a salve; a look in its mouth (Wits, its "yes, but").
 // The Rat Catchers' Wager (Ch7, the Third): silver on the crowd's word, never a name; up on the wall (Wits, its "yes, but"). The Deeds page,
 // the journal, the after-nodes, phone width (412), and screenshots of each table to /tmp/claude-0/shots/b7/games/.
@@ -119,13 +119,13 @@ await ev(() => { delete S.f.b7_debtPaid; S.b7.file = 0; S.squad = S.squad.filter
 await setup(2, { f: { b7_c2_ph: 3 } }); ok(!(await fireOk('b7_c2_fire', /debt-tokens/)).game, 'out in the streets there is no bench');
 await ev(() => { S.f.b7_c2_ph = 5; }); ok((await fireOk('b7_c2_fire', /debt-tokens/)).game, 'home at the brazier, the bench again');
 
-/* ============ 3. The Fuse-Count (Ch3, the Third) ============ */
+/* ============ 3. The Timer-Count (Ch3, the Third) ============ */
 await setup(3);
 ok(await ev(() => S.thread === 't'), 'Chapter Three: the Third');
-fireLine(await fireOk('b7_c3_fire', /coil of fuse/), 'Ch3 the farmhouse floor: the Fuse-Count');
+fireLine(await fireOk('b7_c3_fire', /pouch of acid timers/), 'Ch3 the farmhouse floor: the Timer-Count');
 await notNow('b7_c3_fire', 'Ch3');
-await open('b7_c3_fire', 'coil of fuse');
-ok(await ev(() => /Fuse-Count/.test($('#mg h2').textContent) && /helmet/.test($('#mgPanel').innerText)), 'the hearth opens; a fuse and a helmet');
+await open('b7_c3_fire', 'pouch of acid timers');
+ok(await ev(() => /Timer-Count/.test($('#mg h2').textContent) && /helmet/.test($('#mgPanel').innerText)), 'the hearth opens; a timer and a helmet');
 await shot('6-fuse-ready');
 await btn('fcNotch'); await wait(60);
 let c = await ev(() => ({check:MG.state.check, notch:MG.state.notch, sharp:MG.state.sharp, used:MG.state.notchUsed, btn:!!$('#fcNotch')}));
@@ -134,20 +134,20 @@ for (let i = 0; i < 2; i++) { await btn('fcLight'); await wait(40);
   if (!i) { const notched = await ev(() => MG.state.notch); if (notched) { await ev(() => { MG.state.t0 = performance.now() - MG.state.burn * .6; }); await wait(120); ok(await ev(() => MG.state.spat), 'the notch spits as the burn passes the half'); } await shot('7-fuse-lit'); }
   await ev(() => { MG.state.t0 = performance.now() - MG.state.burn; }); await btn('fcNow'); await until(() => MG.state.phase === 'ready' || MG.state.over, 6000); }
 c = await ev(() => ({over:MG.state.over, mine:MG.state.mine, deeds:S.deeds.b7FuseWon})); ok(c.over && c.mine === 2 && c.deeds === 1, 'called on the burn both times: two rounds, the match');
-f = await fit(); ok(f.ok, 'the Fuse-Count fits a phone' + (f.ok ? '' : ': ' + f.bad.join(' ')));
+f = await fit(); ok(f.ok, 'the Timer-Count fits a phone' + (f.ok ? '' : ': ' + f.bad.join(' ')));
 await btn('fcDone'); await wait(100);
 c = await ev(() => ({node:S.node, burner:S.inv.burner, paid:S.f.b7_fusePaid}));
 ok(c.node === 'b7_c3_fuse_after' && c.burner === 2 && c.paid === 1 && /burner/.test(await text()), 'won: the sapper\'s burner, the after-node');
-ok(!(await fireOk('b7_c3_fire', /coil of fuse/)).game, 'played once: the hearth is not offered again');
+ok(!(await fireOk('b7_c3_fire', /pouch of acid timers/)).game, 'played once: the hearth is not offered again');
 await ev(() => b7FusePay({won:true, done:true})); ok((await ev(() => S.inv.burner)) === 2, 'the burner is paid once a book');
-await setup(3); await open('b7_c3_fire', 'coil of fuse'); await nearNext(); await key('n'); await wait(40);
+await setup(3); await open('b7_c3_fire', 'pouch of acid timers'); await nearNext(); await key('n'); await wait(40);
 c = await ev(() => ({tier:MG.state.check && MG.state.check.tier, notch:MG.state.notch, sharp:MG.state.sharp})); ok(c.tier === 'near' && c.notch && c.sharp, '"yes, but" on the notch: it spits, and the sapper counts by it too');
 for (let i = 0; i < 2; i++) { await key(' '); await wait(40); await ev(() => { MG.state.t0 = performance.now(); }); await key(' '); await until(() => MG.state.phase === 'ready' || MG.state.over, 6000); }
 c = await ev(() => ({over:MG.state.over, his:MG.state.his, deeds:S.deeds.b7FuseLost})); await btn('fcDone'); await wait(80);
 const cl = {burner:await ev(() => S.inv.burner), txt:await text()};
 ok(c.over && c.his === 2 && c.deeds === 1 && cl.burner === 1 && /sapper.s count/.test(cl.txt), 'called at once both times: the sapper\'s match, no burner' + (c.over && c.his === 2 && c.deeds === 1 && cl.burner === 1 ? '' : ' ' + JSON.stringify([c, cl])));
-await setup(3, { f: { b7_c3_ph: 2 } }); ok(!(await fireOk('b7_c3_fire', /coil of fuse/)).game, 'on the march there is no hearth');
-await ev(() => { S.f.b7_c3_ph = 4; }); ok((await fireOk('b7_c3_fire', /coil of fuse/)).game, 'in the factor\'s barn by day, the fuse again');
+await setup(3, { f: { b7_c3_ph: 2 } }); ok(!(await fireOk('b7_c3_fire', /pouch of acid timers/)).game, 'on the march there is no hearth');
+await ev(() => { S.f.b7_c3_ph = 4; }); ok((await fireOk('b7_c3_fire', /pouch of acid timers/)).game, 'in the factor\'s barn by day, the timers again');
 
 /* ============ 4. The Horse-Trade (Ch4, the Letherii) ============ */
 await setup(4, { join: ['sorvan'] });
@@ -231,11 +231,11 @@ await ev(() => { S.f.b7_c7_ph = 3; S.f.b7_c7_view = 1; }); ok(!(await fireOk('b7
 
 /* the Deeds page, the journal, the after-nodes */
 const dd = await ev(() => { S.deeds = Object.assign(S.deeds || {}, {b7ShipsWon:2, b7DebtWon:1, b7FuseLost:1, b7HorseWon:1, b7WagerWon:1});
-  const h = b7DeedsExtra([{s:S}]); return {fires:/At the fires/.test(h), rising:/The Rising/.test(h), rows:['Ships', 'Pass the Debt', 'Fuse-Count', 'Horse-Trade', 'Rat Catchers'].every(k => h.includes(k)), leak:/undefined|NaN/.test(h)}; });
+  const h = b7DeedsExtra([{s:S}]); return {fires:/At the fires/.test(h), rising:/The Rising/.test(h), rows:['Ships', 'Pass the Debt', 'Timer-Count', 'Horse-Trade', 'Rat Catchers'].every(k => h.includes(k)), leak:/undefined|NaN/.test(h)}; });
 ok(dd.fires && dd.rising && dd.rows && !dd.leak, 'the Deeds page lists Book Seven\'s fires under the Rising');
 const jn = await ev(() => { S.f.b7_shipsLast = {games:1, pay:2}; S.f.b7_debtLast = {done:true, won:true}; S.f.b7_fuseLast = {done:true, won:false}; S.f.b7_horseLast = {done:true, won:true}; S.f.b7_wagerLast = {done:true, won:true, pay:3, heard:'Emperor'};
   return [B7CH1.journal(), B7CH2.journal(), B7CH3.journal(), B7CH4.journal(), B7CH7.journal()].map(j => j[0]); });
-ok(/Ships/.test(jn[0]) && /Pass the Debt/.test(jn[1]) && /Fuse-Count/.test(jn[2]) && /horse/.test(jn[3]) && /crowd's word/.test(jn[4]), 'each game leaves a journal line');
+ok(/Ships/.test(jn[0]) && /Pass the Debt/.test(jn[1]) && /Timer-Count/.test(jn[2]) && /horse/.test(jn[3]) && /crowd's word/.test(jn[4]), 'each game leaves a journal line');
 const leak = await ev(() => { const out = []; const cases = {b7_c1_ships_after:[{}, {games:1, pay:3}, {games:2, pay:-2}, {games:1, pay:0}], b7_c2_debt_after:[{}, {done:true, won:true, mine:2, his:9}, {done:true, won:false, mine:9, his:2}], b7_c3_fuse_after:[{}, {done:true, won:true, mine:2}, {done:true, won:false, mine:1}], b7_c4_horse_after:[{}, {done:true, won:true, spent:40}, {done:true, won:false, spent:80}], b7_c7_wager_after:[{}, {done:true, won:true, pay:4, heard:'Saviour'}, {done:true, won:false, pay:-2, heard:'Emperor'}]};
   const last = {b7_c1_ships_after:'b7_shipsLast', b7_c2_debt_after:'b7_debtLast', b7_c3_fuse_after:'b7_fuseLast', b7_c4_horse_after:'b7_horseLast', b7_c7_wager_after:'b7_wagerLast'};
   const BAN = /Laseen|Kellanved|Dancer|Ammanas|Surly|Topper|the Talon|the Eel|Burn's Sleep|Kettle|Tehol|the Only|\b11\d\d\b/;

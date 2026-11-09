@@ -473,7 +473,7 @@ Sethand has not come closer. He will not.`,
   sgt:`It takes you a minute because you're looking for the wrong thing. You're looking for where the tracks go. They don't go.`,
   ohl:`It takes Ohl a minute, because he's looking for the wrong thing: for where the tracks go, the way you look for where the blood goes. They don't go.`,
   tuft:`Tuft finds it, because she isn't looking for tracks. She walks the spiral with her head on one side, as if listening for a draught under a door, and stops. "Here," she says. "It doesn't go anywhere from here."`,
-  kettle:`Kettle finds it, because Kettle reads ground the way she reads a fuse: where does it stop? "It stops," she says. "Sergeant. It just *stops*."`,
+  kettle:`Kettle finds it, because Kettle reads ground the way she reads a timer: where does it stop? "It stops," she says. "Sergeant. It just *stops*."`,
   brisk:`Brisk finds it, because Brisk counts paces. She walks the spiral counting, and the count runs out.`,
   _:`It takes {who} a minute, looking for the wrong thing: for where the tracks go. They don't go.`})}
 
@@ -981,7 +981,7 @@ ${by({
   ohl:`It's Ohl. He has a voice for it, which nobody knew: low, cracked down the middle, patient. "I have a rule," he says, before he starts. "I learn the words for the dead in every tongue I am likely to need them in. I made it at dusk." Then he sings it, with the man's word where the horse was.`,
   tuft:`It's Tuft. She sings it the way she says *Yes, Sergeant*: very quietly, very exactly, as if anything louder would break. When she comes to the man's word she doesn't stop. She knows who it's for. It is the first thing anyone has let her do for Tattersail.`,
   ellis:`It's Ellis. "They sing it over horses," she says, before. "I heard it from a ridge once, scouting with Toc. You change one word." She sings it flat and exact, the way she'd give a count, and changes the word.`,
-  kettle:`It's Kettle. She sings it loudly and badly and with total confidence, and gets every word right, which is not. She puts the man's word in the horse's place without being told; she's been listening to it the way she listens to a fuse.`,
+  kettle:`It's Kettle. She sings it loudly and badly and with total confidence, and gets every word right, which is not. She puts the man's word in the horse's place without being told; she's been listening to it the way she listens to a timer.`,
   brisk:`It's Brisk. She doesn't sing it, exactly. She calls it the way names are read out after a field; and it turns out that is what the song is.`,
   _:`It's {who}. {who} sings it low, the few words, with the man's word where the horse was.`})}
 
@@ -1139,7 +1139,7 @@ Kettle, when they're gone: "They asked one thing and answered nothing. That's no
   sgt:`You answer, and while you answer you watch, and you see it.`,
   ohl:`You answer. Ohl watches their hands, because hands are where a healer looks first: the face is what a man has decided to show you, and the hands are what he hasn't. And Ohl sees it.`,
   ellis:`You answer. Ellis skips their faces. She counts their hands, which is what she does with everything, and loses the count at the younger one's, because they will not stay still long enough to be counted.`,
-  kettle:`You answer. Kettle watches them ${S.f.c2_bones ? `the way she watched Hedge's hands over the bones, for the tell` : `the way she'd watch a lit fuse, for the moment it does the thing`}, and she finds it.`,
+  kettle:`You answer. Kettle watches them ${S.f.c2_bones ? `the way she watched Hedge's hands over the bones, for the tell` : `the way she'd watch a bitten timer, for the moment it does the thing`}, and she finds it.`,
   tuft:`You answer. Tuft watches them from the ground, with the name still on her lips, and she sees it first.`,
   brisk:`You answer. Brisk watches them over the rim of her shield, and she sees it.`,
   _:`You answer, and while you answer {who} watches, and sees it.`})}

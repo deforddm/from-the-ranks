@@ -771,7 +771,7 @@ Vell's hands are moving at his sides, copying the throw without meaning to. "Tha
 
 "The Guild," says Oskan, "can come to the Cawn and ask."` : ''}`,
     ch:[{t:'"Show us the knot."', check:['wits', 16], trick:'b3_c6_knot', req:()=>!S.f.b3_c6_knotTried, fx:()=>{ S.f.b3_c6_knotTried = 1; },
-          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with fuses', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
+          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with timers', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
           go:'b3_c6_oskan0_knot', fail:'b3_c6_oskan0_miss'},
         {t:'"A river, you said."', go:'b3_c6_oskan0_river'},
         {t:'Leave him to his post.', go:()=>startExplore()}]}),
@@ -800,7 +800,7 @@ Vell coils the line the Guild way without thinking, and stops, and coils it agai
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_oskan0_again:()=>({sp:'Oskan', txt:`Oskan is still at the post. The line goes out; the post jumps. "Hip," he says, when he sees you. "Not the arm."`,
     ch:[{t:'"Show us the knot again."', check:['wits', 16], trick:'b3_c6_knot', req:()=>!S.f.b3_c6_knotTried2 && S.f.b3_c6_knotTried && !(S.tricks && S.tricks.b3_c6_knot), fx:()=>{ S.f.b3_c6_knotTried2 = 1; },
-          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with fuses', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
+          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with timers', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
           go:'b3_c6_oskan0_knot', fail:'b3_c6_oskan0_miss'},
         {t:'Leave him.', go:()=>startExplore()}]}),
 });
@@ -1164,7 +1164,7 @@ Ohl gets up, slowly, without a word, and you know from the set of his shoulders 
 
 He jerks his chin at the reeds on the far bank. "Something's been watching us from over there since the first keel. Pannion. Garrison that never got the word to go home, maybe. Living in the reeds like eels." The adze comes down. "If I were them, I'd come for the slips at night with fire. Green wood doesn't burn well. Pitch does."`,
     ch:[{t:'"Show us the knot, Oskan."', check:['wits', 16], trick:'b3_c6_knot', req:()=>!(S.tricks && S.tricks.b3_c6_knot) && !S.f.b3_c6_knotTried3, fx:()=>{ S.f.b3_c6_knotTried3 = 1; },
-          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with fuses', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
+          edges:id=>[id === 'brisk' && ['she grew up on the Cawn docks', 2], id === 'sohra' && ['a herd-rider\'s rope hand', 1], id === 'kettle' && ['quick fingers, and patience with timers', 1], id === 'tuft' && ['she has never thrown anything heavier than a card', -1], id === 'vell' && ['rope is his trade', 2]],
           go:'b3_c6_oskan0_knot', fail:'b3_c6_oskan0_miss'},
         {t:'Leave him to his adze.', go:()=>startExplore()}]}),
   b3_c6_oskan_again:()=>({sp:'Oskan', txt: S.f.b3_c6_raidDone ? `Oskan is in the water to his waist, caulking a seam by feel, swearing at the river in Cawn. He waves the caulking iron at you.` : `The adze comes down. "Pitch," Oskan says. "At night. Mark me."`,
