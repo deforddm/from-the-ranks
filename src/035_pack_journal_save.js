@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],
   ['10.1.0', ['Book Six on Bridgeburner is evened out. Y\'Ghatan\'s streets and gate, the deserters on the Kokakal shore and the cult at G\'danisban are fairer; the patrol, the coast road, the sally, the carts and the boats bite harder.', 'Soldier and Story are unchanged. Saves carry on as they were.']],
   ['10.0.3', ['Book Seven: Perrit and the tile-woman read the tiles for this book now: the barracks under the Patriotists\' eye, the muster at the horse lines, and the field before the walls.', 'Nothing else changes.']],
   ['10.0.2', ['Book Six: the readers speak for this book now. Marrow, Tallow and the old soldier read for the Lato Odhan, Y\'Ghatan, the Kokakal shore and the sea; Tuft, Sohra and old Benna for the north coast, G\'danisban and the night road.', 'Fixed: in Book Six the Fourth\'s readers said nothing after a card, and in Book Seven neither did the Letherii\'s. They speak now.', 'Nothing else changes.']],
