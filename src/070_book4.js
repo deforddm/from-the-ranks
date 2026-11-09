@@ -393,7 +393,7 @@ const b4Finished = () => roster().list.filter(e => e.book === 'dg' && e.done && 
 const b4And = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a[0] || '';
 function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. At the muster you pick one of the Fourteenth\'s spares to make five.';
   const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), n = Math.max(0, 4 - i.mates.length);
-  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
+  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them; change it if you like.`; }
 
 /* ---- the words Book Four throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.hoc = [

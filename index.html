@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '10.3.0';
+const VERSION = '10.3.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5496,15 +5496,15 @@ function showTitle(fresh, want){
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
-    /* picking a Book One sergeant for Book Three fills and locks the name (a fresh start unlocks it) */
-    const lockName = on => { nm.readOnly = !!on; nm.classList.toggle('locked', !!on); if (on) { nm.value = on; nm.oninput(); } };
+    /* picking a sergeant to carry over fills in their name; it stays editable (David, Nov 9, 2026: change the name when carrying it over) */
+    const lockName = on => { nm.readOnly = false; nm.classList.remove('locked'); if (on) { nm.value = on; nm.oninput(); } };
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else if (book === 'bh' || book === 'rg') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else if (book === 'tth' && typeof b8ImpName === 'function') { $('#impDesc').innerHTML = `${b8ImpDesc(v)}${v ? '' : ' Only a finished Book Three on the daru or stand-down road, or a finished Book Six (any of the Fourth\'s roads).'}`; const nmv = v && b8ImpName(v); lockName(nmv ? nmv.slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; };
-      const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = !!o; n2.classList.toggle('locked', !!o); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
+      const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = false; n2.classList.remove('locked'); if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
     bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)';
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
@@ -7866,6 +7866,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.1', ['A sergeant carried into a new book can be renamed there: the name is filled in for you, and you can change it.']],
   ['10.3.0', ['Tricks that don\'t strike no longer cost the turn: the shield calls, the battle cries, the dark and the smoke, the curses. One free trick each a turn.', 'Barghast Blood-Iron, the Long Listen and the Pilot\'s Eye now work by themselves at the start of every fight.', 'Only a heal aimed at one soldier leaves a ward now. Group heals and the gods\' small mercies heal, and that is all.', 'Saves carry on as they were.']],
   ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],
   ['10.1.0', ['Book Six on Bridgeburner is evened out. Y\'Ghatan\'s streets and gate, the deserters on the Kokakal shore and the cult at G\'danisban are fairer; the patrol, the coast road, the sally, the carts and the boats bite harder.', 'Soldier and Story are unchanged. Saves carry on as they were.']],
@@ -36245,7 +36246,7 @@ Object.defineProperty(BOOKS.moi, 'titleArt', {configurable:true, get(){ return t
 const b3Finished = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done && b3Qualifies(loadSlot(e.id)));
 function b3ImpDesc(id){ const i = id && b3Import(id); if (!i) return 'A fresh start: the Fourth all came out of Darujhistan, and marched north with the Host.';
   const dead = i.dead.map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name);
-  return `Sergeant ${esc(i.from)}'s Fourth, as they left Darujhistan: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come out; there is room for a recruit where they were` : ''}. The sergeant's name comes with them.`; }
+  return `Sergeant ${esc(i.from)}'s Fourth, as they left Darujhistan: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come out; there is room for a recruit where they were` : ''}. The sergeant's name comes with them; change it if you like.`; }
 
 /* ---- the words Book Three throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.moi = [
@@ -49903,7 +49904,7 @@ const b4Finished = () => roster().list.filter(e => e.book === 'dg' && e.done && 
 const b4And = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a[0] || '';
 function b4ImpDesc(id){ const i = id && b4Import(id); if (!i) return 'A fresh start: Haddat, Tangle and Marrow came off the Chain with you. Sathi stayed on the Barrow. At the muster you pick one of the Fourteenth\'s spares to make five.';
   const dead = i.dead.filter(k => HOC_CORE.includes(k) || ['redblade', 'warlock'].includes(k)).map(k => TPL[k].name), went = i.mates.map(k => TPL[k].name), n = Math.max(0, 4 - i.mates.length);
-  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them.`; }
+  return `Sergeant ${esc(i.from)}'s squad, as it came into Aren: ${went.length ? esc(b4And(went)) : 'nobody but you'}${dead.length ? `. ${esc(b4And(dead))} stayed on the Barrow` : ''}${n ? `. At the muster you pick ${n === 1 ? 'one' : numw(n)} of the Fourteenth's spares to make up the five` : ''}.${i.ramin ? ' Ramin is with the Red Blades.' : ''}${i.keth ? ' Keth is with the Wickan youths.' : ''} The sergeant's name comes with them; change it if you like.`; }
 
 /* ---- the words Book Four throws at you: [chapter, word, meaning, met?] (flags the chapters set unlock the later ones) ---- */
 GLOSSX.hoc = [
