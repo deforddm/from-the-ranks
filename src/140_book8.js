@@ -307,6 +307,10 @@ const FOE_SORC_B8 = ['b8_kelykpriest']; FOE_SORC_B8.forEach(k => FOE_SORC.add(k)
     gone.forEach(u => { B.units.splice(B.units.indexOf(u), 1); const i = B.initOrder.indexOf(u); if (i >= 0) B.initOrder.splice(i, 1); if (B.order !== B.initOrder) { const j = B.order.indexOf(u); if (j >= 0) B.order.splice(j, 1); }
       blog(`<em>${u.name} goes on down the street.</em> It never once looked at the squad. The street is very quiet after it.`); }); }; }
 
+/* the Hound never attacks the squad (rule 14's other half; Ch 6 report, Nov 9): its turn is spent standing in the street, and it gives no free swings */
+{ const _ai = aiTurn; aiTurn = async function(u, turnId){ if (u && u.b8hound) { if (!B || B.over || B.turn !== turnId) return; if (!u.b8said) { u.b8said = 1; blog(`<em>${u.name} stands in the street and looks past the squad, at something further off.</em>`); } updBattleUI(); if (!checkEnd()) endTurn(); return; } return _ai(u, turnId); }; }
+{ const _th = threatsAt; threatsAt = function(u, x, y){ return _th(u, x, y).filter(e => !e.b8hound); }; }
+
 /* ---- Book Eight's balance: empty until the chapters exist (the balance step, docs/v10.2-balance.md method). B8SOLDIER rows go into
    SOLDIER_FIGHT (Soldier, by fight id); B8GAP is Bridgeburner's per-fight boost ({ac +, atk +, hp ×, dmg +}, as B7GAP). B8GAP_ROW is the
    row a b8_ fight without its own row gets on Bridgeburner: null for now, so nothing is boosted until the lead tunes it. ---- */
