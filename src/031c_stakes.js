@@ -65,8 +65,10 @@ const WARD_LINE = {
   soliel:(u, w) => `The oil stays warm on ${u.name}. <em>A ward of ${w}.</em>`,
   spirits:(u, w) => `The ground stays close to ${u.name}. <em>A ward of ${w}.</em>`,
   plain:(u, w) => `${u.name} is past whole, and the rest of it holds. <em>A ward of ${w}.</em>`};
+/* v10.3 (David, Nov 8, 2026): only a heal aimed at one squadmate leaves a ward (healW). Group heals, the gods' trickles and lifesteal don't. */
+function healW(u, n){ if (B) B.wardOk = 1; try { heal(u, n); } finally { if (B) B.wardOk = 0; } }
 function wardFrom(u, before, n){
-  if (!B || !u || u.side !== 'p' || u.ally || before <= 0 || !(n > 0)) return;
+  if (!B || !B.wardOk || !u || u.side !== 'p' || u.ally || before <= 0 || !(n > 0)) return;
   const over = before + n - u.maxhp; if (over <= 0) return;
   const w = Math.min(wardCap(u), over); if (w <= (u.ward || 0)) return; // never stacks; a smaller one changes nothing
   u.ward = w; float(u, 'ward ' + w, '#dfe8f0'); blog(WARD_LINE[wardSource()](u, w)); }
@@ -494,7 +496,7 @@ Object.assign(AB, {
       blog(`${u.name} opens ${u.id === 'ohl' ? 'his' : 'her'} hands and lets Denul out like water from a cup. ${near.length > 1 ? 'Everyone close enough feels it.' : `There is nobody close enough but ${u.id === 'ohl' ? 'him' : 'her'}.`}${d < 1 ? ' It comes thin here.' : ''}`); }},
   stanch:{name:'Stanch', strain:2, desc:()=>'A squadmate within 3 cannot drop below 1 health until the healer\'s next turn, stops bleeding, and heals 1 for each squad level past the first. Strain 2.',
     tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 3 && p.stanch !== u && sees(u, p)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) heal(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own' : `${t.name}'s`} wound and says something to Hood in Ehrlii. ${t === u ? 'He' : t.name} is not going anywhere until he says so.`); }},
 });
 

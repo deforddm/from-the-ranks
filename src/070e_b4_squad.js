@@ -93,7 +93,7 @@ Object.assign(AB, {
       const n = roll(1, 4, lvDmg()); later(() => { if (B && t.hp > 0) { hurt(t, n); updBattleUI(); } }, pace(200)); }},
   b4_wormgift:{name:'The Worm Gives Back', prayer:true, sorcery:true, desc:()=>`A prayer to D'rek: Hessa or a squadmate next to her heals 1d6+${2 + lvB()} and stops bleeding. Twice a fight. Grows with the squad's level. A god's answer, not a warren: the Dust never touches it. Otataral does.`,
     ok:()=>(B.used.b4_wormgift || 0) < 2, tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 1 && p.hp < p.maxhp),
-    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_wormgift = (B.used.b4_wormgift || 0) + 1; AUDIO.play('heal'); heal(t, roll(1, 6, 2 + lvB())); t.bleed = 0; sparks(t.x, t.y, 10, '#b8a870', .35);
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_wormgift = (B.used.b4_wormgift || 0) + 1; AUDIO.play('heal'); healW(t, roll(1, 6, 2 + lvB())); t.bleed = 0; sparks(t.x, t.y, 10, '#b8a870', .35);
       blog(`${u.name} puts ${t === u ? 'her own palm' : `her palm on ${t.name}'s back`} and asks the Worm for a little of what it has taken. It gives it back, warm, smelling of turned earth.`); }},
   /* Yorin: Serc, the Path of the Sky. Warren sorcery: strain, and in the Dust it sputters (half) */
   b4_bolt:{name:'Sky-Fire', strain:2, desc:()=>`Serc: lightning on an enemy within ${b4BoltR(B && B.cur)} in sight. It strikes at +${S && has('yorin', 'b4_stormeye') ? 3 : 2}: 2d6+${2 + lvDmg()} on a hit. Strain 2. A warren: in the Dust it can sputter (half damage).`,

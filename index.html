@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '10.2.0';
+const VERSION = '10.3.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5911,7 +5911,7 @@ function mkParty(id, x, y){
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
   ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
-  trickAbs(id).forEach(k => { if (AB[k]) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
+  trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
@@ -6110,9 +6110,9 @@ const AB = {
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
   mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); heal(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
+    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
-    run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); heal(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
+    run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); healW(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
   mark:{name:'Tracker\'s Mark', free:true, desc:()=>`It does not use the action: an enemy within 5 is marked, and every hit on it does +${2 + lvT()} damage for two rounds. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdMark >= B.round), tiles:u=>foes().filter(f => cheb(u,f) <= 5 && canShoot(u,f) && !(f.markedUntil >= B.round)),
     run(u,x,y){ const t = unitAt(x,y); u.cdMark = B.round + 2 - lvAt(6); t.markedUntil = B.round + 2; t.markDmg = 2 + lvT(); AUDIO.play('click'); float(t,'marked','#f2c46b'); blog(`${u.name} marks ${t.name}: a nick of chalk on the ground, a word to the squad, and it is a target.`); }},
@@ -6170,7 +6170,7 @@ const AB = {
 /* Chub's cusser, Maud: Kettle carries her "for the one that matters" and won't fire her in an ordinary fight. The story spends her (the barrow in Chapter 5, or Ch'kess in Chapter 7). */
 const maudKept = () => !!(S && S.f && BOOK === 'gotm' && !S.f.c5_cusserUsed && S.f.c7_debt !== 'paid');
 const itemLeft = k => Math.max(0, (S.inv[k] || 0) - (k === 'cusser' && maudKept() ? 1 : 0));
-function abOk(u, k){ const a = AB[k]; if (!a) return false; if (a.trick && !trickOk(u, a)) return false; if (a.sorcery && !a.elder && B && B.def.nomagic) return false; /* Elder warrens shrug off otataral */ if (a.strain && B && B.def.nomagic) return false; if (a.boom && B && B.def.nothrow) return false; if (a.item === 'cusser' && B && B.def.style === 'roof') return false; /* Fiddler's order: no cussers on the roofs */ if (a.item === 'burner' && B && B.def.nomagic) return false; /* burners and otataral: Kettle won't */ if (a.item && !(itemLeft(a.item) > 0)) return false; if (a.ok && !a.ok(u)) return false; if (a.tiles && !a.tiles(u).length) return false; return true; }
+function abOk(u, k){ const a = AB[k]; if (!a) return false; if (a.passive) return false; if (a.trick && !trickOk(u, a)) return false; if (a.trick && a.free && B && u.freeTrick === B.turn) return false; /* v10.3: one free trick a turn */ if (a.sorcery && !a.elder && B && B.def.nomagic) return false; /* Elder warrens shrug off otataral */ if (a.strain && B && B.def.nomagic) return false; if (a.boom && B && B.def.nothrow) return false; if (a.item === 'cusser' && B && B.def.style === 'roof') return false; /* Fiddler's order: no cussers on the roofs */ if (a.item === 'burner' && B && B.def.nomagic) return false; /* burners and otataral: Kettle won't */ if (a.item && !(itemLeft(a.item) > 0)) return false; if (a.ok && !a.ok(u)) return false; if (a.tiles && !a.tiles(u).length) return false; return true; }
 function scatter(u, x, y, failOn, dist){
   const nat = d20() + (S.card === 'oponn' ? 1 : 0);
   if (nat <= failOn && !has(u.id,'longfuse')) { const [dx,dy] = DIRS[R(8)]; let nx = x, ny = y;
@@ -6350,6 +6350,7 @@ function useAb(k, x, y){
   const u = B.cur, a = AB[k];
   if (a.item) { S.inv[a.item]--; tally('thrown_' + a.item); }
   if (a.boom || k === 'quickshot' || k === 'mark' || k === 'bash') u.fired = true;
+  if (a.trick && a.free) u.freeTrick = B.turn;
   if (a.trick) { if (TRICKS[a.trick].use === 'chapter') spendTrick(a.trick); else { B.used[k] = 1; tally('tricksUsed'); } }
   if (!a.free) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; } B.mode = 'act'; B.aim = null; B.busy = true;
   B.blastKind = a.item || (k === 'quorl' ? 'sharper' : null); // what a blast() that lands later was thrown with (v6.10: a foe may resist or fear a munition)
@@ -6922,8 +6923,10 @@ const WARD_LINE = {
   soliel:(u, w) => `The oil stays warm on ${u.name}. <em>A ward of ${w}.</em>`,
   spirits:(u, w) => `The ground stays close to ${u.name}. <em>A ward of ${w}.</em>`,
   plain:(u, w) => `${u.name} is past whole, and the rest of it holds. <em>A ward of ${w}.</em>`};
+/* v10.3 (David, Nov 8, 2026): only a heal aimed at one squadmate leaves a ward (healW). Group heals, the gods' trickles and lifesteal don't. */
+function healW(u, n){ if (B) B.wardOk = 1; try { heal(u, n); } finally { if (B) B.wardOk = 0; } }
 function wardFrom(u, before, n){
-  if (!B || !u || u.side !== 'p' || u.ally || before <= 0 || !(n > 0)) return;
+  if (!B || !B.wardOk || !u || u.side !== 'p' || u.ally || before <= 0 || !(n > 0)) return;
   const over = before + n - u.maxhp; if (over <= 0) return;
   const w = Math.min(wardCap(u), over); if (w <= (u.ward || 0)) return; // never stacks; a smaller one changes nothing
   u.ward = w; float(u, 'ward ' + w, '#dfe8f0'); blog(WARD_LINE[wardSource()](u, w)); }
@@ -7351,7 +7354,7 @@ Object.assign(AB, {
       blog(`${u.name} opens ${u.id === 'ohl' ? 'his' : 'her'} hands and lets Denul out like water from a cup. ${near.length > 1 ? 'Everyone close enough feels it.' : `There is nobody close enough but ${u.id === 'ohl' ? 'him' : 'her'}.`}${d < 1 ? ' It comes thin here.' : ''}`); }},
   stanch:{name:'Stanch', strain:2, desc:()=>'A squadmate within 3 cannot drop below 1 health until the healer\'s next turn, stops bleeding, and heals 1 for each squad level past the first. Strain 2.',
     tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 3 && p.stanch !== u && sees(u, p)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) heal(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own' : `${t.name}'s`} wound and says something to Hood in Ehrlii. ${t === u ? 'He' : t.name} is not going anywhere until he says so.`); }},
 });
 
@@ -7850,6 +7853,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.0', ['Tricks that don\'t strike no longer cost the turn: the shield calls, the battle cries, the dark and the smoke, the curses. One free trick each a turn.', 'Barghast Blood-Iron, the Long Listen and the Pilot\'s Eye now work by themselves at the start of every fight.', 'Only a heal aimed at one soldier leaves a ward now. Group heals and the gods\' small mercies heal, and that is all.', 'Saves carry on as they were.']],
   ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],
   ['10.1.0', ['Book Six on Bridgeburner is evened out. Y\'Ghatan\'s streets and gate, the deserters on the Kokakal shore and the cult at G\'danisban are fairer; the patrol, the coast road, the sally, the carts and the boats bite harder.', 'Soldier and Story are unchanged. Saves carry on as they were.']],
   ['10.0.3', ['Book Seven: Perrit and the tile-woman read the tiles for this book now: the barracks under the Patriotists\' eye, the muster at the horse lines, and the field before the walls.', 'Nothing else changes.']],
@@ -34854,7 +34858,7 @@ Object.assign(AB, {
     ok:()=>(B.used.b2_bargain || 0) < 1 + lvAt(6), tiles:u=>party().filter(p => p.hp > 0 && p.hp < p.maxhp && cheb(u, p) <= 4 && sees(u, p)),
     run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b2_bargain = (B.used.b2_bargain || 0) + 1;
       const n = Math.min(roll(2, 6, 2 + lvB()), t.maxhp - t.hp), e = foes().filter(f => f.hp > 0 && cheb(f, t) <= 3).sort((a, b) => cheb(a, t) - cheb(b, t) || a.hp - b.hp)[0];
-      AUDIO.play('heal'); heal(t, n); t.bleed = 0; sparks(t.x, t.y, 12, '#c8d8b8', .4);
+      AUDIO.play('heal'); healW(t, n); t.bleed = 0; sparks(t.x, t.y, 12, '#c8d8b8', .4);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own breastbone' : t.name + '\'s back'}, and an old woman's voice says, out of a boy's mouth: <em>Give it here. I know someone who wants it.</em>`);
       if (e && n > 0) { later(() => { if (!B || e.hp <= 0) return; B.fx.push({kind:'bolt', from:{x:t.x, y:t.y}, to:{x:e.x, y:e.y}, col:'#8aa86a', t:performance.now(), dur:320, wob:true}); AUDIO.play('step');
           blog(`The ground under ${e.name} opens its mouth and gives it the wound: ${n} damage.`); hurt(e, n); sparks(e.x, e.y, 10, '#6a7a4a', .5); updBattleUI(); }, pace(320)); }
@@ -40200,7 +40204,7 @@ Object.assign(TRICKS, {
 });
 Object.assign(AB, {
   t_b3_c3_stripe:{name:TRICKS.b3_c3_stripe.name, trick:'b3_c3_stripe', self:true, free:true, spirit:true, desc:()=>TRICKS.b3_c3_stripe.fx,
-    run(u){ u.stripeUntil = B.round + 1; heal(u, 2 + lvT()); AUDIO.play('growl'); sparks(u.x, u.y, 16, '#e8a040', .5); float(u, 'striped', '#e8a040');
+    run(u){ u.stripeUntil = B.round + 1; healW(u, 2 + lvT()); AUDIO.play('growl'); sparks(u.x, u.y, 16, '#e8a040', .5); float(u, 'striped', '#e8a040');
       blog(`${u.name} closes a fist on the strip of tiger hide, and for a breath something long and low and striped looks out through ${u.name}'s eyes. It does not want the fight to be over.`); }},
 });
 { const _atkCalc = atkCalc;
@@ -46650,7 +46654,7 @@ Object.assign(AB, {
   t_b3_c7_anvil:{name:'The Shield Anvil\'s Weight', trick:'b3_c7_anvil', spirit:true, desc:()=>TRICKS.b3_c7_anvil.fx,
     tiles:u=>party().filter(p => p !== u && !p.ally && p.hp > 0 && p.hp < p.maxhp && cheb(u, p) <= 1),
     run(u, x, y){ const t = unitAt(x, y); if (!t) return; const want = Math.min(6 + 2 * lvT(), t.maxhp - t.hp), cost = Math.min(Math.ceil(want / 2), Math.max(0, u.hp - 1));
-      heal(t, want); if (cost > 0) { u.hp -= cost; float(u, '−' + cost + ' carried', '#c8d4e0'); u.flash = performance.now(); }
+      healW(t, want); if (cost > 0) { u.hp -= cost; float(u, '−' + cost + ' carried', '#c8d4e0'); u.flash = performance.now(); }
       AUDIO.play('heal'); sparks(t.x, t.y, 12, '#c8d4e0', .4); sparks(u.x, u.y, 8, '#9aa4ac', .3);
       blog(`${u.name} steps in and puts a hand flat on ${t.name}'s, the way the Grey Swords showed, and takes some of it. ${t.name} stands up straighter. ${u.name} does not, for a moment.`); }},
 });
@@ -50742,7 +50746,7 @@ Object.assign(AB, {
       const n = roll(1, 4, lvDmg()); later(() => { if (B && t.hp > 0) { hurt(t, n); updBattleUI(); } }, pace(200)); }},
   b4_wormgift:{name:'The Worm Gives Back', prayer:true, sorcery:true, desc:()=>`A prayer to D'rek: Hessa or a squadmate next to her heals 1d6+${2 + lvB()} and stops bleeding. Twice a fight. Grows with the squad's level. A god's answer, not a warren: the Dust never touches it. Otataral does.`,
     ok:()=>(B.used.b4_wormgift || 0) < 2, tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 1 && p.hp < p.maxhp),
-    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_wormgift = (B.used.b4_wormgift || 0) + 1; AUDIO.play('heal'); heal(t, roll(1, 6, 2 + lvB())); t.bleed = 0; sparks(t.x, t.y, 10, '#b8a870', .35);
+    run(u, x, y){ const t = unitAt(x, y); if (!t) return; B.used.b4_wormgift = (B.used.b4_wormgift || 0) + 1; AUDIO.play('heal'); healW(t, roll(1, 6, 2 + lvB())); t.bleed = 0; sparks(t.x, t.y, 10, '#b8a870', .35);
       blog(`${u.name} puts ${t === u ? 'her own palm' : `her palm on ${t.name}'s back`} and asks the Worm for a little of what it has taken. It gives it back, warm, smelling of turned earth.`); }},
   /* Yorin: Serc, the Path of the Sky. Warren sorcery: strain, and in the Dust it sputters (half) */
   b4_bolt:{name:'Sky-Fire', strain:2, desc:()=>`Serc: lightning on an enemy within ${b4BoltR(B && B.cur)} in sight. It strikes at +${S && has('yorin', 'b4_stormeye') ? 3 : 2}: 2d6+${2 + lvDmg()} on a hit. Strain 2. A warren: in the Dust it can sputter (half damage).`,
@@ -90207,6 +90211,35 @@ function b7WagerPay(r){ if (!r || !r.done) return; S.f.b7_wager = {marks:r.marks
 `You come back to the brazier ${-(r.pay || 0)} silver lighter. The crowd said what it said. ${b7In('haddat') ? 'Haddat says the crowd in Hissar shouted too, once, and that she did not bet on it either time.' : 'At the corner the Rat Catcher has already wiped the slate.'}`); };
     jn(B7CH7, () => { const r = S.f.b7_wagerLast; return r && r.done ? `On the city's last day a Rat Catcher at a corner took bets on the crowd's word. The Third heard "${r.heard || 'it'}"${(r.pay || 0) > 0 ? ', and was paid on it' : ''}.` : ''; }); }
 }
+
+/* ============ v10.3 (David, Sun Nov 8, 2026, 8:50 PM PST): tricks that don't strike are free; three tricks become passive ============
+   Loaded after every book's tricks (14x-12x) and before the boot (990).
+   - FREE: a trick that doesn't strike a foe or take its turn away no longer uses the bearer's action. One free trick a squadmate a
+     turn (abOk/useAb in 031, `u.freeTrick`). Strikes, Omtose Rime and the Herd-Call still use the action, and so do the group heals.
+   - PASSIVE: Barghast Blood-Iron, the Long Listen and the Pilot's Eye work on their own at the start of every fight the bearer walks
+     into: no button (031's trickAbs filter), nothing to spend. */
+const V103_FREE = ['line', 'dark', 'otataral', 'b2_drop', 'b2_earth', 'b2_paint', 'b2_squint', 'b3_c4_wolfrope', 'b4_c1_gate',
+  'b4_c2_crow', 'b4_c3_tears', 'b4_c5_seabed', 'b5_c6_finger', 'b6_c1_map', 'b6_c4_vinegar', 'b7_c2_margin', 'b7_c6_ward'];
+const V103_PASSIVE = ['b3_c5_blood', 'b4_c6_listen', 'b5_c2_pilot'];
+const V103_FREE_LINE = ' It does not use the action (one free trick a turn).';
+const V103_PASSIVE_LINE = ' Always on: it works by itself at the start of every fight the bearer is in. Nothing to press.';
+/* a trick's own words, said its new way: Once a fight now reads as a free trick or a passive one */
+function v103Words(k, add, strip){
+  const t = TRICKS[k]; if (!t) return;
+  const d = Object.getOwnPropertyDescriptor(t, 'fx'); const base = d && d.get ? d.get : (() => d ? d.value : '');
+  Object.defineProperty(t, 'fx', {configurable:true, enumerable:true, get(){ let s = String(base.call(t) || ''); if (strip) s = s.replace(/^Once a fight:\s*/, ''); return s + add; }});
+}
+V103_FREE.forEach(k => { const t = TRICKS[k]; const a = t && t.ab && AB[t.ab]; if (!a) return; a.free = true; v103Words(k, V103_FREE_LINE);
+  if (typeof a.desc === 'function') { const d0 = a.desc; a.desc = function(){ const s = String(d0.apply(this, arguments) || ''); return s.includes('does not use the action') ? s : s + V103_FREE_LINE; }; } });
+V103_PASSIVE.forEach(k => { const t = TRICKS[k]; const a = t && t.ab && AB[t.ab]; if (!a) return; a.passive = true; a.free = true; v103Words(k, V103_PASSIVE_LINE, true); });
+/* the passives switch on as the fight opens: the bearer's own blade (Blood-Iron), or the listening (the Long Listen, the Pilot's Eye) */
+function v103Passives(){
+  if (!B || B.over) return;
+  party().forEach(u => { if (u.ally || u.hp <= 0) return;
+    V103_PASSIVE.forEach(k => { const t = TRICKS[k], a = t && AB[t.ab]; if (!a || trickBy(k) !== u.id || B.used[t.ab]) return;
+      B.used[t.ab] = 1; const hs = B.healSrc; try { a.run(u, u.x, u.y); } catch (e) { console.warn('passive', k, e); } finally { B.healSrc = hs; } }); });
+}
+{ const _sb = startBattle; startBattle = function(){ const r = _sb.apply(this, arguments); try { v103Passives(); } catch (e) { console.warn('v103 passives', e); } return r; }; }
 
 /* ============ resume & boot ============ */
 function resume(){
