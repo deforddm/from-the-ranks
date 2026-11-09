@@ -58,7 +58,7 @@ The cards offer you nothing more, and neither does she.`, ch:tatRest()}),
 
 ${by({tuft:`Tuft has been watching her hands, not the cards. Later, in the lee of Pell's wagon, she does it once with her own Deck, badly, and then again, not badly. "It lets her," she says, to the cards. "It might let me. Sometimes."`,
   ohl:`Ohl has been watching her hands the way he watches a surgeon's, for the moment the knife goes in. "It's a stitch," he says later, outside, pleased with himself. "Under, over, and the cut never shows. I'll show the child. She'll pretend she knew."`,
-  kettle:`Kettle has been watching her hands the way she watches a fuse. "That's a *palm*," she breathes, outside, delighted. "A card-sharp's palm. A cadre mage." She makes Tuft let her try it in the lee of Pell's wagon, until Tuft takes the Deck back and does it herself, properly, to make her stop.`,
+  kettle:`Kettle has been watching her hands the way she watches a timer. "That's a *palm*," she breathes, outside, delighted. "A card-sharp's palm. A cadre mage." She makes Tuft let her try it in the lee of Pell's wagon, until Tuft takes the Deck back and does it herself, properly, to make her stop.`,
   sgt:`You've been watching her hands, not the cards. Under, over, and the turned card is simply not there any more. You think you could do it, if a card ever came up that you couldn't live with. You think Tuft could do it better.`,
   _:`{who} has been watching her hands, not the cards. Under, over, and the turned card is simply not there any more.`})}
 

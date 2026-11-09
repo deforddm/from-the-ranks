@@ -50,7 +50,7 @@ Object.assign(FIGX, {
     ctx.save(); ctx.translate(1.2, 1.2); h.head('#b4947a', 4.1, -11.4); h.look('rgba(24,14,10,.82)', -11.6); B2F.cap(ctx, '#7a5e3a', 4.3, -12.6, 1.1, 1.92); ctx.restore(); // the head comes forward and down
     ctx.strokeStyle = '#4a3320'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(2, -.6); ctx.lineTo(13, -2.8); ctx.stroke(); ctx.strokeStyle = '#8d8a86'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(9.6, -7.2); ctx.lineTo(9.6, 1.2); ctx.stroke(); // the crossbow
     ctx.fillStyle = '#6a6458'; ctx.fillRect(7.2, -1.4, 3.6, 1.6); // its home-made cradle
-    ctx.strokeStyle = '#c8a466'; ctx.lineWidth = .7; for (let i=0;i<3;i++){ ctx.beginPath(); ctx.ellipse(5.4, -.6 + i*.9, 1.6, .6, 0, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.ellipse(-6, 2 + i*.9, 1.6, .6, 0, 0, 7); ctx.stroke(); } // fuse-cord round both wrists
+    ctx.strokeStyle = '#c8a466'; ctx.lineWidth = .7; for (let i=0;i<3;i++){ ctx.beginPath(); ctx.ellipse(5.4, -.6 + i*.9, 1.6, .6, 0, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.ellipse(-6, 2 + i*.9, 1.6, .6, 0, 0, 7); ctx.stroke(); } // trip cord round both wrists
     ctx.restore(); },
   haddat(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.08, 1.14); // tall, broad in the shoulder
     h.legs('#2e2a26'); poly(ctx, [[-6.6,-6],[6.6,-6],[7.8,11.6],[-7.8,11.6]], h.armor('#4e443a', '#1c1814')); // the long coat
@@ -185,7 +185,7 @@ Object.assign(POR, {
       PR.strands(ctx, 7, ['#141010', '#2a2222'], .5, 80 + sd, (i, r) => { const x = sd*(12.6 + Math.sin(2.4)*3.6) + (r() - .5)*3, y = F.cy + 46.4; return [x, y, x + (r() - .5)*2, y + 3, x + (r() - .5)*3, y + 5 + r()*3]; }); });
     BP.fist(ctx, -36.6, -41, .18, {k:'bracer', c:['#b8946a', '#7a5434', '#1e140a']}, 50); // her fist on the grip, a hide bracer
     return F; },
-  /* Tangle: a long Kanese face that has stood too near too many fuses; an ear Marrow stitched; fuse-cord coiled round his wrist and over his shoulder; the crossbow and its tally */
+  /* Tangle: a long Kanese face that has stood too near too many timers; an ear Marrow stitched; trip cord coiled round his wrist and over his shoulder; the crossbow and its tally */
   tangle(ctx){ const F = {cy:-75, w:11.8, h:21, jaw:.74, chin:4.4, skin:'#b4947a', iris:'#4e5a48', lip:'#8a5a4a', browCol:'#4a3620', browW:1.25, arch:1.25, browL:.7, browR:.15, rim:'#e07a45', nose:1.2, age:.45, bags:.9, look:.15, smileL:-.2, smileR:.3, mouthW:3.8, earS:1.12};
     // the crossbow behind his right shoulder: the stock with its tally, the prod, the cradle he made
     ctx.save(); ctx.translate(26, -46); ctx.rotate(.22); ctx.fillStyle = PR.lin(ctx, -3, 0, 4, 0, [[0,'#8a6440'], [.5,'#5a3e22'], [1,'#1e140a']]); ctx.fillRect(-3, -44, 6, 70);
@@ -199,7 +199,7 @@ Object.assign(POR, {
     [[-6, -30, 4], [8, -16, 5.4], [-10, -10, 3], [4, -38, 2.4]].forEach(([x, y, r], i) => { PR.soft(ctx, x, y, r*2.4, r*1.7, '#0e0804', .6, i); if (i%2 === 0) { ell(ctx, x + .4, y, r*.38, r*.28, '#080402', i); PR.stroke(ctx, 'rgba(255,140,70,.4)', .35, () => { ctx.ellipse(x + .4, y, r*.38, r*.28, i, 0, 7); }); } }); // burns, two of them through
     ctx.strokeStyle = PR.lit(ctx, '#3a2818', '#120c06', -30, 30); ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(-14, -44); ctx.lineTo(-22, -48); ctx.moveTo(14, -44); ctx.lineTo(22, -48); ctx.stroke(); // the apron's straps
     ctx.restore(); BP.light(ctx, F, B, true);
-    // fuse-cord coiled over the left shoulder
+    // trip cord coiled over the left shoulder
     for (let i=0;i<5;i++){ ctx.strokeStyle = PR.lin(ctx, -40, 0, -14, 0, [[0,'#e0c088'], [.6,'#9a7a48'], [1,'#3a2a14']]); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.ellipse(-22 + i*.6, -36 + i*.8, 10 - i*.4, 4.4, -.5, 0, 7); ctx.stroke(); }
     PR.stroke(ctx, 'rgba(40,24,10,.5)', .4, () => { for (let i=0;i<16;i++){ const a = i/16*6.28, x = -22 + Math.cos(a)*10, y = -36 + Math.sin(a)*4.4; ctx.moveTo(x - .6, y - .6); ctx.lineTo(x + .6, y + .6); } });
     BP.shirt(ctx, B, '#9a8c70', '#2a2418', -47); BP.band(ctx, B, -.6, 1.8); ctx.fillStyle = PR.lit(ctx, '#6a5440', '#1a120a', -B.nx - 3, B.nx + 3); ctx.fill(); // the jerkin open, a shirt under it

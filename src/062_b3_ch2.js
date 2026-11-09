@@ -425,7 +425,7 @@ Behind him, at a little distance, a younger man with the same broad face and the
         {t:'"What\'s he counting?"', go:'b3_c2_mott_count'},
         {t:'"We\'re on the march. Another time."', go:'b3_c2_mott_no'}]}),
   b3_c2_mott_drink:()=>({sp:'A Bole', txt:
-`It is not wine. It is not beer. It is something that was a pear once, a long time ago, before the Boles got to it, and it goes down like a lit fuse.
+`It is not wine. It is not beer. It is something that was a pear once, a long time ago, before the Boles got to it, and it goes down like a mouthful of Moranth acid.
 
 ${b3In('kettle') ? `Kettle drinks, and goes a colour, and holds out the jug for more. "That's *beautiful*," she says hoarsely. "What's it made of? Can it be made to go off?" The Bole looks at her with something like love.` : `You drink. Your eyes water. The Bole is delighted.`}${b3In('ohl') ? ` Ohl declines, on medical grounds, and then accepts, on medical grounds.` : ''}${b3In('vell') ? ` Vell takes a pull to be polite, and spends some time afterwards looking at the sky from closer to the grass than he meant to.` : ''}
 
@@ -780,7 +780,7 @@ When she has finished she nods, as if the number were right. Then she goes back 
 
 He is looking at the child.
 
-He does not move. He does not need to. ${b3In('tuft') ? `Tuft has seen him. She has stopped walking. "He looks at her like ${b3In('kettle') ? 'Kettle' : 'a sapper'} looks at a fuse," she says, very low. "Like he's working out how long."` : `He looks at her the way a sapper looks at a fuse: working out how long.`}${b3In('ellis') ? ` Ellis has moved, without seeming to, until she has a line on him from the dark. She doesn't nock. She just wants the line.` : ''}
+He does not move. He does not need to. ${b3In('tuft') ? `Tuft has seen him. She has stopped walking. "He looks at her like ${b3In('kettle') ? 'Kettle' : 'a sapper'} looks at a timer," she says, very low. "Like he's working out how long."` : `He looks at her the way a sapper looks at a timer: working out how long.`}${b3In('ellis') ? ` Ellis has moved, without seeming to, until she has a line on him from the dark. She doesn't nock. She just wants the line.` : ''}
 
 ${S.f.b3_kallorSaw ? `Then he turns his head, slowly, and looks at you. He has seen your face before, at the Mhybe's tent after the parley. He lets you see that he remembers it. Then he looks back at the child, as if you had been a thing in the way of the view.` : `After a while his eyes move off the child and go over the Fourth, once, without interest, the way you look at a cart going by.`}
 

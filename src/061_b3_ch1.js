@@ -400,7 +400,7 @@ ${b3In('ohl') ? `Ohl, beside you: "If he'd let me—"
 
 "He won't let you. He won't let *me*, and I'm better than you." Mallet looks at Ohl. "No offence."
 
-"None," says Ohl. "You are." They look at each other, two healers, the way two sappers look at the same fuse.` : `He looks back toward the standard, where Whiskeyjack is standing on the leg as if it were a point of honour, which it is.`}
+"None," says Ohl. "You are." They look at each other, two healers, the way two sappers look at the same timer.` : `He looks back toward the standard, where Whiskeyjack is standing on the leg as if it were a point of honour, which it is.`}
 
 "You've a squad that watches him," Mallet says. "I've noticed. He's noticed. Keep watching." He goes.`,
       ch:[{t:'Leave him to it.'}]}),
@@ -530,7 +530,7 @@ The Fourth went down this hole once, the week the sky came down, with a lantern 
 
 It doesn't smell the way it did. ${b3In('tuft') ? `"The cold's gone," Tuft says, from the lip, very quietly. "Quick Ben said a month." It has been a good deal more than a month.` : `The cold that lived down there, the cold that pushed against the lantern, is gone.`} What it smells of now is smoke, and people, and somebody's dinner.
 
-Fresh boot-prints in the mud at the mouth, going down. A Host crate-lid with Pell's mark on it, kicked into the rubble. ${b3In('kettle') ? `Kettle crouches over a scrap of fuse-cord on the timbers and sniffs it. "Ours," she says. "Old. Somebody down there knows what this is."` : ''}${b3In('ellis') ? `\n\nEllis is down on one knee over the prints with her bare hand flat beside them, not touching. "Four," she says. "One heavy. One favours the left foot. One's barefoot, and light." A pause. "The fourth walks as if the place is his. He'll be at the back."` : ''}${b3In('vell') ? `\n\nVell looks down the hole with the expression of a rope boy who has been shown a building upside down. "It's a roof," he says at last, "only on the wrong side." He does not sound reassured.` : ''}
+Fresh boot-prints in the mud at the mouth, going down. A Host crate-lid with Pell's mark on it, kicked into the rubble. ${b3In('kettle') ? `Kettle crouches over a scrap of timer-wax on the timbers and sniffs it. "Ours," she says. "Old. Somebody down there knows what this is."` : ''}${b3In('ellis') ? `\n\nEllis is down on one knee over the prints with her bare hand flat beside them, not touching. "Four," she says. "One heavy. One favours the left foot. One's barefoot, and light." A pause. "The fourth walks as if the place is his. He'll be at the back."` : ''}${b3In('vell') ? `\n\nVell looks down the hole with the expression of a rope boy who has been shown a building upside down. "It's a roof," he says at last, "only on the wrong side." He does not sound reassured.` : ''}
 
 ${b3In('brisk') ? `"Straight down the sap," Brisk says, "or the side gallery." She doesn't say *the one the deserters used, the first time*. She doesn't have to.` : `There are two ways in: straight down the sap, or the side gallery the deserters used, the first time.`}`,
       ch:[{t:'"Straight down. Shields first."', go:()=>startBattle('b3_c1_tunnels', {})},

@@ -2,7 +2,7 @@
 // squad's talk, Not now), opens on the tables' frame, plays to a win and to a loss from the panel and the keys, closes to its
 // after-node, pays once a book, and leaves its deed; a game left early pays nothing. Shells: a stake won and lost, the palm called
 // (Nerve +1, once), Darrut's check and its "yes, but" (the blanket folds), the silver cap. The cup: drunk level and boasted (Orvas +1),
-// spilt (nothing). The hand game: the sticks taken (Nerve +1), Tebbet's read. The Fuse: five on the count (a sharper), Tangle's thumb.
+// spilt (nothing). The hand game: the sticks taken (Nerve +1), Tebbet's read. The Timer: five on the count (a sharper), Tangle's thumb.
 // The feather: three passes (Sathi +1), Keth's lead on the Wickan road, and none after nightfall. The Deeds page, the journal, phone
 // width, and screenshots of each table to /tmp/claude-0/shots/b4/games/.
 // Usage: node tools/b4games_test.mjs   (build first; exit 1 on a failure or a page error)
@@ -127,20 +127,20 @@ ok(hr.over && hr.theirs === 8 && hr.deeds.b4HandsLost === 1 && (await ev(() => S
 await ev(() => { G.said = null; talk('b4_c4_setifire'); }); await click('tally sticks'); await wait(80); await ev(() => MG.leave()); await wait(80);
 ok((await ev(() => S.node)) === 'b4_c4_hands_after' && /leave the sticks/.test(await text()), 'left early: the after-node says so');
 
-/* ============ 4. The Fuse ============ */
+/* ============ 4. The Timer ============ */
 await setup(5, ['haddat', 'tangle', 'marrow', 'tallow']); await ev(() => { S.dust = 1; });
-fireLine(await fireOk('b4_c5_wallfire', /cutting fuse/), 'Ch5 the Wall\'s fire: the Fuse');
-await click('cutting fuse'); await wait(100); ok(await ev(() => /Fuse/.test($('#mg h2').textContent) && /Tangle sits down/.test($('#mgPanel').innerText)), 'the Fuse opens; Tangle sits down to it');
+fireLine(await fireOk('b4_c5_wallfire', /cutting timers/), 'Ch5 the Wall\'s fire: the Timer');
+await click('cutting timers'); await wait(100); ok(await ev(() => /Timer/.test($('#mg h2').textContent) && /Tangle sits down/.test($('#mgPanel').innerText)), 'the Fuse opens; Tangle sits down to it');
 const onCount = () => ev(() => { const g = MG.state; g.t0 = performance.now() - g.want * 1000 * b4gPace(1) / g.speed; });
 let fr0 = await ev(() => S.inv.sharper);
 for (let c = 0; c < 5; c++) { await btn('fuGo'); await wait(40); if (!c) { const r = await ev(() => MG.state.roll); ok(r && r.who === 'tangle' && r.stat === 'wits', `Tangle reads the cord first (Wits, a sapper's edge): ${r && r.tier}, thumb ${await ev(() => MG.state.thumb)}`); await wait(500); await shot('9-fuse-reel'); }
   await onCount(); await key(' '); await wait(80); if (!c) await shot('10-fuse-burn'); await until(() => MG.state.phase === 'between' || MG.state.over, 3000); }
 let fr = await ev(() => ({over:MG.state.over, err:MG.state.err, deeds:S.deeds}));
 ok(fr.over && fr.err.every(e => e <= .1) && fr.deeds.b4FuseWon === 1 && fr.deeds.b4FuseClean === 1, `five lengths on the count (${fr.err.join(', ')}): won, clean`);
-f = await fit(); ok(f.ok, 'the Fuse fits a phone' + (f.ok ? '' : ': ' + f.bad.join(' ')));
+f = await fit(); ok(f.ok, 'the Timer fits a phone' + (f.ok ? '' : ': ' + f.bad.join(' ')));
 await btn('fuDone'); await wait(100); fr = await ev(() => ({node:S.node, sharper:S.inv.sharper, paid:S.f.b4_fusePaid}));
 ok(fr.node === 'b4_c5_fuse_after' && fr.sharper === fr0 + 1 && fr.paid === 1 && /a sharper/.test(await text()), 'clean: a sharper off the company\'s sapper, the after-node');
-await ev(() => { G.said = null; talk('b4_c5_wallfire'); }); await click('cutting fuse'); await wait(80);
+await ev(() => { G.said = null; talk('b4_c5_wallfire'); }); await click('cutting timers'); await wait(80);
 for (let c = 0; c < 5; c++) { await btn('fuGo'); await wait(40); await key(' '); await wait(60); await until(() => MG.state.phase === 'between' || MG.state.over, 3000); }
 fr = await ev(() => ({over:MG.state.over, deeds:S.deeds})); await btn('fuDone'); await wait(100);
 ok(fr.over && fr.deeds.b4FuseLost === 1 && (await ev(() => S.inv.sharper)) === fr0 + 1 && /nothing else/.test(await text()), 'every length cut at once: lost, no munition');
@@ -176,11 +176,11 @@ await ev(() => { b4FeatherPay({done:true, won:true}); }); ok((await ev(() => S.l
 
 /* the Deeds page and the journal */
 const dd = await ev(() => { S.deeds = Object.assign(S.deeds || {}, {b4ShellsWon:2, b4ShellsLost:1, b4ShellsPalm:1, b4CupWon:1, b4HandsWon:1, b4FuseWon:1, b4FuseClean:1, b4FeatherWon:1, b4Feathers:3}); S.f.b4_cupBest = 8; S.f.b4_fuseBest = .3;
-  const h = b4DeedsExtra([{s:S}]); return {fires:/At the fires/.test(h), nerve:/Nerve and Dust/.test(h), rows:['Shells', 'Burned Tears', 'hand game', 'The Fuse', 'The feather'].every(k => h.includes(k)), palm:/palm called once/.test(h), leak:/undefined|NaN/.test(h)}; });
+  const h = b4DeedsExtra([{s:S}]); return {fires:/At the fires/.test(h), nerve:/Nerve and Dust/.test(h), rows:['Shells', 'Burned Tears', 'hand game', 'The Timer', 'The feather'].every(k => h.includes(k)), palm:/palm called once/.test(h), leak:/undefined|NaN/.test(h)}; });
 ok(dd.fires && dd.nerve && dd.rows && dd.palm && !dd.leak, "the Deeds page lists Book Four's fires under Nerve and Dust");
 const jn = await ev(() => { S.f.b4_cupLast = {done:true, won:true}; S.f.b4_handsLast = {done:true, won:false}; S.f.b4_fuseLast = {done:true, won:true}; S.f.b4_featherLast = {done:true, won:true};
   return [B4CH3.journal(), B4CH4.journal(), B4CH5.journal(), B4CH6.journal()].map(j => j[0]); });
-ok(/horn/.test(jn[0]) && /hand game/.test(jn[1]) && /fuse/.test(jn[2]) && /feather/.test(jn[3]), 'each game leaves a journal line');
+ok(/horn/.test(jn[0]) && /hand game/.test(jn[1]) && /timers/.test(jn[2]) && /feather/.test(jn[3]), 'each game leaves a journal line');
 const leak = await ev(() => ['b4_c1_shells_after', 'b4_c3_cup_after', 'b4_c4_hands_after', 'b4_c5_fuse_after', 'b4_c6_feather_after'].filter(k => { const t = DLG[k]().txt; return !t.trim() || /undefined|NaN|\[object|\$\{/.test(t); }));
 ok(!leak.length, 'the after-nodes read cleanly' + (leak.length ? ': ' + leak.join(' ') : ''));
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

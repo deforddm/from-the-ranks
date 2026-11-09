@@ -193,6 +193,10 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.5', ['No more lit fuses, in any book. Moranth munitions go off when the shell breaks, or when an acid timer eats through its wax, so the sappers now talk of timers, wax and trip cord. Tangle\'s wrists are wound with trip cord.', 'Book Four\'s fire game is now The Timer and Book Seven\'s is the Timer-Count: same play, acid instead of flame. Old saves and deeds carry over.']],
+  ['10.3.4', ['The cusser artwork no longer shows a lit spark: Moranth munitions have no fuse. They go off when the shell breaks, or when an acid timer eats through its wax plug.']],
+  ['10.3.3', ['The cusser artwork carries the Moranth seal, not Maud\'s name: Maud is the one cusser Kettle named.']],
+  ['10.3.2', ['Book Four opening: with one squadmate off the Chain, the line now reads "was dealt with you".']],
   ['10.3.1', ['A sergeant carried into a new book can be renamed there: the name is filled in for you, and you can change it.']],
   ['10.3.0', ['Tricks that don\'t strike no longer cost the turn: the shield calls, the battle cries, the dark and the smoke, the curses. One free trick each a turn.', 'Barghast Blood-Iron, the Long Listen and the Pilot\'s Eye now work by themselves at the start of every fight.', 'Only a heal aimed at one soldier leaves a ward now. Group heals and the gods\' small mercies heal, and that is all.', 'Saves carry on as they were.']],
   ['10.2.0', ['Armour soaks blows; healing beyond full leaves a ward; a fallen soldier fights for breath, and a bad fall leaves a wound to carry.', 'A squadmate whose second stat fits the check backs the roller up for +2.', 'Every book is re-balanced: Soldier can now go wrong, and Bridgeburner bites. The gods will have work to do.', 'Saves carry on as they were.']],

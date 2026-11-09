@@ -164,7 +164,7 @@ The stair is one body wide and turns twice. ${b2In('haddat') ? `Haddat puts her 
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
       foes:[['b2_lancer',1,0],['b2_lancer',6,1],['b2_lancer',2,2],['b2_semk',4,1]], xp:150, after:'b2_after_batrol',
       waves:[{round:2, foes:[['b2_lancer',0,3],['b2_lancer',7,3]], text:'Two more come in wide on the flanks, whooping, lances down.'}],
-      preText:()=>`Tangle's sharper was in the ground before they came, under a stone at the lip of the wash, with a long fuse and four notes hummed over it. He stops humming. The front of their charge goes up in a fan of grit and the rest of it has to go round, and green armies do not like going round.`,
+      preText:()=>`Tangle's sharper was in the ground before they came, under a stone at the lip of the wash, with its timer waxed thick and four notes hummed over it. He stops humming. The front of their charge goes up in a fan of grit and the rest of it has to go round, and green armies do not like going round.`,
       stage2:{title:'The dry wash', xp:80,
         text:()=>`The ones on the hardpan break, and do not run back the way they came. They run into the wash, which is where the rest of them were waiting: a dry channel between two banks of crumbling clay, a painted holy man at the head of it with his hands up, and a big man on foot with a feathered lance shouting them back into line.
 

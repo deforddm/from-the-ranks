@@ -333,7 +333,7 @@ He returns it correctly, which surprises you, and a beat late, which doesn't. So
     c1_paran_count:()=>({sp:'Captain Paran', fx:()=>{loy('brisk',1); S.f.c1_paranStare=1;}, txt:
 `${c1Five()}
 
-${by({sgt:`He holds your stare. You hold his.`, kettle:`He holds Kettle's stare, and Kettle holds his, the way she'd hold a lit fuse: because she has no idea how to put it down.`, _:`He holds {who}'s stare, and {who} holds his.`})} It is a longer contest than it should be, and he is the one who ends it, with a small nod that is not a concession and is not quite an order.
+${by({sgt:`He holds your stare. You hold his.`, kettle:`He holds Kettle's stare, and Kettle holds his, the way she'd hold a cusser with its timer bitten: because she has no idea how to put it down.`, _:`He holds {who}'s stare, and {who} holds his.`})} It is a longer contest than it should be, and he is the one who ends it, with a small nod that is not a concession and is not quite an order.
 
 "Five," he says. "I'll remember the number. I've been given a great many numbers today, Sergeant, and yours is the first one that came with a face attached."
 

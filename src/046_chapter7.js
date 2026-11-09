@@ -1252,7 +1252,7 @@ ${S.f.c3_ellisMsg ? `The clerk looks up. He's young; nineteen. Ellis stops in th
   brisk:`Brisk crosses the room in two steps and puts her hand round the clerk's wrist and holds it, the way she holds a line: not pushing. Just there.${near ? ` He pulls, once, and the line holds harder than she meant it to.` : ''} He looks at her hand. He looks at her. He stops feeding the fire.`,
   sgt:`You cross the room and take his wrist, and hold it.${near ? ` He pulls, once, hard, and you hold harder than you meant to.` : ''} He looks at your hand, and then at you, and stops feeding the fire.`,
   ohl:near ? `Ohl takes the clerk's wrist the way he takes a pulse, two fingers and a thumb; and when the boy pulls, Ohl's grip closes the way it closes on a man trying to get off the table. "Sit down, child," says Ohl. He sits.` : `Ohl takes the clerk's wrist the way he takes a pulse, two fingers and a thumb, and the boy is so surprised to be handled gently that he stops. "Sit down, child," says Ohl. He sits.`,
-  kettle:`Kettle grabs his wrist in both hands, the way she'd grab a fuse somebody had cut too short. "*No*," she says. He stops, mostly out of astonishment.`,
+  kettle:`Kettle grabs his wrist in both hands, the way she'd grab a timer somebody had waxed too thin. "*No*," she says. He stops, mostly out of astonishment.`,
   _:`{who} crosses the room and takes the clerk's wrist, and holds it.${near ? ` He pulls. The grip holds harder than it meant to.` : ''} He stops feeding the fire.`}) : how === 'eyes' ? eyes : by({
   ohl:`Ohl goes through the stack by the grate the way he goes through his list: one at a time, in order, not skipping, his lips moving on the spines.`,
   ellis:`Ellis goes through the stack herself, on her knees by the grate, book by book, with the clerk's hands working beside hers; he doesn't stop her and doesn't help.`,
@@ -1853,7 +1853,7 @@ The helm regards her. Click. Hiss. A long click.
 
 Then Ch'kess holds out the slate, and the stylus.
 
-Kettle makes the mark. You watch her do it: two strokes and a hook, slow and careful, her tongue between her teeth like a recruit cutting a fuse. Ch'kess looks at it. It doesn't correct it.
+Kettle makes the mark. You watch her do it: two strokes and a hook, slow and careful, her tongue between her teeth like a recruit paring a timer. Ch'kess looks at it. It doesn't correct it.
 
 "Twelve," it says. "Twelve hands signed." Click. "Chub is square."
 

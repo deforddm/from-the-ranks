@@ -5,7 +5,7 @@
      burn. Silver, because a dice game among soldiers is where money is the scene. Net capped at 10 silver.
    - Pass the Debt (Ch2, the Letherii, b7_c2_fire): clay debt-tokens and a spun dock against the company clerk. A line left off the night
      roll (a page of the file), or Perrit's regard, or a salve.
-   - The Fuse-Count (Ch3, the Third, b7_c3_fire): a lit fuse under a helmet, counted in the dark against a marine sapper. A burner.
+   - The Timer-Count (Ch3, the Third, b7_c3_fire): a bitten acid timer under a helmet, counted in the dark against a marine sapper. A burner.
    - The Horse-Trade (Ch4, the Letherii, b7_c4_fire): three remounts off a Bluerose horse-coper on the company's purse. Sorvan's regard,
      or a pot of liniment (a salve).
    - The Rat Catchers' Wager (Ch7, the Third, b7_c7_fire): a slate of words the crowd might shout for the new king, and the crowd's word
@@ -203,11 +203,11 @@ function b7DebtPay(r){ if (!r) return; S.f.b7_debt = {mine:r.mine, his:r.his, wo
     else { S.inv.salve = (S.inv.salve || 0) + 1; note('+1 salve: the clerk pays what he owes in kind.', 'good'); } }
   save(); }
 
-/* ============ 3. The Fuse-Count ============
-   No light inland: the column lights nothing. So a marine sapper lights a length of fuse on the hearthstone and puts a helmet over it, and
-   the game is to count it in the dark: call "now" when you think it has burned to the end. He calls too. The helmet comes up, and whoever
-   called nearer takes the round. First to two rounds. Before a fuse is lit, once a game, Tangle may notch it at the half the Kanese way, so
-   it spits when the burn passes the notch (Wits; Tangle with an edge): made, you hear the half; "yes, but", you hear it, and so does the
+/* ============ 3. The Timer-Count ============
+   No light inland: the column lights nothing. So a marine sapper bites an acid timer (no fuse, no flame: acid through wax) on the hearthstone
+   and puts a helmet over it, and the game is to count it in the dark: call "now" when you think the acid is through. He calls too. The helmet comes up, and whoever
+   called nearer takes the round. First to two rounds. Before a timer is bitten, once a game, Tangle may score its wax at the half the Kanese way, so
+   it ticks when the acid passes the score (Wits; Tangle with an edge): made, you hear the half; "yes, but", you hear it, and so does the
    sapper. A match won pays once a book: the sapper's stake, a burner out of the marines' issue, which the marines do not share. */
 const B7G_FUSEWIN = 2, B7G_COUNT = 1000;
 function playB7Fuse(opt = {}){
@@ -216,42 +216,42 @@ function playB7Fuse(opt = {}){
   const g = MG.state = {round:0, mine:0, his:0, phase:'ready', target:0, t0:0, burn:0, call:null, myErr:0, hisErr:0, notch:false, notchUsed:false, sharp:false, spit:0, spat:false, check:null, talk:'', over:false};
   const result = () => ({mine:g.mine, his:g.his, rounds:g.round, won:g.over && g.mine >= B7G_FUSEWIN, done:g.over});
   const barn = (S.f.b7_c3_ph || 1) >= 4;
-  mgOpen({kick:barn ? 'The factor\'s barn · the hearth of nothing' : 'The farmhouse floor · the cold hearth', title:'The Fuse-Count', leaveText:'Leave the hearth', done:r => opt.after && opt.after(r), leave:() => { g.over = true; mgClose(Object.assign(result(), {left:true, done:false, won:false})); }}); on = b7gOn();
+  mgOpen({kick:barn ? 'The factor\'s barn · the hearth of nothing' : 'The farmhouse floor · the cold hearth', title:'The Timer-Count', leaveText:'Leave the hearth', done:r => opt.after && opt.after(r), leave:() => { g.over = true; mgClose(Object.assign(result(), {left:true, done:false, won:false})); }}); on = b7gOn();
   const cnt = ms => (ms / unit()).toFixed(1);
-  const draw = () => mgPanel(`<div class="cpbar"><span>${g.over ? 'The fuse is out' : `Round ${g.round + 1}${g.target ? `: a ${numw(g.target)}-count` : ''}`}</span><span>You <b>${g.mine}</b> · the sapper <b>${g.his}</b></span><span>First to ${B7G_FUSEWIN}</span></div>
+  const draw = () => mgPanel(`<div class="cpbar"><span>${g.over ? 'The last timer is through' : `Round ${g.round + 1}${g.target ? `: a ${numw(g.target)}-count` : ''}`}</span><span>You <b>${g.mine}</b> · the sapper <b>${g.his}</b></span><span>First to ${B7G_FUSEWIN}</span></div>
       ${g.talk}${b7gRollHTML(g.check)}
       <div class="row mgbtns">${g.over ? `<button class="btn primary" id="fcDone" data-bot="1">Back to the fire</button>`
-        : g.phase === 'ready' ? `<button class="btn primary" id="fcLight" data-bot="1">Light it</button>${!g.notchUsed ? `<button class="btn" id="fcNotch" data-bot="1">Notch it at the half first (once)</button>` : ''}`
+        : g.phase === 'ready' ? `<button class="btn primary" id="fcLight" data-bot="1">Bite it</button>${!g.notchUsed ? `<button class="btn" id="fcNotch" data-bot="1">Score it at the half first (once)</button>` : ''}`
         : g.phase === 'lit' ? `<button class="btn primary" id="fcNow" data-bot="1">Now</button>`
         : `<button class="btn" disabled data-bot="1">The helmet comes up</button>`}</div>
-      <p class="fine">The sapper names a length and lights it under the helmet. Count it in your head and call "now" when you think it has burned to the end. Nearer call takes the round.</p>
-      <p class="hint keys"><kbd>Space</kbd> light / now · <kbd>N</kbd> notch · <kbd>Esc</kbd> leave</p>`),
+      <p class="fine">The sapper names a count, bites the timer and puts the helmet over it. Count it in your head and call "now" when you think the acid is through the wax. Nearer call takes the round.</p>
+      <p class="hint keys"><kbd>Space</kbd> bite / now · <kbd>N</kbd> score · <kbd>Esc</kbd> leave</p>`),
     bind = () => { if ($('#fcLight')) $('#fcLight').onclick = () => light(); if ($('#fcNotch')) $('#fcNotch').onclick = () => notch(); if ($('#fcNow')) $('#fcNow').onclick = () => callNow(); if ($('#fcDone')) $('#fcDone').onclick = () => { AUDIO.play('click'); mgClose(result()); }; },
     redraw = () => { draw(); bind(); };
-  /* the check: notch the fuse at the half (Wits 13). Made: it spits at the half. Yes, but: it spits, and the sapper counts by it too. */
+  /* the check: score the wax at the half (Wits 13). Made: it ticks at the half. Yes, but: it ticks, and the sapper counts by it too. */
   const notch = () => { if (g.notchUsed || g.phase !== 'ready' || g.over) return; g.notchUsed = true; AUDIO.play('click');
-    const r = g.check = b7gRoll('wits', 13, null, [['he has cut fuse since he could hold a knife', 2, 'tangle'], ['she cuts her fuses by the length of her thumb', 1, 'rasp'], ['you have stood next to a lot of sappers', 1, 'sgt']]);
-    if (r.ok) { g.notch = true; g.talk = mgSay(r.who === 'sgt' ? '' : NAME(r.who), r.who === 'sgt' ? 'You nick the fuse at the half with a thumbnail, small, where the sapper does not see. It will spit when the burn passes it.' : `${NAME(r.who)} takes the fuse to look at it, and gives it back with a nick at the half you only see because you were watching. "Kanese," ${b7gHe(r.who)} says, under ${b7gHis(r.who)} breath. "It'll spit."`); }
-    else if (r.tier === 'near') { g.notch = true; g.sharp = true; g.talk = mgSay('The sapper', '"Notched it," he says, and grins. "Kanese trick. I know it. I\'ll count by it too, then, heavy." <span class="dim">(the sapper hears the half as well)</span>'); }
-    else g.talk = mgSay('', `${NAME(r.who)} tries a nick at the half and cuts too deep, and the sapper takes the fuse back and cuts a fresh length with a look.`);
+    const r = g.check = b7gRoll('wits', 13, null, [['he has waxed timers since he could hold a knife', 2, 'tangle'], ['she waxes her timers by the width of her thumb', 1, 'rasp'], ['you have stood next to a lot of sappers', 1, 'sgt']]);
+    if (r.ok) { g.notch = true; g.talk = mgSay(r.who === 'sgt' ? '' : NAME(r.who), r.who === 'sgt' ? 'You score the wax at the half with a thumbnail, small, where the sapper does not see. It will tick when the acid passes it.' : `${NAME(r.who)} takes the timer to look at it, and gives it back with a score at the half you only see because you were watching. "Kanese," ${b7gHe(r.who)} says, under ${b7gHis(r.who)} breath. "It'll tick."`); }
+    else if (r.tier === 'near') { g.notch = true; g.sharp = true; g.talk = mgSay('The sapper', '"Scored it," he says, and grins. "Kanese trick. I know it. I\'ll count by it too, then, heavy." <span class="dim">(the sapper hears the half as well)</span>'); }
+    else g.talk = mgSay('', `${NAME(r.who)} tries a score at the half and cuts too deep, and the sapper takes the timer back and waxes a fresh one with a look.`);
     redraw(); };
   const light = () => { if (g.phase !== 'ready' || g.over) return; g.target = 4 + R(4); g.t0 = performance.now(); g.burn = g.target * unit() * (.94 + R(13) / 100); g.call = null; g.spat = false; g.spit = 0; g.phase = 'lit'; AUDIO.play('click');
-    g.talk = mgSay('The sapper', `"A ${numw(g.target)}-count." He touches the match to it and puts the helmet over before the light gets out. ${g.notch ? 'Under it, the fuse hisses.' : 'Under it, nothing you can see.'}`); redraw(); setTimeout(tick, 40); };
+    g.talk = mgSay('The sapper', `"A ${numw(g.target)}-count." He cracks the acid into the wax with his thumb and puts the helmet over it. ${g.notch ? 'Under it, very faintly, the acid hisses.' : 'Under it, nothing you can hear.'}`); redraw(); setTimeout(tick, 40); };
   const tick = () => { if (!on() || g.phase !== 'lit') return; const e = performance.now() - g.t0;
     if (g.notch && !g.spat && e >= g.burn / 2) { g.spat = true; g.spit = performance.now(); AUDIO.play('click'); }
     if (e > g.burn + 2.5 * unit()) return callNow(true); setTimeout(tick, 40); };
   const callNow = (late) => { if (g.phase !== 'lit' || g.over) return; const e = performance.now() - g.t0; g.call = e; g.myErr = Math.abs(e - g.burn);
     g.hisErr = (.05 + R(80) / 100) * unit() * (g.sharp && g.notch ? .5 : 1); g.phase = 'lift'; AUDIO.play('click'); redraw();
     T(() => { const win = g.myErr < g.hisErr; g.round++; if (win) { g.mine++; AUDIO.play('coin'); } else { g.his++; AUDIO.play('miss'); }
-      const yours = late ? 'You never called it.' : e < g.burn ? `You called it at ${cnt(e)} counts; the fuse is still burning when the helmet comes up, ${cnt(g.burn - e)} short of the end.` : `You called it at ${cnt(e)} counts; it went out at ${cnt(g.burn)}.`;
-      g.talk = mgSay('', `${yours} The sapper was ${cnt(g.hisErr)} out. ${win ? b7gPick(['The round is yours.', 'Yours. He scratches a mark on the hearthstone with the match.']) : b7gPick(['His.', 'His round. He scratches a mark on his side of the hearthstone.'])}`);
+      const yours = late ? 'You never called it.' : e < g.burn ? `You called it at ${cnt(e)} counts; the wax is still whole when the helmet comes up, ${cnt(g.burn - e)} short of the end.` : `You called it at ${cnt(e)} counts; it bit through at ${cnt(g.burn)}.`;
+      g.talk = mgSay('', `${yours} The sapper was ${cnt(g.hisErr)} out. ${win ? b7gPick(['The round is yours.', 'Yours. He scratches a mark on the hearthstone with his knife.']) : b7gPick(['His.', 'His round. He scratches a mark on his side of the hearthstone.'])}`);
       g.notch = false; g.sharp = false; g.target = 0;
       if (g.mine >= B7G_FUSEWIN || g.his >= B7G_FUSEWIN) end(); else g.phase = 'ready'; redraw(); }, REDUCE() ? 150 : 600); };
   const end = () => { g.over = true; g.phase = 'over'; const W = g.mine >= B7G_FUSEWIN; mgDeed(W ? 'b7FuseWon' : 'b7FuseLost'); AUDIO.play(W ? 'win' : 'lose');
     g.talk += mgSay('The sapper', W ? '"Heavies who can count." He pushes the burner across the hearthstone, carefully, with one finger. "Marines don\'t share," he says. "Marines pay their bets. It\'s different."' : '"Two to me." He puts the burner back in his satchel. "Count in the dark long enough and you stop needing the light. Try it a few more years, heavy."') +
-      (b7In('tangle') ? mgSay('Tangle', W ? '"Kan," Tangle says, very quietly, to the burner.' : '"His fuse runs a touch long," Tangle says. "Marine fuse. Damp. I could have told you."') : ''); };
+      (b7In('tangle') ? mgSay('Tangle', W ? '"Kan," Tangle says, very quietly, to the burner.' : '"His wax runs a touch thick," Tangle says. "Marine wax. Cold. I could have told you."') : ''); };
   mgKeys({n:() => notch(), ' ':() => { const b = $('#fcDone') || $('#fcLight') || $('#fcNow'); b && b.click(); }});
-  /* the hearth: a dark room (the farmhouse, or the barn by day), grey light through the cracks, an upturned helmet over the fuse */
+  /* the hearth: a dark room (the farmhouse, or the barn by day), grey light through the cracks, an upturned helmet over the timer */
   MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H, now = performance.now();
     ctx.fillStyle = barn ? '#14110c' : '#0e0c0a'; ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = barn ? 'rgba(220,210,170,.18)' : 'rgba(170,180,200,.12)'; for (let i = 0; i < (barn ? 7 : 4); i++) ctx.fillRect(W*(.08 + i*(barn ? .13 : .24)), 0, barn ? 2 : 3, H*.55); // light through the boards, or the shutters
@@ -259,19 +259,19 @@ function playB7Fuse(opt = {}){
     ctx.fillStyle = barn ? '#241e16' : '#1e1a16'; ctx.fillRect(0, H*.62, W, H*.38);
     const hx = W*.5, hy = H*.74, hw = Math.min(W*.3, 150); ctx.fillStyle = '#3a3632'; ctx.fillRect(hx - hw/2, hy - 4, hw, 10); // the hearthstone
     const lit = g.phase === 'lit', lifting = g.phase === 'lift' || (g.phase === 'ready' && g.round > 0) || g.over, e = lit ? now - g.t0 : g.call || 0, fl = hw*.7;
-    ctx.strokeStyle = '#6a5a3a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - fl/2, hy - 6); ctx.lineTo(hx + fl/2, hy - 6); ctx.stroke(); // the fuse
-    if (lit && e < unit() * .6) { const x = hx - fl/2 + fl * Math.min(1, e / g.burn); glow(ctx, x, hy - 6, 14, '#ffb050', .7); } // the match, before the helmet goes over
+    ctx.strokeStyle = '#6a5a3a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - fl/2, hy - 6); ctx.lineTo(hx + fl/2, hy - 6); ctx.stroke(); // the timer's wax
+    if (lit && e < unit() * .6) { const x = hx - fl/2 + fl * Math.min(1, e / g.burn); glow(ctx, x, hy - 6, 14, '#b8e070', .5); } // the acid, before the helmet goes over
     if (g.phase === 'lift' || lifting) { const k = g.burn ? Math.min(1, (g.call || g.burn) / g.burn) : 1; ctx.strokeStyle = '#1a1612'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(hx - fl/2, hy - 6); ctx.lineTo(hx - fl/2 + fl*k, hy - 6); ctx.stroke();
-      if (g.call && g.call < g.burn && g.phase === 'lift') glow(ctx, hx - fl/2 + fl*k, hy - 6, 10, '#ffb050', .8); }
+      if (g.call && g.call < g.burn && g.phase === 'lift') glow(ctx, hx - fl/2 + fl*k, hy - 6, 10, '#b8e070', .6); }
     if (lit && e >= unit() * .6) { ctx.fillStyle = '#5a6068'; ctx.beginPath(); ctx.arc(hx, hy - 4, hw*.42, Math.PI, 0); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(hx - hw*.3, hy - hw*.36, hw*.08, hw*.24); // the helmet, over it
-      if (g.spit && now - g.spit < 250) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, hx + hw*.42, hy - 2, 10, '#ffd080', .5); ctx.globalCompositeOperation = 'source-over'; } } // the spit at the notch, a wink at the helmet's rim
+      if (g.spit && now - g.spit < 250) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, hx + hw*.42, hy - 2, 10, '#c8f090', .4); ctx.globalCompositeOperation = 'source-over'; } } // the tick at the score, a wink at the helmet's rim
     else { ctx.fillStyle = '#5a6068'; ctx.save(); ctx.translate(W*.78, H*.6); ctx.rotate(-.4); ctx.beginPath(); ctx.arc(0, 0, hw*.3, Math.PI, 0); ctx.fill(); ctx.restore(); }
     for (let i = 0; i < g.mine; i++) { ctx.fillStyle = 'rgba(160,230,190,.8)'; ctx.fillRect(hx - hw/2 + 6 + i*7, hy + 1, 2, 5); }
     for (let i = 0; i < g.his; i++) { ctx.fillStyle = 'rgba(230,200,150,.8)'; ctx.fillRect(hx + hw/2 - 8 - i*7, hy + 1, 2, 5); }
     const fs = clamp(H/100, 1.4, 3); drawFigure(ctx, 'b2soldier', W*.86, H*.86, fs, t, {still:true, dir:-1}); drawFigure(ctx, 'sgt', W*.14, H*.86, fs, t, {still:true, dir:1});
     if (b7In('tangle')) drawFigure(ctx, 'tangle', W*.26, H*.84, fs*.92, t, {still:true, dir:1, phase:2}); };
-  g.talk = mgSay('', `${barn ? 'In the factor\'s barn, with the doors barred on the day,' : 'On the farmhouse floor, with the shutters closed on the last of the light,'} a marine sapper from the next squad over has a coil of fuse, a knife, a match and a helmet. The column lights nothing now. He has found a way round that.`) +
-    mgSay('The sapper', '"Fuse-count, heavy. I cut it, I light it, the helmet goes over. You count. Call it when it\'s done." He sets a burner on the hearthstone between you. "Two rounds takes it. Marines don\'t share. Marines bet."') +
+  g.talk = mgSay('', `${barn ? 'In the factor\'s barn, with the doors barred on the day,' : 'On the farmhouse floor, with the shutters closed on the last of the light,'} a marine sapper from the next squad over has a pouch of acid timers, a knife and a helmet. The column lights nothing now. He has found a way round that.`) +
+    mgSay('The sapper', '"Timer-count, heavy. I wax it, I bite it, the helmet goes over. You count. Call it when it\'s done." He sets a burner on the hearthstone between you. "Two rounds takes it. Marines don\'t share. Marines bet."') +
     (b7In('tangle') ? mgSay('', 'Tangle has moved round the hearth to watch the knife. He has the look of a man watching somebody else cook his mother\'s recipe.') : '');
   redraw();
 }
@@ -439,7 +439,7 @@ function b7WagerPay(r){ if (!r || !r.done) return; S.f.b7_wager = {marks:r.marks
 { const _de = b7DeedsExtra; b7DeedsExtra = function(mine){ const out = _de(mine), d = k => mine.reduce((a, {s}) => a + (((s.deeds || {})[k]) || 0), 0);
     const rows = [['Ships above the beach', d('b7ShipsWon') || d('b7ShipsLost') ? `${d('b7ShipsWon')} won, ${d('b7ShipsLost')} lost` : 'Not yet'],
       ['Pass the Debt', d('b7DebtWon') ? 'The clerk missed a line' : d('b7DebtLost') ? 'The debt found you' : 'Not yet'],
-      ['The Fuse-Count', d('b7FuseWon') ? 'Counted in the dark' : d('b7FuseLost') ? 'The sapper\'s count' : 'Not yet'],
+      ['The Timer-Count', d('b7FuseWon') ? 'Counted in the dark' : d('b7FuseLost') ? 'The sapper\'s count' : 'Not yet'],
       ['The Horse-Trade', d('b7HorseWon') ? 'Three horses, within the purse' : d('b7HorseLost') ? 'Robbed, politely' : 'Not yet'],
       ['The Rat Catchers\' Wager', d('b7WagerWon') ? 'The crowd\'s word paid' : d('b7WagerLost') ? 'The crowd decided' : 'Not yet']];
     return out + `<h4 class="jh">At the fires</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }; }
@@ -463,13 +463,13 @@ function b7WagerPay(r){ if (!r || !r.done) return; S.f.b7_wager = {marks:r.marks
 `${r.mine} to his ${r.his}, and the debt went the clerk's way. ${p === 'file' ? 'In the morning the night roll goes across the canal to the grey coats with the Sixth\'s squad left off the bottom of it. The clerk is getting old. He says so to anyone who asks.' : p === 'perrit' ? 'Perrit sits back down by you with her charcoal. "He passed on four," she says. "Every time. A clerk should know better." She sounds fond of him.' : 'The clerk pays what he owes in kind before he goes: a salve out of the battalion\'s stores, signed for in a hand nobody will read.'}` :
 `${r.mine} to his ${r.his}. The clerk puts the bag away. ${b7In('tobet') ? '"The pebbles never paid either," Tobet says again. It is still true.' : 'Across the yard, at the gate, the grey shape has not moved all game.'}`); };
     jn(B7CH2, () => { const r = S.f.b7_debtLast; return r && r.done ? (r.won ? 'At the Sixth\'s brazier the sergeant played Pass the Debt with the company clerk, and passed the debt on.' : 'At the Sixth\'s brazier the sergeant played Pass the Debt with the company clerk. The debt found the sergeant.') : ''; }); }
-  /* Ch3: the Fuse-Count with a marine sapper, on the farmhouse floor or in the factor's barn */
-  if (typeof B7CH3 !== 'undefined') { wrap(B7CH3, 'b7_c3_fire', n => after(n, '^Talk with the squad', [{t:'A marine sapper has a coil of fuse, a match and a helmet, and a burner for a stake. The Fuse-Count.', tag:'The Fuse-Count', req:()=>{ const ph = S.f.b7_c3_ph || 1; return (ph === 1 || ph >= 4) && !(S.f.b7_fuse && S.f.b7_fuse.done); }, go:()=>playB7Fuse({after:r => { b7FusePay(r); S.f.b7_fuseLast = r; talk('b7_c3_fuse_after'); }})}]));
+  /* Ch3: the Timer-Count with a marine sapper, on the farmhouse floor or in the factor's barn */
+  if (typeof B7CH3 !== 'undefined') { wrap(B7CH3, 'b7_c3_fire', n => after(n, '^Talk with the squad', [{t:'A marine sapper has a pouch of acid timers and a helmet, and a burner for a stake. The Timer-Count.', tag:'The Timer-Count', req:()=>{ const ph = S.f.b7_c3_ph || 1; return (ph === 1 || ph >= 4) && !(S.f.b7_fuse && S.f.b7_fuse.done); }, go:()=>playB7Fuse({after:r => { b7FusePay(r); S.f.b7_fuseLast = r; talk('b7_c3_fuse_after'); }})}]));
     B7CH3.dlg.b7_c3_fuse_after = () => { const r = S.f.b7_fuseLast || {}, barn = (S.f.b7_c3_ph || 1) >= 4; return b7gAfter(barn ? 'The factor\'s barn' : 'The farmhouse floor', barn ? 'b7_c3_house' : 'b7_c3_floor', 'b7_c3_fire', !r.done ?
-`You leave the hearth before the last fuse. The sapper does not mind. He goes on cutting lengths and counting them by himself in the dark, which seems to be how he likes it.` : r.won ?
+`You leave the hearth before the last timer. The sapper does not mind. He goes on waxing timers and counting them by himself in the dark, which seems to be how he likes it.` : r.won ?
 `Two rounds to you, and a burner out of the marines' issue on the squad's side of the hearth. ${b7In('tangle') ? 'Tangle packs it in the satchel between two smokers, where it will travel quietly, and counts the satchel again.' : 'The squad passes it round, carefully, like an egg.'}` :
 `The sapper's count, two rounds to ${r.mine}. ${b7In('marrow') ? 'Marrow says counting in the dark is how she spent her girlhood, and never once won anything by it either.' : 'He takes his burner and goes back to his own squad, whistling, very softly.'}`); };
-    jn(B7CH3, () => { const r = S.f.b7_fuseLast; return r && r.done ? (r.won ? 'Inland, with no light allowed, a marine sapper played the Fuse-Count with the Third under a helmet. The sergeant counted nearer, and won his burner.' : 'Inland, with no light allowed, a marine sapper played the Fuse-Count with the Third under a helmet.') : ''; }); }
+    jn(B7CH3, () => { const r = S.f.b7_fuseLast; return r && r.done ? (r.won ? 'Inland, with no light allowed, a marine sapper played the Timer-Count with the Third under a helmet. The sergeant counted nearer, and won his burner.' : 'Inland, with no light allowed, a marine sapper played the Timer-Count with the Third under a helmet.') : ''; }); }
   /* Ch4: the Horse-Trade at the horse lines below Kravos Hill */
   if (typeof B7CH4 !== 'undefined') { wrap(B7CH4, 'b7_c4_fire', n => after(n, '^Talk with the squad', [{t:'The Finadd wants three pack horses, and an old Bluerose horse-coper at the lines has the last of the remounts. Go and trade.', tag:'The Horse-Trade', req:()=>{ const ph = S.f.b7_c4_ph || 1; return (ph === 1 || ph === 3) && !(S.f.b7_horse && S.f.b7_horse.done); }, go:()=>playB7Horse({after:r => { b7HorsePay(r); S.f.b7_horseLast = r; talk('b7_c4_horse_after'); }})}]));
     B7CH4.dlg.b7_c4_horse_after = () => { const r = S.f.b7_horseLast || {}; return b7gAfter('The Sixth\'s fire', 'b7_c4_tent', 'b7_c4_fire', !r.done ?
