@@ -124,7 +124,7 @@ const b8WayOut = (c = b8Contract()) => c <= 1 ? 'quiet' : c <= 4 ? 'roofs' : c <
     const k = {forgotten:0, paper:0, price:-1, watched:-1, veteran:-2, grandmaster:-3}[b8ConTier()]; if (k) out.push(['The Guild\'s paper', k]); return out; }; }
 /* the Guild counts its dead; time away cools the paper */
 { const _endBeat = endBeat; endBeat = function(won){ const r = _endBeat(won);
-    if (b8On() && won && B && B.def && B.def.guild && !B.def.isStage2 && !B.b8counted) { B.b8counted = 1; b8Con(1, 'the Guild counts its dead'); }
+    if (b8On() && won && B && B.def && B.def.guild && !B.def.isStage2 && !B.b8counted) { B.b8counted = 1; const ck = 'b8_cnt_' + B.id; if (!S.f[ck]) { S.f[ck] = 1; b8Con(1, 'the Guild counts its dead'); } } /* once a fight: a retry after losing the second ground doesn't count again */
     return r; }; }
 { const _sc = startChapter; startChapter = function(n){ if (b8On() && (n === 3 || n === 4) && !S.f['b8_away' + n]) { S.f['b8_away' + n] = 1; b8Con(-1, 'weeks out of the city'); } return _sc(n); }; }
 /* the widget for a node's html, and the HUD pill beside the purse */
