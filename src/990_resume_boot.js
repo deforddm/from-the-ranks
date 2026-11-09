@@ -64,6 +64,8 @@ function start(){
    typeof B6CH5 !== 'undefined' && B6CH5, typeof B6CH6 !== 'undefined' && B6CH6, typeof B6CH7 !== 'undefined' && B6CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'bh'); }); // its chapters are const B6CH1..B6CH7 (101-107)
   [typeof B7CH1 !== 'undefined' && B7CH1, typeof B7CH2 !== 'undefined' && B7CH2, typeof B7CH3 !== 'undefined' && B7CH3, typeof B7CH4 !== 'undefined' && B7CH4, // Book Seven: Unwitnessed (120);
    typeof B7CH5 !== 'undefined' && B7CH5, typeof B7CH6 !== 'undefined' && B7CH6, typeof B7CH7 !== 'undefined' && B7CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'rg'); }); // its chapters are const B7CH1..B7CH7 (121-127)
+  [typeof B8CH1 !== 'undefined' && B8CH1, typeof B8CH2 !== 'undefined' && B8CH2, typeof B8CH3 !== 'undefined' && B8CH3, typeof B8CH4 !== 'undefined' && B8CH4, // Book Eight: Time Served (140);
+   typeof B8CH5 !== 'undefined' && B8CH5, typeof B8CH6 !== 'undefined' && B8CH6, typeof B8CH7 !== 'undefined' && B8CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tth'); }); // its chapters are const B8CH1..B8CH7 (141-147)
   showTitle();
   requestAnimationFrame(loop);
 }

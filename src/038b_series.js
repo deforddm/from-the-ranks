@@ -55,6 +55,7 @@ function whereBooksMeetHTML(open){
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and no road joins it to the other books yet.</li>` : ''}
       ${BOOKS.bh && !BOOKS.bh.coming ? `<li><b>Book Six, Bones in the Walls,</b> brings both squads back, weeks after Raraku. Book Two's squad marches with the Fourteenth across the Odhans to Y'Ghatan and on to the sea; the Fourth, with Onearm's Host, land on Seven Cities' north coast and march inland through the plague to G'danisban. The two never meet. The Fourteenth sails at last for Malaz City, on Quon Tali, off the sketch to the west.</li>` : ''}
       ${BOOKS.rg && !BOOKS.rg.coming ? `<li><b>Book Seven, Unwitnessed,</b> is where the roads join. The Fourteenth crosses the oceans to Lether, burns its ships on the coast and marches inland on Letheras; the Third goes with it, lent to Keneb's marines as heavies. Book Five's Letherii squad is in the capital, under the Edur, and is sent out with the army to meet the invaders. One war, two squads, on opposite sides. The Fourth is not with them.</li>` : ''}
+      ${BOOKS.tth && !BOOKS.tth.coming ? `<li><b>Book Eight, Time Served,</b> goes back to Genabackis, years after Coral. The Fourth, out of the army, keeps a door in Darujhistan. In the winter before the Gedderone Fete the Assassins' Guild puts their names on a paper, and they go east with a merchant's caravan over the old Domin to Black Coral, Coral renamed, and come back for the Fete's last night.</li>` : ''}
       <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }
@@ -137,6 +138,7 @@ function bookDeedsHTML(b, all){
   else if (b === 'mt') extra = typeof b5DeedsExtra === 'function' ? b5DeedsExtra(mine) : ''; // Book Five's Debt (80)
   else if (b === 'bh') extra = typeof b6DeedsExtra === 'function' ? b6DeedsExtra(mine) : ''; // Book Six's Fever (100)
   else if (b === 'rg') extra = typeof b7DeedsExtra === 'function' ? b7DeedsExtra(mine) : ''; // Book Seven's Rising (120)
+  else if (b === 'tth') extra = typeof b8DeedsExtra === 'function' ? b8DeedsExtra(mine) : ''; // Book Eight's Contract (140)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
