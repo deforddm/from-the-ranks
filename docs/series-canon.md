@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Sun Nov 8, 2026, 8:21 PM PST (Book Eight's rules 70–83, what TtH lifts, names and gods added to §(a), §(b) and §(f); Book Eight on branch `book8`, not shipped). Before that Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -116,6 +116,37 @@ Rule 43 ends here: Book Seven prints the Patriotists, Karos Invictad, Tanal Yath
 
 ---
 
+### Book Eight (*Toll the Hounds*), added Nov 8, 2026
+
+The reasons and sources are in the repo's `docs/tth-canon.md`, §5 and the plan corrections.
+
+**What TtH lifts or closes:**
+- **Rule 6:** lifts the sleep. Rallick and Vorcan are awake (W *Rallick Nom*, ch 3). The Azath stays shut, its inside never shown. Rallick may be "back" in rumour. **Vorcan is still never named**, and Lady Varada is never said to be her (OST).
+- **Rule 11:** lifts to Tuft only, as the plan has it. Mother Dark comes to Black Coral (W *Mother Dark*). "A cold that turns warm", never named, never the Gate.
+- **Rule 14:** closes for **Murillio** and **Rake** (the city learns both deaths). It still stands for Coll, Baruk, Derudan, Kruppe and the Crone (all in OST). Still **no Hound dies at the Fourth's hands**.
+- **Rule 17:** Duiker lives at K'rul's (R1, R7). Book Eight may say "an old historian at K'rul's". Never his name, never how he lives.
+- **Rule 19:** the Bridgeburner dead fight in Dragnipur (R24.1 S5). The narrator still never says "ascended". In a vision they are "the dead".
+- **Rules 7 and 12** continue (Whiskeyjack only as Iskar Jarak, in a vision; the Fourth never "Bridgeburners").
+- **Rule 13** continues: never "the T'orrud Cabal", even though OST uses it.
+- **§(f)'s Hood line:** stays, with correction 7's timing.
+
+
+
+70. **The Guild's paper.** Never who paid, for the Fourth's knives or K'rul's. Never that the Fourth's names were on the K'rul's contract. The Grand Master is faceless: never Seba Krafar or Krute on the page. Vorcan's return to the Guild, if any, is headline at most (OST).
+71. **K'rul's Bar is closed.** Mallet and Bluepearl die there; the Fourth hear it as news, after. Never the raid, Blend's wound, Picker's coma or her dream-realm. Spindle's pilgrimage and Monkrat are never met.
+72. **Rake's death** is never seen: no street, no duel, no blow. The city hears bells, sees the moon burst and follows Brood's cart. Never Dragnipur's realm, the Gate of Darkness, or "sacrifice" as narration.
+73. **Traveller** is "a swordsman" at most. Never Dassem Ultor, never the Dassembrae, never Hood's daughter.
+74. **Hood falls; he never dies.** Never his beheading shown, never the Ice Throne, his Jaghut or his penance (DoD). Death "didn't answer" on the last night.
+75. **The Guardians of the Gate** are nameless dead, from the morning after on. Never Whiskeyjack's name, Toc as Herald, or the Gate's arbiters (DoD).
+76. **Dragnipur:** "the black sword is gone" at most. Never Brood's hammer, Draconus, the Chained, Apsal'ara, Ditch or Kadaspala.
+77. **Black Coral after the night:** Mother Dark per rule 11. "A young lord in Black Coral" at most: never Nimander's name, Aranatha, Clip, or the Eleint blood.
+78. **The Redeemer and the Dying God:** never the embrace, never Salind's or the Seerdomin's end. The camp ends in "fire from the sky", seen from far off or told after. Never Bastion or the Dying God's body.
+79. **Karsa and the gods of war:** "a giant in the street". Never Toc's message, "torc-bearer", Karsa's daughters, or what he will do (DoD, TCG). Rule 24 continues.
+80. **OST's ground:** never the Legate, the Seguleh coming, the Spawns (never by that name), the Malazan ambassador, Humble Measure's rise, Taya, or Tayschrenn as T'renn. The `daru` road may say "Malazans may come back one day", nothing more.
+81. **The moon** cracks and bursts on the last night, and its pieces fall east. Never why, and never Challice's globe.
+82. **Cutter, Challice and Gorlas:** the city's gossip only. Never Cutter's destination (TCG).
+83. **Kallor lives.** Never his road after TtH (TCG). Never Orfantal's death, never Korlat's dragons by name.
+
 ## (b) Name clashes and their resolutions
 
 | Name | Status | Canon bearer | Note for writers |
@@ -145,6 +176,10 @@ Rule 43 ends here: Book Seven prints the Patriotists, Karos Invictad, Tanal Yath
 | *Bones in the Walls* (Book Six's title) | Kept. | The novel's opening epigraph's image, not a canon title. | — |
 | Hollet, Radde (Book Four: the 9th's Second Company's captain and sergeant) | Clear (supported: no Malazan match found by web search; the wiki pages don't exist). | — | **Ossik** was rejected: too near Osric, L'oric's father, in HoC itself. |
 | Doss, Wenna, Ilsa, Sorvan (Book Seven's recruits) | Clear (Nov 5: wiki page lookups and the RG, BH, TtH and DoD Dramatis Personae). | — | Wenna and Ilsa are "she". Rejected: **Fenn** and **Pell** (both have pages). Book Seven never writes the name Kettle (rule 60). |
+| Vasso (Book Eight's Guild journeyman), Edrem (Book Eight's former Seerdomin) | Clear (supported, Nov 8: TtH names in every R and W page reached, the OST Dramatis Personae, wiki search; the TtH, MoI, DoD and TCG Dramatis Personae did not load). | Edur (a people) is the nearest to Edrem. | Spares: Tamber, Ardo, Velkis, Seltar. Minor NPC names: Orsa (she), Benlo, Calder, Thessaly (she), Hurrin, Mossa (she). Rejected: Dorrin (Dorin), Dester, Zechan, Giddyn, Krute, Mathok, Ulthan. |
+| Madryn in Book Eight | Kept; never written in Book Eight. | Madrun guards Nom Manor (OST DP). | A Book One memory line says "the Claw's man". |
+| Lim, Orr | Note. | Shardan Lim, Hanut Orr (TtH); Councilman Lim, Turban Orr (GotM); Jeshin, Corien Lim, Redda Orr (OST). | Never a new Lim or Orr. |
+| *Time Served* (Book Eight's title) | Clear. | No canon title or phrase found. | — |
 | *Unwitnessed* (Book Seven's title) | Kept. | Tavore's word (RG), and "The Unwitnessed Dance", Fisher kel Tath's poem heading RG ch 24. | A canon word and poem title, not a novel's title (as *Unblooded*). |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
@@ -265,6 +300,7 @@ The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later ch
 - **The Tarthenal dead** (an invention, marked so). The Tarthenal's own gods, the Seregahl, are malign and propitiated so they look away (W *Tarthenal*), so never a patron. Answer for Thegg in Book Five.
 - **Book Six** (Nov 5): Book Three's and Four's patrons stand for their squads. **Poliel never answers** (rule 54). **Soliel** reads stronger from Chapter 4 on (W15). **Hood** answers as before. **The Queen of Dreams** is Leoman's ally in BH (W7): if she answers for a squadmate, she never helps against Leoman. **Togg and Fanderay's** realm carries the fleet (W21); their boon stands.
 - **Book Seven** (Nov 6): the Third's patrons carry over from Book Six, the Letherii's from Book Five. **Hood** answers (he receives Beak, never shown). **Never** the Crippled God, Poliel, Mael (rule 56) or Scabandari. **The Errant**, if he answers the Letherii sergeant in Ch 4 or Ch 6, gives a boon with a twist, never a gift. **The Shore** answers Brune more strongly (the Shake have a queen again). Detail in `rg-canon.md` §9.
+- **Book Eight** (Nov 8): the Fourth's patrons carry over from Books Three and Six. **Hood** answers Ch 1–5 and falls on the last night (Rake beheads him with Dragnipur, ch 21). In Ch 6 **the dead** answer, nameless, marching elsewhere. From Ch 7, **the Guardians of the Gate** (from the morning after, when Dragnipur is shattered), never named (rule 75). **Shadowthrone and Cotillion** are in play in person; a Shadow boon never turns a Hound on or off. **Treach** never names Gruntle. **K'rul** may answer as a hum in an old bell, never through Kruppe. **The Redeemer** never grants: a prayer at the barrow gets peace, never a boon. **Never** the Dying God, the Crippled God, Poliel, Mael, Burn, Ardata, or Gedderone as a voice. Detail in the repo's `docs/tth-canon.md` §7.
 - **The Shore** (the Shake faith, the sea that takes back everything: W *Shake*). Answers for Brune in Book Five. Never a queen, never Tiste blood (rule 36).
 
 ---

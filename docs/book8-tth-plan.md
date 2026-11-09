@@ -1,4 +1,4 @@
-Sun Nov 8, 2026, 7:54 PM PST (David's answers). First written 7:52 PM PST. Plan for Book Eight, against v10.2.0.
+Sun Nov 8, 2026, 8:21 PM PST (the calendar, after the canon sheet). Before that 7:54 PM PST (David's answers). First written 7:52 PM PST. Plan for Book Eight, against v10.2.0.
 
 **Settled (David, Sun Nov 8, 2026, 7:54 PM PST): all as recommended.**
 - 1: the Fourth only.
@@ -11,6 +11,27 @@ Sun Nov 8, 2026, 7:54 PM PST (David's answers). First written 7:52 PM PST. Plan 
 - 9: Hood to Ch 5, then the Guardians of the Gate.
 - 10: the title is ***Time Served***.
 - 11: two recruits, a Guild journeyman and a former Seerdomin.
+
+**Settled (David, Sun Nov 8, 2026, 8:20 PM PST), after the canon sheet (`docs/tth-canon.md`, correction 1): start earlier (fix A).**
+- In the novel, Darujhistan's story fills the Gedderone Fête, a matter of days, so the round trip can't come after the Fête's first day.
+- **Ch 1** moves to the winter before the Fête. The Guild's first knife for the Fourth comes on a paper of its own. K'rul's isn't touched yet.
+- **Ch 2** is the caravan east, over the old Domin, at winter's end.
+- **Ch 3** is Black Coral, as drafted.
+- **Ch 4** is the camp's *first* turning. The squad holds its edge on one bad night and is gone before the real turning.
+- **Ch 5** is the road back west during the Fête, reaching the city on its last day. The news from K'rul's meets them at the gate.
+- **Ch 6** (the last night) and **Ch 7** (the morning after) stay as drafted, with the corrections below.
+
+**Claude's calls from the canon sheet** (David may overturn any; sources in `docs/tth-canon.md`):
+- **Ch 1's title** becomes *Before the Fête*. The keys stay `hunt` / `quiet`.
+- **The contract:** the Fourth's knives are a second paper. Who paid is never said, and the narrator never ties it to K'rul's (rule 70).
+- **Ch 2's road** runs east over the old Domin, not "north and east". The caravan is one merchant's venture, never the Council's, and the trip takes "weeks", never a count. It never meets Nimander's Andii or Kallor, and never goes to Bastion.
+- **Ch 4's `burn`** means the squad's own edge's kelyk stores. Silanah burns Gradithan's camp later, and the squad hears it as rumour.
+- **Ch 5:** the Hounds run toward the city. The crossroads torches are seen far off at dusk on the last day, never closer.
+- **Ch 6:** the Fourth hold a different breach, or the Gadrobi streets behind the wall. They are never at Traveller's breach, never with Cotillion, never in the gaol. **No Hound dies at their hands** (rule 14). So **the mortal fight is the Guild's knives**, come under cover of the night, with the Contract deciding how many. A Hound passes the end of the street as a "survive" beat.
+- **Ch 7:** there is no Andii procession. Brood carries Rake on an ox cart to a barrow outside the city, with tens of thousands following. The Fourth walk at the far back. The city's bells toll for Rake, and the plan's bell for every soldier rings under them.
+- **Patrons:** Hood answers in Ch 1–5. In Ch 6, "the dead" answer, nameless, marching somewhere else. From Ch 7 on, the Guardians of the Gate answer.
+- **Names:** the journeyman is **Vasso**, the former Seerdomin **Edrem** (always by his own name; "wore the grey once"). Minor NPC names come from the canon sheet's six.
+- **Keep-open rules 70–83** are in `series-canon.md` §(a). The page checks are in `open-questions.md` Q26.
 
 # Book Eight: beside *Toll the Hounds* (plan)
 
