@@ -115,7 +115,7 @@ const r = await page.evaluate(async () => {
   startExplore('b8_c2_town'); out.town.gateOpen = has('b8_c2_to_fields', /On, east/) && has('b8_c2_to_fields', /Not now/);
   take('b8_c2_to_fields', /On, east/); out.fl = {area:S.area, ph:S.f.b8_c2_ph, seen:S.f.b8_c2_fieldsSeen, sing:/they sing/i.test(DLG.b8_c2_fields_arrive().txt), notStraw:/not straw/.test(DLG.b8_c2_fields_arrive().txt)};
   /* phase 4: the fields: the fire before the rescue, the gap (its "yes, but"; the fight, two grounds, pollen) */
-  talk('b8_c2_fire'); out.fl.fireShut = !has('b8_c2_fire', /watch/) && has('b8_c2_fire', /rest/); talk('b8_c2_fields_calder'); out.fl.calder = /They know us/.test(DLG.b8_c2_fields_calder().txt);
+  talk('b8_c2_fire'); out.fl.fireShut = !has('b8_c2_fire', /Sit up with the watch/) && has('b8_c2_fire', /rest/); talk('b8_c2_fields_calder'); out.fl.calder = /They know us/.test(DLG.b8_c2_fields_calder().txt);
   talk('b8_c2_gap'); out.fl.gapNot = has('b8_c2_gap', /Not now/); out.fl.red = /red scarf/.test(DLG.b8_c2_gap().txt);
   const sg = JSON.stringify(S); near('b8_c2_gap', /Stop up your ears/, 'sgt'); out.fl.near = !!(S.rattled || {}).sgt; B = null; restore(sg, 'b8_c2_fields');
   const cf = b8Contract(); out.fl.fight = await force('b8_c2_fields'); out.fl.con = b8Contract() - cf; out.fl.done = S.f.b8_c2_fieldsDone === 1 && S.f.b8_c2_drover === 'saved'; out.fl.never = /never do/.test(DLG.b8_c2_fields_after().txt);

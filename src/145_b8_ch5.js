@@ -645,7 +645,8 @@ You know now how they wait on a road, and where they lie up, and which way they 
       ch:[{t:'Back down.', go:()=>startExplore()}]}),
     b8_c5_rise_back:()=>({sp:'The rise', scene:'b8_c5_wayhouse', txt:
 `Down the rise is the road, and Calder's wagons coming on along it slowly.`,
-      ch:[{t:'Back to the halt.', go:()=>startExplore('b8_c5_road')}]}),
+      ch:[{t:'Back to the halt.', onward:true, go:()=>startExplore('b8_c5_road')},
+          {t:'Not now.', go:()=>startExplore('b8_c5_rise')}]}),
     b8_c5_rise_on:()=>({sp:'The road west', scene:'b8_c5_wayhouse', txt: S.f.b8_c5_knivesDone ?
 `West, down off the rise, the road, and the wall of the city standing up out of the grass with lanterns all along the top of it. The wagons fall in behind you. The light is going.` :
 `West. Not with them sitting on the rise behind you.`,

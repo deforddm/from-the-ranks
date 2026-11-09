@@ -467,7 +467,8 @@ b86Ph() === 1 ? `South, the lane runs down between the tanneries to the foot of 
 "Malazans," he says, as the Fourth comes down. He does not get up. "The ones up the street from the Phoenix. I know you. You pay your rent." He nods at the brazier. "Warm your hands. There's nothing out there tonight but grass."${b86If('edrem', `\n\nEdrem looks up at the wall, all the length of it, with an expression nobody in the Fourth has seen on him before. "I have been on the other side of a wall like this," he says. "It looks different from here."`)}${b86If('vasso', `\n\nVasso looks up at the walk, at the young watchmen, and further, at the roofs behind. "No one watches the wall," he says. "Everybody watches the city."`)}`,
       ch:[{t:'"Quiet up there?"', go:'b8_c6_watch_quiet'},
           {t:'Edrem, looking up at the wall.', req:()=>b8In('edrem') && !S.f.b8_c6_edremWall, go:'b8_c6_edrem_wall'},
-          {t:'Back up into the lanes.', go:()=>startExplore('b8_c6_lanes')}]}),
+          {t:'Back up into the lanes.', onward:true, go:()=>startExplore('b8_c6_lanes')},
+          {t:'Not now.', go:()=>startExplore('b8_c6_wallfoot')}]}),
     b8_c6_edrem_wall:()=>({sp:'Edrem', scene:'b8_gadrobi', fx:()=>{ S.f.b8_c6_edremWall = 1; b86L('edrem', 1); }, txt:
 `Edrem walks along the foot of the wall a little way with one hand flat on the stone, like a man beside a horse he does not know yet.
 

@@ -147,6 +147,8 @@ Tiers by Ch 6: `paper` on every `quiet` road, `price`/`watched` on `hunt`, `vete
 7. **Fire lines copied between chapters (style).** Ch 6's late Vasso and Dannet lines and Ch 3's late Ellis line opened word for word as Ch 1's; reworded. Edrem's "to nobody in particular" (Ch 3 and Ch 4) now differs in Ch 4.
 8. **The rest line (style).** "The Fourth sits an hour by… Wounds close, mostly." was in all seven chapters; Ch 2–7 now vary it.
 9. **Rule 17 (the historian).** Picker's vision placed him "at the corner table": now just "the old historian".
+10. **"Not now" (onward_test).** Ch 5's `b8_c5_rise_back` and Ch 6's `b8_c6_watch` had an onward step with no way to stay; both now offer "Not now".
+11. **A stale test (b8ch2).** The Ch 2 test read any "watch" at the fire as the way on, so the games' Last Peg ("the dog watch") failed it after the merge. It now looks for "Sit up with the watch".
 
 **Repeated phrases left** (five or more across chapters): the map hint "Tap ground to move · tap a figure to talk" (UI); "up the street from the Phoenix" (13, the door's one address, by design); "a night that does not lift" (Black Coral's tag, Ch 2–3 and visions); "someone on a roof saw it" (the brief's own "yes, but" words, Ch 1, 5, 6, 7); "the tavern with the painted sign" (Ch 1, 6, the brief's name for it); "from the Seven Cities lot" (the brief's); "Ressa has her hands round a cup" (Ch 1–3, 6, her fire opener; only a transfer sees it); Edrem's "the mace across his knees" (Ch 3–7, his tic); Vasso "sits with his back to…" (Ch 1, 3, 4, 7, varied after). "With her back to the…" (11) is spread across many speakers and settings.
 
