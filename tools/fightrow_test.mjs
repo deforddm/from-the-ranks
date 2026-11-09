@@ -30,7 +30,7 @@ const out = await page.evaluate(() => {
       for (const d of ['story', 'soldier', 'bridgeburner']) { r[d] = foe(book, ch, d, id); r[d + '0'] = emptied(tbl, id, () => foe(book, ch, d, id)); }
       r.other = foe(book === 'gotm' ? 'dg' : 'gotm', ch, 'bridgeburner', id); r.other0 = emptied(tbl, id, () => foe(book === 'gotm' ? 'dg' : 'gotm', ch, 'bridgeburner', id)); rows.push(r); }
     // Soldier never stronger than Bridgeburner, every fight with a row
-    const ids = [...new Set([...Object.keys(SOLDIER_FIGHT), ...Object.values(BB).flatMap(t => Object.keys(t)), ...Object.keys(B5GAP_FIGHT), ...Object.keys(B6GAP), ...Object.keys(B7GAP)])];
+    const ids = [...new Set([...Object.keys(SOLDIER_FIGHT), ...Object.values(BB).flatMap(t => Object.keys(t)), ...Object.keys(B5GAP_FIGHT), ...Object.keys(B6GAP), ...Object.keys(B7GAP), ...Object.keys(B8GAP)])];
     const cap = ids.filter(id => !SOLDIER_SKIP.has(id)).map(id => { const book = bookOf(id); if (typeof setBook === 'function') setBook(book); const ch = chOf(id); return { id, s: foe(book, ch, 'soldier', id), b: foe(book, ch, 'bridgeburner', id) }; });
     return { rows, cap };
   } catch (e) { return { err: e.stack.split('\n').slice(0, 3).join(' | ') }; }
