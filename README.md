@@ -9,6 +9,7 @@ A non-commercial Malazan Book of the Fallen fan RPG series for personal play, to
 - **Book Five, Indebted**, beside *Midnight Tides*: a new Letherii squad, the Sixth Company of the Whitefinder Battalion, from Letheras north to High Fort and back to the city's fall, every soldier in debt.
 - **Book Six, Bones in the Walls**, beside *The Bonehunters*: both squads back, taking turns. Book Two's squad marches with the Fourteenth to Y'Ghatan and the sea; the Fourth march with Onearm's Host through the plague to G'danisban.
 - **Book Seven, Unwitnessed**, beside *Reaper's Gale*: the invasion of Lether from both sides. Book Two's squad, lent to Keneb's marines, marches on Letheras; Book Five's Letherii are sent out against them.
+- **Book Eight, Time Served**, beside *Toll the Hounds*: the Fourth, out of the army years after Coral, keep a door in Darujhistan until the Assassins' Guild puts their names on a paper.
 
 Turn-based tactical combat, dialogue skill checks, warren strain, Moranth munitions and a Deck of Dragons reading in every chapter.
 
@@ -65,6 +66,7 @@ Chapters are content modules (`src/040_chapter1.js`, …) registered at boot; ea
 
 Newest first.
 
+- v11.0.0 — Book Eight, Toll the Hounds, *Time Served* (David, Nov 8–9, 2026): the Fourth in Darujhistan against the Assassins' Guild; the Contract (0–10, src/140 b8Con) sets foes and the way out; seven chapters 141–147, visions 148; transfers from Book Three (daru, standdown) and Book Six (highfist, hanarara, home); levels 16–21. Balance (David, Nov 9): B8SOLDIER/B8GAP to the series targets, Soldier mean 94.6, Bridgeburner mean 82.9, none under 65; docs/v11.0-balance.md, docs/tth-*.md.
 - v8.2.0 — Backups (David, Oct 30, 2026: players who cleared their browser lost every save). src/035b_backup.js: a backup file with every sergeant and the settings (download, or the phone's share sheet), Load a backup file with a two-tap guard on name clashes, a reminder on the title and at every chapter end that speaks up three chapters past the last backup, and navigator.storage.persist() on the first save. Save codes unchanged. tools/backup_test.mjs.
 - v8.1.0 — The item pass (David, Oct 30, 2026): one stat line for every item everywhere (itemStatLine, src/14b), weapon damage shown, every weapon its own profile, two trinket places, sixteen trinkets with real effects, Book Four armour, new Book One and Five weapons, Allocate weighs specials, the kit in the Pack tab; docs/items-pass.md. v8.1.1 redrew all 145 items to one look (src/89d–89g).
 - v10.3.1 — A carried-over sergeant's name is filled in but editable on the new-sergeant screen (David, Nov 9, 2026; `lockName` in src/029).
