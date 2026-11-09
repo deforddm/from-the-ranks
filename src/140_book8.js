@@ -311,13 +311,65 @@ const FOE_SORC_B8 = ['b8_kelykpriest']; FOE_SORC_B8.forEach(k => FOE_SORC.add(k)
 { const _ai = aiTurn; aiTurn = async function(u, turnId){ if (u && u.b8hound) { if (!B || B.over || B.turn !== turnId) return; if (!u.b8said) { u.b8said = 1; blog(`<em>${u.name} stands in the street and looks past the squad, at something further off.</em>`); } updBattleUI(); if (!checkEnd()) endTurn(); return; } return _ai(u, turnId); }; }
 { const _th = threatsAt; threatsAt = function(u, x, y){ return _th(u, x, y).filter(e => !e.b8hound); }; }
 
-/* ---- Book Eight's balance: empty until the chapters exist (the balance step, docs/v10.2-balance.md method). B8SOLDIER rows go into
-   SOLDIER_FIGHT (Soldier, by fight id); B8GAP is Bridgeburner's per-fight boost ({ac +, atk +, hp ×, dmg +}, as B7GAP). B8GAP_ROW is the
-   row a b8_ fight without its own row gets on Bridgeburner: null for now, so nothing is boosted until the lead tunes it. ---- */
-const B8SOLDIER = {};
+/* ---- Book Eight's balance (David, Mon Nov 9, 2026, ~7:41 AM PST: tune to the series targets, Book Eight tables only; docs/v11.0-balance.md,
+   the docs/v10.2-balance.md method). As built every fight was won 100% on both difficulties (1-12% health lost): the Fourth at 16-19
+   against street knives and cultists. B8SOLDIER rows go into SOLDIER_FIGHT (Soldier only, by fight id), tuned to about 90% won; the first
+   fight (b8_c1_alley) and the survive fights (b8_c4_edge, b8_c6_street) have none and stay near 100%. B8GAP is Bridgeburner's per-fight
+   boost ({ac +, atk +, hp ×, dmg +}, as B7GAP), tuned to about 75-80% won; B8GAP_ROW is the row a b8_ fight without its own row gets.
+   Measured with the harness's Contract at 4 (three knives on Ch 5's road, four in Ch 6's mortal fight, two on Ch 7's roofs): a higher
+   Contract puts more and better knives on those tiles, under the same row, so those three fights are harder than measured at 6+.
+   The rows are big (to hit and armour +3 to +13): the squad is a veteran Fourth, and these are the foes the story gives it. ---- */
+const B8SOLDIER = {
+  b8_c1_den:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c1_hunt:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c1_chancers:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c2_raid:{ac:10, atk:10, hp:6.0, dmg:12},
+  b8_c2_town:{ac:8, atk:9, hp:5.25, dmg:11},
+  b8_c2_fields:{ac:5, atk:6, hp:3.75, dmg:8},
+  b8_c3_road:{ac:5, atk:5, hp:3.8, dmg:7},
+  b8_c3_ridge:{ac:4, atk:5, hp:3.25, dmg:7},
+  b8_c3_sellers:{ac:7, atk:8, hp:4.75, dmg:10},
+  b8_c4_water:{ac:9, atk:9, hp:5.5, dmg:11},
+  b8_c4_drunk:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c4_stores:{ac:9, atk:9, hp:5.5, dmg:11},
+  b8_c5_grass:{ac:8, atk:9, hp:5.25, dmg:11},
+  b8_c5_peddler:{ac:10, atk:10, hp:6.0, dmg:12},
+  b8_c5_knives:{ac:6, atk:6, hp:4.0, dmg:9},
+  b8_c6_masks:{ac:8, atk:9, hp:5.25, dmg:11},
+  b8_c6_wall:{ac:5, atk:5, hp:3.4, dmg:6},
+  b8_c6_knives:{ac:6, atk:6, hp:4.2, dmg:8},
+  b8_c7_looters:{ac:4, atk:5, hp:3.25, dmg:7},
+  b8_c7_roofs:{ac:12, atk:12, hp:7.0, dmg:14},
+  b8_c7_doorway:{ac:8, atk:9, hp:5.25, dmg:11},
+};
 Object.assign(SOLDIER_FIGHT, B8SOLDIER);
-const B8GAP_ROW = null;
-const B8GAP = {};
+const B8GAP_ROW = {ac:5, atk:5, hp:3.5, dmg:7}; // a b8_ fight without its own row
+const B8GAP = {
+  b8_c1_alley:{ac:5, atk:5, hp:3.5, dmg:7},
+  b8_c1_den:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c1_hunt:{ac:4, atk:4, hp:3.0, dmg:6},
+  b8_c1_chancers:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c2_raid:{ac:8, atk:8, hp:5.75, dmg:10},
+  b8_c2_town:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c2_fields:{ac:5, atk:5, hp:3.5, dmg:7},
+  b8_c3_road:{ac:4, atk:4, hp:3.0, dmg:6},
+  b8_c3_ridge:{ac:4, atk:4, hp:3.0, dmg:6},
+  b8_c3_sellers:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c4_water:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c4_drunk:{ac:5, atk:5, hp:3.5, dmg:7},
+  b8_c4_edge:{ac:5, atk:5, hp:3.5, dmg:7},
+  b8_c4_stores:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c5_grass:{ac:7, atk:7, hp:4.5, dmg:9},
+  b8_c5_peddler:{ac:8, atk:8, hp:5.0, dmg:10},
+  b8_c5_knives:{ac:4, atk:4, hp:3.0, dmg:6},
+  b8_c6_masks:{ac:6, atk:6, hp:4.0, dmg:8},
+  b8_c6_wall:{ac:3, atk:3, hp:2.65, dmg:5},
+  b8_c6_street:{ac:4, atk:5, hp:3.25, dmg:7},
+  b8_c6_knives:{ac:4, atk:4, hp:3.0, dmg:6},
+  b8_c7_looters:{ac:3, atk:3, hp:2.5, dmg:5},
+  b8_c7_roofs:{ac:12, atk:13, hp:7.25, dmg:15},
+  b8_c7_doorway:{ac:6, atk:7, hp:4.25, dmg:9},
+};
 const b8Gap = () => { if (!b8On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B8GAP[id]) || (id && /^b8_/.test(id) ? B8GAP_ROW : null); };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b8Gap(); if (!g || u.b8hound) return u;
