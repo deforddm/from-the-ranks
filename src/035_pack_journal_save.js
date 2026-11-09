@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['10.3.4', ['The cusser artwork no longer shows a lit spark: Moranth munitions have no fuse. They go off when the shell breaks, or when an acid timer eats through its wax plug.']],
   ['10.3.3', ['The cusser artwork carries the Moranth seal, not Maud\'s name: Maud is the one cusser Kettle named.']],
   ['10.3.2', ['Book Four opening: with one squadmate off the Chain, the line now reads "was dealt with you".']],
   ['10.3.1', ['A sergeant carried into a new book can be renamed there: the name is filled in for you, and you can change it.']],
