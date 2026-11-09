@@ -157,6 +157,28 @@ SCENEX.b8_barrow = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .66, .5); };
 
+/* the pilgrims' road: the old Domin flat and grey under a light that never finishes, no shadows; the road going east with pilgrims on it,
+   small, in twos and threes; dead trees; far east the smudge of the barrow's lamps; and west, behind, the Andii's night standing on the plain
+   like a wall, its edge as sharp as a drawn line */
+SCENEX.b8_c3_road = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5;
+  ctx.drawImage(sceneLayer('b83:road', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#3a3c42'],[.7,'#55565a'],[1,'#626260']]); x.fillRect(0, 0, W, hz + 2); // a grey that never finishes
+    x.fillStyle = '#020306'; x.fillRect(0, 0, W*.16, hz + 2); x.fillStyle = vgrad(x, 0, hz, [[0,'rgba(2,3,6,.9)'],[1,'rgba(2,3,6,.6)']]); x.fillRect(W*.16, 0, W*.02, hz); // the night, west, its edge
+    for (let i = 0; i < 6; i++) { x.fillStyle = 'rgba(230,236,250,.7)'; x.fillRect(W*(.02 + hash(i, 8370)*.12), hz - H*(.02 + hash(i, 8371)*.08), 1, 1); } // the city's lamps inside it
+    x.fillStyle = '#4a4a48'; x.beginPath(); x.moveTo(0, hz); for (let i = 0; i <= 20; i++) x.lineTo(W*i/20, hz - H*(.006 + hash(i, 8372)*.012)); x.lineTo(W, hz); x.closePath(); x.fill();
+    x.fillStyle = vgrad(x, hz, H, [[0,'#4a4844'],[1,'#26241f']]); x.fillRect(0, hz, W, H - hz); // stubble and dead earth
+    for (let i = 0; i < 160; i++) { const d = hash(i, 8373), yy = hz + Math.pow(d, .8)*(H - hz); x.fillStyle = `rgba(30,28,24,${(.2 + d*.3).toFixed(2)})`; x.fillRect(hash(i, 8374)*W, yy, 1 + d*2, 1); }
+    x.fillStyle = '#5a5850'; x.beginPath(); x.moveTo(W*.4, H); x.lineTo(W*.62, H); x.lineTo(W*.86, hz); x.lineTo(W*.84, hz); x.closePath(); x.fill(); // the road, going east
+    [[.18, .62, 1], [.72, .58, .7], [.9, .7, 1.2]].forEach(([u, v, k]) => { x.strokeStyle = '#1e1c1a'; x.lineWidth = 1.6*k; x.beginPath(); x.moveTo(W*u, H*v); x.lineTo(W*u, H*v - 26*k); x.moveTo(W*u, H*v - 14*k); x.lineTo(W*u + 9*k, H*v - 22*k); x.moveTo(W*u, H*v - 18*k); x.lineTo(W*u - 7*k, H*v - 25*k); x.stroke(); }); // dead trees
+    for (let i = 0; i < 4; i++) { x.fillStyle = 'rgba(240,244,252,.8)'; x.fillRect(W*(.85 + i*.012), hz - 3 - (i % 2), 1, 1); } glow(x, W*.87, hz - 3, H*.06, '#c8d4f0', .2); // the barrow's lamps, far off
+    x.fillStyle = '#2a2622'; x.save(); x.translate(W*.56, H*.74); x.rotate(.3); x.fillRect(-12, -5, 24, 8); x.restore(); ell(x, W*.5, H*.79, 5, 5, '#1a1612'); // the cart, over, a wheel off
+  }), 0, 0, W, H);
+  // pilgrims on the road, small, going east, slowly
+  for (let i = 0; i < 9; i++) { const k = (hash(i, 8375) + (mo ? t/90000 : 0)) % 1, u = .5 + k*.35, v = 1 - k*.48, s = 1.4 - k; const px = W*(u + (hash(i, 8376) - .5)*.04), py = H*v;
+    ctx.fillStyle = 'rgba(30,26,22,.9)'; ctx.fillRect(px - 1.4*s, py - 6*s, 2.8*s, 6*s); ctx.beginPath(); ctx.arc(px, py - 7*s, 1.2*s, 0, 7); ctx.fill(); if (i % 3 === 0) { ctx.fillStyle = 'rgba(70,60,44,.9)'; ctx.fillRect(px - 2.6*s, py - 6*s, 1.4*s, 3*s); } }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.08 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .55, .5); };
+
 /* the room over the chandler's: a narrow room of whitewash gone grey, two beds, the window with its wide stone sill and the shutters open,
    and outside on iron arms the lamps burning against the night; the reading's place */
 SCENEX.b8_c3_lodging = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fy = H*.8;
@@ -188,12 +210,13 @@ SCENEX.b8_c3_lodging = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 SCENEX.b8_c3_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, wall = H*.78;
   ctx.drawImage(sceneLayer('b83:harbour', W, H, (x, W, H) => {
     b83Night(x, W, H, hz);
-    x.fillStyle = vgrad(x, hz, wall, [[0,'#04050a'],[1,'#0a0c14']]); x.fillRect(0, hz, W, wall - hz); // the bay
+    x.fillStyle = vgrad(x, hz, wall, [[0,'#141a28'],[1,'#0a0c14']]); x.fillRect(0, hz, W, wall - hz); // the bay
+    glow(x, W*.64, hz, W*.42, '#4a5a80', .22); x.fillStyle = 'rgba(70,86,120,.25)'; x.fillRect(0, hz - 1, W, 2); // a faint haze along the horizon, so the shape stands against it
     // the shape in the water, far out: a broken black mass, tilted, with jagged spires, and its reflection
-    const sx = W*.64, sy = hz + H*.06, s = Math.min(W, H*1.6)*.0018;
+    const sx = W*.64, sy = hz + H*.085, s = Math.min(W, H*1.6)*.00024;
     const shape = [[-60, 0], [-52, -14], [-40, -18], [-34, -38], [-28, -20], [-12, -26], [-6, -52], [0, -30], [14, -34], [22, -62], [28, -36], [44, -28], [52, -12], [64, 0]];
     x.save(); x.translate(sx, sy); x.rotate(-.08); x.fillStyle = '#010102'; x.beginPath(); shape.forEach(([px, py], i) => i ? x.lineTo(px*s*10, py*s*10) : x.moveTo(px*s*10, py*s*10)); x.closePath(); x.fill();
-    x.strokeStyle = 'rgba(120,140,180,.12)'; x.lineWidth = 1; x.beginPath(); shape.slice(0, 8).forEach(([px, py], i) => i ? x.lineTo(px*s*10, py*s*10) : x.moveTo(px*s*10, py*s*10)); x.stroke(); // a little lamplight on its landward face
+    x.strokeStyle = 'rgba(150,170,210,.45)'; x.lineWidth = 1; x.beginPath(); shape.slice(0, 8).forEach(([px, py], i) => i ? x.lineTo(px*s*10, py*s*10) : x.moveTo(px*s*10, py*s*10)); x.stroke(); // a little lamplight on its landward face
     x.globalAlpha = .35; x.scale(1, -.5); x.beginPath(); shape.forEach(([px, py], i) => i ? x.lineTo(px*s*10, py*s*10) : x.moveTo(px*s*10, py*s*10)); x.closePath(); x.fill(); x.restore();
     // the harbour wall: black stone patched pale, along the bottom
     x.fillStyle = vgrad(x, wall, H, [[0,'#1a1a20'],[1,'#08080a']]); x.fillRect(0, wall, W, H - wall); x.fillStyle = '#2a2a32'; x.fillRect(0, wall, W, H*.012);
@@ -201,7 +224,7 @@ SCENEX.b8_c3_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     for (let i = 0; i < 14; i++) { x.strokeStyle = 'rgba(0,0,0,.4)'; x.lineWidth = .6; x.beginPath(); x.moveTo(W*i/14, wall); x.lineTo(W*i/14, H); x.stroke(); }
   }), 0, 0, W, H);
   // the fishing boats' lamps in a long ring round the shape, far off, keeping away, rising and falling a little on the swell
-  const sx = W*.64, sy = hz + H*.06;
+  const sx = W*.64, sy = hz + H*.085;
   for (let i = 0; i < 9; i++) { const a = i/9*Math.PI*2, bob = mo ? Math.sin(t/1400 + i)*1 : 0, lx = sx + Math.cos(a)*W*.2, ly = sy + Math.sin(a)*H*.035 + bob; if (ly < hz + 2) continue;
     ctx.fillStyle = 'rgba(255,210,150,.85)'; ctx.fillRect(lx - 1, ly - 1, 2, 2); ctx.fillStyle = 'rgba(255,210,150,.25)'; ctx.fillRect(lx - .5, ly + 2, 1, 5 + (mo ? Math.sin(t/300 + i)*1.5 : 0)); }
   // the wall's lamps on poles, and each one standing upside down in the water

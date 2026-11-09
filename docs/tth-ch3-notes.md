@@ -115,9 +115,11 @@ Paid xp: about 456 with everything, 252 with the road alone. Not `guild:true`: n
 
 - Nothing the engine lacked. No wraps. The shroud is the engine's `TRICKS.b8_shroud`, used as written.
 - One new ground, `TILEX.b8_c3_mound`, in 143b (Book Three's field at night plus the barrow, lamps on poles, mats and the sellers' tent). The chapter file registers a `??=` fallback.
-- Three scenes added in `CH.scenes` (`b8_c3_lodging`, `b8_c3_harbour`, `b8_c3_tavern`), drawn in 143b; 143b also draws 140's `b8_blackcoral` and `b8_barrow`, replaces `FIGX.edrem` (the bust's kit: filed grey scale, the pilgrim's cloak, the slung mace, the coral token), and adds `b8_c3_thessaly`, `b8_c3_priestess`.
+- Four scenes added in `CH.scenes` (`b8_c3_lodging`, `b8_c3_harbour`, `b8_c3_tavern`, `b8_c3_road`), drawn in 143b; 143b also draws 140's `b8_blackcoral` and `b8_barrow`, replaces `FIGX.edrem` (the bust's kit: filed grey scale, the pilgrim's cloak, the slung mace, the coral token), and adds `b8_c3_thessaly`, `b8_c3_priestess`.
 - Glossary: "The Andii's night", "The pilgrims' road", "A pilgrim's token" pushed onto `GLOSSX.tth`.
 - No edits outside my files.
+- Lint warns that `b8_c3_anvil` is an orphan: it is opened through `b8_c3_barrow_go` (a function, as Ch 1's alley mouth), not a string link. `b8_c3_card` is an orphan by design, as every book's card node.
+- **Art, looked at in a 390×844 browser:** the lodging, the harbour (fixed while looking: the wreck was black on black and too large; it now sits small on a hazed horizon), the tavern, the road (the road nodes first borrowed the barrow backdrop; they now have their own, `b8_c3_road`), the barrow, the three maps, the three items.
 
 ## Tests
 

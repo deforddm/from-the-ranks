@@ -50,7 +50,7 @@ const b83Bearer = () => trickBy('b3_c7_anvil') || 'sgt';
 /* ---- the shroud (b8_shroud) is the engine's (140): Black Coral's trick, earned at the landward gate behind a ✦ wits 17 check ---- */
 
 /* ---- borrowed pictures until the artist's file (143b) replaces them: three scenes, the ground, two figures, the three items ---- */
-{ const like = {b8_c3_lodging:'b8_door', b8_c3_harbour:'b8_blackcoral', b8_c3_tavern:'b8_door'};
+{ const like = {b8_c3_lodging:'b8_door', b8_c3_harbour:'b8_blackcoral', b8_c3_tavern:'b8_door', b8_c3_road:'b8_road_east'};
   Object.entries(like).forEach(([k, l]) => { SCENEX[k] ??= (cv, t) => (SCENEX[l] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); }); }
 if (typeof TILEX !== 'undefined') TILEX.b8_c3_mound ??= (ctx, ch, x, y, T, dark) => (TILEX.b3_c7_field_night || TILEX.plain_night)(ctx, ch === 'M' || ch === 'l' || ch === 'p' ? ',' : ch === 'k' ? '=' : ch, x, y, T, dark);
 if (typeof FIGX !== 'undefined') { FIGX.b8_c3_thessaly ??= (ctx, h, t, o) => (FIGX.b5_c1_clerk || FIGX.b2soldier || (() => {}))(ctx, h, t, o);
@@ -194,6 +194,7 @@ const B8CH3 = {
   scenes:{
     b8_c3_lodging:{loc:'Black Coral', sub:'A lodging over a chandler\'s · noon', cap:'A narrow room over a chandler\'s on the harbour street, a wide stone sill, and lamps lit on iron arms outside the window at noon.', amb:'explore'},
     b8_c3_harbour:{loc:'Black Coral', sub:'The harbour wall', cap:'The bay flat and black under the night, the lamps of the harbour along the wall, and far out a broken black shape in the water.', amb:'explore'},
+    b8_c3_road:{loc:'Outside Black Coral', sub:'The pilgrims\' road', cap:'The old Domin flat and grey under a light that never finishes, the road full of pilgrims walking east, and behind them the city\'s night standing on the plain like a wall.', amb:'explore'},
     b8_c3_tavern:{loc:'Black Coral', sub:'A tavern off the harbour street · another night', cap:'A low room of lamps and carters and Andii-sworn clerks, and in the far corner two figures at a board, left alone.', amb:'explore'} },
 
   end:{
@@ -402,38 +403,38 @@ It does not last. It does not need to. When it is wanted, on a squadmate's shoul
       ch:[{t:'Back to the gate.', go:'b8_c3_gate'}]}),
 
     /* ======== phase 2: the pilgrims' road ======== */
-    b8_c3_road_arrive:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', fx:()=>{ S.f.b8_c3_roadSeen = 1; }, txt:
+    b8_c3_road_arrive:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', fx:()=>{ S.f.b8_c3_roadSeen = 1; }, txt:
 `Outside the gate the grey is worse than the dark, as Thessaly said. It is the light of a day that has given up: no shadows, no sun, the old Domin flat and colourless to the edge of everything, and the road going east across it full of people walking.
 
 Pilgrims. Old ones and young ones, in twos and threes and alone, with bundles and without, all going the same way. A morning's walk east, under a smudge of lamps on the horizon, is the barrow.
 
 Halfway there a cart has gone over in the road, a wheel off, and in front of it, with a knot of pilgrims crouched behind him, a man is standing in old grey scale with a mace in both hands, looking east along the road at something coming.${b83If('vasso', `\n\nVasso has his hand on his knife. "Outside the walls," he says. "Twice now." He does not sound as if he is getting used to it.`)}`,
       ch:[{t:'To the cart.', go:()=>startExplore()}]}),
-    b8_c3_cart:()=>({sp:'The broken cart', scene:'b8_barrow', txt: S.f.b8_c3_roadDone ?
+    b8_c3_cart:()=>({sp:'The broken cart', scene:'b8_c3_road', txt: S.f.b8_c3_roadDone ?
 `The cart is back on three wheels and a prop, and the pilgrims are loading it again, slowly, with the care of people who have very little and have just nearly lost it.${b83If('edrem', ' Edrem has his shoulder under the axle while they do it.')}` :
 `The cart is a pilgrims' cart, hired by a dozen of them together in Black Coral to carry the old and the lame out to the barrow, and it has thrown a wheel in a rut. They are crouched behind it now. The man in grey scale is standing in front of it, between them and the road east.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
     /* Edrem: the first meeting, before the raiders */
     b8_c3_edrem:()=>{ const d = S.f.b8_edremDone;
-      if (d === 2) return {sp:'Edrem', scene:'b8_barrow', txt:
+      if (d === 2) return {sp:'Edrem', scene:'b8_c3_road', txt:
 `Edrem is on the road still, by the cart, with his mace slung, watching the pilgrims go by. He nods to you when you come up, one sentry to another.`,
         ch:[{t:'"Walk with us, Edrem."', fx:()=>{ b8Join('edrem'); b83L('brisk', 1); }, go:'b8_c3_edrem_join'},
             {t:'Not now.', go:()=>startExplore()}]};
       if (S.f.b8_c3_roadDone) return DLG.b8_c3_edrem_after();
-      return {sp:'A man in grey scale', scene:'b8_barrow', fx:()=>{ S.f.b8_c3_edremMet = 1; }, again:()=>'The man in grey scale, in front of the cart, watching the road east.', txt:
+      return {sp:'A man in grey scale', scene:'b8_c3_road', fx:()=>{ S.f.b8_c3_edremMet = 1; }, again:()=>'The man in grey scale, in front of the cart, watching the road east.', txt:
 `He is forty or so, grey in the stubble, with a face that has been out in a great deal of bad light. The scale is old Pannion grey, good work once, with the marks on it filed off so hard the metal is bright in the scars. There is a pilgrim's cloak over one shoulder and a bit of coral on a cord at his throat. He does not take his eyes off the road.
 
 "Raiders," he says. "Seven. Three on the road, the rest round by the ditch, for the cart. They come every few days." He shifts his grip on the mace. "You're Malazans. Soldiers. I know how you stand."${b83If('brisk', `\n\nBrisk has already set her shield beside him, without being asked. He looks at it, and at her, and something in his shoulders comes down a finger's width.`)}`,
         ch:[{t:'"Who are you?"', go:'b8_c3_edrem_who'},
             {t:'"Then we\'ll stand with you." Face the road.', go:'b8_c3_road_start'},
             {t:'Not now.', go:()=>startExplore()}]}; },
-    b8_c3_edrem_who:()=>({sp:'A man in grey scale', scene:'b8_barrow', txt:
+    b8_c3_edrem_who:()=>({sp:'A man in grey scale', scene:'b8_c3_road', txt:
 `"Edrem." He says it as if he has not had much use for it lately. "I wore the grey once. Seerdomin, the Domin called us. Nine years." His jaw works. "No one calls me anything now. I keep this road. I'm not paid. That's the point of it."
 
 He nods east, where there are figures on the road now, three of them, coming on at a walk that is too easy. "They'll want the cart. The pilgrims carry what they mean to lay on the barrow. Some of it's worth taking."`,
       ch:[{t:'"Then we\'ll stand with you, Edrem."', go:'b8_c3_road_start'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_road_start:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', fx:()=>{ S.f.b8_c3_edremMet = 1; }, txt:
+    b8_c3_road_start:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', fx:()=>{ S.f.b8_c3_edremMet = 1; }, txt:
 `Three of them on the road, in hides and road-dust, with a sellsword in a good coat walking behind like a man out to see a property. The rest will be in the ditch. Edrem said so, and Edrem has stood here before.
 
 "Old soldiers," the sellsword calls, cheerfully, when he sees the Fourth. "Pilgrims too, are you? You'll want to lighten your load before the barrow. We help with that."${b83If('kettle', `\n\nKettle has a sharper in her hand. "Not near the cart," she says. "I know. I know."`)}${b83If('vasso', `\n\nVasso, at your shoulder: "The one in the coat is a Daru bravo gone to the plains. You can tell by the boots." He sounds personally disappointed in the man.`)}`,
@@ -443,10 +444,10 @@ He nods east, where there are figures on the road now, three of them, coming on 
             near:{t:()=>`Yes, but the stubble is cut short and sharp as pikes, and ${b83Nm(b83Who())} ${b83V(b83Who(), 'come', 'comes')} out of it with both shins opened. ${b83Nmc(b83Who())}'ll feel it in the fight.`, fx:()=>bruise(b83Who(), bruiseN())},
             fx:()=>{ S.f.b8_c3_roadTried = 1; }, go:()=>startBattle('b8_c3_road', nearMiss() ? {} : {surprise:'p'}), fail:'b8_c3_road_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_road_seen:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', txt:
+    b8_c3_road_seen:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', txt:
 `A dead tree goes over with a crack like a shot, and the sellsword laughs, and points, and the three in hides spread out on the road at a run.`,
       ch:[{t:'Shields up.', go:()=>startBattle('b8_c3_road', {surprise:'e'})}]}),
-    b8_c3_road_after:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', fx:()=>{ if (!S.f.b8_c3_roadDone) { S.f.b8_c3_roadDone = 1; gain('b8_c3_coralknife'); } }, txt:
+    b8_c3_road_after:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', fx:()=>{ if (!S.f.b8_c3_roadDone) { S.f.b8_c3_roadDone = 1; gain('b8_c3_coralknife'); } }, txt:
 `The road is quiet. The raiders who can run have run, back into the grey toward the ridge, and the sellsword in the good coat went with them, without the coat. The pilgrims come out from behind the cart one at a time, as if the road might not hold.
 
 The second sellsword had a long knife on him, dark iron with a grip of pale porous stone, the kind they sell in the smiths' street in Black Coral to people who mean to take one to the barrow. He took it off someone. It goes in the kit.
@@ -455,7 +456,7 @@ Edrem is standing where he stood, by the cart, with blood on his mace and his br
       ch:[{t:'To Edrem.', go:()=>{ startExplore(); talk('b8_c3_edrem_after'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
     /* Edrem, after the road: the join */
-    b8_c3_edrem_after:()=>({sp:'Edrem', scene:'b8_barrow', again:()=>'Edrem by the cart, his breath back, his mace slung.', txt:
+    b8_c3_edrem_after:()=>({sp:'Edrem', scene:'b8_c3_road', again:()=>'Edrem by the cart, his breath back, his mace slung.', txt:
 `"They'll be back," he says, when he can. "Three days. Four. They camp on the ridge, over there, in a fold out of the wind, with everything they've taken off the road." He looks at the pilgrims loading the cart. "I can't take a camp. One man can't. I keep the road instead."
 
 He looks at the Fourth properly for the first time: the old kit, the old habits, the way you stand. "You're going to the barrow. Everyone is." A breath. "I've kept this road for years. I could keep it a while with somebody beside me. Or I could walk with you, out there, and back, wherever you're going. The road will keep a day." He does not say which he would rather. He is plainly a man who does not ask for things.${b83If('vasso', `\n\nVasso, quietly, to you: "He's like us. He just hasn't got a door."`)}`,
@@ -463,22 +464,22 @@ He looks at the Fourth properly for the first time: the old kit, the old habits,
           {t:'"Keep your road for now. We\'ll send for you."', fx:()=>{ S.f.b8_edremDone = 2; }, go:'b8_c3_edrem_wait'},
           {t:'"The road needs you more than we do."', fx:()=>{ S.f.b8_edremDone = 0; b83L('ohl', -1); }, go:'b8_c3_edrem_no'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_edrem_join:()=>({sp:'Edrem', scene:'b8_barrow', txt:
+    b8_c3_edrem_join:()=>({sp:'Edrem', scene:'b8_c3_road', txt:
 `${b8In('edrem') ? `He nods, once, the way he does everything, and slings the mace, and settles the pilgrim's cloak on his shoulder.
 
 "I don't pray," he says, as if it needed saying before anything else. "I'll stand where the praying people can see me. That's what I do." He looks down the road toward the barrow. "And I'll hold a line. I was good at that, once. For the wrong side." He falls in beside ${b83Say({brisk:'Brisk, shield to shield, without being told', _:'the squad, at the end of it, where a heavy goes'})}.` : `He nods, and stays by the cart. Six walk with the Fourth already, and a soldier can count. "When there's room," he says. "I'll be on the road. I'm always on the road."`}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
-    b8_c3_edrem_wait:()=>({sp:'Edrem', scene:'b8_barrow', txt:
+    b8_c3_edrem_wait:()=>({sp:'Edrem', scene:'b8_c3_road', txt:
 `He nods, as if that were the answer he expected from anybody.
 
 "The road," he says. "Ask anyone on it for Edrem. They'll point."`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
-    b8_c3_edrem_no:()=>({sp:'Edrem', scene:'b8_barrow', txt:
+    b8_c3_edrem_no:()=>({sp:'Edrem', scene:'b8_c3_road', txt:
 `"Yes," he says. "It does." He does not sound hurt. He sounds as if he has been told something he already knew. He goes back to the cart and puts his shoulder under the axle.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* the pilgrims by the cart: a coral token, and the sweet smell on one of them */
-    b8_c3_pilgrims:()=>({sp:'Pilgrims by the cart', scene:'b8_barrow', fx:()=>{ if (!S.f.b8_c3_token) { S.f.b8_c3_token = 1; gain('b8_c3_pilgrimtoken'); } }, again:()=>'The pilgrims, loading the cart.', txt:
+    b8_c3_pilgrims:()=>({sp:'Pilgrims by the cart', scene:'b8_c3_road', fx:()=>{ if (!S.f.b8_c3_token) { S.f.b8_c3_token = 1; gain('b8_c3_pilgrimtoken'); } }, again:()=>'The pilgrims, loading the cart.', txt:
 `An old man from the north, by his accent, comes over from the cart and takes your hand in both of his and presses something into it: a bit of coral on a plain cord. He does not stay to be thanked. He goes back to the cart and helps lift a woman with a bad leg onto it.
 
 "For luck," one of the others says. "They say." She smiles. "The priestesses say it's for nothing. That's why he gives them away."
@@ -487,18 +488,18 @@ One of the younger ones, at the back, has the sweet smell on her, and the wrong 
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* a dry well on the road */
-    b8_c3_well:()=>({sp:'A dry well', scene:'b8_barrow', again:()=>'The dry well by the road.', txt:
+    b8_c3_well:()=>({sp:'A dry well', scene:'b8_c3_road', again:()=>'The dry well by the road.', txt:
 `A well by the road, from when there were farms here, its windlass gone and its stones blackened by some old fire. It is dry. At the bottom, where the light does not quite reach, something glints: a flask, small, stoppered, thrown down. The sweet smell comes up out of the well, faint, like rot in a fruit store.${b83Say({kettle:`\n\nKettle looks down it and sniffs. "Someone had the sense to throw it away," she says. "Or ran out of sense after." She does not go down for it.`, _:'\n\nNobody goes down for it.'})}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* the raiders' camp on the ridge: optional */
-    b8_c3_ridge_view:()=>({sp:'The ridge path', scene:'b8_barrow', again:()=> S.f.b8_c3_ridgeDone ? 'The ridge path up to the fold where the raiders camped. Empty now.' : 'The ridge path, going up into the grey toward the raiders\' fold.', txt: S.f.b8_c3_ridgeDone ?
+    b8_c3_ridge_view:()=>({sp:'The ridge path', scene:'b8_c3_road', again:()=> S.f.b8_c3_ridgeDone ? 'The ridge path up to the fold where the raiders camped. Empty now.' : 'The ridge path, going up into the grey toward the raiders\' fold.', txt: S.f.b8_c3_ridgeDone ?
 `The path goes up the ridge to the fold where the raiders camped. The fire is out. The packs went back down the road to the people they came off.` : !S.f.b8_c3_roadDone ?
 `A goat-path goes up off the road onto a low ridge, toward a fold in it out of the wind. There is smoke from the fold, thin, and the man in grey scale at the cart is watching the road, not the path.` :
 `A goat-path goes up off the road onto the ridge, toward the fold where the raiders camp: thin smoke, and somewhere up there a heap of pilgrims' packs and the men who took them, getting their breath back.${b83If('edrem', `\n\nEdrem looks up at the smoke. "They'll come back in three days," he says. "Unless they can't."`)}`,
       ch:[{t:'Up the path, to the raiders\' camp.', onward:true, req:()=>!!S.f.b8_c3_roadDone && !S.f.b8_c3_ridgeDone, go:'b8_c3_ridge_start'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_ridge_start:()=>({sp:'The raiders\' camp', scene:'b8_barrow', txt:
+    b8_c3_ridge_start:()=>({sp:'The raiders\' camp', scene:'b8_c3_road', txt:
 `The fold in the ridge is out of the wind, and out of sight of the road, and full of the raiders' living: a cookfire, hides on poles, a heap of bundles and packs with pilgrims' tokens still tied to some of them. Four men round the fire, one of them the sellsword with a name, arm in a sling, who has plainly been explaining to the others why it went wrong.
 
 He sees the Fourth at the lip of the fold. He stops explaining.`,
@@ -508,21 +509,21 @@ He sees the Fourth at the lip of the fold. He stops explaining.`,
             near:{t:()=>`Yes, but the shale goes out from under ${b83Nm(b83Who())} at the last, and ${b83Nm(b83Who())} ${b83V(b83Who(), 'arrive', 'arrives')} at the bottom of the fold bruised to the hip. ${b83Nmc(b83Who())}'ll feel it in the fight.`, fx:()=>bruise(b83Who(), bruiseN())},
             fx:()=>{ S.f.b8_c3_ridgeTried = 1; }, go:()=>startBattle('b8_c3_ridge', nearMiss() ? {} : {surprise:'p'}), fail:'b8_c3_ridge_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_ridge_seen:()=>({sp:'The raiders\' camp', scene:'b8_barrow', txt:
+    b8_c3_ridge_seen:()=>({sp:'The raiders\' camp', scene:'b8_c3_road', txt:
 `The shale goes, all at once, in a long rattle down into the fold, and the men at the fire are on their feet before it stops.`,
       ch:[{t:'Down into them, now.', go:()=>startBattle('b8_c3_ridge', {surprise:'e'})}]}),
-    b8_c3_ridge_after:()=>({sp:'The raiders\' camp', scene:'b8_barrow', fx:()=>{ S.f.b8_c3_ridgeDone = 1; b83L('edrem', 1); }, txt:
+    b8_c3_ridge_after:()=>({sp:'The raiders\' camp', scene:'b8_c3_road', fx:()=>{ S.f.b8_c3_ridgeDone = 1; b83L('edrem', 1); }, txt:
 `The fold is quiet. The raiders who could run have gone over the far side of the ridge and onto the plain, and they will not be back on this road soon. The packs go down to the cart in three trips, and the pilgrims go through them with their hands shaking, finding their own.
 
 Some of them find what they were going to lay on the barrow. One old woman finds a child's shoe, very small, and holds it, and does not say whose it was.${b83If('edrem', `\n\nEdrem carries the last of the packs down himself. "Three days," he says, to no one, "and they'd have been back." He looks at the Fourth. "They won't now." It is as near to thanks as he seems to come.`)}`,
       ch:[{t:'Back down to the road.', go:()=>startExplore()}]}),
 
     /* the road's ends */
-    b8_c3_road_back:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', txt:
+    b8_c3_road_back:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', txt:
 `West, the road runs back to the line where the night begins, and the gate, and the lamps.`,
       ch:[{t:'Back to the city.', onward:true, go:()=>startExplore('b8_c3_city')},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b8_c3_road_on:()=>({sp:'The pilgrims\' road', scene:'b8_barrow', txt: S.f.b8_c3_roadDone ?
+    b8_c3_road_on:()=>({sp:'The pilgrims\' road', scene:'b8_c3_road', txt: S.f.b8_c3_roadDone ?
 `East, the road goes on with the pilgrims to the barrow and its lamps.` :
 `East, the road goes on to the barrow. But there is a cart over in the road behind you, and a man in front of it, and something coming.`,
       ch: S.f.b8_c3_roadDone ? [{t:'On to the barrow.', onward:true, fx:()=>{ S.f.b8_c3_ph = Math.max(3, S.f.b8_c3_ph || 1); }, go:()=>{ startExplore('b8_c3_barrow'); if (!S.f.b8_c3_barrowSeen) talk('b8_c3_barrow_arrive'); }},
