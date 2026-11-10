@@ -50,7 +50,7 @@ const B10_SGT = {
   l:{epithet:'Sixth Company, the Whitefinder Battalion, with the Commander\'s brigades',
      get bio2(){ const d = typeof b5Debt === 'function' ? b5Debt('sgt') : null;
        return `The paybook still has the old number in it${d != null ? `, ${b5Coin(d)}` : ''}. You still read it, out of habit, the way you still pray before a wager.\n\n${b10LRoad() === 'adjunct' ? 'When the foreigners turned east into the glass, the Sixth went with them: a few Letherii who stayed. Everyone else in Lether went south.' : 'When the foreigners turned east into the glass, the Commander turned south, and the Sixth went with him: the long way round to a country called Kolanse, behind the Bolkando and the grey-helmed foreigners.'}`; },
-     get quest(){ return b10LRoad() === 'adjunct' ? 'Across the glass behind the foreigners, on their water and your own. Nobody in Lether has a legend about this place. You mean to come back and make one.'
+     get quest(){ return b10LRoad() === 'adjunct' ? 'Across the glass behind the foreigners, on their water and your own. Lether has no legend about this place. You mean to come back and make one.'
        : 'South and east with the brigades, to Kolanse, wherever that ends. The Errant gets a prayer before everything. Lately the prayers come back with nothing in them.'; }}};
 function b10SgtFor(t){ const snap = BOOKSNAP[B10_TH[t].book] && BOOKSNAP[B10_TH[t].book].sgt;
   if (snap) TPL.sgt = Object.defineProperties({}, Object.assign({}, snap, Object.getOwnPropertyDescriptors(B10_SGT[t])));
@@ -289,7 +289,7 @@ if (typeof FIGX !== 'undefined') Object.assign(FIGX, {
    as in Books Eight and Nine (nameless). The Shore does not answer (Yedan holds it, and dies holding it). The recruits have no god.
    A quiet patron (P.quiet) keeps the retry as before but leaves no boon (BOONS has no entry for it): Claude's call, notes §Gods. ---- */
 const PATRON_B10GATE = {sig:'b8gate', god:'the Guardians of the Gate', title:'The Guardians of the Gate', txt:id => `${NAME(id)}, on the glass, says the old words to the old god, out of habit, and knows as they leave that nobody has been in that seat for a long while.\n\nSomething answers anyway. A gate, far off and very close, with soldiers standing in it, more than anyone could count, and not one face turned this way. One of them lifts a hand. *Not yet.*`};
-const PATRON_B10QUIET = {sig:'errant', god:'Lether\'s luck', title:'The Errant', quiet:true, txt:id => `You say the prayer, the one every Letherii soldier says before a wager, and wait for the coin to land.\n\nNothing lands. Lether's luck has gone quiet, the way a room goes quiet when somebody has left it.\n\nThe squad gets up anyway. Nobody helped. That turns out to be enough, this once.`};
+const PATRON_B10QUIET = {sig:'errant', god:'Lether\'s luck', title:'The Errant', quiet:true, txt:id => `You say the prayer, the one every Letherii soldier says before a wager, and wait for the coin to land.\n\nNothing lands. Lether's luck has gone quiet, the way a room goes quiet when somebody has left it.\n\nThe squad gets up anyway. It helped no one. That turns out to be enough, this once.`};
 const PATRON_B10SHORE = {sig:'brune', god:'the Shore, far off', title:'The Shore', quiet:true, txt:id => `${NAME(id)} says the words to the Shore, the way Letheras's fisher-folk do, and listens for the tide.\n\nThere is no tide here. Wherever the Shore is, it is busy being held. ${NAME(id)} gets up on the third try anyway, and the squad gets up after.`};
 const b10Quiet = P => !!(b10On() && P && P.quiet);
 Object.keys(PATRONS).forEach(id => { if (id === 'sgt') return; const prev = Object.getOwnPropertyDescriptor(PATRONS, id); if (!prev) return; const was = () => prev.get ? prev.get() : prev.value;
@@ -402,18 +402,18 @@ const b10Saw = t => () => !!S && (S.chapter || 0) >= t;
 GLOSSX.tcg = [
   [0, 'Witness', 'What the squad still believes it marches for, when nobody has said. Some days it is each other. Some days it is a saying the sergeants repeat. Some days there is nothing, and the squad walks anyway.'],
   [0, 'Kolanse', 'The country east of the Wastes, where the Adjunct is marching. A drought there, years long; thin soil, empty granaries, and people who have been hungry so long they have stopped saying so.'],
-  [0, 'The chained god', 'What the soldiers call the god the Adjunct means to free, when they call it anything. Camp word says that is the reason for all of it. Nobody in the squad has seen a chain.'],
+  [0, 'The chained god', 'What the soldiers call the god the Adjunct means to free, when they call it anything. Camp word says that is the reason for all of it. Not one of the squad has seen a chain.'],
   [0, 'The Assail', 'Who holds Kolanse, by the soldiers\' word: tall, pale, and very hard to kill. The mages call them something else and do not like saying it.'],
   [0, 'The heavies', 'The army\'s heavy infantry: scale, big swords, and a habit of not moving. The Third marches with them. When the beasts die, the heavies take the traces.', ()=>b10Thread() === 't'],
-  [0, 'Docks', 'Letherii coin. Nobody out here will take it. The squad counts it anyway.', ()=>b10Thread() === 'l'],
+  [0, 'Docks', 'Letherii coin. Out here, no one will take it. The squad counts it anyway.', ()=>b10Thread() === 'l'],
   [0, 'The Commander', 'Brys Beddict, who commands the Letherii army: seen far off, at the head of the column, on a tired horse.', ()=>b10Thread() === 'l'],
   [0, 'The Glass Desert', 'The waste between the Wastes and Kolanse: no water, nothing living, and the ground underfoot gone to glass that cuts boots and catches the stars at night. The army crosses it by night.', ()=>b10Crossing() || b10Saw(3)()],
-  [0, 'The lizard-folk', 'The great scaled things that marched out of the Wastes after the battle with the short-tails and joined the allies. Nobody in the ranks has the word for them. A Letherii officer has one and uses it once.', ()=>b10Thread() === 'l' || b10Saw(2)()],
+  [0, 'The lizard-folk', 'The great scaled things that marched out of the Wastes after the battle with the short-tails and joined the allies. The ranks have no word for them. A Letherii officer has one and uses it once.', ()=>b10Thread() === 'l' || b10Saw(2)()],
   [0, 'The Grey Helms', 'Foreign knights in grey, marching ahead of the Letherii toward Kolanse, faster than anyone needs to.', ()=>b10Thread() === 'l' || b10Saw(4)()],
   [3, 'Night marches', 'How the army crosses the glass: march in the dark, lie up under whatever shade there is by day, and count the water every time the column halts.', b10Saw(3)],
   [4, 'The long way round', 'The allies\' road: south of the glass and east along it to Kolanse City, behind the Bolkando and the Grey Helms. Longer, with water in it, and every horse in the train dying slowly.', b10Saw(4)],
   [6, 'The King\'s ships', 'Supply ships out of Letheras, come round by sea to meet the allied army on the Kolanse coast, with food, water, and some very large passengers.', b10Saw(6)],
-  [7, 'A Malazan Host', 'Another Malazan army, out of nowhere, over a ridge, at the end. Nobody in the Third can say whose. Some of it was on the Third\'s stretch before anyone could ask.', b10Saw(7)],
+  [7, 'A Malazan Host', 'Another Malazan army, out of nowhere, over a ridge, at the end. The Third can\'t say whose. Some of it was on the Third\'s stretch before anyone could ask.', b10Saw(7)],
   [7, 'The barrows', 'Where the army buried its dead after the last battle, in Kolanse, in long mounds. The squads stood at the edge.', ()=>!!(S && S.chapters && S.chapters[7] != null)],
 ];
 
@@ -525,8 +525,8 @@ function b10CodaWords(q){ const B = BOOKS[q.book] || BOOKS.gotm, u = B10_UNITP[q
 /* the opening page and the credits (the coda's narration: canon's answer, said only here, as "the story is": tcg-canon §9a and §10 Q6) */
 const B10CODA_OPEN = [
   'The story is that at the barrows, at the very end, the Adjunct said the army would be forgotten, and that she did not regret it.',
-  'The story is right about the army. Nobody back home will learn these names. Nobody will put up a stone that says who held which stretch, or who came back for water, or who did not.',
-  'The story is wrong about one thing. Somebody wrote them down.',
+  'The story is right about the army. Home will never learn these names. No one will put up a stone that says who held which stretch, or who came back for water, or who did not.',
+  'The story is wrong about one thing. They were written down anyway.',
   'These are the ones this device remembers.'];
 function b10CreditsWords(n, more){ const shelf = shelfBooks().sort((a, b) => a.n - b.n);
   return [`From the Ranks: ${rdUpT(shelf.length).toLowerCase()} books, each beside one of Steven Erikson's novels of the Malazan Book of the Fallen, in order, told by soldiers the novels never name.`,
