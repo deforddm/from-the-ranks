@@ -179,7 +179,7 @@ It is chosen at the fever-carts on the second night, once Thallo has given the c
 - **The sergeants' meeting** (R11 S10, a hard limit): never shown. One line comes through Thallo, from a heavy who was fetching water nearby.
 - **Off the page entirely:** Hedge's company, Ruthan Gudd, Bugg's gift and the Akryn envoy are not mentioned. Sinn and Grub are not mentioned either; this chapter's one rumour is the Barghast war.
 - **The one rumour:** Duvo says the Barghast have gone to war with the Akrynnai on the plains to the north (allowed Ch 3–4).
-- **"Bonehunters"** is said once, by Thallo ("some clerk thought of it").
+- **"Bonehunters"** is said once, by Thallo ("don't ask me who started it"; the continuity read dropped "some clerk thought of it", Nov 10).
 - **Kolanse** is said once (the intro, the clerks); nothing of what waits there.
 - **The other squad:** one line, from the healer, as camp talk read from `b9Key(2)`:
   - `drill`: "went back to your drill sergeant's square… very proud… mad";

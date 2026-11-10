@@ -121,9 +121,9 @@ const B97TALK = {
   doss:[()=>`Doss has the flail across his knees. "On the holding," he says, "when the river came up, the factor's men went to the high field with the stock. We stayed for the houses." He looks at the stretch. "Same thing. Somebody stays."`,
         ()=>`Doss is eating the pot slowly. "I was never in a battle," he says. "Before." He thinks about it. "I'm still not sure I was. I stood where I was put."`],
   wenna:[()=>`Wenna has her ear to the ground. "Lots of feet," she says. "Big ones. Coming and going." She sits up. "More coming than going."`,
-         ()=>`Wenna is barefoot by the fire, rubbing her feet. "The Shore was a long way off last night," she says. "I talked to it anyway. Out loud. The heavies thought I was mad." She shrugs. "Maybe."`],
+         ()=>`Wenna is barefoot by the fire, rubbing her feet. "The Shore was a long way off that night," she says. "I talked to it anyway. Out loud. The heavies thought I was mad." She shrugs. "Maybe."`],
   mehet:[()=>`Mehet is looking at the burned wagons on the east end of the stretch. "Good wall," he says. "Already on fire, so nobody can set it on fire." He seems pleased with the reasoning.`,
-         ()=>`Mehet turns his ring of keys over in his hands. "Nothing out there to open," he says. "Nothing to close either." He puts the ring away. "I'd have liked a door last night. Just one."`],
+         ()=>`Mehet turns his ring of keys over in his hands. "Nothing out there to open," he says. "Nothing to close either." He puts the ring away. "I'd have liked a door that night. Just one."`],
   ottar:[()=>`Ottar is buckling the grey plate tighter. "Today's word," he says, "is <em>rearguard</em>." He tries it twice. "In Perish it is the place of honour. In Malazan it is where they put the heavies." He nods. "Both."`,
          ()=>`Ottar has the grey plate off, and the dents in it are new. "Today's word," he says, "is <em>after</em>." He looks at the dents. "It is a good word. Not everyone gets it."`],
   tallow:[()=>`Tallow is shuffling his grandmother's deck and not dealing it. "Grandmother said never read before a fight," he says. "Read after. Then you know whether to believe it."`,
@@ -147,7 +147,7 @@ const B97TALK = {
   brask:[()=>`Brask has the heavy sword across his knees and the tally-stick out, turning it. Four notches, filed flat. "Old squad held a gate in Letheras," he says. "I was on the other side of the city." He puts the stick away. "Not this time."`,
          ()=>`Brask is cutting a notch in the tally-stick with his belt-knife, slowly. ${b97Fell().length ? `"For the stretch," he says. He does not file it flat.` : `"For the stretch," he says. "We all walked off it. That's a notch too." He does not file it flat.`}`],
   tegra:[()=>`Tegra is squatting on her heels at the back of the line, running her hand over the dust, against the grain and with it. "They walk heavy," she says. "Like old bulls. Heavy things go down hard and get up slow." She stands. "Remember that."`,
-         ()=>`Tegra sits with her face to the dark, as she always does. "Among my people the dead watch the living," she says. "I think the ones who fell last night are watching you eat." She considers. "Eat well, then."`]};
+         ()=>`Tegra sits with her face to the dark, as she always does. "Among my people the dead watch the living," she says. "I think the ones who fell on the stretch are watching you eat." She considers. "Eat well, then."`]};
 
 const B9CH7 = {
   title:B9CH[7], number:'Seven',
@@ -290,9 +290,9 @@ const B9CH7 = {
     b9_c7_road:{loc:'The Wastes', sub:'The road out', cap:'The Wastes at the end of a day, and a road going away across them.', amb:'explore'} },
 
   end:{
-    adjunct:['East, with the army', 'The Third held a stretch of the heavies\' rearguard on the night the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the one that goes east with the Adjunct, wherever that is.'],
-    south:['South, the long way round', 'The Third held a stretch of the heavies\' rearguard on the night the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the one that goes south with the Letherii, the long way round.'],
-    home:['Time served', 'The Third held a stretch of the heavies\' rearguard on the night the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the time-served slate, and turned west.'] },
+    adjunct:['East, with the army', 'The Third held a stretch of the heavies\' rearguard on the day the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the one that goes east with the Adjunct, wherever that is.'],
+    south:['South, the long way round', 'The Third held a stretch of the heavies\' rearguard on the day the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the one that goes south with the Letherii, the long way round.'],
+    home:['Time served', 'The Third held a stretch of the heavies\' rearguard on the day the short-tails came, between a cut bank and a line of burned wagons, late in the day and into the dark, and walked back in step when the column\'s lamps were gone. Days after, when the slates came round, it put its names on the time-served slate, and turned west.'] },
   endScene:'b9_c7_camp',
   endCap:()=> b97Key() === 'home' ? 'Dusk on the Wastes, and a squad with its packs on going west out of the camp, toward the last of the light.' : b97Key() === 'south' ? 'Dusk on the Wastes, and a squad going over to the Letherii wagons with its packs on.' : 'Dusk on the Wastes, and a squad sitting on its packs by its fire, waiting for the column to say east.',
   tease:'There is no Chapter Eight. The book ends on a plain in the Wastes nobody has named.',
@@ -326,7 +326,7 @@ const B9CH7 = {
     b9_c7_start:()=>({sp:'The stretch', scene:'b9_c7_late', fx:()=>{ S.f.b9_c7_ph = S.f.b9_c7_ph || 1; }, again:()=>'The heavies\' stretch, between the cut bank and the burned wagons, and the dust in front.', txt:
 `The heavies' stretch is two hundred paces of trampled grass with a cut bank at the west end, high as a man, and at the east end a line of supply wagons that somebody set on fire at noon, so that nothing could come round that way without walking through it. The shields are set along it. Behind it the ground runs down south, toward where the column is getting away.
 
-In front of it there is the dust. It has been in front of it all day. There are shapes in it, taller than any soldier, going one way and another along the far side, and now and then a pale light, there and gone.${b97If('tegra', `\n\nTegra comes up the back of the line from the guides' carts with an axe in each hand. "The guides are going with the column," she says. "I told them I was with the Third." She looks at the dust. "They did not argue."`)}${b97If('brask', `\n\nBrask is standing in the line already, as if he had been born in it. "Heavies' stretch," he says. "Nice and short." He sounds content.`)}
+In front of it there is the dust. It has been in front of it all day. There are shapes in it, too tall for soldiers, going one way and another along the far side, and now and then a pale light, there and gone.${b97If('tegra', `\n\nTegra comes up the back of the line from the guides' carts with an axe in each hand. "The guides are going with the column," she says. "I told them I was with the Third." She looks at the dust. "They did not argue."`)}${b97If('brask', `\n\nBrask is standing in the line already, as if he had been born in it. "Heavies' stretch," he says. "Nice and short." He sounds content.`)}
 
 Thallo is at the heavies' brew-fire behind the line with the captain's word, eating something.`,
       ch:[{t:'Thallo.', go:'b9_c7_thallo'},
@@ -423,7 +423,7 @@ The cart goes. The heavy lifts his sword at the Third as it goes, as if the Thir
 
     /* the burned wagons at the east end: the far fight, at a distance (never closer; never a canon scene) */
     b9_c7_wreck:()=>({sp:'The burned wagons', scene:'b9_battle', fx:()=>{ S.f.b9_c7_wreck = 1; }, again:()=>'The burned wagons at the stretch\'s east end, still smoking, and the far fight beyond.', txt:
-`From the end of the burned wagons you can see along the back of the army, east, to where the marines are: a long way off, a thin dark line under its own brown cloud, and in the cloud shapes taller than any soldier, and now and then a light that is not fire, there and gone. Something over there goes off with a sound like a wall coming down, and the dust jumps, and settles.
+`From the end of the burned wagons you can see along the back of the army, east, to where the marines are: a long way off, a thin dark line under its own brown cloud, and in the cloud shapes a head and more above the shields, and now and then a light that is not fire, there and gone. Something over there goes off with a sound like a wall coming down, and the dust jumps, and settles.
 
 The Third does not say what any of it is. It does not know.${b97If('yorin', `\n\nYorin's copper vane is spinning on his palm. He closes his hand on it.`)}${b97If('tegra', `\n\nTegra looks east a long while. "They are fighting well over there," she says. "I can tell by how the dust stands."`)}`,
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
@@ -448,7 +448,7 @@ The Third does not say what any of it is. It does not know.${b97If('yorin', `\n\
       return {sp:camp ? 'The Third\'s fire' : 'The heavies\' brew-fire', scene:camp ? 'b9_c7_camp' : 'b9_c7_late', html:rationsHTML(),
         again:()=> camp ? 'The Third\'s fire in the retreat camp, a dung-fire burning low.' : 'The heavies\' brew-fire behind the line, a pot on it with not much in.', txt:
 `${camp ? `The Third's fire in the retreat camp is a few cakes of dung in a ring of stones, as every fire has been since the Wastes began. ${b97Fell().length ? `There is a gap in the ring where ${b97And(b97Fell().map(NAME))} would be sitting. Nobody sits in it.` : 'Everybody who walked onto the stretch is sitting round it. The Third looks at itself a while, as if checking.'}` : `The heavies' brew-fire is behind the line, out of the dust, a pot on it with not much in, and the heavies of the next files coming back to it two at a time to eat what is there and go back.`}${b97If('brask', camp ? `\n\nBrask sits with his back to the fire and the tally-stick in his hand.` : `\n\nBrask eats standing up, so as to be back in the line sooner.`)}${b97If('tegra', `\n\nTegra squats on her heels with her face to the dark, as she always does.`)}`,
-        ch:[{t:camp ? 'Sit an hour. Let the squad rest.' : 'Eat, and sit while there is time.', req:()=>!S.f[rk] && !(ph === 1 && b97Rear()), fx:()=>{ S.f[rk] = 1; rest(camp ? 'The Third sits an hour by its fire. Wounds close, mostly. The rest takes longer.' : 'The Third eats what is in the pot and sits while there is time. Wounds close, mostly.'); }, go:'b9_c7_fire_rest'},
+        ch:[{t:camp ? 'Sit an hour. Let the squad rest.' : 'Eat, and sit while there is time.', req:()=>!S.f[rk] && !(ph === 1 && b97Rear()), fx:()=>{ S.f[rk] = 1; rest(camp ? 'The Third sits an hour by its fire. Old linen comes off and clean goes on. The rest takes longer.' : 'The Third eats what is in the pot and sits while there is time. Straps tightened, cuts bound.'); }, go:'b9_c7_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c7_fire_talk'},
             {t:'"What are we standing here for?"', req:()=>ph === 1 && !wit && !b97Rear(), go:'b9_c7_wit'},
             {t:'Cut the squad\'s roll into a stick.', req:()=>camp && !S.f.b9_c7_roll, go:'b9_c7_roll'},
@@ -777,7 +777,7 @@ ${f === 'doubt' ? `The Third is quiet a long while. Then ${b97Say({tangle:'Tangl
     b9_c7_old4:()=>({sp:'The old marine', scene:'b9_c7_camp', fx:()=>{ S.f.b9_c7_old4 = 1; }, again:()=>'The old marine at his small fire, his deck in his shirt.', txt:
 `The old marine has his own small fire again, by the heavies' lines, and his cup, and somebody has put rum in the cup, which he has not drunk yet.
 
-"Read for the marines last night," he says. "Fair cards. All of them." He turns the cup. "${S.f.b9_c7_drawn ? `Yours came up honest, in the dark. They do, out here.` : 'You never let me read for you. Out there in the dark. Probably right.'}" He drinks at last. "That's the end of a book, a night like that. Every army has one. Then it turns the page and keeps walking."`,
+"Read for the marines that night," he says. "Fair cards. All of them." He turns the cup. "${S.f.b9_c7_drawn ? `Yours came up honest, in the dark. They do, out here.` : 'You never let me read for you. Out there in the dark. Probably right.'}" He drinks at last. "That's the end of a book, a night like that. Every army has one. Then it turns the page and keeps walking."`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
 
     /* the roll, cut into a stick (an item) */
@@ -952,7 +952,7 @@ B97FIN.meet = () => [
 `The roads go on from a plain in the Wastes nobody has named: east, south, or home. Whatever comes after, for whoever went, it starts there.`];
 
 /* the coda: both squads, the stretch, the line, the dark */
-B97FIN.coda = key => { const fell = b97Fell(), h = b97LHalf(), lDead = h ? Object.keys(h.dead || {}).filter(id => h.dead[id] && !h.dead[id].from && TPL[id]) : [];
+B97FIN.coda = key => { const fell = b97Fell(), h = b97LHalf(), lDead = h ? Object.keys(h.dead || {}).filter(id => h.dead[id] && !h.dead[id].from && h.dead[id].ch === 6 && TPL[id]) : [];
   return [
 `The army marched east out of Letheras without being told why, into the Wastes, on a ration that got shorter. It caught a fever on the road and boiled its water. It found the Wastes empty of nearly everything. Then, one morning, there was dust on the horizon that was not a storm, and the short-tails came out of it. The marines and the heavies held while the regulars broke. The Fist died. The High Mage went missing. The Adjunct was carried off the field. Horsemen went into the dust at dusk, and fewer came back. The army walked away in the dark, and kept walking.`,
 `The Third was there, on a stretch of the heavies' rearguard between a cut bank and a line of burned wagons. ${fell.length ? `${b97And(fell.map(NAME))} did not walk off it.` : 'Every one of the Third who stood on it walked off it.'} The Sixth was there too, on the escort's stretch from the cairn to the dry wash. ${lDead.length ? `${b97And(lDead.map(NAME))} did not come off it.` : 'Every one of the Sixth came off it.'} That is each squad's part. It is small. It is the only part anybody will tell right.`,

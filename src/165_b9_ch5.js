@@ -63,7 +63,7 @@ const b95CacheDone = () => !!S.f.b9_c5_cacheDone;
    close by. Not sorcery. v10.3: it strikes nobody, so it is free. ---- */
 Object.assign(TRICKS, {
   b9_c5_witness:{name:'Our Own Witness', ch:5, use:'fight', ab:'t_b9_c5_witness', where:'a dung-fire deep in the Wastes, from an old marine, on short rations',
-    lore:'Some of the old hands say it at the halts, when the ration is cut again: we shall be our own witness. The story is that the Adjunct said it once, on the other side of the sea, to marines going over the side. The old marine was not there and says it does not matter who said it first. What matters is that you say it to the soldier next to you, and they say it back, and then the both of you know somebody is watching. Said out loud in a fight, it makes a line stand where it is.',
+    lore:'Some of the old hands say it at the halts, when the ration is cut again: we shall be our own witness. The story is that the Adjunct said it once to her officers, on a ship, before the landing. The old marine was not there and says it does not matter who said it first. What matters is that you say it to the soldier next to you, and they say it back, and then the both of you know somebody is watching. Said out loud in a fight, it makes a line stand where it is.',
     get fx(){ return `Once a fight: the bearer says it, and the squad beside them says it back. The bearer and squadmates next to them are +2 to hit until the bearer's next turn; enemies within 2 of the bearer are −3 to hit this round, and ${lvT() >= 2 ? 'the nearest of them loses its nerve for a turn' : 'falter'}. Not sorcery. It does not use the action (one free trick a turn).`; }},
 });
 Object.assign(AB, {
@@ -91,7 +91,7 @@ B9READ[5] = {scene:'b9_wastes_night', where:'bare ground under the stars, by the
 /* ---- the words this chapter adds to Book Nine's glossary ---- */
 GLOSSX.dod.push(
   [5, 'Short rations', 'What the quartermasters call a ration after it has been cut, and cut again. Half a biscuit, what the pot holds, and water by the cup.', ()=>!!(S && S.f && S.f.b9_c5_ph)],
-  [5, 'Our own witness', 'Something the old hands say at the halts on the march east: we shall be our own witness. Some say the Adjunct said it first, on the other side of the sea. The ones who say it now were mostly not there.', ()=>!!(S && S.f && S.f.b9_c5_wordHeard)],
+  [5, 'Our own witness', 'Something the old hands say at the halts on the march east: we shall be our own witness. Some say the Adjunct said it first, to her officers, before the landing. The ones who say it now were mostly not there.', ()=>!!(S && S.f && S.f.b9_c5_wordHeard)],
   [5, 'The guides', 'Plainsfolk the quartermasters hire for the column\'s water details: they know which dry washes hold water under the sand. Most of them do not say where they come from, and are not asked.', ()=>!!(S && S.f && S.f.b9_tegraDone != null)]);
 
 /* 160's scene keeps its caption; in this chapter the far dust is far, and nobody is turning to face it yet */
@@ -239,7 +239,7 @@ const B9CH5 = {
     return x; },
 
   journal:()=>{ const f = S.f; return [
-    f.b9_c5_dust && 'At first light, dust far out on the horizon. Not the column\'s. Tegra says the wind does not raise dust like that.',
+    f.b9_c5_dust && 'At first light, dust far out on the horizon. Not the column\'s, and not the wind\'s.',
     f.b9_c5_key && (f.b9_c5_key === 'share' ? 'The sutler\'s cache went into the company\'s pot. The heavies ate a little better, and knew who to thank.' : 'The sutler\'s cache stayed with the Third. The Third ate. Haddat did not, the first night.'),
     f.b9_c5_found && 'A Kartool sutler went off the column\'s line after water and died in a dry wash. There was food under the floor of his cart.',
     f.b9_c5_rise && 'A lone officer rode out from the column to look at the Wastes, and was fetched back. The heavies said it was the Fist.',
@@ -376,7 +376,7 @@ They stop when the Third comes near. One of them, a long-faced corporal, looks u
       if (ph >= 3) return {sp:'The old marine', scene:'b9_wastes_night', fx:()=>{ S.f.b9_c5_wordHeard = 1; }, again:()=> S.f.b9_c5_wordTried ? 'The old marine at his small fire, his cup empty, saying it under his breath to nobody in particular.' : 'The old marine at his small fire, with an empty cup.', txt:
 `The old marine has his boots off and his feet to his dung-fire and his cup in his hand, and nothing in the cup. He is holding it anyway.
 
-"Heard them at the next fire," he says. "Saying it." He does not say what. "Ration's cut, so they say it. That's how it goes." He turns the empty cup in his fingers. "<em>We shall be our own witness.</em> Story is the Adjunct said it, on the other side of the sea, to the marines going over the side. I wasn't there. Wasn't on that boat." He shrugs. "Doesn't matter who said it first."
+"Heard them at the next fire," he says. "Saying it." He does not say what. "Ration's cut, so they say it. That's how it goes." He turns the empty cup in his fingers. "<em>We shall be our own witness.</em> Story is the Adjunct said it to her officers, on a ship, before the landing. I wasn't there. Wasn't on that ship." He shrugs. "Doesn't matter who said it first."
 
 "What matters is how you say it. Not to the sky. Not to the Adjunct. To the one next to you. And they say it back." He looks at the Third. "Then you both know someone's watching. That's all a soldier wants, most days. Somebody to see it." He drinks from the empty cup, out of habit. "In a fight, said right, it holds a line where it is. Seen it."`,
         ch:[{t:'Learn to say it the way the old hands do: to the one beside you, and wait for it back.', check:['wits', 19], trick:'b9_c5_witness', witness:true, req:()=>!S.f.b9_c5_wordTried, fx:()=>{ S.f.b9_c5_wordTried = 1; },
@@ -411,7 +411,7 @@ They stop when the Third comes near. One of them, a long-faced corporal, looks u
         again:()=>'The Third\'s dung-fire under the stars, burning low to make the dung last.', txt:
 `${late ? `The Third's fire tonight is the same dung-fire a day further east, under the same stars, burning low. ${b95Key() === 'keep' ? 'There is something in the pot tonight that did not come off the company\'s wagons, and the squad eats it with its back to the next fire.' : b95Key() === 'share' ? 'The company\'s pot is thicker tonight, by a dead man\'s floor, and the heavies at the next fire raised their cups to the Third when it came in. The cups had water in them.' : 'The pot is thin.'}` : `The Third's fire is a few cakes of dung on bare ground with a ring of stones round it, and it burns low and hot and smells of the herds that left it. Short rations, the clerks call it. Half a biscuit, what the pot holds, and water by the cup. The pot does not hold much.`}${b95If('tegra', late ? `\n\nTegra sits on her heels with her feet to the fire and her face to the dark, as she said she would.` : `\n\nTegra sits on her heels at the Third's fire with her feet to it and her face to the dark.`)}${b95If('brask', `\n\nBrask has his back to the fire and his half-biscuit in his fist, not eaten yet.`)}`,
         ch:[...(ph === 1 ? [b9ReadChoice(5)] : []),
-            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(late ? 'The squad sits an hour by the dung-fire. Wounds close, mostly. The hunger stays.' : 'The squad sits an hour by the dung-fire. Wounds close, mostly. The belts stay where they are.'); }, go:'b9_c5_fire_rest'},
+            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(late ? 'The squad sits an hour by the dung-fire. Cuts get looked at and bound. The hunger stays.' : 'The squad sits an hour by the dung-fire with its boots off. Blisters get seen to. The belts stay where they are.'); }, go:'b9_c5_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c5_fire_talk'},
             {t:'"What are we marching for, out here, on this?"', req:()=>late && !(S.b9 && S.b9.wit && S.b9.wit.c5), go:'b9_c5_witness'},
             {t:'Turn in. The column moves at first light.', req:()=>ph === 1 && !!S.f.b9_c5_orders1, onward:true, go:'b9_c5_turnin'},
@@ -482,7 +482,7 @@ Thallo is coming down the line from the captain's wagon with his face set the wa
 
 He sits there a while. Then a second rider goes out to him from the head of the column at a walk, and reaches him, and the two of them sit together a moment, and then they turn and come back, slowly, side by side.
 
-${b95Say({brask:`Brask has come up beside you. "Fist," he says. "Keneb. Rides out most days at the halt, they say, and looks at it." He watches the two riders coming in. "And most days somebody gets sent to fetch him." He shrugs. "Officers."`, haddat:`Haddat has come up beside you. "The Fist," she says. "Keneb. The heavies say he rides out at every halt and looks, and somebody is sent to fetch him." She watches the riders. "My mother said a man who keeps looking at the road has already seen where it goes."`, _:'A heavy sitting on the stone with his boots off says, "Fist Keneb. Rides out most days, and gets fetched back," and goes back to his boots.'})}`,
+${b95Say({brask:`Brask has come up beside you. "Fist," he says. "Keneb. Rides out at the halt, they say, and looks at it." He watches the two riders coming in. "And somebody gets sent to fetch him." He shrugs. "Officers."`, haddat:`Haddat has come up beside you. "The Fist," she says. "Keneb. The heavies say he rides out at the halt and looks, and somebody is sent to fetch him." She watches the riders. "My mother said a man who keeps looking at the road has already seen where it goes."`, _:'A heavy sitting on the stone with his boots off says, "Fist Keneb. Rides out and looks, and gets fetched back," and goes back to his boots.'})}`,
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
     /* the sappers' wagons: the munitions short (Hedge, seen at a distance) */
     b9_c5_sappers:()=>({sp:'The sappers\' wagons', scene:'b9_c5_plain', fx:()=>{ S.f.b9_c5_sappers = 1; }, again:()=>'The sappers\' wagons, the canvas lashed tight, and the argument over.', txt:
@@ -704,7 +704,7 @@ Thallo comes to the fire after dark and sits down without being asked.`,
       ch:[{t:'Thallo.', go:'b9_c5_thallo3'},
           {t:'Walk the camp.', go:()=>startExplore()}]}),
     b9_c5_thallo3:()=>({sp:'Thallo', scene:'b9_wastes_night', fx:()=>{ S.f.b9_c5_orders3 = 1; }, again:()=>'Thallo, at the fire, with his hands to it.', txt: b95Key() === 'share' ?
-`"Captain says thank you," Thallo says. He seems to find it as strange as Brask would. "He said the Third's name to the clerk, so the clerk would write it down. He said it twice." He holds his hands to the fire. "Company's eating tonight. Two nights. Then it's half a biscuit again." He shrugs. "Two nights is two nights."
+`"Captain says thank you," Thallo says. He seems to find it strange. "He said the Third's name to the clerk, so the clerk would write it down. He said it twice." He holds his hands to the fire. "Company's eating tonight. Two nights. Then it's half a biscuit again." He shrugs. "Two nights is two nights."
 
 "Heard them at the next fire," he says. "Saying the thing the old hands say. Our own witness." He looks into the fire. "First time I've heard it said like they meant it."` :
 `Thallo holds his hands to the fire and looks at it, not at you. "My heavy says he didn't see anything down that wash," he says. "He was very sure about it." He sniffs, once. "Smells of pork, this fire."

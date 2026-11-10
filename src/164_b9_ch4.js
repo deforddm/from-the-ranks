@@ -94,7 +94,7 @@ GLOSSX.dod.push(
 
 /* 160's scenes keep their own captions; in this chapter the noon halt's caption follows the backdrop */
 { const sc = SCENES.b9_wastes, base = sc && sc.cap; if (sc) Object.defineProperty(sc, 'cap', {configurable:true, enumerable:true,
-    get(){ return S && S.book === 'dod' && S.chapter === 4 ? 'The escort halted at noon on open country: the train drawn up along the track, Bluerose outriders out on the flanks, and dust on the northern sky.' : base; }}); }
+    get(){ if (!(S && S.book === 'dod' && S.chapter === 4)) return base; return ((S.f && S.f.b9_c4_ph) || 1) >= 4 ? 'First light on open country: the escort forming on the track brigade by brigade, the train behind it, and the foreigners\' dust already up far ahead.' : 'The escort halted at noon on open country: the train drawn up along the track, Bluerose outriders out on the flanks, and dust on the northern sky.'; }}); }
 
 /* the fire is a roster fire (38c) */
 ROSTER_FIRES.dod = ROSTER_FIRES.dod || {}; ROSTER_FIRES.dod[4] = ['b9_c4_fire'];
@@ -527,7 +527,7 @@ North-east, the Bluerose outriders have come in off the flank at a canter, and o
     b9_c4_herdsign:()=>({sp:'A Bluerose outrider', scene:'b9_wastes', again:()=>'The outrider, his horse blowing, pointing north at the dust.', txt:
 `The outrider is a lean grey man in blue scale on a horse that has been run hard. He pulls up by the squad because it is the nearest thing standing.
 
-"Bhederin," he says. "A herd. Something spooked them in the north, the painted clans' hunting, or their war. They're coming down on the track and they're not looking." He points with his lance. "The water wagons are right in their road. Get the oxen turned and get in front of them, or they'll go through the train like it's grass."${b94If('kaedra', `\n\nKaedra drops off the wagon-tongue. "Forty," she says. "Maybe fifty. They'll split round anything that stands still and shouts." She nocks an arrow. "Stand still. Shout."`)}`,
+"Bhederin," he says. "A herd. Something spooked them in the north, the painted clans' hunting, or their war. They're coming down on the track and they're not looking." He points with his lance. "The water wagons are right in their road. Get the oxen turned and get in front of them, or they'll go through the train like it's grass."${b94If('kaedra', `\n\nKaedra drops off the wagon-tongue. "A score," she says. "Maybe fewer. More than I thought were left out here. They'll split round anything that stands still and shouts." She nocks an arrow. "Stand still. Shout."`)}`,
       ch:[{t:'Get the oxen and the water wagons turned before the herd hits.', check:['might', 16],
             edges:id=>[id === 'brennet' && ['he has turned an ox team in a ditch with one hand', 2], id === 'thegg' && ['an ox is light, if you are Thegg', 2], id === 'sorvan' && ['a lancer turns a frightened horse every day', 1], id === 'kaedra' && ['she knows which way a herd will break', 1], id === 'pessa' && ['she has hauled eel-boats up canal steps', 1], id === 'perrit' && ['she is built for sums, not oxen', -1], id === 'ilsa' && ['a clerk lifts paper', -1]],
             near:{t:()=>`Yes, but the last water wagon is still swinging round when the herd's edge clips its tail, and ${b94Nm(b94Who())} ${b94V(b94Who(), 'watch', 'watches')} a barrel come off the top, burst on the stones and soak into the dust in a breath: a ration gone.`, fx:()=>{ b9Ration(-1, 'a barrel burst in the stampede'); }},

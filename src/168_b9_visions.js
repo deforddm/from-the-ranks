@@ -288,14 +288,14 @@ The short-tails have gone. Their great dust has moved on and away, and the plain
     {txt:
 `He circles once, wide, and reads the field as a hunter reads a kill.
 
-A heap of something white near the middle, white even from here. Bones, picked clean already, heaped where they fell on each other. Near it, a great dark ring pressed into the ground, black at the rim, as if a fist had come down out of the sky and struck the plain.
+A heap of something white near the middle, white even from here. Bones, picked clean already, heaped high. Near it, a great dark ring pressed into the ground, black at the rim, as if a fist had come down out of the sky and struck the plain.
 
 He does not know what made it. He finds that he would like to.`,
      ch:[{t:'Go lower.', set:['b9v7_low','low']},
          {t:'Stay high.', set:['b9v7_low','high']}]},
     {txt:()=>`${S.f.b9v7_low === 'low' ? `He goes lower, slowly, in long falling turns, until the marks on the cloth become things, and the things become what they were.` : `He stays high. From up here the field keeps its shape. Lower down it would only be wreckage, and wreckage tells you less than shape does.`}
 
-Out on one flank, a long spray of dark shapes where a charge of horsemen went in, late and fast, and did not come out. Horses and riders lie along it in a fan, the way a wave leaves weed on a beach.
+Out on one flank, a long spray of dark shapes where a charge of horsemen went in, late and fast, and few came out. Horses and riders lie along it in a fan, the way a wave leaves weed on a beach.
 
 Brave, he thinks. Stupid, and brave. The two are often found together among the soft ones.`},
     {txt:
@@ -305,7 +305,7 @@ A trail. Wide, untidy, scuffed into the pale ground by a great many feet, going 
 
 They were beaten here. He can read that plainly. They were broken and driven and they bled. And then the ones who were left picked up the ones who could not walk, and turned, and walked away.
 
-The short-tails who stayed to stop them are the bones.`,
+What is heaped in the middle is what it cost them.`,
      ch:[{t:'Follow the trail.', set:['b9v7_trail','follow']},
          {t:'Hold where you are.', set:['b9v7_trail','hold']}]},
     {go:'Climb.', txt:()=>`${S.f.b9v7_trail === 'follow' ? `He follows the trail a while, high and slow, a shadow nobody below will ever see, until it bends out of the country he came to look at.` : `He holds where he is, riding the same slow circle over the field, and looks at the trail until he has it by heart.`}

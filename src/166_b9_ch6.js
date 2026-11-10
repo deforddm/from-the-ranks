@@ -300,7 +300,7 @@ const B9CH6 = {
 
 The Sixth has the only cook-fire lit, because the Sixth lit one before anybody said not to.${b96Say({thegg:`\n\nThegg is eating his biscuit standing up, looking north. "That," he says, "is not a storm." He chews. "Storms move."`, tobet:`\n\nTobet is counting his arrows, and then counting them again, which he does not usually do.`, _:''})}${b96If('kaedra', `\n\nKaedra has climbed onto a wagon's tongue to see further. "It's keeping its shape," she says. "Dust doesn't keep its shape. Feet do."`)}
 
-Finadd Ennic is walking the line with his slate. Low on the northern sky, where there was nothing last night, there is a long brown smear, and it is not getting thinner.`,
+Finadd Ennic is walking the line with his slate. The brown smear on the northern sky is longer than it was an hour ago, and it is not getting thinner.`,
       ch:[{t:'The Finadd.', go:'b9_c6_ennic'},
           b9ReadChoice(6),
           {t:'Walk the stretch.', go:()=>startExplore()}]}),

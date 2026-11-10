@@ -101,7 +101,7 @@ SCENEX.b9_wastes = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
       for (let i = 0; i < 4; i++) b93aHorse(x, W*(.6 + i*.06), hz + H*.08, H/220, ['#6a4a2e', '#3a2a1a', '#8a6a4a'][i % 3], -1); } }), 0, 0, W, H); // the outriders' horses on the flank
   if (herd) for (let i = 0; i < 6; i++) { const k = ((t/7000*mo + i/6) % 1), hz = H*.44; ctx.fillStyle = `rgba(140,108,70,${(.5*(1 - k*.5)).toFixed(3)})`; ctx.beginPath(); ctx.ellipse(W*(.04 + i*.07) + k*W*.04, hz - H*(.01 + k*.05), W*(.08 + k*.04), H*(.03 + k*.015), 0, 0, 7); ctx.fill(); } // the herd's dust coming on
   for (let i = 0; i < 14; i++) { const k = ((t/9000*mo + hash(i, 9411)) % 1); ctx.fillStyle = `rgba(240,216,168,${(.4*(1 - k)).toFixed(2)})`; ctx.fillRect(W*(.1 + hash(i, 9412)*.8) + k*W*.08, H*(.55 + hash(i, 9413)*.35) - k*H*.06, 1.3, 1.3); } // dust on the air
-  if (c4) { drawFigure(ctx, 'b9_c4_outrider', W*.78, H*.8, 1.2, t, {dir:-1, phase:2}); if (f.b9_c4_herdDone && !f.b9_c4_huntTried) drawFigure(ctx, 'b3_c2_bhederin', W*.9, H*.7, 1, t, {dir:-1, still:true}); }
+  if (c4) { drawFigure(ctx, 'b9_c4_outrider', W*.78, H*.8, 1.2, t, {dir:-1, phase:2}); if (f.b9_c4_herdDone && !f.b9_c4_huntTried && (f.b9_c4_ph || 1) === 3) drawFigure(ctx, 'b3_c2_bhederin', W*.9, H*.7, 1, t, {dir:-1, still:true}); }
   ctx.fillStyle = 'rgba(220,200,160,.06)'; ctx.fillRect(0, 0, W, H);
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .5, .5); };

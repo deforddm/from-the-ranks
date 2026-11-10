@@ -302,7 +302,7 @@ He nods back up the camp toward the carts. "The Letherii sent their healers down
     b9_c3_thallo_more:()=>({sp:'Thallo', scene:'b9_c3_fevercamp', fx:()=>{ S.f.b9_c3_where = 1; }, txt:
 `"The water," he says. "Everybody says the water. The front of the column drinks out of a stream, and then the horses go through it, and then the wagons, and then us at the back." He shrugs. "By the time it's our turn it's not a stream, it's soup."
 
-He looks east along the road, where the column's fires go away in a line and stop. "Bonehunters, they call us now. Some clerk thought of it." He finishes the bread. "Never seen a bone I'd hunt. I've seen a lot of water I wouldn't drink, though."`,
+He looks east along the road, where the column's fires go away in a line and stop. "Bonehunters, they call us. Don't ask me who started it." He finishes the bread. "Never seen a bone I'd hunt. I've seen a lot of water I wouldn't drink, though."`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
 
     /* Brask, the first night: carrying water (his own scene) */
@@ -424,7 +424,7 @@ ${b93Say({brask:`Brask drags the dogs out past the camp's edge by their hind leg
         again:()=> edge ? 'The Third\'s cook-fire at the last water, the Wastes beyond it.' : 'The Third\'s fever-fire by its stone, the sick in their blankets.', txt:
 `${edge ? `The Third's fire at the last water is dung and dry grass, because there is no more wood. It burns hot and fast and smells of the herds that left it.${b93Key() === 'press' && b93SickIn() ? ` ${NAME(b93Sick())} sits closest, still in the blanket, still shaking at dusk.` : b93Key() === 'boil' ? ' The healer\'s pot is on it, as it is at every halt now. The pot is not argued with.' : ''}` : ph === 3 ? `The Third's fire by its flat stone is a fever-fire tonight, as half the fires in the camp are: a pot on it, a skin by it, and somebody in a blanket beside it who is not getting better.` : `The Third's fire is a small one by a flat stone at the edge of the road, with a pot on it and the fever-carts behind. ${b93SickIn() ? `${NAME(b93Sick())} is in a blanket on the warm side.` : 'The heavies\' sick are in the carts behind.'}`}${b93If('brask', edge ? `\n\nBrask has his back to the fire and his face to the Wastes, looking at all that nothing.` : `\n\nBrask sits a little back from the fire, with a water skin across his knees, waiting for it to cool.`)}`,
         ch:[...(ph === 1 ? [b9ReadChoice(3)] : []),
-            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && (ph === 1 || edge), fx:()=>{ S.f[rk] = 1; b93Rest(edge ? 'The squad sits an hour at the last water. Wounds close, mostly.' : 'The squad sits an hour by the fever-fire. Wounds close, mostly. The fever does not.'); }, go:'b9_c3_fire_rest'},
+            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && (ph === 1 || edge), fx:()=>{ S.f[rk] = 1; b93Rest(edge ? 'The squad sits an hour at the last water with its boots off and its feet in it. The cuts scab over.' : 'The squad sits an hour by the fever-fire. The cuts are seen to. The fever is not finished.'); }, go:'b9_c3_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c3_fire_talk'},
             {t:'"What are we marching for?"', req:()=>ph === 3 && !!S.f.b9_c3_orders3 && !(S.b9 && S.b9.wit && S.b9.wit.c3), go:'b9_c3_witness'},
             {t:'Turn in. The column moves at first light.', req:()=>ph === 1 && !!S.f.b9_c3_healer, onward:true, go:'b9_c3_turnin'},

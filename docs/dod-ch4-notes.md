@@ -150,7 +150,7 @@ All three are got on both keys.
 - **Rule 85:** water by the cup and a seep in a wash; no thirst unto death. Hunger is a belt on a new hole, half a biscuit passed back and forth.
 - **Never said:** "weeks", "months", a Burn's Sleep year, "Bonehunters" (not said at all; "the foreigners").
 - **Open on purpose:** where the runner went; what the Barghast hunters do next; what the decurion's party carries home besides meat.
-- **Unsure:** the canon sheet has bhederin "still walk" the Wastes (R10 S1) and the Wastes "emptied" (R10 S7). The stampede's "forty, maybe fifty" is the game's own. I suggest a page check that a herd of that size is plausible this far into the Wastes.
+- **Unsure:** the canon sheet has bhederin "still walk" the Wastes (R10 S1) and the Wastes "emptied" (R10 S7). The stampede's size is the game's own ("a score, maybe fewer" since the continuity read, Nov 10: R10 S7 has the Wastes "emptied"). I suggest a page check that a herd of that size is plausible this far into the Wastes.
 
 ## Art (164b)
 
