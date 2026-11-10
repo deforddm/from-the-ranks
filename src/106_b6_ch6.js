@@ -64,7 +64,7 @@ Object.assign(TRICKS, {
 /* ---- the words this chapter adds to Book Six's glossary ---- */
 GLOSSX.bh.push(
   [6, 'Hanar Ara', 'The City of the Fallen, north-east of G\'danisban: a city of tents and shrines on a plain, where those the plague marked and did not take have been going. Mathok\'s rebels came out of it to meet the Host.', ()=>(S.chapter || 0) >= 6],
-  [6, 'The lights below the moon', 'A row of lights that came down out of the night sky north-east of G\'danisban, in a curve below the moon, while the Host marched. The column halted. The ranks do not agree what they were.', ()=>!!(S.f && S.f.b6_c6_lights)],
+  [6, 'The lights below the moon', 'A row of lights that came down out of the evening sky north-east of G\'danisban, in a curve below the moon, while the Host marched. The column halted. The ranks do not agree what they were.', ()=>!!(S.f && S.f.b6_c6_lights)],
   [6, 'The carriers', 'Soldiers who had the fever and lived. Since G\'danisban a touch from one of them breaks it in others, and the camp has stopped asking why and started asking where they are.', ()=>!!(S.f && S.f.b6_soliel)]);
 
 /* ---- the reading: the column halted on the night road, every face turned up to the lights (bh:6; the Gate leans, B6POOL[6]) ---- */
@@ -350,9 +350,9 @@ const B6CH6 = {
     /* ---- phase 1: the night road, the lights, the halt (the first halt: the Deck is offered here) ---- */
     b6_c6_start:()=>({sp:'The night road', scene:'b6_sky', fx:()=>{ S.f.b6_c6_ph ??= 1; },
       again:()=>`The column stands on the night road with every face in it turned up, and the lights still coming down below the moon.`, txt:
-`The Host is an hour past moonrise on the night road, marching, when the first light comes down.
+`The Host is an hour out on the night road, the sun just down behind it and the sky to the north-east still blue, the moon only lately up, when the first light comes down.
 
-It comes down out of the clear sky to the north-east, below the moon, slowly, the way nothing falls. Then another beside it. Then more, in a curve, like beads on a string somebody is lowering. The column does not so much halt as stop walking, company by company, from the front back, until the whole Host is standing on the road with its face turned up.
+It comes down out of the blue to the north-east, below the moon, slowly, the way nothing falls. Then another beside it. Then more, in a curve, like beads on a string somebody is lowering. The column does not so much halt as stop walking, company by company, from the front back, until the whole Host is standing on the road with its face turned up.
 
 Then the horns come down the line, late, and make it an order: halt.${b66Say({kettle:`\n\nKettle is counting under her breath. "Ten. Eleven. Twelve." She stops. "Twelve. That's not a number anything comes down in."`, brisk:'\n\nBrisk counts them too, out loud, which nobody has heard her do with anything but rations.', _:''})}`,
       ch:[{t:'Watch the lights.', req:()=>!S.f.b6_c6_lights, go:'b6_c6_lights'},
@@ -637,7 +637,7 @@ She packs it all back, the cusser last, at the bottom, padded. "Don't tell Brisk
     b6_c6_skywatch:()=>({sp:'The sky', scene:'b6_sky', again:()=>`The sky over the camp, clear and empty, and the camp pretending not to look at it.`, txt:
 `You lie back on the ground by the fire and look at the sky a while. It is very clear, the way it is in this country after the heat goes, and full of stars, and empty of anything that moves.
 
-${S.f.b6_c6_lights ? `Last night twelve lights came down out of it, just there, below where the moon will rise. Tonight there is nothing. Somewhere out on the scrub to the north-east they came down, or did not; nobody in the Host has gone to look, and nobody has been told to.` : `The camp says lights came down out of it last night, below the moon. You missed most of it, looking at other things. Tonight there is nothing.`}${b66Say({tuft:`
+${S.f.b6_c6_lights ? `Last night, at sundown, twelve lights came down out of it, just there, below where the moon rises. Tonight there is nothing. Somewhere out on the scrub to the north-east they came down, or did not; nobody in the Host has gone to look, and nobody has been told to.` : `The camp says lights came down out of it last night, below the moon. You missed most of it, looking at other things. Tonight there is nothing.`}${b66Say({tuft:`
 
 Tuft lies down beside you, without asking, and looks up too. "She used to say the sky was the Deck nobody can read," she says. Tattersail. "I never knew if she meant it." After a while she gets up and goes back to the lamp.`, sohra:`
 

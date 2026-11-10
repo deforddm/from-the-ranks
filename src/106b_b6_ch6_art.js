@@ -30,7 +30,7 @@ function b66Wagon(ctx, x, y, s, c){ ctx.fillStyle = c; ctx.fillRect(x - 6*s, y -
 
 /* the column halted under the falling lights */
 SCENEX.b6_sky = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.6;
-  ctx.drawImage(sceneLayer('b66:sky', W, H, (x, W, H) => { b66Sky(x, W, hz, true); b66Clouds(x, W, hz, true);
+  ctx.drawImage(sceneLayer('b66:sky', W, H, (x, W, H) => { b66Sky(x, W, hz, true); { const g = x.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, 'rgba(40,62,104,.35)'); g.addColorStop(.6, 'rgba(62,96,150,.5)'); g.addColorStop(1, 'rgba(120,140,170,.55)'); x.fillStyle = g; x.fillRect(0, 0, W, hz); } /* sundown: the sky still blue (BH ch 20, R) */ b66Clouds(x, W, hz, true);
     x.globalCompositeOperation = 'lighter'; glow(x, W*.24, H*.14, H*.22, '#c8d4e8', .18); x.globalCompositeOperation = 'source-over'; ell(x, W*.24, H*.14, H*.045, H*.045, '#e4e8ec'); ell(x, W*.235, H*.13, H*.012, H*.01, 'rgba(160,168,180,.6)'); ell(x, W*.25, H*.155, H*.008, H*.007, 'rgba(160,168,180,.5)'); // the moon
     b66Plain(x, W, H, hz, true); b66Road(x, W, H, hz, true);
     for (let i = 0; i < 40; i++) { const u = .12 + i/40*.86, [px, py] = b66RoadAt(W, H, hz, u), s = lerp(1.4, .3, u); if (i % 9 === 4) b66Wagon(x, px + 4*s, py, s, '#06070a'); else b66Tiny(x, px + (i % 2 ? 3 : -3)*s, py, s, '#07080b', i % 3 === 0); } // the column, stopped on the road

@@ -261,7 +261,7 @@ Keneb thinks he will tell the Adjunct whose word it was, after all. He finds he 
       other:(r, p) => `${r.name} lets the card go. "A Fist on the beach and a boy's warning," ${p.s} says, "and the marines walking in."`})]},
 
   /* ---- Chapter 6: north-east of G'danisban. Up the halted column, the Host's chief cutter looks at the sky. ---- */
-  b6v6:{book:'bh', ch:6, who:'Noto Boil', where:'North-east of G\'danisban', fig:'b6v_noto', bg:'b6v_lights', cap:'A long column halted on a plain, a pale moon high over it, and below the moon a curve of small bright lights, coming down.', steps:[
+  b6v6:{book:'bh', ch:6, who:'Noto Boil', where:'North-east of G\'danisban', fig:'b6v_noto', bg:'b6v_lights', cap:'A long column halted on a plain, a pale moon low over it, and below the moon a curve of small bright lights, coming down.', steps:[
     {txt:
 `Noto Boil, chief cutter of Onearm's Host, walks beside a wagon with a bag over his shoulder that clinks, and complains about his feet.
 

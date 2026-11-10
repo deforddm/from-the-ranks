@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '11.0.0';
+const VERSION = '11.0.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7866,6 +7866,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['11.0.1', ['Book Six, Chapter Six: the twelve lights now come down at sundown, the sky still blue, as the novel has it, before the night march goes on. Saves are unchanged.']],
   ['11.0.0', ['Book Eight, Time Served, beside Toll the Hounds: the Fourth, out of the army years after Coral, keep a door in Darujhistan, and the Assassins\' Guild puts their names on a paper.', 'The Contract: how much the Guild wants you dead rises with every Guild fight you win and falls while you are out of the city. It decides who comes for you and how you get out at the end.', 'Seven chapters, from the city east over the old Domin to Black Coral and back. A Deck reading and a vision every chapter, one mortal fight, recruits, games at the fires, and a fate page for every soldier.', 'A finished Book Three or Book Six on the right road carries the Fourth across. Older saves carry on as they were.']],
   ['10.3.5', ['No more lit fuses, in any book. Moranth munitions go off when the shell breaks, or when an acid timer eats through its wax, so the sappers now talk of timers, wax and trip cord. Tangle\'s wrists are wound with trip cord.', 'Book Four\'s fire game is now The Timer and Book Seven\'s is the Timer-Count: same play, acid instead of flame. Old saves and deeds carry over.']],
   ['10.3.4', ['The cusser artwork no longer shows a lit spark: Moranth munitions have no fuse. They go off when the shell breaks, or when an acid timer eats through its wax plug.']],
@@ -78027,7 +78028,7 @@ Object.assign(TRICKS, {
 /* ---- the words this chapter adds to Book Six's glossary ---- */
 GLOSSX.bh.push(
   [6, 'Hanar Ara', 'The City of the Fallen, north-east of G\'danisban: a city of tents and shrines on a plain, where those the plague marked and did not take have been going. Mathok\'s rebels came out of it to meet the Host.', ()=>(S.chapter || 0) >= 6],
-  [6, 'The lights below the moon', 'A row of lights that came down out of the night sky north-east of G\'danisban, in a curve below the moon, while the Host marched. The column halted. The ranks do not agree what they were.', ()=>!!(S.f && S.f.b6_c6_lights)],
+  [6, 'The lights below the moon', 'A row of lights that came down out of the evening sky north-east of G\'danisban, in a curve below the moon, while the Host marched. The column halted. The ranks do not agree what they were.', ()=>!!(S.f && S.f.b6_c6_lights)],
   [6, 'The carriers', 'Soldiers who had the fever and lived. Since G\'danisban a touch from one of them breaks it in others, and the camp has stopped asking why and started asking where they are.', ()=>!!(S.f && S.f.b6_soliel)]);
 
 /* ---- the reading: the column halted on the night road, every face turned up to the lights (bh:6; the Gate leans, B6POOL[6]) ---- */
@@ -78313,9 +78314,9 @@ const B6CH6 = {
     /* ---- phase 1: the night road, the lights, the halt (the first halt: the Deck is offered here) ---- */
     b6_c6_start:()=>({sp:'The night road', scene:'b6_sky', fx:()=>{ S.f.b6_c6_ph ??= 1; },
       again:()=>`The column stands on the night road with every face in it turned up, and the lights still coming down below the moon.`, txt:
-`The Host is an hour past moonrise on the night road, marching, when the first light comes down.
+`The Host is an hour out on the night road, the sun just down behind it and the sky to the north-east still blue, the moon only lately up, when the first light comes down.
 
-It comes down out of the clear sky to the north-east, below the moon, slowly, the way nothing falls. Then another beside it. Then more, in a curve, like beads on a string somebody is lowering. The column does not so much halt as stop walking, company by company, from the front back, until the whole Host is standing on the road with its face turned up.
+It comes down out of the blue to the north-east, below the moon, slowly, the way nothing falls. Then another beside it. Then more, in a curve, like beads on a string somebody is lowering. The column does not so much halt as stop walking, company by company, from the front back, until the whole Host is standing on the road with its face turned up.
 
 Then the horns come down the line, late, and make it an order: halt.${b66Say({kettle:`\n\nKettle is counting under her breath. "Ten. Eleven. Twelve." She stops. "Twelve. That's not a number anything comes down in."`, brisk:'\n\nBrisk counts them too, out loud, which nobody has heard her do with anything but rations.', _:''})}`,
       ch:[{t:'Watch the lights.', req:()=>!S.f.b6_c6_lights, go:'b6_c6_lights'},
@@ -78600,7 +78601,7 @@ She packs it all back, the cusser last, at the bottom, padded. "Don't tell Brisk
     b6_c6_skywatch:()=>({sp:'The sky', scene:'b6_sky', again:()=>`The sky over the camp, clear and empty, and the camp pretending not to look at it.`, txt:
 `You lie back on the ground by the fire and look at the sky a while. It is very clear, the way it is in this country after the heat goes, and full of stars, and empty of anything that moves.
 
-${S.f.b6_c6_lights ? `Last night twelve lights came down out of it, just there, below where the moon will rise. Tonight there is nothing. Somewhere out on the scrub to the north-east they came down, or did not; nobody in the Host has gone to look, and nobody has been told to.` : `The camp says lights came down out of it last night, below the moon. You missed most of it, looking at other things. Tonight there is nothing.`}${b66Say({tuft:`
+${S.f.b6_c6_lights ? `Last night, at sundown, twelve lights came down out of it, just there, below where the moon rises. Tonight there is nothing. Somewhere out on the scrub to the north-east they came down, or did not; nobody in the Host has gone to look, and nobody has been told to.` : `The camp says lights came down out of it last night, below the moon. You missed most of it, looking at other things. Tonight there is nothing.`}${b66Say({tuft:`
 
 Tuft lies down beside you, without asking, and looks up too. "She used to say the sky was the Deck nobody can read," she says. Tattersail. "I never knew if she meant it." After a while she gets up and goes back to the lamp.`, sohra:`
 
@@ -78844,7 +78845,7 @@ function b66Wagon(ctx, x, y, s, c){ ctx.fillStyle = c; ctx.fillRect(x - 6*s, y -
 
 /* the column halted under the falling lights */
 SCENEX.b6_sky = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.6;
-  ctx.drawImage(sceneLayer('b66:sky', W, H, (x, W, H) => { b66Sky(x, W, hz, true); b66Clouds(x, W, hz, true);
+  ctx.drawImage(sceneLayer('b66:sky', W, H, (x, W, H) => { b66Sky(x, W, hz, true); { const g = x.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, 'rgba(40,62,104,.35)'); g.addColorStop(.6, 'rgba(62,96,150,.5)'); g.addColorStop(1, 'rgba(120,140,170,.55)'); x.fillStyle = g; x.fillRect(0, 0, W, hz); } /* sundown: the sky still blue (BH ch 20, R) */ b66Clouds(x, W, hz, true);
     x.globalCompositeOperation = 'lighter'; glow(x, W*.24, H*.14, H*.22, '#c8d4e8', .18); x.globalCompositeOperation = 'source-over'; ell(x, W*.24, H*.14, H*.045, H*.045, '#e4e8ec'); ell(x, W*.235, H*.13, H*.012, H*.01, 'rgba(160,168,180,.6)'); ell(x, W*.25, H*.155, H*.008, H*.007, 'rgba(160,168,180,.5)'); // the moon
     b66Plain(x, W, H, hz, true); b66Road(x, W, H, hz, true);
     for (let i = 0; i < 40; i++) { const u = .12 + i/40*.86, [px, py] = b66RoadAt(W, H, hz, u), s = lerp(1.4, .3, u); if (i % 9 === 4) b66Wagon(x, px + 4*s, py, s, '#06070a'); else b66Tiny(x, px + (i % 2 ? 3 : -3)*s, py, s, '#07080b', i % 3 === 0); } // the column, stopped on the road
@@ -80397,7 +80398,7 @@ Keneb thinks he will tell the Adjunct whose word it was, after all. He finds he 
       other:(r, p) => `${r.name} lets the card go. "A Fist on the beach and a boy's warning," ${p.s} says, "and the marines walking in."`})]},
 
   /* ---- Chapter 6: north-east of G'danisban. Up the halted column, the Host's chief cutter looks at the sky. ---- */
-  b6v6:{book:'bh', ch:6, who:'Noto Boil', where:'North-east of G\'danisban', fig:'b6v_noto', bg:'b6v_lights', cap:'A long column halted on a plain, a pale moon high over it, and below the moon a curve of small bright lights, coming down.', steps:[
+  b6v6:{book:'bh', ch:6, who:'Noto Boil', where:'North-east of G\'danisban', fig:'b6v_noto', bg:'b6v_lights', cap:'A long column halted on a plain, a pale moon low over it, and below the moon a curve of small bright lights, coming down.', steps:[
     {txt:
 `Noto Boil, chief cutter of Onearm's Host, walks beside a wagon with a bag over his shoulder that clinks, and complains about his feet.
 
