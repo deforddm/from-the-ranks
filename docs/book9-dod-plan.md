@@ -65,3 +65,8 @@ Marks: [T] the novel's text, [W] the wiki, [R] Reactor, [O] memory only. The can
 10. No Neffarias Bredd rumour in Book Nine: canon uses the name itself in DoD.
 11. A sergeant carried from Book Seven gets a new save slot; the Book Seven save is untouched.
 12. The title art: a lone dusty soldier walking after the column, the short-tails' dust far off. The patch: both squads' patches on one dun strip with a stitched boot-print.
+
+## Settled at balance (David, Tue Nov 10, 2026)
+
+7. **Balance: to the targets**, Book Nine tables only (Soldier ~90%, 85–97; Bridgeburner ~75–80%, 65–85, none under 60; first fights and survive fights near 100% on Soldier). Untuned, the bot won all 22 fights on both difficulties. Final numbers go to David before the ship.
+8. **Rations floor at 2 before Ch 7:** the column's pot tops the Third up to at least 2 before the rearguard.
