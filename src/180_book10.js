@@ -526,7 +526,7 @@ function b10CodaWords(q){ const B = BOOKS[q.book] || BOOKS.gotm, u = B10_UNITP[q
 const B10CODA_OPEN = [
   'The story is that at the barrows, at the very end, the Adjunct said the army would be forgotten, and that she did not regret it.',
   'The story is right about the army. Home will never learn these names. No one will put up a stone that says who held which stretch, or who came back for water, or who did not.',
-  'The story is wrong about one thing. They were written down anyway.',
+  'The story is wrong about one thing. Somebody wrote them down.',
   'These are the ones this device remembers.'];
 function b10CreditsWords(n, more){ const shelf = shelfBooks().sort((a, b) => a.n - b.n);
   return [`From the Ranks: ${rdUpT(shelf.length).toLowerCase()} books, each beside one of Steven Erikson's novels of the Malazan Book of the Fallen, in order, told by soldiers the novels never name.`,
