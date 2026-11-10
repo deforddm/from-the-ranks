@@ -1,3 +1,5 @@
+/* v12.0.3: a two-squad patch (600 wide, two 290-wide patches) shows each squad's patch at a single patch's size */
+function tpatchCls(k){ return 'tpatch' + (k && / viewBox="0 0 600 /.test(ART[k] || '') ? ' tpatch2' : ''); }
 /* ============ title / intro ============ */
 /* installing the game as an app on a PC. Chrome and Edge offer it with beforeinstallprompt, which is held here and fired from our own
    button (the title offers it once in a while; Settings always has it). Safari on a Mac has File > Add to Dock and no event, so it gets
@@ -44,7 +46,7 @@ const titleBookOf = list => { const b = list[0] && list[0].book; return b && BOO
 function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
   if (ARTON()) { const el = $('.titleart'); if (el && el.dataset.book !== b) { el.dataset.book = b; el.innerHTML = art(B.titleArt || 'title/key'); } }
   else { const old = $('#titlecv'); if (old && old.dataset.book !== b) { const cv = document.createElement('canvas'); cv.id = 'titlecv'; cv.setAttribute('aria-hidden', 'true'); cv.dataset.book = b; old.replaceWith(cv); startTitleBackdrop(cv, b); } }
-  const tp = $('#tPatch'); if (tp && tp.dataset.book !== b) { tp.dataset.book = b; tp.innerHTML = art(B.patch || 'insignia/patch', 'tpatch'); }
+  const tp = $('#tPatch'); if (tp && tp.dataset.book !== b) { tp.dataset.book = b; tp.innerHTML = art(B.patch || 'insignia/patch', tpatchCls(B.patch)); }
   const tn = $('#tName'); if (tn) tn.innerHTML = `${B.h1[0]}<span>${B.h1[1]}</span>`;
   const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
@@ -106,7 +108,7 @@ function showTitle(fresh, want){
   const taken = n => list.find(e => sameName(e.name, n));
   const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a backup or save code</b> here and paste it.</p>` : '';
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
-    <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
+    <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', tpatchCls(TB.patch))}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
     ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).filter(b => !b.coming || b.id === tb).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}${b.coming ? ' · coming' : ''}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
     <div id="bookRows">${bookRows(tb)}</div>

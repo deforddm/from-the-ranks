@@ -539,7 +539,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .fallen li span{opacity:.75} .fallen li em{display:block;font-size:.82rem;opacity:.65}
 .title .iosnote{margin:10px 0 0;padding:8px 10px;border-left:2px solid rgba(201,151,63,.6);background:rgba(20,15,10,.6)}
 .title .series{font-family:var(--display);font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;color:#cdbf9f;opacity:.85;margin:6px 0 4px;text-shadow:0 2px 6px #000}
-.tpatch{width:64px;margin:0 0 -4px -6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}
+.tpatch{width:64px;margin:0 0 -4px -6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}.tpatch.tpatch2{width:132px}
 .artscene .vista{display:block;width:100%}
 .artscene.plate .vista svg{height:auto;max-height:calc(100vh - 20px - 3.3rem - 24px)} /* a chapter plate: its own shape, never cropped hard */
 .fin .artscene .vista svg{height:auto} /* the road picture keeps its shape in the narrow finale column */
@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '12.0.2';
+const VERSION = '12.0.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5339,6 +5339,8 @@ let fullTried = false;
   fullTried = true; toggleFull(true); }, {capture:true}));
 
 
+/* v12.0.3: a two-squad patch (600 wide, two 290-wide patches) shows each squad's patch at a single patch's size */
+function tpatchCls(k){ return 'tpatch' + (k && / viewBox="0 0 600 /.test(ART[k] || '') ? ' tpatch2' : ''); }
 /* ============ title / intro ============ */
 /* installing the game as an app on a PC. Chrome and Edge offer it with beforeinstallprompt, which is held here and fired from our own
    button (the title offers it once in a while; Settings always has it). Safari on a Mac has File > Add to Dock and no event, so it gets
@@ -5385,7 +5387,7 @@ const titleBookOf = list => { const b = list[0] && list[0].book; return b && BOO
 function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
   if (ARTON()) { const el = $('.titleart'); if (el && el.dataset.book !== b) { el.dataset.book = b; el.innerHTML = art(B.titleArt || 'title/key'); } }
   else { const old = $('#titlecv'); if (old && old.dataset.book !== b) { const cv = document.createElement('canvas'); cv.id = 'titlecv'; cv.setAttribute('aria-hidden', 'true'); cv.dataset.book = b; old.replaceWith(cv); startTitleBackdrop(cv, b); } }
-  const tp = $('#tPatch'); if (tp && tp.dataset.book !== b) { tp.dataset.book = b; tp.innerHTML = art(B.patch || 'insignia/patch', 'tpatch'); }
+  const tp = $('#tPatch'); if (tp && tp.dataset.book !== b) { tp.dataset.book = b; tp.innerHTML = art(B.patch || 'insignia/patch', tpatchCls(B.patch)); }
   const tn = $('#tName'); if (tn) tn.innerHTML = `${B.h1[0]}<span>${B.h1[1]}</span>`;
   const tg = $('#tTag'); if (tg) tg.textContent = B.tag; }
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
@@ -5447,7 +5449,7 @@ function showTitle(fresh, want){
   const taken = n => list.find(e => sameName(e.name, n));
   const iosNote = !list.length && IOS() ? `<p class="fine iosnote">Coming from Ashes of the Pale on this iPhone? On its title, tap your sergeant's name under <i>Copy a sergeant's code</i>, then tap <b>Load a backup or save code</b> here and paste it.</p>` : '';
   toTop(); $('#app').innerHTML = `${ARTON() ? `<div class="titleart" aria-hidden="true" data-book="${tb}">${art(TB.titleArt || 'title/key')}</div>` : ''}<canvas id="titlecv" aria-hidden="true" data-book="${tb}" ${ARTON() ? 'hidden' : ''}></canvas>${fullBtn('bFullT').replace('class="btn icon"', 'class="btn icon tfull"')}<div id="title" class="title">
-    <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', 'tpatch')}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
+    <span id="tPatch" data-book="${tb}">${art(TB.patch || 'insignia/patch', tpatchCls(TB.patch))}</span><div class="series">From the Ranks</div><h1 id="tName">${TB.h1[0]}<span>${TB.h1[1]}</span></h1>
     <p class="tag" id="tTag">${TB.tag}</p>
     ${form ? `<div class="field"><label>Book</label><div class="seg bseg">${Object.values(BOOKS).filter(b => !b.coming || b.id === tb).map(b => `<button class="btn ${b.id === tb ? 'on' : ''}" data-book="${b.id}">Book ${b.word}<small>${b.name}${b.coming ? ' · coming' : ''}</small></button>`).join('')}</div><small class="fine" id="bBlurb">${TB.blurb}</small></div>
     <div id="bookRows">${bookRows(tb)}</div>
@@ -7890,6 +7892,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['12.0.3', ['Book Seven\'s title art: the column walks up the beach and over the dune, and nobody stands on the water any more.', 'On the title, a two-squad patch (Books Six, Seven and Nine) now shows each squad\'s patch as large as a single one.']],
   ['12.0.2', ['Book Nine\'s title art: the soldier in front is drawn again, back to you, helm, cloak, pack and bedroll, spear on the shoulder, walking after the column with a long shadow thrown ahead.']],
   ['12.0.1', ['Book Nine: the two squads wear their own patches side by side, as in Book Seven: the Third\'s with a boot-print in the dust, the Sixth Company\'s with a ration sack.']],
   ['12.0.0', ['Book Nine, Dust on the Boots, beside Dust of Dreams: the Third with the Bonehunters\' marines and heavies, and the Letherii with the escort, taking turns on the march east into the Wastelands.',
@@ -81637,7 +81640,12 @@ Object.entries(B7_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => 
   s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE + 4} T${W} ${SHORE - 30}" stroke="#ff9a50" stroke-width="2" fill="none" opacity=".35"/>`;
   s += `<path d="M760 ${H} Q900 700 1080 640 Q1260 590 1600 520 L1600 ${H} Z" fill="#1c140e"/><path d="M1000 ${H} Q1150 760 1320 690 Q1460 640 1600 610 L1600 ${H} Z" fill="#120d09"/>`;
   /* the column going up from the beach into the dark, small, spears up, nobody looking back */
-  let col = ''; for (let i = 0; i < 18; i++) { const t = i / 17, x = 640 + t * 820, y = SHORE + 50 - t * 120 + Math.sin(t * 6) * 8, k = 1.1 - t * .6;
+  /* the land's top edge at x: the beach's waterline, or the dune's crest where the dune stands higher; every foot is set on or below it (v12.0.3: none on the water) */
+  const qb = (a, c, b, t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * c + t * t * b;
+  const edge = segs => { const pts = []; segs.forEach(([x0, y0, cx, cy, x1, y1]) => { for (let j = 0; j <= 40; j++) { const t = j / 40; pts.push([qb(x0, cx, x1, t), qb(y0, cy, y1, t)]); } }); return x => { let best = 1e9; for (let j = 1; j < pts.length; j++) { const [ax, ay] = pts[j - 1], [bx, by] = pts[j]; if ((x - ax) * (x - bx) <= 0 && ax !== bx) best = Math.min(best, ay + (by - ay) * (x - ax) / (bx - ax)); } return best; }; };
+  const beach = edge([[0, SHORE, 400, SHORE - 14, 800, SHORE + 4], [800, SHORE + 4, 1200, SHORE + 22, W, SHORE - 30]]), dune = edge([[760, H, 900, 700, 1080, 640], [1080, 640, 1260, 590, W, 520]]);
+  const land = x => Math.min(beach(x), dune(x));
+  let col = ''; for (let i = 0; i < 18; i++) { const t = i / 17, x = 640 + t * 820, k = 1.1 - t * .6, y = Math.max(SHORE + 50 - t * 120 + Math.sin(t * 6) * 8, land(x) + 14 * k);
     col += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})"><rect x="-4" y="-22" width="8" height="18" fill="#0a0806"/><circle cx="0" cy="-26" r="4.5" fill="#0a0806"/><rect x="-6" y="-20" width="5" height="12" fill="#0a0806"/><rect x="5" y="-42" width="1.6" height="38" fill="#0a0806"/><rect x="-4" y="-4" width="3" height="10" fill="#0a0806"/><rect x="1" y="-4" width="3" height="10" fill="#0a0806"/></g>`; }
   s += `<g class="k7-march">${col}</g>`;
   /* the foreground: a charred prow-timber half in the sand, its carved head burned away */

@@ -519,7 +519,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .fallen li span{opacity:.75} .fallen li em{display:block;font-size:.82rem;opacity:.65}
 .title .iosnote{margin:10px 0 0;padding:8px 10px;border-left:2px solid rgba(201,151,63,.6);background:rgba(20,15,10,.6)}
 .title .series{font-family:var(--display);font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;color:#cdbf9f;opacity:.85;margin:6px 0 4px;text-shadow:0 2px 6px #000}
-.tpatch{width:64px;margin:0 0 -4px -6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}
+.tpatch{width:64px;margin:0 0 -4px -6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}.tpatch.tpatch2{width:132px}
 .artscene .vista{display:block;width:100%}
 .artscene.plate .vista svg{height:auto;max-height:calc(100vh - 20px - 3.3rem - 24px)} /* a chapter plate: its own shape, never cropped hard */
 .fin .artscene .vista svg{height:auto} /* the road picture keeps its shape in the narrow finale column */

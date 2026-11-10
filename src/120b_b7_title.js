@@ -46,7 +46,12 @@
   s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE + 4} T${W} ${SHORE - 30}" stroke="#ff9a50" stroke-width="2" fill="none" opacity=".35"/>`;
   s += `<path d="M760 ${H} Q900 700 1080 640 Q1260 590 1600 520 L1600 ${H} Z" fill="#1c140e"/><path d="M1000 ${H} Q1150 760 1320 690 Q1460 640 1600 610 L1600 ${H} Z" fill="#120d09"/>`;
   /* the column going up from the beach into the dark, small, spears up, nobody looking back */
-  let col = ''; for (let i = 0; i < 18; i++) { const t = i / 17, x = 640 + t * 820, y = SHORE + 50 - t * 120 + Math.sin(t * 6) * 8, k = 1.1 - t * .6;
+  /* the land's top edge at x: the beach's waterline, or the dune's crest where the dune stands higher; every foot is set on or below it (v12.0.3: none on the water) */
+  const qb = (a, c, b, t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * c + t * t * b;
+  const edge = segs => { const pts = []; segs.forEach(([x0, y0, cx, cy, x1, y1]) => { for (let j = 0; j <= 40; j++) { const t = j / 40; pts.push([qb(x0, cx, x1, t), qb(y0, cy, y1, t)]); } }); return x => { let best = 1e9; for (let j = 1; j < pts.length; j++) { const [ax, ay] = pts[j - 1], [bx, by] = pts[j]; if ((x - ax) * (x - bx) <= 0 && ax !== bx) best = Math.min(best, ay + (by - ay) * (x - ax) / (bx - ax)); } return best; }; };
+  const beach = edge([[0, SHORE, 400, SHORE - 14, 800, SHORE + 4], [800, SHORE + 4, 1200, SHORE + 22, W, SHORE - 30]]), dune = edge([[760, H, 900, 700, 1080, 640], [1080, 640, 1260, 590, W, 520]]);
+  const land = x => Math.min(beach(x), dune(x));
+  let col = ''; for (let i = 0; i < 18; i++) { const t = i / 17, x = 640 + t * 820, k = 1.1 - t * .6, y = Math.max(SHORE + 50 - t * 120 + Math.sin(t * 6) * 8, land(x) + 14 * k);
     col += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})"><rect x="-4" y="-22" width="8" height="18" fill="#0a0806"/><circle cx="0" cy="-26" r="4.5" fill="#0a0806"/><rect x="-6" y="-20" width="5" height="12" fill="#0a0806"/><rect x="5" y="-42" width="1.6" height="38" fill="#0a0806"/><rect x="-4" y="-4" width="3" height="10" fill="#0a0806"/><rect x="1" y="-4" width="3" height="10" fill="#0a0806"/></g>`; }
   s += `<g class="k7-march">${col}</g>`;
   /* the foreground: a charred prow-timber half in the sand, its carved head burned away */
