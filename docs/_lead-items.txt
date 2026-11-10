@@ -1,0 +1,15 @@
+- Ch 2: a caption getter on the shared SCENES.b9_muster (runtime change to a 160 scene).
+- Ch 3: the water cure's salt and honey are an invention; page-check Brys's cure (DoD ch 11).
+- Ch 3: the march fever survives fires in Ch 3 until `boil` (injuryClear wrapper); v12.0-notes says a fire clears it — fix the notes.
+- Ch 3: "surviving isn't what this is about" — secondhand from the marines' sergeants' fire; check it isn't a canon quote put in the wrong mouth.
+- Ch 4: the herd's size ("forty, maybe fifty") is the game's own; page-check R10.
+- Ch 4: Barghast hunters with no clan named in the Wastes — check against the canon sheet's Barghast limits.
+- Ch 4: 164 redrew 160's b9_wastes and b9_camp_night and gave b9_wastes a Ch 4 caption.
+- Ch 5: Keneb's ride and the two sergeants gone — same day? (R22 S5/S6).
+- Ch 5: "our own witness" as a soldier's repeated line — fits Tavore's RG speech (R quote); keep it soldiers' talk, never Tavore on the page.
+- Ch 6: the Khundryl charge's hour (canon Q12) — distant horsemen into the dust at dusk; cut if the charge was after dark.
+- Ch 6: did the Letherii escort break? the pull-back reads "together, in step".
+- Ch 6: 166b wraps FIGX.khell to draw short-tails when Book Nine is open — check no other book's K'ell is affected.
+- Ch 7: "the Adjunct carried" after the battle — check canon (is Tavore carried/wounded?); and the east/south split spoken of that early.
+- Ch 7: day or night of the battle (canon sheet §10 Q1); horsemen's charge at dusk (Q12) consistent with Ch 6.
+- Ch 7: finale adds the Letherii's earlier fallen (Ch 6's pages left them out).
