@@ -50,3 +50,18 @@ Marks: [T] the novel's text, [W] the wiki, [R] Reactor, [O] memory only. The can
 - **Patrons:** the Guardians of the Gate where Hood answered (Hood falls in Book Eight); the Errant for the Letherii sergeant, as before.
 - **Roads out** (to Book Ten, *The Crippled God*): fixed in the brief, so each squad has a road into the Glass Desert and Kolanse and at least one road out of it.
 - **The page checks David asked about** (Nov 9: "you may find the answers in the later books"): the canon sheet also looks for Q21 (*The Bonehunters*) and Q23 (*Reaper's Gale*) answers in *Dust of Dreams* and *The Crippled God*.
+
+## Claude's calls from the engine and brief (Mon Nov 9, 2026; `docs/v12.0-notes.md`, `docs/dod-book-brief.md`)
+
+1. Rations are counted per squad, 0–10, starting at 6; Ch 1's `stores` key brings the Third to 8. The march eats 2 at the start of Ch 3–5 and 1 at Ch 6–7.
+2. Below 5, squadmates start each fight 5/10/15% down on health; `rations:true` checks get +1 to −3, and a hungry squad takes −1 on other checks.
+3. Witness: one beat a chapter from Ch 3, `kept` or `doubt`, the first answer standing; ±1 on `witness:true` checks; it colours the Ch 6 and Ch 7 roads.
+4. Levels 22 and 23 give +1 damage and +1 armour; 24 adds nothing new.
+5. Chapter titles: *Letheras, Emptied* · *The Escort* · *The Road East* · *The Ration Book* · *Short Rations* · *Dust on the Horizon* · *The Rearguard*.
+6. Keys: Ch 1 `stores`/`street`, Ch 2 `wagons`/`drill`, Ch 3 `boil`/`press`, Ch 4 `book`/`forage`, Ch 5 `share`/`keep`, Ch 6 `line`/`train`; the Third's roads `adjunct`/`south`/`home`; the Letherii's `escort`/`adjunct`/`home`.
+7. Recruits: Brask (Ch 1) and Tegra (Ch 5) with the Third; Brennet (Ch 2) and Kaedra (Ch 4) with the Letherii. Hood's faithful are answered by the Guardians of the Gate; the recruits have no gods.
+8. The Nah'ruk are "short-tails" on screen: armoured, half damage from sharpers and burners, cussers tear them open, their sorcerers' blows count as sorcery.
+9. The fever is a wound (−1 to hit) that only a chapter gives.
+10. No Neffarias Bredd rumour in Book Nine: canon uses the name itself in DoD.
+11. A sergeant carried from Book Seven gets a new save slot; the Book Seven save is untouched.
+12. The title art: a lone dusty soldier walking after the column, the short-tails' dust far off. The patch: both squads' patches on one dun strip with a stitched boot-print.
