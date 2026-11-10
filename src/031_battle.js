@@ -827,8 +827,36 @@ function drawHeld(ctx, u, cx, cy, layer, t, T){
     const bx = cx + Math.cos(an)*rx, by = cy + sn*ry, h = T*(.22 + hash(i, sd)*.12)*(1 + (RM ? 0 : Math.sin(t/300 + i*1.3)*.12)), w = T*.06;
     drawFang(ctx, bx, by, bx + (cx - bx)*.45, by - h, w, col, .95, .12); }
 }
+/* v11.1 (3D test): one figure and everything that rides on it, drawn at (cx, cy) on any canvas. The 2D board calls it in place;
+   the 3D battlefield (031d) calls it on each figure's own card. The ground marks (turn ring, reach, hit chances) stay on the board. */
+function drawCorpse(ctx, u, x, y, T, t, now){ const k = clamp((now - (u.deadAt || 0)) / 900, 0, 1);
+  ctx.save(); ctx.translate(x, y); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); }
+function drawUnitFig(ctx, u, cx, cy, sc, d, T, t, now, RM, solo){
+    if (u.side === 'p' && !solo) glow(ctx, cx, cy - T*.4, T*1.6, '#e8b060', .06);
+    if (u.veilUntil >= B.round) { glow(ctx, cx, cy - T*.4, T*.9, '#9a86e0', .25); }
+    if (u.rimeUntil >= B.round) glow(ctx, cx, cy - T*.4, T*.95, '#bfe8ff', .32);
+    if (u.burnTurns > 0) glow(ctx, cx, cy - T*.35, T*.8, '#ff7a3a', .32 + (RM ? 0 : Math.sin(t/70 + cx)*.1)); // on fire
+    if (u.dazzleUntil >= B.round) glow(ctx, cx, cy - T*.5, T*.7, '#6fb7ff', .22 + (RM ? 0 : Math.sin(t/120)*.06));
+    if (lineCovers(u)) { ctx.strokeStyle = 'rgba(232,192,115,.75)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy + T*.06, T*.46, T*.19, 0, 0, 7); ctx.stroke(); }
+    if (u.cantRound === B.round) { ctx.fillStyle = '#f2c46b'; ctx.font = `${Math.round(T*.28)}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText('✋', cx, cy - T*1.05); }
+    if (u.markedUntil >= B.round) { ctx.strokeStyle = 'rgba(242,196,107,.8)'; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(cx, cy + T*.04, T*.4, T*.16, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+    const arrive = u.arrived ? clamp((now - u.arrived) / 450, 0, 1) : 1;
+    const bite = B.fx.filter(f => f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur), fx0 = solo ? cx : d.x*T + T/2, fy0 = solo ? cy : d.y*T + T*.6, held = u.earthUntil >= B.round && !bite.length;
+    bite.forEach(f => { f.fr = now; drawTeeth(ctx, f, fx0, fy0, 0, now, T); }); if (held) drawHeld(ctx, u, fx0, fy0, 0, t, T);
+    drawFigure(ctx, u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85});
+    bite.forEach(f => drawTeeth(ctx, f, fx0, fy0, 1, now, T)); if (held) drawHeld(ctx, u, fx0, fy0, 1, t, T);
+    if (u.flash && now - u.flash < 160) { ctx.globalCompositeOperation = 'lighter'; ell(ctx, cx, cy - T*.4, T*.35, T*.45, `rgba(255,120,100,${(1 - (now - u.flash)/160)*.6})`); ctx.globalCompositeOperation = 'source-over'; }
+    if (u.healed && now - u.healed < 500) glow(ctx, cx, cy - T*.4, T*.9, '#9fe0b8', (1 - (now - u.healed)/500)*.4);
+    const w = T*.7, px = cx - w/2, py = cy + T*.3; ctx.fillStyle = '#0d0b09'; ctx.fillRect(px, py, w, Math.max(3, T*.08));
+    ctx.fillStyle = u.side === 'p' ? (u.ally ? '#8fa6cf' : '#7fb394') : '#d9695a'; ctx.fillRect(px, py, w * u.hp / u.maxhp, Math.max(3, T*.08));
+    if (u.ward > 0) { const bh = Math.max(3, T*.08), ww = w * Math.min(1, u.ward / u.maxhp); ctx.fillStyle = 'rgba(223,232,240,.85)'; ctx.fillRect(px, py - bh*.6, ww, bh*.6); ctx.fillStyle = 'rgba(223,232,240,.25)'; ctx.fillRect(px, py, ww, bh); } // v10.2: the ward, a pale band over the health bar
+    if (u.stun) { ctx.fillStyle = '#e9dfc9'; ctx.font = `${Math.round(T*.3)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('z', cx + T*.3, cy - T*.7 + Math.sin(t/300)*2); }
+    if (u.blindTurns > 0) { const hx = cx, hy = cy - T*.62; for (let i=0;i<3;i++){ const ph = t/420 + i*2.1; ctx.fillStyle = `rgba(28,18,52,${.5 - i*.1})`; ctx.beginPath(); ctx.ellipse(hx + Math.cos(ph)*T*.07, hy + Math.sin(ph*1.3)*T*.03, T*(.3 - i*.05), T*(.1 + i*.02), Math.sin(ph)*.2, 0, 7); ctx.fill(); } ctx.strokeStyle = 'rgba(154,134,224,.55)'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.ellipse(hx, hy, T*.3, T*.1, 0, 0, 7); ctx.stroke(); } // Phantom: shadow over the eyes
+    if (u.turned) { ctx.fillStyle = '#e0a8d8'; ctx.font = `bold ${Math.round(T*.32)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('?', cx + T*.3, cy - T*.7 + Math.sin(t/260)*2); }
+}
 function drawBattle(t){
   const {ctx, T} = G; if (!ctx || !B) return; const def = B.def, now = performance.now(), H = G.oy || 0, RM = REDUCE();
+  G.flat = typeof b3dActive === 'function' && b3dActive(); // v11.1: the 3D battlefield paints this board as its ground, without the figures
   battleWatchdog(now);
   // headroom above the top row: the ground fades up into the dark, so a tall figure standing on row one keeps its head
   if (H) { ctx.fillStyle = '#060505'; ctx.fillRect(0, 0, 8*T, H); ctx.globalAlpha = .5; ctx.drawImage(G.bgc, 0, 0, G.bgc.width, Math.round(H*G.dpr), 0, 0, 8*T, H); ctx.globalAlpha = 1;
@@ -868,8 +896,7 @@ function drawBattle(t){
   if (myTurn && G.hover && !B.busy) { const hv = G.hover, k = K(hv.x, hv.y), hot = (B.reach && B.reach.has(k)) || (B.hl && (B.hl.atk.has(k) || B.hl.tgt.has(k)));
     ctx.strokeStyle = hot ? 'rgba(255,224,160,.9)' : 'rgba(232,192,115,.3)'; ctx.lineWidth = hot ? 2 : 1; ctx.strokeRect(hv.x*T + 2, hv.y*T + 2, T - 4, T - 4); }
   // corpses first
-  B.units.filter(u => u.hp <= 0).forEach(u => { const k = clamp((now - (u.deadAt || 0)) / 900, 0, 1); const d = dispOf(ukey(u), u.x, u.y);
-    ctx.save(); ctx.translate(d.x*T + T/2, d.y*T + T*.6); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); });
+  if (!G.flat) B.units.filter(u => u.hp <= 0).forEach(u => { const d = dispOf(ukey(u), u.x, u.y); drawCorpse(ctx, u, d.x*T + T/2, d.y*T + T*.6, T, t, now); }); // 3D: the corpses stand in the scene (031d)
   // living units
   const cur = B.cur, labels = [];
   B.units.filter(u => u.hp > 0).sort((a,b) => a.y - b.y).forEach(u => {
@@ -882,30 +909,10 @@ function drawBattle(t){
       ctx.strokeStyle = `rgba(${col},${.5+p*.45})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy - T*.02, T*.42 + p*2, T*.17 + p, 0, 0, 7); ctx.stroke();
       const k = (now - (B.turnAt || 0)) / 550; if (k < 1 && !RM) { ctx.strokeStyle = `rgba(${col},${(1-k)*.8})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy - T*.02, T*(.42 + k*.5), T*(.17 + k*.2), 0, 0, 7); ctx.stroke(); } }
     if (B.ping && B.ping.u === u && now - B.ping.t < 1200) { const k = (now - B.ping.t) / 1200; ctx.strokeStyle = `rgba(233,223,201,${(1-k)*.9})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy - T*.02, T*(.46 + (RM ? 0 : Math.sin(k*Math.PI*3)*.06)), T*.2, 0, 0, 7); ctx.stroke(); }
-    if (u.side === 'p') glow(ctx, cx, cy - T*.4, T*1.6, '#e8b060', .06);
-    if (u.veilUntil >= B.round) { glow(ctx, cx, cy - T*.4, T*.9, '#9a86e0', .25); }
-    if (u.rimeUntil >= B.round) glow(ctx, cx, cy - T*.4, T*.95, '#bfe8ff', .32);
-    if (u.burnTurns > 0) glow(ctx, cx, cy - T*.35, T*.8, '#ff7a3a', .32 + (RM ? 0 : Math.sin(t/70 + cx)*.1)); // on fire
-    if (u.dazzleUntil >= B.round) glow(ctx, cx, cy - T*.5, T*.7, '#6fb7ff', .22 + (RM ? 0 : Math.sin(t/120)*.06));
-    if (lineCovers(u)) { ctx.strokeStyle = 'rgba(232,192,115,.75)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy + T*.06, T*.46, T*.19, 0, 0, 7); ctx.stroke(); }
-    if (u.cantRound === B.round) { ctx.fillStyle = '#f2c46b'; ctx.font = `${Math.round(T*.28)}px sans-serif`; ctx.textAlign = 'center'; ctx.fillText('✋', cx, cy - T*1.05); }
-    if (u.markedUntil >= B.round) { ctx.strokeStyle = 'rgba(242,196,107,.8)'; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(cx, cy + T*.04, T*.4, T*.16, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
-    const arrive = u.arrived ? clamp((now - u.arrived) / 450, 0, 1) : 1;
-    const bite = B.fx.filter(f => f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur), fx0 = d.x*T + T/2, fy0 = d.y*T + T*.6, held = u.earthUntil >= B.round && !bite.length;
-    bite.forEach(f => { f.fr = now; drawTeeth(ctx, f, fx0, fy0, 0, now, T); }); if (held) drawHeld(ctx, u, fx0, fy0, 0, t, T);
-    drawFigure(ctx, u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85});
-    bite.forEach(f => drawTeeth(ctx, f, fx0, fy0, 1, now, T)); if (held) drawHeld(ctx, u, fx0, fy0, 1, t, T);
-    if (u.flash && now - u.flash < 160) { ctx.globalCompositeOperation = 'lighter'; ell(ctx, cx, cy - T*.4, T*.35, T*.45, `rgba(255,120,100,${(1 - (now - u.flash)/160)*.6})`); ctx.globalCompositeOperation = 'source-over'; }
-    if (u.healed && now - u.healed < 500) glow(ctx, cx, cy - T*.4, T*.9, '#9fe0b8', (1 - (now - u.healed)/500)*.4);
+    if (!G.flat) drawUnitFig(ctx, u, cx, cy, sc, d, T, t, now, RM); else B.fx.forEach(f => { if (f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur) f.fr = now; }); // 3D: the figure stands in the scene (031d)
     const k = K(u.x,u.y);
     if (B.hl && B.hl.atk.has(k) && myTurn) { ctx.strokeStyle = '#f08a7c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy - T*.02, T*.44, T*.18, 0, 0, 7); ctx.stroke();
       labels.push({x:cx, y:cy - T*(u.boss ? 1.18 : .98), txt:`${B.hl.pct.get(k)}%${B.hl.flank.has(k) ? ' · flank' : ''}`, col:B.hl.flank.has(k) ? '#f2c46b' : '#f4c2b8'}); }
-    const w = T*.7, px = cx - w/2, py = cy + T*.3; ctx.fillStyle = '#0d0b09'; ctx.fillRect(px, py, w, Math.max(3, T*.08));
-    ctx.fillStyle = u.side === 'p' ? (u.ally ? '#8fa6cf' : '#7fb394') : '#d9695a'; ctx.fillRect(px, py, w * u.hp / u.maxhp, Math.max(3, T*.08));
-    if (u.ward > 0) { const bh = Math.max(3, T*.08), ww = w * Math.min(1, u.ward / u.maxhp); ctx.fillStyle = 'rgba(223,232,240,.85)'; ctx.fillRect(px, py - bh*.6, ww, bh*.6); ctx.fillStyle = 'rgba(223,232,240,.25)'; ctx.fillRect(px, py, ww, bh); } // v10.2: the ward, a pale band over the health bar
-    if (u.stun) { ctx.fillStyle = '#e9dfc9'; ctx.font = `${Math.round(T*.3)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('z', cx + T*.3, cy - T*.7 + Math.sin(t/300)*2); }
-    if (u.blindTurns > 0) { const hx = cx, hy = cy - T*.62; for (let i=0;i<3;i++){ const ph = t/420 + i*2.1; ctx.fillStyle = `rgba(28,18,52,${.5 - i*.1})`; ctx.beginPath(); ctx.ellipse(hx + Math.cos(ph)*T*.07, hy + Math.sin(ph*1.3)*T*.03, T*(.3 - i*.05), T*(.1 + i*.02), Math.sin(ph)*.2, 0, 7); ctx.fill(); } ctx.strokeStyle = 'rgba(154,134,224,.55)'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.ellipse(hx, hy, T*.3, T*.1, 0, 0, 7); ctx.stroke(); } // Phantom: shadow over the eyes
-    if (u.turned) { ctx.fillStyle = '#e0a8d8'; ctx.font = `bold ${Math.round(T*.32)}px sans-serif`; ctx.textAlign = 'left'; ctx.fillText('?', cx + T*.3, cy - T*.7 + Math.sin(t/260)*2); }
   });
   /* clouds (v3.18.3 the dark, v3.19 smoke): one cloud per throw or cast, see-through enough to play under, clipped to the tiles it covers, with its edge traced so they are plain.
      Smoke is grey and drifts quicker; A Courtesy of Darkness is violet-black and slow. */
@@ -945,6 +952,7 @@ function drawBattle(t){
   // effects
   B.fx = B.fx.filter(f => now - f.t < (f.dur ? f.dur + 40 : 950));
   B.fx.forEach(f => { if (now < f.t) return; const k = clamp((now - f.t) / (f.dur || 950), 0, 1);
+    if (G.flat && (f.kind === 'txt' || f.kind === 'arc')) return; // the 3D battlefield floats these (031d)
     if (f.kind === 'boom') { ctx.globalAlpha = (1 - k) * .9; ctx.fillStyle = f.col; const s = (f.r + .5) * T * (0.4 + k*.7); ctx.beginPath(); ctx.arc(f.x*T + T/2, f.y*T + T/2, s, 0, 7); ctx.fill(); ctx.globalAlpha = (1 - k) * .5; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(f.x*T + T/2, f.y*T + T/2, s*1.3, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(ctx, f.x*T + T/2, f.y*T + T/2, s*2.5, f.col, (1-k)*.4); }
     else if (f.kind === 'teeth') { if (f.fr !== now) { const x = f.x*T + T/2, y = f.y*T + T*.6; drawTeeth(ctx, f, x, y, 0, now, T); drawTeeth(ctx, f, x, y, 1, now, T); } } // nobody standing in it any more
     else if (f.kind === 'ring') { ctx.globalAlpha = 1 - k; ctx.strokeStyle = f.col; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(f.x*T + T/2, f.y*T + T*.6, T*(.3 + k*.7), T*(.12 + k*.28), 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
@@ -959,8 +967,8 @@ function drawBattle(t){
       const pop = big && !RM ? 1 + Math.max(0, .35 - k)*1.2 : 1; if (pop !== 1) { ctx.save(); ctx.translate(f.x*T + T/2, f.y*T + T*.3 - k*T*.55); ctx.scale(pop, pop); ctx.fillText(f.txt, 0, 0); ctx.restore(); }
       else ctx.fillText(f.txt, f.x*T + T/2, f.y*T + T*.3 - k*T*.55); ctx.shadowBlur = 0; ctx.globalAlpha = 1; } });
   // vignette
-  if (!G.vig || G.vigT !== T) { G.vig = ctx.createRadialGradient(4*T, 5*T, T*3, 4*T, 5*T, T*7); G.vig.addColorStop(0, 'rgba(0,0,0,0)'); G.vig.addColorStop(1, 'rgba(0,0,0,.55)'); G.vigT = T; }
-  ctx.fillStyle = G.vig; ctx.fillRect(0, -H, 8*T, 10*T + H);
+  if (!G.flat) { if (!G.vig || G.vigT !== T) { G.vig = ctx.createRadialGradient(4*T, 5*T, T*3, 4*T, 5*T, T*7); G.vig.addColorStop(0, 'rgba(0,0,0,0)'); G.vig.addColorStop(1, 'rgba(0,0,0,.55)'); G.vigT = T; }
+  ctx.fillStyle = G.vig; ctx.fillRect(0, -H, 8*T, 10*T + H); }
   // the end of the fight: a banner across the middle of the field
   if (B.banner) { const k = clamp((now - B.banner.t) / 450, 0, 1), a = RM ? 1 : ease(k), by = 4.2*T, bh = 1.6*T;
     ctx.globalAlpha = a*.82; ctx.fillStyle = '#0a0807'; ctx.fillRect(0, by, 8*T, bh); ctx.globalAlpha = a;
@@ -968,4 +976,5 @@ function drawBattle(t){
     ctx.font = `${Math.round(T*.72)}px 'IM Fell English SC', Georgia, serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.shadowColor = B.banner.col; ctx.shadowBlur = 18;
     ctx.fillText(B.banner.txt, 4*T, by + bh/2 + (1 - a)*T*.25); ctx.shadowBlur = 0; ctx.textBaseline = 'alphabetic'; ctx.globalAlpha = 1; }
   ctx.restore();
+  if (G.flat) b3dFrame(t); // v11.1: the 3D battlefield, over this board
 }

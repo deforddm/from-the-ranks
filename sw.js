@@ -1,7 +1,7 @@
-const CACHE = 'ftr-v11.0.1'; // backups: a save file that survives a cleared browser
+const CACHE = 'ftr-v11.1.0'; // backups: a save file that survives a cleared browser
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
-const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
+const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './three3d.min.js']; // v11.1: the 3D battlefield's library, so it works offline
 /* A new version installs and then WAITS. The page shows "Update ready"; tapping it posts 'skip', and only then
    does the new version take over (the page reloads itself on controllerchange). Never skipWaiting on install. */
 /* the typography, fetched at install so the first offline launch already has it: the stylesheet the page asks for (same URL,
