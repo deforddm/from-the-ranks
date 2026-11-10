@@ -11,6 +11,12 @@ Tue Nov 10, 2026, 10:37 AM PST. The plan for Book Ten, beside *The Crippled God*
 3. **Mortal fights: one per squad**, each squad's last chapter: the Letherii at the pass (Ch 6), the Third at the end of the crossing (Ch 7).
 4. **The end: a series coda** after Book Ten's own finale (one page per squad from every finished book on the device, then the credits). **Title: *Witnessed*.**
 
+## Settled after the canon sheet (David, Tue Nov 10, 2026, 11:05 AM PST)
+
+5. **The Letherii's mortal fight is the feint battle before Kolanse City** (TCG ch 23), on a stretch of the allied line canon never names; there is no pass on their road (the pass is Paran's). Brys and the Voice, the Perish centre, the seawater cloud, Spax with the Gilk and Grub's relief are hard limits (`docs/tcg-canon.md`). Ch 4 is the long southern march, no mountains.
+6. **The Third's mortal fight: lent to the regulars' line** on the last nights of the crossing; it holds a stretch far from the Adjunct, Fiddler's hill and the Khundryl until Paran's relief comes over the ridge. The hill itself is never entered.
+7. **The Fourth comes with Onearm's Host from Aren**: it finds its old army at Aren and comes over the ridge with the relief onto the Third's stretch in Ch 7; how it got there is one page.
+
 ## David's questions as asked (recommendation first)
 
 1. **Who comes.** Recommended: the Third and the Letherii taking turns, as in Books Six, Seven and Nine; the Fourth (Book Eight's `east` road) lands on the Kolanse coast and joins the Third for the last chapter only. Alternatives: three squads taking turns; or the Third and the Letherii only, the Fourth never comes.
@@ -25,7 +31,7 @@ Tue Nov 10, 2026, 10:37 AM PST. The plan for Book Ten, beside *The Crippled God*
 - The southern force at the pass; the Perish's part; the Letherii's battle [O].
 - Kolanse and the Spire; the end of the Crippled God's chains [O]. Headline only for the squads, canon's scenes never entered.
 
-## The chapters (draft; the canon sheet and the brief fix them)
+## The chapters (draft; replaced by the canon sheet's chapter table, `docs/tcg-canon.md`, with decisions 5–7)
 
 | Ch | Squad | Draft |
 |---|---|---|
@@ -44,3 +50,4 @@ Tue Nov 10, 2026, 10:37 AM PST. The plan for Book Ten, beside *The Crippled God*
 - **Readings:** the Deck for the Third, the Tiles for the Letherii.
 - **Recruits:** one per squad, named after the series-wide name check.
 - **Standing for every book** as in Book Nine: a reading with a vision, a trick behind a hard check, two to four items with art, a key choice, "Not now" on every onward step, a "yes, but" on every check, title art, flavour line and patch, glossary, journal, Deeds, five games at the fires, the balance targets of Nov 6. Chapters one agent at a time.
+- **From the canon sheet (Nov 10):** a Book Nine `adjunct` Letherii may cross the desert with the Malazans (Henar Vygulf did; W). The Errant stops answering after Ch 2 (he flees into the warrens; W). Recruits: Pruss (the Third) and Tirren (the Letherii, she), name-checked in the canon sheet.
