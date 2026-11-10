@@ -106813,6 +106813,525 @@ ${notches.join('')}
   ART_SIZE['item/b9_c7_rollstick'] = [200, 150];
 }
 
+/* ============ Book Nine: the seven visions of Dust on the Boots ============
+   One per chapter, played when Book Nine's reader turns a card or lays a tile and looks into it. Book Nine reads through each squad's own
+   reader (160c, by b9As): the Third (chapters 1, 3, 5, 7) reads the Deck through Book Four's chain, Marrow, else Tallow, else the old
+   marine of the heavies' lines; the Letherii (2, 4, 6) cast the Tiles through Book Five's, Perrit, else the tile-woman who rides the
+   escort's supply train. visReader() (36b, wrapped by 160c) gives the right one, and 36b's visTiles() says "Through the Tiles" for the
+   Letherii. Here the old marine is given his Book Nine name (below), so the closing step's speaker, 36b's replay line and the journal say
+   "the old marine", never "of the 9th" (v12.0 notes).
+   Each vision is a scene neither squad can stand in (dod-canon §4), through the eyes of a canon character neither squad speaks with.
+   Choices change words, never outcomes (S.f.b9v*_ keys; nothing else reads them). The last step of each is the reader, back at the
+   chapter's reading place (B9READ[n]): its sp, fig and txt are getters/functions of visReader(), so visAgain (36b) still matches it on a
+   replay.
+   How it hooks on: 21's card screen offers "✦ Look into the card" (or the tile) whenever visionFor(chapter, card) finds one (36b, by book
+   'dod'); the vision comes back to b9_c<n>_card (36b's cardNodeName), whose one button goes to B9READ[n].back. No chapter file changes.
+   Canon basis: docs/dod-canon.md §9, bound by §4, §5 (rules 84-97) and series-canon §(a). Vision 1 is the one place a card is dealt to
+   anyone (rule 92): the Magus of Dark to Quick Ben, nothing to the Adjunct (WC3); the King's brother waits for his and the vision stops
+   there, before the card, the Errant and the attack. Brys is never shown dead or waking (92) and nothing of his part in the battle (97).
+   Koryk's fever is the army's, the cure the Letherii's (R11 S13). Aranict is "the Atri-Ceda". Keneb's ride stops at the Adjunct's
+   summons; nothing of what she wants (55, 84) and nothing after (86). Henar's stories are folk-tale, naming no people (87). Gu'Rull is a
+   hunter high over the field; never who sent him, never the Che'Malle, the Matron or Kalyth (88); the Nah'ruk are "the short-tails"; the
+   field is headline (bones heaped, a crater, a charge broken, a trail away); no one on it is found (86).
+   Backdrops are VISBG b9v_* and b9deck, the new figures FIGX b9v_* (168b, which loads after this file; both are read only when a vision
+   plays). Notes: docs/dod-visions-notes.md. */
+
+/* the old marine is Book Four's oldninth (70: "The old soldier"); in Book Nine he is the old marine of the heavies' lines */
+{ const _vr = VISREADER; VISREADER = () => { const r = _vr ? _vr() : null; return r && b9On() && r.id === 'oldninth' ? Object.assign({}, r, {name:'The old marine', mid:'the old marine'}) : r; }; }
+
+/* ---------------- the reader, at the end of each vision ---------------- */
+const b9vP = r => r.he ? {S:'He', s:'he', H:'His', h:'his'} : {S:'She', s:'she', H:'Her', h:'her'};
+const B9V_READERS = ['marrow', 'tallow', 'oldninth', 'perrit', 'tilewoman'];
+const b9vWho = r => B9V_READERS.includes(r.id) ? r.id : 'other';
+const b9vFig = () => { const r = visReader(); return ({marrow:'marrow', tallow:'tallow', oldninth:'b4v_oldninth', perrit:'perrit', tilewoman:'b5_c1_tilewoman'})[r.id] || (FIGX[r.id] ? r.id : r.he ? 'b4v_oldninth' : 'b5_c1_tilewoman'); };
+/* o = {<reader id>:(r, p) => text, ..., other:...}: the chapter's squad's readers; other is the fallback */
+const b9vEnd = o => ({get sp(){ return visReader().name; }, get fig(){ return b9vFig(); }, bg:'b9deck',
+  txt:() => { const r = visReader(), p = b9vP(r); return (o[b9vWho(r)] || o.other)(r, p); }});
+
+Object.assign(VISIONS, {
+  /* ---- Chapter 1: Letheras, the night the barracks emptied. In a room across the city, a sergeant of marines deals the Deck. ---- */
+  b9v1:{book:'dod', ch:1, who:'Fiddler', where:'A room in Letheras', fig:'b7v_fiddler', bg:'b9v_reading', cap:'A low room at night, one lamp on a table, cards laid out on it in a cross, faces round it in the dark, and through the shutters a city where the dogs will not settle.', steps:[
+    {txt:
+`Fiddler sits at a table he didn't want, with a deck he didn't want to touch, in front of people he didn't ask.
+
+The barracks emptied hours ago. Every soldier with sense found a reason to be somewhere else tonight: a tavern, a woman, a long walk to the far side of the river. Fiddler would like to be with them. He has done this before. He knows what the Deck is like when it has been kept waiting.
+
+It has been kept waiting a long time.`},
+    {txt:
+`The lamp is the only light. Round the table, faces.
+
+Quick Ben across from him, thin and dark and too interested. The Adjunct at the end, plain as a nail, her hands folded. A tall Letherii with a soldier's quiet, the King's brother, who came when he was asked and sat where he was put. Others along the wall, holding their breath and pretending not to.
+
+The cards are warm. Cards should not be warm.`,
+     ch:[{t:'Deal.', set:['b9v1_deal','deal']},
+         {t:'Shuffle once more.', set:['b9v1_deal','shuffle']}]},
+    {txt:()=>`${S.f.b9v1_deal === 'shuffle' ? `He shuffles once more, for luck, or for time. The deck doesn't care for it. A card tries to come out of the middle on its own, and he slaps it back, and the room hears him do it.` : `He deals. No ceremony. A sapper puts the charge where it goes and stands back.`}
+
+The first one lands in front of Quick Ben. The Magus of Dark.
+
+Fiddler names it, as a reader must. Quick Ben looks down at it and grins, and it is not a grin Fiddler likes. They have known each other a long time. It is a grin that says: well, of course.`},
+    {txt:
+`After that the cards come faster than his hands.
+
+He names them as they land. He hears his own voice doing it, flat as a roll call, and somewhere under the floor and out past the shutters, the city starts to answer. Dogs, all at once, across every quarter. Then other things. Out there in the dark, things that were lying still are not lying still any more. He can feel it the way you feel a mine take before it goes.
+
+He deals to the Adjunct's place. The deck gives her nothing. Not a card, not a blank. Nothing.
+
+Fiddler keeps his face on the cards.`,
+     ch:[{t:'Keep dealing.', set:['b9v1_stop','keep']},
+         {t:'Try to stop.', set:['b9v1_stop','try']}]},
+    {go:'Turn the next card.', txt:()=>`${S.f.b9v1_stop === 'try' ? `He tries to stop. His hands won't. Stopping now, some old part of him knows, would be worse than finishing: like pulling a fuse with the fire already in it.` : `He keeps dealing. There's no stopping a thing like this halfway. A sapper knows that better than anyone.`}
+
+Far off across the roofs a long low sound rolls in, a roof going in somewhere, and the lamp leans with it, and the faces round the table lean too.
+
+The King's brother sits very still, waiting for his.
+
+Fiddler's hand is on the next card. The card shows no more than that: a sergeant's hand on the deck, a lamp leaning, and a city outside that will not lie down.`},
+    b9vEnd({
+      marrow:() => `Marrow lets the card go. "Tonight," she says. "Now, child. Across the city." She listens to the dark beyond the yard, where the dogs are still at it. "A sergeant of marines, dealing for the Adjunct, and the Deck all the way open." She lays the card face down on the kit-crate and keeps her palm on it. "That's what we felt. That's where everyone went to get away from." Her hands are cold.`,
+      tallow:() => `Tallow puts the card face down on the crate. "Grandmother said a full reading wakes the drowned," he says. He looks toward the roofs, where the long sound came from. "I thought she meant it as a saying." He wraps the deck in its oilcloth, tight. "I'd stay in, Sergeant. All night. I'd stay right here."`,
+      oldninth:() => `The old marine lets the card go and drinks. "Fiddler," he says. "Knew it'd be him. No one else in this army could hold the cards that long." He pours a finger more, slowly. "That's the whole Deck out, Sergeant, and the city hearing it." He tips the cup at the dark. "Stay in. I'm staying in."`,
+      other:(r, p) => `${r.name} lets the card go. "A sergeant dealing the Deck," ${p.s} says, "across the city. Tonight."`})]},
+
+  /* ---- Chapter 2: the night before the march. Alone in his tent outside the city, the Commander of the escort. ---- */
+  b9v2:{book:'dod', ch:2, who:'Brys Beddict', where:'The Commander\'s tent', fig:'b9v_brys', bg:'b9v_tent', cap:'A plain field tent at night, a lamp on a camp table among folded maps, a sword in its scabbard against the pole, and outside the canvas the lights of an army asleep.', steps:[
+    {txt:
+`Brys Beddict sits alone in his tent the night before the march, with a lamp and the brigade lists, and does not sleep.
+
+He has been reshaping an army. What the Edur left of it, and what the city left after that: regiments with no officers, officers with no regiments, men who served three masters in a year and expect a fourth. He has broken it down and put it back together, the way his old master of arms made him break down a cut and put it back, slow, a piece at a time.
+
+It is better than it was. It is not yet anything.`},
+    {txt:
+`The Malazans laugh at his soldiers. He has heard them at it in the drill yards, the heavies with their wooden swords and their opinions, marching the Letherii until they fall down, and asking very politely where they were when the city was taken.
+
+His officers want it stopped. Brys does not.
+
+Let them be mocked, he thinks. Let his soldiers hate it. Hate is a thing an army can stand on, at the start, if it is pointed the right way. One day, if the gods are kind, the two of them will look round and find they have become one army without anyone deciding it.`,
+     ch:[{t:'Read the lists again.', set:['b9v2_list','again']},
+         {t:'Put the lists away.', set:['b9v2_list','away']}]},
+    {txt:()=>`${S.f.b9v2_list === 'again' ? `He reads the lists again. Names and numbers, brigade by brigade, the carters and cooks of the train at the bottom in a clerk's small hand. He knows a fair number of them now. He means to know more before this is over.` : `He puts the lists away. He knows what is in them. Reading them a fifth time will not put one more barrel of water on a wagon.`}
+
+The march frightens him a little, and he is honest enough to say so to himself. East, into the Wastes, where no Letherii army has gone and come back to talk about it. Thin water. Thin game. Old stories, and nobody left who knows which of them are true.
+
+Something else, too, which he has been noticing lately. He is further from people than he used to be. Not colder. Further. He notices it the way a swordsman notices a change in his own footwork: without alarm, and without being able to leave it alone.`},
+    {txt:
+`Outside, the camp. A cook-pot being scoured. A soldier singing, badly, a song about a girl in Fent Reach. A sentry's challenge, and the tired answer.
+
+His brother would make a joke of all this. His brother makes a joke of everything, and means every one of them, and has given Brys an army and a road east and a hand on the shoulder at the gate, and not one word of advice. Brys has decided to take that as a compliment.`,
+     ch:[{t:'Go out among them.', set:['b9v2_out','out']},
+         {t:'Stay in.', set:['b9v2_out','in']}]},
+    {go:'Put out the lamp.', txt:()=>`${S.f.b9v2_out === 'out' ? `He goes out among them for a while, without his cloak, so that he is only a tall man walking. At one fire they offer him tea before they see who he is, and keep offering it after. He drinks it. It is terrible. He thanks them, and means it.` : `He stays in. They have a long road tomorrow and do not need their Commander standing over their fires tonight.`}
+
+Back at the table he turns the lamp down and sits a moment in the dark with his hands on his knees.
+
+An army is a promise, he thinks. Every man in it made one, and so did he. Tomorrow they begin keeping them.
+
+He puts out the lamp.`},
+    b9vEnd({
+      perrit:() => `Perrit turns the tile face down. "The Commander," she says. "Alone, in his tent, the night before we go." She squares the tile with the edge of the tailboard, exactly. "He is not afraid of the Malazans laughing at us, Sergeant. He wants them to." She looks along the loaded wagons. "The school would call that a sum. I think it is a good one." Her hands are cold.`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "The tall one," she says, and spits to one side, for manners. "Sat up all night with his lists like a clerk." She tucks the tile away in its cloth. "Drank bad tea with some lads at a fire, didn't he. That's a good sign in a commander, soldier. The bad tea." Her hands are cold.`,
+      other:(r, p) => `${r.name} turns the tile face down. "The Commander in his tent," ${p.s} says, "the night before the march."`})]},
+
+  /* ---- Chapter 3: the road east. In a fever-cart up the column, a marine who hates being carried, and the cure that works. ---- */
+  b9v3:{book:'dod', ch:3, who:'Koryk', where:'A fever-cart on the road east', fig:'b9v_koryk', bg:'b9v_carts', cap:'A line of open carts on a dusty road east, the sick laid in them under blankets, the column going on ahead in its own dust, and the last farms falling away behind.', steps:[
+    {txt:
+`Koryk lies in the bed of a cart with his teeth chattering and the sun in his eyes, and hates every part of it.
+
+Half the army has this fever. That is no comfort. He is a big man and a strong one, and the fever has made him into a sack of wet sand that shakes. The finger bones knotted into his belt and his hair rattle every time the cart hits a rut, which is always. It sounds like somebody laughing at him.
+
+He would rather walk. He tried. He got about eleven steps.`},
+    {txt:
+`Smiles walks beside the cart, in no hurry, with the expression of a woman who has found the day's entertainment.
+
+She tells him he looks terrible. She tells him the rest of the squad is taking bets on whether he lasts to the Wastes, and what the odds are, and who has his boots if he doesn't. She tells him all this kindly, which is the worst part.`,
+     ch:[{t:'"Go away."', set:['b9v3_smiles','away']},
+         {t:'"Water."', set:['b9v3_smiles','water']}]},
+    {txt:()=>`${S.f.b9v3_smiles === 'water' ? `"Water," he says. She looks at him a moment, and the smile goes away, and she gives him her own skin. It is warm and tastes of leather, and he drinks half of it before she takes it back.` : `"Go away," he tells her. She doesn't. She walks beside the cart for another mile, humming, so that he knows she isn't going anywhere.`}
+
+At dusk the carts stop and a Letherii healer comes down the line with a bucket and a ladle. A grey woman in an apron, with the Commander's order behind her and no patience for anybody's pride.
+
+Boiled water, she says, with salt in it, and something bitter she doesn't name. All of it. Every ladle. And again at midnight, and again at dawn.
+
+Koryk drinks it because he is too weak to argue.`},
+    {txt:
+`At dawn he wakes, and the sky is the right colour, and the cart is not moving under him.
+
+He sits up. His head stays where he left it. The shaking has gone out of his hands. All down the line men are sitting up in the carts and looking at their own hands the same way, as if someone had given them back.
+
+Bottle comes along the carts with his hands in his pockets and sits on the tail of Koryk's, swinging his feet. The squad mage. Young, and odd, and always knowing things he shouldn't.
+
+Fid's got that look, Bottle says. The one he gets. He thinks there's a bad fight coming, somewhere out there.`,
+     ch:[{t:'"When?"', set:['b9v3_when','when']},
+         {t:'"Good."', set:['b9v3_when','good']}]},
+    {go:'Get down and walk.', txt:()=>`${S.f.b9v3_when === 'good' ? `"Good," says Koryk. Bottle looks at him sideways, the way you look at a man still a little feverish, and doesn't argue.` : `"When?" Koryk asks. Bottle shrugs. Fid doesn't know when. Fid never knows when. He just gets the look.`}
+
+Koryk climbs down out of the cart. His legs hold. Up the road the column is moving off into its own dust, east, with the last farms falling away behind it and nothing much ahead.
+
+He picks up his kit, which someone has been carrying for him, and shoulders it, and starts walking. He is not going to ask who.`},
+    b9vEnd({
+      marrow:() => `Marrow lets the card go. "The same fever," she says. "Up the column, in the marines' carts." She looks along the sick laid out by the stone, at the skins and the boiling pots. "And the Letherii cure. It took, child. All down the line." She lays the card face down. "Keep them drinking. All night. That's the whole of the reading."`,
+      tallow:() => `Tallow puts the card face down. "A marine in a cart," he says, "and a healer with a ladle." He looks at the brown water in the pot, beginning to boil. "Grandmother said salt in the water for the shakes. I thought she meant for the taste." He feeds the fire. "It works, Sergeant. The card says it works."`,
+      oldninth:() => `The old marine lets the card go and drinks, from the boiled pot this time. "Koryk," he says. "Fiddler's lot. Big lad, bones in his hair." He wipes his mouth. "Up and walking by morning, him and all his cart." He looks east. "And Fiddler with the look. Don't like that part, Sergeant."`,
+      other:(r, p) => `${r.name} lets the card go. "A marine with the fever," ${p.s} says, "and the cure that works."`})]},
+
+  /* ---- Chapter 4: the escort's camp in the Wastes. Beside the Commander as he walks the lines at night, the Atri-Ceda. ---- */
+  b9v4:{book:'dod', ch:4, who:'Aranict', where:'The escort\'s camp', fig:'b9v_aranict', bg:'b9v_lines', cap:'Rows of tents on a dark plain, small dung-fires at the ends of the rows, sentries leaning on spears, and two figures walking slowly between the lines, one with a thread of smoke going up.', steps:[
+    {txt:
+`Aranict walks beside the Commander through the escort's lines at night, a stick of rustleaf between her fingers, and lets him talk.
+
+She is the Atri-Ceda. It is a large title for what she can do out here, which is less every night. The Holds are a long way down in the Wastes. She reaches for them the way you reach for a stair in the dark and find it a step lower than it was, and then lower again.
+
+She has told no one how much lower. She is telling no one now.`},
+    {txt:
+`He stops at every fire. Not long. A word, a name if he has it, a question about boots or water or someone's brother in another brigade. The soldiers stand up, and then, when he waves them down, sit, and look at each other after he has gone.
+
+Between fires he talks to her, low, as if thinking aloud. Every soldier needs a stone to stand on, he says. A stone of loyalty. To his brigade, his friend, his sergeant, his own pride, it hardly matters which. Something under his feet that won't move when the ground does.`,
+     ch:[{t:'Ask him what his is.', set:['b9v4_ask','ask']},
+         {t:'Smoke, and listen.', set:['b9v4_ask','listen']}]},
+    {txt:()=>`${S.f.b9v4_ask === 'ask' ? `"And yours?" she asks. He thinks about it, seriously, the way he thinks about everything, for the length of three tents. Then he says he will tell her when he finds it. She cannot tell if it is a joke.` : `She smokes, and listens. He does not need answering. He needs someone beside him while he works it out, and she has found that she does not mind being that.`}
+
+At one fire the talk stops when they come up, and doesn't start again quickly enough. A soldier is frightened, and too proud to say so, and his friends have been feeding it.
+
+The foreigners' mages have fallen, the soldier says at last. Everybody knows it. The Malazans' own mages, gone sick and quiet, and if theirs have gone, what about ours.`},
+    {txt:
+`The Commander answers him. Aranict hardly hears what he says. She is watching his face in the firelight, the way it goes still and kind and very attentive, and she is thinking something she has been thinking for some weeks now, and has decided not to think.
+
+It is not a good time. There is no good time on a road like this. She knows exactly how foolish it is, and she is not a foolish woman, and none of that has helped at all.`,
+     ch:[{t:'Say it.', set:['b9v4_say','say']},
+         {t:'Not tonight.', set:['b9v4_say','not']}]},
+    {go:'Walk on.', txt:()=>`${S.f.b9v4_say === 'say' ? `When they walk on she opens her mouth to say it, and what comes out is something about the water barrels on the third wagon. He agrees that it is a problem. She agrees that he agrees. It is not her finest hour.` : `Not tonight. She lights another stick from the end of the last and walks on beside him.`}
+
+At the end of the lines the camp stops and the dark begins, all of it, the whole width of the Wastes. He stands looking out at it a while. So does she.
+
+The soldier at the fire behind them is laughing now, at something one of his friends said. The Commander hears it, and almost smiles. She sees that too.`},
+    b9vEnd({
+      perrit:() => `Perrit turns the tile face down, and keeps her hand on it. "The Atri-Ceda," she says. "Walking the lines tonight, beside the Commander." She glances along the wagons toward the brigades' fires. "She feels the Holds going down, Sergeant, the same as I do. Further than I do." A breath. "She has told no one. I will not either."`,
+      tilewoman:() => `The tile-woman puts her hand over the tile. "The Atri-Ceda," she says, "smoking like a chimney, and walking beside him all night." She spits to one side, for manners. "And not a word out of her about it, soldier. Not one." She folds the tile into its cloth. "Some things the tiles show you that are none of your business. This is one."`,
+      other:(r, p) => `${r.name} turns the tile face down. "The Atri-Ceda walking the lines," ${p.s} says, "beside the Commander, tonight."`})]},
+
+  /* ---- Chapter 5: deep in the Wastes. A Fist rides out alone to look at the country, until the Adjunct sends for him. ---- */
+  b9v5:{book:'dod', ch:5, who:'Keneb', where:'A rise in the Wastes', fig:'keneb', bg:'b9v_rise', cap:'A low rise on a pale empty plain under a high white sky, a horse cropping thin grass, and far behind it the dust of an army on the march.', steps:[
+    {txt:
+`Fist Keneb rides out from the column alone, because he wants to look at the country, and because for an hour nobody can ask him anything.
+
+The Wastes go on. Pale ground, pale grass, a sky so high and white it hurts to look into. Behind him the army's dust stands up off the plain like a wall. Ahead of him there is nothing at all, and he rides toward it at a walk.
+
+He has been a soldier a long time. He has never seen country so empty that it seemed to be waiting.`},
+    {txt:
+`He counts, because counting is what he does when he is worried, and he is always worried.
+
+Blistig will not fight her openly. Blistig will only let the doubt run downhill through his officers, like water finding its way, and call it honesty. That is one.
+
+He himself cannot tell the soldiers what the Adjunct wants, because he does not know. That is two. He has stopped expecting to be told.
+
+And the boy has gone off on his own, the boy he took in, and Keneb lets himself think about that for exactly as long as it takes the horse to climb the next rise. Then he puts it away.`,
+     ch:[{t:'Ride on.', set:['b9v5_ride','on']},
+         {t:'Stop here.', set:['b9v5_ride','stop']}]},
+    {txt:()=>`${S.f.b9v5_ride === 'on' ? `He rides on to the next rise, and the one after, because each looks as if it might show him something. None does. At the third he gives up and gets down.` : `He stops at the top of the rise and gets down, to give the horse a rest it hasn't earned and himself one he has.`}
+
+The horse crops at the thin grass. Far off to the south a line of dark shapes moves along a fold in the ground: bhederin, a few of them, more than he expected and fewer than he'd like.
+
+The wind blows. There is no other sound. He finds he is holding his breath, and lets it go.`},
+    {txt:
+`Then dust, coming from the column. A single rider, riding hard.
+
+Keneb watches it come for a while before he admits to himself what it is. A runner from the Adjunct's command, a young woman on a tired horse, pulling up a polite distance off and saluting.
+
+The Adjunct asks for the Fist, she says. At his convenience. Which means now.`,
+     ch:[{t:'"Tell her I\'m coming."', set:['b9v5_back','coming']},
+         {t:'Take one more look first.', set:['b9v5_back','look']}]},
+    {go:'Ride back.', txt:()=>`${S.f.b9v5_back === 'look' ? `He takes one more look first. The runner waits. The plain waits. It is the kind of country that will wait for anyone, he thinks, for as long as it takes.` : `"Tell her I'm coming," Keneb says. The runner wheels and goes, and her dust goes after her.`}
+
+He gets back into the saddle, stiffly, and turns the horse's head toward the army.
+
+The card shows no more than that: a Fist riding back to his column, a long way out on an empty plain, at a walk that is not quite as quick as it ought to be.`},
+    b9vEnd({
+      marrow:() => `Marrow lets the card go. "The Fist," she says. "Fist Keneb, out on his own, looking at all this." She looks round at the bare ground, the low fire, the dark on every side. "Counting what he can't fix, child. I know that face." She lays the card down in the dust. "And then the Adjunct sends for him, and he goes."`,
+      tallow:() => `Tallow puts the card face down on the bare ground. "That was the Fist," he says. "Riding out to look at it." He looks east, where there is nothing to see. "Grandmother said you look at the sea before you go out on it. So it knows you've seen it." He pauses. "I don't think this place cares who looks at it, Sergeant."`,
+      oldninth:() => `The old marine lets the card go. "Keneb," he says, and drinks, and is quiet a while. "Fist's got the whole army on his back and Blistig sitting on top of it." He turns the cup in his hands. "Rides out to breathe. Can't blame him." He holds the cup out to the dark, a little, and then drinks it himself.`,
+      other:(r, p) => `${r.name} lets the card go. "The Fist riding out alone," ${p.s} says, "until the Adjunct sends for him."`})]},
+
+  /* ---- Chapter 6: the night before the battle. The tallest soldier in the escort is called to the Commander's tent and asked for stories. ---- */
+  b9v6:{book:'dod', ch:6, who:'Henar Vygulf', where:'The Commander\'s tent', fig:'b9v_henar', bg:'b9v_stories', cap:'The Commander\'s tent at night, a lamp low on the camp table, a woman smoking in the corner, and a very tall soldier bent nearly double under the ridge-pole.', steps:[
+    {txt:
+`Henar Vygulf is the tallest soldier in the escort, and the Commander's tent was not made for him.
+
+He ducks at the flap and still catches the ridge-pole with the top of his head, and the whole tent shivers, and the lamp on the table swings. No one laughs. He would rather they had.
+
+He has been sent for at night, by name, to the Commander. He has spent the walk over going through everything he might have done. It is a long list. None of it seemed worth this.`},
+    {txt:
+`The Commander is sitting at the table in his shirt, with no papers in front of him. In the corner the Atri-Ceda sits on a camp stool with a stick of rustleaf, watching, the smoke going up straight.
+
+Sit, the Commander says. Henar folds himself onto a stool that is much too low.
+
+Then the Commander asks him a strange thing. Not about the march. Not about his brigade. About stories. The old stories of the Wastes, the ones grandmothers tell, the ones nobody believes. He has been asking soldiers all down the column, he says. Someone said Henar's family had a good many.`,
+     ch:[{t:'Tell the one about the wind.', set:['b9v6_tale','wind']},
+         {t:'Say you know none worth hearing.', set:['b9v6_tale','none']}]},
+    {txt:()=>`${S.f.b9v6_tale === 'none' ? `"None worth hearing, sir," Henar says. The Commander waits. He has a way of waiting. In the end Henar tells him the one about the wind anyway, because it is easier than sitting in that silence.` : `Henar tells the one about the wind, because it was his grandmother's favourite, and because it is the first one that comes.`}
+
+The wind in the Wastes knows your name, the story goes, and calls it after dark in your mother's voice. You never answer. You never sleep with your feet to the east. Out there the land was something else once, before it was empty, and the something is not all the way gone.
+
+He tells two more. They are worse. He has never said them aloud in front of an officer, and they sound thinner here, and older.
+
+The Commander listens to all of it very carefully, and asks small careful questions, and writes nothing down.`},
+    {txt:
+`When it is done the Commander sits back.
+
+He thanks Henar. He means it; Henar can hear that he means it, which is unsettling in an officer. Then he says, in the same voice, that Henar is promoted.
+
+Henar is so surprised that he does not properly hear to what. Something with more men under it than he has now. The Atri-Ceda, in her corner, blows out a long thread of smoke and looks at the roof of the tent.`,
+     ch:[{t:'"Sir."', set:['b9v6_sir','sir']},
+         {t:'Ask why.', set:['b9v6_sir','why']}]},
+    {go:'Duck out.', txt:()=>`${S.f.b9v6_sir === 'why' ? `"Why, sir?" he asks, before he can stop himself. The Commander considers this. "Because you came when you were sent for," he says, "and told me the truth, and did not pretend the stories were silly." That seems to be the whole answer.` : `"Sir," says Henar, which is all he can find. It seems to be enough.`}
+
+He gets up. He hits the ridge-pole again on the way out. This time the Atri-Ceda laughs, quietly, and so after a moment does the Commander.
+
+Outside the night is huge and cold and full of stars, and the escort asleep in its rows, and far off in the dark to the north, though Henar does not know it yet, something is already coming.`},
+    b9vEnd({
+      perrit:() => `Perrit turns the tile face down, quickly, and presses it flat against the shield. "Last night," she says. "In the Commander's tent. A soldier telling him the old stories." She looks north, at the brown smear on the sky, and away. "The Commander was listening for something in them, Sergeant. I do not know what." Her voice stays level. "Whatever it was, it is coming." Her hands are cold.`,
+      tilewoman:() => `The tile-woman puts her hand flat over the tile and leaves it there. "The wind that knows your name," she says. "My mother told that one." She does not spit. She looks north, where the dust is. "Feet to the west tonight, soldier, if there's a tonight. I mean it." She folds the tile away. "Dock's paid. Go and stand where they put you." Her hands are cold.`,
+      other:(r, p) => `${r.name} turns the tile face down. "A soldier telling the Commander old stories," ${p.s} says, "last night."`})]},
+
+  /* ---- Chapter 7: after. High over the field when the short-tails are gone, a hunter on the wind, looking down. ---- */
+  b9v7:{book:'dod', ch:7, who:'Gu\'Rull', where:'High over the plain', fig:'b9v_gurull', bg:'b9v_field', cap:'A plain seen from very high up, pale and wide, a dark ring pressed into it, something white heaped near its middle, and a broad scuffed trail going away across it to the edge of sight.', steps:[
+    {txt:
+`Gu'Rull rides the cold air higher than any bird, so high the plain below is a pale cloth with marks on it, and the wind up here has no smell at all.
+
+He has come a long way to look at this. He looks at most things from up here. It is the only distance at which most things are worth looking at.
+
+The short-tails have gone. Their great dust has moved on and away, and the plain they fought on lies open under the sky for anyone who cares to see it.`},
+    {txt:
+`He circles once, wide, and reads the field as a hunter reads a kill.
+
+A heap of something white near the middle, white even from here. Bones, picked clean already, heaped where they fell on each other. Near it, a great dark ring pressed into the ground, black at the rim, as if a fist had come down out of the sky and struck the plain.
+
+He does not know what made it. He finds that he would like to.`,
+     ch:[{t:'Go lower.', set:['b9v7_low','low']},
+         {t:'Stay high.', set:['b9v7_low','high']}]},
+    {txt:()=>`${S.f.b9v7_low === 'low' ? `He goes lower, slowly, in long falling turns, until the marks on the cloth become things, and the things become what they were.` : `He stays high. From up here the field keeps its shape. Lower down it would only be wreckage, and wreckage tells you less than shape does.`}
+
+Out on one flank, a long spray of dark shapes where a charge of horsemen went in, late and fast, and did not come out. Horses and riders lie along it in a fan, the way a wave leaves weed on a beach.
+
+Brave, he thinks. Stupid, and brave. The two are often found together among the soft ones.`},
+    {txt:
+`And then the thing he came to see, though he did not know it until now.
+
+A trail. Wide, untidy, scuffed into the pale ground by a great many feet, going away across the plain to the edge of sight. Wagons in it, some. Litters. The marks of those who carried and those who were carried.
+
+They were beaten here. He can read that plainly. They were broken and driven and they bled. And then the ones who were left picked up the ones who could not walk, and turned, and walked away.
+
+The short-tails who stayed to stop them are the bones.`,
+     ch:[{t:'Follow the trail.', set:['b9v7_trail','follow']},
+         {t:'Hold where you are.', set:['b9v7_trail','hold']}]},
+    {go:'Climb.', txt:()=>`${S.f.b9v7_trail === 'follow' ? `He follows the trail a while, high and slow, a shadow nobody below will ever see, until it bends out of the country he came to look at.` : `He holds where he is, riding the same slow circle over the field, and looks at the trail until he has it by heart.`}
+
+He had thought them soft. He had thought them small, quarrelling, short-lived things, that break when you look at them hard.
+
+He climbs back into the cold, where the wind has no smell, and finds that something has changed in him and will not change back.
+
+No one saw them do it. Now someone has.`},
+    b9vEnd({
+      marrow:() => `Marrow lets the card go. "After," she says. "Not tonight. Days after, child." She looks out past the burning wagons, into the dark where the short-tails are. "Something up very high, looking down at this place when it's empty." She lays the card face down on the ground, slowly. "It saw a trail. A lot of feet, walking away from here." She keeps her palm flat on the card. "That's us, child. Some of us. Walking." Her hands are cold.`,
+      tallow:() => `Tallow puts the card face down. "A bird," he says. "Or something like a bird. Very high." He looks up, at the smoke going over the wagons. "Grandmother said the gulls know where the boats come in before the boats do." He swallows. "It saw a trail going away from here, Sergeant. It saw people walk out."`,
+      oldninth:() => `The old marine lets the card go and turns his empty cup upside down on the ground. "After," he says. "Something up high, looking at what's left." He looks along the line at the shields in the wagon-light. "Saw us walk out. Some of us." He rights the cup again. "That's the only reading I want. Back on your feet, Sergeant."`,
+      other:(r, p) => `${r.name} lets the card go. "Something high over the field," ${p.s} says, "after. And a trail, walking away."`})]},
+});
+
+/* ============ Book Nine: the visions' art (168) — backdrops VISBG b9v_* and b9deck, the figures FIGX b9v_* ============
+   Drawn the way Books Three to Eight draw their visions (68b, 78b, 88b, 108b, 128b, 148b): a few strokes per place, figures in the ~32px
+   frame lit from the left, and 36b's drawVision laying the vision's own figure, the motes, the violet and the vignette over each backdrop.
+   Book Nine's look: Letheras by night (88b's blue-grey and lamp-gold) for the reading room and the camp outside the walls; the road east
+   in dust-ochre; the Wastes pale and wide under a white sky by day and a hard black one by night; the field from very high up, a pale
+   cloth with marks on it.
+   Headline only: what stirs in the city is felt, not drawn (the dogs, a far roof going in as a puff of dust over the roofline); the sick
+   are blanket shapes in the carts; the field is a white heap, a dark ring, a fan of small dark marks and a scuffed trail, seen from so
+   high that nothing on it has a face. No card face is drawn: the cards on the table are backs, and the one under Fiddler's hand is
+   never turned.
+   Reused: b7v_fiddler (128b), keneb (54b), b7_malregular (126b), b2soldier (47b), b5_letherii (80d), b9_c3_healer (163b), the readers marrow, tallow,
+   b4v_oldninth (78b), perrit, b5_c1_tilewoman (81b); the helpers B3VB (68b), B4VB (78b), B5VB (88b), B6VB (108b), B7VB (128b). */
+
+/* ---------------- figures ---------------- */
+Object.assign(FIGX, {
+  /* Brys Beddict: a tall, lean Letherii in his shirtsleeves and a plain dark coat, dark hair cut short, clean-shaven, a long sword at
+     his hip; nothing of rank on him but the cut of the coat */
+  b9v_brys(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.12); const sw = o.still ? 0 : Math.sin(t/800 + (o.phase || 0))*.3;
+    h.legs('#22242a'); poly(ctx, [[-6,-6.2],[5.6,-6.2],[6.4,9.6 + sw],[-6.8 - sw,9.8]], h.armor('#2a3040', '#0e1016')); // the coat
+    poly(ctx, [[-2.4,-6.2],[2.4,-6.2],[1.6,4],[-1.6,4]], '#c8c2b4'); ctx.fillStyle = '#16120e'; ctx.fillRect(-6, 3.2, 12, 1.1); // the shirt, the belt
+    B2F.line(ctx, '#9aa0aa', 1.1, [[-5.4, 3.4], [-9, 12.6]]); B2F.line(ctx, '#3a2a1a', 1.6, [[-5, 2.4], [-5.8, 4.4]]); // the sword, hilt up
+    h.head('#c09e82', 4, -11.4); h.look('rgba(20,16,12,.9)', -11.6); B2F.cap(ctx, '#1a1410', 4.2, -12.6, 1, 2); ctx.fillStyle = '#1a1410'; ctx.fillRect(-4.2, -12.6, 1.1, 2.4); // short dark hair
+    ctx.restore(); },
+  /* Koryk: a big half-Seti marine, shaven-headed, in a sweat-dark shirt, finger bones knotted on cords at his belt; o.sick: lying back,
+     shaking, a blanket to the chest */
+  b9v_koryk(ctx, h, t, o){ ctx.save(); const sick = !!o.sick, sh = sick && !REDUCE() ? Math.sin(t/38)*.35 : 0;
+    if (sick) { ctx.translate(0, 9); ctx.rotate(-Math.PI/2 + .12); ctx.translate(-1 + sh, -2); }
+    B2F.grow(ctx, 1.1, 1.08);
+    h.legs('#3a3228'); h.torso('#6a5a44', '#2a2216', 6.8); ctx.fillStyle = 'rgba(20,14,8,.3)'; ctx.fillRect(-4, -4, 8, 6); // the shirt, sweat-dark
+    ctx.fillStyle = '#1e160e'; ctx.fillRect(-6.6, 3.2, 13.2, 1.2); for (let i=0;i<5;i++){ B2F.line(ctx, '#3a2a1a', .4, [[-5 + i*2.4, 4.4], [-5.2 + i*2.4, 7.6]]); ell(ctx, -5.2 + i*2.4, 8, .5, .9, '#e2d8c0'); } // the bones on cords
+    h.head('#9a7454', 4.4, -11.2); h.look('rgba(24,14,8,.9)', -11.4); ctx.fillStyle = 'rgba(40,28,20,.35)'; ctx.beginPath(); ctx.arc(0, -12.6, 4.4, Math.PI*1.05, Math.PI*1.95); ctx.fill(); // shaven, a shadow of stubble
+    if (sick) poly(ctx, [[-7.4,-3],[7.4,-3],[7.8,12],[-7.8,12]], h.armor('#5a5244', '#24201a')); // the blanket
+    ctx.restore(); },
+  /* Aranict: a Letherii woman past her first youth, slight, brown hair pinned up untidily, a long grey-blue robe of the cadre under a
+     travelling coat; a stick of rustleaf at her lips with its thread of smoke */
+  b9v_aranict(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .9, 1);
+    h.legs('#2a2a30'); B2F.robe(ctx, h, '#5a6478', '#20242e', 5.6, 7.6); poly(ctx, [[-5.8,-6],[-2,-6],[-3,10.4],[-7,10.4]], '#3a3a3e'); poly(ctx, [[2,-6],[5.8,-6],[7,10.4],[3,10.4]], '#3a3a3e'); // the coat over the robe
+    h.head('#c4a28a', 3.9, -11.2); h.look('rgba(22,14,10,.85)', -11.4); B2F.cap(ctx, '#5a3a24', 4.1, -12.4); ell(ctx, -1, -16.6, 2.6, 1.8, '#5a3a24'); // hair pinned up
+    B2F.line(ctx, '#e8e0cc', .7, [[2.6, -9.2], [6.2, -9.6]]); glow(ctx, 6.4, -9.6, 3, '#ff9a40', .6); // the rustleaf stick, lit
+    const k = REDUCE() ? 0 : (t/1400) % 1; ctx.strokeStyle = `rgba(200,200,210,${.4*(1 - k)})`; ctx.lineWidth = .6; ctx.beginPath(); ctx.moveTo(6.4, -10.4); ctx.quadraticCurveTo(8 + Math.sin(t/700)*1.5, -15 - k*4, 6.6, -20 - k*6); ctx.stroke(); // its smoke
+    ctx.restore(); },
+  /* Henar Vygulf: a very tall, rangy young Letherii soldier in a padded jerkin and a brigade's grey-green cloak, fair hair cropped,
+     bending a little at the neck as if under a roof */
+  b9v_henar(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1, 1.3); ctx.translate(0, 1); ctx.rotate(o.still ? .06 : .06 + Math.sin(t/900)*.01);
+    poly(ctx, [[-6,-6.4],[5.4,-6.4],[6.4,11.2],[-7.4,11.6]], h.armor('#4a5444', '#1a2018')); // the cloak
+    h.legs('#2a2a24'); h.torso('#7a6a4c', '#2e2618', 5.4); ctx.fillStyle = 'rgba(0,0,0,.25)'; for (let i=0;i<4;i++) ctx.fillRect(-4.6, -4 + i*2.6, 9.2, .5); // padding
+    ctx.fillStyle = '#1e160e'; ctx.fillRect(-5.4, 3.2, 10.8, 1.1);
+    h.head('#d0aa8a', 3.9, -11.4); h.look('rgba(30,20,14,.85)', -11.6); B2F.cap(ctx, '#c8a464', 4.1, -12.6, 1, 2); // fair hair, cropped
+    ctx.restore(); },
+  /* Gu'Rull: a long, lean hunter of the high air, seen from below: a narrow reptilian body and long neck, a tail like a rudder, two great
+     thin-membraned wings, dark above and grey-pale beneath; wings beating slowly or held in a glide */
+  b9v_gurull(ctx, h, t, o){ ctx.save(); const fl = REDUCE() || o.still ? .2 : Math.sin(t/520 + (o.phase || 0))*.55;
+    ctx.translate(0, -4);
+    const wing = sd => { poly(ctx, [[sd*1.5,-2],[sd*9,-7 - fl*7],[sd*17,-5 - fl*10],[sd*15,-1 - fl*6],[sd*11,1 - fl*3],[sd*6,1.4],[sd*1.5,2]], '#2a2c30');
+      B2F.line(ctx, 'rgba(150,152,160,.6)', .5, [[sd*1.5, -1], [sd*16, -4.8 - fl*10]]); B2F.line(ctx, 'rgba(150,152,160,.4)', .4, [[sd*3, 0], [sd*12, .4 - fl*3]]); };
+    wing(-1); wing(1);
+    ctx.fillStyle = '#3a3c40'; ell(ctx, 0, 0, 2.4, 6, '#3a3c40'); poly(ctx, [[-1,-5],[1,-5],[.6,-11],[-.6,-11]], '#3a3c40'); ell(ctx, 0, -12.2, 1.4, 2, '#4a4c50'); // body, neck, head
+    poly(ctx, [[-1.2,5],[1.2,5],[.4,15],[-.4,15]], '#2e3034'); poly(ctx, [[-.4,14],[.4,14],[2.4,17],[-2.4,17]], '#2e3034'); // the tail
+    ctx.fillStyle = 'rgba(220,200,120,.8)'; ctx.fillRect(-.9, -12.8, .6, .5); ctx.fillRect(.3, -12.8, .6, .5); // the eyes
+    ctx.restore(); },
+});
+
+/* ---------------- backdrop helpers ---------------- */
+const B9VB = {
+  /* the inside of a field tent: canvas walls sloping to a ridge-pole, a pole in the middle, a camp table with a lamp */
+  tent(ctx, W, H, T, lamp = 1){ ctx.fillStyle = '#1a1612'; ctx.fillRect(0, 0, W, H);
+    poly(ctx, [[0, H*.8],[0, H*.36],[W*.5, 0],[W, H*.36],[W, H*.8]], '#3a3226'); poly(ctx, [[W*.5, 0],[W, H*.36],[W, H*.8],[W*.5, H*.8]], '#2e281e');
+    ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1; for (let i=1;i<6;i++){ ctx.beginPath(); ctx.moveTo(W*.5, 0); ctx.lineTo(W*(i/6), H*.8); ctx.stroke(); } // the seams
+    ctx.fillStyle = '#4a3a24'; ctx.fillRect(W*.5 - 2, 0, 4, H*.8); ctx.fillStyle = '#2a2016'; ctx.fillRect(0, H*.8, W, H*.2); // the pole, the ground-cloth
+    ctx.fillStyle = '#4a3a26'; ctx.fillRect(W*.58, H*.72, W*.26, 4); ctx.fillRect(W*.6, H*.74, 3, H*.14); ctx.fillRect(W*.81, H*.74, 3, H*.14); // the camp table
+    if (lamp) { B4VB.lamp(ctx, W*.71, H*.69, T, 80*lamp, .32); glow(ctx, W*.71, H*.6, W*.4, '#e8a050', .12*lamp); } },
+  /* a far city roofline puff: a roof going in, a column of dust and a little fire under it */
+  rooffall(ctx, x, y, T, k){ if (k <= 0) return; for (let i=0;i<6;i++){ const yy = y - i*7*k - (REDUCE() ? 0 : Math.sin(T/600 + i)*1.5); ell(ctx, x + (hash(i, 901) - .5)*10, yy, 6 + i*2.4*k, 4 + i*1.6*k, `rgba(150,140,130,${.32*(1 - i/7)})`); } glow(ctx, x, y + 2, 16, '#ff8a40', .25*k); },
+  /* the field from very high: a ring pressed into the ground */
+  crater(ctx, x, y, r){ ell(ctx, x, y, r, r*.62, '#2a2622'); ell(ctx, x, y, r*.8, r*.48, '#4a4238'); ctx.strokeStyle = 'rgba(10,8,6,.6)'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(x, y, r, r*.62, 0, 0, 7); ctx.stroke(); },
+};
+
+Object.assign(VISBG, {
+  /* a low room at night: one lamp on the table, the cards in a cross (backs only), dark faces round it, the shutters on the city with the
+     dogs; step 2 the first card down in front of a place; step 3 the cards spreading and the lamp leaning; step 4 a far roof going in
+     through the shutter's gap, and the lamp leaning hard */
+  b9v_reading(ctx, W, H, T, v){ const s = v.step || 0, lean = s >= 4 ? .18 : s >= 3 ? .06 : 0;
+    ctx.fillStyle = '#0c0a0c'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#08070a'; for (let i=0;i<4;i++) ctx.fillRect(0, H*(.04 + i*.07), W, 4); // the beams
+    ctx.fillStyle = '#05060c'; ctx.fillRect(W*.04, H*.12, W*.2, H*.34); B3VB.stars(ctx, W*.2, H*.4, T, 10, .5, .4, 911); ctx.save(); ctx.translate(W*.04, H*.12); B6VB.roofs(ctx, W*.2, H*.32, '#0e0e18', 912, 3, T); ctx.restore(); // the window on the city
+    if (s >= 4) b9vRoof(ctx, W, H, T); ctx.fillStyle = '#1a1410'; for (let i=0;i<4;i++) ctx.fillRect(W*(.04 + i*.066), H*.12, 3, H*.34); // the shutters, open a crack
+    ctx.fillStyle = '#2a1e14'; ctx.fillRect(W*.3, H*.72, W*.5, 6); ctx.fillStyle = '#1a120c'; ctx.fillRect(W*.34, H*.74, 4, H*.2); ctx.fillRect(W*.74, H*.74, 4, H*.2); // the table
+    ctx.save(); ctx.translate(W*.55, H*.7); ctx.rotate(lean); B4VB.lamp(ctx, 0, -4, T, 90, .34); ctx.fillStyle = '#3a2a18'; ctx.fillRect(-3, -2, 6, 3); ctx.restore(); glow(ctx, W*.55, H*.66, W*.45, '#e8a050', .1); // the lamp, leaning
+    const n = s <= 1 ? 1 : s === 2 ? 3 : 7; [[0, 0], [-1, 0], [1, 0], [0, -1], [0, 1], [-2, 0], [2, 0]].slice(0, n).forEach(([dx, dy], i) => B6VB.card(ctx, W*(.55 + dx*.05), H*(.735 + dy*.02), -.1 + hash(i, 913)*.2)); // the cards, backs up
+    for (let i=0;i<5;i++){ const x = W*(.34 + i*.11), y = H*.66; if (i === 2) continue; ell(ctx, x, y - 14, 4.6, 5.4, 'rgba(10,8,8,.95)'); poly(ctx, [[x - 8, y + 8],[x - 6, y - 8],[x + 6, y - 8],[x + 8, y + 8]], 'rgba(10,8,8,.95)'); glow(ctx, x, y - 14, 8, '#e8a050', .08); } // the faces round it, in shadow
+    for (let i=0;i<4;i++) B7VB.mark(ctx, W*(.86 + i*.035), H*.62, 2.2, 'rgba(8,6,8,.9)'); // the others, along the wall
+    return {fx:W*.2, fy:H*.94, fs:2.4}; },
+
+  /* the Commander's tent the night before the march: canvas walls, the camp table and the lamp, maps and lists; the sword against the pole.
+     Steps 0-2 the lamp up; step 3 the flap open on the camp's fires; step 4 the lamp down to an ember */
+  b9v_tent(ctx, W, H, T, v){ const s = v.step || 0; B9VB.tent(ctx, W, H, T, s >= 4 ? .3 : 1);
+    ctx.fillStyle = '#c8bca0'; ctx.fillRect(W*.62, H*.705, W*.08, 3); ctx.fillStyle = '#b0a488'; ctx.fillRect(W*.72, H*.71, W*.06, 2.4); // the lists, a map
+    B2F.line(ctx, '#8a909a', 1.2, [[W*.5 + 3, H*.5], [W*.5 + 5, H*.8]]); // the sword against the pole
+    if (s === 3) { poly(ctx, [[W*.1, H*.8],[W*.16, H*.4],[W*.28, H*.8]], '#05060c'); B3VB.stars(ctx, W, H, T, 6, .1, .4, 921); for (let i=0;i<3;i++) B4VB.fire(ctx, W*(.15 + i*.04), H*.78, T, .3); } // the flap open on the camp
+    if (s >= 4) { ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 0, W, H); }
+    return {fx:W*.4, fy:H*.94, fs:2.4}; },
+
+  /* the fever-carts on the road east: a dust-yellow sky, the road running off east, open carts with blanket shapes, the column's dust
+     ahead. Step 0-1 by day (Koryk in the cart, Smiles walking); step 2 dusk, the healer with her bucket; steps 3-4 dawn, the sick sitting
+     up, the column moving off */
+  b9v_carts(ctx, W, H, T, v){ const s = v.step || 0, dusk = s === 2, dawn = s >= 3;
+    B4VB.sky(ctx, W, H*.56, dusk ? [[0, '#1a1420'], [1, '#8a4a30']] : dawn ? [[0, '#5a6070'], [1, '#d8b890']] : [[0, '#a89070'], [1, '#d8c49a']]);
+    ctx.fillStyle = dusk ? '#3a2a1c' : '#7a6646'; ctx.fillRect(0, H*.54, W, H*.46); ctx.fillStyle = dusk ? '#4a3626' : '#9a8460'; ctx.beginPath(); ctx.moveTo(0, H*.86); ctx.lineTo(W*.7, H*.56); ctx.lineTo(W*.78, H*.56); ctx.lineTo(W*.4, H); ctx.lineTo(0, H); ctx.fill(); // the road east
+    B3VB.dust(ctx, W*.84, H*.56, 70, 50, T, dusk ? .12 : .3, 931); for (let i=0;i<9;i++) B3VB.walker(ctx, W*(.74 + i*.012), H*(.57 - i*.002), .6, 'rgba(40,30,20,.7)', T, i, 1); // the column ahead, in its dust
+    if (!dawn) for (let i=0;i<3;i++){ const x = W*(.1 + i*.06), y = H*.58; ctx.fillStyle = '#3a3020'; ctx.fillRect(x, y - 6, 10, 6); poly(ctx, [[x - 2, y - 6],[x + 2, y - 14],[x + 6, y - 9],[x + 12, y - 6]], '#4a3e2a'); } // the last farms, behind
+    for (let i=0;i<3;i++){ const x = W*(.5 + i*.13), y = H*(.84 - i*.07), k = 1 - i*.2; ctx.fillStyle = '#4a3420'; ctx.fillRect(x - 18*k, y - 7*k, 36*k, 6*k); [x - 12*k, x + 12*k].forEach(wx => { ctx.strokeStyle = '#2a1e12'; ctx.lineWidth = 1.6*k; ctx.beginPath(); ctx.arc(wx, y, 4*k, 0, 7); ctx.stroke(); });
+      for (let j=0;j<2;j++) ell(ctx, x - 8*k + j*14*k, y - 9*k - (dawn ? 3*k : 0), 6*k, (dawn ? 3.6 : 2.4)*k, dawn ? '#6a5e4a' : '#5a5244'); } // the carts, the blanket shapes (sitting up at dawn)
+    if (s === 1) drawFigure(ctx, 'b7_malregular', W*.3, H*.92, 1.9, T, {dir:1}); // Smiles walking beside
+    if (s === 2) { drawFigure(ctx, 'b9_c3_healer', W*.72, H*.94, 2, T, {still:true, dir:-1}); for (let i=0;i<4;i++) B4VB.fire(ctx, W*(.86 + i*.03), H*(.8 - i*.03), T, .4); }
+    if (s === 3) drawFigure(ctx, 'b2soldier', W*.62, H*.86, 1.6, T, {still:true, dir:-1}); // Bottle on the cart's tail
+    return s >= 4 ? {fx:W*.34, fy:H*.94, fs:2.3} : s === 3 ? {fx:W*.5, fy:H*.8, fs:2} : {fx:W*.5, fy:H*.74, fs:2}; }, // Koryk lies in the nearest cart (steps 0-2), sits up in it at dawn (3)
+
+  /* the escort's camp at night in the Wastes: a hard black sky, rows of tents to the dark, dung-fires at the row ends, sentries; the
+     soldier's fire (step 2) close by; step 4 the end of the lines and the dark beyond */
+  b9v_lines(ctx, W, H, T, v){ const s = v.step || 0, end = s >= 4;
+    B4VB.sky(ctx, W, H*.56, [[0, '#020206'], [1, '#12121c']]); B3VB.stars(ctx, W, H, T, 70, .5, .6, 941);
+    ctx.fillStyle = '#16140e'; ctx.fillRect(0, H*.54, W, H*.46);
+    const rows = end ? 1 : 3; for (let r=0;r<rows;r++) for (let i=0;i<9;i++){ const k = .5 + r*.25, x = W*(end ? .02 + i*.05 : .04 + i*.12 + r*.03), y = H*(.6 + r*.1); B3VB.tent(ctx, x, y, k, '#2a2620'); }
+    for (let i=0;i<(end ? 1 : 4);i++) B4VB.fire(ctx, W*(.1 + i*.27), H*(.68 + (i % 2)*.1), T, .5); // dung-fires, small
+    if (!end) for (let i=0;i<3;i++) B7VB.mark(ctx, W*(.2 + i*.3), H*.66, 1.4, 'rgba(10,10,10,.9)'); // sentries
+    if (s === 2) { B4VB.fire(ctx, W*.74, H*.9, T, 1); for (let i=0;i<4;i++) drawFigure(ctx, 'b5_letherii', W*(.62 + i*.06), H*(.96 - (i % 2)*.03), 1.4, T, {still:true, dir:i < 2 ? 1 : -1, phase:i}); }
+    drawFigure(ctx, 'b9v_brys', W*(end ? .5 : .34), H*.94, 2.2, T, {still:end, dir:end ? 1 : -1});
+    return {fx:W*(end ? .42 : .26), fy:H*.94, fs:2.2}; },
+
+  /* a rise in the Wastes at midday: a high white sky, the pale plain, the army's dust far behind, a horse cropping; bhederin far to the
+     south (step 2); a rider's dust coming from the column (steps 3-4) */
+  b9v_rise(ctx, W, H, T, v){ const s = v.step || 0;
+    B4VB.sky(ctx, W, H*.5, [[0, '#e8e8e4'], [1, '#d4ccb8']]);
+    ctx.fillStyle = '#b8a888'; ctx.fillRect(0, H*.48, W, H*.52); ctx.fillStyle = '#a89878'; ctx.beginPath(); ctx.moveTo(0, H); ctx.quadraticCurveTo(W*.4, H*.66, W, H*.8); ctx.lineTo(W, H); ctx.fill(); // the rise
+    B3VB.dust(ctx, W*.06, H*.5, 90, 70, T, .35, 951); // the army's dust behind
+    B7VB.grass(ctx, W, H*.7, H, 140, 'rgba(140,128,90,.6)', .2, T, 952);
+    if (s >= 2) for (let i=0;i<6;i++) B4VB.horse(ctx, W*(.62 + i*.04), H*(.53 + hash(i, 953)*.01), .5, 'rgba(40,30,22,.8)', T, i, -1); // bhederin far off (a herd in silhouette)
+    if (s >= 3) { const k = s >= 4 ? 1 : .55; B3VB.dust(ctx, W*(.06 + k*.14), H*.56, 30, 24, T, .4, 954); B3VB.rider(ctx, W*(.06 + k*.14), H*.58, .6 + k*.4, '#2a2018', T, 0, 1, false); } // the runner
+    B4VB.horse(ctx, W*.66, H*.86, 1.8, '#4a3626', T, 2, -1, '#2a1e14'); // his horse, cropping
+    return {fx:W*.4, fy:H*.92, fs:2.4}; },
+
+  /* the Commander's tent the night before the battle: canvas walls, the lamp low, the Atri-Ceda in the corner with her smoke (all steps);
+     the Commander at the table (steps 1-3); the night outside and the rows asleep (step 4) */
+  b9v_stories(ctx, W, H, T, v){ const s = v.step || 0;
+    if (s >= 4) { B4VB.sky(ctx, W, H*.6, [[0, '#020208'], [1, '#141420']]); B3VB.stars(ctx, W, H, T, 90, .55, .7, 961); ctx.fillStyle = '#12100c'; ctx.fillRect(0, H*.58, W, H*.42);
+      for (let r=0;r<2;r++) for (let i=0;i<10;i++) B3VB.tent(ctx, W*(.04 + i*.1 + r*.05), H*(.66 + r*.1), .6 + r*.2, '#24201a');
+      ctx.fillStyle = 'rgba(255,200,120,.35)'; ctx.fillRect(W*.82, H*.62, W*.06, H*.18); glow(ctx, W*.86, H*.7, 30, '#e8a050', .2); // the tent behind him, lit
+      B3VB.dust(ctx, W*.52, H*.54, 120, 20, T, .05, 962); // something on the northern dark, very faint
+      return {fx:W*.4, fy:H*.94, fs:2.4}; }
+    B9VB.tent(ctx, W, H, T, .6);
+    drawFigure(ctx, 'b9v_aranict', W*.9, H*.92, 1.9, T, {still:true, dir:-1});
+    if (s >= 1 && s <= 3) drawFigure(ctx, 'b9v_brys', W*.68, H*.94, 2.1, T, {still:true, dir:-1});
+    return {fx:W*.34, fy:H*.96, fs:2.3}; },
+
+  /* the field from very high up: a pale cloth of a plain, a dark ring pressed into it, a white heap near the middle, a fan of small dark
+     marks on one flank, and a broad scuffed trail away to the edge (steps 3-4). Lower (b9v7_low) the marks are bigger; the hunter in
+     the air above all of it */
+  b9v_field(ctx, W, H, T, v){ const s = v.step || 0, low = s >= 2 && S && S.f && S.f.b9v7_low === 'low' ? 1.5 : 1;
+    ctx.fillStyle = vgrad(ctx, 0, H, [[0, '#c8bca2'], [1, '#a89c80']]); ctx.fillRect(0, 0, W, H);
+    for (let i=0;i<30;i++) ell(ctx, W*hash(i, 971), H*hash(i, 972), 20 + hash(i, 973)*50, 4 + hash(i, 974)*8, 'rgba(120,108,84,.14)'); // the plain's folds
+    if (s >= 1) { B9VB.crater(ctx, W*.52, H*.58, 34*low); for (let i=0;i<30;i++) ell(ctx, W*(.42 + hash(i, 975)*.08), H*(.5 + hash(i, 976)*.08), (1.4 + hash(i, 977)*1.6)*low, (.9 + hash(i, 978))*low, '#ece6d8'); } // the ring; the white heap
+    if (s >= 2) for (let i=0;i<34;i++){ const a = -.5 + hash(i, 979)*1, r = (16 + hash(i, 980)*60)*low; ctx.fillStyle = 'rgba(40,30,24,.75)'; ctx.fillRect(W*.82 - Math.cos(a)*r, H*.3 + Math.sin(a)*r*.5, 2.2*low, 1.2*low); } // the broken charge, a fan
+    if (s >= 3) { ctx.strokeStyle = 'rgba(90,78,60,.55)'; ctx.lineWidth = 18*low; ctx.beginPath(); ctx.moveTo(W*.46, H*.68); ctx.quadraticCurveTo(W*.3, H*.86, -10, H*.96); ctx.stroke();
+      ctx.strokeStyle = 'rgba(70,60,46,.4)'; ctx.lineWidth = 1; for (let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(W*.46, H*(.66 + i*.008)); ctx.quadraticCurveTo(W*.3, H*(.84 + i*.008), -10, H*(.93 + i*.01)); ctx.stroke(); } } // the trail, scuffed, going away
+    for (let i=0;i<8;i++){ const x = ((hash(i, 981)*W + (REDUCE() ? 0 : T*.02)) % (W + 60)) - 30; ell(ctx, x, H*hash(i, 982), 30, 8, 'rgba(240,240,244,.12)'); } // thin high cloud below him
+    const cx = REDUCE() ? W*.3 : W*(.3 + Math.sin(T/3000)*.08), cy = H*(.3 + Math.cos(T/2400)*.05);
+    return {fx:cx, fy:cy, fs:s >= 4 ? 1.8 : 2.4, air:true}; },
+
+  /* the reader, back at the chapter's reading place (B9READ[n]): 1 a kit-crate in the emptied barracks yard, Letheras at night, the dogs;
+     2 a supply wagon's tailboard at the muster, evening lamplight; 3 a flat stone by the road at the fever-fire, the sick on blankets;
+     4 a ration crate at the train at dusk, the wagons drawn in; 5 bare ground under the stars by a dung-fire; 6 a shield on the plain at
+     dawn, a brown smear on the northern sky; 7 the plain after dark, lit by burning wagons. A card for the Third; a tile for the
+     Letherii (obsidian for Perrit, bone for the tile-woman) */
+  b9deck(ctx, W, H, T, v){ const ch = (VISIONS[v.id] && VISIONS[v.id].ch) || 1, tiles = ch % 2 === 0;
+    const SK = {1:['#04040a', '#141628'], 2:['#0a0a12', '#3a2a24'], 3:['#14101a', '#6a3a26'], 4:['#100c14', '#5a3a2a'], 5:['#020206', '#0e0e18'], 6:['#4a4a56', '#c0a080'], 7:['#040306', '#2a140e']}[ch];
+    B4VB.sky(ctx, W, H*.64, [[0, SK[0]], [1, SK[1]]]);
+    const gnd = {1:'#2a2a30', 2:'#3a3024', 3:'#4a3a28', 4:'#3a3024', 5:'#1e1a14', 6:'#6a5e44', 7:'#1a1410'}[ch]; ctx.fillStyle = gnd; ctx.fillRect(0, H*.64, W, H*.36);
+    if (ch === 1) { B3VB.stars(ctx, W, H, T, 20, .3, .4, 991); B6VB.roofs(ctx, W, H*.64, '#0c0c16', 992, 4, T); ctx.fillStyle = '#16141a'; ctx.fillRect(W*.7, H*.2, W*.3, H*.44); for (let i=0;i<4;i++){ ctx.fillStyle = '#06060a'; ctx.fillRect(W*(.73 + i*.07), H*.3, 8, 10); } b9vRoof(ctx, W, H, T, .6); ctx.fillStyle = '#4a3a24'; ctx.fillRect(W*.4, H*.82, W*.22, H*.08); B4VB.fire(ctx, W*.12, H*.8, T, .8); } // the empty bunk-house, a far roof, the crate, the fire
+    else if (ch === 2) { for (let i=0;i<3;i++) B3VB.wagon(ctx, W*(.6 + i*.15), H*.64, .9, '#2a2016', '#6a5e48', '#1a140e'); for (let i=0;i<3;i++) B4VB.lamp(ctx, W*(.58 + i*.15), H*.5, T, 30, .3); ctx.fillStyle = '#5a4a36'; ctx.fillRect(W*.3, H*.8, W*.4, 6); } // the train loading by lamplight, the tailboard
+    else if (ch === 3) { B4VB.fire(ctx, W*.78, H*.76, T, 1.2); for (let i=0;i<5;i++) ell(ctx, W*(.08 + i*.1), H*(.72 + (i % 2)*.04), 12, 4, '#5a5040'); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(W*.04, H*.58, W*.3, 5); ell(ctx, W*.5, H*.86, W*.12, 7, '#6a6050'); } // the fire, the sick on blankets, a cart, the stone
+    else if (ch === 4) { for (let i=0;i<4;i++) B3VB.wagon(ctx, W*(.08 + i*.22), H*.64, .8, '#2a2016', '#5a5040', '#1a140e'); for (let i=0;i<3;i++) B4VB.fire(ctx, W*(.2 + i*.3), H*.72, T, .4); ctx.fillStyle = '#5a4a32'; ctx.fillRect(W*.38, H*.8, W*.24, H*.1); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(W*.38, H*.84, W*.24, 1); } // the wagons drawn in, low fires, the crate
+    else if (ch === 5) { B3VB.stars(ctx, W, H, T, 90, .6, .7, 993); B4VB.fire(ctx, W*.76, H*.8, T, .6); ell(ctx, W*.5, H*.88, W*.14, 6, '#2a241a'); for (let i=0;i<4;i++) glow(ctx, W*(.1 + i*.12), H*.62, 6, '#e08040', .3); } // stars, the dung-fire, smoothed ground, the column's other fires
+    else if (ch === 6) { ctx.fillStyle = 'rgba(120,90,60,.4)'; ell(ctx, W*.5, H*.42, W*.5, H*.08, 'rgba(120,90,60,.35)'); B3VB.dust(ctx, W*.5, H*.5, 160, 40, T, .12, 994); B7VB.grass(ctx, W, H*.66, H, 120, 'rgba(120,110,70,.5)', 0, T, 995); for (let i=0;i<12;i++) B7VB.mark(ctx, W*(.04 + i*.08), H*.66, 1.4, 'rgba(30,26,20,.85)'); ell(ctx, W*.5, H*.88, W*.1, 8, '#5a4a30'); ctx.strokeStyle = '#8a7a50'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(W*.5, H*.88, W*.1, 8, 0, 0, 7); ctx.stroke(); } // the smear on the northern sky, the line forming, the shield
+    else if (ch === 7) { B7VB.smoke(ctx, W, H*.3, T, .35, 996, 6); for (let i=0;i<4;i++){ const x = W*(.1 + i*.24); B3VB.wagon(ctx, x, H*.64, .8, '#1a120c', '#2a1e14', '#0e0a06'); B4VB.fire(ctx, x, H*.6, T, 1.1); } for (let i=0;i<5;i++) ell(ctx, W*(.2 + i*.14), H*.8, 7, 3, '#3a3634'); } // the burning wagons, smoke, shields on the ground
+    if (tiles) B5VB.tile(ctx, W*.5, H*.88, 22, visReader().id !== 'perrit'); else B6VB.card(ctx, W*.5, H*.88);
+    return {fx:W*.3, fy:H*.86, fs:2.4}; },
+});
+
+/* a far roof going in over a roofline (b9v1's last step through the shutters, and the barracks yard on the first night) */
+function b9vRoof(ctx, W, H, T, k = 1){ B9VB.rooffall(ctx, W*.14, H*.36, T, k); }
+
+/* Koryk lies sick in the cart through b9v3's first three steps; Fiddler sits at the table through b9v1 */
+{ const _df = drawFigure; drawFigure = function(ctx, kind, x, y, s, t, o = {}){
+    if (kind === 'b9v_koryk' && VIS && VIS.id === 'b9v3' && o.sick == null) o = Object.assign({}, o, {sick:VIS.step <= 2});
+    return _df(ctx, kind, x, y, s, t, o); }; }
+
 /* ============ v10.3 (David, Sun Nov 8, 2026, 8:50 PM PST): tricks that don't strike are free; three tricks become passive ============
    Loaded after every book's tricks (14x-12x) and before the boot (990).
    - FREE: a trick that doesn't strike a foe or take its turn away no longer uses the bearer's action. One free trick a squadmate a
