@@ -15,8 +15,8 @@ const srv = await server(); const br = await launch();
 const { page, errors } = await openGame(br, srv.url, { fast: true });
 const out = await page.evaluate(() => {
   try {
-    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol'), mt: () => newStateMT('Sol'), bh: () => newStateBH('Sol'), rg: () => newStateRG('Sol'), tth: () => newStateTTH('Sol') };
-    const bookOf = id => ({ b2: 'dg', b3: 'moi', b4: 'hoc', b5: 'mt', b6: 'bh', b7: 'rg', b8: 'tth' })[id.slice(0, 2)] || 'gotm';
+    const mk = { gotm: () => newState('Sol'), dg: () => newStateDG('Sol'), moi: () => newStateMOI('Sol'), hoc: () => newStateHOC('Sol'), mt: () => newStateMT('Sol'), bh: () => newStateBH('Sol'), rg: () => newStateRG('Sol'), tth: () => newStateTTH('Sol'), dod: () => newStateDOD('Sol') };
+    const bookOf = id => ({ b2: 'dg', b3: 'moi', b4: 'hoc', b5: 'mt', b6: 'bh', b7: 'rg', b8: 'tth', b9: 'dod' })[id.slice(0, 2)] || 'gotm';
     const chOf = id => +(Object.keys(CHAPTERS).find(n => CHAPTERS[n].battles && id in CHAPTERS[n].battles) || 0);
     const foe = (book, ch, diff, bid) => { if (typeof setBook === 'function') setBook(book); S = mk[book](); S.chapter = ch; S.diff = diff; B = { id: bid, def: {} };
       const u = mkFoe('bruiser', 1, 1); B = null; return { hp: u.maxhp, atk: u.atk, dmg: u.dmg[2], ac: u.ac, avg: u.dmg[0] * (u.dmg[1] + 1) / 2 + u.dmg[2] }; };
@@ -30,7 +30,7 @@ const out = await page.evaluate(() => {
       for (const d of ['story', 'soldier', 'bridgeburner']) { r[d] = foe(book, ch, d, id); r[d + '0'] = emptied(tbl, id, () => foe(book, ch, d, id)); }
       r.other = foe(book === 'gotm' ? 'dg' : 'gotm', ch, 'bridgeburner', id); r.other0 = emptied(tbl, id, () => foe(book === 'gotm' ? 'dg' : 'gotm', ch, 'bridgeburner', id)); rows.push(r); }
     // Soldier never stronger than Bridgeburner, every fight with a row
-    const ids = [...new Set([...Object.keys(SOLDIER_FIGHT), ...Object.values(BB).flatMap(t => Object.keys(t)), ...Object.keys(B5GAP_FIGHT), ...Object.keys(B6GAP), ...Object.keys(B7GAP), ...Object.keys(B8GAP)])];
+    const ids = [...new Set([...Object.keys(SOLDIER_FIGHT), ...Object.values(BB).flatMap(t => Object.keys(t)), ...Object.keys(B5GAP_FIGHT), ...Object.keys(B6GAP), ...Object.keys(B7GAP), ...Object.keys(B8GAP), ...Object.keys(B9GAP)])];
     const cap = ids.filter(id => !SOLDIER_SKIP.has(id)).map(id => { const book = bookOf(id); if (typeof setBook === 'function') setBook(book); const ch = chOf(id); return { id, s: foe(book, ch, 'soldier', id), b: foe(book, ch, 'bridgeburner', id) }; });
     return { rows, cap };
   } catch (e) { return { err: e.stack.split('\n').slice(0, 3).join(' | ') }; }

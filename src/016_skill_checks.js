@@ -194,7 +194,7 @@ function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === '
    Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
 const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
 /* the chapter's key flag (c3_key, b2_c3_key, b3_c3_key); when a choice sets it, a low chord marks the moment (v6.8.0) */
-const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : S.book === 'bh' ? 'b6_' : S.book === 'rg' ? 'b7_' : S.book === 'tth' ? 'b8_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
+const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : S.book === 'bh' ? 'b6_' : S.book === 'rg' ? 'b7_' : S.book === 'tth' ? 'b8_' : S.book === 'dod' ? 'b9_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
 function keyWatch(fn){ const k = keyFlag(), was = k && S.f ? S.f[k] : undefined; fn(); if (k && S && S.f && !was && S.f[k]) AUDIO.play('choice'); }
 function runFx(c){
   if (!c.fx) return;

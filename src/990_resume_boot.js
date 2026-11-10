@@ -66,6 +66,8 @@ function start(){
    typeof B7CH5 !== 'undefined' && B7CH5, typeof B7CH6 !== 'undefined' && B7CH6, typeof B7CH7 !== 'undefined' && B7CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'rg'); }); // its chapters are const B7CH1..B7CH7 (121-127)
   [typeof B8CH1 !== 'undefined' && B8CH1, typeof B8CH2 !== 'undefined' && B8CH2, typeof B8CH3 !== 'undefined' && B8CH3, typeof B8CH4 !== 'undefined' && B8CH4, // Book Eight: Time Served (140);
    typeof B8CH5 !== 'undefined' && B8CH5, typeof B8CH6 !== 'undefined' && B8CH6, typeof B8CH7 !== 'undefined' && B8CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tth'); }); // its chapters are const B8CH1..B8CH7 (141-147)
+  [typeof B9CH1 !== 'undefined' && B9CH1, typeof B9CH2 !== 'undefined' && B9CH2, typeof B9CH3 !== 'undefined' && B9CH3, typeof B9CH4 !== 'undefined' && B9CH4, // Book Nine: Dust on the Boots (160);
+   typeof B9CH5 !== 'undefined' && B9CH5, typeof B9CH6 !== 'undefined' && B9CH6, typeof B9CH7 !== 'undefined' && B9CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'dod'); }); // its chapters are const B9CH1..B9CH7 (161-167)
   showTitle();
   requestAnimationFrame(loop);
 }

@@ -1,7 +1,7 @@
 /* ============ figure sprites ============ */
 /* draws a ~32px-tall figure centred at (cx, baseline cy). s = scale, dir = facing */
 function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
-  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg')) && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt')) && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
+  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg')) && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt')) && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
   const dir = o.dir || 1, bob = o.still ? 0 : Math.sin(t/420 + (o.phase||0)) * .6 * s;
   ctx.save(); ctx.translate(cx, cy); ctx.scale(dir * s, s); ctx.translate(0, bob);
   ctx.globalAlpha = o.alpha ?? 1;
