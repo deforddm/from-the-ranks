@@ -99223,13 +99223,56 @@ const b9Shorttail = u => !!(u && u.side === 'e' && /^b9_l?nahruk/.test(String(u.
 /* the allies grow with the squad, as Book Seven's do */
 { const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
     if (['b9_heavy', 'b9_escort', 'b9_bluerose'].includes(k)) { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b9reg = true; } return u; }; }
-/* ---- Book Nine's balance tables: empty on purpose. The balance step fills them and goes to David first (the Nov 6 targets): B9SOLDIER
-   rows join SOLDIER_FIGHT (Soldier, by fight id); B9GAP is Bridgeburner's per-fight boost ({ac +, atk +, hp ×, dmg +, mv +}, as B8GAP);
-   B9GAP_ROW, once set, is the row a b9_ fight without its own row gets. ---- */
-const B9SOLDIER = {};
+/* ---- Book Nine's balance tables (v12.0, docs/v12.0-balance.md; David, Nov 10, 2026: "tune Book Nine to the series targets, Book Nine
+   tables only"). B9SOLDIER rows join SOLDIER_FIGHT (Soldier only, by fight id), tuned to about 90% won first try; the first fight of each
+   squad's book (b9_c1_looters, the Third; b9_c2_drill, the Letherii) and the survive fights (b9_c2_drill, b9_c4_herd, b9_c6_train,
+   b9_c6_dusk, b9_c7_dark) have none and stay near 100%. B9GAP is Bridgeburner's per-fight boost ({ac +, atk +, hp ×, dmg +}, as B8GAP),
+   tuned to about 75-80% won; B9GAP_ROW is the row a b9_ fight without its own row gets. Win % / health lost %: smart bot, first try,
+   20 runs (tools/balance.mjs --book=dod). ---- */
+const B9SOLDIER = {
+  b9_c1_stores:{ac:9, atk:10, hp:5.9, dmg:12}, // 90% won, 32% health lost
+  b9_c1_brawl:{ac:12, atk:12, hp:7.0, dmg:14}, // 85% won, 36% health lost
+  b9_c2_bout:{ac:6, atk:6, hp:4.0, dmg:8}, // 100% won, 21% health lost
+  b9_c2_wagons:{ac:5, atk:5, hp:3.5, dmg:7}, // 85% won, 37% health lost
+  b9_c3_farm:{ac:8, atk:8, hp:5.0, dmg:10}, // 90% won, 21% health lost
+  b9_c3_dogs:{ac:10, atk:10, hp:6.0, dmg:12}, // 95% won, 30% health lost
+  b9_c3_road:{ac:6, atk:7, hp:4.2, dmg:9}, // 80% won, 43% health lost (a cliff: 100% a hair easier)
+  b9_c4_raid:{ac:3, atk:3, hp:2.5, dmg:5}, // 100% won, 31% health lost
+  b9_c4_forage:{ac:4, atk:5, hp:3.1, dmg:6}, // 90% won, 30% health lost
+  b9_c5_cache:{ac:9, atk:10, hp:5.75, dmg:12}, // 90% won, 26% health lost
+  b9_c5_bull:{ac:20, atk:20, hp:11.0, dmg:22}, // 95% won, 14% health lost
+  b9_c5_dogs:{ac:11, atk:11, hp:6.5, dmg:13}, // 85% won, 40% health lost
+  b9_c6_line:{ac:3, atk:4, hp:2.7, dmg:6}, // 85% won, 51% health lost
+  b9_c6_gap:{ac:7, atk:8, hp:4.75, dmg:10}, // 85% won, 46% health lost
+  b9_c7_rearguard:{ac:2, atk:2, hp:1.8, dmg:4}, // 90% won, 30% health lost (mortal); 0.6 dead a fight
+  b9_c7_trail:{ac:14, atk:14, hp:8.0, dmg:16}, // 100% won, 14% health lost
+};
 Object.assign(SOLDIER_FIGHT, B9SOLDIER);
-let B9GAP_ROW = null;
-const B9GAP = {};
+let B9GAP_ROW = {ac:5, atk:6, hp:3.75, dmg:8}; // a b9_ fight without its own row (about the book's middle row)
+const B9GAP = {
+  b9_c1_looters:{ac:7, atk:7, hp:4.5, dmg:9}, // 85% won, 35% health lost (the Third's first fight)
+  b9_c1_stores:{ac:7, atk:7, hp:4.5, dmg:9}, // 85% won, 35% health lost
+  b9_c1_brawl:{ac:9, atk:10, hp:5.75, dmg:12}, // 70% won, 55% health lost
+  b9_c2_drill:{ac:17, atk:18, hp:9.75, dmg:20}, // 100% won, 82% health lost (survive 4)
+  b9_c2_bout:{ac:5, atk:5, hp:3.6, dmg:7}, // 85% won, 39% health lost
+  b9_c2_wagons:{ac:4, atk:4, hp:3.0, dmg:6}, // 75% won, 57% health lost
+  b9_c3_farm:{ac:6, atk:6, hp:4.0, dmg:8}, // 75% won, 34% health lost
+  b9_c3_dogs:{ac:7, atk:8, hp:4.75, dmg:10}, // 80% won, 43% health lost
+  b9_c3_road:{ac:4, atk:5, hp:3.25, dmg:7}, // 70% won, 50% health lost
+  b9_c4_herd:{ac:19, atk:20, hp:10.75, dmg:22}, // 80% won, 81% health lost (survive 4)
+  b9_c4_raid:{ac:2, atk:2, hp:2.0, dmg:4}, // 60% won, 67% health lost (72% pooled over 40)
+  b9_c4_forage:{ac:3, atk:4, hp:2.75, dmg:6}, // 80% won, 43% health lost
+  b9_c5_cache:{ac:7, atk:7, hp:4.5, dmg:9}, // 85% won, 29% health lost
+  b9_c5_bull:{ac:19, atk:19, hp:10.5, dmg:21}, // 90% won, 20% health lost
+  b9_c5_dogs:{ac:8, atk:9, hp:5.25, dmg:11}, // 75% won, 51% health lost
+  b9_c6_line:{ac:2, atk:2, hp:2.1, dmg:4}, // 80% won, 56% health lost
+  b9_c6_train:{ac:19, atk:20, hp:10.75, dmg:22}, // 100% won, 53% health lost (survive 5)
+  b9_c6_gap:{ac:5, atk:6, hp:3.75, dmg:8}, // 85% won, 42% health lost
+  b9_c6_dusk:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 7% health lost (survive 4)
+  b9_c7_rearguard:{ac:0, atk:1, hp:1.25, dmg:3}, // 90% won, 31% health lost (mortal); 1.0 dead a fight
+  b9_c7_dark:{ac:19, atk:20, hp:10.75, dmg:22}, // 100% won, 47% health lost (survive 5)
+  b9_c7_trail:{ac:12, atk:13, hp:7.25, dmg:15}, // 95% won, 37% health lost
+};
 const b9Gap = () => { if (!b9On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B9GAP[id]) || (id && /^b9_/.test(id) ? B9GAP_ROW : null); };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b9Gap(); if (!g) return u;

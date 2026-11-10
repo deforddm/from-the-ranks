@@ -20,7 +20,7 @@ const out = await page.evaluate(() => {
     const chOf = id => +(Object.keys(CHAPTERS).find(n => CHAPTERS[n].battles && id in CHAPTERS[n].battles) || 0);
     const foe = (book, ch, diff, bid) => { if (typeof setBook === 'function') setBook(book); S = mk[book](); S.chapter = ch; S.diff = diff; B = { id: bid, def: {} };
       const u = mkFoe('bruiser', 1, 1); B = null; return { hp: u.maxhp, atk: u.atk, dmg: u.dmg[2], ac: u.ac, avg: u.dmg[0] * (u.dmg[1] + 1) / 2 + u.dmg[2] }; };
-    const emptied = (tbl, id, fn) => { const keep = tbl[id]; delete tbl[id]; try { return fn(); } finally { tbl[id] = keep; } };
+    const emptied = (tbl, id, fn) => { const keep = tbl[id], row9 = B9GAP_ROW; delete tbl[id]; if (tbl === B9GAP) B9GAP_ROW = null; try { return fn(); } finally { tbl[id] = keep; B9GAP_ROW = row9; } }; // B9GAP_ROW would stand in for an emptied B9GAP row
     const BB = { gotm: B1GAP, dg: B2GAP, moi: B3GAP_FIGHT, hoc: B4GAP_FIGHT, dod: B9GAP }; // Book Nine's B9GAP (v12.0) checked row by row too
     const rows = [];
     for (const id of Object.keys(SOLDIER_FIGHT)) { const book = bookOf(id); if (typeof setBook === 'function') setBook(book); const ch = chOf(id), r = { id, book, ch, kind: 'S', row: { ...SOLDIER_FIGHT[id] } };
