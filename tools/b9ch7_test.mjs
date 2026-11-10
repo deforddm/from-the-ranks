@@ -112,6 +112,11 @@ const r = await page.evaluate(async () => {
     hold:vis('b9_c7_hold').filter(c => c.onward).every(c => c.tag === 'mortal' && /stays down/.test(tt(c))) && /stays down/.test(DLG.b9_c7_hold().txt), pre:/stays down/.test(BATTLES.b9_c7_rearguard.preText()), s2:/stays down/.test(BATTLES.b9_c7_rearguard.stage2.text())};
   { const sn = JSON.stringify(S); near('b9_c7_line', /Lock shields/, 'haddat'); out.line.near = ((S.bruised || {}).haddat || 0) > 0; restore(sn, 'b9_c7_rear'); }
   made('b9_c7_line', /Lock shields/, 'haddat'); out.line.locked = S.f.b9_c7_locked === 1;
+  /* the column's pot before the rearguard (David, Nov 10): Hold tops the Third's Rations up to 2, never lowers them; the fight starts on it */
+  { const sn = JSON.stringify(S), sb = startBattle; out.pot = {};
+    try { for (const r of [0, 1, 2, 4]) { S.b9r.n = r; const txt = DLG.b9_c7_hold().txt; let at = null; startBattle = id => { at = {id, n:b9Rations()}; };
+        take('b9_c7_hold', /^Hold/); out.pot[r] = {at:at && at.id === 'b9_c7_rearguard' ? at.n : null, said:/column's pot/.test(txt), lo:S.b9r.lo}; restore(sn, 'b9_c7_rear'); } }
+    finally { startBattle = sb; } restore(sn, 'b9_c7_rear'); }
   /* the mortal fight: mortal, death checks off, the battle log says so; Mirrel falls in its second ground and stays down */
   const snapM = JSON.stringify(S);
   out.m = await force('b9_c7_rearguard', {surprise:'p'}, 'mirrel');
@@ -205,6 +210,9 @@ s.ph === 1 && s.thallo && s.fireOpt && s.noLine && s.orders && s.sign && s.html 
 reg.near && reg.ok && cart.rations && cart.down === 1 && cart.lost && cart.ok && sap.one && sap.once && sap.near ? ok('the regulars (a bruise for its "yes, but"); the surgeons\' cart (rations:true; its "yes, but" is the chapter\'s ration −1); the sappers\' cusser, once, and a second for a sharper') : no('phase 1 ' + JSON.stringify({reg, cart, sap}));
 wit.notNow && wit.each && wit.own && wit.put ? ok('the Witness before the dark: each other, our own witness (kept), "they put us here" (doubt); Not now records nothing; each leads on to the mortal line') : no('witness ' + JSON.stringify(wit));
 line.sign && line.tags && line.notNow && line.html && line.hold && line.pre && line.s2 && line.near && line.locked ? ok('the mortal fight is signposted before it starts: the line, every step into it ("a mortal fight: whoever falls here stays down"), the hold, the battle\'s preText and its second ground all say so; locking the shields (a crushed hand for its "yes, but")') : no('signpost ' + JSON.stringify(line));
+const pot = r.pot || {};
+[0, 1].every(n => pot[n] && pot[n].at === 2 && pot[n].said) && pot[2] && pot[2].at === 2 && !pot[2].said && pot[4] && pot[4].at === 4 && !pot[4].said
+  ? ok('the column\'s pot before the rearguard: Hold tops the Third up to 2 Rations from 0 or 1 (and says so), leaves 2 and 4 alone; the fight starts on it') : no('pot ' + JSON.stringify(pot));
 m.started && m.mortal && !m.death && m.stage2 && m.inStage2 && m.mortal2 && !m.death2 && m.allies === 2 && m.foes === 4 && /stays down/.test(m.log) && m.dead && m.gone && m.named && m.fell === 'mirrel' && m.ph === 2 && m.area === 'b9_c7_dark' && m.done && m.lull
   ? ok('the rearguard is MORTAL: death checks off in both grounds (four short-tails, two heavies beside the Third; a heavy and two more at dusk); the battle says whoever falls stays down; Mirrel, downed in the second ground, is dead (S.dead, chapter 7), off the roll and named after; on into the dark') : no('mortal ' + JSON.stringify(m).slice(0, 1000));
 rd.offered && rd.notNow && rd.drawn === 1 && rd.reader === 'marrow' && rd.inPool && rd.readNotNow && rd.cardNode === 'b9_c7_card' && rd.cardBack === 'b9_c7_lull' && rd.where && rd.again ? ok('the reading opens at the first halt after dark: Marrow draws from B9POOL[7] on the plain after dark, by a burning wagon; the card node is the visions pass\'s hook; back to the line; offered once') : no('reading ' + JSON.stringify(rd));

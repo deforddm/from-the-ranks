@@ -521,8 +521,8 @@ This is the rearguard. It holds until dark. <b>Whoever falls here stays down.</b
 
 ${b97Mates().length ? `${b97And(b97Mates().map(NAME))} ${b97Mates().length > 1 ? 'are' : 'is'} in the line with you.` : 'You are in the line alone, with the heavies of the next files on either side.'} The heavies along the stretch go quiet, all at once, the way a crowd does. Somebody at the far end says the old god's name out of habit, and nobody answers it.
 
-Whoever falls here stays down.`,
-      ch:[{t:'Hold. (a mortal fight: whoever falls here stays down)', tag:'mortal', onward:true, go:()=>startBattle('b9_c7_rearguard', S.f.b9_c7_locked ? {surprise:'p'} : {})},
+Whoever falls here stays down.${b9Rations() < B97_POT ? `\n\nA heavy comes down the back of the line with the column's pot and a ladle, and the Third eats what is in it standing up, out of its helms. It is not much. It is more than the Third had.` : ''}`,
+      ch:[{t:'Hold. (a mortal fight: whoever falls here stays down)', tag:'mortal', onward:true, go:()=>{ b97Pot(); startBattle('b9_c7_rearguard', S.f.b9_c7_locked ? {surprise:'p'} : {}); }},
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ======== after the rearguard: the fallen said once, headline; then phase 2 ======== */
@@ -803,6 +803,9 @@ ${b97Fell().length ? `The Third is shorter by ${numw(b97Fell().length)} than it 
 /* the rearguard is done: on into the dark (phase 2) */
 function b97ToDark(){ S.f.b9_c7_ph = 2; if (S.f.sgtScar) S.f.b9_c7_scarSaid = 1; }
 /* a line on hunger before the mortal fight (the engine takes the health; this only says so) */
+/* the column's pot before the rearguard (David, Nov 10, 2026): the Third goes into the line on at least 2 Rations; never lowers them */
+const B97_POT = 2;
+function b97Pot(){ const r = b9Rations(); if (r < B97_POT) b9Ration(B97_POT - r, 'the column\'s pot, before the rearguard'); return b9Rations(); }
 function b97Hunger(){ const t = b9RatTier(); return t === 'short' ? '\n\nThe Third is on short rations, and has been. It will feel it out there.' : t === 'hungry' || t === 'starving' ? '\n\nThe Third is on half a ration and less, and has been for days. Every one of it will feel it out there.' : ''; }
 
 /* ============ the end of Book Nine: both squads (37's pages, extended below for the Letherii's road and pages and Where the books meet) ============ */
