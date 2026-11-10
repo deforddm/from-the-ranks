@@ -47,16 +47,42 @@
   /* the foreground: one soldier of the column, close, walking away east after it, back to us: a pack, a cloak, a spear over the
      shoulder, and the boots and leggings grey with dust to the knee, one heel lifting to go on */
   s += `<path d="M0 ${H} L0 830 Q300 800 620 815 Q760 822 900 ${H} Z" fill="#2a2018" opacity=".7"/>`;
+  /* (David, Nov 10: "not able to tell it was a soldier") redrawn as a clear figure from behind: helm, shoulders, arms, cloak, pack and
+     bedroll, a spear on the right shoulder, legs mid-stride, the sun behind us rimming the left edges, and the long shadow thrown ahead */
+  s += `<defs><linearGradient id="k9cloak" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a6248"/><stop offset=".35" stop-color="#4a3a2a"/><stop offset="1" stop-color="#1c150e"/></linearGradient>
+<linearGradient id="k9leg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2018"/><stop offset=".45" stop-color="#3a3024"/><stop offset=".62" stop-color="#8a7c66"/><stop offset="1" stop-color="#a89a80"/></linearGradient>
+<linearGradient id="k9pack" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a7254"/><stop offset=".4" stop-color="#5a4632"/><stop offset="1" stop-color="#2a2016"/></linearGradient>
+<linearGradient id="k9helm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8b898"/><stop offset=".35" stop-color="#7a7262"/><stop offset="1" stop-color="#2a2620"/></linearGradient></defs>`;
+  /* the long shadow, thrown ahead toward the column */
+  s += `<path d="M300 880 L372 880 Q520 790 640 712 L620 706 Q470 778 300 880 Z" fill="#140f0a" opacity=".45"/>`;
   s += `<g class="k9-heat"><g transform="translate(330 880)">
-<path d="M-26 -230 L-44 -120 L-58 -10 L-30 -10 L-16 -120 L-6 -200 Z" fill="#241c14"/><path d="M8 -200 L26 -120 L58 -26 L84 -36 L48 -126 L30 -230 Z" fill="#1e1710"/>
-<path d="M-58 -70 L-30 -70 L-30 -10 L-60 -10 Z" fill="#9a8a6e"/><path d="M-64 -12 L-22 -12 L-14 4 L-66 4 Z" fill="#8a7a60"/><path d="M-66 4 L-14 4" stroke="#0e0a06" stroke-width="4"/>
-<path d="M48 -86 L72 -96 L86 -40 L62 -30 Z" fill="#a8987a"/><path d="M58 -30 L92 -44 L100 -30 L64 -16 Z" fill="#8a7a60"/>
-<path d="M-48 -260 Q-54 -330 -40 -380 L42 -380 Q58 -330 50 -250 Q44 -214 34 -200 L-34 -200 Q-46 -214 -48 -260 Z" fill="#3a3024"/>
-<path d="M-50 -250 Q0 -232 50 -246 L46 -214 Q0 -200 -44 -216 Z" fill="#2a2218"/>
-<rect x="-40" y="-372" width="80" height="96" rx="12" fill="#4a3c2c"/><rect x="-36" y="-368" width="72" height="10" fill="#5a4a36"/><path d="M-40 -300 L40 -300" stroke="#2a2016" stroke-width="3"/>
-<rect x="-12" y="-420" width="24" height="26" rx="5" fill="#2a2218"/><path d="M-22 -402 Q0 -440 22 -402 Z" fill="#5a5448"/><rect x="-23" y="-404" width="46" height="5" fill="#3a3630"/>
-<path d="M30 -390 L110 -760" stroke="#2e2216" stroke-width="7"/><path d="M106 -752 L118 -800 L120 -748 Z" fill="#a8a090"/></g>
-<g transform="translate(330 880)" opacity=".5"><path d="M-62 -70 Q-46 -64 -28 -70 M50 -84 Q62 -90 74 -96" stroke="#d0c0a0" stroke-width="3" fill="none"/></g></g>`;
+<!-- the back leg, heel lifting -->
+<path d="M14 -268 Q30 -190 44 -120 Q52 -80 64 -40 L92 -50 Q80 -96 72 -132 Q60 -200 52 -268 Z" fill="url(#k9leg)"/>
+<path d="M60 -44 L94 -56 Q104 -40 104 -28 L66 -14 Q58 -24 60 -44 Z" fill="#6a5c48"/><path d="M66 -14 L104 -28" stroke="#140f0a" stroke-width="4"/>
+<!-- the front leg, planted -->
+<path d="M-40 -268 Q-46 -190 -48 -120 Q-50 -70 -52 -26 L-20 -26 Q-18 -76 -12 -126 Q-4 -196 2 -268 Z" fill="url(#k9leg)"/>
+<path d="M-56 -30 L-18 -30 Q-12 -14 -10 0 L-62 0 Q-62 -16 -56 -30 Z" fill="#6a5c48"/><path d="M-64 0 L-8 0" stroke="#140f0a" stroke-width="5"/>
+<!-- the left arm, hanging and swinging a little out -->
+<path d="M-78 -470 Q-100 -420 -104 -360 Q-106 -330 -98 -306 L-80 -310 Q-84 -340 -78 -380 Q-72 -420 -58 -454 Z" fill="#3a2e22"/><ellipse cx="-90" cy="-300" rx="12" ry="14" fill="#5a4636"/>
+<!-- the body and the cloak from the shoulders to mid-thigh, its hem ragged, swinging -->
+<path d="M-78 -478 Q-82 -500 -60 -506 L60 -506 Q84 -500 80 -476 Q90 -380 88 -300 Q92 -250 84 -220 L66 -228 L54 -212 L36 -224 L18 -208 L0 -222 L-18 -206 L-36 -222 L-54 -210 L-70 -226 L-86 -214 Q-92 -260 -88 -310 Q-90 -390 -78 -478 Z" fill="url(#k9cloak)"/>
+<path d="M-40 -440 Q-46 -340 -50 -230 M0 -444 Q2 -340 0 -226 M40 -440 Q46 -340 52 -232" stroke="#140f0a" stroke-width="3" fill="none" opacity=".45"/>
+<!-- the pack on the upper back, the bedroll on top, a waterskin at the side -->
+<rect x="-46" y="-468" width="92" height="104" rx="12" fill="url(#k9pack)" stroke="#140f0a" stroke-width="3"/><path d="M-46 -420 L46 -420" stroke="#140f0a" stroke-width="3"/><rect x="-10" y="-432" width="20" height="16" rx="3" fill="#2a2016"/>
+<rect x="-64" y="-500" width="128" height="34" rx="17" fill="#8a7a5a" stroke="#140f0a" stroke-width="3"/><path d="M-30 -500 L-30 -466 M30 -500 L30 -466" stroke="#3a2e1e" stroke-width="5"/>
+<path d="M48 -400 Q66 -396 66 -372 Q64 -350 50 -350 Q40 -366 48 -400 Z" fill="#6a5034" stroke="#140f0a" stroke-width="2"/>
+<!-- the right arm raised to the spear on the shoulder -->
+<path d="M66 -490 Q92 -470 100 -440 Q104 -420 96 -404 L80 -414 Q84 -436 74 -458 Z" fill="#3a2e22"/><ellipse cx="92" cy="-404" rx="11" ry="12" fill="#5a4636"/>
+<!-- the head and the helm -->
+<path d="M-16 -506 L16 -506 L14 -526 L-14 -526 Z" fill="#4a3a2c"/>
+<ellipse cx="0" cy="-548" rx="30" ry="30" fill="#3a2e22"/>
+<path d="M-34 -548 Q-34 -592 0 -594 Q34 -592 34 -548 Z" fill="url(#k9helm)"/><path d="M-40 -548 L40 -548 Q40 -540 34 -538 L-34 -538 Q-40 -540 -40 -548 Z" fill="#5a5448"/>
+<path d="M0 -594 L0 -548" stroke="#2a2620" stroke-width="3"/>
+<!-- the spear: shaft from behind the shoulder through the right hand, up and forward -->
+<path d="M64 -360 L176 -830" stroke="#2e2216" stroke-width="8" stroke-linecap="round"/><path d="M170 -820 L186 -878 L190 -818 Z" fill="#c8c0b0" stroke="#3a3630" stroke-width="2"/>
+<!-- the sun behind us, rimming the left edges -->
+<path d="M-82 -470 Q-92 -390 -88 -310 M-62 -506 L-20 -506 M-34 -548 Q-34 -590 -4 -594 M-46 -466 L-46 -380 M-64 -490 Q-66 -478 -60 -468" stroke="#ffd8a0" stroke-width="3" fill="none" opacity=".55"/>
+</g></g>`;
   /* dust kicked up round the boots */
   for (let i = 0; i < 10; i++) s += `<ellipse cx="${f1(250 + h(i, 105) * 220)}" cy="${f1(872 + h(i, 106) * 20)}" rx="${f1(26 + h(i, 107) * 34)}" ry="${f1(5 + h(i, 108) * 5)}" fill="#b89a72" opacity="${f1(.2 + h(i, 109) * .16)}"/>`;
   s += `</svg>`;
