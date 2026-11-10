@@ -16,7 +16,7 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   out.caps = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh', 'tth'].map(b => { S = {book:b}; return b + ':' + lvCap(); }).join(' ');
   S = {book:'dod', thread:'t'}; out.dodT = lvCap(); S = {book:'dod', thread:'l'}; out.dodL = lvCap();
   S = {book:'tcg', thread:'t'}; out.capT = lvCap(); S = {book:'tcg', thread:'l'}; out.capL = lvCap();
-  out.levels = LEVELS.length; out.lv = [LEVELS[24], LEVELS[27]].join(','); out.dmg = [24, 25, 28].map(l => lvDmg(l)).join(','); out.ac = [24, 28].map(l => lvAc(l)).join(',');
+  out.levels = LEVELS.length; out.lv = [LEVELS[24], LEVELS[27]].join(','); out.dmg = [24, 25, 28].map(l => lvDmg(l)).join(','); out.ac = [24, 26, 27].map(l => lvAc(l)).join(',');
   out.coming = !!BOOKS.tcg.coming; out.shelf = shelfBooks().map(b => b.id).join(','); out.tcgCh = Object.keys((BOOKSNAP.tcg && BOOKSNAP.tcg.ch) || {}).length;
   out.book = {n:BOOKS.tcg.n, word:BOOKS.tcg.word, name:BOOKS.tcg.name, title:BOOKS.tcg.title, tag:BOOKS.tcg.tag, h1:BOOKS.tcg.h1.join(' ').trim()};
   /* stub chapters, so startChapter and the finale run (the real ones register from 181-187) */
@@ -51,9 +51,9 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   /* the beats: one a chapter, the first answer stands, kept +1 / doubt −1 */
   S = newStateTCG('Hask', 'Brann'); S.chapter = 1; const w0 = b10Wit(); out.beat = {a:b10Beat('kept', 'the fire'), b:b10Beat('doubt'), w:b10Wit() - w0, bad:b10Beat('maybe')};
   S.chapter = 3; b10Beat('doubt'); out.beat.c = b10BeatCount('t').kept + ':' + b10BeatCount('t').doubt; out.beat.w2 = b10Wit() - w0; out.beat.none = (() => { const s0 = S; S = {book:'dod'}; const v = b10Beat('kept'); S = s0; return v; })();
-  /* the fight table is neutral: no squadmate's to hit moves with Witness (David rules first) */
+  /* the fight table (David, Nov 10): hollow -1 to hit, witnessed +1, the middle tiers 0 */
   S = newStateTCG('Hask', 'Brann'); S.chapter = 1; const a5 = mkParty('haddat', 0, 0).atk; S.b10w.n = 0; const a0 = mkParty('haddat', 0, 0).atk; S.b10w.n = 10; const a10 = mkParty('haddat', 0, 0).atk;
-  out.neutral = a5 === a0 && a5 === a10 && Object.values(B10_WITFIGHT).every(v => v === 0);
+  out.neutral = a0 === a5 - 1 && a10 === a5 + 1 && B10_WITFIGHT.doubt === 0 && B10_WITFIGHT.holding === 0 && B10_WITFIGHT.kept === 0;
   /* thirst */
   S = newStateTCG('Hask', 'Brann'); S.chapter = 3; const th = b10ThirstPick(); out.thirst = {pick:!!th && th !== 'sgt', given:b10Thirst(th), hit:(injuryOf(th) || {}).hit, again:b10Thirst(th), sgt:b10Thirst('sgt')};
   /* the gods */
@@ -159,8 +159,8 @@ const ui = await page.evaluate(async () => { const wait = ms => new Promise(res 
     o.hud = /Witness/.test((document.getElementById('chainp') || {}).textContent || '') || true;
   } catch(e) { o.err = String(e && e.stack || e); } return o; });
 if (r.err) ok(false, 'threw: ' + r.err); else {
-  ok(r.caps === 'gotm:8 dg:8 moi:15 hoc:15 mt:8 bh:18 tth:21' && r.dodT === 24 && r.dodL === 16 && r.capT === 28 && r.capL === 20 && r.levels === 28 && r.lv === '7510,8500' && r.dmg === '8,8,8' && r.ac === '6,6',
-    `caps: the others unchanged (${r.caps}; dod ${r.dodT}/${r.dodL}); Book Ten 28 / 20; levels to 28 (330 a level); no new damage or armour past 24 (neutral; David rules)`);
+  ok(r.caps === 'gotm:8 dg:8 moi:15 hoc:15 mt:8 bh:18 tth:21' && r.dodT === 24 && r.dodL === 16 && r.capT === 28 && r.capL === 20 && r.levels === 28 && r.lv === '7510,8500' && r.dmg === '8,9,9' && r.ac === '6,6,7',
+    `caps: the others unchanged (${r.caps}; dod ${r.dodT}/${r.dodL}); Book Ten 28 / 20; levels to 28 (330 a level); +1 damage at 25 and +1 armour at 27 (David, Nov 10)`);
   ok((r.tcgCh ? !r.coming && r.shelf.includes('tcg') : r.coming && !r.shelf.includes('tcg')) && r.book.n === 10 && r.book.word === 'Ten' && r.book.name === 'Witnessed' && r.book.title === 'The Crippled God' && /Somebody should/.test(r.book.tag) && r.book.h1 === 'Witnessed', 'the shelf: Book Ten, Witnessed, beside The Crippled God, coming until a chapter registers: ' + JSON.stringify(r.book));
   const f = r.fresh; ok(f.book === 'tcg' && f.thread === 't' && f.name === 'Hask' && f.lvl === 24 && f.squad === 'sgt,haddat,tangle,marrow,mirrel' && f.camp === 'brask,tegra' && f.sathi && f.wit === 5 && f.tier === 'holding' && f.key === 'b10_c1_key' && f.core === 'sgt,haddat,sathi,tangle,marrow' && f.patron === 'Treach'
     && f.lName === 'Brann' && f.lLvl === 16 && f.lSquad === 'sgt,tobet,thegg,perrit,ammet' && f.lCamp === 'brennet,kaedra' && f.lWit === 5 && f.lMun === 0 && f.lDebt && f.sgtBio && f.look === 'dg' && f.roads === 'adjunct,escort'
@@ -171,7 +171,7 @@ if (r.err) ok(false, 'threw: ' + r.err); else {
     'Chapter 3 swaps the Third back and the wear takes 1 Witness, once, leaving the Letherii\'s alone; in Chapter 4 the Errant has gone quiet (no boon) and the Letherii\'s wear: ' + JSON.stringify(b) + ` ${r.gods4} ${r.lWear}`);
   const w = r.wit; ok(w.e5 === 0 && w.e9 === 2 && w.e7 === 1 && w.e3 === -1 && w.e0 === -2 && w.p0 === -1 && w.p3 === 0 && w.low === 0 && w.hi === 9 && w.tiers === 'hollow,doubt,holding,kept,witnessed' && w.noted && w.tierNote && w.up === 7 && w.down === 9 && w.html && !w.open && w.open2,
     'Witness: noted, clamped 0..10, tiers; the edge on witness:true checks (+2 witnessed … −2 hollow) and "Nothing to march for" on every other check when hollow; Kolanse opens at holding: ' + JSON.stringify(w));
-  const bt = r.beat; ok(bt.a === 'kept' && bt.b === 'kept' && bt.w === 1 && bt.bad === null && bt.c === '1:1' && bt.w2 === 0 && bt.none === null && r.neutral, 'the beats: one a chapter, the first answer stands, kept +1 and doubt −1, nothing outside Book Ten; the fight table neutral: ' + JSON.stringify(bt) + ' neutral ' + r.neutral);
+  const bt = r.beat; ok(bt.a === 'kept' && bt.b === 'kept' && bt.w === 1 && bt.bad === null && bt.c === '1:1' && bt.w2 === 0 && bt.none === null && r.neutral, 'the beats: one a chapter, the first answer stands, kept +1 and doubt −1, nothing outside Book Ten; the fight table: hollow -1, witnessed +1: ' + JSON.stringify(bt) + ' neutral ' + r.neutral);
   const t = r.thirst; ok(t.pick && t.given && t.hit === 1 && !t.again && !t.sgt && r.thirstRand === false, 'thirst: a chapter gives it (−1 to hit), never twice, never the sergeant, never a bad fall: ' + JSON.stringify(t));
   const g = r.gods; ok(g.haddat === 'the Guardians of the Gate' && g.boon === 'b8gate' && g.sgt === 'Treach' && g.lsgt === 'the Errant' && g.lboon === 'errant' && g.perrit === 'the Empty Hold' && g.brune && g.haddatDod === 'the Guardians of the Gate' && g.haddatRg === 'Hood' && g.recruits,
     'the gods: Treach; the Errant in Chapter 2; Hood\'s faithful answered by the Guardians (Book Seven unchanged); the Shore quiet, no boon; no gods for the recruits: ' + JSON.stringify(g));

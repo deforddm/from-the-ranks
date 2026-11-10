@@ -140,8 +140,8 @@ function gainXP(n){
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
    Levels 4 and 8: +1 armour. And the squad's own hands get better at it: the heals and Rally grow with lvB() (31). */
 const lvB = () => Math.max(0, ((S && S.lvl) || 1) - 1);
-const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13,16,19,22].filter(k => l >= k).length; // 10 and 13: Book Three's veterans; 16: Book Six's; 19: Book Seven's Third; 22: Book Nine's Third (160)
-const lvAc = (l = (S && S.lvl) || 1) => [4,8,12,16,20,23].filter(k => l >= k).length; // 20: Book Seven's Third (120); 23: Book Nine's Third (160)
+const lvDmg = (l = (S && S.lvl) || 1) => [3,5,7,10,13,16,19,22,25].filter(k => l >= k).length; // 10 and 13: Book Three's veterans; 16: Book Six's; 19: Book Seven's Third; 22: Book Nine's Third (160); 25: Book Ten's Third (180; David, Nov 10)
+const lvAc = (l = (S && S.lvl) || 1) => [4,8,12,16,20,23,27].filter(k => l >= k).length; // 20: Book Seven's Third (120); 23: Book Nine's Third (160); 27: Book Ten's Third (180; David, Nov 10)
 /* tiers for the rest of the skills and spells: reach, duration, how hard a boss must roll to shrug it off. lvT: +1 at levels 4 and 7; lvAt(n): from level n */
 const lvT = (l = (S && S.lvl) || 1) => [4,7,11,14].filter(k => l >= k).length;
 const lvAt = n => ((S && S.lvl) || 1) >= n ? 1 : 0;

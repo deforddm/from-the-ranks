@@ -154,7 +154,7 @@ function b10Beat(v, why = '', n = (S && S.chapter) || 0){ if (!b10On() || !B10_B
 const b10BeatOf = n => (S && S.b10 && S.b10.beat && S.b10.beat['c' + n]) || null;
 function b10BeatCount(t = b10Thread()){ const w = b10Beats(), out = {kept:0, doubt:0}; Object.entries(B10BEAT).forEach(([n, th]) => { if (th === t && w['c' + n]) out[w['c' + n]]++; }); return out; }
 const B10_WITEDGE = {hollow:-2, doubt:-1, holding:0, kept:1, witnessed:2};
-const B10_WITFIGHT = {hollow:0, doubt:0, holding:0, kept:0, witnessed:0}; // to hit; neutral until David rules (notes §Witness)
+const B10_WITFIGHT = {hollow:-1, doubt:0, holding:0, kept:0, witnessed:1}; // to hit (David, Nov 10: hollow -1, witnessed +1)
 const B10_ROADNEED = {kolanse:'holding'}; // the endings Witness opens (notes §Witness: the roads)
 const b10RoadOpen = (r, t = b10Thread()) => !B10_ROADNEED[r] || B10_TIERS.indexOf(b10WitTier(b10WitOf(t))) >= B10_TIERS.indexOf(B10_ROADNEED[r]);
 { const _ef = edgesFor; edgesFor = function(c, id){ const out = _ef(c, id); if (!b10On() || !c) return out;

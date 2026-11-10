@@ -17,6 +17,13 @@ Tue Nov 10, 2026, 10:37 AM PST. The plan for Book Ten, beside *The Crippled God*
 6. **The Third's mortal fight: lent to the regulars' line** on the last nights of the crossing; it holds a stretch far from the Adjunct, Fiddler's hill and the Khundryl until Paran's relief comes over the ridge. The hill itself is never entered.
 7. **The Fourth comes with Onearm's Host from Aren**: it finds its old army at Aren and comes over the ridge with the relief onto the Third's stretch in Ch 7; how it got there is one page.
 
+## Settled after the engine (David, Tue Nov 10, 2026, 11:53 AM PST)
+
+8. **Witness in fights:** hollow −1 to hit, witnessed +1; the middle tiers nothing (`B10_WITFIGHT`).
+9. **Levels 25–28:** +1 damage at 25, +1 armour at 27 (`lvDmg`, `lvAc`).
+10. **The gods' silence:** a wiped fight still restarts, with no boon, once Hood is gone and the Errant has fled (from Ch 3).
+11. **One Forkrul Assail** leads the Kolansii in the Third's mortal fight, on its unnamed stretch; tuned to the targets at balance.
+
 ## David's questions as asked (recommendation first)
 
 1. **Who comes.** Recommended: the Third and the Letherii taking turns, as in Books Six, Seven and Nine; the Fourth (Book Eight's `east` road) lands on the Kolanse coast and joins the Third for the last chapter only. Alternatives: three squads taking turns; or the Third and the Letherii only, the Fourth never comes.
