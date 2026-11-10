@@ -17,6 +17,10 @@ Mon Nov 9, 2026, 4:45 PM PST. The plan for Book Nine, beside *Dust of Dreams* (n
 
 Standing for every book: a Deck reading (the Third) or a Tiles cast (the Letherii) with a vision through canon eyes, a trick behind a hard check, two to four items with art, a key choice, "Not now" on every onward step, a "yes, but" on every check, the title art, flavour line and patch, glossary, journal, Deeds, a finale with a fate page per squadmate and roads out, five games at the fires. The balance targets of Nov 6. Chapters one agent at a time unless David says otherwise.
 
+## Settled after the canon sheet (David, Mon Nov 9, 2026, 5:23 PM PST)
+
+6. **The Letherii are in the Nah'ruk battle** (they are the Bonehunters' "Letherii escort", W ch 23; `docs/dod-canon.md`). Their Ch 6 is the battle's day from their own stretch of line: a hard fight, not mortal; they choose their road at dusk. The Third's Ch 7 is the mortal rearguard into the dark. The canon sheet's chapter table (`docs/dod-canon.md`) replaces the draft below.
+
 ## The spine (draft, for the canon sheet to check)
 
 Marks: [T] the novel's text, [W] the wiki, [R] Reactor, [O] memory only. The canon sheet re-checks every line before any writing.
