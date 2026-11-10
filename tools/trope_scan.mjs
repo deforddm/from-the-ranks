@@ -12,7 +12,7 @@ const SRC = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'sr
 const SKIP = /(_art|art\.js|sprites|portraits|pinup|drawing|audio|canvas|tiles|interp|pathfind|utilities|sigils|backdrop|19c|19d|boot)/;
 // the book a file belongs to, by the shelf's numbering (playbook §2): 39–46 Book One, 47–58 Two, 60–69 Three, 70–79 Four, 80–89 Five
 const bookOf = f => { const n = parseInt(f, 10); if (n >= 39 && n <= 46) return 'B1'; if (n >= 47 && n <= 58) return 'B2';
-  if (n >= 60 && n <= 69) return 'B3'; if (n >= 70 && n <= 79) return 'B4'; if (n >= 80 && n <= 89) return 'B5'; if (n >= 100 && n <= 119) return 'B6'; if (n >= 120 && n <= 139) return 'B7'; if (n >= 140 && n <= 159) return 'B8'; if (n >= 160 && n <= 179) return 'B9'; return 'shared'; };
+  if (n >= 60 && n <= 69) return 'B3'; if (n >= 70 && n <= 79) return 'B4'; if (n >= 80 && n <= 89) return 'B5'; if (n >= 100 && n <= 119) return 'B6'; if (n >= 120 && n <= 139) return 'B7'; if (n >= 140 && n <= 159) return 'B8'; if (n >= 160 && n <= 179) return 'B9'; if (n >= 180 && n <= 199) return 'B10'; return 'shared'; };
 // rate budgets: hits per 10,000 words of a book's prose
 export const FAMILIES = [
   {id:'weather', name:'"weather" (as if it were weather…)', re:/\bweather\b/gi, cap:3},

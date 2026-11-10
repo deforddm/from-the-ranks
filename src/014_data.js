@@ -120,8 +120,8 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   orb:{name:'Orb',house:'Unaligned',hue:'#bdb3a3',txt:'A grey sphere hanging in the dark, with a point of light in it that isn\'t the lamp\'s.',fx:'None. It refuses her.'},
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
-const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210,4540,4870,5200,5530,5860,6190,6520,6850,7180]; // levels 1..24 (Books One, Two and Five stop at 8; Books Three and Four run 8..15; Book Six 12..18; Book Seven's Third 16..21, its Letherii 8..12; Book Eight 16..21; Book Nine's Third 19..24, its Letherii 11..16)
-const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'dod') ? (S.thread === 'l' ? 16 : 24) : (typeof S !== 'undefined' && S && S.book === 'tth') ? 21 : (typeof S !== 'undefined' && S && S.book === 'rg') ? (S.thread === 'l' ? 12 : 21) : (typeof S !== 'undefined' && S && S.book === 'bh') ? 18 : (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
+const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210,4540,4870,5200,5530,5860,6190,6520,6850,7180,7510,7840,8170,8500]; // levels 1..28 (Book Ten's Third 24..28, its Letherii 16..20; Books One, Two and Five stop at 8; Books Three and Four run 8..15; Book Six 12..18; Book Seven's Third 16..21, its Letherii 8..12; Book Eight 16..21; Book Nine's Third 19..24, its Letherii 11..16)
+const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'tcg') ? (S.thread === 'l' ? 20 : 28) : (typeof S !== 'undefined' && S && S.book === 'dod') ? (S.thread === 'l' ? 16 : 24) : (typeof S !== 'undefined' && S && S.book === 'tth') ? 21 : (typeof S !== 'undefined' && S && S.book === 'rg') ? (S.thread === 'l' ? 12 : 21) : (typeof S !== 'undefined' && S && S.book === 'bh') ? 18 : (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -187,7 +187,7 @@ const BOOKS = {
 };
 /* the books the title offers: a book whose chapters are not written yet (B.coming) stays off the shelf, the picker and Deeds (70) */
 const shelfBooks = () => Object.values(BOOKS).filter(B => !B.coming);
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}, bh:{ch:{}, end:{}, tease:{}}, rg:{ch:{}, end:{}, tease:{}}, tth:{ch:{}, end:{}, tease:{}}, dod:{ch:{}, end:{}, tease:{}}};
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}, bh:{ch:{}, end:{}, tease:{}}, rg:{ch:{}, end:{}, tease:{}}, tth:{ch:{}, end:{}, tease:{}}, dod:{ch:{}, end:{}, tease:{}}, tcg:{ch:{}, end:{}, tease:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){

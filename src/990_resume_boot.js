@@ -68,6 +68,8 @@ function start(){
    typeof B8CH5 !== 'undefined' && B8CH5, typeof B8CH6 !== 'undefined' && B8CH6, typeof B8CH7 !== 'undefined' && B8CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tth'); }); // its chapters are const B8CH1..B8CH7 (141-147)
   [typeof B9CH1 !== 'undefined' && B9CH1, typeof B9CH2 !== 'undefined' && B9CH2, typeof B9CH3 !== 'undefined' && B9CH3, typeof B9CH4 !== 'undefined' && B9CH4, // Book Nine: Dust on the Boots (160);
    typeof B9CH5 !== 'undefined' && B9CH5, typeof B9CH6 !== 'undefined' && B9CH6, typeof B9CH7 !== 'undefined' && B9CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'dod'); }); // its chapters are const B9CH1..B9CH7 (161-167)
+  [typeof B10CH1 !== 'undefined' && B10CH1, typeof B10CH2 !== 'undefined' && B10CH2, typeof B10CH3 !== 'undefined' && B10CH3, typeof B10CH4 !== 'undefined' && B10CH4, // Book Ten: Witnessed (180);
+   typeof B10CH5 !== 'undefined' && B10CH5, typeof B10CH6 !== 'undefined' && B10CH6, typeof B10CH7 !== 'undefined' && B10CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tcg'); }); // its chapters are const B10CH1..B10CH7 (181-187)
   showTitle();
   requestAnimationFrame(loop);
 }

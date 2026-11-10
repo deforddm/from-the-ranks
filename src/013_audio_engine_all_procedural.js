@@ -65,6 +65,13 @@ const AUDIO = (() => {
       inst:{title:['reed', 'cello'], calm:['cello', 'reed', 'glass'], end:['cello', 'bell', 'reed']},
       bpm:{title:48, calm:54, end:44, dread:50, battle:96, dark:84},
       pats:['K...K...', 'K..kK...', 'K.....S.', 'K.k.K..s'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X...x...'},
+    /* v13.0 Book Ten (the last: a desert of glass crossed by night, the long way round, and the end of it): the series ends in Book One's
+       key, D, one step brighter than its Phrygian (Aeolian); the thin pad of Book Two's desert, war drums slowed almost to a walk with the
+       backbeat dropped, Book One's horn for the lead, and a bell louder than Book Nine's for the barrows */
+    tcg:{scale:[0, 2, 3, 5, 7, 8, 10], root:73.42, pad:'thin', wet:.34, drum:'war', lead:'horn', bellK:1.2, // D Aeolian
+      inst:{title:['glass', 'cello'], calm:['glass', 'cello', 'flute'], end:['bell', 'glass', 'flute']},
+      bpm:{title:46, calm:52, end:42, dread:48, battle:94, dark:80},
+      pats:['K.......', 'K...K...', 'K.....S.', 'K..kK...'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X.......'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -568,6 +575,7 @@ const AUDIO = (() => {
     if (/^b5|^mt/.test(n)) return dark || /night/.test(n) ? 'river_night' : /dusk/.test(n) ? 'dusk' : 'river'; // Book Five: Lether's river country
     if (/^b6|^bh/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Six: the Odhans, until a place says otherwise
     if (/^b8|^tth/.test(n)) return /wall|burning|fire/.test(n) ? 'burning' : /lake|shore/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'lake') : /daru|gadrobi|door|city|street|morning/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /barrow/.test(n) ? 'barrow' : /camp|caravan/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /coral/.test(n) ? 'city_night' : /fields|lamatath|road/.test(n) ? (dark || /night|dusk/.test(n) ? 'night' : 'plain') : dark || /night/.test(n) ? 'night' : 'plain'; // Book Eight: Darujhistan and the road east, by the place's word
+    if (/^b10|^tcg/.test(n)) return /burning|fire/.test(n) ? 'burning' : /barrow/.test(n) ? 'barrow' : /lake/.test(n) ? 'lake' : /coast|shore|beach|ship/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'sea') : /battle|line|field|ridge|feint/.test(n) ? (dark || /night|dark/.test(n) ? 'siege_night' : 'siege') : /glass|crossing|traces/.test(n) ? (dark || /night/.test(n) ? 'desert_night' : 'desert') : /camp|train|burial|horse/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /south|column|road|march/.test(n) ? (dark || /night/.test(n) ? 'column_night' : 'column') : /kolanse|field|farm/.test(n) ? 'dusk' : dark || /night/.test(n) ? 'night' : 'plain'; // Book Ten: the glass, the long way round, the coast, the battles, the barrows
     if (/^b9|^dod/.test(n)) return /burning|fire/.test(n) ? 'burning' : /letheras|barracks|city|street/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /battle|line|dust|rearguard|field/.test(n) ? (dark || /night|dark/.test(n) ? 'siege_night' : 'siege') : /dark|retreat/.test(n) ? 'night' : /muster|camp|wagons|train/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /column|road|march/.test(n) ? (dark || /night/.test(n) ? 'column_night' : 'column') : dark || /night/.test(n) ? 'night' : 'plain'; // Book Nine: Letheras, the column, the Wastes, by the place's word
     if (/^b7|^rg/.test(n)) return /burning|fire/.test(n) ? 'burning' : /coast|shore|beach/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'sea') : /letheras|barracks|city|street/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /camp|kravos|muster/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /field|ridge|battle/.test(n) ? 'siege' : /farm|village/.test(n) ? (dark || /night/.test(n) ? 'night' : 'plain') : dark || /night/.test(n) ? 'river_night' : 'river'; // Book Seven: Lether, by the place's word
     return null;
@@ -586,8 +594,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : V.key === 'rg' ? 'sea_night' : V.key === 'tth' ? 'city_night' : V.key === 'dod' ? 'plain' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : V.key === 'rg' ? 'city_night' : V.key === 'tth' ? 'lake' : V.key === 'dod' ? 'night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : V.key === 'rg' ? 'sea_night' : V.key === 'tth' ? 'city_night' : V.key === 'dod' ? 'plain' : V.key === 'tcg' ? 'desert_night' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : V.key === 'rg' ? 'city_night' : V.key === 'tth' ? 'lake' : V.key === 'dod' ? 'night' : V.key === 'tcg' ? 'barrow' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};

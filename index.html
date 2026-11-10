@@ -808,6 +808,13 @@ const AUDIO = (() => {
       inst:{title:['reed', 'cello'], calm:['cello', 'reed', 'glass'], end:['cello', 'bell', 'reed']},
       bpm:{title:48, calm:54, end:44, dread:50, battle:96, dark:84},
       pats:['K...K...', 'K..kK...', 'K.....S.', 'K.k.K..s'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X...x...'},
+    /* v13.0 Book Ten (the last: a desert of glass crossed by night, the long way round, and the end of it): the series ends in Book One's
+       key, D, one step brighter than its Phrygian (Aeolian); the thin pad of Book Two's desert, war drums slowed almost to a walk with the
+       backbeat dropped, Book One's horn for the lead, and a bell louder than Book Nine's for the barrows */
+    tcg:{scale:[0, 2, 3, 5, 7, 8, 10], root:73.42, pad:'thin', wet:.34, drum:'war', lead:'horn', bellK:1.2, // D Aeolian
+      inst:{title:['glass', 'cello'], calm:['glass', 'cello', 'flute'], end:['bell', 'glass', 'flute']},
+      bpm:{title:46, calm:52, end:42, dread:48, battle:94, dark:80},
+      pats:['K.......', 'K...K...', 'K.....S.', 'K..kK...'], fills:['K.S.K.SS', 'K..SKSSS'], ost:'X.......'},
   };
   Object.keys(VOICES).forEach(k => VOICES[k].key = k);
   let V = VOICES.gotm;
@@ -1311,6 +1318,7 @@ const AUDIO = (() => {
     if (/^b5|^mt/.test(n)) return dark || /night/.test(n) ? 'river_night' : /dusk/.test(n) ? 'dusk' : 'river'; // Book Five: Lether's river country
     if (/^b6|^bh/.test(n)) return dark || /night/.test(n) ? 'desert_night' : /dusk/.test(n) ? 'desert_dusk' : 'desert'; // Book Six: the Odhans, until a place says otherwise
     if (/^b8|^tth/.test(n)) return /wall|burning|fire/.test(n) ? 'burning' : /lake|shore/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'lake') : /daru|gadrobi|door|city|street|morning/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /barrow/.test(n) ? 'barrow' : /camp|caravan/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /coral/.test(n) ? 'city_night' : /fields|lamatath|road/.test(n) ? (dark || /night|dusk/.test(n) ? 'night' : 'plain') : dark || /night/.test(n) ? 'night' : 'plain'; // Book Eight: Darujhistan and the road east, by the place's word
+    if (/^b10|^tcg/.test(n)) return /burning|fire/.test(n) ? 'burning' : /barrow/.test(n) ? 'barrow' : /lake/.test(n) ? 'lake' : /coast|shore|beach|ship/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'sea') : /battle|line|field|ridge|feint/.test(n) ? (dark || /night|dark/.test(n) ? 'siege_night' : 'siege') : /glass|crossing|traces/.test(n) ? (dark || /night/.test(n) ? 'desert_night' : 'desert') : /camp|train|burial|horse/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /south|column|road|march/.test(n) ? (dark || /night/.test(n) ? 'column_night' : 'column') : /kolanse|field|farm/.test(n) ? 'dusk' : dark || /night/.test(n) ? 'night' : 'plain'; // Book Ten: the glass, the long way round, the coast, the battles, the barrows
     if (/^b9|^dod/.test(n)) return /burning|fire/.test(n) ? 'burning' : /letheras|barracks|city|street/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /battle|line|dust|rearguard|field/.test(n) ? (dark || /night|dark/.test(n) ? 'siege_night' : 'siege') : /dark|retreat/.test(n) ? 'night' : /muster|camp|wagons|train/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /column|road|march/.test(n) ? (dark || /night/.test(n) ? 'column_night' : 'column') : dark || /night/.test(n) ? 'night' : 'plain'; // Book Nine: Letheras, the column, the Wastes, by the place's word
     if (/^b7|^rg/.test(n)) return /burning|fire/.test(n) ? 'burning' : /coast|shore|beach/.test(n) ? (dark || /night/.test(n) ? 'sea_night' : 'sea') : /letheras|barracks|city|street/.test(n) ? (dark || /night/.test(n) ? 'city_night' : 'city') : /camp|kravos|muster/.test(n) ? (dark || /night/.test(n) ? 'camp_night' : 'camp') : /field|ridge|battle/.test(n) ? 'siege' : /farm|village/.test(n) ? (dark || /night/.test(n) ? 'night' : 'plain') : dark || /night/.test(n) ? 'river_night' : 'river'; // Book Seven: Lether, by the place's word
     return null;
@@ -1329,8 +1337,8 @@ const AUDIO = (() => {
   function cue(kind){
     const w = where();
     switch (kind) {
-      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : V.key === 'rg' ? 'sea_night' : V.key === 'tth' ? 'city_night' : V.key === 'dod' ? 'plain' : 'wind'};
-      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : V.key === 'rg' ? 'city_night' : V.key === 'tth' ? 'lake' : V.key === 'dod' ? 'night' : 'wind'};
+      case 'title': return {mus:'title', amb:V.key === 'dg' || V.key === 'hoc' ? 'desert' : V.key === 'moi' ? 'snow' : V.key === 'mt' ? 'river_night' : V.key === 'bh' ? 'desert_night' : V.key === 'rg' ? 'sea_night' : V.key === 'tth' ? 'city_night' : V.key === 'dod' ? 'plain' : V.key === 'tcg' ? 'desert_night' : 'wind'};
+      case 'end': return {mus:'end', amb:V.key === 'dg' ? 'sea' : V.key === 'moi' || V.key === 'hoc' ? 'sea_night' : V.key === 'mt' ? 'city_night' : V.key === 'bh' ? 'sea_night' : V.key === 'rg' ? 'city_night' : V.key === 'tth' ? 'lake' : V.key === 'dod' ? 'night' : V.key === 'tcg' ? 'barrow' : 'wind'};
       case 'battle': return {mus:'battle', amb:battleAmb(w)};
       case 'dark': return w.v === 'battle' ? {mus:'dark', amb:battleAmb(w)} : {mus:'dread', amb:w.sk === 'garden_storm' ? 'storm' : placeAmb(w.sk, true) === 'barrow' ? 'barrow' : w.sk === 'b3_c7_spawn' ? 'spawn' : 'dark'};
       case 'tunnel': return {mus:'calm', amb:'tunnel'};
@@ -1506,8 +1514,8 @@ const CARDS = { // the Herald, the Crown and the Wain are added by Chapters 5, 7
   orb:{name:'Orb',house:'Unaligned',hue:'#bdb3a3',txt:'A grey sphere hanging in the dark, with a point of light in it that isn\'t the lamp\'s.',fx:'None. It refuses her.'},
   blank:{name:'The unpainted card',house:'—',hue:'#d8d0c0',txt:'No house. No figure. Gesso and grain, and nothing on it yet.',fx:'None. It isn\'t anyone\'s yet.'},
 };
-const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210,4540,4870,5200,5530,5860,6190,6520,6850,7180]; // levels 1..24 (Books One, Two and Five stop at 8; Books Three and Four run 8..15; Book Six 12..18; Book Seven's Third 16..21, its Letherii 8..12; Book Eight 16..21; Book Nine's Third 19..24, its Letherii 11..16)
-const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'dod') ? (S.thread === 'l' ? 16 : 24) : (typeof S !== 'undefined' && S && S.book === 'tth') ? 21 : (typeof S !== 'undefined' && S && S.book === 'rg') ? (S.thread === 'l' ? 12 : 21) : (typeof S !== 'undefined' && S && S.book === 'bh') ? 18 : (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
+const LEVELS = [0,100,250,450,700,1000,1400,1900,2230,2560,2890,3220,3550,3880,4210,4540,4870,5200,5530,5860,6190,6520,6850,7180,7510,7840,8170,8500]; // levels 1..28 (Book Ten's Third 24..28, its Letherii 16..20; Books One, Two and Five stop at 8; Books Three and Four run 8..15; Book Six 12..18; Book Seven's Third 16..21, its Letherii 8..12; Book Eight 16..21; Book Nine's Third 19..24, its Letherii 11..16)
+const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'tcg') ? (S.thread === 'l' ? 20 : 28) : (typeof S !== 'undefined' && S && S.book === 'dod') ? (S.thread === 'l' ? 16 : 24) : (typeof S !== 'undefined' && S && S.book === 'tth') ? 21 : (typeof S !== 'undefined' && S && S.book === 'rg') ? (S.thread === 'l' ? 12 : 21) : (typeof S !== 'undefined' && S && S.book === 'bh') ? 18 : (typeof S !== 'undefined' && S && (S.book === 'moi' || S.book === 'hoc')) ? 15 : 8; // Books Three and Four run 8..15 (60, 70); Books One, Two and Five stop at 8 (80)
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
@@ -1573,7 +1581,7 @@ const BOOKS = {
 };
 /* the books the title offers: a book whose chapters are not written yet (B.coming) stays off the shelf, the picker and Deeds (70) */
 const shelfBooks = () => Object.values(BOOKS).filter(B => !B.coming);
-const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}, bh:{ch:{}, end:{}, tease:{}}, rg:{ch:{}, end:{}, tease:{}}, tth:{ch:{}, end:{}, tease:{}}, dod:{ch:{}, end:{}, tease:{}}};
+const BOOKSNAP = {gotm:{ch:{}, end:{}, tease:{}}, dg:{ch:{}, end:{}, tease:{}}, moi:{ch:{}, end:{}, tease:{}, tpl:{}}, hoc:{ch:{}, end:{}, tease:{}, tpl:{}}, mt:{ch:{}, end:{}, tease:{}}, bh:{ch:{}, end:{}, tease:{}}, rg:{ch:{}, end:{}, tease:{}}, tth:{ch:{}, end:{}, tease:{}}, dod:{ch:{}, end:{}, tease:{}}, tcg:{ch:{}, end:{}, tease:{}}};
 let BOOK = 'gotm';
 const REG_CLASH = []; // ids a chapter registered over another chapter's (the lint fails on any)
 function registerChapter(n, CH, book = 'gotm'){
@@ -2082,7 +2090,7 @@ function goTo(tgt){ if (!tgt) { const was = S.node; closeSheet(); if (view === '
    Gifts ("for good") and the "yes, but" losses (they run elsewhere) don't. */
 const MUNIS = ['sharper', 'burner', 'cusser', 'smoker'];
 /* the chapter's key flag (c3_key, b2_c3_key, b3_c3_key); when a choice sets it, a low chord marks the moment (v6.8.0) */
-const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : S.book === 'bh' ? 'b6_' : S.book === 'rg' ? 'b7_' : S.book === 'tth' ? 'b8_' : S.book === 'dod' ? 'b9_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
+const keyFlag = () => S ? ((S.book === 'dg' ? 'b2_' : S.book === 'moi' ? 'b3_' : S.book === 'hoc' ? 'b4_' : S.book === 'mt' ? 'b5_' : S.book === 'bh' ? 'b6_' : S.book === 'rg' ? 'b7_' : S.book === 'tth' ? 'b8_' : S.book === 'dod' ? 'b9_' : S.book === 'tcg' ? 'b10_' : '') + 'c' + (S.chapter || 0) + '_key') : null;
 function keyWatch(fn){ const k = keyFlag(), was = k && S.f ? S.f[k] : undefined; fn(); if (k && S && S.f && !was && S.f[k]) AUDIO.play('choice'); }
 function runFx(c){
   if (!c.fx) return;
@@ -2261,7 +2269,7 @@ function drawHound(ctx, o = {}){
 /* ============ figure sprites ============ */
 /* draws a ~32px-tall figure centred at (cx, baseline cy). s = scale, dir = facing */
 function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
-  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg')) && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt')) && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
+  if (kind === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'dg')) && FIGX.sgt_dg) kind = 'sgt_dg'; if (kind === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'mt')) && FIGX.sgt_mt) kind = 'sgt_mt'; // Book Two has its own sergeant (55b); Book Four is the same sergeant (70); Book Five's is Letherii (80d)
   const dir = o.dir || 1, bob = o.still ? 0 : Math.sin(t/420 + (o.phase||0)) * .6 * s;
   ctx.save(); ctx.translate(cx, cy); ctx.scale(dir * s, s); ctx.translate(0, bob);
   ctx.globalAlpha = o.alpha ?? 1;
@@ -2906,7 +2914,7 @@ const POR = {
 };
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
-  (id === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt')) && POR.sgt_mt ? POR.sgt_mt : id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg')) && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
+  (id === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'mt')) && POR.sgt_mt ? POR.sgt_mt : id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'dg')) && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
   ctx.restore();
 }
 
@@ -5397,7 +5405,7 @@ function titleDress(b){ const B = BOOKS[b] || BOOKS.gotm;
 const finishedGotm = () => roster().list.filter(e => (!e.book || e.book === 'gotm') && e.done);
 /* the import field: Book Two brings a finished Book One's road; Book Three (60) brings a finished Book One sergeant on the outlaw road, and the Fourth with them */
 const impList = b => b === 'dg' ? finishedGotm() : b === 'moi' && typeof b3Finished === 'function' ? b3Finished() : b === 'hoc' && typeof b4Finished === 'function' ? b4Finished() : [];
-const impShow = b => b === 'bh' || b === 'rg' || b === 'tth' || b === 'dod' || impList(b).length > 0; // v9.0: Book Six always asks for its second sergeant's name (100)
+const impShow = b => b === 'bh' || b === 'rg' || b === 'tth' || b === 'dod' || b === 'tcg' || impList(b).length > 0; // v9.0: Book Six always asks for its second sergeant's name (100)
 function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
   if (b === 'bh' && typeof b6ImpList === 'function') { const o = t => b6ImpList(t).map(e => `<option value="${e.id}">Sergeant ${esc(e.name)}</option>`).join('');
     return `<label for="impSel">Bring Book Four's squad (the Third, with the Fourteenth)</label><select id="impSel"><option value="">No: a fresh start</option>${o('r')}</select>
@@ -5411,11 +5419,20 @@ function impInner(b){ const opts = impList(b).map(e => `<option value="${e.id}">
   if (b === 'dod' && typeof b9ImpList === 'function') { const o = b9ImpList('t').map(e => `<option value="${e.id}">Sergeant ${esc(b9ImpName(e.id, 't') || e.name)}</option>`).join(''); // v12.0: Book Nine (160)
     return `<label for="impSel">Bring Book Seven's Third</label><select id="impSel"><option value="">No: a fresh start</option>${o}</select>
       <small class="fine" id="impDesc">${b9ImpDesc('', 't')} Only a finished Book Seven whose Third stayed with the army (the adjunct road).</small>`; }
+  if (b === 'tcg' && typeof b10ImpList === 'function') { const o = b10ImpList('t').map(e => `<option value="${e.id}">Sergeant ${esc(b10ImpName(e.id, 't') || e.name)}</option>`).join(''); // v13.0: Book Ten (180)
+    return `<label for="impSel">Bring Book Nine's Third</label><select id="impSel"><option value="">No: a fresh start</option>${o}</select>
+      <small class="fine" id="impDesc">${b10ImpDesc('', 't')} Only a finished Book Nine whose Third went on (the adjunct or south road).</small>`; }
   if (b === 'hoc') return `<label for="impSel">Bring a Book Two sergeant and the squad</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book Two on the Aren Guard or the Wickan road: that squad was in Aren when the Adjunct came. The desert road leads elsewhere.</small>`;
   return b === 'moi' ? `<label for="impSel">Bring a Book One sergeant and the Fourth</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One on the outlaw road: that Fourth marched north with the Host. The other roads lead elsewhere.</small>`
     : `<label for="impSel">Bring a Book One sergeant's road</label><select id="impSel"><option value="">No: a fresh start</option>${opts}</select><small class="fine" id="impDesc">Only a finished Book One counts: how the Fourth left Darujhistan is heard of on the Chain, and on one road one of them may find you at Aren.</small>`; }
 /* v9.0: Book Six's second sergeant, under the first's name (100): the Fourth's name, and a Book Three squad to bring */
-function impInner2(b){ if (b === 'dod' && typeof b9ImpList === 'function') { const o = b9ImpList('l').map(e => `<option value="${e.id}">Sergeant ${esc(b9ImpName(e.id, 'l') || 'Brann')}</option>`).join(''); // v12.0: Book Nine's Letherii (160)
+function impInner2(b){ if (b === 'tcg' && typeof b10ImpList === 'function') { const o = t => b10ImpList(t).map(e => `<option value="${e.id}">Sergeant ${esc(b10ImpName(e.id, t) || (t === 'l' ? 'Brann' : e.name))}</option>`).join(''); // v13.0: Book Ten's Letherii and Book Eight's Fourth (180)
+    return `<label for="nm2">The Letherii sergeant (the Sixth Company)</label><input type="text" id="nm2" maxlength="18" value="Brann" placeholder="Name the Letherii sergeant" autocomplete="off" autocapitalize="words" spellcheck="false">
+    <label for="impSel2">Bring Book Nine's Letherii</label><select id="impSel2"><option value="">No: a fresh start</option>${o('l')}</select>
+    <small class="fine" id="impDesc2">${b10ImpDesc('', 'l')} Only a finished Book Nine whose Letherii went on (the escort or adjunct road).</small>
+    <label for="impSel3">Bring Book Eight's Fourth (the last chapter only)</label><select id="impSel3"><option value="">No: the Fourth as canon leaves it</option>${o('f')}</select>
+    <small class="fine" id="impDesc3">${b10ImpDesc('', 'f')} Only a finished Book Eight on the east road.</small>`; }
+  if (b === 'dod' && typeof b9ImpList === 'function') { const o = b9ImpList('l').map(e => `<option value="${e.id}">Sergeant ${esc(b9ImpName(e.id, 'l') || 'Brann')}</option>`).join(''); // v12.0: Book Nine's Letherii (160)
     return `<label for="nm2">The Letherii sergeant (in the escort)</label><input type="text" id="nm2" maxlength="18" value="Brann" placeholder="Name the Letherii sergeant" autocomplete="off" autocapitalize="words" spellcheck="false">
     <label for="impSel2">Bring Book Seven's Letherii (the Sixth Company)</label><select id="impSel2"><option value="">No: a fresh start</option>${o}</select>
     <small class="fine" id="impDesc2">${b9ImpDesc('', 'l')} Only a finished Book Seven whose Letherii stayed in the army (the army road).</small>`; }
@@ -5459,7 +5476,7 @@ function showTitle(fresh, want){
     <div id="bookRows">${bookRows(tb)}</div>
     <div class="field" id="impField" ${impShow(tb) ? '' : 'hidden'}>${impInner(tb)}</div>
     <div class="field"><label for="nm" id="nmLab">${list.some(e => onShelf(e, tb)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'}</label><input type="text" id="nm" maxlength="18" value="${taken('Hask') ? '' : 'Hask'}" placeholder="Name your sergeant" autocomplete="off" autocapitalize="words" spellcheck="false"></div>
-    <div class="field" id="impField2" ${tb === 'bh' || tb === 'rg' || tb === 'dod' ? '' : 'hidden'}>${impInner2(tb)}</div>
+    <div class="field" id="impField2" ${tb === 'bh' || tb === 'rg' || tb === 'dod' || tb === 'tcg' ? '' : 'hidden'}>${impInner2(tb)}</div>
     <div class="field"><label>Difficulty</label><div class="seg dseg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${k === 'soldier' ? 'on' : ''}" data-diff="${k}">${d.name}</button>`).join('')}</div><small class="fine" id="dBlurb">${DIFFS.soldier.blurb} You can change it later in Settings.</small></div>
     ${iosNote}
     <p class="fine tmsg" id="nmMsg" role="status"></p>
@@ -5496,6 +5513,13 @@ function showTitle(fresh, want){
       if (book === 'rg' && typeof b7ChCount === 'function' && !b7ChCount()) { msg('Book Seven is still being written. Its chapters are on the way.'); return; }
       if (book === 'tth' && typeof b8ChCount === 'function' && !b8ChCount()) { msg('Book Eight is still being written. Its chapters are on the way.'); return; }
       if (book === 'dod' && typeof b9ChCount === 'function' && !b9ChCount()) { msg('Book Nine is still being written. Its chapters are on the way.'); return; }
+      if (book === 'tcg' && typeof b10ChCount === 'function' && !b10ChCount()) { msg('Book Ten is still being written. Its chapters are on the way.'); return; }
+      if (book === 'tcg') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' '), imp2 = $('#impSel2') ? $('#impSel2').value : '', imp3 = $('#impSel3') ? $('#impSel3').value : ''; // v13.0: two squads from Book Nine, and the Fourth from Book Eight (180)
+        if (!n2) { msg('Give the Letherii sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
+        if (sameName(n2, n)) { msg('Two sergeants, two names.'); $('#nm2').focus(); return; }
+        const t10 = imp || imp2 || imp3 ? list.find(e => e.book === 'tcg' && sameName(e.name, n)) : taken(n); // a Book Nine sergeant carried across keeps their Book Nine save
+        if (t10 && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t10.name} over`; msg(tapWord(`Sergeant ${t10.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
+        S = newStateTCG(n, n2, imp, imp2, imp3, t10 ? t10.id : undefined); S.diff = diff; save(); return startChapter(1); }
       if (book === 'dod') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' '), imp2 = $('#impSel2') ? $('#impSel2').value : ''; // v12.0: two squads, carried from Book Seven (160)
         if (!n2) { msg('Give the Letherii sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
         if (sameName(n2, n)) { msg('Two sergeants, two names.'); $('#nm2').focus(); return; }
@@ -5518,8 +5542,8 @@ function showTitle(fresh, want){
     let diff = 'soldier', book = tb;
     const disarm = () => { if (b.dataset.arm) { delete b.dataset.arm; b.classList.remove('warn'); b.classList.add('primary'); msg(''); } b.textContent = label(); };
     document.querySelectorAll('.bseg [data-book]').forEach(x => x.onclick = () => { AUDIO.play('click'); book = x.dataset.book; document.querySelectorAll('.bseg [data-book]').forEach(y => y.classList.toggle('on', y === x));
-      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); const f2 = $('#impField2'); if (f2) { f2.hidden = book !== 'bh' && book !== 'rg' && book !== 'dod'; f2.innerHTML = impInner2(book); } bindImp();
-      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)'; if (book === 'dod') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)'; disarm(); });
+      $('#bBlurb').textContent = BOOKS[book].blurb; titleDress(book); const f = $('#impField'); f.hidden = !impShow(book); f.innerHTML = impInner(book); const f2 = $('#impField2'); if (f2) { f2.hidden = book !== 'bh' && book !== 'rg' && book !== 'dod' && book !== 'tcg'; f2.innerHTML = impInner2(book); } bindImp();
+      $('#bookRows').innerHTML = bookRows(book); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); $('#nmLab').textContent = list.some(e => onShelf(e, book)) ? 'Or a new sergeant’s name' : 'Your sergeant’s name'; if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)'; if (book === 'dod') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)'; if (book === 'tcg') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)'; disarm(); });
     document.querySelectorAll('[data-diff]').forEach(x => x.onclick = () => { AUDIO.play('click'); diff = x.dataset.diff; document.querySelectorAll('[data-diff]').forEach(y => y.classList.toggle('on', y === x)); $('#dBlurb').textContent = `${DIFFS[diff].blurb} You can change it later in Settings.`; });
     nm.oninput = () => disarm();
     nm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); b.click(); } };
@@ -5528,14 +5552,17 @@ function showTitle(fresh, want){
     function bindImp(){ lockName(false); const sel = $('#impSel'); if (!sel) return;
       sel.onchange = () => { const v = sel.value;
         if (book === 'moi' || book === 'hoc') { $('#impDesc').innerHTML = book === 'hoc' ? (typeof b4ImpDesc === 'function' ? b4ImpDesc(v) : '') : typeof b3ImpDesc === 'function' ? b3ImpDesc(v) : ''; const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
+        else if (book === 'tcg' && typeof b10ImpName === 'function') { $('#impDesc').innerHTML = `${b10ImpDesc(v, 't')}${v ? '' : ' Only a finished Book Nine whose Third went on (the adjunct or south road).'}`; const nmv = v && b10ImpName(v, 't'); lockName(nmv ? nmv.slice(0, 18) : false); }
         else if (book === 'dod' && typeof b9ImpName === 'function') { $('#impDesc').innerHTML = `${b9ImpDesc(v, 't')}${v ? '' : ' Only a finished Book Seven whose Third stayed with the army (the adjunct road).'}`; const nmv = v && b9ImpName(v, 't'); lockName(nmv ? nmv.slice(0, 18) : false); }
         else if (book === 'bh' || book === 'rg') { const o = v && loadSlot(v); lockName(o ? String(o.name || 'Hask').slice(0, 18) : false); }
         else if (book === 'tth' && typeof b8ImpName === 'function') { $('#impDesc').innerHTML = `${b8ImpDesc(v)}${v ? '' : ' Only a finished Book Three on the daru or stand-down road, or a finished Book Six (any of the Fourth\'s roads).'}`; const nmv = v && b8ImpName(v); lockName(nmv ? nmv.slice(0, 18) : false); }
         else $('#impDesc').innerHTML = v ? impDesc(v) : 'A fresh start: the Fourth is only a rumour here.'; };
       const s2 = $('#impSel2'), n2 = $('#nm2'); if (s2 && n2) s2.onchange = () => { const o = s2.value && loadSlot(s2.value); n2.readOnly = false; n2.classList.remove('locked');
+        if (book === 'tcg' && typeof b10ImpName === 'function') { const nmv = s2.value && b10ImpName(s2.value, 'l'); if (nmv) n2.value = nmv.slice(0, 18); if ($('#impDesc2')) $('#impDesc2').innerHTML = `${b10ImpDesc(s2.value, 'l')}${s2.value ? '' : ' Only a finished Book Nine whose Letherii went on (the escort or adjunct road).'}`; return; } // v13.0
         if (book === 'dod' && typeof b9ImpName === 'function') { const nmv = s2.value && b9ImpName(s2.value, 'l'); if (nmv) n2.value = nmv.slice(0, 18); if ($('#impDesc2')) $('#impDesc2').innerHTML = `${b9ImpDesc(s2.value, 'l')}${s2.value ? '' : ' Only a finished Book Seven whose Letherii stayed in the army (the army road).'}`; return; } // v12.0: the Letherii's own sergeant, from o.th.l
-        if (o) n2.value = String(o.name || 'Brann').slice(0, 18); }; }
-    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)'; if (book === 'dod') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)';
+        if (o) n2.value = String(o.name || 'Brann').slice(0, 18); };
+      const s3 = $('#impSel3'); if (s3) s3.onchange = () => { if ($('#impDesc3') && typeof b10ImpDesc === 'function') $('#impDesc3').innerHTML = `${b10ImpDesc(s3.value, 'f')}${s3.value ? '' : ' Only a finished Book Eight on the east road.'}`; }; }
+    bindImp(); bindLoads($('#bookRows')); bindDels($('#bookRows'), () => book); if (book === 'bh') $('#nmLab').textContent = 'The Third’s sergeant (with the Fourteenth)'; if (book === 'rg') $('#nmLab').textContent = 'The Third’s sergeant (lent to the marines)'; if (book === 'dod') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)'; if (book === 'tcg') $('#nmLab').textContent = 'The Third’s sergeant (with the heavies)';
     $('#bBack').onclick = () => { AUDIO.play('click'); showTitle(); };
     if (fresh && !want) nm.focus();
   } else {
@@ -6107,7 +6134,7 @@ function lose(){
   const others = kept.filter(k => bn && k !== bn.key).map(k => BOON_BY_KEY[k]).filter(Boolean), lapsed = was.filter(k => !kept.includes(k)).map(k => BOON_BY_KEY[k]).filter(Boolean);
   const boonNote = bn ? `<div class="note boonnote"><b>The boon: ${esc(bn.name)}.</b> ${esc(bn.txt)} It lasts the fight, and its second ground.${others.length ? ` It joins ${others.map(b => `${esc(b.god === 'the spirits' ? 'the Wickan spirits' : b.god)}'s (${esc(b.name.toLowerCase())})`).join(' and ')}.` : ''}${lapsed.length ? ` On Story two gods hold at once: ${lapsed.map(b => esc(b.name.toLowerCase())).join(' and ')} lapse${lapsed.length > 1 ? '' : 's'}.` : ''}</div>` : '';
   if (P) sh.innerHTML = `${art('patrons/' + (P.sig || who), 'godsig')}<div class="sp godsp">${esc(P.title)}</div><div class="txt god">${fmt(P.txt(who))}</div>
-    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' || (S.book === 'bh' && S.thread !== 'h') || ((S.book === 'rg' || S.book === 'dod') && S.thread !== 'l') ? 'The Third\'s' : S.book === 'mt' || S.book === 'rg' || S.book === 'dod' ? 'The squad\'s' : 'The Fourth\'s'} road would have ended here. ${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
+    <div class="note trick">${S.book === 'dg' || S.book === 'hoc' || (S.book === 'bh' && S.thread !== 'h') || ((S.book === 'rg' || S.book === 'dod' || S.book === 'tcg') && S.thread !== 'l') ? 'The Third\'s' : S.book === 'mt' || S.book === 'rg' || S.book === 'dod' || S.book === 'tcg' ? 'The squad\'s' : 'The Fourth\'s'} road would have ended here. ${P.quiet && S.book === 'tcg' ? 'Nobody answered, and it did not end anyway' : `${who === 'sgt' ? 'The soldiers\' god' : `${esc(NAME(who))}'s god`} would not let it`}.${story ? '' : ` ${esc(P.god)} will not answer again this chapter. ${left ? `${left} more ${left === 1 ? 'god is' : 'gods are'} still listening.` : 'No one else is listening.'}`}</div>${boonNote}
     <div class="choices"><button class="choice" id="bRetry">Rise, and fight it again</button></div>`;
   else sh.innerHTML = `<div class="sp godsp">No one answers</div><div class="txt god">${fmt(`Every god who had a reason to listen has already spent it this chapter. Hood's gate opens the rest of the way, and it is very quiet on the other side.\n\nAnd then it is morning, and the Fourth is where this chapter began, with all of it still to do, and nobody quite able to say why they are so tired.`)}</div>
     <div class="choices"><button class="choice" id="bRetry">Begin the chapter again</button></div>`;
@@ -9164,9 +9191,9 @@ const visReader = () => (VISREADER && S && S.book && S.book !== 'gotm' ? VISREAD
 /* the reader's name in the middle of a sentence ("the old Kanese"); and the node a reading's card screen comes back to: c4_card in Book One, b2_c4_card in Book Two */
 const visMid = () => { const r = visReader(); return r.mid || r.name; };
 /* v8.0: Book Five's readings are tiles of the Holds, not the Deck: its visions are "Through the Tiles" (80c) */
-const visTiles = () => !!(S && (S.book === 'mt' || ((S.book === 'rg' || S.book === 'dod') && S.thread === 'l'))); // v12.0: Book Nine's Letherii too (160c) // v10.0: Book Seven's Letherii read the Tiles (120c)
+const visTiles = () => !!(S && (S.book === 'mt' || ((S.book === 'rg' || S.book === 'dod' || S.book === 'tcg') && S.thread === 'l'))); // v13.0: Book Ten's Letherii (180c) // v12.0: Book Nine's Letherii too (160c) // v10.0: Book Seven's Letherii read the Tiles (120c)
 const visKick = () => visTiles() ? 'Through the Tiles' : 'Through the Deck';
-const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : S && S.book === 'bh' ? 'b6_c' : S && S.book === 'rg' ? 'b7_c' : S && S.book === 'tth' ? 'b8_c' : S && S.book === 'dod' ? 'b9_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
+const cardNodeName = () => (S && S.book === 'dg' ? 'b2_c' : S && S.book === 'moi' ? 'b3_c' : S && S.book === 'hoc' ? 'b4_c' : S && S.book === 'mt' ? 'b5_c' : S && S.book === 'bh' ? 'b6_c' : S && S.book === 'rg' ? 'b7_c' : S && S.book === 'tth' ? 'b8_c' : S && S.book === 'dod' ? 'b9_c' : S && S.book === 'tcg' ? 'b10_c' : 'c') + (S ? S.chapter : 0) + '_card'; // Book Three's card node is b3_c<n>_card (60c)
 /* which vision the turned card opens this chapter: Ch4 keys its four by card; every other chapter has one, for any card */
 function visionFor(ch, card){
   if (!ch || !card || card === 'blank') return null;
@@ -9701,6 +9728,7 @@ function whereBooksMeetHTML(open){
       ${BOOKS.rg && !BOOKS.rg.coming ? `<li><b>Book Seven, Unwitnessed,</b> is where the roads join. The Fourteenth crosses the oceans to Lether, burns its ships on the coast and marches inland on Letheras; the Third goes with it, lent to Keneb's marines as heavies. Book Five's Letherii squad is in the capital, under the Edur, and is sent out with the army to meet the invaders. One war, two squads, on opposite sides. The Fourth is not with them.</li>` : ''}
       ${BOOKS.tth && !BOOKS.tth.coming ? `<li><b>Book Eight, Time Served,</b> goes back to Genabackis, years after Coral. The Fourth, out of the army, keeps a door in Darujhistan. In the winter before the Gedderone Fete the Assassins' Guild puts their names on a paper, and they go east with a merchant's caravan over the old Domin to Black Coral, Coral renamed, and come back for the Fete's last night.</li>` : ''}
       ${BOOKS.dod && !BOOKS.dod.coming ? `<li><b>Book Nine, Dust on the Boots,</b> goes back to Lether, months after Letheras fell. The Fourteenth, the Bonehunters now, marches east out of the city into the Wastes with a Letherii escort behind it, and nobody in the ranks is told why. Book Seven's two squads march in the same column, the Third with the heavies and the Letherii in the escort, a day's dust apart.</li>` : ''}
+      ${BOOKS.tcg && !BOOKS.tcg.coming ? `<li><b>Book Ten, Witnessed,</b> is the last. Days after the short-tails, the army splits at the Wastes' edge: the Bonehunters east into a desert made of glass, by night, behind an Adjunct who still has not said why; the Letherii and the allies south, the long way round. Both roads end in Kolanse. Book Nine's two squads are on them, and at the very end Book Eight's Fourth comes over a ridge with a Malazan Host. After it, nothing: that is where the novels end, too.</li>` : ''}
       <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
     </ul></details>`;
 }
@@ -9785,6 +9813,7 @@ function bookDeedsHTML(b, all){
   else if (b === 'rg') extra = typeof b7DeedsExtra === 'function' ? b7DeedsExtra(mine) : ''; // Book Seven's Rising (120)
   else if (b === 'tth') extra = typeof b8DeedsExtra === 'function' ? b8DeedsExtra(mine) : ''; // Book Eight's Contract (140)
   else if (b === 'dod') extra = typeof b9DeedsExtra === 'function' ? b9DeedsExtra(mine) : ''; // Book Nine's Rations (160)
+  else if (b === 'tcg') extra = typeof b10DeedsExtra === 'function' ? b10DeedsExtra(mine) : ''; // Book Ten's Witness (180)
   else if (b === 'dg') { const fin = mine.filter(({s}) => bookDone(s)), col = fin.map(({s}) => (s.chain && s.chain.column) || 0), stayed = mine.reduce((a, {s}) => a + Object.values((s.f && s.f.b2_split) || {}).filter(v => v === 'stay').length, 0);
     const lowest = mine.length ? Math.min(...mine.map(({s}) => (s.chain && s.chain.water != null) ? s.chain.water : 8)) : null;
     const rows2 = [['Most of the column brought into Aren', fin.length ? Math.max(...col) : 'Not yet'], ['Stayed with Coltaine at the split', stayed ? `${stayed} squadmate${stayed === 1 ? '' : 's'}, across every sergeant` : 'None yet'],
@@ -107881,6 +107910,898 @@ function b9KnifePay(r){ if (!r) return; S.f.b9_knife = {mine:r.mine, his:r.his, 
     jn(B9CH7, () => { const r = S.f.b9_knifeLast; return r && r.done ? (r.won ? 'In the retreat camp, days after, a heavy from the next fire played Knife in the Dirt with the sergeant, and the sergeant stuck the most.' : 'In the retreat camp, days after, a heavy from the next fire played Knife in the Dirt with the sergeant.') : ''; }); }
 }
 
+/* ============ Book Ten: Witnessed, beside The Crippled God (v13.0 engine, 180) ============
+   The last book. Two squads take turns, as in Book Nine (160): the Third (thread 't', Book Nine's on the 'adjunct' or 'south' road) in
+   Chapters 1, 3, 5, 7; the Letherii, the Sixth Company (thread 'l', Book Nine's on the 'escort' or 'adjunct' road), in Chapters 2, 4, 6.
+   One save holds both: the squad not playing waits in S.th[thread]; startChapter swaps it in. Each squad keeps its own levels: the Third
+   fresh at 24, cap 28; the Letherii fresh at 16, cap 20 (lvCap in 014 reads S.thread). Book Eight's Fourth (its 'east' road) comes over
+   the ridge with the relief in Chapter 7 only: it is kept in S.b10f, never played, and fights beside the Third as allies.
+   The book's own system is Witness (David, Nov 10, decision 2): what each squad still believes it marches for, 0 to 10, in its own half.
+   Thirst and short rations live in the scenes and their costs, not in a counter. After the finale, the series coda: one page per squad
+   from every finished book on the device, then the credits.
+   Plan: docs/book10-tcg-plan.md. Canon: docs/tcg-canon.md (binding; hard limits §4, rules 98-111). Notes: docs/v13.0-notes.md.
+   Brief: docs/tcg-book-brief.md. Ids b10_, shelf 180-199, abbreviation 'tcg'.
+   The v10.0.2 rule: b10As(fn) switches S.book for a moment. Anything that asks which squad is playing asks BEFORE the switch, or inside it
+   through b10Thread(), which remembers the squad for the length of the switch (b10AsT). */
+
+const b10On = () => !!(S && S.book === 'tcg');
+const B10_CH = {1:'t', 2:'l', 3:'t', 4:'l', 5:'t', 6:'l', 7:'t'};  // which squad plays each chapter (plan, settled 1)
+const B10_TH = {
+  t:{book:'hoc', look:'dg', unit:'the Third', squad:'Third Squad, with the heavies', army:'the Bonehunters', who:'the Third, with the Bonehunters\' heavies',
+     core:['sgt', 'haddat', 'sathi', 'tangle', 'marrow'], fresh:['haddat', 'tangle', 'marrow', 'mirrel'], camp0:['brask', 'tegra'], recruits:['pruss'], lvl:24, cap:28},
+  l:{book:'mt', look:'mt', unit:'the squad', squad:'Sixth Company, with the Commander\'s brigades', army:'the Letherii brigades', who:'the Sixth Company\'s squad, in the Commander\'s brigades',
+     core:['sgt', 'tobet', 'thegg', 'perrit', 'ammet'], fresh:['tobet', 'thegg', 'perrit', 'ammet'], camp0:['brennet', 'kaedra'], recruits:['tirren'], lvl:16, cap:20}};
+const B10_KEYS = ['name', 'squad', 'camp', 'loy', 'gear', 'picks', 'kit', 'tricks', 'inv', 'lvl', 'xp', 'dead', 'parked', 'wounds', 'injury', 'silver', 'picksDue', 'imported', 'trail', 'debt', 'debt0', 'b10w'];
+let b10AsT = null; // the squad playing, remembered while b10As has S.book switched (the v10.0.2 rule)
+const b10Thread = () => b10AsT || (S && S.book === 'tcg' && S.thread) || 't';
+const b10Other = () => b10Thread() === 't' ? 'l' : 't';
+const b10L = () => b10On() && b10Thread() === 'l';            // the Letherii are playing
+const b10Third = () => b10On() && b10Thread() === 't';        // the Third is playing
+const b10Unit = (t = b10Thread()) => B10_TH[t].unit;
+const b10In = id => !!(S && Array.isArray(S.squad) && S.squad.includes(id) && !(S.dead && S.dead[id]));
+const b10OtherName = () => (S && S.th && S.th[b10Other()] && S.th[b10Other()].name) || 'the other sergeant';
+const b10Coin = n => b10L() ? b5Coin(n) : `${n} silver`; // the Letherii count in docks; the Third in silver
+const b10SgtLook = () => b10On() ? B10_TH[b10Thread()].look : null; // 018, 019: the Third wears Book Two's look (sgt_dg), the Letherii Book Five's (sgt_mt)
+const b10ChCount = () => Object.keys(BOOK === 'tcg' ? CHAPTERS : BOOKSNAP.tcg.ch).length;
+
+/* ---- the roads each squad marches in Book Ten (from Book Nine; a fresh start takes canon's): the Third 'adjunct' (into the Glass Desert
+   behind the Adjunct) or 'south' (with the Commander's column, the long way round); the Letherii 'escort' (the Commander's brigades, south)
+   or 'adjunct' (a few Letherii who crossed with the Malazans; correction 4). S.f.b10_tRoad, S.f.b10_lRoad. ---- */
+const b10TRoad = () => (S && S.f && S.f.b10_tRoad === 'south') ? 'south' : 'adjunct';
+const b10LRoad = () => (S && S.f && S.f.b10_lRoad === 'adjunct') ? 'adjunct' : 'escort';
+const b10Crossing = (t = b10Thread()) => t === 't' ? b10TRoad() === 'adjunct' : b10LRoad() === 'adjunct'; // this squad is in the glass
+
+/* ---- the sergeants: Book Four's (the Third) and Book Five's (the Letherii), each with Book Ten's own lines on top ---- */
+const B10_SGT = {
+  t:{epithet:'Third squad, 9th Legion, with the Bonehunters\' heavies, at the end of the march east',
+     get bio2(){ return b10TRoad() === 'south' ? 'The short-tails came out of the dust, and the heavies held, and the Fist died, and the Adjunct was carried. When the slates came round you put the Third\'s names on the one that goes south with the Letherii, the long way round.\n\nThe army went one way and you went the other. Nobody has told either half why.'
+       : 'The short-tails came out of the dust, and the heavies held, and the Fist died, and the Adjunct was carried. When the slates came round you put the Third\'s names on the one that goes east.\n\nEast is a desert made of glass. The Adjunct means to cross it. She has still not said why, and you have stopped expecting her to.'; },
+     get quest(){ const w = b10WitTier(b10WitOf('t')); return w === 'kept' || w === 'witnessed' ? 'East, to the end of it. The squad still marches for something. You mean to get it there with all its names.'
+       : w === 'hollow' || w === 'doubt' ? 'East, because the column is going east. You count the squad every night and the water every morning, and you have stopped saying either number out loud.'
+       : 'East, behind the Adjunct, to wherever this ends. You count the water. You count the squad. Some nights you count them in the wrong order.'; }},
+  l:{epithet:'Sixth Company, the Whitefinder Battalion, with the Commander\'s brigades',
+     get bio2(){ const d = typeof b5Debt === 'function' ? b5Debt('sgt') : null;
+       return `The paybook still has the old number in it${d != null ? `, ${b5Coin(d)}` : ''}. You still read it, out of habit, the way you still pray before a wager.\n\n${b10LRoad() === 'adjunct' ? 'When the foreigners turned east into the glass, the Sixth went with them: a few Letherii who stayed. Everyone else in Lether went south.' : 'When the foreigners turned east into the glass, the Commander turned south, and the Sixth went with him: the long way round to a country called Kolanse, behind the Bolkando and the grey-helmed foreigners.'}`; },
+     get quest(){ return b10LRoad() === 'adjunct' ? 'Across the glass behind the foreigners, on their water and your own. Nobody in Lether has a legend about this place. You mean to come back and make one.'
+       : 'South and east with the brigades, to Kolanse, wherever that ends. The Errant gets a prayer before everything. Lately the prayers come back with nothing in them.'; }}};
+function b10SgtFor(t){ const snap = BOOKSNAP[B10_TH[t].book] && BOOKSNAP[B10_TH[t].book].sgt;
+  if (snap) TPL.sgt = Object.defineProperties({}, Object.assign({}, snap, Object.getOwnPropertyDescriptors(B10_SGT[t])));
+  if (typeof PORTRAIT_CACHE !== 'undefined') PORTRAIT_CACHE.clear(); }
+/* swap the squad playing. Idempotent. The waiting squad's fields go into S.th[other]; shared: S.f, S.stats, S.chapter(s), S.diff, S.b10
+   (the beats), S.b10f (the Fourth) */
+function b10Use(t){ if (!b10On() || !B10_TH[t]) return; S.th ??= {}; const cur = S.thread || 't';
+  if (cur !== t && S.th[t]) { const out = {}; B10_KEYS.forEach(k => { out[k] = S[k]; }); S.th[cur] = out;
+    B10_KEYS.forEach(k => { S[k] = S.th[t][k]; }); delete S.th[t]; }
+  S.thread = t; b10SgtFor(t); }
+{ const _setBook = setBook; setBook = function(b){ _setBook(b); if (b === 'tcg' && S && S.book === 'tcg') b10SgtFor(b10Thread()); }; }
+/* run fn as if the squad's own earlier book were open ('hoc' for the Third, 'mt' for the Letherii), for a moment, synchronously; fn gets the
+   squad's thread, read before the switch. b10Thread() still answers inside. */
+function b10As(fn){ if (!b10On()) return fn(b10Thread()); const t = b10Thread(), was = S.book, wasT = b10AsT; S.book = B10_TH[t].book; b10AsT = t;
+  try { return fn(t); } finally { S.book = was; b10AsT = wasT; } }
+
+/* ---- the shelf ---- */
+BOOKS.tcg = {id:'tcg', n:10, word:'Ten', title:'The Crippled God', name:'Witnessed', h1:['', 'Witnessed'], squad:'Two squads', unit:'the squad',
+  tag:'The army crosses a desert made of glass for a reason nobody gives it, and the Letherii go the long way round. Nobody will remember who was there. Somebody should.',
+  titleArt:'title/tcg', titleScene:'tcg', patch:'insignia/tcg',
+  blurb:'The Glass Desert and Kolanse, days after the short-tails, beside The Crippled God: the Third in the crossing, Book Nine\'s Letherii on the long way round, and Book Eight\'s Fourth at the very end. The last book. A finished Book Nine carries both squads across.'};
+Object.defineProperty(BOOKS.tcg, 'coming', {configurable:true, get(){ return b10ChCount() === 0; }});
+Object.defineProperty(BOOKS.tcg, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/tcg'] ? 'title/tcg' : 'title/dod'; }});
+Object.defineProperty(BOOKS.tcg, 'patch', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['insignia/tcg'] ? 'insignia/tcg' : 'insignia/dod'; }});
+/* the title's credit, once the last book is on the shelf: no "more to come" (titleCredit is 029's; this only speaks when Book Ten is on it) */
+{ const _tc = titleCredit; titleCredit = function(){ const bs = shelfBooks().sort((a, b) => a.n - b.n); const last = bs[bs.length - 1];
+    if (!last || last.id !== 'tcg' || bs.length < 2) return _tc();
+    return `${last.word} books, each beside one of Erikson's Malazan novels, in order, from ${bs[0].title} to ${last.title}. That is all of them.`; }; }
+
+/* ---- the transfers: a finished Book Nine save. Its Third on 'adjunct' or 'south' (o.chapters[7]); its Letherii on 'escort' or
+   'adjunct' (o.f.b9_lethRoad, 'escort' by default, as Book Nine's own b97OnwardL). 'home' on either: that squad starts fresh, with
+   canon's road. One save holds both squads: the Third is on top (Chapter 7 is the Third's), the Letherii in o.th.l.
+   Book Eight's Fourth: a finished Book Eight on the 'east' road (o.chapters[7]); otherwise a canon-default Fourth. ---- */
+const b10HalfOf = (o, t) => { if ((o.thread || 't') === t) return o; const h = (o.th && o.th[t]) || {}; // the waiting half: its own fields only, never the other squad's
+  return Object.assign({}, h, {thread:t, sid:o.sid, book:o.book, f:o.f, chapters:o.chapters, squad:h.squad || ['sgt'], camp:h.camp || [], dead:h.dead || {}, gear:h.gear || {}, picks:h.picks || {}, loy:h.loy || {}, kit:h.kit || [], tricks:h.tricks || {}, inv:h.inv || {}, parked:h.parked || {}}); };
+const b10RoadT = o => o && o.chapters ? (o.chapters[7] ?? (o.f && o.f.b9_c7_key)) : null;
+const b10RoadL = o => (o && o.f && o.f.b9_lethRoad) || 'escort';
+const b10QualT = o => !!(o && o.book === 'dod' && bookDone(o) && ['adjunct', 'south'].includes(b10RoadT(o)));
+const b10QualL = o => !!(o && o.book === 'dod' && bookDone(o) && ['escort', 'adjunct'].includes(b10RoadL(o)));
+const b10QualF = o => !!(o && o.book === 'tth' && bookDone(o) && (o.chapters[7] ?? (o.f && o.f.b8_c7_key)) === 'east');
+/* Book Nine's Witness beats, by squad (B9WIT: c3, c5, c7 the Third's; c4, c6 the Letherii's) */
+function b10B9Beats(o, t){ const w = (o && o.b9 && o.b9.wit) || {}, out = {kept:0, doubt:0};
+  Object.entries({3:'t', 4:'l', 5:'t', 6:'l', 7:'t'}).forEach(([n, th]) => { if (th === t && (w['c' + n] === 'kept' || w['c' + n] === 'doubt')) out[w['c' + n]]++; }); return out; }
+function b10CarryT(o){ const h = b10HalfOf(o, 't'), b = b10B9Beats(o, 't'); return Object.assign(b6Carry(h), {from:h.name || o.name, road:b10RoadT(o), beats:b, rat:(h.b9r && typeof h.b9r.n === 'number') ? h.b9r.n : null}); }
+function b10CarryL(o){ const h = b10HalfOf(o, 'l'), b = b10B9Beats(o, 'l'); return Object.assign(b7CarryL(h), {from:h.name || 'Brann', road:b10RoadL(o), beats:b, rat:(h.b9r && typeof h.b9r.n === 'number') ? h.b9r.n : null}); }
+function b10CarryF(o){ return Object.assign(b6Carry(o), {from:o.name || '', book:'tth'}); }
+const b10ImpT = id => { const o = id && loadSlot(id); return b10QualT(o) ? b10CarryT(o) : null; };
+const b10ImpL = id => { const o = id && loadSlot(id); return b10QualL(o) ? b10CarryL(o) : null; };
+const b10ImpF = id => { const o = id && loadSlot(id); return b10QualF(o) ? b10CarryF(o) : null; };
+const b10ImpList = t => roster().list.filter(e => { const o = loadSlot(e.id); return t === 't' ? b10QualT(o) : t === 'l' ? b10QualL(o) : b10QualF(o); });
+const b10ImpName = (id, t = 't') => { const o = id && loadSlot(id); if (!o) return null;
+  if (t === 'f') return b10QualF(o) ? String(o.name || '') : null;
+  return (t === 't' ? b10QualT(o) : b10QualL(o)) ? String(b10HalfOf(o, t).name || (t === 't' ? 'Hask' : 'Brann')) : null; };
+const B10_ROADW = {adjunct:'east into the glass behind the Adjunct', south:'south with the Letherii, the long way round', escort:'south with the Commander\'s brigades', adjunct_l:'east into the glass with the foreigners'};
+function b10ImpDesc(id, t = 't'){
+  if (t === 'f') { const i = b10ImpF(id); if (!i) return `A fresh start: Brisk, Kettle, Tuft and Ohl, at level ${B10_FOURTH_LVL}. They join the Third in the last chapter only.`;
+    const went = i.mates.map(k => TPL[k].name), dead = i.dead.map(k => TPL[k].name);
+    return `Sergeant ${esc(i.from || 'of the Fourth')}'s Fourth: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come through` : ''}. They keep level ${Math.min(i.lvl, B10_FOURTH_CAP)}, and join the Third in the last chapter only.`; }
+  const i = t === 't' ? b10ImpT(id) : b10ImpL(id), T = B10_TH[t];
+  if (!i) return t === 't' ? `A fresh start: Haddat, Tangle, Marrow and Mirrel, with Brask and Tegra at the baggage, at level ${T.lvl}. Sathi fell at the Barrow.` : `A fresh start: Tobet, Thegg, Perrit and Ammet, with Brennet and Kaedra at the train, at level ${T.lvl}.`;
+  const went = i.mates.map(k => TPL[k].name), dead = i.dead.map(k => TPL[k].name);
+  return `Sergeant ${esc(i.from)}'s ${t === 't' ? 'Third' : 'Letherii'}, ${B10_ROADW[t === 'l' && i.road === 'adjunct' ? 'adjunct_l' : i.road] || ''}: ${went.length ? esc(went.join(', ')) : 'nobody else'}${dead.length ? `. ${esc(dead.join(' and '))} did not come through` : ''}. ${i.lvl < T.lvl ? `The days since bring them to level ${T.lvl}.` : `They keep level ${Math.min(i.lvl, T.cap)}.`}`; }
+
+/* ---- Witness (plan, settled 2: the main track). What the squad still believes it marches for, 0 to 10, in each squad's own half
+   (S.b10w = {n, lo, hi}). Fresh, it starts at 5. From Book Nine it starts at 5 + kept − doubt of that squad's Book Nine beats, held to 2..8.
+     b10Wit()               the playing squad's number; b10WitOf(t) either squad's (the waiting one from S.th).
+     b10WitTier(n)          'hollow' 0-1, 'doubt' 2-3, 'holding' 4-6, 'kept' 7-8, 'witnessed' 9-10 (B10_WITW holds the words).
+     b10Witness(n, why)     moves it (n may be negative): noted with the reason and any tier change, clamped 0..10, tallied b10WitUp /
+                            b10WitDown, HUD updated, saved; returns the new value.
+     b10Beat(v, why, n)     the chapter's one Witness beat (every chapter has one, B10BEAT): 'kept' +1, 'doubt' −1, recorded once in
+                            S.b10.beat (the first answer stands). Null outside Book Ten or for a value it does not know.
+     The engine's own move, the wear: nobody tells the army why. At the start of Chapters 3, 4 and 5 the playing squad loses 1 (once a
+     chapter, flag b10_wear<n>; B10_WEAR).
+     On checks: a check with c.witness:true gets the edge "Witness": witnessed +2, kept +1, holding 0, doubt −1, hollow −2. Any other check,
+     while 'hollow', gets "Nothing to march for" −1.
+     In a fight: B10_WITFIGHT, to hit for every squadmate by tier. ALL ZERO on purpose: a balance change goes to David first (docs/v13.0-notes.md
+     §Witness proposes hollow −1, witnessed +1). The log says so only when a number is not zero.
+     On the roads: b10RoadOpen(r) says whether an ending is open: 'kolanse' (stay and help the drought country) needs 'holding' or better. ---- */
+const B10_WIT0 = 5, B10_WITMAX = 10;
+const B10_WITW = {hollow:'nothing left to march for', doubt:'marching because the column does', holding:'still marching for something', kept:'marching for each other', witnessed:'their own witness'};
+const B10_WEAR = {3:-1, 4:-1, 5:-1};
+const B10BEAT = {1:'t', 2:'l', 3:'t', 4:'l', 5:'t', 6:'l', 7:'t'};
+const B10_BEATV = ['kept', 'doubt'];
+const b10W = () => { if (!S) return {n:B10_WIT0, lo:B10_WIT0, hi:B10_WIT0}; if (!S.b10w || typeof S.b10w.n !== 'number') S.b10w = {n:B10_WIT0, lo:B10_WIT0, hi:B10_WIT0}; return S.b10w; };
+const b10Wit = () => b10W().n;
+const b10WitOf = (t = b10Thread()) => { if (!S) return B10_WIT0; if (t === b10Thread() || !S.th || !S.th[t]) return b10Wit(); const w = S.th[t].b10w; return w && typeof w.n === 'number' ? w.n : B10_WIT0; };
+const b10WitTier = (n = b10Wit()) => n >= 9 ? 'witnessed' : n >= 7 ? 'kept' : n >= 4 ? 'holding' : n >= 2 ? 'doubt' : 'hollow';
+const B10_TIERS = ['hollow', 'doubt', 'holding', 'kept', 'witnessed'];
+const b10Hollow = () => b10WitTier() === 'hollow';
+function b10Witness(n, why = ''){ if (!b10On() || !n) return b10Wit(); const st = b10W(), was = st.n, t0 = b10WitTier(was);
+  st.n = clamp(was + n, 0, B10_WITMAX); const d = st.n - was; if (!d) return st.n; st.hi = Math.max(st.hi ?? was, st.n); st.lo = Math.min(st.lo ?? was, st.n);
+  tally(d > 0 ? 'b10WitUp' : 'b10WitDown', Math.abs(d));
+  note(`Witness ${d > 0 ? '+' : '−'}${Math.abs(d)}${why ? ` (${why})` : ''}: ${st.n} of ${B10_WITMAX}.`, d > 0 ? 'good' : 'bad');
+  const t1 = b10WitTier(st.n); if (t1 !== t0) note(`${b10Unit() === 'the Third' ? 'The Third' : 'The squad'}: ${B10_WITW[t1]}.`, d > 0 ? 'good' : 'bad');
+  if (typeof updChain === 'function') updChain(); save(); return st.n; }
+const b10Beats = () => { if (!S) return {}; S.b10 ??= {beat:{}}; S.b10.beat ??= {}; return S.b10.beat; };
+function b10Beat(v, why = '', n = (S && S.chapter) || 0){ if (!b10On() || !B10_BEATV.includes(v) || !B10BEAT[n]) return null; const w = b10Beats(), k = 'c' + n;
+  if (w[k]) return w[k]; w[k] = v; tally(v === 'kept' ? 'b10Kept' : 'b10Doubt', 1);
+  note(v === 'kept' ? `Witness: the squad still marches for something${why ? ` (${why})` : ''}.` : `Witness: the squad marches because the column does${why ? ` (${why})` : ''}.`, v === 'kept' ? 'good' : 'bad');
+  b10Witness(v === 'kept' ? 1 : -1, v === 'kept' ? 'kept' : 'doubted'); return v; }
+const b10BeatOf = n => (S && S.b10 && S.b10.beat && S.b10.beat['c' + n]) || null;
+function b10BeatCount(t = b10Thread()){ const w = b10Beats(), out = {kept:0, doubt:0}; Object.entries(B10BEAT).forEach(([n, th]) => { if (th === t && w['c' + n]) out[w['c' + n]]++; }); return out; }
+const B10_WITEDGE = {hollow:-2, doubt:-1, holding:0, kept:1, witnessed:2};
+const B10_WITFIGHT = {hollow:0, doubt:0, holding:0, kept:0, witnessed:0}; // to hit; neutral until David rules (notes §Witness)
+const B10_ROADNEED = {kolanse:'holding'}; // the endings Witness opens (notes §Witness: the roads)
+const b10RoadOpen = (r, t = b10Thread()) => !B10_ROADNEED[r] || B10_TIERS.indexOf(b10WitTier(b10WitOf(t))) >= B10_TIERS.indexOf(B10_ROADNEED[r]);
+{ const _ef = edgesFor; edgesFor = function(c, id){ const out = _ef(c, id); if (!b10On() || !c) return out;
+    const tier = b10WitTier();
+    if (c.witness) { const k = B10_WITEDGE[tier]; if (k) out.push(['Witness', k]); }
+    else if (tier === 'hollow') out.push(['Nothing to march for', -1]);
+    return out; }; }
+{ const _mkParty = mkParty; mkParty = function(id, x, y){ const u = _mkParty(id, x, y); const k = b10On() ? (B10_WITFIGHT[b10WitTier()] || 0) : 0;
+    if (k) { u.atk += k; u.b10wit = k; } return u; }; }
+{ const _startBattle = startBattle;
+  startBattle = function(id, opt = {}){ const r = _startBattle(id, opt); if (!b10On() || !B) return r;
+    const k = B10_WITFIGHT[b10WitTier()] || 0; if (k) blog(`<em>${k > 0 ? 'Their own witness.' : 'Nothing to march for.'}</em> Every squadmate is ${k > 0 ? '+' : '−'}${Math.abs(k)} to hit this fight.`);
+    if (B.log && CARDS[S.card] && CARDS[S.card].fx) blog(`<em>${CARDS[S.card].name}:</em> ${CARDS[S.card].fx}`);
+    return r; }; }
+/* the widget for a node's html (as Book Nine's rationsHTML), and the HUD pill beside the purse */
+function witnessHTML(t){ const n = t ? b10WitOf(t) : b10Wit(), tier = b10WitTier(n);
+  return `<div class="chainbox allybox" role="group" aria-label="Witness"><div class="crow"><span>Witness</span><b>${n} of ${B10_WITMAX} · ${esc(B10_WITW[tier])}</b></div><div class="bar${n <= 3 ? ' col' : ''}"><i style="width:${Math.round(n / B10_WITMAX * 100)}%"></i></div></div>`; }
+{ const _updChain = updChain;
+  updChain = function(){ const el = typeof document !== 'undefined' && document.getElementById('chainp');
+    if (!el || !S || S.book !== 'tcg') return _updChain();
+    const n = b10Wit(); el.innerHTML = `<span class="chainpill allypill"><span class="${n <= 3 ? 'dry' : ''}">Witness <b>${n}</b></span></span>`; }; }
+{ const _updSilver = updSilver;
+  updSilver = function(){ if (!b10L()) return _updSilver();
+    const el = typeof document !== 'undefined' && document.getElementById('silver'); if (!el) return; const t = b5Coin(S.silver);
+    if (el.textContent !== t) { el.textContent = t; if (silverShown != null && silverShown !== S.silver) { el.classList.remove('sup', 'sdown'); void el.offsetWidth; el.classList.add(S.silver > silverShown ? 'sup' : 'sdown'); } }
+    silverShown = S.silver; updChain(); }; }
+/* the one line of the opening a transfer's Book Nine Rations become (plan, Claude's call: Rations are not carried) */
+const b10RationLine = (t = b10Thread()) => { const h = t === b10Thread() ? S : (S.th && S.th[t]), i = h && h.imported, r = i && typeof i.rat === 'number' ? i.rat : null;
+  if (r == null) return '';
+  return t === 't' ? (r >= 8 ? 'The Third came out of the Wastes on full rations, which nobody else did, and nobody has forgiven it.' : r >= 5 ? 'The Third came out of the Wastes on the march ration. The march ration is about to stop meaning anything.' : r >= 1 ? 'The Third came out of the Wastes on half a ration and less. Belts are on their last holes already.' : 'The Third came out of the Wastes with nothing in the wagons. It has had practice at that.')
+    : (r >= 8 ? 'The Sixth came off the Wastes with the train full, and Yelt\'s book to prove it.' : r >= 5 ? 'The Sixth came off the Wastes on the march ration, and the march ration is going thinner.' : r >= 1 ? 'The Sixth came off the Wastes on short rations, and the train is lighter than the book says.' : 'The Sixth came off the Wastes with nothing in the wagons. The book says otherwise. The book is wrong.'); };
+
+/* ---- one squad's half of the save ---- */
+function b10Half(t, name, imp){ const T = B10_TH[t];
+  const mates = imp ? imp.mates.slice(0, 5) : T.fresh.slice(), squad = ['sgt', ...mates];
+  const lvl = clamp(Math.max(T.lvl, imp ? imp.lvl : 1), 1, T.cap);
+  const w0 = imp && imp.beats ? clamp(B10_WIT0 + imp.beats.kept - imp.beats.doubt, 2, 8) : B10_WIT0;
+  const half = {name, squad, camp:imp ? imp.mates.slice(5) : T.camp0.slice(), loy:{}, gear:imp ? imp.gear : {}, picks:imp ? imp.picks : {}, kit:imp ? imp.kit : [],
+    tricks:imp ? imp.tricks : {}, inv:imp ? imp.inv : (t === 't' ? {sharper:2, burner:1, cusser:1, smoker:1, salve:3} : {sharper:0, burner:0, cusser:0, smoker:0, salve:2}),
+    lvl, xp:LEVELS[lvl - 1] || 0, dead:{}, parked:{}, wounds:null, injury:null, silver:20, picksDue:[], debt:null, debt0:null,
+    imported:imp ? {from:imp.from, sid:imp.sid, lvl:imp.lvl, mates:imp.mates.slice(), lifted:imp.lvl < T.lvl, road:imp.road, rat:imp.rat, beats:imp.beats} : null,
+    trail:[{x:4, y:8}, {x:6, y:8}, {x:4, y:9}, {x:5, y:9}], b10w:{n:w0, lo:w0, hi:w0}};
+  squad.forEach(k => { if (k !== 'sgt') half.loy[k] = imp ? (imp.loy[k] || 0) : 0; }); half.camp.forEach(k => { half.loy[k] = imp ? (imp.loy[k] || 0) : 0; half.picks[k] ??= []; half.gear[k] ??= {}; });
+  if (imp) imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; half.dead[k] = {ch:d.ch || 7, where:d.where || '', from:d.from || 'dod'}; });
+  else if (t === 't') half.dead.sathi = {ch:7, where:'The Barrow', from:'dg'}; // the fresh start, as Books Four, Six, Seven and Nine have it
+  /* Debt is flavour, as in Books Seven and Nine: the Letherii keep the numbers their bios read, and nothing moves them */
+  if (t === 'l') { const D0 = typeof B5_DEBT0 !== 'undefined' ? B5_DEBT0 : {};
+    half.debt = imp && imp.debt ? imp.debt : Object.fromEntries(squad.filter(k => D0[k] != null).map(k => [k, D0[k]]));
+    half.debt0 = imp && imp.debt0 ? imp.debt0 : Object.assign({}, half.debt); }
+  return half; }
+/* the Fourth: Book Eight's on the 'east' road, or a canon-default Fourth (Brisk, Kettle, Tuft, Ohl). Never played; it fights beside the
+   Third in Chapter 7 (b10FourthAllies) and has its pages in the finale and the coda. */
+const B10_FOURTH_FRESH = ['brisk', 'kettle', 'tuft', 'ohl'], B10_FOURTH_LVL = 20, B10_FOURTH_CAP = 21;
+function b10FourthHalf(imp){ const mates = imp ? imp.mates.slice(0, 5) : B10_FOURTH_FRESH.slice(), f = {name:imp ? (imp.from || '') : '', squad:['sgt', ...mates], camp:imp ? imp.mates.slice(5) : [],
+    lvl:clamp(imp ? imp.lvl : B10_FOURTH_LVL, 1, B10_FOURTH_CAP), loy:{}, gear:imp ? imp.gear : {}, picks:imp ? imp.picks : {}, dead:{}, imported:imp ? {from:imp.from, sid:imp.sid, lvl:imp.lvl, book:'tth'} : null};
+  mates.forEach(k => { f.loy[k] = imp ? (imp.loy[k] || 0) : 0; });
+  if (imp) imp.dead.forEach(k => { const d = imp.deadAt[k] || {}; f.dead[k] = {ch:d.ch || 7, where:d.where || '', from:d.from || 'tth'}; });
+  return f; }
+/* a new Book Ten save. nameT: the Third's sergeant; nameL: the Letherii sergeant. impT, impL: slot ids of finished Book Nine saves (one save
+   can carry both); impF: a finished Book Eight save (the Fourth), or empty. */
+function newStateTCG(nameT, nameL, impT, impL, impF, sid){
+  nameT = nameT || 'Hask'; nameL = nameL || 'Brann';
+  const iT = b10ImpT(impT), iL = b10ImpL(impL), iF = b10ImpF(impF), t = b10Half('t', nameT, iT), l = b10Half('l', nameL, iL);
+  const s = Object.assign({v:1, book:'tcg', sid:sid || (iT || iL || iF ? newSid() : sidFor(nameT)), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+    battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'t', th:{l}, b10:{beat:{}}, b10f:b10FourthHalf(iF)}, t);
+  s.f.b10_tRoad = iT && iT.road === 'south' ? 'south' : 'adjunct'; s.f.b10_lRoad = iL && iL.road === 'adjunct' ? 'adjunct' : 'escort';
+  migrate(s); s.picksDue = picksOwed(s); s.th.l.picksDue = picksOwed(Object.assign({}, s, s.th.l, {thread:'l'}));
+  return s; }
+
+/* ---- the march: the chapter's squad swapped in first, then the wear ---- */
+{ const _sc = startChapter; startChapter = function(n){ if (b10On() && B10_CH[n]) { b10Use(B10_CH[n]); if (B10_WEAR[n] && !S.f['b10_wear' + n]) { S.f['b10_wear' + n] = 1; b10Witness(B10_WEAR[n], 'nobody says why'); } } return _sc(n); }; }
+
+/* ---- thirst, a scene cost (plan, settled 2: no counter): a wound like the others, the weakest; only a chapter gives it, with b10Thirst(id),
+   never a bad fall; a rest at the fire clears it, as any wound (a mouthful saved for it). b10ThirstPick(): the walking squadmate with the
+   lowest loyalty, never the sergeant. ---- */
+INJURIES.b10thirst = {name:'the thirst', word:'the thirst', hit:1, sev:0};
+{ const _gi = giveInjury; giveInjury = function(u, pick){ if (!pick) { const ks = Object.keys(INJURIES).filter(k => k !== 'kelyk' && k !== 'b9fever' && k !== 'b10thirst'); pick = ks[R(ks.length)]; } return _gi(u, pick); }; }
+function b10Thirst(id){ if (!b10On() || !id || !TPL[id] || id === 'sgt' || injuryOf(id)) return false; (S.injury ??= {})[id] = 'b10thirst'; tally('b10Thirst'); save(); return true; }
+const b10ThirstPick = () => { const sq = (S.squad || []).filter(k => k !== 'sgt' && b10In(k) && !injuryOf(k)); return sq.sort((a, b) => ((S.loy || {})[a] || 0) - ((S.loy || {})[b] || 0))[0] || null; };
+
+/* ---- the Letherii keep Book Five's hands while they play (as Books Seven and Nine): the renamed abilities, and Lether has no Moranth
+   munitions ---- */
+Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
+  ['name', 'desc'].forEach(f => { if (!x[f]) return; const d = Object.getOwnPropertyDescriptor(a, f); if (!d) return;
+    Object.defineProperty(a, f, {configurable:true, enumerable:true, get(){ return b10L() ? x[f] : d.get ? d.get.call(this) : d.value; }, set(v){ /* fixed per book */ }}); });
+  const run = a.run;
+  a.run = function(u, x0, y0){ if (!b10L()) return run.call(this, u, x0, y0);
+    const t = B && B.units.find(p => p.x === x0 && p.y === y0), _b = blog; let n = 0; const w0 = B && B.warren;
+    blog = m => { let s = String(m); if (x.line && n === 0) s = x.line(u, t); if (x.map) x.map.forEach(([re, to]) => { s = s.replace(re, to); }); n++; return _b(s); };
+    if (u && u.id === 'ammet' && B) B.warren = Object.assign({}, w0 || {}, {denul:1});
+    const done = () => { blog = _b; if (u && u.id === 'ammet' && B && w0) B.warren = w0; };
+    let r; try { r = run.call(this, u, x0, y0); } catch (e) { done(); throw e; }
+    if (r && r.then) return r.finally(done);
+    done(); return r; }; });
+{ const _rl = rosterLacks; rosterLacks = function(sq){ const r = _rl(sq); return b10L() ? r.filter(k => k !== 'munitions') : r; }; }
+
+/* ---- the recruits (canon sheet §6: names checked). Base numbers; the roster brings them to the squad's level. ---- */
+Object.assign(TPL, {
+  pruss:{name:'Pruss', role:'Heavy, a carter\'s son', sig:'P', col:'#8a7a62', hp:27, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+    epithet:'"My da hauled for the army at Unta. Said the beasts always die first. I thought he meant oxen."', origin:'A carter\'s yard outside Unta, Quon Tali', age:24, service:'Four years in the heavies, the last of it carrying more than his share',
+    weapon:'A heavy infantry sword, notched, and a carter\'s maul on a thong', armour:'A heavy\'s scale, patched with somebody else\'s, and a helm he wears on the march only when told',
+    bio:'A carter\'s son from outside Unta who joined the heavies because they eat first. His squad held a stretch of the rearguard on the day the short-tails came, and he was the one sent back for water when it broke, and so he is the one left. The clerks put him on the Third\'s list at the burial lines. He came over with his kit and his old sergeant\'s helm, and asked where they wanted the weight carried.',
+    traits:['Knows how much a wagon weighs by the sound of its axle', 'Says his old squad\'s names under his breath at every halt', 'Laughs late, and then too long'], gear:['A heavy\'s sword', 'His old sergeant\'s helm, tied to his pack'],
+    get quest(){ return 'East, in whatever traces the column gives him. He would like to be the one sent back for water, just once more, and come back with it.'; }},
+  tirren:{name:'Tirren', role:'Farrier of the train', sig:'T', col:'#9a7a5e', hp:20, ac:13, atk:4, dmg:[1,8,2], rng:1, mv:5, init:2, st:{might:2, wits:2, guile:1}, ab:['bash', 'salve'],
+    epithet:'"The horses don\'t lie about how far they can go. The officers do. I listen to the horses."', origin:'A smithy in a Letherii river town', age:21, service:'Two years shoeing for the brigades\' train, and one long road',
+    weapon:'A farrier\'s hammer, and a hoof-knife she will not lend', armour:'A leather farrier\'s apron over a quilted shirt, and a scarf over her hair against the dust',
+    bio:'Her father shod for the river garrisons and taught her before he taught her brothers, because she listened. She came out with the brigades\' supply train to keep its horses on their feet, and has watched the long road south kill them one by one anyway. She asked the Sixth\'s sergeant for a place in the squad because a squad can at least decide when it stops, and a horse cannot.',
+    traits:['Talks to every horse in the train by name, and to most soldiers by none', 'Checks feet before faces', 'Keeps a tally of the horses lost on the inside of her apron'], gear:['A farrier\'s hammer', 'A rasp worn thin as a leaf'],
+    get quest(){ return 'Wherever the road ends, with whatever is still walking. She means to bring one horse home. She has not said which.'; }},
+});
+Object.assign(VERB, {pruss:'brings the heavy sword down on', tirren:'swings the farrier\'s hammer at'});
+Object.assign(STATUP, {pruss:['might', 'wits'], tirren:['might', 'wits']});
+Object.assign(TPL_ROLES, {pruss:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], tirren:['light', 'blade', 'heavyweapon']});
+Object.assign(PICKS[3], {
+  pruss:[['holdline', 'Into the Traces', 'Pruss\'s free swings are unlimited and hit +2. A carter\'s son leans into a load and does not stop until it moves.'], ['shieldwall', 'Shoulder to the Wheel', 'Squadmates standing next to Pruss get +2 armour. He has stood beside a wagon in a bad place before, and knows which side takes the weight.']],
+  tirren:[['snare', 'The Twitch', 'Whatever Tirren catches is tangled: −2 to hit and −2 armour through its next turn. A farrier knows how to hold something that would rather kick.'], ['ghost', 'In the Horse-Lines', 'Enemies take −2 to hit Tirren. Among the horses, the one who stays calm is the one nobody notices.']],
+});
+/* sprites until the chapter art (180b draws the busts) */
+if (typeof FIGX !== 'undefined') Object.assign(FIGX, {
+  pruss(ctx, h, t, o){ ctx.save(); ctx.scale(1.08, 1.04); h.legs('#2a2420'); h.torso('#7e7462', '#2a261e', 7); ctx.fillStyle = 'rgba(0,0,0,.25)'; for (let y = -4; y < 6; y += 2.2) ctx.fillRect(-6, y, 12, .6);
+    ctx.strokeStyle = '#4a3622'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-6, -6); ctx.lineTo(6, 6); ctx.stroke(); // the trace-strap
+    h.head('#b8906c', 4.5, -11.2); h.look('rgba(20,12,10,.85)', -11.4); ctx.fillStyle = '#6a5a48'; ctx.beginPath(); ctx.arc(0, -12.4, 4.6, Math.PI * 1.05, Math.PI * 1.95); ctx.fill(); // cropped hair
+    ctx.strokeStyle = '#cfc8b8'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(7, 6); ctx.lineTo(10, -10); ctx.stroke(); ctx.restore(); },
+  tirren(ctx, h, t, o){ h.legs('#2e2218'); poly(ctx, [[-6,-6],[6,-6],[7,10],[-7,10]], h.armor('#7a5a3e', '#261a10')); h.head('#c49a76', 4.2, -11.4); h.look('rgba(20,12,10,.85)', -11.6);
+    ctx.fillStyle = '#8a6a4a'; ctx.beginPath(); ctx.arc(0, -12.8, 4.8, Math.PI, 0); ctx.fill(); ctx.fillRect(-4.8, -13, 9.6, 1.6); // the scarf
+    ctx.fillStyle = '#6a6a6a'; ctx.fillRect(6.2, -1, 3.4, 2.6); ctx.strokeStyle = '#5a4028'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(7.8, 1.6); ctx.lineTo(7.8, 7); ctx.stroke(); }, // the hammer
+});
+
+/* ---- the gods (canon sheet §7). The sergeants: Treach for the Third's; the Errant for the Letherii's in Chapter 2 only (he stops
+   answering after: "Lether's luck has gone quiet"; no twist boons in Book Ten). Hood's faithful are answered by the Guardians of the Gate,
+   as in Books Eight and Nine (nameless). The Shore does not answer (Yedan holds it, and dies holding it). The recruits have no god.
+   A quiet patron (P.quiet) keeps the retry as before but leaves no boon (BOONS has no entry for it): Claude's call, notes §Gods. ---- */
+const PATRON_B10GATE = {sig:'b8gate', god:'the Guardians of the Gate', title:'The Guardians of the Gate', txt:id => `${NAME(id)}, on the glass, says the old words to the old god, out of habit, and knows as they leave that nobody has been in that seat for a long while.\n\nSomething answers anyway. A gate, far off and very close, with soldiers standing in it, more than anyone could count, and not one face turned this way. One of them lifts a hand. *Not yet.*`};
+const PATRON_B10QUIET = {sig:'errant', god:'Lether\'s luck', title:'The Errant', quiet:true, txt:id => `You say the prayer, the one every Letherii soldier says before a wager, and wait for the coin to land.\n\nNothing lands. Lether's luck has gone quiet, the way a room goes quiet when somebody has left it.\n\nThe squad gets up anyway. Nobody helped. That turns out to be enough, this once.`};
+const PATRON_B10SHORE = {sig:'brune', god:'the Shore, far off', title:'The Shore', quiet:true, txt:id => `${NAME(id)} says the words to the Shore, the way Letheras's fisher-folk do, and listens for the tide.\n\nThere is no tide here. Wherever the Shore is, it is busy being held. ${NAME(id)} gets up on the third try anyway, and the squad gets up after.`};
+const b10Quiet = P => !!(b10On() && P && P.quiet);
+Object.keys(PATRONS).forEach(id => { if (id === 'sgt') return; const prev = Object.getOwnPropertyDescriptor(PATRONS, id); if (!prev) return; const was = () => prev.get ? prev.get() : prev.value;
+  Object.defineProperty(PATRONS, id, {configurable:true, enumerable:true, get(){ const p = was(); if (!b10On() || !p) return p;
+    return p.god === 'Hood' || p.god === 'the Guardians of the Gate' ? PATRON_B10GATE : p.god === 'the Shore' ? PATRON_B10SHORE : p; }, set(v){ /* kept per book */ }}); });
+{ const prev = Object.getOwnPropertyDescriptor(PATRONS, 'sgt');
+  Object.defineProperty(PATRONS, 'sgt', {configurable:true, enumerable:true, get(){ if (S && S.book === 'tcg') return b10Thread() === 'l' ? ((S.chapter || 0) <= 2 ? PATRON_ERRANT : PATRON_B10QUIET) : PATRON_TREACH;
+    return prev.get ? prev.get() : prev.value; }, set(v){ /* kept per book */ }}); }
+/* the Guardians' boon in Book Ten, as Books Eight and Nine: the first time each squadmate would go down, they stay up at 1 health with a ward of a tenth */
+{ const _hurt = hurt;
+  hurt = function(u, n, crit){ const before = u ? u.hp : 0; _hurt(u, n, crit);
+    if (b10On() && B && u && u.side === 'p' && !u.ally && before > 0 && u.hp <= 0 && boon('b8gate') && !((S.boons.spared || {})['g_' + u.id])) {
+      (S.boons.spared ??= {})['g_' + u.id] = 1; u.hp = 1; u.deadAt = null;
+      const w = Math.round(u.maxhp * .1); if (w > (u.ward || 0)) u.ward = w; blog(`<em>The Gate is held.</em> ${u.name} gets back up at 1 health, with a ward of ${w}.`); float(u, 'the gate holds', '#8fa38a'); } }; }
+
+const B10_DONE = {pruss:'b10_prussDone', tirren:'b10_tirrenDone'}; // 1 walks, 2 waits, 0 sent away
+const B10_HOME = {pruss:'the heavies\' baggage', tirren:'the train\'s horse-lines', brask:'the heavies\' baggage', tegra:'the guides\' fire at the column\'s edge', brennet:'the supply train', kaedra:'the outriders'};
+const b10Recruits = () => B10_TH[b10Thread()].recruits;
+const b10CanRecruit = id => !!(b10On() && TPL[id] && b10Recruits().includes(id) && !(S.dead && S.dead[id]) && S.f[B10_DONE[id]] !== 0);
+function b10Join(id){ if (!b10CanRecruit(id) || b10In(id)) return false;
+  if ((S.squad || []).length < ROSTER_CAP) { recruit(id); S.f[B10_DONE[id]] = 1; }
+  else { S.camp = [...new Set([...(S.camp || []), id])]; S.loy[id] ??= 0; S.picks[id] ??= []; S.gear[id] ??= {}; S.f[B10_DONE[id]] = 2; note(`${NAME(id)} waits with ${B10_HOME[id]}: six walk already.`); }
+  save(); return true; }
+{ const _recruit = recruit; recruit = function(id){ if (!b10On()) return _recruit(id); const n0 = note;
+    note = (t, c) => n0(String(t).replace('joins the Fourth', `joins ${b10Unit()}`), c); try { _recruit(id); } finally { note = n0; } save(); }; }
+
+ROSTER_BOOKS.tcg = {
+  get core(){ return B10_TH[b10Thread()].core; },
+  bench:()=>b10Thread() === 't' ? ['pruss', 'brask', 'tegra', 'doss', 'wenna', 'mehet', 'ottar', ...B4_RECRUITS, ...HOC_NEW] : ['tirren', 'brennet', 'kaedra', 'ilsa', 'sorvan', ...B5_RECRUITS],
+  home:id=>B10_HOME[id] || (b10Thread() === 't' ? 'the heavies\' baggage' : 'the brigades\' train'),
+  wait:id=>(S.camp || []).includes(id) || (!!B10_DONE[id] && S.f[B10_DONE[id]] === 2),
+  gone:id=>!!B10_DONE[id] && !b10CanRecruit(id) && !(S.camp || []).includes(id) && !b10In(id),
+  open:()=>true,
+  in:id=>{ if (B10_DONE[id]) S.f[B10_DONE[id]] = 1; },
+  out:id=>{ if (B10_DONE[id]) S.f[B10_DONE[id]] = 2; }};
+
+/* ---- the foes (canon sheet §3-§4, rules 100-103; v10.2 soak from base armour: 16-17 soak 1, 18+ soak 2). Two scales: the Third's at
+   24-28, the Letherii's (an 'l' in the id) at 16-20. Field-strippers at the burial lines (Ch 1); thirst-mad stragglers in the glass
+   (non-lethal in words: nobody in the column kills its own, rule 100); Bolkando deserters and starving foragers on the southern road;
+   Kolansii outriders at the glass's far edge (Ch 5); and in the battles, the Kolansii (men and women, starved and driven, rule 103), the
+   Shriven, and at most one of the Assail on a stretch ("the Assail" on screen; never a Pure, never a name, never "Watered" on screen).
+   Bodies borrowed until the chapter art. The numbers are the engine's first guess; the balance step tunes them and goes to David. ---- */
+Object.assign(FOES, {
+  /* the Third's (24-28) */
+  b10_scav:{name:'Field-stripper', kind:'b6_bandit', sig:'f', hp:44, ac:16, atk:17, dmg:[1,8,7], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
+  b10_scavbow:{name:'Stripper with a sling', kind:'b6_bandit', sig:'s', hp:34, ac:15, atk:17, dmg:[1,8,6], rng:6, mv:5, init:3, verb:'slings a stone at'},
+  b10_scavchief:{name:'The strippers\' boss', kind:'b6_bandit', sig:'F', hp:84, ac:18, atk:18, dmg:[1,10,8], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
+  b10_straggler:{name:'Straggler, mad with thirst', kind:'b2soldier', sig:'t', hp:40, ac:15, atk:16, dmg:[1,6,7], rng:1, mv:4, init:2, verb:'clubs at'},
+  b10_ringleader:{name:'The stragglers\' ringleader', kind:'b2soldier', sig:'T', hp:80, ac:17, atk:17, dmg:[1,8,8], rng:1, mv:4, init:2, boss:true, sk:['shove'], verb:'clubs at'},
+  b10_outrider:{name:'Kolansii outrider', kind:'b5_letherii', sig:'o', hp:46, ac:16, atk:17, dmg:[1,8,7], rng:1, mv:6, init:3, sk:['hitrun'], verb:'cuts at'},
+  b10_kolansii:{name:'Kolansii soldier', kind:'b5_letherii', sig:'k', hp:48, ac:17, atk:18, dmg:[1,10,8], rng:1, mv:4, init:2, verb:'cuts at'},
+  b10_kolbow:{name:'Kolansii archer', kind:'b5_letherii_bow', sig:'a', hp:36, ac:15, atk:18, dmg:[1,10,7], rng:6, mv:4, init:2, sk:['pin'], verb:'looses an arrow at'},
+  b10_kolpike:{name:'Kolansii pikeman', kind:'b5_letherii', sig:'p', hp:54, ac:18, atk:18, dmg:[1,10,8], rng:1, mv:4, init:1, sk:['reach'], verb:'drives a pike at'},
+  b10_kofficer:{name:'Kolansii officer', kind:'b5_letherii', sig:'K', hp:90, ac:19, atk:19, dmg:[1,12,9], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'cuts at'},
+  b10_shriven:{name:'Shriven', kind:'b2soldier', sig:'S', hp:70, ac:19, atk:19, dmg:[1,12,9], rng:1, mv:4, init:2, dr:2, sk:['parry'], verb:'brings a blade down on'},
+  b10_assail:{name:'Assail', kind:'b3_barghast', sig:'A', hp:190, ac:20, atk:21, dmg:[2,10,10], rng:1, mv:5, init:3, dr:3, boss:true, sk:['reach', 'daze'], verb:'strikes at'},
+  /* the Letherii's (16-20) */
+  b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
+  b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
+  b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
+  b10_ldog:{name:'Half-wild dog', kind:'b5_c7_greatwolf', sig:'d', hp:22, ac:13, atk:11, dmg:[1,6,4], rng:1, mv:7, init:4, verb:'bites'},
+  b10_lforager:{name:'Starving forager', kind:'b6_bandit', sig:'g', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'swings a hook at'},
+  b10_lforagerchief:{name:'Foragers\' headman', kind:'b6_bandit', sig:'G', hp:56, ac:15, atk:12, dmg:[1,10,6], rng:1, mv:5, init:2, boss:true, sk:['rally'], verb:'swings a hook at'},
+  b10_lstraggler:{name:'Straggler, mad with thirst', kind:'b2soldier', sig:'t', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:4, init:2, verb:'clubs at'},
+  b10_lringleader:{name:'The stragglers\' ringleader', kind:'b2soldier', sig:'T', hp:56, ac:15, atk:12, dmg:[1,8,6], rng:1, mv:4, init:2, boss:true, sk:['shove'], verb:'clubs at'},
+  b10_lkolansii:{name:'Kolansii soldier', kind:'b5_letherii', sig:'k', hp:36, ac:15, atk:12, dmg:[1,10,5], rng:1, mv:4, init:2, verb:'cuts at'},
+  b10_lkolbow:{name:'Kolansii archer', kind:'b5_letherii_bow', sig:'a', hp:26, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:4, init:2, sk:['pin'], verb:'looses an arrow at'},
+  b10_lkolpike:{name:'Kolansii pikeman', kind:'b5_letherii', sig:'p', hp:40, ac:16, atk:12, dmg:[1,10,5], rng:1, mv:4, init:1, sk:['reach'], verb:'drives a pike at'},
+  b10_lkofficer:{name:'Kolansii officer', kind:'b5_letherii', sig:'K', hp:70, ac:17, atk:13, dmg:[1,12,6], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'cuts at'},
+  b10_lshriven:{name:'Shriven', kind:'b2soldier', sig:'S', hp:52, ac:17, atk:13, dmg:[1,10,6], rng:1, mv:4, init:2, dr:1, sk:['parry'], verb:'brings a blade down on'},
+  b10_lassail:{name:'Assail', kind:'b3_barghast', sig:'A', hp:130, ac:18, atk:14, dmg:[2,8,7], rng:1, mv:5, init:3, dr:2, boss:true, sk:['reach', 'daze'], verb:'strikes at'},
+  /* on the squad's side, in a fight's allies:[[id, x, y]]: a Bonehunter regular with the Third; a Letherii spear of the line with the Letherii */
+  b10_regular:{name:'Regular of the Bonehunters', kind:'b2soldier', sig:'r', hp:40, ac:17, atk:16, dmg:[1,10,5], rng:1, mv:4, init:1, verb:'cuts at'},
+  b10_lspear:{name:'Spear of the line', kind:'b5_letherii', sig:'e', hp:26, ac:15, atk:9, dmg:[1,8,3], rng:1, mv:4, init:1, verb:'drives a spear at'},
+});
+const b10Kolansii = u => !!(u && u.side === 'e' && /^b10_l?(kolansii|kolbow|kolpike|kofficer|outrider)/.test(String(u.id || '')));
+const b10Assail = u => !!(u && u.side === 'e' && /^b10_l?assail/.test(String(u.id || '')));
+/* the allies grow with the squad, as Book Nine's do */
+{ const _mkAlly = mkAlly; mkAlly = function(k, x, y){ const u = _mkAlly(k, x, y);
+    if (['b10_regular', 'b10_lspear'].includes(k)) { u.maxhp = u.hp = FOES[k].hp + 3 * lvB(); u.atk += lvB(); if (u.dmg && lvDmg()) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + lvDmg()]; u.ac += lvAc(); u.b10reg = true; } return u; }; }
+/* the Fourth over the ridge (Chapter 7): its sergeant and its first living squadmates, at the Fourth's own level, as allies. Each is made a
+   FOES row on the fly (b10_4_<id>) so mkAlly can build it; the Fourth's sergeant borrows a Malazan soldier's body. B10_FOURTH_N: how many come
+   onto the stretch (a knob for the balance step; David rules). b10FourthAllies(x, y) -> [[id, x, y], ...] for a battle's allies list. */
+const B10_FOURTH_N = 3;
+function b10FourthRow(id){ const f = (S && S.b10f) || b10FourthHalf(null), lvl = f.lvl || B10_FOURTH_LVL, L = lvl - 1;
+  if (id === 'sgt') return {name:f.name ? `Sergeant ${f.name}, of the Fourth` : 'The Fourth\'s sergeant', kind:'b2soldier', sig:'4', col:'#c8a46a', hp:22 + L * 4, ac:15 + lvAc(lvl), atk:4 + L, dmg:[1,10,2 + lvDmg(lvl)], rng:1, mv:4, init:2, verb:'cuts at'};
+  const t = TPL[id]; if (!t) return null;
+  return {name:t.name, kind:id, sig:t.sig, col:t.col, hp:t.hp + L * 4, ac:t.ac + lvAc(lvl), atk:t.atk + L, dmg:t.dmg ? [t.dmg[0], t.dmg[1], (t.dmg[2] || 0) + lvDmg(lvl)] : [1,6,lvDmg(lvl)], rng:t.rng || 1, mv:t.mv || 4, init:t.init || 1, verb:VERB[id] || 'strikes at'}; }
+function b10FourthAllies(x = 1, y = 1){ const f = (S && S.b10f) || b10FourthHalf(null), dead = f.dead || {};
+  const ids = ['sgt', ...(f.squad || []).filter(k => k !== 'sgt' && TPL[k] && !dead[k])].slice(0, B10_FOURTH_N);
+  return ids.map((id, i) => { const k = 'b10_4_' + id, row = b10FourthRow(id); if (!row) return null; FOES[k] = row; return [k, x + i, y]; }).filter(Boolean); }
+const b10FourthName = () => { const f = S && S.b10f; return f && f.name ? `Sergeant ${f.name}` : 'the Fourth\'s sergeant'; };
+
+/* ---- Book Ten's balance tables (empty on purpose: the balance step fills them and goes to David; the Nov 6 targets). B10SOLDIER rows
+   join SOLDIER_FIGHT; B10GAP is Bridgeburner's per-fight boost, as B9GAP; B10GAP_ROW stays null until the step (no row = Bridgeburner's
+   plain multipliers). ---- */
+const B10SOLDIER = {};
+Object.assign(SOLDIER_FIGHT, B10SOLDIER);
+let B10GAP_ROW = null;
+const B10GAP = {};
+const b10Gap = () => { if (!b10On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B10GAP[id]) || (id && /^b10_/.test(id) ? B10GAP_ROW : null); };
+{ const _mkFoe = mkFoe;
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b10Gap(); if (!g) return u;
+    u.ac = (u.ac || 10) + (g.ac || 0); u.atk = (u.atk || 0) + (g.atk || 0); u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * (g.hp || 1)));
+    if (u.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + (g.dmg || 0)]; if (g.mv) u.mv = (u.mv || 4) + g.mv; return u; }; }
+
+/* ---- the words Book Ten throws at you. Bound by tcg-canon §4 and rules 98-111: the Glass Desert by name; the chained god by the
+   soldiers' word; the Assail by the soldiers' word; the lizard-folk; "a Malazan Host"; Brys "the Commander" ---- */
+const b10Saw = t => () => !!S && (S.chapter || 0) >= t;
+GLOSSX.tcg = [
+  [0, 'Witness', 'What the squad still believes it marches for, when nobody has said. Some days it is each other. Some days it is a saying the sergeants repeat. Some days there is nothing, and the squad walks anyway.'],
+  [0, 'Kolanse', 'The country east of the Wastes, where the Adjunct is marching. A drought there, years long; thin soil, empty granaries, and people who have been hungry so long they have stopped saying so.'],
+  [0, 'The chained god', 'What the soldiers call the god the Adjunct means to free, when they call it anything. Camp word says that is the reason for all of it. Nobody in the squad has seen a chain.'],
+  [0, 'The Assail', 'Who holds Kolanse, by the soldiers\' word: tall, pale, and very hard to kill. The mages call them something else and do not like saying it.'],
+  [0, 'The heavies', 'The army\'s heavy infantry: scale, big swords, and a habit of not moving. The Third marches with them. When the beasts die, the heavies take the traces.', ()=>b10Thread() === 't'],
+  [0, 'Docks', 'Letherii coin. Nobody out here will take it. The squad counts it anyway.', ()=>b10Thread() === 'l'],
+  [0, 'The Commander', 'Brys Beddict, who commands the Letherii army: seen far off, at the head of the column, on a tired horse.', ()=>b10Thread() === 'l'],
+  [0, 'The Glass Desert', 'The waste between the Wastes and Kolanse: no water, nothing living, and the ground underfoot gone to glass that cuts boots and catches the stars at night. The army crosses it by night.', ()=>b10Crossing() || b10Saw(3)()],
+  [0, 'The lizard-folk', 'The great scaled things that marched out of the Wastes after the battle with the short-tails and joined the allies. Nobody in the ranks has the word for them. A Letherii officer has one and uses it once.', ()=>b10Thread() === 'l' || b10Saw(2)()],
+  [0, 'The Grey Helms', 'Foreign knights in grey, marching ahead of the Letherii toward Kolanse, faster than anyone needs to.', ()=>b10Thread() === 'l' || b10Saw(4)()],
+  [3, 'Night marches', 'How the army crosses the glass: march in the dark, lie up under whatever shade there is by day, and count the water every time the column halts.', b10Saw(3)],
+  [4, 'The long way round', 'The allies\' road: south of the glass and east along it to Kolanse City, behind the Bolkando and the Grey Helms. Longer, with water in it, and every horse in the train dying slowly.', b10Saw(4)],
+  [6, 'The King\'s ships', 'Supply ships out of Letheras, come round by sea to meet the allied army on the Kolanse coast, with food, water, and some very large passengers.', b10Saw(6)],
+  [7, 'A Malazan Host', 'Another Malazan army, out of nowhere, over a ridge, at the end. Nobody in the Third can say whose. Some of it was on the Third\'s stretch before anyone could ask.', b10Saw(7)],
+  [7, 'The barrows', 'Where the army buried its dead after the last battle, in Kolanse, in long mounds. The squads stood at the edge.', ()=>!!(S && S.chapters && S.chapters[7] != null)],
+];
+
+/* ---- the journal, the count and Deeds ---- */
+{ const _jn = journalNotes; journalNotes = function(){ const out = _jn(); if (!b10On()) return out;
+    const o = S.th && S.th[b10Other()], t = b10Thread() === 't', n = b10Wit();
+    const where = t ? (b10TRoad() === 'south' ? 'The Third, with the Letherii column, the long way round' : 'The Third, with the Bonehunters\' heavies, crossing the glass') : (b10LRoad() === 'adjunct' ? 'The Sixth Company\'s squad, crossing the glass with the Malazans' : 'The Sixth Company\'s squad, in the Commander\'s brigades, the long way round');
+    out.unshift(`${where}. Witness: ${n} of ${B10_WITMAX}, ${B10_WITW[b10WitTier(n)]}.${o ? ` ${b10Other() === 't' ? 'The Third' : 'The Letherii squad'} (Sergeant ${esc(o.name)}) is ${b10TRoad() === 'south' || b10LRoad() === 'adjunct' ? 'in the same column, somewhere' : 'on the other road'}, at level ${o.lvl}.` : ''}`);
+    return out; }; }
+{ const _sr = statsRows; statsRows = function(s){ const r = _sr(s); if (!s || s.book !== 'tcg') return r; const st = s.stats || {};
+    const cur = s.b10w || {}, oth = (s.th && Object.values(s.th)[0] && Object.values(s.th)[0].b10w) || null;
+    r.push(['Witness, now', `${cur.n ?? B10_WIT0} of ${B10_WITMAX}`], ['Witness, at its lowest', Math.min(cur.lo ?? B10_WIT0, oth ? (oth.lo ?? B10_WIT0) : 10)], ['Beats kept', st.b10Kept || 0], ['Beats doubted', st.b10Doubt || 0], ['Thirst', st.b10Thirst || 0]); return r; }; }
+function b10DeedsExtra(mine){ const lows = mine.filter(({s}) => s.b10w).map(({s}) => Math.min(s.b10w.lo ?? B10_WIT0, ...Object.values(s.th || {}).map(h => (h && h.b10w && h.b10w.lo) ?? 10))), fin = mine.filter(({s}) => bookDone(s)).length;
+  const kept = mine.reduce((a, {s}) => a + (((s.stats || {}).b10Kept) || 0), 0), top = mine.filter(({s}) => s.b10w).map(({s}) => Math.max(s.b10w.hi ?? B10_WIT0, ...Object.values(s.th || {}).map(h => (h && h.b10w && h.b10w.hi) ?? 0)));
+  const rows = [['Witness at its lowest, across every sergeant', lows.length ? `${Math.min(...lows)} of ${B10_WITMAX}` : 'Not yet'], ['Witness at its highest', top.length ? `${Math.max(...top)} of ${B10_WITMAX}` : 'Not yet'], ['Beats kept', kept || 'Not yet'], ['Came through to the end', fin || 'Not yet']];
+  return `<h4 class="jh">Witness</h4><div class="kv">${rows.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }
+
+/* the chapters' titles (Claude's call; the canon sheet fixes the places), keys and their defaults (the bot and a rebuild use these).
+   Chapter 7's keys are the Third's endings; the Letherii's ending is S.f.b10_lethRoad, set at Chapter 6's dusk; the Fourth's is
+   S.f.b10_fourthRoad, set in Chapter 7. The last book: the roads are endings, not imports. */
+const B10CH = {1:'Missing Is Not Dead', 2:'The Parting', 3:'Night Marches', 4:'The Long Way Round', 5:'The Last Water', 6:'The Feint', 7:'Over the Ridge'};
+const B10KEYS = {1:['names', 'water'], 2:['watch', 'count'], 3:['haul', 'cut'], 4:['horses', 'pace'], 5:['give', 'hold'], 6:['hold', 'carry'], 7:['colours', 'kolanse', 'home']};
+const B10KEY0 = {1:'names', 2:'watch', 3:'haul', 4:'horses', 5:'give', 6:'hold', 7:'colours'};
+const B10_LETHROADS = ['letheras', 'kolanse', 'free'];
+const B10_FOURTHROADS = ['host', 'third', 'home'];
+const b10Key = n => (S && S.f && S.f[`b10_c${n}_key`]) || (S && S.chapters && S.chapters[n]) || null;
+const b10LethRoad = () => B10_LETHROADS.includes(S && S.f && S.f.b10_lethRoad) ? S.f.b10_lethRoad : null;
+const b10FourthRoad = () => B10_FOURTHROADS.includes(S && S.f && S.f.b10_fourthRoad) ? S.f.b10_fourthRoad : null;
+/* the endings' names and one line each, for the coda and any page that needs them (the chapters write the full pages) */
+const B10_ENDW = {
+  t:{colours:['With the colours', 'The Third stayed with what was left of the army, wherever it goes now.'], kolanse:['In Kolanse', 'The Third stayed in Kolanse when the army left, to dig wells in a country that had forgotten what rain was for.'], home:['Time served', 'The Third put its names on the time-served list, and went down to the coast for a ship home.']},
+  l:{letheras:['Home to Letheras', 'The Sixth Company went home with the Commander\'s brigades, on the King\'s ships, to a city that had not decided what to make of them.'], kolanse:['In Kolanse', 'The Sixth Company stayed in Kolanse when the brigades sailed, with the horses that were left and a country that needed them.'], free:['Out', 'The Sixth Company came out of the army at the coast, every name on the list, and went its own ways.']},
+  f:{host:['With the Host', 'The Fourth went back to the Host that brought it over the ridge, and goes where it goes.'], third:['With the Third', 'The Fourth stayed with the Third, which nobody had planned and nobody argued with.'], home:['Home', 'The Fourth went home, again, and this time meant it.']}};
+
+/* ---- the backdrops: each borrows an earlier book's drawing until the chapter art replaces it (Book Nine's pattern, 160) ---- */
+const B10_SCENE_LIKE = {b10_camp:'b9_camp_night', b10_camp_night:'b9_camp_night', b10_burial:'b9_retreat', b10_glass:'b9_wastes', b10_glass_night:'b9_wastes_night', b10_traces:'b9_column',
+  b10_south:'b9_column', b10_south_night:'b9_wastes_night', b10_train:'b9_wagons', b10_coast:'b2_harbour_night', b10_field:'b9_line', b10_battle:'b9_battle', b10_lake:'b9_wastes_night',
+  b10_kolanse:'b9_wastes', b10_ridge:'b9_line', b10_barrows:'b9_retreat'};
+Object.assign(SCENES, {
+  b10_camp:{loc:'The Wastes\' edge', sub:'The camp after the short-tails', cap:'Tents in their rows with gaps in them, the wounded in the long tents, and the allies\' columns coming in on the horizon.', amb:'explore'},
+  b10_camp_night:{loc:'The Wastes\' edge', sub:'The camp · night', cap:'Small fires, the long tents lit from inside, and somebody at every fire counting names.', amb:'explore'},
+  b10_burial:{loc:'The Wastes\' edge', sub:'The burial lines', cap:'Long trenches in the dry ground, spades going, and a clerk with a slate at each one.', amb:'explore'},
+  b10_glass:{loc:'The Glass Desert', sub:'Lying up by day', cap:'Glass to the horizon, every edge of it throwing the sun back, and the column under its cloaks waiting for dark.', amb:'explore'},
+  b10_glass_night:{loc:'The Glass Desert', sub:'The night march', cap:'Stars overhead and the same stars underfoot in the glass, and the column walking between them without a light.', amb:'explore'},
+  b10_traces:{loc:'The Glass Desert', sub:'The wagons, in the traces', cap:'A supply wagon with no oxen, and heavies in the harness where the oxen were.', amb:'explore'},
+  b10_south:{loc:'South of the glass', sub:'The long way round', cap:'A column in poor shape on a road that is mostly an idea, the Bolkando ahead and the Grey Helms\' dust ahead of them.', amb:'explore'},
+  b10_south_night:{loc:'South of the glass', sub:'The column\'s camp · night', cap:'The brigades\' fires in a long line, the horse-lines quiet, and a farrier\'s lamp still going.', amb:'explore'},
+  b10_train:{loc:'South of the glass', sub:'The supply train', cap:'Wagons, water barrels, and horses with their heads down, and the clerks counting all three.', amb:'explore'},
+  b10_coast:{loc:'The Kolanse coast', sub:'The King\'s ships', cap:'Ships at anchor off a grey beach, boats coming in loaded, and on the sand a line of crates longer than the column.', amb:'explore'},
+  b10_field:{loc:'Before Kolanse City', sub:'The allied line', cap:'A long line of shields on open ground, the Kolansii line across from it, and the city beyond them both.', amb:'explore'},
+  b10_battle:{loc:'Kolanse', sub:'The battle', cap:'Dust, smoke, the noise of shields, and a line that has to hold a little longer.', amb:'battle'},
+  b10_lake:{loc:'The Glass Desert', sub:'Wet ground', cap:'The glass going dark underfoot, then wet, then water, and the whole column stopping to look at it.', amb:'explore'},
+  b10_kolanse:{loc:'Kolanse', sub:'Out of the glass', cap:'Thin fields, empty granaries, and dust where there should be grass, and people at the field-edges watching an army come out of the desert.', amb:'explore'},
+  b10_ridge:{loc:'Kolanse', sub:'The regulars\' line', cap:'A stretch of the line far from anyone\'s banner, a ridge behind the enemy, and a hill far off with smoke over it.', amb:'battle'},
+  b10_barrows:{loc:'Kolanse', sub:'The barrows', cap:'Long mounds of new earth in rows, the army standing at the edge of them, and nobody talking.', amb:'explore'},
+});
+Object.entries(B10_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
+/* the chapter card falls back by squad when a chapter names no scene: the camp in Ch 1-2, then the glass or the southern road */
+{ const _sci = showChapterIntro; showChapterIntro = function(){ const r = _sci(); const CH = CHAPTERS[S && S.chapter];
+    if (b10On() && CH && !(CH.intro && CH.intro.scene)) { G.sceneKind = (S.chapter || 0) <= 2 ? 'b10_camp' : b10Crossing() ? 'b10_glass_night' : 'b10_south'; AUDIO.setScene(sceneAmb(G.sceneKind, 'explore')); } return r; }; }
+{ const _endBeat = endBeat; endBeat = function(won){ const r = _endBeat(won); if (b10L() && B && B.banner && !won) B.banner.txt = 'The squad is down'; return r; }; }
+
+/* ============ the finale and the series coda (plan, settled 4) ============
+   Book Ten's own finale is 037's (CHAPTERS[7].finale; Chapter 7 writes it), with any extra pages Chapter 7 adds through B10FIN.extra (the
+   Letherii's road and pages, the Fourth's), put in before 037's end page. After the end page comes the series coda: an opening page, one
+   page per squad from every finished book on this device (the roster's saves, read the way the title reads them), and the credits last.
+   Each squad's page is built from data its book already has: the road it took (that book's own Chapter 7 end line, CHEND[7][key], or the
+   second squad's road from B10_ROAD2), who walked off the last page, who did not. Where a book has nothing to read, a neutral line.
+   Chapter 7 draws its own extra pages in a showFinale wrapper for kinds starting 'b107'; this file draws 'b10c…' kinds. ---- */
+const B10FIN = {extra:null};
+const B10CODA_MAX = 40; // squads; past this the credits page counts the rest
+/* the second squad's roads in the two-squad books, by the words those books gave them (107, 127, 167; and Book Ten's own) */
+const B10_ROAD2 = {
+  bh:{key:'b6_fourthRoad', t:'h', unit:'Fourth', vals:{highfist:['With the High Fist', 'The Fourth marched on with Onearm\'s Host, which is the High Fist\'s Host now.'], hanarara:['The Hanar Ara road', 'The Fourth stayed behind as the picket on the Hanar Ara road, for a while.'], home:['The road home', 'The Fourth went home, down to the coast and onto a ship west.']}, d:'highfist'},
+  rg:{key:'b7_lethRoad', t:'l', unit:'Sixth', vals:{army:['The army', 'The Sixth Company stayed a company of the army of the new Lether.'], palace:['The palace', 'The Sixth Company went into the Palace Guard of the new emperor.'], free:['Out', 'The Sixth Company went out of the army.']}, d:'army'},
+  dod:{key:'b9_lethRoad', t:'l', unit:'Sixth', vals:{escort:['With the Commander', 'The Sixth Company stayed with the Commander\'s brigades.'], adjunct:['East, with the foreigners', 'The Sixth Company went on east with the foreigners.'], home:['Home to Lether', 'The Sixth Company went home to Lether when there was a way home.']}, d:'escort'},
+  tcg:{key:'b10_lethRoad', t:'l', unit:'Sixth', vals:Object.fromEntries(Object.entries(B10_ENDW.l)), d:'letheras'}};
+/* the squad's own name in each book: the first squad (the one on top of a save that finished), and the second (in o.th) */
+const B10_UNIT1 = {gotm:'Fourth', dg:'Third', moi:'Fourth', hoc:'Third', mt:'Sixth', bh:'Third', rg:'Third', tth:'Fourth', dod:'Third', tcg:'Third'};
+const b10NameList = ids => { const n = ids.map(id => TPL[id] ? TPL[id].name : null).filter(Boolean); return n.length < 2 ? n.join('') : `${n.slice(0, -1).join(', ')} and ${n[n.length - 1]}`; };
+/* every finished save on the device, Book One first; the current save (if finished) stands for its own slot */
+function b10CodaSaves(){ const out = [], seen = new Set();
+  try { roster().list.forEach(e => { if (!e || !e.id || seen.has(e.id)) return; seen.add(e.id); const o = S && S.sid === e.id ? S : loadSlot(e.id); if (o && bookDone(o) && BOOKS[bookOf(o)]) out.push({o, upd:e.upd || 0}); }); } catch(e) { /* a device with no roster */ }
+  if (S && bookDone(S) && !seen.has(S.sid)) out.push({o:S, upd:Date.now()});
+  return out.sort((a, b) => BOOKS[bookOf(a.o)].n - BOOKS[bookOf(b.o)].n || b.upd - a.upd).map(x => x.o); }
+/* one page's data for one squad: {book, unit, sgt, road:[title, line], walked:[ids], fell:[ids], wit} */
+function b10CodaHalf(o, h, unit, road, extra){ const dead = h.dead || {}, own = id => !(dead[id] && dead[id].from); // the dead this squad lost in this book
+  const walked = [...new Set([...(h.squad || []), ...(h.camp || [])])].filter(id => id !== 'sgt' && TPL[id] && !dead[id]);
+  const fell = Object.keys(dead).filter(id => TPL[id] && own(id));
+  return Object.assign({book:bookOf(o), unit, sgt:h.name || '', road, walked, fell}, extra || {}); }
+function b10CodaSquads(o){ const b = bookOf(o), out = [], E = (bookEnds(b)[7] || {}), key = o.chapters && o.chapters[7];
+  const end1 = E[key] ? [String(E[key][0] || ''), String(E[key][1] || '')] : null;
+  const top = o.thread && B10_ROAD2[b] && o.thread === B10_ROAD2[b].t ? Object.assign({}, o, (o.th && Object.values(o.th)[0]) || {}) : o; // the first squad, whichever half it sits in
+  out.push(b10CodaHalf(o, top, B10_UNIT1[b] || 'Fourth', end1, b === 'tcg' ? {wit:(top.b10w && top.b10w.n) ?? null} : null));
+  const R = B10_ROAD2[b], h2 = R && o.th && o.th[R.t] ? o.th[R.t] : (R && o.thread === R.t ? o : null);
+  if (R && h2 && h2 !== top) { const v = (o.f && o.f[R.key]) || R.d; out.push(b10CodaHalf(o, h2, R.unit, R.vals[v] || null, b === 'tcg' ? {wit:(h2.b10w && h2.b10w.n) ?? null} : null)); }
+  if (b === 'tcg' && o.b10f) { const v = (o.f && o.f.b10_fourthRoad) || 'host'; out.push(b10CodaHalf(o, o.b10f, 'Fourth', B10_ENDW.f[v] || null)); }
+  return out; }
+function b10CodaPages(){ const all = []; b10CodaSaves().forEach(o => { try { b10CodaSquads(o).forEach(q => all.push(q)); } catch(e) { console.warn('coda', e); } }); return all; }
+const B10_NEUTRAL = 'Whatever road it took at the end, nobody wrote it down. The squad was on it anyway.';
+const B10_UNITP = {Fourth:'Fourth', Third:'Third', Sixth:'Sixth Company'};
+function b10CodaWords(q){ const B = BOOKS[q.book] || BOOKS.gotm, u = B10_UNITP[q.unit] || 'squad', who = q.sgt ? `Sergeant ${q.sgt}'s ${u}` : `The ${u}`;
+  const paras = [];
+  paras.push(q.road ? `*${q.road[0]}.* ${q.road[1] || ''}`.trim() : B10_NEUTRAL);
+  paras.push(q.walked.length ? `Walked off the last page: ${b10NameList(q.walked)}${q.sgt ? `, and the sergeant` : ''}.` : q.sgt ? 'Walked off the last page: the sergeant, and nobody else.' : 'Nobody on the roll walked off the last page that anyone wrote down.');
+  if (q.fell.length) paras.push(`Did not: ${b10NameList(q.fell)}.`);
+  if (q.wit != null && typeof q.wit === 'number') paras.push(`At the end, ${B10_WITW[b10WitTier(q.wit)]}.`);
+  return {kicker:`Book ${B.word} · ${B.name}`, title:who, paras}; }
+/* the opening page and the credits (the coda's narration: canon's answer, said only here, as "the story is": tcg-canon §9a and §10 Q6) */
+const B10CODA_OPEN = [
+  'The story is that at the barrows, at the very end, the Adjunct said the army would be forgotten, and that she did not regret it.',
+  'The story is right about the army. Nobody back home will learn these names. Nobody will put up a stone that says who held which stretch, or who came back for water, or who did not.',
+  'The story is wrong about one thing. Somebody wrote them down.',
+  'These are the ones this device remembers.'];
+function b10CreditsWords(n, more){ const shelf = shelfBooks().sort((a, b) => a.n - b.n);
+  return [`From the Ranks: ${rdUpT(shelf.length).toLowerCase()} books, each beside one of Steven Erikson's novels of the Malazan Book of the Fallen, in order, told by soldiers the novels never name.`,
+    `${n ? `${rdUpT(n)} squad${n === 1 ? '' : 's'} on this device came through to the end of a book${more ? `, and ${more} more past what this page can hold` : ''}.` : 'No squad on this device has finished a book yet, apart from this one.'}`,
+    'The Malazan world was created by Steven Erikson and Ian C. Esslemont, and it and its canon characters belong to them. With thanks to Steven Erikson for the Malazan Book of the Fallen, all ten of it, and to Ian C. Esslemont for the world they built together. The squads only walked beside it.',
+    'For personal play.']; }
+{ const _fp = finPages, _sf = showFinale;
+  const mine = k => /^b10c/.test(k);
+  finPages = function(){ const P = _fp(); if (!b10On()) return P;
+    const iEnd = P.findIndex(p => p.k === 'end'); let add = [];
+    try { add = typeof B10FIN.extra === 'function' ? (B10FIN.extra() || []) : []; } catch(e) { console.warn('finale', e); add = []; }
+    if (add.length) P.splice(iEnd < 0 ? P.length : iEnd, 0, ...add);
+    let Q = []; try { Q = b10CodaPages(); } catch(e) { console.warn('coda', e); Q = []; }
+    const show = Q.slice(0, B10CODA_MAX), more = Math.max(0, Q.length - show.length);
+    P.push({k:'b10copen'}, ...show.map(q => ({k:'b10coda', q})), {k:'b10credits', n:Q.length, more});
+    return P; };
+  showFinale = function(i = 0){ if (!b10On()) return _sf(i);
+    const P = finPages(); i = clamp(i | 0, 0, P.length - 1); const pg = P[i]; if (!mine(pg.k)) return _sf(i);
+    S.scene = 'finale'; S.finPage = i; S.node = null; save();
+    view = 'finale'; $('#sheet').hidden = true; B = null; titleAnim = null; finAnim = null; AUDIO.setScene('end');
+    let body = '';
+    if (pg.k === 'b10copen') { G.sceneKind = SCENES.b10_barrows ? 'b10_barrows' : 'b9_retreat';
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">From the Ranks</div><h1 class="fin-title">The roll</h1><div class="narr">${B10CODA_OPEN.map(p => fmt(p)).join('')}</div>`; }
+    else if (pg.k === 'b10coda') { const W = b10CodaWords(pg.q);
+      body = `<div class="fin-k">${esc(W.kicker)}</div><h1 class="fin-title">${esc(W.title)}</h1><div class="narr">${W.paras.map(p => fmt(p)).join('')}</div>`; }
+    else { const L = b10CreditsWords(pg.n || 0, pg.more || 0);
+      body = `<div class="fin-k">The end of the series</div><h1 class="fin-title">${esc(BOOKS.tcg.name)}</h1><div class="narr">${L.slice(0, 2).map(p => fmt(p)).join('')}</div><p class="fine fin-credit">${esc(L[2])}</p><p class="fine">${esc(L[3])}</p>`; }
+    const last = i === P.length - 1;
+    toTop(); $('#app').innerHTML = `<div class="fin" id="fin">${body}
+    <div class="fin-nav ${last ? 'last' : ''}"><button class="btn" id="fBack">Back</button><span class="fin-pg">${i + 1} / ${P.length}</span>${last ? `<button class="btn" id="fSq">The squad</button><button class="btn primary" id="fTitle">Title</button>` : `<button class="btn primary" id="fNext">Next</button>`}</div></div>`;
+    window.scrollTo(0, 0);
+    $('#fBack').onclick = () => { AUDIO.play('click'); finGo(-1); };
+    if (last) { $('#fSq').onclick = () => { AUDIO.play('click'); openChars(0); }; $('#fTitle').onclick = () => { AUDIO.play('click'); showTitle(); }; }
+    else $('#fNext').onclick = () => { AUDIO.play('click'); finGo(1); };
+    let sx = null, sy = null; const el = $('#fin'); el.ontouchstart = e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; };
+    el.ontouchend = e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; if (Math.abs(dx) > 70 && Math.abs(dy) < 50) { AUDIO.play('flip'); finGo(dx < 0 ? 1 : -1); } }; }; }
+
+/* ============ Book Ten's title: the Glass Desert by night, and two who stay awake (v13.0, 180b) ============
+   The painted title (ART 'title/tcg', drawn by Claude for this game from a seeded generator): night in the Glass Desert. A sky crowded with
+   stars over a plain of glass that throws them back, so the stars are above and below; low ridges of glass catching the light in long thin
+   glints. Far off, the army as a thin dark line walking east without a lamp, a few wagons in it with no beasts in the traces. In the
+   foreground, on their packs, two soldiers sitting back to back, awake, each looking out a different way: one a Malazan heavy in scale with
+   a big sword across the knees, one a Letherii with a spear upright and a round padded cap. Between them on the glass, an empty water-skin
+   laid flat. Nobody sleeps; somebody has to see it. Nothing in the sky is named or explained (rules 98, 107).
+   The patch (ART 'insignia/tcg'): the two squads' own patches side by side, as Books Seven and Nine (Book Nine's rule: two 290-wide inner
+   patches in a 600-wide SVG, so 029's tpatch2 rule shows them at single size): the Third's (Book Four's lozenge) with a shard of glass
+   stitched under it in pale thread; the Sixth Company's (Book Five's coin) with a small ship under sail.
+   Motion: the .k10-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
+{
+  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
+  const W = 1600, H = 900, HZ = 520; // the horizon
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+<style>.k10-tw{animation:k10-tw 5s ease-in-out infinite}.k10-gl{animation:k10-gl 7s ease-in-out infinite}.k10-march{animation:k10-march 2.4s ease-in-out infinite}
+.k10-br{animation:k10-br 6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes k10-tw{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes k10-gl{0%,100%{opacity:0}45%{opacity:0}55%{opacity:.9}65%{opacity:0}}
+@keyframes k10-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.8px)}}
+@keyframes k10-br{0%,100%{transform:scale(1,1)}50%{transform:scale(1,1.008)}}
+@media (prefers-reduced-motion:reduce){.k10-tw,.k10-gl,.k10-march,.k10-br{animation:none}}.reduce .k10-tw,.reduce .k10-gl,.reduce .k10-march,.reduce .k10-br{animation:none}</style>
+<defs><linearGradient id="k10sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05070f"/><stop offset=".55" stop-color="#0d1426"/><stop offset=".92" stop-color="#1c2a40"/><stop offset="1" stop-color="#2a3a52"/></linearGradient>
+<linearGradient id="k10glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4c62"/><stop offset=".25" stop-color="#1e2a3a"/><stop offset="1" stop-color="#070a10"/></linearGradient>
+<radialGradient id="k10band" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c8d4f0" stop-opacity=".16"/><stop offset="1" stop-color="#c8d4f0" stop-opacity="0"/></radialGradient>
+<linearGradient id="k10scale" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a96a8"/><stop offset=".4" stop-color="#4a5262"/><stop offset="1" stop-color="#161a22"/></linearGradient>
+<linearGradient id="k10coat" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a2230"/><stop offset=".6" stop-color="#2e3a50"/><stop offset="1" stop-color="#5a6a84"/></linearGradient>
+<linearGradient id="k10pack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4438"/><stop offset="1" stop-color="#14120e"/></linearGradient></defs>
+<rect width="${W}" height="${H}" fill="url(#k10sky)"/>`;
+  /* the band of the sky, a faint river of light slanting across */
+  s += `<ellipse cx="900" cy="230" rx="900" ry="120" fill="url(#k10band)" transform="rotate(-14 900 230)"/>`;
+  /* the stars: many, small, a few that twinkle */
+  let st = ''; for (let i = 0; i < 300; i++) { const x = h(i, 11) * W, y = Math.pow(h(i, 12), 1.15) * (HZ - 10), r = .4 + Math.pow(h(i, 13), 3) * 1.8, op = .35 + h(i, 14) * .6;
+    st += i % 9 === 0 ? `<circle class="k10-tw" style="animation-delay:-${f1(h(i, 15) * 5)}s" cx="${f1(x)}" cy="${f1(y)}" r="${f1(r + .3)}" fill="#e8eeff"/>` : `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="#dfe6f8" opacity="${f1(op)}"/>`; }
+  s += st;
+  /* the glass plain, to the horizon */
+  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k10glass)"/>`;
+  s += `<path d="M0 ${HZ} L${W} ${HZ}" stroke="#9ab0d0" stroke-width="1.4" opacity=".4"/>`;
+  /* the stars again, below: thrown back by the glass, smeared and broken into facets */
+  let rf = ''; for (let i = 0; i < 170; i++) { const x = h(i, 21) * W, d = Math.pow(h(i, 22), 1.4), y = HZ + 6 + d * (H - HZ - 30), w = 1 + d * 6, op = (1 - d) * .55 + .08;
+    rf += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(.6 + d * 1.4)}" fill="#cfdcf4" opacity="${f1(op)}" transform="rotate(${f1((h(i, 23) - .5) * 30)} ${f1(x)} ${f1(y)})"/>`; }
+  s += rf;
+  /* facets: thin bright edges of the glass, and long ridges going away */
+  let fc = ''; for (let i = 0; i < 70; i++) { const d = Math.pow(h(i, 31), 1.2), y = HZ + 14 + d * (H - HZ - 40), x = h(i, 32) * W, L = 20 + d * 140;
+    fc += `<path d="M${f1(x)} ${f1(y)} l${f1(L * .5)} ${f1(-2 - d * 6)} l${f1(L * .5)} ${f1(3 + d * 5)}" stroke="#b8cce8" stroke-width="${f1(.5 + d * 1.4)}" fill="none" opacity="${f1(.12 + (1 - d) * .2)}"/>`; }
+  s += fc;
+  for (let i = 0; i < 5; i++) { const y = HZ + 30 + i * 55 + h(i, 41) * 20; s += `<path d="M0 ${f1(y + 20)} Q${f1(400 + h(i, 42) * 300)} ${f1(y - 8)} ${f1(900 + h(i, 43) * 300)} ${f1(y + 6)} T${W} ${f1(y - 4)}" stroke="#7e94b4" stroke-width="${f1(1 + i * .5)}" fill="none" opacity="${f1(.18 + i * .03)}"/>`; }
+  /* the glints that come and go */
+  for (let i = 0; i < 26; i++) { const d = h(i, 51), x = h(i, 52) * W, y = HZ + 20 + d * (H - HZ - 60), r = 2 + d * 5;
+    s += `<g class="k10-gl" style="animation-delay:-${f1(h(i, 53) * 7)}s"><path d="M${f1(x - r)} ${f1(y)} L${f1(x + r)} ${f1(y)} M${f1(x)} ${f1(y - r)} L${f1(x)} ${f1(y + r)}" stroke="#f0f6ff" stroke-width="1"/></g>`; }
+  /* the army: a thin dark line walking away east to the horizon, no lamps, wagons with heavies in the traces */
+  let col = ''; for (let i = 0; i < 60; i++) { const t = i / 59, x = 380 + t * 760 + Math.sin(t * 6) * 22, y = 640 - Math.pow(t, .55) * 118, k = 1 - t * .82, op = .95 - t * .5, wag = i % 9 === 4;
+    col += wag ? `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})" opacity="${f1(op)}"><rect x="-14" y="-18" width="28" height="12" fill="#06080c"/><path d="M-14 -18 Q0 -32 14 -18" fill="#1a2232"/><circle cx="-9" cy="-4" r="4.4" fill="#06080c"/><circle cx="9" cy="-4" r="4.4" fill="#06080c"/>${[-22, -28].map(dx => `<g transform="translate(${dx} 0)"><rect x="-2.4" y="-16" width="4.8" height="12" fill="#06080c"/><circle cx="0" cy="-18.6" r="2.8" fill="#06080c"/><rect x="-2.4" y="-4" width="1.8" height="6" fill="#06080c"/><rect x=".6" y="-4" width="1.8" height="6" fill="#06080c"/></g>`).join('')}<path d="M-30 -10 L-14 -10" stroke="#06080c" stroke-width="1.4"/></g>`
+      : `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})" opacity="${f1(op)}">${[-7, 0, 7].map(dx => `<g transform="translate(${dx} 0)"><rect x="-2.6" y="-18" width="5.2" height="14" fill="#06080c"/><circle cx="0" cy="-21" r="3.2" fill="#06080c"/><rect x="-2.6" y="-4" width="2" height="7" fill="#06080c"/><rect x=".6" y="-4" width="2" height="7" fill="#06080c"/>${dx === 7 ? '<rect x="2.6" y="-34" width="1" height="30" fill="#06080c"/>' : ''}</g>`).join('')}</g>`; }
+  s += `<g class="k10-march">${col}</g>`;
+  /* the column's faint reflection on the glass */
+  s += `<path d="M380 652 Q760 630 1140 532" stroke="#0a0e16" stroke-width="10" fill="none" opacity=".35"/>`;
+  /* the foreground: a low swell of darker glass the two sit on */
+  s += `<path d="M0 ${H} L0 818 Q360 772 760 790 Q1120 806 1600 770 L1600 ${H} Z" fill="#05070b" opacity=".9"/>`;
+  s += `<path d="M0 818 Q360 772 760 790 Q1120 806 1600 770" stroke="#7e94b4" stroke-width="1.6" fill="none" opacity=".35"/>`;
+  /* the two, back to back, on their packs; starlight rimming their upper edges from the left */
+  s += `<g class="k10-br"><g transform="translate(800 826) scale(1.45)">
+<!-- the packs they sit on -->
+<rect x="-118" y="-30" width="104" height="44" rx="10" fill="url(#k10pack)" stroke="#05060a" stroke-width="3"/>
+<rect x="14" y="-28" width="100" height="42" rx="10" fill="url(#k10pack)" stroke="#05060a" stroke-width="3"/>
+<!-- the heavy, on the left, facing left: scale, a helm, the big sword across the knees -->
+<path d="M-130 -10 Q-170 -6 -196 6 L-196 18 Q-160 12 -120 12 Z" fill="#1a1e26"/><path d="M-190 6 L-200 16 L-176 18 Z" fill="#0a0c10"/>
+<path d="M-104 -34 Q-110 -110 -96 -150 Q-80 -176 -52 -176 Q-26 -172 -18 -146 Q-8 -100 -14 -34 Z" fill="url(#k10scale)" stroke="#05060a" stroke-width="3"/>
+${[...Array(7)].map((_, i) => `<path d="M-98 ${-150 + i * 17} Q-58 ${-142 + i * 17} -20 ${-150 + i * 17}" stroke="#0e1016" stroke-width="2" fill="none" opacity=".55"/>`).join('')}
+<path d="M-100 -150 Q-120 -120 -132 -84 Q-136 -64 -150 -50 L-140 -40 Q-118 -60 -110 -90 Z" fill="#3a4250"/>
+<path d="M-228 -36 L-60 -48" stroke="#aab4c4" stroke-width="7" stroke-linecap="round"/><path d="M-228 -36 L-60 -48" stroke="#5a6272" stroke-width="2.4"/><rect x="-66" y="-60" width="8" height="26" rx="2" fill="#3a3024" transform="rotate(-4 -62 -47)"/><path d="M-58 -46 L-30 -48" stroke="#2a2018" stroke-width="7" stroke-linecap="round"/>
+<ellipse cx="-58" cy="-196" rx="22" ry="24" fill="#2a2420"/>
+<path d="M-84 -196 Q-84 -236 -56 -238 Q-30 -236 -30 -198 Z" fill="#6a7486"/><path d="M-88 -198 L-26 -198" stroke="#3a4250" stroke-width="5"/><path d="M-82 -194 L-90 -170 L-80 -168 Z" fill="#4a5262"/>
+<path d="M-84 -232 Q-70 -240 -50 -238" stroke="#d8e2f4" stroke-width="2" fill="none" opacity=".55"/><path d="M-104 -148 Q-104 -170 -86 -176" stroke="#d8e2f4" stroke-width="2" fill="none" opacity=".45"/>
+<!-- the Letherii, on the right, facing right: a dark coat, a round padded cap, the spear upright -->
+<path d="M120 -10 Q160 -4 186 8 L186 20 Q150 14 112 12 Z" fill="#141a24"/><path d="M180 8 L192 18 L168 20 Z" fill="#0a0c10"/>
+<path d="M20 -34 Q12 -104 24 -142 Q38 -166 62 -166 Q86 -162 94 -138 Q104 -96 98 -34 Z" fill="url(#k10coat)" stroke="#05060a" stroke-width="3"/>
+<path d="M58 -160 L60 -40" stroke="#0e1420" stroke-width="2" opacity=".6"/>
+<path d="M92 -140 Q112 -110 118 -80 Q124 -60 136 -52" stroke="#2e3a50" stroke-width="16" stroke-linecap="round" fill="none"/>
+<path d="M140 -380 L140 14" stroke="#4a3a2a" stroke-width="5"/><path d="M140 -404 L148 -380 L132 -380 Z" fill="#aab4c4"/><ellipse cx="140" cy="-54" rx="9" ry="7" fill="#3a2e24"/>
+<ellipse cx="60" cy="-186" rx="20" ry="22" fill="#2a2420"/>
+<path d="M36 -192 Q36 -220 60 -222 Q84 -220 84 -192 Q72 -196 60 -196 Q48 -196 36 -192 Z" fill="#3a4050"/><path d="M38 -194 Q60 -200 82 -194" stroke="#1a1e28" stroke-width="3" fill="none"/>
+<path d="M40 -214 Q52 -224 66 -222" stroke="#d8e2f4" stroke-width="2" fill="none" opacity=".5"/>
+<!-- between them on the glass: an empty water-skin, laid flat -->
+<path d="M-26 6 Q-10 -4 10 -2 Q30 2 26 12 Q8 18 -14 16 Q-30 14 -26 6 Z" fill="#4a3a28" stroke="#05060a" stroke-width="2"/><path d="M22 2 L34 -6" stroke="#4a3a28" stroke-width="4" stroke-linecap="round"/>
+</g></g>`;
+  s += `</svg>`;
+  ART['title/tcg'] = s; ART_SIZE['title/tcg'] = [W, H];
+
+  /* the patch (Book Nine's rule: two inner patches side by side in a 600-wide SVG): the Third's (insignia/hoc) with a shard of glass stitched
+     under it; the Sixth Company's (insignia/mt) with a small ship under sail */
+  const inner = (k, x) => (ART[k] || '').replace(/^<svg /, `<svg x="${x}" y="0" width="290" height="330" `);
+  ART['insignia/tcg'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-label="The two squads' patches, Book Ten: the Third's with a shard of glass stitched under it, and the Sixth Company's with a small ship under sail">
+${inner('insignia/hoc', 0)}${inner('insignia/mt', 310)}
+<g transform="translate(145 352)"><path d="M-14 12 L-4 -20 L6 -8 L16 14 Z" fill="#9ab8d4" fill-opacity=".55" stroke="#e8f2ff" stroke-width="1.8" stroke-dasharray="4 3"/><path d="M-4 -20 L-2 10" stroke="#e8f2ff" stroke-width="1" opacity=".7"/><path d="M-30 16 L30 16" stroke="#e0c890" stroke-width="1.6" stroke-dasharray="3 3"/></g>
+<g transform="translate(455 352)"><path d="M-20 6 L20 6 L14 16 L-14 16 Z" fill="#5a4630" stroke="#e0c890" stroke-width="1.6"/><path d="M0 6 L0 -24" stroke="#e0c890" stroke-width="1.8"/><path d="M2 -22 L18 2 L2 2 Z" fill="#d8ccb0" stroke="#4a3a24" stroke-width="1.2"/><path d="M-2 -18 L-14 2 L-2 2 Z" fill="#c8bca0" stroke="#4a3a24" stroke-width="1.2"/><path d="M-30 20 Q-15 16 0 20 Q15 24 30 20" stroke="#8ab0c8" stroke-width="1.6" fill="none" stroke-dasharray="3 3"/></g></svg>`;
+}
+/* Settings › Artwork off: the title's canvas backdrop borrows Book Four's desert until Book Ten has its own */
+{ const _stb = startTitleBackdrop; startTitleBackdrop = function(cv, b){ return _stb(cv, b === 'tcg' ? 'hoc' : b); }; }
+
+/* ---------------- the busts (the bust rules: each its own neckline by kit, a short natural neck, the garment blending up into the
+   shoulders, every prop held, slung or belted). Lantern low left, a rim of the soldier's own colour on the right. ---------------- */
+/* Pruss: twenty-four, a carter's son and a heavy; broad, young, cropped hair, a scar through the left brow; a heavy's scale patched with a
+   different set of plates on the right shoulder; a leather trace-strap across the chest from the haul; his old sergeant's helm slung at the back */
+POR.pruss = function(ctx){ const F = {cy:-74, w:13.4, h:19.8, jaw:.92, chin:5.4, skin:'#b8906c', iris:'#3a3024', lip:'#8a5a46', browCol:'#4a3a2a', browW:2, arch:.25, browL:.1, browR:.2, rim:'#8a7a62', rimA:.22, nose:1.4, look:-.1, smileL:.05, smileR:-.05, mouthW:4, age:.05, bags:.2, open:.84};
+  ctx.save(); ctx.beginPath(); ctx.ellipse(-34, -42, 11, 8, -.5, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#7a8090', '#1e2026', -44, -24); ctx.fill(); ctx.restore(); // the old sergeant's helm, slung behind the shoulder
+  PR.neck(ctx, F, 10);
+  const B = BP.body(ctx, F, {wide:44, drop:2, trap:7, nx:12, ny:F.cy + 15.2, cb:F.cy + 20.8, c1:'#7e7666', c2:'#22201a'});
+  ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -48, 48, -60, 4, 5.6, '#7a7464', 177); BP.scales(ctx, 18, 48, -52, 4, 5, '#6a6a72', 179); // the patched plates
+    PR.stroke(ctx, '#3a2818', 5, () => { ctx.moveTo(-34, -40); ctx.lineTo(30, 12); }); PR.stroke(ctx, 'rgba(255,220,180,.18)', 1, () => { ctx.moveTo(-34, -42); ctx.lineTo(30, 10); }); // the trace-strap
+    PR.soft(ctx, 22, -16, 18, 20, '#000000', .45); ctx.restore();
+  BP.light(ctx, F, B, false);
+  BP.collar(ctx, F, '#6a6458', '#1e1c18', 'rgba(0,0,0,.45)', {style:'wrap', sw:26, sy:-44});
+  F.under = (ctx, F) => { PR.dots(ctx, F, 40, 'rgba(60,44,30,.24)', .4, [5, 18]); };
+  PR.face(ctx, F);
+  const u = F.h/20; PR.stroke(ctx, 'rgba(120,70,50,.6)', .9, () => { ctx.moveTo(-F.w*.5, F.cy - 7.4*u); ctx.lineTo(-F.w*.3, F.cy - 3.6*u); }); // the scar through the brow
+  BP.hair(ctx, F, {c:['#5a4634', '#3a2a1c', '#1a120a'], v:.6, wx:.95, hl:6, ey:-3.4, n:46, sw:.36, seed:181, sh:'#c8b090', shA:.12});
+  return F; };
+/* Tirren: twenty-one, a farrier's daughter; sun-browned, freckled; hair tied up under a dust scarf; a leather farrier's apron over a quilted
+   shirt; a rasp on a thong at the throat; the farrier's hammer's head up by the right shoulder, held */
+POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9, skin:'#c49a76', iris:'#4a3a24', lip:'#9a5a4a', browCol:'#4a321e', browW:1.05, arch:.65, browL:.3, browR:.3, rim:'#a07a5a', rimA:.22, nose:1.1, look:.25, smileL:.15, smileR:.1, mouthW:3.3, age:0, bags:.1, open:.88};
+  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 4, F.cy - 6); ctx.quadraticCurveTo(-F.w - 7, F.cy + 18, -F.w - 2, -44); ctx.lineTo(F.w + 2, -44); ctx.quadraticCurveTo(F.w + 7, F.cy + 18, F.w + 4, F.cy - 6); ctx.closePath();
+    ctx.fillStyle = PR.lit(ctx, '#9a6a40', '#2a160a', -F.w, F.w); ctx.fill(); ctx.restore(); // her hair, long, down behind to the shoulders
+  PR.stroke(ctx, '#4a3624', 3.4, () => { ctx.moveTo(22, 6); ctx.lineTo(28, -84); }); ctx.save(); ctx.translate(28.6, -88); ctx.rotate(.1); ctx.fillStyle = '#5a5a5e'; ctx.fillRect(-7, -3, 14, 6); ctx.restore(); // the hammer
+  PR.neck(ctx, F, 7.6);
+  const B = BP.body(ctx, F, {wide:32, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#a89272', c2:'#2a2016'});
+  ctx.save(); B.path(); ctx.clip(); ctx.fillStyle = PR.lit(ctx, '#7a5a3e', '#1e140a', -28, 28); ctx.fillRect(-22, -38, 44, 60); // the apron
+    PR.stroke(ctx, '#2a1a0c', 1.6, () => { ctx.moveTo(-20, -38); ctx.lineTo(-16, 8); ctx.moveTo(20, -38); ctx.lineTo(16, 8); }); PR.soft(ctx, 18, -16, 14, 14, '#000000', .4); ctx.restore();
+  BP.light(ctx, F, B, false);
+  BP.collar(ctx, F, '#b8a688', '#3a3024', 'rgba(0,0,0,.4)', {style:'rib', sw:20, sy:-44});
+  for (let i = 0; i < 6; i++) ell(ctx, -F.w*.9 - 1 + i * .5, F.cy + 12 + i * 5.2, 2.6, 2, i % 2 ? '#7a4e2c' : '#9a6a40'); // the braid over the left shoulder
+  PR.stroke(ctx, '#2a2018', .6, () => { ctx.moveTo(-4, -50); ctx.quadraticCurveTo(0, -42, 4, -50); }); ctx.save(); ctx.translate(0, -40); ctx.fillStyle = '#7a7a80'; ctx.fillRect(-1, -5, 2, 9); ctx.restore(); // the rasp on its thong
+  PR.face(ctx, F);
+  const u = F.h/20, top = F.cy - 21*u;
+  for (let i = 0; i < 10; i++) { const r = PR.rng(i + 2101); ell(ctx, (r() < .5 ? -1 : 1) * (3 + r() * 3.4), F.cy + .6*u + r() * 1.6*u, .32, .32, 'rgba(130,70,40,.35)'); } // freckles across the cheeks
+  BP.hair(ctx, F, {c:['#9a6a40', '#6a4228', '#2a160a'], v:1.2, wx:.92, hl:12, ey:-2.4, n:60, sw:.42, seed:2111, sh:'#e0b890', shA:.18}); // the hair, loose at the sides under the scarf
+  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 2.6, top + 10.6*u); ctx.quadraticCurveTo(-F.w - 2, top - 3*u, 0, top - 3.6*u); ctx.quadraticCurveTo(F.w + 2, top - 3*u, F.w + 2.6, top + 10.6*u);
+    ctx.quadraticCurveTo(0, top + 6.2*u, -F.w - 2.6, top + 10.6*u); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#a6845e', '#2a1e12', -F.w, F.w); ctx.fill(); ctx.restore(); // the dust scarf over the crown
+  PR.stroke(ctx, 'rgba(30,20,10,.5)', .8, () => { ctx.moveTo(-F.w - 2.4, top + 10*u); ctx.quadraticCurveTo(0, top + 6*u, F.w + 2.4, top + 10*u); });
+  PR.stroke(ctx, 'rgba(255,236,210,.25)', .7, () => { ctx.moveTo(-F.w, top + 1*u); ctx.quadraticCurveTo(-F.w*.4, top - 2.6*u, 0, top - 3*u); });
+  ctx.save(); ctx.translate(F.w + 1.6, top + 9*u); ctx.rotate(.4); ctx.fillStyle = '#8a6a48'; ctx.fillRect(0, 0, 3.4, 9); ctx.restore(); // the knot's tail
+  return F; };
+
+/* ============ Book Ten: the readings. The Third reads the Deck of Dragons; the Letherii cast the Tiles of the Holds (v13.0, 180c) ============
+   As Book Nine's 160c, under Book Ten's names. Each squad reads through its own reader, by b10As (180): S.book is set to 'hoc' for the
+   Third (Book Four's chain, 70c: Marrow while she walks, else Tallow, else the old soldier, who is "the old marine" of the heavies' lines
+   since Book Nine) and to 'mt' for the Letherii (80c: Perrit while she walks, else the tile-woman, who still rides the supply train) for the
+   moment the reader, the captions and the words are asked for. The once-a-book words, the "again" words and every card and tile line are
+   Book Ten's own (B10RD, B10SAY, B10SAY_L). The cards are canon Deck cards the earlier books already hold; the tiles are Book Five's.
+   Canon in the words: the King of High House Death's seat is empty (rule 74, closed but not named); the Knight of Chains is a card, never the
+   god in his chains (rule 98); the Errant is gone into the warrens after Chapter 2 (§7), so the Letherii readers feel the tiles go quiet and
+   never say why (rule 31: never "Errastas", never "Elder"); magic near the Adjunct's ground may feel dead (§7, the otataral).
+   The v10.0.2 rule: the squad is read before b10As switches the book (b10As passes it in), never after.
+
+   How a chapter uses it (one API for both squads):
+     - fill B10READ[n] from the chapter's file: {scene, where, set, back, backT, say:{<reader id>:'…'}}
+         the Third's reader ids: marrow, tallow, oldninth. The Letherii's: perrit, tilewoman.
+     - put b10ReadChoice(n) among the chapter's first halt choices;
+     - register two nodes:  b10_c<n>_read: () => b10ReadOffer(n),  b10_c<n>_card: () => b10ReadCard(n).
+   "Let her draw" (or "lay them") sets S.f.b10_c<n>_drawn = 1 and S.f.b10_c<n>_reader; "Not now" sets S.f.b10_c<n>_noCard = 1.
+   b10_c<n>_card is what 36b's cardNodeName() returns in Book Ten. */
+
+{ const _vr = VISREADER; VISREADER = () => { if (!b10On()) return _vr ? _vr() : null; const r = b10As(() => _vr ? _vr() : null);
+    return r && r.id === 'oldninth' ? Object.assign({}, r, {name:'The old marine', mid:'the old marine'}) : r; }; }
+{ const _cb = CARDBOOK;
+  CARDBOOK = {
+    txt:id => b10On() ? b10As(() => _cb.txt(id)) : _cb.txt(id),
+    cap(t, self, second){ return b10On() ? b10As(() => _cb.cap(t, self, second)) : _cb.cap(t, self, second); },
+  };
+  ['square', 'done', 'look'].forEach(k => { if (_cb && typeof _cb[k] === 'function') CARDBOOK[k] = (...a) => b10On() ? b10As(() => _cb[k](...a)) : _cb[k](...a); }); }
+/* the tiles are drawn square, obsidian for Perrit and bone for the tile-woman (80c), while the Letherii read */
+{ const _dcf = drawCardFlip; drawCardFlip = function(...a){ return b10L() ? b10As(() => _dcf.apply(this, a)) : _dcf.apply(this, a); }; }
+
+/* each chapter's pool leans to one card or tile (three of it), with two others */
+const B10POOL = {
+  1:['b3c_lifesoldier', 'b3c_lifesoldier', 'b3c_lifesoldier', 'oponn', 'b2c_king'],   // the camp after the short-tails: kneeling over somebody
+  2:['b5t_seer', 'b5t_seer', 'b5t_seer', 'b5t_walker', 'b5t_seed'],                   // the parting: an eye open, watching them go
+  3:['b4c_leper', 'b4c_leper', 'b4c_leper', 'b2c_queen', 'obelisk'],                  // the night marches: walking through the bad country
+  4:['b5t_whitecrow', 'b5t_whitecrow', 'b5t_whitecrow', 'b5t_walker', 'b5t_boneperch'], // the long way round: a branch nobody else sits on
+  5:['b2c_queen', 'b2c_queen', 'b2c_queen', 'b4c_knightchains', 'obelisk'],           // the last water: water into dry ground
+  6:['b5t_heartstone', 'b5t_heartstone', 'b5t_heartstone', 'b5t_wall', 'b5t_barrow'], // the feint: a coal under ash
+  7:['b4c_knightchains', 'b4c_knightchains', 'b4c_knightchains', 'b2c_soldier', 'b2c_mason'], // over the ridge: one who stands alone
+};
+const b10Pool = n => (B10POOL[n] || B10POOL[B10_CH[n] === 'l' ? 2 : 1]).filter(id => CARDS[id]);
+const b10Rd = () => visReader();
+const b10RdObj = () => b10Rd().he ? 'him' : 'her';
+/* the once-a-book words, and the "again" words */
+const B10RD = {
+  marrow:{deck:'Marrow has her Deck out: the temple deck from Nap, carried the length of the Chain and across two oceans and into the Wastes. She reads at the first halt of a road, as she always has. She has stopped counting the cards before she shuffles. She says they are all still there, which is more than the army can say.', again:'Marrow has the Deck out, the paint gone soft at every corner.'},
+  tallow:{deck:'Tallow has his grandmother\'s deck out of its oilcloth. He lays them two down and one up, the way she did, and keeps them close to his chest so the light off the ground does not get at them.', again:'Tallow has the old woman\'s deck out, held close.'},
+  oldninth:{deck:'The old marine reads for the heavies\' lines, still: a grey man with a soldier\'s deck that has seen more wars than he has, and a cup with nothing in it this time. He says the cards do not need the rum. He does.', again:'The old marine has his deck out, and an empty cup beside it out of habit.'},
+  perrit:{deck:'Perrit has her tiles out of the calfskin pouch: the cadre\'s black stone, small and square. She warms each one in her palm before she lays it. Lately she holds them longer, and lays them down as if she expected them to be heavier.', again:'Perrit has the black tiles out, holding each one a while.'},
+  tilewoman:{deck:'The old tile-woman still rides the supply train, on a different wagon now, because hers ran out of horses. She reads at the tailboards for a dock that nobody out here can spend, and takes it anyway, because a dock is a dock.', again:'The tile-woman has her bone tiles out on a tailboard.'},
+};
+const b10RdWords = (id, again) => B10RD[id] ? (again ? B10RD[id].again : B10RD[id].deck) : '';
+/* the Third's card lines: the description (Book Four's), then the reader's own line in Book Ten */
+const B10SAY = {
+  b3c_lifesoldier:{d:B4SAY.b3c_lifesoldier.d,
+    marrow:`"Soldier of High House Life," Marrow says. "Kneeling over somebody." She looks at the long tents, where the surgeons have not stopped since the battle. "There's mending here, child. More than there should be. Don't ask who's paying for it."`,
+    tallow:`"The kneeling one," Tallow says. "Grandmother liked her." He looks down the rows of the wounded. "I'd like her to stay a while."`,
+    oldninth:`"Life's soldier," the old marine says. "Healers heal more." He turns the empty cup over. "They'll need to. Tell yours."`},
+  oponn:{d:B4SAY.oponn.d,
+    marrow:`"The Twins," Marrow says. "The coin in the air." She leaves it face up. "Missing is not dead, child. I said that before. The coin agrees with me, for once."`,
+    tallow:`"Twins," Tallow says. "A good tide." He looks out past the pickets, where somebody is walking in who should not be. "Or a strange one."`,
+    oldninth:`"Luck," the old marine says. "It's turning. Don't ask which way." He squints at the edge of the camp. "Somebody's coming back who wasn't. That's one way."`},
+  b2c_king:{d:B4SAY.b2c_king.d,
+    marrow:`Marrow does not turn him over. "The King's seat is still empty," she says. "Still." She slides the card under the others. "Somebody else keeps that gate now. I'd rather not meet them yet."`,
+    tallow:`"The hooded man," Tallow says. "He isn't there." He looks at the card a long while. "Grandmother would have hated that more than anything."`,
+    oldninth:`"Hood's own," the old marine says, and does not touch the bone at his throat this time. "Empty chair." He puts it away. "Burial lines are full anyway. Somebody's taking them."`},
+  b4c_leper:{d:B4SAY.b4c_leper.d,
+    marrow:`"The Leper," Marrow says. "Walks through the bad country and catches nothing." She looks out at the glass, flat and bright to the edge of the world. "The warrens are dead out here, child. Whatever the squad has that isn't steel, don't count on it."`,
+    tallow:`"The bell," Tallow says. "So you know he's coming." He listens. There is no sound at all, out here, but the column. "He's already here. He's us."`,
+    oldninth:`"Leper," the old marine says. "Walks clean." He looks at the dark where the Adjunct's tent is pitched. "Up near her, nothing works but your legs. Keep them working."`},
+  b2c_queen:{d:B4SAY.b2c_queen.d,
+    marrow:()=>(S.chapter || 0) >= 5 ? `Marrow holds the Queen a while. "Water," she says, "into dry ground." Her voice cracks on the second word and she does not try it again. She lays the card face up between them, and leaves it there.` : `"The Queen of High House Life," Marrow says. "The cup running over." She looks at the water barrels on the wagon, and counts them, and does not say the number. "Drink when you're told, child. Not before."`,
+    tallow:`"The lady with the cup," Tallow says. His lips are split; he does not lick them. "Grandmother said she always comes. She never said when."`,
+    oldninth:`"Queen with the cup," the old marine says. "Healers heal more." He looks at his own empty one. "And somewhere, somebody gets a drink. I'd like it to be us."`},
+  obelisk:{d:B4SAY.obelisk.d,
+    marrow:`"Something lasts," Marrow says. She looks round at the squad, thinner than it was in the Wastes, and the Wastes took plenty. "Something. I'd like it to be the names."`,
+    tallow:`"The stone," Tallow says. "For the old men." He puts it down carefully on the glass, which is harder than any table. "It'll last. It always does."`,
+    oldninth:`"Obelisk," the old marine says. "You'll last." He taps it twice. "Doesn't say how much of you."`},
+  b4c_knightchains:{d:B4SAY.b4c_knightchains.d,
+    marrow:()=>(S.chapter || 0) >= 7 ? `Marrow holds it and does not lay it down at first. "Chains," she says. "A knight who stands alone." She looks at the line forming, and the gaps in it, and at the ridge beyond. "Somebody stands alone today. Somebody always has. Let it be somebody else's turn, child."` : `"The Knight of Chains," Marrow says. "Standing where nobody else will." She looks east. "That House is the reason for all of this, they say. I don't like it in my hand."`,
+    tallow:`"The one that wasn't in her deck," Tallow says. "It's always in mine now." He turns it face down, and then, after a while, face up again.`,
+    oldninth:`"That one," the old marine says. "Stands on his own, hits harder for it." He looks along the line. "Don't be him. If you have to be, be him properly."`},
+  b2c_soldier:{d:B4SAY.b2c_soldier.d,
+    marrow:`"Soldier of High House Death," Marrow says. "A gate behind him. Somebody else's gate now." She looks at the heavies in their scale. "Stand where you're put, child. Today that's all there is to it."`,
+    tallow:`"The grey soldier," Tallow says. "A long watch." He looks at the sun. "Long enough, maybe."`,
+    oldninth:`"Death's soldier," the old marine says. "Heavies' card." He almost laughs. "Never been dealt it so often."`},
+  b2c_mason:{d:B4SAY.b2c_mason.d,
+    marrow:`"The Mason," Marrow says. "A long stone for a long hole." She puts it down carefully, and looks away, toward where the barrows will be, though nobody has dug them yet. "Munitions bite deeper today. That's all I'll say about this one."`,
+    tallow:`"The stone-cutter," Tallow says. "She hated this one." He looks at the sappers' crates. "They won't."`,
+    oldninth:`"Mason," the old marine says. "Sapper's lucky day." He looks at the ridge. "Everybody else's, maybe not."`},
+};
+/* the Letherii's tile lines in Book Ten: the descriptions stay Book Five's. After Chapter 2 the tiles feel quiet, as if somebody had left
+   the room (the Errant, never named as the cause) */
+const b10Quietly = () => (S.chapter || 0) > 2;
+const B10SAY_L = {
+  b5t_seer:{d:B5SAY.b5t_seer.d,
+    perrit:`"The Seer," Perrit says. "An eye, open, in the antlers." She looks east, where the Malazans are walking out onto the glass in a long dark line. "Somebody should watch them go. The tile says it is us."`,
+    tilewoman:`"The eye in the antlers," the old woman says. "Means they swing and miss." She shades her own eyes toward the glass. "Means you watch, soldier. Somebody has to."`},
+  b5t_walker:{d:B5SAY.b5t_walker.d,
+    perrit:()=>b10Quietly() ? `"The Walker." Perrit turns it over, and over again. "No prints behind." She is quiet. "It is cold. Colder than in the Wastes. The tiles used to answer back a little. This one only lies there."` : `"The Walker," Perrit says. "A long road, and no prints." She looks south, along the column. "A longer road than theirs, and with water in it. I will take ours."`,
+    tilewoman:`"The walking one," the old woman says. "Long road." She looks at her own feet. "Your feet first, soldier. Then the horses'. Then pride, if there's any left."`},
+  b5t_seed:{d:B5SAY.b5t_seed.d,
+    perrit:`"The Seed," Perrit says. "Green in the ice." She glances at the water barrels. "Wounds close better than they should. I would like to believe it."`,
+    tilewoman:`"The seed," the old woman says. "Good tile for a dry road." She taps her water-skin. "Heals more. Drink less. You know the rest."`},
+  b5t_whitecrow:{d:B5SAY.b5t_whitecrow.d,
+    perrit:`"The White Crow." Perrit lays it slowly. "On a branch nobody else is sitting on." She looks at the column, the Bolkando ahead and the grey knights' dust ahead of them, and the Letherii last. "That is us, I think. Behind everyone. The tile says it keeps us from being hit. I hope it is right; the tiles have been very quiet."`,
+    tilewoman:`"The white crow," the old woman says. "Alone on its branch. Means they miss you." She sniffs. "Means everybody else went on ahead. Both, soldier. Always both."`},
+  b5t_boneperch:{d:B5SAY.b5t_boneperch.d,
+    perrit:`"Bone Perch." Perrit frowns at it. "Nothing on it yet." She looks at the horse-lines, thinner every night. "It means we will last a little longer than we should. The tile does not say what it costs. They never used to say. Now they say nothing at all."`,
+    tilewoman:`"The pole of bones," the old woman says. "Nothing on it." She looks at the horses. "Not yet, anyway. More health for you, soldier. Less for the horses, I'd say."`},
+  b5t_heartstone:{d:B5SAY.b5t_heartstone.d,
+    perrit:`"Heartstone." Perrit holds it a long while before she lays it. "A slow light, like a coal under ash." She looks at the Kolansii line across the field, and the city beyond it. "Something in it still burns. I will take that. It is the first tile in a while that felt warm."`,
+    tilewoman:`"The stone with the coal in it," the old woman says. "Means you last." She looks at the line forming. "Means you'll need to, today. Coal under ash, soldier. Don't go out."`},
+  b5t_wall:{d:B5SAY.b5t_wall.d,
+    perrit:`"The Wall." Perrit squares it with the others. "Stone on stone, no gate." She looks along the Letherii line. "Stand behind each other. That has always been the whole of it."`,
+    tilewoman:`"Stone on stone," says the old woman. "Your shields hold." She looks at them. "They'd better."`},
+  b5t_barrow:{d:B5SAY.b5t_barrow.d,
+    perrit:`Perrit lays the Barrow and does not look at it. "A long mound with a stone at its head, and nothing cut on the stone." She is quiet. "Whoever is under it, nobody wrote it down. I will write ours down. Every one."`,
+    tilewoman:`"The long mound," the old woman says, and puts it away quickly. "Means you finish what's falling." She does not look at the field. "Means somebody digs, after."`},
+};
+/* the reader is read inside b10As (Book Four's or Book Five's chain); the squad is passed in from before the switch */
+const b10CardSay = id => b10As(t => { const tbl = t === 't' ? B10SAY : B10SAY_L, s = tbl[id] || (t === 't' ? B4SAY : B5SAY)[id], r = b10Rd().id, v = s && (typeof s[r] === 'function' ? s[r]() : s[r]);
+  return s ? `${s.d}\n\n${v || ''}`.trim() : ((CARDS[id] && CARDS[id].txt) || ''); });
+
+/* per chapter: the writers fill 3..7. Chapter 1 (the Third, the camp) and Chapter 2 (the Letherii, the parting) are the worked examples. */
+const B10READ = {
+  1:{scene:'b10_camp_night', where:'an upturned water barrel at the burial lines', set:'Night in the camp after the short-tails, the burial lines quiet at last, and the allies\' fires coming up on the horizon one by one.', back:'b10_c1_fire', backT:'Back to the fire.',
+     say:{marrow:'"Sit down, child," Marrow says. "One card. Everybody else has been counting names all day. Let the Deck count something else."', tallow:'"Grandmother read on the night after a burial," Tallow says. "She said the dead like to see the cards go round. One?"',
+          oldninth:'"Still here," the old marine says. "Both of us. That calls for a card, if not a drink. Sit."'}},
+  2:{scene:'b10_train', where:'the tailboard of a water wagon at the parting', set:'Evening on the day the army split, the Malazans gone out onto the glass, and the Letherii column turning south with its train.', back:'b10_c2_fire', backT:'Back to the fire.',
+     say:{perrit:'"Three tiles," she says. "Before a long road. We are on one now, and they are on a worse one." She warms the first tile in her hand. "Sit, Sergeant."',
+          tilewoman:'"South, then," the old woman says. "The long way. A dock first, soldier. It\'s a long way to spend it."'}},
+};
+
+function b10ReadChoice(n){ const r = b10Rd(), t = b10Thread() === 'l';
+  return {t:`Sit with ${r.id === 'oldninth' ? 'the old marine' : (r.mid || r.name)} and the ${t ? 'tiles' : 'Deck'}.`, deck:true, req:()=>!S.f[`b10_c${n}_drawn`] && !S.f[`b10_c${n}_noCard`], go:`b10_c${n}_read`}; }
+function b10ReadOffer(n, card = `b10_c${n}_card`){ const D = B10READ[n] || B10READ[B10_CH[n] === 'l' ? 2 : 1], r = b10Rd(), seen = S.f['b10_rd_' + r.id], tiles = b10Thread() === 'l';
+  return {sp:r.id === 'tilewoman' ? 'The tile-woman' : r.id === 'oldninth' ? 'The old marine' : r.name, scene:D.scene, fx:()=>{ S.f['b10_rd_' + r.id] = 1; }, txt:
+`${b10RdWords(r.id, seen)}
+
+${D.set || ''} ${(D.say || {})[r.id] || ''}`.trim(),
+    ch:[{t:tiles ? 'Let her lay them.' : `Let ${b10RdObj()} draw.`, deck:true, fx:()=>{ S.f[`b10_c${n}_drawn`] = 1; S.f[`b10_c${n}_reader`] = r.id; S.card = dealCard(b10Pool(n)); }, go:()=>cardSequence(()=>talk(card))},
+        {t:'"Not now."', fx:()=>{ S.f[`b10_c${n}_noCard`] = 1; }, go:D.back}]}; }
+function b10ReadCard(n){ const D = B10READ[n] || B10READ[B10_CH[n] === 'l' ? 2 : 1], r = b10Rd(), pool = b10Pool(n), id = S.card && CARDS[S.card] ? S.card : pool[0], c = CARDS[id], tiles = b10Thread() === 'l';
+  const nm = r.id === 'oldninth' ? 'The old marine' : r.id === 'tilewoman' ? 'The tile-woman' : r.name;
+  return {sp:tiles ? 'The Tiles of the Holds' : 'The Deck of Dragons', scene:D.scene,
+    txt:tiles ? `${nm} lays the tiles out on ${D.where}. The first ones show ${r.he ? 'him' : 'her'} nothing. The last one does.` : `${nm} lays the reading out on ${D.where}. ${readRefuseLine(b10RdObj())}`,
+    html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div><div class="note">${esc(c.name)}${c.house && tiles ? ` · ${esc(c.house)}` : ''}${c.fx ? ` · ${esc(c.fx)}` : ''}</div>`, oncard:[id, false],
+    after:b10CardSay(id), ch:[{t:D.backT, go:D.back}]}; }
+
+/* ---- the tiles' effects in the Letherii's fights (80c's, keyed on S.card, which read b5On()) ---- */
+const b10Tile = () => (b10L() && S.card && B5TILES[S.card]) ? B5TILES[S.card].b5fx : null;
+{ const _atkCalc = atkCalc;
+  atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o), fx = b10Tile(); if (!fx || !a || !t) return c;
+    if (fx === 'armour' && t.side === 'p' && !t.ally) c.ac += 1;
+    if (fx === 'hit' && a.side === 'p' && !a.ally) c.bonus += 1;
+    if (fx === 'ward' && a.side === 'e' && t.side === 'p') c.bonus -= 1;
+    return c; }; }
+{ const _heal = heal; heal = function(u, n){ return _heal(u, b10Tile() === 'heal' && u && u.side === 'p' && n > 0 ? n + 2 : n); }; }
+{ const _attack = attack;
+  attack = function(a, t, o = {}){
+    if (b10Tile() === 'finish' && a && a.side === 'p' && t && t.side === 'e' && t.hp > 0 && t.hp * 2 <= t.maxhp) { const dd = o.dmg || a.dmg; if (dd) o = Object.assign({}, o, {dmg:[dd[0], dd[1], (dd[2] || 0) + 2]}); }
+    return _attack(a, t, o); }; }
+{ const _mkParty = mkParty;
+  mkParty = function(id, x, y){ const u = _mkParty(id, x, y), fx = b10Tile(); if (!fx) return u;
+    if (fx === 'hp') { const full = u.hp === u.maxhp; u.maxhp += 4; if (full) u.hp = u.maxhp; }
+    if (fx === 'move') u.mv += 1;
+    return u; }; }
+
+/* ---- the tables (21b): one per chapter's reading place ----
+   1 an upturned water barrel at the burial lines, night; 2 a water wagon's tailboard at the parting, evening; 3 the glass under the stars,
+   no fire; 4 a horse-blanket on the ground by the train, dusk; 5 the glass at first light, the last of the water; 6 a crate from the King's
+   ships on the beach, dawn; 7 a shield on the ground behind the regulars' line, the light going. */
+Object.assign(READTABLE, {
+  'tcg:1':{surf:'wood', p:{base:'#4a3c2c', dark:'#1c1610', planks:5}, light:'lantern', lp:[.12, .1], lc:'#ffc070', air:'none', dark:'#08070a', props:[['lantern', .12, .1, 14], ['cup', .86, .84, 12]]},
+  'tcg:2':{surf:'wood', p:{base:'#5a4a36', dark:'#241c12', planks:3}, light:'dusk', lp:[.88, .12], lc:'#e0a070', air:'dust', dark:'#0a0806', props:[['coin', .14, .84, 9]]},
+  'tcg:3':{surf:'stone', p:{base:'#3a4a5c', dark:'#141c26', cracks:6}, light:'dusk', lp:[.5, 0], lc:'#a8b8d8', air:'none', dark:'#04060a', props:[]},
+  'tcg:4':{surf:'ground', p:{base:'#6a5a42', dark:'#2a2216', stones:20, grass:20, grassCol:'#7a6a3a'}, light:'dusk', lp:[.5, 0], lc:'#d09070', air:'dust', dark:'#0e0c0a', props:[['coin', .86, .16, 9]]},
+  'tcg:5':{surf:'stone', p:{base:'#5a6a7c', dark:'#1e2834', cracks:8}, light:'dawn', lp:[.92, .1], lc:'#e8d8c0', air:'none', dark:'#08090c', props:[['cup', .86, .84, 12]]},
+  'tcg:6':{surf:'wood', p:{base:'#6a5a42', dark:'#2a2216', planks:4}, light:'dawn', lp:[.92, .12], lc:'#e8c8a0', air:'none', dark:'#0a0a0c', props:[['coin', .14, .16, 9]]},
+  'tcg:7':{surf:'shield', p:{base:'#4a5058', dark:'#1e2228', under:{base:'#6a5a46', dark:'#2a2418', stones:30, grass:10, grassCol:'#7a6a4a'}}, light:'dusk', lp:[.5, 0], lc:'#e0a070', air:'ash', dark:'#08080a', props:[['helm', .12, .84, 16]]},
+});
+
 /* ============ v10.3 (David, Sun Nov 8, 2026, 8:50 PM PST): tricks that don't strike are free; three tricks become passive ============
    Loaded after every book's tricks (14x-12x) and before the boot (990).
    - FREE: a trick that doesn't strike a foe or take its turn away no longer uses the bearer's action. One free trick a squadmate a
@@ -107980,6 +108901,8 @@ function start(){
    typeof B8CH5 !== 'undefined' && B8CH5, typeof B8CH6 !== 'undefined' && B8CH6, typeof B8CH7 !== 'undefined' && B8CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tth'); }); // its chapters are const B8CH1..B8CH7 (141-147)
   [typeof B9CH1 !== 'undefined' && B9CH1, typeof B9CH2 !== 'undefined' && B9CH2, typeof B9CH3 !== 'undefined' && B9CH3, typeof B9CH4 !== 'undefined' && B9CH4, // Book Nine: Dust on the Boots (160);
    typeof B9CH5 !== 'undefined' && B9CH5, typeof B9CH6 !== 'undefined' && B9CH6, typeof B9CH7 !== 'undefined' && B9CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'dod'); }); // its chapters are const B9CH1..B9CH7 (161-167)
+  [typeof B10CH1 !== 'undefined' && B10CH1, typeof B10CH2 !== 'undefined' && B10CH2, typeof B10CH3 !== 'undefined' && B10CH3, typeof B10CH4 !== 'undefined' && B10CH4, // Book Ten: Witnessed (180);
+   typeof B10CH5 !== 'undefined' && B10CH5, typeof B10CH6 !== 'undefined' && B10CH6, typeof B10CH7 !== 'undefined' && B10CH7].forEach((CH, i) => { if (CH) registerChapter(i + 1, CH, 'tcg'); }); // its chapters are const B10CH1..B10CH7 (181-187)
   showTitle();
   requestAnimationFrame(loop);
 }
