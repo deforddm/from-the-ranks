@@ -1,7 +1,7 @@
 // v6.12.0: words said once in a sitting, and the fight log that scrolls.
 // A hub a branch comes back to shows its `again` line, or its words folded with "Read it again"; a topic already heard (its node's
 // every way out comes back here or to what is offered here, with the same words) is not offered again, never the last choice; the
-// picker's Back shows the words whole; a map, a fight, a vision or the sheet closing starts a new sitting; the deck is described once
+// picker's Back shows the words whole; a map, a fight, a vision or the sheet closing starts a new sitting (v12.0.4: words heard whole stay folded across sittings); the deck is described once
 // a book per reader; the fight log keeps eighty lines in a box that scrolls, and a narrow PC window gives the box its room.
 // Usage: node tools/said_test.mjs   (exit 1 on a failure or a page error)
 import { server, browser as launch, openGame } from './page.mjs';
@@ -49,11 +49,14 @@ await ev(() => { G.said = null; talk('__pk'); }); await click('Try the lock'); a
 const pk = await ev(() => !!document.querySelector('#sheet .choices.picker'));
 await ev(() => { const b = document.querySelector('#sheet [data-back]'); if (b) b.click(); }); await wait(60); let s6 = await sheet();
 ok(pk && !s6.said && /already read once/.test(s6.text), "the picker's Back shows the words whole, not folded");
-/* a new sitting: the sheet closed, the map, a fight, a vision */
-await ev(() => { G.said = null; talk('__hub'); closeSheet(); talk('__hub'); }); let s7 = await sheet();
+/* a new sitting: the sheet closed, the map, a fight, a vision. v12.0.4: the topics heard come back (a new sitting), but words
+   already heard whole, unchanged, stay folded (G.heard); words that changed show whole */
+await ev(() => { G.said = null; G.heard = {}; talk('__hub'); closeSheet(); talk('__hub'); }); let s7 = await sheet(), c7 = await choices();
 await ev(() => { talk('__hub'); startExplore(); talk('__hub'); }); let s8 = await sheet();
 await ev(() => { talk('__hub'); startBattle('deserters', {}); }); await wait(100); await ev(() => { talk('__hub'); }); let s9 = await sheet();
-ok(!s7.said && !s8.said && !s9.said, 'the sheet closing, the map and a fight each start a new sitting');
+ok(s7.said && s8.said && s9.said && c7.length === 4, 'after the sheet closing, the map or a fight, words heard fold, and every topic is offered again');
+await ev(() => { G.heard.__hub = 'other words'; closeSheet(); talk('__hub'); }); let s10 = await sheet();
+ok(!s10.said && /already read once/.test(s10.text), 'words that changed since they were heard show whole');
 const vis = await ev(() => { G.said = {x:1}; playVision('v1_paran', () => {}); const r = Object.keys(G.said || {}); VIS = null; document.body.classList.remove('vision'); return r; });
 ok(!vis.includes('x') && vis.includes('vis_v1_paran_0'), 'a vision starts a new sitting');
 /* the deck described once a book */
