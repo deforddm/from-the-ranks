@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['12.0.1', ['Book Nine: the two squads wear their own patches side by side, as in Book Seven: the Third\'s with a boot-print in the dust, the Sixth Company\'s with a ration sack.']],
   ['12.0.0', ['Book Nine, Dust on the Boots, beside Dust of Dreams: the Third with the Bonehunters\' marines and heavies, and the Letherii with the escort, taking turns on the march east into the Wastelands.',
     'Rations: each squad keeps its own count. A hungry squad starts fights hurt and takes it on its checks. A few choices ask what the squad still marches for.',
     'Seven chapters, two recruits for each squad, five games at the fires, and one fight where the fallen stay down.',

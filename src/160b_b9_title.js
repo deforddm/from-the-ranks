@@ -3,9 +3,8 @@
    for the land under it; the army as a long thin column marching away east to the horizon, wagons among the files, its own dust hanging
    over it; far off on the horizon a low wall of dust that is not the column's (the short-tails, never shown); and in the foreground one
    soldier walking away after the column, pack and spear, the boots and leggings grey with dust to the knee. No one turns to look at the far dust yet.
-   The patch (ART 'insignia/dod'): the two squads' own patches stitched onto one strip of dun cloth, the way soldiers on a long march
-   sew things to whatever is left (series-patches.md, the two-squad books' pattern): the Third's (Book Four's lozenge, its finger bone) and
-   the Sixth Company's (Book Five's coin), both washed pale with dust, and between and under them a boot-print stitched in sand thread.
+   The patch (ART 'insignia/dod'): the two squads' own patches side by side, as Book Seven's (David, Nov 10): the Third's (Book Four's
+   lozenge, its finger bone) with a boot-print in dust stitched under it, and the Sixth Company's (Book Five's coin) with a ration sack.
    Motion: the .k9-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
   const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
@@ -63,17 +62,13 @@
   s += `</svg>`;
   ART['title/dod'] = s; ART_SIZE['title/dod'] = [W, H];
 
-  /* the patch: the Third's (insignia/hoc) and the Sixth Company's (insignia/mt) stitched onto one strip of dun cloth, washed with dust,
-     a boot-print in sand thread under them */
-  const inner = (k, x) => (ART[k] || '').replace(/^<svg /, `<svg x="${x}" y="10" width="270" height="310" `);
-  ART['insignia/dod'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-label="The two squads' patches, Book Nine: the Third's and the Sixth Company's, stitched onto one strip of dun cloth, washed with dust, a boot-print stitched under them">
-<rect x="6" y="40" width="588" height="300" rx="18" fill="#8a7658" stroke="#3a2e20" stroke-width="3"/><rect x="16" y="50" width="568" height="280" rx="12" fill="none" stroke="#d8c08a" stroke-width="2" stroke-dasharray="7 6" opacity=".8"/>
-${inner('insignia/hoc', 20)}${inner('insignia/mt', 310)}
-<rect x="6" y="40" width="588" height="300" rx="18" fill="#c8a878" opacity=".22"/>
-<g transform="translate(300 360)"><path d="M-18 -26 Q-22 -12 -16 4 Q-10 18 0 18 Q10 18 12 4 Q14 -12 8 -26 Q0 -34 -18 -26 Z" fill="#5a4a34" stroke="#e0c890" stroke-width="2" stroke-dasharray="4 3"/>
-<circle cx="-12" cy="-40" r="4" fill="#5a4a34" stroke="#e0c890" stroke-width="1.6"/><circle cx="-2" cy="-44" r="4" fill="#5a4a34" stroke="#e0c890" stroke-width="1.6"/><circle cx="8" cy="-42" r="3.6" fill="#5a4a34" stroke="#e0c890" stroke-width="1.6"/></g>
-<path d="M300 70 L300 310" stroke="#3a2e20" stroke-width="2" stroke-dasharray="3 5" opacity=".6"/></svg>`;
-}
+  /* the patch (David, Nov 10: separate, as Book Seven's): the Third's (insignia/hoc) with a boot-print in dust under it; the Sixth
+     Company's (insignia/mt) with a ration sack */
+  const inner = (k, x) => (ART[k] || '').replace(/^<svg /, `<svg x="${x}" y="0" width="290" height="330" `);
+   ART['insignia/dod'] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-label="The two squads' patches, Book Nine: the Third's with a boot-print in dust stitched under it, and the Sixth Company's with a ration sack">
+${inner('insignia/hoc', 0)}${inner('insignia/mt', 310)}
+<g transform="translate(145 352)"><ellipse cx="0" cy="6" rx="46" ry="7" fill="#8a7658" opacity=".55"/><path d="M-10 -14 Q-13 -4 -9 7 Q-5 15 1 15 Q7 15 8 7 Q10 -4 6 -14 Q1 -19 -10 -14 Z" fill="#5a4a34" stroke="#e0c890" stroke-width="1.8" stroke-dasharray="4 3"/><circle cx="-7" cy="-23" r="2.6" fill="#5a4a34" stroke="#e0c890" stroke-width="1.2"/><circle cx="-1" cy="-25" r="2.6" fill="#5a4a34" stroke="#e0c890" stroke-width="1.2"/><circle cx="5" cy="-24" r="2.4" fill="#5a4a34" stroke="#e0c890" stroke-width="1.2"/></g>
+<g transform="translate(455 352)"><path d="M-16 -16 Q-20 6 -14 16 L14 16 Q20 6 16 -16 Q8 -22 0 -18 Q-8 -22 -16 -16 Z" fill="#b8a07a" stroke="#4a3a24" stroke-width="2"/><path d="M-8 -20 Q0 -26 8 -20" fill="none" stroke="#4a3a24" stroke-width="2.4"/><path d="M-10 2 L10 2" stroke="#4a3a24" stroke-width="1.6" stroke-dasharray="3 3"/></g></svg>`;}
 /* Settings › Artwork off: the title's canvas backdrop borrows Book Four's desert until Book Nine has its own */
 { const _stb = startTitleBackdrop; startTitleBackdrop = function(cv, b){ return _stb(cv, b === 'dod' ? 'hoc' : b); }; }
 
