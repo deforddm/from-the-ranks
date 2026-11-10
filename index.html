@@ -101905,7 +101905,7 @@ const B9CH3 = {
     b9_c3_farm:{title:'The last farm', style:'b9_c3_farm', warrenText:'Afternoon at the last farm in Lether · dust on everything · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","..t.....","....t...","........","#......#","..t..t..","........","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_heavy',1,8]],
-      foes:[['b9_deserter',2,1],['b9_deserter',5,1],['b9_deserter',4,2],['b9_deserterbow',3,0]], xp:380, after:'b9_c3_farm_after',
+      foes:[['b9_deserter',2,0],['b9_deserter',5,1],['b9_deserter',4,1],['b9_deserterbow',3,0]], xp:380, after:'b9_c3_farm_after',
       preText:()=>`Four of them come out of the house into the yard, Letherii army coats with the badges cut off and the farm's flour on their boots. They have been told the Malazans are a day ahead. They were told wrong.`,
       stage2:{title:'The barn', xp:170,
         text:()=>`The yard is the Third's. The barn is not. A man with an officer's sword and a deserter's coat is in the barn door with the farm's cart half loaded behind him, and he is not running, because the cart is all he has.${b93If('brask', `\n\nBrask looks at the cart, and then at the man. "Leave it," he says. "You'll live longer." The man does not leave it.`)}`,
@@ -102998,12 +102998,12 @@ const B9CH4 = {
         text:()=>`The ones at the barrels are down or gone back under the wagons. Out past the ring, in the dark, a man on a horse is waiting with the cart-pony's lead rope and a sword, and two more come up out of the grass beside him. He has a bone whistle on a thong round his neck, and he blows it once, short, and his people stop running away and turn round.${b94If('kaedra', `\n\nKaedra has an arrow on the string. "Border work," she says. "He's the one who counts. Take him and the rest go home."`)}${b94If('brennet', `\n\nBrennet has the wagon-pin in both hands. "That pony's harness is off our train," he says. "I know the stitching."`)}`,
         map:["#......#","........","..t..t..","........","...tt...","........",".t....t.","........","........","#......#"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b9_lraiderchief',3,1],['b9_lraider',5,2],['b9_lraiderbow',2,0]]} },
+        foes:[['b9_lraiderchief',3,1],['b9_lraider',5,1],['b9_lraiderbow',2,0]]} },
     /* the forage road: Barghast skirmishers who claim the herd in the wash (rule 89: no clan named; the war with the Akryn as headline) */
     b9_c4_forage:{title:'The dry wash', style:'b9_c4_wastes', warrenText:'Afternoon in a dry wash · dust, bhederin bawling, painted faces · the Holds thin', warren:{meanas:1, denul:1}, music:'battle',
       map:["..t.....","........","....t...","........",".t......","......t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_bluerose',1,8],['b9_bluerose',6,8]],
-      foes:[['b9_lbarghast',2,1],['b9_lbarghast',5,1],['b9_lbarghast',4,2],['b9_lbarghastchief',3,0]], xp:220, after:'b9_c4_forage_after',
+      foes:[['b9_lbarghast',2,1],['b9_lbarghast',5,1],['b9_lbarghast',4,1],['b9_lbarghastchief',3,0]], xp:220, after:'b9_c4_forage_after',
       preText:()=>`They come down off the far lip of the wash at a run, faces painted white, war-axes up, shouting in a tongue none of the squad has. They are not raiders. They are hunters at war with somebody else, and the herd was theirs before the Letherii saw it, and they mean to make that plain.`} },
 
   foes:{
@@ -103208,7 +103208,7 @@ He straightens when the squad comes over. "Checking the count," he says. "For th
 `The light goes. The cook-fires go down to a red glow, one by one. The carters roll themselves in blankets under their wagons. The outriders' horses stop shifting.
 
 The Sixth takes its blankets to the water wagons on the north side of the ring${b94Marks() ? ', the chalked ones,' : ''} and lies down beside them with its boots on and its weapons by its hands, and does not sleep.`,
-      ch:[{t:'Night. Sit the train.', onward:true, fx:()=>{ S.f.b9_c4_ph = 2; }, go:()=>{ startExplore('b9_c4_camp'); talk('b9_c4_night_arrive'); }},
+      ch:[{t:'Night. Sit the train.', fx:()=>{ S.f.b9_c4_ph = 2; }, go:()=>{ startExplore('b9_c4_camp'); talk('b9_c4_night_arrive'); }},
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ======== the fire: by phase. 1 dusk, 2 that night after the raid (the Witness), 4 and 5 the evening after. The games pass wraps
@@ -103936,7 +103936,7 @@ const B9CH5 = {
     b9_c5_cache:{title:'The sutler\'s cache', style:'b9_c5_wastes', warrenText:'A dry wash deep in the Wastes · afternoon · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","..t.....","........","....t...","#......#","..t.....","......t.","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_heavy',1,8]],
-      foes:[['b9_deserter',2,1],['b9_deserter',5,1],['b9_raider',1,2],['b9_raider',6,2]], xp:380, after:'b9_c5_cache_after',
+      foes:[['b9_deserter',2,0],['b9_deserter',5,1],['b9_raider',1,2],['b9_raider',6,2]], xp:380, after:'b9_c5_cache_after',
       preText:()=>`Four of them come down the bank into the wash, two in Letherii army coats with the badges cut off, two in riders' leathers with their faces wrapped against the dust. They heard about the cache from the same loud sutler the Third did. They have walked further for it, and are hungrier.`,
       stage2:{title:'The wreck', xp:170,
         text:()=>`The bed of the wash is the Third's. The wreck is not. A man in an officer's coat with the badges cut off has come round the far side of the cart with a pry-bar in one hand and a sword in the other, and he is not running, because this was the plan, and there is no other one.${b95If('tegra', `\n\nTegra has an axe in her hand, not thrown yet. "He will not stop," she says. "Out here, the ones who come this far for food do not stop."`)}`,
@@ -104958,7 +104958,7 @@ const B9CH6 = {
         text:()=>`The first of them are down, or gone back into the dust as if called. The line has not moved. Then the dust in front of the stretch goes dark from the inside, and a bigger one comes out of it, plate on plate, a blade as long as a door, and another behind it.${b96If('kaedra', `\n\nKaedra has an arrow on the string. "The joints," she says. "Under the arm. The plate doesn't go all the way."`)}${b96If('brennet', `\n\nBrennet has the wagon-pin in both hands and his back to the train. "Not past here," he says, to nobody, and to all of them.`)}`,
         map:["........","...t....","........","..#..t..","........","........",".t....t.","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b9_lnahrukbrute',3,1],['b9_lnahruk',5,1]]} },
+        foes:[['b9_lnahrukbrute',3,0],['b9_lnahruk',5,1]]} },
     /* the 'train' road: short-tails come round in the dust at the wagons. Survive five rounds until the escort's reserve comes up. */
     b9_c6_train:{title:'The wagons', style:'b9_c6_field', warrenText:'Afternoon at the train · dust over the wagons, oxen bellowing · the Holds thin', warren:{meanas:1, denul:1}, music:'battle',
       objective:{type:'survive', rounds:5, text:'Hold the wagons five rounds, until the reserve comes up. Nothing gets to the water.'},
@@ -105933,14 +105933,14 @@ const B9CH7 = {
       objective:{type:'survive', rounds:5, text:'Hold the dark until the column\'s lamps are out of sight behind you.'},
       map:["........","..t.....","........",".....t..","........","..t.....","........","......t.","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]], allies:[['b9_heavy',6,8]],
-      foes:[['b9_nahruk',2,1],['b9_nahruk',5,1],['b9_nahrukcaster',4,0]], xp:160, after:'b9_c7_dark_after',
+      foes:[['b9_nahruk',2,0],['b9_nahruk',5,1],['b9_nahrukcaster',4,0]], xp:160, after:'b9_c7_dark_after',
       waves:[{round:3, foes:[['b9_nahruk',3,0]], text:'One more comes out of the dark past the wagon-light. Only one, now.'}],
       preText:()=>`They come again after dark, fewer than before, out of the dark past the wagon-light, so that the first anybody sees of them is plate catching fire-glow. Behind the line the column's lamps are going away south, slowly, too slowly.`},
     /* the retreat trail (optional): Wastes dogs at the stragglers' edge */
     b9_c7_trail:{title:'The stragglers\' edge', style:'b9_c7_field', warrenText:'A grey morning on the retreat trail · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","......t.","........","...t....","........",".t......","........","........","#......#"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b9_dog',2,1],['b9_dog',5,1],['b9_dog',4,0]], xp:90, after:'b9_c7_dogs_after',
+      foes:[['b9_dog',2,0],['b9_dog',5,1],['b9_dog',4,0]], xp:90, after:'b9_c7_dogs_after',
       preText:()=>`Three of them, grey as the morning, working along the stragglers' edge the way dogs work a herd: looking for the slow one. They have found the Third instead.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each

@@ -230,7 +230,7 @@ const B9CH6 = {
         text:()=>`The first of them are down, or gone back into the dust as if called. The line has not moved. Then the dust in front of the stretch goes dark from the inside, and a bigger one comes out of it, plate on plate, a blade as long as a door, and another behind it.${b96If('kaedra', `\n\nKaedra has an arrow on the string. "The joints," she says. "Under the arm. The plate doesn't go all the way."`)}${b96If('brennet', `\n\nBrennet has the wagon-pin in both hands and his back to the train. "Not past here," he says, to nobody, and to all of them.`)}`,
         map:["........","...t....","........","..#..t..","........","........",".t....t.","........","........","........"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
-        foes:[['b9_lnahrukbrute',3,1],['b9_lnahruk',5,1]]} },
+        foes:[['b9_lnahrukbrute',3,0],['b9_lnahruk',5,1]]} },
     /* the 'train' road: short-tails come round in the dust at the wagons. Survive five rounds until the escort's reserve comes up. */
     b9_c6_train:{title:'The wagons', style:'b9_c6_field', warrenText:'Afternoon at the train · dust over the wagons, oxen bellowing · the Holds thin', warren:{meanas:1, denul:1}, music:'battle',
       objective:{type:'survive', rounds:5, text:'Hold the wagons five rounds, until the reserve comes up. Nothing gets to the water.'},

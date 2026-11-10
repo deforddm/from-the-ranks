@@ -212,7 +212,7 @@ const B9CH3 = {
     b9_c3_farm:{title:'The last farm', style:'b9_c3_farm', warrenText:'Afternoon at the last farm in Lether · dust on everything · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","..t.....","....t...","........","#......#","..t..t..","........","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_heavy',1,8]],
-      foes:[['b9_deserter',2,1],['b9_deserter',5,1],['b9_deserter',4,2],['b9_deserterbow',3,0]], xp:380, after:'b9_c3_farm_after',
+      foes:[['b9_deserter',2,0],['b9_deserter',5,1],['b9_deserter',4,1],['b9_deserterbow',3,0]], xp:380, after:'b9_c3_farm_after',
       preText:()=>`Four of them come out of the house into the yard, Letherii army coats with the badges cut off and the farm's flour on their boots. They have been told the Malazans are a day ahead. They were told wrong.`,
       stage2:{title:'The barn', xp:170,
         text:()=>`The yard is the Third's. The barn is not. A man with an officer's sword and a deserter's coat is in the barn door with the farm's cart half loaded behind him, and he is not running, because the cart is all he has.${b93If('brask', `\n\nBrask looks at the cart, and then at the man. "Leave it," he says. "You'll live longer." The man does not leave it.`)}`,

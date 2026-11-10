@@ -186,7 +186,7 @@ const B9CH5 = {
     b9_c5_cache:{title:'The sutler\'s cache', style:'b9_c5_wastes', warrenText:'A dry wash deep in the Wastes · afternoon · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["##....##","..t.....","........","....t...","#......#","..t.....","......t.","........","........","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_heavy',1,8]],
-      foes:[['b9_deserter',2,1],['b9_deserter',5,1],['b9_raider',1,2],['b9_raider',6,2]], xp:380, after:'b9_c5_cache_after',
+      foes:[['b9_deserter',2,0],['b9_deserter',5,1],['b9_raider',1,2],['b9_raider',6,2]], xp:380, after:'b9_c5_cache_after',
       preText:()=>`Four of them come down the bank into the wash, two in Letherii army coats with the badges cut off, two in riders' leathers with their faces wrapped against the dust. They heard about the cache from the same loud sutler the Third did. They have walked further for it, and are hungrier.`,
       stage2:{title:'The wreck', xp:170,
         text:()=>`The bed of the wash is the Third's. The wreck is not. A man in an officer's coat with the badges cut off has come round the far side of the cart with a pry-bar in one hand and a sword in the other, and he is not running, because this was the plan, and there is no other one.${b95If('tegra', `\n\nTegra has an axe in her hand, not thrown yet. "He will not stop," she says. "Out here, the ones who come this far for food do not stop."`)}`,

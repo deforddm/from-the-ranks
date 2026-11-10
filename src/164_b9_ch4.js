@@ -207,12 +207,12 @@ const B9CH4 = {
         text:()=>`The ones at the barrels are down or gone back under the wagons. Out past the ring, in the dark, a man on a horse is waiting with the cart-pony's lead rope and a sword, and two more come up out of the grass beside him. He has a bone whistle on a thong round his neck, and he blows it once, short, and his people stop running away and turn round.${b94If('kaedra', `\n\nKaedra has an arrow on the string. "Border work," she says. "He's the one who counts. Take him and the rest go home."`)}${b94If('brennet', `\n\nBrennet has the wagon-pin in both hands. "That pony's harness is off our train," he says. "I know the stitching."`)}`,
         map:["#......#","........","..t..t..","........","...tt...","........",".t....t.","........","........","#......#"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-        foes:[['b9_lraiderchief',3,1],['b9_lraider',5,2],['b9_lraiderbow',2,0]]} },
+        foes:[['b9_lraiderchief',3,1],['b9_lraider',5,1],['b9_lraiderbow',2,0]]} },
     /* the forage road: Barghast skirmishers who claim the herd in the wash (rule 89: no clan named; the war with the Akryn as headline) */
     b9_c4_forage:{title:'The dry wash', style:'b9_c4_wastes', warrenText:'Afternoon in a dry wash · dust, bhederin bawling, painted faces · the Holds thin', warren:{meanas:1, denul:1}, music:'battle',
       map:["..t.....","........","....t...","........",".t......","......t.","........","...t....","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]], allies:[['b9_bluerose',1,8],['b9_bluerose',6,8]],
-      foes:[['b9_lbarghast',2,1],['b9_lbarghast',5,1],['b9_lbarghast',4,2],['b9_lbarghastchief',3,0]], xp:220, after:'b9_c4_forage_after',
+      foes:[['b9_lbarghast',2,1],['b9_lbarghast',5,1],['b9_lbarghast',4,1],['b9_lbarghastchief',3,0]], xp:220, after:'b9_c4_forage_after',
       preText:()=>`They come down off the far lip of the wash at a run, faces painted white, war-axes up, shouting in a tongue none of the squad has. They are not raiders. They are hunters at war with somebody else, and the herd was theirs before the Letherii saw it, and they mean to make that plain.`} },
 
   foes:{
@@ -417,7 +417,7 @@ He straightens when the squad comes over. "Checking the count," he says. "For th
 `The light goes. The cook-fires go down to a red glow, one by one. The carters roll themselves in blankets under their wagons. The outriders' horses stop shifting.
 
 The Sixth takes its blankets to the water wagons on the north side of the ring${b94Marks() ? ', the chalked ones,' : ''} and lies down beside them with its boots on and its weapons by its hands, and does not sleep.`,
-      ch:[{t:'Night. Sit the train.', onward:true, fx:()=>{ S.f.b9_c4_ph = 2; }, go:()=>{ startExplore('b9_c4_camp'); talk('b9_c4_night_arrive'); }},
+      ch:[{t:'Night. Sit the train.', fx:()=>{ S.f.b9_c4_ph = 2; }, go:()=>{ startExplore('b9_c4_camp'); talk('b9_c4_night_arrive'); }},
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ======== the fire: by phase. 1 dusk, 2 that night after the raid (the Witness), 4 and 5 the evening after. The games pass wraps

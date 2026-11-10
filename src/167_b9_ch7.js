@@ -268,14 +268,14 @@ const B9CH7 = {
       objective:{type:'survive', rounds:5, text:'Hold the dark until the column\'s lamps are out of sight behind you.'},
       map:["........","..t.....","........",".....t..","........","..t.....","........","......t.","........","........"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]], allies:[['b9_heavy',6,8]],
-      foes:[['b9_nahruk',2,1],['b9_nahruk',5,1],['b9_nahrukcaster',4,0]], xp:160, after:'b9_c7_dark_after',
+      foes:[['b9_nahruk',2,0],['b9_nahruk',5,1],['b9_nahrukcaster',4,0]], xp:160, after:'b9_c7_dark_after',
       waves:[{round:3, foes:[['b9_nahruk',3,0]], text:'One more comes out of the dark past the wagon-light. Only one, now.'}],
       preText:()=>`They come again after dark, fewer than before, out of the dark past the wagon-light, so that the first anybody sees of them is plate catching fire-glow. Behind the line the column's lamps are going away south, slowly, too slowly.`},
     /* the retreat trail (optional): Wastes dogs at the stragglers' edge */
     b9_c7_trail:{title:'The stragglers\' edge', style:'b9_c7_field', warrenText:'A grey morning on the retreat trail · the warrens thin and far off', warren:{meanas:1, denul:1}, music:'battle',
       map:["#......#","..t.....","......t.","........","...t....","........",".t......","........","........","#......#"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
-      foes:[['b9_dog',2,1],['b9_dog',5,1],['b9_dog',4,0]], xp:90, after:'b9_c7_dogs_after',
+      foes:[['b9_dog',2,0],['b9_dog',5,1],['b9_dog',4,0]], xp:90, after:'b9_c7_dogs_after',
       preText:()=>`Three of them, grey as the morning, working along the stragglers' edge the way dogs work a herd: looking for the slow one. They have found the Third instead.`} },
 
   gear:{ // slot ∈ weapon|armour|trinket; role (38c) on each
