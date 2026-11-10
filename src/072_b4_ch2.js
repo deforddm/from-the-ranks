@@ -704,7 +704,7 @@ ${b42Say({haddat:`Haddat goes down on her knees by the cloak and begins, very ca
 The pilgrims come up out of the dusk to help, the old Crow and the Aren women, without a word, and the squad and the pilgrims put the hill back as near as anybody can tell: braids on the stakes, feathers in the earth, the dog skulls on their cords. It takes until full dark. The old woman of the Crow watches it from her lamp.
 
 When it is done the pilgrims go back to their lamps, and the hill is a hill again, and the ants go on with it.`,
-      ch:[{t:'Down to the camp.', onward:true, go:()=>{ startExplore('b4_c2_camp'); talk('b4_c2_night'); }},
+      ch:[{t:'Down to the camp.', onward:true, go:()=>{ startExplore('b4_c2_camp'); if (!S.f.b4_c2_night) talk('b4_c2_night'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
     b4_c2_hill_down:()=> b42Key() === 'fall' ? (S.f.b4_c2_hillDone ? ({sp:'The path down', txt:
 `The path down to the camp in the grey before dawn. Below, the 9th's fires are burning low, and the column is stirring.`,

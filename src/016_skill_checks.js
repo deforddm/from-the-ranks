@@ -163,7 +163,11 @@ function talk(id){
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
   { const fresh = curCh.filter(c => !rolledHere(id, c)); if (fresh.length) curCh = fresh; } // a check already rolled here is not offered again
-  G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
+  /* v12.0.4: G.heard keeps, for the whole run of the page (not the save), the words each node last showed whole. Coming back to a
+     node from the map ("Give me a moment", "Not now") with its words unchanged folds them as a hub return does, so a long speech
+     is not read out again in full; "Read it again" still opens it. */
+  G.said = G.said || {}; G.heard = G.heard || {}; const words = saidWords(n), said = (G.said[id] === words || G.heard[id] === words) && n.again !== false;
+  G.heard[id] = words;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
   let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
@@ -221,7 +225,7 @@ function openPicker(c, ids){
     ${no.map(id => `<button class="choice who" disabled><b>${esc(NAME(id))}</b><small>${esc((T && T.notWhy && T.notWhy[id]) || (c.notWhy && c.notWhy[id]) || 'not this one')}</small></button>`).join('')}
     <button class="choice back" data-back="1">Back</button>`;
   box.querySelectorAll('[data-who]').forEach(b => b.onclick = () => { AUDIO.play('click'); rollFor(c, b.dataset.who); });
-  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; talk(S.node); }; // the same words again, not folded
+  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; if (G.heard) delete G.heard[S.node]; talk(S.node); }; // the same words again, not folded
   const b0 = box.querySelector('.best') || box.querySelector('[data-who]'); if (b0 && !('ontouchstart' in window)) b0.focus({preventScroll:true});
   b0 && b0.scrollIntoView({block:'nearest'});
 }

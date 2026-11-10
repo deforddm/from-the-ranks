@@ -32,7 +32,7 @@ function fitCanvas(cols, rows){
   const ctx = sized();
   const bgc = document.createElement('canvas'); bgc.width = cols*T*dpr; bgc.height = rows*T*dpr; const bctx = bgc.getContext('2d'); bctx.setTransform(dpr,0,0,dpr,0,0);
   const dec = document.createElement('canvas'); dec.width = cols*T*dpr; dec.height = rows*T*dpr; const dctx = dec.getContext('2d'); dctx.setTransform(dpr,0,0,dpr,0,0);
-  G = {ctx, T, cv, cols, rows, bgc, bctx, dec, dctx, dpr, vw, vh, cam:{x:0, y:0, pan:false, snap:true}, pannable:pan, hudH:hud ? hud.offsetHeight : null, disp:G.disp || {}, sceneKind:G.sceneKind};
+  G = {ctx, T, cv, cols, rows, bgc, bctx, dec, dctx, dpr, vw, vh, cam:{x:0, y:0, pan:false, snap:true}, pannable:pan, hudH:hud ? hud.offsetHeight : null, disp:G.disp || {}, heard:G.heard || {}, sceneKind:G.sceneKind};
   const tile = e => { const r = cv.getBoundingClientRect(); return {x:Math.floor((e.clientX - r.left + G.cam.x) / T), y:Math.floor((e.clientY - r.top + G.cam.y) / T)}; };
   const tap = e => { const {x, y} = tile(e); if (x < 0 || y < 0 || x >= cols || y >= rows) return; if (view === 'explore') exploreTap(x, y); else if (view === 'battle') battleTap(x, y); };
   cv.onpointermove = cv.onpointerup = cv.onpointercancel = null;

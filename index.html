@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '12.0.3';
+const VERSION = '12.0.4';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2047,7 +2047,11 @@ function talk(id){
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
   curCh = n.ch.filter(c => !c.req || c.req());
   { const fresh = curCh.filter(c => !rolledHere(id, c)); if (fresh.length) curCh = fresh; } // a check already rolled here is not offered again
-  G.said = G.said || {}; const words = saidWords(n), said = G.said[id] === words && n.again !== false;
+  /* v12.0.4: G.heard keeps, for the whole run of the page (not the save), the words each node last showed whole. Coming back to a
+     node from the map ("Give me a moment", "Not now") with its words unchanged folds them as a hub return does, so a long speech
+     is not read out again in full; "Read it again" still opens it. */
+  G.said = G.said || {}; G.heard = G.heard || {}; const words = saidWords(n), said = (G.said[id] === words || G.heard[id] === words) && n.again !== false;
+  G.heard[id] = words;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
   let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
@@ -2105,7 +2109,7 @@ function openPicker(c, ids){
     ${no.map(id => `<button class="choice who" disabled><b>${esc(NAME(id))}</b><small>${esc((T && T.notWhy && T.notWhy[id]) || (c.notWhy && c.notWhy[id]) || 'not this one')}</small></button>`).join('')}
     <button class="choice back" data-back="1">Back</button>`;
   box.querySelectorAll('[data-who]').forEach(b => b.onclick = () => { AUDIO.play('click'); rollFor(c, b.dataset.who); });
-  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; talk(S.node); }; // the same words again, not folded
+  box.querySelector('[data-back]').onclick = () => { AUDIO.play('click'); box.classList.remove('picker'); if (G.said) delete G.said[S.node]; if (G.heard) delete G.heard[S.node]; talk(S.node); }; // the same words again, not folded
   const b0 = box.querySelector('.best') || box.querySelector('[data-who]'); if (b0 && !('ontouchstart' in window)) b0.focus({preventScroll:true});
   b0 && b0.scrollIntoView({block:'nearest'});
 }
@@ -4919,7 +4923,7 @@ function fitCanvas(cols, rows){
   const ctx = sized();
   const bgc = document.createElement('canvas'); bgc.width = cols*T*dpr; bgc.height = rows*T*dpr; const bctx = bgc.getContext('2d'); bctx.setTransform(dpr,0,0,dpr,0,0);
   const dec = document.createElement('canvas'); dec.width = cols*T*dpr; dec.height = rows*T*dpr; const dctx = dec.getContext('2d'); dctx.setTransform(dpr,0,0,dpr,0,0);
-  G = {ctx, T, cv, cols, rows, bgc, bctx, dec, dctx, dpr, vw, vh, cam:{x:0, y:0, pan:false, snap:true}, pannable:pan, hudH:hud ? hud.offsetHeight : null, disp:G.disp || {}, sceneKind:G.sceneKind};
+  G = {ctx, T, cv, cols, rows, bgc, bctx, dec, dctx, dpr, vw, vh, cam:{x:0, y:0, pan:false, snap:true}, pannable:pan, hudH:hud ? hud.offsetHeight : null, disp:G.disp || {}, heard:G.heard || {}, sceneKind:G.sceneKind};
   const tile = e => { const r = cv.getBoundingClientRect(); return {x:Math.floor((e.clientX - r.left + G.cam.x) / T), y:Math.floor((e.clientY - r.top + G.cam.y) / T)}; };
   const tap = e => { const {x, y} = tile(e); if (x < 0 || y < 0 || x >= cols || y >= rows) return; if (view === 'explore') exploreTap(x, y); else if (view === 'battle') battleTap(x, y); };
   cv.onpointermove = cv.onpointerup = cv.onpointercancel = null;
@@ -7892,6 +7896,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['12.0.4', ['Conversations no longer repeat in full. Step away from a talk ("Give me a moment", "Not now") and come back, and the words you have already heard fold to their first lines; "Read it again" opens them. Every book.', 'Book Four, Chapter Two: the night by the Fall no longer plays twice.']],
   ['12.0.3', ['Book Seven\'s title art: the column walks up the beach and over the dune, and nobody stands on the water any more.', 'On the title, a two-squad patch (Books Six, Seven and Nine) now shows each squad\'s patch as large as a single one.']],
   ['12.0.2', ['Book Nine\'s title art: the soldier in front is drawn again, back to you, helm, cloak, pack and bedroll, spear on the shoulder, walking after the column with a long shadow thrown ahead.']],
   ['12.0.1', ['Book Nine: the two squads wear their own patches side by side, as in Book Seven: the Third\'s with a boot-print in the dust, the Sixth Company\'s with a ration sack.']],
@@ -9198,7 +9203,7 @@ function playVision(id, done){
   if (done) { S.tuftVisions = S.tuftVisions || []; if (!S.tuftVisions.includes(id)) S.tuftVisions.push(id); }
   const ret = {view, kind:G.sceneKind, bg:S.bg, node:S.node}, cardNode = cardNodeName();
   VIS = {id, ret, replay:!done, again, done:done || (() => { if (ret.node && DLG[ret.node]) talk(ret.node); }), resume:done ? (DLG[cardNode] ? cardNode : ret.node) : ret.node, bg:V.bg, fig:V.fig, t0:performance.now()};
-  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null; G.said = null; // a vision between: the card's page comes back whole (16)
+  $('#sheet').hidden = true; $('#modal').hidden = true; routeAnim = null; G.said = null; if (G.heard) { delete G.heard[ret.node]; delete G.heard[cardNode]; } // a vision between: the card's page comes back whole (16; v12.0.4 heard)
   document.body.classList.add('vision');
   view = 'scene'; B = null; G.sceneKind = 'vision'; AUDIO.setScene('dark'); AUDIO.play('reveal');
   toTop(); $('#app').innerHTML = `<header class="hud vhud"><div><div class="kick">${visKick()}</div><div class="loc">${esc(V.who)}</div><div class="sub warren">${esc(V.where)}</div></div></header>
@@ -52930,7 +52935,7 @@ ${b42Say({haddat:`Haddat goes down on her knees by the cloak and begins, very ca
 The pilgrims come up out of the dusk to help, the old Crow and the Aren women, without a word, and the squad and the pilgrims put the hill back as near as anybody can tell: braids on the stakes, feathers in the earth, the dog skulls on their cords. It takes until full dark. The old woman of the Crow watches it from her lamp.
 
 When it is done the pilgrims go back to their lamps, and the hill is a hill again, and the ants go on with it.`,
-      ch:[{t:'Down to the camp.', onward:true, go:()=>{ startExplore('b4_c2_camp'); talk('b4_c2_night'); }},
+      ch:[{t:'Down to the camp.', onward:true, go:()=>{ startExplore('b4_c2_camp'); if (!S.f.b4_c2_night) talk('b4_c2_night'); }},
           {t:'Not now.', go:()=>startExplore()}]}),
     b4_c2_hill_down:()=> b42Key() === 'fall' ? (S.f.b4_c2_hillDone ? ({sp:'The path down', txt:
 `The path down to the camp in the grey before dawn. Below, the 9th's fires are burning low, and the column is stirring.`,

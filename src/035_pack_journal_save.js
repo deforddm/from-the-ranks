@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['12.0.4', ['Conversations no longer repeat in full. Step away from a talk ("Give me a moment", "Not now") and come back, and the words you have already heard fold to their first lines; "Read it again" opens them. Every book.', 'Book Four, Chapter Two: the night by the Fall no longer plays twice.']],
   ['12.0.3', ['Book Seven\'s title art: the column walks up the beach and over the dune, and nobody stands on the water any more.', 'On the title, a two-squad patch (Books Six, Seven and Nine) now shows each squad\'s patch as large as a single one.']],
   ['12.0.2', ['Book Nine\'s title art: the soldier in front is drawn again, back to you, helm, cloak, pack and bedroll, spear on the shoulder, walking after the column with a long shadow thrown ahead.']],
   ['12.0.1', ['Book Nine: the two squads wear their own patches side by side, as in Book Seven: the Third\'s with a boot-print in the dust, the Sixth Company\'s with a ration sack.']],
