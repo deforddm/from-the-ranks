@@ -352,7 +352,7 @@ After a while she gets up anyway, by herself, swaying, because she had decided t
 "The Bolkando's word," he says. "The column keeps up. Their queen will not wait, and the Grey Helms will not wait for her, and nobody means to arrive at Kolanse last." He looks at the train's horses, heads low in the traces. "The Commander's word is that the column keeps together. Which is not the same thing, and the Bolkando know it.
 
 "The Sixth has the train's rearguard. We can walk the horses at their own pace, the farrier's way, and fall behind, and come in to the halt at the tail long after dark. Or we keep up. Drive them. And when one drops, we leave it and put its load on the next."${b104If('tirren', `\n\nTirren has stopped walking. "Walk them," she says. "Please. They'll get there. Not fast. They'll get there."`)}${b104If('thegg', `\n\nThegg looks south after the Bolkando dust. "If we fall behind," he says slowly, "we are last of the last. There is nobody behind last."`)}`,
-        ch:[{t:()=>b104T() ? '"We walk them. Tirren\'s way."' : '"We walk them. The farrier\'s way."', fx:()=>{ S.f.b10_c4_key = 'horses'; S.f.b10_c4_horses = 1; S.f.b10_c4_ph = 3; b104Lc('tirren', 1); }, go:'b10_c4_key_horses'},
+        ch:[{t:b104T() ? '"We walk them. Tirren\'s way."' : '"We walk them. The farrier\'s way."', fx:()=>{ S.f.b10_c4_key = 'horses'; S.f.b10_c4_horses = 1; S.f.b10_c4_ph = 3; b104Lc('tirren', 1); }, go:'b10_c4_key_horses'},
             {t:'"We keep up. Drive them."', fx:()=>{ S.f.b10_c4_key = 'pace'; S.f.b10_c4_pace = 1; S.f.b10_c4_ph = 3; b104L('thegg', 1); b104Lc('tirren', -1); }, go:'b10_c4_key_pace'},
             {t:'Not yet.', go:()=>startExplore()}]};
       if (ph === 2) return {sp:B5_FINADD.name, scene:b104Scene2(), txt:

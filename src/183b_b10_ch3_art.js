@@ -120,7 +120,7 @@ TILEX.b10_c3_ground = (ctx, ch, x, y, T, dark) => { const N = !!dark, south = b1
     if (c === '#') { const px = x*T, py = y*T; for (let i = 0; i < 3; i++) { const sx = px + T*(.15 + i*.3 + hash(x, y, 10361 + i)*.1), h = T*(.3 + hash(x, y, 10364 + i)*.4); // a ridge of shards
         ctx.fillStyle = N ? '#26324a' : '#a8b4c4'; ctx.beginPath(); ctx.moveTo(sx - T*.12, py + T*.9); ctx.lineTo(sx, py + T*.9 - h); ctx.lineTo(sx + T*.1, py + T*.9); ctx.closePath(); ctx.fill();
         ctx.fillStyle = N ? 'rgba(170,190,230,.3)' : 'rgba(255,255,255,.8)'; ctx.beginPath(); ctx.moveTo(sx - T*.12, py + T*.9); ctx.lineTo(sx, py + T*.9 - h); ctx.lineTo(sx - T*.03, py + T*.9); ctx.closePath(); ctx.fill(); } } }); };
-  if (!'cWwxFv'.includes(ch)) return ground(ch);
+  if (!'cWwxFOv'.includes(ch)) return ground(ch);
   ground('.');
   b2Clip(ctx, x, y, T, () => { const px = x*T, py = y*T;
     if (ch === 'c') return b103aCloak(ctx, px + T*.5, py + T*.86, T/16, N);
@@ -130,7 +130,7 @@ TILEX.b10_c3_ground = (ctx, ch, x, y, T, dark) => { const N = !!dark, south = b1
       b55Wagon(ctx, px, py, T, N); [[.3], [.5], [.7]].forEach(([k]) => { ell(ctx, px + T*k, py + T*.4, T*.1, T*.12, N ? '#2a2016' : '#7a5a38'); ctx.fillStyle = N ? '#14100c' : '#3a2a1a'; ctx.fillRect(px + T*(k - .1), py + T*.38, T*.2, Math.max(1, T*.03)); }); return; } // the water wagon, its barrels
     if (ch === 'x') { ctx.strokeStyle = N ? 'rgba(150,130,100,.5)' : 'rgba(110,86,56,.8)'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); // the picket line
       const ph = (S && S.f && S.f.b10_c3_ph) || 1; if (ph >= 2) return; return b103aOx(ctx, px + T*.56, py + T*.86, T/26, N, hash(x, y, 10371) > .5 ? 1 : -1); }
-    if (ch === 'F') { for (let i = 0; i < 7; i++) { const a = i/7*Math.PI*2; ell(ctx, px + T*(.5 + Math.cos(a)*.32), py + T*(.56 + Math.sin(a)*.22), T*.1, T*.07, N ? '#2a2620' : '#6a5a48'); } // packs in a ring, no fire
+    if (ch === 'F' || ch === 'O') { for (let i = 0; i < 7; i++) { const a = i/7*Math.PI*2; ell(ctx, px + T*(.5 + Math.cos(a)*.32), py + T*(.56 + Math.sin(a)*.22), T*.1, T*.07, N ? '#2a2620' : '#6a5a48'); } // packs in a ring, no fire
       ctx.fillStyle = N ? '#1a1610' : '#5a4630'; ctx.fillRect(px + T*.44, py + T*.5, T*.12, T*.06); return; } // a skin in the middle
     if (ch === 'v') { ell(ctx, px + T*.5, py + T*.7, T*.48, T*.24, N ? '#1e2a40' : '#e6eaee'); ell(ctx, px + T*.42, py + T*.62, T*.3, T*.12, N ? 'rgba(170,190,230,.16)' : 'rgba(255,255,255,.7)'); return; } }); }; // a low rise of glass, lit from the left
 /* low cover ('t') on this chapter's ground: a shard of glass standing up (a stone on 'south') */
