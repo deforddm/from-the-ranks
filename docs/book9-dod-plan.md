@@ -70,3 +70,5 @@ Marks: [T] the novel's text, [W] the wiki, [R] Reactor, [O] memory only. The can
 
 7. **Balance: to the targets**, Book Nine tables only (Soldier ~90%, 85–97; Bridgeburner ~75–80%, 65–85, none under 60; first fights and survive fights near 100% on Soldier). Untuned, the bot won all 22 fights on both difficulties. Final numbers go to David before the ship.
 8. **Rations floor at 2 before Ch 7:** the column's pot tops the Third up to at least 2 before the rearguard.
+
+9. **Balance approved** (David, Tue Nov 10, 2026, 5:08 AM PST: "Approve and ship"): Soldier mean 93.0% (min 80), Bridgeburner mean 83.9% (min 60); the rearguard 90% on both, 0.6 / 1.0 dead a fight (at Rations 2: 80% / 1.2 and 65% / 2.4). `docs/v12.0-balance.md`.

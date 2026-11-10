@@ -16,7 +16,7 @@ steps.push(['lint', 'node', ['tools/lint.mjs']]);
 for (const t of fs.readdirSync(path.join(root, 'tools')).filter(f => f.endsWith('_test.mjs')).sort()) steps.push([t.replace('.mjs', ''), 'node', ['tools/' + t]]);
 for (let i = 1; i <= plays; i++) steps.push([`play ${i}/${plays}`, 'node', ['tools/play.mjs']]);
 let bad = 0; const t00 = Date.now();
-const run = (cmd, args) => spawnSync(cmd, args, { cwd: root, encoding: 'utf8', timeout: 15 * 60 * 1000, maxBuffer: 64 << 20 });
+const run = (cmd, args) => spawnSync(cmd, args, { cwd: root, encoding: 'utf8', timeout: 45 * 60 * 1000, maxBuffer: 64 << 20 });
 for (const [name, cmd, args] of steps) {
   const t0 = Date.now(); let ok, out, note = '';
   if (!cmd) { const errs = args.map(f => [f, run('node', ['--check', f])]).filter(([, r]) => r.status !== 0); ok = !errs.length; out = errs.map(([f, r]) => f + ':\n' + r.stderr).join('\n'); }

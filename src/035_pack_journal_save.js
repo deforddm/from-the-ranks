@@ -193,6 +193,10 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['12.0.0', ['Book Nine, Dust on the Boots, beside Dust of Dreams: the Third with the Bonehunters\' marines and heavies, and the Letherii with the escort, taking turns on the march east into the Wastelands.',
+    'Rations: each squad keeps its own count. A hungry squad starts fights hurt and takes it on its checks. A few choices ask what the squad still marches for.',
+    'Seven chapters, two recruits for each squad, five games at the fires, and one fight where the fallen stay down.',
+    'A finished Book Seven save carries both squads over with their levels, gear and picks, into a new save. The Book Seven save is untouched.']],
   ['11.0.1', ['Book Six, Chapter Six: the twelve lights now come down at sundown, the sky still blue, as the novel has it, before the night march goes on. Saves are unchanged.']],
   ['11.0.0', ['Book Eight, Time Served, beside Toll the Hounds: the Fourth, out of the army years after Coral, keep a door in Darujhistan, and the Assassins\' Guild puts their names on a paper.', 'The Contract: how much the Guild wants you dead rises with every Guild fight you win and falls while you are out of the city. It decides who comes for you and how you get out at the end.', 'Seven chapters, from the city east over the old Domin to Black Coral and back. A Deck reading and a vision every chapter, one mortal fight, recruits, games at the fires, and a fate page for every soldier.', 'A finished Book Three or Book Six on the right road carries the Fourth across. Older saves carry on as they were.']],
   ['10.3.5', ['No more lit fuses, in any book. Moranth munitions go off when the shell breaks, or when an acid timer eats through its wax, so the sappers now talk of timers, wax and trip cord. Tangle\'s wrists are wound with trip cord.', 'Book Four\'s fire game is now The Timer and Book Seven\'s is the Timer-Count: same play, acid instead of flame. Old saves and deeds carry over.']],
