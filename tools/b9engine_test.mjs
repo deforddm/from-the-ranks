@@ -95,7 +95,10 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   /* art, scenes, glossary, keys, voice */
   out.art = {title:/<svg/.test(ART['title/dod'] || ''), patch:/boot-print/.test(ART['insignia/dod'] || ''), titleArt:BOOKS.dod.titleArt, patchKey:BOOKS.dod.patch,
     scenes:Object.keys(B9_SCENE_LIKE).every(k => SCENES[k] && SCENEX[k]), gloss:(GLOSSX.dod || []).length, keys:Object.keys(B9KEYS).length, ch:Object.keys(B9CH).length,
-    defaults:Object.keys(B9KEY0).every(n => B9KEYS[n].includes(B9KEY0[n])), keys7:B9KEYS[7].length, roads:B9_LETHROADS.join(','), gap:Object.keys(B9GAP).length === 0 && B9GAP_ROW === null && Object.keys(B9SOLDIER).length === 0,
+    defaults:Object.keys(B9KEY0).every(n => B9KEYS[n].includes(B9KEY0[n])), keys7:B9KEYS[7].length, roads:B9_LETHROADS.join(','), gap:(() => { const ids = Object.keys(BATTLES).filter(k => /^b9_c\d_/.test(k)), keep = ['b9_c1_looters', 'b9_c2_drill', 'b9_c4_herd', 'b9_c6_train', 'b9_c6_dusk', 'b9_c7_dark'];
+      const row = g => !!g && ['ac', 'atk', 'hp', 'dmg'].every(k => typeof g[k] === 'number') && g.hp >= 1;
+      return ids.length === 22 && ids.every(k => row(B9GAP[k])) && row(B9GAP_ROW) && keep.every(k => !B9SOLDIER[k]) && ids.filter(k => !keep.includes(k)).every(k => row(B9SOLDIER[k]) && SOLDIER_FIGHT[k] === B9SOLDIER[k])
+        && Object.keys(B9GAP).every(k => ids.includes(k)) && Object.keys(B9SOLDIER).every(k => ids.includes(k)); })(),
     voice:((AUDIO.names || (AUDIO._dev && AUDIO._dev.names) || {}).voices || []).includes('dod'),
     places:['b9_letheras_night', 'b9_column', 'b9_wastes', 'b9_wastes_night', 'b9_camp_night', 'b9_line', 'b9_dark', 'b9_muster'].map(k => AUDIO._dev.placeAmb(k)).join(','),
     passive:V103_PASSIVE.includes('b9_c4_spoor'), deeds:/Rations/.test(b9DeedsExtra([]))};
@@ -137,7 +140,7 @@ if (r.err) ok(false, 'threw: ' + r.err); else {
     && d.l.who === 'perrit' && d.l.choice && d.l.node === 'b9_c2_card' && d.l.tiles && d.l.key === 'dod:2' && d.l.sayL && d.l.tile === 'armour' && d.l.tw === 'tilewoman' && d.l.twWords,
     'the readers: the Third\'s Deck (Marrow, else the old marine), the Letherii\'s Tiles (Perrit, else the tile-woman with the train), each squad\'s own lines (the v10.0.2 rule), seven tables and pools, the tiles\' effects: ' + JSON.stringify(d));
   const a = r.art; ok(a.title && a.patch && a.titleArt === 'title/dod' && a.patchKey === 'insignia/dod' && a.scenes && a.gloss >= 12 && a.keys === 7 && a.ch === 7 && a.defaults && a.keys7 === 3 && a.roads === 'escort,adjunct,home' && a.gap && a.voice && a.places === 'city_night,column,plain,night,camp_night,siege,night,camp' && a.passive && a.deeds,
-    'title art, the patch with its boot-print, the backdrops, the glossary, keys and roads, the balance tables empty for the balance step, the voice and places, Ch 4\'s passive registered, Deeds: ' + JSON.stringify(a));
+    'title art, the patch with its boot-print, the backdrops, the glossary, keys and roads, the balance tables filled (v12.0: a Bridgeburner row for all 22 fights, a Soldier row for all but the two first fights and the survive fights, B9GAP_ROW set), the voice and places, Ch 4\'s passive registered, Deeds: ' + JSON.stringify(a));
 }
 ok((!ui.empty || /still being written/.test(ui.msgEmpty || '')) && ui.shelf && /Dust/.test(ui.h1 || '') && ui.imp && ui.picker >= 9 && ui.fit && ui.meet && ui.credit && ui.twoNames && ui.made, 'the new-sergeant screen: still being written while empty; nine books fit at 390px; two names and two Book Seven pickers; Where the books meet; Begin makes the Third at 19 and the Letherii at 11: ' + JSON.stringify(ui));
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

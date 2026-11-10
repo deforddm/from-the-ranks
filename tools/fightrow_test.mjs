@@ -21,7 +21,7 @@ const out = await page.evaluate(() => {
     const foe = (book, ch, diff, bid) => { if (typeof setBook === 'function') setBook(book); S = mk[book](); S.chapter = ch; S.diff = diff; B = { id: bid, def: {} };
       const u = mkFoe('bruiser', 1, 1); B = null; return { hp: u.maxhp, atk: u.atk, dmg: u.dmg[2], ac: u.ac, avg: u.dmg[0] * (u.dmg[1] + 1) / 2 + u.dmg[2] }; };
     const emptied = (tbl, id, fn) => { const keep = tbl[id]; delete tbl[id]; try { return fn(); } finally { tbl[id] = keep; } };
-    const BB = { gotm: B1GAP, dg: B2GAP, moi: B3GAP_FIGHT, hoc: B4GAP_FIGHT };
+    const BB = { gotm: B1GAP, dg: B2GAP, moi: B3GAP_FIGHT, hoc: B4GAP_FIGHT, dod: B9GAP }; // Book Nine's B9GAP (v12.0) checked row by row too
     const rows = [];
     for (const id of Object.keys(SOLDIER_FIGHT)) { const book = bookOf(id); if (typeof setBook === 'function') setBook(book); const ch = chOf(id), r = { id, book, ch, kind: 'S', row: { ...SOLDIER_FIGHT[id] } };
       for (const d of ['story', 'soldier', 'bridgeburner']) { r[d] = foe(book, ch, d, id); r[d + '0'] = emptied(SOLDIER_FIGHT, id, () => foe(book, ch, d, id)); }
@@ -55,7 +55,7 @@ else {
       ok(same(r.other, r.other0), `${t}: the row does nothing in another book`);
     }
   }
-  console.log(`${nS} Soldier rows, ${nB} Bridgeburner rows (Books One to Four) checked`);
+  console.log(`${nS} Soldier rows, ${nB} Bridgeburner rows (Books One to Four and Nine) checked`);
   const threat = (f, k) => f.hp * Math.min(.95, Math.max(.05, (21 + f.atk - 16) / 20)) * Math.max(1, f.avg * k);
   const over = out.cap.filter(c => threat(c.s, 1) > 1.1 * threat(c.b, 1.2));
   ok(!over.length, `Soldier's foe never stronger than Bridgeburner's, fight for fight (${out.cap.length} fights)` + (over.length ? ': ' + over.map(c => `${c.id} ${(threat(c.s, 1) / threat(c.b, 1.2)).toFixed(2)}×`).join('; ') : ''));
