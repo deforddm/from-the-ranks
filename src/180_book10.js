@@ -383,13 +383,52 @@ function b10FourthAllies(x = 1, y = 1){ const f = (S && S.b10f) || b10FourthHalf
   return ids.map((id, i) => { const k = 'b10_4_' + id, row = b10FourthRow(id); if (!row) return null; FOES[k] = row; return [k, x + i, y]; }).filter(Boolean); }
 const b10FourthName = () => { const f = S && S.b10f; return f && f.name ? `Sergeant ${f.name}` : 'the Fourth\'s sergeant'; };
 
-/* ---- Book Ten's balance tables (empty on purpose: the balance step fills them and goes to David; the Nov 6 targets). B10SOLDIER rows
-   join SOLDIER_FIGHT; B10GAP is Bridgeburner's per-fight boost, as B9GAP; B10GAP_ROW stays null until the step (no row = Bridgeburner's
-   plain multipliers). ---- */
-const B10SOLDIER = {};
+/* ---- Book Ten's balance tables (the Nov 6 targets; tools/balance.mjs, bot 'smart', Tue Nov 10, 2026, 8:30 PM PST; pending David's approval).
+   B10SOLDIER rows join SOLDIER_FIGHT; B10GAP is Bridgeburner's per-fight boost, as B9GAP; B10GAP_ROW stays null (every b10 fight has a row). ---- */
+const B10SOLDIER = {
+  // b10_c1_strippers: no row, 100% won, 8% health lost (first or survive fight)
+  b10_c1_graves:{ac:10, atk:11, hp:6.25, dmg:13}, // 95% won, 25% health lost (20 runs)
+  // b10_c1_spar: no row, 100% won, 6% health lost (first or survive fight)
+  // b10_c2_spar: no row, 100% won, 3% health lost (first or survive fight)
+  b10_c2_deserters:{ac:5, atk:5, hp:3.5, dmg:7}, // 95% won, 34% health lost (20 runs)
+  b10_c2_dogs:{ac:5, atk:6, hp:3.75, dmg:8}, // 90% won, 40% health lost (20 runs)
+  b10_c3_wagon:{ac:9, atk:9, hp:5.5, dmg:11}, // 95% won, 21% health lost (20 runs)
+  // b10_c3_traces: no row, 100% won, 7% health lost (first or survive fight)
+  b10_c4_foragers:{ac:7, atk:7, hp:4.5, dmg:9}, // 95% won, 27% health lost (20 runs)
+  b10_c4_night:{ac:10, atk:10, hp:6.0, dmg:12}, // 95% won, 29% health lost (20 runs)
+  b10_c4_dogs:{ac:8, atk:9, hp:5.25, dmg:11}, // 90% won, 43% health lost (20 runs)
+  b10_c5_stragglers:{ac:12, atk:13, hp:7.25, dmg:15}, // 90% won, 24% health lost (20 runs)
+  b10_c5_outriders:{ac:9, atk:9, hp:5.5, dmg:11}, // 85% won, 27% health lost (20 runs)
+  b10_c6_beach:{ac:5, atk:5, hp:3.5, dmg:7}, // 100% won, 42% health lost (20 runs)
+  b10_c6_line:{ac:3, atk:4, hp:2.75, dmg:6}, // 95% won, 41% health lost (20 runs)
+  // b10_c6_open: no row, 100% won, 5% health lost (first or survive fight)
+  b10_c7_picket:{ac:6, atk:6, hp:4.0, dmg:8}, // 85% won, 31% health lost (20 runs)
+  // b10_c7_morning: no row, 100% won, 4% health lost (first or survive fight)
+  b10_c7_line:{ac:5, atk:5, hp:3.5, dmg:7}, // 85% won, 33% health lost (20 runs)
+};
 Object.assign(SOLDIER_FIGHT, B10SOLDIER);
 let B10GAP_ROW = null;
-const B10GAP = {};
+const B10GAP = {
+  b10_c1_strippers:{ac:5, atk:6, hp:3.75, dmg:8}, // 75% won, 47% health lost (20 runs)
+  b10_c1_graves:{ac:7, atk:7, hp:4.75, dmg:10}, // 70% won, 46% health lost (30 runs)
+  b10_c1_spar:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 39% health lost (20 runs)
+  b10_c2_spar:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 69% health lost (20 runs)
+  b10_c2_deserters:{ac:3, atk:3, hp:2.75, dmg:6}, // 87% won, 46% health lost (30 runs)
+  b10_c2_dogs:{ac:4, atk:4, hp:3.25, dmg:6}, // 83% won, 49% health lost (30 runs)
+  b10_c3_wagon:{ac:6, atk:6, hp:4.0, dmg:8}, // 70% won, 41% health lost (20 runs)
+  b10_c3_traces:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 39% health lost (20 runs)
+  b10_c4_foragers:{ac:5, atk:6, hp:3.75, dmg:8}, // 70% won, 57% health lost (20 runs)
+  b10_c4_night:{ac:8, atk:8, hp:5.25, dmg:11}, // 77% won, 60% health lost (30 runs)
+  b10_c4_dogs:{ac:6, atk:6, hp:4.25, dmg:8}, // 70% won, 62% health lost (30 runs)
+  b10_c5_stragglers:{ac:9, atk:10, hp:5.75, dmg:12}, // 75% won, 43% health lost (20 runs)
+  b10_c5_outriders:{ac:6, atk:7, hp:4.25, dmg:9}, // 70% won, 43% health lost (20 runs)
+  b10_c6_beach:{ac:3, atk:4, hp:2.75, dmg:6}, // 65% won, 67% health lost (20 runs)
+  b10_c6_line:{ac:2, atk:3, hp:2.25, dmg:5}, // 83% won, 53% health lost (30 runs)
+  b10_c6_open:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 58% health lost (20 runs)
+  b10_c7_picket:{ac:4, atk:4, hp:3.0, dmg:6}, // 77% won, 48% health lost (30 runs)
+  b10_c7_morning:{ac:20, atk:20, hp:11.0, dmg:22}, // 100% won, 22% health lost (20 runs)
+  b10_c7_line:{ac:3, atk:3, hp:2.5, dmg:5}, // 75% won, 36% health lost (20 runs)
+};
 const b10Gap = () => { if (!b10On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B10GAP[id]) || (id && /^b10_/.test(id) ? B10GAP_ROW : null); };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b10Gap(); if (!g) return u;

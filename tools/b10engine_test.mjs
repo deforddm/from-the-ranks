@@ -104,7 +104,7 @@ const r = await page.evaluate(async () => { const out = {}, wait = ms => new Pro
   /* the foes: on-screen names keep rule 103 (no Pure, no "Watered", no Voice), the rest present */
   out.foes = {names:Object.keys(FOES).filter(k => /^b10_/.test(k)).every(k => !/Watered|Pure|Voice|Forkrul|Diligence|Reverence|Aloft/.test(FOES[k].name)),
     all:['b10_scav', 'b10_straggler', 'b10_outrider', 'b10_kolansii', 'b10_kolbow', 'b10_kolpike', 'b10_kofficer', 'b10_shriven', 'b10_assail', 'b10_lbolkando', 'b10_ldog', 'b10_lforager', 'b10_lstraggler', 'b10_lkolansii', 'b10_lkofficer', 'b10_lshriven', 'b10_lassail', 'b10_regular', 'b10_lspear'].every(k => FOES[k] && FOES[k].kind),
-    soak:foeSoak('b10_shriven'), empty:!Object.keys(B10SOLDIER).length && !Object.keys(B10GAP).length && B10GAP_ROW === null};
+    soak:foeSoak('b10_shriven'), empty:Object.keys(B10GAP).filter(k => /^b10_/.test(k)).length === 19 && Object.keys(B10SOLDIER).length === 13 && Object.keys(B10SOLDIER).every(k => SOLDIER_FIGHT[k] === B10SOLDIER[k])};
   /* art, scenes, glossary, keys, voice */
   out.art = {title:/<svg/.test(ART['title/tcg'] || ''), size:(ART['title/tcg'] || '').length, patch:/viewBox="0 0 600 /.test(ART['insignia/tcg'] || '') && /shard of glass/.test(ART['insignia/tcg']), titleArt:BOOKS.tcg.titleArt, patchKey:BOOKS.tcg.patch, cls:tpatchCls(BOOKS.tcg.patch),
     scenes:Object.keys(B10_SCENE_LIKE).every(k => SCENES[k] && SCENEX[k]), gloss:(GLOSSX.tcg || []).length, keys:Object.keys(B10KEYS).length, ch:Object.keys(B10CH).length,
@@ -187,7 +187,7 @@ if (r.err) ok(false, 'threw: ' + r.err); else {
   const d = r.read; ok(d.who === 'marrow' && d.choice && d.offer && d.node === 'b10_c1_card' && d.key === 'tcg:1' && !d.tiles && d.tables && d.pools && d.saidT && d.saidL && d.sayT && d.marine
     && d.l.who === 'perrit' && d.l.choice && d.l.node === 'b10_c2_card' && d.l.tiles && d.l.key === 'tcg:2' && d.l.sayL && d.l.tile === 'armour' && d.l.tw === 'tilewoman',
     'the readers: the Third\'s Deck (Marrow, else the old marine), the Letherii\'s Tiles (Perrit, else the tile-woman), each squad\'s own lines, seven tables and pools, the tiles\' effects: ' + JSON.stringify(d));
-  ok(r.foes.names && r.foes.all && r.foes.soak === 2 && r.foes.empty, 'the foes: present with bodies; no Pure, Watered or Voice on screen (rule 103); the balance tables empty for the balance step: ' + JSON.stringify(r.foes));
+  ok(r.foes.names && r.foes.all && r.foes.soak === 2 && r.foes.empty, 'the foes: present with bodies; no Pure, Watered or Voice on screen (rule 103); the balance tables filled (19 Bridgeburner rows, 13 Soldier rows in SOLDIER_FIGHT): ' + JSON.stringify(r.foes));
   const ar = r.art; ok(ar.title && ar.size < 120000 && ar.patch && ar.titleArt === 'title/tcg' && ar.patchKey === 'insignia/tcg' && /tpatch2/.test(ar.cls) && ar.scenes && ar.gloss >= 12 && ar.keys === 7 && ar.ch === 7 && ar.defaults && ar.keys7 === 3 && ar.roads === 'letheras,kolanse,free|host,third,home' && ar.voice
     && ar.places === 'camp,desert_night,desert,column,sea,siege,barrow,lake' && ar.deeds, 'title art (under 120 KB), the two-squad patch at single size (tpatch2), backdrops, glossary, keys and endings, the voice and places, Deeds: ' + JSON.stringify(ar));
   const c = r.coda; ok(c.n === 9 && c.books === 'gotm,rg,rg,tth,dod,dod,tcg,tcg,tcg' && c.unf && c.first === 'Ashen' && c.rgL && c.sathi && c.marrow && c.tcgF && c.tcgL && c.w.gotm && c.w.wit && c.none,
