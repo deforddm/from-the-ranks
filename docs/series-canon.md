@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Mon Nov 9, 2026, 5:04 PM PST (Book Nine's rules 84–97, what DoD lifts, names and gods added to §(a), §(b), §(c) and §(f); Book Nine planned on branch `book9`, not built). Before that Sun Nov 8, 2026, 8:21 PM PST (Book Eight's rules 70–83, what TtH lifts, names and gods added to §(a), §(b) and §(f); Book Eight on branch `book8`, not shipped). Before that Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Wed Nov 11, 2026, 2:18 AM PST (Book Ten's rules 98–111, what TCG lifts, names and gods added to §(a), §(b) and §(f); shipped as v13.0.0; the last book). Before that Mon Nov 9, 2026, 5:04 PM PST (Book Nine's rules 84–97, what DoD lifts, names and gods added to §(a), §(b), §(c) and §(f); Book Nine planned on branch `book9`, not built). Before that Sun Nov 8, 2026, 8:21 PM PST (Book Eight's rules 70–83, what TtH lifts, names and gods added to §(a), §(b) and §(f); Book Eight on branch `book8`, not shipped). Before that Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -175,6 +175,50 @@ The reasons and sources are in the repo's `docs/dod-canon.md`, §5 and the plan 
 96. **The Shake, Twilight, Yedan and the Liosan:** never (rule 61; TCG).
 97. **The Letherii's part** in the Nah'ruk battle is the game's, on ground canon doesn't name. Never Brys's or Aranict's acts in it; Brys "lives" and is seen far off. Never his death or return in TCG.
 
+### Book Ten (*The Crippled God*), added Nov 10, 2026, shipped as v13.0.0 (Nov 11)
+
+The reasons and sources are in `tcg-canon.md` §5 (project copy) and the repo's `docs/tcg-canon.md`. Book Ten is the last book.
+
+**There is no later book.** The narrator may now say what TCG settles, but only what the squad could see or hear; the hard limits (§4) still bind, and the darkest canon stays headline (rule 101). What TCG closes, rule by rule:
+
+| Rule | What TCG does | Book Ten may now |
+|---|---|---|
+| 45, 62 | Kalam lives; with Quick Ben at Paran's side (WC21) | Say "an assassin with the Host" in rumour. Never his name outside a vision; never his kills. |
+| 55, 84 | The Adjunct's purpose is said at the parley: free the Crippled God's heart before the Pures drain it (WC7) | Camp word may say "she means to free the chained god". Never her words or thoughts; **Tavore is never a viewpoint, to the end.** |
+| 85 | The crossing is the book | Lifted for the crossing itself: the desert's name, night marches, water running out, the lake. Rules 100–102 keep the darkest parts out. |
+| 86 | Bottle and Ruthan Gudd back (ch 7); Quick Ben alive (ch 21, 24); Tavore healed (ch 4) | Say each as news when canon has it happen. |
+| 87 | The Forkrul Assail are the enemy | Rule 103. |
+| 88 | The Che'Malle march with the allies; the Nah'ruk are gone | Rule 104. |
+| 89 | Tool leads the Imass to the Spire; his family whole (WC23) | Headline: "the dead Imass came". Never Tool's name or family. |
+| 90, 91 | Gesler, Stormy and Sinn die at the Spire; Grub lives (WC23; R23.2) | "Two sergeants and a girl died at the tower" as news after. Never how. Rule 18 still binds what Grub is. |
+| 94 | The Perish betray, then turn; Krughava, Tanakalian and Setoc die (WC23) | Rule 105. |
+| 97 | Brys dies and returns (WC23) | "The Commander fell, and got up" as camp news. Never seen. |
+| 74, 75, 19 | Hood in flesh freezes the bay and kills Reverence; Whiskeyjack and the dead turn the Spire fight; the dead come to the hill (WC23; R24.4 S9) | The bay freezing may be seen from far off. "The dead" turning a fight may be seen far off by the Letherii. Hood's name, Whiskeyjack's name and "Guardians" only in a vision. |
+| 79, 24 | Karsa breaks Fener's tusk in Darujhistan (WC23) | Only in a vision; the squads see "something cut in half in the sky" (rule 107). |
+| 25, 42 | The House of Chains' god is freed, then released by Cotillion (WC24; R24.4 S8) | Rule 98. |
+| 31, 57, 95 | The Errant flees into the warrens (W *Errastas*); Kilmandaros and Sechul Lath die (WT) | Rule 31 still binds: never "Errastas" or "Elder". The Errant stops answering (§7). |
+| 12 | Still binds. The Fourth joins the Third on the regulars' field; Fiddler is on the hill | The Fourth and Fiddler never meet on the page, even now. |
+| 13 | Still binds forever: the never-use names and no Burn's Sleep year | — |
+
+Rules **1–11, 14, 17, 20–23, 26–27, 30, 32–41, 43–44, 46–54, 56, 58–61, 63–73, 76–78, 80–83, 92, 93, 96** are untouched by TCG or closed by earlier books; they stand as written.
+
+**New rules (98–111):**
+
+98. **The Crippled God.** Soldiers say "the chained god" or "the Fallen One"; a mage or a priest may say "the Crippled God" once a chapter. Narration names him only in vision 7. Never his body, the heart, the chains breaking, Korabas bound, or Cotillion's knife in play.
+99. **The Glass Desert** may be named (Book Ten's own ground). The crossing is by night; water is counted; beasts die; heavies haul. Never a count of days in game text.
+100. **Thirst, headline.** The squad is thirsty and may go mad with it in a line. Never drinking blood or urine shown or said by narration (a soldier may say "it came to that" once). Never Pores stabbed, never Blistig's barrels or mutiny seen; "a Fist tried to take the water" at most, as rumour.
+101. **The Snake** (the children's march) is headline only, from far off: "children in the column, from somewhere east". Never a child's death shown, never a name (Badalle, Saddic, Rutt, Held), never the Shards, never what the children ate or did. Tone binds: the darkest canon of the book stays in one sentence.
+102. **The lake.** The ground goes wet under the army at the end; the squad may see the water and drink. Never the Adjunct's blood, the knife, Bugg's name or how it came. "A gift from the King" stays rumour.
+103. **The Forkrul Assail** may be named by soldiers as "the Assail" and by mages as "Forkrul". "Pures", "Watered" and "the Voice" only in an officer's or mage's mouth. Never a Pure by name (Reverence, Diligence, Serenity, Calm, Belie, Equity, Freedom, Aloft, Grave), never Akhrast Korvalain outside a mage's single line. The Kolansii are men and women, starved and driven.
+104. **The Che'Malle** march with the allies and may be seen: "the lizard-folk", "the big ones" (Ve'Gath), named "Che'Malle" by a Letherii officer once. Never Kalyth, the Matron, Gu'Rull outside a vision, or their attack on the Spire seen close.
+105. **The Perish:** the squads see the Grey Helms march ahead and later turn. "Their leaders are dead" as news. Never Tanakalian, Setoc, Krughava or Syndecan in a scene, never the Wolves taking a body.
+106. **Paran's Host** is "a Malazan Host" or "the Host". Paran is "a Fist on the ridge" or "the High Fist", never "Paran" or "Ganoes" outside a vision (the squads cannot know the brother). Never the card, Mathok's portal close, Tavore and Paran.
+107. **The sky over the end:** dragons may be seen, many, and something great cut in half above the far tower; the squads never know what. Never Korabas, T'iam, Silchas Ruin, Tulas Shorn, Apsal'ara or Nimander's people by name.
+108. **The hill** is seen from the regulars' field: a hill, smoke, the munitions' thunder, a glare, then quiet. Never who held it, never the god on it.
+109. **The Fourth's road.** Its voyage, Aren, the gate, the North Citadel and the pass are told in one page of the Fourth's own words after they join: "a keep", "a pass", "the sappers did the rest". Never Kalam, Serenity, the Deck or the warehouse. Kettle's munitions line in Book Eight may be answered: "the Host had munitions, more than it should have, and nobody would say from where".
+110. **The barrows and the end.** The squads may stand at the barrows' edge (Epilogue I has the whole army's dead). Never the speeches, Fiddler's fiddle, Korlat and Whiskeyjack. Nefarias Bredd may be asked after once and nobody can say (R24.4 S9).
+111. **No canon character's death is shown**, and none is reversed or prevented. The squads' fallen are the game's own.
+
 ## (b) Name clashes and their resolutions
 
 | Name | Status | Canon bearer | Note for writers |
@@ -214,6 +258,10 @@ The reasons and sources are in the repo's `docs/dod-canon.md`, §5 and the plan 
 | **Bridgeburners** (the word, Book Nine) | Note. | Hedge's Letherii company in DoD and TCG. | Neither squad is ever called Bridgeburners (rules 12, 93). |
 | Sorvan (Book Seven) in Book Nine | Kept. | DoD's Letherii carry Bluerose cavalry (p. 763). | He rides in the escort, never beside a named officer. |
 | *Dust on the Boots* (Book Nine's title) | Clear. | No canon title or phrase found. | — |
+| Pruss (Book Ten's Third), Tirren (Book Ten's Letherii, she) | Clear (supported, Nov 10: TCG DP A, C, F, G, I–K, M–P, R–U, Z; R and W pages; web search; repo grep; B, D, E, H, L, T did not load). | Pully, Pravalak Rim (TCG DP) nearest to Pruss. | Minor names: Sedge (she), Rolle. Rejected: Corse (Cord, a Bonehunter sergeant), Ossery (Osserc), Fane (Faint). Never Ven-, Hen-, Syn-, Spa-, Gil-, Fes-, Mel-, Hag- or -dict names. |
+| **Hask**, **Brann** | Note. | The game's default sergeant names (`src/120`). | Never a recruit or NPC. |
+| Kettle (ours) in Book Ten | Kept. | The Azath child (TCG DP). | "Kettle" only inside the Fourth's scenes. |
+| *Witnessed* (Book Ten's title) | Clear. | No canon novel or chapter title; answers *Unwitnessed* and the Fallen written down (R24.3 S47). | — |
 
 **Q16 was run on Oct 20, 2026** for Book Two's and Book Three's names. Clear, as far as the wiki lists that loaded go: Sathi, Tangle, Haddat, Marrow, Ramin, Hackle, Yedda, Dessi, Ilhar, Wicket, Sohra, Dannet, Old Benna, Sarhul, Oskan, Ressan and Ambrel. Mincer, Lull, List and Bult are the canon characters themselves. The rows above cover the rest.
 
@@ -339,6 +387,7 @@ The game's patrons (`src/31c_stakes.js`) and what becomes of each, so a later ch
 - **Book Seven** (Nov 6): the Third's patrons carry over from Book Six, the Letherii's from Book Five. **Hood** answers (he receives Beak, never shown). **Never** the Crippled God, Poliel, Mael (rule 56) or Scabandari. **The Errant**, if he answers the Letherii sergeant in Ch 4 or Ch 6, gives a boon with a twist, never a gift. **The Shore** answers Brune more strongly (the Shake have a queen again). Detail in `rg-canon.md` §9.
 - **Book Eight** (Nov 8): the Fourth's patrons carry over from Books Three and Six. **Hood** answers Ch 1–5 and falls on the last night (Rake beheads him with Dragnipur, ch 21). In Ch 6 **the dead** answer, nameless, marching elsewhere. From Ch 7, **the Guardians of the Gate** (from the morning after, when Dragnipur is shattered), never named (rule 75). **Shadowthrone and Cotillion** are in play in person; a Shadow boon never turns a Hound on or off. **Treach** never names Gruntle. **K'rul** may answer as a hum in an old bell, never through Kruppe. **The Redeemer** never grants: a prayer at the barrow gets peace, never a boon. **Never** the Dying God, the Crippled God, Poliel, Mael, Burn, Ardata, or Gedderone as a voice. Detail in the repo's `docs/tth-canon.md` §7.
 - **Book Nine** (Nov 9): **the Guardians of the Gate** answer for the Third, nameless; Hedge tells the army the dead Bridgeburners hold the gate (R19.2 S5). **Hood never**: he wakes on his throne at DoD's end. **The Errant** answers the Letherii sergeant only with a twist, never touching Brys (he attacks Brys after the Reading) and never after Ch 6 (he ends DoD maimed). **The Shore** answers faintly (the Shake are gone into a Liosan realm). **Togg and Fanderay** stand, never through Setoc. Magic is failing after the Reading: narration may make a trick cost more; numbers only with David. **Never** the Crippled God, the Forkrul Assail's power, Kilmandaros, Sechul Lath, Draconus, Olar Ethil, Mael, Poliel. Detail in the repo's `docs/dod-canon.md` §7.
+- **Book Ten** (Nov 10): **the Guardians of the Gate** answer for the Third, nameless. **Hood never** (in flesh, no longer Death's god). **D'rek** answers Hessa strongly. **The Errant stops answering after Ch 2** (he flees into the warrens): a line of silence, no boon. **The Empty Hold** answers Perrit, stronger. **Togg and Fanderay** never on the Letherii's battlefield; elsewhere their boon costs a wound. **The Shore, Fener, Mael** never. **Shadow** as before, never touching a Hound. From Ch 3 a wiped fight still restarts, with no boon (David, decision 10). **Never** the Crippled God (rule 98), the Forkrul Assail's god, Kilmandaros, Sechul Lath, Draconus, Olar Ethil, Poliel. Detail in `tcg-canon.md` §7.
 - **The Shore** (the Shake faith, the sea that takes back everything: W *Shake*). Answers for Brune in Book Five. Never a queen, never Tiste blood (rule 36).
 
 ---
