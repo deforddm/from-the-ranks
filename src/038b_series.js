@@ -13,11 +13,23 @@ const bookOf = s => (s && s.book) || 'gotm';
 const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
+const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming);
 function worldSVG(){
-  return `<svg class="worldmap" viewBox="${BOOKS.mt && !BOOKS.mt.coming ? '-130 0 770 300' : '0 0 640 300'}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}">
-  <rect x="-130" width="770" height="300" fill="#1c1610"/>
-  <rect x="-130" width="770" height="300" fill="#16304a" opacity=".35"/>
-  ${BOOKS.mt && !BOOKS.mt.coming ? `<path d="M-130 70 C-112 64 -92 76 -84 100 C-76 126 -88 150 -80 176 C-72 204 -96 232 -130 240 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
+  const far = bookLive('rg') || bookLive('dod') || bookLive('tcg'), H = far ? 470 : 300, x0 = !far && bookLive('mt') ? -130 : 0;
+  return `<svg class="worldmap" viewBox="${x0} 0 ${640 - x0} ${H}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}${far ? ', with the march east from Letheras into the Wastes, the Glass Desert and Kolanse' : ''}">
+  <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#1c1610"/>
+  <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#16304a" opacity=".35"/>
+  ${far ? `<path d="M20 300 L620 300" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
+  <text x="620" y="292" text-anchor="end" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="11" fill="#8fb0d0">oceans away, west: Lether and the east</text>
+  <path d="M40 330 C160 312 420 310 560 322 C610 330 618 370 606 410 C590 448 520 462 420 460 C300 462 120 462 60 448 C30 436 26 380 40 330 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
+  <text x="110" y="352" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#d8dcc8">Lether</text>
+  <g font-family="Alegreya Sans SC, sans-serif" font-size="12" fill="#e8e0b0">
+    <circle cx="80" cy="414" r="4" fill="#c8b47a"/><text x="52" y="440">Letheras · Books Five, Seven</text>
+    ${bookLive('dod') ? `<path d="M80 414 C140 400 200 392 262 388" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="262" cy="388" r="4" fill="#d8b860"/><text x="140" y="378">the Wastes · Book Nine</text>` : ''}
+    ${bookLive('tcg') ? `<path d="M262 388 C340 370 440 356 540 350" fill="none" stroke="#e8c073" stroke-width="2" stroke-dasharray="6 4" opacity=".9"/><text x="400" y="352" text-anchor="middle" font-size="11" fill="#e8d6a0">the Glass Desert</text>
+    <path d="M262 388 C300 450 480 452 540 356" fill="none" stroke="#bcd4ee" stroke-width="1.6" stroke-dasharray="3 3" opacity=".85"/><text x="400" y="448" text-anchor="middle" font-size="11" fill="#c8d8ea">the long way round</text>
+    <circle cx="544" cy="350" r="5" fill="#e8c073"/><text x="598" y="336" text-anchor="end">Kolanse · Book Ten</text>` : ''}
+  </g>` : BOOKS.mt && !BOOKS.mt.coming ? `<path d="M-130 70 C-112 64 -92 76 -84 100 C-76 126 -88 150 -80 176 C-72 204 -96 232 -130 240 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
   <text x="-112" y="128" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="17" fill="#d8dcc8" transform="rotate(-90 -112 128)">Lether</text>
   <g font-family="Alegreya Sans SC, sans-serif" font-size="11" fill="#e8e0b0"><circle cx="-92" cy="196" r="4" fill="#c8b47a"/><text x="-122" y="218">Letheras · Book Five</text></g>
   <path d="M-60 40 L-60 260" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
@@ -31,15 +43,15 @@ function worldSVG(){
   <g font-family="Alegreya Sans SC, sans-serif" font-size="12" fill="#f2dca6">
     <circle cx="440" cy="60" r="4" fill="#e8c073"/><text x="448" y="56">Genabaris</text>
     <circle cx="480" cy="110" r="4" fill="#c9973f"/><text x="488" y="106">Pale</text>
-    <circle cx="520" cy="220" r="4" fill="#c9973f"/><text x="460" y="242">Darujhistan · Book One</text>
+    <circle cx="520" cy="220" r="4" fill="#c9973f"/><text x="${bookLive('tth') ? 432 : 460}" y="242">Darujhistan · Book One${bookLive('tth') ? ', Eight' : ''}</text>
     <circle cx="232" cy="78" r="4" fill="#c9973f"/><text x="150" y="70">Hissar</text>
     <circle cx="150" cy="240" r="4" fill="#e8c073"/><text x="42" y="268">Aren · Book Two</text>
-    <path d="M150 240 C140 214 120 190 96 168" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="96" cy="168" r="4" fill="#d8b860"/><text x="104" y="164" font-size="11">Raraku · Book Four</text><text x="112" y="214" text-anchor="end" fill="#d8c88a" font-size="11">the Fourteenth</text>
+    <path d="M150 240 C140 214 120 190 96 168" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="96" cy="168" r="4" fill="#d8b860"/><text x="104" y="164" font-size="11">Raraku · Book Four</text><text x="112" y="214" text-anchor="end" fill="#d8c88a" font-size="11">the Fourteenth</text>${bookLive('bh') ? `<path d="M96 168 C80 176 64 184 50 192" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="50" cy="192" r="4" fill="#d8b860"/><text x="20" y="186" font-size="11">Y\'Ghatan · Book Six</text>` : ''}
     <path d="M232 78 C220 120 196 170 150 240" fill="none" stroke="#c94a20" stroke-width="2" opacity=".85"/><text x="200" y="196" fill="#e89a6a" font-size="11">the Chain</text>
     <path d="M480 110 C520 120 548 140 560 160 C572 182 584 196 598 206" fill="none" stroke="#bcd4ee" stroke-width="2" opacity=".85"/><circle cx="560" cy="160" r="3.5" fill="#8fa8c0"/><text x="566" y="156" font-size="11">Capustan</text>
-    <circle cx="598" cy="206" r="4" fill="#bcd4ee"/><text x="618" y="196" text-anchor="end" font-size="11">Coral · Book Three</text>
+    <circle cx="598" cy="206" r="4" fill="#bcd4ee"/><text x="618" y="196" text-anchor="end" font-size="11">${bookLive('tth') ? 'Black Coral · Books Three, Eight' : 'Coral · Book Three'}</text>${bookLive('tth') ? `<path d="M520 220 C548 222 576 216 598 206" fill="none" stroke="#bcd4ee" stroke-width="1.4" stroke-dasharray="2 3" opacity=".7"/>` : ''}
   </g>
-  <text x="620" y="292" text-anchor="end" font-family="Alegreya Sans, sans-serif" font-style="italic" font-size="10" fill="#a89a82">a sketch, not to scale</text>
+  <text x="620" y="${H - 8}" text-anchor="end" font-family="Alegreya Sans, sans-serif" font-style="italic" font-size="10" fill="#a89a82">a sketch, not to scale</text>
   </svg>`;
 }
 function whereBooksMeetHTML(open){
@@ -52,13 +64,13 @@ function whereBooksMeetHTML(open){
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
       <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
-      ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and no road joins it to the other books yet.</li>` : ''}
+      ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and ${bookLive('rg') ? 'Two books later the Malazans come to it.' : 'no road joins it to the other books yet.'}</li>` : ''}
       ${BOOKS.bh && !BOOKS.bh.coming ? `<li><b>Book Six, Bones in the Walls,</b> brings both squads back, weeks after Raraku. Book Two's squad marches with the Fourteenth across the Odhans to Y'Ghatan and on to the sea; the Fourth, with Onearm's Host, land on Seven Cities' north coast and march inland through the plague to G'danisban. The two never meet. The Fourteenth sails at last for Malaz City, on Quon Tali, off the sketch to the west.</li>` : ''}
       ${BOOKS.rg && !BOOKS.rg.coming ? `<li><b>Book Seven, Unwitnessed,</b> is where the roads join. The Fourteenth crosses the oceans to Lether, burns its ships on the coast and marches inland on Letheras; the Third goes with it, lent to Keneb's marines as heavies. Book Five's Letherii squad is in the capital, under the Edur, and is sent out with the army to meet the invaders. One war, two squads, on opposite sides. The Fourth is not with them.</li>` : ''}
       ${BOOKS.tth && !BOOKS.tth.coming ? `<li><b>Book Eight, Time Served,</b> goes back to Genabackis, years after Coral. The Fourth, out of the army, keeps a door in Darujhistan. In the winter before the Gedderone Fete the Assassins' Guild puts their names on a paper, and they go east with a merchant's caravan over the old Domin to Black Coral, Coral renamed, and come back for the Fete's last night.</li>` : ''}
       ${BOOKS.dod && !BOOKS.dod.coming ? `<li><b>Book Nine, Dust on the Boots,</b> goes back to Lether, months after Letheras fell. The Fourteenth, the Bonehunters now, marches east out of the city into the Wastes with a Letherii escort behind it, and nobody in the ranks is told why. Book Seven's two squads march in the same column, the Third with the heavies and the Letherii in the escort, a day's dust apart.</li>` : ''}
       ${BOOKS.tcg && !BOOKS.tcg.coming ? `<li><b>Book Ten, Witnessed,</b> is the last. Days after the short-tails, the army splits at the Wastes' edge: the Bonehunters east into a desert made of glass, by night, behind an Adjunct who still has not said why; the Letherii and the allies south, the long way round. Both roads end in Kolanse. Book Nine's two squads are on them, and at the very end Book Eight's Fourth comes over a ridge with a Malazan Host. After it, nothing: that is where the novels end, too.</li>` : ''}
-      <li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>
+      ${bookLive('tcg') ? `<li>So the roads run: the Fourth on Genabackis in Books One, Three and Eight, and across the sea to Seven Cities in Book Six; Book Two's squad, the Third, from Hissar to Aren, Raraku, Y'Ghatan, Lether, the Wastes and Kolanse; Book Five's Letherii from their own war into the Malazans', and east with them. The Fourth and the Third meet once, at the very end, on the regulars' line before Kolanse; on the southern road the Letherii are a long march away, holding their own stretch of the feint.</li>` : `<li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>`}
     </ul></details>`;
 }
 
