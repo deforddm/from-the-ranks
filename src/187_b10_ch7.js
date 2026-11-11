@@ -628,14 +628,14 @@ Then he takes off the long grey cloak, and holds it out, because ${b107Say({prus
 
 "Third squad?" the sergeant says. "Ninth Legion? With the heavies?" A nod at your face. "Fourth. Seventh Company, once. Somebody told us there was a Third out here that did the same sort of thing we do." A long look along the Third. "We came over a ridge on the other field. We thought you'd be on it. You weren't." The sergeant sits down at the Third's edge as if it had been agreed. "So we came looking."
 
-Book Six said the Fourth and the Third never met, and never would. Book Six was wrong about that.
+Somebody, years back, said the Fourth and the Third would never meet. Somebody was wrong about that.
 
 ${b107FSgtC()} takes off the long grey cloak and holds it out. "Spare," the sergeant says. "The Host had more of everything than it should have. Take it."` :
 `${b107FSgtC()} is sitting on an upturned shield behind the stretch with the Fourth round about: ${names.length ? `${b107And(names)}, all of them` : 'nobody else; the Fourth is one sergeant today'}, in the Host's long grey cloaks with the dust of a ridge on them.
 
 "Third squad," the sergeant says, before you can say anything. "Ninth Legion. The heavies' lot." A long look along the Third, the way one sergeant looks at another sergeant's squad. "Fourth. Seventh Company, once, and some other things since. We came over that ridge to the first stretch that looked like it needed somebody." A nod at the open ground. "It did."
 
-Book Six said the Fourth and the Third never met, and never would. Book Six was wrong about that.`;
+Somebody, years back, said the Fourth and the Third would never meet. Somebody was wrong about that.`;
       const lines = names.length ? b107FSay({kettle:`\n\n${b10In('tangle') ? 'Kettle sits down next to Tangle and looks at his satchel with professional interest. "What\'ve you got left?" she says. He does not tell her. She approves.' : 'Kettle has a crossbow over her shoulder and a satchel that clinks, and looks at the Third\'s satchel with professional interest. Nobody tells her what is in it.'}`, ohl:`\n\nOhl is already among the Third's cuts with his needle and his opinions. "Who did this one?" he says of a dressing. ${b10In('mirrel') ? 'Mirrel says she did. "Hm," says Ohl. "Good."' : '"Hm," he says. "Good."'}`, brisk:'\n\nBrisk sits down first and stands up again first. "Fourth," she says to the Third, as if that settled everything. It does, mostly.', tuft:'\n\nTuft keeps looking east, past the end of the line, where the smoke was, and then not looking. "Don\'t ask," she says, to nobody who had asked.', _:''}) : '';
       const darrut = b10In('darrut') ? `\n\nDarrut hears "Aren" somewhere in it and looks up. "How's the harbour?" he says. "Still stinks," says ${b107FSgt()}. Darrut nods, satisfied.` : '';
       if (ph === 4 && met && b107Key() && !b10FourthRoad()) return DLG.b10_c7_fourth_ask();
@@ -726,7 +726,7 @@ ${b107South() ? '"Lent south, all the way round," he says. "Heard you were at th
 ` : ''}He has three slates under his arm, the way he had them in the Wastes, after the short-tails.
 
 "Clerks want every squad's names on one of these by morning," he says. "Army's going on, what's left of it, wherever it goes now. That's the first. Some are staying here, in Kolanse, to dig wells for people who haven't seen rain in years. That's the second. And the time-served list. Ship home from the coast. That's the third." He holds them out. "Your names, Sergeant. Your call."`,
-        ch:[{t:'Take the slates.', go:'b10_c7_key'}, {t:'Not yet.', go:()=>startExplore()}]}; },
+        ch:[b107South() && !S.f.b10_c7_fourthMet ? {t:'Not yet. Somebody is walking the barrows\' edge looking at faces.', go:()=>startExplore()} : {t:'Take the slates.', go:'b10_c7_key'}, {t:'Not yet.', go:()=>startExplore()}]}; }, // continuity read (Nov 10): on south the Fourth walks up before the slates, so its +1 counts toward the ending
     /* the key: the Third's ending (colours / kolanse / home); kolanse needs Witness holding or better; words by tier */
     b10_c7_key:()=>{ if (b107Key()) return DLG.b10_c7_key_done();
       const open = b10RoadOpen('kolanse'), low = b107Low(), high = b107High();
