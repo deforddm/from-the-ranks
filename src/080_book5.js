@@ -155,8 +155,8 @@ const B5_ABX = {
   b2_lance:{name:'The Fish-Spear', map:[[/drives the short lance at/g, 'drives the fish-spear at']]},
 };
 Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
-  ['name', 'desc'].forEach(f => { if (!x[f]) return; const d = Object.getOwnPropertyDescriptor(a, f); const base = d && 'value' in d ? d.value : undefined;
-    Object.defineProperty(a, f, {configurable:true, enumerable:true, get(){ return b5On() ? x[f] : base; }, set(v){ /* fixed per book */ }}); });
+  ['name', 'desc'].forEach(f => { if (!x[f]) return; const d = Object.getOwnPropertyDescriptor(a, f); const base = d && 'value' in d ? d.value : undefined, get0 = d && d.get; // v13: a base that is itself a getter (b2_lance's name by carrier) is kept
+    Object.defineProperty(a, f, {configurable:true, enumerable:true, get(){ return b5On() ? x[f] : get0 ? get0.call(a) : base; }, set(v){ /* fixed per book */ }}); });
   const run = a.run;
   a.run = function(u, x0, y0){ if (!b5On()) return run.call(this, u, x0, y0);
     const t = B && B.units.find(p => p.x === x0 && p.y === y0), _b = blog; let n = 0; const w0 = B && B.warren;

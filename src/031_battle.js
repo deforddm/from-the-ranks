@@ -554,6 +554,8 @@ async function aiTurn(u, turnId){
   if (!B || B.over || B.turn !== turnId) return;
   const b0 = B, gone = () => B !== b0 || B.turn !== turnId; // the battle was left or restarted, or the turn moved on, while this one played out
   const done = () => { updBattleUI(); if (!checkEnd()) endTurn(); };
+  if (u.side === 'e' && u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); float(u, 'bleeding', '#e0574a'); hurt(u, roll(1,4)); updBattleUI(); // v13: a lance's thrust (b2_lance) bleeds an enemy
+    if (u.hp <= 0) { await wait(300); if (gone()) return; return done(); } }
   const inRange = () => foesOf(u).filter(p => cheb(u,p) <= u.rng && canShoot(u,p));
   if (u.turned) { u.turned = false; // Mockra Whisper: this turn belongs to its own side
     const own = B.units.filter(v => v !== u && v.hp > 0 && v.side === u.side && !v.immortal).sort((a, b) => cheb(u, a) - cheb(u, b)), near = own[0];

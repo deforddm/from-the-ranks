@@ -187,10 +187,23 @@ VERB.redblade = 'cuts at';
 STATUP.redblade = ['might', 'guile'];
 PICKS[3].redblade = [['holdline','The Red Line','Ramin\'s free swings are unlimited and hit +2. The Red Blades were drilled to hold a street on foot when the horses would not.'],['discipline','Company Drill','Every squadmate wears +1 armour. He drills them at dusk whether they asked or not.']];
 PATRONS.redblade = {god:'the Queen of Dreams', title:'The Queen of Dreams', txt:id => `Ramin, down in the dust, says the Ehrlitan prayer his mother said over the toll-gate every dusk, and the noise of the fight goes far away, into a dream somebody else is having.\n\nIn the dream the squad stands up. It is not the Queen's habit to explain herself. It is not Ramin's habit to ask.`};
-/* Ramin's lance, held short: a blow at two paces */
-AB.b2_lance = {name:'Lance Held Short', desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+/* Ramin's lance, held short: a blow at two paces. v13.0 (David, Nov 10, 2026): it drives the enemy back a tile (free swings for every
+   squadmate it is driven out of reach of, as Shield Drive) and leaves it bleeding 1d4 at the start of its next two turns. One ability,
+   named for whoever carries it: Ramin's broken-hafted lance, Orvas's Khundryl lance, Brune's fish-spear (Book Five's own table, 080),
+   Sorvan's Bluerose lance. */
+const LANCE_WHO = {redblade:['Lance Held Short', 'drives the short lance at'], orvas:['The Khundryl Lance', 'drives the lance at'], brune:['The Fish-Spear', 'drives the fish-spear at'], sorvan:['The Bluerose Lance', 'drives the lance at']};
+const lanceWho = () => { const c = B && B.cur && B.cur.side === 'p' && LANCE_WHO[B.cur.id] ? B.cur.id : (G && LANCE_WHO[G.abWho]) ? G.abWho : null;
+  if (c) return c; const sq = (S && S.squad) || []; return ['redblade', 'orvas', 'sorvan', 'brune'].find(id => sq.includes(id)) || 'redblade'; };
+AB.b2_lance = {get name(){ return LANCE_WHO[lanceWho()][0]; }, desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit, and it is driven back a tile, giving every squadmate it is driven out of reach of a free swing, and it bleeds 1d4 at the start of its next two turns. Bosses and the very heavy don't move, but still bleed. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
   ok:u=>!(u.cdLance >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= 2 && sees(u, f)),
-  run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdLance = B.round + 2 - lvAt(6); u.reachMelee = true; attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:'drives the short lance at'}); u.reachMelee = false; }};
+  async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdLance = B.round + 2 - lvAt(6); u.reachMelee = true;
+    const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:(LANCE_WHO[u.id] || LANCE_WHO.redblade)[1]}); u.reachMelee = false; if (!r || !r.hit) return;
+    if (t.hp > 0) { t.bleed = Math.max(t.bleed || 0, 2); float(t, 'bleeding', '#e0574a'); }
+    await wait(pace(250)); if (!B || t.hp <= 0) return;
+    if (t.boss || t.immortal || t.maxhp >= 45) { blog(`${t.name} takes the blow and doesn't give a step.`); float(t, 'braced', '#a99a88'); return; }
+    const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y), to = {x:t.x + dx, y:t.y + dy};
+    if (!(dx || dy) || !(pitAt(to.x, to.y) || free(to.x, to.y, t))) return; // nothing behind it to give: it bleeds where it stands
+    blog(`${u.name} drives ${t.name} back a pace.`); float(t, 'driven back', '#e8c073'); await forcedMove(t, to, 'driven'); }};
 /* a recruit in Book Two joins the squad, not the Fourth */
 { const _recruit = recruit; recruit = function(id){ if (!S || S.book !== 'dg') return _recruit(id); const n0 = note; note = (t, c) => n0(String(t).replace('joins the Fourth', 'joins the squad'), c); try { _recruit(id); } finally { note = n0; } }; }
 /* how far Book Two goes, for the title: counted from the chapters actually registered */

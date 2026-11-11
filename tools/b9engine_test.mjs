@@ -110,7 +110,7 @@ const ui = await page.evaluate(async () => { const wait = ms => new Promise(res 
     o.shelf = !BOOKS.dod.coming && shelfBooks().some(b => b.id === 'dod'); o.h1 = document.getElementById('tName').textContent;
     o.imp = !document.getElementById('impField').hidden && /Book Seven/.test(document.getElementById('impField').textContent) && !document.getElementById('impField2').hidden && /Letherii/.test(document.getElementById('impField2').textContent);
     const seg = document.querySelector('.bseg'), bs = [...seg.querySelectorAll('.btn')]; o.picker = bs.length; o.fit = document.documentElement.scrollWidth <= innerWidth + 1 && bs.every(b => b.getBoundingClientRect().right <= innerWidth + 1);
-    o.meet = /Dust on the Boots/.test(whereBooksMeetHTML(true)); o.credit = /^Nine books/.test(titleCredit());
+    o.meet = /Dust on the Boots/.test(whereBooksMeetHTML(true)); o.credit = /^(Nine|Ten) books/.test(titleCredit());
     document.getElementById('nm').value = 'Ferro'; document.getElementById('nm2').value = 'Ferro'; document.getElementById('bNew').click(); await wait(100); o.twoNames = /Two sergeants/.test(document.getElementById('nmMsg').textContent);
     document.getElementById('nm2').value = 'Vale'; document.getElementById('bNew').click(); await wait(300);
     o.made = !!(S && S.book === 'dod' && S.name === 'Ferro' && S.lvl === 19 && S.th.l.name === 'Vale' && S.th.l.lvl === 11 && S.thread === 't');
