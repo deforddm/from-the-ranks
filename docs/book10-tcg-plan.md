@@ -24,6 +24,11 @@ Tue Nov 10, 2026, 10:37 AM PST. The plan for Book Ten, beside *The Crippled God*
 10. **The gods' silence:** a wiped fight still restarts, with no boon, once Hood is gone and the Errant has fled (from Ch 3).
 11. **One Forkrul Assail** leads the Kolansii in the Third's mortal fight, on its unnamed stretch; tuned to the targets at balance.
 
+## Settled during the build (David, Tue Nov 10, 2026, 4:28 PM PST), shipping with v13.0.0
+
+12. **The lance thrust** (`AB.b2_lance`, every book that has it): it still hits an enemy up to 2 tiles off for 1d10+2 plus the level bonus; on a hit the enemy is driven back a tile (free swings for every squadmate it is driven out of reach of, as Shield Drive; bosses and the very heavy don't move) and bleeds 1d4 at the start of its next two turns. Named for its carrier: Ramin's *Lance Held Short*, Orvas's *The Khundryl Lance*, Brune's *The Fish-Spear*, Sorvan's *The Bluerose Lance*. Enemies now bleed (engine).
+13. **Allies know fire** (David, Tue Nov 10, 2026, 4:53 PM PST): an allied unit walks round burning tiles, never ends a move in fire when it can help it, and steps out of fire it stands in. Foes unchanged. `tools/allyfire_test.mjs`.
+
 ## David's questions as asked (recommendation first)
 
 1. **Who comes.** Recommended: the Third and the Letherii taking turns, as in Books Six, Seven and Nine; the Fourth (Book Eight's `east` road) lands on the Kolanse coast and joins the Third for the last chapter only. Alternatives: three squads taking turns; or the Third and the Letherii only, the Fourth never comes.
