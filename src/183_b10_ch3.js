@@ -417,7 +417,7 @@ ${b103South() ? 'A handful of carters, Bolkando and Letherii both, from the wago
 `The knife-man sees the movement among the cloaks and shouts, a dry cracked sound, and they come on at a run, all of them, straight for the barrels.`,
       ch:[{t:'Shields up.', go:()=>startBattle('b10_c3_wagon', {surprise:'e'})}]}),
     b10_c3_call_ok:()=>({sp:b103S('Stragglers', 'Thirsty carters'), scene:b103Scene(false), fx:()=>{ S.f.b10_c3_called = 'sat'; }, txt:
-`${by({sgt:'You call it', haddat:'Haddat calls it', pruss:'Pruss calls it', _:'{who} calls it'})} across the open ground, not loud: ${b103South() ? 'the names of their wagons, their brigade, their trade, the way the train calls the carters to the teams at dusk' : 'their company\'s number, and their captain\'s name, and then "Bonehunters", the way a sergeant says it at a muster'}.
+`${by({sgt:'You call it', haddat:'Haddat calls it', pruss:'Pruss calls it', _:'{who} calls it'})} across the open ground, not loud: ${b103South() ? 'the names of their wagons, their brigade, their trade, the way the train calls the carters to the teams at dusk' : 'their company\'s number, and their captain\'s name, and then the army\'s name, the way a sergeant says it at a muster'}.
 
 One of them stops. Just stops, in the glare, and looks down at the stave in his hand as if somebody had given it to him, and sits down where he is and puts his face in his hands. The rest come on. Fewer.`,
       ch:[{t:'Shields up. Meet the rest.', go:()=>startBattle('b10_c3_wagon', {drop:[3]})}]}),

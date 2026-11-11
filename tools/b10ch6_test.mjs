@@ -176,7 +176,7 @@ const r = await page.evaluate(async () => {
   talk('b10_c6_landing'); out.u.ditch = /dry ditch/.test(DLG.b10_c6_landing().txt); out.u.fightB = await force('b10_c6_beach');
   take('b10_c6_fire', /Out to the line/); take('b10_c6_up', /To the stretch/); out.u.field = S.area === 'b10_c6_field';
   talk('b10_c6_order'); out.u.order = /ridge/.test(DLG.b10_c6_order().txt) && !/Grey Helms/.test(DLG.b10_c6_order().txt);
-  talk('b10_c6_east'); out.u.third = /foreign heavies/.test(DLG.b10_c6_east().txt) && /their own stretch/.test(DLG.b10_c6_east().txt);
+  talk('b10_c6_west'); talk('b10_c6_east'); out.u.third = /foreign heavies/.test(DLG.b10_c6_west().txt) && /to the west/.test(DLG.b10_c6_west().txt) && /stretch is their own/.test(DLG.b10_c6_west().txt) && !/foreign heavies/.test(DLG.b10_c6_east().txt) && !/burned hand/.test(DLG.b10_c6_west().txt);
   out.u.line = await force('b10_c6_line'); out.u.fell = Array.isArray(S.f.b10_c6_fell) && !S.f.b10_c6_fell.length; out.u.noGrey = !/fold the wrong way/.test(BATTLES.b10_c6_line.stage2.text());
   talk('b10_c6_key'); out.u.key = /walk back across the open ground/i.test(DLG.b10_c6_key().txt) || /go back/.test(DLG.b10_c6_key().txt); take('b10_c6_key', /holds\. As ordered/); made('b10_c6_hold', /Shields locked/, 'thegg', false); out.u.bent = S.f.b10_c6_held === 'bent' && /low hill/.test(DLG.b10_c6_hold_no().txt);
   take('b10_c6_todusk', /^Dusk/); talk('b10_c6_news'); out.u.news = /Malazan Host/.test(DLG.b10_c6_news().txt) && /knees/.test(DLG.b10_c6_news().txt) && !/Commander fell/.test(DLG.b10_c6_news().txt);

@@ -126,8 +126,8 @@ function b10ImpDesc(id, t = 't'){
      chapter, flag b10_wear<n>; B10_WEAR).
      On checks: a check with c.witness:true gets the edge "Witness": witnessed +2, kept +1, holding 0, doubt −1, hollow −2. Any other check,
      while 'hollow', gets "Nothing to march for" −1.
-     In a fight: B10_WITFIGHT, to hit for every squadmate by tier. ALL ZERO on purpose: a balance change goes to David first (docs/v13.0-notes.md
-     §Witness proposes hollow −1, witnessed +1). The log says so only when a number is not zero.
+     In a fight: B10_WITFIGHT, to hit for every squadmate by tier: hollow −1, witnessed +1, the middle tiers nothing (David, Nov 10, plan
+     decision 8). The log says so only when a number is not zero.
      On the roads: b10RoadOpen(r) says whether an ending is open: 'kolanse' (stay and help the drought country) needs 'holding' or better. ---- */
 const B10_WIT0 = 5, B10_WITMAX = 10;
 const B10_WITW = {hollow:'nothing left to march for', doubt:'marching because the column does', holding:'still marching for something', kept:'marching for each other', witnessed:'their own witness'};

@@ -657,7 +657,7 @@ Book Six said the Fourth and the Third never met, and never would. Book Six was 
 
 "Then a keep, in hill country, with the Assail sitting round it. We had it off them. Then south a long way, to a pass, with them in it." A shrug. "The sappers did the rest. The Host had munitions, more than it should have, and nobody would say from where."${b107FIn('kettle') ? '\n\nKettle grins and pats her satchel, and says nothing at all.' : ''}
 
-"Your High Mage is alive, by the way. Saw him once, at a distance. Short. Shouting at somebody. Then he wasn't with us any more, and nobody would say where he'd gone."
+"Your High Mage is alive, by the way. Saw him once, at a distance. Shouting at somebody. Then he wasn't with us any more, and nobody would say where he'd gone."
 
 "Then that ridge," ${b107FSgt()} says. "And here you are."${b107FDead().length ? `\n\nThe sergeant does not say the names the Fourth left behind before Aren: ${b107And(b107FDead().map(NAME))}. The Fourth says them anyway, at night. You can tell.` : ''}`,
       ch:[{t:'Back.', go:'b10_c7_fourth'}]}),

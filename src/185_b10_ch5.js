@@ -15,7 +15,7 @@
    the glass's far edge: the first scrub of Kolanse; the Third sent forward as a picket; Kolansii outriders (b10_c5_outriders, main, stage
    2); Sedge, the regulars' captain, asks for file-closers: the Third is lent to her company (said once, plainly); the first fire since the
    glass; on.
-   The 'south' road (the Third lent to the Commander's column, Ch 1): still by night on the Commander's word (Ch 3's choice kept); the
+   The 'south' road (the Third lent to the Commander's column, Ch 1): by night again on the Commander's word (Ch 3's night, Ch 4's day on broken ground, then night again: the continuity read); the
    Twelfth's wagon-master for Thallo; the column's water ration cut; the grey knights' dust turning away east; the King's ships rumoured at
    the coast; no children, no lake: at grey light the first well in Kolanse (b10Witness(1, 'the first well in Kolanse')); the outriders at
    the edge of Kolanse's farmland; the Twelfth asks for the Third as file-closers.
@@ -158,7 +158,7 @@ const B10CH5 = {
   intro:{ get loc(){ return S && S.f && b105South() ? 'South of the glass' : 'The Glass Desert'; }, get sub(){ return S && S.f && b105South() ? 'The long way round · the water ration cut' : 'The crossing · the last water'; }, get scene(){ return S && S.f ? (b105South() ? 'b10_south_night' : 'b10_glass_night') : 'b10_glass_night'; },
     get cap(){ return S && S.f && b105South() ? 'The column walking south by night, slower than it did, and the wagons lighter, and the barrels on them lighter still.' : 'Stars overhead and the same stars underfoot in the glass, and the column walking between them slower than it did.'; },
     paras:[
-()=> b105South() ? `The long way round. The column still walks by night on the Commander's word, for the horses that are left, and lies up by day beside the road. The road has begun, very slightly, to smell of somewhere.` : `The glass. The column still walks by night without a lamp and lies up by day under its cloaks. It walks slower than it did. It lies up longer. There are gaps in the files where nobody closes up.`,
+()=> b105South() ? `The long way round. The column walks by night again on the Commander's word, now the road is flat again, for the horses that are left, and lies up by day beside the road. The road has begun, very slightly, to smell of somewhere.` : `The glass. The column still walks by night without a lamp and lies up by day under its cloaks. It walks slower than it did. It lies up longer. There are gaps in the files where nobody closes up.`,
 ()=>{ const v = (S.squad || []).filter(id => id !== 'sgt' && b10In(id)).map(id => NAME(id));
   return `You are Sergeant {sgt}, Third squad, with the heavies${b105South() ? ', lent to the Letherii, guarding a wagon that is mostly empty now' : ''}. ${v.length ? `${v.length > 1 ? v.slice(0, -1).join(', ') + ' and ' + v[v.length - 1] + ' are' : v[0] + ' is'} the Third, still.` : 'The Third, still, is you.'}`; },
 ()=> b105South() ? `The Commander's word came down the line at the last halt: the water ration is cut. The word did not say by how much. Everybody can tell.` : `The company's barrels went dry at the last halt. The captain has not said what comes next. Everybody has a guess, and keeps it.`],

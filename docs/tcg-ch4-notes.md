@@ -89,7 +89,7 @@ None new. Ennic, Yelt, Orla, Saffa, the tile-woman (Ch 2's). Unnamed by role: th
 
 - The strangers (Faint, Amby Bole, Precious Thimble; R13 S1–S3) are three sunburned figures out of the north-west at the rear, "taken in" by two riders from the staff's wagons; never met, named, or close; the staff's wagons are never entered. Aranict and the Empty Hold, Abrastal and Felash, Spax, the Grey Helms' camp: absent. Krughava's ride is rumour only ("the grey knights' commander", never named).
 - No count of days or nights; "no mountains", "no pass" (tested). "Che'Malle" not said (Ch 2 spent it). "Bonehunters" not said.
-- **Unsure:** where on the southern road R13 S1 puts the strangers' arrival relative to Krughava's ride (written in one chapter, both far off); whether the southern column marched by day (written by day on `escort`, as Ch 2's road; Ch 3's `south` wrote night marches "for the horses"; both can be true at different stretches).
+- **Unsure:** where on the southern road R13 S1 puts the strangers' arrival relative to Krughava's ride (written in one chapter, both far off); whether the southern column marched by day (written by day on `escort`, as Ch 2's road; Ch 3's `south` wrote night marches "for the horses"; the continuity read made Ennic say so: "By day again … the ground on this stretch is too broken to walk blind").
 
 ## Engine changes
 

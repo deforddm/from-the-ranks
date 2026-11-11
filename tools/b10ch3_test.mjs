@@ -98,7 +98,7 @@ const r = await page.evaluate(async () => {
   { const sn = JSON.stringify(S); near('b10_c3_strag', /along the cloaks/, 'tangle'); out.s.near = ((S.bruised || {}).tangle || 0) > 0; restore(sn, 'b10_c3_lieup'); }
   { const cc = vis('b10_c3_strag').find(c => c.witness); out.s.callWit = !!cc && (edgesFor(cc, 'sgt').find(e => e[0] === 'Witness') || [null, 'none'])[1] === 'none';
     const sn = JSON.stringify(S); near('b10_c3_strag', /Call to them/, 'haddat'); out.s.callNear = ((S.bruised || {}).haddat || 0) > 0; restore(sn, 'b10_c3_lieup'); }
-  made('b10_c3_strag', /Call to them/, 'haddat'); out.s.called = S.f.b10_c3_called; out.s.callText = /Bonehunters/.test(DLG.b10_c3_call_ok().txt);
+  made('b10_c3_strag', /Call to them/, 'haddat'); out.s.called = S.f.b10_c3_called; out.s.callText = /the army's name/.test(DLG.b10_c3_call_ok().txt) && !/Bonehunters/.test(DLG.b10_c3_call_ok().txt);
   startBattle('b10_c3_wagon', {}); await wait(80);
   { const u = B.units.find(x => x.id === 'pruss'), o = B.units.find(x => x.id === 'haddat'), ux = u.x, uy = u.y, ox = o.x, oy = o.y; out.t.offered = trickOk(u, AB.t_b10_c3_harness) && AB.t_b10_c3_harness.tiles(u).includes(o); AB.t_b10_c3_harness.run(u, o.x, o.y); out.t.swapped = u.x === ox && u.y === oy && o.x === ux && o.y === uy; }
   B = null; view = 'scene'; S.scene = 'talk'; startExplore('b10_c3_lieup');
