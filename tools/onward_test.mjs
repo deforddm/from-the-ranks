@@ -26,7 +26,7 @@ const where = id => { const re = new RegExp(`(^|[\\s{,])${id}\\s*:\\s*\\(`); for
 const srv = await server(); const br = await launch();
 /* v7.3.2: the audit runs in batches of areas, each in a fresh page. As one evaluate over all 105 areas it built up in the renderer
    (every stubbed talk still notes, floats and schedules) until the renderer crashed (Oct 27, v7.2.0–v7.3.1, every container). */
-const BATCH = 10, errors = [];
+const BATCH = 5, errors = []; // v13.0: 5 a page (ten of Book Ten's areas on one page ran it out of memory)
 const AUDIT = (AIDS) => {
   let seed = 7; const rng = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
   const all = Object.values(DLG).map(String).join('\n') + Object.values(AREAS).map(a => (a.npcs || []).map(n => String(n.node) + String(n.show || '')).join('')).join('');
