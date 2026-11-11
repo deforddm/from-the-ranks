@@ -78,7 +78,7 @@ Object.defineProperty(BOOKS.tcg, 'patch', {configurable:true, get(){ return type
 /* the title's credit, once the last book is on the shelf: no "more to come" (titleCredit is 029's; this only speaks when Book Ten is on it) */
 { const _tc = titleCredit; titleCredit = function(){ const bs = shelfBooks().sort((a, b) => a.n - b.n); const last = bs[bs.length - 1];
     if (!last || last.id !== 'tcg' || bs.length < 2) return _tc();
-    return `${last.word} books, each beside one of Erikson's Malazan novels, in order, from ${bs[0].title} to ${last.title}. That is all of them.`; }; }
+    return `${last.word} books, each beside one of Erikson's Malazan novels, in order, from ${bs[0].title} to ${last.title}.`; }; }
 
 /* ---- the transfers: a finished Book Nine save. Its Third on 'adjunct' or 'south' (o.chapters[7]); its Letherii on 'escort' or
    'adjunct' (o.f.b9_lethRoad, 'escort' by default, as Book Nine's own b97OnwardL). 'home' on either: that squad starts fresh, with
