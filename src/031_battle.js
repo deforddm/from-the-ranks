@@ -583,7 +583,10 @@ async function aiTurn(u, turnId){
   if (opp.length) {
     // score every reachable tile: in reach of a target, flanking it if it can, but never paying a free swing for a flank; a crossbow
     // keeps a step of room; out of burner fire; otherwise as close as it can get, by the route that gives away the fewest free swings
-    const reach = reachSafe(u.x, u.y, (x,y) => free(x,y,u), u.mv, (x,y) => leaveCost(u, x, y));
+    // v13 (David, Nov 10): an ally knows fire when it sees it. Every burning tile it would walk through counts as three free swings,
+    // and it will not end its move in fire unless nothing else is reachable. Foes keep their old, careless ways (balance).
+    const wary = u.side === 'p' && !!u.ally;
+    const reach = reachSafe(u.x, u.y, (x,y) => free(x,y,u), u.mv, (x,y) => leaveCost(u, x, y) + (wary && fireAt(x, y) && !(x === u.x && y === u.y) ? 3 : 0));
     const swingW = u.hp <= 8 ? 110 : 70; // a badly hurt thing is warier of free swings
     let best = null, bestS = -Infinity;
     reach.forEach(n => {
@@ -592,7 +595,7 @@ async function aiTurn(u, turnId){
       if (tg.length) { s += 100; if (tg.some(p => flanked(u, p, here))) s += 60; }
       else s -= Math.min(...opp.map(p => cheb(here, p))) * 5;
       if (u.rng > 1) s -= opp.filter(p => cheb(here, p) === 1).length * 30;
-      if (B.fires.some(f => f.x === n.x && f.y === n.y)) s -= 25;
+      if (B.fires.some(f => f.x === n.x && f.y === n.y)) s -= wary ? 400 : 25;
       s -= n.c * swingW; s -= n.d;
       if (s > bestS) { bestS = s; best = n; }
     });
@@ -600,7 +603,10 @@ async function aiTurn(u, turnId){
     if (best && best.d > 0) { if (!await aiWalk(u, best.path, gone)) return; walked = true; }
     else if (!inRange().length) {
       // nothing reachable in range this turn: close the distance along the shortest open path
-      const path = findPath(u.x, u.y, (x,y) => free(x,y,u), (x,y) => opp.some(p => p.hp > 0 && cheb({x,y}, p) <= u.rng && canShoot({x,y}, p)));
+      const goal = (x,y) => opp.some(p => p.hp > 0 && cheb({x,y}, p) <= u.rng && canShoot({x,y}, p));
+      let path = wary ? findPath(u.x, u.y, (x,y) => free(x,y,u) && !fireAt(x, y), goal) : null; // an ally goes round the fire if there is a way round
+      if (!path || !path.length) path = findPath(u.x, u.y, (x,y) => free(x,y,u), goal);
+      if (wary && path && path.length) { const cut = path.slice(0, u.mv); while (cut.length && fireAt(cut[cut.length - 1].x, cut[cut.length - 1].y)) cut.pop(); path = cut; } // and does not stop in it (nowhere safe to stop: it waits)
       if (path && path.length) { if (!await aiWalk(u, path.slice(0, u.mv), gone)) return; walked = true; }
     }
     if (u.hp <= 0) return done();
