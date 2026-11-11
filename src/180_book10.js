@@ -404,7 +404,7 @@ const B10SOLDIER = {
   // b10_c6_open: no row, 100% won, 5% health lost (first or survive fight)
   b10_c7_picket:{ac:6, atk:6, hp:4.0, dmg:8}, // 85% won, 31% health lost (20 runs)
   // b10_c7_morning: no row, 100% won, 4% health lost (first or survive fight)
-  b10_c7_line:{ac:5, atk:5, hp:3.5, dmg:7}, // 85% won, 33% health lost (20 runs)
+  b10_c7_line:{ac:5, atk:5, hp:3.25, dmg:7}, // 85% won, 33% health lost at hp 3.5 (20 runs); hp 3.25 keeps the foe within 1.1x Bridgeburner's (fightrow_test)
 };
 Object.assign(SOLDIER_FIGHT, B10SOLDIER);
 let B10GAP_ROW = null;
