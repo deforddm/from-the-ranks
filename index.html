@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.0.3';
+const VERSION = '13.0.4';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7938,6 +7938,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.0.4', ['Book Four, Chapter 5: after finding the seep, saying "Not now" at the reef no longer strands the water party. Talk to them again and choose "Back up to the reef." Saves already stuck there pick it up.']],
   ['13.0.3', ['A Title button beside Squad and Settings, on the map, in talk and on the chapter pages: it saves and takes you back to the title. In a fight it asks first, and the fight starts again from the last save when you come back.']],
   ['13.0.2', ['The title credit names the ten books and stops there.']],
   ['13.0.1', ['Where the books meet (the Journal and every finale): the map now shows all ten books. Lether gets its own band below, with Letheras, the march into the Wastes, the Glass Desert, the long way round and Kolanse; Y\'Ghatan and Black Coral are marked. The closing line follows every squad to the end.']],
@@ -56547,6 +56548,7 @@ ${b45F() === 'haddat' ? `Haddat leads. She walks with her head up and the blue s
             edges:id=>[id === 'haddat' && ['her mother\'s marks, and her own memory', 3], id === 'orvas' && ['the riders\' tracks are as good as a road to him', 2], id === 'darrut' && ['the old map on the Guard-house wall', 1], id === 'tebbet' && ['the far view, even in this', 1], id === 'yorin' && ['he can find the sun through the dust, and the west with it', 1], S.tricks && S.tricks.b4_c5_seabed && ['the old road\'s marks, learned at the stone', 1], id === 'tallow' && ['he gets lost in a camp', -1]],
             near:{t:'Yes, but the way is longer than it was when it was remembered, and the party walks an hour in the dust on the wrong side of a shell bank before the reef shows. Every squadmate starts the next fight thirsty and sore: a little health down.', fx:()=>{ SQUAD().forEach(id => bruise(id, 2 + lvT())); }},
             go:'b4_c5_seep_found', fail:'b4_c5_seep_lost'},
+          {t:'Back up to the reef.', req:()=>!!S.f.b4_c5_found, onward:true, go:'b4_c5_seep_start'}, // v13.0.4 (David, Nov 11): found once and then "Not now" at the reef left only the rest here
           {t:'"Not yet. Rest a moment in the lee of the bones."', go:()=>startExplore()}]}),
     b4_c5_seep_lost:()=>({sp:'Off the road', scene:'b4_c5_seabed', fx:()=>{ S.f.b4_c5_found = 'late'; SQUAD().forEach(id => bruise(id, 3 + lvT())); }, txt:
 `The dust thickens in the afternoon and the haze comes down, and for two hours the water party walks on a white floor with a white sky over it and nothing in between, and ${b45FName()} stops more and more often, and says less. A regular drinks the last of his own water when nobody is looking, and then everybody is looking.
