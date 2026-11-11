@@ -193,6 +193,12 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.0.0', ['Book Ten, Witnessed, beside The Crippled God, the last book: the Third crosses the glass desert behind the Adjunct, the Letherii march south with Brys toward Kolanse, taking turns. The Fourth comes over the ridge for the last chapter.',
+    'Witness: what the squad still believes it marches for. It shades the checks, the roads and the fights. A hollow squad fights worse, a witnessed one better.',
+    'Seven chapters, a recruit for each squad, seven visions, five games at the fires, one fight per squad where the fallen stay down, and levels to 28. After the finale, a coda for every squad you have finished.',
+    'A finished Book Nine save carries both squads over with their levels, gear and picks, into a new save. The Book Nine save is untouched.',
+    'The lance thrust, every book: it drives the enemy back a tile (free swings for the squadmates it leaves) and bleeds it two turns, and it is named for whoever carries it. Ramin keeps Lance Held Short.',
+    'Allies walk round fire, and step out of it.']],
   ['12.0.4', ['Conversations no longer repeat in full. Step away from a talk ("Give me a moment", "Not now") and come back, and the words you have already heard fold to their first lines; "Read it again" opens them. Every book.', 'Book Four, Chapter Two: the night by the Fall no longer plays twice.']],
   ['12.0.3', ['Book Seven\'s title art: the column walks up the beach and over the dune, and nobody stands on the water any more.', 'On the title, a two-squad patch (Books Six, Seven and Nine) now shows each squad\'s patch as large as a single one.']],
   ['12.0.2', ['Book Nine\'s title art: the soldier in front is drawn again, back to you, helm, cloak, pack and bedroll, spear on the shoulder, walking after the column with a long shadow thrown ahead.']],
