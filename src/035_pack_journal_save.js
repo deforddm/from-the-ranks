@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.0.3', ['A Title button beside Squad and Settings, on the map, in talk and on the chapter pages: it saves and takes you back to the title. In a fight it asks first, and the fight starts again from the last save when you come back.']],
   ['13.0.2', ['The title credit names the ten books and stops there.']],
   ['13.0.1', ['Where the books meet (the Journal and every finale): the map now shows all ten books. Lether gets its own band below, with Letheras, the march into the Wastes, the Glass Desert, the long way round and Kolanse; Y\'Ghatan and Black Coral are marked. The closing line follows every squad to the end.']],
   ['13.0.0', ['Book Ten, Witnessed, beside The Crippled God, the last book: the Third crosses the glass desert behind the Adjunct, the Letherii march south with Brys toward Kolanse, taking turns. The Fourth comes over the ridge for the last chapter.',

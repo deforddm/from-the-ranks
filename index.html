@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.0.2';
+const VERSION = '13.0.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5339,8 +5339,14 @@ const rosterHud = () => { if (typeof rosterCampList !== 'function' || !S || !S.s
 function rosterBtnSync(){ const row = document.querySelector('#app .maprow'), old = $('#bRoster'); if (old) old.remove(); if (!row) return;
   const h = rosterHud(); if (!h) return; const mb = $('#bMap'); if (mb) mb.insertAdjacentHTML('beforebegin', h); else row.insertAdjacentHTML('beforeend', h);
   $('#bRoster').onclick = () => { AUDIO.play('click'); openRoster(null); }; }
-function hudButtons(){ return `<button class="btn" id="bSquad">Squad</button>${fullBtn('bFull')}<button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>`; }
-function bindHud(){ const a = $('#bSquad'), b = $('#bSet'), f = $('#bFull'); if (a) a.onclick = () => { AUDIO.play('click'); openChars(0); }; if (b) b.onclick = () => { AUDIO.play('click'); openSettings(); }; if (f) f.onclick = () => { AUDIO.play('click'); toggleFull(); }; }
+/* v13.0.3 (David, Nov 11: a way back to the title beside Squad and Settings). Off the map or a page it saves and goes; in a fight the
+   first tap asks (the fight starts again from the last save when the sergeant comes back). */
+function hudButtons(){ return `<button class="btn" id="bSquad">Squad</button><button class="btn" id="bTitle" aria-label="Back to the title screen">Title</button>${fullBtn('bFull')}<button class="btn icon" id="bSet" aria-label="Settings">${GEAR}</button>`; }
+function bindHud(){ const a = $('#bSquad'), b = $('#bSet'), f = $('#bFull'); if (a) a.onclick = () => { AUDIO.play('click'); openChars(0); }; if (b) b.onclick = () => { AUDIO.play('click'); openSettings(); }; if (f) f.onclick = () => { AUDIO.play('click'); toggleFull(); };
+  const t = $('#bTitle'); if (t) t.onclick = () => { AUDIO.play('click'); const fight = typeof view !== 'undefined' && view === 'battle';
+    if (fight && !t.dataset.arm) { t.dataset.arm = '1'; t.textContent = 'Leave?'; t.setAttribute('aria-label', 'Tap again to leave the fight for the title screen. The fight starts again from the last save.');
+      setTimeout(() => { if (t.isConnected) { delete t.dataset.arm; t.textContent = 'Title'; t.setAttribute('aria-label', 'Back to the title screen'); } }, 3000); return; }
+    if (!fight && S) save(); const m = $('#modal'); if (m) { m.hidden = true; m.innerHTML = ''; } showTitle(); }; }
 /* every full screen button shows which way it goes; and the page's size changed, so the map fits itself again (the resize event does that) */
 const fullSync = () => document.querySelectorAll('[data-full]').forEach(b => { const on = isFull(); b.innerHTML = on ? FULL_OUT : FULL_IN; b.setAttribute('aria-label', on ? 'Leave full screen' : 'Full screen'); b.title = (on ? 'Leave full screen' : 'Full screen') + ' (F)'; });
 document.addEventListener('fullscreenchange', fullSync); document.addEventListener('webkitfullscreenchange', fullSync);
@@ -7932,6 +7938,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.0.3', ['A Title button beside Squad and Settings, on the map, in talk and on the chapter pages: it saves and takes you back to the title. In a fight it asks first, and the fight starts again from the last save when you come back.']],
   ['13.0.2', ['The title credit names the ten books and stops there.']],
   ['13.0.1', ['Where the books meet (the Journal and every finale): the map now shows all ten books. Lether gets its own band below, with Letheras, the march into the Wastes, the Glass Desert, the long way round and Kolanse; Y\'Ghatan and Black Coral are marked. The closing line follows every squad to the end.']],
   ['13.0.0', ['Book Ten, Witnessed, beside The Crippled God, the last book: the Third crosses the glass desert behind the Adjunct, the Letherii march south with Brys toward Kolanse, taking turns. The Fourth comes over the ridge for the last chapter.',
