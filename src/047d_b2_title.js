@@ -43,7 +43,9 @@
   s += `<path d="${[...Array(41)].map((_, i) => { const [x, y] = road(i / 40); return (i ? 'L' : 'M') + f1(x) + ' ' + f1(y - 14); }).join('')}" stroke="#f0b080" stroke-width="30" fill="none" opacity=".12" filter="url(#k2b24)"/>`;
   /* Wickan riders along a far ridge to the right, lances up */
   s += `<path d="M880 ${HZ + 2} Q1060 ${HZ - 30} 1260 ${HZ - 22} Q1400 ${HZ - 12} 1520 ${HZ + 4} Z" fill="#2a1810"/>`;
-  let rd = ''; for (let i = 0; i < 14; i++) { const x = 940 + i * 34 + (h(i, 271) - .5) * 30 + (i > 6 ? 40 : 0), y = HZ - 22 - Math.sin((x - 880) / 640 * Math.PI) * 6, k = .62;
+  const ridgeY = x => { const q = (a, c, b) => { let lo = 0, hi = 1; for (let n = 0; n < 24; n++) { const t = (lo + hi) / 2, xt = (1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * c[0] + t * t * b[0]; if (xt < x) lo = t; else hi = t; } const t = lo; return (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * c[1] + t * t * b[1]; };
+    return x < 1260 ? q([880, HZ + 2], [1060, HZ - 30], [1260, HZ - 22]) : q([1260, HZ - 22], [1400, HZ - 12], [1520, HZ + 4]); }; // the far ridge's crest, so the riders ride on it
+  let rd = ''; for (let i = 0; i < 14; i++) { const x = 940 + i * 34 + (h(i, 271) - .5) * 30 + (i > 6 ? 40 : 0), y = ridgeY(x) + 1, k = .62;
     rd += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})" fill="#100806"><path d="M-14 -16 Q-4 -22 10 -18 L16 -24 L20 -22 L16 -14 L12 -12 L10 0 L7 0 L6 -10 L-8 -10 L-10 0 L-13 0 L-12 -11 Q-18 -12 -14 -16 Z"/><path d="M-2 -18 L-3 -32 L3 -32 L2 -18 Z"/><circle cx="0" cy="-35" r="3"/><path d="M4 -24 L${10 + h(i, 272) * 6} -60" stroke="#100806" stroke-width="1.2"/></g>`; }
   s += rd;
   /* crows: hundreds over the column, wheeling */
