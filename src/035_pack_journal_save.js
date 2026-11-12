@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.2.3', ['The title\'s book list shows the covers two to a row, so each cover is bigger.']],
   ['13.2.2', ['Book Two\'s title: the Wickan riders ride along the crest of the far ridge, following its curve, instead of above it.']],
   ['13.2.1', ['Book One\'s title laid out as it first was: Darujhistan\'s blue fire across the lake fills the skyline, Moon\'s Spawn hangs over it as wide as the city, the ruins of Pale small on the left, and the Fourth\'s five on the rise.']],
   ['13.2.0', ['Title art redrawn for Books One to Nine, in the style of Book Ten\'s: deeper skies and ground, the book\'s own scene in more detail, and each book\'s soldiers in the foreground seen from behind, off to the right of the lettering. Moon\'s Spawn over Pale; Hissar burning behind the Chain; the cold light over the Rhivi Plain; the Whirlwind as a wall of dust; the Quillas Canal between its houses; Y\'Ghatan\'s bone walls under smoke; the transports burning; Darujhistan\'s blue fire under the cracked moon; the column going east into the Wastes. The covers on the book list are framed to match.']],

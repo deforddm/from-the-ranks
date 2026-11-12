@@ -496,7 +496,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 /* Choose your book: the three books as covers on the title (29: shelfHTML) */
 .shelf{display:flex;flex-direction:column;gap:8px}
 .shelf .rh{font-family:var(--label);font-size:.8rem;color:var(--mute);letter-spacing:.08em;text-shadow:0 1px 4px #000}
-.covers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.covers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .cover{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;padding:6px 6px 8px;border:1px solid rgba(201,151,63,.45);background:linear-gradient(180deg,rgba(32,25,18,.94),rgba(14,11,9,.94));box-shadow:0 8px 22px rgba(0,0,0,.6);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
 .cover:hover,.cover:focus-visible{transform:translateY(-3px);border-color:var(--brass2);box-shadow:0 12px 28px rgba(0,0,0,.7),0 0 18px rgba(201,151,63,.25)}
 .cover:focus-visible{outline:2px solid var(--brass2);outline-offset:2px}

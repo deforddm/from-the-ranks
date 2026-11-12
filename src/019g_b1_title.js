@@ -89,5 +89,5 @@
   s += `</svg>`;
   ART['title/key'] = s; ART_SIZE['title/key'] = [W, H];
 }
-/* the book list's cover: frame the five on the rise */
-BOOKS.gotm.coverPos = '80% 50%';
+/* the book list's cover: the city, Moon's Spawn and the five */
+BOOKS.gotm.coverPos = '58% 50%';
