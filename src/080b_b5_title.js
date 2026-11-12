@@ -8,70 +8,68 @@
    sand-gold, the five tally strokes, a coin-sack tied on a rope, and the shared flame on the right.
    Motion: the .k5-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, HZ = 520; // the horizon: the far end of the canal
-  const cx = v => 800 + Math.sin(v * 2.2) * 40 * v, cw = v => 18 + Math.pow(1 - v, 1.7) * 900; // v: 0 near … 1 at the horizon; the canal's middle and width
-  const cy = v => HZ + Math.pow(1 - v, 2) * (H - HZ);
+  /* redrawn v13.2 from a seeded generator (019f's kit): dusk over Letheras; the city's towers along the skyline, a palace among three old
+     towers and a great unfinished dome under scaffolding, windows lit; the Quillas Canal coming out of the foreground between its stepped
+     walks, the sky and the lamps on the water; a bridge over it with a file of soldiers crossing, spears and round shields; on the right-hand
+     walk, seen from behind, two of the Sixth Company watching them go; and in the foreground, a mooring post with a rope over the water and a
+     weighted coin-sack on it (the Drownings, the book's debt). */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, HZ = 470, VX = 760;
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-<style>.k5-water{animation:k5-water 6s ease-in-out infinite}.k5-glint{animation:k5-glint 2.8s ease-in-out infinite}.k5-lamp{animation:k5-lamp 1.7s ease-in-out infinite}
-.k5-birds{animation:k5-birds 38s linear infinite}.k5-march{animation:k5-march 1.2s ease-in-out infinite}.k5-sack{animation:k5-sack 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
-.k5-cloud{animation:k5-cloud 60s linear infinite}
-@keyframes k5-water{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,1px)}}
-@keyframes k5-glint{0%,100%{opacity:.25}50%{opacity:.7}}
-@keyframes k5-lamp{0%,100%{opacity:.85}40%{opacity:1}70%{opacity:.75}}
-@keyframes k5-birds{from{transform:translate(0,0)}to{transform:translate(-520px,-30px)}}
-@keyframes k5-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
-@keyframes k5-sack{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
-@keyframes k5-cloud{from{transform:translate(0,0)}to{transform:translate(-300px,0)}}
-@media (prefers-reduced-motion: reduce){.k5-water,.k5-glint,.k5-lamp,.k5-birds,.k5-march,.k5-sack,.k5-cloud{animation:none}}.reduce .k5-water,.reduce .k5-glint,.reduce .k5-lamp,.reduce .k5-birds,.reduce .k5-march,.reduce .k5-sack,.reduce .k5-cloud{animation:none}</style>
-<defs>
-<linearGradient id="k5-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1018"/><stop offset=".38" stop-color="#1e2a3a"/><stop offset=".62" stop-color="#4a4a58"/><stop offset=".84" stop-color="#a06848"/><stop offset="1" stop-color="#d89058"/></linearGradient>
-<radialGradient id="k5-sunset" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd8a0" stop-opacity=".6"/><stop offset=".4" stop-color="#e09058" stop-opacity=".25"/><stop offset="1" stop-color="#804030" stop-opacity="0"/></radialGradient>
-<linearGradient id="k5-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c88050"/><stop offset=".12" stop-color="#5a4a50"/><stop offset=".5" stop-color="#1c2430"/><stop offset="1" stop-color="#080c12"/></linearGradient>
-<linearGradient id="k5-walk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a3e"/><stop offset="1" stop-color="#0e0e10"/></linearGradient>
-<linearGradient id="k5-vig" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".72"/><stop offset=".45" stop-color="#000" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
-<radialGradient id="k5-vig2" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></radialGradient>
-</defs>
-<rect width="${W}" height="${HZ + 4}" fill="url(#k5-sky)"/>`;
-  for (let i = 0; i < 46; i++) s += `<rect x="${f1(h(i, 501) * W)}" y="${f1(Math.pow(h(i, 502), 1.8) * HZ * .45)}" width="1.6" height="1.6" fill="#dce4f0" opacity="${f1(.15 + h(i, 503) * .45)}"/>`; // the first stars
-  s += `<circle cx="1080" cy="${HZ - 10}" r="360" fill="url(#k5-sunset)"/>`; // where the sun went down, behind the city
-  s += `<g class="k5-cloud">`; for (let i = 0; i < 9; i++) { const y = 250 + i * 26 + h(i, 521) * 14, x = h(i, 504) * (W + 300), w = 140 + h(i, 505) * 260; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(w)}" ry="${f1(3 + h(i, 522) * 5)}" fill="#1a1820" opacity="${f1(.3 + h(i, 523) * .25)}"/><ellipse cx="${f1(x)}" cy="${f1(y + 4)}" rx="${f1(w * .8)}" ry="1.4" fill="#f0a870" opacity=".22"/>`; } s += `</g>`;
-  /* the city on the horizon: a long low mass of roofs, then towers; the palace with three old towers round it; a dome under scaffolding; one dark tower apart */
-  let roofs = `M0 ${HZ + 4}`; for (let i = 0; i <= 64; i++) { const x = i * W / 64, y = HZ - 18 - h(i, 506) * 26 - (Math.abs(x - 800) < 500 ? 14 : 0); roofs += ` L ${f1(x)} ${f1(y)} L ${f1(x + W / 128)} ${f1(y - h(i, 507) * 8)}`; } roofs += ` L ${W} ${HZ + 4} Z`;
-  s += `<path d="${roofs}" fill="#14161e"/>`;
-  const tower = (x, w, ht, cap, col = '#101218') => `<rect x="${f1(x - w / 2)}" y="${f1(HZ - ht)}" width="${f1(w)}" height="${f1(ht)}" fill="${col}"/>${cap === 'spire' ? `<path d="M${f1(x - w / 2 - 4)} ${f1(HZ - ht)} L ${f1(x)} ${f1(HZ - ht - w * 1.6)} L ${f1(x + w / 2 + 4)} ${f1(HZ - ht)} Z" fill="${col}"/>` : cap === 'flat' ? `<rect x="${f1(x - w / 2 - 4)}" y="${f1(HZ - ht - 6)}" width="${f1(w + 8)}" height="6" fill="${col}"/>` : ''}`;
-  for (let i = 0; i < 12; i++) { const x = 120 + h(i, 508) * 1360; if (Math.abs(x - 860) < 180) continue; s += tower(x, 14 + h(i, 509) * 14, 60 + h(i, 510) * 70, h(i, 511) < .5 ? 'spire' : 'flat'); }
-  s += tower(780, 34, 190, 'flat') + tower(850, 30, 214, 'flat') + tower(918, 32, 176, 'flat'); // the three old towers round the palace
-  s += `<rect x="760" y="${HZ - 96}" width="180" height="96" fill="#0e1016"/>`; // the palace between them
-  s += `<rect x="1210" y="${HZ - 150}" width="24" height="150" fill="#08090c"/><ellipse cx="1222" cy="${HZ - 150}" rx="14" ry="6" fill="#08090c"/>`; // a dark round tower, apart, behind
-  { const dx = 1010, dy = HZ - 70; s += `<path d="M${dx - 90} ${dy} Q ${dx} ${dy - 120} ${dx + 90} ${dy} Z" fill="#12141a"/><rect x="${dx - 96}" y="${dy}" width="192" height="70" fill="#12141a"/>`;
-    for (let i = 0; i < 9; i++) s += `<rect x="${dx - 100 + i * 24}" y="${dy - 110}" width="2" height="180" fill="#2a2c34" opacity=".8"/>`; for (let j = 0; j < 5; j++) s += `<rect x="${dx - 104}" y="${dy - 100 + j * 30}" width="208" height="2" fill="#2a2c34" opacity=".8"/>`; } // the great unfinished dome under its scaffold
-  for (let i = 0; i < 90; i++) { const x = h(i, 512) * W, y = HZ - 8 - h(i, 513) * 90; if (y < HZ - 30 && Math.abs(x - 850) > 120 && h(i, 514) < .6) continue; s += `<rect class="k5-lamp" style="animation-delay:${f1(h(i, 515) * 2)}s" x="${f1(x)}" y="${f1(y)}" width="2.4" height="3" fill="#ffc870" opacity="${f1(.4 + h(i, 516) * .5)}"/>`; } // lit windows
-  /* starlings over the towers */
-  s += `<g class="k5-birds">`; for (let i = 0; i < 60; i++) { const x = 700 + h(i, 517) * 900, y = 260 + h(i, 518) * 120 + Math.sin(i * .5) * 20; s += `<path d="M${f1(x - 2.4)} ${f1(y)} Q ${f1(x)} ${f1(y - 1.6)} ${f1(x + 2.4)} ${f1(y)}" stroke="#0a0a0e" stroke-width="1" fill="none"/>`; } s += `</g>`;
-  /* the canal: water from the foreground to the city, between stepped walks */
-  let wl = '', wr = ''; for (let i = 0; i <= 24; i++) { const v = i / 24, x = cx(v), y = cy(v), w = cw(v) / 2; wl += `${i ? ' L' : 'M'} ${f1(x - w)} ${f1(y)}`; wr = ` L ${f1(x + w)} ${f1(y)}` + wr; }
-  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="#0c0d10"/>`; // the city's near ground, dark
-  s += `<path d="${wl}${wr} Z" fill="url(#k5-water)"/>`;
-  for (const side of [-1, 1]) { for (let k = 0; k < 3; k++) { let p = ''; for (let i = 0; i <= 20; i++) { const v = i / 20, x = cx(v) + side * (cw(v) / 2 + k * (8 + (1 - v) * 60)), y = cy(v) - k * (2 + (1 - v) * 22); p += `${i ? ' L' : 'M'} ${f1(x)} ${f1(y)}`; } s += `<path d="${p}" stroke="#4a4a50" stroke-opacity="${f1(.5 - k * .12)}" stroke-width="${f1(2.4 - k * .5)}" fill="none"/>`; } } // the tiers of the walks
-  s += `<g class="k5-water">`; for (let i = 0; i < 70; i++) { const v = Math.pow(h(i, 519), .8) * .95, x = cx(v) + (h(i, 520) - .5) * cw(v) * .9, y = cy(v) + 2; s += `<rect class="k5-glint" style="animation-delay:${f1(h(i, 524) * 3)}s" x="${f1(x)}" y="${f1(y)}" width="${f1(4 + (1 - v) * 40)}" height="${f1(1 + (1 - v) * 1.6)}" fill="#f0b070" opacity=".35"/>`; } s += `</g>`; // the dusk on the water
-  for (let i = 0; i < 24; i++) { const x = 760 + h(i, 525) * 180, ln = 30 + h(i, 526) * 80; s += `<rect x="${f1(x)}" y="${f1(HZ + 4)}" width="3" height="${f1(ln)}" fill="#ffc870" opacity="${f1(.06 + h(i, 527) * .1)}"/>`; } // the palace windows, long in the water
-  /* lamps along both walks */
-  for (let i = 0; i < 10; i++) { const v = .1 + i * .085, side = i % 2 ? 1 : -1, x = cx(v) + side * (cw(v) / 2 + 10 + (1 - v) * 70), y = cy(v) - 6 - (1 - v) * 20, sc = Math.max(.15, 1 - v) * 1.4;
-    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 10) / 10})"><rect x="-1.5" y="-60" width="3" height="60" fill="#0a0a0c"/><rect x="-5" y="-70" width="10" height="11" fill="#1a1a1e"/><rect class="k5-lamp" style="animation-delay:${f1(h(i, 528) * 1.5)}s" x="-3.5" y="-68" width="7" height="7" fill="#ffd080"/><circle cx="0" cy="-64" r="22" fill="#ffc070" opacity=".08"/></g>`; }
-  /* the bridge, and the company crossing it north: spears up, round shields */
-  { const v = .42, y = cy(v) - 4, w = cw(v) / 2 + 70, x0 = cx(v) - w, x1 = cx(v) + w;
-    s += `<path d="M${f1(x0)} ${f1(y)} Q ${f1(cx(v))} ${f1(y - 34)} ${f1(x1)} ${f1(y)} L ${f1(x1)} ${f1(y + 10)} Q ${f1(cx(v))} ${f1(y - 22)} ${f1(x0)} ${f1(y + 10)} Z" fill="#0c0c10"/>`;
-    s += `<path d="M${f1(cx(v) - cw(v) / 2 + 20)} ${f1(y + 10)} Q ${f1(cx(v))} ${f1(y - 14)} ${f1(cx(v) + cw(v) / 2 - 20)} ${f1(y + 10)} L ${f1(cx(v) + cw(v) / 2 - 20)} ${f1(y + 40)} L ${f1(cx(v) - cw(v) / 2 + 20)} ${f1(y + 40)} Z" fill="#06070a" opacity=".85"/>`; // the arch's shadow on the water
-    s += `<g class="k5-march">`; for (let i = 0; i < 26; i++) { const k = i / 25, bx = x0 + 40 + k * (x1 - x0 - 80), by = y - 34 * (1 - Math.pow(2 * k - 1, 2)) * .92 - 2;
-      s += `<g transform="translate(${f1(bx)} ${f1(by)}) scale(.9)" fill="#08080a"><rect x="-2.6" y="-18" width="5.2" height="14"/><circle cx="0" cy="-21" r="3"/><rect x="-2.6" y="-4" width="2" height="4"/><rect x=".6" y="-4" width="2" height="4"/><rect x="3" y="-34" width="1" height="30"/>${i % 3 === 1 ? '<circle cx="-4" cy="-11" r="4.4"/>' : ''}${i % 3 === 1 ? '<circle cx="-4" cy="-11" r="1.2" fill="#d8d0c0"/>' : ''}</g>`; } s += `</g>`; }
-  /* the foreground: the near walk's edge, a mooring post, and on its rope over the water a weighted sack of coins */
-  s += `<path d="M0 ${H - 120} L 360 ${H - 150} L 470 ${H} L 0 ${H} Z" fill="#0a0a0c"/><path d="M0 ${H - 120} L 360 ${H - 150}" stroke="#3a3a40" stroke-width="3"/>`;
-  s += `<rect x="300" y="${H - 260}" width="26" height="120" fill="#141416"/><rect x="296" y="${H - 266}" width="34" height="10" fill="#1e1e22"/><rect x="306" y="${H - 250}" width="4" height="100" fill="#2a2a30" opacity=".6"/>`;
-  s += `<path d="M326 ${H - 240} Q 420 ${H - 230} 470 ${H - 180}" stroke="#6a5a42" stroke-width="3" fill="none"/>`;
-  s += `<g class="k5-sack"><path d="M470 ${H - 180} L 470 ${H - 150}" stroke="#6a5a42" stroke-width="2.6"/><path d="M456 ${H - 150} Q 470 ${H - 158} 484 ${H - 150} Q 498 ${H - 120} 484 ${H - 104} Q 470 ${H - 98} 456 ${H - 104} Q 442 ${H - 120} 456 ${H - 150} Z" fill="#4a3a28"/>
-<path d="M458 ${H - 150} Q 470 ${H - 156} 482 ${H - 150}" stroke="#2a1e14" stroke-width="3" fill="none"/><circle cx="476" cy="${H - 124}" r="3.4" fill="#c8a050" opacity=".8"/><circle cx="464" cy="${H - 116}" r="2.6" fill="#c8a050" opacity=".6"/></g>`;
-  s += `<rect width="${W}" height="${H}" fill="url(#k5-vig)"/><rect width="${W}" height="${H}" fill="url(#k5-vig2)"/></svg>`;
+<style>.k5-fl{animation:k5-fl 2.2s ease-in-out infinite}.k5-wv{animation:k5-wv 6s ease-in-out infinite}.k5-sw{animation:k5-sw 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}.k5-wk{animation:k5-wk 2.2s ease-in-out infinite}
+@keyframes k5-fl{0%,100%{opacity:.75}50%{opacity:1}}@keyframes k5-wv{0%,100%{transform:translate(0,0)}50%{transform:translate(8px,0)}}@keyframes k5-sw{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}@keyframes k5-wk{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.6px)}}
+@media (prefers-reduced-motion:reduce){.k5-fl,.k5-wv,.k5-sw,.k5-wk{animation:none}}.reduce .k5-fl,.reduce .k5-wv,.reduce .k5-sw,.reduce .k5-wk{animation:none}</style>
+<defs><linearGradient id="k5sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1024"/><stop offset=".45" stop-color="#2a2c4c"/><stop offset=".78" stop-color="#8a5262"/><stop offset="1" stop-color="#e8946a"/></linearGradient>
+<linearGradient id="k5water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c88070"/><stop offset=".15" stop-color="#5a4458"/><stop offset=".55" stop-color="#1e2236"/><stop offset="1" stop-color="#080a14"/></linearGradient>
+<linearGradient id="k5wallL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0e0e16"/><stop offset="1" stop-color="#2a2632"/></linearGradient>
+<linearGradient id="k5wallR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a3240"/><stop offset="1" stop-color="#121118"/></linearGradient>
+<radialGradient id="k5lamp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd890" stop-opacity=".95"/><stop offset=".35" stop-color="#ffa050" stop-opacity=".35"/><stop offset="1" stop-color="#ffa050" stop-opacity="0"/></radialGradient>
+<linearGradient id="k5body" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a4a62"/><stop offset=".3" stop-color="#1e1e2c"/><stop offset="1" stop-color="#08080e"/></linearGradient>
+<filter id="k5b16" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter><filter id="k5b3" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="${W}" height="${H}" fill="url(#k5sky)"/>`;
+  s += TK.stars(90, 501, 0, 200, W, '#e8eaf8', '');
+  s += `<g filter="url(#k5b16)">${[...Array(9)].map((_, i) => { const y = 180 + h(i, 511) * 250; return `<ellipse cx="${f1(h(i, 512) * W)}" cy="${f1(y)}" rx="${f1(200 + h(i, 513) * 320)}" ry="${f1(8 + h(i, 514) * 12)}" fill="${y > 330 ? '#f0a080' : '#6a4a6a'}" opacity="${f1(.3 + h(i, 515) * .3)}"/>`; }).join('')}</g>`;
+  /* the skyline: two depths of roofs and towers, the palace's three old towers and the great dome under scaffolding */
+  const sky = (y0, n, hmax, seed, col, lit) => { let d = `M0 ${y0}`, wn = ''; for (let i = 0; i < n; i++) { const x = i * W / n, w = W / n, ht = 10 + Math.pow(h(i, seed), 2) * hmax, tw = h(i, seed + 1) < .15;
+    d += ` L${f1(x)} ${f1(y0 - ht)} L${f1(x + w * (tw ? .3 : 1))} ${f1(y0 - ht)}`; if (tw) d += ` L${f1(x + w * .3)} ${f1(y0 - ht - 40)} L${f1(x + w * .4)} ${f1(y0 - ht - 54)} L${f1(x + w * .5)} ${f1(y0 - ht - 40)} L${f1(x + w * .5)} ${f1(y0 - ht)} L${f1(x + w)} ${f1(y0 - ht)}`;
+    if (lit) for (let k = 0; k < 3; k++) if (h(i * 5 + k, seed + 2) < .3) wn += `<rect x="${f1(x + 3 + h(i * 5 + k, seed + 3) * (w - 6))}" y="${f1(y0 - ht + 6 + h(i * 5 + k, seed + 4) * (ht - 8))}" width="2" height="3" fill="#ffcc80" opacity=".8"/>`; }
+    return `<path d="${d} L${W} ${y0} Z" fill="${col}"/>${wn}`; };
+  s += sky(HZ, 60, 60, 521, '#2a2236', false);
+  s += `<g fill="#1c1626"><rect x="560" y="${HZ - 190}" width="26" height="190"/><path d="M556 ${HZ - 190} L573 ${HZ - 226} L590 ${HZ - 190} Z"/><rect x="640" y="${HZ - 230}" width="30" height="230"/><path d="M636 ${HZ - 230} L655 ${HZ - 270} L674 ${HZ - 230} Z"/><rect x="720" y="${HZ - 175}" width="24" height="175"/><path d="M716 ${HZ - 175} L732 ${HZ - 206} L748 ${HZ - 175} Z"/><path d="M590 ${HZ} L590 ${HZ - 120} L720 ${HZ - 120} L720 ${HZ} Z"/></g>`;
+  s += `<g><path d="M300 ${HZ - 60} A110 110 0 0 1 520 ${HZ - 60} Z" fill="#1c1626"/><path d="M330 ${HZ - 60} A80 90 0 0 1 400 ${HZ - 150}" stroke="#8a6a7a" stroke-width="1.6" fill="none" opacity=".4"/>`;
+  let sc = ''; for (let i = 0; i < 10; i++) sc += `M${300 + i * 22} ${HZ - 60} L${300 + i * 22} ${f1(HZ - 60 - Math.sqrt(Math.max(0, 110 * 110 - Math.pow(i * 22 - 110, 2))) - 14)}`; for (let j = 0; j < 6; j++) sc += `M300 ${HZ - 70 - j * 22} L520 ${HZ - 70 - j * 22}`;
+  s += `<path d="${sc}" stroke="#3a3044" stroke-width="1.4" opacity=".9"/><rect x="290" y="${HZ - 62}" width="240" height="62" fill="#1c1626"/></g>`;
+  s += sky(HZ + 6, 40, 90, 531, '#140f1c', true);
+  /* the water between the walks, the sky on it, lamp-light in long streaks */
+  s += `<path d="M${VX - 70} ${HZ + 4} L${VX + 70} ${HZ + 4} L1100 ${H} L420 ${H} Z" fill="url(#k5water)"/>`;
+  let rp = ''; for (let i = 0; i < 70; i++) { const t = h(i, 541), y = HZ + 10 + t * t * (H - HZ - 10), half = 70 + t * t * 270, x = VX + (h(i, 542) - .5) * 2 * half * .9, l = 6 + t * 50; rp += `M${f1(x)} ${f1(y)} l${f1(l)} 0`; }
+  s += `<g class="k5-wv"><path d="${rp}" stroke="#f0b090" stroke-width="1.2" opacity=".35"/></g>`;
+  /* the walks: stepped stone, lamps on posts at intervals, their light on the water */
+  s += `<path d="M0 ${HZ + 4} L${VX - 70} ${HZ + 4} L420 ${H} L0 ${H} Z" fill="url(#k5wallL)"/><path d="M${VX + 70} ${HZ + 4} L${W} ${HZ + 4} L${W} ${H} L1100 ${H} Z" fill="url(#k5wallR)"/>`;
+  for (let j = 1; j < 4; j++) s += `<path d="M${f1(VX - 70 - j * 40)} ${HZ + 4} L${f1(420 - j * 140)} ${H}" stroke="#4a3e4c" stroke-width="2" opacity=".5"/><path d="M${f1(VX + 70 + j * 40)} ${HZ + 4} L${f1(1100 + j * 140)} ${H}" stroke="#5a4a58" stroke-width="2" opacity=".5"/>`;
+  /* the houses along both walks, fronts receding to the bridge, windows lit */
+  const fac = sd => { let o = '', t = .03; for (let i = 0; t < .62; i++) { const t2 = Math.min(.66, t + .04 + h(i, 571 + sd) * .07), q = u => [VX + sd * (150 + u * 1100), HZ + 4 + u * (H - HZ)], hf = (.75 + h(i, 573 + sd) * .55), ht = u => (22 + u * 640) * hf;
+      const [xa, ya] = q(t), [xb, yb] = q(t2); o += `<path d="M${f1(xa)} ${f1(ya)} L${f1(xa)} ${f1(ya - ht(t))} L${f1(xb)} ${f1(yb - ht(t2))} L${f1(xb)} ${f1(yb)} Z" fill="${i % 2 ? '#16121c' : '#1c1722'}" stroke="#0a080e" stroke-width="1.5"/>`;
+      o += `<path d="M${f1(xa)} ${f1(ya - ht(t))} L${f1(xb)} ${f1(yb - ht(t2))}" stroke="#c88a7a" stroke-width="1.2" opacity=".35"/>`;
+      for (let k = 0; k < 6; k++) if (h(i * 9 + k, 575 + sd) < .4) { const u = t + (t2 - t) * (.2 + h(i * 9 + k, 577) * .6), [wx, wy] = q(u), r = .25 + h(i * 9 + k, 579) * .55, sz = 2 + u * 22;
+        o += `<rect x="${f1(wx - sz * .3)}" y="${f1(wy - ht(u) * r - sz)}" width="${f1(sz * .6)}" height="${f1(sz)}" fill="#ffc878" opacity="${f1(.55 + h(i * 9 + k, 581) * .4)}"/>`; }
+      t = t2; } return o; };
+  s += fac(-1) + fac(1);
+  let lm = ''; for (let i = 0; i < 7; i++) { const t = Math.pow((i + 1) / 8, 1.6), y = HZ + 4 + t * (H - HZ), side = [-1, 1]; for (const sd of side) { const x = VX + sd * (70 + t * 330 + 6), ht = 14 + t * 120;
+    lm += `<path d="M${f1(x)} ${f1(y)} L${f1(x)} ${f1(y - ht)}" stroke="#0a0810" stroke-width="${f1(1 + t * 4)}"/><circle class="k5-fl" style="animation-delay:-${f1(h(i * 2 + (sd > 0), 551) * 2)}s" cx="${f1(x)}" cy="${f1(y - ht)}" r="${f1(8 + t * 40)}" fill="url(#k5lamp)"/><rect x="${f1(x - 1 - t * 3)}" y="${f1(y - ht - 2 - t * 6)}" width="${f1(2 + t * 6)}" height="${f1(3 + t * 9)}" fill="#ffe0a0"/>`;
+    lm += `<path d="M${f1(x - sd * (16 + t * 34))} ${f1(y + 4)} L${f1(x - sd * (16 + t * 34))} ${f1(y + 40 + t * 160)}" stroke="#ffc070" stroke-width="${f1(2 + t * 6)}" opacity=".5" filter="url(#k5b3)"/>`; } }
+  s += lm;
+  /* the bridge over the canal, a low arch, and the file crossing it */
+  const BY = HZ + 40; s += `<path d="M${VX - 230} ${BY - 26} L${VX + 230} ${BY - 26} L${VX + 230} ${BY + 6} L${VX + 110} ${BY + 6} Q${VX} ${BY - 40} ${VX - 110} ${BY + 6} L${VX - 230} ${BY + 6} Z" fill="#120e18"/><path d="M${VX - 230} ${BY - 26} L${VX + 230} ${BY - 26}" stroke="#d8a080" stroke-width="1.4" opacity=".5"/>`;
+  s += `<path d="M${VX - 110} ${BY + 8} Q${VX} ${BY + 44} ${VX + 110} ${BY + 8}" stroke="#120e18" stroke-width="6" fill="none" opacity=".4"/>`;
+  let fl = ''; for (let i = 0; i < 26; i++) { const x = VX - 210 + i * 16.5 + h(i, 561) * 4; fl += TK.walker(x, BY - 26, .62, i + 50, '#08060c', {spears:.7, lean:1}); if (i % 3 === 1) fl += `<circle cx="${f1(x - 3)}" cy="${f1(BY - 37)}" r="5" fill="#08060c"/>`; }
+  s += `<g class="k5-wk">${fl}</g>`;
+  /* the mooring post and the coin-sack on its rope over the water */
+  s += `<rect x="1010" y="640" width="30" height="190" rx="5" fill="#140e10" stroke="#05040a" stroke-width="2"/><path d="M1012 652 L1040 652" stroke="#3a2e2a" stroke-width="5"/>${TK.rim('M1012 646 L1012 820', '#f0b090', 1.6, .5)}`;
+  s += `<path d="M1024 660 Q960 690 900 760" stroke="#3a2c20" stroke-width="3" fill="none"/><g class="k5-sw"><path d="M900 760 L900 790" stroke="#3a2c20" stroke-width="2.4"/><path d="M886 794 Q900 786 914 794 Q922 820 900 828 Q878 820 886 794 Z" fill="#3a2e22" stroke="#05040a" stroke-width="2"/><path d="M890 794 Q900 790 910 794" stroke="#6a5a40" stroke-width="2" fill="none"/>${TK.rim('M888 798 Q884 814 894 824', '#f0b090', 1.4, .45)}</g>`;
+  /* two of the Sixth Company on the right-hand walk, seen from behind */
+  const B = {fill:'url(#k5body)', dark:'#0e0e16', rim:'#f0b8a0', helmc:'#3a3a4a', packc:'#24222a', roll:'#302c34', ink:'#040408'};
+  s += `<g transform="translate(1300 846) scale(.84)">${TK.back(Object.assign({}, B, {kit:'spear', head:'helm', cloak:'#1a1a26'}))}</g><g transform="translate(1440 870) scale(.92)">${TK.back(Object.assign({}, B, {kit:'shield', head:'cap', helmc:'#2a2a3a', shieldc:'#2a2a38', shieldr:'#5a5a74', wide:1.08}))}</g>`;
+  s += `</svg>`;
   ART['title/mt'] = s; ART_SIZE['title/mt'] = [W, H];
 }
 

@@ -9,59 +9,63 @@
    Also here: the three new sigils (the dead, the Guardians of the Gate, K'rul), the Hood-touched charm's picture, and the recruits' busts
    (Vasso, Edrem). Motion: the .k8-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, SKY = 520, LAKE = 640; // the city's foot, the lake's edge
+  /* redrawn v13.2 from a seeded generator (019f's kit): night over Darujhistan, the city of blue fire; the upper city's domes and towers on
+     its hill against the sky, gas-light blue in a thousand windows and along the streets, a blue haze over all of it; the lower city below
+     and the lake with the light on it; the moon over the city with a crack across it (it bursts on the last night, rule 81: never why); and
+     in the foreground a Gadrobi roof's edge, slates and a chimney, a Guild knife driven into the slate through a paper with five short
+     strokes on it, the Fourth's names as the Guild counts them. Original work: no copyrighted image, no named place drawn. */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, SKY = 470, LAKE = 590; // the city's foot, the lake's edge
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-<style>.k8-gas{animation:k8-gas 2.8s ease-in-out infinite}.k8-glint{animation:k8-glint 3.4s ease-in-out infinite}.k8-moon{animation:k8-moon 9s ease-in-out infinite}
-.k8-cloud{animation:k8-cloud 30s ease-in-out infinite}.k8-paper{animation:k8-paper 4s ease-in-out infinite;transform-box:fill-box;transform-origin:0 0}
-@keyframes k8-gas{0%,100%{opacity:.75}50%{opacity:1}}
-@keyframes k8-glint{0%,100%{opacity:.2}50%{opacity:.7}}
-@keyframes k8-moon{0%,100%{opacity:.85}50%{opacity:1}}
-@keyframes k8-cloud{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,0)}}
-@keyframes k8-paper{0%,100%{transform:rotate(0)}50%{transform:rotate(-2deg)}}
-@media (prefers-reduced-motion:reduce){.k8-gas,.k8-glint,.k8-moon,.k8-cloud,.k8-paper{animation:none}}.reduce .k8-gas,.reduce .k8-glint,.reduce .k8-moon,.reduce .k8-cloud,.reduce .k8-paper{animation:none}</style>
-<defs><linearGradient id="k8sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03050c"/><stop offset=".5" stop-color="#0c1428"/><stop offset=".86" stop-color="#1c3050"/><stop offset="1" stop-color="#2a4a70"/></linearGradient>
-<linearGradient id="k8lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1a30"/><stop offset="1" stop-color="#03060c"/></linearGradient>
-<radialGradient id="k8moon" cx=".42" cy=".4" r=".6"><stop offset="0" stop-color="#f4f0e2"/><stop offset=".7" stop-color="#cfc8b4"/><stop offset="1" stop-color="#8e8878"/></radialGradient>
-<radialGradient id="k8halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#dfe6f0" stop-opacity=".28"/><stop offset="1" stop-color="#dfe6f0" stop-opacity="0"/></radialGradient>
-<radialGradient id="k8blue" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5ab4ff" stop-opacity=".6"/><stop offset="1" stop-color="#3a7ad0" stop-opacity="0"/></radialGradient>
-<linearGradient id="k8slate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2c34"/><stop offset="1" stop-color="#0c0d12"/></linearGradient></defs>
+<style>.k8-tw{animation:k8-tw 5s ease-in-out infinite}.k8-gas{animation:k8-gas 3.2s ease-in-out infinite}.k8-wv{animation:k8-wv 7s ease-in-out infinite}.k8-sm{animation:k8-sm 12s ease-in-out infinite}
+@keyframes k8-tw{0%,100%{opacity:.35}50%{opacity:1}}@keyframes k8-gas{0%,100%{opacity:.7}50%{opacity:1}}@keyframes k8-wv{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,0)}}@keyframes k8-sm{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-6px)}}
+@media (prefers-reduced-motion:reduce){.k8-tw,.k8-gas,.k8-wv,.k8-sm{animation:none}}.reduce .k8-tw,.reduce .k8-gas,.reduce .k8-wv,.reduce .k8-sm{animation:none}</style>
+<defs><linearGradient id="k8sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#02040c"/><stop offset=".55" stop-color="#0a1430"/><stop offset=".9" stop-color="#1a3460"/><stop offset="1" stop-color="#2a5288"/></linearGradient>
+<linearGradient id="k8lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a3a6a"/><stop offset=".5" stop-color="#0a1830"/><stop offset="1" stop-color="#040810"/></linearGradient>
+<radialGradient id="k8moon" cx=".42" cy=".4" r=".6"><stop offset="0" stop-color="#f4f0e4"/><stop offset=".7" stop-color="#c8c4b8"/><stop offset="1" stop-color="#8a8a86"/></radialGradient>
+<radialGradient id="k8mglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c8d4f0" stop-opacity=".35"/><stop offset="1" stop-color="#c8d4f0" stop-opacity="0"/></radialGradient>
+<radialGradient id="k8haze" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#4a9aff" stop-opacity=".75"/><stop offset=".6" stop-color="#2a5ad0" stop-opacity=".2"/><stop offset="1" stop-color="#2a5ad0" stop-opacity="0"/></radialGradient>
+<linearGradient id="k8slate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3040"/><stop offset="1" stop-color="#0a0c12"/></linearGradient>
+<filter id="k8b16" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter><filter id="k8b3" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3"/></filter></defs>
 <rect width="${W}" height="${H}" fill="url(#k8sky)"/>`;
-  for (let i = 0; i < 90; i++) { const x = h(i, 81) * W, y = h(i, 82) * SKY * .6; s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(.5 + h(i, 83) * 1.1)}" fill="#e8ecf4" opacity="${f1(.15 + h(i, 84) * .5)}"/>`; }
-  /* the moon, high over the upper city, a crack across it and a sliver standing a little apart */
-  const mx = 1080, my = 170, mr = 74;
-  s += `<circle cx="${mx}" cy="${my}" r="${mr * 2.6}" fill="url(#k8halo)"/><g class="k8-moon"><circle cx="${mx}" cy="${my}" r="${mr}" fill="url(#k8moon)"/>`;
-  for (let i = 0; i < 7; i++) s += `<circle cx="${f1(mx + (h(i, 85) - .5) * mr * 1.3)}" cy="${f1(my + (h(i, 86) - .5) * mr * 1.3)}" r="${f1(6 + h(i, 87) * 12)}" fill="#a49e8c" opacity=".35"/>`;
-  s += `<path d="M${mx - 52} ${my - 54} L${mx - 18} ${my - 14} L${mx - 26} ${my + 6} L${mx + 10} ${my + 30} L${mx + 4} ${my + 46} L${mx + 30} ${my + 66}" stroke="#1a1e2a" stroke-width="3" fill="none" stroke-linejoin="round"/>
-<path d="M${mx - 18} ${my - 14} L${mx + 22} ${my - 30} M${mx + 10} ${my + 30} L${mx + 48} ${my + 18}" stroke="#1a1e2a" stroke-width="1.6" fill="none"/>
-<path d="M${mx + 54} ${my - 50} Q${mx + 84} ${my - 10} ${mx + 66} ${my + 40} L${mx + 74} ${my + 44} Q${mx + 96} ${my - 8} ${mx + 62} ${my - 56} Z" fill="#cfc8b4" opacity=".9"/></g>`;
-  /* thin cloud across the moon's foot */
-  for (let i = 0; i < 4; i++) s += `<ellipse class="k8-cloud" style="animation-delay:-${i * 7}s" cx="${f1(700 + i * 260)}" cy="${f1(250 + i * 30)}" rx="${f1(280 - i * 30)}" ry="${f1(16 + i * 3)}" fill="#1a2438" opacity="${f1(.5 - i * .08)}"/>`;
-  /* the upper city on its rise: domes, towers, the long roofs, all black against the sky, with blue fire in the windows */
-  let city = `M0 ${SKY}`; const tops = [];
-  for (let x = 0; x <= W; x += 40) { const k = Math.sin(x / W * Math.PI), y = SKY - 60 - k * 140 - h(x, 88) * 50; city += ` L${x} ${f1(y)} L${x + 40} ${f1(y)}`; tops.push([x, y]); }
-  s += `<path d="${city} L${W} ${LAKE} L0 ${LAKE} Z" fill="#05070e"/>`;
-  [[520, 330, 46], [760, 290, 60], [980, 312, 40], [1240, 360, 34]].forEach(([x, y, r]) => s += `<path d="M${x - r} ${y + r * .2} Q${x - r} ${y - r} ${x} ${y - r * 1.1} Q${x + r} ${y - r} ${x + r} ${y + r * .2} Z" fill="#05070e"/><rect x="${x - 2}" y="${f1(y - r * 1.5)}" width="4" height="${f1(r * .45)}" fill="#05070e"/>`); // domes
-  [[640, 250, 18], [880, 230, 16], [1120, 268, 14], [380, 320, 14], [1400, 360, 16]].forEach(([x, y, w]) => s += `<rect x="${x - w / 2}" y="${y}" width="${w}" height="${SKY - y + 40}" fill="#05070e"/><path d="M${x - w / 2 - 3} ${y} L${x} ${y - w * 1.4} L${x + w / 2 + 3} ${y} Z" fill="#05070e"/>`); // towers
-  /* the blue fire: windows and street-lights, thickest low down, a glow over the whole city */
-  s += `<ellipse cx="${W / 2}" cy="${SKY + 30}" rx="${W * .62}" ry="140" fill="url(#k8blue)" opacity=".7"/>`;
-  for (let i = 0; i < 260; i++) { const x = h(i, 89) * W, y = SKY - 10 - Math.pow(h(i, 90), 1.6) * 230 + 110 * Math.pow(h(i, 91), 3), top = tops[Math.min(tops.length - 1, Math.floor(x / 40))][1];
-    if (y < top + 8 || y > LAKE - 6) continue;
-    s += `<rect class="k8-gas" style="animation-delay:-${f1(h(i, 92) * 2.8)}s" x="${f1(x)}" y="${f1(y)}" width="${f1(1.6 + h(i, 93) * 2.4)}" height="${f1(1.6 + h(i, 94) * 2)}" fill="${h(i, 95) > .85 ? '#ffd890' : '#7ac8ff'}" opacity=".85"/>`; }
-  /* the lake, and the city's light on it */
-  s += `<rect y="${LAKE}" width="${W}" height="${H - LAKE}" fill="url(#k8lake)"/>`;
-  for (let i = 0; i < 70; i++) { const x = h(i, 96) * W, y = LAKE + 8 + h(i, 97) * 150, w = 10 + h(i, 98) * 50; s += `<rect class="k8-glint" style="animation-delay:-${f1(h(i, 99) * 3.4)}s" x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="1.6" fill="${h(i, 100) > .9 ? '#ffd890' : '#6ab4f0'}" opacity=".4"/>`; }
-  s += `<path d="M${mx - 10} ${LAKE + 10} L${mx + 10} ${LAKE + 10} L${mx + 24} ${H - 120} L${mx - 24} ${H - 120} Z" fill="#cfc8b4" opacity=".08"/>`; // the moon's road on the water
-  /* the foreground: a Gadrobi roof's edge, slates, a chimney; the knife in the slate through a paper with five strokes */
-  s += `<path d="M0 ${H - 210} L620 ${H - 300} L760 ${H - 250} L760 ${H} L0 ${H} Z" fill="url(#k8slate)"/>`;
-  for (let r = 0; r < 7; r++) { const y0 = H - 210 + r * 34; let d = ''; for (let x = 0; x < 760; x += 46) { const yy = y0 - x * (90 / 620) + (x > 620 ? (x - 620) * .4 : 0) + (r % 2 ? 0 : 3); d += `M${x} ${f1(yy)} L${x + 44} ${f1(yy - 6)} `; } s += `<path d="${d}" stroke="#05060a" stroke-width="2" opacity=".7"/>`; }
-  s += `<path d="M0 ${H - 210} L620 ${H - 300}" stroke="#4a6a90" stroke-width="2" opacity=".55"/>`; // the ridge, lit blue from below
-  s += `<rect x="470" y="${H - 380}" width="64" height="120" fill="#0a0b10"/><rect x="462" y="${H - 390}" width="80" height="14" fill="#12141a"/><rect x="482" y="${H - 404}" width="16" height="14" fill="#0a0b10"/><rect x="506" y="${H - 400}" width="14" height="10" fill="#0a0b10"/>`; // the chimney
-  s += `<g transform="translate(250 ${H - 188}) rotate(-8)"><g class="k8-paper"><path d="M-70 -40 L70 -50 L76 40 L-64 52 Z" fill="#cdbf9e"/><path d="M-70 -40 L70 -50 L76 40 L-64 52 Z" fill="none" stroke="#2a2016" stroke-width="1.4" opacity=".6"/>
-<g stroke="#2a1c12" stroke-width="5" stroke-linecap="round">${[0, 1, 2, 3, 4].map(i => `<path d="M${-38 + i * 18} ${-14 - i * 1.2} L${-36 + i * 18} ${22 - i * 1.2}"/>`).join('')}</g>
-<path d="M-60 34 Q0 30 66 26" stroke="#7a2a1a" stroke-width="2" fill="none" opacity=".5"/></g>
-<rect x="-6" y="-140" width="12" height="100" fill="#14161c"/><rect x="-5" y="-140" width="3" height="100" fill="#5a6a80" opacity=".6"/><path d="M-6 -40 L0 -14 L6 -40 Z" fill="#14161c"/>
-<rect x="-18" y="-152" width="36" height="12" rx="3" fill="#2a2018"/><rect x="-7" y="-196" width="14" height="46" rx="4" fill="#3a2a1c"/><circle cx="0" cy="-200" r="7" fill="#2a2018"/></g>`; // the paper with five strokes, and the knife through it
+  s += TK.stars(260, 801, 0, SKY - 120, W, '#e4ecff', 'k8-tw');
+  /* the moon, cracked across */
+  s += `<circle cx="1220" cy="150" r="170" fill="url(#k8mglow)"/><circle cx="1220" cy="150" r="62" fill="url(#k8moon)"/>`;
+  s += [[1200, 130, 12], [1240, 172, 9], [1192, 176, 7], [1246, 128, 6]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#a8a69c" opacity=".55"/>`).join('');
+  s += `<path d="M1178 104 L1204 134 L1196 148 L1226 166 L1222 182 L1252 206" stroke="#1a1c24" stroke-width="2.4" fill="none"/><path d="M1204 134 L1230 124 M1226 166 L1250 160" stroke="#1a1c24" stroke-width="1.4" fill="none"/>`;
+  s += `<g filter="url(#k8b16)">${[...Array(6)].map((_, i) => `<ellipse cx="${f1(h(i, 811) * W)}" cy="${f1(220 + h(i, 812) * 160)}" rx="${f1(220 + h(i, 813) * 280)}" ry="${f1(10 + h(i, 814) * 14)}" fill="#3a5a90" opacity="${f1(.15 + h(i, 815) * .2)}"/>`).join('')}</g>`;
+  /* the upper city on its hill: domes and towers, windows in blue */
+  s += `<ellipse cx="760" cy="${SKY - 20}" rx="700" ry="200" fill="url(#k8haze)"/>`;
+  let up = '', win = ''; const hill = x => SKY - 70 * Math.exp(-Math.pow((x - 760) / 380, 2));
+  for (let i = 0; i < 60; i++) { const x = 120 + i * 22 + h(i, 821) * 8, base = hill(x), ht = 20 + h(i, 822) * 60 + (base < SKY - 30 ? 30 : 0), w = 18 + h(i, 823) * 16, k = h(i, 824);
+    if (k < .18) up += `<path d="M${f1(x)} ${f1(base)} L${f1(x)} ${f1(base - ht)} A${f1(w / 2)} ${f1(w * .6)} 0 0 1 ${f1(x + w)} ${f1(base - ht)} L${f1(x + w)} ${f1(base)} Z"/><path d="M${f1(x + w / 2)} ${f1(base - ht - w * .6)} L${f1(x + w / 2)} ${f1(base - ht - w * .6 - 12)}" stroke="#060a16" stroke-width="2"/>`;
+    else if (k < .3) up += `<rect x="${f1(x + w * .3)}" y="${f1(base - ht - 70)}" width="${f1(w * .4)}" height="${f1(ht + 70)}"/><path d="M${f1(x + w * .2)} ${f1(base - ht - 70)} L${f1(x + w * .5)} ${f1(base - ht - 96)} L${f1(x + w * .8)} ${f1(base - ht - 70)} Z"/>`;
+    else up += `<rect x="${f1(x)}" y="${f1(base - ht)}" width="${f1(w)}" height="${f1(ht)}"/>`;
+    for (let j = 0; j < 6; j++) if (h(i * 7 + j, 825) < .55) win += `<rect class="${j % 3 ? '' : 'k8-gas'}" style="animation-delay:-${f1(h(i * 7 + j, 826) * 3.2)}s" x="${f1(x + 3 + h(i * 7 + j, 827) * (w - 6))}" y="${f1(base - 6 - h(i * 7 + j, 828) * (ht - 8))}" width="2.2" height="3.2"/>`; }
+  s += `<g fill="#060a16">${up}</g><g fill="#9ad0ff">${win}</g>`;
+  /* the lower city: rows of roofs down to the lake, streets of blue light */
+  let lo = '', lw = ''; for (let r = 0; r < 3; r++) for (let i = 0; i < 48; i++) { const ww = 22 + h(r * 50 + i, 835) * 22, x = i * 34 + (r % 2) * 17 + h(r * 50 + i, 831) * 10 - 6, base = SKY + 30 + r * 30, ht = 10 + h(r * 50 + i, 832) * 30, pk = h(r * 50 + i, 836) < .5 ? 10 : 0;
+    lo += `<path d="M${f1(x)} ${f1(base)} L${f1(x)} ${f1(base - ht)} L${f1(x + ww / 2)} ${f1(base - ht - pk)} L${f1(x + ww)} ${f1(base - ht)} L${f1(x + ww)} ${f1(base)} Z" fill="${['#0a1020', '#080d1a', '#060a14'][r]}"/>`;
+    if (h(r * 50 + i, 833) < .5) lw += `<rect x="${f1(x + 6 + h(r * 50 + i, 834) * 16)}" y="${f1(base - ht * .6)}" width="2.4" height="3.4"/>`; }
+  let gl = ''; for (let r = 0; r < 4; r++) gl += `<path d="M0 ${SKY + 4 + r * 30} L${W} ${SKY + 2 + r * 30}" stroke="#3a8aff" stroke-width="12" opacity=".55"/>`;
+  for (let i = 0; i < 70; i++) gl += `<circle cx="${f1(h(i, 837) * W)}" cy="${f1(SKY + 4 + Math.floor(h(i, 838) * 4) * 30)}" r="${f1(8 + h(i, 839) * 10)}" fill="#6ab8ff" opacity=".6"/>`;
+  s += `<g filter="url(#k8b3)">${gl}</g>` + lo + `<g fill="#8ac8ff">${lw}</g>`;
+  /* the lake: the light on it in long trembling streaks */
+  s += `<rect y="${LAKE}" width="${W}" height="${H - LAKE}" fill="url(#k8lake)"/><path d="M0 ${LAKE} L${W} ${LAKE}" stroke="#7ab8ff" stroke-width="1.6" opacity=".5"/>`;
+  let rf = ''; for (let i = 0; i < 160; i++) { const d = h(i, 841), y = LAKE + 6 + d * d * 260, x = h(i, 842) * W, l = 8 + d * 40; rf += `M${f1(x)} ${f1(y)} l${f1(l)} 0`; }
+  s += `<g class="k8-wv"><path d="${rf}" stroke="#7ab8ff" stroke-width="1.4" opacity=".4"/></g>`;
+  s += `<path d="M1180 ${LAKE + 6} L1260 ${LAKE + 6} L1300 ${H} L1140 ${H} Z" fill="#c8d4f0" opacity=".12" filter="url(#k8b3)"/><g filter="url(#k8b3)">${[...Array(24)].map((_, i) => `<rect x="${f1(h(i, 843) * W)}" y="${LAKE + 4}" width="${f1(4 + h(i, 844) * 8)}" height="${f1(40 + h(i, 845) * 120)}" fill="#4a9aff" opacity="${f1(.2 + h(i, 846) * .25)}"/>`).join('')}</g>`;
+  /* the roof in the foreground: rows of slates rising to the right, the ridge lit by the moon, the chimney */
+  s += `<path d="M0 ${H} L0 812 L1600 676 L1600 ${H} Z" fill="url(#k8slate)"/>`;
+  let sl = ''; for (let r = 0; r < 8; r++) { const y0 = 820 + r * 18; sl += `M0 ${f1(y0)} L1600 ${f1(y0 - 136)}`; for (let c = 0; c < 46; c++) { const x = c * 36 + (r % 2) * 18, y = y0 - x * .085; sl += `M${f1(x)} ${f1(y)} L${f1(x + 1)} ${f1(y + 18)}`; } }
+  s += `<path d="${sl}" stroke="#05070c" stroke-width="1.8" opacity=".75"/>${TK.rim('M0 812 L1600 676', '#c8d8f8', 2.4, .6)}`;
+  let lic = ''; for (let i = 0; i < 40; i++) { const x = h(i, 851) * 1600, r = Math.floor(h(i, 852) * 6), y = 820 + r * 18 - x * .085 + 3; lic += `<rect x="${f1(x)}" y="${f1(y)}" width="30" height="12" fill="#8aa0c8" opacity="${f1(.05 + h(i, 853) * .08)}" transform="skewY(-4.9)" transform-origin="${f1(x)} ${f1(y)}"/>`; }
+  s += lic;
+  s += `<g><rect x="1390" y="560" width="74" height="150" fill="#14141c" stroke="#05060a" stroke-width="2.4"/><rect x="1382" y="550" width="90" height="16" fill="#1c1c26" stroke="#05060a" stroke-width="2"/>${[...Array(8)].map((_, i) => `<path d="M1390 ${578 + i * 16} L1464 ${578 + i * 16}" stroke="#05060a" stroke-width="1.4" opacity=".7"/>`).join('')}${TK.rim('M1392 566 L1392 704', '#c8d8f8', 2, .5)}</g>`;
+  s += `<g class="k8-sm">${TK.smoke(1428, 530, 260, 20, 60, '#2a3448', .5, 861, 'k8b16')}</g>`;
+  /* the Guild's knife through the paper with five strokes */
+  s += `<g transform="translate(1180 790) rotate(-8) scale(1.25)"><path d="M-40 -26 L44 -34 L52 22 L-34 30 Z" fill="#d8ccb0" stroke="#5a4e3a" stroke-width="1.6"/><path d="M-34 30 L52 22 L50 26 L-32 34 Z" fill="#000" opacity=".35"/>
+${[...Array(5)].map((_, i) => `<path d="M${-22 + i * 13} -14 L${-24 + i * 13} 16" stroke="#2a2018" stroke-width="3" stroke-linecap="round"/>`).join('')}
+<path d="M4 -4 L1 -40 Q2 -64 8 -76 L12 -76 Q12 -50 10 -4 Z" fill="#5a6274" stroke="#0a0a0e" stroke-width="1.6"/><path d="M4 -8 L3 -42 Q4 -62 9 -72" stroke="#d8e4ff" stroke-width="1.4" fill="none" opacity=".75"/><path d="M-10 -78 L30 -80" stroke="#2a2a34" stroke-width="7" stroke-linecap="round"/><path d="M10 -82 L11 -118" stroke="#1a120e" stroke-width="12" stroke-linecap="round"/>${[0, 1, 2, 3].map(i => `<path d="M5 ${-88 - i * 8} L17 ${-86 - i * 8}" stroke="#3a2a20" stroke-width="1.4"/>`).join('')}<circle cx="11" cy="-124" r="7" fill="#4a4a54" stroke="#0a0a0e" stroke-width="2"/>${TK.rim('M5 -86 L6 -116', '#c8d8f8', 1.4, .45)}</g>`;
   s += `</svg>`;
   ART['title/tth'] = s; ART_SIZE['title/tth'] = [W, H];
 

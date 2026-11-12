@@ -7,50 +7,56 @@
    Fourth's with a finger bone stitched under the flame (series-patches.md; plan question 6).
    Motion: the .k6-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, WALL = 520; // the foot of the walls
+  /* redrawn v13.2 from a seeded generator (019f's kit): a smoke-red dusk over the Odhan; Y'Ghatan on its rise, walls the colour of old bone
+     with the bones of the older cities in them (the novel's epigraph: "the bones in the walls, the bones beneath the floor"); one tower down
+     and a breach; smoke rising behind the walls; the road up to it between the barrows of the Empire's dead; a file of soldiers on the road;
+     and in the foreground a spear driven into the ground with a finger bone on a thong hanging from it, the Bonehunters' mark, and two of
+     them beside it, seen from behind, looking at the city. */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, WALL = 520; // the foot of the walls
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-<style>.k6-smoke{animation:k6-smoke 14s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}.k6-ember{animation:k6-ember 2.4s ease-in-out infinite}
-.k6-march{animation:k6-march 1.3s ease-in-out infinite}.k6-bone{animation:k6-bone 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
-@keyframes k6-smoke{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-14px,-10px) scale(1.04)}}
-@keyframes k6-ember{0%,100%{opacity:.35}50%{opacity:.9}}
-@keyframes k6-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
-@keyframes k6-bone{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-@media (prefers-reduced-motion:reduce){.k6-smoke,.k6-ember,.k6-march,.k6-bone{animation:none}}.reduce .k6-smoke,.reduce .k6-ember,.reduce .k6-march,.reduce .k6-bone{animation:none}</style>
-<defs><linearGradient id="k6sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1014"/><stop offset=".45" stop-color="#5a2418"/><stop offset=".8" stop-color="#b0502a"/><stop offset="1" stop-color="#d88a4a"/></linearGradient>
-<linearGradient id="k6wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8b08a"/><stop offset="1" stop-color="#7a6248"/></linearGradient>
-<linearGradient id="k6ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4430"/><stop offset="1" stop-color="#1e1610"/></linearGradient>
-<radialGradient id="k6glow" cx=".5" cy="1" r=".6"><stop offset="0" stop-color="#ff8a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient></defs>
-<rect width="${W}" height="${H}" fill="url(#k6sky)"/>
-<ellipse cx="860" cy="${WALL}" rx="620" ry="260" fill="url(#k6glow)"/>`;
-  /* smoke behind the walls: three columns leaning west */
-  [[640, 1.0], [880, 1.25], [1080, .9]].forEach(([x, k], i) => { let d = `M${x - 40} ${WALL - 60}`;
-    for (let j = 0; j < 7; j++) { const y = WALL - 80 - j * 70 * k, w = 50 + j * 26; d += ` Q${f1(x - j * 34 - w)} ${f1(y - 20)} ${f1(x - j * 40)} ${f1(y - 60)}`; }
-    s += `<path class="k6-smoke" style="animation-delay:-${i * 4}s" d="${d} L${x + 60} ${WALL - 60} Z" fill="#2a1a16" opacity="${.55 - i * .08}"/>`; });
-  /* the walls: bone-coloured, a crenellated line, towers, one tower down and a breach */
-  let wall = `M0 ${WALL - 120}`; for (let x = 0; x <= W; x += 40) { const hgt = WALL - 120 - (Math.floor(x / 40) % 2 ? 0 : 14); wall += ` L${x} ${hgt} L${x + 20} ${hgt}`; }
-  s += `<path d="${wall} L${W} ${WALL} L0 ${WALL} Z" fill="url(#k6wall)"/>`;
-  [180, 470, 1240, 1480].forEach((x, i) => s += `<rect x="${x - 50}" y="${WALL - 220 - (i % 2) * 30}" width="100" height="${220 + (i % 2) * 30}" fill="#b49a76"/><rect x="${x - 56}" y="${WALL - 232 - (i % 2) * 30}" width="112" height="16" fill="#8a7458"/>`);
-  s += `<path d="M780 ${WALL - 120} L820 ${WALL - 40} L860 ${WALL - 70} L900 ${WALL - 20} L950 ${WALL - 90} L990 ${WALL - 120} L990 ${WALL} L780 ${WALL} Z" fill="#3a2a20"/>`; // the breach
-  s += `<path d="M900 ${WALL - 30} l-60 12 l90 8 l-40 10 l70 -4 Z" fill="#9a8264"/>`; // tumbled stone
-  /* the bones in the walls: skulls and long bones set in the courses, picked from a seed */
-  for (let i = 0; i < 46; i++) { const x = 20 + h(i, 61) * (W - 40), y = WALL - 110 + h(i, 62) * 100; if (x > 770 && x < 1000) continue;
-    if (h(i, 63) > .6) s += `<g opacity=".55"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="7" ry="8" fill="#e8dcc4"/><circle cx="${f1(x - 2.5)}" cy="${f1(y - 1)}" r="1.8" fill="#3a2a20"/><circle cx="${f1(x + 2.5)}" cy="${f1(y - 1)}" r="1.8" fill="#3a2a20"/></g>`;
-    else s += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(14 + h(i, 64) * 16)}" height="3.2" rx="1.6" fill="#ece0c8" opacity=".5" transform="rotate(${f1((h(i, 65) - .5) * 30)} ${f1(x)} ${f1(y)})"/>`; }
-  /* embers in the breach */
-  for (let i = 0; i < 14; i++) s += `<circle class="k6-ember" style="animation-delay:-${f1(h(i, 66) * 2.4)}s" cx="${f1(800 + h(i, 67) * 170)}" cy="${f1(WALL - 20 - h(i, 68) * 80)}" r="${f1(1.5 + h(i, 69) * 2)}" fill="#ffb060"/>`;
-  /* the ground, the road and the barrows */
-  s += `<rect y="${WALL}" width="${W}" height="${H - WALL}" fill="url(#k6ground)"/>`;
-  s += `<path d="M880 ${WALL} L760 ${H} L1080 ${H} L920 ${WALL} Z" fill="#6a5238" opacity=".7"/>`;
-  [[260, 640, 150], [470, 600, 110], [1260, 610, 130], [1440, 660, 170], [120, 740, 190], [1360, 780, 160]].forEach(([x, y, w]) =>
-    s += `<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${f1(w * .28)}" fill="#3e2e20"/><ellipse cx="${x}" cy="${f1(y - w * .06)}" rx="${f1(w * .8)}" ry="${f1(w * .18)}" fill="#4e3a28"/>`);
-  /* a file of soldiers on the road, small, spears up */
-  let col = ''; for (let i = 0; i < 16; i++) { const t = i / 16, x = 900 - t * 90 + (i % 2) * 6, y = WALL + 30 + t * 210, k = .5 + t * .9;
-    col += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})"><rect x="-4" y="-22" width="8" height="18" fill="#1a120c"/><circle cx="0" cy="-26" r="4.5" fill="#1a120c"/><rect x="5" y="-40" width="1.6" height="36" fill="#1a120c"/><rect x="-4" y="-4" width="3" height="10" fill="#1a120c"/><rect x="1" y="-4" width="3" height="10" fill="#1a120c"/></g>`; }
-  s += `<g class="k6-march">${col}</g>`;
-  /* the foreground: a spear planted in the ground with a finger bone hanging from its thong */
-  s += `<rect x="1300" y="380" width="8" height="${H - 380}" fill="#2a1c12"/><path d="M1296 384 L1304 330 L1312 384 Z" fill="#8a8a88"/>
-<g class="k6-bone"><path d="M1304 420 L1290 500" stroke="#3a2a1a" stroke-width="2.5"/><g transform="translate(1290 500) rotate(-10)"><rect x="-6" y="0" width="12" height="44" rx="6" fill="#efe4cc"/><circle cx="0" cy="2" r="7" fill="#efe4cc"/><circle cx="0" cy="44" r="6" fill="#efe4cc"/><rect x="-1.2" y="8" width="2.4" height="30" fill="#c8b898" opacity=".6"/></g></g>`;
+<style>.k6-sm{animation:k6-sm 16s ease-in-out infinite}.k6-fl{animation:k6-fl 1.8s ease-in-out infinite}.k6-sw{animation:k6-sw 4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}.k6-wk{animation:k6-wk 2.4s ease-in-out infinite}
+@keyframes k6-sm{0%,100%{transform:translate(0,0)}50%{transform:translate(16px,-8px)}}@keyframes k6-fl{0%,100%{opacity:.7}50%{opacity:1}}@keyframes k6-sw{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}@keyframes k6-wk{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.7px)}}
+@media (prefers-reduced-motion:reduce){.k6-sm,.k6-fl,.k6-sw,.k6-wk{animation:none}}.reduce .k6-sm,.reduce .k6-fl,.reduce .k6-sw,.reduce .k6-wk{animation:none}</style>
+<defs><linearGradient id="k6sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#140608"/><stop offset=".4" stop-color="#4a1410"/><stop offset=".75" stop-color="#a0381a"/><stop offset="1" stop-color="#e07a3a"/></linearGradient>
+<linearGradient id="k6wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c89c7c"/><stop offset=".55" stop-color="#8a6048"/><stop offset="1" stop-color="#4a2c22"/></linearGradient>
+<linearGradient id="k6tow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dcac88"/><stop offset=".45" stop-color="#946a50"/><stop offset="1" stop-color="#3a2219"/></linearGradient>
+<linearGradient id="k6land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a3a22"/><stop offset=".3" stop-color="#3a2014"/><stop offset="1" stop-color="#0e0806"/></linearGradient>
+<radialGradient id="k6fire" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffc070" stop-opacity=".9"/><stop offset=".4" stop-color="#ff6a20" stop-opacity=".4"/><stop offset="1" stop-color="#ff6a20" stop-opacity="0"/></radialGradient>
+<linearGradient id="k6body" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a3022"/><stop offset=".3" stop-color="#22120c"/><stop offset="1" stop-color="#0a0504"/></linearGradient>
+<filter id="k6b24" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="24"/></filter><filter id="k6b8" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="8"/></filter></defs>
+<rect width="${W}" height="${H}" fill="url(#k6sky)"/>`;
+  /* the smoke over the city, great slow columns leaning east, lit from below */
+  s += `<g class="k6-sm">${TK.smoke(600, WALL - 110, 440, 70, 50, '#221a20', .85, 601, 'k6b24')}${TK.smoke(880, WALL - 120, 480, 80, 70, '#2a2026', .8, 603, 'k6b24')}${TK.smoke(1130, WALL - 100, 360, 56, 60, '#221a20', .75, 605, 'k6b24')}</g>`;
+  s += `<ellipse cx="820" cy="${WALL - 140}" rx="520" ry="110" fill="url(#k6fire)" opacity=".55"/>`;
+  /* the rise, and the city's roofs and domes behind the walls */
+  s += `<path d="M0 ${WALL + 60} Q300 ${WALL + 10} 560 ${WALL - 4} L1180 ${WALL - 4} Q1360 ${WALL + 10} ${W} ${WALL + 50} L${W} ${H} L0 ${H} Z" fill="url(#k6land)"/>`;
+  let rf = ''; for (let i = 0; i < 26; i++) { const x = 500 + i * 26 + h(i, 611) * 10, ht = 20 + h(i, 612) * 50; rf += h(i, 613) < .25 ? `<path d="M${f1(x)} ${WALL - 70} L${f1(x)} ${f1(WALL - 70 - ht * .6)} A18 18 0 0 1 ${f1(x + 36)} ${f1(WALL - 70 - ht * .6)} L${f1(x + 36)} ${WALL - 70} Z"/>` : `<rect x="${f1(x)}" y="${f1(WALL - 70 - ht)}" width="${f1(18 + h(i, 614) * 14)}" height="${f1(ht)}"/>`; }
+  s += `<g fill="#3a1c14">${rf}</g>`;
+  /* the walls: bone-coloured, the bones of older cities set in them, towers along them, one tower down and a breach */
+  const WX0 = 470, WX1 = 1250, WT = WALL - 92;
+  s += `<path d="M${WX0} ${WALL} L${WX0} ${WT} ${[...Array(27)].map((_, i) => { const x = WX0 + i * 30; return `L${x} ${WT} L${x} ${WT - 8} L${x + 15} ${WT - 8} L${x + 15} ${WT}`; }).join(' ')} L${WX1} ${WT} L${WX1} ${WALL} Z" fill="url(#k6wall)"/>`;
+  s += `<path d="M836 ${WALL} L846 ${WT + 4} L870 ${WT + 30} L890 ${WT + 10} L906 ${WT + 40} L918 ${WALL} Z" fill="#2a120c"/><path d="M846 ${WT + 4} L870 ${WT + 30} L890 ${WT + 10} L906 ${WT + 40}" stroke="#f0e0c0" stroke-width="1.4" fill="none" opacity=".6"/>`;
+  s += `<circle class="k6-fl" cx="878" cy="${WALL - 30}" r="34" fill="url(#k6fire)"/>`;
+  let bn = ''; for (let i = 0; i < 70; i++) { const x = WX0 + 8 + h(i, 621) * (WX1 - WX0 - 16), y = WT + 10 + h(i, 622) * 78; if (x > 830 && x < 924) continue; const k = h(i, 623);
+    bn += k < .25 ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.4" fill="#e8d4b4" stroke="#5a4030" stroke-width=".8" opacity=".85"/><circle cx="${f1(x - 1.2)}" cy="${f1(y - .4)}" r=".8" fill="#4a3826"/><circle cx="${f1(x + 1.2)}" cy="${f1(y - .4)}" r=".8" fill="#4a3826"/>` : `<path d="M${f1(x - 6)} ${f1(y)} L${f1(x + 6)} ${f1(y + (h(i, 624) - .5) * 4)}" stroke="#e8d4b4" stroke-width="1.8" stroke-linecap="round" opacity=".55"/>`; }
+  s += bn + `<path d="M${WX0} ${WT + 30} L${WX1} ${WT + 30} M${WX0} ${WT + 60} L${WX1} ${WT + 60}" stroke="#7a6448" stroke-width="1" opacity=".5"/>`;
+  const tower = (x, w, ht, fallen) => fallen ? `<path d="M${x} ${WALL} L${x} ${WT - 20} L${x + w * .3} ${WT - 34} L${x + w * .55} ${WT - 14} L${x + w} ${WT - 26} L${x + w} ${WALL} Z" fill="url(#k6tow)"/><g fill="#a88a6c">${[...Array(7)].map((_, i) => `<rect x="${f1(x + w + 4 + h(i, 631) * 50)}" y="${f1(WALL - 6 - h(i, 632) * 12)}" width="${f1(6 + h(i, 633) * 10)}" height="${f1(4 + h(i, 634) * 6)}" transform="rotate(${f1((h(i, 635) - .5) * 60)} ${f1(x + w + 10)} ${WALL - 6})"/>`).join('')}</g>`
+    : `<rect x="${x}" y="${WT - ht}" width="${w}" height="${ht + WALL - WT}" fill="url(#k6tow)"/><path d="M${x - 4} ${WT - ht} ${[...Array(4)].map((_, i) => `L${x - 4 + i * (w + 8) / 4} ${WT - ht - 9} L${x - 4 + (i + .5) * (w + 8) / 4} ${WT - ht - 9} L${x - 4 + (i + .5) * (w + 8) / 4} ${WT - ht}`).join(' ')} L${x + w + 4} ${WT - ht} Z" fill="#b88a6c"/><rect x="${x + w / 2 - 3}" y="${WT - ht + 20}" width="6" height="12" fill="#2a120c"/>`;
+  s += tower(450, 50, 70) + tower(640, 46, 56) + tower(1000, 48, 62) + tower(1226, 54, 80) + tower(760, 46, 0, true);
+  s += `<path d="M${WX0} ${WALL} L${WX1} ${WALL}" stroke="#2a120c" stroke-width="5"/>`;
+  /* the road to the breach, the barrows along it, the file on it */
+  s += `<path d="M862 ${WALL} L894 ${WALL} L1180 ${H} L520 ${H} Z" fill="#7a4a2a" opacity=".55"/>`;
+  let br = ''; for (let i = 0; i < 9; i++) { const t = Math.pow((i + 1) / 10, 1.6), y = WALL + 10 + t * (H - WALL - 30), w = 14 + t * 160; for (const sd of [-1, 1]) { const x = 878 + sd * (30 + t * 520);
+    br += `<path d="M${f1(x - w)} ${f1(y)} Q${f1(x - w * .7)} ${f1(y - w * .3)} ${f1(x)} ${f1(y - w * .32)} Q${f1(x + w * .7)} ${f1(y - w * .3)} ${f1(x + w)} ${f1(y)} Z" fill="#2a140c"/><path d="M${f1(x - w * .7)} ${f1(y - w * .22)} Q${f1(x - w * .4)} ${f1(y - w * .31)} ${f1(x)} ${f1(y - w * .32)}" stroke="#e08a50" stroke-width="${f1(.8 + t * 1.4)}" fill="none" opacity=".3"/><rect x="${f1(x - 1 - t * 2)}" y="${f1(y - w * .32 - 4 - t * 30)}" width="${f1(2 + t * 4)}" height="${f1(4 + t * 30)}" fill="#1a0c08"/>`; } }
+  s += br;
+  let fl = ''; for (let i = 0; i < 40; i++) { const t = Math.pow(i / 40, 1.5), y = WALL + 6 + t * 150, x = 878 + (h(i, 641) - .5) * (6 + t * 70), k = .25 + t * .5; fl += TK.walker(x, y, k, i, '#140806', {spears:.5}); }
+  s += `<g class="k6-wk">${fl}</g>`;
+  /* the foreground: the spear and the finger bone on its thong; two of them beside it */
+  s += `<path d="M560 ${H} Q800 800 1100 790 Q1400 782 1600 800 L1600 ${H} Z" fill="#0c0604"/>${TK.rim('M600 890 Q800 802 1100 792 Q1400 784 1600 802', '#ff9a5a', 1.6, .4)}`;
+  s += `<path d="M1090 830 L1110 380" stroke="#2a1810" stroke-width="7" stroke-linecap="round"/><path d="M1111 340 L1118 384 L1102 382 Z" fill="#b8b0a0" stroke="#0a0504" stroke-width="1.4"/>${TK.rim('M1108 392 L1092 820', '#ffb070', 1.4, .45)}`;
+  s += `<path d="M1101 400 L1110 402" stroke="#3a2418" stroke-width="5"/><g class="k6-sw"><path d="M1105 402 Q1100 420 1104 440" stroke="#4a3020" stroke-width="2" fill="none"/><g transform="translate(1104 450)"><rect x="-4" y="-10" width="8" height="24" rx="4" fill="#f0e6d0" stroke="#5a4428" stroke-width="1.4"/><circle cx="0" cy="-10" r="4.6" fill="#f0e6d0" stroke="#5a4428" stroke-width="1.4"/><circle cx="0" cy="14" r="4" fill="#f0e6d0" stroke="#5a4428" stroke-width="1.4"/></g></g>`;
+  const B = {fill:'url(#k6body)', dark:'#120806', rim:'#ffa870', helmc:'#3a2620', packc:'#2a1810', roll:'#3a2416', ink:'#060202'};
+  s += `<g transform="translate(1300 860) scale(.86)">${TK.back(Object.assign({}, B, {kit:'xbow', head:'helm', cloak:'#1c0e0a'}))}</g><g transform="translate(1450 880) scale(.94)">${TK.back(Object.assign({}, B, {kit:'shield', head:'wrap', helmc:'#5a3a26', shieldc:'#2a1610', shieldr:'#6a3a22', wide:1.1}))}</g>`;
   s += `</svg>`;
   ART['title/bh'] = s; ART_SIZE['title/bh'] = [W, H];
 

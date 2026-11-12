@@ -8,55 +8,60 @@
    struck through.
    Motion: the .k7-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, SEA = 470, SHORE = 600; // the horizon, and the waterline
+  /* redrawn v13.2 from a seeded generator (019f's kit): night on the Lether coast; the transports burning at anchor all along the water, so
+     there is no way back (rg-canon §2, W13: "burned the transports"); their smoke going up into the low cloud and the cloud lit from below;
+     the fire doubled in the sea; a beach, and dunes with grass; the column walking up off the beach, away from the fire, into dark country;
+     the nearest of them on the dune crest, black against the burning, none looking back; and on the sand in front a charred prow-timber. */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, SEA = 470, SHORE = 600; // the horizon, and the waterline
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
 <style>.k7-flame{animation:k7-flame 1.1s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}.k7-ember{animation:k7-ember 3s linear infinite}
 .k7-glint{animation:k7-glint 2.6s ease-in-out infinite}.k7-march{animation:k7-march 1.4s ease-in-out infinite}.k7-smoke{animation:k7-smoke 16s ease-in-out infinite}
-@keyframes k7-flame{0%,100%{transform:scale(1,1)}50%{transform:scale(1.08,1.18)}}
-@keyframes k7-ember{0%{transform:translate(0,0);opacity:0}15%{opacity:.9}100%{transform:translate(-30px,-160px);opacity:0}}
-@keyframes k7-glint{0%,100%{opacity:.25}50%{opacity:.8}}
-@keyframes k7-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
-@keyframes k7-smoke{0%,100%{transform:translate(0,0)}50%{transform:translate(-24px,-6px)}}
+@keyframes k7-flame{0%,100%{transform:scale(1,1)}50%{transform:scale(1.08,1.18)}}@keyframes k7-ember{0%{transform:translate(0,0);opacity:1}100%{transform:translate(30px,-120px);opacity:0}}
+@keyframes k7-glint{0%,100%{opacity:.25}50%{opacity:.7}}@keyframes k7-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.8px)}}@keyframes k7-smoke{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-8px)}}
 @media (prefers-reduced-motion:reduce){.k7-flame,.k7-ember,.k7-glint,.k7-march,.k7-smoke{animation:none}}.reduce .k7-flame,.reduce .k7-ember,.reduce .k7-glint,.reduce .k7-march,.reduce .k7-smoke{animation:none}</style>
-<defs><linearGradient id="k7sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05070e"/><stop offset=".55" stop-color="#1a1420"/><stop offset=".86" stop-color="#5a2a1c"/><stop offset="1" stop-color="#a04a22"/></linearGradient>
-<linearGradient id="k7sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1a18"/><stop offset="1" stop-color="#0a0c12"/></linearGradient>
-<linearGradient id="k7sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3a2c"/><stop offset="1" stop-color="#14100c"/></linearGradient>
-<radialGradient id="k7glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff9a40" stop-opacity=".7"/><stop offset="1" stop-color="#ff6a20" stop-opacity="0"/></radialGradient></defs>
+<defs><linearGradient id="k7sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05040a"/><stop offset=".5" stop-color="#1a0e14"/><stop offset=".85" stop-color="#5a2416"/><stop offset="1" stop-color="#a04a1e"/></linearGradient>
+<linearGradient id="k7sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a2a1a"/><stop offset=".4" stop-color="#2a1416"/><stop offset="1" stop-color="#0a080e"/></linearGradient>
+<linearGradient id="k7sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4030"/><stop offset=".5" stop-color="#2a1a14"/><stop offset="1" stop-color="#0c0806"/></linearGradient>
+<linearGradient id="k7fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff0c0"/><stop offset=".3" stop-color="#ffb050"/><stop offset=".75" stop-color="#e05a1a"/><stop offset="1" stop-color="#a02a10" stop-opacity="0"/></linearGradient>
+<radialGradient id="k7glow" cx=".5" cy=".6" r=".5"><stop offset="0" stop-color="#ff9a40" stop-opacity=".7"/><stop offset=".5" stop-color="#d0501a" stop-opacity=".2"/><stop offset="1" stop-color="#d0501a" stop-opacity="0"/></radialGradient>
+<filter id="k7b20" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="20"/></filter><filter id="k7b4" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter></defs>
 <rect width="${W}" height="${H}" fill="url(#k7sky)"/>`;
-  /* stars, thin, where the smoke has not reached */
-  for (let i = 0; i < 70; i++) { const x = h(i, 71) * W, y = h(i, 72) * SEA * .55; s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(.6 + h(i, 73) * 1.1)}" fill="#e8e4f0" opacity="${f1(.2 + h(i, 74) * .5)}"/>`; }
-  /* the smoke of the fleet, lying west along the coast under the cloud */
-  for (let i = 0; i < 5; i++) { const y = 150 + i * 46, w = 1400 - i * 120; s += `<ellipse class="k7-smoke" style="animation-delay:-${i * 3}s" cx="${700 + i * 40}" cy="${y}" rx="${w / 2}" ry="${34 + i * 6}" fill="#2a1814" opacity="${f1(.35 - i * .04)}"/>`; }
-  /* the sea, with the light of the fires on it */
+  /* the low cloud, lit from under by the fires */
+  s += `<g filter="url(#k7b20)">${[...Array(12)].map((_, i) => `<ellipse cx="${f1(h(i, 701) * W)}" cy="${f1(150 + h(i, 702) * 200)}" rx="${f1(200 + h(i, 703) * 300)}" ry="${f1(26 + h(i, 704) * 40)}" fill="${h(i, 705) < .5 ? '#6a2a1a' : '#2a1418'}" opacity="${f1(.4 + h(i, 706) * .4)}"/>`).join('')}</g>`;
+  /* the sea */
   s += `<rect y="${SEA}" width="${W}" height="${SHORE - SEA + 40}" fill="url(#k7sea)"/>`;
-  /* the transports burning at anchor, a long line of them, smaller further off */
-  const ships = []; for (let i = 0; i < 11; i++) { const t = i / 10, x = 120 + t * 1360 + (h(i, 75) - .5) * 60, k = .55 + h(i, 76) * .6; ships.push([x, k]); }
-  ships.forEach(([x, k], i) => { const y = SEA + 18 + k * 14, hw = 60 * k, mast = 110 * k;
-    s += `<ellipse cx="${f1(x)}" cy="${f1(y - mast * .4)}" rx="${f1(hw * 2.4)}" ry="${f1(mast * .9)}" fill="url(#k7glow)"/>`;
-    s += `<path d="M${f1(x - hw)} ${f1(y - 10 * k)} L${f1(x + hw)} ${f1(y - 10 * k)} L${f1(x + hw * .8)} ${f1(y + 6 * k)} L${f1(x - hw * .8)} ${f1(y + 6 * k)} Z" fill="#120a08"/>`;
-    s += `<rect x="${f1(x - 2 * k)}" y="${f1(y - mast)}" width="${f1(4 * k)}" height="${f1(mast)}" fill="#160c0a"/><rect x="${f1(x - hw * .5)}" y="${f1(y - mast * .78)}" width="${f1(hw)}" height="${f1(3 * k)}" fill="#160c0a" transform="rotate(${f1((h(i, 77) - .5) * 20)} ${f1(x)} ${f1(y - mast * .78)})"/>`;
-    for (let j = 0; j < 3; j++) { const fx = x + (j - 1) * hw * .5, fh = (40 + h(i * 3 + j, 78) * 50) * k;
-      s += `<path class="k7-flame" style="animation-delay:-${f1(h(i * 3 + j, 79) * 1.1)}s" d="M${f1(fx - 12 * k)} ${f1(y - 8 * k)} Q${f1(fx - 10 * k)} ${f1(y - fh * .6)} ${f1(fx)} ${f1(y - fh)} Q${f1(fx + 10 * k)} ${f1(y - fh * .6)} ${f1(fx + 12 * k)} ${f1(y - 8 * k)} Z" fill="${j === 1 ? '#ffd080' : '#ff8a30'}" opacity=".9"/>`; }
-    for (let j = 0; j < 6; j++) { const ry = SEA + 34 + j * 14, rw = (30 - j * 3) * k; s += `<rect class="k7-glint" style="animation-delay:-${f1(h(i * 6 + j, 80) * 2.6)}s" x="${f1(x - rw / 2 + (h(i * 6 + j, 81) - .5) * 20)}" y="${f1(ry)}" width="${f1(rw)}" height="2" fill="#ffb060" opacity=".5"/>`; } });
-  /* embers going up off the fleet */
-  for (let i = 0; i < 26; i++) { const [x] = ships[i % ships.length]; s += `<circle class="k7-ember" style="animation-delay:-${f1(h(i, 82) * 3)}s" cx="${f1(x + (h(i, 83) - .5) * 60)}" cy="${f1(SEA - 20 - h(i, 84) * 40)}" r="${f1(1.2 + h(i, 85) * 1.6)}" fill="#ffc070"/>`; }
-  /* the beach and the dunes, rising to the right, inland */
-  s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE + 4} T${W} ${SHORE - 30} L${W} ${H} L0 ${H} Z" fill="url(#k7sand)"/>`;
-  s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE + 4} T${W} ${SHORE - 30}" stroke="#ff9a50" stroke-width="2" fill="none" opacity=".35"/>`;
-  s += `<path d="M760 ${H} Q900 700 1080 640 Q1260 590 1600 520 L1600 ${H} Z" fill="#1c140e"/><path d="M1000 ${H} Q1150 760 1320 690 Q1460 640 1600 610 L1600 ${H} Z" fill="#120d09"/>`;
-  /* the column going up from the beach into the dark, small, spears up, nobody looking back */
-  /* the land's top edge at x: the beach's waterline, or the dune's crest where the dune stands higher; every foot is set on or below it (v12.0.3: none on the water) */
-  const qb = (a, c, b, t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * c + t * t * b;
-  const edge = segs => { const pts = []; segs.forEach(([x0, y0, cx, cy, x1, y1]) => { for (let j = 0; j <= 40; j++) { const t = j / 40; pts.push([qb(x0, cx, x1, t), qb(y0, cy, y1, t)]); } }); return x => { let best = 1e9; for (let j = 1; j < pts.length; j++) { const [ax, ay] = pts[j - 1], [bx, by] = pts[j]; if ((x - ax) * (x - bx) <= 0 && ax !== bx) best = Math.min(best, ay + (by - ay) * (x - ax) / (bx - ax)); } return best; }; };
-  const beach = edge([[0, SHORE, 400, SHORE - 14, 800, SHORE + 4], [800, SHORE + 4, 1200, SHORE + 22, W, SHORE - 30]]), dune = edge([[760, H, 900, 700, 1080, 640], [1080, 640, 1260, 590, W, 520]]);
-  const land = x => Math.min(beach(x), dune(x));
-  let col = ''; for (let i = 0; i < 18; i++) { const t = i / 17, x = 640 + t * 820, k = 1.1 - t * .6, y = Math.max(SHORE + 50 - t * 120 + Math.sin(t * 6) * 8, land(x) + 14 * k);
-    col += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})"><rect x="-4" y="-22" width="8" height="18" fill="#0a0806"/><circle cx="0" cy="-26" r="4.5" fill="#0a0806"/><rect x="-6" y="-20" width="5" height="12" fill="#0a0806"/><rect x="5" y="-42" width="1.6" height="38" fill="#0a0806"/><rect x="-4" y="-4" width="3" height="10" fill="#0a0806"/><rect x="1" y="-4" width="3" height="10" fill="#0a0806"/></g>`; }
+  /* the ships at anchor, burning; each with a glow, a hull, masts, flames, smoke, and its fire in the water */
+  const ships = [[70, .5], [190, .62], [330, .78], [480, .95], [640, 1.15], [800, .9], [930, .72], [1060, .6], [1180, .52], [1300, .44], [1420, .4], [1530, .36]];
+  let sm = '', gl = '', sh = '', rf = '';
+  ships.forEach(([x, k], i) => { const y = SEA + 18 + k * 18, w = 70 * k;
+    sm += TK.smoke(x, y - 80 * k, 240 + k * 120, 40 * k + 14, 50, '#1e1214', .3, 711 + i, 'k7b20');
+    gl += `<ellipse cx="${x}" cy="${f1(y - 30 * k)}" rx="${f1(140 * k)}" ry="${f1(90 * k)}" fill="url(#k7glow)"/>`;
+    rf += `<path d="M${f1(x - w * .5)} ${f1(y + 4)} L${f1(x + w * .5)} ${f1(y + 4)} L${f1(x + w * .3)} ${f1(y + 110 * k)} L${f1(x - w * .3)} ${f1(y + 110 * k)} Z" fill="#ff9040" opacity=".22" filter="url(#k7b4)"/>`;
+    for (let j = 0; j < 8; j++) rf += `<path class="k7-glint" style="animation-delay:-${f1(h(i * 9 + j, 721) * 2.6)}s" d="M${f1(x - w * .4 + h(i * 9 + j, 722) * w * .8)} ${f1(y + 8 + j * 12 * k)} l${f1(10 + h(i * 9 + j, 723) * 20 * k)} 0" stroke="#ffc070" stroke-width="${f1(1 + k)}"/>`;
+    sh += `<path d="M${f1(x - w)} ${f1(y - 14 * k)} Q${f1(x - w * .9)} ${f1(y)} ${f1(x - w * .6)} ${f1(y + 2)} L${f1(x + w * .7)} ${f1(y + 2)} Q${f1(x + w)} ${f1(y - 2)} ${f1(x + w * 1.08)} ${f1(y - 22 * k)} L${f1(x + w * .8)} ${f1(y - 12 * k)} L${f1(x - w * .8)} ${f1(y - 10 * k)} Z" fill="#0a0506"/>`;
+    const m1 = i % 3 === 0 ? 70 : 118, m2 = i % 2 ? 46 : 92, lean1 = (h(i, 736) - .5) * 30, lean2 = (h(i, 737) - .5) * 40;
+    sh += `<path d="M${f1(x - w * .2)} ${f1(y - 10 * k)} L${f1(x - w * .2 + lean1 * k)} ${f1(y - m1 * k)} M${f1(x + w * .35)} ${f1(y - 10 * k)} L${f1(x + w * .35 + lean2 * k)} ${f1(y - m2 * k)}" stroke="#0a0506" stroke-width="${f1(1.4 + 2 * k)}" stroke-linecap="round"/>`;
+    sh += `<path d="M${f1(x - w * .2 + lean1 * k)} ${f1(y - m1 * k)} Q${f1(x + w * .2)} ${f1(y - m1 * k * .5)} ${f1(x + w * .9)} ${f1(y - 16 * k)} M${f1(x - w * .2 + lean1 * k * .8)} ${f1(y - m1 * k * .8)} Q${f1(x - w * .6)} ${f1(y - m1 * k * .4)} ${f1(x - w * .9)} ${f1(y - 12 * k)}" stroke="#0a0506" stroke-width="${f1(.6 + k * .6)}" fill="none" opacity=".8"/>`;
+    sh += `<ellipse cx="${x}" cy="${f1(y - 16 * k)}" rx="${f1(w * .95)}" ry="${f1(18 * k)}" fill="#ffb050" opacity=".55" filter="url(#k7b4)"/>`;
+    for (let j = 0; j < 7; j++) { const fx = x - w * .75 + j * w * .25 + (h(i * 9 + j, 731) - .5) * 10 * k, fh = (30 + h(i * 9 + j, 732) * 80 * (j > 1 && j < 5 ? 1.3 : .8)) * k, fw = (9 + h(i * 9 + j, 733) * 9) * k, sw = (h(i * 9 + j, 735) - .3) * fw * 1.6, b = y - 8 * k;
+      sh += `<path class="k7-flame" style="animation-delay:-${f1(h(i * 9 + j, 734) * 1.1)}s" d="M${f1(fx - fw)} ${f1(b)} C${f1(fx - fw)} ${f1(b - fh * .4)} ${f1(fx - fw * .1)} ${f1(b - fh * .55)} ${f1(fx + sw)} ${f1(b - fh)} C${f1(fx + fw * .4)} ${f1(b - fh * .6)} ${f1(fx + fw * 1.1)} ${f1(b - fh * .35)} ${f1(fx + fw)} ${f1(b)} Z" fill="url(#k7fl)"/>`; }
+    for (let j = 0; j < 4; j++) sh += `<circle class="k7-ember" style="animation-delay:-${f1(h(i * 5 + j, 741) * 3)}s" cx="${f1(x + (h(i * 5 + j, 742) - .5) * w)}" cy="${f1(y - 60 * k)}" r="${f1(1 + k)}" fill="#ffd080"/>`; });
+  s += `<g class="k7-smoke">${sm}</g>${gl}${rf}${sh}`;
+  /* the shore: a lit line of surf, the wet sand, the beach, the dunes */
+  s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE - 4} Q1200 ${SHORE + 6} ${W} ${SHORE - 10} L${W} ${H} L0 ${H} Z" fill="url(#k7sand)"/>`;
+  s += `<path d="M0 ${SHORE} Q400 ${SHORE - 14} 800 ${SHORE - 4} Q1200 ${SHORE + 6} ${W} ${SHORE - 10}" stroke="#ffb070" stroke-width="2" fill="none" opacity=".45"/>`;
+  s += `<path d="M0 ${SHORE + 50} Q300 ${SHORE + 20} 560 ${SHORE + 40} Q900 ${SHORE + 10} 1200 ${SHORE + 30} Q1420 ${SHORE + 14} ${W} ${SHORE + 30} L${W} ${H} L0 ${H} Z" fill="#1c100c"/>`;
+  s += `<path d="M860 ${H} Q1000 740 1200 724 Q1420 712 ${W} 730 L${W} ${H} Z" fill="#0a0605"/>${TK.rim('M900 880 Q1020 744 1200 726 Q1420 714 1600 732', '#ff9a50', 1.8, .5)}`;
+  let gr = ''; for (let i = 0; i < 120; i++) { const x = 920 + h(i, 751) * 680, y = 732 + h(i, 752) * 20 + (x < 1200 ? (1200 - x) * .48 : 0), l = 10 + h(i, 753) * 26; if (y > 900) continue; gr += `M${f1(x)} ${f1(y)} q${f1((h(i, 754) - .5) * 8)} ${f1(-l * .5)} ${f1((h(i, 754) - .3) * 14)} ${f1(-l)}`; }
+  s += `<path d="${gr}" stroke="#140a06" stroke-width="1.4" fill="none"/><path d="${gr}" stroke="#ff9a50" stroke-width=".5" fill="none" opacity=".25" transform="translate(-1 0)"/>`;
+  /* the column walking up off the beach toward the dunes, away from the fire */
+  let col = ''; for (let i = 0; i < 44; i++) { const t = i / 44, x = 420 + t * 640 + (h(i, 761) - .5) * 30, y = SHORE + 40 + t * 90 - Math.pow(t, 3) * 30 + Math.sin(t * 9) * 8 + (h(i, 762) - .5) * 10, k = .4 + t * .6; col += TK.walker(x, y, k, i, '#080404', {spears:.5, lean:1}); }
   s += `<g class="k7-march">${col}</g>`;
-  /* the foreground: a charred prow-timber half in the sand, its carved head burned away */
-  s += `<g transform="translate(260 790) rotate(-14)"><path d="M-160 20 Q-40 -10 80 -40 Q130 -60 150 -110 Q160 -130 170 -120 Q168 -80 120 -20 Q60 30 -150 46 Z" fill="#1a0f0a"/>
-<path d="M-120 22 Q0 0 100 -30" stroke="#ff7a30" stroke-width="2" fill="none" opacity=".45"/><path d="M140 -100 Q150 -112 158 -114" stroke="#ff9a40" stroke-width="3" fill="none" opacity=".6" class="k7-glint"/></g>`;
+  /* the nearest of them on the crest, black against the burning */
+  const B = {fill:'#0a0505', dark:'#070303', rim:'#ff9a50', helmc:'#0e0807', packc:'#0c0606', roll:'#0e0807', ink:'#040202', walk:1};
+  s += `<g transform="translate(1290 742) scale(.8)">${TK.back(Object.assign({}, B, {kit:'spear', head:'helm', cloak:'#0c0606', pack:false}))}</g><g transform="translate(1440 760) scale(.9)">${TK.back(Object.assign({}, B, {kit:'none', head:'cap', pack:false, wide:1.1, flip:true}))}</g>`;
+  /* the charred prow-timber on the sand */
+  s += `<path d="M640 860 Q700 820 790 800 Q860 784 900 740 Q910 728 918 740 Q910 780 870 810 Q790 846 660 878 Z" fill="#100806" stroke="#040202" stroke-width="2"/>${TK.rim('M660 856 Q720 822 790 804 Q856 788 896 744', '#ff8a40', 2, .55)}<circle class="k7-glint" cx="880" cy="776" r="2.4" fill="#ff8a40"/><circle class="k7-glint" style="animation-delay:-1s" cx="820" cy="802" r="2" fill="#ff8a40"/>`;
   s += `</svg>`;
   ART['title/rg'] = s; ART_SIZE['title/rg'] = [W, H];
 

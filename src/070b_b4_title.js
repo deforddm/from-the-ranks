@@ -7,67 +7,62 @@
    tally strokes, a finger bone on a thong across the tally, and the shared flame on the left.
    Motion: the .k4-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, HZ = 560; // the horizon
-  const roadX = v => 820 + (1 - v) * -40 + Math.sin(v * 3) * 30, roadY = v => HZ + 6 + Math.pow(1 - v, 1.9) * (H - HZ); // v: 0 near … 1 at the horizon
-  const roadW = v => 6 + Math.pow(1 - v, 1.6) * 520;
+  /* redrawn v13.2 from a seeded generator (019f's kit): the low sun through the haze; the Whirlwind across the north as a towering wall of
+     dust, lit gold on its western face; the road running out of the foreground to the horizon between the empty spiked trees of the Aren
+     Way; the column on the road, the standard at its head; and on the road's edge in the foreground, seen from behind, three of the Third
+     walking north, wraps over their helms. */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, HZ = 540, VX = 820;
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-<style>.k4-dust{animation:k4-dust 22s linear infinite}.k4-dust2{animation:k4-dust 34s linear infinite reverse}.k4-wall{animation:k4-wall 11s ease-in-out infinite}
-.k4-sun{animation:k4-sun 7s ease-in-out infinite}.k4-haze{animation:k4-haze 3.4s ease-in-out infinite}.k4-flag{animation:k4-flag 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:0 50%}
-.k4-march{animation:k4-march 1.1s ease-in-out infinite}
-@keyframes k4-dust{from{transform:translate(0,0)}to{transform:translate(-400px,0)}}
-@keyframes k4-wall{0%,100%{opacity:.86;transform:translate(0,0)}50%{opacity:1;transform:translate(-14px,-6px)}}
-@keyframes k4-sun{0%,100%{opacity:.9}50%{opacity:1}}
-@keyframes k4-haze{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1.5px)}}
-@keyframes k4-flag{0%,100%{transform:skewY(0)}50%{transform:skewY(-5deg)}}
-@keyframes k4-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
-@media (prefers-reduced-motion: reduce){.k4-dust,.k4-dust2,.k4-wall,.k4-sun,.k4-haze,.k4-flag,.k4-march{animation:none}}.reduce .k4-dust,.reduce .k4-dust2,.reduce .k4-wall,.reduce .k4-haze,.reduce .k4-flag,.reduce .k4-march{animation:none}</style>
-<defs>
-<linearGradient id="k4-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1612"/><stop offset=".35" stop-color="#4a3a2a"/><stop offset=".55" stop-color="#8a6a42"/><stop offset=".62" stop-color="#c49a5a"/><stop offset=".64" stop-color="#d8b070"/></linearGradient>
-<radialGradient id="k4-sunglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff0c8" stop-opacity=".95"/><stop offset=".18" stop-color="#ffd890" stop-opacity=".7"/><stop offset=".5" stop-color="#e0a050" stop-opacity=".25"/><stop offset="1" stop-color="#a06030" stop-opacity="0"/></radialGradient>
-<linearGradient id="k4-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7a4a"/><stop offset=".08" stop-color="#6e5434"/><stop offset=".4" stop-color="#3a2c1c"/><stop offset="1" stop-color="#140f0a"/></linearGradient>
-<linearGradient id="k4-wallg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a878" stop-opacity="0"/><stop offset=".25" stop-color="#b8925e" stop-opacity=".55"/><stop offset=".7" stop-color="#a07a4a" stop-opacity=".85"/><stop offset="1" stop-color="#8a6a40" stop-opacity=".9"/></linearGradient>
-<linearGradient id="k4-road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b89868"/><stop offset="1" stop-color="#5a4630"/></linearGradient>
-<linearGradient id="k4-vig" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".7"/><stop offset=".45" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
-<radialGradient id="k4-vig2" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
-</defs>
-<rect width="${W}" height="${HZ + 4}" fill="url(#k4-sky)"/>`;
-  for (let i = 0; i < 40; i++) s += `<rect x="${f1(h(i, 401) * W)}" y="${f1(Math.pow(h(i, 402), 1.8) * HZ * .4)}" width="1.6" height="1.6" fill="#e8dcc8" opacity="${f1(.2 + h(i, 403) * .4)}"/>`; // the last stars
-  s += `<g class="k4-sun"><circle cx="470" cy="${HZ - 36}" r="300" fill="url(#k4-sunglow)"/><circle cx="470" cy="${HZ - 36}" r="38" fill="#fff4d8"/></g>`; // the low sun
-  for (let i = 0; i < 7; i++) { const y = 330 + i * 30 + h(i, 421) * 14, cx = 120 + h(i, 404) * 900, w = 120 + h(i, 405) * 260; s += `<ellipse cx="${f1(cx)}" cy="${f1(y)}" rx="${f1(w)}" ry="${f1(3 + h(i, 422) * 4)}" fill="#2a1e14" opacity="${f1(.22 + h(i, 423) * .2)}"/><ellipse cx="${f1(cx)}" cy="${f1(y + 3)}" rx="${f1(w * .8)}" ry="1.2" fill="#f0c080" opacity=".28"/>`; } // thin cloud lit from below
-  /* the Whirlwind: a wall of dust standing up off the horizon to the right, streaked, with a brighter edge where the sun catches it */
-  let wall = `M 640 ${HZ + 4}`; for (let i = 0; i <= 40; i++) { const k = i / 40, x = 640 + k * 1000, rise = Math.min(1, k * 3.2), y = HZ - rise * (150 + Math.sin(i * .55) * 22 + h(i, 406) * 26); wall += ` L ${f1(x)} ${f1(Math.min(HZ, y))}`; } wall += ` L 1640 ${HZ + 4} Z`; // rising out of the haze on the left, a cliff of sand to the right
-  s += `<g class="k4-wall"><path d="${wall}" fill="url(#k4-wallg)"/>`;
-  for (let i = 0; i < 30; i++) { const x = 760 + h(i, 407) * 860, y = HZ - 20 - h(i, 408) * 150 * Math.min(1, (x - 640) / 320); s += `<path d="M ${f1(x)} ${f1(y)} q 40 -12 90 ${f1(-4 - h(i, 409) * 8)}" stroke="#d8b886" stroke-opacity="${f1(.12 + h(i, 410) * .2)}" stroke-width="${f1(2 + h(i, 411) * 4)}" fill="none"/>`; }
-  s += `<path d="M 700 ${HZ - 40} Q 900 ${HZ - 175} 1100 ${HZ - 168} T 1640 ${HZ - 170}" stroke="#f0d098" stroke-opacity=".3" stroke-width="5" fill="none"/></g>`;
-  /* the land: the far ridges, the ground, dune crests */
-  s += `<path d="M0 ${HZ - 8} Q 160 ${HZ - 26} 320 ${HZ - 12} T 640 ${HZ - 10} T 900 ${HZ - 4} L 900 ${HZ + 6} L 0 ${HZ + 6} Z" fill="#5a4630" opacity=".85"/>`;
-  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k4-ground)"/>`;
-  for (let i = 0; i < 6; i++) { const y = HZ + 40 + i * i * 9; s += `<path d="M0 ${y} Q 200 ${y - 10} 400 ${y} T 800 ${y} T 1200 ${y} T 1600 ${y}" stroke="#c89a5a" stroke-opacity="${f1(.06 + i * .02)}" stroke-width="1.5" fill="none"/>`; }
-  /* the road: out of the foreground and up to the horizon */
-  let rl = '', rr = ''; for (let i = 0; i <= 24; i++) { const v = i / 24, x = roadX(v), y = roadY(v), w = roadW(v) / 2; rl += `${i ? ' L' : 'M'} ${f1(x - w)} ${f1(y)}`; rr = ` L ${f1(x + w)} ${f1(y)}` + rr; }
-  s += `<path d="${rl}${rr} Z" fill="url(#k4-road)" opacity=".55"/>`;
-  /* the spiked trees of the Aren Way, empty, along both sides of the road */
-  for (let i = 0; i < 14; i++) { const v = .12 + i * .06, side = i % 2 ? 1 : -1, x = roadX(v) + side * (roadW(v) / 2 + 20 + (1 - v) * 60), y = roadY(v), sc = Math.max(.12, Math.pow(1 - v, 1.3)) * 1.6;
-    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 10) / 10})" fill="#1a120c"><rect x="-3" y="-120" width="6" height="120"/><path d="M0 -110 L -28 -150 L -24 -152 L 2 -118 Z"/><path d="M0 -90 L 30 -130 L 33 -126 L 4 -86 Z"/><path d="M0 -70 L -20 -96 L -17 -98 L 2 -74 Z"/><circle cx="0" cy="-64" r="1.6" fill="#6a4a30"/></g>`; }
-  /* the column: soldiers four abreast on the road, smaller into the distance, the dust they raise */
-  s += `<g class="k4-march">`;
-  for (let i = 0, v = .08; i < 400 && v < .94; i++) { if (i % 4 === 0 && i) v += .005 + .06 * Math.pow(1 - v, 2.4); const row = i % 4, x = roadX(v) + (row - 1.5) * roadW(v) * .14, y = roadY(v), sc = Math.max(.1, Math.pow(1 - v, 1.5)) * 2.2;
-    if (i % 22 === 0) s += `<ellipse cx="${f1(roadX(v))}" cy="${f1(y - 10 * sc)}" rx="${f1(roadW(v) * .5)}" ry="${f1(12 * sc + 2)}" fill="#c8a070" opacity=".12"/>`;
-    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 100) / 100})" fill="#120c08"><rect x="-3" y="-22" width="6" height="18"/><circle cx="0" cy="-26" r="3.6"/><rect x="-3" y="-4" width="2.4" height="5"/><rect x=".6" y="-4" width="2.4" height="5"/>${i % 7 === 3 ? '<rect x="3" y="-40" width="1.2" height="36"/>' : ''}${i % 5 === 1 ? '<ellipse cx="-4" cy="-14" rx="3.5" ry="5"/>' : ''}</g>`; }
-  s += `</g>`;
-  /* the standard at the head of the nearer column: a thin figure holding up a bone before a sandstorm, on a tall pole */
-  { const v = .2, x = roadX(v) + roadW(v) * .32, y = roadY(v), sc = Math.pow(1 - v, 1.5) * 2.6;
-    s += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc * 100) / 100})"><rect x="-1.2" y="-130" width="2.4" height="130" fill="#120c08"/>
-<rect x="-8" y="-131" width="18" height="3" fill="#120c08"/>
-<g class="k4-flag"><path d="M1 -128 L 40 -128 L 36 -112 L 41 -96 L 34 -84 L 38 -66 L 1 -72 Z" fill="#7a5c3a" stroke="#2a1e12" stroke-width="1.2"/>
-<path d="M2 -74 Q 10 -96 20 -92 Q 30 -108 38 -122 L 37 -112 Q 30 -98 37 -88 L 34 -80 Q 20 -84 2 -74 Z" fill="#c8a070" opacity=".7"/>
-<path d="M18 -78 L 19 -96 L 23 -96 L 24 -78 Z" fill="#1a120c"/><circle cx="21" cy="-100" r="3.2" fill="#1a120c"/>
-<path d="M19.5 -95 L 15 -108 M22.5 -95 L 26 -110" stroke="#1a120c" stroke-width="2" stroke-linecap="round"/>
-<rect x="24" y="-118" width="3.4" height="9" rx="1.7" fill="#efe4c8"/></g></g>`; }
-  /* dust blowing across, two layers */
-  ['k4-dust', 'k4-dust2'].forEach((cls, L) => { s += `<g class="${cls}">`; for (let i = 0; i < 40; i++) { const x = h(i, 412 + L) * (W + 400), y = HZ - 220 + h(i, 414 + L) * 280; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(120 + h(i, 416 + L) * 220)}" ry="${f1(2 + h(i, 418 + L) * 5)}" fill="#d8b07a" opacity="${f1(.03 + h(i, 420 + L) * .05)}"/>`; } s += `</g>`; });
-  s += `<rect width="${W}" height="${H}" fill="url(#k4-vig)"/><rect width="${W}" height="${H}" fill="url(#k4-vig2)"/></svg>`;
+<style>.k4-dust{animation:k4-dust 18s ease-in-out infinite}.k4-wk{animation:k4-wk 2.4s ease-in-out infinite}.k4-blow{animation:k4-blow 7s linear infinite}
+@keyframes k4-dust{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-6px)}}@keyframes k4-wk{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.8px)}}@keyframes k4-blow{0%{transform:translate(0,0)}100%{transform:translate(-200px,30px)}}
+@media (prefers-reduced-motion:reduce){.k4-dust,.k4-wk,.k4-blow{animation:none}}.reduce .k4-dust,.reduce .k4-wk,.reduce .k4-blow{animation:none}</style>
+<defs><linearGradient id="k4sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2430"/><stop offset=".4" stop-color="#8a5a3a"/><stop offset=".8" stop-color="#d8a060"/><stop offset="1" stop-color="#f0c888"/></linearGradient>
+<linearGradient id="k4land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a87a4a"/><stop offset=".2" stop-color="#7a5434"/><stop offset=".6" stop-color="#3e2a1a"/><stop offset="1" stop-color="#1a1008"/></linearGradient>
+<linearGradient id="k4road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0b880"/><stop offset=".4" stop-color="#a07a50"/><stop offset="1" stop-color="#4a3420"/></linearGradient>
+<linearGradient id="k4wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0a868"/><stop offset=".4" stop-color="#a06a40"/><stop offset="1" stop-color="#5a3a2a"/></linearGradient>
+<radialGradient id="k4sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff0c8" stop-opacity=".95"/><stop offset=".25" stop-color="#ffc878" stop-opacity=".5"/><stop offset="1" stop-color="#ffa050" stop-opacity="0"/></radialGradient>
+<linearGradient id="k4body" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a4a30"/><stop offset=".3" stop-color="#2e2016"/><stop offset="1" stop-color="#120c08"/></linearGradient>
+<filter id="k4b30" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="30"/></filter><filter id="k4b12" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="12"/></filter><filter id="k4b4" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<rect width="${W}" height="${H}" fill="url(#k4sky)"/>`;
+  /* the low sun in the west (left), and the haze */
+  s += `<circle cx="260" cy="${HZ - 90}" r="300" fill="url(#k4sun)"/><circle cx="260" cy="${HZ - 90}" r="30" fill="#fff4dc" opacity=".9"/>`;
+  /* the Whirlwind: a wall of dust along the whole north, billows on billows, lit on the west face */
+  let wb = ''; for (let i = 0; i < 46; i++) { const x = 380 + h(i, 401) * 1260, y = HZ - 40 - Math.pow(h(i, 402), .8) * 300, r = 60 + h(i, 403) * 110; wb += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(r * 1.3)}" ry="${f1(r)}" fill="${h(i, 404) < .5 ? '#b07a4a' : '#7a5034'}" opacity="${f1(.35 + h(i, 405) * .35)}"/>`; }
+  s += `<g class="k4-dust"><g filter="url(#k4b30)">${wb}</g>`;
+  s += `<path d="M420 ${HZ} Q460 ${HZ - 200} 600 ${HZ - 280} Q820 ${HZ - 340} 1100 ${HZ - 330} Q1380 ${HZ - 320} ${W} ${HZ - 260} L${W} ${HZ} Z" fill="url(#k4wall)" opacity=".55" filter="url(#k4b12)"/>`;
+  let top = `M380 ${HZ}`; for (let i = 0; i <= 24; i++) { const x = 380 + i * 52, y = HZ - 170 - Math.sin(i / 24 * Math.PI) * 80 - h(i, 411) * 50; top += ` Q${f1(x + 26)} ${f1(y - 30 - h(i, 412) * 30)} ${f1(x + 52)} ${f1(y)}`; }
+  top += ` L${W} ${HZ} Z`;
+  s += `<path d="${top}" fill="url(#k4wall)" opacity=".5" filter="url(#k4b4)"/><path d="M380 ${HZ} L${W} ${HZ} L${W} ${HZ - 40} Q1000 ${HZ - 70} 380 ${HZ - 20} Z" fill="#5a3a26" opacity=".45" filter="url(#k4b12)"/></g>`;
+  /* the land: flat to the horizon, ripples of sand and stone */
+  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k4land)"/>`;
+  s += `<path d="M0 ${HZ} L${W} ${HZ}" stroke="#f0d0a0" stroke-width="2" opacity=".4"/>`;
+  let rp = ''; for (let i = 0; i < 26; i++) { const t = i / 26, y = HZ + 6 + t * t * (H - HZ); rp += `M0 ${f1(y + h(i, 421) * 6)} Q${f1(400 + h(i, 422) * 300)} ${f1(y - 4 - t * 10)} ${W} ${f1(y + 2)}`; }
+  s += `<path d="${rp}" stroke="#e0b07a" stroke-width="1" fill="none" opacity=".14"/>`;
+  let st = ''; for (let i = 0; i < 140; i++) { const d = h(i, 431), y = HZ + 6 + d * d * (H - HZ), x = h(i, 432) * W, r = .6 + d * 4; st += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(r * 1.8)}" ry="${f1(r * .8)}"/>`; }
+  s += `<g fill="#2a1a0e" opacity=".6">${st}</g>`;
+  /* the road, from under the viewer to the horizon */
+  s += `<path d="M${VX - 6} ${HZ} L${VX + 6} ${HZ} L1240 ${H} L360 ${H} Z" fill="url(#k4road)" opacity=".85"/>`;
+  s += `<path d="M${VX} ${HZ} L800 ${H}" stroke="#5a3a20" stroke-width="2" opacity=".25"/><path d="M${VX - 4} ${HZ} L${VX - 160} ${H} M${VX + 4} ${HZ} L${VX + 160} ${H}" stroke="#4a2e18" stroke-width="3" opacity=".2"/>`;
+  /* the empty spiked trees of the Aren Way, both sides, smaller toward the horizon */
+  const tree = (x, y, k, i) => { const lean = (h(i, 440) - .5) * 14; let d = `M0 0 Q${f1(lean * k * .4)} ${f1(-60 * k)} ${f1(lean * k)} ${f1(-112 * k)}`, sp = '';
+    for (let b = 0; b < 5; b++) { const by = -34 - b * 17, bx = lean * (-by / 112), dir = (b + i) % 2 ? 1 : -1, l = (30 - b * 4) * (.7 + h(i * 7 + b, 441) * .6), ex = bx + dir * l, ey = by - l * .55;
+      d += ` M${f1(bx * k)} ${f1(by * k)} Q${f1((bx + dir * l * .5) * k)} ${f1((by - 2) * k)} ${f1(ex * k)} ${f1(ey * k)}`; sp += ` M${f1((bx + dir * l * .55) * k)} ${f1((by - l * .2) * k)} l${f1(dir * 3 * k)} ${f1(-9 * k)} M${f1(ex * k)} ${f1(ey * k)} l${f1(dir * 5 * k)} ${f1(-5 * k)}`; }
+    return `<g transform="translate(${f1(x)} ${f1(y)})" stroke="#1e130a" stroke-linecap="round" fill="none"><path d="${d}" stroke-width="${f1(Math.max(1, 3.4 * k))}"/><path d="${sp}" stroke-width="${f1(Math.max(.6, 1.4 * k))}"/></g>`; };
+  let tr = ''; for (let i = 0; i < 12; i++) { const t = Math.pow(1 - i / 12, 1.8), y = HZ + 4 + t * (H - HZ - 40), k = .12 + t * 2.1, off = 50 + t * 560;
+    if (i > 1) tr += tree(VX - off, y, k, i); tr += tree(VX + off + 10, y, k, i + 40); }
+  s += tr;
+  /* the column on the road, and the standard at its head */
+  let col = ''; for (let i = 0; i < 120; i++) { const t = Math.pow(i / 120, 1.7), y = HZ + 3 + t * 120, x = VX + (h(i, 451) - .5) * (10 + t * 100), k = .16 + t * .55; col += TK.walker(x, y, k, i, '#1c1008', {spears:.5}); }
+  s += `<g class="k4-wk">${col}</g>`;
+  s += `<g transform="translate(${VX} ${HZ + 2}) scale(.5)" fill="#1c1008"><path d="M0 0 L0 -60" stroke="#1c1008" stroke-width="2"/><path d="M0 -60 L22 -56 L20 -40 L0 -44 Z" fill="#3a2010"/><path d="M-3 0 L-2 -16 L3 -16 L3 0 Z"/><circle cx="0" cy="-19" r="3"/><path d="M2 -14 L8 -28" stroke="#1c1008" stroke-width="1.6"/><rect x="7" y="-33" width="2" height="5" fill="#f0e6d0"/></g>`;
+  /* blown sand across the foreground */
+  let bl = ''; for (let i = 0; i < 70; i++) { const x = h(i, 461) * (W + 240), y = HZ + 120 + h(i, 462) * 300, l = 20 + h(i, 463) * 60; bl += `M${f1(x)} ${f1(y)} l${f1(-l)} ${f1(l * .12)}`; }
+  s += `<g class="k4-blow"><path d="${bl}" stroke="#f0d0a0" stroke-width="1.2" opacity=".18"/></g>`;
+  /* three of the Third on the road's edge, walking north, seen from behind, the sun on their left */
+  const B = {fill:'url(#k4body)', dark:'#160e08', rim:'#ffd8a0', helmc:'#4a3a2a', packc:'#3a2a1a', roll:'#5a4028', ink:'#0a0604', walk:1};
+  const three = [[1180, 840, .78, {kit:'spear', head:'wrap', helmc:'#6a5640'}], [1410, 870, .9, {kit:'shield', head:'helm', wide:1.12, shieldc:'#3a2416', shieldr:'#7a5232', cloak:''}], [1300, 826, .72, {kit:'xbow', head:'wrap', helmc:'#5e4a36', flip:true}]];
+  for (const [x, y, k, o] of three) s += `<g transform="translate(${x} ${y}) scale(${k})">${TK.back(Object.assign({}, B, o))}</g>`;
+  s += `</svg>`;
   ART['title/hoc'] = s; ART_SIZE['title/hoc'] = [W, H];
 }
 
@@ -126,3 +121,5 @@ function startTitleHOC(cv){
   };
 }
 { const base = startTitleBackdrop; startTitleBackdrop = function(cv, book){ if (book && BOOKS[book] && BOOKS[book].titleScene === 'hoc') return startTitleHOC(cv); return base(cv, book); }; }
+/* the book list's cover (v13.2): frame the squad on the right */
+BOOKS.hoc.coverPos = '72% 50%';

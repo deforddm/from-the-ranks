@@ -7,84 +7,43 @@
    lozenge, its finger bone) with a boot-print in dust stitched under it, and the Sixth Company's (Book Five's coin) with a ration sack.
    Motion: the .k9-* rules inside the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
-  const h = (i, s) => hash(i, s), f1 = n => Math.round(n * 10) / 10;
-  const W = 1600, H = 900, HZ = 470; // the horizon
+  /* redrawn v13.2 from a seeded generator (019f's kit): late afternoon in the Wastes, a sky too big for the land under it, high thin cloud
+     and the sun low behind haze; the army as a long thin column marching away east to the horizon, wagons among the files, its own dust
+     hanging over it gold in the light; far off on the horizon a low wall of dust that is not the column's (the short-tails, never shown);
+     cracked ground and scrub; and in the foreground one soldier walking away after the column, pack and spear, the boots and leggings grey
+     with dust to the knee. No one turns to look at the far dust yet. */
+  const f1 = TK.f1, h = (i, s) => hash(i, s), W = 1600, H = 900, HZ = 470, VX = 1180; // the horizon, and where the column meets it
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-<style>.k9-dust{animation:k9-dust 18s ease-in-out infinite}.k9-march{animation:k9-march 1.6s ease-in-out infinite}.k9-far{animation:k9-far 9s ease-in-out infinite}
-.k9-mote{animation:k9-mote 7s linear infinite}.k9-heat{animation:k9-heat 4s ease-in-out infinite}
-@keyframes k9-dust{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-4px)}}
-@keyframes k9-march{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-1px)}}
-@keyframes k9-far{0%,100%{opacity:.55}50%{opacity:.8}}
-@keyframes k9-mote{0%{transform:translate(0,0);opacity:0}20%{opacity:.7}100%{transform:translate(160px,-50px);opacity:0}}
-@keyframes k9-heat{0%,100%{transform:scale(1,1)}50%{transform:scale(1,1.02)}}
-@media (prefers-reduced-motion:reduce){.k9-dust,.k9-march,.k9-far,.k9-mote,.k9-heat{animation:none}}.reduce .k9-dust,.reduce .k9-march,.reduce .k9-far,.reduce .k9-mote,.reduce .k9-heat{animation:none}</style>
-<defs><linearGradient id="k9sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3446"/><stop offset=".5" stop-color="#7a6a5a"/><stop offset=".86" stop-color="#c89a6a"/><stop offset="1" stop-color="#e0b47a"/></linearGradient>
-<linearGradient id="k9land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a7254"/><stop offset=".4" stop-color="#5a4a36"/><stop offset="1" stop-color="#1e1812"/></linearGradient>
-<radialGradient id="k9sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff0c8" stop-opacity=".95"/><stop offset=".3" stop-color="#ffd08a" stop-opacity=".45"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient>
-<linearGradient id="k9wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a08868" stop-opacity="0"/><stop offset=".6" stop-color="#8a7054" stop-opacity=".75"/><stop offset="1" stop-color="#6a5440" stop-opacity=".9"/></linearGradient>
-<linearGradient id="k9boot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a5a46"/><stop offset=".5" stop-color="#3a2e22"/><stop offset="1" stop-color="#140f0a"/></linearGradient></defs>
+<style>.k9-wk{animation:k9-wk 2.4s ease-in-out infinite}.k9-dust{animation:k9-dust 14s ease-in-out infinite}.k9-me{animation:k9-me 1.2s ease-in-out infinite}.k9-far{animation:k9-far 20s ease-in-out infinite}
+@keyframes k9-wk{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-.8px)}}@keyframes k9-dust{0%,100%{transform:translate(0,0)}50%{transform:translate(12px,-4px)}}@keyframes k9-me{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-2px)}}@keyframes k9-far{0%,100%{opacity:.75}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.k9-wk,.k9-dust,.k9-me,.k9-far{animation:none}}.reduce .k9-wk,.reduce .k9-dust,.reduce .k9-me,.reduce .k9-far{animation:none}</style>
+<defs><linearGradient id="k9sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4a5e"/><stop offset=".5" stop-color="#8a8a86"/><stop offset=".85" stop-color="#d0b890"/><stop offset="1" stop-color="#e8cc9c"/></linearGradient>
+<linearGradient id="k9land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a87a"/><stop offset=".2" stop-color="#9a7c56"/><stop offset=".6" stop-color="#5a4430"/><stop offset="1" stop-color="#2a1e14"/></linearGradient>
+<radialGradient id="k9sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4dc" stop-opacity=".95"/><stop offset=".2" stop-color="#ffe0a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd090" stop-opacity="0"/></radialGradient>
+<linearGradient id="k9body" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a7254"/><stop offset=".35" stop-color="#4a3a2a"/><stop offset="1" stop-color="#1e1610"/></linearGradient>
+<filter id="k9b20" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="20"/></filter><filter id="k9b6" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="6"/></filter></defs>
 <rect width="${W}" height="${H}" fill="url(#k9sky)"/>`;
-  /* the sun low behind the viewer's shoulder: its light only, high on the left */
-  s += `<circle cx="180" cy="210" r="260" fill="url(#k9sun)" opacity=".5"/>`;
-  /* thin high cloud */
-  for (let i = 0; i < 6; i++) { const y = 90 + i * 42, x = 300 + h(i, 91) * 900; s += `<ellipse cx="${f1(x)}" cy="${y}" rx="${f1(160 + h(i, 92) * 200)}" ry="${f1(6 + h(i, 93) * 6)}" fill="#e8d8c0" opacity="${f1(.12 + h(i, 94) * .12)}"/>`; }
-  /* the far dust on the horizon, east: a long low wall, not the column's */
-  s += `<path class="k9-far" d="M980 ${HZ} Q1060 ${HZ - 38} 1160 ${HZ - 30} Q1260 ${HZ - 48} 1360 ${HZ - 34} Q1480 ${HZ - 44} 1600 ${HZ - 30} L1600 ${HZ + 6} L980 ${HZ + 6} Z" fill="url(#k9wall)"/>`;
-  /* the land, flat, cracked, to the horizon */
-  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k9land)"/>`;
-  s += `<path d="M0 ${HZ} L${W} ${HZ}" stroke="#e8c896" stroke-width="2" opacity=".35"/>`;
-  for (let i = 0; i < 40; i++) { const y = HZ + 20 + Math.pow(h(i, 95), 1.6) * (H - HZ - 40), x = h(i, 96) * W, w = 30 + (y - HZ) * .4 * h(i, 97);
-    s += `<path d="M${f1(x)} ${f1(y)} l${f1(w * .4)} ${f1(2 + h(i, 98) * 3)} l${f1(w * .3)} ${f1(-3 * h(i, 99))} l${f1(w * .3)} ${f1(2)}" stroke="#2a2016" stroke-width="${f1(.6 + (y - HZ) / 300)}" fill="none" opacity=".5"/>`; }
-  /* the column: files of soldiers and wagons going away east up a faint track to the horizon, smaller and paler as they go */
-  let col = ''; for (let i = 0; i < 46; i++) { const t = i / 45, x = 560 + t * 420 + Math.sin(t * 5) * 18, y = 700 - Math.pow(t, .6) * 222, k = 1 - t * .86, op = 1 - t * .55, wag = i % 7 === 3;
-    col += wag ? `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})" opacity="${f1(op)}"><rect x="-16" y="-20" width="32" height="14" fill="#2a2016"/><path d="M-16 -20 Q0 -36 16 -20" fill="#7a6a52"/><circle cx="-10" cy="-4" r="5" fill="#1a140e"/><circle cx="10" cy="-4" r="5" fill="#1a140e"/><rect x="-34" y="-14" width="14" height="8" fill="#3a2e22"/></g>`
-      : `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(k)})" opacity="${f1(op)}">${[-8, 0, 8].map(dx => `<g transform="translate(${dx} 0)"><rect x="-3" y="-20" width="6" height="15" fill="#241c14"/><circle cx="0" cy="-23" r="3.6" fill="#241c14"/><rect x="-3" y="-5" width="2.4" height="8" fill="#241c14"/><rect x=".6" y="-5" width="2.4" height="8" fill="#241c14"/>${dx === 8 ? '<rect x="3" y="-38" width="1.2" height="34" fill="#241c14"/>' : ''}</g>`).join('')}</g>`; }
-  s += `<g class="k9-march">${col}</g>`;
-  /* the column's own dust, hanging over it */
-  for (let i = 0; i < 8; i++) { const t = i / 7, x = 600 + t * 420, y = 650 - t * 200; s += `<ellipse class="k9-dust" style="animation-delay:-${i * 2}s" cx="${f1(x)}" cy="${f1(y)}" rx="${f1(140 - t * 80)}" ry="${f1(36 - t * 18)}" fill="#c8a87a" opacity="${f1(.22 - t * .08)}"/>`; }
-  /* motes of dust in the low light */
-  for (let i = 0; i < 30; i++) { s += `<circle class="k9-mote" style="animation-delay:-${f1(h(i, 101) * 7)}s" cx="${f1(h(i, 102) * 900)}" cy="${f1(560 + h(i, 103) * 300)}" r="${f1(1 + h(i, 104) * 1.6)}" fill="#f0d8a8"/>`; }
-  /* the foreground: one soldier of the column, close, walking away east after it, back to us: a pack, a cloak, a spear over the
-     shoulder, and the boots and leggings grey with dust to the knee, one heel lifting to go on */
-  s += `<path d="M0 ${H} L0 830 Q300 800 620 815 Q760 822 900 ${H} Z" fill="#2a2018" opacity=".7"/>`;
-  /* (David, Nov 10: "not able to tell it was a soldier") redrawn as a clear figure from behind: helm, shoulders, arms, cloak, pack and
-     bedroll, a spear on the right shoulder, legs mid-stride, the sun behind us rimming the left edges, and the long shadow thrown ahead */
-  s += `<defs><linearGradient id="k9cloak" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a6248"/><stop offset=".35" stop-color="#4a3a2a"/><stop offset="1" stop-color="#1c150e"/></linearGradient>
-<linearGradient id="k9leg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2018"/><stop offset=".45" stop-color="#3a3024"/><stop offset=".62" stop-color="#8a7c66"/><stop offset="1" stop-color="#a89a80"/></linearGradient>
-<linearGradient id="k9pack" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a7254"/><stop offset=".4" stop-color="#5a4632"/><stop offset="1" stop-color="#2a2016"/></linearGradient>
-<linearGradient id="k9helm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8b898"/><stop offset=".35" stop-color="#7a7262"/><stop offset="1" stop-color="#2a2620"/></linearGradient></defs>`;
-  /* the long shadow, thrown ahead toward the column */
-  s += `<path d="M300 880 L372 880 Q520 790 640 712 L620 706 Q470 778 300 880 Z" fill="#140f0a" opacity=".45"/>`;
-  s += `<g class="k9-heat"><g transform="translate(330 880)">
-<!-- the back leg, heel lifting -->
-<path d="M14 -268 Q30 -190 44 -120 Q52 -80 64 -40 L92 -50 Q80 -96 72 -132 Q60 -200 52 -268 Z" fill="url(#k9leg)"/>
-<path d="M60 -44 L94 -56 Q104 -40 104 -28 L66 -14 Q58 -24 60 -44 Z" fill="#6a5c48"/><path d="M66 -14 L104 -28" stroke="#140f0a" stroke-width="4"/>
-<!-- the front leg, planted -->
-<path d="M-40 -268 Q-46 -190 -48 -120 Q-50 -70 -52 -26 L-20 -26 Q-18 -76 -12 -126 Q-4 -196 2 -268 Z" fill="url(#k9leg)"/>
-<path d="M-56 -30 L-18 -30 Q-12 -14 -10 0 L-62 0 Q-62 -16 -56 -30 Z" fill="#6a5c48"/><path d="M-64 0 L-8 0" stroke="#140f0a" stroke-width="5"/>
-<!-- the left arm, hanging and swinging a little out -->
-<path d="M-78 -470 Q-100 -420 -104 -360 Q-106 -330 -98 -306 L-80 -310 Q-84 -340 -78 -380 Q-72 -420 -58 -454 Z" fill="#3a2e22"/><ellipse cx="-90" cy="-300" rx="12" ry="14" fill="#5a4636"/>
-<!-- the body and the cloak from the shoulders to mid-thigh, its hem ragged, swinging -->
-<path d="M-78 -478 Q-82 -500 -60 -506 L60 -506 Q84 -500 80 -476 Q90 -380 88 -300 Q92 -250 84 -220 L66 -228 L54 -212 L36 -224 L18 -208 L0 -222 L-18 -206 L-36 -222 L-54 -210 L-70 -226 L-86 -214 Q-92 -260 -88 -310 Q-90 -390 -78 -478 Z" fill="url(#k9cloak)"/>
-<path d="M-40 -440 Q-46 -340 -50 -230 M0 -444 Q2 -340 0 -226 M40 -440 Q46 -340 52 -232" stroke="#140f0a" stroke-width="3" fill="none" opacity=".45"/>
-<!-- the pack on the upper back, the bedroll on top, a waterskin at the side -->
-<rect x="-46" y="-468" width="92" height="104" rx="12" fill="url(#k9pack)" stroke="#140f0a" stroke-width="3"/><path d="M-46 -420 L46 -420" stroke="#140f0a" stroke-width="3"/><rect x="-10" y="-432" width="20" height="16" rx="3" fill="#2a2016"/>
-<rect x="-64" y="-500" width="128" height="34" rx="17" fill="#8a7a5a" stroke="#140f0a" stroke-width="3"/><path d="M-30 -500 L-30 -466 M30 -500 L30 -466" stroke="#3a2e1e" stroke-width="5"/>
-<path d="M48 -400 Q66 -396 66 -372 Q64 -350 50 -350 Q40 -366 48 -400 Z" fill="#6a5034" stroke="#140f0a" stroke-width="2"/>
-<!-- the right arm raised to the spear on the shoulder -->
-<path d="M66 -490 Q92 -470 100 -440 Q104 -420 96 -404 L80 -414 Q84 -436 74 -458 Z" fill="#3a2e22"/><ellipse cx="92" cy="-404" rx="11" ry="12" fill="#5a4636"/>
-<!-- the head and the helm -->
-<path d="M-16 -506 L16 -506 L14 -526 L-14 -526 Z" fill="#4a3a2c"/>
-<ellipse cx="0" cy="-548" rx="30" ry="30" fill="#3a2e22"/>
-<path d="M-34 -548 Q-34 -592 0 -594 Q34 -592 34 -548 Z" fill="url(#k9helm)"/><path d="M-40 -548 L40 -548 Q40 -540 34 -538 L-34 -538 Q-40 -540 -40 -548 Z" fill="#5a5448"/>
-<path d="M0 -594 L0 -548" stroke="#2a2620" stroke-width="3"/>
-<!-- the spear: shaft from behind the shoulder through the right hand, up and forward -->
-<path d="M64 -360 L176 -830" stroke="#2e2216" stroke-width="8" stroke-linecap="round"/><path d="M170 -820 L186 -878 L190 -818 Z" fill="#c8c0b0" stroke="#3a3630" stroke-width="2"/>
-<!-- the sun behind us, rimming the left edges -->
-<path d="M-82 -470 Q-92 -390 -88 -310 M-62 -506 L-20 -506 M-34 -548 Q-34 -590 -4 -594 M-46 -466 L-46 -380 M-64 -490 Q-66 -478 -60 -468" stroke="#ffd8a0" stroke-width="3" fill="none" opacity=".55"/>
-</g></g>`;
-  /* dust kicked up round the boots */
-  for (let i = 0; i < 10; i++) s += `<ellipse cx="${f1(250 + h(i, 105) * 220)}" cy="${f1(872 + h(i, 106) * 20)}" rx="${f1(26 + h(i, 107) * 34)}" ry="${f1(5 + h(i, 108) * 5)}" fill="#b89a72" opacity="${f1(.2 + h(i, 109) * .16)}"/>`;
+  /* the sun low in the west behind haze, and the high thin cloud drawn out across the whole sky */
+  s += `<circle cx="300" cy="300" r="340" fill="url(#k9sun)"/><circle cx="300" cy="300" r="34" fill="#fff8e8" opacity=".85"/>`;
+  s += `<g filter="url(#k9b6)">${[...Array(16)].map((_, i) => { const y = 60 + h(i, 901) * 300, x = h(i, 902) * W; return `<path d="M${f1(x - 200 - h(i, 903) * 200)} ${f1(y)} Q${f1(x)} ${f1(y - 10 - h(i, 904) * 14)} ${f1(x + 200 + h(i, 905) * 200)} ${f1(y + 6)}" stroke="#f4ead8" stroke-width="${f1(2 + h(i, 906) * 4)}" fill="none" opacity="${f1(.12 + h(i, 907) * .2)}"/>`; }).join('')}</g>`;
+  /* the land, flat to the horizon; the far dust that is not theirs, low and long on the right */
+  s += `<path d="M900 ${HZ} Q1100 ${HZ - 50} 1300 ${HZ - 40} Q1480 ${HZ - 60} ${W} ${HZ - 46} L${W} ${HZ} Z" fill="#7a5a40" opacity=".85" filter="url(#k9b20)" class="k9-far"/>`;
+  s += `<rect y="${HZ}" width="${W}" height="${H - HZ}" fill="url(#k9land)"/><path d="M0 ${HZ} L${W} ${HZ}" stroke="#f0dcb8" stroke-width="1.6" opacity=".6"/>`;
+  /* cracked ground in perspective, and scrub */
+  let cr = ''; for (let i = 0; i < 120; i++) { const d = h(i, 911), y = HZ + 8 + d * d * (H - HZ), x = h(i, 912) * W, l = 6 + d * 60; cr += `M${f1(x)} ${f1(y)} l${f1(l * .5)} ${f1((h(i, 913) - .5) * l * .2)} l${f1(l * .5)} ${f1((h(i, 914) - .5) * l * .2)}`; }
+  s += `<path d="${cr}" stroke="#3a2a1c" stroke-width="1.2" fill="none" opacity=".45"/>`;
+  let sb = ''; for (let i = 0; i < 70; i++) { const d = h(i, 921), y = HZ + 6 + d * d * (H - HZ - 40), x = h(i, 922) * W, r = 1.4 + d * 14; let br = ''; for (let j = 0; j < 6; j++) br += `M${f1(x)} ${f1(y)} l${f1((j - 2.5) * r * .4)} ${f1(-r * (.6 + h(i * 7 + j, 923) * .6))}`; sb += br; }
+  s += `<path d="${sb}" stroke="#3a2c1c" stroke-width="1.2" fill="none" opacity=".8"/>`;
+  /* the column: out of the foreground on the left, away east to the horizon; files and wagons; its dust above it lit gold */
+  const pt = t => [VX - (1 - t) * 760 - Math.sin(t * 3) * 40 * (1 - t), HZ + 2 + Math.pow(1 - t, 2.2) * 240];
+  s += `<g class="k9-dust"><path d="${[...Array(31)].map((_, i) => { const [x, y] = pt(i / 30); return (i ? 'L' : 'M') + f1(x) + ' ' + f1(y - 30 * (1 - i / 30) - 6); }).join('')}" stroke="#f0d8a8" stroke-width="60" fill="none" opacity=".35" filter="url(#k9b20)"/></g>`;
+  let col = ''; for (let i = 0; i < 170; i++) { const t = Math.pow(h(i, 931), .6), [x, y] = pt(t), k = .12 + Math.pow(1 - t, 2) * 1.1, off = (h(i, 932) - .5) * 30 * k;
+    if (i % 19 === 4) col += `<g transform="translate(${f1(x + off)} ${f1(y)}) scale(${f1(k)})" fill="#2a1e14"><path d="M-14 -24 Q0 -36 14 -24 L14 -9 L-14 -9 Z" fill="#6a5a44"/><rect x="-15" y="-11" width="30" height="5"/><circle cx="-9" cy="-4" r="5"/><circle cx="9" cy="-4" r="5"/></g>`;
+    else col += TK.walker(x + off, y, k, i, '#2a1e14', {spears:.4}); }
+  s += `<g class="k9-wk">${col}</g>`;
+  /* the one in front, walking away after them */
+  s += `<ellipse cx="1250" cy="892" rx="170" ry="12" fill="#1e140c" opacity=".35"/>`;
+  s += `<g class="k9-me"><g transform="translate(1250 890) scale(1.3)">${TK.back({fill:'url(#k9body)', dark:'#2a2018', rim:'#fff0d0', helmc:'#6a5a46', packc:'#4a3a28', roll:'#6a5236', ink:'#120c08', kit:'spear', head:'helm', cloak:'#3a2e22', walk:1, dust:'#a89878', shaft:'#4a3826'})}</g></g>`;
   s += `</svg>`;
   ART['title/dod'] = s; ART_SIZE['title/dod'] = [W, H];
 
