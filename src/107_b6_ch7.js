@@ -986,7 +986,7 @@ B6CH7.finale = {
     if (pg.k === 'b67road4') { const R = B67FIN.fourthRoad(); G.sceneKind = road === 'hanarara' ? 'b6_hanar_ara' : road === 'home' ? 'b6_coast' : 'b6_sky';
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">The Fourth</div><h1 class="fin-title">${esc(R.title)}</h1><div class="narr">${R.paras.map(p => fmt(p)).join('')}</div>`; }
     else if (pg.k === 'b67meet') { G.sceneKind = 'b6_sea';
-      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('bh'); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const id = pg.id, sgt = id === 'sgt', gone = pg.k === 'b67gone4';
       const info = b67AsH(() => { const nm = sgt ? S.name : NAME(id), role = sgt ? 'Sergeant · Fourth Squad, Seventh Company, Onearm\'s Host' : (TPL[id] ? TPL[id].role : ''), loyv = sgt ? '' : loyLabel((S.loy || {})[id] || 0);
         let title = B67FIN.fourthTitle(id) || role, txt = '', where = '';

@@ -193,7 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
-  ['13.1.0', ['Bridgeburner, Books One to Seven: 57 fights that had grown harder than intended are eased back to about three wins in four. Book Five\'s early fights were the worst of them. Soldier and Story are unchanged (one Book Five Soldier fight, the wolves in Chapter 4, gives up a little health so it stays easier than its Bridgeburner side).', 'Saves carry on as they were.']],
+  ['13.1.0', ['Bridgeburner, Books One to Seven: 57 fights that had grown harder than intended are eased back to about three wins in four. Book Five\'s early fights were the worst of them. Soldier and Story are unchanged (one Book Five Soldier fight, the wolves in Chapter 4, gives up a little health so it stays easier than its Bridgeburner side).', 'Each finale\'s Where the books meet map now stops at its own book.', 'Saves carry on as they were.']],
   ['13.0.4', ['Book Four, Chapter 5: after finding the seep, saying "Not now" at the reef no longer strands the water party. Talk to them again and choose "Back up to the reef." Saves already stuck there pick it up.']],
   ['13.0.3', ['A Title button beside Squad and Settings, on the map, in talk and on the chapter pages: it saves and takes you back to the title. In a fight it asks first, and the fight starts again from the last save when you come back.']],
   ['13.0.2', ['The title credit names the ten books and stops there.']],

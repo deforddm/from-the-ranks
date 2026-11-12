@@ -13,8 +13,11 @@ const bookOf = s => (s && s.book) || 'gotm';
 const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
-const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming);
-function worldSVG(){
+/* v13.1.0: a finale's map stops at its own book (Book Nine's finale must not show Book Ten's Glass Desert, rule 85); the Journal shows the whole shelf. */
+const MAP_ORDER = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']; let MAP_UPTO = null;
+const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming) && (!MAP_UPTO || MAP_ORDER.indexOf(k) <= MAP_ORDER.indexOf(MAP_UPTO));
+function worldSVG(upTo){ const was = MAP_UPTO; MAP_UPTO = upTo || null; try { return worldSVG0(); } finally { MAP_UPTO = was; } }
+function worldSVG0(){
   const far = bookLive('rg') || bookLive('dod') || bookLive('tcg'), H = far ? 470 : 300, x0 = !far && bookLive('mt') ? -130 : 0;
   return `<svg class="worldmap" viewBox="${x0} 0 ${640 - x0} ${H}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}${far ? ', with the march east from Letheras into the Wastes, the Glass Desert and Kolanse' : ''}">
   <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#1c1610"/>

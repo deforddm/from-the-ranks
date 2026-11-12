@@ -7939,7 +7939,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
-  ['13.1.0', ['Bridgeburner, Books One to Seven: 57 fights that had grown harder than intended are eased back to about three wins in four. Book Five\'s early fights were the worst of them. Soldier and Story are unchanged (one Book Five Soldier fight, the wolves in Chapter 4, gives up a little health so it stays easier than its Bridgeburner side).', 'Saves carry on as they were.']],
+  ['13.1.0', ['Bridgeburner, Books One to Seven: 57 fights that had grown harder than intended are eased back to about three wins in four. Book Five\'s early fights were the worst of them. Soldier and Story are unchanged (one Book Five Soldier fight, the wolves in Chapter 4, gives up a little health so it stays easier than its Bridgeburner side).', 'Each finale\'s Where the books meet map now stops at its own book.', 'Saves carry on as they were.']],
   ['13.0.4', ['Book Four, Chapter 5: after finding the seep, saying "Not now" at the reef no longer strands the water party. Talk to them again and choose "Back up to the reef." Saves already stuck there pick it up.']],
   ['13.0.3', ['A Title button beside Squad and Settings, on the map, in talk and on the chapter pages: it saves and takes you back to the title. In a fight it asks first, and the fight starts again from the last save when you come back.']],
   ['13.0.2', ['The title credit names the ten books and stops there.']],
@@ -9711,8 +9711,11 @@ const bookOf = s => (s && s.book) || 'gotm';
 const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 
 /* ---- where the books meet: a sketch of the two coasts, the sea lane, and the months between (Book Four added v7.3.3, David, Oct 27: keep it current with every book) ---- */
-const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming);
-function worldSVG(){
+/* v13.1.0: a finale's map stops at its own book (Book Nine's finale must not show Book Ten's Glass Desert, rule 85); the Journal shows the whole shelf. */
+const MAP_ORDER = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']; let MAP_UPTO = null;
+const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming) && (!MAP_UPTO || MAP_ORDER.indexOf(k) <= MAP_ORDER.indexOf(MAP_UPTO));
+function worldSVG(upTo){ const was = MAP_UPTO; MAP_UPTO = upTo || null; try { return worldSVG0(); } finally { MAP_UPTO = was; } }
+function worldSVG0(){
   const far = bookLive('rg') || bookLive('dod') || bookLive('tcg'), H = far ? 470 : 300, x0 = !far && bookLive('mt') ? -130 : 0;
   return `<svg class="worldmap" viewBox="${x0} 0 ${640 - x0} ${H}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}${far ? ', with the march east from Letheras into the Wastes, the Glass Desert and Kolanse' : ''}">
   <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#1c1610"/>
@@ -80014,7 +80017,7 @@ B6CH7.finale = {
     if (pg.k === 'b67road4') { const R = B67FIN.fourthRoad(); G.sceneKind = road === 'hanarara' ? 'b6_hanar_ara' : road === 'home' ? 'b6_coast' : 'b6_sky';
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">The Fourth</div><h1 class="fin-title">${esc(R.title)}</h1><div class="narr">${R.paras.map(p => fmt(p)).join('')}</div>`; }
     else if (pg.k === 'b67meet') { G.sceneKind = 'b6_sea';
-      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Seven Cities, and the sea</h1><div class="narr">${B67FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('bh'); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const id = pg.id, sgt = id === 'sgt', gone = pg.k === 'b67gone4';
       const info = b67AsH(() => { const nm = sgt ? S.name : NAME(id), role = sgt ? 'Sergeant · Fourth Squad, Seventh Company, Onearm\'s Host' : (TPL[id] ? TPL[id].role : ''), loyv = sgt ? '' : loyLabel((S.loy || {})[id] || 0);
         let title = B67FIN.fourthTitle(id) || role, txt = '', where = '';
@@ -89062,7 +89065,7 @@ B7CH7.finale = {
     if (pg.k === 'b77road') { const R = B77FIN.lethRoad(); G.sceneKind = SCENES[R.scene] ? R.scene : 'b7_letheras';
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">The Sixth Company</div><h1 class="fin-title">${esc(R.title)}</h1><div class="narr">${R.paras.map(p => fmt(p)).join('')}</div>`; }
     else if (pg.k === 'b77meet') { G.sceneKind = 'b7_c7_after';
-      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Lether, again</h1><div class="narr">${B77FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Lether, again</h1><div class="narr">${B77FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('rg'); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const L = pg.pg || {}, id = pg.id, sgt = id === 'sgt', gone = L.k === 'gone', h = b77LHalf() || {};
       const nm = sgt ? (L.name || h.name || 'The sergeant') : (TPL[id] ? TPL[id].name : id), role = sgt ? 'Sergeant · Sixth Company, the Whitefinder Battalion' : (TPL[id] ? TPL[id].role : '');
       const where = gone && h.dead && h.dead[id] ? [h.dead[id].where, h.dead[id].ch ? `Chapter ${h.dead[id].ch}` : ''].filter(Boolean).join(' · ') : '';
@@ -97815,7 +97818,7 @@ B8CH7.finale = {
     S.scene = 'finale'; S.finPage = i; S.node = null; save();
     view = 'finale'; $('#sheet').hidden = true; B = null; titleAnim = null; finAnim = null; AUDIO.setScene('end');
     G.sceneKind = 'b8_lakeshore';
-    const body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Darujhistan, again</h1><div class="narr">${B87FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`;
+    const body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Darujhistan, again</h1><div class="narr">${B87FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('tth'); } catch(e) { return ''; } })()}</div>` : ''}`;
     toTop(); $('#app').innerHTML = `<div class="fin" id="fin">${body}
     <div class="fin-nav"><button class="btn" id="fBack">Back</button><span class="fin-pg">${i + 1} / ${P.length}</span><button class="btn primary" id="fNext">Next</button></div></div>`;
     window.scrollTo(0, 0);
@@ -106780,7 +106783,7 @@ B9CH7.finale = {
     if (pg.k === 'b97road') { const R = B97FIN.lethRoad(); G.sceneKind = SCENES[R.scene] ? R.scene : 'b9_wagons';
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">The Sixth Company</div><h1 class="fin-title">${esc(R.title)}</h1><div class="narr">${R.paras.map(p => fmt(p)).join('')}</div>`; }
     else if (pg.k === 'b97meet') { G.sceneKind = 'b9_retreat';
-      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Into the Wastes</h1><div class="narr">${B97FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Into the Wastes</h1><div class="narr">${B97FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('dod'); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const L = pg.pg || {}, id = pg.id, sgt = id === 'sgt', gone = L.k === 'gone', h = b97LHalf() || {};
       const nm = sgt ? (L.name || h.name || 'The sergeant') : (TPL[id] ? TPL[id].name : id), role = sgt ? 'Sergeant · Sixth Company, the Whitefinder Battalion' : (TPL[id] ? TPL[id].role : '');
       const where = gone && h.dead && h.dead[id] ? [h.dead[id].where, h.dead[id].from ? '' : (h.dead[id].ch ? `Chapter ${h.dead[id].ch}` : '')].filter(Boolean).join(' · ') : '';
@@ -115690,7 +115693,7 @@ B10FIN.extra = () => { if (!b10On()) return []; const add = [];
     else if (pg.k === 'b107fourth') { const R = B107FIN.fourth(); G.sceneKind = 'b10_c7_fourth';
       body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">The Fourth</div><h1 class="fin-title">${esc(R.title)}</h1><div class="narr">${R.paras.map(p => fmt(p)).join('')}</div>`; }
     else if (pg.k === 'b107meet') { G.sceneKind = 'b10_barrows';
-      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">At the barrows</h1><div class="narr">${B107FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`; }
+      body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">At the barrows</h1><div class="narr">${B107FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('tcg'); } catch(e) { return ''; } })()}</div>` : ''}`; }
     else { const L = pg.pg || {}, id = pg.id, sgt = id === 'sgt', gone = L.k === 'gone', h = B107FIN.lethHalf() || {};
       const nm = sgt ? (L.name || h.name || 'The sergeant') : (TPL[id] ? TPL[id].name : id), role = sgt ? 'Sergeant · Sixth Company, the Whitefinder Battalion' : (TPL[id] ? TPL[id].role : '');
       const where = gone && h.dead && h.dead[id] ? [h.dead[id].where, h.dead[id].from ? '' : (h.dead[id].ch ? `Chapter ${h.dead[id].ch}` : '')].filter(Boolean).join(' · ') : '';

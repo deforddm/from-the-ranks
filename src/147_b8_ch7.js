@@ -803,7 +803,7 @@ B8CH7.finale = {
     S.scene = 'finale'; S.finPage = i; S.node = null; save();
     view = 'finale'; $('#sheet').hidden = true; B = null; titleAnim = null; finAnim = null; AUDIO.setScene('end');
     G.sceneKind = 'b8_lakeshore';
-    const body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Darujhistan, again</h1><div class="narr">${B87FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG(); } catch(e) { return ''; } })()}</div>` : ''}`;
+    const body = `<div class="scene"><canvas id="scv" width="560" height="240"></canvas></div><div class="fin-k">Where the books meet</div><h1 class="fin-title">Darujhistan, again</h1><div class="narr">${B87FIN.meet().map(p => fmt(p)).join('')}</div>${typeof worldSVG === 'function' ? `<div class="gloss meet">${(() => { try { return worldSVG('tth'); } catch(e) { return ''; } })()}</div>` : ''}`;
     toTop(); $('#app').innerHTML = `<div class="fin" id="fin">${body}
     <div class="fin-nav"><button class="btn" id="fBack">Back</button><span class="fin-pg">${i + 1} / ${P.length}</span><button class="btn primary" id="fNext">Next</button></div></div>`;
     window.scrollTo(0, 0);
