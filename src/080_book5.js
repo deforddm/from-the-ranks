@@ -377,33 +377,34 @@ const B5GAP = { // tuned Thu Oct 29, 2026 (docs/mt-balance.md): the chapter's ro
   6:{ac:3, atk:3, hp:2.0, dmg:4},
   7:{ac:3, atk:3, hp:2.0, dmg:4}};
 const B5GAP_FIGHT = { // a fight's own row instead of its chapter's: the main and key fights sit lower, the small ones carry the chapter's (v10.2, Nov 7, 2026: every row re-tuned per fight, and rows added for the rest; docs/v10.2-balance.md)
-  b5_c1_lowwalk:{ac:1,atk:1,hp:1.32,dmg:1},
-  b5_c1_tavern:{ac:0,atk:0,hp:1.44,dmg:2} /* the hardest as built (about 62% won): eased a little */,
-  b5_c2_looters:{ac:3,atk:3,hp:2.24,dmg:3},
+  b5_c1_lowwalk:{ac:1, atk:1, hp:1.127, dmg:1}, // v13.1 (Nov 11): eased, 66% won, 65% health lost (50 runs; was 45%)
+  b5_c1_tavern:{ac:0, atk:0, hp:1.166, dmg:1}, // v13.1 (Nov 11): eased, 70% won, 65% health lost (50 runs; was 25%)
+  b5_c2_looters:{ac:3, atk:3, hp:2.016, dmg:3}, // v13.1 (Nov 11): eased, 68% won, 58% health lost (50 runs; was 45%)
   b5_c2_wreckers:{ac:1,atk:1,hp:1.71,dmg:1},
   b5_c2_hulk:{ac:0,atk:1,hp:0.98,dmg:-1} /* the main fight */,
-  b5_c3_rivermen:{ac:1,atk:1,hp:1.27,dmg:1} /* the main fight */,
+  b5_c3_rivermen:{ac:1, atk:1, hp:1.143, dmg:1}, // v13.1 (Nov 11): eased, 72% won, 61% health lost (50 runs; was 50%)
   b5_c3_bank:{ac:2,atk:2,hp:1.48,dmg:3},
-  b5_c4_wraiths:{ac:2,atk:2,hp:2.16,dmg:5},
-  b5_c4_demon:{ac:1,atk:1,hp:1.69,dmg:2} /* the key fight (hold) */,
-  b5_c4_wolves:{ac:2,atk:2,hp:1.76,dmg:4} /* the key fight (run) */,
-  b5_c5_farm:{ac:3,atk:3,hp:1.94,dmg:3},
+  b5_c4_wraiths:{ac:2, atk:2, hp:1.75, dmg:4}, // v13.1 (Nov 11): eased, 80% won, 41% health lost (50 runs; was 35%)
+  b5_c4_demon:{ac:1, atk:1, hp:1.521, dmg:2}, // v13.1 (Nov 11): eased, 72% won, 73% health lost (50 runs; was 50%)
+  b5_c4_wolves:{ac:2, atk:2, hp:1.426, dmg:3}, // v13.1 (Nov 11): eased, 82% won, 46% health lost (50 runs; was 45%)
+  b5_c5_farm:{ac:3, atk:3, hp:1.613, dmg:3}, // v13.1 (Nov 11): eased, 84% won, 54% health lost (50 runs; was 25%)
   b5_c5_wagons:{ac:2,atk:2,hp:1.87,dmg:3},
-  b5_c6_hills:{ac:2,atk:1,hp:1.69,dmg:2},
+  b5_c6_hills:{ac:2, atk:1, hp:1.405, dmg:2}, // v13.1 (Nov 11): eased, 66% won, 60% health lost (50 runs; was 45%)
   b5_c6_flight:{ac:1, atk:1, hp:1.4, dmg:2},
   b5_c6_channel:{ac:2, atk:1, hp:1.4, dmg:2} /* the mortal fight */,
-  b5_c7_looters:{ac:3,atk:3,hp:2.45,dmg:4},
+  b5_c7_looters:{ac:3, atk:3, hp:1.985, dmg:3}, // v13.1 (Nov 11): eased, 78% won, 48% health lost (50 runs; was 30%)
   b5_c7_wolves:{ac:1, atk:1, hp:1.25, dmg:1},
   b5_c7_barricade:{ac:0,atk:1,hp:1.28,dmg:0} /* the main fight */,
   b5_c1_cutpurses:{ac:2,atk:1,hp:1.75,dmg:2},
-  b5_c1_lane:{ac:2,atk:3,hp:4.18,dmg:8},
-  b5_c2_tide:{ac:3,atk:3,hp:2.45,dmg:5},
-  b5_c3_deserters:{ac:3,atk:3,hp:3.12,dmg:6},
-  b5_c3_cheer:{ac:3,atk:3,hp:3.92,dmg:8},
+  b5_c1_lane:{ac:2, atk:1, hp:2.221, dmg:5}, // v13.1 (Nov 11): eased, 80% won, 83% health lost (50 runs; was 5%)
+  b5_c2_tide:{ac:3, atk:3, hp:1.985, dmg:4}, // v13.1 (Nov 11): eased, 84% won, 77% health lost (50 runs; was 45%)
+  b5_c3_deserters:{ac:3, atk:2, hp:2.274, dmg:5}, // v13.1 (Nov 11): eased, 76% won, 56% health lost (50 runs; was 10%)
+  b5_c3_cheer:{ac:3, atk:2, hp:2.858, dmg:7}, // v13.1 (Nov 11): eased, 72% won, 84% health lost (50 runs; was 45%)
   b5_c4_gully:{ac:2,atk:2,hp:1.48,dmg:3},
   b5_c5_press:{ac:3,atk:3,hp:3.92,dmg:8},
   b5_c5_factor:{ac:3,atk:3,hp:3.92,dmg:8},
-  b5_c7_court:{ac:3,atk:3,hp:3.92,dmg:8}};
+  b5_c7_court:{ac:3,atk:3,hp:3.92,dmg:8},
+};
 const B5SOFT = {}; // v10.2 (David, Nov 6, 2026): the barricade comes back to about 90% on Soldier (SOLDIER_FIGHT, 31c); it was {hp:.85, atk:-1, dmg:-1}
 const b5Gap = () => { if (!b5On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id;
   return (id && B5GAP_FIGHT[id]) || B5GAP[clamp(S.chapter || 1, 1, 7)] || null; };

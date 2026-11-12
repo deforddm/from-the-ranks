@@ -250,25 +250,26 @@ const B6GAP = {
   b6_c1_edge:{ac:4,atk:4,hp:3.16,dmg:5},
   b6_c1_patrol:{ac:2,atk:2,hp:2.36,dmg:3},
   b6_c2_shrine:{ac:2,atk:2,hp:1.98,dmg:3},
-  b6_c2_village:{ac:1,atk:1,hp:1.56,dmg:2},
+  b6_c2_village:{ac:1, atk:1, hp:1.404, dmg:2}, // v13.1 (Nov 11): eased, 74% won, 51% health lost (50 runs; was 50%)
   b6_c2_road:{ac:0,atk:0,hp:1.21,dmg:0},
   b6_c3_sally:{ac:1,atk:1,hp:1.67,dmg:2},
-  b6_c3_streets:{ac:2,atk:2,hp:1.72,dmg:2},
+  b6_c3_streets:{ac:2, atk:2, hp:1.548, dmg:2}, // v13.1 (Nov 11): eased, 70% won, 57% health lost (50 runs; was 35%)
   b6_c3_gate:{ac:2,atk:2,hp:2.18,dmg:3},
   b6_c3_strays:{ac:4,atk:4,hp:3.15,dmg:5},
-  b6_c4_carts:{ac:4,atk:4,hp:2.99,dmg:5},
-  b6_c4_cult:{ac:3,atk:3,hp:2.57,dmg:4},
+  b6_c4_carts:{ac:4, atk:4, hp:2.553, dmg:5}, // v13.1 (Nov 11): eased, 78% won, 48% health lost (50 runs; was 45%)
+  b6_c4_cult:{ac:3, atk:3, hp:2.313, dmg:4}, // v13.1 (Nov 11): eased, 64% won, 59% health lost (50 runs; was 40%)
   b6_c4_streets:{ac:2,atk:2,hp:2.18,dmg:3},
   b6_c5_village:{ac:4,atk:4,hp:2.4,dmg:5},
   b6_c5_deserters:{ac:2,atk:2,hp:1.76,dmg:3},
   b6_c5_boats:{ac:1,atk:1,hp:1.95,dmg:2},
   b6_c6_night:{ac:1,atk:1,hp:1.52,dmg:2},
   b6_c6_wells:{ac:4,atk:4,hp:2.8,dmg:5},
-  b6_c6_cult:{ac:1,atk:1,hp:1.62,dmg:3},
+  b6_c6_cult:{ac:1, atk:1, hp:1.458, dmg:3}, // v13.1 (Nov 11): eased, 74% won, 66% health lost (50 runs; was 30%)
   b6_c7_alley:{ac:5,atk:5,hp:3.2,dmg:6},
   b6_c7_jetty:{ac:3,atk:3,hp:2.1,dmg:4},
-  b6_c7_guard:{ac:2,atk:2,hp:2.15,dmg:4},
-  b6_c7_streets:{ac:3,atk:3,hp:2.73,dmg:4}};
+  b6_c7_guard:{ac:2, atk:2, hp:1.836, dmg:4}, // v13.1 (Nov 11): eased, 74% won, 54% health lost (50 runs; was 55%)
+  b6_c7_streets:{ac:3, atk:3, hp:2.457, dmg:4}, // v13.1 (Nov 11): eased, 86% won, 44% health lost (50 runs; was 55%)
+};
 const b6Gap = () => { if (!b6On() || (S.diff || 'soldier') !== 'bridgeburner') return null; const id = B && B.id; return (id && B6GAP[id]) || (id && /^b6_/.test(id) ? B6GAP_ROW : null); };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const g = b6Gap(); if (!g) return u;
