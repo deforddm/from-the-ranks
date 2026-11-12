@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.2.0';
+const VERSION = '13.2.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3596,10 +3596,10 @@ const TK = {
 
 /* ============ Book One's title: Moon's Spawn over the ruins of Pale, and the Fourth on the rise (redrawn v13.2, 019g) ============
    The painted title (ART 'title/key', drawn by Claude for this game from a seeded generator; it replaces the canvas board's first drawing,
-   019c, which stays as generated): night over the Pale hills. Moon's Spawn hangs over the sky, a black mountain of basalt the stars go out
-   behind, a few lights in its flanks and rain trailing from its underside; under it the ruins of Pale still smoulder, smoke leaning south;
-   Onearm's Host's camp in the fields before the walls, rows of tents and its fires; far off on the southern skyline the faint blue of a
-   great city's gas-light, unnamed. In the foreground on a rise, seen from behind, the Fourth's five watching: the sergeant with a spear,
+   019c, which stays as generated; laid out as that first drawing, David Nov 12): night. Across the lake the city of blue fire fills the
+   skyline, its upper city high in the middle, its gas-light in round blue glows thrown down into the water; over it hangs Moon's Spawn,
+   as wide as the city, a black mountain of basalt the stars go out behind, the city's blue on its belly and rain trailing from it; far
+   off on the left the ruins of Pale still smoulder, small. In the foreground on a rise, seen from behind, the Fourth's five watching: the sergeant with a spear,
    a heavy with a round shield, a sapper with a crossbow slung, a hooded mage with a staff, and the healer. Motion: the .k1-* rules inside
    the SVG; prefers-reduced-motion and .reduce hold it still. */
 {
@@ -3620,44 +3620,54 @@ const TK = {
   s += TK.stars(300, 101, 0, HZ - 30, W, '#e4e8f8', 'k1-tw');
   /* low cloud: long bands lit faintly from the fires below */
   s += `<g filter="url(#k1b20)">${[...Array(7)].map((_, i) => `<ellipse cx="${f1(h(i, 111) * W)}" cy="${f1(380 + h(i, 112) * 160)}" rx="${f1(220 + h(i, 113) * 260)}" ry="${f1(14 + h(i, 114) * 18)}" fill="${i % 2 ? '#3a2430' : '#2a2238'}" opacity=".55"/>`).join('')}</g>`;
-  /* Moon's Spawn: a black mountain afloat, its top a crown of basalt spires, its underside a long ragged cone; the stars go out behind it */
-  const MX = 960, MY = 200, HW = 400; let top = '', x = MX - HW;
+  /* Moon's Spawn: a black mountain afloat over the city, as wide as the city is, its top a crown of basalt spires, its underside a long
+     ragged cone; the stars go out behind it, and the city's blue light is on its belly */
+  const MX = 760, MY = 150, HW = 310; let top = '', x = MX - HW;
   top = `M${MX - HW} ${MY + 40}`;
-  for (let i = 0; x < MX + HW - 10; i++) { const t = (x - MX + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = 14 + h(i, 121) * 34, ht = env * (40 + Math.pow(h(i, 122), 2) * 150) + 10, lean = (h(i, 123) - .5) * 10;
+  for (let i = 0; x < MX + HW - 10; i++) { const t = (x - MX + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = 12 + h(i, 121) * 28, ht = env * (30 + Math.pow(h(i, 122), 2) * 120) + 8, lean = (h(i, 123) - .5) * 10;
     top += ` L${f1(x + bw * .2)} ${f1(MY + 30 - ht * .35)} L${f1(x + bw * .45 + lean)} ${f1(MY + 26 - ht)} L${f1(x + bw * .62)} ${f1(MY + 30 - ht * .55)}`; x += bw; }
   top += ` L${MX + HW} ${MY + 40}`;
-  let bot = ''; const n = 30; for (let i = n; i >= 0; i--) { const t = i / n, xx = MX - HW + t * 2 * HW, d = Math.pow(Math.sin(t * Math.PI), 2.2) * 250 * (.7 + h(i, 124) * .6) + 16 + h(i, 125) * 20; bot += ` L${f1(xx + (h(i, 126) - .5) * 16)} ${f1(MY + 40 + d)}`; }
+  let bot = ''; const n = 28; for (let i = n; i >= 0; i--) { const t = i / n, xx = MX - HW + t * 2 * HW, d = Math.pow(Math.sin(t * Math.PI), 2.2) * 190 * (.7 + h(i, 124) * .6) + 14 + h(i, 125) * 18; bot += ` L${f1(xx + (h(i, 126) - .5) * 14)} ${f1(MY + 40 + d)}`; }
   const spawn = top + bot + ' Z';
   s += `<g class="k1-sp"><path d="${spawn}" fill="#000" filter="url(#k1b20)" opacity=".7" transform="translate(0 20)"/><path d="${spawn}" fill="url(#k1rock)"/>`;
-  /* faces of the rock: long facets, the left ones lit a little by the night sky */
-  let fc = ''; for (let i = 0; i < 26; i++) { const t = h(i, 131), xx = MX - HW + 30 + t * (2 * HW - 60), y0 = MY + 20 + h(i, 132) * 30, len = 50 + Math.pow(Math.sin(t * Math.PI), 2) * 180 * h(i, 133), w = 8 + h(i, 134) * 18;
+  let fc = ''; for (let i = 0; i < 24; i++) { const t = h(i, 131), xx = MX - HW + 24 + t * (2 * HW - 48), y0 = MY + 20 + h(i, 132) * 26, len = 40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, 133), w = 7 + h(i, 134) * 15;
     fc += `<path d="M${f1(xx)} ${f1(y0)} L${f1(xx + w)} ${f1(y0 + 6)} L${f1(xx + w * .4)} ${f1(y0 + len)} Z" fill="${t < .45 ? '#3a3c52' : '#000'}" opacity="${f1((t < .45 ? .32 * (1 - t) : .4) * 100) / 100}"/>`; }
   s += fc;
+  s += `<path d="${bot.replace(/^ L/, 'M')}" stroke="#5a8ad8" stroke-width="2" fill="none" opacity=".35"/>`; // the city's light on the underside
   s += `<path d="${top}" stroke="#8a90b4" stroke-width="1.2" fill="none" opacity=".25"/>`;
-  for (let i = 0; i < 9; i++) { const xx = MX - 280 + h(i, 141) * 560, y = MY + 20 + h(i, 142) * 70; s += `<g class="k1-fl" style="animation-delay:-${f1(h(i, 143) * 2)}s"><circle cx="${f1(xx)}" cy="${f1(y)}" r="7" fill="url(#k1blue)"/><rect x="${f1(xx - 1.2)}" y="${f1(y - 2)}" width="2.4" height="4" fill="#a8ccff"/></g>`; }
-  /* rain trailing from the underside */
-  let rn = ''; for (let i = 0; i < 70; i++) { const xx = MX - 220 + h(i, 151) * 440, y = MY + 150 + h(i, 152) * 90; rn += `M${f1(xx)} ${f1(y)} l-6 ${f1(40 + h(i, 153) * 70)}`; }
-  s += `<path d="${rn}" stroke="#6a7090" stroke-width="1" opacity=".22"/></g>`;
-  /* the far southern skyline: hills, and a blue glow of a city's lights a long way off */
-  s += `<ellipse cx="1340" cy="${HZ - 4}" rx="320" ry="70" fill="url(#k1blue)" opacity=".8"/>`;
-  s += `<path d="M0 ${HZ} Q160 ${HZ - 22} 340 ${HZ - 12} Q520 ${HZ - 30} 720 ${HZ - 10} Q960 ${HZ - 26} 1200 ${HZ - 8} Q1400 ${HZ - 18} ${W} ${HZ - 6} L${W} ${H} L0 ${H} Z" fill="#141018"/>`;
-  for (let i = 0; i < 26; i++) s += `<circle cx="${f1(1250 + h(i, 161) * 180)}" cy="${f1(HZ - 8 - h(i, 162) * 8)}" r=".9" fill="#9cc4ff" opacity="${f1(.4 + h(i, 163) * .5)}"/>`;
-  /* the plain toward Pale */
-  s += `<path d="M0 ${HZ + 20} Q300 ${HZ + 4} 600 ${HZ + 18} Q900 ${HZ + 30} 1200 ${HZ + 16} Q1420 ${HZ + 8} ${W} ${HZ + 22} L${W} ${H} L0 ${H} Z" fill="url(#k1land)"/>`;
-  /* Pale: the ruined walls and towers on its hill, the gaps lit from inside by what still burns; smoke leaning south */
-  s += `<ellipse cx="420" cy="${HZ - 10}" rx="360" ry="70" fill="url(#k1ember)"/>`;
-  let pale = `M110 ${HZ + 14} Q250 ${HZ - 40} 420 ${HZ - 46} Q600 ${HZ - 44} 740 ${HZ + 14} Z`; s += `<path d="${pale}" fill="#120c10"/>`;
-  let wl = ''; for (let i = 0; i < 30; i++) { const x = 170 + i * 18, bw = 12 + h(i, 171) * 10, ht = 10 + h(i, 172) * 34 * (i % 5 === 2 ? 2.4 : 1), base = HZ - 30 - Math.sin((i / 30) * Math.PI) * 14; const broken = h(i, 173) < .45;
-    wl += `<path d="M${f1(x)} ${f1(base)} L${f1(x)} ${f1(base - ht)} ${broken ? `L${f1(x + bw * .4)} ${f1(base - ht + 8)} L${f1(x + bw * .7)} ${f1(base - ht - 4)}` : ''} L${f1(x + bw)} ${f1(base - ht)} L${f1(x + bw)} ${f1(base)} Z" fill="#0a0709"/>`;
-    if (h(i, 174) < .4) wl += `<rect x="${f1(x + bw * .3)}" y="${f1(base - ht * .55)}" width="2.4" height="4" fill="#ffa050" class="k1-fl" style="animation-delay:-${f1(h(i, 175) * 1.6)}s"/>`; }
-  s += wl;
-  for (let i = 0; i < 5; i++) s += `<g class="k1-sm" style="animation-delay:-${i * 3}s">${TK.smoke(230 + i * 100 + h(i, 181) * 40, HZ - 50, 220 + h(i, 182) * 100, 26 + h(i, 183) * 14, 50, i % 2 ? '#3a2a2c' : '#2a2026', .5, 190 + i, 'k1b20')}</g>`;
-  for (let i = 0; i < 8; i++) s += `<circle cx="${f1(220 + h(i, 191) * 420)}" cy="${f1(HZ - 34 - h(i, 192) * 20)}" r="${f1(14 + h(i, 193) * 18)}" fill="url(#k1fire)" class="k1-fl" style="animation-delay:-${f1(h(i, 194) * 1.6)}s"/>`;
-  /* Onearm's Host's camp in the fields: rows of tents in perspective, fires among them */
-  let tn = ''; for (let r = 0; r < 4; r++) for (let c = 0; c < 22; c++) { const y = HZ + 34 + r * 16, k = .5 + r * .22, x = 120 + c * (34 + r * 8) + (r % 2) * 14 + (h(r * 30 + c, 201) - .5) * 8; if (x > 1100) continue;
-    tn += `<path d="M${f1(x - 9 * k)} ${f1(y)} L${f1(x)} ${f1(y - 11 * k)} L${f1(x + 9 * k)} ${f1(y)} Z" fill="#1c1418"/><path d="M${f1(x - 9 * k)} ${f1(y)} L${f1(x)} ${f1(y - 11 * k)}" stroke="#8a5a40" stroke-width=".8" opacity=".5"/>`;
-    if (h(r * 30 + c, 202) < .18) tn += `<circle class="k1-fl" style="animation-delay:-${f1(h(r * 30 + c, 203) * 1.6)}s" cx="${f1(x + 14 * k)}" cy="${f1(y - 2)}" r="${f1(5 + 4 * k)}" fill="url(#k1fire)"/>`; }
-  s += tn;
+  for (let i = 0; i < 8; i++) { const xx = MX - 220 + h(i, 141) * 440, y = MY + 20 + h(i, 142) * 60; s += `<g class="k1-fl" style="animation-delay:-${f1(h(i, 143) * 2)}s"><circle cx="${f1(xx)}" cy="${f1(y)}" r="6" fill="url(#k1blue)"/><rect x="${f1(xx - 1.1)}" y="${f1(y - 2)}" width="2.2" height="3.6" fill="#a8ccff"/></g>`; }
+  let rn = ''; for (let i = 0; i < 50; i++) { const xx = MX - 170 + h(i, 151) * 340, y = MY + 140 + h(i, 152) * 70; rn += `M${f1(xx)} ${f1(y)} l-5 ${f1(30 + h(i, 153) * 50)}`; }
+  s += `<path d="${rn}" stroke="#6a7090" stroke-width="1" opacity=".2"/></g>`;
+  /* the far skyline, low hills either side of the city */
+  s += `<path d="M0 ${HZ} Q160 ${HZ - 22} 340 ${HZ - 12} Q520 ${HZ - 26} 720 ${HZ - 10} Q960 ${HZ - 22} 1200 ${HZ - 8} Q1400 ${HZ - 18} ${W} ${HZ - 6} L${W} ${H} L0 ${H} Z" fill="#141018"/>`;
+  /* Darujhistan under it: the city of blue fire across the lake, the upper city high in the middle, domes and towers, the gas-light
+     in round blue glows along the walls and streets */
+  const CX0 = 410, CX1 = 1110, CB = HZ - 6, hill = xx => 46 * Math.exp(-Math.pow((xx - 760) / 230, 2));
+  s += `<ellipse cx="760" cy="${CB - 30}" rx="460" ry="120" fill="url(#k1blue)" opacity=".85"/>`;
+  let cy = '', cw = ''; for (let i = 0; i < 64; i++) { const xx = CX0 + i * 11 + h(i, 161) * 4, base = CB - hill(xx), ht = 10 + Math.pow(h(i, 162), 1.6) * 34 + hill(xx) * .4, w = 10 + h(i, 163) * 10, k = h(i, 164);
+    if (k < .14) cy += `<path d="M${f1(xx)} ${f1(base)} L${f1(xx)} ${f1(base - ht)} A${f1(w / 2)} ${f1(w * .62)} 0 0 1 ${f1(xx + w)} ${f1(base - ht)} L${f1(xx + w)} ${f1(base)} Z"/>`;
+    else if (k < .24) cy += `<rect x="${f1(xx + w * .3)}" y="${f1(base - ht - 30)}" width="${f1(w * .4)}" height="${f1(ht + 30)}"/><path d="M${f1(xx + w * .2)} ${f1(base - ht - 30)} L${f1(xx + w * .5)} ${f1(base - ht - 46)} L${f1(xx + w * .8)} ${f1(base - ht - 30)} Z"/>`;
+    else cy += `<rect x="${f1(xx)}" y="${f1(base - ht)}" width="${f1(w)}" height="${f1(ht + hill(xx) + 6)}"/>`;
+    for (let j = 0; j < 3; j++) if (h(i * 5 + j, 165) < .5) cw += `<rect x="${f1(xx + 2 + h(i * 5 + j, 166) * (w - 4))}" y="${f1(base - 4 - h(i * 5 + j, 167) * (ht - 6))}" width="1.6" height="2.4"/>`; }
+  s += `<path d="M${CX0 - 30} ${CB + 6} Q${CX0 + 60} ${CB - 14} 640 ${CB - 40} Q760 ${CB - 56} 880 ${CB - 40} Q${CX1 - 60} ${CB - 14} ${CX1 + 30} ${CB + 6} Z" fill="#0a0c18"/><g fill="#080a14">${cy}</g><g fill="#9ac8ff">${cw}</g>`;
+  /* the gas-lights: round blue glows along the walls, a few high on the upper city, each thrown down into the lake */
+  for (let i = 0; i < 14; i++) { const xx = CX0 + 20 + i * 48 + (h(i, 171) - .5) * 20, y = CB - 6 - hill(xx) * (h(i, 172) < .4 ? 1.2 : .3) - h(i, 173) * 10, r = 10 + h(i, 174) * 10;
+    s += `<g class="k1-fl" style="animation-delay:-${f1(h(i, 175) * 2)}s"><circle cx="${f1(xx)}" cy="${f1(y)}" r="${f1(r * 2.2)}" fill="url(#k1blue)"/><circle cx="${f1(xx)}" cy="${f1(y)}" r="${f1(r * .35)}" fill="#cfe4ff"/></g><rect x="${f1(xx - 1.5)}" y="${CB + 12}" width="3" height="${f1(30 + h(i, 176) * 50)}" fill="#7ab0ff" opacity=".45" filter="url(#k1b3)"/>`; }
+  /* the lake in front of the city, dark, with the blue on it */
+  s += `<path d="M${CX0 - 160} ${CB + 6} L${CX1 + 160} ${CB + 6} Q${CX1 + 100} ${CB + 60} 760 ${CB + 74} Q${CX0 - 100} ${CB + 60} ${CX0 - 160} ${CB + 6} Z" fill="#0c1428"/>`;
+  let lk = ''; for (let i = 0; i < 50; i++) { const xx = CX0 - 80 + h(i, 181) * (CX1 - CX0 + 160), y = CB + 12 + h(i, 182) * 54, l = 6 + h(i, 183) * 20; lk += `M${f1(xx)} ${f1(y)} l${f1(l)} 0`; }
+  s += `<path d="${lk}" stroke="#7ab0ff" stroke-width="1.2" opacity=".35"/>`;
+  for (let i = 0; i < 14; i++) { const xx = CX0 + 20 + i * 48 + (h(i, 171) - .5) * 20; s += `<rect x="${f1(xx - 1.5)}" y="${CB + 10}" width="3" height="${f1(24 + h(i, 176) * 40)}" fill="#8ac0ff" opacity=".5" filter="url(#k1b3)"/>`; }
+  /* the plain this side of the lake */
+  s += `<path d="M0 ${HZ + 20} Q300 ${HZ + 6} ${CX0 - 160} ${HZ + 14} Q760 ${HZ + 96} ${CX1 + 160} ${HZ + 14} Q1420 ${HZ + 8} ${W} ${HZ + 22} L${W} ${H} L0 ${H} Z" fill="url(#k1land)"/>`;
+  /* far off on the left, the ruins of Pale still smouldering, small */
+  s += `<ellipse cx="170" cy="${HZ - 6}" rx="170" ry="40" fill="url(#k1ember)" opacity=".7"/>`;
+  let wl = ''; for (let i = 0; i < 16; i++) { const xx = 60 + i * 15, bw = 10 + h(i, 191) * 6, ht = 6 + h(i, 192) * 20 * (i % 5 === 2 ? 2 : 1), base = HZ - 4 - Math.sin(i / 16 * Math.PI) * 6;
+    wl += `<path d="M${f1(xx)} ${f1(base)} L${f1(xx)} ${f1(base - ht)} L${f1(xx + bw * .5)} ${f1(base - ht + 5)} L${f1(xx + bw)} ${f1(base - ht - 2)} L${f1(xx + bw)} ${f1(base)} Z" fill="#0a0709"/>`; if (h(i, 193) < .3) wl += `<rect x="${f1(xx + 4)}" y="${f1(base - ht * .5)}" width="2" height="3" fill="#ffa050" class="k1-fl"/>`; }
+  s += wl + TK.smoke(150, HZ - 24, 180, 18, 40, '#2a2026', .4, 195, 'k1b20');
+  /* stakes along an old road toward the city, and a dead tree on the right */
+  for (let i = 0; i < 7; i++) { const t = i / 7, xx = 150 + t * 90, y = HZ + 70 - t * 50, ht = 22 - t * 12; s += `<path d="M${f1(xx)} ${f1(y)} L${f1(xx)} ${f1(y - ht)}" stroke="#0a080c" stroke-width="${f1(3 - t * 1.6)}"/><path d="M${f1(xx - 3)} ${f1(y - ht)} L${f1(xx + 3)} ${f1(y - ht)}" stroke="#0a080c" stroke-width="2"/>`; }
+  s += `<path d="M1548 770 Q1544 640 1552 540 M1550 600 Q1520 570 1500 548 M1550 640 Q1580 610 1598 596 M1551 570 Q1566 548 1572 520 M1512 562 L1496 560" stroke="#08060a" stroke-width="5" stroke-linecap="round" fill="none"/>`;
   /* the rise the five stand on, with dry grass catching the glow */
   s += `<path d="M640 ${H} Q820 762 1040 748 Q1300 736 1600 760 L1600 ${H} Z" fill="#07060a"/>`;
   s += TK.rim('M700 860 Q840 768 1040 750 Q1300 738 1600 762', '#a07060', 1.6, .35);
@@ -8091,6 +8101,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.2.1', ['Book One\'s title laid out as it first was: Darujhistan\'s blue fire across the lake fills the skyline, Moon\'s Spawn hangs over it as wide as the city, the ruins of Pale small on the left, and the Fourth\'s five on the rise.']],
   ['13.2.0', ['Title art redrawn for Books One to Nine, in the style of Book Ten\'s: deeper skies and ground, the book\'s own scene in more detail, and each book\'s soldiers in the foreground seen from behind, off to the right of the lettering. Moon\'s Spawn over Pale; Hissar burning behind the Chain; the cold light over the Rhivi Plain; the Whirlwind as a wall of dust; the Quillas Canal between its houses; Y\'Ghatan\'s bone walls under smoke; the transports burning; Darujhistan\'s blue fire under the cracked moon; the column going east into the Wastes. The covers on the book list are framed to match.']],
   ['13.1.1', ['Book Ten\'s title art redrawn: the Glass Desert as cracked plates of glass throwing back the stars, shards standing out of it, the army walking east to the horizon with each soldier doubled in the glass, and the two who stay awake seen from behind on their packs, off to one side so the title reads clear.']],
   ['13.1.0', ['Bridgeburner, Books One to Seven: 57 fights that had grown harder than intended are eased back to about three wins in four. Book Five\'s early fights were the worst of them. Soldier and Story are unchanged (one Book Five Soldier fight, the wolves in Chapter 4, gives up a little health so it stays easier than its Bridgeburner side).', 'Each finale\'s Where the books meet map now stops at its own book.', 'Saves carry on as they were.']],
