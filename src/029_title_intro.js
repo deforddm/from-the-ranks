@@ -105,7 +105,7 @@ function shelfHTML(list){
   return `<div class="shelf"><div class="rh">${list.length > 1 ? 'Choose a book: its sergeants, or a new one' : list.length ? 'A new sergeant? Choose your book' : 'Choose your book'}</div><div class="covers">${shelfBooks().map(B => {
     const n = list.filter(e => onShelf(e, B.id)).length, src = coverSrc(B.titleArt || 'title/key');
     return `<button class="cover" data-shelf="${B.id}" aria-label="Book ${B.word}: ${esc(B.name)}, beside ${esc(B.title)}${n ? `; ${n} sergeant${n > 1 ? 's' : ''}` : ''}">
-      <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false">` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
+      <span class="cimg">${src ? `<img src="${src}" alt="" draggable="false"${B.coverPos ? ` style="object-position:${B.coverPos}"` : ''}>` : `<i>${ROMAN[B.n]}</i>`}${n ? `<em>${n} sergeant${n > 1 ? 's' : ''}</em>` : ''}</span>
       <span class="cw">Book ${B.word}</span><b>${esc(B.name)}</b><small>${esc(B.title)}</small></button>`; }).join('')}</div></div>`; }
 function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');

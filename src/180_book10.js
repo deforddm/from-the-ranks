@@ -70,7 +70,7 @@ function b10As(fn){ if (!b10On()) return fn(b10Thread()); const t = b10Thread(),
 /* ---- the shelf ---- */
 BOOKS.tcg = {id:'tcg', n:10, word:'Ten', title:'The Crippled God', name:'Witnessed', h1:['', 'Witnessed'], squad:'Two squads', unit:'the squad',
   tag:'The army crosses a desert made of glass for a reason nobody gives it, and the Letherii go the long way round. Nobody will remember who was there. Somebody should.',
-  titleArt:'title/tcg', titleScene:'tcg', patch:'insignia/tcg',
+  titleArt:'title/tcg', coverPos:'84% 50%', titleScene:'tcg', patch:'insignia/tcg',
   blurb:'The Glass Desert and Kolanse, days after the short-tails, beside The Crippled God: the Third in the crossing, Book Nine\'s Letherii on the long way round, and Book Eight\'s Fourth at the very end. The last book. A finished Book Nine carries both squads across.'};
 Object.defineProperty(BOOKS.tcg, 'coming', {configurable:true, get(){ return b10ChCount() === 0; }});
 Object.defineProperty(BOOKS.tcg, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/tcg'] ? 'title/tcg' : 'title/dod'; }});
