@@ -24,6 +24,9 @@ function migrate(s){
   s.dead ??= {};
   s.tricks ??= {}; s.rattled ??= {}; s.push ??= 0; // v3.11: tricks won on hard checks, a natural 1's rattle, the Lord's push
   s.inv ??= {}; s.inv.smoker ??= 0; // v3.7.1: smokers. Saves already past Hedge's cellar in Chapter 3 get the two he handed over there.
+  // v13.4 (David, Nov 12): the Mockra Whisper is Tuft's from the start, so a Tuft who took it as her level-3 talent chooses again (Shadow Step or Shadow Lash)
+  [s, ...Object.values(s.th || {})].forEach(t => { const p = t && t.picks && t.picks.tuft; if (!p || !p.includes('mockra')) return; t.picks.tuft = p.filter(k => k !== 'mockra');
+    if ((t.lvl || s.lvl || 1) >= 3) { t.picksDue ??= []; if (!t.picksDue.includes(3)) t.picksDue.push(3); } });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
   if (!s.f.gotSmokers && (s.chapter > 3 || (s.fxd && s.fxd.c3_work_hedge))) { s.inv.smoker += 2; s.f.gotSmokers = 1; }
   // v3.7.3: the Phoenix's door moved off the crossing, up the alley into the Daru District; a save standing in its old doorway steps back into the street

@@ -379,15 +379,14 @@ const INIT = () => {
       // the sergeant's Rally when most of the squad is close and the fight has come to them
       if (can(u, 'rally')) { const near = sq.filter(p => p !== u && cheb(u, p) <= 4);
         if (near.length >= 3 && (minD(u, opp) <= 3 || near.some(p => pct(p) < .6 || minD(p, opp) <= 1))) return tryAb('rally'); }
-      // Tuft: out through Meanas if she is cornered and hurt; a veil on whoever is taking it; a phantom on the worst thing near us
+      // Tuft: out through Meanas if she is cornered and hurt; the Lash on a knot of them; a phantom or the Whisper on the worst thing near us
       if (u.id === 'tuft') {
         if (can(u, 'shadowstep') && strainOk(u, 1) && opp.some(e => cheb(e, u) === 1) && pct(u) < .6) {
           const t = AB.shadowstep.tiles(u).map(p => ({ ...p, s: -threatAt(p, u) - opp.filter(e => cheb(e, p) === 1).length * 50 - Math.max(0, minD(p, opp) - u.rng) * 3 })).sort((a, b) => b.s - a.s)[0];
           if (t) return tryAb('shadowstep', t.x, t.y); }
-        if (can(u, 'veil') && strainOk(u, 2)) { const t = AB.veil.tiles(u).filter(p => !p.ally && !(p.veilUntil >= B.round)).map(p => { const adj = opp.filter(e => cheb(e, p) === 1 && !e.stun);
-            return { p, adj, s: adj.reduce((s, e) => s + danger(e), 0) * (1.5 - pct(p)) }; })
-          .filter(o => o.adj.some(e => e.boss) || o.adj.length >= 2 || (o.adj.length && pct(o.p) < .5)).sort((a, b) => b.s - a.s)[0];
-          if (t) return tryAb('veil', t.p.x, t.p.y); }
+        // v13.4: Shadow Lash (her talent, strain 4) when it will strike two or more
+        if (can(u, 'shadowlash') && strainOk(u, 4)) { const t = AB.shadowlash.tiles(u).map(e => [e, opp.filter(o => o !== e && cheb(o, e) <= 2).length]).filter(([, n]) => n >= 1).sort((a, b) => b[1] - a[1] || danger(b[0]) - danger(a[0]))[0];
+          if (t) return tryAb('shadowlash', t[0].x, t[0].y); }
         for (const k of ['phantom', 'mockra']) if (can(u, k) && strainOk(u, k === 'phantom' ? 3 : 2)) {
           const t = AB[k].tiles(u).filter(e => !e.stun && (e.boss || danger(e) >= 8) && sq.some(p => cheb(p, e) <= e.mv + e.rng)).sort((a, b) => danger(b) - danger(a))[0];
           if (t) return tryAb(k, t.x, t.y); }
@@ -395,10 +394,10 @@ const INIT = () => {
       // munitions and the quorl
       for (const k of ['cusser', 'sharper', 'burner', 'quorl', 'smoker']) { const t = bestThrow(u, k, spec); if (t) return tryAb(k, t.x, t.y); }
       // the sergeant's Shield Drive: when a squadmate stands beside the same enemy, drive it out of their reach for the free swing
-      if (can(u, 'shove')) { const t = AB.shove.tiles(u).filter(e => !e.boss && !e.immortal && e.maxhp < 45 && sq.some(p => p !== u && cheb(p, e) === 1)).sort((a, b) => danger(b) - danger(a))[0];
+      if (can(u, 'shove')) { const t = AB.shove.tiles(u).filter(e => !e.heavy && !e.immortal && sq.some(p => p !== u && cheb(p, e) === 1)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('shove', t.x, t.y); }
       // Vell: the hook on a shooter or a caster standing off, hauled in among the squad
-      if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.boss && !e.immortal && e.maxhp < 45 && (e.rng > 1 || danger(e) >= 8)).sort((a, b) => danger(b) - danger(a))[0];
+      if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.heavy && !e.immortal && (e.rng > 1 || danger(e) >= 8)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('grapple', t.x, t.y); }
       // v7.1 Book Four: the Twins first (free), Hessa's prayers, Yorin's Serc (the Shove where it catches two or more, else Sky-Fire on the worst thing in reach)
       if (can(u, 'b4_twins')) { const t = AB.b4_twins.tiles(u).sort((a, b) => b.atk - a.atk)[0]; if (t) { const r = tryAb('b4_twins', t.x, t.y); if (r) return r; } }

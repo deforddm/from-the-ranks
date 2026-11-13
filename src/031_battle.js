@@ -77,7 +77,7 @@ function mkParty(id, x, y){
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
-  ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
+  ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
@@ -242,7 +242,7 @@ function lose(){
     S = migrate(JSON.parse(snap)); if (st) S.stats = st; S.gods = gods; if (met) S.godsMet = met; boonGrant(S.battle, bn); startBattle(S.battle, S.bopt || {}); }; // the count and the gods remember the lost fight; the god's boon goes on it (31c)
 }
 
-const grapR = () => 3 + lvT(), shoveDist = () => 1 + lvAt(4);
+const grapR = () => 3 + lvT(), shoveDist = () => 1 + lvAt(4), lashN = () => 3 + lvAt(7) + lvAt(14);
 /* after a Shield Drive: the tile the enemy left is offered to the sergeant for one free step (tap it), until anything else is tapped or the turn ends */
 function offerFollow(u, at, t){ B.follow = {u, t, x:at.x, y:at.y}; blog(`<em>Tap the tile it left to follow through, or anywhere else to hold your ground.</em>`); updBattleUI(); }
 /* abilities. The heals and Rally grow with the squad's level (lvB, 15), so they keep up with the road's harder blows */
@@ -266,9 +266,7 @@ const AB = {
       const g = 's' + B.turn + ':' + pt.x + ',' + pt.y; for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) if (!solid(pt.x+dx, pt.y+dy)) B.smoke.push({x:pt.x+dx, y:pt.y+dy, until:B.round+2, g});
       updBattleUI(); if (B.cur && B.cur.side === 'p') afterAct(); }); // a smoker has no blast() to hand the turn back, so it does it here (it used to wait for the watchdog: the hang)
       blog(`${u.name} breaks a smoker. Grey rolls out across the ${placeWord(B.def)} and sits there like a held breath.`); }},
-  veil:{name:'Veil', strain:2, desc:()=>`Meanas illusion on a squadmate within 4: enemies take −${veilPen()} to hit them for ${2 + lvAt(5)} rounds. Grows with level. Strain 2.`,
-    tiles:u=>party().filter(p => cheb(u,p) <= 4 && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); t.veilUntil = B.round + 2 + lvAt(5); AUDIO.play('magic'); sparks(t.x, t.y, 14, '#c9bbff', .4); blog(`${u.name} folds shadow around ${t.name}. They blur at the edges.`); float(t,'veiled','#c9bbff'); }},
+  /* (v13.4: Veil, the −to-hit cover Tuft put on a squadmate, is gone: David, Nov 12, Phantom and the Mockra Whisper are hers from the start) */
   /* Phantom (Meanas): shadow folded over an enemy's eyes for two rounds. It fights phantoms; half the blows that would land go into the dark. */
   phantom:{name:'Phantom', strain:2, desc:()=>`Meanas shadow over the eyes of an enemy within 5 for its next ${2 + lvT()} turns: it swings at phantoms, and half the blows that would have landed go into the dark (−50% to hit). Grows with level. Strain 2.`,
     tiles:u=>foes().filter(f => cheb(u,f) <= 5 && sees(u,f)),
@@ -322,6 +320,17 @@ const AB = {
     run(u,x,y){ B.used.quorl = 1; const pt = {x,y}; AUDIO.play('bow'); B.fx.push({kind:'arc', from:{x:pt.x + 1.5, y:-3}, to:pt, t:performance.now(), dur:REDUCE() ? 1 : pace(480), drop:true}); later(() => { blast(pt, [[1,10,2],[1,6,0]], '#f2c46b'); AUDIO.play('sharper'); sparks(pt.x, pt.y, 26, '#f2c46b'); }, REDUCE() ? 1 : pace(500)); blog(`${u.name} shows a lamp to the sky. Something with wings answers.`); }},
   shadowstep:{name:'Shadow Step', strain:1, desc:()=>`Step through Meanas to any free tile within ${4 + lvT()}. No free swings. Grows with level. Strain 1.`, tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 4 + lvT() && free(x,y,u) && !(x === u.x && y === u.y)) out.push({x,y,step:true}); return out; },
     run(u,x,y){ AUDIO.play('shadow'); sparks(u.x, u.y, 12, '#c9bbff', .4); u.x = x; u.y = y; sparks(x, y, 12, '#c9bbff', .4); blog(`${u.name} is somewhere else.`); enterFire(u); }},
+  /* v13.4 (David, Nov 12): Shadow Lash, Tuft's level-3 talent beside Shadow Step. A lash of Meanas at one enemy that leaps on to the
+     nearest other enemy within 2 tiles of the last one struck, 2 less each leap; 3 enemies, 4 from level 7, 5 from level 14 (lashN); never
+     a squadmate; strain 4, so two in a row overdraws her (strMax is 6, 10 at the top). */
+  shadowlash:{name:'Shadow Lash', strain:4, desc:()=>`Meanas at an enemy within 5: 1d8+${2 + lvDmg()} on a hit, then it leaps to the nearest other enemy within 2 tiles of the last one struck, 2 less each leap, striking up to ${lashN()} enemies. Never a squadmate. Grows with level. Strain 4.`,
+    tiles:u=>foes().filter(f => cheb(u,f) <= 5 && sees(u,f)),
+    async run(u,x,y){ let t = unitAt(x,y); if (!t) return; const hit = new Set(); let from = {x:u.x, y:u.y}, less = 0; AUDIO.play('shadow');
+      for (let i = 0; i < lashN() && t && B; i++) { hit.add(t); B.fx.push({kind:'bolt', from, to:{x:t.x, y:t.y}, col:'#8a74d8', t:performance.now(), dur:300, wob:true});
+        attack(u, t, {dmg:[1, 8, Math.max(0, 2 + lvDmg() - less)], verb:i ? 'and the lash leaps on to' : 'lashes Meanas across', spell:true}); sparks(t.x, t.y, 10, '#6a58b0', .4);
+        await wait(pace(220)); if (!B) return; from = {x:t.x, y:t.y}; less += 2;
+        const last = from; t = foes().filter(f => f.hp > 0 && !hit.has(f) && cheb(f, last) <= 2).sort((a, b) => cheb(a, last) - cheb(b, last))[0]; }
+      blog(`${u.name}'s lash goes out of the dark and comes back to her hand${hit.size > 1 ? `, by way of ${hit.size} of them` : ''}.`); }},
   /* Mockra, the warren of the mind: not a lost turn (that is Phantom) but a turned one. The enemy hears its own side say something
      unforgivable and spends its next turn going for the nearest of them instead of the squad. */
   mockra:{name:'Mockra Whisper', strain:3, desc:()=>`An enemy within 4 hears its own side whisper something unforgivable. On its next turn it goes for the nearest of them instead of you. Bosses resist on ${12 + 2*lvT()}+. Grows with level. Strain 3.`,

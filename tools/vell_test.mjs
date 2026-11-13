@@ -12,10 +12,10 @@ const click = async txt => { const n = await page.evaluate(t => { const q = s =>
 const choices = () => ev(() => [...document.querySelectorAll('#sheet .choice')].map(b => b.textContent.replace(/[“”"‘’']/g, '').trim()));
 
 // ---- levels ----
-const lv = await ev(() => { S = newState('Hask'); const at = l => { S.lvl = l; return {rally:rallyHeal(), str:strMax(), veil:veilPen(), wits:statOf('sgt','wits'), might:statOf('sgt','might'), guile:statOf('vell','guile'), dmg:lvDmg(), ac:lvAc(), pull:trickN('pull'), hook:grapR()}; }; return [at(1), at(4), at(8)]; });
+const lv = await ev(() => { S = newState('Hask'); const at = l => { S.lvl = l; return {rally:rallyHeal(), str:strMax(), lash:lashN(), wits:statOf('sgt','wits'), might:statOf('sgt','might'), guile:statOf('vell','guile'), dmg:lvDmg(), ac:lvAc(), pull:trickN('pull'), hook:grapR()}; }; return [at(1), at(4), at(8)]; });
 ok(lv[0].rally === 5 && lv[2].rally === 19, `Rally heals 5 at level 1, 19 at level 8 (${lv[0].rally}, ${lv[2].rally})`);
 ok(lv[0].str === 6 && lv[1].str === 7 && lv[2].str === 8, `strain limit 6 → 7 → 8 (${lv.map(x => x.str)})`);
-ok(lv[0].veil < lv[2].veil, `Veil grows (${lv[0].veil} → ${lv[2].veil})`);
+ok(lv[0].lash < lv[2].lash, `Shadow Lash grows (${lv[0].lash} → ${lv[2].lash})`);
 ok(lv[0].wits === 2 && lv[1].wits === 3 && lv[2].might === 3, `the sergeant's Wits +1 at 4, Might +1 at 8`);
 ok(lv[0].guile === 3 && lv[1].guile === 4, `Vell's Guile +1 at level 4`);
 ok(lv[0].pull === 2 && lv[2].pull === 3, `chapter tricks gain a use at level 5`);
