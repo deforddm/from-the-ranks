@@ -387,6 +387,11 @@ const INIT = () => {
         // v13.4: Shadow Lash (her talent, strain 4) when it will strike two or more
         if (can(u, 'shadowlash') && strainOk(u, 4)) { const t = AB.shadowlash.tiles(u).map(e => [e, opp.filter(o => o !== e && cheb(o, e) <= 2).length]).filter(([, n]) => n >= 1).sort((a, b) => b[1] - a[1] || danger(b[0]) - danger(a[0]))[0];
           if (t) return tryAb('shadowlash', t[0].x, t[0].y); }
+        // v13.4 (David, Nov 13: "whisper is incredibly powerful when you take attacks of opportunity into account"): the Whisper first on
+        // an enemy that is in a squadmate's reach (it walks off and eats the free swings) or beside its own (it hits them)
+        if (can(u, 'mockra') && strainOk(u, 3)) { const t = AB.mockra.tiles(u).filter(e => !e.stun && (sq.some(p => cheb(p, e) === 1) || opp.some(o => o !== e && cheb(o, e) <= Math.max(1, e.rng || 1))))
+            .sort((a, b) => (sq.filter(p => cheb(p, b) === 1).length - sq.filter(p => cheb(p, a) === 1).length) || (danger(b) - danger(a)) || ((a.boss ? 1 : 0) - (b.boss ? 1 : 0)))[0];
+          if (t && (!t.boss || danger(t) >= 8)) return tryAb('mockra', t.x, t.y); }
         for (const k of ['phantom', 'mockra']) if (can(u, k) && strainOk(u, k === 'phantom' ? 3 : 2)) {
           const t = AB[k].tiles(u).filter(e => !e.stun && (e.boss || danger(e) >= 8) && sq.some(p => cheb(p, e) <= e.mv + e.rng)).sort((a, b) => danger(b) - danger(a))[0];
           if (t) return tryAb(k, t.x, t.y); }
