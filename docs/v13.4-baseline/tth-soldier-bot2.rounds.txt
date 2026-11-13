@@ -1,0 +1,25 @@
+ALL fights 24 mean won 98% median rounds 13 p90 22
+b8_c1_alley won 100% median rounds 6 n 10
+b8_c1_den won 100% median rounds 14 n 10
+b8_c1_chancers won 100% median rounds 13 n 10
+b8_c1_hunt won 100% median rounds 22 n 10
+b8_c2_raid won 100% median rounds 11 n 10
+b8_c2_town won 100% median rounds 19 n 10
+b8_c2_fields won 100% median rounds 16 n 10
+b8_c3_ridge won 100% median rounds 11 n 10
+b8_c3_road won 100% median rounds 18 n 10
+b8_c3_sellers won 90% median rounds 12 n 10
+b8_c4_water won 100% median rounds 11 n 10
+b8_c4_drunk won 100% median rounds 12 n 10
+b8_c4_edge won 100% median rounds 8 n 10
+b8_c5_grass won 100% median rounds 12 n 10
+b8_c4_stores won 100% median rounds 25 n 10
+b8_c5_knives won 100% median rounds 15 n 10
+b8_c5_peddler won 100% median rounds 21 n 10
+b8_c6_masks won 100% median rounds 12 n 10
+b8_c6_street won 100% median rounds 9 n 10
+b8_c6_wall won 90% median rounds 18 n 10
+b8_c6_knives won 100% median rounds 11 n 10
+b8_c7_roofs won 100% median rounds 8 n 10
+b8_c7_looters won 80% median rounds 22 n 10
+b8_c7_doorway won 100% median rounds 15 n 10
