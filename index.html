@@ -1422,9 +1422,9 @@ const TPL = {
     get quest(){ return squadQuest('kettle', `Owes a Moranth quartermaster something she won't name. The Moranth remember debts, and Kettle keeps checking the sky for quorls.`); },
     banter:[`"You want the count, Sergeant, ask Brisk. She's who you trust with numbers, apparently."`,`"Two sharpers, one burner, one cusser. Same as this morning. You can stop asking."`,`"You keep pointing me at things and I'll keep making them stop being things. That's love, in the sapper trade."`],
     rel:{brisk:'Calls her "the wall." Not to her face. Brisk knows.',tuft:'Shares a tent with her. Has stopped asking about the nightmares.',ohl:'He stitched her hand at Nathilog. She owes him and pays in tobacco.',ellis:'Trades her trip-cord for arrows and has never once asked what the cord is for. For Kettle, not asking is a kind of vow.'}},
-  tuft:{name:'Tuft',role:'Squad mage · Meanas',sig:'T',col:'#a08de0',hp:14,ac:12,atk:4,dmg:[1,6,1],rng:4,mv:4,init:1,st:{might:0,wits:2,guile:3},ab:['veil','phantom','salve'],magic:true,
+  tuft:{name:'Tuft',role:'Squad mage · Meanas',sig:'T',col:'#a08de0',hp:14,ac:12,atk:4,dmg:[1,6,1],rng:4,mv:4,init:1,st:{might:0,wits:2,guile:3},ab:['phantom','mockra','salve'],magic:true,
     epithet:'Quiet, and too young for her eyes.',origin:'Malaz City, the Mouse Quarter',age:19,service:'Fourteen months. Feels longer to everyone.',height:'Slight. Vanishes into a crowd of two.',
-    weapon:'Shadow-lash at range, a Meanas veil up close, and a Deck of Dragons she says is for luck',armour:'A grey cloak that is sometimes not there when you look at it',
+    weapon:'Shadow-lash at range, a whisper in the wrong ear up close, and a Deck of Dragons she says is for luck',armour:'A grey cloak that is sometimes not there when you look at it',
     bio:`Shadow-lash at range, illusions up close, and a battered Deck of Dragons in her sleeve that she reads when she thinks no one is watching, which is a thing a Meanas mage should be better at judging.`,
     bio2:`A Mouse Quarter foundling who found her warren the way children in that quarter find most things, by accident and at night. She was ten the night the new mage cadre came through the Quarter, with soldiers at their backs, killing every mage who wasn't on a register, nine years before Pale, and she lived by being small and very quiet, which she has been ever since. Was taken into the cadre at sixteen, spent a season attached to the High Mage's staff, and requested transfer to a marine squad with a letter that said nothing and a face that said the rest. Nobody in the Fourth has asked. Ohl came closest.`,
     traits:['Goes very still when someone says "High Mage"','Never draws a card for herself','Sleeps with a lamp lit','Laughs at exactly one thing: Kettle'],
@@ -1555,7 +1555,7 @@ const PICKS = {
   3:{ sgt:[['discipline','Marine Discipline','Every squadmate wears +1 armour. Eleven years of telling people where to stand.'],['sappers_eye','Sapper\'s Eye','The squad rolls +2 initiative, and the sergeant\'s free swings hit +2.']],
       brisk:[['shieldwall','Shield Wall','Squadmates standing next to Brisk get +2 armour.'],['holdline','Hold the Line','Brisk\'s free swings are unlimited and hit +2.']],
       kettle:[['longfuse','Crossbow Cradle','A munitions cradle on the heavy crossbow: sharpers, burners, smokers and cussers never scatter, and reach one tile further.'],['quorl','Quorl Signal','Once a fight: a Moranth drop. A sharper from the sky, anywhere within 5, not from the satchel.']],
-      tuft:[['shadowstep','Shadow Step','Step through Meanas to any open tile within 4. No free swings. Strain 1.'],['mockra','Mockra Whisper','Mockra, the mind: an enemy within 4 turns on its own side for a turn and goes for the nearest of them instead of you. Bosses may resist. Strain 3.']],
+      tuft:[['shadowstep','Shadow Step','Step through Meanas to any open tile within 4. No free swings. Strain 1.'],['shadowlash','Shadow Lash','Meanas at an enemy within 5 that leaps on to the nearest enemy within 2 of the last one struck, 2 less each leap: three enemies, four from level 7, five from level 14. Never a squadmate. Strain 4.']],
       ohl:[['triage','Field Triage','Mend heals +3 and reaches 4 tiles.'],['argument','Argument with Hood','Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3.']],
       ellis:[['quickshot','Quick Shot','Once a fight: two arrows at one target within reach.'],['ghost','Ghost Step','Enemies take −2 to hit Ellis. Six years of not being where the sentry looked.']],
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). No free swings.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
@@ -1765,6 +1765,9 @@ function migrate(s){
   s.dead ??= {};
   s.tricks ??= {}; s.rattled ??= {}; s.push ??= 0; // v3.11: tricks won on hard checks, a natural 1's rattle, the Lord's push
   s.inv ??= {}; s.inv.smoker ??= 0; // v3.7.1: smokers. Saves already past Hedge's cellar in Chapter 3 get the two he handed over there.
+  // v13.4 (David, Nov 12): the Mockra Whisper is Tuft's from the start, so a Tuft who took it as her level-3 talent chooses again (Shadow Step or Shadow Lash)
+  [s, ...Object.values(s.th || {})].forEach(t => { const p = t && t.picks && t.picks.tuft; if (!p || !p.includes('mockra')) return; t.picks.tuft = p.filter(k => k !== 'mockra');
+    if ((t.lvl || s.lvl || 1) >= 3) { t.picksDue ??= []; if (!t.picksDue.includes(3)) t.picksDue.push(3); } });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
   if (!s.f.gotSmokers && (s.chapter > 3 || (s.fxd && s.fxd.c3_work_hedge))) { s.inv.smoker += 2; s.f.gotSmokers = 1; }
   // v3.7.3: the Phoenix's door moved off the crossing, up the alley into the Daru District; a save standing in its old doorway steps back into the street
@@ -6148,7 +6151,7 @@ function mkParty(id, x, y){
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
-  ['quorl','shadowstep','mockra','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
+  ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
@@ -6157,7 +6160,7 @@ function mkParty(id, x, y){
   return u;
 }
 function mkFoe(k, x, y, extra=0){ const f = FOES[k], fs = foeScale(), sl = soldierLate() || bbFight() || {hp:1, atk:0, dmg:0}, hp = Math.max(1, Math.round((f.hp + extra) * DIFF().hp * fs.hp * (sl.hp || 1))), sk = foeSkills(k, f), dmg = f.dmg ? [f.dmg[0], f.dmg[1], (f.dmg[2] || 0) + fs.dmg + (sl.dmg || 0)] : f.dmg;
-  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), ac:f.ac != null ? f.ac + (sl.ac || 0) : f.ac, maxhp:hp, hp, col:'#d9695a', x, y, soak:foeSoak(k), pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // v10.2: the per-fight rows (31c: SOLDIER_FIGHT, B1GAP..B4GAP_FIGHT); soak, from the armour it was made with (31c)
+  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), ac:f.ac != null ? f.ac + (sl.ac || 0) : f.ac, maxhp:hp, hp, col:'#d9695a', x, y, heavy:!!f.heavy || HEAVY_FOES.has(k), soak:foeSoak(k), pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // v10.2: the per-fight rows (31c: SOLDIER_FIGHT, B1GAP..B4GAP_FIGHT); soak, from the armour it was made with (31c)
 function mkAlly(k, x, y){ const f = FOES[k]; return {id:'ally_' + k, kind:k, side:'p', ally:true, ...f, name:f.name + ' (ally)', maxhp:f.hp, hp:f.hp, col:'#9fb3d9', x, y, ab:[], pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // an ally's crossbow or sorcery goes past soak too; allies have no soak of their own (v10.2)
 /* the nearest free tile to x,y (itself if free), ring by ring out to 4, the straight neighbours first */
 function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};
@@ -6313,7 +6316,7 @@ function lose(){
     S = migrate(JSON.parse(snap)); if (st) S.stats = st; S.gods = gods; if (met) S.godsMet = met; boonGrant(S.battle, bn); startBattle(S.battle, S.bopt || {}); }; // the count and the gods remember the lost fight; the god's boon goes on it (31c)
 }
 
-const grapR = () => 3 + lvT(), shoveDist = () => 1 + lvAt(4);
+const grapR = () => 3 + lvT(), shoveDist = () => 1 + lvAt(4), lashN = () => 3 + lvAt(7) + lvAt(14);
 /* after a Shield Drive: the tile the enemy left is offered to the sergeant for one free step (tap it), until anything else is tapped or the turn ends */
 function offerFollow(u, at, t){ B.follow = {u, t, x:at.x, y:at.y}; blog(`<em>Tap the tile it left to follow through, or anywhere else to hold your ground.</em>`); updBattleUI(); }
 /* abilities. The heals and Rally grow with the squad's level (lvB, 15), so they keep up with the road's harder blows */
@@ -6337,9 +6340,7 @@ const AB = {
       const g = 's' + B.turn + ':' + pt.x + ',' + pt.y; for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) if (!solid(pt.x+dx, pt.y+dy)) B.smoke.push({x:pt.x+dx, y:pt.y+dy, until:B.round+2, g});
       updBattleUI(); if (B.cur && B.cur.side === 'p') afterAct(); }); // a smoker has no blast() to hand the turn back, so it does it here (it used to wait for the watchdog: the hang)
       blog(`${u.name} breaks a smoker. Grey rolls out across the ${placeWord(B.def)} and sits there like a held breath.`); }},
-  veil:{name:'Veil', strain:2, desc:()=>`Meanas illusion on a squadmate within 4: enemies take −${veilPen()} to hit them for ${2 + lvAt(5)} rounds. Grows with level. Strain 2.`,
-    tiles:u=>party().filter(p => cheb(u,p) <= 4 && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); t.veilUntil = B.round + 2 + lvAt(5); AUDIO.play('magic'); sparks(t.x, t.y, 14, '#c9bbff', .4); blog(`${u.name} folds shadow around ${t.name}. They blur at the edges.`); float(t,'veiled','#c9bbff'); }},
+  /* (v13.4: Veil, the −to-hit cover Tuft put on a squadmate, is gone: David, Nov 12, Phantom and the Mockra Whisper are hers from the start) */
   /* Phantom (Meanas): shadow folded over an enemy's eyes for two rounds. It fights phantoms; half the blows that would land go into the dark. */
   phantom:{name:'Phantom', strain:2, desc:()=>`Meanas shadow over the eyes of an enemy within 5 for its next ${2 + lvT()} turns: it swings at phantoms, and half the blows that would have landed go into the dark (−50% to hit). Grows with level. Strain 2.`,
     tiles:u=>foes().filter(f => cheb(u,f) <= 5 && sees(u,f)),
@@ -6357,12 +6358,12 @@ const AB = {
   quickshot:{name:'Quick Shot', desc:()=>`Once a fight: ${lvAt(6) ? 'three' : 'two'} arrows at one target within range${lvAt(6) ? '' : ' (three from level 6)'}.`, ok:()=>!B.used.quickshot, tiles:u=>foes().filter(f => cheb(u,f) <= u.rng && canShoot(u,f)),
     run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
   /* Vell's rope-and-hook: a throw at range that hauls whatever it bites to the tile beside him. The heavy take the hook and stay put. */
-  grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. Bosses and the very heavy take the hook but don't come. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the hook but don't come; a leader braces against it about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdHook >= B.round), tiles:u=>foes().filter(f => cheb(u,f) >= 2 && cheb(u,f) <= grapR() && canShoot(u,f)),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdHook = B.round + 2 - lvAt(6); AUDIO.play('bow');
       const r = attack(u, t, {dmg:[1,6,1 + lvDmg()], verb:'throws the hook at'}); if (!r.hit) return;
       await wait(pace(300)); if (!B || t.hp <= 0) return;
-      if (t.boss || t.immortal || t.maxhp >= 45) { blog(`The hook bites into ${t.name}. ${t.name} doesn't come. Vell lets go of the line before it takes him instead.`); float(t, 'too heavy', '#a99a88'); return; }
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `The hook bites into ${t.name}. ${t.name} doesn't come. Vell lets go of the line before it takes him instead.` : `The hook bites into ${t.name}, who sets both feet and leans back against it. Vell lets go before he is the one hauled.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const at = DIRS.map(([dx, dy]) => ({x:u.x + dx, y:u.y + dy})).filter(p => free(p.x, p.y, t)).sort((a, b) => cheb(a, t) - cheb(b, t))[0];
       if (!at) { blog(`There's nowhere beside Vell to haul ${t.name} to. The hook comes back with a piece of it.`); return; }
       blog(`Vell hauls on the line with his whole weight and ${t.name} comes off its feet and across the ground to him${has(u.id, 'snare') ? `, tangled to the knees in tarred rope` : ''}.`);
@@ -6371,12 +6372,12 @@ const AB = {
       t.facing = u.x >= t.x ? 1 : -1;
       if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); } }},
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
-  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. Bosses and the very heavy don't move. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdShove = B.round + 2 - lvAt(6); u.aooTurn = B.turn; // the sergeant's own swing is spent on the drive
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'drives a shield into'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0) return;
-      if (t.boss || t.immortal || t.maxhp >= 45) { blog(`${t.name} takes the shield and doesn't give a step.`); float(t, 'braced', '#a99a88'); return; }
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the shield and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
       for (let i = 0; i < shoveDist(); i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; } // a pit takes it (forcedMove asks the save)
       if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
@@ -6393,6 +6394,17 @@ const AB = {
     run(u,x,y){ B.used.quorl = 1; const pt = {x,y}; AUDIO.play('bow'); B.fx.push({kind:'arc', from:{x:pt.x + 1.5, y:-3}, to:pt, t:performance.now(), dur:REDUCE() ? 1 : pace(480), drop:true}); later(() => { blast(pt, [[1,10,2],[1,6,0]], '#f2c46b'); AUDIO.play('sharper'); sparks(pt.x, pt.y, 26, '#f2c46b'); }, REDUCE() ? 1 : pace(500)); blog(`${u.name} shows a lamp to the sky. Something with wings answers.`); }},
   shadowstep:{name:'Shadow Step', strain:1, desc:()=>`Step through Meanas to any free tile within ${4 + lvT()}. No free swings. Grows with level. Strain 1.`, tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 4 + lvT() && free(x,y,u) && !(x === u.x && y === u.y)) out.push({x,y,step:true}); return out; },
     run(u,x,y){ AUDIO.play('shadow'); sparks(u.x, u.y, 12, '#c9bbff', .4); u.x = x; u.y = y; sparks(x, y, 12, '#c9bbff', .4); blog(`${u.name} is somewhere else.`); enterFire(u); }},
+  /* v13.4 (David, Nov 12): Shadow Lash, Tuft's level-3 talent beside Shadow Step. A lash of Meanas at one enemy that leaps on to the
+     nearest other enemy within 2 tiles of the last one struck, 2 less each leap; 3 enemies, 4 from level 7, 5 from level 14 (lashN); never
+     a squadmate; strain 4, so two in a row overdraws her (strMax is 6, 10 at the top). */
+  shadowlash:{name:'Shadow Lash', strain:4, desc:()=>`Meanas at an enemy within 5: 1d8+${2 + lvDmg()} on a hit, then it leaps to the nearest other enemy within 2 tiles of the last one struck, 2 less each leap, striking up to ${lashN()} enemies. Never a squadmate. Grows with level. Strain 4.`,
+    tiles:u=>foes().filter(f => cheb(u,f) <= 5 && sees(u,f)),
+    async run(u,x,y){ let t = unitAt(x,y); if (!t) return; const hit = new Set(); let from = {x:u.x, y:u.y}, less = 0; AUDIO.play('shadow');
+      for (let i = 0; i < lashN() && t && B; i++) { hit.add(t); B.fx.push({kind:'bolt', from, to:{x:t.x, y:t.y}, col:'#8a74d8', t:performance.now(), dur:300, wob:true});
+        attack(u, t, {dmg:[1, 8, Math.max(0, 2 + lvDmg() - less)], verb:i ? 'and the lash leaps on to' : 'lashes Meanas across', spell:true}); sparks(t.x, t.y, 10, '#6a58b0', .4);
+        await wait(pace(220)); if (!B) return; from = {x:t.x, y:t.y}; less += 2;
+        const last = from; t = foes().filter(f => f.hp > 0 && !hit.has(f) && cheb(f, last) <= 2).sort((a, b) => cheb(a, last) - cheb(b, last))[0]; }
+      blog(`${u.name}'s lash goes out of the dark and comes back to her hand${hit.size > 1 ? `, by way of ${hit.size} of them` : ''}.`); }},
   /* Mockra, the warren of the mind: not a lost turn (that is Phantom) but a turned one. The enemy hears its own side say something
      unforgivable and spends its next turn going for the nearest of them instead of the squad. */
   mockra:{name:'Mockra Whisper', strain:3, desc:()=>`An enemy within 4 hears its own side whisper something unforgivable. On its next turn it goes for the nearest of them instead of you. Bosses resist on ${12 + 2*lvT()}+. Grows with level. Strain 3.`,
@@ -6571,6 +6583,13 @@ async function overEdge(t, pit, how){
   if (mine) { blog(`<em>${t.name} goes over into ${what}</em>${math} and comes back up it, the hard way.`); float(t, 'fell', '#f08a7c'); hurt(t, roll(2,6,2)); if (t.hp > 0) t.prone = true; updBattleUI(); return t.hp <= 0; }
   t.x = pit.x; t.y = pit.y; t.fell = true; AUDIO.play('miss'); sparks(pit.x, pit.y, 10, '#6a6460', .5);
   blog(`<em>${t.name} goes over into ${what}.</em>${math} It isn't coming back up.`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
+/* v13.4 (David, Nov 12): who a push moves (Shield Drive, the hook, the lance thrust, the Sky's Shove). It used to be anything marked boss
+   or with 45 health or more, a Book One number the later books' health carried nearly every soldier past. Now it is what the enemy is:
+   the very heavy (HEAVY_FOES, or heavy:true on the def) and the deathless never move; a leader (boss) braces and holds about half the
+   time; everyone else goes. Returns '' (it moves), 'heavy' or 'braced'. */
+const HEAVY_FOES = new Set(['stone', 'raest', 'b3_khell', 'b3_c4_roped', 'b3_c7_hurthunter', 'hound', 'houndhurt', 'b8_hound', 'b9_nahruk', 'b9_nahrukcaster',
+  'b9_nahrukbrute', 'b9_lnahruk', 'b9_lnahrukcaster', 'b9_lnahrukbrute', 'b10_assail', 'b10_lassail', 'b5_demon', 'b9_bhederin', 'b3_c6_ridden', 'ward']);
+function pushHolds(t){ if (!t) return 'heavy'; if (t.immortal || t.heavy) return 'heavy'; if (t.boss) return d20() >= 11 ? 'braced' : ''; return ''; }
 async function forcedMove(t, to, how){
   let x = t.x, y = t.y, guard = 0;
   while ((x !== to.x || y !== to.y) && guard++ < 12) {
@@ -6658,7 +6677,7 @@ async function aiTurn(u, turnId){
     // and it will not end its move in fire unless nothing else is reachable. Foes keep their old, careless ways (balance).
     const wary = u.side === 'p' && !!u.ally;
     const reach = reachSafe(u.x, u.y, (x,y) => free(x,y,u), u.mv, (x,y) => leaveCost(u, x, y) + (wary && fireAt(x, y) && !(x === u.x && y === u.y) ? 3 : 0));
-    const swingW = u.hp <= 8 ? 110 : 70; // a badly hurt thing is warier of free swings
+    const swingW = u.hp <= Math.max(8, u.maxhp * .2) ? 110 : 70; // a badly hurt thing is warier of free swings (v13.4: a fifth of its health, not a Book One 8)
     let best = null, bestS = -Infinity;
     reach.forEach(n => {
       const here = {x:n.x, y:n.y}, tg = opp.filter(p => cheb(here, p) <= u.rng && canShoot(here, p));
@@ -22952,13 +22971,13 @@ PATRONS.redblade = {god:'the Queen of Dreams', title:'The Queen of Dreams', txt:
 const LANCE_WHO = {redblade:['Lance Held Short', 'drives the short lance at'], orvas:['The Khundryl Lance', 'drives the lance at'], brune:['The Fish-Spear', 'drives the fish-spear at'], sorvan:['The Bluerose Lance', 'drives the lance at']};
 const lanceWho = () => { const c = B && B.cur && B.cur.side === 'p' && LANCE_WHO[B.cur.id] ? B.cur.id : (G && LANCE_WHO[G.abWho]) ? G.abWho : null;
   if (c) return c; const sq = (S && S.squad) || []; return ['redblade', 'orvas', 'sorvan', 'brune'].find(id => sq.includes(id)) || 'redblade'; };
-AB.b2_lance = {get name(){ return LANCE_WHO[lanceWho()][0]; }, desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit, and it is driven back a tile, giving every squadmate it is driven out of reach of a free swing, and it bleeds 1d4 at the start of its next two turns. Bosses and the very heavy don't move, but still bleed. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+AB.b2_lance = {get name(){ return LANCE_WHO[lanceWho()][0]; }, desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit, and it is driven back a tile, giving every squadmate it is driven out of reach of a free swing, and it bleeds 1d4 at the start of its next two turns. The very heavy don't move, and a leader braces about half the time, but both still bleed. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
   ok:u=>!(u.cdLance >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= 2 && sees(u, f)),
   async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdLance = B.round + 2 - lvAt(6); u.reachMelee = true;
     const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:(LANCE_WHO[u.id] || LANCE_WHO.redblade)[1]}); u.reachMelee = false; if (!r || !r.hit) return;
     if (t.hp > 0) { t.bleed = Math.max(t.bleed || 0, 2); float(t, 'bleeding', '#e0574a'); }
     await wait(pace(250)); if (!B || t.hp <= 0) return;
-    if (t.boss || t.immortal || t.maxhp >= 45) { blog(`${t.name} takes the blow and doesn't give a step.`); float(t, 'braced', '#a99a88'); return; }
+    { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the blow and doesn't give a step.` : `${t.name} braces on the shaft and gives nothing.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
     const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y), to = {x:t.x + dx, y:t.y + dy};
     if (!(dx || dy) || !(pitAt(to.x, to.y) || free(to.x, to.y, t))) return; // nothing behind it to give: it bleeds where it stands
     blog(`${u.name} drives ${t.name} back a pace.`); float(t, 'driven back', '#e8c073'); await forcedMove(t, to, 'driven'); }};
@@ -51198,14 +51217,14 @@ Object.assign(AB, {
       B.fx.push({kind:'bolt', from:{x:u.x, y:u.y - .6}, to:{x:t.x, y:t.y}, col:'#d8ecff', t:performance.now(), dur:pace(260), wob:true}); AUDIO.play('magic'); sparks(t.x, t.y, 18, '#d8ecff', 1.1);
       blog(`${u.name} opens a hand to the sky and pulls. ${half ? 'Something comes down, thinner than he asked for.' : 'It comes down.'}`);
       return attack(u, t, {dmg:half ? [1, 6, Math.floor(k / 2)] : [2, 6, k], bonus:has(u.id, 'b4_stormeye') ? 3 : 2, verb:'brings the lightning down on', ground:true, land:pace(240)}); }},
-  b4_gust:{name:'The Sky\'s Shove', strain:3, desc:()=>`Serc: a fist of wind at an enemy within 4. It and every enemy next to it are thrown straight back from Yorin ${b4GustD(B && B.cur)} tiles, ${S && has('yorin', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. Bosses and the very heavy stagger and stay put. Strain 3. A warren: in the Dust it can sputter (thrown 1 tile).`,
+  b4_gust:{name:'The Sky\'s Shove', strain:3, desc:()=>`Serc: a fist of wind at an enemy within 4. It and every enemy next to it are thrown straight back from Yorin ${b4GustD(B && B.cur)} tiles, ${S && has('yorin', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. The very heavy stagger and stay put; a leader braces and holds about half the time. Strain 3. A warren: in the Dust it can sputter (thrown 1 tile).`,
     tiles:u=>foes().filter(f => cheb(u, f) <= 4 && sees(u, f)),
     async run(u, x, y){ const t = unitAt(x, y); if (!t) return; const half = b4Serc() < 1, d = b4GustD(u, half), die = has(u.id, 'b4_squall') ? 6 : 4; u.facing = t.x >= u.x ? 1 : -1;
       const group = [t, ...foes().filter(f => f !== t && cheb(f, t) === 1)].sort((a, b) => cheb(b, u) - cheb(a, u)); // the far ones first, so the near ones have room
       AUDIO.play('slam'); shakeMap(); B.fx.push({kind:'ring', x:t.x, y:t.y, col:'#d8ecff', t:performance.now(), dur:pace(500)});
       blog(`${u.name} throws both hands out, and the air in front of him goes with them${half ? ', what there is of it' : ''}.`);
       for (const f of group) { if (!B || f.hp <= 0) continue; sparks(f.x, f.y, 10, '#e4f0ff', .9); hurt(f, roll(1, die, 0)); if (!B || f.hp <= 0) continue;
-        if (f.boss || f.immortal || f.maxhp >= 45) { float(f, 'staggers', '#d8ecff'); blog(`${f.name} leans into the wind and stays.`); continue; }
+        { const hold = pushHolds(f); if (hold) { float(f, hold === 'heavy' ? 'staggers' : 'braces', '#d8ecff'); blog(hold === 'heavy' ? `${f.name} leans into the wind and stays.` : `${f.name} drops low into the wind and holds.`); continue; } }
         const dx = Math.sign(f.x - u.x), dy = Math.sign(f.y - u.y); if (!dx && !dy) continue;
         let to = {x:f.x, y:f.y}, slam = false;
         for (let i = 0; i < d; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, f)) { slam = true; break; } to = n; }
@@ -61314,9 +61333,9 @@ const B5_ABX = {
     line:(u, t) => `${u.name} puts a hot iron to ${t ? t.name : 'the wound'} and says something short and filthy into ${t ? b5His(t.id) || 'their' : 'their'} ear. ${t ? t.name : 'They'} gets up, mostly to argue.`},
   b4_bolt:{name:'The Cadre\'s Lightning', desc:()=>{ const u = (B && B.cur && B.cur.id === 'perrit') ? B.cur : {id:'perrit'}; return `Letherii sorcery, drawn through the Holds: lightning on an enemy within ${b4BoltR(u)} in sight. It strikes at +${S && has('perrit', 'b4_stormeye') ? 3 : 2}: 2d6+${2 + lvDmg()} on a hit. Strain 2.`; },
     line:u => `${u.name} lays two fingers on a tile at ${b5His(u.id)} hip and says the cadre's word, and the Hold opens a crack.`},
-  b4_gust:{name:'The Hold\'s Shove', desc:()=>`Letherii sorcery: a shove of the Hold's air at an enemy within 4. It and every enemy next to it are thrown straight back ${b4GustD({id:'perrit'})} tiles, ${S && has('perrit', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. Bosses and the very heavy stagger and stay put. Strain 3.`,
+  b4_gust:{name:'The Hold\'s Shove', desc:()=>`Letherii sorcery: a shove of the Hold's air at an enemy within 4. It and every enemy next to it are thrown straight back ${b4GustD({id:'perrit'})} tiles, ${S && has('perrit', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. The very heavy stagger and stay put; a leader braces and holds about half the time. Strain 3.`,
     line:u => `${u.name} puts both palms out flat, the way the school taught, and the air in front of ${b5Him(u.id)} leaves all at once.`},
-  grapple:{name:'Boathook', desc:()=>`Hook an enemy 2 to ${grapR()} tiles off with the boathook: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Pessa nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. Bosses and the very heavy take the hook but don't come. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  grapple:{name:'Boathook', desc:()=>`Hook an enemy 2 to ${grapR()} tiles off with the boathook: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Pessa nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the hook but don't come; a leader braces against it about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     map:[[/throws the hook at/g, 'swings the boathook at'], [/Vell lets go of the line before it takes him instead/g, 'Pessa lets go of the haft before it takes her instead'], [/beside Vell/g, 'beside Pessa'], [/Vell hauls on the line with his whole weight/g, 'Pessa hauls on the boathook with her whole weight'], [/tangled to the knees in tarred rope/g, 'tangled in the hook and its own feet'], [/\bVell\b/g, 'Pessa']]},
   b2_lance:{name:'The Fish-Spear', map:[[/drives the short lance at/g, 'drives the fish-spear at']]},
 };
