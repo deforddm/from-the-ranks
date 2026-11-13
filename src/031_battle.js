@@ -603,7 +603,7 @@ async function aiTurn(u, turnId){
     // and it will not end its move in fire unless nothing else is reachable. Foes keep their old, careless ways (balance).
     const wary = u.side === 'p' && !!u.ally;
     const reach = reachSafe(u.x, u.y, (x,y) => free(x,y,u), u.mv, (x,y) => leaveCost(u, x, y) + (wary && fireAt(x, y) && !(x === u.x && y === u.y) ? 3 : 0));
-    const swingW = u.hp <= 8 ? 110 : 70; // a badly hurt thing is warier of free swings
+    const swingW = u.hp <= Math.max(8, u.maxhp * .2) ? 110 : 70; // a badly hurt thing is warier of free swings (v13.4: a fifth of its health, not a Book One 8)
     let best = null, bestS = -Infinity;
     reach.forEach(n => {
       const here = {x:n.x, y:n.y}, tg = opp.filter(p => cheb(here, p) <= u.rng && canShoot(here, p));
