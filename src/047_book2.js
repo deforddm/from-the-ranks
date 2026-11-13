@@ -194,13 +194,13 @@ PATRONS.redblade = {god:'the Queen of Dreams', title:'The Queen of Dreams', txt:
 const LANCE_WHO = {redblade:['Lance Held Short', 'drives the short lance at'], orvas:['The Khundryl Lance', 'drives the lance at'], brune:['The Fish-Spear', 'drives the fish-spear at'], sorvan:['The Bluerose Lance', 'drives the lance at']};
 const lanceWho = () => { const c = B && B.cur && B.cur.side === 'p' && LANCE_WHO[B.cur.id] ? B.cur.id : (G && LANCE_WHO[G.abWho]) ? G.abWho : null;
   if (c) return c; const sq = (S && S.squad) || []; return ['redblade', 'orvas', 'sorvan', 'brune'].find(id => sq.includes(id)) || 'redblade'; };
-AB.b2_lance = {get name(){ return LANCE_WHO[lanceWho()][0]; }, desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit, and it is driven back a tile, giving every squadmate it is driven out of reach of a free swing, and it bleeds 1d4 at the start of its next two turns. Bosses and the very heavy don't move, but still bleed. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+AB.b2_lance = {get name(){ return LANCE_WHO[lanceWho()][0]; }, desc:()=>`An enemy up to 2 tiles off: 1d10+${2 + lvDmg()} on a hit, and it is driven back a tile, giving every squadmate it is driven out of reach of a free swing, and it bleeds 1d4 at the start of its next two turns. The very heavy don't move, and a leader braces about half the time, but both still bleed. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
   ok:u=>!(u.cdLance >= B.round), tiles:u=>foes().filter(f => cheb(u, f) <= 2 && sees(u, f)),
   async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdLance = B.round + 2 - lvAt(6); u.reachMelee = true;
     const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:(LANCE_WHO[u.id] || LANCE_WHO.redblade)[1]}); u.reachMelee = false; if (!r || !r.hit) return;
     if (t.hp > 0) { t.bleed = Math.max(t.bleed || 0, 2); float(t, 'bleeding', '#e0574a'); }
     await wait(pace(250)); if (!B || t.hp <= 0) return;
-    if (t.boss || t.immortal || t.maxhp >= 45) { blog(`${t.name} takes the blow and doesn't give a step.`); float(t, 'braced', '#a99a88'); return; }
+    { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the blow and doesn't give a step.` : `${t.name} braces on the shaft and gives nothing.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
     const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y), to = {x:t.x + dx, y:t.y + dy};
     if (!(dx || dy) || !(pitAt(to.x, to.y) || free(to.x, to.y, t))) return; // nothing behind it to give: it bleeds where it stands
     blog(`${u.name} drives ${t.name} back a pace.`); float(t, 'driven back', '#e8c073'); await forcedMove(t, to, 'driven'); }};

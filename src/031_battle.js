@@ -86,7 +86,7 @@ function mkParty(id, x, y){
   return u;
 }
 function mkFoe(k, x, y, extra=0){ const f = FOES[k], fs = foeScale(), sl = soldierLate() || bbFight() || {hp:1, atk:0, dmg:0}, hp = Math.max(1, Math.round((f.hp + extra) * DIFF().hp * fs.hp * (sl.hp || 1))), sk = foeSkills(k, f), dmg = f.dmg ? [f.dmg[0], f.dmg[1], (f.dmg[2] || 0) + fs.dmg + (sl.dmg || 0)] : f.dmg;
-  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), ac:f.ac != null ? f.ac + (sl.ac || 0) : f.ac, maxhp:hp, hp, col:'#d9695a', x, y, soak:foeSoak(k), pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // v10.2: the per-fight rows (31c: SOLDIER_FIGHT, B1GAP..B4GAP_FIGHT); soak, from the armour it was made with (31c)
+  return {id:k, kind:k, side:'e', ...f, dmg, sk, parryLeft:sk.includes('parry') ? 1 : 0, rng:sk.includes('reach') ? Math.max(f.rng || 1, 2) : f.rng, atk:(f.atk || 0) + DIFF().atk + fs.atk + (sl.atk || 0), ac:f.ac != null ? f.ac + (sl.ac || 0) : f.ac, maxhp:hp, hp, col:'#d9695a', x, y, heavy:!!f.heavy || HEAVY_FOES.has(k), soak:foeSoak(k), pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // v10.2: the per-fight rows (31c: SOLDIER_FIGHT, B1GAP..B4GAP_FIGHT); soak, from the armour it was made with (31c)
 function mkAlly(k, x, y){ const f = FOES[k]; return {id:'ally_' + k, kind:k, side:'p', ally:true, ...f, name:f.name + ' (ally)', maxhp:f.hp, hp:f.hp, col:'#9fb3d9', x, y, ab:[], pierceShot:foePierce(k), sorcShot:FOE_SORC.has(k)}; } // an ally's crossbow or sorcery goes past soak too; allies have no soak of their own (v10.2)
 /* the nearest free tile to x,y (itself if free), ring by ring out to 4, the straight neighbours first */
 function freeNear(x, y, self){ if (free(x,y,self)) return {x,y};
@@ -286,12 +286,12 @@ const AB = {
   quickshot:{name:'Quick Shot', desc:()=>`Once a fight: ${lvAt(6) ? 'three' : 'two'} arrows at one target within range${lvAt(6) ? '' : ' (three from level 6)'}.`, ok:()=>!B.used.quickshot, tiles:u=>foes().filter(f => cheb(u,f) <= u.rng && canShoot(u,f)),
     run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
   /* Vell's rope-and-hook: a throw at range that hauls whatever it bites to the tile beside him. The heavy take the hook and stay put. */
-  grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. Bosses and the very heavy take the hook but don't come. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the hook but don't come; a leader braces against it about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdHook >= B.round), tiles:u=>foes().filter(f => cheb(u,f) >= 2 && cheb(u,f) <= grapR() && canShoot(u,f)),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdHook = B.round + 2 - lvAt(6); AUDIO.play('bow');
       const r = attack(u, t, {dmg:[1,6,1 + lvDmg()], verb:'throws the hook at'}); if (!r.hit) return;
       await wait(pace(300)); if (!B || t.hp <= 0) return;
-      if (t.boss || t.immortal || t.maxhp >= 45) { blog(`The hook bites into ${t.name}. ${t.name} doesn't come. Vell lets go of the line before it takes him instead.`); float(t, 'too heavy', '#a99a88'); return; }
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `The hook bites into ${t.name}. ${t.name} doesn't come. Vell lets go of the line before it takes him instead.` : `The hook bites into ${t.name}, who sets both feet and leans back against it. Vell lets go before he is the one hauled.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const at = DIRS.map(([dx, dy]) => ({x:u.x + dx, y:u.y + dy})).filter(p => free(p.x, p.y, t)).sort((a, b) => cheb(a, t) - cheb(b, t))[0];
       if (!at) { blog(`There's nowhere beside Vell to haul ${t.name} to. The hook comes back with a piece of it.`); return; }
       blog(`Vell hauls on the line with his whole weight and ${t.name} comes off its feet and across the ground to him${has(u.id, 'snare') ? `, tangled to the knees in tarred rope` : ''}.`);
@@ -300,12 +300,12 @@ const AB = {
       t.facing = u.x >= t.x ? 1 : -1;
       if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); } }},
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
-  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. Bosses and the very heavy don't move. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdShove = B.round + 2 - lvAt(6); u.aooTurn = B.turn; // the sergeant's own swing is spent on the drive
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'drives a shield into'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0) return;
-      if (t.boss || t.immortal || t.maxhp >= 45) { blog(`${t.name} takes the shield and doesn't give a step.`); float(t, 'braced', '#a99a88'); return; }
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the shield and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
       for (let i = 0; i < shoveDist(); i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; } // a pit takes it (forcedMove asks the save)
       if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
@@ -500,6 +500,13 @@ async function overEdge(t, pit, how){
   if (mine) { blog(`<em>${t.name} goes over into ${what}</em>${math} and comes back up it, the hard way.`); float(t, 'fell', '#f08a7c'); hurt(t, roll(2,6,2)); if (t.hp > 0) t.prone = true; updBattleUI(); return t.hp <= 0; }
   t.x = pit.x; t.y = pit.y; t.fell = true; AUDIO.play('miss'); sparks(pit.x, pit.y, 10, '#6a6460', .5);
   blog(`<em>${t.name} goes over into ${what}.</em>${math} It isn't coming back up.`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
+/* v13.4 (David, Nov 12): who a push moves (Shield Drive, the hook, the lance thrust, the Sky's Shove). It used to be anything marked boss
+   or with 45 health or more, a Book One number the later books' health carried nearly every soldier past. Now it is what the enemy is:
+   the very heavy (HEAVY_FOES, or heavy:true on the def) and the deathless never move; a leader (boss) braces and holds about half the
+   time; everyone else goes. Returns '' (it moves), 'heavy' or 'braced'. */
+const HEAVY_FOES = new Set(['stone', 'raest', 'b3_khell', 'b3_c4_roped', 'b3_c7_hurthunter', 'hound', 'houndhurt', 'b8_hound', 'b9_nahruk', 'b9_nahrukcaster',
+  'b9_nahrukbrute', 'b9_lnahruk', 'b9_lnahrukcaster', 'b9_lnahrukbrute', 'b10_assail', 'b10_lassail', 'b5_demon', 'b9_bhederin', 'b3_c6_ridden', 'ward']);
+function pushHolds(t){ if (!t) return 'heavy'; if (t.immortal || t.heavy) return 'heavy'; if (t.boss) return d20() >= 11 ? 'braced' : ''; return ''; }
 async function forcedMove(t, to, how){
   let x = t.x, y = t.y, guard = 0;
   while ((x !== to.x || y !== to.y) && guard++ < 12) {
