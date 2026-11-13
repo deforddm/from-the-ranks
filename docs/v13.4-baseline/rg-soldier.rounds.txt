@@ -1,0 +1,24 @@
+ALL fights 23 mean won 94% median rounds 13 p90 24
+b7_c1_dunes won 100% median rounds 5 n 10
+b7_c1_riders won 90% median rounds 15 n 10
+b7_c2_gate won 100% median rounds 8 n 10
+b7_c1_tally won 100% median rounds 24 n 10
+b7_c2_alley won 90% median rounds 13 n 10
+b7_c2_bridge won 80% median rounds 7 n 10
+b7_c3_farm won 90% median rounds 23 n 10
+b7_c3_road won 90% median rounds 18 n 10
+b7_c4_riot won 100% median rounds 9 n 10
+b7_c4_edurcamp won 100% median rounds 9 n 10
+b7_c3_factor won 90% median rounds 31 n 10
+b7_c4_patriots won 100% median rounds 11 n 10
+b7_c5_road won 100% median rounds 18 n 10
+b7_c5_village won 100% median rounds 13 n 10
+b7_c5_bailiff won 70% median rounds 23 n 10
+b7_c6_deserters won 100% median rounds 7 n 10
+b7_c5_slip won 100% median rounds 8 n 10
+b7_c6_stand won 90% median rounds 9 n 10
+b7_c6_landing won 100% median rounds 13 n 10
+b7_c6_break won 100% median rounds 7 n 10
+b7_c7_gate won 80% median rounds 23 n 10
+b7_c7_streets won 90% median rounds 22 n 10
+b7_c7_bridge won 100% median rounds 13 n 10
