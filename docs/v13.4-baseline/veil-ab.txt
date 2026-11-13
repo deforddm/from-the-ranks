@@ -1,0 +1,5 @@
+none {'b3_c1_tunnels': 80, 'b3_c1_herds': 75}
+noveil {'b3_c1_tunnels': 40, 'b3_c1_herds': 40}
+noveil_mock {'b3_c1_tunnels': 45, 'b3_c1_herds': 55}
+
+[exited with code 0]
