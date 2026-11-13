@@ -102,14 +102,14 @@ Object.assign(AB, {
       B.fx.push({kind:'bolt', from:{x:u.x, y:u.y - .6}, to:{x:t.x, y:t.y}, col:'#d8ecff', t:performance.now(), dur:pace(260), wob:true}); AUDIO.play('magic'); sparks(t.x, t.y, 18, '#d8ecff', 1.1);
       blog(`${u.name} opens a hand to the sky and pulls. ${half ? 'Something comes down, thinner than he asked for.' : 'It comes down.'}`);
       return attack(u, t, {dmg:half ? [1, 6, Math.floor(k / 2)] : [2, 6, k], bonus:has(u.id, 'b4_stormeye') ? 3 : 2, verb:'brings the lightning down on', ground:true, land:pace(240)}); }},
-  b4_gust:{name:'The Sky\'s Shove', strain:3, desc:()=>`Serc: a fist of wind at an enemy within 4. It and every enemy next to it are thrown straight back from Yorin ${b4GustD(B && B.cur)} tiles, ${S && has('yorin', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. Bosses and the very heavy stagger and stay put. Strain 3. A warren: in the Dust it can sputter (thrown 1 tile).`,
+  b4_gust:{name:'The Sky\'s Shove', strain:3, desc:()=>`Serc: a fist of wind at an enemy within 4. It and every enemy next to it are thrown straight back from Yorin ${b4GustD(B && B.cur)} tiles, ${S && has('yorin', 'b4_squall') ? '1d6' : '1d4'} each, and +1d6 into a wall or a body. Every squadmate a thrown enemy leaves gets a free swing. Toward a pit or a drop: a save to catch the lip. The very heavy stagger and stay put; a leader braces and holds about half the time. Strain 3. A warren: in the Dust it can sputter (thrown 1 tile).`,
     tiles:u=>foes().filter(f => cheb(u, f) <= 4 && sees(u, f)),
     async run(u, x, y){ const t = unitAt(x, y); if (!t) return; const half = b4Serc() < 1, d = b4GustD(u, half), die = has(u.id, 'b4_squall') ? 6 : 4; u.facing = t.x >= u.x ? 1 : -1;
       const group = [t, ...foes().filter(f => f !== t && cheb(f, t) === 1)].sort((a, b) => cheb(b, u) - cheb(a, u)); // the far ones first, so the near ones have room
       AUDIO.play('slam'); shakeMap(); B.fx.push({kind:'ring', x:t.x, y:t.y, col:'#d8ecff', t:performance.now(), dur:pace(500)});
       blog(`${u.name} throws both hands out, and the air in front of him goes with them${half ? ', what there is of it' : ''}.`);
       for (const f of group) { if (!B || f.hp <= 0) continue; sparks(f.x, f.y, 10, '#e4f0ff', .9); hurt(f, roll(1, die, 0)); if (!B || f.hp <= 0) continue;
-        if (f.boss || f.immortal || f.maxhp >= 45) { float(f, 'staggers', '#d8ecff'); blog(`${f.name} leans into the wind and stays.`); continue; }
+        { const hold = pushHolds(f); if (hold) { float(f, hold === 'heavy' ? 'staggers' : 'braces', '#d8ecff'); blog(hold === 'heavy' ? `${f.name} leans into the wind and stays.` : `${f.name} drops low into the wind and holds.`); continue; } }
         const dx = Math.sign(f.x - u.x), dy = Math.sign(f.y - u.y); if (!dx && !dy) continue;
         let to = {x:f.x, y:f.y}, slam = false;
         for (let i = 0; i < d; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, f)) { slam = true; break; } to = n; }
