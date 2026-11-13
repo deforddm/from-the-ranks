@@ -1,0 +1,25 @@
+ALL fights 24 mean won 79% median rounds 12 p90 17
+b2_cistern won 80% median rounds 7 n 10
+b2_street won 90% median rounds 11 n 10
+b2_gate won 80% median rounds 11 n 10
+b2_batrol won 70% median rounds 14 n 10
+b2_spring won 80% median rounds 13 n 10
+b2_tithwell won 70% median rounds 13 n 10
+b2_tail won 100% median rounds 3 n 10
+b2_raid won 70% median rounds 10 n 10
+b2_westbank won 80% median rounds 14 n 10
+b2_bait won 80% median rounds 16 n 10
+b2_pull won 60% median rounds 12 n 10
+b2_ring won 60% median rounds 14 n 10
+b2_ropes won 90% median rounds 11 n 10
+b2_envoy won 60% median rounds 10 n 10
+b2_bridge won 90% median rounds 18 n 10
+b2_mounds won 90% median rounds 8 n 10
+b2_herd won 90% median rounds 10 n 10
+b2_dryraid won 90% median rounds 16 n 10
+b2_sanimon won 80% median rounds 12 n 10
+b2_dojal won 70% median rounds 16 n 10
+b2_silver won 50% median rounds 13 n 10
+b2_barrow won 100% median rounds 8 n 10
+b2_runway won 90% median rounds 15 n 10
+b2_postern won 80% median rounds 16 n 10
