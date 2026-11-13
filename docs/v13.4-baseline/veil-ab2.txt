@@ -1,0 +1,4 @@
+none {'b3_c1_herds': 50, 'b3_c1_tunnels': 15} mockra 0 phantom 453 veil 0
+noveil_mock {'b3_c1_tunnels': 40, 'b3_c1_herds': 75} mockra 320 phantom 40 veil 0
+
+[exited with code 0]
