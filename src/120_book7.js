@@ -85,8 +85,8 @@ function b7Half(t, name, imp){ const T = B7_TH[t];
 /* a new Book Seven save. nameT: the Third's sergeant; nameL: the Letherii sergeant. impT, impL: slot ids of the transfers, or empty. */
 function newStateRG(nameT, nameL, impT, impL, sid){
   nameT = nameT || 'Hask'; nameL = nameL || 'Brann';
-  const t = b7Half('t', nameT, b7ImpT(impT)), l = b7Half('l', nameL, b7ImpL(impL));
-  const s = Object.assign({v:1, book:'rg', sid:sid || sidFor(nameT), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+  const iT = b7ImpT(impT), iL = b7ImpL(impL), t = b7Half('t', nameT, iT), l = b7Half('l', nameL, iL);
+  const s = Object.assign({v:1, book:'rg', sid:sid || (iT || iL ? newSid() : sidFor(nameT)), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
     battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'t', th:{l}, b7:{rise:B7_RISE0, file:0, hi:B7_RISE0}}, t);
   migrate(s); s.picksDue = picksOwed(s); s.th.l.picksDue = picksOwed(Object.assign({}, s, s.th.l, {thread:'l'}));
   return s; }

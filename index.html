@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.3.0';
+const VERSION = '13.3.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5697,7 +5697,7 @@ function showTitle(fresh, want){
       if (book === 'bh' || book === 'rg') { const n2 = ($('#nm2') ? $('#nm2').value : '').trim().replace(/\s+/g, ' ');
         if (!n2) { msg(book === 'rg' ? 'Give the Letherii sergeant a name too.' : 'Give the Fourth\'s sergeant a name too.'); if ($('#nm2')) $('#nm2').focus(); return; }
         if (sameName(n2, n)) { msg('Two sergeants, two names.'); $('#nm2').focus(); return; }
-        const t6 = taken(n); if (t6 && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t6.name} over`; msg(tapWord(`Sergeant ${t6.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
+        const imp2b = $('#impSel2') ? $('#impSel2').value : '', t6 = imp || imp2b ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); /* v13.3.1: a carried sergeant keeps their earlier book's save */ if (t6 && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t6.name} over`; msg(tapWord(`Sergeant ${t6.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
         S = (book === 'rg' ? newStateRG : newStateBH)(n, n2, imp, $('#impSel2') ? $('#impSel2').value : '', t6 ? t6.id : undefined); S.diff = diff; save(); return startChapter(1); } // v9.0: two squads (100); v10.0 Book Seven (120)
       const t = (book === 'moi' || book === 'hoc' || book === 'tth') && imp ? list.find(e => e.book === book && sameName(e.name, n)) : taken(n); // a Book One sergeant carried into Book Three keeps their own Book One save
       if (t && b.dataset.arm !== n.toLowerCase()) { b.dataset.arm = n.toLowerCase(); b.classList.add('warn'); b.classList.remove('primary'); b.textContent = `Start Sergeant ${t.name} over`; msg(tapWord(`Sergeant ${t.name} already has a save here. Tap again to start over; that save is erased. Or go back and pick them to carry on.`)); return; }
@@ -8101,6 +8101,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.3.1', ['Books Six and Seven: bringing a squad from an earlier book no longer says your sergeant "already has a save here". The carried squad gets its own new save, and the earlier book\'s save is kept.']],
   ['13.3.0', ['Book Four, Chapter 6: going forward to the ramps now pays off before first light. Back at the picket, Radde tells you what happened while the squad was out (a patrol found the end of the line a squad short, and the regulars and the recruits held it without you, two of them hurt), reads back what you saw, and sends it up the line. The button after the outpost fight now says plainly that it takes you back to the picket, and Radde has the news if you skip it.']],
   ['13.2.3', ['The title\'s book list shows the covers two to a row, so each cover is bigger.']],
   ['13.2.2', ['Book Two\'s title: the Wickan riders ride along the crest of the far ridge, following its curve, instead of above it.']],
@@ -73309,8 +73310,8 @@ function b6Half(t, name, imp){ const T = B6_TH[t];
 /* a new Book Six save. nameR: the Fourteenth's sergeant; nameH: the Fourth's. impR, impH: slot ids of the transfers, or empty. */
 function newStateBH(nameR, nameH, impR, impH, sid){
   nameR = nameR || 'Hask'; nameH = nameH || 'Brann';
-  const r = b6Half('r', nameR, b6ImpR(impR)), h = b6Half('h', nameH, b6ImpH(impH));
-  const s = Object.assign({v:1, book:'bh', sid:sid || sidFor(nameR), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+  const iR = b6ImpR(impR), iH = b6ImpH(impH), r = b6Half('r', nameR, iR), h = b6Half('h', nameH, iH);
+  const s = Object.assign({v:1, book:'bh', sid:sid || (iR || iH ? newSid() : sidFor(nameR)), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
     battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'r', th:{h}}, r);
   migrate(s); s.picksDue = picksOwed(s); s.th.h.picksDue = picksOwed(Object.assign({}, s, s.th.h));
   return s; }
@@ -81730,8 +81731,8 @@ function b7Half(t, name, imp){ const T = B7_TH[t];
 /* a new Book Seven save. nameT: the Third's sergeant; nameL: the Letherii sergeant. impT, impL: slot ids of the transfers, or empty. */
 function newStateRG(nameT, nameL, impT, impL, sid){
   nameT = nameT || 'Hask'; nameL = nameL || 'Brann';
-  const t = b7Half('t', nameT, b7ImpT(impT)), l = b7Half('l', nameL, b7ImpL(impL));
-  const s = Object.assign({v:1, book:'rg', sid:sid || sidFor(nameT), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+  const iT = b7ImpT(impT), iL = b7ImpL(impL), t = b7Half('t', nameT, iT), l = b7Half('l', nameL, iL);
+  const s = Object.assign({v:1, book:'rg', sid:sid || (iT || iL ? newSid() : sidFor(nameT)), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
     battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'t', th:{l}, b7:{rise:B7_RISE0, file:0, hi:B7_RISE0}}, t);
   migrate(s); s.picksDue = picksOwed(s); s.th.l.picksDue = picksOwed(Object.assign({}, s, s.th.l, {thread:'l'}));
   return s; }

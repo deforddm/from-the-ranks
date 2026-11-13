@@ -77,8 +77,8 @@ function b6Half(t, name, imp){ const T = B6_TH[t];
 /* a new Book Six save. nameR: the Fourteenth's sergeant; nameH: the Fourth's. impR, impH: slot ids of the transfers, or empty. */
 function newStateBH(nameR, nameH, impR, impH, sid){
   nameR = nameR || 'Hask'; nameH = nameH || 'Brann';
-  const r = b6Half('r', nameR, b6ImpR(impR)), h = b6Half('h', nameH, b6ImpH(impH));
-  const s = Object.assign({v:1, book:'bh', sid:sid || sidFor(nameR), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
+  const iR = b6ImpR(impR), iH = b6ImpH(impH), r = b6Half('r', nameR, iR), h = b6Half('h', nameH, iH);
+  const s = Object.assign({v:1, book:'bh', sid:sid || (iR || iH ? newSid() : sidFor(nameR)), scene:'chintro', node:null, bg:null, card:null, f:{}, pos:{x:5, y:8}, log:[], ending:null,
     battle:null, bopt:null, chapter:0, chapters:{}, area:'pale', thread:'r', th:{h}}, r);
   migrate(s); s.picksDue = picksOwed(s); s.th.h.picksDue = picksOwed(Object.assign({}, s, s.th.h));
   return s; }
