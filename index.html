@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.2.3';
+const VERSION = '13.3.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -8101,6 +8101,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.3.0', ['Book Four, Chapter 6: going forward to the ramps now pays off before first light. Back at the picket, Radde tells you what happened while the squad was out (a patrol found the end of the line a squad short, and the regulars and the recruits held it without you, two of them hurt), reads back what you saw, and sends it up the line. The button after the outpost fight now says plainly that it takes you back to the picket, and Radde has the news if you skip it.']],
   ['13.2.3', ['The title\'s book list shows the covers two to a row, so each cover is bigger.']],
   ['13.2.2', ['Book Two\'s title: the Wickan riders ride along the crest of the far ridge, following its curve, instead of above it.']],
   ['13.2.1', ['Book One\'s title laid out as it first was: Darujhistan\'s blue fire across the lake fills the skyline, Moon\'s Spawn hangs over it as wide as the city, the ruins of Pale small on the left, and the Fourth\'s five on the rise.']],
@@ -57695,7 +57696,7 @@ const B4CH6 = {
   extras:()=>{ const f = S.f, x = [];
     x.push(f.b4_blistigNoticed ? 'The Fist of the 9th asked for the Chain squad by name, for the end of the line. Radde says that is a compliment. Radde has a strange idea of compliments.' : 'Sergeant Radde volunteered the Third for the flank pickets before anybody asked. He says it was the kindest thing he could think of.');
     if (f.b4_c6_key === 'hold') x.push('The Third held the picket as posted, all night. Radde wrote it in the book, and Captain Hollet signed it, which he does not do.');
-    if (f.b4_c6_key === 'forward') x.push(`The Third went out from the picket to the foot of the ramps in the dark, and saw the trenches close.${f.b4_c6_downed ? ' Not everybody walked all the way back.' : ' Everybody came back.'} The picket was short a squad for an hour, and the Second Company noticed.`);
+    if (f.b4_c6_key === 'forward') x.push(`The Third went out from the picket to the foot of the ramps in the dark, and saw the trenches close.${f.b4_c6_downed ? ' Not everybody walked all the way back.' : ' Everybody came back.'} The picket was short a squad, and a Dogslayer patrol found it so after midnight; the regulars and the recruits held the end of the line without the Third, two of them hurt, and Radde sent what the Third saw up the line before light.`);
     if (f.b4_c6_setiStood) x.push('A Seti archer stood the picket with the Third, because her society remembers. She left before light without saying goodbye, which the Seti think is polite.');
     if (f.b4_c6_nil) x.push('At dusk two Wickan children walked the length of the lines, barefoot, and the soldiers went quiet as they passed.');
     if (f.b4_orvasDone === 1) x.push('Orvas stood the picket on foot, with the horse lines a long way behind him. He has asked that this be written down.');
@@ -58288,20 +58289,39 @@ The squad goes on, back across the basin in the dark, the last of it at a walk, 
 "Back," he says. He looks along them, counting. "${S.f.b4_c6_downed ? 'Back,' : 'All of you. Back.'}" He writes. "What did you see?"
 
 What the squad tells him goes in the book, and the book goes up the line at first light, and what the officers make of it nobody tells the Third. But the squad saw the trenches full, and the fires back and back up the slope, and the dark over the oasis. That does not go in the book. Radde does not ask what it was, and nobody tells him.${b4In('mirrel') ? (S.f.b4_c6_downed ? `\n\nMirrel is working before the squad is through the gap, on her knees by the coals: one, two, three, and up, until there is nobody left to bring up.` : `\n\nMirrel goes along them at the gap all the same, a hand to each wrist. "Nothing," she says at the end, as if she did not quite believe it. "Not a scratch I'd stitch."`) : ''}${b46Seti() ? `\n\nThe Seti archer comes in last, walking backward, with her last arrow on the string. "They will not follow," she says. "They do not want to see what is behind your screen." She slings the bow. "Neither would I."` : ''}${b46R({orvas:`\n\nOrvas picks his lance up from beside the fire and holds it, just holds it, with both hands.`, redblade:`\n\nRamin puts his scale back on piece by piece in the dark by the fire, and does not speak until the last buckle is done.`, warlock:`\n\nKeth puts his palms on the sand, at last, inside the screen. "*There,*" the grandmother says, and her voice is very old. "*Now you have seen her house. Now you know.*"`})}`,
-      ch:[{t:'Inside the screen. The fire.', onward:true, go:'b4_c6_return'},
-          {t:'Not now. Breathe first.', go:'b4_c6_return'}]}),
+      ch:[{t:'Back at the picket. Radde, and the book.', onward:true, go:'b4_c6_return'},
+          {t:'Not now. Breathe first, inside the screen.', go:()=>{ S.f.b4_c6_ph = 2; startExplore('b4_c6_night'); }}]}),
     b4_c6_ramp_back:()=>({sp:'The way back', scene:'b4_c6_close', txt: S.f.b4_c6_outpostDone ?
 `Back across the basin. The picket is that way, behind its screen.` :
 `Back, across the basin, the picket is short a squad. There is the outpost first, and what the squad came to see.`,
       ch: S.f.b4_c6_outpostDone ? [{t:'Back to the line.', onward:true, go:'b4_c6_return'}, {t:'Not yet.', go:()=>startExplore()}] : [{t:'Not yet.', go:()=>startExplore()}]}),
     b4_c6_return:()=>({sp:'The picket', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_ph = 2; }, txt:
 `Inside the screen, and the fire behind its shield, and the company's regulars along the screen looking at the squad as it comes in, and looking away.${S.f.b4_c6_downed ? (b4In('marrow') ? ' Marrow goes to work by the coals with her hands, and does not say "child" once.' : b4In('mirrel') ? ' Mirrel goes to work by the coals with her linen, counting in threes, and does not stop counting.' : ' The company\'s healer comes along the pickets at a run, and goes to work by the coals.') : ''} The night is nearly over. Across the basin the Dogslayers' fires are burning low, the same as the 9th's.`,
-      ch:[{t:'The fire.', onward:true, go:()=>{ startExplore('b4_c6_night'); talk('b4_c6_picketfire'); }}]}),
+      ch:[{t:'Radde, at the gap.', onward:true, go:()=>{ startExplore('b4_c6_night'); talk('b4_c6_report'); }},
+          {t:'Not now. The fire first.', go:()=>{ startExplore('b4_c6_night'); talk('b4_c6_picketfire'); }}]}),
+    /* v13.2.4 (David, Nov 12): on the forward road, the scouting lands before first light. What the picket went through while the
+       squad was out (short a squad: the patrol came anyway, and the regulars and the recruits held it without them, at a cost), and
+       the report: Radde reads back what he wrote, a runner takes it up the line, and somebody says the thing about the dark. */
+    b4_c6_report:()=>({sp:'Sergeant Radde', scene:'b4_c6_eve', fx:()=>{ S.f.b4_c6_reported = 1; }, txt:
+`Radde is at the gap with the book open on his knee, and there is blood drying on his sleeve. Not his.
+
+"They came," he says, before anyone asks. "After midnight, the way I said. A patrol, a dozen, out of the scrub on the left where the screen ends. They found the end of the line a squad short." He does not look at the empty scrapes the Third left. "The regulars closed it up. The recruits stayed in their holes. Most of them." He turns a page back. "Two of ours hurt. One won't hold a shield this side of the battle. Nobody dead. They went back across with fewer than they brought."${b46Seti() ? ` He tips his head along the screen. "Your Seti stood the end of the line in your place. She says to tell you she counted."` : ''}
+
+He turns the page forward again, to where the writing is fresher. "Now yours." He reads it back, low, the way he reads everything: the trenches on the middle ramp full, men in them shoulder to shoulder, Malazan helms and headcloths together. Fires behind, and another trench behind the fires, and more fires behind that. An outpost at the foot of the middle ramp, and the outpost gone. "That's what's in the book," he says. "Read it again if you want. It won't get bigger."
+
+He tears the page out along the stitching, folds it twice, and gives it to a runner, a regular with no shield, who goes off along the back of the pickets toward the 9th's lines at a jog, bent low.
+
+"Hollet won't sign it," Radde says. "The Fist will read it." He shuts the book. "The picket was short a squad tonight, and the picket held, and you came back with what nobody up the line had. That's both in there. I don't decide which one they read first."${b46Say({marrow:`\n\nMarrow has not sat down. She is looking past him through the gap, at the oasis, at the dark over it. "It didn't look at us," she says. "Tonight. Next time it will."`, tebbet:`\n\nTebbet is looking past him through the gap, at the oasis. "You didn't write the other thing," he says. Radde says nothing. "Good. I couldn't tell you what to write."`, haddat:`\n\nHaddat sits down against the screen with her shield on her knees and looks at the oasis. "There was something over the trees," she says. "Darker than dark." She shakes her head, once. "Don't write that."`, sathi:`\n\nSathi is crouched in the gap with Hackle against her side, both of them looking at the oasis. "He wouldn't look at it," she says. "The dog. All the way across, and back." She scratches his ears. "Neither would I."`, _:`\n\nNobody in the squad says anything about the dark over the oasis. Everybody in the squad looks at it once, through the gap, and looks away.`})}
+
+"First light's an hour off," Radde says. "Sleep if you can. If they come out of those trenches tomorrow, the end of the line knows which ramp."`,
+      ch:[{t:'The fire.', onward:true, go:()=>talk('b4_c6_picketfire')},
+          {t:'Not now.', go:()=>startExplore()}]}),
     b4_c6_radde_after:()=>({sp:'Sergeant Radde', scene:'b4_c6_eve', txt: b46Key() === 'hold' ?
 `Radde is at the gap with the book. "${S.f.b4_c6_patrolDone ? 'Held as posted,' : 'As posted, Sergeant,'}" he says. "${S.f.b4_c6_patrolDone ? 'Twice in the book. First light soon.' : 'They\'ll come. I\'d be at the screen.'}"` :
 `Radde is at the gap with the book. "${S.f.b4_c6_outpostDone ? 'You came back,' : 'Out and back, Sergeant,'}" he says. "${S.f.b4_c6_outpostDone ? 'I\'ve written what you saw. Not all of it.' : 'before light. I\'ve written it. Don\'t make me rub it out.'}"`,
       ch:[{t:'To the screen.', req:()=>b46Key() === 'hold' && !S.f.b4_c6_patrolDone, onward:true, go:'b4_c6_patrol_start'},
           {t:'To the gap, and out.', req:()=>b46Key() === 'forward' && !S.f.b4_c6_out, onward:true, go:'b4_c6_gap'},
+          {t:'"What happened here while we were out?"', req:()=>b46Key() === 'forward' && S.f.b4_c6_outpostDone && !S.f.b4_c6_reported, onward:true, go:'b4_c6_report'},
           {t:'First light.', req:()=>b46KeyDone(), onward:true, go:'b4_c6_dawn'},
           {t:'Leave him.', go:()=>startExplore()}]}),
 

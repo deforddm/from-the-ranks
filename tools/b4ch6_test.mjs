@@ -88,7 +88,11 @@ const r = await page.evaluate(async () => {
   out.w.noInside = !/inside the trench|into the trench/.test(DLG.b4_c6_ramp_look().txt);
   talk('b4_c6_outpost_start'); out.w.outNotNow = has('b4_c6_outpost_start', /Not now/);
   const n6 = S.nerve; out.w.fight = await force('b4_c6_outpost'); out.w.done = S.f.b4_c6_outpostDone; out.w.clean = S.nerve - n6;
-  take('b4_c6_outpost_after', /Inside the screen/); take('b4_c6_return', /The fire/); out.w.area = S.area; take('b4_c6_picketfire', /first light/); take('b4_c6_dawn', /Sleep/); await wait(50);
+  out.w.outNotNowHome = (() => { const c = DLG.b4_c6_outpost_after().ch.find(x => /Not now/.test(x.t)); return !!c && typeof c.go === 'function'; })();
+  take('b4_c6_outpost_after', /Back at the picket/); take('b4_c6_return', /Radde, at the gap/); out.w.area = S.area;
+  out.w.report = S.node === 'b4_c6_report' && S.f.b4_c6_reported === 1 && /a squad short/.test(DLG.b4_c6_report().txt) && /up the line/.test(DLG.b4_c6_report().txt) && !/undefined|\$\{/.test(DLG.b4_c6_report().txt);
+  out.w.raddeNoRepeat = !DLG.b4_c6_radde_after().ch.filter(x => !x.req || x.req()).some(x => /while we were out/.test(x.t));
+  take('b4_c6_report', /The fire/); take('b4_c6_picketfire', /first light/); take('b4_c6_dawn', /Sleep/); await wait(50);
   out.w.end = {view, ch:S.chapters[6], lvl:S.lvl, nerve:S.nerve, net:S.nerve - out.f.n0};
   /* the trick, the badge and the horn in a fight */
   S = JSON.parse(snap); migrate(S); S.tricks = {b4_c6_listen:{who:'haddat', ch:6}}; equip('haddat', 'b4_c6_pickethorn'); equip('tangle', 'b4_c6_dogslayer'); /* v7.2: one wearer per piece */ delete S.f.b4_c6_hornBlown; save();
@@ -125,7 +129,7 @@ const r = await page.evaluate(async () => {
   talk('b4_c6_key'); take('b4_c6_key', /We hold/); out.t.patrol = await force('b4_c6_patrol');
   S = JSON.parse(tsnap); save(); startExplore('b4_c6_night'); talk('b4_c6_key'); take('b4_c6_key', /go and look/); take('b4_c6_forward', /To the gap/); made('b4_c6_gap', /Out across/, 'sathi');
   out.t.seen = S.f.b4_c6_seen; take('b4_c6_out', /On, low/); take('b4_c6_to_ramp', /Up to the foot/); out.t.ilharTrench = /make herself stop/.test(DLG.b4_c6_ramp_look().txt);
-  out.t.outpost = await force('b4_c6_outpost'); take('b4_c6_outpost_after', /Inside the screen/); take('b4_c6_picketfire', /first light/); take('b4_c6_dawn', /Sleep/); await wait(50);
+  out.t.outpost = await force('b4_c6_outpost'); S.f.b4_c6_ph = 2; startExplore('b4_c6_night'); out.t.raddeAsks = DLG.b4_c6_radde_after().ch.filter(x => !x.req || x.req()).some(x => /while we were out/.test(x.t)); take('b4_c6_picketfire', /first light/); take('b4_c6_dawn', /Sleep/); await wait(50);
   out.t.end = {view, ch:S.chapters[6], extras:CHAPTERS[6].extras().some(x => /Seti archer/.test(x)) && CHAPTERS[6].extras().some(x => /Keth/.test(x))};
   } catch (e) { out.err2 = e.stack; }
   return out;
@@ -146,7 +150,7 @@ if (f.area) {
 }
 h.key === 'hold' && h.saw === 'far' && h.nerve === 2 && h.hollet && h.stay && h.startNotNow && h.fight && h.fight.started && h.fight.regs >= 1 && h.fight.stage2 && h.fight.inStage2 && !h.fight.seti && h.clean === 1 && h.done && h.dawnOn && h.dawnStay && h.end && h.end.view === 'end' && h.end.ch === 'hold' && h.end.lvl >= 14 && h.end.net >= -2 && h.end.net <= 6
   ? ok(`key hold: b4_saw far, Radde and Hollet sign, Nerve +2; the patrol after midnight with the company, both grounds; the end at level ${h.end.lvl}, Nerve ${h.end.nerve} (net ${h.end.net}; ${h.extras} end lines, ${h.journal} journal)`) : no('hold ' + JSON.stringify(h));
-w.key === 'forward' && w.saw === 'close' && w.nerve === -1 && w.stay && w.gapNotNow && w.seen === 'near' && w.basin === 'b4_c6_basin' && w.backShut && w.ramp.area === 'b4_c6_ramp' && w.ramp.ph === 4 && w.ramp.close && w.ramp.wrong && w.upShut && w.noInside && w.outNotNow && w.fight && w.fight.started && w.fight.stage2 && w.fight.inStage2 && w.fight.style2 === 'b4_c6_lines' && w.done && w.clean === 1 && w.area === 'b4_c6_night' && w.end && w.end.view === 'end' && w.end.ch === 'forward' && w.end.lvl >= 14
+w.key === 'forward' && w.saw === 'close' && w.nerve === -1 && w.stay && w.gapNotNow && w.outNotNowHome && w.report && w.raddeNoRepeat && w.seen === 'near' && w.basin === 'b4_c6_basin' && w.backShut && w.ramp.area === 'b4_c6_ramp' && w.ramp.ph === 4 && w.ramp.close && w.ramp.wrong && w.upShut && w.noInside && w.outNotNow && w.fight && w.fight.started && w.fight.stage2 && w.fight.inStage2 && w.fight.style2 === 'b4_c6_lines' && w.done && w.clean === 1 && w.area === 'b4_c6_night' && w.end && w.end.view === 'end' && w.end.ch === 'forward' && w.end.lvl >= 14
   ? ok(`key forward: b4_saw close, Nerve −1; the gap's "yes, but" (seen); the basin, the ramps' foot (the trenches full, the dark wrong), never up the ramps; the outpost and the run back (both grounds), Nerve +1 with nobody down; the end at level ${w.end.lvl}`) : no('forward ' + JSON.stringify(w));
 tr.hasListen && tr.hasHorn && tr.marked === 2 && tr.unmarked === 0 && tr.noFlank && tr.badge === 1 && tr.horn === 2 && tr.blown === 1 && tr.hornGone ? ok('in a fight: the Long Listen marks the first enemy to move (+2, not the second) and no flanking until the bearer\'s next turn; the badge +1 against Dom\'s soldiers; the horn brings two regulars, once a book') : no('trick/kit ' + JSON.stringify(tr));
 if (t.renderErr) {
@@ -154,7 +158,7 @@ if (t.renderErr) {
   t.nest && t.nest.dog && t.nest.started && !t.nest.skins ? ok('Hackle is at Sathi\'s knee in the chapter\'s fights; no seep water on the column road') : no('dog ' + JSON.stringify(t.nest));
   t.swapOffered && t.swap.orvas && !t.swap.keth && t.swap.kethWaits && t.swap.line && t.swap.fireLine ? ok('the swap at the fire: Orvas in, Keth back to Temul\'s youths; Orvas has his line at the fire') : no('swap ' + JSON.stringify([t.swapOffered, t.swap]));
   t.ilhar && t.ilharTrench && t.barrow && t.eveKeth && t.reader === 'tallow' ? ok('Haddat looks for her brother among the Dogslayers (b2_ilhar lost) and stops; the Barrow line is Marrow\'s; the eve offers Keth and not Marrow; Tallow reads') : no('transfer lines ' + JSON.stringify([t.ilhar, t.ilharTrench, t.barrow, t.eveKeth, t.reader]));
-  t.setiNpc && t.stood && t.patrol && t.patrol.seti && t.patrol.seti2 && t.outpost && t.outpost.seti && t.seen === 'no' && t.end && t.end.view === 'end' && t.end.ch === 'forward' && t.end.extras ? ok('the Seti archer who remembers stands the picket and fights in both key fights (both grounds); Sathi gets the squad across unseen; the end lines name the Seti and Keth') : no('seti ' + JSON.stringify([t.setiNpc, t.stood, t.patrol, t.outpost, t.seen, t.end]));
+  t.setiNpc && t.stood && t.raddeAsks && t.patrol && t.patrol.seti && t.patrol.seti2 && t.outpost && t.outpost.seti && t.seen === 'no' && t.end && t.end.view === 'end' && t.end.ch === 'forward' && t.end.extras ? ok('the Seti archer who remembers stands the picket and fights in both key fights (both grounds); Sathi gets the squad across unseen; the end lines name the Seti and Keth') : no('seti ' + JSON.stringify([t.setiNpc, t.stood, t.patrol, t.outpost, t.seen, t.end]));
 }
 errors.length ? no('page errors: ' + errors.join(' | ').slice(0, 600)) : ok('no page errors');
 await br.close(); srv.kill();

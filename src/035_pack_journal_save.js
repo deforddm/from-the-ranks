@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.3.0', ['Book Four, Chapter 6: going forward to the ramps now pays off before first light. Back at the picket, Radde tells you what happened while the squad was out (a patrol found the end of the line a squad short, and the regulars and the recruits held it without you, two of them hurt), reads back what you saw, and sends it up the line. The button after the outpost fight now says plainly that it takes you back to the picket, and Radde has the news if you skip it.']],
   ['13.2.3', ['The title\'s book list shows the covers two to a row, so each cover is bigger.']],
   ['13.2.2', ['Book Two\'s title: the Wickan riders ride along the crest of the far ridge, following its curve, instead of above it.']],
   ['13.2.1', ['Book One\'s title laid out as it first was: Darujhistan\'s blue fire across the lake fills the skyline, Moon\'s Spawn hangs over it as wide as the city, the ruins of Pale small on the left, and the Fourth\'s five on the rise.']],
