@@ -1,0 +1,20 @@
+ALL fights 19 mean won 84% median rounds 14 p90 37
+b10_c1_graves won 90% median rounds 21 n 10
+b10_c1_spar won 100% median rounds 4 n 10
+b10_c2_spar won 100% median rounds 4 n 10
+b10_c1_strippers won 70% median rounds 35 n 10
+b10_c2_dogs won 100% median rounds 8 n 10
+b10_c2_deserters won 90% median rounds 16 n 10
+b10_c3_traces won 100% median rounds 4 n 10
+b10_c4_foragers won 70% median rounds 22 n 10
+b10_c3_wagon won 90% median rounds 33 n 10
+b10_c4_dogs won 100% median rounds 10 n 10
+b10_c4_night won 60% median rounds 15 n 10
+b10_c5_outriders won 50% median rounds 42 n 10
+b10_c5_stragglers won 80% median rounds 26 n 10
+b10_c6_beach won 80% median rounds 12 n 10
+b10_c6_open won 100% median rounds 4 n 10
+b10_c6_line won 70% median rounds 22 n 10
+b10_c7_picket won 60% median rounds 16 n 10
+b10_c7_morning won 100% median rounds 4 n 10
+b10_c7_line won 90% median rounds 39 n 10
