@@ -58,7 +58,6 @@ function hurt(u, n, crit){ if (u.hp <= 0) return; // already down: a second blas
   if (u.ward > 0 && n > 0) { const a = Math.min(u.ward, n); u.ward -= a; n -= a; float(u, 'ward −' + a, '#dfe8f0'); blog(`${u.name}'s ward takes ${a}${u.ward ? `; ${u.ward} of it left` : ' and is gone'}.`); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // v10.2 ward: after soak, against anything (31c)
   if (u.side === 'p' && !u.ally && u.hp - n <= 0 && S.f && S.f.hoodRepCh !== (S.chapter || 0) && Object.values((S.gear && S.gear[u.id]) || {}).includes('hoodrep')) { S.f.hoodRepCh = S.chapter || 0; n = u.hp - 1; blog(`<em>The little black bottle at ${u.name}'s throat cracks.</em> ${u.name} does not go down. Nobody can explain it. Doctor Brack could, at length.`); float(u, 'repelled', '#9fb3d9'); } // Doctor Brack's Hood's Repellent: once a chapter
   if (u.side === 'p' && !u.ally && S.card === 'herald' && u.hp - n <= 0 && !B.used.herald) { B.used.herald = true; n = u.hp - 1; blog(`<em>The Herald turns its head.</em> ${u.name} stays standing at 1 health.`); float(u, 'spared', '#8fa38a'); }
-  if (u.side === 'p' && !u.ally && u.hp - n <= 0 && !B.used.nottoday) { const h = party().find(p => !p.ally && has(p.id, 'nottoday') && cheb(p, u) <= 4); if (h) { B.used.nottoday = 1; n = u.hp - 1; blog(`<em>Not today.</em> ${h.name} has a hand on ${h === u ? 'their own wound' : u.name} before the ground does. ${u.name} stays up at 1 health.`); float(u, 'not today', '#9fe0b8'); } } // v13.5: the healers' second talent
   if (u.side === 'p' && !u.ally && u.hp - n <= 0 && boon('hood') && !(S.boons.spared && S.boons.spared[u.id])) { (S.boons.spared ??= {})[u.id] = 1; n = u.hp - 1; blog(`<em>The gate stays shut.</em> ${u.name} stays up at 1 health.`); float(u, 'the gate holds', '#8fa38a'); } // Hood's boon: once each, for the fight (31c)
   if (u.stanch && u.stanch.hp > 0 && u.hp - n < 1) { n = Math.max(0, u.hp - 1); float(u, 'held', '#9fe0b8'); blog(`${u.name} should have gone down. ${u.stanch.name} said no.`); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // Stanch
   if (u.immortal && u.hp - n < 1) { n = Math.max(0, u.hp - 1); float(u, 'holds', '#bfe8ff'); if (!n) { u.flash = performance.now(); AUDIO.play('hurt'); return; } } // it does not fall
@@ -78,7 +77,7 @@ function mkParty(id, x, y){
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
-  ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','tripcord'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
+  ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','stakeline'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
@@ -182,7 +181,6 @@ function nextTurn(){
   if (u.strain) u.strain = Math.max(0, u.strain - 1);
   if (u.anvilOn) u.anvilOn = false; // v13.5: Anvil holds until the heavy's next turn
   if (u.calledUntil != null && B.round > u.calledUntil) { u.ac += 2; u.calledUntil = null; } // v13.5: Called Shot's 2 armour comes back with the Mark
-  if (u.side === 'e' && B.cords && B.cords.length) { const i = B.cords.findIndex(c => cheb(c, u) <= 1); if (i >= 0) { const c = B.cords.splice(i, 1)[0]; blog(`<em>The cord goes taut.</em> ${c.by}'s sharper goes off under ${u.name}.`); blast({x:c.x, y:c.y}, [[1,10,2],[1,6,0]], '#f2c46b'); AUDIO.play('sharper'); sparks(c.x, c.y, 26, '#f2c46b'); } } // v13.5: Trip Cord
   if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
   { const fi = B.fires.find(f => f.x === u.x && f.y === u.y); if (fi && u.hp > 0) { blog(`${u.name} is caught in ${fi.txt || 'burner fire'}.`); hurt(u, roll(1,6)); } }
   if (u.hp <= 0) { B.busy = true; updBattleUI(); if (checkEnd()) return; return later(nextTurn, pace(600)); }
@@ -279,14 +277,15 @@ const AB = {
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
   mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
+    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`);
+      if (has(u.id, 'fieldsurgeon')) { const o = party().filter(p => p !== t && !p.ally && p.hp < p.maxhp && cheb(p, t) <= 2).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp)[0]; if (o) { heal(o, Math.max(1, Math.floor(n / 2))); sparks(o.x, o.y, 8, '#9fe0b8', .3); blog(`The other hand finds ${o.name}.`); } } }}, // v13.5: Field Surgeon
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
     run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); healW(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
   anvil:{name:'Anvil', free:true, self:true, desc:()=>'Once a fight, and it does not use the action: until this soldier\'s next turn, every blow aimed at a squadmate standing next to them lands on them instead.',
     ok:u=>!B.used['anvil' + u.id], run(u){ B.used['anvil' + u.id] = 1; u.anvilOn = true; AUDIO.play('click'); float(u, 'anvil', '#dfe8f0'); blog(`${u.name} plants a foot and squares up: "On me."`); }},
-  tripcord:{name:'Trip Cord', range:4, desc:()=>'Once a fight: a sharper on a cord, laid on an open tile within 4. At the start of an enemy\'s turn on it or next to it, it goes off: 1d10+2 there and 1d6 next to it, squad included. Not from the satchel.',
-    ok:u=>!B.used['cord' + u.id], tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 4 && free(x,y,u)) out.push({x,y}); return out; },
-    run(u,x,y){ B.used['cord' + u.id] = 1; (B.cords ??= []).push({x, y, by:u.name}); AUDIO.play('click'); B.fx.push({kind:'txt', x, y, txt:'cord', col:'#f2c46b', t:performance.now()}); blog(`${u.name} lays a sharper on a cord and backs off from it carefully.`); }},
+  stakeline:{name:'Stake Line', range:4, desc:()=>'Once a fight: three sharpened stakes and a cord across open ground, centred on a tile within 4 and running across. An enemy that steps onto the line stops there, its move done. No munition in it.',
+    ok:u=>!B.used['stakes' + u.id], tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 4 && free(x,y,u)) out.push({x,y}); return out; },
+    run(u,x,y){ B.used['stakes' + u.id] = 1; B.stakes ??= []; [-1, 0, 1].forEach(d => { const sx = x + d; if (sx >= 0 && sx < 8 && !wall(sx, y)) { B.stakes.push({x:sx, y}); B.fx.push({kind:'txt', x:sx, y, txt:'stakes', col:'#c9a36b', t:performance.now()}); } }); AUDIO.play('click'); blog(`${u.name} drives three stakes and runs a cord between them, low, where nobody looks.`); }},
   mark:{name:'Tracker\'s Mark', free:true, desc:()=>`It does not use the action: an enemy within 5 is marked, and every hit on it does +${2 + lvT()} damage for two rounds. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdMark >= B.round), tiles:u=>foes().filter(f => cheb(u,f) <= 5 && canShoot(u,f) && !(f.markedUntil >= B.round)),
     run(u,x,y){ const t = unitAt(x,y); u.cdMark = B.round + 2 - lvAt(6); t.markedUntil = B.round + 2; t.markDmg = 2 + lvT(); if (has(u.id, 'calledshot')) { if (t.calledUntil == null) t.ac -= 2; t.calledUntil = B.round + 2; } AUDIO.play('click'); float(t,'marked','#f2c46b'); blog(`${u.name} marks ${t.name}: a nick of chalk on the ground, a word to the squad, and it is a target.`); }},
@@ -573,6 +572,7 @@ const leaveCost = (u, x, y) => u.side === 'p' && boon('rope') ? 0 : threatsAt(u,
 async function aiWalk(u, path, gone){
   if (u.rising === B.turn) return true; // spent getting up
   for (const st of path) { if (await opportunity(u, st) || gone()) break; const was = {x:u.x, y:u.y}; u.facing = st.x >= u.x ? 1 : -1; u.x = st.x; u.y = st.y; if (u.kind !== 'shade') AUDIO.play('step'); enterFire(u); await wait(160); if (gone()) return false; if (u.hp <= 0) break;
+    if (u.side === 'e' && B.stakes && B.stakes.some(t => t.x === u.x && t.y === u.y)) { float(u, 'staked', '#c9a36b'); blog(`${u.name} goes into the stake line and stops there.`); break; } // v13.5: Stake Line
     if (u.side === 'e' && await postUp(u, was)) { if (gone()) return false; if (u.hp <= 0) break; } }
   return !gone();
 }
