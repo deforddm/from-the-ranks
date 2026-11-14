@@ -48,7 +48,7 @@ const R = r;
 R.fresh.lvl === 8 && R.fresh.xp === 1900 && R.fresh.due === '3,5,7' ? ok('a fresh Book Three game starts at level 8 and picks its level 3/5/7 talents') : no('fresh ' + JSON.stringify(R.fresh));
 R.to10.lvl === 10 && R.to10.due === '3,5,7,9' ? ok('levels 9 and 10 come in Book Three, with a veteran pick at 9') : no('to10 ' + JSON.stringify(R.to10));
 R.hp10 === 8 && R.dmg10 === 1 ? ok('level 10: +8 health over level 8 and +1 damage') : no(`hp10 ${R.hp10} dmg10 ${R.dmg10}`);
-R.cap === 15 && R.capDue === '3,5,7,9,11,13,15' ? ok('the cap in Book Three is 15, with veteran picks at 11, 13 and 15') : no(`cap ${R.cap} ${R.capDue}`);
+R.cap === 15 && R.capDue === '3,5,7,9,11,12,13,15' ? ok('the cap in Book Three is 15, with veteran picks at 11, 13 and 15 and the second talent at 12') : no(`cap ${R.cap} ${R.capDue}`);
 R.ac15 === 3 && R.dmg15 === 5 && R.t15 === 4 && R.wits15 === 2 ? ok('level 15: armour +3, damage +5, spell tier 4, the role Measure +2') : no(`15: ac ${R.ac15} dmg ${R.dmg15} t ${R.t15} wits ${R.wits15}`);
 R.stout === 1 && R.edge === 1 ? ok('Stout gives +1 armour, Edge +1 damage') : no(`stout ${R.stout} edge ${R.edge}`);
 R.sohraVet === 4 ? ok('Sohra joining a level-12 squad brings four veteran picks') : no('sohra vet ' + R.sohraVet);

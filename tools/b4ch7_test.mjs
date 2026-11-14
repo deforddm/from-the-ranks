@@ -38,7 +38,7 @@ const r = await page.evaluate(async () => {
     if (saw) S.f.b4_saw = saw; S.picksDue = []; };
   try {
   /* ================= a fresh start at Chapter Seven: Sathi is the Barrow dead; b4_saw unset (far); Orvas walking ================= */
-  setBook('hoc'); S = newStateHOC('Fresh'); lvl14(); S.f.b4_orvasDone = 1; S.squad.push('orvas'); S.loy.orvas = 2; migrate(S); save(); startChapter(7);
+  setBook('hoc'); S = newStateHOC('Fresh'); lvl14(); S.f.b4_orvasDone = 1; S.squad.push('orvas'); S.loy.orvas = 2; migrate(S); S.picksDue = []; save(); startChapter(7); // v13.5: migrate asks for the level-12 talent; not this test's business
   out.f = {area:S.area, ch:S.chapter, squad:S.squad.join(','), lvl0:S.lvl, dust:S.dust, n0:S.nerve, renderErr:renderAll(), nodes:nodes.length, face:b47Face(), sure:b47Sure()};
   talk('b4_c7_start'); take('b4_c7_start', /Find Radde/);
   out.f.radde = /Nerve/.test(DLG.b4_c7_radde().html || ''); take('b4_c7_radde', /see to the riders/); out.f.raddeSaid = S.f.b4_c7_raddeSaid;
