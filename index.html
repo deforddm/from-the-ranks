@@ -117188,11 +117188,17 @@ const TOUGH = {   // calibrated Nov 13, 2026 with the Whisper bot, 10 runs a fig
   bh:{hp:.65, atk:2, dmg:3}, rg:{hp:.75, atk:1, dmg:2},
   tth:{hp:.7, atk:4, dmg:8}, dod:{hp:.65, atk:3, dmg:6}, tcg:{hp:.7, atk:3, dmg:7},
 };
+/* TFIGHT[id] = {s: k, b: k}: a fight's own step on Soldier (s) and Bridgeburner (b), after TOUGH. Each step is +1 damage, and every
+   second step +1 to hit; a negative step eases. Health is left alone so the fight keeps its length. Set by the per-fight pass. */
+const TFIGHT = {};
 { const _mkFoe = mkFoe;
-  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); const t = S && TOUGH[S.book || 'gotm'];
-    if (!t || u.immortal || DIFF() === DIFFS.story) return u;
-    u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * t.hp)); u.atk = (u.atk || 0) + (t.atk || 0);
-    if (u.dmg && t.dmg) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + t.dmg];
+  mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra);
+    if (!S || u.immortal || DIFF() === DIFFS.story) return u;
+    const t = TOUGH[S.book || 'gotm'], tf = B && B.id && TFIGHT[B.id], st = tf ? tf[(S.diff || 'soldier') === 'bridgeburner' ? 'b' : 's'] || 0 : 0;
+    const hp = t ? t.hp : 1, atk = (t ? t.atk || 0 : 0) + Math.trunc(st / 2), dmg = (t ? t.dmg || 0 : 0) + st;
+    if (hp !== 1) u.maxhp = u.hp = Math.max(1, Math.round(u.maxhp * hp));
+    u.atk = (u.atk || 0) + atk;
+    if (u.dmg && dmg) u.dmg = [u.dmg[0], u.dmg[1], Math.max(0, (u.dmg[2] || 0) + dmg)];
     return u; }; }
 
 /* ============ v10.3 (David, Sun Nov 8, 2026, 8:50 PM PST): tricks that don't strike are free; three tricks become passive ============
