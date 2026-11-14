@@ -1,0 +1,25 @@
+ALL fights 24 mean won 79% median rounds 13 p90 16
+b6_c1_rearguard won 80% median rounds 15 n 10
+b6_c1_well won 70% median rounds 10 n 10
+b6_c1_edge won 50% median rounds 11 n 10
+b6_c1_patrol won 90% median rounds 10 n 10
+b6_c2_shrine won 60% median rounds 8 n 10
+b6_c2_village won 80% median rounds 14 n 10
+b6_c2_road won 70% median rounds 10 n 10
+b6_c3_sally won 70% median rounds 14 n 10
+b6_c3_streets won 90% median rounds 14 n 10
+b6_c3_gate won 50% median rounds 14 n 10
+b6_c3_strays won 80% median rounds 9 n 10
+b6_c4_carts won 100% median rounds 9 n 10
+b6_c4_cult won 100% median rounds 16 n 10
+b6_c4_streets won 90% median rounds 12 n 10
+b6_c5_village won 80% median rounds 8 n 10
+b6_c5_deserters won 70% median rounds 14 n 10
+b6_c5_boats won 100% median rounds 15 n 10
+b6_c6_wells won 100% median rounds 9 n 10
+b6_c6_night won 60% median rounds 15 n 10
+b6_c7_alley won 60% median rounds 9 n 10
+b6_c6_cult won 80% median rounds 14 n 10
+b6_c7_guard won 80% median rounds 8 n 10
+b6_c7_jetty won 100% median rounds 13 n 10
+b6_c7_streets won 90% median rounds 13 n 10
