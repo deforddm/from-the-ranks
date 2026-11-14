@@ -38,7 +38,7 @@ const rnd = v => ev(v => { window._r ??= Math.random; Math.random = () => v; }, 
 const tierLine = r => r ? `${r.who} ${r.stat} ${r.tier}` : 'no roll';
 const nearNext = () => ev(() => { window._g ??= b5gRoll; b5gRoll = (...a) => { const r = window._g(...a); b5gRoll = window._g; r.tier = 'near'; r.ok = false; r.pass = true; return r; }; });
 const conSame = async m => ok(await ev(() => b8Contract() === window._con), `${m}: the Contract does not move`);
-const NEVER = /Bridgeburner|Seba|Krute|Picker|Mallet|Bluepearl|Antsy|Blend\b|Murillio|Kruppe|Kellanved|Dancer|Laseen|Ammanas|Burn's Sleep|\b1\d\d\d\b|Whiskeyjack|Dragnipur|Spawn|Mother Dark|Spinnock|Endest|Korlat|Seerdomin|Salind|Gradithan|Kef Tanar|Rake/;
+const NEVER = /Bridgeburner|Seba|Krute|Picker|Mallet|Bluepearl|Antsy|Blend\b|Murillio|Kruppe|Kellanved|Dancer|Laseen|Ammanas|Burn's Sleep|\b1\d\d\d\b|Whiskeyjack|Dragnipur|Spawn|Mother Dark|Spinnock|Endest|Korlat|Seerdomin|Salind|Gradithan|Rake/; // Kef Tanar may be named (David, Nov 13, 2026); the squad still never sits at Spinnock's table
 let allPanel = '';
 
 /* ============ 1. Orsa's Cup (Ch1) ============ */

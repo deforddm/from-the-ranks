@@ -155,7 +155,7 @@ Some stains, he thinks, never wash out. He believes it. He has built what is lef
     {txt:
 `Spinnock Durav has been alive for a very long time, and has found that the trick of it is to have somewhere to be on certain evenings.
 
-This is one. A tavern in the city, low-beamed, where the human drinkers have stopped staring at the Tiste Andii in the corner because he has been coming for so long. Across the board from him sits his friend: big, grey, careful, once a Seerdomin of the Pannion, who plays as if every piece were a soldier he would have to answer for.
+This is one. A tavern in the city, low-beamed, where the human drinkers have stopped staring at the Tiste Andii in the corner because he has been coming for so long. Across the Kef Tanar board from him sits his friend: big, grey, careful, once a Seerdomin of the Pannion, who plays as if every tile were a soldier he would have to answer for. Spinnock has played the game for longer than this city has stood.
 
 Spinnock likes him. It surprised him, at first, how much.`},
     {txt:

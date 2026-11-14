@@ -391,6 +391,7 @@ GLOSSX.tth = [
   [2, 'The old Domin', 'The Pannion lands east of the city, years after the Seer fell. Some of the towns are coming back. Some of them are coming back wrong.', b8Saw(2)],
   [2, 'Kelyk', 'The drink of the Dying God\'s cult: sweet, dark, and it does not let go. Its fields are fed with the dead.', b8Saw(2)],
   [3, 'Black Coral', 'Coral, renamed, on Coral\'s own site, under a night that does not lift. The Tiste Andii hold it.', b8Saw(3)],
+  [3, 'Kef Tanar', 'The Andii\'s board game of tiles: keeps, a grand city, one gate. Hours to a game, coin in it and side bets round it. Whoever goes out by the gate keeps some of what they won, and doesn\'t drink with the winner after. It has reached Darujhistan.', b8Saw(3)],
   [3, 'The Redeemer', 'The god of the barrow outside Black Coral. The Fourth saw the man in it go under the gifts, years ago. He takes the weight. He does not answer.', b8Saw(3)],
   [4, 'The pilgrims\' camp', 'Tents and shacks round the barrow, people come from every road to kneel. Some of them have started drinking something besides water.', b8Saw(4)],
   [5, 'The Lamatath', 'The plains between Black Coral and Darujhistan\'s east road. Long grass, few roads, and this season something running through it at night.', b8Saw(5)],

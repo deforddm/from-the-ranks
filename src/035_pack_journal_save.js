@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.3.2', ['Book Eight: Kef Tanar, the Tiste Andii\'s tile game, is now in the story. Two carters play it in Orsa\'s den, Thessaly and Edrem mention it in Black Coral, Spinnock\'s vision shows him at the board, and it has its own glossary entry. Saves are unchanged.']],
   ['13.3.1', ['Books Six and Seven: bringing a squad from an earlier book no longer says your sergeant "already has a save here". The carried squad gets its own new save, and the earlier book\'s save is kept.']],
   ['13.3.0', ['Book Four, Chapter 6: going forward to the ramps now pays off before first light. Back at the picket, Radde tells you what happened while the squad was out (a patrol found the end of the line a squad short, and the regulars and the recruits held it without you, two of them hurt), reads back what you saw, and sends it up the line. The button after the outpost fight now says plainly that it takes you back to the picket, and Radde has the news if you skip it.']],
   ['13.2.3', ['The title\'s book list shows the covers two to a row, so each cover is bigger.']],
