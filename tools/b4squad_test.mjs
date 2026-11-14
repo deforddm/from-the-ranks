@@ -114,7 +114,7 @@ else {
     ? ok('the sergeant, Haddat and Ramin: healer, bow, sorcery and munitions all marked') : no('two marks ' + JSON.stringify(m2));
   R.short.open && R.short.places === 1 && R.short.choices.some(t => /^Take Mirrel/.test(t)) && R.short.squad === 'sgt,haddat,redblade,tallow,hessa,mirrel' && R.short.orvas === false && R.short.after === 6
     ? ok('a save from before the muster one short (sergeant, Haddat, Ramin, Tallow, Hessa): the fire offers a spare straight in, to six; Orvas then has no room') : no('short ' + JSON.stringify(R.short));
-  R.six.six === Math.max(1, Math.round(R.six.five * 1.15)) && R.six.d6 === R.six.d5 + 1 ? ok(`a squad of six meets more in each foe (health ${R.six.five} -> ${R.six.six}, damage +1)`) : no('six ' + JSON.stringify(R.six));
+  Math.abs(R.six.six - Math.max(1, Math.round(R.six.five * 1.15))) <= 1 /* v13.4: TOUGH rounds after the 1.15 */ && R.six.d6 === R.six.d5 + 1 ? ok(`a squad of six meets more in each foe (health ${R.six.five} -> ${R.six.six}, damage +1)`) : no('six ' + JSON.stringify(R.six));
   R.five.ramin === true && R.five.squad === 'sgt,haddat,tallow,hessa,tebbet,redblade' && R.five.orvas === false && R.five.len === 6
     ? ok('a recruit joins a full five without anybody going back; the sixth place is the last') : no('five ' + JSON.stringify(R.five));
   R.two.marks2.mirrel === 'x' && R.two.marks2.rasp === 'no sapper in the squad' && R.two.places2 === 1 && R.two.squad === 'sgt,haddat,redblade,mirrel,rasp,yorin' && R.two.last === 'Into the line.' && R.two.mustered === 1
