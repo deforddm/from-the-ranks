@@ -1,0 +1,27 @@
+ALL fights 26 mean won 98% median rounds 10 p90 14
+b4_c1_runners won 100% median rounds 6 n 5
+b4_c1_dig won 100% median rounds 12 n 5
+b4_c1_watch won 100% median rounds 16 n 5
+b4_c1_brawl won 100% median rounds 10 n 5
+b4_c2_robbers won 100% median rounds 10 n 5
+b4_c2_probe won 100% median rounds 10 n 5
+b4_c2_hill won 100% median rounds 9 n 5
+b4_c3_brawl won 100% median rounds 4 n 5
+b4_c3_raiders won 100% median rounds 11 n 5
+b4_c3_scavengers won 100% median rounds 9 n 5
+b4_c3_poles won 100% median rounds 9 n 5
+b4_c4_lancers_brawl won 100% median rounds 4 n 5
+b4_c4_wagons won 80% median rounds 10 n 5
+b4_c4_wounded won 100% median rounds 10 n 5
+b4_c4_picket won 100% median rounds 9 n 5
+b4_c5_seep won 100% median rounds 10 n 5
+b4_c5_wallriders won 100% median rounds 11 n 5
+b4_c5_rearguard won 100% median rounds 11 n 5
+b4_c5_deserters won 100% median rounds 13 n 5
+b4_c6_nest won 60% median rounds 10 n 5
+b4_c6_dusk won 100% median rounds 12 n 5
+b4_c6_patrol won 100% median rounds 16 n 4
+b4_c6_outpost won 100% median rounds 12 n 4
+b4_c7_outriders won 100% median rounds 14 n 4
+b4_c7_breakout won 100% median rounds 13 n 4
+b4_c7_spur won 100% median rounds 12 n 4
