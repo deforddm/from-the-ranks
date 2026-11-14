@@ -1016,7 +1016,7 @@ B6CH7.finale = {
    has six picks, so at level 17 a soldier who already holds all six is owed a pick with nothing to choose, and 37's openPicks waits
    for ever on a Confirm that never enables (the --from=7 bot stuck at 'picks'). Skip a veteran level nobody walking can take. ---- */
 { const _op = openPicks;
-  openPicks = function(done){ if (b6On() && Array.isArray(S.picksDue)) while (S.picksDue.length && S.picksDue[0] !== 3 && !SQUAD().some(id => owesAt(id, S.picksDue[0]) && PICKS.vet.some(v => !has(id, v[0])))) S.picksDue.shift();
+  openPicks = function(done){ if (b6On() && Array.isArray(S.picksDue)) while (S.picksDue.length && S.picksDue[0] !== 3 && S.picksDue[0] !== 12 && !SQUAD().some(id => owesAt(id, S.picksDue[0]) && PICKS.vet.some(v => !has(id, v[0])))) S.picksDue.shift();
     return _op(done); }; }
 
 /* the onward road: a finished Book Six save on the 'adjunct' road is the one Book Seven imports (no import is written yet) */

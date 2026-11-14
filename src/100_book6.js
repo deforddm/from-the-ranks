@@ -50,7 +50,7 @@ function b6Carry(o){ const dead = o.dead || {}, alive = k => k !== 'sgt' && TPL[
   const mates = [...new Set([...(o.squad || []), ...(o.camp || [])])].filter(alive);
   const who = ['sgt', ...mates], gear = {}, picks = {}, loy = {}, worn = new Set();
   who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
-    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p)));
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || !!PICKS.t2[p] || ((PICKS[3][k] || []).some(v => v[0] === p)));
     if (k !== 'sgt') loy[k] = clamp(((o.loy || {})[k]) || 0, -2, 3); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));

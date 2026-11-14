@@ -7,7 +7,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const gearOf = Object.values(S.gear[id] || {}).map(g => ITEMS[g]).filter(Boolean);
   const sum = k => gearOf.reduce((a,it) => a + (it[k] || 0), 0);
   const wnd = injuryOf(id), hp = Math.max(1, c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0) - (wnd && wnd.hp || 0)), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0) - (wnd && wnd.hit || 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
-  const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet];
+  const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet, ...Object.values(PICKS.t2)];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
   const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
   const wearer = g => SQUAD().find(w => Object.values(S.gear[w] || {}).includes(g));

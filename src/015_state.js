@@ -27,6 +27,8 @@ function migrate(s){
   // v13.4 (David, Nov 12): the Mockra Whisper is Tuft's from the start, so a Tuft who took it as her level-3 talent chooses again (Shadow Step or Shadow Lash)
   [s, ...Object.values(s.th || {})].forEach(t => { const p = t && t.picks && t.picks.tuft; if (!p || !p.includes('mockra')) return; t.picks.tuft = p.filter(k => k !== 'mockra');
     if ((t.lvl || s.lvl || 1) >= 3) { t.picksDue ??= []; if (!t.picksDue.includes(3)) t.picksDue.push(3); } });
+  // v13.5: a save already at level 12 or past it is asked for the second talent (picksOwed checks who still owes it)
+  [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !t.picks || (t.lvl || s.lvl || 1) < 12 || t.t2Asked) return; t.t2Asked = 1; t.picksDue ??= []; if (!t.picksDue.includes(12)) t.picksDue.push(12); });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
   if (!s.f.gotSmokers && (s.chapter > 3 || (s.fxd && s.fxd.c3_work_hedge))) { s.inv.smoker += 2; s.f.gotSmokers = 1; }
   // v3.7.3: the Phoenix's door moved off the crossing, up the alley into the Daru District; a save standing in its old doorway steps back into the street
@@ -73,8 +75,16 @@ const VET_LVLS = [5,7,9,11,13,15];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
+/* v13.5: the level-12 talent (014 PICKS.t2). The role is read from the kit: sergeant, healer, heavy, sapper, bow, caster. */
+function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'nottoday'; if (ab.includes('bash')) return 'anvil';
+  if (ab.includes('sharper')) return 'tripcord'; if (ab.includes('mark')) return 'calledshot'; if (ab.some(a => AB[a] && AB[a].strain && !['mend','wash','stanch'].includes(a))) return 'deepwarren'; return null; }
+const T2IDS = () => Object.keys(PICKS.t2);
+function t2Opts(s, k){ const t3 = PICKS[3][k]; if (!t3) return []; const mine = ((s.picks || {})[k]) || [], took = t3.find(o => mine.includes(o[0]));
+  if (!took) return []; const out = t3.filter(o => o[0] !== took[0]); const r = t2Role(k); if (r) out.push(PICKS.t2[r]); return out; }
+const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k) && (() => { const o = t2Opts(s, k), mine = ((s.picks || {})[k]) || []; return o.length && !o.some(x => mine.includes(x[0])); })();
 function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
+  if (sq.some(k => t2Owed(s, k))) due.push(12);
   VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
 function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
@@ -137,7 +147,7 @@ function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
   S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,13,15].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,12,13,15].includes(k)) S.picksDue.push(k); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.

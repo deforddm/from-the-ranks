@@ -167,6 +167,16 @@ const PICKS = {
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). No free swings.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
   vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.']],
 };
+/* v13.5 (David, Nov 14, 2026, design C; series-polish-plan.md §0c.3): a second talent at level 12, a choice of two: the level-3 talent
+   passed over, or the one written for the soldier's role (t2Role, 015). Kept as ids in S.picks like any other pick. */
+PICKS.t2 = {
+  oldhand:['oldhand', 'Old Hand', 'Rally can be called once more each fight. They have heard the voice before, and it has always meant they lived.'],
+  nottoday:['nottoday', 'Not Today', 'Once a fight: the first squadmate within 4 who would go down stays up at 1 health instead. Hood can wait his turn.'],
+  anvil:['anvil', 'Anvil', 'Once a fight, without using the action: until the next turn, every blow aimed at a squadmate standing next to this one lands on this one instead.'],
+  tripcord:['tripcord', 'Trip Cord', 'Once a fight: a sharper on a cord laid on a tile within 4. At the start of an enemy\'s turn on it or beside it, it goes off. Not from the satchel.'],
+  calledshot:['calledshot', 'Called Shot', 'An enemy this soldier marks also loses 2 armour while the Mark holds.'],
+  deepwarren:['deepwarren', 'Deep Warren', 'Every spell costs 1 less strain (never under 1). Years of going in, and coming back.'],
+};
 /* v4.0 books. Each book has its own chapters 1..7 (and its own end lines and teasers); the globals CHAPTERS, CHEND and CHTEASE
    always hold the book being played, swapped by setBook() (15). Areas, fights, foes, nodes and scenes are shared by id, so a
    later book's ids carry a prefix (b2_ for Deadhouse Gates). */

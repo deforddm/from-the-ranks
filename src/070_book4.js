@@ -305,12 +305,12 @@ function b4Import(id){ const o = loadSlot(id); if (!b4Qualifies(o)) return null;
   /* what the squad carried, as Book Three's transfer does (60): worn gear and unworn kit, talents and veteran picks, the tricks of anyone who comes across */
   const who = ['sgt', ...mates], gear = {}, picks = {}, worn = new Set();
   who.forEach(k => { gear[k] = {}; Object.entries(Object.assign({}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it]) { gear[k][slot] = it; worn.add(it); } });
-    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p))); });
+    picks[k] = (((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || !!PICKS.t2[p] || ((PICKS[3][k] || []).some(v => v[0] === p))); });
   const wornByGone = new Set(); Object.entries(o.gear || {}).forEach(([k, g]) => { if (!who.includes(k)) Object.values(g || {}).forEach(it => wornByGone.add(it)); });
   /* v7.2: Ramin and Keth, if they come later, bring what they wore in Book Two (parked for them), their loyalty and their picks */
   const carry = {}; [['redblade', !!f.b2_raminGone && !dead.redblade], ['warlock', !!f.b2_kethGone && !dead.warlock]].forEach(([k, on]) => { if (!on) return;
     const g = {}; Object.entries(Object.assign({}, ((o.f || {}).b2_allyGear || {})[k] || {}, ((o.parked || {})[k]) || {}, ((o.gear || {})[k]) || {})).forEach(([slot, it]) => { if (ITEMS[it] && (o.kit || []).includes(it) && !worn.has(it)) { g[slot] = it; worn.add(it); } });
-    carry[k] = {gear:g, loy:clamp(((o.loy || {})[k]) || 0, -2, 3), picks:(((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][k] || []).some(v => v[0] === p)))}; });
+    carry[k] = {gear:g, loy:clamp(((o.loy || {})[k]) || 0, -2, 3), picks:(((o.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p) || !!PICKS.t2[p] || ((PICKS[3][k] || []).some(v => v[0] === p)))}; });
   const kit = (o.kit || []).filter(it => ITEMS[it] && (worn.has(it) || !wornByGone.has(it)));
   const tricks = {}; Object.entries(o.tricks || {}).forEach(([k, t]) => { if (TRICKS[k] && t && who.includes(t.who)) tricks[k] = {who:t.who, ch:0, left:null}; });
   const inv = Object.assign({sharper:0, burner:0, cusser:0, smoker:0}, ...B2_MUNI.map(k => ({[k]:Math.max(0, ((o.inv || {})[k]) || 0)})), {salve:Math.max(2, ((o.inv || {}).salve) || 0)}); // Tangle's satchel, as Book Two left it

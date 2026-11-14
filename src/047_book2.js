@@ -366,7 +366,7 @@ const b2OldHandPick = () => { const h = dgOldHands(), i = S && S.imported; if (!
   return h.slice().sort((a, b) => ((i.loy || {})[b] || 0) - ((i.loy || {})[a] || 0))[0]; };
 function b2OldHand(id){ if (!TPL[id] || S.squad.includes(id) || ['redblade', 'warlock'].some(k => S.squad.includes(k))) return false;
   S.f.b2_oldHand = id; const i = S.imported || {}; // v7.2: before recruit, so the roster counts them as the book's own bench
-  S.picks[id] = ((i.picks || {})[id] || []).filter(p => PICKS.vet.some(v => v[0] === p) || ((PICKS[3][id] || []).some(v => v[0] === p)));
+  S.picks[id] = ((i.picks || {})[id] || []).filter(p => PICKS.vet.some(v => v[0] === p) || !!PICKS.t2[p] || ((PICKS[3][id] || []).some(v => v[0] === p)));
   if (i.loy && i.loy[id] != null) S.loy[id] = clamp(i.loy[id], -2, 3);
   S.parked ??= {}; const g = {}; Object.entries((i.gear || {})[id] || {}).forEach(([slot, it]) => { if (!ITEMS[it]) return; if (!S.kit.includes(it)) S.kit.push(it); g[slot] = it; }); S.parked[id] = g;
   recruit(id); if (!S.squad.includes(id)) return false;
