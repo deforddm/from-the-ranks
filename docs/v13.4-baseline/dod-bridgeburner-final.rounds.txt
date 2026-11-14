@@ -1,0 +1,23 @@
+ALL fights 22 mean won 81% median rounds 11 p90 23
+b9_c1_stores won 80% median rounds 13 n 10
+b9_c1_looters won 70% median rounds 20 n 10
+b9_c2_drill won 100% median rounds 4 n 10
+b9_c1_brawl won 60% median rounds 13 n 10
+b9_c2_bout won 90% median rounds 7 n 10
+b9_c2_wagons won 60% median rounds 12 n 10
+b9_c3_dogs won 80% median rounds 10 n 10
+b9_c3_farm won 70% median rounds 19 n 10
+b9_c4_herd won 50% median rounds 4 n 10
+b9_c3_road won 90% median rounds 13 n 10
+b9_c4_raid won 80% median rounds 12 n 10
+b9_c4_forage won 80% median rounds 10 n 10
+b9_c5_bull won 80% median rounds 29 n 10
+b9_c5_cache won 80% median rounds 22 n 10
+b9_c5_dogs won 80% median rounds 11 n 10
+b9_c6_train won 100% median rounds 5 n 10
+b9_c6_line won 90% median rounds 18 n 10
+b9_c6_dusk won 100% median rounds 4 n 10
+b9_c6_gap won 80% median rounds 10 n 10
+b9_c7_dark won 100% median rounds 5 n 10
+b9_c7_trail won 100% median rounds 11 n 10
+b9_c7_rearguard won 70% median rounds 25 n 10
