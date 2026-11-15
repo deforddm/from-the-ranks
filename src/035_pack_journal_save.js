@@ -195,6 +195,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.10.0', ['Book Three meets more of the canon. After the parley, Whiskeyjack stops at the Fourth\'s post, and Brisk tells him to see Mallet about the leg. Quick Ben on the shore, about the White Face clans; a fevered Captain Paran on a well\'s rim in Capustan; Gruntle on the Maurik, who guards caravans on land; and before Coral, Hedge with his munitions laid out on an oilcloth, talking to them.']],
   ['13.9.0', ['Book Two meets more of the canon. At the Sekala crossing Coltaine reins in and gives the Third its stretch of bank himself; a sour sapper called Cuttle sits on the box of timers; after the count, Baria Setral of the Red Blades comes along the bank to see who held behind his file. In the Vathar forest, Nil and Nether come to ask Marrow how her warren is.']],
   ['13.8.0', ['Book One meets more of the canon (the first of ten books getting this). At Pale, the night before the Hounds, High Fist Dujek is alone at the top of the Second\'s burial field, reading the helmets: speak to him. In Chapter Four Kettle spends the nights in the vault with Fiddler and Hedge, and learns where the Daru pin a plank.']],
   ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],

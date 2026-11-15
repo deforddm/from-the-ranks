@@ -103,7 +103,9 @@ const B3CH5 = {
         {id:'hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:4, node:()=>S.f.b3_c5_hurl ? 'b3_c5_hurl_again' : 'b3_c5_hurl', fresh:()=>!S.f.b3_c5_hurl},
         {id:'qm5', name:'The quartermaster', kind:'b2soldier', x:3, y:8, node:()=>'b3_c5_qm', fresh:()=>!S.f.b3_c5_qm},
         {id:'glean', name:'A woman in the stubble', kind:'b3_c5_villager', x:5, y:9, node:()=>'b3_c5_glean', show:()=>!S.f.b3_c5_glean || S.f.b3_c5_glean === 'left' || /^b3_c5_glean/.test(S.node || ''), fresh:()=>!S.f.b3_c5_glean},
-        {id:'shaman', name:'An Ilgres shaman', kind:'b3_barghast', x:10, y:7, node:()=>S.f.b3_c5_bloodTried ? 'b3_c5_shaman_again' : 'b3_c5_shaman', fresh:()=>!S.f.b3_c5_bloodTried} ] },
+        {id:'shaman', name:'An Ilgres shaman', kind:'b3_barghast', x:10, y:7, node:()=>S.f.b3_c5_bloodTried ? 'b3_c5_shaman_again' : 'b3_c5_shaman', fresh:()=>!S.f.b3_c5_bloodTried},
+        /* v13.8 (David, Nov 15): meetings. Quick Ben, back from the White Face's lines up the shore, watching the Ilgres fire from a careful distance */
+        {id:'qb5', name:'Quick Ben', kind:'qb', x:13, y:9, node:()=>'b3_c5_qb', fresh:()=>!S.f.b3_c5_qb} ] },
 
     /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on) */
     { id:'b3_c5_ford', title:'The Domin · a ford two days south', sub:'Noon · a rearguard on the far bank', hint:'Tap ground to move · tap a figure to talk · the ford is the gravel across the river', decor:'b3_c5_domin', amb:'wind',
@@ -266,6 +268,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     if (f.b3_c5_glean === 'fed') x.push('A woman gleaning single grains in the stubble on the south shore has a day of the Host\'s hardtack in her skirt.');
     if (f.b3_c5_glean === 'north') x.push('A woman gleaning in the stubble walked north to find the Grey Swords, on Dannet\'s word.');
     if (f.b3_c5_blood) x.push(`${c5Name(f.b3_c5_blood)} held an Ilgres shaman's knife while he said the blood-iron words, and did not let go.`);
+    if (f.b3_c5_qb) x.push('Quick Ben, back from the White Face\'s lines on the south shore, told the Fourth to keep its warrens shut in the Domin and its opinions about Barghast to itself.');
     if (f.b3_c5_leg) x.push('Whiskeyjack says Mallet can have his week after Coral. Not before.');
     if (f.b3_c5_quorls) x.push('Kettle counts the quorls at dusk and again at dawn, and the numbers do not agree. It is in the ledger.');
     if (preUsed('b3_c5_ford')) x.push('Kettle put a sharper in a river and the river got up and landed on a Beklite line. She wants it noted that this was a first.');
@@ -278,6 +281,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     f.b3_c5_townDone && `A burnt town in the rain. The Seer's soldiers were driving the last of its people south ahead of the army. The Fourth cut them loose.`,
     f.b3_c5_fordDone && `A Beklite rearguard held a ford two days south of the Catlin, and died there. A cadre mage stood the river up against their mage, and a quarrel did the rest.`,
     f.b3_c5_race && `Hurlochel: Brood's camp says the Host means to take Coral first and keep it for the Empress. Kallor says it loudest.`,
+    f.b3_c5_qb && `Quick Ben: Humbrall Taur has every White Face clan at one fire, which has never happened, and every one of them hating the next, which always has. Their gods came up out of the Thrall's floor and are learning to walk. Trotts is a warchief.`,
     f.b3_c5_mhybe && `The Mhybe has gone back north to Capustan in a wagon, with the two Daru, to find a temple that can ease her. Her daughter stayed with the army.`,
     `The Fourth crossed the Catlin into the Pannion Domin. The fields are stripped, the villages empty, and the warrens poisoned.`].filter(Boolean); },
 
@@ -410,6 +414,60 @@ The woman gets up, which takes a while, and starts north toward the ford without
 
 Sohra looks back too, once. She doesn't sing for an hour after.` : ''}`,
       ch:[{t:'On.'}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Quick Ben on the south shore, about the White Face ----
+       The plan puts him "at the Barghast camp (Ch 5)". Where and when: after the relief the allied camp is on the south shore of the Catlin
+       (moi-canon §1.7, GR ch. 21); the Bridgeburners march with the army into the Domin (GR ch. 23: the Edur body on the shore, Straw and the
+       table) and the White Face with it (this book's Ch6 river road; W *Trotts*). Supported (GR, two threads; W). What he says of the clans is
+       moi-canon §1.3 (Humbrall Taur and Hetan, the Barahn and the Ahkrata, the Ahkrata against the Ilgres: KH 21%, 38%; the First Founders out of
+       the Thrall: WDE ch. 10, and this book's Ch4) and Trotts a warchief without a tribe (W *Trotts*). The warrens poisoned: b3_domin, this
+       chapter. Nothing past the Domin: no Coral, no keep, no Seer named, and nothing of how the Barghast or Trotts fare there. He knew Tuft
+       in Book One (c1_qb_tuft; 61's "Quick Ben said a month"). Sets b3_c5_qb; Tuft +1, else Ohl +1, else Sohra +1. */
+    b3_c5_qb:()=>({sp:'Quick Ben · Bridgeburners', scene:'b3_c5_catlin', again:'Quick Ben is still on his root, watching the Ilgres fire, with his hands in his sleeves and the look of a man doing sums.', fx:()=>{ S.f.b3_c5_qb = 1; if (b3In('tuft')) c5Loy('tuft', 1); else if (b3In('ohl')) c5Loy('ohl', 1); else c5Loy('sohra', 1); }, txt:
+`A small, slight, dark man is sitting on the root of a dead tree down the shore from the Ilgres fires, with his hands in his sleeves, watching the old shaman work his knife the way a cardsharp watches somebody else's game: with great interest, and from a careful distance.
+
+Quick Ben. The Bridgeburners' mage. He has come down the shore from the White Face's lines, by the paint on his boots, and he looks up as the Fourth comes by as if he had been expecting it for about a quarter of a bell.
+
+"Sergeant. The Fourth." He counts you, the way they all do in this army, and seems content with the number.${b3In('tuft') ? `
+
+Then, to Tuft, mildly: "Still cold?"
+
+"No," says Tuft.
+
+"Told you a month."
+
+"It was longer."
+
+"It's always longer." He looks south, along the road, at the stripped fields. "Don't open it down here. Any of you with a warren. Not a crack, not to light a pipe. Something's got into them south of the river, and it likes the taste of whoever opens the door."` : `
+
+He looks south, along the road, at the stripped fields. "Anyone in the Fourth with a warren: don't open it down here. Not a crack. Something's got into them south of the river, and it likes the taste of whoever opens the door."`}${b3In('ohl') ? `
+
+"Denul's been coming out sour since the ford," Ohl says. "Like milk on the turn."
+
+"Then stop drinking from it, healer." Quick Ben nods at the shaman. "Use what doesn't come out of a warren. That, for instance. The Barghast never bothered with warrens. Their spirits are older and stupider and nobody has thought to poison them yet."` : ''}`,
+      ch:[{t:'"You were with the White Face."', go:'b3_c5_qb_wf'},
+          {t:'"Mage."', go:()=>startExplore()}]}),
+    b3_c5_qb_wf:()=>({sp:'Quick Ben', scene:'b3_c5_catlin', txt:
+`"Since the hills." He holds up a hand and folds the fingers down one at a time. "Humbrall Taur has every White Face clan in those hills sitting round one fire, which has never happened, and every one of them hating the clan next along, which always has. The Barahn want to be first at everything. The Ahkrata want the Barahn not to be. Taur holds it together with his two hands, and his daughter holds what his hands can't reach."
+
+He folds the last finger. "And their gods came up out of the floor of a council hall in Capustan this month, in boats, after a very long sleep, and are learning to walk. New gods are hungry. Old ones are worse. These are both." He considers that. "Interesting times to be a Barghast. Worse ones to be standing near one."
+
+"Trotts is a warchief now," he adds. "Don't laugh. He'd take it badly, and he'd be right."${b3In('brisk') ? `
+
+Brisk${S.f.b3_c2_bb ? ', who bared her teeth at Trotts on the plain and had them bared back,' : ''} does not laugh. "Good," she says.` : ''}${b3In('kettle') ? `
+
+"Do the White Face use munitions?" Kettle asks, in the voice of someone asking if a new acquaintance is married.
+
+"They use you," says Quick Ben. "Ask any of them."` : ''}${b3In('sohra') ? `
+
+Sohra has been listening with her chin up. "In my grandmother's time the White Face stole Rhivi herds," she says. "In my mother's time they stole them back from whoever stole them from us. Now they ride with us." She says it as a thing to be wondered at, not trusted.
+
+"Now they ride with everyone," Quick Ben agrees. "It's a short list. Keep it that way."` : ''}${b3In('greysword') ? `
+
+Dannet says nothing, but her eyes go north, to the river and the city behind it, where the floor of the Thrall is a pit.` : ''}
+
+He nods along the shore at the Ilgres fire. "And the Ahkrata hate those ones. So don't tell that shaman anything I just said. He'll want to discuss it with a knife, and he has the good one."`,
+      ch:[{t:'"Mage."', go:()=>startExplore()}]}),
 
     /* the Ilgres shaman and the blood-iron (the chapter's trick) */
     b3_c5_shaman:()=>({sp:'An Ilgres shaman', txt:

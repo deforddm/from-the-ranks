@@ -122,7 +122,9 @@ const B3CH1 = {
         {id:'sarhul', name:'Ilgres Barghast', kind:'b3_c1_ilgres', x:7, y:8, node:()=>'b3_c1_ilgres', fresh:()=>!S.f.b3_c1_ilgresMet},
         {id:'ilgres2', name:'Ilgres Barghast', kind:'b3_c1_ilgres', x:5, y:8, node:()=>'b3_c1_ilgres'},
         {id:'mott', name:'A man in a strange hat', kind:'b3_c1_mott', x:3, y:9, node:()=>'b3_c1_mott', fresh:()=>!S.f.b3_c1_mott},
-        {id:'sohra', name:'A Rhivi rider', kind:'sohra', x:11, y:9, node:()=>'b3_c1_sohra_line', show:()=>!b3In('sohra'), fresh:()=>!S.f.b3_sohraMet} ] },
+        {id:'sohra', name:'A Rhivi rider', kind:'sohra', x:11, y:9, node:()=>'b3_c1_sohra_line', show:()=>!b3In('sohra'), fresh:()=>!S.f.b3_sohraMet},
+        /* v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack comes back down past the Fourth's post after the parley */
+        {id:'wjpost', name:'Whiskeyjack', kind:'wj', x:6, y:6, node:()=>'b3_c1_wjpost', show:()=>!!S.f.b3_c1_parleyDone, fresh:()=>!!S.f.b3_c1_parleyDone && !S.f.b3_c1_wjpost} ] },
 
     /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket */
     { id:'b3_c1_rhivi', title:'The Rhivi camp · night', sub:'Fires, herds, and somebody always singing', hint:'Tap ground to move · tap a figure to talk · the fires are warm', decor:'b3camp_night', dark:true,
@@ -239,6 +241,7 @@ const B3CH1 = {
     if (f.b3_kallorSaw) x.push('Kallor walked past the Mhybe\'s tent after the fight and looked at the sergeant, and took his time about it. He has a face for his book now.');
     if (f.b3_kallor) x.push('Brood\'s second called the child an abomination in front of both armies, and demanded her death, and Whiskeyjack struck him. The squad saw it from the picket. Kallor, the soldiers call him.');
     if (f.b3_legSeen) x.push('Mallet wants a week of Whiskeyjack flat on his back for that leg. Whiskeyjack has not given him an hour.');
+    if (f.b3_c1_wjpost) x.push(b3In('brisk') ? 'After the parley Whiskeyjack came down past the Fourth\'s post on the picket, and Brisk told him to his face to see Mallet. He said Mallet had seen it.' : 'After the parley Whiskeyjack came down past the Fourth\'s post on the picket, and the Fourth told him to see Mallet. He said Mallet had seen it.');
     if (f.b3_tav) x.push(b3In('brisk') ? 'Brisk walked to Tav\'s cook-fire, and stood by it until he felt it. He was singing. He can\'t.' : 'Tav, Brisk\'s brother, found the Fourth at Pale, and sat with the sergeant a while, and did not say much. Neither did the sergeant.');
     if (f.b3_tuftChild) x.push('The child in red wool looked across the parley ground at Tuft, as if she half knew her. Tuft has not said what she felt. She has not slept much either.');
     if (f.b3_c1_ilgres === 'won') x.push('The Fourth won a shield-push at the Ilgres fire, and an iron torc with it.');
@@ -261,6 +264,7 @@ const B3CH1 = {
     f.b3_tuftChild && 'Tuft saw the child for the first time since the hill above the plain. The child looked back.',
     f.b3_c1_tunnelsDone && 'The Fourth went back down the old north sap under Pale, where its story started, and cleared it before the parley.',
     f.b3_legSeen && 'Mallet wants a week of Whiskeyjack flat on his back. Whiskeyjack has a parley, and a war after it, and will not give him an hour.',
+    f.b3_c1_wjpost && 'After the parley Whiskeyjack walked back to the Host\'s lines across the picket, past the Fourth\'s post, on the leg. He said the Fourth had done what it was told: watched.',
     f.b3_tav && 'Tav, Brisk\'s brother, a heavy-infantry corporal in the Fourth Regiment of the Second, has a cook-fire at the far end of the Host\'s lines. He sings. He cannot.',
     'Onearm\'s Host is back outside Pale. Caladan Brood\'s army has come in across the valley. The two are going to talk.'].filter(Boolean); },
 
@@ -637,6 +641,57 @@ The child has gone to Whiskeyjack. She stands beside him, and looks up at him, a
 
 ${b31Say({brisk:`"Good," says Brisk. That's all. She means the blow.`, kettle:`"He *hit* him," Kettle says. "Whiskeyjack. He hit Brood's— he walked over on that leg and he *hit* him." She can't decide whether she's frightened or in love.`, _:`The Fourth's stretch of the line has gone very quiet.`})}${b3In('ohl') ? `\n\n"On that leg," Ohl says. "Hood's breath. Mallet's going to kill him before anybody else gets the chance."` : ''}${b3In('tuft') ? `\n\nTuft hasn't moved. "I've seen him look at her," she says. "Since she was a bundle on a saddle. I've seen him *look*." She takes a breath that doesn't go all the way down. "Now I've heard him say it."` : ''}${b3In('ellis') ? `\n\nEllis lets the arrow off the string, slowly. "The Claw keeps a page on Brood's second," she says. "I read it once. It's short." She puts the arrow back. "It says *don't be in the room*."` : ''}`,
       ch:[{t:'Stand the line.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack at the parley ----
+       Where and when: the parley at Brood's camp near Pale (moi-canon §1.1: GR ch. 3, and R ch. 4–5 / W *Murillio* via series-canon §(d));
+       Whiskeyjack is Dujek's second there and strikes Kallor (W *Silverfox*; this chapter's b3_c1_parley_strike). That he walks back to the
+       Host's lines across the picket afterwards is nothing the books say otherwise (lock 2's gap). He has counted the Fourth already this
+       morning ("All five", b3_c1_wj_order); this is the afternoon. Rule 7 holds: the leg stays as it is, by his choice, and nobody heals it;
+       nothing says what it will do. Sethand's vow holds: Tuft tells him nothing about the child (series-canon §(d), what a sequel inherits).
+       Sets b3_c1_wjpost; Brisk +1 (she said it to his face), Tuft +1 if she held her tongue when he asked. */
+    b3_c1_wjpost:()=>({sp:'Whiskeyjack · the picket', scene:'b3_c1_parley_after', again:'Whiskeyjack is through the gap and into the Host\'s lines, walking it as if the leg were nobody\'s business. From behind, you can see that it is.', fx:()=>{ S.f.b3_c1_wjpost = 1; b31L('brisk', 1); }, txt:
+`Late in the afternoon the command tent's flap goes back and one man comes out of it alone and lets it fall laced behind him. The High Fist is still inside, and Brood, and the rest of them. Somebody has to see to the Host.
+
+Whiskeyjack comes straight down the meeting ground to the picket rather than round by the horse lines, which is shorter, and means he does not walk the length of Brood's camp on that leg with Brood's people watching how he walks. He stops at the Fourth's post. He looks at the ditch nobody finished, and the standard on its pole, and the squad.
+
+"You watched."
+
+"Only watched, sir."
+
+"Good." He looks back up the slope at the tent. "So did everybody. That was the point of it." The knuckles of his right hand are split across the back. He has not noticed, or has decided not to.
+
+He shifts his weight to go on, and it is the same step as on the slope, coming round the High Fist: the leg takes it wrong, and comes back, and his face does not change at all.
+
+${b31Say({brisk:`"Sir." Brisk, flat, the way she says everything, and to his face. "See Mallet."
+
+He looks at her. Not angry. Interested, almost, the way he looks at ground he has to cross. "Mallet's seen it."
+
+"Then let him do something about it. Sir."
+
+${b3In('kettle') ? `Somewhere behind you Kettle makes a small noise, like a kettle. Whiskeyjack doesn't look at her. ` : ''}"When there's time, soldier."
+
+"Sir." It is not agreement, and everyone on the post knows it isn't, and so does he. Something happens at the corner of his mouth and is put away.`, ohl:`Ohl clears his throat. "Sir. Mallet, or me. Today. You've hit a king with that hand and you're standing on a leg that—"
+
+"I know what I'm standing on, healer." Mild as milk. "Mallet's seen it."
+
+"Then let him do something about it, sir," says Ohl, and then looks as if he would like the words back, and doesn't take them.
+
+"When there's time."`, _:`"Sir," you say. "See Mallet."
+
+He looks at you. Not angry. "Mallet's seen it." A pause. "When there's time, Sergeant."`})}${b3In('tuft') && S.f.b3_tuftChild ? `
+
+He turns, and then turns back, and it is Tuft he is looking at. "The child looked down the slope. Before it started. At this post." A plain question, in no hurry, the kind he asks of a map. "At you, I thought."
+
+Tuft holds his eyes. "At all of us, sir. Children look at soldiers."
+
+He lets it lie there a moment, the way he let Mallet's argument lie this morning: not agreed to, not refused. "So they do." And that is all.` : ''}${b3In('ellis') ? `
+
+Ellis gives him her count of Brood's fires without being asked. He takes it as if he had asked, and nods, and you watch him put it away somewhere behind his eyes, beside everything else.` : ''}${b3In('vell') ? `
+
+Vell, who has never been this close to him, has gone so straight he creaks. Whiskeyjack's eyes pass over the Guild coil on his shoulder and very nearly smile.` : ''}
+
+Then he goes on, west, through the gap in the Host's palisade, walking it as if the leg were nobody's business.`,
+      ch:[{t:'"Sir."', fx:()=>{ if (b3In('tuft') && S.f.b3_tuftChild) b31L('tuft', 1); }, go:()=>startExplore()}]}),
 
     /* ---- the Ilgres fire ---- */
     b3_c1_ilgres:()=> S.f.b3_c1_ilgres ? {sp:'The Ilgres fire', txt: ['won', 'helped', 'calmed'].includes(S.f.b3_c1_ilgres) ?

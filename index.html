@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.9.0';
+const VERSION = '13.10.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9124,6 +9124,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.10.0', ['Book Three meets more of the canon. After the parley, Whiskeyjack stops at the Fourth\'s post, and Brisk tells him to see Mallet about the leg. Quick Ben on the shore, about the White Face clans; a fevered Captain Paran on a well\'s rim in Capustan; Gruntle on the Maurik, who guards caravans on land; and before Coral, Hedge with his munitions laid out on an oilcloth, talking to them.']],
   ['13.9.0', ['Book Two meets more of the canon. At the Sekala crossing Coltaine reins in and gives the Third its stretch of bank himself; a sour sapper called Cuttle sits on the box of timers; after the count, Baria Setral of the Red Blades comes along the bank to see who held behind his file. In the Vathar forest, Nil and Nether come to ask Marrow how her warren is.']],
   ['13.8.0', ['Book One meets more of the canon (the first of ten books getting this). At Pale, the night before the Hounds, High Fist Dujek is alone at the top of the Second\'s burial field, reading the helmets: speak to him. In Chapter Four Kettle spends the nights in the vault with Fiddler and Hedge, and learns where the Daru pin a plank.']],
   ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],
@@ -38959,7 +38960,9 @@ const B3CH1 = {
         {id:'sarhul', name:'Ilgres Barghast', kind:'b3_c1_ilgres', x:7, y:8, node:()=>'b3_c1_ilgres', fresh:()=>!S.f.b3_c1_ilgresMet},
         {id:'ilgres2', name:'Ilgres Barghast', kind:'b3_c1_ilgres', x:5, y:8, node:()=>'b3_c1_ilgres'},
         {id:'mott', name:'A man in a strange hat', kind:'b3_c1_mott', x:3, y:9, node:()=>'b3_c1_mott', fresh:()=>!S.f.b3_c1_mott},
-        {id:'sohra', name:'A Rhivi rider', kind:'sohra', x:11, y:9, node:()=>'b3_c1_sohra_line', show:()=>!b3In('sohra'), fresh:()=>!S.f.b3_sohraMet} ] },
+        {id:'sohra', name:'A Rhivi rider', kind:'sohra', x:11, y:9, node:()=>'b3_c1_sohra_line', show:()=>!b3In('sohra'), fresh:()=>!S.f.b3_sohraMet},
+        /* v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack comes back down past the Fourth's post after the parley */
+        {id:'wjpost', name:'Whiskeyjack', kind:'wj', x:6, y:6, node:()=>'b3_c1_wjpost', show:()=>!!S.f.b3_c1_parleyDone, fresh:()=>!!S.f.b3_c1_parleyDone && !S.f.b3_c1_wjpost} ] },
 
     /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket */
     { id:'b3_c1_rhivi', title:'The Rhivi camp · night', sub:'Fires, herds, and somebody always singing', hint:'Tap ground to move · tap a figure to talk · the fires are warm', decor:'b3camp_night', dark:true,
@@ -39076,6 +39079,7 @@ const B3CH1 = {
     if (f.b3_kallorSaw) x.push('Kallor walked past the Mhybe\'s tent after the fight and looked at the sergeant, and took his time about it. He has a face for his book now.');
     if (f.b3_kallor) x.push('Brood\'s second called the child an abomination in front of both armies, and demanded her death, and Whiskeyjack struck him. The squad saw it from the picket. Kallor, the soldiers call him.');
     if (f.b3_legSeen) x.push('Mallet wants a week of Whiskeyjack flat on his back for that leg. Whiskeyjack has not given him an hour.');
+    if (f.b3_c1_wjpost) x.push(b3In('brisk') ? 'After the parley Whiskeyjack came down past the Fourth\'s post on the picket, and Brisk told him to his face to see Mallet. He said Mallet had seen it.' : 'After the parley Whiskeyjack came down past the Fourth\'s post on the picket, and the Fourth told him to see Mallet. He said Mallet had seen it.');
     if (f.b3_tav) x.push(b3In('brisk') ? 'Brisk walked to Tav\'s cook-fire, and stood by it until he felt it. He was singing. He can\'t.' : 'Tav, Brisk\'s brother, found the Fourth at Pale, and sat with the sergeant a while, and did not say much. Neither did the sergeant.');
     if (f.b3_tuftChild) x.push('The child in red wool looked across the parley ground at Tuft, as if she half knew her. Tuft has not said what she felt. She has not slept much either.');
     if (f.b3_c1_ilgres === 'won') x.push('The Fourth won a shield-push at the Ilgres fire, and an iron torc with it.');
@@ -39098,6 +39102,7 @@ const B3CH1 = {
     f.b3_tuftChild && 'Tuft saw the child for the first time since the hill above the plain. The child looked back.',
     f.b3_c1_tunnelsDone && 'The Fourth went back down the old north sap under Pale, where its story started, and cleared it before the parley.',
     f.b3_legSeen && 'Mallet wants a week of Whiskeyjack flat on his back. Whiskeyjack has a parley, and a war after it, and will not give him an hour.',
+    f.b3_c1_wjpost && 'After the parley Whiskeyjack walked back to the Host\'s lines across the picket, past the Fourth\'s post, on the leg. He said the Fourth had done what it was told: watched.',
     f.b3_tav && 'Tav, Brisk\'s brother, a heavy-infantry corporal in the Fourth Regiment of the Second, has a cook-fire at the far end of the Host\'s lines. He sings. He cannot.',
     'Onearm\'s Host is back outside Pale. Caladan Brood\'s army has come in across the valley. The two are going to talk.'].filter(Boolean); },
 
@@ -39474,6 +39479,57 @@ The child has gone to Whiskeyjack. She stands beside him, and looks up at him, a
 
 ${b31Say({brisk:`"Good," says Brisk. That's all. She means the blow.`, kettle:`"He *hit* him," Kettle says. "Whiskeyjack. He hit Brood's— he walked over on that leg and he *hit* him." She can't decide whether she's frightened or in love.`, _:`The Fourth's stretch of the line has gone very quiet.`})}${b3In('ohl') ? `\n\n"On that leg," Ohl says. "Hood's breath. Mallet's going to kill him before anybody else gets the chance."` : ''}${b3In('tuft') ? `\n\nTuft hasn't moved. "I've seen him look at her," she says. "Since she was a bundle on a saddle. I've seen him *look*." She takes a breath that doesn't go all the way down. "Now I've heard him say it."` : ''}${b3In('ellis') ? `\n\nEllis lets the arrow off the string, slowly. "The Claw keeps a page on Brood's second," she says. "I read it once. It's short." She puts the arrow back. "It says *don't be in the room*."` : ''}`,
       ch:[{t:'Stand the line.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack at the parley ----
+       Where and when: the parley at Brood's camp near Pale (moi-canon §1.1: GR ch. 3, and R ch. 4–5 / W *Murillio* via series-canon §(d));
+       Whiskeyjack is Dujek's second there and strikes Kallor (W *Silverfox*; this chapter's b3_c1_parley_strike). That he walks back to the
+       Host's lines across the picket afterwards is nothing the books say otherwise (lock 2's gap). He has counted the Fourth already this
+       morning ("All five", b3_c1_wj_order); this is the afternoon. Rule 7 holds: the leg stays as it is, by his choice, and nobody heals it;
+       nothing says what it will do. Sethand's vow holds: Tuft tells him nothing about the child (series-canon §(d), what a sequel inherits).
+       Sets b3_c1_wjpost; Brisk +1 (she said it to his face), Tuft +1 if she held her tongue when he asked. */
+    b3_c1_wjpost:()=>({sp:'Whiskeyjack · the picket', scene:'b3_c1_parley_after', again:'Whiskeyjack is through the gap and into the Host\'s lines, walking it as if the leg were nobody\'s business. From behind, you can see that it is.', fx:()=>{ S.f.b3_c1_wjpost = 1; b31L('brisk', 1); }, txt:
+`Late in the afternoon the command tent's flap goes back and one man comes out of it alone and lets it fall laced behind him. The High Fist is still inside, and Brood, and the rest of them. Somebody has to see to the Host.
+
+Whiskeyjack comes straight down the meeting ground to the picket rather than round by the horse lines, which is shorter, and means he does not walk the length of Brood's camp on that leg with Brood's people watching how he walks. He stops at the Fourth's post. He looks at the ditch nobody finished, and the standard on its pole, and the squad.
+
+"You watched."
+
+"Only watched, sir."
+
+"Good." He looks back up the slope at the tent. "So did everybody. That was the point of it." The knuckles of his right hand are split across the back. He has not noticed, or has decided not to.
+
+He shifts his weight to go on, and it is the same step as on the slope, coming round the High Fist: the leg takes it wrong, and comes back, and his face does not change at all.
+
+${b31Say({brisk:`"Sir." Brisk, flat, the way she says everything, and to his face. "See Mallet."
+
+He looks at her. Not angry. Interested, almost, the way he looks at ground he has to cross. "Mallet's seen it."
+
+"Then let him do something about it. Sir."
+
+${b3In('kettle') ? `Somewhere behind you Kettle makes a small noise, like a kettle. Whiskeyjack doesn't look at her. ` : ''}"When there's time, soldier."
+
+"Sir." It is not agreement, and everyone on the post knows it isn't, and so does he. Something happens at the corner of his mouth and is put away.`, ohl:`Ohl clears his throat. "Sir. Mallet, or me. Today. You've hit a king with that hand and you're standing on a leg that—"
+
+"I know what I'm standing on, healer." Mild as milk. "Mallet's seen it."
+
+"Then let him do something about it, sir," says Ohl, and then looks as if he would like the words back, and doesn't take them.
+
+"When there's time."`, _:`"Sir," you say. "See Mallet."
+
+He looks at you. Not angry. "Mallet's seen it." A pause. "When there's time, Sergeant."`})}${b3In('tuft') && S.f.b3_tuftChild ? `
+
+He turns, and then turns back, and it is Tuft he is looking at. "The child looked down the slope. Before it started. At this post." A plain question, in no hurry, the kind he asks of a map. "At you, I thought."
+
+Tuft holds his eyes. "At all of us, sir. Children look at soldiers."
+
+He lets it lie there a moment, the way he let Mallet's argument lie this morning: not agreed to, not refused. "So they do." And that is all.` : ''}${b3In('ellis') ? `
+
+Ellis gives him her count of Brood's fires without being asked. He takes it as if he had asked, and nods, and you watch him put it away somewhere behind his eyes, beside everything else.` : ''}${b3In('vell') ? `
+
+Vell, who has never been this close to him, has gone so straight he creaks. Whiskeyjack's eyes pass over the Guild coil on his shoulder and very nearly smile.` : ''}
+
+Then he goes on, west, through the gap in the Host's palisade, walking it as if the leg were nobody's business.`,
+      ch:[{t:'"Sir."', fx:()=>{ if (b3In('tuft') && S.f.b3_tuftChild) b31L('tuft', 1); }, go:()=>startExplore()}]}),
 
     /* ---- the Ilgres fire ---- */
     b3_c1_ilgres:()=> S.f.b3_c1_ilgres ? {sp:'The Ilgres fire', txt: ['won', 'helped', 'calmed'].includes(S.f.b3_c1_ilgres) ?
@@ -43662,7 +43718,9 @@ const B3CH4 = {
         {id:'dannet', name:'Dannet', kind:'greysword', x:12, y:7, node:()=>c4DannetDone() ? 'b3_c4_dannet_again' : 'b3_c4_dannet', show:()=>!c4In('greysword') || !S.f.b3_c4_dannet, fresh:()=>!S.f.b3_c4_dannet},
         {id:'ambrel', name:C4.ropesgt, kind:'b3_greysword', x:14, y:10, node:()=>'b3_c4_ambrel', fresh:()=>!S.f.b3_c4_ambrel},
         {id:'recruits', name:'Recruits at drill', kind:'tenescowri', x:10, y:10, node:()=>'b3_c4_recruits', fresh:()=>!S.f.b3_c4_recruits},
-        {id:'barghast', name:'A Barghast at the door', kind:'b3_barghast', x:8, y:2, node:()=>'b3_c4_thrall', fresh:()=>!S.f.b3_c4_thrall} ] },
+        {id:'barghast', name:'A Barghast at the door', kind:'b3_barghast', x:8, y:2, node:()=>'b3_c4_thrall', fresh:()=>!S.f.b3_c4_thrall},
+        /* v13.8 (David, Nov 15): meetings. Captain Paran on the well's rim in the Camp, between one quarrel and the next */
+        {id:'paran4', name:'Captain Paran', kind:'paran', x:5, y:4, node:()=>'b3_c4_paran', fresh:()=>!S.f.b3_c4_paran} ] },
 
     /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes */
     { id:'b3_c4_night', title:'West of Capustan · the guards\' bank', sub:'Night · cold out of nowhere', hint:'Tap ground to move · tap a figure to talk · the fire, when you\'re ready', decor:'b3_c4_camp_night', dark:true,
@@ -43774,6 +43832,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     if (f.b3_c4_ohlBurnt) x.push('Ohl reached into Denul for a sick boy on the wrong side of the stakes, and the warren bit him. He has written that down, and underlined it.');
     if (f.b3_c4_ellisPriest) x.push('On the cold night Ellis found the priest\'s sentry post across the ditch, back to front, an hour before he stood up.');
     if (f.b3_c4_ellisRead === 'read' && f.b3_c4_hunted) x.push('At the gully mouth Ellis read where the K\'ell Hunter would step from its tracks, and the Grey Swords put their ropes there.');
+    if (f.b3_c4_paran) x.push('Captain Paran sat on a well\'s rim in Capustan, grey with fever, and told the Fourth he had spent the morning keeping a Shield Anvil and a priest of the tiger from each other. Both lived. In Capustan, he said, that counts.');
     if (f.b3_c4_tav) x.push('Tav passed his bread through the stakes to a ring of children and sang to them, badly. Brisk stood at the edge of the light.');
     return x; },
 
@@ -43785,6 +43844,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     f.b3_c4_gathering && `The child went out of the camp with the fat Daru and two Host marines, two women. That night was cold out of nowhere, and the dust stood up on the horizon.`,
     f.b3_c4_hunted && `The Grey Swords pulled a K'ell Hunter down into a gully with ropes${f.b3_c4_vellRope ? ', one of them Vell\'s,' : ''}, and the Fourth helped kill it. Something dust-grey watched from a rise, and was gone.`,
     f.b3_c4_dannet && `Dannet, a Capan second daughter and a Grey Sword acolyte, is lent to the Malazans as a guide into the Domin.`,
+    f.b3_c4_paran && `Captain Paran is in Capustan, sick with something he will not name, standing between quarrels for whoever asks him. He told the Fourth the Grey Swords pulled one of the things on the plain down with ropes, before the siege.`,
     f.b3_c4_founders && `The Barghast tore up the floor of the Thrall and found their First Founders in nine great canoes.`,
     f.b3_c4_order && `Whiskeyjack's order: nobody goes over the stakes, nobody takes anything from the other side of them, nobody touches the Tenescowri except to feed them or bury them.`,
     `Two hundred thousand Tenescowri are held on the plain west of Capustan, behind a ditch and a stake line.`].filter(Boolean); },
@@ -44106,6 +44166,47 @@ On the fourth throw the hooks go round his shins and the recruits pull and he go
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ---- the Thrall: the Barghast and their First Founders ---- */
+    /* ---- v13.8 (David, Nov 15): meetings. Captain Paran in Capustan, after the relief ----
+       Claude's own pick (the brief's "feel right"). Where and when: after the relief Paran is in the city; he helps Itkovian and mediates
+       between him and Rath'Trake (moi-canon §1.5, W *Bridgeburners*) and speaks to the Grey Swords' new Destriant (GR ch. 21). Closed (W, GR).
+       He is sick through the book with the Hounds' blood (moi-canon §2: "sickly much of the book"; GotM). The Grey Swords pulled an undead K'ell
+       Hunter down with ropes before the siege (moi-canon §1.5, W ch. 7): the rope-sergeant's lesson tonight. Nothing of the Deck, the Azath,
+       the wolves' names or what he did at the barracks: Dannet's "a sick-looking captain" stays what she saw. Rule 5: his eyes stop on Ellis,
+       as on the plain, and nothing is said of Toc. The Fourth is not one of his thirty-eight. Sets b3_c4_paran; Tuft +1 (else Ellis +1). */
+    b3_c4_paran:()=>({sp:'Captain Paran · Bridgeburners', scene:'b3_c3_court', again:'Paran is still on the well\'s rim, with his elbows on his knees, looking into the water as if it owed him money.', fx:()=>{ S.f.b3_c4_paran = 1; if (c4In('tuft')) loy('tuft', 1); else if (c4In('ellis')) loy('ellis', 1); }, txt:
+`Captain Paran is sitting on the rim of the well in the middle of the Camp with his elbows on his knees, looking down into the water. He looks worse than he did on the Rhivi Plain: greyer, thinner, with a sheen on him like a man with a fever who has decided to have it standing up, since nobody will let him lie down.
+
+He hears the Fourth's boots and looks up. "Sergeant." He counts you, as he always has. "Good."
+
+"I've spent the morning in a council hall with no floor," he says, before you have asked anything, "standing between the Shield Anvil of a god who has gone and a priest of a god who has only just arrived, keeping them off each other. They're both still alive." He rubs his eyes. "I'm told that's a success, in Capustan."
+
+He looks west, toward the plain and the prisoners. "You're on the stake line. Whiskeyjack's order." It isn't a question. "Hold it. He doesn't give many he means that much."
+
+Then, as if it had only just come to him: "And the Grey Swords. Before the siege a patrol of theirs met one of those things on the plain, the long ones that walk wrong, and it was already dead and hadn't noticed. Swords did nothing. They pulled it down with ropes." He almost smiles. "Ropes, Sergeant. Everyone in this city has a story, and that's the one I'd keep."${c4In('tuft') ? `
+
+Tuft has not taken her eyes off him since the well came in sight. "Sir." Very low. "It's in your blood. Something with a great many teeth."
+
+He looks at her for a long moment, without surprise. "Yes," says Paran. "I had noticed." And then, more gently than you would expect: "It doesn't bite the people I like. I'm fairly sure."` : ''}${c4In('ellis') ? `
+
+His eyes go to Ellis, and stop, a breath too long, the way they did on the plain.
+
+"Scout."
+
+"Captain."
+
+That is all either of them says. It is, you think, all either of them can.` : ''}${c4In('greysword') ? `
+
+Dannet has come to attention at the sight of him. "Captain. The Destriant asks after you."
+
+Paran winces as if at a draught. "Tell the Destriant I'm a captain of the Bridgeburners with a fever, and nothing else he needs to write down."
+
+"Sir," says Dannet, in the voice of a woman who will tell the Destriant exactly that, word for word, and that the Destriant will write it down.` : ''}${c4In('brisk') ? `
+
+Brisk looks him up and down, the fever and all, the way she looks at a wall someone else built. "He'll stand," she says afterwards. "He stood on the plain."` : ''}${c4In('vell') ? `
+
+Vell, who has two coils on his shoulder and has heard the word *ropes*, has gone a little pink.` : ''}`,
+      ch:[{t:'"Sir."', go:()=>startExplore()}]}),
+
     b3_c4_thrall:()=> S.f.b3_c4_thrall ? {sp:'The Thrall', txt:
 `The Thrall's door. Inside, the Barghast are still lifting flagstones, and the priests have stopped shouting and started arguing with each other instead, which is what the Mask Council is for.`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]} : {sp:'The Thrall · the council hall', fx:()=>{ S.f.b3_c4_thrall = 1; }, txt:
@@ -45016,7 +45117,9 @@ const B3CH5 = {
         {id:'hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:4, node:()=>S.f.b3_c5_hurl ? 'b3_c5_hurl_again' : 'b3_c5_hurl', fresh:()=>!S.f.b3_c5_hurl},
         {id:'qm5', name:'The quartermaster', kind:'b2soldier', x:3, y:8, node:()=>'b3_c5_qm', fresh:()=>!S.f.b3_c5_qm},
         {id:'glean', name:'A woman in the stubble', kind:'b3_c5_villager', x:5, y:9, node:()=>'b3_c5_glean', show:()=>!S.f.b3_c5_glean || S.f.b3_c5_glean === 'left' || /^b3_c5_glean/.test(S.node || ''), fresh:()=>!S.f.b3_c5_glean},
-        {id:'shaman', name:'An Ilgres shaman', kind:'b3_barghast', x:10, y:7, node:()=>S.f.b3_c5_bloodTried ? 'b3_c5_shaman_again' : 'b3_c5_shaman', fresh:()=>!S.f.b3_c5_bloodTried} ] },
+        {id:'shaman', name:'An Ilgres shaman', kind:'b3_barghast', x:10, y:7, node:()=>S.f.b3_c5_bloodTried ? 'b3_c5_shaman_again' : 'b3_c5_shaman', fresh:()=>!S.f.b3_c5_bloodTried},
+        /* v13.8 (David, Nov 15): meetings. Quick Ben, back from the White Face's lines up the shore, watching the Ilgres fire from a careful distance */
+        {id:'qb5', name:'Quick Ben', kind:'qb', x:13, y:9, node:()=>'b3_c5_qb', fresh:()=>!S.f.b3_c5_qb} ] },
 
     /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on) */
     { id:'b3_c5_ford', title:'The Domin · a ford two days south', sub:'Noon · a rearguard on the far bank', hint:'Tap ground to move · tap a figure to talk · the ford is the gravel across the river', decor:'b3_c5_domin', amb:'wind',
@@ -45179,6 +45282,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     if (f.b3_c5_glean === 'fed') x.push('A woman gleaning single grains in the stubble on the south shore has a day of the Host\'s hardtack in her skirt.');
     if (f.b3_c5_glean === 'north') x.push('A woman gleaning in the stubble walked north to find the Grey Swords, on Dannet\'s word.');
     if (f.b3_c5_blood) x.push(`${c5Name(f.b3_c5_blood)} held an Ilgres shaman's knife while he said the blood-iron words, and did not let go.`);
+    if (f.b3_c5_qb) x.push('Quick Ben, back from the White Face\'s lines on the south shore, told the Fourth to keep its warrens shut in the Domin and its opinions about Barghast to itself.');
     if (f.b3_c5_leg) x.push('Whiskeyjack says Mallet can have his week after Coral. Not before.');
     if (f.b3_c5_quorls) x.push('Kettle counts the quorls at dusk and again at dawn, and the numbers do not agree. It is in the ledger.');
     if (preUsed('b3_c5_ford')) x.push('Kettle put a sharper in a river and the river got up and landed on a Beklite line. She wants it noted that this was a first.');
@@ -45191,6 +45295,7 @@ Dannet says one word in Elin, under her breath, and puts her shield up.` : ''}${
     f.b3_c5_townDone && `A burnt town in the rain. The Seer's soldiers were driving the last of its people south ahead of the army. The Fourth cut them loose.`,
     f.b3_c5_fordDone && `A Beklite rearguard held a ford two days south of the Catlin, and died there. A cadre mage stood the river up against their mage, and a quarrel did the rest.`,
     f.b3_c5_race && `Hurlochel: Brood's camp says the Host means to take Coral first and keep it for the Empress. Kallor says it loudest.`,
+    f.b3_c5_qb && `Quick Ben: Humbrall Taur has every White Face clan at one fire, which has never happened, and every one of them hating the next, which always has. Their gods came up out of the Thrall's floor and are learning to walk. Trotts is a warchief.`,
     f.b3_c5_mhybe && `The Mhybe has gone back north to Capustan in a wagon, with the two Daru, to find a temple that can ease her. Her daughter stayed with the army.`,
     `The Fourth crossed the Catlin into the Pannion Domin. The fields are stripped, the villages empty, and the warrens poisoned.`].filter(Boolean); },
 
@@ -45323,6 +45428,60 @@ The woman gets up, which takes a while, and starts north toward the ford without
 
 Sohra looks back too, once. She doesn't sing for an hour after.` : ''}`,
       ch:[{t:'On.'}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Quick Ben on the south shore, about the White Face ----
+       The plan puts him "at the Barghast camp (Ch 5)". Where and when: after the relief the allied camp is on the south shore of the Catlin
+       (moi-canon §1.7, GR ch. 21); the Bridgeburners march with the army into the Domin (GR ch. 23: the Edur body on the shore, Straw and the
+       table) and the White Face with it (this book's Ch6 river road; W *Trotts*). Supported (GR, two threads; W). What he says of the clans is
+       moi-canon §1.3 (Humbrall Taur and Hetan, the Barahn and the Ahkrata, the Ahkrata against the Ilgres: KH 21%, 38%; the First Founders out of
+       the Thrall: WDE ch. 10, and this book's Ch4) and Trotts a warchief without a tribe (W *Trotts*). The warrens poisoned: b3_domin, this
+       chapter. Nothing past the Domin: no Coral, no keep, no Seer named, and nothing of how the Barghast or Trotts fare there. He knew Tuft
+       in Book One (c1_qb_tuft; 61's "Quick Ben said a month"). Sets b3_c5_qb; Tuft +1, else Ohl +1, else Sohra +1. */
+    b3_c5_qb:()=>({sp:'Quick Ben · Bridgeburners', scene:'b3_c5_catlin', again:'Quick Ben is still on his root, watching the Ilgres fire, with his hands in his sleeves and the look of a man doing sums.', fx:()=>{ S.f.b3_c5_qb = 1; if (b3In('tuft')) c5Loy('tuft', 1); else if (b3In('ohl')) c5Loy('ohl', 1); else c5Loy('sohra', 1); }, txt:
+`A small, slight, dark man is sitting on the root of a dead tree down the shore from the Ilgres fires, with his hands in his sleeves, watching the old shaman work his knife the way a cardsharp watches somebody else's game: with great interest, and from a careful distance.
+
+Quick Ben. The Bridgeburners' mage. He has come down the shore from the White Face's lines, by the paint on his boots, and he looks up as the Fourth comes by as if he had been expecting it for about a quarter of a bell.
+
+"Sergeant. The Fourth." He counts you, the way they all do in this army, and seems content with the number.${b3In('tuft') ? `
+
+Then, to Tuft, mildly: "Still cold?"
+
+"No," says Tuft.
+
+"Told you a month."
+
+"It was longer."
+
+"It's always longer." He looks south, along the road, at the stripped fields. "Don't open it down here. Any of you with a warren. Not a crack, not to light a pipe. Something's got into them south of the river, and it likes the taste of whoever opens the door."` : `
+
+He looks south, along the road, at the stripped fields. "Anyone in the Fourth with a warren: don't open it down here. Not a crack. Something's got into them south of the river, and it likes the taste of whoever opens the door."`}${b3In('ohl') ? `
+
+"Denul's been coming out sour since the ford," Ohl says. "Like milk on the turn."
+
+"Then stop drinking from it, healer." Quick Ben nods at the shaman. "Use what doesn't come out of a warren. That, for instance. The Barghast never bothered with warrens. Their spirits are older and stupider and nobody has thought to poison them yet."` : ''}`,
+      ch:[{t:'"You were with the White Face."', go:'b3_c5_qb_wf'},
+          {t:'"Mage."', go:()=>startExplore()}]}),
+    b3_c5_qb_wf:()=>({sp:'Quick Ben', scene:'b3_c5_catlin', txt:
+`"Since the hills." He holds up a hand and folds the fingers down one at a time. "Humbrall Taur has every White Face clan in those hills sitting round one fire, which has never happened, and every one of them hating the clan next along, which always has. The Barahn want to be first at everything. The Ahkrata want the Barahn not to be. Taur holds it together with his two hands, and his daughter holds what his hands can't reach."
+
+He folds the last finger. "And their gods came up out of the floor of a council hall in Capustan this month, in boats, after a very long sleep, and are learning to walk. New gods are hungry. Old ones are worse. These are both." He considers that. "Interesting times to be a Barghast. Worse ones to be standing near one."
+
+"Trotts is a warchief now," he adds. "Don't laugh. He'd take it badly, and he'd be right."${b3In('brisk') ? `
+
+Brisk${S.f.b3_c2_bb ? ', who bared her teeth at Trotts on the plain and had them bared back,' : ''} does not laugh. "Good," she says.` : ''}${b3In('kettle') ? `
+
+"Do the White Face use munitions?" Kettle asks, in the voice of someone asking if a new acquaintance is married.
+
+"They use you," says Quick Ben. "Ask any of them."` : ''}${b3In('sohra') ? `
+
+Sohra has been listening with her chin up. "In my grandmother's time the White Face stole Rhivi herds," she says. "In my mother's time they stole them back from whoever stole them from us. Now they ride with us." She says it as a thing to be wondered at, not trusted.
+
+"Now they ride with everyone," Quick Ben agrees. "It's a short list. Keep it that way."` : ''}${b3In('greysword') ? `
+
+Dannet says nothing, but her eyes go north, to the river and the city behind it, where the floor of the Thrall is a pit.` : ''}
+
+He nods along the shore at the Ilgres fire. "And the Ahkrata hate those ones. So don't tell that shaman anything I just said. He'll want to discuss it with a knife, and he has the good one."`,
+      ch:[{t:'"Mage."', go:()=>startExplore()}]}),
 
     /* the Ilgres shaman and the blood-iron (the chapter's trick) */
     b3_c5_shaman:()=>({sp:'An Ilgres shaman', txt:
@@ -46398,7 +46557,9 @@ const B3CH6 = {
         {id:'c6wj2', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c6_wjLeg ? 'b3_c6_wj_again' : 'b3_c6_wj_leg', fresh:()=>!S.f.b3_c6_wjLeg},
         {id:'c6oskan', name:'Oskan', kind:'b2soldier', x:5, y:4, node:()=>S.f.b3_c6_oskan ? 'b3_c6_oskan_again' : 'b3_c6_oskan', fresh:()=>!S.f.b3_c6_oskan},
         {id:'c6whiteface', name:'A White Face warrior', kind:'b3_barghast', x:12, y:7, node:()=>S.f.b3_c6_logs ? 'b3_c6_barghast_again' : 'b3_c6_barghast', fresh:()=>!S.f.b3_c6_logs},
-        {id:'c6bearer', name:'The standard bearer', kind:'artanthos', x:2, y:4, node:()=>'b3_c6_bearer', fresh:()=>!S.f.b3_c6_bearer} ] },
+        {id:'c6bearer', name:'The standard bearer', kind:'artanthos', x:2, y:4, node:()=>'b3_c6_bearer', fresh:()=>!S.f.b3_c6_bearer},
+        /* v13.8 (David, Nov 15): meetings. Gruntle, with Trake's Legion beside Whiskeyjack's column, looking at the barges */
+        {id:'c6gruntle', name:'Gruntle', kind:'b3_c3_gruntle', x:6, y:7, node:()=>'b3_c6_gruntle', fresh:()=>!S.f.b3_c6_gruntle} ] },
 
     /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south */
     { id:'b3_c6_landing', title:'Maurik · the landing', sub:'Day · an empty city on a river · Brood\'s army coming in by the ford', hint:'Tap ground to move · tap a figure to talk · the road south leaves from the east end', decor:'b3_c6_river',
@@ -46560,6 +46721,7 @@ ${b3In('greysword') ? `
       if (f.b3_c6_ambDone) x.push(`On the river the Fourth went over the side and up a reed bank after a Seerdomin master.${f.b3_c6_barghastCame ? ' The White Face went with them, singing.' : ''}`);
       if (f.b3_c6_brood) x.push('At Maurik, from a guard line, the Fourth watched Caladan Brood find out.');
       if (f.b3_c6_logs) x.push(f.b3_c6_logs === 'won' ? 'On the Maurik the Fourth beat a White Face warrior at carrying logs, and the White Face sang about it.' : 'On the Maurik a White Face warrior beat the Fourth at carrying logs, and sang about it, kindly.');
+      if (f.b3_c6_gruntle) x.push('Gruntle of Trake\'s Legion looked at the barges on the Maurik for a long time, and said he guarded caravans. On land.');
       if (f.b3_c6_korlat) x.push('Korlat asked the sergeant to tell her, not him, if Whiskeyjack fell behind on the road.');
       if (f.b3_c6_kallorLook) x.push(`${c6Kallor(true)} looked at the sergeant at Maurik. He has a long memory for faces, and nothing else to do with it yet.`);
     }
@@ -46569,6 +46731,7 @@ ${b3In('greysword') ? `
     f.b3_c6_key === 'maurik' && f.b3_c6_brood && `At Maurik, Caladan Brood found out what the Host had done, and said only that he should have been told. Kallor, it is said, called leaving the Host to be annihilated a tactical mistake, and asked to ride south; Korlat went with Whiskeyjack. Whiskeyjack marched for Coral that afternoon with the White Face, and Brood's army came on behind at its own pace.`,
     f.b3_c6_key === 'maurik' && `Whiskeyjack's column built barges on the Maurik below the ford and floated a day downriver to Maurik, an empty city. Three clans of the White Face Barghast rode the barges; the rest walked.`,
     f.b3_c6_key === 'quorl' && `The Seventh's marines were flown south to the mountains above Coral, where Dujek's half of the Host is dug in under cedar and moss. The Bridgeburners hold the forward trenches. The Condors have started following the quorls home.`,
+    f.b3_c6_key === 'maurik' && f.b3_c6_gruntle && `Trake's Legion marches with Whiskeyjack's column: Capan townsfolk with the tiger's stripes on them, and Gruntle, the Daru caravan guard the priests call the Tiger's Mortal Sword. He doesn't.`,
     f.b3_legSeen && f.b3_c6_key === 'maurik' && `Whiskeyjack's leg is worse. He will not lie down until after Coral.`,
     `South of Setta the Black Moranth began taking the Host away by quorl, whole companies a night, more than half of it in all, and Dujek with them. Neither Brood nor the Seer was told. About four thousand stayed on the road under Whiskeyjack.`].filter(Boolean); },
 
@@ -47430,6 +47593,51 @@ But he gets up and helps with the last of it, and claps ${by({sgt:'you', _:'{who
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_barghast_again:()=>({sp:'A White Face warrior', txt:`The White Face warrior is carrying two logs. He lifts one end of one of them at you in greeting, which nearly kills a carpenter.`,
     ch:[{t:'Leave him.', go:()=>startExplore()}]}),
+  /* ---- v13.8 (David, Nov 15): meetings. Gruntle on the Maurik ----
+     Claude's own pick (the brief's "feel right"). Where and when: Gruntle is beside Whiskeyjack's column at the Maurik, where the army builds
+     barges downriver of a ford (moi-canon §1.7, KH 82%, a quotation from the novel). Supported (one source, the text). His followers are
+     Trake's Legion, Capan, with the tiger's stripes (W *Trake*; WP). Picks up Ch3's meeting (b3_c3Gruntle) where the squad had it. Nothing of
+     Coral: nothing of the K'ell Hunters there, of the tiger the legion becomes, or of who of them walks away; "Lestari" is memory only and
+     unused. Sets b3_c6_gruntle; trust +1 (a Mortal Sword of the alliance seen at a Malazan fire). */
+  b3_c6_gruntle:()=>({sp:'Gruntle · Trake\'s Legion', scene:'b3_c6_barges', again:'Gruntle is on the bank still, sitting on an upturned hull, watching the river go past as if it were a caravan that had not paid.', fx:()=>{ S.f.b3_c6_gruntle = 1; ally(1, 0, 'Gruntle at the Malazans\' slips'); }, txt:
+`${S.f.b3_c3Gruntle ? `The big Daru from the square in Capustan is sitting on an upturned hull at the top of the slips, two cutlasses across his knees, looking at the barges. The stripes on him have not faded since the city. If anything they are darker, and there is more amber in his beard.
+
+"Malazans," he says, as he said it then, and moves over on the hull. "You were in the square. You didn't call me anything. Sit."` : `A big Daru with a caravan guard's shoulders is sitting on an upturned hull at the top of the slips, two cutlasses across his knees, looking at the barges. There are stripes on him, dark bars barbed at the ends, across his cheeks and down his bare arms, and amber in his beard and his eyes. A few of Trake's Legion sit along the bank below him, Capan townsfolk with the same stripes, mending boots.
+
+"Malazans." He moves over on the hull. "Gruntle. Don't call me anything else. Sit, if you like."`}
+
+You sit. Down on the slips, a wright is driving trenails into a strake with the patience of a man who has done nothing else since he was born.
+
+"I guard caravans," Gruntle says, after a while. "On land. Wagons. Oxen. Roads, with a ditch on either side to fall into. I know where I am with a ditch." He nods at the nearest barge. "That is a box. Somebody is going to put it on a river and put me in it, and the river is going to go wherever it likes, and I'm meant to stand at the front with these," the cutlasses, "looking fierce."
+
+"It goes to Maurik. A few days, they say."
+
+"Everything goes somewhere," says Gruntle. "That's what's wrong with it."${b3In('kettle') && S.f.b3_c3Sat ? `
+
+"The cooper," Kettle says. "From the square. With the stripes to the elbow. Is he—"
+
+"Here. Down there." Gruntle points with his chin at the bank. "He's been telling the wrights how to caulk. They hate him. He's right." Kettle is already on her feet.` : b3In('kettle') ? `
+
+Kettle has been looking at the hull he is sitting on. "Is it sound?"
+
+"I'm sitting on it," says Gruntle, "so I'd hope so."` : ''}${b3In('brisk') ? `
+
+Brisk looks at the barge, and at the river, and at Gruntle. "Heavies hate boats too," she says.
+
+"Good," says Gruntle. "Then I'll stand behind you."` : ''}${b3In('vell') ? `
+
+Vell says something to him in Daru, the stairwell kind. Gruntle answers in it, at length, and Vell laughs out loud, which you have heard him do perhaps twice. He won't translate. "It was about boats," is all he will say, "and a man in Saltoan."` : ''}${b3In('greysword') ? `
+
+Dannet stands at the end of the hull rather than sit on it. "Mortal Sword," she says, and inclines her head, Grey Sword to tiger.
+
+"Don't," says Gruntle, but he says it to her more gently than to anyone.` : ''}${b3In('sohra') ? `
+
+Sohra looks at the stripes on his forearm a long time. "The tiger is a summer god," she says. "On the plain we say a summer god is quick to come and quick to anger."
+
+"So am I," says Gruntle. "We get on."` : ''}
+
+He looks at the river a while longer. Then he gets up, because one of his legion is calling up the bank about the boots, and goes down to see.`,
+    ch:[{t:'Leave him to his boots.', go:()=>startExplore()}]}),
   b3_c6_bearer:()=>({sp:'The standard bearer', fx:()=>{ S.f.b3_c6_bearer = 1; }, txt:
 `The High Fist's standard came south with the column, though the High Fist did not, and the standard bearer came with it: the same unremarkable man, neither young nor old, sitting on a coil of rope by the slips with the standard's pole across his knees, rubbing oil into the wood with a rag.
 
@@ -48473,6 +48681,8 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'tav7', name:'Tav', kind:'tav', x:3, y:8, node:()=>'b3_c7_tav', fresh:()=>!S.f.b3_c7_tav},
         {id:'art7', name:'The standard bearer', kind:'artanthos', x:10, y:5, node:()=>'b3_c7_art', fresh:()=>!S.f.b3_c7_art},
         {id:'bb7', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:13, y:8, node:()=>'b3_c7_bb', fresh:()=>!S.f.b3_c7_bb},
+        /* v13.8 (David, Nov 15): meetings. The plan's star: Hedge, laying out his munitions on an oilcloth behind the screen */
+        {id:'hedge7', name:'Hedge', kind:'hedge', x:9, y:8, node:()=>'b3_c7_hedge', fresh:()=>!S.f.b3_c7_hedge},
         {id:'dannet7', name:'Dannet', kind:'greysword', x:5, y:6, node:()=>'b3_c7_dannet', show:()=>b3In('greysword'), fresh:()=>b3In('greysword') && !S.f.b3_c7_dannet},
         /* the Book One recruits, when an import brought them: Ellis facing the dark at the screen's end, Vell watching Coral's roofs */
         {id:'ellis7', name:'Ellis', kind:'ellis', x:2, y:4, still:true, node:()=>'b3_c7_ellis_night', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eNight},
@@ -48709,6 +48919,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
   extras:()=>{ const f = S.f, x = [];
     x.push(b3c7Flew() ? 'The Fourth came to Coral by quorl, out of the mountains, and went into the streets behind the Bridgeburners.' : 'The Fourth came to Coral down the Maurik with Whiskeyjack\'s column, and stood on the alliance\'s hill.');
     if (f.b3_c7_exchange) x.push('In the entrenchments the squad heard Quick Ben call it a fair exchange. The legion took the grey sorcery that night, badly, and held.');
+    if (f.b3_c7_hedge) x.push(b3Was('b1_c4_sappers') && b3In('kettle') ? 'Hedge kept Kettle\'s place in the queue for a better cusser, in the mountains above Coral, and gave her a sharper to be going on with.' : 'Hedge the sapper laid out his munitions on an oilcloth in the mountains above Coral, and gave the Fourth a sharper. Moranth stock. Don\'t tell Picker.');
     if (f.b3_c7_square === 'hunt') x.push('In the square the Fourth stood in front of a K\'ell Hunter so the Bridgeburners would not have to turn round.');
     if (f.b3_c7_square === 'side') x.push('The Fourth held a side street while the Moranth dealt with the Hunter in the square. The Moranth paid for it.');
     if (f.b3_c7_hunters === 'stakes') x.push('At the stake line the Fourth held the gap where the K\'ell Hunters came through Trake\'s Legion.');
@@ -48725,6 +48936,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
 
   journal:()=>{ const f = S.f; return [
     f.b3_c7_started && `Coral, the Pannion Seer's city by the sea. ${b3c7Flew() ? 'Half of Onearm\'s Host lay hidden in the mountains above it, flown in by the Black Moranth.' : 'Whiskeyjack\'s column came down the Maurik to join Brood\'s army on a hill outside it.'}`,
+    f.b3_c7_hedge && `In the entrenchments above Coral, Hedge, a Bridgeburner sapper, laid out his munitions in rows on an oilcloth and talked to them. He said somebody, some day, will make a better cusser, in a shed.`,
     f.b3_c7_exchange && `Quick Ben told the High Fist the Bridgeburners and the mages could bloody the Seer's nose and take out ten thousand Beklites, a dozen mages and a Septarch. He called it a fair exchange. The Bridgeburners went into Coral from the night sky.`,
     (f.b3_c7_news || f.b3_c7_htent) && `Whiskeyjack died on the alliance's hill, defending the child, when his leg gave. Kallor killed him. A Host marine wounded Kallor; Kallor killed the two marines guarding the child. The standard bearer drove Kallor out and saved Korlat. Kallor is alive.`,
     (f.b3_c7_spawn || f.b3_c7_hspawn) && `Moon's Spawn came down out of the sky on the Seer's keep. Quick Ben, they say, took the Seer. Twist, Trotts and Hedge are dead.`,
@@ -48877,6 +49089,56 @@ Kettle looks at his satchel with naked love. He sees it, and grins, and taps it.
 
 Vell is looking at the coil the man is sitting on. "Good rope," he says. "Daru-laid. Wasted under a sapper." The Bridgeburner shifts to sit on it more firmly. "First in, rope boy," he says. "We'll want it on the way out."` : ''}`,
       ch:[{t:'"Good hunting."', go:()=>startExplore()}]}),
+
+  /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Three's end: Hedge, the night before the Bridgeburners go in ----
+     The plan puts it "before Coral (Ch 7)". Where and when: Hedge is a Bridgeburner in MoI (series-canon §(c), W *Hedge*); the Bridgeburners and
+     their mages are in Dujek's hidden entrenchments above Coral before they go in by quorl (moi-canon §1.9: KH 84–86%, W *Trotts*). Supported
+     (W, KH). He deals bones at the Fourth's fire at Pale in 69's Ch1 game, which is optional, so the text does not lean on it. Book One's nest under the crossing (b1_c4_sappers, read by
+     b3Was) gave Kettle second place in his queue for a better cusser; Book Ten (b10_c7_hedge) pays that off, so the cusser stays unnamed and
+     nothing new is invented (rule 93). Fiddler gone over the sea with Kalam is the end of GotM, nothing later. The lock: nothing here hints at
+     his death; it is the night before, and he is counting. Only on the lift road: the river road never reaches the mountains.
+     Sets b3_c7_hedge; a sharper (Moranth stock); Kettle +1. */
+  b3_c7_hedge:()=>({sp:'Hedge · Bridgeburners', scene:'b3_c6_entrench', again:'Hedge is still on his knees over the oilcloth, moving one sharper a finger\'s width to the left, and then back. He is talking to it.', fx:()=>{ S.f.b3_c7_hedge = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('A sharper, Moranth stock, from Hedge\'s oilcloth.', 'good'); b3c7Loy('kettle', 1); }, txt:
+`Behind the cedar screen, under a shuttered lantern, a Bridgeburner sapper is on his knees over a square of oilcloth with his satchel open beside him, laying his munitions out in rows: sharpers along the top, burners under them, the way a cook lays out knives before a feast. He is talking to them. Under his breath, the whole time.
+
+Hedge. Every sapper in the Host knows Hedge, and most of them have lost silver to him at bones.${b3Was('b1_c4_sappers') && b3In('kettle') ? `
+
+He looks up at the boots, and sees Kettle, and grins all over his face. "The nest-keeper. Under the crossing. Two nights, and not a drop on the clay." He sits back on his heels. "Haven't forgotten."
+
+"Second in the queue," Kettle says. "You promised."
+
+"I did." Hedge looks at the rows on the oilcloth with something like regret. "And nobody's made it yet. Still Moranth, all of it. Perfect." He says the word the way other men say *boring*. "Somewhere there's a shed with a better one in it. Still waiting. You're still second."
+
+"Who's first?"
+
+"Me," says Hedge, astonished that anyone would ask.
+
+"Heard from Fiddler?" Kettle says.
+
+"Gone over the sea, him and Kalam. Didn't say what for. Didn't ask me along either." He sniffs. "He'll find something to blow up. He always does."` : b3In('kettle') ? `
+
+He looks up at the boots, and then at Kettle's satchel, which is where everyone with a satchel looks first. "Marine sapper," he says. "What's in it?"
+
+Kettle tells him, in order, without being asked twice: "${b31Count()}."
+
+"Not bad." He holds up a sharper to the slit of lantern light and turns it. "Moranth stock. Perfect, every one." He says the word the way other men say *boring*. "Somewhere somebody's going to make a better one, in a shed, out of something nobody's thought of, and blow the shed down doing it. When they do, I'm first in the queue." He considers Kettle. "You can be second."
+
+Kettle looks as if she has been knighted.` : `
+
+He looks up at the boots. "Marines," he says. "The Seventh's. You're going down behind us." He holds up a sharper to the slit of lantern light and turns it. "Moranth stock. Perfect, every one. Somewhere somebody's going to make a better one, in a shed." He puts it back in its row.`}${b3In('tuft') ? `
+
+Tuft has stopped where the lantern-light ends. ${b3Was('b1_c4_sappers') ? `"He still talks to them," she says, very low. "Like under the crossing."` : `"He talks to them," she says, very low. "The whole time."`}` : ''}${b3In('ohl') ? `
+
+"Have you slept?" Ohl asks him.
+
+"Sappers don't sleep, healer. We lie down with our eyes shut and count." Hedge goes on counting.` : ''}${b3In('brisk') ? `
+
+Brisk watches his hands, not the munitions. They don't shake. "Steady," she says, which from Brisk is a medal.` : ''}${b3In('greysword') ? `
+
+Dannet watches the rows on the oilcloth the way a Grey Sword watches a sword drill: looking for the one that is out of line. There isn't one.` : ''}
+
+Then he takes one sharper off the end of the top row, and looks at it, and pushes it across the oilcloth with one finger to ${b3In('kettle') ? 'Kettle' : 'you'}. "Moranth stock. One spare. Don't tell Picker; she counts." He goes back to the rows. "First in, Sergeant. You lot get the middle."`,
+    ch:[{t:'"Hedge."', go:()=>startExplore()}]}),
 
   /* ---- Dannet and the trick ---- */
   b3_c7_dannet:()=>({sp:'Dannet', fx:()=>{ S.f.b3_c7_dannet = 1; }, txt:

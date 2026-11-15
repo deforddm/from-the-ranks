@@ -160,6 +160,8 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'tav7', name:'Tav', kind:'tav', x:3, y:8, node:()=>'b3_c7_tav', fresh:()=>!S.f.b3_c7_tav},
         {id:'art7', name:'The standard bearer', kind:'artanthos', x:10, y:5, node:()=>'b3_c7_art', fresh:()=>!S.f.b3_c7_art},
         {id:'bb7', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:13, y:8, node:()=>'b3_c7_bb', fresh:()=>!S.f.b3_c7_bb},
+        /* v13.8 (David, Nov 15): meetings. The plan's star: Hedge, laying out his munitions on an oilcloth behind the screen */
+        {id:'hedge7', name:'Hedge', kind:'hedge', x:9, y:8, node:()=>'b3_c7_hedge', fresh:()=>!S.f.b3_c7_hedge},
         {id:'dannet7', name:'Dannet', kind:'greysword', x:5, y:6, node:()=>'b3_c7_dannet', show:()=>b3In('greysword'), fresh:()=>b3In('greysword') && !S.f.b3_c7_dannet},
         /* the Book One recruits, when an import brought them: Ellis facing the dark at the screen's end, Vell watching Coral's roofs */
         {id:'ellis7', name:'Ellis', kind:'ellis', x:2, y:4, still:true, node:()=>'b3_c7_ellis_night', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eNight},
@@ -396,6 +398,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
   extras:()=>{ const f = S.f, x = [];
     x.push(b3c7Flew() ? 'The Fourth came to Coral by quorl, out of the mountains, and went into the streets behind the Bridgeburners.' : 'The Fourth came to Coral down the Maurik with Whiskeyjack\'s column, and stood on the alliance\'s hill.');
     if (f.b3_c7_exchange) x.push('In the entrenchments the squad heard Quick Ben call it a fair exchange. The legion took the grey sorcery that night, badly, and held.');
+    if (f.b3_c7_hedge) x.push(b3Was('b1_c4_sappers') && b3In('kettle') ? 'Hedge kept Kettle\'s place in the queue for a better cusser, in the mountains above Coral, and gave her a sharper to be going on with.' : 'Hedge the sapper laid out his munitions on an oilcloth in the mountains above Coral, and gave the Fourth a sharper. Moranth stock. Don\'t tell Picker.');
     if (f.b3_c7_square === 'hunt') x.push('In the square the Fourth stood in front of a K\'ell Hunter so the Bridgeburners would not have to turn round.');
     if (f.b3_c7_square === 'side') x.push('The Fourth held a side street while the Moranth dealt with the Hunter in the square. The Moranth paid for it.');
     if (f.b3_c7_hunters === 'stakes') x.push('At the stake line the Fourth held the gap where the K\'ell Hunters came through Trake\'s Legion.');
@@ -412,6 +415,7 @@ Then another comes through the gap in the stakes, slower than the first, with a 
 
   journal:()=>{ const f = S.f; return [
     f.b3_c7_started && `Coral, the Pannion Seer's city by the sea. ${b3c7Flew() ? 'Half of Onearm\'s Host lay hidden in the mountains above it, flown in by the Black Moranth.' : 'Whiskeyjack\'s column came down the Maurik to join Brood\'s army on a hill outside it.'}`,
+    f.b3_c7_hedge && `In the entrenchments above Coral, Hedge, a Bridgeburner sapper, laid out his munitions in rows on an oilcloth and talked to them. He said somebody, some day, will make a better cusser, in a shed.`,
     f.b3_c7_exchange && `Quick Ben told the High Fist the Bridgeburners and the mages could bloody the Seer's nose and take out ten thousand Beklites, a dozen mages and a Septarch. He called it a fair exchange. The Bridgeburners went into Coral from the night sky.`,
     (f.b3_c7_news || f.b3_c7_htent) && `Whiskeyjack died on the alliance's hill, defending the child, when his leg gave. Kallor killed him. A Host marine wounded Kallor; Kallor killed the two marines guarding the child. The standard bearer drove Kallor out and saved Korlat. Kallor is alive.`,
     (f.b3_c7_spawn || f.b3_c7_hspawn) && `Moon's Spawn came down out of the sky on the Seer's keep. Quick Ben, they say, took the Seer. Twist, Trotts and Hedge are dead.`,
@@ -564,6 +568,56 @@ Kettle looks at his satchel with naked love. He sees it, and grins, and taps it.
 
 Vell is looking at the coil the man is sitting on. "Good rope," he says. "Daru-laid. Wasted under a sapper." The Bridgeburner shifts to sit on it more firmly. "First in, rope boy," he says. "We'll want it on the way out."` : ''}`,
       ch:[{t:'"Good hunting."', go:()=>startExplore()}]}),
+
+  /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Three's end: Hedge, the night before the Bridgeburners go in ----
+     The plan puts it "before Coral (Ch 7)". Where and when: Hedge is a Bridgeburner in MoI (series-canon §(c), W *Hedge*); the Bridgeburners and
+     their mages are in Dujek's hidden entrenchments above Coral before they go in by quorl (moi-canon §1.9: KH 84–86%, W *Trotts*). Supported
+     (W, KH). He deals bones at the Fourth's fire at Pale in 69's Ch1 game, which is optional, so the text does not lean on it. Book One's nest under the crossing (b1_c4_sappers, read by
+     b3Was) gave Kettle second place in his queue for a better cusser; Book Ten (b10_c7_hedge) pays that off, so the cusser stays unnamed and
+     nothing new is invented (rule 93). Fiddler gone over the sea with Kalam is the end of GotM, nothing later. The lock: nothing here hints at
+     his death; it is the night before, and he is counting. Only on the lift road: the river road never reaches the mountains.
+     Sets b3_c7_hedge; a sharper (Moranth stock); Kettle +1. */
+  b3_c7_hedge:()=>({sp:'Hedge · Bridgeburners', scene:'b3_c6_entrench', again:'Hedge is still on his knees over the oilcloth, moving one sharper a finger\'s width to the left, and then back. He is talking to it.', fx:()=>{ S.f.b3_c7_hedge = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; note('A sharper, Moranth stock, from Hedge\'s oilcloth.', 'good'); b3c7Loy('kettle', 1); }, txt:
+`Behind the cedar screen, under a shuttered lantern, a Bridgeburner sapper is on his knees over a square of oilcloth with his satchel open beside him, laying his munitions out in rows: sharpers along the top, burners under them, the way a cook lays out knives before a feast. He is talking to them. Under his breath, the whole time.
+
+Hedge. Every sapper in the Host knows Hedge, and most of them have lost silver to him at bones.${b3Was('b1_c4_sappers') && b3In('kettle') ? `
+
+He looks up at the boots, and sees Kettle, and grins all over his face. "The nest-keeper. Under the crossing. Two nights, and not a drop on the clay." He sits back on his heels. "Haven't forgotten."
+
+"Second in the queue," Kettle says. "You promised."
+
+"I did." Hedge looks at the rows on the oilcloth with something like regret. "And nobody's made it yet. Still Moranth, all of it. Perfect." He says the word the way other men say *boring*. "Somewhere there's a shed with a better one in it. Still waiting. You're still second."
+
+"Who's first?"
+
+"Me," says Hedge, astonished that anyone would ask.
+
+"Heard from Fiddler?" Kettle says.
+
+"Gone over the sea, him and Kalam. Didn't say what for. Didn't ask me along either." He sniffs. "He'll find something to blow up. He always does."` : b3In('kettle') ? `
+
+He looks up at the boots, and then at Kettle's satchel, which is where everyone with a satchel looks first. "Marine sapper," he says. "What's in it?"
+
+Kettle tells him, in order, without being asked twice: "${b31Count()}."
+
+"Not bad." He holds up a sharper to the slit of lantern light and turns it. "Moranth stock. Perfect, every one." He says the word the way other men say *boring*. "Somewhere somebody's going to make a better one, in a shed, out of something nobody's thought of, and blow the shed down doing it. When they do, I'm first in the queue." He considers Kettle. "You can be second."
+
+Kettle looks as if she has been knighted.` : `
+
+He looks up at the boots. "Marines," he says. "The Seventh's. You're going down behind us." He holds up a sharper to the slit of lantern light and turns it. "Moranth stock. Perfect, every one. Somewhere somebody's going to make a better one, in a shed." He puts it back in its row.`}${b3In('tuft') ? `
+
+Tuft has stopped where the lantern-light ends. ${b3Was('b1_c4_sappers') ? `"He still talks to them," she says, very low. "Like under the crossing."` : `"He talks to them," she says, very low. "The whole time."`}` : ''}${b3In('ohl') ? `
+
+"Have you slept?" Ohl asks him.
+
+"Sappers don't sleep, healer. We lie down with our eyes shut and count." Hedge goes on counting.` : ''}${b3In('brisk') ? `
+
+Brisk watches his hands, not the munitions. They don't shake. "Steady," she says, which from Brisk is a medal.` : ''}${b3In('greysword') ? `
+
+Dannet watches the rows on the oilcloth the way a Grey Sword watches a sword drill: looking for the one that is out of line. There isn't one.` : ''}
+
+Then he takes one sharper off the end of the top row, and looks at it, and pushes it across the oilcloth with one finger to ${b3In('kettle') ? 'Kettle' : 'you'}. "Moranth stock. One spare. Don't tell Picker; she counts." He goes back to the rows. "First in, Sergeant. You lot get the middle."`,
+    ch:[{t:'"Hedge."', go:()=>startExplore()}]}),
 
   /* ---- Dannet and the trick ---- */
   b3_c7_dannet:()=>({sp:'Dannet', fx:()=>{ S.f.b3_c7_dannet = 1; }, txt:

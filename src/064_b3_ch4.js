@@ -171,7 +171,9 @@ const B3CH4 = {
         {id:'dannet', name:'Dannet', kind:'greysword', x:12, y:7, node:()=>c4DannetDone() ? 'b3_c4_dannet_again' : 'b3_c4_dannet', show:()=>!c4In('greysword') || !S.f.b3_c4_dannet, fresh:()=>!S.f.b3_c4_dannet},
         {id:'ambrel', name:C4.ropesgt, kind:'b3_greysword', x:14, y:10, node:()=>'b3_c4_ambrel', fresh:()=>!S.f.b3_c4_ambrel},
         {id:'recruits', name:'Recruits at drill', kind:'tenescowri', x:10, y:10, node:()=>'b3_c4_recruits', fresh:()=>!S.f.b3_c4_recruits},
-        {id:'barghast', name:'A Barghast at the door', kind:'b3_barghast', x:8, y:2, node:()=>'b3_c4_thrall', fresh:()=>!S.f.b3_c4_thrall} ] },
+        {id:'barghast', name:'A Barghast at the door', kind:'b3_barghast', x:8, y:2, node:()=>'b3_c4_thrall', fresh:()=>!S.f.b3_c4_thrall},
+        /* v13.8 (David, Nov 15): meetings. Captain Paran on the well's rim in the Camp, between one quarrel and the next */
+        {id:'paran4', name:'Captain Paran', kind:'paran', x:5, y:4, node:()=>'b3_c4_paran', fresh:()=>!S.f.b3_c4_paran} ] },
 
     /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes */
     { id:'b3_c4_night', title:'West of Capustan · the guards\' bank', sub:'Night · cold out of nowhere', hint:'Tap ground to move · tap a figure to talk · the fire, when you\'re ready', decor:'b3_c4_camp_night', dark:true,
@@ -283,6 +285,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     if (f.b3_c4_ohlBurnt) x.push('Ohl reached into Denul for a sick boy on the wrong side of the stakes, and the warren bit him. He has written that down, and underlined it.');
     if (f.b3_c4_ellisPriest) x.push('On the cold night Ellis found the priest\'s sentry post across the ditch, back to front, an hour before he stood up.');
     if (f.b3_c4_ellisRead === 'read' && f.b3_c4_hunted) x.push('At the gully mouth Ellis read where the K\'ell Hunter would step from its tracks, and the Grey Swords put their ropes there.');
+    if (f.b3_c4_paran) x.push('Captain Paran sat on a well\'s rim in Capustan, grey with fever, and told the Fourth he had spent the morning keeping a Shield Anvil and a priest of the tiger from each other. Both lived. In Capustan, he said, that counts.');
     if (f.b3_c4_tav) x.push('Tav passed his bread through the stakes to a ring of children and sang to them, badly. Brisk stood at the edge of the light.');
     return x; },
 
@@ -294,6 +297,7 @@ The gap at the cart road is open. ${c4In('brisk') ? `Brisk looks at it, and at y
     f.b3_c4_gathering && `The child went out of the camp with the fat Daru and two Host marines, two women. That night was cold out of nowhere, and the dust stood up on the horizon.`,
     f.b3_c4_hunted && `The Grey Swords pulled a K'ell Hunter down into a gully with ropes${f.b3_c4_vellRope ? ', one of them Vell\'s,' : ''}, and the Fourth helped kill it. Something dust-grey watched from a rise, and was gone.`,
     f.b3_c4_dannet && `Dannet, a Capan second daughter and a Grey Sword acolyte, is lent to the Malazans as a guide into the Domin.`,
+    f.b3_c4_paran && `Captain Paran is in Capustan, sick with something he will not name, standing between quarrels for whoever asks him. He told the Fourth the Grey Swords pulled one of the things on the plain down with ropes, before the siege.`,
     f.b3_c4_founders && `The Barghast tore up the floor of the Thrall and found their First Founders in nine great canoes.`,
     f.b3_c4_order && `Whiskeyjack's order: nobody goes over the stakes, nobody takes anything from the other side of them, nobody touches the Tenescowri except to feed them or bury them.`,
     `Two hundred thousand Tenescowri are held on the plain west of Capustan, behind a ditch and a stake line.`].filter(Boolean); },
@@ -615,6 +619,47 @@ On the fourth throw the hooks go round his shins and the recruits pull and he go
           {t:'Not yet.', go:()=>startExplore()}]}),
 
     /* ---- the Thrall: the Barghast and their First Founders ---- */
+    /* ---- v13.8 (David, Nov 15): meetings. Captain Paran in Capustan, after the relief ----
+       Claude's own pick (the brief's "feel right"). Where and when: after the relief Paran is in the city; he helps Itkovian and mediates
+       between him and Rath'Trake (moi-canon §1.5, W *Bridgeburners*) and speaks to the Grey Swords' new Destriant (GR ch. 21). Closed (W, GR).
+       He is sick through the book with the Hounds' blood (moi-canon §2: "sickly much of the book"; GotM). The Grey Swords pulled an undead K'ell
+       Hunter down with ropes before the siege (moi-canon §1.5, W ch. 7): the rope-sergeant's lesson tonight. Nothing of the Deck, the Azath,
+       the wolves' names or what he did at the barracks: Dannet's "a sick-looking captain" stays what she saw. Rule 5: his eyes stop on Ellis,
+       as on the plain, and nothing is said of Toc. The Fourth is not one of his thirty-eight. Sets b3_c4_paran; Tuft +1 (else Ellis +1). */
+    b3_c4_paran:()=>({sp:'Captain Paran · Bridgeburners', scene:'b3_c3_court', again:'Paran is still on the well\'s rim, with his elbows on his knees, looking into the water as if it owed him money.', fx:()=>{ S.f.b3_c4_paran = 1; if (c4In('tuft')) loy('tuft', 1); else if (c4In('ellis')) loy('ellis', 1); }, txt:
+`Captain Paran is sitting on the rim of the well in the middle of the Camp with his elbows on his knees, looking down into the water. He looks worse than he did on the Rhivi Plain: greyer, thinner, with a sheen on him like a man with a fever who has decided to have it standing up, since nobody will let him lie down.
+
+He hears the Fourth's boots and looks up. "Sergeant." He counts you, as he always has. "Good."
+
+"I've spent the morning in a council hall with no floor," he says, before you have asked anything, "standing between the Shield Anvil of a god who has gone and a priest of a god who has only just arrived, keeping them off each other. They're both still alive." He rubs his eyes. "I'm told that's a success, in Capustan."
+
+He looks west, toward the plain and the prisoners. "You're on the stake line. Whiskeyjack's order." It isn't a question. "Hold it. He doesn't give many he means that much."
+
+Then, as if it had only just come to him: "And the Grey Swords. Before the siege a patrol of theirs met one of those things on the plain, the long ones that walk wrong, and it was already dead and hadn't noticed. Swords did nothing. They pulled it down with ropes." He almost smiles. "Ropes, Sergeant. Everyone in this city has a story, and that's the one I'd keep."${c4In('tuft') ? `
+
+Tuft has not taken her eyes off him since the well came in sight. "Sir." Very low. "It's in your blood. Something with a great many teeth."
+
+He looks at her for a long moment, without surprise. "Yes," says Paran. "I had noticed." And then, more gently than you would expect: "It doesn't bite the people I like. I'm fairly sure."` : ''}${c4In('ellis') ? `
+
+His eyes go to Ellis, and stop, a breath too long, the way they did on the plain.
+
+"Scout."
+
+"Captain."
+
+That is all either of them says. It is, you think, all either of them can.` : ''}${c4In('greysword') ? `
+
+Dannet has come to attention at the sight of him. "Captain. The Destriant asks after you."
+
+Paran winces as if at a draught. "Tell the Destriant I'm a captain of the Bridgeburners with a fever, and nothing else he needs to write down."
+
+"Sir," says Dannet, in the voice of a woman who will tell the Destriant exactly that, word for word, and that the Destriant will write it down.` : ''}${c4In('brisk') ? `
+
+Brisk looks him up and down, the fever and all, the way she looks at a wall someone else built. "He'll stand," she says afterwards. "He stood on the plain."` : ''}${c4In('vell') ? `
+
+Vell, who has two coils on his shoulder and has heard the word *ropes*, has gone a little pink.` : ''}`,
+      ch:[{t:'"Sir."', go:()=>startExplore()}]}),
+
     b3_c4_thrall:()=> S.f.b3_c4_thrall ? {sp:'The Thrall', txt:
 `The Thrall's door. Inside, the Barghast are still lifting flagstones, and the priests have stopped shouting and started arguing with each other instead, which is what the Mask Council is for.`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]} : {sp:'The Thrall · the council hall', fx:()=>{ S.f.b3_c4_thrall = 1; }, txt:

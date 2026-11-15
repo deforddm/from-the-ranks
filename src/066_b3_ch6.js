@@ -162,7 +162,9 @@ const B3CH6 = {
         {id:'c6wj2', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c6_wjLeg ? 'b3_c6_wj_again' : 'b3_c6_wj_leg', fresh:()=>!S.f.b3_c6_wjLeg},
         {id:'c6oskan', name:'Oskan', kind:'b2soldier', x:5, y:4, node:()=>S.f.b3_c6_oskan ? 'b3_c6_oskan_again' : 'b3_c6_oskan', fresh:()=>!S.f.b3_c6_oskan},
         {id:'c6whiteface', name:'A White Face warrior', kind:'b3_barghast', x:12, y:7, node:()=>S.f.b3_c6_logs ? 'b3_c6_barghast_again' : 'b3_c6_barghast', fresh:()=>!S.f.b3_c6_logs},
-        {id:'c6bearer', name:'The standard bearer', kind:'artanthos', x:2, y:4, node:()=>'b3_c6_bearer', fresh:()=>!S.f.b3_c6_bearer} ] },
+        {id:'c6bearer', name:'The standard bearer', kind:'artanthos', x:2, y:4, node:()=>'b3_c6_bearer', fresh:()=>!S.f.b3_c6_bearer},
+        /* v13.8 (David, Nov 15): meetings. Gruntle, with Trake's Legion beside Whiskeyjack's column, looking at the barges */
+        {id:'c6gruntle', name:'Gruntle', kind:'b3_c3_gruntle', x:6, y:7, node:()=>'b3_c6_gruntle', fresh:()=>!S.f.b3_c6_gruntle} ] },
 
     /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south */
     { id:'b3_c6_landing', title:'Maurik · the landing', sub:'Day · an empty city on a river · Brood\'s army coming in by the ford', hint:'Tap ground to move · tap a figure to talk · the road south leaves from the east end', decor:'b3_c6_river',
@@ -324,6 +326,7 @@ ${b3In('greysword') ? `
       if (f.b3_c6_ambDone) x.push(`On the river the Fourth went over the side and up a reed bank after a Seerdomin master.${f.b3_c6_barghastCame ? ' The White Face went with them, singing.' : ''}`);
       if (f.b3_c6_brood) x.push('At Maurik, from a guard line, the Fourth watched Caladan Brood find out.');
       if (f.b3_c6_logs) x.push(f.b3_c6_logs === 'won' ? 'On the Maurik the Fourth beat a White Face warrior at carrying logs, and the White Face sang about it.' : 'On the Maurik a White Face warrior beat the Fourth at carrying logs, and sang about it, kindly.');
+      if (f.b3_c6_gruntle) x.push('Gruntle of Trake\'s Legion looked at the barges on the Maurik for a long time, and said he guarded caravans. On land.');
       if (f.b3_c6_korlat) x.push('Korlat asked the sergeant to tell her, not him, if Whiskeyjack fell behind on the road.');
       if (f.b3_c6_kallorLook) x.push(`${c6Kallor(true)} looked at the sergeant at Maurik. He has a long memory for faces, and nothing else to do with it yet.`);
     }
@@ -333,6 +336,7 @@ ${b3In('greysword') ? `
     f.b3_c6_key === 'maurik' && f.b3_c6_brood && `At Maurik, Caladan Brood found out what the Host had done, and said only that he should have been told. Kallor, it is said, called leaving the Host to be annihilated a tactical mistake, and asked to ride south; Korlat went with Whiskeyjack. Whiskeyjack marched for Coral that afternoon with the White Face, and Brood's army came on behind at its own pace.`,
     f.b3_c6_key === 'maurik' && `Whiskeyjack's column built barges on the Maurik below the ford and floated a day downriver to Maurik, an empty city. Three clans of the White Face Barghast rode the barges; the rest walked.`,
     f.b3_c6_key === 'quorl' && `The Seventh's marines were flown south to the mountains above Coral, where Dujek's half of the Host is dug in under cedar and moss. The Bridgeburners hold the forward trenches. The Condors have started following the quorls home.`,
+    f.b3_c6_key === 'maurik' && f.b3_c6_gruntle && `Trake's Legion marches with Whiskeyjack's column: Capan townsfolk with the tiger's stripes on them, and Gruntle, the Daru caravan guard the priests call the Tiger's Mortal Sword. He doesn't.`,
     f.b3_legSeen && f.b3_c6_key === 'maurik' && `Whiskeyjack's leg is worse. He will not lie down until after Coral.`,
     `South of Setta the Black Moranth began taking the Host away by quorl, whole companies a night, more than half of it in all, and Dujek with them. Neither Brood nor the Seer was told. About four thousand stayed on the road under Whiskeyjack.`].filter(Boolean); },
 
@@ -1194,6 +1198,51 @@ But he gets up and helps with the last of it, and claps ${by({sgt:'you', _:'{who
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b3_c6_barghast_again:()=>({sp:'A White Face warrior', txt:`The White Face warrior is carrying two logs. He lifts one end of one of them at you in greeting, which nearly kills a carpenter.`,
     ch:[{t:'Leave him.', go:()=>startExplore()}]}),
+  /* ---- v13.8 (David, Nov 15): meetings. Gruntle on the Maurik ----
+     Claude's own pick (the brief's "feel right"). Where and when: Gruntle is beside Whiskeyjack's column at the Maurik, where the army builds
+     barges downriver of a ford (moi-canon §1.7, KH 82%, a quotation from the novel). Supported (one source, the text). His followers are
+     Trake's Legion, Capan, with the tiger's stripes (W *Trake*; WP). Picks up Ch3's meeting (b3_c3Gruntle) where the squad had it. Nothing of
+     Coral: nothing of the K'ell Hunters there, of the tiger the legion becomes, or of who of them walks away; "Lestari" is memory only and
+     unused. Sets b3_c6_gruntle; trust +1 (a Mortal Sword of the alliance seen at a Malazan fire). */
+  b3_c6_gruntle:()=>({sp:'Gruntle · Trake\'s Legion', scene:'b3_c6_barges', again:'Gruntle is on the bank still, sitting on an upturned hull, watching the river go past as if it were a caravan that had not paid.', fx:()=>{ S.f.b3_c6_gruntle = 1; ally(1, 0, 'Gruntle at the Malazans\' slips'); }, txt:
+`${S.f.b3_c3Gruntle ? `The big Daru from the square in Capustan is sitting on an upturned hull at the top of the slips, two cutlasses across his knees, looking at the barges. The stripes on him have not faded since the city. If anything they are darker, and there is more amber in his beard.
+
+"Malazans," he says, as he said it then, and moves over on the hull. "You were in the square. You didn't call me anything. Sit."` : `A big Daru with a caravan guard's shoulders is sitting on an upturned hull at the top of the slips, two cutlasses across his knees, looking at the barges. There are stripes on him, dark bars barbed at the ends, across his cheeks and down his bare arms, and amber in his beard and his eyes. A few of Trake's Legion sit along the bank below him, Capan townsfolk with the same stripes, mending boots.
+
+"Malazans." He moves over on the hull. "Gruntle. Don't call me anything else. Sit, if you like."`}
+
+You sit. Down on the slips, a wright is driving trenails into a strake with the patience of a man who has done nothing else since he was born.
+
+"I guard caravans," Gruntle says, after a while. "On land. Wagons. Oxen. Roads, with a ditch on either side to fall into. I know where I am with a ditch." He nods at the nearest barge. "That is a box. Somebody is going to put it on a river and put me in it, and the river is going to go wherever it likes, and I'm meant to stand at the front with these," the cutlasses, "looking fierce."
+
+"It goes to Maurik. A few days, they say."
+
+"Everything goes somewhere," says Gruntle. "That's what's wrong with it."${b3In('kettle') && S.f.b3_c3Sat ? `
+
+"The cooper," Kettle says. "From the square. With the stripes to the elbow. Is he—"
+
+"Here. Down there." Gruntle points with his chin at the bank. "He's been telling the wrights how to caulk. They hate him. He's right." Kettle is already on her feet.` : b3In('kettle') ? `
+
+Kettle has been looking at the hull he is sitting on. "Is it sound?"
+
+"I'm sitting on it," says Gruntle, "so I'd hope so."` : ''}${b3In('brisk') ? `
+
+Brisk looks at the barge, and at the river, and at Gruntle. "Heavies hate boats too," she says.
+
+"Good," says Gruntle. "Then I'll stand behind you."` : ''}${b3In('vell') ? `
+
+Vell says something to him in Daru, the stairwell kind. Gruntle answers in it, at length, and Vell laughs out loud, which you have heard him do perhaps twice. He won't translate. "It was about boats," is all he will say, "and a man in Saltoan."` : ''}${b3In('greysword') ? `
+
+Dannet stands at the end of the hull rather than sit on it. "Mortal Sword," she says, and inclines her head, Grey Sword to tiger.
+
+"Don't," says Gruntle, but he says it to her more gently than to anyone.` : ''}${b3In('sohra') ? `
+
+Sohra looks at the stripes on his forearm a long time. "The tiger is a summer god," she says. "On the plain we say a summer god is quick to come and quick to anger."
+
+"So am I," says Gruntle. "We get on."` : ''}
+
+He looks at the river a while longer. Then he gets up, because one of his legion is calling up the bank about the boots, and goes down to see.`,
+    ch:[{t:'Leave him to his boots.', go:()=>startExplore()}]}),
   b3_c6_bearer:()=>({sp:'The standard bearer', fx:()=>{ S.f.b3_c6_bearer = 1; }, txt:
 `The High Fist's standard came south with the column, though the High Fist did not, and the standard bearer came with it: the same unremarkable man, neither young nor old, sitting on a coil of rope by the slips with the standard's pole across his knees, rubbing oil into the wood with a rag.
 
