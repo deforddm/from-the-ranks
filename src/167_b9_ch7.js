@@ -355,7 +355,7 @@ He nods at the pot on the brew-fire. "Eat what's in that. There's nothing on the
     b9_c7_captain:()=>({sp:'The captain, down the line', scene:'b9_c7_late', fx:()=>{ S.f.b9_c7_captain = 1; }, again:()=>'The captain, walking the back of the heavies\' line, a hand on each shoulder as he goes.', txt:
 `The heavies' captain is walking the back of the line from the burned wagons toward the bank, slowly, a big grey man with his helm under his arm. At every file he puts a hand on a shoulder and says something too low to carry, and goes on.
 
-He does not come as far as the Third. Halfway along he stops, and looks at the dust for a while, and puts his helm on, and goes back the way he came.${b97If('haddat', `\n\nHaddat watches him go. "He is saying their names," she says. "I can tell by his mouth."`)}`,
+He stops short of the Third's fire, and talks from there. Halfway along he stops, and looks at the dust for a while, and puts his helm on, and goes back the way he came.${b97If('haddat', `\n\nHaddat watches him go. "He is saying their names," she says. "I can tell by his mouth."`)}`,
       ch:[{t:'Back to the stretch.', go:()=>startExplore()}]}),
 
     /* the regulars coming back through the files (RT4 S3: the regulars broke); a check: put a spear back in a boy's hands */

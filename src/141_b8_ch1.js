@@ -732,7 +732,7 @@ There is somebody sitting on the Fourth's step, in the dark, with his hands open
     b8_c1_vasso_home:()=>({sp:'Vasso', scene:'b8_daru_night', txt:
 `He looks at you for a while, and then up at the roofs, and then he gets up, stiffly, and puts his hands in his jack.
 
-"Home," he says, like a word in a language he had nearly learned. "Yes, Sergeant." He goes off up the street, keeping to the middle of it, away from the walls, as a journeyman walks when he knows the roofs are watching. At the corner he looks back once. Then the fog has him.`,
+"Home," he says, and turns the word over as if checking it for cracks. "Yes, Sergeant." He goes off up the street, keeping to the middle of it, away from the walls, as a journeyman walks when he knows the roofs are watching. At the corner he looks back once. Then the fog has him.`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
 
     /* ======== phase 4, 'quiet': the bar across the door; chancers in the street ======== */

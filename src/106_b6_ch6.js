@@ -749,10 +749,10 @@ Then, as the light starts to go, they begin to gather, between the tents, a few 
 She does not say who told her so. She has a knife in her sleeve. So do a great many of them.
 
 There is time to get back to the picket and get the shields up before they come. It is not much time.`,
-      ch:[{t:'Back to the picket. Shields.', go:()=>startBattle('b6_c6_cult', {surprise:'p'})}]}),
+      ch:[{t:'Run for the picket and get the shields up. They are coming.', go:()=>startBattle('b6_c6_cult', {surprise:'p'})}]}),
     b6_c6_edge_seen:()=>({sp:'Among the tents', scene:'b6_hanar_ara', txt:
 `Somebody between the tents points, and shouts, and the crowd turns all at once, and the talking stops. They have seen a soldier where a soldier should not be. They come.`,
-      ch:[{t:'Back to the picket. Shields.', go:()=>startBattle('b6_c6_cult', {surprise:'e'})}]}),
+      ch:[{t:'Run for the picket. They are on your heels.', go:()=>startBattle('b6_c6_cult', {surprise:'e'})}]}),
     b6_c6_dusk:()=>({sp:'The picket', scene:'b6_hanar_ara', txt:
 `The light goes red, and then grey. Between the outer tents the crowd has grown, and the one talking is louder, and the Seventh's picket stands with its shields grounded and its orders in its head: not past the shrines, whatever they shout.
 

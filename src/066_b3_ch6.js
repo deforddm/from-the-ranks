@@ -421,7 +421,7 @@ He knew already. Word reached him in Darujhistan, or he read it on a roll. He wa
     ch:[{t:'Tell him how she stood.', go:'b3_c6_tav_grief2'},
         {t:'"I\'m sorry. Not tonight."', go:()=>startExplore()}]}),
   b3_c6_tav_grief2:()=>({sp:'Tav', txt:
-`You tell him. In order, without anything in it that isn't so.
+`You tell him. Every word of it in its place, and none of it made kinder than it was.
 
 He listens the way she used to listen to orders, all the way to the end, without moving. When you have finished he nods once.
 

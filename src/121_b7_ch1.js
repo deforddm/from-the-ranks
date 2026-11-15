@@ -345,7 +345,7 @@ A spark came down on ${b71Say({tangle:'Tangle\'s', mirrel:'Mirrel\'s', haddat:'H
     b7_c1_above:()=>({sp:'Above the beach', scene:'b7_coast_night', fx:()=>{ S.f.b7_c1_ph = Math.max(2, S.f.b7_c1_ph || 1); }, again:()=>'The column\'s first halt in the dunes above the beach, the smoke lying along the water below.', txt:
 `The column halts in the dunes above the beach, in the hollows out of the wind. Below, the ships are burning down to the waterline, and the smoke lies along the water in a long brown bank that will be there at dawn.
 
-The lieutenant lets the squads light small fires in the hollows. Tonight the whole coast is lit anyway, she says, and after tonight there will be no fires at all, so warm your hands while you can.${b71Say({mirrel:`\n\nMirrel is counting the squad's salves into her bag in threes. "Three, six," she says. "And a jar." She looks at the jar for some time.`, marrow:`\n\nMarrow lowers herself onto the sand in a hollow and sets her bag between her feet. "Sit, child," she says. "Before the Fist thinks of something."`, _:''})}`,
+The lieutenant lets the squads light small fires in the hollows. Tonight the whole coast is lit anyway, she says, and after tonight there will be no fires at all, so warm your hands while you can.${b71Say({mirrel:`\n\nMirrel tips the squad's salves out on a cloth and puts them back three at a time. "Three, six," she says. "And a jar." She looks at the jar for some time.`, marrow:`\n\nMarrow lowers herself onto the sand in a hollow and sets her bag between her feet. "Sit, child," she says. "Before the Fist thinks of something."`, _:''})}`,
       ch:[b7ReadChoice(1),
           {t:'The fire.', go:'b7_c1_fire'},
           {t:'The lieutenant.', go:'b7_c1_lt2'},

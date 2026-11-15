@@ -376,7 +376,7 @@ ${S.f.b10_c1_rollTried ? `He sees the Third watching. "Again at the next one," h
     b10_c1_roll_ok:()=>({sp:'A sergeant of the heavies', scene:'b10_burial', fx:()=>{ S.f.b10_c1_rollOk = 1; }, txt:
 `By the third trench ${by({sgt:'you can', pruss:'Pruss is calling it with him, and', brask:'Brask is calling it with him, and', _:'{who} can'})} call the Third's roll the heavies' way: the names of the dead first, each answered "here" by the one beside, then the living, each for themselves, and the squad stepping up into the gaps until the file is closed and no order was given.
 
-The sergeant listens to it once without turning round. "That'll do," he says, to the trench. "Do it in a fight. They answer quicker in a fight."${b101If('haddat', `\n\nHaddat answers to her name as if it were a prayer. It might be one.`)}`,
+The sergeant listens to it once without turning round. "That'll do," he says, to the trench. "Do it in a fight. They answer quicker in a fight."${b101If('haddat', `\n\nHaddat answers to her name the way some people answer a bell for prayers: at once, and without looking up. It might be one.`)}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b10_c1_roll_no:()=>({sp:'A sergeant of the heavies', scene:'b10_burial', txt:
 `It goes well through the dead, and then somebody answers for a living soldier who has not been called yet, and two people step into the same gap, and the file comes apart like a bad seam.
@@ -531,7 +531,7 @@ He puts the hand down. "Then we find out where we're going." He looks at the lon
     b10_c1_fire_rest:()=>({sp:'The Third\'s fire', scene:b101Night() ? 'b10_camp_night' : 'b10_camp', txt:
 `${b101Night() ? 'An hour, then, by a small fire in the dark, with the camp murmuring all round and the allies\' fires out on the plain.' : 'An hour, then, among the tents, with the spades still going at the lines and the heat lying on everything.'}
 
-${b101Say({mirrel:`Mirrel goes round the squad with the water skin, one mouthful each, and watches each one swallow. "Drink. Good."`, marrow:`Marrow goes round the squad with her hands, and stops at each of them long enough to frown. She closes a cut anyway.`, _:'Some of them sleep. The rest watch the camp.'})}${b101If('haddat', `\n\nHaddat says the names of the dead under her breath, the long list, and ${b10In('pruss') && S.f.b10_c1_prussSquad ? 'six new ones at the end of it, that Pruss gave her.' : 'has not run out.'}`)}${b101If('pruss', `\n\nPruss sleeps sitting up with his back to a wagon wheel and the helm in his lap, the way carters sleep on a long road.`)}`,
+${b101Say({mirrel:`Mirrel takes the water skin round again, one mouthful each, and this time does not have to watch them; they know. "Drink. Good."`, marrow:`Marrow goes round the squad with her hands, and stops at each of them long enough to frown. She closes a cut anyway.`, _:'Some of them sleep. The rest watch the camp.'})}${b101If('haddat', `\n\nHaddat says the names of the dead under her breath, the long list, and ${b10In('pruss') && S.f.b10_c1_prussSquad ? 'six new ones at the end of it, that Pruss gave her.' : 'it is longer than it was in the Wastes, and she has every name.'}`)}${b101If('pruss', `\n\nPruss sleeps sitting up with his back to a wagon wheel and the helm in his lap, the way carters sleep on a long road.`)}`,
       ch:[{t:'Back to the fire.', go:'b10_c1_fire'}]}),
     b10_c1_fire_talk:()=>{ const night = b101Night(), ln = [];
       Object.keys(B101TALK).forEach(id => { if (b10In(id)) ln.push(B101TALK[id][night ? 1 : 0]()); });

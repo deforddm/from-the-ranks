@@ -392,7 +392,7 @@ He lowers his voice, though there is nobody to hear but the eaves. "And keep the
 
 "The Preda and the Queen's faction are not speaking, except to the King, about each other. Finadd Brys Beddict is the King's new Champion: the best sword in Lether, everyone says, and very quiet about it. The King is sending a delegation north to the Edur for the Great Meeting: Prince Quillas, with Finadd Moroch Nevath, who heads the Prince's guard, and the First Eunuch. And Finadd Gerun Eberict."
 
-He shuts the book on his finger. "Eberict holds the King's Leave, for saving the King's life. There is a list. The city says thirty-one names, and the city counts these things." He looks at you. "If you meet him, Sergeant, be very polite, and very brief, and somewhere else."${b51If('perrit', `\n\nPerrit, at your shoulder, says under her breath, "Thirty-one is the count the city knows."`)}`,
+He closes the ledger with a finger keeping his place. "Eberict holds the King's Leave, for saving the King's life. There is a list. The city says thirty-one names, and the city counts these things." He looks at you. "If you meet him, Sergeant, be very polite, and very brief, and somewhere else."${b51If('perrit', `\n\nPerrit, at your shoulder, says under her breath, "Thirty-one is the count the city knows."`)}`,
       ch:[{t:'"Yes, Finadd."', go:()=>startExplore()}]}),
     b5_c1_ennic_eve:()=>({sp:B5_FINADD.name, scene:'b5_barracks', fx:()=>{ S.f.b5_c1_purse = 1; S.silver = (S.silver || 0) + 5; updSilver(); note('+5 docks: the Finadd\'s festival dock, a dock a head.', 'good'); },
       again:()=>`Finadd Ennic, by the officers' door. He has signed everything he is going to sign tonight.`, txt:

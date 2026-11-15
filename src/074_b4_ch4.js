@@ -530,7 +530,7 @@ And the days go on like that. The heat. The dust. A wagon burnt here, a picket c
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the Seti ambushed ---- */
-    b4_c4_ambush:()=>({sp:'The column', scene:'b4_march_dusk', fx:()=>{ if (!S.f.b4_c4_ambush) { S.f.b4_c4_ambush = 1; S.f.b4_c4_ph = 3; b4Nerve(-1, 'Three hundred Seti dead in a gorge'); } }, txt:
+    b4_c4_ambush:()=>({sp:'The column', scene:'b4_march', fx:()=>{ if (!S.f.b4_c4_ambush) { S.f.b4_c4_ambush = 1; S.f.b4_c4_ph = 3; b4Nerve(-1, 'Three hundred Seti dead in a gorge'); } }, txt:
 `The word comes back down the column in the afternoon, faster than any horse, and the column stops to hear it.
 
 The Seti rode after riders again this morning. A few dozen of them, on the edge of sight, going away at a canter toward the hills. The Seti went after them, most of them, the young lancers and their women archers, the way they have gone after everything all week. The riders led them into a gorge. And in the gorge the rest of the riders were waiting.

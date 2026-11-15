@@ -619,7 +619,7 @@ It is how the Fourth has always done it. At every halt, all the way from Pale: c
             near:{t:()=>`Yes, but the count will not come right until ${b87Nm(b87Who())} ${b87V(b87Who(), 'have', 'has')} said every number out loud, and somewhere past three hundred the numbers start sounding like names, and they go on sounding like names all night: rattled.`, fx:()=>b87Rattle(b87Who())},
             go:'b8_c7_count_ok', fail:'b8_c7_count_no'},
           {t:'Let the bells count themselves.', go:'b8_c7_fire'},
-          {t:'Not now.', go:'b8_c7_fire'}]}),
+          {t:'Not now.', go:()=>startExplore()}]}),
     b8_c7_count_ok:()=>({sp:'The bells', scene:'b8_lakeshore', fx:()=>{ S.f.b8_c7_tollOk = 1; }, txt:
 `${by({sgt:'You count', vasso:'Vasso counts', kettle:'Kettle counts', ohl:'Ohl counts', _:'{who} counts'})} them through, once, and then again, and the second count comes out where the first did not, and is the one ${by({sgt:'you believe', _:'everyone believes'})}. It is not much. It is a way of holding a number steady while everything round it rings.
 

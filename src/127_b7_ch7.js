@@ -691,7 +691,7 @@ ${b77Held() ? `She looks at the squad, and at the gaps in it, if there are gaps.
       ch:[{t:'Three weeks.', onward:true, fx:()=>{ S.f.b7_c7_ph = 4; }, go:()=>{ startExplore('b7_c7_after'); talk('b7_c7_after_arrive'); }},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b7_c7_streets_west:()=>({sp:'The streets', scene:'b7_city_burning', txt:
-`Back west toward the gate square. The Fist still holds the gate. There is nothing back there for the Third today.`,
+`Back west toward the gate square. The Fist still holds the gate. Whatever was back there, the Third has had all of it it wants.`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
 
     /* ======== phase 4: three weeks on ======== */

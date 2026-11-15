@@ -307,7 +307,7 @@ Then, because she can't not: "There are quorls at the edge of the camp. Twelve c
           {t:'"Tuft. What\'s up there?"', req:()=>b3In('tuft') && !S.f.b3_c1_askTuft, fx:()=>{ S.f.b3_c1_askTuft = 1; }, go:'b3_c1_start_tuft'},
           b3DeckChoice(1), {t:'Walk the lines.', go:()=>startExplore()}]}),
     b3_c1_start_ohl:()=>({sp:'Ohl', scene:'b3_pale_camp', txt:
-`He folds the oilcloth along its old creases. "${b3ListWords().replace(/^./, c => c.toUpperCase())}. A good many of them are from here, child. I came to this camp with a short list and left it with a long one." He looks at the burial field, green now, the mounds soft with it. "I walked up there last night. I thought I should. I don't know what I thought I'd find. Grass, it turns out."
+`He folds the oilcloth the way he always has, along creases older than the squad. "${b3ListWords().replace(/^./, c => c.toUpperCase())}. A good many of them are from here, child. I came to this camp with a short list and left it with a long one." He looks at the burial field, green now, the mounds soft with it. "I walked up there last night. I thought I should. I don't know what I thought I'd find. Grass, it turns out."
 
 ${b3Fallen().length ? `"And ours," he says, more quietly. "${b3FallenNames()}. I wrote them in Darujhistan. I said I would die before I did." He puts the oilcloth away. "I was slow."` : `"None of ours, Sergeant." He says it to the oilcloth. "Still none. I mention it because you'd never ask."`}`,
       ch:[{t:'"Kettle. Count."', req:()=>b3In('kettle') && !S.f.b3_c1_askKettle, fx:()=>{ S.f.b3_c1_askKettle = 1; }, go:'b3_c1_start_kettle'},
@@ -394,7 +394,7 @@ You tell him. In order, without anything in it that isn't so${S.f.b3_c1_boy === 
 
 "Sergeant." He knows the Fourth: every healer in the Host knows the squads that come back. "You heard that."
 
-"It wants a week of him flat on his back. I said it in Darujhistan, the night after, with the splint still wet. It's not a hard leg. It's a stubborn man." He wipes his hands down his tunic as if the argument were on them. "I'm the best there is at this in the Host. That's the patient I got."
+"It wants a week of him flat on his back. I said it in Darujhistan, the night after, with the splint still wet. It's not a hard leg. It's a stubborn man." He wipes his hands down his tunic as if the argument were on them. "Nobody in this Host does this better, and you know it. That's the patient I got."
 
 ${b3In('ohl') ? `Ohl, beside you: "If he'd let me—"
 
@@ -988,8 +988,7 @@ ${b31Say({ohl:`Ohl is awake, sitting up with his hands in his sleeves, listening
 `A runner of the Host, out of breath and out of place among the hide tents, finds the Fourth by asking every Rhivi he meets where the Malazans are, which is not a question the Rhivi enjoy.
 
 "Sergeant {sgt}? Fourth Squad?" He holds out a slate. "From the Host's quartermaster, by the Fist's word. A Moranth munitions train is coming in off the Divide road tonight, down from the hills, late. There's been men on that road. The Fourth's nearest, and the Fourth knows the road." He looks round at the Rhivi camp. "They said you'd be here. They didn't say why."`,
-      ch:[{t:'"Wait. I\'ve something to settle first."', go:'b3_c1_key'},
-          {t:'"Tell them we\'ll come."', go:'b3_c1_key'}]}),
+      ch:[{t:'"Wait. There\'s something to settle first."', go:'b3_c1_key'}]}),
 
     /* ---- the key: the Mhybe's tent, or the Host's order ---- */
     b3_c1_key:()=>({sp:'The Mhybe\'s tent · the Host\'s order', fx:()=>{ S.f.b3_c1_sohraAsked = 1; }, txt:

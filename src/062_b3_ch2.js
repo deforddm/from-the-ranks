@@ -399,10 +399,10 @@ He cannot sing. He has never been able to sing. Everyone within forty paces know
 "Good. You'd do it wrong." The wheel comes up out of the hole. He straightens, wipes his hands on his thighs, and looks at the rest of the Fourth with frank interest. "${c2Sealed() ? `She tell you she's not opened my letter yet? Three years. She says she'll open it when I'm dead. I say that's a long wait.` : `She tell you about the four coppers? She tells everybody about the four coppers. I'm not paying. It's the principle.`}"
 
 Brisk keeps her mouth shut. She stands at the edge of the wagon's shadow, as she stands by his fire most evenings, and watches him the way she watches a gate she has been told to hold.`,
-    ch:[{t:'"Tav. Look after the wagons."', go:'b3_c2_tav2'},
-        {t:'Leave them be.', go:'b3_c2_tav2'}]}),
+    ch:[{t:'"Tav. Look after the wagons."', fx:()=>{ S.f.b3_c2_tavLeft = 0; }, go:'b3_c2_tav2'},
+        {t:'Leave them be.', fx:()=>{ S.f.b3_c2_tavLeft = 1; }, go:'b3_c2_tav2'}]}),
   b3_c2_tav2:()=>({sp:'Tav', txt:
-`"Wagons are easy," Tav says. "Wagons stay where you put them." He nods at his sister. "It's her you want to look after. She stands in front of things."
+`${S.f.b3_c2_tavLeft ? `Tav waits for the sergeant to say something, the way people do, and nobody does. "Nobody ever tells me to look after the wagons," he says, pleased about it. "Wagons stay where you put them.` : `"Wagons are easy," Tav says. "Wagons stay where you put them.`}" He nods at his sister. "It's her you want to look after. She stands in front of things."
 
 "I don't," says Brisk.
 

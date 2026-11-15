@@ -736,7 +736,7 @@ ${b61Say({haddat:`Haddat takes every watch she is not ordered off. She does not 
 ${b61Key() === 'bury' ? `Behind the Third the barrows along this stretch of the road are closed, with fresh earth on them, and a line of stones along the top of each. On the walls above, men are looking down at them.` : `Behind the Third the barrows along the road lie open in the new light, as the rebels left them. On the walls above, men are looking down at the Malazan picket that walked past them.`}
 
 The relief comes out from the 9th's lines at sunrise. The corporal in charge of it looks at the barrows, and at the squad, and says, "They say the Adjunct means to go in soon." He looks up at the walls. "They say a lot of things."${b61If('mehet', `\n\nMehet stands at the edge of the road looking up at his city in the morning light, turning his keys. "${b61Key() === 'bury' ? 'You put them back,' : 'You let them lie,'}" he says. "I will remember which." He puts the keys away.`)}`,
-      ch:[{t:'Back to the 9th. The siege.', onward:true, go:()=>chapterEnd(1, b61Key() || 'leave')},
+      ch:[{t:'Hand the road to the relief and march for the 9th\'s lines.', onward:true, go:()=>chapterEnd(1, b61Key() || 'leave')},
           {t:'Not yet.', go:()=>startExplore()}]}),
   },
 };
