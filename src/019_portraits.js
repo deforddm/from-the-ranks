@@ -1,11 +1,71 @@
 /* ============ portraits ============ */
 /* A painted bust of each squadmate, lit by a lantern low on the left, with a rim of the squadmate's own colour on the right.
-   The figure is painted once into a cached layer (it changes only with state: the sergeant's alley scar, Tuft's grey lock);
+   The figure is painted once into a cached layer (it changes only with state: the sergeant's alley scar, Tuft's grey lock, Ellis's streak,
+   and with the book: the road on a recurring face, WEAR below);
    each frame draws the dark, the ash and the breathing light around it, and Tuft's shadow. */
 const PORTRAIT_CACHE = new Map();
-function portraitState(id){ const f = (typeof S !== 'undefined' && S && S.f) || {}; return id === 'sgt' ? (f.sgtScar ? 'scar' : '') : id === 'tuft' ? (f.c5_tuftMarked ? 'marked' : '') : ''; }
+/* ---- the road on a face (series-polish-plan §3, v13.6.x). A recurring squadmate is the same drawing in every book, worn by the years and
+   the road between: WEAR[look][book] is that book's stage, applied inside the shared helpers (PR.wear, called by PR.neck, PR.face, BP.body;
+   PR.wearAfter over the finished bust), so no bust needs more than its id here. A look's first book has no row: pixel for pixel as drawn.
+   Keys: a, the years (added to F.age: lines at the eyes, brow and mouth); b, tiredness (F.bags); g, grey (0 to 1) where the look's `at`
+   says it shows ('brow', 'beard', 'stubble', 'temple'); s, sun and wind (darker, warmer skin, a burned nose and cheekbones, pale squint-lines);
+   t, thin (a narrower jaw, the cheeks hollowed: hunger and thirst, headline only); sc, scars the text gives in every game.
+   The stage follows the book being played (BOOK), and the look (porLook) follows the squad, so in a two-squad book each sergeant ages as
+   their own squad does. Scars a save's flags give are in wearScars. Tuning: node tools/contact_sheets.mjs --wear=DIR --wear-only. */
+let WEAR_OFF = false; // the contact sheet's "before" row (tools/contact_sheets.mjs --wear)
+const WEAR = {
+  /* the Fourth: Book One 1163; Three 1164 (Capustan, Coral); Six 1164-65 (the plague coast of Seven Cities); Eight about 1166 (years in
+     Darujhistan, out of the army); Ten 1166 (east to Kolanse with the relief) */
+  sgt:{at:['beard', 'brow'], moi:{a:.12, b:.1}, bh:{a:.2, b:.2, s:.4, t:.15, g:.15}, tth:{a:.34, b:.25, g:.45, s:.1}},
+  brisk:{moi:{a:.1}, bh:{a:.16, b:.1, s:.45, t:.1}, tth:{a:.3, b:.15, s:.1}, tcg:{a:.36, b:.2, s:.35, t:.15}},
+  kettle:{moi:{a:.06}, bh:{a:.1, s:.35, t:.1}, tth:{a:.18, b:.1, s:.05}, tcg:{a:.22, b:.15, s:.3, t:.15}},
+  tuft:{moi:{b:.06}, bh:{a:.05, s:.2, t:.15}, tth:{a:.12, b:.05}, tcg:{a:.16, b:.1, s:.2, t:.15}},
+  ohl:{moi:{a:.1, b:.1}, bh:{a:.15, b:.2, s:.3, t:.2}, tth:{a:.3, b:.3, t:.1}, tcg:{a:.35, b:.35, s:.25, t:.25}},
+  /* the Third: Book Two 1164; Four 1164 (Raraku); Six 1164-65 (Y'Ghatan, the plague, the sea); Seven 1165-66 ("thinner than they were on
+     the coast", 125_b7_ch5); Nine 1166 (the Wastes); Ten 1166 (the Glass Desert) */
+  sgt_dg:{at:['stubble'], hoc:{a:.08, s:.15}, bh:{a:.15, b:.1, s:.35}, rg:{a:.2, b:.15, s:.15, t:.3}, dod:{a:.28, b:.25, g:.3, s:.45, t:.5}, tcg:{a:.32, b:.3, g:.4, s:.55, t:.65}},
+  haddat:{hoc:{a:.05, s:.15}, bh:{a:.1, b:.1, s:.35}, rg:{a:.15, b:.15, s:.15, t:.3}, dod:{a:.2, b:.25, s:.45, t:.5}, tcg:{a:.25, b:.3, s:.55, t:.65}},
+  tangle:{at:['temple', 'brow'], hoc:{a:.05, s:.15}, bh:{a:.1, b:.1, s:.35}, rg:{a:.15, b:.15, s:.15, t:.3, g:.15}, dod:{a:.22, b:.2, g:.3, s:.45, t:.5}, tcg:{a:.26, b:.25, g:.4, s:.55, t:.65}},
+  marrow:{at:['temple', 'brow'], tt:6.4, hoc:{a:.05, s:.15}, bh:{a:.1, b:.1, s:.35, g:.2}, rg:{a:.15, b:.15, s:.15, t:.3, g:.3}, dod:{a:.2, b:.2, g:.45, s:.45, t:.5}, tcg:{a:.24, b:.25, g:.55, s:.55, t:.65}},
+  sathi:{hoc:{s:.15}, bh:{s:.35}, rg:{a:.04, s:.15, t:.3}, dod:{a:.08, b:.15, s:.45, t:.5}, tcg:{a:.1, b:.2, s:.55, t:.65}},
+  mirrel:{at:['temple'], bh:{a:.08, b:.1, s:.3}, rg:{a:.14, b:.15, s:.12, t:.3}, dod:{a:.2, b:.2, g:.2, s:.45, t:.5}, tcg:{a:.25, b:.25, g:.3, s:.55, t:.65}},
+  /* the Letherii: Book Five 1161-62; Seven 1165-66 (three or more years on, under the Edur); Nine 1166 (the Wastes, with the escort); Ten 1166
+     (the glass: thirst in the Sixth's chapters too, 182 and 184) */
+  sgt_mt:{at:['brow'], rg:{a:.25, b:.15, g:.25}, dod:{a:.32, b:.25, g:.35, s:.4, t:.5}, tcg:{a:.38, b:.3, g:.45, s:.5, t:.65}},
+  tobet:{rg:{a:.15, s:.1}, dod:{a:.2, b:.15, s:.45, t:.5}, tcg:{a:.25, b:.2, s:.55, t:.65}},
+  thegg:{rg:{a:.15, sc:['brow']}, dod:{a:.2, b:.15, s:.4, t:.45, sc:['brow']}, tcg:{a:.25, b:.2, s:.5, t:.6, sc:['brow']}}, // the cut over his eye, Ammet's two stitches (081_b5_ch1, the fines court)
+  perrit:{rg:{a:.1, b:.15}, dod:{a:.16, b:.25, s:.35, t:.5}, tcg:{a:.2, b:.3, s:.45, t:.65}},
+  ammet:{at:['brow'], rg:{a:.25, b:.1, g:.3}, dod:{a:.3, b:.2, g:.4, s:.4, t:.45}, tcg:{a:.35, b:.25, g:.5, s:.5, t:.6}},
+};
+/* which bust the id paints in this book: the sergeant shares one id and wears their squad's look */
+function porLook(id){
+  if (id !== 'sgt') return POR[id] ? id : 'sgt';
+  const th = BOOK === 'rg' && typeof b7SgtLook === 'function' ? b7SgtLook() : BOOK === 'dod' && typeof b9SgtLook === 'function' ? b9SgtLook() : BOOK === 'tcg' && typeof b10SgtLook === 'function' ? b10SgtLook() : null;
+  if ((BOOK === 'mt' || th === 'mt') && POR.sgt_mt) return 'sgt_mt';
+  if ((BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || th === 'dg') && POR.sgt_dg) return 'sgt_dg'; // Book Two has its own sergeant (55b)
+  return 'sgt'; }
+/* the scars a save's flags give, by the look that earned them. The sergeant's mortal-fight scar (S.f.sgtScar) is the book's flag, shared by
+   both squads in a two-squad book, so it goes to the sergeant whose fight can set it: Six's and Seven's mortal fights are the Third's (103,
+   125), Nine's is the Third's (167); in Ten both squads stand on a stretch, and the Sixth's is known by S.f.b10_c6_scarSaid (186). The cheek:
+   "There is a scar on your cheek from the stretch" (167_b9_ch7, 187_b10_ch7); Four, Six and Seven say only "a scar" (Claude's call: the same cheek). */
+function wearScars(look){ const f = (typeof S !== 'undefined' && S && S.f) || {};
+  if (look === 'sgt_dg' && ['hoc', 'bh', 'rg', 'dod'].includes(BOOK) && f.sgtScar) return ['cheek'];
+  if (look === 'sgt_dg' && BOOK === 'tcg' && f.sgtScar && !f.b10_c6_scarSaid) return ['cheek'];
+  if (look === 'sgt_mt' && BOOK === 'tcg' && f.b10_c6_scarSaid) return ['cheek'];
+  return []; }
+function wearFor(look){ if (WEAR_OFF) return null; const L = WEAR[look], st = L && L[BOOK], sc = [...((st && st.sc) || []), ...wearScars(look)];
+  return st || sc.length ? Object.assign({at:(L && L.at) || [], tt:(L && L.tt) || 11}, st || {}, {sc}) : null; }
+const wearKey = w => w ? [w.a, w.b, w.g, w.s, w.t, ...w.sc].join(',') : '';
+let WEAR_NOW = null; // the stage of the bust being painted (paintPortrait sets it; the helpers read it)
+/* a flag that came across from the book before (Book Three keeps Book One's: S.imported.f, 060) */
+const porFlag = k => { const f = (typeof S !== 'undefined' && S && S.f) || {}, i = typeof S !== 'undefined' && S && S.imported && S.imported.f; return f[k] || (BOOK === 'moi' && i ? i[k] : undefined); };
+function portraitState(id){ const look = porLook(id);
+  if (look === 'sgt') return porFlag('sgtScar') && BOOK !== 'bh' ? 'scar' : ''; // Six's mortal fight is the Third's (103): its scar is not the Fourth's
+  return id === 'tuft' ? (porFlag('c5_tuftMarked') ? 'marked' : '') : id === 'ellis' ? (porFlag('c7_ellisBack') ? 'back' : '') : ''; }
+/* the cache key: the look and its stage are in it, so a book or a squad switch repaints (the two-squad finales lend a layer under it: 107, 127, 167, 187) */
+function portraitKey(id, W, H){ const look = porLook(id); return `${id}|${W}x${H}|${portraitState(id)}|${BOOK}|${look}|${wearKey(wearFor(look))}`; }
 function drawPortrait(ctx, id, W, H, t){
-  const c = TPL[id] || TPL.sgt, hue = c.col, st = portraitState(id), key = `${id}|${W}x${H}|${st}|${BOOK}`, mo = REDUCE() ? 0 : 1;
+  const c = TPL[id] || TPL.sgt, hue = c.col, st = portraitState(id), key = portraitKey(id, W, H), mo = REDUCE() ? 0 : 1;
   let layer = PORTRAIT_CACHE.get(key);
   if (!layer) { layer = document.createElement('canvas'); layer.width = W; layer.height = H; paintPortrait(layer.getContext('2d'), id, W, H, st); if (PORTRAIT_CACHE.size > 24) PORTRAIT_CACHE.clear(); PORTRAIT_CACHE.set(key, layer); }
   const fl = 1 + (Math.sin(t/130)*.05 + Math.sin(t/57)*.03)*mo;
@@ -35,11 +95,11 @@ const PR = {
   /* shoulders and chest: sloped, rounded at the deltoid; returns nothing, leaves the path for clipping */
   torsoPath(ctx, wide, drop = 0){ ctx.beginPath(); ctx.moveTo(-wide - 2, 2); ctx.lineTo(-wide, -20 + drop); ctx.bezierCurveTo(-wide, -34 + drop, -wide*.82, -41 + drop, -wide*.52, -43 + drop); ctx.quadraticCurveTo(-19, -46 + drop*.3, -9, -50);
     ctx.lineTo(9, -50); ctx.quadraticCurveTo(19, -46 + drop*.3, wide*.52, -43 + drop); ctx.bezierCurveTo(wide*.82, -41 + drop, wide, -34 + drop, wide, -20 + drop); ctx.lineTo(wide + 2, 2); ctx.closePath(); },
-  neck(ctx, F, w = 7.2){ const {cy, skin} = F, u = F.h/20, x = F.x || 0; ctx.fillStyle = PR.lin(ctx, x - w, 0, x + w, 0, [[0, shade(skin, -.05)], [.45, shade(skin, -.25)], [1, shade(skin, -.8)]]);
+  neck(ctx, F, w = 7.2){ PR.wear(F); const {cy, skin} = F, u = F.h/20, x = F.x || 0; ctx.fillStyle = PR.lin(ctx, x - w, 0, x + w, 0, [[0, shade(skin, -.05)], [.45, shade(skin, -.25)], [1, shade(skin, -.8)]]);
     PR.path(ctx, [[x - w*.86, cy + 10*u], [x + w*.86, cy + 10*u], [x + w*1.05, -46], [x + w*1.6, -41], [x - w*1.6, -41], [x - w*1.05, -46]]); ctx.fill();
     ctx.save(); ctx.clip(); PR.soft(ctx, x + 1, cy + 19*u, w*1.5, 5, '#140806', .8); PR.stroke(ctx, 'rgba(30,12,8,.3)', .8, () => { ctx.moveTo(x - w*.5, cy + 17*u); ctx.quadraticCurveTo(x - w*.2, -52, x - 1.5, -46); ctx.moveTo(x + w*.5, cy + 17*u); ctx.quadraticCurveTo(x + w*.3, -52, x + 1.5, -46); }); ctx.restore(); },
   /* the face: head shape, planes, nose, mouth, eyes and brows. F: {cy, w, h, jaw, chin, skin, iris, lip, browCol, ...} */
-  face(ctx, F){
+  face(ctx, F){ PR.wear(F);
     const {cy, w, skin} = F, u = F.h/20, jaw = F.jaw ?? .8, chin = F.chin ?? 5, top = cy - 21*u, bot = cy + 19*u, x = F.x || 0, nz = F.nose ?? 1;
     ctx.save(); ctx.translate(x, 0);
     const path = () => { ctx.beginPath(); ctx.moveTo(0, top); ctx.bezierCurveTo(w*.62, top, w*.97, top + 7*u, w, cy - 3*u); ctx.bezierCurveTo(w*1.02, cy + 4*u, w*jaw*1.04, cy + 9*u, w*jaw, cy + 12.5*u); ctx.bezierCurveTo(w*jaw*.88, cy + 16.5*u, chin*1.3, bot, 0, bot);
@@ -67,9 +127,11 @@ const PR = {
     if (F.teeth) { ctx.fillStyle = 'rgba(226,214,196,.8)'; ctx.fillRect(-mw*.35, my - .15 - (sl + sr)*.2, mw*.9, .55); }
     PR.soft(ctx, -.9, my + 1.4, 1.7, .5, '#ffe8d8', .26); PR.soft(ctx, 0, my + 3.6*u, 3.6, 1.1*u, '#140604', .36); PR.soft(ctx, -1.4, bot - 4*u, 3.2, 2*u, '#ffdcc0', .1);
     if (F.under) F.under(ctx, F, path, top, bot);
+    if (WEAR_NOW) PR.wearFace(ctx, F, WEAR_NOW);
     ctx.restore();
     ctx.save(); path(); ctx.clip(); ctx.beginPath(); ctx.rect(w*.3, top - 4, w + 6, bot - top + 8); ctx.clip(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = rgba(F.rim, F.rimA ?? .2); ctx.lineWidth = 2.4; ctx.translate(-1.2, 0); path(); ctx.stroke(); ctx.restore(); // rim light
     [-1, 1].forEach(sd => PR.eye(ctx, F, sd)); [-1, 1].forEach(sd => PR.brow(ctx, F, sd));
+    if (WEAR_NOW && WEAR_NOW.sc.includes('brow')) PR.wearBrow(ctx, F);
     ctx.restore(); },
   eye(ctx, F, sd){ const u = F.h/20, ex = sd*F.w*.4, ey = F.cy - 1*u, ew = F.w*.2, eh = 1.35*u*(F.open ?? 1), look = F.look ?? .25, far = sd > 0;
     const almond = () => { ctx.beginPath(); ctx.moveTo(ex - ew, ey + .2); ctx.quadraticCurveTo(ex - ew*.1, ey - eh*2.1, ex + ew, ey - .1); ctx.quadraticCurveTo(ex + ew*.1, ey + eh*1.5, ex - ew, ey + .2); ctx.closePath(); };
@@ -101,6 +163,37 @@ const PR = {
   stitch(ctx, col, w, f){ ctx.save(); ctx.setLineDash([.9, .9]); PR.stroke(ctx, col, w, f); ctx.restore(); },
   /* hair as many fine strokes following a flow: f(i, r) returns [x0, y0, cx, cy, x1, y1] */
   strands(ctx, n, cols, w, seed, f){ const r = PR.rng(seed); ctx.lineCap = 'round'; for (let i=0;i<n;i++){ const p = f(i, r); ctx.strokeStyle = cols[i % cols.length]; ctx.lineWidth = w*(.6 + r()*.6); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.quadraticCurveTo(p[2], p[3], p[4], p[5]); ctx.stroke(); } },
+  /* ---- the road on a face (WEAR, above): what a book's stage does to F, then to the face, then over the finished bust ---- */
+  mix(a, b, k){ const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v)*k).toString(16).padStart(2, '0')).join(''); },
+  /* once per bust, before anything reads F: the years and the tiredness, the sun on the skin and the lips, the jaw thinned, the brows greying */
+  wear(F){ const w = WEAR_NOW; if (!w || F._worn) return F; F._worn = 1;
+    if (w.a) F.age = (F.age || 0) + w.a; if (w.b) F.bags = (F.bags || 0) + w.b;
+    if (w.s && /^#[0-9a-f]{6}$/i.test(F.skin)) { F.skin = PR.mix(F.skin, '#7a4a2c', .28*w.s); if (F.lip) F.lip = PR.mix(F.lip, F.skin, .22*w.s); }
+    if (w.t) { F.jaw = (F.jaw ?? .8)*(1 - .1*w.t); F.chin = (F.chin ?? 5)*(1 - .14*w.t); F.bags = (F.bags || 0) + .2*w.t; }
+    if (w.g && w.at.includes('brow') && /^#[0-9a-f]{6}$/i.test(F.browCol || '')) F.browCol = PR.mix(F.browCol, '#b8b0a6', .45*w.g);
+    return F; },
+  /* inside the face's clip, after its own marks: hollow cheeks, the sun's burn and pale squint-lines, grey in a beard or stubble, a scar */
+  wearFace(ctx, F, w){ const u = F.h/20, cy = F.cy, W = F.w; ctx.lineCap = 'round';
+    if (w.t) { [-1, 1].forEach(sd => PR.soft(ctx, sd*W*.6, cy + 7.8*u, W*.26, 3.4*u, '#1a0a06', (sd < 0 ? .3 : .36)*w.t)); PR.soft(ctx, -W*.88, cy - 6*u, W*.2, 3.4*u, '#1a0a06', .18*w.t); PR.soft(ctx, -W*.45, cy + 1.6*u, W*.22, 1.2*u, '#1a0a06', .16*w.t); } // under the cheekbones; the temple; under the near eye
+    if (w.s) { PR.soft(ctx, -.4, cy + 5.6*u, 2.6, 2.4*u, '#b4482a', .24*w.s); [-1, 1].forEach(sd => PR.soft(ctx, sd*W*.5, cy + 3.6*u, W*.24, 1.8*u, '#b4482a', (sd < 0 ? .18 : .1)*w.s)); PR.soft(ctx, -W*.2, cy - 11*u, W*.6, 3*u, '#7a3a1c', .12*w.s); // the nose, the cheekbones, the brow, burned
+      [-1, 1].forEach(sd => PR.stroke(ctx, `rgba(255,232,206,${(sd < 0 ? .2 : .05)*w.s})`, .3, () => { for (let i = 0; i < 3; i++){ ctx.moveTo(sd*W*.66, cy + (-.5 + i*.8)*u); ctx.lineTo(sd*(W*.78 + i*.15), cy + (-1.1 + i*1.1)*u); } })); } // the squint-lines, pale where the sun never got into them
+    const bd = w.at.includes('beard'), sb = w.at.includes('stubble');
+    if (w.g && (bd || sb)) { const r = PR.rng(91), n = Math.round((bd ? 150 : 60)*w.g);
+      for (let i = 0, k = 0; i < n*6 && k < n; i++){ const x = (r() - .5)*2*W*.85, yy = (bd ? 10 : 8) + r()*(bd ? 9.6 : 10); if (Math.abs(x) < 4.8 && yy > 10.2 && yy < 14.4) continue; // not on the mouth
+        if (r() > (Math.abs(x) < 5 && yy > 14 ? 1 : .3) || r() < .5*Math.max(0, x/W)) continue; k++; const y = cy + yy*u; // the chin first, the jaw after; less on the dark side
+        if (bd) { ctx.strokeStyle = `rgba(196,190,180,${.18 + r()*.16})`; ctx.lineWidth = .3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (r() - .5)*.4, y + .6 + r()*.5); ctx.stroke(); }
+        else { ctx.fillStyle = `rgba(186,180,172,${.14 + r()*.12})`; ctx.fillRect(x, y, .38, .38); } } } // grey coming in at the chin, then along the jaw
+    if (w.sc.includes('cheek')) { const p = () => { ctx.moveTo(-W*.7, cy + 1.6*u); ctx.quadraticCurveTo(-W*.62, cy + 6.4*u, -W*.4, cy + 10.4*u); }; // the stretch's scar, along the near cheek
+      PR.stroke(ctx, 'rgba(96,34,26,.5)', 1.15, p); PR.stroke(ctx, 'rgba(236,188,168,.42)', .42, () => { ctx.save(); ctx.translate(-.3, -.2); p(); ctx.restore(); });
+      PR.stroke(ctx, 'rgba(80,28,22,.45)', .3, () => { for (let i = 0; i < 4; i++){ const k = (i + .5)/4, x = lerp(-W*.69, -W*.42, k*k*.6 + k*.4), y = cy + lerp(2.2, 9.8, k)*u; ctx.moveTo(x - 1, y - .3); ctx.lineTo(x + 1, y + .3); } }); } },
+  /* a healed nick through the near brow, after the brows are drawn: the hair parted by it, a pale line above and below */
+  wearBrow(ctx, F){ const u = F.h/20, x = -F.w*.5, y0 = F.cy - 7.4*u, y1 = F.cy - 2.8*u; ctx.lineCap = 'round';
+    PR.stroke(ctx, shade(F.skin, .02), (F.browW ?? 1.4)*.5, () => { ctx.moveTo(x + .5, F.cy - 5.6*u); ctx.lineTo(x - .2, F.cy - 4.2*u); });
+    PR.stroke(ctx, 'rgba(70,30,22,.28)', .6, () => { ctx.moveTo(x + .8, y0); ctx.lineTo(x - .5, y1); }); PR.stroke(ctx, 'rgba(232,196,170,.38)', .34, () => { ctx.moveTo(x + .6, y0 + .2); ctx.lineTo(x - .6, y1); }); },
+  /* over the finished bust: grey at the temples, where the hair shows there (the far side in shadow) */
+  wearAfter(ctx, F, w){ if (!(w.g && w.at.includes('temple'))) return; const u = F.h/20, x0 = F.x || 0, r = PR.rng(57), n = Math.round(14*w.g); ctx.lineCap = 'round';
+    [-1, 1].forEach(sd => { for (let i = 0; i < n; i++){ const y1 = F.cy - (3 + r()*3)*u*w.tt/11, x1 = x0 + sd*(F.w + .2 - r()*.8); ctx.strokeStyle = `rgba(210,204,194,${(.26 + r()*.22)*(sd < 0 ? 1 : .4)})`; ctx.lineWidth = .26 + r()*.16;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(x1 + sd*.3, F.cy - w.tt*.7*u, x1 - sd*(1.2 + r()*1.4)*w.tt/11, F.cy - (w.tt + r()*2.4*w.tt/11)*u); ctx.stroke(); } }); }, // fine, swept up and back with the hair (tt: how high, under a hat)
 };
 /* bust helpers shared by every book (first written for Book Five): hair with volume over the skull, hanging scale, quilting, the Whitefinder shield,
    and the garment that rises from the shoulders to the neckline in one piece (body, band, light) */
@@ -168,7 +261,7 @@ const BP = {
      o: {wide, drop, trap: how hard the trapezius rises, nx: half-width where it meets the neck, ny: how high it climbs at the neck's sides, cb: the neckline's low point in front, v: a V opening, c1, c2}.
      Returns {path, top (the neckline as a sub-path), topIn (the same, continuing a path from (−nx, ny)), pt(t, off): a point on the neckline, t −1..1, off pushes down, nx, ny, cb, wd}.
      Draw the neck first, then this, then textures clipped to B.path, then BP.light; any bust in any book can use it. */
-  body(ctx, F, o){ const u = F.h/20, wd = o.wide, dr = (o.drop || 0) - (o.shrug ?? SHRUG), /* v13.5.5 (David: the necks run long): every shoulder line sits SHRUG higher */ nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = o.trap ?? 0, v = o.v;
+  body(ctx, F, o){ PR.wear(F); const u = F.h/20, wd = o.wide, dr = (o.drop || 0) - (o.shrug ?? SHRUG), /* v13.5.5 (David: the necks run long): every shoulder line sits SHRUG higher */ nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = o.trap ?? 0, v = o.v;
     const topIn = () => { if (v) { ctx.lineTo(0, cb); ctx.lineTo(nx, ny); } else { ctx.quadraticCurveTo(-nx*.6, cb, 0, cb); ctx.quadraticCurveTo(nx*.6, cb, nx, ny); } };
     const path = () => { ctx.beginPath(); ctx.moveTo(-wd - 2, 2); ctx.lineTo(-wd, -20 + dr); ctx.bezierCurveTo(-wd, -34 + dr, -wd*.82, -41 + dr, -wd*.52, -43 + dr); ctx.bezierCurveTo(-wd*.3, -44 + dr - tr, -nx - 2 - tr*.3, ny + 8 - tr*.4, -nx, ny); topIn();
       ctx.bezierCurveTo(nx + 2 + tr*.3, ny + 8 - tr*.4, wd*.3, -44 + dr - tr, wd*.52, -43 + dr); ctx.bezierCurveTo(wd*.82, -41 + dr, wd, -34 + dr, wd, -20 + dr); ctx.lineTo(wd + 2, 2); ctx.closePath(); };
@@ -399,7 +492,7 @@ const POR = {
     PR.strands(ctx, 110, ['#e8e0d0', '#b8b0a0', '#8a8478', '#6a665e'], .45, 41, (i, r) => { const x0 = bx + (r() - .5)*20, y0 = by + 8 + r()*10, x1 = bx + (x0 - bx)*.35 + (r() - .5)*4, y1 = y0 + 10 + r()*16; return [x0, y0, (x0 + x1)/2 + (r() - .5)*2, (y0 + y1)/2, x1, Math.min(y1, by + 36)]; });
     ctx.beginPath(); ctx.moveTo(bx - .4, by + 9.8); ctx.bezierCurveTo(bx - 3, by + 9, bx - 6.6, by + 10.6, bx - 7.4, by + 15.4); ctx.quadraticCurveTo(bx - 4, by + 12.6, bx - .4, by + 12.2); ctx.quadraticCurveTo(bx + 4, by + 12.6, bx + 7.4, by + 15.4); ctx.bezierCurveTo(bx + 6.6, by + 10.6, bx + 3, by + 9, bx + .4, by + 9.8); ctx.fillStyle = PR.lin(ctx, bx - 7, 0, bx + 7, 0, [[0,'#e0d8c8'], [.5,'#b0a898'], [1,'#4a463e']]); ctx.fill();
     return F; },
-  ellis(ctx){ const F = {cy:-74, w:12.8, h:19.5, jaw:.74, chin:4.6, skin:'#b89a80', iris:'#6a806c', lip:'#9a6458', browCol:'#2a1c12', browW:1.15, arch:.5, browL:.2, rim:'#8fb3a0', rimA:.15, nose:.95, look:-.75, smileL:-.1, smileR:.55, mouthW:3.8};
+  ellis(ctx, st){ const F = {cy:-74, w:12.8, h:19.5, jaw:.74, chin:4.6, skin:'#b89a80', iris:'#6a806c', lip:'#9a6458', browCol:'#2a1c12', browW:1.15, arch:.5, browL:.2, rim:'#8fb3a0', rimA:.15, nose:.95, look:-.75, smileL:-.1, smileR:.55, mouthW:3.8};
     // the quiver over her right shoulder, grey fletching
     ctx.fillStyle = PR.lit(ctx, '#4a3624', '#1a120a', 18, 34); ctx.save(); ctx.translate(26, -40); ctx.rotate(.32); ctx.fillRect(-4.5, -12, 9, 40); ctx.restore();
     for (let i=0;i<7;i++){ const x = 19 + i*1.9, y = -54 + i*.7 + (i%2)*1.2, c = ['#9a9a92','#7a7a74','#b8b8b0'][i%3]; PR.stroke(ctx, '#3a2a1a', .6, () => { ctx.moveTo(x + 1, y + 10); ctx.lineTo(x, y - 2); }); ell(ctx, x - .3, y + 2, .9, 3.6, c, -.12); ell(ctx, x + .5, y + 2.2, .6, 3.2, shade(c, -.4), -.1); } // grey fletching
@@ -415,6 +508,7 @@ const POR = {
     PR.strands(ctx, 40, ['#3a2a1c', '#1a120a', '#5a4430'], .5, 61, (i, r) => { const sd = r() < .5 ? -1 : 1, x0 = sd*r()*4, y0 = F.cy - 14, x1 = sd*(8 + r()*5), y1 = F.cy - 17 + r()*14; return [x0, y0, x0 + sd*5, F.cy - 21, x1, y1]; });
     ctx.fillStyle = '#2a1c12'; ctx.beginPath(); ctx.moveTo(12, F.cy - 6); ctx.bezierCurveTo(20, F.cy, 22, F.cy + 20, 18, F.cy + 34); ctx.lineTo(15, F.cy + 33); ctx.bezierCurveTo(17, F.cy + 20, 14, F.cy + 6, 10.6, F.cy - 2); ctx.fill(); ctx.fillStyle = '#6a5a3a'; ctx.fillRect(12.2, F.cy - 2.4, 3.4, 1.6); // the tail, tied
     PR.strands(ctx, 3, ['#3a2a1c'], .45, 62, (i, r) => { const x = -9.6 + i*1.2, y = F.cy - 12; return [x, y, x - 2, y + 6, x - 1 - r(), y + 12 + i*2]; });
+    if (st === 'back') PR.strands(ctx, 11, ['rgba(150,144,138,.75)', 'rgba(122,118,112,.75)', 'rgba(168,162,154,.65)'], .48, 63, (i, r) => { const x0 = -11.8 + r()*1.4, y0 = F.cy - 5 - r()*4; return [x0, y0, x0 + 1.2, F.cy - 16.4, -4.6 - r()*2.6, F.cy - 20.2 + r()*1.2]; }); // out of the grey: "a streak of it back from the left temple, the colour of ash" (046_chapter7)
     // the horn bow, held; and the glove
     ctx.lineCap = 'round'; ctx.strokeStyle = PR.lin(ctx, -40, 0, -26, 0, [[0,'#d8c8a0'], [1,'#6a5a3a']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(-30, -98); ctx.bezierCurveTo(-44, -76, -36, -40, -34, -24); ctx.bezierCurveTo(-32, -8, -40, 4, -38, 12); ctx.stroke();
     PR.stroke(ctx, 'rgba(230,220,200,.55)', .4, () => { ctx.moveTo(-30, -98); ctx.lineTo(-38, 12); });
@@ -451,6 +545,7 @@ const POR = {
 };
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
-  (id === 'sgt' && (BOOK === 'mt' || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'mt') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'mt') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'mt')) && POR.sgt_mt ? POR.sgt_mt : id === 'sgt' && (BOOK === 'dg' || BOOK === 'hoc' || (BOOK === 'bh' && typeof b6SgtLook === 'function' && b6SgtLook()) || (BOOK === 'rg' && typeof b7SgtLook === 'function' && b7SgtLook() === 'dg') || (BOOK === 'dod' && typeof b9SgtLook === 'function' && b9SgtLook() === 'dg') || (BOOK === 'tcg' && typeof b10SgtLook === 'function' && b10SgtLook() === 'dg')) && POR.sgt_dg ? POR.sgt_dg : POR[id] || POR.sgt)(ctx, st); // Book Two has its own sergeant (55b)
+  const look = porLook(id); WEAR_NOW = wearFor(look);
+  try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; }
   ctx.restore();
 }

@@ -975,8 +975,8 @@ B6CH7.finale = {
     add.push({k:'b67meet'}); P.splice(P.length - 1, 0, ...add); return P; };
   /* the Fourth's sergeant's portrait: painted once in Book One's look (S.thread 'h'), then lent to 19's cache for each frame */
   let b67Sgt4 = null;
-  const sgt4Layer = () => { const key = `sgt|400x520|${portraitState('sgt')}|${BOOK}`, was = S.thread;
-    try { b6SgtFor('h'); S.thread = 'h'; PORTRAIT_CACHE.delete(key); const cv = document.createElement('canvas'); cv.width = 400; cv.height = 520; drawPortrait(cv.getContext('2d'), 'sgt', 400, 520, 0); b67Sgt4 = PORTRAIT_CACHE.get(key) || null; PORTRAIT_CACHE.delete(key); }
+  const sgt4Layer = () => { let key = '', was = S.thread;
+    try { b6SgtFor('h'); S.thread = 'h'; key = portraitKey('sgt', 400, 520); PORTRAIT_CACHE.delete(key); const cv = document.createElement('canvas'); cv.width = 400; cv.height = 520; drawPortrait(cv.getContext('2d'), 'sgt', 400, 520, 0); b67Sgt4 = PORTRAIT_CACHE.get(key) || null; PORTRAIT_CACHE.delete(key); }
     finally { S.thread = was; b6SgtFor(b6Thread()); } return key; };
   showFinale = function(i = 0){ if (!b6On()) return _sf(i);
     const P = finPages(); i = clamp(i | 0, 0, P.length - 1); const pg = P[i]; if (!mine(pg.k)) return _sf(i);
@@ -1002,7 +1002,7 @@ B6CH7.finale = {
         <div class="fin-who"><h2>${esc(info.nm)}</h2><div class="r">${esc(info.role)}</div>${sgt ? '' : gone ? (info.where ? `<div class="pips">${esc(info.where)}</div>` : '') : `<div class="pips">${info.loyv}</div>`}</div></div>
       <h3 class="fin-h">${esc(info.title)}</h3><div class="narr fin-txt">${fmt(info.txt || '')}</div>`;
       finAnim = t => { const cv = $('#fpc'); if (!cv) { finAnim = null; return; }
-        if (sgt && b67Sgt4) { const key = `sgt|400x520|${portraitState('sgt')}|${BOOK}`, own = PORTRAIT_CACHE.get(key); PORTRAIT_CACHE.set(key, b67Sgt4); try { drawPortrait(cv.getContext('2d'), 'sgt', 400, 520, t); } finally { if (own) PORTRAIT_CACHE.set(key, own); else PORTRAIT_CACHE.delete(key); } }
+        if (sgt && b67Sgt4) { const key = portraitKey('sgt', 400, 520), own = PORTRAIT_CACHE.get(key); PORTRAIT_CACHE.set(key, b67Sgt4); try { drawPortrait(cv.getContext('2d'), 'sgt', 400, 520, t); } finally { if (own) PORTRAIT_CACHE.set(key, own); else PORTRAIT_CACHE.delete(key); } }
         else drawPortrait(cv.getContext('2d'), id, 400, 520, t); }; }
     toTop(); $('#app').innerHTML = `<div class="fin" id="fin">${body}
     <div class="fin-nav"><button class="btn" id="fBack">Back</button><span class="fin-pg">${i + 1} / ${P.length}</span><button class="btn primary" id="fNext">Next</button></div></div>`;
