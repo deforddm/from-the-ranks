@@ -181,7 +181,7 @@ const unused = Object.keys(ALLOW).filter(k => !res.some(o => o.id === k)); if (u
    a single click can take minutes (seen on v7.0.1 as on v7.1.0); the check is about one node in the real sheet, not about that pile. */
 const { page: page2, errors: errors2 } = await openGame(br, srv.url, {});
 const ui = await page2.evaluate(async () => {
-  S = newState('Hask'); S.squad = [...PORDER]; migrate(S); S.chapter = 1; S.f.c1_wj = 1; S.f.c1_reported = 1; S.f.c1_tent = 1; S.f.c1_bones = 1; S.f.c1_claw = 1; S.silver = 3; save(); startExplore('pale_night');
+  S = newState('Hask'); S.squad = [...PORDER]; migrate(S); S.chapter = 1; S.f.c1_wj = 1; S.f.c1_reported = 1; S.f.c1_tent = 1; S.f.c1_bones = 1; S.f.c1_claw = 1; S.f.b1_c1_dujek = 1; /* v13.8 (David, Nov 15): meetings: the High Fist at the pits, spoken to */ S.silver = 3; save(); startExplore('pale_night');
   talk('c1_pell'); const sh = document.getElementById('sheet');
   const r = {line: (sh.querySelector('.unspoken') || {}).textContent || '', ch: [...sh.querySelectorAll('.choice')].map(b => b.textContent)};
   const ny = [...sh.querySelectorAll('.choice')].find(b => b.textContent === 'Not yet.'); ny && ny.click(); await new Promise(z => setTimeout(z, 50));

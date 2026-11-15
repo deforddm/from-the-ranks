@@ -164,6 +164,7 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
     if (preUsed('andii_roof')) x.push('Kettle lit a Tiste Andii up like a lamp, and the Fourth looked it in the face. Kalam told them not to.');
     if (heldDowns('andii_roof') > 0) x.push(`${heldDowns('andii_roof') > 1 ? 'Two Tiste Andii' : 'A Tiste Andii'} went down on the leads of a Daru roof under the Fourth's blades, and got up, and went elsewhere. They live a very long time. They remember roofs.`);
     if (preUsed('c4_clan')) x.push('A chimney burned blue on the Daru ridge in the small hours. The Watch said the gas. Fiddler has not said anything yet, at length.');
+    if (f.b1_c4_sappers) x.push('Kettle kept the nest under the crossing dry for two nights, beside Hedge and Fiddler. Hedge has promised her second place in the queue for a better cusser.');
     if (preUsed('reprisal')) x.push('The Guild came to an alley with knives, to ask a question. The Fourth answered with Moranth clay, and the Watch rattles went on till dawn.');
     return x; },
 
@@ -260,6 +261,41 @@ ${SQUAD().includes('tuft') ? `Tuft has taken a step back. She hasn't noticed she
 "Planks between roofs, you cross one at a time. *One.* Nobody waits in the middle. You don't look down to see how far down is." He lets go of your sleeve. "And the cusser." He looks past you at Kettle's satchel. "She's not to throw it up there. Not a sharper near the edge, not a burner anywhere. You set fire to a roof in this city and the gas finds it, and then there's no city, and then Whiskeyjack's annoyed."
 
 ${SQUAD().includes('kettle') ? `Kettle, who has heard every word, looks at him with the expression of a woman being told not to breathe. "Fiddler," she says. "I *know*." He looks back at her. "I know you know," he says. "I'm telling you so you'll remember I told you."` : ''}`,
+      ch:[{t:'Kettle is at the far end of the vault with Hedge.', req:()=>SQUAD().includes('kettle') && !S.f.b1_c4_sappers, go:'c4_sappers'},
+          {t:'"Ellis. You\'ve been up there."', req:()=>SQUAD().includes('ellis'), go:'c4_start_ellis'},
+          {t:'Up the ladder.', go:()=>{ startExplore('roofs_gadrobi'); talk('c4_roofs_arrive'); }}]}),
+    /* v13.8 (David, Nov 15): meetings. The plan's star for Book One: Kettle works beside Fiddler and Hedge under the crossing.
+       Ch3 already has the squad laying the crate with them (c3_work_*); this is the two nights the Ch4 intro skips ("guarding a hole"),
+       when Kettle sat the nest with the two sappers. GotM ch. 11-13: the Bridgeburners are the city's "road crew", laying mines, the
+       nights of the rooftops (canon-chronology 7.6, 11.2, 13.11, from R GotM ch. 7, 11, 13; the mines told to Lorn at 20.4); Hedge and
+       Fiddler are alive and in the city through the Fete (22.2, 23.7; W *Hedge*, *Fiddler*). Closed (R + W). Rule 10: the nest
+       is kept dry, nothing is fired or set. Book Ten's b10_c7_hedge has Kettle ask "what he's using for cussers these days"; this is where
+       that interest starts. Hedge's later munitions are never named (rule 93); he only wants a better cusser, which he always did.
+       Sets b1_c4_sappers; Kettle +1; an edge on the plank-down check (Fiddler tells her where the Daru pin a plank). */
+    c4_sappers:()=>({sp:'Hedge and Fiddler · sappers', scene:'cellar', again:'Kettle and Hedge, shoulder to shoulder over a niche, pressing clay.', fx:()=>{ S.f.b1_c4_sappers=1; loy('kettle',1); }, txt:
+`Kettle has spent both nights since the dye-shop down here. Nobody ordered it. On the first night she came down the ladder at the change of watch with the lantern and didn't go back up, and Hedge, on his knees at the junction run, moved over without looking round to make room for her, and that was that.
+
+She's there now, at the far end of the vault where the pipes join, with Hedge, the two of them shoulder to shoulder over a niche, pressing new clay round a cusser's collar with their thumbs. The damp gets into the wax down here. You check it every night, or you haven't got a nest, you've got a wet hole full of maybes.
+
+"Never said *Moranth* cussers," Hedge is saying. "Moranth cussers are perfect. That's what's wrong with them. Perfect's finished. Nobody's making them better."
+
+"Nobody *needs* to make them better." Kettle, thumbing clay. "It's a cusser."
+
+"There's always a better one." Hedge sits back on his heels and looks at the niche the way other men look at a sunset. "Somewhere. Some day somebody's going to make it out of something nobody's thought of, in a shed, and blow the shed down doing it. And when they do, I'm first in the queue."
+
+Kettle considers that with the whole of her face. "Second," she says.
+
+"Second." He thinks about it. "You can have second. And then you tell me what you'd do with it. You'd do something stupid. I want to know what."${SQUAD().includes('tuft') ? `
+
+Tuft, at the foot of the ladder, has been watching Hedge rather than the cussers. "He talks to them," she says, very low. He does: under his breath, the whole time, the way Ohl talks to a stitch.` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk, beside you, not quite quietly enough: "She sleeps in the day. Under the eaves, with her boots on." A pause. "She's happy. I didn't know she could do that without something going off."` : ''}
+
+Fiddler has come down the vault with the roll of timer-wax. He doesn't look at the niche; he has looked at it twice already tonight. He crouches by Kettle instead. "Roofs," he says. "One more thing. A Daru plank's pinned. Iron pin, under the lead, on the near side, so it won't walk. You want a plank gone in a hurry, you don't heave it. You find the pin."
+
+Kettle doesn't say *I know* this time. "Near side," she says. Fiddler nods, once, and goes back to the ladder.
+
+Hedge spits on the clay, which is a sapper's blessing, and says to Kettle without looking at her, "Same tomorrow?" and Kettle says, "Same tomorrow," and neither of them asks the sergeant.`,
       ch:[{t:'"Ellis. You\'ve been up there."', req:()=>SQUAD().includes('ellis'), go:'c4_start_ellis'},
           {t:'Up the ladder.', go:()=>{ startExplore('roofs_gadrobi'); talk('c4_roofs_arrive'); }}]}),
     c4_start_ellis:()=>({sp:'Ellis', fx:()=>{S.f.c4_ellisRoofs=1;}, txt:
@@ -1058,7 +1094,7 @@ They're coming down to the plank.`,
       ch:[{t:'"Hold the plank."', go:()=>startBattle('c4_clan',{})},
           {t:'Kettle skims a sharper along the Daru ridge, away from the edge.', tag:'uses 1 sharper', req:()=>S.inv.sharper>0, fx:()=>{S.inv.sharper--;}, go:()=>startBattle('c4_clan',{pre:true})},
           {t:'Throw the plank down before they reach it.', check:['might',16], near:false,
-            edges:id=>[id === 'kettle' && ['a sapper knows what a thing is pinned with', 1], S.f.c4_planks && ['Ellis read these planks for you', 1]],
+            edges:id=>[id === 'kettle' && ['a sapper knows what a thing is pinned with', 1], id === 'kettle' && S.f.b1_c4_sappers && ['Fiddler told her where the pin is', 1], S.f.c4_planks && ['Ellis read these planks for you', 1]],
             go:'c4_plank_down', fail:'c4_plank_stuck'}]}),
     c4_plank_down:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_plankDown=1; }, txt:
 `${by({

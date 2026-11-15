@@ -425,7 +425,7 @@ You give him ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}.
 
 "On the rolls," says Dujek. "Top of the page." He says something else after that, and the wind takes it, and you don't ask for it back.
 
-` : ''}Somewhere in Onearm's Host, somebody has noticed. You've carried that about for months without knowing you were carrying it. It was him. Of course it was him.`,
+` : ''}Somewhere in Onearm's Host, somebody has noticed. You've carried that about for months without knowing you were carrying it. It was him. Of course it was him.${S.f.b1_c1_dujek ? ` At the burial field at Pale he looked at the Fourth a moment longer than he needed to, and you put it down to the dark.` : ''}`,
       ch:[{t:'Brisk has a question, sir.', req:()=>C7H.has('brisk') && !S.f.c7_askedTav, go:'c7_sending_tav'},
           {t:'"Sir. A soldier of the Second. Fourth Regiment."', req:()=>C7H.isDead('brisk') && !S.f.c7_askedTav, go:'c7_sending_tav'},
           {t:'"Ohl\'s here, sir."', req:()=>C7H.has('ohl') && !S.f.c7_askedOhl, go:'c7_sending_ohl'},
@@ -436,7 +436,9 @@ You give him ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}.
 
 "Sir. Brisk, sir. Corporal, Fourth Squad." A breath. "My brother's Second. Fourth Regiment. Tavrin, called Tav. Of Cawn." Another breath. "Sir."
 
-The voice is quiet a moment. "Corporal, I've a whole Host to count and one arm to count it on. I don't carry the rolls in my head." Not unkind. Tired. "The Moranth carry them. Living, and the other kind. They never lose a thing; it's a religious matter with them. Ask the Moranth." A pause. "I stopped reading the other kind after Pale. Ask for the living first."
+The voice is quiet a moment. "Corporal, I've a whole Host to count and one arm to count it on. I don't carry the rolls in my head." Not unkind. Tired. "The Moranth carry them. Living, and the other kind. They never lose a thing; it's a religious matter with them. Ask the Moranth." A pause. "I stopped reading the other kind after Pale. Ask for the living first."${S.f.b1_c1_dujek ? `
+
+Brisk's mouth moves, very slightly. He made it a rule at the pits, the night of the Hounds, with the helmets in a row in front of him. She heard him make it.` : ''}
 
 "Sir." Brisk steps back into her place. Her face does nothing at all. Her hand has gone to her gorget, where the letter is.` :
 `You ask it yourself. Brisk can't.

@@ -97,6 +97,7 @@ function journalNotes(){
   const c4 = ch >= 4 ? [
     f.c4_key === 'shield' ? `On the roofs the Fourth stood between a Guild boy and the Tiste Andii hunting him, and held. The boy's name is Vell.${SQUAD().includes('vell') ? ` He walks with the Fourth now, with forty feet of tarred line on his shoulder.` : ''}${f.c4_ellisToc ? ` Ellis went east that night, into the hills, to find her captain.` : ''}` : f.c4_key === 'aside' ? `On the roofs you let the Tiste Andii through. It killed the Guild boy in one motion, looked at the sergeant, and nodded.` : '',
     f.c4_reprisalFought ? `The Guild came for the Fourth after. Fewer of them walked home than went out.` : '',
+    f.b1_c4_sappers ? `Kettle sat both nights before the roofs in the hole under the crossing with Hedge and Fiddler, keeping the nest dry. Hedge has promised her second place in the queue for a better cusser.` : '',
   ] : [];
   const c3 = ch >= 3 ? [
     f.c3_key === 'report' ? `You told the grey-haired woman at the dye-shop what the Bridgeburners are doing under the city, for forty silver.${f.c7_wjKnows ? ' Whiskeyjack knows now.' : ' Whiskeyjack does not know.'}` : f.c3_key === 'refuse' ? `You told the grey-haired woman at the dye-shop nothing, and paid for it in an alley. The Claw has the sergeant's name now.` : '',
@@ -111,6 +112,7 @@ function journalNotes(){
   const c1 = ch >= 1 ? [
     f.c1_reported ? `Whiskeyjack: the Fourth rides south overland with the baggage. Darujhistan.` : `Report to Whiskeyjack at the Bridgeburners' fire.`,
     f.c1_paran ? `Captain Paran walked the lines. Noble-born. Trying.` : '',
+    f.b1_c1_dujek ? `Dujek Onearm at the Second's burial field, reading the helmets: "Ask for the living first. The dead keep."` : '',
     f.c1_sawHairlock ? `Tattersail's puppet turned its head.` : '',
     f.c1_plant ? `Tattersail knows about Tuft's badge. So, now, do you.` : '',
     f.c1_hounds ? `The Hounds of Shadow came through the tent lines. ${f.c1_key === 'claw' ? 'You held the crate.' : 'You held the line.'}` : '',
@@ -193,6 +195,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.8.0', ['Book One meets more of the canon (the first of ten books getting this). At Pale, the night before the Hounds, High Fist Dujek is alone at the top of the Second\'s burial field, reading the helmets: speak to him. In Chapter Four Kettle spends the nights in the vault with Fiddler and Hedge, and learns where the Daru pin a plank.']],
   ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],
   ['13.7.0', ['Two of the series\' promised callbacks land. Book Nine: Rumjugs and Sweetlard, at the barracks gate in Letheras, sergeants now, loading a handcart. Book Ten: when the Fourth comes over the ridge, ask its sergeant about an old sapper called Hedge.', 'The series\' transfers are checked end to end: every road that carries a squad from one book to the next, through all ten books.']],
   ['13.6.0', ['Every chapter of every book now opens on a painted plate of its own, as Book One\'s always did: seventy-one in all, each drawing the chapter\'s opening caption. Book One\'s eight are redrawn to match. The Classic art setting still shows the drawn scenes instead.', 'The squad walks in the same order in every scene as on the map: the sergeant in front, then each squadmate in roster order. Before, most scenes had the roster back to front.', 'Walking figures redrawn to match their portraits: Thegg (long brown hair, fur at the shoulders, bead collar, a blue iron-rimmed shield), Ammet, Tobet, Pessa, the Letherii sergeant, and Vell in Book One.']],

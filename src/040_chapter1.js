@@ -82,6 +82,8 @@ const CH1 = {
       {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:9, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', show:()=>!S.f.c1_kalamWary || !S.f.c1_wj || /^c1_(wj|brief|qb|kalam|deck|card)/.test(S.node || '')},
       {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>S.f.c1_tent?'c1_tent_again':'c1_tent', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent},
       {id:'pell', name:'Quartermaster Pell', kind:'pell', x:6, y:6, node:()=>'c1_pell'},
+      // v13.8 (David, Nov 15): meetings. The High Fist at the top of the Second's burial field; gone toward the city once he has spoken
+      {id:'dujek', name:'A one-armed man', kind:'dujek', x:12, y:2, still:true, node:()=>S.f.b1_c1_dujek?'c1_dujek_again':'c1_dujek', show:()=>!S.f.c1_hounds && (!S.f.b1_c1_dujek || /^c1_dujek/.test(S.node || '')), fresh:()=>!S.f.b1_c1_dujek},
       // Hedge and Fiddler, on the dark side of the Bridgeburners' fire with a blanket and two bones
       {id:'fiddler', name:'Fiddler', kind:'fiddler', x:11, y:10, node:()=>'c1_bones', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_bones},
       {id:'hedge', name:'Hedge', kind:'hedge', x:12, y:10, node:()=>'c1_bones', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_bones},
@@ -153,6 +155,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
     S.f.c1_hairlockLooked && !S.f.c1_sawHairlock && 'The puppet got down off its crate unseen.',
     S.f.c1_raidLet && 'Somewhere in the Host, a deserter of the Second has a crate of Moranth munitions and nothing left to lose. The Fourth walked past.',
     S.f.c1_raidCrate && 'The big one went into the tent lines with a Moranth crate under his arm. He was not followed.',
+    S.f.b1_c1_dujek && 'High Fist Dujek read the Second\'s helmets at the burial field, alone, and said it was the last night he would.',
     S.f.c1_houndDown && `${S.f.c1_houndDown > 1 ? 'Two Hounds of Shadow' : 'A Hound of Shadow'} went down in the ash of the Pale under marine blades, and got up, and went home. Hounds remember.`],
 
   dlg:{
@@ -576,6 +579,51 @@ After a while Brisk stands. She leaves the shield against the helmets.
 
 Then: "Sergeant." And the conversation, such as it was, is over, and something in it has been put down that she was carrying.`,
       ch:[{t:'Walk the lines.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Dujek Onearm at the Second's burial field ----
+       Dujek is at Pale through GotM ch. 2-9 (canon-chronology 2.2, 4.5, 9.4; R GotM ch. 2-3, 4, 9; W *Dujek Onearm*): the council,
+       his warning to Whiskeyjack (4.5, the same nights as this chapter, story-bible §9), Lorn's visit. Closed (R + W). A High Fist walking his dead army's pits alone at night is the game's gap; nothing in
+       the books puts him elsewhere that night. He never touches the outlawing (rule 1) and never counts the Fourth aloud: Ch7's
+       "I noticed" stays his reveal. What it plants: Ch7's "Ask for the living first. I've made that a rule." He makes it here.
+       Sets b1_c1_dujek; Brisk +1. */
+    c1_dujek:()=>({sp:'Dujek Onearm · High Fist', scene:'camp_night', txt:
+`There is a man at the top of the Second's burial field, among the helmets, standing the way a sergeant stands at roll-call. No escort. No lantern. A plain cloak, still dark at the hem from yesterday's rain, and one sleeve of it pinned up empty at the shoulder.
+
+You know the shape of him before you know the face. You have seen it on a horse in front of the Host for three years, the one arm pointing you at whatever came next. High Fist Dujek. Onearm. Reading the helmets along the lip of the pit, one at a time, as if every one of them had a name painted on it, which none of them has.
+
+He doesn't turn round. "Marines," he says. "I can hear the munitions. Whose?"`,
+      ch:[{t:'"Fourth Squad, sir. Seventh Company."', go:'c1_dujek_talk'},
+          {t:'Not now. Leave him to it.', go:()=>startExplore()}]}),
+    c1_dujek_talk:()=>({sp:'Dujek Onearm', scene:'camp_night', again:'The helmets, in their row. The High Fist reading them, one at a time.', fx:()=>{ S.f.b1_c1_dujek=1; if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+`"The Fourth." He says it as if he were putting it on a shelf. Then he goes back to the helmets.
+
+"The Second," he says. "Mine, before I was the whole of it. Somebody ought to read them the first night they're in. After that they keep. They're the only thing in this Host that does."${SQUAD().includes('ohl') ? `
+
+Ohl has taken his cap off. "Sir."
+
+Dujek looks round at that, for the first time, and finds him in the dark. "Ohl. Ehrlitan." Not a question. "I thought you'd gone to the marines for a rest."
+
+"I had, sir."
+
+"How's that going?"
+
+Ohl considers the pits, the lime, the helmets. "Technically, sir," he says, "it is going."` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk has gone past you to the lip of the pit. She is reading too. She can't help it.${S.f.c1_pits ? ` She has been here once tonight already.` : ''} Dujek watches her do it for a while.
+
+"Who've you got in there, Corporal?"
+
+"Nobody, sir." A breath. "My brother's Second. Fourth Regiment. He isn't on any list."
+
+The High Fist is quiet long enough for the wind to come down the hill and go. "Then stop reading this one," he says. "Ask for the living first. The dead keep." He looks along the row once more, to the end. "I'm making that a rule. Tonight's the last night I read these myself. An old man's allowed one rule he made up."
+
+"Sir." Brisk steps back from the pit, and her hand goes to her gorget, and stays there.` : ''}
+
+Then he looks at the Fourth, all of you, a moment longer than a High Fist needs to look at a squad of marines in the dark, and says nothing about it. "Get some sleep, Sergeant," he says. "Whatever comes next, it'll come whether you're tired or not."
+
+He walks off down the field toward the city, with his one hand behind his back where the other would be holding it.`,
+      ch:[{t:'Walk the lines.', go:()=>startExplore()}]}),
+    c1_dujek_again:()=>({sp:'The Second\'s burial field', txt:`The High Fist has gone down the field toward the city. The helmets are where he left them, in their row, read.`, ch:[{t:'Leave'}]}),
 
     /* ---- the grey cloak ---- */
     c1_claw:()=>{ const named = pWho('p_clawNamed'); return {sp:'A grey cloak', fx:()=>{S.f.c1_claw=1;}, txt:

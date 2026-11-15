@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.7.1';
+const VERSION = '13.8.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9026,6 +9026,7 @@ function journalNotes(){
   const c4 = ch >= 4 ? [
     f.c4_key === 'shield' ? `On the roofs the Fourth stood between a Guild boy and the Tiste Andii hunting him, and held. The boy's name is Vell.${SQUAD().includes('vell') ? ` He walks with the Fourth now, with forty feet of tarred line on his shoulder.` : ''}${f.c4_ellisToc ? ` Ellis went east that night, into the hills, to find her captain.` : ''}` : f.c4_key === 'aside' ? `On the roofs you let the Tiste Andii through. It killed the Guild boy in one motion, looked at the sergeant, and nodded.` : '',
     f.c4_reprisalFought ? `The Guild came for the Fourth after. Fewer of them walked home than went out.` : '',
+    f.b1_c4_sappers ? `Kettle sat both nights before the roofs in the hole under the crossing with Hedge and Fiddler, keeping the nest dry. Hedge has promised her second place in the queue for a better cusser.` : '',
   ] : [];
   const c3 = ch >= 3 ? [
     f.c3_key === 'report' ? `You told the grey-haired woman at the dye-shop what the Bridgeburners are doing under the city, for forty silver.${f.c7_wjKnows ? ' Whiskeyjack knows now.' : ' Whiskeyjack does not know.'}` : f.c3_key === 'refuse' ? `You told the grey-haired woman at the dye-shop nothing, and paid for it in an alley. The Claw has the sergeant's name now.` : '',
@@ -9040,6 +9041,7 @@ function journalNotes(){
   const c1 = ch >= 1 ? [
     f.c1_reported ? `Whiskeyjack: the Fourth rides south overland with the baggage. Darujhistan.` : `Report to Whiskeyjack at the Bridgeburners' fire.`,
     f.c1_paran ? `Captain Paran walked the lines. Noble-born. Trying.` : '',
+    f.b1_c1_dujek ? `Dujek Onearm at the Second's burial field, reading the helmets: "Ask for the living first. The dead keep."` : '',
     f.c1_sawHairlock ? `Tattersail's puppet turned its head.` : '',
     f.c1_plant ? `Tattersail knows about Tuft's badge. So, now, do you.` : '',
     f.c1_hounds ? `The Hounds of Shadow came through the tent lines. ${f.c1_key === 'claw' ? 'You held the crate.' : 'You held the line.'}` : '',
@@ -9122,6 +9124,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.8.0', ['Book One meets more of the canon (the first of ten books getting this). At Pale, the night before the Hounds, High Fist Dujek is alone at the top of the Second\'s burial field, reading the helmets: speak to him. In Chapter Four Kettle spends the nights in the vault with Fiddler and Hedge, and learns where the Daru pin a plank.']],
   ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],
   ['13.7.0', ['Two of the series\' promised callbacks land. Book Nine: Rumjugs and Sweetlard, at the barracks gate in Letheras, sergeants now, loading a handcart. Book Ten: when the Fourth comes over the ridge, ask its sergeant about an old sapper called Hedge.', 'The series\' transfers are checked end to end: every road that carries a squad from one book to the next, through all ten books.']],
   ['13.6.0', ['Every chapter of every book now opens on a painted plate of its own, as Book One\'s always did: seventy-one in all, each drawing the chapter\'s opening caption. Book One\'s eight are redrawn to match. The Classic art setting still shows the drawn scenes instead.', 'The squad walks in the same order in every scene as on the map: the sergeant in front, then each squadmate in roster order. Before, most scenes had the roster back to front.', 'Walking figures redrawn to match their portraits: Thegg (long brown hair, fur at the shoulders, bead collar, a blue iron-rimmed shield), Ammet, Tobet, Pessa, the Letherii sergeant, and Vell in Book One.']],
@@ -11769,6 +11772,8 @@ const CH1 = {
       {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:9, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', show:()=>!S.f.c1_kalamWary || !S.f.c1_wj || /^c1_(wj|brief|qb|kalam|deck|card)/.test(S.node || '')},
       {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>S.f.c1_tent?'c1_tent_again':'c1_tent', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent},
       {id:'pell', name:'Quartermaster Pell', kind:'pell', x:6, y:6, node:()=>'c1_pell'},
+      // v13.8 (David, Nov 15): meetings. The High Fist at the top of the Second's burial field; gone toward the city once he has spoken
+      {id:'dujek', name:'A one-armed man', kind:'dujek', x:12, y:2, still:true, node:()=>S.f.b1_c1_dujek?'c1_dujek_again':'c1_dujek', show:()=>!S.f.c1_hounds && (!S.f.b1_c1_dujek || /^c1_dujek/.test(S.node || '')), fresh:()=>!S.f.b1_c1_dujek},
       // Hedge and Fiddler, on the dark side of the Bridgeburners' fire with a blanket and two bones
       {id:'fiddler', name:'Fiddler', kind:'fiddler', x:11, y:10, node:()=>'c1_bones', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_bones},
       {id:'hedge', name:'Hedge', kind:'hedge', x:12, y:10, node:()=>'c1_bones', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_bones},
@@ -11840,6 +11845,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
     S.f.c1_hairlockLooked && !S.f.c1_sawHairlock && 'The puppet got down off its crate unseen.',
     S.f.c1_raidLet && 'Somewhere in the Host, a deserter of the Second has a crate of Moranth munitions and nothing left to lose. The Fourth walked past.',
     S.f.c1_raidCrate && 'The big one went into the tent lines with a Moranth crate under his arm. He was not followed.',
+    S.f.b1_c1_dujek && 'High Fist Dujek read the Second\'s helmets at the burial field, alone, and said it was the last night he would.',
     S.f.c1_houndDown && `${S.f.c1_houndDown > 1 ? 'Two Hounds of Shadow' : 'A Hound of Shadow'} went down in the ash of the Pale under marine blades, and got up, and went home. Hounds remember.`],
 
   dlg:{
@@ -12263,6 +12269,51 @@ After a while Brisk stands. She leaves the shield against the helmets.
 
 Then: "Sergeant." And the conversation, such as it was, is over, and something in it has been put down that she was carrying.`,
       ch:[{t:'Walk the lines.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Dujek Onearm at the Second's burial field ----
+       Dujek is at Pale through GotM ch. 2-9 (canon-chronology 2.2, 4.5, 9.4; R GotM ch. 2-3, 4, 9; W *Dujek Onearm*): the council,
+       his warning to Whiskeyjack (4.5, the same nights as this chapter, story-bible §9), Lorn's visit. Closed (R + W). A High Fist walking his dead army's pits alone at night is the game's gap; nothing in
+       the books puts him elsewhere that night. He never touches the outlawing (rule 1) and never counts the Fourth aloud: Ch7's
+       "I noticed" stays his reveal. What it plants: Ch7's "Ask for the living first. I've made that a rule." He makes it here.
+       Sets b1_c1_dujek; Brisk +1. */
+    c1_dujek:()=>({sp:'Dujek Onearm · High Fist', scene:'camp_night', txt:
+`There is a man at the top of the Second's burial field, among the helmets, standing the way a sergeant stands at roll-call. No escort. No lantern. A plain cloak, still dark at the hem from yesterday's rain, and one sleeve of it pinned up empty at the shoulder.
+
+You know the shape of him before you know the face. You have seen it on a horse in front of the Host for three years, the one arm pointing you at whatever came next. High Fist Dujek. Onearm. Reading the helmets along the lip of the pit, one at a time, as if every one of them had a name painted on it, which none of them has.
+
+He doesn't turn round. "Marines," he says. "I can hear the munitions. Whose?"`,
+      ch:[{t:'"Fourth Squad, sir. Seventh Company."', go:'c1_dujek_talk'},
+          {t:'Not now. Leave him to it.', go:()=>startExplore()}]}),
+    c1_dujek_talk:()=>({sp:'Dujek Onearm', scene:'camp_night', again:'The helmets, in their row. The High Fist reading them, one at a time.', fx:()=>{ S.f.b1_c1_dujek=1; if (SQUAD().includes('brisk')) loy('brisk',1); }, txt:
+`"The Fourth." He says it as if he were putting it on a shelf. Then he goes back to the helmets.
+
+"The Second," he says. "Mine, before I was the whole of it. Somebody ought to read them the first night they're in. After that they keep. They're the only thing in this Host that does."${SQUAD().includes('ohl') ? `
+
+Ohl has taken his cap off. "Sir."
+
+Dujek looks round at that, for the first time, and finds him in the dark. "Ohl. Ehrlitan." Not a question. "I thought you'd gone to the marines for a rest."
+
+"I had, sir."
+
+"How's that going?"
+
+Ohl considers the pits, the lime, the helmets. "Technically, sir," he says, "it is going."` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk has gone past you to the lip of the pit. She is reading too. She can't help it.${S.f.c1_pits ? ` She has been here once tonight already.` : ''} Dujek watches her do it for a while.
+
+"Who've you got in there, Corporal?"
+
+"Nobody, sir." A breath. "My brother's Second. Fourth Regiment. He isn't on any list."
+
+The High Fist is quiet long enough for the wind to come down the hill and go. "Then stop reading this one," he says. "Ask for the living first. The dead keep." He looks along the row once more, to the end. "I'm making that a rule. Tonight's the last night I read these myself. An old man's allowed one rule he made up."
+
+"Sir." Brisk steps back from the pit, and her hand goes to her gorget, and stays there.` : ''}
+
+Then he looks at the Fourth, all of you, a moment longer than a High Fist needs to look at a squad of marines in the dark, and says nothing about it. "Get some sleep, Sergeant," he says. "Whatever comes next, it'll come whether you're tired or not."
+
+He walks off down the field toward the city, with his one hand behind his back where the other would be holding it.`,
+      ch:[{t:'Walk the lines.', go:()=>startExplore()}]}),
+    c1_dujek_again:()=>({sp:'The Second\'s burial field', txt:`The High Fist has gone down the field toward the city. The helmets are where he left them, in their row, read.`, ch:[{t:'Leave'}]}),
 
     /* ---- the grey cloak ---- */
     c1_claw:()=>{ const named = pWho('p_clawNamed'); return {sp:'A grey cloak', fx:()=>{S.f.c1_claw=1;}, txt:
@@ -15780,6 +15831,7 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
     if (preUsed('andii_roof')) x.push('Kettle lit a Tiste Andii up like a lamp, and the Fourth looked it in the face. Kalam told them not to.');
     if (heldDowns('andii_roof') > 0) x.push(`${heldDowns('andii_roof') > 1 ? 'Two Tiste Andii' : 'A Tiste Andii'} went down on the leads of a Daru roof under the Fourth's blades, and got up, and went elsewhere. They live a very long time. They remember roofs.`);
     if (preUsed('c4_clan')) x.push('A chimney burned blue on the Daru ridge in the small hours. The Watch said the gas. Fiddler has not said anything yet, at length.');
+    if (f.b1_c4_sappers) x.push('Kettle kept the nest under the crossing dry for two nights, beside Hedge and Fiddler. Hedge has promised her second place in the queue for a better cusser.');
     if (preUsed('reprisal')) x.push('The Guild came to an alley with knives, to ask a question. The Fourth answered with Moranth clay, and the Watch rattles went on till dawn.');
     return x; },
 
@@ -15876,6 +15928,41 @@ ${SQUAD().includes('tuft') ? `Tuft has taken a step back. She hasn't noticed she
 "Planks between roofs, you cross one at a time. *One.* Nobody waits in the middle. You don't look down to see how far down is." He lets go of your sleeve. "And the cusser." He looks past you at Kettle's satchel. "She's not to throw it up there. Not a sharper near the edge, not a burner anywhere. You set fire to a roof in this city and the gas finds it, and then there's no city, and then Whiskeyjack's annoyed."
 
 ${SQUAD().includes('kettle') ? `Kettle, who has heard every word, looks at him with the expression of a woman being told not to breathe. "Fiddler," she says. "I *know*." He looks back at her. "I know you know," he says. "I'm telling you so you'll remember I told you."` : ''}`,
+      ch:[{t:'Kettle is at the far end of the vault with Hedge.', req:()=>SQUAD().includes('kettle') && !S.f.b1_c4_sappers, go:'c4_sappers'},
+          {t:'"Ellis. You\'ve been up there."', req:()=>SQUAD().includes('ellis'), go:'c4_start_ellis'},
+          {t:'Up the ladder.', go:()=>{ startExplore('roofs_gadrobi'); talk('c4_roofs_arrive'); }}]}),
+    /* v13.8 (David, Nov 15): meetings. The plan's star for Book One: Kettle works beside Fiddler and Hedge under the crossing.
+       Ch3 already has the squad laying the crate with them (c3_work_*); this is the two nights the Ch4 intro skips ("guarding a hole"),
+       when Kettle sat the nest with the two sappers. GotM ch. 11-13: the Bridgeburners are the city's "road crew", laying mines, the
+       nights of the rooftops (canon-chronology 7.6, 11.2, 13.11, from R GotM ch. 7, 11, 13; the mines told to Lorn at 20.4); Hedge and
+       Fiddler are alive and in the city through the Fete (22.2, 23.7; W *Hedge*, *Fiddler*). Closed (R + W). Rule 10: the nest
+       is kept dry, nothing is fired or set. Book Ten's b10_c7_hedge has Kettle ask "what he's using for cussers these days"; this is where
+       that interest starts. Hedge's later munitions are never named (rule 93); he only wants a better cusser, which he always did.
+       Sets b1_c4_sappers; Kettle +1; an edge on the plank-down check (Fiddler tells her where the Daru pin a plank). */
+    c4_sappers:()=>({sp:'Hedge and Fiddler · sappers', scene:'cellar', again:'Kettle and Hedge, shoulder to shoulder over a niche, pressing clay.', fx:()=>{ S.f.b1_c4_sappers=1; loy('kettle',1); }, txt:
+`Kettle has spent both nights since the dye-shop down here. Nobody ordered it. On the first night she came down the ladder at the change of watch with the lantern and didn't go back up, and Hedge, on his knees at the junction run, moved over without looking round to make room for her, and that was that.
+
+She's there now, at the far end of the vault where the pipes join, with Hedge, the two of them shoulder to shoulder over a niche, pressing new clay round a cusser's collar with their thumbs. The damp gets into the wax down here. You check it every night, or you haven't got a nest, you've got a wet hole full of maybes.
+
+"Never said *Moranth* cussers," Hedge is saying. "Moranth cussers are perfect. That's what's wrong with them. Perfect's finished. Nobody's making them better."
+
+"Nobody *needs* to make them better." Kettle, thumbing clay. "It's a cusser."
+
+"There's always a better one." Hedge sits back on his heels and looks at the niche the way other men look at a sunset. "Somewhere. Some day somebody's going to make it out of something nobody's thought of, in a shed, and blow the shed down doing it. And when they do, I'm first in the queue."
+
+Kettle considers that with the whole of her face. "Second," she says.
+
+"Second." He thinks about it. "You can have second. And then you tell me what you'd do with it. You'd do something stupid. I want to know what."${SQUAD().includes('tuft') ? `
+
+Tuft, at the foot of the ladder, has been watching Hedge rather than the cussers. "He talks to them," she says, very low. He does: under his breath, the whole time, the way Ohl talks to a stitch.` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk, beside you, not quite quietly enough: "She sleeps in the day. Under the eaves, with her boots on." A pause. "She's happy. I didn't know she could do that without something going off."` : ''}
+
+Fiddler has come down the vault with the roll of timer-wax. He doesn't look at the niche; he has looked at it twice already tonight. He crouches by Kettle instead. "Roofs," he says. "One more thing. A Daru plank's pinned. Iron pin, under the lead, on the near side, so it won't walk. You want a plank gone in a hurry, you don't heave it. You find the pin."
+
+Kettle doesn't say *I know* this time. "Near side," she says. Fiddler nods, once, and goes back to the ladder.
+
+Hedge spits on the clay, which is a sapper's blessing, and says to Kettle without looking at her, "Same tomorrow?" and Kettle says, "Same tomorrow," and neither of them asks the sergeant.`,
       ch:[{t:'"Ellis. You\'ve been up there."', req:()=>SQUAD().includes('ellis'), go:'c4_start_ellis'},
           {t:'Up the ladder.', go:()=>{ startExplore('roofs_gadrobi'); talk('c4_roofs_arrive'); }}]}),
     c4_start_ellis:()=>({sp:'Ellis', fx:()=>{S.f.c4_ellisRoofs=1;}, txt:
@@ -16674,7 +16761,7 @@ They're coming down to the plank.`,
       ch:[{t:'"Hold the plank."', go:()=>startBattle('c4_clan',{})},
           {t:'Kettle skims a sharper along the Daru ridge, away from the edge.', tag:'uses 1 sharper', req:()=>S.inv.sharper>0, fx:()=>{S.inv.sharper--;}, go:()=>startBattle('c4_clan',{pre:true})},
           {t:'Throw the plank down before they reach it.', check:['might',16], near:false,
-            edges:id=>[id === 'kettle' && ['a sapper knows what a thing is pinned with', 1], S.f.c4_planks && ['Ellis read these planks for you', 1]],
+            edges:id=>[id === 'kettle' && ['a sapper knows what a thing is pinned with', 1], id === 'kettle' && S.f.b1_c4_sappers && ['Fiddler told her where the pin is', 1], S.f.c4_planks && ['Ellis read these planks for you', 1]],
             go:'c4_plank_down', fail:'c4_plank_stuck'}]}),
     c4_plank_down:()=>({sp:'The plank west', scene:'roof_night', fx:()=>{ S.f.c4_plankDown=1; }, txt:
 `${by({
@@ -21745,7 +21832,7 @@ You give him ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}.
 
 "On the rolls," says Dujek. "Top of the page." He says something else after that, and the wind takes it, and you don't ask for it back.
 
-` : ''}Somewhere in Onearm's Host, somebody has noticed. You've carried that about for months without knowing you were carrying it. It was him. Of course it was him.`,
+` : ''}Somewhere in Onearm's Host, somebody has noticed. You've carried that about for months without knowing you were carrying it. It was him. Of course it was him.${S.f.b1_c1_dujek ? ` At the burial field at Pale he looked at the Fourth a moment longer than he needed to, and you put it down to the dark.` : ''}`,
       ch:[{t:'Brisk has a question, sir.', req:()=>C7H.has('brisk') && !S.f.c7_askedTav, go:'c7_sending_tav'},
           {t:'"Sir. A soldier of the Second. Fourth Regiment."', req:()=>C7H.isDead('brisk') && !S.f.c7_askedTav, go:'c7_sending_tav'},
           {t:'"Ohl\'s here, sir."', req:()=>C7H.has('ohl') && !S.f.c7_askedOhl, go:'c7_sending_ohl'},
@@ -21756,7 +21843,9 @@ You give him ${d.length > 1 ? 'the names' : 'the name'}. ${C7H.names(d)}.
 
 "Sir. Brisk, sir. Corporal, Fourth Squad." A breath. "My brother's Second. Fourth Regiment. Tavrin, called Tav. Of Cawn." Another breath. "Sir."
 
-The voice is quiet a moment. "Corporal, I've a whole Host to count and one arm to count it on. I don't carry the rolls in my head." Not unkind. Tired. "The Moranth carry them. Living, and the other kind. They never lose a thing; it's a religious matter with them. Ask the Moranth." A pause. "I stopped reading the other kind after Pale. Ask for the living first."
+The voice is quiet a moment. "Corporal, I've a whole Host to count and one arm to count it on. I don't carry the rolls in my head." Not unkind. Tired. "The Moranth carry them. Living, and the other kind. They never lose a thing; it's a religious matter with them. Ask the Moranth." A pause. "I stopped reading the other kind after Pale. Ask for the living first."${S.f.b1_c1_dujek ? `
+
+Brisk's mouth moves, very slightly. He made it a rule at the pits, the night of the Hounds, with the helmets in a row in front of him. She heard him make it.` : ''}
 
 "Sir." Brisk steps back into her place. Her face does nothing at all. Her hand has gone to her gorget, where the letter is.` :
 `You ask it yourself. Brisk can't.
