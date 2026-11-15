@@ -12,7 +12,10 @@
    Fist the army chooses) or 'out' (on picket, outside it; the vote is still the army's, unanimous); the tomb seen from the lines.
    Never: the field hospital's command cots, Poliel's or Soliel's temples, the command tent, inside Dujek's tomb, inside the walls. Never a
    word with Paran, Dujek, Hurlochel, Sweetcreek, Rythe Bude or Noto Boil; never the name "Paran" (he is "Captain Kindly", later "the High
-   Fist"). Notes for later chapters: docs/bh-ch4-notes.md. */
+   Fist"). Notes for later chapters: docs/bh-ch4-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves above are lifted (series-canon §(a0)). The Fourth knows the man in the rain from
+   Pale and Darujhistan: Captain Kindly comes out of the field hospital (b6_c4_paran) and takes the squad in to the High Fist's cot for two
+   minutes (b6_c4_onearm). The narrator still calls him Kindly; the squad says the other name once, and keeps it after. */
 /* FOR THE ARTIST (104b): names this file uses.
    Items: ART['item/b6_c4_raincloak'], ART['item/b6_c4_dyerknives']. Figure: ressa (the recruit, as an npc kind at the picket).
    Backdrops: b6_gdanisban_rain (100's, the artist's), b6_camp_night (100's, borrowed), and two of this file's own, which borrow until drawn:
@@ -224,6 +227,8 @@ const B6CH4 = {
     if (f.b6_c4_hounds === 'shaken') x.push('Something ran through the camp in the night. The Fourth will not talk about how close it came.');
     if (f.b6_c4_streetsDone) x.push('The forward picket\'s post in the streets outside the walls held until morning, with the Fourth behind the cart.');
     if (f.b6_c4_cartsDone) x.push('Bandits off the plague road came for the surgeons\' carts at the picket gap. The carts came in.');
+    if (f.b6_c4_paran) x.push('Captain Kindly came out of the field hospital in the rain, and the Fourth knew his face from Pale. It calls him Kindly, like the rest of the Host.');
+    if (f.b6_c4_onearm) x.push('The Fourth stood two minutes at High Fist Dujek\'s cot in the field hospital. He asked if it was still short.');
     if (f.b6_c4_vinOk) x.push('An orderly at the bedding pits showed the squad how to carry the smoke.');
     if (f.b6_soliel) x.push('The fever broke for many, the morning after. The carriers, the camp says.');
     if (b6In('ressa')) x.push('Ressa walked out of G\'danisban in the rain and asked for work, and walks with the Fourth.');
@@ -238,6 +243,8 @@ const B6CH4 = {
     f.b6_c4_hounds && 'Something ran through the camp and on into the city in the night. The Seventh will not say what.',
     f.b6_c4_cultDone && 'The Mistress\'s followers came at the ditch with their hands open. A priest led them.',
     f.b6_c4_kindly && 'A deserter knocked Captain Sweetcreek down in the rain, and turned out to be Captain Kindly, who now commands the Host. Not one soldier in the Host has ever met Captain Kindly.',
+    f.b6_c4_onearm && 'The High Fist asked for the old companies one at a time from his cot, and the Fourth went in for two minutes. "Still short?" he said.',
+    f.b6_c4_paran && 'Captain Kindly is a man the Fourth has met before, under another name. It keeps the name to itself. He said that if anything came through the camp that was not ours, to let it go by.',
     f.b6_c4_hospital && 'The High Fist is in the field hospital. Its flap stays shut.',
     (b6In('ressa') || b64RessaWaits()) && 'Ressa, a dyer out of G\'danisban who had the fever and lived, asked the Fourth for work.',
     'The Host is camped before G\'danisban, in the rain.'].filter(Boolean); },
@@ -352,7 +359,61 @@ While you stand in the mud a tall outrider comes out of the flap, Hurlochel, who
             edges:id=>[id === 'sgt' && ['a sergeant may ask a guard things', 1], id === 'ohl' && ['he served under the High Fist in the Second, and says so', 2], id === 'brannoc' && ['the guard is Falari, and so is he', 1], id === 'kettle' && ['she asks too brightly', -1]],
             near:{t:()=>`Yes, but the guard wants something for the cutter, who is short of everything: one of the squad's salves goes in through the flap.`, fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; }},
             go:'b6_c4_hospital_ok', fail:'b6_c4_hospital_no'},
+          {t:'Wait under the eaves, out of the rain.', req:()=>b64Ph() <= 1 && !S.f.b6_c4_paran && !S.f.b6_c4_bell, go:'b6_c4_paran'},
           {t:'Not now.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, second half: the plague, and the officer who takes over ----
+       Where and when: the camp before G'danisban in the rain (W13). Paran has come in as a "deserter", knocked Sweetcreek down and taken
+       command at Hurlochel's asking as Captain Kindly (W13). Dujek lies dying of the plague in the field hospital, Rythe Bude attends,
+       and Noto Boil tries to keep Paran out (W15, R15) [closed]. Paran goes into the city with Noto that night and kills Poliel; Dujek
+       dies two bells before he comes back; the army votes him High Fist on the logs (W15, R15; W *Dujek Onearm*) [closed]. The Fourth
+       knows his face from Pale and Darujhistan (Book One; Book Three's Capustan meeting is optional, so unsaid). Order kept: this is the afternoon before he goes in (Ch4 phase 1);
+       the vision (b6v4) has Dujek awake toward evening and asking where the captain went. Locks: no word of the goddess, the temple,
+       the otataral or the Deragoth; the Hounds go through the camp in phase 2 as written (rule 14); Dujek's death is the bell's, as
+       before. Paran says only "let it go by" of the night, which the next check reads (+1). Dujek's "I went and looked" is his own
+       strike at the temple a month before (W *Dujek Onearm*, ch 13), said as he would say it; read only with Ch2's b6_c2_onearm.
+       Sets b6_c4_paran, b6_c4_onearm; Tuft +1 (Paran), Ohl +1 or Brisk +1 (Dujek). */
+    b6_c4_paran:()=>({sp:'The field hospital', scene:'b6_gdanisban_rain', again:()=>`The field hospital, its flap shut, the guards in the rain.`, txt:
+`You stand under the eaves of the big tent with the rain coming off the canvas in a fringe, and the guards pretend not to see you, and after a while the flap opens.
+
+A man comes out into the rain, ducking, with a cutter's voice following him out of the tent, low and sharp, still saying no. He lets the flap fall on it. Tall enough, not young, in a borrowed cloak that was somebody else's and mud to the knees, and a face like somebody has been telling him bad news for a year and he has stopped flinching.
+
+Every soldier in the Host has heard of Captain Kindly. Not one of them has met him. The Fourth has met this man. On the plain outside Pale, and in Darujhistan, and on other roads since.${b64If('tuft', `\n\nTuft has stepped back a pace, and pulled her hood down, and is looking very hard at the mud.`)}`,
+      ch:[{t:'"Captain Paran."', fx:()=>{ S.f.b6_c4_paranSaid = 'paran'; }, go:'b6_c4_paran_talk'},
+          {t:'"Captain Kindly."', fx:()=>{ S.f.b6_c4_paranSaid = 'kindly'; }, go:'b6_c4_paran_talk'},
+          {t:'Not now. Let him go by.', go:()=>startExplore()}]}),
+    b6_c4_paran_talk:()=>({sp:'Captain Kindly', scene:'b6_gdanisban_rain', fx:()=>{ S.f.b6_c4_paran = 1; b64L('tuft', 1); },
+      again:()=>`Captain Kindly has gone off through the lines in the rain.`, txt:
+`${S.f.b6_c4_paranSaid === 'paran' ? `He stops, and looks at you, and for a moment he looks very tired indeed. "Kindly," he says. "In this camp. The name is doing better than I would." He wipes the rain off his face with the heel of his hand. "Sergeant. The Fourth." He says it the way a man finds a coin in a pocket he thought was empty.` : `He stops, and looks at you, and something at the corner of his mouth moves. "Sergeant," he says. "You know perfectly well it isn't." He wipes the rain off his face with the heel of his hand. "But keep saying it. The Host likes it. The Fourth." He says it the way a man finds a coin in a pocket he thought was empty.`}
+
+He counts the squad, the way every officer has counted every squad since Coral, and gets to the end, and does not say the sum.${b64If('tuft', ` His eyes stop on the hooded one looking at the mud. "Tuft," he says, quite gently. "Still not looking at me."\n\n"No, Captain," says Tuft, to the mud.\n\n"Wise," he says. "I'd not look at me either, this week."`)}${b64If('brannoc', `\n\nBrannoc is staring at him with his mouth a little open. This is the man who knocked Sweetcreek flat. He looks at the hands, which are only hands, and seems disappointed.`)}
+
+"He's been asking for the old companies," Kindly says, and tips his head at the tent behind him. "One at a time, as if he was counting. He asked for the Seventh yesterday." He looks at the flap. "He's awake now. It won't last. Two minutes, Sergeant, and if the cutter throws you out, go."
+
+He turns to leave, and turns back, and says it lower, under the rain. "And tonight. If anything comes through the camp that isn't ours, let it go by. Don't stand in front of it. Don't let your people stand in front of it." He does not say what. "It isn't looking for you."
+
+Then he goes off through the lines, toward the middle of the camp, with the rain on his shoulders.`,
+      ch:[{t:'Go in. Two minutes.', go:'b6_c4_onearm'},
+          {t:'Not now. Leave the High Fist his rest.', go:()=>startExplore()}]}),
+    b6_c4_onearm:()=>({sp:'Dujek Onearm · the field hospital', scene:'b6_gdanisban_rain', fx:()=>{ S.f.b6_c4_onearm = 1; if (b6In('ohl')) b64L('ohl', 1); else b64L('brisk', 1); },
+      again:()=>`The field hospital's flap, shut again, and the guards in the rain.`, txt:
+`Inside, the long tent is lamplit and close and smells of vinegar and wet wool, and of the fever under them. Cots in rows. Orderlies going up and down. At the far end a cutter in a stained apron looks up from a cot, sees the squad, says "Two minutes," in a voice that has said it before today and will again, and goes back to work.
+
+The High Fist is on the cot at the back, under a grey cloak. Grey in the face, as grey as the cloak. The stump of the left arm is wrapped in clean linen. His eyes are open, and they find you, and they know you.
+
+"Seventh," says Dujek Onearm. It takes him a breath to get to the next word. "Fourth." Another. "Still short?"
+
+"Always, sir."
+
+"Good." Something that would be a smile on a man with more breath. "Means you're alive to be short."${S.f.b6_c2_onearm ? `
+
+His eyes go past you to the canvas, as if he could see through it to the city. "The village," he says. "South end." A breath. "I went and looked, after. Where it was coming from." Another. "It looked back."` : `
+
+His eyes go past you to the canvas, and the rain on it. "Feet," he says. "Keep them dry. Nobody does."`}${b64If('ohl', `\n\nOhl has taken his cap off. "Sir."\n\n"Ohl." The High Fist finds him. "Second." It is not a question. It is a roll-call. "Still counting them?"\n\n"Every one, sir."\n\n"Put me on the end," Dujek says. "When it's time. Not before." And he closes his eyes, as if that was the last order of the day and he is satisfied with it.`)}${b64If('brisk', () => b6In('ohl') ? '' : `\n\nBrisk lifts two fingers to her brow. The High Fist sees it, and lifts his own hand an inch off the blanket, which is all he has, and lets it fall.`)}
+
+"Out," says the cutter, from the next cot, not unkindly. "That's two."
+
+The squad goes back out into the rain. Nobody says anything for a long way down the lines.`,
+      ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c4_hospital_ok:()=>({sp:'The field hospital', scene:'b6_gdanisban_rain', txt:
 `The guard looks at the flap, and at you, and lets his shoulders down an inch. "He asks for his logs," he says, very quietly. "Every bell. The new man reads them to him." He swallows. "He was asking for the Seventh by name yesterday. All the old companies, one at a time, as if he was counting." He looks back at the rain. "Go on, Sergeant. There's nothing to stand here for."`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
@@ -527,7 +588,7 @@ Then the shapes. Down the lane between the Seventh's tent rows, low and long and
 
 They are coming toward the edge. Toward the gap. Toward the city behind it.${b64If('tuft', `\n\nTuft's hand is on your arm, hard. "Don't move," she breathes. "None of you. I know that sound. From the Pale." Her face is white in the firelight. "They're not here for us. Don't make them be."`)}`,
       ch:[{t:'"Still. Everyone. Weapons down. Let it go past."', req:()=>!S.f.b6_c4_hounds, check:['wits', 15],
-            edges:id=>[id === 'tuft' && ['she has met them before, and she is still here', 3], id === 'brisk' && ['she can stand still like a wall stands still', 2], id === 'sohra' && ['the herds taught her to stand still when something big goes by', 1], id === 'brannoc' && ['every part of him wants to swing the axe', -2], id === 'kettle' && ['her hand is already in the satchel', -1]],
+            edges:id=>[id === 'tuft' && ['she has met them before, and she is still here', 3], id === 'brisk' && ['she can stand still like a wall stands still', 2], id === 'sohra' && ['the herds taught her to stand still when something big goes by', 1], id === 'brannoc' && ['every part of him wants to swing the axe', -2], id === 'kettle' && ['her hand is already in the satchel', -1], S.f.b6_c4_paran && ['Kindly said: let it go by, it isn\'t looking for you', 1]],
             near:{t:()=>{ const w = b64Who(); return `Yes, but one of them stops at the gap, right beside ${b64Nm(w)}, and breathes, and goes on. ${b64Nm(w).replace(/^./, c => c.toUpperCase())} will not be right for a day: rattled.`; }, fx:()=>b64Rattle(b64Who())},
             go:'b6_c4_hounds_still', fail:'b6_c4_hounds_shaken'},
           {t:'Not now.', req:()=>!S.f.b6_c4_hounds, go:()=>startExplore()},

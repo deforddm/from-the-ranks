@@ -14,7 +14,9 @@
    book). Phase 4: the Fourth's road, S.f.b6_fourthRoad: 'highfist' (on with the Host), 'hanarara' (the picket left on the Hanar Ara road
    a while), 'home' (the time-served list, to the coast and a ship west). This is the Fourth's last chapter: B6CH6.fates holds its fate
    pages for Ch7's finale (shape documented in docs/bh-ch6-notes.md). Never Paran's gate, Felisin Younger, Kulat, the city's centre;
-   never speaks with Paran, Mathok, Sweetcreek, Rythe Bude. Notes: docs/bh-ch6-notes.md. */
+   never speaks with Paran, Mathok, Sweetcreek, Rythe Bude. Notes: docs/bh-ch6-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves are lifted (series-canon §(a0)): the High Fist walks the lines at dusk in the
+   day camp and stops at the Fourth's fire (b6_c6_highfist). Never his gate, Mael or what he promised Hood (rule 52). */
 /* FOR THE ARTIST (106b): names this file uses.
    Items: ART['item/b6_c6_starstone'], ['item/b6_c6_hanararobe'] (a plain placeholder is registered below, after load, only if 106b has none).
    Backdrops (SCENEX, the brief's): b6_sky (the column halted under the lights), b6_hanar_ara (outside the City of the Fallen); also used:
@@ -233,7 +235,9 @@ const B6CH6 = {
         {id:'captain', name:'The captain', kind:'b2soldier', x:9, y:5, node:()=>'b6_c6_captain_camp', fresh:()=>!S.f.b6_c6_captainCamp},
         {id:'falari', name:'Sweetcreek\'s Falari', kind:'b2soldier', x:4, y:5, node:()=>S.f.b6_c6_wellsDone ? 'b6_c6_falari_after' : 'b6_c6_wells_ask', fresh:()=>!S.f.b6_c6_wellsAsked},
         {id:'carrier', name:'A carrier', kind:'b3_c5_villager', x:12, y:7, node:()=>'b6_c6_carriers', fresh:()=>b6FeverList().length > 0},
-        {id:'benna', name:'Old Benna', kind:'b3v_benna', x:4, y:9, node:()=>'b6_c6_benna', fresh:()=>false} ] },
+        {id:'benna', name:'Old Benna', kind:'b3v_benna', x:4, y:9, node:()=>'b6_c6_benna', fresh:()=>false},
+        /* v13.8 (David, Nov 15): meetings. The High Fist walking the lines at dusk, as the old one used to; gone on down the lines once spoken to */
+        {id:'highfist', name:'The High Fist', kind:'paran', x:11, y:3, node:()=>'b6_c6_highfist', show:()=>!S.f.b6_c6_tomarch && (!S.f.b6_c6_highfist || /^b6_c6_highfist/.test(S.node || '')), fresh:()=>!S.f.b6_c6_highfist} ] },
 
     /* 16 x 12 (odhan, day into dusk). The plain before Hanar Ara: . hardpan  , scrub  x a dead thorn  = the city's outer tents
        ^ the city's edge, where the picket goes  r the Seventh's place in the Host's line  v back to the Host's camp */
@@ -329,6 +333,7 @@ const B6CH6 = {
     if (f.b6_fourthRoad === 'highfist') x.push('The Fourth goes on with the High Fist\'s Host.');
     if (f.b6_fourthRoad === 'hanarara') x.push('The Fourth stays behind on the Hanar Ara road, as the High Fist\'s picket.');
     if (f.b6_fourthRoad === 'home') x.push('The Fourth\'s names went on the time-served list. It goes down to the coast, and west.');
+    if (f.b6_c6_highfist) x.push('The High Fist walked the lines at dusk in the old High Fist\'s armour, a fire at a time, and stopped at the Fourth\'s.');
     if (b6In('brannoc')) x.push('Brannoc came through it whistling.');
     if (b6In('ressa')) x.push('Ressa came through Hanar Ara with the city calling her one of its own, and did not answer.');
     return x; },
@@ -340,6 +345,7 @@ const B6CH6 = {
     f.b6_c6_key === 'report' && 'You named the cult at Hanar Ara\'s edge to the captain. He wrote it down and sent it up.',
     f.b6_c6_key === 'letgo' && 'You let the surrender at Hanar Ara stand as the High Fist gave it.',
     f.b6_c6_surr && 'Mathok\'s rebels came out of Hanar Ara and surrendered. The High Fist let them go.',
+    f.b6_c6_highfist && 'The High Fist walks the lines at dusk, the way the old one did. Asked about the lights, he said, "Later."',
     f.b6_c6_lights && 'A row of lights came down below the moon on the night road, and the Host halted. The High Fist rode out ahead and came back. The ranks were not told what for.',
     'The Fourth is marching north-east of G\'danisban with Onearm\'s Host, under its new High Fist.'].filter(Boolean); },
 
@@ -536,6 +542,39 @@ ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it
       if (b6In('vell')) ln.push(`Vell is splicing a rope. "In Darujhistan," he says, "anything strange in the sky was the Moon. Here there isn't a Moon to blame." He thinks about it. "I miss the Moon."`);
       return {sp:'The Fourth\'s fire', scene:'b6_camp_night', txt:ln.length ? ln.join('\n\n') : `The squad is you tonight, and the fire. You sit with it, and watch the sky go dark over the scrub, and think about the end of a war, which is a thing you have never yet seen.`,
         ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}; },
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, carried on: the officer who took over, walking the lines as High Fist ----
+       Where and when: the Host's day camp north-east of G'danisban, the day after the lights (W20; bh-canon §3). He wears Onearm's
+       armour with a new sleeve (W16) [supported]. Walking the lines at dusk is the game's gap, and pays off Ch2's captain ("he used to
+       walk them every night ... asking after your feet") and Ch2/Ch4's meetings with Dujek. Dujek's logs are canon (the vote, W15, R15);
+       what is in them about the Fourth is the game's. Locks: rule 52 (what he promised Hood) and "never his gate": asked about the
+       lights he says "Later", which is no answer; nothing of Mael, the Deck card, or Hanar Ara's outcome. The narrator calls him the High
+       Fist only. Reads b6_c2_onearm, b6_c2_key, b6_c4_key, b6_c4_onearm. Sets b6_c6_highfist; Tuft +1, or Brisk +1 without her. */
+    b6_c6_highfist:()=>({sp:'The High Fist', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_highfist = 1; if (b6In('tuft')) b66L('tuft', 1); else b66L('brisk', 1); },
+      again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
+`At dusk, while the camp is waking for the night's march, the High Fist comes down the lines on foot.
+
+He has the old High Fist's armour on, plain and much-mended, with a new sleeve of chain where the left arm of it used to be pinned up empty. It is the first thing everybody looks at, and then they look at his face, and then they look away. He stops at a fire, and asks something, and goes on to the next. ${S.f.b6_c2_capDujek ? 'The captain said, on the coast, that the old one used to do this every night. ' : ''}Asking after their feet, the soldiers tell each other, after he has gone.
+
+He stops at the Fourth's.
+
+"Sergeant." He looks at the squad, and counts it, and this time he says the sum, under his breath, to himself, as if writing it down. ${b66Voted() ? `"The Seventh stood at the back, that morning," he says. "Somebody told me. I couldn't see past the mud."` : b66Out() ? `"You had the picket that morning," he says. "While the rest of the Host stood in a field and shouted. Somebody had to."` : `"The Seventh," he says. "Good."`}${S.f.b6_c2_onearm ? `
+
+"He wrote you down, you know." He nods back the way the Host has come, toward G'danisban and what is outside it. "In the logs. The Fourth, Seventh Company, a village on the road south, which end died first." A pause. ${b66Passed() ? `"And under it, in his own hand: *burned*. Underlined twice." He looks at you. "He never underlined anything twice in his life. I read every page."` : `"And under it, in his own hand: *looked first*." He looks at you. "I read every page. He didn't write that about many."`}` : ''}${S.f.b6_c4_onearm ? `
+
+"And you went in," he says. "Two minutes." Something in his face that is not quite a smile. "He'd have asked after your feet."
+
+"He asked if we were still short, sir."
+
+"Of course he did."` : ''}${b66If('tuft', `\n\nTuft has not looked up from the fire. "Tuft," he says, and nothing else, and after a moment she nods to the fire, and that seems to be enough for both of them.`)}${b66If('brannoc', `\n\nBrannoc, who has told the story of Sweetcreek in the mud at every fire from G'danisban to here, finds he has nothing at all to say, and says it.`)}`,
+      ch:[{t:'"The lights, sir?"', req:()=>!S.f.b6_c6_hfLights, fx:()=>{ S.f.b6_c6_hfLights = 1; }, go:'b6_c6_highfist_lights'},
+          {t:'"High Fist."', go:()=>startExplore()}]}),
+    b6_c6_highfist_lights:()=>({sp:'The High Fist', scene:'b6_camp_night', again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
+`He looks up, east, at the sky where they fell, which is only sky now, going dark.
+
+"Later," he says. It is not an answer. It is the only one anybody in the Host has had, and the Fourth has had it to its face, which is more than most.
+
+"Keep your feet dry, Sergeant," says the High Fist, and goes on to the next fire.`,
+      ch:[{t:'Back to the fire.', go:()=>startExplore()}]}),
     /* camp news: the High Fist, Sweetcreek and Bude at a distance, and the Fourteenth as rumour */
     b6_c6_news:()=>({sp:'Camp news', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_news = 1; }, again:()=>`The camp's news, going round the fires.`, txt:
 `The news goes round the fires the way it always does, faster than runners and less true.

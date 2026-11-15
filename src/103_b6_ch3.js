@@ -141,7 +141,9 @@ const B6CH3 = {
         {id:'old', name:'An old soldier of the 9th', kind:'b2soldier', x:4, y:7, node:()=>'b6_c3_old', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_oldMet},
         {id:'sapper', name:'A sapper on the forward trench', kind:'b2soldier', x:11, y:3, node:()=>S.f.b6_c3_breathTried ? 'b6_c3_sapper_again' : 'b6_c3_sapper', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_breathTried},
         {id:'rider', name:'A Khundryl rider', kind:'b4_c3_khundryl', x:14, y:7, node:()=>'b6_c3_rider', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_rider},
-        {id:'carrier', name:'A water-carrier', kind:'b4_c1_recruit', x:2, y:5, node:()=>'b6_c3_water', show:()=>b63Ph() === 1 && !S.f.b6_c3_waterTried, fresh:()=>!S.f.b6_c3_waterTried} ] },
+        {id:'carrier', name:'A water-carrier', kind:'b4_c1_recruit', x:2, y:5, node:()=>'b6_c3_water', show:()=>b63Ph() === 1 && !S.f.b6_c3_waterTried, fresh:()=>!S.f.b6_c3_waterTried},
+        /* v13.8 (David, Nov 15): meetings. Sergeant Strings (Fiddler) of the marines, up on the spoil looking at the walls; back to his squad once spoken to */
+        {id:'fiddler', name:'A sergeant of marines', kind:'fiddler', x:7, y:1, node:()=>'b6_c3_fiddler', show:()=>b63Ph() === 1 && (!S.f.b6_c3_fiddler || /^b6_c3_fiddler/.test(S.node || '')), fresh:()=>!S.f.b6_c3_fiddler} ] },
 
     /* 16 x 12 (b6_c3_breach, night; Book Two's Hissar). Under the walls at the breach, the city burning past it: # the city's walls and
        houses  D at the top the breach (into the streets), and at the right the gate  F fire  , ash and rubble  . the open ground
@@ -251,6 +253,7 @@ const B6CH3 = {
     if (f.b6_c3_key === 'in') x.push(`The Third went into the burning streets to hold the way out open.${fell.length ? ` ${b63And(fell.map(NAME))} did not come back. ${fell.length > 1 ? 'They are' : (b63He(fell[0]) === 'she' ? 'She is' : 'He is')} in the long barrow outside the walls.` : ' Everyone came back out.'}`);
     if (f.b6_c3_key === 'line') x.push('The Third held the gate at Y\'Ghatan and pulled the burned out of it.');
     if (f.b6_c3_sallyDone) x.push('Leoman\'s people came up out of an old drain at dusk to fire the reserve\'s wagons. The Third stopped them at the drain mouth.');
+    if (f.b6_c3_fiddler) x.push('On the afternoon of the assault Sergeant Strings of the marines stood on the 9th\'s spoil with the Third and looked at the walls, and said the reserve was the job that mattered.');
     if (f.b6_c3_breathOk) x.push('A sapper of the 9th showed the squad how to breathe in a fire.');
     if (f.b6_c3_strays) x.push('On the night after, strays from the city were found among the far barrows.');
     if (b63K1() === 'bury') x.push('The old barrows were whole again when the new one was raised beside them. The Third had seen to that, on its last night under the walls.');
@@ -264,6 +267,7 @@ const B6CH3 = {
     f.b6_c3_key && (f.b6_c3_key === 'in' ? 'When the city burned, the Third went into the streets to hold the way out open.' : 'When the city burned, the Third held the gate and pulled the burned out of it.'),
     f.b6_c3_oil && 'Mehet says Leoman emptied the maethgara, the old oil stores, before he sent the city to Lothal.',
     f.b6_c3_wallSeen && 'At dusk the wall went down, and the marines went in. Then the city burned from the inside.',
+    f.b6_c3_fiddler && 'Sergeant Strings of the marines, whom half the Fourteenth calls something else, says a door is only a door while somebody is holding it.',
     f.b6_c3_sallyDone && 'Leoman\'s people came up an old drain at dusk to fire the reserve\'s wagons.',
     'The 9th holds the reserve at Y\'Ghatan. The marines lead the assault at dusk.'].filter(Boolean); },
 
@@ -303,6 +307,42 @@ He looks at the walls. "There are a great many of them in there, and it is a gre
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the old soldier of the 9th: the last time, the barrows, and news of the other squad ---- */
+    /* ---- v13.8 (David, Nov 15): meetings. Fiddler before Y'Ghatan (the plan: "a word at the siege lines; the fire and the escape
+       stay canon's") ----
+       Where and when: the marines lead the assault at dusk with the sappers ahead of them (W7, bh-canon §2); Fiddler (still Strings to
+       the army, "the worst kept secret in the 14th", W *Fiddler*) is in it with his squad, Bottle among them, and comes out under the
+       city (W7, W10) [supported; Reactor not reachable this pass]. A marine sergeant up on the reserve's spoil in the afternoon, looking
+       at the walls before his own squad goes in, is the game's gap. Locks: nothing he says knows the oil or the fire; he speaks as any
+       old sapper speaks before a city fight. The narrator never says who comes out (the 791, the tunnel under the city, the squads in
+       ch 10 all stay canon's and unshown here). Bottle is folded in (Claude's call): a young marine with something alive in his shirt.
+       What it gives: +1 on both of phase 2's ways in (the streets' low approach; the carts across the gate). Sets b6_c3_fiddler;
+       Tangle +1, or Rasp +1 without him. */
+    b6_c3_fiddler:()=>({sp:'Sergeant Strings · the marines', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_fiddler = 1; if (b6In('tangle')) b63L('tangle', 1); else b63L('rasp', 1); },
+      again:()=>'The marine sergeant has gone back down the sappers\' trench to his squad.', txt:
+`There is a sergeant of marines on top of the spoil heap at the end of the 9th's line, where no marine has any reason to be, with his elbows on his knees and his eyes on the walls. Grey in the beard, a sapper's crossbow across his back, and the patient, sour look of a man who has been looking at walls for longer than most of the Fourteenth has been alive.
+
+A young marine is squatting beside him with one hand inside his shirt, where something small is moving.
+
+"Strings," the sergeant says, when the Third comes up the spoil, before anyone can ask. He does not look round. Half the Fourteenth calls him something else. Nobody does it to his face. "Fourth Squad, the marines. That's Bottle. Bottle, stop talking to it."
+
+"I'm not talking to it," Bottle says. "It's talking to me."
+
+Strings ignores this, with the ease of long practice. "Blistig's 9th," he says. "The reserve." He looks at the walls again. "They'll tell you the reserve is the job nobody wants. It's the job nobody wants until it's the only one that matters."
+
+He is quiet a while. The walls are quiet too. On the walls, men are walking about without any hurry at all.
+
+"Quiet," you say.
+
+"Don't," says Strings. "Bards say that. Then something happens and the bards look clever." He rubs his knee. "My knee hurts, is all. It hurts before weather and before bad nights, and there's no weather."${b63Say({tangle:`\n\nTangle has been looking at the crossbow, and the satchel at the sergeant's hip, the way sappers look at each other's kit. "Cussers?" he says.
+
+"Some." Strings looks at him properly for the first time. "You're a sapper. 9th's?" Tangle nods. "Then listen. If it goes bad in there, a door's only a door while somebody's holding it. Put something in the door you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high." He gets up. "That's free. The next one costs you a drink."`, rasp:`\n\nRasp has been looking at the crossbow and the satchel at the sergeant's hip. "Malaz City," she says. "Marine-trained. I was nearly yours."
+
+"Nearly's a good place to be," Strings says. "Then listen. If it goes bad in there, a door's only a door while somebody's holding it. Put something in the door you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high." He gets up. "That's free. The next one costs you a drink."`, _:`\n\nHe gets up, knees cracking. "If it goes bad in there," he says, to nobody in particular, "a door's only a door while somebody's holding it. Put something in it you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high."`})}${b63If('mehet', `\n\nMehet says, "It is my city."
+
+Strings looks at him, and at the walls, and back. "Then I'm sorry," he says, "for what we're about to do to it," and he sounds as if he means it.`)}
+
+"Come on, Bottle." The young marine takes his hand out of his shirt, and something grey and quick goes down his sleeve and is gone. They go back down the spoil and along the sappers' trench toward the wall, Strings with his hands in his belt, not hurrying, the way a man walks to work.`,
+      ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
     b6_c3_old:()=>({sp:'An old soldier of the 9th', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_oldMet = 1; },
       again:()=>`The old soldier, polishing his helm. "Y'Ghatan," he says. "Again."`, txt:
 `An old soldier of the 9th is sitting in the door of his tent polishing a helm that has been polished so often it has gone thin at the brow. He is the one who reads the Deck behind the cook-lines for a finger of rum. His name is his own business. He has been asked.
@@ -605,7 +645,7 @@ The street is the width of a cart, and the houses lean in over it, and every hou
 This is the place the reserve was sent to hold.${S.f.b6_c3_breathOk ? ' The sapper\'s rules are three. You remember all three.' : ''}`,
       ch:[{t:'"Third. Forward." (a mortal fight: whoever falls here stays down)', tag:'mortal', onward:true, go:()=>startBattle('b6_c3_streets', {})},
           {t:'Down under the smoke, cloths wet, and come at them out of it.', check:['guile', 15], onward:true,
-            edges:id=>[(id === 'tangle' || id === 'rasp') && ['the sapper\'s rules are a sapper\'s', 2], id === 'mehet' && ['these are his streets', 3], (id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a big shield in a small street is noticed', -1], ...(S.f.b6_c3_breathOk ? [['the sapper showed the squad how', 1]] : [])],
+            edges:id=>[(id === 'tangle' || id === 'rasp') && ['the sapper\'s rules are a sapper\'s', 2], id === 'mehet' && ['these are his streets', 3], (id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a big shield in a small street is noticed', -1], ...(S.f.b6_c3_breathOk ? [['the sapper showed the squad how', 1]] : []), S.f.b6_c3_fiddler && ['Strings said: go low, everything in a city fight goes high', 1]],
             near:{t:()=>{ const w = b63Who(); return `Yes, but the smoke comes down lower than anyone thought it could, and ${b63Nm(w)} ${b63V(w, 'come', 'comes')} up out of it coughing, half-blind and rattled.`; }, fx:()=>b63Rattle(b63Who())},
             go:()=>startBattle('b6_c3_streets', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c3_streets_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -635,7 +675,7 @@ Out through the breach, onto the rubble, into the night, and the air outside is 
 Which it is.${b63If('haddat', `\n\nHaddat sets her shield. "Behind me," she says, to the burned, very gently.`)}`,
       ch:[{t:'"Third. Hold the gate."', onward:true, go:()=>startBattle('b6_c3_gate', {})},
           {t:'Get the carts across the gate-mouth first, for a wall.', check:['might', 15], onward:true,
-            edges:id=>[(id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a shield fighter knows where a wall should be', 2], id === 'tangle' && ['he has built a barricade out of less', 1], id === 'mirrel' && ['she is small, and the carts are full', -1]],
+            edges:id=>[(id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a shield fighter knows where a wall should be', 2], id === 'tangle' && ['he has built a barricade out of less', 1], id === 'mirrel' && ['she is small, and the carts are full', -1], S.f.b6_c3_fiddler && ['Strings said: put something in the door you can stand behind', 1]],
             near:{t:()=>{ const w = b63Who(); return `Yes, but a cart wheel goes over ${b63Pos(w)} foot on the way across: bruised before the first blow.`; }, fx:()=>bruise(b63Who(), bruiseN())},
             go:()=>startBattle('b6_c3_gate', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c3_gate_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),

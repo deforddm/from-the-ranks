@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.12.0';
+const VERSION = '13.13.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9124,6 +9124,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.13.0', ['Book Six meets more of the canon. On the Odhan a Red Blade captain, Lostara Yil, reads Leoman\'s trail, and a sergeant from Kartool wants a drink. Before Y\'Ghatan, Sergeant Strings on the spoil, with a young marine who keeps something alive in his shirt. In the Host, Dujek Onearm walks the column on foot, then lies in the field hospital, and Captain Kindly, whom the Fourth knew by another name, comes out to them. Later the new High Fist walks the lines and asks after feet.']],
   ['13.12.0', ['Book Five meets more of the canon. On the festival\'s first morning the King\'s Champion, Brys Beddict, watches the Sixth drill from the barracks gate, and says one thing about Thegg\'s feet. A builder called Bugg at his board on the Low Walk. Preda Unnutal Hebaz walks the Whitefinders\' lines the night before Brans Keep and asks what the white finger is for. And the night before the city falls, the squad carries its roll to Finadd Moroch Nevath at the principal bridge over Main Canal.']],
   ['13.11.0', ['Book Four meets more of the canon. Captain Keneb looks the squad over at the muster, with the boy beside him who never speaks. Temul under an empty tree on the Aren Way, Duiker\'s grey mare beside him. Gesler at the water barrels. At Vathar Crossing a sergeant called Strings shares the marines\' fire, and Gesler tells the Third it is not marines. On the barrow night Gesler\'s marines go out into the fog.']],
   ['13.10.0', ['Book Three meets more of the canon. After the parley, Whiskeyjack stops at the Fourth\'s post, and Brisk tells him to see Mallet about the leg. Quick Ben on the shore, about the White Face clans; a fevered Captain Paran on a well\'s rim in Capustan; Gruntle on the Maurik, who guards caravans on land; and before Coral, Hedge with his munitions laid out on an oilcloth, talking to them.']],
@@ -75729,7 +75730,9 @@ const B6CH1 = {
       walk:'.,', triggers:{o:'b6_c1_well_arrive', '<':'b6_c1_road_back', '>':'b6_c1_to_wash'}, start:{x:2, y:4},
       quest:()=> !S.f.b6_c1_wellDone ? 'The well the scouts marked, to the north-west. Hold it for the water wagons.' : !S.f.b6_c1_rearDone ? 'East along the road. The scouts say there is something in the wash ahead.' : 'East, and the city.',
       npcs:[
-        {id:'prisoner', name:'A wounded rebel', kind:'b4_c7_fleer', x:13, y:5, node:()=>'b6_c1_prisoner', show:()=>!!S.f.b6_c1_rearDone && !S.f.b6_c1_prisoner, fresh:()=>true} ] },
+        {id:'prisoner', name:'A wounded rebel', kind:'b4_c7_fleer', x:13, y:5, node:()=>'b6_c1_prisoner', show:()=>!!S.f.b6_c1_rearDone && !S.f.b6_c1_prisoner, fresh:()=>true},
+        /* v13.8 (David, Nov 15): meetings. Captain Lostara Yil of the Red Blades, reading Leoman's trail ahead of the column; rides on once spoken to */
+        {id:'lostara', name:'A Red Blade captain', kind:'b7v_lostara', x:9, y:3, node:()=>'b6_c1_lostara', show:()=>!!S.f.b6_c1_wellDone && !S.f.b6_c1_rearDone && (!S.f.b6_c1_lostara || /^b6_c1_lostara/.test(S.node || '')), fresh:()=>!S.f.b6_c1_lostara} ] },
 
     /* 16 x 12 (b4_c4_camp, dusk). . earth  , trampled grass  = a tent  W a wagon  h horse lines  f the Third's cook fire
        < west, the camp's edge and the townsfolk  > east, the barrow road under the walls */
@@ -75846,6 +75849,8 @@ const B6CH1 = {
     if (f.b6_c1_prisoner === 'kept') x.push('A wounded rebel from the wash went to the captain\'s wagon with water in him.');
     if (f.b6_c1_prisoner === 'left') x.push('A wounded rebel from the wash was left by the road with a water skin.');
     if (f.b6_c1_dug) x.push('The 9th\'s diggers owe the Third a stretch of trench.');
+    if (f.b6_c1_lostara) x.push('Captain Lostara Yil of the Red Blades read Leoman\'s trail ahead of the column, and told the Third where his rearguard would be lying.');
+    if (f.b6_c1_hellian) x.push('Sergeant Hellian of Kartool walked in with the reinforcements and asked the Third for a drink. It had none. She asked about spiders.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -75853,6 +75858,8 @@ const B6CH1 = {
     f.b6_c1_ph >= 4 && 'The rebels dug into the barrows of the Malazan dead along the road under Y\'Ghatan\'s walls before the Fourteenth came up.',
     f.b6_mehetDone != null && 'At the camp\'s edge, Leoman\'s knives came out of a postern at night for the townsfolk who would not go to Lothal. A potter\'s son named Mehet was one of them.',
     f.b6_c1_rumour && 'Camp talk: the Fists are not happy with the Adjunct, Fist Blistig least of all. Onearm\'s Host is on the north coast, and they say the High Fist\'s spirit is broken.',
+    f.b6_c1_hellian && 'A sergeant of the Kartool City Guard, Hellian, came in with the reinforcements. She was on a temple door in Kartool when something went wrong inside it, she says, and will not say what.',
+    f.b6_c1_lostara && 'Captain Lostara Yil of the Red Blades says Leoman is not running from the Fourteenth but going somewhere, and means to be there first.',
     f.b6_c1_sortSeen && 'Reinforcements walked into the camp before Y\'Ghatan under a captain from the Stormwall, Faradan Sort, the soldiers say.',
     f.b6_c1_news && 'Leoman has taken Y\'Ghatan. He killed the Falah\'d at the gate, made himself Falah\'d, and sent the city\'s people to Lothal with their goods.',
     f.b6_c1_wellDone && 'Bandits held a well on the Odhan ahead of the column, and fouled it.',
@@ -76049,6 +76056,39 @@ By evening the 9th's water wagons are filling at the well, and the drivers want 
 In the end the squad lets the rope go and stands round the well-head breathing. The wagons' crews will have to deal with it. They will have opinions about that.`,
       ch:[{t:'On along the road.', go:()=>startExplore()}]}),
 
+    /* ---- v13.8 (David, Nov 15): meetings. Captain Lostara Yil of the Red Blades, on the Odhan, about Leoman's trail ----
+       The plan's pick (series-meetings-plan, Book Six: "Lostara Yil, Third Ch1, on the Odhan about Leoman's trail"). Where and when:
+       she stays with the Fourteenth as it follows Leoman to Y'Ghatan, a captain of Tene Baralta's Red Blades, with Pearl (W *Lostara
+       Yil*, BH c. 2-7) [supported, one source; Reactor was not reachable this pass]. A Red Blade officer reading the trail ahead of the
+       column is the game's gap. Locks: rule 21, the pursuit is never finished: she says outright the column will not catch him before
+       he gets where he is going, and the next scene's prisoner names the city. Nothing of the siege, the fire, Pearl or Cotillion.
+       Ramin (a Red Blade, lent to the squad since the Sekala) is the loyalty beat; without him, Sathi. What it gives: the wash's flank
+       check gets +1 (she says where the rearguard lies). Sets b6_c1_lostara. */
+    b6_c1_lostara:()=>({sp:'Captain Lostara Yil · Red Blades', scene:'b6_c1_road', fx:()=>{ S.f.b6_c1_lostara = 1; if (b6In('redblade')) b61L('redblade', 1); else b61L('sathi', 1); },
+      again:()=>'The Red Blade captain, a dust-plume going east along the road.', txt:
+`A rider is sitting her horse in the scrub off the road, alone, a little ahead of where the Third is, looking at the ground. Red-enamelled scale gone pink with dust, a curved sword, a captain's crest on the helm hung at her saddle. A Red Blade. She does not look up as the squad comes near, and then she does, all at once, the way a hawk does.
+
+"Third of the 9th," she says. It is not a question; she has read the shields. "Captain Lostara Yil. Tene Baralta's." She points down at the ground with her chin. "Look. Tell me what you see."
+
+There are tracks. Hooves, mostly, and feet, a great many of both, all going one way.${b61Say({sathi:`\n\nSathi crouches and looks, and touches nothing. "Shod and unshod," she says. "Walking. Not running." She looks further along the road. "Nobody's dropped anything."`, haddat:`\n\nHaddat looks at them a while. "No one is lame," she says. "Nine days on the Odhan and no one is lame. They are being looked after."`, _:''})}
+
+"Nine days," the captain says. "And not a waterskin thrown away, not a lame horse cut loose, not a straggler left for us to catch." She sounds almost admiring, and hates that she does. "A man who is running drops things. Leoman is not running from us. He is going somewhere, and he means to be there first. We won't catch him before he is." She turns her horse's head east. "Then we'll see what he does when he gets there."
+
+"There's a wash across the road a mile on. He's left people in it for you, to cost the column a day. Bows on the far rise." She looks at you. "If I were a sergeant, I'd go up the wash under the north bank. They can't see down it from there."${b6In('redblade') ? `
+
+Ramin has been standing very straight since she rode up, straighter than anyone stands on the Odhan. She looks at him for the first time, at the red scale he polishes every night and the spurs with no horse under them.
+
+"The Sekala," she says.
+
+"Captain."
+
+"I heard. Your file held the west bank." Something passes over her face, too quick to read. "The company has no horses for you. Stay lent." And then, after a moment, more quietly: "It asks after you."
+
+Ramin says nothing at all. When she has gone he stands looking after the dust a long time, and then he goes back to the squad and is, for the rest of the day, unbearable.` : ''}
+
+She does not wait for thanks. The horse goes off east along the road at a walk, and then a trot, and the dust takes her.`,
+      ch:[{t:'On along the road.', go:()=>startExplore()}]}),
+
     /* ---- the rebel rearguard in the wash ---- */
     b6_c1_to_wash:()=>{ const done = !!S.f.b6_c1_rearDone, well = !!S.f.b6_c1_wellDone;
       return {sp:'The wash', scene:'b6_c1_road', again:()=> done ? 'The wash, empty now, and the road beyond it.' : 'The wash across the road, and nothing in it.', txt: !well ?
@@ -76062,7 +76102,7 @@ The rebels have left a rearguard across the road, to slow the column a day. The 
         ch: !well ? [{t:'Back to the road.', go:()=>startExplore()}] : done ? [{t:'On, to the city.', req:()=>!!S.f.b6_c1_prisoner, onward:true, go:'b6_c1_to_city'}, {t:'Not now.', go:()=>startExplore()}] : [
           {t:'"Third! Down into the wash!" Straight at them.', go:()=>startBattle('b6_c1_rearguard', {})},
           {t:'Up the wash and round their flank, under the bank.', check:['wits', 15],
-            edges:id=>[id === 'sathi' && ['an outrider reads a wash like a page', 2], id === 'tebbet' && ['he sees the far bank better than any of you', 1], id === 'haddat' && ['she knows the Odhan\'s ground', 1], id === 'orvas' && ['the Khundryl ride round, never at', 1], id === 'tallow' && ['he would rather go straight at it and get it over', -1], id === 'hessa' && ['a temple guard stands; she does not creep', -1]],
+            edges:id=>[id === 'sathi' && ['an outrider reads a wash like a page', 2], id === 'tebbet' && ['he sees the far bank better than any of you', 1], id === 'haddat' && ['she knows the Odhan\'s ground', 1], id === 'orvas' && ['the Khundryl ride round, never at', 1], id === 'tallow' && ['he would rather go straight at it and get it over', -1], id === 'hessa' && ['a temple guard stands; she does not creep', -1], S.f.b6_c1_lostara && ['the Red Blade captain said: under the north bank, where they cannot see down', 1]],
             near:{t:()=>`Yes, but the bank gives way under ${b61Nm(b61Who())}, and ${b61Nm(b61Who())} ${b61V(b61Who(), 'go', 'goes')} down it in a slide of stones on ${b61V(b61Who(), 'your', 'the')} shoulder. ${b61Nmc(b61Who())}'ll feel it in the fight.`, fx:()=>bruise(b61Who(), bruiseN())},
             go:()=>startBattle('b6_c1_rearguard', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c1_rear_seen'},
           {t:'Not now.', go:()=>startExplore()}]}; },
@@ -76142,6 +76182,32 @@ ${b61Say({haddat:`Haddat looks at the walls and then at the barrows along the ro
 At the head of it walks a woman captain, square and weathered, who walks like somebody who has stood on a high wall in a cold wind for a long time. "Faradan Sort," the word goes down the trench. "From the Stormwall. Korelri." The 9th knows nothing else about her. By nightfall everybody in the 9th will know something.
 
 Further back in the column a sergeant from Kartool is telling the world what she thinks of it, at length, and a very large corporal behind her is carrying her pack as well as his own.${b61If('hessa', `\n\nHessa watches the Kartool sergeant go by. "City watch," she says. "I know the walk." She does not say if that is good.`)}`,
+      ch:[{t:'Go and say hello to the Kartool sergeant.', req:()=>!S.f.b6_c1_hellian, go:'b6_c1_hellian'},
+          {t:'Back to the lines.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Sergeant Hellian of the Kartool City Guard, walking in with Faradan Sort's column ----
+       Claude's own pick (the brief's "feel right"). Deepened, not duplicated: the Kartool sergeant and her very large corporal were
+       already in this scene, unnamed. Where and when: Hellian and Urb come to the Fourteenth with the reinforcements under Faradan Sort
+       before Y'Ghatan (R5; bh-canon §2 ch 5, W5 and R5 for Sort) [supported]. Her prologue is the temple of D'rek in Kartool (W Prologue,
+       bh-canon §3) and her horror of spiders is the books' running joke (W *Hellian*) [supported]. Locks: she never says what happened in
+       the temple (Ch5's sailors bring that news, and Hessa hears it there); nothing of Y'Ghatan's inside or of her squad after the fire.
+       Sets b6_c1_hellian; Hessa +1 or, without her, Tallow +1. */
+    b6_c1_hellian:()=>({sp:'Sergeant Hellian · Kartool City Guard', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_hellian = 1; if (b6In('hessa')) b61L('hessa', 1); else b61L('tallow', 1); },
+      again:()=>'The Kartool sergeant, sitting on her corporal\'s pack, asking the trench for a drink.', txt:
+`The Kartool sergeant has stopped at the end of the 9th's trench and sat down on her corporal's pack, which he is still wearing. He bends a little at the knees to make it easier. It is clearly not the first time.
+
+She is not tall, and very sunburned, and she has the look of a woman who was drunk this morning and is upset to find the condition has worn off. "Hellian," she says, before anyone asks. "Sergeant. Kartool City Guard, which I was, and now I'm this." She waves at the Odhan, the walls, the Fourteenth. "This is Urb." The corporal nods, carefully, so as not to tip her off. "Has anybody here got anything to drink that isn't water?"
+
+Nobody has. She takes it badly, but well, as if it is the kind of news she gets a lot.
+
+"They sent me here," she says, "because I was on a door. A temple door, in Kartool. Something went wrong on the inside of it, and I was on the outside, and that's what they had." She looks into the trench. "Are there spiders here? Tell me the truth. Big ones."${b61Say({hessa:`\n\nHessa has gone very still. "Which temple?" she says.
+
+Hellian looks at her, at the spear, at the way she stands, and something in her face sobers by a degree, which on her is a long way. "The big one," she says. "You know the one." She looks away. "I don't talk about it. Ask me when I'm drunk. No. Don't."
+
+Hessa does not ask again. She stands beside the Kartool sergeant a while, though, saying nothing, and when Hellian gets up off Urb's pack to go on, Hessa touches two fingers to her brow, Kartool fashion, and Hellian, to her own surprise, does it back.`, tallow:`\n\n"Scorpions," Tallow says helpfully. "Not spiders. Mostly scorpions."
+
+Hellian looks at him for a long time. "That," she says, "was not the comfort you think it was." But she laughs, after, the way people laugh in a new camp when somebody has been decent to them, and when she goes on she says "Scorpions" to Urb, darkly, and Tallow grins all the way back to his spade.`, _:`\n\n"No spiders," you tell her, which is a guess.
+
+"Liar," she says, kindly, and gets up off Urb, and goes on down the lines with him to find wherever the Fourteenth keeps its drink.`})}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c1_captain_camp:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
 `The captain is standing at the end of the 9th's trench with a slate in his hand, counting spades. He coughs, and puts the slate under his arm.
@@ -76886,6 +76952,7 @@ const B6CH2 = {
     if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axe and his tin whistle.');
     else if (f.b6_brannocDone === 2) x.push('Brannoc of Sweetcreek\'s Falari waits with his own lines for now. The roster can bring him in.');
     if (f.b6_c2_weatherOk) x.push('An old Falari sail-mender on the shore taught the squad to feel the break in a squall before it comes.');
+    if (f.b6_c2_onearm) x.push(f.b6_c2_key === 'pass' ? 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. He wrote the village down as burned.' : 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. South, it told him.');
     if (f.b6_c2_cured) x.push('Ohl broke the fever at the fire, out of a warren that is sick this season, and was grey for a day after.');
     return x; },
 
@@ -76898,6 +76965,7 @@ const B6CH2 = {
     f.b6_c2_shrineDone && 'A shrine of D\'rek on the headland, its priests dead inside, and looters at the door.',
     f.b6_brannocDone === 1 && 'Brannoc, a Falari of Sweetcreek\'s, loaned to the Seventh to make up its numbers. He walks with the squad.',
     f.b6_brannocDone === 2 && 'Brannoc, a Falari of Sweetcreek\'s, loaned to the Seventh. He waits with his own lines for now.',
+    f.b6_c2_onearm && 'The High Fist walked the column on foot at dawn on the road south, asking about the villages. Every village says the fever came up the road from the south.',
     f.b6_c2_dujek && 'The ranks say the High Fist\'s spirit is broken. He has not walked the lines since the landing.',
     f.b6_c2_drekHeard && 'The priests of D\'rek have been found slaughtered, the camp says: the healers, the ones who would have known what to do.',
     'Onearm\'s Host has landed on the north coast of Seven Cities, near Ehrlitan, to finish the rebellion. There is a fever inland.'].filter(Boolean); },
@@ -77329,8 +77397,47 @@ There are six silver among the rest of them, and some bread nobody will eat. The
 The Host goes on south, inland, in the rain. Somewhere ahead, the scouts say, there is a city called G'danisban, and the High Fist means to stop before it. Somewhere behind, the villages.
 
 ${b6In('brannoc') ? `Brannoc marches beside you, with his whistle in his teeth, not playing it. "The Seventh's got its numbers," he says, after a while. "The captain'll want to send me back to Sweetcreek." He walks on. "Don't let him."` : b62Near() ? `Somewhere back in the Falari line, a tin whistle is playing very badly. Brannoc is still loaned to the Seventh, and the roster at any fire can send for him.` : ''}${b62If('ohl', `\n\nOhl walks at the back of the squad, as he always does, so he can see them all.`)}${b62If('tuft', `\n\nTuft walks with her hood up and her hand in her sleeve, on the cards.`)}${b62If('kettle', `\n\nKettle walks with her satchel held against her chest, out of the rain.`)}${b62If('brisk', `\n\nBrisk walks at the front, where she always walks, and the rain comes off her shield in a sheet.`)}`,
-      ch:[{t:'South.', onward:true, go:()=>chapterEnd(2, b62Key() || 'burn')},
+      ch:[{t:'Someone is walking back down the column on foot, against the march. Wait for him.', req:()=>!S.f.b6_c2_onearm, go:'b6_c2_onearm'},
+          {t:'South.', onward:true, go:()=>chapterEnd(2, b62Key() || 'burn')},
           {t:'Not yet.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, first half: Dujek Onearm on his feet, before the plague has him ----
+       Where and when: the Host is on the north coast near Ehrlitan (BH p. 36, ch 1, the innkeeper's "Dujek's army?"; W *Dujek Onearm*,
+       ch 1 p. 41) and goes inland; Dujek traces the plague to its source and strikes at it at G'danisban himself, and catches it there,
+       a month before Paran comes (W *Dujek Onearm*, BH ch 13 pp. 518-519) [supported; the order of events closed with R15 and W15 for
+       what follows]. A High Fist walking back down his own column on the march south is the game's gap, and answers the captain's
+       "he hasn't walked the lines since we landed" (b6_c2_capt_dujek) and Tavore's "spirit broken" (W6) without overturning either:
+       it is the fever that moves him. Locks: he says only what the squad saw (which way the dead lay); never the goddess, the temple
+       or his own end. His left arm is the one gone (W, from GotM). The key is read (pass: he writes the village down as burned).
+       Sets b6_c2_onearm (read by Ch4 at his cot and by Ch6's High Fist); Ohl +1, or Brisk +1. */
+    b6_c2_onearm:()=>({sp:'Dujek Onearm · High Fist', scene:'b6_plague_village', fx:()=>{ S.f.b6_c2_onearm = 1; if (b6In('ohl')) b62L('ohl', 1); else b62L('brisk', 1); },
+      again:()=>`The High Fist has gone back up the column on foot, with the horse led behind him.`, txt:
+`He comes down the column against the march, on foot, in the rain, leading a horse he is not riding, with a tall outrider walking a pace behind him who would clearly rather he was riding it. A plain grey cloak, dark to the knee with mud. No helm. The left sleeve pinned up empty at the shoulder.
+
+The Seventh's rearguard sees who it is and stops walking, and he waves them on with the one hand, irritably, and they walk on. He stops by the Fourth.
+
+"Seventh," says Dujek Onearm. "Fourth." He looks the squad over, the way every officer has looked at every squad since Coral, counting, and for once does not seem to mind the sum. "You were the ones in the village. With the dead in the houses."
+
+"Sir."
+
+"Which houses first? The ones at the north end, or the south?"${b62Say({ohl:`\n\nOhl answers before you can. "The south end, High Fist," he says. "Nearest the road from the south. The longest dead were there. The newest by the well, at the north." A pause. "It came up the road, sir. Into the village. Not out of it."`, ellis:`\n\nEllis answers before you can. "South, sir. The south end had been dead longest. The tracks of the ones who ran were all going north."`, _:`\n\n"South, sir," you tell him. "The south end were longest dead."`})}
+
+The High Fist nods, as if it was the answer he expected and did not want. "South," he says. "Every village says south. Every one a little worse than the last, the further south you go." He looks down the road the Host is marching along, into the rain, where G'danisban is. "Somebody's sending it, then. Or something is."
+
+${b62Key() === 'pass' ? `He looks at the squad again. "Your captain says there was no smoke behind you."
+
+Nobody says anything.
+
+"A family?"
+
+"Yes, sir."
+
+"Then I'll write the village down as burned," Dujek says. "My hand's bad today. I'm always getting things down wrong."` : `He looks at the soot on the squad's shields. "You fired it," he says. "Good. Somebody had to, and I'd rather it was somebody who looked first."`}${b62If('ohl', `\n\nHe finds Ohl at the back of the squad, where Ohl always is. "Ohl. Ehrlitan." Not a question. "You're home."
+
+"Technically, sir," Ohl says.`)}${b62If('brannoc', `\n\nBrannoc has his whistle out of his teeth and is holding it behind his back, like a boy caught with something.`)}
+
+"Get your feet dry, Sergeant," the High Fist says. "It's a long way south." And he goes on down the column, on foot, asking a squad here and a squad there about their feet, with the outrider and the horse coming after him in the rain. It is the first time since the landing that anyone in the Seventh has seen him walk the lines.`,
+      ch:[{t:'Back to the column.', go:'b6_c2_column'}]}),
   },
 };
 
@@ -77732,7 +77839,9 @@ const B6CH3 = {
         {id:'old', name:'An old soldier of the 9th', kind:'b2soldier', x:4, y:7, node:()=>'b6_c3_old', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_oldMet},
         {id:'sapper', name:'A sapper on the forward trench', kind:'b2soldier', x:11, y:3, node:()=>S.f.b6_c3_breathTried ? 'b6_c3_sapper_again' : 'b6_c3_sapper', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_breathTried},
         {id:'rider', name:'A Khundryl rider', kind:'b4_c3_khundryl', x:14, y:7, node:()=>'b6_c3_rider', show:()=>b63Ph() === 1, fresh:()=>!S.f.b6_c3_rider},
-        {id:'carrier', name:'A water-carrier', kind:'b4_c1_recruit', x:2, y:5, node:()=>'b6_c3_water', show:()=>b63Ph() === 1 && !S.f.b6_c3_waterTried, fresh:()=>!S.f.b6_c3_waterTried} ] },
+        {id:'carrier', name:'A water-carrier', kind:'b4_c1_recruit', x:2, y:5, node:()=>'b6_c3_water', show:()=>b63Ph() === 1 && !S.f.b6_c3_waterTried, fresh:()=>!S.f.b6_c3_waterTried},
+        /* v13.8 (David, Nov 15): meetings. Sergeant Strings (Fiddler) of the marines, up on the spoil looking at the walls; back to his squad once spoken to */
+        {id:'fiddler', name:'A sergeant of marines', kind:'fiddler', x:7, y:1, node:()=>'b6_c3_fiddler', show:()=>b63Ph() === 1 && (!S.f.b6_c3_fiddler || /^b6_c3_fiddler/.test(S.node || '')), fresh:()=>!S.f.b6_c3_fiddler} ] },
 
     /* 16 x 12 (b6_c3_breach, night; Book Two's Hissar). Under the walls at the breach, the city burning past it: # the city's walls and
        houses  D at the top the breach (into the streets), and at the right the gate  F fire  , ash and rubble  . the open ground
@@ -77842,6 +77951,7 @@ const B6CH3 = {
     if (f.b6_c3_key === 'in') x.push(`The Third went into the burning streets to hold the way out open.${fell.length ? ` ${b63And(fell.map(NAME))} did not come back. ${fell.length > 1 ? 'They are' : (b63He(fell[0]) === 'she' ? 'She is' : 'He is')} in the long barrow outside the walls.` : ' Everyone came back out.'}`);
     if (f.b6_c3_key === 'line') x.push('The Third held the gate at Y\'Ghatan and pulled the burned out of it.');
     if (f.b6_c3_sallyDone) x.push('Leoman\'s people came up out of an old drain at dusk to fire the reserve\'s wagons. The Third stopped them at the drain mouth.');
+    if (f.b6_c3_fiddler) x.push('On the afternoon of the assault Sergeant Strings of the marines stood on the 9th\'s spoil with the Third and looked at the walls, and said the reserve was the job that mattered.');
     if (f.b6_c3_breathOk) x.push('A sapper of the 9th showed the squad how to breathe in a fire.');
     if (f.b6_c3_strays) x.push('On the night after, strays from the city were found among the far barrows.');
     if (b63K1() === 'bury') x.push('The old barrows were whole again when the new one was raised beside them. The Third had seen to that, on its last night under the walls.');
@@ -77855,6 +77965,7 @@ const B6CH3 = {
     f.b6_c3_key && (f.b6_c3_key === 'in' ? 'When the city burned, the Third went into the streets to hold the way out open.' : 'When the city burned, the Third held the gate and pulled the burned out of it.'),
     f.b6_c3_oil && 'Mehet says Leoman emptied the maethgara, the old oil stores, before he sent the city to Lothal.',
     f.b6_c3_wallSeen && 'At dusk the wall went down, and the marines went in. Then the city burned from the inside.',
+    f.b6_c3_fiddler && 'Sergeant Strings of the marines, whom half the Fourteenth calls something else, says a door is only a door while somebody is holding it.',
     f.b6_c3_sallyDone && 'Leoman\'s people came up an old drain at dusk to fire the reserve\'s wagons.',
     'The 9th holds the reserve at Y\'Ghatan. The marines lead the assault at dusk.'].filter(Boolean); },
 
@@ -77894,6 +78005,42 @@ He looks at the walls. "There are a great many of them in there, and it is a gre
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the old soldier of the 9th: the last time, the barrows, and news of the other squad ---- */
+    /* ---- v13.8 (David, Nov 15): meetings. Fiddler before Y'Ghatan (the plan: "a word at the siege lines; the fire and the escape
+       stay canon's") ----
+       Where and when: the marines lead the assault at dusk with the sappers ahead of them (W7, bh-canon §2); Fiddler (still Strings to
+       the army, "the worst kept secret in the 14th", W *Fiddler*) is in it with his squad, Bottle among them, and comes out under the
+       city (W7, W10) [supported; Reactor not reachable this pass]. A marine sergeant up on the reserve's spoil in the afternoon, looking
+       at the walls before his own squad goes in, is the game's gap. Locks: nothing he says knows the oil or the fire; he speaks as any
+       old sapper speaks before a city fight. The narrator never says who comes out (the 791, the tunnel under the city, the squads in
+       ch 10 all stay canon's and unshown here). Bottle is folded in (Claude's call): a young marine with something alive in his shirt.
+       What it gives: +1 on both of phase 2's ways in (the streets' low approach; the carts across the gate). Sets b6_c3_fiddler;
+       Tangle +1, or Rasp +1 without him. */
+    b6_c3_fiddler:()=>({sp:'Sergeant Strings · the marines', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_fiddler = 1; if (b6In('tangle')) b63L('tangle', 1); else b63L('rasp', 1); },
+      again:()=>'The marine sergeant has gone back down the sappers\' trench to his squad.', txt:
+`There is a sergeant of marines on top of the spoil heap at the end of the 9th's line, where no marine has any reason to be, with his elbows on his knees and his eyes on the walls. Grey in the beard, a sapper's crossbow across his back, and the patient, sour look of a man who has been looking at walls for longer than most of the Fourteenth has been alive.
+
+A young marine is squatting beside him with one hand inside his shirt, where something small is moving.
+
+"Strings," the sergeant says, when the Third comes up the spoil, before anyone can ask. He does not look round. Half the Fourteenth calls him something else. Nobody does it to his face. "Fourth Squad, the marines. That's Bottle. Bottle, stop talking to it."
+
+"I'm not talking to it," Bottle says. "It's talking to me."
+
+Strings ignores this, with the ease of long practice. "Blistig's 9th," he says. "The reserve." He looks at the walls again. "They'll tell you the reserve is the job nobody wants. It's the job nobody wants until it's the only one that matters."
+
+He is quiet a while. The walls are quiet too. On the walls, men are walking about without any hurry at all.
+
+"Quiet," you say.
+
+"Don't," says Strings. "Bards say that. Then something happens and the bards look clever." He rubs his knee. "My knee hurts, is all. It hurts before weather and before bad nights, and there's no weather."${b63Say({tangle:`\n\nTangle has been looking at the crossbow, and the satchel at the sergeant's hip, the way sappers look at each other's kit. "Cussers?" he says.
+
+"Some." Strings looks at him properly for the first time. "You're a sapper. 9th's?" Tangle nods. "Then listen. If it goes bad in there, a door's only a door while somebody's holding it. Put something in the door you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high." He gets up. "That's free. The next one costs you a drink."`, rasp:`\n\nRasp has been looking at the crossbow and the satchel at the sergeant's hip. "Malaz City," she says. "Marine-trained. I was nearly yours."
+
+"Nearly's a good place to be," Strings says. "Then listen. If it goes bad in there, a door's only a door while somebody's holding it. Put something in the door you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high." He gets up. "That's free. The next one costs you a drink."`, _:`\n\nHe gets up, knees cracking. "If it goes bad in there," he says, to nobody in particular, "a door's only a door while somebody's holding it. Put something in it you can stand behind. And if you have to go in after anyone, go low. Everything in a city fight goes high."`})}${b63If('mehet', `\n\nMehet says, "It is my city."
+
+Strings looks at him, and at the walls, and back. "Then I'm sorry," he says, "for what we're about to do to it," and he sounds as if he means it.`)}
+
+"Come on, Bottle." The young marine takes his hand out of his shirt, and something grey and quick goes down his sleeve and is gone. They go back down the spoil and along the sappers' trench toward the wall, Strings with his hands in his belt, not hurrying, the way a man walks to work.`,
+      ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
     b6_c3_old:()=>({sp:'An old soldier of the 9th', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c3_oldMet = 1; },
       again:()=>`The old soldier, polishing his helm. "Y'Ghatan," he says. "Again."`, txt:
 `An old soldier of the 9th is sitting in the door of his tent polishing a helm that has been polished so often it has gone thin at the brow. He is the one who reads the Deck behind the cook-lines for a finger of rum. His name is his own business. He has been asked.
@@ -78196,7 +78343,7 @@ The street is the width of a cart, and the houses lean in over it, and every hou
 This is the place the reserve was sent to hold.${S.f.b6_c3_breathOk ? ' The sapper\'s rules are three. You remember all three.' : ''}`,
       ch:[{t:'"Third. Forward." (a mortal fight: whoever falls here stays down)', tag:'mortal', onward:true, go:()=>startBattle('b6_c3_streets', {})},
           {t:'Down under the smoke, cloths wet, and come at them out of it.', check:['guile', 15], onward:true,
-            edges:id=>[(id === 'tangle' || id === 'rasp') && ['the sapper\'s rules are a sapper\'s', 2], id === 'mehet' && ['these are his streets', 3], (id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a big shield in a small street is noticed', -1], ...(S.f.b6_c3_breathOk ? [['the sapper showed the squad how', 1]] : [])],
+            edges:id=>[(id === 'tangle' || id === 'rasp') && ['the sapper\'s rules are a sapper\'s', 2], id === 'mehet' && ['these are his streets', 3], (id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a big shield in a small street is noticed', -1], ...(S.f.b6_c3_breathOk ? [['the sapper showed the squad how', 1]] : []), S.f.b6_c3_fiddler && ['Strings said: go low, everything in a city fight goes high', 1]],
             near:{t:()=>{ const w = b63Who(); return `Yes, but the smoke comes down lower than anyone thought it could, and ${b63Nm(w)} ${b63V(w, 'come', 'comes')} up out of it coughing, half-blind and rattled.`; }, fx:()=>b63Rattle(b63Who())},
             go:()=>startBattle('b6_c3_streets', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c3_streets_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -78226,7 +78373,7 @@ Out through the breach, onto the rubble, into the night, and the air outside is 
 Which it is.${b63If('haddat', `\n\nHaddat sets her shield. "Behind me," she says, to the burned, very gently.`)}`,
       ch:[{t:'"Third. Hold the gate."', onward:true, go:()=>startBattle('b6_c3_gate', {})},
           {t:'Get the carts across the gate-mouth first, for a wall.', check:['might', 15], onward:true,
-            edges:id=>[(id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a shield fighter knows where a wall should be', 2], id === 'tangle' && ['he has built a barricade out of less', 1], id === 'mirrel' && ['she is small, and the carts are full', -1]],
+            edges:id=>[(id === 'haddat' || id === 'darrut' || id === 'hessa') && ['a shield fighter knows where a wall should be', 2], id === 'tangle' && ['he has built a barricade out of less', 1], id === 'mirrel' && ['she is small, and the carts are full', -1], S.f.b6_c3_fiddler && ['Strings said: put something in the door you can stand behind', 1]],
             near:{t:()=>{ const w = b63Who(); return `Yes, but a cart wheel goes over ${b63Pos(w)} foot on the way across: bruised before the first blow.`; }, fx:()=>bruise(b63Who(), bruiseN())},
             go:()=>startBattle('b6_c3_gate', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c3_gate_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
@@ -78484,7 +78631,10 @@ b63Item('b6_c3_fanaticknife', 'A fanatic\'s knife', '<defs><linearGradient id="@
    Fist the army chooses) or 'out' (on picket, outside it; the vote is still the army's, unanimous); the tomb seen from the lines.
    Never: the field hospital's command cots, Poliel's or Soliel's temples, the command tent, inside Dujek's tomb, inside the walls. Never a
    word with Paran, Dujek, Hurlochel, Sweetcreek, Rythe Bude or Noto Boil; never the name "Paran" (he is "Captain Kindly", later "the High
-   Fist"). Notes for later chapters: docs/bh-ch4-notes.md. */
+   Fist"). Notes for later chapters: docs/bh-ch4-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves above are lifted (series-canon §(a0)). The Fourth knows the man in the rain from
+   Pale and Darujhistan: Captain Kindly comes out of the field hospital (b6_c4_paran) and takes the squad in to the High Fist's cot for two
+   minutes (b6_c4_onearm). The narrator still calls him Kindly; the squad says the other name once, and keeps it after. */
 /* FOR THE ARTIST (104b): names this file uses.
    Items: ART['item/b6_c4_raincloak'], ART['item/b6_c4_dyerknives']. Figure: ressa (the recruit, as an npc kind at the picket).
    Backdrops: b6_gdanisban_rain (100's, the artist's), b6_camp_night (100's, borrowed), and two of this file's own, which borrow until drawn:
@@ -78696,6 +78846,8 @@ const B6CH4 = {
     if (f.b6_c4_hounds === 'shaken') x.push('Something ran through the camp in the night. The Fourth will not talk about how close it came.');
     if (f.b6_c4_streetsDone) x.push('The forward picket\'s post in the streets outside the walls held until morning, with the Fourth behind the cart.');
     if (f.b6_c4_cartsDone) x.push('Bandits off the plague road came for the surgeons\' carts at the picket gap. The carts came in.');
+    if (f.b6_c4_paran) x.push('Captain Kindly came out of the field hospital in the rain, and the Fourth knew his face from Pale. It calls him Kindly, like the rest of the Host.');
+    if (f.b6_c4_onearm) x.push('The Fourth stood two minutes at High Fist Dujek\'s cot in the field hospital. He asked if it was still short.');
     if (f.b6_c4_vinOk) x.push('An orderly at the bedding pits showed the squad how to carry the smoke.');
     if (f.b6_soliel) x.push('The fever broke for many, the morning after. The carriers, the camp says.');
     if (b6In('ressa')) x.push('Ressa walked out of G\'danisban in the rain and asked for work, and walks with the Fourth.');
@@ -78710,6 +78862,8 @@ const B6CH4 = {
     f.b6_c4_hounds && 'Something ran through the camp and on into the city in the night. The Seventh will not say what.',
     f.b6_c4_cultDone && 'The Mistress\'s followers came at the ditch with their hands open. A priest led them.',
     f.b6_c4_kindly && 'A deserter knocked Captain Sweetcreek down in the rain, and turned out to be Captain Kindly, who now commands the Host. Not one soldier in the Host has ever met Captain Kindly.',
+    f.b6_c4_onearm && 'The High Fist asked for the old companies one at a time from his cot, and the Fourth went in for two minutes. "Still short?" he said.',
+    f.b6_c4_paran && 'Captain Kindly is a man the Fourth has met before, under another name. It keeps the name to itself. He said that if anything came through the camp that was not ours, to let it go by.',
     f.b6_c4_hospital && 'The High Fist is in the field hospital. Its flap stays shut.',
     (b6In('ressa') || b64RessaWaits()) && 'Ressa, a dyer out of G\'danisban who had the fever and lived, asked the Fourth for work.',
     'The Host is camped before G\'danisban, in the rain.'].filter(Boolean); },
@@ -78824,7 +78978,61 @@ While you stand in the mud a tall outrider comes out of the flap, Hurlochel, who
             edges:id=>[id === 'sgt' && ['a sergeant may ask a guard things', 1], id === 'ohl' && ['he served under the High Fist in the Second, and says so', 2], id === 'brannoc' && ['the guard is Falari, and so is he', 1], id === 'kettle' && ['she asks too brightly', -1]],
             near:{t:()=>`Yes, but the guard wants something for the cutter, who is short of everything: one of the squad's salves goes in through the flap.`, fx:()=>{ if ((S.inv.salve || 0) > 0) S.inv.salve -= 1; }},
             go:'b6_c4_hospital_ok', fail:'b6_c4_hospital_no'},
+          {t:'Wait under the eaves, out of the rain.', req:()=>b64Ph() <= 1 && !S.f.b6_c4_paran && !S.f.b6_c4_bell, go:'b6_c4_paran'},
           {t:'Not now.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, second half: the plague, and the officer who takes over ----
+       Where and when: the camp before G'danisban in the rain (W13). Paran has come in as a "deserter", knocked Sweetcreek down and taken
+       command at Hurlochel's asking as Captain Kindly (W13). Dujek lies dying of the plague in the field hospital, Rythe Bude attends,
+       and Noto Boil tries to keep Paran out (W15, R15) [closed]. Paran goes into the city with Noto that night and kills Poliel; Dujek
+       dies two bells before he comes back; the army votes him High Fist on the logs (W15, R15; W *Dujek Onearm*) [closed]. The Fourth
+       knows his face from Pale and Darujhistan (Book One; Book Three's Capustan meeting is optional, so unsaid). Order kept: this is the afternoon before he goes in (Ch4 phase 1);
+       the vision (b6v4) has Dujek awake toward evening and asking where the captain went. Locks: no word of the goddess, the temple,
+       the otataral or the Deragoth; the Hounds go through the camp in phase 2 as written (rule 14); Dujek's death is the bell's, as
+       before. Paran says only "let it go by" of the night, which the next check reads (+1). Dujek's "I went and looked" is his own
+       strike at the temple a month before (W *Dujek Onearm*, ch 13), said as he would say it; read only with Ch2's b6_c2_onearm.
+       Sets b6_c4_paran, b6_c4_onearm; Tuft +1 (Paran), Ohl +1 or Brisk +1 (Dujek). */
+    b6_c4_paran:()=>({sp:'The field hospital', scene:'b6_gdanisban_rain', again:()=>`The field hospital, its flap shut, the guards in the rain.`, txt:
+`You stand under the eaves of the big tent with the rain coming off the canvas in a fringe, and the guards pretend not to see you, and after a while the flap opens.
+
+A man comes out into the rain, ducking, with a cutter's voice following him out of the tent, low and sharp, still saying no. He lets the flap fall on it. Tall enough, not young, in a borrowed cloak that was somebody else's and mud to the knees, and a face like somebody has been telling him bad news for a year and he has stopped flinching.
+
+Every soldier in the Host has heard of Captain Kindly. Not one of them has met him. The Fourth has met this man. On the plain outside Pale, and in Darujhistan, and on other roads since.${b64If('tuft', `\n\nTuft has stepped back a pace, and pulled her hood down, and is looking very hard at the mud.`)}`,
+      ch:[{t:'"Captain Paran."', fx:()=>{ S.f.b6_c4_paranSaid = 'paran'; }, go:'b6_c4_paran_talk'},
+          {t:'"Captain Kindly."', fx:()=>{ S.f.b6_c4_paranSaid = 'kindly'; }, go:'b6_c4_paran_talk'},
+          {t:'Not now. Let him go by.', go:()=>startExplore()}]}),
+    b6_c4_paran_talk:()=>({sp:'Captain Kindly', scene:'b6_gdanisban_rain', fx:()=>{ S.f.b6_c4_paran = 1; b64L('tuft', 1); },
+      again:()=>`Captain Kindly has gone off through the lines in the rain.`, txt:
+`${S.f.b6_c4_paranSaid === 'paran' ? `He stops, and looks at you, and for a moment he looks very tired indeed. "Kindly," he says. "In this camp. The name is doing better than I would." He wipes the rain off his face with the heel of his hand. "Sergeant. The Fourth." He says it the way a man finds a coin in a pocket he thought was empty.` : `He stops, and looks at you, and something at the corner of his mouth moves. "Sergeant," he says. "You know perfectly well it isn't." He wipes the rain off his face with the heel of his hand. "But keep saying it. The Host likes it. The Fourth." He says it the way a man finds a coin in a pocket he thought was empty.`}
+
+He counts the squad, the way every officer has counted every squad since Coral, and gets to the end, and does not say the sum.${b64If('tuft', ` His eyes stop on the hooded one looking at the mud. "Tuft," he says, quite gently. "Still not looking at me."\n\n"No, Captain," says Tuft, to the mud.\n\n"Wise," he says. "I'd not look at me either, this week."`)}${b64If('brannoc', `\n\nBrannoc is staring at him with his mouth a little open. This is the man who knocked Sweetcreek flat. He looks at the hands, which are only hands, and seems disappointed.`)}
+
+"He's been asking for the old companies," Kindly says, and tips his head at the tent behind him. "One at a time, as if he was counting. He asked for the Seventh yesterday." He looks at the flap. "He's awake now. It won't last. Two minutes, Sergeant, and if the cutter throws you out, go."
+
+He turns to leave, and turns back, and says it lower, under the rain. "And tonight. If anything comes through the camp that isn't ours, let it go by. Don't stand in front of it. Don't let your people stand in front of it." He does not say what. "It isn't looking for you."
+
+Then he goes off through the lines, toward the middle of the camp, with the rain on his shoulders.`,
+      ch:[{t:'Go in. Two minutes.', go:'b6_c4_onearm'},
+          {t:'Not now. Leave the High Fist his rest.', go:()=>startExplore()}]}),
+    b6_c4_onearm:()=>({sp:'Dujek Onearm · the field hospital', scene:'b6_gdanisban_rain', fx:()=>{ S.f.b6_c4_onearm = 1; if (b6In('ohl')) b64L('ohl', 1); else b64L('brisk', 1); },
+      again:()=>`The field hospital's flap, shut again, and the guards in the rain.`, txt:
+`Inside, the long tent is lamplit and close and smells of vinegar and wet wool, and of the fever under them. Cots in rows. Orderlies going up and down. At the far end a cutter in a stained apron looks up from a cot, sees the squad, says "Two minutes," in a voice that has said it before today and will again, and goes back to work.
+
+The High Fist is on the cot at the back, under a grey cloak. Grey in the face, as grey as the cloak. The stump of the left arm is wrapped in clean linen. His eyes are open, and they find you, and they know you.
+
+"Seventh," says Dujek Onearm. It takes him a breath to get to the next word. "Fourth." Another. "Still short?"
+
+"Always, sir."
+
+"Good." Something that would be a smile on a man with more breath. "Means you're alive to be short."${S.f.b6_c2_onearm ? `
+
+His eyes go past you to the canvas, as if he could see through it to the city. "The village," he says. "South end." A breath. "I went and looked, after. Where it was coming from." Another. "It looked back."` : `
+
+His eyes go past you to the canvas, and the rain on it. "Feet," he says. "Keep them dry. Nobody does."`}${b64If('ohl', `\n\nOhl has taken his cap off. "Sir."\n\n"Ohl." The High Fist finds him. "Second." It is not a question. It is a roll-call. "Still counting them?"\n\n"Every one, sir."\n\n"Put me on the end," Dujek says. "When it's time. Not before." And he closes his eyes, as if that was the last order of the day and he is satisfied with it.`)}${b64If('brisk', () => b6In('ohl') ? '' : `\n\nBrisk lifts two fingers to her brow. The High Fist sees it, and lifts his own hand an inch off the blanket, which is all he has, and lets it fall.`)}
+
+"Out," says the cutter, from the next cot, not unkindly. "That's two."
+
+The squad goes back out into the rain. Nobody says anything for a long way down the lines.`,
+      ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c4_hospital_ok:()=>({sp:'The field hospital', scene:'b6_gdanisban_rain', txt:
 `The guard looks at the flap, and at you, and lets his shoulders down an inch. "He asks for his logs," he says, very quietly. "Every bell. The new man reads them to him." He swallows. "He was asking for the Seventh by name yesterday. All the old companies, one at a time, as if he was counting." He looks back at the rain. "Go on, Sergeant. There's nothing to stand here for."`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
@@ -78999,7 +79207,7 @@ Then the shapes. Down the lane between the Seventh's tent rows, low and long and
 
 They are coming toward the edge. Toward the gap. Toward the city behind it.${b64If('tuft', `\n\nTuft's hand is on your arm, hard. "Don't move," she breathes. "None of you. I know that sound. From the Pale." Her face is white in the firelight. "They're not here for us. Don't make them be."`)}`,
       ch:[{t:'"Still. Everyone. Weapons down. Let it go past."', req:()=>!S.f.b6_c4_hounds, check:['wits', 15],
-            edges:id=>[id === 'tuft' && ['she has met them before, and she is still here', 3], id === 'brisk' && ['she can stand still like a wall stands still', 2], id === 'sohra' && ['the herds taught her to stand still when something big goes by', 1], id === 'brannoc' && ['every part of him wants to swing the axe', -2], id === 'kettle' && ['her hand is already in the satchel', -1]],
+            edges:id=>[id === 'tuft' && ['she has met them before, and she is still here', 3], id === 'brisk' && ['she can stand still like a wall stands still', 2], id === 'sohra' && ['the herds taught her to stand still when something big goes by', 1], id === 'brannoc' && ['every part of him wants to swing the axe', -2], id === 'kettle' && ['her hand is already in the satchel', -1], S.f.b6_c4_paran && ['Kindly said: let it go by, it isn\'t looking for you', 1]],
             near:{t:()=>{ const w = b64Who(); return `Yes, but one of them stops at the gap, right beside ${b64Nm(w)}, and breathes, and goes on. ${b64Nm(w).replace(/^./, c => c.toUpperCase())} will not be right for a day: rattled.`; }, fx:()=>b64Rattle(b64Who())},
             go:'b6_c4_hounds_still', fail:'b6_c4_hounds_shaken'},
           {t:'Not now.', req:()=>!S.f.b6_c4_hounds, go:()=>startExplore()},
@@ -80301,7 +80509,9 @@ b65Item('b6_c5_nokrope', 'A coil of Nok\'s rope', '<ellipse cx="118" cy="110" rx
    book). Phase 4: the Fourth's road, S.f.b6_fourthRoad: 'highfist' (on with the Host), 'hanarara' (the picket left on the Hanar Ara road
    a while), 'home' (the time-served list, to the coast and a ship west). This is the Fourth's last chapter: B6CH6.fates holds its fate
    pages for Ch7's finale (shape documented in docs/bh-ch6-notes.md). Never Paran's gate, Felisin Younger, Kulat, the city's centre;
-   never speaks with Paran, Mathok, Sweetcreek, Rythe Bude. Notes: docs/bh-ch6-notes.md. */
+   never speaks with Paran, Mathok, Sweetcreek, Rythe Bude. Notes: docs/bh-ch6-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves are lifted (series-canon §(a0)): the High Fist walks the lines at dusk in the
+   day camp and stops at the Fourth's fire (b6_c6_highfist). Never his gate, Mael or what he promised Hood (rule 52). */
 /* FOR THE ARTIST (106b): names this file uses.
    Items: ART['item/b6_c6_starstone'], ['item/b6_c6_hanararobe'] (a plain placeholder is registered below, after load, only if 106b has none).
    Backdrops (SCENEX, the brief's): b6_sky (the column halted under the lights), b6_hanar_ara (outside the City of the Fallen); also used:
@@ -80520,7 +80730,9 @@ const B6CH6 = {
         {id:'captain', name:'The captain', kind:'b2soldier', x:9, y:5, node:()=>'b6_c6_captain_camp', fresh:()=>!S.f.b6_c6_captainCamp},
         {id:'falari', name:'Sweetcreek\'s Falari', kind:'b2soldier', x:4, y:5, node:()=>S.f.b6_c6_wellsDone ? 'b6_c6_falari_after' : 'b6_c6_wells_ask', fresh:()=>!S.f.b6_c6_wellsAsked},
         {id:'carrier', name:'A carrier', kind:'b3_c5_villager', x:12, y:7, node:()=>'b6_c6_carriers', fresh:()=>b6FeverList().length > 0},
-        {id:'benna', name:'Old Benna', kind:'b3v_benna', x:4, y:9, node:()=>'b6_c6_benna', fresh:()=>false} ] },
+        {id:'benna', name:'Old Benna', kind:'b3v_benna', x:4, y:9, node:()=>'b6_c6_benna', fresh:()=>false},
+        /* v13.8 (David, Nov 15): meetings. The High Fist walking the lines at dusk, as the old one used to; gone on down the lines once spoken to */
+        {id:'highfist', name:'The High Fist', kind:'paran', x:11, y:3, node:()=>'b6_c6_highfist', show:()=>!S.f.b6_c6_tomarch && (!S.f.b6_c6_highfist || /^b6_c6_highfist/.test(S.node || '')), fresh:()=>!S.f.b6_c6_highfist} ] },
 
     /* 16 x 12 (odhan, day into dusk). The plain before Hanar Ara: . hardpan  , scrub  x a dead thorn  = the city's outer tents
        ^ the city's edge, where the picket goes  r the Seventh's place in the Host's line  v back to the Host's camp */
@@ -80616,6 +80828,7 @@ const B6CH6 = {
     if (f.b6_fourthRoad === 'highfist') x.push('The Fourth goes on with the High Fist\'s Host.');
     if (f.b6_fourthRoad === 'hanarara') x.push('The Fourth stays behind on the Hanar Ara road, as the High Fist\'s picket.');
     if (f.b6_fourthRoad === 'home') x.push('The Fourth\'s names went on the time-served list. It goes down to the coast, and west.');
+    if (f.b6_c6_highfist) x.push('The High Fist walked the lines at dusk in the old High Fist\'s armour, a fire at a time, and stopped at the Fourth\'s.');
     if (b6In('brannoc')) x.push('Brannoc came through it whistling.');
     if (b6In('ressa')) x.push('Ressa came through Hanar Ara with the city calling her one of its own, and did not answer.');
     return x; },
@@ -80627,6 +80840,7 @@ const B6CH6 = {
     f.b6_c6_key === 'report' && 'You named the cult at Hanar Ara\'s edge to the captain. He wrote it down and sent it up.',
     f.b6_c6_key === 'letgo' && 'You let the surrender at Hanar Ara stand as the High Fist gave it.',
     f.b6_c6_surr && 'Mathok\'s rebels came out of Hanar Ara and surrendered. The High Fist let them go.',
+    f.b6_c6_highfist && 'The High Fist walks the lines at dusk, the way the old one did. Asked about the lights, he said, "Later."',
     f.b6_c6_lights && 'A row of lights came down below the moon on the night road, and the Host halted. The High Fist rode out ahead and came back. The ranks were not told what for.',
     'The Fourth is marching north-east of G\'danisban with Onearm\'s Host, under its new High Fist.'].filter(Boolean); },
 
@@ -80823,6 +81037,39 @@ ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it
       if (b6In('vell')) ln.push(`Vell is splicing a rope. "In Darujhistan," he says, "anything strange in the sky was the Moon. Here there isn't a Moon to blame." He thinks about it. "I miss the Moon."`);
       return {sp:'The Fourth\'s fire', scene:'b6_camp_night', txt:ln.length ? ln.join('\n\n') : `The squad is you tonight, and the fire. You sit with it, and watch the sky go dark over the scrub, and think about the end of a war, which is a thing you have never yet seen.`,
         ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}; },
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, carried on: the officer who took over, walking the lines as High Fist ----
+       Where and when: the Host's day camp north-east of G'danisban, the day after the lights (W20; bh-canon §3). He wears Onearm's
+       armour with a new sleeve (W16) [supported]. Walking the lines at dusk is the game's gap, and pays off Ch2's captain ("he used to
+       walk them every night ... asking after your feet") and Ch2/Ch4's meetings with Dujek. Dujek's logs are canon (the vote, W15, R15);
+       what is in them about the Fourth is the game's. Locks: rule 52 (what he promised Hood) and "never his gate": asked about the
+       lights he says "Later", which is no answer; nothing of Mael, the Deck card, or Hanar Ara's outcome. The narrator calls him the High
+       Fist only. Reads b6_c2_onearm, b6_c2_key, b6_c4_key, b6_c4_onearm. Sets b6_c6_highfist; Tuft +1, or Brisk +1 without her. */
+    b6_c6_highfist:()=>({sp:'The High Fist', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_highfist = 1; if (b6In('tuft')) b66L('tuft', 1); else b66L('brisk', 1); },
+      again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
+`At dusk, while the camp is waking for the night's march, the High Fist comes down the lines on foot.
+
+He has the old High Fist's armour on, plain and much-mended, with a new sleeve of chain where the left arm of it used to be pinned up empty. It is the first thing everybody looks at, and then they look at his face, and then they look away. He stops at a fire, and asks something, and goes on to the next. ${S.f.b6_c2_capDujek ? 'The captain said, on the coast, that the old one used to do this every night. ' : ''}Asking after their feet, the soldiers tell each other, after he has gone.
+
+He stops at the Fourth's.
+
+"Sergeant." He looks at the squad, and counts it, and this time he says the sum, under his breath, to himself, as if writing it down. ${b66Voted() ? `"The Seventh stood at the back, that morning," he says. "Somebody told me. I couldn't see past the mud."` : b66Out() ? `"You had the picket that morning," he says. "While the rest of the Host stood in a field and shouted. Somebody had to."` : `"The Seventh," he says. "Good."`}${S.f.b6_c2_onearm ? `
+
+"He wrote you down, you know." He nods back the way the Host has come, toward G'danisban and what is outside it. "In the logs. The Fourth, Seventh Company, a village on the road south, which end died first." A pause. ${b66Passed() ? `"And under it, in his own hand: *burned*. Underlined twice." He looks at you. "He never underlined anything twice in his life. I read every page."` : `"And under it, in his own hand: *looked first*." He looks at you. "I read every page. He didn't write that about many."`}` : ''}${S.f.b6_c4_onearm ? `
+
+"And you went in," he says. "Two minutes." Something in his face that is not quite a smile. "He'd have asked after your feet."
+
+"He asked if we were still short, sir."
+
+"Of course he did."` : ''}${b66If('tuft', `\n\nTuft has not looked up from the fire. "Tuft," he says, and nothing else, and after a moment she nods to the fire, and that seems to be enough for both of them.`)}${b66If('brannoc', `\n\nBrannoc, who has told the story of Sweetcreek in the mud at every fire from G'danisban to here, finds he has nothing at all to say, and says it.`)}`,
+      ch:[{t:'"The lights, sir?"', req:()=>!S.f.b6_c6_hfLights, fx:()=>{ S.f.b6_c6_hfLights = 1; }, go:'b6_c6_highfist_lights'},
+          {t:'"High Fist."', go:()=>startExplore()}]}),
+    b6_c6_highfist_lights:()=>({sp:'The High Fist', scene:'b6_camp_night', again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
+`He looks up, east, at the sky where they fell, which is only sky now, going dark.
+
+"Later," he says. It is not an answer. It is the only one anybody in the Host has had, and the Fourth has had it to its face, which is more than most.
+
+"Keep your feet dry, Sergeant," says the High Fist, and goes on to the next fire.`,
+      ch:[{t:'Back to the fire.', go:()=>startExplore()}]}),
     /* camp news: the High Fist, Sweetcreek and Bude at a distance, and the Fourteenth as rumour */
     b6_c6_news:()=>({sp:'Camp news', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_news = 1; }, again:()=>`The camp's news, going round the fires.`, txt:
 `The news goes round the fires the way it always does, faster than runners and less true.

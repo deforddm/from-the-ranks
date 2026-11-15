@@ -131,7 +131,9 @@ const B6CH1 = {
       walk:'.,', triggers:{o:'b6_c1_well_arrive', '<':'b6_c1_road_back', '>':'b6_c1_to_wash'}, start:{x:2, y:4},
       quest:()=> !S.f.b6_c1_wellDone ? 'The well the scouts marked, to the north-west. Hold it for the water wagons.' : !S.f.b6_c1_rearDone ? 'East along the road. The scouts say there is something in the wash ahead.' : 'East, and the city.',
       npcs:[
-        {id:'prisoner', name:'A wounded rebel', kind:'b4_c7_fleer', x:13, y:5, node:()=>'b6_c1_prisoner', show:()=>!!S.f.b6_c1_rearDone && !S.f.b6_c1_prisoner, fresh:()=>true} ] },
+        {id:'prisoner', name:'A wounded rebel', kind:'b4_c7_fleer', x:13, y:5, node:()=>'b6_c1_prisoner', show:()=>!!S.f.b6_c1_rearDone && !S.f.b6_c1_prisoner, fresh:()=>true},
+        /* v13.8 (David, Nov 15): meetings. Captain Lostara Yil of the Red Blades, reading Leoman's trail ahead of the column; rides on once spoken to */
+        {id:'lostara', name:'A Red Blade captain', kind:'b7v_lostara', x:9, y:3, node:()=>'b6_c1_lostara', show:()=>!!S.f.b6_c1_wellDone && !S.f.b6_c1_rearDone && (!S.f.b6_c1_lostara || /^b6_c1_lostara/.test(S.node || '')), fresh:()=>!S.f.b6_c1_lostara} ] },
 
     /* 16 x 12 (b4_c4_camp, dusk). . earth  , trampled grass  = a tent  W a wagon  h horse lines  f the Third's cook fire
        < west, the camp's edge and the townsfolk  > east, the barrow road under the walls */
@@ -248,6 +250,8 @@ const B6CH1 = {
     if (f.b6_c1_prisoner === 'kept') x.push('A wounded rebel from the wash went to the captain\'s wagon with water in him.');
     if (f.b6_c1_prisoner === 'left') x.push('A wounded rebel from the wash was left by the road with a water skin.');
     if (f.b6_c1_dug) x.push('The 9th\'s diggers owe the Third a stretch of trench.');
+    if (f.b6_c1_lostara) x.push('Captain Lostara Yil of the Red Blades read Leoman\'s trail ahead of the column, and told the Third where his rearguard would be lying.');
+    if (f.b6_c1_hellian) x.push('Sergeant Hellian of Kartool walked in with the reinforcements and asked the Third for a drink. It had none. She asked about spiders.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -255,6 +259,8 @@ const B6CH1 = {
     f.b6_c1_ph >= 4 && 'The rebels dug into the barrows of the Malazan dead along the road under Y\'Ghatan\'s walls before the Fourteenth came up.',
     f.b6_mehetDone != null && 'At the camp\'s edge, Leoman\'s knives came out of a postern at night for the townsfolk who would not go to Lothal. A potter\'s son named Mehet was one of them.',
     f.b6_c1_rumour && 'Camp talk: the Fists are not happy with the Adjunct, Fist Blistig least of all. Onearm\'s Host is on the north coast, and they say the High Fist\'s spirit is broken.',
+    f.b6_c1_hellian && 'A sergeant of the Kartool City Guard, Hellian, came in with the reinforcements. She was on a temple door in Kartool when something went wrong inside it, she says, and will not say what.',
+    f.b6_c1_lostara && 'Captain Lostara Yil of the Red Blades says Leoman is not running from the Fourteenth but going somewhere, and means to be there first.',
     f.b6_c1_sortSeen && 'Reinforcements walked into the camp before Y\'Ghatan under a captain from the Stormwall, Faradan Sort, the soldiers say.',
     f.b6_c1_news && 'Leoman has taken Y\'Ghatan. He killed the Falah\'d at the gate, made himself Falah\'d, and sent the city\'s people to Lothal with their goods.',
     f.b6_c1_wellDone && 'Bandits held a well on the Odhan ahead of the column, and fouled it.',
@@ -451,6 +457,39 @@ By evening the 9th's water wagons are filling at the well, and the drivers want 
 In the end the squad lets the rope go and stands round the well-head breathing. The wagons' crews will have to deal with it. They will have opinions about that.`,
       ch:[{t:'On along the road.', go:()=>startExplore()}]}),
 
+    /* ---- v13.8 (David, Nov 15): meetings. Captain Lostara Yil of the Red Blades, on the Odhan, about Leoman's trail ----
+       The plan's pick (series-meetings-plan, Book Six: "Lostara Yil, Third Ch1, on the Odhan about Leoman's trail"). Where and when:
+       she stays with the Fourteenth as it follows Leoman to Y'Ghatan, a captain of Tene Baralta's Red Blades, with Pearl (W *Lostara
+       Yil*, BH c. 2-7) [supported, one source; Reactor was not reachable this pass]. A Red Blade officer reading the trail ahead of the
+       column is the game's gap. Locks: rule 21, the pursuit is never finished: she says outright the column will not catch him before
+       he gets where he is going, and the next scene's prisoner names the city. Nothing of the siege, the fire, Pearl or Cotillion.
+       Ramin (a Red Blade, lent to the squad since the Sekala) is the loyalty beat; without him, Sathi. What it gives: the wash's flank
+       check gets +1 (she says where the rearguard lies). Sets b6_c1_lostara. */
+    b6_c1_lostara:()=>({sp:'Captain Lostara Yil · Red Blades', scene:'b6_c1_road', fx:()=>{ S.f.b6_c1_lostara = 1; if (b6In('redblade')) b61L('redblade', 1); else b61L('sathi', 1); },
+      again:()=>'The Red Blade captain, a dust-plume going east along the road.', txt:
+`A rider is sitting her horse in the scrub off the road, alone, a little ahead of where the Third is, looking at the ground. Red-enamelled scale gone pink with dust, a curved sword, a captain's crest on the helm hung at her saddle. A Red Blade. She does not look up as the squad comes near, and then she does, all at once, the way a hawk does.
+
+"Third of the 9th," she says. It is not a question; she has read the shields. "Captain Lostara Yil. Tene Baralta's." She points down at the ground with her chin. "Look. Tell me what you see."
+
+There are tracks. Hooves, mostly, and feet, a great many of both, all going one way.${b61Say({sathi:`\n\nSathi crouches and looks, and touches nothing. "Shod and unshod," she says. "Walking. Not running." She looks further along the road. "Nobody's dropped anything."`, haddat:`\n\nHaddat looks at them a while. "No one is lame," she says. "Nine days on the Odhan and no one is lame. They are being looked after."`, _:''})}
+
+"Nine days," the captain says. "And not a waterskin thrown away, not a lame horse cut loose, not a straggler left for us to catch." She sounds almost admiring, and hates that she does. "A man who is running drops things. Leoman is not running from us. He is going somewhere, and he means to be there first. We won't catch him before he is." She turns her horse's head east. "Then we'll see what he does when he gets there."
+
+"There's a wash across the road a mile on. He's left people in it for you, to cost the column a day. Bows on the far rise." She looks at you. "If I were a sergeant, I'd go up the wash under the north bank. They can't see down it from there."${b6In('redblade') ? `
+
+Ramin has been standing very straight since she rode up, straighter than anyone stands on the Odhan. She looks at him for the first time, at the red scale he polishes every night and the spurs with no horse under them.
+
+"The Sekala," she says.
+
+"Captain."
+
+"I heard. Your file held the west bank." Something passes over her face, too quick to read. "The company has no horses for you. Stay lent." And then, after a moment, more quietly: "It asks after you."
+
+Ramin says nothing at all. When she has gone he stands looking after the dust a long time, and then he goes back to the squad and is, for the rest of the day, unbearable.` : ''}
+
+She does not wait for thanks. The horse goes off east along the road at a walk, and then a trot, and the dust takes her.`,
+      ch:[{t:'On along the road.', go:()=>startExplore()}]}),
+
     /* ---- the rebel rearguard in the wash ---- */
     b6_c1_to_wash:()=>{ const done = !!S.f.b6_c1_rearDone, well = !!S.f.b6_c1_wellDone;
       return {sp:'The wash', scene:'b6_c1_road', again:()=> done ? 'The wash, empty now, and the road beyond it.' : 'The wash across the road, and nothing in it.', txt: !well ?
@@ -464,7 +503,7 @@ The rebels have left a rearguard across the road, to slow the column a day. The 
         ch: !well ? [{t:'Back to the road.', go:()=>startExplore()}] : done ? [{t:'On, to the city.', req:()=>!!S.f.b6_c1_prisoner, onward:true, go:'b6_c1_to_city'}, {t:'Not now.', go:()=>startExplore()}] : [
           {t:'"Third! Down into the wash!" Straight at them.', go:()=>startBattle('b6_c1_rearguard', {})},
           {t:'Up the wash and round their flank, under the bank.', check:['wits', 15],
-            edges:id=>[id === 'sathi' && ['an outrider reads a wash like a page', 2], id === 'tebbet' && ['he sees the far bank better than any of you', 1], id === 'haddat' && ['she knows the Odhan\'s ground', 1], id === 'orvas' && ['the Khundryl ride round, never at', 1], id === 'tallow' && ['he would rather go straight at it and get it over', -1], id === 'hessa' && ['a temple guard stands; she does not creep', -1]],
+            edges:id=>[id === 'sathi' && ['an outrider reads a wash like a page', 2], id === 'tebbet' && ['he sees the far bank better than any of you', 1], id === 'haddat' && ['she knows the Odhan\'s ground', 1], id === 'orvas' && ['the Khundryl ride round, never at', 1], id === 'tallow' && ['he would rather go straight at it and get it over', -1], id === 'hessa' && ['a temple guard stands; she does not creep', -1], S.f.b6_c1_lostara && ['the Red Blade captain said: under the north bank, where they cannot see down', 1]],
             near:{t:()=>`Yes, but the bank gives way under ${b61Nm(b61Who())}, and ${b61Nm(b61Who())} ${b61V(b61Who(), 'go', 'goes')} down it in a slide of stones on ${b61V(b61Who(), 'your', 'the')} shoulder. ${b61Nmc(b61Who())}'ll feel it in the fight.`, fx:()=>bruise(b61Who(), bruiseN())},
             go:()=>startBattle('b6_c1_rearguard', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c1_rear_seen'},
           {t:'Not now.', go:()=>startExplore()}]}; },
@@ -544,6 +583,32 @@ ${b61Say({haddat:`Haddat looks at the walls and then at the barrows along the ro
 At the head of it walks a woman captain, square and weathered, who walks like somebody who has stood on a high wall in a cold wind for a long time. "Faradan Sort," the word goes down the trench. "From the Stormwall. Korelri." The 9th knows nothing else about her. By nightfall everybody in the 9th will know something.
 
 Further back in the column a sergeant from Kartool is telling the world what she thinks of it, at length, and a very large corporal behind her is carrying her pack as well as his own.${b61If('hessa', `\n\nHessa watches the Kartool sergeant go by. "City watch," she says. "I know the walk." She does not say if that is good.`)}`,
+      ch:[{t:'Go and say hello to the Kartool sergeant.', req:()=>!S.f.b6_c1_hellian, go:'b6_c1_hellian'},
+          {t:'Back to the lines.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Sergeant Hellian of the Kartool City Guard, walking in with Faradan Sort's column ----
+       Claude's own pick (the brief's "feel right"). Deepened, not duplicated: the Kartool sergeant and her very large corporal were
+       already in this scene, unnamed. Where and when: Hellian and Urb come to the Fourteenth with the reinforcements under Faradan Sort
+       before Y'Ghatan (R5; bh-canon §2 ch 5, W5 and R5 for Sort) [supported]. Her prologue is the temple of D'rek in Kartool (W Prologue,
+       bh-canon §3) and her horror of spiders is the books' running joke (W *Hellian*) [supported]. Locks: she never says what happened in
+       the temple (Ch5's sailors bring that news, and Hessa hears it there); nothing of Y'Ghatan's inside or of her squad after the fire.
+       Sets b6_c1_hellian; Hessa +1 or, without her, Tallow +1. */
+    b6_c1_hellian:()=>({sp:'Sergeant Hellian · Kartool City Guard', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_hellian = 1; if (b6In('hessa')) b61L('hessa', 1); else b61L('tallow', 1); },
+      again:()=>'The Kartool sergeant, sitting on her corporal\'s pack, asking the trench for a drink.', txt:
+`The Kartool sergeant has stopped at the end of the 9th's trench and sat down on her corporal's pack, which he is still wearing. He bends a little at the knees to make it easier. It is clearly not the first time.
+
+She is not tall, and very sunburned, and she has the look of a woman who was drunk this morning and is upset to find the condition has worn off. "Hellian," she says, before anyone asks. "Sergeant. Kartool City Guard, which I was, and now I'm this." She waves at the Odhan, the walls, the Fourteenth. "This is Urb." The corporal nods, carefully, so as not to tip her off. "Has anybody here got anything to drink that isn't water?"
+
+Nobody has. She takes it badly, but well, as if it is the kind of news she gets a lot.
+
+"They sent me here," she says, "because I was on a door. A temple door, in Kartool. Something went wrong on the inside of it, and I was on the outside, and that's what they had." She looks into the trench. "Are there spiders here? Tell me the truth. Big ones."${b61Say({hessa:`\n\nHessa has gone very still. "Which temple?" she says.
+
+Hellian looks at her, at the spear, at the way she stands, and something in her face sobers by a degree, which on her is a long way. "The big one," she says. "You know the one." She looks away. "I don't talk about it. Ask me when I'm drunk. No. Don't."
+
+Hessa does not ask again. She stands beside the Kartool sergeant a while, though, saying nothing, and when Hellian gets up off Urb's pack to go on, Hessa touches two fingers to her brow, Kartool fashion, and Hellian, to her own surprise, does it back.`, tallow:`\n\n"Scorpions," Tallow says helpfully. "Not spiders. Mostly scorpions."
+
+Hellian looks at him for a long time. "That," she says, "was not the comfort you think it was." But she laughs, after, the way people laugh in a new camp when somebody has been decent to them, and when she goes on she says "Scorpions" to Urb, darkly, and Tallow grins all the way back to his spade.`, _:`\n\n"No spiders," you tell her, which is a guess.
+
+"Liar," she says, kindly, and gets up off Urb, and goes on down the lines with him to find wherever the Fourteenth keeps its drink.`})}`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c1_captain_camp:()=>({sp:'Captain Hollet', scene:'b6_ghatan_walls', fx:()=>{ S.f.b6_c1_orders3 = 1; }, again:()=>`The captain, in the 9th's lines. "The barrow road tonight, Sergeant."`, txt:
 `The captain is standing at the end of the 9th's trench with a slate in his hand, counting spades. He coughs, and puts the slate under his arm.

@@ -228,6 +228,7 @@ const B6CH2 = {
     if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axe and his tin whistle.');
     else if (f.b6_brannocDone === 2) x.push('Brannoc of Sweetcreek\'s Falari waits with his own lines for now. The roster can bring him in.');
     if (f.b6_c2_weatherOk) x.push('An old Falari sail-mender on the shore taught the squad to feel the break in a squall before it comes.');
+    if (f.b6_c2_onearm) x.push(f.b6_c2_key === 'pass' ? 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. He wrote the village down as burned.' : 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. South, it told him.');
     if (f.b6_c2_cured) x.push('Ohl broke the fever at the fire, out of a warren that is sick this season, and was grey for a day after.');
     return x; },
 
@@ -240,6 +241,7 @@ const B6CH2 = {
     f.b6_c2_shrineDone && 'A shrine of D\'rek on the headland, its priests dead inside, and looters at the door.',
     f.b6_brannocDone === 1 && 'Brannoc, a Falari of Sweetcreek\'s, loaned to the Seventh to make up its numbers. He walks with the squad.',
     f.b6_brannocDone === 2 && 'Brannoc, a Falari of Sweetcreek\'s, loaned to the Seventh. He waits with his own lines for now.',
+    f.b6_c2_onearm && 'The High Fist walked the column on foot at dawn on the road south, asking about the villages. Every village says the fever came up the road from the south.',
     f.b6_c2_dujek && 'The ranks say the High Fist\'s spirit is broken. He has not walked the lines since the landing.',
     f.b6_c2_drekHeard && 'The priests of D\'rek have been found slaughtered, the camp says: the healers, the ones who would have known what to do.',
     'Onearm\'s Host has landed on the north coast of Seven Cities, near Ehrlitan, to finish the rebellion. There is a fever inland.'].filter(Boolean); },
@@ -671,7 +673,46 @@ There are six silver among the rest of them, and some bread nobody will eat. The
 The Host goes on south, inland, in the rain. Somewhere ahead, the scouts say, there is a city called G'danisban, and the High Fist means to stop before it. Somewhere behind, the villages.
 
 ${b6In('brannoc') ? `Brannoc marches beside you, with his whistle in his teeth, not playing it. "The Seventh's got its numbers," he says, after a while. "The captain'll want to send me back to Sweetcreek." He walks on. "Don't let him."` : b62Near() ? `Somewhere back in the Falari line, a tin whistle is playing very badly. Brannoc is still loaned to the Seventh, and the roster at any fire can send for him.` : ''}${b62If('ohl', `\n\nOhl walks at the back of the squad, as he always does, so he can see them all.`)}${b62If('tuft', `\n\nTuft walks with her hood up and her hand in her sleeve, on the cards.`)}${b62If('kettle', `\n\nKettle walks with her satchel held against her chest, out of the rain.`)}${b62If('brisk', `\n\nBrisk walks at the front, where she always walks, and the rain comes off her shield in a sheet.`)}`,
-      ch:[{t:'South.', onward:true, go:()=>chapterEnd(2, b62Key() || 'burn')},
+      ch:[{t:'Someone is walking back down the column on foot, against the march. Wait for him.', req:()=>!S.f.b6_c2_onearm, go:'b6_c2_onearm'},
+          {t:'South.', onward:true, go:()=>chapterEnd(2, b62Key() || 'burn')},
           {t:'Not yet.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, first half: Dujek Onearm on his feet, before the plague has him ----
+       Where and when: the Host is on the north coast near Ehrlitan (BH p. 36, ch 1, the innkeeper's "Dujek's army?"; W *Dujek Onearm*,
+       ch 1 p. 41) and goes inland; Dujek traces the plague to its source and strikes at it at G'danisban himself, and catches it there,
+       a month before Paran comes (W *Dujek Onearm*, BH ch 13 pp. 518-519) [supported; the order of events closed with R15 and W15 for
+       what follows]. A High Fist walking back down his own column on the march south is the game's gap, and answers the captain's
+       "he hasn't walked the lines since we landed" (b6_c2_capt_dujek) and Tavore's "spirit broken" (W6) without overturning either:
+       it is the fever that moves him. Locks: he says only what the squad saw (which way the dead lay); never the goddess, the temple
+       or his own end. His left arm is the one gone (W, from GotM). The key is read (pass: he writes the village down as burned).
+       Sets b6_c2_onearm (read by Ch4 at his cot and by Ch6's High Fist); Ohl +1, or Brisk +1. */
+    b6_c2_onearm:()=>({sp:'Dujek Onearm · High Fist', scene:'b6_plague_village', fx:()=>{ S.f.b6_c2_onearm = 1; if (b6In('ohl')) b62L('ohl', 1); else b62L('brisk', 1); },
+      again:()=>`The High Fist has gone back up the column on foot, with the horse led behind him.`, txt:
+`He comes down the column against the march, on foot, in the rain, leading a horse he is not riding, with a tall outrider walking a pace behind him who would clearly rather he was riding it. A plain grey cloak, dark to the knee with mud. No helm. The left sleeve pinned up empty at the shoulder.
+
+The Seventh's rearguard sees who it is and stops walking, and he waves them on with the one hand, irritably, and they walk on. He stops by the Fourth.
+
+"Seventh," says Dujek Onearm. "Fourth." He looks the squad over, the way every officer has looked at every squad since Coral, counting, and for once does not seem to mind the sum. "You were the ones in the village. With the dead in the houses."
+
+"Sir."
+
+"Which houses first? The ones at the north end, or the south?"${b62Say({ohl:`\n\nOhl answers before you can. "The south end, High Fist," he says. "Nearest the road from the south. The longest dead were there. The newest by the well, at the north." A pause. "It came up the road, sir. Into the village. Not out of it."`, ellis:`\n\nEllis answers before you can. "South, sir. The south end had been dead longest. The tracks of the ones who ran were all going north."`, _:`\n\n"South, sir," you tell him. "The south end were longest dead."`})}
+
+The High Fist nods, as if it was the answer he expected and did not want. "South," he says. "Every village says south. Every one a little worse than the last, the further south you go." He looks down the road the Host is marching along, into the rain, where G'danisban is. "Somebody's sending it, then. Or something is."
+
+${b62Key() === 'pass' ? `He looks at the squad again. "Your captain says there was no smoke behind you."
+
+Nobody says anything.
+
+"A family?"
+
+"Yes, sir."
+
+"Then I'll write the village down as burned," Dujek says. "My hand's bad today. I'm always getting things down wrong."` : `He looks at the soot on the squad's shields. "You fired it," he says. "Good. Somebody had to, and I'd rather it was somebody who looked first."`}${b62If('ohl', `\n\nHe finds Ohl at the back of the squad, where Ohl always is. "Ohl. Ehrlitan." Not a question. "You're home."
+
+"Technically, sir," Ohl says.`)}${b62If('brannoc', `\n\nBrannoc has his whistle out of his teeth and is holding it behind his back, like a boy caught with something.`)}
+
+"Get your feet dry, Sergeant," the High Fist says. "It's a long way south." And he goes on down the column, on foot, asking a squad here and a squad there about their feet, with the outrider and the horse coming after him in the rain. It is the first time since the landing that anyone in the Seventh has seen him walk the lines.`,
+      ch:[{t:'Back to the column.', go:'b6_c2_column'}]}),
   },
 };
