@@ -166,8 +166,8 @@ POR.pruss = function(ctx){ const F = {cy:-74, w:13.4, h:19.8, jaw:.92, chin:5.4,
 /* Tirren: twenty-one, a farrier's daughter; sun-browned, freckled; hair tied up under a dust scarf; a leather farrier's apron over a quilted
    shirt; a rasp on a thong at the throat; the farrier's hammer's head up by the right shoulder, held */
 POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9, skin:'#c49a76', iris:'#4a3a24', lip:'#9a5a4a', browCol:'#4a321e', browW:1.05, arch:.65, browL:.3, browR:.3, rim:'#a07a5a', rimA:.22, nose:1.1, look:.25, smileL:.15, smileR:.1, mouthW:3.3, age:0, bags:.1, open:.88};
-  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 4, F.cy - 6); ctx.quadraticCurveTo(-F.w - 7, F.cy + 18, -F.w - 2, -44); ctx.lineTo(F.w + 2, -44); ctx.quadraticCurveTo(F.w + 7, F.cy + 18, F.w + 4, F.cy - 6); ctx.closePath();
-    ctx.fillStyle = PR.lit(ctx, '#9a6a40', '#2a160a', -F.w, F.w); ctx.fill(); ctx.restore(); // her hair, long, down behind to the shoulders
+  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 2, F.cy - 6); ctx.quadraticCurveTo(-F.w - 3.4, F.cy + 14, -F.w + 1, -50); ctx.lineTo(F.w - 1, -50); ctx.quadraticCurveTo(F.w + 3.4, F.cy + 14, F.w + 2, F.cy - 6); ctx.closePath();
+    ctx.fillStyle = PR.lit(ctx, '#6a4228', '#1a0e06', -F.w, F.w); ctx.fill(); ctx.restore(); // her hair, down behind to the collar (v13.5.3: narrower and in shadow; it had read as a slab beside the face)
   PR.stroke(ctx, '#4a3624', 3.4, () => { ctx.moveTo(22, 6); ctx.lineTo(28, -84); }); ctx.save(); ctx.translate(28.6, -88); ctx.rotate(.1); ctx.fillStyle = '#5a5a5e'; ctx.fillRect(-7, -3, 14, 6); ctx.restore(); // the hammer
   PR.neck(ctx, F, 7.6);
   const B = BP.body(ctx, F, {wide:32, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#a89272', c2:'#2a2016'});
@@ -180,7 +180,7 @@ POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9,
   PR.face(ctx, F);
   const u = F.h/20, top = F.cy - 21*u;
   for (let i = 0; i < 10; i++) { const r = PR.rng(i + 2101); ell(ctx, (r() < .5 ? -1 : 1) * (3 + r() * 3.4), F.cy + .6*u + r() * 1.6*u, .32, .32, 'rgba(130,70,40,.35)'); } // freckles across the cheeks
-  BP.hair(ctx, F, {c:['#9a6a40', '#6a4228', '#2a160a'], v:1.2, wx:.92, hl:12, ey:-2.4, n:60, sw:.42, seed:2111, sh:'#e0b890', shA:.18}); // the hair, loose at the sides under the scarf
+  BP.hair(ctx, F, {c:['#7a5034', '#4a2c18', '#1a0e06'], v:1.2, wx:.92, hl:12, ey:-2.4, n:60, sw:.42, seed:2111, sh:'#e0b890', shA:.12}); // the hair, loose at the sides under the scarf (v13.5.3: darker, so it reads as hair beside the face)
   ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 2.6, top + 10.6*u); ctx.quadraticCurveTo(-F.w - 2, top - 3*u, 0, top - 3.6*u); ctx.quadraticCurveTo(F.w + 2, top - 3*u, F.w + 2.6, top + 10.6*u);
     ctx.quadraticCurveTo(0, top + 6.2*u, -F.w - 2.6, top + 10.6*u); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#a6845e', '#2a1e12', -F.w, F.w); ctx.fill(); ctx.restore(); // the dust scarf over the crown
   PR.stroke(ctx, 'rgba(30,20,10,.5)', .8, () => { ctx.moveTo(-F.w - 2.4, top + 10*u); ctx.quadraticCurveTo(0, top + 6*u, F.w + 2.4, top + 10*u); });

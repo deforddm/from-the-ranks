@@ -91,8 +91,8 @@ POR.tegra = function(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.8, chin:4.4, 
   F.under = (ctx, F) => { const u = F.h/20; [-1, 1].forEach(sd => { ctx.fillStyle = 'rgba(240,236,220,.85)'; ctx.fillRect(sd*F.w*.42 - 2.2, F.cy + 1.4*u, 4.4, 1); ctx.fillRect(sd*F.w*.42 - 2.2, F.cy + 3*u, 4.4, 1); }); };
   PR.face(ctx, F);
   BP.hair(ctx, F, {c:['#2a1e14', '#120c08', '#040302'], v:1.5, wx:.9, hl:12.6, ey:-2.4, n:70, sw:.45, seed:917, sh:'#c8b48a', shA:.18});
-  const u = F.h/20; PR.stroke(ctx, '#140e08', 3.4, () => { ctx.moveTo(-F.w*.8, F.cy + 4*u); ctx.quadraticCurveTo(-F.w - 2, F.cy + 16*u, -F.w*.6, F.cy + 30*u); }); // the braid over the left shoulder
-  for (let i = 0; i < 5; i++) ell(ctx, -F.w*.86 - (i < 2 ? 1 : 0) + i * .4, F.cy + (8 + i * 4.4)*u, 2, 1.4, '#2a1e14');
+  const u = F.h/20; PR.stroke(ctx, '#140e08', 3.4, () => { ctx.moveTo(-F.w - .4, F.cy + 9*u); ctx.quadraticCurveTo(-F.w - 3.4, F.cy + 18*u, -F.w*.7, F.cy + 30*u); }); // the braid over the left shoulder, from behind the ear (v13.5.3: it had crossed her cheek)
+  for (let i = 0; i < 5; i++) ell(ctx, -F.w - 1.6 + i * .5, F.cy + (12 + i * 4)*u, 2, 1.4, '#2a1e14');
   return F; };
 /* Brennet: thirty-one, a carter; sun-browned, a padded cap; a leather apron with iron studs over a shirt, the shirt's collar open; the
    wagon-pin's head up by the left shoulder, held */

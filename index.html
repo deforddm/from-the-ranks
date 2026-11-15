@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.5.2';
+const VERSION = '13.5.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2637,8 +2637,11 @@ const BP = {
      its top edge runs up to the jaw's corner at the sides (o.drop lowers it) and dips under the chin; a lit edge, a dark edge, the jaw's cast shadow on it */
   collar(ctx, F, c1, c2, lines, o = {}){ const u = F.h/20, x = F.x || 0, jw = F.w*(F.jaw ?? .8), jy = F.cy + 13*u + (o.drop || 0), cb = F.cy + 19*u + 1 + (o.drop || 0)*.5, sw = o.sw ?? 28, sy = o.sy ?? -38;
     const top = () => { ctx.moveTo(x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy); };
-    const shape = () => { ctx.beginPath(); ctx.moveTo(x - sw, sy); ctx.bezierCurveTo(x - sw*.5, sy - 6, x - jw - 2.2, jy + 10, x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy);
-      ctx.bezierCurveTo(x + jw + 2.2, jy + 10, x + sw*.5, sy - 6, x + sw, sy); ctx.quadraticCurveTo(x, sy + 5, x - sw, sy); ctx.closePath(); };
+    /* v13.5.3 (David, Nov 14: the collar's corners stuck out past the shoulders as two points): the outer edge now rounds down into
+       the shoulder (a curve through a corner pulled in and dropped), so the collar sits on the body instead of winging out of it */
+    const ex = sw*.84, ey = sy + 3;
+    const shape = () => { ctx.beginPath(); ctx.moveTo(x - ex, ey); ctx.bezierCurveTo(x - sw*.62, sy - 5, x - jw - 2.2, jy + 10, x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy);
+      ctx.bezierCurveTo(x + jw + 2.2, jy + 10, x + sw*.62, sy - 5, x + ex, ey); ctx.quadraticCurveTo(x + sw*.98, sy + 7, x + sw*.6, sy + 7.5); ctx.quadraticCurveTo(x, sy + 9, x - sw*.6, sy + 7.5); ctx.quadraticCurveTo(x - sw*.98, sy + 7, x - ex, ey); ctx.closePath(); };
     ctx.save(); shape(); ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c1, c2, x - sw, x + sw); ctx.fill(); ctx.restore();
     ctx.save(); shape(); ctx.clip(); PR.soft(ctx, x + sw*.55, sy - 6, sw*.6, 12, '#000000', .5); PR.soft(ctx, x - sw*.45, sy - 6, sw*.35, 5, '#fff0d8', .12);
       const st = o.style || 'rib';
@@ -8150,6 +8153,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.5.3', ['Portraits: the high collars worn in the later books no longer stick out past the shoulders in two points; they round down onto the shoulder. Tegra\'s braid falls from behind her ear instead of across her cheek, Tirren\'s hair sits in shadow beside her face, and Ruuk\'s pushed-back hood is smaller and darker.']],
   ['13.5.2', ['The polish punch list, as David picked it. Choices that changed nothing now do something or say what they do: Tav answers what was said to him, the Host runner gets one honest answer, eating while the Book Four ridge watches steadies the 9th, Not now at the Book Eight bells keeps you on the shore, and Book Six\'s buttons say when they start a fight. Sentences that turned up word for word in two books are rewritten in the later one (the readings and the fire refrain stay, on purpose). Book Four\'s news of the Seti gorge comes in the afternoon light it is told in.']],
   ['13.5.1', ['Field Surgeon reworked: it now goes with Stanch, not Mend. A stanched squadmate also gets a dressing that heals a little at the start of each of their next three turns (2, more at higher levels). Soldiers who took it keep it.']],
   ['13.5.0', ['A second talent at level 12. Every soldier who took a talent at level 3 chooses another: the one passed over then, or a new one for their trade. Sergeants: Old Hand (one more Rally a fight). Healers: Field Surgeon (Mend also heals the worst-hurt squadmate within 2 of its target, for half). Heavies: Anvil (once a fight, blows aimed at a squadmate beside them land on them instead). Sappers: Stake Line (once a fight, three sharpened stakes and a cord; an enemy that walks onto them stops there, and no munition is used). Bows: Called Shot (a marked enemy loses 2 armour). Casters: Deep Warren (every spell costs 1 less strain). A save already past level 12 is asked at the next fire. Picks carry into later books like any other.']],
@@ -62440,8 +62444,8 @@ Object.assign(POR, {
       const hy = -104 + i*4; PR.path(ctx, [[0, hy - 13], [2.2, hy - 5], [.8, hy], [-.8, hy], [-2.2, hy - 5]]); ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#f0ece4'], [.45, '#a09c94'], [1, '#2a2826']]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.4)', .3, () => { ctx.moveTo(0, hy - 12); ctx.lineTo(0, hy); });
       PR.stroke(ctx, '#d8c8a0', .5, () => { for (let k = 0; k < 3; k++){ ctx.moveTo(-1.1, hy + 1 + k*.9); ctx.lineTo(1.1, hy + 1.4 + k*.9); } }); ctx.restore(); }
     PR.stroke(ctx, '#3a2614', 1.2, () => { ctx.moveTo(11, -46); ctx.quadraticCurveTo(26, -50, 34, -44); }); // the bundle's thong
-    ctx.beginPath(); ctx.moveTo(-18, -42); ctx.bezierCurveTo(-21, -56, -15, -65, 0, -64); ctx.bezierCurveTo(15, -65, 21, -56, 18, -42); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a6c46', '#120a04', -18, 14); ctx.fill(); // the hood, pushed back, bunched behind his neck
-    PR.stroke(ctx, 'rgba(0,0,0,.5)', .8, () => { ctx.moveTo(-15, -46); ctx.quadraticCurveTo(-14, -58, -6, -62); ctx.moveTo(15, -46); ctx.quadraticCurveTo(14, -58, 6, -62); });
+    ctx.beginPath(); ctx.moveTo(-15, -44); ctx.bezierCurveTo(-17.5, -56, -13, -64, 0, -63); ctx.bezierCurveTo(13, -64, 17.5, -56, 15, -44); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#5e4a30', '#120a04', -16, 12); ctx.fill(); // the hood, pushed back, bunched behind his neck (v13.5.3: smaller and in shadow; it had stood out as a pale lump)
+    PR.stroke(ctx, 'rgba(0,0,0,.5)', .8, () => { ctx.moveTo(-12.5, -47); ctx.quadraticCurveTo(-12, -57, -5, -61); ctx.moveTo(12.5, -47); ctx.quadraticCurveTo(12, -57, 5, -61); });
     PR.neck(ctx, F, 8.8); BP.throat(ctx, F, -47.6);
     const B = B5P.body(ctx, F, {wide:34, drop:3, trap:3.5, nx:11.4, ny:F.cy + 18.6, cb:-47.6, c1:'#a4845a', c2:'#1a1008'}); ctx.save(); B.path(); ctx.clip(); // the hide hood, pushed back, lying in folds round his shoulders
       ctx.fillStyle = PR.lit(ctx, '#5e5444', '#14100a', -8, 8); PR.path(ctx, [[-6, -34], [6, -34], [9, 6], [-9, 6]]); ctx.fill(); // wool, where the hide is laced
@@ -99934,8 +99938,8 @@ POR.tegra = function(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.8, chin:4.4, 
   F.under = (ctx, F) => { const u = F.h/20; [-1, 1].forEach(sd => { ctx.fillStyle = 'rgba(240,236,220,.85)'; ctx.fillRect(sd*F.w*.42 - 2.2, F.cy + 1.4*u, 4.4, 1); ctx.fillRect(sd*F.w*.42 - 2.2, F.cy + 3*u, 4.4, 1); }); };
   PR.face(ctx, F);
   BP.hair(ctx, F, {c:['#2a1e14', '#120c08', '#040302'], v:1.5, wx:.9, hl:12.6, ey:-2.4, n:70, sw:.45, seed:917, sh:'#c8b48a', shA:.18});
-  const u = F.h/20; PR.stroke(ctx, '#140e08', 3.4, () => { ctx.moveTo(-F.w*.8, F.cy + 4*u); ctx.quadraticCurveTo(-F.w - 2, F.cy + 16*u, -F.w*.6, F.cy + 30*u); }); // the braid over the left shoulder
-  for (let i = 0; i < 5; i++) ell(ctx, -F.w*.86 - (i < 2 ? 1 : 0) + i * .4, F.cy + (8 + i * 4.4)*u, 2, 1.4, '#2a1e14');
+  const u = F.h/20; PR.stroke(ctx, '#140e08', 3.4, () => { ctx.moveTo(-F.w - .4, F.cy + 9*u); ctx.quadraticCurveTo(-F.w - 3.4, F.cy + 18*u, -F.w*.7, F.cy + 30*u); }); // the braid over the left shoulder, from behind the ear (v13.5.3: it had crossed her cheek)
+  for (let i = 0; i < 5; i++) ell(ctx, -F.w - 1.6 + i * .5, F.cy + (12 + i * 4)*u, 2, 1.4, '#2a1e14');
   return F; };
 /* Brennet: thirty-one, a carter; sun-browned, a padded cap; a leather apron with iron studs over a shirt, the shirt's collar open; the
    wagon-pin's head up by the left shoulder, held */
@@ -109087,8 +109091,8 @@ POR.pruss = function(ctx){ const F = {cy:-74, w:13.4, h:19.8, jaw:.92, chin:5.4,
 /* Tirren: twenty-one, a farrier's daughter; sun-browned, freckled; hair tied up under a dust scarf; a leather farrier's apron over a quilted
    shirt; a rasp on a thong at the throat; the farrier's hammer's head up by the right shoulder, held */
 POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9, skin:'#c49a76', iris:'#4a3a24', lip:'#9a5a4a', browCol:'#4a321e', browW:1.05, arch:.65, browL:.3, browR:.3, rim:'#a07a5a', rimA:.22, nose:1.1, look:.25, smileL:.15, smileR:.1, mouthW:3.3, age:0, bags:.1, open:.88};
-  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 4, F.cy - 6); ctx.quadraticCurveTo(-F.w - 7, F.cy + 18, -F.w - 2, -44); ctx.lineTo(F.w + 2, -44); ctx.quadraticCurveTo(F.w + 7, F.cy + 18, F.w + 4, F.cy - 6); ctx.closePath();
-    ctx.fillStyle = PR.lit(ctx, '#9a6a40', '#2a160a', -F.w, F.w); ctx.fill(); ctx.restore(); // her hair, long, down behind to the shoulders
+  ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 2, F.cy - 6); ctx.quadraticCurveTo(-F.w - 3.4, F.cy + 14, -F.w + 1, -50); ctx.lineTo(F.w - 1, -50); ctx.quadraticCurveTo(F.w + 3.4, F.cy + 14, F.w + 2, F.cy - 6); ctx.closePath();
+    ctx.fillStyle = PR.lit(ctx, '#6a4228', '#1a0e06', -F.w, F.w); ctx.fill(); ctx.restore(); // her hair, down behind to the collar (v13.5.3: narrower and in shadow; it had read as a slab beside the face)
   PR.stroke(ctx, '#4a3624', 3.4, () => { ctx.moveTo(22, 6); ctx.lineTo(28, -84); }); ctx.save(); ctx.translate(28.6, -88); ctx.rotate(.1); ctx.fillStyle = '#5a5a5e'; ctx.fillRect(-7, -3, 14, 6); ctx.restore(); // the hammer
   PR.neck(ctx, F, 7.6);
   const B = BP.body(ctx, F, {wide:32, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#a89272', c2:'#2a2016'});
@@ -109101,7 +109105,7 @@ POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9,
   PR.face(ctx, F);
   const u = F.h/20, top = F.cy - 21*u;
   for (let i = 0; i < 10; i++) { const r = PR.rng(i + 2101); ell(ctx, (r() < .5 ? -1 : 1) * (3 + r() * 3.4), F.cy + .6*u + r() * 1.6*u, .32, .32, 'rgba(130,70,40,.35)'); } // freckles across the cheeks
-  BP.hair(ctx, F, {c:['#9a6a40', '#6a4228', '#2a160a'], v:1.2, wx:.92, hl:12, ey:-2.4, n:60, sw:.42, seed:2111, sh:'#e0b890', shA:.18}); // the hair, loose at the sides under the scarf
+  BP.hair(ctx, F, {c:['#7a5034', '#4a2c18', '#1a0e06'], v:1.2, wx:.92, hl:12, ey:-2.4, n:60, sw:.42, seed:2111, sh:'#e0b890', shA:.12}); // the hair, loose at the sides under the scarf (v13.5.3: darker, so it reads as hair beside the face)
   ctx.save(); ctx.beginPath(); ctx.moveTo(-F.w - 2.6, top + 10.6*u); ctx.quadraticCurveTo(-F.w - 2, top - 3*u, 0, top - 3.6*u); ctx.quadraticCurveTo(F.w + 2, top - 3*u, F.w + 2.6, top + 10.6*u);
     ctx.quadraticCurveTo(0, top + 6.2*u, -F.w - 2.6, top + 10.6*u); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#a6845e', '#2a1e12', -F.w, F.w); ctx.fill(); ctx.restore(); // the dust scarf over the crown
   PR.stroke(ctx, 'rgba(30,20,10,.5)', .8, () => { ctx.moveTo(-F.w - 2.4, top + 10*u); ctx.quadraticCurveTo(0, top + 6*u, F.w + 2.4, top + 10*u); });

@@ -144,8 +144,11 @@ const BP = {
      its top edge runs up to the jaw's corner at the sides (o.drop lowers it) and dips under the chin; a lit edge, a dark edge, the jaw's cast shadow on it */
   collar(ctx, F, c1, c2, lines, o = {}){ const u = F.h/20, x = F.x || 0, jw = F.w*(F.jaw ?? .8), jy = F.cy + 13*u + (o.drop || 0), cb = F.cy + 19*u + 1 + (o.drop || 0)*.5, sw = o.sw ?? 28, sy = o.sy ?? -38;
     const top = () => { ctx.moveTo(x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy); };
-    const shape = () => { ctx.beginPath(); ctx.moveTo(x - sw, sy); ctx.bezierCurveTo(x - sw*.5, sy - 6, x - jw - 2.2, jy + 10, x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy);
-      ctx.bezierCurveTo(x + jw + 2.2, jy + 10, x + sw*.5, sy - 6, x + sw, sy); ctx.quadraticCurveTo(x, sy + 5, x - sw, sy); ctx.closePath(); };
+    /* v13.5.3 (David, Nov 14: the collar's corners stuck out past the shoulders as two points): the outer edge now rounds down into
+       the shoulder (a curve through a corner pulled in and dropped), so the collar sits on the body instead of winging out of it */
+    const ex = sw*.84, ey = sy + 3;
+    const shape = () => { ctx.beginPath(); ctx.moveTo(x - ex, ey); ctx.bezierCurveTo(x - sw*.62, sy - 5, x - jw - 2.2, jy + 10, x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy);
+      ctx.bezierCurveTo(x + jw + 2.2, jy + 10, x + sw*.62, sy - 5, x + ex, ey); ctx.quadraticCurveTo(x + sw*.98, sy + 7, x + sw*.6, sy + 7.5); ctx.quadraticCurveTo(x, sy + 9, x - sw*.6, sy + 7.5); ctx.quadraticCurveTo(x - sw*.98, sy + 7, x - ex, ey); ctx.closePath(); };
     ctx.save(); shape(); ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c1, c2, x - sw, x + sw); ctx.fill(); ctx.restore();
     ctx.save(); shape(); ctx.clip(); PR.soft(ctx, x + sw*.55, sy - 6, sw*.6, 12, '#000000', .5); PR.soft(ctx, x - sw*.45, sy - 6, sw*.35, 5, '#fff0d8', .12);
       const st = o.style || 'rib';

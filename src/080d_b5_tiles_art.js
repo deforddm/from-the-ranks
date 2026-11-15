@@ -308,8 +308,8 @@ Object.assign(POR, {
       const hy = -104 + i*4; PR.path(ctx, [[0, hy - 13], [2.2, hy - 5], [.8, hy], [-.8, hy], [-2.2, hy - 5]]); ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#f0ece4'], [.45, '#a09c94'], [1, '#2a2826']]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.4)', .3, () => { ctx.moveTo(0, hy - 12); ctx.lineTo(0, hy); });
       PR.stroke(ctx, '#d8c8a0', .5, () => { for (let k = 0; k < 3; k++){ ctx.moveTo(-1.1, hy + 1 + k*.9); ctx.lineTo(1.1, hy + 1.4 + k*.9); } }); ctx.restore(); }
     PR.stroke(ctx, '#3a2614', 1.2, () => { ctx.moveTo(11, -46); ctx.quadraticCurveTo(26, -50, 34, -44); }); // the bundle's thong
-    ctx.beginPath(); ctx.moveTo(-18, -42); ctx.bezierCurveTo(-21, -56, -15, -65, 0, -64); ctx.bezierCurveTo(15, -65, 21, -56, 18, -42); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a6c46', '#120a04', -18, 14); ctx.fill(); // the hood, pushed back, bunched behind his neck
-    PR.stroke(ctx, 'rgba(0,0,0,.5)', .8, () => { ctx.moveTo(-15, -46); ctx.quadraticCurveTo(-14, -58, -6, -62); ctx.moveTo(15, -46); ctx.quadraticCurveTo(14, -58, 6, -62); });
+    ctx.beginPath(); ctx.moveTo(-15, -44); ctx.bezierCurveTo(-17.5, -56, -13, -64, 0, -63); ctx.bezierCurveTo(13, -64, 17.5, -56, 15, -44); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#5e4a30', '#120a04', -16, 12); ctx.fill(); // the hood, pushed back, bunched behind his neck (v13.5.3: smaller and in shadow; it had stood out as a pale lump)
+    PR.stroke(ctx, 'rgba(0,0,0,.5)', .8, () => { ctx.moveTo(-12.5, -47); ctx.quadraticCurveTo(-12, -57, -5, -61); ctx.moveTo(12.5, -47); ctx.quadraticCurveTo(12, -57, 5, -61); });
     PR.neck(ctx, F, 8.8); BP.throat(ctx, F, -47.6);
     const B = B5P.body(ctx, F, {wide:34, drop:3, trap:3.5, nx:11.4, ny:F.cy + 18.6, cb:-47.6, c1:'#a4845a', c2:'#1a1008'}); ctx.save(); B.path(); ctx.clip(); // the hide hood, pushed back, lying in folds round his shoulders
       ctx.fillStyle = PR.lit(ctx, '#5e5444', '#14100a', -8, 8); PR.path(ctx, [[-6, -34], [6, -34], [9, 6], [-9, 6]]); ctx.fill(); // wool, where the hide is laced
