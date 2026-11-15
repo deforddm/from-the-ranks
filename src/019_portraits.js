@@ -302,11 +302,12 @@ const POR = {
     ctx.fillStyle = PR.lit(ctx, '#5a4028', '#241810', -30, 30); PR.path(ctx, [[-32, -41], [-27, -44], [36, 2], [28, 2]]); ctx.fill(); ctx.fillStyle = '#9a9488'; ctx.fillRect(4, -21, 4.4, 4.4); ctx.fillStyle = '#34322e'; ctx.fillRect(5.1, -19.9, 2.2, 2.2); ctx.restore(); BP.light(ctx, F, B); // the baldric and its buckle
     BP.spaulder(ctx, {wide:56, drop:2, rise:3.4, n:4, c:['#e0e2e4', '#9a9c9e', '#3a3c3e'], style:'plate', rivet:'#fff4e0', trim:'rgba(180,60,40,.8)'}); // riveted steel spaulders over the mail, edged in her oxblood
     // the scale gorget: a collar round the neck in one piece with the mail, each row hanging over the one below like slates
-    { BP.band(ctx, B, -1, 12); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 2; ctx.fillStyle = '#2a2722'; ctx.fill(); ctx.restore();
-      ctx.save(); BP.band(ctx, B, -1, 12); ctx.clip(); BP.scales(ctx, -B.nx*1.7, B.nx*1.7, B.ny - 2, B.cb + 12, 4.4, '#8a8274', 17); PR.soft(ctx, B.nx, B.ny + 8, 14, 10, '#000000', .4); PR.soft(ctx, -B.nx*.7, B.ny + 4, 7, 4, '#e8dcc0', .12); PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3.2, '#0a0604', .55); ctx.restore();
+    { BP.band(ctx, B, -1, 12); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 1; ctx.fillStyle = '#2a2722'; ctx.fill(); ctx.restore(); // v13.5.3 (David: blend it better): a softer drop onto the mail
+      ctx.save(); BP.band(ctx, B, -1, 12); ctx.clip(); BP.scales(ctx, -B.nx*1.7, B.nx*1.7, B.ny - 2, B.cb + 12, 4.4, '#7c766c', 17);
+      { const g = ctx.createLinearGradient(0, B.cb + 2, 0, B.cb + 13); g.addColorStop(0, 'rgba(48,46,42,0)'); g.addColorStop(1, 'rgba(48,46,42,.55)'); ctx.fillStyle = g; ctx.fillRect(-B.nx*2, B.cb + 2, B.nx*4, 12); } /* the scales darken into the mail below */ PR.soft(ctx, B.nx, B.ny + 8, 14, 10, '#000000', .4); PR.soft(ctx, -B.nx*.7, B.ny + 4, 7, 4, '#e8dcc0', .12); PR.soft(ctx, 1.4, B.cb + 1.2, F.w*.8, 3.2, '#0a0604', .55); ctx.restore();
       ctx.lineCap = 'round'; PR.stroke(ctx, '#3a2618', 2.4, B.top); ctx.save(); ctx.translate(0, -.6); PR.stroke(ctx, 'rgba(200,160,110,.3)', .6, B.top); ctx.restore(); // the leather it's riveted to, rolled at the top
       for (let i = 1; i < 10; i++){ const [x, y] = B.pt(-1 + i/5, .2); ell(ctx, x, y, .75, .75, x < 3 ? '#c8c0b0' : '#6a645a'); }
-      PR.stroke(ctx, 'rgba(10,8,6,.7)', .7, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1.05 + i/20*2.1, 12); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); } // the hem's dark edge
+      PR.stroke(ctx, 'rgba(10,8,6,.3)', .6, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1.05 + i/20*2.1, 12); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); } // the hem's edge, faint
     F.under = (ctx, F) => { const u = F.h/20; PR.dots(ctx, F, 70, 'rgba(150,80,50,.22)', .5, [-4, 8, (x, y) => Math.abs(x) > F.w*.8]); // freckles, sun-faded
       PR.soft(ctx, 2, F.cy + 16, 5.5, 2, '#140806', .22);
       ctx.lineCap = 'round'; PR.stroke(ctx, 'rgba(236,196,176,.4)', .5, () => { ctx.moveTo(-6.2, F.cy + 16.4*u); ctx.lineTo(-3.8, F.cy + 17.6*u); }); // a nick on the chin that healed pale
