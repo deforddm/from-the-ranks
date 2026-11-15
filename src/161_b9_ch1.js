@@ -153,7 +153,8 @@ const B9CH1 = {
         {id:'drill', name:'The heavies\' drill sergeant', kind:'b2soldier', x:13, y:5, node:()=>'b9_c1_drill', fresh:()=>!S.f.b9_c1_rollTried},
         {id:'qm', name:'The quartermaster', kind:'b2soldier', x:10, y:2, node:()=>'b9_c1_qm', fresh:()=>!S.f.b9_c1_scale},
         {id:'captain', name:'The captain', kind:'b2soldier', x:4, y:2, node:()=>'b9_c1_captain', fresh:()=>!S.f.b9_c1_captain},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false} ] },
+        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false},
+        {id:'ladies', name:'Two sergeants with a handcart', kind:'b5_c5_refugee', x:3, y:10, node:()=>'b9_c1_ladies', fresh:()=>!S.f.b9_c1_ladies} ] },
 
     /* 16 x 12 (b9_c1_quarter, day). The quarter by day: L a looted house, its door broken in  T the soldiers' tavern  D the household's
        door  Y their yard gate  c a handcart  < back to the barracks */
@@ -232,6 +233,7 @@ const B9CH1 = {
     if (f.b9_c1_key === 'street') x.push(`The Third went out into the quarter the night of the cards and helped a household.${f.b9_c1_boy === 'found' ? ' The boy who ran was found in an alley.' : ''}`);
     if (f.b9_braskDone === 1) x.push(b9In('brask') ? 'Brask, a heavy of the 9th whose squad was broken up in Letheras, walks with the Third, and has learned where to sit at the fire.' : 'Brask, a heavy of the 9th, walks with the Third.');
     if (f.b9_braskDone === 2) x.push('Brask, a heavy of the 9th, waits in the heavies\' lines, if the squad will have him.');
+    if (f.b9_c1_ladies) x.push('Two sergeants at the barracks gate, Rumjugs and Sweetlard, loaded a handcart for the old sapper\'s new company.');
     if (f.b9_c1_rollOk) x.push('The heavies\' drill sergeant taught the Third the roll at the gate.');
     if (f.b9_c1_lootersDone) x.push('Looters in the emptied quarter met the Third, and the quarter is quieter.');
     if (f.b9_c1_brawlDone) x.push('Some Letherii veterans in a soldiers\' tavern met the Third, and bought it a drink after.');
@@ -596,6 +598,20 @@ Thallo is by the wagons with a list he plainly did not write.`,
       ch: S.f.b9_c1_lootersDone ? [{t:'Back to the yard.', go:()=>startExplore()}] :
         [{t:'"The quarter, then."', go:()=>startExplore()},
          {t:'Not now.', go:()=>startExplore()}]}),
+    /* v13.7 (polish plan §2, the series continuity read; David, Nov 8: "Rumjugs and Sweetlard meet the squad for real in Book Nine").
+       Book One's pin-up (019b) and Book Eight's tavern sign (141) are the same two women nobody can explain. In DoD they are sergeants of
+       Hedge's new Letherii company (series-canon §(a), what DoD lifts: rule 16 closes; R11 S16, TCG DP). Here they load a handcart for it.
+       Rule 93: the company is never joined, never its recipes; the narrator never explains the pin-up. Sets b9_c1_ladies. */
+    b9_c1_ladies:()=>({sp:'Two sergeants with a handcart', scene:'b9_barracks', fx:()=>{ S.f.b9_c1_ladies = 1; }, again:()=>'Rumjugs and Sweetlard, still loading, still arguing about the crate.', txt:
+`By the gate two big women are loading a handcart as if they had loaded a good many: kit-bags, a small barrel, a crate packed in straw that nobody is to drop, and a folding stool on top of the lot. Both laced into bodices that have been losing the same argument for years, with sergeants' knots on the shoulder. One has a rum jug sitting on the muscle of her arm as if it grew there.
+
+"Sergeant," says the other, and looks the Third over, not unkindly. "Sweetlard. And that's Rumjugs. Sergeants, the both of us, so you can put your eyebrows back where they were."
+
+Behind them a dozen Letherii in new Malazan kit are trying to look as if they have done this before. "The old sapper's new company," Sweetlard says. "Letherii, most of them. He calls them something we're not to say in front of the regulars." She tucks the straw round the crate. "Don't ask what's in it. He won't say, and we don't want to know."
+
+Rumjugs looks east, past the gate, where the road goes out. "Long way," she says. It is the only thing she says.${b91Say({tangle:`\n\nTangle looks at the crate in the straw with deep professional interest. "Don't," says Sweetlard, without turning round.`, marrow:`\n\nMarrow looks at the two of them for a long moment, the way she looks at a card that has come up twice. "I've seen you somewhere," she says. "No," says Sweetlard, comfortably. "You haven't."`, _:''})}${b91Say({brask:`\n\nBrask nods to them as an old acquaintance. "They were at Malaz, on the docks," he says, when they are out of hearing. "Sergeants now. Nobody knows how. Nobody asks."`, mirrel:`\n\nMirrel asks their names again, slowly, and says them over to herself, for the list. "We're not dead, love," Sweetlard says. "Not the kind of list we like." Mirrel says it is the other list.`, _:''})}`,
+      ch:[{t:'"See you at the end of it, then."', go:()=>startExplore()},
+          {t:'Help them lift the crate onto the cart. Carefully.', go:()=>startExplore()}]}),
     b9_c1_captain:()=>({sp:'The captain', scene:'b9_barracks', fx:()=>{ S.f.b9_c1_captain = 1; }, again:()=>'The captain, across the yard, with the quartermaster\'s lists.', txt:
 `The captain of the heavies' company is across the yard by the stores with the quartermaster's lists in one hand and the drill sergeant at his elbow: a grey, square man in plain scale, who walks the wagon line the way a farmer walks a fence. He reads a list, hands it back, says a word, and the drill sergeant says the same word a great deal louder.
 

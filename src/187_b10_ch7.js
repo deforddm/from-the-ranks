@@ -330,6 +330,7 @@ const B10CH7 = {
     if (f.b10_c7_lineDone) x.push(fell.length ? `The Kolansii, and two Shriven, and an Assail, came onto the Third's stretch. ${b107And(fell.map(NAME))} fell there.` : 'The Kolansii, and two Shriven, and an Assail, came onto the Third\'s stretch. Every one of the Third who stood there walked off it.');
     if (f.b10_c7_came) x.push(b107South() ? 'At the barrows the Fourth walked up out of the crowd and said its name.' : 'A Malazan Host came over the ridge, and the Fourth came onto the Third\'s stretch with it.');
     if (f.b10_c7_rimOk) x.push('The Fourth\'s old trick: rim to rim.');
+    if (f.b10_c7_hedge) x.push('The Fourth heard that Hedge came back. Nobody went to look.');
     if (b107Key()) x.push(`The Third's road: ${B10_ENDW.t[b107Key()][0]}.`);
     if (b10FourthRoad()) x.push(`The Fourth's road: ${B10_ENDW.f[b10FourthRoad()][0]}.`);
     return x; },
@@ -646,7 +647,28 @@ Somebody, years back, said the Fourth and the Third would never meet. Somebody w
               edges:id=>[id === 'haddat' && ['the Hissari shield-wall is the same lock, older', 2], id === 'brask' && ['the heavies\' line is this, with more scale', 2], id === 'darrut' && ['the Aren Guard locked rims on the gate', 1], id === 'pruss' && ['a carter\'s shoulder to the wheel is the same push', 1], id === 'sgt' && (typeof trickBy === 'function' && trickBy('b9_c1_rollcall') === 'sgt' ? ['you already call the heavies\' roll at the gate; this is the lock under it', 2] : ['you have stood in a shield line since Aren', 1]), id === 'tangle' && ['a sapper goes under a line, not along it', -1], id === 'tebbet' && ['an archer stands behind the shields, not in them', -1]],
               go:'b10_c7_rim_ok', fail:'b10_c7_rim_no'}] : []),
             ...(ph === 4 && b107Key() && !b10FourthRoad() ? [{t:'"Where does the Fourth go now?"', go:'b10_c7_fourth_ask'}] : []),
+            ...(!first && !S.f.b10_c7_hedge ? [{t:'"There\'s a sapper with the marines you might have known. An old one. Hedge."', go:'b10_c7_hedge'}] : []),
             {t:'Back.', go:()=>startExplore()}]}; },
+    /* v13.7 (polish plan §2, the series continuity read; David, Nov 8: "when they hear Hedge came back, Brisk always knew he was too
+       stubborn"). The Fourth knew Hedge in Book One and heard he died at Coral (Book Three). He came back at Letheras and has marched with
+       the marines since, recruiting Letherii he calls Bridgeburners (RG ch 17, 23, 24; DoD, TCG: W *Hedge*). The Third knows him as camp
+       word. The Fourth never goes to look for him on the page (rule 12's spirit: the two Fourths never meet). Sets b10_c7_hedge only. */
+    b10_c7_hedge:()=>{ const brisk = b107FIn('brisk'), kettle = b107FIn('kettle'), gone = b107FDead().includes('brisk');
+      return {sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_hedge = 1; }, again:()=>`${b107FSgtC()}, with the Fourth, not talking about Hedge.`, txt:
+`${b107FSgtC()} looks at you for a long moment. "Hedge," the sergeant says. "Hedge died at Coral. Everybody said so."
+
+"He came back," you say. It is camp word, and has been since Letheras: an old sapper from Genabackis who walked in on the marines one day as if he had only stepped out, and has been with them since, with a crate of munitions nobody will ask him the source of and a company of Letherii he calls by an old name, to their face. "Nobody asks how. He doesn't say."
+
+${brisk ? `Brisk has gone very still. Then she laughs, once, short, the way she does when a wall goes down that she said would. "Too stubborn," she says. "Too stubborn to stay dead. I always said it." She sits back. "Didn't I always say it?"
+
+She did. The Fourth agrees that she did.` : gone ? `Nobody says anything for a while. "Brisk always said he was too stubborn to stay dead," the sergeant says at last. "Said it at Pale, said it in the hills." A breath. "She'd have liked to be right about that."` : `Nobody says anything for a while. "Too stubborn to stay dead," the sergeant says at last. "Somebody always said so."`}${kettle ? `
+
+Kettle asks what he's using for cussers these days, and whether they're any good, with real professional interest. Nobody can tell her.` : ''}${b107If('tangle', `
+
+Tangle says that if it is the same Hedge, he once saw him light a fuse with the end of another fuse, and the Fourth nods: it is the same Hedge.`)}
+
+Nobody suggests going up the line to look for him. There is the morning to get through, and he will be busy, and some things are better as camp word.`,
+      ch:[{t:'Back.', go:()=>startExplore()}]}; },
     /* the Fourth's road, in one page of its own words (rule 109): Darujhistan, a ship, Aren, the old Host, a keep, a pass, the sappers */
     b10_c7_fourth_road:()=>({sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_fourthRoad = 1; }, again:()=>`${b107FSgtC()}, telling it again, shorter.`, txt:
 `"Out of Darujhistan," ${b107FSgt()} says. "On a lake boat, the morning after the bells. Then a coast, and a ship, and a long time on it. I won't say how long. Long enough to stop being sick, and start again."

@@ -80,7 +80,7 @@ const words = await ev(() => { const out = [];
     ['tuft', 'sohra', 'benna', 'stranger'].forEach(id2 => { VISREADER = () => ({id:id2, name:id2 === 'stranger' ? 'A stranger' : id2, he:false}); out.push(end.txt()); });
     VISREADER = _vr; });
   return out.join('\n'); });
-const NEVER = [/Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|\bTalon\b|\bEel\b|T'orrud/, /Burn's Sleep|\b1\d{3}\b|\bBS\b/, /Seba|Krute|Krafar|Dester|who paid/i,
+const NEVER = [/(?!)/, /(?!)/, /Krafar|Dester|who paid/i,  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   /\bRake\b|Son of Darkness|Anomander|Dragnipur|black sword|Draconus|chained|Apsal|\bDitch\b|Kadaspala/i, /Dassem|Dassembrae|Traveller|Hood's daughter/, /\bHood\b|Ice Throne|beheaded|Guardians? of the Gate/,
   /Whiskeyjack|\bToc\b|Herald|\btorcs?\b|torc-bearer/i, /Mother Dark|Kurald|Gate of Darkness|\bdragon|Eleint|Silanah|Korlat|Orfantal/i, /Skintick|Desra|Nenanda|Kedeviss|Aranatha|\bClip\b|Phaed|Bastion|the god's body/,
   /Salind|Gradithan|High Priestess|embrace|Itkovian/, /Challice|globe|Cutter|Gorlas/, /\bascend/i, /sacrifice/i, /Seguleh|Legate|Spawns|Tayschrenn|Dujek|Bult\b|Coltaine/, /Bridgeburner/];

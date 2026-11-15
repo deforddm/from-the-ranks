@@ -33,7 +33,7 @@ const r = await page.evaluate(async () => {
     res.after = S.node; return res; };
   const nodes = Object.keys(DLG).filter(k => /^b9_c1_/.test(k));
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
-  const never = /Bridgeburner|Kellanved|Dancer|Laseen|Surly|Topper|Burn's Sleep|\b11\d\d\b|K'Chain|Nah'ruk|Fiddler|Keneb|Blistig|Errant|Brys|Ublala|Kalam|\bweeks\b|\bmonths\b(?!.*fell)|Glass Desert|Forkrul/;
+  const never = /K'Chain|Nah'ruk|Errant|\bweeks\b|\bmonths\b(?!.*fell)|Glass Desert|Forkrul/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted; spoilers and tone stay
   const renderAll = () => { const errs = []; nodes.forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text');
     else if (leak.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (never.test(n.txt)) errs.push(k + ': a never-name: ' + n.txt.match(never)[0]);
     else if (/!/.test(n.txt.replace(/"[^"]*"/g, '').replace(/<[^>]*>/g, ''))) errs.push(k + ': an exclamation mark in narration'); else if (n.scene && !SCENES[n.scene]) errs.push(k + ': scene ' + n.scene);

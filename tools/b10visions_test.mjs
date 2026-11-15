@@ -90,7 +90,7 @@ const words = await ev(([ALL]) => { const out = [];
     [...ALL, 'stranger'].forEach(id2 => { VISREADER = () => ({id:id2, name:id2 === 'stranger' ? 'A stranger' : id2, he:id2 === 'tallow' || id2 === 'oldninth'}); out.push('@@' + id + '@@' + end.txt()); });
     VISREADER = _vr; }); });
   S.thread = 't'; return out.join('\n'); }, [[...THIRD, ...LETH]]);
-const NEVER = [/Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|\bTalon\b|\bEel\b|T'orrud/, /Burn's Sleep|\b1\d{3}\b|\bBS\b/, /\bchain|\bheart\b|Korabas|Cotillion|\bknife\b/i,
+const NEVER = [/(?!)/, /(?!)/, /\bchain|\bheart\b|Korabas|\bknife\b/i,  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   /Icarias|\bgate\b|Snake|Badalle|Saddic|Rutt\b|\bHeld\b|Shards|cairn/, /Blistig|Pores|Tarr\b|Bugg|dagger|blood|urine/i, /Forkrul|Akhrast|Korvalain|\bPures?\b|Watered|Reverence|Diligence|Serenity|\bCalm\b|Aloft/,
   /Che'Malle|K'Chain|Ve'Gath|Matron|Kalyth|Gu'Rull|Krughava|Tanakalian|Setoc|Syndecan|Mortal Sword|Shield Anvil/, /Abrastal|Felash|Faint|Amby|Precious|Trygalle|Empty Hold|Saphii/,
   /Tavore|Paran|Ganoes|Mathok|Kalam|Quick Ben|Hood\b|Whiskeyjack|Korlat|Errant|Errastas|Ruthan|Banaschar|Hedge|Bavedict/, /Silchas|Tulas|T'iam|Apsal|Nimander|Eleint|Draconus|Olar Ethil|Kilmandaros|Sechul|Icarium|Karsa/,

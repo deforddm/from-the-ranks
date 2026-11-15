@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.6.0';
+const VERSION = '13.7.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9122,6 +9122,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.7.0', ['Two of the series\' promised callbacks land. Book Nine: Rumjugs and Sweetlard, at the barracks gate in Letheras, sergeants now, loading a handcart. Book Ten: when the Fourth comes over the ridge, ask its sergeant about an old sapper called Hedge.', 'The series\' transfers are checked end to end: every road that carries a squad from one book to the next, through all ten books.']],
   ['13.6.0', ['Every chapter of every book now opens on a painted plate of its own, as Book One\'s always did: seventy-one in all, each drawing the chapter\'s opening caption. Book One\'s eight are redrawn to match. The Classic art setting still shows the drawn scenes instead.', 'The squad walks in the same order in every scene as on the map: the sergeant in front, then each squadmate in roster order. Before, most scenes had the roster back to front.', 'Walking figures redrawn to match their portraits: Thegg (long brown hair, fur at the shoulders, bead collar, a blue iron-rimmed shield), Ammet, Tobet, Pessa, the Letherii sergeant, and Vell in Book One.']],
   ['13.5.5', ['Shorter necks on the squad portraits: the shoulders sit higher, so heads rest down between them, in every book. Ohl, Haddat and Ammet, who were already right, are unchanged.']],
   ['13.5.4', ['Brisk\'s scale gorget sits into her mail instead of on top of it: a softer shadow, the scales darkening toward the hem, and a fainter edge.']],
@@ -28002,7 +28003,7 @@ He stands up. "He was a soldier once, the old man. Before the Emperor decided he
   b2_duiker3:()=>({sp:'Duiker · Imperial Historian', fx:()=>{ S.f.b2_duiker3 = 1; S.f.b2_duiker = 1; }, txt:
 `Duiker is sitting on a saddle by a dead fire, sharpening a short sword he does not look as if he has drawn in years. He has got the rebel robes off. The sun is still burned into him.
 
-"Sergeant." He holds up the sword. "I have been volunteered. Captain Lull has a gift for the passive voice." He tests the edge with his thumb and winces. "I was a soldier, you know, before Kellanved pulled me out of the ranks and had me taught my letters. I had hoped not to be one again. History is so much more comfortable from the far end."
+"Sergeant." He holds up the sword. "I have been volunteered. Captain Lull has a gift for the passive voice." He tests the edge with his thumb and winces. "I was a soldier, you know, before the old Emperor pulled me out of the ranks and had me taught my letters. I had hoped not to be one again. History is so much more comfortable from the far end."
 
 He puts the sword across his knees. "I said at the Sekala I wanted your column's story. Yours, not the officers'. I still do. There may not be another quiet night between here and the river. Tell me something. Anything. A name."`,
     ch:[{t:'Tell him about the stretch: the names, the count, the dead.', fx:()=>{ S.f.b2_duikerTold3 = 1; if (b2In('haddat')) loy('haddat', 1); }, go:'b2_duiker3_tell'},
@@ -101281,7 +101282,8 @@ const B9CH1 = {
         {id:'drill', name:'The heavies\' drill sergeant', kind:'b2soldier', x:13, y:5, node:()=>'b9_c1_drill', fresh:()=>!S.f.b9_c1_rollTried},
         {id:'qm', name:'The quartermaster', kind:'b2soldier', x:10, y:2, node:()=>'b9_c1_qm', fresh:()=>!S.f.b9_c1_scale},
         {id:'captain', name:'The captain', kind:'b2soldier', x:4, y:2, node:()=>'b9_c1_captain', fresh:()=>!S.f.b9_c1_captain},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false} ] },
+        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false},
+        {id:'ladies', name:'Two sergeants with a handcart', kind:'b5_c5_refugee', x:3, y:10, node:()=>'b9_c1_ladies', fresh:()=>!S.f.b9_c1_ladies} ] },
 
     /* 16 x 12 (b9_c1_quarter, day). The quarter by day: L a looted house, its door broken in  T the soldiers' tavern  D the household's
        door  Y their yard gate  c a handcart  < back to the barracks */
@@ -101360,6 +101362,7 @@ const B9CH1 = {
     if (f.b9_c1_key === 'street') x.push(`The Third went out into the quarter the night of the cards and helped a household.${f.b9_c1_boy === 'found' ? ' The boy who ran was found in an alley.' : ''}`);
     if (f.b9_braskDone === 1) x.push(b9In('brask') ? 'Brask, a heavy of the 9th whose squad was broken up in Letheras, walks with the Third, and has learned where to sit at the fire.' : 'Brask, a heavy of the 9th, walks with the Third.');
     if (f.b9_braskDone === 2) x.push('Brask, a heavy of the 9th, waits in the heavies\' lines, if the squad will have him.');
+    if (f.b9_c1_ladies) x.push('Two sergeants at the barracks gate, Rumjugs and Sweetlard, loaded a handcart for the old sapper\'s new company.');
     if (f.b9_c1_rollOk) x.push('The heavies\' drill sergeant taught the Third the roll at the gate.');
     if (f.b9_c1_lootersDone) x.push('Looters in the emptied quarter met the Third, and the quarter is quieter.');
     if (f.b9_c1_brawlDone) x.push('Some Letherii veterans in a soldiers\' tavern met the Third, and bought it a drink after.');
@@ -101724,6 +101727,20 @@ Thallo is by the wagons with a list he plainly did not write.`,
       ch: S.f.b9_c1_lootersDone ? [{t:'Back to the yard.', go:()=>startExplore()}] :
         [{t:'"The quarter, then."', go:()=>startExplore()},
          {t:'Not now.', go:()=>startExplore()}]}),
+    /* v13.7 (polish plan §2, the series continuity read; David, Nov 8: "Rumjugs and Sweetlard meet the squad for real in Book Nine").
+       Book One's pin-up (019b) and Book Eight's tavern sign (141) are the same two women nobody can explain. In DoD they are sergeants of
+       Hedge's new Letherii company (series-canon §(a), what DoD lifts: rule 16 closes; R11 S16, TCG DP). Here they load a handcart for it.
+       Rule 93: the company is never joined, never its recipes; the narrator never explains the pin-up. Sets b9_c1_ladies. */
+    b9_c1_ladies:()=>({sp:'Two sergeants with a handcart', scene:'b9_barracks', fx:()=>{ S.f.b9_c1_ladies = 1; }, again:()=>'Rumjugs and Sweetlard, still loading, still arguing about the crate.', txt:
+`By the gate two big women are loading a handcart as if they had loaded a good many: kit-bags, a small barrel, a crate packed in straw that nobody is to drop, and a folding stool on top of the lot. Both laced into bodices that have been losing the same argument for years, with sergeants' knots on the shoulder. One has a rum jug sitting on the muscle of her arm as if it grew there.
+
+"Sergeant," says the other, and looks the Third over, not unkindly. "Sweetlard. And that's Rumjugs. Sergeants, the both of us, so you can put your eyebrows back where they were."
+
+Behind them a dozen Letherii in new Malazan kit are trying to look as if they have done this before. "The old sapper's new company," Sweetlard says. "Letherii, most of them. He calls them something we're not to say in front of the regulars." She tucks the straw round the crate. "Don't ask what's in it. He won't say, and we don't want to know."
+
+Rumjugs looks east, past the gate, where the road goes out. "Long way," she says. It is the only thing she says.${b91Say({tangle:`\n\nTangle looks at the crate in the straw with deep professional interest. "Don't," says Sweetlard, without turning round.`, marrow:`\n\nMarrow looks at the two of them for a long moment, the way she looks at a card that has come up twice. "I've seen you somewhere," she says. "No," says Sweetlard, comfortably. "You haven't."`, _:''})}${b91Say({brask:`\n\nBrask nods to them as an old acquaintance. "They were at Malaz, on the docks," he says, when they are out of hearing. "Sergeants now. Nobody knows how. Nobody asks."`, mirrel:`\n\nMirrel asks their names again, slowly, and says them over to herself, for the list. "We're not dead, love," Sweetlard says. "Not the kind of list we like." Mirrel says it is the other list.`, _:''})}`,
+      ch:[{t:'"See you at the end of it, then."', go:()=>startExplore()},
+          {t:'Help them lift the crate onto the cart. Carefully.', go:()=>startExplore()}]}),
     b9_c1_captain:()=>({sp:'The captain', scene:'b9_barracks', fx:()=>{ S.f.b9_c1_captain = 1; }, again:()=>'The captain, across the yard, with the quartermaster\'s lists.', txt:
 `The captain of the heavies' company is across the yard by the stores with the quartermaster's lists in one hand and the drill sergeant at his elbow: a grey, square man in plain scale, who walks the wagon line the way a farmer walks a fence. He reads a list, hands it back, says a word, and the drill sergeant says the same word a great deal louder.
 
@@ -116388,6 +116405,7 @@ const B10CH7 = {
     if (f.b10_c7_lineDone) x.push(fell.length ? `The Kolansii, and two Shriven, and an Assail, came onto the Third's stretch. ${b107And(fell.map(NAME))} fell there.` : 'The Kolansii, and two Shriven, and an Assail, came onto the Third\'s stretch. Every one of the Third who stood there walked off it.');
     if (f.b10_c7_came) x.push(b107South() ? 'At the barrows the Fourth walked up out of the crowd and said its name.' : 'A Malazan Host came over the ridge, and the Fourth came onto the Third\'s stretch with it.');
     if (f.b10_c7_rimOk) x.push('The Fourth\'s old trick: rim to rim.');
+    if (f.b10_c7_hedge) x.push('The Fourth heard that Hedge came back. Nobody went to look.');
     if (b107Key()) x.push(`The Third's road: ${B10_ENDW.t[b107Key()][0]}.`);
     if (b10FourthRoad()) x.push(`The Fourth's road: ${B10_ENDW.f[b10FourthRoad()][0]}.`);
     return x; },
@@ -116704,7 +116722,28 @@ Somebody, years back, said the Fourth and the Third would never meet. Somebody w
               edges:id=>[id === 'haddat' && ['the Hissari shield-wall is the same lock, older', 2], id === 'brask' && ['the heavies\' line is this, with more scale', 2], id === 'darrut' && ['the Aren Guard locked rims on the gate', 1], id === 'pruss' && ['a carter\'s shoulder to the wheel is the same push', 1], id === 'sgt' && (typeof trickBy === 'function' && trickBy('b9_c1_rollcall') === 'sgt' ? ['you already call the heavies\' roll at the gate; this is the lock under it', 2] : ['you have stood in a shield line since Aren', 1]), id === 'tangle' && ['a sapper goes under a line, not along it', -1], id === 'tebbet' && ['an archer stands behind the shields, not in them', -1]],
               go:'b10_c7_rim_ok', fail:'b10_c7_rim_no'}] : []),
             ...(ph === 4 && b107Key() && !b10FourthRoad() ? [{t:'"Where does the Fourth go now?"', go:'b10_c7_fourth_ask'}] : []),
+            ...(!first && !S.f.b10_c7_hedge ? [{t:'"There\'s a sapper with the marines you might have known. An old one. Hedge."', go:'b10_c7_hedge'}] : []),
             {t:'Back.', go:()=>startExplore()}]}; },
+    /* v13.7 (polish plan §2, the series continuity read; David, Nov 8: "when they hear Hedge came back, Brisk always knew he was too
+       stubborn"). The Fourth knew Hedge in Book One and heard he died at Coral (Book Three). He came back at Letheras and has marched with
+       the marines since, recruiting Letherii he calls Bridgeburners (RG ch 17, 23, 24; DoD, TCG: W *Hedge*). The Third knows him as camp
+       word. The Fourth never goes to look for him on the page (rule 12's spirit: the two Fourths never meet). Sets b10_c7_hedge only. */
+    b10_c7_hedge:()=>{ const brisk = b107FIn('brisk'), kettle = b107FIn('kettle'), gone = b107FDead().includes('brisk');
+      return {sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_hedge = 1; }, again:()=>`${b107FSgtC()}, with the Fourth, not talking about Hedge.`, txt:
+`${b107FSgtC()} looks at you for a long moment. "Hedge," the sergeant says. "Hedge died at Coral. Everybody said so."
+
+"He came back," you say. It is camp word, and has been since Letheras: an old sapper from Genabackis who walked in on the marines one day as if he had only stepped out, and has been with them since, with a crate of munitions nobody will ask him the source of and a company of Letherii he calls by an old name, to their face. "Nobody asks how. He doesn't say."
+
+${brisk ? `Brisk has gone very still. Then she laughs, once, short, the way she does when a wall goes down that she said would. "Too stubborn," she says. "Too stubborn to stay dead. I always said it." She sits back. "Didn't I always say it?"
+
+She did. The Fourth agrees that she did.` : gone ? `Nobody says anything for a while. "Brisk always said he was too stubborn to stay dead," the sergeant says at last. "Said it at Pale, said it in the hills." A breath. "She'd have liked to be right about that."` : `Nobody says anything for a while. "Too stubborn to stay dead," the sergeant says at last. "Somebody always said so."`}${kettle ? `
+
+Kettle asks what he's using for cussers these days, and whether they're any good, with real professional interest. Nobody can tell her.` : ''}${b107If('tangle', `
+
+Tangle says that if it is the same Hedge, he once saw him light a fuse with the end of another fuse, and the Fourth nods: it is the same Hedge.`)}
+
+Nobody suggests going up the line to look for him. There is the morning to get through, and he will be busy, and some things are better as camp word.`,
+      ch:[{t:'Back.', go:()=>startExplore()}]}; },
     /* the Fourth's road, in one page of its own words (rule 109): Darujhistan, a ship, Aren, the old Host, a keep, a pass, the sappers */
     b10_c7_fourth_road:()=>({sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_fourthRoad = 1; }, again:()=>`${b107FSgtC()}, telling it again, shorter.`, txt:
 `"Out of Darujhistan," ${b107FSgt()} says. "On a lake boat, the morning after the bells. Then a coast, and a ship, and a long time on it. I won't say how long. Long enough to stop being sick, and start again."

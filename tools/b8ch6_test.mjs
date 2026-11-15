@@ -42,7 +42,7 @@ const r = await page.evaluate(async () => {
     res.after = S.node; return res; };
   const nodes = Object.keys(DLG).filter(k => /^b8_c6_/.test(k));
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
-  const never = /Bridgeburner|Seba|Krute|Picker|Mallet|Bluepearl|Antsy|Blend\b|Murillio|Duiker|Kruppe|Kellanved|Dancer|Laseen|Burn's Sleep|\b11\d\d\b|Traveller|Cotillion|Shadowthrone|Karsa|Samar|Rake|Anomander|Dragnipur|Brood|Envy|Spite|Raven|Dassem|gaol|Temple of Shadow|K'rul's Bar|Phoenix Inn|Coll\b|Finnest|Vorcan|Rallick|Torvald|Challice|Gorlas|Cutter|beheaded|Hounds of Light|\bweeks\b|\bmonths\b|\b(two|three|four|five|six|seven|eight|nine|ten) years\b|\d+ years/i;
+  const never = /Traveller|Shadowthrone|Karsa|Samar|Anomander|Dragnipur|Brood|Envy|Spite|Raven|Dassem|gaol|Temple of Shadow|K'rul's Bar|Phoenix Inn|Coll\b|Finnest|Vorcan|Rallick|Torvald|Challice|Gorlas|Cutter|beheaded|Hounds of Light|\bweeks\b|\bmonths\b|\b(two|three|four|five|six|seven|eight|nine|ten) years\b|\d+ years/i;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted; spoilers and tone stay
   const renderAll = () => { const errs = []; nodes.forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text');
     else if (leak.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (never.test(n.txt)) errs.push(k + ': a never-name: ' + n.txt.match(never)[0]);
     else if (/!/.test(n.txt.replace(/"[^"]*"/g, ''))) errs.push(k + ': an exclamation mark in narration'); else if (n.scene && !SCENES[n.scene]) errs.push(k + ': scene ' + n.scene);

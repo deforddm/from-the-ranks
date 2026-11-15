@@ -91,7 +91,7 @@ const words = await ev(([ALL]) => { const out = [];
     [...ALL, 'stranger'].forEach(id2 => { VISREADER = () => ({id:id2, name:id2 === 'stranger' ? 'A stranger' : id2, he:id2 === 'tallow' || id2 === 'oldninth'}); out.push(end.txt()); });
     VISREADER = _vr; });
   return out.join('\n'); }, [[...THIRD, ...LETH]]);
-const NEVER = [/Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|\bTalon\b|\bEel\b|T'orrud/, /Burn's Sleep|\b1\d{3}\b|\bBS\b/, /Crippled God|Chained One|\bchains?\b|Fallen God/i, /Kolanse|Sinter|\bheart of\b|god's heart/,
+const NEVER = [/(?!)/, /(?!)/, /Crippled God|Chained One|\bchains?\b|Fallen God/i, /Kolanse|\bheart of\b|god's heart/,  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   /Glass Desert|drink(ing)? (blood|urine)|Bugg|dagger/i, /Forkrul|Akhrast|Korvalain|\bPures?\b|Quitters/, /Che'Malle|K'Chain|Nah'ruk|Matron|Kalyth|Shi'gal|sky keep|Gesler|Stormy|Mortal Sword|Shield Anvil/,
   /\bTool\b|T'lan|Imass|Senan|Hetan|Stolmen|Sekara/, /\bSinn\b|\bGrub\b|Icarium|warren/, /King of Life|Virgin of Death|Errant|Errastas|Ublala|Seren|Trull/, /Hedge|Bridgeburner|Bavedict|kitten/,
   /Run'Thurvian|Tanakalian|Krughava|Felash|Abrastal|\bGall\b|Khundryl|Perish|Bolkando/, /Draconus|Kilmandaros|Sechul|Olar Ethil|\bHood\b/, /Twilight|Yedan|Shake|Liosan/, /Kalam|Deadsmell|Lostara|Ruthan|Banaschar|Pores/,

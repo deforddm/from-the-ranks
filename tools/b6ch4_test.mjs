@@ -32,7 +32,7 @@ const r = await page.evaluate(async () => {
     if (S.node !== BATTLES[id].after) talk(BATTLES[id].after);
     res.caught = b6FeverList().length - f0; res.after = S.node; return res; };
   const nodes = () => Object.keys(DLG).filter(k => /^b6_c4_/.test(k));
-  const BAN = /\bParan\b|Laseen|Bonehunters|Bridgeburners|Burn's Sleep|Kellanved|Dancer|Ammanas|\b11\d\d\b/;
+  const BAN = /Bonehunters/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   const renderAll = () => { const errs = []; nodes().forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text'); else if (/undefined|NaN|\[object |\$\{/.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (!Array.isArray(n.ch) || !n.ch.length) errs.push(k + ': no choices'); else if (n.ch.some(c => typeof c.t !== 'string')) errs.push(k + ': a choice without words'); else if (BAN.test(n.txt)) errs.push(k + ': a hard-limit word: ' + n.txt.match(BAN)[0]); else if (/!/.test(n.txt.replace(/"[^"]*"/g, ''))) errs.push(k + ': an exclamation mark in narration'); } catch (e) { errs.push(k + ': ' + e.message); } }); return errs; };
   /* a fresh Chapter Four: Book Six save, Chapters 1-3 played, the Fourth at level 13 */
   const mk = (c2, withBrannoc, fever) => { setBook('bh'); S = newStateBH('Hask', 'Brann'); S.chapters = {1:'bury', 2:c2, 3:'line'}; S.f.b6_c1_key = 'bury'; S.f.b6_c2_key = c2; S.f.b6_c3_key = 'line';

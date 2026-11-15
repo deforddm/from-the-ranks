@@ -75,7 +75,7 @@ const words = await ev(([ALL]) => { const out = [];
     [...ALL, 'stranger'].forEach(id2 => { VISREADER = () => ({id:id2, name:id2 === 'stranger' ? 'A stranger' : id2, he:id2 === 'tallow' || id2 === 'oldninth'}); out.push(end.txt()); });
     VISREADER = _vr; });
   return out.join('\n'); }, [[...THIRD, ...LETH]]);
-const NEVER = [/Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|\bTalon\b|\bEel\b|T'orrud/, /Burn's Sleep|\b1\d{3}\b|\bBS\b/, /Master of the Deck|\bParan\b|Ganoes/, /Crippled God|Chained One|\bchaos\b|Fallen God/i,
+const NEVER = [/(?!)/, /(?!)/, /Master of the Deck/, /Crippled God|Chained One|\bchaos\b|Fallen God/i,  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   /\bMael\b|Errastas|\bElder\b/, /Kettle|Silchas|Menandore|Refugium|Azath seed/, /Eleint|dragon/i, /Kalam|Quick Ben|\bHedge\b/, /Bolkando|Wastes|Nah'ruk|Aranict|K'Chain/, /Tehol the Only|Emperor Tehol|Empress/,
   /\bTrull\b|\bSeren\b|\bKarsa\b|Icarium|Sirryn/, /\bPearl\b|Felisin|Sha'ik/, /\bToc\b|Redmask|Andii|Yedan/, /Bonehunter/];
 NEVER.forEach(re => { const m = words.match(new RegExp('.{0,40}' + re.source + '.{0,40}', re.flags)); ok(!m, `no ${re.source} in the visions ${m ? '"' + m[0].replace(/\n/g, ' ') + '"' : ''}`); });

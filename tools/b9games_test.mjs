@@ -40,7 +40,7 @@ const tierLine = r => r ? `${r.who} ${r.stat} ${r.tier}` : 'no roll';
 const nearNext = () => ev(() => { window._g ??= b5gRoll; b5gRoll = (...a) => { const r = window._g(...a); b5gRoll = window._g; r.tier = 'near'; r.ok = false; r.pass = true; return r; }; });
 const rat = () => ev(() => b9Rations() - window._rat);
 const witSame = async m => ok(await ev(() => JSON.stringify(S.b9) === window._wit), `${m}: the Witness does not move`);
-const NEVER = /Bridgeburner|Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|Burn's Sleep|\b11\d\d\b|K'Chain|Nah'ruk|short-tail|Fiddler|Tarr\b|Cuttle|Hedge|Bavedict|Keneb|Blistig|Errant|Brys|Aranict|Henar|Ublala|Kalam|Tehol|Tool\b|Hetan|Tavore|Gesler|Stormy|Bonehunters|\bweeks?\b|\bmonths?\b|Glass Desert|Forkrul/;
+const NEVER = /K'Chain|Nah'ruk|short-tail|Bavedict|Errant|Bonehunters|\bweeks?\b|\bmonths?\b|Glass Desert|Forkrul/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
 const ROUNDS = /\b(a|the|next|this|each|every|one)\s+(round|turn)\b/;
 let allPanel = '';
 

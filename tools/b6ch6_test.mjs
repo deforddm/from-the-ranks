@@ -30,7 +30,7 @@ const r = await page.evaluate(async () => {
     if (S.picksDue && S.picksDue.length) { shut(); talk(BATTLES[id].after); }
     res.after = S.node; return res; };
   const nodes = () => Object.keys(DLG).filter(k => /^b6_c6_/.test(k));
-  const NEVER = /Felisin|Kulat|Laseen|Kellanved|Dancer|Ammanas|Bridgeburner|Bonehunter|Paran's gate|Mael|Noto|Hurlochel|Burn's Sleep|\b11\d\d\b/;
+  const NEVER = /Kulat|Bonehunter|Paran's gate|Mael|Noto|Hurlochel/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   const renderAll = () => { const errs = []; nodes().forEach(k => { try { const n = DLG[k](); const all = n && (n.txt + (n.html || '') + n.ch.map(c => c.t).join(' '));
     if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text'); else if (/undefined|NaN|\[object |\$\{|\bnull\b/.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (!Array.isArray(n.ch) || !n.ch.length) errs.push(k + ': no choices'); else if (!n.ch.some(c => !c.req || c.req())) errs.push(k + ': no visible choice'); else if (NEVER.test(all)) errs.push(k + ': a hard-limit word ' + NEVER.exec(all)[0]); else if (/!/.test(n.txt.replace(/"[^"]*"/g, ''))) errs.push(k + ': an exclamation mark in narration'); } catch (e) { errs.push(k + ': ' + e.message); } }); return errs; };
   /* a Book Six save at the start of Chapter 6: the Fourth at 15, the Third at 16, the earlier keys, Brannoc with the Fourth (Ressa optional) */

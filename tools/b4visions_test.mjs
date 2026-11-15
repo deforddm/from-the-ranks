@@ -56,7 +56,7 @@ const words = await ev(() => { const out = [];
     const keys = Object.keys(sets); for (let r = 0; r < 2; r++) { keys.forEach(k => { S.f[k] = sets[k][r % sets[k].length]; });
       V.steps.forEach(st => { out.push(typeof st.txt === 'function' ? st.txt() : st.txt); (st.ch || []).forEach(c => out.push(c.t)); if (st.go) out.push(st.go); }); } });
   return out.join('\n'); });
-const NEVER = [/Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|\bTalon\b|\bEel\b|T'orrud/, /Burn's Sleep|\b1\d{3}\b/, /Bonehunter/, /Tavore/, /Felisin/, /First Sword/, /Crippled God|Chained One|Master of the Deck/, /Y'Ghatan/, /Hanavat|Picker|Duiker|Mallick/];
+const NEVER = [/(?!)/, /(?!)/, /Bonehunter/, /(?!)/, /(?!)/, /First Sword/, /Crippled God|Chained One|Master of the Deck/, /Y'Ghatan/, /Mallick/];  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
 NEVER.forEach(re => { const m = words.match(new RegExp('.{0,40}' + re.source + '.{0,40}')); ok(!m, `no ${re.source} in the visions ${m ? '"' + m[0] + '"' : ''}`); });
 ok(!/!\s/.test(words.replace(/"[^"]*"/g, '')), 'no exclamation marks in the narration');
 const v6 = await ev(() => { const V = VISIONS.b4v6, t = V.steps.map(st => typeof st.txt === 'function' ? st.txt() : st.txt).join(' '); return {sister:(t.match(/sister/g) || []).length, adj:/Adjunct|army|Malazan|Fourteenth/.test(t)}; });

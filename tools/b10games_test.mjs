@@ -48,7 +48,7 @@ const moved = () => ev(() => { const a = JSON.parse(window._snap), wit = (S.b10w
   const now = {inj:S.injury || {}, silver:S.silver, gear:gr(S.gear), inv:S.inv, xp:S.xp, beat:S.b10}, was = {inj:a.inj, silver:a.silver, gear:gr(a.gear), inv:a.inv, xp:a.xp, beat:a.beat};
   const diff = Object.keys(now).filter(k => JSON.stringify(now[k]) !== JSON.stringify(was[k])).map(k => `${k}: ${JSON.stringify(was[k])} -> ${JSON.stringify(now[k])}`).join('; ');
   return {wit, loyUp, up, other:!!diff, diff}; });
-const NEVER = /Bridgeburner|Kellanved|Dancer|Ammanas|Laseen|Surly|Topper|Burn's Sleep|\b11\d\d\b|K'Chain|Che'Malle|Nah'ruk|Fiddler|Tarr\b|Cuttle|Hedge|Bavedict|Keneb|Blistig|Errant|Brys|Aranict|Henar|Kalam|Tehol|Tavore|Paran|Gesler|Stormy|Krughava|Forkrul|\bPures?\b|Crippled God|\bdays?\b|\bweeks?\b|\bmonths?\b/;
+const NEVER = /K'Chain|Che'Malle|Nah'ruk|Bavedict|Errant|Forkrul|\bPures?\b|Crippled God|\bdays?\b|\bweeks?\b|\bmonths?\b/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
 const ROUNDS = /\b(a|the|next|this|each|every|one)\s+(round|turn)\b/;
 const OPEN = /(?:^|[.?!]\s+|["“`]\s*)(Nobody|Somebody)\b/m;
 let allPanel = '';

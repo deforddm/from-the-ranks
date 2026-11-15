@@ -30,7 +30,7 @@ const r = await page.evaluate(async () => {
     if (S.picksDue && S.picksDue.length) { res.picks = S.picksDue.join(','); shut(); talk(BATTLES[id].after); }
     res.after = S.node; return res; };
   const nodes = () => Object.keys(DLG).filter(k => /^b6_c7_/.test(k));
-  const NEVER = /Laseen|Kellanved|Dancer|Ammanas|Surly|Topper|the Talon|the Eel|T'orrud|Burn's Sleep|Smiley|Hanged Man|Deadhouse|Raven Hill|Admiral Bridge|Centre District|First Throne|Froth Wolf|Silanda|Mouse|T'amber|Run'Thurvian|Rynag|Cuttle|Koryk|crossbow-wielding/;
+  const NEVER = /Smiley|Hanged Man|Deadhouse|Raven Hill|Admiral Bridge|Centre District|First Throne|Froth Wolf|Silanda|Mouse|T'amber|Run'Thurvian|Rynag|crossbow-wielding/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
   const renderAll = () => { const errs = []; nodes().forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text'); else if (leak.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (!Array.isArray(n.ch) || !n.ch.length) errs.push(k + ': no choices'); else if (n.ch.some(c => typeof c.t !== 'string')) errs.push(k + ': a choice without words'); else if (!n.ch.some(c => !c.req || c.req())) errs.push(k + ': no visible choice'); else if (NEVER.test(n.txt + n.ch.map(c => c.t).join(' '))) errs.push(k + ': a hard-limit word ' + NEVER.exec(n.txt + n.ch.map(c => c.t).join(' '))[0]); else if (/!/.test(n.txt.replace(/"[^"]*"/g, ''))) errs.push(k + ': an exclamation mark in narration'); } catch (e) { errs.push(k + ': ' + e.message); } }); return errs; };
   const finale = async () => { const P = finPages(), pages = [];

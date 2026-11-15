@@ -37,7 +37,7 @@ const r = await page.evaluate(async () => {
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
   /* the hard limits: nobody canon may meet or name here (§4), the never-use names, the crossroads people (rule 83), Traveller and Karsa and
      the plains clans, the Guild's Grand Master by name (rule 70), the raid's others (rule 71), years and weeks counted */
-  const never = /Bridgeburner|Seba|Krute|Picker|Antsy|Blend\b|Murillio|Duiker|Kruppe|Kellanved|Dancer|Laseen|Burn's Sleep|\b11\d\d\b|Spinnock|Kallor|Korlat|Orfantal|Traveller|Karsa|Samar|Kindaru|Skathandi|Seerdomin|Benighted|Endest|Nimander|Itkovian|Bastion|Dragnipur|\bRake\b|\d+ (weeks|months|years)/i;
+  const never = /Orfantal|Traveller|Karsa|Samar|Kindaru|Skathandi|Seerdomin|Benighted|Bastion|Dragnipur|\d+ (weeks|months|years)/i;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted; spoilers and tone stay
   const newsOnly = /Mallet|Bluepearl|Whiskeyjack/;
   const renderAll = () => { const errs = []; nodes.forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text');
     else if (leak.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (never.test(n.txt)) errs.push(k + ': a never-name: ' + n.txt.match(never)[0]);

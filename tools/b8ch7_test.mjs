@@ -38,7 +38,7 @@ const r = await page.evaluate(async () => {
   const nodes = Object.keys(DLG).filter(k => /^b8_c7_/.test(k));
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
   /* canon the Fourth cannot meet or the narrator may not print here (tth-canon §4, rules 70-83), and the never-use names */
-  const NEVER = /Bridgeburner|Seba|Krute|Picker|Mallet|Bluepearl|Antsy|Blend\b|Murillio|Duiker|Kruppe|Kellanved|Dancer|Laseen|Ammanas|Burn's Sleep|\b1\d\d\d\b|Whiskeyjack|Iskar|Jarak|Dragnipur|Draconus|Nimander|Spawn|Mother Dark|Traveller|Cotillion|Shadowthrone|Kallor|Karsa|Samar|Spinnock|Endest|Korlat|Orfantal|Dassem|Raest|Chaur|Vorcan|Rallick|Cutter|Challice|Gorlas|Seerdomin|Salind|Gradithan|Spindle|Monkrat|Silanah|Itkovian|sacrifice|Bastion|Legate|Seguleh|Toc\b|Andii procession|Phoenix Inn's door|K'rul's Bar|\bRake\b/;
+  const NEVER = /\b1\d\d\d\b|Iskar|Jarak|Dragnipur|Draconus|Spawn|Mother Dark|Traveller|Shadowthrone|Karsa|Samar|Orfantal|Dassem|Raest|Chaur|Vorcan|Rallick|Cutter|Challice|Gorlas|Seerdomin|Silanah|sacrifice|Bastion|Legate|Seguleh|Toc\b|Andii procession|Phoenix Inn's door|K'rul's Bar/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   const NEVER_CS = /\bSpite\b|\bEnvy\b/;
   const renderAll = () => { const errs = []; nodes.forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text');
     else { const t = n.txt + ' ' + (n.html || '').replace(/<[^>]*>/g, ' ') + ' ' + (n.ch || []).map(c => typeof c.t === 'function' ? c.t() : c.t).join(' ');

@@ -32,7 +32,7 @@ const r = await page.evaluate(async () => {
     if (S.picksDue && S.picksDue.length) { res.picks = S.picksDue.join(','); shut(); talk(BATTLES[id].after); }
     res.after = S.node; return res; };
   const nodes = () => Object.keys(DLG).filter(k => /^b6_c5_/.test(k));
-  const HARD = /Bonehunters|Laseen|Kellanved|Dancer|Ammanas|Surly|Topper|Silanda|Froth Wolf|Mock's Hold|Grub said|Keneb says|Blistig says|Fiddler|Quick Ben|Kalam|Faradan|Sinn says|Temul says to you|\b11\d\d\b/;
+  const HARD = /Bonehunters|Silanda|Froth Wolf|Mock's Hold|Grub said|Keneb says|Blistig says|Sinn says|Temul says to you/;  // v13.7 (David, Nov 15): canon names, the old never-use names and Burn's Sleep years lifted
   const renderAll = () => { const errs = []; nodes().forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text');
       else if (/undefined|NaN|\[object |\$\{|\bnull\b/.test(n.txt + (n.html || ''))) errs.push(k + ': leaks');
       else if (!Array.isArray(n.ch) || !n.ch.filter(c => !c.req || c.req()).length) errs.push(k + ': no visible choices');
