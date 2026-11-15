@@ -4,7 +4,7 @@
    pages Deadhouse Gates, Seven Cities and Genabackis, Wikipedia's Deadhouse Gates): Book One ends with the Fete in Darujhistan, the
    Daru new year at winter's end; Deadhouse Gates opens a few months later and runs alongside Memories of Ice (the Host's next year).
    Seven Cities lies west of Genabackis, the Meningalle Ocean on Genabackis' west coast between them; Genabaris in the north of
-   Genabackis is the port the Empire's ships use. Never a Burn's Sleep year in game text. Never vouch for the outlawing (series rule 1). */
+   Genabackis is the port the Empire's ships use. Burn's Sleep years only in timelineHTML, with their notes (v13.19, rule 13 lifted). Never vouch for the outlawing (series rule 1). */
 
 /* ---- each book's chapters and end lines, whichever book is loaded ---- */
 const bookChs = b => (b === BOOK ? CHAPTERS : (BOOKSNAP[b] || {}).ch) || {};
@@ -65,7 +65,7 @@ function whereBooksMeetHTML(open){
       <li>While the Chain walks, Onearm's Host, proclaimed outlaw, is on Genabackis with Caladan Brood. The two stories run side by side, and only a little word passes between them.</li>
       <li>Ships out of Genabaris put in at Aren. That is how word crosses, and sometimes people.</li>
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
-      <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
+      <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, months after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and ${bookLive('rg') ? 'Two books later the Malazans come to it.' : 'no road joins it to the other books yet.'}</li>` : ''}
       ${BOOKS.bh && !BOOKS.bh.coming ? `<li><b>Book Six, Bones in the Walls,</b> brings both squads back, weeks after Raraku. Book Two's squad marches with the Fourteenth across the Odhans to Y'Ghatan and on to the sea; the Fourth, with Onearm's Host, land on Seven Cities' north coast and march inland through the plague to G'danisban. The two never meet. The Fourteenth sails at last for Malaz City, on Quon Tali, off the sketch to the west.</li>` : ''}
@@ -75,6 +75,32 @@ function whereBooksMeetHTML(open){
       ${BOOKS.tcg && !BOOKS.tcg.coming ? `<li><b>Book Ten, Witnessed,</b> is the last. Days after the short-tails, the army splits at the Wastes' edge: the Bonehunters east into a desert made of glass, by night, behind an Adjunct who still has not said why; the Letherii and the allies south, the long way round. Both roads end in Kolanse. Book Nine's two squads are on them, and at the very end Book Eight's Fourth comes over a ridge with a Malazan Host. After it, nothing: that is where the novels end, too.</li>` : ''}
       ${bookLive('tcg') ? `<li>So the roads run: the Fourth on Genabackis in Books One, Three and Eight, and across the sea to Seven Cities in Book Six; Book Two's squad, the Third, from Hissar to Aren, Raraku, Y'Ghatan, Lether, the Wastes and Kolanse; Book Five's Letherii from their own war into the Malazans', and east with them. The Fourth and the Third meet once, at the very end, on the regulars' line before Kolanse; on the southern road the Letherii are a long march away, holding their own stretch of the feint.</li>` : `<li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>`}
     </ul></details>`;
+}
+
+/* ---- when the books happen: one series timeline by Burn's Sleep year (v13.19.0, David, Nov 15: "help me piece together the puzzle
+   of the books, lift both"). Rule 13's ban is lifted (series-canon §(a0)); §(e) holds the sources. Erikson's own years disagree in
+   places, so a disputed year is printed only with its note. Each row shows only when its book is live (bookLive, so a finale's
+   MAP_UPTO stops it at its own book). Sources per row, in series-canon §(e): W = malazan.fandom.com, Wp = Wikipedia's chronology
+   (liquisearch mirror), F = the fan worksheet, MF = the malazanempire.com timeline thread, R = Reactor, RM = the TtH reading guide. */
+const BS_ROWS = [
+  {b:null, y:'1154', t:'The old Emperor and his companion are gone in a night, and the Empress takes the throne. Every Malazan soldier in these books has served under her since.'}, // W Tayschrenn, Wp (NoK 1154), F: two
+  {b:'mt', y:'1161 or 1162', t:'Lether\'s war with the Tiste Edur. The Letherii count it their own way: the Year of the Late Frost, the last before the Seventh Closure.', d:'The reckonings disagree by a year, and one of them files a single chapter under 1159.'}, // Wp 1161; F 1162-3 with one entry 1159; MF 1161-62; Letherii count: novel heads via W1, R1
+  {b:'gotm', y:'1163', t:'Pale has fallen before the book opens. About a month, from the ruins to the Fête in Darujhistan, which ends the Daru year.'}, // W Burn's Sleep, Wp, F: two
+  {b:'dg', y:'1164', t:'A few months after the Fête. Hissar burns and the Chain walks through the hot months.', d:'Some reckonings start it in 1163: the Daru year turns at the Fête, the Malazan count later.'}, // F (bulk 1164, prologue 1163); Wp 1163-64; §(e) year-boundary note
+  {b:'moi', y:'1164', t:'From two months after the Fête, on Genabackis, the same months as the Chain.'}, // W Burn's Sleep, F: two
+  {b:'hoc', y:'1164', t:'The Fourteenth lands at Aren after the Chain, and marches on Raraku the same year.', d:'Its opening, far to the north and years earlier, is printed in the novel as 1159; one reckoning argues 1163 for it, and Erikson is quoted for 1159.'}, // F, MF (Books II-IV 1164); printed 1159 and Erikson quote via F
+  {b:'bh', y:'1164 to 1165', t:'Weeks after Raraku, through Y\'Ghatan and the plague to the sea.', d:'Its prologue gives the Empress\'s reign a length that her other dates put twelve years later.'}, // Wp 1164-65; F (prologue 1164, 1165); Laseen's 22nd year vs 1176: F
+  {b:'rg', y:'1165 into 1166', t:'The Fourteenth crosses to Lether, some three years after Lether\'s war.'}, // Wp c.1165 or 1166; F into 1166: two
+  {b:'tth', y:'about 1166, by most reckonings', t:'Years after Coral. No year is printed.', d:'Reckonings run from 1165 to 1168: one guide puts it four or five years after the Fête.'}, // MF 1165-66?; F memory 1166-67; RM 4-5 years after GotM (tth-canon §1): none agree
+  {b:'dod', y:'1166', t:'Months after Letheras falls. No year is printed.', d:'"Months" is the novel\'s own word; the year is the reckonings\' guess.'}, // MF post-1166; R DoD ch 5, W (months after RG): supported
+  {b:'tcg', y:'1166', t:'Days after Book Nine ends, to Kolanse. Where the novels stop.'}, // follows DoD directly (tcg-canon §1): supported
+];
+function timelineHTML(open){
+  const rows = BS_ROWS.filter(r => !r.b || bookLive(r.b)); if (rows.length < 3) return '';
+  const name = b => { const B = BOOKS[b]; return B ? `Book ${B.word}, ${B.name}` : ''; };
+  return `<details class="gloss meet"${open ? ' open' : ''}><summary>When the books happen</summary>
+    <p class="fine">Years by Burn's Sleep, the Empire's count. The novels do not always agree with themselves. Where they don't, it says so.</p>
+    <ul class="jl meetl">${rows.map(r => `<li><b>${r.y}${r.b ? ' · ' + name(r.b) : ''}.</b> ${r.t}${r.d ? ` <i class="fine">${r.d}</i>` : ''}</li>`).join('')}</ul></details>`;
 }
 
 /* ---- Book Two's road map: the Chain from Hissar to Aren, as far as the sergeant has come ---- */
@@ -189,7 +215,7 @@ deedsHTML = function(){
     ${S ? `<h4 class="jh">Sergeant ${esc(S.name)}'s count <small>Book ${(BOOKS[bookOf(S)] || BOOKS.gotm).word}</small></h4>${statsHTML(S)}` : ''}
     ${S ? `<h4 class="jh">Play a chapter again</h4>${doneR.length ? `<p class="fine">Any chapter Sergeant ${esc(baseName())} has finished can be played again, to try the other roads. It starts as a new save, ${esc(baseName())} (Ch <i>n</i>), with the squad, the kit and the tricks as they stood when that chapter began; this save stays as it is.</p>
       <div class="row chsel">${doneR.map(n => `<button class="btn" data-replay="${n}">${replayLabel(n)}</button>`).join('')}</div><p class="fine" id="replayMsg"></p>` : `<p class="fine">Finish a chapter, and it can be played again from here.</p>`}` : ''}
-    ${whereBooksMeetHTML(false)}`;
+    ${whereBooksMeetHTML(false)}${timelineHTML(false)}`;
 };
 { const _bd = bindDeeds; bindDeeds = function(){ _bd();
     const cvs = [...document.querySelectorAll('canvas[data-route]')];

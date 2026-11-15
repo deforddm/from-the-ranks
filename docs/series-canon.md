@@ -369,7 +369,12 @@ One or two lines each. Sources in brackets; *(memory)* lines are unchecked.
 
 ## (e) Timeline by Burn's Sleep year
 
-Never print a BS year in game text (rule 13). This is for writers only.
+**Rule 13 is lifted** (David, Nov 15: "help me piece together the puzzle of the books, lift both"). Since v13.18.0 (written Sun Nov 15, 2026, 1:49 PM PST) the game prints these years in one place, the journal's and Deeds' "When the books happen" (`src/038b_series.js`, `BS_ROWS`), each disputed year with its note. Chapter text still gives no year unless a speaker would. New sources added for that build: **Wp** = Wikipedia's *Malazan Book of the Fallen* chronology (liquisearch mirror: NoK 1154, MT 1161 with one chapter 1159, GotM 1163, DG and MoI 1163–64 together, BH 1164–65, RG c. 1165 or 1166, HoC "starts a couple of years before DG", TtH and DoD simultaneous); **MF** = the malazanempire.com "Timeline?" thread, a chronology quoted from a Reaper's Gale forum post (MT 1161–62; HoC prologue and Book I 1162–63?, Books II–IV 1164; TtH 1165–66?; DoD and TCG post-1166). No Erikson statement on the later years was found.
+
+**What the game prints, and why** (Claude's calls, for David to overturn):
+- 1154 the Empress's accession (W, Wp, F: two). MT "1161 or 1162" (Wp vs F/MF), with the Letherii count (Year of the Late Frost, the last before the Seventh Closure: W1, R1). GotM 1163 (two). DG 1164, noting reckonings that start it in 1163 (F, Wp). MoI 1164 (two). HoC 1164 (F, MF), noting the printed 1159 and the 1163 argument. BH 1164–65 (Wp, F), noting the prologue's reign length. RG 1165 into 1166 (Wp, F). TtH "about 1166, by most reckonings", noting 1165–68 (MF, F memory, RM). DoD 1166, "months" after RG (R, W; MF). TCG 1166, days after DoD.
+- Book Four's blurbs said "the year after the Chain"; the reckonings put the Chain and Raraku in the same year (1164), so they now say "months after the Chain" (`src/014_data.js`, `src/070_book4.js`, the meet map's line).
+
 
 | BS | Event | Source | Agreement |
 |---|---|---|---|

@@ -190,7 +190,7 @@ const BOOKS = {
     blurb:'Genabackis, the spring after the Fete, beside Memories of Ice.'},
   /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 070_book4.js */
   hoc:{id:'hoc', n:4, word:'Four', title:'House of Chains', name:'Unblooded', h1:['', 'Unblooded'], squad:'Third Squad', unit:'the squad', tag:'The Adjunct\'s army has never fought. Five who walked the Chain of Dogs are put in its ranks, and it marches north for Raraku.', titleArt:'title/hoc', titleScene:'hoc', patch:'insignia/hoc',
-    blurb:'Seven Cities, the year after the Chain, beside House of Chains.'},
+    blurb:'Seven Cities, months after the Chain, beside House of Chains.'},
   /* v8.0: Book Five. A new Letherii squad of the Whitefinder Battalion, from Letheras north to High Fort and back. Its blurb, title art and 'coming' are filled in by 080_book5.js */
   mt:{id:'mt', n:5, word:'Five', title:'Midnight Tides', name:'Indebted', h1:['', 'Indebted'], squad:'Sixth Company', unit:'the squad', tag:'Lether counts everything. The Edur come south, and five soldiers who owe more than they will ever earn are sent north to meet them.', titleArt:'title/mt', titleScene:'mt', patch:'insignia/mt',
     blurb:'Lether, beside Midnight Tides.'},

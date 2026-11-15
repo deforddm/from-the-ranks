@@ -1,5 +1,5 @@
 /* ============ Book Four: Unblooded (beside House of Chains) — Book Two's squad in the Fourteenth, Nerve and Dust ============ */
-/* Book Four is Book Two's squad again, the year after the Chain: broken up into the Adjunct's Fourteenth Army as canon does with every unit
+/* Book Four is Book Two's squad again, months after the Chain: broken up into the Adjunct's Fourteenth Army as canon does with every unit
    of Chain survivors, serving as medium infantry in Blistig's 9th Legion, from Aren north to Raraku. Its chapters register with
    registerChapter(n, B4CHn, 'hoc') (90) and every id carries a b4_ prefix (areas, nodes, fights, foes, gear, scenes, tricks, flags S.f.b4_*).
    This file holds what the book needs outside a chapter: the Book Two four's lives a few months on (swapped in and out by setBook), the four
@@ -384,7 +384,7 @@ const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id) && (b4Room() > 0 |
    off the shelf, the picker and Deeds (14 shelfBooks); showTitle(false, 'hoc') still dresses the title for it, and Begin says it is being written ---- */
 const b4ChCount = () => Object.keys(BOOK === 'hoc' ? CHAPTERS : BOOKSNAP.hoc.ch).length;
 const b4Progress = () => { const n = b4ChCount(); return n >= 7 ? 'All seven chapters.' : n === 0 ? 'Its chapters are being written.' : n === 1 ? 'Chapter One so far.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n]} chapters so far.`; };
-Object.defineProperty(BOOKS.hoc, 'blurb', {configurable:true, get(){ return 'Seven Cities, the year after the Chain, beside House of Chains. Book Two\'s squad in the Adjunct\'s Fourteenth, from Aren to Raraku. Plays on its own; a finished Book Two save on the Aren Guard or Wickan road can bring its squad across.' + (b4ChCount() >= 7 ? '' : ' ' + b4Progress()); }});
+Object.defineProperty(BOOKS.hoc, 'blurb', {configurable:true, get(){ return 'Seven Cities, months after the Chain, beside House of Chains. Book Two\'s squad in the Adjunct\'s Fourteenth, from Aren to Raraku. Plays on its own; a finished Book Two save on the Aren Guard or Wickan road can bring its squad across.' + (b4ChCount() >= 7 ? '' : ' ' + b4Progress()); }});
 Object.defineProperty(BOOKS.hoc, 'coming', {configurable:true, get(){ return b4ChCount() === 0; }});
 Object.defineProperty(BOOKS.hoc, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/hoc'] ? 'title/hoc' : 'title/dg'; }});
 

@@ -11,7 +11,7 @@ function openModal(tab){
       ${S.wounds ? `<h4 class="jh">Wounds carried (Bridgeburner)</h4><div class="kv wounds">${SQUAD().map(id => woundOf(id) == null ? '' : `<span>${esc(NAME(id))}</span><span>${woundOf(id)} / ${S.wounds[id + '_max'] || '?'} health ${S.inv.salve > 0 && woundOf(id) < (S.wounds[id + '_max'] || 0) ? `<button class="btn sm" data-salve="${id}">Salve +8</button>` : ''}</span>`).join('')}</div><p class="fine">Wounds close when the squad rests: at the start of a chapter, or where the story lets them sleep.</p>` : ''}
       <p class="fine" style="margin-top:10px">${S.book === 'mt' ? 'Lether has no Moranth munitions. ' : 'Moranth munitions hit everything in the blast, your own squad included. '}${S.book === 'mt' ? 'Sorcery, and the surgeon\'s hands, build strain' : 'Warren magic builds strain'}; past ${strMax()}, the caster pays in blood (the limit grows at levels 4 and 7).</p>`,
     deeds:()=>deedsHTML(),
-    journal:()=>`${journalHead()}<div class="route sm"><canvas id="jRoute"></canvas></div><h4 class="jh">Notes</h4><ul class="jl">${journalNotes().map(l => `<li>${l}</li>`).join('')}</ul>${artJournalHTML()}${typeof visionsHTML === 'function' ? visionsHTML() : ''}${glossHTML()}${typeof whereBooksMeetHTML === 'function' ? whereBooksMeetHTML(false) : ''}`,
+    journal:()=>`${journalHead()}<div class="route sm"><canvas id="jRoute"></canvas></div><h4 class="jh">Notes</h4><ul class="jl">${journalNotes().map(l => `<li>${l}</li>`).join('')}</ul>${artJournalHTML()}${typeof visionsHTML === 'function' ? visionsHTML() : ''}${glossHTML()}${typeof whereBooksMeetHTML === 'function' ? whereBooksMeetHTML(false) : ''}${typeof timelineHTML === 'function' ? timelineHTML(false) : ''}`,
     save:()=>`${S ? `<p class="fine">Playing as <b class="who">Sergeant ${esc(S.name)}</b>. The game saves itself on this device as you play, under your sergeant's name. Anyone else can start their own sergeant from the title, and each keeps a save of their own.</p>
       <div class="row" style="margin:8px 0 16px"><button class="btn" id="bSwitch">Switch sergeant</button></div>` : ''}
       <h4 class="jh">Keep your saves safe</h4>
@@ -113,6 +113,7 @@ function journalNotes(){
     f.c1_reported ? `Whiskeyjack: the Fourth rides south overland with the baggage. Darujhistan.` : `Report to Whiskeyjack at the Bridgeburners' fire.`,
     f.c1_paran ? `Captain Paran walked the lines. Noble-born. Trying.` : '',
     f.b1_c1_dujek ? `Dujek Onearm at the Second's burial field, reading the helmets: "Ask for the living first. The dead keep."` : '',
+    f.b1_c1_tattersail ? `Tattersail's second reading, before the Hounds: the Mason high, the Knight of High House Dark against Shadow. "Let it decide you're a wall."` : '',
     f.c1_sawHairlock ? `Tattersail's puppet turned its head.` : '',
     f.c1_plant ? `Tattersail knows about Tuft's badge. So, now, do you.` : '',
     f.c1_hounds ? `The Hounds of Shadow came through the tent lines. ${f.c1_key === 'claw' ? 'You held the crate.' : 'You held the line.'}` : '',
