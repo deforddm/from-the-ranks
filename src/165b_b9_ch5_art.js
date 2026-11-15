@@ -121,7 +121,7 @@ SCENEX.b9_c5_plain = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
     for (let i = 0; i < 2; i++) { const cx = W*(.26 + i*.08), cy = hz + H*.14, s = H/220; b92aWagon(x, cx, cy, s, 'day', false); x.fillStyle = 'rgba(120,110,90,.7)'; x.fillRect(cx - 12*s, cy - 15*s, 24*s, 2*s); } // the sappers' wagons, set apart, canvas lashed
     for (let i = 0; i < 7; i++) { const k = i/6; x.fillStyle = `rgba(206,184,140,${(.22 - k*.02).toFixed(2)})`; x.beginPath(); x.ellipse(W*(.96 - k*.03), hz - H*(.01 + k*.03), W*(.03 + k*.03), H*(.016 + k*.006), 0, 0, 7); x.fill(); } }), 0, 0, W, H); // the front of the column's dust, far east
   const hz = H*.44;
-  if (!f.b9_c5_rise) b93aHorse(ctx, W*.86, hz - H*.012, H/520, '#2a2018', 1); // the lone rider, his back to the column
+  if (!f.b9_c5_rise) { if (f.b9_c5_keneb || f.b9_c5_orders2) b93aHorse(ctx, W*.86, hz - H*.012, H/520, '#2a2018', 1); } // the lone rider, his back to the column (v13.8: once the Fist has ridden out; before, he is on foot at the halt)
   else { const k = mo ? ((t/30000) % 1) : .4; [[0, '#2a2018'], [.015, '#3a2a1a']].forEach(([d, c]) => b93aHorse(ctx, W*(.84 - k*.06 + d), hz - H*.006 + k*H*.02, H/500, c, -1)); } // two riders, coming back
   if (!f.b9_c5_bullDone) drawFigure(ctx, 'b3_c2_bhederin', W*.84, H*.74, 1.05, t, {dir:-1, phase:3});
   for (let i = 0; i < 14; i++) { const k = ((t/9000*mo + hash(i, 9545)) % 1); ctx.fillStyle = `rgba(240,216,168,${(.4*(1 - k)).toFixed(2)})`; ctx.fillRect(W*(.1 + hash(i, 9546)*.8) + k*W*.08, H*(.55 + hash(i, 9547)*.35) - k*H*.06, 1.3, 1.3); } // dust on the air

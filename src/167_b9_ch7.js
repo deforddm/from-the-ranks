@@ -641,7 +641,7 @@ Up the trail a runner is coming back from the head of the column, against the st
 
 "The Fist is dead," she says. "He went in. The High Mage is missing. Nobody's found him. A captain went in alone, up the far end, and nobody's seen him since." She looks at the slate. "The Adjunct was carried off the field. That's all they'll say." She looks at the Third. "Column's stopping tonight. Days, maybe. Heavies at the back. That's all."
 
-She goes on down the trail to the next company, saying it again.${b97Say({haddat:'\n\nHaddat stands very still. Then she adds a name to the long list, under her breath, a Fist\'s. She does not know it. She says "the Fist" instead.', marrow:'\n\nMarrow closes her eyes a moment. "Missing is not dead, child," she says. "Not yet. Not until somebody says it with their own mouth."', _:''})}`,
+She goes on down the trail to the next company, saying it again.${S.f.b9_c5_keneb ? '\n\nThe Fist. The one who led his horse down the halt in the Wastes and weighed the Third\'s water in his hand, and asked how they were, not the count.' : ''}${b97Say({haddat:S.f.b9_c5_keneb ? '\n\nHaddat stands very still. Then she adds a name to the long list, under her breath: Keneb.' : '\n\nHaddat stands very still. Then she adds a name to the long list, under her breath, a Fist\'s. She does not know it. She says "the Fist" instead.', marrow:'\n\nMarrow closes her eyes a moment. "Missing is not dead, child," she says. "Not yet. Not until somebody says it with their own mouth."', _:''})}`,
       ch:[{t:'Back to the trail.', go:()=>startExplore()}]}),
 
     /* stragglers: get them walking (a check) */

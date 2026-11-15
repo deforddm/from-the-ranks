@@ -11,7 +11,10 @@
    cure: b9Ration(1), the sick squadmate carries the fever to the fire). Phase 4, the Wastes' edge: Duvo the Akrynnai horse-trader
    (horse-meat, a rations check, +1 if the farm gave nothing; the Barghast war on the Akryn as news, the chapter's one rumour); raiders
    on his horses (b9_c3_road, optional); Harro again; the fire; out onto the Wastes.
-   Notes for later chapters: docs/dod-ch3-notes.md. */
+   Notes for later chapters: docs/dod-ch3-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance half lifted (series-canon §(a0)): the first night, the Third carries crates for Hedge's
+   new company at the far end of the camp (b9_c3_hedge); rule 93's other halves hold (never joined, never the recipes). Ch 5's sappers'
+   wagons read it. */
 /* FOR THE ARTIST (163b): names this file uses.
    Items: ART['item/b9_c3_akrynknife'], ['item/b9_c3_boilingpot'], ['item/b9_c3_feverbark'].
    Figures: b9_c3_healer (the Letherii healer), b9_c3_harro (the sutler), b9_c3_duvo (the Akrynnai trader); placeholders here with ??=.
@@ -33,6 +36,7 @@ const b93Nmc = id => id === 'sgt' ? 'You' : NAME(id);
 const b93V = (id, you, they) => id === 'sgt' ? you : they;
 const b93And = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
 const b93Rattle = id => { S.rattled ??= {}; S.rattled[id] = 1; };
+const b93Sap = () => ['tangle', 'rasp'].find(id => b9In(id)) || null; // v13.8: the squad's sapper, for Hedge's night
 const B93SHE = ['haddat', 'sathi', 'marrow', 'mirrel', 'wenna', 'hessa', 'rasp', 'tegra'];
 const b93He = (id, cap) => B93SHE.includes(id) ? (cap ? 'She' : 'she') : (cap ? 'He' : 'he');
 const b93His = id => B93SHE.includes(id) ? 'her' : 'his';
@@ -141,7 +145,9 @@ const B9CH3 = {
         {id:'healer', name:'A Letherii healer', kind:'b9_c3_healer', x:6, y:4, node:()=>'b9_c3_healer', show:()=>b93Ph() === 1, fresh:()=>!S.f.b9_c3_healer},
         {id:'brask', name:'Brask', kind:'brask', x:10, y:2, node:()=>'b9_c3_brask', show:()=>b93Ph() === 1 && b9In('brask'), fresh:()=>!S.f.b9_c3_brask},
         {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:8, node:()=>'b9_c3_oldmarine', fresh:()=>!S.f.b9_c3_old},
-        {id:'dogs', name:'Eyes past the carts', kind:'b5_c7_greatwolf', x:13, y:2, node:()=>'b9_c3_dogs', show:()=>!S.f.b9_c3_dogsDone && !!S.f.b9_c3_healer, fresh:()=>true} ] },
+        {id:'dogs', name:'Eyes past the carts', kind:'b5_c7_greatwolf', x:13, y:2, node:()=>'b9_c3_dogs', show:()=>!S.f.b9_c3_dogsDone && !!S.f.b9_c3_healer, fresh:()=>true},
+        /* v13.8 (David, Nov 15): meetings. Hedge's new company at the far end of the camp, the first night; once the Third has carried, he is busy */
+        {id:'hedge', name:'A sapper in a leather cap, on a wagon', kind:'hedge', x:14, y:10, node:()=>'b9_c3_hedge', show:()=>b93Ph() === 1 && !!S.f.b9_c3_orders1 && (!S.f.b9_c3_hedge || /^b9_c3_hedge/.test(S.node || '')), fresh:()=>!S.f.b9_c3_hedge} ] },
 
     /* 16 x 12 (b9_c3_road, day). The column halted at noon among the last farms: w wagons  H Harro's wagon  # a field wall  < back west
        > the lane to the last farm */
@@ -259,6 +265,7 @@ const B9CH3 = {
     if (f.b9_c3_found) x.push(f.b9_c3_found === 'farm' ? 'The last farm sold the Third what it could spare.' : 'Duvo the Akrynnai traded the Third horse-meat at the Wastes\' edge.');
     if (f.b9_c3_roadDone) x.push('Raiders on an Akrynnai trader\'s horses met the Third at the Wastes\' edge, and the trader got his horses back.');
     if (f.b9_c3_dogsDone) x.push('Wastes dogs came for the fever-carts the first night. They did not get to them.');
+    if (f.b9_c3_hedge) x.push('The first night on the road east the Third carried crates half the night for Hedge\'s new company, out at the far end of the camp, and never asked what was in them.');
     if (S.b9 && S.b9.wit && S.b9.wit.c3) x.push(S.b9.wit.c3 === 'kept' ? 'Asked what it marches for, the Third had an answer.' : 'Asked what it marches for, the Third said the column was going, so it went.');
     if (b9In('brask')) x.push('Brask carried water down the fever-carts the first night, and did not say why.');
     return x; },
@@ -266,6 +273,7 @@ const B9CH3 = {
   journal:()=>{ const f = S.f; return [
     f.b9_c3_key && (f.b9_c3_key === 'boil' ? 'The Third fell out of the column and boiled everything it owned, and the fever broke. It cost a day and a place at the wagons.' : 'The Third kept the column\'s pace and its place at the wagons, and trusted the cure. The fever came with it.'),
     f.b9_c3_orders3 && 'The marines\' sergeants say surviving isn\'t what this is about. Thallo had it from a heavy who had it from a marine.',
+    f.b9_c3_hedge && 'Hedge, the old sapper who came back, moving his company\'s crates away from the fever-fires. Sweetlard and Rumjugs with him. One cart nobody touches.',
     f.b9_c3_duvo && 'Duvo, an Akrynnai horse-trader at the Wastes\' edge. He says the Barghast have gone to war with his people on the plains to the north.',
     f.b9_c3_farmDone && 'The last farm in Lether, and deserters in it with a cart half loaded. An old woman stayed.',
     f.b9_c3_bark && 'Harro, a sutler following the column, sells fever-bark at a price that would make a Letherii clerk blush.',
@@ -311,6 +319,42 @@ He looks east along the road, where the column's fires go away in a line and sto
 
 "Two of mine had this," he says, when you come up. "At the river. Before the river. They got over it, and then the river had them anyway." He gives a man a mouthful. "Seemed a waste, to get over it." He moves to the next cart.${b93SickIn() ? `\n\n"I'll do ${NAME(b93Sick())} last," he says. "${b93He(b93Sick(), true)}'ll want to say ${b93He(b93Sick())} doesn't need it. Better if ${b93He(b93Sick())}'s too tired."` : ''}`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. A night beside Hedge's new company, the first night on the road east ----
+       The plan's pick (series-meetings-plan, Book Nine: "Hedge's company, Third Ch3: the Third works a night beside Hedge's new
+       company"). Where and when: Hedge has taken in a company of Letherii recruits, with Sweetlard and Rumjugs as its sergeants, and
+       marches with the army when it leaves Letheras (R11 S5, S14, S16; W *Hedge*) [supported, H with RT4 and the TCG DP]; Moranth
+       munitions are running low, so he has an alchemist make new ones (W *Hedge*) [1]. The fever in the column is the same days (R11
+       S13). The night's job (the ox gone to the fever-carts, the crates moved off from the fever-fires) is the game's gap. Hedge's look:
+       a weathered face the colour of his scorched leather cap, pulled down over his ears (W *Hedge*), as Book Seven's b7_c7_hedge has
+       him. Locks: rule 93, the company is never joined and its name never said, the alchemist's cart is never opened and nothing in it is
+       named, nothing new goes into the Third's satchel; rule 62, his return is never explained; rule 12's first half, the Third is not
+       the Bridgeburners. Book Ten's b10_c7_hedge ("a company of Letherii he calls by an old name, to their face") stays true. What it
+       gives: the sapper +1 (Tangle, else Rasp), else Brask +1; Ch 5's sappers' wagons read it. Sets b9_c3_hedge. */
+    b9_c3_hedge:()=>({sp:'A sapper in a leather cap', scene:'b9_c3_fevercamp', again:()=>'The wagon at the far end of the camp, the lanterns, the crates coming down off it one at a time.', txt:
+`At the far end of the camp, downwind of everything and well away from the fever-fires, a wagon stands on its own with its shafts down and no ox in them. Round it, by two shuttered lanterns, a dozen Letherii in new Malazan kit are lifting crates off the bed and setting them down in the grass, very slowly, one at a time, as if each might take offence.${S.f.b9_c1_ladies ? ` The two sergeants from the barracks gate in Letheras are with them, Sweetlard with a crate on her hip and Rumjugs with the rum jug on her arm.` : ` Two big women with sergeants' knots on their shoulders are with them, one with a crate on her hip and one with a rum jug sitting on her arm.`}
+
+On top of the wagon, directing, is a sapper: a weathered face the colour of the scorched leather cap pulled down over his ears, and a voice that carries exactly as far as he wants it to and no further.
+
+He sees the Third's shields. "Heavies," he says, delighted. "Look at that. Backs." He comes to the edge of the bed. "The quartermaster took my ox for the fever-carts, and every fire in this camp tonight has a pot on it and a man in a blanket beside it kicking in his sleep. I'm not keeping these within a hundred paces of that. I want them out past the end of the camp before midnight, laid in a row, and I want it done by people who don't drop things." He looks the Third over. "You don't drop things. I can tell."`,
+      ch:[{t:'"The Third will carry."', go:'b9_c3_hedge_night'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b9_c3_hedge_night:()=>{ const sp = b93Sap(), who = sp || (b9In('brask') ? 'brask' : null);
+      return {sp:'Hedge\'s company', scene:'b9_c3_fevercamp', fx:()=>{ if (!S.f.b9_c3_hedge) { S.f.b9_c3_hedge = 1; if (who) b93L(who, 1); } }, txt:
+`So the Third carries, half the night, with the fever-carts creaking at the other end of the camp and the pots going on every fire.
+
+The crates are Moranth, most of them, the old issue, wax seals and clay and straw, and the sapper knows every one by its weight. He stands on the wagon and hands them down himself, and says what each one is as it goes, and how to hold it, and where it goes in the row out on the grass, and why. "Sharpers. Flat, like a baby. Burners: don't let the straw touch your sleeve. That one's a cusser, so if you trip, trip away from me."
+
+There are fewer than there should be. He says so, more than once. "The Moranth stopped sending," he says, "or the boats did, or somebody's sitting on them in Malaz, warm." He hands down another. "So I'm making my own arrangements."
+
+One cart he does not unload. It stands a little off, under its own tilt, with a thin Letherii with stained fingers and no eyebrows fretting round it, and when ${sp ? NAME(sp) : 'one of the Third'} drifts toward it the sapper says, without looking, "Not that one. That one's mine." That is all he says about it.${sp ? `\n\nLater, at the end of the row, he looks at ${NAME(sp)}'s satchel and the way ${b93He(sp)} carries it, and grunts. "Who taught you to tie a satchel like that?" ${NAME(sp)} tells him. "Hm," he says. "Not bad. Wrong, but not bad." He shows ${b93Him(sp)} the right way, twice, fast, and seems pleased when ${b93He(sp)} gets it the second time.` : ''}
+
+"My company," he says once, to the Third, watching his Letherii set a crate down like glass. "My —" and Sweetlard coughs, loudly, and he grins. "My company. Good lads. Terrified. They'll do."${b93Say({tangle:`\n\nTangle has worked it out by the second crate. "That's Hedge," he says, under his breath, to you. "The one who came back." He hands down a sharper flat, like a baby. "No one said he'd be like this."`, rasp:`\n\nRasp has worked it out by the second crate. "That's Hedge," she says, under her breath, to you. "The one who came back." She lays a burner down with its straw clear of her sleeve. "I thought he'd be taller."`, brask:`\n\nBrask carries two crates at once until Hedge sees him do it and shouts, and then carries one, very carefully, with an expression of injury.`, _:''})}
+
+Near midnight the last crate is down in its row on the grass, and Rumjugs walks the length of it with the jug and gives every heavy one swallow. "Long way," she says, to the Third. ${S.f.b9_c1_ladies ? 'It is still the only thing she says.' : 'It is the only thing she says all night.'}
+
+"Heavies," says Hedge from the empty wagon bed, stretching. "Good backs. Never ask what's in anything." From him it is the highest praise there is. "Hedge," he adds, in case nobody had told them. "Go and sleep. You'll be sick by morning, half of you. Everybody is."`,
+        ch:[{t:'Back to the Third\'s fire.', go:()=>startExplore()}]}; },
 
     /* the fever-carts: the healer (phase 1), the key (phase 3) */
     b9_c3_carts:()=>{ const ph = b93Ph();

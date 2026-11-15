@@ -12,7 +12,11 @@
    company's pot: no ration move, Brask and Haddat +1, S.f.b9_c5_shared = 1) or 'keep' (b9Ration(2), Tegra +1, Haddat −1). Phase 3, the
    dung-fire under the stars: the Witness beat (b9Wit), the old marine's saying (the trick, Our Own Witness, behind a ✦ check that carries
    witness:true), Harro's camp talk (the other squad's one line); first light, and dust on the horizon that is not the column's (once).
-   Notes for later chapters: docs/dod-ch5-notes.md. */
+   Notes for later chapters: docs/dod-ch5-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves lifted (series-canon §(a0)): Fist Keneb leads his horse down the halt before his
+   ride and stops at the Third's wagon (b9_c5_keneb); the rise then shows him out on the plain. Hedge at the sappers' wagons knows the
+   Third if it carried for his company on the road east (Ch 3's b9_c3_hedge). A young marine of the 4th, Bottle, at the Third's fire the
+   second night (b9_c5_bottle). */
 /* FOR THE ARTIST (165b): names this file uses.
    Items: ART['item/b9_c5_barghastaxe'], ['item/b9_c5_sutlerspack'], ['item/b9_c5_dustscarf'].
    Figures: tegra (replaces 160's sprite). Reused: b9_c1_thallo (161b), b9_c3_harro (163b), b2soldier (the old marine, the heavies),
@@ -57,6 +61,8 @@ const b95Other = () => (b9Key(4) || 'book') === 'forage' ? 'The Letherii rode ou
 /* the cache: found in the wreck, fought over, and shared or kept */
 const b95Found = () => !!S.f.b9_c5_found;
 const b95CacheDone = () => !!S.f.b9_c5_cacheDone;
+/* v13.8: the Fist is on foot at the halt until the Third has spoken with him or Thallo has given the day's word; then he is out on the rise */
+const b95KenebOut = () => !!(S.f.b9_c5_keneb || S.f.b9_c5_orders2 || S.f.b9_c5_rise);
 
 /* ---- Our Own Witness: what some of the old hands say at the halts when the ration is cut, "we shall be our own witness", and the soldier
    beside them says it back. It copies the Khundryl Paint (b2_paint): a cry that steadies the bearer's neighbours and checks the enemy
@@ -134,7 +140,9 @@ const B9CH5 = {
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:4, y:4, node:()=>b95Ph() === 1 ? 'b9_c5_thallo' : 'b9_c5_thallo3', fresh:()=>b95Ph() === 1 ? !S.f.b9_c5_orders1 : !S.f.b9_c5_orders3},
         {id:'tegra', get name(){ return b95TSettled() ? 'Tegra' : 'A Barghast guide'; }, kind:'tegra', x:13, y:7, node:()=>'b9_c5_tegra', show:()=>!b95TSettled() || b95TWaits(), fresh:()=>!b95TSettled()},
         {id:'old', name:'The old marine', kind:'b2soldier', x:11, y:9, node:()=>'b9_c5_oldmarine', fresh:()=>b95Ph() === 1 ? !S.f.b9_c5_old : !S.f.b9_c5_wordTried},
-        {id:'heavies', name:'Heavies at the next fire', kind:'b2soldier', x:3, y:8, node:()=>'b9_c5_heavies', show:()=>b95Ph() === 1, fresh:()=>!S.f.b9_c5_heavies} ] },
+        {id:'heavies', name:'Heavies at the next fire', kind:'b2soldier', x:3, y:8, node:()=>'b9_c5_heavies', show:()=>b95Ph() === 1, fresh:()=>!S.f.b9_c5_heavies},
+        /* v13.8 (David, Nov 15): meetings. A young marine of the 4th outside the Third's firelight, the second night; gone once spoken to */
+        {id:'bottle', name:'A young marine, watching the moths', kind:'b2soldier', x:9, y:7, node:()=>'b9_c5_bottle', show:()=>b95Ph() === 3 && (!S.f.b9_c5_bottle || /^b9_c5_bottle/.test(S.node || '')), fresh:()=>!S.f.b9_c5_bottle} ] },
 
     /* 16 x 12 (b9_c5_wastes, day). The noon halt on open country: , the column's track  w its wagons  W the sappers' wagons  m a stone rise
        x scrub  s the water detail's way south  > the column, east */
@@ -152,11 +160,13 @@ const B9CH5 = {
             "r......s.......r",
             "rrrrrrrsrrrrrrrr" ],
       walk:'.,s', triggers:{W:'b9_c5_sappers', m:'b9_c5_rise', s:'b9_c5_south', '>':'b9_c5_plain_east'}, start:{x:3, y:7},
-      quest:()=> !S.f.b9_c5_orders2 ? 'Thallo, by the wagons. He has the captain\'s word.' : !S.f.b9_c5_cacheDone ? `South, with ${b95Guide()} and the water detail.` : 'Back to the column.',
+      quest:()=> !S.f.b9_c5_orders2 ? (!S.f.b9_c5_keneb ? 'Thallo, by the wagons. He has the captain\'s word. And an officer is leading a horse down the line.' : 'Thallo, by the wagons. He has the captain\'s word.') : !S.f.b9_c5_cacheDone ? `South, with ${b95Guide()} and the water detail.` : 'Back to the column.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:5, y:7, node:()=>'b9_c5_thallo2', fresh:()=>!S.f.b9_c5_orders2},
         {id:'bull', name:'A bhederin bull, alone', kind:'b3_c2_bhederin', x:13, y:9, node:()=>'b9_c5_bull', show:()=>!S.f.b9_c5_bullDone, fresh:()=>true},
-        {id:'tegra', name:'Tegra', kind:'tegra', x:8, y:8, node:()=>'b9_c5_tegra', show:()=>b95TWaits(), fresh:()=>false} ] },
+        {id:'tegra', name:'Tegra', kind:'tegra', x:8, y:8, node:()=>'b9_c5_tegra', show:()=>b95TWaits(), fresh:()=>false},
+        /* v13.8 (David, Nov 15): meetings. Fist Keneb on foot, leading his horse down the halt before he rides out; gone once spoken to */
+        {id:'keneb', name:'Fist Keneb, leading his horse', kind:'keneb', x:11, y:7, node:()=>'b9_c5_keneb', show:()=>b95Ph() === 2 && (!b95KenebOut() || /^b9_c5_keneb/.test(S.node || '')), fresh:()=>!S.f.b9_c5_keneb} ] },
 
     /* 16 x 12 (b9_c5_wastes, day). A dry wash south of the halt: r its banks of stone  d the sandy bed  K the sutler's wrecked cart  e
        where water stands under the sand  m the shade under the bank  < back up to the column */
@@ -215,7 +225,7 @@ const B9CH5 = {
       line:'A long strip of loose-woven linen, dun, to wrap the mouth and nose against the dust of the march. Harro sells them out of a sack at a price that would shame a temple. It keeps out most of the dust. The dust that gets past it tastes of linen, which is an improvement.'} },
 
   scenes:{
-    b9_c5_plain:{loc:'The Wastes', sub:'The noon halt · open country', cap:'The column halted at noon on a plain with nothing on it, wagons drawn up along the track, and far out east a single rider on a low rise.', amb:'explore'},
+    b9_c5_plain:{loc:'The Wastes', sub:'The noon halt · open country', get cap(){ return b95KenebOut() ? 'The column halted at noon on a plain with nothing on it, wagons drawn up along the track, and far out east a single rider on a low rise.' : 'The column halted at noon on a plain with nothing on it, wagons drawn up along the track, and the low rise far out east empty.'; }, amb:'explore'},
     b9_c5_wash:{loc:'The Wastes', sub:'A dry wash · afternoon', cap:'A dry wash cut into the plain, a sutler\'s cart on its side in the sandy bed, and shade under the south bank.', amb:'explore'} },
 
   end:{
@@ -235,6 +245,8 @@ const B9CH5 = {
     if (f.b9_c5_dug === 'ok') x.push('Tegra found water under the sand of a dry wash, and the Third filled every skin.');
     if (f.b9_c5_wordOk) x.push('An old marine taught the Third how the old hands say it at the halts: we shall be our own witness.');
     if (S.b9 && S.b9.wit && S.b9.wit.c5) x.push(S.b9.wit.c5 === 'kept' ? 'On short rations under the stars, the Third still had an answer for what it marches for.' : 'On short rations under the stars, the Third said it marches for nothing, out loud.');
+    if (f.b9_c5_keneb) x.push('Fist Keneb stopped at the Third\'s wagon at a noon halt, weighed its water, and asked how it was. Then he rode out alone to look at the Wastes.');
+    if (f.b9_c5_bottle) x.push('A young marine of the 4th called Bottle sat outside the Third\'s firelight one night, watching the moths, and asked who its mage was.');
     if (f.b9_c5_dust) x.push('At first light there was dust on the horizon that was not the column\'s.');
     return x; },
 
@@ -243,6 +255,8 @@ const B9CH5 = {
     f.b9_c5_key && (f.b9_c5_key === 'share' ? 'The sutler\'s cache went into the company\'s pot. The heavies ate a little better, and knew who to thank.' : 'The sutler\'s cache stayed with the Third. The Third ate. Haddat did not, the first night.'),
     f.b9_c5_found && 'A Kartool sutler went off the column\'s line after water and died in a dry wash. There was food under the floor of his cart.',
     f.b9_c5_rise && 'A lone officer rode out from the column to look at the Wastes, and was fetched back. The heavies said it was the Fist.',
+    f.b9_c5_keneb && 'Fist Keneb at the Third\'s wagon at noon, weighing a water skin. "Hear them, then leave them at the fire."',
+    f.b9_c5_bottle && 'Bottle, a marine mage of the 4th: the ground out here is dead to a mage, he says. He had had a bad day, and did not say what.',
     f.b9_c5_sappers && 'The munitions are short. A man in a leather cap told a quartermaster\'s clerk so, at length, at the sappers\' wagons.',
     f.b9_c5_orders2 && 'Two of the marines\' sergeants are gone in the night, Thallo says. The marines are not saying where.',
     f.b9_c5_heavies && 'Heavies at the next fire talking about the west, and how far back the last water is.',
@@ -405,6 +419,27 @@ They stop when the Third comes near. One of them, a long-faced corporal, looks u
 `Past the last tents the ground goes on, pale grass and bare stone, into a dark with no fires in it at all. The sentries stand facing it. There is nothing out there to see, and they look at it anyway, as soldiers do.${b95If('tegra', `\n\nTegra comes up beside you and looks too, for a while. "Nothing," she says. Then: "Not nothing. Nothing close."`)}`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
 
+    /* ---- v13.8 (David, Nov 15): meetings. Bottle at the Third's fire, the second night (Claude's own pick) ----
+       Where and when: the night after the torn tent. Bottle, the 4th's young mage, found the tent that morning and told Fiddler the
+       Wastes "might as well be dusted in otataral" (R22 S5, S7) [1]; he is with the army until the Nah'ruk (W *Bottle*) [1]. A marine
+       mage walking the heavies' fires at night is the game's gap. His look: a plain young man, thin as a spear, about twenty; his
+       grandmother's old magic, seeing through the eyes of small animals and insects (W *Bottle*) [1]. Locks: rule 86, nothing of the
+       wyval or of his going missing; rule 90, the tent and the sergeants never said, only "a bad day"; rule 88, nothing of what took
+       them; Quick Ben never named. What it gives: a loyalty beat for the squad's own mage or healer (Keth, else Marrow, else Yorin, else
+       Hessa), and his name. Sets b9_c5_bottle. */
+    b9_c5_bottle:()=>{ const who = ['warlock', 'marrow', 'yorin', 'hessa'].find(id => b9In(id)) || null;
+      return {sp:'A young marine', scene:'b9_wastes_night', fx:()=>{ if (!S.f.b9_c5_bottle) { S.f.b9_c5_bottle = 1; if (who) b95L(who, 1); } }, again:()=>'The place outside the firelight where the young marine sat. The moths are still there.', txt:
+`Just outside the Third's firelight a young marine is sitting on his heels, watching the moths. They have come out of nowhere to the dung-fire, a dozen of them, pale and slow, and he is watching them the way other men watch dice: a plain young man, thin as a spear, no helmet, a marine's kit that has been slept in.
+
+He looks up when the Third does, quick, like somebody caught at something. "Sorry," he says. "Moths." He seems to think that explains it. "Not much alive out here. You go where it is."
+
+He has had a bad day. It is on him like the dust. He does not say what it was, and nobody asks him.
+
+"Who's your mage?" he says instead. "Your heavies'. Is anything answering?" He nods at the dark past the tents. "The ground out here might as well be dusted in otataral. I reach, and there's nothing. Then I reach further, and there's less."${b95Say({warlock:`\n\nKeth opens his mouth, and the grandmother answers out of it. "*Further than you'd think, boy,*" she says. "*Further down. Old things still down there, if you're rude enough.*" Keth closes his mouth and looks embarrassed.\n\nThe marine stares at him. Then he grins, for the first time, like a boy. "Mine does that too," he says. "Not out of my mouth. Just in my ear." He looks at Keth with something like fellow feeling. "Does yours ever stop?"\n\n"*No,*" says the grandmother.`, marrow:`\n\nMarrow looks at him over the fire. "Soliel's door is open a crack, child," she says. "Further than I'd have thought, out here. A healer gets in where a mage doesn't." She considers him. "You've had no sleep."\n\n"No," he agrees. "Not much."`, yorin:`\n\nYorin holds up the copper wind-vane. "Serc's here," he says. "Plenty of wind. Nothing in it." The marine nods. "That's it," he says. "That's it exactly."`, hessa:`\n\nHessa lays her palm on the bare ground. "D'rek is very far down," she says. "But she is down there." The marine looks at her hand on the ground for a while, as if he were listening through it.`, _:`\n\nThe Third has no mage worth the name. He looks almost relieved. "Then you've lost nothing," he says.`})}
+
+A voice from up the lines, in the dark, not loud: "Bottle. Fid wants you." The young marine gets up, all at once, the way young men do, and nods to the Third. "Bottle," he says, in case it was not clear. "Fourth squad." Then he is gone up the lines, and the moths stay where they were.`,
+        ch:[{t:'Back to the fire.', go:'b9_c5_fire'}]}; },
+
     /* ======== the fire: phase 1 the first night, phase 3 the second. The games pass wraps this node: keep the id ======== */
     b9_c5_fire:()=>{ const ph = b95Ph(), late = ph >= 3, rk = 'b9_c5_rest' + (late ? 3 : 1);
       return {sp:'The Third\'s fire', scene:'b9_wastes_night', html:rationsHTML(),
@@ -459,8 +494,9 @@ At first light the drums go, and the column gets up off the bare ground, slowly,
 
 Little is said. Water goes round by the cup.${b95If('tegra', `\n\nTegra squats on her heels at the track's edge and runs a hand flat over the grass, against the grain and then with it. "South," she says, to nobody in particular. "Low ground south. A wash." She stands. "I will tell your captain."`)}${b95If('brask', `\n\nBrask is walking on the dusty side of the track again, so the rest of the Third can walk on the less dusty one. He was not asked to, and is not stopped.`)}
 
-Thallo is coming down the line from the captain's wagon with his face set the way it sets for a job, and something else in it too.`,
-      ch:[{t:'Thallo.', go:'b9_c5_thallo2'},
+${!b95KenebOut() ? `Up the line a broad man in a plain cloak is walking the halt on foot, leading a tired horse, and stopping at every company's wagons.\n\n` : ''}Thallo is coming down the line from the captain's wagon with his face set the way it sets for a job, and something else in it too.`,
+      ch:[...(!b95KenebOut() ? [{t:'The officer leading the horse.', go:'b9_c5_keneb'}] : []),
+          {t:'Thallo.', go:'b9_c5_thallo2'},
           {t:'Walk the halt.', go:()=>startExplore()}]}),
     /* Thallo, the noon halt: the rumour, and the water detail */
     b9_c5_thallo2:()=>({sp:'Thallo', scene:'b9_c5_plain', fx:()=>{ S.f.b9_c5_orders2 = 1; }, again:()=> b95CacheDone() ? 'Thallo, in the shade of a wagon. "Column camps at dusk, Sergeant."' : `Thallo, by the wagons. "South with ${b95Guide()}, Sergeant. The skins."`, txt:
@@ -477,20 +513,54 @@ Thallo is coming down the line from the captain's wagon with his face set the wa
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
 
     /* the rise: a lone officer far out on the plain, fetched back (Keneb's ride, R22 S6, seen from the halt and never touched) */
-    b9_c5_rise:()=>({sp:'The rise', scene:'b9_c5_plain', fx:()=>{ S.f.b9_c5_rise = 1; }, again:()=>'A low back of stone at the halt\'s east end, and the empty plain past it.', txt:
-`From the low back of stone at the east end of the halt, the plain goes on and on, and far out on it, a mile or more, there is a single rider sitting a horse on a rise of his own with his back to the column. An officer's cloak, by the cut of it. He is not doing anything. He is looking east, at the Wastes.
+    b9_c5_rise:()=> !b95KenebOut() ? {sp:'The rise', scene:'b9_c5_plain', txt:
+`From the low back of stone at the east end of the halt, the plain goes on and on, pale and empty, to a low rise a mile or more out with nothing on it. Back along the wagons an officer is leading a tired horse down the line, stopping at each company.`,
+      ch:[{t:'Back to the halt.', go:()=>startExplore()}]} : ({sp:'The rise', scene:'b9_c5_plain', fx:()=>{ S.f.b9_c5_rise = 1; }, again:()=>'A low back of stone at the halt\'s east end, and the empty plain past it.', txt:
+`From the low back of stone at the east end of the halt, the plain goes on and on, and far out on it, a mile or more, there is a single rider sitting a horse on a rise of his own with his back to the column. An officer's cloak, by the cut of it. He is not doing anything. He is looking east, at the Wastes.${S.f.b9_c5_keneb ? ' It is the tired horse that was led down the line an hour ago, and the man who weighed the Third\'s water.' : ''}
 
 He sits there a while. Then a second rider goes out to him from the head of the column at a walk, and reaches him, and the two of them sit together a moment, and then they turn and come back, slowly, side by side.
 
 ${b95Say({brask:`Brask has come up beside you. "Fist," he says. "Keneb. Rides out at the halt, they say, and looks at it." He watches the two riders coming in. "And somebody gets sent to fetch him." He shrugs. "Officers."`, haddat:`Haddat has come up beside you. "The Fist," she says. "Keneb. The heavies say he rides out at the halt and looks, and somebody is sent to fetch him." She watches the riders. "My mother said a man who keeps looking at the road has already seen where it goes."`, _:'A heavy sitting on the stone with his boots off says, "Fist Keneb. Rides out and looks, and gets fetched back," and goes back to his boots.'})}`,
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Fist Keneb before his ride, the day of the torn tent ----
+       The plan's pick (series-meetings-plan, Book Nine: "Keneb before his ride, Third Ch5: one talk the day of the torn tent"). Where and
+       when: the morning Gesler and Stormy are found gone, Keneb rides out to a rise to look at the Wastes, worrying at Blistig and himself,
+       until the Adjunct calls him back (R22 S5, S6; W *Keneb*: he runs the army nearly alone on the march) [supported; dod-canon ch 22
+       row]. The game's halt is that day (Thallo's "two sergeants gone in the night", b9_c5_thallo2; the rise, b9_c5_rise), so the talk is
+       at the halt before he mounts: he is on foot until the Third has spoken with him or Thallo has given the day's word, and the
+       backdrop's rider (165b) waits for that. He counts, as he always has (Book Two's Aren gate, Book Four's muster, Book Seven's lie-up:
+       told as the Third's history, no flags carry). Locks: rule 86, nothing of his death or the charge, nothing a soldier could not feel
+       (a tired man); rule 90, the sergeants are "things at the fires", never the tent; rule 91, the boy has "gone off on his own"; rule
+       84, nothing of the Adjunct's purpose. What it gives: a loyalty beat for whoever he speaks to (Brask, else Haddat, else Marrow, else
+       Tangle) and a line on the rise. Sets b9_c5_keneb (the answer: 'hold', 'why' or 'ask'). */
+    b9_c5_keneb:()=>{ const k3 = S.f.b9_c3_key;
+      return {sp:'Fist Keneb', scene:'b9_c5_plain', again:()=>'The Fist at the Third\'s wagon with the reins over his arm, waiting for an answer.', txt:
+`He comes down the line on foot, leading the horse by the reins: a broad man in a plain cloak gone the colour of the Wastes, with a runner a pace behind him holding a slate he keeps taking back. No crest. No escort. He stops at every company's wagons, and the files sitting in the dust start to get up, and he waves them down without looking.
+
+It is the Fist. Keneb. The Third has seen that face before, at gates and musters and the edges of woods, always counting something. It is thinner now than any of those times.
+
+He stops at the Third's wagon, lifts a water skin off the tailboard, weighs it in his hand, and hangs it back. "The 9th's heavies," he says. "How much water, Sergeant?"
+
+You tell him: what is in the skins, what the Third drank at dawn, and that a guide says there is a wash an hour south. He writes it on the slate himself, small, and underlines it.${k3 === 'boil' ? `\n\n"You're the squad that fell out on the road east to boil," he says. "The Letherii healer told the quartermaster, and the quartermaster told me, at some length." Something nearly happens at the corner of his mouth. "Your sick lived. I wrote that down too."` : k3 === 'press' ? `\n\n"You kept the pace on the road east with a fever on the cart," he says. "The quartermaster told me. He was pleased." He looks at the slate. "I'd have been pleased if you'd stopped. Both, I suppose."` : ''}${b95Say({marrow:`\n\nMarrow has been watching him, the way she watches a cough. "The boy, Fist," she says. "From the muster."\n\nHe is quiet a moment. "Gone off on his own," he says. "With the girl." He puts it away somewhere, and you watch him do it. "He was always going off."`, _:''})}
+
+"You'll hear things at the fires today," he says, to the slate. "Hear them. Then leave them at the fire." He hands the slate back to the runner. "That isn't an order. I'm asking." Then he looks at the Third, properly, one face after another. "How are they, Sergeant? Not the count. Them."`,
+        ch:[{t:'"Holding, Fist."', fx:()=>{ S.f.b9_c5_kenebAns = 'hold'; }, go:'b9_c5_keneb_ans'},
+            {t:'"Hungry, sir. And asking what for."', fx:()=>{ S.f.b9_c5_kenebAns = 'why'; }, go:'b9_c5_keneb_ans'},
+            {t:'"Ask them yourself, sir."', fx:()=>{ S.f.b9_c5_kenebAns = 'ask'; }, go:'b9_c5_keneb_ans'},
+            {t:'Not now.', go:()=>startExplore()}]}; },
+    b9_c5_keneb_ans:()=>{ const a = S.f.b9_c5_kenebAns || 'hold', who = ['brask', 'haddat', 'marrow', 'tangle'].find(id => b9In(id)) || null;
+      return {sp:'Fist Keneb', scene:'b9_c5_plain', fx:()=>{ if (!S.f.b9_c5_keneb) { S.f.b9_c5_keneb = a; if (who) b95L(who, 1); } }, txt:
+`${a === 'hold' ? `"Holding," he says, and nods, slowly, as if the word had a weight he could feel. "Holding is what I need. Holding is most of it."` : a === 'why' ? `He does not write that down. "Hungry I can count," he says. "The other thing I can't." He looks east, past the wagons. "The Adjunct knows why. I've seen her be right when nobody else could see it. Tell them the Fist asked after them. That's what I have."` : `He looks at you a moment, and then he does: he turns to the nearest of them and asks, as if a Fist asked heavies how they were every day of his life.`}${a === 'ask' ? b95Say({brask:`\n\nBrask gets up, because he cannot help it, and stands like a wall. "Tired, Fist," he says. "Hungry. Still here." Keneb nods. "Good," he says. "Still here is good."`, haddat:`\n\nHaddat looks at him over the blue shield. "My mother crossed worse than this, Fist," she says. "On less." Keneb nods. "Then I'll take your mother's word," he says, "and yours."`, marrow:`\n\nMarrow looks at him a long breath. "Better than you are, Fist," she says. He almost laughs. "Most of the army is," he says. "I'm told."`, tangle:`\n\nTangle counts on his fingers. "Six days' biscuit at the cut," he says. "Water to the wash and back." Keneb writes it down. "Thank you," he says, and means it. "Somebody should count."`, _:`\n\nThe Third does not quite know what to say to a Fist. He waits until one of them says "Fine, sir," and seems to take that for what it is.`}) : b95Say({brask:`\n\nBrask has stood up anyway, as heavies do. Keneb looks at him and nods, a soldier's nod, and Brask sits down looking as if he had been paid.`, haddat:`\n\nHaddat watches him. "He weighed the skin," she says, low, to you. "My mother weighed skins like that." She does not say more.`, _:''})}
+
+He gathers the reins and swings up into the saddle, stiffly, a man who has ridden a long way on bad feed. "I'm going to have a look at it," he says, of the Wastes, and turns the horse east, and walks it out past the end of the halt onto the plain, alone, with the runner standing in the track looking after him.${b95If('tegra', `\n\nTegra watches him go. "He rides out to look at it," she says. "It does not look back. Someone should tell him."`)}`,
+        ch:[{t:'Back to the halt.', go:()=>startExplore()}]}; },
     /* the sappers' wagons: the munitions short (Hedge, seen at a distance) */
     b9_c5_sappers:()=>({sp:'The sappers\' wagons', scene:'b9_c5_plain', fx:()=>{ S.f.b9_c5_sappers = 1; }, again:()=>'The sappers\' wagons, the canvas lashed tight, and the argument over.', txt:
 `The sappers' wagons are drawn up a little apart from the rest, as they always are, with their canvas lashed down and a sentry on each who is very careful where he sits.
 
 At the last of them a man in a battered leather cap is telling a quartermaster's clerk, at length and from very close, how much of the army's issue is left in the way of munitions, and that it is not enough, and what he thinks of whoever decided it was. The clerk is holding a tally and nodding at it. The man in the cap is not done.
 
-${b95Say({tangle:`Tangle has stopped dead in the track. "That's Hedge," he says, very quietly. "The one who came back." He watches the man in the cap a while. "He's right, too." His hand is on the satchel. He does not go any nearer, and neither does anyone else.`, rasp:`Rasp has stopped in the track. "That's Hedge," she says. "The one who came back." She watches. "He's right." She does not go any nearer.`, _:'A sentry on the nearest wagon catches your eye and shakes his head, very slightly. "Hedge," he says. "Don\'t." The Third does not.'})}`,
+${S.f.b9_c3_hedge ? `He sees the Third over the clerk's shoulder, and points at it without stopping. "Them," he tells the clerk. "Carried my crates a whole night on the road east and never once asked what was in them. That's the army I want. Write that down." The clerk writes something down. Hedge lifts a hand to the Third, and goes back to the clerk.${b95Say({tangle:`\n\nTangle lifts a hand back. "He remembers," he says, and cannot decide whether to be pleased. "He's right, too."`, rasp:`\n\nRasp lifts a hand back. "He remembers," she says. "He's right, too."`, brask:`\n\nBrask lifts a hand back, the size of a shovel. "Good crates," he says. "Heavy."`, _:''})}` : b95Say({tangle:`Tangle has stopped dead in the track. "That's Hedge," he says, very quietly. "The one who came back." He watches the man in the cap a while. "He's right, too." His hand is on the satchel. He does not go any nearer, and neither does anyone else.`, rasp:`Rasp has stopped in the track. "That's Hedge," she says. "The one who came back." She watches. "He's right." She does not go any nearer.`, _:'A sentry on the nearest wagon catches your eye and shakes his head, very slightly. "Hedge," he says. "Don\'t." The Third does not.'})}`,
       ch:[{t:'Back to the halt.', go:()=>startExplore()}]}),
     b9_c5_plain_east:()=>({sp:'The track east', scene:'b9_c5_plain', txt:
 `The column's track goes on east from the halt, a pale stripe of trodden grass and wheel-ruts across country that has no other mark on it, to where the front of the column is already a smudge of its own dust on the horizon.`,

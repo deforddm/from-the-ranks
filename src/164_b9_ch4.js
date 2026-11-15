@@ -9,7 +9,10 @@
    the train's flank (b9_c4_herd, survive 4), the hunt for a lamed straggler (+1), Kaedra's spoor (the trick, Reading the Spoor, passive);
    the key from Ennic, S.f.b9_c4_key: 'book' (keep the ration book honest with Yelt: b9Ration(1), S.f.b9_c4_book = 1) or 'forage' (ride out
    with Kaedra and the Bluerose outriders after the herd: Barghast skirmishers who claim it, b9_c4_forage; b9Ration(3); Kaedra +1).
-   Phase 4 the key's road; phase 5 the camp at evening, and on east at first light. Notes for later chapters: docs/dod-ch4-notes.md. */
+   Phase 4 the key's road; phase 5 the camp at evening, and on east at first light. Notes for later chapters: docs/dod-ch4-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance halves lifted (series-canon §(a0)): at dusk the Commander and the Atri-Ceda walk the
+   train's fires and stop at the Sixth's, and the squad tells them what it stands on (b9_c4_brys, the plan's star). Vision 4 is the same
+   walk through her eyes, at another fire. */
 /* FOR THE ARTIST (164b): names this file uses.
    Items: ART['item/b9_c4_bluerosespear'], ['item/b9_c4_scoutcoat'], ['item/b9_c4_bonewhistle'].
    Figures: kaedra (160's simple sprite, replaced in 164b), b9_c4_outrider (a Bluerose outrider on foot), b9_c4_runner (the quartermaster's
@@ -41,6 +44,8 @@ const b94Kae = s => b9In('kaedra') ? s : '';
 const b94NightReady = () => !!S.f.b9_c4_orders1 && b94KSettled() && !!S.f.b9_c4_countTried;
 const b94Ennic = () => B5_FINADD.short;
 const b94Marks = () => !!S.f.b9_c4_marks;
+/* v13.8: the Commander's walk passes the Sixth's fires at dusk, once the Finadd has given the night's word, until it has stopped there */
+const b94BrysHere = () => b94Ph() === 1 && !!S.f.b9_c4_orders1 && (!S.f.b9_c4_brys || /^b9_c4_brys/.test(S.node || ''));
 /* Chapter 2 read, always with a default: Yelt remembers the Sixth for the barrels found or the wagons loaded true */
 const b94Yelt2 = () => S.f.b9_c2_loadedTrue || (b9Key(2) || 'wagons') === 'wagons' ? 'the Sixth loaded my wagons true outside Letheras, which nobody else did' : S.f.b9_c2_found ? 'the Sixth found my three barrels of pork outside Letheras' : 'the Sixth came back from the river';
 /* the one line of the other squad, as camp talk (its Chapter 3 key; b9OtherName is not used) */
@@ -140,7 +145,10 @@ const B9CH4 = {
         {id:'orla', name:'Orla, at her water-cart', kind:'b9_c2_orla', x:6, y:7, node:()=>'b9_c4_cart', show:()=>b94Ph() !== 2, fresh:()=>!S.f.b9_c4_orla},
         {id:'saffa', name:'Saffa, the field cook', kind:'b9_c2_saffa', x:4, y:5, node:()=>'b9_c4_saffa', show:()=>b94Ph() !== 2, fresh:()=>!S.f.b9_c4_saffa},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:9, y:3, node:()=>'b9_c4_crate', show:()=>b94Ph() === 1, fresh:()=>!S.f.b9_c4_drawn && !S.f.b9_c4_noCard},
-        {id:'raiders', name:'Shapes at the water wagons', kind:'b6_bandit', x:13, y:1, node:()=>'b9_c4_raiders', show:()=>b94Ph() === 2 && !S.f.b9_c4_raidDone, fresh:()=>true} ] },
+        {id:'raiders', name:'Shapes at the water wagons', kind:'b6_bandit', x:13, y:1, node:()=>'b9_c4_raiders', show:()=>b94Ph() === 2 && !S.f.b9_c4_raidDone, fresh:()=>true},
+        /* v13.8 (David, Nov 15): meetings. The Commander and the Atri-Ceda walking the train's fires at dusk, after the Finadd's word; gone on once spoken to */
+        {id:'brys', name:'The Commander, on foot', kind:'b9v_brys', x:5, y:3, node:()=>'b9_c4_brys', show:()=>b94BrysHere(), fresh:()=>!S.f.b9_c4_brys},
+        {id:'aranict', name:'The Atri-Ceda', kind:'b9v_aranict', x:6, y:3, node:()=>'b9_c4_brys', show:()=>b94BrysHere(), fresh:()=>!S.f.b9_c4_brys} ] },
 
     /* 16 x 12 (b9_c4_wastes, day). The noon halt on open country: r bare stone  . dry grass  , the column's track  w the train halted
        along it  o barrels  h the outriders' horses  m an old cairn  x thorn  s the herd's track (after the stampede)  > the track east */
@@ -248,6 +256,7 @@ const B9CH4 = {
     if (f.b9_c4_herdDone) x.push('A bhederin herd ran across the train at noon, and the squad stood in front of the oxen.');
     if (f.b9_c4_hunted) x.push('The squad brought down a lamed straggler from the herd. Saffa made it go round three companies.');
     if (f.b9_c4_marks) x.push('The squad found the chalk under the water wagons\' tailboards before the raiders did.');
+    if (f.b9_c4_brys) x.push(`The Commander and the Atri-Ceda stopped at the squad's fire at dusk, and the Commander asked what the Sixth stands on. ${({squad:'The squad said: each other.', lether:'The squad said: the new Lether, the one without the debt books.', commander:'The squad said: him.', none:'The squad said it would tell him when it found it.'})[f.b9_c4_brys] || ''}`);
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -257,6 +266,7 @@ const B9CH4 = {
     f.b9_c4_spoorOk && 'Reading the spoor: which way the stems lie, where the crust is broken, how old the print is.',
     f.b9_c4_outrider && 'The Bluerose outriders say the Barghast are at war with the Akryn on the plains north of the road. Their smoke is on the sky.',
     f.b9_c4_key && (f.b9_c4_key === 'book' ? 'The squad kept the ration book honest with Yelt: the true count, short, sent up the column.' : 'The squad rode out after the herd with the outriders, and met painted hunters in a dry wash.'),
+    f.b9_c4_brys && 'The Commander walking the train\'s fires at dusk, on foot, with the Atri-Ceda. "What does the Sixth stand on?"',
     f.b9_kaedraDone != null && 'A scout named Kaedra came in with the outriders: half Bolkando, off a border fort that stopped paying her. She asked for a squad that walks.',
     'The Sixth Company, in the Commander\'s escort, out on the Wastes.'].filter(Boolean); },
 
@@ -297,6 +307,41 @@ Finadd Ennic is at the company's tents with his slate. Out past the ring, on the
 
 "Every legend in Lether has the Barghast in it somewhere. Usually at the end." He considers. "I have decided not to be in a legend."`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star: Brys and Aranict walking the camp ----
+       The plan (series-meetings-plan, Book Nine ★: "Brys and Aranict walking the camp, Letherii Ch4: each soldier needs 'a stone of
+       loyalty'; the squad gives an answer to their faces"). Where and when: in the Wastes Brys and Aranict, the Atri-Ceda, walk through
+       the escort's camp; he marches with his soldiers rather than riding; each soldier holds a "stone of loyalty" and he must carve his
+       name into it, since he may one day have to ask the impossible; the soldiers need reassuring tonight because the Malazan mages have
+       gone down (R19.2 S6; dod-canon ch 19 row) [1]. Aranict: tall, late thirties, deep creases framing her mouth, a rustleaf user (W
+       *Aranict*) [1]; the stick and its smoke are Book Nine's vision 4 figure. Brys's two fingers to the brow are Book Five's gesture
+       (b5_c1_brysdrill, b7_c6_brys). Vision 4 (168) is this walk through her eyes at another fire; nothing here contradicts it (she has
+       told no one how far down the Holds are; he will say what his own stone is "when he finds it"). Locks: rule 92, nothing of the
+       Reading or the Errant; rule 97, nothing of what either does in the battle; nothing of TCG; Aranict never narrated from inside
+       here. What it gives: a loyalty beat by the answer (squad: Thegg, else Tobet; lether: Brennet, else Tobet; commander: Sorvan, else
+       Perrit; none: Perrit, else Ruuk). Sets b9_c4_brys to the answer. */
+    b9_c4_brys:()=>({sp:'The Commander and the Atri-Ceda', scene:'b9_c4_dusk', again:()=>'The Commander at the Sixth\'s fire, the Atri-Ceda a pace back with her rustleaf, both waiting.', txt:
+`They come along the train's fires on foot from the brigades' end of the camp, two of them and nobody else: a tall lean man in a plain soldier's coat with a sword at his hip and the Wastes' dust on his boots to the knee, and beside him a tall woman in a long grey-blue robe under a travelling coat, with deep creases at her mouth and a stick of rustleaf burning between her fingers.
+
+Every soldier in the escort knows his face. Brys Beddict, the Commander, who marches with the brigades instead of riding at the head of them, and is said to know which of them have blisters. At each fire he stops, not long. A word, a name if he has it, a question about boots or water. The soldiers stand, and he waves them down, and they sit, and look at each other after he has gone.
+
+He stops at the Sixth's. "Sixth Company," he says. "You came back from the river." He says it as a thing he knows, not a thing he was told.${b94If('perrit', `\n\n"They say at the fires the foreigners' mages have fallen, Commander," Perrit says, before anyone can stop her. "They haven't. Not fallen. The Holds are further down out here, that's all. Every night, a little further." The woman with the rustleaf looks at Perrit, and holds her eyes a moment, and lets them go. Her stick has gone out. She does not light it again at once.`)}
+
+"Out here," the Commander says, and looks past the wagons at the dark, "the ground moves. Not the dirt. The rest of it. A soldier needs something under his feet that won't, when it does." He looks back at the squad, at each face. "What does the Sixth stand on, Sergeant?"
+
+The woman beside him has the stick at her lips again, and is watching you, not him. She looks as if she would like to hear it too.`,
+      ch:[{t:'"Each other, Commander. The ones beside us."', fx:()=>{ S.f.b9_c4_brysAns = 'squad'; }, go:'b9_c4_brys_said'},
+          {t:'"Lether. The new one. The one that tore up the debt books."', fx:()=>{ S.f.b9_c4_brysAns = 'lether'; }, go:'b9_c4_brys_said'},
+          {t:'"You, Commander. You asked for soldiers who came back."', fx:()=>{ S.f.b9_c4_brysAns = 'commander'; }, go:'b9_c4_brys_said'},
+          {t:'"We\'ll tell you when we find it."', fx:()=>{ S.f.b9_c4_brysAns = 'none'; }, go:'b9_c4_brys_said'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b9_c4_brys_said:()=>{ const a = S.f.b9_c4_brysAns || 'squad';
+      const who = ({squad:['thegg', 'tobet'], lether:['brennet', 'tobet'], commander:['sorvan', 'perrit'], none:['perrit', 'ruuk']})[a].find(id => b9In(id)) || null;
+      return {sp:'The Commander and the Atri-Ceda', scene:'b9_c4_dusk', fx:()=>{ if (!S.f.b9_c4_brys) { S.f.b9_c4_brys = a; if (who) b94L(who, 1); } }, txt:
+`${a === 'squad' ? `He considers it, seriously, the way he seems to consider everything. "That one doesn't move," he says. "I have stood on it. Keep it."${b94Say({thegg:`\n\nThegg nods, slowly, three times, and looks round at the squad as if to make sure it is all still there. It is.`, tobet:`\n\nTobet looks round the fire, at each of them, the way he counts arrows. "All here," he says.`, _:''})}` : a === 'lether' ? `Something moves in his face that might be a smile. "My brother tore them up," he says. "He will be pleased somebody noticed. He will hide it badly." He looks round the squad. "I'll tell him. He will make a joke of it, and keep it."${b94Say({brennet:`\n\nBrennet sits up straighter by the wagon wheel. "Free means you can say yes," he says, to the Commander's face, and goes red. The Commander nods as if a sergeant had reported the wagons sound.`, tobet:`\n\nTobet has his tally-stick in his hand. He puts it away. "Nothing on it now," he says. "First time."`, _:''})}` : a === 'commander' ? `He is quiet a moment. It is not the answer he wanted, and he does not pretend it is. "Then I had better not move," he says.\n\n"He'll take that as an order," says the woman beside him, round the rustleaf. "He takes everything as an order. Even his own."${b94Say({sorvan:`\n\nSorvan has stood up, in his blue scale, without meaning to. "Bluerose rode for you at the river, Commander," he says. "We'd ride again." Brys looks at the scale, and nods to him as to an equal.`, perrit:`\n\nPerrit says, low, "You came back from the river too, Commander." He looks at her. "Yes," he says. He leaves it there.`, _:''})}` : `The woman with the rustleaf laughs, once, short, surprised out of her. The Commander looks at her.\n\n"That's the best answer I've heard tonight," she says. "Three fires and it's the best." She tips the ash off the stick.\n\n"It is mine as well," he says, and she looks at him sidelong. He looks at the Sixth with something like fellow feeling. "When you find it, Sergeant, tell me what it was. I would like to know where to look."${b94Say({perrit:`\n\nPerrit is watching the woman, not him. She almost smiles.`, ruuk:`\n\nRuuk grins at the Commander, all his teeth. "In Faraed," he says, "we stand on the horse. The horse moves." Brys considers it. "Yes," he says. "That is the trouble."`, _:''})}`}
+
+He touches two fingers to his brow, to the squad in general, and walks on along the wagons to the next fire, slowly, a soldier on a long march. "Aranict," he says, not loud, and the Atri-Ceda goes after him, with the smoke from her stick going up straight in the still air.${b94If('kaedra', `\n\nKaedra has watched the whole of it from outside the light. "On the border," she says, when they have gone, "the officers never walked the fires." She thinks about it. "The forts fell anyway. But I'd have liked it."`)}`,
+        ch:[{t:'Back to the camp.', go:()=>startExplore()}]}; },
 
     /* Kaedra (the first halt): a scout off the Bolkando border, come in with the Bluerose outriders */
     b9_c4_kaedra:()=>{ const d = S.f.b9_kaedraDone;
