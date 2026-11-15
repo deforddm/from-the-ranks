@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],
   ['13.7.0', ['Two of the series\' promised callbacks land. Book Nine: Rumjugs and Sweetlard, at the barracks gate in Letheras, sergeants now, loading a handcart. Book Ten: when the Fourth comes over the ridge, ask its sergeant about an old sapper called Hedge.', 'The series\' transfers are checked end to end: every road that carries a squad from one book to the next, through all ten books.']],
   ['13.6.0', ['Every chapter of every book now opens on a painted plate of its own, as Book One\'s always did: seventy-one in all, each drawing the chapter\'s opening caption. Book One\'s eight are redrawn to match. The Classic art setting still shows the drawn scenes instead.', 'The squad walks in the same order in every scene as on the map: the sergeant in front, then each squadmate in roster order. Before, most scenes had the roster back to front.', 'Walking figures redrawn to match their portraits: Thegg (long brown hair, fur at the shoulders, bead collar, a blue iron-rimmed shield), Ammet, Tobet, Pessa, the Letherii sergeant, and Vell in Book One.']],
   ['13.5.5', ['Shorter necks on the squad portraits: the shoulders sit higher, so heads rest down between them, in every book. Ohl, Haddat and Ammet, who were already right, are unchanged.']],

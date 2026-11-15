@@ -340,7 +340,7 @@ He stands up. "He was a soldier once, the old man. Before the Emperor decided he
   b2_duiker3:()=>({sp:'Duiker · Imperial Historian', fx:()=>{ S.f.b2_duiker3 = 1; S.f.b2_duiker = 1; }, txt:
 `Duiker is sitting on a saddle by a dead fire, sharpening a short sword he does not look as if he has drawn in years. He has got the rebel robes off. The sun is still burned into him.
 
-"Sergeant." He holds up the sword. "I have been volunteered. Captain Lull has a gift for the passive voice." He tests the edge with his thumb and winces. "I was a soldier, you know, before the old Emperor pulled me out of the ranks and had me taught my letters. I had hoped not to be one again. History is so much more comfortable from the far end."
+"Sergeant." He holds up the sword. "I have been volunteered. Captain Lull has a gift for the passive voice." He tests the edge with his thumb and winces. "I was a soldier, you know, before Kellanved pulled me out of the ranks and had me taught my letters. I had hoped not to be one again. History is so much more comfortable from the far end."
 
 He puts the sword across his knees. "I said at the Sekala I wanted your column's story. Yours, not the officers'. I still do. There may not be another quiet night between here and the river. Tell me something. Anything. A name."`,
     ch:[{t:'Tell him about the stretch: the names, the count, the dead.', fx:()=>{ S.f.b2_duikerTold3 = 1; if (b2In('haddat')) loy('haddat', 1); }, go:'b2_duiker3_tell'},
