@@ -223,7 +223,9 @@ const B8CH1 = {
     b8_c1_tavern:{loc:'Darujhistan', sub:'The tavern with the painted sign', cap:'A long low Gadrobi taproom, a fire at one end, benches, and over the door outside two painted women nobody can explain.', amb:'explore'},
     b8_c1_den:{loc:'Darujhistan', sub:'Orsa\'s dice den', cap:'A cellar under the Gadrobi lanes, lamp-smoke, a long table, the rattle of bones in a cup.', amb:'explore'},
     b8_c1_roofs:{loc:'Darujhistan', sub:'The Gadrobi roofs · night', cap:'Wet slate and chimneys under the fog, a tarred line strung between two of them, and the upper city\'s blue fire far off above it all.', amb:'explore'},
-    b8_c1_house:{loc:'Darujhistan', sub:'A go-between\'s courtyard · night', cap:'A small walled courtyard below the Daru tier, a brazier, and a door shut on all of it.', amb:'explore'} },
+    b8_c1_house:{loc:'Darujhistan', sub:'A go-between\'s courtyard · night', cap:'A small walled courtyard below the Daru tier, a brazier, and a door shut on all of it.', amb:'explore'},
+    b8_c1_kruls:{loc:'Darujhistan', sub:'K\'rul\'s Bar · the end of winter', cap:'An old temple\'s nave for a taproom: benches where the pews were, a bar, a fire in a hearth never built for one, and the bell rope hanging still in the tower door.', amb:'explore'},
+    b8_c1_phoenix:{loc:'Darujhistan', sub:'The Phoenix Inn · winter', cap:'A low, loud, crowded taproom, a fire, Meese behind the bar, and at the table by the hearth a round man with a plate of pastries.', amb:'explore'} },
 
   end:{
     hunt:['Names asked', 'The Guild\'s first knife came for the Fourth over the winter roofs, on a paper of its own, and went no further than the alley behind the door. The Fourth went after whoever had paid for it, through a dice den and a go-between\'s courtyard, and found a door shut on the answer, which is what a go-between is for. The city noticed the names being asked. A Guild journeyman noticed too, and came and sat on the Fourth\'s step.'],
@@ -242,6 +244,10 @@ const B8CH1 = {
     if (f.b8_c1_lineOk) x.push('The Fourth learned the Guild\'s lines between the chimneys.');
     if (f.b8_c1_charm) x.push('An old soldier from the Seven Cities lot let a Hood-touched charm go to the Fourth.');
     if (f.b8_c1_denDone) x.push('Orsa\'s dice den needs a new table.');
+    if (f.b8_c1_kruppe) x.push(f.b8_c1_kruppe === 'orsa' ? 'Kruppe, at the Phoenix, knew what was on the Fourth\'s paper, and talked all round who wrote it, and mentioned dice.' : 'Kruppe, at the Phoenix, knew what was on the Fourth\'s paper, and fed the Fourth pastries.');
+    if (f.b8_c1_kruls) x.push('At the end of winter the Fourth drank at K\'rul\'s with Picker, Blend, Antsy and Mallet: old Host soldiers with old Host soldiers.');
+    if (f.b8_c1_salve) x.push('Mallet gave the Fourth a jar of his own salve. He makes more of it than anybody gets hurt, these days.');
+    if (f.b8_c1_hist) x.push(b8In('ohl') ? 'Ohl stood by the old historian\'s table at K\'rul\'s. They both keep a list.' : 'An old man writes at a corner table at K\'rul\'s, and means to finish it.');
     if (f.b8_c1_vell) x.push(f.b8_c1_vell === 'cut' ? 'Vell cut a Guild knot out of a dead knife\'s cord. It had his name in it.' : 'Vell kept a Guild knot that had his name in it.');
     return x; },
 
@@ -251,6 +257,10 @@ const B8CH1 = {
     f.b8_c1_huntDone && 'A go-between\'s courtyard below the Daru tier, and the bravos he pays.',
     f.b8_c1_chancersDone && 'Chancers at the Fourth\'s door, who had heard there was money on it. Not the Guild.',
     f.b8_c1_bredd && 'An old soldier in the tavern with the painted sign says Neffarias Bredd stopped the Whirlwind with a shovel.',
+    f.b8_c1_salve && 'Mallet, up at K\'rul\'s, looks at everybody\'s hands. He gave the Fourth a jar of salve: "It\'s no use to me on a shelf."',
+    f.b8_c1_krulsPact && 'Picker, at K\'rul\'s: if they come over the Fourth\'s roof again, send up the hill. Same the other way. Arithmetic.',
+    f.b8_c1_kruls && 'K\'rul\'s Bar, in the old belfry up the hill: Picker, Blend, Antsy and Mallet keep it, and drink with whoever comes in.',
+    f.b8_c1_kruppe && 'Kruppe, at the Phoenix, knew what was on the paper. He says he knows nothing. People tell him things.',
     f.b8_c1_historian && 'There is an old man up at K\'rul\'s who walked the Chain of Dogs and wrote it down.',
     f.b8_c1_paperRead && 'The paper on the first knife: five strokes, the chalk sign that was on the Fourth\'s door, and no name.',
     f.b8_c1_alleyDone && 'The Guild came for the Fourth on a winter night, over the roofs.',
@@ -422,8 +432,40 @@ ${b81Say({ohl:`Ohl goes round the squad with his tea and his hands, and closes w
 
     /* the street's ends */
     b8_c1_phoenix:()=>({sp:'Down the street', scene:'b8_daru_night', again:()=>'Down the street, the Phoenix\'s lamp, and the Fourth not going in.', txt:
-`Down the street, at the bottom where it meets the lane, there is a painted bird over a door and a lamp lit under it, and noise behind it, as there always is: the Phoenix. The Fourth does not go in. The Fourth has its own door.${b81FromMoi() && b8In('brisk') ? `\n\nBrisk stops at the corner, as she always does, and glares at the Phoenix's door for a breath. There was a winter once when she meant to stand in it. The Phoenix had other ideas. She has not forgiven it.` : b8In('brisk') ? `\n\nBrisk looks at the Phoenix's lamp, and at the door under it, and walks the other way, as she always does.` : ''}`,
-      ch:[{t:'Back up the street.', go:()=>startExplore()}]}),
+`Down the street, at the bottom where it meets the lane, there is a painted bird over a door and a lamp lit under it, and noise behind it, as there always is: the Phoenix. The Fourth does not go in. The Fourth has its own door.${b81FromMoi() && b8In('brisk') ? `\n\nBrisk stops at the corner, as she always does, and glares at the Phoenix's door for a breath. There was a winter once when she meant to stand in it. The Phoenix had other ideas. She has not forgiven it.` : b8In('brisk') ? `\n\nBrisk looks at the Phoenix's lamp, and at the door under it, and walks the other way, as she always does.` : ''}${S.f.b8_c1_paperRead && !S.f.b8_c1_kruppe ? `\n\nTonight the door opens as you pass, on the noise and the warm, and a round man at a table by the hearth inside lifts a pastry at you, as if he had been expecting the Fourth for years and was not at all put out that it had taken so long.` : ''}`,
+      ch:[{t:S.f.b8_c1_kruppe ? 'In, to Kruppe\'s table.' : 'Go in, for once.', req:()=>!!S.f.b8_c1_paperRead, go:'b8_c1_kruppe'},
+          {t:'Back up the street.', go:()=>startExplore()}]}),
+
+    /* v13.15 meetings (David, Nov 15): Kruppe at the Phoenix. He knows what the Fourth's paper says, and talks all round who wrote it
+       (rule 70: never who paid; the go-between stays the only one who knew). The Phoenix is always his (W Kruppe; R1, R17.2, R23); Meese
+       keeps it in TtH (W Meese: "proprietor of the Phoenix Inn"). What he gives: how to ask Orsa (an edge on her check). */
+    b8_c1_kruppe:()=>({sp:'Kruppe · the Phoenix', scene:'b8_c1_phoenix', fx:()=>{ S.f.b8_c1_kruppe = S.f.b8_c1_kruppe || 1; }, again:()=>'Kruppe\'s table by the Phoenix\'s hearth: the pastries, the cup, the round man behind them, beaming.', txt:
+`The Phoenix inside is low and loud and too warm, wet wool and spilt ale and something baking, and every bench full. Behind the bar Meese, who owns it now, big, with forearms like a stevedore's, looks the Fourth up and down once and goes back to her jugs.
+
+At the table by the hearth sits a round man in a claret waistcoat with a plate of pastries in front of him and a cup, and crumbs on most of him. He waves you down into the chair across from him as if it had been kept.
+
+"The Fourth," he says. "Who keep a door up the street, and pay the rent, and have walked past this one every night for years with their noses in the air. Kruppe is not offended. Kruppe is delighted. Sit. Have a pastry. Meese, the good jug, and do not charge it to Kruppe."${b81FromMoi() && b8In('brisk') ? `\n\nHe beams at Brisk. "And the stalwart who was to have been our door. The door has never recovered." Brisk looks at him a while, and then, to the squad's lasting astonishment, sits down.` : b8In('brisk') ? `\n\nBrisk stands behind your chair with her back to the wall and the door in view. Kruppe beams at her as if she were the best thing in the room.` : ''}${b81If('tuft', `\n\nTuft keeps her hand on the Deck in her sleeve, the whole time, and does not draw.`)}
+
+He pushes a pastry across. "A paper, Kruppe hears. Five little strokes all in a row, and a chalk mark like the one somebody drew on a certain door, and no name at all. Such a modest paper." He sighs. "Kruppe admires modesty in a paper. It is so rare in a man."`,
+      ch:[{t:'"Who wrote it, Kruppe?"', go:'b8_c1_kruppe_who'},
+          {t:'"How do you know what\'s on it?"', go:'b8_c1_kruppe_how'},
+          {t:'Eat the pastry, and go.', go:()=>startExplore()}]}),
+    b8_c1_kruppe_who:()=>({sp:'Kruppe · the Phoenix', scene:'b8_c1_phoenix', fx:()=>{ S.f.b8_c1_kruppe = 'orsa'; }, txt:
+`Kruppe looks wounded, briefly, and then has a pastry, which helps.
+
+"Kruppe? Kruppe knows nothing. Kruppe sits by a fire and listens to the rain. And the rain says, dear Sergeant, that a paper comes down through a go-between, and a go-between is a man whose whole trade is forgetting, and he forgets very well, and is paid to." He dusts his fingers. "A man who wished to remember what a go-between forgot would first have to find which go-between. And to find that he would have to ask someone who hears what is brokered, very nicely, under a noise, so that the noise hears it and nobody else does."
+
+He considers the ceiling. "Dice make a lovely noise. Kruppe has always thought so."${b81Say({ohl:`\n\nOhl, beside you, says quietly, "That's a name without the name." Kruppe looks enormously pleased with him.`, kettle:`\n\nKettle, beside you, says, "He means Orsa." Kruppe looks pained, and offers her a pastry so that she will stop.`, _:''})}
+
+"And the Fete," Kruppe adds, to his cup, "is a very crowded time to be an old soldier in a city. Kruppe merely observes. Kruppe observes a great deal. It is his only exercise."`,
+      ch:[{t:'"How do you know what\'s on it?"', go:'b8_c1_kruppe_how'},
+          {t:'Thank him, and go.', go:()=>startExplore()}]}),
+    b8_c1_kruppe_how:()=>({sp:'Kruppe · the Phoenix', scene:'b8_c1_phoenix', txt:
+`"Know?" He spreads his hands, which are small and very clean, apart from the crumbs. "Kruppe knows nothing. People tell Kruppe things. They sit where you are sitting and eat his pastries and talk, and Kruppe nods, and in the morning they have forgotten they said anything, and Kruppe has forgotten nothing at all." He smiles. "It is a gift. It is not always a pleasant one."
+
+"Five strokes is five old soldiers, Sergeant. You can count. Kruppe can count. Whoever wrote it can count." He pushes the plate an inch toward you. "The rest of the arithmetic is beyond Kruppe. Truly. Have another."`,
+      ch:[{t:'"Who wrote it, Kruppe?"', req:()=>S.f.b8_c1_kruppe !== 'orsa', go:'b8_c1_kruppe_who'},
+          {t:'Thank him, and go.', go:()=>startExplore()}]}),
     b8_c1_to_lanes:()=>{ const ph = b81Ph();
       if (ph <= 2) return {sp:'The street', scene:'b8_daru_night', txt:
 `East, the street runs on into the Gadrobi lanes, all shut and dark under the fog at this hour. Nothing is open at the end of it that would talk to the Fourth tonight. ${ph === 1 ? 'And there is something on your roof.' : 'And the paper wants reading first, by the fire.'}`,
@@ -453,10 +495,89 @@ On the corner of the dyers' row there is a tavern with a painted sign over its d
     b8_c1_to_daru:()=>{ const go = b81Hunt() && b81Ph() === 4 && !!S.f.b8_c1_named;
       return {sp:'The lanes', scene:'b8_gadrobi', txt: go ?
 `East, the lanes climb out of the Gadrobi toward the Daru tier, steps and terraces and better lamps, and the houses get taller and quieter and further apart. Orsa's go-between keeps a house on the last of the Gadrobi streets before the Daru begins, with a wall round its courtyard and a lamp on the gate.` :
-`East, the lanes climb toward the Daru District, steps and terraces and better lamps. There is nothing up there for the Fourth tonight${b81Hunt() && b81Ph() === 4 ? ' that Orsa has not yet put a name to' : ''}.`,
+`East, the lanes climb toward the Daru District, steps and terraces and better lamps. There is nothing up there for the Fourth tonight${b81Hunt() && b81Ph() === 4 ? ' that Orsa has not yet put a name to' : ''}, except, a long way up, the old belfry where some of the Genabackis lot drink: K'rul's.`,
         ch: go ? [{t:'Up to the go-between\'s house.', onward:true, go:()=>{ startExplore('b8_c1_house'); talk('b8_c1_house_arrive'); }},
+                  {t:'Up the hill to the old belfry, K\'rul\'s.', go:'b8_c1_kruls'},
                   {t:'Not now.', go:()=>startExplore()}]
-               : [{t:'Back down the lane.', go:()=>startExplore()}]}; },
+               : [{t:'Up the hill to the old belfry, K\'rul\'s.', go:'b8_c1_kruls'},
+                  {t:'Back down the lane.', go:()=>startExplore()}]}; },
+
+    /* v13.15 meetings (David, Nov 15): K'rul's Bar, the end of winter, weeks before the Fete. Picker, Blend, Antsy and Mallet keep it (W
+       Picker, Blend, Antsy: the back pay pooled for a bar in an Elder god's old temple; W Mallet; tth-canon §1 R1, R7); old Host soldiers
+       drinking with old Host soldiers, so that Mallet's death in Ch 5 (callback 3) is a man the Fourth sat with. Locks (rule 71's outcome
+       half, rule 70): nothing of the raid, the cellar or who is paying; no line that hints who will die; the K'rul's contract is never tied
+       to the Fourth's paper. Spindle is away or unmentioned (his pilgrimage is the Fete's first day, R1). Picker: gravelly voice, a tooth
+       she picks at, no torcs (W Picker: given to Gruntle in MoI). Antsy: short, heavy, red-faced, a handlebar moustache he tugs, gloomy, a
+       poor card player (W Antsy). Blend: dark-eyed, quiet, unnoticed (W Blend). The old historian in the corner (Claude's call, callback 6):
+       unnamed, never how he lives (rule 17 as Book Eight keeps it). What it gives: a jar of Mallet's salve; Brisk's regard at the bar;
+       Ohl's at the historian's table. */
+    b8_c1_kruls:()=>({sp:'K\'rul\'s Bar', scene:'b8_c1_kruls', fx:()=>{ S.f.b8_c1_kruls = 1; }, again:()=>'K\'rul\'s: the nave for a taproom, the fire in a hearth never built for one, Picker behind the bar, Antsy at his cards, Mallet by the fire.', txt:
+`K'rul's is a temple that was and a bar that is: an old stone belfry high up the hill, its tower still standing over it and its bell still in the tower. The rope has not been pulled in years. The Fourth has heard the bell anyway, from across the city, humming the hour.
+
+Inside, the nave is the taproom. Benches where the pews were, a bar where something holier stood once, and a fire in a hearth that was never built for one. It is quiet tonight. It is quiet most nights. The owners like it that way, and drink with whoever comes in as if they were the ones paying.
+
+Behind the bar, a tall woman with a gravelly voice is picking at a tooth with a sliver of wood and watching the door: Picker. At a table by the wall a short, heavy, red-faced man with a handlebar moustache is playing cards against himself, and losing: Antsy. Nearer the fire, with a cup gone cold in front of him, sits Mallet, who was the Bridgeburners' healer, looking into the flames.
+
+There is a fourth one. You are fairly sure of it. There usually is.
+
+"The Fourth," Picker says. She puts the sliver down. "Pale and Coral and the bones." She jerks her chin at the benches. "Sit. House rules: you're old, you're Host, and you're paying."${b81If('brisk', `
+
+Brisk gives her the old salute, two fingers to the brow. Picker sighs, and gives it back.`)}`,
+      ch:[{t:'Sit at the bar with Picker.', go:'b8_c1_kruls_picker'},
+          {t:'Mallet, by the fire.', go:'b8_c1_kruls_mallet'},
+          {t:'Antsy and his cards.', go:'b8_c1_kruls_antsy'},
+          {t:'The old man writing in the corner.', go:'b8_c1_kruls_hist'},
+          {t:'Back down the hill.', go:()=>startExplore()}]}),
+    b8_c1_kruls_picker:()=>({sp:'Picker · K\'rul\'s', scene:'b8_c1_kruls', fx:()=>{ if (!S.f.b8_c1_krulsPact) { S.f.b8_c1_krulsPact = 1; b81L('brisk', 1); } }, txt:
+`Picker pours without being asked, for the squad and for herself, and leans her elbows on the bar.
+
+"Heard you had company on your slates," she says. "The whole hill heard. Gadrobi roofs, a winter night, and the company didn't go home." She drinks. "Old Malazans get looked at, this winter. In the street. We get looked at. We look back."
+
+"Guild," says a voice at your elbow, and you did not see anyone come to stand there. A dark-eyed woman with a plain face, the kind the eye slides off, has a cup in her hand that she did not have a moment ago, and is drinking from it. Blend. She says nothing else. She has said what she came to say.
+
+Picker keeps her elbows on the bar. "That's Blend. She's been there the whole time." She turns her glass on the bar. "So. If they come over your roof again, you send up the hill, and we'll come down. Same the other way. That's not friendship, Sergeant. That's arithmetic. There aren't so many of us left in this city that we can afford not to count."${b81Say({brisk:`
+
+"Done," says Brisk, before you can. Picker looks at her, and almost smiles.`, kettle:`
+
+"Done," says Kettle, and then, to Blend, "How do you do that?" Blend is not there to answer.`, _:''})}`,
+      ch:[{t:'"Same the other way." Drink on it.', go:'b8_c1_kruls'}]}),
+    b8_c1_kruls_mallet:()=>({sp:'Mallet · K\'rul\'s', scene:'b8_c1_kruls', fx:()=>{ if (!S.f.b8_c1_salve) { S.f.b8_c1_salve = 1; S.inv.salve = (S.inv.salve || 0) + 1; note('Mallet\'s salve, from his own jar. +1 salve.', 'good'); } }, txt:
+`Mallet looks up when you sit, and nods, and looks at your hands. He looks at everybody's hands, and has since Pale, and has never said what he sees.
+
+"Steady," he says. "Good." He turns his cold cup round on the table. "This is what I wanted, you know. All those years. A bar, a fire, a roof that doesn't leak more than it should. Nobody bleeding on me." He looks at the fire. "Turns out a healer with nobody bleeding is just a man sitting down."${b81Say({ohl:`
+
+He looks at Ohl, and something in his face wakes up. "The Denul with the tea," he says. "Still talking the whole time?"
+
+"Still," Ohl says. "Still better than me?"
+
+"Still." Mallet nearly laughs. "No offence."
+
+"None taken," Ohl says, and they sit a while, two healers with their hands round cups, talking about nothing that needs mending.`, _:''})}
+
+When you get up he pushes a little clay jar across the table, stoppered with wax. "Salve," he says. "My own. I make more of it than anybody gets hurt, these days." He shrugs. "Take it to your roof. It's no use to me on a shelf."`,
+      ch:[{t:'Take the jar, and thank him.', go:'b8_c1_kruls'}]}),
+    b8_c1_kruls_antsy:()=>({sp:'Antsy · K\'rul\'s', scene:'b8_c1_kruls', txt:
+`Antsy has dealt himself a hand of something and is losing it, slowly, to the other hand. He tugs his moustache at you by way of greeting.
+
+"Guild," he says. "On your roof. Course it was Guild. This city's got a guild for everything. Got a guild for complaining, probably, and they won't have me." He throws a card down. "You know what I hate? The bell. Up there." He points at the ceiling, at the tower over it. "Nobody's pulled that rope in years. I checked. It rings anyway. Every hour, low, like a man humming through his teeth. I sleep right under it."${b8In('vasso') ? `
+
+Vasso says, "I count by it. From the roofs. Everybody does."
+
+Antsy looks at him with deep suspicion. "Course they do," he says.` : ''}${b81Say({kettle:`
+
+Kettle sits down across from him and takes the other hand off him. Antsy loses to her as well, and says he knew he would, and seems to feel better for it.`, _:''})}`,
+      ch:[{t:'Back to the bar.', go:'b8_c1_kruls'}]}),
+    b8_c1_kruls_hist:()=>({sp:'K\'rul\'s · the corner table', scene:'b8_c1_kruls', fx:()=>{ if (!S.f.b8_c1_hist) { S.f.b8_c1_hist = 1; b81L('ohl', 1); } }, txt:
+`In the corner, out of the fire's reach, an old man sits at a table with a lamp and a stack of pages and a pen, and writes. He is grey and thin and very upright, and his hand moves without stopping.${S.f.b8_c1_historian ? ' The old soldier in the tavern with the painted sign was right, then. There is an old man up at K\'rul\'s who knows things.' : ''}
+
+"Leave him be," Picker says from the bar, not unkindly. "He's working. He's always working."
+
+${b8In('ohl') ? `Ohl does not leave him be. He goes and stands by the table, and waits, with his cup in his hands, until the pen stops.
+
+"Seven Cities," Ohl says. "A long while. I've a list." He touches his coat, where the oilcloth is.
+
+The old man looks up at him. His eyes are very tired and very clear. "So have I," he says, and lays his hand flat on the pages. Then he goes back to writing, and Ohl comes back to the bar, and sits, and is quiet for the rest of the evening in a way that is not unhappy.` : `He looks up once, at the Fourth, with eyes that are very tired and very clear, and nods, as one old soldier to another. Then the pen moves again. Whatever he is writing, he means to finish it.`}`,
+      ch:[{t:'Back to the bar.', go:'b8_c1_kruls'}]}),
 
     /* the dyer at her lines: a word about the city's gossip */
     b8_c1_dyer:()=>({sp:'A dyer at her lines', scene:'b8_gadrobi', fx:()=>{ S.f.b8_c1_dyer = 1; }, again:()=>'The dyer, her arms blue to the elbow, taking in the day\'s cloth.', txt:
@@ -608,7 +729,7 @@ Orsa is already unhooking her lamps.`,
 
 "Asking costs more," she says again. "And asking that costs more than anything, because a go-between who finds out who sent the Malazans to his door will know it came out of my den." She turns a ring on her finger. "Ask me nicely. Ask me so that nobody at that end of the table hears a word. Then maybe."`,
       ch:[{t:'Ask her quietly, so that the far end of the table hears dice and nothing else.', check:['guile', 15], contract:true, req:()=>!S.f.b8_c1_orsaTried,
-            edges:id=>[id === 'vell' && ['a Guild boy knows how a name is passed in a room', 2], id === 'ellis' && ['the Claw taught her to talk under a room', 2], id === 'tuft' && ['a Meanas mage can make a room look the other way', 1], id === 'sgt' && ['Orsa has known you for years', 1], id === 'kettle' && ['Kettle\'s quiet is louder than most people\'s talk', -1], id === 'brannoc' && ['a Falari cannot whisper', -2]],
+            edges:id=>[id === 'vell' && ['a Guild boy knows how a name is passed in a room', 2], S.f.b8_c1_kruppe === 'orsa' && id === 'sgt' && ['Kruppe said it: very nicely, under a noise', 2], id === 'ellis' && ['the Claw taught her to talk under a room', 2], id === 'tuft' && ['a Meanas mage can make a room look the other way', 1], id === 'sgt' && ['Orsa has known you for years', 1], id === 'kettle' && ['Kettle\'s quiet is louder than most people\'s talk', -1], id === 'brannoc' && ['a Falari cannot whisper', -2]],
             near:{t:'Yes, but someone on a roof saw it: when the Fourth comes up the steps, there is a shape on the cobbler\'s ridge, very still, and then there is not.', fx:()=>{ if (!S.f.b8_c1_roofSaw) { S.f.b8_c1_roofSaw = 1; b8Con(1, 'someone on a roof saw it'); } }},
             fx:()=>{ S.f.b8_c1_orsaTried = 1; }, go:'b8_c1_orsa_name', fail:'b8_c1_orsa_heard'},
           {t:'Not now.', go:()=>startExplore()}]}),

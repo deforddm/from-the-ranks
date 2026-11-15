@@ -195,7 +195,8 @@ const B8CH3 = {
     b8_c3_lodging:{loc:'Black Coral', sub:'A lodging over a chandler\'s · noon', cap:'A narrow room over a chandler\'s on the harbour street, a wide stone sill, and lamps lit on iron arms outside the window at noon.', amb:'explore'},
     b8_c3_harbour:{loc:'Black Coral', sub:'The harbour wall', cap:'The bay flat and black under the night, the lamps of the harbour along the wall, and far out a broken black shape in the water.', amb:'explore'},
     b8_c3_road:{loc:'Outside Black Coral', sub:'The pilgrims\' road', cap:'The old Domin flat and grey under a light that never finishes, the road full of pilgrims walking east, and behind them the city\'s night standing on the plain like a wall.', amb:'explore'},
-    b8_c3_tavern:{loc:'Black Coral', sub:'A tavern off the harbour street · another night', cap:'A low room of lamps and carters and Andii-sworn clerks, and in the far corner two figures at a board, left alone.', amb:'explore'} },
+    b8_c3_tavern:{loc:'Black Coral', sub:'A tavern off the harbour street · another night', cap:'A low room of lamps and carters and Andii-sworn clerks, and in the far corner two figures at a board, left alone.', amb:'explore'},
+    b8_c3_board:{loc:'Black Coral', sub:'The corner table · Kef Tanar', cap:'A table apart in a lamplit harbour tavern, a board of tiles between two cups, a tall Andii on one side and a big man in a grey cloak on the other.', amb:'explore'} },
 
   end:{
     kneel:['The weight laid down', 'Black Coral under its night, and the Great Barrow outside it heaped with gifts, the one the Fourth saw raised over a man years ago. The Fourth came in with a merchant\'s wagons and kept the pilgrims\' road for a morning beside a man who wore the grey once, and went out to the barrow, and knelt in the mud with the pilgrims, and laid something down. Nothing came back for it. That is how it works, the priestesses said. Something went off the Fourth anyway.'],
@@ -213,6 +214,7 @@ const B8CH3 = {
     if (f.b8_c3_anvil) x.push(f.b8_c3_anvil === 'sgt' ? 'At the barrow you remembered a hand laid on a hand, the day of Coral.' : `At the barrow ${NAME(f.b8_c3_anvil)} carried the Shield Anvil's weight up to him, and set it down.`);
     if (f.b8_c3_wreck) x.push('From the harbour wall the Fourth saw what is left of the fortress that hung over Pale, broken, in the bay.');
     if (f.b8_c3_shroudOk) x.push('The Fourth learned to fold a little of the Andii\'s night and carry it.');
+    if (f.b8_c3_spinnock) x.push(f.b8_c3_kef ? `Spinnock Durav, an Andii, showed the Fourth the opening of Kef Tanar in a harbour tavern. ${f.b8_c3_kef === 'gate' ? 'The sergeant looked for the gate first.' : 'The sergeant built a keep first.'}` : 'Spinnock Durav, an Andii, let the Fourth watch a game of Kef Tanar in a harbour tavern.');
     if (f.b8_c3_ridgeDone) x.push('The raiders\' camp on the ridge over the pilgrims\' road was broken, and the packs went back to their owners.');
     if (f.b8_c3_sellersDone) x.push(f.b8_c3_sellersSent ? 'Kelyk-sellers at the camp\'s edge packed up their jars and went into the rows. They will be back.' : 'The kelyk-sellers\' jars at the camp\'s edge were broken in the mud.');
     return x; },
@@ -223,6 +225,7 @@ const B8CH3 = {
     f.b8_c3_anvil && 'The barrow outside Black Coral is the one the Fourth saw raised over the Shield Anvil, years ago, out of gifts.',
     f.b8_edremDone != null && 'A man named Edrem, who wore the grey once, keeps the pilgrims\' road between Black Coral and the barrow, and nobody pays him.',
     f.b8_c3_roadDone && 'Raiders on the pilgrims\' road, with sellswords to do their deciding.',
+    f.b8_c3_spinnock && 'Spinnock Durav plays Kef Tanar in the corner of a harbour tavern with a big man in a grey cloak, his friend. He talks while his friend thinks. The dark, he says, is not for holding.',
     f.b8_c3_tavern && 'In a tavern off the harbour street, an Andii and a man in a grey cloak play at a board in the corner, and the room leaves them be.',
     f.b8_c3_wreck && 'Out in the bay at Black Coral there is a broken black shape in the water. The fishing boats keep away from it.',
     f.b8_c3_thessaly && 'Thessaly, a clerk sworn to the Andii, keeps the ledger at the landward gate. The Andii like to know who sleeps under their night.',
@@ -372,8 +375,46 @@ In the far corner there is a table by itself. A tall Andii sits at it, long-limb
 
 "Rows are full of it," a fisherman says, to his cup. "The priestesses can't stop it. The guards don't try any more." He drinks. "It'll come to something. That sort of thing always comes to something."
 
-In the corner, the man in grey moves a piece at last. The Andii looks at the board a long while. The room does not watch them do it.${b83Say({ohl:`\n\nOhl pushes the sour wine away. "I'll have water," he says. "It's the only thing in this city I'm sure of."`, tuft:`\n\nTuft stares into her cup. "Don't look at the corner," she says, very low. "I mean it."`, _:''})}`,
-      ch:[{t:'Back out into the street.', go:()=>startExplore()}]}),
+In the corner, the man in grey moves a piece at last. The Andii looks at the board a long while. The room does not watch them do it.${b83Say({ohl:`\n\nOhl pushes the sour wine away. "I'll have water," he says. "It's the only thing in this city I'm sure of."`, tuft:`\n\nTuft stares into her cup. "Don't look at the corner," she says, very low. "I mean it."`, _:''})}${S.f.b8_c3_spinnock ? '' : `\n\nWhen the Fourth gets up to go, the Andii in the corner lifts his head and looks across the room, at you, and raises one long hand from the board: come over, if you like. The room notices, and goes on pretending it has not.`}`,
+      ch:[{t:S.f.b8_c3_spinnock ? 'Over to the corner, to Spinnock\'s board.' : 'Go over to the corner.', go:'b8_c3_spinnock'},
+          {t:'Back out into the street.', go:()=>startExplore()}]}),
+
+    /* v13.15 meetings (David, Nov 15): Spinnock Durav at the Kef Tanar board, with his friend, the man in the grey cloak (tth-canon §1: R4
+       S8, R6 S6, the tavern where they play; the vision b8v4 has the night his friend yields, which this is not). Kef Tanar is not yet
+       playable: its rules are not page-checked (Q30), so the squad watches, and the sergeant is shown the opening, in words only, from
+       the glossary's own terms (keeps, a grand city, one gate; going out by the gate keeps some of what was won). Claude's call. Locks:
+       nothing of the crossroads, Kallor, Korlat or being sent away (rule 83); no other Andii named (rule 77); the man in grey is never
+       given his name or the order's (the chapter's test bans it), and never a line that commits him. What it gives: Tuft's regard, and
+       how the Andii carry the dark (an edge on the shroud's check at the landward gate, if it is not yet tried). */
+    b8_c3_spinnock:()=>({sp:'Spinnock Durav', scene:'b8_c3_board', fx:()=>{ S.f.b8_c3_spinnock = S.f.b8_c3_spinnock || 1; }, again:()=>'The corner table: the board, the Andii, the man in grey, and a chair pulled up for you.', txt:
+`Close to, the Andii is taller than he looked, and older than anything in the room, and he looks at the Fourth with plain, friendly interest. Iron-grey hair tied back; a long dark coat over mail; a long sword sheathed and leaned against the wall within his reach, and forgotten there.
+
+"Malazans," he says. "Calder's guards, from Darujhistan. It is a small city, under the dark." He smiles. "Spinnock Durav. Sit, if you like. He won't mind." He nods across the board. "He minds very little, so long as nobody touches the pieces."
+
+The man in the grey cloak is big and careful and past his prime, with grey stubble and heavy shoulders, and he has eyes only for the board, studying it as if every tile on it were a soldier he would have to answer for, one at a time, to somebody.${b83If('edrem', `\n\nEdrem has stayed at the Fourth's table, with his back to the corner. The man in grey lifts his eyes once, to the old grey scale on Edrem's shoulders, and then back to the board. Neither of them says anything about it.`)}${b83If('tuft', `\n\nTuft has come with you, close behind your shoulder, her hand on the Deck in her sleeve. Spinnock looks at her a moment. "Shadow's child," he says gently, "in our night. Be easy. It doesn't mind you." Something in Tuft's shoulders lets go.`)}
+
+"Kef Tanar," Spinnock says, and lays a long hand beside the board. "Keeps, a grand city, and one gate. It takes all night and most of a purse, and whoever goes out by the gate keeps some of what he won, and drinks alone after." He looks at his friend with real affection. "I have played it longer than this city has stood. He learned it here. He wins more than he ought."`,
+      ch:[{t:'Watch a while.', go:'b8_c3_spinnock_watch'},
+          {t:'"Show me the opening. No purse."', req:()=>!S.f.b8_c3_kef, go:'b8_c3_spinnock_sit'},
+          {t:'Leave them to it.', go:()=>startExplore()}]}),
+    b8_c3_spinnock_watch:()=>({sp:'Spinnock Durav', scene:'b8_c3_board', fx:()=>{ if (!S.f.b8_c3_spinnockWatch) { S.f.b8_c3_spinnockWatch = 1; b83L('tuft', 1); if (!S.f.b8_c3_shroudTried) S.f.b8_c3_dark = 1; } }, txt:
+`You watch. The tiles go down one by one, very slowly; the room's noise goes on round the corner without coming into it. Spinnock talks while his friend thinks, quietly, about nothing much: the salt fish, the lamps, a clerk he likes, the wagons in from the west.${b83If('kettle', `\n\nKettle asks him how the lamps burn without oil. Spinnock laughs, a low surprised sound, as if nobody had asked him anything for a while. "Patiently," he says. "Everything here burns patiently."`)}
+
+${S.f.b8_c3_shroudOk ? `He glances once at your hand, where a little of the dark has been carried since the landward gate. "You have some of it on you already," he says. "Good. It likes to be carried. Not held."` : `"You'll go out to the landward gate, if you haven't," he says, with his eyes on the board. "Everybody goes, to see where the night stops. Everybody tries to take hold of it." He moves a tile. "Don't. Nobody holds the dark. Let it lie over the hand, like a cloth on a table, and it may stay a while. It is very patient."`}
+
+Across the board the man in grey moves at last, and Spinnock sits back and looks at the move with pleasure, as at a gift he had not expected and does not quite deserve.`,
+      ch:[{t:'Back to the board.', go:'b8_c3_spinnock'}]}),
+    b8_c3_spinnock_sit:()=>({sp:'Spinnock Durav', scene:'b8_c3_board', txt:
+`Spinnock turns the board a little toward you, between moves, and shows you the opening with one long finger: where the keeps go, and the grand city in the middle that everybody wants and nobody can hold for long, and the gate at the edge, by itself.
+
+"Most people," he says, "build a keep first. It feels safe. Some go straight for the gate, because they mean to leave rich." He looks at you over the board, amused. "What does a sergeant do?"`,
+      ch:[{t:'"Build a keep. Then see."', fx:()=>{ S.f.b8_c3_kef = 'keep'; }, go:'b8_c3_spinnock_sat'},
+          {t:'"Find where the gate is. Before anything."', fx:()=>{ S.f.b8_c3_kef = 'gate'; }, go:'b8_c3_spinnock_sat'}]}),
+    b8_c3_spinnock_sat:()=>({sp:'Spinnock Durav', scene:'b8_c3_board', txt:
+`${S.f.b8_c3_kef === 'gate' ? `Spinnock laughs, quietly. "A soldier," he says. "Know the way out before you take the ground." He nods at his friend. "He plays that way too. It's why I lose."` : `Spinnock nods slowly. "A keep, then. Walls first." He turns the board back. "It's how I play. Mostly I lose to him with very good walls."`}
+
+The man in grey keeps to the board, but at the corner of his mouth something happens and is put away again.${b83Say({brisk:`\n\nBrisk, behind you, says, "Walls," with approval, and Spinnock inclines his head to her as if she had made a move.`, vasso:`\n\nVasso, behind you, is counting the gate's distance from the keeps under his breath. Spinnock watches him do it with interest.`, _:''})}`,
+      ch:[{t:'Back to the board.', go:'b8_c3_spinnock'}]}),
 
     /* the upper streets: not for the Fourth */
     b8_c3_upper:()=>({sp:'The upper streets', scene:'b8_blackcoral', txt:
@@ -388,7 +429,7 @@ In the corner, the man in grey moves a piece at last. The Andii looks at the boa
 
 You know this dark. Not this city's, but its kind. A dark like it came down once over a terrace in Darujhistan, the night of the Fete, like a lid on a pot, and took a fight away with it.${b83If('tuft', `\n\nTuft puts her hand out into the edge of it, slowly, the way you would put a hand into a river to feel the cold. "Cold," she says. And then, quieter, with a look on her face you have not seen there in years: "And under it, not. Like somebody holding a hand that's been out in the winter." She takes her hand back and holds it against her chest, and that is all of it she will give.`)}${trickBy('dark') ? `\n\n${NAME(trickBy('dark'))}'s hand has gone to where the Courtesy of Darkness lives, at the wrist, without being asked. It knows this kind of dark.` : ''}`,
       ch:[{t:'Fold a piece of the dark round a hand, the way the Andii carry it.', check:['wits', 17], trick:'b8_shroud', req:()=>!S.f.b8_c3_shroudTried, fx:()=>{ S.f.b8_c3_shroudTried = 1; },
-            edges:id=>[id === 'tuft' && ['Meanas: Shadow is the dark\'s own child, and she has felt this before', 3], trickBy('dark') === id && ['A Courtesy of Darkness: it has held this dark before', 3], id === 'sgt' && ['you saw the dark come down over Lady Simtal\'s terrace', 1], id === 'sohra' && ['the spirits live in the dark, and she has asked them things there', 1], id === 'edrem' && ['years of standing under this night at the barrow', 1], id === 'ohl' && ['Denul wants light to work by', -1], id === 'kettle' && ['a sapper likes to see her fuse', -1], id === 'brisk' && ['Hood\'s dark is a different dark', -1]],
+            edges:id=>[id === 'tuft' && ['Meanas: Shadow is the dark\'s own child, and she has felt this before', 3], trickBy('dark') === id && ['A Courtesy of Darkness: it has held this dark before', 3], id === 'sgt' && ['you saw the dark come down over Lady Simtal\'s terrace', 1], id === 'sohra' && ['the spirits live in the dark, and she has asked them things there', 1], id === 'edrem' && ['years of standing under this night at the barrow', 1], S.f.b8_c3_dark && id === 'sgt' && ['Spinnock, at his board: let it lie, don\'t hold it', 2], id === 'ohl' && ['Denul wants light to work by', -1], id === 'kettle' && ['a sapper likes to see her fuse', -1], id === 'brisk' && ['Hood\'s dark is a different dark', -1]],
             near:{t:()=>`Yes, but the dark gets into ${b83Nm(b83Who())}'s hand to the wrist and is slow to come out: the fingers will not close properly until evening, and ${b83Nm(b83Who())} ${b83V(b83Who(), 'keep', 'keeps')} looking at them. Rattled.`, fx:()=>b83Rattle(b83Who())},
             go:'b8_c3_shroud_ok', fail:'b8_c3_shroud_no'},
           {t:'Out onto the pilgrims\' road.', onward:true, fx:()=>{ S.f.b8_c3_ph = Math.max(2, S.f.b8_c3_ph || 1); }, go:()=>{ startExplore('b8_c3_road'); if (!S.f.b8_c3_roadSeen) talk('b8_c3_road_arrive'); }},

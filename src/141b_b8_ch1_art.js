@@ -313,3 +313,82 @@ SCENEX.b8_c1_house = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
 <ellipse cx="100" cy="74" rx="56" ry="40" fill="#6a9ae0" opacity=".05"/></svg>`;
   ART_SIZE['item/b8_c1_roofboots'] = [200, 150];
 }
+
+/* ---------------- v13.15 meetings (David, Nov 15): Blend, K'rul's Bar and the Phoenix ---------------- */
+/* Blend, retired: slight, dark-eyed, dark hair cut short, a plain brown shirt and a grey vest, nothing to catch the eye (W Blend: "not
+   very talkative", a face the eye slides off); a cup. o.alpha the scenes give her keeps her half there */
+FIGX.b8_c1_blend = (ctx, h, t, o) => { ctx.save(); B2F.grow(ctx, .92, .98);
+  h.legs('#2a2622'); poly(ctx, [[-5.6,-6],[5.6,-6],[6,6.6],[-6,6.6]], h.armor('#6a5a46', '#2a2218')); poly(ctx, [[-5.6,-6],[-2,-6],[-2.4,6.6],[-6,6.6]], h.armor('#4a4a4c', '#1a1a1c')); poly(ctx, [[2,-6],[5.6,-6],[6,6.6],[2.4,6.6]], h.armor('#4a4a4c', '#1a1a1c'));
+  ctx.fillStyle = '#1e1810'; ctx.fillRect(-6, 3, 12, 1.1);
+  ctx.fillStyle = '#9a7a5c'; ctx.fillRect(4.6, -1.4, 2.2, 2.8); ell(ctx, 6.4, -2.2, 1.6, 2, '#5a4a3a'); // the cup
+  h.head('#9a7a5c', 4, -11.2); h.look('rgba(16,10,8,.95)', -11.4);
+  ctx.fillStyle = '#16100c'; ctx.beginPath(); ctx.arc(0, -12.4, 4.3, Math.PI*.95, Math.PI*2.05); ctx.fill(); // dark hair, cut short
+  ctx.restore(); };
+
+/* K'rul's Bar, inside: an old temple's nave in grey stone, tall and narrow, two pointed windows dark with night; the bar on the left where
+   something holier stood; benches where the pews were; the hearth on the right, never built for a fire, with one in it; at the back the
+   tower door and the bell rope hanging still. Picker behind the bar, Blend half there beside it, Antsy at his cards by the wall, Mallet by
+   the fire, and in the far corner the old man with his lamp and his pages. Nothing of the cellar. */
+SCENEX.b8_c1_kruls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), fy = H*.78;
+  ctx.drawImage(sceneLayer('b81:kruls', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, fy, [[0,'#0e0e12'],[.5,'#1c1a1c'],[1,'#2c2620']]); x.fillRect(0, 0, W, fy);
+    for (let i = 0; i < 70; i++) { const bx = hash(i, 8190)*W, by = hash(i, 8191)*fy; x.strokeStyle = 'rgba(80,76,72,.18)'; x.lineWidth = 1; x.strokeRect(bx, by, 10 + hash(i, 8192)*12, 5 + hash(i, 8193)*4); } // the old stone courses
+    // the vault's ribs, rising out of the dark
+    x.strokeStyle = 'rgba(60,56,54,.5)'; x.lineWidth = 3; [[.1, .9], [.3, .7]].forEach(([a, b]) => { x.beginPath(); x.moveTo(W*a, H*.44); x.quadraticCurveTo(W*.5, -H*.1, W*b, H*.44); x.stroke(); });
+    // two pointed windows, night in them
+    [.22, .62].forEach(u => { const wx = W*u, wy = H*.12, ww = W*.07, wh = H*.24; x.fillStyle = '#060810'; x.beginPath(); x.moveTo(wx, wy + wh); x.lineTo(wx, wy + ww*.6); x.quadraticCurveTo(wx + ww/2, wy - ww*.3, wx + ww, wy + ww*.6); x.lineTo(wx + ww, wy + wh); x.closePath(); x.fill();
+      x.fillStyle = 'rgba(70,110,180,.18)'; x.fillRect(wx + ww*.45, wy + ww*.2, ww*.1, wh - ww*.2); });
+    // the tower door at the back, and the bell rope hanging still in it
+    x.fillStyle = '#08070a'; x.fillRect(W*.44, H*.36, W*.08, fy - H*.36); x.fillStyle = '#6a5a3e'; x.fillRect(W*.478, H*.04, W*.004, H*.5); ell(x, W*.48, H*.55, W*.006, H*.02, '#6a5a3e');
+    x.fillStyle = vgrad(x, fy, H, [[0,'#2a241c'],[1,'#0e0c0a']]); x.fillRect(0, fy, W, H - fy); // flagstones
+    for (let i = 0; i < 9; i++) { x.fillStyle = 'rgba(0,0,0,.25)'; x.fillRect(0, fy + i*(H - fy)/9, W, 1); }
+    // the bar, left, on the old altar step; jugs behind it
+    x.fillStyle = '#1a1612'; x.fillRect(0, H*.66, W*.3, H*.03); x.fillStyle = '#3a2a1a'; x.fillRect(W*.02, H*.56, W*.26, H*.05); x.fillStyle = '#24180e'; x.fillRect(W*.02, H*.61, W*.26, H*.05);
+    x.fillStyle = '#1a140c'; x.fillRect(W*.02, H*.4, W*.24, H*.012); [.05, .1, .15, .2, .24].forEach((u, i) => ell(x, W*u, H*.385, W*.011, H*.018, ['#4a3a2a', '#3a3a3e', '#5a4030', '#2e2e34', '#4a3420'][i]));
+    // benches where the pews were
+    x.fillStyle = '#2a1c10'; [[.34, .7], [.52, .74]].forEach(([u, v]) => { x.fillRect(W*u, H*v, W*.16, H*.02); x.fillRect(W*u, H*v + H*.02, W*.01, H*.04); x.fillRect(W*(u + .15), H*v + H*.02, W*.01, H*.04); });
+    // Antsy's table by the wall, and the cards on it; the old man's table in the far corner, with his lamp and pages
+    x.fillStyle = '#3a2614'; x.fillRect(W*.32, H*.6, W*.1, H*.02); x.fillStyle = '#e0d8c4'; for (let i = 0; i < 5; i++) x.fillRect(W*(.33 + i*.016), H*.592, W*.008, H*.008);
+    x.fillStyle = '#2a1e12'; x.fillRect(W*.58, H*.5, W*.08, H*.016); x.fillStyle = '#d8ccb0'; x.fillRect(W*.6, H*.494, W*.03, H*.007);
+    // the hearth, right: a temple's niche with a fire in it
+    x.fillStyle = '#1a1612'; x.fillRect(W*.76, H*.3, W*.2, fy - H*.3); x.fillStyle = '#0a0806'; x.beginPath(); x.moveTo(W*.79, fy); x.lineTo(W*.79, H*.5); x.quadraticCurveTo(W*.86, H*.4, W*.93, H*.5); x.lineTo(W*.93, fy); x.closePath(); x.fill();
+  }), 0, 0, W, H);
+  // the fire, and its light on the nave; the old man's lamp
+  const cx = W*.86, cy = fy - H*.02; ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy, H*.6, '#ff8a3a', .2*fl); glow(ctx, W*.62, H*.47, H*.1, '#ffc070', .3); ctx.globalCompositeOperation = 'source-over';
+  poly(ctx, [[cx - 12, cy], [cx - 5, cy - 18*fl], [cx, cy - 8], [cx + 5, cy - 15*fl], [cx + 12, cy]], 'rgba(255,140,50,.95)'); poly(ctx, [[cx - 5, cy], [cx, cy - 10*fl], [cx + 5, cy]], 'rgba(255,220,130,.9)');
+  ctx.fillStyle = 'rgba(255,210,140,.9)'; ctx.fillRect(W*.645 - 1, H*.47, 2, 3);
+  if (mo) { const sw = Math.sin(t/2600)*.6; ctx.fillStyle = 'rgba(106,90,62,.35)'; ctx.fillRect(W*.478 + sw, H*.2, 1, H*.3); } // the rope, very nearly still
+  drawFigure(ctx, 'duiker', W*.62, H*.56, 1.1, t, {still:true, dir:-1, alpha:.75});
+  drawFigure(ctx, 'b8v_picker', W*.15, H*.6, 1.6, t, {still:true, dir:1});
+  drawFigure(ctx, 'b8_c1_blend', W*.29, H*.72, 1.6, t, {still:true, dir:1, alpha:.7});
+  drawFigure(ctx, 'antsy', W*.38, H*.7, 1.6, t, {still:true, dir:1});
+  drawFigure(ctx, 'mallet', W*.72, H*.8, 1.7, t, {still:true, dir:-1});
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.34 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.8, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .72, .5); };
+
+/* the Phoenix Inn, inside, in Book Eight's winter: low beams, a crowded taproom in lamp gold, the bar on the left with Meese behind it, the
+   hearth on the right and Kruppe at his table by it with a plate of pastries; the drinkers as shapes. Book One's inn had Crokus and the
+   others at the table; this winter it has Kruppe. */
+SCENEX.b8_c1_phoenix = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), fy = H*.78;
+  ctx.drawImage(sceneLayer('b81:phoenix', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, fy, [[0,'#1e140c'],[1,'#3a281a']]); x.fillRect(0, 0, W, fy);
+    for (let i = 0; i < 6; i++) { x.fillStyle = '#140c06'; x.fillRect(0, H*(.04 + i*.0), W, H*.035); x.fillRect(W*(.06 + i*.18), 0, W*.022, H*.1); } // the low beams
+    x.fillStyle = vgrad(x, fy, H, [[0,'#32221a'],[1,'#140c08']]); x.fillRect(0, fy, W, H - fy);
+    // the bar, left, and the kegs behind it
+    x.fillStyle = '#3a2614'; x.fillRect(W*.02, H*.54, W*.28, H*.06); x.fillStyle = '#24180c'; x.fillRect(W*.02, H*.6, W*.28, fy - H*.6);
+    for (let i = 0; i < 3; i++) ell(x, W*(.07 + i*.08), H*.42, W*.03, H*.05, '#4a3220');
+    // the crowd: shapes on benches, heads and shoulders, a cup raised here and there
+    for (let i = 0; i < 12; i++) { const cx = W*(.34 + hash(i, 8195)*.36), cy = H*(.56 + hash(i, 8196)*.08); x.fillStyle = `rgba(20,14,10,${(.7 + hash(i, 8197)*.3).toFixed(2)})`; x.fillRect(cx - 4, cy - 12, 8, 14); x.beginPath(); x.arc(cx, cy - 15, 3.4, 0, 7); x.fill(); }
+    x.fillStyle = '#2a1c10'; x.fillRect(W*.32, H*.64, W*.4, H*.025);
+    // the hearth, right, and Kruppe's table before it with the pastries
+    x.fillStyle = '#1a1612'; x.fillRect(W*.8, H*.3, W*.17, fy - H*.3); x.fillStyle = '#0a0806'; x.fillRect(W*.82, H*.5, W*.13, fy - H*.5);
+    x.fillStyle = '#4a3018'; x.fillRect(W*.62, H*.68, W*.14, H*.022); x.fillStyle = '#2a1c10'; x.fillRect(W*.635, H*.7, W*.01, fy - H*.7); x.fillRect(W*.735, H*.7, W*.01, fy - H*.7);
+    ell(x, W*.67, H*.672, W*.024, H*.008, '#d8ccb0'); [.66, .675, .69].forEach(u => ell(x, W*u, H*.664, W*.006, H*.006, '#c08040')); // the plate, the pastries
+  }), 0, 0, W, H);
+  const cx = W*.885, cy = fy - H*.02; ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy, H*.6, '#ff8a3a', .22*fl); glow(ctx, W*.5, H*.4, W*.45, '#ffb060', .06); ctx.globalCompositeOperation = 'source-over';
+  poly(ctx, [[cx - 11, cy], [cx - 5, cy - 17*fl], [cx, cy - 8], [cx + 5, cy - 14*fl], [cx + 11, cy]], 'rgba(255,140,50,.95)'); poly(ctx, [[cx - 5, cy], [cx, cy - 9*fl], [cx + 5, cy]], 'rgba(255,220,130,.9)');
+  if (mo) for (let i = 0; i < 3; i++) { const k = ((t/2400 + i/3) % 1); ctx.fillStyle = `rgba(200,190,170,${(.12*(1 - k)).toFixed(2)})`; ctx.beginPath(); ctx.arc(W*(.4 + i*.12), H*(.4 - k*.3), 6 + k*10, 0, 7); ctx.fill(); } // pipe smoke
+  drawFigure(ctx, 'meese', W*.16, H*.56, 1.7, t, {still:true, dir:1});
+  drawFigure(ctx, 'kruppe', W*.7, H*.8, 1.9, t, {still:true, dir:-1});
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.26 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.8, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .7, .5); };

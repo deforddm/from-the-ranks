@@ -302,3 +302,33 @@ SCENEX.b8_c3_tavern = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 <path d="M86 44 L86 100" stroke="#ffffff" stroke-width="1.2" opacity=".5"/></svg>`;
   ART_SIZE['item/b8_c3_lamp'] = [200, 150];
 }
+
+/* v13.15 meetings (David, Nov 15): the corner table, close to. The same low harbour tavern from the corner: the room's lamps and shapes
+   behind, the table apart, the Kef Tanar board of tiles between two cups; Spinnock Durav seated tall on the left (b8v_spinnock, 148b), the
+   man in the grey cloak on the right (b8v_seerdomin, 148b), the squad come over from the room. */
+SCENEX.b8_c3_board = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fy = H*.8;
+  ctx.drawImage(sceneLayer('b83:board', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, fy, [[0,'#101014'],[1,'#26221e']]); x.fillRect(0, 0, W, fy);
+    for (let i = 0; i < 4; i++) { x.fillStyle = '#08080a'; x.fillRect(0, H*.05, W, H*.03); x.fillRect(W*(.1 + i*.27), 0, W*.02, H*.09); } // the beams
+    x.fillStyle = vgrad(x, fy, H, [[0,'#22201a'],[1,'#0a0908']]); x.fillRect(0, fy, W, H - fy);
+    // the room behind, small: benches and drinkers as shapes, a glint at a cuff
+    for (let i = 0; i < 9; i++) { const cx = W*(.06 + i*.1), cy = H*.5; x.fillStyle = 'rgba(14,12,16,.85)'; x.fillRect(cx - 3, cy - 11, 6, 11); x.beginPath(); x.arc(cx, cy - 13, 2.8, 0, 7); x.fill(); if (i % 3 === 1) { x.fillStyle = 'rgba(200,210,230,.55)'; x.fillRect(cx + 2, cy - 5, 1.2, .8); } }
+    x.fillStyle = '#1a140c'; x.fillRect(0, H*.5, W, H*.02);
+    // the corner's own dark, and the table
+    x.fillStyle = 'rgba(8,8,10,.6)'; x.fillRect(W*.22, H*.2, W*.56, H*.56);
+    x.fillStyle = '#2e2216'; poly(x, [[W*.34, H*.64], [W*.66, H*.64], [W*.7, H*.69], [W*.3, H*.69]], '#2e2216'); x.fillStyle = '#1a120a'; x.fillRect(W*.33, H*.69, W*.015, fy - H*.69); x.fillRect(W*.655, H*.69, W*.015, fy - H*.69);
+    // the board, and its tiles: light and dark, in rows, one at the edge by itself (the gate)
+    x.fillStyle = '#4a3c2a'; poly(x, [[W*.42, H*.625], [W*.58, H*.625], [W*.6, H*.65], [W*.4, H*.65]], '#4a3c2a');
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 7; c++) { if (hash(r*7 + c, 8370) < .35) continue; x.fillStyle = (r + c) % 2 ? '#d0c8b8' : '#18181c'; x.fillRect(W*(.425 + c*.021 + r*.002), H*(.629 + r*.007), W*.012, H*.005); }
+    x.fillStyle = '#e8dcc0'; x.fillRect(W*.592, H*.637, W*.006, H*.006); // the gate's tile, apart
+    ell(x, W*.375, H*.632, W*.012, H*.016, '#4a3a2a'); ell(x, W*.625, H*.632, W*.012, H*.016, '#3a3a3e'); // two cups
+    // the forgotten sword, leaned against the wall behind the Andii's chair
+    x.strokeStyle = '#3a3c44'; x.lineWidth = 2; x.beginPath(); x.moveTo(W*.24, H*.36); x.lineTo(W*.26, H*.72); x.stroke();
+  }), 0, 0, W, H);
+  // the lamp on its hook over the table: white, steady
+  const lx = W*.5, ly = H*.32; B2F.line(ctx, '#0a0a0c', .6, [[lx, H*.08], [lx, ly - 4]]); ctx.fillStyle = 'rgba(236,240,250,.95)'; ctx.fillRect(lx - 2.6, ly - 4, 5.2, 5);
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly + H*.2, H*.42, '#c0ccf0', .24); glow(ctx, W*.37, H*.62, H*.16, '#c0ccf0', .14); ctx.globalCompositeOperation = 'source-over';
+  drawFigure(ctx, 'b8v_spinnock', W*.37, H*.74, 2.1, t, {still:true, dir:1});
+  drawFigure(ctx, 'b8v_seerdomin', W*.69, H*.74, 2.1, t, {still:true, dir:-1});
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.05 + i*Math.min(.05, .24/sq.length)), H*.98 - (i % 2)*2, 1.6, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .66, .5); };
