@@ -69,6 +69,27 @@ Object.assign(FIGX, {
     if (girl) { B2F.cap(ctx, '#2a1a12', 4.2, -12.4); ctx.fillStyle = '#2a1a12'; ctx.fillRect(-5, -12, 1.6, 9); }
     else { ctx.beginPath(); ctx.arc(0, -12.6, 4.8, Math.PI, 0); ctx.fillStyle = shade(c[0], -.2); ctx.fill(); ctx.fillRect(-1, -12.8, 6.8, 1.3); } // a cap pulled low
     ctx.restore(); },
+  /* v13.8 (David, Nov 15): meetings. Brys Beddict, Finadd of the Royal Guard and the King's new Champion (W *Brys Beddict*: calm brown
+     eyes, a martial bearing, formal armour, a longsword): young, slim, very still; good scale under a dark Guard's cloak, a plain
+     longsword at the hip, no helm, brown hair cut short */
+  b5_c1_brys(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .96, 1.08);
+    poly(ctx, [[-5.6,-6],[-8.4,11],[-2.6,10.4],[-2,-6]], '#262a36'); poly(ctx, [[5.4,-6],[7.6,10.4],[3,10],[2,-6]], '#20242e'); // the Guard's cloak, both sides
+    h.legs('#202228'); ctx.fillStyle = '#121010'; ctx.fillRect(-4.5, 10.4, 3.4, 2.6); ctx.fillRect(1.1, 10.4, 3.4, 2.6); // good boots
+    h.torso('#9a9c9e', '#2a2c30', 5.8); ctx.strokeStyle = 'rgba(0,0,0,.26)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 5; i++) { ctx.moveTo(-5.4, -4 + i*2.2); ctx.lineTo(5.4, -4 + i*2.2); } ctx.stroke(); // formal scale, kept bright
+    ctx.fillStyle = '#c9a35a'; ctx.fillRect(-5.8, -6, 11.6, 1); ctx.fillStyle = '#2a1e14'; ctx.fillRect(-5.8, 3.2, 11.6, 1.3); // a thin gilt edge, the belt
+    B2F.line(ctx, '#2a2420', 1.6, [[5.2, 4], [8.6, 12.4]]); ctx.fillStyle = '#8a8a86'; ctx.fillRect(3.6, 2.8, 3.4, .9); ell(ctx, 4.4, 2.2, .9, .9, '#9a9a96'); // the longsword, sheathed, a plain steel hilt
+    h.head('#c8a88c', 4.1, -11.4); h.look('rgba(40,24,14,.85)', -11.6); B2F.cap(ctx, '#4a3424', 4.2, -12.6, 1.04, 1.96); // brown eyes, short brown hair
+    ctx.restore(); },
+  /* v13.8 (David, Nov 15): meetings (Claude's call). Bugg, a builder, Tehol Beddict's manservant (W *Bugg*: old, mostly bald, thinning
+     grizzled hair, a wizened face, scars): a plain worn coat with plaster dust in its creases, sleeves rolled on scarred forearms, hands
+     behind the back, a builder's rule stuck in the belt */
+  b5_c1_bugg(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .88, .94);
+    h.legs('#2e2a26'); poly(ctx, [[-5.6,-6],[5.6,-6],[6.6,9],[-6.6,9]], h.armor('#6a5e50', '#262018')); ctx.fillStyle = 'rgba(230,224,210,.28)'; for (let i = 0; i < 5; i++) ctx.fillRect(-5 + hash(i, 811)*9, -3 + hash(i, 812)*10, 1.4, .6); // the worn coat, plaster dust in it
+    ctx.fillStyle = '#b08e74'; ctx.fillRect(-7.6, -4.6, 2, 5); ctx.fillRect(5.6, -4.6, 2, 5); ctx.strokeStyle = 'rgba(90,50,40,.5)'; ctx.lineWidth = .4; ctx.beginPath(); ctx.moveTo(-7.4, -3); ctx.lineTo(-5.8, -2); ctx.moveTo(5.8, -1.6); ctx.lineTo(7.4, -.4); ctx.stroke(); // sleeves rolled, scarred forearms going behind the back
+    ctx.fillStyle = '#c8b070'; ctx.fillRect(1.4, 2.6, 1.2, 6); ctx.fillStyle = 'rgba(0,0,0,.4)'; for (let i = 0; i < 3; i++) ctx.fillRect(1.4, 3.4 + i*1.8, 1.2, .3); // a builder's rule in the belt
+    h.head('#b89478', 4, -11.2); h.look('rgba(30,24,20,.75)', -11.2); ctx.fillStyle = 'rgba(80,50,40,.3)'; ctx.fillRect(-3, -9, 6, .5); ctx.fillRect(-2.6, -13.2, 5.4, .4); // a wizened face, a lined brow
+    ctx.fillStyle = 'rgba(190,184,172,.75)'; ctx.fillRect(-4.2, -12.6, 1.2, 2.6); ctx.fillRect(3.2, -12.6, 1.2, 2.4); // a bald crown, grizzled at the sides
+    ctx.restore(); },
   /* a pit-town drunk: Tarthenal, the size of a door; a sleeveless jerkin, huge bare arms, a bench-leg in one fist, a heavy brow */
   b5_c1_drunk(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.32, 1.22); const sk = b2Pick(o, ['#a07a5a', '#8e6a4e', '#a8846a']);
     h.legs('#2a241e'); h.torso('#5a4a36', '#1e180e', 7.8); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-.6, -6, 1.2, 13); ctx.fillStyle = 'rgba(80,60,40,.6)'; ctx.fillRect(-4, 0, 3, 2); // a stained jerkin

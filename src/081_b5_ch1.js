@@ -9,7 +9,9 @@
    that night the collector comes to the barracks lane, b5_c1_lane) or 'swim' (Thegg swims the Quillas Canal at first light weighted
    with the court's 300 docks, and lives; then the bookmaker's men on the Low Walk, b5_c1_lowwalk). The festival night: the Wager Board
    (89) at the yard fire, the lanterns, the King's party far off. Next morning the Special Drownings from the tiers, headline only, and
-   the Trate news: the Sixth is lent north. Notes for later chapters: docs/mt-ch1-notes.md. */
+   the Trate news: the Sixth is lent north. Notes for later chapters: docs/mt-ch1-notes.md.
+   v13.8 (David, Nov 15): meetings. Brys Beddict watches the Sixth drill on the festival's first morning (b5_c1_brysdrill); Bugg, a
+   builder, by his board on the Low Walk (b5_c1_bugg). */
 /* FOR THE ARTIST (81b): names this file uses.
    Items: ART['item/b5_c1_hookknife'], ['item/b5_c1_chit'], ['item/b5_c1_receipt'], ['item/b5_c1_weightbag'].
    Figures: b5_c1_ennic, b5_c1_clerk, b5_c1_tilewoman, b5_c1_ropeman, b5_c1_bookman, b5_c1_cutpurse, b5_c1_drunk. Reused: b5_letherii
@@ -117,7 +119,10 @@ const B5CH1 = {
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:3, y:3, node:()=>'b5_c1_clerk', fresh:()=>!S.f.b5_c1_clerk},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:12, y:2, node:()=>b51Ph() >= 3 ? 'b5_c1_ennic_eve' : 'b5_c1_ennic', fresh:()=>b51Ph() >= 3 ? !S.f.b5_c1_purse : !S.f.b5_c1_ennic},
         {id:'qm', name:'The quartermaster', kind:'b5_letherii', x:13, y:7, node:()=>'b5_c1_qm', fresh:()=>!S.f.b5_c1_qm},
-        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:11, y:9, node:()=>'b5_c1_tilewoman', fresh:()=>!S.f.b5_c1_tw} ] },
+        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:11, y:9, node:()=>'b5_c1_tilewoman', fresh:()=>!S.f.b5_c1_tw},
+        /* v13.8 (David, Nov 15): meetings. The plan's star for Book Five: Brys Beddict, Finadd of the Royal Guard and the King's new
+           Champion, in the barracks gateway on the festival's first morning, watching the Sixth drill */
+        {id:'brys', name:'The King\'s Champion', kind:'b5_c1_brys', x:13, y:4, node:()=>'b5_c1_brysdrill', show:()=>b51Ph() === 1 && b51Slept() && !S.f.b5_c1_brysdrill, fresh:()=>!S.f.b5_c1_brysdrill} ] },
 
     /* 16 x 12 (b5_c1_canal, day).  . paving  , the tiers' steps  ~ the Quillas Canal  # wall  s a stall  n a builder's board  D the fines
        court's door  - the Low Walk's edge  P a mooring post  < west, back to the barracks  > east, the gate to the pit towns */
@@ -143,7 +148,10 @@ const B5CH1 = {
         {id:'steps', name:'The court\'s bench by the steps', kind:'b5_letherii', x:4, y:6, node:()=>'b5_c1_steps', show:()=>b51Ph() >= 4 && b51Key() === 'swim' && !S.f.b5_c1_swam, fresh:()=>true},
         {id:'bookmen', name:'The bookmaker\'s men', kind:'b5_c1_bookman', x:6, y:6, node:()=>'b5_c1_walk_start', show:()=>b51Ph() >= 4 && b51Key() === 'swim' && !!S.f.b5_c1_swam && !S.f.b5_c1_walkDone, fresh:()=>true},
         {id:'tiers', name:'The crowd on the tiers', kind:'b5_letherii', x:10, y:4, node:()=>'b5_c1_tiers', show:()=>b51Ph() >= 4 && (b51Key() !== 'swim' || !!S.f.b5_c1_walkDone) && !S.f.b5_c1_tiers, fresh:()=>true},
-        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>'b5_c1_trate', show:()=>!!S.f.b5_c1_tiers, fresh:()=>!S.f.b5_trate} ] },
+        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>'b5_c1_trate', show:()=>!!S.f.b5_c1_tiers, fresh:()=>!S.f.b5_trate},
+        /* v13.8 (David, Nov 15): meetings (Claude's call, one of the brief's own). Bugg, Tehol Beddict's manservant and a builder, at his
+           own board on the festival's first day */
+        {id:'bugg', name:'An old man by the builder\'s board', kind:'b5_c1_bugg', x:8, y:2, node:()=>'b5_c1_bugg', show:()=>b51Ph() === 2, fresh:()=>!S.f.b5_c1_bugg} ] },
 
     /* 16 x 12 (b5_c1_canal, night): the same walk, lamplit, with the stalls shut and the court's door open */
     { id:'b5_c1_canalnight', title:'Letheras · the Low Walk', sub:'Night · the fines court is sitting', hint:'Tap ground to move · the court\'s door is lit', decor:'b5_c1_canal', dark:true,
@@ -256,6 +264,8 @@ const B5CH1 = {
     if (f.b5_c1_key === 'swim') x.push(`Thegg swam the Quillas Canal with the court's three hundred docks tied to him, and came out on the far steps. The court charged him for the rope.${f.b5_c1_walkDone ? ' The bookmaker who laid against him came to collect from somebody, and did not.' : ''}`);
     if (f.b5_c1_cutDone) x.push('The squad broke up a ring of festival cutpurses in the Down Market. The stall-keepers paid in docks and gratitude, in that order.');
     if (f.b5_c1_ropeOk) x.push('An old rope-man of the Drownings showed the squad how a body is hauled. He has done it, now and then, when nobody was watching.');
+    if (f.b5_c1_brysdrill) x.push('On the festival\'s first morning Brys Beddict, the King\'s Champion, watched the Sixth drill from the barracks gateway, and told you to watch the feet.');
+    if (f.b5_c1_bugg) x.push('An old builder called Bugg, under his own board by the Low Walk, explained that the new palace is not sinking. It is settling.');
     if (f.b5_c1_brys) x.push('Far off on a palace balcony on the festival night: the King\'s party, and the King\'s new Champion with them.');
     if (f.b5_c1_sums === 'ok') x.push('The company clerk found six docks the auditors had owed the Sixth since the spring. He was quietly appalled.');
     if (f.b5_c1_carter) x.push('A Tarthenal carter in the pit town owes the squad a favour for a wheel out of the mud.');
@@ -271,6 +281,8 @@ const B5CH1 = {
     f.b5_c1_fine && 'After the brawl in the pit-town tavern, the City Garrison took the biggest man there: Thegg. Assault without cause, three hundred docks.',
     f.b5_c1_tab && 'The pit-town tavern says the army has stopped paying Thegg\'s mother\'s tab, and has added interest.',
     f.b5_brizad && 'Tavern talk: the Queen\'s First Consort, Turudal Brizad, has the Queen\'s ear, and half the court owes him a favour.',
+    f.b5_c1_brysdrill && 'Brys Beddict, the King\'s Champion, stood in the barracks gateway on the festival\'s first morning and watched the Sixth drill. He said one thing: watch the feet.',
+    f.b5_c1_bugg && 'Bugg the builder, by his board on the Low Walk: the new palace is settling, not sinking, and the clay was here first.',
     f.b5_bugg && 'A builder\'s board on the street up toward the new palace says Bugg. The palace\'s clay heave is a city joke.',
     'The court is quarrelling: the Preda and the Queen\'s faction. Brys Beddict is the new King\'s Champion. The delegation to the Edur is being chosen, and Finadd Gerun Eberict has the King\'s Leave.',
     'The Sixth Company is in Letheras with the battalion\'s sick and its paybooks, for the pursers\' audit and new kit.'].filter(Boolean); },
@@ -457,6 +469,7 @@ In the morning the auditors arrive at the second bell, three pursers in grey wit
 
 "The festival," he says. "Be back by dark. Nobody drowns."${b51If('thegg', `\n\nThegg is already at the gate with the folded note in his hand. "The tavern does not open before dusk," he says. "I would like to go then. If the sergeant will come."`)}`,
       ch:[{t:'Out through the gate, into the festival.', onward:true, go:'b5_c1_out'},
+          {t:'The morning drill first, in the yard.', req:()=>!S.f.b5_c1_brysdrill, go:'b5_c1_brysdrill'},
           {t:'Not yet.', go:()=>startExplore()}]}),
     b5_c1_out:()=>({sp:'The Drownings District', scene:'b5_c1_lowwalk', fx:()=>{ S.f.b5_c1_ph = 2; }, txt:
 `Out through the gate and two streets down, and the street ends in the Low Walk: the paved walk along the Quillas Canal, a hundred paces of dark green water to the far side, and above the walk on both banks the tiers, stone steps going up like seats in a theatre, which is what they are.
@@ -706,10 +719,55 @@ ${b51Key() === 'swim' ? `The board has a line of its own at the bottom, in fresh
     b5_c1_festival:()=>({sp:'The Errant\'s festival', scene:'b5_c1_festival', fx:()=>{ S.f.b5_c1_brys = 1; }, txt:
 `Out at the end of the barracks street, where it gives on to a bridge over a side canal, you can see half of Letheras lit: lanterns along every canal, strung across the streets, hung in the rigging of the boats, and over all of it the old towers dark against the last of the light, and the new palace's dome under its scaffolding.
 
-Far off across the water there is a lit balcony on the palace side with a crowd of small figures on it: the King's party, out to be seen on the Errant's night. One of them stands a little apart from the rest with a sword at his hip, and the people on the bridge beside you say that is Brys Beddict, the new Champion. From here he is a shape with a sword, and very still.
+Far off across the water there is a lit balcony on the palace side with a crowd of small figures on it: the King's party, out to be seen on the Errant's night. One of them stands a little apart from the rest with a sword at his hip, and the people on the bridge beside you say that is Brys Beddict, the new Champion. From here he is a shape with a sword, and very still.${S.f.b5_c1_brysdrill ? ' You have seen that stillness nearer, in the barracks gateway this morning, watching your feet.' : ''}
 
 ${b51Say({tobet:`Tobet watches the balcony for a while. "The holder took us to see the King once," he says. "On a festival. We stood a long way off, like this." He thinks. "It was very like this."`, perrit:`Perrit has her back to the canal, as usual, and is watching the lanterns instead. "Every one of those is on somebody's account," she says. "I'd like to see that ledger."`, _:'The squad watches the lit city for a while, and then goes back in.'})}`,
       ch:[{t:'Back to the fire.', go:'b5_c1_yard'}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Five: Brys Beddict watches the Sixth drill ----
+       Where and when: Letheras, the festival's first morning, the Whitefinders' barracks yard by the Drownings District. Brys is Finadd of
+       the Royal Guard and the King's new Champion in Letheras in novel ch 2 and 4 (mt-canon §1.1: W2, W4, R2, R4; W *Brys Beddict*); he
+       "led training exercises for the king's own guard, which sometimes drew an audience", and was drawn to the fighting arts for their
+       order (W *Brys Beddict*, supported). Why he is in a provincial company's gateway is not said: a gap the books leave (lock 2).
+       Rule 33: his throne-room death stays as the city tells it in Ch7; nothing here hints past it. One line, a swordsman's. Sets
+       b5_c1_brysdrill; Thegg +1 (the Champion looked at his feet). */
+    b5_c1_brysdrill:()=>{ const pt = b5In('thegg') ? 'thegg' : b5In('tobet') ? 'tobet' : null, pn = pt ? NAME(pt) : 'the Fourth Squad\'s corporal';
+      return {sp:'Brys Beddict · the King\'s Champion', scene:'b5_barracks', fx:()=>{ S.f.b5_c1_brysdrill = 1; b51L('thegg', 1); },
+      again:()=>`The barracks gateway, empty. The Champion has gone out into the festival.`, txt:
+`The Sixth drills in the yard on the festival's first morning because it drills every morning, and because a company that has been given the day will spend it in the canal unless it is tired first. Shields and blades, in pairs, on the flags, while the auditors go through the books behind the officers' door.
+
+${b51Say({thegg:`You take Thegg, because the rest of the squad has learned not to. He sets the tower shield and waits behind it, and you go at him the way you always do, and he turns you the way he always does.`, tobet:`You take Tobet, who is no swordsman and says so, and who blocks well enough to make you work for it.`, _:`You take the Fourth Squad's corporal, who blocks well enough to make you work for it.`})}
+
+There is an officer in the gateway. Royal Guard: formal scale worn for use, a dark cloak, a plain longsword, and a young face with calm brown eyes that gives the yard nothing at all. He has been there a while. The sentry at the gate is standing straighter than the Sixth has ever seen him stand, and mouths a name at you across the flags. *Beddict. The Champion.*
+
+Brys Beddict watches two more passes. Then he says, not loudly, "Sergeant."
+
+You stop.
+
+"You are watching the ${pt === 'thegg' ? 'shield' : 'blade'}." He tips his head at ${pn}'s boots. "Watch the feet. The ${pt === 'thegg' ? 'shield' : 'blade'} goes where they have already been."
+
+He touches two fingers to his brow, to the yard in general, and goes out into the festival. Finadd Ennic comes out of the officers' door a moment after, pen in hand, and looks at the empty gateway, and goes back in.
+
+${b51Say({thegg:`Thegg thinks about it with the shield still up. "He means I tell you where I am going," he says. "With my feet." He looks down at them as if they had informed on him. Then, slowly, and pleased about it: "The King's Champion looked at my feet."`, tobet:`Tobet lowers his blade. "He never looked at the paybooks," he says. "Officers always look at the paybooks first."`, _:'The yard goes back to its drill, a little more carefully.'})}${b51If('perrit', `\n\nPerrit, on the bunk-house step, has watched all of it. "The best sword in Lether," she says, "spent on a sergeant's footwork in a barracks yard. On a festival day." She considers it. "I would like to know what he charges the King."`)}${b51If('ammet', b5In('thegg') ? `\n\nAmmet, from the sick-house door: "Feet. I've been telling the big one that for a year." Thegg does not hear her, on purpose.` : '')}`,
+      ch:[{t:'Out through the gate, into the festival.', req:()=>b51Slept() && b51Ph() === 1, onward:true, go:'b5_c1_out'},
+          {t:'Back to the drill.', go:()=>startExplore()}]}; },
+
+    /* ---- v13.8 (David, Nov 15): meetings (Claude's call, one of the brief's own). Bugg at his builder's board ----
+       Where and when: Letheras in novel ch 2–6; Bugg is Tehol Beddict's manservant and a builder, proprietor of Bugg's Construction, the
+       front for Tehol's dealings (W *Bugg*; mt-canon §1.1 has Tehol's house in the city; the game's own board, b5_bugg). His look: old,
+       mostly bald, grizzled, a wizened face, scars (W *Bugg*, supported). The new palace's clay heave: mt-canon §1.1 (W2, W4). Rule 32:
+       a builder and a manservant, nothing more; he says nothing of water, the sea or gods. Rule 33: Tehol is "a gentleman who was once
+       very rich", never named by Bugg, never his scheme. Sets b5_c1_bugg (and b5_bugg); Thegg +1. */
+    b5_c1_bugg:()=>({sp:'Bugg · a builder', scene:'b5_c1_lowwalk', fx:()=>{ S.f.b5_c1_bugg = 1; S.f.b5_bugg = 1; b51L('thegg', 1); },
+      again:()=>`The old builder under his board, looking up at the dome as if it owed him money.`, txt:
+`An old man is standing under the builder's board with his hands behind his back, looking up over the roofs at the dome of the new palace as if it owed him money. He is mostly bald, grizzled at the sides, with a wizened face and old scars on the forearms where his sleeves are rolled, and there is plaster dust in every crease of his coat.
+
+"Mine," he says, when he sees you reading the board. "Bugg. I build things." He considers that. "And I keep house, for a gentleman who was once very rich and has since become very good at the other thing. Between the two I am kept busy."
+
+He nods up at the dome. "You'll have heard the joke. It isn't sinking. It's settling. A builder never says sinking where the client can hear." He scratches his jaw. "The clay was here first. Clay always was. We just send the bill."
+
+${b51Say({thegg:`Thegg tells him, gravely, what his mother said about who raised the first walls here. Bugg looks up at him, a long way up, with every appearance of respect. "Builders say that of whoever came before them," he says. "Most of the time they're right, and nobody ever paid them for it." Thegg thinks about that, and nods, slowly, as if a sum had been entered in the right column at last.`, perrit:`Perrit asks him what a builder charges to tell a palace it is settling. "Less than a palace charges to hear it," Bugg says.`, _:'He wishes the squad a lucky festival, and means it about as much as anybody does.'})}${b51If('tobet', `\n\nTobet looks at the scars on the old man's arms, and then politely at the dome instead.`)}`,
+      ch:[{t:'On along the Walk.', go:()=>startExplore()}]}),
 
     /* ---- 'pay': the lane that night ---- */
     b5_c1_lane_start:()=>({sp:'The barracks lane', scene:'b5_barracks', txt:

@@ -22,6 +22,8 @@
    Main Canal, Soulan Bridge, the Pack's temple, Settle Lake's cavern or bench, the swamp, Tehol's house, roof, street or warehouse, the
    Eternal Domicile and its halls and throne room, the Azath and its barrow, the crypt, Seren's house, Mayen's streets, Bugg's wall; never
    a meeting with Brys, the Ceda, Rhulad, Trull, Fear, Mosag, Tehol, Bugg, Eberict, Hull, Udinaas, Seren, Iron Bars or the Azath's child.
+   v13.8 (David, Nov 15): meetings. On the last night the sergeant carries the Sixth's roll to the principal bridge over Main Canal and the
+   squad stands an hour at its foot while Finadd Moroch Nevath sets his wall (b5_c7_moroch); the duel stays heard, never seen.
    Notes for later books: docs/mt-ch7-notes.md. */
 /* FOR THE ARTIST (87b): names this file uses.
    Items: ART['item/b5_c7_dock'], ['item/b5_c7_lamp'], ['item/b5_c7_ledgerpage'].
@@ -307,6 +309,7 @@ const B5CH7 = {
     b5_c7_night:{loc:'Letheras', sub:'The night after Brans Keep', cap:'Fires over the roofs in three places, smoke lying in the streets, and starlings in their thousands going round a dark tower apart.', amb:'explore'},
     b5_c7_walls:{loc:'Letheras', sub:'The day the Edur come · the white walls', cap:'Citizens along the white walls in their hundreds, watching the west road, and some of them writing on slates.', amb:'explore'},
     b5_c7_sorcery:{loc:'Letheras', sub:'The day the Edur come · the street', cap:'A darkness coming down the street toward the barricade, and the lamps going out ahead of it, one after another.', amb:'explore'},
+    b5_c7_mainbridge:{loc:'Letheras', sub:'The main bridge over Main Canal · the last night', cap:'The principal bridge over Main Canal by torchlight: a shield wall across it, the city burning beyond, and the Finadd walking the line.', amb:'explore'},
     b5_c7_under:{loc:'Letheras', sub:'Under the footbridge', cap:'Under the arch of the footbridge: green water to the chin, the stones dripping, and daylight on the steps above.', amb:'explore'},
     b5_c7_finale:{loc:'Letheras', sub:'The Low Walk · the evening of the fall', cap:'The Low Walk at dusk after the fall: the canal going by under the footbridge as it always has, and the squad small on the steps.', amb:'explore'} },
 
@@ -323,6 +326,7 @@ const B5CH7 = {
     else if (f.b5_c7_clerk && !b57House()) x.push('The clerk sat all night in a doorway with the paybook case on his knees.');
     if (fell.length) x.push(`At the brazier the squad said ${b57And(fell.map(NAME))}, once each.`);
     if (f.b5_c7_courtDone) x.push(f.b5_c7_courtDone === 'receipt' ? 'The fines court\'s receipt turned the court\'s men away on the last night.' : f.b5_c7_courtDone === 'swam' ? 'The court\'s men knew Thegg\'s face, the one who swam, and went.' : 'The Drownings court\'s men came with a list on the last night, and went away without the name.');
+    if (f.b5_c7_moroch) x.push('On the last night the sergeant carried the Sixth\'s roll to the main bridge over Main Canal, and the squad stood an hour at its foot while Finadd Moroch Nevath set his wall.');
     if (f.b5_c7_wolvesDone) x.push('The Sixth drove the Jheck\'s wolves off the tiers and the footbridge.');
     if (f.b5_c7_canal) x.push('When the sorcery came down the street, the swimmers took the squad into the canal under the footbridge, and everybody came up.');
     if (f.b5_c7_dockOk) x.push('The canal children showed the squad the holed dock, and gave it the twin.');
@@ -341,6 +345,7 @@ const B5CH7 = {
     f.b5_c7_stopped && 'The Emperor stopped the killing in the streets, and decreed a day of suffering.',
     f.b5_c7_canal && 'When the sorcery came down the street, the squad went into the canal under the footbridge, and came up.',
     f.b5_c7_word && 'Word along the canal: a Finadd held the main bridge and fought the Emperor, and both fell, and the Emperor rose. Not one of them saw it.',
+    f.b5_c7_moroch && 'The main bridge over Main Canal, the night before: Finadd Moroch Nevath and the Prince\'s Guard, seventy-three shields. "I\'ve heard it said of men before."',
     f.b5_c7_burned && 'The house\'s strongroom burned in the night. A quarter of every debt went with it.',
     'The King has been crowned Emperor, they say, by his court. The Seventh Closure has come.',
     'The Sixth is in Letheras, at a footbridge over the Quillas Canal by the Low Walk, two streets from where you were born.'].filter(Boolean); },
@@ -546,7 +551,45 @@ ${fell.map(b57Heir).join(' ')} It is not the squad's to pay. The army's rule say
 `Finadd Ennic is sitting on a cart's shaft writing the night's orders into his book, in his neat hand, by the brazier's light. He shows you the page. It says *The footbridge over the Quillas Canal, the Low Walk. Hold.* and underneath, smaller, *Against whatever comes down the street.*
 
 "I have never written anything so short," he says. "I keep wanting to add to it." He closes the book. "The Guard has the main bridge, they say." He seems to find this hopeful. "We have this one. We will hold it."`,
-      ch:[{t:'Not now.', go:()=>startExplore()}]}),
+      ch:[{t:'"Does the main bridge want our roll, Finadd?"', req:()=>!S.f.b5_c7_moroch && b57Ph() < 3, go:'b5_c7_moroch_go'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Finadd Moroch Nevath at the principal bridge over Main Canal (series-meetings-plan, Book Five) ----
+       Where and when: Letheras, the night before the Edur come (novel ch 24 is the next day). Moroch holds "the principal bridge crossing
+       Main Canal" with "seventy-three of his company's finest soldiers" in a shield wall, and is "Finadd" there (ch 24, HC pp. 560, 563,
+       [T]; mt-canon §7.3, §17c); he reached the gates of Letheras with the disarmed in ch 20 (R20, [1]) and tore a tendon at High Fort
+       (R18, [H]). That he dresses the wall the night before is a gap the books leave (lock 2). Lock 1: tomorrow he and the Emperor kill
+       each other and the Emperor rises (W24, R24); the squad is back at its own footbridge by then and only hears it (b5_c7_wolves_after,
+       unchanged: "Not a soul along the canal saw it"). The squad stands at the bridge-foot one hour while the wall is set, never in it:
+       the seventy-three are his company's. Nothing he says commits him: he has heard what everyone has heard of the Emperor. Sets
+       b5_c7_moroch; Ammet +1 if she looks at the leg, else Thegg +1. */
+    b5_c7_moroch_go:()=>({sp:B5_FINADD.name, scene:'b5_letheras', txt:
+`Ennic considers it, which takes him a moment, because it is not written down. Then he writes it down. "The garrison wants every bridge's roll at the main bridge," he says, "so the Finadd there knows who holds the canals on his flank." He tears the page out, neatly, and folds it. "Take it yourself, Sergeant. A quarter-hour along the canals. Come back."`,
+      ch:[{t:'Along the canals to the main bridge.', go:'b5_c7_moroch'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b5_c7_moroch:()=>({sp:'Finadd Moroch Nevath · the main bridge', scene:'b5_c7_mainbridge', fx:()=>{ S.f.b5_c7_moroch = 1; if (b5In('ammet')) b57L('ammet', 1); else b57L('thegg', 1); },
+      again:()=>`The principal bridge over Main Canal, the shield wall across it, and the Finadd walking the line.`, txt:
+`A quarter-hour along the canals in the dark, past bridges with soldiers on them and bridges without, to Main Canal, and the principal bridge over it: broad, old stone, the water green-black under its piers, and the city burning beyond it in two places.
+
+The Prince's Guard has the bridge, what is left of it, and is building a wall across it out of itself: shields, in a line, the line being dressed by a Finadd who walks along it with a limp he does not let slow him. A hard face gone to stubble, good scale gone dirty, a red sash, the right leg bound tight under a greave. ${S.f.b5_c4_moroch ? 'You saw him at High Fort, far off on the royals\' rampart, the one officer up there who was not easy.' : 'The sentry at the bridge-foot gives you his name before you ask for it: Finadd Moroch Nevath.'}
+
+He takes the Sixth's page and reads it by a torch. "Whitefinders." He reads it again. "The footbridge by the Low Walk." He looks at you. "High Fort?"
+
+"${b57Held() ? 'The west rampart, Finadd. To the surrender.' : 'The west rampart, Finadd. Until it went.'}"
+
+"The far end." He folds the page into his belt. "I was at the other end of it." He does not say what that was like. He looks past you, across the bridge, to where the west road comes in. "Everyone's heard what they say of him. That he can't be killed." He says it flatly, as he might read out a list of stores. "I've heard it said of men before."
+
+He turns to the wall, and counts it under his breath, end to end. Seventy-three. "Stand at the foot an hour, Sergeant, while they set it. I want something at their backs that has seen the Edur and walked away. Then go back to your footbridge and hold it."
+
+The Sixth stands at the bridge-foot an hour, in the torchlight, while the Prince's Guard locks its shields and unlocks them and locks them again, and the Finadd walks the line and does not sit down.
+
+${b57Say({ammet:`Ammet looks at the bound leg the whole hour. At the end of it she says, "That tendon wants a month off it, Finadd." He looks down at her. "It'll get one," he says.`, thegg:`Thegg stands at the bridge-foot with the tower shield grounded, the size of a door, and the Guard at the back of the wall keep looking round at him and then standing a little easier.`, _:'Nobody in the Guard speaks to the Sixth. That is not the same as not wanting it there.'})}${b57If('pessa', `
+
+Pessa looks over the parapet at the water. "I poled grain under this one," she says. "Every week for nine years. Never once looked up at it."`)}${b57If('ruuk', `
+
+Ruuk walks the bridge's length once, quietly, and back, and says, "Main Canal. Now I have it."`)}${b57If('brune', `
+
+Brune watches the canal go under the piers. "Slow water," she says. "It does not care who is on the bridge."`)}`,
+      ch:[{t:'Back along the canals to the footbridge.', go:()=>{ startExplore('b5_c7_canal'); }}]}),
     b5_c7_garrison:()=>({sp:'A garrison sergeant', scene:'b5_letheras', fx:()=>{ S.f.b5_c7_garrison = 1; },
       again:()=>`The garrison sergeant behind the carts.`, txt:
 `The garrison sergeant at the barricade is an old man with a spear and the City Garrison's badge on a coat that has been let out twice. He has been at this footbridge for two days, keeping looters off the Low Walk, and he is glad of the Whitefinders and does not pretend not to be.
@@ -677,7 +720,9 @@ The citizen with the slate comes down to the barricade. "Five to one," he says. 
 
 Then a runner along the canal, shouting as he comes, and everybody along the Low Walk stops to listen. A Finadd held the main bridge. With his company, seventy of them or so, in a shield wall. The Emperor came down to it himself, in front of the Edur. And the Finadd fought him, and they killed each other, both of them, on the bridge.
 
-And then the Emperor got up.
+And then the Emperor got up.${S.f.b5_c7_moroch ? `
+
+You know which Finadd. You stood at the foot of his bridge last night while he counted his wall.` : ''}
 
 The runner is gone before anybody can ask him how he knows. Not a soul along the canal saw it. Everybody along the canal is saying it, already, to everybody else.${b57Say({tobet:`\n\nTobet has gone quiet. "Got up," he says, at last. "He'd want paying for that, in Lether."`, ammet:`\n\nAmmet says, "I'd want to look at that wound," and nothing else.`, _:''})}
 
@@ -770,7 +815,7 @@ The squad is wet to the bone. Finadd Ennic is sitting on the bottom step with hi
     b5_c7_news:()=>({sp:'A garrison sergeant', scene:'b5_c7_finale', fx:()=>{ S.f.b5_c7_news = 1; }, again:()=>`The garrison sergeant on the Low Walk, wringing out his coat.`, txt:
 `The old garrison sergeant from the barricade came up out of the canal two arches down, and has walked back along the Low Walk to find the Whitefinders, wringing out his coat as he comes. He has been talking to people. Everybody along the canal has been talking to everybody.
 
-"Finadd Eberict's dead," he says. "In a street, near the river. Him that had the King's Leave. Nobody knows who did it, and nobody's saying they're sorry." He wrings the coat. "The King's Champion is dead, they say. In the throne room. The people who say it were there, or say they were." He shakes his head. "And the Chancellor's sworn to the Emperor. On his knees, they say, the same day."
+"Finadd Eberict's dead," he says. "In a street, near the river. Him that had the King's Leave. Nobody knows who did it, and nobody's saying they're sorry." He wrings the coat. "The King's Champion is dead, they say. In the throne room. The people who say it were there, or say they were." He shakes his head.${S.f.b5_c1_brysdrill ? ' You think of a young officer in a barracks gateway on a festival morning, telling you to watch the feet.' : ''} "And the Chancellor's sworn to the Emperor. On his knees, they say, the same day."
 
 He puts the coat back on, wet. "So that's all decided, then," he says. "Nobody asked us. They never do."${b57If('tobet', `\n\nTobet listens to all of it. "Somebody will have written it down," he says. "Somebody always does."`)}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),

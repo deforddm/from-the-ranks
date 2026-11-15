@@ -192,6 +192,16 @@ SCENEX.b5_c7_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   ctx.fillStyle = 'rgba(40,34,30,.25)'; for (let i = 0; i < 4; i++) ell(ctx, W*(.2 + i*.2) + (mo ? Math.sin(t/3000 + i)*10 : 0), H*.78, W*.2, H*.04, ctx.fillStyle); // smoke lying in the street
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.36 + i*18, H*.95, 1.7, t, {phase:i, dir:1, still:!mo}));
   vign(ctx, W, H, .7, .55); };
+/* v13.8 (David, Nov 15): meetings. The principal bridge over Main Canal on the night before the Edur come (ch 24, HC p. 560): the city
+   burning beyond, the canal green-black below, the Prince's Guard dressing its shield wall across the bridge, and the Finadd walking it.
+   Drawn with Book Five's vision ground for the same bridge (88b's b5v_bridge, step 0: no Edur on it yet), at night. */
+SCENEX.b5_c7_mainbridge = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1;
+  const r = (typeof VISBG !== 'undefined' && VISBG.b5v_bridge) ? VISBG.b5v_bridge(ctx, W, H, mo ? t : 0, {step:0}) : null;
+  ctx.fillStyle = 'rgba(6,8,16,.42)'; ctx.fillRect(0, 0, W, H); // night over it
+  [[.3, .62], [.64, .54]].forEach(([u, v], i) => { const fl = mo ? .75 + Math.sin(t/240 + i*2)*.25 : .9; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*u, H*v, H*.08, '#ff9a40', .5*fl); ctx.globalCompositeOperation = 'source-over'; }); // torches on the bridge
+  drawFigure(ctx, 'b5v_moroch', r ? r.fx + W*.06 : W*.36, r ? r.fy - H*.02 : H*.68, 1.6, t, {still:!mo, dir:-1});
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.6 + i*18, H*.96, 1.7, t, {phase:i, dir:-1, still:!mo}));
+  vign(ctx, W, H, .7, .55); };
 /* the walls: citizens along the white walls in their hundreds, watching the west road, slates among them; far off on the road, a dark line */
 SCENEX.b5_c7_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4, wt = H*.5, wbase = H*.78;
   ctx.drawImage(sceneLayer('b57:walls', W, H, (x, W, H) => { b57aSky(x, W, hz, 'day'); for (let i = 0; i < 5; i++) { x.fillStyle = 'rgba(240,240,236,.3)'; x.beginPath(); x.ellipse(hash(i, 5771)*W, hz*(.2 + hash(i, 5772)*.4), W*.12, hz*.06, 0, 0, 7); x.fill(); }

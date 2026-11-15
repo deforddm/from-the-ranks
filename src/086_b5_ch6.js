@@ -16,7 +16,9 @@
    keep burns; the Emperor's declaration heard; the barrow raised on the field at night, far off (b5_barrowSeen); the fallen named once,
    and who carries their debts (the engine has passed them: S.f.b5_heirs). Never the Edur hill, the towers' mages, the Preda's command,
    the Edur right, Rhulad and Mosag's quarrel, Trull, Ahlrada Ahn, Canarth; never Tomad or Binadas in person or by name in narration;
-   never Moroch's recruiting or the Artisans' standard. Notes for later chapters: docs/mt-ch6-notes.md. */
+   never Moroch's recruiting or the Artisans' standard. Notes for later chapters: docs/mt-ch6-notes.md.
+   v13.8 (David, Nov 15): meetings. On the eve Preda Unnutal Hebaz walks the right and stops at the Sixth's shields (b5_c6_preda); her
+   standard still goes under far off tomorrow, never how. */
 /* FOR THE ARTIST (86b): names this file uses.
    Items: ART['item/b5_c6_edurblade'], ['item/b5_c6_paint'], ['item/b5_c6_lakestone'].
    Figures: b5_c6_whitefinder, b5_c6_drillsgt. Reused: b5_c1_ennic, b5_c1_clerk, b5_c1_tilewoman, b5_c5_factor, b5_c5_quartermaster,
@@ -138,7 +140,9 @@ const B5CH6 = {
         {id:'drill', name:'The old drill-sergeant', kind:'b5_c6_drillsgt', x:5, y:10, node:()=>'b5_c6_drillsgt', fresh:()=>!S.f.b5_c6_drillTried},
         {id:'foragers', name:'The foragers\' sergeant', kind:'b5_c6_whitefinder', x:13, y:2, node:()=>'b5_c6_foragers', show:()=>b56Ph() < 2, fresh:()=>!S.f.b5_c6_foragers},
         {id:'factor', name:'The house\'s factor', kind:'b5_c5_factor', x:14, y:10, node:()=>'b5_c6_factor', show:()=>b56House(), fresh:()=>!S.f.b5_c6_factor},
-        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:3, y:6, node:()=>'b5_c6_tilewoman', fresh:()=>false} ] },
+        {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:3, y:6, node:()=>'b5_c6_tilewoman', fresh:()=>false},
+        /* v13.8 (David, Nov 15): meetings. Preda Unnutal Hebaz walks the right on the eve (series-meetings-plan, Book Five) */
+        {id:'preda', name:'The Preda', kind:'b5v_preda', x:9, y:3, node:()=>'b5_c6_preda', show:()=>b56Ph() < 2, fresh:()=>!S.f.b5_c6_preda} ] },
 
     /* 16 x 12 (b5_c6_channel, the day). The dry channel in battle: . the channel floor  , stones  # the banks  n the far lip, where the
        right stands and the Edur come  - the crossing, the way back over  s shields dropped on the stones (decor) */
@@ -265,6 +269,7 @@ const B5CH6 = {
     if (f.b5_c6_key === 'stand') x.push(fell.length ? `The Sixth held the crossing on the dry channel while the battalion went back over. ${b56And(fell.map(NAME))} did not come out of it, and ${fell.length > 1 ? 'lie' : 'lies'} in the barrow with the rest.` : 'The Sixth held the crossing on the dry channel while the battalion went back over, and everyone in the squad came out of it.');
     if (f.b5_c6_key === 'fallback') x.push('The Sixth went back over the channel with the first who broke, toward Dissent.');
     if (f.b5_c6_ennicHurt) x.push(f.b5_c6_stitched === 'ammet' ? 'Finadd Ennic was wounded, and Ammet stitched him.' : 'Finadd Ennic was wounded, and the battalion\'s surgeons stitched him.');
+    if (f.b5_c6_preda) x.push('On the eve Preda Unnutal Hebaz walked the right on foot, turned a Sixth Company shield over with her boot, and asked what the finger was for.');
     if (f.b5_c6_fingerOk) x.push('The old drill-sergeant showed the squad his guess at the white fingertip: boss to boss, and the line cannot be opened.');
     if (f.b5_c6_shoreDone) x.push('On the eve the Sixth drove Jheck off the battalion\'s foragers by the lake.');
     if (f.b5_c6_pack) x.push('Thegg gave Pessa her pack back on the eve.');
@@ -278,6 +283,7 @@ const B5CH6 = {
     f.b5_c6_key === 'stand' && (fell.length ? `The Sixth held the crossing at Brans Keep. ${b56And(fell.map(NAME))} fell there. Their debts went to their heirs.` : 'The Sixth held the crossing at Brans Keep, and came out of it whole.'),
     f.b5_c6_key === 'fallback' && 'The Sixth went back over the channel at Brans Keep with the first who broke, toward Dissent.',
     f.b5_c6_day >= 1 && 'The army of Lether was destroyed at Brans Keep. The pillars came down on the left and the centre. The Preda\'s standard went under.',
+    f.b5_c6_preda && 'On the eve the Preda walked the right. She stopped at the Sixth\'s shields and asked what the white finger was for. "The right holds the channel."',
     f.b5_bounty && 'The King paid a bounty for the stand: thirty docks off every soldier\'s line.',
     'The Sixth is at Brans Keep, with its battalion, on the right across the dry channel.'].filter(Boolean); },
 
@@ -307,6 +313,29 @@ Ennic has said one more thing, to the Sixth only, quietly, so that it would be s
 He hesitates. "I have written the Sixth's roll out fair. In case." He does not say in case of what. He seems ashamed of the neatness of it.`,
       ch:[{t:'"Hand to hand, Finadd. We heard."', go:()=>startExplore()},
           {t:'Not now.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Preda Unnutal Hebaz inspects the Whitefinders on the eve (series-meetings-plan, Book Five) ----
+       Where and when: Brans Keep, the eve of the battle (novel ch 22–23). She commands there; the King and the Preda ordered the stand
+       (mt-canon §7.2: W *Battle of Brans Keep*); at the battle she is with the King's Battalion (ebook p. 815, [T]). That she walks the
+       right on the eve is a gap the books leave (lock 2). Her look: "taller than most women, nearly Brys's own height. Fair-skinned, with
+       a burnished cast to her blonde hair … In her fortieth year" (ch 2, HC p. 69, [T]). Lock 1: she dies at Brans Keep, as canon has it
+       (W *Battle*, Q20); the narrator never says so, here or tomorrow, and never how; the day's standard (b5_c6_sorcery) carries it.
+       Nothing she says commits her to anything the book does not: an order to hold, a question about the paint. Sets b5_c6_preda; she
+       points the squad to the drill-sergeant if it has not been to him (the trick); Thegg or Pessa +1. */
+    b5_c6_preda:()=>({sp:'Preda Unnutal Hebaz', scene:'b5_c6_eve', fx:()=>{ S.f.b5_c6_preda = 1; if (b5In('thegg')) b56L('thegg', 1); else b56L('pessa', 1); },
+      again:()=>`The Preda's small knot of officers, going on along the right in the dusk, and the Finadds straightening as it comes.`, txt:
+`She comes along the right in the last of the light on foot, with two aides, a standard-bearer, and a Finadd of the battalion's staff walking a careful half-step behind her, and the Whitefinders' lines straighten as she comes. A tall woman, nearly a tall man's height, fair, in plain good armour and a commander's dark cloak, with her hair bound back. She is in her forties and looks as though she has not sat down since the spring.
+
+The battalion's Finadd tells her which company. She stops at the Sixth's shields, where they are stacked by the tents, and turns one over with her boot to look at the boss.
+
+"Whitefinders," says Preda Unnutal Hebaz. "The finger." She looks at it. "Does anybody in this battalion know what it is for?"
+
+${S.f.b5_c6_fingerOk ? `You tell her the old drill-sergeant's guess: boss to boss, finger to finger, rim over rim, and a line that cannot be opened. She listens to all of it. "A guess," she says, "is more than my staff have given me today."` : S.f.b5_c6_drillMet ? `You tell her the old drill-sergeant thinks it is a drill. "Then learn it from him," she says. "Tonight."` : `You tell her nobody does. "Somebody does," she says. "Somebody always does. There is an old man along your lines with a paint-pot. Ask him."`}
+
+She looks along the shields to the channel, and across it, at the old lake beds going away grey toward the hills. "Sixth Company. The one that came south from High Fort." It is not a question. "Then you have seen them. Half this army has not." She lets the shield down onto the stack. "The right holds the channel, Sergeant. Tomorrow I will not have time to say it again."
+
+${b56Say({thegg:`Thegg has stood up from the fire, all of him, because she is the Preda. She looks up at him, which she plainly does not often have to do. "Good," she says, to the size of him, and walks on. Thegg stays standing until she is three companies away.`, pessa:`Pessa has stood up with her boathook, because it is the Preda, and is holding it like a pike. The Preda looks at it. "That is not issue," she says. "No, Preda," Pessa says. "It's mine." The Preda nods once, as if that settled it, and walks on.`, _:'She walks on along the right, and the lines straighten ahead of her.'})}${b56If('perrit', `\n\nPerrit watches her go. "No mage with her," she says, low. "Every officer in the army has a mage at the elbow. The Preda walks the line with two clerks and a flag."`)}${b56If('ruuk', `\n\nRuuk, who was asleep by the fire and is now very awake, says, "She looked at the hills. Not at us. At the hills." He looks at them himself.`)}`,
+      ch:[{t:'"Yes, Preda."', go:()=>startExplore()}]}),
 
     /* ---- the King's bounty for the stand: the clerk at his table, the battalion in a line ---- */
     b5_c6_bounty:()=>({sp:'The clerk\'s table', scene:'b5_branskeep', html:debtHTML('The Sixth Company · Brans Keep'), fx:()=>{ b56Bounty(); },
@@ -506,7 +535,7 @@ Then the pillars. Huge dark columns, rising out of the dust over the Edur's line
 
 Both corner towers come down, the left and then the right, the way a sandcastle goes when the sea reaches it, with the mages and the mangonels on them. The white fire goes wild, and runs back along the army, and then the pillars lean, and come down on the left and the centre.
 
-Afterwards nobody on the right can say how long it took. Far off, where the King's Battalion was, a standard that everybody on the field knows by its colours goes under, and does not come up.${b56Say({perrit:`\n\nPerrit has gone the colour of the stones. "The link," she says, very quietly. "Every link in the army. It went." She is holding on to the bank with both hands.`, tobet:`\n\nTobet's lips move: he is counting something. Then: "That was the Preda's," he says, flat, about the standard. The squad lets it stand.`, _:''})}`,
+Afterwards nobody on the right can say how long it took. Far off, where the King's Battalion was, a standard that everybody on the field knows by its colours goes under, and does not come up.${S.f.b5_c6_preda ? ' You saw it go along the right last night, behind a tall fair woman on foot who asked about the paint on your shields.' : ''}${b56Say({perrit:`\n\nPerrit has gone the colour of the stones. "The link," she says, very quietly. "Every link in the army. It went." She is holding on to the bank with both hands.`, tobet:`\n\nTobet's lips move: he is counting something. Then: "That was the Preda's," he says, flat, about the standard. The squad lets it stand.`, _:''})}`,
       ch:[{t:'The lake beds. Something is coming over them.', go:'b5_c6_clash'},
           {t:'Not now.', go:()=>startExplore()}]}),
     b5_c6_clash:()=>({sp:'The far lip', scene:'b5_c6_pillars', fx:()=>{ S.f.b5_c6_day = Math.max(2, b56Day()); if (!S.f.b5_c6_blade) { S.f.b5_c6_blade = 1; gain('b5_c6_edurblade'); } },

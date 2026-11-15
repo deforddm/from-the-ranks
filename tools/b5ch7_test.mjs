@@ -33,7 +33,8 @@ const r = await page.evaluate(async () => {
     if (S.picksDue && S.picksDue.length) { res.picks = S.picksDue.join(','); shut(); talk(BATTLES[id].after); }
     res.after = S.node; res.dead = Object.keys(S.dead || {}).join(','); return res; };
   const nodes = () => Object.keys(DLG).filter(k => /^b5_c7_/.test(k));
-  const NEVER = /Kettle|Green Jackets|crossbow|Rhulad|Mosag|Trull|Udinaas|Moroch|Soulan|Main Canal|Crippled|\bchaos\b|Brous|Tehol|Bugg|Seren|Iron Bars|Mayen|Azath|B'nagga|Patriot|Karos|Bivatt|Kravos|Errastas|Mael|Burn's Sleep|Malazan/;
+  // v13.8 (David, Nov 15): meetings. Moroch and Main Canal dropped from the list: the squad stands at the foot of his bridge the night before (b5_c7_moroch)
+  const NEVER = /Kettle|Green Jackets|crossbow|Rhulad|Mosag|Trull|Udinaas|Soulan|Crippled|\bchaos\b|Brous|Tehol|Bugg|Seren|Iron Bars|Mayen|Azath|B'nagga|Patriot|Karos|Bivatt|Kravos|Errastas|Mael|Burn's Sleep|Malazan/;
   const renderAll = () => { const errs = []; nodes().forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text'); else if (/undefined|NaN|\[object |\$\{|\bnull\b/.test(n.txt + (n.html || ''))) errs.push(k + ': leaks'); else if (!Array.isArray(n.ch) || !n.ch.length) errs.push(k + ': no choices'); else if (n.ch.some(c => typeof c.t !== 'string')) errs.push(k + ': a choice without words'); else if (!n.ch.some(c => !c.req || c.req())) errs.push(k + ': no visible choice'); else if (NEVER.test(n.txt + n.ch.map(c => c.t).join(' '))) errs.push(k + ': a hard-limit word ' + NEVER.exec(n.txt + n.ch.map(c => c.t).join(' '))[0]); else if (/!/.test(n.txt.replace(/"[^"]*"/g, ''))) errs.push(k + ': an exclamation mark in narration'); } catch (e) { errs.push(k + ': ' + e.message); } }); return errs; };
   /* the finale, page by page, as the player sees it */
   const leak = /undefined|NaN|\[object |\$\{|\bnull\b/;
