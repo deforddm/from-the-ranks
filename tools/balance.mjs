@@ -85,6 +85,9 @@ const INIT = () => {
     if (st && before > 0) { if (W.open && W.open.u.side !== u.side) W.open.dmg += before - u.hp;
       if (u.side === 'p' && !u.ally) { st.dmgTaken += before - u.hp; if (u.hp <= 0) { st.downs++; st.downed[u.id] = 1; } } }
     return r; };
+  /* v13.5: the level-12 talent; the bot takes its trade's own (Anvil, Stake Line, Field Surgeon, Old Hand, Called Shot, Deep Warren) */
+  const t2 = o => { if (!o || !o.picks || (o.lvl || 1) < 12) return; (o.squad || []).forEach(id => { const r = typeof t2Role === 'function' && PICKS[3][id] && t2Role(id); o.picks[id] ??= []; if (r && !o.picks[id].includes(r)) o.picks[id].push(r); }); };
+  const _sb = startBattle; window.startBattle = function () { if (S) { t2(S); Object.values(S.th || {}).forEach(t2); } return _sb.apply(this, arguments); };
   const _useAb = useAb; window.useAb = function (k) {
     const st = W.st, a = AB[k];
     if (st) { st.abil[k] = (st.abil[k] || 0) + 1; if (a.item === 'salve') st.salves++; else if (a.item) { st.mun++; if (a.item === 'cusser') st.cussers++; } if (W.open) W.open.atk++; }
@@ -303,10 +306,10 @@ const INIT = () => {
       if (wall(x, y) || cheb(u, { x, y }) > R) continue; const pt = { x, y };
       if (B.units.some(v => v.hp > 0 && v.side === 'p' && cheb(v, pt) <= a.aoe + scat)) continue; // nobody of ours in it, scatter included
       let val = 0, n = 0, boss = false;
-      if (k === 'smoker') { const sh = foes().filter(e => e.rng > 1 && cheb(e, pt) <= 1); n = sh.length; val = sh.reduce((s, e) => s + danger(e), 0); if (n < 2) continue; }
+      if (k === 'smoker') { const sh = foes().filter(e => e.rng > 1 && cheb(e, pt) <= 1); n = sh.length; val = sh.reduce((s, e) => s + danger(e), 0); if (n < 2 && !(n === 1 && danger(sh[0]) >= 8)) continue; }
       else {
         const dice = k === 'cusser' ? [[3, 8, 0], [3, 8, 0], [1, 8, 0]] : k === 'burner' ? [[1, 6, 0], [1, 6, 0]] : [[1, 10, 2], [1, 6, 0]];
-        foes().forEach(e => { const d = cheb(e, pt); if (d >= dice.length || e.immortal) return; const dm = avg(dice[d]) + (k === 'burner' ? 2 : 0); n++; if (e.boss) boss = true; val += Math.min(e.hp, dm) + (e.hp <= dm ? 6 : 0); });
+        foes().forEach(e => { const d = cheb(e, pt); if (d >= dice.length || e.immortal) return; const dm = avg(dice[d]) + (k === 'burner' ? 5 : 0); /* v13.5: the fire stays two rounds */ n++; if (e.boss) boss = true; val += Math.min(e.hp, dm) + (e.hp <= dm ? 6 : 0); });
         const need = k === 'cusser' ? (boss ? 2 : 3) : 2; if (n < need) continue;
       }
       if (!best || val > best.val) best = { x, y, val, n };
@@ -370,7 +373,7 @@ const INIT = () => {
         if (t && (strainOk(u, 3) || (pct(t) < .25 && u.strain + 3 <= strMax() + 1 && u.hp > 8))) return tryAb('mend', t.x, t.y); }
       // Denul Wash when two or more close by are hurt; Stanch on someone about to drop with enemies on them
       if (can(u, 'wash') && strainOk(u, 3) && sq.filter(p => !p.ally && cheb(p, u) <= 3 && pct(p) < .65).length >= 2) return tryAb('wash', u.x, u.y);
-      if (can(u, 'stanch') && strainOk(u, 2)) { const t = AB.stanch.tiles(u).filter(p => pct(p) < .25 && minD(p, opp) <= 1)[0]; if (t) return tryAb('stanch', t.x, t.y); }
+      if (can(u, 'stanch') && strainOk(u, 2)) { const t = AB.stanch.tiles(u).filter(p => !p.ally && pct(p) < .3 && minD(p, opp) <= 2)[0]; if (t) return tryAb('stanch', t.x, t.y); }
       // a salve on yourself or the one beside you when it is bad (one a fight: the satchel has to last)
       if (can(u, 'salve') && W.st.salves < spec.salveCap) {
         const ohl = sq.find(p => isHealer(p)), mendSoon = ohl && ohl !== u && !B.def.nomagic && ohl.strain <= 3;
@@ -396,13 +399,17 @@ const INIT = () => {
           const t = AB[k].tiles(u).filter(e => !e.stun && (e.boss || danger(e) >= 8) && sq.some(p => cheb(p, e) <= e.mv + e.rng)).sort((a, b) => danger(b) - danger(a))[0];
           if (t) return tryAb(k, t.x, t.y); }
       }
+      // v13.5: Anvil (free) when a hurt squadmate beside the heavy has an enemy on them and the heavy can take it
+      if (can(u, 'anvil') && pct(u) > .5) { const m = sq.filter(p => p !== u && !p.ally && cheb(p, u) === 1 && pct(p) < .6 && opp.some(e => cheb(e, p) === 1)); if (m.length) { const r = tryAb('anvil', u.x, u.y); if (r) return r; } }
+      // v13.5: the Stake Line across the way the enemy has to come, while they are still 3 or more off
+      if (can(u, 'stakeline') && minD(u, opp) >= 3) { const t = AB.stakeline.tiles(u).map(p => ({ ...p, d: minD(p, opp), q: minD(p, sq) })).filter(p => p.d >= 1 && p.d <= 3 && p.q >= 1 && p.q <= 2).sort((a, b) => a.d - b.d)[0]; if (t) return tryAb('stakeline', t.x, t.y); }
       // munitions and the quorl
       for (const k of ['cusser', 'sharper', 'burner', 'quorl', 'smoker']) { const t = bestThrow(u, k, spec); if (t) return tryAb(k, t.x, t.y); }
       // the sergeant's Shield Drive: when a squadmate stands beside the same enemy, drive it out of their reach for the free swing
       if (can(u, 'shove')) { const t = AB.shove.tiles(u).filter(e => !e.heavy && !e.immortal && sq.some(p => p !== u && cheb(p, e) === 1)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('shove', t.x, t.y); }
       // Vell: the hook on a shooter or a caster standing off, hauled in among the squad
-      if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.heavy && !e.immortal && (e.rng > 1 || danger(e) >= 8)).sort((a, b) => danger(b) - danger(a))[0];
+      if (can(u, 'grapple')) { const t = AB.grapple.tiles(u).filter(e => !e.heavy && !e.immortal && cheb(e, u) >= 2 && (e.rng > 1 || danger(e) >= 6 || sq.some(p => p !== u && cheb(p, u) <= 1))).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('grapple', t.x, t.y); }
       // v7.1 Book Four: the Twins first (free), Hessa's prayers, Yorin's Serc (the Shove where it catches two or more, else Sky-Fire on the worst thing in reach)
       if (can(u, 'b4_twins')) { const t = AB.b4_twins.tiles(u).sort((a, b) => b.atk - a.atk)[0]; if (t) { const r = tryAb('b4_twins', t.x, t.y); if (r) return r; } }
