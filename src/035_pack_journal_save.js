@@ -193,6 +193,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.5.5', ['Shorter necks on the squad portraits: the shoulders sit higher, so heads rest down between them, in every book. Ohl, Haddat and Ammet, who were already right, are unchanged.']],
   ['13.5.4', ['Brisk\'s scale gorget sits into her mail instead of on top of it: a softer shadow, the scales darkening toward the hem, and a fainter edge.']],
   ['13.5.3', ['Portraits: the high collars worn in the later books no longer stick out past the shoulders in two points; they round down onto the shoulder. Tegra\'s braid falls from behind her ear instead of across her cheek, Tirren\'s hair sits in shadow beside her face, and Ruuk\'s pushed-back hood is smaller and darker.']],
   ['13.5.2', ['The polish punch list, as David picked it. Choices that changed nothing now do something or say what they do: Tav answers what was said to him, the Host runner gets one honest answer, eating while the Book Four ridge watches steadies the 9th, Not now at the Book Eight bells keeps you on the shore, and Book Six\'s buttons say when they start a fight. Sentences that turned up word for word in two books are rewritten in the later one (the readings and the fire refrain stay, on purpose). Book Four\'s news of the Seti gorge comes in the afternoon light it is told in.']],

@@ -104,6 +104,9 @@ const PR = {
 };
 /* bust helpers shared by every book (first written for Book Five): hair with volume over the skull, hanging scale, quilting, the Whitefinder shield,
    and the garment that rises from the shoulders to the neckline in one piece (body, band, light) */
+/* v13.5.5 (David, Nov 14: "shorten her neck a bit, that is a standing issue across almost all of our characters"): the shoulders of every
+   bust built on BP.body rise by SHRUG, so the head sits lower between them. A bust can override it with o.shrug. */
+const SHRUG = 7;
 const BP = {
   /* hair over the skull. o: {c:[light, mid, dark], v: height over the skull, wx: width past the temples, hl: hairline (u above cy), ey: where the sides end (u below cy),
      s: strand colours, n: strands, sh: sheen colour, spiky: tufts past the outline} */
@@ -165,7 +168,7 @@ const BP = {
      o: {wide, drop, trap: how hard the trapezius rises, nx: half-width where it meets the neck, ny: how high it climbs at the neck's sides, cb: the neckline's low point in front, v: a V opening, c1, c2}.
      Returns {path, top (the neckline as a sub-path), topIn (the same, continuing a path from (−nx, ny)), pt(t, off): a point on the neckline, t −1..1, off pushes down, nx, ny, cb, wd}.
      Draw the neck first, then this, then textures clipped to B.path, then BP.light; any bust in any book can use it. */
-  body(ctx, F, o){ const u = F.h/20, wd = o.wide, dr = o.drop || 0, nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = o.trap ?? 0, v = o.v;
+  body(ctx, F, o){ const u = F.h/20, wd = o.wide, dr = (o.drop || 0) - (o.shrug ?? SHRUG), /* v13.5.5 (David: the necks run long): every shoulder line sits SHRUG higher */ nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = o.trap ?? 0, v = o.v;
     const topIn = () => { if (v) { ctx.lineTo(0, cb); ctx.lineTo(nx, ny); } else { ctx.quadraticCurveTo(-nx*.6, cb, 0, cb); ctx.quadraticCurveTo(nx*.6, cb, nx, ny); } };
     const path = () => { ctx.beginPath(); ctx.moveTo(-wd - 2, 2); ctx.lineTo(-wd, -20 + dr); ctx.bezierCurveTo(-wd, -34 + dr, -wd*.82, -41 + dr, -wd*.52, -43 + dr); ctx.bezierCurveTo(-wd*.3, -44 + dr - tr, -nx - 2 - tr*.3, ny + 8 - tr*.4, -nx, ny); topIn();
       ctx.bezierCurveTo(nx + 2 + tr*.3, ny + 8 - tr*.4, wd*.3, -44 + dr - tr, wd*.52, -43 + dr); ctx.bezierCurveTo(wd*.82, -41 + dr, wd, -34 + dr, wd, -20 + dr); ctx.lineTo(wd + 2, 2); ctx.closePath(); };
