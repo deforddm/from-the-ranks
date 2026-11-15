@@ -27,9 +27,20 @@ const data = await page.evaluate(async () => {
     out.scenes.push({k, b: bookOf(k), loc: (SCENES[k].loc || '') + (SCENES[k].sub ? ' · ' + SCENES[k].sub : ''), src: jpg(sm)}); }
   // portraits: every squad template, in its own book's look (setBook by the template's book where known)
   const tplBook = id => { for (const [bk, B] of Object.entries(BOOKS || {})) if ((B.squad || []).includes(id)) return bk; return null; };
-  for (const id of Object.keys(TPL)) { const cv = document.createElement('canvas'); cv.width = 240; cv.height = 180;
+  /* the sergeant shares one id across the books and takes the book's look (v13.6): draw each look, Book One's first */
+  const SGT = [[1, 'Sergeant (the Fourth: Book One\'s look)'], [2, 'Sergeant (the Third: Book Two\'s look)'], [5, 'Sergeant (the Sixth Company: Book Five\'s look)']];
+  for (const [b, nm] of SGT) { try { NEW[b](); } catch (e) {} const cv = document.createElement('canvas'); cv.width = 240; cv.height = 180;
+    try { if (typeof PORTRAIT_CACHE !== 'undefined') PORTRAIT_CACHE.clear(); drawPortrait(cv.getContext('2d'), 'sgt', 240, 180, 0); } catch (e) { continue; }
+    out.portraits.push({k: 'sgt', name: nm, src: jpg(cv, .7)}); }
+  for (const id of Object.keys(TPL)) { if (id === 'sgt') continue; const cv = document.createElement('canvas'); cv.width = 240; cv.height = 180;
     try { drawPortrait(cv.getContext('2d'), id, 240, 180, 0); } catch (e) { continue; }
     out.portraits.push({k: id, name: TPL[id].name || id, src: jpg(cv, .7)}); }
+  /* the squad's walking figures (drawFigure), beside the busts, so the two can be compared */
+  out.figs = [];
+  for (const [b, nm] of SGT) { try { NEW[b](); } catch (e) {} const cv = document.createElement('canvas'); cv.width = 120; cv.height = 120; const x = cv.getContext('2d'); x.fillStyle = '#5a5648'; x.fillRect(0, 0, 120, 120);
+    try { drawFigure(x, 'sgt', 60, 82, 3, 0, {still: true}); } catch (e) { continue; } out.figs.push({k: 'sgt', name: nm, src: jpg(cv, .8)}); }
+  for (const id of Object.keys(TPL)) { if (id === 'sgt') continue; const cv = document.createElement('canvas'); cv.width = 120; cv.height = 120; const x = cv.getContext('2d'); x.fillStyle = '#5a5648'; x.fillRect(0, 0, 120, 120);
+    try { drawFigure(x, id, 60, 82, 3, 0, {still: true}); } catch (e) { continue; } out.figs.push({k: id, name: TPL[id].name || id, src: jpg(cv, .8)}); }
   // ART: the SVG strings as they are
   for (const k of Object.keys(ART)) out.art.push({k, g: k.split('/')[0], svg: String(ART[k])});
   return out;
@@ -49,12 +60,13 @@ nav{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 4px}nav a{color:var(-
 .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;min-width:0}figure img{width:100%;display:block;max-width:100%}
 figcaption{font:11px/1.3 var(--ui);color:var(--mut);padding:4px 6px;overflow-wrap:anywhere}
-</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap"><main><h1>Art contact sheets</h1><p>Every backdrop, squad portrait and picture in From the Ranks v13.5.1, book by book, for spotting the weak and the inconsistent at a glance. Captions are the game's own keys, then the place line the game shows.</p><nav>`;
+</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap"><main><h1>Art contact sheets</h1><p>Every backdrop, squad portrait and picture in From the Ranks v13.6.0, book by book, for spotting the weak and the inconsistent at a glance. Captions are the game's own keys, then the place line the game shows.</p><nav>`;
 const books = [...new Set(data.scenes.map(s => s.b))].sort((a, b) => a - b);
-h += books.map(b => `<a href="#b${b}">Book ${BN[b]}</a>`).join('') + `<a href="#portraits">Portraits</a><a href="#art">Pictures</a></nav>`;
+h += books.map(b => `<a href="#b${b}">Book ${BN[b]}</a>`).join('') + `<a href="#portraits">Portraits</a><a href="#figs">Figures</a><a href="#art">Pictures</a></nav>`;
 for (const b of books) { const sc = data.scenes.filter(s => s.b === b);
   h += `<h2 id="b${b}">Book ${BN[b]}: backdrops (${sc.length})</h2><div class="g">` + sc.map(s => `<figure><img loading="lazy" src="${s.src}" alt=""><figcaption>${esc(s.k)}<br>${esc(s.loc)}</figcaption></figure>`).join('') + '</div>'; }
 h += `<h2 id="portraits">Portraits (${data.portraits.length})</h2><div class="g">` + data.portraits.map(p => `<figure><img loading="lazy" src="${p.src}" alt=""><figcaption>${esc(p.name)} · ${esc(p.k)}</figcaption></figure>`).join('') + '</div>';
+h += `<h2 id="figs">Walking figures (${data.figs.length})</h2><div class="g">` + data.figs.map(p => `<figure><img loading="lazy" src="${p.src}" alt=""><figcaption>${esc(p.name)} · ${esc(p.k)}</figcaption></figure>`).join('') + '</div>';
 h += `<h2 id="art">Pictures (${data.art.length})</h2>`;
 for (const g of [...new Set(data.art.map(a => a.g))]) { const L = data.art.filter(a => a.g === g);
   h += `<h3>${esc(g)} (${L.length})</h3><div class="g">` + L.map(a => `<figure><img loading="lazy" src="data:image/svg+xml;base64,${Buffer.from(a.svg).toString('base64')}" alt=""><figcaption>${esc(a.k)}</figcaption></figure>`).join('') + '</div>'; }

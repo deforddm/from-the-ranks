@@ -100,7 +100,8 @@ function bindArtJournal(m){ m.querySelectorAll('[data-map]').forEach(b => b.oncl
 const ART_ENDVISTA = {0:'vistas/prologue', 1:'vistas/pale', 2:'vistas/lake', 3:'vistas/canal', 4:'vistas/roof', 5:'vistas/barrow', 6:'vistas/garden', 7:'vistas/hill'};
 function artScene(key, cap){ return `<div class="scene artscene">${art(key, 'vista').replace('<svg ', '<svg preserveAspectRatio="xMidYMid slice" ')}${cap ? `<div class="cap">${cap}</div>` : ''}</div>`; }
 /* a chapter opening shows one picture: the painted plate, or with the Classic set the drawn scene */
-function artPlate(n, cap){ return ARTON() && BOOK === 'gotm' && ART['chapters/' + n] ? `<div class="scene artscene plate">${art('chapters/' + n, 'vista')}<div class="cap">${cap}</div></div>`
+/* (v13.6: every book has its plates, keyed chapters/<book>/<n>, 019h and the 019i files) */
+function artPlate(n, cap){ const k = 'chapters/' + BOOK + '/' + n; return ARTON() && ART[k] ? `<div class="scene artscene plate">${art(k, 'vista')}<div class="cap">${cap}</div></div>`
   : `<div class="scene"><canvas id="scv" width="560" height="240"></canvas><div class="cap">${cap}</div></div>`; }
 /* the viewer owns the keyboard while it is open: Esc closes it, nothing else reaches the game */
 window.addEventListener('keydown', e => { if (!artViewOpen()) return; e.stopImmediatePropagation(); if (e.key === 'Escape') { e.preventDefault(); $('#avClose').click(); } }, true);

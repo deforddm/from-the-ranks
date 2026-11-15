@@ -18,8 +18,9 @@ function sceneLayer(key, W, H, paint){ const dpr = Math.min(2, window.devicePixe
   if (!c) { c = document.createElement('canvas'); c.width = Math.max(1, Math.round(W*dpr)); c.height = Math.max(1, Math.round(H*dpr)); const x = c.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); paint(x, W, H); if (SCENE_CACHE.size > 12) SCENE_CACHE.clear(); SCENE_CACHE.set(k, c); }
   return c; }
 const sceneSquad = () => (typeof SQUAD === 'function' && S ? SQUAD() : PORDER);
-/* a column walking right, drawn left to right: the rest behind, then Brisk, then the sergeant in the lead */
-const marchOrder = sq => { const lead = ['brisk','sgt'].filter(id => sq.includes(id)); return [...sq.filter(id => !lead.includes(id)), ...lead]; };
+/* a column walking right, drawn left to right: the squad in the order it walks on the map (v13.6, David): the sergeant in the lead,
+   the roster's first squadmate next behind, then the second, and the last at the back. So the list is the roster reversed, then the sergeant. */
+const marchOrder = sq => { if (sq._marched) return sq; const o = [...sq.filter(id => id !== 'sgt').reverse(), ...(sq.includes('sgt') ? ['sgt'] : [])]; o._marched = true; return o; }; // once only: squadLine is often handed a list already in order
 /* a line of the squad in story art, the sergeant always in front: facing right (dir 1) the sergeant is the rightmost, facing left the
    leftmost; and the sergeant is drawn last, so nobody stands across them. place(id, i) draws one, i counting from the left. */
 function squadLine(sq, dir, place){ const o = dir < 0 ? marchOrder(sq).slice().reverse() : marchOrder(sq);
