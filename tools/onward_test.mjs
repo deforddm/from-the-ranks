@@ -151,7 +151,9 @@ const res0 = {lines: {n: 0, bad: [], ex: []}, thrown: [], flagged: []}, merged =
 let allAids = null;
 for (let i = 0; allAids === null || i < allAids.length; i += BATCH) {
   const { page, errors: e1 } = await openGame(br, srv.url, {});
-  if (allAids === null) { allAids = await page.evaluate(() => Object.keys(AREAS)); }
+  if (allAids === null) { allAids = await page.evaluate(() => Object.keys(AREAS));
+    const only = (process.env.FTR_BOOKS || '').split(',').filter(Boolean), PFX = {gotm:'', dg:'b2_', moi:'b3_', hoc:'b4_', mt:'b5_', bh:'b6_', rg:'b7_', tth:'b8_', dod:'b9_', tcg:'b10_'}; // v13.5: run_all --books
+    if (only.length) { allAids = allAids.filter(a => only.some(b => b === 'gotm' ? !/^b\d+_/.test(a) : a.startsWith(PFX[b]))); console.log(`onward: books ${only.join(', ')}, ${allAids.length} maps`); } }
   const part = await page.evaluate(AUDIT, allAids.slice(i, i + BATCH));
   errors.push(...e1); await page.close();
   res0.lines.n += part.lines.n; part.lines.bad.forEach(b => { if (!res0.lines.bad.includes(b)) res0.lines.bad.push(b); });
