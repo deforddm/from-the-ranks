@@ -13,7 +13,7 @@ const c1Puppet = () => ({t:'Look at the puppet.', check:['wits',12], edges:id =>
   go:'c1_hairlock', fail:'c1_hairlock_miss'});
 /* ✦ The Line: lock shields across the row before the first Hound hits (either order, once a playthrough) */
 const c1LineTrick = where => ({t:`Lock shields rim to rim across the ${where} before it hits.`, check:['might',16], trick:'line', req:()=>!S.f.c1_lineTried, fx:()=>{ S.f.c1_lineTried = 1; },
-  edges:id => [Object.values(S.gear[id] || {}).includes('heater') && ['the Second\'s heater shield', 1]], go:'c1_line_ok', fail:'c1_line_fail'});
+  edges:id => [Object.values(S.gear[id] || {}).includes('heater') && ['the Second\'s heater shield', 1], S.f.b1_c1_tattersail && ['Tattersail read it: be a wall', 1]], go:'c1_line_ok', fail:'c1_line_fail'});
 /* the gap in the shields, if the Line was tried and missed: Brisk names it after the fight */
 const c1Gap = () => { const g = pWho('c1_lineGap'); if (!g || !SQUAD().includes('brisk')) return '';
   return '\n\n' + (g === 'brisk' ? `Brisk is looking at her own shield. "A hand's width," she says to it. "Mine." She'll drill it on the plain, alone, before the rest of you are up.` : `Brisk looks at her shield, and then at ${pYou(g)}. "A hand's width," she says. "On the plain, we drill it." It isn't a threat. It's a schedule.`); };
@@ -80,7 +80,8 @@ const CH1 = {
       {id:'qb', name:'Quick Ben', kind:'qb', x:13, y:8, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj'},
       // once he's wary of the Fourth he spends an hour following it (c1_claw, c1_wj_last): off the fire as soon as you walk away from it
       {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:9, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', show:()=>!S.f.c1_kalamWary || !S.f.c1_wj || /^c1_(wj|brief|qb|kalam|deck|card)/.test(S.node || '')},
-      {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>S.f.c1_tent?'c1_tent_again':'c1_tent', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent},
+      // v13.8 (David, Nov 15): meetings. Once the first talk is done her ◆ lights again for the second reading (c1_tat_spread), but not while the squad is still in her tent
+      {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>!S.f.c1_tent ? 'c1_tent' : S.f.b1_c1_tattersail ? 'c1_tent_again' : 'c1_tat_spread', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent || (!S.f.b1_c1_tattersail && !/^c1_(tent|tuft|plant|hairlock)/.test(S.node || ''))},
       {id:'pell', name:'Quartermaster Pell', kind:'pell', x:6, y:6, node:()=>'c1_pell'},
       // v13.8 (David, Nov 15): meetings. The High Fist at the top of the Second's burial field; gone toward the city once he has spoken
       {id:'dujek', name:'A one-armed man', kind:'dujek', x:12, y:2, still:true, node:()=>S.f.b1_c1_dujek?'c1_dujek_again':'c1_dujek', show:()=>!S.f.c1_hounds && (!S.f.b1_c1_dujek || /^c1_dujek/.test(S.node || '')), fresh:()=>!S.f.b1_c1_dujek},
@@ -155,6 +156,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
     S.f.c1_hairlockLooked && !S.f.c1_sawHairlock && 'The puppet got down off its crate unseen.',
     S.f.c1_raidLet && 'Somewhere in the Host, a deserter of the Second has a crate of Moranth munitions and nothing left to lose. The Fourth walked past.',
     S.f.c1_raidCrate && 'The big one went into the tent lines with a Moranth crate under his arm. He was not followed.',
+    S.f.b1_c1_tattersail && 'Tattersail laid out the Hound night on her table before it came: the Mason high, the Knight against Shadow. She told the Fourth to be a wall.',
     S.f.b1_c1_dujek && 'High Fist Dujek read the Second\'s helmets at the burial field, alone, and said it was the last night he would.',
     S.f.c1_houndDown && `${S.f.c1_houndDown > 1 ? 'Two Hounds of Shadow' : 'A Hound of Shadow'} went down in the ash of the Pale under marine blades, and got up, and went home. Hounds remember.`],
 
@@ -465,14 +467,60 @@ ${S.ending === 'told' || S.ending === 'given' ? `Tattersail puts something in yo
   S.ending === 'burned' ? `Tattersail sits. "Pell's restocked, if you have coin. Buy the sapper something that goes off. I have a feeling about tonight and the cards won't tell me what it's a feeling of."` :
   `Tattersail sits. "Pell's restocked," she says, which is a dismissal. "Buy the sapper something that goes off. Something in this camp should do what it's told tonight."`}
 
-She's back to her cards before you reach the flap. "Sergeant. If you hear dogs tonight, they aren't."`,
+She's back to her cards before you reach the flap, laying a second spread across the first. "Sergeant. If you hear dogs tonight, they aren't."`,
       // with Whiskeyjack already seen, leaving the tent starts the Hounds: one last chance at Pell's wagon first
       ch:[{t:'Leave the tent', req:()=>!c1Ready(), go:()=>startExplore()}, c1Home,
           {t:'Stop at Pell\'s wagon on the way.', req:()=>!!S.f.c1_wj && S.silver >= 5, go:()=>{ sceneShell('camp_night'); talk('c1_pell'); }},
           {t:'Not yet. Walk the lines.', req:c1Ready, go:()=>startExplore()}]}),
-    c1_tent_again:()=>({sp:'Tattersail', txt:
+    c1_tent_again:()=> !S.f.b1_c1_tattersail ? CH1.dlg.c1_tat_spread() : ({sp:'Tattersail', txt:
 `"Sergeant." She turns a card. "The cards haven't got better. Neither has the puppet. Go and sleep, or go and pretend to."`,
       ch:[c1Home, {t:'Leave', go:()=>startExplore()}]}),
+    /* v13.8 (David, Nov 15): meetings. Tattersail's second reading, the Hound night, before the Hounds.
+       Where and when: in Pale after the fall, the same nights as Paran's arrival. GotM ch. 4 scene 3 (R, Reactor re-read GotM ch. 4-5):
+       she lays a reading with "an immediacy" to it, the Mason of High House Death prominent and the Knight of Darkness set against
+       High House Shadow; scene 5 has Paran brought to her, scene 6 has Gear break in after Hairlock (canon-chronology 4.4, 4.6, 4.7).
+       Supported (R; the chronology's 4.4 is R and the bible, not a second source). W *Tattersail*: after the siege she moved from her
+       tent to quarters in an estate two blocks from the old palace, and Gear came there about seven days after the siege; the game has
+       kept her on the cadre row since v3 (Ch1's whole night is built on that tent), so the reading stays in the tent (Claude's call).
+       The plan's "before Pale falls" can't be met: the game opens after the fall (the prologue is the tunnels under the fallen city).
+       Locks: rule 4 (nothing of the child, her death or her rebirth: the Mason is named, never read for anyone); rules 2-3 untouched;
+       Hairlock only as the Fourth sees it (it faces the cards); Paran not touched past c1_tent_captain; the Knight is the game's own card.
+       What it gives: +1 on the Line (c1LineTrick, either road); Tuft +1. Sets b1_c1_tattersail. */
+    c1_tat_spread:()=>({sp:'Tattersail · cadre mage', scene:'tent', txt:
+`She has laid the second spread since you left, and she hasn't finished it. Five cards down, one in her hand with its face to her palm. The cup is where it was. Nobody has drunk from it.
+
+"Sergeant. Twice in a night." She doesn't look up. "Either you've forgotten something or the cards sent for you, and I'd rather the first. Sit, if you're staying. Don't touch the table."
+
+On the crate, the puppet is facing the cards. ${S.f.c1_sawHairlock ? `It was facing you, the last time. It has found something it likes better.` : `You don't remember it facing that way. You don't remember it facing any way.`}`,
+      ch:[{t:'"What are they saying, ma\'am?"', go:'c1_tat_reading'},
+          c1Home, {t:'Not now. Leave her to it.', go:()=>startExplore()}]}),
+    c1_tat_reading:()=>({sp:'Tattersail', scene:'tent', again:'Six cards on the table. The Mason at the top, the Knight turned away, and Shadow three times over against him.',
+      fx:()=>{ S.f.b1_c1_tattersail = 1; if (SQUAD().includes('tuft')) loy('tuft',1); }, txt:
+`She lays the one in her hand at the top, above the rest. A man in a mason's apron with a hammer and a block of grey stone, and the stone is the colour of the lime on the Second's pits.
+
+"The Mason. High House Death." She says it the way Pell reads out a price. "He builds. Doors, stairs, rooms nobody asked for. He never says whose. He's had the high place in every spread I've laid since the Spawn, and I've stopped asking him."
+
+One finger goes to the next card, and stops short of it. A tall figure, turned away, a black sword point-down.
+
+"The Knight of High House Dark. And across from him, here, and here, and here." Three cards, all of them the same grey. "Shadow. The whole House at once. The Deck likes to say *tomorrow*, Sergeant, or *next year*, or *when you're old*. There's no tomorrow anywhere on this table. This is tonight."
+
+She sits back. "They aren't coming for us. I don't think they know we're here. They're going past, and we're standing in the road. If something of Shadow's comes over the tents tonight, don't chase it and don't run from it. Stand where you are, lock your shields, and let it decide you're a wall. Walls are dull. Be dull."${SQUAD().includes('tuft') ? `
+
+Tuft, from the flap: "Meanas has been wrong since supper. Like a door left open in the next room."
+
+Tattersail looks at her for the first time since you came back in. "Then you'll feel it before I do. Tell your sergeant when. Don't wait to be sure."
+
+"Yes, ma'am." Not *Yes, Sergeant*. You notice. So does Tattersail.` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk, behind you: "Rim to rim, ma'am." It isn't a question.
+
+"Rim to rim," Tattersail agrees. "I watched the Second do it at a gate once. I'd like to see the Fourth do it at a tent."` : ''}${!SQUAD().includes('tuft') && !SQUAD().includes('brisk') && SQUAD().includes('ohl') ? `
+
+Ohl, from beside the crate, where he has been careful not to stand: "That's a healer's advice, ma'am. Don't move, and let it pass."
+
+"It's everybody's advice," she says. "Nobody takes it."` : ''}`,
+      html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div>`, oncard:['knight', false],
+      ch:[c1Home, {t:'Back to the lines.', go:()=>startExplore()}]}),
 
     /* ---- Pell's wagon ---- */
     c1_pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:

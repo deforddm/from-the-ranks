@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.17.0';
+const VERSION = '13.18.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1584,7 +1584,7 @@ const BOOKS = {
     blurb:'Genabackis, the spring after the Fete, beside Memories of Ice.'},
   /* v7.0: Book Four. Book Two's squad in the Adjunct's Fourteenth, from Aren to Raraku. Its blurb, title art and 'coming' are filled in by 070_book4.js */
   hoc:{id:'hoc', n:4, word:'Four', title:'House of Chains', name:'Unblooded', h1:['', 'Unblooded'], squad:'Third Squad', unit:'the squad', tag:'The Adjunct\'s army has never fought. Five who walked the Chain of Dogs are put in its ranks, and it marches north for Raraku.', titleArt:'title/hoc', titleScene:'hoc', patch:'insignia/hoc',
-    blurb:'Seven Cities, the year after the Chain, beside House of Chains.'},
+    blurb:'Seven Cities, months after the Chain, beside House of Chains.'},
   /* v8.0: Book Five. A new Letherii squad of the Whitefinder Battalion, from Letheras north to High Fort and back. Its blurb, title art and 'coming' are filled in by 080_book5.js */
   mt:{id:'mt', n:5, word:'Five', title:'Midnight Tides', name:'Indebted', h1:['', 'Indebted'], squad:'Sixth Company', unit:'the squad', tag:'Lether counts everything. The Edur come south, and five soldiers who owe more than they will ever earn are sent north to meet them.', titleArt:'title/mt', titleScene:'mt', patch:'insignia/mt',
     blurb:'Lether, beside Midnight Tides.'},
@@ -8940,7 +8940,7 @@ function openModal(tab){
       ${S.wounds ? `<h4 class="jh">Wounds carried (Bridgeburner)</h4><div class="kv wounds">${SQUAD().map(id => woundOf(id) == null ? '' : `<span>${esc(NAME(id))}</span><span>${woundOf(id)} / ${S.wounds[id + '_max'] || '?'} health ${S.inv.salve > 0 && woundOf(id) < (S.wounds[id + '_max'] || 0) ? `<button class="btn sm" data-salve="${id}">Salve +8</button>` : ''}</span>`).join('')}</div><p class="fine">Wounds close when the squad rests: at the start of a chapter, or where the story lets them sleep.</p>` : ''}
       <p class="fine" style="margin-top:10px">${S.book === 'mt' ? 'Lether has no Moranth munitions. ' : 'Moranth munitions hit everything in the blast, your own squad included. '}${S.book === 'mt' ? 'Sorcery, and the surgeon\'s hands, build strain' : 'Warren magic builds strain'}; past ${strMax()}, the caster pays in blood (the limit grows at levels 4 and 7).</p>`,
     deeds:()=>deedsHTML(),
-    journal:()=>`${journalHead()}<div class="route sm"><canvas id="jRoute"></canvas></div><h4 class="jh">Notes</h4><ul class="jl">${journalNotes().map(l => `<li>${l}</li>`).join('')}</ul>${artJournalHTML()}${typeof visionsHTML === 'function' ? visionsHTML() : ''}${glossHTML()}${typeof whereBooksMeetHTML === 'function' ? whereBooksMeetHTML(false) : ''}`,
+    journal:()=>`${journalHead()}<div class="route sm"><canvas id="jRoute"></canvas></div><h4 class="jh">Notes</h4><ul class="jl">${journalNotes().map(l => `<li>${l}</li>`).join('')}</ul>${artJournalHTML()}${typeof visionsHTML === 'function' ? visionsHTML() : ''}${glossHTML()}${typeof whereBooksMeetHTML === 'function' ? whereBooksMeetHTML(false) : ''}${typeof timelineHTML === 'function' ? timelineHTML(false) : ''}`,
     save:()=>`${S ? `<p class="fine">Playing as <b class="who">Sergeant ${esc(S.name)}</b>. The game saves itself on this device as you play, under your sergeant's name. Anyone else can start their own sergeant from the title, and each keeps a save of their own.</p>
       <div class="row" style="margin:8px 0 16px"><button class="btn" id="bSwitch">Switch sergeant</button></div>` : ''}
       <h4 class="jh">Keep your saves safe</h4>
@@ -9042,6 +9042,7 @@ function journalNotes(){
     f.c1_reported ? `Whiskeyjack: the Fourth rides south overland with the baggage. Darujhistan.` : `Report to Whiskeyjack at the Bridgeburners' fire.`,
     f.c1_paran ? `Captain Paran walked the lines. Noble-born. Trying.` : '',
     f.b1_c1_dujek ? `Dujek Onearm at the Second's burial field, reading the helmets: "Ask for the living first. The dead keep."` : '',
+    f.b1_c1_tattersail ? `Tattersail's second reading, before the Hounds: the Mason high, the Knight of High House Dark against Shadow. "Let it decide you're a wall."` : '',
     f.c1_sawHairlock ? `Tattersail's puppet turned its head.` : '',
     f.c1_plant ? `Tattersail knows about Tuft's badge. So, now, do you.` : '',
     f.c1_hounds ? `The Hounds of Shadow came through the tent lines. ${f.c1_key === 'claw' ? 'You held the crate.' : 'You held the line.'}` : '',
@@ -9124,6 +9125,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.18.0', ['When the books happen: a new section in the Journal and on the Deeds page, under Where the books meet. Each book\'s year by Burn\'s Sleep, the Empire\'s count, in the order the books happen (Lether\'s war comes first). Where the novels disagree about a year, it says so, and how.', 'Book One: on the Hound night, once the first talk in her tent is done, Tattersail has a second spread half laid out. Ask what it says, and she gives the squad a soldier\'s answer for tonight.', 'Book Four now begins months after the Chain, not a year, as the reckonings have it.']],
   ['13.17.0', ['Book Ten meets more of the canon, and every book now has its meetings. At the barrows the Fourth walks up the edge to see Hedge at last, and Brisk says it to his face. On the regulars\' field the Fourth tells who sent them to the Third\'s left: the High Fist, on foot on the ridge. Captain Fiddler gives the Third the order that never reached it. And on the escort road the Sixth takes a skin of water to three sunburned strangers before the riders get there.']],
   ['13.16.0', ['Book Nine meets more of the canon. On the first night in the Wastes the Third carries Hedge\'s crates away from the fever-fires until midnight, and does not ask what is in the last cart. On the day of the torn tent Fist Keneb weighs the squad\'s water and asks how they are, then rides out. A young marine called Bottle watches the moths. And with the Letherii train, Brys walks the camp on foot with Aranict and asks the Sixth to its face what it stands on.']],
   ['13.15.0', ['Book Eight meets more of the canon. Up the hill at K\'rul\'s Bar, old Host soldiers drink with old Host soldiers: Picker, Blend at your elbow, Antsy at cards against himself, and Mallet, who looks at everyone\'s hands and sends you off with a jar of salve. An old man writes at the corner table. At the Phoenix, Kruppe recites the Guild\'s paper and talks all round who wrote it. And in Black Coral a Tiste Andii called Spinnock beckons from his corner and shows the sergeant an opening at Kef Tanar.']],
@@ -10917,7 +10919,7 @@ window.addEventListener('gamepadconnected', () => { PAD.on = true; document.body
    pages Deadhouse Gates, Seven Cities and Genabackis, Wikipedia's Deadhouse Gates): Book One ends with the Fete in Darujhistan, the
    Daru new year at winter's end; Deadhouse Gates opens a few months later and runs alongside Memories of Ice (the Host's next year).
    Seven Cities lies west of Genabackis, the Meningalle Ocean on Genabackis' west coast between them; Genabaris in the north of
-   Genabackis is the port the Empire's ships use. Never a Burn's Sleep year in game text. Never vouch for the outlawing (series rule 1). */
+   Genabackis is the port the Empire's ships use. Burn's Sleep years only in timelineHTML, with their notes (v13.19, rule 13 lifted). Never vouch for the outlawing (series rule 1). */
 
 /* ---- each book's chapters and end lines, whichever book is loaded ---- */
 const bookChs = b => (b === BOOK ? CHAPTERS : (BOOKSNAP[b] || {}).ch) || {};
@@ -10978,7 +10980,7 @@ function whereBooksMeetHTML(open){
       <li>While the Chain walks, Onearm's Host, proclaimed outlaw, is on Genabackis with Caladan Brood. The two stories run side by side, and only a little word passes between them.</li>
       <li>Ships out of Genabaris put in at Aren. That is how word crosses, and sometimes people.</li>
       <li><b>Book Three, The Fair Exchange,</b> runs beside Book Two: the spring and summer after the Fete, on Genabackis, while the Chain walks. The Host and Brood's army march together from Pale to Capustan on the Catlin, and on south into the Pannion Domin, to Coral.</li>
-      <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, the year after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
+      <li><b>Book Four, Unblooded,</b> goes back to Seven Cities, months after the Chain. The Adjunct's new Fourteenth Army lands at Aren, takes in what is left of the Chain's soldiers, and marches north up the Aren Way, past Coltaine's Fall and over the Vathar, to the Whirlwind and Raraku.</li>
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li><b>Book Five, Indebted,</b> goes a long way off: to Lether, across the oceans from both Genabackis and Seven Cities, and years before the Malazans ever hear of it. Its squad is new, Letherii, and owes money to everyone.</li>` : ''}
       ${BOOKS.mt && !BOOKS.mt.coming ? `<li>Book Five stands apart. On the sketch it sits beyond the western edge, across more sea than the sketch can hold: Lether's war is over long before the Malazans ever hear of it, and ${bookLive('rg') ? 'Two books later the Malazans come to it.' : 'no road joins it to the other books yet.'}</li>` : ''}
       ${BOOKS.bh && !BOOKS.bh.coming ? `<li><b>Book Six, Bones in the Walls,</b> brings both squads back, weeks after Raraku. Book Two's squad marches with the Fourteenth across the Odhans to Y'Ghatan and on to the sea; the Fourth, with Onearm's Host, land on Seven Cities' north coast and march inland through the plague to G'danisban. The two never meet. The Fourteenth sails at last for Malaz City, on Quon Tali, off the sketch to the west.</li>` : ''}
@@ -10988,6 +10990,32 @@ function whereBooksMeetHTML(open){
       ${BOOKS.tcg && !BOOKS.tcg.coming ? `<li><b>Book Ten, Witnessed,</b> is the last. Days after the short-tails, the army splits at the Wastes' edge: the Bonehunters east into a desert made of glass, by night, behind an Adjunct who still has not said why; the Letherii and the allies south, the long way round. Both roads end in Kolanse. Book Nine's two squads are on them, and at the very end Book Eight's Fourth comes over a ridge with a Malazan Host. After it, nothing: that is where the novels end, too.</li>` : ''}
       ${bookLive('tcg') ? `<li>So the roads run: the Fourth on Genabackis in Books One, Three and Eight, and across the sea to Seven Cities in Book Six; Book Two's squad, the Third, from Hissar to Aren, Raraku, Y'Ghatan, Lether, the Wastes and Kolanse; Book Five's Letherii from their own war into the Malazans', and east with them. The Fourth and the Third meet once, at the very end, on the regulars' line before Kolanse; on the southern road the Letherii are a long march away, holding their own stretch of the feint.</li>` : `<li>So the books cross twice. Books One and Three keep to Genabackis; Books Two and Four keep to Seven Cities. Book Two's squad is Book Four's, and the Fourth come back in Book Three. Ships out of Genabaris still carry the news between them, months late.</li>`}
     </ul></details>`;
+}
+
+/* ---- when the books happen: one series timeline by Burn's Sleep year (v13.19.0, David, Nov 15: "help me piece together the puzzle
+   of the books, lift both"). Rule 13's ban is lifted (series-canon §(a0)); §(e) holds the sources. Erikson's own years disagree in
+   places, so a disputed year is printed only with its note. Each row shows only when its book is live (bookLive, so a finale's
+   MAP_UPTO stops it at its own book). Sources per row, in series-canon §(e): W = malazan.fandom.com, Wp = Wikipedia's chronology
+   (liquisearch mirror), F = the fan worksheet, MF = the malazanempire.com timeline thread, R = Reactor, RM = the TtH reading guide. */
+const BS_ROWS = [
+  {b:null, y:'1154', t:'The old Emperor and his companion are gone in a night, and the Empress takes the throne. Every Malazan soldier in these books has served under her since.'}, // W Tayschrenn, Wp (NoK 1154), F: two
+  {b:'mt', y:'1161 or 1162', t:'Lether\'s war with the Tiste Edur. The Letherii count it their own way: the Year of the Late Frost, the last before the Seventh Closure.', d:'The reckonings disagree by a year, and one of them files a single chapter under 1159.'}, // Wp 1161; F 1162-3 with one entry 1159; MF 1161-62; Letherii count: novel heads via W1, R1
+  {b:'gotm', y:'1163', t:'Pale has fallen before the book opens. About a month, from the ruins to the Fête in Darujhistan, which ends the Daru year.'}, // W Burn's Sleep, Wp, F: two
+  {b:'dg', y:'1164', t:'A few months after the Fête. Hissar burns and the Chain walks through the hot months.', d:'Some reckonings start it in 1163: the Daru year turns at the Fête, the Malazan count later.'}, // F (bulk 1164, prologue 1163); Wp 1163-64; §(e) year-boundary note
+  {b:'moi', y:'1164', t:'From two months after the Fête, on Genabackis, the same months as the Chain.'}, // W Burn's Sleep, F: two
+  {b:'hoc', y:'1164', t:'The Fourteenth lands at Aren after the Chain, and marches on Raraku the same year.', d:'Its opening, far to the north and years earlier, is printed in the novel as 1159; one reckoning argues 1163 for it, and Erikson is quoted for 1159.'}, // F, MF (Books II-IV 1164); printed 1159 and Erikson quote via F
+  {b:'bh', y:'1164 to 1165', t:'Weeks after Raraku, through Y\'Ghatan and the plague to the sea.', d:'Its prologue gives the Empress\'s reign a length that her other dates put twelve years later.'}, // Wp 1164-65; F (prologue 1164, 1165); Laseen's 22nd year vs 1176: F
+  {b:'rg', y:'1165 into 1166', t:'The Fourteenth crosses to Lether, some three years after Lether\'s war.'}, // Wp c.1165 or 1166; F into 1166: two
+  {b:'tth', y:'about 1166, by most reckonings', t:'Years after Coral. No year is printed.', d:'Reckonings run from 1165 to 1168: one guide puts it four or five years after the Fête.'}, // MF 1165-66?; F memory 1166-67; RM 4-5 years after GotM (tth-canon §1): none agree
+  {b:'dod', y:'1166', t:'Months after Letheras falls. No year is printed.', d:'"Months" is the novel\'s own word; the year is the reckonings\' guess.'}, // MF post-1166; R DoD ch 5, W (months after RG): supported
+  {b:'tcg', y:'1166', t:'Days after Book Nine ends, to Kolanse. Where the novels stop.'}, // follows DoD directly (tcg-canon §1): supported
+];
+function timelineHTML(open){
+  const rows = BS_ROWS.filter(r => !r.b || bookLive(r.b)); if (rows.length < 3) return '';
+  const name = b => { const B = BOOKS[b]; return B ? `Book ${B.word}, ${B.name}` : ''; };
+  return `<details class="gloss meet"${open ? ' open' : ''}><summary>When the books happen</summary>
+    <p class="fine">Years by Burn's Sleep, the Empire's count. The novels do not always agree with themselves. Where they don't, it says so.</p>
+    <ul class="jl meetl">${rows.map(r => `<li><b>${r.y}${r.b ? ' · ' + name(r.b) : ''}.</b> ${r.t}${r.d ? ` <i class="fine">${r.d}</i>` : ''}</li>`).join('')}</ul></details>`;
 }
 
 /* ---- Book Two's road map: the Chain from Hissar to Aren, as far as the sergeant has come ---- */
@@ -11102,7 +11130,7 @@ deedsHTML = function(){
     ${S ? `<h4 class="jh">Sergeant ${esc(S.name)}'s count <small>Book ${(BOOKS[bookOf(S)] || BOOKS.gotm).word}</small></h4>${statsHTML(S)}` : ''}
     ${S ? `<h4 class="jh">Play a chapter again</h4>${doneR.length ? `<p class="fine">Any chapter Sergeant ${esc(baseName())} has finished can be played again, to try the other roads. It starts as a new save, ${esc(baseName())} (Ch <i>n</i>), with the squad, the kit and the tricks as they stood when that chapter began; this save stays as it is.</p>
       <div class="row chsel">${doneR.map(n => `<button class="btn" data-replay="${n}">${replayLabel(n)}</button>`).join('')}</div><p class="fine" id="replayMsg"></p>` : `<p class="fine">Finish a chapter, and it can be played again from here.</p>`}` : ''}
-    ${whereBooksMeetHTML(false)}`;
+    ${whereBooksMeetHTML(false)}${timelineHTML(false)}`;
 };
 { const _bd = bindDeeds; bindDeeds = function(){ _bd();
     const cvs = [...document.querySelectorAll('canvas[data-route]')];
@@ -11712,7 +11740,7 @@ const c1Puppet = () => ({t:'Look at the puppet.', check:['wits',12], edges:id =>
   go:'c1_hairlock', fail:'c1_hairlock_miss'});
 /* ✦ The Line: lock shields across the row before the first Hound hits (either order, once a playthrough) */
 const c1LineTrick = where => ({t:`Lock shields rim to rim across the ${where} before it hits.`, check:['might',16], trick:'line', req:()=>!S.f.c1_lineTried, fx:()=>{ S.f.c1_lineTried = 1; },
-  edges:id => [Object.values(S.gear[id] || {}).includes('heater') && ['the Second\'s heater shield', 1]], go:'c1_line_ok', fail:'c1_line_fail'});
+  edges:id => [Object.values(S.gear[id] || {}).includes('heater') && ['the Second\'s heater shield', 1], S.f.b1_c1_tattersail && ['Tattersail read it: be a wall', 1]], go:'c1_line_ok', fail:'c1_line_fail'});
 /* the gap in the shields, if the Line was tried and missed: Brisk names it after the fight */
 const c1Gap = () => { const g = pWho('c1_lineGap'); if (!g || !SQUAD().includes('brisk')) return '';
   return '\n\n' + (g === 'brisk' ? `Brisk is looking at her own shield. "A hand's width," she says to it. "Mine." She'll drill it on the plain, alone, before the rest of you are up.` : `Brisk looks at her shield, and then at ${pYou(g)}. "A hand's width," she says. "On the plain, we drill it." It isn't a threat. It's a schedule.`); };
@@ -11779,7 +11807,8 @@ const CH1 = {
       {id:'qb', name:'Quick Ben', kind:'qb', x:13, y:8, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj'},
       // once he's wary of the Fourth he spends an hour following it (c1_claw, c1_wj_last): off the fire as soon as you walk away from it
       {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:9, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', show:()=>!S.f.c1_kalamWary || !S.f.c1_wj || /^c1_(wj|brief|qb|kalam|deck|card)/.test(S.node || '')},
-      {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>S.f.c1_tent?'c1_tent_again':'c1_tent', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent},
+      // v13.8 (David, Nov 15): meetings. Once the first talk is done her ◆ lights again for the second reading (c1_tat_spread), but not while the squad is still in her tent
+      {id:'tat', name:'Tattersail', kind:'tat', x:4, y:1, node:()=>!S.f.c1_tent ? 'c1_tent' : S.f.b1_c1_tattersail ? 'c1_tent_again' : 'c1_tat_spread', show:()=>!S.f.c1_hounds, fresh:()=>!S.f.c1_tent || (!S.f.b1_c1_tattersail && !/^c1_(tent|tuft|plant|hairlock)/.test(S.node || ''))},
       {id:'pell', name:'Quartermaster Pell', kind:'pell', x:6, y:6, node:()=>'c1_pell'},
       // v13.8 (David, Nov 15): meetings. The High Fist at the top of the Second's burial field; gone toward the city once he has spoken
       {id:'dujek', name:'A one-armed man', kind:'dujek', x:12, y:2, still:true, node:()=>S.f.b1_c1_dujek?'c1_dujek_again':'c1_dujek', show:()=>!S.f.c1_hounds && (!S.f.b1_c1_dujek || /^c1_dujek/.test(S.node || '')), fresh:()=>!S.f.b1_c1_dujek},
@@ -11854,6 +11883,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
     S.f.c1_hairlockLooked && !S.f.c1_sawHairlock && 'The puppet got down off its crate unseen.',
     S.f.c1_raidLet && 'Somewhere in the Host, a deserter of the Second has a crate of Moranth munitions and nothing left to lose. The Fourth walked past.',
     S.f.c1_raidCrate && 'The big one went into the tent lines with a Moranth crate under his arm. He was not followed.',
+    S.f.b1_c1_tattersail && 'Tattersail laid out the Hound night on her table before it came: the Mason high, the Knight against Shadow. She told the Fourth to be a wall.',
     S.f.b1_c1_dujek && 'High Fist Dujek read the Second\'s helmets at the burial field, alone, and said it was the last night he would.',
     S.f.c1_houndDown && `${S.f.c1_houndDown > 1 ? 'Two Hounds of Shadow' : 'A Hound of Shadow'} went down in the ash of the Pale under marine blades, and got up, and went home. Hounds remember.`],
 
@@ -12164,14 +12194,60 @@ ${S.ending === 'told' || S.ending === 'given' ? `Tattersail puts something in yo
   S.ending === 'burned' ? `Tattersail sits. "Pell's restocked, if you have coin. Buy the sapper something that goes off. I have a feeling about tonight and the cards won't tell me what it's a feeling of."` :
   `Tattersail sits. "Pell's restocked," she says, which is a dismissal. "Buy the sapper something that goes off. Something in this camp should do what it's told tonight."`}
 
-She's back to her cards before you reach the flap. "Sergeant. If you hear dogs tonight, they aren't."`,
+She's back to her cards before you reach the flap, laying a second spread across the first. "Sergeant. If you hear dogs tonight, they aren't."`,
       // with Whiskeyjack already seen, leaving the tent starts the Hounds: one last chance at Pell's wagon first
       ch:[{t:'Leave the tent', req:()=>!c1Ready(), go:()=>startExplore()}, c1Home,
           {t:'Stop at Pell\'s wagon on the way.', req:()=>!!S.f.c1_wj && S.silver >= 5, go:()=>{ sceneShell('camp_night'); talk('c1_pell'); }},
           {t:'Not yet. Walk the lines.', req:c1Ready, go:()=>startExplore()}]}),
-    c1_tent_again:()=>({sp:'Tattersail', txt:
+    c1_tent_again:()=> !S.f.b1_c1_tattersail ? CH1.dlg.c1_tat_spread() : ({sp:'Tattersail', txt:
 `"Sergeant." She turns a card. "The cards haven't got better. Neither has the puppet. Go and sleep, or go and pretend to."`,
       ch:[c1Home, {t:'Leave', go:()=>startExplore()}]}),
+    /* v13.8 (David, Nov 15): meetings. Tattersail's second reading, the Hound night, before the Hounds.
+       Where and when: in Pale after the fall, the same nights as Paran's arrival. GotM ch. 4 scene 3 (R, Reactor re-read GotM ch. 4-5):
+       she lays a reading with "an immediacy" to it, the Mason of High House Death prominent and the Knight of Darkness set against
+       High House Shadow; scene 5 has Paran brought to her, scene 6 has Gear break in after Hairlock (canon-chronology 4.4, 4.6, 4.7).
+       Supported (R; the chronology's 4.4 is R and the bible, not a second source). W *Tattersail*: after the siege she moved from her
+       tent to quarters in an estate two blocks from the old palace, and Gear came there about seven days after the siege; the game has
+       kept her on the cadre row since v3 (Ch1's whole night is built on that tent), so the reading stays in the tent (Claude's call).
+       The plan's "before Pale falls" can't be met: the game opens after the fall (the prologue is the tunnels under the fallen city).
+       Locks: rule 4 (nothing of the child, her death or her rebirth: the Mason is named, never read for anyone); rules 2-3 untouched;
+       Hairlock only as the Fourth sees it (it faces the cards); Paran not touched past c1_tent_captain; the Knight is the game's own card.
+       What it gives: +1 on the Line (c1LineTrick, either road); Tuft +1. Sets b1_c1_tattersail. */
+    c1_tat_spread:()=>({sp:'Tattersail · cadre mage', scene:'tent', txt:
+`She has laid the second spread since you left, and she hasn't finished it. Five cards down, one in her hand with its face to her palm. The cup is where it was. Nobody has drunk from it.
+
+"Sergeant. Twice in a night." She doesn't look up. "Either you've forgotten something or the cards sent for you, and I'd rather the first. Sit, if you're staying. Don't touch the table."
+
+On the crate, the puppet is facing the cards. ${S.f.c1_sawHairlock ? `It was facing you, the last time. It has found something it likes better.` : `You don't remember it facing that way. You don't remember it facing any way.`}`,
+      ch:[{t:'"What are they saying, ma\'am?"', go:'c1_tat_reading'},
+          c1Home, {t:'Not now. Leave her to it.', go:()=>startExplore()}]}),
+    c1_tat_reading:()=>({sp:'Tattersail', scene:'tent', again:'Six cards on the table. The Mason at the top, the Knight turned away, and Shadow three times over against him.',
+      fx:()=>{ S.f.b1_c1_tattersail = 1; if (SQUAD().includes('tuft')) loy('tuft',1); }, txt:
+`She lays the one in her hand at the top, above the rest. A man in a mason's apron with a hammer and a block of grey stone, and the stone is the colour of the lime on the Second's pits.
+
+"The Mason. High House Death." She says it the way Pell reads out a price. "He builds. Doors, stairs, rooms nobody asked for. He never says whose. He's had the high place in every spread I've laid since the Spawn, and I've stopped asking him."
+
+One finger goes to the next card, and stops short of it. A tall figure, turned away, a black sword point-down.
+
+"The Knight of High House Dark. And across from him, here, and here, and here." Three cards, all of them the same grey. "Shadow. The whole House at once. The Deck likes to say *tomorrow*, Sergeant, or *next year*, or *when you're old*. There's no tomorrow anywhere on this table. This is tonight."
+
+She sits back. "They aren't coming for us. I don't think they know we're here. They're going past, and we're standing in the road. If something of Shadow's comes over the tents tonight, don't chase it and don't run from it. Stand where you are, lock your shields, and let it decide you're a wall. Walls are dull. Be dull."${SQUAD().includes('tuft') ? `
+
+Tuft, from the flap: "Meanas has been wrong since supper. Like a door left open in the next room."
+
+Tattersail looks at her for the first time since you came back in. "Then you'll feel it before I do. Tell your sergeant when. Don't wait to be sure."
+
+"Yes, ma'am." Not *Yes, Sergeant*. You notice. So does Tattersail.` : ''}${SQUAD().includes('brisk') ? `
+
+Brisk, behind you: "Rim to rim, ma'am." It isn't a question.
+
+"Rim to rim," Tattersail agrees. "I watched the Second do it at a gate once. I'd like to see the Fourth do it at a tent."` : ''}${!SQUAD().includes('tuft') && !SQUAD().includes('brisk') && SQUAD().includes('ohl') ? `
+
+Ohl, from beside the crate, where he has been careful not to stand: "That's a healer's advice, ma'am. Don't move, and let it pass."
+
+"It's everybody's advice," she says. "Nobody takes it."` : ''}`,
+      html:`<div class="cardinline"><canvas id="icard" width="240" height="360"></canvas></div>`, oncard:['knight', false],
+      ch:[c1Home, {t:'Back to the lines.', go:()=>startExplore()}]}),
 
     /* ---- Pell's wagon ---- */
     c1_pell:()=>({sp:'Quartermaster Pell', again:()=>`Pell waits with the ledger open. You carry ${S.silver} silver.`, txt:
@@ -51481,7 +51557,7 @@ function b3CrossPay(r){ if (!r.done || S.f.b3_crossPaid) return; S.f.b3_crossPai
     return base + `<h4 class="jh">At the fires</h4><div class="kv">${fires.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>`; }; }
 
 /* ============ Book Four: Unblooded (beside House of Chains) — Book Two's squad in the Fourteenth, Nerve and Dust ============ */
-/* Book Four is Book Two's squad again, the year after the Chain: broken up into the Adjunct's Fourteenth Army as canon does with every unit
+/* Book Four is Book Two's squad again, months after the Chain: broken up into the Adjunct's Fourteenth Army as canon does with every unit
    of Chain survivors, serving as medium infantry in Blistig's 9th Legion, from Aren north to Raraku. Its chapters register with
    registerChapter(n, B4CHn, 'hoc') (90) and every id carries a b4_ prefix (areas, nodes, fights, foes, gear, scenes, tricks, flags S.f.b4_*).
    This file holds what the book needs outside a chapter: the Book Two four's lives a few months on (swapped in and out by setBook), the four
@@ -51866,7 +51942,7 @@ const b4Offers = () => B4_RECRUITS.filter(id => b4Waiting(id) && (b4Room() > 0 |
    off the shelf, the picker and Deeds (14 shelfBooks); showTitle(false, 'hoc') still dresses the title for it, and Begin says it is being written ---- */
 const b4ChCount = () => Object.keys(BOOK === 'hoc' ? CHAPTERS : BOOKSNAP.hoc.ch).length;
 const b4Progress = () => { const n = b4ChCount(); return n >= 7 ? 'All seven chapters.' : n === 0 ? 'Its chapters are being written.' : n === 1 ? 'Chapter One so far.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n]} chapters so far.`; };
-Object.defineProperty(BOOKS.hoc, 'blurb', {configurable:true, get(){ return 'Seven Cities, the year after the Chain, beside House of Chains. Book Two\'s squad in the Adjunct\'s Fourteenth, from Aren to Raraku. Plays on its own; a finished Book Two save on the Aren Guard or Wickan road can bring its squad across.' + (b4ChCount() >= 7 ? '' : ' ' + b4Progress()); }});
+Object.defineProperty(BOOKS.hoc, 'blurb', {configurable:true, get(){ return 'Seven Cities, months after the Chain, beside House of Chains. Book Two\'s squad in the Adjunct\'s Fourteenth, from Aren to Raraku. Plays on its own; a finished Book Two save on the Aren Guard or Wickan road can bring its squad across.' + (b4ChCount() >= 7 ? '' : ' ' + b4Progress()); }});
 Object.defineProperty(BOOKS.hoc, 'coming', {configurable:true, get(){ return b4ChCount() === 0; }});
 Object.defineProperty(BOOKS.hoc, 'titleArt', {configurable:true, get(){ return typeof ART !== 'undefined' && ART['title/hoc'] ? 'title/hoc' : 'title/dg'; }});
 
