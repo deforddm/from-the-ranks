@@ -1,6 +1,6 @@
 # Ashes of the Pale: series canon for writers
 
-Wed Nov 11, 2026, 2:18 AM PST (Book Ten's rules 98–111, what TCG lifts, names and gods added to §(a), §(b) and §(f); shipped as v13.0.0; the last book). Before that Mon Nov 9, 2026, 5:04 PM PST (Book Nine's rules 84–97, what DoD lifts, names and gods added to §(a), §(b), §(c) and §(f); Book Nine planned on branch `book9`, not built). Before that Sun Nov 8, 2026, 8:21 PM PST (Book Eight's rules 70–83, what TtH lifts, names and gods added to §(a), §(b) and §(f); Book Eight on branch `book8`, not shipped). Before that Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
+Sun Nov 15, 2026, 12:13 AM PST (§(a0), the new line: David loosened the distance rules, lifted the never-use names and the Burn's Sleep year ban; rules 12, 13 and every "never meets / never speaks with / at a distance" rewritten by the table there). Before that Wed Nov 11, 2026, 2:18 AM PST (Book Ten's rules 98–111, what TCG lifts, names and gods added to §(a), §(b) and §(f); shipped as v13.0.0; the last book). Before that Mon Nov 9, 2026, 5:04 PM PST (Book Nine's rules 84–97, what DoD lifts, names and gods added to §(a), §(b), §(c) and §(f); Book Nine planned on branch `book9`, not built). Before that Sun Nov 8, 2026, 8:21 PM PST (Book Eight's rules 70–83, what TtH lifts, names and gods added to §(a), §(b) and §(f); Book Eight on branch `book8`, not shipped). Before that Fri Nov 6, 2026, 6:50 AM PST (Book Seven's rules 55–69, names and gods added to §(a), §(b) and §(f); shipped as v10.0.0). Before that Thu Nov 5, 2026, 9:15 AM PST (Book Six's rules, names and gods added to §(a), §(b) and §(f); shipped as v9.0.0). Before that Wed Oct 28, 2026, 9:16 AM PDT (Book Five's rules, names and gods added to §(a), §(b) and §(f); the Bungle row closed; against v7.4.0). Book Four's were added Tue Oct 20, 2026, 9:48 PM PDT. First written Thu Oct 8, 2026, 12:30 AM PDT for v3.16.0. **The reference every later chapter of the game is written against.** Built from `forward-canon-v3.15.3.md` (§3 keep-open rules, §4 name clashes, §5 roads and books), then re-checked: §7 below works through that doc's "Not verified" list and its medium, low and memory items with fresh sources. The book-order chronology of *Gardens of the Moon* is `canon-chronology.md` (beat IDs like `22.8`).
 
 **Rules for using it.** The novels, all of them, are the authority; everything here is a check on them, gathered by people who did not have the text. Each claim carries its sources:
 - **W**: Malazan Wiki (malazan.fandom.com), the named page. About half of all requests returned HTTP 402; each was retried once.
@@ -15,7 +15,29 @@ Line numbers (`46:2267` = `src/46_chapter7.js` line 2267) are for commit 7b9647d
 
 ---
 
-## (a) Keep-open rules: binding on every writer
+## (a0) The line (David, Sun Nov 15, 2026, 12:06–12:11 AM PST): this section overrides anything below that disagrees
+
+David: "It has always been my intention for the squads to closely interact and intersect with canon characters, I just don't ever want us to control one of them." And on the bans: "is there any real reason that we stopped using burns sleep years? … I want this game to help me piece together the puzzle of the books, lift both."
+
+**Locked (what never moves):**
+1. **Outcomes and deaths.** No canon death is prevented, caused by the squad, or reversed; every battle, siege and duel ends as the books end it. The squad may stand in it, fight beside it, carry a message in it: the result is canon's.
+2. **Who is where, when.** A canon character appears only where and when the books put them (or where nothing in the books says otherwise); the squad goes to them, not the other way.
+3. **No early spoilers.** The narrator never states what a later novel reveals. Characters may hint, guess or believe wrongly (the old rule: a character may believe what a later book overturns; the narrator may not say it).
+4. **Never a viewpoint, never played.** No canon character is controlled by the player or narrated from inside. **Visions are the exception by design:** direct canon reads, real characters and real events told as they occurred, from the participants' own perspective.
+
+**Lifted:**
+- **Distance rules.** Every "never meets", "never speaks with", "at a distance at most", "seen at most", "never in a scene canon lists by name", "never stands in a scene", the per-book *Never speaks with* lists (tcg-canon §4 and the others) and the Hard limits' "who must not be present" line. The squads may talk with, march beside, fight beside and be spoken to by canon characters, inside canon scenes as well as the gaps, so long as 1–4 hold.
+- **Rule 12's second half** (the Fourth and Fiddler never meet). The first half stands as a fact: the Fourth is not the Bridgeburners and is never called so.
+- **Rule 13 in full.** The never-use names (Kellanved, Dancer, Ammanas, Laseen, Surly, Topper, the Talon, the Eel, the T'orrud Cabal) may be used where the speakers would use them. **Burn's Sleep years may be printed** once the series timeline gives a sourced year (§(e) has the known disputes; a disputed year is not printed until the timeline settles it, and where Erikson's own years disagree the game says so in the glossary rather than picking silently).
+- **Naming rules that existed only to keep distance** (e.g. rule 106's "Paran never named": lifted where a squadmate would know the name; still never narrated from his head).
+
+**Still binding, because they are 1–3 in another form:** every rule below that keeps a death, an outcome, a secret or a later book's reveal (e.g. 2, 4, 5, 17, 19's belief lines, 21's "Leoman lives and reaches Y'Ghatan", 22, 31–42 for Book Five's timing, 45, 62's "never explained", 72, 74, 86, 98–103, 107, 108, 111). Where a rule mixes the two, its distance half is lifted and its spoiler or outcome half stands.
+
+**The chapter tests** (`tools/*_test.mjs` never-lists) drop the canon names, the old never-use names and the year patterns (v13.7); their spoiler and tone terms stay. Book Five's tests keep their Malazan names, since Book Five happens years before *Gardens of the Moon* (lock 2).
+
+---
+
+## (a) Keep-open rules: binding on every writer (read with §(a0))
 
 Each rule says what a later book depends on. Break one and a sequel chapter, or a reader of the series, finds the game wrong.
 
