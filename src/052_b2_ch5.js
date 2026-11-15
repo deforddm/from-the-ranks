@@ -52,6 +52,19 @@ GLOSSX.dg.push(
   [5, 'The Nenoth Odhan', 'The Dry March: the waterless plain between the Vathar Forest and the hills, where the Seventh\'s last cattle died.', ()=>!!(S.f && S.f.b2_nenoth)],
   [5, 'The Trygalle Trade Guild', 'Traders out of Genabackis who drive a carriage through the warrens to wherever they are paid to go. Their guards are shareholders. Most of them do not live to collect.', ()=>!!(S.f && S.f.b2_trygalle)]);
 
+/* v13.8: what Nether tells Marrow, after either answer (b2_c5_nil_all / b2_c5_nil_mud), and who reacts */
+const b2NilWords = () => `"Ours too," Nether says. "Not the same warren. The same feet." She walks two fingers slowly across her own palm. "Soletaken. D'ivers. Hundreds. He said so, at the Sekala. All of them walking the one way, through every warren there is, and they do not care whose it is. It is not you, healer. It is not your goddess. They are not even looking at you." A breath. "They are only passing."
+
+"Not everywhere," Nil says.
+
+Nether looks at him, and then, for the first time, at you. "Where it is very cold, they do not go," she says. "I think. Nil thinks. Old cold, older than them." She gets up, and pulls Nil up after her. "If you find a cold place, healer, put your hand in there."${b2In('sathi') ? `
+
+Sathi has watched it all from the edge of the track with her hand in Hackle's ruff. When they are gone she says something in Wickan, very low, and then in Malazan, for you: "They came to us. Not to the Crow healers. To us." She does not laugh.` : ''}${b2In('warlock') ? `
+
+Keth has not moved the whole time. When the twins are gone he lets his breath out. And the old woman, out of him, gently for her: "Sormo's children. Let them go and cry where nobody can see, Foolish Dog. That is what they came out here looking for."` : ''}
+
+Marrow sits on where they left her, with the string in her lap. "Ten," she says at last. "He's ten, child. And he knew already." She does not tie anything.`;
+
 const B2CH5 = {
   title:'The Dry March', number:'Five',
   intro:{loc:'Vathar Forest', sub:'South of the Vathar · the old wood', scene:'b2_forest', cap:'An old dark forest, mounds among the trees, and far off, above the canopy, the top of a tower.',
@@ -84,7 +97,10 @@ const B2CH5 = {
         {id:'weasel5', name:'A Weasel rider', kind:'weasel', x:2, y:6, node:()=>S.f.b2_weasel5 ? 'b2_weasel5_again' : 'b2_weasel5', show:()=>!!S.f.b2_list5, fresh:()=>!!S.f.b2_list5 && !S.f.b2_weasel5},
         {id:'bungle5', name:'Sergeant Bungle', kind:'sapper', x:2, y:4, node:()=>'b2_bungle5', fresh:()=>!S.f.b2_bungle5},
         {id:'ours7', name:'The squad\'s people', kind:'hissari_w', x:5, y:9, node:()=>'b2_ours7', fresh:()=>!S.f.b2_ours7},
-        {id:'ramin7', name:'Ramin', kind:'redblade', x:13, y:8, node:()=>'b2_ramin7', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin7} ] },
+        {id:'ramin7', name:'Ramin', kind:'redblade', x:13, y:8, node:()=>'b2_ramin7', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin7},
+        /* v13.8 (David, Nov 15): meetings. Nil and Nether come to ask the squad's healer how the warrens are */
+        {id:'nil5', name:'Nil and Nether', kind:'nil', x:12, y:4, node:()=>'b2_c5_nil', fresh:()=>!S.f.b2_c5_nil},
+        {id:'nether5', name:'Nether', kind:'nether', x:13, y:4, node:()=>'b2_c5_nil'} ] },
 
     /* 16 x 12.  the Jaghut tower inside: . frost-rimed stone  # wall (blocks)  i ice (blocks)  - slick ice  s stair  c cold brazier */
     { id:'b2_jtower', title:'The tower', sub:'Inside · colder than it should be', hint:'Tap ground to move · tap a figure to talk · the braziers, the ice, the stair up and the way out', decor:'jaghut', dark:true,
@@ -249,6 +265,7 @@ Haddat is looking at the skins on his saddle. She has gone very still.` : ''}`,
     if (f.b2_drankSkip === 'redblade') x.push('Ramin would not drink before the stretch had. He fought the Tregyn in his scale with nothing in him, and said it was an order he had given himself.');
     if (f.b2_towerIn) x.push(`The squad went into the Jaghut tower in Vathar Forest${f.b2_shade ? ', and saw something tall at the top of the stair that did not look at it' : ''}.`);
     if (trickBy('b2_breath')) x.push(`${NAME(trickBy('b2_breath'))} carries a little of the tower's cold, and can let it out.`);
+    if (f.b2_c5_nil) x.push(f.b2_c5_nilAll ? 'Two days after the Vathar, Nil and Nether came to Marrow under the trees to ask how the warrens were, because Sormo had told them to. She told them all of it.' : f.b2_c5_cold && b2In('marrow') ? 'Two days after the Vathar, Nil and Nether came to Marrow under the trees to ask how the warrens were. Nil already knew what was at the bottom.' : 'Two days after the Vathar, Nil and Nether came looking for the squad\'s healer, and left word for her: where it is very cold, the things in the warrens do not go.');
     if (f.b2_towerWarren) x.push('In the tower Marrow reached into her warren and found it clean, for the first time since Hissar. Nothing at the bottom of it.');
     if (f.b2_sathiRode) x.push('Sathi rode with the Weasel Clan on the Nenoth and turned the last herd, and the clan let her.');
     if (f.b2_ilharWater) x.push(`Haddat found her mother's house mark on a Tregyn's water-skin. ${f.b2_ilharSkin === 'kept' ? 'She carries it, full.' : 'The stretch drank it.'}`);
@@ -260,6 +277,7 @@ Haddat is looking at the skins on his saddle. She has gone very still.` : ''}`,
 
   journal:()=>{ const f = S.f; return [
     f.b2_forest && `South of the Vathar the column went through an old forest of mounds and bones, where the T'lan Imass and the Jaghut fought before there were cities. There is a Jaghut tower in it. Corporal List dreams about it.`,
+    f.b2_c5_nil && `In the forest the young warlocks Nil and Nether, the Seventh's last since the Vathar, asked the squad's healer how the warrens were. Something is walking through all of them: shapechangers, Nether says, hundreds, only passing.`,
     f.b2_nenoth && `After the forest, the Nenoth Odhan: the Dry March. The Bhilard and the Tregyn raid every day. Korbolo Dom's army follows, five times the size of the Seventh, and growing.`,
     f.b2_cattleDead && `The last of the Seventh's cattle died on the Nenoth.`,
     f.b2_c5_key && `When the water ran short on the Nenoth, the sergeant had to choose who drank: the squad, or its stretch of the column.`,
@@ -403,6 +421,54 @@ In the trench Mincer has stopped digging. He nods to Tangle, once, a captain's n
     ch:[{t:'On.', go:()=>startExplore()}]}),
 
   /* ---- the standing stone, and the path to the tower ---- */
+  /* ---- v13.8 (David, Nov 15): meetings. Nil and Nether ask the healer about the warrens going wrong ----
+     Where and when: the twins go on with the army after the Vathar, the Seventh's only warlocks once Sormo is dead (W *Nil*, DG ch. 16, 19;
+     dg-canon §2), so they are in the forest with the column. Supported (W). What they say: at the Sekala Sormo told Duiker the warrens are
+     infested with Soletaken and D'ivers (W *Deadhouse Gates/Chapter 10*); the fouled warrens are the book's own (dg-canon §3). Nobody here
+     names where the shapechangers are going. That the old cold keeps them out is Nether's guess ("I think"), matching what Marrow finds in the
+     tower (b2_tower_marrow). It pays off Ch1's Sormo ("Tell your healer") and Ch4's "Don't tell Sormo's boy. He's ten." (b2_warrenFloor).
+     Sets b2_c5_nil and b2_c5_cold (an edge on the brazier's check, below); Marrow +1 if she tells them all of it. */
+  b2_c5_nil:()=> !b2In('marrow') ? {sp:'Nil and Nether · the Wickan warlocks', scene:'b2_forest', fx:()=>{ S.f.b2_c5_nil = 1; S.f.b2_c5_cold = 1; }, again:'The twins are sitting together at the edge of the clearing, Nether holding Nil\'s wrist. They do not look up.', txt:
+`They come to the squad's halt in the early afternoon, the two of them, on foot. Nil and Nether. Nobody sent them; nobody is with them. Two days since the Vathar. Since Sormo. They look it.
+
+Nether looks along the squad for somebody who is not there. "The healer," she says, in her good Malazan. "With the string."
+
+${b2Away() === 'marrow' ? 'You tell her: on the burned ship, down the Vathar, with the wounded.' : 'You tell her the healer is not with you.'} She takes it the way she takes everything, without a flicker.
+
+"Then tell her when she comes back to you. He said to tell her." She does not say who. "It is not her. It is not her goddess. Soletaken, D'ivers, hundreds, walking through every warren there is. They are not even looking at her. They are only passing." She looks at Nil, and back. "Where it is very cold, they do not go. I think. Old cold. If she finds a cold place, she should put her hand in there."
+
+Then she takes Nil's wrist and they go back the way they came.`,
+    ch:[{t:'Let them go.', go:()=>startExplore()}]} : {sp:'Nil and Nether · the Wickan warlocks', scene:'b2_forest', fx:()=>{ S.f.b2_c5_nil = 1; }, again:'The twins are sitting with Marrow at the edge of the clearing, saying nothing. Nobody hurries them.', txt:
+`They come to the squad's halt in the early afternoon, the two of them, on foot. Nil and Nether. Nobody sent them; nobody is with them.
+
+Two days since the Vathar. Since Sormo. They look it. Nil is grey under the brown, and his eyes do not settle on anything. Nether holds his wrist, the way you hold a child's in a crowd, though she is not much older.
+
+They do not look at you. They look at Marrow.
+
+"Healer," Nether says, in her good Malazan. "With the string." She sits down in the leaf-litter in front of Marrow without asking, and pulls Nil down beside her. "He told us to ask you. Before. If he was not there to ask." She does not say who. She does not have to. "How is it, in yours?"
+
+Marrow looks at them a long moment. Then she sits down too, slowly, which is not how Marrow sits.
+
+"Mud," she says. "Most days. Fur in it, some days. Something wading, a long way off."${S.f.b2_warrenFloor ? ` She glances at you, once. You remember the night at the Vathar, and what she said into your shoulder: *Don't tell Sormo's boy. He's ten.*` : ` She turns the string over in her fingers.`}`,
+    ch:[{t:S.f.b2_warrenFloor ? '"Tell them, Marrow. All of it."' : 'Let Marrow tell it.', go:'b2_c5_nil_all'},
+        {t:'"Mud is enough for today."', req:()=>!!S.f.b2_warrenFloor, go:'b2_c5_nil_mud'}]},
+  b2_c5_nil_all:()=>({sp:'Nil and Nether', scene:'b2_forest', fx:()=>{ S.f.b2_c5_cold = 1; S.f.b2_c5_nilAll = 1; loy('marrow', 1); }, txt:
+`Marrow tells them. ${S.f.b2_warrenFloor ? 'All of it: the row of wounded at the Vathar, the reaching, the fourth man who did not take, and the thing at the bottom of the warren where the water should be, big and patient, that moved when she touched it.' : 'All of it, from Hissar on: the mud, the fur, the healings that took and the ones that did not, the knots and the fingers.'}
+
+Nil listens with his head on one side, the way he listened to the island at the Sekala. When she is finished he says, to the leaf-litter, "Yes."
+
+${b2NilWords()}`,
+    ch:[{t:'Let them go.', go:()=>startExplore()}]}),
+  b2_c5_nil_mud:()=>({sp:'Nil and Nether', scene:'b2_forest', fx:()=>{ S.f.b2_c5_cold = 1; }, txt:
+`Marrow looks at you, and nods, and says nothing more.
+
+It does not matter. Nil lifts his head. "There is a bottom," he says, in the quiet voice, to nobody. "Where the water should be. And something sitting on it." He says it the way a boy tells you there is a dog in the yard.
+
+Marrow shuts her eyes.
+
+${b2NilWords()}`,
+    ch:[{t:'Let them go.', go:()=>startExplore()}]}),
+
   b2_tstone:()=>({sp:'A standing stone', txt: S.f.b2_towerOut ?
 `The standing stone, with the frost on its north face, and the path going away from it toward the tower. You have been. Once is plenty.` :
 `A standing stone at the edge of the mounds, taller than a man, leaning. There is frost on its north face. It is midday, under a summer sun, and there is frost on the stone, white, and it does not melt when you put your hand to it.
@@ -460,7 +526,7 @@ You don't. After a while (a long while, or no time at all) it is not there. The 
 `The brazier burns on with its cold, as it has for longer than anyone has a word for. ${trickBy('b2_breath') ? `${NAME(trickBy('b2_breath'))} does not go near it again. Some of it is still in there, behind the ribs.` : 'Your hand still aches from it.'}` :
 `An iron brazier, grey with age, full of something like coals that are white instead of red. The air above it shivers. You hold out a hand over it, from habit, and the cold comes up into it, and goes on coming, up the wrist and the arm and into the chest, and it is not like ice, it is like a breath held under water: there is a weight in it, and a stillness, and if you could hold on to it a moment longer, you think you could keep some.`,
     ch:[{t:'Hold on. Breathe it in.', check:['wits',16], trick:'b2_breath', req:()=>!S.f.b2_breathTry, fx:()=>{ S.f.b2_breathTry = 1; },
-          edges:id=>[id === 'marrow' && ['she knows a warren when she is standing in one', 2], id === 'tangle' && ['he has held worse things very still', 1], id === 'redblade' && ['a desert man, and every hair on him says no', -1]],
+          edges:id=>[id === 'marrow' && ['she knows a warren when she is standing in one', 2], id === 'tangle' && ['he has held worse things very still', 1], id === 'redblade' && ['a desert man, and every hair on him says no', -1], S.f.b2_c5_cold && ['Nether said the old cold is clean', 1]],
           go:'b2_brazier_yes', fail:'b2_brazier_no'},
         {t:'Take your hand away.', go:()=>startExplore()}]}),
   b2_brazier_yes:()=>({sp:'A cold brazier', txt:

@@ -195,6 +195,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.9.0', ['Book Two meets more of the canon. At the Sekala crossing Coltaine reins in and gives the Third its stretch of bank himself; a sour sapper called Cuttle sits on the box of timers; after the count, Baria Setral of the Red Blades comes along the bank to see who held behind his file. In the Vathar forest, Nil and Nether come to ask Marrow how her warren is.']],
   ['13.8.0', ['Book One meets more of the canon (the first of ten books getting this). At Pale, the night before the Hounds, High Fist Dujek is alone at the top of the Second\'s burial field, reading the helmets: speak to him. In Chapter Four Kettle spends the nights in the vault with Fiddler and Hedge, and learns where the Daru pin a plank.']],
   ['13.7.1', ['Duiker names Kellanved again in Book Two: the old never-use names are allowed now where the speaker would use them.']],
   ['13.7.0', ['Two of the series\' promised callbacks land. Book Nine: Rumjugs and Sweetlard, at the barracks gate in Letheras, sergeants now, loading a handcart. Book Ten: when the Fourth comes over the ridge, ask its sergeant about an old sapper called Hedge.', 'The series\' transfers are checked end to end: every road that carries a squad from one book to the next, through all ten books.']],

@@ -103,7 +103,9 @@ const B2CH2 = {
         {id:'nil', name:'Nil', kind:'nil', x:3, y:5, node:()=>'b2_nil', fresh:()=>!S.f.b2_nil},
         {id:'nether', name:'Nether', kind:'nether', x:4, y:6, node:()=>'b2_nil', show:()=>!S.f.b2_nil || /^b2_nil/.test(S.node || '')},
         {id:'ramin1', name:'A Red Blade', kind:'redblade', x:12, y:3, node:()=>'b2_ramin_first', fresh:()=>!S.f.b2_raminFirst},
-        {id:'duiker2', name:'A ragged man', kind:'duiker', x:6, y:2, node:()=>S.f.b2_duikerBack ? 'b2_duiker_again2' : 'b2_duiker_back', fresh:()=>!S.f.b2_duikerBack} ] },
+        {id:'duiker2', name:'A ragged man', kind:'duiker', x:6, y:2, node:()=>S.f.b2_duikerBack ? 'b2_duiker_again2' : 'b2_duiker_back', fresh:()=>!S.f.b2_duikerBack},
+        /* v13.8 (David, Nov 15): meetings. Cuttle with the timers, once Mincer has named him */
+        {id:'cuttle2', name:'Cuttle', kind:'sapper', x:13, y:6, node:()=>'b2_c2_cuttle', show:()=>!!S.f.b2_mincer, fresh:()=>!!S.f.b2_mincer && !S.f.b2_c2_cuttle} ] },
 
     /* 16 x 12.  ~ deep water  - shallows  p the ford (behind)  s sand  . bank  , reeds  r rock  = tent  W wagon */
     { id:'b2_westbank', title:'The Sekala · the west bank', sub:'Day · the column coming over · the Semk on the ridge', hint:'Tap ground to move · tap a figure to talk · the ford is behind you now', decor:'river',
@@ -125,7 +127,11 @@ const B2CH2 = {
         {id:'chenned', name:'Captain Chenned', kind:'b2soldier', x:5, y:6, node:()=>S.f.b2_westDone ? 'b2_chenned_again' : 'b2_chenned', fresh:()=>!S.f.b2_chenned},
         {id:'ramin2', name:'Ramin', kind:'redblade', x:10, y:6, node:()=>S.f.b2_raminDone != null ? 'b2_ramin_again' : 'b2_ramin', show:()=>!!S.f.b2_blown && !b2In('redblade') && S.f.b2_raminDone !== 0, fresh:()=>!!S.f.b2_blown && S.f.b2_raminDone == null},
         {id:'bult3', name:'Bult', kind:'bult', x:12, y:8, node:()=>'b2_ubaryd', show:()=>!!S.f.b2_blown, fresh:()=>!!S.f.b2_blown && !S.f.b2_ubaryd},
-        {id:'ours4', name:'The squad\'s people', kind:'hissari_m', x:3, y:8, node:()=>'b2_west_ours', show:()=>!!S.f.b2_westDone, fresh:()=>!!S.f.b2_westDone && !S.f.b2_westOurs} ] } ],
+        {id:'ours4', name:'The squad\'s people', kind:'hissari_m', x:3, y:8, node:()=>'b2_west_ours', show:()=>!!S.f.b2_westDone, fresh:()=>!!S.f.b2_westDone && !S.f.b2_westOurs},
+        /* v13.8 (David, Nov 15): meetings. The Fist riding the line before the Semk come (the plan's star for Book Two); the Red Blades'
+           commander along the bank after the names */
+        {id:'coltaine3', name:'Coltaine', kind:'coltaine', x:9, y:4, node:()=>'b2_c2_coltaine', show:()=>!S.f.b2_westDone, fresh:()=>!S.f.b2_c2_coltaine},
+        {id:'baria', name:'Baria Setral', kind:'redblade', x:13, y:5, node:()=>'b2_c2_baria', show:()=>!!S.f.b2_counted, fresh:()=>!!S.f.b2_counted && !S.f.b2_c2_baria} ] } ],
 
   battles:{
     /* Dryj Spring, the Wickans gone: Tithansi raiders come for the water, and the squad is between them and it */
@@ -239,6 +245,9 @@ The Red Blades go up the rise beside you without waiting to be asked.`}`,
     if (f.b2_fordLight === 'dumped') x.push('The squad poured three barrels into the Sekala to lighten the carts on the ford. Every soul in its stretch came over.');
     if (f.b2_fordLight === 'kept') x.push('The squad kept its water on the ford. The carts were slow, and the river took some of the people walking beside them.');
     if (f.b2_duikerBack) x.push('The Imperial Historian came back across the lines at the Sekala in a rebel\'s clothes, three months after anyone had seen him.');
+    if (f.b2_c2_coltaine) x.push('On the west bank of the Sekala the Fist reined in above the squad\'s stretch and gave the Third the bank himself, in one line. It held.');
+    if (f.b2_c2_cuttle) x.push('Cuttle, who had the timers, told the squad to stand over there. The squad stood over there.');
+    if (f.b2_c2_baria) x.push('Baria Setral, commander of the Red Blades, came along the bank after the names to see who had held behind his file.');
     if (b2In('redblade')) x.push('Ramin, a Red Blade of Ehrlitan, walks with the squad. He is lent, he says, until the company remounts. He says it every day.');
     if (f.b2_raminDone === 0) x.push('A Red Blade offered his sword to the squad on the west bank, and the squad said no. He went back to what was left of his company.');
     if (f.b2_spirits) x.push('From the west bank the squad saw the land\'s spirits come up out of the dark and take the Semk god apart. Sathi did not laugh. That is how you know.');
@@ -251,6 +260,8 @@ The Red Blades go up the rise beside you without waiting to be asked.`}`,
     f.b2_ubaryd && `Ubaryd has fallen to the rebellion. The column will have to go all the way to Aren.`,
     b2In('redblade') && `Ramin of the Red Blades walks with the squad, lent until his company remounts. The rebels call his people Malazan lapdogs. The Malazans don't call them anything.`,
     f.b2_duikerBack && `Duiker came back to the column at the Sekala, across the rebel lines, in a rebel's clothes.`,
+    f.b2_c2_coltaine && `At the Sekala the Fist gave the Third its piece of the west bank himself: "Here. Until the last cart is up."`,
+    f.b2_c2_baria && `Baria Setral commands the Red Blades on the Chain. He came along the west bank after the names, to see who had held behind his file.`,
     f.b2_ilharHeard && `A prisoner at Dryj Spring said a man from the water-sellers' quarter of Hissar rides with Reloe's Tithansi.`,
     f.b2_c2_key === 'spring' && `At Dryj Spring the squad held the water for the refugees while Coltaine's Wickans rode out and destroyed a Tithansi army seven times their number.`,
     f.b2_c2_key === 'water' && `At Dryj Spring the squad rode with a Weasel party and took a Tithansi well, while Coltaine's Wickans destroyed a Tithansi army seven times their number.`,
@@ -884,6 +895,33 @@ He goes on down to the ford between his Wickans, ${b2In('sathi') ? 'and Sathi sa
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_duiker_again2:()=>({sp:'Duiker', txt:`He is on the far bank by now, or somewhere in the fog, with the Fist. You can't see him. You'd know him anywhere now: the only man in the column wearing the rebellion's colours on purpose.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
+  /* ---- v13.8 (David, Nov 15): meetings. Cuttle and the timers ----
+     DG ch. 10 (W *Deadhouse Gates/Chapter 10*; W *Battle of Sekala Crossing*, via dg-canon §1 and the Ch2 re-check): Mincer's sappers pave
+     the ford and lace it with 55 cussers, and Cuttle blows it with Reloe's peasants on it. Supported (W, two pages). Cuttle lives on into
+     HoC and later (dg-canon §2); nothing here says so. He never lets the squad near the timers; who lights it stays Mincer's word (b2_mincer_who).
+     Sets b2_c2_cuttle; Tangle +1 (an old company's sapper counting with him). */
+  b2_c2_cuttle:()=>({sp:'Cuttle · Mincer\'s sappers', scene:'b2_sekala_dug', again:'Cuttle, on his crate up the bank, with the box across his knees. He does not look up. You stand over there.', fx:()=>{ S.f.b2_c2_cuttle = 1; if (b2In('tangle')) loy('tangle', 1); }, txt:
+`You find Cuttle by asking. The first two sappers you ask point at each other. The third points up the bank, at a man sitting by himself on a crate with a lidded box across his knees, well away from everyone, the way you would sit with a sleeping snake.
+
+He is not much to look at. Thick through the shoulders, wet to the waist like the rest of them, with a face that has decided in advance how today will go. He has the lid of the box up the width of two fingers, and he is looking into it.
+
+"Don't," he says, before you have said anything. "Whatever it is. Don't stand there. Stand over there." You stand over there. "Timers. Acid in wax. The wax doesn't like the wet, and I don't like the wax." He lets the lid down, a hair at a time. "Fifty-five under that river, and one of these to bite, and all of it on me."${b2In('tangle') ? `
+
+Tangle has come up the bank behind you, and stops at exactly the distance Cuttle wanted, without being told.
+
+"Cuttle."
+
+"Tangle." That is the whole of it, for a while. Then Cuttle, not looking up: "Captain says you're counting again."
+
+"${b2Count()}."
+
+Cuttle nods slowly, as if that were a reasonable answer to anything. "Keep counting. Somebody should, that isn't me."` : ''}
+
+"When the horn goes," he says, "and your people are on the stones, get them off the stones. Don't stop to look at the river. I won't be looking at you."${b2In('marrow') ? `
+
+Marrow waits until you are out of earshot. "He's frightened, child," she says. "Good. The ones who aren't frightened of those boxes don't get old."` : ''}`,
+    ch:[{t:'Stand over there.', go:()=>startExplore()}]}),
+
   b2_ford_wagons:()=>({sp:'The squad\'s carts', txt:
 `The squad's carts and the squad's people, waiting their turn on the bank. ${chainC()} of them. They are standing in the shallows, or asleep on the cart-beds, or watching the hill to the east where the fires are. Out on the ford the cattle are still going over.`,
     html:chainHTML('The Sekala · the east bank'),
@@ -938,10 +976,31 @@ ${b2In('haddat') ? `"Semk," Haddat says. "From the hills. They have a god." Her 
 
 The Red Blades are already riding along the front of the line toward them, red scale flashing, what horses they have left under them.`,
     ch:[{t:'Find whoever is holding this line.', go:()=>startExplore()}]}),
+  /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Two: Coltaine gives the Third its job himself, in one line ----
+     The plan puts it at "the Sekala crossing (Ch 3)"; the crossing is this chapter's (049), so it is built here. Where he is: DG ch. 10
+     (W *Deadhouse Gates/Chapter 10*) has Coltaine lay out the crossing to his captains and warlocks; the regulars cross overnight and dig in
+     on the west bank, Chenned holding it (dg-canon Ch2 re-check, W). Which bank the Fist stood on in the fight: open (nothing places him);
+     the game already has him over the river by dawn (b2_duiker_back, "The Fist is over the river"). Nothing here touches the battle's
+     outcome. His death at Aren is untouched. Sets b2_c2_coltaine; Sathi +1; Chenned's briefing then starts from the Fist's order. */
+  b2_c2_coltaine:()=>({sp:'Coltaine · Fist of the Seventh', scene:'b2_sekala_west', again:'The Fist is further along the line now, at the same walk, looking at the ground.', fx:()=>{ S.f.b2_c2_coltaine = 1; if (b2In('sathi')) loy('sathi', 1); }, txt:
+`The Fist is riding the top of the bank behind the regulars' line, at a walk, with two Crow riders behind him and his cloak of black feathers lifting in the wind off the river. He is looking at the ground. Not at the Semk on the rise, nor the Guran in their squares: at the ground between the line and the water, where the carts are coming up off the ford.
+
+He reins in above the squad's stretch.
+
+He looks at it: the soft wet bank, and the carts, and the people. Then at the squad. Then south, at the rise, where the air is bending. You have the feeling he has counted all of it, and you in it.
+
+"Third." He points with his chin at the bank under his horse's feet. "Here. Until the last cart is up."
+
+Then he rides on along the line at the same walk, and does not look back to see if you heard.${b2In('sathi') ? `
+
+"He gave us the bank," Sathi says, low, as if it were a gift, and to a Wickan it is. "Himself. Not Bult. Not a captain." Then she laughs, because she is Sathi. "Now we cannot lose it. It is very bad luck to lose a thing the Fist gave you."` : ''}${b2In('haddat') ? `
+
+Haddat watches him go. "He looked at the ground before he looked at us," she says. "Good."` : ''}`,
+    ch:[{t:'Salute his back.', go:()=>startExplore()}]}),
   b2_chenned:()=>({sp:'Captain Chenned · the Seventh', fx:()=>{ S.f.b2_chenned = 1; }, txt:
 `The captain holding this stretch of the line is a lean, hollow-eyed Malazan with a bandage round his sword-hand and a voice worn to a whisper by a night of shouting. Chenned, the regulars call him.
 
-"Third Squad. Hissar." He doesn't ask how you know he's in charge. "Good. Your stretch is coming off the ford there." He points with the bandaged hand. "The Semk will come down that rise at it, because it's soft and it's wet and it's full of carts. The Red Blades are going to hit them first. They'll need somebody to hold the bank behind them while they do. That's you."
+${S.f.b2_c2_coltaine ? `"Third Squad. I saw the Fist stop at you." He doesn't ask what was said. "Then you know where. Here's the why.` : `"Third Squad. Hissar." He doesn't ask how you know he's in charge. "Good.`} Your stretch is coming off the ford there." He points with the bandaged hand. "The Semk will come down that rise at it, because it's soft and it's wet and it's full of carts. The Red Blades are going to hit them first. They'll need somebody to hold the bank behind them while they do. That's you."
 
 He looks north, at the three square blocks of Guran in the sun. "And them. They're waiting to see who wins. They'll send a file down the bank to find out if we're soft. Don't be soft."
 
@@ -1046,6 +1105,29 @@ Along the bank the Red Blades are still saying their dead. Ramin says them with 
 Keth watches him go. "Correct," the old woman says, out of him. "He will be correct all the way to Aren." Keth, in his own voice: "She liked him."` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_ramin_again:()=>({sp:'Ramin', txt:`He's with what's left of the Red Blades, saying the names.`, ch:[{t:'Leave him.', go:()=>startExplore()}]}),
+
+  /* ---- v13.8 (David, Nov 15): meetings. Baria Setral, the Red Blades' commander, after the names ----
+     DG ch. 10 (W *Deadhouse Gates/Chapter 10*: Duiker warns Baria Setral of the Red Blades that the Semk have joined Reloe; W *Battle of
+     Sekala Crossing* via dg-canon Ch2 re-check: Baria Setral led the Red Blades there, and they lost about half). Supported (W, two pages).
+     His fate is left alone: dg-canon has it open whether his company stays with Coltaine or reaches Aren, so he says only "when the company
+     calls", as Ramin does. Sets b2_c2_baria; Ramin +1 if he walks with the squad. */
+  b2_c2_baria:()=>({sp:'Baria Setral · the Red Blades', scene:'b2_sekala_eve', again:'Baria Setral is further down the bank, at another squad\'s carts, with his helm under his arm, still on his feet.', fx:()=>{ S.f.b2_c2_baria = 1; if (b2In('redblade')) loy('redblade', 1); }, txt:
+`The Red Blades' commander comes along the bank when the names are done, on foot, with his helm under his arm, stopping at each squad that held a piece of the bank behind his people. A Seven Cities man, like all of them, in the same red-enamelled scale, scored down one side. He has the look of a man who has said a great many names out loud this evening and will not sit down until he has said one thing more.
+
+"Sergeant. Baria Setral." A short bow in the Ehrlitan way, and a Malazan salute on top of it, both correct. "Captain Chenned says the Third held behind my file on the rise." He looks at the bank: the trodden mud, the place where the Guran came. "It held. I wanted to see who."
+
+${b2In('redblade') ? `He looks past you at Ramin, who has gone as straight as a lance. "You have one of mine."
+
+"Lent, sir," Ramin says.
+
+"Lent," Baria agrees. "Keep him fed, Sergeant. He will not ask. And when the company calls him he will come. He has told you, I expect."
+
+"Every day," you say. Baria very nearly smiles.` : S.f.b2_raminDone === 0 ? `"One of mine asked you for a place." There is no reproach in it. "He will find another squad. They all will. I have more men than horses tonight. That has not happened to the Red Blades before."` : `"I have more men than horses tonight. Some of them will come to the Seventh's squads, asking. Hear them, if they ask."`}${S.f.b2_duikerBack ? `
+
+He puts the helm on. "Your historian found me this morning in a rebel's head-cloth and told me about the Semk before anyone else knew." A pause. "He was right."` : ''}${b2In('haddat') ? `
+
+Haddat says something to him in the quarter's Hissari. He answers in it, and then, to you, in Malazan: "She asks if they will spit at us in Aren as well. I told her yes. Louder."` : ''}`,
+    ch:[{t:'Return the salute.', go:()=>startExplore()}]}),
 
   /* ---- Bult, and the news from Ubaryd ---- */
   b2_ubaryd:()=> S.f.b2_raminDone == null ? {sp:'Bult', txt:
