@@ -17,7 +17,11 @@
    the Fourth walks up at the barrows (Witness +1 there), and a regular at the barrows' camp teaches the trick. The hill is never seen.
    Never: Fiddler's hill or who held it; the god on it, the chains, the ring; the Adjunct's charge; the plains-folk's warleader seen; the
    Voice; the Snake's children; the four named regulars; the High Fist on the ridge, his card, the portal; the Adjunct and the High Fist;
-   the barrow speeches. Notes: docs/tcg-ch7-notes.md. The finale (B10CH7.finale, 037's pages) and the extra pages through B10FIN.extra
+   the barrow speeches. Notes: docs/tcg-ch7-notes.md.
+   v13.8 (David, Nov 15): meetings (series-canon §(a0) lifts the distance halves; outcomes, deaths and spoilers stay). After the line the
+   Fourth's sergeant says the High Fist sent it to this end himself, from the ridge, and names him (b10_c7_paran; never the card or the
+   portal). At the barrows: Captain Fiddler, one exchange (b10_c7_fiddler; the speeches stay unheard, never the fiddle, Korlat or the
+   dead); Hedge on a crate at a barrow's mouth, and the Fourth walks up the edge to him (b10_c7_hedge_see; Brisk says it to his face). The finale (B10CH7.finale, 037's pages) and the extra pages through B10FIN.extra
    (the Sixth's road and pages, the Fourth's page, Where the books meet) are at the end of this file; the engine's coda follows them. */
 /* FOR THE ARTIST (187b): names this file uses.
    Items: ART['item/b10_c7_knot'], ['item/b10_c7_ridgecloak'], ['item/b10_c7_roll'].
@@ -262,7 +266,11 @@ const B10CH7 = {
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:5, y:5, node:()=>'b10_c7_thallo', fresh:()=>!S.f.b10_c7_thallo || !b107Key()},
         {id:'sedge', name:'Captain Sedge', kind:'b2soldier', x:11, y:3, node:()=>'b10_c7_sedge', show:()=>!b107South(), fresh:()=>!S.f.b10_c7_boss4},
         {id:'finadd', name:'The Twelfth\'s finadd', kind:'b5_letherii', x:11, y:3, node:()=>'b10_c7_sedge', show:()=>b107South(), fresh:()=>!S.f.b10_c7_boss4},
-        {id:'fourth', name:'The Fourth\'s sergeant', kind:'b2soldier', x:10, y:8, node:()=>'b10_c7_fourth', fresh:()=>!b107FMet() || (!!b107Key() && !b10FourthRoad())} ] } ],
+        {id:'fourth', name:'The Fourth\'s sergeant', kind:'b2soldier', x:10, y:8, node:()=>'b10_c7_fourth', fresh:()=>!b107FMet() || (!!b107Key() && !b10FourthRoad())},
+        /* v13.8 (David, Nov 15): meetings. At the marines' end of the edge, at a barrow's mouth (Epilogue I S2: Fiddler and Hedge there
+           together, R24.4E; W *Fiddler*, *Hedge*: both live): the captain, and Hedge once the Fourth is with the Third */
+        {id:'fiddler', name:'Captain Fiddler', kind:'fiddler', x:14, y:2, node:()=>'b10_c7_fiddler', fresh:()=>!S.f.b10_c7_fiddler},
+        {id:'hedge', name:'Hedge', kind:'hedge', x:14, y:3, node:()=>'b10_c7_hedge_see', show:()=>b107FMet(), fresh:()=>!S.f.b10_c7_hedgeMet} ] } ],
 
   foes:{
     /* on the Twelfth's stretch ('south'): a spear of the Twelfth at the Third's scale, as the regulars are */
@@ -330,7 +338,10 @@ const B10CH7 = {
     if (f.b10_c7_lineDone) x.push(fell.length ? `The Kolansii, and two Shriven, and an Assail, came onto the Third's stretch. ${b107And(fell.map(NAME))} fell there.` : 'The Kolansii, and two Shriven, and an Assail, came onto the Third\'s stretch. Every one of the Third who stood there walked off it.');
     if (f.b10_c7_came) x.push(b107South() ? 'At the barrows the Fourth walked up out of the crowd and said its name.' : 'A Malazan Host came over the ridge, and the Fourth came onto the Third\'s stretch with it.');
     if (f.b10_c7_rimOk) x.push('The Fourth\'s old trick: rim to rim.');
-    if (f.b10_c7_hedge) x.push('The Fourth heard that Hedge came back. Nobody went to look.');
+    if (f.b10_c7_paran) x.push('The High Fist sent the Fourth to the Third\'s end of the line himself, from the ridge, with two fingers.');
+    if (f.b10_c7_hedgeMet) x.push(f.b10_c7_hedgeMet === 'brisk' ? 'At the barrows the Fourth walked up the edge to the marines, and Hedge was there, and Brisk said it to his face: too stubborn to stay dead.' : f.b10_c7_hedgeMet === 'gone' ? 'At the barrows the Fourth walked up the edge to the marines, and Hedge was there, and the Fourth said to his face what Brisk always said.' : 'At the barrows the Fourth walked up the edge to the marines, and Hedge was there, too stubborn to stay dead.');
+    else if (f.b10_c7_hedge) x.push('The Fourth heard that Hedge came back.');
+    if (f.b10_c7_fiddler) x.push('At the barrows the captain asked whether the Third held. It held.');
     if (b107Key()) x.push(`The Third's road: ${B10_ENDW.t[b107Key()][0]}.`);
     if (b10FourthRoad()) x.push(`The Fourth's road: ${B10_ENDW.f[b10FourthRoad()][0]}.`);
     return x; },
@@ -340,6 +351,9 @@ const B10CH7 = {
     b10FourthRoad() && `The Fourth's road: ${B10_ENDW.f[b10FourthRoad()][0]}.`,
     b107Key() && `The Third's road: ${B10_ENDW.t[b107Key()][0]}.`,
     f.b10_c7_bredd && 'At the barrows, somebody asked after a soldier nobody could place.',
+    f.b10_c7_fiddler && 'At the barrows, Captain Fiddler asked whether the Third held, and gave it an order that reached it.',
+    f.b10_c7_hedgeMet && 'At the barrows, the Fourth walked up the edge and found Hedge alive, sitting on a crate.',
+    f.b10_c7_paran && 'The Fourth\'s sergeant said who sent it to the Third\'s end: the High Fist, from the ridge.',
     f.b10_c7_fourthRoad && 'The Fourth told how it got here, in its own words.',
     f.b10_c7_came && (b107South() ? 'The Fourth found the Third at the barrows.' : 'A Malazan Host came over the ridge, and the Fourth with it.'),
     f.b10_c7_lineDone && (fell.length ? `Held the stretch. ${b107And(fell.map(NAME))} did not walk off it.` : 'Held the stretch. Everybody walked off it.'),
@@ -634,7 +648,7 @@ Somebody, years back, said the Fourth and the Third would never meet. Somebody w
 ${b107FSgtC()} takes off the long grey cloak and holds it out. "Spare," the sergeant says. "The Host had more of everything than it should have. Take it."` :
 `${b107FSgtC()} is sitting on an upturned shield behind the stretch with the Fourth round about: ${names.length ? `${b107And(names)}, all of them` : 'nobody else; the Fourth is one sergeant today'}, in the Host's long grey cloaks with the dust of a ridge on them.
 
-"Third squad," the sergeant says, before you can say anything. "Ninth Legion. The heavies' lot." A long look along the Third, the way one sergeant looks at another sergeant's squad. "Fourth. Seventh Company, once, and some other things since. We came over that ridge to the first stretch that looked like it needed somebody." A nod at the open ground. "It did."
+"Third squad," the sergeant says, before you can say anything. "Ninth Legion. The heavies' lot." A long look along the Third, the way one sergeant looks at another sergeant's squad. "Fourth. Seventh Company, once, and some other things since. We came over that ridge and got sent to the end that looked like it needed somebody." A nod at the open ground. "It did."
 
 Somebody, years back, said the Fourth and the Third would never meet. Somebody was wrong about that.`;
       const lines = names.length ? b107FSay({kettle:`\n\n${b10In('tangle') ? 'Kettle sits down next to Tangle and looks at his satchel with professional interest. "What\'ve you got left?" she says. He does not tell her. She approves.' : 'Kettle has a crossbow over her shoulder and a satchel that clinks, and looks at the Third\'s satchel with professional interest. Nobody tells her what is in it.'}`, ohl:`\n\nOhl is already among the Third's cuts with his needle and his opinions. "Who did this one?" he says of a dressing. ${b10In('mirrel') ? 'Mirrel says she did. "Hm," says Ohl. "Good."' : '"Hm," he says. "Good."'}`, brisk:'\n\nBrisk sits down first and stands up again first. "Fourth," she says to the Third, as if that settled everything. It does, mostly.', tuft:'\n\nTuft keeps looking east, past the end of the line, where the smoke was, and then not looking. "Don\'t ask," she says, to nobody who had asked.', _:''}) : '';
@@ -647,28 +661,113 @@ Somebody, years back, said the Fourth and the Third would never meet. Somebody w
               edges:id=>[id === 'haddat' && ['the Hissari shield-wall is the same lock, older', 2], id === 'brask' && ['the heavies\' line is this, with more scale', 2], id === 'darrut' && ['the Aren Guard locked rims on the gate', 1], id === 'pruss' && ['a carter\'s shoulder to the wheel is the same push', 1], id === 'sgt' && (typeof trickBy === 'function' && trickBy('b9_c1_rollcall') === 'sgt' ? ['you already call the heavies\' roll at the gate; this is the lock under it', 2] : ['you have stood in a shield line since Aren', 1]), id === 'tangle' && ['a sapper goes under a line, not along it', -1], id === 'tebbet' && ['an archer stands behind the shields, not in them', -1]],
               go:'b10_c7_rim_ok', fail:'b10_c7_rim_no'}] : []),
             ...(ph === 4 && b107Key() && !b10FourthRoad() ? [{t:'"Where does the Fourth go now?"', go:'b10_c7_fourth_ask'}] : []),
-            ...(!first && !S.f.b10_c7_hedge ? [{t:'"There\'s a sapper with the marines you might have known. An old one. Hedge."', go:'b10_c7_hedge'}] : []),
+            ...(!sth && ph === 3 && !S.f.b10_c7_paran ? [{t:'"Who sent the Fourth down to this end?"', go:'b10_c7_paran'}] : []),
+            ...(!first && !S.f.b10_c7_hedge && !S.f.b10_c7_hedgeMet ? [{t:'"There\'s a sapper with the marines you might have known. An old one. Hedge."', go:'b10_c7_hedge'}] : []),
             {t:'Back.', go:()=>startExplore()}]}; },
     /* v13.7 (polish plan §2, the series continuity read; David, Nov 8: "when they hear Hedge came back, Brisk always knew he was too
        stubborn"). The Fourth knew Hedge in Book One and heard he died at Coral (Book Three). He came back at Letheras and has marched with
        the marines since, recruiting Letherii he calls Bridgeburners (RG ch 17, 23, 24; DoD, TCG: W *Hedge*). The Third knows him as camp
-       word. The Fourth never goes to look for him on the page (rule 12's spirit: the two Fourths never meet). Sets b10_c7_hedge only. */
-    b10_c7_hedge:()=>{ const brisk = b107FIn('brisk'), kettle = b107FIn('kettle'), gone = b107FDead().includes('brisk');
-      return {sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_hedge = 1; }, again:()=>`${b107FSgtC()}, with the Fourth, not talking about Hedge.`, txt:
+       word, and tells the Fourth. v13.8 (David, Nov 15): meetings. The old "never goes to look" is lifted (series-canon §(a0)): the Fourth
+       goes to look, at the barrows (b10_c7_hedge_see), and Brisk says it to his face there. Sets b10_c7_hedge only. */
+    b10_c7_hedge:()=>{ const brisk = b107FIn('brisk'), gone = b107FDead().includes('brisk'), ph = b107Ph();
+      return {sp:b107FSgtC(), scene:ph >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_hedge = 1; }, again:()=>`${b107FSgtC()}, with the Fourth, looking ${ph >= 4 ? 'up the edge toward the marines' : 'east along the line'}.`, txt:
 `${b107FSgtC()} looks at you for a long moment. "Hedge," the sergeant says. "Hedge died at Coral. Everybody said so."
 
 "He came back," you say. It is camp word, and has been since Letheras: an old sapper from Genabackis who walked in on the marines one day as if he had only stepped out, and has been with them since, with a crate of munitions nobody will ask him the source of and a company of Letherii he calls by an old name, to their face. "Nobody asks how. He doesn't say."
 
-${brisk ? `Brisk has gone very still. Then she laughs, once, short, the way she does when a wall goes down that she said would. "Too stubborn," she says. "Too stubborn to stay dead. I always said it." She sits back. "Didn't I always say it?"
-
-She did. The Fourth agrees that she did.` : gone ? `Nobody says anything for a while. "Brisk always said he was too stubborn to stay dead," the sergeant says at last. "Said it at Pale, said it in the hills." A breath. "She'd have liked to be right about that."` : `Nobody says anything for a while. "Too stubborn to stay dead," the sergeant says at last. "Somebody always said so."`}${kettle ? `
-
-Kettle asks what he's using for cussers these days, and whether they're any good, with real professional interest. Nobody can tell her.` : ''}${b107If('tangle', `
+${brisk ? `Brisk has gone very still. Then she stands up. "Where?" she says.` : gone ? `Nobody says anything for a while. "Brisk always said he was too stubborn to stay dead," the sergeant says at last. "Said it at Pale, said it in the hills." A breath. "Somebody ought to tell him."` : `Nobody says anything for a while. "Too stubborn to stay dead," the sergeant says at last. "Somebody always said so."`}${b107If('tangle', `
 
 Tangle says that if it is the same Hedge, he once saw him light a fuse with the end of another fuse, and the Fourth nods: it is the same Hedge.`)}
 
-Nobody suggests going up the line to look for him. There is the morning to get through, and he will be busy, and some things are better as camp word.`,
-      ch:[{t:'Back.', go:()=>startExplore()}]}; },
+${ph >= 4 ? `${b107FSgtC()} looks up the edge, east, to where the marines are standing, what there is of them. "Then let's go and look," the sergeant says.` : `${b107FSgtC()} looks east along the line, a long way, toward the far end of the field. "Tonight, then," the sergeant says. "At the barrows. Everybody comes to the barrows."`}`,
+      ch:[...(ph >= 4 && b107FMet() ? [{t:'Go up the edge with the Fourth.', go:'b10_c7_hedge_see'}] : []), {t:ph >= 4 ? 'Not now.' : 'Back.', go:()=>startExplore()}]}; },
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Ten: the Fourth meets Hedge, and Brisk says it to his face ----
+       Where and when: the barrows, the evening after the battle (Epilogue I). Hedge is at the barrows with Fiddler, at a barrow's mouth
+       (R24.4E S2) and lives (W *Hedge*; tcg-canon §3); the night before at the hill's barrow he was "thinking of buying" Smiley's in Malaz
+       City (R24.4 S9). The leather cap: GotM (W *Hedge*). He held the hill as canon has it: the page shows a man who has put something down,
+       never what, never the god or the ring (rules 98, 108 keep their outcome halves). Kettle's queue is Book One's (b1_c4_sappers) and Book
+       Three's (b3_c7_hedge): Book Eight's import carries no flags, so the exchange reads either way (he remembers, or he takes her word).
+       The Fourth is never played: its sergeant leads, the Third's sergeant goes along. Sets b10_c7_hedgeMet ('brisk' / 'gone' / 'said')
+       and b10_c7_hedge. */
+    b10_c7_hedge_see:()=>{ const brisk = b107FIn('brisk'), gone = b107FDead().includes('brisk'), kettle = b107FIn('kettle'), names = b107FNames(), told = !!S.f.b10_c7_hedge;
+      return {sp:'Hedge', scene:'b10_barrows', fx:()=>{ S.f.b10_c7_hedgeMet = brisk ? 'brisk' : gone ? 'gone' : 'said'; S.f.b10_c7_hedge = 1; },
+        again:()=>'Hedge, on his crate at the barrow\'s mouth, with the Fourth sitting round him in the dirt as if they had never been anywhere else.', txt:
+`${told ? `${b107FSgtC()} walks up the edge toward the marines ${names.length ? `with ${b107And(names)} behind` : 'alone'}, the way you walk up to a door you have not knocked on in years. You go too, because somebody should.` : `${b107FSgtC()} is walking the edge with the Third, not saying much, when the sergeant stops dead and stares up it, east, to where the marines are standing.`}
+
+At the far end of the edge there are not many marines. They are standing anyway.
+
+One of them is sitting on an empty crate at a barrow's mouth with his satchel between his boots: a stocky man in a leather cap gone dark with sweat and dust, older than the Fourth remembers him and exactly the same, picking at the satchel's seams with a thumbnail. He has the look of a man who has been holding something up all day and has only just been let put it down.
+
+He looks up at the boots. Then at the faces. It takes him a moment.
+
+"Pale," Hedge says. "Seventh Company. The Fourth." He looks along them. "Thought you'd all have had the sense to be dead or retired by now."
+
+${brisk ? `Brisk walks straight up to the crate and stands over him with her arms folded.
+
+"Too stubborn to stay dead," she says to his face. "I always said it."
+
+Hedge thinks about that. "You did," he says. "Every time." Then he grins all over his face. "Somebody had to be right about something."` : gone ? `${b107FSgtC()} looks at him a long moment. "Brisk always said you were too stubborn to stay dead," the sergeant says. "Said it at Pale. Said it in the hills. She isn't here to say it. So I am."
+
+Hedge stops picking at the seam. "Then she was right," he says, quietly. He does not ask. Soldiers don't.` : `"Too stubborn to stay dead," ${b107FSgt()} says to his face. "Somebody always said so."
+
+"Somebody always does," says Hedge.`}${kettle ? `
+
+Kettle crouches by the satchel without being asked. "Anybody make it yet?" she says. "The better one. In a shed somewhere."
+
+"Not yet." Hedge looks at her properly. "You in the queue, are you?"
+
+"Second."
+
+He considers that, and nods slowly, as if it settled something. "Still second," he says. "Nobody's moved."` : ''}
+
+"Malaz City," Hedge says after a while, to nobody much. "There's an old bar there. Smiley's. Thinking of buying it." A shrug. "Somebody has to."${b107Say({tangle:`
+
+Tangle stands at the back with his own satchel held against his chest, the way a boy stands near a famous horse. Hedge sees it, and looks at the satchel, and nods to him, one sapper to another. Tangle will be insufferable for days.`, brask:`
+
+Brask stands at the back and says nothing, the way heavies stand near marines. When the Third goes back down the edge he says, "That's him, then," as if a story had turned out to be a man, and seems satisfied with it.`, _:''})}
+
+A little way off, at the barrow's mouth, the marines' captain looks round once at the Fourth, and lifts a hand, and goes back to waiting for whatever he is waiting for.`,
+        ch:[{t:'Leave the Fourth with him. Back down the edge.', go:()=>startExplore()}]}; },
+    /* ---- v13.8 (David, Nov 15): meetings. Paran on the ridge: the Fourth's High Fist sent it to the Third's stretch himself ----
+       Where and when: the ridge over the regulars' field, the battle's end (R24.3 S29–S38; W *Tavore Paran*, ch 24: "relieved by the forces
+       of her brother"); Paran has been High Fist of Onearm's Host since BH (series-canon §(c)). The Fourth knows him: Book One's Captain
+       Paran walking the lines at Pale (c1_paran), Book Six's G'danisban. Told by the Fourth's sergeant, never from his head (lock 4); rule
+       106's naming half lifted (a squadmate knows the name); never the card, the portal, or the Adjunct. The Fourth asking for an end is
+       Rolle's line; the pointing is Claude's call (canon does not say where Paran sent any one squad). Sets b10_c7_paran. */
+    b10_c7_paran:()=>({sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_paran = 1; b107L('brask', 1); }, again:()=>`${b107FSgtC()}, looking up at the ridge now and then.`, txt:
+`"The High Fist," ${b107FSgt()} says. "Himself."
+
+"We came up the back of that ridge at a run with the whole Host, and at the top he was there, on foot, with his staff round him and the field laid out under him like a map somebody had spilled wine on. Everybody up there was looking at the middle, where the colours were. He was looking at the ends." A nod west, past the end of the stretch, where there is nothing but fields. "We'd asked for an end. Any end. He heard us asking. He looked down the line a long time, and then he pointed, two fingers, the way an officer does when he doesn't want a fuss made. 'That one,' he said. 'Somebody's been holding it all day with nobody on their left. Go and be on their left.'"
+
+The sergeant turns a strap over in one hand. "Paran," the sergeant says. "He was a captain at Pale, once, with a new cloak, walking our lines the first night and asking which of the things he'd been told were true." A short laugh. "Never thought he'd remember the Fourth. Maybe he didn't. Maybe he just looks at the ends."${b107FSay({ohl:'\n\nOhl says the High Fist once drank his tea, at Pale, and made the face, and that it does a soldier good to see a man come up in the world who has made the face.', tuft:'\n\nTuft looks up at the ridge, where the standard is, for a long time, and says nothing at all.', _:''})}${b107Say({brask:'\n\n"Somebody looked," Brask says. That seems to be the whole of it for Brask, and it is enough.', haddat:'\n\nHaddat looks west, at the empty end of the stretch, for a long time. "Somebody looked," she says.', _:''})}`,
+      ch:[{t:'Back.', go:'b10_c7_fourth'}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Fiddler at the barrows: one exchange with the captain ----
+       Where and when: the barrows, Epilogue I; Fiddler at his soldiers' barrow and at a barrow's mouth with Hedge (R24.4E S1–S2); captain
+       of the surviving marines and heavies since the camp after the Nah'ruk (TCG ch 4, UK HB p. 99, 110; W *Fiddler*): the "captain's word"
+       Thallo has carried to the Third all book. Rule 110 keeps its half: the speeches unheard, never the fiddle, Korlat or Whiskeyjack; he
+       says nothing of the hill. On 'south' the captain lent the Third to the Commander's column (Ch 1). Sets b10_c7_fiddler; Brask +1. */
+    b10_c7_fiddler:()=>{ const sth = b107South();
+      return {sp:'Captain Fiddler', scene:'b10_barrows', fx:()=>{ S.f.b10_c7_fiddler = 1; b107L('brask', 1); }, again:()=>'The captain, at the barrow\'s mouth, with his back to the army, waiting.', txt:
+`At the east end of the edge, at the mouth of a new barrow, a man is standing with his back to the army: lean, grey in the beard, a crossbow slung. Fiddler. Captain of the marines, and of the heavies too, since the camp after the short-tails. Every captain's word Thallo carried to the Third's fire across the glass was his.
+
+He hears the boots and turns, and looks at the Third the way a sergeant looks at a squad, which is what he was until the day somebody made him something else.
+
+"Third," he says. "Heavies. Thallo's lot." ${sth ? `A pause. "Lent south. The long way round."
+
+"The Commander's column, Captain," you say. "The back of a Letherii line, before the city."
+
+"I know. I lent you."` : `A pause. "You weren't with us."
+
+"The order never reached us, Captain," you say. "We were on Sedge's stretch. The west end."
+
+"Sedge's," he says, and nods, as if that were an answer to something.`} He looks west along the whole length of the edge. "Hold it?"
+
+"We held it."
+
+Fiddler nods, once. "Good," he says. "Go and get some sleep, Sergeant. That's an order. It'll reach you this time. I'm standing right here."
+
+He turns back to the barrow's mouth. Whatever he is waiting for, it is not the Third.${b107Say({brask:'\n\nBrask watches him a while. "Our captain," he says, as if he had only just been told. Perhaps he had.', haddat:'\n\nHaddat adds a name to the end of her list, under her breath. Not one of the dead. One she means to keep.', _:''})}${b107If('pruss', '\n\nPruss takes his old sergeant\'s helm off, for the captain, and puts it back on when the captain has turned away.')}`,
+        ch:[{t:'Back.', go:()=>startExplore()}]}; },
     /* the Fourth's road, in one page of its own words (rule 109): Darujhistan, a ship, Aren, the old Host, a keep, a pass, the sappers */
     b10_c7_fourth_road:()=>({sp:b107FSgtC(), scene:b107Ph() >= 4 ? 'b10_barrows' : 'b10_ridge', fx:()=>{ S.f.b10_c7_fourthRoad = 1; }, again:()=>`${b107FSgtC()}, telling it again, shorter.`, txt:
 `"Out of Darujhistan," ${b107FSgt()} says. "On a lake boat, the morning after the bells. Then a coast, and a ship, and a long time on it. I won't say how long. Long enough to stop being sick, and start again."

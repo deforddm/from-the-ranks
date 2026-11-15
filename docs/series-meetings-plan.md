@@ -1,4 +1,4 @@
-Sun Nov 15, 2026, 12:30 AM PST. Written against v13.7.1. **LIVE: the list of canon meetings to add, book by book, for David to pick.**
+Sun Nov 15, 2026, 7:15 AM PST. Written against v13.17.0 (Built section added). Before that Sun Nov 15, 2026, 12:30 AM PST. Written against v13.7.1. **LIVE: the list of canon meetings to add, book by book, for David to pick.**
 
 # From the Ranks: meeting the canon (the new line, David, Nov 15)
 
@@ -63,6 +63,21 @@ Lock 2 binds hard here: no Malazans, nothing after the conquest.
 - ★ **The Fourth meets Hedge (Ch 7).** Today the Fourth only hears of him (v13.7). Under the new line the Fourth can walk up the line and see him: Brisk says it to his face. He holds the hill, as canon has it.
 - **Paran on the ridge (Ch 7).** The Fourth's High Fist sends them to the Third's stretch himself.
 - **Fiddler at the barrows (Epilogue).** One exchange with the captain. The speeches stay unheard (rule 110).
+
+## Built (v13.8.0 – v13.17.0, Nov 15)
+Every ★ and listed meeting is in the game except where noted; each book also took one or two of its own. Claude's calls are recorded in each version's report and listed here for David to overturn.
+- **One (v13.8.0):** Dujek at the burial field; Kettle with Fiddler and Hedge in the vault. Tattersail not yet built.
+- **Two (v13.9.0):** Coltaine at the Sekala; Cuttle; Baria Setral; Nil and Nether.
+- **Three (v13.10.0):** Whiskeyjack after the parley ("See Mallet"); Quick Ben on the White Face; Paran in Capustan (own); Gruntle on the Maurik (own); Hedge before Coral, a sharper.
+- **Four (v13.11.0):** Keneb at the muster and beside the boy (own); Temul at the trees; Gesler at the barrels; Strings and Gesler at the marines' fire (+1 ford); Gesler's marines on the barrow night (+1 fog). Book Two's Keneb/Gesler/Cuttle flags now carry into Book Four. The "made marines" rumour is invented.
+- **Five (v13.12.0):** Brys at the drill; Bugg at his board (own); Preda Hebaz on the eve of Brans Keep; Moroch Nevath at the bridge the night before (duel stays offstage). Skipped Tehol, Ublala, Hull (placement).
+- **Six (v13.13.0):** Lostara on the Odhan (+1 wash); Hellian (own); Strings and Bottle before Y'Ghatan (+1 ways in); Dujek on foot (Ch2) and in the hospital (Ch4); Paran as Kindly (Ch4) and as High Fist (Ch6, own). Dujek's logs on the Fourth are invented.
+- **Seven (v13.14.0):** Keneb counts the Third (Ch3, Ch5) and lifts his slate (Ch7, own); Hellian on the river road; Brys walks back into Letheras; Hedge and Quick Ben in the streets, a sharper. Keneb's count is "six hundred and some" (Q8 open).
+- **Eight (v13.15.0):** K'rul's Bar in Ch1 (Picker, Blend, Antsy, Mallet's salve; an unnamed historian, own); Kruppe at the Phoenix (+2 Orsa); Spinnock at Kef Tanar, watched not played until Q30's page check (+2 shroud).
+- **Nine (v13.16.0):** Hedge's company (a night with the crates, recipes closed); Keneb before his ride; Bottle (own); Brys and Aranict walk the camp.
+- **Ten (v13.17.0):** the Fourth sees Hedge at the barrows (Brisk to his face); Paran sent them to the Third's left; Fiddler at the barrows; Faint on the escort road (own). Skipped Banaschar, Hellian, Sort, Kindly, Pores, Spax (placement or too near a death).
+
+Still open from this list: Tattersail (One); the Burn's Sleep series timeline; Q30's Kef Tanar page check.
 
 ## Also opened by the new line
 - **Burn's Sleep years.** Rule 13 was never about style: Erikson's own years disagree in places (`series-canon.md` §(e): *House of Chains* prints 1159 against a later 1163; *The Bonehunters*' prologue year is out of step with Laseen's reign; the Tellann years differ by one). So the game left dates relative rather than print a wrong one. Now, at David's word (Nov 15: "help me piece together the puzzle of the books"):

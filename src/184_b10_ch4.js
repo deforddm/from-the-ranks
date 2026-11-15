@@ -19,7 +19,9 @@
    fought down, never killed in words). Phase 2 is the night march (no strangers, no dogs: nothing lives in the glass). 'horses' is the last
    of the Letherii's horses, led at their own pace behind the column's tail; 'pace' keeps up with the column. Phase 3 is the halt at the end
    of the march before grey light; the night thieves are stragglers too. Yelt, Orla, Saffa and the tile-woman went south with the brigades.
-   Never: the three strangers met or named, the staff's wagons close, the Commander's consort and her Hold, the Bolkando queen and her
+   v13.8 (David, Nov 15): meetings (series-canon §(a0)): at the rear the Sixth may take the three strangers a skin before the staff's
+   riders reach them (b10_c4_faint); one of them gives her name. The staff still takes them in, as canon has it.
+   Never: the staff's wagons close, the Commander's consort and her Hold, the Bolkando queen and her
    daughter, the Grey Helms' camp or their commander's ride (dust far off at most), the old Bolkando king. Notes: docs/tcg-ch4-notes.md. */
 /* FOR THE ARTIST (184b): names this file uses.
    Items: ART['item/b10_c4_horsebow'], ['item/b10_c4_rasp'], ['item/b10_c4_veil'].
@@ -287,7 +289,7 @@ const B10CH4 = {
     if (f.b10_c4_forDone) x.push(b104Adj() ? 'Stragglers came for the horses\' water at the day\'s end, and went back up the column without it.' : 'Starving foragers came for the horses at dusk, and went back into the scrub without them.');
     if (f.b10_c4_nightDone) x.push('Thieves at the picket in the dark, and the squad put them off it.');
     if (f.b10_c4_dogsDone) x.push('Half-wild dogs in a wash off the road, and the squad put them off the carcasses.');
-    if (f.b10_c4_strangers) x.push('Three sunburned strangers walked up out of the west at the column\'s rear, and somebody else took them in.');
+    if (f.b10_c4_strangers) x.push(f.b10_c4_faint ? 'Three sunburned strangers walked up out of the west at the column\'s rear. The Sixth got a skin to them before the staff\'s riders did. One of them was called Faint.' : 'Three sunburned strangers walked up out of the west at the column\'s rear, and somebody else took them in.');
     return x; },
 
   journal:()=>{ const f = S.f, adj = b104Adj(); return [
@@ -295,7 +297,7 @@ const B10CH4 = {
     f.b10_c4_walked && (adj ? 'Walked the last of the horses behind the column\'s tail at their own pace. Came in late. All of them.' : 'Walked the horses Tirren\'s way and fell behind the Bolkando. Came in at the tail long after dark, with the horses.'),
     f.b10_c4_kept && (adj ? 'Kept up with the column and drove the horses until they dropped.' : 'Kept up with the Bolkando and drove the horses until they dropped.'),
     f.b10_c4_thirst && f.b10_c4_thirst !== 'none' && f.b10_c4_thirst !== 'waived' && 'The horses drank first. The thirst came after.',
-    f.b10_c4_strangers && 'Three sunburned strangers walked up the road out of the west at the column\'s rear. Riders from the staff went back for them.',
+    f.b10_c4_strangers && (f.b10_c4_faint ? 'Three sunburned strangers walked up the road out of the west at the column\'s rear. The Sixth took them a skin; Faint, of the Trygalle, drank last. Riders from the staff took them in.' : 'Three sunburned strangers walked up the road out of the west at the column\'s rear. Riders from the staff went back for them.'),
     f.b10_c4_forDone && (adj ? 'Stragglers from up the column, after the horses\' water.' : 'Starving people out of the scrub, after the horses.'),
     f.b10_c4_downSeen && 'A horse lay down at the picket and decided whether to get up.',
     adj ? 'The Sixth Company, a few Letherii at the tail of the foreigners\' column, in the middle of the crossing.' : 'The Sixth Company, in the Commander\'s brigades, on the long way round.'].filter(Boolean); },
@@ -503,14 +505,41 @@ ${b104Say({ammet:'Ammet goes round the squad with the needle and the herbs, and 
 
 Far ahead, the Grey Helms' dust, very straight. Behind it, the Bolkando's, trying to keep up. Behind that, the brigades. The train last. The Sixth at the train's rear.${b104If('kaedra', `\n\nKaedra has dropped back to the very end of the train and is walking backwards, looking north up the road. "There's somebody on the road behind us," she says. "Walking."`)}${b104If('tirren', `\n\nTirren walks at the horse-lines with her hand on a neck. She does not look at the road. She looks at their feet.`)}`,
       ch:[{t:'The column.', go:()=>startExplore()}]}),
-    /* the column's rear: the three strangers, seen far off and taken in by somebody else (never met, never named) */
-    b10_c4_rear:()=>({sp:'The column\'s rear', scene:'b10_south', fx:()=>{ S.f.b10_c4_strangers = 1; }, again:()=>'The road north, behind the train, empty now.', txt: S.f.b10_c4_strangers ?
+    /* the column's rear: the three strangers, seen far off and taken in by the staff's riders. v13.8 (David, Nov 15): meetings: the Sixth
+       may get a skin to them first (b10_c4_faint), or leave it to the riders, as before */
+    b10_c4_rear:()=>({sp:'The column\'s rear', scene:'b10_south', fx:()=>{ S.f.b10_c4_strangers = 1; }, again:()=>'The road north, behind the train, empty now.', txt: S.f.b10_c4_rearDone ?
 `The road north, behind the train, is empty again. The dust of the two riders going back up the column has settled.` :
 `Back up the road, where the column's dust is thinnest, three figures are walking south out of the north-west, out of nowhere, across country that has no road on it.
 
 They are a long way off. Even from here you can see they are burned: red as brick, the three of them, the way only somebody who has never been under this sun burns. They walk like people who have been walking a long time and did not expect to be. One of them is waving.
 
-The Sixth does not go. Before it has to decide, two riders come back down the column from the staff's wagons at a trot, and reach them, and there is talking, and the three go up the column with the riders, slowly, and are lost in the dust round the staff's wagons. The Sixth does not see them again.${b104Say({kaedra:'\n\nKaedra watches them go. "No kit," she says. "No water. No road." She shakes her head. "Wherever they came from, it wasn\'t here."', ruuk:'\n\nRuuk watches them go with deep interest. "My grandmother would have had questions," he says. "I have the same questions. They will not be answered."', tobet:'\n\nTobet counts them. "Three," he says. Then, after a while: "Where from?" No answer comes.', _:'\n\nOne of the squad says they looked like sailors. Why, is not clear.'})}`,
+Far up the column two riders have turned out of the dust round the staff's wagons and are coming back down at a trot. They will be a while yet.`,
+      ch: !S.f.b10_c4_rearDone ? [{t:'Take them a skin. Somebody should get there first.', fx:()=>{ S.f.b10_c4_rearDone = 1; }, go:'b10_c4_faint'},
+            {t:'Leave it to the riders.', fx:()=>{ S.f.b10_c4_rearDone = 1; }, go:'b10_c4_rear_left'}, {t:'Not now.', go:()=>startExplore()}]
+        : [{t:'Back to the column.', go:()=>startExplore()}]}),
+    b10_c4_rear_left:()=>({sp:'The column\'s rear', scene:'b10_south', txt:
+`The Sixth does not go. The two riders reach the three, and there is talking, and the three go up the column with the riders, slowly, and are lost in the dust round the staff's wagons. The Sixth does not see them again.${b104Say({kaedra:'\n\nKaedra watches them go. "No kit," she says. "No water. No road." She shakes her head. "Wherever they came from, it wasn\'t here."', ruuk:'\n\nRuuk watches them go with deep interest. "My grandmother would have had questions," he says. "I have the same questions. They will not be answered."', tobet:'\n\nTobet counts them. "Three," he says. Then, after a while: "Where from?" No answer comes.', _:'\n\nOne of the squad says they looked like sailors. Why, is not clear.'})}`,
+      ch:[{t:'Back to the column.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings (Claude's own pick). Faint, Amby Bole and Precious Thimble at the Letherii's rear ----
+       Where and when: TCG ch 13, the southern march; the Trygalle's stranded crew are found at the Letherii's rear, sunburned, and taken
+       in (R13 S1–S3; tcg-canon §5, supported). Who first reached them is not in the sources found: the Sixth only gets there before the
+       staff's riders, and the staff takes them in, as canon has it. Faint a Trygalle shareholder; Amby Bole devoted to Precious Thimble
+       (W *Faint*, *Amby Bole*, *Precious Thimble*). Faint names herself; the others are never named; nothing of what Precious says to
+       the Commander's staff. Sets b10_c4_faint; Kaedra +1 (she saw them first). */
+    b10_c4_faint:()=>({sp:'Three strangers on the road', scene:'b10_south', fx:()=>{ S.f.b10_c4_faint = 1; b104L('kaedra', 1); }, again:()=>'The road north, behind the train, empty now.', txt:
+`You take a skin off the tail of the last wagon and go back up the road at a walk, because nobody runs in this, and ${b104Say({kaedra:'Kaedra comes with you, since she saw them first', ruuk:'Ruuk comes with you, out of curiosity', tobet:'Tobet comes with you, counting', _:'one of the squad comes with you'})}.
+
+Close to, the three are worse than they looked. A lean, hard woman with a torn shirt tied over her head against the sun. A very big young man, walking beside a young woman as if somebody had once told him to and he had decided to go on doing it for ever. And the young woman herself, who looks at the Sixth's skin the way a queen looks at a gift she had been expecting for some time.
+
+The lean woman takes the skin and does not drink. She hands it to the young woman first, and then to the big one, and drinks only when it comes back to her, and then not much.
+
+"Faint," she says, wiping her mouth on her wrist. "Trygalle Trade Guild. Shareholder." She looks past you at the column, the brigades and the train and the dust going away south. "Whose army is this?"
+
+"Lether's," you say. "The Commander's."
+
+"Lether." She thinks about it. "Further than I thought. Nearer than I feared." She gives back the skin, lighter. "We've been walking a while. Don't ask from where."
+
+Then the riders from the staff are there, and there is talking, and the three go up the column with them, slowly. The young woman does not look back. The big one does, once, and lifts a hand to the Sixth, as if a skin of warm water on a bad road were a thing worth remembering. Perhaps to him it is.${b104Say({kaedra:'\n\nKaedra watches them go. "No kit," she says. "No road. A shareholder." She shakes her head. "Whatever a Trygalle is, it is a long way from home."', ruuk:'\n\nRuuk watches them go with deep interest. "My grandmother would have had questions," he says. "I asked none. She would be ashamed of me."', tobet:'\n\nTobet counts them. "Three," he says. "And one skin." He seems to find that it came out right.', _:''})}`,
       ch:[{t:'Back to the column.', go:()=>startExplore()}]}),
     /* the wash off the road: dogs at the carcasses (optional, 'escort') */
     b10_c4_wash:()=>{ if (S.f.b10_c4_dogsDone || S.f.b10_c4_dogsLeft) return {sp:'The wash', scene:'b10_south', txt:

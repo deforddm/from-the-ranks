@@ -1,4 +1,4 @@
-Tue Nov 10, 2026, 2:05 PM PST. Book Ten, Chapter 4, "The Long Way Round" (`src/184_b10_ch4.js`, art `src/184b_b10_ch4_art.js`, test `tools/b10ch4_test.mjs`), against the Book Ten engine on `book10` (v13.0.0, not shipped).
+Sun Nov 15, 2026, 6:51 AM PST (v13.8 meetings, at the end). First written Tue Nov 10, 2026, 2:05 PM PST. Book Ten, Chapter 4, "The Long Way Round" (`src/184_b10_ch4.js`, art `src/184b_b10_ch4_art.js`, test `tools/b10ch4_test.mjs`), against the Book Ten engine on `book10` (v13.0.0, not shipped).
 
 # Chapter 4 notes: The Long Way Round
 
@@ -104,3 +104,7 @@ None. `B10READ[4]`, `SCENEX.b10_c4_dusk`, `SCENEX.b10_south_night` (180's placeh
 ## Tests (Tue Nov 10, 2026)
 
 `python3 build.py`; `node --check` on both files; `node tools/lint.mjs`; `tools/b10ch4_test.mjs` all ok (a `--from=4` start, both keys from the same moment, the thirst waived by `b10_c2_counted`, the `adjunct` road, a transfer's squad with Tirren waiting); `b10engine_test`, `b10ch1_test`, `b10ch2_test`, `b10ch3_test`, `los_test`, `trope_test`, `recruit_test`. A 412×915 screenshot of the first halt. Not run (the lead's instruction): `run_all`, `balance`.
+
+## v13.8 meetings (David, Nov 15: series-canon §(a0))
+
+- **Faint at the rear** (`b10_c4_faint`, Claude's own pick): `b10_c4_rear` now offers "Take them a skin" / "Leave it to the riders" (`b10_c4_rear_left`, the old text) / "Not now". The Sixth reaches the three before the staff's riders; Faint names herself (Trygalle shareholder); Amby Bole and Precious Thimble are described, never named. The staff still takes them in (R13 S1–S3, supported). Kaedra +1. Flags `b10_c4_rearDone`, `b10_c4_faint`.

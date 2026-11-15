@@ -1,4 +1,4 @@
-Tue Nov 10, 2026, 4:09 PM PST. Book Ten, Chapter 7, "Over the Ridge", and the book's finale (`src/187_b10_ch7.js`, art `src/187b_b10_ch7_art.js`, test `tools/b10ch7_test.mjs`), against the Book Ten engine on `book10` (v13.0.0, not shipped).
+Sun Nov 15, 2026, 6:51 AM PST (v13.8 meetings, at the end). First written Tue Nov 10, 2026, 4:09 PM PST. Book Ten, Chapter 7, "Over the Ridge", and the book's finale (`src/187_b10_ch7.js`, art `src/187b_b10_ch7_art.js`, test `tools/b10ch7_test.mjs`), against the Book Ten engine on `book10` (v13.0.0, not shipped).
 
 # Chapter 7 notes: Over the Ridge (and the finale)
 
@@ -124,3 +124,10 @@ None in 180. In this file, guarded: a `mkAlly` wrapper for this chapter's own al
 ## Tests (Tue Nov 10, 2026)
 
 `python3 build.py`; `node --check` on both files; `node tools/lint.mjs`: 0 errors (warnings are the chapter's own battle style and the orphan-looking card/order nodes, as Ch 3–6); `tools/b10ch7_test.mjs` all ok; `trope_test` ok; `repeat_scan` (only the fire's and the Fourth's again-lines, as every chapter). The rest of the run is in the report. Not run (the lead's instruction): `run_all`, `balance`.
+
+## v13.8 meetings (David, Nov 15: series-canon §(a0))
+
+- **Paran on the ridge** (`b10_c7_paran`, phase 3, regulars' field only): asked of the Fourth's sergeant ("Who sent the Fourth down to this end?"). The Fourth asked for an end (Rolle's line); the High Fist, on foot on the ridge, pointed it to the Third's stretch with two fingers. The sergeant names him (Captain Paran at Pale, Book One's `c1_paran`). Never the card, the portal, the Adjunct. Brask +1. Claude's call: the pointing (canon does not place any one squad).
+- **The Fourth meets Hedge** (`b10_c7_hedge_see`, the barrows; NPC `hedge` at 14,3 once the Fourth is met): the old news node `b10_c7_hedge` now ends "tonight, at the barrows" (phase 3) or "let's go and look" (phase 4); "Nobody went to look" is gone. Brisk says "Too stubborn to stay dead. I always said it." to his face (Brisk dead: the sergeant says it for her). Kettle's queue reads either way (Book Eight's import carries no flags). Smiley's (R24.4 S9). He held the hill: shown only as a man who has put something down. Flags `b10_c7_hedgeMet` ('brisk'/'gone'/'said').
+- **Fiddler at the barrows** (`b10_c7_fiddler`, NPC `fiddler` at 14,2): one exchange; he is the "captain's word" all book. The speeches unheard; never the fiddle, Korlat or the dead. Brask +1.
+- Sources: Epilogue I S1–S2 (Fiddler and Hedge at a barrow's mouth, R24.4E), W *Fiddler*, *Hedge*; R24.3 S29–S38 and W *Tavore Paran* p. 871 (the ridge).
