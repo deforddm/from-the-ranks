@@ -185,6 +185,8 @@ const B4CH4 = {
         {id:'cutter', name:'A Seti cutter', kind:'b4_c4_seticutter', x:4, y:4, node:()=>'b4_c4_healer', fresh:()=>!S.f.b4_c4_salve},
         {id:'archer', name:'A Seti archer', kind:'b4_c4_setiwounded', x:12, y:4, node:()=>'b4_c4_archer', fresh:()=>!S.f.b4_c4_archer},
         {id:'lancers', name:'Young Seti lancers', kind:'b4_c4_seti', x:13, y:8, node:()=>'b4_c4_lancers', show:()=>!S.f.b4_c4_lancersDone, fresh:()=>!S.f.b4_c4_lancersDone},
+        /* v13.8 (David, Nov 15): meetings. Gesler's marines going out to the barrows, through the Seti camp at dusk */
+        {id:'gesler', name:'Marines of the 8th, going out', kind:'gesler', x:6, y:2, node:()=>'b4_c4_gesler', show:()=>!!S.f.b4_c4_lancersDone && !b44Key() && !S.f.b4_c4_gesler, fresh:()=>!!S.f.b4_c4_lancersDone && !b44Key() && !S.f.b4_c4_gesler},
         {id:'riders', name:'Riders in the dark', kind:'b4_c4_rider', x:14, y:2, node:()=>'b4_c4_vigil', show:()=>b44Key() === 'seti' && !S.f.b4_c4_woundedDone, fresh:()=>b44Key() === 'seti' && !S.f.b4_c4_woundedDone} ] },
 
     /* 16 x 12 (b4_c4_hills, night, fog: 'picket' only).  . grass  , scrub  # rock  B barrow mounds  L the picket's lantern */
@@ -311,11 +313,15 @@ const B4CH4 = {
     else if (f.b4_raminDone === 2) x.push('Ramin rides with the Red Blades, near.');
     if (f.b4_kethDone === 1) x.push('Keth walks with the squad. The Wickans guarded the wagons on the raid night and lost none.');
     else if (f.b4_kethDone === 2) x.push('Keth is with Temul\'s youths, who guard the wagons now.');
+    if (f.b4_c4_keneb) x.push(f.b4_c4_keneb === 'marrow' ? 'At a noon halt Marrow got up, and took a skin of water down the column to the boy who would not ride, and put a hat on him. Captain Keneb was walking beside him. Marrow has not said anything about it.' : 'At a noon halt the sergeant took a skin of water down the column to the boy who would not ride. Captain Keneb was walking beside him, on foot, at the boy\'s pace.');
+    if (f.b4_c4_gesler) x.push('On the barrow night Gesler\'s marines went out through the Seti camp with their crates, and Gesler told the Third it was marines\' business, and not to come and help. It didn\'t.');
     if (f.b4_c4_setibow) x.push('A Seti archer who will not draw a bow again gave hers to the Third.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
     f.b4_c4_ph >= 5 && 'On the barrow night a Fist was thrown from his horse in the fog, the camp says, and pulled out by marines of the 8th. Keneb, the captain with the boy, is acting Fist.',
+    f.b4_c4_gesler && 'At dusk on the barrow night the 8th\'s marines went out to the hills through the Seti camp with crates on poles. Gesler said whatever the Third heard in the hills was theirs.',
+    f.b4_c4_keneb && 'The boy from the review would not ride. Captain Keneb walked beside him in the noon sun, at the boy\'s pace. The boy drank from the Third\'s skin.',
     f.b4_c4_woundedDone && 'On the barrow night the Third stayed with the Seti wounded. The riders came back for them in the small hours. The camp held.',
     f.b4_c4_picketDone && 'On the barrow night the Third held the far end of the 9th\'s picket line in the fog, a long way from the marines\' trap. Raiders who came round it came at the picket.',
     f.b4_c4_key && (f.b4_c4_key === 'seti' ? 'The Third chose the wounded camp over the picket line on the barrow night.' : 'The Third took the far end of the picket line on the barrow night.'),
@@ -338,7 +344,54 @@ He is far down the column, with the 8th's wagons, a small fair-haired boy in a s
 `The 9th has seen him too. The word goes down the wagons as every word does. *The boy with the bone. The one from the review in Aren. The captain of the 8th's boy.* He would not go in the wagon this morning, the 9th says, or yesterday. He walks. The captain has not made him stop.
 
 ${b44Say({marrow:`"Five, maybe," Marrow says, watching, with her hand up against the glare. "Six. He wants a hat." She does not get up. It is a long way, and he is not hers, and she has been not getting up for a year.`, haddat:`Haddat watches him a long time with the blue shield grounded beside her. "The Chain had children who walked like that," she says. "At the end." She stops, and does not finish it.`, _:'The squad watches him. Out in the heat the small figure goes on beside the wheel, and does not get any nearer.'})}${b4In('tallow') ? `\n\n"He's littler than my sister," Tallow says. "She'd have had a hat on him by now. And a slap." He keeps watching, as if he could put a hat on him from here.` : ''}${b4In('mirrel') ? `\n\nMirrel has her eyes narrowed at the small figure, counting something. "Red in the face, no sweat on him at this distance, and still walking straight," she says. "One, he wants water. Two, he wants shade. Three, he wants somebody to make him." She sits back. "He'll get the first two. In Li Heng we'd have called the third a mother."` : ''}${b4In('yorin') ? `\n\nYorin is squinting up, not at the boy. "Sky's white," he says. "Clear right to the edge. That's the trouble with it." He licks a finger and holds it up and gets nothing. "No wind. It's holding its breath. I hate it when it does that."` : ''}${b4In('rasp') ? `\n\nRasp has the satchel in the wagon's shade and her back to the wheel. "Heat like this, clay sweats," she says, hoarse, to nobody in particular, and pats the satchel like a dog's flank. Then she looks at the boy. "Give that one a hat," she says. "Before I do."` : ''}${b44R({orvas:`\n\nOrvas shades his eyes. "Khundryl children walk beside the herd," he says, "when they are being punished." He watches. "And no one is punishing that one. That is worse."`, redblade:`\n\n"In Ehrlitan," Ramin says, "they would say a child who walks in the sun is a child the sun has chosen." He shrugs. "In Ehrlitan they say all kinds of things."`, warlock:`\n\nThe grandmother, out of Keth, says only: "*Hm.*" And then nothing at all, which is not like her.`})}`,
-      ch:[{t:'Into the shade of the wagons.', go:()=>startExplore()}]}),
+      ch:[{t:'Take a skin of water down the column to him.', req:()=>!S.f.b4_c4_keneb, go:'b4_c4_boywater'},
+          {t:'Into the shade of the wagons.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings (Claude's call, one of the brief's own). Keneb walking beside the boy in the noon sun ----
+       Where and when: the first week of the march, the hottest sun of the year; the boy, about five, refused a wagon and walked
+       (hoc-canon §1.4: the epigraph of HoC ch 19, from Keneb's journals, W19, supported). Keneb is still a captain of the 8th (acting
+       Fist only after the barrow night: R19, W *Gamet*, W *Keneb*); the boy never speaks in his presence (W *Keneb*). That the captain
+       walks beside him is the game's reading of "refused a wagon" (lock 2's gap). Rule 18: a small boy and nothing more; nothing of the
+       epigraph's other words. Never where Keneb's family is (hoc-canon §3). Sets b4_c4_keneb; Marrow +2 if she carries the skin (she has
+       "been not getting up for a year"), else +0. */
+    b4_c4_boywater:()=>({sp:'Down the column', scene:'b4_c4_sun', fx:()=>{ S.f.b4_c4_keneb = b4In('marrow') ? 'marrow' : 'sgt'; b44L('marrow', 2); }, txt:
+`${b4In('marrow') ? `Marrow gets up. She does it slowly, a hand on the wheel, and takes the skin off the wagon's hook without asking whose it is, and puts her hat on, and goes. You go with her.` : `You take a skin off the wagon's hook and a spare hat off a sleeping recruit, and go.`}
+
+It is a long way down the halted column in that sun: past the rest of the 9th in the wagons' shade, past the 8th's tail, the heat coming up through the boots. The boy is still walking when you reach him, beside the wheel of a wagon that has stopped, round and round it, at the pace it would have gone.
+
+There is a man walking with him. A captain of the 8th, on foot, bareheaded, sweating through his cloak, keeping to the boy's pace exactly: Keneb, from the review in Aren. He looks up as you come, and sees the skin, and something in his tired face eases a little.
+
+"He won't ride," Keneb says, before anybody asks. "They put him in a wagon at dawn. He got down. They put him back. He got down." He wipes his face with his sleeve. "So I walk."
+
+${b4In('marrow') ? `Marrow does not ask the boy anything. She gets in front of him and goes down on her heels, so that he has to stop or walk into her, and he stops, and she puts the hat on him, and holds the skin to his mouth. "Small," she says. "Small, child. Then more." He drinks, a little, and then more, his eyes on her over the skin. Then he steps round her and goes on walking. Marrow stays down on her heels in the dust a moment longer, and then gets up, and her face is a face you have not seen on her since Hissar.` : `You hold the skin out. The boy stops, and looks at it, and at you, and drinks, a little, politely, and then more. You put the hat on him. He lets you. Then he steps round you and goes on walking.`}
+
+"He takes it from you," Keneb says. He does not sound hurt. He sounds like a man writing something down in his head, to write down properly tonight. "He won't, from me. Not yet." He looks at the skin. "Thank you, Sergeant. Tell the 9th, if they ask, that the boy's walking because he wants to, and the captain's walking because the boy is." He nearly smiles. "Tell Fist Blistig that too, if he asks. He won't."${b4In('mirrel') ? `\n\nMirrel, who came after you without being asked, has a wet cloth for the back of the boy's neck, and gets it there, walking, without breaking his stride. "One, two, three," she says, under her breath, "and on." Keneb watches her do it and says nothing, but he remembers her face; you see him do it.` : ''}${b4In('tallow') ? `\n\nTallow, at the back, has started walking beside the boy too, on the other side, at the boy's pace, as if he had been told to. Nobody told him to.` : ''}
+
+You leave them there, the captain and the boy and the wagon wheel, and walk back up the column to the 9th's shade. When you look back he is still walking, small, in the hat.`,
+      ch:[{t:'Back into the shade of the wagons.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star, its second half: Gesler's marines going out on the barrow night ----
+       Where and when: the barrow night (HoC ch 19: hoc-canon §1.4, R19, W *Fiddler*). The Adjunct sends the marines out to the hills in
+       a trap; the 9th Company's three marine squads (Fiddler's, Gesler's, Borduke's) are there; Gesler and Pella pull Gamet out in the fog
+       later that night (R19, W *Gamet*), so Gesler goes out. That they pass through the Seti camp on the way is a gap (lock 2). Locks:
+       nobody says what the trap is for (the bait is the Adjunct's, R19); never Gamet's fall foreseen; the Third is not marines, and is
+       told so again; Strings goes by and is not named past what the camp calls him. Sets b4_c4_gesler; the picket's fog flank gets +1
+       (keep low, go round by the barrows' backs). */
+    b4_c4_gesler:()=>({sp:'Marines of the 8th · going out', scene:'b4_seti_fire', fx:()=>{ S.f.b4_c4_gesler = 1; }, txt:
+`In the last of the light a file of marines comes through the Seti camp from the 8th's end of the column, heading north toward the hills, with crates slung on poles between them, and not talking. They step round the wounded without looking down, the way soldiers do who have decided not to look at anything tonight but the next step.
+
+Gesler is at the head of it, gold in the firelight. Stormy is behind him with a crate on each shoulder that two men would have carried. Further back, in the middle of the file, is a lean sergeant with something long wrapped in oilcloth over his shoulder${S.f.b4_c3_strings ? `: Strings, from the fire at the Vathar. He sees the Third, and nods to ${b4In('tangle') ? 'Tangle' : b4In('rasp') ? 'Rasp' : 'you'}, and does not stop` : ''}.
+
+Gesler stops. He sets his end of the pole down, and the man behind him sets his down too, and swears.
+
+"${S.f.b4_c3_strings || S.f.b4_c2_gesler ? 'The Chain lot' : 'Third of the 9th'}," Gesler says. "Listen. Whatever you hear in the hills tonight, it's ours. Don't come and help."
+
+"What is it?"
+
+"Marines' business." He shifts the pole on his shoulder. "Mediums' business is to stay where it's put. You're good at that." He looks north, at the hills going dark. "Fog by the small hours in every low place out there. If they put you out on the hills tonight, keep your lantern low, and if you have to move, go round by the backs of the mounds. Nobody can see in it." He picks the pole up. "Not them either."
+
+${b44Say({tebbet:`Tebbet watches them go, out past the horse lines, into the dusk. "Crates," he says. "Out to the hills. In the dark." He thinks about it. "I would not want to be whoever comes to look."`, darrut:`Darrut watches them go, with his arms folded. "In the Guard," he says, "when they sent the marines out at night, they never said what for either." He considers. "We used to find out in the morning."`, haddat:`Haddat watches them go, out past the horse lines into the dusk, with her shield grounded. "They are not afraid," she says. "Or they are, and it is not for themselves." She does not say anything else.`, _:`The squad watches them go, out past the horse lines into the dusk, the crates swinging between them on the poles.`})}${b4In('tallow') ? `\n\nTallow has half stood up, as if to go with them. He sits down again. "Mediums," he says, to himself, trying the word out. "Stay where it's put."` : ''}`,
+      ch:[{t:'Let them go.', go:()=>startExplore()}]}),
 
     /* ---- the Second Company at the noon halt: Radde, Hollet, the recruits, the Seti riding past ---- */
     b4_c4_radde:()=>({sp:'Sergeant Radde · Second Company', html:nerveHTML('The Second Company'), txt:
@@ -783,7 +836,7 @@ They stop when they see the lantern. Then the one in front, a tall man with a lo
           {t:'Tangle puts a sharper out into the fog where they are.', tag:'uses 1 sharper', req:()=>b4In('tangle') && (S.inv.sharper || 0) > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b4_c4_picket', {pre:'Tangle\'s sharper goes off out in the fog, a yellow flash in the white, and the shapes in it scatter.'})},
           {t:'Rasp puts a sharper out into the fog where they are.', tag:'uses 1 sharper', req:()=>b4In('rasp') && (S.inv.sharper || 0) > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b4_c4_picket', {pre:'Rasp throws where the running men bunched, and the sharper goes off in the fog, a yellow flash in the white. The shapes in it scatter.'})},
           {t:'Go round them in the fog, along the barrow, and take them from the side. (they cannot see either)', check:['wits', 15],
-            edges:id=>[id === 'tebbet' && ['hills are his, and the far view, even in fog', 2], id === 'darrut' && ['he stood the Aren wall in sea-fog for ten years', 2], id === 'orvas' && ['he moves as if the horse were still under him', 1], id === 'tallow' && ['he has never been in fog this thick that wasn\'t on the sea', -1], id === 'hessa' && ['her shield is loud and she is careful of it', -1], id === 'yorin' && ['he can feel which way the fog is moving', 1], id === 'rasp' && ['her satchel clinks if she hurries', -1]],
+            edges:id=>[id === 'tebbet' && ['hills are his, and the far view, even in fog', 2], id === 'darrut' && ['he stood the Aren wall in sea-fog for ten years', 2], id === 'orvas' && ['he moves as if the horse were still under him', 1], id === 'tallow' && ['he has never been in fog this thick that wasn\'t on the sea', -1], id === 'hessa' && ['her shield is loud and she is careful of it', -1], id === 'yorin' && ['he can feel which way the fog is moving', 1], id === 'rasp' && ['her satchel clinks if she hurries', -1], S.f.b4_c4_gesler && ['Gesler said go round by the backs of the mounds', 1]],
             near:{t:'Yes, but a recruit\'s spear-butt rings on the barrow\'s stone in the fog as the squad goes along it, and the nearest of them turn toward it.'},
             go:()=>startBattle('b4_c4_picket', nearMiss() ? {} : {surprise:'p'}), fail:'b4_c4_fog_seen'},
           {t:'Not yet.', go:()=>startExplore()}]}),

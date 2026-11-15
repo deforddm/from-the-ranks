@@ -44,7 +44,9 @@ const b41Token = () => ({thread:b4In('haddat') ? 'a twist of Haddat\'s blue thre
 /* Book Two's b2_nobles7 (the squad stood behind Duiker against Pullyk Alar at Balahn) is not among the flags the transfer keeps (70's
    B4_KEEP); this chapter reads it for one line, so the transfer copies it too. Guarded: a fresh start and Books One to Three are untouched. */
 { const _imp = b4Import;
-  b4Import = function(id){ const r = _imp(id); if (r) { const o = loadSlot(id), v = o && o.f && o.f.b2_nobles7; if (v != null) r.f.b2_nobles7 = v; } return r; }; }
+  b4Import = function(id){ const r = _imp(id); if (r) { const o = loadSlot(id), f = (o && o.f) || {};
+    /* v13.8 (David, Nov 15): meetings. Book Two's meetings with Keneb, Gesler and Cuttle are read by Book Four's (Ch1 Keneb, Ch2–4 Gesler, Ch3 Cuttle) */
+    ['b2_nobles7', 'b2_keneb1', 'b2_kenebHelp', 'b2_gesler', 'b2_gesler7', 'b2_c2_cuttle'].forEach(k => { if (f[k] != null) r.f[k] = f[k]; }); } return r; }; }
 
 /* ---- the Gate Drill: the Aren Guard's gate drill, from Darrut's old sergeant at the 9th's barracks gate. Not sorcery. ---- */
 Object.assign(TRICKS, {
@@ -130,7 +132,9 @@ const B4CH1 = {
         {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:10, y:8, node:()=>S.f.b4_c1_drill ? 'b4_c1_recruits_again' : 'b4_c1_recruits', fresh:()=>!S.f.b4_c1_drill},
         {id:'recruit2', name:'A recruit', kind:'b4_c1_recruit', x:11, y:9, node:()=>S.f.b4_c1_drill ? 'b4_c1_recruits_again' : 'b4_c1_recruits'},
         {id:'blistig', name:'Fist Blistig', kind:'blistig', x:12, y:2, node:()=>'b4_c1_blistig', fresh:()=>!S.f.b4_c1_blistigHeard},
-        {id:'officer', name:'An officer of the 9th', kind:'b2soldier', x:13, y:3, node:()=>'b4_c1_blistig'} ] },
+        {id:'officer', name:'An officer of the 9th', kind:'b2soldier', x:13, y:3, node:()=>'b4_c1_blistig'},
+        /* v13.8 (David, Nov 15): meetings. Keneb, captain in the 8th, comes along the back of the 9th's line after the review with the boy */
+        {id:'keneb', name:'A captain of the 8th', kind:'keneb', x:2, y:4, node:()=>S.f.b4_c1_keneb ? 'b4_c1_keneb_again' : 'b4_c1_keneb', fresh:()=>!S.f.b4_c1_keneb} ] },
 
     /* 16 x 12 (b4_c1_aren, afternoon).  . paving  , sand blown in  # wall  = awning  s the relic stall  c cart  w well  D the 9th's barracks gate
        < west, back to the marshaling ground  > east, to the quay */
@@ -300,6 +304,7 @@ const B4CH1 = {
     if (f.b4_c1_drill === 'clean' || f.b4_c1_drill === 'ok') x.push('The Second Company\'s recruits can lock shields now, after a fashion. They learned it from the Chain lot.');
     if (f.b4_c1_runnersDone) x.push('Durhang runners at the 9th\'s gate went away with less than they came with.');
     if (f.b4_c1_sexton) x.push('The cemetery\'s sexton had been selling the Chain\'s corner. He will not be keeping the gate any more.');
+    if (f.b4_c1_keneb) x.push('After the review Captain Keneb of the 8th came along the 9th\'s line with the boy, asking the Chain\'s people whether anyone knew him. Nobody in the Third did.');
     if (f.b4_c1_cartSharper) x.push('A wagon guard of the 8th is a sharper short, and has the sergeant\'s name.');
     return x; },
 
@@ -310,6 +315,7 @@ const B4CH1 = {
     f.b4_c1_runnersDone && 'Durhang runners came to the 9th\'s barracks gate the day the Red Blades took the drink. The squad and the company sent them off.',
     f.b4_c1_quay && 'Three ships came into Aren with three hundred Wickans of the Crow Clan, Coltaine\'s own, with their horses and their dogs. They will not take orders from a boy.',
     f.b4_c1_sweep && 'The Red Blades are taking every cask and every pipe in the Fourteenth. The soldiers are calling them names. The Red Blades do not seem to mind.',
+    f.b4_c1_keneb && 'Captain Keneb, the 8th\'s, who wrote the Chain in at Aren\'s gate, has the boy from the review. The historian gave him to him. He is asking the Chain\'s people who the boy\'s people were.',
     f.b4_blistig && 'Fist Blistig, the 9th\'s, says the Adjunct is mad and the army is finished. He says it where the soldiers can hear.',
     f.b4_c1_grub && 'At the review a small boy walked out onto the ground with a bone, and the army called it an omen before he had stopped walking.',
     f.b4_c1_blast && 'Something went off under the cobbles in the 8th\'s ranks at the review, and knocked a third of a legion flat. The 8th stood up straighter afterwards. The camp says a sapper did it on purpose.',
@@ -445,6 +451,42 @@ One of his officers says something careful. Blistig looks at him until he stops.
 
 ${b4In('darrut') ? `Darrut, beside you, has gone very still. He followed this man out of the Aren Guard. "He was better on the wall," he says, low. "He was. You'd not know it, now."` : b41Guard() ? `He knew the squad, once, on Aren's wall, when the Chain came in. He keeps his back to the line now. You are not sure he would know you if he turned.` : `The Second Company's recruits, who are near enough to hear, have stopped talking among themselves.`}${b4In('yorin') ? `\n\nYorin has been looking at the sky over the Fist's head. "There's a man who carries his own cloud," he says, low. "They don't blow over. Not that kind."` : ''}`,
       ch:[{t:'Walk away before he sees the Third listening.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Keneb as captain, after the review (series-meetings-plan, Book Four) ----
+       Where and when: Aren's marshaling ground, the review (hoc-canon §1.1: R8, W8). Keneb is a captain of the 8th's 9th Company (W *Keneb*;
+       W *Malaz 14th Army*); he takes the boy up off the ground and says Duiker gave him to him (R8, W8); Duiker handed him the child at
+       Aren's gate and asked him to find the child's people (W *Keneb*, DG); in DG he served in the Aren Guard under Blistig and was among
+       the Guard sent to bring the Chain in (W *Keneb*), which is how the Third knows his face; the boy never speaks in his presence
+       (W *Keneb*, supported). That he walks the 9th's line afterwards is a gap the books leave (lock 2). Rule 18: the boy is a small boy.
+       Rule 28: a captain, nothing more. hoc-canon §3: never where his family is, never the Orbal rumour (Ch3's camp talk), settled.
+       Blistig's "staged" (R8) stays his suspicion. Sets b4_c1_keneb; Marrow +1 (she looks at the boy properly). */
+    b4_c1_keneb:()=>({sp:'Captain Keneb · the 8th', scene:'b4_c1_review', fx:()=>{ S.f.b4_c1_keneb = 1; b41L('marrow', 1); }, txt:
+`A captain of the 8th comes along the back of the 9th's line on foot, the long way round, well clear of the Fist and his officers: a broad man with a tired, ordinary face, in a captain's cloak that has been mended at the hem. A small fair-haired boy walks beside him holding a fold of the cloak in his fist. The bone has been taken off him somewhere. The boy has not.
+
+${b4Was('b2_keneb1') ? `You know him. Keneb, who stood on Aren's gate with a slate the day the Chain came in, and asked how many you had brought in, and wrote it down, and underlined it.` : `You have seen him before. On Aren's north gate, the day the Chain came in, there was an officer of the Guard with a slate, counting the column in as it came through. This was the man.`} He stops in front of the Third and looks it over the way an officer does without meaning to: boots, straps, the satchel, the spear-points, the gaps.
+
+"Third squad, 9th," he says. "The Chain." He counts. It does not take long. "Better kept than the 8th was this morning." A pause. "That isn't difficult."
+
+He does not look down at the boy, and the boy does not look up at him. "The historian gave him to me at the gate," he says. "Duiker. Put him in my arms and said find his people." He says the name carefully, as if it might break. "I've asked the 8th's Chain people. I'm asking the 9th's. Did anyone here know him? From the road."
+
+${b41Say({marrow:`Marrow gets down on her heels in the dust in front of the boy, slowly, with a hand on her knee, and looks at him for a long time, the way she looked at every child who came past her on the Chain: eyes, mouth, the colour under the nails. He looks back. He does not say anything. "There were a great many children, Captain," she says at last. "Most of them I knew by their coughs." She gets up. "Not this one. He's sound, child. Somebody fed him, at the end." That is for the boy, though she says it to Keneb.`, haddat:`Haddat looks at the boy a long breath, and shakes her head. "There were hundreds, at the end," she says. "With the Wickans. The Wickans had their names." She does not say what happened to the Wickans.`, _:`Nobody in the Third knows him. There were a great many children on the Chain, and at the end there was no keeping count of them.`})}${b4In('darrut') ? `\n\nDarrut has drawn himself up behind the big round shield. Keneb's eyes go to the scraped place where the Guard's badge was. "Darrut," he says. "Sir," says Darrut. That is all of it. They stood a wall together one season, and both of them remember which one.` : ''}${b4In('tallow') ? `\n\nTallow, who is not so far from a boy himself, has crouched down too, without being told, and is making a face at the boy. The boy watches the face with great seriousness and does not laugh.` : ''}${b41R({warlock:`\n\nKeth looks at the boy, and the grandmother looks out through him, and for once has nothing to say at all.`})}
+
+Across the ground, Fist Blistig's officers have seen a captain of the 8th at the 9th's line. Keneb sees them see him. He does not go over.
+
+"Thank you, Sergeant," he says. "${b4Was('b2_keneb1') ? 'Somebody should count. I said that, on the gate.' : 'Somebody should ask.'}"`,
+      ch:[{t:'Crouch, and ask the boy his name.', go:'b4_c1_keneb_boy'},
+          {t:'"Sir."', go:()=>startExplore()}]}),
+    b4_c1_keneb_boy:()=>({sp:'Captain Keneb · the 8th', scene:'b4_c1_review', txt:
+`You get down on your heels in the dust. The boy looks at you. He has very clear eyes, and dust in his hair, and he is holding the captain's cloak as if it were a rope on a boat.
+
+"What do they call you?" you ask him.
+
+He does not answer. He looks at you a while longer, politely, and then up the ground at the walls, at something there or nothing.
+
+"He doesn't," Keneb says. "Not to me. Not yet." He is not sorry for himself; he says it as he would say the 8th was late. "He walks. He'll walk all day if you let him." He turns, and the boy turns with him, and they go back along the 9th's line the long way round, the captain and the small boy holding a fold of the cloak, and the recruits who called it an omen this morning step out of their way.`,
+      ch:[{t:'Let them go.', go:()=>startExplore()}]}),
+    b4_c1_keneb_again:()=>({sp:'Captain Keneb', scene:'b4_c1_review', txt:
+`Keneb is a long way down the 9th's line now, asking another squad, with the boy beside him. The squad shakes its heads. He goes on to the next.`,
+      ch:[{t:'Leave him to it.', go:()=>startExplore()}]}),
     b4_c1_well:()=>({sp:'The well', txt:
 `A public well at the edge of the ground, a round curb of old dressed stone, with a bucket on a chain and a queue of thirsty recruits. ${b41Say({haddat:`Haddat goes to the head of the queue, which nobody argues with, and draws a bucket, and then makes each of the recruits drink twice, and says a word in Hissari as each of them does: *water*, *well*, *poisoned*, *enough*, *run*. "You will need these," she tells them. "Say them back to me." They do, badly. She makes them do it again.`, _:`The squad drinks, slowly, the way the Chain taught it, and the recruits watching copy it without knowing they are copying.`})}${b4In('mirrel') ? `\n\nMirrel tastes the first bucket before anyone else drinks from it, and spits, and nods. "Fine. Sweet, even. Don't let it make you careless."` : ''}`,
       ch:[{t:'Drink, and walk on.', go:()=>startExplore()}]}),

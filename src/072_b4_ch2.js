@@ -125,7 +125,9 @@ const B4CH2 = {
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:8, y:5, node:()=>'b4_c2_radde_road', fresh:()=>!S.f.b4_c2_raddeRoad},
         {id:'axes', name:'A squad of the 10th', kind:'b2soldier', x:4, y:2, node:()=>S.f.b4_c2_axes ? 'b4_c2_axes_again' : 'b4_c2_axes', fresh:()=>!S.f.b4_c2_axes},
         {id:'crows', name:'Old pilgrims on the verge', kind:'b4_c2_pilgrim', x:12, y:8, node:()=>'b4_c2_crows', fresh:()=>!S.f.b4_c2_crows},
-        {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:11, y:4, node:()=>S.f.b4_c2_ask ? 'b4_c2_ask_again' : S.f.b4_barrowSeen ? 'b4_c2_ask' : 'b4_c2_recruits_road', fresh:()=>!!S.f.b4_barrowSeen && !S.f.b4_c2_ask} ] },
+        {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:11, y:4, node:()=>S.f.b4_c2_ask ? 'b4_c2_ask_again' : S.f.b4_barrowSeen ? 'b4_c2_ask' : 'b4_c2_recruits_road', fresh:()=>!!S.f.b4_barrowSeen && !S.f.b4_c2_ask},
+        /* v13.8 (David, Nov 15): meetings. Temul at the trees, by day */
+        {id:'temultree', name:'Temul', kind:'b4_c2_temul', x:9, y:8, node:()=>S.f.b4_c2_temulTree ? 'b4_c2_temultree_again' : 'b4_c2_temultree', fresh:()=>!S.f.b4_c2_temulTree} ] },
 
     /* 16 x 12 (b4_c2_way, dusk and night). . trampled road  , verge  # rock  T the trees along the Way  n tents  c the company's carts
        F the Third's fire  ^ the path up the hill */
@@ -147,7 +149,7 @@ const B4CH2 = {
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:5, y:6, node:()=>b42Ph() >= 3 && !b42Key() ? 'b4_c2_key' : 'b4_c2_radde_camp', fresh:()=>b42Ph() >= 3 ? !b42Key() : !S.f.b4_c2_raddeCamp},
         {id:'hollet', name:'Captain Hollet', kind:'b4_c1_hollet', x:10, y:3, node:()=>'b4_c2_hollet_camp', fresh:()=>!S.f.b4_c2_holletCamp},
-        {id:'marines', name:'Marines of the 8th', kind:'b2soldier', x:12, y:8, node:()=>'b4_c2_marines', fresh:()=>!S.f.b4_c2_duiker},
+        {id:'marines', name:'Marines of the 8th', kind:'gesler', x:12, y:8, node:()=>'b4_c2_marines', fresh:()=>!S.f.b4_c2_duiker}, /* v13.8: the gravel-voiced sergeant is Gesler (R11: he shows the tree; W *Duiker*: he thinks the markets) */
         {id:'oldninth', name:'An old soldier of the 9th', kind:'b2soldier', x:3, y:8, node:()=>'b4_c2_oldsoldier', fresh:()=>!S.f.b4_c2_oldsoldier},
         {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:9, y:6, node:()=>'b4_c2_recruits_camp', fresh:()=>!S.f.b4_c2_recCamp},
         {id:'temul', name:'Temul', kind:'b4_c2_temul', x:8, y:1, node:()=>'b4_c2_temul', show:()=>b42Wick() && b42Ph() === 3 && !S.f.b4_temulPast, fresh:()=>b42Wick() && b42Ph() === 3 && !S.f.b4_temulPast},
@@ -274,6 +276,8 @@ const B4CH2 = {
     if (f.b4_c2_key === 'march') x.push('The Third kept its place in the column on the first night, as ordered, and held the 9th\'s line when the raiders came. Radde wrote it down.');
     if (f.b4_c2_robbersDone) x.push('Men from Aren were stripping the braids and feathers off Coltaine\'s Fall for the relic markets. The squad put them off the hill, and put the braids back.');
     if (f.b4_c2_axes === 'stopped') x.push('A squad of the 10th wanted to cut one of the empty trees down. The Third reminded it of the Adjunct\'s order before Radde had to.');
+    if (f.b4_c2_temulTree) x.push(f.b4_c2_temulTree === 'sir' ? 'Temul stood under one of the empty trees on the Aren Way with the historian\'s mare, and the Third called him sir, and meant it. He is counting the trees.' : 'Temul stood under one of the empty trees on the Aren Way with the historian\'s mare and a blank scroll, and the Third stood under it with him.');
+    if (f.b4_c2_gesler) x.push('Sergeant Gesler of the 8th\'s marines went and looked at the historian\'s tree. Empty. He thinks the markets.');
     if (f.b4_temulPast) x.push('Temul walked past the Third\'s fire on the first night, alone, and did not stop. The Crow had refused him.');
     if (f.b4_c2_relicLeft) x.push('The market\'s "Coltaine\'s finger" is buried on the hill where he fell. It is still a goat\'s, probably.');
     if (f.b4_c2_keepLeft) x.push('A keepsake off the Chain stayed on the hill, among the braids.');
@@ -291,6 +295,7 @@ const B4CH2 = {
     b42Done() && (f.b4_c2_key === 'fall' ? 'On the first night the squad went up Coltaine\'s Fall with the pilgrims and left the names there. The men who strip the hill came back in the dark. They went away again without the braids.' : 'On the first night the raiders came to the 9th\'s line in the dark and then to the wagons. The squad was in its place. So was the company.'),
     f.b4_c2_crowTaught && 'An old woman of the Crow Clan, on the hill, taught the word the Crow use for asking the birds.',
     f.b4_c2_robbersDone && 'At dusk there were men on Coltaine\'s Fall cutting down the braids and the feathers for Aren\'s relic markets. The squad drove them off and put the braids back as near as anybody could tell.',
+    f.b4_c2_temulTree && 'Temul, the Wickan youths\' captain, keeps the historian\'s grey mare, and carries a roll of vellum with nothing written on it. He was looking for the historian\'s tree. Nobody says which end of the Way is the last.',
     f.b4_c2_duiker && 'The marines of the 8th say Duiker\'s tree, the historian\'s, the last on the Way, is empty, and no one knows why. The marines think the markets.',
     f.b4_c2_crowsRefuse && 'The Crow elders have refused Temul. They will not be commanded by a boy, they say, not after Coltaine.',
     f.b4_c2_standard && 'The standard went up at the head of the column on the first day: a thin figure holding up a bone before a sandstorm, made of the army\'s bones. From the 9th it was very small.',
@@ -565,6 +570,32 @@ ${b42Say({marrow:`Marrow goes round the squad without asking, and looks at hands
       return {sp:'The Third\'s fire', scene:late ? 'b4_march' : 'b4_road_fire', txt:ln.length ? ln.join('\n\n') : `The squad is quiet tonight. You sit with it, and that is the talk.`,
         ch:[{t:'Back to the fire.', go:'b4_c2_fire'}]}; },
 
+    /* ---- v13.8 (David, Nov 15): meetings. Temul at the trees (series-meetings-plan, Book Four) ----
+       Where and when: the Aren Way, the first day out, among the empty trees (hoc-canon §1.2: R11, W11). Temul is at the Fall that day
+       (R11, W11), captain of the Wickan youths who came through the Chain, the Adjunct's bodyguard (R5, W ch 5); the Wickans guard the
+       wagons on the march (W *Temul*; R19). He carries a blank vellum scroll in Duiker's honour and keeps Duiker's mare (W *Temul*,
+       W *Duiker*: supported). His look follows 72b's figure. Rule 17: the tree is empty and nobody says why; Temul never says Duiker
+       lives, and the narrator says nothing of where the body went. Rule 28: never Temul as Fist. The Crow's refusal is tonight's camp
+       talk and is not touched here. Sets b4_c2_temulTree ('sir' or 'stood'); Sathi or Keth +1 on 'stood', Haddat +1 on 'sir'. */
+    b4_c2_temultree_again:()=>({sp:'Temul · the Aren Way', scene:'b4_c2_trees', txt:'Temul is a long way up the verge now, under another tree, looking up into it, with the grey mare cropping at the end of her lead.',
+      ch:[{t:'Back to the column.', go:()=>startExplore()}]}),
+    b4_c2_temultree:()=>({sp:'Temul · the Aren Way', scene:'b4_c2_trees', txt:
+`Under one of the trees on the verge a grey mare is cropping the dry grass at the end of a lead, and the boy holding the lead has his head back, looking up into the branches.
+
+Temul. Captain of the Wickan youths who came through the Chain, the ones who guard the Adjunct now: a boy in horsehide with ash under his eyes for the dead, braids tied off with copper wire, and a Malazan sword at his hip much too long for him. The youths are up the column with the wagons. He is here, on foot.
+
+He does not turn round. "Spike holes," he says, in a Malazan with the Wickan still in it. "In every one. At the height of a man's hands." He lets that be. "They say the historian's tree was the last on the Way." He looks down the road toward Aren, and up it toward the hill. "Nobody says which end is last."
+
+The mare lifts her head and looks at the squad, and goes back to the grass. "His," Temul says, of her. "I keep her." From inside his coat he takes a roll of vellum tied with a thong and unrolls a hand's width of it. It is clean. Nothing has ever been written on it. "This also." He rolls it up again and puts it away, and does not explain it, and you find you do not need him to.
+
+${b42Say({sathi:`Sathi has come up beside you with Hackle at her knee. She says something to him in Wickan, low and quick, a clan's greeting, the long form. He answers in the short one. It is the first time today anybody has called him by his rank in his own tongue, and he holds himself very straight while she does it.`, warlock:`Keth has gone very still. The grandmother looks out of his face at the boy, and says, in Wickan, in her own voice, something that makes Temul's jaw set. "*She says the Fist would not have stood under a tree,*" Keth tells you, after. "*She says he would have ridden up the column and made them look at him.*" He swallows. "She says it kindly. For her."`, haddat:`Haddat looks up into the tree with him. "Duiker asked everybody's name," she says. "On the road. Mine. He wrote it down." Temul looks at her for the first time. "Yes," he says. "He did that."`, _:`The squad looks up into the tree with him. There is nothing in it but the holes, and a braid somebody has tied on since, and the light.`})}`,
+      ch:[{t:'"We\'ll watch the trees as we go, sir. Every one."', fx:()=>{ S.f.b4_c2_temulTree = 'sir'; b42L('haddat', 1); }, go:'b4_c2_temultree_2'},
+          {t:'Say nothing. Stand under it with him a while.', fx:()=>{ S.f.b4_c2_temulTree = 'stood'; b42L('sathi', 1); b42L('warlock', 1); }, go:'b4_c2_temultree_2'},
+          {t:'Not now.', go:()=>startExplore()}]}),
+    b4_c2_temultree_2:()=>({sp:'Temul · the Aren Way', scene:'b4_c2_trees', txt: S.f.b4_c2_temulTree === 'sir' ?
+`He looks at you when you say *sir*, quickly, to see if it was meant. It was. "Every one," he says. "Yes." He gathers the mare's lead. "Somebody should. I am trying to count the trees." He nearly smiles, and does not, and goes up the verge with the mare toward the head of the column, walking very straight.` :
+`The squad stands under the tree with him and says nothing, and the column goes past behind it, a long way, wagons and dust and boots. After a while he nods, once, to nobody, and gathers the mare's lead. "Thank you," he says, in Wickan and then in Malazan, to be sure, and goes up the verge toward the head of the column with the mare walking beside him, as if she were the one who knew the way.`,
+      ch:[{t:'Back to the column.', go:()=>startExplore()}]}),
     /* ---- the camp at dusk and at night: Radde, Hollet, the marines of the 8th, the old soldier, the recruits, Temul ---- */
     b4_c2_radde_camp:()=>({sp:'Sergeant Radde', fx:()=>{ S.f.b4_c2_raddeCamp = 1; }, txt: b42Ph() >= 4 ?
 `Radde is on his bucket by the company's fire with the book on his knee. "${b42Key() === 'march' ? 'Your place on the line, Sergeant. I wrote it. Go and stand in it.' : 'You\'re up the hill, Sergeant. You\'re not here. I\'m writing you as not here.'}" He writes.` : S.f.b4_c2_robbersDone ?
@@ -581,14 +612,20 @@ He looks at you at last. "The Fist says it's no business of the 9th's what Aren'
 
 He sets the stylus down. "The order for tonight, Sergeant, from the Fist, through me: the column keeps its lines. Pickets out at dark on the camp's edge, every company its own stretch. No wandering off. There've been riders seen in the rocks to the east all afternoon, the scouts say, not many, not near." He looks up at the hill, and the lamps on it. "And the pilgrims are the pilgrims' business."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b4_c2_marines:()=>({sp:'Marines of the 8th', fx:()=>{ S.f.b4_c2_duiker = 1; }, txt:
-`A handful of the 8th's marines are at the water barrels below the road, filling skins and arguing, the way marines do, about everything at once. One of them, a sergeant with a voice like gravel in a pot, is telling it to the others, and the 9th's men round the barrels are listening without pretending not to.
+    /* v13.8 (David, Nov 15): meetings. Deepened, not duplicated: the sergeant at the barrels is Gesler, of the 8th's 9th Company's marines
+       (hoc-canon §1.2: R11, he shows Duiker's tree and says the body went missing; W *Duiker*, he thinks it stolen for the relic stalls),
+       with Stormy (hoc-canon §1.3 has both on the march). Gold skin and the red-bearded Falari: Book Two's own (051, 054). Book Two's squad
+       met them at the Vathar and on Aren's quay (b2_gesler, b2_gesler7, carried by 71's import). Sets b4_c2_gesler as well. */
+    b4_c2_marines:()=>({sp:'Sergeant Gesler · marines of the 8th', fx:()=>{ S.f.b4_c2_duiker = 1; S.f.b4_c2_gesler = 1; }, txt:
+`A handful of the 8th's marines are at the water barrels below the road, filling skins and arguing, the way marines do, about everything at once. One of them, a sergeant with a voice like gravel in a pot and a skin gone the colour of old gold, is telling it to the others, and the 9th's men round the barrels are listening without pretending not to.
 
 "The last one," he is saying. "The last tree on the Way. The historian's. We went and looked." He drinks. "Empty. Spike holes and nothing. No body."
 
-"Crows," says somebody.
+"Crows," says the biggest of them, a red-bearded Falari with shoulders like a doorway.
 
 "Crows don't take the nails," the sergeant says. "He was taken down. And I'd bet you a month's pay what for: the markets. You've seen the stalls in Aren. A bit of the Chain's historian'd fetch a price." He spits. "That's what I think. No one knows."
+
+${b4Was('b2_gesler') || b4Was('b2_gesler7') ? `Then he sees the Third, and looks at it properly, and does the sum the way he did it on Aren's quay. "The Chain lot," he says. "From the Vathar." He touches the bridge of his nose. "Your Fist hit me there. Then I took his wounded down the river anyway." Stormy, beside him, grunts. It might be a laugh. "Gesler," Gesler says, in case the squad has forgotten. "Fifth squad, the 8th's marines, for the moment."` : `Then he sees the Third looking, and looks back, and nods, as one sergeant to another across a water barrel. "Gesler," he says. "Fifth squad, the 8th's marines, for the moment." The red-bearded one is Stormy, it seems. Stormy does not say so. Stormy is drinking.`}
 
 ${b42Say({haddat:`Haddat has gone very still beside you. "Duiker," she says, low, in Malazan. "He walked with us. He asked everybody's name. He wrote them down." She looks north up the dark road. "Someone should have his."`, marrow:`Marrow's hand is on her string. "The historian," she says. "He asked me once what I'd seen. I told him. He wrote it down." She does not say anything about the markets. Her mouth says it for her.`, tangle:`Tangle, beside you, has stopped counting. "The historian," he says. "Duiker. He knew everybody's name on the Chain." He looks north. "Even mine."`, _:`The historian, then. Duiker, who walked the Chain with a notebook and asked everybody's name.`})}${b4In('tallow') ? `\n\nTallow looks from the marines to the squad. "You knew him?" he says. The squad lets that be its own answer.` : ''}${b42Add('rasp', `Rasp has been listening from the barrels with her arms folded. "Marines," she says, to the gravel-voiced sergeant, hoarse. "Always the markets, with marines." He looks at the satchel on her hip, and then at her hands, and decides not to argue with the 9th's sapper.`)}`,
       ch:[{t:'Leave the marines to their water.', go:()=>startExplore()}]}),
@@ -618,7 +655,7 @@ He drinks. "You'll have heard about the boy and the Crow. Three hundred of them 
 
 You know him. The whole squad knows him, from the Chain, from Aren, from the Fist's children. ${b4In('warlock') ? 'Keth half rises, and the grandmother says something low in Wickan, and the boy does not hear it, or will not.' : b4In('sathi') ? 'Sathi half rises, and says his name, and he does not hear it, or will not.' : 'Nobody calls out to him. It is not a night for it.'}
 
-He walks on past the fire and along the line of the camp, toward the Wickan youths' fires, and in the dark at the edge of the firelight his shoulders are not as straight as he is holding them.`,
+${S.f.b4_c2_temulTree ? `This morning he stood under a tree with the Third and talked about the historian's mare. Since then the Crow have said what they said to the Adjunct.\n\n` : ''}He walks on past the fire and along the line of the camp, toward the Wickan youths' fires, and in the dark at the edge of the firelight his shoulders are not as straight as he is holding them.`,
       ch:[{t:'Let him go.', go:()=>startExplore()}]}),
 
     /* ---- the path up the hill at dusk, and the hill ---- */

@@ -173,7 +173,7 @@ const B4CH3 = {
       quest:()=> !b43Key() ? 'Sergeant Radde, on the 9th\'s stretch of the bank.' : b43Key() === 'carry' ? (S.f.b4_c3_scavDone ? 'Dawn, and the sappers.' : S.f.b4_c3_waded ? 'Something moving in the shallows, downstream.' : 'Into the water, with the squad.') : 'Sleep, and the sappers at dawn.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:8, y:8, node:()=>b43Key() ? 'b4_c3_radde_ford' : 'b4_c3_key', fresh:()=>!b43Key()},
-        {id:'sappers', name:'Marines of the 8th, down the bank', kind:'b2soldier', x:14, y:6, node:()=>'b4_c3_sappers', fresh:()=>!S.f.b4_c3_sappers},
+        {id:'sappers', name:'Marines of the 8th, down the bank', kind:'fiddler', x:14, y:6, node:()=>'b4_c3_sappers', fresh:()=>!S.f.b4_c3_sappers || (!S.f.b4_c3_strings && !b43Key())}, /* v13.8: Strings's squad (fiddler's figure) */
         {id:'hollet', name:'Captain Hollet', kind:'b4_c1_hollet', x:3, y:9, node:()=>'b4_c3_hollet_ford', fresh:()=>!S.f.b4_c3_holletFord},
         {id:'scav', name:'Shapes in the shallows', kind:'b4_c3_scavenger', x:13, y:4, node:()=>'b4_c3_scav_start', show:()=>b43Key() === 'carry' && !!S.f.b4_c3_waded && !S.f.b4_c3_scavDone, fresh:()=>!!S.f.b4_c3_waded && !S.f.b4_c3_scavDone} ] },
 
@@ -310,6 +310,7 @@ const B4CH3 = {
     if (b4In('mirrel')) x.push(f.b4_c3_key === 'carry' ? 'Mirrel got the recruits out of the Vathar before the cold took them, and stitched the old ferryman who had been picking it. She has not said which she minded more.' : 'Mirrel laid out her linen for the river men on the far bank. They would not take it. She rolled it up again, three turns and a tuck.');
     if (b4In('yorin') && f.b4_whirlwindSeen) x.push('Yorin saw the Whirlwind from the butte. His copper vane has not pointed true since. He says it will. He checks it every morning.');
     if (b4In('rasp')) x.push(f.b4_c3_key === 'blow' ? 'Rasp watched the marines blow Vathar Crossing from the bank and called it lovely work. Then she was quiet for a day, which the squad had not known she could be.' : 'Rasp hung her satchel on the ferry post and carried bones all night with the rest. She watched the marines blow the ford in the morning, and called it lovely work, quietly.');
+    if (f.b4_c3_strings) x.push('At the Vathar the Third sat at the 8th\'s marines\' fire the night before the blast, with a sergeant called Strings and Sergeant Gesler. Gesler told the Third it was not marines. Stormy said marines were mostly crates.');
     if (f.b4_c3_rope) x.push('The squad cut a length of the old ferry rope off its post at the Vathar. It is knotted round somebody\'s wrist.');
     return x; },
 
@@ -318,6 +319,7 @@ const B4CH3 = {
     f.b4_c3_scavDone && 'The night before the crossing the Third waded its own stretch of the ford and carried out what bones it could. Scavengers came for the iron in them. They did not get it.',
     f.b4_c3_bandDone && 'The night after the crossing a river band came to the offering poles on the far bank, for the blasting. The Third met them.',
     f.b4_c3_key && (f.b4_c3_key === 'carry' ? 'At Vathar Crossing the Third carried its own dead out of the ford before the sappers blew it.' : 'At Vathar Crossing the Third let the sappers blow the ford clear. The army crossed dry, the marines who blew it first.'),
+    f.b4_c3_strings && 'The marines who blew Vathar Crossing are the 8th\'s, a sergeant called Strings and his squad. Strings sets a cracker seal-down. Gesler, from the water barrels, says the Third is the Third of the 9th, medium, and not marines, whatever the camp says.',
     f.b4_c3_ford && 'Vathar Crossing is choked with the Chain\'s dead, from the Day of Pure Blood, and hung with the tribes\' offerings on poles. The Khundryl call it a place of death.',
     f.b4_c3_shaman && 'The Khundryl shamans read the army at the feast: a long but restless life, a life of searching.',
     f.b4_khundryl && 'The riders on the ridges were Gall\'s Khundryl Burned Tears, come to make amends for riding away before Coltaine\'s end. Gall knelt to Temul. The Khundryl are Crow Clan now.',
@@ -680,7 +682,50 @@ ${b43Say({marrow:`Marrow looks for a while, and then turns away. "There is nothi
 `Far down the bank, at the head of the ford where the 8th is camped, there are men at the water's edge in marines' gear: a sergeant and a handful of his squad, and a long-faced sapper wading out to the knee with a pole, prodding the bone-banks, and wading back, and saying something, and wading out again. Another, crouched on the bank, is laying out crates in a row in the last of the light.
 
 Marines of the 8th. The ones who went out to look at the Khundryl, the camp says. They are going to blow the ford in the morning. ${b43Say({rasp:`\n\nRasp watches them with the look of somebody standing outside a bakery. "Marines," she says. "That's the good wax he's setting. The slow stuff." She watches the long-faced one prod the bank, and wade back, and prod again. "He's checking for holes. That's a careful man, Sergeant. That's what the school said they were like, and I never believed it." She does not go down the bank. She would like to, and she does not, and she keeps that to herself so loudly the whole squad can hear it.`, tangle:`\n\nTangle watches them, unmoving, until the light goes. "Crackers," he says at last, very softly. "And cussers. Laid along the banks, the whole width. He's checking for holes first. That's a careful man, Sergeant." He does not go down the bank to them. He does not ask to. "I'd like to watch," he says. "From here."`, _:'The Third watches from where it is. It is not the Third\'s work, or the Third\'s ford, after tonight.'})}`,
-      ch:[{t:'Leave them to it.', go:()=>startExplore()}]}),
+      ch:[{t:'Walk down the bank to the marines\' fire.', req:()=>!S.f.b4_c3_strings, go:'b4_c3_strings'},
+          {t:'Leave them to it.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. The plan's star for Book Four: the Third at the marines' fire, with Strings and Gesler ----
+       Where and when: Vathar Crossing at dusk, the evening before the blast (hoc-canon §1.3: R15, W15). Fiddler, called Strings in the
+       Fourteenth, and Cuttle blow the ford with crackers and cussers in the morning; somebody checks the banks for holes first (R15, W15);
+       Gesler, Stormy and Truth are at the Vathar (R15, W15); Cuttle is in Strings's squad (R11, W11). That the marines lay their crates
+       the dusk before is the game's own reading (73's b4_c3_sappers). The Third is not marines, and is told so (series-canon rule 12's
+       first half, as the plan puts it). Locks: nobody learns who Strings is (his own squad learns in ch 19, R19); Topper's news is never
+       touched here (rule 19); the first feet across stay the marines' (§4). Fiddler's regret at re-enlisting, and Gesler talking him
+       round (R15, W15), is theirs: the Third leaves them to it. Book Two's squad met Gesler at this ford and Cuttle on the Chain (51, 49;
+       71's import). Sets b4_c3_strings; Tangle or Rasp +1; the 'carry' wade gets +1 (Strings says where the bank shelves hard). */
+    b4_c3_strings:()=>({sp:'Strings · the 8th\'s marines', scene:'b4_c3_ford', fx:()=>{ S.f.b4_c3_strings = 1; b43L('tangle', 1); b43L('rasp', 1); }, txt:
+`The marines' fire is a small one, low on the bank above the crates, out of the wind, with a pot on it that nobody is watching. The sergeant comes up out of the water as the Third gets there, wet to the thigh, wiping his hands down his shirt: a lean man with a weathered, tired face and a beard he has stopped trimming. He looks at the squad, and at the satchel, and then for a moment at nothing in particular.
+
+"Strings," says the sapper with the crates, without looking up, and it takes you a breath to understand that it is the sergeant's name and not something about the crates.
+
+"Third of the 9th," Strings says, when you have said it. "Medium." It is not a question. "Sit, if you want. Not on that." *That* is a crate.${b4Was('b2_c2_cuttle') ? `
+
+You know the sapper with the crates. The one with the timers, on the Chain, who told the squad to stand over there. He looks up, and knows you too, and points with his chin at a place well back from the crates. The squad goes and sits there.` : ''}
+
+${b43Say({tangle:`Tangle does not sit. He stands at the edge of the firelight and watches Strings's hands go back into the crate, and Strings lets him watch, which is more than most sappers would. "Cracker," Tangle says, very quietly, as one comes out. "Wax-sealed. Laid with the seal down." Strings looks at him then. "Who taught you that?" "Nobody. I watched." "Keep watching," Strings says. "It's the only school there is." He goes back to the crate, and Tangle stands there with his face doing something he will not want to talk about later.`, rasp:`Rasp does not sit. She stands at the edge of the firelight with her arms folded, watching Strings's hands go back into the crate. "I passed the school," she says, hoarse, to nobody, "at Malaz. They taught us that seal-down was a waste of a second." "It is," says Strings, without looking up. "Right up until it isn't." He sets the cracker. "Which school?" She tells him. Something goes across his face and is gone. "They still teach it like that," he says. "Huh." He does not say anything else, and Rasp stands there for a long time afterwards looking pleased in a way she will deny.`, _:`The squad sits where it is told. Strings goes back to the crates.`})}
+
+Then there are more of them at the fire, out of the dark from the 8th's lines with a jug: a sergeant with gold skin, a red-bearded Falari as big as a door, and a boy carrying the jug as if it were a standard. ${b4Was('b2_gesler') || b4Was('b2_gesler7') ? `Gesler stops when he sees the Third. "This ford," he says. "You lot. Again." He looks down at the water. "The Silanda was tied up about there." He does not say anything about the rest of that day, and neither does the Third.` : S.f.b4_c2_gesler ? `It is Gesler, from the water barrels on the first night, and Stormy, and a boy they call Truth. Gesler knows the Third by its face now, as everybody in the army seems to: the Chain lot.` : `"Gesler," says the gold one, to the Third. "Fifth squad, the 8th's marines, for the moment." He sits down without being asked. The Falari is Stormy. The boy is Truth.`}
+
+${b43Say({tallow:`Tallow, who has been dying to, asks it. "Sergeant. Is it true the Chain squads are going to be made marines? Everybody says—"
+
+"No," says Gesler.
+
+"But we walked the—"
+
+"You walked the Chain," Gesler says. "Which makes you the Third of the 9th, and medium, and the ones who stand in a line and don't move, and stand in it again tomorrow. Marines get sent where it's stupid and run off with whatever's loose." He takes the jug off the boy. "Don't let anybody tell you you're marines. They'll want you to do what we do."
+
+"Mostly crates," Stormy says.`, darrut:`Darrut looks at the crates, and the gold-skinned sergeant, and the Falari, and says what the 9th has been saying since Aren. "The camp says the Chain squads are to be made marines."
+
+"The camp says a lot," says Gesler. "You're the Third of the 9th. Medium. You stand in a line and you don't move, and you stand in it again tomorrow. Marines get sent where it's stupid and run off with whatever's loose." He takes the jug off the boy. "You're not marines. Don't let anybody tell you you are. They'll want you to do what we do."
+
+"Mostly crates," Stormy says.`, _:`"You walked the Chain," Gesler says to you, as if it were the end of an argument nobody had started. "That doesn't make you marines, Sergeant, whatever the camp says. You're the Third of the 9th. Medium. You stand in a line and you don't move." He takes the jug off the boy. "Marines get sent where it's stupid and run off with whatever's loose. Don't let them make you that."
+
+"Mostly crates," Stormy says.`})}
+
+${!b43Key() ? `Strings has been listening without seeming to. He sets the last cracker and stands, and looks down the bank at the 9th's stretch, below, where the bone-banks show pale under the water. "If anybody on your stretch," he says, "were to go in tonight, which I'd not want to hear about, they'd go in at the downstream end. It shelves hard there. Packed." He nods upstream. "That end's mud to the thigh, and it keeps boots." He sits down by the fire. That is all he says about it.` : b43Key() === 'carry' ? `Strings has been listening without seeming to. "Your lot's going in tonight," he says. "I heard." He looks down the bank at the 9th's stretch. "Downstream end. It shelves hard there. The other end keeps boots." That is all he says about it.` : `Strings has been listening without seeming to. "We'll be gone up the far bank before you're in the water," he says. "Stand well back at dawn." That is all he says about it.`}
+
+Gesler sits down by Strings with the jug between them, and the boy Truth stands behind them like a guard on two wounded men, and Gesler says something low about the morning, or about something else. It is not for the 9th. The Third goes back up the bank to its own fire.${b43R({orvas:`\n\nOrvas, going, looks back at the marines' fire. "Those two," he says. "They talk like old men at a grave." He does not say whose.`})}`,
+      ch:[{t:'Back up the bank.', go:()=>startExplore()}]}),
     b4_c3_hollet_ford:()=>({sp:'Captain Hollet', scene:'b4_c3_ford', fx:()=>{ S.f.b4_c3_holletFord = 1; }, txt:
 `Hollet is sitting on a rock above the bank with his tablet on his knee and nothing written on it. He has been looking at the river for some time.
 
@@ -706,7 +751,7 @@ The word goes back up the bank to the Second Company before the Third is in the 
 
 The water is cold. Not cool: cold, the way a river is cold at dusk after a day of sun, coming up through the feet and the shins into the bones.${b43Say({haddat:` Haddat goes in first, to the waist, the blue shield slung, still saying the names.`, _:''})}${b4In('hessa') ? `\n\nHessa wades in with her spear left on the bank and her lips moving: not the names, a temple prayer, short, the one for the doors. "The Worm will have them back in the end," she says, to the river. "Tonight she can wait."` : ''}${b43Sp({mirrel:`Mirrel ties her hospice bag high on a pole on the bank, where it will stay dry, and wades in after it with her sleeves rolled. "One, two, three, and up," she says, at the first bone, to whoever is on the other end of it.`, yorin:`Yorin stands on the bank a breath with his hands up, and the wind off the river drops, all along the 9th's stretch, as if somebody had shut a door on it. "That'll hold an hour," he says, through his teeth. "Maybe two." Then he wades in too.`, rasp:`Rasp hangs the satchel on the ferry post, well up, and looks at it hanging there as if she were leaving a child with strangers. Then she goes in.`})}${b43R({orvas:`\n\nOrvas comes down off the bank and into the water behind you, without a horse. "My clan rode away," he says. "I am not riding away from this." He wades out past you to the bone-bank.`, redblade:`\n\nRamin wades in in his red scale, which is a very bad idea, and does not take it off.`, warlock:`\n\nKeth wades in beside the squad, and the grandmother says, very gently, "*There. There. We have come for you.*"`})}`,
       ch:[{t:'Into the water. (wade the stretch, and carry)', check:['might', 14],
-            edges:id=>[(id === 'hessa' || id === 'darrut') && ['shield-line shoulders', 1], id === 'haddat' && ['she has done this once before, on this ford', 2], id === 'marrow' && ['she is old, and the water is cold', -2], id === 'tebbet' && ['he would rather be anywhere but in this water', -1], id === 'orvas' && ['he wants this more than anyone', 1], id === 'yorin' && ['he has the wind off the bank, for a while', 1], id === 'mirrel' && ['hospice work: lift, carry, lay down, again', 1]],
+            edges:id=>[(id === 'hessa' || id === 'darrut') && ['shield-line shoulders', 1], id === 'haddat' && ['she has done this once before, on this ford', 2], id === 'marrow' && ['she is old, and the water is cold', -2], id === 'tebbet' && ['he would rather be anywhere but in this water', -1], id === 'orvas' && ['he wants this more than anyone', 1], id === 'yorin' && ['he has the wind off the bank, for a while', 1], id === 'mirrel' && ['hospice work: lift, carry, lay down, again', 1], S.f.b4_c3_strings && ['Strings said the bank shelves hard at the downstream end', 1]],
             clean:{t:'The squad works its stretch out to the bone-bank and back, again and again, until the light is gone, and nobody falls.'},
             near:{t:'Yes, but the cold gets into everybody before the work is done: every squadmate who waded starts the next fight a little down, the river still in their bones.', fx:()=>{ SQUAD().forEach(id => bruise(id, 2 + lvT())); }},
             go:'b4_c3_carry_ok', fail:'b4_c3_carry_cold'},
