@@ -2,7 +2,7 @@
 // One line per step, then PASS or FAIL overall; exits 1 on any failure. Full output of a failed step is printed after it.
 // Usage (no npm needed):  node tools/run_all.mjs [--play=N] [--verbose] [--books=hoc,tth | --changed[=ref]]
 //   --books=…   v13.5 (polish plan §0c.5): only those books' own tests (b4*, b8*, moi_test …) beside every shared test; onward_test
-//               audits only their maps; the plays are one per book named. For a change inside one or two books, not for the engine.
+//               audits only their maps; the plays are one per book named, fights won outright (--cheat: the story's flow; balance.mjs measures the fights). For a change inside one or two books, not for the engine.
 //   --changed   the books from `git diff --name-only <ref>` (default origin/main) by the src shelf; any change outside a book's
 //               block (engine, shared art, tools, sw.js) means the full run, and it says so.
 import { spawnSync } from 'child_process';
@@ -29,7 +29,7 @@ const js = [...fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.j
 steps.push(['node --check (' + js.length + ' files)', null, js]);
 steps.push(['lint', 'node', ['tools/lint.mjs']]);
 for (const t of fs.readdirSync(path.join(root, 'tools')).filter(f => f.endsWith('_test.mjs')).sort()) { const tb = testBook(t); if (want.length && tb && !want.includes(tb)) continue; steps.push([t.replace('.mjs', ''), 'node', ['tools/' + t]]); }
-if (want.length) { if (plays) books.forEach(b => steps.push([`play ${b}`, 'node', ['tools/play.mjs', '1', ...(b === 'gotm' ? [] : ['--book=' + b])]])); }
+if (want.length) { if (plays) books.forEach(b => steps.push([`play ${b} (story)`, 'node', ['tools/play.mjs', '1', '--cheat', '--quiet', ...(b === 'gotm' ? [] : ['--book=' + b])]])); } // fights won outright: the plays test the story's flow; balance.mjs measures the fights
 else for (let i = 1; i <= plays; i++) steps.push([`play ${i}/${plays}`, 'node', ['tools/play.mjs']]);
 let bad = 0; const t00 = Date.now();
 const run = (cmd, args) => spawnSync(cmd, args, { cwd: root, encoding: 'utf8', timeout: 45 * 60 * 1000, maxBuffer: 64 << 20 });
