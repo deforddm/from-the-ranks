@@ -15,7 +15,9 @@
    served, a berth home). Then the finale for both squads (B7CH7.finale; the Letherii's pages from B7CH6.fates) and Where the books meet.
    Never: the tunnel or the postern; the palace, the throne room, the Eternal Domicile; the arena; Scale House and the machine; the roofs
    where Ruin falls; the City Garrison fight; the Patriotist compound; Tehol's house; Settle Lake. Never speaks with Keneb, Fiddler,
-   Quick Ben, Hedge, Tehol, Brys, Janath or Varat Taun. Notes for the lead: docs/rg-ch7-notes.md. */
+   Quick Ben, Hedge, Tehol, Brys, Janath or Varat Taun. Notes for the lead: docs/rg-ch7-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance half lifted (series-canon §(a0)): Hedge and Quick Ben stop in the street, looking for
+   Fiddler (b7_c7_hedge); the Fist lifts a hand to the Third from up the road if he has counted it inland (b7_c7_fist). */
 /* FOR THE ARTIST (127b): names this file uses.
    Items: ART['item/b7_c7_lethcloak'], ['item/b7_c7_kingscoin'].
    Figures, all existing: b2soldier (the lieutenant, marines, the Fist's officers far off), b5_c5_refugee (refugees, the water-woman, the
@@ -198,7 +200,9 @@ const B7CH7 = {
         {id:'shouters', name:'Men starting the shouting', kind:'b5_c5_refugee', x:9, y:3, node:()=>'b7_c7_shouters', fresh:()=>!S.f.b7_c7_shouters},
         {id:'runner', name:'A Letherii running', kind:'b5_letherii', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
         {id:'sky', name:'Marines looking up', kind:'b2soldier', x:13, y:8, node:()=>'b7_c7_sky', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_sky},
-        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3} ] },
+        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3},
+        /* v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, looking for Fiddler, before the white dragon; gone on once spoken to */
+        {id:'hedge', name:'Two men going north', kind:'hedge', x:14, y:4, node:()=>'b7_c7_hedge', show:()=>b77Ph() === 3 && !S.f.b7_c7_sky && (!S.f.b7_c7_hedge || /^b7_c7_hedge/.test(S.node || '')), fresh:()=>!S.f.b7_c7_hedge} ] },
 
     /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet */
     { id:'b7_c7_after', title:'Letheras · three weeks on', sub:'A canal street · the new emperor\'s city', hint:'Tap ground to move · tap a figure to talk · the Third\'s billet and its brazier are by the bridge; the canal is south', decor:'b5_c7_canal', dark:false,
@@ -287,6 +291,7 @@ const B7CH7 = {
     if (f.b7_c7_luckOk) x.push('The Third learned the crowd\'s coin from an old woman on a bridge.');
     if (f.b7_c7_view) x.push('From the end of a street the Third saw the garrison of Letheras give up, and heard the crowd shout two words.');
     if (f.b7_c7_quake) x.push('The ground moved under the city, and a white light came up under one quarter, and nobody in the Third knows what it was.');
+    if (f.b7_c7_hedge) x.push('An old sapper in a scorched leather cap stopped the Third in the street, looking for a sergeant called Fiddler, and gave the satchel a sharper and some advice. The small dark man with him called him Hedge.');
     if (f.b7_c7_key) x.push(f.b7_c7_key === 'adjunct' ? 'The Third stays with the army.' : f.b7_c7_key === 'letheras' ? 'The Third takes the new emperor\'s coin.' : 'The Third goes home.');
     return x; },
 
@@ -295,6 +300,7 @@ const B7CH7 = {
     f.b7_c7_ph >= 4 && 'Letheras has a new emperor. The Edur have gone. The Patriotists\' files went to the river in barrows.',
     f.b7_c7_view && 'The garrison of Letheras gave up to the Adjunct. The crowd shouted "Saviour" and "Emperor".',
     f.b7_c7_quake && 'The ground moved under the city, and a white light came up under one quarter. A white dragon was driven off over the palace.',
+    f.b7_c7_hedge && 'In the street on the city\'s last day: an old sapper called Hedge, just got in, he said, and a small dark man with him who would not say from where. They were looking for Fiddler.',
     f.b7_c7_holdoutsDone && 'Patriotists made a stand in a counting-house. The Third went in ahead of the crowd.',
     f.b7_c7_gateDone && 'The Fist took the gate of Letheras himself at first light. The Third went through behind him.',
     'A day out from the city a mage of the marines burned, holding off the Letherii sorcery. The Third saw the light from a league back.'].filter(Boolean); },
@@ -375,7 +381,7 @@ Then they are gone along the wall, and the lantern with them.${b77If('mehet', `\
 
 He walks down the line while you watch, slowly, stopping at every squad in the ditch. Some of the sergeants stand up. He waves them down. You hear his voice once, down the line, not the words, only the sound of it: a tired man, saying a plain thing, the way you would tell a carter which road.
 
-He does not come as far as the Third. A sergeant of borrowed heavies does not go up the road to a Fist, and the Third does not.${b77Say({haddat:'\n\n"He has a face like my uncle," Haddat says. "My uncle was a good man. He died of it."', tangle:'\n\n"He goes in first," Tangle says. "Fists don\'t do that." He thinks about it. "This one does."', _:''})}`,
+He does not come as far as the Third. A sergeant of borrowed heavies does not go up the road to a Fist, and the Third does not.${S.f.b7_c3_keneb || S.f.b7_c5_keneb ? ` But at the end of the line he turns and looks down the road toward the Third, a long way, and lifts a hand with the slate in it. Counting, still.` : ''}${b77Say({haddat:'\n\n"He has a face like my uncle," Haddat says. "My uncle was a good man. He died of it."', tangle:'\n\n"He goes in first," Tangle says. "Fists don\'t do that." He thinks about it. "This one does."', _:''})}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* back down the road: the field a day behind, the barrow unseen */
@@ -585,8 +591,48 @@ Over the palace district, against the smoke, something white is turning in the s
 
 Then, from somewhere on the roofs over there, too far to see who, light: once, twice, a flash and a flat crack that comes late across the city, and something the colour of a burner going off. The white thing turns, and lurches, and goes away north over the river, low, and does not come back.
 
-"Dragon," one of the marines says, to nobody. "A white one." He says it the way you would say *rain*. "Somebody drove it off." He does not say who. He does not seem to want to know.${b77If('ottar', `\n\nOttar watches the sky where it went. "In Perish," he says, after a while, "there is no word for that." He thinks. "There is now."`)}`,
+"Dragon," one of the marines says, to nobody. "A white one." He says it the way you would say *rain*. "Somebody drove it off." He does not say who. He does not seem to want to know.${S.f.b7_c7_hedge && b77Sap() ? `\n\n${NAME(b77Sap())} is looking at the roofs where the flash was. "That was a cusser," ${b77He(b77Sap())} says. "A big one, thrown." A breath. "That was him. The one with the cap."` : ''}${b77If('ottar', `\n\nOttar watches the sky where it went. "In Perish," he says, after a while, "there is no word for that." He thinks. "There is now."`)}`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, fresh back, looking for Fiddler ----
+       The plan's pick (series-meetings-plan, Book Seven: "Hedge and Quick Ben at Letheras, Third Ch7: Hedge fresh back, the first time
+       the Third hears of him"). Where and when: Quick Ben and Hedge reach Letheras during the invasion, leave their companions at a house
+       and go looking for Fiddler; they find his squad on a building over the palace as Silchas Ruin dives, Hedge throws a cusser and Quick
+       Ben drives the dragon off (W *Hedge*; R24.2 S39; rg-canon §2) [supported]. So the street meeting comes before the white dragon
+       (shown only while b7_c7_sky is unset), and the sky node reads it. Hedge's look: a weathered face the colour of his scorched leather
+       cap, pulled over his ears (W *Hedge*). Locks: rule 62/19, his return is never explained and he was never said to be dead here; rule
+       60, the dragon is never named; nothing of the companions, the house, the arena or Sirryn; nothing of the Letherii company he raises
+       in DoD (Book Nine's b9_c1_ladies). Book Ten's b10_c7_hedge builds on this: "an old sapper from Genabackis who walked in on the
+       marines one day as if he had only stepped out", and Tangle "once saw him light a fuse with the end of another fuse" (here). Book
+       Nine's b9_c5_sappers: Tangle (or Rasp) knows him by sight after. The sapper +1; the satchel +1 sharper. Sets b7_c7_hedge. */
+    b7_c7_hedge:()=>{ const sp = b77Sap();
+      return {sp:'An old sapper and a small dark man', scene:'b7_city_burning', fx:()=>{ if (!S.f.b7_c7_hedge) { S.f.b7_c7_hedge = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; if (sp) b77L(sp, 1); note('A sharper for the satchel, from a bag nobody is going to ask about.', 'good'); } },
+      again:()=>'The two men have gone on north, toward the palace district.', txt:
+`Two men are coming down the street against the crowd, the way men walk who have somewhere to be and have not been told the way.
+
+One is small and dark and slight, in a plain coat with nothing on it, and he looks at everything in the street, the Third included, as if he were adding it up and did not like the total. The other is a sapper. There is no mistaking it. A weathered face the colour of the scorched leather cap pulled down over his ears, a crossbow slung, and on his hip a heavy bag he carries the way a sapper carries the kind of bag you do not drop.
+
+The sapper sees the Third's shields and his whole face opens. "Malazans," he says. "Heavies, is it? Good. Where's the marines? I'm looking for a sergeant. Fiddler. Fid. Beard, worried look, sick on boats." He waits. "You'd know him. Everyone knows him. He's always about to be sick."
+
+The Third does not know where the marines' squads went. The lieutenant never said.
+
+${sp ? `The sapper's eyes have gone to ${NAME(sp)}'s satchel, the way a sapper's eyes always go to another sapper's satchel. "What are you carrying?" He does not wait to be told. He has a fuse out of it, and a knife, and he looks at the fuse the way a cook looks at bad meat. "Long," he says. "You'll be standing there counting while they walk up and take it off you." He cuts a thumb's length off the end, and lights it, without looking, off the end of another fuse he has smouldering behind his ear, and the two of them watch it burn down. "Slow. Cut them short, and you'll live long enough to complain about it." He pinches it out and hands it back.
+
+${NAME(sp)} is staring at him. "You lit a fuse," ${b77He(sp)} says, "with a fuse."
+
+"How else would you light one?"` : `The sapper looks the squad over the way a sapper looks at anything, for where it would come apart. "No sapper," he says. "Who carries the munitions?" You do. He looks at what you carry, and sighs, as if it were a personal sorrow.`}
+
+"Hedge," says the small man.
+
+"Coming." The sapper takes something out of the bag, round and clay and heavy, a sharper, and ${sp ? `tucks it into ${NAME(sp)}'s satchel` : 'puts it into your hand'}. "You're short," he says. "Everyone's short." Then, because the name is out: "Hedge. Just got in."
+
+"Don't," says the small man, to nobody, and lifts his head a little, as if he were listening for something too high to hear. "North," he says. "By the palace. He's up on a roof, the idiot."
+
+"Course he is," says Hedge, delighted, and they go on up the street together toward the palace district, the small man in front and Hedge talking at his back the whole way.${b77Say({marrow:`
+
+Marrow watches the small man go. "That one is a great deal more than he looks, child," she says. "And he knows it, and wishes he didn't."`, haddat:`
+
+Haddat watches them go. "He was happy," she says, of the sapper. "In this city, today." She thinks about it. "Somebody should be."`, _:''})}`,
+      ch:[{t:'Back to the street.', go:()=>startExplore()}]}; },
     /* the arena, as news (rules 33-35, 58): the Emperor fell and has not got up; an Edur killed there after */
     b7_c7_news:()=>({sp:'A Letherii running', scene:'b7_city_burning', fx:()=>{ S.f.b7_c7_news = 1; }, again:()=>'The young man has gone on, telling the next street.', txt:
 `A young man comes running down the street from the north, a clerk by his ink-stained cuffs, and when he sees the Third he does not run away. He stops, out of breath, and tells them, because he has to tell somebody and they are there.

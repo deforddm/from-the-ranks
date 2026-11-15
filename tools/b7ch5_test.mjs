@@ -31,7 +31,7 @@ const r = await page.evaluate(async () => {
     if (S.node !== BATTLES[id].after) talk(BATTLES[id].after);
     res.after = S.node; return res; };
   const nodes = Object.keys(DLG).filter(k => /^b7_c5_/.test(k));
-  const leak = /undefined|NaN|\[object |\$\{|\bnull\b|Kettle|Tehol the Only|Mael\b|Hellian|\bUrb\b|\bBowl\b|Lutes|Tavos|Primly|Badan|Bonehunter/;
+  const leak = /undefined|NaN|\[object |\$\{|\bnull\b|Kettle|Tehol the Only|Mael\b|\bBowl\b|Lutes|Tavos|Primly|Badan|Bonehunter/;  // v13.8 (David, Nov 15): meetings (Hellian and Urb on the river road)
   const renderAll = () => { const errs = []; nodes.forEach(k => { try { const n = DLG[k](); if (!n || typeof n.txt !== 'string' || !n.txt.trim()) errs.push(k + ': no text'); else if (leak.test(n.txt + (n.html || ''))) errs.push(k + ': leaks ' + (n.txt + (n.html || '')).match(leak)[0]); else if (n.scene && !SCENES[n.scene]) errs.push(k + ': scene ' + n.scene); else if (/!/.test(n.txt)) errs.push(k + ': an exclamation mark'); (n.ch || []).forEach(c => { const t = typeof c.t === 'function' ? c.t() : c.t; if (/undefined|NaN/.test(t)) errs.push(k + ': choice leaks'); }); } catch (e) { errs.push(k + ': ' + e.message); } }); return errs; };
   const allPhases = () => { const keep = {ph:S.f.b7_c5_ph, key:S.f.b7_c5_key, hd:S.f.b7_c5_holdDone, roof:S.f.b7_c5_roof}, e = [];
     for (const ph of [1, 2, 3, 4]) for (const key of [null, 'hold', 'slip']) for (const roof of [0, 1]) { if (ph < 3 && key) continue; if (roof && key !== 'hold') continue; S.f.b7_c5_ph = ph; S.f.b7_c5_key = key || undefined; S.f.b7_c5_holdDone = key === 'hold' && ph >= 4 ? 1 : undefined; S.f.b7_c5_roof = roof || undefined; e.push(...renderAll().map(x => `ph${ph}${key ? ' ' + key : ''}${roof ? ' roof' : ''}: ${x}`)); }

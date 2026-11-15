@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.13.0';
+const VERSION = '13.14.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9124,6 +9124,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.14.0', ['Book Seven meets more of the canon. Fist Keneb finds the Third in the wood and asks how many it has lost since the coast, and writes it down. Sergeant Hellian on the river road, with rum off a burning ship. In Letheras the Sixth stands inside the river gate as the King\'s Champion who was dead walks past, soaked, toward the Patriotists. And in the streets on the last day, two Malazans looking for a friend: a sapper in a leather cap who has just got in, and a wizard who would rather not say.']],
   ['13.13.0', ['Book Six meets more of the canon. On the Odhan a Red Blade captain, Lostara Yil, reads Leoman\'s trail, and a sergeant from Kartool wants a drink. Before Y\'Ghatan, Sergeant Strings on the spoil, with a young marine who keeps something alive in his shirt. In the Host, Dujek Onearm walks the column on foot, then lies in the field hospital, and Captain Kindly, whom the Fourth knew by another name, comes out to them. Later the new High Fist walks the lines and asks after feet.']],
   ['13.12.0', ['Book Five meets more of the canon. On the festival\'s first morning the King\'s Champion, Brys Beddict, watches the Sixth drill from the barracks gate, and says one thing about Thegg\'s feet. A builder called Bugg at his board on the Low Walk. Preda Unnutal Hebaz walks the Whitefinders\' lines the night before Brans Keep and asks what the white finger is for. And the night before the city falls, the squad carries its roll to Finadd Moroch Nevath at the principal bridge over Main Canal.']],
   ['13.11.0', ['Book Four meets more of the canon. Captain Keneb looks the squad over at the muster, with the boy beside him who never speaks. Temul under an empty tree on the Aren Way, Duiker\'s grey mare beside him. Gesler at the water barrels. At Vathar Crossing a sergeant called Strings shares the marines\' fire, and Gesler tells the Third it is not marines. On the barrow night Gesler\'s marines go out into the fog.']],
@@ -86509,7 +86510,9 @@ const B7CH3 = {
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
         {id:'wenna', name:'A Shake fisher', kind:'wenna', x:12, y:7, node:()=>'b7_c3_wenna', show:()=>S.f.b7_wennaDone == null || S.f.b7_wennaDone === 2, fresh:()=>S.f.b7_wennaDone == null},
         {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines},
-        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
+        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd}, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
+        /* v13.8 (David, Nov 15): meetings. Fist Keneb walking the lie-up at dusk, once the lieutenant has given the night's orders */
+        {id:'keneb', name:'Fist Keneb', kind:'keneb', x:11, y:3, node:()=>'b7_c3_keneb', show:()=>b73Ph() === 1 && !!S.f.b7_c3_orders1, fresh:()=>!S.f.b7_c3_keneb} ] },
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
        field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
@@ -86623,6 +86626,7 @@ const B7CH3 = {
     if (f.b7_c3_tracksOk) x.push('The Third learned the Shake tracks: the field-drains no map shows.');
     if (f.b7_c3_steward === 'freed') x.push('The factor\'s steward walked off down the lane toward the city with the clothes he stood in.');
     if (f.b7_c3_steward === 'locked') x.push('The factor\'s steward was locked in his own pantry for the factor to find.');
+    if (f.b7_c3_keneb) x.push('Fist Keneb walked the lie-up at dusk, asked the Third how many it had lost since the coast, and wrote it down.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -86632,6 +86636,7 @@ const B7CH3 = {
     f.b7_c3_village && (f.b7_c3_village === 'open' ? 'A village in the valley opened its gate to the Third. Word had got there first.' : 'A village in the valley kept its gate barred. Every family inside was afraid to be the one who opened it.'),
     f.b7_c3_prisoners && (f.b7_c3_prisoners === 'freed' ? 'The Third let the crossbowmen from the farm go home, without their crossbows.' : 'The Third handed the crossbowmen from the farm to the column.'),
     f.b7_c3_farmDone && 'Letherii crossbowmen and a cadre mage lay in wait at a farm in the valley. They had been killing marines for a month.',
+    f.b7_c3_keneb && 'Fist Keneb, who counted the Chain in at Aren\'s gate, walks his column\'s lie-ups at dusk and asks every sergeant how many. He writes the answers down.',
     f.b7_c3_drum && 'Something went up on a road to the north, louder than any cusser. The marines grinned and would not say whose.',
     f.b7_wennaDone != null && 'A Shake fisher named Wenna, at the column\'s edge with smoked fish to sell, offered to show the Third the roads the maps leave out.',
     'The Letherii are not rising. They fight beside the Edur. Word came down the column from the north.'].filter(Boolean); },
@@ -86667,6 +86672,42 @@ Outside, in the wood, the column is waking too. Somewhere under the trees a voic
 
 She nods along the wood's edge, to where a handful of figures sit apart from the marines with baskets at their feet. "Shake. Fishers off the coast. A few of them have followed the column inland since the beach, selling smoked fish, because the Edur took their boats and they've nothing else to sell. They know this country. They walked it before Lether drew it." She shrugs. "Take one, if one will come. Pay what they ask. It'll be cheaper than a squad."`,
       ch:[{t:'"A Shake guide. Yes, Lieutenant."', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Fist Keneb gives the Third its orders himself, at dusk in the lie-up ----
+       The plan's ★ (series-meetings-plan, Book Seven: "Keneb and the marines inland, Third Ch3-5: Keneb gives the Third its orders").
+       Where and when: Keneb commands the marines inland from the landing and orders the march (W13; rg-canon §2 ch 13, correction 1) and
+       is with the column through the night raids (W17, W21) [supported]. A Fist walking his column's lie-up at dusk is the game's gap.
+       The game's own hook: Book Two's Aren gate ("Somebody should count", b2_keneb1) and Book Four's muster (b4_c1_keneb); Book Seven
+       has no imported flags, so the history is told as the Third's, not as a flag. Locks: his doubt of the Adjunct (W13) is never voiced;
+       rule 55 (nothing of her purpose); rule 18 (the boy is a small boy, alive, nothing more); Sands as the lieutenant already says it.
+       Marrow +1 (she asks after the boy), else Haddat +1. What it gives: +1 on the farm's ditch check (the sergeant's edge). Sets
+       b7_c3_keneb. */
+    b7_c3_keneb:()=>({sp:'Fist Keneb', scene:'b7_camp_night', fx:()=>{ if (!S.f.b7_c3_keneb) { S.f.b7_c3_keneb = 1; if (b7In('marrow')) b73L('marrow', 1); else b73L('haddat', 1); } },
+      again:()=>'The Fist, further along the wood\'s edge now, crouched by another squad with his slate.', txt:
+`A broad man in a plain cloak is coming along the wood's edge on foot, with one runner behind him and nobody else, stopping at every squad under the trees. No crest. No escort. The marines he passes do not get up, and he does not seem to expect them to.
+
+You have seen him before. On Aren's north gate, the day the Chain came in, there was an officer of the Guard with a slate counting the column through, and asking every sergeant how many. Then at the muster at Aren, a captain of the 8th with a boy holding a fold of his cloak. He is a Fist now. The face is the same face, tireder.
+
+He crouches in front of the Third with the slate on his knee. "The 9th's heavies," he says. "How many since the coast, Sergeant?"
+
+You tell him: all of them who came ashore${b7In('doss') ? ', and one more, off a holding' : ''}. He writes it down, carefully, beside a mark that is probably the Third, and underlines it out of what looks like habit.
+
+"Good," he says. "Somebody should count."
+
+"The lieutenant's given you the farm." He does not wait for the answer. "They've been lying up in it a month, killing marines on the tracks, and in a month they've learned where we come from. The track, and the gate. A farm wall has a back, Sergeant. Come in at the back." He looks down the valley, where the dark is coming up out of the fields. "And we leave the people be. We'll see if they notice."${b73Say({marrow:`
+
+Marrow has been looking at him the whole time, the way she looks at a cough. "The boy, Fist," she says. "From the muster."
+
+Something goes across his face and is put away. "Alive," he says. "Taller." He stands, and his knees crack, and he almost smiles at that. "Thank you for asking. Nobody does."`, haddat:`
+
+Haddat has been looking at him the whole time. "You counted us in at Aren," she says.
+
+"I did." He looks at her a moment longer than he needs to. "I remember the Chain. Not the names. I'm sorry for that." He stands, and his knees crack. "I've a great many names now, and a slate."`, _:`
+
+He stands, and his knees crack, and he almost smiles at that.`})}
+
+Then he is gone along the wood's edge to the next squad, the runner after him, and the next sergeant does not get up either.`,
+      ch:[{t:'"Sir."', go:()=>startExplore()}]}),
 
     /* Wenna: a Shake fisher at the column's edge */
     b7_c3_wenna:()=>{ const d = S.f.b7_wennaDone;
@@ -86888,7 +86929,7 @@ ${b73Teacher() === 'wenna' ? '"Took me a childhood," Wenna says. "You had an hou
 ${g === 'wenna' ? `Wenna is lying beside you in the barley. "Ditch," she breathes, and points: a dry ditch under the hedge that runs right up behind the barn wall. "They watch the gate and the track. They never watch a ditch."` : g === 'doss' ? `Doss is lying beside you in the barley. "There's a drain," he breathes. "There always is. Behind the barn." He points. "They'll watch the gate."` : `The lieutenant's map shows a gate and a track, and the gate and the track are exactly what the crossbows will be watching. There might be a ditch behind the barn. There usually is.`}${b73If('marrow', `\n\nMarrow's lips are pressed thin. "The mage is in the barn, child," she says. "Awake."`)}`,
         ch:[{t:'"Third! Over the wall!" Straight at them.', go:()=>startBattle('b7_c3_farm', {})},
             {t:g === 'wenna' ? 'Wenna\'s way: down the dry ditch and in behind the barn.' : g === 'doss' ? 'Doss\'s way: the drain behind the barn.' : 'Find the ditch behind the barn, and go in that way.', check:['wits', 15], rise:true,
-              edges:id=>[id === 'wenna' && ['the Shake tracks are hers', 3], id === 'doss' && ['he knows field-drains with his feet', 2], S.f.b7_c1_dossRoads && id === 'doss' && ['he drew you these tracks in the dirt on the coast', 1], S.f.b7_c3_tracksOk && id === 'sgt' && ['the Shake track: the squad goes in under the hedge', 2], g === 'wenna' && id === 'sgt' && ['Wenna is in the ditch in front of you', 1], id === 'sathi' && ['she went in under Odhan camps for the Weasels', 1], id === 'ottar' && ['grey plate in a ditch is a bell', -2], id === 'darrut' && ['an Aren Guard\'s kit was not made for ditches', -1]],
+              edges:id=>[id === 'wenna' && ['the Shake tracks are hers', 3], id === 'doss' && ['he knows field-drains with his feet', 2], S.f.b7_c1_dossRoads && id === 'doss' && ['he drew you these tracks in the dirt on the coast', 1], S.f.b7_c3_tracksOk && id === 'sgt' && ['the Shake track: the squad goes in under the hedge', 2], S.f.b7_c3_keneb && id === 'sgt' && ['the Fist said: a farm wall has a back, and they watch the front', 1], g === 'wenna' && id === 'sgt' && ['Wenna is in the ditch in front of you', 1], id === 'sathi' && ['she went in under Odhan camps for the Weasels', 1], id === 'ottar' && ['grey plate in a ditch is a bell', -2], id === 'darrut' && ['an Aren Guard\'s kit was not made for ditches', -1]],
               near:{t:()=>`Yes, but the ditch is not as dry as it looked, and ${b73Nm(b73Who())} ${b73V(b73Who(), 'come', 'comes')} up out of it at the barn wall with a mouthful of it and a knee on a stone. ${b73Nmc(b73Who())}'ll be a step slow for a while.`, fx:()=>bruise(b73Who(), bruiseN())},
               fx:()=>{ S.f.b7_c3_guided = 1; }, go:()=>startBattle('b7_c3_farm', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c3_farm_seen'},
             {t:'Not now.', go:()=>startExplore()}]}; },
@@ -88565,7 +88606,9 @@ const B7CH5 = {
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:4, y:5, node:()=>'b7_c5_lt', fresh:()=>!S.f.b7_c5_orders},
         {id:'marines', name:'Marines going past', kind:'b2soldier', x:8, y:2, node:()=>'b7_c5_marines', fresh:()=>!S.f.b7_c5_marines},
         {id:'scouts', name:'Shapes on the road', kind:'b5_edur', x:11, y:4, node:()=>'b7_c5_scouts', show:()=>!!S.f.b7_c5_orders && !S.f.b7_c5_roadDone, fresh:()=>true},
-        {id:'boy', name:'Somebody in the hedge', kind:'b5_c5_refugee', x:13, y:6, node:()=>'b7_c5_boy', show:()=>!!S.f.b7_c5_roadDone, fresh:()=>!S.f.b7_c5_boy} ] },
+        {id:'boy', name:'Somebody in the hedge', kind:'b5_c5_refugee', x:13, y:6, node:()=>'b7_c5_boy', show:()=>!!S.f.b7_c5_roadDone, fresh:()=>!S.f.b7_c5_boy},
+        /* v13.8 (David, Nov 15): meetings. Sergeant Hellian's squad on the road, on its way to the big village with the tavern; gone on once spoken to */
+        {id:'hellian', name:'A sergeant with a jug', kind:'b7v_hellian', x:10, y:7, node:()=>'b7_c5_hellian', show:()=>b75Ph() === 1 && !!S.f.b7_c5_orders && (!S.f.b7_c5_hellian || /^b7_c5_hellian/.test(S.node || '')), fresh:()=>!S.f.b7_c5_hellian} ] },
 
     /* 16 x 12 (b5_c5_farm). . the street and square  , trodden ash  # walls and houses  B the factor's door (his cellar: the Third's floor,
        the fire)  w the well  e the north gate, to the lane  > the mill-race and the river, south */
@@ -88610,7 +88653,9 @@ const B7CH5 = {
       quest:()=> !S.f.b7_c5_lt3 ? 'The lieutenant, on the path.' : 'The lie-up in the reeds. At first light, on with the column.',
       npcs:[
         {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:6, y:2, node:()=>'b7_c5_lt3', fresh:()=>!S.f.b7_c5_lt3},
-        {id:'marines4', name:'Marines in the reeds', kind:'b2soldier', x:11, y:5, node:()=>'b7_c5_marines4', fresh:()=>!S.f.b7_c5_marines4} ] } ],
+        {id:'marines4', name:'Marines in the reeds', kind:'b2soldier', x:11, y:5, node:()=>'b7_c5_marines4', fresh:()=>!S.f.b7_c5_marines4},
+        /* v13.8 (David, Nov 15): meetings. Fist Keneb walking the bank as the column pulls together, counting, after the lieutenant's word */
+        {id:'keneb', name:'Fist Keneb', kind:'keneb', x:13, y:3, node:()=>'b7_c5_keneb', show:()=>!!S.f.b7_c5_lt3, fresh:()=>!S.f.b7_c5_keneb} ] } ],
 
   battles:{
     /* Edur scouts on the road in: spearmen and the shadow-things that walk with them */
@@ -88686,10 +88731,14 @@ const B7CH5 = {
     if (f.b7_c5_squareOk) x.push('The Third learned the old square: four shields, and the step.');
     if (f.b7_c5_shield) x.push('The mill-woman gave the Third the village\'s old shield off the meeting-house wall.');
     if (f.b7_c5_warned) x.push('The village\'s children ran in from the fields to warn the Third, in time.');
+    if (f.b7_c5_hellian) x.push('Sergeant Hellian of the marines stopped on the river road with a jug of rum off a burning ship, and shared it with the Third. She was going to the village with the tavern.');
+    if (f.b7_c5_keneb) x.push(`Fist Keneb walked the bank in the dark and counted the Third${fell.length ? `, and wrote down ${b75And(fell.map(NAME))}` : ''}.`);
     return x; },
 
   journal:()=>{ const f = S.f, fell = b75Fell(); return [
     f.b7_c5_lt3 && 'The Fist means to pull the column together and push hard for the capital.',
+    f.b7_c5_keneb && 'Fist Keneb walked the riverbank in the dark, squad by squad, counting. He wrote every name he was given.',
+    f.b7_c5_hellian && 'Sergeant Hellian, once of the Kartool City Guard, has rum off a burning ship and a corporal called Urb. Her squad does the villages the hard way: the officials, the money-lenders and the factor\'s men first, then the people.',
     fell.length && `${b75And(fell.map(NAME))} fell in the square of a mill village on the river, holding it, and ${fell.length > 1 ? 'are' : 'is'} buried by the mill-race.`,
     f.b7_c5_key && (f.b7_c5_key === 'hold' ? 'When the Edur came for the village that hid it, the Third held the street and the square.' : 'When the Edur came for the village that hid it, the Third went out by the river path in the dark.'),
     f.b7_c5_bailiffDone && 'The village\'s bailiff rode north with a letter for the Edur. The Third caught him on the lane.',
@@ -88733,6 +88782,47 @@ She is quiet a moment. "Captain Sort says the Letherii won't rise for us. Not al
 "Heavies," she says. "You're the river village? Lucky. We've got the one with the pig-farm." She wipes her face. "Word from up the road is the Edur are going for the big village with the tavern. Hundreds. Squads in there already, and not leaving." She shakes her head. "Rather them than me. Rather you than me, too, if they come your way."
 
 She is up and gone before anybody can answer, after her squad, into the dark.${b75If('marrow', `\n\nMarrow watches them go. "They are tired, child," she says. "All of them. Tired in the way that makes you brave."`)}`,
+      ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Sergeant Hellian's squad at the next fire on the river road ----
+       The plan's ★ (series-meetings-plan, Book Seven: "Hellian's squad at the next fire"). Where and when: Hellian and Urb, City Garrison
+       of Kartool reassigned into the marines (BH R5; rg-canon correction 1), land with Keneb's column; Hellian salvages rum off a burning
+       ship at the landing (W13) [supported]; in the funnel her squad "liberates" every village, the officials, money-lenders and advocates
+       first, and the people warn them after (W21; the lieutenant already says it unnamed); her squad is in the tavern village when the
+       Edur close on it (W21; vision b7v5) [supported]. On the road to it the night before is Claude's call. Locks: the tavern village and
+       its fight are a hard limit and stay off the page beyond "the big village with the tavern"; Bowl, Lutes and Tavos Pond never named
+       (§15 Q1); her killings headline only. Her spiders and the Kartool temple are Book Six's (b6_c1_hellian); no flag carries, so she
+       half-remembers the 9th from Y'Ghatan. Hessa +1 (Kartool), else Tangle +1. What it gives: +1 on the well's short-way check (the
+       sergeant's edge: "the women always know who rides"). Sets b7_c5_hellian. */
+    b7_c5_hellian:()=>({sp:'Sergeant Hellian · marines', scene:'b7_c5_lane', fx:()=>{ if (!S.f.b7_c5_hellian) { S.f.b7_c5_hellian = 1; if (b7In('hessa')) b75L('hessa', 1); else b75L('tangle', 1); } },
+      again:()=>'The Kartool sergeant and her squad have gone on up the road, toward the big village and its tavern.', txt:
+`A marine squad has stopped in the ditch a little up the road from the Third, the way squads do when their sergeant sits down and nobody can make her get up. The sergeant is sitting on the bank with her helm off and a stone jug in her lap. Behind her a very large corporal stands with two packs on, his own and hers, waiting, as if he has done a great deal of it.
+
+She is not tall, and very sunburned, and she looks at the Third's shields for a long time. "Ninth," she says at last. "Heavies. Were you at Y'Ghatan? Everybody was at Y'Ghatan." She considers it. "I was. I'm told." She holds up the jug. "Rum. Off a ship. The ship was on fire, and it seemed a waste." She takes a pull, and then, because she is a sergeant and the Third are soldiers, she holds it out. "Go on. Before Urb says something."
+
+The corporal says nothing at all. It is clearly what he usually says.
+
+The rum is very bad and very strong. It tastes of smoke.
+
+"You're the river village," she says. "We're the big one. Up the road. Somebody says it has a tavern." She takes the jug back. "We've been doing the villages. You heard? The officials first, and the money-lenders, and the factor's men. Then the people take what they like and run off, and then they come back, and tell us where the Edur are." She wipes her mouth. "And in every village there's one who rides off to sell you. There always is. Ask the women. The women always know who." She squints up the road. "Are there spiders in this country? Big ones?"${b75Say({hessa:`
+
+Hessa has gone very straight at the word Kartool, and stays that way. "Sergeant," she says.
+
+Hellian looks at her for a long time, at the spear and the way she stands. "Temple," she says. "Don't." And then, more gently than anything else she has said: "Have some rum."
+
+Hessa does, and coughs, and Hellian looks pleased for the first time.`, tangle:`
+
+"Not spiders," Tangle says. "Eels. In the ditches. Big as your arm."
+
+Hellian looks at him with real hatred. "That," she says, "is worse." But she gives him another pull on the jug for it, as if bad news were worth paying for, and Tangle grins at the stars.`, mirrel:`
+
+Mirrel takes the jug, smells it, and gives it back without drinking. "Bad," she says. "For the wound. Not the mouth." Hellian thinks about that, and pours a little on a scrape on her wrist, and swears, and drinks some more.`, _:`
+
+"No spiders," you tell her, which is a guess.
+
+"Liar," she says, kindly.`})}
+
+Then Urb puts out a hand the size of a shovel, and she takes it, and he lifts her onto her feet without any fuss, and the squad goes on up the road into the dark toward the big village, with the jug.`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* Edur scouts on the road */
@@ -88901,7 +88991,7 @@ ${b75Say({marrow:`Marrow sits beside each of them a moment with her palm on a fo
 
 The water is cold and tastes of iron. The squad fills its skins.${!S.f.b7_c5_bailiffDone && S.f.b7_c5_lane ? `\n\nOne of the women is the boy's mother, or his aunt; she has his chin. She is looking at the north lane, and then at you.` : ''}`,
       ch:[{t:'Ask the women for the short way to the north lane, through the fields.', req:()=>b75Ph() === 2 && !!S.f.b7_c5_lane && !S.f.b7_c5_bailiffDone && !S.f.b7_c5_shortTried, check:['guile', 15], rise:true, fx:()=>{ S.f.b7_c5_shortTried = 1; },
-            edges:id=>[id === 'doss' && ['he talks to them the way field-hands talk to field-hands', 3], id === 'wenna' && ['a woman from the coast, barefoot, not a soldier', 1], id === 'marrow' && ['an old woman with a string of knots; they trust her on sight', 1], b75Word() && id === 'sgt' && ['they know who burned the rolls', 2], id === 'ottar' && ['seven feet of grey plate frightens women at a well', -2], id === 'sathi' && ['her filed teeth frighten women at a well', -1]],
+            edges:id=>[id === 'doss' && ['he talks to them the way field-hands talk to field-hands', 3], id === 'wenna' && ['a woman from the coast, barefoot, not a soldier', 1], id === 'marrow' && ['an old woman with a string of knots; they trust her on sight', 1], b75Word() && id === 'sgt' && ['they know who burned the rolls', 2], S.f.b7_c5_hellian && id === 'sgt' && ['the Kartool sergeant said: the women always know who rides', 1], id === 'ottar' && ['seven feet of grey plate frightens women at a well', -2], id === 'sathi' && ['her filed teeth frighten women at a well', -1]],
             near:{t:()=>`Yes, but they tell you a way that goes through the stinging nettles at the bottom of the orchard, and ${b75Nm(b75Who())} ${b75V(b75Who(), 'find', 'finds')} out about it first, the hard way.`, fx:()=>bruise(b75Who(), bruiseN())},
             go:'b7_c5_well_ok', fail:'b7_c5_well_no'},
           {t:'Back to the square.', go:()=>startExplore()}]}),
@@ -89176,6 +89266,29 @@ ${b75Key() === 'hold' ? `"The mill village," she says. "I heard. A war-leader an
 
 "The Fist's word," she says. "We pull together tonight and we go for the city, hard, at first light. No more villages. Captain Sort has the back of the column. The Third walks with my lot." She tucks the slate away. ${S.f.b7_c4_key === 'letherii' ? `"And they say the Letherii have mustered an army against us, and its officers and the Edur aren't speaking. Make of it what you like."` : S.f.b7_c4_key === 'edur' ? `"And they say the Letherii have mustered an army against us, with the Edur watching it from every hill. Make of it what you like."` : `"And they say the Letherii have an army out against us. We'll meet it, I expect."`}`,
       ch:[{t:'"First light. Yes, Lieutenant."', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Fist Keneb on the bank, the night the column pulls together ----
+       The plan's ★, its second half (Keneb gives the Third its orders, Ch3-5). Where and when: in ch 21 Keneb, with 671 soldiers, orders
+       the hard push for the capital, and Faradan Sort takes the rearguard (W21) [supported, one source; the count is §15 Q8, so the game
+       says "six hundred and some"]. Walking the bank among the squads is the game's gap; his camp council stays a hard limit. The order is
+       the lieutenant's relay (b7_c5_lt3), so he shows after it and counts. Locks: Beak and the killing field a day on are never foretold;
+       nothing of the Adjunct's landing. Haddat +1 (she says the names, he writes them), else Marrow +1. Sets b7_c5_keneb. */
+    b7_c5_keneb:()=>{ const fell = b75Fell(), held = b75Key() === 'hold';
+      return {sp:'Fist Keneb', scene:'b7_c5_river', fx:()=>{ if (!S.f.b7_c5_keneb) { S.f.b7_c5_keneb = 1; if (b7In('haddat')) b75L('haddat', 1); else b75L('marrow', 1); } },
+      again:()=>'The Fist, further along the bank in the dark, crouched by another squad with his slate.', txt:
+`The Fist comes along the bank in the dark with his slate, the way ${S.f.b7_c3_keneb ? 'he came along the wood\'s edge weeks ago' : 'the marines say he does'}, stopping at every squad in the reeds. He crouches by the Third and does not say anything for a moment. He looks done in. Everybody does.
+
+"How many, Sergeant?"${S.f.b7_c3_keneb ? ` He hears himself. "I asked you that in the wood. I ask everyone twice. It's the only way I'm sure."` : ''}
+
+${fell.length ? `You tell him. Then, because he waits, you give him the names: ${b75And(fell.map(NAME))}, in the square by the mill. He writes each one down, all of it, the name and the place, slowly, in a hand that is steadier than his face.` : held ? 'You tell him: all of them. He looks at the squad, and at the shields, and writes it down, and underlines it.' : 'You tell him: all of them. He writes it down. He does not underline it. He does not ask about the village, and you do not tell him.'}
+
+${held ? `"The mill village," he says. "I heard." He looks across the fields toward it. "It's still there?" You tell him it is. He nods, as if that were the number he wanted.` : `He looks across the fields at the light over the trees, and then at his slate, and then puts the slate away.`}
+
+"Six hundred and some, on this bank," he says. "That's the column. Tomorrow we stop hiding in villages, and go for the city." He gets up, slowly. "Somebody should count. I said that once, at a gate."${b75Say({haddat:`
+
+Haddat has been saying names under her breath since the Fist sat down, the way she does. He stops, and looks at her. "Say them louder," he says. "I'll write them too." She does. He does.`, marrow:`
+
+Marrow watches him go along the bank. "He carries every one of them, child," she says. "On that slate, and not only there."`, _:''})}`,
+      ch:[{t:'"Sir."', go:()=>startExplore()}]}; },
     b7_c5_water:()=>({sp:'The river', scene:'b7_c5_river', fx:()=>{ S.f.b7_c5_water = 1; }, again:()=>'The river, wide and black, going to the city.', txt:
 `The river at night is so wide that the far bank is only a line of darker dark, and so quiet that you can hear the column breathing in the reeds all along the bank. It goes east, toward the city, a few days off. There is nothing on it. Not a boat, not a raft, not a log.
 
@@ -89601,7 +89714,7 @@ const B76_FATE = {
 /* a squadmate with no page of their own above */
 const b76FateDefault = (id, r) => ({title:TPL[id] ? TPL[id].role : 'One of the Sixth', txt:`${TPL[id] ? TPL[id].name : 'They'} ${r === 'free' ? 'goes out of the army with the rest of the Sixth who wanted it, into a city still deciding what it is' : r === 'palace' ? 'stands a palace post with the rest of the Sixth' : 'stays with the army of the new Lether, with the rest of the Sixth'}.`});
 const b76SgtFate = (r, k) => ({title:'The sergeant', txt:
-  (r === 'army' ? `You stay with the army of the new Lether, at the head of the Sixth, under whoever the new emperor makes Preda. Malazan sergeants come in that summer to drill the battalions, and one of them watches the Sixth on the ground for a morning and then comes over and asks where you learned to hold a line. You tell her the river. She nods as if that were an answer. Some of the army, people say, will march east with the foreigners under Brys Beddict, when the foreigners go. There is barracks talk that he walked back into the city alive, which nobody can explain.`
+  (r === 'army' ? `You stay with the army of the new Lether, at the head of the Sixth, under whoever the new emperor makes Preda. Malazan sergeants come in that summer to drill the battalions, and one of them watches the Sixth on the ground for a morning and then comes over and asks where you learned to hold a line. You tell her the river. She nods as if that were an answer. Some of the army, people say, will march east with the foreigners under Brys Beddict, when the foreigners go. ${S.f.b7_c6_brys ? 'You saw him come back yourself, the morning the Sixth came in by the river gate, wet to the skin with the rats running in front of him, and you still cannot explain it. Nobody asks you to.' : 'There is barracks talk that he walked back into the city alive, which nobody can explain.'}`
    : r === 'palace' ? `You take the Sixth into the Palace Guard, at a post on a door you were once told never to go near. The household in the palace now does not know what it is doing and says so, which you find you prefer. The Finadd keeps the roll. You stand your door, and the city goes past it.`
    : `You take your name off the battalion roll, and the Sixth's names with it, every one who wanted it, in the Finadd's own hand. What you owe and to whom, in a city where no one can find the ledgers, you have decided not to ask. You walk out of the barracks gate past the place the Edur used to stand, and it is only a gate.`)
   + (k === 'break' ? `\n\nAt the river the Sixth ran with the rest, and lived, and some who stood did not. You think about it some nights. You think the sum came out right, and that it cost somebody, and that both are true.` : `\n\nAt the river the Sixth stood when the line went, until a Malazan sergeant's squad broke on it, and then it walked off the field in order. You think about the ones who ran some nights. You would stand again.`)
@@ -89814,10 +89927,12 @@ const B7CH6 = {
     if (f.b7_c6_deserters) x.push(f.b7_c6_deserters === 'fought' ? 'Deserters ran from the ridge through the Sixth\'s stretch of the line. The Sixth stopped them.' : 'Deserters ran from the ridge through the Sixth\'s stretch of the line. The Sixth let them go.');
     if (f.b7_c6_watcherGone) x.push('The man in the grey coat sat at the next fire the night before the field, and left before morning.');
     if (f.b7_c6_wardOk) x.push('The squad learned the cadre\'s ward, or the surgeons\' version of it.');
+    if (f.b7_c6_brys) x.push('Inside the river gate, the Sixth saw Brys Beddict, the King\'s Champion the city said had died, walk up the street soaked to the skin behind a flood of rats.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
     f.b7_lethRoad && ({army:'The sergeant told the Finadd the Sixth will stay a company of the army, whatever army Lether has after.', palace:'The sergeant told the Finadd the Sixth will stand guard for whoever sits the throne.', free:'The sergeant told the Finadd the Sixth wants its names off the roll.'})[f.b7_lethRoad],
+    f.b7_c6_brys && 'On the city\'s last morning the King\'s Champion, Brys Beddict, who died in the throne room the year the Edur came, walked past the Sixth in a street off the river gate, wet through, with an old rat-catcher and the rats. He touched two fingers to his brow.',
     f.b7_c6_key && (f.b7_c6_key === 'stand' ? 'At the river the Sixth stood when the line went, and walked off the field in order.' : 'At the river the Sixth ran with the rest of the line, and lived.'),
     f.b7_c6_homeDone && (b76K4() === 'edur' ? 'The eldest Edur said the cadre\'s light was meant for the Edur as well as the foreigners. The Edur have gone home.' : 'The captain\'s officers knew what the ridge was for. They asked the Sixth to stay in the line so it would not be out on the plain with the Edur.'),
     f.b7_c6_dome && 'From the line the Sixth saw a light come off the ridge and break against a dome of silver fire far out on the plain. Then the dome went out.',
@@ -90322,8 +90437,45 @@ The Finadd writes it on the Sixth's page, and blots it, and then, after a moment
 The Finadd stands up from the fire and brushes his coat. ${k === 'stand' ? 'He takes up the battalion standard.' : 'He has no standard to take up, and does not look for one.'} The Sixth falls in behind him, ${k === 'stand' ? 'in its file, in step, as it came off the bank' : 'all of it, which is more than the road can say'}, and goes in through the river gate of Letheras, the one that faces the way the army went, into a city that is deciding what it is.
 
 ${r === 'army' ? 'Whatever army Lether has after, the Sixth means to be a company of it.' : r === 'palace' ? 'Whoever sits the throne after, the Sixth means to stand at a door of it.' : 'Whatever Lether is after, the Sixth means to be out of its army, and in it.'} Behind them, on the road, the foreigners are coming.${b7In('sorvan') ? `\n\nSorvan goes in last but one, with the blue scale on, looking up at the gate-arch as a man looks at a stable he has been told is his.` : ''}${b7In('ilsa') ? `\n\nIlsa goes in with the grey coat over her arm, not on. "Home," she says. "Whatever that is now."` : ''}`,
-        ch:[{t:'Into the city.', onward:true, go:()=>chapterEnd(6, k)},
+        ch:[{t:'Into the city.', onward:true, go:()=>talk('b7_c6_brys')}, // v13.8: through the gate to the street off it (Brys), then the end
             {t:'Not yet.', go:()=>startExplore()}]}; },
+
+    /* ---- v13.8 (David, Nov 15): meetings. Brys Beddict walks into the city, seen from the street off the river gate ----
+       The plan's pick (series-meetings-plan, Book Seven: "Brys back in Letheras, Letherii Ch6: the squad sees the Champion who was dead
+       walk into the city"; rule 33 closes here, rg-canon §7). Where and when: Brys comes up out of Settle Lake, and Ormly of the Rat
+       Catchers takes him to the Patriotist compound, a flood of rats going in before them; there he kills Karos (W *Brys Beddict*;
+       R24.2 S28; rg-canon §3) [supported]. The Sixth comes in by the river gate the morning after the river, on the city's last day
+       (rg-continuity Fixed 4; rg-canon §4), which puts it in the streets before the surrender (S43) [the timing is Claude's call]. Locks:
+       the lake and the compound stay off the page (hard limits); nothing of what he does there or of his brother; the narrator never
+       explains the return (rule 33's close is what the city sees); Bugg/Mael never (rule 56). He touches two fingers to his brow, Book
+       Five's gesture (b5_c1_brysdrill), and does not stop; Ormly speaks one line and is never named. Thegg +1, else Perrit +1. Sets
+       b7_c6_brys; the sergeant's army fate reads it. */
+    b7_c6_brys:()=>{ const k = b76Key() || 'stand';
+      return {sp:'Inside the river gate', scene:'b7_city_burning', fx:()=>{ if (!S.f.b7_c6_brys) { S.f.b7_c6_brys = 1; if (b7In('thegg')) b76L('thegg', 1); else b76L('perrit', 1); } }, txt:
+`Inside the river gate the street climbs from the water between warehouses with their shutters nailed. The city is louder in here than it was through the grating. A long way off, toward the middle of it, there is the crowd, and closer there is nothing at all: no carts, no hawkers, a dog in a doorway, smoke over the roofs from more than one place.
+
+Then the rats.
+
+They come out of a side street at a run, hundreds of them, more, a brown flood going over the cobbles and down the gutters and along the foot of the walls, all one way, toward the noise. Not one turns aside for the Sixth. They are round the next corner as fast as they came.
+
+Behind them, walking, come two men. One is old, in a rat-catcher's leathers, with a pole over his shoulder. The other is tall and lean and soaked to the skin, as if he had come up that minute out of deep water: hair flat to his skull, clothes dark and clinging, a sword in his hand. He walks up the middle of the street as if it were a yard he had drilled in for years.
+
+Every soldier in Letheras knows that face. The King's Champion. Brys Beddict, who died in the throne room the year the Edur came. Everybody knew it. The whole city knew it.
+
+He looks at the Sixth as he goes by: at the shields, and the white finger on them. He touches two fingers to his brow, to the squad in general, and does not stop.
+
+"Mind the rats, soldiers," the old man says, not unkindly, and the two of them go on up the street after the rats, toward the noise.${b76Say({thegg:`
+
+Thegg has not moved since the rats. "That was the Champion," he says. "He died. My mother's dead told me. Everybody's did." He looks up the empty street. "They were wrong."`, perrit:`
+
+Perrit watches them go. "The city said he died," she says. "The city says a great many things." She is very pale. "I never once heard it say that."`, _:`
+
+Nobody in the Sixth says anything for a long moment.`})}${b76If('ilsa', `
+
+Ilsa is looking after them too, and she knows the city's streets the way a clerk does. "That way's the compound," she says, very quietly. She does not say anything else.`)}
+
+The Finadd takes out the roll, and his pen, and looks at the Sixth's page. Then he puts both away again. "Some things," he says, "are not for the company's page." He looks up the street. "Come. The city is deciding what it is."`,
+        ch:[{t:'Into the city.', onward:true, go:()=>chapterEnd(6, k)}]}; },
   },
   fates:B76FATES,
 };
@@ -90576,7 +90728,9 @@ b76Item('b7_c6_fingershield', 'A Whitefinder shield', '<ellipse cx="120" cy="114
    served, a berth home). Then the finale for both squads (B7CH7.finale; the Letherii's pages from B7CH6.fates) and Where the books meet.
    Never: the tunnel or the postern; the palace, the throne room, the Eternal Domicile; the arena; Scale House and the machine; the roofs
    where Ruin falls; the City Garrison fight; the Patriotist compound; Tehol's house; Settle Lake. Never speaks with Keneb, Fiddler,
-   Quick Ben, Hedge, Tehol, Brys, Janath or Varat Taun. Notes for the lead: docs/rg-ch7-notes.md. */
+   Quick Ben, Hedge, Tehol, Brys, Janath or Varat Taun. Notes for the lead: docs/rg-ch7-notes.md.
+   v13.8 (David, Nov 15): meetings. The distance half lifted (series-canon §(a0)): Hedge and Quick Ben stop in the street, looking for
+   Fiddler (b7_c7_hedge); the Fist lifts a hand to the Third from up the road if he has counted it inland (b7_c7_fist). */
 /* FOR THE ARTIST (127b): names this file uses.
    Items: ART['item/b7_c7_lethcloak'], ['item/b7_c7_kingscoin'].
    Figures, all existing: b2soldier (the lieutenant, marines, the Fist's officers far off), b5_c5_refugee (refugees, the water-woman, the
@@ -90759,7 +90913,9 @@ const B7CH7 = {
         {id:'shouters', name:'Men starting the shouting', kind:'b5_c5_refugee', x:9, y:3, node:()=>'b7_c7_shouters', fresh:()=>!S.f.b7_c7_shouters},
         {id:'runner', name:'A Letherii running', kind:'b5_letherii', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
         {id:'sky', name:'Marines looking up', kind:'b2soldier', x:13, y:8, node:()=>'b7_c7_sky', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_sky},
-        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3} ] },
+        {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3},
+        /* v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, looking for Fiddler, before the white dragon; gone on once spoken to */
+        {id:'hedge', name:'Two men going north', kind:'hedge', x:14, y:4, node:()=>'b7_c7_hedge', show:()=>b77Ph() === 3 && !S.f.b7_c7_sky && (!S.f.b7_c7_hedge || /^b7_c7_hedge/.test(S.node || '')), fresh:()=>!S.f.b7_c7_hedge} ] },
 
     /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet */
     { id:'b7_c7_after', title:'Letheras · three weeks on', sub:'A canal street · the new emperor\'s city', hint:'Tap ground to move · tap a figure to talk · the Third\'s billet and its brazier are by the bridge; the canal is south', decor:'b5_c7_canal', dark:false,
@@ -90848,6 +91004,7 @@ const B7CH7 = {
     if (f.b7_c7_luckOk) x.push('The Third learned the crowd\'s coin from an old woman on a bridge.');
     if (f.b7_c7_view) x.push('From the end of a street the Third saw the garrison of Letheras give up, and heard the crowd shout two words.');
     if (f.b7_c7_quake) x.push('The ground moved under the city, and a white light came up under one quarter, and nobody in the Third knows what it was.');
+    if (f.b7_c7_hedge) x.push('An old sapper in a scorched leather cap stopped the Third in the street, looking for a sergeant called Fiddler, and gave the satchel a sharper and some advice. The small dark man with him called him Hedge.');
     if (f.b7_c7_key) x.push(f.b7_c7_key === 'adjunct' ? 'The Third stays with the army.' : f.b7_c7_key === 'letheras' ? 'The Third takes the new emperor\'s coin.' : 'The Third goes home.');
     return x; },
 
@@ -90856,6 +91013,7 @@ const B7CH7 = {
     f.b7_c7_ph >= 4 && 'Letheras has a new emperor. The Edur have gone. The Patriotists\' files went to the river in barrows.',
     f.b7_c7_view && 'The garrison of Letheras gave up to the Adjunct. The crowd shouted "Saviour" and "Emperor".',
     f.b7_c7_quake && 'The ground moved under the city, and a white light came up under one quarter. A white dragon was driven off over the palace.',
+    f.b7_c7_hedge && 'In the street on the city\'s last day: an old sapper called Hedge, just got in, he said, and a small dark man with him who would not say from where. They were looking for Fiddler.',
     f.b7_c7_holdoutsDone && 'Patriotists made a stand in a counting-house. The Third went in ahead of the crowd.',
     f.b7_c7_gateDone && 'The Fist took the gate of Letheras himself at first light. The Third went through behind him.',
     'A day out from the city a mage of the marines burned, holding off the Letherii sorcery. The Third saw the light from a league back.'].filter(Boolean); },
@@ -90936,7 +91094,7 @@ Then they are gone along the wall, and the lantern with them.${b77If('mehet', `\
 
 He walks down the line while you watch, slowly, stopping at every squad in the ditch. Some of the sergeants stand up. He waves them down. You hear his voice once, down the line, not the words, only the sound of it: a tired man, saying a plain thing, the way you would tell a carter which road.
 
-He does not come as far as the Third. A sergeant of borrowed heavies does not go up the road to a Fist, and the Third does not.${b77Say({haddat:'\n\n"He has a face like my uncle," Haddat says. "My uncle was a good man. He died of it."', tangle:'\n\n"He goes in first," Tangle says. "Fists don\'t do that." He thinks about it. "This one does."', _:''})}`,
+He does not come as far as the Third. A sergeant of borrowed heavies does not go up the road to a Fist, and the Third does not.${S.f.b7_c3_keneb || S.f.b7_c5_keneb ? ` But at the end of the line he turns and looks down the road toward the Third, a long way, and lifts a hand with the slate in it. Counting, still.` : ''}${b77Say({haddat:'\n\n"He has a face like my uncle," Haddat says. "My uncle was a good man. He died of it."', tangle:'\n\n"He goes in first," Tangle says. "Fists don\'t do that." He thinks about it. "This one does."', _:''})}`,
       ch:[{t:'Back to the road.', go:()=>startExplore()}]}),
 
     /* back down the road: the field a day behind, the barrow unseen */
@@ -91146,8 +91304,48 @@ Over the palace district, against the smoke, something white is turning in the s
 
 Then, from somewhere on the roofs over there, too far to see who, light: once, twice, a flash and a flat crack that comes late across the city, and something the colour of a burner going off. The white thing turns, and lurches, and goes away north over the river, low, and does not come back.
 
-"Dragon," one of the marines says, to nobody. "A white one." He says it the way you would say *rain*. "Somebody drove it off." He does not say who. He does not seem to want to know.${b77If('ottar', `\n\nOttar watches the sky where it went. "In Perish," he says, after a while, "there is no word for that." He thinks. "There is now."`)}`,
+"Dragon," one of the marines says, to nobody. "A white one." He says it the way you would say *rain*. "Somebody drove it off." He does not say who. He does not seem to want to know.${S.f.b7_c7_hedge && b77Sap() ? `\n\n${NAME(b77Sap())} is looking at the roofs where the flash was. "That was a cusser," ${b77He(b77Sap())} says. "A big one, thrown." A breath. "That was him. The one with the cap."` : ''}${b77If('ottar', `\n\nOttar watches the sky where it went. "In Perish," he says, after a while, "there is no word for that." He thinks. "There is now."`)}`,
       ch:[{t:'Back to the street.', go:()=>startExplore()}]}),
+    /* ---- v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, fresh back, looking for Fiddler ----
+       The plan's pick (series-meetings-plan, Book Seven: "Hedge and Quick Ben at Letheras, Third Ch7: Hedge fresh back, the first time
+       the Third hears of him"). Where and when: Quick Ben and Hedge reach Letheras during the invasion, leave their companions at a house
+       and go looking for Fiddler; they find his squad on a building over the palace as Silchas Ruin dives, Hedge throws a cusser and Quick
+       Ben drives the dragon off (W *Hedge*; R24.2 S39; rg-canon §2) [supported]. So the street meeting comes before the white dragon
+       (shown only while b7_c7_sky is unset), and the sky node reads it. Hedge's look: a weathered face the colour of his scorched leather
+       cap, pulled over his ears (W *Hedge*). Locks: rule 62/19, his return is never explained and he was never said to be dead here; rule
+       60, the dragon is never named; nothing of the companions, the house, the arena or Sirryn; nothing of the Letherii company he raises
+       in DoD (Book Nine's b9_c1_ladies). Book Ten's b10_c7_hedge builds on this: "an old sapper from Genabackis who walked in on the
+       marines one day as if he had only stepped out", and Tangle "once saw him light a fuse with the end of another fuse" (here). Book
+       Nine's b9_c5_sappers: Tangle (or Rasp) knows him by sight after. The sapper +1; the satchel +1 sharper. Sets b7_c7_hedge. */
+    b7_c7_hedge:()=>{ const sp = b77Sap();
+      return {sp:'An old sapper and a small dark man', scene:'b7_city_burning', fx:()=>{ if (!S.f.b7_c7_hedge) { S.f.b7_c7_hedge = 1; S.inv.sharper = (S.inv.sharper || 0) + 1; if (sp) b77L(sp, 1); note('A sharper for the satchel, from a bag nobody is going to ask about.', 'good'); } },
+      again:()=>'The two men have gone on north, toward the palace district.', txt:
+`Two men are coming down the street against the crowd, the way men walk who have somewhere to be and have not been told the way.
+
+One is small and dark and slight, in a plain coat with nothing on it, and he looks at everything in the street, the Third included, as if he were adding it up and did not like the total. The other is a sapper. There is no mistaking it. A weathered face the colour of the scorched leather cap pulled down over his ears, a crossbow slung, and on his hip a heavy bag he carries the way a sapper carries the kind of bag you do not drop.
+
+The sapper sees the Third's shields and his whole face opens. "Malazans," he says. "Heavies, is it? Good. Where's the marines? I'm looking for a sergeant. Fiddler. Fid. Beard, worried look, sick on boats." He waits. "You'd know him. Everyone knows him. He's always about to be sick."
+
+The Third does not know where the marines' squads went. The lieutenant never said.
+
+${sp ? `The sapper's eyes have gone to ${NAME(sp)}'s satchel, the way a sapper's eyes always go to another sapper's satchel. "What are you carrying?" He does not wait to be told. He has a fuse out of it, and a knife, and he looks at the fuse the way a cook looks at bad meat. "Long," he says. "You'll be standing there counting while they walk up and take it off you." He cuts a thumb's length off the end, and lights it, without looking, off the end of another fuse he has smouldering behind his ear, and the two of them watch it burn down. "Slow. Cut them short, and you'll live long enough to complain about it." He pinches it out and hands it back.
+
+${NAME(sp)} is staring at him. "You lit a fuse," ${b77He(sp)} says, "with a fuse."
+
+"How else would you light one?"` : `The sapper looks the squad over the way a sapper looks at anything, for where it would come apart. "No sapper," he says. "Who carries the munitions?" You do. He looks at what you carry, and sighs, as if it were a personal sorrow.`}
+
+"Hedge," says the small man.
+
+"Coming." The sapper takes something out of the bag, round and clay and heavy, a sharper, and ${sp ? `tucks it into ${NAME(sp)}'s satchel` : 'puts it into your hand'}. "You're short," he says. "Everyone's short." Then, because the name is out: "Hedge. Just got in."
+
+"Don't," says the small man, to nobody, and lifts his head a little, as if he were listening for something too high to hear. "North," he says. "By the palace. He's up on a roof, the idiot."
+
+"Course he is," says Hedge, delighted, and they go on up the street together toward the palace district, the small man in front and Hedge talking at his back the whole way.${b77Say({marrow:`
+
+Marrow watches the small man go. "That one is a great deal more than he looks, child," she says. "And he knows it, and wishes he didn't."`, haddat:`
+
+Haddat watches them go. "He was happy," she says, of the sapper. "In this city, today." She thinks about it. "Somebody should be."`, _:''})}`,
+      ch:[{t:'Back to the street.', go:()=>startExplore()}]}; },
     /* the arena, as news (rules 33-35, 58): the Emperor fell and has not got up; an Edur killed there after */
     b7_c7_news:()=>({sp:'A Letherii running', scene:'b7_city_burning', fx:()=>{ S.f.b7_c7_news = 1; }, again:()=>'The young man has gone on, telling the next street.', txt:
 `A young man comes running down the street from the north, a clerk by his ink-stained cuffs, and when he sees the Third he does not run away. He stops, out of breath, and tells them, because he has to tell somebody and they are there.

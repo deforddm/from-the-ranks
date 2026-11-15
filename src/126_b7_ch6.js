@@ -158,7 +158,7 @@ const B76_FATE = {
 /* a squadmate with no page of their own above */
 const b76FateDefault = (id, r) => ({title:TPL[id] ? TPL[id].role : 'One of the Sixth', txt:`${TPL[id] ? TPL[id].name : 'They'} ${r === 'free' ? 'goes out of the army with the rest of the Sixth who wanted it, into a city still deciding what it is' : r === 'palace' ? 'stands a palace post with the rest of the Sixth' : 'stays with the army of the new Lether, with the rest of the Sixth'}.`});
 const b76SgtFate = (r, k) => ({title:'The sergeant', txt:
-  (r === 'army' ? `You stay with the army of the new Lether, at the head of the Sixth, under whoever the new emperor makes Preda. Malazan sergeants come in that summer to drill the battalions, and one of them watches the Sixth on the ground for a morning and then comes over and asks where you learned to hold a line. You tell her the river. She nods as if that were an answer. Some of the army, people say, will march east with the foreigners under Brys Beddict, when the foreigners go. There is barracks talk that he walked back into the city alive, which nobody can explain.`
+  (r === 'army' ? `You stay with the army of the new Lether, at the head of the Sixth, under whoever the new emperor makes Preda. Malazan sergeants come in that summer to drill the battalions, and one of them watches the Sixth on the ground for a morning and then comes over and asks where you learned to hold a line. You tell her the river. She nods as if that were an answer. Some of the army, people say, will march east with the foreigners under Brys Beddict, when the foreigners go. ${S.f.b7_c6_brys ? 'You saw him come back yourself, the morning the Sixth came in by the river gate, wet to the skin with the rats running in front of him, and you still cannot explain it. Nobody asks you to.' : 'There is barracks talk that he walked back into the city alive, which nobody can explain.'}`
    : r === 'palace' ? `You take the Sixth into the Palace Guard, at a post on a door you were once told never to go near. The household in the palace now does not know what it is doing and says so, which you find you prefer. The Finadd keeps the roll. You stand your door, and the city goes past it.`
    : `You take your name off the battalion roll, and the Sixth's names with it, every one who wanted it, in the Finadd's own hand. What you owe and to whom, in a city where no one can find the ledgers, you have decided not to ask. You walk out of the barracks gate past the place the Edur used to stand, and it is only a gate.`)
   + (k === 'break' ? `\n\nAt the river the Sixth ran with the rest, and lived, and some who stood did not. You think about it some nights. You think the sum came out right, and that it cost somebody, and that both are true.` : `\n\nAt the river the Sixth stood when the line went, until a Malazan sergeant's squad broke on it, and then it walked off the field in order. You think about the ones who ran some nights. You would stand again.`)
@@ -371,10 +371,12 @@ const B7CH6 = {
     if (f.b7_c6_deserters) x.push(f.b7_c6_deserters === 'fought' ? 'Deserters ran from the ridge through the Sixth\'s stretch of the line. The Sixth stopped them.' : 'Deserters ran from the ridge through the Sixth\'s stretch of the line. The Sixth let them go.');
     if (f.b7_c6_watcherGone) x.push('The man in the grey coat sat at the next fire the night before the field, and left before morning.');
     if (f.b7_c6_wardOk) x.push('The squad learned the cadre\'s ward, or the surgeons\' version of it.');
+    if (f.b7_c6_brys) x.push('Inside the river gate, the Sixth saw Brys Beddict, the King\'s Champion the city said had died, walk up the street soaked to the skin behind a flood of rats.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
     f.b7_lethRoad && ({army:'The sergeant told the Finadd the Sixth will stay a company of the army, whatever army Lether has after.', palace:'The sergeant told the Finadd the Sixth will stand guard for whoever sits the throne.', free:'The sergeant told the Finadd the Sixth wants its names off the roll.'})[f.b7_lethRoad],
+    f.b7_c6_brys && 'On the city\'s last morning the King\'s Champion, Brys Beddict, who died in the throne room the year the Edur came, walked past the Sixth in a street off the river gate, wet through, with an old rat-catcher and the rats. He touched two fingers to his brow.',
     f.b7_c6_key && (f.b7_c6_key === 'stand' ? 'At the river the Sixth stood when the line went, and walked off the field in order.' : 'At the river the Sixth ran with the rest of the line, and lived.'),
     f.b7_c6_homeDone && (b76K4() === 'edur' ? 'The eldest Edur said the cadre\'s light was meant for the Edur as well as the foreigners. The Edur have gone home.' : 'The captain\'s officers knew what the ridge was for. They asked the Sixth to stay in the line so it would not be out on the plain with the Edur.'),
     f.b7_c6_dome && 'From the line the Sixth saw a light come off the ridge and break against a dome of silver fire far out on the plain. Then the dome went out.',
@@ -879,8 +881,45 @@ The Finadd writes it on the Sixth's page, and blots it, and then, after a moment
 The Finadd stands up from the fire and brushes his coat. ${k === 'stand' ? 'He takes up the battalion standard.' : 'He has no standard to take up, and does not look for one.'} The Sixth falls in behind him, ${k === 'stand' ? 'in its file, in step, as it came off the bank' : 'all of it, which is more than the road can say'}, and goes in through the river gate of Letheras, the one that faces the way the army went, into a city that is deciding what it is.
 
 ${r === 'army' ? 'Whatever army Lether has after, the Sixth means to be a company of it.' : r === 'palace' ? 'Whoever sits the throne after, the Sixth means to stand at a door of it.' : 'Whatever Lether is after, the Sixth means to be out of its army, and in it.'} Behind them, on the road, the foreigners are coming.${b7In('sorvan') ? `\n\nSorvan goes in last but one, with the blue scale on, looking up at the gate-arch as a man looks at a stable he has been told is his.` : ''}${b7In('ilsa') ? `\n\nIlsa goes in with the grey coat over her arm, not on. "Home," she says. "Whatever that is now."` : ''}`,
-        ch:[{t:'Into the city.', onward:true, go:()=>chapterEnd(6, k)},
+        ch:[{t:'Into the city.', onward:true, go:()=>talk('b7_c6_brys')}, // v13.8: through the gate to the street off it (Brys), then the end
             {t:'Not yet.', go:()=>startExplore()}]}; },
+
+    /* ---- v13.8 (David, Nov 15): meetings. Brys Beddict walks into the city, seen from the street off the river gate ----
+       The plan's pick (series-meetings-plan, Book Seven: "Brys back in Letheras, Letherii Ch6: the squad sees the Champion who was dead
+       walk into the city"; rule 33 closes here, rg-canon §7). Where and when: Brys comes up out of Settle Lake, and Ormly of the Rat
+       Catchers takes him to the Patriotist compound, a flood of rats going in before them; there he kills Karos (W *Brys Beddict*;
+       R24.2 S28; rg-canon §3) [supported]. The Sixth comes in by the river gate the morning after the river, on the city's last day
+       (rg-continuity Fixed 4; rg-canon §4), which puts it in the streets before the surrender (S43) [the timing is Claude's call]. Locks:
+       the lake and the compound stay off the page (hard limits); nothing of what he does there or of his brother; the narrator never
+       explains the return (rule 33's close is what the city sees); Bugg/Mael never (rule 56). He touches two fingers to his brow, Book
+       Five's gesture (b5_c1_brysdrill), and does not stop; Ormly speaks one line and is never named. Thegg +1, else Perrit +1. Sets
+       b7_c6_brys; the sergeant's army fate reads it. */
+    b7_c6_brys:()=>{ const k = b76Key() || 'stand';
+      return {sp:'Inside the river gate', scene:'b7_city_burning', fx:()=>{ if (!S.f.b7_c6_brys) { S.f.b7_c6_brys = 1; if (b7In('thegg')) b76L('thegg', 1); else b76L('perrit', 1); } }, txt:
+`Inside the river gate the street climbs from the water between warehouses with their shutters nailed. The city is louder in here than it was through the grating. A long way off, toward the middle of it, there is the crowd, and closer there is nothing at all: no carts, no hawkers, a dog in a doorway, smoke over the roofs from more than one place.
+
+Then the rats.
+
+They come out of a side street at a run, hundreds of them, more, a brown flood going over the cobbles and down the gutters and along the foot of the walls, all one way, toward the noise. Not one turns aside for the Sixth. They are round the next corner as fast as they came.
+
+Behind them, walking, come two men. One is old, in a rat-catcher's leathers, with a pole over his shoulder. The other is tall and lean and soaked to the skin, as if he had come up that minute out of deep water: hair flat to his skull, clothes dark and clinging, a sword in his hand. He walks up the middle of the street as if it were a yard he had drilled in for years.
+
+Every soldier in Letheras knows that face. The King's Champion. Brys Beddict, who died in the throne room the year the Edur came. Everybody knew it. The whole city knew it.
+
+He looks at the Sixth as he goes by: at the shields, and the white finger on them. He touches two fingers to his brow, to the squad in general, and does not stop.
+
+"Mind the rats, soldiers," the old man says, not unkindly, and the two of them go on up the street after the rats, toward the noise.${b76Say({thegg:`
+
+Thegg has not moved since the rats. "That was the Champion," he says. "He died. My mother's dead told me. Everybody's did." He looks up the empty street. "They were wrong."`, perrit:`
+
+Perrit watches them go. "The city said he died," she says. "The city says a great many things." She is very pale. "I never once heard it say that."`, _:`
+
+Nobody in the Sixth says anything for a long moment.`})}${b76If('ilsa', `
+
+Ilsa is looking after them too, and she knows the city's streets the way a clerk does. "That way's the compound," she says, very quietly. She does not say anything else.`)}
+
+The Finadd takes out the roll, and his pen, and looks at the Sixth's page. Then he puts both away again. "Some things," he says, "are not for the company's page." He looks up the street. "Come. The city is deciding what it is."`,
+        ch:[{t:'Into the city.', onward:true, go:()=>chapterEnd(6, k)}]}; },
   },
   fates:B76FATES,
 };

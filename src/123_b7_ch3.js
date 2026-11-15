@@ -111,7 +111,9 @@ const B7CH3 = {
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
         {id:'wenna', name:'A Shake fisher', kind:'wenna', x:12, y:7, node:()=>'b7_c3_wenna', show:()=>S.f.b7_wennaDone == null || S.f.b7_wennaDone === 2, fresh:()=>S.f.b7_wennaDone == null},
         {id:'marines', name:'Marines under the trees', kind:'b2soldier', x:6, y:8, node:()=>'b7_c3_marines', fresh:()=>!S.f.b7_c3_marines},
-        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
+        {id:'bredd', name:'A marine with a skin', kind:'b2soldier', x:2, y:7, node:()=>'b7_c3_bredd', fresh:()=>!S.f.b7_c3_bredd}, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
+        /* v13.8 (David, Nov 15): meetings. Fist Keneb walking the lie-up at dusk, once the lieutenant has given the night's orders */
+        {id:'keneb', name:'Fist Keneb', kind:'keneb', x:11, y:3, node:()=>'b7_c3_keneb', show:()=>b73Ph() === 1 && !!S.f.b7_c3_orders1, fresh:()=>!S.f.b7_c3_keneb} ] },
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
        field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
@@ -225,6 +227,7 @@ const B7CH3 = {
     if (f.b7_c3_tracksOk) x.push('The Third learned the Shake tracks: the field-drains no map shows.');
     if (f.b7_c3_steward === 'freed') x.push('The factor\'s steward walked off down the lane toward the city with the clothes he stood in.');
     if (f.b7_c3_steward === 'locked') x.push('The factor\'s steward was locked in his own pantry for the factor to find.');
+    if (f.b7_c3_keneb) x.push('Fist Keneb walked the lie-up at dusk, asked the Third how many it had lost since the coast, and wrote it down.');
     return x; },
 
   journal:()=>{ const f = S.f; return [
@@ -234,6 +237,7 @@ const B7CH3 = {
     f.b7_c3_village && (f.b7_c3_village === 'open' ? 'A village in the valley opened its gate to the Third. Word had got there first.' : 'A village in the valley kept its gate barred. Every family inside was afraid to be the one who opened it.'),
     f.b7_c3_prisoners && (f.b7_c3_prisoners === 'freed' ? 'The Third let the crossbowmen from the farm go home, without their crossbows.' : 'The Third handed the crossbowmen from the farm to the column.'),
     f.b7_c3_farmDone && 'Letherii crossbowmen and a cadre mage lay in wait at a farm in the valley. They had been killing marines for a month.',
+    f.b7_c3_keneb && 'Fist Keneb, who counted the Chain in at Aren\'s gate, walks his column\'s lie-ups at dusk and asks every sergeant how many. He writes the answers down.',
     f.b7_c3_drum && 'Something went up on a road to the north, louder than any cusser. The marines grinned and would not say whose.',
     f.b7_wennaDone != null && 'A Shake fisher named Wenna, at the column\'s edge with smoked fish to sell, offered to show the Third the roads the maps leave out.',
     'The Letherii are not rising. They fight beside the Edur. Word came down the column from the north.'].filter(Boolean); },
@@ -269,6 +273,42 @@ Outside, in the wood, the column is waking too. Somewhere under the trees a voic
 
 She nods along the wood's edge, to where a handful of figures sit apart from the marines with baskets at their feet. "Shake. Fishers off the coast. A few of them have followed the column inland since the beach, selling smoked fish, because the Edur took their boats and they've nothing else to sell. They know this country. They walked it before Lether drew it." She shrugs. "Take one, if one will come. Pay what they ask. It'll be cheaper than a squad."`,
       ch:[{t:'"A Shake guide. Yes, Lieutenant."', go:()=>startExplore()}]}),
+
+    /* ---- v13.8 (David, Nov 15): meetings. Fist Keneb gives the Third its orders himself, at dusk in the lie-up ----
+       The plan's ★ (series-meetings-plan, Book Seven: "Keneb and the marines inland, Third Ch3-5: Keneb gives the Third its orders").
+       Where and when: Keneb commands the marines inland from the landing and orders the march (W13; rg-canon §2 ch 13, correction 1) and
+       is with the column through the night raids (W17, W21) [supported]. A Fist walking his column's lie-up at dusk is the game's gap.
+       The game's own hook: Book Two's Aren gate ("Somebody should count", b2_keneb1) and Book Four's muster (b4_c1_keneb); Book Seven
+       has no imported flags, so the history is told as the Third's, not as a flag. Locks: his doubt of the Adjunct (W13) is never voiced;
+       rule 55 (nothing of her purpose); rule 18 (the boy is a small boy, alive, nothing more); Sands as the lieutenant already says it.
+       Marrow +1 (she asks after the boy), else Haddat +1. What it gives: +1 on the farm's ditch check (the sergeant's edge). Sets
+       b7_c3_keneb. */
+    b7_c3_keneb:()=>({sp:'Fist Keneb', scene:'b7_camp_night', fx:()=>{ if (!S.f.b7_c3_keneb) { S.f.b7_c3_keneb = 1; if (b7In('marrow')) b73L('marrow', 1); else b73L('haddat', 1); } },
+      again:()=>'The Fist, further along the wood\'s edge now, crouched by another squad with his slate.', txt:
+`A broad man in a plain cloak is coming along the wood's edge on foot, with one runner behind him and nobody else, stopping at every squad under the trees. No crest. No escort. The marines he passes do not get up, and he does not seem to expect them to.
+
+You have seen him before. On Aren's north gate, the day the Chain came in, there was an officer of the Guard with a slate counting the column through, and asking every sergeant how many. Then at the muster at Aren, a captain of the 8th with a boy holding a fold of his cloak. He is a Fist now. The face is the same face, tireder.
+
+He crouches in front of the Third with the slate on his knee. "The 9th's heavies," he says. "How many since the coast, Sergeant?"
+
+You tell him: all of them who came ashore${b7In('doss') ? ', and one more, off a holding' : ''}. He writes it down, carefully, beside a mark that is probably the Third, and underlines it out of what looks like habit.
+
+"Good," he says. "Somebody should count."
+
+"The lieutenant's given you the farm." He does not wait for the answer. "They've been lying up in it a month, killing marines on the tracks, and in a month they've learned where we come from. The track, and the gate. A farm wall has a back, Sergeant. Come in at the back." He looks down the valley, where the dark is coming up out of the fields. "And we leave the people be. We'll see if they notice."${b73Say({marrow:`
+
+Marrow has been looking at him the whole time, the way she looks at a cough. "The boy, Fist," she says. "From the muster."
+
+Something goes across his face and is put away. "Alive," he says. "Taller." He stands, and his knees crack, and he almost smiles at that. "Thank you for asking. Nobody does."`, haddat:`
+
+Haddat has been looking at him the whole time. "You counted us in at Aren," she says.
+
+"I did." He looks at her a moment longer than he needs to. "I remember the Chain. Not the names. I'm sorry for that." He stands, and his knees crack. "I've a great many names now, and a slate."`, _:`
+
+He stands, and his knees crack, and he almost smiles at that.`})}
+
+Then he is gone along the wood's edge to the next squad, the runner after him, and the next sergeant does not get up either.`,
+      ch:[{t:'"Sir."', go:()=>startExplore()}]}),
 
     /* Wenna: a Shake fisher at the column's edge */
     b7_c3_wenna:()=>{ const d = S.f.b7_wennaDone;
@@ -490,7 +530,7 @@ ${b73Teacher() === 'wenna' ? '"Took me a childhood," Wenna says. "You had an hou
 ${g === 'wenna' ? `Wenna is lying beside you in the barley. "Ditch," she breathes, and points: a dry ditch under the hedge that runs right up behind the barn wall. "They watch the gate and the track. They never watch a ditch."` : g === 'doss' ? `Doss is lying beside you in the barley. "There's a drain," he breathes. "There always is. Behind the barn." He points. "They'll watch the gate."` : `The lieutenant's map shows a gate and a track, and the gate and the track are exactly what the crossbows will be watching. There might be a ditch behind the barn. There usually is.`}${b73If('marrow', `\n\nMarrow's lips are pressed thin. "The mage is in the barn, child," she says. "Awake."`)}`,
         ch:[{t:'"Third! Over the wall!" Straight at them.', go:()=>startBattle('b7_c3_farm', {})},
             {t:g === 'wenna' ? 'Wenna\'s way: down the dry ditch and in behind the barn.' : g === 'doss' ? 'Doss\'s way: the drain behind the barn.' : 'Find the ditch behind the barn, and go in that way.', check:['wits', 15], rise:true,
-              edges:id=>[id === 'wenna' && ['the Shake tracks are hers', 3], id === 'doss' && ['he knows field-drains with his feet', 2], S.f.b7_c1_dossRoads && id === 'doss' && ['he drew you these tracks in the dirt on the coast', 1], S.f.b7_c3_tracksOk && id === 'sgt' && ['the Shake track: the squad goes in under the hedge', 2], g === 'wenna' && id === 'sgt' && ['Wenna is in the ditch in front of you', 1], id === 'sathi' && ['she went in under Odhan camps for the Weasels', 1], id === 'ottar' && ['grey plate in a ditch is a bell', -2], id === 'darrut' && ['an Aren Guard\'s kit was not made for ditches', -1]],
+              edges:id=>[id === 'wenna' && ['the Shake tracks are hers', 3], id === 'doss' && ['he knows field-drains with his feet', 2], S.f.b7_c1_dossRoads && id === 'doss' && ['he drew you these tracks in the dirt on the coast', 1], S.f.b7_c3_tracksOk && id === 'sgt' && ['the Shake track: the squad goes in under the hedge', 2], S.f.b7_c3_keneb && id === 'sgt' && ['the Fist said: a farm wall has a back, and they watch the front', 1], g === 'wenna' && id === 'sgt' && ['Wenna is in the ditch in front of you', 1], id === 'sathi' && ['she went in under Odhan camps for the Weasels', 1], id === 'ottar' && ['grey plate in a ditch is a bell', -2], id === 'darrut' && ['an Aren Guard\'s kit was not made for ditches', -1]],
               near:{t:()=>`Yes, but the ditch is not as dry as it looked, and ${b73Nm(b73Who())} ${b73V(b73Who(), 'come', 'comes')} up out of it at the barn wall with a mouthful of it and a knee on a stone. ${b73Nmc(b73Who())}'ll be a step slow for a while.`, fx:()=>bruise(b73Who(), bruiseN())},
               fx:()=>{ S.f.b7_c3_guided = 1; }, go:()=>startBattle('b7_c3_farm', nearMiss() ? {} : {surprise:'p'}), fail:'b7_c3_farm_seen'},
             {t:'Not now.', go:()=>startExplore()}]}; },

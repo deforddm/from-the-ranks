@@ -137,12 +137,12 @@ const r = await page.evaluate(async () => {
   take('b7_c6_fire', /through the gate/); out.e.notYet = has('b7_c6_end', /Not yet/);
   /* the fates while the Letherii play */
   out.fa = {errs:fatesCheck(), pages:B7CH6.fates.pages().length, here:S.squad.length, last:B7CH6.fates.pages().slice(-1)[0].id, road:B7CH6.fates.road(), key:B7CH6.fates.key(), half:B7CH6.fates.half() === S, roadTitle:B7CH6.fates.roadPage().title};
-  take('b7_c6_end', /Into the city/); await wait(60);
+  take('b7_c6_end', /Into the city/); out.e.brys = S.node === 'b7_c6_brys' && !!S.f.b7_c6_brys && /Brys Beddict/.test(DLG.b7_c6_brys().txt); take('b7_c6_brys', /Into the city/); await wait(60); // v13.8 (David, Nov 15): meetings (Brys inside the river gate)
   out.e = Object.assign(out.e, {view, ch:S.chapters[6], lvl:S.lvl, xp:S.xp, rise:b7Rising(), extras:CHAPTERS[6].extras().length, journal:CHAPTERS[6].journal().length, endText:(CHEND[6] || {}).break && CHEND[6].break[0]});
   /* the fates once the Third is in (Ch7 reads S.th.l) */
   const lname = S.name; b7Use('t'); out.fa.third = {thread:S.thread, half:B7CH6.fates.half() === S.th.l, name:B7CH6.fates.pages().slice(-1)[0].name === lname, pages:B7CH6.fates.pages().length, para:B7CH6.fates.roadPage().paras.slice(-1)[0].includes(lname)};
   /* stand end too */
-  restore(snapS, 'b7_c6_walls'); talk('b7_c6_road'); take('b7_c6_road', /Soldiers/); talk('b7_c6_fire'); take('b7_c6_fire', /through the gate/); take('b7_c6_end', /Into the city/); await wait(60);
+  restore(snapS, 'b7_c6_walls'); talk('b7_c6_road'); take('b7_c6_road', /Soldiers/); talk('b7_c6_fire'); take('b7_c6_fire', /through the gate/); take('b7_c6_end', /Into the city/); take('b7_c6_brys', /Into the city/); await wait(60);
   out.e2 = {ch:S.chapters[6], lvl:S.lvl, endText:(CHEND[6] || {}).stand && CHEND[6].stand[0]};
   /* ================= synthetic saves: Perrit dead (Ammet teaches); Perrit and Ammet dead (the old escort; the tile-woman reads) ================= */
   setBook('rg'); S = newStateRG('Syn', 'Other'); { const L = S.th.l; L.squad = ['sgt', 'thegg', 'ammet', 'ruuk', 'brune', 'ilsa']; L.camp = ['sorvan']; L.dead = {perrit:{ch:7, where:'Brans Keep', from:'mt'}, tobet:{ch:7, where:'Letheras', from:'mt'}}; ['ruuk', 'brune', 'ilsa', 'sorvan'].forEach(k => { L.loy[k] ??= 0; L.gear[k] ??= {}; L.picks[k] ??= []; }); L.picksDue = []; L.lvl = 10; L.xp = LEVELS[9]; }
@@ -178,7 +178,7 @@ k.stand && k.brk && k.notYet && k.html ? ok('the key at the river: stand, break,
 st.key === 'stand' && st.rise === 0 && st.thegg >= 0 && st.fight.started && st.fight.after === 'b7_c6_stand_after' && st.done === 1 && st.walk && st.area === 'b7_c6_walls' && st.ph === 4 ? ok('stand: no move on the Rising; the Malazan sergeant\'s squad (a forced win); "Walk."; the walls') : no('stand ' + JSON.stringify(st));
 b.key === 'break' && b.rise === 1 && b.rose >= 1 && b.fight.started && b.fight.obj && b.fight.stage2 && b.fight.inStage2 && b.fight.after === 'b7_c6_break_after' && b.done === 1 && b.area === 'b7_c6_walls' ? ok('break: the Rising +1; the bank (survive) and the reeds forced; the walls') : no('break ' + JSON.stringify(b));
 wl.walls && wl.endGated && wl.gate && wl.refugees && wl.choices && rdd.army && rdd.army.set && rdd.palace && rdd.palace.set && rdd.free && rdd.free.set && rdd.free.again ? ok('the walls: the refugees (the mob), the gate; the road: army, palace, free from one moment') : no('walls ' + JSON.stringify([wl, rdd]));
-e.open && e.lines === e.here && e.html && e.notYet && e.view === 'end' && e.ch === 'break' && e.lvl >= 11 && e.extras >= 5 && e.journal >= 4 && e.endText === 'The bank' && e2.ch === 'stand' && e2.lvl >= 11 && e2.endText === 'The line that held'
+e.open && e.lines === e.here && e.html && e.notYet && e.brys && e.view === 'end' && e.ch === 'break' && e.lvl >= 11 && e.extras >= 5 && e.journal >= 4 && e.endText === 'The bank' && e2.ch === 'stand' && e2.lvl >= 11 && e2.endText === 'The line that held'
   ? ok(`the end: in through the gate; break at level ${e.lvl} (${e.xp} xp), the Rising ${e.rise}; stand at level ${e2.lvl}`) : no('end ' + JSON.stringify([e, e2]));
 fa.errs && !fa.errs.length && fa.pages === fa.here && fa.last === 'sgt' && fa.road === 'free' && fa.key === 'break' && fa.half && fa.roadTitle === 'Out' && fa.third && fa.third.thread === 't' && fa.third.half && fa.third.name && fa.third.pages === fa.pages && fa.third.para
   ? ok(`B7CH6.fates: a page for every soldier on every road, key and earlier key; pages() (${fa.pages}) from S, and from S.th.l once the Third is in`) : no('fates ' + JSON.stringify(fa).slice(0, 800));
