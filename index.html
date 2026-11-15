@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.5.0';
+const VERSION = '13.5.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1565,7 +1565,7 @@ const PICKS = {
    passed over, or the one written for the soldier's role (t2Role, 015). Kept as ids in S.picks like any other pick. */
 PICKS.t2 = {
   oldhand:['oldhand', 'Old Hand', 'Rally can be called once more each fight. They have heard the voice before, and it has always meant they lived.'],
-  fieldsurgeon:['fieldsurgeon', 'Field Surgeon', 'Mend also heals the worst-hurt other squadmate within 2 of its target, for half. Two hands, two wounds, no time.'],
+  fieldsurgeon:['fieldsurgeon', 'Field Surgeon', 'Stanch also leaves a dressing that heals a little at the start of each of the squadmate\'s next three turns (2, and 1 more for every four squad levels past the first). Stitched, packed and talked to.'],
   anvil:['anvil', 'Anvil', 'Once a fight, without using the action: until the next turn, every blow aimed at a squadmate standing next to this one lands on this one instead.'],
   stakeline:['stakeline', 'Stake Line', 'Once a fight: a line of three sharpened stakes and cord across open ground within 4. An enemy that steps onto it stops there, its move done. No munition in it.'],
   calledshot:['calledshot', 'Called Shot', 'An enemy this soldier marks also loses 2 armour while the Mark holds.'],
@@ -6273,6 +6273,7 @@ function nextTurn(){
   B.cur = u; B.moved = false; B.mvLeft = u.mv; B.acted = false; B.mode = null; B.aim = null; B.turn++; B.turnAt = performance.now();
   boonFoeTurnStart(u); // the gods' boons on an enemy's turn: the Wickan cold, the Wolves (31c)
   if (u.strain) u.strain = Math.max(0, u.strain - 1);
+  if (u.hot && u.hot.left > 0 && u.hp > 0) { u.hot.left--; heal(u, u.hot.n); if (!u.hot.left) u.hot = null; } // v13.5: Field Surgeon's dressing
   if (u.anvilOn) u.anvilOn = false; // v13.5: Anvil holds until the heavy's next turn
   if (u.calledUntil != null && B.round > u.calledUntil) { u.ac += 2; u.calledUntil = null; } // v13.5: Called Shot's 2 armour comes back with the Mark
   if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
@@ -6371,8 +6372,7 @@ const AB = {
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
   mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`);
-      if (has(u.id, 'fieldsurgeon')) { const o = party().filter(p => p !== t && !p.ally && p.hp < p.maxhp && cheb(p, t) <= 2).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp)[0]; if (o) { heal(o, Math.max(1, Math.floor(n / 2))); sparks(o.x, o.y, 8, '#9fe0b8', .3); blog(`The other hand finds ${o.name}.`); } } }}, // v13.5: Field Surgeon
+    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
     run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); healW(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
   anvil:{name:'Anvil', free:true, self:true, desc:()=>'Once a fight, and it does not use the action: until this soldier\'s next turn, every blow aimed at a squadmate standing next to them lands on them instead.',
@@ -7650,7 +7650,7 @@ Object.assign(AB, {
       blog(`${u.name} opens ${u.id === 'ohl' ? 'his' : 'her'} hands and lets Denul out like water from a cup. ${near.length > 1 ? 'Everyone close enough feels it.' : `There is nobody close enough but ${u.id === 'ohl' ? 'him' : 'her'}.`}${d < 1 ? ' It comes thin here.' : ''}`); }},
   stanch:{name:'Stanch', strain:2, desc:()=>'A squadmate within 3 cannot drop below 1 health until the healer\'s next turn, stops bleeding, and heals 1 for each squad level past the first. Strain 2.',
     tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 3 && p.stanch !== u && sees(u, p)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); if (has(u.id, 'fieldsurgeon')) { t.hot = {n:2 + Math.floor(lvB() / 4), left:3}; blog(`${u.name} packs the wound and binds it. It will hold, and it will mend.`); } /* v13.5: Field Surgeon */ AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own' : `${t.name}'s`} wound and says something to Hood in Ehrlii. ${t === u ? 'He' : t.name} is not going anywhere until he says so.`); }},
 });
 
@@ -8150,6 +8150,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.5.1', ['Field Surgeon reworked: it now goes with Stanch, not Mend. A stanched squadmate also gets a dressing that heals a little at the start of each of their next three turns (2, more at higher levels). Soldiers who took it keep it.']],
   ['13.5.0', ['A second talent at level 12. Every soldier who took a talent at level 3 chooses another: the one passed over then, or a new one for their trade. Sergeants: Old Hand (one more Rally a fight). Healers: Field Surgeon (Mend also heals the worst-hurt squadmate within 2 of its target, for half). Heavies: Anvil (once a fight, blows aimed at a squadmate beside them land on them instead). Sappers: Stake Line (once a fight, three sharpened stakes and a cord; an enemy that walks onto them stops there, and no munition is used). Bows: Called Shot (a marked enemy loses 2 armour). Casters: Deep Warren (every spell costs 1 less strain). A save already past level 12 is asked at the next fire. Picks carry into later books like any other.']],
   ['13.4.0', ['Fights are shorter and more dangerous across the series. From Book Three on, enemies have less health and hit harder, so a typical fight lasts about ten to twelve rounds instead of fifteen to twenty, and munitions, the Whisper and pushback matter again in the late books. Every fight was then tuned on its own to Soldier about 90% and Bridgeburner about 75 to 80% for a careful player.',
     'Pushback: only the big and the deathless stand their ground now (stone, Jaghut, hounds, K\'Chain, demons, the Assail and the like). A leader holds on a coin toss. Ordinary soldiers can be shoved again in every book.',
