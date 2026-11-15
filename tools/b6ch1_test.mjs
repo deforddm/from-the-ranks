@@ -105,13 +105,13 @@ const r = await page.evaluate(async () => {
   take('b6_c1_bury', /Up the shields/); out.b.patrolNotNow = has('b6_c1_patrol_start', /Not now/); out.b.npc = AREAS.b6_c1_barrows.npcs.find(n => n.id === 'patrol').show();
   out.b.patrol = await force('b6_c1_patrol'); out.b.done = S.f.b6_c1_patrolDone;
   take('b6_c1_patrol_after', /Wait for dawn/); out.b.dawn = /fresh earth/.test(DLG.b6_c1_dawn().txt); out.b.notYet = has('b6_c1_dawn', /Not yet/);
-  take('b6_c1_dawn', /siege/); await wait(60); out.b.end = {view, ch:S.chapters[1], lvl:S.lvl, xp:S.xp};
+  take('b6_c1_dawn', /9th.s lines/); await wait(60); out.b.end = {view, ch:S.chapters[1], lvl:S.lvl, xp:S.xp};
   out.b.extras = CHAPTERS[1].extras().length; out.b.journal = CHAPTERS[1].journal().length; out.b.endText = (CHEND[1] || {}).bury && CHEND[1].bury[0];
   /* ================= key: leave, from the same moment ================= */
   S = JSON.parse(snap); save(); setBook('bh'); startExplore('b6_c1_barrows'); G.said = {};
   S.wounds = {haddat:5}; talk('b6_c1_barrow'); take('b6_c1_barrow', /Leave them/); out.l = {key:S.f.b6_c1_key, rested:!S.wounds, haddat:S.loy.haddat - lb.haddat, tangle:S.loy.tangle - lb.tangle, noPatrol:!AREAS.b6_c1_barrows.npcs.find(n => n.id === 'patrol').show()};
   take('b6_c1_leave', /Wait for dawn/); out.l.dawn = /open/.test(DLG.b6_c1_dawn().txt);
-  take('b6_c1_dawn', /siege/); await wait(60); out.l.end = {view, ch:S.chapters[1], lvl:S.lvl};
+  take('b6_c1_dawn', /9th.s lines/); await wait(60); out.l.end = {view, ch:S.chapters[1], lvl:S.lvl};
   /* ================= a --from=1 style save: Sathi alive, Book Four's spares and Ramin walking ================= */
   setBook('bh'); S = newStateBH('Syn', 'Other'); delete S.dead.sathi; S.squad = ['sgt', 'haddat', 'sathi', 'tangle', 'tallow', 'rasp']; ['sathi', 'tallow', 'rasp'].forEach(k => { S.loy[k] ??= 0; S.gear[k] ??= {}; S.picks[k] ??= []; }); S.picksDue = []; save(); startChapter(1);
   out.y = {renderErr:renderAll(), lines:DLG.b6_c1_fire_talk().txt.split('\n\n').length, here:S.squad.filter(id => id !== 'sgt').length, sathi:/Sathi/.test(DLG.b6_c1_fire_talk().txt), reader:visReader().id};
