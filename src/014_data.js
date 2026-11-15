@@ -171,7 +171,7 @@ const PICKS = {
    passed over, or the one written for the soldier's role (t2Role, 015). Kept as ids in S.picks like any other pick. */
 PICKS.t2 = {
   oldhand:['oldhand', 'Old Hand', 'Rally can be called once more each fight. They have heard the voice before, and it has always meant they lived.'],
-  fieldsurgeon:['fieldsurgeon', 'Field Surgeon', 'Mend also heals the worst-hurt other squadmate within 2 of its target, for half. Two hands, two wounds, no time.'],
+  fieldsurgeon:['fieldsurgeon', 'Field Surgeon', 'Stanch also leaves a dressing that heals a little at the start of each of the squadmate\'s next three turns (2, and 1 more for every four squad levels past the first). Stitched, packed and talked to.'],
   anvil:['anvil', 'Anvil', 'Once a fight, without using the action: until the next turn, every blow aimed at a squadmate standing next to this one lands on this one instead.'],
   stakeline:['stakeline', 'Stake Line', 'Once a fight: a line of three sharpened stakes and cord across open ground within 4. An enemy that steps onto it stops there, its move done. No munition in it.'],
   calledshot:['calledshot', 'Called Shot', 'An enemy this soldier marks also loses 2 armour while the Mark holds.'],

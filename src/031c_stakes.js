@@ -497,7 +497,7 @@ Object.assign(AB, {
       blog(`${u.name} opens ${u.id === 'ohl' ? 'his' : 'her'} hands and lets Denul out like water from a cup. ${near.length > 1 ? 'Everyone close enough feels it.' : `There is nobody close enough but ${u.id === 'ohl' ? 'him' : 'her'}.`}${d < 1 ? ' It comes thin here.' : ''}`); }},
   stanch:{name:'Stanch', strain:2, desc:()=>'A squadmate within 3 cannot drop below 1 health until the healer\'s next turn, stops bleeding, and heals 1 for each squad level past the first. Strain 2.',
     tiles:u=>party().filter(p => !p.ally && cheb(u, p) <= 3 && p.stanch !== u && sees(u, p)),
-    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; t.stanch = u; t.bleed = 0; if (lvB()) healW(t, lvB()); if (has(u.id, 'fieldsurgeon')) { t.hot = {n:2 + Math.floor(lvB() / 4), left:3}; blog(`${u.name} packs the wound and binds it. It will hold, and it will mend.`); } /* v13.5: Field Surgeon */ AUDIO.play('heal'); float(t, 'stanched', '#9fe0b8'); sparks(t.x, t.y, 8, '#9fe0b8', .3);
       blog(`${u.name} puts two fingers on ${t === u ? 'his own' : `${t.name}'s`} wound and says something to Hood in Ehrlii. ${t === u ? 'He' : t.name} is not going anywhere until he says so.`); }},
 });
 

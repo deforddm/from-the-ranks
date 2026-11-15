@@ -179,6 +179,7 @@ function nextTurn(){
   B.cur = u; B.moved = false; B.mvLeft = u.mv; B.acted = false; B.mode = null; B.aim = null; B.turn++; B.turnAt = performance.now();
   boonFoeTurnStart(u); // the gods' boons on an enemy's turn: the Wickan cold, the Wolves (31c)
   if (u.strain) u.strain = Math.max(0, u.strain - 1);
+  if (u.hot && u.hot.left > 0 && u.hp > 0) { u.hot.left--; heal(u, u.hot.n); if (!u.hot.left) u.hot = null; } // v13.5: Field Surgeon's dressing
   if (u.anvilOn) u.anvilOn = false; // v13.5: Anvil holds until the heavy's next turn
   if (u.calledUntil != null && B.round > u.calledUntil) { u.ac += 2; u.calledUntil = null; } // v13.5: Called Shot's 2 armour comes back with the Mark
   if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
@@ -277,8 +278,7 @@ const AB = {
       blog(`${u.name} pulls Meanas down over ${t.name}'s eyes. For its next ${['','one','two','three','four','five'][t.blindTurns] || t.blindTurns} turns it will be fighting phantoms.`); }},
   mend:{name:'Mend', strain:3, desc:()=>{ const w = (B && B.cur && B.cur.side === 'p' && B.cur.ab && B.cur.ab.includes('mend') && B.cur.id) || HEALER() || 'ohl'; return `Denul healing on a squadmate within ${has(w,'triage') ? 4 : 3}: 2d6+${(has(w,'triage') ? 6 : 3) + lvB()}${B && B.warren && B.warren.denul < 1 ? ', weakened here' : ''}. Strain 3.`; },
     tiles:u=>party().filter(p => cheb(u,p) <= (has(u.id,'triage') ? 4 : 3) && sees(u,p)),
-    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`);
-      if (has(u.id, 'fieldsurgeon')) { const o = party().filter(p => p !== t && !p.ally && p.hp < p.maxhp && cheb(p, t) <= 2).sort((a, b) => a.hp / a.maxhp - b.hp / b.maxhp)[0]; if (o) { heal(o, Math.max(1, Math.floor(n / 2))); sparks(o.x, o.y, 8, '#9fe0b8', .3); blog(`The other hand finds ${o.name}.`); } } }}, // v13.5: Field Surgeon
+    run(u,x,y){ const t = unitAt(x,y); const n = Math.max(1, Math.round(roll(2,6,(has(u.id,'triage') ? 6 : 3) + lvB()) * B.warren.denul)); AUDIO.play('heal'); healW(t, n); sparks(t.x, t.y, 12, '#9fe0b8', .4); blog(`${u.name} lays hands on ${t.name}${B.warren.denul < 1 ? '. Denul comes thin and grudging' : ''}.`); }},
   salve:{name:'Salve', item:'salve', desc:()=>`Heal ${salveHeal()}, yourself or an adjacent squadmate.`, tiles:u=>party().filter(p => cheb(u,p) <= 1),
     run(u,x,y){ const t = unitAt(x,y); AUDIO.play('heal'); healW(t, salveHeal()); blog(`${u.name} slaps salve on ${t === u ? 'their own wounds' : t.name}.`); }},
   anvil:{name:'Anvil', free:true, self:true, desc:()=>'Once a fight, and it does not use the action: until this soldier\'s next turn, every blow aimed at a squadmate standing next to them lands on them instead.',
