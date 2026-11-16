@@ -6635,7 +6635,22 @@ const TKS = {
   b5_c3_bank:{fam:'earth', as:{'4':'#', '5':'x'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b5_c6_dissent:{fam:'plain', as:{'7':'c'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b7_c4_lines:{fam:'plain', as:{'@':'H'}, draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
-  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
+  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  /* Book Eight (v13.22): Darujhistan's streets, roofs and lake shore (the city's own barrels, handcarts and chimneys, water butts, rope),
+     the caravan east over the old Domin, Black Coral and the pilgrims' camp under its night, the Lamatath by day, the road out */
+  city_night:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  city_dusk:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  roof_night:{fam:'earth', as:{'4':'C'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  lakefront:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b8_c2_camp:{fam:'plain', as:{'6':'=', '7':'W', '0':'F', '@':'h'}},
+  b8_c2_road:{fam:'earth', as:{'5':'x', '7':'W', '4':'#'}},
+  b8_c2_town:{fam:'earth', as:{'5':'x'}},
+  b3_c7_coral:{fam:'earth'},
+  b3_c5_domin_night:{fam:'earth', as:{'5':'x'}},
+  b8_c3_mound:{fam:'plain', as:{'6':'='}},
+  b8_c4_camp:{fam:'plain', as:{'6':'=', '0':'F', '7':'c', '8':'t'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b8_c5_day:{fam:'earth', as:{'4':'#'}},
+  plain:{fam:'plain'} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };
@@ -94744,11 +94759,12 @@ const B8CH1 = {
 
   areas:[
     /* 16 x 12 (city_night). . cobbles  , gutter  # house fronts  D the Fourth's door  g the alley mouth  L gas-lamps  B barrels
-       < down the street, toward the Phoenix  > on into the Gadrobi lanes */
+       < down the street, toward the Phoenix  > on into the Gadrobi lanes
+       Terrain kit (25b, v13.22): a light touch: a water butt by a door (&), and a neighbour clearing his step (folk). */
     { id:'b8_c1_street', title:'Darujhistan · the Fourth\'s street', sub:'The Gadrobi District · winter', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s door is the one with the bar behind it', decor:'city_night', dark:true,
       map:[ "################",
             "###L####D##g#L##",
-            "#..............#",
+            "#.............&#",
             "#.,,.........,.#",
             "#......B.......#",
             "<..............>",
@@ -94759,6 +94775,7 @@ const B8CH1 = {
             "######L..L######",
             "################" ],
       walk:'.,Dg<>', triggers:{D:'b8_c1_fire', g:'b8_c1_alley_mouth', '<':'b8_c1_phoenix', '>':'b8_c1_to_lanes'}, start:{x:8, y:2},
+      folk:[{x:12, y:4, kind:'b5_c7_citizen', name:'A neighbour with a shovel', line:'Frost on the step again. Every winter I say I\'ll move up to the Daru tier. Every winter the Daru tier says no.', wander:1}],
       quest:()=> b81Ph() === 1 ? 'Something on the roof. The alley behind the door.'
         : b81Ph() === 2 ? 'The paper, on the table by the fire.'
         : b81Ph() === 3 ? (!S.f.b8_c1_vetMet ? 'The Gadrobi lanes, east. The tavern with the painted sign.' : 'The fire. The paper is still on the table.')
@@ -94770,40 +94787,44 @@ const B8CH1 = {
         {id:'vasso', name:'A young man on the step', kind:'vasso', x:9, y:2, node:()=>'b8_c1_vasso', show:()=>b81Ph() >= 5 && b81Hunt() && (S.f.b8_vassoDone == null || S.f.b8_vassoDone === 2), fresh:()=>S.f.b8_vassoDone == null} ] },
 
     /* 16 x 12 (roof_night). . tile  , slate  # the drop  C chimneys  p planks between roofs  x the Guild's line on its post  S the skylight
-       < the way down, a drainpipe to the alley */
+       < the way down, a drainpipe to the alley
+       Terrain kit (25b, v13.22): more chimneys (4, drawn as the roof's own C), rain casks (&), a pigeon loft or two (8), coils of somebody's rope (*); nobody up here (no folk). */
     { id:'b8_c1_roofs', title:'Darujhistan · the Gadrobi roofs', sub:'Night · over the alley', hint:'Tap roof to move · the planks hold · the line is on its post by the chimney · down is west', decor:'roof_night', dark:true,
       map:[ "################",
-            "#..C...#,,,,,,,#",
-            "#......p,,C,,,,#",
-            "#......#,,,,,x,#",
-            "#......#,,,,,,,#",
+            "#&.C..4#,,,,,4,#",
+            "#.....*p,,C,,,&#",
+            "#......#8,,,,x,#",
+            "#4.....#,,,,,,*#",
             "<......p,,S,,,,#",
-            "#..C...#,,,,,,,#",
-            "#......#,,,,C,,#",
+            "#..C...#,,,,,,4#",
+            "#.....&#,,,,C,,#",
             "#.,....p,,,,,,,#",
-            "#......#,,,,,,,#",
-            "#......#,,,,,,,#",
+            "#8.....#,,,8,,,#",
+            "#....4.#,&,,,,4#",
             "################" ],
-      walk:'.,pxS<', triggers:{x:'b8_c1_line', S:'b8_c1_boots', '<':'b8_c1_roofs_down'}, start:{x:2, y:5},
+      walk:'.,pxS<*', triggers:{x:'b8_c1_line', S:'b8_c1_boots', '<':'b8_c1_roofs_down'}, start:{x:2, y:5},
       quest:()=> !S.f.b8_c1_lineTried ? 'The Guild\'s line, on its post by the far chimney.' : !S.f.b8_c1_boots ? 'The skylight, where the crossbow knelt.' : 'Down, west. The paper wants reading by a fire.',
       npcs:[] },
 
     /* 16 x 12 (city_dusk). . cobbles  , gutter  # house fronts  D the tavern with the painted sign  S the steps down to Orsa's den
-       W Benlo's barrow  x the dyers' lines  L lamps  < back to the Fourth's street  > on into the Daru District */
+       W Benlo's barrow  x the dyers' lines  L lamps  < back to the Fourth's street  > on into the Daru District
+       Terrain kit (25b, v13.22): two stalls toward the Daru end (9), barrels (8), dye vats (&), another of the dyers' lines (x), slush by the steps (:), a chestnut-seller and a dyer's boy (folk). */
     { id:'b8_c1_gadrobi', title:'Darujhistan · the Gadrobi lanes', sub:'Winter · the lamps coming on', hint:'Tap ground to move · tap a figure to talk · the tavern is north, Orsa\'s is down the steps', decor:'city_dusk',
       map:[ "################",
             "##L###D####L####",
-            "#..............#",
-            "#.x..x....,....#",
+            "#.........9.9..#",
+            "#&x..x....,...8#",
             "#..............#",
             "<.....W........>",
             "#..,...........#",
-            "#.....,.....x..#",
+            "#.x...,.....x..#",
             "#L..##S##.....L#",
-            "#...##.##......#",
-            "#..............#",
+            "#...##.##.:..8.#",
+            "#&.............#",
             "################" ],
-      walk:'.,DS<>', triggers:{D:'b8_c1_tavern', S:'b8_c1_den_door', '<':'b8_c1_lanes_back', '>':'b8_c1_to_daru'}, start:{x:1, y:5},
+      walk:'.,DS<>:', triggers:{D:'b8_c1_tavern', S:'b8_c1_den_door', '<':'b8_c1_lanes_back', '>':'b8_c1_to_daru'}, start:{x:1, y:5},
+      folk:[{x:11, y:3, kind:'b5_c3_trader', name:'A chestnut-seller', line:'Hot chestnuts. Warm your hands on them first, eat them second. Some do it the other way and regret it.'},
+        {x:9, y:7, kind:'urchin', name:'A dyer\'s boy with a bolt of cloth', line:'Indigo takes three days to set. My hands took three years. They\'re not coming back.', wander:1}],
       quest:()=> !S.f.b8_c1_vetMet ? 'The tavern with the painted sign.'
         : b81Ph() === 3 ? 'Back to the Fourth\'s door. The paper is waiting for an answer.'
         : b81Hunt() && b81Ph() === 4 ? (!S.f.b8_c1_named ? 'Orsa, down the steps. She hears who brokers what.' : 'East, into the Daru District. The go-between\'s house.') : 'The lanes.',
@@ -94812,21 +94833,23 @@ const B8CH1 = {
         {id:'dyer', name:'A dyer at her lines', kind:'b5_c5_refugee', x:3, y:4, node:()=>'b8_c1_dyer', fresh:()=>!S.f.b8_c1_dyer} ] },
 
     /* 16 x 12 (city_night). . the courtyard  , gutter  # walls  D the go-between's door  g the gate  B barrels  F the bravos' brazier
-       L lamps  < back west to the Gadrobi lanes */
+       L lamps  < back west to the Gadrobi lanes
+       Terrain kit (25b, v13.22): a light touch: barrels (8), the water butt (&), and a servant (folk). */
     { id:'b8_c1_house', title:'Darujhistan · a house below the Daru tier', sub:'Night · a go-between\'s courtyard', hint:'Tap ground to move · tap a figure to talk · the door is north · the lanes are west', decor:'city_night', dark:true,
       map:[ "################",
             "#####L##D##L####",
             "#..............#",
             "#..B.......B...#",
-            "#..............#",
+            "#.............8#",
             "#.....F........#",
-            "#..............#",
+            "#&.............#",
             "#L.....,.....,L#",
             "#######gg#######",
             "#######..#######",
             "<..............#",
             "################" ],
       walk:'.,gD<', triggers:{D:'b8_c1_closed', '<':'b8_c1_house_back'}, start:{x:2, y:10},
+      folk:[{x:12, y:6, kind:'b5_c1_tilewoman', name:'A servant with a pail', line:'Fetch, carry, don\'t listen. I\'m very good at the last one.'}],
       quest:()=> !S.f.b8_c1_huntDone ? 'The men round the brazier in the courtyard.' : !S.f.b8_c1_closed ? 'The go-between\'s door.' : 'West, and home.',
       npcs:[
         {id:'bravos', name:'Bravos round a brazier', kind:'thug', x:7, y:5, node:()=>'b8_c1_hunt_start', show:()=>!S.f.b8_c1_huntDone, fresh:()=>true},
@@ -96001,7 +96024,7 @@ SCENEX.b8_c1_phoenix = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 /* FOR THE ARTIST (142b): names this file uses.
    Items: ART['item/b8_c2_caravanmail'], ['item/b8_c2_drovergoad'] (b8_kelykjug is 140b's).
    Figures: b8_c2_calder (the caravan master), b8_c2_carter (the carters, Calder's man), b8_c2_drover (the drover with the red scarf and
-   the goad); placeholders here with ??=. Reused: vasso, tenescowri (field-tenders and raiders), priest, b6_cultist, b3_c5_villager.
+   the goad); placeholders here with ??=. Reused: vasso, tenescowri (field-tenders and raiders), b4_c5_rider (the riders on the ridge), priest, b6_cultist, b3_c5_villager.
    Backdrops: b8_road_east, b8_fields, b8_caravan_night (140's, yours), and two this file adds that borrow until you draw them: b8_c2_town
    (a Pannion town coming back: new whitewash over old soot, a well, a temple's steps) and b8_c2_rows (the scarecrow fields at night,
    lanterns moving in the rows, a wagon at the verge).
@@ -96086,21 +96109,23 @@ const B8CH2 = {
 
   areas:[
     /* 16 x 12 (b8_c2_camp). . trampled earth  , dead grass  # the dark beyond the ring  W wagons  K the last wagon  F the caravan's fire
-       = carters' tents  h horse lines  > the road east, in the dark */
+       = carters' tents  h horse lines  > the road east, in the dark
+       Terrain kit (25b, v13.22): a light touch: trodden ground round the fire (:), sacks off the wagons (8), another horse on the line (@), and a carter (folk). */
     { id:'b8_c2_camp', title:'The old Domin · the first halt', sub:'Night · the caravan\'s ring', hint:'Tap ground to move · tap a figure to talk · the fire is in the middle of the ring · the last wagon is east', decor:'b8_c2_camp', dark:true,
       map:[ "################",
-            "##W..W....W..W.#",
+            "##W8.W....W.8W.#",
             "#W.,.....,....W#",
             "#....=....=....#",
-            "#W.......,.....#",
+            "#W....:.:,.....#",
             "#..,...F.......>",
-            "#W.............#",
+            "#W....:.:......#",
             "#...=.....,.=..#",
-            "#W.....h.h....K#",
+            "#W.....h@h....K#",
             "#.,............#",
             "##.W..W....W..W#",
             "################" ],
-      walk:'.,FK>', triggers:{F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_camp_east'}, start:{x:7, y:6},
+      walk:'.,FK>:', triggers:{F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_camp_east'}, start:{x:7, y:6},
+      folk:[{x:11, y:6, kind:'b8_c2_carter', name:'A carter mending a trace', line:'First night out of the city is the worst. Second night you\'ve forgotten your bed. Third night, your name.'}],
       quest:()=> b82VassoPending() ? 'A young man by the last tent, with his hands where you can see them.'
         : !S.f.b8_c2_calderMet ? 'Calder, the caravan master, at his wagon.'
         : !S.f.b8_c2_wagonSeen ? 'The last wagon in the ring, east, with its tarp lashed down.'
@@ -96111,30 +96136,33 @@ const B8CH2 = {
         {id:'vasso2', name:'A young man by the last tent', kind:'vasso', x:2, y:9, node:()=>'b8_c2_vasso', show:()=>b82Ph() === 1 && (b82VassoPending() || (S.f.b8_vassoDone === 2 && !!S.f.b8_c2_vassoCame)), fresh:()=>b82VassoPending()} ] },
 
     /* 16 x 12 (b8_c2_road). . earth  , dead grass  # a broken field wall  x a dead tree  W wagons  L the lead wagon and its chains
-       < back west (the city is weeks behind)  > east, toward a town */
+       < back west (the city is weeks behind)  > east, toward a town
+       Terrain kit (25b, v13.22): the road's ruts (_), the field walls tumbled further (4, drawn as the road's own #), and a carter on foot (folk). */
     { id:'b8_c2_road', title:'The old Domin · the road east', sub:'Day · wind from the north · flat to the edge of the sky', hint:'Tap ground to move · tap a figure to talk · the lead wagon carries the chains · the road goes on east', decor:'b8_c2_road',
       map:[ "################",
             "#..x....,..#.,.#",
-            "#.,..##....,...#",
+            "#.,..##4...,...#",
             "#.........,....#",
             "#,..W.W.L.W.W..#",
-            "<..............>",
+            "<______________>",
             "#....,.........#",
-            "#.##......x..,.#",
+            "#.##4.....x..,.#",
             "#..,..,.....##.#",
             "#.x.......,....#",
             "#.,..#.....,..x#",
             "################" ],
-      walk:'.,L<>', triggers:{L:'b8_c2_brake', '<':'b8_c2_road_west', '>':'b8_c2_to_town'}, start:{x:2, y:5},
+      walk:'.,L<>_', triggers:{L:'b8_c2_brake', '<':'b8_c2_road_west', '>':'b8_c2_to_town'}, start:{x:2, y:5},
+      folk:[{x:3, y:6, kind:'b8_c2_carter', name:'A carter walking by his team', line:'Wind\'s from the north. Wind\'s always from the north out here. Nothing between us and it but the wagons.', wander:1}],
       quest:()=> !S.f.b8_c2_ridersSeen ? 'Riders on the ridge, north. The carters have seen them.'
         : !S.f.b8_c2_brakeTried ? 'The lead wagon. The carters are getting the chains out.'
         : !S.f.b8_c2_raidSettled ? 'The riders on the ridge, still watching.' : 'East. There is a town ahead, Calder says, with a well.',
       npcs:[
-        {id:'riders', name:'Riders on the ridge', kind:'tenescowri', x:12, y:1, node:()=>'b8_c2_riders', show:()=>b82Ph() === 2 && !S.f.b8_c2_raidSettled, fresh:()=>!S.f.b8_c2_ridersSeen},
+        {id:'riders', name:'Riders on the ridge', kind:'b4_c5_rider', x:12, y:1, node:()=>'b8_c2_riders', show:()=>b82Ph() === 2 && !S.f.b8_c2_raidSettled, fresh:()=>!S.f.b8_c2_ridersSeen},
         {id:'calder2', name:'Calder, walking his horse', kind:'b8_c2_calder', x:6, y:6, node:()=>'b8_c2_road_calder', fresh:()=>!S.f.b8_c2_roadCalder} ] },
 
     /* 16 x 12 (b8_c2_town). . earth  , dead grass  # walls, whitewashed again over the soot  w the well  T the temple steps  x a dead tree
-       < back west to the road  > on east, out of the town */
+       < back west to the road  > on east, out of the town
+       Terrain kit (25b, v13.22): a light touch: crates by the walls (8), a dead tree (5, drawn as the town's own x), and one of the smiling townsfolk (folk). */
     { id:'b8_c2_town', title:'The old Domin · a town coming back', sub:'Dusk · new whitewash on old soot', hint:'Tap ground to move · tap a figure to talk · the well is in the square · the temple is north', decor:'b8_c2_town',
       map:[ "################",
             "#.##..#TT#..##.#",
@@ -96144,11 +96172,12 @@ const B8CH2 = {
             "<.......w......>",
             "#.,............#",
             "##.###..,.##.###",
-            "#...#......#...#",
+            "#..8#....8.#...#",
             "#.,....x.....,.#",
-            "#..#..,....#...#",
+            "#..#..,....#5..#",
             "################" ],
       walk:'.,wT<>', triggers:{w:'b8_c2_well', T:'b8_c2_temple', '<':'b8_c2_town_back', '>':'b8_c2_to_fields'}, start:{x:1, y:5},
+      folk:[{x:11, y:3, kind:'b3_c5_villager', name:'A townsman, smiling', line:'You look tired, soldier. Everyone who comes through looks tired. Then they stay a while, and they don\'t.'}],
       quest:()=> !S.f.b8_c2_townDone ? 'The priest on the temple steps is watching the caravan come in. So is the whole town.' : 'East, out of the town, before dark.',
       npcs:[
         {id:'priest', name:'A priest in the square', kind:'priest', x:8, y:3, node:()=>'b8_c2_priest', show:()=>!S.f.b8_c2_townDone, fresh:()=>true},
@@ -96156,7 +96185,8 @@ const B8CH2 = {
         {id:'calderman', name:'Calder\'s man, at a back door', kind:'b8_c2_carter', x:13, y:8, node:()=>'b8_c2_backdoor', show:()=>!S.f.b8_c2_backdoor, fresh:()=>true} ] },
 
     /* 16 x 12 (b8_c2_fields). g the green rows  y a pole in the rows  e the gap where the drover went in  . , the verge  W wagons
-       K the last wagon  F the caravan's fire  > the road on east */
+       K the last wagon  F the caravan's fire  > the road on east
+       Terrain kit (25b, v13.22): nothing on the ground (the rows fill the map already); a carter at the fire (folk). */
     { id:'b8_c2_fields', title:'The old Domin · the scarecrow fields', sub:'Dusk into night · the halt beside the rows', hint:'Tap ground to move · tap a figure to talk · the rows are north · the fire is on the verge · the last wagon is east', decor:'b8_c2_fields', dark:true,
       map:[ "################",
             "#gggygggggygggg#",
@@ -96171,6 +96201,7 @@ const B8CH2 = {
             "#..W....W...W..#",
             "################" ],
       walk:'.,eFK>', triggers:{e:'b8_c2_gap', F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_fields_east'}, start:{x:2, y:8},
+      folk:[{x:7, y:8, kind:'b8_c2_carter', name:'A carter by the fire', line:'Calder says keep out of the rows. Calder doesn\'t say why. That\'s how you know to keep out of the rows.'}],
       quest:()=> !S.f.b8_c2_fieldsDone ? 'The gap in the rows, where the drover went in after the song.'
         : b82Ph() === 4 ? 'The fire. The rows want watching tonight.'
         : !S.f.b8_c2_found ? 'Lanterns in the rows, coming toward the last wagon.'
@@ -97024,7 +97055,7 @@ SCENEX.b8_c2_rows = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
 /* FOR THE ARTIST (143b): names this file uses.
    Items: ART['item/b8_c3_coralknife'], ['item/b8_c3_pilgrimtoken'], ['item/b8_c3_lamp'].
    Figures: edrem (140's simple sprite, replaced in 143b), b8_c3_thessaly (the Andii-sworn clerk), b8_c3_priestess (a Redeemer priestess at
-   the barrow's edge); placeholders here with ??=. Reused: b5_c3_trader (Calder), b4_c2_pilgrim (pilgrims), tenescowri (raiders),
+   the barrow's edge); placeholders here with ??=. Reused: b8_c2_calder (Calder), b4_c2_pilgrim (pilgrims), tenescowri (raiders),
    b2soldier (the camp's guards).
    Backdrops: b8_blackcoral and b8_barrow (140's, yours), and three this file adds that borrow until you draw them: b8_c3_lodging (a room
    over a chandler's, a wide stone sill, lamps on iron arms outside the window at noon), b8_c3_harbour (the harbour wall, the black bay, and
@@ -97093,10 +97124,11 @@ const B8CH3 = {
 
   areas:[
     /* 16 x 12 (b3_c7_coral, dark). . black paving  , rubble  c coral-stone  # walls  H the harbour steps (the wall over the bay)
-       D the lodging over the chandler's (the fire)  T the tavern  g the landward gate (the night stops there)  < the upper streets */
+       D the lodging over the chandler's (the fire)  T the tavern  g the landward gate (the night stops there)  < the upper streets
+       Terrain kit (25b, v13.22): a light touch: Calder's wagon and its crates by the harbour steps (7, 8), an Andii and a chandler's man (folk). */
     { id:'b8_c3_city', title:'Black Coral · the harbour street', sub:'Noon, under the night', hint:'Tap ground to move · tap a figure to talk · the harbour is north, the lodging and the tavern either side, the landward gate south', decor:'b3_c7_coral', dark:true,
       map:[ "######HHH#######",
-            "#..............#",
+            "#7.8...........#",
             "#.c..D.....T...#",
             "#..............#",
             "###.####..####.#",
@@ -97108,6 +97140,8 @@ const B8CH3 = {
             "#.,....gg......#",
             "################" ],
       walk:'.,cHDTg<', triggers:{H:'b8_c3_harbour', D:'b8_c3_fire', T:'b8_c3_tavern_door', g:'b8_c3_gate', '<':'b8_c3_upper'}, start:{x:5, y:3},
+      folk:[{x:14, y:2, kind:'b3_andii', name:'A Tiste Andii on the corner', line:'You keep looking up. There is nothing up there to find. That is rather the point.'},
+        {x:2, y:9, kind:'b8_c2_carter', name:'A chandler\'s man', line:'Noon, they tell me. I take their word for it. They\'ve had longer to practise.'}],
       quest:()=> b83Ph() >= 4 ? 'The lodging. The camp wants guards, and the wagons will not go west for days.'
         : b83Ph() === 3 ? 'The barrow, outside the landward gate.'
         : b83Ph() === 2 ? 'The pilgrims\' road, out of the landward gate.'
@@ -97116,25 +97150,28 @@ const B8CH3 = {
         : 'The landward gate, south. The barrow is a morning\'s walk outside it.',
       npcs:[
         {id:'thessaly', name:'Thessaly, at the gate-house', kind:'b8_c3_thessaly', x:10, y:9, still:true, node:()=>'b8_c3_thessaly', fresh:()=>!S.f.b8_c3_thessaly},
-        {id:'calder', name:'Calder, with the wagons', kind:'b5_c3_trader', x:2, y:3, node:()=>'b8_c3_calder', show:()=>b83Ph() <= 3, fresh:()=>!S.f.b8_c3_calder},
+        {id:'calder', name:'Calder, with the wagons', kind:'b8_c2_calder', x:2, y:3, node:()=>'b8_c3_calder', show:()=>b83Ph() <= 3, fresh:()=>!S.f.b8_c3_calder},
         {id:'beggar', name:'A pilgrim in the street', kind:'b4_c2_pilgrim', x:12, y:6, node:()=>'b8_c3_beggar', show:()=>b83Ph() <= 2, fresh:()=>!S.f.b8_c3_beggar} ] },
 
     /* 16 x 12 (b3_c5_domin_night). . the road  , stubble  # ruin walls  x dead trees  w a dry well  W the broken cart (Edrem's)
-       r the path up to the ridge  < back to the city  > on to the barrow */
+       r the path up to the ridge  < back to the city  > on to the barrow
+       Terrain kit (25b, v13.22): the road's ruts (_), a bank and brush along the stubble's edge (1, 2), and two pilgrims walking in (folk). */
     { id:'b8_c3_road', title:'The pilgrims\' road', sub:'Outside Black Coral · a grey that never finishes', hint:'Tap ground to move · tap a figure to talk · the cart is in the road, the ridge path north-east, the barrow east', decor:'b3_c5_domin_night', dark:true,
       map:[ "################",
             "#,,,,x,,,,,,,r,#",
             "#,,..........,,#",
             "#,.....#,,.....#",
             "#,..,,,,,,..x..#",
-            "<..............>",
+            "<______________>",
             "#,.....W.......#",
             "#,,x.......,,,.#",
             "#,......w....,,#",
             "#,,,,.......x..#",
-            "#,,,,,,,,,,,,,,#",
+            "#11111221112111#",
             "################" ],
-      walk:'.,Wwr<>', triggers:{W:'b8_c3_cart', w:'b8_c3_well', r:'b8_c3_ridge_view', '<':'b8_c3_road_back', '>':'b8_c3_road_on'}, start:{x:1, y:5},
+      walk:'.,Wwr<>_', triggers:{W:'b8_c3_cart', w:'b8_c3_well', r:'b8_c3_ridge_view', '<':'b8_c3_road_back', '>':'b8_c3_road_on'}, start:{x:1, y:5},
+      folk:[{x:3, y:3, kind:'b4_c2_pilgrim', name:'A pilgrim on the road', line:'Three months walking. My feet stopped complaining a while back. I think they\'ve given up on me.'},
+        {x:11, y:8, kind:'b3_c5_villager', name:'A pilgrim with a bundle', line:'They say you leave it all at the barrow. I\'ve not much left to leave. It should be quick.'}],
       quest:()=> !S.f.b8_c3_roadDone ? 'The broken cart in the road, and the man standing in front of it.'
         : !b83EdremSettled() ? 'Edrem, by the cart.'
         : 'East, to the barrow.',
@@ -97144,7 +97181,8 @@ const B8CH3 = {
         {id:'pilgrims', name:'Pilgrims by the cart', kind:'b4_c2_pilgrim', x:6, y:7, node:()=>'b8_c3_pilgrims', show:()=>!!S.f.b8_c3_roadDone, fresh:()=>!S.f.b8_c3_token} ] },
 
     /* 16 x 12 (b8_c3_mound, 143b; night). , trodden grass  . mud  M the Great Barrow  l lamps on poles  p pilgrims' mats  = tents
-       k the sellers' tent  F the guards' fire  < back west to the road  > east into the camp's rows */
+       k the sellers' tent  F the guards' fire  < back west to the road  > east into the camp's rows
+       Terrain kit (25b, v13.22): a light touch: bundles (8), a cookfire (0), two more tents at the camp's edge (6, drawn as the ground's own =), and a pilgrim with her gift (folk). */
     { id:'b8_c3_barrow', title:'The Great Barrow', sub:'Outside Black Coral · the camp\'s edge', hint:'Tap ground to move · tap a figure to talk · the barrow is north, the camp\'s tents south and east', decor:'b8_c3_mound', dark:true,
       map:[ "################",
             "#,,,,lMMMMl,,,,#",
@@ -97155,10 +97193,11 @@ const B8CH3 = {
             "#.=.=..F...=.=.#",
             "#..............#",
             "#.=..k....=..=.#",
-            "#..............#",
-            "#,,,,,,,,,,,,,,#",
+            "#..8.......0...#",
+            "#6,,,,,,,,,,,,6#",
             "################" ],
       walk:'.,Mk<>', triggers:{M:'b8_c3_barrow_go', k:'b8_c3_sellers_view', '<':'b8_c3_camp_back', '>':'b8_c3_camp_east'}, start:{x:1, y:5},
+      folk:[{x:13, y:4, kind:'b3_c5_villager', name:'A woman with a gift', line:'A spoon. It was my mother\'s. It\'s the best thing I own, so it\'s the right thing to give.'}],
       quest:()=> !S.f.b8_c3_anvil ? 'The barrow, north. The Fourth saw it raised.'
         : !b83Key() ? 'The barrow. Kneel, or stand at the edge.'
         : 'West, back along the road to the city.',
@@ -98072,7 +98111,7 @@ SCENEX.b8_c3_board = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
 /* FOR THE ARTIST (144b): names this file uses.
    Items: ART['item/b8_c4_camphook'], ['item/b8_c4_greyscale'], ['item/b8_c4_ashrag'].
    Figures: b8_c4_mossa (the Redeemer priestess at the edge), b8_c4_hurrin (the pilgrim from the north), b8_c4_carrier (a water-carrier with a
-   yoke and two buckets); placeholders here with ??=. Reused: edrem (140 / Ch 3), b4_c2_pilgrim (kelyk-mad pilgrims), b6_cultist (the sellers),
+   yoke and two buckets); placeholders here with ??=. Reused: edrem (140 / Ch 3), b4_c2_pilgrim (kelyk-mad pilgrims), b6_cultist (the sellers), b8_kelykpriest (the yard's keepers),
    priest (the Dying God's priest).
    Backdrops: b8_camp_night (140's, yours), and three this file adds that borrow until drawn: b8_c4_rows (the camp's inner rows under the
    night, shacks and rag-lines, a sweet haze, the barrow far off with its lamps), b8_c4_yard (the store-yard behind the edge: a stake fence,
@@ -98157,21 +98196,25 @@ const B8CH4 = {
 
   areas:[
     /* 16 x 12 (b8_c4_camp, night). . trodden mud  , grass  = tents  s shacks  T Mossa's tent  w the water line (barrels on a handcart)
-       F the Fourth's fire  ^ north along the edge to the store-yard  < west into the rows  v south, the road back to the city */
+       F the Fourth's fire  ^ north along the edge to the store-yard  < west into the rows  v south, the road back to the city
+       Terrain kit (25b, v13.22): the rows filled in: more tents (6, drawn as the camp's own =), bundles (8), two cookfires (0), a handcart (7, the camp's c), water casks (&), trodden ground (:), the bank where the camp stops and the dark begins (1, 2), and three of the camp (folk). */
     { id:'b8_c4_edge', title:'The pilgrims\' camp · the far edge', sub:'Black Coral\'s night · the last rows', hint:'Tap ground to move · tap a figure to talk · the rows are west, the yard north, the city road south', decor:'b8_c4_camp', dark:true,
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",=,s,,,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,,",
-            "<....T......w..,",
-            ",,=,,,,.,,,,,=,,",
-            ",,,,,,,.F,,,,,,,",
-            ",s,,=,,.,,,,s,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",=,,,,,.,,,=,,,,",
-            ",,,,,s,.,,,,,,s,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,<^v', triggers:{T:'b8_c4_mossa', w:'b8_c4_water', F:'b8_c4_fire', '^':'b8_c4_to_yard', '<':'b8_c4_to_rows', 'v':'b8_c4_road'}, start:{x:7, y:9},
+      map:[ "6,8,6,:^:,6,,6,1",
+            ",=,s,0,.,:=,8s,1",
+            ",:,8,:,.,,,,:,61",
+            "<....T......w..1",
+            "8,=,,,,.,,&,,=,1",
+            "6:0:,,,.F:,6,8,1",
+            ",s:,=,,.,::,s,71",
+            "6,,,8,:.,,,,,8,1",
+            ",=,6,,,.,,,=8,61",
+            "8,:::s,.,:,,,,s1",
+            ",6,,,,:.:,,6,8,1",
+            "112,6,,v,,6,2111" ],
+      walk:'.,<^v:', triggers:{T:'b8_c4_mossa', w:'b8_c4_water', F:'b8_c4_fire', '^':'b8_c4_to_yard', '<':'b8_c4_to_rows', 'v':'b8_c4_road'}, start:{x:7, y:9},
+      folk:[{x:3, y:6, kind:'b4_c2_pilgrim', name:'A pilgrim at a fire', line:'Came for a month. That was two years ago. The night does that. You lose count of things.'},
+        {x:11, y:9, kind:'b8_pilgrim', name:'A man with a cup', line:'Just a cup. Takes the edge off the dark. Everyone here has a cup. Where\'s yours?'},
+        {x:13, y:2, kind:'b3_c5_villager', name:'A woman hanging washing', line:'We came for the Redeemer. We stay because walking back is further.'}],
       quest:()=> b84Ph() === 1 ? (!S.f.b8_c4_mossaMet ? 'Mossa, the priestess, at her tent.' : !S.f.b8_c4_waterDone ? 'The water line. Something is wrong at the barrels.' : 'The fire, and what sleep there is.')
         : b84Ph() === 2 ? (!S.f.b8_c4_hurrinMet ? 'The rows, west. The frightened ones keep their flaps tied.' : !S.f.b8_c4_yardSeen ? 'North along the edge. Where does the sweet stuff come from?' : 'The fire. It is getting dark, even here.')
         : b84Ph() === 3 ? (b84NightDone() ? 'The fire.' : b84Key() === 'burn' ? 'North, to the store-yard.' : 'The edge. Set it, and hold it.')
@@ -98182,45 +98225,49 @@ const B8CH4 = {
         {id:'edrem', name:'Edrem, on the pilgrims\' road', kind:'edrem', x:9, y:7, node:()=>'b8_c4_edrem', show:()=>b84EdremHere(), fresh:()=>!S.f.b8_c4_edremTalk} ] },
 
     /* 16 x 12 (b8_c4_camp, night). The inner rows toward the barrow. = tents  s shacks  r the rope across the barrow end, the children's
-       tents beyond it  ^ toward the barrow  > east, back to the edge */
+       tents beyond it  ^ toward the barrow  > east, back to the edge
+       Terrain kit (25b, v13.22): the rows packed close: tents (6, the camp's =), bundles (8), cookfires (0), a water cask (&), trodden ground (:), a bank at the bottom of the lane (1, 2), a dancer and a woman at her tent (folk). */
     { id:'b8_c4_rows', title:'The pilgrims\' camp · the rows', sub:'Black Coral\'s night · toward the barrow', hint:'Tap ground to move · tap a figure to talk · the barrow is north, the edge east', decor:'b8_c4_camp', dark:true,
-      map:[ "=,s,=,,^,,=,,s,=",
-            ",,,,,,,.,,,,,,,,",
-            "rrrrrr,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,,",
-            "=,s,=,,.,,,s,=,,",
+      map:[ "=8s,=6,^,0=,6s,=",
+            ",,:,,,:.:,,,,,8,",
+            "rrrrrr,.,6=,8s,6",
+            "6,,,:,,.,,:,,,,,",
+            "=8s,=0:.,6,s,=68",
             "...............>",
-            ",,=,,s,.,,=,,,s,",
-            ",,,,,,,.,,,,,,,,",
-            "s,=,,,,.,,,s,,=,",
-            ",,,,,,,.,,,,,,,,",
-            ",=,,s,,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,," ],
-      walk:'.,^>', triggers:{r:'b8_c4_rope', '^':'b8_c4_barrow_look', '>':'b8_c4_rows_back'}, start:{x:14, y:5},
+            "6,=0:s,.,8=,6,s6",
+            ",:,:,8,.,:,,,&,,",
+            "s8=,6,,.,0,s:,=6",
+            ":,,,,:,.,,:,,,8,",
+            "6=0,s,8.,,=6,s,6",
+            "121,6,,.,6,,1211" ],
+      walk:'.,^>:', triggers:{r:'b8_c4_rope', '^':'b8_c4_barrow_look', '>':'b8_c4_rows_back'}, start:{x:14, y:5},
+      folk:[{x:9, y:3, kind:'b8_pilgrim', name:'A dancer in the lane', line:'Can\'t stop. If I stop I\'ll remember what I came here to forget.', wander:1},
+        {x:2, y:7, kind:'b3_c5_villager', name:'A woman mending a tent', line:'Third tent this year. The first two walked off with men who said they\'d be back.'}],
       quest:()=> !S.f.b8_c4_hurrinMet ? 'A man from the north, by his shack, coughing.' : !S.f.b8_c4_yardSeen ? 'Back to the edge, and north along it.' : 'Back to the edge.',
       npcs:[
         {id:'hurrin', name:'Hurrin, a pilgrim from the north', kind:'b8_c4_hurrin', x:12, y:3, node:()=> b84Ph() >= 4 ? 'b8_c4_hurrin_end' : 'b8_c4_hurrin', fresh:()=> b84Ph() >= 4 ? !S.f.b8_c4_hurrinEnd : !S.f.b8_c4_hurrinMet},
         {id:'drinkers', name:'Drinkers at the end tent', kind:'b4_c2_pilgrim', x:3, y:9, node:()=>'b8_c4_tentend', show:()=>b84Ph() === 2 && !S.f.b8_c4_drunkDone, fresh:()=>true} ] },
 
     /* 16 x 12 (b8_c4_camp, night). The store-yard behind the edge. # the stake fence  x lean-tos stacked with jugs  c handcarts
-       t a barrel table  v back south to the edge */
+       t a barrel table  v back south to the edge
+       Terrain kit (25b, v13.22): the yard stacked: barrels and bundles (8, the camp's t), handcarts (7, the camp's c), casks (&), trodden mud (:), and outside the fence a cookfire, a tent and the bank (0, 6, 1, 2); nobody about but the keepers (no folk). */
     { id:'b8_c4_yard', title:'The pilgrims\' camp · the store-yard', sub:'Black Coral\'s night · behind the edge', hint:'Tap ground to move · the lean-tos are along the fence · the edge is south', decor:'b8_c4_camp', dark:true,
       map:[ "################",
-            "#,,x,,x,,,x,,c,#",
+            "#8,x,,x,8,x,8c&#",
             "#..............#",
-            "#,c,,,,,,,,,,,,#",
-            "#......t.......#",
-            "#,,,,,,,,,,,c,,#",
-            "#..............#",
-            "#,,,,,,,,,,,,,,#",
+            "#&c,:,,,,,,8,78#",
+            "#8.....t......&#",
+            "#,78,,:,,:,,c,8#",
+            "#&...........8.#",
+            "#88,,,,::,,,7,8#",
             "#######..#######",
-            ",,,,,,,..,,,,,,,",
-            ",,=,,,,..,,,s,,,",
-            ",,,,,,,vv,,,,,,," ],
-      walk:'.,v', triggers:{x:'b8_c4_jars', 'v':'b8_c4_yard_back'}, start:{x:7, y:10},
+            "12,,,,:..:,,,,21",
+            "1,=,0:,..,,,s6,1",
+            "112,,,,vv,,,2111" ],
+      walk:'.,v:', triggers:{x:'b8_c4_jars', 'v':'b8_c4_yard_back'}, start:{x:7, y:10},
       quest:()=> b84Ph() === 3 && b84Key() === 'burn' && !S.f.b8_c4_storesDone ? 'The keepers, by the lean-tos.' : b84Ph() === 3 && b84Key() === 'burn' && !S.f.b8_c4_burned ? 'The jugs. All of them.' : 'Back to the edge.',
       npcs:[
-        {id:'keepers', name:'The keepers of the yard', kind:'b6_cultist', x:7, y:3, node:()=> b84Ph() === 3 && b84Key() === 'burn' ? 'b8_c4_stores_start' : 'b8_c4_keepers', show:()=>b84Ph() >= 2 && b84Ph() <= 3 && !S.f.b8_c4_storesDone && !(b84Ph() === 3 && b84Key() === 'hold'), fresh:()=>!S.f.b8_c4_keepers || (b84Ph() === 3 && b84Key() === 'burn')} ] } ],
+        {id:'keepers', name:'The keepers of the yard', kind:'b8_kelykpriest', x:7, y:3, node:()=> b84Ph() === 3 && b84Key() === 'burn' ? 'b8_c4_stores_start' : 'b8_c4_keepers', show:()=>b84Ph() >= 2 && b84Ph() <= 3 && !S.f.b8_c4_storesDone && !(b84Ph() === 3 && b84Key() === 'hold'), fresh:()=>!S.f.b8_c4_keepers || (b84Ph() === 3 && b84Key() === 'burn')} ] } ],
 
   battles:{
     /* the water line: pilgrims gone sweet on kelyk at the barrels, and the man who brought them the jugs */
@@ -99115,21 +99162,24 @@ const B8CH5 = {
 
   areas:[
     /* 16 x 12 (b8_c5_grass, dusk and night). The caravan's halt on the Lamatath road. r the road  W the wagons  F the Fourth's fire
-       = Benna's laundry wagon's awning  ^ north into the long grass  < west, the road on  > east, the road back */
+       = Benna's laundry wagon's awning  ^ north into the long grass  < west, the road on  > east, the road back
+       Terrain kit (25b, v13.22): rises and brush in the long grass (1, 2), sacks off the wagons (8), the carters' tents and cookfire (6, 0: the wagons' own = and F), the horse lines (@), trodden ground in the ring (:), flowers in the grass (*), a carter and a drover (folk). */
     { id:'b8_c5_road', title:'The Lamatath · the caravan\'s halt', sub:'Dusk on the road west · the long grass', hint:'Tap ground to move · tap a figure to talk · the road goes on west', decor:'b8_c5_grass', dark:true,
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,W,,,.,,,W,,,,",
-            ",,,,,.....,,,,,,",
-            ",W,,,.,,,.,,,W,,",
+      map:[ "11,,,,,^,,,,,211",
+            "1,*,,,,.,,,*,,,1",
+            ",,8W,,,.,,,W8,,2",
+            ",6,,:.....,,,6,,",
+            ",W:,,.,,,.,:,W,*",
             "<rrrrr.F..rrrrr>",
-            ",W,,,.,,,.,,=W,,",
-            ",,,,,.....,,,,,,",
-            ",,,W,,,,,,,W,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,#,,,",
-            ",,,,,,,,,,,,,,,," ],
-      walk:'.,r<^>', triggers:{F:'b8_c5_fire', '^':'b8_c5_to_grass', '<':'b8_c5_west', '>':'b8_c5_east'}, start:{x:7, y:7},
+            ",W:,,.,,,.:,=W,8",
+            ",0:,,.....,,,,,,",
+            ",,8W,:,,,:,W8,*,",
+            ",,,@@@,,,@@,,,,2",
+            "21,,,,*,,,,,#111",
+            "1112211,,,112111" ],
+      walk:'.,r<^>:*', triggers:{F:'b8_c5_fire', '^':'b8_c5_to_grass', '<':'b8_c5_west', '>':'b8_c5_east'}, start:{x:7, y:7},
+      folk:[{x:2, y:6, kind:'b8_c2_carter', name:'A carter by the cookfire', line:'Grass to the edge of the sky. Like the sea, they say. I\'ve never seen the sea. I\'m guessing.'},
+        {x:7, y:9, kind:'b8_c2_drover', name:'A drover at the picket', line:'The horses keep looking east. Horses know things. Mostly about oats.', wander:1}],
       quest:()=> b85Ph() === 1 ? (!S.f.b8_c5_calder ? 'Calder, by the lead wagon.' : 'The fire, and sleep, if the grass lets you.')
         : b85Ph() === 2 ? (!b85PedDone() ? 'West along the road. The outrider has seen a cart ahead.' : 'The fire. The last night on the grass.')
         : b85Ph() === 3 ? (!b85Key() ? 'The fire. The milestone. Decide.' : 'West, for the gate.')
@@ -99140,41 +99190,43 @@ const B8CH5 = {
         {id:'benna', name:'Old Benna, at her tubs', kind:'b8_c5_benna', x:12, y:7, node:()=>'b8_c5_benna', show:()=>b85Ph() <= 3, fresh:()=>!S.f.b8_c5_benna} ] },
 
     /* 16 x 12 (b8_c5_day, day). The road crosses a dry wash; the peddler's cart has stopped in it. p the cart and its jugs  # banks of
-       grey stone  t tussocks  > east, back along the road to the wagons */
+       grey stone  t tussocks  > east, back along the road to the wagons
+       Terrain kit (25b, v13.22): the wash's banks on both sides of the road (1, and 3 where the grey stone shows), stones down on its floor (4, drawn as the ground's own #), an old skull ($), brush and tufts (2, *); nobody but the peddler (no folk). */
     { id:'b8_c5_wash', title:'The Lamatath · the dry wash', sub:'Day · the road west', hint:'Tap ground to move · tap a figure to talk · the wagons are back east', decor:'b8_c5_day',
-      map:[ ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,##,,,,,,,,,##,",
-            ",,,,,,t,,,,,,,,,",
+      map:[ "2,11,,*,,,,,,11,",
+            "2,13,,,,,4,,,312",
+            "*,##,$,,,,,,,##,",
+            ",,31,,t,,,,*,13,",
             "rrrrr.......rrr>",
-            ",,,,..p.....,,,,",
-            ",,,,.........,,,",
-            ",,#,,,,,,,t,,,,,",
-            ",,,,,,,,,,,,,#,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,t,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,," ],
-      walk:'.,r>', triggers:{p:'b8_c5_cart', '>':'b8_c5_wash_back'}, start:{x:14, y:4},
+            ",,11..p.....,,,,",
+            "*,31.........131",
+            "2,#1,,4,,,t,,11,",
+            ",,13,,,,*,,,,#3,",
+            ",,11,4,,,,*,,112",
+            ",,31t,,,,4,,,31,",
+            "2111,,,*,,,,4111" ],
+      walk:'.,r>*', triggers:{p:'b8_c5_cart', '>':'b8_c5_wash_back'}, start:{x:14, y:4},
       quest:()=> !b85PedDone() ? 'The man with the cart.' : 'Back east, to the wagons.',
       npcs:[
         {id:'peddler', name:'The peddler, by his cart', kind:'b8_c5_peddler', x:7, y:5, node:()=>'b8_c5_peddler', show:()=>!b85PedDone(), fresh:()=>!S.f.b8_c5_pedMet} ] },
 
     /* 16 x 12 (b8_c5_grass, the last day's dusk). The burned wayhouse on its rise above the road. x its walls  t fallen stones
-       m the milestone  v back down to the road and the wagons  < on west to the gate */
+       m the milestone  v back down to the road and the wagons  < on west to the gate
+       Terrain kit (25b, v13.22): the rise itself (1), stones fallen out of the walls (3), a dead tree (5), brush along the road's far side (1, 2), tufts (*); nobody (no folk: the Guild is up there somewhere). */
     { id:'b8_c5_rise', title:'The Lamatath · the burned wayhouse', sub:'The Fete\'s last day · late', hint:'Tap ground to move · the wayhouse is on the rise · the gate is west', decor:'b8_c5_grass', dark:true,
-      map:[ ",,,,,,,,,,,,,,,,",
-            ",,,,xxxxxxx,,,,,",
-            ",,,,x.....x,,,,,",
-            ",,,,x.t...x,,,,,",
-            ",,,,x.....x,,,,,",
-            ",,,,xxx.xxx,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
+      map:[ "112,,11,,1,,,211",
+            ",,11xxxxxxx31,,,",
+            ",,,1x.....x15,,,",
+            ",,11x.t...x11,,,",
+            ",,,3x.....x1,,,,",
+            ",,,1xxx.xxx31,,,",
+            ",,,,,3,.,3,,,,*,",
+            ",,*,,,,.,,,*,,,,",
             "<rrrrrrrrrrrrm,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,r<v', triggers:{m:'b8_c5_milestone', t:'b8_c5_wayhouse', '<':'b8_c5_rise_on', 'v':'b8_c5_rise_back'}, start:{x:7, y:9},
+            ",,,*,,,,,,,,,,,2",
+            "21,,,*,,,,*,,121",
+            "11211,,v,,121111" ],
+      walk:'.,r<v*', triggers:{m:'b8_c5_milestone', t:'b8_c5_wayhouse', '<':'b8_c5_rise_on', 'v':'b8_c5_rise_back'}, start:{x:7, y:9},
       quest:()=> !S.f.b8_c5_knivesDone ? 'The wayhouse on the rise. They are in there, or on it.' : 'West, to the gate. The wagons will catch you up.',
       npcs:[
         {id:'knives', name:'Somewhere in the wayhouse', kind:'guildknife', x:7, y:3, node:()=>'b8_c5_lieup', show:()=>!S.f.b8_c5_knivesDone, fresh:()=>true} ] },
@@ -100111,7 +100163,8 @@ const B8CH6 = {
 
   areas:[
     /* 16 x 12 (city_night). . cobbles  , gutter  # house fronts  D the Fourth's door  l Fete lanterns on poles  B barrels  L gas-lamps
-       < down the street, toward the Phoenix  > on into the Gadrobi lanes */
+       < down the street, toward the Phoenix  > on into the Gadrobi lanes
+       Terrain kit (25b, v13.22): nothing on the ground (the street is busy and its paving is at the floor already); one reveller while the Fete lasts (folk). */
     { id:'b8_c6_lane', title:'Darujhistan · the Fourth\'s street', sub:'The Gadrobi District · the Fete\'s last night', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s door is the one with the bar behind it', decor:'city_night', dark:true,
       map:[ "################",
             "###L####D###l#L#",
@@ -100126,6 +100179,7 @@ const B8CH6 = {
             "######L..L######",
             "################" ],
       walk:'.,Dk<>', triggers:{D:'b8_c6_fire', k:'b8_c6_moon', '<':'b8_c6_phoenix', '>':'b8_c6_to_lanes'}, start:{x:8, y:2},
+      folk:[{x:5, y:6, kind:'reveller', name:'A reveller in a fox mask', line:'Last night of the Fete. Tomorrow I go back to being me. I\'m putting it off as long as I can.', show:()=>b86Ph() === 1}],
       quest:()=> b86Ph() === 1 ? (!S.f.b8_c6_fete ? 'Benlo, with a barrow full of masks.' : !S.f.b8_c6_lanesSeen ? 'The Gadrobi lanes, east. The whole district is out.' : !S.f.b8_c6_wallSeen ? 'The east wall, past the lanes. The watch is up there.' : 'The door, and the fire.')
         : b86Ph() === 2 ? (!b86Key() ? 'The door. Decide.' : b86Key() === 'street' && !S.f.b8_c6_streetDone ? 'The door. Hold the street.' : b86Key() === 'wall' && !S.f.b8_c6_wallDone ? 'The lanes, and the wall beyond them.' : 'The door.')
         : b86Ph() === 3 ? 'The door. Something is on the roofs.'
@@ -100136,7 +100190,8 @@ const B8CH6 = {
         {id:'neighbours', name:'The neighbours, on their steps', kind:'reveller', x:11, y:3, node:()=>'b8_c6_neighbours', show:()=>b86Ph() >= 4, fresh:()=>!S.f.b8_c6_neighbours} ] },
 
     /* 16 x 12 (city_night). The Gadrobi lanes, the dyers' row. D the tavern with the painted sign  x a lamp-post where the Guild's line
-       comes down  g the steps down to Orsa's den  F a Fete brazier  < back to the Fourth's street  v down to the east wall */
+       comes down  g the steps down to Orsa's den  F a Fete brazier  < back to the Fourth's street  v down to the east wall
+       Terrain kit (25b, v13.22): nothing on the ground (already below the floor); a dyer at her lines while the Fete lasts (folk). */
     { id:'b8_c6_lanes', title:'Darujhistan · the Gadrobi lanes', sub:'The dyers\' row · the Fete\'s last night', hint:'Tap ground to move · tap a figure to talk · the wall is south, the Fourth\'s street west', decor:'city_night', dark:true,
       map:[ "################",
             "##D####x###g####",
@@ -100151,6 +100206,7 @@ const B8CH6 = {
             "#######L.#######",
             "#######vv#######" ],
       walk:'.,Dxg<v', triggers:{D:'b8_c6_sign', x:'b8_c6_post', g:'b8_c6_orsa', '<':'b8_c6_lanes_back', 'v':'b8_c6_to_wall'}, start:{x:1, y:5},
+      folk:[{x:12, y:4, kind:'b5_c1_tilewoman', name:'A dyer taking in her cloth', line:'Fete or no Fete, the good blue comes in before dark. Somebody in a mask always wants to borrow it for a cape.', show:()=>b86Ph() === 1}],
       quest:()=> b86Ph() === 1 ? (!S.f.b8_c6_signSeen ? 'The tavern with the painted sign, on the corner.' : !S.f.b8_c6_wallSeen ? 'South, to the wall and the watch.' : 'Back to the Fourth\'s street.')
         : b86Ph() === 2 && b86Key() === 'wall' && !S.f.b8_c6_wallDone ? 'South, to the wall. It is down.' : 'Back to the Fourth\'s street.',
       npcs:[
@@ -100159,7 +100215,8 @@ const B8CH6 = {
         {id:'buckets', name:'A bucket line', kind:'reveller', x:9, y:6, node:()=>'b8_c6_buckets', show:()=>b86Ph() >= 2 && b86Ph() <= 3, fresh:()=>!S.f.b8_c6_buckets} ] },
 
     /* 16 x 12 (city_night). The foot of the east wall behind the Gadrobi District, an unnamed stretch. # the wall  r mending stone, and
-       after the night broke, the fall  F the watch's brazier  B barrels  v back up into the lanes */
+       after the night broke, the fall  F the watch's brazier  B barrels  v back up into the lanes
+       Terrain kit (25b, v13.22): nothing (an unnamed stretch, meant to be empty, and its ground at the floor already); no folk. */
     { id:'b8_c6_wallfoot', title:'Darujhistan · the east wall', sub:'Behind the Gadrobi District · an unnamed stretch', hint:'Tap ground to move · tap a figure to talk · the lanes are north', decor:'city_night', dark:true,
       map:[ "################",
             "################",
@@ -101020,28 +101077,32 @@ const B8CH7 = {
 
   areas:[
     /* 16 x 12 (lakefront). ~ the lake  n boats drawn up  p a jetty  , wet shingle  . shingle  F the Fourth's fire  k a bollard  # the
-       warehouse backs  > east, up into the Gadrobi District */
+       warehouse backs  > east, up into the Gadrobi District
+       Terrain kit (25b, v13.22): a light touch: coiled rope (*), a water cask (&), fish barrels (8, the shore's own B), a handcart (7, the shore's W), a fisherman and a woman with a basket (folk). */
     { id:'b8_c7_shore', title:'The lake shore', sub:'The morning after · the bells', hint:'Tap ground to move · tap a figure to talk · the street is east', decor:'lakefront',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~n~~~~~~~~~n~~~",
             "~~~~~~~p~~~~~~~~",
             ",,,,,,,p,,,,,,,,",
-            "...n...p....n...",
-            "..k............,",
+            "...n...p....n.&.",
+            "..k......*.....,",
             "......F........>",
-            "................",
-            "...,......,.....",
-            "##..........####",
+            ".............*..",
+            "...,......8.....",
+            "##.7........####",
             "####......######",
             "################" ],
-      walk:'.,p>', triggers:{F:'b8_c7_fire', n:'b8_c7_boats', k:'b8_c7_lake', '>':'b8_c7_to_street'}, start:{x:6, y:8},
+      walk:'.,p>*', triggers:{F:'b8_c7_fire', n:'b8_c7_boats', k:'b8_c7_lake', '>':'b8_c7_to_street'}, start:{x:6, y:8},
+      folk:[{x:4, y:7, kind:'b5_c1_ropeman', name:'A fisherman mending a net', line:'Bells since before light. Nobody\'s said what for. Fish don\'t care. I\'m trying to be more like the fish.'},
+        {x:11, y:6, kind:'b3_c5_villager', name:'A woman with a basket', line:'My husband went up to see. That was an hour ago. He\'ll be back when the bells stop, or when he\'s hungry.'}],
       quest:()=> b87Ph() === 1 ? (!S.f.b8_c7_street ? 'The street, east. The door, and what the night left of it.' : !b87LoopDone() ? 'Back up to the street. Something is wrong in the dyers\' row.' : 'The street, and the east road. The whole city is going out of it.')
         : b87Ph() === 2 ? 'The road, behind the crowd.'
         : !b87Tolled() ? 'The fire. A bell for every soldier.' : !b87Key() ? 'The fire, and the roads.' : 'The fire.',
       npcs:[] },
 
     /* 16 x 12 (city_dusk, the grey morning). The Fourth's street, up from the Phoenix. # house fronts  D the Fourth's door  x the post with
-       the painted sign  l a Fete pole, masks still on its string  r rubble  W a handcart  < west, down to the lake  > east, the road out */
+       the painted sign  l a Fete pole, masks still on its string  r rubble  W a handcart  < west, down to the lake  > east, the road out
+       Terrain kit (25b, v13.22): a light touch: what came down in the night (3), and a woman sweeping (folk). */
     { id:'b8_c7_street', title:'The Fourth\'s street', sub:'The Gadrobi District · the morning after', hint:'Tap ground to move · tap a figure to talk · the lake is west, the east road east', decor:'city_dusk',
       map:[ "################",
             "####D######x#S##",
@@ -101051,11 +101112,12 @@ const B8CH7 = {
             "...............>",
             "#####...r.######",
             "#####.....######",
-            "##W...........##",
-            "##....r.....####",
+            "##W..........3##",
+            "##3...r.....####",
             "####........####",
             "################" ],
       walk:'.,<>', triggers:{D:'b8_c7_door', x:'b8_c7_sign', l:'b8_c7_masks', S:'b8_c7_roofs_look', '<':'b8_c7_street_back', '>':'b8_c7_to_road'}, start:{x:1, y:4},
+      folk:[{x:3, y:2, kind:'b3_c5_villager', name:'A woman sweeping glass', line:'Thirty years I\'ve swept this step. First morning it\'s been half the roof.'}],
       quest:()=> b87Ph() !== 1 ? 'The east road.' : !S.f.b8_c7_doorDone ? 'The door. There are voices inside it.' : !b87LoopDone() ? 'The dyers\' row, south. Orsa\'s, and the men at her shutters.' : b87RoofsOpen() && !S.f.b8_c7_roofsLeft ? 'Somebody on the roofs, watching: the outside stair goes up. And the east road.' : 'The east road. The whole street is going out of it.',
       npcs:[
         {id:'benlo', name:'Benlo, at his barrow', kind:'b8_c1_benlo', x:9, y:4, still:true, node:()=>'b8_c7_benlo', show:()=>b87Ph() === 1, fresh:()=>!S.f.b8_c7_benlo},
@@ -101064,21 +101126,25 @@ const B8CH7 = {
         {id:'orsa', name:'Orsa, at her door', kind:'b8_c1_orsa', x:11, y:9, node:()=>'b8_c7_orsa', show:()=>b87LoopDone() && b87Ph() === 1, fresh:()=>!S.f.b8_c7_orsa} ] },
 
     /* 16 x 12 (plain). The road out of the city behind the crowd, the Fourth at its very back. . the road  , verge  # hedge  r stones  x a
-       milestone  ^ north, toward the cart (never reached)  v south, back to the city */
+       milestone  ^ north, toward the cart (never reached)  v south, back to the city
+       Terrain kit (25b, v13.22): the road churned by the crowd ahead (:, _ its middle), hedges and the fields' banks on both sides (2, 1), a dead tree (5), tufts on the verge (*), and the stragglers at the back (folk). */
     { id:'b8_c7_road', title:'The road out of the city', sub:'Behind the crowd · the bells behind', hint:'Tap ground to move · tap a figure to talk · the cart is north, far ahead', decor:'plain',
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",#,,,,...,,,,#,,",
-            ",,,,,,...,,,,,,,",
-            ",,r,,,...,,,r,,,",
-            ",,,,,,...,,,,,,,",
-            "#,,,,,...,,,,,,#",
-            ",,,,,,...,,,,,,,",
-            ",,x,,,...,,,,,,,",
-            ",,,,,,...,,,,r,,",
-            ",#,,,,...,,,,,#,",
-            ",,,,,,...,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,^v', triggers:{'^':'b8_c7_ahead', x:'b8_c7_milestone', r:'b8_c7_crowd', 'v':'b8_c7_road_back'}, start:{x:7, y:9},
+      map:[ "12,*,,:^:,,,,*21",
+            "1#,,,,:_:,,,,#21",
+            "12,,,,:_:,*,,,21",
+            "12r,,,:_:,,,r,21",
+            "12,,*,:_:,,,,,21",
+            "#2,,,,:_:,,*,,2#",
+            "12,,,,:_:,,,,,21",
+            "12x,,,:_:,,,5,21",
+            "12,*,,:_:,,,,r21",
+            "1#,,,,:_:,*,,,#1",
+            "12,,,,:_:,,,,,21",
+            "112,,,,v,,,,2111" ],
+      walk:'.,^v_:*', triggers:{'^':'b8_c7_ahead', x:'b8_c7_milestone', r:'b8_c7_crowd', 'v':'b8_c7_road_back'}, start:{x:7, y:9},
+      folk:[{x:4, y:3, kind:'reveller', name:'A reveller still in her mask', line:'Took it off once this morning. Didn\'t like what the street looked like without it. Put it back on.'},
+        {x:3, y:9, kind:'urchin', name:'A boy at the back', line:'Everybody\'s walking, so I\'m walking. Nobody\'s said where. Nobody\'s said to anybody.'},
+        {x:11, y:8, kind:'b3_c5_villager', name:'An old woman with a stick', line:'I followed the bells. The bells have stopped. Now I\'m following the people who followed the bells.'}],
       quest:()=> !S.f.b8_c7_guardian ? 'The back of the crowd. There is someone walking behind the Fourth.' : 'North, as far as the crowd goes.',
       npcs:[
         {id:'guardian', name:'A soldier at the back', kind:'b8_c7_guardian', x:8, y:11, node:()=>'b8_c7_guardian', show:()=>b87Ph() === 2 && !S.f.b8_c7_guardian, fresh:()=>true},

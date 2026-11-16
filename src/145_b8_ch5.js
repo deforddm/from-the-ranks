@@ -115,21 +115,24 @@ const B8CH5 = {
 
   areas:[
     /* 16 x 12 (b8_c5_grass, dusk and night). The caravan's halt on the Lamatath road. r the road  W the wagons  F the Fourth's fire
-       = Benna's laundry wagon's awning  ^ north into the long grass  < west, the road on  > east, the road back */
+       = Benna's laundry wagon's awning  ^ north into the long grass  < west, the road on  > east, the road back
+       Terrain kit (25b, v13.22): rises and brush in the long grass (1, 2), sacks off the wagons (8), the carters' tents and cookfire (6, 0: the wagons' own = and F), the horse lines (@), trodden ground in the ring (:), flowers in the grass (*), a carter and a drover (folk). */
     { id:'b8_c5_road', title:'The Lamatath · the caravan\'s halt', sub:'Dusk on the road west · the long grass', hint:'Tap ground to move · tap a figure to talk · the road goes on west', decor:'b8_c5_grass', dark:true,
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,W,,,.,,,W,,,,",
-            ",,,,,.....,,,,,,",
-            ",W,,,.,,,.,,,W,,",
+      map:[ "11,,,,,^,,,,,211",
+            "1,*,,,,.,,,*,,,1",
+            ",,8W,,,.,,,W8,,2",
+            ",6,,:.....,,,6,,",
+            ",W:,,.,,,.,:,W,*",
             "<rrrrr.F..rrrrr>",
-            ",W,,,.,,,.,,=W,,",
-            ",,,,,.....,,,,,,",
-            ",,,W,,,,,,,W,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,#,,,",
-            ",,,,,,,,,,,,,,,," ],
-      walk:'.,r<^>', triggers:{F:'b8_c5_fire', '^':'b8_c5_to_grass', '<':'b8_c5_west', '>':'b8_c5_east'}, start:{x:7, y:7},
+            ",W:,,.,,,.:,=W,8",
+            ",0:,,.....,,,,,,",
+            ",,8W,:,,,:,W8,*,",
+            ",,,@@@,,,@@,,,,2",
+            "21,,,,*,,,,,#111",
+            "1112211,,,112111" ],
+      walk:'.,r<^>:*', triggers:{F:'b8_c5_fire', '^':'b8_c5_to_grass', '<':'b8_c5_west', '>':'b8_c5_east'}, start:{x:7, y:7},
+      folk:[{x:2, y:6, kind:'b8_c2_carter', name:'A carter by the cookfire', line:'Grass to the edge of the sky. Like the sea, they say. I\'ve never seen the sea. I\'m guessing.'},
+        {x:7, y:9, kind:'b8_c2_drover', name:'A drover at the picket', line:'The horses keep looking east. Horses know things. Mostly about oats.', wander:1}],
       quest:()=> b85Ph() === 1 ? (!S.f.b8_c5_calder ? 'Calder, by the lead wagon.' : 'The fire, and sleep, if the grass lets you.')
         : b85Ph() === 2 ? (!b85PedDone() ? 'West along the road. The outrider has seen a cart ahead.' : 'The fire. The last night on the grass.')
         : b85Ph() === 3 ? (!b85Key() ? 'The fire. The milestone. Decide.' : 'West, for the gate.')
@@ -140,41 +143,43 @@ const B8CH5 = {
         {id:'benna', name:'Old Benna, at her tubs', kind:'b8_c5_benna', x:12, y:7, node:()=>'b8_c5_benna', show:()=>b85Ph() <= 3, fresh:()=>!S.f.b8_c5_benna} ] },
 
     /* 16 x 12 (b8_c5_day, day). The road crosses a dry wash; the peddler's cart has stopped in it. p the cart and its jugs  # banks of
-       grey stone  t tussocks  > east, back along the road to the wagons */
+       grey stone  t tussocks  > east, back along the road to the wagons
+       Terrain kit (25b, v13.22): the wash's banks on both sides of the road (1, and 3 where the grey stone shows), stones down on its floor (4, drawn as the ground's own #), an old skull ($), brush and tufts (2, *); nobody but the peddler (no folk). */
     { id:'b8_c5_wash', title:'The Lamatath · the dry wash', sub:'Day · the road west', hint:'Tap ground to move · tap a figure to talk · the wagons are back east', decor:'b8_c5_day',
-      map:[ ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,##,,,,,,,,,##,",
-            ",,,,,,t,,,,,,,,,",
+      map:[ "2,11,,*,,,,,,11,",
+            "2,13,,,,,4,,,312",
+            "*,##,$,,,,,,,##,",
+            ",,31,,t,,,,*,13,",
             "rrrrr.......rrr>",
-            ",,,,..p.....,,,,",
-            ",,,,.........,,,",
-            ",,#,,,,,,,t,,,,,",
-            ",,,,,,,,,,,,,#,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,t,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,," ],
-      walk:'.,r>', triggers:{p:'b8_c5_cart', '>':'b8_c5_wash_back'}, start:{x:14, y:4},
+            ",,11..p.....,,,,",
+            "*,31.........131",
+            "2,#1,,4,,,t,,11,",
+            ",,13,,,,*,,,,#3,",
+            ",,11,4,,,,*,,112",
+            ",,31t,,,,4,,,31,",
+            "2111,,,*,,,,4111" ],
+      walk:'.,r>*', triggers:{p:'b8_c5_cart', '>':'b8_c5_wash_back'}, start:{x:14, y:4},
       quest:()=> !b85PedDone() ? 'The man with the cart.' : 'Back east, to the wagons.',
       npcs:[
         {id:'peddler', name:'The peddler, by his cart', kind:'b8_c5_peddler', x:7, y:5, node:()=>'b8_c5_peddler', show:()=>!b85PedDone(), fresh:()=>!S.f.b8_c5_pedMet} ] },
 
     /* 16 x 12 (b8_c5_grass, the last day's dusk). The burned wayhouse on its rise above the road. x its walls  t fallen stones
-       m the milestone  v back down to the road and the wagons  < on west to the gate */
+       m the milestone  v back down to the road and the wagons  < on west to the gate
+       Terrain kit (25b, v13.22): the rise itself (1), stones fallen out of the walls (3), a dead tree (5), brush along the road's far side (1, 2), tufts (*); nobody (no folk: the Guild is up there somewhere). */
     { id:'b8_c5_rise', title:'The Lamatath · the burned wayhouse', sub:'The Fete\'s last day · late', hint:'Tap ground to move · the wayhouse is on the rise · the gate is west', decor:'b8_c5_grass', dark:true,
-      map:[ ",,,,,,,,,,,,,,,,",
-            ",,,,xxxxxxx,,,,,",
-            ",,,,x.....x,,,,,",
-            ",,,,x.t...x,,,,,",
-            ",,,,x.....x,,,,,",
-            ",,,,xxx.xxx,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
+      map:[ "112,,11,,1,,,211",
+            ",,11xxxxxxx31,,,",
+            ",,,1x.....x15,,,",
+            ",,11x.t...x11,,,",
+            ",,,3x.....x1,,,,",
+            ",,,1xxx.xxx31,,,",
+            ",,,,,3,.,3,,,,*,",
+            ",,*,,,,.,,,*,,,,",
             "<rrrrrrrrrrrrm,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,r<v', triggers:{m:'b8_c5_milestone', t:'b8_c5_wayhouse', '<':'b8_c5_rise_on', 'v':'b8_c5_rise_back'}, start:{x:7, y:9},
+            ",,,*,,,,,,,,,,,2",
+            "21,,,*,,,,*,,121",
+            "11211,,v,,121111" ],
+      walk:'.,r<v*', triggers:{m:'b8_c5_milestone', t:'b8_c5_wayhouse', '<':'b8_c5_rise_on', 'v':'b8_c5_rise_back'}, start:{x:7, y:9},
       quest:()=> !S.f.b8_c5_knivesDone ? 'The wayhouse on the rise. They are in there, or on it.' : 'West, to the gate. The wagons will catch you up.',
       npcs:[
         {id:'knives', name:'Somewhere in the wayhouse', kind:'guildknife', x:7, y:3, node:()=>'b8_c5_lieup', show:()=>!S.f.b8_c5_knivesDone, fresh:()=>true} ] },

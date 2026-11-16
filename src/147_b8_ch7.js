@@ -119,28 +119,32 @@ const B8CH7 = {
 
   areas:[
     /* 16 x 12 (lakefront). ~ the lake  n boats drawn up  p a jetty  , wet shingle  . shingle  F the Fourth's fire  k a bollard  # the
-       warehouse backs  > east, up into the Gadrobi District */
+       warehouse backs  > east, up into the Gadrobi District
+       Terrain kit (25b, v13.22): a light touch: coiled rope (*), a water cask (&), fish barrels (8, the shore's own B), a handcart (7, the shore's W), a fisherman and a woman with a basket (folk). */
     { id:'b8_c7_shore', title:'The lake shore', sub:'The morning after · the bells', hint:'Tap ground to move · tap a figure to talk · the street is east', decor:'lakefront',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~n~~~~~~~~~n~~~",
             "~~~~~~~p~~~~~~~~",
             ",,,,,,,p,,,,,,,,",
-            "...n...p....n...",
-            "..k............,",
+            "...n...p....n.&.",
+            "..k......*.....,",
             "......F........>",
-            "................",
-            "...,......,.....",
-            "##..........####",
+            ".............*..",
+            "...,......8.....",
+            "##.7........####",
             "####......######",
             "################" ],
-      walk:'.,p>', triggers:{F:'b8_c7_fire', n:'b8_c7_boats', k:'b8_c7_lake', '>':'b8_c7_to_street'}, start:{x:6, y:8},
+      walk:'.,p>*', triggers:{F:'b8_c7_fire', n:'b8_c7_boats', k:'b8_c7_lake', '>':'b8_c7_to_street'}, start:{x:6, y:8},
+      folk:[{x:4, y:7, kind:'b5_c1_ropeman', name:'A fisherman mending a net', line:'Bells since before light. Nobody\'s said what for. Fish don\'t care. I\'m trying to be more like the fish.'},
+        {x:11, y:6, kind:'b3_c5_villager', name:'A woman with a basket', line:'My husband went up to see. That was an hour ago. He\'ll be back when the bells stop, or when he\'s hungry.'}],
       quest:()=> b87Ph() === 1 ? (!S.f.b8_c7_street ? 'The street, east. The door, and what the night left of it.' : !b87LoopDone() ? 'Back up to the street. Something is wrong in the dyers\' row.' : 'The street, and the east road. The whole city is going out of it.')
         : b87Ph() === 2 ? 'The road, behind the crowd.'
         : !b87Tolled() ? 'The fire. A bell for every soldier.' : !b87Key() ? 'The fire, and the roads.' : 'The fire.',
       npcs:[] },
 
     /* 16 x 12 (city_dusk, the grey morning). The Fourth's street, up from the Phoenix. # house fronts  D the Fourth's door  x the post with
-       the painted sign  l a Fete pole, masks still on its string  r rubble  W a handcart  < west, down to the lake  > east, the road out */
+       the painted sign  l a Fete pole, masks still on its string  r rubble  W a handcart  < west, down to the lake  > east, the road out
+       Terrain kit (25b, v13.22): a light touch: what came down in the night (3), and a woman sweeping (folk). */
     { id:'b8_c7_street', title:'The Fourth\'s street', sub:'The Gadrobi District · the morning after', hint:'Tap ground to move · tap a figure to talk · the lake is west, the east road east', decor:'city_dusk',
       map:[ "################",
             "####D######x#S##",
@@ -150,11 +154,12 @@ const B8CH7 = {
             "...............>",
             "#####...r.######",
             "#####.....######",
-            "##W...........##",
-            "##....r.....####",
+            "##W..........3##",
+            "##3...r.....####",
             "####........####",
             "################" ],
       walk:'.,<>', triggers:{D:'b8_c7_door', x:'b8_c7_sign', l:'b8_c7_masks', S:'b8_c7_roofs_look', '<':'b8_c7_street_back', '>':'b8_c7_to_road'}, start:{x:1, y:4},
+      folk:[{x:3, y:2, kind:'b3_c5_villager', name:'A woman sweeping glass', line:'Thirty years I\'ve swept this step. First morning it\'s been half the roof.'}],
       quest:()=> b87Ph() !== 1 ? 'The east road.' : !S.f.b8_c7_doorDone ? 'The door. There are voices inside it.' : !b87LoopDone() ? 'The dyers\' row, south. Orsa\'s, and the men at her shutters.' : b87RoofsOpen() && !S.f.b8_c7_roofsLeft ? 'Somebody on the roofs, watching: the outside stair goes up. And the east road.' : 'The east road. The whole street is going out of it.',
       npcs:[
         {id:'benlo', name:'Benlo, at his barrow', kind:'b8_c1_benlo', x:9, y:4, still:true, node:()=>'b8_c7_benlo', show:()=>b87Ph() === 1, fresh:()=>!S.f.b8_c7_benlo},
@@ -163,21 +168,25 @@ const B8CH7 = {
         {id:'orsa', name:'Orsa, at her door', kind:'b8_c1_orsa', x:11, y:9, node:()=>'b8_c7_orsa', show:()=>b87LoopDone() && b87Ph() === 1, fresh:()=>!S.f.b8_c7_orsa} ] },
 
     /* 16 x 12 (plain). The road out of the city behind the crowd, the Fourth at its very back. . the road  , verge  # hedge  r stones  x a
-       milestone  ^ north, toward the cart (never reached)  v south, back to the city */
+       milestone  ^ north, toward the cart (never reached)  v south, back to the city
+       Terrain kit (25b, v13.22): the road churned by the crowd ahead (:, _ its middle), hedges and the fields' banks on both sides (2, 1), a dead tree (5), tufts on the verge (*), and the stragglers at the back (folk). */
     { id:'b8_c7_road', title:'The road out of the city', sub:'Behind the crowd · the bells behind', hint:'Tap ground to move · tap a figure to talk · the cart is north, far ahead', decor:'plain',
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",#,,,,...,,,,#,,",
-            ",,,,,,...,,,,,,,",
-            ",,r,,,...,,,r,,,",
-            ",,,,,,...,,,,,,,",
-            "#,,,,,...,,,,,,#",
-            ",,,,,,...,,,,,,,",
-            ",,x,,,...,,,,,,,",
-            ",,,,,,...,,,,r,,",
-            ",#,,,,...,,,,,#,",
-            ",,,,,,...,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,^v', triggers:{'^':'b8_c7_ahead', x:'b8_c7_milestone', r:'b8_c7_crowd', 'v':'b8_c7_road_back'}, start:{x:7, y:9},
+      map:[ "12,*,,:^:,,,,*21",
+            "1#,,,,:_:,,,,#21",
+            "12,,,,:_:,*,,,21",
+            "12r,,,:_:,,,r,21",
+            "12,,*,:_:,,,,,21",
+            "#2,,,,:_:,,*,,2#",
+            "12,,,,:_:,,,,,21",
+            "12x,,,:_:,,,5,21",
+            "12,*,,:_:,,,,r21",
+            "1#,,,,:_:,*,,,#1",
+            "12,,,,:_:,,,,,21",
+            "112,,,,v,,,,2111" ],
+      walk:'.,^v_:*', triggers:{'^':'b8_c7_ahead', x:'b8_c7_milestone', r:'b8_c7_crowd', 'v':'b8_c7_road_back'}, start:{x:7, y:9},
+      folk:[{x:4, y:3, kind:'reveller', name:'A reveller still in her mask', line:'Took it off once this morning. Didn\'t like what the street looked like without it. Put it back on.'},
+        {x:3, y:9, kind:'urchin', name:'A boy at the back', line:'Everybody\'s walking, so I\'m walking. Nobody\'s said where. Nobody\'s said to anybody.'},
+        {x:11, y:8, kind:'b3_c5_villager', name:'An old woman with a stick', line:'I followed the bells. The bells have stopped. Now I\'m following the people who followed the bells.'}],
       quest:()=> !S.f.b8_c7_guardian ? 'The back of the crowd. There is someone walking behind the Fourth.' : 'North, as far as the crowd goes.',
       npcs:[
         {id:'guardian', name:'A soldier at the back', kind:'b8_c7_guardian', x:8, y:11, node:()=>'b8_c7_guardian', show:()=>b87Ph() === 2 && !S.f.b8_c7_guardian, fresh:()=>true},

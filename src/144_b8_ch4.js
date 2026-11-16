@@ -16,7 +16,7 @@
 /* FOR THE ARTIST (144b): names this file uses.
    Items: ART['item/b8_c4_camphook'], ['item/b8_c4_greyscale'], ['item/b8_c4_ashrag'].
    Figures: b8_c4_mossa (the Redeemer priestess at the edge), b8_c4_hurrin (the pilgrim from the north), b8_c4_carrier (a water-carrier with a
-   yoke and two buckets); placeholders here with ??=. Reused: edrem (140 / Ch 3), b4_c2_pilgrim (kelyk-mad pilgrims), b6_cultist (the sellers),
+   yoke and two buckets); placeholders here with ??=. Reused: edrem (140 / Ch 3), b4_c2_pilgrim (kelyk-mad pilgrims), b6_cultist (the sellers), b8_kelykpriest (the yard's keepers),
    priest (the Dying God's priest).
    Backdrops: b8_camp_night (140's, yours), and three this file adds that borrow until drawn: b8_c4_rows (the camp's inner rows under the
    night, shacks and rag-lines, a sweet haze, the barrow far off with its lamps), b8_c4_yard (the store-yard behind the edge: a stake fence,
@@ -101,21 +101,25 @@ const B8CH4 = {
 
   areas:[
     /* 16 x 12 (b8_c4_camp, night). . trodden mud  , grass  = tents  s shacks  T Mossa's tent  w the water line (barrels on a handcart)
-       F the Fourth's fire  ^ north along the edge to the store-yard  < west into the rows  v south, the road back to the city */
+       F the Fourth's fire  ^ north along the edge to the store-yard  < west into the rows  v south, the road back to the city
+       Terrain kit (25b, v13.22): the rows filled in: more tents (6, drawn as the camp's own =), bundles (8), two cookfires (0), a handcart (7, the camp's c), water casks (&), trodden ground (:), the bank where the camp stops and the dark begins (1, 2), and three of the camp (folk). */
     { id:'b8_c4_edge', title:'The pilgrims\' camp · the far edge', sub:'Black Coral\'s night · the last rows', hint:'Tap ground to move · tap a figure to talk · the rows are west, the yard north, the city road south', decor:'b8_c4_camp', dark:true,
-      map:[ ",,,,,,,^,,,,,,,,",
-            ",=,s,,,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,,",
-            "<....T......w..,",
-            ",,=,,,,.,,,,,=,,",
-            ",,,,,,,.F,,,,,,,",
-            ",s,,=,,.,,,,s,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",=,,,,,.,,,=,,,,",
-            ",,,,,s,.,,,,,,s,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,v,,,,,,,," ],
-      walk:'.,<^v', triggers:{T:'b8_c4_mossa', w:'b8_c4_water', F:'b8_c4_fire', '^':'b8_c4_to_yard', '<':'b8_c4_to_rows', 'v':'b8_c4_road'}, start:{x:7, y:9},
+      map:[ "6,8,6,:^:,6,,6,1",
+            ",=,s,0,.,:=,8s,1",
+            ",:,8,:,.,,,,:,61",
+            "<....T......w..1",
+            "8,=,,,,.,,&,,=,1",
+            "6:0:,,,.F:,6,8,1",
+            ",s:,=,,.,::,s,71",
+            "6,,,8,:.,,,,,8,1",
+            ",=,6,,,.,,,=8,61",
+            "8,:::s,.,:,,,,s1",
+            ",6,,,,:.:,,6,8,1",
+            "112,6,,v,,6,2111" ],
+      walk:'.,<^v:', triggers:{T:'b8_c4_mossa', w:'b8_c4_water', F:'b8_c4_fire', '^':'b8_c4_to_yard', '<':'b8_c4_to_rows', 'v':'b8_c4_road'}, start:{x:7, y:9},
+      folk:[{x:3, y:6, kind:'b4_c2_pilgrim', name:'A pilgrim at a fire', line:'Came for a month. That was two years ago. The night does that. You lose count of things.'},
+        {x:11, y:9, kind:'b8_pilgrim', name:'A man with a cup', line:'Just a cup. Takes the edge off the dark. Everyone here has a cup. Where\'s yours?'},
+        {x:13, y:2, kind:'b3_c5_villager', name:'A woman hanging washing', line:'We came for the Redeemer. We stay because walking back is further.'}],
       quest:()=> b84Ph() === 1 ? (!S.f.b8_c4_mossaMet ? 'Mossa, the priestess, at her tent.' : !S.f.b8_c4_waterDone ? 'The water line. Something is wrong at the barrels.' : 'The fire, and what sleep there is.')
         : b84Ph() === 2 ? (!S.f.b8_c4_hurrinMet ? 'The rows, west. The frightened ones keep their flaps tied.' : !S.f.b8_c4_yardSeen ? 'North along the edge. Where does the sweet stuff come from?' : 'The fire. It is getting dark, even here.')
         : b84Ph() === 3 ? (b84NightDone() ? 'The fire.' : b84Key() === 'burn' ? 'North, to the store-yard.' : 'The edge. Set it, and hold it.')
@@ -126,45 +130,49 @@ const B8CH4 = {
         {id:'edrem', name:'Edrem, on the pilgrims\' road', kind:'edrem', x:9, y:7, node:()=>'b8_c4_edrem', show:()=>b84EdremHere(), fresh:()=>!S.f.b8_c4_edremTalk} ] },
 
     /* 16 x 12 (b8_c4_camp, night). The inner rows toward the barrow. = tents  s shacks  r the rope across the barrow end, the children's
-       tents beyond it  ^ toward the barrow  > east, back to the edge */
+       tents beyond it  ^ toward the barrow  > east, back to the edge
+       Terrain kit (25b, v13.22): the rows packed close: tents (6, the camp's =), bundles (8), cookfires (0), a water cask (&), trodden ground (:), a bank at the bottom of the lane (1, 2), a dancer and a woman at her tent (folk). */
     { id:'b8_c4_rows', title:'The pilgrims\' camp · the rows', sub:'Black Coral\'s night · toward the barrow', hint:'Tap ground to move · tap a figure to talk · the barrow is north, the edge east', decor:'b8_c4_camp', dark:true,
-      map:[ "=,s,=,,^,,=,,s,=",
-            ",,,,,,,.,,,,,,,,",
-            "rrrrrr,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,,",
-            "=,s,=,,.,,,s,=,,",
+      map:[ "=8s,=6,^,0=,6s,=",
+            ",,:,,,:.:,,,,,8,",
+            "rrrrrr,.,6=,8s,6",
+            "6,,,:,,.,,:,,,,,",
+            "=8s,=0:.,6,s,=68",
             "...............>",
-            ",,=,,s,.,,=,,,s,",
-            ",,,,,,,.,,,,,,,,",
-            "s,=,,,,.,,,s,,=,",
-            ",,,,,,,.,,,,,,,,",
-            ",=,,s,,.,,=,,s,,",
-            ",,,,,,,.,,,,,,,," ],
-      walk:'.,^>', triggers:{r:'b8_c4_rope', '^':'b8_c4_barrow_look', '>':'b8_c4_rows_back'}, start:{x:14, y:5},
+            "6,=0:s,.,8=,6,s6",
+            ",:,:,8,.,:,,,&,,",
+            "s8=,6,,.,0,s:,=6",
+            ":,,,,:,.,,:,,,8,",
+            "6=0,s,8.,,=6,s,6",
+            "121,6,,.,6,,1211" ],
+      walk:'.,^>:', triggers:{r:'b8_c4_rope', '^':'b8_c4_barrow_look', '>':'b8_c4_rows_back'}, start:{x:14, y:5},
+      folk:[{x:9, y:3, kind:'b8_pilgrim', name:'A dancer in the lane', line:'Can\'t stop. If I stop I\'ll remember what I came here to forget.', wander:1},
+        {x:2, y:7, kind:'b3_c5_villager', name:'A woman mending a tent', line:'Third tent this year. The first two walked off with men who said they\'d be back.'}],
       quest:()=> !S.f.b8_c4_hurrinMet ? 'A man from the north, by his shack, coughing.' : !S.f.b8_c4_yardSeen ? 'Back to the edge, and north along it.' : 'Back to the edge.',
       npcs:[
         {id:'hurrin', name:'Hurrin, a pilgrim from the north', kind:'b8_c4_hurrin', x:12, y:3, node:()=> b84Ph() >= 4 ? 'b8_c4_hurrin_end' : 'b8_c4_hurrin', fresh:()=> b84Ph() >= 4 ? !S.f.b8_c4_hurrinEnd : !S.f.b8_c4_hurrinMet},
         {id:'drinkers', name:'Drinkers at the end tent', kind:'b4_c2_pilgrim', x:3, y:9, node:()=>'b8_c4_tentend', show:()=>b84Ph() === 2 && !S.f.b8_c4_drunkDone, fresh:()=>true} ] },
 
     /* 16 x 12 (b8_c4_camp, night). The store-yard behind the edge. # the stake fence  x lean-tos stacked with jugs  c handcarts
-       t a barrel table  v back south to the edge */
+       t a barrel table  v back south to the edge
+       Terrain kit (25b, v13.22): the yard stacked: barrels and bundles (8, the camp's t), handcarts (7, the camp's c), casks (&), trodden mud (:), and outside the fence a cookfire, a tent and the bank (0, 6, 1, 2); nobody about but the keepers (no folk). */
     { id:'b8_c4_yard', title:'The pilgrims\' camp · the store-yard', sub:'Black Coral\'s night · behind the edge', hint:'Tap ground to move · the lean-tos are along the fence · the edge is south', decor:'b8_c4_camp', dark:true,
       map:[ "################",
-            "#,,x,,x,,,x,,c,#",
+            "#8,x,,x,8,x,8c&#",
             "#..............#",
-            "#,c,,,,,,,,,,,,#",
-            "#......t.......#",
-            "#,,,,,,,,,,,c,,#",
-            "#..............#",
-            "#,,,,,,,,,,,,,,#",
+            "#&c,:,,,,,,8,78#",
+            "#8.....t......&#",
+            "#,78,,:,,:,,c,8#",
+            "#&...........8.#",
+            "#88,,,,::,,,7,8#",
             "#######..#######",
-            ",,,,,,,..,,,,,,,",
-            ",,=,,,,..,,,s,,,",
-            ",,,,,,,vv,,,,,,," ],
-      walk:'.,v', triggers:{x:'b8_c4_jars', 'v':'b8_c4_yard_back'}, start:{x:7, y:10},
+            "12,,,,:..:,,,,21",
+            "1,=,0:,..,,,s6,1",
+            "112,,,,vv,,,2111" ],
+      walk:'.,v:', triggers:{x:'b8_c4_jars', 'v':'b8_c4_yard_back'}, start:{x:7, y:10},
       quest:()=> b84Ph() === 3 && b84Key() === 'burn' && !S.f.b8_c4_storesDone ? 'The keepers, by the lean-tos.' : b84Ph() === 3 && b84Key() === 'burn' && !S.f.b8_c4_burned ? 'The jugs. All of them.' : 'Back to the edge.',
       npcs:[
-        {id:'keepers', name:'The keepers of the yard', kind:'b6_cultist', x:7, y:3, node:()=> b84Ph() === 3 && b84Key() === 'burn' ? 'b8_c4_stores_start' : 'b8_c4_keepers', show:()=>b84Ph() >= 2 && b84Ph() <= 3 && !S.f.b8_c4_storesDone && !(b84Ph() === 3 && b84Key() === 'hold'), fresh:()=>!S.f.b8_c4_keepers || (b84Ph() === 3 && b84Key() === 'burn')} ] } ],
+        {id:'keepers', name:'The keepers of the yard', kind:'b8_kelykpriest', x:7, y:3, node:()=> b84Ph() === 3 && b84Key() === 'burn' ? 'b8_c4_stores_start' : 'b8_c4_keepers', show:()=>b84Ph() >= 2 && b84Ph() <= 3 && !S.f.b8_c4_storesDone && !(b84Ph() === 3 && b84Key() === 'hold'), fresh:()=>!S.f.b8_c4_keepers || (b84Ph() === 3 && b84Key() === 'burn')} ] } ],
 
   battles:{
     /* the water line: pilgrims gone sweet on kelyk at the barrels, and the man who brought them the jugs */

@@ -88,7 +88,22 @@ const TKS = {
   b5_c3_bank:{fam:'earth', as:{'4':'#', '5':'x'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b5_c6_dissent:{fam:'plain', as:{'7':'c'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b7_c4_lines:{fam:'plain', as:{'@':'H'}, draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
-  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
+  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  /* Book Eight (v13.22): Darujhistan's streets, roofs and lake shore (the city's own barrels, handcarts and chimneys, water butts, rope),
+     the caravan east over the old Domin, Black Coral and the pilgrims' camp under its night, the Lamatath by day, the road out */
+  city_night:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  city_dusk:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  roof_night:{fam:'earth', as:{'4':'C'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  lakefront:{fam:'earth', as:{'8':'B', '7':'W'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b8_c2_camp:{fam:'plain', as:{'6':'=', '7':'W', '0':'F', '@':'h'}},
+  b8_c2_road:{fam:'earth', as:{'5':'x', '7':'W', '4':'#'}},
+  b8_c2_town:{fam:'earth', as:{'5':'x'}},
+  b3_c7_coral:{fam:'earth'},
+  b3_c5_domin_night:{fam:'earth', as:{'5':'x'}},
+  b8_c3_mound:{fam:'plain', as:{'6':'='}},
+  b8_c4_camp:{fam:'plain', as:{'6':'=', '0':'F', '7':'c', '8':'t'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b8_c5_day:{fam:'earth', as:{'4':'#'}},
+  plain:{fam:'plain'} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };
