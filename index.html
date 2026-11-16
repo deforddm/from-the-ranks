@@ -6620,7 +6620,22 @@ const TKS = {
   b6_c7_deck:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
   b6_c7_deckcold:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => { tkCoil(c, x, y, T, P); tkRime(c, x, y, T); }}},
   b6_c7_quay:{fam:'earth', as:{'7':'c'}, draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_wharf'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
-  b6_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
+  b6_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  /* Book Seven (v13.22): Book Five's Lether, inland and in Letheras: the night roads and fields, the farmyards, the Whitefinders' yard,
+     the canal walks and streets (barrels, casks, coiled rope, mooring posts, market stalls), the wood, the riverbanks, the army's lines */
+  plain_night:{fam:'plain', as:{'0':'F'}},
+  b5_c5_farm:{fam:'earth', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c1_barracks:{fam:'earth', as:{'0':'F'}, draw:{'8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c1_canal:{fam:'earth', draw:{'9':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_canal'), '4':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_walk'), '8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'),
+    '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c7_canal:{fam:'earth', as:{'0':'F'}, draw:{'4':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_lowwalk'), '8':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_streets'), '7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N),
+    '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'8':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_streets'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c4_wood:{fam:'plain', as:{'4':'#'}, draw:{'5':(c, x, y, T, N) => b54Cover(c, x, y, T, N, 'b5_c4_wood')}},
+  b5_c3_bank:{fam:'earth', as:{'4':'#', '5':'x'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c6_dissent:{fam:'plain', as:{'7':'c'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b7_c4_lines:{fam:'plain', as:{'@':'H'}, draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };
@@ -85294,21 +85309,23 @@ const B7CH1 = {
     go:'Into the boats', node:'b7_c1_start'},
 
   areas:[
-    /* 16 x 12 (b5_c2_strand, night). ~ the sea  , . sand  B a boat drawn up  # dune grass  F the Third's fire in a hollow  > inland, off the beach */
+    /* 16 x 12 (b5_c2_strand, night). ~ the sea  , . sand  B a boat drawn up  # dune grass  F the Third's fire in a hollow  > inland, off the beach
+       Terrain kit (25b, v13.22): a light touch: the dune foot (1, 2 scrub), what the boats brought up (8 crates, & a water cask), boot-churned sand (:), a tuft of marram (*), and one marine hauling (folk). */
     { id:'b7_c1_beach', title:'The Lether coast · the beach', sub:'Night · the landing', hint:'Tap ground to move · tap a figure to talk · the boats are at the waterline, the way inland is east', decor:'b5_c2_strand', dark:true,
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
             ",,~~~,,,,,~~~,,,",
-            ",,B,,,,B,,,,,B,,",
+            ",,B,*,,B,,,,,B,,",
+            "....:.......:...",
             "................",
-            "................",
-            ".,......,.....,.",
-            "......##........",
-            "...F..##...#..,.",
-            ".,..........##.>",
-            "##..,...#....###",
+            ".,......:..&.8,.",
+            ".....8##........",
+            "1..F..##...#..,.",
+            "11..........##.>",
+            "##12,...#....###",
             "################" ],
-      walk:'.,', triggers:{B:'b7_c1_boats', F:'b7_c1_fire', '>':'b7_c1_inland'}, start:{x:7, y:5},
+      walk:'.,:*', triggers:{B:'b7_c1_boats', F:'b7_c1_fire', '>':'b7_c1_inland'}, start:{x:7, y:5},
+      folk:[{x:9, y:3, kind:'b2soldier', name:'A marine with a cask', line:'Rum, says the mark on it. Water, says the sergeant. We find out at the first fire.', wander:1}],
       quest:()=> b71Ph() === 1 ? (!S.f.b7_c1_orders1 ? 'The lieutenant, up the beach.' : 'The boats at the waterline. The lamp goes up soon.')
         : !S.f.b7_c1_orders2 ? 'The lieutenant, by the fires in the dunes.' : !S.f.b7_c1_dunesDone ? 'The Edur patrol in the dunes to the east.' : 'The fire, and then inland. The column moves tonight.',
       npcs:[
@@ -85320,21 +85337,23 @@ const B7CH1 = {
         {id:'dunes', name:'Shapes on a dune crest', kind:'b5_edur', x:13, y:8, node:()=>'b7_c1_dunes_start', show:()=>b71Ph() >= 2 && !!S.f.b7_c1_orders2 && !S.f.b7_c1_dunesDone, fresh:()=>true} ] },
 
     /* 16 x 12 (plain_night). , grass  . the coast road  # hedge  C the farm  R the tally-shed off the road  r a rock  x a post  F the lie-up
-       < west, back toward the beach  > east, after the column */
+       < west, back toward the beach  > east, after the column
+       Terrain kit (25b, v13.22): hedgerows on the field edges (2) and banks under them (1), a cart left by the road (7), sacks (8), the trodden ground round the fire (:), tufts in the barley (*), and one picket (folk). */
     { id:'b7_c1_road', title:'The coast road', sub:'Night · a day\'s march inland', hint:'Tap ground to move · tap a figure to talk · the farm is west, the tally-shed east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,,#,,,,,,,,#",
-            "#,C,,,,,,,,,R,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#22,,,#,,22,,22#",
+            "#,C,,,*,,,,,R,1#",
+            "#*,,,:,,,,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,#,,,,,,,,,,,#",
-            "#,,,,,,,,r,,,,,#",
-            "#,,,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,#,,#",
-            "#,,,x,,,,,,,,,,#",
+            "#,,,,7,,,,,,,:,#",
+            "#,,#,,,,*,,,,,2#",
+            "#2,,,,,,,r,,,*,#",
+            "#,,,,:F:,,,8,,,#",
+            "#1,,,,*,,,,,#,1#",
+            "#11,x,,22,*,,11#",
             "################" ],
-      walk:'.,', triggers:{C:'b7_c1_farm', R:'b7_c1_shed_view', F:'b7_c1_fire', '<':'b7_c1_road_back', '>':'b7_c1_road_east'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{C:'b7_c1_farm', R:'b7_c1_shed_view', F:'b7_c1_fire', '<':'b7_c1_road_back', '>':'b7_c1_road_east'}, start:{x:1, y:4},
+      folk:[{x:13, y:6, kind:'b2soldier', name:'A marine on picket', line:'Barley to the hedges and not a dog barking. Either they are asleep out there or they are counting us.'}],
       quest:()=> b71Ph() >= 5 ? (!b71DossSettled() ? 'There is a man at the pickets asking for the heavies.' : 'The lie-up. At dusk the column moves on.')
         : !S.f.b7_c1_orders3 ? 'The lieutenant, by the road.'
         : b71Strip() && !S.f.b7_c1_farmDone ? 'The farm to the west. The squad needs what the transport did not give it.'
@@ -85347,21 +85366,23 @@ const B7CH1 = {
         {id:'doss', name:'A man at the pickets', kind:'doss', x:3, y:8, node:()=>'b7_c1_doss', show:()=>b71Ph() >= 5 && (S.f.b7_dossDone == null || S.f.b7_dossDone === 2), fresh:()=>S.f.b7_dossDone == null},
         {id:'lt5', name:'The lieutenant', kind:'b2soldier', x:9, y:9, node:()=>'b7_c1_lt5', show:()=>b71Ph() >= 5, fresh:()=>!S.f.b7_c1_lt5} ] },
 
-    /* 16 x 12 (b5_c5_farm, night). . the yard  , ash and weeds  # fieldstone walls  B the shed door  w the well  e the gate, back to the road */
+    /* 16 x 12 (b5_c5_farm, night). . the yard  , ash and weeds  # fieldstone walls  B the shed door  w the well  e the gate, back to the road
+       Terrain kit (25b, v13.22): the factor's tithe in the side sheds (8 sacks, 7 his cart, & a water butt), lanterns at the doors (!), the worn way from the gate to the shed (_), trodden ground (:), weeds (*), a bank outside the wall (1), and the factor's carter (folk). */
     { id:'b7_c1_shed', title:'The coast road · the tally-shed', sub:'Night · the factor\'s outpost', hint:'Tap ground to move · the shed door is at the top of the yard · the gate is south', decor:'b5_c5_farm', dark:true,
       map:[ "################",
-            "#....#....#....#",
-            "#....#....#....#",
-            "#....##BB##....#",
-            "#..............#",
-            "#,.............#",
-            "#,.....w.......#",
-            "#,.............#",
-            "##............##",
-            ",#,,...........#",
-            ",,#,,..........#",
+            "#88..#8..8#..88#",
+            "#8...#....#...&#",
+            "#....##BB##...7#",
+            "#..!...__....!.#",
+            "#,.:.*.._...*..#",
+            "#,.....w_......#",
+            "#,:.....:....8.#",
+            "##......_.....##",
+            "1#,,8...__...8&#",
+            "11#,,..._....*.#",
             ",,,,,,,ee,,,,,,," ],
-      walk:'.,', triggers:{B:'b7_c1_book', w:'b7_c1_shed_well', e:'b7_c1_shed_out'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{B:'b7_c1_book', w:'b7_c1_shed_well', e:'b7_c1_shed_out'}, start:{x:7, y:10},
+      folk:[{x:4, y:7, kind:'b8_c2_carter', name:'An Indebted carter', line:'The factor\'s cart, the factor\'s mule, the factor\'s grain. I walk beside it. That goes on the tally too.', wander:1}],
       quest:()=> !S.f.b7_c1_bookBurned ? 'The shed. The tally-book is inside.' : 'The gate, and the road. Dawn is coming.',
       npcs:[
         {id:'clerk', name:'The tally-clerk', kind:'b5_c1_clerk', x:11, y:6, node:()=>'b7_c1_clerk', fresh:()=>!S.f.b7_c1_clerk} ] } ],
@@ -86229,7 +86250,7 @@ SCENEX.b7_c1_shed = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
 /* FOR THE ARTIST (122b): names this file uses.
    Items: ART['item/b7_c2_filepage'], ['item/b7_c2_agentknife'], ['item/b7_c2_greycoat'].
    Figures: ilsa (the recruit), b7_agent (a Patriotist in a grey coat: the engine's agents wear it from this chapter). Reused: b5_c1_ennic,
-   b5_c1_clerk, b5_c1_tilewoman, b5_edur (the gate), b5_letherii (the lamplighter), b5_c5_refugee (the neighbour), bruiser (enforcers).
+   b5_c1_clerk, b5_c1_tilewoman, b5_edur (the gate), b5_c3_riverman (the eel-seller), b5_c3_pole (the lamplighter, his pole), b5_c7_citizen (the neighbour), bruiser (enforcers).
    Backdrops: b7_barracks and b7_letheras (120's, yours), and three this file adds that borrow until you draw them: b7_c2_greymorning (the
    barracks yard by a grey morning), b7_c2_alley (a narrow alley off a canal at dusk, one lamp, a door at its end), b7_c2_bridge (a stone
    canal bridge at night, lanterns at its far end, men in grey turning out a satchel).
@@ -86315,21 +86336,23 @@ const B7CH2 = {
     go:'Into the yard', node:'b7_c2_yard'},
 
   areas:[
-    /* 16 x 12 (b5_c1_barracks, night). . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  t the clerk's table  F the fire  > the gate */
+    /* 16 x 12 (b5_c1_barracks, night). . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  t the clerk's table  F the fire  > the gate
+       Terrain kit (25b, v13.22): a light touch: barrels (8), the water butt (&), the company's spears racked (%), a lantern on its pole (!), the trodden ground by the fire (:), and one of the Sixth off duty (folk). */
     { id:'b7_c2_barracks', title:'Letheras · the Whitefinders\' barracks', sub:'Night · the yard', hint:'Tap ground to move · tap a figure to talk · the clerk\'s table is west, the gate east', decor:'b5_c1_barracks', dark:true,
       map:[ "################",
             "#===b=====..===#",
-            "#..............#",
-            "#.t............#",
-            "#..............#",
+            "#&.......%....8#",
+            "#.t..........!.#",
+            "#.....:..:.....#",
             "#.......F......>",
+            "#%.....:.:.....#",
             "#..............#",
-            "#..............#",
-            "#=====b........#",
-            "#======........#",
-            "#..............#",
+            "#=====b.......8#",
+            "#======.......&#",
+            "#8.:.....8....%#",
             "################" ],
-      walk:'.', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_gate_view'}, start:{x:8, y:7},
+      walk:'.:', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_gate_view'}, start:{x:8, y:7},
+      folk:[{x:4, y:6, kind:'b5_c6_whitefinder', name:'A Whitefinder off duty', line:'Pay is late again. The paymaster says the coin is coming up the river. So is the river.', wander:1}],
       quest:()=> b72Ph() >= 5 ? (S.f.b7_c2_bridgeDone ? 'The fire. The night is the squad\'s, what is left of it.' : 'The lists, over the canal.')
         : !S.f.b7_c2_ennic ? 'Finadd Ennic, under his lamp.' : 'The fire, and then the bunk-houses. Something is happening in the lane tonight.',
       npcs:[
@@ -86338,7 +86361,8 @@ const B7CH2 = {
         {id:'edur', name:'The Edur at the gate', kind:'b5_edur', x:14, y:5, node:()=>'b7_c2_gate_view', show:()=>!S.f.b7_c2_gateDone, fresh:()=>!S.f.b7_c2_gateSeen} ] },
 
     /* 16 x 12 (b5_c1_canal, day). . paving  , the canal steps  ~ the Quillas Canal  # wall  s an apothecary's barrow  n the broadsheet wall
-       D the cookshop's door  - the walk's edge  P a mooring post  < back to the barracks gate  > on along the canal (dusk) */
+       D the cookshop's door  - the walk's edge  P a mooring post  < back to the barracks gate  > on along the canal (dusk)
+       Terrain kit (25b, v13.22): nothing on the ground (the street is busy and its paving is at the floor already); one neighbour on her step (folk). */
     { id:'b7_c2_street', title:'Letheras · the canal street', sub:'Morning · the lane by the barracks', hint:'Tap ground to move · tap a figure to talk · the cookshop is the open door', decor:'b5_c1_canal',
       map:[ "################",
             "#.s....n...D...#",
@@ -86353,49 +86377,54 @@ const B7CH2 = {
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,-', triggers:{s:'b7_c2_stall', n:'b7_c2_board', D:'b7_c2_door', '<':'b7_c2_to_yard', '>':'b7_c2_to_alley'}, start:{x:2, y:2},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A woman sweeping her step', line:'Sweep the step, pay the tax on the step. I sweep it slowly. It feels like more for the money.'}],
       quest:()=> !S.f.b7_c2_door ? 'The cookshop across the lane. Its door is open.' : !S.f.b7_c2_ilsaMet ? 'A woman in a grey coat on the canal steps, watching the barracks.' : 'Along the canal at dusk. The agents by the eel stall will follow.',
       npcs:[
         {id:'ilsa', name:'A woman in a grey coat', kind:'ilsa', x:9, y:5, node:()=>'b7_c2_ilsa', show:()=>!S.f.b7_c2_ilsaMet || b72IlsaWaits(), fresh:()=>!S.f.b7_c2_ilsaMet},
-        {id:'neigh', name:'A neighbour at a window', kind:'b5_c5_refugee', x:13, y:2, node:()=>'b7_c2_neighbours', fresh:()=>!S.f.b7_c2_neighTried},
+        {id:'neigh', name:'A neighbour at a window', kind:'b5_c7_citizen', x:13, y:2, node:()=>'b7_c2_neighbours', fresh:()=>!S.f.b7_c2_neighTried},
         {id:'agents', name:'Two men by the eel stall', kind:'b7_agent', x:4, y:6, node:()=>'b7_c2_agents', fresh:()=>!S.f.b7_c2_agents},
-        {id:'eel', name:'The eel-seller', kind:'b5_letherii', x:5, y:1, node:()=>'b7_c2_eelseller', fresh:()=>!S.f.b7_c2_eel} ] },
+        {id:'eel', name:'The eel-seller', kind:'b5_c3_riverman', x:5, y:1, node:()=>'b7_c2_eelseller', fresh:()=>!S.f.b7_c2_eel} ] },
 
     /* 16 x 12 (b5_c7_canal, night). . setts  # wall  ~ the canal  - the bridge deck  A the alley mouth  B the bridge's far end  P a post
-       < west, back toward the barracks */
+       < west, back toward the barracks
+       Terrain kit (25b, v13.22): lamps along the walk (!), coiled rope (*), barrels (8), a water cask (&), and a boatman tying up (folk). */
     { id:'b7_c2_canal', title:'Letheras · along the canal', sub:'Night · the lamps lit', hint:'Tap ground to move · tap a figure to talk · the alley is north, the bridge south over the water', decor:'b5_c7_canal', dark:true,
       map:[ "######A#########",
-            "#..............#",
+            "#..!......8...!#",
             "<..............#",
-            "#..............#",
-            "#.P.....-...P..#",
+            "#*............&#",
+            "#.P.....-...P*.#",
             "~~~~~~~~-~~~~~~~",
             "~~~~~~~~-~~~~~~~",
-            "#.P.....-...P..#",
-            "#.......B......#",
-            "#..............#",
-            "#..............#",
+            "#.P*....-...P..#",
+            "#.......B....8.#",
+            "#..!.........!.#",
+            "#8...&.....*...#",
             "################" ],
-      walk:'.-', triggers:{A:'b7_c2_alley_view', B:'b7_c2_bridge_view', '<':'b7_c2_canal_back'}, start:{x:2, y:2},
+      walk:'.-*', triggers:{A:'b7_c2_alley_view', B:'b7_c2_bridge_view', '<':'b7_c2_canal_back'}, start:{x:2, y:2},
+      folk:[{x:5, y:9, kind:'b5_c3_bargeman', name:'A boatman on the walk', line:'Toll at this bridge, toll at the next. A man could drown in debt in this city and never touch the water.', wander:1}],
       quest:()=> b72Ph() >= 5 ? (!S.f.b7_c2_bridgeDone ? 'The bridge, south over the canal. The battalion office is on the far side.' : 'Back to the barracks.')
         : !S.f.b7_c2_alleyDone ? 'The alley off the canal, north. They are waiting in it.' : 'Back to the barracks before the lamps go out.',
       npcs:[
-        {id:'lamp', name:'A lamplighter', kind:'b5_letherii', x:11, y:3, node:()=>'b7_c2_lamplighter', show:()=>b72Ph() === 3, fresh:()=>!S.f.b7_c2_lamp} ] },
+        {id:'lamp', name:'A lamplighter', kind:'b5_c3_pole', x:11, y:3, node:()=>'b7_c2_lamplighter', show:()=>b72Ph() === 3, fresh:()=>!S.f.b7_c2_lamp} ] },
 
-    /* 16 x 12 (b5_c1_barracks, day): the same yard by a grey morning, the Patriotist at the gate */
+    /* 16 x 12 (b5_c1_barracks, day): the same yard by a grey morning, the Patriotist at the gate
+       Terrain kit (25b, v13.22): the yard dressed as at night (barrels, the butt, the spears, the lantern, the trodden ground), and another of the Sixth (folk). */
     { id:'b7_c2_yardday', title:'Letheras · the Whitefinders\' barracks', sub:'Morning · a visitor at the gate', hint:'Tap ground to move · tap a figure to talk · the man in the grey coat is waiting', decor:'b5_c1_barracks',
       map:[ "################",
             "#===b=====..===#",
-            "#..............#",
-            "#.t............#",
-            "#..............#",
+            "#&.......%....8#",
+            "#.t..........!.#",
+            "#.....:..:.....#",
             "#.......F......>",
+            "#%.....:.:.....#",
             "#..............#",
-            "#..............#",
-            "#=====b........#",
-            "#======........#",
-            "#..............#",
+            "#=====b.......8#",
+            "#======.......&#",
+            "#8.:.....8....%#",
             "################" ],
-      walk:'.', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_yard_gate'}, start:{x:8, y:7},
+      walk:'.:', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_yard_gate'}, start:{x:8, y:7},
+      folk:[{x:5, y:3, kind:'b5_c6_whitefinder', name:'A Whitefinder with a whetstone', line:'There is an Edur at the gate. There is always an Edur at the gate. You stop looking, and you never stop knowing.', wander:1}],
       quest:()=> !b72Key() ? 'The man in the grey coat, with the Finadd. He wants a word.' : 'The Finadd\'s lists, over the canal at dusk. The gate.',
       npcs:[
         {id:'edur', name:'The Edur at the gate', kind:'b5_edur', x:14, y:5, node:()=>'b7_c2_edur_day', fresh:()=>!S.f.b7_c2_edurDay},
@@ -87311,21 +87340,22 @@ const B7CH3 = {
     go:'Wake', node:'b7_c3_start'},
 
   areas:[
-    /* 16 x 12 (b5_c4_wood, night). T trees  , litter  . the wood floor  H the farmhouse at the wood's edge (the Third's floor, the fire)  > out east, down into the valley */
+    /* 16 x 12 (b5_c4_wood, night). T trees  , litter  . the wood floor  H the farmhouse at the wood's edge (the Third's floor, the fire)  > out east, down into the valley
+       Terrain kit (25b, v13.22): more trees at the wood's edges (T), fallen trunks (5), rocks (4), the trodden ground of the lie-up (:), tufts (*). No folk: the column lies hidden here. */
     { id:'b7_c3_wood', title:'A wood above a farm valley', sub:'Dusk · the column\'s lie-up', hint:'Tap ground to move · tap a figure to talk · the farmhouse is at the wood\'s edge, the valley is east', decor:'b5_c4_wood', dark:true,
       map:[ "TTTTTTTTTTTTTTTT",
-            "T,,..T....,..TTT",
+            "TT,..T..*.,.TTTT",
             "T,H.......,....T",
-            "T.........T....T",
-            "TT....,.......,T",
-            "T....T.........>",
-            "T,.........T...T",
-            "T....,.........T",
-            "T..T.......,...T",
-            "T,.....T....s..T",
-            "TT,,........,TTT",
+            "T.*.......T...*T",
+            "TTT...,.......,T",
+            "T....T...5.....>",
+            "T,.:.......T.*.T",
+            "T.....,......4.T",
+            "T..T.....5.,...T",
+            "TT*....T....s..T",
+            "TTTT.4......,TTT",
             "TTTTTTTTTTTTTTTT" ],
-      walk:'.,', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
+      walk:'.,:*', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
       quest:()=> !S.f.b7_c3_orders1 ? 'The lieutenant, under the trees.' : !b73WennaSettled() ? 'A Shake fisher at the column\'s edge, who knows the ground.' : 'East, down into the valley. The column moves at full dark.',
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
@@ -87336,21 +87366,22 @@ const B7CH3 = {
         {id:'keneb', name:'Fist Keneb', kind:'keneb', x:11, y:3, node:()=>'b7_c3_keneb', show:()=>b73Ph() === 1 && !!S.f.b7_c3_orders1, fresh:()=>!S.f.b7_c3_keneb} ] },
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
-       field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
+       field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house
+       Terrain kit (25b, v13.22): field banks and hedgerows (1, 2), a farm cart left in the field (7), grain sacks (8), the trodden ground by the fire (:), tufts (*). No folk: the column moves unseen. */
     { id:'b7_c3_fields', title:'The farm valley', sub:'Night · the column in the fields', hint:'Tap ground to move · tap a figure to talk · the farm is west, the village north-east, the factor\'s house further east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,#,,,,,,,,,#",
-            "#,,C,,,,,,,,V,,#",
-            "#,,,,,,,#,,,,,,#",
+            "#22,,#,,*,22,,2#",
+            "#,,C,,,,,,,,V,1#",
+            "#1,,,,,,#,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,k,,,,,#,,,,#",
-            "#,,,,,,,r,,,,,,#",
-            "#,#,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,,#,#",
-            "#,,x,,,,,,,,,,,#",
+            "#,,*,,,,,7,,,,,#",
+            "#,,,k,,,,,#,,*,#",
+            "#2,,,,,8,r,,,,,#",
+            "#,#,,:F:,,,,,,1#",
+            "#1,,,,,,,*,,,#1#",
+            "#11x,,22,,,,,11#",
             "################" ],
-      walk:'.,', triggers:{C:'b7_c3_farm_view', V:'b7_c3_village', k:'b7_c3_track', F:'b7_c3_fire', '<':'b7_c3_fields_back', '>':'b7_c3_fields_east'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{C:'b7_c3_farm_view', V:'b7_c3_village', k:'b7_c3_track', F:'b7_c3_fire', '<':'b7_c3_fields_back', '>':'b7_c3_fields_east'}, start:{x:1, y:4},
       quest:()=> !S.f.b7_c3_orders2 ? 'The lieutenant, by the hedge.'
         : !S.f.b7_c3_farmDone ? 'The farm to the west, where the crossbowmen lie.'
         : !S.f.b7_c3_prisoners ? 'The prisoners from the farm, by the hedge.'
@@ -87363,21 +87394,23 @@ const B7CH3 = {
         {id:'pris', name:'Letherii prisoners', kind:'b5_letherii', x:4, y:4, node:()=>'b7_c3_prisoners', show:()=>!!S.f.b7_c3_farmDone && !S.f.b7_c3_prisoners, fresh:()=>true},
         {id:'road', name:'Fires on the old road', kind:'b5_edur', x:14, y:5, node:()=>'b7_c3_road_start', show:()=>S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone, fresh:()=>true} ] },
 
-    /* 16 x 12 (b5_c5_farm, night). . the yard  , trodden ash and weeds  # stone walls  B the house door (the counting room)  b the barn  w the well  e the gate, to the lane */
+    /* 16 x 12 (b5_c5_farm, night). . the yard  , trodden ash and weeds  # stone walls  B the house door (the counting room)  b the barn  w the well  e the gate, to the lane
+       Terrain kit (25b, v13.22): the factor's sacks and stores (8), the water butt (&), his cart (7), lanterns (!), the worn way from the gate to the door (_), trodden ground (:), weeds (*), a bank outside the wall (1), and one of the house's Indebted at the water (folk). */
     { id:'b7_c3_house', title:'The factor\'s house', sub:'Night · a holding inland', hint:'Tap ground to move · the house door is at the top left · the barn top right · the gate is south', decor:'b5_c5_farm', dark:true,
       map:[ "################",
-            "#......#.......#",
-            "#......#..bb...#",
+            "#88..*.#..!...8#",
+            "#8.....#..bb..&#",
             "#..##BB##......#",
-            "#..............#",
-            "#........,.....#",
-            "#,.....w.......#",
-            "#..............#",
-            "##............##",
-            ",#,,...........#",
-            ",,#,,..........#",
+            "#.....__.....!.#",
+            "#.*...._.,.*...#",
+            "#,.....w_......#",
+            "#.8.....:....8.#",
+            "##......_.....##",
+            "1#,,....__.....#",
+            "11#,*.:.._...7.#",
             ",,,,,,,ee,,,,,,," ],
-      walk:'.,', triggers:{B:'b7_c3_door', b:'b7_c3_fire', w:'b7_c3_well', e:'b7_c3_gate'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{B:'b7_c3_door', b:'b7_c3_fire', w:'b7_c3_well', e:'b7_c3_gate'}, start:{x:7, y:10},
+      folk:[{x:13, y:6, kind:'b8_c4_carrier', name:'An Indebted water-carrier', line:['Forty buckets a day for the house. The factor counts them. I count them too. We never get the same number.', 'If the factor asks, I never saw you. He never asks me anything, so that will be easy.'], wander:1}],
       quest:()=> !b73Key() ? 'The counting room, through the house door.' : 'The barn. The column lies up here by day.',
       npcs:[
         {id:'steward', name:'The factor\'s steward', kind:'b5_c1_clerk', x:11, y:6, node:()=>'b7_c3_steward', fresh:()=>!S.f.b7_c3_steward},
@@ -88419,21 +88452,23 @@ const B7CH4 = {
     go:'Into the lines', node:'b7_c4_tent'},
 
   areas:[
-    /* 16 x 12 (b7_c4_lines, dusk). , trodden grass  . the lane  = tents  F the Sixth's fire  ^ the hill road (the banners above)  > east to the horse lines */
+    /* 16 x 12 (b7_c4_lines, dusk). , trodden grass  . the lane  = tents  F the Sixth's fire  ^ the hill road (the banners above)  > east to the horse lines
+       Terrain kit (25b, v13.22): the camp's banks and scrub at its edges (1, 2), more of the army's tents (6), other companies' fires (0), spears racked (%), crates (8), a lantern (!), the trodden ground by the fire (:), tufts (*), and three of the camp (folk). */
     { id:'b7_c4_lines', title:'Kravos Hill · the Whitefinders\' lines', sub:'Dusk · below the hill', hint:'Tap ground to move · tap a figure to talk · the hill road is north-west, the horse lines east', decor:'b7_c4_lines', dark:true,
-      map:[ "^,,==,,.,,==,,,,",
-            ",,,==,,.,,==,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,==,,",
-            ",,==,,,F,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,==,,,",
-            ",,==,,,.,,,==,,>",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,," ],
-      walk:'.,', triggers:{F:'b7_c4_fire', '^':'b7_c4_hill', '>':'b7_c4_to_horse'}, start:{x:7, y:10},
+      map:[ "^,,==,1.1,==1112",
+            ",,%==,,.,*==6,,6",
+            ",:,,,0,.,,8,,,*,",
+            "1,==,,,.,,,,==,1",
+            "1,==,:,F,:,,==,1",
+            ",8,,,,,.,,,,,,:,",
+            "2,%,,,,.,,:,,,,1",
+            ",,==,*,.,8,==,,1",
+            ",*==,0,.,,,==,,>",
+            "6,,,,,,.,,,,:,%,",
+            ",!,,8,,.,,,,0,,6",
+            "11,,,,1.1,,*,112" ],
+      walk:'.,:*', triggers:{F:'b7_c4_fire', '^':'b7_c4_hill', '>':'b7_c4_to_horse'}, start:{x:7, y:10},
+      folk:[{x:4, y:9, kind:'b5_c6_whitefinder', name:'A Whitefinder at the cook-pot', line:'They count us in the morning and count us again at night, and the numbers never agree. Somebody is being paid for the difference.', wander:1}, {x:11, y:9, kind:'b5_c1_bookman', name:'A company bookkeeper', line:'Every spear is on the books twice: once as issued, once as owed. The man carrying it is on there three times.'}, {x:14, y:2, kind:'b8_c2_carter', name:'An Indebted porter', line:'I carry the company\'s water. The company carries my debt. Neither of us ever gets to put it down.', wander:1}],
       quest:()=> b74Ph() >= 3 ? (!S.f.b7_c4_patriotsDone ? 'The horse lines, east. The grey coats have a wagon there.' : !b74Key() ? 'The fire. Two people are waiting at it.' : 'The fire. Dawn is coming.')
         : !S.f.b7_c4_ennic ? 'Finadd Ennic, by the battalion standard.' : 'The fire, and then sleep. The muster is in the morning.',
       npcs:[
@@ -88444,21 +88479,23 @@ const B7CH4 = {
         {id:'visit', name:'Two visitors at the fire', kind:'b5_letherii', x:6, y:5, node:()=>'b7_c4_key', show:()=>b74Ph() === 3 && !!S.f.b7_c4_patriotsDone && !b74Key(), fresh:()=>!b74Key()} ] },
 
     /* 16 x 12 (b5_c6_dissent, day). , grass  . the road through the gate  # the palisade  G the gate, the crowd beyond  c a cart  t the muster
-       tables  s a sutler's cart  < back to the lines */
+       tables  s a sutler's cart  < back to the lines
+       Terrain kit (25b, v13.22): banks and scrub at the field's edges (1, 2), the battalions' tents (6), a sutler's stall and a cart (9, 7), crates (8), spears racked (%), a cookfire (0), a lantern (!), the ground trodden round the gate and the tables (:), tufts (*), and three of the muster (folk). */
     { id:'b7_c4_gate', title:'Kravos Hill · the muster gate', sub:'Morning · the battalions counted', hint:'Tap ground to move · tap a figure to talk · the crowd is at the gate, the tables west', decor:'b5_c6_dissent',
       map:[ "#######GG#######",
-            ",,,,,,,..,,,,,,,",
-            ",c,,,,,..,,,,,c,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,t,,..,,s,,,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,..,,,,,,,",
-            "<,,,,,,..,,,,,,," ],
-      walk:'.,', triggers:{G:'b7_c4_crowd', t:'b7_c4_tables', s:'b7_c4_sutler', '<':'b7_c4_gate_back'}, start:{x:7, y:10},
+            "1,:,8:,..,:9,,,1",
+            ",c,8,,:..,,,6,c,",
+            "1,%,,*,..,,:,,,1",
+            ",,8,t,:..,:s9,7,",
+            "2,,:,,,..,,,,*,2",
+            ",,6,,,,..,,,6,!,",
+            "1,,,,,*..,,,,,%1",
+            ",,%,0,,..,*,,8,,",
+            "2,6,,8,..,:,6,,2",
+            ",,,,*,,..,,:,,8,",
+            "<,1,*,,..,,,,112" ],
+      walk:'.,:*', triggers:{G:'b7_c4_crowd', t:'b7_c4_tables', s:'b7_c4_sutler', '<':'b7_c4_gate_back'}, start:{x:7, y:10},
+      folk:[{x:10, y:2, kind:'b5_c7_child', name:'A sutler\'s girl', line:'Bread. A dock a loaf, or two on the company\'s chit. The chit is cheaper. It costs more later.', wander:1}, {x:12, y:7, kind:'b5_c5_refugee', name:'A man waiting to be counted', line:'I came to work off my father\'s debt in the levy. The clerk says it has grown since breakfast.', wander:1}, {x:4, y:6, kind:'b8_c4_carrier', name:'A water-seller', line:'Water is free at the river. Here it is a dock. The river is a long walk past the Edur.'}],
       quest:()=> !S.f.b7_c4_riotDone ? 'The gate. The crowd will not let the levies in, or out.' : !S.f.b7_c4_sorvanMet ? 'A Bluerose lancer with no horse, by the empty horse pickets.' : 'Back to the lines at dusk.',
       npcs:[
         {id:'sorvan', name:'A lancer with no horse', kind:'sorvan', x:2, y:7, node:()=>'b7_c4_sorvan', show:()=>!S.f.b7_c4_sorvanMet || b74SorvanWaits(), fresh:()=>!S.f.b7_c4_sorvanMet},
@@ -88466,42 +88503,46 @@ const B7CH4 = {
         {id:'agent', name:'A grey coat at the tables', kind:'b7_agent', x:5, y:5, node:()=>'b7_c4_tables', fresh:()=>!S.f.b7_c4_badge} ] },
 
     /* 16 x 12 (b7_c4_lines, night). , grass  H the horse pickets  = tents (the provost's, the officers' at the back)  w the provost's wagon
-       < west, back to the Whitefinders' lines */
+       < west, back to the Whitefinders' lines
+       Terrain kit (25b, v13.22): banks and scrub at the edges (1, 2), more remounts on a picket rope (@), the ground churned by the lines (:), feed sacks and saddles (8), the water butt (&), spears (%), a lantern (!), a grooms' tent (6), a fire (0), tufts (*), and a farrier (folk). */
     { id:'b7_c4_horse', title:'Kravos Hill · the horse lines', sub:'Night · the remounts', hint:'Tap ground to move · tap a figure to talk · the wagon is east, the pickets north', decor:'b7_c4_lines', dark:true,
-      map:[ ",,,,,,,,,,,,,,,,",
-            ",HHHHHH,,,,,==,,",
-            ",,,,,,,,,,,,==,,",
-            ",HHHHHH,,,,,,,,,",
-            ",,,,,,,,,,,,,,w,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,==,,,,,,,,,,",
-            ",,,,==,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            "<,,,,,,,,,,,,,,," ],
-      walk:',', triggers:{H:'b7_c4_horses', w:'b7_c4_wagon', '<':'b7_c4_horse_back'}, start:{x:1, y:10},
+      map:[ "1112,*,,,,,1112,",
+            ",HHHHHH,8,,,==,,",
+            ",::::::,,*,,==!,",
+            ",HHHHHH,,&,,,,,1",
+            ",,:,,:,,,,,8,,w,",
+            "1,,,*,,,:,,,,,,1",
+            ",,%,==,,,,@@@,,1",
+            "2,,,==,8,,:::,,,",
+            ",,,,,,,,,,,,,*,2",
+            "1,*,,:,,0,,,,6,1",
+            ",,,,8,,,,,*,,,,,",
+            "<,,,6,,,,,,8,112" ],
+      walk:',:*', triggers:{H:'b7_c4_horses', w:'b7_c4_wagon', '<':'b7_c4_horse_back'}, start:{x:1, y:10},
+      folk:[{x:9, y:8, kind:'b8_c2_drover', name:'A farrier', line:'Every horse here belongs to the crown, every shoe on it to the smith, and the smith to a moneylender. I only hold the hoof.', wander:1}],
       quest:()=> !S.f.b7_c4_patriotsDone ? 'The provost\'s wagon. The grey coats are waiting by it.' : 'Back to the lines. There are visitors at the fire.',
       npcs:[
-        {id:'groom', name:'An Indebted groom', kind:'b5_c5_refugee', x:7, y:2, node:()=>'b7_c4_grooms', fresh:()=>!S.f.b7_c4_groomsTried},
+        {id:'groom', name:'An Indebted groom', kind:'b8_c2_carter', x:7, y:2, node:()=>'b7_c4_grooms', fresh:()=>!S.f.b7_c4_groomsTried},
         {id:'sorvanw', name:'Sorvan, at the pickets', kind:'sorvan', x:3, y:4, node:()=>'b7_c4_horse_trick', show:()=>b74SorvanWaits() && !S.f.b7_c4_horseTried, fresh:()=>!S.f.b7_c4_horseTried},
         {id:'pat', name:'Grey coats by the wagon', kind:'b7_agent', x:12, y:5, node:()=>'b7_c4_patriots', show:()=>!S.f.b7_c4_patriotsDone, fresh:()=>!S.f.b7_c4_patriotsDone} ] },
 
-    /* 16 x 12 (b7_c4_lines, dawn): the same lines by first light */
+    /* 16 x 12 (b7_c4_lines, dawn): the same lines by first light
+       Terrain kit (25b, v13.22): the lines dressed as at dusk, and two of the camp getting up to the drums (folk). */
     { id:'b7_c4_dawn', title:'Kravos Hill · the Whitefinders\' lines', sub:'Dawn · the drums on the hill', hint:'Tap ground to move · tap a figure to talk · the fire is in the middle of the lines', decor:'b7_c4_lines',
-      map:[ "^,,==,,.,,==,,,,",
-            ",,,==,,.,,==,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,==,,",
-            ",,==,,,F,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,==,,,",
-            ",,==,,,.,,,==,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,," ],
-      walk:'.,', triggers:{F:'b7_c4_fire', '^':'b7_c4_hill'}, start:{x:7, y:10},
+      map:[ "^,,==,1.1,==1112",
+            ",,%==,,.,*==6,,6",
+            ",:,,,0,.,,8,,,*,",
+            "1,==,,,.,,,,==,1",
+            "1,==,:,F,:,,==,1",
+            ",8,,,,,.,,,,,,:,",
+            "2,%,,:,.,,:,,8,1",
+            ",,==,*,.,8,==,,1",
+            ",*==,0,.,,,==,,,",
+            "6,*,,,,.,,,,:,%,",
+            ",!,,8,,.,,,,0,,6",
+            "11,,,,1.1,,*,112" ],
+      walk:'.,:*', triggers:{F:'b7_c4_fire', '^':'b7_c4_hill'}, start:{x:7, y:10},
+      folk:[{x:4, y:9, kind:'b5_c6_whitefinder', name:'A Whitefinder buckling on', line:'Drums on the hill before breakfast. Somebody up there has decided what today is.', wander:1}, {x:12, y:5, kind:'b5_c4_grassjacket', name:'A levy with a new spear', line:'They gave me the spear on credit. If I die holding it, my sister owes for it.'}],
       quest:()=> !S.f.b7_c4_dawnEnnic ? 'The Finadd, by the standard.' : 'The fire. The army moves when the hill says.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>'b7_c4_dawn_ennic', fresh:()=>!S.f.b7_c4_dawnEnnic} ] } ],
@@ -89312,7 +89353,7 @@ b74Item('b7_c4_musterbadge', 'A muster badge', '<ellipse cx="120" cy="104" rx="5
    Notes for later chapters: docs/rg-ch5-notes.md. */
 /* FOR THE ARTIST (125b): names this file uses.
    Items: ART['item/b7_c5_villageshield'], ['item/b7_c5_edurblade'].
-   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the mill-woman, the Indebted, the boy), b5_c1_clerk (the
+   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b8_c5_benna (the mill-woman, floury to the elbow), b5_c7_child (the boy), b5_c1_clerk (the
    bailiff), b5_edur (Edur scouts seen on the road).
    Backdrops: b7_village (120's, yours: plaster and thatch, a well in the square, the factor's house the only one in stone; by day in
    phase 2, at dusk in phase 3; on 'hold' with the roof-cusser fired, the factor's roof gone and a thin smoke), and three this file adds
@@ -89404,21 +89445,22 @@ const B7CH5 = {
     go:'March', node:'b7_c5_start'},
 
   areas:[
-    /* 16 x 12 (plain_night). , grass  . the road  # hedge  r rock  x a post  F the halt  < back west, toward the column  > east, to the village by the river */
+    /* 16 x 12 (plain_night). , grass  . the road  # hedge  r rock  x a post  F the halt  < back west, toward the column  > east, to the village by the river
+       Terrain kit (25b, v13.22): hedgerows and their banks along the fields (2, 1), a cart abandoned on the verge (7), a dead tree (5), the trodden ground at the halt (:), tufts (*). No folk: the marines move unseen here. */
     { id:'b7_c5_lane', title:'The river road', sub:'Night · the funnel', hint:'Tap ground to move · tap a figure to talk · the village is east, the river\'s edge south-east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,,,#,,,,,,,#",
-            "#,,r,,,,,,,,#,,#",
+            "#22,,,,#,,,,,22#",
+            "#1,r,,*,,,,,#,1#",
             "#,,,,,#,,,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,x,,,,,,,r,,,#",
-            "#,,,,,,,,#,,,,,#",
-            "#,#,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,,#,#",
-            "#,,,,,,,,,,,,,R#",
+            "#,,,,,,,*,,,,,,#",
+            "#2,x,,,,,,,r,,,#",
+            "#,,,,7,,,#,,,*,#",
+            "#,#,,:F:,,,,,,2#",
+            "#1,,,,,,,5,,,#,#",
+            "#11,*,,22,,,,,R#",
             "################" ],
-      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east', R:'b7_c5_reeds'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east', R:'b7_c5_reeds'}, start:{x:1, y:4},
       quest:()=> !S.f.b7_c5_orders ? 'The lieutenant, in the ditch by the road.'
         : !S.f.b7_c5_roadDone ? 'Something on the road ahead, between the Third and the river.'
         : !S.f.b7_c5_boy ? 'Somebody small in the hedge, waiting.'
@@ -89432,45 +89474,48 @@ const B7CH5 = {
         {id:'hellian', name:'A sergeant with a jug', kind:'b7v_hellian', x:10, y:7, node:()=>'b7_c5_hellian', show:()=>b75Ph() === 1 && !!S.f.b7_c5_orders && (!S.f.b7_c5_hellian || /^b7_c5_hellian/.test(S.node || '')), fresh:()=>!S.f.b7_c5_hellian} ] },
 
     /* 16 x 12 (b5_c5_farm). . the street and square  , trodden ash  # walls and houses  B the factor's door (his cellar: the Third's floor,
-       the fire)  w the well  e the north gate, to the lane  > the mill-race and the river, south */
+       the fire)  w the well  e the north gate, to the lane  > the mill-race and the river, south
+       Terrain kit (25b, v13.22): market stalls in the square (9), flour sacks (8), the miller's cart (7), water butts (&), the ground trodden round the well (:), weeds at the walls (*), and two of the village (folk). */
     { id:'b7_c5_street', title:'The mill village', sub:'A village on the river · the factor gone', hint:'Tap ground to move · tap a figure to talk · the factor\'s house is top left, the bailiff\'s door beside it, the meeting house top right, the north gate at the top, the mill-race south', decor:'b5_c5_farm', dark:false,
       map:[ "#######ee#######",
-            "#..BB#.d...#.h.#",
-            "#....#.....#...#",
-            "#..............#",
+            "#8.BB#.d...#.h8#",
+            "#8...#.....#.&.#",
+            "#...9......9...#",
             "##.....,.....###",
             "#......w.......#",
-            "#.....,q,......#",
-            "#..............#",
-            "###...........##",
-            "#,,...........,#",
+            "#.&...:q:....7.#",
+            "#8.............#",
+            "###...8.......##",
+            "#,,*.........8*#",
             "#,,,,.m.....,,,#",
             "########>>######" ],
-      walk:'.,', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square', m:'b7_c5_mill'}, start:{x:8, y:9},
+      walk:'.,:*', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square', m:'b7_c5_mill'}, start:{x:8, y:9},
+      folk:[{x:3, y:7, kind:'b3_c5_villager', name:'An old man on a bench', line:'The factor is gone, and his ledgers with him. Forty years I owed that man. I feel lighter, and I do not trust it.', wander:1}, {x:10, y:7, kind:'b8_c2_carter', name:'A carter from the mill', line:'Flour goes down the river to Letheras and the debt comes back up it. The wheel turns either way.', wander:1}],
       quest:()=> b75Ph() >= 3 && !b75Key() ? 'The mill-woman, in the square. The Edur are coming.'
         : b75Ph() >= 3 ? (b75Key() === 'hold' ? 'The square. Hold it.' : 'South, to the mill-race and the river path.')
         : !S.f.b7_c5_miller ? 'The mill-woman, who hid the Third.'
         : 'The village by day. At dusk the Edur will be wherever they are going.',
       npcs:[
-        {id:'miller', name:'The mill-woman', kind:'b5_c5_refugee', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
-        {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c5_refugee', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
+        {id:'miller', name:'The mill-woman', kind:'b8_c5_benna', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
+        {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c7_child', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
         {id:'women', name:'Women at the well', kind:'b5_c5_refugee', x:6, y:5, node:()=>'b7_c5_well', show:()=>b75Ph() === 2, fresh:()=>!!S.f.b7_c5_lane && !S.f.b7_c5_shortTried && !S.f.b7_c5_bailiffDone} ] },
 
-    /* 16 x 12 (b5_c3_bank, night). ~ the river  , reeds  . the path  # rock  x a stake  F the lie-up in the reeds (the fire)  < west, the village across the fields */
+    /* 16 x 12 (b5_c3_bank, night). ~ the river  , reeds  . the path  # rock  x a stake  F the lie-up in the reeds (the fire)  < west, the village across the fields
+       Terrain kit (25b, v13.22): a light touch: rocks in the reeds (4), a dead snag (5), the trodden ground at the lie-up (:). No folk. */
     { id:'b7_c5_bank', title:'The riverbank', sub:'Night · the column pulling together', hint:'Tap ground to move · tap a figure to talk · the lie-up is in the reeds, a mooring stake by the water, the village back across the fields', decor:'b5_c3_bank', dark:true,
       map:[ "################",
-            "#,,,,,,,,,,,,,,#",
-            "#,.....,,,.....#",
-            "<..............#",
-            "#,..,....F.....#",
+            "#,,,4,,,,,,,,5,#",
+            "#,....,,,.....4#",
+            "<..........,...#",
+            "#,..,..:.F.....#",
             "#,,......,,....#",
             "#...#......,,..#",
-            "#,,.....x......#",
+            "#,,.4...x......#",
             "#~~~,,,,,,,,~~~#",
             "#~~~~~~~~~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
-      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_across', x:'b7_c5_water'}, start:{x:2, y:3},
+      walk:'.,:', triggers:{F:'b7_c5_fire', '<':'b7_c5_across', x:'b7_c5_water'}, start:{x:2, y:3},
       quest:()=> !S.f.b7_c5_lt3 ? 'The lieutenant, on the path.' : 'The lie-up in the reeds. At first light, on with the column.',
       npcs:[
         {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:6, y:2, node:()=>'b7_c5_lt3', fresh:()=>!S.f.b7_c5_lt3},
@@ -90591,21 +90636,23 @@ const B7CH6 = {
 
   areas:[
     /* 16 x 12 (b7_c6_field, night). R the ridge's scree foot  ^ the ridge path (never up it)  , trodden grass  . the lane along the line
-       = a tent  F the Sixth's fire  p the stake line facing the plain  > the plain's edge */
+       = a tent  F the Sixth's fire  p the stake line facing the plain  > the plain's edge
+       Terrain kit (25b, v13.22): banks and scrub at the line's ends (1, 2), more of the army's tents (6), other companies' fires (0), spears racked (%), crates (8), a lantern (!), the trodden ground by the fire (:), tufts (*), and two of the line (folk). */
     { id:'b7_c6_line', title:'Before Letheras · the line below the ridge', sub:'Night · the last before the field', hint:'Tap ground to move · tap a figure to talk · the ridge is north, the plain south', decor:'b7_c6_field', dark:true,
       map:[ "RRRRRRR^RRRRRRRR",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
+            "1,%,6,,.,,8,,6,1",
+            ",,==,0,.,,,,==,,",
+            "2,,,,,:.,,,,,,,2",
             "................",
-            ",,,,,F,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,==,,,,,,,,==,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
+            ",8,,:F:,,,,0,,%,",
+            ",,,,,,,,*,,,,,,1",
+            ",,==,,6,,,,,==,,",
+            "1,,,,,,,8,,,,,!,",
+            ",%,,0,,*,,,6,,,2",
+            "2,,6,,,,,,:,,*,1",
             "pppppppp>ppppppp" ],
-      walk:'.,', triggers:{F:'b7_c6_fire', '^':'b7_c6_ridge', '>':'b7_c6_plain'}, start:{x:5, y:8},
+      walk:'.,:*', triggers:{F:'b7_c6_fire', '^':'b7_c6_ridge', '>':'b7_c6_plain'}, start:{x:5, y:8},
+      folk:[{x:2, y:8, kind:'b5_c6_whitefinder', name:'A Whitefinder with a whetstone', line:'The mages on the ridge eat better than we do. I suppose they have to. Nobody wants a hungry mage.', wander:1}, {x:10, y:9, kind:'b5_c4_grassjacket', name:'A levy at the next fire', line:'My debt-holder says if I die tomorrow the debt passes to my brother. So I am to try very hard not to, for his sake.', wander:1}],
       quest:()=> !S.f.b7_c6_ennic ? 'Finadd Ennic, by the battalion standard.' : !S.f.b7_c6_visitDone ? (b76K4() === 'edur' ? 'An Edur has come back from the forward camp to the Sixth\'s fire.' : 'The captain from the horse-lines tent is walking the line.') : 'The fire, and then sleep. The field is in the morning.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b7_c6_ennic', fresh:()=>!S.f.b7_c6_ennic},
@@ -90617,21 +90664,23 @@ const B7CH6 = {
         {id:'visitE', name:'The eldest Edur', kind:'b5_edur', x:6, y:6, node:()=>'b7_c6_visit', show:()=>b76K4() === 'edur' && !S.f.b7_c6_visitDone, fresh:()=>!S.f.b7_c6_visitDone},
         {id:'visitL', name:'The captain', kind:'b5_letherii', x:6, y:6, node:()=>'b7_c6_visit', show:()=>b76K4() === 'letherii' && !S.f.b7_c6_visitDone, fresh:()=>!S.f.b7_c6_visitDone} ] },
 
-    /* 16 x 12 (b7_c6_field, dawn): the same line by day */
+    /* 16 x 12 (b7_c6_field, dawn): the same line by day
+       Terrain kit (25b, v13.22): the line dressed as at night, and two of it awake at first light (folk). */
     { id:'b7_c6_dawn', title:'Before Letheras · the line below the ridge', sub:'Dawn · the field', hint:'Tap ground to move · tap a figure to talk · the plain is south, past the stakes', decor:'b7_c6_field',
       map:[ "RRRRRRR^RRRRRRRR",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
+            "1,%,6,,.,,8,,6,1",
+            ",,==,0,.,,,,==,,",
+            "2,,,,,:.,,,,,,,2",
             "................",
-            ",,,,,F,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,==,,,,,,,,==,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,,,,,,,,,",
+            ",8,,:F:,,,,0,,%,",
+            ",,,,,,,,*,,,,,,1",
+            ",,==,,6,,,,,==,,",
+            "1,,,,,,,8,,,,,!,",
+            ",%,,0,,*,,,6,,,2",
+            "2,,6,,,,,,:,,*,1",
             "pppppppp>ppppppp" ],
-      walk:'.,', triggers:{F:'b7_c6_fire', '^':'b7_c6_ridge', '>':'b7_c6_plain'}, start:{x:5, y:8},
+      walk:'.,:*', triggers:{F:'b7_c6_fire', '^':'b7_c6_ridge', '>':'b7_c6_plain'}, start:{x:5, y:8},
+      folk:[{x:4, y:8, kind:'b5_c6_whitefinder', name:'A Whitefinder at first light', line:'The Edur are packing up on the ridge. Nobody has told us yet whether that is good.', wander:1}, {x:12, y:6, kind:'b5_c4_grassjacket', name:'A levy counting coins', line:'Three docks. Two I owe, and one I owe twice. That is my whole fortune, Sergeant.', wander:1}],
       quest:()=> !S.f.b7_c6_dawnEnnic ? 'The Finadd, by the standard.' : !S.f.b7_c6_dome ? 'The stakes, and the plain beyond them. Something on the ridge is nearly finished.' : !S.f.b7_c6_homeDone ? 'The Edur are coming back across the plain.' : !S.f.b7_c6_orders ? 'The Finadd. A rider has come down from the hill.' : 'The fire. The army marches for the river.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>!S.f.b7_c6_dawnEnnic ? 'b7_c6_dawn_ennic' : S.f.b7_c6_homeDone ? 'b7_c6_orders' : 'b7_c6_dawn_ennic', fresh:()=>!S.f.b7_c6_dawnEnnic || (!!S.f.b7_c6_homeDone && !S.f.b7_c6_orders)},
@@ -90641,41 +90690,44 @@ const B7CH6 = {
         {id:'homeL', name:'The captain', kind:'b5_letherii', x:8, y:9, node:()=>'b7_c6_home', show:()=>b76K4() === 'letherii' && !!S.f.b7_c6_dome && !S.f.b7_c6_homeDone, fresh:()=>!S.f.b7_c6_homeDone},
         {id:'deserters', name:'Levies running from the ridge', kind:'b5_c5_refugee', x:2, y:3, node:()=>'b7_c6_deserters', show:()=>!!S.f.b7_c6_dome && !S.f.b7_c6_deserters && !S.f.b7_c6_orders, fresh:()=>!S.f.b7_c6_deserters} ] },
 
-    /* 16 x 12 (b5_c3_bank, day). ~ the river  , reeds  . the bank path  # rock  x a dead tree  ^ the water's edge, where the boats come in */
+    /* 16 x 12 (b5_c3_bank, day). ~ the river  , reeds  . the bank path  # rock  x a dead tree  ^ the water's edge, where the boats come in
+       Terrain kit (25b, v13.22): rocks and snags along the bank (4, 5), banks at the field's edges (1, 2), what came off the boats (8 crates, & a cask), the worn way up from the landing (_), trodden ground (:), tufts (*). No folk: a battle's morning. */
     { id:'b7_c6_bank', title:'The Lether River · the bank below the city', sub:'Day · the landing', hint:'Tap ground to move · tap a figure to talk · the river is north, the boats coming in', decor:'b5_c3_bank',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
-            ",,,,,^,,,,,,x,,,",
-            ",,..............",
-            ",...,,,,,,,,,...",
-            "..#.............",
-            "................",
-            ",,,,.......,,,,,",
-            ",,,,.......,,#,,",
-            ",x,,.......,,,,,",
-            ",,,,.......,,,,,",
-            ",,,,.......,,,,," ],
-      walk:'.,', triggers:{'^':'b7_c6_ships'}, start:{x:7, y:10},
+            ",,4,,^,,*,,,x,5,",
+            ",,..:_......8.*.",
+            ",...,_,,,,,,,...",
+            "..#..._:.....&.1",
+            "1.....__........",
+            "1,,,...__..,,,,1",
+            ",2,,...:_..,,#,1",
+            ",x,,....__.,4,,1",
+            "1,,4...._..,,*,2",
+            "11,,...._..,,112" ],
+      walk:'.,_:*', triggers:{'^':'b7_c6_ships'}, start:{x:7, y:10},
       quest:()=> !S.f.b7_c6_landingDone ? 'The water\'s edge. The boats are coming in.' : !b76Key() ? 'The Finadd. The line either side is going.' : 'The road to the city.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:6, node:()=>b76BankNode(), fresh:()=>!S.f.b7_c6_bankEnnic || (!!S.f.b7_c6_landingDone && !b76Key()) || (!!b76Key() && (S.f.b7_c6_ph || 0) < 4)},
         {id:'boats', name:'Soldiers off the boats', kind:'b7_malregular', x:7, y:3, node:()=>'b7_c6_boats', show:()=>!S.f.b7_c6_landingDone, fresh:()=>!S.f.b7_c6_landingDone} ] },
 
-    /* 16 x 12 (b7_c6_field, night). W the walls of Letheras  G a gate  , grass  . the road  = a tent  F the Sixth's fire */
+    /* 16 x 12 (b7_c6_field, night). W the walls of Letheras  G a gate  , grass  . the road  = a tent  F the Sixth's fire
+       Terrain kit (25b, v13.22): rubble at the wall's foot (3), banks and scrub at the edges (1, 2), tents (6), fires (0), spears racked (%), bundles and crates (8), a handcart (7), a lantern (!), trodden ground (:), tufts (*), and two of the people coming out of the city (folk). */
     { id:'b7_c6_walls', title:'Letheras · under the walls', sub:'Night · after the river', hint:'Tap ground to move · tap a figure to talk · the gate is north', decor:'b7_c6_field', dark:true,
       map:[ "WWWWWWWGWWWWWWWW",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,,,,,",
-            ",,,,,,,.,,,==,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,F,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,," ],
-      walk:'.,', triggers:{F:'b7_c6_fire', G:'b7_c6_gate'}, start:{x:7, y:10},
+            "3,,8,,:.:,,,7,33",
+            ",,*,8,,.,,,,,,8,",
+            ",,==,,,.,,*,,,2,",
+            "1,%,,,,.,,,==6,1",
+            ",,,,,,:.,,,*,0,,",
+            "2,8,F:,.,,,,8,,1",
+            ",*,,,,,.,:6,,,*,",
+            ",,==,:,.,,,,==,,",
+            "1,0,,*,.,:8,,,%1",
+            ",,,8,,:.,,*,,,11",
+            "11,6,,,.,,!,,112" ],
+      walk:'.,:*', triggers:{F:'b7_c6_fire', G:'b7_c6_gate'}, start:{x:7, y:10},
+      folk:[{x:12, y:2, kind:'b5_c5_refugee', name:'A woman with a bundle', line:'Every lender on our street shut his door at noon. When the lenders hide, sensible people leave.', wander:1}, {x:2, y:10, kind:'b3_c5_villager', name:'An old man with a handcart', line:'I still owe for the house I am leaving. If it burns, do I still owe it? Nobody at the gate could tell me.', wander:1}],
       quest:()=> !b76Road() ? 'The Finadd, at the Sixth\'s fire. He has a question.' : 'The gate, in the morning. The fire until then.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:5, y:5, node:()=>'b7_c6_road', fresh:()=>!b76Road()},
@@ -91555,7 +91607,7 @@ b76Item('b7_c6_fingershield', 'A Whitefinder shield', '<ellipse cx="120" cy="114
 /* FOR THE ARTIST (127b): names this file uses.
    Items: ART['item/b7_c7_lethcloak'], ['item/b7_c7_kingscoin'].
    Figures, all existing: b2soldier (the lieutenant, marines, the Fist's officers far off), b5_c5_refugee (refugees, the water-woman, the
-   old woman on the bridge, the crowd), b5_letherii (the gate's prisoners, the Whitefinders far off), b5_c1_clerk (the moneychanger),
+   old woman on the bridge, the crowd), b5_letherii (the gate's prisoners, the Whitefinders far off), b5_c1_clerk (the moneychanger, the running clerk),
    b7_agent (Patriotist holdouts).
    Backdrops: b7_city_burning (120's, yours: Letheras on its last day, smoke over the towers, and after the earthquake a white light under
    one quarter to the north; a white shape in the sky once the dragon has been seen), and three this file adds that borrow until you draw
@@ -91665,21 +91717,23 @@ const B7CH7 = {
     go:'March', node:'b7_c7_start'},
 
   areas:[
-    /* 16 x 12 (b7_c6_field, night). W the walls  G the gate  , grass  . the road  = stakes  F the column's lie-up in the ditch  < back down the road */
+    /* 16 x 12 (b7_c6_field, night). W the walls  G the gate  , grass  . the road  = stakes  F the column's lie-up in the ditch  < back down the road
+       Terrain kit (25b, v13.22): rubble at the wall's foot (3), banks and scrub at the edges (1, 2), what the people coming out left behind (7 carts, 8 bundles), the column's fires (0) and spears (%), a dead tree (5), trodden ground (:), tufts (*), and one marine (folk). */
     { id:'b7_c7_road', title:'Under the walls of Letheras', sub:'Night · before the gate', hint:'Tap ground to move · tap a figure to talk · the gate is north, the road back south', decor:'b7_c6_field', dark:true,
       map:[ "WWWWWWWGWWWWWWWW",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,,,,,",
-            ",,,,,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,F,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,,,,,",
-            ",,,,,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,<,,,,,,,," ],
-      walk:'.,', triggers:{F:'b7_c7_fire', G:'b7_c7_gate_go', '<':'b7_c7_behind'}, start:{x:7, y:10},
+            "3,,8,,:.:,*,,,33",
+            "1,==,*,.,,,,,%,1",
+            ",,,,*,,.,,,,==,,",
+            "2,7:,,,.:,,8,,*1",
+            ",,,,,F:.,,,,,*,,",
+            "1,%,:,,.,,5,,,,2",
+            ",,==,,,.,,,,8,,,",
+            ",*,,,0,.,,:,==,,",
+            "2,,,,,:.,,*,8,,1",
+            ",18,,,,.,,,,70,,",
+            "11,,*,,<,,,,,112" ],
+      walk:'.,:*', triggers:{F:'b7_c7_fire', G:'b7_c7_gate_go', '<':'b7_c7_behind'}, start:{x:7, y:10},
+      folk:[{x:3, y:9, kind:'b2soldier', name:'A marine with a crossbow', line:'The wall is higher close up. They always are. Nobody ever builds one that shrinks when you get near it.', wander:1}],
       quest:()=> !S.f.b7_c7_orders ? 'The lieutenant, in the ditch by the road.'
         : b77Ph() >= 2 ? 'The gate. The Fist is in front.'
         : 'The gate, at first light. Until then, the road.',
@@ -91689,21 +91743,23 @@ const B7CH7 = {
         {id:'marines', name:'Marines going along the wall', kind:'b2soldier', x:12, y:2, node:()=>'b7_c7_marines', show:()=>!!S.f.b7_c7_orders, fresh:()=>!S.f.b7_c7_marines},
         {id:'fist', name:'Officers by the road', kind:'b2soldier', x:9, y:3, node:()=>'b7_c7_fist', show:()=>!!S.f.b7_c7_orders, fresh:()=>!S.f.b7_c7_fist} ] },
 
-    /* 16 x 12 (b5_c7_streets, morning). G the gate behind  # burned walls  c a cart  x a shop  , rubble  > south, into the streets */
+    /* 16 x 12 (b5_c7_streets, morning). G the gate behind  # burned walls  c a cart  x a shop  , rubble  > south, into the streets
+       Terrain kit (25b, v13.22): rubble in the corners (3), barrels and casks (8, &), a stall left standing (9), a lantern still lit (!), the trodden ground inside the gate (:), weeds between the setts (*), and a shopkeeper (folk). */
     { id:'b7_c7_square', title:'Letheras · inside the gate', sub:'First light · the gate square', hint:'Tap ground to move · tap a figure to talk · the gate is behind you, north; the streets go on south', decor:'b5_c7_streets', dark:false,
       map:[ "######GG########",
-            "#..............#",
-            "#.c............#",
+            "#8.............#",
+            "#.c.........!&.#",
             "#.......,...c..#",
-            "#..,...........#",
-            "##.....##......#",
-            "#......##..,...#",
-            "#..............#",
+            "#3.,...........#",
+            "##.....##....8.#",
+            "#9.....##..,...#",
+            "#......:.......#",
             "#.,.........x..#",
-            "#..............#",
-            "#......,.......#",
+            "#.8.*...*....&.#",
+            "#3.....,..9...3#",
             "#######>>#######" ],
-      walk:'.,', triggers:{G:'b7_c7_wall_gate', '>':'b7_c7_square_east', x:'b7_c7_shop'}, start:{x:7, y:2},
+      walk:'.,:*', triggers:{G:'b7_c7_wall_gate', '>':'b7_c7_square_east', x:'b7_c7_shop'}, start:{x:7, y:2},
+      folk:[{x:9, y:7, kind:'b5_c7_citizen', name:'A shopkeeper at his shutters', line:'Open or shut? Nobody has said which is safer today, so I am doing half of each.', wander:1}],
       quest:()=> !S.f.b7_c7_lt2 ? 'The lieutenant, by the gatehouse.' : 'South, into the streets.',
       npcs:[
         {id:'lt2', name:'The lieutenant', kind:'b2soldier', x:5, y:3, node:()=>'b7_c7_lt2', fresh:()=>!S.f.b7_c7_lt2},
@@ -91711,48 +91767,52 @@ const B7CH7 = {
         {id:'water', name:'A woman with a water-jar', kind:'b5_c5_refugee', x:3, y:8, node:()=>'b7_c7_water', fresh:()=>!S.f.b7_c7_water} ] },
 
     /* 16 x 12 (b5_c7_streets, day). ^ the street end, north, to a square below the palace  F a brazier at a corner (the first halt)
-       h the counting-house door  x a shop with a broadsheet  v down to the canal and the bridge  < back, west, to the gate square */
+       h the counting-house door  x a shop with a broadsheet  v down to the canal and the bridge  < back, west, to the gate square
+       Terrain kit (25b, v13.22): a light touch: barrels (8), a water cask (&), rubble at the corners (3), and a man boarding his door (folk). */
     { id:'b7_c7_streets', title:'Letheras · the streets', sub:'The city\'s last day', hint:'Tap ground to move · tap a figure to talk · the brazier is by the corner, the canal east, the street to the palace north', decor:'b5_c7_streets', dark:false,
       map:[ "#######^########",
-            "#..,......#..x.#",
-            "#.c..,....#....#",
+            "#8.,......#..x.#",
+            "#.c..,....#...8#",
             "##.............#",
             "#....##..,.....#",
             "#.,..##.....h..#",
             "<......F.......v",
             "#..,.......##..#",
-            "#.....c....##..#",
-            "##..,...,......#",
-            "#.......#..,...#",
+            "#3....c....##..#",
+            "##......,....&.#",
+            "#..8....#..,..3#",
             "################" ],
       walk:'.,', triggers:{F:'b7_c7_fire', '^':'b7_c7_view', h:'b7_c7_holdouts', x:'b7_c7_broadsheet', v:'b7_c7_bridge', '<':'b7_c7_streets_west'}, start:{x:1, y:6},
+      folk:[{x:9, y:1, kind:'b5_c7_citizen', name:'A man boarding his door', line:'The last time there was shouting in this street, the Patriotists came for the shouters and for the neighbours both. Boards are cheap.'}],
       quest:()=> !S.f.b7_c7_holdoutsDone ? 'A counting-house, and the crowd round it, east of the brazier.'
         : !S.f.b7_c7_view ? 'North, to the end of the street. Something is happening at the palace.'
         : !S.f.b7_c7_lt3 ? 'The lieutenant has found the Third.'
         : 'Evening. The lieutenant.',
       npcs:[
         {id:'shouters', name:'Men starting the shouting', kind:'b5_c5_refugee', x:9, y:3, node:()=>'b7_c7_shouters', fresh:()=>!S.f.b7_c7_shouters},
-        {id:'runner', name:'A Letherii running', kind:'b5_letherii', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
+        {id:'runner', name:'A Letherii running', kind:'b5_c1_clerk', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
         {id:'sky', name:'Marines looking up', kind:'b2soldier', x:13, y:8, node:()=>'b7_c7_sky', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_sky},
         {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3},
         /* v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, looking for Fiddler, before the white dragon; gone on once spoken to */
         {id:'hedge', name:'Two men going north', kind:'hedge', x:14, y:4, node:()=>'b7_c7_hedge', show:()=>b77Ph() === 3 && !S.f.b7_c7_sky && (!S.f.b7_c7_hedge || /^b7_c7_hedge/.test(S.node || '')), fresh:()=>!S.f.b7_c7_hedge} ] },
 
-    /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet */
+    /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet
+       Terrain kit (25b, v13.22): a light touch: mooring posts on the walk (4), coiled rope (*), the market's stalls back (9), barrels and casks (8, &), a lamp (!), and two of the city at work (folk). */
     { id:'b7_c7_after', title:'Letheras · three weeks on', sub:'A canal street · the new emperor\'s city', hint:'Tap ground to move · tap a figure to talk · the Third\'s billet and its brazier are by the bridge; the canal is south', decor:'b5_c7_canal', dark:false,
       map:[ "################",
+            "#8.....9.....&.#",
+            "#....F........!#",
             "#..............#",
-            "#....F.........#",
-            "#..............#",
-            "#..............#",
+            "#.4.*......4.*.#",
             ",,,,,,,--,,,,,,,",
             "~~~~~~~--~~~~~~~",
             "~~~~~~~--~~~~~~~",
             ",,,,,,a--a,,,,,,",
             "................",
-            "#..............#",
+            "#.&...9....*..8#",
             "################" ],
-      walk:'.,-', triggers:{F:'b7_c7_fire', a:'b7_c7_canal'}, start:{x:7, y:3},
+      walk:'.,-*', triggers:{F:'b7_c7_fire', a:'b7_c7_canal'}, start:{x:7, y:3},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A clerk on the walk', line:'Three weeks of the new emperor and not one bailiff on the street. People have started whistling. It makes the clerks nervous.', wander:1}, {x:8, y:10, kind:'b5_c3_bargeman', name:'A boatman', line:'They say the new emperor can count money in his head. I count mine on one hand. We will see who runs out first.', wander:1}],
       quest:()=> !S.f.b7_c7_lt4 ? 'The lieutenant has three lists, and wants a word.'
         : !b77Key() ? 'The roads out. The lieutenant is waiting for the Third\'s answer.'
         : 'The brazier by the billet. The last of it.',

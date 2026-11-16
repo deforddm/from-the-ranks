@@ -13,7 +13,7 @@
    Notes for later chapters: docs/rg-ch5-notes.md. */
 /* FOR THE ARTIST (125b): names this file uses.
    Items: ART['item/b7_c5_villageshield'], ['item/b7_c5_edurblade'].
-   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the mill-woman, the Indebted, the boy), b5_c1_clerk (the
+   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b8_c5_benna (the mill-woman, floury to the elbow), b5_c7_child (the boy), b5_c1_clerk (the
    bailiff), b5_edur (Edur scouts seen on the road).
    Backdrops: b7_village (120's, yours: plaster and thatch, a well in the square, the factor's house the only one in stone; by day in
    phase 2, at dusk in phase 3; on 'hold' with the roof-cusser fired, the factor's roof gone and a thin smoke), and three this file adds
@@ -105,21 +105,22 @@ const B7CH5 = {
     go:'March', node:'b7_c5_start'},
 
   areas:[
-    /* 16 x 12 (plain_night). , grass  . the road  # hedge  r rock  x a post  F the halt  < back west, toward the column  > east, to the village by the river */
+    /* 16 x 12 (plain_night). , grass  . the road  # hedge  r rock  x a post  F the halt  < back west, toward the column  > east, to the village by the river
+       Terrain kit (25b, v13.22): hedgerows and their banks along the fields (2, 1), a cart abandoned on the verge (7), a dead tree (5), the trodden ground at the halt (:), tufts (*). No folk: the marines move unseen here. */
     { id:'b7_c5_lane', title:'The river road', sub:'Night · the funnel', hint:'Tap ground to move · tap a figure to talk · the village is east, the river\'s edge south-east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,,,#,,,,,,,#",
-            "#,,r,,,,,,,,#,,#",
+            "#22,,,,#,,,,,22#",
+            "#1,r,,*,,,,,#,1#",
             "#,,,,,#,,,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,x,,,,,,,r,,,#",
-            "#,,,,,,,,#,,,,,#",
-            "#,#,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,,#,#",
-            "#,,,,,,,,,,,,,R#",
+            "#,,,,,,,*,,,,,,#",
+            "#2,x,,,,,,,r,,,#",
+            "#,,,,7,,,#,,,*,#",
+            "#,#,,:F:,,,,,,2#",
+            "#1,,,,,,,5,,,#,#",
+            "#11,*,,22,,,,,R#",
             "################" ],
-      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east', R:'b7_c5_reeds'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{F:'b7_c5_fire', '<':'b7_c5_lane_west', '>':'b7_c5_lane_east', R:'b7_c5_reeds'}, start:{x:1, y:4},
       quest:()=> !S.f.b7_c5_orders ? 'The lieutenant, in the ditch by the road.'
         : !S.f.b7_c5_roadDone ? 'Something on the road ahead, between the Third and the river.'
         : !S.f.b7_c5_boy ? 'Somebody small in the hedge, waiting.'
@@ -133,45 +134,48 @@ const B7CH5 = {
         {id:'hellian', name:'A sergeant with a jug', kind:'b7v_hellian', x:10, y:7, node:()=>'b7_c5_hellian', show:()=>b75Ph() === 1 && !!S.f.b7_c5_orders && (!S.f.b7_c5_hellian || /^b7_c5_hellian/.test(S.node || '')), fresh:()=>!S.f.b7_c5_hellian} ] },
 
     /* 16 x 12 (b5_c5_farm). . the street and square  , trodden ash  # walls and houses  B the factor's door (his cellar: the Third's floor,
-       the fire)  w the well  e the north gate, to the lane  > the mill-race and the river, south */
+       the fire)  w the well  e the north gate, to the lane  > the mill-race and the river, south
+       Terrain kit (25b, v13.22): market stalls in the square (9), flour sacks (8), the miller's cart (7), water butts (&), the ground trodden round the well (:), weeds at the walls (*), and two of the village (folk). */
     { id:'b7_c5_street', title:'The mill village', sub:'A village on the river · the factor gone', hint:'Tap ground to move · tap a figure to talk · the factor\'s house is top left, the bailiff\'s door beside it, the meeting house top right, the north gate at the top, the mill-race south', decor:'b5_c5_farm', dark:false,
       map:[ "#######ee#######",
-            "#..BB#.d...#.h.#",
-            "#....#.....#...#",
-            "#..............#",
+            "#8.BB#.d...#.h8#",
+            "#8...#.....#.&.#",
+            "#...9......9...#",
             "##.....,.....###",
             "#......w.......#",
-            "#.....,q,......#",
-            "#..............#",
-            "###...........##",
-            "#,,...........,#",
+            "#.&...:q:....7.#",
+            "#8.............#",
+            "###...8.......##",
+            "#,,*.........8*#",
             "#,,,,.m.....,,,#",
             "########>>######" ],
-      walk:'.,', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square', m:'b7_c5_mill'}, start:{x:8, y:9},
+      walk:'.,:*', triggers:{B:'b7_c5_door', w:'b7_c5_well', e:'b7_c5_gate', '>':'b7_c5_race', d:'b7_c5_board', h:'b7_c5_hall', q:'b7_c5_square', m:'b7_c5_mill'}, start:{x:8, y:9},
+      folk:[{x:3, y:7, kind:'b3_c5_villager', name:'An old man on a bench', line:'The factor is gone, and his ledgers with him. Forty years I owed that man. I feel lighter, and I do not trust it.', wander:1}, {x:10, y:7, kind:'b8_c2_carter', name:'A carter from the mill', line:'Flour goes down the river to Letheras and the debt comes back up it. The wheel turns either way.', wander:1}],
       quest:()=> b75Ph() >= 3 && !b75Key() ? 'The mill-woman, in the square. The Edur are coming.'
         : b75Ph() >= 3 ? (b75Key() === 'hold' ? 'The square. Hold it.' : 'South, to the mill-race and the river path.')
         : !S.f.b7_c5_miller ? 'The mill-woman, who hid the Third.'
         : 'The village by day. At dusk the Edur will be wherever they are going.',
       npcs:[
-        {id:'miller', name:'The mill-woman', kind:'b5_c5_refugee', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
-        {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c5_refugee', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
+        {id:'miller', name:'The mill-woman', kind:'b8_c5_benna', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
+        {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c7_child', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
         {id:'women', name:'Women at the well', kind:'b5_c5_refugee', x:6, y:5, node:()=>'b7_c5_well', show:()=>b75Ph() === 2, fresh:()=>!!S.f.b7_c5_lane && !S.f.b7_c5_shortTried && !S.f.b7_c5_bailiffDone} ] },
 
-    /* 16 x 12 (b5_c3_bank, night). ~ the river  , reeds  . the path  # rock  x a stake  F the lie-up in the reeds (the fire)  < west, the village across the fields */
+    /* 16 x 12 (b5_c3_bank, night). ~ the river  , reeds  . the path  # rock  x a stake  F the lie-up in the reeds (the fire)  < west, the village across the fields
+       Terrain kit (25b, v13.22): a light touch: rocks in the reeds (4), a dead snag (5), the trodden ground at the lie-up (:). No folk. */
     { id:'b7_c5_bank', title:'The riverbank', sub:'Night · the column pulling together', hint:'Tap ground to move · tap a figure to talk · the lie-up is in the reeds, a mooring stake by the water, the village back across the fields', decor:'b5_c3_bank', dark:true,
       map:[ "################",
-            "#,,,,,,,,,,,,,,#",
-            "#,.....,,,.....#",
-            "<..............#",
-            "#,..,....F.....#",
+            "#,,,4,,,,,,,,5,#",
+            "#,....,,,.....4#",
+            "<..........,...#",
+            "#,..,..:.F.....#",
             "#,,......,,....#",
             "#...#......,,..#",
-            "#,,.....x......#",
+            "#,,.4...x......#",
             "#~~~,,,,,,,,~~~#",
             "#~~~~~~~~~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
-      walk:'.,', triggers:{F:'b7_c5_fire', '<':'b7_c5_across', x:'b7_c5_water'}, start:{x:2, y:3},
+      walk:'.,:', triggers:{F:'b7_c5_fire', '<':'b7_c5_across', x:'b7_c5_water'}, start:{x:2, y:3},
       quest:()=> !S.f.b7_c5_lt3 ? 'The lieutenant, on the path.' : 'The lie-up in the reeds. At first light, on with the column.',
       npcs:[
         {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:6, y:2, node:()=>'b7_c5_lt3', fresh:()=>!S.f.b7_c5_lt3},

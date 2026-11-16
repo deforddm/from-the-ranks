@@ -14,7 +14,7 @@
 /* FOR THE ARTIST (122b): names this file uses.
    Items: ART['item/b7_c2_filepage'], ['item/b7_c2_agentknife'], ['item/b7_c2_greycoat'].
    Figures: ilsa (the recruit), b7_agent (a Patriotist in a grey coat: the engine's agents wear it from this chapter). Reused: b5_c1_ennic,
-   b5_c1_clerk, b5_c1_tilewoman, b5_edur (the gate), b5_letherii (the lamplighter), b5_c5_refugee (the neighbour), bruiser (enforcers).
+   b5_c1_clerk, b5_c1_tilewoman, b5_edur (the gate), b5_c3_riverman (the eel-seller), b5_c3_pole (the lamplighter, his pole), b5_c7_citizen (the neighbour), bruiser (enforcers).
    Backdrops: b7_barracks and b7_letheras (120's, yours), and three this file adds that borrow until you draw them: b7_c2_greymorning (the
    barracks yard by a grey morning), b7_c2_alley (a narrow alley off a canal at dusk, one lamp, a door at its end), b7_c2_bridge (a stone
    canal bridge at night, lanterns at its far end, men in grey turning out a satchel).
@@ -100,21 +100,23 @@ const B7CH2 = {
     go:'Into the yard', node:'b7_c2_yard'},
 
   areas:[
-    /* 16 x 12 (b5_c1_barracks, night). . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  t the clerk's table  F the fire  > the gate */
+    /* 16 x 12 (b5_c1_barracks, night). . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  t the clerk's table  F the fire  > the gate
+       Terrain kit (25b, v13.22): a light touch: barrels (8), the water butt (&), the company's spears racked (%), a lantern on its pole (!), the trodden ground by the fire (:), and one of the Sixth off duty (folk). */
     { id:'b7_c2_barracks', title:'Letheras · the Whitefinders\' barracks', sub:'Night · the yard', hint:'Tap ground to move · tap a figure to talk · the clerk\'s table is west, the gate east', decor:'b5_c1_barracks', dark:true,
       map:[ "################",
             "#===b=====..===#",
-            "#..............#",
-            "#.t............#",
-            "#..............#",
+            "#&.......%....8#",
+            "#.t..........!.#",
+            "#.....:..:.....#",
             "#.......F......>",
+            "#%.....:.:.....#",
             "#..............#",
-            "#..............#",
-            "#=====b........#",
-            "#======........#",
-            "#..............#",
+            "#=====b.......8#",
+            "#======.......&#",
+            "#8.:.....8....%#",
             "################" ],
-      walk:'.', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_gate_view'}, start:{x:8, y:7},
+      walk:'.:', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_gate_view'}, start:{x:8, y:7},
+      folk:[{x:4, y:6, kind:'b5_c6_whitefinder', name:'A Whitefinder off duty', line:'Pay is late again. The paymaster says the coin is coming up the river. So is the river.', wander:1}],
       quest:()=> b72Ph() >= 5 ? (S.f.b7_c2_bridgeDone ? 'The fire. The night is the squad\'s, what is left of it.' : 'The lists, over the canal.')
         : !S.f.b7_c2_ennic ? 'Finadd Ennic, under his lamp.' : 'The fire, and then the bunk-houses. Something is happening in the lane tonight.',
       npcs:[
@@ -123,7 +125,8 @@ const B7CH2 = {
         {id:'edur', name:'The Edur at the gate', kind:'b5_edur', x:14, y:5, node:()=>'b7_c2_gate_view', show:()=>!S.f.b7_c2_gateDone, fresh:()=>!S.f.b7_c2_gateSeen} ] },
 
     /* 16 x 12 (b5_c1_canal, day). . paving  , the canal steps  ~ the Quillas Canal  # wall  s an apothecary's barrow  n the broadsheet wall
-       D the cookshop's door  - the walk's edge  P a mooring post  < back to the barracks gate  > on along the canal (dusk) */
+       D the cookshop's door  - the walk's edge  P a mooring post  < back to the barracks gate  > on along the canal (dusk)
+       Terrain kit (25b, v13.22): nothing on the ground (the street is busy and its paving is at the floor already); one neighbour on her step (folk). */
     { id:'b7_c2_street', title:'Letheras · the canal street', sub:'Morning · the lane by the barracks', hint:'Tap ground to move · tap a figure to talk · the cookshop is the open door', decor:'b5_c1_canal',
       map:[ "################",
             "#.s....n...D...#",
@@ -138,49 +141,54 @@ const B7CH2 = {
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,-', triggers:{s:'b7_c2_stall', n:'b7_c2_board', D:'b7_c2_door', '<':'b7_c2_to_yard', '>':'b7_c2_to_alley'}, start:{x:2, y:2},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A woman sweeping her step', line:'Sweep the step, pay the tax on the step. I sweep it slowly. It feels like more for the money.'}],
       quest:()=> !S.f.b7_c2_door ? 'The cookshop across the lane. Its door is open.' : !S.f.b7_c2_ilsaMet ? 'A woman in a grey coat on the canal steps, watching the barracks.' : 'Along the canal at dusk. The agents by the eel stall will follow.',
       npcs:[
         {id:'ilsa', name:'A woman in a grey coat', kind:'ilsa', x:9, y:5, node:()=>'b7_c2_ilsa', show:()=>!S.f.b7_c2_ilsaMet || b72IlsaWaits(), fresh:()=>!S.f.b7_c2_ilsaMet},
-        {id:'neigh', name:'A neighbour at a window', kind:'b5_c5_refugee', x:13, y:2, node:()=>'b7_c2_neighbours', fresh:()=>!S.f.b7_c2_neighTried},
+        {id:'neigh', name:'A neighbour at a window', kind:'b5_c7_citizen', x:13, y:2, node:()=>'b7_c2_neighbours', fresh:()=>!S.f.b7_c2_neighTried},
         {id:'agents', name:'Two men by the eel stall', kind:'b7_agent', x:4, y:6, node:()=>'b7_c2_agents', fresh:()=>!S.f.b7_c2_agents},
-        {id:'eel', name:'The eel-seller', kind:'b5_letherii', x:5, y:1, node:()=>'b7_c2_eelseller', fresh:()=>!S.f.b7_c2_eel} ] },
+        {id:'eel', name:'The eel-seller', kind:'b5_c3_riverman', x:5, y:1, node:()=>'b7_c2_eelseller', fresh:()=>!S.f.b7_c2_eel} ] },
 
     /* 16 x 12 (b5_c7_canal, night). . setts  # wall  ~ the canal  - the bridge deck  A the alley mouth  B the bridge's far end  P a post
-       < west, back toward the barracks */
+       < west, back toward the barracks
+       Terrain kit (25b, v13.22): lamps along the walk (!), coiled rope (*), barrels (8), a water cask (&), and a boatman tying up (folk). */
     { id:'b7_c2_canal', title:'Letheras · along the canal', sub:'Night · the lamps lit', hint:'Tap ground to move · tap a figure to talk · the alley is north, the bridge south over the water', decor:'b5_c7_canal', dark:true,
       map:[ "######A#########",
-            "#..............#",
+            "#..!......8...!#",
             "<..............#",
-            "#..............#",
-            "#.P.....-...P..#",
+            "#*............&#",
+            "#.P.....-...P*.#",
             "~~~~~~~~-~~~~~~~",
             "~~~~~~~~-~~~~~~~",
-            "#.P.....-...P..#",
-            "#.......B......#",
-            "#..............#",
-            "#..............#",
+            "#.P*....-...P..#",
+            "#.......B....8.#",
+            "#..!.........!.#",
+            "#8...&.....*...#",
             "################" ],
-      walk:'.-', triggers:{A:'b7_c2_alley_view', B:'b7_c2_bridge_view', '<':'b7_c2_canal_back'}, start:{x:2, y:2},
+      walk:'.-*', triggers:{A:'b7_c2_alley_view', B:'b7_c2_bridge_view', '<':'b7_c2_canal_back'}, start:{x:2, y:2},
+      folk:[{x:5, y:9, kind:'b5_c3_bargeman', name:'A boatman on the walk', line:'Toll at this bridge, toll at the next. A man could drown in debt in this city and never touch the water.', wander:1}],
       quest:()=> b72Ph() >= 5 ? (!S.f.b7_c2_bridgeDone ? 'The bridge, south over the canal. The battalion office is on the far side.' : 'Back to the barracks.')
         : !S.f.b7_c2_alleyDone ? 'The alley off the canal, north. They are waiting in it.' : 'Back to the barracks before the lamps go out.',
       npcs:[
-        {id:'lamp', name:'A lamplighter', kind:'b5_letherii', x:11, y:3, node:()=>'b7_c2_lamplighter', show:()=>b72Ph() === 3, fresh:()=>!S.f.b7_c2_lamp} ] },
+        {id:'lamp', name:'A lamplighter', kind:'b5_c3_pole', x:11, y:3, node:()=>'b7_c2_lamplighter', show:()=>b72Ph() === 3, fresh:()=>!S.f.b7_c2_lamp} ] },
 
-    /* 16 x 12 (b5_c1_barracks, day): the same yard by a grey morning, the Patriotist at the gate */
+    /* 16 x 12 (b5_c1_barracks, day): the same yard by a grey morning, the Patriotist at the gate
+       Terrain kit (25b, v13.22): the yard dressed as at night (barrels, the butt, the spears, the lantern, the trodden ground), and another of the Sixth (folk). */
     { id:'b7_c2_yardday', title:'Letheras · the Whitefinders\' barracks', sub:'Morning · a visitor at the gate', hint:'Tap ground to move · tap a figure to talk · the man in the grey coat is waiting', decor:'b5_c1_barracks',
       map:[ "################",
             "#===b=====..===#",
-            "#..............#",
-            "#.t............#",
-            "#..............#",
+            "#&.......%....8#",
+            "#.t..........!.#",
+            "#.....:..:.....#",
             "#.......F......>",
+            "#%.....:.:.....#",
             "#..............#",
-            "#..............#",
-            "#=====b........#",
-            "#======........#",
-            "#..............#",
+            "#=====b.......8#",
+            "#======.......&#",
+            "#8.:.....8....%#",
             "################" ],
-      walk:'.', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_yard_gate'}, start:{x:8, y:7},
+      walk:'.:', triggers:{F:'b7_c2_fire', t:'b7_c2_clerk', b:'b7_c2_bunk', '>':'b7_c2_yard_gate'}, start:{x:8, y:7},
+      folk:[{x:5, y:3, kind:'b5_c6_whitefinder', name:'A Whitefinder with a whetstone', line:'There is an Edur at the gate. There is always an Edur at the gate. You stop looking, and you never stop knowing.', wander:1}],
       quest:()=> !b72Key() ? 'The man in the grey coat, with the Finadd. He wants a word.' : 'The Finadd\'s lists, over the canal at dusk. The gate.',
       npcs:[
         {id:'edur', name:'The Edur at the gate', kind:'b5_edur', x:14, y:5, node:()=>'b7_c2_edur_day', fresh:()=>!S.f.b7_c2_edurDay},

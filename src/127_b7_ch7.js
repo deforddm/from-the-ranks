@@ -21,7 +21,7 @@
 /* FOR THE ARTIST (127b): names this file uses.
    Items: ART['item/b7_c7_lethcloak'], ['item/b7_c7_kingscoin'].
    Figures, all existing: b2soldier (the lieutenant, marines, the Fist's officers far off), b5_c5_refugee (refugees, the water-woman, the
-   old woman on the bridge, the crowd), b5_letherii (the gate's prisoners, the Whitefinders far off), b5_c1_clerk (the moneychanger),
+   old woman on the bridge, the crowd), b5_letherii (the gate's prisoners, the Whitefinders far off), b5_c1_clerk (the moneychanger, the running clerk),
    b7_agent (Patriotist holdouts).
    Backdrops: b7_city_burning (120's, yours: Letheras on its last day, smoke over the towers, and after the earthquake a white light under
    one quarter to the north; a white shape in the sky once the dragon has been seen), and three this file adds that borrow until you draw
@@ -131,21 +131,23 @@ const B7CH7 = {
     go:'March', node:'b7_c7_start'},
 
   areas:[
-    /* 16 x 12 (b7_c6_field, night). W the walls  G the gate  , grass  . the road  = stakes  F the column's lie-up in the ditch  < back down the road */
+    /* 16 x 12 (b7_c6_field, night). W the walls  G the gate  , grass  . the road  = stakes  F the column's lie-up in the ditch  < back down the road
+       Terrain kit (25b, v13.22): rubble at the wall's foot (3), banks and scrub at the edges (1, 2), what the people coming out left behind (7 carts, 8 bundles), the column's fires (0) and spears (%), a dead tree (5), trodden ground (:), tufts (*), and one marine (folk). */
     { id:'b7_c7_road', title:'Under the walls of Letheras', sub:'Night · before the gate', hint:'Tap ground to move · tap a figure to talk · the gate is north, the road back south', decor:'b7_c6_field', dark:true,
       map:[ "WWWWWWWGWWWWWWWW",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,,,,,",
-            ",,,,,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,F,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,==,,,.,,,,,,,,",
-            ",,,,,,,.,,,,==,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,.,,,,,,,,",
-            ",,,,,,,<,,,,,,,," ],
-      walk:'.,', triggers:{F:'b7_c7_fire', G:'b7_c7_gate_go', '<':'b7_c7_behind'}, start:{x:7, y:10},
+            "3,,8,,:.:,*,,,33",
+            "1,==,*,.,,,,,%,1",
+            ",,,,*,,.,,,,==,,",
+            "2,7:,,,.:,,8,,*1",
+            ",,,,,F:.,,,,,*,,",
+            "1,%,:,,.,,5,,,,2",
+            ",,==,,,.,,,,8,,,",
+            ",*,,,0,.,,:,==,,",
+            "2,,,,,:.,,*,8,,1",
+            ",18,,,,.,,,,70,,",
+            "11,,*,,<,,,,,112" ],
+      walk:'.,:*', triggers:{F:'b7_c7_fire', G:'b7_c7_gate_go', '<':'b7_c7_behind'}, start:{x:7, y:10},
+      folk:[{x:3, y:9, kind:'b2soldier', name:'A marine with a crossbow', line:'The wall is higher close up. They always are. Nobody ever builds one that shrinks when you get near it.', wander:1}],
       quest:()=> !S.f.b7_c7_orders ? 'The lieutenant, in the ditch by the road.'
         : b77Ph() >= 2 ? 'The gate. The Fist is in front.'
         : 'The gate, at first light. Until then, the road.',
@@ -155,21 +157,23 @@ const B7CH7 = {
         {id:'marines', name:'Marines going along the wall', kind:'b2soldier', x:12, y:2, node:()=>'b7_c7_marines', show:()=>!!S.f.b7_c7_orders, fresh:()=>!S.f.b7_c7_marines},
         {id:'fist', name:'Officers by the road', kind:'b2soldier', x:9, y:3, node:()=>'b7_c7_fist', show:()=>!!S.f.b7_c7_orders, fresh:()=>!S.f.b7_c7_fist} ] },
 
-    /* 16 x 12 (b5_c7_streets, morning). G the gate behind  # burned walls  c a cart  x a shop  , rubble  > south, into the streets */
+    /* 16 x 12 (b5_c7_streets, morning). G the gate behind  # burned walls  c a cart  x a shop  , rubble  > south, into the streets
+       Terrain kit (25b, v13.22): rubble in the corners (3), barrels and casks (8, &), a stall left standing (9), a lantern still lit (!), the trodden ground inside the gate (:), weeds between the setts (*), and a shopkeeper (folk). */
     { id:'b7_c7_square', title:'Letheras · inside the gate', sub:'First light · the gate square', hint:'Tap ground to move · tap a figure to talk · the gate is behind you, north; the streets go on south', decor:'b5_c7_streets', dark:false,
       map:[ "######GG########",
-            "#..............#",
-            "#.c............#",
+            "#8.............#",
+            "#.c.........!&.#",
             "#.......,...c..#",
-            "#..,...........#",
-            "##.....##......#",
-            "#......##..,...#",
-            "#..............#",
+            "#3.,...........#",
+            "##.....##....8.#",
+            "#9.....##..,...#",
+            "#......:.......#",
             "#.,.........x..#",
-            "#..............#",
-            "#......,.......#",
+            "#.8.*...*....&.#",
+            "#3.....,..9...3#",
             "#######>>#######" ],
-      walk:'.,', triggers:{G:'b7_c7_wall_gate', '>':'b7_c7_square_east', x:'b7_c7_shop'}, start:{x:7, y:2},
+      walk:'.,:*', triggers:{G:'b7_c7_wall_gate', '>':'b7_c7_square_east', x:'b7_c7_shop'}, start:{x:7, y:2},
+      folk:[{x:9, y:7, kind:'b5_c7_citizen', name:'A shopkeeper at his shutters', line:'Open or shut? Nobody has said which is safer today, so I am doing half of each.', wander:1}],
       quest:()=> !S.f.b7_c7_lt2 ? 'The lieutenant, by the gatehouse.' : 'South, into the streets.',
       npcs:[
         {id:'lt2', name:'The lieutenant', kind:'b2soldier', x:5, y:3, node:()=>'b7_c7_lt2', fresh:()=>!S.f.b7_c7_lt2},
@@ -177,48 +181,52 @@ const B7CH7 = {
         {id:'water', name:'A woman with a water-jar', kind:'b5_c5_refugee', x:3, y:8, node:()=>'b7_c7_water', fresh:()=>!S.f.b7_c7_water} ] },
 
     /* 16 x 12 (b5_c7_streets, day). ^ the street end, north, to a square below the palace  F a brazier at a corner (the first halt)
-       h the counting-house door  x a shop with a broadsheet  v down to the canal and the bridge  < back, west, to the gate square */
+       h the counting-house door  x a shop with a broadsheet  v down to the canal and the bridge  < back, west, to the gate square
+       Terrain kit (25b, v13.22): a light touch: barrels (8), a water cask (&), rubble at the corners (3), and a man boarding his door (folk). */
     { id:'b7_c7_streets', title:'Letheras · the streets', sub:'The city\'s last day', hint:'Tap ground to move · tap a figure to talk · the brazier is by the corner, the canal east, the street to the palace north', decor:'b5_c7_streets', dark:false,
       map:[ "#######^########",
-            "#..,......#..x.#",
-            "#.c..,....#....#",
+            "#8.,......#..x.#",
+            "#.c..,....#...8#",
             "##.............#",
             "#....##..,.....#",
             "#.,..##.....h..#",
             "<......F.......v",
             "#..,.......##..#",
-            "#.....c....##..#",
-            "##..,...,......#",
-            "#.......#..,...#",
+            "#3....c....##..#",
+            "##......,....&.#",
+            "#..8....#..,..3#",
             "################" ],
       walk:'.,', triggers:{F:'b7_c7_fire', '^':'b7_c7_view', h:'b7_c7_holdouts', x:'b7_c7_broadsheet', v:'b7_c7_bridge', '<':'b7_c7_streets_west'}, start:{x:1, y:6},
+      folk:[{x:9, y:1, kind:'b5_c7_citizen', name:'A man boarding his door', line:'The last time there was shouting in this street, the Patriotists came for the shouters and for the neighbours both. Boards are cheap.'}],
       quest:()=> !S.f.b7_c7_holdoutsDone ? 'A counting-house, and the crowd round it, east of the brazier.'
         : !S.f.b7_c7_view ? 'North, to the end of the street. Something is happening at the palace.'
         : !S.f.b7_c7_lt3 ? 'The lieutenant has found the Third.'
         : 'Evening. The lieutenant.',
       npcs:[
         {id:'shouters', name:'Men starting the shouting', kind:'b5_c5_refugee', x:9, y:3, node:()=>'b7_c7_shouters', fresh:()=>!S.f.b7_c7_shouters},
-        {id:'runner', name:'A Letherii running', kind:'b5_letherii', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
+        {id:'runner', name:'A Letherii running', kind:'b5_c1_clerk', x:4, y:9, node:()=>'b7_c7_news', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_news},
         {id:'sky', name:'Marines looking up', kind:'b2soldier', x:13, y:8, node:()=>'b7_c7_sky', show:()=>!!S.f.b7_c7_quake, fresh:()=>!S.f.b7_c7_sky},
         {id:'lt3', name:'The lieutenant', kind:'b2soldier', x:3, y:4, node:()=>'b7_c7_lt3', show:()=>!!S.f.b7_c7_holdoutsDone && !!S.f.b7_c7_view, fresh:()=>!S.f.b7_c7_lt3},
         /* v13.8 (David, Nov 15): meetings. Hedge and Quick Ben in the street, looking for Fiddler, before the white dragon; gone on once spoken to */
         {id:'hedge', name:'Two men going north', kind:'hedge', x:14, y:4, node:()=>'b7_c7_hedge', show:()=>b77Ph() === 3 && !S.f.b7_c7_sky && (!S.f.b7_c7_hedge || /^b7_c7_hedge/.test(S.node || '')), fresh:()=>!S.f.b7_c7_hedge} ] },
 
-    /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet */
+    /* 16 x 12 (b5_c7_canal, morning). ~ the canal  - the footbridge  a an arch over the water  F the Third's brazier by its billet
+       Terrain kit (25b, v13.22): a light touch: mooring posts on the walk (4), coiled rope (*), the market's stalls back (9), barrels and casks (8, &), a lamp (!), and two of the city at work (folk). */
     { id:'b7_c7_after', title:'Letheras · three weeks on', sub:'A canal street · the new emperor\'s city', hint:'Tap ground to move · tap a figure to talk · the Third\'s billet and its brazier are by the bridge; the canal is south', decor:'b5_c7_canal', dark:false,
       map:[ "################",
+            "#8.....9.....&.#",
+            "#....F........!#",
             "#..............#",
-            "#....F.........#",
-            "#..............#",
-            "#..............#",
+            "#.4.*......4.*.#",
             ",,,,,,,--,,,,,,,",
             "~~~~~~~--~~~~~~~",
             "~~~~~~~--~~~~~~~",
             ",,,,,,a--a,,,,,,",
             "................",
-            "#..............#",
+            "#.&...9....*..8#",
             "################" ],
-      walk:'.,-', triggers:{F:'b7_c7_fire', a:'b7_c7_canal'}, start:{x:7, y:3},
+      walk:'.,-*', triggers:{F:'b7_c7_fire', a:'b7_c7_canal'}, start:{x:7, y:3},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A clerk on the walk', line:'Three weeks of the new emperor and not one bailiff on the street. People have started whistling. It makes the clerks nervous.', wander:1}, {x:8, y:10, kind:'b5_c3_bargeman', name:'A boatman', line:'They say the new emperor can count money in his head. I count mine on one hand. We will see who runs out first.', wander:1}],
       quest:()=> !S.f.b7_c7_lt4 ? 'The lieutenant has three lists, and wants a word.'
         : !b77Key() ? 'The roads out. The lieutenant is waiting for the Third\'s answer.'
         : 'The brazier by the billet. The last of it.',
