@@ -103,21 +103,23 @@ const B5CH4 = {
 
   areas:[
     /* 16 x 12 (b5_c4_road, day). The forest road north: . the road , leaf litter  T trees  ~ the stream in spate  - the ford
-       # rock  h a bare hill off the road  ^ on, north, to High Fort */
+       # rock  h a bare hill off the road  ^ on, north, to High Fort
+       Terrain kit (25b, v13.22): a light touch: fallen trunks (5), rock (4), a tuft in the litter (*), and one of the Sixth resting (folk). */
     { id:'b5_c4_road', title:'The forest road', sub:'North from the Landing', hint:'Tap ground to move · tap a figure to talk · the road goes north, over the stream', decor:'b5_c4_road',
       map:[ "TTTTTTT^TTTTTTTT",
             "TT,,TT,.,TT,,,TT",
-            "T,,#,,..,,,,h,,T",
-            "T,,,,,.,,,,,,,,T",
+            "T,,#,,..,,*,h,,T",
+            "T,,,,,.,,,,,,5,T",
             "TT,,,,.,,,TT,,TT",
             ",,,TT,.,,,,,,#,,",
             "~~~~~~-~~~~~~~~~",
-            ",,,,,,.,,TT,,,,,",
-            "TT,#,,.,,,,,,,TT",
+            ",,5,,,.,,TT,,,,,",
+            "TT,#,,.,,,,,4,TT",
             "T,,,,..,,,,T,,,T",
             "TT,,,.,,,,,,,,TT",
             "TTTTT.TTTTTTTTTT" ],
-      walk:'.,-', triggers:{'-':'b5_c4_ford', h:'b5_c4_hill', '^':'b5_c4_north'}, start:{x:5, y:10},
+      walk:'.,-*', triggers:{'-':'b5_c4_ford', h:'b5_c4_hill', '^':'b5_c4_north'}, start:{x:5, y:10},
+      folk:[{x:2, y:3, kind:'b5_c6_whitefinder', name:'One of the Sixth, resting', line:'Somebody paved this road once. Somebody will want paying for it.', wander:1}],
       quest:()=> !S.f.b5_c4_ford ? 'North, up the road. There is a stream ahead.' : 'North, to High Fort.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:7, y:9, node:()=>'b5_c4_ennic_road', fresh:()=>!S.f.b5_c4_ennicRoad},
@@ -126,21 +128,24 @@ const B5CH4 = {
 
     /* 16 x 12 (b5_c4_rampart). The westernmost rampart at High Fort, under the largest bastion tower: # the tower (top left) and the fort's
        inner wall (bottom)  = the rampart crest  . turf , trampled earth  F the rampart's fire  p the garrison's brand-pot store under the
-       tower  v the firing step, where you can see the field  ^ the sally-steps down to the gully  g the gate into the fort */
+       tower  v the firing step, where you can see the field  ^ the sally-steps down to the gully  g the gate into the fort
+       Terrain kit (25b, v13.22): the worn ways from the gate to the firing step and the sally-steps (_), the garrison's crates (8), spears racked (%), a water cask (&), a lantern (!), the trodden ground by the fire (:), and two of the garrison (folk). */
     { id:'b5_c4_rampart', title:'High Fort · the west rampart', sub:'Under the bastion tower', hint:'Tap ground to move · tap a figure to talk · the firing step looks out over the field', decor:'b5_c4_rampart',
       map:[ "####============",
             "####==========^=",
-            "####p..v........",
-            "....,,......,,..",
-            "..,,....F.....,,",
-            "................",
-            ",,....,,.....,,.",
-            "......,,,.......",
-            "..,,..........,,",
-            ",,......,,......",
-            "........,,......",
+            "####p..v.______.",
+            "8!..,,._....,,.&",
+            "%.,,...:F:....,,",
+            ".......:......,8",
+            ",,....,_.....,,8",
+            "......,_,.......",
+            "..,,..._......,,",
+            ",,.....__,......",
+            "8......_,,.....%",
             "#######g########" ],
-      walk:'.,', triggers:{F:'b5_c4_fire', p:'b5_c4_pots', v:'b5_c4_view', '^':'b5_c4_sally', g:'b5_c4_gate'}, start:{x:8, y:9},
+      walk:'.,_:', triggers:{F:'b5_c4_fire', p:'b5_c4_pots', v:'b5_c4_view', '^':'b5_c4_sally', g:'b5_c4_gate'}, start:{x:8, y:9},
+      folk:[{x:2, y:5, kind:'b5_c4_garrison', name:'A garrison spearman', line:'The fort has stood here a hundred years. The garrison has been owed its pay for most of them.', wander:1},
+        {x:12, y:6, kind:'b8_c4_carrier', name:'An Indebted water-carrier', line:'Forty trips up the rampart a day, each one off the debt. I have done the sums. Eleven years, if nobody dies and leaves me theirs.', wander:1}],
       quest:()=> b54Ph() <= 2 ? (!S.f.b5_c4_posted ? 'The garrison\'s officer, on the rampart.' : S.f.b5_c4_patrol && !S.f.b5_c4_gullyDone ? 'The sally-steps, and Dry Gully.' : 'The fire. The night before something.')
         : !S.f.b5_c4_wraithsDone ? 'The crest. They are coming.' : 'The rampart.',
       npcs:[
@@ -154,40 +159,42 @@ const B5CH4 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:14, y:9, node:()=>'b5_c4_tilewoman', show:()=>b54Ph() <= 2, fresh:()=>!S.f.b5_c4_tw} ] },
 
     /* 16 x 12 (b5_c4_gully, night; the optional patrol). Dry Gully under the far ramparts: # the banks  . stones on the old bed
-       , dry grass  x brush  e where the tracks are  v back up the bank to the sally-steps */
+       , dry grass  x brush  e where the tracks are  v back up the bank to the sally-steps
+       Terrain kit (25b, v13.22): the banks' foot (1), brush (2), boulders on the old bed (4). No folk: a night patrol. */
     { id:'b5_c4_gully', title:'Dry Gully', sub:'Night · the patrol', hint:'Tap ground to move · the gully runs east · the way back is up the bank', decor:'b5_c4_gully', dark:true,
       map:[ "################",
-            "##,,..xx...,,###",
-            "#,,....,,..x..,#",
+            "##11..xx...,11##",
+            "#2,....,4..x..,#",
             "#..x...,,....,.#",
-            ".....,,...x.....",
-            "..,,......,,...e",
-            "....x....,,.....",
+            ".....,,...x...4.",
+            "..,,.4....,,...e",
+            "....x....,,.4...",
             "#,,....,,..x..,#",
-            "#..,,...x....,,#",
-            "##..,,.....,,###",
-            "###,,..v..,,####",
+            "#2.,,...x....,2#",
+            "##11,,.....,11##",
+            "###1,..v..,1####",
             "################" ],
       walk:'.,x', triggers:{e:'b5_c4_tracks', v:'b5_c4_gully_back'}, start:{x:7, y:9},
       quest:()=> !S.f.b5_c4_gullyDone ? 'East, along the gully bed.' : 'Back up the bank to the rampart.',
       npcs:[] },
 
     /* 16 x 12 (b5_c4_wood, failing light; 'run' only). The wood west of the fort: . forest floor  T trees  , fern  # rock
-       w where the wolves have been  v south, out of the trees to the road */
+       w where the wolves have been  v south, out of the trees to the road
+       Terrain kit (25b, v13.22): more trees at the wood's edge (T), a fallen trunk (5), rock (4), a tuft (*). No folk: the squad is alone here. */
     { id:'b5_c4_wood', title:'The wood west of the fort', sub:'Failing light · armed', hint:'Tap ground to move · the way out is south, to the road', decor:'b5_c4_wood', dark:true,
       map:[ "TTTTTTTTTTTTTTTT",
             "TT,,..TT..,,.TTT",
-            "T,,...,,....,,..",
-            "T.w,,TT..#..,...",
+            "T,,...,,....,,.T",
+            "T.w,,TT..#..,..T",
             "TT,,....,,..TT..",
-            "T..,,#...,,.....",
+            "T..,,#..5,,.....",
             "TT....,,TT..,,TT",
-            "T,,.TT....,,...T",
+            "T,,.TT....,,..4T",
             "T...,,..#...,,TT",
-            "TT,,......,,...T",
+            "TT,*......,,...T",
             "TTT,,..,,....TTT",
             "TTTTTTTTvTTTTTTT" ],
-      walk:'.,', triggers:{w:'b5_c4_wolfsign', v:'b5_c4_wood_edge'}, start:{x:14, y:2},
+      walk:'.,*', triggers:{w:'b5_c4_wolfsign', v:'b5_c4_wood_edge'}, start:{x:14, y:2},
       quest:()=> !S.f.b5_c4_wolvesDone ? 'West, into the trees, ahead of whatever is in them.' : 'South, out of the trees, to the road.',
       npcs:[] } ],
 

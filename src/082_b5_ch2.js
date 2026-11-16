@@ -12,7 +12,7 @@
 /* FOR THE ARTIST (82b): names this file uses.
    Items: ART['item/b5_c2_sealcoat'], ['item/b5_c2_tooth'], ['item/b5_c2_gaff'], ['item/b5_c2_shells'].
    Figures: b5_c2_looter, b5_c2_wrecker, b5_c2_wreckboss, b5_c2_drowned, b5_c2_pilot, b5_c2_harbourmaster, b5_c2_shake. Reused: b5_c1_ennic,
-   b5_c1_clerk, b5_c1_tilewoman, b5_letherii (the quartermaster, the Legion), b5_letherii_bow, b5_wraith, brune.
+   b5_c1_clerk, b5_c1_tilewoman, b5_c5_quartermaster, b5_letherii (the Legion), b5_letherii_bow, b5_wraith, brune.
    Backdrops (SCENEX): b5_trate_harbour (80's, redrawn), b5_c2_wrecks, b5_c2_hold, b5_c2_strand.
    Ground (TILEX): b5_c2_quay (. planking , wet stone ~ harbour w wreckage # shed wall c the cart of the drowned f fish D a shed door M a
    market stall H the plank to the first hulk <), b5_c2_hulk (. deck - the open, flooded hold # bulkhead m mast h hatch <), b5_c2_strand
@@ -100,21 +100,23 @@ const B5CH2 = {
 
   areas:[
     /* 16 x 12 (b5_c2_quay, evening). ~ the harbour  w wreckage  . planking  , wet stone  f fish  c the Legion's cart for the drowned
-       H the plank up to the first hulk  # the harbour-front sheds  D a shed door  M a market stall  < south, to the strand */
+       H the plank up to the first hulk  # the harbour-front sheds  D a shed door  M a market stall  < south, to the strand
+       Terrain kit (25b, v13.22): a light touch: salvage chests under a tarpaulin (8), a water cask (&), coiled rope (*), and a fishwife salvaging (folk). */
     { id:'b5_c2_quay', title:'Trate · the harbour front', sub:'The quays after the wave', hint:'Tap ground to move · tap a figure to talk · the strand is south-west', decor:'b5_c2_quay',
       map:[ "~~~~~~~~~~~~~~~~",
             "~ww~~~~~~~~~~ww~",
             "~ww~~~~H~~~~~ww~",
             "................",
-            "..f.......c..f..",
+            ".*f...&...c..f*.",
             "................",
             ",,,,,,,,,,,,,,,,",
             "####D###,,M#####",
-            "#,,,,,,,,,,,,,,#",
-            "<,,,,,,f,,,,,,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#8,,,,,,,,,,,,8#",
+            "<,,,,,,f,,,,,*,#",
+            "#,8,,,,,,,,,,8&#",
             "################" ],
-      walk:'.,f', triggers:{H:'b5_c2_gangplank', D:'b5_c2_sheds', M:'b5_c2_market', c:'b5_c2_cartdead', '<':'b5_c2_to_strand'}, start:{x:8, y:5},
+      walk:'.,f*', triggers:{H:'b5_c2_gangplank', D:'b5_c2_sheds', M:'b5_c2_market', c:'b5_c2_cartdead', '<':'b5_c2_to_strand'}, start:{x:8, y:5},
+      folk:[{x:5, y:9, kind:'b3_c5_villager', name:'A fishwife', line:'The wave took the boats and left the fish. The harbour master says the fish are salvage. Salvage is taxed.', wander:1}],
       quest:()=> b52Ph() === 1 ? (S.f.b5_c2_hm ? 'The first hulk, at dusk: the plank from the quay.' : 'The harbour master, at his board on the quay.')
         : b52Ph() === 2 ? 'The Sixth\'s lines are on the strand, south-west.'
         : !b52Key() ? 'The harbour master has posted something on his board.'
@@ -126,47 +128,50 @@ const B5CH2 = {
         {id:'tide', name:'The Shake, sitting with the dead', kind:'b5_c2_shake', x:9, y:5, node:()=>'b5_c2_tide_start', show:()=>b52Key() === 'dead' && !!S.f.b5_c2_laid && !S.f.b5_c2_tideDone, fresh:()=>true} ] },
 
     /* 16 x 12 (b5_c2_hulk, dusk). The first harvest ship, on her side across the end of the long quay: the slope of her deck, the open
-       hold with water in it (-), her masts (m), her bulkheads (#), the hatch to the hold (h), and the plank back down to the quay (<) */
+       hold with water in it (-), her masts (m), her bulkheads (#), the hatch to the hold (h), and the plank back down to the quay (<)
+       Terrain kit (25b, v13.22): what the wave left on her deck: oar-benches and crates (4), iron-bound chests (8), water casks (&), coiled rope (*). No folk: a dead ship. */
     { id:'b5_c2_hulk', title:'Trate · the first hulk', sub:'Dusk · the tide off her', hint:'Tap ground to move · the hatch is amidships · the plank is aft', decor:'b5_c2_hulk', dark:true,
       map:[ "################",
-            "#......m.......#",
-            "#..............#",
-            "#...----.......#",
-            "#...----...h...#",
-            "#..............#",
-            "#......m.......#",
-            "#..............#",
-            "#.....---......#",
-            "#.....---......#",
-            "#.....<........#",
+            "#&4....m....*4&#",
+            "#4............8#",
+            "#.*.----.......#",
+            "#...----...h..4#",
+            "#8.............#",
+            "#&.....m....*..#",
+            "#4.............#",
+            "#.*...---....8&#",
+            "#.....---.....4#",
+            "#8&...<....*.48#",
             "################" ],
-      walk:'.', triggers:{h:'b5_c2_hatch', m:'b5_c2_rigging', '<':'b5_c2_hulk_back'}, start:{x:7, y:7},
+      walk:'.*', triggers:{h:'b5_c2_hatch', m:'b5_c2_rigging', '<':'b5_c2_hulk_back'}, start:{x:7, y:7},
       quest:()=> S.f.b5_c2_hulkDone ? 'Down the plank to the harbour master.' : 'The hatch, amidships. The hold.',
       npcs:[] },
 
     /* 16 x 12 (b5_c2_strand, night). ~ the sea  , shingle  . sand  B the Shake boats, drawn up  F the Sixth's fire  # the dune bank
-       > north-east, back to the quays */
+       > north-east, back to the quays
+       Terrain kit (25b, v13.22): the dune bank's foot (1), rocks on the shingle (4), the company's spears (%) and barrels (8), a water cask (&), the trodden sand round the fire (:), marram (*), and one of the Sixth on watch (folk). */
     { id:'b5_c2_strand', title:'Trate · the strand', sub:'South of the quays · the Shake boats', hint:'Tap ground to move · tap a figure to talk · the quays are north-east', decor:'b5_c2_strand', dark:true,
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
             ",,,~~~,,,,~~~,,,",
-            ",B,,,,,B,,,,,B,,",
+            ",B,,4,,B,,4,,B,,",
             "................",
-            ".......F........",
-            "................",
-            ".,......,.....,.",
-            "................",
-            "...............>",
-            "....,......,....",
+            ".....%:F:.....*.",
+            "..*....:.......1",
+            ".,......,.8.8.,1",
+            "1..........8....",
+            "1*.............>",
+            "11*...&8....*.11",
             "################" ],
-      walk:'.,', triggers:{F:'b5_c2_fire', B:'b5_c2_boats', '>':'b5_c2_to_quay'}, start:{x:9, y:8},
+      walk:'.,:*', triggers:{F:'b5_c2_fire', B:'b5_c2_boats', '>':'b5_c2_to_quay'}, start:{x:9, y:8},
+      folk:[{x:6, y:8, kind:'b5_c6_whitefinder', name:'A Whitefinder on watch', line:'The sea came up the harbour and went back again. Nobody has told me it will not do it twice.', wander:1}],
       quest:()=> b52Ph() === 2 ? (S.f.b5_bruneDone == null ? 'The Shake boats. One of them has somebody waiting by it.' : 'The fire. The work goes on in the morning.')
         : b52Ph() === 3 ? (!b52Key() ? 'The quay: the harbour master has posted something.' : b52Key() === 'salvage' && !S.f.b5_c2_wreckDone ? 'The fire, and then the chests on the quay.' : 'The fire.')
         : 'The Finadd is coming down the strand.',
       npcs:[
         {id:'brune', name:'Brune, of the Shake', kind:'brune', x:2, y:4, node:()=>S.f.b5_bruneDone == null ? 'b5_c2_brune' : 'b5_c2_brune_again', show:()=>!b5In('brune') && S.f.b5_bruneDone !== 0 && b5CanRecruit('brune'), fresh:()=>S.f.b5_bruneDone == null},
         {id:'shake', name:'A Shake woman at the boats', kind:'b5_c2_shake', x:12, y:4, node:()=>'b5_c2_shakewoman', fresh:()=>!S.f.b5_c2_shake},
-        {id:'qm', name:'The quartermaster', kind:'b5_letherii', x:11, y:7, node:()=>'b5_c2_qm', fresh:()=>!S.f.b5_c2_qm},
+        {id:'qm', name:'The quartermaster', kind:'b5_c5_quartermaster', x:11, y:7, node:()=>'b5_c2_qm', fresh:()=>!S.f.b5_c2_qm},
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:4, y:7, node:()=>'b5_c2_clerk', fresh:()=>!S.f.b5_c2_clerk},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:13, y:9, node:()=>'b5_c2_tilewoman', fresh:()=>!S.f.b5_c2_tw},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:6, node:()=>'b5_c2_war', show:()=>b52Ph() >= 4, fresh:()=>true} ] } ],

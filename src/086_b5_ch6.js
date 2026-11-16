@@ -117,21 +117,24 @@ const B5CH6 = {
 
   areas:[
     /* 16 x 12 (b5_c6_lines, the eve: dusk, then night). The Whitefinders' lines across the dry channel: . grass  , trodden earth  = tents
-       F the Sixth's fire  ~ the dry channel  - the crossing  L the path down to the lake, where the foragers went */
+       F the Sixth's fire  ~ the dry channel  - the crossing  L the path down to the lake, where the foragers went
+       Terrain kit (25b, v13.22): more tents (6, =), horses on a picket rope (@), other companies' fires (0), spears racked (%), crates (8), wagons (7), a water butt (&), a lantern (!), trodden ground by the fire (:), a tuft (*), and two of the line (folk). */
     { id:'b5_c6_lines', title:'Brans Keep · the Whitefinders\' lines', sub:'Across the dry channel · the eve', hint:'Tap ground to move · tap a figure to talk · the fire is in the middle of the lines', decor:'b5_c6_lines',
-      map:[ "~~,,==,,.,,==,,L",
-            "~~,,==,,.,,==,,,",
-            "~-,,,,,,.,,,,,,,",
-            "~~,,,,,,.,,,==,,",
-            "~~,,==,,F,,,==,,",
-            "~~,,==,,,,,,,,,,",
-            "~~,,,,,,.,,,,,,,",
-            "~~,,,,,,.,,,==,,",
-            "~~,==,,,.,,,==,,",
-            "~~,==,,,.,,,,,,,",
-            "~~,,,,,,.,,,,,,,",
-            "~~,,,,,,.,,,,,,," ],
-      walk:'.,', triggers:{F:'b5_c6_fire', '-':'b5_c6_crossing', L:'b5_c6_lakepath'}, start:{x:8, y:10},
+      map:[ "~~%,==!,.,,==@@L",
+            "~~,,==,,.,,==,,8",
+            "~-,,,,:,.,,,,,,&",
+            "~~,8,,,:.,,,==,6",
+            "~~,,==,:F:,,==,6",
+            "~~,,==,,:,,,,,,%",
+            "~~,,,,,,.,,,0,,,",
+            "~~,%,,,,.,,,==,6",
+            "~~,==,,,.,*,==,6",
+            "~~,==,0,.,,,8,,7",
+            "~~8,,,,,.,,,,,,7",
+            "~~,,==,,.,,,==,6" ],
+      walk:'.,:*', triggers:{F:'b5_c6_fire', '-':'b5_c6_crossing', L:'b5_c6_lakepath'}, start:{x:8, y:10},
+      folk:[{x:10, y:1, kind:'b5_c6_whitefinder', name:'A Whitefinder writing a letter', line:'Writing home. The clerk charges a dock to carry it, and another if they write back. My mother writes back.', wander:1},
+        {x:12, y:5, kind:'b5_letherii', name:'A sentry by the fire', line:'Dry channel. Dry as a ledger. They say it ran full once. They say a lot of things on this side of it.'}],
       quest:()=> !S.f.b5_bounty ? 'The clerk\'s table. The King has sent something.' : b56Ph() >= 2 ? 'Dawn. To the crossing.' : 'The fire. Tomorrow they will come.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:7, y:6, node:()=>'b5_c6_ennic', fresh:()=>!S.f.b5_c6_ennic},
@@ -145,17 +148,18 @@ const B5CH6 = {
         {id:'preda', name:'The Preda', kind:'b5v_preda', x:9, y:3, node:()=>'b5_c6_preda', show:()=>b56Ph() < 2, fresh:()=>!S.f.b5_c6_preda} ] },
 
     /* 16 x 12 (b5_c6_channel, the day). The dry channel in battle: . the channel floor  , stones  # the banks  n the far lip, where the
-       right stands and the Edur come  - the crossing, the way back over  s shields dropped on the stones (decor) */
+       right stands and the Edur come  - the crossing, the way back over  s shields dropped on the stones (decor)
+       Terrain kit (25b, v13.22): a light touch: stones on the bed (4). No folk: the battle's day. */
     { id:'b5_c6_channel', title:'The dry channel', sub:'Brans Keep · the day', hint:'Tap ground to move · the far lip is where the line stands · the crossing goes back over', decor:'b5_c6_channel',
       map:[ "####nnnnnnnn####",
             "###,,,,..,,,,###",
-            "##,,..s..,..,,##",
+            "##,,..s..,.4,,##",
             "##,.,....,...,##",
             "#,,...,..s..,,,#",
-            "#,.,......,..,,#",
+            "#,.,......,.4,,#",
             "#,,..s..,....,,#",
             "##,,.,...,..,,##",
-            "##,,....,..,.,##",
+            "##,,4...,..,.,##",
             "###,,.,..,.,,###",
             "####,,,..,,,####",
             "#######--#######" ],
@@ -165,41 +169,43 @@ const B5CH6 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:6, node:()=>b56Key() ? 'b5_c6_ennic_day' : b56DayNext(), fresh:()=>!b56Key()} ] },
 
     /* 16 x 12 (b5_c6_hills, after the stand: afternoon into night). The barren hills behind the keep: . scrub  , scree  # rock  x thorn
-       o a wayside shrine to the Errant  J the Jheck's trail  v the ridge, where the field can be seen */
+       o a wayside shrine to the Errant  J the Jheck's trail  v the ridge, where the field can be seen
+       Terrain kit (25b, v13.22): the hillsides rising at the rim (1, 2 thorn), boulders (4), a tuft (*). No folk: the Jheck's ground. */
     { id:'b5_c6_hills', title:'The hills behind the keep', sub:'Brans Keep · after', hint:'Tap ground to move · the ridge looks down on the field', decor:'b5_c6_hills',
       map:[ "########vv######",
-            "##,,,,,,..,,,,##",
-            "#,,x,,,.,,,x,,,#",
-            "#,,,,#,.,,,,,,,#",
-            "#,x,,,,..,,,#,,#",
-            "#,,,,,,,.,,,,,,J",
-            "##,,,o,,.,,x,,,#",
-            "#,,,,,,,.,,,,,,#",
-            "#,x,,,,..,,,x,,#",
-            "#,,,,,,.,,,,,,,#",
-            "##,,,,,.,,,,,###",
-            "#####,,..,,#####" ],
-      walk:'.,', triggers:{v:'b5_c6_ridge', o:'b5_c6_shrine', J:'b5_c6_hunt'}, start:{x:7, y:10},
+            "##12,,,,..,,21##",
+            "#1,x,,,.,,4x,,1#",
+            "#,,4,#,.,,,,,42#",
+            "#1x,,,,..,,,#,1#",
+            "#,,,,4,,.,*,,,,J",
+            "##,,,o,,.,,x,,2#",
+            "#2,,,,,,.,,4,,1#",
+            "#1x,,,,..,,,x,1#",
+            "#,,4,,,.,,,,,21#",
+            "##12,,,.,,,,2###",
+            "#####1,..,1#####" ],
+      walk:'.,*', triggers:{v:'b5_c6_ridge', o:'b5_c6_shrine', J:'b5_c6_hunt'}, start:{x:7, y:10},
       quest:()=> !S.f.b5_c6_hillsDone ? 'The Jheck are hunting. The ridge, and past it.' : 'The ridge. The field below.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:9, node:()=>'b5_c6_ennic_hills', fresh:()=>!S.f.b5_c6_ennicHills} ] },
 
     /* 16 x 12 (b5_c6_dissent, after the fallback). The road south-west toward Dissent across open ground: . the road  , grass  # field
-       walls  c an abandoned cart  J the fleeing, and what is running them down  v on, south-west */
+       walls  c an abandoned cart  J the fleeing, and what is running them down  v on, south-west
+       Terrain kit (25b, v13.22): field banks and hedges (1, 2), a dead tree (5), rocks (4), the grass trodden flat beside the road by running feet (:), tufts (*). No folk: what is on this road is running. */
     { id:'b5_c6_dissent', title:'The Dissent road', sub:'South-west from Brans Keep · after', hint:'Tap ground to move · the road goes on south-west', decor:'b5_c6_dissent',
-      map:[ "####,,,,..,,,,,,",
-            ",,,#,,,,.,,,,,,,",
-            ",,,,,,,..,,c,,,,",
-            ",#,,,,,.,,,,,,,J",
-            ",#,,,,.,,,,,,,,,",
-            ",,,,,..,,,,,#,,,",
-            ",,,,.,,,,,,,#,,,",
-            ",,,..,,,,,,,,,,,",
-            ",,..,,,,c,,,,,,,",
-            ",..,,,,,,,,,##,,",
-            "..,,,,,,,,,,,,,,",
-            "v,,,,,,,,,,,,,,," ],
-      walk:'.,', triggers:{c:'b5_c6_cart', J:'b5_c6_fleeing', v:'b5_c6_roadsw'}, start:{x:9, y:0},
+      map:[ "####2,*,..,,*211",
+            ",,,#22,:.:,,*,,1",
+            "1*,,4,:..:,c,*,2",
+            "1#,*,,:.:,*,4,,J",
+            "1#,,,:.:,,*,2,22",
+            ",5,,:..:,,,,#,*1",
+            "*,,:.:,,4,*,#,,1",
+            ",,:..:,*,,4,,221",
+            ",:..:,*,c,,*,2,1",
+            "2..:,,*,,*,,##,1",
+            "..:,,4,,,5,*,*,2",
+            "v:,*,*,,,4,,,122" ],
+      walk:'.,:*', triggers:{c:'b5_c6_cart', J:'b5_c6_fleeing', v:'b5_c6_roadsw'}, start:{x:9, y:0},
       quest:()=> !S.f.b5_c6_flightDone ? 'The Jheck are running down the fleeing. South-west.' : 'South-west, toward Dissent.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:8, y:3, node:()=>'b5_c6_ennic_road', fresh:()=>!S.f.b5_c6_ennicRoad} ] } ],

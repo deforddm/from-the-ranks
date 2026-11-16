@@ -15,7 +15,7 @@
 /* FOR THE ARTIST (81b): names this file uses.
    Items: ART['item/b5_c1_hookknife'], ['item/b5_c1_chit'], ['item/b5_c1_receipt'], ['item/b5_c1_weightbag'].
    Figures: b5_c1_ennic, b5_c1_clerk, b5_c1_tilewoman, b5_c1_ropeman, b5_c1_bookman, b5_c1_cutpurse, b5_c1_drunk. Reused: b5_letherii
-   (the quartermaster, the Garrison, the court's men), thug (the collector), bruiser (the bullies, the minder).
+   (the Garrison, the court's men), b5_c5_quartermaster, b5_c7_courtman (the court's bench), b5_c7_citizen (the tiers), thug (the collector), bruiser (the bullies, the minder).
    Backdrops (SCENEX): b5_barracks (80's, redrawn), b5_c1_lowwalk, b5_c1_pittown, b5_c1_court, b5_c1_festival.
    Ground (TILEX): b5_c1_barracks (. flags, # wall, = eaves, F fire, b bunk-house door, t the clerk's table, > the gate), b5_c1_canal
    (. paving, , steps, ~ canal, # wall, s stall, - the Low Walk's edge, P mooring post, n a builder's board, D the court's door, < >),
@@ -98,34 +98,37 @@ const B5CH1 = {
 
   areas:[
     /* 16 x 12 (b5_c1_barracks, night).  . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  t the clerk's table  F the
-       Sixth's fire  > the gate, east, to the Drownings District */
+       Sixth's fire  > the gate, east, to the Drownings District
+       Terrain kit (25b, v13.22): a light touch: the quartermaster's barrels (8), the water butt (&), spears racked (%), the clerk's lamp (!), the trodden ground by the fire (:), and one of the Sixth off duty (folk). */
     { id:'b5_c1_barracks', title:'Letheras · the Whitefinders\' barracks', sub:'Night · the eve of the festival', hint:'Tap ground to move · tap a figure to talk · the clerk\'s table is west, the gate east', decor:'b5_c1_barracks', dark:true,
       map:[ "################",
             "#===b=====..===#",
-            "#..............#",
+            "#!.........%..8#",
             "#.t............#",
             "#..............#",
-            "#.......F......>",
-            "#..............#",
-            "#..............#",
-            "#=====b........#",
+            "#......:F:.....>",
+            "#.......:.....8#",
+            "#.............8#",
+            "#=====b.......8#",
             "#======........#",
-            "#..............#",
+            "#&.....:....8.%#",
             "################" ],
-      walk:'.', triggers:{F:'b5_c1_yard', t:'b5_c1_clerk', b:'b5_c1_bunk', '>':'b5_c1_gate'}, start:{x:8, y:7},
+      walk:'.:', triggers:{F:'b5_c1_yard', t:'b5_c1_clerk', b:'b5_c1_bunk', '>':'b5_c1_gate'}, start:{x:8, y:7},
+      folk:[{x:4, y:6, kind:'b5_c6_whitefinder', name:'A Whitefinder off duty', line:'Festival tomorrow. Every bookmaker in the Drownings knows my name. Not my face. I am keeping it that way.', wander:1}],
       quest:()=> b51Ph() >= 3 ? (b51KeyDone() || b51Key() === 'swim' ? 'The fire, and then sleep.' : 'The fire. The festival is on the far side of the wall.')
         : !S.f.b5_c1_clerk ? 'The company clerk, at his table under the lamp.' : b51Slept() ? 'Out through the gate, into the festival.' : 'The fire, and then the bunk-houses. The festival is tomorrow.',
       npcs:[
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:3, y:3, node:()=>'b5_c1_clerk', fresh:()=>!S.f.b5_c1_clerk},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:12, y:2, node:()=>b51Ph() >= 3 ? 'b5_c1_ennic_eve' : 'b5_c1_ennic', fresh:()=>b51Ph() >= 3 ? !S.f.b5_c1_purse : !S.f.b5_c1_ennic},
-        {id:'qm', name:'The quartermaster', kind:'b5_letherii', x:13, y:7, node:()=>'b5_c1_qm', fresh:()=>!S.f.b5_c1_qm},
+        {id:'qm', name:'The quartermaster', kind:'b5_c5_quartermaster', x:13, y:7, node:()=>'b5_c1_qm', fresh:()=>!S.f.b5_c1_qm},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:11, y:9, node:()=>'b5_c1_tilewoman', fresh:()=>!S.f.b5_c1_tw},
         /* v13.8 (David, Nov 15): meetings. The plan's star for Book Five: Brys Beddict, Finadd of the Royal Guard and the King's new
            Champion, in the barracks gateway on the festival's first morning, watching the Sixth drill */
         {id:'brys', name:'The King\'s Champion', kind:'b5_c1_brys', x:13, y:4, node:()=>'b5_c1_brysdrill', show:()=>b51Ph() === 1 && b51Slept() && !S.f.b5_c1_brysdrill, fresh:()=>!S.f.b5_c1_brysdrill} ] },
 
     /* 16 x 12 (b5_c1_canal, day).  . paving  , the tiers' steps  ~ the Quillas Canal  # wall  s a stall  n a builder's board  D the fines
-       court's door  - the Low Walk's edge  P a mooring post  < west, back to the barracks  > east, the gate to the pit towns */
+       court's door  - the Low Walk's edge  P a mooring post  < west, back to the barracks  > east, the gate to the pit towns
+       Terrain kit (25b, v13.22): nothing on the ground (the walk is busy and its paving is at the floor already); a man taking bets and a cake-seller (folk). */
     { id:'b5_c1_canal', title:'Letheras · the Low Walk', sub:'The Drownings District · the Errant\'s festival', hint:'Tap ground to move · tap a figure to talk · the barracks are west, the gate to the pit towns east', decor:'b5_c1_canal',
       map:[ "################",
             "#.s....n....s..#",
@@ -140,53 +143,60 @@ const B5CH1 = {
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,-', triggers:{s:'b5_c1_stall', n:'b5_c1_board', D:'b5_c1_courtdoor', '<':'b5_c1_to_yard', '>':'b5_c1_to_pit'}, start:{x:2, y:2},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A man with a chalk slate', line:'Three to one the next swimmer reaches the second post. Ten to one the third. Nobody has collected on the third.', wander:1},
+        {x:14, y:6, kind:'b3_c5_villager', name:'A cake-seller', line:'Honey cakes, two for a dock. Festival price. The rest of the year they are one for a dock and nobody wants them.'}],
       quest:()=> b51Ph() >= 4 ? (b51Key() === 'swim' && !S.f.b5_c1_swam ? 'The court\'s bench by the steps. First light.' : b51Key() === 'swim' && !S.f.b5_c1_walkDone ? 'The bookmaker\'s men are waiting on the Low Walk.' : !S.f.b5_c1_tiers ? 'Up onto the tiers. The Special Drownings.' : 'The Finadd, on the tiers. The company is going somewhere.')
         : 'East through the gate to the pit town, at dusk, for Thegg\'s mother\'s tab. The Low Walk until then.',
       npcs:[
         {id:'ropeman', name:'An old rope-man', kind:'b5_c1_ropeman', x:8, y:7, node:()=>S.f.b5_c1_ropeTried ? 'b5_c1_ropeman_again' : 'b5_c1_ropeman', fresh:()=>!S.f.b5_c1_ropeTried},
         {id:'crowd', name:'A crowd at the eel stall', kind:'b5_c1_cutpurse', x:11, y:2, node:()=>'b5_c1_crowd', show:()=>b51Ph() < 4 && !S.f.b5_c1_cutDone, fresh:()=>!S.f.b5_c1_cutDone},
-        {id:'steps', name:'The court\'s bench by the steps', kind:'b5_letherii', x:4, y:6, node:()=>'b5_c1_steps', show:()=>b51Ph() >= 4 && b51Key() === 'swim' && !S.f.b5_c1_swam, fresh:()=>true},
+        {id:'steps', name:'The court\'s bench by the steps', kind:'b5_c7_courtman', x:4, y:6, node:()=>'b5_c1_steps', show:()=>b51Ph() >= 4 && b51Key() === 'swim' && !S.f.b5_c1_swam, fresh:()=>true},
         {id:'bookmen', name:'The bookmaker\'s men', kind:'b5_c1_bookman', x:6, y:6, node:()=>'b5_c1_walk_start', show:()=>b51Ph() >= 4 && b51Key() === 'swim' && !!S.f.b5_c1_swam && !S.f.b5_c1_walkDone, fresh:()=>true},
-        {id:'tiers', name:'The crowd on the tiers', kind:'b5_letherii', x:10, y:4, node:()=>'b5_c1_tiers', show:()=>b51Ph() >= 4 && (b51Key() !== 'swim' || !!S.f.b5_c1_walkDone) && !S.f.b5_c1_tiers, fresh:()=>true},
+        {id:'tiers', name:'The crowd on the tiers', kind:'b5_c7_citizen', x:10, y:4, node:()=>'b5_c1_tiers', show:()=>b51Ph() >= 4 && (b51Key() !== 'swim' || !!S.f.b5_c1_walkDone) && !S.f.b5_c1_tiers, fresh:()=>true},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>'b5_c1_trate', show:()=>!!S.f.b5_c1_tiers, fresh:()=>!S.f.b5_trate},
         /* v13.8 (David, Nov 15): meetings (Claude's call, one of the brief's own). Bugg, Tehol Beddict's manservant and a builder, at his
            own board on the festival's first day */
         {id:'bugg', name:'An old man by the builder\'s board', kind:'b5_c1_bugg', x:8, y:2, node:()=>'b5_c1_bugg', show:()=>b51Ph() === 2, fresh:()=>!S.f.b5_c1_bugg} ] },
 
-    /* 16 x 12 (b5_c1_canal, night): the same walk, lamplit, with the stalls shut and the court's door open */
+    /* 16 x 12 (b5_c1_canal, night): the same walk, lamplit, with the stalls shut and the court's door open
+       Terrain kit (25b, v13.22): a light touch: a lamp on its pole (!), a coil of rope by the posts (*), and a debtor waiting on the steps (folk). */
     { id:'b5_c1_canalnight', title:'Letheras · the Low Walk', sub:'Night · the fines court is sitting', hint:'Tap ground to move · the court\'s door is lit', decor:'b5_c1_canal', dark:true,
       map:[ "################",
-            "#.s....n....s..#",
+            "#.s....n....s.!#",
             "<..............>",
             "#.....D........#",
             "#,,,,,,,,,,,,,,#",
             "#,,,,,,,,,,,,,,#",
-            "#..............#",
+            "#.........*....#",
             "#.P....P....P..#",
             "#--------------#",
             "#~~~~~~~~~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
-      walk:'.,-', triggers:{s:'b5_c1_stall', n:'b5_c1_board', D:'b5_c1_court', '<':'b5_c1_to_yard', '>':'b5_c1_to_pit'}, start:{x:6, y:4},
+      walk:'.,-*', triggers:{s:'b5_c1_stall', n:'b5_c1_board', D:'b5_c1_court', '<':'b5_c1_to_yard', '>':'b5_c1_to_pit'}, start:{x:6, y:4},
+      folk:[{x:3, y:4, kind:'b5_c7_citizen', name:'A debtor on the steps', line:'Third night on the court\'s list. They say the court is fair. It is. It charges everyone the same.'}],
       quest:()=>'The fines court, by the lit door. Thegg is inside.',
       npcs:[
         {id:'garrison', name:'A Garrison man at the court door', kind:'b5_letherii', x:7, y:3, node:()=>'b5_c1_court', fresh:()=>!b51Key()} ] },
 
-    /* 16 x 12 (b5_c1_pittown, night).  . mud  , rubbish  # shack walls  D the tavern's door  c a cart  F a brazier  ^ north, back to the gate */
+    /* 16 x 12 (b5_c1_pittown, night).  . mud  , rubbish  # shack walls  D the tavern's door  c a cart  F a brazier  ^ north, back to the gate
+       Terrain kit (25b, v13.22): a light touch: barrels (8), a water butt (&), the mud trodden round the brazier (:), and two of the pit town (folk). */
     { id:'b5_c1_pittown', title:'The pit town', sub:'Outside the walls · dusk going to night', hint:'Tap ground to move · tap a figure to talk · the tavern is the door with the light in it', decor:'b5_c1_pittown', dark:true,
       map:[ "#######^^#######",
-            "#.....,........#",
+            "#.....,.....8..#",
             "#.###.....####.#",
             "#.#D#..c..#..#.#",
-            "#.....,........#",
-            "#..,.....F.....#",
+            "#.....,..:.....#",
+            "#..,....:F.....#",
             "#.####.....###.#",
-            "#.#..#..,..#.#.#",
+            "#.#8.#..,..#.#.#",
             "#......c.......#",
             "#.,.........,..#",
-            "#..............#",
+            "#&............8#",
             "################" ],
-      walk:'.,', triggers:{D:'b5_c1_taverndoor', c:'b5_c1_cart', '^':'b5_c1_pit_back'}, start:{x:7, y:9},
+      walk:'.,:', triggers:{D:'b5_c1_taverndoor', c:'b5_c1_cart', '^':'b5_c1_pit_back'}, start:{x:7, y:9},
+      folk:[{x:12, y:4, kind:'b5_c5_nerek', name:'A Nerek woman at a cookpot', line:'Eel and onion, a third the bowl. The onion is real.'},
+        {x:12, y:8, kind:'b8_c2_carter', name:'A labourer off the city walls', line:'They build the walls with our backs, then tax us for living outside them.', wander:1}],
       quest:()=> S.f.b5_c1_tavernDone ? 'Back north to the city, after Thegg.' : 'The tavern, with the light in the door. Thegg\'s mother\'s tab.',
       npcs:[
         {id:'oldman', name:'An old Tarthenal by the brazier', kind:'b5_c1_drunk', x:10, y:5, node:()=>'b5_c1_oldman', show:()=>!S.f.b5_c1_tavernDone, fresh:()=>!S.f.b5_c1_oldman} ] } ],
