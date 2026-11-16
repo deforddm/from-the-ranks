@@ -6912,7 +6912,7 @@ function folkStep(p, t){ const w = p.f.wander || 0; if (!w || REDUCE() || walkin
 function drawFolk(ctx, T, t){ const ps = folkNow(); if (!ps.length) return; const k = Math.min(1, ((t - (FOLK.t || t)) || 16) / 700); FOLK.t = t;
   ps.slice().sort((p, q) => p.dy - q.dy).forEach(p => { folkStep(p, t); p.dx = lerp(p.dx, p.x, REDUCE() ? 1 : k); p.dy = lerp(p.dy, p.y, REDUCE() ? 1 : k); if (Math.abs(p.dx - p.x) < .02) p.dx = p.x; if (Math.abs(p.dy - p.y) < .02) p.dy = p.y;
     if (!onCam(Math.round(p.dx), Math.round(p.dy), 1)) return; const moving = p.dx !== p.x || p.dy !== p.y;
-    drawFigure(ctx, p.f.kind, p.dx*T + T/2, p.dy*T + T*.6, T/32*.86, t, {phase:p.f.x*1.7 + p.f.y, still:!moving, dir:p.dir});
+    drawFigure(ctx, p.f.kind, p.dx*T + T/2, p.dy*T + T*.6, T/32*.86, t, {phase:p.f.x*1.7 + p.f.y, still:!moving, dir:p.dir, folk:true});
     if (p.said && t - p.said < 2600) { const a = Math.min(1, (2600 - (t - p.said))/500), bx = p.dx*T + T*.5, by = p.dy*T - T*.18; ctx.globalAlpha = a; // a small speech mark over whoever spoke
       ctx.fillStyle = 'rgba(20,16,12,.8)'; ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(bx, by, T*.2, T*.13, 0, 0, 7); ctx.fill(); ctx.stroke();
       ctx.fillStyle = '#e8c073'; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.arc(bx + i*T*.08, by, Math.max(1, T*.025), 0, 7); ctx.fill(); } ctx.globalAlpha = 1; } }); }

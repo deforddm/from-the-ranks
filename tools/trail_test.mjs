@@ -19,7 +19,7 @@ const res = await page.evaluate(() => {
     const saved = a.npcs.map(n => n.show); const mates = new Set(S.squad.slice(1));
     a.npcs.forEach(n => { if (mates.has(n.kind)) n.show = () => true; });
     try { startExplore(); } catch (e) { bad.push(aid + ' open: ' + e.message); }
-    const drawn = []; drawFigure = (ctx, kind, x, y, sc, t, o) => { drawn.push({kind, sc}); };
+    const drawn = []; drawFigure = (ctx, kind, x, y, sc, t, o) => { if (!(o && o.folk)) drawn.push({kind, sc}); }; // v13.29: ambient folk (025b) are not the squad's line
     try { drawExplore(0); } catch (e) { bad.push(aid + ': ' + e.message); }
     drawFigure = real; a.npcs.forEach((n, i) => { n.show = saved[i]; });
     const npcKinds = new Set(a.npcs.filter(n => mates.has(n.kind)).map(n => n.kind));
