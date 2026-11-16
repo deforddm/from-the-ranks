@@ -83,21 +83,23 @@ const B3CH5 = {
     go:'Across', node:'b3_c5_start'},
 
   areas:[
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ the Catlin (blocks)  - the ford they came over  > the road south-east */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ the Catlin (blocks)  - the ford they came over  > the road south-east
+       Terrain kit (25b, v13.22): the road from the ford south-east (_), the quartermaster's wheel-less wagon (7) and a crate off it (8), tumbled stone at the ruin (4), the low banks at the south (1), and one of the Host looking at the empty country (folk). */
     { id:'b3_c5_shore', title:'The south shore of the Catlin', sub:'Morning · the Domin begins', hint:'Tap ground to move · tap a figure to talk · the road goes on east', decor:'b3_c5_domin', amb:'plain',
       map:[ "#~~~~~~--~~~~~~#",
             "#~~~~~~--~~~~~~#",
             "#,..,.......,..#",
-            "#..x...,....x..#",
-            "#.,....#.,.....#",
-            "#..,..##...,...>",
-            "#......,..,....>",
-            "#.x.,......#.,.#",
-            "#....,...,.##..#",
+            "#..x...,_...x..#",
+            "#.,..4.#._.....#",
+            "#..,..##..._...>",
+            "#......,..,.___>",
+            "#.x.8......#.,.#",
+            "#.7..,...,.##..#",
             "#.,...x.......,#",
-            "#..,....,..x...#",
+            "#11,....,..x...#",
             "################" ],
-      walk:'.,-', triggers:{'>':'b3_c5_to_ford'}, start:{x:8, y:2},
+      walk:'.,-_', triggers:{'>':'b3_c5_to_ford'}, start:{x:8, y:2},
+      folk:[{x:4, y:3, kind:'b2soldier', name:'A Host regular', line:'Look at it. Not a cow, not a dog, not a chicken. Somebody took the chickens. That is how you know it is serious.'}],
       quest:()=> !S.f.b3_c5_hurl ? 'An outrider is walking his horse down the column. Outriders never do that for nothing.' : !S.f.b3_c5_bloodTried && !S.f.b3_c5_glean ? 'The shore, before the road. The road goes on east.' : 'The road south-east, two days to the next river.',
       npcs:[
         {id:'hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:4, node:()=>S.f.b3_c5_hurl ? 'b3_c5_hurl_again' : 'b3_c5_hurl', fresh:()=>!S.f.b3_c5_hurl},
@@ -107,7 +109,8 @@ const B3CH5 = {
         /* v13.8 (David, Nov 15): meetings. Quick Ben, back from the White Face's lines up the shore, watching the Ilgres fire from a careful distance */
         {id:'qb5', name:'Quick Ben', kind:'qb', x:13, y:9, node:()=>'b3_c5_qb', fresh:()=>!S.f.b3_c5_qb} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on) */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on)
+       Terrain kit (25b, v13.22): a light touch: tumbled stone at the ruin wall (4); no folk (the far bank is the enemy's). */
     { id:'b3_c5_ford', title:'The Domin · a ford two days south', sub:'Noon · a rearguard on the far bank', hint:'Tap ground to move · tap a figure to talk · the ford is the gravel across the river', decor:'b3_c5_domin', amb:'wind',
       map:[ "################",
             "#.....x...,..x.#",
@@ -119,7 +122,7 @@ const B3CH5 = {
             "#~~~~~~--~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "#,..,..x...,..,#",
-            "#..#....,...#..#",
+            "#..#....,..4#..#",
             "################" ],
       walk:'.,', triggers:{'-':'b3_c5_ford'}, start:{x:7, y:2},
       quest:()=> S.f.b3_c5_fordDone ? 'The ford is the Host\'s. Across, and south.' : !S.f.b3_c5_capt ? 'The Seventh\'s lieutenant is on the bank with the cadre, pointing.' : 'The ford. Beklites behind an earthwork on the far bank.',
@@ -128,41 +131,44 @@ const B3CH5 = {
         {id:'mage5', name:'A cadre mage', kind:'b3_c5_mage', x:11, y:5, node:()=>S.f.b3_c5_fordDone ? 'b3_c5_drowned' : 'b3_c5_mage', fresh:()=>!S.f.b3_c5_mage || (!!S.f.b3_c5_fordDone && !S.f.b3_c5_drowned)},
         {id:'rider5', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:2, node:()=>'b3_c5_rider', show:()=>!S.f.b3_c5_fordDone, fresh:()=>S.f.b3_c5_asked == null} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  F smoulder (blocks)  x dead tree  w the square's well  > the road on */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  F smoulder (blocks)  x dead tree  w the square's well  > the road on
+       Terrain kit (25b, v13.22): meant to be empty: the street through the burnt town (_) and tumbled stone from the fallen walls (4); no folk. */
     { id:'b3_c5_town', title:'The Domin · a burnt town', sub:'Rain · the Seer\'s people burned it themselves', hint:'Tap ground to move · tap a figure to talk · the square is round the well', decor:'b3_c5_domin', amb:'storm',
       map:[ "################",
             "#..##..,.##F,..#",
             "#..#F...,.#....#",
             "#,.......,...,.#",
-            "##.##..,...##..#",
+            "##.##4.,...##..#",
             "#....,..w.....,>",
-            "#.,..........,.>",
-            "##..##.,..#F#..#",
+            "#.,_______.___.>",
+            "##..##.,.4#F#..#",
             "#F..#...,..#...#",
             "#..,..x.....,..#",
-            "#.,..#...,..x..#",
+            "#.,..#4..,..x..#",
             "################" ],
-      walk:'.,', triggers:{w:'b3_c5_square', '>':'b3_c5_to_well'}, start:{x:2, y:6},
+      walk:'.,_', triggers:{w:'b3_c5_square', '>':'b3_c5_to_well'}, start:{x:2, y:6},
       quest:()=> S.f.b3_c5_townDone ? 'South again. The column halts at dusk, somewhere with a well.' : 'The square, round the well. The Seer\'s soldiers have the last of the town\'s people there.',
       npcs:[
         {id:'oldman', name:'An old man in a doorway', kind:'b3_c5_villager', x:13, y:2, node:()=>'b3_c5_oldman', fresh:()=>!S.f.b3_c5_oldman},
         {id:'gs5', name:'A Grey Sword trooper', kind:'b3_greysword', x:3, y:9, node:()=>S.f.b3_c5_townDone ? 'b3_c5_gs_again' : 'b3_c5_gs', fresh:()=>S.f.b3_c5_gs == null} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  w the village well  F the Fourth's fire */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  w the village well  F the Fourth's fire
+       Terrain kit (25b, v13.22): rubble at the ruins (3), the green's tufts round the well (*), the trodden ground by the Fourth's fire and the well (:), the squad's gear (8), and one of the Host (folk). */
     { id:'b3_c5_well', title:'The Domin · a dead village', sub:'Night · the halt · one well', hint:'Tap ground to move · tap a figure to talk · the well is on the green, the Fourth\'s fire by the wall', decor:'b3_c5_domin_night', amb:'night', dark:true,
       map:[ "################",
             "#.,..x.....,.x.#",
             "#..##....,.....#",
-            "#..#..,....##..#",
-            "#,......,......#",
+            "#..#3.,...3##..#",
+            "#,......*......#",
             "#....,.w...,...#",
-            "#.,.........,..#",
-            "#..x...,....#..#",
-            "#.,...F...,.##.#",
+            "#.,...*.*...,..#",
+            "#..x...,.:.3#..#",
+            "#.,.8.F:..,.##.#",
             "#....,.....,...#",
             "#.x.,....,...x.#",
             "################" ],
-      walk:'.,', triggers:{w:'b3_c5_well', F:'b3_c5_fire'}, start:{x:7, y:9},
+      walk:'.,:*', triggers:{w:'b3_c5_well', F:'b3_c5_fire'}, start:{x:7, y:9},
+      folk:[{x:10, y:9, kind:'b2soldier', name:'A Host regular', line:'One well and a whole army. We drink in turns. The horses drink first. Nobody argued.'}],
       quest:()=> S.f.b3_c5_key ? 'The fire, when you are ready to sleep. Coral is south.' : S.f.b3_c5_caught ? 'The man in the fur collar sits bound by the well. What happens to him is yours.' : S.f.b3_c5_inc ? 'Somebody put a dead calf down that well. Find out who.' : 'Two lines at one well: the Fourth Regiment\'s water detail and the Rhivi herd.',
       npcs:[
         {id:'tav5', name:'Tav', kind:'tav', x:5, y:4, node:()=>'b3_c5_tav', fresh:()=>!S.f.b3_c5_tav},

@@ -28,16 +28,16 @@ const C4 = {mother:'Sarn', boy:'Tibb', corporal:'Mosk', ropesgt:'Ambrel'};
 /* the same map serves the day, the night and the dawn on the guards' bank: the prisoners north of the ditch, the gap where the carts go in */
 const C4EDGE = [
   "=,.=..=.,=..=.,=",
-  ".,.=,..,..,.=..,",
+  ".,:=,..,.:,.=..,",
   "########.#######",
-  "..,.........,...",
-  ".F.....x.....F..",
-  "......c........>",
-  ".,.............>",
-  "....=......,....",
-  "..,....F........",
-  ".........,....,.",
-  "..=..,......=...",
+  "..,.%..._...,...",
+  ".F.....x_...:F..",
+  ":.....c..______>",
+  ".,.....8.......>",
+  "1...=6.....%....",
+  "1.,...:F........",
+  "1...6....,:...,1",
+  "11=6.,......=611",
   "################"];
 
 /* ---- the Wolves' Rope: the Grey Swords' way of pulling down a K'ell Hunter (a hard check in the barracks yard) ---- */
@@ -139,9 +139,12 @@ const B3CH4 = {
     go:'Walk the line', node:'b3_c4_start'},
 
   areas:[
-    /* 16 x 12. . trodden earth  , ash  # the ditch and the stake line (a gap at the cart road)  = shelters  F fires  x the dead tree  c the ration cart  > the road east to Capustan */
+    /* 16 x 12. . trodden earth  , ash  # the ditch and the stake line (a gap at the cart road)  = shelters  F fires  x the dead tree  c the ration cart  > the road east to Capustan
+       Terrain kit (25b, v13.22): (this map is C4EDGE, the same for the dusk, the night and the dawn) the cart road from the gap to the road east (_), the bank's rim (1), more of the guards' shelters (6), stacked spears (%), crates by the cart (8), churned ground by the fires and across the ditch (:), a guard on the bank and a man across the ditch (folk). */
     { id:'b3_c4_edge', title:'West of Capustan · the guards\' bank', sub:'Dusk · the prisoners across the ditch', hint:'Tap ground to move · tap a figure to talk · the road east goes into the city', decor:'b3_c4_camp',
-      map:C4EDGE, walk:'.,', triggers:{c:'b3_c4_cart', '>':'b3_c4_to_city'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{c:'b3_c4_cart', '>':'b3_c4_to_city'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Every one of them watching our fires. You stop looking back after a while. You do not stop feeling it.'},
+        {x:2, y:0, kind:'tenescowri', name:'A man across the ditch', line:'We walked a long way to sit down. Now we are good at sitting.'}],
       quest:()=> !S.f.b3_c4_order ? 'Whiskeyjack is walking the line.' : !S.f.b3_c4_city ? 'The Grey Swords\' guide waits in the city. The road east, when your stretch is walked.' : 'The road east, to Capustan.',
       npcs:[
         {id:'wj', name:'Whiskeyjack', kind:'wj', x:6, y:3, node:()=>S.f.b3_c4_order ? 'b3_c4_wj_again' : 'b3_c4_wj', fresh:()=>!S.f.b3_c4_order},
@@ -151,21 +154,23 @@ const B3CH4 = {
         {id:'tav', name:'Tav', kind:'tav', x:2, y:4, node:()=>S.f.b3_c4_tav ? 'b3_c4_tav_again' : 'b3_c4_tav', show:()=>c4In('brisk'), fresh:()=>c4In('brisk') && !S.f.b3_c4_tav},
         {id:'rider', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:14, y:8, node:()=>S.f.b3_c4_rider ? 'b3_c4_rider_again' : 'b3_c4_rider', fresh:()=>!S.f.b3_c4_rider} ] },
 
-    /* 16 x 12. . paving  , rubble  # walls  D the Thrall's door  t temple steps  = awnings  w a well  c a cart  F a house still burning  < the road west */
+    /* 16 x 12. . paving  , rubble  # walls  D the Thrall's door  t temple steps  = awnings  w a well  c a cart  F a house still burning  < the road west
+       Terrain kit (25b, v13.22): a light touch: rubble (3), crates (8), the Grey Swords' spears by the yard (%), and a Capan carter (folk). */
     { id:'b3_c4_city', title:'Capustan · the Camps by the Thrall', sub:'Day · the city two days after', hint:'Tap ground to move · tap a figure to talk · the Thrall\'s door is north',  decor:'b3_c3_city',
       map:[ "################",
-            "#...#..D...#..t#",
+            "#3..#..D...#..t#",
             "#.,.#......#..t#",
             "#...=..,...=...#",
-            "#..............#",
+            "#............8.#",
             "<.....w....,...#",
             "<..,...........#",
             "#..c.....=.....#",
-            "#.##.....,..##.#",
+            "#.##.....,..##%#",
             "#.##..F.....##.#",
-            "#,.......,.....#",
+            "#,.....3.,.....#",
             "################" ],
       walk:'.,=', triggers:{D:'b3_c4_thrall', t:'b3_c4_healers', '<':'b3_c4_city_back'}, start:{x:2, y:5},
+      folk:[{x:10, y:4, kind:'b3_c3_capan', name:'A Capan carter', line:'Two days. The smoke is thinner. Mind the cart, it has opinions about corners.'}],
       quest:()=> !c4DannetDone() ? 'The Grey Swords\' barracks, for the guide.' : !S.f.b3_c4_ambrel ? 'The rope-sergeant in the barracks yard has something to say about the plain.' : 'The rope-sergeant. The company rides west at dusk.',
       npcs:[
         {id:'dannet', name:'Dannet', kind:'greysword', x:12, y:7, node:()=>c4DannetDone() ? 'b3_c4_dannet_again' : 'b3_c4_dannet', show:()=>!c4In('greysword') || !S.f.b3_c4_dannet, fresh:()=>!S.f.b3_c4_dannet},
@@ -175,17 +180,21 @@ const B3CH4 = {
         /* v13.8 (David, Nov 15): meetings. Captain Paran on the well's rim in the Camp, between one quarrel and the next */
         {id:'paran4', name:'Captain Paran', kind:'paran', x:5, y:4, node:()=>'b3_c4_paran', fresh:()=>!S.f.b3_c4_paran} ] },
 
-    /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes */
+    /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes
+       Terrain kit (25b, v13.22): C4EDGE, dressed with the dusk (above); one guard on the bank (folk). */
     { id:'b3_c4_night', title:'West of Capustan · the guards\' bank', sub:'Night · cold out of nowhere', hint:'Tap ground to move · tap a figure to talk · the fire, when you\'re ready', decor:'b3_c4_camp_night', dark:true,
-      map:C4EDGE, walk:'.,', triggers:{F:'b3_c4_fire', c:'b3_c4_cart_night', '>':'b3_c4_road_night'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{F:'b3_c4_fire', c:'b3_c4_cart_night', '>':'b3_c4_road_night'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Cold like this in summer is somebody\'s doing. I would like a word with them.'}],
       quest:()=> !S.f.b3_c4_mosk ? 'Corporal ' + C4.corporal + '\'s lads are by the gap, and they are not sleeping.' : 'The fire. Sleep, or pretend.',
       npcs:[
         {id:'nmosk', name:'Corporal ' + C4.corporal, kind:'b2soldier', x:10, y:3, node:()=>S.f.b3_c4_mosk ? 'b3_c4_mosk_after' : 'b3_c4_mosk_night', fresh:()=>!S.f.b3_c4_mosk},
         {id:'nsarn', name:C4.mother, kind:'tenescowri', x:7, y:1, node:()=>'b3_c4_sarn_night'} ] },
 
-    /* dawn on the bank: Whiskeyjack walking the line, the people who came over the stakes, and the ration cart */
+    /* dawn on the bank: Whiskeyjack walking the line, the people who came over the stakes, and the ration cart
+       Terrain kit (25b, v13.22): C4EDGE, dressed with the dusk (above); one guard on the bank (folk). */
     { id:'b3_c4_dawn', title:'West of Capustan · the guards\' bank', sub:'Dawn · after the night', hint:'Tap ground to move · tap a figure to talk · the ration cart, when you\'re ready', decor:'b3_c4_camp',
-      map:C4EDGE, walk:'.,', triggers:{c:'b3_c4_key', '>':'b3_c4_road_dawn'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{c:'b3_c4_key', '>':'b3_c4_road_dawn'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Frost on the stakes, and it is summer. Nobody is saying anything about it, so I am.'}],
       quest:()=> !S.f.b3_c4_dawnWj ? 'Whiskeyjack is walking the line again.' : S.f.b3_c4_key ? 'Three days to the Catlin. The cart, when you\'re ready.' : 'The ration cart. The people who came over the stakes are sitting by it.',
       npcs:[
         {id:'dwj', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c4_dawnWj ? 'b3_c4_dawn_wj_again' : 'b3_c4_dawn_wj', fresh:()=>!S.f.b3_c4_dawnWj},

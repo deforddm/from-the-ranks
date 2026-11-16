@@ -78,7 +78,8 @@ const B3CH2 = {
     go:'Walk', node:'b3_c2_start'},
 
   areas:[
-    /* 16 x 12.  . grass  , long grass  h the herds  = tent  F fire  W wagon  > east  */
+    /* 16 x 12.  . grass  , long grass  h the herds  = tent  F fire  W wagon  > east
+       Terrain kit (25b, v13.22): the column's road east (_), the plain's low rises along the south (1), a Rhivi herder and a footsore regular (folk). */
     { id:'b3_c2_column', title:'The Rhivi Plain · the column', sub:'Day · the first week out of Pale', hint:'Tap ground to move · tap a figure to talk · east, when the squad goes out', decor:'b3_c2_plain',
       map:[ "################",
             "#hhh,,..hhh,,hh#",
@@ -86,13 +87,15 @@ const B3CH2 = {
             "#,....=.....,..#",
             "#..=..=...F....#",
             "#.........,....#",
-            "#..W..W....=...>",
-            "#.,.....,......#",
+            "#..W..W....=___>",
+            "#.,.________...#",
             "#....F....W..,.#",
             "#.W.....,....=.#",
-            "#,,..,....,,..,#",
+            "#11..,....111.,#",
             "################" ],
-      walk:'.,', triggers:{h:'b3_c2_herd', W:'b3_c2_wagons', '>':'b3_c2_to_far'}, start:{x:7, y:7},
+      walk:'.,_', triggers:{h:'b3_c2_herd', W:'b3_c2_wagons', '>':'b3_c2_to_far'}, start:{x:7, y:7},
+      folk:[{x:5, y:2, kind:'rhivi', name:'A Rhivi herder', line:'Your army walks as if it is angry with the ground. Walk like the bhederin. They will be at Capustan before you.', wander:1},
+        {x:8, y:4, kind:'b2soldier', name:'A Host regular, limping', line:'First week out. My feet have filed a complaint with the quartermaster. He is selling them salve.'}],
       quest:()=> !S.f.b3_c2_bb ? 'Whiskeyjack is by the road. Something is leaving.' : !S.f.b3_c2_hurl ? 'Hurlochel the outrider wants the Fourth. He is by the wagons.' : 'East, with Hurlochel, when the squad is ready.',
       npcs:[
         {id:'c2wj', name:'Whiskeyjack', kind:'wj', x:12, y:5, node:()=>S.f.b3_c2_bb ? 'b3_c2_wj_again' : 'b3_c2_bb', fresh:()=>!S.f.b3_c2_bb},
@@ -101,45 +104,50 @@ const B3CH2 = {
         {id:'c2trotts', name:'Trotts', kind:'trotts', x:14, y:7, node:()=>'b3_c2_bb', show:()=>!S.f.b3_c2_bb || /^b3_c2_(bb|mallet|paran)/.test(S.node || '')},
         {id:'c2korlat', name:'Korlat', kind:'korlat', x:11, y:5, node:()=>'b3_c2_korlat', show:()=>!!S.f.b3_c2_bb, fresh:()=>!!S.f.b3_c2_bb && !S.f.b3_c2_korlat},
         {id:'c2tav', name:'Tav', kind:'tav', x:4, y:7, node:()=>S.f.b3_c2_tav ? 'b3_c2_tav_again' : 'b3_c2_tav', show:()=>b3In('brisk'), fresh:()=>b3In('brisk') && !S.f.b3_c2_tav},
-        {id:'c2bole', name:'A Mott Irregular', kind:'bruiser', x:9, y:3, node:()=>S.f.b3_c2_mott ? 'b3_c2_mott_again' : 'b3_c2_mott', fresh:()=>!S.f.b3_c2_mott},
+        {id:'c2bole', name:'A Mott Irregular', kind:'b3_c1_mott', x:9, y:3, node:()=>S.f.b3_c2_mott ? 'b3_c2_mott_again' : 'b3_c2_mott', fresh:()=>!S.f.b3_c2_mott},
         {id:'c2qm', name:'The quartermaster\'s clerk', kind:'b2soldier', x:10, y:9, node:()=>'b3_c2_qm', fresh:()=>!S.f.b3_c2_qm},
         {id:'c2hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:8, node:()=>'b3_c2_hurl', fresh:()=>!S.f.b3_c2_hurl} ] },
 
-    /* 16 x 12.  . grass  , long grass  # the Barghast hill's stones  ~ a stream (blocks)  - the wallow  > the hill, east */
+    /* 16 x 12.  . grass  , long grass  # the Barghast hill's stones  ~ a stream (blocks)  - the wallow  > the hill, east
+       Terrain kit (25b, v13.22): the outriders' trail to the hill (_), the plain's rises (1), thorn by the stream (2), stones under the Barghast hill (4), a dead tree (5), and one Rhivi outrider (folk). */
     { id:'b3_c2_far', title:'The Rhivi Plain · the far grass', sub:'Day · two weeks out · the outriders\' country', hint:'Tap ground to move · tap a figure to talk · the hill is east', decor:'b3_c2_plain',
       map:[ "################",
-            "#,,..,....,###.#",
+            "#11..,....,###.#",
             "#,..,...,..###.#",
-            "#...,......,#..#",
+            "#...,...4..4#..#",
             "#..,..........,#",
-            "#~~~..,........#",
-            "#~~~~~.....,...>",
-            "#.,~~~--.......#",
-            "#....~--,..,...#",
-            "#,..,.~~.....,.#",
-            "#,,....~~..,,..#",
+            "#~~~._____.....#",
+            "#~~~~~...._____>",
+            "#2,~~~--.......#",
+            "#2...~--,..,...#",
+            "#,..,.~~5....,.#",
+            "#,1....~~..11.1#",
             "################" ],
-      walk:'.,-', triggers:{'-':'b3_c2_strides', '>':'b3_c2_to_hill'}, start:{x:3, y:3},
+      walk:'.,-_', triggers:{'-':'b3_c2_strides', '>':'b3_c2_to_hill'}, start:{x:3, y:3},
+      folk:[{x:10, y:2, kind:'b3_rhivi_rider', name:'A Rhivi outrider', line:'Grass to the edge of the sky and then more grass. Your people say the plain ends somewhere. Mine do not.'}],
       quest:()=> !S.f.b3_khell ? 'Hurlochel says the rider went down by the stream.' : !S.f.b3_c2_hillDone ? 'The hill to the east, with the stones on it, and smoke.' : 'Back to the column. It will have made camp by dark.',
       npcs:[
         {id:'c2hurl2', name:'Hurlochel', kind:'hurlochel', x:5, y:4, node:()=>'b3_c2_hurl2', fresh:()=>!!S.f.b3_khell && !S.f.b3_c2_hurl2},
         {id:'c2kin', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:9, y:8, node:()=>S.f.b3_c2_kin ? 'b3_c2_kin_again' : 'b3_c2_kin', show:()=>!!S.f.b3_khell, fresh:()=>!!S.f.b3_khell && !S.f.b3_c2_kin} ] },
 
-    /* 16 x 12.  . grass  , long grass  h the herd lines  = tent  F fire  W wagon */
+    /* 16 x 12.  . grass  , long grass  h the herd lines  = tent  F fire  W wagon
+       Terrain kit (25b, v13.22): a light touch: the trodden ground at the fire (:), stacked spears (%), crates by the wagons (8), another fire (0), the rises at the camp's edge (1), a tuft (*), a regular on watch and a herder (folk). */
     { id:'b3_c2_camp', title:'The Rhivi Plain · the night camp', sub:'Night · three weeks out · the herds lowing in the dark', hint:'Tap ground to move · tap a figure to talk · the fire, then the herd lines', decor:'b3_c2_plain_night', dark:true,
       map:[ "################",
             "#hhhh..hhhh,,hh#",
             "#hh.....hh.....#",
             "#..,..........,#",
-            "#.=..F..=...=..#",
+            "#.=.:F:.=...=..#",
             "#.......,......#",
-            "#..=.........=.#",
+            "#..=......%..=.#",
             "#,......,......#",
-            "#..W....=..W...#",
-            "#....,.........#",
-            "#,,..W.....,,,.#",
+            "#..W8...=..W8..#",
+            "#....,...0.....#",
+            "#1*..W.....111.#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c2_fire', h:'b3_c2_herdlines'}, start:{x:7, y:7},
+      walk:'.,:*', triggers:{F:'b3_c2_fire', h:'b3_c2_herdlines'}, start:{x:7, y:7},
+      folk:[{x:10, y:2, kind:'b2soldier', name:'A Host regular on watch', line:'The herds do not sleep. Neither do I. One of us is being paid for it.'},
+        {x:4, y:6, kind:'rhivi', name:'A Rhivi herder', line:'The bhederin know the dark better than you. Stand still and they walk round you. Run, and they do not.'}],
       quest:()=> S.f.b3_c2_nightDone ? 'Morning. The column moves on toward the river.' : !S.f.b3_c2_rest ? 'The Fourth\'s fire. The Rhivi fires beyond it.' : 'The herd lines, when the squad takes its watch.',
       npcs:[
         {id:'c2mhybe', name:'The Mhybe', kind:'mhybe', x:12, y:5, node:()=>S.f.b3_c2_mhybe ? 'b3_c2_mhybe_again' : 'b3_c2_mhybe', fresh:()=>!S.f.b3_c2_mhybe},
@@ -149,21 +157,23 @@ const B3CH2 = {
         {id:'c2gran', name:'An old Rhivi woman', kind:'rhivi', x:7, y:3, node:()=>S.f.b3_c2_gran ? 'b3_c2_gran_again' : 'b3_c2_gran', fresh:()=>!S.f.b3_c2_gran},
         {id:'c2rumour', name:'A Host regular', kind:'b2soldier', x:6, y:9, node:()=>'b3_c2_rumour', fresh:()=>!S.f.b3_c2_rumour} ] },
 
-    /* 16 x 12.  . grass  , long grass  ~ the river (blocks)  - the ford  h the herd on the far bank  W wagon  = tent  F fire  > on */
+    /* 16 x 12.  . grass  , long grass  ~ the river (blocks)  - the ford  h the herd on the far bank  W wagon  = tent  F fire  > on
+       Terrain kit (25b, v13.22): a light touch: the trodden way up from the ford and on east (_), the churned mud at the ford's mouth (:), a crate off a wagon (8), and a regular with his boots in his hand (folk). */
     { id:'b3_c2_river', title:'The Rhivi Plain · the river', sub:'Day · five weeks out · rain in the hills', hint:'Tap ground to move · tap a figure to talk · the ford', decor:'b3_c2_plain',
       map:[ "################",
             "#,,..hh..,,,...#",
             "#.,.hhhh...,,..#",
             "#~~~~~~----~~~~#",
             "#~~~~~~----~~~~#",
-            "#..,.W..W...,..#",
-            "#.......,..=...>",
-            "#.,..=.........#",
+            "#..,.W8:W_..,..#",
+            "#.......,._=_._>",
+            "#.,..=....._...#",
             "#....,....,..,.#",
             "#,..=....F.....#",
             "#,,.....,,...,,#",
             "################" ],
-      walk:'.,', triggers:{'-':'b3_c2_ford', W:'b3_c2_rwagons', '>':'b3_c2_onward'}, start:{x:7, y:8},
+      walk:'.,_:', triggers:{'-':'b3_c2_ford', W:'b3_c2_rwagons', '>':'b3_c2_onward'}, start:{x:7, y:8},
+      folk:[{x:6, y:7, kind:'b2soldier', name:'A Host regular, boots in hand', line:'Rain in the hills, the Rhivi say. The ford is this deep today and that deep tomorrow. They hold their hands a long way apart.'}],
       quest:()=> S.f.b3_c2_floodDone ? 'The far bank tonight. On, toward Capustan.' : !S.f.b3_c2_key ? 'The ford. The herd is half across and the sky in the west is black.' : 'The water.',
       npcs:[
         {id:'c2mother', name:'A Rhivi herd-mother', kind:'rhivi', x:3, y:6, node:()=>S.f.b3_c2_mother ? 'b3_c2_mother_again' : 'b3_c2_mother', fresh:()=>!S.f.b3_c2_mother && !S.f.b3_c2_key},
