@@ -57,29 +57,33 @@ const CH6 = {
 
   areas:[
     /* 16 x 12.  . cobbles  , puddle  # building / Simtal's wall  L blue gas lamp  l Fete lantern pole  B crates  W wagon  x post  F brazier  D door (shut)  g Lady Simtal's gate */
+    /* Terrain kit (25b, v13.22): two Fete stalls (9); a reveller in a hare mask and a pie-seller (folk). */
     { id:'fete_street', title:'Darujhistan · the Estate District', sub:'Dusk · the Gedderone Fete', hint:'Tap the street to move · tap a figure to talk · Lady Simtal\'s gate is north', decor:'city_dusk',
       map:[ "################",
             "#####L###g###L##",
             "#..l.....,...l.#",
             "#.....,........#",
             "##..B....l..F..#",
-            "#..........,...#",
+            "#..........,..9#",
             "#..l...,....W..#",
             "#......x....,..#",
             "#.,..l.....l...#",
-            "#......L.......#",
+            "#.9....L.......#",
             "##D####..###D###",
             "################" ],
       walk:'.,', triggers:{'g':'c6_gate'}, start:{x:1,y:5},
+      folk:[{x:4, y:5, kind:'reveller', name:'A reveller in a hare mask', line:'Gedderone\'s night. Everybody is somebody else till dawn. I was hoping for somebody taller.', wander:1},
+        {x:9, y:8, kind:'b5_c3_trader', name:'A pie-seller', line:'Pies, a copper. What\'s in them is between me and the goddess, and she isn\'t telling either.', wander:1}],
       npcs:[ {id:'kruppe', name:'Kruppe', kind:'kruppe', x:5, y:3, node:()=>'c6_kruppe', fresh:()=>!S.f.c6_kruppe},
              {id:'murillio', name:'Murillio', kind:'murillio', x:8, y:2, node:()=>'c6_murillio', fresh:()=>!S.f.c6_mur},
              {id:'coll', name:'A big man in plain brown', kind:'coll', x:11, y:3, still:true, node:()=>'c6_coll', fresh:()=>!S.f.c6_coll},
              {id:'crokus', name:'A boy with a rope', kind:'crokus', x:6, y:7, node:()=>'c6_crokus', show:()=>!S.f.c6_crokus, fresh:()=>true},
              {id:'rallick', name:'A man in a doorway', kind:'rallick', x:12, y:9, still:true, node:()=>'c6_rallick', fresh:()=>!S.f.c6_rallick},
              {id:'reveller', name:'A reveller in a goat mask', kind:'reveller', x:3, y:8, node:()=>'c6_reveller', fresh:()=>!S.f.c6_rev},
-             {id:'horses', name:'An old Gadrobi horse-seller', kind:'reveller', x:13, y:7, still:true, node:()=>'c6_horses', show:()=>SQUAD().includes('ellis'), fresh:()=>!S.f.c6_horses} ] },
+             {id:'horses', name:'An old Gadrobi horse-seller', kind:'b8_c2_drover', x:13, y:7, still:true, node:()=>'c6_horses', show:()=>SQUAD().includes('ellis'), fresh:()=>!S.f.c6_horses} ] },
 
     /* . marble  , mosaic runner  # the house wall  D the lit hall doors  s statue  t banquet table  l lantern pole  b balustrade  v the steps down to the garden.  The upper terrace is the shelf in the north-east corner. */
+    /* Terrain kit (25b, v13.22): no kit; a guest in a heron mask and a servant with a tray (folk). */
     { id:'simtal_terrace', title:'Lady Simtal\'s estate · the terraces', sub:'Night · the Fete', hint:'Tap to move · tap a figure to talk · guard rounds: the upper terrace is north-east · the garden is down the steps, south', decor:'estate_terrace',
       map:[ "################",
             "#s.D....D..s#..#",
@@ -94,6 +98,8 @@ const CH6 = {
             "#bbbbbbvvbbbbbb#",
             "################" ],
       walk:'.,', triggers:{'D':'c6_hall', 'v':'c6_steps'}, start:{x:1,y:6},
+      folk:[{x:10, y:8, kind:'reveller', name:'A guest in a heron mask', line:'Lady Simtal\'s wine is excellent. Lady Simtal\'s guests are not. I include myself.'},
+        {x:12, y:7, kind:'b5_c1_tilewoman', name:'A servant with a tray', line:'Wine? It\'s the second-best. The best went to the Council benches an hour ago, and they\'ve not noticed the difference.', wander:1}],
       npcs:[ {id:'baruk', name:'An old man in dark red', kind:'baruk', x:9, y:3, still:true, node:()=>'c6_baruk', fresh:()=>!S.f.c6_baruk},
              {id:'rakemask', name:'The tall guest', kind:'rakemask', x:10, y:2, still:true, node:()=>'c6_rake', fresh:()=>!S.f.c6_rakeMet && !(S.fxd && S.fxd.c6_rake)},
              {id:'kruppe_t', name:'Kruppe', kind:'kruppe', x:4, y:7, still:true, node:()=>'c6_kruppe_t', fresh:()=>!S.f.c6_kruppeT},
@@ -105,6 +111,7 @@ const CH6 = {
              {id:'knives', name:'Shapes on the balustrade', kind:'guildknife', x:14, y:1, still:true, node:()=>'c6_knives', show:()=>!S.f.c6_knivesDone, fresh:()=>true} ] },
 
     /* . lawn  , raked gravel  h hedge  f fountain  w pond  T tree  s statue  l lantern pole  A the Finnest sapling (the young Azath, after)  g the garden gate  ^ the steps up to the terrace */
+    /* Terrain kit (25b, v13.22): none; the garden reads full as it is. */
     { id:'simtal_garden', title:'Lady Simtal\'s estate · the garden', sub:'Night · the Fete', hint:'Tap to move · tap a figure to talk · the terrace steps are north', decor:'estate_night',
       map:[ "################",
             "#l..hh.^^.hh..l#",

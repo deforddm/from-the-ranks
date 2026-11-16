@@ -138,6 +138,7 @@ const CH7 = {
 
   areas:[
     /* 16 columns x 12 rows.  ~ lake  n moored boat  p pier planks  , wet stone  . cobbles  k bollard  B crates  L gas lamp  x post  W wagon  # warehouses  D the green door  > the Worry Gate road east */
+    /* Terrain kit (25b, v13.22): folk only (the quay is full, 32% bare): a boatman. */
     { id:'lakefront', title:'Darujhistan · the Lakefront', sub:'Dawn · the morning after the Fete', hint:'Tap ground to move · tap a figure to talk · the green door is on the south side · the Worry Gate is east', decor:'lakefront',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~n~~~~~~~~~~~~~",
@@ -152,6 +153,7 @@ const CH7 = {
             "###.########.###",
             "################" ],
       walk:'.,p>', triggers:{'D':'c7_green_door', '>':'c7_to_hill'}, start:{x:1, y:7},
+      folk:[{x:14, y:7, kind:'b5_c3_bargeman', name:'A boatman', line:'The Fete\'s over and the lake doesn\'t know it. The gulls know. The gulls always know.', wander:1}],
       npcs:[ {id:'kalam', name:'Kalam', kind:'kalam', x:6, y:4, still:true, node:()=>'c7_kalam', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_kalam},
              {id:'fiddler', name:'Fiddler', kind:'fiddler', x:7, y:4, node:()=>'c7_fiddler', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_fiddler},
              {id:'crokus', name:'Crokus', kind:'crokus', x:8, y:4, node:()=>S.f.c7_coin ? 'c7_crokus_again' : 'c7_crokus', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_coin},
@@ -168,6 +170,7 @@ const CH7 = {
              {id:'veteran', name:'An old man mending a net', kind:'guildveteran', x:12, y:9, still:true, node:()=>'c7_veteran', show:()=>S.f.c4_key === 'aside' && !S.f.c4_vell, fresh:()=>!S.f.c7_veteran} ] },
 
     /* . grass  , scrub and Jatem's Worry (the road east)  r rock  M barrow stone  x Rhivi stake  # drop  < the road back west to the city */
+    /* Terrain kit (25b, v13.22): the Rhivi road worn into the grass along the south (_), two tufts (*); no folk (the hill is crowded as it is). */
     { id:'quorl_hill', title:'East of the city · the quorl hill', sub:'Late morning · Jatem\'s Worry', hint:'Tap ground to move · tap a figure to talk · Whiskeyjack is on the litter · the Rhivi are on the road', decor:'hills',
       map:[ "################",
             "#,,..r......,.M#",
@@ -177,11 +180,11 @@ const CH7 = {
             "#.,.......r....#",
             "#........,.....#",
             "#r...M......x..#",
-            "#....,.....x...#",
-            "<,,,,,,,,,,,,,,,",
-            "#..,..r...,..,.#",
+            "#..*.,.....x...#",
+            "<_______________",
+            "#..,..r..*,..,.#",
             "################" ],
-      walk:'.,<', triggers:{'<':'c7_hill_west'}, start:{x:2, y:9},
+      walk:'.,<_*', triggers:{'<':'c7_hill_west'}, start:{x:2, y:9},
       npcs:[ {id:'wj', name:'Whiskeyjack', kind:'wj', x:7, y:4, still:true, node:()=>'c7_wj', fresh:()=>!S.f.c7_key},
              {id:'qb', name:'Quick Ben', kind:'qb', x:8, y:5, node:()=>'c7_qb_hill', fresh:()=>!S.f.c7_qbHill},
              {id:'paran', name:'Captain Paran', kind:'paran', x:5, y:3, node:()=>'c7_paran_hill', fresh:()=>!S.f.c7_paranHill},
@@ -195,7 +198,7 @@ const CH7 = {
              {id:'trotts', name:'Trotts', kind:'trotts', x:5, y:5, still:true, node:()=>'c7_trotts'},
              {id:'crone', name:'A raven on a stone', kind:'crone', x:13, y:1, still:true, node:()=>'c7_crone', fresh:()=>!S.f.c7_crone},
              {id:'sethand', name:'Sethand', kind:'rhivi', x:12, y:9, still:true, node:()=>'c7_seth', fresh:()=>!S.f.c7_seth},
-             {id:'bundle', name:'A woman on a grey mare', kind:'rhivi', x:14, y:9, still:true, node:()=>'c7_bundle', fresh:()=>!S.f.c7_tattersail},
+             {id:'bundle', name:'A woman on a grey mare', kind:'b3_rhivi_rider', x:14, y:9, still:true, node:()=>'c7_bundle', fresh:()=>!S.f.c7_tattersail},
              {id:'rhivi2', name:'A Rhivi rider', kind:'rhivi', x:13, y:10, still:true, node:()=>'c7_rhivi'} ] } ],
 
   battles:{

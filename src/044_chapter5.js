@@ -36,39 +36,41 @@ const CH5 = {
 
   areas:[
     /* 16 columns x 12 rows.  . grass  , scrub  r rock  M barrow stone  # cliff / drop  x Rhivi marker-stake  > exit east (to the vale) */
+    /* Terrain kit (25b, v13.22): the skyline north (1), scrub (2), boulders (4), a dead tree (5), tufts (*); nobody. */
     { id:'hills_ridge', title:'The Gadrobi Hills · the long ridge', sub:'Day · the third day out', hint:'Tap ground to move · tap a figure to talk · stay below the skyline · the vale is east', decor:'hills',
       map:[ "################",
-            "#,,..r...,..M..#",
-            "#.,....,...MM,.#",
-            "#..x......,....#",
+            "#1111r11111.M12#",
+            "#.,....,...MM,4#",
+            "#..x.....*,....#",
             "#,....M.....r..#",
             "#..,..MM.......#",
-            "#.........,....>",
+            "#.........,.*..>",
             "#.r....,...x...#",
-            "#,...,....M....#",
-            "#..#.......MM,.#",
-            "#,,##..,.....,,#",
+            "#,*..,....M....#",
+            "#..#4.*....MM,.#",
+            "#,,##..,.....52#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_to_vale'}, start:{x:2,y:6},
+      walk:'.,><*', triggers:{'>':'c5_to_vale'}, start:{x:2,y:6},
       npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:8, y:5, still:true, node:()=>S.f.c5_seth ? 'c5_seth_again' : 'c5_seth', fresh:()=>!S.f.c5_seth},
              {id:'outrider', name:'A Rhivi outrider', kind:'rhivi', x:13, y:3, still:true, node:()=>'c5_outrider', fresh:()=>!S.f.c5_outrider},
              {id:'crone', name:'A raven on a stone', kind:'crone', x:9, y:8, still:true, node:()=>S.f.c5_crone ? 'c5_crone_again' : 'c5_crone', show:()=>!!S.f.c5_seth, fresh:()=>!S.f.c5_crone} ] },
 
     /* . grass  , the dig / turned earth  r rock  M barrow stone (the ring)  # drop  < exit west (the ridge)  > exit east (the far hill; after dark, the rent) */
+    /* Terrain kit (25b, v13.22): grassed rises at the north rim (1), scrub in the south corners (2), the dig's spoil by the north-east stones (3), a boulder (4), tufts (*); nobody (the vale is meant to be empty). barrow_night is the same map. */
     { id:'barrow_vale', title:'The Gadrobi Hills · the barrow vale', sub:'Dusk · the long barrow', hint:'Tap ground to move · tap a figure to talk · do not go near the Adjunct · west is the ridge', decor:'hills_dusk',
       map:[ "################",
-            "#..r.....,,....#",
+            "#1111....,,3311#",
             "#....MMMMMM....#",
             "#...M,,,,,,M...#",
-            "#..M,,,,,,,,M..#",
+            "#.*M,,,,,,,,M*.#",
             "#...M,,,,,,M.r.#",
             "<....MM,,MM....>",
             "#.r.....,......#",
-            "#.....r....,...#",
-            "#..,.......r...#",
-            "#.,,...r.....,.#",
+            "#.....r.*..,4..#",
+            "#2.,.......r..2#",
+            "#2,,...r.....22#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:1,y:6},
+      walk:'.,><*', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:1,y:6},
       npcs:[ {id:'lorn', name:'The Adjunct', kind:'lorn', x:13, y:2, still:true, node:()=>S.f.c5_wardsFought ? 'c5_lorn_after' : 'c5_lorn', show:()=>!S.f.c5_night, fresh:()=>S.f.c5_wardsFought ? !S.f.c5_lornAfter : !S.f.c5_lorn},
              /* in the ring of stones until it breaks the wards; then back down in the dig at the far end, by the Adjunct, where its node says it is */
              {id:'tool', name:'A thing of bone and hide', kind:'tool', x:7, y:4, still:true, node:()=>S.f.c5_wardsFought ? 'c5_tool_after' : 'c5_tool', show:()=>!S.f.c5_night && !S.f.c5_wardsFought, fresh:()=>!S.f.c5_wardsFought},
@@ -77,20 +79,21 @@ const CH5 = {
              {id:'paran', name:'Captain Paran', kind:'paran', x:5, y:9, still:true, node:()=>S.f.c5_paran ? 'c5_paran_again' : S.f.c5_toc ? 'c5_paran' : 'c5_toc', show:()=>!!S.f.c5_wardsFought && !S.f.c5_night, fresh:()=>!S.f.c5_paran} ] },
 
     /* the same vale after the Adjunct has gone: night, nobody left in it but the Fourth. Entered from c5_nightfall. */
+    /* Terrain kit (25b, v13.22): as barrow_vale: the same rim, spoil, boulder and tufts; nobody. */
     { id:'barrow_night', title:'The Gadrobi Hills · the barrow vale', sub:'Night · the long barrow', hint:'Tap ground to move · east, past the dig, to Paran\'s fire', decor:'hills_night',
       map:[ "################",
-            "#..r.....,,....#",
+            "#1111....,,3311#",
             "#....MMMMMM....#",
             "#...M,,,,,,M...#",
-            "#..M,,,,,,,,M..#",
+            "#.*M,,,,,,,,M*.#",
             "#...M,,,,,,M.r.#",
             "<....MM,,MM....>",
             "#.r.....,......#",
-            "#.....r....,...#",
-            "#..,.......r...#",
-            "#.,,...r.....,.#",
+            "#.....r.*..,4..#",
+            "#2.,.......r..2#",
+            "#2,,...r.....22#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:3,y:7}, npcs:[] } ],
+      walk:'.,><*', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:3,y:7}, npcs:[] } ],
 
   /* quest lines for the areas above (they take the place of the engine's QUESTS entries for these ids) */
   quests:{

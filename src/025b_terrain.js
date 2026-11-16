@@ -16,7 +16,8 @@
        ':' trampled ground: hoof-churned, boot-marked       '*' a tuft: greener grass, a few flowers or stones
    A decor joins the kit with an entry in TKS below: its palette family, the decor characters to draw some kit characters as
    (as:{'7':'W'}), its own drawings for others (draw:{'4':fn}), and optionally its raw ground, its light and its fog (so a kit tile's
-   ground is lit and fogged the same as the ground round it; the banks, tracks and things on top are not). A decor with no entry gets
+   ground is lit and fogged the same as the ground round it; the banks, tracks and things on top are not), and what its tracks run on
+   into besides a way out (joins: '<>^vr' unless it says otherwise; a decor whose 'r' is a rock leaves the 'r' out). A decor with no entry gets
    the 'earth' family, which suits any dry ground.
    Ambient folk (area.folk) are in the second half of this file. */
 const TK_CH = '1234567890@%$&!_:*', TK_WALK = '_:*', TK_RAISED = '123';
@@ -40,6 +41,8 @@ const TKP = {
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // the glass gone wet at grey light (185b's b10_c5_wet)
   ash:    {d:{body:'#6e6556', crest:'226,218,200', foot:'30,26,22', blade:'#6a6a4a', bladeL:'#8a8a62', brush:'#4a4a36', brushL:'#62624a', stem:'#3a3428', rock:'#6a645a', rockL:'#948e82', rockD:'#2e2a26', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'92,80,66', mud:'42,36,30', lit:'240,230,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // ash and dead earth, darker than 'earth' (Book Three's guards' bank west of Capustan and the Domin's emptied fields)
+  ruin:   {d:{body:'#3c342b', crest:'190,170,140', foot:'10,8,6', blade:'#5a5440', bladeL:'#7a7458', brush:'#3a3628', brushL:'#4e4a38', stem:'#2a2218', rock:'#4e443a', rockL:'#6a5c4c', rockD:'#1e1812', wood:'#4a3624', woodL:'#6e5438', canvas:'#a8987a', canvasD:'#6a5a44', bone:'#d8d0bc', cloth:['#7a3428', '#a8905a'], track:'120,100,80', mud:'30,24,18', lit:'240,220,190', tex:'turf'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // the Pale's ash and broken stone, as dark as its own ground (Book One's prologue)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -156,7 +159,17 @@ const TKS = {
   b3_c6_mountain:{fam:'scree', as:{'0':'F'}},
   b3_c6_mountain_night:{fam:'scree', as:{'0':'F'}},
   b3_c6_river:{fam:'earth', as:{'0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
-  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}} };
+  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}},
+  /* Book One (v13.22): the Pale's ruins by day (its own dark ash and broken stone; its tents) and the Host's camp at night (its tents, wagons and fires), the Rhivi
+     Plain at dusk and the Gadrobi Hills by day, at dusk and at night (the plain's green, as Book One's grass is). Their 'r' is a rock, so a track does not run into it (joins). plain, plain_night,
+     city_dusk, city_night, roof_night and lakefront joined with Books Seven and Eight above, unchanged. */
+  pale:{fam:'ruin', as:{'6':'='}},
+  camp_night:{fam:'earth', as:{'6':'=', '7':'W', '0':'F'}},
+  plain_dusk:{fam:'plain', joins:'<>^v'},
+  hills:{fam:'plain', joins:'<>^v'},
+  hills_dusk:{fam:'plain', joins:'<>^v'},
+  hills_night:{fam:'plain', joins:'<>^v'} };
+TKS.plain.joins = '<>^v'; // Book One's plain is strewn with rocks ('r'); Book Eight's road on it has its crowd on 'r', never beside its track
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
 /* is this Book Ten ground the glass just now? 't' the Third's crossing (not on 'south'), 'l' the Letherii who crossed ('adjunct'), 'c2' the
@@ -274,7 +287,8 @@ function tkLamp(ctx, x, y, T, P, N){ const px = x*T, py = y*T; ell(ctx, px + T*.
 /* the worn track, in world space like the banks: each '_' joins its neighbours (and runs on into a way out or a road), and every tile
    near one draws the whole band inside its own edges, in one stroke, so it bends and crosses tile corners without a seam */
 const tkIsTrack = c => c === '_';
-function tkLinks(x, y){ const isT = (dx, dy) => { const c = tkAt(x + dx, y + dy); return c !== null && (c === '_' || '<>^vr'.includes(c)); };
+let tkJoins = '<>^vr'; // what a track runs on into: the ways out, and 'r' where a book's road is 'r'; a decor whose 'r' is a rock says joins:'<>^v' (set per tile by drawTile below)
+function tkLinks(x, y){ const isT = (dx, dy) => { const c = tkAt(x + dx, y + dy); return c !== null && (c === '_' || tkJoins.includes(c)); };
   return [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]].filter(([dx, dy]) => isT(dx, dy) && (!dx || !dy || (!isT(dx, 0) && !isT(0, dy)))).map(([dx, dy]) => [dx, dy, tkIsTrack(tkAt(x + dx, y + dy)) ? .5 : 1]); }
 function tkPaths(ctx, x, y, T, P, N){ const cs = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (tkIsTrack(tkAt(x + dx, y + dy))) cs.push({x:x + dx, y:y + dy, l:tkLinks(x + dx, y + dy)}); if (!cs.length) return;
   const band = (w, col, cap) => { ctx.lineCap = cap; ctx.lineJoin = 'round'; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); cs.forEach(c => { const cx = (c.x + .5)*T, cy = (c.y + .5)*T; if (!c.l.length) { ctx.moveTo(cx - T*.12, cy); ctx.lineTo(cx + T*.12, cy); } c.l.forEach(([dx, dy, k]) => { ctx.moveTo(cx, cy); ctx.lineTo(cx + dx*T*k, cy + dy*T*k); }); }); ctx.stroke(); };
@@ -299,6 +313,7 @@ const TK_DRAW = {
 /* the kit's drawTile: a kit character is the decor's ground (or the decor's own thing) and the kit's drawing over it; any other
    tile is drawn as it always was, then seated against a bank beside it. Battle maps never hold kit characters. */
 { const _dt = drawTile; drawTile = function(ctx, ch, x, y, T, dark, tunnel, style){
+    tkJoins = (tkCfg(style) || {}).joins || '<>^vr';
     const kit = TK_CH.includes(ch), near = !!tileMap && (tkCells(x, y).length > 0 || [-1, 0, 1].some(dy => [-1, 0, 1].some(dx => tkIsTrack(tkAt(x + dx, y + dy)))));
     const spill = (P, N) => { ctx.save(); ctx.beginPath(); ctx.rect(x*T, y*T, T, T); ctx.clip(); tkPaths(ctx, x, y, T, P, N); tkRise(ctx, x, y, T, P); ctx.restore(); };
     if (!kit) { const r = _dt(ctx, ch, x, y, T, dark, tunnel, style); if (near && ch !== '#') { spill(tkPal(tkCfg(style), !!dark), !!dark); if ('<>^v'.includes(ch)) exitArrow(ctx, ch, x*T, y*T, T); } return r; } // a way out keeps its arrow on top
