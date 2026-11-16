@@ -24,8 +24,8 @@
    docs/tcg-ch5-notes.md. */
 /* FOR THE ARTIST (185b): names this file uses.
    Items: ART['item/b10_c5_kolansiiblade'], ['item/b10_c5_emptyskin'], ['item/b10_c5_lakestone'].
-   Figures: pruss (181b), b9_c1_thallo (161b), b5_letherii (the wagon-master on 'south'; the outriders), b2soldier (the old marine, the
-   clerk, the regulars, Sedge, the stragglers).
+   Figures: pruss (181b), b9_c1_thallo (161b), b5_letherii (the wagon-master on 'south'), b10_kolansii (the
+   outriders, v13.22), b8_c1_veteran (the old marine, v13.22), b2soldier (the clerk, the regulars, Sedge, the stragglers).
    Backdrops: b10_lake and b10_kolanse (180's, yours), and one this file adds: b10_c5_dawn (the glass at first light). The night march uses
    b10_glass_night (183b); on 'south' b10_south (182b) and b10_south_night (184b).
    Ground (TILEX): b10_c5_ground (the lie-up and the night march: the glass, or on 'south' Book Nine's road ground): 'c' a cloak on a
@@ -166,92 +166,99 @@ const B10CH5 = {
 
   areas:[
     /* 16 x 12 (b10_c5_ground, day). The last lie-up. c a cloak on a spear-shaft  W the last water  r the next cloak over (the regulars)
-       O the squad's circle (no fire)  v a rise of glass, west  T the empty tailboard  < west: the column lying up */
+       O the squad's circle (no fire)  v a rise of glass, west  T the empty tailboard  < west: the column lying up
+       Terrain kit (25b, v13.22): the track in (_), the rim raised in shards (1), trodden ground (:), dropped kit (8), bones ($), and a heavy under a cloak (folk). */
     { id:'b10_c5_lieup', title:'The last water · the lie-up', sub:'Day · under the cloaks', hint:'Tap ground to move · tap a figure to talk · the column lies up west, the next cloak east', decor:'b10_c5_ground',
       map:[ "################",
             "#..c....c...c..#",
-            "#v.............#",
-            "#..c..T.....c..#",
-            "#.......W......#",
-            "<..............#",
-            "#..c...O....r..#",
-            "#..............#",
+            "#v.........$..1#",
+            "#..c..T.....c.1#",
+            "#.......W.....1#",
+            "<______........#",
+            "#..c...O.:..r..#",
+            "#.........8....#",
             "#.c...c...c..c.#",
             "#..............#",
-            "#....c....c....#",
+            "#111.c....c.111#",
             "################" ],
-      walk:'.', triggers:{W:'b10_c5_last', T:'b10_c5_tail', r:'b10_c5_next', O:'b10_c5_fire', v:'b10_c5_look', '<':'b10_c5_west'}, start:{x:1, y:5},
+      walk:'._:', triggers:{W:'b10_c5_last', T:'b10_c5_tail', r:'b10_c5_next', O:'b10_c5_fire', v:'b10_c5_look', '<':'b10_c5_west'}, start:{x:1, y:5},
+      folk:[{x:6, y:9, kind:'b2soldier', name:'A heavy under a cloak', line:'Do not talk. Talking dries the mouth. I have worked it out. I have been working it out since dawn.'}],
       quest:()=> !S.f.b10_c5_orders ? `${b105BossC()}, by the last water. The Third has what it has.` : !b105Key() ? 'The last water. The next cloak over, east: one of theirs is failing.' : !b105KeyDone() ? 'The next cloak over, with the water.' : 'The circle, and dusk. The column goes on in the dark.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:4, node:()=>'b10_c5_thallo', show:()=>!b105South(), fresh:()=>!S.f.b10_c5_orders},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:9, y:4, node:()=>'b10_c5_thallo', show:()=>b105South(), fresh:()=>!S.f.b10_c5_orders},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:4, y:7, node:()=>'b10_c5_oldmarine', fresh:()=>!S.f.b10_c5_old},
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:4, y:7, node:()=>'b10_c5_oldmarine', fresh:()=>!S.f.b10_c5_old},
         {id:'strag', name:'Shapes by the next cloak', kind:'b2soldier', x:13, y:5, node:()=>'b10_c5_next', show:()=>!!S.f.b10_c5_orders && !S.f.b10_c5_stragDone && !S.f.b10_c5_stragLeft, fresh:()=>true} ] },
 
     /* 16 x 12 (b10_c5_ground, night). The night march. w the column's wagons  O the halt in the night (the fire with no fire)
-       r west: the rearguard  > east: on, toward grey light */
+       r west: the rearguard  > east: on, toward grey light
+       Terrain kit (25b, v13.22): empty: the track through the halt (_), ridges of standing glass at the rim (1), broken glass (*), shard rubble (3), bones ($), dropped kit (8); no folk. */
     { id:'b10_c5_march', title:'The last water · the column', sub:'Night · no lamps', hint:'Tap ground to move · tap a figure to talk · the rearguard is west, the halt in the middle, the way on east', decor:'b10_c5_ground', dark:true,
       map:[ "################",
-            "#..............#",
+            "#11111.....1111#",
             "#..w.....w.....#",
+            "#....*.........#",
             "#..............#",
+            "r______O_______>",
+            "#.........8....#",
+            "#.....*.....3..#",
+            "#...w..$..w....#",
             "#..............#",
-            "r......O.......>",
-            "#..............#",
-            "#..............#",
-            "#...w.....w....#",
-            "#..............#",
-            "#..............#",
+            "#1111.....11111#",
             "################" ],
-      walk:'.', triggers:{O:'b10_c5_fire', r:'b10_c5_rear', '>':'b10_c5_east'}, start:{x:2, y:5},
+      walk:'._*', triggers:{O:'b10_c5_fire', r:'b10_c5_rear', '>':'b10_c5_east'}, start:{x:2, y:5},
       quest:()=> !S.f.b10_c5_halt ? 'The halt in the night. The column stops where it stands.' : 'East, toward grey light.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:11, y:4, node:()=>'b10_c5_thallo2', show:()=>!b105South(), fresh:()=>!S.f.b10_c5_thallo2},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:11, y:4, node:()=>'b10_c5_thallo2', show:()=>b105South(), fresh:()=>!S.f.b10_c5_thallo2} ] },
 
     /* 16 x 12 (b10_c5_wet, grey light). The ground gone wet (on 'south', the first Kolansii village and its well). L the water
-       (or the well and its trough)  > east: on, to the glass's far edge */
+       (or the well and its trough)  > east: on, to the glass's far edge
+       Terrain kit (25b, v13.22): a light touch: the rim raised (1, the wet glass's own palette), trodden mud at the water's edge (:), and a regular at the water (folk, the glass only). */
     { id:'b10_c5_lake', title:'The last water · grey light', sub:'Grey light · wet ground', hint:'Tap ground to move · tap a figure to talk · the water is in front of you, the way on east', decor:'b10_c5_wet',
       map:[ "################",
-            "#..............#",
+            "#11..........11#",
             "#..............#",
             "#....LLLLLL....#",
-            "#...LLLLLLLL...#",
+            "#..:LLLLLLLL:..#",
             "<...LLLLLLLL...>",
-            "#....LLLLLL....#",
+            "#..:.LLLLLL.:..#",
             "#..............#",
             "#..............#",
             "#..............#",
-            "#..............#",
+            "#111........111#",
             "################" ],
-      walk:'.', triggers:{L:'b10_c5_water', '<':'b10_c5_lakewest', '>':'b10_c5_lakeeast'}, start:{x:2, y:8},
+      walk:'.:', triggers:{L:'b10_c5_water', '<':'b10_c5_lakewest', '>':'b10_c5_lakeeast'}, start:{x:2, y:8},
+      folk:[{x:10, y:7, kind:'b2soldier', name:'A regular on her knees at the edge', line:'I keep putting my hand in to see if it is still there. It is still there. I will check again in a moment.', show:()=>S.f.b10_tRoad !== 'south'}],
       quest:()=> !S.f.b10_c5_drank ? b105S('The water. Get the squad to it.', 'The well. Get the squad to it.') : 'East, to the far edge.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:12, y:8, node:()=>'b10_c5_thallo3', show:()=>!b105South(), fresh:()=>!S.f.b10_c5_thallo3},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:12, y:8, node:()=>'b10_c5_thallo3', show:()=>b105South(), fresh:()=>!S.f.b10_c5_thallo3},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:6, y:9, node:()=>'b10_c5_oldmarine', fresh:()=>false} ] },
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:6, y:9, node:()=>'b10_c5_oldmarine', fresh:()=>false} ] },
 
     /* 16 x 12 (b10_c5_scrub, day). The glass's far edge: the first scrub of Kolanse (on 'south', the edge of Kolanse's farmland).
-       s a thorn-bush  g a field's edge  F a real fire  > east: on  < west: the glass, behind */
+       s a thorn-bush  g a field's edge  F a real fire  > east: on  < west: the glass, behind
+       Terrain kit (25b, v13.22): a light touch: the track in from the glass (_), thicket at the rim (2), a dead tree (5), boulders (4), tufts (*), and a regular looking at a bush (folk, not on 'south'). */
     { id:'b10_c5_scrub', title:'The last water · the far edge', sub:'Day · the first scrub', hint:'Tap ground to move · tap a figure to talk · the picket is east, the fire in the middle, the way on east', decor:'b10_c5_scrub',
       map:[ "################",
-            "#..s....s...ggg#",
-            "#.......s...ggg#",
-            "#..s.........gg#",
+            "#2.s....s...ggg#",
+            "#2......s...ggg#",
+            "#..s.......5.gg#",
             "#.....s........#",
-            "<......F.......>",
+            "<______F.......>",
             "#..............#",
             "#..s.....s.....#",
-            "#.........s..gg#",
-            "#..s.........gg#",
-            "#.....s.....ggg#",
+            "#.*.......s..gg#",
+            "#..s.4....*..gg#",
+            "#22...s.....ggg#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c5_fire', '<':'b10_c5_scrubwest', '>':'b10_c5_edge'}, start:{x:1, y:5},
+      walk:'._*', triggers:{F:'b10_c5_fire', '<':'b10_c5_scrubwest', '>':'b10_c5_edge'}, start:{x:1, y:5},
+      folk:[{x:6, y:3, kind:'b2soldier', name:'A regular looking at a bush', line:'A bush. With leaves on it. I have been looking at it for a while. I do not know what it is called and I do not care.', show:()=>S.f.b10_tRoad !== 'south'}],
       quest:()=> !S.f.b10_c5_picket ? `${b105BossC()}. The captain's word for the Third.` : !S.f.b10_c5_ridersDone ? 'Riders, east, at the scrub\'s edge.' : !S.f.b10_c5_lent ? 'An officer of the regulars, looking for the Third.' : 'The fire, and on.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:4, y:6, node:()=>'b10_c5_thallo4', show:()=>!b105South(), fresh:()=>!S.f.b10_c5_picket},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:4, y:6, node:()=>'b10_c5_thallo4', show:()=>b105South(), fresh:()=>!S.f.b10_c5_picket},
-        {id:'riders', name:'Riders at the scrub\'s edge', kind:'b5_letherii', x:12, y:5, node:()=>'b10_c5_riders', show:()=>!!S.f.b10_c5_picket && !S.f.b10_c5_ridersDone, fresh:()=>true},
+        {id:'riders', name:'Riders at the scrub\'s edge', kind:'b10_kolansii', x:12, y:5, node:()=>'b10_c5_riders', show:()=>!!S.f.b10_c5_picket && !S.f.b10_c5_ridersDone, fresh:()=>true},
         {id:'sedge', name:'Captain Sedge', kind:'b2soldier', x:9, y:6, node:()=>'b10_c5_sedge', show:()=>!b105South() && !!S.f.b10_c5_ridersDone, fresh:()=>!S.f.b10_c5_lent},
         {id:'finadd', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:9, y:6, node:()=>'b10_c5_sedge', show:()=>b105South() && !!S.f.b10_c5_ridersDone, fresh:()=>!S.f.b10_c5_lent} ] } ],
 

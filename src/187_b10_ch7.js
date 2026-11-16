@@ -197,21 +197,24 @@ const B10CH7 = {
   areas:[
     /* 16 x 12 (b10_c7_field, dusk). The first fields the night before: G an empty granary at the field's edge (the pickets)  F the squad's
        fire  R a shield laid on the ground (the reading)  H the heavies' fire (Thallo; on 'south' the Twelfth's wagons)  T tents  w wagons
-       > east, toward the line, at first light */
+       > east, toward the line, at first light
+       Terrain kit (25b, v13.22): the way east to the line (_), thorn along the field's rims (2), trodden ground (:), a tent (6), a weapon stack (%), crates (8), a cookfire (0), and a soldier who cannot sleep (folk, one for each road). */
     { id:'b10_c7_camp', title:'Kolanse · the first fields', sub:'The night before', hint:'Tap ground to move · tap a figure to talk · the line is east, the granary north', decor:'b10_c7_field', dark:true,
       map:[ "################",
-            "#....G.........#",
+            "#....G....22222#",
             "#..............#",
-            "#.T....T....T..#",
+            "#.T..6.T....T8.#",
             "#..............#",
-            "#..H....F...R..#",
+            "#..H.:..F.%.R..#",
             "#..............#",
-            "#.w.........w..>",
+            "#.w......______>",
             "#..............#",
-            "#..T.......T...#",
-            "#..............#",
+            "#..T..0....T...#",
+            "#2222......2222#",
             "################" ],
-      walk:'.', triggers:{G:'b10_c7_granary', F:'b10_c7_fire', R:'b10_c7_shield', H:'b10_c7_heavies', '>':'b10_c7_night'}, start:{x:8, y:7},
+      walk:'._:', triggers:{G:'b10_c7_granary', F:'b10_c7_fire', R:'b10_c7_shield', H:'b10_c7_heavies', '>':'b10_c7_night'}, start:{x:8, y:7},
+      folk:[{x:6, y:6, kind:'b2soldier', name:'A regular who cannot sleep', line:'Good ground tomorrow, the captain says. Flat. Dry. Nothing to trip on.', show:()=>S.f.b10_tRoad !== 'south'},
+            {x:6, y:6, kind:'b5_letherii', name:'A Letherii soldier who cannot sleep', line:'The brigades\' fires go on a long way tonight. Further than I have ever seen them. I have stopped counting them.', show:()=>S.f.b10_tRoad === 'south'}],
       quest:()=> !S.f.b10_c7_boss1 ? `${b107BossN()}, walking the lines. The order for tomorrow.` : 'The fire. Then sleep, if anybody can. The line is east, at first light.',
       npcs:[
         {id:'sedge', name:'Captain Sedge', kind:'b2soldier', x:9, y:3, node:()=>'b10_c7_sedge', show:()=>!b107South(), fresh:()=>!S.f.b10_c7_boss1},
@@ -219,21 +222,24 @@ const B10CH7 = {
 
     /* 16 x 12 (b10_c7_field, day; phases 2 and 3). The stretch: ; the open ground in front (no walking)  L the shield line (the first rush;
        the mortal fight; after, the field)  W its west end (the end of the line; on 'south' the Sixth, three stretches off)  E its east end
-       (the far sights)  b water barrels  c the surgeons' cart  w wagons  , the track behind the line  > back, and later south to the barrows */
+       (the far sights)  b water barrels  c the surgeons' cart  w wagons  , the track behind the line  > back, and later south to the barrows
+       Terrain kit (25b, v13.22): a light touch: boot-marked ground behind the line (:), a weapon stack (%), a crate (8), thorn at the corners (2), and a soldier at the end of the line (folk, one for each road). */
     { id:'b10_c7_line', get title(){ return S && S.f && b107South() ? 'Before Kolanse City · the Twelfth\'s stretch' : 'Kolanse · the far end of the line'; }, sub:'The stretch · far from anybody\'s banner', hint:'Tap ground to move · tap a figure to talk · the line is north, the rear south', decor:'b10_c7_field',
       map:[ ";;;;;;;;;;;;;;;;",
             ";;;;;;;;;;;;;;;;",
             "WLLLLLLLLLLLLLLE",
-            "#..............#",
-            "#..b....,......#",
+            "#..:...:..:..:.#",
+            "#..b..%.,......#",
             "#.......,...c..#",
             "#.......,......#",
-            "#.......,......#",
+            "#.....8.,......#",
             "#..w....,....w.#",
-            "#.......,......#",
-            "#.......,......#",
+            "#.......,.:....#",
+            "#2......,.....2#",
             "########>#######" ],
-      walk:'.,', triggers:{L:'b10_c7_line', W:'b10_c7_west', E:'b10_c7_east', b:'b10_c7_barrels', c:'b10_c7_cart', '>':'b10_c7_tobarrows'}, start:{x:8, y:9},
+      walk:'.,:', triggers:{L:'b10_c7_line', W:'b10_c7_west', E:'b10_c7_east', b:'b10_c7_barrels', c:'b10_c7_cart', '>':'b10_c7_tobarrows'}, start:{x:8, y:9},
+      folk:[{x:2, y:6, kind:'b2soldier', name:'A regular at the end of the line', line:'If they come round the end, we hear first. The sergeant calls that an honour. I call it the end.', show:()=>S.f.b10_tRoad !== 'south'},
+            {x:2, y:6, kind:'b5_letherii', name:'A Letherii soldier behind the line', line:'Three stretches from the Sixth, they say. Close enough to hear it. Far enough not to see. I will take it.', show:()=>S.f.b10_tRoad === 'south'}],
       quest:()=>{ const p = b107Ph();
         if (p === 2) return !S.f.b10_c7_orders ? `${b107BossN()}, behind the line. The order for the day.` : !b107RushDone() ? 'The line, north. The first of them are coming.' : !b107LineDone() ? 'The line, north. The rest of them are coming now.' : 'The line.';
         if (b107South()) return !S.f.b10_c7_march ? 'The Twelfth\'s finadd. There is word along the line.' : 'South, when the squad is ready. North, the army says, to the foreigners\' field.';
@@ -246,21 +252,23 @@ const B10CH7 = {
 
     /* 16 x 12 (b10_c7_field, evening; phase 4). The barrows: M the long mounds (no walking)  e the edge where the army stands  X a spear
        stood at the Third's place on the edge (the names)  B a knot of soldiers asking after somebody  r a regular's pack and spear  F the
-       squad's fire  T tents  w wagons  > the end */
+       squad's fire  T tents  w wagons  > the end
+       Terrain kit (25b, v13.22): a light touch: trodden ground toward the edge (:), a lantern on a pole (!), thorn at the corners (2), and one regular (folk). Quiet. */
     { id:'b10_c7_barrows', title:'Kolanse · the barrows', sub:'Evening · after', hint:'Tap ground to move · tap a figure to talk · the barrows are north, the road south', decor:'b10_c7_field', dark:true,
       map:[ "MMMMMMMMMMMMMMMM",
             "MMMMMMMMMMMMMMMM",
             "#eeeeeeXeeeeeee#",
-            "#..............#",
+            "#.....:..:.....#",
             "#..B........r..#",
             "#.......,......#",
-            "#..F....,......#",
+            "#..F....,....!.#",
             "#.......,...w..#",
             "#..T....,......#",
             "#.......,...T..#",
-            "#..............#",
+            "#2............2#",
             "########>#######" ],
-      walk:'.,e', triggers:{X:'b10_c7_edge', B:'b10_c7_bredd', r:'b10_c7_regular', F:'b10_c7_fire', '>':'b10_c7_onroad'}, start:{x:8, y:9},
+      walk:'.,e:', triggers:{X:'b10_c7_edge', B:'b10_c7_bredd', r:'b10_c7_regular', F:'b10_c7_fire', '>':'b10_c7_onroad'}, start:{x:8, y:9},
+      folk:[{x:6, y:8, kind:'b2soldier', name:'A regular with her helmet off', line:'They are cutting names into boards for the mounds. Somebody asked how long the boards would be. Long enough, they said.'}],
       quest:()=> !S.f.b10_c7_edge ? 'The edge of the barrows, north.' : !b107Key() ? 'Thallo. He has slates.' : !b10FourthRoad() ? 'The Fourth\'s sergeant wants a word.' : !b10BeatOf(7) ? 'The fire. One more thing to say.' : 'South, when the squad is ready. The end of it.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:5, y:5, node:()=>'b10_c7_thallo', fresh:()=>!S.f.b10_c7_thallo || !b107Key()},

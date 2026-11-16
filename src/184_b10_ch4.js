@@ -151,21 +151,23 @@ const B10CH4 = {
     /* 16 x 12 (b10_c4_ground, dusk). The horse-lines at the halt (on 'adjunct' the column's tail on the glass). . open ground  # scrub and
        stone (the dark beyond)  h the picket  k the horse that has gone down  w wagons  T tents (cloaks on 'adjunct')  W the water wagon
        (Yelt; on 'adjunct' the Sixth's carts)  c a water-cart (Orla; the foreigners' water-sergeant)  F the squad's fire  X the picket's far
-       end, east */
+       end, east
+       Terrain kit (25b, v13.22): the way out to the picket's end (_), trodden ground along the picket (:), a saddle (8), the rim raised (1), and a horse-holder (folk, the road only). */
     { id:'b10_c4_lines', title:'The long way round · the horse-lines', sub:'Dusk · the train halted', hint:'Tap ground to move · tap a figure to talk · the picket is north, its far end east', decor:'b10_c4_ground',
       map:[ "################",
-            "#.hhhhhhh..T...#",
-            "#..............#",
+            "#.hhhhhhh.8T..1#",
+            "#..:.:.:......1#",
             "#.k....w....W..#",
             "#..............#",
-            "#......F.......X",
+            "#......F_______X",
             "#..............#",
             "#..c.......w...#",
             "#..............#",
             "#..T..w....T...#",
-            "#..............#",
+            "#111........111#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c4_fire', k:'b10_c4_down', W:'b10_c4_yelt', c:'b10_c4_cart', X:'b10_c4_picket'}, start:{x:3, y:4},
+      walk:'._:', triggers:{F:'b10_c4_fire', k:'b10_c4_down', W:'b10_c4_yelt', c:'b10_c4_cart', X:'b10_c4_picket'}, start:{x:3, y:4},
+      folk:[{x:5, y:8, kind:'b5_letherii', name:'A horse-holder', line:'Another one down this week. The farrier says it is the water. I say it is the walking. We are both right, and neither of us is a horse.', show:()=>S.f.b10_lRoad !== 'adjunct'}],
       quest:()=> !S.f.b10_c4_downSeen ? 'The horse that has gone down, at the picket\'s west end.' : !S.f.b10_c4_orders ? 'The Finadd. He has the column\'s word.' : !S.f.b10_c4_forDone ? 'The picket\'s far end, east. Something is moving out past the horses.' : 'The fire. Then the road.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:2, node:()=>'b10_c4_ennic', fresh:()=>!S.f.b10_c4_orders},
@@ -173,62 +175,68 @@ const B10CH4 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:13, y:8, node:()=>'b10_c4_tile', show:()=>!b104Adj(), fresh:()=>false} ] },
 
     /* 16 x 12 (b10_c4_ground, day; 'escort' only). The road south: , the track  w wagons  h horses on the march  R the column's rear,
-       north  v the lookout on the east side (the Grey Helms' dust)  s a dry wash with carcasses in it  > on south */
+       north  v the lookout on the east side (the Grey Helms' dust)  s a dry wash with carcasses in it  > on south
+       Terrain kit (25b, v13.22): the road's ruts (_), its verges banked (1), a dead tree (5), tufts (*), a sack (8), bones by the wash ($), and a soldier and a carter (folk). */
     { id:'b10_c4_road', title:'The long way round · the road', sub:'Noon · the column on the march', hint:'Tap ground to move · tap a figure to talk · the rear is north, the wash west, the dust east', decor:'b10_c4_ground',
       map:[ "################",
-            "#.....,R,......#",
-            "#..w..,,,..h...#",
-            "#.....,,,......#",
-            "#..h..,,,......v",
-            "#.....,,,..w...#",
-            "s.....,,,......#",
-            "#..w..,,,..h...#",
-            "#.....,,,......#",
-            "#..h..,,,......#",
-            "#.....,,,......#",
+            "#1....,R,..5..1#",
+            "#1.w*.,_,..h..1#",
+            "#1....,_,......#",
+            "#..h..,_,......v",
+            "#.....,_,..w...#",
+            "s.....,_,...8..#",
+            "#..w..,_,..h...#",
+            "#.$...,_,.....1#",
+            "#..h..,_,.*...1#",
+            "#1....,_,.....1#",
             "#######>########" ],
-      walk:'.,', triggers:{R:'b10_c4_rear', v:'b10_c4_look', s:'b10_c4_wash', '>':'b10_c4_onkey'}, start:{x:7, y:3},
+      walk:'.,_*', triggers:{R:'b10_c4_rear', v:'b10_c4_look', s:'b10_c4_wash', '>':'b10_c4_onkey'}, start:{x:7, y:3},
+      folk:[{x:4, y:5, kind:'b5_letherii', name:'A Letherii soldier on the march', line:'Grey knights a day ahead, Bolkando half a day. We are right here. Somebody has to be right here.', wander:1},
+            {x:12, y:4, kind:'b8_c2_carter', name:'A carter with a thin horse', line:'He ate a thornbush yesterday. Spat it out. Ate it again. That is how hungry. Him and me both.'}],
       quest:()=> !S.f.b10_c4_strangers ? 'The column\'s rear, north. Kaedra has seen something on the road.' : !S.f.b10_c4_lookDone ? 'The east side of the road. The Bolkando are pulling away.' : 'The Finadd. The Bolkando want the column to keep up.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>'b10_c4_ennic', fresh:()=>b104KeyReady() && !S.f.b10_c4_key}] },
 
     /* 16 x 12 (b10_c4_ground, night; 'adjunct' only). The night march on the glass: w the column's carts going on ahead  h the Sixth's
-       horses on lead-reins  v the column's tail, east (keeping it in sight)  > on east */
+       horses on lead-reins  v the column's tail, east (keeping it in sight)  > on east
+       Terrain kit (25b, v13.22): empty: the column's track toward its tail (_), ridges of standing glass (1), broken glass (*), shard rubble (3), a horse's bones ($); no folk. */
     { id:'b10_c4_march', title:'The crossing · the night march', sub:'Night · the column\'s tail', hint:'Tap ground to move · tap a figure to talk · the column\'s tail is east', decor:'b10_c4_ground', dark:true,
       map:[ "################",
-            "#..............#",
+            "#11111....11111#",
             "#..w.......w...#",
-            "#..............#",
-            "#..h...........v",
-            "#......h.......#",
-            "#..............#",
+            "#...........$..#",
+            "#..h..........1v",
+            "#......h......_#",
+            "#______.______1#",
             "#..h.......w...#",
-            "#..............#",
-            "#.....h........#",
-            "#..............>",
+            "#....$.....*...#",
+            "#.3...h........#",
+            "#111111........>",
             "################" ],
-      walk:'.', triggers:{v:'b10_c4_look', '>':'b10_c4_onkey'}, start:{x:3, y:6},
+      walk:'._*', triggers:{v:'b10_c4_look', '>':'b10_c4_onkey'}, start:{x:3, y:6},
       quest:()=> !S.f.b10_c4_lookDone ? 'The column\'s tail, east. It is getting further ahead.' : 'The Finadd. The foreigners\' sergeant wants the tail to keep up.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:8, y:6, node:()=>'b10_c4_ennic', fresh:()=>b104KeyReady() && !S.f.b10_c4_key}] },
 
     /* 16 x 12 (b10_c4_ground, night). The horse-lines at the key's halt (on 'horses' at the column's tail, alone; on 'pace' at the edge of
        the Bolkando's camp; on 'adjunct' the halt on the glass before grey light): H the horse-lines (the key's work)  W the water wagon (Yelt,
-       the ledger shut; the Sixth's carts)  F the fire  X the picket's far end  > on south (on east) */
+       the ledger shut; the Sixth's carts)  F the fire  X the picket's far end  > on south (on east)
+       Terrain kit (25b, v13.22): the ways from the fire to the picket's end and south (_), trodden ground at the picket (:), saddles (8), a tuft (*), the rim raised (1), and a picket (folk, the road only). */
     { id:'b10_c4_night', title:'The long way round · the halt', sub:'Night · the horse-lines', hint:'Tap ground to move · tap a figure to talk · the horses are north, the picket\'s end east', decor:'b10_c4_ground', dark:true,
       map:[ "################",
-            "#.hhhhH........#",
-            "#..............#",
+            "#.hhhhH:.:8...1#",
+            "#.............1#",
             "#..w....W...w..#",
             "#..............#",
-            "#......F.......X",
-            "#..............#",
-            "#..w.......w...#",
-            "#..............#",
-            "#....T.....T...#",
-            "#..............#",
+            "#......F_______X",
+            "#......_.......#",
+            "#..w...._..w...#",
+            "#.......*......#",
+            "#....T..:..T...#",
+            "#111...._...111#",
             "#######>########" ],
-      walk:'.', triggers:{F:'b10_c4_fire', H:'b10_c4_horselines', W:'b10_c4_yelt', X:'b10_c4_thieves', '>':'b10_c4_onroad'}, start:{x:7, y:6},
+      walk:'._:*', triggers:{F:'b10_c4_fire', H:'b10_c4_horselines', W:'b10_c4_yelt', X:'b10_c4_thieves', '>':'b10_c4_onroad'}, start:{x:7, y:6},
+      folk:[{x:4, y:4, kind:'b5_letherii', name:'A Letherii picket', line:'Count the horses at dusk, at midnight, at grey light. Same number, you sleep. It has not been the same number yet.', show:()=>S.f.b10_lRoad !== 'adjunct'}],
       quest:()=> !b104WorkDone() ? 'The horse-lines, north. The horses first.' : (b104Horses() && !S.f.b10_c4_nightDone) ? 'The picket\'s far end, east. Somebody is out there in the dark.' : !b10BeatOf(4) ? (b104Adj() ? 'The circle. The squad has something to ask.' : 'The fire. Yelt has shut the ledger.') : 'On, at first light.',
       npcs:[] } ],
 

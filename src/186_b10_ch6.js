@@ -207,21 +207,23 @@ const B10CH6 = {
   areas:[
     /* 16 x 12 (b10_c6_coast, dawn; 'escort'). The beach: ~ the sea  b a boat at the waterline  C the King's crates  D the drill on the sand
        F the squad's fire  H the horse-lines  R a crate for the reading  Y Yelt's tailboard  c Orla's cart  X the landing's far end, east
-       T tents  w wagons  > up to the line */
+       T tents  w wagons  > up to the line
+       Terrain kit (25b, v13.22): a light touch: more of the King's crates (8, drawn as C), another horse (@, as H), a cask (&), a tent (6), the track up to the road (_), dune grass (*), and a soldier with a crate (folk). */
     { id:'b10_c6_coast', title:'The Kolanse coast · the beach', sub:'First light · the King\'s ships', hint:'Tap ground to move · tap a figure to talk · the sea is north, the landing east, the road to the line south', decor:'b10_c6_coast',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~b~~~~~~~b~~~~",
+            "#*............*#",
+            "#.CCC8...D...8.X",
             "#..............#",
-            "#.CCC....D.....X",
+            "#..C...F...H@..#",
             "#..............#",
-            "#..C...F...H...#",
-            "#..............#",
-            "#.Y....R....c..#",
-            "#..............#",
-            "#..T..w....T...#",
-            "#..............#",
+            "#.Y....R....c&.#",
+            "#......_.......#",
+            "#..T..w_...T.6.#",
+            "#*.....__.....*#",
             "#######>########" ],
-      walk:'.', triggers:{b:'b10_c6_boats', D:'b10_c6_drill', F:'b10_c6_fire', H:'b10_c6_horses', R:'b10_c6_crate', Y:'b10_c6_yelt', c:'b10_c6_orla', X:'b10_c6_landing', '>':'b10_c6_up'}, start:{x:7, y:6},
+      walk:'._*', triggers:{b:'b10_c6_boats', D:'b10_c6_drill', F:'b10_c6_fire', H:'b10_c6_horses', R:'b10_c6_crate', Y:'b10_c6_yelt', c:'b10_c6_orla', X:'b10_c6_landing', '>':'b10_c6_up'}, start:{x:7, y:6},
+      folk:[{x:4, y:6, kind:'b5_letherii', name:'A Letherii soldier with a crate on his shoulder', line:'Biscuit. Biscuit. Salt pork. More biscuit. The King thought of everything, and most of it was biscuit.', wander:1}],
       quest:()=> !S.f.b10_c6_orders ? 'The Finadd. He has the morning\'s orders.' : !S.f.b10_c6_scaleGot && !S.f.b10_c6_scaleLate ? 'Yelt, at his tailboard. The ships\' stores are being handed out.' : 'The fire. Then up the road to the line.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b10_c6_ennic', fresh:()=>!S.f.b10_c6_orders},
@@ -229,62 +231,68 @@ const B10CH6 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:9, y:8, node:()=>'b10_c6_crate', fresh:()=>false} ] },
 
     /* 16 x 12 (b10_c6_field, dawn; 'adjunct'). The foreigners' camp out of the glass: T tents  w carts  D the drill  R a crate for the
-       reading  F the squad's fire  Q a foreign quartermaster's wagon  X the camp's ditch, east  > out to the line */
+       reading  F the squad's fire  Q a foreign quartermaster's wagon  X the camp's ditch, east  > out to the line
+       Terrain kit (25b, v13.22): the way to the ditch and the way out (_), trodden ground at the drill (:), a tent (6), a weapon stack (%), crates (8), a cookfire (0), the rim raised (1), and a regular with her boots off (folk). */
     { id:'b10_c6_camp', title:'Kolanse · the foreigners\' camp', sub:'First light · out of the glass', hint:'Tap ground to move · tap a figure to talk · the ditch is east, the line south', decor:'b10_c6_field',
       map:[ "################",
-            "#..T....T....T.#",
-            "#..............#",
-            "#.w....D.......X",
-            "#..............#",
+            "#..T6...T....T.#",
+            "#.....:.:......#",
+            "#.w.%..D_______X",
+            "#.....:........#",
             "#..R...F...Q...#",
             "#..............#",
-            "#.T....w....T..#",
-            "#..............#",
-            "#....T....T....#",
-            "#..............#",
+            "#.T....w....T8.#",
+            "#.......:......#",
+            "#....T.._.T.0..#",
+            "#111...._...111#",
             "#######>########" ],
-      walk:'.', triggers:{D:'b10_c6_drill', F:'b10_c6_fire', R:'b10_c6_crate', Q:'b10_c6_yelt', X:'b10_c6_landing', '>':'b10_c6_up'}, start:{x:7, y:6},
+      walk:'._:', triggers:{D:'b10_c6_drill', F:'b10_c6_fire', R:'b10_c6_crate', Q:'b10_c6_yelt', X:'b10_c6_landing', '>':'b10_c6_up'}, start:{x:7, y:6},
+      folk:[{x:4, y:8, kind:'b2soldier', name:'A regular with her boots off', line:'There is water in this country. You do not have to carry it. I keep forgetting, and carrying it.'}],
       quest:()=> !S.f.b10_c6_orders ? 'The Finadd. He has the morning\'s orders.' : !S.f.b10_c6_scaleGot ? 'The foreign quartermaster\'s wagon. He is handing out the dead\'s kit.' : 'The fire. Then out to the line.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b10_c6_ennic', fresh:()=>!S.f.b10_c6_orders} ] },
 
     /* 16 x 12 (b10_c6_field, day; both roads). The Sixth's stretch: ; the open ground in front (no walking)  L the shield line (the mortal
        fight)  W the stretch's west end (the next company)  E its east end (the far sights)  S stakes  b water barrels  h the horses (or
-       the stretch's back)  w carts  , the track behind the line  > back to the rear */
+       the stretch's back)  w carts  , the track behind the line  > back to the rear
+       Terrain kit (25b, v13.22): a light touch: boot-marked ground behind the line (:), a weapon stack (%), a crate (8), a water barrel (&, as b), thorn at the corners (2), and a soldier re-lacing a boot (folk). */
     { id:'b10_c6_field', title:'Kolanse · the Sixth\'s stretch', sub:'The line · far from anybody\'s banner', hint:'Tap ground to move · tap a figure to talk · the line is north, the rear south', decor:'b10_c6_field',
       map:[ ";;;;;;;;;;;;;;;;",
             ";;;;;;;;;;;;;;;;",
             "WLLLLLLLLLLLLLLE",
-            "#..............#",
-            "#..S....,......#",
-            "#.......,......#",
+            "#..:..:...:..:.#",
+            "#..S....,..8...#",
+            "#....%..,......#",
             "#..b....,...h..#",
-            "#.......,......#",
+            "#.....8.,......#",
             "#..w....,....w.#",
-            "#.......,......#",
-            "#.......,......#",
+            "#..&....,..:...#",
+            "#2......,.....2#",
             "########>#######" ],
-      walk:'.,', triggers:{L:'b10_c6_line', W:'b10_c6_west', E:'b10_c6_east', S:'b10_c6_stakes', b:'b10_c6_barrels', h:'b10_c6_back', '>':'b10_c6_todusk'}, start:{x:8, y:9},
+      walk:'.,:', triggers:{L:'b10_c6_line', W:'b10_c6_west', E:'b10_c6_east', S:'b10_c6_stakes', b:'b10_c6_barrels', h:'b10_c6_back', '>':'b10_c6_todusk'}, start:{x:8, y:9},
+      folk:[{x:12, y:8, kind:'b5_letherii', name:'A Letherii soldier re-lacing a boot', line:'Far from anybody\'s banner, the Finadd says. So nobody will see us. I have decided that is a good thing. Ask me tonight.'}],
       quest:()=> !S.f.b10_c6_fieldOrders ? 'The Finadd, behind the line. He has the order for the day.' : !b106LineDone() ? 'The line, north. They are coming.' : !b106Key() ? 'The Finadd. Something is happening in front of the stretch.' : !b106WorkDone() ? (b106Key() === 'carry' ? 'The line, north. Out into the open ground for the wounded.' : 'The line, north. Hold the stretch.') : 'South, to the rear. The day is going.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=> !S.f.b10_c6_fieldOrders ? 'b10_c6_order' : (b106LineDone() && !b106Key()) ? 'b10_c6_key' : 'b10_c6_ennic', fresh:()=>!S.f.b10_c6_fieldOrders || (b106LineDone() && !b106Key())} ] },
 
     /* 16 x 12 (b10_c6_field, dusk; both roads). Behind the line at dusk: L the line, still standing (the field after)  E the east end (the
-       far sights at dusk)  F the squad's fire  Y the paymaster's tailboard (the King's tallies)  h the horses  w carts  T tents  > the end */
+       far sights at dusk)  F the squad's fire  Y the paymaster's tailboard (the King's tallies)  h the horses  w carts  T tents  > the end
+       Terrain kit (25b, v13.22): a light touch: trodden ground (:), a weapon stack (%), a crate (8), a cookfire (0), thorn at the corners (2), and a soldier at the fire (folk). */
     { id:'b10_c6_dusk', title:'Kolanse · behind the line', sub:'Dusk · the feint over', hint:'Tap ground to move · tap a figure to talk · the line is north, the fire west', decor:'b10_c6_field', dark:true,
       map:[ ";;;;;;;;;;;;;;;;",
             ";;;;;;;;;;;;;;;;",
             "#LLLLLLLLLLLLLLE",
-            "#..............#",
+            "#.....:...:....#",
             "#.......,......#",
             "#..F....,...Y..#",
-            "#.......,......#",
+            "#....%..,..8...#",
             "#..w....,....h.#",
-            "#.......,......#",
-            "#..T....,...T..#",
-            "#.......,......#",
+            "#......0,......#",
+            "#..T....,.:.T..#",
+            "#2......,.....2#",
             "########>#######" ],
-      walk:'.,', triggers:{L:'b10_c6_dlook', E:'b10_c6_deast', F:'b10_c6_fire', Y:'b10_c6_tally', h:'b10_c6_back', '>':'b10_c6_onroad'}, start:{x:8, y:8},
+      walk:'.,:', triggers:{L:'b10_c6_dlook', E:'b10_c6_deast', F:'b10_c6_fire', Y:'b10_c6_tally', h:'b10_c6_back', '>':'b10_c6_onroad'}, start:{x:8, y:8},
+      folk:[{x:5, y:8, kind:'b5_letherii', name:'A Letherii soldier at the fire', line:'Somebody down the line is singing. Badly. Nobody has told him to stop. Nobody is going to, tonight.'}],
       quest:()=> !S.f.b10_c6_news ? 'The Finadd. He has the word from along the line.' : !b106Road() ? 'The Finadd. The staff is asking every sergeant something.' : !b10BeatOf(6) ? 'The fire. One more thing to say.' : 'South, when the squad is ready. The end of it.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=> !S.f.b10_c6_news ? 'b10_c6_news' : !b106Road() ? 'b10_c6_road' : 'b10_c6_ennic', fresh:()=>!S.f.b10_c6_news || !b106Road()} ] } ],

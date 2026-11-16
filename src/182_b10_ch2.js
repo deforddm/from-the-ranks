@@ -159,21 +159,24 @@ const B10CH2 = {
   areas:[
     /* 16 x 12 (b10_c2_ground, afternoon). The rise. . dry grass  # drystone and scrub  w wagons  o barrels  T tents  h the horse-lines
        W a water wagon with a lamp at its tailboard (the tile-woman)  B water barrels on flat wagons (Yelt's)  c Orla's water-cart  F the
-       squad's fire  X the rise's edge, east (the overlook) */
+       squad's fire  X the rise's edge, east (the overlook)
+       Terrain kit (25b, v13.22): the rise's east edge raised (1) with the way out to the overlook (_), trodden ground at the picket (:), another horse on it (@), a sack (8) and a barrel (&), and a soldier and a carter (folk). */
     { id:'b10_c2_rise', title:'The glass\'s edge · the brigades\' train', sub:'Afternoon · the train halted on the rise', hint:'Tap ground to move · tap a figure to talk · the rise\'s edge is east, the horse-lines west', decor:'b10_c2_ground',
       map:[ "################",
-            "#..w..w...T..T.#",
+            "#..w..w.8.T..T.#",
+            "#.:::.........1#",
+            "#.hhh@....W...1#",
             "#..............#",
-            "#.hhh.....W....#",
+            "#......F.______X",
             "#..............#",
-            "#......F.......X",
-            "#..............#",
-            "#..c.....BB....#",
-            "#..............#",
-            "#..T..w....T...#",
-            "#..............#",
+            "#..c.....BB.&.1#",
+            "#.............1#",
+            "#..T..w....T..1#",
+            "#11...........1#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c2_fire', W:'b10_c2_tailboard', B:'b10_c2_wagons', c:'b10_c2_cart', X:'b10_c2_overlook'}, start:{x:2, y:4},
+      walk:'._:', triggers:{F:'b10_c2_fire', W:'b10_c2_tailboard', B:'b10_c2_wagons', c:'b10_c2_cart', X:'b10_c2_overlook'}, start:{x:2, y:4},
+      folk:[{x:12, y:9, kind:'b5_letherii', name:'A Letherii soldier on the rise', line:'Down there, the foreigners, lying under their cloaks like washing put out. Tonight they walk into that. On foot.'},
+            {x:12, y:3, kind:'b8_c2_carter', name:'A carter at the barrel wagons', line:'Grey knights in front, Bolkando behind them, us behind them. We get everybody\'s dust. Dust is free. Water is in the ledger.'}],
       quest:()=> !b102TirrenSettled() ? 'The horse-lines. A farrier with a horse that has gone down.' : !S.f.b10_c2_orders ? 'The Finadd, by the tents. He has the brigades\' word.' : !S.f.b10_c2_sparDone ? 'The Ninth\'s sergeant, by the wagons. The drill.' : (!b102Adj() && !S.f.b10_c2_desDone) ? 'The water wagons. Something is wrong down the row.' : 'The Finadd. The foreigners are moving.',
       npcs:[
         {id:'tirren', name:'A farrier at the horse-lines', kind:'tirren', x:3, y:4, node:()=>'b10_c2_tirren', show:()=>S.f.b10_tirrenDone == null || S.f.b10_tirrenDone === 2, fresh:()=>S.f.b10_tirrenDone == null},
@@ -184,21 +187,24 @@ const B10CH2 = {
         {id:'saffa', name:'Saffa, the field cook', kind:'b9_c2_saffa', x:8, y:5, node:()=>'b10_c2_saffa', fresh:()=>!S.f.b10_c2_saffa} ] },
 
     /* 16 x 12 (b10_c2_ground, dusk). The rise at dusk: the same ground. X the edge (the parting), B the water wagons (the count), F the
-       fire, < the road south (or down onto the glass) */
+       fire, < the road south (or down onto the glass)
+       Terrain kit (25b, v13.22): as the rise by day, with the road west (_) instead of the way to the edge, and a sentry and a carter (folk). */
     { id:'b10_c2_dusk', title:'The glass\'s edge · the brigades\' train', sub:'Dusk · the parting', hint:'Tap ground to move · tap a figure to talk · the edge is east, the road west', decor:'b10_c2_ground', dark:true,
       map:[ "################",
-            "#..w..w...T..T.#",
+            "#..w..w.8.T..T.#",
+            "#.:::.........1#",
+            "#.hhh@....W...1#",
             "#..............#",
-            "#.hhh.....W....#",
+            "<______F.......X",
             "#..............#",
-            "<......F.......X",
-            "#..............#",
-            "#..c.....BB....#",
-            "#..............#",
-            "#..T..w....T...#",
-            "#..............#",
+            "#..c.....BB.&.1#",
+            "#.............1#",
+            "#..T..w....T..1#",
+            "#11...........1#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c2_fire', X:'b10_c2_edge', B:'b10_c2_count', W:'b10_c2_tailboard', c:'b10_c2_cart', '<':'b10_c2_south'}, start:{x:8, y:6},
+      walk:'._:', triggers:{F:'b10_c2_fire', X:'b10_c2_edge', B:'b10_c2_count', W:'b10_c2_tailboard', c:'b10_c2_cart', '<':'b10_c2_south'}, start:{x:8, y:6},
+      folk:[{x:13, y:4, kind:'b5_letherii', name:'A sentry at the rise\'s edge', line:'Lamps out on the wagons, the Finadd says. Voices down. The glass carries sound, they say. Nobody says who would hear.'},
+            {x:3, y:8, kind:'b8_c2_carter', name:'A carter checking a trace', line:'South at dark. South is the long way. The long way has water on it, I am told, by people who have not been.'}],
       quest:()=> b102Watch() ? (!S.f.b10_c2_watchDone ? (b102Adj() ? 'The edge, east, down on the glass. The brigades are turning south.' : 'The edge of the rise, east. The foreigners are going out.') : 'The fire. Then the road.')
         : (!S.f.b10_c2_countDone ? 'Yelt, at the water wagons. Every barrel.' : 'The fire. Then the road.'),
       npcs:[
@@ -206,40 +212,45 @@ const B10CH2 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:6, y:2, node:()=>'b10_c2_ennic', fresh:()=>false} ] },
 
     /* 16 x 12 (b10_c2_ground, night). The first night's halt: wagons drawn up, the horse-lines, the fire, a dead horse at the edge of the
-       picket (k), the Sixth's water barrels (B), the road on, south (>). On 'adjunct' the same halt is on the glass, at the column's tail. */
+       picket (k), the Sixth's water barrels (B), the road on, south (>). On 'adjunct' the same halt is on the glass, at the column's tail.
+       Terrain kit (25b, v13.22): the rim raised west and south (1: a grass bank on the road, a ridge of standing glass on 'adjunct'), the road on east (_), trodden ground at the picket (:), sacks off a wagon (8), and a carter at the wagons (folk, the road only; the glass is empty). */
     { id:'b10_c2_halt', title:'The first halt', sub:'Night · the train drawn up', hint:'Tap ground to move · tap a figure to talk · the horse-lines are north, the barrels east', decor:'b10_c2_ground', dark:true,
       map:[ "################",
             "#.hhhh.....k...#",
+            "#.:::..........#",
+            "#.w...w...w.8..#",
             "#..............#",
-            "#.w...w...w....#",
-            "#..............#",
-            "#......F.......#",
-            "#..............>",
-            "#.w.......BB...#",
-            "#..............#",
-            "#....w....w....#",
-            "#..............#",
+            "#1.....F.......#",
+            "#1......_______>",
+            "#1w.......BB...#",
+            "#1.............#",
+            "#1...w....w....#",
+            "#1111......111.#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c2_fire', k:'b10_c2_carcass', B:'b10_c2_barrels', '>':'b10_c2_onroad'}, start:{x:7, y:6},
+      walk:'._:', triggers:{F:'b10_c2_fire', k:'b10_c2_carcass', B:'b10_c2_barrels', '>':'b10_c2_onroad'}, start:{x:7, y:6},
+      folk:[{x:5, y:8, kind:'b8_c2_carter', name:'A carter by the wagons', line:'Wagons in a ring, same as every night. You would think a ring kept the dark out. It keeps the horses in. Mostly.', show:()=>S.f.b10_lRoad !== 'adjunct'}],
       quest:()=> b102Adj() && !S.f.b10_c2_desDone ? 'The Sixth\'s water barrels, east. Shapes coming down the column.' : !b10BeatOf(2) ? 'The fire. The squad is talking about the foreigners.' : 'On, at first light.',
       npcs:[] },
 
     /* 16 x 12 (b10_c2_ground, day; 'escort' only). The road south: , the track  w wagons  h horses on the march  X the column's east flank,
-       where the dust comes from  > on south */
+       where the dust comes from  > on south
+       Terrain kit (25b, v13.22): the ruts down the road (_), the verges banked (1), tufts (*), a sack fallen off a wagon (8), old bones at the verge ($), and a soldier and a carter (folk). */
     { id:'b10_c2_road', title:'South of the glass · the long way round', sub:'Morning · the column on the road', hint:'Tap ground to move · tap a figure to talk · the column\'s flank is east, the road on south', decor:'b10_c2_ground',
       map:[ "################",
-            "#.....,,,......#",
-            "#..w..,,,..h...#",
-            "#.....,,,......#",
-            "#..h..,,,..w...#",
-            "#.....,,,......X",
-            "#..w..,,,..h...#",
-            "#.....,,,......#",
-            "#..h..,,,..w...#",
-            "#.....,,,......#",
-            "#.....,,,......#",
+            "#1..*.,_,.....1#",
+            "#1.w..,_,..h..1#",
+            "#1....,_,.....1#",
+            "#..h..,_,.....1#",
+            "#.....,_,..w...X",
+            "#..w..,_,..h...#",
+            "#.....,_,......#",
+            "#..h$.,_,..w...#",
+            "#1....,_,..8..1#",
+            "#1....,_,..*..1#",
             "#######>########" ],
-      walk:'.,', triggers:{X:'b10_c2_flank', '>':'b10_c2_onroad'}, start:{x:7, y:2},
+      walk:'.,_*', triggers:{X:'b10_c2_flank', '>':'b10_c2_onroad'}, start:{x:7, y:2},
+      folk:[{x:4, y:5, kind:'b5_letherii', name:'A Letherii soldier on the march', line:'The Bolkando have the good water, being in front. The grey knights are in front of them. We are in front of nobody. Nobody envies us.', wander:1},
+            {x:12, y:7, kind:'b8_c2_carter', name:'A carter walking by his wagon', line:'That wheel is going. I told the wagon-master. He said so is everything. He is not wrong, which is the trouble with him.'}],
       quest:()=> !S.f.b10_c2_joined ? 'The column\'s east flank. The horses have smelled something.' : 'On south, with the column.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b10_c2_ennic_road', fresh:()=>!!S.f.b10_c2_joined && !S.f.b10_c2_word}] } ],

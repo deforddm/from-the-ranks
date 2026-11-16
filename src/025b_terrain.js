@@ -34,6 +34,10 @@ const TKP = {
            n:{body:'#2e2c2c', crest:'200,200,210', foot:'0,0,0', blade:'#3a3a34', bladeL:'#4a4a42', brush:'#2a2826', brushL:'#3a3834', stem:'#2a2622', rock:'#34302e', rockL:'#4c4844', rockD:'#141210', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3e3a36', canvasD:'#221e1c', bone:'#6a6a70', cloth:['#3a2018', '#3a3020'], track:'170,170,180', mud:'0,0,0', lit:'200,200,215', tex:'dune'}}, // the old sea floor's white shell ground (75b)
   scree:  {d:{body:'#8a867a', crest:'246,242,230', foot:'50,46,40', blade:'#7a7a52', bladeL:'#a0a070', brush:'#5a6040', brushL:'#7a8052', stem:'#3a3428', rock:'#7a766c', rockL:'#aaa69a', rockD:'#3a3832', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'110,104,92', mud:'70,64,54', lit:'250,246,232', tex:'turf'},
            n:{body:'#24241f', crest:'190,190,205', foot:'0,0,0', blade:'#383a30', bladeL:'#4a4c40', brush:'#1e201a', brushL:'#2e3028', stem:'#24201a', rock:'#2a2a28', rockL:'#3e3e3a', rockD:'#10100e', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,215', tex:'turf'}}, // grey scree and scrub (Book Five's hills behind Brans Keep)
+  glass:  {d:{body:'#bcc6d2', crest:'255,255,255', foot:'70,84,104', blade:'#9aa6b6', bladeL:'#eef4fa', brush:'#8a96a6', brushL:'#b4c0ce', stem:'#5a6676', rock:'#a8b4c4', rockL:'#f0f4f8', rockD:'#5e6a7c', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#efe9da', cloth:['#8a3a2a', '#c8a868'], track:'120,132,150', mud:'96,108,128', lit:'255,255,255', tex:'glass'},
+           n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // Book Ten's Glass Desert (183b's b103aGlassT): pale glinting glass by day, star-dark by night
+  wetglass:{d:{body:'#5a6676', crest:'220,228,240', foot:'20,26,36', blade:'#8a96a6', bladeL:'#d8e0ea', brush:'#4a5464', brushL:'#6a7686', stem:'#3a4250', rock:'#6a7686', rockL:'#b8c4d2', rockD:'#2a3240', wood:'#4a3420', woodL:'#7a5a3a', canvas:'#a89878', canvasD:'#6a5c48', bone:'#d8d4c8', cloth:['#7a3428', '#a8905a'], track:'150,164,184', mud:'40,48,60', lit:'230,236,244', tex:'glass'},
+           n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // the glass gone wet at grey light (185b's b10_c5_wet)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -121,7 +125,24 @@ const TKS = {
   b5_c6_lines:{fam:'plain', as:{'6':'='}, draw:{'0':(c, x, y, T, N) => b55Fire(c, x*T, y*T, T, N), '7':(c, x, y, T, N) => b55Wagon(c, x*T, y*T, T, N), '8':(c, x, y, T, N) => b55Cover(c, x, y, T, N, 'b5_c5_keep'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b5_c6_channel:{fam:'earth'},
   b5_c6_hills:{fam:'scree'},
-  plain:{fam:'plain'} };
+  plain:{fam:'plain'},
+  /* Book Ten (v13.22): the camp at the Wastes' edge and the brigades' road (Book Nine's road ground: its tents, wagons, fires, horse picket
+     and water barrels), the Glass Desert (the glass palette: ridges of standing shards, broken glass for a tuft; a cloak on a spear-shaft
+     for a tent), the wet glass at grey light, Kolanse's scrub and fields (their tents, wagons, fires, horses and barrels), the beach (the
+     King's crates). The road decides the ground (183b's b103aSouth and its kin), so the family and the drawings are read at draw time. */
+  b10_c1_camp:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'o'}},
+  b10_c2_ground:{get fam(){ return tkB10Glass('c2') ? 'glass' : 'earth'; }, get as(){ return tkB10Glass('c2') ? {'7':'w', '0':'F', '@':'h'} : {'6':'T', '7':'w', '0':'F', '@':'h', '&':'o'}; }},
+  b10_c3_ground:{get fam(){ return tkB10Glass('t') ? 'glass' : 'earth'; }, as:{'6':'c', '7':'w'}},
+  b10_c4_ground:{get fam(){ return tkB10Glass('l') ? 'glass' : 'earth'; }, get as(){ return tkB10Glass('l') ? {'6':'T', '7':'w', '@':'h'} : {'6':'T', '7':'w', '0':'F', '@':'h', '&':'o'}; }},
+  b10_c5_wet:{get fam(){ return tkB10Glass('t') ? 'wetglass' : 'earth'; }},
+  b10_c5_scrub:{fam:'earth'},
+  b10_c6_coast:{fam:'sand', as:{'6':'T', '7':'w', '0':'F', '8':'C', '@':'H'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b10_c6_field:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'b'}} };
+TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
+TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
+/* is this Book Ten ground the glass just now? 't' the Third's crossing (not on 'south'), 'l' the Letherii who crossed ('adjunct'), 'c2' the
+   Sixth's first halt on 'adjunct' (182b draws only that area of Ch 2's road ground as the glass) */
+function tkB10Glass(k){ const f = (S && S.f) || {}; return k === 't' ? f.b10_tRoad !== 'south' : k === 'l' ? f.b10_lRoad === 'adjunct' : !!(S && S.area === 'b10_c2_halt' && f.b10_lRoad === 'adjunct'); }
 TKS.b5_c7_canalnight = TKS.b5_c7_walk = TKS.b5_c7_canal; // the footbridge by night and at the evening of the fall: the same ground
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
@@ -139,7 +160,7 @@ function tkCells(x, y){ const out = []; for (let dy = -1; dy <= 1; dy++) for (le
 const TK_LUMPS = (c, dune) => { const j = k => hash(c.x, c.y, k + 360) - .5; return dune ? [[j(1)*.12, j(2)*.08, .86, .58], [-.34 + j(3)*.1, .12 + j(4)*.06, .56, .4], [.34 + j(5)*.1, .1 + j(6)*.06, .56, .4]] // a dune: long and smooth
     : [[j(1)*.16, j(2)*.12, .74, .6], [-.3 + j(3)*.12, .16 + j(4)*.1, .5, .42], [.3 + j(5)*.12, -.14 + j(6)*.1, .5, .44], [j(7)*.2, -.26 + j(8)*.08, .42, .34]]; };
 function tkLumps(ctx, c, T, ox, oy, s, col, dune){ const bx = (c.x + .5)*T, by = (c.y + .5)*T; ctx.fillStyle = col; ctx.beginPath(); TK_LUMPS(c, dune).forEach(([u, v, rx, ry]) => { ctx.moveTo(bx + (u + ox)*T + rx*s*T, by + (v + oy)*T); ctx.ellipse(bx + (u + ox)*T, by + (v + oy)*T, rx*s*T, ry*s*T, 0, 0, 7); }); ctx.fill(); }
-function tkRise(ctx, x, y, T, P){ const cs = tkCells(x, y); if (!cs.length) return; const D = P.tex === 'dune', night = P.foot === '0,0,0';
+function tkRise(ctx, x, y, T, P){ const cs = tkCells(x, y); if (!cs.length) return; const D = P.tex === 'dune' || P.tex === 'glass', night = P.foot === '0,0,0';
   const body = k => k === '2' ? tkHex(P.body, -.16) : k === '3' ? tkHex(P.body, -.08) : P.body;
   cs.forEach(c => tkLumps(ctx, c, T, .1, .17, 1, `rgba(${P.foot},${night ? .4 : .3})`, D)); // the shadow, down and right
   cs.forEach(c => tkLumps(ctx, c, T, 0, .1, 1, tkHex(body(c.k), -.3), D)); // the face toward us, in its own shade
@@ -148,7 +169,10 @@ function tkRise(ctx, x, y, T, P){ const cs = tkCells(x, y); if (!cs.length) retu
   cs.forEach(c => { if (tkRaised(c.x, c.y - 1) && tkAt(c.x, c.y - 1) !== null) return; const [u, v, rx, ry] = TK_LUMPS(c, D)[0], bx = (c.x + .5 + u)*T, by = (c.y + .5 + v - .04)*T; // its crest, where it meets the sky
     ctx.strokeStyle = `rgba(${P.crest},${night ? .16 : .3})`; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.ellipse(bx, by, rx*T*.96, ry*T*.96, 0, Math.PI*1.12, Math.PI*1.88); ctx.stroke(); });
   cs.forEach(c => { const bx = (c.x + .5)*T, by = (c.y + .46)*T; // what grows on it, or lies on it
-    if (c.k === '1') { if (P.tex === 'dune') { for (let i = 0; i < 3; i++) { const yy = by + T*(-.3 + i*.24), w = T*(.5 - Math.abs(i - 1)*.12); ctx.strokeStyle = i % 2 ? `rgba(${P.crest},.2)` : `rgba(${P.foot},.18)`; ctx.lineWidth = Math.max(1, T*.025); ctx.beginPath(); ctx.moveTo(bx - w, yy + T*.03); ctx.quadraticCurveTo(bx, yy - T*.07, bx + w, yy + T*.02); ctx.stroke(); } }
+    if (c.k === '1' && P.tex === 'glass') { const night = P.foot === '0,0,0'; for (let i = 0; i < 4; i++) { const sx = bx + T*(-.36 + i*.24 + (hash(c.x, c.y, i + 480) - .5)*.1), sy = by + T*(.16 + (hash(c.y, c.x, i + 481) - .5)*.16), h = T*(.18 + hash(c.x, c.y, i + 482)*.3), w = T*(.07 + hash(c.y, c.x, i + 483)*.05), lean = (hash(c.x, c.y, i + 484) - .5)*T*.12; // shards of glass standing up out of the ridge
+        poly(ctx, [[sx - w, sy], [sx + lean, sy - h], [sx + w, sy]], P.rock); poly(ctx, [[sx - w, sy], [sx + lean, sy - h], [sx - w*.2, sy]], night ? `rgba(${P.crest},.28)` : `rgba(${P.crest},.75)`); }
+      if (!night && hash(c.x, c.y, 490) > .5) { ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillRect(bx + T*(hash(c.x, c.y, 491) - .5)*.6, by - T*.12, Math.max(1, T*.06), Math.max(1, T*.025)); } } // a glint
+    else if (c.k === '1') { if (P.tex === 'dune') { for (let i = 0; i < 3; i++) { const yy = by + T*(-.3 + i*.24), w = T*(.5 - Math.abs(i - 1)*.12); ctx.strokeStyle = i % 2 ? `rgba(${P.crest},.2)` : `rgba(${P.foot},.18)`; ctx.lineWidth = Math.max(1, T*.025); ctx.beginPath(); ctx.moveTo(bx - w, yy + T*.03); ctx.quadraticCurveTo(bx, yy - T*.07, bx + w, yy + T*.02); ctx.stroke(); } }
       else { const n = P.tex === 'grass' ? 14 : 10; ctx.lineWidth = 1; for (let i = 0; i < n; i++) { const a0 = hash(c.x, c.y, i + 320)*6.28, r0 = Math.sqrt(hash(c.y, c.x, i + 321))*T*.55, gx = bx + Math.cos(a0)*r0, gy = by + Math.sin(a0)*r0*.75, l = T*(P.tex === 'grass' ? .14 + hash(c.x, c.y, i + 322)*.14 : .07 + hash(c.x, c.y, i + 322)*.09), a = (hash(c.x, c.y, i + 323) - .5)*.8 + (P.tex === 'grass' ? .3 : 0);
           ctx.strokeStyle = i % 3 ? P.blade : P.bladeL; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.quadraticCurveTo(gx + Math.sin(a)*l*.4, gy - l*.6, gx + Math.sin(a)*l, gy - Math.cos(a)*l); ctx.stroke(); }
         if (hash(c.x, c.y, 330) > .6) { const sx = bx + T*(hash(c.x, c.y, 331) - .5)*.5, sy = by + T*(hash(c.y, c.x, 332) - .5)*.4; ell(ctx, sx + T*.03, sy + T*.03, T*.09, T*.04, `rgba(${P.foot},.3)`); ell(ctx, sx, sy, T*.08, T*.055, P.rock); ell(ctx, sx - T*.02, sy - T*.015, T*.04, T*.025, P.rockL); } } } // a stone showing through
@@ -219,6 +243,13 @@ function tkCoil(ctx, x, y, T, P){ const cx = x*T + T*(.4 + hash(x, y, 460)*.2), 
   ctx.lineWidth = Math.max(1, T*.04); for (let i = 0; i < 4; i++) { ctx.strokeStyle = i % 2 ? P.canvasD : P.canvas; ctx.beginPath(); ctx.ellipse(cx, cy, T*(.24 - i*.05), T*(.11 - i*.022), 0, 0, 7); ctx.stroke(); }
   ctx.strokeStyle = P.canvasD; ctx.beginPath(); ctx.moveTo(cx + T*.22, cy + T*.02); ctx.quadraticCurveTo(cx + T*.36, cy + T*.1, cx + T*.42, cy + T*.3); ctx.stroke(); } // and its end, run out
 function tkRime(ctx, x, y, T){ ctx.fillStyle = 'rgba(200,220,240,.22)'; for (let i = 0; i < 6; i++) ell(ctx, x*T + T*hash(x, y, 470 + i), y*T + T*hash(y, x, 476 + i), T*.08, T*.03, ctx.fillStyle); }
+/* on the glass (Book Ten) a tuft is a scatter of broken glass: flakes lying flat, one on its edge, and a glint */
+function tkShards(ctx, x, y, T, P, N){ const px = x*T, py = y*T;
+  for (let i = 0; i < 5; i++) { const sx = px + T*(.14 + hash(x, y, i + 500)*.72), sy = py + T*(.22 + hash(y, x, i + 501)*.66), r = T*(.05 + hash(x, y, i + 502)*.07), a = hash(x, y, i + 503)*3;
+    ctx.save(); ctx.translate(sx, sy); ctx.rotate(a); poly(ctx, [[-r, 0], [0, -r*.5], [r*1.1, r*.1], [r*.1, r*.5]], i % 2 ? P.rock : P.rockL); ctx.restore(); }
+  const ex = px + T*(.3 + hash(x, y, 510)*.4), ey = py + T*(.7 + hash(y, x, 511)*.1), h = T*(.18 + hash(x, y, 512)*.14); ell(ctx, ex + T*.05, ey + T*.02, T*.1, T*.03, `rgba(${P.foot},${N ? .4 : .25})`);
+  poly(ctx, [[ex - T*.06, ey], [ex + T*.01, ey - h], [ex + T*.07, ey]], P.rock); poly(ctx, [[ex - T*.06, ey], [ex + T*.01, ey - h], [ex - T*.01, ey]], N ? `rgba(${P.crest},.3)` : `rgba(${P.crest},.8)`);
+  if (!N && hash(x, y, 513) > .4) { ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillRect(ex - T*.02, ey - h*.7, Math.max(1, T*.05), Math.max(1, T*.02)); } }
 function tkLamp(ctx, x, y, T, P, N){ const px = x*T, py = y*T; ell(ctx, px + T*.5, py + T*.86, T*.16, T*.05, `rgba(${P.foot},.4)`); ctx.fillStyle = P.wood; ctx.fillRect(px + T*.47, py + T*.2, T*.06, T*.66);
   ctx.fillStyle = 'rgba(255,210,120,.95)'; ctx.fillRect(px + T*.42, py + T*.1, T*.16, T*.14); glow(ctx, px + T*.5, py + T*.17, T*.42, '#e8a040', N ? .3 : .12); } // (kept inside the tile: the frame's glow, 30's tkFrame, is the light round it)
 /* the worn track, in world space like the banks: each '_' joins its neighbours (and runs on into a way out or a road), and every tile
@@ -236,7 +267,7 @@ function tkTrack(ctx, x, y, T, P, N){ const px = x*T, py = y*T; // the track's o
 function tkTrampled(ctx, x, y, T, P, N){ const px = x*T, py = y*T; b2Soft(ctx, px + T*(.4 + hash(x, y, 420)*.2), py + T*(.45 + hash(y, x, 421)*.2), T*.5, .7, P.mud, N ? .35 : .22);
   ctx.strokeStyle = `rgba(${P.mud},.5)`; ctx.lineWidth = 1; for (let i = 0; i < 5; i++) { const hx = px + T*(.15 + hash(x, y, i + 422)*.7), hy = py + T*(.2 + hash(y, x, i + 423)*.65); ctx.beginPath(); ctx.arc(hx, hy, T*.045, Math.PI*.1, Math.PI*.9); ctx.stroke(); } // hoof-cuts
   for (let i = 0; i < 3; i++) ell(ctx, px + T*(.2 + hash(x, y, i + 430)*.6), py + T*(.2 + hash(y, x, i + 431)*.6), T*.035, T*.06, `rgba(${P.mud},.35)`, .3); } // boot-marks
-function tkTuft(ctx, x, y, T, P, N){ const px = x*T, py = y*T; for (let c = 0; c < 3; c++) { const bx = px + T*(.18 + hash(x, y, c + 440)*.64), by = py + T*(.45 + hash(y, x, c + 441)*.45);
+function tkTuft(ctx, x, y, T, P, N){ const px = x*T, py = y*T; if (P.tex === 'glass') return tkShards(ctx, x, y, T, P, N); for (let c = 0; c < 3; c++) { const bx = px + T*(.18 + hash(x, y, c + 440)*.64), by = py + T*(.45 + hash(y, x, c + 441)*.45);
     ell(ctx, bx + T*.04, by + T*.02, T*.12, T*.035, `rgba(${P.foot},.25)`); ctx.lineWidth = 1; for (let i = 0; i < 7; i++) { const a = (i/6 - .5)*1.1, l = T*(.14 + hash(x, y, c*9 + i + 442)*.12); ctx.strokeStyle = i % 2 ? P.bladeL : shade(P.bladeL, .15); ctx.beginPath(); ctx.moveTo(bx, by); ctx.quadraticCurveTo(bx + Math.sin(a)*l*.4, by - l*.6, bx + Math.sin(a)*l, by - Math.cos(a)*l); ctx.stroke(); } }
   if (hash(x, y, 450) > .5) for (let i = 0; i < 4; i++) ell(ctx, px + T*(.15 + hash(x, y, i + 451)*.7), py + T*(.15 + hash(y, x, i + 452)*.7), Math.max(.8, T*.02), Math.max(.8, T*.02), N ? 'rgba(150,150,170,.5)' : ['#e8dc7a', '#f0ece0', '#c890c8'][i % 3]);
   else { ell(ctx, px + T*.7, py + T*.3, T*.06, T*.04, P.rock); ell(ctx, px + T*.68, py + T*.29, T*.03, T*.02, P.rockL); } }
