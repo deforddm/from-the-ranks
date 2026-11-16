@@ -124,7 +124,7 @@ function playHerd(opt = {}){
     g.strays.forEach(s => drawFigure(ctx, s.k, s.x*W, s.y*H, sc*(s.k === 'cattle' ? 1 : .9), t, {still:!g.t0 || s.in, dir:s.vx < 0 ? -1 : 1, phase:s.ph}));
     if (g.t0 && !g.over) { ctx.strokeStyle = 'rgba(255,214,140,.4)'; ctx.beginPath(); ctx.arc(g.to.x*W, g.to.y*H, 6, 0, 7); ctx.stroke(); }
     drawFigure(ctx, 'hackle', g.dog.x*W, g.dog.y*H, sc, t, {still:!g.t0 || g.over, dir:g.dog.face || -1}); };
-  g.talk = mgSay(dog === 'Hackle' ? 'Sathi' : 'A Weasel herder', dog === 'Hackle' ? `"Seven of yours are out on the flat. Children. Goats. An old man with a cow." She points west, at a smear of dust. "Riders. Not soon. Soon." She puts two fingers in her mouth. "Tell him where. He knows what."` : `"Seven of yours are out on the flat." He points at the dust. "Riders. Take my dog. Tell him where. He knows what. He is better at this than you."`);
+  g.talk = mgSay(dog === 'Hackle' ? 'Sathi' : 'A Weasel herder', dog === 'Hackle' ? `"Seven of ours on the flat," she tells Hackle. "Children. Goats. An old man with a cow." She points west, at a smear of dust. "Riders. Not soon. Soon." Two fingers to her mouth; then, to you: "Tell him where. He knows what."` : `"Seven of yours are out on the flat." He points at the dust. "Riders. Take my dog. Tell him where. He knows what. He is better at this than you."`);
   redraw();
 }
 

@@ -336,7 +336,7 @@ Object.assign(B2CH7.dlg, {
 
 The Kherahn will go home in the morning. They have brought the column to where the road begins, which is what they were paid for, and they have fed it, which they were not. Tomorrow it is three leagues of Aren Way, and the gate, and whatever is behind the gate.
 
-${rg.length ? `You count the squad at the halt, out of habit. You get to the end and keep counting: ${b2And(rg)}, ${rg.length === 1 ? 'a day back' : 'a day back, all of them'}, with the Fist.${rg.includes('sathi') ? ' There is no dog at the squad\'s fire. You keep looking for him under the cart.' : ''} ` : 'You count the squad at the halt, out of habit, and get the right number, and count again anyway. '}${b2Away() ? `And ${NAME(b2Away())}, in Aren, if the ship got there. ` : ''}${b2Hurt() ? `${NAME(b2Hurt())} sits down at the halt carefully, the Vathar wound bound tight, and says Aren will have clean healers. ` : ''}${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. ` : ''}${b2In('marrow') ? `Marrow has ${b2Knots()}.` : ''}${b2In('redblade') ? ` Ramin counts with you, under his breath, in Ehrlitan, and gets the same number, and looks as relieved as a Red Blade is allowed to look.` : ''}${b2In('warlock') ? ` Keth sits down at the halt before anyone else has sat at all, and looks at Balahn's hardpan with respect. "Old ground," he says. "Older than the road. Mind your feet."` : ''}`,
+${rg.length ? `You count the squad at the halt, out of habit. You get to the end and keep counting: ${b2And(rg)}, ${rg.length === 1 ? 'a day back' : 'a day back, all of them'}, with the Fist.${rg.includes('sathi') ? ' There is no dog at the squad\'s fire. You keep looking for him under the cart.' : ''} ` : 'You count the squad at the halt, out of habit, and get the right number, and count again anyway. '}${b2Away() ? `And ${NAME(b2Away())}, in Aren, if the ship got there. ` : ''}${b2Hurt() ? `${NAME(b2Hurt())} sits down at the halt carefully, the Vathar wound bound tight, and says Aren will have clean healers. ` : ''}${b2In('tangle') ? `"${b2Count()}," Tangle says, to the satchel. ` : ''}${b2In('marrow') ? `Marrow has ${b2Knots()}. "Three leagues," she says, sitting down. "I've sat through longer sermons."` : ''}${b2In('redblade') ? ` Ramin counts with you, under his breath, in Ehrlitan, and gets the same number, and looks as relieved as a Red Blade is allowed to look.` : ''}${b2In('warlock') ? ` Keth sits down at the halt before anyone else has sat at all, and looks at Balahn's hardpan with respect. "Old ground," he says. "Older than the road. Mind your feet."` : ''}`,
     html:chainHTML('Balahn · the head of Aren Way'),
     ch:[b2DeckChoice(7), {t:'Look round.', go:()=>startExplore()}]}; },
   /* the reading at Balahn, the last halt before Aren (47c) */
@@ -437,9 +437,9 @@ Duiker lets his breath out. "He will," he says. "He remembers everything. It is 
   b2_sathi7:()=>({sp:'Sathi', fx:()=>{ S.f.b2_sathi7 = 1; }, txt:
 `Sathi is with the Wickan children's horses, because she was sent with the children, and is pretending not to be one of them. Hackle is lying across her feet.
 
-"The crows went east all day," she says. "Every one." She pulls Hackle's ear. "In Hissar, the night the city burned, they came down over his tent. I said it meant something, and was told to see to the horses." Her teeth show${S.f.b2_sathiTeeth ? ', filed' : ''}. "Now they listen. Now everybody is looking at the crows."
+"The crows went east all day," she tells Hackle, pulling his ear. "Every one." Her teeth show${S.f.b2_sathiTeeth ? ', filed' : ''}. "In Hissar I said it meant something. Now everybody looks at the crows."
 
-She does not laugh. "Tomorrow, Sergeant, you look at the road. I will look at the sky. Hackle will look at everything."`,
+Then, to you, which is all you get tonight: "Tomorrow you look at the road, Sergeant. I will look at the sky."`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_tangle7:()=>({sp:'Tangle', fx:()=>{ S.f.b2_tangle7 = 1; }, txt:
 `Tangle has the satchel open on the tailboard and is not counting it. He is listening, with his head on one side, to the east.
@@ -770,7 +770,7 @@ All of them, at once, out of the dim, onto the barrow, onto the cross, until the
 
 The cross is empty. There is nothing on it at all.
 
-${b2In('sathi') ? `Sathi is laughing. She is crying too; you can see it; Wickan manners. "I said," she says, to you, to Hackle, to the wall. "In Hissar. The night the city burned. They came down over his tent and I said it meant something." Hackle howls, and on the tower Nether is wailing, a long sound with no words in it, and Nil is lying on the stones.` : `On the tower Nether is wailing, a long sound with no words in it, and Nil is lying on the stones. Somewhere along the wall a Wickan child is laughing, the funeral laugh, and nobody tells her to stop.`}${b2In('warlock') ? `
+${b2In('sathi') ? `Sathi is laughing. She is crying too; you can see it; Wickan manners. "I said," she tells Hackle, and the wall, and you. "In Hissar. I said." Hackle howls, and on the tower Nether is wailing, a long sound with no words in it, and Nil is lying on the stones.` : `On the tower Nether is wailing, a long sound with no words in it, and Nil is lying on the stones. Somewhere along the wall a Wickan child is laughing, the funeral laugh, and nobody tells her to stop.`}${b2In('warlock') ? `
 
 Keth laughs with them, a breath late, as he always is. The old woman does not laugh. "Good," she says, out of him, very quietly. "Good. They came for him."` : ''}${b2In('redblade') ? `
 
@@ -907,7 +907,7 @@ ${B2.elder} looks up at you over her sister's head. She does not get up. She doe
   b2_sq7s:()=>({sp:'Sathi', fx:()=>b2Sq7('sathi'), txt:
 `Sathi is with the Wickan children by Temul's door, laughing at something none of them will tell you, which means she has been crying, which means she is fine. Hackle is lying across the doorstep.
 
-"The crows took him," she says, when she sees you. As if you had not been there. "All of him. Nobody on that mound will have him now, not Dom, not his mage." Her teeth show. "We did not bury him, Sergeant. The sky did. It is the best way. I will tell the clan, if there is a clan." She looks away. "There is not much of a clan."`,
+"The crows took him," she says to Hackle, when she sees you. "All of him. Not Dom. Nobody." Her teeth show. "The sky buried him. It is the best way." She looks away, at the children by the door. There is not much of a clan left to tell.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_sq7t:()=>({sp:'Tangle', fx:()=>b2Sq7('tangle'), txt:
 `Tangle is sitting at the foot of the wall with the satchel in his lap, not counting it.
@@ -1175,9 +1175,9 @@ ${S.f.b2_ilhar === 'came' ? `"My brother has found the third-best well in Aren,"
   b2_last_sathi:()=>({sp:'Sathi', fx:()=>{ S.f.b2_lastS = 1; }, txt:
 `Sathi is with the Wickan children's horses at the end of the quay, with Hackle, ${S.f.b2_silandaBack && S.f.b2_silandaWho === 'sathi' ? 'just off the Silanda, and already the oldest of them,' : ''} braiding the bony grey's mane.
 
-"The Weasels stayed with him," she says. "My clan. The captain, all of them." She does not stop braiding. "So the Weasel Clan is me, now. And three children who hold horses. And Hackle." She laughs, the funeral laugh, short. "A clan is a clan. The captain would say: it is a small one. Ride it well."
+"The Weasels stayed with him," she says, braiding, to the dog. "The captain. All of them." She ties off the braid. "So the Weasel Clan is me, now. Three children who hold horses. And you." She laughs, the funeral laugh, short.
 
-She ties off the braid. "Temul says when there is somewhere to ride, the children ride. I will ride with them. Someone has to teach them to laugh at the right times."`,
+When there is somewhere to ride, Temul's children will ride, and she will ride with them. "Someone has to teach them to laugh at the right times," she says to you.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_last_tangle:()=>{ const n = (S.inv.sharper || 0) + (S.inv.burner || 0) + (S.inv.cusser || 0) + (S.inv.smoker || 0);
     return {sp:'Tangle', fx:()=>{ S.f.b2_lastT = 1; }, txt:

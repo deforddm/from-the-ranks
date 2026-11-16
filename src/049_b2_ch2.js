@@ -172,7 +172,7 @@ ${b2In('haddat') ? `
       stage2:{title:'The well-house', xp:40,
         text:()=>`The yard is taken. The well-house is not: a squat mud-brick thing over the shaft, older than anyone's grandfather, with a door that has just been barred from inside, and somebody in there with the rope and the bucket and the only way down to the water.
 ${b2In('sathi') ? `
-Sathi laughs, high and short. "They have locked themselves in with the well," she says. "Now they own the water and nothing else." Hackle is already at the door, nose to the crack.` : ''}`,
+Sathi laughs, high and short. "Locked in with the well," she says to the dog. "Now they own the water and nothing else." Hackle is already at the door, nose to the crack.` : ''}`,
         map:["########","#..t...#","#......#","#.#..#.#","#......#","###..###","#......#","#.t..t.#","#......#","##....##"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b2_wellkeeper',4,1],['b2_lancer',1,2],['b2_lancer',6,2],['b2_tithbow',2,4]]} },
@@ -288,7 +288,7 @@ Object.assign(B2CH2.dlg, {
   b2_c2_start:()=>({sp:'The Odhan', scene:'b2_odhan_day', fx:()=>{ if (!S.f.b2_c2Start) { S.f.b2_c2Start = 1; chain(-2, -1, 'Three weeks on the Odhan'); } }, txt:
 `Three weeks.
 
-The column learns to walk the way the Odhan wants it to: before dawn and after dusk, and in the middle of the day under anything that throws a shadow, a cart, a cloak on two spears, a cow. The squad's stretch learns it with everyone else. Bult rides past once a day, laughing at something, and shouts *count them*, and you do.
+The column learns to walk the way the Odhan wants: before dawn and after dusk, and at noon under anything that throws a shadow. A cart. A cloak on two spears. A cow. The squad's stretch learns it with everyone else. Bult rides past once a day, laughing at something, and shouts *count them*, and you do.
 
 One less. An old man from the dyers' street, who sat down at noon in the shade of a wagon and was still sitting there when the wagon moved. ${b2In('haddat') ? `Haddat knew his name. She said it over him in Hissari, and then in Malazan, so the squad would have it too.` : `One of the dyers knew his name. You have it written down.`}
 
@@ -301,7 +301,7 @@ ${b2In('tangle') ? `Tangle counts the satchel at every halt. "${b2Count()}," he 
   b2_c2_deck:()=>b2DeckOffer(2, 'b2_c2_card'),
   b2_c2_card:()=>b2DeckCard(2),
   b2_c2_start2:()=>({sp:'The Odhan', scene:'b2_odhan_day', txt:
-`${b2In('sathi') ? `"Two days," Sathi says. "Hackle says one. Hackle is a liar about water. He always thinks it is closer." The dog, trotting beside her horse with his tongue out, does not dispute it.
+`${b2In('sathi') ? `"Two days," Sathi tells the dog. "Not one. You always think water is closer. You are a liar about water." The dog, trotting beside her horse with his tongue out, does not dispute it.
 
 ` : ''}Duiker has not been seen since Bat'rol. He rode back across the basin after the battle with the dead-counters, notebook out, the way he does, and did not come back with them. The Weasels say the green army has him, or the Odhan does. Bult says the historian is too stubborn for either and will turn up when he has finished his chapter. Bult laughs when he says it. You have learned what that means.
 
@@ -384,7 +384,9 @@ They leave one behind. He is sitting against a tamarisk with a cut arm and no we
 
 The noise in the north goes on until dusk, and then it stops, and some time after dark the Wickans come back. Not all of them. Most of them. They come in singing, slow, with their horses walking, and the Weasels are laughing, and there is a great deal of blood on all of it.
 
-${b2In('sathi') ? `Sathi goes out to meet them before anyone can stop her. When she comes back she is quiet. "Seven to one," she says. "They killed them all. All of them, Sergeant. In a valley. The Tithansi rode into it and the clans closed it." She looks at the spring, and at the squad's people asleep round it, and some of the not-forgiving goes out of her. "The Weasel captain says somebody had to hold the water. He says it like an insult. It isn't one."` : `A Weasel rider tells you what happened, as much of it as you can follow. A valley. The Tithansi rode into it. The clans closed it. *All of them,* he says, more than once.`}`,
+${b2In('sathi') ? `Sathi goes out to meet them before anyone can stop her, and comes back quiet. The Tithansi rode into a valley, and the clans closed it. "Seven to one," she tells Hackle, in Malazan, so the squad hears. "All of them." She looks at the spring, and at the squad's people asleep round it, and some of the not-forgiving goes out of her.
+
+The Weasel captain, riding past, tells you in bad Malazan that somebody had to hold the water. He says it like an insult. It isn't one.` : `A Weasel rider tells you what happened, as much of it as you can follow. A valley. The Tithansi rode into it. The clans closed it. *All of them,* he says, more than once.`}`,
     ch:[{t:'The prisoner.', go:()=>startExplore()}]}),
 
   /* the water: the squad rides with the Weasels */
@@ -411,7 +413,7 @@ The Crow Clan comes over the western lip of the valley first, not fast, as if th
 
 You don't see the rest. Dust goes up over it so thick that it is like looking into a storm, and the noise comes to you a long time after, the way thunder does, a sound like surf on a coast you have never been to.
 
-${b2In('sathi') ? `Sathi, flat on the bank beside you, is laughing under her breath, not happily. "Seven to one," she says. "Seven to one, and they will all be dead by dark. Nobody will ever believe it." She looks at you sideways. "Write it down. The old historian is not here. Somebody should."` : `The Weasel captain watches with his chin on his fist, and then touches your shoulder, and points west, away from it.`}
+${b2In('sathi') ? `Sathi, flat on the bank beside you, is laughing under her breath, not happily. "Seven to one," she says. "Nobody will believe it." She looks at you sideways. "Write it down. Somebody should."` : `The Weasel captain watches with his chin on his fist, and then touches your shoulder, and points west, away from it.`}
 
 This was never yours. Yours is two leagues on.`,
     ch:[{t:'The well.', go:'b2_well_go'}]}),
@@ -420,7 +422,7 @@ This was never yours. Yours is two leagues on.`,
 
 The Weasel captain looks at the camp, and at you, and says one word.
 
-${b2In('sathi') ? `"He says: you have the fire-pots. You go in the front. We go in the sides." Sathi grins. "He says it is an honour. It is also because he does not want to be the one in front."` : `He points at you, and at the front of the camp, and at his riders, and at the sides. It is not complicated.`}`,
+${b2In('sathi') ? `Sathi does not translate. She doesn't need to: he points at the squad, and at the front of the camp, and at his riders, and at the sides. The Malazans have the fire-pots, so the Malazans have the front. "An honour," Sathi says to Hackle, grinning. "He does not want to be in front."` : `He points at you, and at the front of the camp, and at his riders, and at the sides. It is not complicated.`}`,
     ch:[{t:'In the front.', go:()=>startBattle('b2_tithwell', {})},
         {t:'Tangle\'s sharper into the yard first.', tag:'uses 1 sharper', req:()=>b2In('tangle') && S.inv.sharper > 0, fx:()=>{ S.inv.sharper--; }, go:()=>startBattle('b2_tithwell', {pre:true, surprise:'p'})}]}),
   b2_after_well:()=>({sp:'The caravan well', scene:'b2_caravan_well', fx:()=>{ S.f.b2_dryjFight = 1; S.f.b2_wellTaken = 1; chain(5, 0, 'The caravan well'); gain('b2_wellrope'); }, txt:
@@ -430,7 +432,7 @@ The Weasels load the spare horses with skins until the horses complain, and then
 
 They leave you one live Tithansi, a boy with a cut arm and a green cloth round the other, sitting against the well-house wall looking at the water. The Weasel captain looks at him and then at you, and shrugs. Yours.${b2In('sathi') ? `
 
-The Weasel captain says something to Sathi on the way back, short, and rides off before she can answer. She doesn't tell you what it was until the edge of the tamarisks: "He says I ride like a Weasel still. He says the dog was never in doubt." She is trying not to smile and failing.` : ''}`,
+The Weasel captain says something to Sathi on the way back, short, and rides off before she can answer. She tells it to Hackle, not to you, at the edge of the tamarisks. You catch *Weasel*, and *still*, and the dog's name. She is trying not to smile and failing.` : ''}`,
     ch:[{t:'Back to the spring.', go:'b2_back_spring'}]}),
   b2_back_spring:()=>({sp:'Dryj Spring · dusk', scene:'b2_dryj_dusk', fx:()=>{ if (!S.f.b2_springHit) { S.f.b2_springHit = 1; chain(0, -4, 'The spring, while the squad was gone'); } }, txt:
 `You come back to the spring at dusk with the skins, and the spring is wrong.
@@ -482,7 +484,7 @@ ${S.f.b2_yedda ? `${B2.widow} looks him up and down. "Tanners' street," she says
 
 ${b2In('haddat') ? `Haddat watches him go between them. Later, by the water, you hear her say his street's name over and over, under her breath, as if she were trying to remember it for someone.` : `He looks back once, at the water.`}${b2In('sathi') ? `
 
-"It is what the clans do," Sathi says. "He came for the spring with a lance." She does not laugh. You notice that she doesn't.` : ''}`,
+"He came for the spring with a lance," Sathi tells Hackle, which in Wickan is the whole of the argument.` : ''}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_prisoner_again:()=>({sp:'The boy from the tanners\' street', txt:
 `He's pushing ${S.f.b2_yedda ? `${B2.widow}'s cart, and being told he's doing it wrong` : `a cart in the squad's stretch`}. He doesn't look at you. He doesn't look away, either.`,
@@ -500,8 +502,8 @@ ${S.f.b2_sathiCrows && b2In('sathi') ? `Over his head, as he rides out, there ar
     ch:[{t:'Salute.', go:()=>startExplore()}]}),
   /* ---- a Weasel rider ---- */
   b2_weasel2:()=>({sp:'A Weasel rider', fx:()=>{ S.f.b2_weasel2 = 1; }, txt: S.f.b2_dryjFight ?
-`The Weasel rider is cleaning a lance in the spring, which nobody downstream of him is going to like. He lifts his chin at you. ${b2In('sathi') ? `He says something to Sathi, and she answers, and he laughs. "He says the valley was full," she says. "He says next time the Malazans should come, because there will not be enough Tithansi to go round and he wants to watch you be disappointed."` : `"Valley," he says in Malazan, and makes a closing gesture with both hands, and grins.`}` :
-`A Weasel rider is watering his horse at the edge of the pool, a lance across his knees, a string of teeth at his throat, the Weasels' way. ${b2In('sathi') ? `He sees Sathi and says something, and she says something back, sharp, and Hackle wags. "He asks if I am still a Wickan," she says. "I told him to ask the dog."` : `He looks at you and says something in Wickan, and then, slowly, in Malazan: "You. Come. Or stay. Both good." He shrugs. "One more good."`}`,
+`The Weasel rider is cleaning a lance in the spring, which nobody downstream of him is going to like. He lifts his chin at you. ${b2In('sathi') ? `He says something to Sathi, and she answers, and he laughs, and gives you the rest himself, in Malazan. "Valley full." He closes both hands. "Next time, Malazans come. Not enough Tithansi to go round." He grins like a man who would enjoy your disappointment.` : `"Valley," he says in Malazan, and makes a closing gesture with both hands, and grins.`}` :
+`A Weasel rider is watering his horse at the edge of the pool, a lance across his knees, a string of teeth at his throat, the Weasels' way. ${b2In('sathi') ? `He sees Sathi and asks her something, and she answers sharp and points at Hackle. *Ask the dog*: you don't need the Wickan for it. Hackle wags.` : `He looks at you and says something in Wickan, and then, slowly, in Malazan: "You. Come. Or stay. Both good." He shrugs. "One more good."`}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   /* ---- the noble's steward at the pool ---- */
   b2_steward:()=>({sp:'A noble\'s steward', fx:()=>{ S.f.b2_steward = 1; }, txt:
@@ -606,7 +608,7 @@ ${b2In('haddat') ? `Haddat takes the first watch. She sits with her back to the 
   b2_road_gave:()=>({sp:'The squad\'s fire', txt:
 `The skin goes down the squad's stretch instead, cart to cart, a mouthful to each, the children first. It doesn't go far. It goes far enough that one old woman, who had stopped talking at noon, starts again, to complain about the taste.
 
-The squad sits round the fire with dry mouths. ${b2In('marrow') ? `"Good," Marrow says. "Stupid. Good." She lies down where she is.` : 'The squad hasn\'t the spit to complain.'}${b2In('tangle') ? ` Tangle says nothing at all, which from Tangle is an argument.` : ''}`,
+The squad sits round the fire with dry mouths. ${b2In('marrow') ? `"Stupid," Marrow says, and lies down where she is. "I'd have done it too."` : 'The squad hasn\'t the spit to complain.'}${b2In('tangle') ? ` Tangle says nothing at all, which from Tangle is an argument.` : ''}`,
     ch:[{t:'Sleep, if you can.', go:()=>startExplore()}]}),
   b2_road_dry:()=>({sp:'The squad\'s fire', txt:
 `Nobody drinks. The skins stay on the wagon where everybody can see them, and everybody looks at them, and nobody touches them.
@@ -630,7 +632,7 @@ ${b2In('sathi') ? `Sathi crouches by the ox and looks at it, and at the vein in 
 In the morning it gets up. Not quickly. It pulls. The two old people on the cart do not know what it cost and the carter does not tell them. He comes and stands by the squad's fire before the march and nods to you, once, and goes back to his ox.`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_ox_bled:()=>({sp:'Sathi', txt:
-`"Cattle carry water," Sathi says. "In the blood. The clans do it on the plains in a bad summer. A little from the neck, and close it again, and the cow lives." She looks at the carter. "Your ox lives. You drink. Everybody wins but the ox, and the ox does not lose much."
+`"Cattle carry water," Sathi says. "In the blood. A little from the neck, close it, and the cow lives." She looks at the carter. "Your ox lives. You drink."
 
 The carter looks at her for a long time. Then he nods.
 
@@ -767,7 +769,7 @@ Object.assign(B2CH2.dlg, {
   b2_ford_arrive:()=>({sp:'The Sekala · the east bank', scene:'b2_sekala_dug', fx:()=>{ if (!S.f.b2_fordIn) { S.f.b2_fordIn = 1; chain(3, 0, 'The Sekala'); } }, txt:
 `The army goes across in the dark.
 
-You don't see how, and you never find out. A fog comes up off the river at midnight that has no business being there in summer, thick and white and smelling of earth, and the Seventh's companies go down into it in file and do not come back up. ${b2In('sathi') ? `"The warlocks," Sathi says, low, with her hand in Hackle's ruff. The dog's hackles are up. "Sormo, and the young ones. They have asked the river for something." She doesn't say what the river asked for back.` : 'The Wickan warlocks, someone says, under their breath.'}
+You don't see how, and you never find out. A fog comes up off the river at midnight that has no business being there in summer, thick and white and smelling of earth, and the Seventh's companies go down into it in file and do not come back up. ${b2In('sathi') ? `"Sormo," Sathi tells Hackle, low, with her hand in his ruff. The dog's hackles are up. "Sormo and the young ones. They have asked the river for something." She doesn't say what the river asked for back.` : 'The Wickan warlocks, someone says, under their breath.'}
 
 By first light the regulars are over and dug in on the far bank, and the cattle are going across, bawling, a brown river on a brown river. The column waits its turn on the east bank. Every skin in the squad's stretch is full for the first time since Dryj. People are standing in the shallows to the knees, not drinking any more, just standing.
 
@@ -870,7 +872,7 @@ You are not. You look anyway. She seems pleased.
 
 The boy has not moved. He is looking east across the river at the long flat hill where Reloe's fires are. "There is an island in the bend," he says, to nobody, in a voice too quiet for a boy. "Down there. The clans fought each other on it, before the Empire. Before anyone. They're still there." He tilts his head as if listening. "They don't like the Tithansi either."
 
-${b2In('sathi') ? `Sathi has gone down on one knee on the blanket's edge, which you have never seen her do for anyone, and says something to them in Wickan. Nether answers, sharp. Nil does not. "They are going across with the rearguard," Sathi says when she stands up, very quietly. "Into the fighting. The young ones. That is what the warlocks are for." She doesn't laugh. Hackle licks Nil's hand, and the boy, for a moment, is a boy.` : `"Go and cross your river, Malazan," Nether says. "We have work."`}`,
+${b2In('sathi') ? `Sathi has gone down on one knee on the blanket's edge, which you have never seen her do for anyone, and says something to them in Wickan. Nether answers, sharp. Nil does not. Sathi stands up with nothing to say, and it is Nether who says it, to you, in Malazan: "We cross with the rearguard. Into the fighting. Go and cross your river, Malazan. We have work." Hackle licks Nil's hand, and the boy, for a moment, is a boy.` : `"Go and cross your river, Malazan," Nether says. "We have work."`}`,
     ch:[{t:'Leave them to their work.', go:()=>startExplore()}]}),
 
   /* ---- the Red Blades at the water ---- */
@@ -904,7 +906,7 @@ He looks past you at the river, and the paved ford, and the column, and somethin
 
 "Thank you." He hands the skin back. "Three months, Sergeant, I have been grateful to people who wanted me dead, for water. It is pleasant to be grateful to someone who doesn't." He wipes his mouth. "${S.f.b2_duikerTold ? `*It looked like a city burning.* I've thought about that a great deal, out there. You were right. It still does.` : `I'll want the column's story from you. The officers will give me the battles.`}"
 
-He goes on down to the ford between his Wickans, ${b2In('sathi') ? 'and Sathi says something to one of the riders, and the rider laughs. "He says the old one walked into their lines asking for Coltaine by name, in that rag, and nearly got a lance for it," she says. "He says the Fist will like him better now."' : 'and the riders let him lead.'}`,
+He goes on down to the ford between his Wickans, ${b2In('sathi') ? 'and one of the riders says something to Sathi and laughs, and acts it out for the Malazans: the old one walking into their lines in that rag, asking for Coltaine by name, and the lance that nearly took him. The Fist, the rider seems to think, will like him better for it.' : 'and the riders let him lead.'}`,
     ch:[{t:'On.', go:()=>startExplore()}]}),
   b2_duiker_again2:()=>({sp:'Duiker', txt:`He is on the far bank by now, or somewhere in the fog, with the Fist. You can't see him. You'd know him anywhere now: the only man in the column wearing the rebellion's colours on purpose.`, ch:[{t:'On.', go:()=>startExplore()}]}),
 
@@ -955,7 +957,7 @@ The squad's stretch goes onto the stones.`,
 
 Not the stones: the stones hold, every one of them, Mincer's road. It is the carts. Too many, too heavy, with the river shoving at the wheels, and the ones in front have slowed, and the squad's stretch is bunching up behind them in water to the waist now where the ford bends. ${S.f.b2_c2_key === 'water' || chainW() >= 6 ? `Your own carts are the heaviest on the ford: barrels and skins, all the water you have carried since Dryj.` : `Your carts are low in the water with barrels and skins.`}
 
-A child goes off the edge of the paving into the deep water, and her mother after her, and ${b2In('sathi') ? 'Hackle goes in after both and drags the child back by her shirt while Sathi screams at the dog in Wickan.' : 'somebody gets an arm to both of them.'} The next ones won't be so lucky. Behind you, on the east bank, the rearguard's ring is very close to the water now.
+A child goes off the edge of the paving into the deep water, and her mother after her, and ${b2In('sathi') ? 'Hackle goes in after both and drags the child back by her shirt while Sathi shouts at the dog in Wickan.' : 'somebody gets an arm to both of them.'} The next ones won't be so lucky. Behind you, on the east bank, the rearguard's ring is very close to the water now.
 
 ${b2In('tangle') ? `"Lighten the carts," Tangle says. "Or they don't go. That's all a ford is, Sergeant. Weight." He looks at the barrels, and then at you.` : 'Lighten the carts, or they don\'t move.'}`,
     ch:[{t:'"Over the side. The barrels. All of them."', fx:()=>{ S.f.b2_fordLight = 'dumped'; chain(-3, 0, 'The barrels, into the Sekala'); if (b2In('marrow')) loy('marrow', 1); if (b2In('haddat')) loy('haddat', 1); }, go:'b2_cross_light'},
@@ -1006,7 +1008,7 @@ He looks at it: the soft wet bank, and the carts, and the people. Then at the sq
 
 Then he rides on along the line at the same walk, and does not look back to see if you heard.${b2In('sathi') ? `
 
-"He gave us the bank," Sathi says, low, as if it were a gift, and to a Wickan it is. "Himself. Not Bult. Not a captain." Then she laughs, because she is Sathi. "Now we cannot lose it. It is very bad luck to lose a thing the Fist gave you."` : ''}${b2In('haddat') ? `
+"He gave us the bank," Sathi says, low, to the dog, as if it were a gift, and to a Wickan it is. Then she laughs, because she is Sathi. "Bad luck, to lose a thing the Fist gave you."` : ''}${b2In('haddat') ? `
 
 Haddat watches him go. "He looked at the ground before he looked at us," she says. "Good."` : ''}`,
     ch:[{t:'Salute his back.', go:()=>startExplore()}]}),
@@ -1094,7 +1096,7 @@ He looks back at the rise, at the red shapes on it.
 
 "I will go back to the company when it calls for me. I say it now so nobody can say I didn't. A lent sword goes back to its owner." He looks at you. "Until then it is kept clean."${b2In('tangle') ? `
 
-Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder: "He fought. I saw. He is a red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
+Tangle, behind you, very low: "Sergeant. He's a native." It is not quite an objection. It is a sapper counting something.` : ''}${b2In('sathi') ? ` Sathi, louder, to Hackle: "He fought. I saw. A red horse with no horse." She seems to think this settles it.` : ''}${b2In('warlock') ? `
 
 The old woman, out of Keth, dry as the riverbed: "A gate-keeper's son. Good. One of you should know how to stand still."` : ''}`,
     ch:[{t:'"Third Squad. If you want it."', go:'b2_ramin_yes'},
@@ -1171,7 +1173,7 @@ The ground is coming up out of itself. That is the only way you can say it after
 
 It does not make a sound you can hear. You hear it anyway.
 
-${b2In('sathi') ? `"The warlocks," Sathi whispers. "Sormo. They have given it to the spirits. To the land. The land is old here and it is very hungry and nobody has fed it in a long time." She is not laughing. You have never seen her not laugh at a death. "Don't watch, Sergeant. It isn't ours. It's theirs."` : `It isn't yours to watch. You watch anyway.`}${b2In('redblade') ? `
+${b2In('sathi') ? `"Sormo," Sathi whispers into Hackle's neck. "The warlocks have given it to the land. The land is old here, and hungry." Then, to you, the only thing she says all night: "Do not watch, Sergeant. It is not ours."` : `It isn't yours to watch. You watch anyway.`}${b2In('redblade') ? `
 
 Ramin is on his feet with his lance before he is properly awake, in his shirt, between the carts and the plain. He stands there until dawn. He does not put the lance down, and he does not ask anyone what he is looking at.` : ''}
 
@@ -1184,7 +1186,7 @@ By dawn there is nothing out there but the plain.`,
 
 All day, the way Bult said: forty thousand people lying in the shade of anything that throws one, on the west bank of a river with water in it, with the ford a trench behind them and Reloe ten days away and ten days back. The cattle go up into the hills to graze on what there is. Nobody counts anything, for a whole day, except you.
 
-${chainC()} in the squad's stretch. ${chainW() > 0 ? `${numw(chainW(), true)} skin${chainW() === 1 ? '' : 's'}, full of the Sekala.` : 'No skins worth the name.'} ${b2In('redblade') ? 'One Red Blade, polishing his scale.' : ''}${b2In('warlock') ? `One Foolish Dog boy asleep face-down in the dust with his palms flat on the ground${S.f.b2_kethPiece ? ', twitching, like a dog dreaming of a hunt, while the old woman mutters in his sleep about paint' : ''}.` : ''} ${b2In('haddat') ? `Haddat, asleep sitting up, with her shield across her knees and the green cloth${S.f.b2_ilharDoor === 'taken' ? ' in its grip' : ' that is not there'}, and a man from the water-sellers' quarter somewhere on the far side of the river, riding with the Tithansi, with a sister he jokes about.` : ''}
+${chainC()} in the squad's stretch. ${chainW() > 0 ? `${numw(chainW(), true)} skin${chainW() === 1 ? '' : 's'}, full of the Sekala.` : 'No skins worth the name.'} ${b2In('redblade') ? 'One Red Blade, polishing his scale.' : ''}${b2In('warlock') ? `One Foolish Dog boy asleep face-down in the dust with his palms flat on the ground${S.f.b2_kethPiece ? ', twitching, like a dog dreaming of a hunt, while the old woman mutters in his sleep about paint' : ''}.` : ''} ${b2In('haddat') ? `Haddat, asleep sitting up against her shield, with the green cloth${S.f.b2_ilharDoor === 'taken' ? ' in its grip' : ' that is not there'}, and a man from the water-sellers' quarter somewhere on the far side of the river, riding with the Tithansi, with a sister he jokes about.` : ''}
 
 Aren. All the way to Aren.`,
     html:chainHTML('The Sekala · the day of rest'),
