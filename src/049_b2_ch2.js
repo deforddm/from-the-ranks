@@ -34,20 +34,24 @@ const B2CH2 = {
 
   areas:[
     /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  = tent  W wagon  h horse lines  o the spring pool  t tamarisk */
+    /* Terrain kit (25b, v13.22): a light touch: the line to the pool trodden into the hardpan (:), skins and bundles set down (8), a tent
+       (6, as its =), a cookfire (0), and a woman in the line and the regular keeping it (folk). */
     { id:'b2_dryj', title:'Dryj Spring · the Odhan', sub:'Day · heat · forty thousand people and one spring', hint:'Tap ground to move · tap a figure to talk · the pool is in the tamarisks', decor:'odhan',
       map:[ "################",
             "#..t..,...=..hh#",
             "#.t.ooo..=....h#",
             "#..ooooo.......#",
             "#.t.ooo..t..W..#",
-            "#....,.........#",
-            "#.=........=...#",
+            "#.:..,::.......#",
+            "#.=.8......=.8.#",
             "#..=..,...r....#",
-            "#......W.....s.#",
-            "#,..x.......ss.#",
-            "#.s.....,....,.#",
+            "#.8....W:....s.#",
+            "#,..x..6....ss.#",
+            "#.s.0...,....,.#",
             "################" ],
-      walk:'.,s', triggers:{o:'b2_pool', W:'b2_dryj_wagons'}, start:{x:7, y:10},
+      walk:'.,s:', triggers:{o:'b2_pool', W:'b2_dryj_wagons'}, start:{x:7, y:10},
+      folk:[{x:10, y:6, kind:'hissari_w', name:'A woman in the water line', line:'One spring, and all of Hissar in the line for it. I have been here since dawn. I have made friends. I have made enemies.'},
+        {x:10, y:9, kind:'b2soldier', name:'A regular keeping the line', line:'Skins first, then pots, then the animals. Anyone who argues goes to the back. Nobody argues twice.'}],
       quest:()=> S.f.b2_prisonerDone ? 'The column moves. The wagons.' : S.f.b2_dryjFight ? 'There is a prisoner. Haddat wants a word with him.' : S.f.b2_c2_key ? 'Go.' : !S.f.b2_bult2 ? 'Bult is by the wagons, giving orders and laughing at them.' : 'Bult wants an answer: the spring, or the ride.',
       npcs:[
         {id:'bult2', name:'Bult', kind:'bult', x:8, y:5, node:()=>S.f.b2_c2_key ? 'b2_bult2_again' : 'b2_bult2', fresh:()=>!S.f.b2_bult2},
@@ -58,21 +62,25 @@ const B2CH2 = {
         {id:'yedda2', name:B2.widow, kind:'hissari_w', x:5, y:7, node:()=>'b2_ours_dryj', show:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda, fresh:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda && !S.f.b2_oursDryj},
         {id:'prisoner', name:'A prisoner', kind:'rebel', x:3, y:6, node:()=>S.f.b2_prisonerDone ? 'b2_prisoner_again' : 'b2_prisoner', show:()=>!!S.f.b2_dryjFight && S.f.b2_prisonerFate !== 'free', fresh:()=>!!S.f.b2_dryjFight && !S.f.b2_prisonerDone} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  r low rock  x dead tree  b bones  = tent  W wagon  F campfire */
+    /* 16 x 12.  . hardpan  , scrub  s sand  r low rock  x dead tree  b bones  = tent  W wagon  F campfire
+       Terrain kit (25b, v13.22): the Odhan's low dunes and scrub at the rim (1, 2), a family's fire (0), what the column set down (8),
+       feet churned round the fires (:), and a man with a pebble and the regular on the water wagon (folk). */
     { id:'b2_road', title:'The Odhan · a night on the march', sub:'Night · no moon · the first real thirst', hint:'Tap ground to move · tap a figure to talk · the squad\'s fire, then the wagons', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#.,..=....,..=.#",
-            "#....=..F......#",
-            "#.,.......W....#",
-            "#..r.....,..,..#",
-            "#.....=.....x..#",
-            "#.b.........,..#",
-            "#....W...F.....#",
-            "#.,......,..=..#",
-            "#..s...r.....,.#",
-            "#ss..,.....b..s#",
+            "#12..=....2..=1#",
+            "#1...=.:F:.....#",
+            "#.,.....8.W...2#",
+            "#..r..8..,..,..#",
+            "#.0...=.....x..#",
+            "#1b.....:...,..#",
+            "#....W..:F:...1#",
+            "#.,.8....,..=..#",
+            "#2.s...r.....,1#",
+            "#ss.12.....b.1s#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_road_fire', W:'b2_road_on', b:'b2_bones'}, start:{x:8, y:9},
+      walk:'.,s:', triggers:{F:'b2_road_fire', W:'b2_road_on', b:'b2_bones'}, start:{x:8, y:9},
+      folk:[{x:5, y:4, kind:'hissari_m', name:'A man sucking a pebble', line:'A pebble under the tongue. My grandfather\'s trick. It does nothing, but it does it slowly.'},
+        {x:11, y:3, kind:'b2soldier', name:'A regular on the water wagon', line:'Half a cup a head at dawn. Do not ask me for it now. I have been asked forty times tonight. I counted.'}],
       quest:()=> S.f.b2_tailDone ? 'The wagons. On toward the river.' : !S.f.b2_roadRest ? 'The squad\'s fire. Count the skins.' : 'The wagons, when the squad is ready to go on.',
       npcs:[
         {id:'oxman', name:'A man with an ox', kind:'hissari_m', x:4, y:6, node:()=>S.f.b2_ox ? 'b2_ox_again' : 'b2_ox', fresh:()=>!S.f.b2_ox},
@@ -81,21 +89,24 @@ const B2CH2 = {
         {id:'dessi3', name:B2.younger, kind:'child', x:9, y:8, node:()=>'b2_road_ours', show:()=>S.f.b2_key === 'daughters', fresh:()=>S.f.b2_key === 'daughters' && !S.f.b2_roadOurs},
         {id:'yedda3', name:B2.widow, kind:'hissari_w', x:9, y:8, node:()=>'b2_road_ours', show:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda, fresh:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda && !S.f.b2_roadOurs} ] },
 
-    /* 16 x 12.  . bank mud  , reeds  s sand  r rock  # cut bank  W wagon  = tent  - shallow ford water  ~ deep water  p the paved ford */
+    /* 16 x 12.  . bank mud  , reeds  s sand  r rock  # cut bank  W wagon  = tent  - shallow ford water  ~ deep water  p the paved ford
+       Terrain kit (25b, v13.22): a light touch (the bank is full): stacked spears (%), crates waiting to cross (8), and a regular waiting
+       with them (folk). */
     { id:'b2_ford', title:'The Sekala · the east bank', sub:'Before dawn · the army crossing in the dark', hint:'Tap ground to move · tap a figure to talk · the paved ford, when the squad is called', decor:'river',
       map:[ "################",
             "#..=...,..W..=.#",
             "#.=..........=.#",
-            "#.....,..r.....#",
-            "#..W.......,...#",
+            "#%....,..r.....#",
+            "#..W.......,.8.#",
             "#,....=........#",
-            "#...........,..#",
+            "#..8........,..#",
             "#ss..s..sss..ss#",
             "#sss,ss.sssssss#",
             "#--~~~pppp~~~--#",
             "#~~~~~pppp~~~~~#",
             "################" ],
       walk:'.,s-', triggers:{p:'b2_cross', W:'b2_ford_wagons'}, start:{x:7, y:1},
+      folk:[{x:10, y:5, kind:'b2soldier', name:'A regular waiting to cross', line:'Boots round the neck, sword over the head, and trust the sappers counted their stones.'}],
       quest:()=> !S.f.b2_mincer ? 'Tangle wants you to meet his captain. Down at the water.' : !S.f.b2_fordWork ? 'Tangle is in the river with the sappers.' : 'The ford. The squad\'s stretch crosses when it is called.',
       npcs:[
         {id:'mincer', name:'Captain Mincer', kind:'mincer', x:8, y:7, node:()=>S.f.b2_mincer ? 'b2_mincer_again' : 'b2_mincer', fresh:()=>!S.f.b2_mincer},
@@ -107,7 +118,8 @@ const B2CH2 = {
         /* v13.8 (David, Nov 15): meetings. Cuttle with the timers, once Mincer has named him */
         {id:'cuttle2', name:'Cuttle', kind:'sapper', x:13, y:6, node:()=>'b2_c2_cuttle', show:()=>!!S.f.b2_mincer, fresh:()=>!!S.f.b2_mincer && !S.f.b2_c2_cuttle} ] },
 
-    /* 16 x 12.  ~ deep water  - shallows  p the ford (behind)  s sand  . bank  , reeds  r rock  = tent  W wagon */
+    /* 16 x 12.  ~ deep water  - shallows  p the ford (behind)  s sand  . bank  , reeds  r rock  = tent  W wagon
+       Terrain kit (25b, v13.22): a light touch: what came over dry, stacked on the bank (8), and a woman who came over wet (folk). */
     { id:'b2_westbank', title:'The Sekala · the west bank', sub:'Day · the column coming over · the Semk on the ridge', hint:'Tap ground to move · tap a figure to talk · the ford is behind you now', decor:'river',
       map:[ "################",
             "#~~~~~pppp~~~~~#",
@@ -115,13 +127,14 @@ const B2CH2 = {
             "#sss.ss..ss.sss#",
             "#..,....s....,.#",
             "#.=...r....=...#",
-            "#.....,........#",
+            "#8....,........#",
             "#..W.......=...#",
             "#.,....r.....,.#",
-            "#....=......W..#",
+            "#....=......W.8#",
             "#.,.....,....,.#",
             "################" ],
       walk:'.,s-', triggers:{p:'b2_ford_look', W:'b2_west_wagons'}, start:{x:7, y:3},
+      folk:[{x:7, y:7, kind:'hissari_w', name:'A woman wringing out her skirts', line:'Wet to the waist and glad of it. That is the first time this year I have said that about water.'}],
       quest:()=> !S.f.b2_westDone ? 'Captain Chenned is holding the line here. Report.' : !S.f.b2_blown ? 'The ford.' : S.f.b2_raminDone == null ? 'The Red Blades are counting their dead. One of them is looking at the squad.' : 'Night is coming. Bult is by the wagons.',
       npcs:[
         {id:'chenned', name:'Captain Chenned', kind:'b2soldier', x:5, y:6, node:()=>S.f.b2_westDone ? 'b2_chenned_again' : 'b2_chenned', fresh:()=>!S.f.b2_chenned},

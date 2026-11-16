@@ -187,6 +187,29 @@ Object.assign(TKS, {
   b9_c5_wastes:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})},
   b9_c6_field:{fam:'dust', joins:'<>^v,', as:TK_B9_TRAIN},
   b9_c7_field:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})} });
+/* Book Two (v13.22): Hissar's quarter and gate square (its handcart for a cart; stalls under its awnings, 82's entry above), the
+   Seventh's camps and the Odhan (Book Six's odhan entries, unchanged), the Sekala's banks (the river's own tents and wagons, on its mud),
+   the P'atha and the Shallows (the ridge's tents and wagons), the Vathar's banks (its mud; its carts are the story's, so a kit cart is
+   the kit's own), Vathar Forest (a dark leaf-litter palette), the Geleen at dusk (its Kherahn tents, on its own gold grass), Aren Way (its straw
+   palette) and Aren (its stall awnings, Book Four's cart, water casks, coiled rope on the quay). Their 'r' is stone, so no track runs into it. */
+Object.assign(TKP, {
+  mud:    {d:{body:'#7e6a52', crest:'246,228,196', foot:'46,34,22', blade:'#7a7a46', bladeL:'#a8a06a', brush:'#4e5030', brushL:'#6a6c42', stem:'#3a2c1e', rock:'#7a746a', rockL:'#b0aa9c', rockD:'#34302a', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e0d8c4', cloth:['#8a3a2a', '#c8a868'], track:'90,70,48', mud:'52,40,26', lit:'250,236,205', tex:'turf'},
+           n:{body:'#2a2a30', crest:'180,186,215', foot:'0,0,0', blade:'#2e3634', bladeL:'#3e4844', brush:'#1e2422', brushL:'#2a3230', stem:'#24201a', rock:'#34343c', rockL:'#4a4a56', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,170', mud:'0,0,0', lit:'170,180,220', tex:'turf'}}, // the Sekala's and the Vathar's trodden mud (49b's b2River, 51b's b2Vathar)
+  forest: {d:{body:'#56492f', crest:'214,214,170', foot:'16,12,6', blade:'#56602e', bladeL:'#7a8440', brush:'#34401e', brushL:'#4e5c2a', stem:'#2a2014', rock:'#6a665a', rockL:'#8e8a7a', rockD:'#24221c', wood:'#3a2a1a', woodL:'#6a5434', canvas:'#a8987a', canvasD:'#6a5a44', bone:'#d6ceb6', cloth:['#7a3428', '#a8905a'], track:'96,80,52', mud:'26,20,12', lit:'226,230,190', tex:'turf'},
+           n:{body:'#1e2018', crest:'160,175,160', foot:'0,0,0', blade:'#2a3226', bladeL:'#3a4434', brush:'#161c14', brushL:'#222a1e', stem:'#1c1a14', rock:'#262622', rockL:'#383832', rockD:'#0c0c0a', wood:'#1a140e', woodL:'#30281c', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#565a56', cloth:['#3a2018', '#3a3020'], track:'130,140,130', mud:'0,0,0', lit:'170,190,170', tex:'turf'}}, // Vathar Forest's floor under the old trees (52b's b2Forest)
+  geleen: {d:{body:'#6a5c34', crest:'255,214,150', foot:'30,22,10', blade:'#8a7a3a', bladeL:'#b8a458', brush:'#4a4a26', brushL:'#6a6a36', stem:'#3a2e1a', rock:'#6a665a', rockL:'#948e7e', rockD:'#2e2a24', wood:'#4a3420', woodL:'#7a5a3a', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#d8ceb0', cloth:['#8a3a2a', '#c8a868'], track:'90,74,44', mud:'40,30,16', lit:'255,220,170', tex:'grass'},
+           n:{body:'#162018', crest:'170,190,220', foot:'0,0,0', blade:'#2e4034', bladeL:'#46584a', brush:'#18221a', brushL:'#2a3a2c', stem:'#2a2418', rock:'#2e3036', rockL:'#454852', rockD:'#141518', wood:'#2a1e14', woodL:'#4a3a28', canvas:'#4a4640', canvasD:'#26241e', bone:'#5c6068', cloth:['#5a2a20', '#5a4a2a'], track:'130,140,160', mud:'8,8,6', lit:'170,184,220', tex:'grass'}}, // the Geleen's long grass gone gold at dusk (53b's b2Geleen)
+  straw:  {d:{body:'#8c7650', crest:'255,232,190', foot:'50,34,20', blade:'#9a8448', bladeL:'#c8ac64', brush:'#5e5a34', brushL:'#7a7444', stem:'#4a3a24', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e0d6bc', cloth:['#8a3a2a', '#c8a868'], track:'110,88,58', mud:'60,44,28', lit:'255,236,200', tex:'grass'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'grass'}} }); // Aren Way's dry straw-grass in the morning sun (54b's b7Barrow)
+Object.assign(TKS, {
+  river:{fam:'mud', joins:'<>^v', as:{'6':'=', '7':'W'}},
+  ridge:{fam:'earth', joins:'<>^v', as:{'6':'=', '7':'W'}},
+  vathar:{fam:'mud', joins:'<>^v', draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  forest:{fam:'forest', joins:'<>^v'},
+  geleen:{fam:'geleen', joins:'<>^v', as:{'6':'='}},
+  barrow:{fam:'straw', joins:'<>^v'},
+  aren:{fam:'earth', as:{'9':'='}, draw:{'7':(c, x, y, T, N) => b41Cart(c, x, y, T, !!N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}} });
+TKS.hissar.as['7'] = 'c'; // Hissar's own handcart (no Book Six map on this ground has a '7')
 TKS.plain.joins = '<>^v'; // Book One's plain is strewn with rocks ('r'); Book Eight's road on it has its crowd on 'r', never beside its track
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)

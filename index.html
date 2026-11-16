@@ -6746,6 +6746,29 @@ Object.assign(TKS, {
   b9_c5_wastes:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})},
   b9_c6_field:{fam:'dust', joins:'<>^v,', as:TK_B9_TRAIN},
   b9_c7_field:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})} });
+/* Book Two (v13.22): Hissar's quarter and gate square (its handcart for a cart; stalls under its awnings, 82's entry above), the
+   Seventh's camps and the Odhan (Book Six's odhan entries, unchanged), the Sekala's banks (the river's own tents and wagons, on its mud),
+   the P'atha and the Shallows (the ridge's tents and wagons), the Vathar's banks (its mud; its carts are the story's, so a kit cart is
+   the kit's own), Vathar Forest (a dark leaf-litter palette), the Geleen at dusk (its Kherahn tents, on its own gold grass), Aren Way (its straw
+   palette) and Aren (its stall awnings, Book Four's cart, water casks, coiled rope on the quay). Their 'r' is stone, so no track runs into it. */
+Object.assign(TKP, {
+  mud:    {d:{body:'#7e6a52', crest:'246,228,196', foot:'46,34,22', blade:'#7a7a46', bladeL:'#a8a06a', brush:'#4e5030', brushL:'#6a6c42', stem:'#3a2c1e', rock:'#7a746a', rockL:'#b0aa9c', rockD:'#34302a', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e0d8c4', cloth:['#8a3a2a', '#c8a868'], track:'90,70,48', mud:'52,40,26', lit:'250,236,205', tex:'turf'},
+           n:{body:'#2a2a30', crest:'180,186,215', foot:'0,0,0', blade:'#2e3634', bladeL:'#3e4844', brush:'#1e2422', brushL:'#2a3230', stem:'#24201a', rock:'#34343c', rockL:'#4a4a56', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,170', mud:'0,0,0', lit:'170,180,220', tex:'turf'}}, // the Sekala's and the Vathar's trodden mud (49b's b2River, 51b's b2Vathar)
+  forest: {d:{body:'#56492f', crest:'214,214,170', foot:'16,12,6', blade:'#56602e', bladeL:'#7a8440', brush:'#34401e', brushL:'#4e5c2a', stem:'#2a2014', rock:'#6a665a', rockL:'#8e8a7a', rockD:'#24221c', wood:'#3a2a1a', woodL:'#6a5434', canvas:'#a8987a', canvasD:'#6a5a44', bone:'#d6ceb6', cloth:['#7a3428', '#a8905a'], track:'96,80,52', mud:'26,20,12', lit:'226,230,190', tex:'turf'},
+           n:{body:'#1e2018', crest:'160,175,160', foot:'0,0,0', blade:'#2a3226', bladeL:'#3a4434', brush:'#161c14', brushL:'#222a1e', stem:'#1c1a14', rock:'#262622', rockL:'#383832', rockD:'#0c0c0a', wood:'#1a140e', woodL:'#30281c', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#565a56', cloth:['#3a2018', '#3a3020'], track:'130,140,130', mud:'0,0,0', lit:'170,190,170', tex:'turf'}}, // Vathar Forest's floor under the old trees (52b's b2Forest)
+  geleen: {d:{body:'#6a5c34', crest:'255,214,150', foot:'30,22,10', blade:'#8a7a3a', bladeL:'#b8a458', brush:'#4a4a26', brushL:'#6a6a36', stem:'#3a2e1a', rock:'#6a665a', rockL:'#948e7e', rockD:'#2e2a24', wood:'#4a3420', woodL:'#7a5a3a', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#d8ceb0', cloth:['#8a3a2a', '#c8a868'], track:'90,74,44', mud:'40,30,16', lit:'255,220,170', tex:'grass'},
+           n:{body:'#162018', crest:'170,190,220', foot:'0,0,0', blade:'#2e4034', bladeL:'#46584a', brush:'#18221a', brushL:'#2a3a2c', stem:'#2a2418', rock:'#2e3036', rockL:'#454852', rockD:'#141518', wood:'#2a1e14', woodL:'#4a3a28', canvas:'#4a4640', canvasD:'#26241e', bone:'#5c6068', cloth:['#5a2a20', '#5a4a2a'], track:'130,140,160', mud:'8,8,6', lit:'170,184,220', tex:'grass'}}, // the Geleen's long grass gone gold at dusk (53b's b2Geleen)
+  straw:  {d:{body:'#8c7650', crest:'255,232,190', foot:'50,34,20', blade:'#9a8448', bladeL:'#c8ac64', brush:'#5e5a34', brushL:'#7a7444', stem:'#4a3a24', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e0d6bc', cloth:['#8a3a2a', '#c8a868'], track:'110,88,58', mud:'60,44,28', lit:'255,236,200', tex:'grass'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'grass'}} }); // Aren Way's dry straw-grass in the morning sun (54b's b7Barrow)
+Object.assign(TKS, {
+  river:{fam:'mud', joins:'<>^v', as:{'6':'=', '7':'W'}},
+  ridge:{fam:'earth', joins:'<>^v', as:{'6':'=', '7':'W'}},
+  vathar:{fam:'mud', joins:'<>^v', draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  forest:{fam:'forest', joins:'<>^v'},
+  geleen:{fam:'geleen', joins:'<>^v', as:{'6':'='}},
+  barrow:{fam:'straw', joins:'<>^v'},
+  aren:{fam:'earth', as:{'9':'='}, draw:{'7':(c, x, y, T, N) => b41Cart(c, x, y, T, !!N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}} });
+TKS.hissar.as['7'] = 'c'; // Hissar's own handcart (no Book Six map on this ground has a '7')
 TKS.plain.joins = '<>^v'; // Book One's plain is strewn with rocks ('r'); Book Eight's road on it has its crowd on 'r', never beside its track
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
@@ -25878,21 +25901,25 @@ const B2CH1 = {
     go:'Down off the wall', node:'b2_start'},
 
   areas:[
-    /* 16 x 12.  . street  , ash  # wall  F fire  w the quarter cistern  c handcart  p palm  = market awning  D Haddat's family door  g the south lane */
+    /* 16 x 12.  . street  , ash  # wall  F fire  w the quarter cistern  c handcart  p palm  = market awning  D Haddat's family door  g the south lane
+       Terrain kit (25b, v13.22): a light touch: market stalls under the awnings (9), a handcart (7, as its c), sacks and crates (8), water
+       butts (&), fallen brick (3), feet churned at the lane mouth (:), and two of the quarter who stayed in (folk). */
     { id:'b2_quarter', title:'Hissar · the water-sellers\' quarter', sub:'Night · fires on the roofs', hint:'Tap ground to move · tap a figure to talk · the south lane goes to the gate', decor:'hissar', dark:true,
       map:[ "################",
-            "#,.F##..##F#,..#",
-            "#...##..##.#..w#",
+            "#3.F##..##F#8..#",
+            "#&..##..##.#..w#",
             "#..............#",
             "#.p..=====...p.#",
-            "#....=====.....#",
+            "#..9.=====.9...#",
             "#,.............#",
-            "##D##..c...##.##",
-            "#....,....,....#",
+            "##D##..c..8##.##",
+            "#....,....,..&.#",
             "#.F..........,.#",
-            "#,....,...p....#",
+            "#7....,:::p..8.#",
             "#######gg#######" ],
-      walk:'.,=', triggers:{D:'b2_door', w:'b2_cistern', g:'b2_to_gate'}, start:{x:8, y:9},
+      walk:'.,=:', triggers:{D:'b2_door', w:'b2_cistern', g:'b2_to_gate'}, start:{x:8, y:9},
+      folk:[{x:12, y:3, kind:'hissari_m', name:'A man with water jars', line:'Three jars full. The rest of the quarter is up on the roofs, shouting. Somebody will want a drink after.'},
+        {x:4, y:8, kind:'hissari_w', name:'A woman at her shutter', line:'Bar the door, bar the shutter, sit in the middle of the room. My mother said that last time. She was right then, too.'}],
       quest:()=> S.f.b2_streetDone ? 'South, to the gate.' : !S.f.b2_ressan ? 'Ressan\'s house, at the top of the quarter.' : 'The south lane, to the gate. The green cloths are in the quarter.',
       npcs:[
         {id:'ressan', name:'Ressan', kind:'ressan', x:7, y:2, node:()=>S.f.b2_ressan ? 'b2_ressan_again' : 'b2_ressan', fresh:()=>!S.f.b2_ressan},
@@ -25900,42 +25927,53 @@ const B2CH1 = {
         {id:'dessi', name:B2.younger, kind:'child', x:8, y:3, node:()=>'b2_imra', show:()=>!!S.f.b2_ressan},
         {id:'yedda', name:B2.widow, kind:'hissari_w', x:11, y:6, node:()=>'b2_yedda', show:()=>!S.f.b2_yeddaGone || /^b2_yedda/.test(S.node || ''), fresh:()=>!S.f.b2_yedda} ] },
 
-    /* 16 x 12.  , ash  # wall  F fire  = awning  p palm  c the water carts  ~ the gate channel  g the south gate */
+    /* 16 x 12.  , ash  # wall  F fire  = awning  p palm  c the water carts  ~ the gate channel  g the south gate
+       Terrain kit (25b, v13.22): the garrison going out: crates and sacks (8), stacked spears (%), water butts (&), the Wickans' horses by
+       the east wall (@), boots and wheels churned round the carts and the gate (:), lanterns at the gate (!), and a regular and a carter
+       loading up (folk). */
     { id:'b2_gate', title:'Hissar · the south gate square', sub:'Night · the garrison pulling out', hint:'Tap ground to move · tap a figure to talk · the carts are by the channel', decor:'hissar', dark:true,
       map:[ "################",
-            "#F.,#......#,.F#",
-            "#...#..==..#...#",
-            "#..............#",
+            "#F.8#%....%#,.F#",
+            "#&..#..==..#..&#",
+            "#............8.#",
             "#.p....,.....p.#",
-            "#..cc......cc..#",
-            "#..............#",
-            "#,.....~~......#",
-            "#.....,........#",
-            "##............##",
-            "###....gg....###",
+            "#8.cc......cc..#",
+            "#..::......::..#",
+            "#,.....~~....%@#",
+            "#.8...,.......@#",
+            "##:..........:##",
+            "###!..:gg:..!###",
             "################" ],
-      walk:'.,=', triggers:{c:'b2_carts', g:'b2_gate_g'}, start:{x:7, y:2},
+      walk:'.,=:',
+      folk:[{x:6, y:6, kind:'b2soldier', name:'A regular with a crate', line:'Take what you can carry, they said. I can carry this. I do not know what is in it.'},
+        {x:9, y:8, kind:'hissari_m', name:'A Hissari carter', line:'The Fist pays in silver and the city pays in knives. I know which I would rather be owed.'}], triggers:{c:'b2_carts', g:'b2_gate_g'}, start:{x:7, y:2},
       quest:()=> S.f.b2_key ? 'The gate.' : S.f.b2_corporal ? 'The carts go in a bell. A boy is running across the square toward you.' : 'The water carts. Find who is moving them.',
       npcs:[
         {id:'benth', name:'Corporal Benth', kind:'b2soldier', x:5, y:5, node:()=>S.f.b2_key ? 'b2_corporal_again' : 'b2_corporal', fresh:()=>!S.f.b2_corporal},
         {id:'priest', name:'A priest of Mael', kind:'priest', x:9, y:3, node:()=>'b2_rel', show:()=>!S.f.b2_relGone || /^b2_rel/.test(S.node || ''), fresh:()=>!S.f.b2_relSeen},
         {id:'gwickan', name:'A Wickan rider', kind:'wickan', x:12, y:8, node:()=>'b2_wickan_gate', fresh:()=>!S.f.b2_wickanGate} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  = tent  F campfire  W wagon  h horse lines  b bones */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  = tent  F campfire  W wagon  h horse lines  b bones
+       Terrain kit (25b, v13.22): a camp filling up in the dark: more tents (6, as its =), refugees' cookfires (0), a wagon and a cart (7, as
+       its W), crates, sacks and water skins (8), stacked spears (%), another horse on the lines (@, as its h), feet churned round the
+       fires and the lines (:), and a refugee, a regular and a boy (folk). */
     { id:'b2_camp', title:'The Seventh\'s camp · outside Hissar', sub:'Before dawn · refugees still coming in', hint:'Tap ground to move · tap a figure to talk · the wagons march at first light', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..==...=..hhh.#",
-            "#..==...=..,...#",
-            "#.......,......#",
-            "#.=..F.....=...#",
-            "#..........=...#",
-            "#,..r....,.....#",
-            "#.....W......b.#",
-            "#..=.....F.....#",
-            "#..=....,....,.#",
-            "#.,.....s...ss.#",
+            "#8.==.%.=..hhh@#",
+            "#..==...=..:::.#",
+            "#.0.....,......#",
+            "#.=.:F:....=...#",
+            "#.7........=..8#",
+            "#6..r....,..8..#",
+            "#8....W:.....b.#",
+            "#..=....:F:..6.#",
+            "#..=.0..,....,6#",
+            "#.,7....s...ss.#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_fire', h:'b2_horses', W:'b2_march'}, start:{x:7, y:10},
+      walk:'.,s:', triggers:{F:'b2_fire', h:'b2_horses', W:'b2_march'}, start:{x:7, y:10},
+      folk:[{x:3, y:3, kind:'hissari_w', name:'A Hissari woman at a cookfire', line:'We walked out with what we could carry. I carried the pot. My husband carried the chickens. The chickens have not forgiven him.'},
+        {x:9, y:2, kind:'b2soldier', name:'A regular of the Seventh', line:'Forty thousand of them, the clerk says, and more at the gate. I have stopped counting. The clerk has not.'},
+        {x:4, y:7, kind:'child', name:'A boy from the city', line:'The Wickans\' horses bite. I know. I asked one.'}],
       quest:()=> !S.f.b2_bult ? 'Find whoever is giving out the column. An old Wickan, they say, laughing.' : 'First light. The wagons, when you are ready.',
       npcs:[
         {id:'bult', name:'Bult', kind:'bult', x:7, y:4, node:()=>S.f.b2_bult ? 'b2_bult_again' : 'b2_bult', fresh:()=>!S.f.b2_bult},
@@ -25945,21 +25983,24 @@ const B2CH1 = {
         {id:'girls', name:B2.elder, kind:'hissari_w', x:11, y:9, node:()=>'b2_imra_camp', show:()=>S.f.b2_key === 'daughters', fresh:()=>S.f.b2_key === 'daughters' && !S.f.b2_imraCamp},
         {id:'crider', name:'A Weasel rider', kind:'wickan', x:10, y:7, node:()=>'b2_horses'} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree (the lip of the wash)  W the water wagon  b bones */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree (the lip of the wash)  W the water wagon  b bones
+       Terrain kit (25b, v13.22): meant to be open: the basin's rim of low dunes and scrub (1, 2), a boulder (4), bones far out ($, as its
+       b), the water wagon's ruts (:), a carter's wagon at the column's end (7, as its W), and its carter resting (folk). */
     { id:'b2_basin', title:'The Vin\'til Basin · south-west of Hissar', sub:'Day · heat · the column strung out behind', hint:'Tap ground to move · tap a figure to talk · the wash is east, by the dead tree', decor:'odhan',
       map:[ "################",
-            "#ss,..r...,.ss.#",
-            "#s...,....#...,#",
-            "#..r.....##..x.#",
+            "#ss112r...11ss1#",
+            "#s...,....#...2#",
+            "#1.r.....##..x1#",
             "#.,.......#....#",
-            "#....W.....,.b.#",
-            "#,..........s..#",
+            "#....W:....,.b1#",
+            "#,..........s.$#",
             "#...,..r.......#",
-            "#.s.....,....,.#",
-            "#..b.........r.#",
-            "#s..,.....,..ss#",
+            "#7s.....,..4.,.#",
+            "#1.b.........r1#",
+            "#s.112...21..ss#",
             "################" ],
-      walk:'.,s', triggers:{x:'b2_wash', W:'b2_wagon'}, start:{x:2, y:7},
+      walk:'.,s:',
+      folk:[{x:3, y:8, kind:'hissari_m', name:'A Hissari carter, resting', line:'The ox stops when it likes. So do I, now. Neither of us is in charge of the heat.'}], triggers:{x:'b2_wash', W:'b2_wagon'}, start:{x:2, y:7},
       quest:()=> S.f.b2_batrolDone ? 'They are running. Let them.' : !S.f.b2_duikerBasin ? 'Dust on the far rim. The historian is on the rise, watching it.' : 'Hold the flank by the dry wash. East, by the dead tree.',
       npcs:[
         {id:'bduiker', name:'Duiker', kind:'duiker', x:8, y:2, node:()=>'b2_duiker_basin', fresh:()=>!S.f.b2_duikerBasin},
@@ -26767,20 +26808,24 @@ const B2CH2 = {
 
   areas:[
     /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  = tent  W wagon  h horse lines  o the spring pool  t tamarisk */
+    /* Terrain kit (25b, v13.22): a light touch: the line to the pool trodden into the hardpan (:), skins and bundles set down (8), a tent
+       (6, as its =), a cookfire (0), and a woman in the line and the regular keeping it (folk). */
     { id:'b2_dryj', title:'Dryj Spring · the Odhan', sub:'Day · heat · forty thousand people and one spring', hint:'Tap ground to move · tap a figure to talk · the pool is in the tamarisks', decor:'odhan',
       map:[ "################",
             "#..t..,...=..hh#",
             "#.t.ooo..=....h#",
             "#..ooooo.......#",
             "#.t.ooo..t..W..#",
-            "#....,.........#",
-            "#.=........=...#",
+            "#.:..,::.......#",
+            "#.=.8......=.8.#",
             "#..=..,...r....#",
-            "#......W.....s.#",
-            "#,..x.......ss.#",
-            "#.s.....,....,.#",
+            "#.8....W:....s.#",
+            "#,..x..6....ss.#",
+            "#.s.0...,....,.#",
             "################" ],
-      walk:'.,s', triggers:{o:'b2_pool', W:'b2_dryj_wagons'}, start:{x:7, y:10},
+      walk:'.,s:', triggers:{o:'b2_pool', W:'b2_dryj_wagons'}, start:{x:7, y:10},
+      folk:[{x:10, y:6, kind:'hissari_w', name:'A woman in the water line', line:'One spring, and all of Hissar in the line for it. I have been here since dawn. I have made friends. I have made enemies.'},
+        {x:10, y:9, kind:'b2soldier', name:'A regular keeping the line', line:'Skins first, then pots, then the animals. Anyone who argues goes to the back. Nobody argues twice.'}],
       quest:()=> S.f.b2_prisonerDone ? 'The column moves. The wagons.' : S.f.b2_dryjFight ? 'There is a prisoner. Haddat wants a word with him.' : S.f.b2_c2_key ? 'Go.' : !S.f.b2_bult2 ? 'Bult is by the wagons, giving orders and laughing at them.' : 'Bult wants an answer: the spring, or the ride.',
       npcs:[
         {id:'bult2', name:'Bult', kind:'bult', x:8, y:5, node:()=>S.f.b2_c2_key ? 'b2_bult2_again' : 'b2_bult2', fresh:()=>!S.f.b2_bult2},
@@ -26791,21 +26836,25 @@ const B2CH2 = {
         {id:'yedda2', name:B2.widow, kind:'hissari_w', x:5, y:7, node:()=>'b2_ours_dryj', show:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda, fresh:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda && !S.f.b2_oursDryj},
         {id:'prisoner', name:'A prisoner', kind:'rebel', x:3, y:6, node:()=>S.f.b2_prisonerDone ? 'b2_prisoner_again' : 'b2_prisoner', show:()=>!!S.f.b2_dryjFight && S.f.b2_prisonerFate !== 'free', fresh:()=>!!S.f.b2_dryjFight && !S.f.b2_prisonerDone} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  r low rock  x dead tree  b bones  = tent  W wagon  F campfire */
+    /* 16 x 12.  . hardpan  , scrub  s sand  r low rock  x dead tree  b bones  = tent  W wagon  F campfire
+       Terrain kit (25b, v13.22): the Odhan's low dunes and scrub at the rim (1, 2), a family's fire (0), what the column set down (8),
+       feet churned round the fires (:), and a man with a pebble and the regular on the water wagon (folk). */
     { id:'b2_road', title:'The Odhan · a night on the march', sub:'Night · no moon · the first real thirst', hint:'Tap ground to move · tap a figure to talk · the squad\'s fire, then the wagons', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#.,..=....,..=.#",
-            "#....=..F......#",
-            "#.,.......W....#",
-            "#..r.....,..,..#",
-            "#.....=.....x..#",
-            "#.b.........,..#",
-            "#....W...F.....#",
-            "#.,......,..=..#",
-            "#..s...r.....,.#",
-            "#ss..,.....b..s#",
+            "#12..=....2..=1#",
+            "#1...=.:F:.....#",
+            "#.,.....8.W...2#",
+            "#..r..8..,..,..#",
+            "#.0...=.....x..#",
+            "#1b.....:...,..#",
+            "#....W..:F:...1#",
+            "#.,.8....,..=..#",
+            "#2.s...r.....,1#",
+            "#ss.12.....b.1s#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_road_fire', W:'b2_road_on', b:'b2_bones'}, start:{x:8, y:9},
+      walk:'.,s:', triggers:{F:'b2_road_fire', W:'b2_road_on', b:'b2_bones'}, start:{x:8, y:9},
+      folk:[{x:5, y:4, kind:'hissari_m', name:'A man sucking a pebble', line:'A pebble under the tongue. My grandfather\'s trick. It does nothing, but it does it slowly.'},
+        {x:11, y:3, kind:'b2soldier', name:'A regular on the water wagon', line:'Half a cup a head at dawn. Do not ask me for it now. I have been asked forty times tonight. I counted.'}],
       quest:()=> S.f.b2_tailDone ? 'The wagons. On toward the river.' : !S.f.b2_roadRest ? 'The squad\'s fire. Count the skins.' : 'The wagons, when the squad is ready to go on.',
       npcs:[
         {id:'oxman', name:'A man with an ox', kind:'hissari_m', x:4, y:6, node:()=>S.f.b2_ox ? 'b2_ox_again' : 'b2_ox', fresh:()=>!S.f.b2_ox},
@@ -26814,21 +26863,24 @@ const B2CH2 = {
         {id:'dessi3', name:B2.younger, kind:'child', x:9, y:8, node:()=>'b2_road_ours', show:()=>S.f.b2_key === 'daughters', fresh:()=>S.f.b2_key === 'daughters' && !S.f.b2_roadOurs},
         {id:'yedda3', name:B2.widow, kind:'hissari_w', x:9, y:8, node:()=>'b2_road_ours', show:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda, fresh:()=>S.f.b2_key !== 'daughters' && !!S.f.b2_yedda && !S.f.b2_roadOurs} ] },
 
-    /* 16 x 12.  . bank mud  , reeds  s sand  r rock  # cut bank  W wagon  = tent  - shallow ford water  ~ deep water  p the paved ford */
+    /* 16 x 12.  . bank mud  , reeds  s sand  r rock  # cut bank  W wagon  = tent  - shallow ford water  ~ deep water  p the paved ford
+       Terrain kit (25b, v13.22): a light touch (the bank is full): stacked spears (%), crates waiting to cross (8), and a regular waiting
+       with them (folk). */
     { id:'b2_ford', title:'The Sekala · the east bank', sub:'Before dawn · the army crossing in the dark', hint:'Tap ground to move · tap a figure to talk · the paved ford, when the squad is called', decor:'river',
       map:[ "################",
             "#..=...,..W..=.#",
             "#.=..........=.#",
-            "#.....,..r.....#",
-            "#..W.......,...#",
+            "#%....,..r.....#",
+            "#..W.......,.8.#",
             "#,....=........#",
-            "#...........,..#",
+            "#..8........,..#",
             "#ss..s..sss..ss#",
             "#sss,ss.sssssss#",
             "#--~~~pppp~~~--#",
             "#~~~~~pppp~~~~~#",
             "################" ],
       walk:'.,s-', triggers:{p:'b2_cross', W:'b2_ford_wagons'}, start:{x:7, y:1},
+      folk:[{x:10, y:5, kind:'b2soldier', name:'A regular waiting to cross', line:'Boots round the neck, sword over the head, and trust the sappers counted their stones.'}],
       quest:()=> !S.f.b2_mincer ? 'Tangle wants you to meet his captain. Down at the water.' : !S.f.b2_fordWork ? 'Tangle is in the river with the sappers.' : 'The ford. The squad\'s stretch crosses when it is called.',
       npcs:[
         {id:'mincer', name:'Captain Mincer', kind:'mincer', x:8, y:7, node:()=>S.f.b2_mincer ? 'b2_mincer_again' : 'b2_mincer', fresh:()=>!S.f.b2_mincer},
@@ -26840,7 +26892,8 @@ const B2CH2 = {
         /* v13.8 (David, Nov 15): meetings. Cuttle with the timers, once Mincer has named him */
         {id:'cuttle2', name:'Cuttle', kind:'sapper', x:13, y:6, node:()=>'b2_c2_cuttle', show:()=>!!S.f.b2_mincer, fresh:()=>!!S.f.b2_mincer && !S.f.b2_c2_cuttle} ] },
 
-    /* 16 x 12.  ~ deep water  - shallows  p the ford (behind)  s sand  . bank  , reeds  r rock  = tent  W wagon */
+    /* 16 x 12.  ~ deep water  - shallows  p the ford (behind)  s sand  . bank  , reeds  r rock  = tent  W wagon
+       Terrain kit (25b, v13.22): a light touch: what came over dry, stacked on the bank (8), and a woman who came over wet (folk). */
     { id:'b2_westbank', title:'The Sekala · the west bank', sub:'Day · the column coming over · the Semk on the ridge', hint:'Tap ground to move · tap a figure to talk · the ford is behind you now', decor:'river',
       map:[ "################",
             "#~~~~~pppp~~~~~#",
@@ -26848,13 +26901,14 @@ const B2CH2 = {
             "#sss.ss..ss.sss#",
             "#..,....s....,.#",
             "#.=...r....=...#",
-            "#.....,........#",
+            "#8....,........#",
             "#..W.......=...#",
             "#.,....r.....,.#",
-            "#....=......W..#",
+            "#....=......W.8#",
             "#.,.....,....,.#",
             "################" ],
       walk:'.,s-', triggers:{p:'b2_ford_look', W:'b2_west_wagons'}, start:{x:7, y:3},
+      folk:[{x:7, y:7, kind:'hissari_w', name:'A woman wringing out her skirts', line:'Wet to the waist and glad of it. That is the first time this year I have said that about water.'}],
       quest:()=> !S.f.b2_westDone ? 'Captain Chenned is holding the line here. Report.' : !S.f.b2_blown ? 'The ford.' : S.f.b2_raminDone == null ? 'The Red Blades are counting their dead. One of them is looking at the squad.' : 'Night is coming. Bult is by the wagons.',
       npcs:[
         {id:'chenned', name:'Captain Chenned', kind:'b2soldier', x:5, y:6, node:()=>S.f.b2_westDone ? 'b2_chenned_again' : 'b2_chenned', fresh:()=>!S.f.b2_chenned},
@@ -28512,21 +28566,25 @@ const B2CH3 = {
     go:'On', node:'b2_c3_start'},
 
   areas:[
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  b bones  = tent  W wagon  F campfire  h horse lines */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  b bones  = tent  W wagon  F campfire  h horse lines
+       Terrain kit (25b, v13.22): a light touch: low dunes and scrub at the camp's rim (1, 2), stacked spears facing the flank (%), what
+       the carts set down (8), feet churned round the fires (:), and a regular with a dry skin and a mother (folk). */
     { id:'b2_east', title:'The Odhan · nine days east of the P\'atha', sub:'Night · the column dry · Tithansi on the flank', hint:'Tap ground to move · tap a figure to talk · the squad\'s carts, when it is time', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..=...,...hhh.#",
-            "#.=....F....h..#",
-            "#....,.....=...#",
+            "#1.=...,...hhh1#",
+            "#.=...:F:...h..#",
+            "#2...,.....=..8#",
             "#..W.......,...#",
-            "#.,...=..r.....#",
+            "#.,...=..r...%.#",
             "#......F....W..#",
-            "#.r..,.........#",
-            "#....=.....x...#",
-            "#.,......,...=.#",
-            "#s..b...s....s.#",
+            "#.r..,.:.:....1#",
+            "#.8..=.....x...#",
+            "#.,......,...=2#",
+            "#s..b.1.s.12.s.#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_east_fire', W:'b2_east_wagons', h:'b2_east_horses', b:'b2_east_bones'}, start:{x:7, y:9},
+      walk:'.,s:', triggers:{F:'b2_east_fire', W:'b2_east_wagons', h:'b2_east_horses', b:'b2_east_bones'}, start:{x:7, y:9},
+      folk:[{x:2, y:9, kind:'b2soldier', name:'A regular with a dry skin', line:'I shake it every hour. It has not filled. I keep shaking it in case it forgets.'},
+        {x:9, y:9, kind:'hissari_w', name:'A mother by the carts', line:'My daughter asked for water and I told her a story instead. She is asleep. I am still telling it.'}],
       quest:()=> !S.f.b2_lull ? 'A marine captain is asking for the Third Squad.' : !S.f.b2_wicket ? 'The sappers you are going with. By the low rock.' : 'The squad\'s carts, when the squad is ready to go under.',
       npcs:[
         {id:'lull', name:'Captain Lull', kind:'lull', x:5, y:3, node:()=>S.f.b2_lull ? 'b2_lull_again' : 'b2_lull', fresh:()=>!S.f.b2_lull},
@@ -28556,7 +28614,9 @@ const B2CH3 = {
       npcs:[
         {id:'wicket2', name:'Sergeant Wicket', kind:'sapper', x:8, y:3, node:()=>'b2_wicket_t', fresh:()=>!S.f.b2_wicketT} ] },
 
-    /* 16 x 12.  . slope  , scrub  s sand  # rock  ^ the ramp's banks (beyond the river)  ~ the P'atha  x dead tree */
+    /* 16 x 12.  . slope  , scrub  s sand  # rock  ^ the ramp's banks (beyond the river)  ~ the P'atha  x dead tree
+       Terrain kit (25b, v13.22): a light touch (the slope is crowded): stacked spears (%), a tent (6, as its =), bundles (8), and a regular
+       looking across at the ridge (folk). */
     { id:'b2_patha', title:'The P\'atha · the eve of Gelor', sub:'Dusk · the ridge across the river, and an army on it', hint:'Tap ground to move · tap a figure to talk · Bult, when the squad is ready to sleep', decor:'ridge',
       map:[ "################",
             "#^^^^^....^^^^^#",
@@ -28565,12 +28625,13 @@ const B2CH3 = {
             "#~~~~~~~~~~~~~~#",
             "#ss.sss..ss.sss#",
             "#..,....,....,.#",
-            "#.x......,.....#",
-            "#....,.....#...#",
+            "#.x......,....6#",
+            "#%...,.....#...#",
             "#.,.....,......#",
-            "#..s..,....x.,.#",
+            "#..s..,....x.,8#",
             "################" ],
       walk:'.,s', triggers:{'~':'b2_patha_river', x:'b2_sathi_tree'}, start:{x:7, y:9},
+      folk:[{x:11, y:7, kind:'b2soldier', name:'A regular looking at the ridge', line:'They have dug us a ramp up it. Very thoughtful. I would rather they had dug us a well.'}],
       quest:()=> b2In('tangle') && !S.f.b2_tangleAway ? 'Mincer is on the bank. He wants Tangle.' : !S.f.b2_weaselcap3 ? 'The Weasel captain. Something about tomorrow.' : 'Bult, when the squad is ready to sleep.',
       npcs:[
         {id:'mincer3', name:'Captain Mincer', kind:'mincer', x:4, y:6, node:()=>S.f.b2_mincer3 ? 'b2_mincer3_again' : 'b2_mincer3', show:()=>!S.f.b2_mincer3 || !b2In('tangle') || /^b2_(mincer3|tangle_go)/.test(S.node || ''), fresh:()=>!S.f.b2_mincer3},
@@ -28583,21 +28644,24 @@ const B2CH3 = {
         {id:'nether4', name:'Nether', kind:'nether', x:6, y:10, node:()=>'b2_mare'},
         {id:'bult4', name:'Bult', kind:'bult', x:10, y:9, node:()=>'b2_bult4', fresh:()=>!!S.f.b2_weaselcap3 && (!b2In('tangle') || !!S.f.b2_tangleAway)} ] },
 
-    /* 16 x 12.  . the lake bed  , scrub  s sand  ^ the foot of the ridge  x dead tree  ~ the P'atha */
+    /* 16 x 12.  . the lake bed  , scrub  s sand  ^ the foot of the ridge  x dead tree  ~ the P'atha
+       Terrain kit (25b, v13.22): a light touch: bundles dropped on the lake bed (8), a wagon left with a broken wheel (7, as its W), and an
+       old woman sitting on her own (folk). */
     { id:'b2_shallows', title:'The Shallows · below Gelor Ridge', sub:'Morning · the army gone up the ramp · the column left behind', hint:'Tap ground to move · tap a figure to talk · the Weasel captain, by the dead trees', decor:'ridge',
       map:[ "################",
             "#^^^^^^..^^^^^^#",
             "#.,..s.....s..,#",
-            "#..s...,.....s.#",
+            "#..s...,..8..s.#",
             "#.....x....,...#",
             "#.,.........s..#",
             "#....s..,......#",
-            "#..,.....x...,.#",
+            "#..,.....x..7,.#",
             "#s.....s.......#",
             "#~~~~~.....~~~~#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,s', triggers:{x:'b2_shallows_tree', '~':'b2_shallows_river'}, start:{x:7, y:8},
+      folk:[{x:9, y:6, kind:'hissari_w', name:'An old woman on her bundle', line:'They went up the hill with their horses and their banners and left us the river. Fine. The river does not shout.'}],
       quest:()=> S.f.b2_ringDone ? 'Dusk. Count them.' : S.f.b2_shDone ? (S.f.b2_cityboy || !b2In('haddat') ? 'The lake bed. The ring is bending. The dead trees, where the wagons are.' : 'Haddat has found someone among the Tithansi.') : !S.f.b2_c3_key ? 'The Weasel captain wants the Third Squad.' : 'Go.',
       npcs:[
         {id:'weaselcap4', name:'The Weasel captain', kind:'weasel', x:7, y:2, node:()=>S.f.b2_c3_key ? 'b2_weaselcap_after' : 'b2_weasel_order', fresh:()=>!S.f.b2_c3_key},
@@ -29930,21 +29994,23 @@ const B2CH4 = {
     go:'On', node:'b2_c4_start'},
 
   areas:[
-    /* 16 x 12.  . mud  , reeds  ~ the river (blocks)  - ford shallows  # steep bank  x drowned tree  W overturned wagon  c cart */
+    /* 16 x 12.  . mud  , reeds  ~ the river (blocks)  - ford shallows  # steep bank  x drowned tree  W overturned wagon  c cart
+       Terrain kit (25b, v13.22): a light touch (the bank is full): bundles set down (8), a water cask (&), and a man with empty skins (folk). */
     { id:'b2_vathar_bank', title:'The Vathar · the near bank', sub:'Afternoon · the column coming down to the water', hint:'Tap ground to move · tap a figure to talk · the drowned tree at the water, the carts, Captain Lull', decor:'vathar',
       map:[ "################",
             "#####.##########",
             "#~~~~-~~~~~~~~~#",
             "#~~~~--~~~~~~~~#",
             "#---,.-,---,-x-#",
-            "#.,....,...c...#",
+            "#.,....,...c..8#",
             "#..W....,......#",
             "#.,..c.....,.,.#",
             "#......,..W....#",
             "#.,.......c..,.#",
-            "#..,........,..#",
+            "#&.,........,..#",
             "################" ],
       walk:'.,-', triggers:{x:'b2_bank_river', c:'b2_bank_cart', W:'b2_bank_wagon'}, start:{x:7, y:9},
+      folk:[{x:11, y:6, kind:'hissari_m', name:'A man with empty skins', line:'The river is right there. Nobody is drinking. Everybody is looking at the other bank.'}],
       quest:()=> !S.f.b2_ropesDone ? (S.f.b2_lull4 ? 'Upriver, where the ropes are. The overturned wagon is the way along the bank.' : 'Captain Lull is looking for squads.') : !S.f.b2_c4_key ? 'The Silanda is taking the wounded.' : !S.f.b2_envoys ? 'Riders on the far bank, under a pale cloth. Go and see.' : 'Dusk. The nobles\' carriages, downstream. The overturned wagon.',
       npcs:[
         {id:'gesler', name:'Sergeant Gesler', kind:'gesler', x:6, y:5, node:()=>S.f.b2_gesler ? 'b2_gesler_again' : 'b2_gesler', show:()=>!S.f.b2_silandaGone, fresh:()=>!S.f.b2_gesler},
@@ -29956,21 +30022,23 @@ const B2CH4 = {
         {id:'ours5', name:'The squad\'s people', kind:'hissari_w', x:13, y:9, node:()=>'b2_ours5', fresh:()=>!S.f.b2_ours5},
         {id:'dom', name:'A rider on the far bank', kind:'dom', x:5, y:1, node:()=>'b2_dom_far', show:()=>!!S.f.b2_envoys, fresh:()=>!!S.f.b2_envoys && !S.f.b2_domSeen} ] },
 
-    /* 16 x 12.  the Council's carriages, downstream, at night */
+    /* 16 x 12.  the Council's carriages, downstream, at night
+       Terrain kit (25b, v13.22): a light touch: lanterns on poles (!), baggage off the carriages (8), and a driver at his horses (folk). */
     { id:'b2_carriages', title:'The Vathar · the Council\'s carriages', sub:'Night · lamps in the carriages, and harness being put on', hint:'Tap ground to move · tap a figure to talk · the squad\'s carts, when there is nothing more to do', decor:'vathar', dark:true,
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "#---,----,---,-#",
-            "#..c..c...c..,.#",
+            "#!.c..c...c..,.#",
             "#.,......W.....#",
-            "#..c.,..c...c..#",
+            "#..c.,..c...c.8#",
             "#.....,........#",
             "#.,..W....,..x.#",
-            "#.......c......#",
+            "#.......c.....!#",
             "#..,.......,...#",
             "################" ],
       walk:'.,-', triggers:{c:'b2_carriage', W:'b2_night_carts', '-':'b2_night_river'}, start:{x:7, y:10},
+      folk:[{x:13, y:10, kind:'hissari_m', name:'A carriage driver', line:'His lordship wants his horses fed before the soldiers\' horses. Yes, my lord. The horses do not know whose they are.'}],
       quest:()=> !S.f.b2_dealKnown ? 'Something is wrong with the carriages tonight.' : !S.f.b2_envoyDone ? 'The steward is going down to the water.' : !S.f.b2_tooLate ? 'Captain Lull, with what you know.' : 'The squad\'s carts. Your own people.',
       npcs:[
         {id:'steward4', name:'Lord Nethpara\'s steward', kind:'noble', x:6, y:5, node:()=>S.f.b2_steward4 ? 'b2_steward4_again' : 'b2_steward4', show:()=>!S.f.b2_envoyDone, fresh:()=>!S.f.b2_steward4},
@@ -29980,7 +30048,8 @@ const B2CH4 = {
         {id:'lull5', name:'Captain Lull', kind:'lull', x:2, y:9, node:()=>'b2_lull_night', show:()=>!!S.f.b2_envoyDone, fresh:()=>!!S.f.b2_envoyDone && !S.f.b2_tooLate},
         {id:'ramin4', name:'Ramin', kind:'redblade', x:9, y:9, node:()=>'b2_ramin4', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin4} ] },
 
-    /* 16 x 12.  the ford at first light: the crossing already begun */
+    /* 16 x 12.  the ford at first light: the crossing already begun
+       Terrain kit (25b, v13.22): a light touch: bundles waiting their turn (8), and a mother going in (folk). */
     { id:'b2_vford', title:'The Vathar · the ford', sub:'Dawn · forty thousand people walking into a river', hint:'Tap ground to move · tap a figure to talk · the overturned wagon, when the squad is ready', decor:'vathar',
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
@@ -29992,22 +30061,24 @@ const B2CH4 = {
             "#.,.......c..,.#",
             "#.....,..W.....#",
             "#..c.......,...#",
-            "#.,....,....c..#",
+            "#.,....,....c.8#",
             "################" ],
       walk:'.,-', triggers:{x:'b2_ford_tree', W:'b2_ford_wagon', c:'b2_ford_cart'}, start:{x:7, y:9},
+      folk:[{x:5, y:9, kind:'hissari_w', name:'A woman with a child on her hip', line:'Hold my hand, keep your feet, do not look at the water. That is all there is to it.'}],
       quest:()=> !S.f.b2_robe ? 'Mincer\'s sappers are pulling on refugees\' robes. Tangle is looking at you.' : 'The overturned wagons in the shallows. Then the water.',
       npcs:[
         {id:'mincer5', name:'Captain Mincer', kind:'mincer', x:4, y:7, node:()=>'b2_robe', fresh:()=>!S.f.b2_robe},
         {id:'ours6', name:'The squad\'s people', kind:'hissari_m', x:12, y:8, node:()=>'b2_ours_ford', fresh:()=>!S.f.b2_oursFord},
         {id:'bult5', name:'Bult', kind:'bult', x:9, y:6, node:()=>'b2_bult_ford', fresh:()=>!S.f.b2_bultFord} ] },
 
-    /* 16 x 12.  the far bank at dusk: the wood behind, the river in front, and what is in it */
+    /* 16 x 12.  the far bank at dusk: the wood behind, the river in front, and what is in it
+       Terrain kit (25b, v13.22): a light touch: what came across, stacked to dry (8), and a woman with a wet blanket (folk). */
     { id:'b2_farbank', title:'The Vathar · the far bank', sub:'Dusk · the edge of the old forest', hint:'Tap ground to move · tap a figure to talk · Bult, when the squad has counted', decor:'vathar',
       map:[ "################",
             "#xx..,xx..x.,xx#",
             "#.,....,...,...#",
             "#..c....W....,.#",
-            "#.......,......#",
+            "#.......,.....8#",
             "#.,..c.....c...#",
             "#......,.......#",
             "#--,-------,---#",
@@ -30016,6 +30087,7 @@ const B2CH4 = {
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,-', triggers:{b:'b2_wreck', c:'b2_far_cart', W:'b2_far_wagon'}, start:{x:7, y:6},
+      folk:[{x:9, y:5, kind:'hissari_w', name:'A woman with a wet blanket', line:'Wring it, spread it, sleep under it wet. I have not got the strength to wring it twice.'}],
       quest:()=> !S.f.b2_orphans ? 'Children on the bank, with nobody. The carts.' : 'Bult, when the squad has counted.',
       npcs:[
         {id:'marrow4', name:'Marrow', kind:'marrow', x:4, y:4, node:()=>'b2_marrow_end', show:()=>b2In('marrow'), fresh:()=>b2In('marrow') && !S.f.b2_marrowEnd},
@@ -31405,21 +31477,25 @@ const B2CH5 = {
     go:'Into the trees', node:'b2_c5_start'},
 
   areas:[
-    /* 16 x 12.  . leaf-litter  , undergrowth  # trunk (blocks)  T big tree (blocks)  m mound/tomb (blocks)  b old bones  r stone */
+    /* 16 x 12.  . leaf-litter  , undergrowth  # trunk (blocks)  T big tree (blocks)  m mound/tomb (blocks)  b old bones  r stone
+       Terrain kit (25b, v13.22): undergrowth banked between the trunks (2), dead trees (5), ferns and moss in the litter (*), and a refugee
+       carrying deadwood and a regular gone quiet (folk). */
     { id:'b2_vforest', title:'Vathar Forest', sub:'Day · under the old trees', hint:'Tap ground to move · tap a figure to talk · the standing stone in the north-east · the great tree to the south, when the squad is ready', decor:'forest',
       map:[ "################",
-            "#..,.#..m..,..r#",
-            "#.,..,..,...,..#",
-            "#..m....#...,..#",
-            "#.,...,...b....#",
-            "#...#.....,..m.#",
-            "#.,....,.......#",
-            "#..,..m...,.#..#",
-            "#.b.......,....#",
-            "#..,..#....,.,.#",
-            "#.,.....,..T...#",
+            "#22,.#..m..2..r#",
+            "#.,..2..,...,..#",
+            "#2.m..5.#...,.2#",
+            "#.,...,*..b....#",
+            "#5..#..2..,..m.#",
+            "#.,....,..*....#",
+            "#2.,..m...,.#.2#",
+            "#.b..*..2.,....#",
+            "#2.,..#....,.,5#",
+            "#22.....,..T.2.#",
             "################" ],
-      walk:'.,b', triggers:{m:'b2_mound', b:'b2_oldbones', r:'b2_tstone', T:'b2_forest_edge'}, start:{x:7, y:9},
+      walk:'.,b*', triggers:{m:'b2_mound', b:'b2_oldbones', r:'b2_tstone', T:'b2_forest_edge'}, start:{x:7, y:9},
+      folk:[{x:4, y:2, kind:'hissari_m', name:'A refugee with an armful of deadwood', line:'Wood. After the Odhan I keep picking it up. I have nothing to burn it on and I cannot stop.'},
+        {x:9, y:6, kind:'b2soldier', name:'A regular among the trees', line:'Old trees, old stones, old bones. Nothing in here has been young for a long time. Keep walking.'}],
       quest:()=> !S.f.b2_list5 ? 'The historian and his escort, up among the trees.' : !S.f.b2_moundsDone ? (S.f.b2_weasel5 ? 'The mounds, where the stragglers went.' : 'A Weasel rider is looking for squads.') : 'The great tree to the south, and the Nenoth beyond it. Or the standing stone, and the tower.',
       npcs:[
         {id:'list5', name:'Corporal List', kind:'list', x:10, y:2, node:()=>S.f.b2_list5 ? 'b2_list5_again' : 'b2_list5', fresh:()=>!S.f.b2_list5},
@@ -31452,21 +31528,24 @@ const B2CH5 = {
         {id:'shade', name:'Something tall', kind:'jaghut_shade', x:8, y:2, node:()=>'b2_shade', show:()=>!!S.f.b2_towerIce, fresh:()=>!!S.f.b2_towerIce && !S.f.b2_shade},
         {id:'marrow5', name:'Marrow', kind:'marrow', x:5, y:7, node:()=>'b2_tower_marrow', show:()=>b2In('marrow'), fresh:()=>b2In('marrow') && !S.f.b2_towerWarren} ] },
 
-    /* 16 x 12.  the Nenoth by day: . hardpan  , scrub  s sand  # rock (blocks)  r low rock  x dead tree  b bones  W wagon  h horse lines */
+    /* 16 x 12.  the Nenoth by day: . hardpan  , scrub  s sand  # rock (blocks)  r low rock  x dead tree  b bones  W wagon  h horse lines
+       Terrain kit (25b, v13.22): meant to be empty: the Odhan's low dunes and scrub (1, 2), a boulder (4), the column's feet churned round the
+       cart (:), and one man walking with his eyes shut (folk). */
     { id:'b2_nenoth', title:'The Nenoth Odhan', sub:'Midday · the Dry March', hint:'Tap ground to move · tap a figure to talk · the squad\'s cart, the bones, the dead tree that looks back', decor:'odhan',
       map:[ "################",
-            "#ss..,..b...,.s#",
-            "#.,..r....,..x.#",
+            "#ss11,..b..11.s#",
+            "#1,..r....,..x1#",
             "#..b....,....,.#",
-            "#.,...s....r...#",
-            "#....,..W....,.#",
+            "#1,...s....r..2#",
+            "#....,.:W:...,.#",
             "#.r.......,..b.#",
-            "#..,..s......,.#",
-            "#.,.....,..r...#",
+            "#4.,..s......,1#",
+            "#.,..:..,..r...#",
             "#..h.,....,..,.#",
-            "#.....s.,....s.#",
+            "#.11..s.,.2..s1#",
             "################" ],
-      walk:'.,s', triggers:{W:'b2_ncart', b:'b2_carcass', x:'b2_lookback', h:'b2_nhorses'}, start:{x:8, y:7},
+      walk:'.,s:', triggers:{W:'b2_ncart', b:'b2_carcass', x:'b2_lookback', h:'b2_nhorses'}, start:{x:8, y:7},
+      folk:[{x:10, y:7, kind:'hissari_m', name:'A man walking with his eyes shut', line:'I shut my eyes for a count of a hundred. Then I open them and it is the same. It passes the time.'}],
       quest:()=> !S.f.b2_herdDone ? (S.f.b2_weaselAsk ? 'The cattle, and the Bhilard on the skyline.' : 'The Weasel captain, by the horse lines.') : !S.f.b2_c5_key ? 'Bult has the water ration.' : !S.f.b2_dryDone ? 'Midday. The Tregyn are coming for the carts.' : 'Dusk. Back to the camp.',
       npcs:[
         {id:'weaselcap5', name:'The Weasel captain', kind:'weasel', x:4, y:9, node:()=>S.f.b2_weaselAsk ? 'b2_weaselcap5b' : 'b2_weaselcap5', fresh:()=>!S.f.b2_weaselAsk},
@@ -31477,21 +31556,26 @@ const B2CH5 = {
         {id:'list6', name:'Corporal List', kind:'list', x:12, y:3, node:()=>'b2_list6', fresh:()=>!S.f.b2_list6},
         {id:'ours8', name:'The squad\'s people', kind:'child', x:6, y:6, node:()=>'b2_ours8', fresh:()=>!S.f.b2_ours8} ] },
 
-    /* 16 x 12.  the camp at night on the Nenoth: . hardpan  , scrub  = tent  F fire  W wagon  h horse lines */
+    /* 16 x 12.  the camp at night on the Nenoth: . hardpan  , scrub  = tent  F fire  W wagon  h horse lines
+       Terrain kit (25b, v13.22): low dunes and scrub at the rim (1, 2), a tent (6, as its =), a family's fire (0), the sacks off the carriage
+       (8), more horses on the lines (@, as its h), feet churned round the fires (:), and a woman with a full skin and a regular counting
+       sacks (folk). */
     { id:'b2_karpcamp', title:'The Nenoth · the camp', sub:'Night · a carriage where there was none', hint:'Tap ground to move · tap a figure to talk · the squad\'s cart, when there is nothing more to do', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#.,..=...=..,..#",
-            "#..F.........,.#",
-            "#.,....,..=....#",
-            "#..=.........F.#",
-            "#.....,..,.....#",
-            "#.,..W.........#",
-            "#...........h..#",
-            "#..,...F...,...#",
-            "#.=.......,..=.#",
-            "#....,...W.....#",
+            "#1,..=.8.=..,.1#",
+            "#.:F:........,2#",
+            "#.,....,..=..8.#",
+            "#..=.......:.F.#",
+            "#.6...,..,.....#",
+            "#.,..W.:....@@.#",
+            "#8..........h@.#",
+            "#..,..:F:..,...#",
+            "#.=..0....,..=.#",
+            "#1...,...W...21#",
             "################" ],
-      walk:'.,', triggers:{W:'b2_kcart', F:'b2_kfire'}, start:{x:7, y:10},
+      walk:'.,:', triggers:{W:'b2_kcart', F:'b2_kfire'}, start:{x:7, y:10},
+      folk:[{x:9, y:7, kind:'hissari_w', name:'A woman with a full skin', line:'Full. I keep lifting it to feel the weight. I have not drunk any. I do not want it to be lighter.'},
+        {x:8, y:1, kind:'b2soldier', name:'A regular counting sacks', line:'Grain, water, salt, more grain. Somebody a long way off thought about us. I had forgotten that could happen.'}],
       quest:()=> !S.f.b2_karpolan ? 'The carriage, and the man who came in it.' : !S.f.b2_campWater ? 'The squad\'s cart. The water is being handed out.' : 'Bult, when the squad has drunk.',
       npcs:[
         {id:'karpolan', name:'Karpolan Demesand', kind:'karpolan', x:8, y:3, node:()=>S.f.b2_karpolan ? 'b2_karpolan_again' : 'b2_karpolan', fresh:()=>!S.f.b2_karpolan},
@@ -32836,21 +32920,24 @@ const B2CH6 = {
     go:'Into the camp', node:'b2_c6_start'},
 
   areas:[
-    /* 16 x 12.  the hills at night: . hardpan  , scrub  r low rock  x the lookout  = tent  F fire  W the squad's cart  h horse lines  o the seep */
+    /* 16 x 12.  the hills at night: . hardpan  , scrub  r low rock  x the lookout  = tent  F fire  W the squad's cart  h horse lines  o the seep
+       Terrain kit (25b, v13.22): the hills' dark shoulders and scrub at the rim (1, 2), more fires (0, as its F), feet churned by the seep
+       and the cart (:), and a refugee counting the fires on the ridges (folk). */
     { id:'b2_hills', title:'The hills above Sanimon', sub:'Night · fires on every ridge', hint:'Tap ground to move · tap a figure to talk · the seep, the lookout, the squad\'s cart when the squad is ready', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..,..r...,..x.#",
-            "#.,.=...,....,.#",
+            "#11,0.r...,1.x1#",
+            "#1,.=...,....,.#",
             "#....,..F...r..#",
-            "#.r.......,....#",
-            "#..,.=......=..#",
-            "#.......,..h...#",
-            "#.,..o.........#",
-            "#....,...W..,..#",
-            "#.=.....,....=.#",
-            "#..,..r.....,..#",
+            "#.r.......,...1#",
+            "#2.,.=......=..#",
+            "#.......,..h..1#",
+            "#.,..o.:.......#",
+            "#.0..,...W:.,..#",
+            "#.=.....,....=2#",
+            "#12,..r.....,21#",
             "################" ],
-      walk:'.,', triggers:{x:'b2_ridge', F:'b2_hfire', o:'b2_hseep', W:'b2_hcart', h:'b2_hhorses'}, start:{x:7, y:10},
+      walk:'.,:', triggers:{x:'b2_ridge', F:'b2_hfire', o:'b2_hseep', W:'b2_hcart', h:'b2_hhorses'}, start:{x:7, y:10},
+      folk:[{x:2, y:7, kind:'hissari_m', name:'A refugee watching the ridges', line:'Every ridge has a fire on it. I counted to forty and stopped. Counting them does not make them any friendlier.'}],
       quest:()=> !S.f.b2_bult9 ? 'Bult is going round the squads.' : !S.f.b2_seepDone ? 'There is water in the hills. The seep.' : 'The squad\'s cart, when the squad is ready for the dawn.',
       npcs:[
         {id:'bult9', name:'Bult', kind:'bult', x:9, y:3, node:()=>'b2_bult9', fresh:()=>!S.f.b2_bult9},
@@ -32864,21 +32951,24 @@ const B2CH6 = {
         {id:'ramin8', name:'Ramin', kind:'redblade', x:13, y:8, node:()=>'b2_ramin8', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin8},
         {id:'ours10', name:'The squad\'s people', kind:'hissari_w', x:10, y:9, node:()=>'b2_ours10', fresh:()=>!S.f.b2_ours10} ] },
 
-    /* 16 x 12.  the field at Sanimon, the afternoon after: . hardpan  , scrub  s sand  r low rock  x a dead tree  b the dead  W Dom's water-carts  = the Seventh's lines  h horse lines */
+    /* 16 x 12.  the field at Sanimon, the afternoon after: . hardpan  , scrub  s sand  r low rock  x a dead tree  b the dead  W Dom's water-carts  = the Seventh's lines  h horse lines
+       Terrain kit (25b, v13.22): the field's rim of low dunes and scrub (1, 2), the ground churned where the lines met (:), spears and
+       shields gathered up (%), a dropped pack (8), and a regular collecting arrows (folk). */
     { id:'b2_field', title:'Sanimon', sub:'Afternoon · the field, after', hint:'Tap ground to move · tap a figure to talk · Dom\'s water-carts, the dead, the Seventh\'s lines when there is nothing more to do', decor:'odhan',
       map:[ "################",
-            "#..b..,...r..,.#",
-            "#.,...W..W..,..#",
-            "#....,.....b...#",
-            "#.r..,.x.....,.#",
-            "#..,....,..r...#",
-            "#.b.........,..#",
-            "#....,..s....b.#",
-            "#.,.....,..,...#",
-            "#..h..,.....=..#",
-            "#.....,..s.....#",
+            "#1.b..,...r.11.#",
+            "#.,...W::W..,.1#",
+            "#..:.,.....b:.2#",
+            "#.r:.,.x.%...,.#",
+            "#..,.::.,..r...#",
+            "#.b..%..::..,.1#",
+            "#2...,:.s....b.#",
+            "#.,..8..,:.,...#",
+            "#..h..,.:...=.1#",
+            "#12...,..s..21.#",
             "################" ],
-      walk:'.,s', triggers:{W:'b2_wcarts', b:'b2_fdead', x:'b2_ftree', '=':'b2_field_out'}, start:{x:8, y:10},
+      walk:'.,s:', triggers:{W:'b2_wcarts', b:'b2_fdead', x:'b2_ftree', '=':'b2_field_out'}, start:{x:8, y:10},
+      folk:[{x:10, y:6, kind:'b2soldier', name:'A regular collecting arrows', line:'Theirs, ours, it does not matter. An arrow is an arrow, and the quartermaster has stopped asking.'}],
       quest:()=> !S.f.b2_duiker10 ? 'The historian, by the dead tree.' : b2In('haddat') && !S.f.b2_ilhar ? 'Dom\'s water-carts, up on the north side of the field.' : !S.f.b2_warchief ? 'The Khundryl are coming down to the Fist\'s standard.' : 'The Seventh\'s lines. The column moves at dusk.',
       npcs:[
         {id:'duiker10', name:'Duiker', kind:'duiker', x:8, y:4, node:()=>'b2_duiker10', fresh:()=>!S.f.b2_duiker10},
@@ -32887,21 +32977,24 @@ const B2CH6 = {
         {id:'ours11', name:'The squad\'s people', kind:'child', x:4, y:9, node:()=>'b2_ours11', fresh:()=>!S.f.b2_ours11},
         {id:'ilharc', name:'Ilhar', kind:'hissari_m', x:7, y:3, node:()=>'b2_ilhar_after', show:()=>S.f.b2_ilhar === 'came', fresh:()=>false} ] },
 
-    /* 16 x 12.  Dojal Spring at noon: . hardpan  , scrub  s sand  r low rock  t tamarisk (blocks)  o the spring (blocks)  W the squad's cart  x the way on */
+    /* 16 x 12.  Dojal Spring at noon: . hardpan  , scrub  s sand  r low rock  t tamarisk (blocks)  o the spring (blocks)  W the squad's cart  x the way on
+       Terrain kit (25b, v13.22): low dunes and scrub at the rim (1, 2), the spring's edge trodden to mud (:), skins and bundles set down
+       (8), a boulder (4), spears stood ready (%), and a regular filling skins at a run (folk). */
     { id:'b2_dojal', title:'Dojal Spring', sub:'Noon · the running retreat', hint:'Tap ground to move · tap a figure to talk · the spring, the squad\'s cart, the way on', decor:'odhan',
       map:[ "################",
-            "#.,..t...,..t..#",
-            "#..,...ooo...,.#",
-            "#.t...,ooo.,...#",
-            "#....,..,....t.#",
-            "#.,.r......,...#",
-            "#....W....,..r.#",
-            "#.,.....,......#",
-            "#..s..,...x..,.#",
-            "#.,......,..s..#",
-            "#....,.....,...#",
+            "#1,..t.:.,..t.1#",
+            "#2.,..:ooo:..,.#",
+            "#.t...:ooo:,..2#",
+            "#..8.,.::....t.#",
+            "#.,.r..8...,...#",
+            "#..4.W....,..r.#",
+            "#.,.....,..:..1#",
+            "#..s..,...x.%,.#",
+            "#1,......,..s.2#",
+            "#.1..,.....,.11#",
             "################" ],
-      walk:'.,s', triggers:{o:'b2_spring6', W:'b2_dcart', x:'b2_dojal_out'}, start:{x:6, y:9},
+      walk:'.,s:', triggers:{o:'b2_spring6', W:'b2_dcart', x:'b2_dojal_out'}, start:{x:6, y:9},
+      folk:[{x:9, y:4, kind:'b2soldier', name:'A regular filling skins at a run', line:'Fill, cork, run. Fill, cork, run. My mother wanted me to be a potter.'}],
       quest:()=> !S.f.b2_dojalDone ? 'The spring, before Dom\'s people get to it.' : 'The stretch is drinking. Then on, to the Geleen.',
       npcs:[
         {id:'lull7', name:'Captain Lull', kind:'lull', x:11, y:5, node:()=>'b2_lull7', fresh:()=>!S.f.b2_lull7},
@@ -32909,21 +33002,24 @@ const B2CH6 = {
         {id:'nobles6', name:'A noble\'s carriage', kind:'nethpara', x:12, y:7, node:()=>'b2_nobles6', fresh:()=>!S.f.b2_nobles6},
         {id:'ours12', name:'The squad\'s people', kind:'hissari_w', x:8, y:7, node:()=>'b2_ours12', fresh:()=>!S.f.b2_ours12} ] },
 
-    /* 16 x 12.  the Geleen Plain at dusk: . short grass  , long grass  = tent  F the elders' fire  c the coin chests  W the squad's cart  h horse lines */
+    /* 16 x 12.  the Geleen Plain at dusk: . short grass  , long grass  = tent  F the elders' fire  c the coin chests  W the squad's cart  h horse lines
+       Terrain kit (25b, v13.22): a light touch: the plain's low rises at the rim (1, 2), more Kherahn tents (6, as its =), a herders' fire
+       (0), the elders' saddlebags (8), and a Kherahn herder who will not talk terms (folk). */
     { id:'b2_geleen', title:'The Geleen Plain', sub:'Dusk · grass, and two roads', hint:'Tap ground to move · tap a figure to talk · the chests by the elders\' fire, the horse lines, the squad\'s cart', decor:'geleen',
       map:[ "################",
-            "#.,..=...,..=..#",
-            "#..,....,..,...#",
-            "#.=...cFc....,.#",
+            "#1,..=.6.,..=.1#",
+            "#6.,....,..,.6.#",
+            "#.=...cFc..8.,1#",
             "#....,.....,...#",
-            "#.,......,...h.#",
+            "#0,......,...h.#",
             "#..,..,....,...#",
-            "#.W.....,..,.=.#",
+            "#.W.....,..,.=1#",
             "#....,.....,...#",
-            "#.,..,...,..,..#",
-            "#.=....,....,..#",
+            "#.,..,...,..,.6#",
+            "#1=....,....,21#",
             "################" ],
       walk:'.,', triggers:{c:'b2_chests', F:'b2_gfire', W:'b2_gcart', h:'b2_ghorses'}, start:{x:7, y:10},
+      folk:[{x:12, y:9, kind:'kherahn', name:'A Kherahn herder', line:'The grass is good this year. That is all I will say to a soldier. Talk to the elders.'}],
       quest:()=> !S.f.b2_bult10 ? 'Bult, by the elders\' fire.' : !S.f.b2_silverDone ? 'The chests by the elders\' fire. Dom\'s riders have heard about the silver.' : !b2AllSaid() ? 'Night. Each of the squad has to choose. Go and hear them.' : 'Bult, when the squad has chosen.',
       npcs:[
         {id:'bult10', name:'Bult', kind:'bult', x:9, y:4, node:()=>S.f.b2_silverDone ? 'b2_bult11' : 'b2_bult10', fresh:()=>!S.f.b2_bult10 || (!!S.f.b2_silverDone && b2AllSaid() && !S.f.b2_c6_key)},
@@ -34354,21 +34450,24 @@ const B2CH7 = {
     go:'Into Balahn', node:'b2_c7_start'},
 
   areas:[
-    /* 16 x 12.  Balahn at night: . hardpan  , scrub  # mud walls  = hovels and tents  F the fire  W the squad's cart  h horse lines  r low rock  x the dead tree at the east end */
+    /* 16 x 12.  Balahn at night: . hardpan  , scrub  # mud walls  = hovels and tents  F the fire  W the squad's cart  h horse lines  r low rock  x the dead tree at the east end
+       Terrain kit (25b, v13.22): the village's tumbled mud-brick (3), its well (&), more hovels (6, as its =), a fire at the south end (0,
+       as its F), what the stretch set down (8), feet churned round the fire (:), and a villager in his doorway (folk). */
     { id:'b2_balahn', title:'Balahn', sub:'Night · the head of Aren Way', hint:'Tap ground to move · tap a figure to talk · the dead tree looks east; the squad\'s cart when the squad is ready for the road', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..,..=...,..x.#",
-            "#.,.#..,.=.....#",
-            "#..,....F...,..#",
-            "#.=.#.......=..#",
+            "#33,..=...,..x.#",
+            "#&,.#3.,.=.....#",
+            "#..,...:F:..,.8#",
+            "#.=.#3......=..#",
             "#......,..h....#",
-            "#.,..r.........#",
-            "#....,...W..,..#",
+            "#.,..r.......6.#",
+            "#6...,...W..,..#",
             "#.=......,...=.#",
-            "#..,...,....,..#",
-            "#.....,..r.....#",
+            "#..,...,....,.3#",
+            "#33...,..r..0..#",
             "################" ],
-      walk:'.,', triggers:{x:'b2_beast', F:'b2_bfire', W:'b2_bcart', h:'b2_bhorses'}, start:{x:7, y:9},
+      walk:'.,:', triggers:{x:'b2_beast', F:'b2_bfire', W:'b2_bcart', h:'b2_bhorses'}, start:{x:7, y:9},
+      folk:[{x:1, y:4, kind:'hissari_m', name:'A villager in his doorway', line:'We have nothing to sell you. We had nothing to sell the last army either. They took it anyway.'}],
       quest:()=> !S.f.b2_duiker12 ? 'The historian, by the fire.' : !S.f.b2_nobles7 ? 'There is trouble at the Kherahn horse lines. The nobles.' : 'The squad\'s cart, at dawn. Aren Way.',
       npcs:[
         {id:'duiker12', name:'Duiker', kind:'duiker', x:6, y:3, node:()=>'b2_duiker12', fresh:()=>!S.f.b2_duiker12},
@@ -34386,21 +34485,25 @@ const B2CH7 = {
         {id:'ramin9', name:'Ramin', kind:'redblade', x:13, y:7, node:()=>'b2_ramin9', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin9},
         {id:'ilhar7', name:'Ilhar', kind:'hissari_m', x:6, y:8, node:()=>'b2_ilhar7', show:()=>S.f.b2_ilhar === 'came', fresh:()=>S.f.b2_ilhar === 'came' && !S.f.b2_ilhar7} ] },
 
-    /* 16 x 12.  Aren Way by day, Aren to the west: . the raised road  , dry grass  m barrow mounds  # rock  x a dead tree on a barrow  r the last milestone */
+    /* 16 x 12.  Aren Way by day, Aren to the west: . the raised road  , dry grass  m barrow mounds  # rock  x a dead tree on a barrow  r the last milestone
+       Terrain kit (25b, v13.22): the old barrow country either side of the Way: thorn (2), stones (4), a dead tree (5), a greener tuft or two
+       (*); by the road a cart stopped beside its carter (7) and a dropped bundle (8); and a woman who will not stop (folk). The road itself
+       is left clear: its ruts are drawn only where it runs straight. */
     { id:'b2_way', title:'Aren Way', sub:'Morning · three leagues to the gate', hint:'Tap ground to move · tap a figure to talk · the dead tree; the last milestone, west, is the way to the gate', decor:'barrow',
       map:[ "################",
-            "#,,m,,,,x,,,m,,#",
-            "#,mm,,,,,,,,mm,#",
-            "#,,,,,m,,,,,,,,#",
-            "#,,,,,,,,,m,,,,#",
+            "#2,m,,,,x,,,m,2#",
+            "#,mm,,4,,,,,mm,#",
+            "#,5,,,m,,,,,,2,#",
+            "#,,*,,,,8,m,,,,#",
             "#r.............#",
             "#..............#",
-            "#,,,m,,,,,,,,,,#",
-            "#,,mm,,,,,m,,,,#",
-            "#,,,,,,,,,,,,m,#",
-            "#,,m,,,,,,,,,,,#",
+            "#,,,m,,7,,,8,,,#",
+            "#,,mm,,,,,m,,4,#",
+            "#,2,,,*,,,,,,m,#",
+            "#,,m,,,,,,2,,,2#",
             "################" ],
-      walk:'.,m', triggers:{r:'b2_wstone', x:'b2_wtree'}, start:{x:14, y:6},
+      walk:'.,m*', triggers:{r:'b2_wstone', x:'b2_wtree'}, start:{x:14, y:6},
+      folk:[{x:5, y:6, kind:'hissari_w', name:'A woman with a bundle, not stopping', line:'Do not stop me, Sergeant. If I stop I will sit, and if I sit I will not get up.'}],
       quest:()=> !S.f.b2_duiker13 ? 'The historian, at the front of the column.' : !S.f.b2_wcart ? 'A cart has stopped on the road. Everything behind it has stopped too.' : 'West. The last milestone, and the gate.',
       npcs:[
         {id:'duiker13', name:'Duiker', kind:'duiker', x:11, y:5, node:()=>'b2_duiker13', fresh:()=>!S.f.b2_duiker13},
@@ -34409,21 +34512,26 @@ const B2CH7 = {
         {id:'ours15', name:'The squad\'s people', kind:'child', x:12, y:7, node:()=>'b2_ours15', fresh:()=>!S.f.b2_ours15},
         {id:'ilhar8', name:'Ilhar', kind:'hissari_m', x:4, y:5, node:()=>'b2_ilhar8', show:()=>S.f.b2_ilhar === 'came', fresh:()=>S.f.b2_ilhar === 'came' && !S.f.b2_ilhar8} ] },
 
-    /* 16 x 12.  Aren, inside the north wall: . paving  , dust  # wall  t the towers  s the stair up the wall  = awnings  w a well  g the harbour gate */
+    /* 16 x 12.  Aren, inside the north wall: . paving  , dust  # wall  t the towers  s the stair up the wall  = awnings  w a well  g the harbour gate
+       Terrain kit (25b, v13.22): a city taking people in: stalls under the awnings (9, as its =), the stores either side of the stores-man
+       (8), the guard's spears (%), a handcart (7), water casks (&), lanterns at the harbour gate (!), feet churned round the well and the
+       gate (:), and a water-carrier and a guard of Aren (folk). */
     { id:'b2_aren', title:'Aren · the north wall', sub:'Inside the gate', hint:'Tap ground to move · tap a figure to talk · the stair up the wall, the well, the harbour gate', decor:'aren',
       map:[ "################",
-            "#t.....s.....t.#",
-            "#..............#",
-            "#.=..,....,..=.#",
-            "#..............#",
-            "#.,...w....,...#",
-            "#..............#",
-            "#.=...,....=...#",
-            "#.....,........#",
-            "#..,.......,...#",
-            "#......g.......#",
+            "#t%....s.....t8#",
+            "#8.............#",
+            "#.=9.,....,..=9#",
+            "#..8.8.........#",
+            "#&,...w:...,...#",
+            "#.............7#",
+            "#.=9..,....=9..#",
+            "#&....,........#",
+            "#..,.......,..8#",
+            "#!....:g:.....!#",
             "################" ],
-      walk:'.,', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
+      walk:'.,:', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
+      folk:[{x:10, y:5, kind:'hissari_m', name:'An Aren water-carrier', line:'They have been coming in at the gate since dawn. I have carried water till my arms stopped. Nobody has paid. Nobody has asked me to stop.'},
+        {x:9, y:10, kind:'aren_guard', name:'A guard of Aren', line:'Keep moving, keep left, keep your weapons sheathed in the city. Three rules. Most people manage two.'}],
       quest:()=> b2Ph7() <= 1 ? (!S.f.b2_blistig1 ? 'The commander of the Aren Guard, at the foot of the stair.' : 'Up on the north wall. Something is coming down Aren Way.') :
         b2Ph7() === 2 ? (!S.f.b2_blistig2 ? 'Blistig. He wants a word with every squad of the Seventh.' : 'Dawn. The stair to the wall, when the city stirs.') :
         b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his rounds.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
@@ -34443,21 +34551,23 @@ const B2CH7 = {
         {id:'marrow9', name:'Marrow', kind:'marrow', x:5, y:9, node:()=>'b2_sq7m', show:()=>b2In('marrow') && b2Ph7() >= 2 && b2Ph7() <= 3, fresh:()=>b2In('marrow') && b2Ph7() === 2 && !(S.f.b2_sq7 || {}).marrow},
         {id:'ramin10', name:'Ramin', kind:'redblade', x:13, y:6, node:()=>'b2_ramin10', show:()=>b2In('redblade') && b2Ph7() <= 1, fresh:()=>b2In('redblade') && b2Ph7() <= 1 && !S.f.b2_ramin10} ] },
 
-    /* 16 x 12.  Aren harbour: . the quay  , dust  # the harbour wall and the drop to the water  s the steps down to the boats  = awnings  w a fountain  g the gate up into the city */
+    /* 16 x 12.  Aren harbour: . the quay  , dust  # the harbour wall and the drop to the water  s the steps down to the boats  = awnings  w a fountain  g the gate up into the city
+       Terrain kit (25b, v13.22): a light touch: cargo on the quay (8), water casks (&), coiled rope (*), and a boatman between trips (folk). */
     { id:'b2_quay', title:'Aren harbour', sub:'The quay', hint:'Tap ground to move · tap a figure to talk · the steps to the boats, the fountain, the gate', decor:'aren',
       map:[ "################",
             "#######s########",
-            "#..............#",
-            "#.=...,....=...#",
+            "#8*...........8#",
+            "#&=...,....=..&#",
             "#..............#",
             "#....,...w.....#",
-            "#..............#",
+            "#*.............#",
             "#.=..,.....=...#",
             "#..............#",
-            "#...,....,.....#",
-            "#......g.......#",
+            "#8..,....,....&#",
+            "#.*....g.....8.#",
             "################" ],
-      walk:'.,', triggers:{s:'b2_qsteps', w:'b2_qwell', g:'b2_qgate'}, start:{x:7, y:8},
+      walk:'.,*', triggers:{s:'b2_qsteps', w:'b2_qwell', g:'b2_qgate'}, start:{x:7, y:8},
+      folk:[{x:6, y:4, kind:'hissari_m', name:'A boatman between trips', line:'I row where I am pointed. Out to the ships, back to the steps, out again. My back stopped arguing about noon.'}],
       quest:()=> b2Ph7() < 4 ? (b2OldHandPick() && !b2OH() && !S.f.b2_oldHandNo ? 'A ship out of Genabaris, at the end of the quay. A sergeant has a friend aboard.' : 'The gate, back up into the city.') :
         !S.f.b2_c7_ready ? 'The Silanda is in. Hear the squad out, and the ones who would have you.' : 'Choose the road out: the Aren Guard (Blistig), the Wickans (Temul), or the landward gate, and Seven Cities.',
       npcs:[

@@ -56,21 +56,25 @@ const B2CH3 = {
     go:'On', node:'b2_c3_start'},
 
   areas:[
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  b bones  = tent  W wagon  F campfire  h horse lines */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree  b bones  = tent  W wagon  F campfire  h horse lines
+       Terrain kit (25b, v13.22): a light touch: low dunes and scrub at the camp's rim (1, 2), stacked spears facing the flank (%), what
+       the carts set down (8), feet churned round the fires (:), and a regular with a dry skin and a mother (folk). */
     { id:'b2_east', title:'The Odhan · nine days east of the P\'atha', sub:'Night · the column dry · Tithansi on the flank', hint:'Tap ground to move · tap a figure to talk · the squad\'s carts, when it is time', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..=...,...hhh.#",
-            "#.=....F....h..#",
-            "#....,.....=...#",
+            "#1.=...,...hhh1#",
+            "#.=...:F:...h..#",
+            "#2...,.....=..8#",
             "#..W.......,...#",
-            "#.,...=..r.....#",
+            "#.,...=..r...%.#",
             "#......F....W..#",
-            "#.r..,.........#",
-            "#....=.....x...#",
-            "#.,......,...=.#",
-            "#s..b...s....s.#",
+            "#.r..,.:.:....1#",
+            "#.8..=.....x...#",
+            "#.,......,...=2#",
+            "#s..b.1.s.12.s.#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_east_fire', W:'b2_east_wagons', h:'b2_east_horses', b:'b2_east_bones'}, start:{x:7, y:9},
+      walk:'.,s:', triggers:{F:'b2_east_fire', W:'b2_east_wagons', h:'b2_east_horses', b:'b2_east_bones'}, start:{x:7, y:9},
+      folk:[{x:2, y:9, kind:'b2soldier', name:'A regular with a dry skin', line:'I shake it every hour. It has not filled. I keep shaking it in case it forgets.'},
+        {x:9, y:9, kind:'hissari_w', name:'A mother by the carts', line:'My daughter asked for water and I told her a story instead. She is asleep. I am still telling it.'}],
       quest:()=> !S.f.b2_lull ? 'A marine captain is asking for the Third Squad.' : !S.f.b2_wicket ? 'The sappers you are going with. By the low rock.' : 'The squad\'s carts, when the squad is ready to go under.',
       npcs:[
         {id:'lull', name:'Captain Lull', kind:'lull', x:5, y:3, node:()=>S.f.b2_lull ? 'b2_lull_again' : 'b2_lull', fresh:()=>!S.f.b2_lull},
@@ -100,7 +104,9 @@ const B2CH3 = {
       npcs:[
         {id:'wicket2', name:'Sergeant Wicket', kind:'sapper', x:8, y:3, node:()=>'b2_wicket_t', fresh:()=>!S.f.b2_wicketT} ] },
 
-    /* 16 x 12.  . slope  , scrub  s sand  # rock  ^ the ramp's banks (beyond the river)  ~ the P'atha  x dead tree */
+    /* 16 x 12.  . slope  , scrub  s sand  # rock  ^ the ramp's banks (beyond the river)  ~ the P'atha  x dead tree
+       Terrain kit (25b, v13.22): a light touch (the slope is crowded): stacked spears (%), a tent (6, as its =), bundles (8), and a regular
+       looking across at the ridge (folk). */
     { id:'b2_patha', title:'The P\'atha · the eve of Gelor', sub:'Dusk · the ridge across the river, and an army on it', hint:'Tap ground to move · tap a figure to talk · Bult, when the squad is ready to sleep', decor:'ridge',
       map:[ "################",
             "#^^^^^....^^^^^#",
@@ -109,12 +115,13 @@ const B2CH3 = {
             "#~~~~~~~~~~~~~~#",
             "#ss.sss..ss.sss#",
             "#..,....,....,.#",
-            "#.x......,.....#",
-            "#....,.....#...#",
+            "#.x......,....6#",
+            "#%...,.....#...#",
             "#.,.....,......#",
-            "#..s..,....x.,.#",
+            "#..s..,....x.,8#",
             "################" ],
       walk:'.,s', triggers:{'~':'b2_patha_river', x:'b2_sathi_tree'}, start:{x:7, y:9},
+      folk:[{x:11, y:7, kind:'b2soldier', name:'A regular looking at the ridge', line:'They have dug us a ramp up it. Very thoughtful. I would rather they had dug us a well.'}],
       quest:()=> b2In('tangle') && !S.f.b2_tangleAway ? 'Mincer is on the bank. He wants Tangle.' : !S.f.b2_weaselcap3 ? 'The Weasel captain. Something about tomorrow.' : 'Bult, when the squad is ready to sleep.',
       npcs:[
         {id:'mincer3', name:'Captain Mincer', kind:'mincer', x:4, y:6, node:()=>S.f.b2_mincer3 ? 'b2_mincer3_again' : 'b2_mincer3', show:()=>!S.f.b2_mincer3 || !b2In('tangle') || /^b2_(mincer3|tangle_go)/.test(S.node || ''), fresh:()=>!S.f.b2_mincer3},
@@ -127,21 +134,24 @@ const B2CH3 = {
         {id:'nether4', name:'Nether', kind:'nether', x:6, y:10, node:()=>'b2_mare'},
         {id:'bult4', name:'Bult', kind:'bult', x:10, y:9, node:()=>'b2_bult4', fresh:()=>!!S.f.b2_weaselcap3 && (!b2In('tangle') || !!S.f.b2_tangleAway)} ] },
 
-    /* 16 x 12.  . the lake bed  , scrub  s sand  ^ the foot of the ridge  x dead tree  ~ the P'atha */
+    /* 16 x 12.  . the lake bed  , scrub  s sand  ^ the foot of the ridge  x dead tree  ~ the P'atha
+       Terrain kit (25b, v13.22): a light touch: bundles dropped on the lake bed (8), a wagon left with a broken wheel (7, as its W), and an
+       old woman sitting on her own (folk). */
     { id:'b2_shallows', title:'The Shallows · below Gelor Ridge', sub:'Morning · the army gone up the ramp · the column left behind', hint:'Tap ground to move · tap a figure to talk · the Weasel captain, by the dead trees', decor:'ridge',
       map:[ "################",
             "#^^^^^^..^^^^^^#",
             "#.,..s.....s..,#",
-            "#..s...,.....s.#",
+            "#..s...,..8..s.#",
             "#.....x....,...#",
             "#.,.........s..#",
             "#....s..,......#",
-            "#..,.....x...,.#",
+            "#..,.....x..7,.#",
             "#s.....s.......#",
             "#~~~~~.....~~~~#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,s', triggers:{x:'b2_shallows_tree', '~':'b2_shallows_river'}, start:{x:7, y:8},
+      folk:[{x:9, y:6, kind:'hissari_w', name:'An old woman on her bundle', line:'They went up the hill with their horses and their banners and left us the river. Fine. The river does not shout.'}],
       quest:()=> S.f.b2_ringDone ? 'Dusk. Count them.' : S.f.b2_shDone ? (S.f.b2_cityboy || !b2In('haddat') ? 'The lake bed. The ring is bending. The dead trees, where the wagons are.' : 'Haddat has found someone among the Tithansi.') : !S.f.b2_c3_key ? 'The Weasel captain wants the Third Squad.' : 'Go.',
       npcs:[
         {id:'weaselcap4', name:'The Weasel captain', kind:'weasel', x:7, y:2, node:()=>S.f.b2_c3_key ? 'b2_weaselcap_after' : 'b2_weasel_order', fresh:()=>!S.f.b2_c3_key},

@@ -50,21 +50,23 @@ const B2CH4 = {
     go:'On', node:'b2_c4_start'},
 
   areas:[
-    /* 16 x 12.  . mud  , reeds  ~ the river (blocks)  - ford shallows  # steep bank  x drowned tree  W overturned wagon  c cart */
+    /* 16 x 12.  . mud  , reeds  ~ the river (blocks)  - ford shallows  # steep bank  x drowned tree  W overturned wagon  c cart
+       Terrain kit (25b, v13.22): a light touch (the bank is full): bundles set down (8), a water cask (&), and a man with empty skins (folk). */
     { id:'b2_vathar_bank', title:'The Vathar · the near bank', sub:'Afternoon · the column coming down to the water', hint:'Tap ground to move · tap a figure to talk · the drowned tree at the water, the carts, Captain Lull', decor:'vathar',
       map:[ "################",
             "#####.##########",
             "#~~~~-~~~~~~~~~#",
             "#~~~~--~~~~~~~~#",
             "#---,.-,---,-x-#",
-            "#.,....,...c...#",
+            "#.,....,...c..8#",
             "#..W....,......#",
             "#.,..c.....,.,.#",
             "#......,..W....#",
             "#.,.......c..,.#",
-            "#..,........,..#",
+            "#&.,........,..#",
             "################" ],
       walk:'.,-', triggers:{x:'b2_bank_river', c:'b2_bank_cart', W:'b2_bank_wagon'}, start:{x:7, y:9},
+      folk:[{x:11, y:6, kind:'hissari_m', name:'A man with empty skins', line:'The river is right there. Nobody is drinking. Everybody is looking at the other bank.'}],
       quest:()=> !S.f.b2_ropesDone ? (S.f.b2_lull4 ? 'Upriver, where the ropes are. The overturned wagon is the way along the bank.' : 'Captain Lull is looking for squads.') : !S.f.b2_c4_key ? 'The Silanda is taking the wounded.' : !S.f.b2_envoys ? 'Riders on the far bank, under a pale cloth. Go and see.' : 'Dusk. The nobles\' carriages, downstream. The overturned wagon.',
       npcs:[
         {id:'gesler', name:'Sergeant Gesler', kind:'gesler', x:6, y:5, node:()=>S.f.b2_gesler ? 'b2_gesler_again' : 'b2_gesler', show:()=>!S.f.b2_silandaGone, fresh:()=>!S.f.b2_gesler},
@@ -76,21 +78,23 @@ const B2CH4 = {
         {id:'ours5', name:'The squad\'s people', kind:'hissari_w', x:13, y:9, node:()=>'b2_ours5', fresh:()=>!S.f.b2_ours5},
         {id:'dom', name:'A rider on the far bank', kind:'dom', x:5, y:1, node:()=>'b2_dom_far', show:()=>!!S.f.b2_envoys, fresh:()=>!!S.f.b2_envoys && !S.f.b2_domSeen} ] },
 
-    /* 16 x 12.  the Council's carriages, downstream, at night */
+    /* 16 x 12.  the Council's carriages, downstream, at night
+       Terrain kit (25b, v13.22): a light touch: lanterns on poles (!), baggage off the carriages (8), and a driver at his horses (folk). */
     { id:'b2_carriages', title:'The Vathar · the Council\'s carriages', sub:'Night · lamps in the carriages, and harness being put on', hint:'Tap ground to move · tap a figure to talk · the squad\'s carts, when there is nothing more to do', decor:'vathar', dark:true,
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "#---,----,---,-#",
-            "#..c..c...c..,.#",
+            "#!.c..c...c..,.#",
             "#.,......W.....#",
-            "#..c.,..c...c..#",
+            "#..c.,..c...c.8#",
             "#.....,........#",
             "#.,..W....,..x.#",
-            "#.......c......#",
+            "#.......c.....!#",
             "#..,.......,...#",
             "################" ],
       walk:'.,-', triggers:{c:'b2_carriage', W:'b2_night_carts', '-':'b2_night_river'}, start:{x:7, y:10},
+      folk:[{x:13, y:10, kind:'hissari_m', name:'A carriage driver', line:'His lordship wants his horses fed before the soldiers\' horses. Yes, my lord. The horses do not know whose they are.'}],
       quest:()=> !S.f.b2_dealKnown ? 'Something is wrong with the carriages tonight.' : !S.f.b2_envoyDone ? 'The steward is going down to the water.' : !S.f.b2_tooLate ? 'Captain Lull, with what you know.' : 'The squad\'s carts. Your own people.',
       npcs:[
         {id:'steward4', name:'Lord Nethpara\'s steward', kind:'noble', x:6, y:5, node:()=>S.f.b2_steward4 ? 'b2_steward4_again' : 'b2_steward4', show:()=>!S.f.b2_envoyDone, fresh:()=>!S.f.b2_steward4},
@@ -100,7 +104,8 @@ const B2CH4 = {
         {id:'lull5', name:'Captain Lull', kind:'lull', x:2, y:9, node:()=>'b2_lull_night', show:()=>!!S.f.b2_envoyDone, fresh:()=>!!S.f.b2_envoyDone && !S.f.b2_tooLate},
         {id:'ramin4', name:'Ramin', kind:'redblade', x:9, y:9, node:()=>'b2_ramin4', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin4} ] },
 
-    /* 16 x 12.  the ford at first light: the crossing already begun */
+    /* 16 x 12.  the ford at first light: the crossing already begun
+       Terrain kit (25b, v13.22): a light touch: bundles waiting their turn (8), and a mother going in (folk). */
     { id:'b2_vford', title:'The Vathar · the ford', sub:'Dawn · forty thousand people walking into a river', hint:'Tap ground to move · tap a figure to talk · the overturned wagon, when the squad is ready', decor:'vathar',
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
@@ -112,22 +117,24 @@ const B2CH4 = {
             "#.,.......c..,.#",
             "#.....,..W.....#",
             "#..c.......,...#",
-            "#.,....,....c..#",
+            "#.,....,....c.8#",
             "################" ],
       walk:'.,-', triggers:{x:'b2_ford_tree', W:'b2_ford_wagon', c:'b2_ford_cart'}, start:{x:7, y:9},
+      folk:[{x:5, y:9, kind:'hissari_w', name:'A woman with a child on her hip', line:'Hold my hand, keep your feet, do not look at the water. That is all there is to it.'}],
       quest:()=> !S.f.b2_robe ? 'Mincer\'s sappers are pulling on refugees\' robes. Tangle is looking at you.' : 'The overturned wagons in the shallows. Then the water.',
       npcs:[
         {id:'mincer5', name:'Captain Mincer', kind:'mincer', x:4, y:7, node:()=>'b2_robe', fresh:()=>!S.f.b2_robe},
         {id:'ours6', name:'The squad\'s people', kind:'hissari_m', x:12, y:8, node:()=>'b2_ours_ford', fresh:()=>!S.f.b2_oursFord},
         {id:'bult5', name:'Bult', kind:'bult', x:9, y:6, node:()=>'b2_bult_ford', fresh:()=>!S.f.b2_bultFord} ] },
 
-    /* 16 x 12.  the far bank at dusk: the wood behind, the river in front, and what is in it */
+    /* 16 x 12.  the far bank at dusk: the wood behind, the river in front, and what is in it
+       Terrain kit (25b, v13.22): a light touch: what came across, stacked to dry (8), and a woman with a wet blanket (folk). */
     { id:'b2_farbank', title:'The Vathar · the far bank', sub:'Dusk · the edge of the old forest', hint:'Tap ground to move · tap a figure to talk · Bult, when the squad has counted', decor:'vathar',
       map:[ "################",
             "#xx..,xx..x.,xx#",
             "#.,....,...,...#",
             "#..c....W....,.#",
-            "#.......,......#",
+            "#.......,.....8#",
             "#.,..c.....c...#",
             "#......,.......#",
             "#--,-------,---#",
@@ -136,6 +143,7 @@ const B2CH4 = {
             "#~~~~~~~~~~~~~~#",
             "################" ],
       walk:'.,-', triggers:{b:'b2_wreck', c:'b2_far_cart', W:'b2_far_wagon'}, start:{x:7, y:6},
+      folk:[{x:9, y:5, kind:'hissari_w', name:'A woman with a wet blanket', line:'Wring it, spread it, sleep under it wet. I have not got the strength to wring it twice.'}],
       quest:()=> !S.f.b2_orphans ? 'Children on the bank, with nobody. The carts.' : 'Bult, when the squad has counted.',
       npcs:[
         {id:'marrow4', name:'Marrow', kind:'marrow', x:4, y:4, node:()=>'b2_marrow_end', show:()=>b2In('marrow'), fresh:()=>b2In('marrow') && !S.f.b2_marrowEnd},

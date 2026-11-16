@@ -62,21 +62,24 @@ const B2CH7 = {
     go:'Into Balahn', node:'b2_c7_start'},
 
   areas:[
-    /* 16 x 12.  Balahn at night: . hardpan  , scrub  # mud walls  = hovels and tents  F the fire  W the squad's cart  h horse lines  r low rock  x the dead tree at the east end */
+    /* 16 x 12.  Balahn at night: . hardpan  , scrub  # mud walls  = hovels and tents  F the fire  W the squad's cart  h horse lines  r low rock  x the dead tree at the east end
+       Terrain kit (25b, v13.22): the village's tumbled mud-brick (3), its well (&), more hovels (6, as its =), a fire at the south end (0,
+       as its F), what the stretch set down (8), feet churned round the fire (:), and a villager in his doorway (folk). */
     { id:'b2_balahn', title:'Balahn', sub:'Night · the head of Aren Way', hint:'Tap ground to move · tap a figure to talk · the dead tree looks east; the squad\'s cart when the squad is ready for the road', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..,..=...,..x.#",
-            "#.,.#..,.=.....#",
-            "#..,....F...,..#",
-            "#.=.#.......=..#",
+            "#33,..=...,..x.#",
+            "#&,.#3.,.=.....#",
+            "#..,...:F:..,.8#",
+            "#.=.#3......=..#",
             "#......,..h....#",
-            "#.,..r.........#",
-            "#....,...W..,..#",
+            "#.,..r.......6.#",
+            "#6...,...W..,..#",
             "#.=......,...=.#",
-            "#..,...,....,..#",
-            "#.....,..r.....#",
+            "#..,...,....,.3#",
+            "#33...,..r..0..#",
             "################" ],
-      walk:'.,', triggers:{x:'b2_beast', F:'b2_bfire', W:'b2_bcart', h:'b2_bhorses'}, start:{x:7, y:9},
+      walk:'.,:', triggers:{x:'b2_beast', F:'b2_bfire', W:'b2_bcart', h:'b2_bhorses'}, start:{x:7, y:9},
+      folk:[{x:1, y:4, kind:'hissari_m', name:'A villager in his doorway', line:'We have nothing to sell you. We had nothing to sell the last army either. They took it anyway.'}],
       quest:()=> !S.f.b2_duiker12 ? 'The historian, by the fire.' : !S.f.b2_nobles7 ? 'There is trouble at the Kherahn horse lines. The nobles.' : 'The squad\'s cart, at dawn. Aren Way.',
       npcs:[
         {id:'duiker12', name:'Duiker', kind:'duiker', x:6, y:3, node:()=>'b2_duiker12', fresh:()=>!S.f.b2_duiker12},
@@ -94,21 +97,25 @@ const B2CH7 = {
         {id:'ramin9', name:'Ramin', kind:'redblade', x:13, y:7, node:()=>'b2_ramin9', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin9},
         {id:'ilhar7', name:'Ilhar', kind:'hissari_m', x:6, y:8, node:()=>'b2_ilhar7', show:()=>S.f.b2_ilhar === 'came', fresh:()=>S.f.b2_ilhar === 'came' && !S.f.b2_ilhar7} ] },
 
-    /* 16 x 12.  Aren Way by day, Aren to the west: . the raised road  , dry grass  m barrow mounds  # rock  x a dead tree on a barrow  r the last milestone */
+    /* 16 x 12.  Aren Way by day, Aren to the west: . the raised road  , dry grass  m barrow mounds  # rock  x a dead tree on a barrow  r the last milestone
+       Terrain kit (25b, v13.22): the old barrow country either side of the Way: thorn (2), stones (4), a dead tree (5), a greener tuft or two
+       (*); by the road a cart stopped beside its carter (7) and a dropped bundle (8); and a woman who will not stop (folk). The road itself
+       is left clear: its ruts are drawn only where it runs straight. */
     { id:'b2_way', title:'Aren Way', sub:'Morning · three leagues to the gate', hint:'Tap ground to move · tap a figure to talk · the dead tree; the last milestone, west, is the way to the gate', decor:'barrow',
       map:[ "################",
-            "#,,m,,,,x,,,m,,#",
-            "#,mm,,,,,,,,mm,#",
-            "#,,,,,m,,,,,,,,#",
-            "#,,,,,,,,,m,,,,#",
+            "#2,m,,,,x,,,m,2#",
+            "#,mm,,4,,,,,mm,#",
+            "#,5,,,m,,,,,,2,#",
+            "#,,*,,,,8,m,,,,#",
             "#r.............#",
             "#..............#",
-            "#,,,m,,,,,,,,,,#",
-            "#,,mm,,,,,m,,,,#",
-            "#,,,,,,,,,,,,m,#",
-            "#,,m,,,,,,,,,,,#",
+            "#,,,m,,7,,,8,,,#",
+            "#,,mm,,,,,m,,4,#",
+            "#,2,,,*,,,,,,m,#",
+            "#,,m,,,,,,2,,,2#",
             "################" ],
-      walk:'.,m', triggers:{r:'b2_wstone', x:'b2_wtree'}, start:{x:14, y:6},
+      walk:'.,m*', triggers:{r:'b2_wstone', x:'b2_wtree'}, start:{x:14, y:6},
+      folk:[{x:5, y:6, kind:'hissari_w', name:'A woman with a bundle, not stopping', line:'Do not stop me, Sergeant. If I stop I will sit, and if I sit I will not get up.'}],
       quest:()=> !S.f.b2_duiker13 ? 'The historian, at the front of the column.' : !S.f.b2_wcart ? 'A cart has stopped on the road. Everything behind it has stopped too.' : 'West. The last milestone, and the gate.',
       npcs:[
         {id:'duiker13', name:'Duiker', kind:'duiker', x:11, y:5, node:()=>'b2_duiker13', fresh:()=>!S.f.b2_duiker13},
@@ -117,21 +124,26 @@ const B2CH7 = {
         {id:'ours15', name:'The squad\'s people', kind:'child', x:12, y:7, node:()=>'b2_ours15', fresh:()=>!S.f.b2_ours15},
         {id:'ilhar8', name:'Ilhar', kind:'hissari_m', x:4, y:5, node:()=>'b2_ilhar8', show:()=>S.f.b2_ilhar === 'came', fresh:()=>S.f.b2_ilhar === 'came' && !S.f.b2_ilhar8} ] },
 
-    /* 16 x 12.  Aren, inside the north wall: . paving  , dust  # wall  t the towers  s the stair up the wall  = awnings  w a well  g the harbour gate */
+    /* 16 x 12.  Aren, inside the north wall: . paving  , dust  # wall  t the towers  s the stair up the wall  = awnings  w a well  g the harbour gate
+       Terrain kit (25b, v13.22): a city taking people in: stalls under the awnings (9, as its =), the stores either side of the stores-man
+       (8), the guard's spears (%), a handcart (7), water casks (&), lanterns at the harbour gate (!), feet churned round the well and the
+       gate (:), and a water-carrier and a guard of Aren (folk). */
     { id:'b2_aren', title:'Aren · the north wall', sub:'Inside the gate', hint:'Tap ground to move · tap a figure to talk · the stair up the wall, the well, the harbour gate', decor:'aren',
       map:[ "################",
-            "#t.....s.....t.#",
-            "#..............#",
-            "#.=..,....,..=.#",
-            "#..............#",
-            "#.,...w....,...#",
-            "#..............#",
-            "#.=...,....=...#",
-            "#.....,........#",
-            "#..,.......,...#",
-            "#......g.......#",
+            "#t%....s.....t8#",
+            "#8.............#",
+            "#.=9.,....,..=9#",
+            "#..8.8.........#",
+            "#&,...w:...,...#",
+            "#.............7#",
+            "#.=9..,....=9..#",
+            "#&....,........#",
+            "#..,.......,..8#",
+            "#!....:g:.....!#",
             "################" ],
-      walk:'.,', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
+      walk:'.,:', triggers:{s:'b2_astair', w:'b2_awell', g:'b2_tohar'}, start:{x:7, y:8},
+      folk:[{x:10, y:5, kind:'hissari_m', name:'An Aren water-carrier', line:'They have been coming in at the gate since dawn. I have carried water till my arms stopped. Nobody has paid. Nobody has asked me to stop.'},
+        {x:9, y:10, kind:'aren_guard', name:'A guard of Aren', line:'Keep moving, keep left, keep your weapons sheathed in the city. Three rules. Most people manage two.'}],
       quest:()=> b2Ph7() <= 1 ? (!S.f.b2_blistig1 ? 'The commander of the Aren Guard, at the foot of the stair.' : 'Up on the north wall. Something is coming down Aren Way.') :
         b2Ph7() === 2 ? (!S.f.b2_blistig2 ? 'Blistig. He wants a word with every squad of the Seventh.' : 'Dawn. The stair to the wall, when the city stirs.') :
         b2Ph7() === 3 ? (!S.f.b2_blistig3 ? 'Blistig, on his rounds.' : 'Night. Every hand on the walls. The stair.') : 'The harbour.',
@@ -151,21 +163,23 @@ const B2CH7 = {
         {id:'marrow9', name:'Marrow', kind:'marrow', x:5, y:9, node:()=>'b2_sq7m', show:()=>b2In('marrow') && b2Ph7() >= 2 && b2Ph7() <= 3, fresh:()=>b2In('marrow') && b2Ph7() === 2 && !(S.f.b2_sq7 || {}).marrow},
         {id:'ramin10', name:'Ramin', kind:'redblade', x:13, y:6, node:()=>'b2_ramin10', show:()=>b2In('redblade') && b2Ph7() <= 1, fresh:()=>b2In('redblade') && b2Ph7() <= 1 && !S.f.b2_ramin10} ] },
 
-    /* 16 x 12.  Aren harbour: . the quay  , dust  # the harbour wall and the drop to the water  s the steps down to the boats  = awnings  w a fountain  g the gate up into the city */
+    /* 16 x 12.  Aren harbour: . the quay  , dust  # the harbour wall and the drop to the water  s the steps down to the boats  = awnings  w a fountain  g the gate up into the city
+       Terrain kit (25b, v13.22): a light touch: cargo on the quay (8), water casks (&), coiled rope (*), and a boatman between trips (folk). */
     { id:'b2_quay', title:'Aren harbour', sub:'The quay', hint:'Tap ground to move · tap a figure to talk · the steps to the boats, the fountain, the gate', decor:'aren',
       map:[ "################",
             "#######s########",
-            "#..............#",
-            "#.=...,....=...#",
+            "#8*...........8#",
+            "#&=...,....=..&#",
             "#..............#",
             "#....,...w.....#",
-            "#..............#",
+            "#*.............#",
             "#.=..,.....=...#",
             "#..............#",
-            "#...,....,.....#",
-            "#......g.......#",
+            "#8..,....,....&#",
+            "#.*....g.....8.#",
             "################" ],
-      walk:'.,', triggers:{s:'b2_qsteps', w:'b2_qwell', g:'b2_qgate'}, start:{x:7, y:8},
+      walk:'.,*', triggers:{s:'b2_qsteps', w:'b2_qwell', g:'b2_qgate'}, start:{x:7, y:8},
+      folk:[{x:6, y:4, kind:'hissari_m', name:'A boatman between trips', line:'I row where I am pointed. Out to the ships, back to the steps, out again. My back stopped arguing about noon.'}],
       quest:()=> b2Ph7() < 4 ? (b2OldHandPick() && !b2OH() && !S.f.b2_oldHandNo ? 'A ship out of Genabaris, at the end of the quay. A sergeant has a friend aboard.' : 'The gate, back up into the city.') :
         !S.f.b2_c7_ready ? 'The Silanda is in. Hear the squad out, and the ones who would have you.' : 'Choose the road out: the Aren Guard (Blistig), the Wickans (Temul), or the landward gate, and Seven Cities.',
       npcs:[

@@ -33,21 +33,25 @@ const B2CH1 = {
     go:'Down off the wall', node:'b2_start'},
 
   areas:[
-    /* 16 x 12.  . street  , ash  # wall  F fire  w the quarter cistern  c handcart  p palm  = market awning  D Haddat's family door  g the south lane */
+    /* 16 x 12.  . street  , ash  # wall  F fire  w the quarter cistern  c handcart  p palm  = market awning  D Haddat's family door  g the south lane
+       Terrain kit (25b, v13.22): a light touch: market stalls under the awnings (9), a handcart (7, as its c), sacks and crates (8), water
+       butts (&), fallen brick (3), feet churned at the lane mouth (:), and two of the quarter who stayed in (folk). */
     { id:'b2_quarter', title:'Hissar · the water-sellers\' quarter', sub:'Night · fires on the roofs', hint:'Tap ground to move · tap a figure to talk · the south lane goes to the gate', decor:'hissar', dark:true,
       map:[ "################",
-            "#,.F##..##F#,..#",
-            "#...##..##.#..w#",
+            "#3.F##..##F#8..#",
+            "#&..##..##.#..w#",
             "#..............#",
             "#.p..=====...p.#",
-            "#....=====.....#",
+            "#..9.=====.9...#",
             "#,.............#",
-            "##D##..c...##.##",
-            "#....,....,....#",
+            "##D##..c..8##.##",
+            "#....,....,..&.#",
             "#.F..........,.#",
-            "#,....,...p....#",
+            "#7....,:::p..8.#",
             "#######gg#######" ],
-      walk:'.,=', triggers:{D:'b2_door', w:'b2_cistern', g:'b2_to_gate'}, start:{x:8, y:9},
+      walk:'.,=:', triggers:{D:'b2_door', w:'b2_cistern', g:'b2_to_gate'}, start:{x:8, y:9},
+      folk:[{x:12, y:3, kind:'hissari_m', name:'A man with water jars', line:'Three jars full. The rest of the quarter is up on the roofs, shouting. Somebody will want a drink after.'},
+        {x:4, y:8, kind:'hissari_w', name:'A woman at her shutter', line:'Bar the door, bar the shutter, sit in the middle of the room. My mother said that last time. She was right then, too.'}],
       quest:()=> S.f.b2_streetDone ? 'South, to the gate.' : !S.f.b2_ressan ? 'Ressan\'s house, at the top of the quarter.' : 'The south lane, to the gate. The green cloths are in the quarter.',
       npcs:[
         {id:'ressan', name:'Ressan', kind:'ressan', x:7, y:2, node:()=>S.f.b2_ressan ? 'b2_ressan_again' : 'b2_ressan', fresh:()=>!S.f.b2_ressan},
@@ -55,42 +59,53 @@ const B2CH1 = {
         {id:'dessi', name:B2.younger, kind:'child', x:8, y:3, node:()=>'b2_imra', show:()=>!!S.f.b2_ressan},
         {id:'yedda', name:B2.widow, kind:'hissari_w', x:11, y:6, node:()=>'b2_yedda', show:()=>!S.f.b2_yeddaGone || /^b2_yedda/.test(S.node || ''), fresh:()=>!S.f.b2_yedda} ] },
 
-    /* 16 x 12.  , ash  # wall  F fire  = awning  p palm  c the water carts  ~ the gate channel  g the south gate */
+    /* 16 x 12.  , ash  # wall  F fire  = awning  p palm  c the water carts  ~ the gate channel  g the south gate
+       Terrain kit (25b, v13.22): the garrison going out: crates and sacks (8), stacked spears (%), water butts (&), the Wickans' horses by
+       the east wall (@), boots and wheels churned round the carts and the gate (:), lanterns at the gate (!), and a regular and a carter
+       loading up (folk). */
     { id:'b2_gate', title:'Hissar · the south gate square', sub:'Night · the garrison pulling out', hint:'Tap ground to move · tap a figure to talk · the carts are by the channel', decor:'hissar', dark:true,
       map:[ "################",
-            "#F.,#......#,.F#",
-            "#...#..==..#...#",
-            "#..............#",
+            "#F.8#%....%#,.F#",
+            "#&..#..==..#..&#",
+            "#............8.#",
             "#.p....,.....p.#",
-            "#..cc......cc..#",
-            "#..............#",
-            "#,.....~~......#",
-            "#.....,........#",
-            "##............##",
-            "###....gg....###",
+            "#8.cc......cc..#",
+            "#..::......::..#",
+            "#,.....~~....%@#",
+            "#.8...,.......@#",
+            "##:..........:##",
+            "###!..:gg:..!###",
             "################" ],
-      walk:'.,=', triggers:{c:'b2_carts', g:'b2_gate_g'}, start:{x:7, y:2},
+      walk:'.,=:',
+      folk:[{x:6, y:6, kind:'b2soldier', name:'A regular with a crate', line:'Take what you can carry, they said. I can carry this. I do not know what is in it.'},
+        {x:9, y:8, kind:'hissari_m', name:'A Hissari carter', line:'The Fist pays in silver and the city pays in knives. I know which I would rather be owed.'}], triggers:{c:'b2_carts', g:'b2_gate_g'}, start:{x:7, y:2},
       quest:()=> S.f.b2_key ? 'The gate.' : S.f.b2_corporal ? 'The carts go in a bell. A boy is running across the square toward you.' : 'The water carts. Find who is moving them.',
       npcs:[
         {id:'benth', name:'Corporal Benth', kind:'b2soldier', x:5, y:5, node:()=>S.f.b2_key ? 'b2_corporal_again' : 'b2_corporal', fresh:()=>!S.f.b2_corporal},
         {id:'priest', name:'A priest of Mael', kind:'priest', x:9, y:3, node:()=>'b2_rel', show:()=>!S.f.b2_relGone || /^b2_rel/.test(S.node || ''), fresh:()=>!S.f.b2_relSeen},
         {id:'gwickan', name:'A Wickan rider', kind:'wickan', x:12, y:8, node:()=>'b2_wickan_gate', fresh:()=>!S.f.b2_wickanGate} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  = tent  F campfire  W wagon  h horse lines  b bones */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  = tent  F campfire  W wagon  h horse lines  b bones
+       Terrain kit (25b, v13.22): a camp filling up in the dark: more tents (6, as its =), refugees' cookfires (0), a wagon and a cart (7, as
+       its W), crates, sacks and water skins (8), stacked spears (%), another horse on the lines (@, as its h), feet churned round the
+       fires and the lines (:), and a refugee, a regular and a boy (folk). */
     { id:'b2_camp', title:'The Seventh\'s camp · outside Hissar', sub:'Before dawn · refugees still coming in', hint:'Tap ground to move · tap a figure to talk · the wagons march at first light', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..==...=..hhh.#",
-            "#..==...=..,...#",
-            "#.......,......#",
-            "#.=..F.....=...#",
-            "#..........=...#",
-            "#,..r....,.....#",
-            "#.....W......b.#",
-            "#..=.....F.....#",
-            "#..=....,....,.#",
-            "#.,.....s...ss.#",
+            "#8.==.%.=..hhh@#",
+            "#..==...=..:::.#",
+            "#.0.....,......#",
+            "#.=.:F:....=...#",
+            "#.7........=..8#",
+            "#6..r....,..8..#",
+            "#8....W:.....b.#",
+            "#..=....:F:..6.#",
+            "#..=.0..,....,6#",
+            "#.,7....s...ss.#",
             "################" ],
-      walk:'.,s', triggers:{F:'b2_fire', h:'b2_horses', W:'b2_march'}, start:{x:7, y:10},
+      walk:'.,s:', triggers:{F:'b2_fire', h:'b2_horses', W:'b2_march'}, start:{x:7, y:10},
+      folk:[{x:3, y:3, kind:'hissari_w', name:'A Hissari woman at a cookfire', line:'We walked out with what we could carry. I carried the pot. My husband carried the chickens. The chickens have not forgiven him.'},
+        {x:9, y:2, kind:'b2soldier', name:'A regular of the Seventh', line:'Forty thousand of them, the clerk says, and more at the gate. I have stopped counting. The clerk has not.'},
+        {x:4, y:7, kind:'child', name:'A boy from the city', line:'The Wickans\' horses bite. I know. I asked one.'}],
       quest:()=> !S.f.b2_bult ? 'Find whoever is giving out the column. An old Wickan, they say, laughing.' : 'First light. The wagons, when you are ready.',
       npcs:[
         {id:'bult', name:'Bult', kind:'bult', x:7, y:4, node:()=>S.f.b2_bult ? 'b2_bult_again' : 'b2_bult', fresh:()=>!S.f.b2_bult},
@@ -100,21 +115,24 @@ const B2CH1 = {
         {id:'girls', name:B2.elder, kind:'hissari_w', x:11, y:9, node:()=>'b2_imra_camp', show:()=>S.f.b2_key === 'daughters', fresh:()=>S.f.b2_key === 'daughters' && !S.f.b2_imraCamp},
         {id:'crider', name:'A Weasel rider', kind:'wickan', x:10, y:7, node:()=>'b2_horses'} ] },
 
-    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree (the lip of the wash)  W the water wagon  b bones */
+    /* 16 x 12.  . hardpan  , scrub  s sand  # rock  r low rock  x dead tree (the lip of the wash)  W the water wagon  b bones
+       Terrain kit (25b, v13.22): meant to be open: the basin's rim of low dunes and scrub (1, 2), a boulder (4), bones far out ($, as its
+       b), the water wagon's ruts (:), a carter's wagon at the column's end (7, as its W), and its carter resting (folk). */
     { id:'b2_basin', title:'The Vin\'til Basin · south-west of Hissar', sub:'Day · heat · the column strung out behind', hint:'Tap ground to move · tap a figure to talk · the wash is east, by the dead tree', decor:'odhan',
       map:[ "################",
-            "#ss,..r...,.ss.#",
-            "#s...,....#...,#",
-            "#..r.....##..x.#",
+            "#ss112r...11ss1#",
+            "#s...,....#...2#",
+            "#1.r.....##..x1#",
             "#.,.......#....#",
-            "#....W.....,.b.#",
-            "#,..........s..#",
+            "#....W:....,.b1#",
+            "#,..........s.$#",
             "#...,..r.......#",
-            "#.s.....,....,.#",
-            "#..b.........r.#",
-            "#s..,.....,..ss#",
+            "#7s.....,..4.,.#",
+            "#1.b.........r1#",
+            "#s.112...21..ss#",
             "################" ],
-      walk:'.,s', triggers:{x:'b2_wash', W:'b2_wagon'}, start:{x:2, y:7},
+      walk:'.,s:',
+      folk:[{x:3, y:8, kind:'hissari_m', name:'A Hissari carter, resting', line:'The ox stops when it likes. So do I, now. Neither of us is in charge of the heat.'}], triggers:{x:'b2_wash', W:'b2_wagon'}, start:{x:2, y:7},
       quest:()=> S.f.b2_batrolDone ? 'They are running. Let them.' : !S.f.b2_duikerBasin ? 'Dust on the far rim. The historian is on the rise, watching it.' : 'Hold the flank by the dry wash. East, by the dead tree.',
       npcs:[
         {id:'bduiker', name:'Duiker', kind:'duiker', x:8, y:2, node:()=>'b2_duiker_basin', fresh:()=>!S.f.b2_duikerBasin},

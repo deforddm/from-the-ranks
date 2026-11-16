@@ -79,21 +79,24 @@ const B2CH6 = {
     go:'Into the camp', node:'b2_c6_start'},
 
   areas:[
-    /* 16 x 12.  the hills at night: . hardpan  , scrub  r low rock  x the lookout  = tent  F fire  W the squad's cart  h horse lines  o the seep */
+    /* 16 x 12.  the hills at night: . hardpan  , scrub  r low rock  x the lookout  = tent  F fire  W the squad's cart  h horse lines  o the seep
+       Terrain kit (25b, v13.22): the hills' dark shoulders and scrub at the rim (1, 2), more fires (0, as its F), feet churned by the seep
+       and the cart (:), and a refugee counting the fires on the ridges (folk). */
     { id:'b2_hills', title:'The hills above Sanimon', sub:'Night · fires on every ridge', hint:'Tap ground to move · tap a figure to talk · the seep, the lookout, the squad\'s cart when the squad is ready', decor:'odhan_night', dark:true,
       map:[ "################",
-            "#..,..r...,..x.#",
-            "#.,.=...,....,.#",
+            "#11,0.r...,1.x1#",
+            "#1,.=...,....,.#",
             "#....,..F...r..#",
-            "#.r.......,....#",
-            "#..,.=......=..#",
-            "#.......,..h...#",
-            "#.,..o.........#",
-            "#....,...W..,..#",
-            "#.=.....,....=.#",
-            "#..,..r.....,..#",
+            "#.r.......,...1#",
+            "#2.,.=......=..#",
+            "#.......,..h..1#",
+            "#.,..o.:.......#",
+            "#.0..,...W:.,..#",
+            "#.=.....,....=2#",
+            "#12,..r.....,21#",
             "################" ],
-      walk:'.,', triggers:{x:'b2_ridge', F:'b2_hfire', o:'b2_hseep', W:'b2_hcart', h:'b2_hhorses'}, start:{x:7, y:10},
+      walk:'.,:', triggers:{x:'b2_ridge', F:'b2_hfire', o:'b2_hseep', W:'b2_hcart', h:'b2_hhorses'}, start:{x:7, y:10},
+      folk:[{x:2, y:7, kind:'hissari_m', name:'A refugee watching the ridges', line:'Every ridge has a fire on it. I counted to forty and stopped. Counting them does not make them any friendlier.'}],
       quest:()=> !S.f.b2_bult9 ? 'Bult is going round the squads.' : !S.f.b2_seepDone ? 'There is water in the hills. The seep.' : 'The squad\'s cart, when the squad is ready for the dawn.',
       npcs:[
         {id:'bult9', name:'Bult', kind:'bult', x:9, y:3, node:()=>'b2_bult9', fresh:()=>!S.f.b2_bult9},
@@ -107,21 +110,24 @@ const B2CH6 = {
         {id:'ramin8', name:'Ramin', kind:'redblade', x:13, y:8, node:()=>'b2_ramin8', show:()=>b2In('redblade'), fresh:()=>b2In('redblade') && !S.f.b2_ramin8},
         {id:'ours10', name:'The squad\'s people', kind:'hissari_w', x:10, y:9, node:()=>'b2_ours10', fresh:()=>!S.f.b2_ours10} ] },
 
-    /* 16 x 12.  the field at Sanimon, the afternoon after: . hardpan  , scrub  s sand  r low rock  x a dead tree  b the dead  W Dom's water-carts  = the Seventh's lines  h horse lines */
+    /* 16 x 12.  the field at Sanimon, the afternoon after: . hardpan  , scrub  s sand  r low rock  x a dead tree  b the dead  W Dom's water-carts  = the Seventh's lines  h horse lines
+       Terrain kit (25b, v13.22): the field's rim of low dunes and scrub (1, 2), the ground churned where the lines met (:), spears and
+       shields gathered up (%), a dropped pack (8), and a regular collecting arrows (folk). */
     { id:'b2_field', title:'Sanimon', sub:'Afternoon · the field, after', hint:'Tap ground to move · tap a figure to talk · Dom\'s water-carts, the dead, the Seventh\'s lines when there is nothing more to do', decor:'odhan',
       map:[ "################",
-            "#..b..,...r..,.#",
-            "#.,...W..W..,..#",
-            "#....,.....b...#",
-            "#.r..,.x.....,.#",
-            "#..,....,..r...#",
-            "#.b.........,..#",
-            "#....,..s....b.#",
-            "#.,.....,..,...#",
-            "#..h..,.....=..#",
-            "#.....,..s.....#",
+            "#1.b..,...r.11.#",
+            "#.,...W::W..,.1#",
+            "#..:.,.....b:.2#",
+            "#.r:.,.x.%...,.#",
+            "#..,.::.,..r...#",
+            "#.b..%..::..,.1#",
+            "#2...,:.s....b.#",
+            "#.,..8..,:.,...#",
+            "#..h..,.:...=.1#",
+            "#12...,..s..21.#",
             "################" ],
-      walk:'.,s', triggers:{W:'b2_wcarts', b:'b2_fdead', x:'b2_ftree', '=':'b2_field_out'}, start:{x:8, y:10},
+      walk:'.,s:', triggers:{W:'b2_wcarts', b:'b2_fdead', x:'b2_ftree', '=':'b2_field_out'}, start:{x:8, y:10},
+      folk:[{x:10, y:6, kind:'b2soldier', name:'A regular collecting arrows', line:'Theirs, ours, it does not matter. An arrow is an arrow, and the quartermaster has stopped asking.'}],
       quest:()=> !S.f.b2_duiker10 ? 'The historian, by the dead tree.' : b2In('haddat') && !S.f.b2_ilhar ? 'Dom\'s water-carts, up on the north side of the field.' : !S.f.b2_warchief ? 'The Khundryl are coming down to the Fist\'s standard.' : 'The Seventh\'s lines. The column moves at dusk.',
       npcs:[
         {id:'duiker10', name:'Duiker', kind:'duiker', x:8, y:4, node:()=>'b2_duiker10', fresh:()=>!S.f.b2_duiker10},
@@ -130,21 +136,24 @@ const B2CH6 = {
         {id:'ours11', name:'The squad\'s people', kind:'child', x:4, y:9, node:()=>'b2_ours11', fresh:()=>!S.f.b2_ours11},
         {id:'ilharc', name:'Ilhar', kind:'hissari_m', x:7, y:3, node:()=>'b2_ilhar_after', show:()=>S.f.b2_ilhar === 'came', fresh:()=>false} ] },
 
-    /* 16 x 12.  Dojal Spring at noon: . hardpan  , scrub  s sand  r low rock  t tamarisk (blocks)  o the spring (blocks)  W the squad's cart  x the way on */
+    /* 16 x 12.  Dojal Spring at noon: . hardpan  , scrub  s sand  r low rock  t tamarisk (blocks)  o the spring (blocks)  W the squad's cart  x the way on
+       Terrain kit (25b, v13.22): low dunes and scrub at the rim (1, 2), the spring's edge trodden to mud (:), skins and bundles set down
+       (8), a boulder (4), spears stood ready (%), and a regular filling skins at a run (folk). */
     { id:'b2_dojal', title:'Dojal Spring', sub:'Noon · the running retreat', hint:'Tap ground to move · tap a figure to talk · the spring, the squad\'s cart, the way on', decor:'odhan',
       map:[ "################",
-            "#.,..t...,..t..#",
-            "#..,...ooo...,.#",
-            "#.t...,ooo.,...#",
-            "#....,..,....t.#",
-            "#.,.r......,...#",
-            "#....W....,..r.#",
-            "#.,.....,......#",
-            "#..s..,...x..,.#",
-            "#.,......,..s..#",
-            "#....,.....,...#",
+            "#1,..t.:.,..t.1#",
+            "#2.,..:ooo:..,.#",
+            "#.t...:ooo:,..2#",
+            "#..8.,.::....t.#",
+            "#.,.r..8...,...#",
+            "#..4.W....,..r.#",
+            "#.,.....,..:..1#",
+            "#..s..,...x.%,.#",
+            "#1,......,..s.2#",
+            "#.1..,.....,.11#",
             "################" ],
-      walk:'.,s', triggers:{o:'b2_spring6', W:'b2_dcart', x:'b2_dojal_out'}, start:{x:6, y:9},
+      walk:'.,s:', triggers:{o:'b2_spring6', W:'b2_dcart', x:'b2_dojal_out'}, start:{x:6, y:9},
+      folk:[{x:9, y:4, kind:'b2soldier', name:'A regular filling skins at a run', line:'Fill, cork, run. Fill, cork, run. My mother wanted me to be a potter.'}],
       quest:()=> !S.f.b2_dojalDone ? 'The spring, before Dom\'s people get to it.' : 'The stretch is drinking. Then on, to the Geleen.',
       npcs:[
         {id:'lull7', name:'Captain Lull', kind:'lull', x:11, y:5, node:()=>'b2_lull7', fresh:()=>!S.f.b2_lull7},
@@ -152,21 +161,24 @@ const B2CH6 = {
         {id:'nobles6', name:'A noble\'s carriage', kind:'nethpara', x:12, y:7, node:()=>'b2_nobles6', fresh:()=>!S.f.b2_nobles6},
         {id:'ours12', name:'The squad\'s people', kind:'hissari_w', x:8, y:7, node:()=>'b2_ours12', fresh:()=>!S.f.b2_ours12} ] },
 
-    /* 16 x 12.  the Geleen Plain at dusk: . short grass  , long grass  = tent  F the elders' fire  c the coin chests  W the squad's cart  h horse lines */
+    /* 16 x 12.  the Geleen Plain at dusk: . short grass  , long grass  = tent  F the elders' fire  c the coin chests  W the squad's cart  h horse lines
+       Terrain kit (25b, v13.22): a light touch: the plain's low rises at the rim (1, 2), more Kherahn tents (6, as its =), a herders' fire
+       (0), the elders' saddlebags (8), and a Kherahn herder who will not talk terms (folk). */
     { id:'b2_geleen', title:'The Geleen Plain', sub:'Dusk · grass, and two roads', hint:'Tap ground to move · tap a figure to talk · the chests by the elders\' fire, the horse lines, the squad\'s cart', decor:'geleen',
       map:[ "################",
-            "#.,..=...,..=..#",
-            "#..,....,..,...#",
-            "#.=...cFc....,.#",
+            "#1,..=.6.,..=.1#",
+            "#6.,....,..,.6.#",
+            "#.=...cFc..8.,1#",
             "#....,.....,...#",
-            "#.,......,...h.#",
+            "#0,......,...h.#",
             "#..,..,....,...#",
-            "#.W.....,..,.=.#",
+            "#.W.....,..,.=1#",
             "#....,.....,...#",
-            "#.,..,...,..,..#",
-            "#.=....,....,..#",
+            "#.,..,...,..,.6#",
+            "#1=....,....,21#",
             "################" ],
       walk:'.,', triggers:{c:'b2_chests', F:'b2_gfire', W:'b2_gcart', h:'b2_ghorses'}, start:{x:7, y:10},
+      folk:[{x:12, y:9, kind:'kherahn', name:'A Kherahn herder', line:'The grass is good this year. That is all I will say to a soldier. Talk to the elders.'}],
       quest:()=> !S.f.b2_bult10 ? 'Bult, by the elders\' fire.' : !S.f.b2_silverDone ? 'The chests by the elders\' fire. Dom\'s riders have heard about the silver.' : !b2AllSaid() ? 'Night. Each of the squad has to choose. Go and hear them.' : 'Bult, when the squad has chosen.',
       npcs:[
         {id:'bult10', name:'Bult', kind:'bult', x:9, y:4, node:()=>S.f.b2_silverDone ? 'b2_bult11' : 'b2_bult10', fresh:()=>!S.f.b2_bult10 || (!!S.f.b2_silverDone && b2AllSaid() && !S.f.b2_c6_key)},
