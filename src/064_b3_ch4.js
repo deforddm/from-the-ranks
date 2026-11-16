@@ -788,7 +788,7 @@ The Grey Swords nearest you have gone very still, the stillness of people who ha
 
 Then the wind that is not there takes it. It goes to dust from the feet up, and the dust lifts off the rise and goes away south-east, toward the wall of dust on the horizon, and the rise is empty.${c4In('vell') ? `
 
-Vell has both coils off his shoulder and in his hands, as if a rope were any use against that. He puts them back, slowly, one and then the other. "Didn't see that," he says. "I'd like that noted. I was looking at the gully."` : ''}${c4In('greysword') ? `
+Vell has both coils off his shoulder and in his hands, as if a rope were any use against that. He puts them back, slowly, one and then the other. "Didn't see that," he says. "I was looking at the gully. I was looking right at it."` : ''}${c4In('greysword') ? `
 
 "They will fight the lizards," Dannet says, very low. "Not us. Never us. The Shield Anvil said, after the patrol." She touches the amulet at her throat, and then the wolf on her shield.` : ''}`,
       ch:[{t:'Walk up to where it stood.', go:'b3_c4_flint'},
@@ -887,11 +887,11 @@ ${c4In('brisk') ? `Brisk, behind you, quietly: "I'll wake the line."` : `You'll 
 
     /* the fire: rest, the recruits, the cold, and the howling */
     b3_c4_fire:()=>({sp:'The Fourth\'s fire', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', again:'The fire, low, with the frost at the edge of it. The howling comes and goes.', txt:
-`The fire is low and the frost comes right up to the edge of it and stops. ${c4In('kettle') ? `Kettle is lying on her back with the satchel under her head, eyes open. ` : ''}${c4In('ohl') ? `Ohl is boiling something that will be tea in the technical sense. ` : ''}${c4In('tuft') ? `Tuft is sitting up with her knees drawn in and her cards in her lap, not reading them. ` : ''}${c4In('sohra') ? `Sohra faces south-east, past the fire, and keeps a hand on her bag of bones. ` : ''}${c4In('greysword') ? `Dannet is wiping the frost off the half-painted wolf with her sleeve, again, every time it comes back. ` : ''}${c4In('ellis') ? `Ellis sits a little apart with her back to the fire, so the fire won't spoil her night eyes, and watches the gap. ` : ''}${c4In('vell') ? `Vell is asleep sitting up against the cart wheel, or making a good show of it.` : ''}
+`The fire is low and the frost comes right up to it and stops. ${c4In('brisk') ? `Brisk sits facing the ditch with the shield on her arm. "Stakes'll hold," she says, to the ditch. ` : ''}${c4In('kettle') ? `Kettle is lying on her back with the satchel under her head, eyes open. "I'm not counting," she says, before anyone asks. "I'm listening. It's worse." ` : ''}${c4In('ohl') ? `Ohl is boiling something that will be tea in the technical sense. "Not tonight," he tells the pot, or somebody behind it. ` : ''}${c4In('tuft') ? `Tuft is sitting up with her knees drawn in and her cards in her lap, not reading them. ` : ''}${c4In('sohra') ? `Sohra faces south-east, past the fire, and keeps a hand on her bag of bones. ` : ''}${c4In('greysword') ? `Dannet is wiping the frost off the half-painted wolf with her sleeve, again, every time it comes back. ` : ''}${c4In('ellis') ? `Ellis sits a little apart with her back to the fire, so the fire won't spoil her night eyes, and watches the gap. ` : ''}${c4In('vell') ? `Vell is asleep sitting up against the cart wheel, or making a good show of it.` : ''}
 
 ${b3Mind() === 'haunted' ? `The squad has not slept since the gully. Everyone keeps looking south-east, at nothing.` : b3Mind() === 'shaken' ? `Every time the howling starts, every head at the fire turns the same way, and then turns back.` : `The howling comes and goes. You find, after a while, that you have started to be able to talk over it.`}`,
       html:allyHTML('West of Capustan · a cold night'),
-      ch:[{t:'Rest, as much as anyone can.', req:()=>!S.f.b3_c4_rested, fx:()=>{ S.f.b3_c4_rested = 1; b3Rest('The Fourth lies down round its fire on the frozen bank with the Host all round it, and rests, more or less. Wounds close, mostly.'); }, go:'b3_c4_fire'},
+      ch:[{t:'Rest, as much as anyone can.', req:()=>!S.f.b3_c4_rested, fx:()=>{ S.f.b3_c4_rested = 1; b3Rest('The Fourth lies down round its fire on the frozen bank with the Host all round it, and rests, more or less. Wounds close. Feet stay cold.'); }, go:'b3_c4_fire'},
           {t:'"Tuft. What is that, out there?"', req:()=>c4In('tuft') && !S.f.b3_c4_askTuft, fx:()=>{ S.f.b3_c4_askTuft = 1; }, go:'b3_c4_fire_tuft'},
           {t:'"Sohra. How is the Mhybe?"', req:()=>c4In('sohra') && !S.f.b3_c4_askSohra, fx:()=>{ S.f.b3_c4_askSohra = 1; }, go:'b3_c4_fire_sohra'},
           {t:'Send for Dannet. Sohra goes back to the Rhivi fires.', req:()=>b3Waiting('greysword') && c4In('sohra') && b3Room() <= 0, fx:()=>{ S.f.b3_c4_swapIn = 'greysword'; b3SwapIn('greysword'); }, go:'b3_c4_swap'},
@@ -992,7 +992,7 @@ Tav comes along the bank from the Fourth Regiment's stretch with blood on his ar
 
     /* ---- dawn on the bank ---- */
     b3_c4_dawn:()=>({sp:'The guards\' bank · dawn', scene:'b3_c4_dawn', fx:()=>{ S.f.b3_c4_dawn = 1; }, txt:
-`The frost goes off the grass in the first sun as if somebody were wiping a slate. The wall of dust on the horizon is gone. The howling stopped an hour before dawn and has not started again, and the silence where it was is enormous.
+`The frost goes off the grass in the first sun like chalk off a slate. The wall of dust on the horizon is gone. The howling stopped an hour before dawn and has not started again, and the quiet where it was is enormous.
 
 Along the gap, on your side of the ditch now, the ones who came over the stakes in the night and did not go back are sitting in a long ragged row by the ration cart: children, most of them, and the sick, and the very old, who could not get back across the ditch, or did not want to. No order has come to send them back, or to let them stay.
 
@@ -1064,7 +1064,7 @@ They sit there. The sun comes up. Neither of them says *we don't leave people*. 
 
 "They're on your side now, Sergeant," he says. "Your side of the ditch. They're not on my count." He doesn't say whose count they're on. "The Host feeds its own. I've no orders for these."
 
-${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for ${numw(S.squad.length)}," she says, to nobody. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
+${c4In('brisk') ? `Brisk is standing by the Fourth's sacks with her arms folded. "Six days' bread for ${numw(S.squad.length)}," she says. "Two salves. Three days to the Catlin and nothing south of it but what we carry." She isn't arguing. She's reading out the ledger, so it will have been read.` : `Six days' bread. Two salves, if nobody has used them. Three days to the Catlin and nothing south of it but what the Fourth carries.`}
 
 ${c4In('ohl') ? `Ohl is looking at a girl at the end of the row whose feet are wrapped in rags that have stopped being white. He is looking at the salve jars.` : 'A girl at the end of the row has her feet wrapped in rags that have stopped being white.'}${c4In('greysword') ? `
 

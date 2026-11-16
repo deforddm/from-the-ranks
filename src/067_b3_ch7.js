@@ -769,13 +769,13 @@ Down on the plain the gold is still lying over the ground where the Hunters fell
 
   /* ---- the fire under the screen: rest, and the Alliance ---- */
   b3_c7_f_fire:()=>({sp:'The shielded fire', txt:
-`A fire in a pit under a slab, banked so low it gives heat and no light. The squad sits round it close.
+`A fire in a pit under a slab, banked so low it gives heat and no light. The squad sits round it close.${b3In('brisk') ? ` Brisk takes her boots off for the first time since the lift, and puts them straight back on. "Habit," she says.` : ''}${b3In('kettle') ? ` Kettle has the satchel open and is touching each thing in it, not counting. "Not yet," she tells it.` : ''}
 
 ${b3In('ohl') ? `Ohl has the list out. He is not reading it. He is holding it. "${b3ListWords()}," he says, when he sees you looking. "I'd like that to be the number at the end of the week, Sergeant. I'd like that very much."` : `One of the squad says the number of the dead out loud, the way Ohl used to. The fire takes it.`}${b3In('sohra') ? ` Sohra hums under her breath, too low for the city to hear, a herd song with the words left out.` : ''}${b3In('greysword') ? ` Dannet sits with her shield on her arm, even here, even sitting down.` : ''}${b3In('ellis') ? ` Ellis sits with her back to the fire, facing the dark, and takes the glove off to warm the hand, and has it on again before anyone can look.` : ''}${b3In('vell') ? ` Vell is asleep sitting up against the slab with the rope in his lap, which is the only way he has ever slept in the Host.` : ''}
 
 Out on the plain, two days off, Brood's army is coming on toward Coral not knowing half the Host is already here. Whatever the Rhivi and the Barghast and the Andii think of the Malazans tonight, they will think something else tomorrow.`,
       html:allyHTML('Above Coral · the night before'),
-      ch:[{t:'Sleep, if anyone can.', req:()=>!S.f.b3_c7_frest, fx:()=>{ S.f.b3_c7_frest = 1; b3Rest('The squad sleeps in the trench in its cloaks, in turns, with the old cold coming up out of the rock. Wounds close, mostly.'); }, go:()=>startExplore()},
+      ch:[{t:'Sleep, if anyone can.', req:()=>!S.f.b3_c7_frest, fx:()=>{ S.f.b3_c7_frest = 1; b3Rest('The squad sleeps in the trench in its cloaks, in turns, with the old cold coming up out of the rock. Cuts close. The cold stays.'); }, go:()=>startExplore()},
           {t:'Back to the line.', go:()=>startExplore()}]}),
 
   /* ---- the quorl roost ---- */
@@ -941,7 +941,7 @@ Object.assign(B3CH7.dlg, {
   b3_c7_r_start:()=>({sp:'The alliance\'s hill · morning', scene:'b3_c7_hill', fx:()=>{ S.f.b3_c7_started = 1; S.f.b3_domin = 1; S.f.b3_river = 1; }, txt:
 `The column came up the back of the hill at dawn and found Brood's army already on it: the Rhivi herds in the hollow behind, Barghast fires along the crest, the Tiste Andii standing apart the way they always stand, and the Grey Swords, and the striped ones, Trake's Legion, sitting in the grass sharpening things. Between the hill and the city there is a plain, and nothing on it yet.
 
-${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other half of the Host went on the quorls. Tav's company went with them. She has not said his name since the lift field. "We don't leave people," she said, the night after the quorls took his company, and then she turned her back on the field and went down to the Maurik with the rest of you.
+${b3In('brisk') ? `Brisk is looking east, toward the mountains, where the other half of the Host went on the quorls. Tav's company went with them. She has not said his name since the lift field. ${b3Leaves() ? `"We don't leave people," she said, the night after the quorls took his company, and then she` : `"We don't—" she said, the night after the quorls took his company, and didn't finish, and`} turned her back on the field and went down to the Maurik with the rest of you.
 
 ` : ''}${b3In('sohra') ? `Sohra went straight to the Rhivi in the hollow and came back an hour later with her face shut. "A rider came down from Capustan," she says. "The Mhybe. She is very old now. Older than anyone. The two Daru carry her from the bed to the window." She sits down. "Sing to me later, ${S.f.b3_herdMother ? 'herd-mother' : 'Sergeant'}. I need someone to sing to me."
 
@@ -1028,7 +1028,7 @@ ${S.f.b3_mhybe || S.f.b3_c1_key === 'mhybe' ? 'Then her eyes find you over Sohra
 
 "And?"
 
-Sohra looks at the squad. "They are loud," she says. "And they don't leave people."
+Sohra looks at the squad. "They are loud," she says. "And they do not leave people."
 
 The old woman laughs, a dry little sound like a stick breaking. "Good," she says. "She will like that. Go and sing to them, then."` : `"Malazans," she says, in a voice like dry leaves, and looks at you a long time. "She sent word from the north. She says the grey one on the crest is kind to her daughter. He is the only one who is not afraid of her." She closes her eyes. "Go and stand where he put you."`}`,
       ch:[{t:'Leave her to the shade.', fx:()=>{ b3c7Loy('sohra', 1); ally(1, 0, 'The Mhybe'); }, go:()=>startExplore()}]}),
@@ -1088,7 +1088,7 @@ ${b3In('greysword') ? `Dannet has gone stiff as a post beside you. He looks at h
   b3_c7_r_fire:()=>({sp:'The fire on the hill', txt:
 `A Malazan cook-fire on a hill full of other people's armies. Barghast come and stare at it. Rhivi children come and stare at the Barghast. Somebody's dog is asleep in the warmest place. ${b3In('kettle') ? `Kettle is lying on her back looking east at the mountains. "They're up there," she says. "Half the Host and all the quorls. I can feel them being up there."` : ''}
 
-${b3In('ohl') ? `Ohl has the list out. "${b3ListWords()}," he says. "Today's a day for it." He puts it away. "I'd like to be wrong."` : ''}${b3In('greysword') ? `
+${b3In('ohl') ? `Ohl has the list out. "${b3ListWords()}," he says. "Today's a day for it." He puts it away. "Hood can wait his turn. He's had a good spring."` : ''}${b3In('greysword') ? `
 
 Dannet has been over to the Grey Swords' fire and come back with a fresh pot of grey, and a look on her face she keeps to herself.` : ''}${b3In('ellis') ? `
 
@@ -1096,7 +1096,7 @@ Ellis sits facing the plain, not the fire, with her gloved hand flat on the gras
 
 Vell is showing a Rhivi child a Guild knot. The child already knows a better one, and is showing him back, and Vell is letting them.` : ''}`,
       html:allyHTML('Outside Coral · the last morning'),
-      ch:[{t:'Rest an hour while there is an hour.', req:()=>!S.f.b3_c7_rrest, fx:()=>{ S.f.b3_c7_rrest = 1; b3Rest('The squad sleeps an hour in the grass with its boots on, in the middle of three armies. Wounds close, mostly.'); }, go:()=>startExplore()},
+      ch:[{t:'Rest an hour while there is an hour.', req:()=>!S.f.b3_c7_rrest, fx:()=>{ S.f.b3_c7_rrest = 1; b3Rest('The squad sleeps an hour in the grass with its boots on, in the middle of three armies, and gets up better than it lay down.'); }, go:()=>startExplore()},
           {t:'Back to the line.', go:()=>startExplore()}]}),
 
   /* ---- the herd-boy and the gully (optional) ---- */
@@ -1336,7 +1336,7 @@ ${S.f.b3_c7_maud ? `"And ${b3c7Maud()}'s gone," she says. "She went where she wa
 
 ${b3c7Sealed() ? `She takes the letter out of her gorget, still sealed, three years and a war old. She holds it a long time. Then she puts it back. "Not yet," she says. "He's not dead. That was the deal."` : `"Four coppers," she says. "He still won't pay." She almost smiles. "I asked him, on the shore. He said *after*. Everybody says after."`}
 
-"We don't leave people," she says. "I said it on the river bank when the quorls went, and they went anyway, and I couldn't go with them." She looks at you. "Turned out you don't have to go with them. You have to be there when they come back." She looks at her hands. "Whiskeyjack didn't come back."`,
+${b3Leaves() ? `"We don't leave people," she says. "I said it on the river bank when the quorls went,` : `"We don't—" She stops, the way she always stops. "I started it on the river bank when the quorls went,`} and they went anyway, and I couldn't go with them." She looks at you. "Turned out you don't have to go with them. You have to be there when they come back." She looks at her hands. "Whiskeyjack didn't come back."`,
       ch:[{t:'"No. He didn\'t."', fx:()=>{ b3c7Loy('brisk', 1); }, go:'b3_c7_s_fire'},
           {t:'Sit with her.', go:'b3_c7_s_fire'}]}),
   b3_c7_w_tuft:()=>({sp:'Tuft', fx:()=>{ S.f.b3_c7_wTuft = 1; }, txt:
@@ -1549,7 +1549,7 @@ B3FIN7.fate = (id, key) => {
     key === 'host' ? `Sohra stays with the Host, which nobody in the Rhivi camp understands, and rides out ahead of it where a scout rides, and sings to the dead of every battlefield it crosses, Malazan and otherwise. The Host has started to say *the Rhivi girl* the way it says *the Moranth*: as if it could not do without.` :
     key === 'daru' ? `Sohra goes to Darujhistan and hates it, loudly, for a month, and then finds the cattle market, and the drovers, and is happy, and still sleeps outside.` :
     `Sohra rides home with the herds across the plain, singing, and tells her people the Malazans are a slow herd and complain and do not leave anyone, and that she has a herd-mother now who is one of them, and they can say what they like.`,
-    B3FIN7.loy('sohra', `"Herd-mother," she says. She means you. She does not explain it to anyone.`, `She watched the Malazans, as she was asked. She did not like everything she saw.`, `"Loud," she says, when anyone asks her what Malazans are. "Loud, and they don't leave people."`)]);
+    B3FIN7.loy('sohra', `"Herd-mother," she says. She means you. She does not explain it to anyone.`, `She watched the Malazans, as she was asked. She did not like everything she saw.`, `"Loud," she says, when anyone asks her what Malazans are. "Loud, and they do not leave people."`)]);
   if (id === 'greysword') return add('The Wolves of Winter', [
     `The wolf on her shield is ${S.f.b3_c7_dannetWolves ? 'finished: she painted it at the foot of the Shield Anvil\'s barrow, at dawn, among the gifts.' : 'still half a wolf. She says she will finish it when she knows. She is nearer than she was.'} The Fener amulet is in her kit, cold. She has not thrown it away. The boar was a long time in her family.`,
     key === 'host' ? `She stays with the Fourth, lent and not returned, and the Grey Swords let her, because the new Mortal Sword says the Wolves go where they are needed.` :
