@@ -73,7 +73,22 @@ const TKS = {
   b6_c7_deck:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
   b6_c7_deckcold:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => { tkCoil(c, x, y, T, P); tkRime(c, x, y, T); }}},
   b6_c7_quay:{fam:'earth', as:{'7':'c'}, draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_wharf'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
-  b6_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
+  b6_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  /* Book Seven (v13.22): Book Five's Lether, inland and in Letheras: the night roads and fields, the farmyards, the Whitefinders' yard,
+     the canal walks and streets (barrels, casks, coiled rope, mooring posts, market stalls), the wood, the riverbanks, the army's lines */
+  plain_night:{fam:'plain', as:{'0':'F'}},
+  b5_c5_farm:{fam:'earth', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c1_barracks:{fam:'earth', as:{'0':'F'}, draw:{'8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c1_canal:{fam:'earth', draw:{'9':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_canal'), '4':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_walk'), '8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'),
+    '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c7_canal:{fam:'earth', as:{'0':'F'}, draw:{'4':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_lowwalk'), '8':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_streets'), '7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N),
+    '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'8':(c, x, y, T, N) => b57aCover(c, x, y, T, N, 'b5_c7_streets'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c4_wood:{fam:'plain', as:{'4':'#'}, draw:{'5':(c, x, y, T, N) => b54Cover(c, x, y, T, N, 'b5_c4_wood')}},
+  b5_c3_bank:{fam:'earth', as:{'4':'#', '5':'x'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c6_dissent:{fam:'plain', as:{'7':'c'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b7_c4_lines:{fam:'plain', as:{'@':'H'}, draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b7_c6_field:{fam:'plain', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };

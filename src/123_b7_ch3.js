@@ -91,21 +91,22 @@ const B7CH3 = {
     go:'Wake', node:'b7_c3_start'},
 
   areas:[
-    /* 16 x 12 (b5_c4_wood, night). T trees  , litter  . the wood floor  H the farmhouse at the wood's edge (the Third's floor, the fire)  > out east, down into the valley */
+    /* 16 x 12 (b5_c4_wood, night). T trees  , litter  . the wood floor  H the farmhouse at the wood's edge (the Third's floor, the fire)  > out east, down into the valley
+       Terrain kit (25b, v13.22): more trees at the wood's edges (T), fallen trunks (5), rocks (4), the trodden ground of the lie-up (:), tufts (*). No folk: the column lies hidden here. */
     { id:'b7_c3_wood', title:'A wood above a farm valley', sub:'Dusk · the column\'s lie-up', hint:'Tap ground to move · tap a figure to talk · the farmhouse is at the wood\'s edge, the valley is east', decor:'b5_c4_wood', dark:true,
       map:[ "TTTTTTTTTTTTTTTT",
-            "T,,..T....,..TTT",
+            "TT,..T..*.,.TTTT",
             "T,H.......,....T",
-            "T.........T....T",
-            "TT....,.......,T",
-            "T....T.........>",
-            "T,.........T...T",
-            "T....,.........T",
-            "T..T.......,...T",
-            "T,.....T....s..T",
-            "TT,,........,TTT",
+            "T.*.......T...*T",
+            "TTT...,.......,T",
+            "T....T...5.....>",
+            "T,.:.......T.*.T",
+            "T.....,......4.T",
+            "T..T.....5.,...T",
+            "TT*....T....s..T",
+            "TTTT.4......,TTT",
             "TTTTTTTTTTTTTTTT" ],
-      walk:'.,', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
+      walk:'.,:*', triggers:{H:'b7_c3_fire', s:'b7_c3_spring', '>':'b7_c3_out'}, start:{x:3, y:3},
       quest:()=> !S.f.b7_c3_orders1 ? 'The lieutenant, under the trees.' : !b73WennaSettled() ? 'A Shake fisher at the column\'s edge, who knows the ground.' : 'East, down into the valley. The column moves at full dark.',
       npcs:[
         {id:'lt', name:'The lieutenant', kind:'b2soldier', x:8, y:4, node:()=>'b7_c3_lt', fresh:()=>!S.f.b7_c3_orders1},
@@ -116,21 +117,22 @@ const B7CH3 = {
         {id:'keneb', name:'Fist Keneb', kind:'keneb', x:11, y:3, node:()=>'b7_c3_keneb', show:()=>b73Ph() === 1 && !!S.f.b7_c3_orders1, fresh:()=>!S.f.b7_c3_keneb} ] },
 
     /* 16 x 12 (plain_night). , grass  . the farm track  # hedge  C the farm where the crossbowmen lie  V the village  k the Shake track (a
-       field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house */
+       field-drain under a hedge)  r a rock  x a post  F the halt  < west, back to the wood  > east, to the factor's house
+       Terrain kit (25b, v13.22): field banks and hedgerows (1, 2), a farm cart left in the field (7), grain sacks (8), the trodden ground by the fire (:), tufts (*). No folk: the column moves unseen. */
     { id:'b7_c3_fields', title:'The farm valley', sub:'Night · the column in the fields', hint:'Tap ground to move · tap a figure to talk · the farm is west, the village north-east, the factor\'s house further east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,#,,,,,,,,,#",
-            "#,,C,,,,,,,,V,,#",
-            "#,,,,,,,#,,,,,,#",
+            "#22,,#,,*,22,,2#",
+            "#,,C,,,,,,,,V,1#",
+            "#1,,,,,,#,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,k,,,,,#,,,,#",
-            "#,,,,,,,r,,,,,,#",
-            "#,#,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,,#,#",
-            "#,,x,,,,,,,,,,,#",
+            "#,,*,,,,,7,,,,,#",
+            "#,,,k,,,,,#,,*,#",
+            "#2,,,,,8,r,,,,,#",
+            "#,#,,:F:,,,,,,1#",
+            "#1,,,,,,,*,,,#1#",
+            "#11x,,22,,,,,11#",
             "################" ],
-      walk:'.,', triggers:{C:'b7_c3_farm_view', V:'b7_c3_village', k:'b7_c3_track', F:'b7_c3_fire', '<':'b7_c3_fields_back', '>':'b7_c3_fields_east'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{C:'b7_c3_farm_view', V:'b7_c3_village', k:'b7_c3_track', F:'b7_c3_fire', '<':'b7_c3_fields_back', '>':'b7_c3_fields_east'}, start:{x:1, y:4},
       quest:()=> !S.f.b7_c3_orders2 ? 'The lieutenant, by the hedge.'
         : !S.f.b7_c3_farmDone ? 'The farm to the west, where the crossbowmen lie.'
         : !S.f.b7_c3_prisoners ? 'The prisoners from the farm, by the hedge.'
@@ -143,21 +145,23 @@ const B7CH3 = {
         {id:'pris', name:'Letherii prisoners', kind:'b5_letherii', x:4, y:4, node:()=>'b7_c3_prisoners', show:()=>!!S.f.b7_c3_farmDone && !S.f.b7_c3_prisoners, fresh:()=>true},
         {id:'road', name:'Fires on the old road', kind:'b5_edur', x:14, y:5, node:()=>'b7_c3_road_start', show:()=>S.f.b7_c3_village === 'shut' && !S.f.b7_c3_roadDone, fresh:()=>true} ] },
 
-    /* 16 x 12 (b5_c5_farm, night). . the yard  , trodden ash and weeds  # stone walls  B the house door (the counting room)  b the barn  w the well  e the gate, to the lane */
+    /* 16 x 12 (b5_c5_farm, night). . the yard  , trodden ash and weeds  # stone walls  B the house door (the counting room)  b the barn  w the well  e the gate, to the lane
+       Terrain kit (25b, v13.22): the factor's sacks and stores (8), the water butt (&), his cart (7), lanterns (!), the worn way from the gate to the door (_), trodden ground (:), weeds (*), a bank outside the wall (1), and one of the house's Indebted at the water (folk). */
     { id:'b7_c3_house', title:'The factor\'s house', sub:'Night · a holding inland', hint:'Tap ground to move · the house door is at the top left · the barn top right · the gate is south', decor:'b5_c5_farm', dark:true,
       map:[ "################",
-            "#......#.......#",
-            "#......#..bb...#",
+            "#88..*.#..!...8#",
+            "#8.....#..bb..&#",
             "#..##BB##......#",
-            "#..............#",
-            "#........,.....#",
-            "#,.....w.......#",
-            "#..............#",
-            "##............##",
-            ",#,,...........#",
-            ",,#,,..........#",
+            "#.....__.....!.#",
+            "#.*...._.,.*...#",
+            "#,.....w_......#",
+            "#.8.....:....8.#",
+            "##......_.....##",
+            "1#,,....__.....#",
+            "11#,*.:.._...7.#",
             ",,,,,,,ee,,,,,,," ],
-      walk:'.,', triggers:{B:'b7_c3_door', b:'b7_c3_fire', w:'b7_c3_well', e:'b7_c3_gate'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{B:'b7_c3_door', b:'b7_c3_fire', w:'b7_c3_well', e:'b7_c3_gate'}, start:{x:7, y:10},
+      folk:[{x:13, y:6, kind:'b8_c4_carrier', name:'An Indebted water-carrier', line:['Forty buckets a day for the house. The factor counts them. I count them too. We never get the same number.', 'If the factor asks, I never saw you. He never asks me anything, so that will be easy.'], wander:1}],
       quest:()=> !b73Key() ? 'The counting room, through the house door.' : 'The barn. The column lies up here by day.',
       npcs:[
         {id:'steward', name:'The factor\'s steward', kind:'b5_c1_clerk', x:11, y:6, node:()=>'b7_c3_steward', fresh:()=>!S.f.b7_c3_steward},

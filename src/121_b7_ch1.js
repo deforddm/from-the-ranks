@@ -82,21 +82,23 @@ const B7CH1 = {
     go:'Into the boats', node:'b7_c1_start'},
 
   areas:[
-    /* 16 x 12 (b5_c2_strand, night). ~ the sea  , . sand  B a boat drawn up  # dune grass  F the Third's fire in a hollow  > inland, off the beach */
+    /* 16 x 12 (b5_c2_strand, night). ~ the sea  , . sand  B a boat drawn up  # dune grass  F the Third's fire in a hollow  > inland, off the beach
+       Terrain kit (25b, v13.22): a light touch: the dune foot (1, 2 scrub), what the boats brought up (8 crates, & a water cask), boot-churned sand (:), a tuft of marram (*), and one marine hauling (folk). */
     { id:'b7_c1_beach', title:'The Lether coast · the beach', sub:'Night · the landing', hint:'Tap ground to move · tap a figure to talk · the boats are at the waterline, the way inland is east', decor:'b5_c2_strand', dark:true,
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
             ",,~~~,,,,,~~~,,,",
-            ",,B,,,,B,,,,,B,,",
+            ",,B,*,,B,,,,,B,,",
+            "....:.......:...",
             "................",
-            "................",
-            ".,......,.....,.",
-            "......##........",
-            "...F..##...#..,.",
-            ".,..........##.>",
-            "##..,...#....###",
+            ".,......:..&.8,.",
+            ".....8##........",
+            "1..F..##...#..,.",
+            "11..........##.>",
+            "##12,...#....###",
             "################" ],
-      walk:'.,', triggers:{B:'b7_c1_boats', F:'b7_c1_fire', '>':'b7_c1_inland'}, start:{x:7, y:5},
+      walk:'.,:*', triggers:{B:'b7_c1_boats', F:'b7_c1_fire', '>':'b7_c1_inland'}, start:{x:7, y:5},
+      folk:[{x:9, y:3, kind:'b2soldier', name:'A marine with a cask', line:'Rum, says the mark on it. Water, says the sergeant. We find out at the first fire.', wander:1}],
       quest:()=> b71Ph() === 1 ? (!S.f.b7_c1_orders1 ? 'The lieutenant, up the beach.' : 'The boats at the waterline. The lamp goes up soon.')
         : !S.f.b7_c1_orders2 ? 'The lieutenant, by the fires in the dunes.' : !S.f.b7_c1_dunesDone ? 'The Edur patrol in the dunes to the east.' : 'The fire, and then inland. The column moves tonight.',
       npcs:[
@@ -108,21 +110,23 @@ const B7CH1 = {
         {id:'dunes', name:'Shapes on a dune crest', kind:'b5_edur', x:13, y:8, node:()=>'b7_c1_dunes_start', show:()=>b71Ph() >= 2 && !!S.f.b7_c1_orders2 && !S.f.b7_c1_dunesDone, fresh:()=>true} ] },
 
     /* 16 x 12 (plain_night). , grass  . the coast road  # hedge  C the farm  R the tally-shed off the road  r a rock  x a post  F the lie-up
-       < west, back toward the beach  > east, after the column */
+       < west, back toward the beach  > east, after the column
+       Terrain kit (25b, v13.22): hedgerows on the field edges (2) and banks under them (1), a cart left by the road (7), sacks (8), the trodden ground round the fire (:), tufts in the barley (*), and one picket (folk). */
     { id:'b7_c1_road', title:'The coast road', sub:'Night · a day\'s march inland', hint:'Tap ground to move · tap a figure to talk · the farm is west, the tally-shed east', decor:'plain_night', dark:true,
       map:[ "################",
-            "#,,,,,#,,,,,,,,#",
-            "#,C,,,,,,,,,R,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#22,,,#,,22,,22#",
+            "#,C,,,*,,,,,R,1#",
+            "#*,,,:,,,,,,,,,#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,#,,,,,,,,,,,#",
-            "#,,,,,,,,r,,,,,#",
-            "#,,,,,F,,,,,,,,#",
-            "#,,,,,,,,,,,#,,#",
-            "#,,,x,,,,,,,,,,#",
+            "#,,,,7,,,,,,,:,#",
+            "#,,#,,,,*,,,,,2#",
+            "#2,,,,,,,r,,,*,#",
+            "#,,,,:F:,,,8,,,#",
+            "#1,,,,*,,,,,#,1#",
+            "#11,x,,22,*,,11#",
             "################" ],
-      walk:'.,', triggers:{C:'b7_c1_farm', R:'b7_c1_shed_view', F:'b7_c1_fire', '<':'b7_c1_road_back', '>':'b7_c1_road_east'}, start:{x:1, y:4},
+      walk:'.,:*', triggers:{C:'b7_c1_farm', R:'b7_c1_shed_view', F:'b7_c1_fire', '<':'b7_c1_road_back', '>':'b7_c1_road_east'}, start:{x:1, y:4},
+      folk:[{x:13, y:6, kind:'b2soldier', name:'A marine on picket', line:'Barley to the hedges and not a dog barking. Either they are asleep out there or they are counting us.'}],
       quest:()=> b71Ph() >= 5 ? (!b71DossSettled() ? 'There is a man at the pickets asking for the heavies.' : 'The lie-up. At dusk the column moves on.')
         : !S.f.b7_c1_orders3 ? 'The lieutenant, by the road.'
         : b71Strip() && !S.f.b7_c1_farmDone ? 'The farm to the west. The squad needs what the transport did not give it.'
@@ -135,21 +139,23 @@ const B7CH1 = {
         {id:'doss', name:'A man at the pickets', kind:'doss', x:3, y:8, node:()=>'b7_c1_doss', show:()=>b71Ph() >= 5 && (S.f.b7_dossDone == null || S.f.b7_dossDone === 2), fresh:()=>S.f.b7_dossDone == null},
         {id:'lt5', name:'The lieutenant', kind:'b2soldier', x:9, y:9, node:()=>'b7_c1_lt5', show:()=>b71Ph() >= 5, fresh:()=>!S.f.b7_c1_lt5} ] },
 
-    /* 16 x 12 (b5_c5_farm, night). . the yard  , ash and weeds  # fieldstone walls  B the shed door  w the well  e the gate, back to the road */
+    /* 16 x 12 (b5_c5_farm, night). . the yard  , ash and weeds  # fieldstone walls  B the shed door  w the well  e the gate, back to the road
+       Terrain kit (25b, v13.22): the factor's tithe in the side sheds (8 sacks, 7 his cart, & a water butt), lanterns at the doors (!), the worn way from the gate to the shed (_), trodden ground (:), weeds (*), a bank outside the wall (1), and the factor's carter (folk). */
     { id:'b7_c1_shed', title:'The coast road · the tally-shed', sub:'Night · the factor\'s outpost', hint:'Tap ground to move · the shed door is at the top of the yard · the gate is south', decor:'b5_c5_farm', dark:true,
       map:[ "################",
-            "#....#....#....#",
-            "#....#....#....#",
-            "#....##BB##....#",
-            "#..............#",
-            "#,.............#",
-            "#,.....w.......#",
-            "#,.............#",
-            "##............##",
-            ",#,,...........#",
-            ",,#,,..........#",
+            "#88..#8..8#..88#",
+            "#8...#....#...&#",
+            "#....##BB##...7#",
+            "#..!...__....!.#",
+            "#,.:.*.._...*..#",
+            "#,.....w_......#",
+            "#,:.....:....8.#",
+            "##......_.....##",
+            "1#,,8...__...8&#",
+            "11#,,..._....*.#",
             ",,,,,,,ee,,,,,,," ],
-      walk:'.,', triggers:{B:'b7_c1_book', w:'b7_c1_shed_well', e:'b7_c1_shed_out'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{B:'b7_c1_book', w:'b7_c1_shed_well', e:'b7_c1_shed_out'}, start:{x:7, y:10},
+      folk:[{x:4, y:7, kind:'b8_c2_carter', name:'An Indebted carter', line:'The factor\'s cart, the factor\'s mule, the factor\'s grain. I walk beside it. That goes on the tally too.', wander:1}],
       quest:()=> !S.f.b7_c1_bookBurned ? 'The shed. The tally-book is inside.' : 'The gate, and the road. Dawn is coming.',
       npcs:[
         {id:'clerk', name:'The tally-clerk', kind:'b5_c1_clerk', x:11, y:6, node:()=>'b7_c1_clerk', fresh:()=>!S.f.b7_c1_clerk} ] } ],
