@@ -86,7 +86,7 @@ const AUDIO = (() => {
     gotm:[{pats:['K.....S.', 'K..K..S.', 'K.....S.', 'K..K..Ss'], fills:['K..SK.SS', 'K.SSKSSS'], ost:'X..xX..f'},
           {pats:['KkK.S.Kk', 'KkK.S.K.', 'KkK.SsKk', 'KkK.S..s'], fills:['KkS.KSSS', 'K.SSKkSS'], ost:'XxbxXxfx'}],
     dg:[{pats:['K.S.KK.S', 'K.s.KK.S', 'K.S.KKsS', 'K.S.KK.s'], fills:['KSKSKKSS', 'K.SSKKSS'], ost:'X.fxX.fx'}, // saidi
-        {pats:['K..S..S.', 'K..S..Ss', 'K..s..S.', 'K..S.sS.'], fills:['K.SSK.SS', 'KSSSKSSS'], ost:'XbXxXbXx'}], // malfuf, quick
+        {pats:['KsS.KsS.', 'KsS.KsSs', 'K.S.KsS.', 'KsS.K.Ss'], fills:['KSSSKSSS', 'K.SSKSSS'], ost:'XbXxXbXx'}], // malfuf, quick
     moi:[{pats:['K..kK...', 'K...K..k', 'K..kK..s', 'K...K.S.'], fills:['K.K.KKSS', 'KKK.KSSS'], ost:'X..fX..o'},
          {pats:['K.S.K.S.', 'K.S.K..S', 'K.s.K.S.', 'K.S.KsS.'], fills:['K.SSK.SS', 'KSKSKSSS'], ost:'X.x.Xfx.'}],
     hoc:[{pats:['K.S..KS.', 'K.S..KSs', 'K.s..KS.', 'K.S..KS.'], fills:['K.SSKKSS', 'KSKSK.SS'], ost:'X.x..Xb.'}, // maqsum
@@ -105,7 +105,10 @@ const AUDIO = (() => {
          {pats:['K.S.K...', 'K.S.K..s', 'K.S.Kk..', 'K.S.K.S.'], fills:['K.SSKSSS', 'KSKSK.SS'], ost:'X.xfX.xo'}],
   };
   /* the trims, in dB per cue (tools/mix_test.mjs measures them): mostly the choir pads of Books Three and Eight, which sing over the rest */
-  const TRIM = {};
+  const TRIM = {gotm:{title:-.5, calm:.5, end:.5, dread:.5, battle2:.5, battle3:-.5}, dg:{battle:2, battle2:-.5, battle3:2, dark:1},
+    moi:{title:-2.5, calm:-3, end:-3, dread:-3, battle:-1, battle2:-2, dark:-1}, hoc:{calm:-.5, battle:1.5, battle2:1, battle3:1, dark:1},
+    mt:{battle:-.5, battle2:-.5, battle3:1.5, dark:-.5}, bh:{title:.5, end:.5, battle:1.5, battle2:1.5, battle3:.5, dark:2}, rg:{battle:1, battle2:.5, dark:.5},
+    tth:{title:-3, calm:-3, end:-3.5, dread:-3, battle2:-.5, dark:-.5}, dod:{calm:.5, battle:-1, battle2:.5, battle3:-1}, tcg:{title:-.5, end:-.5, battle2:-.5}};
   Object.keys(VOICES).forEach(k => { VOICES[k].key = k; VOICES[k].alt = ALT[k]; VOICES[k].trim = TRIM[k] || {}; });
   let V = VOICES.gotm;
   const f = (deg, oct = 0) => V.root * Math.pow(2, (V.scale[((deg % 7) + 7) % 7] + 12 * (Math.floor(deg / 7) + oct)) / 12);
@@ -420,7 +423,7 @@ const AUDIO = (() => {
     if (b % 8 === 0) { if (!(L.left-- > 0)) section(L); if (head) { L.sec = 'full'; L.prog = [[-2,2],[0,4],[-2,2],[-1,3]]; } const ch = L.ch = L.prog[(b >> 3) % L.prog.length];
       if (L.sec !== 'rest') pad(L, t, ch, bl * 8 + .5, P0.pv * (L.sec === 'thin' ? .75 : 1), P0.cut);
       else if (chance(.6)) pad(L, t, [ch[0]], bl * 8 + .5, P0.pv * .6, P0.cut * .7); }
-    if (head) { L.themed = true; L.hold = b + 8; themeLine(L, t, 0, 4, bl, themeInst(), 1.1); }
+    if (head) { L.themed = true; L.hold = b + 8; themeLine(L, t, 0, 4, bl, themeInst(), .9); }
     if (b < L.hold) return; // nothing else sings over it
     if (b % 2 === 0) { const d = L.motif[L.mi];
       if (L.sec === 'full' && chance(P0.dens)) melody(L, t, d, bl);
@@ -550,7 +553,7 @@ const AUDIO = (() => {
   const AMB_LVL = {wind:.5, camp:.56, camp_night:.75, plain:.7, dusk:.7, hills:.53, storm:.63, city_night:.75, lake:.8, tunnel:.75, dark:.75, inn:1.5,
     desert:.62, desert_dusk:.68, desert_night:.75, column:.62, column_night:.72, oasis:.75, forest:.7, forest_night:.78, river:.7, river_night:.74, sea:.68, sea_night:.72, siege:.7, siege_night:.75, burning:.7,
     snow:.6, snow_night:.68, burnt:.62, burnt_night:.7, herds:.68, rain:.62, barrow:.75, coral:.72, spawn:.75,
-    canal:.72, daru_night:.95, glass:1.2, wastes:.55}; // the sound pass's four, matched by ear-weighted loudness to their neighbours (city_night, desert_night, plain) // so that each sits a few dB under the music
+    canal:.72, daru_night:.95, glass:1.2, wastes:.55}; // so that each sits a few dB under the music (the sound pass's four matched by ear-weighted loudness to city_night, desert_night and plain)
   const SPACE = {tunnel:'hall', dark:'hall', interior:'hall', inn:'hall', barrow:'hall', coral:'hall', spawn:'hall', burning:'hall', siege:'open', fete:'open'}; // which reverb the place has; outdoors is 'open'
   const AMB = {
     wind(L){ L.wind = bed(L, {f:320, q:.8, v:.5, drift:180}); on(L, {gust:11, ember:1.1}); },
@@ -643,7 +646,7 @@ const AUDIO = (() => {
     b4_picket:'desert_night', b4_panarak:'siege', b4_panarak_night:'siege_night', b4picket:'desert_night', b4_trenches:'siege_night',
     b4_coral:'coral', b4_coral_dawn:'sea', b4coral:'coral', b4_flood:'sea', b4_finale:'sea_night',
     // Book Five (80): the seven reading places and the decors the chapters will use; anything else b5_ falls to the river country
-    b5_barracks:'city_night', b5_letheras:'city', b5_letheras_night:'city_night', b5_canal:'canal', b5_canal_night:'canal', b5_drownings:'canal', b5_market:'city', b5letheras:'city', b5letheras_night:'city_night',
+    b5_barracks:'city_night', b5_letheras:'canal', b5_letheras_night:'city_night', b5_canal:'canal', b5_canal_night:'canal', b5_drownings:'canal', b5_market:'city', b5letheras:'city', b5letheras_night:'city_night',
     b5_trate_harbour:'sea', b5_trate:'sea', b5_trate_night:'sea_night', b5_wreck:'sea', b5_harbour:'sea', b5trate:'sea',
     b5_landing:'river_night', b5_landing_day:'river', b5_barges:'river', b5_river:'river', b5landing:'river', b5_fire:'river_night',
     b5_highfort:'hills', b5_rampart:'siege', b5_rampart_night:'siege_night', b5_gully:'hills', b5highfort:'hills',
@@ -668,7 +671,7 @@ const AUDIO = (() => {
     // Letheras falls (87): the Drownings District at night, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after
     b5_c7_streets:'city_night', b5_c7_night:'burning', b5_c7_canalnight:'canal', b5_c7_canal:'canal', b5_c7_lowwalk:'canal', b5_c7_barricade:'siege', b5_c7_walls:'city', b5_c7_sorcery:'dark', b5_c7_under:'canal', b5_c7_walk:'canal', b5_c7_finale:'city_night',
     // the sound pass (series polish §4): the canals of Letheras (Books Five and Seven), Darujhistan after dark (Book Eight), the Wastes (Book Nine), the glass (Book Ten)
-    b5_letheras:'canal', b7_c2_bridge:'canal', b7_c2_alley:'canal', b7_c7_after:'canal', b7_letheras:'canal',
+    b7_c2_bridge:'canal', b7_c2_alley:'canal', b7_c7_after:'canal', b7_letheras:'canal',
     b8_daru_night:'daru_night', b8_c1_roofs:'daru_night',
     b9_wastes:'wastes', b9_wastes_night:'wastes', b9_c4_wastes:'wastes', b9_c5_wastes:'wastes', b9_c4_wash:'wastes', b9_c5_wash:'wastes', b9_c5_plain:'wastes', b9_c7_road:'wastes', b9_retreat:'wastes',
     b10_glass:'glass', b10_glass_night:'glass', b10_traces:'glass', b10_c3_ground:'glass', b10_c5_ground:'glass', b10_c5_wet:'lake',
@@ -751,6 +754,7 @@ const AUDIO = (() => {
   const _dev = {attach(c){ ac = c; offline = true; bufs = {}; recent = {}; codaTill = 0; mus = amb = null; fading = []; want = null; hush = false; build(); }, tick, sync, cue, placeAmb, battleAmb,
     force(m, a){ if (m) mus = startMusic(m, .01); if (a) amb = startAmb(a, .01); },
     advance(sec){ [mus, amb].forEach(L => { if (L && L.step) L.step(L, now(), now() + sec); }); }, // offline tests: schedule sec seconds of whatever is playing
+    theme(bt = .7){ const t = now() + .1, L = sting(15); pad(L, t, [0, 4], 4.8, .055, 600); pad(L, t + 4.4, [-2, 2], 4, .05, 600); pad(L, t + 8, [0, 4], 6, .055, 600); themeLine(L, t + .3, 0, 8, bt, themeInst()); }, // the whole theme in the current voice, for listening
     voice(k){ if (VOICES[k]) { V = VOICES[k]; if (ac) musSend.gain.value = V.wet; } return V.key; },
     get names(){ return {sfx:Object.keys(SFX), amb:Object.keys(AMB), mus:Object.keys(STYLE), voices:Object.keys(VOICES), places:Object.keys(PLACE)}; },
     get state(){ return {want, mus:mus && mus.key, amb:amb && amb.key, voice:V.key, space, fading:fading.length, timer:!!timer, hush, ctx:ac && ac.state}; }};

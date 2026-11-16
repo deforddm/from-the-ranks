@@ -4,9 +4,9 @@
 // Two fixed seeds, thirty seconds each, so the generative sections (full, thin, rest) are averaged and every run is the same.
 // Usage: node tools/mix_test.mjs [--json] [--cues=title,calm]   (exit 1 when a cue spreads more than SPREAD dB across the books)
 import { server, browser, openGame } from './page.mjs';
-const SPREAD = 1.5, SEC = 30, SEEDS = [1234567, 7654321];
+const SPREAD = 1.5, SEC = 30;
 const arg = k => (process.argv.find(a => a.startsWith(`--${k}=`)) || '').split('=')[1];
-const json = process.argv.includes('--json');
+const json = process.argv.includes('--json'), SEEDS = arg('seeds') ? arg('seeds').split(',').map(Number) : [1234567, 7654321]; // --seeds=a,b: a fresh pair, to see that the trims hold beyond the seeds they were measured on
 const srv = await server(); const br = await browser();
 let fail = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); if (!c) fail = 1; };
 const { page, errors } = await openGame(br, srv.url, { fast: true, width: 1024, height: 768, settings: { master: .8, music: .6, sfx: .8, amb: .6 } });
