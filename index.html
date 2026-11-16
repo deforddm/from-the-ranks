@@ -1520,19 +1520,21 @@ const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'tcg') ? (S.thr
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
-/* explore map: # rubble  . ground  , ash  R ruin  ~ crater  = tents  T tunnel  P burial pit */
+/* explore map: # rubble  . ground  , ash  R ruin  ~ crater  = tents  T tunnel  P burial pit
+   Terrain kit (25b, v13.22): a light touch: broken stone heaped against the north-east wall (3), boots worn into the ash by the tunnel mouth (:),
+   Pell's crates (8); a regular at the pits and a sapper sorting stone (folk, on AREAS.pale). */
 const PALE = [
   "################",
-  "#.T..,..RR...,.#",
-  "#....,..RR.....#",
-  "#.RR...........#",
+  "#.T..,..RR.3333#",
+  "#.::.,..RR....3#",
+  "#.RR..........3#",
   "#.RR..,,....R..#",
   "#PP....~~~~..,.#",
   "#PP,...~~~~....#",
   "#......,,,..RR.#",
   "#.R.,.......RR.#",
   "#.R...===......#",
-  "#.....===..,...#",
+  "#.....===..,..8#",
   "################"];
 const NPCS = [
   {id:'tat',name:'Tattersail',kind:'tat',col:'#a08de0',x:7,y:8,node:()=>'tat_map',fresh:()=>!S.f.quest},
@@ -1544,7 +1546,10 @@ const NPCS = [
 ];
 /* explore areas. walk = tile chars you can stand on; triggers = tile char -> dialogue node when stepped on; decor = which drawExplore dressing to use */
 const AREAS = {
-  pale:{id:'pale', title:'The Pale · north quarter', sub:'', hint:'Tap ground to move · tap a figure to talk · the tunnel mouth is top left', map:PALE, walk:'.,T', triggers:{T:'mouth'}, npcs:NPCS, start:{x:5,y:8}, decor:'pale',
+  pale:{id:'pale', title:'The Pale · north quarter', sub:'', hint:'Tap ground to move · tap a figure to talk · the tunnel mouth is top left', map:PALE, walk:'.,T:', triggers:{T:'mouth'},
+    folk:[{x:3, y:7, kind:'b2soldier', name:'A regular with a shovel', line:'Captain says this is the last pit. Captain said that about the last pit.', wander:1},
+        {x:12, y:2, kind:'sapper', name:'A sapper sorting stone', line:'Good dressed stone, this. Somebody will want it for a wall one day. Somebody always wants a wall.'}],
+      npcs:NPCS, start:{x:5,y:8}, decor:'pale',
     quest:()=>S.f.gotSatchel ? `Bring Varrow's satchel to Tattersail` : S.f.quest ? `Recover Varrow's satchel from the north tunnels` : ''},
 };
 const CHAPTERS = {}; // n -> chapter module (CH1, CH2, ...), registered at boot
@@ -6563,7 +6568,8 @@ function bloodDecal(x, y, big){
        ':' trampled ground: hoof-churned, boot-marked       '*' a tuft: greener grass, a few flowers or stones
    A decor joins the kit with an entry in TKS below: its palette family, the decor characters to draw some kit characters as
    (as:{'7':'W'}), its own drawings for others (draw:{'4':fn}), and optionally its raw ground, its light and its fog (so a kit tile's
-   ground is lit and fogged the same as the ground round it; the banks, tracks and things on top are not). A decor with no entry gets
+   ground is lit and fogged the same as the ground round it; the banks, tracks and things on top are not), and what its tracks run on
+   into besides a way out (joins: '<>^vr' unless it says otherwise; a decor whose 'r' is a rock leaves the 'r' out). A decor with no entry gets
    the 'earth' family, which suits any dry ground.
    Ambient folk (area.folk) are in the second half of this file. */
 const TK_CH = '1234567890@%$&!_:*', TK_WALK = '_:*', TK_RAISED = '123';
@@ -6587,6 +6593,8 @@ const TKP = {
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // the glass gone wet at grey light (185b's b10_c5_wet)
   ash:    {d:{body:'#6e6556', crest:'226,218,200', foot:'30,26,22', blade:'#6a6a4a', bladeL:'#8a8a62', brush:'#4a4a36', brushL:'#62624a', stem:'#3a3428', rock:'#6a645a', rockL:'#948e82', rockD:'#2e2a26', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'92,80,66', mud:'42,36,30', lit:'240,230,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // ash and dead earth, darker than 'earth' (Book Three's guards' bank west of Capustan and the Domin's emptied fields)
+  ruin:   {d:{body:'#3c342b', crest:'190,170,140', foot:'10,8,6', blade:'#5a5440', bladeL:'#7a7458', brush:'#3a3628', brushL:'#4e4a38', stem:'#2a2218', rock:'#4e443a', rockL:'#6a5c4c', rockD:'#1e1812', wood:'#4a3624', woodL:'#6e5438', canvas:'#a8987a', canvasD:'#6a5a44', bone:'#d8d0bc', cloth:['#7a3428', '#a8905a'], track:'120,100,80', mud:'30,24,18', lit:'240,220,190', tex:'turf'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // the Pale's ash and broken stone, as dark as its own ground (Book One's prologue)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -6703,7 +6711,17 @@ const TKS = {
   b3_c6_mountain:{fam:'scree', as:{'0':'F'}},
   b3_c6_mountain_night:{fam:'scree', as:{'0':'F'}},
   b3_c6_river:{fam:'earth', as:{'0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
-  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}} };
+  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}},
+  /* Book One (v13.22): the Pale's ruins by day (its own dark ash and broken stone; its tents) and the Host's camp at night (its tents, wagons and fires), the Rhivi
+     Plain at dusk and the Gadrobi Hills by day, at dusk and at night (the plain's green, as Book One's grass is). Their 'r' is a rock, so a track does not run into it (joins). plain, plain_night,
+     city_dusk, city_night, roof_night and lakefront joined with Books Seven and Eight above, unchanged. */
+  pale:{fam:'ruin', as:{'6':'='}},
+  camp_night:{fam:'earth', as:{'6':'=', '7':'W', '0':'F'}},
+  plain_dusk:{fam:'plain', joins:'<>^v'},
+  hills:{fam:'plain', joins:'<>^v'},
+  hills_dusk:{fam:'plain', joins:'<>^v'},
+  hills_night:{fam:'plain', joins:'<>^v'} };
+TKS.plain.joins = '<>^v'; // Book One's plain is strewn with rocks ('r'); Book Eight's road on it has its crowd on 'r', never beside its track
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
 /* is this Book Ten ground the glass just now? 't' the Third's crossing (not on 'south'), 'l' the Letherii who crossed ('adjunct'), 'c2' the
@@ -6821,7 +6839,8 @@ function tkLamp(ctx, x, y, T, P, N){ const px = x*T, py = y*T; ell(ctx, px + T*.
 /* the worn track, in world space like the banks: each '_' joins its neighbours (and runs on into a way out or a road), and every tile
    near one draws the whole band inside its own edges, in one stroke, so it bends and crosses tile corners without a seam */
 const tkIsTrack = c => c === '_';
-function tkLinks(x, y){ const isT = (dx, dy) => { const c = tkAt(x + dx, y + dy); return c !== null && (c === '_' || '<>^vr'.includes(c)); };
+let tkJoins = '<>^vr'; // what a track runs on into: the ways out, and 'r' where a book's road is 'r'; a decor whose 'r' is a rock says joins:'<>^v' (set per tile by drawTile below)
+function tkLinks(x, y){ const isT = (dx, dy) => { const c = tkAt(x + dx, y + dy); return c !== null && (c === '_' || tkJoins.includes(c)); };
   return [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]].filter(([dx, dy]) => isT(dx, dy) && (!dx || !dy || (!isT(dx, 0) && !isT(0, dy)))).map(([dx, dy]) => [dx, dy, tkIsTrack(tkAt(x + dx, y + dy)) ? .5 : 1]); }
 function tkPaths(ctx, x, y, T, P, N){ const cs = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (tkIsTrack(tkAt(x + dx, y + dy))) cs.push({x:x + dx, y:y + dy, l:tkLinks(x + dx, y + dy)}); if (!cs.length) return;
   const band = (w, col, cap) => { ctx.lineCap = cap; ctx.lineJoin = 'round'; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); cs.forEach(c => { const cx = (c.x + .5)*T, cy = (c.y + .5)*T; if (!c.l.length) { ctx.moveTo(cx - T*.12, cy); ctx.lineTo(cx + T*.12, cy); } c.l.forEach(([dx, dy, k]) => { ctx.moveTo(cx, cy); ctx.lineTo(cx + dx*T*k, cy + dy*T*k); }); }); ctx.stroke(); };
@@ -6846,6 +6865,7 @@ const TK_DRAW = {
 /* the kit's drawTile: a kit character is the decor's ground (or the decor's own thing) and the kit's drawing over it; any other
    tile is drawn as it always was, then seated against a bank beside it. Battle maps never hold kit characters. */
 { const _dt = drawTile; drawTile = function(ctx, ch, x, y, T, dark, tunnel, style){
+    tkJoins = (tkCfg(style) || {}).joins || '<>^vr';
     const kit = TK_CH.includes(ch), near = !!tileMap && (tkCells(x, y).length > 0 || [-1, 0, 1].some(dy => [-1, 0, 1].some(dx => tkIsTrack(tkAt(x + dx, y + dy)))));
     const spill = (P, N) => { ctx.save(); ctx.beginPath(); ctx.rect(x*T, y*T, T, T); ctx.clip(); tkPaths(ctx, x, y, T, P, N); tkRise(ctx, x, y, T, P); ctx.restore(); };
     if (!kit) { const r = _dt(ctx, ch, x, y, T, dark, tunnel, style); if (near && ch !== '#') { spill(tkPal(tkCfg(style), !!dark), !!dark); if ('<>^v'.includes(ch)) exitArrow(ctx, ch, x*T, y*T, T); } return r; } // a way out keeps its arrow on top
@@ -12233,6 +12253,7 @@ const CH1 = {
 `The runner said: *the Bridgeburners' fire, when you're ready.* Then he looked at your squad, all five, and added, "Sergeant," as if it were a question.`],
     go:'Walk the lines', node:'c1_start'},
 
+  /* Terrain kit (25b, v13.22): a light touch: crates by Pell's wagon (8), a spear stack (%), the Host's horses on the east picket (@), a trodden patch (:), broken stone in the south-west corner (3); a sentry by the pits and a regular who can't sleep (folk). */
   area:{ id:'pale_night', title:'The Pale · the camp at night', sub:'Bridgeburners\' fire to the east · cadre row north',
     hint:'Tap ground to move · tap a figure to talk',
     // 16 columns x 12 rows. # rubble  . ground  , ash  = tent  C cadre tent (Tattersail's; walking onto it = talk)  F fire (the Fourth's by the start; the other feeds the Bridgeburners')  W wagon (Pell)  P burial pit  x picket stake  B Bridgeburners' fire (walk onto = Whiskeyjack)
@@ -12241,16 +12262,18 @@ const CH1 = {
           "#.....=..=...PP#",
           "#,,..........P.#",
           "#..=...x.x.x...#",
-          "#..=......,....#",
+          "#..=......,..@@#",
           "#....W.....,...#",
-          "#..=.......=..,#",
+          "#..=8.:....=..,#",
           "#..=...,F..=B..#",
-          "#.....,....,F..#",
-          "#..,......,....#",
+          "#.....,...%,F..#",
+          "#3.,......,....#",
           "################" ],
-    walk:'.,P', triggers:{C:'c1_tent', B:'c1_wj', W:'c1_pell', P:'c1_pits'},
+    walk:'.,P:', triggers:{C:'c1_tent', B:'c1_wj', W:'c1_pell', P:'c1_pits'},
     start:{x:8,y:9},
-    npcs:[
+    folk:[{x:14, y:3, kind:'b2soldier', name:'A sentry by the pits', line:'Quiet night. I\'d rather a loud one. You know where you are with a loud one.'},
+        {x:2, y:8, kind:'b2soldier', name:'A regular who can\'t sleep', line:'Sky looks wrong with nothing hanging in it. Spent the whole siege looking up. Can\'t stop now.', wander:1}],
+      npcs:[
       // once he has said good night he walks on toward the cadre row: he stays on the map only while you are talking to him
       {id:'paran', name:'Captain Paran', kind:'paran', x:6, y:5, node:()=>S.f.c1_paran?'c1_paran_again':'c1_paran', show:()=>!S.f.c1_hounds && (!S.f.c1_paran || /^c1_paran/.test(S.node || '')), fresh:()=>!S.f.c1_paran},
       {id:'wj', name:'Whiskeyjack', kind:'wj', x:12, y:8, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', fresh:()=>!S.f.c1_wj},
@@ -13224,72 +13247,76 @@ const CH2 = {
 
   areas:[
     /* 16 columns x 12 rows.  . grass  , tall grass  r rock  M barrow stone  W wagon  F fire  = tent  x stake  > exit east  # impassable */
+    /* Terrain kit (25b, v13.22): the plain's rim, a grassed rise north and scrub in the corners (1, 2), the wagon road east (_), a few tufts (*); nobody (the plain is empty, and should feel it). */
     { id:'plain_road', title:'The Rhivi Plain · the wagon road', sub:'Day four', hint:'Tap ground to move · tap a figure to talk · east is the way', decor:'plain',
       map:[ "################",
-            "#,,..,....,...,#",
+            "#22111111111122#",
             "#.,....r...,,..#",
             "#..........MM..#",
-            "#,..........MM,#",
-            "#.......,......#",
-            "#..............>",
-            "#..W.,.....r...#",
-            "#,.......,.....#",
-            "#..r...,.......#",
-            "#,,..,....,..,,#",
+            "#,..*.......MM,#",
+            "#_____________.#",
+            "#............._>",
+            "#..W.,.....r*..#",
+            "#,....*..,.....#",
+            "#..r...,..*....#",
+            "#2,..,....,..22#",
             "################" ],
-      walk:'.,', triggers:{W:'c2_wagon', M:'c2_barrow', '>':'c2_to_hound'}, start:{x:2,y:6},
+      walk:'.,_*', triggers:{W:'c2_wagon', M:'c2_barrow', '>':'c2_to_hound'}, start:{x:2,y:6},
       quest:()=> !S.f.c2_seth ? 'The guide. He has not said where the road goes.' : 'East. The grass does not care which way you go.',
       npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:4, y:5, node:()=>S.f.c2_seth?'c2_sethand_again':'c2_sethand', fresh:()=>!S.f.c2_seth} ] },
 
+    /* Terrain kit (25b, v13.22): the same rim (1, 2), the wagon road on east (_), hoof-churned ground where the horses went down (:), tufts (*); nobody. */
     { id:'hound_site', title:'The Rhivi Plain · where the horses died', sub:'Day four · dusk', hint:'Tap ground to move · tap a figure to talk · east is the way', decor:'plain_dusk',
       map:[ "################",
-            "#,,.....,.....,#",
-            "#..r.......,...#",
-            "#.....,........#",
-            "#,........r....#",
-            "#..............>",
-            "#.......,......#",
-            "#...,..........#",
-            "#.r.......,.r..#",
+            "#22111111111122#",
+            "#..r.......,..2#",
+            "#...*.,........#",
+            "#,.....:.:r....#",
+            "#.........:..__>",
+            "#____________..#",
+            "#...,........*.#",
+            "#.r..*....,.r..#",
             "#......,.......#",
-            "#,,....,....,,,#",
+            "#22....,....,,2#",
             "################" ],
-      walk:'.,', triggers:{'>':'c2_to_ridge'}, start:{x:2,y:6},
+      walk:'.,_:*', triggers:{'>':'c2_to_ridge'}, start:{x:2,y:6},
       quest:()=> S.f.c2_tocGone ? 'East. The ridge before dark, Sethand says.' : !S.f.c2_toc ? 'Two dead horses and a Malazan sitting with his back to the third.' : !S.f.c2_horseDone ? 'The third horse is still breathing.' : 'Toc has something to say before he rides.',
       npcs:[ {id:'toc', name:'Toc the Younger', kind:'toc', x:8, y:5, node:()=>S.f.c2_horseDone && !S.f.c2_tocGone ? 'c2_toc_offer' : S.f.c2_toc ? 'c2_toc_again' : 'c2_toc', show:()=>!S.f.c2_tocGone, fresh:()=>!S.f.c2_toc || (S.f.c2_horseDone && !S.f.c2_tocGone)},
              {id:'ellis', name:'Ellis', kind:'ellis', x:9, y:6, node:()=>S.f.c2_horseDone ? 'c2_toc_offer' : 'c2_ellis', show:()=>!S.f.c2_ellisJoined && !S.f.c2_ellisRefused && !S.f.c2_tocGone, fresh:()=>!S.f.c2_horseDone} ] },
 
+    /* Terrain kit (25b, v13.22): the ridge's crest north (1), scrub at the foot of the slope (2), trodden ground round the fire (:), the spare kit off the wagon (8), a boulder (4), tufts (*); nobody but the squad and the guide. */
     { id:'ridge', title:'The Rhivi Plain · the fourth camp', sub:'Night · a low ridge with the wind on it', hint:'Tap ground to move · tap a figure to talk · the fire is lit', decor:'plain_night',
       map:[ "################",
-            "###..,....###..#",
-            "#.....r.......,#",
-            "#,.............#",
+            "###.111111###11#",
+            "#.....r.......4#",
+            "#,.........*...#",
             "#....=...=.....#",
-            "#..............#",
-            "#,.....F.......#",
-            "#..............>",
-            "#..W....x.x....#",
-            "#.........,....#",
-            "#,,....,....r,,#",
+            "#.*...:........#",
+            "#,.....F:......#",
+            "#.....:........>",
+            "#..W8...x.x....#",
+            "#.........,.*..#",
+            "#22....,....r22#",
             "################" ],
-      walk:'.,', triggers:{F:'c2_fire', '=':'c2_tent', W:'c2_wagon_night', '>':'c2_to_hills'}, start:{x:5,y:9},
+      walk:'.,:*', triggers:{F:'c2_fire', '=':'c2_tent', W:'c2_wagon_night', '>':'c2_to_hills'}, start:{x:5,y:9},
       quest:()=> S.f.c2_lightDone ? 'Dawn. East, and the hills.' : S.f.c2_light ? 'There is a light in the west.' : !S.f.c2_sethNight ? 'The fourth camp. Sethand is at the fire, which is new.' : !(S.f.c2_drawn || S.f.c2_noCard) ? 'Night. Tuft is at the fire with the Deck in her hand.' : 'Night. The squad is still awake. The fire, when the squad is ready.',
       npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:8, y:7, node:()=>S.f.c2_sethNight ? 'c2_ridge_seth_again' : 'c2_ridge_seth', fresh:()=>!S.f.c2_sethNight} ] },
 
+    /* Terrain kit (25b, v13.22): the first rises of the hills against their rock (1), scrub (2), boulders (4), the wagon road running out at the hills (_), a tuft (*); nobody. */
     { id:'hills_edge', title:'The edge of the Gadrobi Hills', sub:'The last morning', hint:'Tap ground to move · tap a figure to talk · the hills are east', decor:'plain',
       map:[ "################",
-            "#,,......,....,#",
-            "#.......r......#",
-            "#,....,.....##.#",
-            "#..........###.#",
-            "#..r......,..#.#",
-            "#..............>",
-            "#.....,......#.#",
-            "#..W.......r##.#",
-            "#,......,...####",
-            "#,,...,....,####",
+            "#,,1111..,....,#",
+            "#....*..r.....4#",
+            "#,....,...11##.#",
+            "#.........1###.#",
+            "#..r......,11#.#",
+            "#....__________>",
+            "#____.,......#.#",
+            "#..W......4r##.#",
+            "#2......,...####",
+            "#22...,....,####",
             "################" ],
-      walk:'.,', triggers:{W:'c2_wagon_last', '>':'c2_close'}, start:{x:2,y:6},
+      walk:'.,_*', triggers:{W:'c2_wagon_last', '>':'c2_close'}, start:{x:2,y:6},
       quest:()=> 'Darujhistan is a blue smudge to the south-west. The hills are in the way.',
       npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:10, y:5, node:()=>S.f.c2_hillsSeth ? 'c2_hills_seth_again' : 'c2_hills_dust', fresh:()=>!S.f.c2_hillsSeth} ] } ],
 
@@ -14534,39 +14561,45 @@ const CH3 = {
 
   areas:[
     /* 16 columns x 12 rows.  . cobbles  , wet cobbles  # wall  L gas lamp  W wagon  B crates  x stake barrier  < exit west (the Worry Gate proper: the road runs along the wall from the hills) */
+    /* Terrain kit (25b, v13.22): the inbound queue: two carts (7), crates (8), a stall (9), a water butt (&), mud at the gate (:); a carter, a mask-seller and a boy (folk). */
     { id:'worry_gate', title:'Darujhistan · the Worry Gate', sub:'Dusk', hint:'Tap ground to move · tap a figure to talk · the gate is west', decor:'city_dusk',
       map:[ "################",
             "#...L....,....L#",
-            "#........,.....#",
+            "#..9.....,..88.#",
             "##..###..BB..###",
-            "#.......,......#",
-            "#.L............#",
-            "<.....,........#",
+            "#&......7......#",
+            "#.L..7.........#",
+            "<::...,........#",
             "#......,.....W.#",
             "#..B..xx...L..##",
-            "#.....,,.......#",
+            "#8....,,.......#",
             "#.L.....,.....L#",
             "################" ],
-      walk:'.,DH><', triggers:{W:'c3_wagon', '<':'c3_to_cross'}, start:{x:12,y:5},
+      walk:'.,DH><:', triggers:{W:'c3_wagon', '<':'c3_to_cross'}, start:{x:12,y:5},
+      folk:[{x:6, y:4, kind:'b8_c2_carter', name:'A carter in the queue', line:'Turnips from the hill farms. Three hours in this queue. The Council taxes the waiting too. They just haven\'t found the column for it yet.'},
+        {x:10, y:2, kind:'b5_c1_tilewoman', name:'A woman with a basket of masks', line:'Masks for the Fete, two coppers. Gedderone\'s night is days off yet, but the good ones go early. The Daru buy them by the cartload.', wander:1},
+        {x:11, y:9, kind:'urchin', name:'A boy watching the lamps', line:'The gas comes up out of the ground and burns blue. Mother says not to think about where it comes from. I think about it.', wander:1}],
       npcs:[ {id:'pallick', name:'Pennick', kind:'guard', x:2, y:7, node:()=>S.f.c3_gate?'c3_pallick_again':'c3_pallick', fresh:()=>!S.f.c3_gate},
              /* v3.18: a dealer in wonders, stuck in the inbound queue because Pennick's ledger has no column for miracles */
              {id:'brack', name:'A stall under a striped awning', kind:'brack', x:9, y:9, still:true, node:()=>S.f.c3_brack ? 'c3_brack_wares' : 'c3_brack', fresh:()=>!S.f.c3_brack} ] },
 
     /* . cobbles  , gutter  # wall  H the dig  x stakes  W the crew's wagon  F brazier  B barrels  L lamp  > the alley up into Daru (the Phoenix at the top of it) */
+    /* Terrain kit (25b, v13.22): a light touch: the dig's spoil inside the stakes (3), crates by the crew's wagon (8); a night-soil man (folk). */
     { id:'gadrobi_cross', title:'Darujhistan · the Gadrobi crossroads', sub:'Night', hint:'Tap ground to move · tap a figure to talk · the hole is in the middle', decor:'city_night',
       map:[ "################",
             "###########....#",
             "#L.........#..L#",
             "#..........#...#",
             "#...xxx.xxx....#",
-            "#...x.....x....#",
+            "#...x....3x....#",
             "#...x..H..x....>",
             "#...xxx.xxx....#",
-            "#..............#",
+            "#8.............#",
             "#.W.....F....B.#",
             "#L,,.........,L#",
             "################" ],
       walk:'.,DH><', triggers:{H:'c3_dig_tile', '>':'c3_to_daru', W:'c3_crew_wagon'}, start:{x:2,y:7},
+      folk:[{x:12, y:10, kind:'b8_c2_carter', name:'A night-soil man', line:'The Council pays a crew to dig a hole at night and nobody to fill it in. That\'s the Council all over.', wander:1}],
       npcs:[ {id:'wj', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.c3_reported?'c3_wj_again':'c3_wj', fresh:()=>!S.f.c3_reported},
              {id:'fiddler', name:'Fiddler', kind:'fiddler', x:6, y:6, node:()=>'c3_fiddler', fresh:()=>!!S.f.c3_reported && !S.f.c3_fid},
              {id:'hedge', name:'Hedge', kind:'hedge', x:8, y:5, node:()=>'c3_hedge'},
@@ -14579,39 +14612,43 @@ const CH3 = {
              {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:3, node:()=>'c3_kalam', show:()=>!!S.f.c3_night2, fresh:()=>!S.f.c3_kal} ] },
 
     /* . cobbles  , gutter  # wall  L lamp  D the Phoenix Inn's door  B barrels  < the alley back down to the crossing */
+    /* Terrain kit (25b, v13.22): a light touch: a handcart (7), water butts (&), a barrel (8); a man on the Phoenix's step (folk). */
     { id:'daru_lane', title:'Darujhistan · the Daru District', sub:'Night · the top of the alley', hint:'Tap ground to move · the Phoenix is the door with the painted bird', decor:'city_night',
       map:[ "################",
             "###L###D###L####",
-            "#..............#",
+            "#&.............#",
             "#.,,........,,.#",
             "#.........B....#",
             "<..............#",
-            "#.......,......#",
+            "#....7..,.....8#",
             "#L............L#",
-            "#####......#####",
+            "#####.....&#####",
             "#####..,...#####",
             "#####L....L#####",
             "################" ],
       walk:'.,D<', triggers:{D:'c3_inn_door', '<':'c3_lane_back'}, start:{x:1,y:5},
+      folk:[{x:5, y:2, kind:'b5_c1_drunk', name:'A man on the Phoenix\'s step', line:'Don\'t go in for the ale. Go in for the company. Then leave before the company does.', wander:1}],
       npcs:[ {id:'irilta', name:'A big woman in an apron', kind:'irilta', x:8, y:2, still:true, node:()=>'c3_lane_irilta', fresh:()=>!S.f.c3_laneIrilta},
-             {id:'laneboy', name:'A boy on a barrel', kind:'cutpurse', x:11, y:4, node:()=>'c3_lane_boy', show:()=>!S.f.c3_laneBoy, fresh:()=>true} ] },
+             {id:'laneboy', name:'A boy on a barrel', kind:'urchin', x:11, y:4, node:()=>'c3_lane_boy', show:()=>!S.f.c3_laneBoy, fresh:()=>true} ] },
 
     /* . cobbles  , gutter  # wall  L lamp  D the dye-shop door  < alley back west */
+    /* Terrain kit (25b, v13.22): a light touch: a water butt (&), barrels (8); a woman at her shutter (folk). */
     { id:'daru_street', title:'Darujhistan · the Daru District', sub:'Night · the second night', hint:'Tap ground to move · tap a figure to talk · the dye-shop is north', decor:'city_night',
       map:[ "################",
             "##L####D####L###",
-            "#..............#",
+            "#.............&#",
             "#.,,....L.....,#",
             "#..###....###..#",
             "<..###....###..#",
             "#..............#",
-            "#..,....,......#",
+            "#..,....,.....8#",
             "#L.###....###.L#",
-            "#..###....###..#",
+            "#8.###....###..#",
             "#..,,......,,..#",
             "################" ],
       walk:'.,DH><', triggers:{D:'c3_dye_door', '<':'c3_back_west'}, start:{x:2,y:6},
       /* the Watch walk off round the corner when paid (or when they leave you to it); they are back on their corner once you've been up the stair */
+      folk:[{x:12, y:10, kind:'b5_c7_citizen', name:'A woman at her shutter', line:'Two of the Watch on one corner, and in the Daru. Somebody on the Council has had a bad dream.', wander:1}],
       npcs:[ {id:'guard1', name:'City Watch', kind:'guard', x:7, y:6, node:()=>S.f.c3_guards?'c3_guard_again':'c3_guard', fresh:()=>!S.f.c3_guards, show:()=>!S.f.c3_watchGone || !!S.f.c3_madryn},
              {id:'guard2', name:'City Watch', kind:'guard', x:8, y:6, node:()=>S.f.c3_guards?'c3_guard_again':'c3_guard', show:()=>!S.f.c3_watchGone || !!S.f.c3_madryn} ] } ],
 
@@ -16232,27 +16269,29 @@ const CH4 = {
 
   areas:[
     /* 16 columns x 12 rows.  . roof tile  , slate  # drop / open air  p plank  C chimney  S skylight  x washing-line post  > exit east (to the Daru roofs) */
+    /* Terrain kit (25b, v13.22): a rain cask (&), coils of rope (*), one more chimney (4, drawn as the roof's own C); nobody up here (no folk). */
     { id:'roofs_gadrobi', title:'Darujhistan · the Gadrobi roofs', sub:'Night · two nights on', hint:'Tap roof to move · tap a figure to talk · the planks hold · the way on is east', decor:'roof_night',
       map:[ "################",
-            "#..C..#,,,,#...#",
+            "#..C..#,,,,#.4.#",
             "#.....#,,C,#.x.#",
             "#.x...p,,,,#...#",
-            "#.....#,S,,p...#",
+            "#...*.#,S,,p...#",
             "#.....#,,,,#...#",
             "#.....#,,,,#...>",
             "#..C..p,,,,#.,.#",
-            "#.....#,,x,#...#",
-            "#.....#,,,,p...#",
+            "#.....#,,x,#.*.#",
+            "#&....#,,,,p...#",
             "#.....#,,,,#.C.#",
             "################" ],
-      walk:'.,p><', triggers:{'>':'c4_to_daru'}, start:{x:2,y:6},
+      walk:'.,p><*', triggers:{'>':'c4_to_daru'}, start:{x:2,y:6},
       npcs:[ {id:'rallick', name:'A man on the ridge', kind:'rallick', x:14, y:10, still:true, node:()=>S.f.c4_rallick?'c4_rallick_again':'c4_rallick', show:()=>!S.f.c4_key, fresh:()=>!S.f.c4_rallick},
              {id:'crokus', name:'Someone running', kind:'crokus', x:8, y:2, node:()=>'c4_crokus', show:()=>!S.f.c4_crokus, fresh:()=>true} ] },
 
     /* . roof tile  , slate  # drop / open air  p plank  C chimney  x washing-line post  < exit west (back to the Gadrobi roofs; after the choice, down) */
+    /* Terrain kit (25b, v13.22): a rain cask (&), coils of rope (*), a pigeon loft (8); nobody up here (no folk). */
     { id:'roofs_daru', title:'Darujhistan · the Daru roofs', sub:'Night · two roofs over', hint:'Tap roof to move · tap a figure to talk · Kalam\'s roof is the far one · down is west', decor:'roof_night',
       map:[ "################",
-            "#...#...C.#....#",
+            "#8..#...C.#...&#",
             "#...#.....#.C..#",
             "#...p.....p....#",
             "#.C.#..x..#....#",
@@ -16260,10 +16299,10 @@ const CH4 = {
             "<...#.,,,.p....#",
             "#...#.....#.x..#",
             "#...p..C..#....#",
-            "#...#.....#....#",
-            "#.x.#.....#..C.#",
+            "#...#.....#.*..#",
+            "#.x.#*....#..C.#",
             "################" ],
-      walk:'.,p><', triggers:{'<':'c4_back_west'}, start:{x:1,y:6},
+      walk:'.,p><*', triggers:{'<':'c4_back_west'}, start:{x:1,y:6},
       npcs:[ {id:'kalam', name:'Kalam', kind:'kalam', x:13, y:5, still:true, node:()=>'c4_meet', show:()=>!S.f.c4_meet, fresh:()=>true},
              {id:'guild1', name:'Guild men', kind:'assassin', x:14, y:4, still:true, node:()=>'c4_guildmen', show:()=>!!S.f.c4_meet && !(S.f.c4_key === 'aside' && S.f.c4_guildmen), fresh:()=>!!S.f.c4_key && !S.f.c4_guildmen},
              {id:'guild2', name:'Guild men', kind:'assassin', x:14, y:7, still:true, node:()=>'c4_guildmen', show:()=>!!S.f.c4_meet && !(S.f.c4_key === 'aside' && S.f.c4_guildmen)},
@@ -17727,39 +17766,41 @@ const CH5 = {
 
   areas:[
     /* 16 columns x 12 rows.  . grass  , scrub  r rock  M barrow stone  # cliff / drop  x Rhivi marker-stake  > exit east (to the vale) */
+    /* Terrain kit (25b, v13.22): the skyline north (1), scrub (2), boulders (4), a dead tree (5), tufts (*); nobody. */
     { id:'hills_ridge', title:'The Gadrobi Hills · the long ridge', sub:'Day · the third day out', hint:'Tap ground to move · tap a figure to talk · stay below the skyline · the vale is east', decor:'hills',
       map:[ "################",
-            "#,,..r...,..M..#",
-            "#.,....,...MM,.#",
-            "#..x......,....#",
+            "#1111r11111.M12#",
+            "#.,....,...MM,4#",
+            "#..x.....*,....#",
             "#,....M.....r..#",
             "#..,..MM.......#",
-            "#.........,....>",
+            "#.........,.*..>",
             "#.r....,...x...#",
-            "#,...,....M....#",
-            "#..#.......MM,.#",
-            "#,,##..,.....,,#",
+            "#,*..,....M....#",
+            "#..#4.*....MM,.#",
+            "#,,##..,.....52#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_to_vale'}, start:{x:2,y:6},
+      walk:'.,><*', triggers:{'>':'c5_to_vale'}, start:{x:2,y:6},
       npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:8, y:5, still:true, node:()=>S.f.c5_seth ? 'c5_seth_again' : 'c5_seth', fresh:()=>!S.f.c5_seth},
              {id:'outrider', name:'A Rhivi outrider', kind:'rhivi', x:13, y:3, still:true, node:()=>'c5_outrider', fresh:()=>!S.f.c5_outrider},
              {id:'crone', name:'A raven on a stone', kind:'crone', x:9, y:8, still:true, node:()=>S.f.c5_crone ? 'c5_crone_again' : 'c5_crone', show:()=>!!S.f.c5_seth, fresh:()=>!S.f.c5_crone} ] },
 
     /* . grass  , the dig / turned earth  r rock  M barrow stone (the ring)  # drop  < exit west (the ridge)  > exit east (the far hill; after dark, the rent) */
+    /* Terrain kit (25b, v13.22): grassed rises at the north rim (1), scrub in the south corners (2), the dig's spoil by the north-east stones (3), a boulder (4), tufts (*); nobody (the vale is meant to be empty). barrow_night is the same map. */
     { id:'barrow_vale', title:'The Gadrobi Hills · the barrow vale', sub:'Dusk · the long barrow', hint:'Tap ground to move · tap a figure to talk · do not go near the Adjunct · west is the ridge', decor:'hills_dusk',
       map:[ "################",
-            "#..r.....,,....#",
+            "#1111....,,3311#",
             "#....MMMMMM....#",
             "#...M,,,,,,M...#",
-            "#..M,,,,,,,,M..#",
+            "#.*M,,,,,,,,M*.#",
             "#...M,,,,,,M.r.#",
             "<....MM,,MM....>",
             "#.r.....,......#",
-            "#.....r....,...#",
-            "#..,.......r...#",
-            "#.,,...r.....,.#",
+            "#.....r.*..,4..#",
+            "#2.,.......r..2#",
+            "#2,,...r.....22#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:1,y:6},
+      walk:'.,><*', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:1,y:6},
       npcs:[ {id:'lorn', name:'The Adjunct', kind:'lorn', x:13, y:2, still:true, node:()=>S.f.c5_wardsFought ? 'c5_lorn_after' : 'c5_lorn', show:()=>!S.f.c5_night, fresh:()=>S.f.c5_wardsFought ? !S.f.c5_lornAfter : !S.f.c5_lorn},
              /* in the ring of stones until it breaks the wards; then back down in the dig at the far end, by the Adjunct, where its node says it is */
              {id:'tool', name:'A thing of bone and hide', kind:'tool', x:7, y:4, still:true, node:()=>S.f.c5_wardsFought ? 'c5_tool_after' : 'c5_tool', show:()=>!S.f.c5_night && !S.f.c5_wardsFought, fresh:()=>!S.f.c5_wardsFought},
@@ -17768,20 +17809,21 @@ const CH5 = {
              {id:'paran', name:'Captain Paran', kind:'paran', x:5, y:9, still:true, node:()=>S.f.c5_paran ? 'c5_paran_again' : S.f.c5_toc ? 'c5_paran' : 'c5_toc', show:()=>!!S.f.c5_wardsFought && !S.f.c5_night, fresh:()=>!S.f.c5_paran} ] },
 
     /* the same vale after the Adjunct has gone: night, nobody left in it but the Fourth. Entered from c5_nightfall. */
+    /* Terrain kit (25b, v13.22): as barrow_vale: the same rim, spoil, boulder and tufts; nobody. */
     { id:'barrow_night', title:'The Gadrobi Hills · the barrow vale', sub:'Night · the long barrow', hint:'Tap ground to move · east, past the dig, to Paran\'s fire', decor:'hills_night',
       map:[ "################",
-            "#..r.....,,....#",
+            "#1111....,,3311#",
             "#....MMMMMM....#",
             "#...M,,,,,,M...#",
-            "#..M,,,,,,,,M..#",
+            "#.*M,,,,,,,,M*.#",
             "#...M,,,,,,M.r.#",
             "<....MM,,MM....>",
             "#.r.....,......#",
-            "#.....r....,...#",
-            "#..,.......r...#",
-            "#.,,...r.....,.#",
+            "#.....r.*..,4..#",
+            "#2.,.......r..2#",
+            "#2,,...r.....22#",
             "################" ],
-      walk:'.,><', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:3,y:7}, npcs:[] } ],
+      walk:'.,><*', triggers:{'>':'c5_vale_east', '<':'c5_back_ridge'}, start:{x:3,y:7}, npcs:[] } ],
 
   /* quest lines for the areas above (they take the place of the engine's QUESTS entries for these ids) */
   quests:{
@@ -19358,29 +19400,33 @@ const CH6 = {
 
   areas:[
     /* 16 x 12.  . cobbles  , puddle  # building / Simtal's wall  L blue gas lamp  l Fete lantern pole  B crates  W wagon  x post  F brazier  D door (shut)  g Lady Simtal's gate */
+    /* Terrain kit (25b, v13.22): two Fete stalls (9); a reveller in a hare mask and a pie-seller (folk). */
     { id:'fete_street', title:'Darujhistan · the Estate District', sub:'Dusk · the Gedderone Fete', hint:'Tap the street to move · tap a figure to talk · Lady Simtal\'s gate is north', decor:'city_dusk',
       map:[ "################",
             "#####L###g###L##",
             "#..l.....,...l.#",
             "#.....,........#",
             "##..B....l..F..#",
-            "#..........,...#",
+            "#..........,..9#",
             "#..l...,....W..#",
             "#......x....,..#",
             "#.,..l.....l...#",
-            "#......L.......#",
+            "#.9....L.......#",
             "##D####..###D###",
             "################" ],
       walk:'.,', triggers:{'g':'c6_gate'}, start:{x:1,y:5},
+      folk:[{x:4, y:5, kind:'reveller', name:'A reveller in a hare mask', line:'Gedderone\'s night. Everybody is somebody else till dawn. I was hoping for somebody taller.', wander:1},
+        {x:9, y:8, kind:'b5_c3_trader', name:'A pie-seller', line:'Pies, a copper. What\'s in them is between me and the goddess, and she isn\'t telling either.', wander:1}],
       npcs:[ {id:'kruppe', name:'Kruppe', kind:'kruppe', x:5, y:3, node:()=>'c6_kruppe', fresh:()=>!S.f.c6_kruppe},
              {id:'murillio', name:'Murillio', kind:'murillio', x:8, y:2, node:()=>'c6_murillio', fresh:()=>!S.f.c6_mur},
              {id:'coll', name:'A big man in plain brown', kind:'coll', x:11, y:3, still:true, node:()=>'c6_coll', fresh:()=>!S.f.c6_coll},
              {id:'crokus', name:'A boy with a rope', kind:'crokus', x:6, y:7, node:()=>'c6_crokus', show:()=>!S.f.c6_crokus, fresh:()=>true},
              {id:'rallick', name:'A man in a doorway', kind:'rallick', x:12, y:9, still:true, node:()=>'c6_rallick', fresh:()=>!S.f.c6_rallick},
              {id:'reveller', name:'A reveller in a goat mask', kind:'reveller', x:3, y:8, node:()=>'c6_reveller', fresh:()=>!S.f.c6_rev},
-             {id:'horses', name:'An old Gadrobi horse-seller', kind:'reveller', x:13, y:7, still:true, node:()=>'c6_horses', show:()=>SQUAD().includes('ellis'), fresh:()=>!S.f.c6_horses} ] },
+             {id:'horses', name:'An old Gadrobi horse-seller', kind:'b8_c2_drover', x:13, y:7, still:true, node:()=>'c6_horses', show:()=>SQUAD().includes('ellis'), fresh:()=>!S.f.c6_horses} ] },
 
     /* . marble  , mosaic runner  # the house wall  D the lit hall doors  s statue  t banquet table  l lantern pole  b balustrade  v the steps down to the garden.  The upper terrace is the shelf in the north-east corner. */
+    /* Terrain kit (25b, v13.22): no kit; a guest in a heron mask and a servant with a tray (folk). */
     { id:'simtal_terrace', title:'Lady Simtal\'s estate · the terraces', sub:'Night · the Fete', hint:'Tap to move · tap a figure to talk · guard rounds: the upper terrace is north-east · the garden is down the steps, south', decor:'estate_terrace',
       map:[ "################",
             "#s.D....D..s#..#",
@@ -19395,6 +19441,8 @@ const CH6 = {
             "#bbbbbbvvbbbbbb#",
             "################" ],
       walk:'.,', triggers:{'D':'c6_hall', 'v':'c6_steps'}, start:{x:1,y:6},
+      folk:[{x:10, y:8, kind:'reveller', name:'A guest in a heron mask', line:'Lady Simtal\'s wine is excellent. Lady Simtal\'s guests are not. I include myself.'},
+        {x:12, y:7, kind:'b5_c1_tilewoman', name:'A servant with a tray', line:'Wine? It\'s the second-best. The best went to the Council benches an hour ago, and they\'ve not noticed the difference.', wander:1}],
       npcs:[ {id:'baruk', name:'An old man in dark red', kind:'baruk', x:9, y:3, still:true, node:()=>'c6_baruk', fresh:()=>!S.f.c6_baruk},
              {id:'rakemask', name:'The tall guest', kind:'rakemask', x:10, y:2, still:true, node:()=>'c6_rake', fresh:()=>!S.f.c6_rakeMet && !(S.fxd && S.fxd.c6_rake)},
              {id:'kruppe_t', name:'Kruppe', kind:'kruppe', x:4, y:7, still:true, node:()=>'c6_kruppe_t', fresh:()=>!S.f.c6_kruppeT},
@@ -19406,6 +19454,7 @@ const CH6 = {
              {id:'knives', name:'Shapes on the balustrade', kind:'guildknife', x:14, y:1, still:true, node:()=>'c6_knives', show:()=>!S.f.c6_knivesDone, fresh:()=>true} ] },
 
     /* . lawn  , raked gravel  h hedge  f fountain  w pond  T tree  s statue  l lantern pole  A the Finnest sapling (the young Azath, after)  g the garden gate  ^ the steps up to the terrace */
+    /* Terrain kit (25b, v13.22): none; the garden reads full as it is. */
     { id:'simtal_garden', title:'Lady Simtal\'s estate · the garden', sub:'Night · the Fete', hint:'Tap to move · tap a figure to talk · the terrace steps are north', decor:'estate_night',
       map:[ "################",
             "#l..hh.^^.hh..l#",
@@ -22080,6 +22129,7 @@ const CH7 = {
 
   areas:[
     /* 16 columns x 12 rows.  ~ lake  n moored boat  p pier planks  , wet stone  . cobbles  k bollard  B crates  L gas lamp  x post  W wagon  # warehouses  D the green door  > the Worry Gate road east */
+    /* Terrain kit (25b, v13.22): folk only (the quay is full, 32% bare): a boatman. */
     { id:'lakefront', title:'Darujhistan · the Lakefront', sub:'Dawn · the morning after the Fete', hint:'Tap ground to move · tap a figure to talk · the green door is on the south side · the Worry Gate is east', decor:'lakefront',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~n~~~~~~~~~~~~~",
@@ -22094,6 +22144,7 @@ const CH7 = {
             "###.########.###",
             "################" ],
       walk:'.,p>', triggers:{'D':'c7_green_door', '>':'c7_to_hill'}, start:{x:1, y:7},
+      folk:[{x:14, y:7, kind:'b5_c3_bargeman', name:'A boatman', line:'The Fete\'s over and the lake doesn\'t know it. The gulls know. The gulls always know.', wander:1}],
       npcs:[ {id:'kalam', name:'Kalam', kind:'kalam', x:6, y:4, still:true, node:()=>'c7_kalam', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_kalam},
              {id:'fiddler', name:'Fiddler', kind:'fiddler', x:7, y:4, node:()=>'c7_fiddler', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_fiddler},
              {id:'crokus', name:'Crokus', kind:'crokus', x:8, y:4, node:()=>S.f.c7_coin ? 'c7_crokus_again' : 'c7_crokus', show:()=>!S.f.c7_shipGone, fresh:()=>!S.f.c7_coin},
@@ -22110,6 +22161,7 @@ const CH7 = {
              {id:'veteran', name:'An old man mending a net', kind:'guildveteran', x:12, y:9, still:true, node:()=>'c7_veteran', show:()=>S.f.c4_key === 'aside' && !S.f.c4_vell, fresh:()=>!S.f.c7_veteran} ] },
 
     /* . grass  , scrub and Jatem's Worry (the road east)  r rock  M barrow stone  x Rhivi stake  # drop  < the road back west to the city */
+    /* Terrain kit (25b, v13.22): the Rhivi road worn into the grass along the south (_), two tufts (*); no folk (the hill is crowded as it is). */
     { id:'quorl_hill', title:'East of the city · the quorl hill', sub:'Late morning · Jatem\'s Worry', hint:'Tap ground to move · tap a figure to talk · Whiskeyjack is on the litter · the Rhivi are on the road', decor:'hills',
       map:[ "################",
             "#,,..r......,.M#",
@@ -22119,11 +22171,11 @@ const CH7 = {
             "#.,.......r....#",
             "#........,.....#",
             "#r...M......x..#",
-            "#....,.....x...#",
-            "<,,,,,,,,,,,,,,,",
-            "#..,..r...,..,.#",
+            "#..*.,.....x...#",
+            "<_______________",
+            "#..,..r..*,..,.#",
             "################" ],
-      walk:'.,<', triggers:{'<':'c7_hill_west'}, start:{x:2, y:9},
+      walk:'.,<_*', triggers:{'<':'c7_hill_west'}, start:{x:2, y:9},
       npcs:[ {id:'wj', name:'Whiskeyjack', kind:'wj', x:7, y:4, still:true, node:()=>'c7_wj', fresh:()=>!S.f.c7_key},
              {id:'qb', name:'Quick Ben', kind:'qb', x:8, y:5, node:()=>'c7_qb_hill', fresh:()=>!S.f.c7_qbHill},
              {id:'paran', name:'Captain Paran', kind:'paran', x:5, y:3, node:()=>'c7_paran_hill', fresh:()=>!S.f.c7_paranHill},
@@ -22137,7 +22189,7 @@ const CH7 = {
              {id:'trotts', name:'Trotts', kind:'trotts', x:5, y:5, still:true, node:()=>'c7_trotts'},
              {id:'crone', name:'A raven on a stone', kind:'crone', x:13, y:1, still:true, node:()=>'c7_crone', fresh:()=>!S.f.c7_crone},
              {id:'sethand', name:'Sethand', kind:'rhivi', x:12, y:9, still:true, node:()=>'c7_seth', fresh:()=>!S.f.c7_seth},
-             {id:'bundle', name:'A woman on a grey mare', kind:'rhivi', x:14, y:9, still:true, node:()=>'c7_bundle', fresh:()=>!S.f.c7_tattersail},
+             {id:'bundle', name:'A woman on a grey mare', kind:'b3_rhivi_rider', x:14, y:9, still:true, node:()=>'c7_bundle', fresh:()=>!S.f.c7_tattersail},
              {id:'rhivi2', name:'A Rhivi rider', kind:'rhivi', x:13, y:10, still:true, node:()=>'c7_rhivi'} ] } ],
 
   battles:{

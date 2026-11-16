@@ -125,19 +125,21 @@ const lvCap = () => (typeof S !== 'undefined' && S && S.book === 'tcg') ? (S.thr
 /* a caster's strain cap grows with the squad: 6, then 7 at level 4 and 8 at level 7 (15: lvT) */
 const strMax = () => 6 + (typeof lvT === 'function' ? lvT() : 0);
 
-/* explore map: # rubble  . ground  , ash  R ruin  ~ crater  = tents  T tunnel  P burial pit */
+/* explore map: # rubble  . ground  , ash  R ruin  ~ crater  = tents  T tunnel  P burial pit
+   Terrain kit (25b, v13.22): a light touch: broken stone heaped against the north-east wall (3), boots worn into the ash by the tunnel mouth (:),
+   Pell's crates (8); a regular at the pits and a sapper sorting stone (folk, on AREAS.pale). */
 const PALE = [
   "################",
-  "#.T..,..RR...,.#",
-  "#....,..RR.....#",
-  "#.RR...........#",
+  "#.T..,..RR.3333#",
+  "#.::.,..RR....3#",
+  "#.RR..........3#",
   "#.RR..,,....R..#",
   "#PP....~~~~..,.#",
   "#PP,...~~~~....#",
   "#......,,,..RR.#",
   "#.R.,.......RR.#",
   "#.R...===......#",
-  "#.....===..,...#",
+  "#.....===..,..8#",
   "################"];
 const NPCS = [
   {id:'tat',name:'Tattersail',kind:'tat',col:'#a08de0',x:7,y:8,node:()=>'tat_map',fresh:()=>!S.f.quest},
@@ -149,7 +151,10 @@ const NPCS = [
 ];
 /* explore areas. walk = tile chars you can stand on; triggers = tile char -> dialogue node when stepped on; decor = which drawExplore dressing to use */
 const AREAS = {
-  pale:{id:'pale', title:'The Pale · north quarter', sub:'', hint:'Tap ground to move · tap a figure to talk · the tunnel mouth is top left', map:PALE, walk:'.,T', triggers:{T:'mouth'}, npcs:NPCS, start:{x:5,y:8}, decor:'pale',
+  pale:{id:'pale', title:'The Pale · north quarter', sub:'', hint:'Tap ground to move · tap a figure to talk · the tunnel mouth is top left', map:PALE, walk:'.,T:', triggers:{T:'mouth'},
+    folk:[{x:3, y:7, kind:'b2soldier', name:'A regular with a shovel', line:'Captain says this is the last pit. Captain said that about the last pit.', wander:1},
+        {x:12, y:2, kind:'sapper', name:'A sapper sorting stone', line:'Good dressed stone, this. Somebody will want it for a wall one day. Somebody always wants a wall.'}],
+      npcs:NPCS, start:{x:5,y:8}, decor:'pale',
     quest:()=>S.f.gotSatchel ? `Bring Varrow's satchel to Tattersail` : S.f.quest ? `Recover Varrow's satchel from the north tunnels` : ''},
 };
 const CHAPTERS = {}; // n -> chapter module (CH1, CH2, ...), registered at boot

@@ -56,6 +56,7 @@ const CH1 = {
 `The runner said: *the Bridgeburners' fire, when you're ready.* Then he looked at your squad, all five, and added, "Sergeant," as if it were a question.`],
     go:'Walk the lines', node:'c1_start'},
 
+  /* Terrain kit (25b, v13.22): a light touch: crates by Pell's wagon (8), a spear stack (%), the Host's horses on the east picket (@), a trodden patch (:), broken stone in the south-west corner (3); a sentry by the pits and a regular who can't sleep (folk). */
   area:{ id:'pale_night', title:'The Pale · the camp at night', sub:'Bridgeburners\' fire to the east · cadre row north',
     hint:'Tap ground to move · tap a figure to talk',
     // 16 columns x 12 rows. # rubble  . ground  , ash  = tent  C cadre tent (Tattersail's; walking onto it = talk)  F fire (the Fourth's by the start; the other feeds the Bridgeburners')  W wagon (Pell)  P burial pit  x picket stake  B Bridgeburners' fire (walk onto = Whiskeyjack)
@@ -64,16 +65,18 @@ const CH1 = {
           "#.....=..=...PP#",
           "#,,..........P.#",
           "#..=...x.x.x...#",
-          "#..=......,....#",
+          "#..=......,..@@#",
           "#....W.....,...#",
-          "#..=.......=..,#",
+          "#..=8.:....=..,#",
           "#..=...,F..=B..#",
-          "#.....,....,F..#",
-          "#..,......,....#",
+          "#.....,...%,F..#",
+          "#3.,......,....#",
           "################" ],
-    walk:'.,P', triggers:{C:'c1_tent', B:'c1_wj', W:'c1_pell', P:'c1_pits'},
+    walk:'.,P:', triggers:{C:'c1_tent', B:'c1_wj', W:'c1_pell', P:'c1_pits'},
     start:{x:8,y:9},
-    npcs:[
+    folk:[{x:14, y:3, kind:'b2soldier', name:'A sentry by the pits', line:'Quiet night. I\'d rather a loud one. You know where you are with a loud one.'},
+        {x:2, y:8, kind:'b2soldier', name:'A regular who can\'t sleep', line:'Sky looks wrong with nothing hanging in it. Spent the whole siege looking up. Can\'t stop now.', wander:1}],
+      npcs:[
       // once he has said good night he walks on toward the cadre row: he stays on the map only while you are talking to him
       {id:'paran', name:'Captain Paran', kind:'paran', x:6, y:5, node:()=>S.f.c1_paran?'c1_paran_again':'c1_paran', show:()=>!S.f.c1_hounds && (!S.f.c1_paran || /^c1_paran/.test(S.node || '')), fresh:()=>!S.f.c1_paran},
       {id:'wj', name:'Whiskeyjack', kind:'wj', x:12, y:8, node:()=>S.f.c1_wj?'c1_wj_again':'c1_wj', fresh:()=>!S.f.c1_wj},
