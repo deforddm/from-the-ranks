@@ -14,8 +14,9 @@
    Figures: brannoc (recruit); foe kinds borrowed from earlier books (deserter, thug, bruiser, b4_c7_fleer, b4_c7_fleerbow, b4_c5_rider).
    NPCs: b2soldier (the captain, a regular, the quartermaster, the runner), crone (the Falari sail-mender), b3_c3_capan (the family).
    Backdrops (SCENEX, 100's placeholders): b6_coast (the camp above the sea), b6_plague_village (the road and the village); b6_camp_night
-   is borrowed for the march fire. Ground is borrowed: b3camp_night (the Host's camp), b5_c2_strand (the shore), b3_c5_domin and
-   b3_c5_domin_night (the plague road, the village). */
+   is borrowed for the march fire. Ground is borrowed: b3camp_night (the Host's camp), b5_c2_strand (the shore). The plague road, the
+   village and the headland are on 102b's own coast ground, b6_c2_coast and b6_c2_coast_night (David, Nov 15: it was Book Three's
+   Pannion farm ground, b3_c5_domin). */
 
 /* ---- small helpers (b62: Book Six, Chapter Two) ---- */
 const b62L = (id, n) => { if (b6In(id) && S.loy && S.loy[id] != null) loy(id, n); };
@@ -128,9 +129,9 @@ const B6CH2 = {
       npcs:[
         {id:'mender', name:'An old Falari sail-mender', kind:'crone', x:8, y:4, node:()=>S.f.b6_c2_weatherTried ? 'b6_c2_mender_again' : 'b6_c2_mender', fresh:()=>!S.f.b6_c2_weatherTried} ] },
 
-    /* 16 x 12 (b3_c5_domin): the road inland, in the rain. # the walls of an empty hamlet  w its well  D a house with the door open
+    /* 16 x 12 (b6_c2_coast): the road inland, in the rain. # the walls of an empty hamlet  w its well  D a house with the door open
        x dead trees  F the Fourth's fire on the march  > east, on along the road */
-    { id:'b6_c2_road', title:'Inland · the plague road', sub:'The march · empty country', hint:'Tap ground to move · the road goes on east', decor:'b3_c5_domin',
+    { id:'b6_c2_road', title:'Inland · the plague road', sub:'The march · empty country', hint:'Tap ground to move · the road goes on east', decor:'b6_c2_coast',
       map:[ "x,,,,,,,,,,,,,,x",
             ",,###.###,,,,,,,",
             ",,#.....#,,x,,,,",
@@ -147,9 +148,9 @@ const B6CH2 = {
       quest:()=> b62Ph() === 2 ? 'The road goes on east. A village, the scouts say, where nobody came out to meet them.' : b62Ph() === 3 ? 'The village, east.' : b62Ph() === 4 ? 'On after the column, east. The road is not empty.' : 'After the column.',
       npcs:[] },
 
-    /* 16 x 12 (b3_c5_domin, night palette): the village where the dead were left. # house walls  D houses with the doors open
+    /* 16 x 12 (b6_c2_coast_night): the village where the dead were left. # house walls  D houses with the doors open
        E the last house  w the village well  x dead trees  v south, back to the road */
-    { id:'b6_c2_vil', title:'Inland · a village', sub:'Rain · the doors open', hint:'Tap ground to move · the road is south', decor:'b3_c5_domin_night', dark:true,
+    { id:'b6_c2_vil', title:'Inland · a village', sub:'Rain · the doors open', hint:'Tap ground to move · the road is south', decor:'b6_c2_coast_night', dark:true,
       map:[ "################",
             "#..###....###..#",
             "#..#D#....#D#..#",
@@ -170,13 +171,13 @@ const B6CH2 = {
 
   battles:{
     /* the D'rek shrine on the headland: looters stripping it, the priests dead inside days since (headline only) */
-    b6_c2_shrine:{title:'The shrine on the headland', style:'b3_c5_domin_night', dark:true, warrenText:'The headland · rain off the sea, and the warrens sour', warren:{meanas:1, denul:1}, music:'battle',
+    b6_c2_shrine:{title:'The shrine on the headland', style:'b6_c2_coast_night', dark:true, warrenText:'The headland · rain off the sea, and the warrens sour', warren:{meanas:1, denul:1}, music:'battle',
       map:["#.t..t.#","#......#","#..##..#","#......#","#.t...t#","#......#","#......#","#..t...#","#......#","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
       foes:[['b6_c2_looter',2,1],['b6_c2_looter',5,1],['b6_bandit',3,3],['b6_c2_looter',6,3],['b6_rebelbow',4,0]], xp:200, after:'b6_c2_shrine_after',
       preText:()=>`The looters have a handcart at the shrine door and the shrine's brass on it. They look at the squad's shields, and at the cart, and decide the cart is worth it.`},
     /* the village where the dead were left: people robbing the dead; then the headman's yard. It spreads the fever. */
-    b6_c2_village:{title:'The village of the open doors', style:'b3_c5_domin_night', dark:true, warrenText:'Rain on a dead village · the warrens are sick this season, and everyone who reaches into one comes out grey', warren:{meanas:1, denul:1}, music:'battle',
+    b6_c2_village:{title:'The village of the open doors', style:'b6_c2_coast_night', dark:true, warrenText:'Rain on a dead village · the warrens are sick this season, and everyone who reaches into one comes out grey', warren:{meanas:1, denul:1}, music:'battle',
       feverRisk:'the dead in the village',
       map:["#..##..#","#......#","#.t..t.#","#......#","##....##","#......#","#..t...#","#......#","#......#","##....##"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
@@ -188,7 +189,7 @@ const B6CH2 = {
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b6_c2_scavboss',3,1],['b6_c2_scav',1,2],['b6_c2_scav',6,2],['b6_bandit',4,4],['b6_rebelbow',2,0]]} },
     /* bandits on the plague road: they wait for whoever runs from the villages, and tonight the Fourth is behind the column */
-    b6_c2_road:{title:'The plague road', style:'b3_c5_domin', warrenText:'The road inland · rain, and the warrens sour', warren:{meanas:1, denul:1}, music:'battle',
+    b6_c2_road:{title:'The plague road', style:'b6_c2_coast', warrenText:'The road inland · rain, and the warrens sour', warren:{meanas:1, denul:1}, music:'battle',
       map:["..t..t..","........","...##...","........",".t....t.","........","........","..t..t..","........","........"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
       foes:[['b6_c2_roadchief',4,1],['b6_bandit',2,2],['b6_bandit',6,2],['b6_bandit',3,4],['b6_rebelbow',1,0],['b6_rebelbow',6,0]], xp:240, after:'b6_c2_road_after',

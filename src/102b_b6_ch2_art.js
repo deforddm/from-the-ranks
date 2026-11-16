@@ -252,3 +252,101 @@ b62Item('b6_c2_drekcharm', 'A D\'rek charm', '<ellipse cx="120" cy="72" rx="64" 
   + '<path d="M120 64 Q140 64 140 84 Q140 102 120 102 Q102 102 102 86" fill="none" stroke="#3a2e1e" stroke-width="1" opacity=".6"/><circle cx="119" cy="80" r="2.2" fill="#3a2e1e"/>'
   + '<g stroke="#5a4a32" stroke-width=".8" opacity=".55"><path d="M124 63 l1 2.6 M132 66 l-.4 2.6 M138 74 l-2.4 1 M140 86 l-2.6 0 M136 96 l-2 -1.6 M126 101 l-1 -2.4 M112 100 l.6 -2.4 M104 92 l2.4 -1"/></g>'
   + '<g fill="#8a7650" opacity=".35"><circle cx="100" cy="98" r="1.2"/><circle cx="142" cy="72" r=".9"/></g>');
+
+/* ---------------- ground: Seven Cities mud-brick, shared with 104b (G'danisban) ----------------
+   b6MudWall draws a wall or a house from above: a flat plastered top with a raised lip on its open sides and, where it stands over open
+   ground to the south, its face: plaster gone in patches to the brick under it, the rain's dark streaks down it. Light from the upper left. */
+const b6WallC = c => c === '#' || c === 'D' || c === 'E' || c === 'G';
+function b6MudWall(ctx, x, y, T, P, N, tall = .44){
+  const px = x*T, py = y*T, h = hash(x, y), W = (dx, dy) => b6WallC(b2Tile(x + dx, y + dy)), face = !W(0, 1), fy = face ? py + T*(1 - tall) : py + T;
+  ctx.fillStyle = shade(P.top, (h - .5)*.07); ctx.fillRect(px, py, T, fy - py); b2Mottle(ctx, x, y, T, N ? .03 : .07, N ? .2 : .13, P.lit, 1.1); // the roof or the wall's top, plastered flat
+  ctx.strokeStyle = P.crack; ctx.lineWidth = 1; for (let i=0;i<2;i++){ const sx = px + hash(x,y,i+20)*T, sy = py + hash(y,x,i+21)*(fy - py); ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + (hash(x,y,i+22) - .5)*T*.36, sy + hash(x,y,i+23)*T*.2); ctx.stroke(); } // cracks in the plaster
+  const lip = Math.max(2, T*.07); // the parapet: lit where it faces up and left, in shade where it faces right
+  if (!W(0, -1)) { ctx.fillStyle = P.topL; ctx.fillRect(px, py, T, lip); ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(px, py + lip, T, Math.max(1, T*.025)); }
+  if (!W(-1, 0)) { ctx.fillStyle = P.topL; ctx.fillRect(px, py, lip, fy - py); }
+  if (!W(1, 0)) { ctx.fillStyle = shade(P.top, -.22); ctx.fillRect(px + T - lip, py, lip, fy - py); }
+  if (!face && W(0, -1) && W(-1, 0) && W(1, 0) && hash(x,y,5) > .55) { // on a roof inside the block: a hatch, a jar, a mat drying
+    const k = hash(x,y,6); if (k > .66) { ctx.fillStyle = N ? shade(P.top, -.45) : P.door; ctx.fillRect(px + T*.3, py + T*.32, T*.24, T*.22); ctx.fillStyle = P.topL; ctx.fillRect(px + T*.3, py + T*.32, T*.24, Math.max(1, T*.025)); }
+    else if (k > .33) { ell(ctx, px + T*.56, py + T*.62, T*.1, T*.08, 'rgba(0,0,0,.3)'); ell(ctx, px + T*.52, py + T*.56, T*.09, T*.09, P.jar); ell(ctx, px + T*.5, py + T*.53, T*.03, T*.03, N ? 'rgba(160,170,200,.2)' : 'rgba(255,240,210,.45)'); }
+    else { ctx.fillStyle = P.mat; ctx.fillRect(px + T*.18, py + T*.24, T*.5, T*.34); ctx.strokeStyle = 'rgba(0,0,0,.18)'; for (let i=1;i<5;i++){ ctx.beginPath(); ctx.moveTo(px + T*.18, py + T*(.24 + i*.068)); ctx.lineTo(px + T*.68, py + T*(.24 + i*.068)); ctx.stroke(); } } }
+  if (!face) return {face, fy};
+  ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px, fy - T*.03, T, T*.04); // the lip's shadow on the face
+  const g = ctx.createLinearGradient(0, fy, 0, py + T); g.addColorStop(0, P.faceL); g.addColorStop(1, P.face); ctx.fillStyle = g; ctx.fillRect(px, fy, T, py + T - fy);
+  for (let i=0;i<2;i++) if (hash(x,y,i+30) > .45) { const bx = px + hash(x,y,i+31)*T*.66, by = fy + (py + T - fy)*(.12 + hash(x,y,i+32)*.4), bw = T*(.18 + hash(x,y,i+33)*.14), bh = (py + T - fy)*.36; // plaster gone, the brick under it
+    ctx.fillStyle = P.brickD; ctx.fillRect(bx, by, bw, bh); ctx.fillStyle = P.brick; for (let r=0;r<3;r++) for (let c=0;c<3;c++){ const cx = bx + (c + (r%2)*.5)*bw/3, cy = by + r*bh/3; if (cx + bw/3 - 1 > bx + bw) continue; ctx.fillRect(cx + .5, cy + .5, bw/3 - 1.5, bh/3 - 1.5); } }
+  ctx.fillStyle = N ? 'rgba(0,0,0,.22)' : 'rgba(60,44,30,.2)'; for (let i=0;i<3;i++){ const sx = px + hash(x,y,i+40)*T, w = T*(.04 + hash(x,y,i+41)*.05); ctx.fillRect(sx, fy + T*.02, w, (py + T - fy)*(.4 + hash(x,y,i+42)*.6)); } // rain streaks down from the lip
+  if (!W(-1, 0)) { ctx.fillStyle = N ? 'rgba(160,170,210,.06)' : 'rgba(255,246,224,.18)'; ctx.fillRect(px, fy, T*.05, py + T - fy); } if (!W(1, 0)) { ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(px + T*.95, fy, T*.05, py + T - fy); }
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(px, py + T - Math.max(1, T*.04), T, Math.max(1, T*.04)); // damp at the foot
+  return {face, fy}; }
+/* a doorway in a wall's face: the dark of a house with its door open, or (shut) the door pulled to and a line of light under it at night */
+function b6Door(ctx, x, y, T, P, N, fy, shut){ const px = x*T, py = y*T, cx = px + T*.5, w = T*.36, top = fy + T*.06;
+  ctx.fillStyle = P.door; ctx.beginPath(); ctx.moveTo(cx - w/2, py + T); ctx.lineTo(cx - w/2, top + w*.3); ctx.quadraticCurveTo(cx, top - w*.12, cx + w/2, top + w*.3); ctx.lineTo(cx + w/2, py + T); ctx.fill(); // the opening, a low arch
+  if (shut) { ctx.fillStyle = P.wood; ctx.fillRect(cx - w*.42, top + w*.28, w*.84, py + T - top - w*.28); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; for (let i=1;i<3;i++){ ctx.beginPath(); ctx.moveTo(cx - w*.42 + i*w*.28, top + w*.3); ctx.lineTo(cx - w*.42 + i*w*.28, py + T); ctx.stroke(); }
+    if (N) { ctx.fillStyle = 'rgba(255,190,110,.75)'; ctx.fillRect(cx - w*.4, py + T - Math.max(1.5, T*.035), w*.8, Math.max(1.5, T*.03)); glow(ctx, cx, py + T, T*.4, '#ffb060', .22); } }
+  else { ctx.fillStyle = P.wood; ctx.beginPath(); ctx.moveTo(cx + w/2, py + T); ctx.lineTo(cx + w/2, top + w*.3); ctx.lineTo(cx + w*.82, top + w*.42); ctx.lineTo(cx + w*.82, py + T + T*.02); ctx.fill(); } // the door, standing open against the wall
+  ctx.strokeStyle = P.topL; ctx.lineWidth = Math.max(1, T*.025); ctx.beginPath(); ctx.moveTo(cx - w/2 - 1, top + w*.3); ctx.quadraticCurveTo(cx, top - w*.16, cx + w/2 + 1, top + w*.3); ctx.stroke(); // the plastered reveal round the arch
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(cx - w*.6, py + T*.92, w*1.2, T*.08); }
+
+/* ---------------- ground: TILEX.b6_c2_coast — the north coast of Seven Cities inland from Ehrlitan, in the rain ----------------
+   Dry hill country gone damp: pale soil, grey-green thorn scrub, limestone breaking through, a track worn white with puddles in it, the
+   hamlets mud-brick and plaster with flat roofs; a cool light off the sea from the north. Replaces Book Three's Pannion farm ground
+   (b3_c5_domin), which this chapter borrowed. '.' the track or the yard, ',' scrub and stony ground, '#' a mud-brick wall (blocks),
+   'D' a house with its door open, 'E' the last house (its door shut), 'w' a well, 'x' a dead tamarisk, 'F' a fire on the march; a battle's
+   't' is the engine's fallen stone. N = night (the village, the headland). */
+const b62CP = N => N ? {soil:'#34322e', track:'#383530', grit:'#1c1b1a', pebble:'#55524c', scrub:'#222a24', scrubL:'#34403a', scrubD:'#121614', lime:'#56565a', limeL:'#6e6f74', limeD:'#26262a',
+    top:'#5e5950', topL:'#767064', face:'#2c2824', faceL:'#3e3933', brick:'#3e342a', brickD:'#1c1712', crack:'rgba(0,0,0,.35)', door:'#060504', wood:'#2a2018', jar:'#3a2c22', mat:'#34302a',
+    bark:'#5c5e66', barkD:'#24252a', pool:'#1a1e24', poolL:'rgba(130,150,190,.22)', lit:'160,176,214', sea:'90,120,165', wet:'10,12,16'}
+  : {soil:'#9c8a68', track:'#a4936f', grit:'#6e604a', pebble:'#d0c6ae', scrub:'#5e6650', scrubL:'#868c6e', scrubD:'#363c2e', lime:'#bdb39a', limeL:'#dcd4be', limeD:'#7e7462',
+    top:'#bca882', topL:'#d6c6a0', face:'#957f5c', faceL:'#ad9772', brick:'#8a6e4c', brickD:'#5e4a32', crack:'rgba(90,70,44,.32)', door:'#1a120c', wood:'#5a4228', jar:'#8a5a36', mat:'#a89a6a',
+    bark:'#d2c8b2', barkD:'#7e7462', pool:'#6e6e66', poolL:'rgba(220,230,236,.4)', lit:'255,248,232', sea:'176,198,214', wet:'40,34,26'};
+function b62Coast(ctx, ch, x, y, T, N){
+  const px = x*T, py = y*T, h = hash(x, y), P = b62CP(N), fill = c => { ctx.fillStyle = c; ctx.fillRect(px, py, T, T); };
+  const rows = (tileMap && tileMap.length) || 12;
+  const seaLight = () => { const k = Math.pow(1 - clamp(y/rows, 0, 1), 1.6), g = ctx.createLinearGradient(0, py, 0, py + T); g.addColorStop(0, `rgba(${P.sea},${(N ? .08 : .1)*k})`); g.addColorStop(1, `rgba(${P.sea},${(N ? .08 : .1)*Math.pow(1 - clamp((y + 1)/rows, 0, 1), 1.6)})`); ctx.fillStyle = g; ctx.fillRect(px, py, T, T); }; // cool light off the sea, from the north
+  const soil = () => { fill(shade(P.soil, (h - .5)*.015)); b2Mottle(ctx, x, y, T, N ? .03 : .08, N ? .16 : .1, P.lit, 1.3);
+    ctx.fillStyle = P.grit; for (let i=0;i<5;i++) ctx.fillRect(px + hash(x,y,i+20)*T, py + hash(y,x,i+21)*T, Math.max(1, T*.035), Math.max(1, T*.03));
+    ctx.fillStyle = P.pebble; for (let i=0;i<4;i++) ctx.fillRect(px + hash(x,y,i+26)*T, py + hash(y,x,i+27)*T, Math.max(1, T*.04), Math.max(1, T*.03)); // pale chips of the stone under it
+    if (h > .82) { const cx = px + T*(.25 + hash(x,y,8)*.5), cy = py + T*(.3 + hash(x,y,9)*.4), r = T*(.1 + hash(x,y,10)*.08); ell(ctx, cx + r*.3, cy + r*.35, r*1.1, r*.5, 'rgba(0,0,0,.25)'); ell(ctx, cx, cy, r, r*.62, P.lime); ell(ctx, cx - r*.25, cy - r*.2, r*.5, r*.28, P.limeL); } }; // a knuckle of limestone
+  const track = () => { fill(shade(P.track, (h - .5)*.015)); b2Mottle(ctx, x, y, T, N ? .03 : .08, N ? .16 : .1, P.lit, 1.3);
+    ctx.fillStyle = P.grit; for (let i=0;i<4;i++) ctx.fillRect(px + hash(x,y,i+50)*T, py + hash(y,x,i+51)*T, Math.max(1, T*.03), Math.max(1, T*.025));
+    ctx.fillStyle = P.pebble; for (let i=0;i<5;i++) ctx.fillRect(px + hash(x,y,i+56)*T, py + hash(y,x,i+57)*T, Math.max(1, T*.035), Math.max(1, T*.025));
+    if (h > .88) { const cx = px + T*(.3 + hash(x,y,60)*.4), cy = py + T*(.35 + hash(x,y,61)*.3), rx = T*(.12 + hash(x,y,62)*.1); ell(ctx, cx, cy, rx, rx*.42, `rgba(${P.wet},.3)`); ell(ctx, cx, cy, rx*.86, rx*.3, P.pool); ell(ctx, cx - rx*.25, cy - rx*.08, rx*.36, rx*.06, P.poolL); } // rain standing in a hollow, the grey sky in it
+    else if (h < .2) b2Prints(ctx, x, y, T, 3, N, 7); };
+  const scrub = () => { soil(); const bush = (cx, cy, r) => { ell(ctx, cx + r*.45, cy + r*.45, r*1.15, r*.5, N ? 'rgba(0,0,0,.4)' : 'rgba(60,46,30,.3)');
+      for (let i=0;i<7;i++){ const a = i/7*6.28 + h*4; ell(ctx, cx + Math.cos(a)*r*.48, cy + Math.sin(a)*r*.38, r*.42, r*.34, i < 4 ? P.scrub : P.scrubD); } ell(ctx, cx - r*.2, cy - r*.24, r*.42, r*.26, P.scrubL);
+      ctx.fillStyle = N ? 'rgba(150,160,190,.12)' : 'rgba(240,236,214,.35)'; for (let i=0;i<4;i++) ctx.fillRect(cx + (hash(x,y,i+70) - .5)*r*1.4, cy + (hash(y,x,i+71) - .6)*r, 1, 1); }; // thorn, grey-green, a few pale spines
+    if (h > .12) bush(px + T*(.3 + hash(x,y,80)*.2), py + T*(.34 + hash(x,y,81)*.22), T*(.17 + hash(x,y,82)*.07)); if (h > .5) bush(px + T*(.68 + hash(x,y,83)*.12), py + T*(.68 + hash(x,y,84)*.12), T*.11);
+    ctx.strokeStyle = N ? 'rgba(70,80,74,.55)' : 'rgba(150,140,100,.7)'; ctx.lineWidth = 1; for (let i=0;i<6;i++){ const gx = px + hash(x,y,i+90)*T, gy = py + T*.3 + hash(y,x,i+91)*T*.65; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + (hash(x,y,i+92) - .5)*3, gy - T*.1); ctx.stroke(); } }; // dry grass between
+  if (b6WallC(ch)) { soil(); const {fy} = b6MudWall(ctx, x, y, T, P, N, .4); if (ch === 'D' || ch === 'E') b6Door(ctx, x, y, T, P, N, fy, ch === 'E'); seaLight(); b2Firelit(ctx, x, y, T, N ? .26 : .1, 3); return; }
+  if (ch === ',') scrub(); else if (ch === '.') track(); else soil();
+  if (ch === 'w') { const cx = px + T*.5, cy = py + T*.58, r = T*.3; // a hill well: a round curb of rough stone plastered over, a beam on two posts, a rope, a stone trough beside it
+    ell(ctx, cx + T*.05, cy + T*.1, r*1.2, r*.58, 'rgba(0,0,0,.35)'); ell(ctx, cx, cy, r*1.06, r*.66, P.limeD); ell(ctx, cx, cy - T*.03, r*1.02, r*.6, P.lime); ell(ctx, cx - r*.3, cy - r*.32, r*.5, r*.16, P.limeL);
+    ell(ctx, cx, cy - T*.03, r*.68, r*.36, '#06070a'); ell(ctx, cx + r*.12, cy - T*.04, r*.32, r*.1, N ? 'rgba(110,130,170,.28)' : 'rgba(170,186,196,.4)'); // the water, low
+    ctx.fillStyle = P.wood; ctx.fillRect(cx - r*1.06, cy - T*.44, T*.05, T*.42); ctx.fillRect(cx + r*.96, cy - T*.44, T*.05, T*.42); ctx.fillRect(cx - r*1.08, cy - T*.46, r*2.16, T*.05);
+    B2F.line(ctx, N ? '#4a4438' : '#a8946a', Math.max(1, T*.02), [[cx + T*.04, cy - T*.42], [cx + T*.04, cy - T*.08]]);
+    ctx.fillStyle = P.limeD; ctx.fillRect(px + T*.66, py + T*.8, T*.3, T*.12); ctx.fillStyle = P.lime; ctx.fillRect(px + T*.66, py + T*.78, T*.3, T*.04); }
+  else if (ch === 'x') { const cx = px + T*(.42 + hash(x,y,120)*.16), by = py + T*.9; // a dead tamarisk: low and twisted, the bark gone silver, a hundred fine twigs
+    ell(ctx, cx + T*.06, by, T*.2, T*.05, 'rgba(0,0,0,.32)'); ctx.lineCap = 'round';
+    const br = (x0, y0, a, l, w, d) => { const x1 = x0 + Math.cos(a)*l, y1 = y0 + Math.sin(a)*l; ctx.strokeStyle = d > 1 ? P.bark : shade(P.bark, -.1); ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo((x0 + x1)/2 + (hash(x, y, d*7) - .5)*l*.4, (y0 + y1)/2, x1, y1); ctx.stroke();
+      ctx.strokeStyle = P.barkD; ctx.lineWidth = w*.35; ctx.beginPath(); ctx.moveTo(x0 + w*.3, y0); ctx.lineTo(x1 + w*.3, y1); ctx.stroke();
+      if (d > 0) { br(x1, y1, a - .45 - hash(x, y, d*3)*.3, l*.7, w*.62, d - 1); br(x1, y1, a + .4 + hash(y, x, d*3)*.3, l*.66, w*.6, d - 1); } };
+    br(cx, by, -Math.PI/2 - .25 + (hash(x,y,121) - .5)*.3, T*.34, Math.max(2, T*.1), 3); ctx.lineCap = 'butt'; }
+  else if (ch === 'F') { const cx = px + T*.5, cy = py + T*.6; for (let i=0;i<7;i++){ const a = i/7*6.28; ell(ctx, cx + Math.cos(a)*T*.26, cy + Math.sin(a)*T*.16, T*.07, T*.05, i%2 ? P.lime : P.limeD); } // the march fire, in a ring of the hill's stones
+    ell(ctx, cx, cy, T*.16, T*.08, '#1a120a'); b2Flames(ctx, cx, cy, T, N ? 1 : .7); if (!N) for (let i=0;i<3;i++) b2Soft(ctx, cx + T*(.04 + i*.06), cy - T*(.32 + i*.18), T*(.08 + i*.04), 1.2, '200,196,186', .3 - i*.07); } // by day, its smoke
+  else if (ch !== '.' && ch !== ',') exitArrow(ctx, ch, px, py, T);
+  seaLight(); b2Firelit(ctx, x, y, T, N ? .3 : .1, 3);
+}
+TILEX.b6_c2_coast = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b62Coast(ctx, ch, x, y, T, !!dark));
+TILEX.b6_c2_coast_night = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b62Coast(ctx, ch, x, y, T, true));
+/* a battle's low cover on this ground: a waist-high knuckle of the hill's pale limestone, a thorn bush grown up against it */
+function b62Boulder(ctx, x, y, T, N){ const px = x*T, py = y*T, P = b62CP(N), h = hash(x, y), fl = h > .5 ? 1 : -1;
+  ell(ctx, px + T*.54, py + T*.84, T*.46, T*.11, N ? 'rgba(0,0,0,.5)' : 'rgba(50,38,24,.4)');
+  const rock = (k, ox, oy, s) => { const pts = [[.06,.86],[.08,.64],[.2,.5],[.36,.44],[.5,.36],[.68,.4],[.84,.5],[.94,.68],[.92,.86]].map(([a, b], i) => [px + T*(ox + (.5 + (a - .5)*fl)*s + (hash(x,y,i+130+k) - .5)*.06*s), py + T*(oy + b*s + (hash(y,x,i+131+k) - .5)*.07*s)]);
+    const g = ctx.createLinearGradient(px + T*ox, py + T*(oy + .3*s), px + T*(ox + s), py + T*(oy + .9*s)); g.addColorStop(0, P.limeL); g.addColorStop(.5, P.lime); g.addColorStop(1, P.limeD); poly(ctx, pts, g);
+    ctx.save(); poly(ctx, pts); ctx.clip(); ctx.strokeStyle = N ? 'rgba(0,0,0,.35)' : 'rgba(80,66,46,.4)'; ctx.lineWidth = Math.max(1, T*.02);
+      ctx.beginPath(); ctx.moveTo(px + T*(ox + .3*s), py + T*(oy + .44*s)); ctx.lineTo(px + T*(ox + .42*s), py + T*(oy + .66*s)); ctx.lineTo(px + T*(ox + .38*s), py + T*(oy + .9*s)); ctx.stroke(); // a fissure
+      ctx.fillStyle = N ? 'rgba(0,0,0,.25)' : 'rgba(60,46,30,.22)'; for (let i=0;i<5;i++) ell(ctx, px + T*(ox + (.2 + hash(x,y,i+150+k)*.6)*s), py + T*(oy + (.55 + hash(y,x,i+151+k)*.3)*s), T*.03*s, T*.02*s, ctx.fillStyle); // pitting
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(px, py + T*(oy + .74*s), T, T*s); ctx.restore(); }; // its shaded foot
+  rock(0, 0, 0, 1); rock(9, fl > 0 ? .6 : 0, .42, .42); // the knuckle, and a smaller stone broken off it
+  const bx = px + T*(fl > 0 ? .2 : .8), by = py + T*.8, r = T*.13; for (let i=0;i<6;i++){ const a = i/6*6.28 + h*4; ell(ctx, bx + Math.cos(a)*r*.5, by + Math.sin(a)*r*.38, r*.44, r*.34, i < 3 ? P.scrub : P.scrubD); } ell(ctx, bx - r*.2, by - r*.24, r*.4, r*.24, P.scrubL); }
+{ const _feat = drawFeature; drawFeature = function(ctx, ch, x, y, T, dark, style, map){ if (ch === 't' && (style === 'b6_c2_coast' || style === 'b6_c2_coast_night')) return b2Clip(ctx, x, y, T, () => b62Boulder(ctx, x, y, T, style === 'b6_c2_coast_night' || !!dark)); return _feat(ctx, ch, x, y, T, dark, style, map); }; }

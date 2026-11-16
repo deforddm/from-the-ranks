@@ -551,6 +551,7 @@ const AUDIO = (() => {
     // Book Six (100): the backdrops the engine borrows; chapters add their own
     b6_odhan_night:'desert_night', b6_ghatan_walls:'siege', b6_ghatan_fire:'burning', b6_barrows:'barrow', b6_coast:'sea_night', b6_plague_village:'rain', b6_gdanisban_rain:'rain',
     b6_kokakal:'sea', b6_sky:'night', b6_hanar_ara:'plain', b6_sea:'sea', b6_malaz:'city', b6_camp_night:'night',
+    b6_c2_coast:'burnt', b6_c2_coast_night:'burnt_night', b6_c4_town:'siege', b6_c4_town_night:'siege_night', // Book Six's own grounds (Nov 15), sounding as the grounds they replaced (b3_c5_domin, b3_c3_city)
     // Book Five's chapters: Letheras (81) in the city, Trate (82) on the sea, Kraig's Landing (83) on the river
     b5_c1_barracks:'city_night', b5_c1_lowwalk:'city', b5_c1_canal:'city', b5_c1_walk:'city', b5_c1_court:'interior', b5_c1_festival:'city_night', b5_c1_pittown:'city_night',
     b5_c2_quay:'sea', b5_c2_wharf:'sea', b5_c2_wrecks:'sea_night', b5_c2_hulk:'sea_night', b5_c2_hold:'interior', b5_c2_strand:'sea_night',

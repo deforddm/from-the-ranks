@@ -206,3 +206,117 @@ SCENEX.b6_gdanisban_rain = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = R
       + `<path d="M120 56 Q125 61 121 68" fill="none" stroke="#5a6ad0" stroke-opacity=".35" stroke-width="1.4"/>`); // a smear of the blue on the near blade's back
   }
 })();
+
+/* ---------------- ground: TILEX.b6_c4_town — the streets outside G'danisban's walls, at night, in the rain ----------------
+   A Seven Cities town: mud-brick houses plastered and flat-roofed, the odd small dome, the street packed earth gone to mud with the rain
+   standing in it, the city's own wall along the north with its gate shut. Replaces Book Three's Capustan (b3_c3_city_night), which this
+   chapter borrowed. The houses are 102b's b6MudWall, taller here, with window slits, nearly all of them dark. '.' the street, ',' rubble
+   (broken brick, sherds, a beam), '#' a house or the city wall (blocks; the top row is the wall), 'G' the gate, shut, '=' a stall's awning,
+   'w' a well, 'c' a handcart, 'p' the forward picket's post (a cart on its side, the picket's lamp); a battle's 't' is the engine's fallen
+   stone. The picket's lamp is the only warm light in the street. N = night (the chapter's only use). */
+const b64TP = N => N ? {mud:'#2c2925', mudL:'#38342e', grit:'#161412', sherd:'#4e3c2e', top:'#5e584e', topL:'#777064', face:'#2c2722', faceL:'#3e3832', brick:'#3a3028', brickD:'#1a1510',
+    crack:'rgba(0,0,0,.35)', door:'#060504', wood:'#2a2018', woodL:'#3c2e22', iron:'#4a4c52', jar:'#3a2c22', mat:'#32302c', pool:'#14181e', poolL:'rgba(130,150,190,.24)', lit:'150,166,206', wet:'8,10,14',
+    awn:[['#2a2e48', '#4a4438'], ['#4a3424', '#3e3a30']], lamp:'255,176,96', stone:'#4c4a46', stoneL:'#625f58'}
+  : {mud:'#7e6e56', mudL:'#94846a', grit:'#4e4232', sherd:'#a86a44', top:'#c0ae8a', topL:'#d8caa8', face:'#988462', faceL:'#ae9a76', brick:'#8a6c4a', brickD:'#5a4630',
+    crack:'rgba(90,70,44,.32)', door:'#1a120c', wood:'#5a4228', woodL:'#7a5c3a', iron:'#3a3a3e', jar:'#8a5a36', mat:'#a89a6a', pool:'#56626a', poolL:'rgba(220,230,236,.45)', lit:'255,246,226', wet:'40,32,24',
+    awn:[['#34407a', '#d8ccb0'], ['#9a4a2a', '#c8a868']], lamp:'255,190,110', stone:'#a89c84', stoneL:'#c8bea6'};
+const b64WallRow = y => y === 0 && !!tileMap && !!tileMap[0] && [...tileMap[0]].filter(c => c === '#' || c === 'G').length >= tileMap[0].length - 2; // the city's wall: the top row, when it is all wall and gate
+function b64Lamplit(ctx, x, y, T, P, a){ if (!tileMap) return; for (let dy=-3; dy<=3; dy++) for (let dx=-3; dx<=3; dx++){ const r = tileMap[y + dy]; if (!r || r[x + dx] !== 'p') continue; // the picket's lamp, pooled on the mud round it
+  const cx = (x + dx + .62)*T, cy = (y + dy + .3)*T, R = T*3.2, g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, `rgba(${P.lamp},${a})`); g.addColorStop(.4, `rgba(${P.lamp},${a*.4})`); g.addColorStop(1, `rgba(${P.lamp},0)`); ctx.fillStyle = g; ctx.fillRect(x*T, y*T, T, T); } }
+function b64Town(ctx, ch, x, y, T, N){
+  const px = x*T, py = y*T, h = hash(x, y), P = b64TP(N), fill = c => { ctx.fillStyle = c; ctx.fillRect(px, py, T, T); };
+  const mud = () => { fill(shade(P.mud, (h - .5)*.015)); b2Mottle(ctx, x, y, T, N ? .03 : .07, N ? .22 : .14, P.lit, 1.3);
+    ctx.fillStyle = P.grit; for (let i=0;i<5;i++) ctx.fillRect(px + hash(x,y,i+20)*T, py + hash(y,x,i+21)*T, Math.max(1, T*.035), Math.max(1, T*.03));
+    ctx.fillStyle = shade(P.mudL, .05); for (let i=0;i<3;i++) ctx.fillRect(px + hash(x,y,i+24)*T, py + hash(y,x,i+25)*T, Math.max(1, T*.04), Math.max(1, T*.025)); // a pale chip of plaster
+    if (h > .84) { const cx = px + T*(.25 + hash(x,y,30)*.5), cy = py + T*(.3 + hash(x,y,31)*.4), rx = T*(.13 + hash(x,y,32)*.1); ell(ctx, cx, cy, rx*1.1, rx*.5, `rgba(${P.wet},.4)`); ell(ctx, cx, cy, rx, rx*.4, P.pool); ell(ctx, cx - rx*.3, cy - rx*.1, rx*.42, rx*.07, P.poolL); // rain standing in the ruts
+      if (N) { ctx.strokeStyle = 'rgba(150,170,210,.25)'; ctx.lineWidth = 1; for (let i=0;i<2;i++){ ctx.beginPath(); ctx.ellipse(cx + (hash(x,y,i+33) - .5)*rx, cy, rx*.18, rx*.07, 0, 0, 7); ctx.stroke(); } } } // a ring where a drop lands
+    else if (h < .3) b2Prints(ctx, x, y, T, 3, N, 11); };
+  const rubble = () => { mud(); for (let i=0;i<6;i++){ const bx = px + T*(.08 + hash(x,y,i+40)*.7), by = py + T*(.12 + hash(x,y,i+41)*.7), w = T*(.1 + hash(x,y,i+42)*.14), hh = w*.6, sh = i%3 === 2; // broken mud-brick, a sherd or two of a jar
+      ctx.save(); ctx.translate(bx, by); ctx.rotate((hash(x,y,i+43) - .5)*1.2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(1, 2, w, hh); ctx.fillStyle = sh ? P.sherd : P.brick; ctx.fillRect(0, 0, w, hh); ctx.fillStyle = sh ? 'rgba(255,220,180,.15)' : P.topL; ctx.fillRect(0, 0, w, Math.max(1, hh*.25)); ctx.restore(); }
+    if (h > .45) B2F.line(ctx, N ? '#141009' : '#3a2a1a', Math.max(1.6, T*.06), [[px + T*.12, py + T*.78], [px + T*.84, py + T*.58]]); }; // a roof-beam come down
+  if (ch === '#' && b64WallRow(y)) { // the city's wall: a broad walk of plastered brick along the top, merlons on the street side, its tall face
+    const fy = py + T*.36; ctx.fillStyle = shade(P.top, -.06); ctx.fillRect(px, py, T, fy - py); b2Mottle(ctx, x, y, T, .02, .2, P.lit, 1);
+    for (let i=0;i<2;i++){ const mx = px + T*(.06 + i*.5); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(mx + T*.03, fy - T*.13, T*.3, T*.14); ctx.fillStyle = P.top; ctx.fillRect(mx, fy - T*.16, T*.3, T*.14); ctx.fillStyle = P.topL; ctx.fillRect(mx, fy - T*.16, T*.3, Math.max(1, T*.03)); } // merlons
+    const g = ctx.createLinearGradient(0, fy, 0, py + T); g.addColorStop(0, P.faceL); g.addColorStop(1, P.face); ctx.fillStyle = g; ctx.fillRect(px, fy, T, py + T - fy);
+    ctx.strokeStyle = N ? 'rgba(0,0,0,.35)' : 'rgba(70,52,34,.3)'; ctx.lineWidth = 1; for (let r=1;r<5;r++){ const yy = fy + r*(py + T - fy)/5; ctx.beginPath(); ctx.moveTo(px, yy); ctx.lineTo(px + T, yy); ctx.stroke(); for (let c=0;c<3;c++){ const xx = px + ((c + (r%2)*.5)/2.5)*T; ctx.beginPath(); ctx.moveTo(xx, yy - (py + T - fy)/5); ctx.lineTo(xx, yy); ctx.stroke(); } } // big courses of brick, the plaster long gone
+    ctx.fillStyle = N ? 'rgba(0,0,0,.25)' : 'rgba(60,44,30,.22)'; for (let i=0;i<3;i++) ctx.fillRect(px + hash(x,y,i+50)*T, fy + T*.02, T*(.04 + hash(x,y,i+51)*.05), (py + T - fy)*(.5 + hash(x,y,i+52)*.5)); // the rain's streaks
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(px, py + T - Math.max(1, T*.05), T, Math.max(1, T*.05)); b64Lamplit(ctx, x, y, T, P, N ? .2 : .08); return; }
+  if (ch === 'G') { mud(); // the gate, shut: a deep arch in the wall, two leaves of heavy timber banded in iron, the plaster round it
+    const left = b2Tile(x - 1, y) !== 'G', right = b2Tile(x + 1, y) !== 'G', fy = py + T*.36;
+    ctx.fillStyle = shade(P.top, -.06); ctx.fillRect(px, py, T, fy - py); ctx.fillStyle = P.face; ctx.fillRect(px, fy, T, py + T - fy);
+    const ax0 = left ? px + T*.14 : px, ax1 = right ? px + T*.86 : px + T, ay = fy + T*.08; // the opening, its arch shared across the two gate tiles
+    ctx.fillStyle = P.door; ctx.fillRect(ax0, ay + T*.06, ax1 - ax0, py + T - ay - T*.06); if (left) { ctx.beginPath(); ctx.moveTo(ax0, ay + T*.12); ctx.quadraticCurveTo(ax0 + T*.1, ay - T*.08, px + T, ay - T*.12); ctx.lineTo(px + T, ay + T*.12); ctx.fill(); } if (right) { ctx.beginPath(); ctx.moveTo(ax1, ay + T*.12); ctx.quadraticCurveTo(ax1 - T*.1, ay - T*.08, px, ay - T*.12); ctx.lineTo(px, ay + T*.12); ctx.fill(); }
+    const lx0 = ax0 + T*.04, lx1 = ax1 - T*.04, ly = ay + T*.12; const lg = ctx.createLinearGradient(lx0, 0, lx1, 0); lg.addColorStop(0, left ? P.woodL : P.wood); lg.addColorStop(1, right ? shade(P.wood, -.2) : P.wood); ctx.fillStyle = lg; ctx.fillRect(lx0, ly, lx1 - lx0, py + T - ly); // the leaf
+    ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; for (let i=1;i<4;i++){ const xx = lx0 + i*(lx1 - lx0)/4; ctx.beginPath(); ctx.moveTo(xx, ly); ctx.lineTo(xx, py + T); ctx.stroke(); } // planks
+    ctx.fillStyle = P.iron; for (let i=0;i<3;i++) ctx.fillRect(lx0, ly + T*(.08 + i*.17), lx1 - lx0, Math.max(1.5, T*.04)); ctx.fillStyle = N ? 'rgba(150,166,206,.22)' : 'rgba(220,210,190,.6)'; for (let i=0;i<3;i++) for (let k=0;k<3;k++) ctx.fillRect(lx0 + T*(.1 + k*.28), ly + T*(.085 + i*.17), Math.max(1, T*.025), Math.max(1, T*.025)); // iron bands, studs
+    if (right) { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(px, ly, Math.max(1, T*.03), py + T - ly); } // where the two leaves meet
+    ctx.fillStyle = P.topL; ctx.fillRect(px, fy, T, Math.max(1, T*.03)); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(px, py + T - Math.max(1, T*.05), T, Math.max(1, T*.05)); b64Lamplit(ctx, x, y, T, P, N ? .2 : .08); return; }
+  if (ch === '#') { mud(); const {face, fy} = b6MudWall(ctx, x, y, T, P, N, .52); const W = (dx, dy) => b6WallC(b2Tile(x + dx, y + dy));
+    if (!face && x > 0 && y > 0 && tileMap && x < tileMap[0].length - 1 && W(0, -1) && W(0, 1) && W(-1, 0) && W(1, 0) && hash(x,y,60) > .7) { const cx = px + T*.5, cy = py + T*.5, r = T*.3; ell(ctx, cx + r*.2, cy + r*.22, r*1.02, r*.92, 'rgba(0,0,0,.35)'); const g = ctx.createRadialGradient(cx - r*.35, cy - r*.4, r*.05, cx, cy, r); g.addColorStop(0, P.topL); g.addColorStop(.6, P.top); g.addColorStop(1, shade(P.top, -.4)); ell(ctx, cx, cy, r, r, g); } // a small dome
+    if (face && hash(x,y,61) > .4) { const wx = px + T*(.3 + hash(x,y,62)*.32), wt = fy + T*.1, lit = N && hash(x,y,63) > .9; ctx.fillStyle = lit ? 'rgba(255,170,90,.75)' : P.door; ctx.beginPath(); ctx.moveTo(wx, wt + T*.22); ctx.lineTo(wx, wt + T*.06); ctx.arc(wx + T*.06, wt + T*.06, T*.06, Math.PI, 0); ctx.lineTo(wx + T*.12, wt + T*.22); ctx.fill(); // a window slit, a lamp in one of them
+      if (lit) glow(ctx, wx + T*.06, wt + T*.12, T*.3, '#ffa860', .2); ctx.fillStyle = P.wood; ctx.fillRect(wx - T*.02, wt + T*.22, T*.16, Math.max(1, T*.03)); }
+    b64Lamplit(ctx, x, y, T, P, N ? .2 : .08); return; }
+  if (ch === ',') rubble(); else mud();
+  if (ch === '=') { const top = py + T*.12, bot = py + T*.58, [c0, c1] = P.awn[Math.floor(h*2) % 2]; ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(px + T*.08, bot, T*.88, T*.28); // a stall's awning, sodden, sagging in the middle and dripping
+    ctx.fillStyle = P.wood; ctx.fillRect(px + T*.05, top, T*.05, T*.78); ctx.fillRect(px + T*.9, top, T*.05, T*.78);
+    for (let i=0;i<5;i++){ const x0 = px + i*T*.2, sag = Math.sin((i + .5)/5*Math.PI)*T*.06; ctx.fillStyle = i%2 ? c0 : c1; ctx.fillRect(x0, top + sag*.5, T*.2, bot - top); ctx.beginPath(); ctx.arc(x0 + T*.1, bot + sag*.5, T*.1, 0, Math.PI); ctx.fill(); }
+    ctx.fillStyle = N ? 'rgba(150,166,206,.08)' : 'rgba(255,252,236,.25)'; ctx.fillRect(px, top, T, T*.06); ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(px, bot - T*.06, T, T*.08);
+    ctx.fillStyle = N ? 'rgba(150,170,210,.45)' : 'rgba(200,214,224,.6)'; for (let i=0;i<4;i++) ctx.fillRect(px + T*(.14 + i*.22), bot + T*(.14 + hash(x,y,i+70)*.12), 1, Math.max(1.5, T*.04)); // drips
+    if (hash(x,y,72) > .5) { ell(ctx, px + T*.34, py + T*.82, T*.07, T*.05, P.jar); ctx.fillStyle = P.stone; ctx.fillRect(px + T*.56, py + T*.76, T*.18, T*.12); } } // what is left on it to sell
+  else if (ch === 'w') { const cx = px + T*.5, cy = py + T*.58, r = T*.3; // the square's well: a square curb of plastered brick, a frame and a pulley, the rope gone
+    ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px + T*.18, py + T*.34, T*.74, T*.6); ctx.fillStyle = P.face; ctx.fillRect(px + T*.12, py + T*.3, T*.72, T*.6); ctx.fillStyle = P.top; ctx.fillRect(px + T*.12, py + T*.3, T*.72, T*.46); ctx.fillStyle = P.topL; ctx.fillRect(px + T*.12, py + T*.3, T*.72, Math.max(1, T*.03));
+    ctx.fillStyle = '#050608'; ctx.fillRect(cx - r*.62, cy - r*.62, r*1.24, r*.9); ctx.fillStyle = N ? 'rgba(120,140,180,.25)' : 'rgba(150,170,180,.35)'; ctx.fillRect(cx - r*.4, cy - r*.3, r*.6, Math.max(1, T*.02)); // black water, the sky in it
+    ctx.fillStyle = P.wood; ctx.fillRect(px + T*.14, py + T*.08, T*.05, T*.3); ctx.fillRect(px + T*.77, py + T*.08, T*.05, T*.3); ctx.fillRect(px + T*.12, py + T*.06, T*.72, T*.05); ell(ctx, cx, py + T*.09, T*.06, T*.06, P.woodL); ell(ctx, cx, py + T*.09, T*.025, T*.025, P.wood); } // the frame, the wheel
+  else if (ch === 'c') { ell(ctx, px + T*.54, py + T*.8, T*.42, T*.1, 'rgba(0,0,0,.45)'); ctx.save(); ctx.translate(px + T*.5, py + T*.52); ctx.rotate((h - .5)*.5); // a handcart, left where it stopped, an oilcloth over what is in it
+    ctx.fillStyle = P.wood; ctx.fillRect(-T*.36, -T*.18, T*.6, T*.36); ctx.fillStyle = P.woodL; ctx.fillRect(-T*.36, -T*.18, T*.6, T*.05); ctx.fillStyle = P.wood; ctx.fillRect(T*.24, -T*.04, T*.24, T*.04); ctx.fillRect(T*.24, T*.06, T*.24, T*.04); // bed, shafts
+    ctx.fillStyle = N ? '#2e2e30' : '#5a5a4e'; ctx.beginPath(); ctx.moveTo(-T*.34, -T*.14); ctx.quadraticCurveTo(-T*.06, -T*.3, T*.22, -T*.14); ctx.lineTo(T*.22, T*.14); ctx.lineTo(-T*.34, T*.14); ctx.fill(); ctx.fillStyle = N ? 'rgba(150,166,206,.18)' : 'rgba(230,236,240,.3)'; ctx.fillRect(-T*.2, -T*.2, T*.24, Math.max(1, T*.025)); // the oilcloth, wet
+    ell(ctx, -T*.18, T*.24, T*.12, T*.05, '#120c08'); ell(ctx, T*.1, T*.24, T*.12, T*.05, '#120c08'); ctx.restore(); }
+  else if (ch === 'p') { const by = py + T*.82; // the forward picket's post: a cart on its side across the street, a spear stood against it, the picket's hooded lamp on a pole
+    ell(ctx, px + T*.5, by + T*.04, T*.5, T*.1, 'rgba(0,0,0,.5)'); ctx.fillStyle = shade(P.wood, -.1); ctx.fillRect(px + T*.04, py + T*.42, T*.92, T*.4); ctx.fillStyle = P.woodL; ctx.fillRect(px + T*.04, py + T*.42, T*.92, Math.max(1, T*.05)); // the bed, on edge
+    ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1; for (let i=1;i<5;i++){ ctx.beginPath(); ctx.moveTo(px + T*.04, py + T*(.42 + i*.08)); ctx.lineTo(px + T*.96, py + T*(.42 + i*.08)); ctx.stroke(); } // its boards
+    [.24, .72].forEach(k => { ell(ctx, px + T*k, py + T*.42, T*.14, T*.05, '#120c08'); ctx.strokeStyle = P.woodL; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.ellipse(px + T*k, py + T*.42, T*.13, T*.045, 0, 0, 7); ctx.stroke(); }); // the wheels, up in the air
+    B2F.line(ctx, N ? '#5a5a62' : '#8a8a90', Math.max(1, T*.025), [[px + T*.14, by], [px + T*.3, py + T*.1]]); poly(ctx, [[px + T*.3, py + T*.1],[px + T*.33, py + T*.02],[px + T*.32, py + T*.13]], N ? '#8a8a96' : '#c8c8d0'); // a spear
+    ctx.fillStyle = P.wood; ctx.fillRect(px + T*.6, py + T*.08, T*.04, T*.36); ctx.fillRect(px + T*.6, py + T*.08, T*.12, T*.03); ctx.fillStyle = '#1a1612'; ctx.fillRect(px + T*.68, py + T*.12, T*.08, T*.1); ctx.fillStyle = `rgba(${P.lamp},.95)`; ctx.fillRect(px + T*.69, py + T*.17, T*.06, T*.05); glow(ctx, px + T*.72, py + T*.2, T*.5, '#ffb060', N ? .45 : .2); } // the lamp
+  else if (ch !== '.' && ch !== ',') exitArrow(ctx, ch, px, py, T);
+  b64Lamplit(ctx, x, y, T, P, N ? .2 : .08);
+}
+TILEX.b6_c4_town = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b64Town(ctx, ch, x, y, T, !!dark));
+TILEX.b6_c4_town_night = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b64Town(ctx, ch, x, y, T, true));
+/* a battle's low cover in these streets: the front of a house come down in a heap of mud-brick, a big storage jar still standing in it */
+function b64Heap(ctx, x, y, T, N){ const px = x*T, py = y*T, P = b64TP(N), h = hash(x, y);
+  ell(ctx, px + T*.52, py + T*.86, T*.46, T*.11, 'rgba(0,0,0,.5)');
+  poly(ctx, [[px + T*.04, py + T*.88],[px + T*.16, py + T*.56],[px + T*.36, py + T*.4],[px + T*.6, py + T*.44],[px + T*.82, py + T*.56],[px + T*.96, py + T*.88]], P.brickD);
+  for (let i=0;i<10;i++){ const bx = px + T*(.12 + hash(x,y,i+160)*.66), by = py + T*(.46 + hash(x,y,i+161)*.34), w = T*(.12 + hash(x,y,i+162)*.08); ctx.save(); ctx.translate(bx, by); ctx.rotate((hash(x,y,i+163) - .5)*1.1);
+    ctx.fillStyle = i%4 === 3 ? P.top : P.brick; ctx.fillRect(0, 0, w, w*.55); ctx.fillStyle = i%4 === 3 ? P.topL : 'rgba(255,230,200,.12)'; ctx.fillRect(0, 0, w, Math.max(1, w*.14)); ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.strokeRect(.5, .5, w - 1, w*.55 - 1); ctx.restore(); } // bricks, a slab of the plaster still on some
+  const jx = px + T*(h > .5 ? .3 : .68), jy = py + T*.5; ell(ctx, jx + T*.05, jy + T*.24, T*.14, T*.05, 'rgba(0,0,0,.4)'); const g = ctx.createRadialGradient(jx - T*.06, jy - T*.04, T*.02, jx, jy, T*.2); g.addColorStop(0, N ? '#6a5040' : '#c88a5a'); g.addColorStop(1, N ? '#2a1c14' : '#6a3e22'); // a big jar, its shoulder broken
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(jx - T*.06, jy - T*.2); ctx.quadraticCurveTo(jx - T*.2, jy - T*.12, jx - T*.15, jy + T*.12); ctx.quadraticCurveTo(jx, jy + T*.28, jx + T*.15, jy + T*.12); ctx.quadraticCurveTo(jx + T*.2, jy - T*.12, jx + T*.06, jy - T*.2); ctx.lineTo(jx + T*.02, jy - T*.14); ctx.lineTo(jx - T*.02, jy - T*.18); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#0a0806'; ell(ctx, jx, jy - T*.18, T*.05, T*.02, '#0a0806'); ctx.fillStyle = N ? 'rgba(150,166,206,.22)' : 'rgba(255,240,220,.4)'; ctx.fillRect(jx - T*.12, jy - T*.08, Math.max(1, T*.025), T*.14); // the wet shine on it
+  b64Lamplit(ctx, x, y, T, P, N ? .2 : .08); }
+{ const _feat = drawFeature; drawFeature = function(ctx, ch, x, y, T, dark, style, map){ if (ch === 't' && (style === 'b6_c4_town' || style === 'b6_c4_town_night')) return b2Clip(ctx, x, y, T, () => b64Heap(ctx, x, y, T, style === 'b6_c4_town_night' || !!dark)); return _feat(ctx, ch, x, y, T, dark, style, map); }; }
+/* v13.21 (David, Nov 15: "yes" to the Book Six ground fix): the talk backdrop for the outer streets, which had borrowed Capustan's walls.
+   G'danisban outside its own wall at night: flat-roofed mud-brick houses, dark windows, the wall and its shut gate behind, a wet street,
+   rain, and one warm lamp at the picket's post. The same country as the b6_c4_town_night ground. */
+SCENEX.b6_c4_outer = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, x = ctx, hz = H*.5;
+  let g = x.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, '#07080e'); g.addColorStop(1, '#1a1a22'); x.fillStyle = g; x.fillRect(0, 0, W, hz + 2);
+  // the city wall across the back, crenellated, the gate shut
+  const wy = H*.34; x.fillStyle = '#211c1a'; x.fillRect(0, wy, W, hz - wy + 2); for (let px = 0; px < W; px += W*.03) x.fillRect(px, wy - H*.025, W*.016, H*.026);
+  x.fillStyle = '#16120f'; const gx = W*.58; x.beginPath(); x.moveTo(gx - W*.05, hz); x.lineTo(gx - W*.05, wy + H*.06); x.quadraticCurveTo(gx, wy - H*.01, gx + W*.05, wy + H*.06); x.lineTo(gx + W*.05, hz); x.fill();
+  x.strokeStyle = 'rgba(120,96,70,.35)'; x.lineWidth = 1; x.beginPath(); x.moveTo(gx, wy + H*.03); x.lineTo(gx, hz); x.stroke();
+  // the street, wet, running up to the gate
+  g = x.createLinearGradient(0, hz, 0, H); g.addColorStop(0, '#2a241f'); g.addColorStop(1, '#14100d'); x.fillStyle = g; x.fillRect(0, hz, W, H - hz);
+  // houses on both sides: flat roofs, parapets, a dome, dark slits
+  const house = (x0, w, h, dome, near) => { const y0 = hz + (near ? H*.16 : H*.02), top = y0 - h;
+    x.fillStyle = near ? '#2c2520' : '#241e1a'; x.fillRect(x0, top, w, h + 2);
+    x.fillStyle = near ? '#352c25' : '#2b2420'; x.fillRect(x0 - 2, top - 3, w + 4, 4); // the parapet
+    if (dome) { x.beginPath(); x.arc(x0 + w*.5, top - 2, w*.22, Math.PI, 0); x.fill(); }
+    x.fillStyle = '#0c0a08'; for (let i = 0; i < 2; i++) x.fillRect(x0 + w*(.25 + i*.4), top + h*.3, Math.max(2, w*.08), h*.18); // the windows, dark
+    x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(x0 + w*.82, top, w*.18, h); };
+  house(W*.02, W*.16, H*.13, false, false); house(W*.19, W*.12, H*.1, true, false); house(W*.72, W*.13, H*.12, false, false); house(W*.86, W*.12, H*.09, true, false);
+  house(-W*.04, W*.24, H*.3, false, true); house(W*.8, W*.26, H*.27, false, true);
+  // puddles holding the sky
+  [[.32, .78, .09], [.55, .7, .06], [.46, .9, .12], [.68, .84, .07]].forEach(([px, py, r]) => { x.fillStyle = 'rgba(70,80,100,.35)'; x.beginPath(); x.ellipse(W*px, H*py, W*r, H*r*.18, 0, 0, Math.PI*2); x.fill(); });
+  // the picket's lamp, by an overturned cart, the one warm light
+  const lx = W*.7, ly = H*.66, fl = .85 + (mo ? .15*Math.sin(t/220) : 0); g = x.createRadialGradient(lx, ly, 0, lx, ly, W*.2); g.addColorStop(0, `rgba(255,190,110,${.42*fl})`); g.addColorStop(1, 'rgba(255,160,80,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#100c0a'; x.fillRect(lx - W*.08, ly + H*.02, W*.1, H*.05); x.beginPath(); x.arc(lx - W*.06, ly + H*.07, H*.03, 0, Math.PI*2); x.fill(); // the cart on its side
+  x.fillStyle = '#ffd890'; x.fillRect(lx + W*.025, ly - H*.01, 3, 4); x.strokeStyle = '#100c0a'; x.beginPath(); x.moveTo(lx + W*.03, ly - H*.01); x.lineTo(lx + W*.03, ly - H*.12); x.stroke(); // lamp and spear
+  b64Rain(ctx, W, H, t, mo, 70, .22); };

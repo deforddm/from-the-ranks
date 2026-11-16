@@ -21,8 +21,9 @@
    Backdrops: b6_gdanisban_rain (100's, the artist's), b6_camp_night (100's, borrowed), and two of this file's own, which borrow until drawn:
    b6_c4_edge (the camp's edge at night, the ditch and the open ground toward the city; borrows b3_c2_camp_night) and b6_c4_outer (the
    streets outside G'danisban's walls at night, the gate shut; borrows b3_c3_walls_night).
-   Ground: existing shelf styles only (b3camp, b3camp_night, b3_c3_city_night). Foe kinds: b3_c4_priest, b4_c7_fleer (or b6_cultist when
-   Chapter 2's art is in), b4_c1_tough, and 100's b6_bandit / b6_rebelbow. */
+   Ground: shelf styles b3camp and b3camp_night for the camp; the streets outside the walls (b6_c4_outer, b6_c4_streets) are on 104b's
+   own Seven Cities town, b6_c4_town_night (David, Nov 15: they were on Book Three's Capustan, b3_c3_city_night). Foe kinds:
+   b3_c4_priest, b4_c7_fleer (or b6_cultist when Chapter 2's art is in), b4_c1_tough, and 100's b6_bandit / b6_rebelbow. */
 
 /* ---- small helpers (b64: Book Six, Chapter Four) ---- */
 const b64L = (id, n) => { if (b6In(id) && S.loy && S.loy[id] != null) loy(id, n); };
@@ -86,7 +87,7 @@ ROSTER_FIRES.bh = ROSTER_FIRES.bh || {}; ROSTER_FIRES.bh[4] = ['b6_c4_fire'];
 
 /* this chapter's own two backdrops borrow an earlier drawing until 104b paints them (100's pattern) */
 SCENEX.b6_c4_edge ??= (cv, t) => (SCENEX.b3_c2_camp_night || SCENEX.b6_camp_night || ((c, tt) => drawCamp(c, tt, true)))(cv, t);
-SCENEX.b6_c4_outer ??= (cv, t) => (SCENEX.b3_c3_walls_night || SCENEX.b6_camp_night || ((c, tt) => drawCamp(c, tt, true)))(cv, t);
+// v13.21: the outer streets' talk backdrop is 104b's own (SCENEX.b6_c4_outer), no longer Capustan's walls.
 
 const B6CH4 = {
   title:'G\'danisban', number:'Four',
@@ -144,9 +145,9 @@ const B6CH4 = {
       npcs:[
         {id:'sentry', name:'A sentry of the Seventh', kind:'b2soldier', x:9, y:4, node:()=>'b6_c4_sentry', fresh:()=>!S.f.b6_c4_sentry} ] },
 
-    /* 16 x 12 (b3_c3_city_night; phase 2). The streets outside G'danisban's walls: # walls and house-fronts  G the gate, shut  . paving
+    /* 16 x 12 (b6_c4_town_night; phase 2). The streets outside G'danisban's walls: # walls and house-fronts  G the gate, shut  . the street
        , rubble  = awnings  w a well  c a cart  p the forward picket's post  v back to the camp */
-    { id:'b6_c4_outer', title:'Outside the walls', sub:'G\'danisban · the outer streets · night', hint:'Tap ground to move · the picket\'s post is east · the gate stays shut', decor:'b3_c3_city_night', dark:true,
+    { id:'b6_c4_outer', title:'Outside the walls', sub:'G\'danisban · the outer streets · night', hint:'Tap ground to move · the picket\'s post is east · the gate stays shut', decor:'b6_c4_town_night', dark:true,
       map:[ "######GG########",
             "#..,....,....=.#",
             "#.=....w.....,.#",
@@ -185,7 +186,7 @@ const B6CH4 = {
         foes:[['b6_c4_mourner',1,1],['b6_c4_mourner',6,1],['b6_c4_mourner',2,0],['b6_c4_mourner',4,2]]} },
     /* phase 2: the forward picket's post in the streets outside the walls, overrun from the gate-ward. It spreads the fever (feverRisk;
        v9.0-notes: "the G'danisban streets") */
-    b6_c4_streets:{title:'The forward picket', style:'b3_c3_city_night', dark:true, feverRisk:'the streets outside the walls', warrenText:'Outside G\'danisban · the warrens reek of the plague here, by the walls', warren:{denul:.85, meanas:.85}, music:'battle',
+    b6_c4_streets:{title:'The forward picket', style:'b6_c4_town_night', dark:true, feverRisk:'the streets outside the walls', warrenText:'Outside G\'danisban · the warrens reek of the plague here, by the walls', warren:{denul:.85, meanas:.85}, music:'battle',
       map:["#..,...#","#......#","#.t..t.#","#......#","##.##.##","#......#","#.t...,#","#......#","#......#","#......#"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]], allies:[['b6_regular',1,7],['b6_regular',6,7]],
       foes:[['b6_c4_gateman',2,1],['b6_c4_gateman',5,1],['b6_c4_gateman',3,2],['b6_c4_ringleader',4,0],['b6_bandit',1,3]], xp:200, after:'b6_c4_streets_after',
