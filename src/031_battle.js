@@ -103,7 +103,7 @@ function startBattle(id, opt={}){
   if (S.scene === 'battle' && S.battle === id && S.binv) S.inv = Object.assign({}, S.binv); else S.binv = Object.assign({}, S.inv);
   S.scene = 'battle'; S.battle = id; S.bopt = opt; S.node = null; S.bg = 'tunnel'; if (def.mortal) S.f.lastFallen = []; save();
   const snap = JSON.stringify(S);
-  view = 'battle'; AUDIO.setScene(def.music || 'battle');
+  view = 'battle'; AUDIO.setScene(def.music || 'battle'); if (def.mortal && !opt.carry) AUDIO.play('mortal'); // the book's mortal fight opens on its own sting (series polish §4); not again on its second map
   B = {def, id, opt, snap, warren:def.warren || {meanas:1, denul:1}, units:[], order:[], idx:-1, round:0, fires:[], smoke:[], fx:[], parts:[], log:[], used:Object.assign({}, opt.used || {}), cur:null, moved:false, acted:false, mode:null, aim:null, busy:true, over:false, turn:0, anim:null};
   SQUAD().forEach((pid,i) => { const p = def.party[i] || def.party[def.party.length - 1]; const at = freeNear(p[0], p[1]) || {x:p[0], y:p[1]}; B.units.push(mkParty(pid, at.x, at.y)); });
   if (opt.carry) B.units.forEach(u => { if (u.side === 'p' && opt.carry[u.id] != null) { u.hp = clamp(opt.carry[u.id], 1, u.maxhp); u.strain = (opt.strain && opt.strain[u.id]) || 0; u.ward = (opt.wards && opt.wards[u.id]) || 0; } }); // into the second area as they came out of the first

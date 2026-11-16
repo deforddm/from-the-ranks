@@ -32,14 +32,14 @@ ok(names.amb.length >= 38, names.amb.length + ' ambiences');
 const silentOk = new Set(); // none may be silent
 for (const k of names.sfx) {
   const args = k === 'house' ? ['High House Death'] : k === 'dice' ? [true] : k === 'bark' ? [2] : [];
-  const r = await render({ sfx: k, args, sec: k === 'cusser' || k === 'chapter' || k === 'choice' || k === 'reveal' ? 3.5 : 1.5 });
+  const r = await render({ sfx: k, args, sec: k === 'cusser' || k === 'chapter' || k === 'choice' || k === 'reveal' || k === 'mortal' || k === 'finale' || k === 'coda' ? 3.5 : 1.5 });
   ok(r.nan === 0 && r.peak > .002 && r.peak <= 1 && r.rms > 5e-5, `sfx ${k}: peak ${r.peak.toFixed(3)} rms ${r.rms.toFixed(4)}${r.nan ? ' NaN!' : ''}`);
 }
 for (const h of ['High House Dark', 'High House Shadow', 'High House Life', 'High House Light', 'High House Chains', 'Unaligned', '—', 'The Empty Hold', 'The Fulcra']) { // v8.0: Book Five's tiles of the Holds knock on stone
   const r = await render({ sfx: 'house', args: [h], sec: 2.5, voice: h.includes('Chains') ? 'moi' : h.includes('Life') ? 'dg' : /Hold|Fulcra/.test(h) ? 'mt' : 'gotm' });
   ok(r.nan === 0 && r.peak > .003 && r.peak <= 1, `house ${h}: peak ${r.peak.toFixed(3)}`);
 }
-for (const v of ['dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice']) {
+for (const v of ['dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']) for (const k of ['chapter', 'choice', 'win', 'lose', 'up', 'trick', 'heal', 'magic', 'grey', 'ice', 'mortal', 'finale']) {
   const r = await render({ sfx: k, sec: 3, voice: v });
   ok(r.nan === 0 && r.peak > .004 && r.peak <= 1, `sfx ${k} in ${v}: peak ${r.peak.toFixed(3)}`);
 }
@@ -88,9 +88,9 @@ ok(b4p.join() === 'city_night,desert_night,camp_night,column_night,desert_night,
 const b5v = await page.evaluate(() => { const out = {}; S = newState('Hask'); S.book = 'mt'; AUDIO.revoice(); out.mt = AUDIO._dev.state.voice; out.title = AUDIO._dev.cue('title'); out.end = AUDIO._dev.cue('end'); S.book = 'gotm'; AUDIO.revoice();
   out.places = ['b5_barracks', 'b5_trate_harbour', 'b5_landing', 'b5_highfort', 'b5_road_south', 'b5_branskeep', 'b5_letheras', 'b5_nowhere', 'b5_nowhere_night'].map(k => AUDIO._dev.placeAmb(k)); return out; });
 ok(b5v.mt === 'mt' && b5v.title && b5v.title.amb === 'river_night' && b5v.end && b5v.end.amb === 'city_night', `Book Five's voice, its title on the river at night and its end in the city at night (${b5v.mt}, ${JSON.stringify(b5v.title)}, ${JSON.stringify(b5v.end)})`);
-ok(b5v.places.join() === 'city_night,sea,river_night,hills,burnt,hills,city,river,river_night', 'Book Five\'s reading places, and b5_ falling to the river country: ' + b5v.places.join(', '));
+ok(b5v.places.join() === 'city_night,sea,river_night,hills,burnt,hills,canal,river,river_night', 'Book Five\'s reading places, and b5_ falling to the river country: ' + b5v.places.join(', '));
 const b5c = await page.evaluate(() => ['b5_c1_lowwalk', 'b5_c1_festival', 'b5_c1_court', 'b5_c2_quay', 'b5_c2_wrecks', 'b5_c2_strand', 'b5_c2_hold', 'b5_c3_dock', 'b5_c3_barges', 'b5_c3_greenfire', 'b5_c3_tents'].map(k => AUDIO._dev.placeAmb(k)));
-ok(b5c.join() === 'city,city_night,interior,sea,sea_night,sea_night,interior,river,river_night,river_night,river', 'Book Five\'s chapters: Letheras in the city, Trate on the sea, Kraig\'s Landing on the river: ' + b5c.join(', '));
+ok(b5c.join() === 'canal,city_night,interior,sea,sea_night,sea_night,interior,river,river_night,river_night,river', 'Book Five\'s chapters: Letheras in the city, Trate on the sea, Kraig\'s Landing on the river: ' + b5c.join(', '));
 const b5d = await page.evaluate(() => ['b5_c4_road', 'b5_c4_rampart', 'b5_c4_field', 'b5_c4_gully', 'b5_c4_lightning', 'b5_c4_wood', 'b5_c4_surrender'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b5d.join() === 'forest,siege,hills,night,siege,forest_night,plain', 'Book Five\'s High Fort: the forest road, the rampart, the field, the gully at night, the battle, the wood, the road south: ' + b5d.join(', '));
 const b5e = await page.evaluate(() => ['b5_c5_road', 'b5_c5_burned', 'b5_c5_farm', 'b5_c5_cache', 'b5_c5_keep', 'b5_c5_arrival'].map(k => AUDIO._dev.placeAmb(k)));
@@ -98,7 +98,26 @@ ok(b5e.join() === 'burnt,burnt,burnt,camp,camp,hills', 'Book Five\'s road south:
 const b5f = await page.evaluate(() => ['b5_c6_lines', 'b5_c6_eve', 'b5_c6_shore', 'b5_c6_channel', 'b5_c6_pillars', 'b5_c6_break', 'b5_c6_hills', 'b5_c6_dissent', 'b5_c6_barrow'].map(k => AUDIO._dev.placeAmb(k)));
 ok(b5f.join() === 'camp_night,camp_night,lake,siege,siege,siege,hills,plain,barrow', 'Book Five\'s Brans Keep: the lines and the eve at night, the lake shore, the channel and the pillars and the break, the hills, the Dissent road, the barrow: ' + b5f.join(', '));
 const b5g = await page.evaluate(() => ['b5_c7_streets', 'b5_c7_night', 'b5_c7_canalnight', 'b5_c7_canal', 'b5_c7_walls', 'b5_c7_sorcery', 'b5_c7_under', 'b5_c7_walk', 'b5_c7_finale'].map(k => AUDIO._dev.placeAmb(k)));
-ok(b5g.join() === 'city_night,burning,city_night,city,city,dark,lake,city_night,city_night', 'Book Five\'s fall of Letheras: the streets at night and the city burning, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after: ' + b5g.join(', '));
+ok(b5g.join() === 'city_night,burning,canal,canal,city,dark,canal,canal,city_night', 'Book Five\'s fall of Letheras: the streets at night and the city burning, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after: ' + b5g.join(', '));
+
+/* the sound pass (series polish §4): the new places resolve, each fight's music is fixed by its id and a long book hears all three, and the
+   mortal fight, the finale and the coda are stingers on the music bus */
+const sp = await page.evaluate(() => { const A = AUDIO._dev, out = {};
+  out.places = ['b5_c1_canal', 'b5_c7_canalnight', 'b7_c2_bridge', 'b7_c7_after', 'alley_night', 'roof_night', 'b8_daru_night', 'b8_c1_roofs', 'b8_gadrobi_night', 'b9_wastes', 'b9_c4_wastes', 'b9_c5_wash', 'b10_glass', 'b10_glass_night', 'b10_c3_ground', 'b10_traces'].map(k => A.placeAmb(k));
+  out.styles = [A.battleAmb({ b: { style: 'city', dark: true } }), A.battleAmb({ b: { style: 'b9_c4_wastes', dark: true } }), A.battleAmb({ b: { style: 'b10_c5_ground' } })];
+  S = newState('Hask'); const ids = {}; Object.keys(BATTLES).forEach(id => { S.battle = id; const c = A.cue('battle').mus; ids[c] = (ids[c] || 0) + 1; }); out.ids = ids;
+  S.battle = Object.keys(BATTLES)[0]; out.same = [A.cue('battle').mus, A.cue('battle').mus];
+  S.book = 'tcg'; AUDIO.revoice(); out.titleTcg = A.cue('title').amb; S.book = 'dod'; AUDIO.revoice(); out.titleDod = A.cue('title').amb; S.book = 'tth'; AUDIO.revoice(); out.titleTth = A.cue('title').amb; S.book = 'gotm'; AUDIO.revoice(); S = null;
+  out.mortal = Object.entries(BATTLES).filter(([k, d]) => d && d.mortal).map(([k]) => k); return out; });
+ok(sp.places.join() === 'canal,canal,canal,canal,daru_night,daru_night,daru_night,daru_night,daru_night,wastes,wastes,wastes,glass,glass,glass,glass', 'the canals, Darujhistan at night, the Wastes and the glass: ' + sp.places.join(', '));
+ok(sp.styles.join() === 'daru_night,wastes,glass', 'fights in those places: ' + sp.styles.join(', '));
+ok(sp.ids.battle > 10 && sp.ids.battle2 > 10 && sp.ids.battle3 > 10 && sp.same[0] === sp.same[1], `each fight's music by its id: ${JSON.stringify(sp.ids)}, the same fight twice: ${sp.same.join(' = ')}`);
+ok(sp.titleTcg === 'glass' && sp.titleDod === 'wastes' && sp.titleTth === 'daru_night', `the titles: Book Ten on the glass, Nine in the Wastes, Eight in Darujhistan at night (${sp.titleTcg}, ${sp.titleDod}, ${sp.titleTth})`);
+ok(sp.mortal.length >= 10, `${sp.mortal.length} mortal fights open on the mortal sting: ${sp.mortal.join(', ')}`);
+const coda = await render({ sfx: 'coda', sec: 30, voice: 'tcg' });
+ok(coda.nan === 0 && coda.peak > .01 && coda.peak <= 1 && coda.lateRms > .0005, `the coda (Book Ten, Book One's flute answering): 30 s, peak ${coda.peak.toFixed(3)}, still sounding at the end (${coda.lateRms.toFixed(4)})`);
+const titleSung = await render({ mus: 'title', voice: 'gotm', sec: 18 });
+ok(titleSung.nan === 0 && titleSung.lateRms > .002, `the title, with the theme's first half two bars in: late rms ${titleSung.lateRms.toFixed(4)}`);
 
 /* blows by verb */
 const blows = await page.evaluate(() => ['brings the long mace down on', 'drives a spear at', 'claws at', 'slings a stone at', 'looses a quarrel at', 'throws grey sorcery at', 'lays a hand of ice on', 'cuts at', 'bites', 'swings a fist like a mallet at'].map(v => AUDIO.blow(v)));
