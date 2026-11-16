@@ -7,16 +7,21 @@
 {
   const B = (o) => Object.assign({fill: '#3a3a3a', dark: '#1a1a1c', rim: '#e0d8c8', helmc: '#3e424a', packc: '#2a241c', cloak: '', kit: 'none', head: 'helm'}, o);
   const quorl = (x, y, k, fill, up = 0) => { const f = PK.f; return `<g transform="translate(${f(x)} ${f(y)}) scale(${k})"><g fill="#3a4258" fill-opacity=".35" stroke="#8a9ab8" stroke-width=".5" stroke-opacity=".5"><ellipse cx="-6" cy="-20" rx="5" ry="15" transform="rotate(${-30 - up} -4 -6)"/><ellipse cx="2" cy="-21" rx="5" ry="16" transform="rotate(${-12 - up} 2 -6)"/><ellipse cx="-8" cy="-19" rx="4" ry="13" transform="rotate(${-52 - up} -6 -6)"/><ellipse cx="4" cy="-19" rx="4" ry="13" transform="rotate(${8 - up} 4 -6)"/></g><path d="M-34 -5 Q-10 -9 18 -7 L24 -6 L18 -3 Q-10 -2 -34 -4 Z" fill="${fill}"/><circle cx="22" cy="-6" r="3.4" fill="${fill}"/><path d="M-6 -3 L-8 6 M6 -3 L8 6" stroke="${fill}" stroke-width="1.2"/></g>`; };
-  PK.plate('chapters/moi/1', 'Chapter One: mud outside Pale with new grass through it, the Host\'s tent lines, and across the valley another army\'s smoke', P => {
+  /* v13.33 (pictures against text): the sub line is "Outside Pale", so Pale stands on its hill above the tent lines (Book One's drawing, 019i_01,
+     its smoke long gone), the burial field of the Second green over its long low mounds in front, and Brood's smoke across the valley, west */
+  PK.plate('chapters/moi/1', 'Chapter One: Pale on its hill over mud and new grass, the burial mounds of the Second gone green, the Host\'s tent lines, and across the valley another army\'s smoke', P => {
     let s = PK.sky(P, [[0, '#6a7890'], [.6, '#b8bcc0'], [1, '#c8c4b8']]) + PK.haze(P, 100, 22, '#ffffff', .25, 330, 360);
-    s += PK.ridge(196, 20, 171, '#6a6e66', .6) + PK.ridge(214, 14, 172, '#585c50', .6);
-    s += PK.tents(P, 380, 640, 214, 1, 14, .45, '#6a6458', 0, 173);
-    for (let i = 0; i < 6; i++) s += PK.smoke(P, 400 + i * 40, 210, 90, 10, 30, '#8a8a88', .45, 174 + i);
+    s += PK.ridge(196, 20, 171, '#6a6e66', .6);
+    s += PK.tents(P, 20, 250, 206, 1, 12, .4, '#6a6458', 0, 173); // Brood's camp across the valley, west
+    for (let i = 0; i < 6; i++) s += PK.smoke(P, 30 + i * 40, 202, 90, 10, 30, '#8a8a88', .45, 174 + i);
+    s += `<g transform="translate(40 -40) scale(.94)">${PK.pale(P, {fill: '#56544e', ridge: 'none', hill: '#5c5e54', city: '#4e4c48', lit: 0, smoke: '#8a8a88', sop: 0})}</g>`; // Pale on its hill, no smoke now
     s += PK.ridge(250, 10, 175, '#4a4a3a', .5) + `<rect y="252" width="660" height="148" fill="${P.lin([[0, '#4a4234'], [1, '#2a2218']])}"/>`;
     s += PK.tents(P, -20, 420, 262, 3, 10, 1, '#7a705e', .1, 176);
+    let mo = ''; [[90, 318, 120], [250, 330, 130], [430, 322, 110], [140, 356, 150], [360, 366, 140]].forEach(([x, y, w]) => { mo += `<path d="M${x - w / 2} ${y} Q${x - w * .3} ${y - 13} ${x} ${y - 14} Q${x + w * .3} ${y - 13} ${x + w / 2} ${y} Z" fill="#434c2e"/><path d="M${x - w * .4} ${y - 6} Q${x} ${y - 16} ${x + w * .4} ${y - 6}" stroke="#6a8248" stroke-width="1.2" fill="none" opacity=".45"/>`; });
+    s += mo; // the burial field of the Second, the long low mounds gone green
     s += PK.grass(400, 177, 260, 400, '#6a8a44', .6) + PK.stones(50, 178, 300, 400, '#1e180e', .4);
     s += `<path d="M380 400 Q420 330 520 300 Q600 280 680 290" stroke="#2a2014" stroke-width="18" fill="none" opacity=".5"/>`;
-    s += PK.back(540, 404, .5, B({cloak: '#4a4236', kit: 'spear', rim: '#f0ece0'}));
+    s += PK.back(560, 404, .5, B({cloak: '#4a4236', kit: 'spear', rim: '#f0ece0'}));
     return s; });
   PK.plate('chapters/moi/2', 'Chapter Two: grass to the edge of the world on the Rhivi Plain, two armies on it, and the herds between them', P => {
     let s = PK.sky(P, [[0, '#4a6a9a'], [.6, '#a8c0d4'], [1, '#d0d8d0']]);

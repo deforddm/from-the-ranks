@@ -191,9 +191,12 @@ function b53Ships(ctx, W, H, base, sky, t, mo){ const c = sky === 'night' ? '#08
 function b53Barges(x, W, H, top, sky){ const c = sky === 'night' ? '#16120e' : sky === 'dawn' ? '#3a3228' : '#2a2218', lc = sky === 'night' ? '#241e18' : '#4a3e30';
   for (let b = 0; b < 3; b++) { const y = top + b*H*.07, x0 = W*(.02 + b*.03), x1 = W*(.92 - b*.02); x.fillStyle = c; x.beginPath(); x.moveTo(x0, y); x.lineTo(x1, y); x.lineTo(x1 - W*.02, y + H*.05); x.lineTo(x0 + W*.02, y + H*.05); x.fill(); x.fillStyle = lc; x.fillRect(x0, y, x1 - x0, 2);
     for (let i = 0; i < 4; i++) { const cx = x0 + (x1 - x0)*(.12 + i*.22 + hash(b*4 + i, 5331)*.06); x.fillStyle = sky === 'night' ? '#1e221c' : '#3e463a'; x.beginPath(); x.moveTo(cx - W*.05, y); x.quadraticCurveTo(cx, y - H*.05, cx + W*.05, y); x.fill(); } } } // cargo under tarpaulins
-SCENEX.b5_landing = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, ph = f.b5_c3_ph || 1, hz = H*.46;
+/* v13.33 (pictures against text): the chapter's end page and b5_c3_road are "the road north out of the Landing at dawn, the mountains grey again,
+   and ash on the dock behind": the dawn Landing whatever the flags say, the squad small along the dock going off it to the road, nobody on
+   the barges, and the ash lying on the dock */
+SCENEX.b5_landing = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, road = !!(S && ((S.scene === 'chend' && S.chapter === 3) || S.node === 'b5_c3_road')), ph = road ? 3 : f.b5_c3_ph || 1, hz = H*.46;
   const sky = ph >= 3 ? 'dawn' : (f.b5_c3_key && !(f.b5_c3_cheerDone || f.b5_c3_bankDone)) || (f.b5_c3_watch && !f.b5_c3_riverDone) ? 'night' : ph === 2 ? 'day' : 'dusk', fallen = !!(f.b5_c3_collapse || f.b5_c3_ranOut || ph >= 3);
-  ctx.drawImage(sceneLayer('b53:land' + sky + (fallen ? 'f' : ''), W, H, (x, W, H) => {
+  ctx.drawImage(sceneLayer('b53:land' + sky + (fallen ? 'f' : '') + (road ? 'r' : ''), W, H, (x, W, H) => {
     const st = sky === 'night' ? [[0,'#05070e'],[1,'#141a28']] : sky === 'dawn' ? [[0,'#4a5250'],[.6,'#8a9a8a'],[1,'#b8c4b0']] : sky === 'day' ? [[0,'#6a84a0'],[1,'#c8ccc0']] : [[0,'#2a2a4a'],[.5,'#7a5a6a'],[.85,'#d88a5a'],[1,'#e8a868']];
     x.fillStyle = vgrad(x, 0, hz, st); x.fillRect(0, 0, W, hz + 2);
     if (sky === 'night') for (let i = 0; i < 60; i++) { x.fillStyle = `rgba(220,226,250,${(.12 + hash(i, 5341)*.45).toFixed(2)})`; x.fillRect(hash(i, 5342)*W, Math.pow(hash(i, 5343), 1.4)*hz*.6, 1, 1); }
@@ -203,13 +206,16 @@ SCENEX.b5_landing = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
     x.fillStyle = vgrad(x, H*.62, H, sky === 'night' ? [[0,'#0c161a'],[1,'#060c0e']] : sky === 'dawn' ? [[0,'#5a6a64'],[1,'#2a3634']] : sky === 'day' ? [[0,'#5a7478'],[1,'#22383a']] : [[0,'#6a5a5a'],[.4,'#2e3e40'],[1,'#162224']]); x.fillRect(0, H*.62, W, H*.38); // the river
     x.fillStyle = sky === 'night' ? '#1a1612' : '#3a3026'; x.fillRect(0, H*.615, W*.6, H*.02); for (let i = 0; i < 12; i++) x.fillRect(W*i*.05, H*.62, 2, H*.04); // the dock on its piles
     b53Barges(x, W, H, H*.74, sky);
+    if (road) {
+      for (let i = 0; i < 60; i++) { x.fillStyle = `rgba(190,206,186,${(.3 + hash(i, 5381)*.3).toFixed(2)})`; x.fillRect(hash(i, 5382)*W*.6, H*(.6 + hash(i, 5383)*.03), 1.4, 1); } } // the ash on the dock
     if (sky === 'dawn') for (let i = 0; i < 120; i++) { x.fillStyle = `rgba(190,210,190,${(.15 + hash(i, 5344)*.25).toFixed(2)})`; x.fillRect(hash(i, 5345)*W, H*(.74 + hash(i, 5346)*.24), 1.2, 1); } // ash on the cargo
   }), 0, 0, W, H);
   b53Ships(ctx, W, H, H*.63, sky, t, mo);
   for (let i = 0; i < 20; i++) { const k = hash(i, 5347), y = lerp(H*.64, H*.98, k), xx = ((hash(i, 5348)*W + t*mo*(.008 + k*.01)) % (W + 30)) - 15; ctx.fillStyle = sky === 'night' ? `rgba(255,200,140,${(.06 + .12*hash(i, 5349)).toFixed(2)})` : `rgba(230,236,230,${(.08 + .14*hash(i, 5349)).toFixed(2)})`; ctx.fillRect(xx, y, 5 + 12*hash(i, 5350), 1); } // the river going past
   if (sky === 'night' || sky === 'dusk') { const lx = W*.5, ly = H*.86, fl = b2Fl(t); ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly, H*.12, '#ffc078', .3*fl); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#2a2018'; ctx.fillRect(lx - 3, ly - 4, 6, 7); ctx.fillStyle = `rgba(255,214,150,${(.8*fl).toFixed(2)})`; ctx.fillRect(lx - 2, ly - 3, 4, 4); } // a hooded lantern on the outer barge
   if (sky !== 'night') for (let i = 0; i < 4; i++) { const k = mo ? ((t/16000 + i*.25) % 1) : hash(i, 5351), gx = lerp(-20, W + 20, k), gy = H*(.12 + hash(i, 5352)*.16) + (mo ? Math.sin(t/400 + i)*3 : 0), wg = mo ? Math.sin(t/120 + i)*2 : 1; ctx.strokeStyle = 'rgba(30,30,40,.6)'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(gx - 4, gy - wg); ctx.quadraticCurveTo(gx - 1.6, gy - 2, gx, gy); ctx.quadraticCurveTo(gx + 1.6, gy - 2, gx + 4, gy - wg); ctx.stroke(); } // birds over the river
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.22 + i*18, H*.8, 1.7, t, {phase:i, dir:1}));
+  if (road) { const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*.05 + i*Math.min(16, W*.2/sq.length), H*.625, 1.1, t, {phase:i, dir:-1})); } // small along the dock, going off it to the road north, nobody on the barges
+  else { const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.22 + i*18, H*.8, 1.7, t, {phase:i, dir:1})); }
   vign(ctx, W, H, sky === 'night' ? .6 : .45, .5); };
 /* the green fire: a curtain of green light hanging over the far mountains from one end of the sky to the other; the camp, the dock and the
    barges as black shapes in front, the crowd with its arms up; the river lit green. What is under it is never shown. */

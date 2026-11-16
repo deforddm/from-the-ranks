@@ -147,8 +147,11 @@ TILEX.b4_c2_fall = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b42Hil
     return _df(ctx, ch, x, y, T, dark, style, map); }; }
 
 /* ---------------- backdrops ---------------- */
-/* an empty tree seen at a distance, for the backdrops: a dead trunk, a crossbar, a braid hanging, and (near) a little pale figure on it */
-function b42FarTree(x, cx, by, hh, col, lit, braid, fig){ const w = hh*.4; x.fillStyle = col; x.fillRect(cx - hh*.035, by - hh, Math.max(.7, hh*.07), hh); x.fillRect(cx - w, by - hh*.92, w*2, Math.max(.6, hh*.05)); // trunk, crossbar
+/* an empty tree seen at a distance, for the backdrops: a dead trunk forking into bare limbs, a braid hanging, and (near) a little pale figure on it.
+   v13.33 (pictures against text): a fork of bare limbs, not a crossbar, which read as a cross; the text and the chapter plate have trees */
+function b42FarTree(x, cx, by, hh, col, lit, braid, fig){ const w = hh*.4; x.fillStyle = col; x.fillRect(cx - hh*.035, by - hh*.78, Math.max(.7, hh*.07), hh*.78); // the trunk
+  x.strokeStyle = col; x.lineCap = 'round'; x.lineWidth = Math.max(.6, hh*.05); x.beginPath(); x.moveTo(cx, by - hh*.6); x.lineTo(cx - w*.9, by - hh*.98); x.moveTo(cx, by - hh*.7); x.lineTo(cx + w*.8, by - hh*1.02); x.moveTo(cx, by - hh*.76); x.lineTo(cx + w*.1, by - hh*1.06); x.stroke(); // bare limbs
+  x.lineWidth = Math.max(.4, hh*.025); x.beginPath(); x.moveTo(cx - w*.55, by - hh*.83); x.lineTo(cx - w*.75, by - hh*.7); x.moveTo(cx + w*.5, by - hh*.88); x.lineTo(cx + w*.95, by - hh*.86); x.stroke(); x.lineCap = 'butt'; // twigs
   if (lit) { x.fillStyle = lit; x.fillRect(cx - hh*.035, by - hh, Math.max(.4, hh*.02), hh); }
   if (braid) { x.fillStyle = braid; x.fillRect(cx - w*.7, by - hh*.88, Math.max(.5, hh*.03), hh*.22); x.fillRect(cx + w*.6, by - hh*.88, Math.max(.5, hh*.03), hh*.16); }
   if (fig) { x.fillStyle = fig; x.fillRect(cx - hh*.04, by - hh*.7, hh*.08, hh*.12); x.fillStyle = 'rgba(200,110,80,.8)'; x.fillRect(cx - hh*.03, by - hh*.75, hh*.06, hh*.05); } }
@@ -279,19 +282,34 @@ SCENEX.b4_road_fire = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 
 /* the march (every later chapter's road between halts, 70's fallback): the column in the sun, a road of dust a league long running away
    into heat-haze, the wagons strung back along it, the squad in its place in the near files; no trees here, no hill: the open north */
-SCENEX.b4_march = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, vx = W*.64;
-  ctx.drawImage(sceneLayer('b42:march', W, H, (x, W, H) => {
-    x.fillStyle = vgrad(x, 0, hz, [[0,'#8aa2bc'],[.6,'#dad0b8'],[1,'#f0e0bc']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.72, hz*.25, W*.45, '#fffae8', .55); glow(x, W*.72, hz*.25, 12, '#ffffff', .8); // the sun, high
+/* v13.33 (pictures against text): the sun is high only on a march by day. Chapter One's dawn (b4_c1_dawn and the chapter's end: "Dawn over Aren.
+   The Fourteenth forms on the Aren Way in the grey light") is a grey dawn with the sun not yet up in the east, Aren's north wall and gate behind
+   the column on the left and the Way going north between the trees; Chapter Two's mornings below the Fall ("in the grey", phase 5) the same
+   grey without the city */
+SCENEX.b4_march = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, vx = W*.64, f = (typeof S !== 'undefined' && S && S.f) || {};
+  const mode = typeof S === 'undefined' || !S ? '' : S.chapter === 1 ? 'aren' : S.chapter === 2 && (f.b4_c2_ph || 0) >= 5 ? 'grey' : '', grey = !!mode;
+  ctx.drawImage(sceneLayer('b42:march' + mode, W, H, (x, W, H) => {
+    if (grey) { x.fillStyle = vgrad(x, 0, hz, [[0,'#3a4458'],[.5,'#7a808c'],[.85,'#b4aaa0'],[1,'#d0bca2']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*1.02, hz, W*.4, '#f0c8a0', .3); // grey dawn, the east just warming, the sun not up
+      for (let i = 0; i < 4; i++) cloud(x, W*(.1 + i*.25), hz*(.25 + i*.1), W*.26, 1.6, '#c8c4cc', .1); }
+    else { x.fillStyle = vgrad(x, 0, hz, [[0,'#8aa2bc'],[.6,'#dad0b8'],[1,'#f0e0bc']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.72, hz*.25, W*.45, '#fffae8', .55); glow(x, W*.72, hz*.25, 12, '#ffffff', .8); } // the sun, high
     x.fillStyle = 'rgba(176,156,126,.55)'; for (let i = 0; i < 7; i++) { const hx = hash(i, 961)*W; x.beginPath(); x.ellipse(hx, hz + 1, W*(.08 + hash(i, 962)*.1), H*(.014 + hash(i, 963)*.02), 0, Math.PI, 0); x.fill(); } // low hills, far
-    x.fillStyle = vgrad(x, hz, H, [[0,'#ccb88e'],[.5,'#b09872'],[1,'#7a6448']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = grey ? vgrad(x, hz, H, [[0,'#9a907c'],[.5,'#807260'],[1,'#4e4436']]) : vgrad(x, hz, H, [[0,'#ccb88e'],[.5,'#b09872'],[1,'#7a6448']]); x.fillRect(0, hz, W, H - hz);
     for (let i = 0; i < 46; i++) { const yy = hz + 2 + Math.pow(hash(i, 964), 1.5)*(H - hz), d = (yy - hz)/(H - hz); x.fillStyle = `rgba(110,86,56,${(.1 + d*.2).toFixed(2)})`; x.fillRect(hash(i, 965)*W, yy, 2 + d*12, .6 + d); }
     for (let i = 0; i < 26; i++) { const yy = hz + 3 + Math.pow(hash(i, 966), 1.3)*(H - hz)*.9, d = (yy - hz)/(H - hz), bx = hash(i, 967)*W; if (Math.abs(bx - vx) < W*.18*d + 6) continue; ell(x, bx, yy, 2 + d*7, 1 + d*3, `rgba(${90 + Math.round(d*20)},${86 + Math.round(d*14)},60,.7)`); } // scrub
     x.beginPath(); x.moveTo(vx - 1, hz); x.lineTo(vx + 1, hz); x.lineTo(vx + W*.28, H); x.lineTo(vx - W*.5, H); x.closePath(); x.fillStyle = 'rgba(230,212,176,.5)'; x.fill(); // the road
-    b42Column(x, vx, hz, H*.86, vx - W*.12, 44, 1.6, 968);
+    if (mode === 'aren') for (const side of [-1, 1]) for (let i = 24; i >= 0; i--) { const k = .1 + i/24*.9, [px, py, z] = b42P(W, H, vx, hz, side, k), hh = H*.034*z; if (px < W*.24 || px > W*1.1) continue; b42FarTree(x, px, py, hh, `rgba(${Math.round(lerp(120, 150, k))},${Math.round(lerp(112, 144, k))},${Math.round(lerp(104, 136, k))},${clamp(.3 + (1 - k)*.7, 0, 1).toFixed(2)})`, null, null, null); } // the Way north between the trees
+    b42Column(x, vx, hz, H*.86, vx - W*.12, 44, 1.6, 968, grey);
+    if (mode === 'aren') { // Aren behind, on the left: the north wall and its gate-tower, the gate open, the army still coming out of it
+      const wt = H*.2; x.fillStyle = vgrad(x, wt, H*.8, [[0,'#7a7468'],[1,'#4a4438']]); x.beginPath(); x.moveTo(0, wt); x.lineTo(W*.24, hz - H*.08); x.lineTo(W*.24, hz + H*.04); x.lineTo(0, H*.8); x.fill();
+      for (let i = 0; i < 9; i++) { const u = i/9, cx0 = u*W*.24, top = lerp(wt, hz - H*.08, u); x.fillRect(cx0, top - lerp(6, 2, u), lerp(7, 3, u), lerp(6, 2, u)); } // merlons
+      x.fillStyle = '#6a6458'; x.fillRect(W*.07, wt - H*.12, W*.07, H*.5); for (let i = 0; i < 3; i++) x.fillRect(W*.07 + i*W*.027, wt - H*.15, W*.016, H*.03); // the gate-tower
+      x.fillStyle = '#1e1a16'; x.beginPath(); x.moveTo(W*.16, H*.66); x.lineTo(W*.16, H*.5); x.quadraticCurveTo(W*.19, H*.44, W*.22, H*.5); x.lineTo(W*.22, H*.62); x.fill(); // the north gate, open
+      for (let i = 0; i < 3; i++) { x.fillStyle = 'rgba(255,200,130,.5)'; x.fillRect(W*(.03 + i*.06), wt + H*(.08 + i*.04), 1.4, 1.8); } // a lamp or two still lit in the towers
+    }
     for (let i = 0; i < 8; i++) { const k = .55 + i*.05, [, py] = b42P(W, H, vx, hz, 0, k), wx = vx + W*.03*(1 - k) + 5; x.fillStyle = 'rgba(90,72,52,.85)'; x.fillRect(wx - 3*(1.2 - k), py - 3*(1.2 - k), 6*(1.2 - k), 2.4*(1.2 - k)); } // wagons far back up the line
   }), 0, 0, W, H);
-  for (let i = 0; i < 7; i++) { const k = ((t*mo/24000 + i/7) % 1); glow(ctx, lerp(-W*.2, W*1.2, k), hz + H*(.01 + (i % 3)*.035), W*.22, '#e8d6b0', .17*Math.sin(k*Math.PI) + (mo ? 0 : .05)); } // the column's dust
-  if (mo) { ctx.globalAlpha = .06 + .03*Math.sin(t/700); ctx.fillStyle = '#fff6e0'; ctx.fillRect(0, hz - 3, W, 5); ctx.globalAlpha = 1; } // heat on the horizon
+  for (let i = 0; i < 7; i++) { const k = ((t*mo/24000 + i/7) % 1); glow(ctx, lerp(-W*.2, W*1.2, k), hz + H*(.01 + (i % 3)*.035), W*.22, grey ? '#b8b0a4' : '#e8d6b0', (grey ? .1 : .17)*Math.sin(k*Math.PI) + (mo ? 0 : .05)); } // the column's dust
+  if (mo && !grey) { ctx.globalAlpha = .06 + .03*Math.sin(t/700); ctx.fillStyle = '#fff6e0'; ctx.fillRect(0, hz - 3, W, 5); ctx.globalAlpha = 1; } // heat on the horizon
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(28, W*.42/sq.length), H*.97 - (i % 2)*2, 2, t, {phase:i, dir:1}));
   vign(ctx, W, H, .42, .5); };
 

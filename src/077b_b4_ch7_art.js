@@ -315,7 +315,9 @@ SCENEX.b4_c7_finale = (cv, t) => { const {ctx, W, H} = sceneFit(cv), hz = H*.52,
   }), 0, 0, W, H);
   b47Mist(ctx, W, H, hz, t, .16);
   if (key === 'ledger') { const k = mo ? ((t % 60000)/60000) : .3; for (let i = 0; i < 5; i++) { ctx.fillStyle = '#2a2420'; const wx = W*(.2 + k*.25) + i*4, wy = hz + H*.08 + i*.6; ctx.fillRect(wx, wy - 3, 1.2, 3); ell(ctx, wx + .6, wy - 3.6, .7, .7, '#2a2420'); ctx.fillStyle = 'rgba(240,236,226,.4)'; ctx.fillRect(wx - 1, wy, 3.2, .6); } } // a few small figures wading south, away
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.56 + i*15, H*.95 - (i % 2)*2, 1.5, t, {phase:i, dir:key === 'ledger' ? -1 : 1}));
+  // v13.33 (pictures against text): on the ledger road the Third is not on the island ("It went south off the end of the 9th's island in the dark,
+  // wading"): only the few far figures in the shallows above are it, and the island is empty
+  if (key !== 'ledger') { const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.56 + i*15, H*.95 - (i % 2)*2, 1.5, t, {phase:i, dir:1})); }
   vign(ctx, W, H, .4, .55); };
 
 /* ---------------- the chapter's gear: on Book Four's sand-and-iron ground (75b's b45Item, 71b's frame) ---------------- */

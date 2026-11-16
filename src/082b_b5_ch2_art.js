@@ -216,8 +216,12 @@ function b52Lighthouse(ctx, x, base, h, col, lampA){ const w = h*.16; ctx.fillSt
 function b52Tower(ctx, x, base, h, col){ const w = h*.17; ctx.fillStyle = '#121216'; ctx.beginPath(); ctx.moveTo(x - w*2.6, base + h*.04); ctx.quadraticCurveTo(x - w*1.6, base - h*.08, x, base - h*.06); ctx.quadraticCurveTo(x + w*1.8, base - h*.1, x + w*2.8, base + h*.04); ctx.fill(); // the island of rocks
   ctx.fillStyle = col; ctx.fillRect(x - w, base - h, w*2, h); for (let i = 1; i < 7; i++) { ctx.fillStyle = 'rgba(255,255,255,.035)'; ctx.fillRect(x - w, base - h + i*h/7, w*2, 1); } // seven storeys of black stone, no door, no window
   ctx.fillStyle = 'rgba(60,64,80,.6)'; ctx.fillRect(x - w, base - h, w*2, h*.03); } // a dull ring at the top (the tiles, not shown as anything)
-SCENEX.b5_trate_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, f = (S && S.f) || {}, late = !!(f.b5_c2_war), night = (f.b5_c2_ph || 1) >= 4 && !late;
-  ctx.drawImage(sceneLayer('b52:harb' + (late ? 'd' : night ? 'n' : ''), W, H, (x, W, H) => {
+/* v13.33 (pictures against text): the chapter's end page and b5_c2_road are "the barges going up the river from Trate at first light": the
+   morning harbour (whatever the flags say) with the regiment's barges out on the water going upstream, the squad sitting on its kit in the
+   nearest, the quay behind them empty, and on the 'dead' road the row of white shells on the planks where the dead were laid. The quays
+   are cleared by then (b5_c2_road), so no fish on them in the late harbour */
+SCENEX.b5_trate_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, f = (S && S.f) || {}, barges = !!(S && ((S.scene === 'chend' && S.chapter === 2) || S.node === 'b5_c2_road')), late = !!(f.b5_c2_war) || barges, night = (f.b5_c2_ph || 1) >= 4 && !late, shells = barges && f.b5_c2_key === 'dead';
+  ctx.drawImage(sceneLayer('b52:harb' + (late ? 'd' : night ? 'n' : '') + (shells ? 's' : ''), W, H, (x, W, H) => {
     const sky = late ? [[0,'#4a5a74'],[.6,'#a6a4a0'],[1,'#e8cfa8']] : night ? [[0,'#070a16'],[1,'#1a2034']] : [[0,'#2e3a5a'],[.5,'#8a6a6a'],[.85,'#e09a5a'],[1,'#f2c27a']]; // dawn for the barges, night, or a summer evening
     x.fillStyle = vgrad(x, 0, hz, sky); x.fillRect(0, 0, W, hz + 2);
     if (!night) for (let i = 0; i < 5; i++) { x.fillStyle = late ? 'rgba(240,236,230,.35)' : 'rgba(255,200,150,.28)'; x.beginPath(); x.ellipse(hash(i, 5211)*W, hz*(.2 + hash(i, 5212)*.4), W*.14, hz*.04, 0, 0, 7); x.fill(); }
@@ -232,7 +236,8 @@ SCENEX.b5_trate_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
     // the near quay: planking, bollards, a coil of rope, fish
     x.fillStyle = night ? '#1a1612' : '#3e3428'; x.fillRect(0, H*.8, W, H*.2); x.fillStyle = night ? '#2a2018' : '#5a4a38'; x.fillRect(0, H*.8, W, H*.015); x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 1; for (let i = 1; i < 6; i++) { x.beginPath(); x.moveTo(0, H*(.8 + i*.035)); x.lineTo(W, H*(.8 + i*.035)); x.stroke(); }
     [[.12, 1], [.66, 1], [.9, 0]].forEach(([u, rope]) => { const bx = W*u; x.fillStyle = '#1e1a16'; x.fillRect(bx - 5, H*.76, 10, H*.06); x.fillStyle = '#3a342c'; x.fillRect(bx - 6, H*.755, 12, 3); if (rope) { x.strokeStyle = '#8a7650'; x.lineWidth = 2; for (let k = 0; k < 3; k++) { x.beginPath(); x.ellipse(bx + 16, H*.86, 9 - k*2, 3 - k*.6, 0, 0, 7); x.stroke(); } } });
-    for (let i = 0; i < 9; i++) { const fx = W*(.2 + hash(i, 5216)*.6), fy = H*(.86 + hash(i, 5217)*.1); x.save(); x.translate(fx, fy); x.rotate(hash(i, 5218)*6); x.fillStyle = night ? '#4a5258' : '#a8b4b8'; x.beginPath(); x.ellipse(0, 0, 5, 1.8, 0, 0, 7); x.fill(); x.restore(); }
+    if (shells) for (let i = 0; i < 11; i++) { const sx = W*(.16 + i*.06), sy = H*.88 + (i % 2)*1.5; ell(x, sx, sy, 4, 2, '#e8e4dc'); ell(x, sx - 1, sy - .6, 2, .8, '#ffffff'); } // the row of shells where the dead were laid
+    if (!late) for (let i = 0; i < 9; i++) { const fx = W*(.2 + hash(i, 5216)*.6), fy = H*(.86 + hash(i, 5217)*.1); x.save(); x.translate(fx, fy); x.rotate(hash(i, 5218)*6); x.fillStyle = night ? '#4a5258' : '#a8b4b8'; x.beginPath(); x.ellipse(0, 0, 5, 1.8, 0, 0, 7); x.fill(); x.restore(); }
   }), 0, 0, W, H);
   // the lighthouse on the harbour front, and the Tarancede Tower out on its rocks, south (right)
   b52Lighthouse(ctx, W*.4, hz - H*.01, H*.3, night ? '#1a1a22' : late ? '#8a8a92' : '#4a4048', night ? .35 + (mo ? Math.sin(t/700)*.08 : 0) : late ? 0 : .12);
@@ -241,8 +246,17 @@ SCENEX.b5_trate_harbour = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
   for (let i = 0; i < 24; i++) { const k = hash(i, 5219), y = lerp(hz + H*.04, H*.78, k), xx = ((hash(i, 5220)*W + t*mo*(.006 + k*.01)) % (W + 30)) - 15; ctx.fillStyle = night ? `rgba(255,214,150,${(.08 + .14*hash(i, 5221)).toFixed(2)})` : late ? `rgba(240,240,230,${(.1 + .16*hash(i, 5221)).toFixed(2)})` : `rgba(255,200,140,${(.1 + .2*hash(i, 5221)).toFixed(2)})`; ctx.fillRect(xx, y, 5 + 12*hash(i, 5222), 1); }
   // the gulls
   if (!night) for (let i = 0; i < 5; i++) { const k = mo ? ((t/14000 + i*.21) % 1) : hash(i, 5223), gx = lerp(-20, W + 20, k), gy = H*(.16 + hash(i, 5224)*.2) + (mo ? Math.sin(t/400 + i)*3 : 0), wg = mo ? Math.sin(t/120 + i)*2 : 1; ctx.strokeStyle = 'rgba(30,30,40,.7)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(gx - 5, gy - wg); ctx.quadraticCurveTo(gx - 2, gy - 2, gx, gy); ctx.quadraticCurveTo(gx + 2, gy - 2, gx + 5, gy - wg); ctx.stroke(); }
-  // the squad on the near quay
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.56 + i*18, H*.98, 1.8, t, {phase:i, dir:-1}));
+  if (barges) { // the regiment's barges out on the water, poled upstream (right), the squad sitting on its kit in the nearest
+    const drift = mo ? ((t/90000) % 1)*W*.06 : 0;
+    [[.12, .2, .7], [.42, .14, .55], [.68, .1, .42]].forEach(([u, dv, k], b) => { const bx = W*u + drift*(1 - b*.3), by = hz + H*dv + H*.06, bw = W*.22*k/.7, bh = H*.05*k/.7;
+      ctx.fillStyle = '#2e261e'; ctx.beginPath(); ctx.moveTo(bx - bw/2, by - bh); ctx.lineTo(bx + bw/2, by - bh); ctx.lineTo(bx + bw/2 - bh*.8, by); ctx.lineTo(bx - bw/2 + bh*.6, by); ctx.fill(); ctx.fillStyle = '#5a4a38'; ctx.fillRect(bx - bw/2, by - bh, bw, 1.4);
+      if (b > 0) { ctx.fillStyle = '#4a4e44'; ctx.beginPath(); ctx.moveTo(bx - bw*.3, by - bh); ctx.quadraticCurveTo(bx, by - bh*2.6, bx + bw*.3, by - bh); ctx.fill(); } // cargo under a tarpaulin
+      const px = bx - bw*.42, ph = bh*3.4; ctx.fillStyle = '#1e1a16'; ctx.fillRect(px - 1, by - bh - ph*.5, 2*k, ph*.5); ell(ctx, px, by - bh - ph*.56, 1.4*k, 1.4*k, '#1e1a16'); ctx.strokeStyle = '#1e1a16'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px - ph*.3, by + bh*.6); ctx.lineTo(px + ph*.2, by - bh - ph*.7); ctx.stroke(); // the bargeman and his pole
+      ctx.fillStyle = 'rgba(240,240,236,.3)'; ctx.fillRect(bx - bw/2 - W*.03, by + .5, W*.03, .8); }); // the wake
+    const sq = marchOrder(sceneSquad()), b0 = W*.12 + drift, by0 = hz + H*.26; squadLine(sq, 1, (id, i) => drawFigure(ctx, id, b0 - W*.06 + i*Math.min(12, W*.14/sq.length), by0 - H*.02, 1.05, t, {phase:i, dir:1, still:true}));
+    ctx.fillStyle = '#2e261e'; ctx.fillRect(b0 - W*.077, by0 - H*.035, W*.154, H*.04); ctx.fillStyle = '#5a4a38'; ctx.fillRect(b0 - W*.077, by0 - H*.035, W*.154, 1.4); } // the gunwale over their legs: sitting
+  else { // the squad on the near quay
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.56 + i*18, H*.98, 1.8, t, {phase:i, dir:-1})); }
   vign(ctx, W, H, .55, .5); };
 
 /* the harvest ships broken on the quays at dusk, close: a hull on her side across the frame, the masts leaning, the rigging in a black net

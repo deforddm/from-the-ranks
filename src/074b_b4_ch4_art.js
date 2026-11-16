@@ -243,7 +243,7 @@ SCENEX.b4_seti_fire = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   }), 0, 0, W, H);
   // the fire's light over the near rows
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy - H*.04, H*.5, '#ff7a30', .3*fl); ctx.globalCompositeOperation = 'source-over';
-  for (let i = 0; i < 4; i++) { const k = ((t*mo/9000 + i/4) % 1); ell(ctx, W*(.08 + i*.26) + k*W*.04, H*(.44 - k*.12), 6 + k*16, 3 + k*6, `rgba(50,40,36,${(.3*(1 - k)).toFixed(3)})`); } // smoke off the burnt wagons
+  for (let w = 0; w < 6; w++) for (let i = 0; i < 4; i++) { const k = mo ? ((t/(8000 + w*700) + i/4 + w*.13) % 1) : (i + .5)/4, wx = W*(.04 + w*.19 + hash(w, 1504)*.04); ell(ctx, wx + k*W*.03 + Math.sin(k*5 + w)*2, hz + H*.02 - k*H*.26, 2 + k*9, 1.6 + k*4, `rgba(120,112,108,${(.3*(1 - k)).toFixed(3)})`); } // v13.33: the burnt wagons still smoking, a thread off each, lit grey against the dark
   // the fire: a ring of stones, wagon-wood, a helm upturned on the coals with water in it, a stained cloth beside
   for (let i = 0; i < 8; i++) { const a = i/8*6.283; ell(ctx, cx + Math.cos(a)*16, cy + Math.sin(a)*4.6, 3, 2, '#2e2a26'); }
   ctx.fillStyle = '#4a2a18'; ctx.fillRect(cx - 10, cy - 2, 20, 2.4);

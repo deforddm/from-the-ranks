@@ -212,7 +212,8 @@ SCENEX.b5_c5_cache = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.04 + i*15, H*.97, 1.5, t, {phase:i, dir:1}));
   vign(ctx, W, H, .5, .5); };
 /* Brans Keep against its cliff, from the north road: the lake grey on the left, the dry channel on the right, the army's tents in front; dusk, night or morning */
-SCENEX.b5_c5_arrival = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, ph = f.b5_c5_ph || 2, sky = f.b5_c5_nightDone ? 'morning' : ph >= 3 ? 'night' : 'dusk', hz = H*.42;
+/* v13.33 (pictures against text): the chapter's end page is "Brans Keep in the morning", so it is morning there whatever the flags say */
+SCENEX.b5_c5_arrival = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, ph = f.b5_c5_ph || 2, sky = f.b5_c5_nightDone || (S && S.scene === 'chend' && S.chapter === 5) ? 'morning' : ph >= 3 ? 'night' : 'dusk', hz = H*.42;
   ctx.drawImage(sceneLayer('b55:keep' + sky, W, H, (x, W, H) => {
     const st = sky === 'night' ? [[0,'#04060e'],[1,'#141a26']] : sky === 'morning' ? [[0,'#5a6270'],[.6,'#9aa0a0'],[1,'#c8c0a8']] : [[0,'#2a2a48'],[.5,'#5a4a62'],[.85,'#b07a5a'],[1,'#d0905a']];
     x.fillStyle = vgrad(x, 0, hz, st); x.fillRect(0, 0, W, hz + 2);

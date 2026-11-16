@@ -253,8 +253,13 @@ SCENEX.b3_c5_drowned = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
   vign(ctx, W, H, .82, .5); };
 
 /* the halt at night in a dead village: the Host's small fires everywhere among the shells, and one big fire with very few people round it —
-   Brood huge against it, Kallor standing apart, Korlat; the rest of the army keeping its distance */
+   Brood huge against it, Korlat; the rest of the army keeping its distance.
+   v13.33 (pictures against text): Kallor only on the node he walks in on (b3_c5_brood_kallor: "He has come into the firelight without anyone
+   hearing him"), gone again after. The chapter's end page follows its caption: 'brood', Brood alone by his fire with the hammer across his
+   knees, nobody else at it; 'quiet', no canon figure at all: the bhederin drinking at a trough knocked together out of a cart-bed, and Tav
+   singing to them by a lantern */
 SCENEX.b3_c5_camp = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, bx = W*.62, by = H*.8;
+  const end = typeof S !== 'undefined' && S && S.scene === 'chend', quiet = end && S.f && S.f.b3_c5_key !== 'brood', node = (typeof S !== 'undefined' && S && S.node) || '';
   const fires = []; for (let i=0;i<26;i++){ const d = Math.pow(hash(i, 3), 1.4); fires.push({x:hash(i, 4)*W, y:hz + 3 + d*H*.2, s:.4 + d*1.1}); }
   ctx.drawImage(sceneLayer('b3c5:camp', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#05070c'],[.6,'#0e1420'],[1,'#1c2230']]); x.fillRect(0, 0, W, hz + 2);
@@ -265,13 +270,23 @@ SCENEX.b3_c5_camp = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
       x.fillStyle = '#08090b'; x.beginPath(); x.moveTo(hx, hb); x.lineTo(hx, hb - hh); x.lineTo(hx + hw*.3, hb - hh - 3); x.lineTo(hx + hw*.5, hb - hh*.7); x.lineTo(hx + hw*.8, hb - hh - 2); x.lineTo(hx + hw, hb - hh*.8); x.lineTo(hx + hw, hb); x.closePath(); x.fill(); } // the shells of the village, roofless
   }), 0, 0, W, H);
   fires.forEach((f, i) => { const fl = .8 + .2*Math.sin(t*mo/(200 + i*13) + i); glow(ctx, f.x, f.y, 10*f.s, '#ff8a30', .25*fl); ell(ctx, f.x, f.y, 1.2*f.s, .8*f.s, `rgba(255,190,100,${(.8*fl).toFixed(2)})`); }); // the Host's fires, many and small
+  if (quiet) { const tx = W*.72, ty = H*.84, lf = .85 + .15*Math.sin(t*mo/170); // the trough, the bhederin at it, Tav and his lantern
+    glow(ctx, tx - W*.12, ty - H*.12, H*.3, '#ffb060', .22*lf); ctx.fillStyle = 'rgba(255,170,90,.1)'; ctx.beginPath(); ctx.ellipse(tx, ty, W*.22, H*.06, 0, 0, 7); ctx.fill();
+    [[-.11, -.05, 1, 1.15], [.11, -.06, -1, 1.15], [-.13, .03, 1, 1.4], [.14, .02, -1, 1.4]].forEach(([dx, dy, d, k], i) => drawFigure(ctx, 'b3_c2_bhederin', tx + W*dx, ty + H*dy, k, t, {phase:i*1.7, dir:d}));
+    ctx.fillStyle = '#2a1e14'; ctx.fillRect(tx - W*.07, ty - H*.035, W*.14, H*.035); ctx.fillStyle = '#4a3622'; ctx.fillRect(tx - W*.07, ty - H*.035, W*.14, 2); ctx.fillStyle = 'rgba(150,170,190,.35)'; ctx.fillRect(tx - W*.065, ty - H*.03, W*.13, 1.4); // the cart-bed, water in it
+    ctx.fillStyle = '#1a120c'; [-.06, .06].forEach(u => ctx.fillRect(tx + W*u - 1.5, ty - H*.01, 3, H*.015));
+    const lx = tx - W*.16, ly = ty - H*.03; ctx.fillStyle = '#2a1e14'; ctx.fillRect(lx - 1, ly - H*.06, 2, H*.06); glow(ctx, lx, ly - H*.07, H*.06, '#ffc070', .5*lf); ctx.fillStyle = `rgba(255,214,140,${(.9*lf).toFixed(2)})`; ctx.fillRect(lx - 2, ly - H*.075, 4, 5); // the lantern on a stake
+    drawFigure(ctx, 'tav', tx - W*.25, ty + H*.08, 1.9, t, {phase:2, dir:1}); // Tav, singing, badly
+    const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(26, W*.32/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
+    ctx.fillStyle = 'rgba(4,6,12,.18)'; ctx.fillRect(0, 0, W, H); vign(ctx, W, H, .82, .55); return; }
   // the big fire, and who is round it
   const fl = .85 + .15*Math.sin(t*mo/150) + .05*Math.sin(t*mo/53);
   glow(ctx, bx, by - H*.06, H*.55, '#ff7a28', .22*fl); glow(ctx, bx, by - H*.04, H*.2, '#ffb060', .35*fl);
   ctx.fillStyle = 'rgba(255,150,70,.14)'; ctx.beginPath(); ctx.ellipse(bx, by, W*.24, H*.07, 0, 0, 7); ctx.fill(); // firelight on the ground
   ell(ctx, bx, by + 2, W*.05, H*.02, '#140a06'); for (let i=0;i<3;i++){ const k = i - 1; poly(ctx, [[bx + k*W*.02 - 6, by], [bx + k*W*.012, by - H*(.1 + .04*Math.sin(t*mo/(110 + i*30) + i))*fl], [bx + k*W*.02 + 6, by]], i === 1 ? '#ffc060' : '#e8642a'); }
   for (let i=0;i<10;i++){ const k = ((t*mo/1400 + hash(i, 31)) % 1); ctx.fillStyle = `rgba(255,200,120,${(.8*(1 - k)).toFixed(2)})`; ctx.fillRect(bx + (hash(i, 32) - .5)*20 + Math.sin(t*mo/300 + i)*4, by - H*.08 - k*H*.35, 1.2, 1.2); } // sparks going up
-  drawFigure(ctx, 'korlat', bx - W*.12, by + H*.02, 2.2, t, {phase:1, dir:1}); drawFigure(ctx, 'brood', bx + W*.09, by + H*.04, 2.95, t, {phase:2, dir:-1, still:true}); drawFigure(ctx, 'kallor', bx + W*.26, by - H*.01, 2.15, t, {phase:3, dir:-1, still:true}); // Korlat; Brood, huge against the fire; Kallor, standing off
+  if (!end) drawFigure(ctx, 'korlat', bx - W*.12, by + H*.02, 2.2, t, {phase:1, dir:1}); drawFigure(ctx, 'brood', bx + W*.09, by + H*.04, 2.95, t, {phase:2, dir:-1, still:true}); // Korlat (not on the end page, where Brood sits alone); Brood, huge against the fire
+  if (node === 'b3_c5_brood_kallor') drawFigure(ctx, 'kallor', bx + W*.26, by - H*.01, 2.15, t, {phase:3, dir:-1, still:true}); // Kallor, standing off, only while he is there
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(26, W*.32/sq.length), H*.96 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   ctx.fillStyle = 'rgba(4,6,12,.18)'; ctx.fillRect(0, 0, W, H); vign(ctx, W, H, .82, .55); };
 

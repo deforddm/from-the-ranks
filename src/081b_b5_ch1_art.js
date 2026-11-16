@@ -325,6 +325,27 @@ SCENEX.b5_c1_festival = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
   for (let b = 0; b < 2; b++) { const k = mo ? ((t/40000 + b*.5) % 1) : .3 + b*.4, bx = lerp(W*.3, W*.7, k), by = H*(.74 + b*.1); ctx.fillStyle = '#0a0a10'; ctx.beginPath(); ctx.moveTo(bx - 18, by); ctx.lineTo(bx + 18, by); ctx.lineTo(bx + 12, by + 5); ctx.lineTo(bx - 12, by + 5); ctx.fill(); ctx.globalCompositeOperation = 'lighter'; glow(ctx, bx, by - 6, 12, '#ffb060', .4); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#ffd890'; ctx.fillRect(bx - 1, by - 8, 2, 3); }
   vign(ctx, W, H, .6, .5); };
 
+/* v13.33 (pictures against text): the road north out of Letheras the next morning (b5_c1_road and the chapter's end: "The road north out of
+   Letheras, the city behind in the morning haze, and the Sixth on it"). Its own picture now, not Book Three's Pannion road at dusk (80's alias):
+   a ruler-straight military road through flat farmland going away north, one company on it, the squad in its near files; the city low in the
+   haze on the left, behind them, its three old towers and the scaffolded dome; the sun just up in the east */
+SCENEX.b5_march = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.5, vx = W*.7, city = typeof S !== 'undefined' && S && S.chapter === 1;
+  ctx.drawImage(sceneLayer('b51:march' + (city ? ':city' : ''), W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#6a7e98'],[.55,'#b4b8bc'],[.85,'#e0d4c0'],[1,'#ecdcc0']]); x.fillRect(0, 0, W, hz + 2); // a hazy morning
+    glow(x, W*.96, hz - H*.06, W*.4, '#fff0d0', .45); glow(x, W*.96, hz - H*.06, 9, '#fffaf0', .8); // the sun, low in the east
+    if (city) { b51Skyline(x, W*.5, hz + 1, H*.12, 'rgba(120,124,134,.55)', null, 'rgba(120,124,134,.4)'); x.fillStyle = vgrad(x, hz - H*.22, hz, [[0,'rgba(230,226,220,0)'],[1,'rgba(230,226,220,.45)']]); x.fillRect(0, hz - H*.22, W, H*.22); } // Letheras, behind, in the haze
+    x.fillStyle = 'rgba(150,150,140,.5)'; x.fillRect(0, hz - 1, W, 2);
+    x.fillStyle = vgrad(x, hz, H, [[0,'#9aa078'],[.4,'#7e8458'],[1,'#4a4c32']]); x.fillRect(0, hz, W, H - hz); // flat farmland, green going to harvest
+    for (let r = 1; r < 16; r++) { const yy = hz + Math.pow(r/16, 1.7)*(H - hz); x.fillStyle = r % 2 ? 'rgba(170,160,110,.25)' : 'rgba(60,70,40,.18)'; x.fillRect(0, yy, W, 1 + r*.3); } // field strips
+    for (let i = 0; i < 14; i++) { const k = hash(i, 5121), px = hash(i, 5122)*W, py = hz + 2 + Math.pow(k, 1.6)*H*.2, s = .5 + k*1.6; if (Math.abs(px - vx) < W*.05) continue; x.fillStyle = 'rgba(60,70,44,.7)'; x.beginPath(); x.ellipse(px, py - 4*s, 4*s, 4*s, 0, 0, 7); x.fill(); x.fillRect(px - .5*s, py - 2*s, s, 2*s); } // hedgerow trees
+    x.fillStyle = vgrad(x, hz, H, [[0,'rgba(220,206,170,.7)'],[1,'rgba(190,170,130,.85)']]); x.beginPath(); x.moveTo(vx - 1, hz); x.lineTo(vx + 1, hz); x.lineTo(W*.86, H); x.lineTo(W*.02, H); x.closePath(); x.fill(); // the road, straight as a ruler
+    x.strokeStyle = 'rgba(120,100,70,.3)'; x.lineWidth = 1; x.beginPath(); x.moveTo(vx, hz); x.lineTo(W*.44, H); x.stroke(); // the crown of it
+  }), 0, 0, W, H);
+  b42Column(ctx, vx, hz, H*.78, W*.52, 16, 1.4, 5131); // one company, not an army: the Sixth, going away north
+  for (let i = 0; i < 3; i++) { const k = ((t*mo/26000 + i/3) % 1); glow(ctx, lerp(W*.2, W*1.1, k), hz + H*(.04 + i*.03), W*.16, '#e8dcc0', .12*Math.sin(k*Math.PI) + (mo ? 0 : .04)); } // the morning haze, drifting
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.1 + i*Math.min(28, W*.4/sq.length), H*.97 - (i % 2)*2, 2, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .42, .5); };
+
 /* ---------------- the chapter's gear: ART['item/<key>'] on Book Five's ground ----------------
    240×130, the same flat shapes and single highlight as the earlier books, on dark canal-slate with a thin dock-gold rim (Claude's call) */
 function b51Item(key, label, body){ const w = 240, h = 130, id = 'c51-' + key.replace(/[^a-z0-9]/g, '');

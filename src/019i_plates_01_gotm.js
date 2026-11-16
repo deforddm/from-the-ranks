@@ -19,8 +19,9 @@
     s += PK.wall(312, 470, 238, 262, c, {cw: 6, towers: [330, 400, 455], tw: 13, th: 24});
     s += PK.wall(508, 660, 234, 262, c, {cw: 6, towers: [540, 610], tw: 13, th: 26, gx: 575, gw: 18, gh: 22});
     s += `<path d="M470 238 L478 248 L486 242 L494 252 L502 244 L508 234 L508 262 L470 262 Z" fill="${c}"/>`; // the breach, rubble where the wall was
-    for (let i = 0; i < 5; i++) s += PK.smoke(P, 360 + i * 62, 226, 150, 12, 34, o.smoke || '#3a2826', o.sop || .42, 30 + i);
+    if (o.sop !== 0) for (let i = 0; i < 5; i++) s += PK.smoke(P, 360 + i * 62, 226, 150, 12, 34, o.smoke || '#3a2826', o.sop || .42, 30 + i);
     return s; };
+  PK.pale = pale; // v13.33: Book Three's plate 1 draws the same Pale (019i_plates_03_moi.js)
   /* v13.31: the prologue is the morning a runner came ("This morning a runner found you"), so the sky is the morning's, grey going gold, no stars */
   PK.plate('chapters/gotm/0', 'Prologue: the Second Army in its pits on the hillside below Pale in the morning, the city broken on its hill and the sky empty where the Spawn hung', P => {
     let s = PK.sky(P, [[0, '#5e6878'], [.45, '#9a9290'], [.78, '#d0a278'], [1, '#6a4a34']]);

@@ -395,7 +395,10 @@ Then another comes through the gap in the stakes, slower than the first, with a 
     b3_c7_barrow:{loc:'Outside Coral', sub:'The Shield Anvil\'s barrow', cap:'A barrow on the plain at dawn, made of gifts, and soldiers of every army standing round it.', amb:'dusk'},
     b3_c7_sea:{loc:'The coast by Coral', sub:'The Rust Ocean', cap:'Moon\'s Spawn going out over the sea, low and slow and small on the horizon, with the sun going down behind it.', amb:'lake'},
     b3_c7_shore_night:{loc:'The coast by Coral', sub:'The shore · night', cap:'Stars down to the sea and nothing on the horizon, the companies still standing along the shingle with a few torches, and the Fourth among them in the dark.', amb:'lake'},
-    b3_c7_finale:{loc:'The coast by Coral', sub:'After', cap:'A shore, the sea, and where the dark shape was, nothing.', amb:'lake'} },
+    b3_c7_finale:{loc:'The coast by Coral', sub:'After', cap:'A shore, the sea, and where the dark shape was, nothing.', amb:'lake'},
+    b3_fin_host:{loc:'The coast by Coral', sub:'A week after', cap:'The Host on the road inland, company by company, the black city on its rise behind, and the sea empty to the horizon.', amb:'wind'},
+    b3_fin_daru:{loc:'The Domin', sub:'The long way back', cap:'The delegation\'s wagons on the road west across the Domin, and the Fourth walking beside them.', amb:'wind'},
+    b3_fin_standdown:{loc:'The coast by Coral', sub:'Noon', cap:'The shore below Coral at noon, the sea going in and out, and nobody left to countersign.', amb:'lake'} },
 
   end:{
     host:['With the Host', 'Whiskeyjack died at Coral, on the hill, of the leg he would not give a week to, and Kallor walked out of the world\'s attention alive. The Shield Anvil is under a barrow of gifts on the plain. Moon\'s Spawn went out over the sea with the Bridgeburners in it. The Fourth stayed with Onearm\'s Host, whatever it is called now, and whatever comes next, which in this army is always more of it.'],
@@ -1480,7 +1483,7 @@ B3FIN7.loy = (id, warm, cold, mid) => { const l = (S.loy && S.loy[id]) || 0; ret
 B3FIN7.trickLine = id => trickBy('b3_c7_anvil') === id ? (id === 'sgt' ? 'When one of yours is hurt now, you step in and put your hand where theirs is. You learned it the day of Coral, from the Grey Swords. You decide it seldom.' : `When one of the Fourth is hurt now, ${b3c7P(id).she} steps in and puts a hand where theirs is, the way the Grey Swords showed, the day of Coral.`) : '';
 
 B3FIN7.ending = key => {
-  const T = {host:['With the Host', 'b3_c7_sea'], daru:['To Darujhistan', 'b3_c7_finale'], standdown:['Stood down', 'b3_c7_finale']}[key] || ['With the Host', 'b3_c7_sea'];
+  const T = {host:['With the Host', 'b3_fin_host'], daru:['To Darujhistan', 'b3_fin_daru'], standdown:['Stood down', 'b3_fin_standdown']}[key] || ['With the Host', 'b3_fin_host']; // v13.33: each road its own picture (067b)
   if (typeof S === 'undefined' || !S || !S.f) return {title:T[0], scene:T[1], paras:[]};
   try {
     const mates = b3c7Mates(), n = mates.length + 1, t = b3Trust(), d = b3Dread();

@@ -53,8 +53,8 @@
     let fr = ''; for (let r = 0; r < 14; r++) { const y = 216 + r * r * .9; fr += `M-10 ${PK.f(y)} L670 ${PK.f(y + 1)}`; } s += `<path d="${fr}" stroke="#3a2e26" stroke-width="1" opacity=".5"/>`;
     s += `<path d="M320 214 L340 214 L470 400 L190 400 Z" fill="#5a4e40"/>`;
     for (let i = 0; i < 6; i++) { const t = (i + 1) / 7, x = 330 + (i % 2 ? 1 : -1) * (40 + t * t * 260); s += PK.tree(x, 214 + t * t * 180, 30 + t * 80, '#0c0806', 'dead', i); }
-    s += PK.column(330, 220, 330, 350, 22, .3, 1, '#14100c', 22, {jx: 26});
-    s += PK.back(560, 404, .5, B({walk: 1, flip: true, rim: '#e0dcd0'}));
+    s += PK.column(330, 220, 330, 350, 22, .3, 1, '#14100c', 22, {jx: 26, spears: 0}); // v13.33: the file of the disarmed carries nothing that cuts
+    s += PK.back(560, 404, .5, B({walk: 1, flip: true, rim: '#e0dcd0', kit: 'none'}));
     return s; });
   PK.plate('chapters/mt/6', 'Chapter Six: Brans Keep squat against its cliff, the lake grey beside it, and the whole army of Lether drawn up in front of its last great work', P => {
     let s = PK.sky(P, [[0, '#3a3a50'], [.6, '#8a7a7a'], [1, '#b09080']]);
