@@ -108,11 +108,14 @@ function b64City(x, W, H, hz, clear){ const c0 = clear ? '#6e7276' : '#565c62', 
 /* rain: slanting streaks falling, in the frame */
 function b64Rain(ctx, W, H, t, mo, n, a){ ctx.strokeStyle = `rgba(206,214,224,${a})`; ctx.lineWidth = .8; ctx.beginPath();
   for (let i = 0; i < n; i++) { const sp = 1 + hash(i, 6411)*.7, k = mo ? ((t/650*sp + hash(i, 6412)) % 1) : hash(i, 6412), px = hash(i, 6413)*W*1.2 - k*H*.22, py = k*H*1.1 - 10; ctx.moveTo(px, py); ctx.lineTo(px - 2.6, py + 9); } ctx.stroke(); }
-SCENEX.b6_gdanisban_rain = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, clear = !!f.b6_soliel, hz = H*.46;
+/* v13.33 (pictures against text): the chapter's end page is "after the rain" (both captions): no rain, the sky lifting, and the Host gathered
+   in the mud (vote, the Fourth at the back of it) or gathered round one tent behind the picket line (out) */
+SCENEX.b6_gdanisban_rain = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, end = !!S && S.scene === 'chend' && S.chapter === 4, ek = end ? ((S.chapters && S.chapters[4]) || f.b6_c4_key || 'vote') : null, clear = !!f.b6_soliel || end, hz = H*.46;
   const puddles = [[.3, .72, .1], [.62, .78, .14], [.86, .7, .07], [.14, .86, .09], [.5, .9, .12]];
-  ctx.drawImage(sceneLayer('b64:camp' + (clear ? 'c' : 'r'), W, H, (x, W, H) => {
+  ctx.drawImage(sceneLayer('b64:camp' + (clear ? 'c' : 'r') + (end ? 'e' : ''), W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, clear ? [[0, '#3c4452'], [.45, '#76808a'], [.85, '#c4bea8'], [1, '#d6ccae']] : [[0, '#23272e'], [.5, '#454b54'], [1, '#737880']]); x.fillRect(0, 0, W, hz + 2);
-    if (clear) glow(x, W*.3, hz*.55, W*.32, '#fff2cc', .3); // a pale sun coming through, low in the east
+    if (clear && !end) glow(x, W*.3, hz*.55, W*.32, '#fff2cc', .3); // a pale sun coming through, low in the east
+    if (end) glow(x, W*.3, hz*.4, W*.4, '#f4f0e0', .18); // after the rain: the cloud lifting, no sun through it yet
     for (let i = 0; i < 12; i++) { const cx = hash(i, 6421)*W, cy = hz*(.08 + hash(i, 6422)*.6), w = W*(.12 + hash(i, 6423)*.24); x.fillStyle = clear ? `rgba(40,46,58,${(.1 + hash(i, 6424)*.12).toFixed(3)})` : `rgba(16,18,24,${(.1 + hash(i, 6424)*.16).toFixed(3)})`; x.beginPath(); x.ellipse(cx, cy, w, 4 + hash(i, 6425)*9, 0, 0, 7); x.fill(); } // torn cloud
     if (!clear) for (let i = 0; i < 4; i++) { const cx = W*(.1 + i*.26 + hash(i, 6426)*.1), cw = W*(.08 + hash(i, 6427)*.08); x.lineWidth = 1; for (let j = 0; j < 26; j++) { const lx = cx + hash(i, j, 6428)*cw, e = Math.sin(Math.PI*(lx - cx)/cw); x.strokeStyle = `rgba(28,32,38,${(.08 + .14*e).toFixed(3)})`; x.beginPath(); x.moveTo(lx, hz*(.34 + hash(i, j, 6429)*.1)); x.lineTo(lx - W*.02, hz - H*.01); x.stroke(); } } // grey curtains of rain hanging under the cloud
     [[.64, 1], [.76, .8]].forEach(([u, k], i) => { for (let j = 0; j < 7; j++) { const sx = W*u - j*W*.01*k, sy = hz - H*.09 - j*H*.026; x.fillStyle = `rgba(${clear ? '86,86,86' : '52,54,58'},${(.2 - j*.025).toFixed(3)})`; ell(x, sx, sy, W*(.005 + j*.003), H*(.008 + j*.003), x.fillStyle); } }); // two thin smokes over the city, far off
@@ -146,7 +149,12 @@ SCENEX.b6_gdanisban_rain = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = R
   /* ripples in the puddles while it rains */
   if (!clear) puddles.forEach(([u, v, r], j) => { for (let i = 0; i < 3; i++) { const k = mo ? ((t/900 + hash(j, i, 6451)) % 1) : .5, px = W*u + (hash(j, i, 6452) - .5)*W*r*1.2, py = H*v + (hash(j, i, 6453) - .5)*H*.016;
     ctx.strokeStyle = `rgba(220,228,238,${(.4*(1 - k)).toFixed(2)})`; ctx.lineWidth = .6; ctx.beginPath(); ctx.ellipse(px, py, 1 + k*5, .4 + k*1.4, 0, 0, 7); ctx.stroke(); } });
+  if (end) { const tx = W*.66, ty = hz + H*.15; // the Host gathered: a dark crowd on the mud, every face one way
+    if (ek === 'out') { ctx.fillStyle = '#8a8a7e'; ctx.beginPath(); ctx.moveTo(tx - W*.05, ty); ctx.lineTo(tx - W*.01, ty - H*.07); ctx.lineTo(tx + W*.01, ty - H*.07); ctx.lineTo(tx + W*.05, ty); ctx.fill(); ctx.fillStyle = '#5a5a50'; ctx.beginPath(); ctx.moveTo(tx + W*.01, ty - H*.07); ctx.lineTo(tx + W*.05, ty); ctx.lineTo(tx + W*.012, ty); ctx.fill(); ctx.fillStyle = '#1a1612'; ctx.fillRect(tx - W*.006, ty - H*.035, W*.012, H*.035); } // the one tent
+    for (let i = 0; i < 260; i++) { const a = hash(i, 6461)*6.283, rr = Math.sqrt(hash(i, 6462)), px = ek === 'out' ? tx + Math.cos(a)*rr*W*.2 : W*(.34 + hash(i, 6461)*.64), py = ek === 'out' ? ty + Math.sin(a)*rr*H*.06 + H*.01 : hz + H*(.06 + Math.pow(hash(i, 6462), .8)*.16), s = .3 + (py - hz)/H*1.1;
+      if (ek === 'out' && Math.abs(px - tx) < W*.055 && py < ty + 2) continue; ctx.fillStyle = `rgba(${22 + (i % 3)*6},${26 + (i % 3)*5},${32 + (i % 3)*4},.92)`; ctx.fillRect(px - 1.8*s, py - 8*s, 3.6*s, 8*s); ell(ctx, px, py - 9*s, 1.7*s, 1.7*s, ctx.fillStyle); } }
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.5 + i*18, H*.95, 1.7, t, {phase:i, dir:1}));
+  if (end && ek === 'out') { ctx.strokeStyle = '#2a2018'; ctx.lineWidth = 1.4; ctx.beginPath(); for (let i = 0; i < 12; i++) { const px = W*(.4 + i*.05); ctx.moveTo(px, H*.99); ctx.lineTo(px + 3, H*.86); } ctx.stroke(); } // the picket's stakes, the Fourth among them
   if (!clear) { b64Rain(ctx, W, H, t, mo, 170, .24); ctx.fillStyle = 'rgba(40,46,56,.12)'; ctx.fillRect(0, 0, W, H); } // the rain, and the grey it puts over everything
   vign(ctx, W, H, clear ? .4 : .55, .5); };
 
@@ -320,3 +328,48 @@ SCENEX.b6_c4_outer = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   x.fillStyle = '#100c0a'; x.fillRect(lx - W*.08, ly + H*.02, W*.1, H*.05); x.beginPath(); x.arc(lx - W*.06, ly + H*.07, H*.03, 0, Math.PI*2); x.fill(); // the cart on its side
   x.fillStyle = '#ffd890'; x.fillRect(lx + W*.025, ly - H*.01, 3, 4); x.strokeStyle = '#100c0a'; x.beginPath(); x.moveTo(lx + W*.03, ly - H*.01); x.lineTo(lx + W*.03, ly - H*.12); x.stroke(); // lamp and spear
   b64Rain(ctx, W, H, t, mo, 70, .22); };
+
+/* ---------------- v13.33 (pictures against text): b6_c4_edge, its own picture (it had borrowed Book Three's starlit camp) ----------------
+   The Seventh's edge of the camp at night, the third night of the rain: low cloud with no star or moon in it, G'danisban a dark rise on the
+   right with a light or two; the open ground black between, and on it a scatter of lamps where nobody should be, a few of them gathered at a
+   post hung with rags just past the gap; the ditch and its bank of earth across the frame with a gap in it a cart wide; the picket fire low in
+   a scrape behind the bank, the squad by it; the rain over all. After the cult (b6_c4_cultDone) the post is down and most lamps are gone */
+SCENEX.b6_c4_edge = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, done = !!f.b6_c4_cultDone, hz = H*.42, bank = H*.7, gx = W*.62, gw = W*.06, fl = b2Fl(t);
+  ctx.drawImage(sceneLayer('b64:edge' + (done ? ':d' : ''), W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0, '#07080b'], [.6, '#12151a'], [1, '#1e2228']]); x.fillRect(0, 0, W, hz + 2); // night, the cloud down low
+    for (let i = 0; i < 10; i++) { x.fillStyle = `rgba(30,34,40,${(.25 + hash(i, 6471)*.25).toFixed(2)})`; x.beginPath(); x.ellipse(hash(i, 6472)*W, hz*(.15 + hash(i, 6473)*.7), W*(.14 + hash(i, 6474)*.2), 5 + hash(i, 6475)*9, 0, 0, 7); x.fill(); } // cloud, a little lighter than the dark
+    // the city on its rise, right, black, a light or two in it
+    x.fillStyle = '#0c0e10'; x.beginPath(); x.moveTo(W*.5, hz + 1); x.quadraticCurveTo(W*.72, hz - H*.05, W*1.02, hz - H*.04); x.lineTo(W + 2, hz + 1); x.fill();
+    for (let i = 0; i < 18; i++) { const rx = W*(.6 + hash(i, 6476)*.38), rh = H*(.02 + hash(i, 6477)*.03); x.fillRect(rx, hz - H*.04 - rh, W*(.012 + hash(i, 6478)*.02), rh + H*.04); }
+    [[.72, .03]].forEach(([u, r]) => { x.beginPath(); x.arc(W*u, hz - H*.075, W*r*.55, Math.PI, 0); x.fill(); });
+    // the open ground toward it: black mud, puddles holding what light there is
+    x.fillStyle = vgrad(x, hz, bank, [[0, '#121310'], [1, '#0a0a08']]); x.fillRect(0, hz, W, bank - hz);
+    for (let i = 0; i < 18; i++) { const px = hash(i, 6479)*W, py = hz + H*(.03 + Math.pow(hash(i, 6480), 1.3)*.22), r = W*(.01 + hash(i, 6481)*.03)*(1 + (py - hz)/H*2); ell(x, px, py, r, r*.16, 'rgba(70,76,86,.35)'); }
+    // the ditch, a black line under the bank's lip, and the bank: raw earth, a gap in it a cart wide
+    x.fillStyle = '#060605'; x.fillRect(0, bank - H*.1, W, H*.02);
+    x.fillStyle = vgrad(x, bank - H*.09, bank + H*.02, [[0, '#2e261c'], [1, '#16120c']]);
+    [[-2, gx - gw/2], [gx + gw/2, W + 2]].forEach(([a, b]) => { x.beginPath(); x.moveTo(a, bank + H*.02); x.lineTo(a, bank - H*.06); for (let px = a; px <= b; px += 8) x.lineTo(px, bank - H*(.07 + .01*Math.sin(px*.07))); x.lineTo(b, bank - H*.05); x.lineTo(b + (a < 0 ? W*.01 : 0), bank + H*.02); x.closePath(); x.fill(); });
+    x.fillStyle = 'rgba(160,140,110,.12)'; x.fillRect(0, bank - H*.072, gx - gw/2, 1); x.fillRect(gx + gw/2, bank - H*.072, W - gx - gw/2, 1); // the wet lip catching the fire
+    x.fillStyle = '#100e0a'; x.beginPath(); x.moveTo(gx - gw/2, bank + H*.02); x.lineTo(gx - gw*.3, bank - H*.07); x.lineTo(gx + gw*.3, bank - H*.07); x.lineTo(gx + gw/2, bank + H*.02); x.fill(); // the gap: ruts going out through it
+    // the near ground inside the camp: mud, the scrape for the fire
+    x.fillStyle = vgrad(x, bank, H, [[0, '#1a1610'], [1, '#0c0a08']]); x.fillRect(0, bank + H*.02, W, H - bank);
+    for (let i = 0; i < 40; i++) { const py = bank + H*.03 + hash(i, 6482)*(H - bank), d = (py - bank)/(H - bank); x.fillStyle = `rgba(0,0,0,${(.2 + d*.2).toFixed(2)})`; x.fillRect(hash(i, 6483)*W, py, 4 + d*20, .8 + d); }
+    if (!done) { // the post past the gap, hung with rags, and the bowls set out in rows in the mud
+      const px = gx + W*.03, py = bank - H*.12; x.fillStyle = '#16120e'; x.fillRect(px, py - H*.12, 2, H*.12);
+      for (let i = 0; i < 5; i++) { x.fillStyle = ['#4a3e34', '#3a3a3e', '#5a4a3a'][i % 3]; x.beginPath(); x.moveTo(px + 2, py - H*(.11 - i*.018)); x.lineTo(px + 8 + hash(i, 6484)*5, py - H*(.1 - i*.018) + 3); x.lineTo(px + 2, py - H*(.1 - i*.018)); x.fill(); }
+      for (let i = 0; i < 12; i++) ell(x, px - W*.04 + (i % 6)*W*.016, py + H*(.012 + Math.floor(i/6)*.014), 2, .9, 'rgba(110,90,70,.6)'); }
+    else { x.fillStyle = '#16120e'; x.save(); x.translate(gx + W*.03, bank - H*.12); x.rotate(1.3); x.fillRect(0, 0, 2, H*.12); x.restore(); } // the post, down
+  }), 0, 0, W, H);
+  // the lamps on the open ground: many, coming a little closer every night; gathered at the post; after, a few going back toward the city
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = 'rgba(255,190,120,.7)'; [[.68, .05], [.83, .045]].forEach(([u, v]) => ctx.fillRect(W*u, hz - H*v, 1.4, 1.4)); // a light or two in the city
+  const nl = done ? 6 : 26; for (let i = 0; i < nl; i++) { const k = hash(i, 6491), px = done ? W*(.62 + k*.3) : (i < 9 ? gx + W*(-.04 + hash(i, 6492)*.12) : W*(.08 + k*.88)), py = done ? hz + H*(.02 + hash(i, 6493)*.05) : (i < 9 ? bank - H*(.11 + hash(i, 6493)*.04) : hz + H*(.02 + Math.pow(hash(i, 6493), 1.3)*.2)), ff = mo ? .8 + .2*Math.sin(t/(300 + i*37) + i) : 1, d = (py - hz)/(bank - hz);
+    glow(ctx, px, py, 5 + d*10, '#ffb060', .35*ff); glow(ctx, px, py, 1.2 + d*1.4, '#ffe0a0', .9*ff); }
+  ctx.globalCompositeOperation = 'source-over';
+  if (!done) for (let i = 0; i < 9; i++) { const px = gx + W*(-.04 + hash(i, 6492)*.12), py = bank - H*(.11 + hash(i, 6493)*.04) + 9, s = .9; ctx.fillStyle = 'rgba(8,8,8,.9)'; ctx.fillRect(px - 2*s, py - 9*s, 4*s, 9*s); ell(ctx, px, py - 10*s, 1.7*s, 1.7*s, ctx.fillStyle); } // the robed ones under their lamps, hands out
+  // the picket fire, low, in its scrape behind the bank; the squad round it
+  const cx = W*.3, cy = H*.86; ctx.globalCompositeOperation = 'lighter'; glow(ctx, cx, cy, H*.3, '#ff8a3a', .24*fl); ctx.globalCompositeOperation = 'source-over';
+  ell(ctx, cx, cy + 2, 14, 4, '#0a0806'); poly(ctx, [[cx - 6, cy], [cx - 1, cy - 9*fl], [cx + 1, cy - 4], [cx + 3, cy - 7*fl], [cx + 6, cy]], 'rgba(255,140,60,.9)'); poly(ctx, [[cx - 3, cy], [cx, cy - 5*fl], [cx + 3, cy]], 'rgba(255,220,140,.9)');
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const n = sq.length, side = i < n/2 ? -1 : 1, j = side < 0 ? i : i - Math.ceil(n/2); drawFigure(ctx, id, cx + side*(26 + j*24), H*.97 - (j % 2)*3, 1.8, t, {phase:i, dir:-side}); });
+  b64Rain(ctx, W, H, t, mo, 150, .2); ctx.fillStyle = 'rgba(20,24,32,.14)'; ctx.fillRect(0, 0, W, H);
+  vign(ctx, W, H, .7, .5); };

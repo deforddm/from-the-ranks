@@ -221,6 +221,24 @@ SCENEX.b6_c2_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
   b62Rain(ctx, W, H, t, mo, 90, .2, .1);
   vign(ctx, W, H, .6, .5); };
 
+/* v13.33 (pictures against text): the chapter's end page, "the column on the road south in the rain", the village small behind it: burnt, a smudge
+   of smoke going flat in the wind (burn), or with its roofs on and one chimney going (pass) */
+{ const _pv = SCENEX.b6_plague_village; SCENEX.b6_plague_village = (cv, t) => { if (!(S && S.scene === 'chend' && S.chapter === 2)) return _pv(cv, t);
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, burnt = ((S.chapters && S.chapters[2]) || (S.f && S.f.b6_c2_key)) !== 'pass', hz = H*.5;
+  const rd = k => [lerp(-W*.02, W*1.02, k), lerp(H*.9, H*.66, k) + Math.sin(k*4)*H*.02];
+  ctx.drawImage(sceneLayer('b62:end' + (burnt ? 'b' : 'p'), W, H, (x, W, H) => {
+    b62Village(x, W, H, hz, false);
+    x.save(); x.translate(W*.22, hz + H*.02); x.scale(.32, .32); x.translate(-W*.5, -hz - H*.02); b62Houses(x, W, H, hz, burnt); x.restore(); // the village, behind, small
+    if (burnt) { x.fillStyle = 'rgba(30,24,20,.35)'; x.fillRect(W*.06, hz + H*.005, W*.3, H*.04); } // its roofs gone, black
+    { const L = [], R = []; for (let i = 0; i <= 24; i++) { const k = i/24, [px, py] = rd(k), w = lerp(16, 9, k); L.push([px, py - w]); R.push([px, py + w]); } poly(x, L.concat(R.reverse()), 'rgba(80,72,60,.6)'); } // the road south, across the frame
+  }), 0, 0, W, H);
+  if (burnt) for (let i = 0; i < 26; i++) { const k = mo ? ((t/9000 + i/26) % 1) : i/26; ell(ctx, W*.2 + k*W*.55, hz - H*.03 - k*H*.05 + Math.sin(i*1.7)*2, 12 + k*44, 4 + k*7, `rgba(34,30,30,${(.26*(1 - k*.7)).toFixed(2)})`); } // a smudge of smoke going flat in the wind
+  else for (let i = 0; i < 16; i++) { const k = mo ? ((t/7000 + i/16) % 1) : i/16; ell(ctx, W*.235 + k*W*.04, hz - H*.02 - k*H*.18, 2 + k*6, 1.6 + k*4, `rgba(170,170,166,${(.3*(1 - k*.8)).toFixed(2)})`); } // one chimney going
+  for (let i = 0; i < 26; i++) { const k = .3 + i/26*.7, [px, py] = rd(k), s = lerp(1.6, 1, k); b65Tiny(ctx, px, py + 2, s, '#262420', false, mo ? Math.sin(t/220 + i)*.5 : 0); } // the column, going on south
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const [px, py] = rd(.04 + i*.045); drawFigure(ctx, id, px, py - 2, 1.5, t, {phase:i, dir:1}); });
+  b62Rain(ctx, W, H, t, mo, 100, .24, .1);
+  vign(ctx, W, H, .55, .5); }; }
+
 /* ---------------- the chapter's gear: ART['item/<key>'] on Book Six's ground ----------------
    240×130, the same flat shapes and single highlight as the earlier books, on dark ash with a thin bone rim (Claude's call: 100b's walls) */
 function b62Item(key, label, body){ const w = 240, h = 130, id = 'c62-' + key.replace(/[^a-z0-9]/g, '');

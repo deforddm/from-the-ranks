@@ -80,6 +80,76 @@ SCENEX.b6_kokakal = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.08 + i*17, H*.95, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .46, .5); };
 
+/* ---------------- v13.33 (pictures against text): Book Two's Odhan replaced, and the 'sail' end page ----------------
+   b6_c5_road: the Sotka road by day, scrub and stone toward the coast, the column halted along it, the company's tents and carts at the road's
+   edge, and the smoke haze of Y'Ghatan still low in the west behind. b6_c5_dusk: a roofless square of mud-brick walls off the road, older than the
+   Empire, a gap where the gate was, a thin smoke from inside and two heads flat on the wall (gone, and the fire ash, once it is over).
+   b6_c5_village: a dry village off the road by day, its one street of low flat-roofed houses, every door shut with a white ring chalked on it at
+   face height, the well in the street with its bucket on the wall, one door at the top standing open (shut again after). The chapter's end on
+   the 'sail' key: from the transport at anchor, the Third at its rail and the beach crowded behind at dusk */
+function b65Sky(x, W, H, hz, dusk){ x.fillStyle = vgrad(x, 0, hz, dusk ? [[0,'#2a2230'],[.5,'#6a4440'],[.85,'#c47a50'],[1,'#e09a62']] : [[0,'#6a86a4'],[.6,'#b0bcc0'],[1,'#e2d4b8']]); x.fillRect(0, 0, W, hz + 2);
+  if (dusk) glow(x, W*.08, hz, W*.36, '#ffb070', .4); else { glow(x, W*.84, H*.08, W*.25, '#fffaee', .35); x.fillStyle = 'rgba(120,100,90,.18)'; x.beginPath(); x.ellipse(W*.06, hz - 8, W*.3, 12, 0, 0, 7); x.fill(); } } // dusk, or day with Y'Ghatan's smoke low in the west
+function b65Ground(x, W, H, hz, dusk){ x.fillStyle = vgrad(x, hz, H, dusk ? [[0,'#6a5038'],[1,'#2a1e14']] : [[0,'#b49c78'],[.5,'#9a8260'],[1,'#6a5640']]); x.fillRect(0, hz, W, H - hz);
+  for (let i = 0; i < 60; i++) { const yy = hz + 2 + Math.pow(hash(i, 6541), 1.4)*(H - hz), d = (yy - hz)/(H - hz); b61Bush(x, hash(i, 6542)*W, yy, .2 + d*1.2, dusk ? `rgba(${30 - Math.round(d*14)},${24 - Math.round(d*10)},${18 - Math.round(d*8)},.85)` : `rgba(${100 - Math.round(d*40)},${96 - Math.round(d*40)},${80 - Math.round(d*34)},.8)`); }
+  for (let i = 0; i < 12; i++) { const yy = hz + 4 + Math.pow(hash(i, 6543), 1.2)*(H - hz)*.8, d = (yy - hz)/(H - hz), r = 2 + d*8; ell(x, hash(i, 6544)*W, yy, r, r*.5, dusk ? 'rgba(70,56,44,.8)' : 'rgba(150,136,116,.9)'); } } // stones
+SCENEX.b6_c5_road = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46;
+  const rd = k => [lerp(W*.06, W*.92, k), lerp(H*.82, hz + H*.01, Math.pow(k, .7))];
+  ctx.drawImage(sceneLayer('b65:road', W, H, (x, W, H) => { b65Sky(x, W, H, hz, false); b65Ground(x, W, H, hz, false);
+    { const L = [], R = []; for (let i = 0; i <= 24; i++) { const k = i/24, [px, py] = rd(k), w = lerp(14, 1.5, k); L.push([px, py - w]); R.push([px, py + w]); } poly(x, L.concat(R.reverse()), 'rgba(220,200,160,.55)'); } // the road, east to the coast
+    for (let i = 0; i < 6; i++) { const tx = W*(.12 + i*.07), ty = H*.66 - i*H*.012, s = 1.4 - i*.08; x.fillStyle = '#7a7660'; x.beginPath(); x.moveTo(tx - 9*s, ty); x.lineTo(tx - 1*s, ty - 8*s); x.lineTo(tx + 8*s, ty); x.fill(); x.fillStyle = 'rgba(30,26,20,.35)'; x.beginPath(); x.moveTo(tx - 1*s, ty - 8*s); x.lineTo(tx + 8*s, ty); x.lineTo(tx + 1*s, ty); x.fill(); } // the company's tents at the road's edge
+    for (let i = 0; i < 4; i++) { const cx = W*(.54 + i*.07), cy = H*.72 - i*H*.02, s = 1.2 - i*.12; x.fillStyle = '#4a3a28'; x.fillRect(cx - 8*s, cy - 7*s, 16*s, 5*s); ell(x, cx - 5*s, cy - 1.6*s, 2.2*s, 2.2*s, '#2a2018'); ell(x, cx + 5*s, cy - 1.6*s, 2.2*s, 2.2*s, '#2a2018'); x.fillStyle = '#6a6250'; x.beginPath(); x.ellipse(cx, cy - 7*s, 7*s, 3*s, 0, Math.PI, 0); x.fill(); } // the carts, covered
+  }), 0, 0, W, H);
+  for (let i = 0; i < 34; i++) { const k = .22 + i/34*.76, [px, py] = rd(k), s = lerp(1.1, .3, k); b65Tiny(ctx, px + (i % 2 ? 3 : -3)*s, py + 2*s, s, '#3a3226', false, 0); } // the column halted along it
+  for (let i = 0; i < 3; i++) { const k = ((t*mo/30000 + i/3) % 1); glow(ctx, lerp(W*.9, W*1.1, k), hz - H*.02, W*.1, '#c8d4d8', .1*Math.sin(k*Math.PI) + (mo ? 0 : .04)); } // the sea air, coming up from the coast
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(24, W*.36/sq.length), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .4, .5); };
+SCENEX.b6_c5_dusk = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, done = !!f.b6_c5_desDone, hz = H*.5, x0 = W*.42, x1 = W*.84, top = H*.38, foot = H*.66;
+  ctx.drawImage(sceneLayer('b65:waystation' + (done ? ':d' : ''), W, H, (x, W, H) => { b65Sky(x, W, H, hz, true); b65Ground(x, W, H, hz, true);
+    x.fillStyle = 'rgba(150,120,90,.4)'; x.beginPath(); x.moveTo(-2, H*.94); x.quadraticCurveTo(W*.3, H*.74, W*.36, hz + 1); x.lineTo(W*.4, hz + 1); x.quadraticCurveTo(W*.36, H*.8, W*.22, H + 2); x.lineTo(-2, H + 2); x.fill(); // the road, going on west past it
+    // the way-station: a square of mud-brick walls, roofless, its far wall showing over the near, worn ragged along the top, a gap where the gate was
+    x.fillStyle = '#4a3428'; x.fillRect(x0 + W*.03, top - H*.03, x1 - x0 - W*.06, H*.05); // the far wall, over the near
+    x.fillStyle = vgrad(x, top, foot, [[0,'#8a6448'],[1,'#5a4030']]); x.beginPath(); x.moveTo(x0, foot); x.lineTo(x0, top); for (let px = x0; px <= x1; px += 6) x.lineTo(px, top - (hash(Math.round(px), 6551) > .7 ? H*.012 : 0) + Math.sin(px*.13)*1.2); x.lineTo(x1, foot); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(255,170,110,.22)'; x.fillRect(x0, top, W*.012, foot - top); // the west corner catching the last light
+    x.fillStyle = '#1a120c'; x.fillRect(x0 + (x1 - x0)*.4, top + H*.1, (x1 - x0)*.12, foot - top - H*.1); // the gap where the gate was
+    x.strokeStyle = 'rgba(40,26,18,.35)'; x.lineWidth = .6; x.beginPath(); for (let y = top + 5; y < foot; y += 5) { x.moveTo(x0, y); x.lineTo(x1, y); } x.stroke(); // the courses
+    x.fillStyle = 'rgba(40,26,18,.6)'; [[.15, .3], [.7, .5], [.86, .2]].forEach(([u, v]) => x.fillRect(x0 + (x1 - x0)*u, top + (foot - top)*v, W*.02, H*.03)); // holes where the brick has gone
+  }), 0, 0, W, H);
+  if (!done) { b2Smoke(ctx, t*mo, x0 + (x1 - x0)*.55, top + H*.02, H*.34, H*.03, '#b0a090', .4, 6552, -1); // a thin smoke from inside
+    [[.22], [.78]].forEach(([u]) => { const px = x0 + (x1 - x0)*u, py = top - 1; ell(ctx, px, py - 2.4, 3.2, 2.8, '#1a120e'); ctx.fillStyle = '#1a120e'; ctx.fillRect(px - 9, py - 1.8, 18, 2.2); }); } // two heads flat on the wall, and their bows
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(24, W*.34/sq.length), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .5, .5); };
+SCENEX.b6_c5_village = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, done = !!f.b6_c5_villageDone, hz = H*.46;
+  ctx.drawImage(sceneLayer('b65:village' + (done ? ':d' : ''), W, H, (x, W, H) => { b65Sky(x, W, H, hz, false); b65Ground(x, W, H, hz, false);
+    x.fillStyle = 'rgba(200,180,140,.55)'; x.beginPath(); x.moveTo(W*.3, H); x.lineTo(W*.49, hz + H*.06); x.lineTo(W*.55, hz + H*.06); x.lineTo(W*.82, H); x.fill(); // the one street, dry
+    const c = '#a08a68', cd = '#6e5c44';
+    const shut = (hx, by, w, h, open) => { const dx = hx + w*.38, dw = w*.2, dh = h*.56; x.fillStyle = open ? '#0a0806' : '#5a3e26'; x.fillRect(dx, by - dh, dw, dh); if (!open) { x.fillStyle = 'rgba(0,0,0,.3)'; x.fillRect(dx + dw*.48, by - dh, .8, dh); x.strokeStyle = 'rgba(240,236,224,.9)'; x.lineWidth = Math.max(.7, w*.012); x.beginPath(); x.arc(dx + dw/2, by - dh*.72, Math.max(1.2, dw*.24), 0, 7); x.stroke(); } }; // a door, shut, the chalk ring on it
+    const L = [[.02, .2, .26], [.2, .13, .17], [.31, .08, .1], [.4, .05, .06]], R = [[.6, .05, .06], [.66, .08, .1], [.76, .12, .17], [.86, .16, .26]];
+    L.forEach(([u, w, hh], i) => { const by = lerp(H*.96, hz + H*.07, i/3.6); b62House(x, W*u, by, W*w, H*hh, c, cd, 0, i < 2 ? .14 : 0); shut(W*u, by, W*w, H*hh, !done && i === 3); });
+    R.forEach(([u, w, hh], i) => { const by = lerp(hz + H*.07, H*.94, i/3.4); b62House(x, W*u, by, W*w, H*hh, shade(c, -.06), cd, 0, i > 1 ? .66 : 0); shut(W*u, by, W*w, H*hh, !done && i === 0); });
+    // the well in the middle of the street, its stone lip, the bucket on the wall
+    const wx = W*.54, wy = H*.74; ell(x, wx, wy + 2, W*.05, H*.018, 'rgba(60,44,30,.35)'); x.fillStyle = '#8a7a62'; x.fillRect(wx - W*.035, wy - H*.05, W*.07, H*.05); ell(x, wx, wy - H*.05, W*.035, H*.012, '#a8987c'); ell(x, wx, wy - H*.05, W*.025, H*.007, '#1a120c');
+    x.fillStyle = '#5a4028'; x.fillRect(wx + W*.02, wy - H*.075, W*.012, H*.024); x.strokeStyle = '#6a5a40'; x.lineWidth = .6; x.beginPath(); x.moveTo(wx + W*.026, wy - H*.075); x.quadraticCurveTo(wx, wy - H*.09, wx - W*.01, wy - H*.05); x.stroke(); // the bucket on its rope
+  }), 0, 0, W, H);
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(24, W*.32/sq.length), H*.985 - (i % 2)*3, 1.6, t, {phase:i}));
+  vign(ctx, W, H, .4, .5); };
+/* the end on 'sail': the transport at anchor off the shore at dusk, the Third at its rail, the beach crowded behind */
+{ const _kk = SCENEX.b6_kokakal; SCENEX.b6_kokakal = (cv, t) => { if (!(S && S.scene === 'chend' && S.chapter === 5 && ((S.chapters && S.chapters[5]) || (S.f && S.f.b6_c5_key)) === 'sail')) return _kk(cv, t);
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.34, sh = H*.56, deck = H*.84;
+  ctx.drawImage(sceneLayer('b65:sail', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#2a2228'],[.45,'#5a3e3c'],[.82,'#a46c50'],[1,'#d09468']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.9, hz, W*.4, '#ffb070', .4); // the sun down behind the Odhan, now on the right: we look back at the shore
+    x.fillStyle = '#5a4436'; x.beginPath(); x.moveTo(0, hz + 2); for (let i = 0; i <= 20; i++) x.lineTo(W*i/20, hz - H*(.01 + .015*Math.sin(i*1.3))); x.lineTo(W, hz + 2); x.fill(); // the Odhan's low line
+    x.fillStyle = vgrad(x, hz, sh, [[0,'#9a8064'],[1,'#c0a47c']]); x.fillRect(0, hz, W, sh - hz); // the dunes and the beach
+    for (let r = 0; r < 3; r++) for (let i = 0; i < 18; i++) { const tx = W*(.02 + i*.056 + (r % 2)*.028), ty = hz + H*(.03 + r*.025), s = .8 + r*.2; x.fillStyle = '#7e7c62'; x.beginPath(); x.moveTo(tx - 5*s, ty); x.lineTo(tx, ty - 5*s); x.lineTo(tx + 5*s, ty); x.fill(); } // the tents on the dunes
+    x.fillStyle = vgrad(x, sh, deck, [[0,'#4a5654'],[1,'#26302e']]); x.fillRect(0, sh, W, deck - sh); x.fillStyle = 'rgba(232,228,216,.4)'; x.fillRect(0, sh, W, 1.2); // the water between, and the surf line
+    for (let i = 0; i < 30; i++) { x.fillStyle = `rgba(255,200,150,${(.06 + hash(i, 6561)*.1).toFixed(2)})`; x.fillRect(hash(i, 6562)*W, sh + 3 + hash(i, 6563)*(deck - sh - 6), 4 + hash(i, 6564)*12, 1); }
+    [[.12, .62], [.86, .6]].forEach(([u, v]) => b7Ship(x, W*u, H*v, .55, '#2a2220', '#c8b89c', false)); // other transports at anchor
+  }), 0, 0, W, H);
+  for (let i = 0; i < 140; i++) { const px = hash(i, 6565)*W, py = sh - H*(.005 + hash(i, 6566)*.07), s = .38 + (py - hz)/H*.9; b65Tiny(ctx, px, py, s, 'rgba(40,32,26,.9)', false, 0); } // the beach crowded with an army
+  ctx.fillStyle = vgrad(ctx, deck, H, [[0,'#4a3e30'],[1,'#2a2218']]); ctx.fillRect(0, deck, W, H - deck); ctx.fillStyle = '#3a2e22'; ctx.fillRect(0, deck - H*.1, W, H*.022); ctx.fillStyle = 'rgba(255,220,180,.18)'; ctx.fillRect(0, deck - H*.1, W, 1.2);
+  ctx.fillStyle = '#2e241a'; for (let i = 0; i < 9; i++) ctx.fillRect(W*(.02 + i*.12), deck - H*.08, W*.012, H*.08);
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*.12 + i*W*.08, deck + H*.14, 1.6, t, {phase:i, dir:1, still:!mo}));
+  vign(ctx, W, H, .5, .5); }; }
+
 /* ---------------- the chapter's gear: ART['item/<key>'] on Book Six's ground for the Third ----------------
    240×130, the same flat shapes and single highlight as the earlier books, on dusk-umber with the thin bone rim the Fourth's chapters use (Claude's call) */
 function b65Item(key, label, body){ const w = 240, h = 130, id = 'c65-' + key.replace(/[^a-z0-9]/g, '');

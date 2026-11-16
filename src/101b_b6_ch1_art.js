@@ -210,10 +210,12 @@ SCENEX.b6_odhan_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
    with square towers and the bones of older cities set in the courses; a thin smoke going up from inside; in front the siege lines
    dug in (a raw earth bank, stakes, the Fourteenth's tents and a standard), and the barrows of the Empire's dead along the road, two of
    them broken open and dark; the squad in the near files, small, looking up at it */
-SCENEX.b6_ghatan_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wb = H*.5, wt = H*.3;
-  ctx.drawImage(sceneLayer('b61:walls', W, H, (x, W, H) => {
-    x.fillStyle = vgrad(x, 0, wb, [[0,'#1a1014'],[.45,'#5a2418'],[.82,'#b0502a'],[1,'#d88a4a']]); x.fillRect(0, 0, W, wb + 2);
-    glow(x, W*.32, wb - H*.04, W*.4, '#ffb060', .3); // the sun gone down behind the city
+/* v13.33 (pictures against text): the chapter's end page is "Y'Ghatan at first light": a pale dawn sky lit from the east, and the barrows by
+   the key, every one closed with fresh earth on it (bury) or four of them open to the sky (leave) */
+SCENEX.b6_ghatan_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wb = H*.5, wt = H*.3, dawn = !!S && S.scene === 'chend' && S.chapter === 1, dk = dawn ? ((S.chapters && S.chapters[1]) || (S.f && S.f.b6_c1_key) || 'leave') : '';
+  ctx.drawImage(sceneLayer('b61:walls' + (dawn ? ':' + dk : ''), W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, wb, dawn ? [[0,'#26304a'],[.45,'#6a7088'],[.82,'#c8b4a0'],[1,'#e8cfa8']] : [[0,'#1a1014'],[.45,'#5a2418'],[.82,'#b0502a'],[1,'#d88a4a']]); x.fillRect(0, 0, W, wb + 2);
+    if (dawn) glow(x, W*1.02, wb - H*.06, W*.45, '#fff0d0', .45); else glow(x, W*.32, wb - H*.04, W*.4, '#ffb060', .3); // first light from the east, or the sun gone down behind the city
     for (let i = 0; i < 5; i++) { x.fillStyle = `rgba(40,20,18,${(.18 + hash(i, 1111)*.14).toFixed(2)})`; x.beginPath(); x.ellipse(hash(i, 1112)*W, H*(.08 + hash(i, 1113)*.14), W*(.14 + hash(i, 1114)*.16), H*(.012 + hash(i, 1115)*.016), 0, 0, 7); x.fill(); } // long smoke-stained cloud
     for (let i = 0; i < 3; i++) { const sx = W*(.4 + i*.17); for (let k = 0; k < 9; k++) { const kk = k/9, yy = wt - kk*H*.26, xx = sx - kk*W*.08 + Math.sin(kk*5 + i)*3; ell(x, xx, yy, 4 + kk*18, 3 + kk*8, `rgba(44,26,22,${(.28*(1 - kk)).toFixed(2)})`); } } // thin smoke going up from inside, leaning west
     // the walls: one bone-coloured line, crenellated, towers on it
@@ -235,7 +237,8 @@ SCENEX.b6_ghatan_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RED
     // the barrows along the road: old grass-dark mounds, two broken open
     [[.2, .6, .1], [.31, .57, .07], [.6, .58, .08], [.74, .62, .11], [.12, .72, .13], [.88, .7, .12]].forEach(([u, v, r], i) => { const bx = W*u, by = H*v, rw = W*r;
       ell(x, bx, by, rw, rw*.22, '#3e2e20'); ell(x, bx - rw*.1, by - rw*.06, rw*.8, rw*.16, '#4e3a28'); ell(x, bx - rw*.3, by - rw*.1, rw*.35, rw*.05, 'rgba(255,200,140,.12)');
-      if (i === 1 || i === 3) { ell(x, bx + rw*.1, by - rw*.04, rw*.22, rw*.07, '#120c08'); for (let k = 0; k < 4; k++) ell(x, bx + rw*(.4 + k*.1), by + rw*(.02 + (k % 2)*.04), rw*.06, rw*.03, '#6a5440'); } }); // dug into, the spoil thrown out
+      if (dk === 'bury') { ell(x, bx - rw*.05, by - rw*.08, rw*.55, rw*.08, '#6e4c32'); ell(x, bx - rw*.2, by - rw*.1, rw*.25, rw*.03, 'rgba(255,220,180,.18)'); } // put back, the earth on it fresh
+      else if (i === 1 || i === 3 || (dk === 'leave' && (i === 0 || i === 5))) { ell(x, bx + rw*.1, by - rw*.04, rw*.22, rw*.07, '#120c08'); for (let k = 0; k < 4; k++) ell(x, bx + rw*(.4 + k*.1), by + rw*(.02 + (k % 2)*.04), rw*.06, rw*.03, '#6a5440'); } }); // dug into, the spoil thrown out
     // the siege lines: a raw earth bank across the field with stakes, tents behind it, a standard
     const by = H*.66; x.fillStyle = '#5a4430'; x.beginPath(); x.moveTo(0, by); for (let i = 0; i <= 24; i++) x.lineTo(i/24*W, by - H*(.012 + .008*Math.sin(i*1.7))); x.lineTo(W, by + H*.03); x.lineTo(0, by + H*.03); x.closePath(); x.fill();
     x.fillStyle = 'rgba(255,200,150,.16)'; x.fillRect(0, by - H*.016, W, 1.4);
@@ -246,6 +249,70 @@ SCENEX.b6_ghatan_walls = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RED
   // the squad in the near files, small, looking at the walls
   const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.16 + i*Math.min(.075, .5/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .55, .5); };
+
+/* ---------------- v13.33 (pictures against text): the three borrowed backdrops replaced ----------------
+   b6_c1_road (Book Four's march): the Lato Odhan by day, hardpan the colour of a biscuit to the edge of the sky, thorn scrub in grey clumps, a
+   rock the size of a house sitting by itself, the track running east as if drawn, the pole-frame over the well small to the north of it, and the
+   column's dust a long way behind in the west. b6_c1_well (Book Four's seep under cliffs): the same flat scrub, a ring of old cut stone
+   waist-high with a frame of poles and a bucket on a rope; while the bandits hold it, a cook fire with its smoke, a string of camels hobbled
+   in the scrub and three robed men by the fire. b6_c1_barrownight (Book Four's fog): the barrow road under the walls at night, the walls dark
+   above, the long mounds dug into and what was in them on the ground (pale bits, no more), the picket's lantern hooded on a stone by the road;
+   once the squad has chosen to bury, the mounds closed again with fresh earth */
+function b61Day(x, W, H, hz){ x.fillStyle = vgrad(x, 0, hz, [[0,'#5a7ea8'],[.6,'#a8bccc'],[1,'#e4dccb']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.86, H*.08, W*.3, '#fffaee', .4); // a hard bright morning
+  x.fillStyle = vgrad(x, hz, H, [[0,'#c8ac80'],[.4,'#b0946a'],[1,'#7a6448']]); x.fillRect(0, hz, W, H - hz); // hardpan the colour of a biscuit
+  x.fillStyle = 'rgba(255,240,210,.25)'; x.fillRect(0, hz, W, 1.4); // the heat-shimmer line
+  for (let i = 0; i < 80; i++) { const yy = hz + 2 + Math.pow(hash(i, 1131), 1.5)*(H - hz), d = (yy - hz)/(H - hz); b61Bush(x, hash(i, 1132)*W, yy, .2 + d*1.3, `rgba(${110 - Math.round(d*40)},${108 - Math.round(d*40)},${96 - Math.round(d*36)},.8)`); } } // grey thorn
+function b61Rock(x, rx, ry, s){ x.fillStyle = '#8a7258'; x.beginPath(); x.moveTo(rx - 14*s, ry); x.quadraticCurveTo(rx - 15*s, ry - 10*s, rx - 6*s, ry - 13*s); x.quadraticCurveTo(rx + 6*s, ry - 15*s, rx + 13*s, ry - 7*s); x.quadraticCurveTo(rx + 16*s, ry - 2*s, rx + 14*s, ry); x.closePath(); x.fill();
+  x.fillStyle = 'rgba(60,40,26,.35)'; x.beginPath(); x.moveTo(rx + 2*s, ry - 14*s); x.quadraticCurveTo(rx + 12*s, ry - 10*s, rx + 14*s, ry); x.lineTo(rx + 3*s, ry); x.closePath(); x.fill(); ell(x, rx, ry + 1, 16*s, 2.4*s, 'rgba(60,44,30,.35)'); }
+function b61WellFrame(x, wx, wy, s){ ell(x, wx, wy + 1.2*s, 11*s, 2.6*s, 'rgba(50,36,24,.35)'); x.fillStyle = '#9a8a70'; x.fillRect(wx - 8*s, wy - 7*s, 16*s, 7*s); ell(x, wx, wy - 7*s, 8*s, 2.2*s, '#b4a486'); ell(x, wx, wy - 7*s, 6*s, 1.4*s, '#1a120c');
+  x.strokeStyle = 'rgba(60,46,32,.5)'; x.lineWidth = .5*s; x.beginPath(); for (let i = 1; i < 4; i++) { x.moveTo(wx - 8*s, wy - 7*s + i*1.8*s); x.lineTo(wx + 8*s, wy - 7*s + i*1.8*s); } x.stroke(); // the courses of cut stone
+  x.strokeStyle = '#4a3624'; x.lineWidth = 1.1*s; x.beginPath(); x.moveTo(wx - 9*s, wy - 6*s); x.lineTo(wx, wy - 24*s); x.lineTo(wx + 9*s, wy - 6*s); x.moveTo(wx, wy - 24*s); x.lineTo(wx + 1.5*s, wy - 4*s); x.stroke(); // the frame of poles
+  x.strokeStyle = '#6a5a40'; x.lineWidth = .5*s; x.beginPath(); x.moveTo(wx, wy - 23*s); x.lineTo(wx, wy - 12*s); x.stroke(); x.fillStyle = '#5a4028'; x.fillRect(wx - 1.6*s, wy - 12*s, 3.2*s, 3*s); } // the rope and its bucket
+function b61Camel(ctx, cx, cy, s, col, down){ ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(cx, cy - 12*s, 8*s, 4*s, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(cx - 1*s, cy - 15*s, 4*s, 3*s, 0, 0, 7); ctx.fill(); // body, hump
+  if (!down) [[-6, 0], [-4, .3], [5, 0], [7, .3]].forEach(([dx]) => ctx.fillRect(cx + dx*s - .6*s, cy - 10*s, 1.2*s, 10*s)); else ctx.fillRect(cx - 8*s, cy - 9*s, 16*s, 3*s);
+  B2F.line(ctx, col, 2*s, [[cx + 7*s, cy - 13*s], [cx + 10*s, cy - 19*s], [cx + 12*s, cy - 20*s]]); ell(ctx, cx + 13*s, cy - 20*s, 2.4*s, 1.3*s, col); }
+SCENEX.b6_c1_road = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, vx = W*.86;
+  ctx.drawImage(sceneLayer('b61:road', W, H, (x, W, H) => { b61Day(x, W, H, hz);
+    { const L = [], R = []; for (let i = 0; i <= 20; i++) { const k = i/20, px = lerp(W*.1, vx, Math.pow(k, .55)), py = lerp(H*1.02, hz + 1, Math.pow(k, .45)), w = lerp(30, 1, Math.pow(k, .6)); L.push([px, py - w*.3]); R.push([px, py + w*.3]); } poly(x, L.concat(R.reverse()), 'rgba(226,206,168,.6)'); } // the track, east, as if drawn
+    b61Rock(x, W*.3, hz + H*.1, 2.6); b61Rock(x, W*.74, hz + H*.04, 1.1);
+    b61WellFrame(x, W*.56, hz + H*.03, .55); x.fillStyle = 'rgba(120,110,100,.35)'; for (let k = 0; k < 4; k++) ell(x, W*.56 - 6 - k*3, hz - H*.01 - k*6, 2 + k*1.4, 1.4 + k, x.fillStyle); // the well to the north of it, and a little smoke
+    x.fillStyle = 'rgba(80,60,40,.3)'; x.fillRect(W*.62, hz + H*.065, W*.14, 2); // the dry wash, a line in the ground
+  }), 0, 0, W, H);
+  for (let i = 0; i < 4; i++) { const k = (mo ? (t/30000 + i/4) % 1 : i/4); glow(ctx, W*(.02 + k*.12), hz - H*(.01 + k*.03), W*.08, '#e8d4ac', .3*(1 - k)); } // the column's dust, a long way behind
+  const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(28, W*.4/sq.length), H*.97 - (i % 2)*2, 1.9, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .35, .5); };
+SCENEX.b6_c1_well = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, done = !!f.b6_c1_wellDone, hz = H*.42, wx = W*.5, wy = H*.74;
+  ctx.drawImage(sceneLayer('b61:well' + (done ? ':d' : ''), W, H, (x, W, H) => { b61Day(x, W, H, hz); b61Rock(x, W*.86, hz + H*.06, 1.8);
+    b61WellFrame(x, wx, wy, 2.4);
+    if (!done) { ell(x, W*.3, H*.74, 12, 3.2, '#3a2a1c'); } // the cook fire's stones
+    else { x.fillStyle = 'rgba(90,70,50,.35)'; ell(x, W*.3, H*.74, 12, 3, x.fillStyle); } // where the fire was
+  }), 0, 0, W, H);
+  if (!done) { const fx = W*.3, fy = H*.735, fl = b2Fl(t); poly(ctx, [[fx - 5, fy], [fx - 1, fy - 8*fl], [fx + 1, fy - 4], [fx + 3, fy - 6*fl], [fx + 5, fy]], 'rgba(255,150,60,.9)');
+    for (let k = 0; k < 7; k++) { const rise = mo ? ((t/90 + k*14) % (H*.4)) : k*H*.05; ell(ctx, fx - rise*.2, fy - 10 - rise, 3 + rise*.12, 2 + rise*.06, `rgba(150,140,130,${(.4*(1 - rise/(H*.4))).toFixed(2)})`); } // its smoke
+    for (let i = 0; i < 5; i++) b61Camel(ctx, W*(.66 + i*.06), hz + H*(.12 + (i % 2)*.015), .75, '#5a4632', i % 2 === 1); // a string of camels hobbled in the scrub
+    [[.22, 1], [.36, -1], [.41, -1]].forEach(([u, d], i) => { const px = W*u, py = H*.77, s = 1.7; ctx.fillStyle = ['#6a5a40', '#5a4c36', '#7a684c'][i]; ctx.beginPath(); ctx.moveTo(px - 4*s, py); ctx.lineTo(px - 3*s, py - 14*s); ctx.lineTo(px + 3*s, py - 14*s); ctx.lineTo(px + 4*s, py); ctx.fill(); ell(ctx, px, py - 16*s, 2.6*s, 2.8*s, '#6a5a44'); ctx.fillStyle = '#3a2e20'; ctx.fillRect(px - 2*s + d*.6, py - 16.6*s, 4*s, 1.2*s); }); } // robed men of the Odhan, veiled
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*.06 + i*Math.min(26, W*.36/sq.length), H*.97 - (i % 2)*2, 1.8, t, {phase:i, dir:1}));
+  vign(ctx, W, H, .35, .5); };
+SCENEX.b6_c1_barrownight = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, f = (S && S.f) || {}, shut = f.b6_c1_key === 'bury', wb = H*.44, wt = H*.26;
+  ctx.drawImage(sceneLayer('b61:barrownight' + (shut ? ':b' : ''), W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, wt, [[0,'#04050c'],[1,'#141826']]); x.fillRect(0, 0, W, wb);
+    for (let i = 0; i < 90; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, 1141)*.5).toFixed(2)})`; const sz = hash(i, 1142) > .93 ? 1.4 : 1; x.fillRect(hash(i, 1143)*W, Math.pow(hash(i, 1144), 1.3)*wt*.95, sz, sz); }
+    // the walls above, dark: a crenellated line and towers, a faint starlight on the bone
+    const crenel = W/46; x.fillStyle = vgrad(x, wt, wb, [[0,'#3a3430'],[1,'#1a1612']]); x.beginPath(); x.moveTo(0, wb + 1); x.lineTo(0, wt);
+    for (let u = 0; u < W; u += crenel*2) { x.lineTo(u, wt - crenel*.6); x.lineTo(u + crenel, wt - crenel*.6); x.lineTo(u + crenel, wt); x.lineTo(u + crenel*2, wt); } x.lineTo(W, wb + 1); x.closePath(); x.fill();
+    [.12, .38, .64, .9].forEach((u, i) => { const tw = W*.07, th = H*(.09 + (i % 2)*.03), tx = W*u - tw/2, ty = wt - th; x.fillStyle = '#2e2a26'; x.fillRect(tx, ty, tw, wb - ty); x.fillStyle = '#26221e'; for (let k = 0; k < 4; k++) x.fillRect(tx - 2 + k*(tw + 4)/3.5, ty - 4, (tw + 4)/7, 4); });
+    x.fillStyle = 'rgba(180,170,150,.08)'; x.fillRect(0, wt, W, 1);
+    x.fillStyle = vgrad(x, wb, H, [[0,'#1a1610'],[1,'#080604']]); x.fillRect(0, wb, W, H - wb);
+    x.fillStyle = 'rgba(120,104,80,.2)'; x.beginPath(); x.moveTo(W*.46, wb); x.lineTo(W*.5, wb); x.lineTo(W*.74, H); x.lineTo(W*.4, H); x.closePath(); x.fill(); // the road under the walls
+    // the barrows along the road: long low mounds, every one dug into, and what was in them on the ground beside them
+    [[.2, .56, 34], [.72, .55, 30], [.12, .7, 48], [.88, .7, 50], [.3, .84, 60]].forEach(([u, v, r], i) => { b63Mound(x, W*u, H*v, r, !shut, i + 11);
+      if (!shut) for (let k = 0; k < 7; k++) { const bx = W*u + (hash(i, k, 1145) - .3)*r*1.6, by = H*v + r*.12 + hash(i, k, 1146)*r*.18; x.fillStyle = `rgba(200,190,170,${(.25 + hash(i, k, 1147)*.2).toFixed(2)})`; x.save(); x.translate(bx, by); x.rotate((hash(i, k, 1148) - .5)*1.4); x.fillRect(-2 - r*.03, -.5, 4 + r*.06, 1); x.restore(); } // old bones, old iron, laid out under the stars
+      else { x.fillStyle = 'rgba(110,80,52,.55)'; x.beginPath(); x.ellipse(W*u, H*v - r*.14, r*.5, r*.08, 0, 0, 7); x.fill(); } }); // the fresh earth
+  }), 0, 0, W, H);
+  // the picket's lantern on a stone by the road, its hood down to a slit
+  { const lx = W*.56, ly = H*.78, fl = mo ? .85 + Math.sin(t/160)*.08 : 1; ell(ctx, lx, ly + 4, 9, 3, '#2a2420'); ctx.fillStyle = '#1a1612'; ctx.fillRect(lx - 3.4, ly - 9, 6.8, 11); ctx.globalCompositeOperation = 'lighter'; glow(ctx, lx, ly - 2, H*.12, '#ffb060', .18*fl); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = `rgba(255,214,140,${(.9*fl).toFixed(2)})`; ctx.fillRect(lx - 2.4, ly - 3, 4.8, 1.2); }
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*.62 + i*Math.min(24, W*.34/sq.length), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:-1, still:true}));
+  vign(ctx, W, H, .6, .5); };
 
 /* ---------------- the chapter's gear: ART['item/<key>'] in the series' 200×150 item style (089g), on Book Six's smoke-umber ground ---------------- */
 (function(){

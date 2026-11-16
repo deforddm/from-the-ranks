@@ -87,9 +87,9 @@ const b66H = () => !S ? null : (S.book === 'bh' && (S.thread || 'r') === 'h') ? 
 const b66RoadOf = () => { const r = S && S.f && S.f.b6_fourthRoad; return ['highfist', 'hanarara', 'home'].includes(r) ? r : 'highfist'; };
 const b66KeyOf = () => (S && S.f && S.f.b6_c6_key) === 'report' ? 'report' : 'letgo';
 const B66_ROAD = {
-  highfist:{title:'With the High Fist', scene:'b6_hanar_ara'},
-  hanarara:{title:'The Hanar Ara road', scene:'b6_hanar_ara'},
-  home:{title:'Time served', scene:'b6_sky'}};
+  highfist:{title:'With the High Fist', scene:'b6_fin4_highfist'},
+  hanarara:{title:'The Hanar Ara road', scene:'b6_fin4_hanarara'},
+  home:{title:'Time served', scene:'b6_fin4_home'}}; // v13.33: each road its own picture (106b)
 /* each squadmate's page: (road, key, loyalty) → {title, txt}. Every one reads right on all three roads and both keys. */
 const B66_FATE = {
   brisk:(r, k, l) => ({title:'The wall', txt:
@@ -324,7 +324,12 @@ const B6CH6 = {
     b6_c6_hanararobe:{name:'A pilgrim\'s robe from Hanar Ara', slot:'armour', role:'light', who:null, ac:1,
       line:'A heavy undyed robe of the kind the city\'s pilgrims wear, with small charms sewn into the hem: a copper, a bead, a twist of hair. It came off the ground at the outer shrines. It keeps the sun off by day and the cold off by night, and it turns a knife better than it has any right to, and whoever wears it gets looked at by every pilgrim on the road.'} },
 
-  scenes:{},
+  scenes:{ // v13.33: the day camp at dusk and the last well its own pictures (106b), and the Fourth's three roads
+    b6_c6_duskcamp:{loc:'North-east of G\'danisban', sub:'The Host\'s camp · dusk', cap:'Canvas in rows on the scrub, the fires lit for an hour before the night\'s march, and the sky going from red to dark.', amb:'explore'},
+    b6_c6_lastwell:{loc:'North-east of G\'danisban', sub:'The last well · dusk', cap:'A stone ring in a dip in the scrub, two carts behind it, and the road going back east to the camp.', amb:'explore'},
+    b6_fin4_highfist:{loc:'North-east of G\'danisban', sub:'With the High Fist', cap:'The Host on the march again under a clear sky, the City of the Fallen small behind it, and the Fourth in the column.', amb:'wind'},
+    b6_fin4_hanarara:{loc:'Hanar Ara', sub:'The picket · evening', cap:'A picket fire on the Hanar Ara road, the city\'s shrines on one side and the Host\'s dust going away on the other.', amb:'explore'},
+    b6_fin4_home:{loc:'The coast road', sub:'Time served · dawn', cap:'The coast road at dawn, the Fourth on it with its packs, and a ship\'s mast somewhere ahead over the scrub.', amb:'wind'} },
 
   end:{
     letgo:['The surrender stands', 'The Host marched north-east of G\'danisban under its new High Fist, and halted on the night road while a row of lights came down below the moon. Somewhere ahead in the dark the High Fist rode out with a handful and came back, and nobody in the ranks was told what for. At Hanar Ara, the City of the Fallen, Mathok\'s rebels came out and surrendered, and the High Fist let them go. The Fourth stood its picket at the city\'s edge, met the cult there, and let the surrender stand as it was given.'],
@@ -460,26 +465,26 @@ He puts his helmet on. "That's all I know, Sergeant. It's more than I knew an ho
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* a baggage wagon, any phase */
-    b6_c6_wagon:()=>({sp:'A baggage wagon', scene:b66Ph() >= 2 ? 'b6_camp_night' : 'b6_sky', again:()=>`A wagon of the Host's baggage.`, txt: b66Ph() >= 2 ?
+    b6_c6_wagon:()=>({sp:'A baggage wagon', scene:b66Ph() >= 2 ? 'b6_c6_duskcamp' : 'b6_sky', again:()=>`A wagon of the Host's baggage.`, txt: b66Ph() >= 2 ?
 `A wagon of the Host's baggage, with its canvas rolled up for the heat and the drovers asleep underneath it in the one strip of shade.` :
 `A wagon of the Host's baggage, stopped on the road with its mules standing. The drover is sitting on the shaft with his face turned up to the sky, and when you go past he says, without looking down, "Twelve. Isn't it. I keep making it twelve."`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* the horse lines */
-    b6_c6_horses:()=>({sp:'The horse lines', scene:b66Ph() >= 2 ? 'b6_camp_night' : 'b6_sky', again:()=>`The Falari horse lines.`, txt: b66Ph() >= 2 ?
+    b6_c6_horses:()=>({sp:'The horse lines', scene:b66Ph() >= 2 ? 'b6_c6_duskcamp' : 'b6_sky', again:()=>`The Falari horse lines.`, txt: b66Ph() >= 2 ?
 `The Falari horse lines, the horses dozing in the heat with their heads low and their tails going at the flies.${b66If('sohra', ' Sohra is among them, talking to a mare in Rhivi. The mare seems to agree with her.')}` :
 `The Falari horse lines, strung out along the roadside, and every horse on them is awake, ears forward, looking at the same piece of sky. They are not afraid. They are attending, the way horses attend to a stranger coming up the road.${b66If('sohra', ' Sohra goes along the line with her hand on each neck in turn, and sings under her breath, and the horses let her.')}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* the carriers: Soliel heals through those who had it and lived (bh-canon §8; after Ch4, S.f.b6_soliel). Headline only. */
     b6_c6_carriers:()=>{ const f = b66Fev();
-      return {sp:'A carrier', scene:b66Ph() >= 3 ? 'b6_hanar_ara' : b66Ph() >= 2 ? 'b6_camp_night' : 'b6_sky', html:feverHTML(), again:()=>`A carrier, one of the ones who had it and lived.`, txt:
+      return {sp:'A carrier', scene:b66Ph() >= 3 ? 'b6_hanar_ara' : b66Ph() >= 2 ? 'b6_c6_duskcamp' : 'b6_sky', html:feverHTML(), again:()=>`A carrier, one of the ones who had it and lived.`, txt:
 `One of the Host's carriers is walking the line, a soldier of the Third Regiment who had the fever at G'danisban and lived. Since that morning a touch from one of them breaks it in others, and nobody in the Host knows why, and the carriers know least of all. This one is a thin, embarrassed man who would rather be anywhere else.
 
 ${f.length ? `"Who's got it?" he says, and then looks, and sees for himself.` : `"Anyone?" he says. The Fourth is clean of it. He looks relieved, and moves on along the line.`}${b66If('ohl', `\n\nOhl watches him the way he watches any healer who is not him. "Soliel," he says, under his breath. "Through him. Of all people." He does not sound unhappy about it.`)}`,
         ch:[{t:'"Here. See to them."', req:()=>b6FeverList().length > 0 && b6CanCure(), fx:()=>{ b66CureAll('a carrier\'s touch'); S.f.b6_c6_carried = 1; }, go:'b6_c6_carried'},
             {t:'Not now.', go:()=>startExplore()}]}; },
-    b6_c6_carried:()=>({sp:'A carrier', scene:b66Ph() >= 3 ? 'b6_hanar_ara' : b66Ph() >= 2 ? 'b6_camp_night' : 'b6_sky', html:feverHTML(), txt:
+    b6_c6_carried:()=>({sp:'A carrier', scene:b66Ph() >= 3 ? 'b6_hanar_ara' : b66Ph() >= 2 ? 'b6_c6_duskcamp' : 'b6_sky', html:feverHTML(), txt:
 `The carrier puts his hand on each fevered forehead in turn, for no longer than you would to see if a child is hot, and takes it away, and wipes it on his trousers out of habit.
 
 That is all. The sweat stops within the hour. The shaking stops after it. By the next halt they are keeping water down and complaining about the water, which Ohl says is how you can tell.`,
@@ -511,7 +516,7 @@ Up the road, a long way ahead, the lights have gone. None of the Host saw them l
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- phase 2: the day camp, and the dusk after ---- */
-    b6_c6_dawn:()=>({sp:'The march', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_ph = Math.max(2, b66Ph()); }, txt:
+    b6_c6_dawn:()=>({sp:'The march', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_ph = Math.max(2, b66Ph()); }, txt:
 `The column moves at first light, two hours north-east, and makes camp before the heat: canvas up, horses picketed, everybody under shade by the second bell and pretending to sleep.
 
 At dusk the camp wakes. The talk is all of the lights, and of the High Fist riding out, and of Hanar Ara, which is a day ahead, where Mathok's army is, the last rebel army in Seven Cities, and where the fever's leavings have been going all summer. The Fourth has a fire, and an hour before the night's march.`,
@@ -519,7 +524,7 @@ At dusk the camp wakes. The talk is all of the lights, and of the High Fist ridi
           {t:'Walk the camp.', go:()=>startExplore('b6_c6_camp')}]}),
 
     /* ---- the fire (the games pass may wrap it; keep the id) ---- */
-    b6_c6_fire:()=>({sp:'The Fourth\'s fire', scene:'b6_camp_night', html:feverHTML(), again:()=>`The Fourth's fire in the Host's camp at dusk, an hour before the night's march.`, txt:
+    b6_c6_fire:()=>({sp:'The Fourth\'s fire', scene:'b6_c6_duskcamp', html:feverHTML(), again:()=>`The Fourth's fire in the Host's camp at dusk, an hour before the night's march.`, txt:
 `The Fourth's fire is a small one, because the night will be warm and the march long, and it is mostly for the tea, which Ohl is making, and which is technically medicine.
 
 The Host's fires go away in rows all round it, and past them the scrub, and the sky going from red to dark, empty and very clear. Every so often somebody at every fire looks up at it, and then looks down, and pretends not to have.${b66If('brannoc', `\n\nBrannoc sits with his back to a wagon wheel, playing the tin whistle very softly, a Falari tune with too many notes in it, and getting most of them.`)}${b66If('ressa', `\n\nRessa sits up against her pack with her knives across her knees, and will sleep that way later, sitting up.`)}${b66If('sohra', `\n\nSohra sits with her face to the north-east, where the lights came down, and sings to the grass under her breath.`)}`,
@@ -535,7 +540,7 @@ The Host's fires go away in rows all round it, and past them the scrub, and the 
           {t:'The fever. Who has it?', req:()=>b6FeverList().length > 0, go:'b6_c6_carriers'},
           {t:'The night\'s march. East, to Hanar Ara.', req:()=>b66Ph() === 2, onward:true, go:'b6_c6_tomarch'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c6_fire_rest:()=>({sp:'The Fourth\'s fire', scene:'b6_camp_night', txt:
+    b6_c6_fire_rest:()=>({sp:'The Fourth\'s fire', scene:'b6_c6_duskcamp', txt:
 `An hour by the fire. The camp goes about its waking round it: water carts, horses, a sergeant two fires over shouting for a missing boot.
 
 ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it, and looks at hands, and feet, and eyes, the way he always does before a march, and says "Drink" to anyone who argues.', brisk:'Brisk sits with her shield across her knees and her eyes shut, and is not asleep, and nobody tests it.', _:'One of them sleeps. The rest watch the sky.'})}${b66If('kettle', `\n\nKettle counts the satchel out on a blanket: two sharpers, a burner, the cusser at the bottom. She counts them twice and puts them back the same way, and looks happier.`)}${b66If('tuft', `\n\nTuft keeps the lamp lit, though the fire is enough, and holds her Deck in her lap without opening it.`)}`,
@@ -552,7 +557,7 @@ ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it
       if (b6In('greysword')) ln.push(`Dannet has her sword across her knees. "In Capustan we would have called the lights a sign from the Wolves," she says. "Here they will call it a sign from something else." She shrugs. "Everybody wants the sky to be talking to them."`);
       if (b6In('ellis')) ln.push(`Ellis is oiling a bowstring. "Seven horses went out last night," she says. "Seven came back. That's all anybody knows, and all anybody's going to." She seems content with that.`);
       if (b6In('vell')) ln.push(`Vell is splicing a rope. "In Darujhistan," he says, "anything strange in the sky was the Moon. Here there isn't a Moon to blame." He thinks about it. "I miss the Moon."`);
-      return {sp:'The Fourth\'s fire', scene:'b6_camp_night', txt:ln.length ? ln.join('\n\n') : `The squad is you tonight, and the fire. You sit with it, and watch the sky go dark over the scrub, and think about the end of a war, which is a thing you have never yet seen.`,
+      return {sp:'The Fourth\'s fire', scene:'b6_c6_duskcamp', txt:ln.length ? ln.join('\n\n') : `The squad is you tonight, and the fire. You sit with it, and watch the sky go dark over the scrub, and think about the end of a war, which is a thing you have never yet seen.`,
         ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}; },
     /* ---- v13.8 (David, Nov 15): meetings. The plan's star, carried on: the officer who took over, walking the lines as High Fist ----
        Where and when: the Host's day camp north-east of G'danisban, the day after the lights (W20; bh-canon §3). He wears Onearm's
@@ -561,7 +566,7 @@ ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it
        what is in them about the Fourth is the game's. Locks: rule 52 (what he promised Hood) and "never his gate": asked about the
        lights he says "Later", which is no answer; nothing of Mael, the Deck card, or Hanar Ara's outcome. The narrator calls him the High
        Fist only. Reads b6_c2_onearm, b6_c2_key, b6_c4_key, b6_c4_onearm. Sets b6_c6_highfist; Tuft +1, or Brisk +1 without her. */
-    b6_c6_highfist:()=>({sp:'The High Fist', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_highfist = 1; if (b6In('tuft')) b66L('tuft', 1); else b66L('brisk', 1); },
+    b6_c6_highfist:()=>({sp:'The High Fist', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_highfist = 1; if (b6In('tuft')) b66L('tuft', 1); else b66L('brisk', 1); },
       again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
 `At dusk, while the camp is waking for the night's march, the High Fist comes down the lines on foot.
 
@@ -580,7 +585,7 @@ He stops at the Fourth's.
 "Of course he did."` : ''}${b66If('tuft', `\n\nTuft has not looked up from the fire. "Tuft," he says, and nothing else, and after a moment she nods to the fire, and that seems to be enough for both of them.`)}${b66If('brannoc', `\n\nBrannoc, who has told the story of Sweetcreek in the mud at every fire from G'danisban to here, finds he has nothing at all to say, and says it.`)}`,
       ch:[{t:'"The lights, sir?"', req:()=>!S.f.b6_c6_hfLights, fx:()=>{ S.f.b6_c6_hfLights = 1; }, go:'b6_c6_highfist_lights'},
           {t:'"High Fist."', go:()=>startExplore()}]}),
-    b6_c6_highfist_lights:()=>({sp:'The High Fist', scene:'b6_camp_night', again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
+    b6_c6_highfist_lights:()=>({sp:'The High Fist', scene:'b6_c6_duskcamp', again:()=>`The High Fist has gone on down the lines, a fire at a time.`, txt:
 `He looks up, east, at the sky where they fell, which is only sky now, going dark.
 
 "Later," he says. It is not an answer. It is the only one anybody in the Host has had, and the Fourth has had it to its face, which is more than most.
@@ -588,7 +593,7 @@ He stops at the Fourth's.
 "Keep your feet dry, Sergeant," says the High Fist, and goes on to the next fire.`,
       ch:[{t:'Back to the fire.', go:()=>startExplore()}]}),
     /* camp news: the High Fist, Sweetcreek and Bude at a distance, and the Fourteenth as rumour */
-    b6_c6_news:()=>({sp:'Camp news', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_news = 1; }, again:()=>`The camp's news, going round the fires.`, txt:
+    b6_c6_news:()=>({sp:'Camp news', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_news = 1; }, again:()=>`The camp's news, going round the fires.`, txt:
 `The news goes round the fires the way it always does, faster than runners and less true.
 
 ${b66HF(true)} came back before dawn and went into his tent and said nothing anyone has heard. The riders who went with him say nothing either, which the camp finds more alarming than anything they could have said. Some say the lights were the Empress's doing. Some say a god's. A Falari swears the lights were his grandmother, and is laughed at, and does not mind.
@@ -596,7 +601,7 @@ ${b66HF(true)} came back before dawn and went into his tent and said nothing any
 Out west, the talk says, the Adjunct's army burned at Y'Ghatan and came out again, some of it, and has gone down to the coast for ships. Not one soldier at the fire knows anyone in the Fourteenth. Every one of them knows somebody who does.${S.f.b6_c5_key === 'wait' ? ' The ships waited a day for something, the story goes, and the story does not say what.' : ''}`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
     /* through a tent wall: Sweetcreek and Fist Rythe Bude, heard, never met (bh-canon §3, ch 20) */
-    b6_c6_canvas:()=>({sp:'A tent wall', scene:'b6_camp_night', fx:()=>{ if (b66Ph() >= 2) S.f.b6_c6_canvas = 1; }, again:()=>`A tent of the Host, its walls rolled down.`, txt: b66Ph() >= 2 && !S.f.b6_c6_tomarch ?
+    b6_c6_canvas:()=>({sp:'A tent wall', scene:'b6_c6_duskcamp', fx:()=>{ if (b66Ph() >= 2) S.f.b6_c6_canvas = 1; }, again:()=>`A tent of the Host, its walls rolled down.`, txt: b66Ph() >= 2 && !S.f.b6_c6_tomarch ?
 `One of the officers' tents is near enough to the Fourth's ground that what is said in it carries, and tonight what is said in it is loud.
 
 A woman's voice, Falari in its vowels, saying that a High Fist who halts an army in the middle of the night to ride out and look at the sky is not a High Fist she was asked about. A man's voice, older and tired, saying that the army was asked, and the army answered, and that is an end of it. The woman's voice says something about Captain Kindly that the Fourth does not quite catch. The man's voice says, "Enough, Captain."
@@ -605,26 +610,26 @@ It is not enough. It goes on. The Fourth moves its fire a little further off, ou
 `A tent of the Host, with its walls rolled down and somebody snoring inside.`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
     /* the captain in camp: Hanar Ara tomorrow */
-    b6_c6_captain_camp:()=>({sp:'The captain', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_captainCamp = 1; }, again:()=>`The captain, eating standing up.`, txt:
+    b6_c6_captain_camp:()=>({sp:'The captain', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_captainCamp = 1; }, again:()=>`The captain, eating standing up.`, txt:
 `The captain is eating standing up by his tent, out of a bowl, which he says is the only way to eat in this country without the flies getting it first.
 
 "Hanar Ara tomorrow," he says. "The City of the Fallen, they call it. Tents and shrines on a plain, and Mathok's army camped round it, and every soul the fever marked and didn't take, walking there from all over Seven Cities." He scrapes the bowl. "The Host draws up in front of it. What happens then is the High Fist's business. The Seventh's business is standing where it's put." He looks at you. "You'll have heard about last night. The baggage. Well done. The drovers asked who."${S.f.b6_c6_wellsAsked && !S.f.b6_c6_wellsDone ? `\n\n"And Sweetcreek's water party isn't back," he adds. "Her Falari are asking for help, and she's busy shouting at Bude. If the Fourth's minded, it's that way." He points west with the spoon.` : ''}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
     /* old Benna at the laundry carts (the reader when Tuft and Sohra are gone; otherwise she is there, and says so) */
-    b6_c6_benna:()=>({sp:'Old Benna · a Host laundress', scene:'b6_camp_night', again:()=>`Old Benna at the wash-tubs, sleeves rolled.`, txt:
+    b6_c6_benna:()=>({sp:'Old Benna · a Host laundress', scene:'b6_c6_duskcamp', again:()=>`Old Benna at the wash-tubs, sleeves rolled.`, txt:
 `Old Benna is at the wash-tubs by the laundry carts with her sleeves rolled to the shoulder, though there is barely water enough to wash a shirt in this country and she says so to every shirt.
 
 "Lights," she says, without looking up. "Thirty years with marines. I've seen fish fall out of a clear sky at Nathilog. I've seen a Moon hang over a city like a lid." She wrings something out. "I've never once been surprised, and last night I was very nearly, and I'll thank the sky not to do it again."${S.f.b6_c6_drawn ? '' : b6Rd().id === 'benna' ? '\n\nShe pats her apron pocket, where the greasy soldier\'s deck lives. "Coppers, if you want them read. Not here. On the road, under the sky, if it does it again."' : ''}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the last well (optional): Sweetcreek's Falari water party ---- */
-    b6_c6_wells_ask:()=>({sp:'Sweetcreek\'s Falari', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_wellsAsked = 1; }, again:()=>`Sweetcreek's Falari, looking west down the road for their water party.`, txt:
+    b6_c6_wells_ask:()=>({sp:'Sweetcreek\'s Falari', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_wellsAsked = 1; }, again:()=>`Sweetcreek's Falari, looking west down the road for their water party.`, txt:
 `A knot of Sweetcreek's Falari is standing at the west edge of the camp looking back down the road, and not arguing, which in Falari is serious.
 
 "Water party," one of them says. "Six of ours and two carts, back to the last well at noon to fill the skins. Should've been back by now." He looks at the dusk. "The captain's in with Bude, shouting. We asked the Seventh's captain. He said ask you."${b66If('brannoc', `\n\nBrannoc knows them all, of course. "My cousin's with them," he says. "He can't find a well in a bucket. Sergeant, please."`)}${b66If('kettle', `\n\nKettle says something to them in Falari, and they look at her, and then at you, and nod.`)}`,
       ch:[{t:'"Show us the road."', req:()=>!S.f.b6_c6_wellsDone, go:'b6_c6_wells'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c6_wells:()=>({sp:'The road west', scene:'b6_camp_night', again:()=>`The road back west, toward the last well.`, txt: S.f.b6_c6_wellsDone ?
+    b6_c6_wells:()=>({sp:'The road west', scene:'b6_c6_lastwell', again:()=>`The road back west, toward the last well.`, txt: S.f.b6_c6_wellsDone ?
 `The road back west toward the last well, empty now in the dusk.` : b66Ph() >= 3 ?
 `The road back west. The Host is past it now.` : !S.f.b6_c6_wellsAsked ?
 `The road back west, the way the Host came, toward the last well. The road is empty.` :
@@ -635,50 +640,50 @@ It is not enough. It goes on. The Fourth moves its fire a little further off, ou
             near:{t:()=>{ const w = b66Who(); return `Yes, but the wash is longer than it looks and ${b66Nm(w)} ${b66V(w, 'come', 'comes')} up out of it last, out of breath, with a turned ankle: bruised.`; }, fx:()=>bruise(b66Who(), bruiseN())},
             go:()=>startBattle('b6_c6_wells', nearMiss() ? {} : {surprise:'p'}), fail:'b6_c6_wells_seen'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b6_c6_wells_seen:()=>({sp:'The last well', scene:'b6_camp_night', txt:
+    b6_c6_wells_seen:()=>({sp:'The last well', scene:'b6_c6_lastwell', txt:
 `A stone goes rattling down the wash under somebody's boot, and up on the well-head every wrapped face turns at once.`,
       ch:[{t:'Shields.', go:()=>startBattle('b6_c6_wells', {surprise:'e'})}]}),
-    b6_c6_wells_after:()=>({sp:'The last well', scene:'b6_camp_night', fx:()=>{ if (S.f.b6_c6_wellsDone) return; S.f.b6_c6_wellsDone = 1; b66L('brannoc', 1); b66L('kettle', 1); }, txt:
+    b6_c6_wells_after:()=>({sp:'The last well', scene:'b6_c6_lastwell', fx:()=>{ if (S.f.b6_c6_wellsDone) return; S.f.b6_c6_wellsDone = 1; b66L('brannoc', 1); b66L('kettle', 1); }, txt:
 `The bandits go off down the wash in the dark, those who can. The Falari come out from behind their carts, six of them, two bleeding, all of them talking at once.
 
 Nobody drinks from the well until ${b66Say({ohl:'Ohl has looked at it, and smelled it, and put a cup of it on his tongue and spat it out, and said it will do', _:'somebody has looked at it, and smelled it, and decided it will do'})}. Then everybody does.${b66If('brannoc', `\n\nBrannoc finds his cousin, who is unhurt and ashamed of it, and hits him on the shoulder hard enough to sit him down. "Bucket," Brannoc says. His cousin does not argue.`)}
 
 The Falari right the carts and fill the skins and walk back to the camp with the Fourth, singing, and the song is about the Fourth by the end of the first mile, and none of it is true.`,
       ch:[{t:'Back to the camp.', go:()=>startExplore('b6_c6_camp')}]}),
-    b6_c6_falari_after:()=>({sp:'Sweetcreek\'s Falari', scene:'b6_camp_night', again:()=>`Sweetcreek's Falari, singing about the Fourth, inaccurately.`, txt:
+    b6_c6_falari_after:()=>({sp:'Sweetcreek\'s Falari', scene:'b6_c6_duskcamp', again:()=>`Sweetcreek's Falari, singing about the Fourth, inaccurately.`, txt:
 `Sweetcreek's Falari are singing the song about the Fourth again. It has more verses now. In the newest one the Fourth fought thirty bandits at the well with its bare hands, and Brisk${b6In('brisk') ? '' : ', whoever that is,'} carried both carts home on her back.${b66If('brisk', ' Brisk has heard it, and has said nothing, which the Falari take for approval.')}`,
       ch:[{t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the squad's own scenes at the fire ---- */
-    b6_c6_lamp:()=>({sp:'Ohl\'s lamp', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_lamp = 1; b66L('ohl', 1); }, txt:
+    b6_c6_lamp:()=>({sp:'Ohl\'s lamp', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_lamp = 1; b66L('ohl', 1); }, txt:
 `Ohl has a small clay lamp lit on a flat stone a little way from the fire, the kind they sell outside temples, and he is sitting in front of it with his hands on his knees.
 
 "Soliel," he says, when you sit down by him, before you can ask. "Twenty-two years I have asked her for things, and mostly she has had other things to do. At G'danisban she answered. Not to me. Through a boy from the Third Regiment who had the fever and lived, and through a thousand like him." He looks at the little flame. "I am not jealous. I tell myself so every night. I light the lamp so that I have to tell myself so."
 
 He is quiet a while. "My list is two hundred and eleven names. It has not got longer since Pale. I would like you to know that I know whose doing that is, partly." He does not say whose. He means you, and Soliel, and a fair amount of luck, and he would not say any of it aloud for anything.`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
-    b6_c6_whistle:()=>({sp:'Brannoc\'s whistle', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_whistle = 1; b66L('brannoc', 1); }, txt:
+    b6_c6_whistle:()=>({sp:'Brannoc\'s whistle', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_whistle = 1; b66L('brannoc', 1); }, txt:
 `Brannoc holds out the tin whistle to whoever is nearest, which is ${b66Say({kettle:'Kettle', tuft:'Tuft', brisk:'Brisk', _:'you'})}. "Falari tune," he says. "Every Falari child learns it before they can walk. It's about a girl who drowns." He considers. "Most Falari tunes are."
 
 ${b66Say({kettle:`Kettle takes it, because she is Falari and has been waiting all season for someone to ask, and plays the tune through, clean, with all the notes in it, and hands it back. Brannoc stares at her. "You never said," he says. "You never asked," Kettle says.`, brisk:`Brisk looks at the whistle as if it might go off. Then she takes it, and blows one note, loud and flat, and hands it back, and that is Brisk's music lesson, and Brannoc says it was the best note he's heard all year.`, tuft:`Tuft takes it, and turns it over, and gives it back. "In the Mouse," she says, "a whistle meant run." Brannoc is quiet, for once, and plays something slower.`, _:`You try. It is not good. Brannoc says it is the bravest thing he has seen a sergeant do, and plays the tune himself, badly, all the way through.`})}
 
 The whistle goes back in Brannoc's shirt. The Falari at the next fire have been listening, and one of them shouts across that he is still flat on the third note, and Brannoc shouts back that the third note is flat on purpose, in honour of the girl.`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
-    b6_c6_blue:()=>({sp:'Ressa', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_blue = 1; b66L('ressa', 1); }, txt:
+    b6_c6_blue:()=>({sp:'Ressa', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_blue = 1; b66L('ressa', 1); }, txt:
 `Ressa is scrubbing at her fingers with a handful of sand, hard, the way you would scrub a pot.
 
 The blue does not come off. It never has. It is dyer's blue, from the vats on her street in G'danisban, and it is in the skin now. "Tomorrow," she says, without looking up, "in Hanar Ara, they will see the blue and the marks and think I'm one of theirs. The fever took my street and left me. They will say it chose me." She scrubs. "It didn't choose anything. It just walked down the street and missed one house."
 
 She throws the sand away and looks at her hands. Still blue. "My mother's hands were this colour," she says. "All her life." She does not scrub again.`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
-    b6_c6_rations:()=>({sp:'Brisk', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_rations = 1; b66L('brisk', 1); }, txt:
+    b6_c6_rations:()=>({sp:'Brisk', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_rations = 1; b66L('brisk', 1); }, txt:
 `Brisk has the Fourth's rations laid out on a cloak by the fire in rows, biscuit, dried meat, a bag of dates from the last town, and is counting them aloud, the way she does every night, and has done every night since before Pale.
 
 "Eleven days," she says, when she has finished. "Twelve if Kettle stops eating the dates." She looks up. "After Hanar Ara there's nobody left to fight in this country. The Host'll still want feeding." She starts putting the rows back in the sack, in order. "Wars end, Sergeant. Rations don't."
 
 It is the most she has said at one time all season. She seems to know it, and keeps quiet until the sack is tied, and then only, "Eleven."`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
-    b6_c6_satchel:()=>({sp:'Kettle', scene:'b6_camp_night', fx:()=>{ S.f.b6_c6_satchel = 1; b66L('kettle', 1); }, txt:
+    b6_c6_satchel:()=>({sp:'Kettle', scene:'b6_c6_duskcamp', fx:()=>{ S.f.b6_c6_satchel = 1; b66L('kettle', 1); }, txt:
 `Kettle has the satchel's contents out on a blanket in a row, and is counting them with her finger, the way a priest counts beads: two sharpers, a burner, a smoker, and at the end of the row, by itself, the cusser.
 
 "Maud," she says, of the cusser, as if introducing someone. "She's come all the way from the Moranth, and across a sea, and through a plague, and nobody's had to throw her." She touches it, very lightly. "If the war ends at Hanar Ara tomorrow, she'll never go off. I can't tell if that's the best thing that's ever happened to her or the saddest."
