@@ -163,7 +163,16 @@ SCENEX.b8_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
   b84Haze(ctx, W, H*.52, H*.08, t, mo, .09);
   b84Tin(ctx, W*.2, H*.62, H/300, t, mo, 0); // Mossa's lamp
   b84Fire(ctx, W*.48, H*.86, H/300, t);
-  if (S && S.f && (S.f.b8_c4_ph || 1) < 4 && !S.f.b8_c4_waterDone) [[.78, 1], [.86, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b4_c2_pilgrim', W*u, H*.8, 1.3, t, {dir:d, phase:i})); else drawFigure(ctx, 'b8_c4_carrier', W*.8, H*.8, 1.3, t, {dir:-1, phase:1});
+  /* v13.33 (pictures against text): the chapter's end page is "the camp's far edge in the morning, by the bells" (both captions); the sky
+     over Black Coral stays dark by canon, so the morning is in what the camp is doing: carriers going among the sick along the near row
+     (hold), or a smear of smoke over the store-yard and the water line working at the cart (burn) */
+  const end = !!(S && S.book === 'tth' && S.scene === 'chend' && S.chapter === 4), ek = end ? ((S.f && S.f.b8_c4_key) || (S.chapters && S.chapters[4]) || 'hold') : '';
+  if (ek === 'burn') { for (let i = 0; i < 9; i++) { const k = ((mo ? t/16000 : 0) + i/9) % 1; ell(ctx, W*(.6 + k*.12) + Math.sin(i)*W*.01, hz - H*.02 - k*H*.12, W*(.03 + k*.07), H*(.015 + k*.02), `rgba(70,66,70,${(.4*(1 - k*.7)).toFixed(2)})`); } // the smear over the store-yard
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.6, hz + H*.02, H*.05, '#c0502a', .14); ctx.globalCompositeOperation = 'source-over';
+    [[.72, 1], [.76, 1], [.88, -1], [.92, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b8_c4_carrier', W*u, H*.8 + (i % 2)*2, 1.2, t, {dir:d, phase:i})); } // the water line at the cart
+  else if (ek === 'hold') { [[.66, .74, 1], [.8, .8, -1], [.12, .82, 1]].forEach(([u, v, d], i) => drawFigure(ctx, 'b8_c4_carrier', W*u, H*v, 1.25, t, {dir:d, phase:i + 1}));
+    for (let i = 0; i < 4; i++) drawFigure(ctx, 'b8_c4_carrier', W*(.08 + i*.16), hz + H*(.07 + (i % 2)*.03), .6, t, {dir:i % 2 ? 1 : -1, phase:i, alpha:.8}); } // carriers among the sick, near and along the far rows
+  else if (S && S.f && (S.f.b8_c4_ph || 1) < 4 && !S.f.b8_c4_waterDone) [[.78, 1], [.86, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b4_c2_pilgrim', W*u, H*.8, 1.3, t, {dir:d, phase:i})); else drawFigure(ctx, 'b8_c4_carrier', W*.8, H*.8, 1.3, t, {dir:-1, phase:1});
   drawFigure(ctx, 'b8_c4_mossa', W*.24, H*.78, 1.35, t, {dir:1, phase:2, still:true});
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.34 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .74, .5); };

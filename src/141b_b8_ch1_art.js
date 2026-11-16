@@ -257,18 +257,22 @@ SCENEX.b8_c1_den = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   vign(ctx, W, H, .78, .55); };
 
 /* the Gadrobi roofs at night: ridges and wet slate going away east, chimneys, a tarred line strung between two of them on iron hooks, fog
-   lying in the streets below like milk in a bowl, the moon over it all (whole, this winter), the upper city's blue fire far off */
+   lying in the streets below like milk in a bowl, no moon or stars through it (v13.33), the upper city's blue fire far off */
 SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4;
   ctx.drawImage(sceneLayer('b81:roofs', W, H, (x, W, H) => {
-    b81Sky(x, W, H, hz, 8180); glow(x, W*.78, H*.12, H*.2, '#dfe6f0', .2); ell(x, W*.78, H*.12, H*.04, H*.04, '#e8e4d6'); ell(x, W*.774, H*.114, H*.012, H*.01, 'rgba(160,156,140,.4)'); // the moon
+    // v13.33 (pictures against text): "under the fog ... like milk in a bowl": a night with the fog up off the lake, no stars and no moon
+    // through it, the upper city's blue fire showing through the haze, and the fog lying thick and pale between the ridges
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#0a0e16'],[.6,'#161e2c'],[1,'#26324a']]); x.fillRect(0, 0, W, hz + 2);
     x.fillStyle = vgrad(x, hz, H, [[0,'#141a26'],[1,'#06070a']]); x.fillRect(0, hz, W, H - hz); // the city under the fog, below the skyline
     b81Upper(x, W, H, hz, 8186, 1.1);
-    x.fillStyle = vgrad(x, hz - H*.02, hz + H*.12, [[0,'rgba(140,160,190,0)'],[.4,'rgba(140,160,190,.12)'],[1,'rgba(140,160,190,0)']]); x.fillRect(0, hz - H*.02, W, H*.14); // fog in the city below the skyline
+    x.fillStyle = vgrad(x, hz*.4, hz + H*.04, [[0,'rgba(120,140,170,0)'],[1,'rgba(120,140,170,.3)']]); x.fillRect(0, hz*.4, W, hz*.6 + H*.04); // haze over the upper city
+    x.fillStyle = vgrad(x, hz - H*.02, hz + H*.16, [[0,'rgba(150,168,196,.1)'],[.4,'rgba(150,168,196,.42)'],[1,'rgba(150,168,196,.2)']]); x.fillRect(0, hz - H*.02, W, H*.18); // the fog in the streets, like milk in a bowl
     // the roofs: three ridges, near to far
     [[.56, '#16181e', 8190], [.7, '#101216', 8191], [.86, '#0a0b0e', 8192]].forEach(([v, c, sd], k) => { x.fillStyle = c; x.beginPath(); x.moveTo(0, H);
       for (let i = 0; i <= 12; i++) { const u = i/12, yy = H*v - (i % 2 ? H*.06 : 0) + hash(i, sd)*H*.02; x.lineTo(u*W, yy); } x.lineTo(W, H); x.closePath(); x.fill();
       x.strokeStyle = `rgba(140,170,210,${(.12 + k*.04).toFixed(2)})`; x.lineWidth = .7; x.beginPath(); for (let i = 0; i <= 12; i++) { const u = i/12, yy = H*v - (i % 2 ? H*.06 : 0) + hash(i, sd)*H*.02; x.lineTo(u*W, yy); } x.stroke(); // wet slate catching the light
-      for (let i = 0; i < 3; i++) { const cxp = W*(.1 + hash(i, sd + 3)*.8), ch = H*(.05 + k*.02); x.fillStyle = c; x.fillRect(cxp, H*v - H*.04 - ch, W*(.02 + k*.006), ch + H*.04); } }); // chimneys
+      for (let i = 0; i < 3; i++) { const cxp = W*(.1 + hash(i, sd + 3)*.8), ch = H*(.05 + k*.02); x.fillStyle = c; x.fillRect(cxp, H*v - H*.04 - ch, W*(.02 + k*.006), ch + H*.04); } // chimneys
+      if (k < 2) { x.fillStyle = vgrad(x, H*v + H*.02, H*v + H*.16, [[0,'rgba(140,158,186,.34)'],[1,'rgba(140,158,186,0)']]); x.fillRect(0, H*v + H*.02, W, H*.14); } }); // the fog lying in the street between this ridge and the next
     // the two chimneys that hold the line, near, left and right
     x.fillStyle = '#0e0f12'; x.fillRect(W*.14, H*.5, W*.05, H*.38); x.fillRect(W*.78, H*.58, W*.045, H*.3); x.fillStyle = '#1e2026'; x.fillRect(W*.135, H*.49, W*.06, H*.02); x.fillRect(W*.775, H*.57, W*.055, H*.02);
   }), 0, 0, W, H);
@@ -276,7 +280,7 @@ SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const ax = W*.19, ay = H*.54, bx = W*.78, by = H*.6; B2F.line(ctx, '#5a5a64', 1.2, [[ax, ay], [bx, by]]); ctx.fillStyle = '#4a4a50'; ctx.fillRect(ax - 2, ay - 1.5, 3, 3); ctx.fillRect(bx - 1, by - 1.5, 3, 3);
   if (mo) { const k = (t/3000) % 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, ax + (bx - ax)*k, ay + (by - ay)*k, 6, '#8ab8ff', .5); ctx.globalCompositeOperation = 'source-over'; }
   for (let i = 1; i < 6; i++) { const u = i/6; ell(ctx, ax + (bx - ax)*u, ay + (by - ay)*u, 1.2, 1.2, '#2a2620'); } // the knots
-  b81Fog(ctx, W, H, H*.62, t, mo, .12);
+  b81Fog(ctx, W, H, H*.62, t, mo, .2); b81Fog(ctx, W, H, H*.46, t + 3000, mo, .18);
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.07, .36/sq.length)), H*.96 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .7, .5); };
 

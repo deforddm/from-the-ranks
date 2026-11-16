@@ -138,7 +138,11 @@ SCENEX.b7_coast_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
 /* above the beach (120's caption; B7READ[1]'s table scene): the column's first halt in the dunes; a hollow with the Third's small fire of
    boat-wood burning blue at the edges, dune grass black against the light; below and beyond, the hulks burning low on the water, the smoke
    lying along the sea in a long bank, other squads' fires in other hollows */
-SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5, fl = b2Fl(t);
+/* v13.33 (pictures against text): the chapter's end page is "the Lether coast at dusk, the hulks still smoking along the water, and a file
+   of soldiers going inland" (both captions): a dusk sky, the hulks burned down to smoke, no fire in the hollow, the file going up over the
+   dunes away from the sea and the squad walking inland with it */
+SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5, fl = b2Fl(t), end = !!(S && S.scene === 'chend' && S.chapter === 1);
+  if (end) return b71CoastEnd(cv, t);
   ctx.drawImage(sceneLayer('b71:above', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#05070e'],[.6,'#161420'],[1,'#3a1e18']]); x.fillRect(0, 0, W, hz + 2);
     for (let i = 0; i < 80; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, 7160)*.5).toFixed(2)})`; x.fillRect(hash(i, 7161)*W, Math.pow(hash(i, 7162), 1.4)*hz*.7, 1, 1); }
@@ -165,6 +169,28 @@ SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
   if (mo) for (let i = 0; i < 6; i++) { const k = ((t/1500 + i/6) % 1); ctx.fillStyle = `rgba(255,190,110,${(.8*(1 - k)).toFixed(2)})`; ctx.fillRect(cx + Math.sin(i*2 + t/500)*4 + k*8, cy - 10 - k*34, 1, 1); } // sparks, inland on the sea wind
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const n = sq.length, side = i < n/2 ? -1 : 1, j = side < 0 ? i : i - Math.ceil(n/2); drawFigure(ctx, id, cx + side*(26 + j*22), H*.97 - (j % 2)*3, 1.9, t, {phase:i, dir:-side}); });
   vign(ctx, W, H, .78, .55); };
+
+function b71CoastEnd(cv, t){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5;
+  ctx.drawImage(sceneLayer('b71:above:dusk', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#1c1c30'],[.45,'#4a3044'],[.8,'#a8583a'],[1,'#d88a4a']]); x.fillRect(0, 0, W, hz + 2); // dusk, the light low over the sea
+    glow(x, W*.3, hz, W*.3, '#f0a060', .3);
+    x.fillStyle = vgrad(x, hz, sh, [[0,'#6a4a44'],[.4,'#2e2630'],[1,'#141420']]); x.fillRect(0, hz, W, sh - hz + 2); // the sea, taking the last of the light
+    for (let i = 0; i < 50; i++) { const yy = hz + 2 + Math.pow(hash(i, 7110), 1.3)*(sh - hz - 2), d = (yy - hz)/(sh - hz); x.fillStyle = `rgba(230,160,110,${(.08 + (1 - d)*.12).toFixed(2)})`; x.fillRect(hash(i, 7111)*W, yy, 8 + d*40, .8 + d); }
+    B71SHIPS.forEach(([u, k]) => { const sx = u*W, sy = hz + H*.012 + k*.6*H*.02, s = k*H/360*.6; poly(x, [[sx - 30*s, sy - 3*s], [sx + 30*s, sy - 4*s], [sx + 24*s, sy + 2*s], [sx - 26*s, sy + 2*s]], '#140c0a'); }); // the hulks, burned to the waterline
+    // the dunes as at night, in the dusk
+    x.fillStyle = '#2a2018'; x.beginPath(); x.moveTo(0, sh + H*.02); for (let i = 0; i <= 24; i++) { const u = i/24; x.lineTo(u*W, sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13))); } x.lineTo(W, H); x.lineTo(0, H); x.closePath(); x.fill();
+    x.fillStyle = vgrad(x, sh + H*.1, H, [[0,'#4a3626'],[1,'#1a120c']]); x.beginPath(); x.moveTo(0, H*.72); x.quadraticCurveTo(W*.3, H*.66, W*.5, H*.7); x.quadraticCurveTo(W*.7, H*.66, W, H*.74); x.lineTo(W, H); x.lineTo(0, H); x.closePath(); x.fill();
+    x.strokeStyle = 'rgba(255,180,120,.3)'; x.lineWidth = 1; x.beginPath(); for (let i = 0; i <= 24; i++) { const u = i/24; x.lineTo(u*W, sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13))); } x.stroke();
+    for (let i = 0; i < 46; i++) { const u = hash(i, 7163), gy = sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13)) + 1; b71Grass(x, u*W, gy, .7 + hash(i, 7164)*.9, 'rgba(30,22,14,.95)'); }
+    for (let i = 0; i < 20; i++) b71Grass(x, hash(i, 7165)*W, H*(.8 + hash(i, 7166)*.18), 1.4 + hash(i, 7167), 'rgba(34,24,16,.95)');
+  }), 0, 0, W, H);
+  // the hulks still smoking along the water: grey columns leaning inland on the sea wind
+  B71SHIPS.forEach(([u, k], i) => { const sx = u*W, sy = hz + H*.012 + k*.6*H*.02; for (let j = 0; j < 7; j++) { const kk = ((mo ? t/16000 : 0) + j/7 + hash(i, 7170)*.3) % 1, r = H*(.008 + kk*.03)*k; ell(ctx, sx - kk*W*.04, sy - 4 - kk*H*.22*k, r, r*.7, `rgba(60,52,56,${(.42*(1 - kk)).toFixed(2)})`); } });
+  // the file going up over the dunes, inland, small and dark against the sky's last light
+  for (let i = 0; i < 9; i++) { const u = .58 + i*.045, gy = sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13)) + 1, s = H/360*.8; drawFigure(ctx, 'b2soldier', W*u + (mo ? (t/400) % 4 : 0), gy, .55, t, {dir:-1, phase:i, still:!mo, alpha:.85}); }
+  // the squad near, packs on, walking inland (left)
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.07, .4/sq.length)), H*.95 - (i % 2)*3, 1.8, t, {phase:i, dir:-1, still:!mo}));
+  vign(ctx, W, H, .6, .45); }
 
 /* the tally-shed (this file's scene): a coast road at night between hedges; behind a fieldstone yard wall a long low shed with a slate roof
    and one window with a lamp in it, a lantern on a post in the yard, the signal-fire brush on its frame by the gate; dark fields and a far
