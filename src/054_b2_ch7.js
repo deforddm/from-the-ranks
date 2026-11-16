@@ -283,7 +283,10 @@ He looks at you. He looks at the bar. ${b2In('tangle') ? 'Tangle hums four notes
     b2_aren_city_day:{loc:'Aren', sub:'Inside the north gate', cap:'Shuttered houses and a fountain running, the High Fist\'s army rank on rank in clean kit, and the column coming in through the gate past it.', amb:'plain'},
     b2_aren_city_dusk:{loc:'Aren', sub:'The square under the north tower', cap:'Lanterns on poles and lamps behind the shutters, and in the square the Red Blades drawn up inside a ring of provosts.', amb:'night'},
     b2_aren_city_dawn:{loc:'Aren', sub:'The muster · dawn', cap:'The street below the north gate full of the army of Aren in clean kit, the cavalry at the gate, and a man in gilt on a white horse.', amb:'plain'},
-    b2_finale:{loc:'Aren Way', sub:'After', cap:'Crows over an empty barrow, and the city behind it, very quiet.', amb:'dusk'} },
+    b2_fin_guard:{loc:'Aren', sub:'The harbour · morning', cap:'The Adjunct\'s fleet coming round the headland, transports to the edge of the sea, more ships than the harbour has room for.', amb:'lake'},
+    b2_fin_wickans:{loc:'Aren', sub:'The landward gate', cap:'A small band riding out of the landward gate, children among them on horses too big for them, and the herd beside.', amb:'wind'},
+    b2_fin_desert:{loc:'Aren', sub:'The landward gate · noon', cap:'The road south into the hills, the squad alone on it, and Aren\'s wall behind.', amb:'wind'},
+    b2_finale:{loc:'Aren Way', sub:'After', cap:'An empty barrow with a bare cross on it, one crow in the grass, and the city behind it, very quiet.', amb:'dusk'} },
 
   end:{
     guard:['The Aren Guard', 'The Chain of Dogs came into Aren and the Fist did not. He died on a barrow in sight of the walls, and ten thousand of the Empire\'s soldiers watched him do it, and the next day the High Fist marched them out and lost every one. The squad stood on the walls with Blistig\'s three hundred and held the door. When the Adjunct\'s fleet comes in, the squad will be on the quay to meet it, in the Aren Guard\'s sashes.'],
@@ -1266,7 +1269,7 @@ B2FIN.extra = id => [
 B2FIN.loy = (id, warm, cold, mid) => { const l = S.loy[id] || 0; return l >= 2 ? warm : l <= -2 ? cold : mid; };
 
 B2FIN.ending = key => {
-  const T = {guard:['The Aren Guard', 'b2_harbour'], wickans:['With the Wickans', 'b2_odhan_dusk'], desert:['Off the map', 'b2_odhan_day']}[key] || ['The Aren Guard', 'b2_harbour'];
+  const T = {guard:['The Aren Guard', 'b2_fin_guard'], wickans:['With the Wickans', 'b2_fin_wickans'], desert:['Off the map', 'b2_fin_desert']}[key] || ['The Aren Guard', 'b2_fin_guard']; // v13.31: each road its own picture (054b)
   if (typeof S === 'undefined' || !S || !S.f) return {title:T[0], scene:T[1], paras:[]};
   try {
     const n = B2FIN.n(), mates = B2FIN.mates(), fell = b2Fallen();

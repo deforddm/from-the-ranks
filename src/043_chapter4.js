@@ -21,6 +21,7 @@ const C4_RIDGE = ["##....##","##.,,.##","###..###","###..###","##.,,.##","###..#
 const CH4 = {
   title:'Assassins', number:'Four',
   endScene:'roof', // the end page (Classic pictures) shows where the chapter ends: dawn on the chandler's roof, not the Pale
+  endCap:()=>'Grey dawn on the same roof. The last lamp on the lakefront is out, the roofs are empty, and somebody is lighting a kitchen fire.',
   intro:{loc:'Darujhistan', sub:'The rooftops · two nights on', cap:'Slate and chimney-pots under a blue haze, and above them a black mountain with no light in its windows.',
     paras:[
 `Two nights since the dye-shop. Two nights of hauling nothing, guarding a hole, and pretending to be a road crew for a city that has stopped pretending not to notice. The Gadrobi crossing has a new brazier and an old silence. Hedge sings in the hole. Trotts stands at the stakes. Whiskeyjack sits on his bucket, and looks at the lake, and does not say what he is waiting for, which is how you know he is waiting for something.`,

@@ -97,7 +97,9 @@ function artJournalHTML(){
 function bindArtJournal(m){ m.querySelectorAll('[data-map]').forEach(b => b.onclick = () => { AUDIO.play('flip'); artView(b.dataset.map); }); }
 
 /* the chapter-end backdrop where the canvas has a vista for it */
-const ART_ENDVISTA = {0:'vistas/prologue', 1:'vistas/pale', 2:'vistas/lake', 3:'vistas/canal', 4:'vistas/roof', 5:'vistas/barrow', 6:'vistas/garden', 7:'vistas/hill'};
+/* v13.31: each end vista agrees with where its chapter ends and with its endCap: 2 the last morning on the plain, by wagon (the lantern boat on the
+   lake is the Bridgeburners'), 3 sunrise on the chandler's roof, 4 the grey before it on the same roof; vistas/lake and vistas/canal are no longer shown */
+const ART_ENDVISTA = {0:'vistas/prologue', 1:'vistas/pale', 2:'vistas/plain', 3:'vistas/roofdawn', 4:'vistas/roof', 5:'vistas/barrow', 6:'vistas/garden', 7:'vistas/hill'};
 function artScene(key, cap){ return `<div class="scene artscene">${art(key, 'vista').replace('<svg ', '<svg preserveAspectRatio="xMidYMid slice" ')}${cap ? `<div class="cap">${cap}</div>` : ''}</div>`; }
 /* a chapter opening shows one picture: the painted plate, or with the Classic set the drawn scene */
 /* (v13.6: every book has its plates, keyed chapters/<book>/<n>, 019h and the 019i files) */

@@ -35,6 +35,7 @@ const c2OutCh = () => [
 const CH2 = {
   title:'The Rhivi Plain', number:'Two',
   endScene:'plain', // the end page (Classic pictures) shows where the chapter ends: the last morning, at the edge of the Gadrobi Hills, not the Pale
+  endCap:()=>'The last morning on the plain. The ruts go up into the Gadrobi Hills, and Sethand has turned his horse west without a word.',
   intro:{loc:'The Rhivi Plain', sub:'Genabackis · three days south-east of Pale', cap:'Grass to every horizon, and one wagon on it, and the sky empty of quorls.',
     paras:[
 `The Black Moranth went south the morning the wagon left, before it had rolled a mile, eight Bridgeburners riding things that should not fly, bound for the north shore of Lake Azur and a boat across it by night. Hedge was still complaining about the boat when the quorl lifted him. The sky over the Pale was full of wings for the time it takes to say a name, and then it was not. Whiskeyjack did not wave. Nobody expected him to. Kettle watched until there was nothing to watch, and then she counted the munitions.`,

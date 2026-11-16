@@ -16,6 +16,7 @@ const brackOff = () => Math.min(3, (S.f.c3_brackDisc ? 2 : 0) + (S.f.c3_brackKet
 const CH3 = {
   title:'Blue Fire', number:'Three',
   endScene:'roof', // the end page (Classic pictures) shows where the chapter ends: dawn on the chandler's roof, not the Pale
+  endCap:()=>'Sunrise on the chandler\'s roof. The lamps are out, the shapes on the roofs are gone, and the city has started to shout about fish.',
   intro:{scene:'city_dusk', loc:'Darujhistan', sub:'The Worry Gate · dusk', cap:'Blue lamps coming on one at a time along the walls, and above the lake a mountain of black stone hanging on nothing.',
     paras:[
 () => `The road comes down out of the Gadrobi Hills in switchbacks, the way a drunk comes down a stair, and the wagon comes down it the same way, with Brisk at the brake and ${S.f.c2_wagon ? 'Pell the mule' : 'the mule'} expressing an opinion at every turn. There are goats on the slopes and goatherds who do not look up at Malazans, and a shrine to a god whose face somebody has chiselled off with care. Kettle has stopped counting munitions. She is counting chimneys.`,

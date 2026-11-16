@@ -1,9 +1,9 @@
 /* ============ Book One's chapter plates (v13.6, 019i): Gardens of the Moon, the prologue and seven chapters ============
    Redrawn from the v1 plates with the plate kit (019h). Each plate draws its chapter's opening caption and nothing the caption does not say:
-   0 the Second Army in its pits on the hillside below Pale, the city burning under Moon's Spawn; 1 the tent lines under a bruised sky,
-   one lamp lit in the cadre row, the Spawn gone; 2 grass to every horizon, one wagon, an empty sky; 3 Darujhistan at dusk from the
+   0 the Second Army in its pits on the hillside below Pale, the morning after, the Spawn gone; 1 the tent lines under a bruised sky,
+   Pale on its hill above them, one lamp lit in the cadre row, the Spawn gone; 2 grass to every horizon, one wagon, an empty sky; 3 Darujhistan at dusk from the
    Worry Gate road, blue lamps coming on along the walls and the Spawn over the lake; 4 slate and chimney-pots under blue haze, a
-   squadmate crouched on the ridge, the Spawn dark above; 5 the Gadrobi Hills folded brown, barrow-stones on every crest, no smoke;
+   squadmate crouched on the ridge, the Spawn dark above; 5 the Gadrobi Hills folded brown, barrow-stones on every crest, no smoke, the barrow door dark (nothing in it yet: v13.31);
    6 the Fete: paper lanterns in every colour but blue, masks on the doors, the Spawn undressed over the lake; 7 the Lakefront at dawn,
    the blue lamps going out along the quay, gulls on the pilings, an empty sky. */
 {
@@ -12,27 +12,31 @@
   /* v13.29 (David's screenshot, Nov 16: Pale was a strip of boxes on the far horizon, and the Spawn hung overhead though the text has it gone three days):
      the Spawn is gone from the sky; Pale stands close on its hill above the pits, walled, towers broken, a breach where the sorcery fell, a few lamps,
      smoke going up thin three days on. */
-  PK.plate('chapters/gotm/0', 'Prologue: the Second Army in its pits on the hillside below Pale, the city broken on its hill and the sky empty where the Spawn hung', P => {
-    let s = PK.sky(P, [[0, '#07060c'], [.45, '#1a1220'], [.78, '#4a2018'], [1, '#22100c']]) + PK.stars(70, 3, 0, 150);
-    s += PK.haze(P, 200, 50, '#c0502a', .22, 420, 250);
-    const hill = '<path d="M150 300 C230 290 290 236 360 226 C430 216 520 214 600 222 C630 226 650 232 660 236 L660 300 Z" fill="#1a100e"/>';
-    s += PK.ridge(262, 8, 11, '#150c0b') + hill;
-    s += PK.skyline(P, 330, 640, 228, 21, {fill: '#120a0a', lit: '#ffa050', p: .05, h: 58, wide: 22, domes: .1, towers: .22, spires: true});
-    s += PK.wall(312, 470, 238, 262, '#170d0c', {cw: 6, towers: [330, 400, 455], tw: 13, th: 24});
-    s += PK.wall(508, 660, 234, 262, '#170d0c', {cw: 6, towers: [540, 610], tw: 13, th: 26, gx: 575, gw: 18, gh: 22});
-    s += '<path d="M470 238 L478 248 L486 242 L494 252 L502 244 L508 234 L508 262 L470 262 Z" fill="#170d0c"/>'; // the breach, rubble where the wall was
-    for (let i = 0; i < 5; i++) s += PK.smoke(P, 360 + i * 62, 226, 150, 12, 34, '#3a2826', .42, 30 + i);
-    s += PK.fires(P, [[488, 246, .55], [372, 234, .35], [598, 230, .4]], .5, '#ff7a2a');
-    s += PK.ridge(300, 30, 12, '#140c0c') + PK.crest(300, 30, 12, '#a05030', 1, .3);
+  /* Pale on its hill (plate 0's v13.28 drawing, shared by plate 1): the hill, the skyline over its walls, the breach, the smoke going up thin */
+  const pale = (P, o = {}) => { const c = o.fill || '#170d0c';
+    let s = PK.ridge(262, 8, 11, o.ridge || '#150c0b') + `<path d="M150 300 C230 290 290 236 360 226 C430 216 520 214 600 222 C630 226 650 232 660 236 L660 300 Z" fill="${o.hill || '#1a100e'}"/>`;
+    s += PK.skyline(P, 330, 640, 228, 21, {fill: o.city || '#120a0a', lit: '#ffa050', p: o.lit ?? .05, h: 58, wide: 22, domes: .1, towers: .22, spires: true});
+    s += PK.wall(312, 470, 238, 262, c, {cw: 6, towers: [330, 400, 455], tw: 13, th: 24});
+    s += PK.wall(508, 660, 234, 262, c, {cw: 6, towers: [540, 610], tw: 13, th: 26, gx: 575, gw: 18, gh: 22});
+    s += `<path d="M470 238 L478 248 L486 242 L494 252 L502 244 L508 234 L508 262 L470 262 Z" fill="${c}"/>`; // the breach, rubble where the wall was
+    for (let i = 0; i < 5; i++) s += PK.smoke(P, 360 + i * 62, 226, 150, 12, 34, o.smoke || '#3a2826', o.sop || .42, 30 + i);
+    return s; };
+  /* v13.31: the prologue is the morning a runner came ("This morning a runner found you"), so the sky is the morning's, grey going gold, no stars */
+  PK.plate('chapters/gotm/0', 'Prologue: the Second Army in its pits on the hillside below Pale in the morning, the city broken on its hill and the sky empty where the Spawn hung', P => {
+    let s = PK.sky(P, [[0, '#5e6878'], [.45, '#9a9290'], [.78, '#d0a278'], [1, '#6a4a34']]);
+    s += PK.haze(P, 200, 50, '#e0a070', .22, 420, 250);
+    s += pale(P, {fill: '#2a1e1a', ridge: '#2a1e1a', hill: '#2e2220', city: '#241a18', lit: 0, smoke: '#5a4a46', sop: .5});
+    s += PK.fires(P, [[488, 246, .55], [372, 234, .35], [598, 230, .4]], .4, '#ff7a2a');
+    s += PK.ridge(300, 30, 12, '#22180f') + PK.crest(300, 30, 12, '#e0a070', 1, .35);
     let pits = ''; for (let i = 0; i < 26; i++) { const x = 20 + hash(i, 41) * 620, y = 296 + hash(i, 42) * 86, w = 10 + (y - 280) * .25; pits += `<ellipse cx="${PK.f(x)}" cy="${PK.f(y)}" rx="${PK.f(w)}" ry="${PK.f(w * .28)}" fill="#050304"/><path d="M${PK.f(x - w)} ${PK.f(y)} Q${PK.f(x)} ${PK.f(y - w * .5)} ${PK.f(x + w)} ${PK.f(y)}" stroke="#4a2418" stroke-width="1" fill="none" opacity=".6"/>`; }
-    s += pits + PK.fires(P, [[90, 330, .8], [250, 372, 1], [560, 350, .9]]);
-    s += PK.back(150, 404, .42, B({rim: '#e08850', cloak: '#2a2220', head: 'helm', kit: 'spear'}));
+    s += pits + PK.fires(P, [[90, 330, .6], [250, 372, .7], [560, 350, .6]]); // cookfires in the pits, morning
+    s += PK.back(150, 404, .42, B({rim: '#e0a878', cloak: '#2a2220', head: 'helm', kit: 'spear'}));
     return s; });
-  PK.plate('chapters/gotm/1', 'Chapter One: the tent lines under a bruised sky, and one lamp lit in the cadre row', P => {
-    let s = PK.sky(P, [[0, '#0b0a14'], [.4, '#2a1a2c'], [.7, '#6a3424'], [1, '#2a1610']]) + PK.stars(50, 5, 0, 110);
+  /* v13.31: Pale stands on its hill above the camp, as on plate 0 (it was a strip of boxes on the far horizon) */
+  PK.plate('chapters/gotm/1', 'Chapter One: the tent lines on the hillside under a bruised sky, Pale broken on its hill above them, and one lamp lit in the cadre row', P => {
+    let s = PK.sky(P, [[0, '#0b0a14'], [.4, '#2a1a2c'], [.7, '#6a3424'], [1, '#2a1610']]) + PK.stars(30, 5, 0, 80);
     s += PK.haze(P, 120, 26, '#8a4a5a', .35, 240, 300) + PK.haze(P, 80, 18, '#4a2a40', .4, 480, 240);
-    s += PK.ridge(210, 24, 13, '#1c1416') + PK.skyline(P, 480, 620, 206, 23, {fill: '#140e10', lit: '#ff8a3a', p: .04, h: 26, roofs: false});
-    for (let i = 0; i < 3; i++) s += PK.smoke(P, 500 + i * 40, 200, 110, 12, 30, '#2a1e20', .45, 50 + i);
+    s += `<g transform="translate(0 -26)">${pale(P, {fill: '#160e10', ridge: '#1c1416', hill: '#181012', city: '#120c0e', lit: .04, smoke: '#2a1e20', sop: .45})}</g>`;
     s += PK.ridge(250, 12, 14, '#130e0e');
     s += PK.tents(P, 10, 640, 252, 3, 14, .9, '#3a3028', .08, 7);
     s += `<rect x="420" y="232" width="34" height="18" fill="#221a16"/><path d="M416 232 L437 218 L458 232 Z" fill="#2a201a"/>` + PK.lamp(P, 437, 242, 2.4, '#ffb050', 3);
@@ -49,10 +53,13 @@
     s += PK.grass(500, 23, 260, 400, '#8a6a3a', .55, 4) + PK.grass(160, 24, 330, 400, '#c09a5a', .35, 5);
     s += TK.bird(380, 120, 1, true, '#2a1e1c');
     return s; });
-  PK.plate('chapters/gotm/3', 'Chapter Three: Darujhistan at dusk from the Worry Gate road, blue lamps coming on along the walls, and Moon\'s Spawn over the lake', P => {
+  /* v13.31: the lake beyond the city, and the Spawn over it rather than over the walls */
+  PK.plate('chapters/gotm/3', 'Chapter Three: Darujhistan at dusk from the Worry Gate road, blue lamps coming on along the walls, the lake beyond, and Moon\'s Spawn over it', P => {
     let s = PK.sky(P, [[0, '#0a0c1c'], [.5, '#2a2a4a'], [.8, '#6a4a5a'], [1, '#3a2a3a']]) + PK.stars(40, 7, 0, 90);
-    s += PK.spawn(P, 420, 26, 170, {under: '#5a8ad8', seed: 9, lights: 0});
-    s += PK.skyline(P, 60, 600, 230, 31, {fill: '#14182a', lit: '#8ec8ff', p: .12, h: 70, domes: .2, towers: .15, spires: true});
+    s += `<rect y="186" width="660" height="50" fill="${P.lin([[0, '#5a5470'], [1, '#2a2a40']])}"/><path d="M0 186.5 H660" stroke="#8a84a0" stroke-width="1" opacity=".5"/>`; // Lake Azur, to the edge of the world
+    s += PK.spawn(P, 470, 34, 130, {under: '#5a8ad8', seed: 9, lights: 0});
+    s += `<ellipse cx="470" cy="196" rx="110" ry="5" fill="#06060c" opacity=".3"/>`; // its shadow on the water
+    s += PK.skyline(P, 60, 600, 230, 31, {fill: '#14182a', lit: '#8ec8ff', p: .12, h: 44, domes: .2, towers: .15, spires: true});
     s += PK.wall(0, 660, 236, 290, '#10131e', {cw: 7, towers: [80, 230, 400, 560], gx: 330, gw: 30, gh: 40, edge: '#5a6a9a'});
     for (let i = 0; i < 9; i++) s += PK.lamp(P, 30 + i * 74, 232, 1.8, '#8ec8ff', i);
     s += `<rect y="288" width="660" height="112" fill="#0c0c12"/><path d="M300 290 L250 400 L410 400 L360 290 Z" fill="#1a1820"/>`;
@@ -77,7 +84,6 @@
     const L = [[170, 26, 51, '#8a7a66'], [210, 30, 52, '#6e5c48'], [250, 34, 53, '#56442f'], [300, 36, 54, '#3e3022'], [350, 30, 55, '#2a2018']];
     for (const [y, a, sd, c] of L) { s += PK.ridge(y, a, sd, c, .6); const st = 4; for (let i = 0; i < st; i++) { const x = 60 + hash(i, sd) * 540, yy = y - (.55 * Math.sin(x / 660 * 5.1 + hash(sd, 1) * 6.28) + .3 * Math.sin(x / 660 * 11.3 + hash(sd, 2) * 6.28)) * a, k = (y - 140) / 60; s += `<path d="M${PK.f(x - 2 * k)} ${PK.f(yy + 1)} L${PK.f(x - 1.6 * k)} ${PK.f(yy - 7 * k)} L${PK.f(x + 1.4 * k)} ${PK.f(yy - 8 * k)} L${PK.f(x + 2 * k)} ${PK.f(yy + 1)} Z" fill="${c === '#2a2018' ? '#14100c' : '#2a221a'}" opacity=".85"/>`; } }
     s += `<path d="M150 400 Q190 300 214 280 Q230 300 270 400 Z" fill="#1c1610"/><path d="M196 330 L196 300 Q212 286 228 300 L228 330 Z" fill="#050404"/>`;
-    s += `<g class="pk-fl"><ellipse cx="205" cy="310" rx="2.2" ry="1.2" fill="#d0402a"/><ellipse cx="219" cy="310" rx="2.2" ry="1.2" fill="#d0402a"/></g>`;
     s += PK.grass(220, 56, 330, 400, '#5a4a30', .6) + PK.stones(30, 57, 340, 400, '#100c08', .5);
     s += PK.back(480, 404, .48, B({rim: '#d8d0c0', cloak: '#3a3226', kit: 'spear'}));
     return s; });

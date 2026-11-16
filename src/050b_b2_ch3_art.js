@@ -277,10 +277,12 @@ SCENEX.b2_tunnel = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   vign(ctx, W, H, .75, .5); };
 
 SCENEX.b2_gelor = (cv, t, eve) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.3; // eve: the evening before (b2_gelor_dusk), nobody on the ramp yet
+  const grey = !eve && S.node === 'b2_patha_morning'; // v13.31: "Before dawn the Seventh forms up ... in the grey light": no sun yet, no glare, the light grey and cold
   const crest = px => H*.24 + (1 - px/W)*H*.08 - Math.sin(px/W*3.2 + .4)*H*.04; // the ridge line, higher to the right
   const ramp = k => [lerp(W*.18, W*.66, k), lerp(H*.86, crest(W*.66) + 2, Math.pow(k, .8))], rampW = k => lerp(W*.2, W*.05, Math.pow(k, .7)); // Reloe's ramp, narrowing as it climbs
-  const L = sceneLayer(eve ? 'b2:gelor:eve' : 'b2:gelor', W, H, (x, W, H) => {
-    x.fillStyle = vgrad(x, 0, H*.42, [[0,'#8a9aa8'],[.5,'#c8ccc4'],[1,'#f0e8d4']]); x.fillRect(0, 0, W, H*.42); glow(x, W*.2, H*.06, W*.6, '#fffcf0', .55); ell(x, W*.2, H*.06, 12, 12, '#ffffff'); // the white sun, behind and left
+  const L = sceneLayer(eve ? 'b2:gelor:eve' : grey ? 'b2:gelor:grey' : 'b2:gelor', W, H, (x, W, H) => {
+    if (grey) { x.fillStyle = vgrad(x, 0, H*.42, [[0,'#2a3040'],[.5,'#5a6070'],[1,'#9a9894']]); x.fillRect(0, 0, W, H*.42); for (let i=0;i<20;i++){ x.fillStyle = `rgba(220,226,250,${(.08 + hash(i, 3)*.25).toFixed(2)})`; x.fillRect(hash(i, 4)*W, hash(i, 5)*H*.12, 1, 1); } } // before dawn: the last stars going, no sun yet
+    else { x.fillStyle = vgrad(x, 0, H*.42, [[0,'#8a9aa8'],[.5,'#c8ccc4'],[1,'#f0e8d4']]); x.fillRect(0, 0, W, H*.42); glow(x, W*.2, H*.06, W*.6, '#fffcf0', .55); ell(x, W*.2, H*.06, 12, 12, '#ffffff'); } // the white sun, behind and left
     for (let i=0;i<3;i++) cloud(x, W*(.3 + i*.25), H*(.08 + i*.04), W*.3, 4, '#ffffff', .08);
     // the ridge itself: a long hogback of dry grass, limestone in its flank, rising right
     x.fillStyle = vgrad(x, H*.22, H, [[0,'#a8946a'],[.3,'#9a8458'],[.7,'#7a6844'],[1,'#4a3e28']]); x.beginPath(); x.moveTo(0, H); x.lineTo(0, crest(0)); for (let px=0;px<=W + 8;px+=8) x.lineTo(px, crest(px)); x.lineTo(W, H); x.fill();
@@ -306,8 +308,9 @@ SCENEX.b2_gelor = (cv, t, eve) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     b2Column(x, W, H, k => [lerp(W*1.05, W*.3, Math.pow(k, .8)), lerp(H*.96, H*.88, k)], 70, '#1e1610', null);
   });
   ctx.drawImage(L, 0, 0, W, H);
-  if (mo) { const dpr = L.width / W, y0 = Math.round(H*.2), y1 = Math.round(H*.36); for (let y=y0; y<y1; y+=2){ const off = Math.sin(t/180 + y*.7)*1.4*Math.sin((y - y0)/(y1 - y0)*Math.PI); ctx.drawImage(L, 0, y*dpr, L.width, 2*dpr, off, y, W, 2); } } // heat along the crest
-  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.2, H*.06, W*.6, '#fff8e0', .14); for (let i=0;i<8;i++){ const k = ((t*mo/1700 + hash(i, 51)) % 1), px = W*(.38 + hash(i, 52)*.5); ctx.fillStyle = `rgba(255,255,240,${.5*Math.sin(k*Math.PI)})`; ctx.fillRect(px, crest(px) - 6 - hash(i, 53)*6, 1.4, 1.4); } ctx.globalCompositeOperation = 'source-over'; // helms and spear-points winking up there
+  if (grey) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = vgrad(ctx, H*.2, H, [[0,'#8a909c'],[1,'#6a6e7a']]); ctx.fillRect(0, H*.2, W, H*.8); ctx.restore(); }
+  if (mo && !grey) { const dpr = L.width / W, y0 = Math.round(H*.2), y1 = Math.round(H*.36); for (let y=y0; y<y1; y+=2){ const off = Math.sin(t/180 + y*.7)*1.4*Math.sin((y - y0)/(y1 - y0)*Math.PI); ctx.drawImage(L, 0, y*dpr, L.width, 2*dpr, off, y, W, 2); } } // heat along the crest
+  if (!grey) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.2, H*.06, W*.6, '#fff8e0', .14); for (let i=0;i<8;i++){ const k = ((t*mo/1700 + hash(i, 51)) % 1), px = W*(.38 + hash(i, 52)*.5); ctx.fillStyle = `rgba(255,255,240,${.5*Math.sin(k*Math.PI)})`; ctx.fillRect(px, crest(px) - 6 - hash(i, 53)*6, 1.4, 1.4); } ctx.globalCompositeOperation = 'source-over'; } // helms and spear-points winking up there (not before the sun is up)
   for (let i=0;i<5;i++){ const k = ((t*mo/11000 + i/5) % 1); ell(ctx, W*(.15 + i*.18) + k*40, H*.3 - 4 - k*10, 30 + k*30, 4 + k*3, `rgba(220,206,170,${.14*Math.sin(k*Math.PI)})`); } // their dust, hanging
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(34, W*.5/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
   vign(ctx, W, H, .45, .5); };

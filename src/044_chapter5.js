@@ -27,6 +27,7 @@ Brisk watches it go. "It dies," she says, low, to nobody. "Whatever it is. On th
 const CH5 = {
   title:'The Gadrobi Hills', number:'Five',
   endScene:'hills', // the end page (Classic pictures) shows where the chapter ends: dawn on the long ridge, not the Pale
+  endCap:()=>'Grey dawn on the long ridge. Something under the barrow turns over in its sleep, and the Fourth starts west, quietly.',
   intro:{loc:'The Gadrobi Hills', sub:'East of Darujhistan · the third day', cap:'Brown hills folded on each other like blankets on a sickbed, and barrow-stones on every crest, and no smoke anywhere.',
     paras:[
 `Out through the Worry Gate before the lamps go off, through Worrytown, past the tanneries and the goat-pens and the last shrine to a god whose name has worn off the lintel, and then the road east stops pretending. Ruts. A cairn. A dead fire nobody claims. The city is behind you, blue and loud, and in front of you there is nothing, and the nothing goes up and down.`,

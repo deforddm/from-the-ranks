@@ -49,6 +49,7 @@ const c1Spot = () => { const k = S.f.bonesSpotLast; if (!k) return '';
     : `\n\nHedge watches the last of his five go across the blanket to Fiddler. "Still in the squad," he says, generously. "Never left it. Fid'll look after it for me." Fiddler, pocketing it: "I will not."`; };
 const CH1 = {
   title:'Pale', number:'One',
+  endCap:()=>'Dawn below Pale. The cadre row is black frames and smoke, and the wagon is loaded for the south.', // the end page's caption, under the dawn vista (019c vistas/pale)
   intro:{loc:'The Pale', sub:'Genabackis · two nights later', cap:'The tent lines under a bruised sky. Somewhere north, the cadre row has one lamp lit.',
     paras:[
 `Two nights since the tunnels. The Host has stopped counting its dead and started counting its living, which is a shorter job and a worse one. A new captain arrived this afternoon with a noble's seat on a horse and a commission for the Bridgeburners, and the Bridgeburners have been very quiet about it. With the Bridgeburners, quiet is loud.`,

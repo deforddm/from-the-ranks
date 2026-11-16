@@ -486,8 +486,10 @@ SCENEX.b2_coltaine_tent = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
   ctx.fillStyle = 'rgba(210,190,160,.3)'; for (let i=0;i<16;i++){ const y = (hash(i,10)*H + t*.01*mo*(1 + hash(i,11))) % H, xx = ax + (hash(i,9) - .5)*W*.5 + Math.sin(t/1400 + i)*6; ctx.globalAlpha = clamp(1 - Math.hypot(xx - ax, y - ly)/(W*.3), 0, 1); ctx.fillRect(xx, y, 1.3, 1.3); } ctx.globalAlpha = 1; // dust in the lamplight
   vign(ctx, W, H, .82, .5); };
 
+/* v13.31 (pictures against text): the caption's court, all of it: the well under its wooden cover, two jars, the door across the court
+   burning, and Ressan sitting on the well-head as if it were a throne */
 SCENEX.b2_well = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, fl = b2Fl(t), wy = H*.7;
-  ctx.drawImage(sceneLayer('b2:well', W, H, (x, W, H) => {
+  ctx.drawImage(sceneLayer('b2:well:2', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, H*.4, [[0,'#0a0608'],[.7,'#4a1a10'],[1,'#a04420']]); x.fillRect(0, 0, W, H*.42); // the sky over the wall, the city burning beyond it
     b2Skyline(x, W, H*.4, '#1a0a08', 13, 24, false);
     const wall = (x0, x1, top, c1, c2) => { x.fillStyle = vgrad(x, top, H*.72, [[0,c1],[1,c2]]); x.fillRect(x0, top, x1 - x0, H*.72 - top); x.fillStyle = 'rgba(255,150,80,.18)'; x.fillRect(x0, top, x1 - x0, 2); for (let i=0;i<10;i++){ x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(x0 + hash(i, Math.round(x0))*(x1 - x0), top + 6 + hash(Math.round(x0), i)*(H*.6 - top), 6 + hash(i,3)*10, 4); } };
@@ -497,14 +499,18 @@ SCENEX.b2_well = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 
     x.fillStyle = vgrad(x, H*.72, H, [[0,'#2a1e16'],[1,'#0a0705']]); x.fillRect(0, H*.72, W, H*.28); for (let i=0;i<60;i++){ x.fillStyle = `rgba(0,0,0,${.15 + hash(i,21)*.2})`; x.fillRect(hash(i,22)*W, H*.74 + hash(i,23)*H*.26, 3 + hash(i,24)*8, 1.4); } // the yard's packed earth
     // a palm over the left wall
     x.strokeStyle = '#0c0806'; x.lineWidth = 4; x.beginPath(); x.moveTo(W*.14, H*.72); x.quadraticCurveTo(W*.1, H*.4, W*.16, H*.12); x.stroke(); for (let i=0;i<8;i++){ const a = -Math.PI*.95 + i/7*Math.PI*.9; x.lineWidth = 2.4; x.beginPath(); x.moveTo(W*.16, H*.12); x.quadraticCurveTo(W*.16 + Math.cos(a)*24, H*.12 + Math.sin(a)*14 - 6, W*.16 + Math.cos(a)*44, H*.12 + Math.sin(a)*20 + 14); x.stroke(); }
-    // the well: a ring of stone, a timber frame, the rope, the bucket
-    const cx = W*.62; ell(x, cx + 4, wy + 14, 40, 8, 'rgba(0,0,0,.5)'); x.fillStyle = vgrad(x, wy - 14, wy + 12, [[0,'#6a5a48'],[1,'#2a2018']]); x.fillRect(cx - 34, wy - 12, 68, 22); ell(x, cx, wy + 10, 34, 7, '#2a2018'); ell(x, cx, wy - 12, 34, 7, '#7a6a56'); ell(x, cx, wy - 12, 27, 5, '#050404');
+    // the well: a ring of stone, and a wooden cover over it, planked and banded
+    const cx = W*.62; ell(x, cx + 4, wy + 14, 40, 8, 'rgba(0,0,0,.5)'); x.fillStyle = vgrad(x, wy - 14, wy + 12, [[0,'#6a5a48'],[1,'#2a2018']]); x.fillRect(cx - 34, wy - 12, 68, 22); ell(x, cx, wy + 10, 34, 7, '#2a2018'); ell(x, cx, wy - 12, 34, 7, '#7a6a56');
     x.strokeStyle = 'rgba(0,0,0,.4)'; x.lineWidth = 1; for (let i=0;i<7;i++){ x.beginPath(); x.moveTo(cx - 34 + i*11, wy - 8); x.lineTo(cx - 34 + i*11, wy + 10); x.stroke(); }
-    x.fillStyle = '#1e140c'; x.fillRect(cx - 30, wy - 52, 4, 42); x.fillRect(cx + 26, wy - 52, 4, 42); x.fillRect(cx - 32, wy - 54, 64, 5); x.fillStyle = 'rgba(255,160,90,.2)'; x.fillRect(cx - 32, wy - 54, 64, 1.2);
-    x.strokeStyle = '#6a5a40'; x.beginPath(); x.moveTo(cx + 6, wy - 50); x.lineTo(cx + 6, wy - 30); x.stroke(); x.fillStyle = '#3a2a1a'; x.fillRect(cx + 1, wy - 30, 10, 9); x.fillStyle = '#5a4430'; x.fillRect(cx + 1, wy - 30, 10, 2);
-    ell(x, cx - 46, wy + 6, 6, 9, '#4a3020'); ell(x, cx - 48, wy - 2, 3, 2, '#2a1a10'); // a water jar
+    ell(x, cx, wy - 13, 29, 5.6, '#4a3624'); x.save(); x.beginPath(); x.ellipse(cx, wy - 13, 29, 5.6, 0, 0, 7); x.clip(); x.strokeStyle = 'rgba(20,12,6,.6)'; x.lineWidth = 1; for (let i=1;i<6;i++){ x.beginPath(); x.moveTo(cx - 29 + i*9.6, wy - 19); x.lineTo(cx - 29 + i*9.6, wy - 7); x.stroke(); } x.fillStyle = '#2a2016'; x.fillRect(cx - 30, wy - 15, 60, 2); x.restore(); x.fillStyle = 'rgba(255,160,90,.25)'; x.fillRect(cx - 26, wy - 18.4, 52, 1); // the cover, planks and an iron band
+    ell(x, cx - 46, wy + 6, 6, 9, '#4a3020'); ell(x, cx - 48, wy - 2, 3, 2, '#2a1a10'); ell(x, cx + 46, wy + 8, 5.4, 8, '#523624'); ell(x, cx + 47, wy + 1, 2.6, 1.8, '#2a1a10'); // two water jars
   }), 0, 0, W, H);
   ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.5, H*.36, W*.6, '#ff7a30', .16*fl); ctx.fillStyle = `rgba(255,120,50,${.07*fl})`; ctx.fillRect(0, H*.16, W, H*.08); ctx.globalCompositeOperation = 'source-over'; // fire-light over the walls
+  { const dx = W*.45, dy = H*.72; ctx.globalCompositeOperation = 'lighter'; glow(ctx, dx, dy - H*.1, W*.12, '#ff8a30', .5*fl); ctx.globalCompositeOperation = 'source-over'; // the door across the court, burning
+    for (let i=0;i<7;i++){ const k = mo ? (Math.sin(t/(90 + i*23) + i*1.7) + 1)/2 : .6, fx = dx - W*.042 + i*W*.014, fh = H*(.08 + hash(i, 31)*.1 + k*.05); ctx.fillStyle = i%2 ? 'rgba(255,150,50,.85)' : 'rgba(255,200,90,.8)'; ctx.beginPath(); ctx.moveTo(fx - W*.012, dy); ctx.quadraticCurveTo(fx - W*.008, dy - fh*.6, fx + (k - .5)*3, dy - fh); ctx.quadraticCurveTo(fx + W*.01, dy - fh*.5, fx + W*.012, dy); ctx.fill(); }
+    ctx.fillStyle = 'rgba(255,236,170,.7)'; ctx.fillRect(dx - W*.03, dy - 3, W*.06, 3); }
+  { const cx = W*.62; ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, wy - 15); ctx.clip(); drawFigure(ctx, 'ressan', cx - 2, wy - 26, 2, t, {still:true, dir:-1}); ctx.restore(); // Ressan, on the well-head, a throne
+    ctx.fillStyle = '#2a2420'; ctx.fillRect(cx - 9, wy - 16, 4.4, 10); ctx.fillRect(cx - 2, wy - 16, 4.4, 9); ctx.fillStyle = '#1a1410'; ctx.fillRect(cx - 10, wy - 7, 6, 2.4); ctx.fillRect(cx - 3, wy - 8, 6, 2.4); } // his legs over the front of it
   for (let i=0;i<3;i++){ const k = ((t*mo/11000 + i/3) % 1); ell(ctx, W*(.3 + i*.2) + k*30, H*.36 - k*H*.4, 14 + k*30, 6 + k*10, `rgba(30,16,12,${.35*(1 - k)})`); } // smoke going over
   for (let i=0;i<14;i++){ const k = ((t*mo/(6000 + hash(i,7)*3000) + hash(i,8)) % 1); ctx.fillStyle = `rgba(255,${150 + Math.round(hash(i,9)*80)},70,${(1 - k)*.8})`; ctx.fillRect(W*hash(i,6) + k*30, H*.42 - k*H*.42, 1.3, 1.3); } // sparks
   const sq = marchOrder(sceneSquad()); sq.forEach((id, i) => drawFigure(ctx, id, W*.08 + i*Math.min(32, W*.4/sq.length), H*.95 - (i%2)*3, 2.1, t, {phase:i, dir:1}));
