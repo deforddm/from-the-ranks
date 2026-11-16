@@ -18,7 +18,7 @@
 /* FOR THE ARTIST (163b): names this file uses.
    Items: ART['item/b9_c3_akrynknife'], ['item/b9_c3_boilingpot'], ['item/b9_c3_feverbark'].
    Figures: b9_c3_healer (the Letherii healer), b9_c3_harro (the sutler), b9_c3_duvo (the Akrynnai trader); placeholders here with ??=.
-   Reused: b9_c1_thallo (161b), b2soldier (the old marine, the captain), b5_c5_refugee (the farm's old woman), b5_letherii (deserters).
+   Reused: b9_c1_thallo (161b), b2soldier (the captain), b8_c1_veteran (the old marine, as Book Ten draws him), b9_dog (the dogs), b5_c5_refugee (the farm's old woman), b5_letherii (deserters).
    Backdrops: b9_road_east and b9_column (160's, yours), and three this file adds: b9_c3_fevercamp (the camp by the road at night, the
    fever-carts, a squad's fire by a stone), b9_c3_farm (the last farm by day), b9_c3_edge (the last water before the Wastes, by day).
    Ground (TILEX): b9_c3_road ('.' dry grass, ',' the road, 'x' scrub, '#' a field wall, 'w' a wagon, 'v' a fever-cart, 'H' Harro's
@@ -123,69 +123,76 @@ const B9CH3 = {
 
   areas:[
     /* 16 x 12 (b9_c3_road, night). . dry grass  , the road  x scrub  T tents  w wagons  v the fever-carts  F the Third's fire  m a stone by
-       the road  o barrels  > the road east */
+       the road  o barrels  > the road east
+       Terrain kit (25b, v13.22): a whole column's camp: more tents (6, as its T), wagons (7, as its w), cookfires (0), water barrels (&, as its o), horses on the picket (@, as its h), trodden ground (:), thorn closing the gaps in the scrub (2), and an orderly and a heavy on watch (folk). */
     { id:'b9_c3_camp', title:'The road east · the column\'s camp', sub:'Night · the fever-carts full', hint:'Tap ground to move · tap a figure to talk · the fever-carts are north of the road, the fire south', decor:'b9_c3_road', dark:true,
-      map:[ "xxxx..xxxxx..xxx",
-            "x.T.T.T....T.T.x",
-            "x..............x",
-            "x.w....vv......x",
-            "x..............x",
+      map:[ "xxxx22xxxxx22xxx",
+            "x.T.T.T.6..T.T.x",
+            "x0.............x",
+            "x.w.&..vv....6.x",
+            "x....:........7x",
             ",,,,,,,,,,,,,,,>",
             ",,,,,,m,,,,,,,,,",
-            "x..............x",
-            "x....F.........x",
-            "x.T.....o..w...x",
-            "x..............x",
+            "x.6..........&.x",
+            "x....F:......6.x",
+            "x.T..:..o..w...x",
+            "x.6..@@...6....x",
             "xxxxxxxxxxxxxxxx" ],
-      walk:'.,', triggers:{F:'b9_c3_fire', v:'b9_c3_carts', m:'b9_c3_stone', '>':'b9_c3_camp_east'}, start:{x:4, y:7},
+      walk:'.,:', triggers:{F:'b9_c3_fire', v:'b9_c3_carts', m:'b9_c3_stone', '>':'b9_c3_camp_east'}, start:{x:4, y:7},
+      folk:[{x:12, y:3, kind:'b5_letherii', name:'A Letherii orderly with a pot', line:'Boiled water for the carts. Boil it, cool it, carry it, boil the next. The healers say the water is the fever. The water says nothing.'},
+            {x:9, y:10, kind:'b2soldier', name:'A heavy on watch', line:'Fires all the way east to the hill. That is us, that is. Looks like an army. Smells like one too.'}],
       quest:()=> b93Ph() === 1 ? (!S.f.b9_c3_orders1 ? 'Thallo, by the road. He has the word from the front.' : !S.f.b9_c3_healer ? 'The fever-carts. A Letherii healer is going down them.' : 'The fire, and sleep. The column moves at first light.')
         : !S.f.b9_c3_orders3 ? 'Thallo, at the fire. He has been to the sergeants\' fires.' : !b93Key() ? `The fever-carts. ${b93SickIn() ? NAME(b93Sick()) + ' is worse.' : 'The sick are worse.'}` : 'First light.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:4, node:()=>b93Ph() === 1 ? 'b9_c3_thallo' : 'b9_c3_thallo3', fresh:()=>b93Ph() === 1 ? !S.f.b9_c3_orders1 : !S.f.b9_c3_orders3},
         {id:'healer', name:'A Letherii healer', kind:'b9_c3_healer', x:6, y:4, node:()=>'b9_c3_healer', show:()=>b93Ph() === 1, fresh:()=>!S.f.b9_c3_healer},
         {id:'brask', name:'Brask', kind:'brask', x:10, y:2, node:()=>'b9_c3_brask', show:()=>b93Ph() === 1 && b9In('brask'), fresh:()=>!S.f.b9_c3_brask},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:8, node:()=>'b9_c3_oldmarine', fresh:()=>!S.f.b9_c3_old},
-        {id:'dogs', name:'Eyes past the carts', kind:'b5_c7_greatwolf', x:13, y:2, node:()=>'b9_c3_dogs', show:()=>!S.f.b9_c3_dogsDone && !!S.f.b9_c3_healer, fresh:()=>true},
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:12, y:8, node:()=>'b9_c3_oldmarine', fresh:()=>!S.f.b9_c3_old},
+        {id:'dogs', name:'Eyes past the carts', kind:'b9_dog', x:13, y:2, node:()=>'b9_c3_dogs', show:()=>!S.f.b9_c3_dogsDone && !!S.f.b9_c3_healer, fresh:()=>true},
         /* v13.8 (David, Nov 15): meetings. Hedge's new company at the far end of the camp, the first night; once the Third has carried, he is busy */
         {id:'hedge', name:'A sapper in a leather cap, on a wagon', kind:'hedge', x:14, y:10, node:()=>'b9_c3_hedge', show:()=>b93Ph() === 1 && !!S.f.b9_c3_orders1 && (!S.f.b9_c3_hedge || /^b9_c3_hedge/.test(S.node || '')), fresh:()=>!S.f.b9_c3_hedge} ] },
 
     /* 16 x 12 (b9_c3_road, day). The column halted at noon among the last farms: w wagons  H Harro's wagon  # a field wall  < back west
-       > the lane to the last farm */
+       > the lane to the last farm
+       Terrain kit (25b, v13.22): the halted column: horses (@, as its h), a wagon (7, as its w), a noon fire (0) and a barrel (&), trodden ground by the road (:), the dusty field inside its wall (*, :), boulders, thorn and a dead tree (4, 2, 5), thorn closing the gaps in the scrub (2), and a heavy and a farm child (folk). */
     { id:'b9_c3_road', title:'The road east · the last farms', sub:'Day · the column halted at noon', hint:'Tap ground to move · tap a figure to talk · the farm lane is east, the sutler west', decor:'b9_c3_road',
-      map:[ "xx...xxxxx...xxx",
-            "x...w...w...w..x",
-            "x..............x",
+      map:[ "xx222xxxxx222xxx",
+            "x.@.w.:.w.0.w.7x",
+            "x..:...:..&.:..x",
             ",,,,,,,,,,,,,,,,",
             "<,,,,,,,,,,,,,,,",
-            "x..............x",
+            "x.:............x",
             "x.H.....######.x",
-            "x.......#....#.x",
-            "x.......#......>",
-            "x.......#####..x",
-            "x..x.......x...x",
+            "x.......#*:.*#.x",
+            "x..4....#:..*..>",
+            "x.2.....#####..x",
+            "x..x..4....x.5.x",
             "xxxxxxxxxxxxxxxx" ],
-      walk:'.,', triggers:{H:'b9_c3_harro', '<':'b9_c3_road_west', '>':'b9_c3_lane'}, start:{x:4, y:5},
+      walk:'.,:*', triggers:{H:'b9_c3_harro', '<':'b9_c3_road_west', '>':'b9_c3_lane'}, start:{x:4, y:5},
+      folk:[{x:11, y:5, kind:'b2soldier', name:'A heavy sitting on his pack', line:'Halt at noon, march at one. In between I sit. I am good at the sitting. They should make me a sergeant of it.'},
+            {x:5, y:8, kind:'b5_c7_child', name:'A farm child on the field wall', line:'Are you going to the end of the world? My da says there is nothing out there. Why would you go to nothing?'}],
       quest:()=> !S.f.b9_c3_orders2 ? 'Thallo, by the wagons. The quartermaster has a job.' : !S.f.b9_c3_farmDone ? 'The lane east, to the last farm.' : 'Back to the column. It makes camp at dusk.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:6, y:5, node:()=>'b9_c3_thallo2', fresh:()=>!S.f.b9_c3_orders2},
         {id:'harro', name:'Harro, the sutler', kind:'b9_c3_harro', x:3, y:7, node:()=>'b9_c3_harro', fresh:()=>!S.f.b9_c3_bark} ] },
 
     /* 16 x 12 (b9_c3_farm, day). The last farm: Q the farmhouse, D its door  b the barn, a its door  W the well  c a cart  k a woodstack
-       < back to the road */
+       < back to the road
+       Terrain kit (25b, v13.22): a light touch: the worn way from the gate to the well and on to the house and the barn (_), the orchard's dead trees (5), a tuft (*), a sack pile (8), boulders (4); nobody but the old woman left (no folk). */
     { id:'b9_c3_farm', title:'The road east · the last farm', sub:'Afternoon · the fields gone to dust', hint:'Tap ground to move · tap a figure to talk · the house is north-west, the barn north-east, the well in the yard', decor:'b9_c3_farm',
       map:[ "################",
-            "#QQQQ#....#bbbb#",
+            "#QQQQ#.5..#bbbb#",
             "#QQDQ#....#bbab#",
-            "#..............#",
+            "#....___.____..#",
             "#.......W......#",
-            "#..............#",
-            "#.c...........k#",
-            "#..............#",
-            "<..............#",
-            "#..............#",
+            "#.......:......#",
+            "#.c.....:.....k#",
+            "#.......:..5...#",
+            "<.......:......#",
+            "#....8..:....4.#",
             "#######..#######",
             "################" ],
-      walk:'.', triggers:{D:'b9_c3_door', a:'b9_c3_barn', W:'b9_c3_well', '<':'b9_c3_farm_back'}, start:{x:2, y:8},
+      walk:'._:', triggers:{D:'b9_c3_door', a:'b9_c3_barn', W:'b9_c3_well', '<':'b9_c3_farm_back'}, start:{x:2, y:8},
       quest:()=> !S.f.b9_c3_farmDone ? 'The farmhouse door. There are men inside who are not farmers.' : !S.f.b9_c3_farmer ? 'The old woman in the yard.' : 'Back to the road. The column makes camp at dusk.',
       npcs:[
         {id:'men', name:'Men at the farmhouse door', kind:'b5_letherii', x:4, y:3, node:()=>'b9_c3_door', show:()=>!S.f.b9_c3_farmDone, fresh:()=>true},
@@ -193,21 +200,24 @@ const B9CH3 = {
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:3, y:9, node:()=>'b9_c3_farm_thallo', fresh:()=>false} ] },
 
     /* 16 x 12 (b9_c3_road, day). The last water before the Wastes: r bare stone  h Duvo's horse picket  D his tent  H Harro's wagon  F the
-       fire  w wagons  > the road east, onto the Wastes */
+       fire  w wagons  > the road east, onto the Wastes
+       Terrain kit (25b, v13.22): the last water: horses (@, as its h), a tent and a wagon (6, 7), a barrel (&, as its o), trodden ground at the horses and the fire (:), thorn and a thorn tree (2, 5), the grass giving out to boulders and old stone on the east side (4, 3), tufts (*), old stone in the gaps of the rim (3), and a heavy and a marine at the stream (folk). */
     { id:'b9_c3_edge', title:'The Wastes\' edge · the last water', sub:'Day · the grass giving out', hint:'Tap ground to move · tap a figure to talk · the trader is north of the road, the fire south', decor:'b9_c3_road',
-      map:[ "rrr..rrrrr...rrr",
-            "r..............r",
-            "r.hhh.....D....r",
-            "r..............r",
+      map:[ "rrr33rrrrr333rrr",
+            "r.2:::*...5...4r",
+            "r.hhh@:...D..4.r",
+            "r.........:....r",
             ",,,,,,,,,,,,,,,>",
             ",,,,,,,,,,,,,,,,",
-            "r..............r",
-            "r.H.....F......r",
-            "r..............r",
-            "r...w..w...rr..r",
-            "r..............r",
+            "r..*...........r",
+            "r.H...:.F.&...4r",
+            "r.6....::...3.*r",
+            "r.7.w..w...rr.4r",
+            "r.....2.....3..r",
             "rrrrrrrrrrrrrrrr" ],
-      walk:'.,', triggers:{h:'b9_c3_horses', D:'b9_c3_duvo', H:'b9_c3_harro', F:'b9_c3_fire', '>':'b9_c3_edge_east'}, start:{x:1, y:5},
+      walk:'.,:*', triggers:{h:'b9_c3_horses', D:'b9_c3_duvo', H:'b9_c3_harro', F:'b9_c3_fire', '>':'b9_c3_edge_east'}, start:{x:1, y:5},
+      folk:[{x:12, y:6, kind:'b2soldier', name:'A heavy filling skins', line:'Last water, the sergeant says. He said that at the last water too. I filled everything I own. I have started on my helmet.'},
+            {x:4, y:8, kind:'sapper', name:'A marine with his boots off', line:'Feet in the stream. First time in a month they have been anywhere I wanted them.'}],
       quest:()=> !S.f.b9_c3_duvo ? 'The horse-trader by the road. An Akrynnai, Thallo says.' : 'The fire. Then the Wastes.',
       npcs:[
         {id:'duvo', name:'Duvo, the horse-trader', kind:'b9_c3_duvo', x:11, y:3, node:()=>'b9_c3_duvo', fresh:()=>!S.f.b9_c3_duvo},

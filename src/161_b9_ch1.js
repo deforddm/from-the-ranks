@@ -15,8 +15,9 @@
 /* FOR THE ARTIST (161b): names this file uses.
    Items: ART['item/b9_c1_heavyscale'], ['item/b9_c1_messtin'], ['item/b9_c1_gutterknife'].
    Figures: brask (160's simple sprite, replaced in 161b), b9_c1_thallo (the corporal; placeholder here with ??=). Reused: b2soldier (the
-   clerk, the old marine, the quartermaster, the drill sergeant, the captain), b5_c5_refugee (the woman, the old carter), urchin (the boy),
-   b5_letherii (the looters, the deserters, the veterans).
+   clerk, the quartermaster, the drill sergeant, the captain), b8_c1_veteran (the old marine, as Book Ten draws him), b7_malsgt (the
+   two sergeants with the handcart), b5_c5_refugee (the woman, the old carter), urchin (the boy), b5_letherii (the looters, the deserters,
+   the veterans).
    Backdrops: b9_letheras_night and b9_barracks (160's, yours), and four this file adds that borrow until you draw them: b9_c1_street (the
    emptied quarter at night), b9_c1_stable (a stable yard at night, a dead dray-horse), b9_c1_lanes (the emptied quarter by day, doors
    broken in), b9_c1_tavern (a soldiers' taproom by the barracks).
@@ -85,43 +86,46 @@ const B9CH1 = {
 
   areas:[
     /* 16 x 12 (b9_c1_barracks, night). . flagstones  # the yard wall  = barrack eaves  b a bunk-house door  S the stores door  t the clerk's
-       table  k kit-crates  F the Third's fire  h the stable gate  > the street gate */
+       table  k kit-crates  F the Third's fire  h the stable gate  > the street gate
+       Terrain kit (25b, v13.22): a light touch: the trodden way from the gate to the fire (_), boot-marked flags round it (:), kit-crates by the stores (8, as its k), a weapon stack (%), a lantern at the stores end (!), water casks (&), and a heavy rolling his kit-bag (folk). */
     { id:'b9_c1_yard', title:'Letheras · the Malazan barracks', sub:'Night · the yard emptying', hint:'Tap ground to move · tap a figure to talk · the stores are north, the stable east, the gate east', decor:'b9_c1_barracks', dark:true,
       map:[ "################",
             "#==b=====SS====#",
-            "#..............#",
-            "#.t.......k....#",
-            "#...........k..#",
-            "#......F.......>",
-            "#..............#",
-            "#.k............#",
+            "#.............!#",
+            "#.t.......k8...#",
+            "#...........k%.#",
+            "#....::F______.>",
+            "#.....:........#",
+            "#.k..........&.#",
             "#=====b........h",
-            "#======........#",
-            "#..............#",
+            "#======8.......#",
+            "#.&.....:......#",
             "################" ],
-      walk:'.', triggers:{F:'b9_c1_fire', t:'b9_c1_clerk', b:'b9_c1_bunk', S:'b9_c1_stores_door', h:'b9_c1_stable', '>':'b9_c1_gate'}, start:{x:8, y:6},
+      walk:'._:', triggers:{F:'b9_c1_fire', t:'b9_c1_clerk', b:'b9_c1_bunk', S:'b9_c1_stores_door', h:'b9_c1_stable', '>':'b9_c1_gate'}, start:{x:8, y:6},
+      folk:[{x:11, y:9, kind:'b2soldier', name:'A heavy rolling a kit-bag', line:'Roll it tight, tie it twice, carry it anyway. Nobody has said where. Nobody says that loudly enough to be wrong.'}],
       quest:()=> b91Ph() === 1 ? (!S.f.b9_c1_orders1 ? 'Thallo, by the stores. He has the captain\'s word.' : !b91BraskSettled() ? 'The clerk\'s table. There is a man waiting by it with his kit.' : 'Somebody is at the gate.')
         : !S.f.b9_c1_horse ? 'The stores watch. Something is wrong in the stable yard.' : !S.f.b9_c1_storesDone ? 'Shapes at the stores door.' : 'Dawn. The stores, and the count.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:2, node:()=>b91Ph() === 1 ? 'b9_c1_thallo' : 'b9_c1_thallo_watch', fresh:()=>b91Ph() === 1 ? !S.f.b9_c1_orders1 : false},
         {id:'clerk', name:'A clerk with a list', kind:'b2soldier', x:3, y:3, node:()=>'b9_c1_clerk', show:()=>b91Ph() === 1, fresh:()=>!S.f.b9_c1_clerk},
         {id:'brask', name:'A heavy with his kit', kind:'brask', x:4, y:4, node:()=>'b9_c1_brask', show:()=>b91Ph() === 1 && !!S.f.b9_c1_clerk && (S.f.b9_braskDone == null || S.f.b9_braskDone === 2), fresh:()=>S.f.b9_braskDone == null},
-        {id:'old', name:'An old marine by the cook-lines', kind:'b2soldier', x:12, y:7, node:()=>'b9_c1_oldmarine', fresh:()=>!S.f.b9_c1_old},
+        {id:'old', name:'An old marine by the cook-lines', kind:'b8_c1_veteran', x:12, y:7, node:()=>'b9_c1_oldmarine', fresh:()=>!S.f.b9_c1_old},
         {id:'woman', name:'A woman at the gate', kind:'b5_c5_refugee', x:14, y:5, node:()=>'b9_c1_woman', show:()=>b91Ph() === 1 && b91WomanDue(), fresh:()=>true},
         {id:'thieves', name:'Shapes at the stores door', kind:'b5_letherii', x:10, y:2, node:()=>'b9_c1_thieves', show:()=>b91Ph() === 2 && !b91Street() && !!S.f.b9_c1_horse && !S.f.b9_c1_storesDone, fresh:()=>true} ] },
 
     /* 16 x 12 (b9_c1_quarter, night). . setts  , the gutter  # shuttered house fronts  D the household's door  Y their stable-yard gate
-       g an alley mouth  c a handcart  < back to the barracks gate  > the lane's end, toward the canal */
+       g an alley mouth  c a handcart  < back to the barracks gate  > the lane's end, toward the canal
+       Terrain kit (25b, v13.22): a light touch: what was left in the lanes, crates and sacks (8), water butts (&), a handcart (7, as its c); nobody out after dark (no folk). */
     { id:'b9_c1_quarter', title:'Letheras · the quarter behind the barracks', sub:'Night · every shutter closed', hint:'Tap ground to move · tap a figure to talk · the household is up the lane, the barracks gate west', decor:'b9_c1_quarter', dark:true,
       map:[ "################",
             "#####D####Y#####",
-            "#..............#",
+            "#.8...........&#",
             "#.,,,,,,,,,,,,.#",
-            "#.......c......#",
+            "#.......c...8..#",
             "<..............>",
-            "#..............#",
+            "#...7....&.....#",
             "#.,,,,,,,,,,,,.#",
-            "#..............#",
+            "#&............8#",
             "####g######g####",
             "################",
             "################" ],
@@ -132,46 +136,50 @@ const B9CH1 = {
         {id:'boy', name:'A small shape in the alley', kind:'urchin', x:11, y:8, node:()=>'b9_c1_alley', show:()=>!!S.f.b9_c1_house && !S.f.b9_c1_boy, fresh:()=>true} ] },
 
     /* 16 x 12 (b9_c1_barracks, day). The same yard, the days after: wagons backed up to the gate, kit in heaps, the heavies counting.
-       w a wagon  k kit-crates  S the stores (the quartermaster)  F the fire  > the gate, the quarter and the march */
+       w a wagon  k kit-crates  S the stores (the quartermaster)  F the fire  > the gate, the quarter and the march
+       Terrain kit (25b, v13.22): a light touch: the way in from the gate (_), boot-marked flags at the fire (:), more kit-crates (8, as its k), weapon stacks (%), a water cask (&), a wagon by the stable gate (7, as its w), and a heavy counting crates (folk). */
     { id:'b9_c1_muster', title:'Letheras · the Malazan barracks', sub:'The days after · the heavies muster', hint:'Tap ground to move · tap a figure to talk · the drill sergeant is at the gate', decor:'b9_c1_barracks',
       map:[ "################",
             "#==b=====SS====#",
-            "#..............#",
-            "#.k....w..w....#",
-            "#..............#",
-            "#......F.......>",
-            "#..............#",
-            "#.k.....k......#",
-            "#=====b.....w..#",
+            "#.............8#",
+            "#.k....w..w..8.#",
+            "#.%............#",
+            "#....::F_____..>",
+            "#.....:........#",
+            "#.k.....k....&.#",
+            "#=====b.....w.7#",
             "#======........#",
-            "#..............#",
+            "#.......%......#",
             "################" ],
-      walk:'.', triggers:{F:'b9_c1_fire', b:'b9_c1_bunk', S:'b9_c1_qm', '>':'b9_c1_gate3'}, start:{x:8, y:6},
+      walk:'._:', triggers:{F:'b9_c1_fire', b:'b9_c1_bunk', S:'b9_c1_qm', '>':'b9_c1_gate3'}, start:{x:8, y:6},
+      folk:[{x:6, y:3, kind:'b2soldier', name:'A heavy counting crates', line:'Forty-one. The clerk says forty. I count forty-one. One of us is going to carry a crate he does not have.'}],
       quest:()=> !S.f.b9_c1_orders3 ? 'Thallo, by the wagons.' : !S.f.b9_c1_lootersDone ? 'The emptied quarter, through the gate. Looters.' : 'The fire, and then the gate. The heavies march at first light.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:4, node:()=>'b9_c1_thallo3', fresh:()=>!S.f.b9_c1_orders3},
         {id:'drill', name:'The heavies\' drill sergeant', kind:'b2soldier', x:13, y:5, node:()=>'b9_c1_drill', fresh:()=>!S.f.b9_c1_rollTried},
         {id:'qm', name:'The quartermaster', kind:'b2soldier', x:10, y:2, node:()=>'b9_c1_qm', fresh:()=>!S.f.b9_c1_scale},
         {id:'captain', name:'The captain', kind:'b2soldier', x:4, y:2, node:()=>'b9_c1_captain', fresh:()=>!S.f.b9_c1_captain},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false},
-        {id:'ladies', name:'Two sergeants with a handcart', kind:'b5_c5_refugee', x:3, y:10, node:()=>'b9_c1_ladies', fresh:()=>!S.f.b9_c1_ladies} ] },
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:12, y:9, node:()=>'b9_c1_oldmarine', fresh:()=>false},
+        {id:'ladies', name:'Two sergeants with a handcart', kind:'b7_malsgt', x:3, y:10, node:()=>'b9_c1_ladies', fresh:()=>!S.f.b9_c1_ladies} ] },
 
     /* 16 x 12 (b9_c1_quarter, day). The quarter by day: L a looted house, its door broken in  T the soldiers' tavern  D the household's
-       door  Y their yard gate  c a handcart  < back to the barracks */
+       door  Y their yard gate  c a handcart  < back to the barracks
+       Terrain kit (25b, v13.22): a light touch: what the households left in the lanes, crates and sacks (8), water butts (&), a handcart (7, as its c), and an old man who stayed (folk). */
     { id:'b9_c1_lanes', title:'Letheras · the emptied quarter', sub:'Day · doors standing open', hint:'Tap ground to move · tap a figure to talk · the looted house is east, the tavern north', decor:'b9_c1_quarter',
       map:[ "################",
             "#####D####Y##T##",
-            "#..............#",
+            "#.8...........&#",
             "#.,,,,,,,,,,,,.#",
-            "#....c.........#",
+            "#....c.....8...#",
             "<..............#",
-            "#.........c....#",
+            "#.......&.c....#",
             "#.,,,,,,,,,,,,.#",
-            "#..............#",
+            "#&............7#",
             "####L######L####",
             "################",
             "################" ],
       walk:'.,', triggers:{L:'b9_c1_looted', T:'b9_c1_tavern', D:'b9_c1_house_day', Y:'b9_c1_house_day', '<':'b9_c1_lanes_back'}, start:{x:1, y:5},
+      folk:[{x:8, y:2, kind:'b5_c7_citizen', name:'An old man on his step', line:'The neighbours went the night the dead walked. I stayed. I am too old to be frightened twice, and the house is paid for.'}],
       quest:()=> !S.f.b9_c1_lootersDone ? 'The looted house, south side of the lane. Thallo says there are more inside.' : 'Back to the barracks. The heavies march at first light.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:3, y:6, node:()=>'b9_c1_thallo_lanes', fresh:()=>false} ] } ],

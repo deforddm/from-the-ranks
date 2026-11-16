@@ -19,8 +19,9 @@
    second night (b9_c5_bottle). */
 /* FOR THE ARTIST (165b): names this file uses.
    Items: ART['item/b9_c5_barghastaxe'], ['item/b9_c5_sutlerspack'], ['item/b9_c5_dustscarf'].
-   Figures: tegra (replaces 160's sprite). Reused: b9_c1_thallo (161b), b9_c3_harro (163b), b2soldier (the old marine, the heavies),
-   b5_letherii (deserters), b6_bandit (raiders), b5_c7_greatwolf (dogs), b3_c2_bhederin (the bull).
+   Figures: tegra (replaces 160's sprite). Reused: b9_c1_thallo (161b), b9_c3_harro (163b), b2soldier (the heavies), b8_c1_veteran
+   (the old marine, as Book Ten draws him), b10v_bottle (the young marine at the moths), b5_letherii (deserters), b6_bandit (raiders),
+   b9_dog (dogs, 163b), b3_c2_bhederin (the bull).
    Backdrops: b9_wastes_night and b9_dust (160's, yours), and two this file adds: b9_c5_plain (the noon halt on open country, the far
    rider, the sappers' wagons), b9_c5_wash (the dry wash, the wreck, the shade under the bank).
    Ground (TILEX): b9_c5_wastes (Ch 4's b9_c4_wastes underneath; and 'K' the sutler's wrecked cart, 'd' the wash's sandy bed). Battle 't'
@@ -119,47 +120,52 @@ const B9CH5 = {
 
   areas:[
     /* 16 x 12 (b9_c5_wastes, night). The column's camp on open ground: r bare stone  T tents  W the company's ration wagons  H Harro's
-       wagon  F the Third's dung-fire  o barrels  > the camp's east edge, into the dark */
+       wagon  F the Third's dung-fire  o barrels  > the camp's east edge, into the dark
+       Terrain kit (25b, v13.22): a whole column's camp: more tents (6, as its T), a ration wagon (7, as its w), the next fires, the old marine's and the guides' (0), barrels (&, as its o), a horse (@, as its h), trodden ground (:), thorn in the gaps of the rim (2), and a marine and a heavy on the wagon watch (folk). */
     { id:'b9_c5_camp', title:'The Wastes · the column\'s camp', sub:'Night · short rations', hint:'Tap ground to move · tap a figure to talk · the ration wagons are north-west, the guides\' fire east', decor:'b9_c5_wastes', dark:true,
-      map:[ "rrrr..rrrrr..rrr",
-            "r.T.T..T...T.T.r",
-            "r..............r",
-            "r.WW.....H.....r",
-            "r..............r",
-            "r......F.......r",
-            "r..............r",
-            "r.T............>",
-            "r..............r",
-            "r...o....T.....r",
-            "r..............r",
+      map:[ "rrrr22rrrrr22rrr",
+            "r.T.T.6T.6.T.T.r",
+            "r.....:.......6r",
+            "r.WW7....H...&.r",
+            "r6.......:.....r",
+            "r.....:F:.....@r",
+            "r..&..........0r",
+            "r.T.6..........>",
+            "r.0............r",
+            "r...o....T..0..r",
+            "r.6...6...6..6.r",
             "rrrrrrrrrrrrrrrr" ],
-      walk:'.', triggers:{F:'b9_c5_fire', W:'b9_c5_wagons', H:'b9_c5_harro', '>':'b9_c5_camp_east'}, start:{x:6, y:6},
+      walk:'.:', triggers:{F:'b9_c5_fire', W:'b9_c5_wagons', H:'b9_c5_harro', '>':'b9_c5_camp_east'}, start:{x:6, y:6},
+      folk:[{x:8, y:2, kind:'b2soldier', name:'A marine darning a sock', line:'Half rations, the quartermaster says. I asked which half. He did not find it funny. I did not find the rations funny either.'},
+            {x:5, y:9, kind:'sapper', name:'A heavy on the wagon watch', line:'Somebody\'s been at the biscuit again. Nobody owns up. Everybody\'s breath smells of biscuit.'}],
       quest:()=> b95Ph() === 1 ? (!S.f.b9_c5_orders1 ? 'Thallo, by the ration wagons. He has the quartermaster\'s word.' : !b95TSettled() ? 'The guides\' fire, east, at the camp\'s edge. The captain has hired somebody.' : 'The fire, and sleep. The column moves at first light.')
         : !S.f.b9_c5_orders3 ? 'Thallo, at the fire.' : !(S.b9 && S.b9.wit && S.b9.wit.c5) ? 'The fire. The squad is awake, and thinking.' : 'The fire. First light, east.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:4, y:4, node:()=>b95Ph() === 1 ? 'b9_c5_thallo' : 'b9_c5_thallo3', fresh:()=>b95Ph() === 1 ? !S.f.b9_c5_orders1 : !S.f.b9_c5_orders3},
         {id:'tegra', get name(){ return b95TSettled() ? 'Tegra' : 'A Barghast guide'; }, kind:'tegra', x:13, y:7, node:()=>'b9_c5_tegra', show:()=>!b95TSettled() || b95TWaits(), fresh:()=>!b95TSettled()},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:11, y:9, node:()=>'b9_c5_oldmarine', fresh:()=>b95Ph() === 1 ? !S.f.b9_c5_old : !S.f.b9_c5_wordTried},
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:11, y:9, node:()=>'b9_c5_oldmarine', fresh:()=>b95Ph() === 1 ? !S.f.b9_c5_old : !S.f.b9_c5_wordTried},
         {id:'heavies', name:'Heavies at the next fire', kind:'b2soldier', x:3, y:8, node:()=>'b9_c5_heavies', show:()=>b95Ph() === 1, fresh:()=>!S.f.b9_c5_heavies},
         /* v13.8 (David, Nov 15): meetings. A young marine of the 4th outside the Third's firelight, the second night; gone once spoken to */
-        {id:'bottle', name:'A young marine, watching the moths', kind:'b2soldier', x:9, y:7, node:()=>'b9_c5_bottle', show:()=>b95Ph() === 3 && (!S.f.b9_c5_bottle || /^b9_c5_bottle/.test(S.node || '')), fresh:()=>!S.f.b9_c5_bottle} ] },
+        {id:'bottle', name:'A young marine, watching the moths', kind:'b10v_bottle', x:9, y:7, node:()=>'b9_c5_bottle', show:()=>b95Ph() === 3 && (!S.f.b9_c5_bottle || /^b9_c5_bottle/.test(S.node || '')), fresh:()=>!S.f.b9_c5_bottle} ] },
 
     /* 16 x 12 (b9_c5_wastes, day). The noon halt on open country: , the column's track  w its wagons  W the sappers' wagons  m a stone rise
-       x scrub  s the water detail's way south  > the column, east */
+       x scrub  s the water detail's way south  > the column, east
+       Terrain kit (25b, v13.22): the Wastes kept empty: banks raised in the corners of the rim (1), old stone in its gaps and out on the plain (3), thorn and boulders (2, 4), bones at a distance ($), a wagon of the column (7, as its w), trodden ground by the track (:), and one sapper on a wagon tongue (folk). */
     { id:'b9_c5_plain', title:'The Wastes · the noon halt', sub:'Day · open country', hint:'Tap ground to move · tap a figure to talk · the rise is east, the sappers\' wagons north, the way south to the wash below', decor:'b9_c5_wastes',
-      map:[ "rrr..rrrrrr..rrr",
-            "r..............r",
-            "r.......x......m",
-            "r..W.W.........r",
+      map:[ "rrr33rrrrrr33rrr",
+            "r11....3..4..11r",
+            "r1....$.x..2...m",
+            "r..W.W..:...7..r",
             ",,,,,,,,,,,,,,,,",
             ",,,,,,,,,,,,,,,>",
-            "r..w.....w.....r",
+            "r..w.:...w..:..r",
             "r..............r",
-            "r.....x........r",
-            "r......s.......r",
-            "r......s.......r",
+            "r..4..x........r",
+            "r1.....s...2...r",
+            "r11$...s....311r",
             "rrrrrrrsrrrrrrrr" ],
-      walk:'.,s', triggers:{W:'b9_c5_sappers', m:'b9_c5_rise', s:'b9_c5_south', '>':'b9_c5_plain_east'}, start:{x:3, y:7},
+      walk:'.,s:', triggers:{W:'b9_c5_sappers', m:'b9_c5_rise', s:'b9_c5_south', '>':'b9_c5_plain_east'}, start:{x:3, y:7},
+      folk:[{x:4, y:2, kind:'sapper', name:'A sapper on a wagon tongue', line:'Nothing out there. I have looked. Nothing, and more of it every day. You have to admire the quantity.'}],
       quest:()=> !S.f.b9_c5_orders2 ? (!S.f.b9_c5_keneb ? 'Thallo, by the wagons. He has the captain\'s word. And an officer is leading a horse down the line.' : 'Thallo, by the wagons. He has the captain\'s word.') : !S.f.b9_c5_cacheDone ? `South, with ${b95Guide()} and the water detail.` : 'Back to the column.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:5, y:7, node:()=>'b9_c5_thallo2', fresh:()=>!S.f.b9_c5_orders2},
@@ -169,7 +175,8 @@ const B9CH5 = {
         {id:'keneb', name:'Fist Keneb, leading his horse', kind:'keneb', x:11, y:7, node:()=>'b9_c5_keneb', show:()=>b95Ph() === 2 && (!b95KenebOut() || /^b9_c5_keneb/.test(S.node || '')), fresh:()=>!S.f.b9_c5_keneb} ] },
 
     /* 16 x 12 (b9_c5_wastes, day). A dry wash south of the halt: r its banks of stone  d the sandy bed  K the sutler's wrecked cart  e
-       where water stands under the sand  m the shade under the bank  < back up to the column */
+       where water stands under the sand  m the shade under the bank  < back up to the column
+       Terrain kit (25b, v13.22): folk only (a sand bed under stone banks, no plain ground to dress): a heavy with a spade (folk). */
     { id:'b9_c5_wash', title:'The Wastes · a dry wash', sub:'Afternoon · the water detail', hint:'Tap ground to move · tap a figure to talk · the wreck is in the bed, the shade under the south bank', decor:'b9_c5_wastes',
       map:[ "rrrrrrrrrrrrrrrr",
             "rrrrr....rrrrrrr",
@@ -184,9 +191,10 @@ const B9CH5 = {
             "rrrrrrdddrrrrrrr",
             "rrrrrrrrrrrrrrrr" ],
       walk:'.d', triggers:{K:'b9_c5_wreck', e:'b9_c5_dig', m:'b9_c5_shade', '<':'b9_c5_wash_back'}, start:{x:2, y:3},
+      folk:[{x:4, y:7, kind:'b2soldier', name:'A heavy with a spade', line:'Dig where it is damp, the sergeant says. It is all damp, once you have dug far enough. That is the trick of it.'}],
       quest:()=> !S.f.b9_c5_dug ? `Where ${b95Guide()} says the water is.` : !S.f.b9_c5_searched ? 'The wreck in the bed of the wash.' : !b95CacheDone() ? 'Men on the lip of the wash.' : !b95Key() ? 'The cache, under the wreck.' : 'Back up to the column.',
       npcs:[
-        {id:'dogs', name:'Dogs up the wash', kind:'b5_c7_greatwolf', x:12, y:3, node:()=>'b9_c5_dogs', show:()=>!S.f.b9_c5_dogsDone, fresh:()=>true},
+        {id:'dogs', name:'Dogs up the wash', kind:'b9_dog', x:12, y:3, node:()=>'b9_c5_dogs', show:()=>!S.f.b9_c5_dogsDone, fresh:()=>true},
         {id:'comers', name:'Men on the lip of the wash', kind:'b5_letherii', x:6, y:1, node:()=>'b9_c5_comers', show:()=>!!S.f.b9_c5_searched && !b95CacheDone(), fresh:()=>true},
         {id:'heavy', name:'Thallo\'s heavy, with the skins', kind:'b2soldier', x:3, y:4, node:()=>'b9_c5_skins', fresh:()=>false},
         {id:'tegra', name:'Tegra', kind:'tegra', x:10, y:6, node:()=>'b9_c5_tegra', show:()=>b95TWaits(), fresh:()=>false} ] } ],

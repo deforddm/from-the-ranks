@@ -43,6 +43,8 @@ const TKP = {
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // ash and dead earth, darker than 'earth' (Book Three's guards' bank west of Capustan and the Domin's emptied fields)
   ruin:   {d:{body:'#3c342b', crest:'190,170,140', foot:'10,8,6', blade:'#5a5440', bladeL:'#7a7458', brush:'#3a3628', brushL:'#4e4a38', stem:'#2a2218', rock:'#4e443a', rockL:'#6a5c4c', rockD:'#1e1812', wood:'#4a3624', woodL:'#6e5438', canvas:'#a8987a', canvasD:'#6a5a44', bone:'#d8d0bc', cloth:['#7a3428', '#a8905a'], track:'120,100,80', mud:'30,24,18', lit:'240,220,190', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // the Pale's ash and broken stone, as dark as its own ground (Book One's prologue)
+  dust:   {d:{body:'#8e8060', crest:'250,236,200', foot:'60,48,30', blade:'#9a8a5c', bladeL:'#b8a678', brush:'#6a6a42', brushL:'#7a704a', stem:'#4a3a26', rock:'#7a7062', rockL:'#a09484', rockD:'#3a342c', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#cfc4a6', cloth:['#8a3a2a', '#c8a868'], track:'120,100,70', mud:'80,62,40', lit:'255,240,210', tex:'turf'},
+           n:{body:'#26241e', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a2e', bladeL:'#4a4a3a', brush:'#1e2018', brushL:'#2e2e24', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#56565a', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // Book Nine's dry grass under its dust (163b's b93aGrass), its thorn and its grey stone
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -169,6 +171,22 @@ const TKS = {
   hills:{fam:'plain', joins:'<>^v'},
   hills_dusk:{fam:'plain', joins:'<>^v'},
   hills_night:{fam:'plain', joins:'<>^v'} };
+/* Book Nine (v13.22): the barracks yard in Letheras (its kit-crates, wagons and fire; water casks) and the emptied quarter's lanes (its
+   handcart; water butts), the escort's muster ground and train (its tents, wagons, barrels, oxen and fire), the road east and the last farm
+   and the Wastes on Ch 3's ground (its tents, wagons, barrels; the Third's horses, the escort's oxen and ration crates from Ch 4 on). The
+   kit's own cookfire, not the decors' F, whose night square of firelight would stand out in a camp of them.
+   Their 'r' is bare stone and their ',' the road or the column's track, so a worn track runs on into the road and never into the stone. */
+const TK_B9_ROAD = {'6':'T', '7':'w', '@':'h', '&':'o'}, TK_B9_TRAIN = {'6':'T', '7':'W', '@':'X', '&':'o', '8':'C'};
+Object.assign(TKS, {
+  b9_c1_barracks:{fam:'earth', as:{'8':'k', '7':'w'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b9_c1_quarter:{fam:'earth', as:{'7':'c'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b9_c2_muster:{fam:'earth', as:{'6':'=', '7':'w', '@':'x', '&':'o'}},
+  b9_c3_road:{fam:'dust', joins:'<>^v,', as:TK_B9_ROAD},
+  b9_c3_farm:{fam:'dust', joins:'<>^v', as:Object.assign({}, TK_B9_ROAD, {'7':'c'})},
+  b9_c4_wastes:{fam:'dust', joins:'<>^v,', as:TK_B9_TRAIN},
+  b9_c5_wastes:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})},
+  b9_c6_field:{fam:'dust', joins:'<>^v,', as:TK_B9_TRAIN},
+  b9_c7_field:{fam:'dust', joins:'<>^v,', as:Object.assign({}, TK_B9_ROAD, {'8':'C'})} });
 TKS.plain.joins = '<>^v'; // Book One's plain is strewn with rocks ('r'); Book Eight's road on it has its crowd on 'r', never beside its track
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
