@@ -146,21 +146,24 @@ const B4CH7 = {
 
   areas:[
     /* 16 x 12 (b4_c7_picket, night).  = the picket screen (blocks; tap it to look across the basin)  t the scrape behind it  . hard sand
-       , scrub  # rock  L a lookout rock  F the Third's shielded fire  > east, the end of the line  < back toward the blocking force */
+       , scrub  # rock  L a lookout rock  F the Third's shielded fire  > east, the end of the line  < back toward the blocking force
+       Terrain kit (25b, v13.22): the basin beyond the screen (1, 2 scrub, 4 a rock, $ bones), the picket's kit behind it (% spears, 8 crates, & the water butt), another squad's fire (0), the scuffed ground by the Third's (:), and the picket at night (folk). */
     { id:'b4_c7_picket', title:'Before Pan\'arak · the flank picket', sub:'Night · the trenches across the basin', hint:'Tap ground to move · tap a figure to talk · the screen looks out across the basin', decor:'b4_c7_picket', dark:true,
-      map:[ ",,..,,....,,..,,",
-            "..,....,,....,..",
+      map:[ "1,..$,....4,..21",
+            "1.,..4.,,..$.,.1",
             "================",
             "#tttt...L..tttt#",
-            "#.......,......#",
+            "#%......,......#",
             "#..,...........>",
-            "#......F.......#",
-            "#.,..........,.#",
-            "#....#.....,...#",
-            "<.......,......#",
-            "#..,......#....#",
+            "#8.....F.......#",
+            "#.,...:.:....,.#",
+            "#....#.....,..&#",
+            "<.......,....0.#",
+            "#11,......#.88.#",
             "################" ],
-      walk:'.,', triggers:{'=':'b4_c7_screen', F:'b4_c7_shield', L:'b4_c7_lookout', '>':'b4_c7_to_breach', '<':'b4_c7_picket_back'}, start:{x:7, y:8},
+      walk:'.,_:*', triggers:{'=':'b4_c7_screen', F:'b4_c7_shield', L:'b4_c7_lookout', '>':'b4_c7_to_breach', '<':'b4_c7_picket_back'}, start:{x:7, y:8},
+      folk:[{x:6, y:4, kind:'b2soldier', name:'A sentry at the screen', line:'Quiet over there tonight. I liked it better when they were singing. You knew where they were.'},
+        {x:12, y:9, kind:'b2soldier', name:'A regular at the other fire', line:'Second watch. I\'ll sleep at third. I\'ve been saying that since Aren.'}],
       quest:()=> !S.f.b4_c7_raddeSaid ? 'Sergeant Radde, by the scrape.' : !S.f.b4_c7_outDone ? 'Riders in the scrub to the east, at dusk.' : b47Ph() < 3 ? 'The screen. Watch the basin.' : 'The end of the line, east. Before dawn.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:4, y:5, node:()=>!S.f.b4_c7_raddeSaid ? 'b4_c7_radde' : b47Ph() >= 3 ? 'b4_c7_predawn' : 'b4_c7_radde_again', fresh:()=>!S.f.b4_c7_raddeSaid || b47Ph() === 3},
@@ -195,21 +198,24 @@ const B4CH7 = {
         {id:'shapes', name:'Shapes coming out of the dark', kind:'b4_c7_fleer', x:12, y:2, node:()=>'b4_c7_hold', show:()=>!S.f.b4_c7_breakDone && !S.f.b4_c7_letGo, fresh:()=>!S.f.b4_c7_breakDone && !S.f.b4_c7_letGo} ] },
 
     /* 16 x 12 (b4_c7_picket, morning): the same ground as the night's, in the light.  = the screen (watch the plain)  F the fire, cold
-       L the lookout rock  > east, down to the ramps' foot with Radde  < back */
+       L the lookout rock  > east, down to the ramps' foot with Radde  < back
+       Terrain kit (25b, v13.22): the same ground as the night's (b4_c7_picket), in the light, and the picket awake (folk). */
     { id:'b4_c7_line', title:'Before Pan\'arak · the morning', sub:'Morning · the trenches silent', hint:'Tap ground to move · tap a figure to talk · the screen looks out across the basin', decor:'b4_c7_picket',
-      map:[ ",,..,,....,,..,,",
-            "..,....,,....,..",
+      map:[ "1,..$,....4,..21",
+            "1.,..4.,,..$.,.1",
             "================",
             "#tttt...L..tttt#",
-            "#.......,......#",
+            "#%......,......#",
             "#..,...........>",
-            "#......F.......#",
-            "#.,..........,.#",
-            "#....#.....,...#",
-            "<.......,......#",
-            "#..,......#....#",
+            "#8.....F.......#",
+            "#.,...:.:....,.#",
+            "#....#.....,..&#",
+            "<.......,....0.#",
+            "#11,......#.88.#",
             "################" ],
-      walk:'.,', triggers:{'=':'b4_c7_watch', F:'b4_c7_coldfire', L:'b4_c7_lookout_day', '>':'b4_c7_to_ramps', '<':'b4_c7_line_back'}, start:{x:7, y:8},
+      walk:'.,_:*', triggers:{'=':'b4_c7_watch', F:'b4_c7_coldfire', L:'b4_c7_lookout_day', '>':'b4_c7_to_ramps', '<':'b4_c7_line_back'}, start:{x:7, y:8},
+      folk:[{x:6, y:4, kind:'b2soldier', name:'A regular at the screen', line:'Their trenches are quiet this morning. Too quiet, my corporal says. My corporal says that about breakfast.'},
+        {x:12, y:9, kind:'b2soldier', name:'A regular at the other fire', line:'Cold ashes for breakfast. Still warmer than the Adjunct, they say. Not where she can hear.'}],
       quest:()=> !S.f.b4_c7_raddeMorn ? 'Sergeant Radde, and the news.' : !S.f.b4_c7_duel ? 'The screen. The whole army is watching the plain.' : !S.f.b4_c7_warned ? 'The line. Something is coming down it.' : 'The coral. Run.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:4, y:5, node:()=>!S.f.b4_c7_raddeMorn ? 'b4_c7_radde_morning' : S.f.b4_c7_duel && !S.f.b4_c7_ramps ? 'b4_c7_radde_ramps' : 'b4_c7_radde_morning_again', fresh:()=>!S.f.b4_c7_raddeMorn || (!!S.f.b4_c7_duel && !S.f.b4_c7_ramps)},
@@ -217,21 +223,23 @@ const B4CH7 = {
         {id:'recruits', name:'The freckled recruit', kind:'b4_c1_recruit', x:3, y:7, node:()=>'b4_c7_recruit_morning', fresh:()=>!S.f.b4_c7_recMorn},
         {id:'runner', name:'A Wickan boy, running', kind:'wickan', x:13, y:4, node:()=>'b4_c7_warning', show:()=>!!S.f.b4_c7_duel, fresh:()=>!!S.f.b4_c7_duel && !S.f.b4_c7_warned} ] },
 
-    /* 16 x 12 (b4_c7_isle, after the flood).  ~ the new water (tap it: the shore)  . coral  , wet sand  c a coral head  F the Third's fire */
+    /* 16 x 12 (b4_c7_isle, after the flood).  ~ the new water (tap it: the shore)  . coral  , wet sand  c a coral head  F the Third's fire
+       Terrain kit (25b, v13.22): a light touch: what the squad carried out of the water (8), something the water left ($), and one of the 9th, still wet (folk). */
     { id:'b4_c7_isle', title:'Raraku · a coral island', sub:'After the flood · the new sea', hint:'Tap ground to move · tap a figure to talk · the water is all round', decor:'b4_c7_isle',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~,,,~~~~~,,~~~",
             "~~,..c..,,....,~",
             "~,...........c,~",
             "~,..c....F.....~",
-            "~,.............~",
+            "~,8............~",
             "~~,....c.....,~~",
             "~~,..........,~~",
-            "~~~,.......,,~~~",
+            "~~~,...$...,,~~~",
             "~~~~,,....,~~~~~",
             "~~~~~~,,,~~~~~~~",
             "~~~~~~~~~~~~~~~~" ],
-      walk:'.,', triggers:{'~':'b4_c7_shore', c:'b4_c7_coralhead', F:'b4_c7_isle'}, start:{x:8, y:6},
+      walk:'.,_:*', triggers:{'~':'b4_c7_shore', c:'b4_c7_coralhead', F:'b4_c7_isle'}, start:{x:8, y:6},
+      folk:[{x:10, y:3, kind:'b2soldier', name:'A regular, still soaked', line:'Yesterday it was a desert. I\'ve crossed deserts and I\'ve waded rivers. Never had the one turn into the other under me.'}],
       quest:()=> !S.f.b4_c7_raddeIsle ? 'Sergeant Radde. The orders.' : !b47Key() ? 'The fire, and the road out.' : 'The fire. The last night of it.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:6, y:5, node:()=>!S.f.b4_c7_raddeIsle ? 'b4_c7_radde_isle' : b47Key() ? 'b4_c7_radde_isle_again' : 'b4_c7_key', fresh:()=>!S.f.b4_c7_raddeIsle || !b47Key()},

@@ -135,21 +135,24 @@ const B4CH3 = {
         {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:11, y:8, node:()=>S.f.b4_c3_recTold ? 'b4_c3_recruits_again' : 'b4_c3_recruits', fresh:()=>!S.f.b4_c3_recTold},
         {id:'recruit2', name:'A recruit', kind:'b4_c1_recruit', x:12, y:9, node:()=>S.f.b4_c3_recTold ? 'b4_c3_recruits_again' : 'b4_c3_recruits'} ] },
 
-    /* 16 x 12 (b4_c3_hills, night).  . trampled grass  , scree  = tents  F the Third's fire among the Khundryl's  f other fires  h horse lines  > east, toward the river */
+    /* 16 x 12 (b4_c3_hills, night).  . trampled grass  , scree  = tents  F the Third's fire among the Khundryl's  f other fires  h horse lines  > east, toward the river
+       Terrain kit (25b, v13.22): a light touch: saddles and gear (8), stacked lances (%), the dancing ground scuffed (:), and two at the feast (folk). */
     { id:'b4_c3_camp', title:'The road to the Vathar · the Khundryl fires', sub:'Night · the feast', hint:'Tap ground to move · tap a figure to talk · the Third\'s fire is in the middle; the road to the river is east', decor:'b4_c3_hills', dark:true,
       map:[ "################",
             "#hhhh..=.=..hhh#",
-            "#......f.......#",
+            "#.8....f.......#",
             "#.=..........=.#",
             "#.=...,..,...=.#",
             "#......F.......#",
-            "#..f........f..#",
+            "#..f...:....f..#",
             "#.....,........#",
             "#.=..=....=..=.#",
             "#..............>",
-            "#......,.......#",
+            "#%.....,.....8.#",
             "################" ],
-      walk:'.,', triggers:{F:'b4_c3_feast', h:'b4_c3_horses', '>':'b4_c3_to_ford'}, start:{x:7, y:9},
+      walk:'.,_:*', triggers:{F:'b4_c3_feast', h:'b4_c3_horses', '>':'b4_c3_to_ford'}, start:{x:7, y:9},
+      folk:[{x:10, y:7, kind:'b2soldier', name:'A regular of the 9th, well into the feast', line:'They keep filling the cup and I keep emptying it. First fair arrangement this army\'s had.'},
+        {x:3, y:4, kind:'b4_c3_khundryl', name:'A Khundryl rider', line:'You march like men with a house on your backs, Malazan. Drink. Tomorrow you carry the house again.'}],
       quest:()=> !S.f.b4_c3_brawlDone ? (S.f.b4_c3_brawlNear ? 'The shouting at the 10th\'s fires, east.' : 'The Third\'s fire, and the feast round it.') : 'The road to the river, east, in the morning.',
       npcs:[
         {id:'shaman', name:'Khundryl shamans', kind:'b4_c3_khundryl', x:7, y:3, node:()=>'b4_c3_shaman', fresh:()=>!S.f.b4_c3_shaman},
@@ -160,7 +163,8 @@ const B4CH3 = {
         {id:'brawl', name:'Shouting at the 10th\'s fires', kind:'b4_c1_recruit', x:13, y:9, node:()=>'b4_c3_brawl_start', show:()=>!S.f.b4_c3_brawlDone, fresh:()=>!S.f.b4_c3_brawlDone},
         {id:'youths', name:'Wickan youths', kind:'wickan', x:2, y:9, node:()=>'b4_c3_youths', fresh:()=>!S.f.b4_c3_youths} ] },
 
-    /* 16 x 12 (b4_c3_ford, dusk).  . bank  ~ deep water  - shallows  b bone-banks under the water  p offering poles  , reeds  r the old ferry post  < back up the road */
+    /* 16 x 12 (b4_c3_ford, dusk).  . bank  ~ deep water  - shallows  b bone-banks under the water  p offering poles  , reeds  r the old ferry post  < back up the road
+       Terrain kit (25b, v13.22): the edge of the army's camp above the ford (6 tents, 0 a fire, 8 crates, % spears), and two of it at the water (folk). */
     { id:'b4_c3_ford', title:'Vathar Crossing · the near bank', sub:'Dusk · the army camped above the ford', hint:'Tap ground to move · tap a figure to talk · the 9th\'s stretch of the bank is in front of you', decor:'b4_c3_ford',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~bbbb~~~~~bbbb~",
@@ -171,10 +175,12 @@ const B4CH3 = {
             "..p.....,..p....",
             "....r...........",
             ".......p........",
-            "<..........,....",
-            "..,.............",
-            ",....,......,..," ],
-      walk:'.,-', triggers:{p:'b4_c3_poles', b:'b4_c3_bones', r:'b4_c3_rope', '<':'b4_c3_ford_back'}, start:{x:7, y:10},
+            "<..........,..%.",
+            "..,.........8...",
+            "6.0..,......,.6," ],
+      walk:'.,-_:*', triggers:{p:'b4_c3_poles', b:'b4_c3_bones', r:'b4_c3_rope', '<':'b4_c3_ford_back'}, start:{x:7, y:10},
+      folk:[{x:5, y:6, kind:'b2soldier', name:'A regular on the bank', line:'Nobody\'s filling canteens here. Not after we saw what\'s under the water.'},
+        {x:1, y:10, kind:'hissari_m', name:'A cook at the fire', line:'Fish from this river? No. Not from this river.'}],
       quest:()=> !b43Key() ? 'Sergeant Radde, on the 9th\'s stretch of the bank.' : b43Key() === 'carry' ? (S.f.b4_c3_scavDone ? 'Dawn, and the sappers.' : S.f.b4_c3_waded ? 'Something moving in the shallows, downstream.' : 'Into the water, with the squad.') : 'Sleep, and the sappers at dawn.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:8, y:8, node:()=>b43Key() ? 'b4_c3_radde_ford' : 'b4_c3_key', fresh:()=>!b43Key()},
@@ -182,21 +188,23 @@ const B4CH3 = {
         {id:'hollet', name:'Captain Hollet', kind:'b4_c1_hollet', x:3, y:9, node:()=>'b4_c3_hollet_ford', fresh:()=>!S.f.b4_c3_holletFord},
         {id:'scav', name:'Shapes in the shallows', kind:'b4_c3_scavenger', x:13, y:4, node:()=>'b4_c3_scav_start', show:()=>b43Key() === 'carry' && !!S.f.b4_c3_waded && !S.f.b4_c3_scavDone, fresh:()=>!!S.f.b4_c3_waded && !S.f.b4_c3_scavDone} ] },
 
-    /* 16 x 12 (b4_c3_ford, night: 'blow' only).  # the far bank's lip  . bank  , reeds  p offering poles  F the 9th's fires  - shallows  ~ deep water */
+    /* 16 x 12 (b4_c3_ford, night: 'blow' only).  # the far bank's lip  . bank  , reeds  p offering poles  F the 9th's fires  - shallows  ~ deep water
+       Terrain kit (25b, v13.22): a light touch: a tent (6), stacked spears (%), and one of the 9th, across and dripping (folk). */
     { id:'b4_c3_farbank', title:'Vathar Crossing · the far bank', sub:'Night · the army across, and dry', hint:'Tap ground to move · tap a figure to talk · the poles are along the bank', decor:'b4_c3_ford', dark:true,
       map:[ "################",
             "#......,....p..#",
-            "#.p............#",
+            "#.p...6........#",
             "#.....,...F....#",
             "#..p.........p.#",
-            "#......,.......#",
+            "#......%.......#",
             "#.,............#",
             ",,,,,,,,,,,,,,,,",
             "---------------~",
             "~~~~--~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~" ],
-      walk:'.,-', triggers:{p:'b4_c3_farpoles', F:'b4_c3_farfire'}, start:{x:7, y:6},
+      walk:'.,-_:*', triggers:{p:'b4_c3_farpoles', F:'b4_c3_farfire'}, start:{x:7, y:6},
+      folk:[{x:9, y:5, kind:'b2soldier', name:'A regular wringing out his kit', line:'Dry, the sergeant says. I\'ve been dry since Aren. This is the first time I\'ve been dry and cold at once.'}],
       quest:()=> S.f.b4_c3_bandDone ? 'The fire, and sleep. The butte in the morning.' : 'The poles along the bank. Something is out there.',
       npcs:[
         {id:'band', name:'Men among the poles', kind:'b4_c3_tribesman', x:12, y:2, node:()=>'b4_c3_band', show:()=>!S.f.b4_c3_bandDone, fresh:()=>!S.f.b4_c3_bandDone},

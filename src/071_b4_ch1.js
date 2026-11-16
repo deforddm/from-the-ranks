@@ -110,21 +110,25 @@ const B4CH1 = {
     go:'Into the line', get node(){ return typeof b4MusterDue === 'function' && b4MusterDue() ? 'b4_muster' : 'b4_c1_start'; }}, // v7.1: the muster first, while the squad has places to fill (70e)
 
   areas:[
-    /* 16 x 12 (b4_c1_aren, day).  , the marshaling ground's dust  . paving  # wall  c a munitions cart  w a well  = the officers' awning  > east, into the streets */
+    /* 16 x 12 (b4_c1_aren, day).  , the marshaling ground's dust  . paving  # wall  c a munitions cart  w a well  = the officers' awning  > east, into the streets
+       Terrain kit (25b, v13.22): the drill dust trodden at the back (:), the 9th's kit along the walls: stacked spears (%), crates (8), a water butt (&), a cart (7), and the 9th falling out (folk). */
     { id:'b4_c1_line', title:'Aren · the marshaling ground', sub:'Late morning · the 9th falling out', hint:'Tap ground to move · tap a figure to talk · the streets are east', decor:'b4_c1_aren',
       map:[ "################",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,,,,,,,,,,,,#",
-            "#..............#",
-            "#..c.......w...#",
+            "#%%,,8,,::,,,8,#",
+            "#,,,::,,::,,,,&#",
+            "#,,,::,,::,,,,,#",
+            "#8.............#",
+            "#7.c.......w..%#",
             "#..............>",
-            "#.....,........#",
-            "#..=...........#",
-            "#..=.....,.....#",
-            "#..............#",
+            "#8....,.......8#",
+            "#..=..........%#",
+            "#.8=.....,.....#",
+            "#8....%....88.7#",
             "################" ],
-      walk:'.,', triggers:{c:'b4_c1_cart', w:'b4_c1_well', '>':'b4_c1_to_streets'}, start:{x:4, y:7},
+      walk:'.,_:*', triggers:{c:'b4_c1_cart', w:'b4_c1_well', '>':'b4_c1_to_streets'}, start:{x:4, y:7},
+      folk:[{x:8, y:4, kind:'b2soldier', name:'A regular of the 9th, fallen out', line:'Fall out, they said. Nobody said where to. So we\'ve fallen out here, in the sun, like sensible men.'},
+        {x:12, y:4, kind:'hissari_m', name:'A water-carrier', line:'Boiled harbour water. It tastes of the harbour. Everything in Aren does.', wander:1},
+        {x:9, y:10, kind:'b2soldier', name:'A corporal with a tally board', line:'Third time I\'ve counted the Second Company. Three different numbers. I\'m going with the middle one.'}],
       quest:()=> !S.f.b4_c1_errand ? 'Captain Hollet, by the officers\' awning.' : 'East into the streets: the quay stores, before the gates shut at dusk.',
       npcs:[
         {id:'hollet', name:'Captain Hollet', kind:'b4_c1_hollet', x:5, y:8, node:()=>S.f.b4_c1_errand ? 'b4_c1_hollet_again' : 'b4_c1_hollet', fresh:()=>!S.f.b4_c1_errand},
@@ -137,21 +141,25 @@ const B4CH1 = {
         {id:'keneb', name:'A captain of the 8th', kind:'keneb', x:2, y:4, node:()=>S.f.b4_c1_keneb ? 'b4_c1_keneb_again' : 'b4_c1_keneb', fresh:()=>!S.f.b4_c1_keneb} ] },
 
     /* 16 x 12 (b4_c1_aren, afternoon).  . paving  , sand blown in  # wall  = awning  s the relic stall  c cart  w well  D the 9th's barracks gate
-       < west, back to the marshaling ground  > east, to the quay */
+       < west, back to the marshaling ground  > east, to the quay
+       Terrain kit (25b, v13.22): stalls under their awnings (9), crates (8), water butts (&), a handcart (7), and the harbour street's people (folk). */
     { id:'b4_c1_streets', title:'Aren · the harbour streets', sub:'Afternoon · the gates shut at dusk', hint:'Tap ground to move · tap a figure to talk · the quay is east, the 9th\'s gate is south', decor:'b4_c1_aren',
       map:[ "################",
             "#==..s..=.=..==#",
-            "#..............#",
+            "#.8..........9.#",
             "<.............,>",
             "#..c....w......#",
-            "#..............#",
+            "#8............&#",
             "#.=.=..,....=..#",
-            "#..............#",
+            "#.............9#",
             "#.,....c.......#",
-            "#..............#",
-            "#....##D##.....#",
+            "#&............8#",
+            "#8...##D##...7.#",
             "################" ],
-      walk:'.,', triggers:{s:'b4_c1_stall', D:'b4_c1_gate', '>':'b4_c1_to_quay', '<':'b4_c1_back_line'}, start:{x:1, y:3},
+      walk:'.,_:*', triggers:{s:'b4_c1_stall', D:'b4_c1_gate', '>':'b4_c1_to_quay', '<':'b4_c1_back_line'}, start:{x:1, y:3},
+      folk:[{x:12, y:3, kind:'hissari_m', name:'A porter', line:'Everything off the transports goes up to the army. Everything. My back knows the Adjunct\'s name now.', wander:1},
+        {x:9, y:4, kind:'hissari_w', name:'A woman at the well', line:'The water\'s free. The jar is two coppers. The walk home is your own business.'},
+        {x:13, y:8, kind:'hissari_m', name:'A stallholder, packing up', line:'Gates shut at dusk, and the soldiers with them. Good for the city. Bad for trade. I\'m the city on alternate days.'}],
       quest:()=> !S.f.b4_c1_water ? 'The quay stores, east, for the company\'s water.' : !S.f.b4_c1_runnersDone ? 'The 9th\'s barracks gate, south. Something is going on at it.' : 'The 9th\'s gate, and in before dusk.',
       npcs:[
         {id:'seller', name:'A relic seller', kind:'hissari_m', x:5, y:2, node:()=>'b4_c1_stall', show:()=>S.f.b4_c1_relic !== 'broken', fresh:()=>!S.f.b4_c1_relic},
@@ -159,21 +167,24 @@ const B4CH1 = {
         {id:'runners', name:'Men at the gate', kind:'b4_c1_runner', x:7, y:9, node:()=>'b4_c1_gate', show:()=>!S.f.b4_c1_runnersDone, fresh:()=>!!S.f.b4_c1_water && !S.f.b4_c1_runnersDone},
         {id:'gatesgt', name:'The gate sergeant', kind:'aren_guard', x:9, y:9, node:()=>'b4_c1_oldguard', show:()=>!!S.f.b4_c1_runnersDone, fresh:()=>!!S.f.b4_c1_runnersDone && !S.f.b4_c1_gateTried} ] },
 
-    /* 16 x 12 (b4_c1_barracks, night).  . flagstones  , grit  # the yard wall  = barrack roofs  b a bunk-house door  F the Third's fire  ^ over the wall, to the old cemetery */
+    /* 16 x 12 (b4_c1_barracks, night).  . flagstones  , grit  # the yard wall  = barrack roofs  b a bunk-house door  F the Third's fire  ^ over the wall, to the old cemetery
+       Terrain kit (25b, v13.22): a light touch: the water butt (&), crates (8), stacked spears (%), and two of the 9th, confined (folk). */
     { id:'b4_c1_barracks', title:'Aren · the 9th\'s barracks', sub:'Night · confined to barracks', hint:'Tap ground to move · tap a figure to talk · the fire is the Third\'s; the wall is north', decor:'b4_c1_barracks', dark:true,
       map:[ "######^^########",
-            "#.....,,.......#",
+            "#.....,,......&#",
             "#.===.....====.#",
             "#.=b=.....=b==.#",
             "#.......F......#",
             "#..............#",
             "#.===......===.#",
             "#.=b=......=b=.#",
-            "#..............#",
+            "#.............8#",
             "#...,......,...#",
-            "#..............#",
+            "#%.............#",
             "################" ],
-      walk:'.,', triggers:{F:'b4_c1_yard', b:'b4_c1_bunk', '^':'b4_c1_wall'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{F:'b4_c1_yard', b:'b4_c1_bunk', '^':'b4_c1_wall'}, start:{x:7, y:10},
+      folk:[{x:1, y:9, kind:'b2soldier', name:'A regular against the wall', line:'Confined to barracks, and the Red Blades took the drink. So this is what sober looks like. I\'d forgotten.'},
+        {x:13, y:1, kind:'b2soldier', name:'A regular at the water butt', line:'Somebody\'s over the wall every night. Nobody\'s seen anybody go. It\'s a very quiet wall.', wander:1}],
       quest:()=> b41Done() ? 'Sleep, if anyone can. The march is at dawn.' : b41Ph() >= 3 ? (S.f.b4_c1_key === 'grave' ? 'Over the wall with the dig detail, when the squad is ready.' : 'The fire. The yard is getting loud.') : !S.f.b4_c1_digDone ? 'Half the company is over the wall in the old cemetery. The wall is north.' : 'The fire.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:5, y:5, node:()=>b41Ph() >= 3 ? 'b4_c1_radde_n2' : 'b4_c1_radde_night', fresh:()=>b41Ph() < 3 ? !S.f.b4_c1_raddeNight : !S.f.b4_c1_raddeN2},
@@ -181,21 +192,23 @@ const B4CH1 = {
         {id:'recruits', name:'Second Company recruits', kind:'b4_c1_recruit', x:9, y:8, node:()=>'b4_c1_recruits_night', fresh:()=>!S.f.b4_c1_recNight},
         {id:'oldninth', name:'An old soldier of the 9th', kind:'b2soldier', x:13, y:9, node:()=>'b4_c1_oldsoldier', fresh:()=>!S.f.b4_c1_oldsoldier} ] },
 
-    /* 16 x 12 (b4_c1_graves, night).  . earth  , dug earth  # tomb walls  o open graves  x dead trees  F lanterns  v south, back over the wall */
+    /* 16 x 12 (b4_c1_graves, night).  . earth  , dug earth  # tomb walls  o open graves  x dead trees  F lanterns  v south, back over the wall
+       Terrain kit (25b, v13.22): a light touch: broken tombs (3), bones lying open ($), a dead tree (5), and one man from another company with a spade (folk). */
     { id:'b4_c1_cemetery', title:'Aren · the old cemetery', sub:'Night · lanterns among the graves', hint:'Tap ground to move · tap a figure to talk · the Chain\'s corner is north-east; the barracks wall is south', decor:'b4_c1_graves', dark:true,
       map:[ "################",
             "#,..x..#..o.,.F#",
             "#..o...#..,..o.#",
-            "#.,....##....,.#",
+            "#.,....##.3..,.#",
             "#..o,.....x....#",
             "#.F....o...o,..#",
-            "#...,.....,....#",
+            "#.$.,.....,....#",
             "#.o..##..o...x.#",
-            "#....#,....,...#",
+            "#..3.#,....,.$.#",
             "#.,......F..o..#",
-            "#..............#",
+            "#5.............#",
             "#######vv#######" ],
-      walk:'.,', triggers:{F:'b4_c1_lantern', v:'b4_c1_cem_back'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{F:'b4_c1_lantern', v:'b4_c1_cem_back'}, start:{x:7, y:10},
+      folk:[{x:4, y:9, kind:'b2soldier', name:'A regular of the 10th, with a spade', line:'Officially I\'m not here. Officially neither are you. Mind the hole.'}],
       quest:()=> b41Ph() >= 3 ? (S.f.b4_c1_watchDone ? 'Back over the wall. The march is at dawn.' : 'The dig detail, in the Chain\'s corner.') : !S.f.b4_c1_digDone ? 'The Chain\'s corner, north-east. There are men digging there who should not be.' : !S.f.b4_c1_key ? 'The Chain\'s corner. Radde is waiting for an answer.' : 'Back over the wall.',
       npcs:[
         {id:'thieves', name:'Men with spades', kind:'b4_c1_thief', x:12, y:3, node:()=>'b4_c1_chaincorner', show:()=>!S.f.b4_c1_digDone, fresh:()=>!S.f.b4_c1_digDone},

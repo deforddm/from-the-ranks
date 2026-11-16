@@ -30,6 +30,8 @@ const TKP = {
            n:{body:'#2e2a28', crest:'214,196,180', foot:'0,0,0', blade:'#3a3628', bladeL:'#4a4636', brush:'#2a2620', brushL:'#3a3628', stem:'#2a2620', rock:'#3a241e', rockL:'#5a3c32', rockD:'#1a100c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3e3834', canvasD:'#221e1c', bone:'#6a6670', cloth:['#3a2018', '#3a3020'], track:'180,165,150', mud:'0,0,0', lit:'214,196,180', tex:'dune'}},
   plain:  {d:{body:'#6a8644', crest:'240,236,190', foot:'40,50,20', blade:'#8a9a50', bladeL:'#c8c88a', brush:'#4a5a2a', brushL:'#7a8a44', stem:'#4a4024', rock:'#8a8478', rockL:'#b8b2a4', rockD:'#4a463e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#d8ccaa', canvasD:'#8a7a5a', bone:'#ece6d4', cloth:['#8a3a2a', '#c8a868'], track:'110,92,60', mud:'60,48,30', lit:'255,248,225', tex:'grass'},
            n:{body:'#162018', crest:'170,190,220', foot:'0,0,0', blade:'#2e4034', bladeL:'#46584a', brush:'#18221a', brushL:'#2a3a2c', stem:'#2a2418', rock:'#2e3036', rockL:'#454852', rockD:'#141518', wood:'#2a1e14', woodL:'#4a3a28', canvas:'#4a4640', canvasD:'#26241e', bone:'#5c6068', cloth:['#5a2a20', '#5a4a2a'], track:'130,140,160', mud:'8,8,6', lit:'170,184,220', tex:'grass'}},
+  shell:  {d:{body:'#cdc6b6', crest:'255,252,242', foot:'80,74,64', blade:'#9a9478', bladeL:'#bab49a', brush:'#7a7462', brushL:'#9a947e', stem:'#5a5444', rock:'#a89c8a', rockL:'#d6cebe', rockD:'#5a5248', wood:'#5a4028', woodL:'#8a6a44', canvas:'#d8ccb0', canvasD:'#9a8a6a', bone:'#f2eee2', cloth:['#8a3a2a', '#c8a868'], track:'120,112,96', mud:'90,84,70', lit:'255,252,240', tex:'dune'},
+           n:{body:'#2e2c2c', crest:'200,200,210', foot:'0,0,0', blade:'#3a3a34', bladeL:'#4a4a42', brush:'#2a2826', brushL:'#3a3834', stem:'#2a2622', rock:'#34302e', rockL:'#4c4844', rockD:'#141210', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3e3a36', canvasD:'#221e1c', bone:'#6a6a70', cloth:['#3a2018', '#3a3020'], track:'170,170,180', mud:'0,0,0', lit:'200,200,215', tex:'dune'}}, // the old sea floor's white shell ground (75b)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -43,7 +45,20 @@ const TKS = {
   b4_c6_lines:{fam:'redsand', ground:(c, ch, x, y, T, N) => b46LinesTile(c, ch, x, y, T, N), light:(c, x, y, T, N) => { if (N) b2Firelit(c, x, y, T, .3, 3.2, '255,140,60'); },
     draw:{'4':(c, x, y, T, N) => b46Rock(c, x, y, T, N, .78), '6':(c, x, y, T, N) => b45Tent(c, x, y, T, N), '8':(c, x, y, T, N) => b44Crates(c, x, y, T, N)}},
   b4_c7_breach:{fam:'sand', ground:(c, ch, x, y, T, N) => b47PicketTile(c, ch, x, y, T, N, true), draw:{'4':(c, x, y, T, N) => b45Boulder(c, x, y, T, N, .85), '6':(c, x, y, T, N) => b45Tent(c, x, y, T, N), '8':(c, x, y, T, N) => b44Crates(c, x, y, T, N)}},
-  b8_c5_grass:{fam:'plain', as:{'7':'W', '6':'=', '0':'F', '!':'L'}} };
+  b8_c5_grass:{fam:'plain', as:{'7':'W', '6':'=', '0':'F', '!':'L'}},
+  /* the rest of Book Four (v13.22): each decor's own cart, tent, fire, rock or coral head where it has one */
+  b4_c1_aren:{fam:'earth', as:{'7':'c'}},
+  b4_c1_barracks:{fam:'earth'},
+  b4_c1_graves:{fam:'earth', as:{'5':'x'}},
+  b4_c2_way:{fam:'odhan', as:{'7':'c', '6':'n', '0':'F'}},
+  b4_c2_fall:{fam:'earth', as:{'4':'#'}},
+  b4_c3_ford:{fam:'earth', as:{'0':'F'}, draw:{'6':(c, x, y, T, N) => b42Tent(c, x, y, T, N)}},
+  b4_c5_wall:{fam:'sand', as:{'6':'=', '7':'W', '0':'f'}, draw:{'4':(c, x, y, T, N) => b45Boulder(c, x, y, T, N, .8)}},
+  b4_c5_seabed:{fam:'shell', as:{'4':'#'}},
+  b4_c5_canal:{fam:'sand', draw:{'6':(c, x, y, T, N) => b45Tent(c, x, y, T, N)}},
+  b4_c6_ramp:{fam:'redsand', draw:{'4':(c, x, y, T, N) => b46Rock(c, x, y, T, N, .78)}},
+  b4_c7_picket:{fam:'sand', draw:{'4':(c, x, y, T, N) => b45Boulder(c, x, y, T, N, .85), '8':(c, x, y, T, N) => b44Crates(c, x, y, T, N)}},
+  b4_c7_isle:{fam:'sand'} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };
