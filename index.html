@@ -6585,6 +6585,8 @@ const TKP = {
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // Book Ten's Glass Desert (183b's b103aGlassT): pale glinting glass by day, star-dark by night
   wetglass:{d:{body:'#5a6676', crest:'220,228,240', foot:'20,26,36', blade:'#8a96a6', bladeL:'#d8e0ea', brush:'#4a5464', brushL:'#6a7686', stem:'#3a4250', rock:'#6a7686', rockL:'#b8c4d2', rockD:'#2a3240', wood:'#4a3420', woodL:'#7a5a3a', canvas:'#a89878', canvasD:'#6a5c48', bone:'#d8d4c8', cloth:['#7a3428', '#a8905a'], track:'150,164,184', mud:'40,48,60', lit:'230,236,244', tex:'glass'},
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // the glass gone wet at grey light (185b's b10_c5_wet)
+  ash:    {d:{body:'#6e6556', crest:'226,218,200', foot:'30,26,22', blade:'#6a6a4a', bladeL:'#8a8a62', brush:'#4a4a36', brushL:'#62624a', stem:'#3a3428', rock:'#6a645a', rockL:'#948e82', rockD:'#2e2a26', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'92,80,66', mud:'42,36,30', lit:'240,230,210', tex:'turf'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // ash and dead earth, darker than 'earth' (Book Three's guards' bank west of Capustan and the Domin's emptied fields)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -6684,7 +6686,24 @@ const TKS = {
   b10_c5_wet:{get fam(){ return tkB10Glass('t') ? 'wetglass' : 'earth'; }},
   b10_c5_scrub:{fam:'earth'},
   b10_c6_coast:{fam:'sand', as:{'6':'T', '7':'w', '0':'F', '8':'C', '@':'H'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
-  b10_c6_field:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'b'}} };
+  b10_c6_field:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'b'}},
+  /* Book Three (v13.22): the Rhivi Plain (its tents, wagons and fires), the field before Capustan (its shelters, cart and fires, and what
+     men drop when they run for a battlefield's bones), Capustan's streets (grey stone rubble; its carts and wells), the guards' bank (the
+     ash palette; its shelters, fires, dead tree and ration cart), the Domin by day (ash; its dead trees and wells), the mountain above
+     Coral (grey scree; its shielded fires), the Maurik's barge camp (casks and coiled rope), the hill outside Coral (grey stone, as its rocks are; its tents and fires).
+     b3camp, b3camp_night, b3_c5_domin_night and b3_c7_coral joined with Books Six and Eight above, unchanged. */
+  b3_c2_plain:{fam:'plain', as:{'6':'=', '7':'W', '0':'F'}},
+  b3_c2_plain_night:{fam:'plain', as:{'6':'=', '7':'W', '0':'F'}},
+  b3_c3_field:{fam:'earth', as:{'6':'=', '7':'c', '0':'F', '$':'d'}},
+  b3_c3_city:{fam:'scree', as:{'7':'c', '&':'w'}},
+  b3_c3_city_night:{fam:'scree', as:{'7':'c', '&':'w'}},
+  b3_c4_camp:{fam:'ash', as:{'6':'=', '0':'F', '5':'x', '7':'c'}},
+  b3_c4_camp_night:{fam:'ash', as:{'6':'=', '0':'F', '5':'x', '7':'c'}},
+  b3_c5_domin:{fam:'ash', as:{'5':'x', '&':'w'}},
+  b3_c6_mountain:{fam:'scree', as:{'0':'F'}},
+  b3_c6_mountain_night:{fam:'scree', as:{'0':'F'}},
+  b3_c6_river:{fam:'earth', as:{'0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}} };
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
 /* is this Book Ten ground the glass just now? 't' the Third's crossing (not on 'south'), 'l' the Letherii who crossed ('adjunct'), 'c2' the
@@ -39436,21 +39455,24 @@ const B3CH1 = {
     go:'Out of the tent', node:'b3_c1_start'},
 
   areas:[
-    /* 16 x 12 (b3camp).  . mud  , new grass  # palisade  = tent  F the Fourth's fire  W Pell's wagon  h horse lines  r the rubble of the north quarter, where the old sap comes out  s the Host's standard  > east, to the picket */
+    /* 16 x 12 (b3camp).  . mud  , new grass  # palisade  = tent  F the Fourth's fire  W Pell's wagon  h horse lines  r the rubble of the north quarter, where the old sap comes out  s the Host's standard  > east, to the picket
+       Terrain kit (25b, v13.22): a light touch: the trodden track out to the picket (_), stacked spears by the standard (%), crates by Pell's wagon and the palisade (8), the ground churned by the fire (:), and two of the Host before the parley (folk). */
     { id:'b3_c1_camp', title:'Outside Pale · the Host\'s lines', sub:'Morning · the parley at noon', hint:'Tap ground to move · tap a figure to talk · the picket is east', decor:'b3camp',
       map:[ "################",
             "#rr...=.=..=.=.#",
             "#r,...=.=..=.=.#",
-            "#,,.........,..#",
+            "#,,....%....,.8#",
             "#.=.=..s....h..#",
             "#.=.=.......h..#",
-            "#......,.......>",
-            "#.=..F....W....#",
-            "#.=.......,..=.#",
+            "#......,.______>",
+            "#.=.:F....W....#",
+            "#.=......8,..=.#",
             "#,...,..=.=..=.#",
             "#..,....=.=....#",
             "################" ],
-      walk:'.,', triggers:{r:'b3_c1_mouth', F:'b3_c1_fire', W:'b3_c1_pell', s:'b3_c1_wj', '>':'b3_c1_to_line'}, start:{x:5, y:8},
+      walk:'.,_:', triggers:{r:'b3_c1_mouth', F:'b3_c1_fire', W:'b3_c1_pell', s:'b3_c1_wj', '>':'b3_c1_to_line'}, start:{x:5, y:8},
+      folk:[{x:3, y:6, kind:'b2soldier', name:'A Host regular, shaving', line:'Last time the Host sat here the city had a moon over it. Grass grows quicker without one.'},
+        {x:12, y:9, kind:'b2soldier', name:'A sapper of the Seventh', line:'Parley at noon. I polished my boots for it. Nobody is going to look at my boots.'}],
       quest:()=> !S.f.b3_c1_order ? 'Whiskeyjack, by the Host\'s standard. He sent for you.' : !S.f.b3_c1_tunnelsDone ? 'The old north sap, in the rubble by the city wall. Before noon.' : 'East, to the picket where the camps meet.',
       npcs:[
         {id:'wj', name:'Whiskeyjack', kind:'wj', x:8, y:5, node:()=>'b3_c1_wj', fresh:()=>!S.f.b3_c1_order || (!!S.f.b3_c1_tunnelsDone && !S.f.b3_c1_wjLine)},
@@ -39458,21 +39480,24 @@ const B3CH1 = {
         {id:'tav', name:'Tav', kind:'tav', x:13, y:7, node:()=>S.f.b3_tav ? 'b3_c1_tav_again' : 'b3_c1_tav', fresh:()=>!S.f.b3_tav},
         {id:'pell', name:'Quartermaster Pell', kind:'pell', x:11, y:7, node:()=>'b3_c1_pell', fresh:()=>!S.f.b3_c1_pellMet} ] },
 
-    /* 16 x 12 (b3camp).  . mud  , grass  # the Host's palisade  = Brood's tents  F the Ilgres fire  W the Daru carriage  h horse lines  s the Fourth's picket post  < west, to the Host  v south, to the Rhivi camp */
+    /* 16 x 12 (b3camp).  . mud  , grass  # the Host's palisade  = Brood's tents  F the Ilgres fire  W the Daru carriage  h horse lines  s the Fourth's picket post  < west, to the Host  v south, to the Rhivi camp
+       Terrain kit (25b, v13.22): a light touch: the trodden way from the Host's side down to the Rhivi camp (_), stacked spears by the post (%), Brood's crates (8), the churned ground by the Ilgres fire (:), tufts (*), a Host picket and a Rhivi herder (folk). */
     { id:'b3_c1_line', title:'The picket · where the camps meet', sub:'Noon · the parley ground below Brood\'s tent', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s post is the standard', decor:'b3camp',
       map:[ "################",
             "#..=.=....,.=.=#",
             "#..=.=........=#",
-            "<.......W...,..#",
-            "#.,..........=.#",
-            "#....s.........#",
-            "#..........,...#",
-            "#.,...F.....=..#",
-            "#..........=...#",
-            "#..,..h.h......#",
-            "#.....h.h..,...#",
+            "<______.W...,..#",
+            "#.,.%.._.....=8#",
+            "#....s._.......#",
+            "#......_...,.*.#",
+            "#.,..:F_....=..#",
+            "#......_...=...#",
+            "#..,..h_h......#",
+            "#.*...h_h..,...#",
             "#######vv#######" ],
-      walk:'.,', triggers:{s:'b3_c1_post', '<':'b3_c1_line_back', v:'b3_c1_to_rhivi'}, start:{x:1, y:3},
+      walk:'.,_:*', triggers:{s:'b3_c1_post', '<':'b3_c1_line_back', v:'b3_c1_to_rhivi'}, start:{x:1, y:3},
+      folk:[{x:12, y:5, kind:'b2soldier', name:'A Host picket', line:'Ten years we tried to kill that lot. Now I am to say good morning to them. I have been practising.'},
+        {x:3, y:6, kind:'rhivi', name:'A Rhivi herder', line:'Your horses are thin. Ours are not. Nobody has told you this, so I am telling you.'}],
       quest:()=> !S.f.b3_c1_parleyDone ? 'The Fourth\'s post on the picket, by the standard. Noon.' : 'Dusk soon. South, to the Rhivi camp, when the line is relieved.',
       npcs:[
         {id:'delegate', name:'A Daru attendant', kind:'b3_c1_delegate', x:7, y:2, node:()=>'b3_c1_delegate', fresh:()=>!S.f.b3_c1_delegate},
@@ -39484,26 +39509,29 @@ const B3CH1 = {
         /* v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack comes back down past the Fourth's post after the parley */
         {id:'wjpost', name:'Whiskeyjack', kind:'wj', x:6, y:6, node:()=>'b3_c1_wjpost', show:()=>!!S.f.b3_c1_parleyDone, fresh:()=>!!S.f.b3_c1_parleyDone && !S.f.b3_c1_wjpost} ] },
 
-    /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket */
+    /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket
+       Terrain kit (25b, v13.22): a light touch: the path in from the picket (_), another Rhivi fire (0), the trodden ground round the fires (:), a tuft by the herds (*), a singer and a boy with a stick (folk). */
     { id:'b3_c1_rhivi', title:'The Rhivi camp · night', sub:'Fires, herds, and somebody always singing', hint:'Tap ground to move · tap a figure to talk · the fires are warm', decor:'b3camp_night', dark:true,
       map:[ "######^^########",
-            "#.=..=...h.h.h.#",
-            "#....,...h.h.h.#",
-            "#.=.F..=.......#",
-            "#......,...=...#",
+            "#.=..=...h.h.h*#",
+            "#....,_..h.h.h.#",
+            "#.=.F._=.......#",
+            "#...:._,...=...#",
             "#.=...........,#",
             "#.....==.......#",
             "#.,...==...F...#",
-            "#..............#",
+            "#.........:.:0.#",
             "#.=..,....=..=.#",
             "#..h.h.....,...#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c1_rfire', '^':'b3_c1_rhivi_back'}, start:{x:6, y:1},
+      walk:'.,_:*', triggers:{F:'b3_c1_rfire', '^':'b3_c1_rhivi_back'}, start:{x:6, y:1},
+      folk:[{x:12, y:4, kind:'rhivi', name:'A Rhivi singer', line:'The song is for the herd. You may listen. The herd does not mind.', wander:1},
+        {x:2, y:10, kind:'child', name:'A Rhivi boy with a stick', line:'That one is Grumbles. That one also. They are all Grumbles.'}],
       quest:()=> b31Done() ? 'Dawn is coming. The fires, and then the march.' : !S.f.b3_sohraMet || !S.f.b3_c1_sohraFire ? 'Sohra, at the fires.' : 'The Mhybe\'s tent, and whatever the night wants of the Fourth.',
       npcs:[
         {id:'sohra', name:'Sohra', kind:'sohra', x:5, y:4, node:()=>b31Done() ? 'b3_c1_sohra_late' : S.f.b3_c1_sohraFire ? 'b3_c1_sohra_again' : 'b3_c1_sohra', show:()=>!b3In('sohra') || !S.f.b3_c1_sohraFire, fresh:()=>!S.f.b3_c1_sohraFire},
         {id:'mhybe', name:'The Mhybe', kind:'mhybe', x:8, y:7, node:()=>'b3_c1_mhybe', show:()=>!S.f.b3_c1_trainDone, fresh:()=>!S.f.b3_c1_mhybeMet},
-        {id:'kmen', name:'Men in grey and fur', kind:'houseguard', x:9, y:5, node:()=>'b3_c1_kmen', show:()=>!S.f.b3_c1_key, fresh:()=>!S.f.b3_c1_kmen},
+        {id:'kmen', name:'Men in grey and fur', kind:'b3_c5_kallorman', x:9, y:5, node:()=>'b3_c1_kmen', show:()=>!S.f.b3_c1_key, fresh:()=>!S.f.b3_c1_kmen},
         {id:'runner', name:'A Host runner', kind:'b2soldier', x:3, y:8, node:()=>'b3_c1_runner', show:()=>!S.f.b3_c1_key && !!S.f.b3_c1_sohraFire, fresh:()=>!S.f.b3_c1_runner} ] } ],
 
   battles:{
@@ -40955,7 +40983,8 @@ const B3CH2 = {
     go:'Walk', node:'b3_c2_start'},
 
   areas:[
-    /* 16 x 12.  . grass  , long grass  h the herds  = tent  F fire  W wagon  > east  */
+    /* 16 x 12.  . grass  , long grass  h the herds  = tent  F fire  W wagon  > east
+       Terrain kit (25b, v13.22): the column's road east (_), the plain's low rises along the south (1), a Rhivi herder and a footsore regular (folk). */
     { id:'b3_c2_column', title:'The Rhivi Plain · the column', sub:'Day · the first week out of Pale', hint:'Tap ground to move · tap a figure to talk · east, when the squad goes out', decor:'b3_c2_plain',
       map:[ "################",
             "#hhh,,..hhh,,hh#",
@@ -40963,13 +40992,15 @@ const B3CH2 = {
             "#,....=.....,..#",
             "#..=..=...F....#",
             "#.........,....#",
-            "#..W..W....=...>",
-            "#.,.....,......#",
+            "#..W..W....=___>",
+            "#.,.________...#",
             "#....F....W..,.#",
             "#.W.....,....=.#",
-            "#,,..,....,,..,#",
+            "#11..,....111.,#",
             "################" ],
-      walk:'.,', triggers:{h:'b3_c2_herd', W:'b3_c2_wagons', '>':'b3_c2_to_far'}, start:{x:7, y:7},
+      walk:'.,_', triggers:{h:'b3_c2_herd', W:'b3_c2_wagons', '>':'b3_c2_to_far'}, start:{x:7, y:7},
+      folk:[{x:5, y:2, kind:'rhivi', name:'A Rhivi herder', line:'Your army walks as if it is angry with the ground. Walk like the bhederin. They will be at Capustan before you.', wander:1},
+        {x:8, y:4, kind:'b2soldier', name:'A Host regular, limping', line:'First week out. My feet have filed a complaint with the quartermaster. He is selling them salve.'}],
       quest:()=> !S.f.b3_c2_bb ? 'Whiskeyjack is by the road. Something is leaving.' : !S.f.b3_c2_hurl ? 'Hurlochel the outrider wants the Fourth. He is by the wagons.' : 'East, with Hurlochel, when the squad is ready.',
       npcs:[
         {id:'c2wj', name:'Whiskeyjack', kind:'wj', x:12, y:5, node:()=>S.f.b3_c2_bb ? 'b3_c2_wj_again' : 'b3_c2_bb', fresh:()=>!S.f.b3_c2_bb},
@@ -40978,45 +41009,50 @@ const B3CH2 = {
         {id:'c2trotts', name:'Trotts', kind:'trotts', x:14, y:7, node:()=>'b3_c2_bb', show:()=>!S.f.b3_c2_bb || /^b3_c2_(bb|mallet|paran)/.test(S.node || '')},
         {id:'c2korlat', name:'Korlat', kind:'korlat', x:11, y:5, node:()=>'b3_c2_korlat', show:()=>!!S.f.b3_c2_bb, fresh:()=>!!S.f.b3_c2_bb && !S.f.b3_c2_korlat},
         {id:'c2tav', name:'Tav', kind:'tav', x:4, y:7, node:()=>S.f.b3_c2_tav ? 'b3_c2_tav_again' : 'b3_c2_tav', show:()=>b3In('brisk'), fresh:()=>b3In('brisk') && !S.f.b3_c2_tav},
-        {id:'c2bole', name:'A Mott Irregular', kind:'bruiser', x:9, y:3, node:()=>S.f.b3_c2_mott ? 'b3_c2_mott_again' : 'b3_c2_mott', fresh:()=>!S.f.b3_c2_mott},
+        {id:'c2bole', name:'A Mott Irregular', kind:'b3_c1_mott', x:9, y:3, node:()=>S.f.b3_c2_mott ? 'b3_c2_mott_again' : 'b3_c2_mott', fresh:()=>!S.f.b3_c2_mott},
         {id:'c2qm', name:'The quartermaster\'s clerk', kind:'b2soldier', x:10, y:9, node:()=>'b3_c2_qm', fresh:()=>!S.f.b3_c2_qm},
         {id:'c2hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:8, node:()=>'b3_c2_hurl', fresh:()=>!S.f.b3_c2_hurl} ] },
 
-    /* 16 x 12.  . grass  , long grass  # the Barghast hill's stones  ~ a stream (blocks)  - the wallow  > the hill, east */
+    /* 16 x 12.  . grass  , long grass  # the Barghast hill's stones  ~ a stream (blocks)  - the wallow  > the hill, east
+       Terrain kit (25b, v13.22): the outriders' trail to the hill (_), the plain's rises (1), thorn by the stream (2), stones under the Barghast hill (4), a dead tree (5), and one Rhivi outrider (folk). */
     { id:'b3_c2_far', title:'The Rhivi Plain · the far grass', sub:'Day · two weeks out · the outriders\' country', hint:'Tap ground to move · tap a figure to talk · the hill is east', decor:'b3_c2_plain',
       map:[ "################",
-            "#,,..,....,###.#",
+            "#11..,....,###.#",
             "#,..,...,..###.#",
-            "#...,......,#..#",
+            "#...,...4..4#..#",
             "#..,..........,#",
-            "#~~~..,........#",
-            "#~~~~~.....,...>",
-            "#.,~~~--.......#",
-            "#....~--,..,...#",
-            "#,..,.~~.....,.#",
-            "#,,....~~..,,..#",
+            "#~~~._____.....#",
+            "#~~~~~...._____>",
+            "#2,~~~--.......#",
+            "#2...~--,..,...#",
+            "#,..,.~~5....,.#",
+            "#,1....~~..11.1#",
             "################" ],
-      walk:'.,-', triggers:{'-':'b3_c2_strides', '>':'b3_c2_to_hill'}, start:{x:3, y:3},
+      walk:'.,-_', triggers:{'-':'b3_c2_strides', '>':'b3_c2_to_hill'}, start:{x:3, y:3},
+      folk:[{x:10, y:2, kind:'b3_rhivi_rider', name:'A Rhivi outrider', line:'Grass to the edge of the sky and then more grass. Your people say the plain ends somewhere. Mine do not.'}],
       quest:()=> !S.f.b3_khell ? 'Hurlochel says the rider went down by the stream.' : !S.f.b3_c2_hillDone ? 'The hill to the east, with the stones on it, and smoke.' : 'Back to the column. It will have made camp by dark.',
       npcs:[
         {id:'c2hurl2', name:'Hurlochel', kind:'hurlochel', x:5, y:4, node:()=>'b3_c2_hurl2', fresh:()=>!!S.f.b3_khell && !S.f.b3_c2_hurl2},
         {id:'c2kin', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:9, y:8, node:()=>S.f.b3_c2_kin ? 'b3_c2_kin_again' : 'b3_c2_kin', show:()=>!!S.f.b3_khell, fresh:()=>!!S.f.b3_khell && !S.f.b3_c2_kin} ] },
 
-    /* 16 x 12.  . grass  , long grass  h the herd lines  = tent  F fire  W wagon */
+    /* 16 x 12.  . grass  , long grass  h the herd lines  = tent  F fire  W wagon
+       Terrain kit (25b, v13.22): a light touch: the trodden ground at the fire (:), stacked spears (%), crates by the wagons (8), another fire (0), the rises at the camp's edge (1), a tuft (*), a regular on watch and a herder (folk). */
     { id:'b3_c2_camp', title:'The Rhivi Plain · the night camp', sub:'Night · three weeks out · the herds lowing in the dark', hint:'Tap ground to move · tap a figure to talk · the fire, then the herd lines', decor:'b3_c2_plain_night', dark:true,
       map:[ "################",
             "#hhhh..hhhh,,hh#",
             "#hh.....hh.....#",
             "#..,..........,#",
-            "#.=..F..=...=..#",
+            "#.=.:F:.=...=..#",
             "#.......,......#",
-            "#..=.........=.#",
+            "#..=......%..=.#",
             "#,......,......#",
-            "#..W....=..W...#",
-            "#....,.........#",
-            "#,,..W.....,,,.#",
+            "#..W8...=..W8..#",
+            "#....,...0.....#",
+            "#1*..W.....111.#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c2_fire', h:'b3_c2_herdlines'}, start:{x:7, y:7},
+      walk:'.,:*', triggers:{F:'b3_c2_fire', h:'b3_c2_herdlines'}, start:{x:7, y:7},
+      folk:[{x:10, y:2, kind:'b2soldier', name:'A Host regular on watch', line:'The herds do not sleep. Neither do I. One of us is being paid for it.'},
+        {x:4, y:6, kind:'rhivi', name:'A Rhivi herder', line:'The bhederin know the dark better than you. Stand still and they walk round you. Run, and they do not.'}],
       quest:()=> S.f.b3_c2_nightDone ? 'Morning. The column moves on toward the river.' : !S.f.b3_c2_rest ? 'The Fourth\'s fire. The Rhivi fires beyond it.' : 'The herd lines, when the squad takes its watch.',
       npcs:[
         {id:'c2mhybe', name:'The Mhybe', kind:'mhybe', x:12, y:5, node:()=>S.f.b3_c2_mhybe ? 'b3_c2_mhybe_again' : 'b3_c2_mhybe', fresh:()=>!S.f.b3_c2_mhybe},
@@ -41026,21 +41062,23 @@ const B3CH2 = {
         {id:'c2gran', name:'An old Rhivi woman', kind:'rhivi', x:7, y:3, node:()=>S.f.b3_c2_gran ? 'b3_c2_gran_again' : 'b3_c2_gran', fresh:()=>!S.f.b3_c2_gran},
         {id:'c2rumour', name:'A Host regular', kind:'b2soldier', x:6, y:9, node:()=>'b3_c2_rumour', fresh:()=>!S.f.b3_c2_rumour} ] },
 
-    /* 16 x 12.  . grass  , long grass  ~ the river (blocks)  - the ford  h the herd on the far bank  W wagon  = tent  F fire  > on */
+    /* 16 x 12.  . grass  , long grass  ~ the river (blocks)  - the ford  h the herd on the far bank  W wagon  = tent  F fire  > on
+       Terrain kit (25b, v13.22): a light touch: the trodden way up from the ford and on east (_), the churned mud at the ford's mouth (:), a crate off a wagon (8), and a regular with his boots in his hand (folk). */
     { id:'b3_c2_river', title:'The Rhivi Plain · the river', sub:'Day · five weeks out · rain in the hills', hint:'Tap ground to move · tap a figure to talk · the ford', decor:'b3_c2_plain',
       map:[ "################",
             "#,,..hh..,,,...#",
             "#.,.hhhh...,,..#",
             "#~~~~~~----~~~~#",
             "#~~~~~~----~~~~#",
-            "#..,.W..W...,..#",
-            "#.......,..=...>",
-            "#.,..=.........#",
+            "#..,.W8:W_..,..#",
+            "#.......,._=_._>",
+            "#.,..=....._...#",
             "#....,....,..,.#",
             "#,..=....F.....#",
             "#,,.....,,...,,#",
             "################" ],
-      walk:'.,', triggers:{'-':'b3_c2_ford', W:'b3_c2_rwagons', '>':'b3_c2_onward'}, start:{x:7, y:8},
+      walk:'.,_:', triggers:{'-':'b3_c2_ford', W:'b3_c2_rwagons', '>':'b3_c2_onward'}, start:{x:7, y:8},
+      folk:[{x:6, y:7, kind:'b2soldier', name:'A Host regular, boots in hand', line:'Rain in the hills, the Rhivi say. The ford is this deep today and that deep tomorrow. They hold their hands a long way apart.'}],
       quest:()=> S.f.b3_c2_floodDone ? 'The far bank tonight. On, toward Capustan.' : !S.f.b3_c2_key ? 'The ford. The herd is half across and the sky in the west is black.' : 'The water.',
       npcs:[
         {id:'c2mother', name:'A Rhivi herd-mother', kind:'rhivi', x:3, y:6, node:()=>S.f.b3_c2_mother ? 'b3_c2_mother_again' : 'b3_c2_mother', fresh:()=>!S.f.b3_c2_mother && !S.f.b3_c2_key},
@@ -42528,21 +42566,24 @@ const B3CH3 = {
     go:'On', node:'b3_c3_start'},
 
   areas:[
-    /* 16 x 12, the shelf's camp ground at night.  . mud  , grass  = tent  F the squad's fire  W wagon  h horse lines  s the Host's standard  E the road south */
+    /* 16 x 12, the shelf's camp ground at night.  . mud  , grass  = tent  F the squad's fire  W wagon  h horse lines  s the Host's standard  E the road south
+       Terrain kit (25b, v13.22): the road up through the halt to the south (_), crates by the wagon (8), stacked spears by the standard (%), another tent (6), another squad's fire (0), the trodden ground by the Fourth's (:), and two of the Host awake (folk). */
     { id:'b3_c3_halt', title:'Before Capustan · the last halt', sub:'Night · two bells · the city burning on the skyline', hint:'Tap ground to move · tap a figure to talk · the squad\'s fire, and the road south at the top of the field', decor:'b3camp_night', dark:true,
       map:[ "#######E########",
-            "#..=..=..h.hh..#",
-            "#.....,......=.#",
-            "#.=......=..,..#",
-            "#......W.......#",
-            "#..,.....s.....#",
-            "#.=....,.......#",
-            "#....W.....=...#",
-            "#.,......F.....#",
-            "#.....=......,.#",
+            "#..=..=_.h.hh..#",
+            "#.....,_.....=.#",
+            "#.=..._..=..,..#",
+            "#....._W8......#",
+            "#..,.._.%s.....#",
+            "#.=..._,.......#",
+            "#....W_....=.6.#",
+            "#.,...._.F.....#",
+            "#..0..=_:.:..,.#",
             "#.......,......#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c3_fire', E:'b3_c3_dawn'}, start:{x:7, y:10},
+      walk:'.,_:', triggers:{F:'b3_c3_fire', E:'b3_c3_dawn'}, start:{x:7, y:10},
+      folk:[{x:4, y:1, kind:'b2soldier', name:'A Host regular, watching the skyline', line:'That glow is Capustan. Been burning since dusk. You would think a city would run out of things to burn.'},
+        {x:13, y:9, kind:'b2soldier', name:'A sapper, oiling a crossbow', line:'Two bells. March at four. Sleep at never.'}],
       quest:()=> !S.f.b3_c3Wj ? 'Whiskeyjack is by the standard.' : !S.f.b3_c3Picket ? 'The picket on the rise across the road.' : !S.f.b3_c3Rested ? 'The squad\'s fire. Two bells.' : 'The road south, at the top of the field, when the squad is ready.',
       npcs:[
         {id:'c3wj', name:'Whiskeyjack', kind:'wj', x:10, y:5, node:()=>S.f.b3_c3Wj ? 'b3_c3_wj_again' : 'b3_c3_wj', fresh:()=>!S.f.b3_c3Wj},
@@ -42551,21 +42592,23 @@ const B3CH3 = {
         {id:'c3korlat', name:'Korlat', kind:'korlat', x:3, y:2, node:()=>S.f.b3_c3Korlat ? 'b3_c3_korlat_again' : 'b3_c3_korlat', fresh:()=>!S.f.b3_c3Korlat},
         {id:'c3rhivi', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:3, node:()=>S.f.b3_c3Rhivi ? 'b3_c3_rhivi_again' : 'b3_c3_rhivi', fresh:()=>!S.f.b3_c3Rhivi} ] },
 
-    /* 16 x 12, the trampled field below the walls (63b).  . earth  , grass  # siege bank  x stake line  r rubble  = shelter  s the Fourth's standard  c cart  F fire  E toward the walls */
+    /* 16 x 12, the trampled field below the walls (63b).  . earth  , grass  # siege bank  x stake line  r rubble  = shelter  s the Fourth's standard  c cart  F fire  E toward the walls
+       Terrain kit (25b, v13.22): the way up through the line to the walls (_), what men drop when they run, by the stake line and the cart ($), churned ground (:), and one of the Host looking at the walls (folk). */
     { id:'b3_c3_field', title:'The field before Capustan', sub:'Day · the Host\'s stretch of the allied line · the walls a mile off', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s standard; the city at the top of the field', decor:'b3_c3_field',
       map:[ "#######E########",
-            "#..r..r....r...#",
-            "#.x.xx.x.xx.x..#",
-            "#......,.......#",
-            "#.,.........,..#",
-            "#...##....##...#",
-            "#.....,........#",
-            "#.=..s.....,.=.#",
-            "#....,..c......#",
-            "#.F......=..F..#",
+            "#..r..r_...r...#",
+            "#.x.xx_x.xx.x..#",
+            "#.$...._.......#",
+            "#.,...._....,..#",
+            "#...##._..##...#",
+            "#....:,_.......#",
+            "#.=..s._...,.=.#",
+            "#....,._c..$...#",
+            "#.F...._.=..F:.#",
             "#..,.....,.....#",
             "################" ],
-      walk:'.,', triggers:{s:'b3_c3_line', E:'b3_c3_field_on'}, start:{x:7, y:10},
+      walk:'.,_:', triggers:{s:'b3_c3_line', E:'b3_c3_field_on'}, start:{x:7, y:10},
+      folk:[{x:12, y:6, kind:'b2soldier', name:'A Host regular', line:'The walls are a mile off and they still look close. Walls do that.'}],
       quest:()=> !S.f.b3_c3Rider ? 'A rider in grey is coming out of the city.' : !c3Key() ? 'The Grey Sword wants an answer. Whiskeyjack is behind the line.' : c3Key() === 'camps' ? 'The postern in the west wall, at the top of the field.' : !S.f.b3_c3Held ? 'The Fourth\'s standard. The gates.' : 'The city, at the top of the field, when the squad is ready.',
       npcs:[
         {id:'c3rider', name:'A Grey Sword', kind:'b3_greysword', x:6, y:3, node:()=>'b3_c3_rider', show:()=>!c3Key(), fresh:()=>!S.f.b3_c3Rider},
@@ -42574,21 +42617,23 @@ const B3CH3 = {
         {id:'c3dannetf', name:'Dannet', kind:'greysword', x:10, y:4, node:()=>'b3_c3_dannet_field', show:()=>!!S.f.b3_c3Held},
         {id:'c3rhivif', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:4, node:()=>'b3_c3_rhivi_field', fresh:()=>!S.f.b3_c3RhiviF || (!!S.f.b3_c3Held && !S.f.b3_c3RhiviF2)} ] },
 
-    /* 16 x 12, Capustan's streets (63b).  . paving  , rubble  # wall  = awning  t temple step  w well  c the barricade cart  E back to the square */
+    /* 16 x 12, Capustan's streets (63b).  . paving  , rubble  # wall  = awning  t temple step  w well  c the barricade cart  E back to the square
+       Terrain kit (25b, v13.22): a light touch: rubble in the street (3), crates (8), the Grey Swords' spears (%), and a Capan woman with a broom (folk). */
     { id:'b3_c3_camp', title:'Capustan · a Camp in the south of the city', sub:'Noon · the Grey Swords\' party · a barricade across the street', hint:'Tap ground to move · tap a figure to talk · the barricade; the way back at the bottom of the street', decor:'b3_c3_city',
       map:[ "################",
             "#.==..#..t.t..w#",
-            "#.....#........#",
+            "#.....#......8.#",
             "#,....#..,.....#",
             "#######c########",
-            "#......,.......#",
+            "#3.....,.....3.#",
             "#..=.......=...#",
             "#.,............#",
             "#...w....,.....#",
             "#..=..=.....,..#",
-            "#.......,......#",
+            "#3...%..,.....8#",
             "#######E########" ],
       walk:'.,', triggers:{c:'b3_c3_barricade', E:'b3_c3_camp_on'}, start:{x:9, y:10},
+      folk:[{x:11, y:10, kind:'b3_c3_capan', name:'A Capan woman with a broom', line:'The Seer\'s people came down this street. Now I sweep it. One of us will be finished first.'}],
       quest:()=> !S.f.b3_c3CampDone ? 'The barricade across the street. The Grey Swords are waiting on you.' : 'The Grey Swords\' barracks. The way out is at the bottom of the street.',
       npcs:[
         {id:'c3vet', name:'The Grey Sword', kind:'b3_greysword', x:6, y:6, node:()=>S.f.b3_c3CampDone ? 'b3_c3_vet_after' : 'b3_c3_vet', fresh:()=>!S.f.b3_c3Vet},
@@ -42596,21 +42641,24 @@ const B3CH3 = {
         {id:'c3dyer', name:'A Capan dyer', kind:'b3_c3_capan', x:2, y:8, node:()=>S.f.b3_c3CampDone ? 'b3_c3_dyer_after' : 'b3_c3_dyer', fresh:()=>!S.f.b3_c3Dyer},
         {id:'c3gidc', name:'A Gidrath', kind:'b3_c3_gidrath', x:12, y:8, node:()=>'b3_c3_gidrath_camp', fresh:()=>!S.f.b3_c3GidCamp} ] },
 
-    /* 16 x 12, the Camps at dusk (63b, night).  . paving  , rubble  # wall  = awning  t the Thrall's steps  D the barracks door  w the square's well  F the legion's fire  c cart  E out of the city */
+    /* 16 x 12, the Camps at dusk (63b, night).  . paving  , rubble  # wall  = awning  t the Thrall's steps  D the barracks door  w the square's well  F the legion's fire  c cart  E out of the city
+       Terrain kit (25b, v13.22): a light touch: lanterns on the square (!), the Grey Swords' spears (%), rubble (3), crates (8), a Capan with a lamp and a Grey Sword on the steps (folk). */
     { id:'b3_c3_dusk', title:'Capustan · the Thrall at dusk', sub:'Dusk · the Camps · the Mask Council in session', hint:'Tap ground to move · tap a figure to talk · the barracks door, the Thrall\'s steps, the well; the way out at the bottom of the square', decor:'b3_c3_city_night', dark:true,
       map:[ "################",
             "#..t.tt.t..#####",
             "#..........#####",
             "#.=.....,..##D##",
-            "#..............#",
-            "#.,....=.....,.#",
+            "#!..........!..#",
+            "#.,....=.....,%#",
             "#..............#",
             "#.=.......F....#",
             "#....c.......=.#",
-            "#..,....w......#",
-            "#..............#",
+            "#..,....w.....3#",
+            "#8.............#",
             "########E#######" ],
       walk:'.,', triggers:{t:'b3_c3_thrall', D:'b3_c3_barracks', w:'b3_c3_well', E:'b3_c3_end'}, start:{x:10, y:10},
+      folk:[{x:13, y:10, kind:'b3_c3_capan', name:'A Capan with a lamp', line:'The Council has been in there since noon. Whatever they are deciding, the rest of us already know.'},
+        {x:9, y:3, kind:'b3_greysword', name:'A Grey Sword on the steps', line:'The Council talks. The Thrall listens. We stand on its steps and do neither.'}],
       quest:()=> !S.f.b3_c3Barracks ? 'The Grey Swords\' barracks, by the lit door. The healers are working.' : S.f.b3_c3Granary === 1 ? 'The Gidrath is waiting by the Thrall\'s steps.' : 'The square: the legion\'s fire, the Thrall\'s steps. The way out of the city at the bottom, when the squad is ready.',
       npcs:[
         {id:'c3itk', name:'The Shield Anvil', kind:'b3_c3_itkovian', x:6, y:2, node:()=>'b3_c3_itkovian', show:()=>!S.f.b3_c3Itk || /^b3_c3_itkovian/.test(S.node || ''), fresh:()=>!S.f.b3_c3Itk},
@@ -44095,16 +44143,16 @@ const C4 = {mother:'Sarn', boy:'Tibb', corporal:'Mosk', ropesgt:'Ambrel'};
 /* the same map serves the day, the night and the dawn on the guards' bank: the prisoners north of the ditch, the gap where the carts go in */
 const C4EDGE = [
   "=,.=..=.,=..=.,=",
-  ".,.=,..,..,.=..,",
+  ".,:=,..,.:,.=..,",
   "########.#######",
-  "..,.........,...",
-  ".F.....x.....F..",
-  "......c........>",
-  ".,.............>",
-  "....=......,....",
-  "..,....F........",
-  ".........,....,.",
-  "..=..,......=...",
+  "..,.%..._...,...",
+  ".F.....x_...:F..",
+  ":.....c..______>",
+  ".,.....8.......>",
+  "1...=6.....%....",
+  "1.,...:F........",
+  "1...6....,:...,1",
+  "11=6.,......=611",
   "################"];
 
 /* ---- the Wolves' Rope: the Grey Swords' way of pulling down a K'ell Hunter (a hard check in the barracks yard) ---- */
@@ -44206,9 +44254,12 @@ const B3CH4 = {
     go:'Walk the line', node:'b3_c4_start'},
 
   areas:[
-    /* 16 x 12. . trodden earth  , ash  # the ditch and the stake line (a gap at the cart road)  = shelters  F fires  x the dead tree  c the ration cart  > the road east to Capustan */
+    /* 16 x 12. . trodden earth  , ash  # the ditch and the stake line (a gap at the cart road)  = shelters  F fires  x the dead tree  c the ration cart  > the road east to Capustan
+       Terrain kit (25b, v13.22): (this map is C4EDGE, the same for the dusk, the night and the dawn) the cart road from the gap to the road east (_), the bank's rim (1), more of the guards' shelters (6), stacked spears (%), crates by the cart (8), churned ground by the fires and across the ditch (:), a guard on the bank and a man across the ditch (folk). */
     { id:'b3_c4_edge', title:'West of Capustan · the guards\' bank', sub:'Dusk · the prisoners across the ditch', hint:'Tap ground to move · tap a figure to talk · the road east goes into the city', decor:'b3_c4_camp',
-      map:C4EDGE, walk:'.,', triggers:{c:'b3_c4_cart', '>':'b3_c4_to_city'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{c:'b3_c4_cart', '>':'b3_c4_to_city'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Every one of them watching our fires. You stop looking back after a while. You do not stop feeling it.'},
+        {x:2, y:0, kind:'tenescowri', name:'A man across the ditch', line:'We walked a long way to sit down. Now we are good at sitting.'}],
       quest:()=> !S.f.b3_c4_order ? 'Whiskeyjack is walking the line.' : !S.f.b3_c4_city ? 'The Grey Swords\' guide waits in the city. The road east, when your stretch is walked.' : 'The road east, to Capustan.',
       npcs:[
         {id:'wj', name:'Whiskeyjack', kind:'wj', x:6, y:3, node:()=>S.f.b3_c4_order ? 'b3_c4_wj_again' : 'b3_c4_wj', fresh:()=>!S.f.b3_c4_order},
@@ -44218,21 +44269,23 @@ const B3CH4 = {
         {id:'tav', name:'Tav', kind:'tav', x:2, y:4, node:()=>S.f.b3_c4_tav ? 'b3_c4_tav_again' : 'b3_c4_tav', show:()=>c4In('brisk'), fresh:()=>c4In('brisk') && !S.f.b3_c4_tav},
         {id:'rider', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:14, y:8, node:()=>S.f.b3_c4_rider ? 'b3_c4_rider_again' : 'b3_c4_rider', fresh:()=>!S.f.b3_c4_rider} ] },
 
-    /* 16 x 12. . paving  , rubble  # walls  D the Thrall's door  t temple steps  = awnings  w a well  c a cart  F a house still burning  < the road west */
+    /* 16 x 12. . paving  , rubble  # walls  D the Thrall's door  t temple steps  = awnings  w a well  c a cart  F a house still burning  < the road west
+       Terrain kit (25b, v13.22): a light touch: rubble (3), crates (8), the Grey Swords' spears by the yard (%), and a Capan carter (folk). */
     { id:'b3_c4_city', title:'Capustan · the Camps by the Thrall', sub:'Day · the city two days after', hint:'Tap ground to move · tap a figure to talk · the Thrall\'s door is north',  decor:'b3_c3_city',
       map:[ "################",
-            "#...#..D...#..t#",
+            "#3..#..D...#..t#",
             "#.,.#......#..t#",
             "#...=..,...=...#",
-            "#..............#",
+            "#............8.#",
             "<.....w....,...#",
             "<..,...........#",
             "#..c.....=.....#",
-            "#.##.....,..##.#",
+            "#.##.....,..##%#",
             "#.##..F.....##.#",
-            "#,.......,.....#",
+            "#,.....3.,.....#",
             "################" ],
       walk:'.,=', triggers:{D:'b3_c4_thrall', t:'b3_c4_healers', '<':'b3_c4_city_back'}, start:{x:2, y:5},
+      folk:[{x:10, y:4, kind:'b3_c3_capan', name:'A Capan carter', line:'Two days. The smoke is thinner. Mind the cart, it has opinions about corners.'}],
       quest:()=> !c4DannetDone() ? 'The Grey Swords\' barracks, for the guide.' : !S.f.b3_c4_ambrel ? 'The rope-sergeant in the barracks yard has something to say about the plain.' : 'The rope-sergeant. The company rides west at dusk.',
       npcs:[
         {id:'dannet', name:'Dannet', kind:'greysword', x:12, y:7, node:()=>c4DannetDone() ? 'b3_c4_dannet_again' : 'b3_c4_dannet', show:()=>!c4In('greysword') || !S.f.b3_c4_dannet, fresh:()=>!S.f.b3_c4_dannet},
@@ -44242,17 +44295,21 @@ const B3CH4 = {
         /* v13.8 (David, Nov 15): meetings. Captain Paran on the well's rim in the Camp, between one quarrel and the next */
         {id:'paran4', name:'Captain Paran', kind:'paran', x:5, y:4, node:()=>'b3_c4_paran', fresh:()=>!S.f.b3_c4_paran} ] },
 
-    /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes */
+    /* the guards' bank again, after dark: the cold, the howling, Mosk's lads, and the night the priest comes
+       Terrain kit (25b, v13.22): C4EDGE, dressed with the dusk (above); one guard on the bank (folk). */
     { id:'b3_c4_night', title:'West of Capustan · the guards\' bank', sub:'Night · cold out of nowhere', hint:'Tap ground to move · tap a figure to talk · the fire, when you\'re ready', decor:'b3_c4_camp_night', dark:true,
-      map:C4EDGE, walk:'.,', triggers:{F:'b3_c4_fire', c:'b3_c4_cart_night', '>':'b3_c4_road_night'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{F:'b3_c4_fire', c:'b3_c4_cart_night', '>':'b3_c4_road_night'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Cold like this in summer is somebody\'s doing. I would like a word with them.'}],
       quest:()=> !S.f.b3_c4_mosk ? 'Corporal ' + C4.corporal + '\'s lads are by the gap, and they are not sleeping.' : 'The fire. Sleep, or pretend.',
       npcs:[
         {id:'nmosk', name:'Corporal ' + C4.corporal, kind:'b2soldier', x:10, y:3, node:()=>S.f.b3_c4_mosk ? 'b3_c4_mosk_after' : 'b3_c4_mosk_night', fresh:()=>!S.f.b3_c4_mosk},
         {id:'nsarn', name:C4.mother, kind:'tenescowri', x:7, y:1, node:()=>'b3_c4_sarn_night'} ] },
 
-    /* dawn on the bank: Whiskeyjack walking the line, the people who came over the stakes, and the ration cart */
+    /* dawn on the bank: Whiskeyjack walking the line, the people who came over the stakes, and the ration cart
+       Terrain kit (25b, v13.22): C4EDGE, dressed with the dusk (above); one guard on the bank (folk). */
     { id:'b3_c4_dawn', title:'West of Capustan · the guards\' bank', sub:'Dawn · after the night', hint:'Tap ground to move · tap a figure to talk · the ration cart, when you\'re ready', decor:'b3_c4_camp',
-      map:C4EDGE, walk:'.,', triggers:{c:'b3_c4_key', '>':'b3_c4_road_dawn'}, start:{x:9, y:8},
+      map:C4EDGE, walk:'.,_:', triggers:{c:'b3_c4_key', '>':'b3_c4_road_dawn'}, start:{x:9, y:8},
+      folk:[{x:11, y:4, kind:'b2soldier', name:'A guard on the bank', line:'Frost on the stakes, and it is summer. Nobody is saying anything about it, so I am.'}],
       quest:()=> !S.f.b3_c4_dawnWj ? 'Whiskeyjack is walking the line again.' : S.f.b3_c4_key ? 'Three days to the Catlin. The cart, when you\'re ready.' : 'The ration cart. The people who came over the stakes are sitting by it.',
       npcs:[
         {id:'dwj', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c4_dawnWj ? 'b3_c4_dawn_wj_again' : 'b3_c4_dawn_wj', fresh:()=>!S.f.b3_c4_dawnWj},
@@ -45617,21 +45674,23 @@ const B3CH5 = {
     go:'Across', node:'b3_c5_start'},
 
   areas:[
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ the Catlin (blocks)  - the ford they came over  > the road south-east */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ the Catlin (blocks)  - the ford they came over  > the road south-east
+       Terrain kit (25b, v13.22): the road from the ford south-east (_), the quartermaster's wheel-less wagon (7) and a crate off it (8), tumbled stone at the ruin (4), the low banks at the south (1), and one of the Host looking at the empty country (folk). */
     { id:'b3_c5_shore', title:'The south shore of the Catlin', sub:'Morning · the Domin begins', hint:'Tap ground to move · tap a figure to talk · the road goes on east', decor:'b3_c5_domin', amb:'plain',
       map:[ "#~~~~~~--~~~~~~#",
             "#~~~~~~--~~~~~~#",
             "#,..,.......,..#",
-            "#..x...,....x..#",
-            "#.,....#.,.....#",
-            "#..,..##...,...>",
-            "#......,..,....>",
-            "#.x.,......#.,.#",
-            "#....,...,.##..#",
+            "#..x...,_...x..#",
+            "#.,..4.#._.....#",
+            "#..,..##..._...>",
+            "#......,..,.___>",
+            "#.x.8......#.,.#",
+            "#.7..,...,.##..#",
             "#.,...x.......,#",
-            "#..,....,..x...#",
+            "#11,....,..x...#",
             "################" ],
-      walk:'.,-', triggers:{'>':'b3_c5_to_ford'}, start:{x:8, y:2},
+      walk:'.,-_', triggers:{'>':'b3_c5_to_ford'}, start:{x:8, y:2},
+      folk:[{x:4, y:3, kind:'b2soldier', name:'A Host regular', line:'Look at it. Not a cow, not a dog, not a chicken. Somebody took the chickens. That is how you know it is serious.'}],
       quest:()=> !S.f.b3_c5_hurl ? 'An outrider is walking his horse down the column. Outriders never do that for nothing.' : !S.f.b3_c5_bloodTried && !S.f.b3_c5_glean ? 'The shore, before the road. The road goes on east.' : 'The road south-east, two days to the next river.',
       npcs:[
         {id:'hurl', name:'Hurlochel', kind:'hurlochel', x:12, y:4, node:()=>S.f.b3_c5_hurl ? 'b3_c5_hurl_again' : 'b3_c5_hurl', fresh:()=>!S.f.b3_c5_hurl},
@@ -45641,7 +45700,8 @@ const B3CH5 = {
         /* v13.8 (David, Nov 15): meetings. Quick Ben, back from the White Face's lines up the shore, watching the Ilgres fire from a careful distance */
         {id:'qb5', name:'Quick Ben', kind:'qb', x:13, y:9, node:()=>'b3_c5_qb', fresh:()=>!S.f.b3_c5_qb} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on) */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  ~ deep river (blocks)  - the ford (the fight, then the way on)
+       Terrain kit (25b, v13.22): a light touch: tumbled stone at the ruin wall (4); no folk (the far bank is the enemy's). */
     { id:'b3_c5_ford', title:'The Domin · a ford two days south', sub:'Noon · a rearguard on the far bank', hint:'Tap ground to move · tap a figure to talk · the ford is the gravel across the river', decor:'b3_c5_domin', amb:'wind',
       map:[ "################",
             "#.....x...,..x.#",
@@ -45653,7 +45713,7 @@ const B3CH5 = {
             "#~~~~~~--~~~~~~#",
             "#~~~~~~~~~~~~~~#",
             "#,..,..x...,..,#",
-            "#..#....,...#..#",
+            "#..#....,..4#..#",
             "################" ],
       walk:'.,', triggers:{'-':'b3_c5_ford'}, start:{x:7, y:2},
       quest:()=> S.f.b3_c5_fordDone ? 'The ford is the Host\'s. Across, and south.' : !S.f.b3_c5_capt ? 'The Seventh\'s lieutenant is on the bank with the cadre, pointing.' : 'The ford. Beklites behind an earthwork on the far bank.',
@@ -45662,41 +45722,44 @@ const B3CH5 = {
         {id:'mage5', name:'A cadre mage', kind:'b3_c5_mage', x:11, y:5, node:()=>S.f.b3_c5_fordDone ? 'b3_c5_drowned' : 'b3_c5_mage', fresh:()=>!S.f.b3_c5_mage || (!!S.f.b3_c5_fordDone && !S.f.b3_c5_drowned)},
         {id:'rider5', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:2, node:()=>'b3_c5_rider', show:()=>!S.f.b3_c5_fordDone, fresh:()=>S.f.b3_c5_asked == null} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  F smoulder (blocks)  x dead tree  w the square's well  > the road on */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  F smoulder (blocks)  x dead tree  w the square's well  > the road on
+       Terrain kit (25b, v13.22): meant to be empty: the street through the burnt town (_) and tumbled stone from the fallen walls (4); no folk. */
     { id:'b3_c5_town', title:'The Domin · a burnt town', sub:'Rain · the Seer\'s people burned it themselves', hint:'Tap ground to move · tap a figure to talk · the square is round the well', decor:'b3_c5_domin', amb:'storm',
       map:[ "################",
             "#..##..,.##F,..#",
             "#..#F...,.#....#",
             "#,.......,...,.#",
-            "##.##..,...##..#",
+            "##.##4.,...##..#",
             "#....,..w.....,>",
-            "#.,..........,.>",
-            "##..##.,..#F#..#",
+            "#.,_______.___.>",
+            "##..##.,.4#F#..#",
             "#F..#...,..#...#",
             "#..,..x.....,..#",
-            "#.,..#...,..x..#",
+            "#.,..#4..,..x..#",
             "################" ],
-      walk:'.,', triggers:{w:'b3_c5_square', '>':'b3_c5_to_well'}, start:{x:2, y:6},
+      walk:'.,_', triggers:{w:'b3_c5_square', '>':'b3_c5_to_well'}, start:{x:2, y:6},
       quest:()=> S.f.b3_c5_townDone ? 'South again. The column halts at dusk, somewhere with a well.' : 'The square, round the well. The Seer\'s soldiers have the last of the town\'s people there.',
       npcs:[
         {id:'oldman', name:'An old man in a doorway', kind:'b3_c5_villager', x:13, y:2, node:()=>'b3_c5_oldman', fresh:()=>!S.f.b3_c5_oldman},
         {id:'gs5', name:'A Grey Sword trooper', kind:'b3_greysword', x:3, y:9, node:()=>S.f.b3_c5_townDone ? 'b3_c5_gs_again' : 'b3_c5_gs', fresh:()=>S.f.b3_c5_gs == null} ] },
 
-    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  w the village well  F the Fourth's fire */
+    /* 16 x 12.  . dead earth  , stubble  # ruin wall  x dead tree  w the village well  F the Fourth's fire
+       Terrain kit (25b, v13.22): rubble at the ruins (3), the green's tufts round the well (*), the trodden ground by the Fourth's fire and the well (:), the squad's gear (8), and one of the Host (folk). */
     { id:'b3_c5_well', title:'The Domin · a dead village', sub:'Night · the halt · one well', hint:'Tap ground to move · tap a figure to talk · the well is on the green, the Fourth\'s fire by the wall', decor:'b3_c5_domin_night', amb:'night', dark:true,
       map:[ "################",
             "#.,..x.....,.x.#",
             "#..##....,.....#",
-            "#..#..,....##..#",
-            "#,......,......#",
+            "#..#3.,...3##..#",
+            "#,......*......#",
             "#....,.w...,...#",
-            "#.,.........,..#",
-            "#..x...,....#..#",
-            "#.,...F...,.##.#",
+            "#.,...*.*...,..#",
+            "#..x...,.:.3#..#",
+            "#.,.8.F:..,.##.#",
             "#....,.....,...#",
             "#.x.,....,...x.#",
             "################" ],
-      walk:'.,', triggers:{w:'b3_c5_well', F:'b3_c5_fire'}, start:{x:7, y:9},
+      walk:'.,:*', triggers:{w:'b3_c5_well', F:'b3_c5_fire'}, start:{x:7, y:9},
+      folk:[{x:10, y:9, kind:'b2soldier', name:'A Host regular', line:'One well and a whole army. We drink in turns. The horses drink first. Nobody argued.'}],
       quest:()=> S.f.b3_c5_key ? 'The fire, when you are ready to sleep. Coral is south.' : S.f.b3_c5_caught ? 'The man in the fur collar sits bound by the well. What happens to him is yours.' : S.f.b3_c5_inc ? 'Somebody put a dead calf down that well. Find out who.' : 'Two lines at one well: the Fourth Regiment\'s water detail and the Rhivi herd.',
       npcs:[
         {id:'tav5', name:'Tav', kind:'tav', x:5, y:4, node:()=>'b3_c5_tav', fresh:()=>!S.f.b3_c5_tav},
@@ -46994,21 +47057,23 @@ const B3CH6 = {
 
   areas:[
     /* 16 x 12 · b3camp_night:  . trampled mud  , grass  # palisade/earthwork  = tent  F the squad's fire  W the quartermaster's wagons  h horse lines
-       r a burnt farmstead  s Dujek's standard  > the lift field, east, past the horse lines */
+       r a burnt farmstead  s Dujek's standard  > the lift field, east, past the horse lines
+       Terrain kit (25b, v13.22): a light touch: the track out to the lift field (_), crates by the wagon (8), stacked spears by the standard (%), and one of the Host (folk). */
     { id:'b3_c6_camp', title:'The Host\'s camp · south of Setta', sub:'Night · the Domin · fewer fires than last week', hint:'Tap ground to move · tap a figure to talk · the lift field is east, past the horse lines', decor:'b3camp_night', dark:true,
       map:[ "################",
             "#=.=..hhhh..=.=#",
             "#.....,.......,#",
-            "#.W.......=..W.#",
-            "#,...=......,..>",
-            "#..,.....s.....#",
-            "#.,....=....,..#",
-            "#rr...,........#",
+            "#.W8......=..W.#",
+            "#,...=......___>",
+            "#..,....%s._...#",
+            "#.,....=.._.,..#",
+            "#rr...,.._.....#",
             "#r.....F...=...#",
             "#..=.,....,..W.#",
             "#.....=.....,..#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c6_fire', W:'b3_c6_wagons', r:'b3_c6_farm', s:'b3_c6_standard', '>':'b3_c6_field_go'}, trigNames:{'>':'The lift field', r:'The burnt farm', s:'The High Fist\'s standard'}, start:{x:7, y:9},
+      walk:'.,_', triggers:{F:'b3_c6_fire', W:'b3_c6_wagons', r:'b3_c6_farm', s:'b3_c6_standard', '>':'b3_c6_field_go'}, trigNames:{'>':'The lift field', r:'The burnt farm', s:'The High Fist\'s standard'}, start:{x:7, y:9},
+      folk:[{x:5, y:10, kind:'b2soldier', name:'A Host regular', line:'Every morning there is more room at the fires. Nobody is saying why. I have stopped asking.'}],
       quest:()=> S.f.b3_c6_fieldDone ? (S.f.b3_c6_key ? 'Go.' : 'Whiskeyjack wants an answer: the quorls, or the road.') : !S.f.b3_c6_tavList && b3In('brisk') && !c6BriskGone() ? 'Tav\'s company is at its fire, packing. Brisk has noticed.' : 'A runner came by: the Fourth to the lift field after dark, east, past the horse lines. No fires. No noise.',
       npcs:[
         {id:'c6tav', name:'Tav', kind:'tav', x:12, y:6, node:()=>c6BriskGone() ? 'b3_c6_tav_grief' : 'b3_c6_tav', show:()=>!S.f.b3_c6_fieldDone && (b3In('brisk') || c6BriskGone()), fresh:()=>!S.f.b3_c6_tavMet},
@@ -47017,61 +47082,67 @@ const B3CH6 = {
         {id:'c6oskan0', name:'Oskan', kind:'b2soldier', x:5, y:3, node:()=>S.f.b3_c6_oskan0 ? 'b3_c6_oskan0_again' : 'b3_c6_oskan0', show:()=>!S.f.b3_c6_key, fresh:()=>!S.f.b3_c6_oskan0},
         {id:'c6rider', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:3, y:6, node:()=>'b3_c6_ask', show:()=>!!S.f.b3_c6_fieldDone && !b3In('sohra') && !c6Told(), fresh:()=>!!S.f.b3_c6_fieldDone && !c6Told()} ] },
 
-    /* 16 x 12 · b3_c6_mountain_night:  . rock  , moss  # cliff  = cedar screen  F shielded fire  q quorl roost  T the trench mouth, down */
+    /* 16 x 12 · b3_c6_mountain_night:  . rock  , moss  # cliff  = cedar screen  F shielded fire  q quorl roost  T the trench mouth, down
+       Terrain kit (25b, v13.22): a light touch: boulders (4), scree at the cliff foot (3), scrub (2), a rise at the ledge's edge (1), moss (*), and a regular in two cloaks (folk). */
     { id:'b3_c6_ledge', title:'The ledge · above Coral', sub:'Night · the mountains · cold that should not be here in summer', hint:'Tap ground to move · tap a figure to talk · the trench mouth goes down to the entrenchments at first light', decor:'b3_c6_mountain_night', dark:true,
       map:[ "################",
             "#,,..#####..q..#",
             "#,....###...q..#",
-            "#..=........,..#",
+            "#.*=...3....,..#",
             "#..=..,....F...#",
             "#.......,......#",
-            "##.............#",
-            "###..,......=..#",
+            "##....4........#",
+            "###.2,......=..#",
             "####.......=...#",
-            "#####..T.......#",
-            "######...,,....#",
+            "#####..T.....4.#",
+            "######...,,..11#",
             "################" ],
-      walk:'.,', triggers:{q:'b3_c6_roost', F:'b3_c6_ledge_fire', T:'b3_c6_ledge_down', '=':'b3_c6_ledge_look'}, trigNames:{'=':'The cedar screen', T:'The trench mouth'}, start:{x:9, y:5},
+      walk:'.,*', triggers:{q:'b3_c6_roost', F:'b3_c6_ledge_fire', T:'b3_c6_ledge_down', '=':'b3_c6_ledge_look'}, trigNames:{'=':'The cedar screen', T:'The trench mouth'}, start:{x:9, y:5},
+      folk:[{x:13, y:5, kind:'b2soldier', name:'A Host regular, in two cloaks', line:'Summer, they said. Pack light, they said.'}],
       quest:()=> !S.f.b3_c6_twist ? 'The Moranth commander is at the roost, among the quorls.' : 'First light. The trench mouth goes down to the entrenchments.',
       npcs:[
         {id:'c6twist', name:'Achievant Twist', kind:'b3_c6_twist', x:10, y:2, node:()=>S.f.b3_c6_twist ? 'b3_c6_twist_again' : 'b3_c6_twist', fresh:()=>!S.f.b3_c6_twist} ] },
 
-    /* 16 x 12 · b3_c6_mountain (day): the entrenchments. . rock  , moss  # cliff  = cedar screen (Coral is below it)  F shielded fire  q roost  T trench mouth */
+    /* 16 x 12 · b3_c6_mountain (day): the entrenchments. . rock  , moss  # cliff  = cedar screen (Coral is below it)  F shielded fire  q roost  T trench mouth
+       Terrain kit (25b, v13.22): a light touch: the trench spoil (1), a boulder (4), stores (8), stacked spears (%), the trodden ground (:), and one of the Host being quiet (folk). */
     { id:'b3_c6_trench', title:'The entrenchments · above Coral', sub:'Day · cedar and moss · six thousand people being quiet', hint:'Tap ground to move · tap a figure to talk · the screen looks down on Coral', decor:'b3_c6_mountain',
       map:[ "################",
-            "#,,..#....###..#",
-            "#,.T.......#..,#",
+            "#,,..#..11###..#",
+            "#,.T.......#.4,#",
             "#.......,...F..#",
             "#..q...........#",
-            "#,......,....q.#",
+            "#,..%...,....q.#",
             "#..,...........#",
-            "#.....T....,...#",
-            "#.,.........,..#",
+            "#.8...T....,...#",
+            "#.,...:...:.,..#",
             "#..............#",
             "#===.====.====.#",
             "################" ],
-      walk:'.,', triggers:{'=':'b3_c6_trench_look', F:'b3_c6_trench_fire', q:'b3_c6_trench_roost', T:'b3_c6_stand'}, trigNames:{'=':'The cedar screen', T:'The roost trench', q:'The roost'}, start:{x:8, y:8},
+      walk:'.,:', triggers:{'=':'b3_c6_trench_look', F:'b3_c6_trench_fire', q:'b3_c6_trench_roost', T:'b3_c6_stand'}, trigNames:{'=':'The cedar screen', T:'The roost trench', q:'The roost'}, start:{x:8, y:8},
+      folk:[{x:3, y:6, kind:'b2soldier', name:'A Host regular', line:'Six thousand of us up here and the order is: be quiet. You can hear the moss growing.'}],
       quest:()=> S.f.b3_c6_condorsDone ? 'Night. Tomorrow is Coral.' : !S.f.b3_c6_tav2 && b3In('brisk') && !c6BriskGone() ? 'Tav\'s company is dug in along the upper trench. Brisk is pretending not to look for him.' : !S.f.b3_c6_dujek ? 'Dujek is walking the trenches. He has seen the Fourth.' : 'Dusk is coming, and the quorls with it. Stand-to at the roost trench.',
       npcs:[
         {id:'c6tav2', name:'Tav', kind:'tav', x:5, y:2, node:()=>'b3_c6_tav2', show:()=>b3In('brisk') || c6BriskGone(), fresh:()=>!S.f.b3_c6_tav2},
         {id:'c6dujek', name:'Dujek Onearm', kind:'dujek', x:10, y:6, node:()=>S.f.b3_c6_dujek ? 'b3_c6_dujek_again' : 'b3_c6_dujek', fresh:()=>!S.f.b3_c6_dujek},
         {id:'c6heavy', name:'A Moranth heavy', kind:'b3_moranth', x:13, y:7, node:()=>'b3_c6_heavy', fresh:()=>!S.f.b3_c6_heavy} ] },
 
-    /* 16 x 12 · b3_c6_river: the barge camp on the Maurik, downriver of the ford. . mud  , reeds  ~ deep river  - the ford's shallows  b barges on their slips  l logs  F fire */
+    /* 16 x 12 · b3_c6_river: the barge camp on the Maurik, downriver of the ford. . mud  , reeds  ~ deep river  - the ford's shallows  b barges on their slips  l logs  F fire
+       Terrain kit (25b, v13.22): a light touch: timber crates (8), coiled rope (*), a water cask (&), and a sapper with an adze (folk). */
     { id:'b3_c6_bank', title:'The Maurik · the barge camp', sub:'Downriver of the ford · four thousand people and a lot of timber', hint:'Tap ground to move · tap a figure to talk · the barges are on their slips by the water', decor:'b3_c6_river',
       map:[ "################",
-            "#...l..=..,..=.#",
-            "#.=......F.....#",
+            "#...l..=..,..=&#",
+            "#.=......F8....#",
             "#..l....,....l.#",
             "#.....,........#",
             "#,..bbb..,.bbb.#",
-            "#,..bbb....bbb,#",
-            "#,,...........,#",
+            "#,..bbb.*..bbb,#",
+            "#,,......*....,#",
             "#--,,,..,..,,,,#",
             "#--,,,....,,,,,#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
-      walk:'.,', triggers:{b:'b3_c6_barges', l:'b3_c6_logs', F:'b3_c6_bank_fire', '-':'b3_c6_ford'}, trigNames:{b:'The barges', l:'The timber', '-':'The ford'}, start:{x:8, y:4},
+      walk:'.,*', triggers:{b:'b3_c6_barges', l:'b3_c6_logs', F:'b3_c6_bank_fire', '-':'b3_c6_ford'}, trigNames:{b:'The barges', l:'The timber', '-':'The ford'}, start:{x:8, y:4},
+      folk:[{x:10, y:4, kind:'b2soldier', name:'A sapper with an adze', line:'I joined to fight. Turns out I joined to build boats. Nobody reads the small print.'}],
       quest:()=> S.f.b3_c6_raidDone ? 'Dawn. The barges go in the water.' : !S.f.b3_c6_wjLeg ? 'Whiskeyjack is sitting on a log by the slips, with his leg out straight.' : 'The barges, when the squad is ready to work into the night.',
       npcs:[
         {id:'c6wj2', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c6_wjLeg ? 'b3_c6_wj_again' : 'b3_c6_wj_leg', fresh:()=>!S.f.b3_c6_wjLeg},
@@ -47081,7 +47152,8 @@ const B3CH6 = {
         /* v13.8 (David, Nov 15): meetings. Gruntle, with Trake's Legion beside Whiskeyjack's column, looking at the barges */
         {id:'c6gruntle', name:'Gruntle', kind:'b3_c3_gruntle', x:6, y:7, node:()=>'b3_c6_gruntle', fresh:()=>!S.f.b3_c6_gruntle} ] },
 
-    /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south */
+    /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south
+       Terrain kit (25b, v13.22): a light touch: a water cask (&); no folk. */
     { id:'b3_c6_landing', title:'Maurik · the landing', sub:'Day · an empty city on a river · Brood\'s army coming in by the ford', hint:'Tap ground to move · tap a figure to talk · the road south leaves from the east end', decor:'b3_c6_river',
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
@@ -47093,7 +47165,7 @@ const B3CH6 = {
             "#......F.......#",
             "#,..=.....,..=.#",
             "#..........,...>",
-            "#.,....,.......#",
+            "#.,....,......&#",
             "################" ],
       walk:'.,', triggers:{b:'b3_c6_unload', F:'b3_c6_landing_fire', l:'b3_c6_gear', '>':'b3_c6_road'}, trigNames:{b:'The barges', l:'The Host\'s gear', '>':'The road south'}, start:{x:7, y:5},
       quest:()=> !S.f.b3_c6_herds ? 'Rhivi herders have run their bhederin down onto the landing. Nothing is getting off the barges.' : !S.f.b3_c6_brood ? 'Brood has come down to the river. Whiskeyjack has gone to meet him, and wants a line of marines behind him.' : 'Whiskeyjack is not waiting for anyone. The road south.',
@@ -49178,26 +49250,28 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
     go:'To the lines', node:'b3_c7_start'},
 
   areas:[
-    /* 16 x 12. THE LIFT: the hidden entrenchments. . rock  , moss  # cliff  = cedar screen  T the forward trench mouth  F shielded fire  q quorl roost */
+    /* 16 x 12. THE LIFT: the hidden entrenchments. . rock  , moss  # cliff  = cedar screen  T the forward trench mouth  F shielded fire  q quorl roost
+       Terrain kit (25b, v13.22): a light touch: stores (8), stacked spears (%), a boulder (4), the trodden ground by the fire (:), and one of the Host whispering (folk). */
     { id:'b3_c7_entrench', title:'The mountains · above Coral', sub:'Night · the hidden entrenchments', hint:'Tap ground to move · tap a figure to talk · the trench mouth goes down to the forward line; the roost, the fire', decor:'b3_c6_mountain_night', dark:true, amb:'night',
       map:[ "################",
             "#..,..=====..q.#",
             "#.,....,.......#",
             "#..T.....,..,..#",
             "#......##......#",
-            "#.,.F..##..,...#",
+            "#.,.F:.##..,..8#",
             "#..............#",
             "#.====...,..=..#",
             "#....,.........#",
             "#.,......,..,..#",
-            "#...,.......,..#",
+            "#4..,.......,.%#",
             "################" ],
-      walk:'.,=', triggers:{T:'b3_c7_trench', F:'b3_c7_f_fire', q:'b3_c7_roost'}, start:{x:7, y:9},
+      walk:'.,=:', triggers:{T:'b3_c7_trench', F:'b3_c7_f_fire', q:'b3_c7_roost'}, start:{x:7, y:9},
+      folk:[{x:13, y:4, kind:'b2soldier', name:'A Host regular, whispering', line:'Whisper, they said. I am whispering. This is me whispering.'}],
       quest:()=> S.f.b3_c7_trenchDone ? 'Dawn is coming. Down the mountain, into Coral, behind the Bridgeburners.' : !S.f.b3_c7_exchange ? 'The High Fist and the Bridgeburners\' mage are over a map, by the cedar screen.' : 'The forward trench, when the squad is ready. The grey sorcery comes tonight.',
       npcs:[
         {id:'qb7', name:'Quick Ben', kind:'qb', x:6, y:2, node:()=>S.f.b3_c7_exchange ? 'b3_c7_qb_again' : 'b3_c7_qb', fresh:()=>!S.f.b3_c7_exchange},
         {id:'dujek7', name:'Dujek Onearm', kind:'dujek', x:8, y:2, node:()=>'b3_c7_dujek', fresh:()=>!S.f.b3_c7_dujek},
-        {id:'twist7', name:'Achievant Twist', kind:'moranth', x:12, y:2, node:()=>'b3_c7_twist', fresh:()=>!S.f.b3_c7_twist},
+        {id:'twist7', name:'Achievant Twist', kind:'b3_c6_twist', x:12, y:2, node:()=>'b3_c7_twist', fresh:()=>!S.f.b3_c7_twist},
         {id:'tav7', name:'Tav', kind:'tav', x:3, y:8, node:()=>'b3_c7_tav', fresh:()=>!S.f.b3_c7_tav},
         {id:'art7', name:'The standard bearer', kind:'artanthos', x:10, y:5, node:()=>'b3_c7_art', fresh:()=>!S.f.b3_c7_art},
         {id:'bb7', name:'A Bridgeburner', kind:'b3_c7_bridgeburner', x:13, y:8, node:()=>'b3_c7_bb', fresh:()=>!S.f.b3_c7_bb},
@@ -49208,21 +49282,23 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'ellis7', name:'Ellis', kind:'ellis', x:2, y:4, still:true, node:()=>'b3_c7_ellis_night', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eNight},
         {id:'vell7', name:'Vell', kind:'vell', x:11, y:9, still:true, node:()=>'b3_c7_vell_night', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vNight} ] },
 
-    /* 16 x 12. THE RIVER: the alliance's position on the hill outside Coral, the last morning. . churned earth  , grass  # rock  = tent  F fire  x the broken stake line at the foot of the hill */
+    /* 16 x 12. THE RIVER: the alliance's position on the hill outside Coral, the last morning. . churned earth  , grass  # rock  = tent  F fire  x the broken stake line at the foot of the hill
+       Terrain kit (25b, v13.22): a light touch: the path up from the stake gap (_), churned ground by the fire (:), stacked spears (%), and one of the Host (folk). */
     { id:'b3_c7_field', title:'Outside Coral · the alliance\'s hill', sub:'Morning · Brood\'s army and Whiskeyjack\'s column', hint:'Tap ground to move · tap a figure to talk · the stake line at the foot of the hill; the fire', decor:'b3_c7_field', amb:'wind',
       map:[ "################",
             "#..,..=...,..=.#",
             "#.,......#.....#",
             "#...F..,.##..,.#",
-            "#.......,......#",
-            "#.,..=.....=...#",
-            "#........,.....#",
-            "#..,..#.....,..#",
-            "#..............#",
+            "#.....:.,...%..#",
+            "#.,..=._...=...#",
+            "#......_.,.....#",
+            "#..,..#_....,..#",
+            "#......_.......#",
             "#.,.,......,...#",
             "#xxxxxx..xxxxxx#",
             "################" ],
-      walk:'.,', triggers:{x:'b3_c7_stakeline', F:'b3_c7_r_fire'}, start:{x:7, y:9},
+      walk:'.,_:', triggers:{x:'b3_c7_stakeline', F:'b3_c7_r_fire'}, start:{x:7, y:9},
+      folk:[{x:10, y:6, kind:'b2soldier', name:'A Host regular', line:'Stakes at the bottom, tents at the top, and us in between. Somebody drew this on a table.'}],
       quest:()=> S.f.b3_c7_hunters ? 'Up the hill. Now.' : S.f.b3_c7_probeDone ? 'Something is coming across the plain that is not an army of men. The stake line.' : !S.f.b3_c7_wj ? 'Whiskeyjack, on the hilltop. He will have a post for the Fourth.' : 'The stake line at the foot of the hill: the Fourth\'s post.',
       npcs:[
         {id:'wj7', name:'Whiskeyjack', kind:'wj', x:7, y:1, node:()=>S.f.b3_c7_wj ? 'b3_c7_wj_again' : 'b3_c7_wj', fresh:()=>!S.f.b3_c7_wj},
@@ -49231,26 +49307,28 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'korlat7', name:'Korlat', kind:'korlat', x:5, y:2, node:()=>'b3_c7_korlat', fresh:()=>!S.f.b3_c7_korlat},
         {id:'kallor7', name:'Kallor', kind:'kallor', x:3, y:1, node:()=>'b3_c7_kallor', fresh:()=>!S.f.b3_c7_kallor},
         {id:'brood7', name:'Caladan Brood', kind:'brood', x:9, y:4, node:()=>'b3_c7_brood', fresh:()=>!S.f.b3_c7_brood},
-        {id:'itko7', name:'The Shield Anvil', kind:'b3_greysword', x:2, y:6, node:()=>'b3_c7_itko', fresh:()=>!S.f.b3_c7_itko},
+        {id:'itko7', name:'The Shield Anvil', kind:'b3_c3_itkovian', x:2, y:6, node:()=>'b3_c7_itko', fresh:()=>!S.f.b3_c7_itko},
         {id:'herd7', name:'A Rhivi herd-boy', kind:'rhivi', x:13, y:7, node:()=>S.f.b3_c7_gullyDone ? 'b3_c7_herdboy_again' : 'b3_c7_herdboy', fresh:()=>!S.f.b3_c7_herdboy},
         {id:'ellis7r', name:'Ellis', kind:'ellis', x:3, y:9, still:true, node:()=>'b3_c7_ellis_grass', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eGrass},
         {id:'vell7r', name:'Vell', kind:'vell', x:11, y:8, still:true, node:()=>'b3_c7_vell_stakes', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vStakes} ] },
 
-    /* 16 x 12. THE RIVER, after: the hilltop at dusk. . churned earth  , grass  # rock  = the tent where he lies  F fire  x broken stakes */
+    /* 16 x 12. THE RIVER, after: the hilltop at dusk. . churned earth  , grass  # rock  = the tent where he lies  F fire  x broken stakes
+       Terrain kit (25b, v13.22): the hill's rims (1), a boulder (4), the path up to the tent (_), churned ground (:), tufts (*), and one of the Host standing apart (folk). */
     { id:'b3_c7_hill', title:'Outside Coral · the hilltop', sub:'Dusk · after', hint:'Tap ground to move · tap a figure to talk · the tent; the fire', decor:'b3_c7_field', dark:true, amb:'dusk',
       map:[ "################",
-            "#....,...,.....#",
+            "#11..,...,...11#",
             "#.,..=.=...,...#",
-            "#.......,..#...#",
+            "#.......,..#4..#",
             "#..,...F.......#",
-            "#....,....,..,.#",
-            "#.#............#",
-            "#....,.........#",
-            "#.,......,..#..#",
-            "#..x.x..x..x.,.#",
+            "#....,._..,..,.#",
+            "#.#...._:.....*#",
+            "#..*.,:_..*....#",
+            "#.,...._.,..#..#",
+            "#..x.x._x..x.,.#",
             "#.......,......#",
             "################" ],
-      walk:'.,', triggers:{'=':'b3_c7_h_tent', F:'b3_c7_h_fire'}, start:{x:7, y:10},
+      walk:'.,_:*', triggers:{'=':'b3_c7_h_tent', F:'b3_c7_h_fire'}, start:{x:7, y:10},
+      folk:[{x:13, y:3, kind:'b2soldier', name:'A Host regular, standing apart', line:'Nobody has told us to stand down. Nobody has told us anything. So we stand.'}],
       quest:()=> !S.f.b3_c7_htent ? 'The tent on the crest. He is in it.' : !S.f.b3_c7_hspawn ? 'The fire. Then look at the city.' : 'To the shore, when the squad is ready.',
       npcs:[
         {id:'hkorlat', name:'Korlat', kind:'korlat', x:9, y:3, node:()=>'b3_c7_h_korlat', fresh:()=>!S.f.b3_c7_hkorlat},
@@ -49260,21 +49338,24 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'hellis', name:'Ellis', kind:'ellis', x:13, y:8, still:true, node:()=>'b3_c7_ellis_dusk', show:()=>b3In('ellis'), fresh:()=>b3In('ellis') && !S.f.b3_c7_eDusk},
         {id:'hvell', name:'Vell', kind:'vell', x:2, y:4, still:true, node:()=>'b3_c7_vell_dusk', show:()=>b3In('vell'), fresh:()=>b3In('vell') && !S.f.b3_c7_vDusk} ] },
 
-    /* 16 x 12. Both roads: the shore below the hill, the days after. . churned earth  , grass  # rock  = the Host's lines  F fire  x the old stake line, where the barrow goes up */
+    /* 16 x 12. Both roads: the shore below the hill, the days after. . churned earth  , grass  # rock  = the Host's lines  F fire  x the old stake line, where the barrow goes up
+       Terrain kit (25b, v13.22): the path up to the barrow (_), stones for it (4), another fire (0), crates (8), stacked spears (%), scrub (2), churned ground (:), tufts (*), and two of the Host (folk). */
     { id:'b3_c7_shore', title:'Coral · the shore', sub:'The days after', hint:'Tap ground to move · tap a figure to talk · the barrow beyond the old stakes; the fire; the Host\'s lines for the road out', decor:'b3_c7_field', amb:'lake',
       map:[ "################",
-            "#.,....x.,..,..#",
+            "#.,....x.,..,.*#",
             "#....,.x.......#",
-            "#.,....x...#...#",
-            "#......,....,..#",
-            "#..#.....F.....#",
-            "#.,....,.......#",
-            "#.....,....,...#",
-            "#..==......,.#.#",
-            "#..==..,.......#",
-            "#.,......,..,..#",
+            "#.,....x.4.#...#",
+            "#*....4,_...,..#",
+            "#..#...._F.....#",
+            "#.,....,_.:....#",
+            "#.....,._..,...#",
+            "#%.==..._..0.#.#",
+            "#..==.:,.......#",
+            "#.,.8....,..,22#",
             "################" ],
-      walk:'.,', triggers:{x:'b3_c7_barrow', F:'b3_c7_s_fire', '=':'b3_c7_roads'}, start:{x:9, y:9},
+      walk:'.,_:*', triggers:{x:'b3_c7_barrow', F:'b3_c7_s_fire', '=':'b3_c7_roads'}, start:{x:9, y:9},
+      folk:[{x:10, y:4, kind:'b2soldier', name:'A Host regular with a basket of stones', line:'Stones for the barrow. Everyone carries one. Nobody has said who started it.'},
+        {x:11, y:10, kind:'b2soldier', name:'A sapper, sitting', line:'The sea is right there. I have been looking at it for two days. It has not done anything either.'}],
       quest:()=> !S.f.b3_c7_barrow ? 'The Shield Anvil\'s barrow, past the old stake line. A gift each.' : !S.f.b3_c7_burial ? 'Moon\'s Spawn, out over the water. Everyone is going down to the shore.' : 'The fire, for the squad. The Host\'s lines, for the road out.',
       npcs:[
         {id:'stav', name:'Tav', kind:'tav', x:12, y:6, node:()=>'b3_c7_s_tav', show:()=>b3In('brisk'), fresh:()=>b3In('brisk') && !S.f.b3_c7_stav},
@@ -49285,10 +49366,11 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
         {id:'sgrey', name:'The Grey Swords', kind:'b3_greysword', x:10, y:2, node:()=>'b3_c7_s_grey', fresh:()=>!S.f.b3_c7_sgrey},
         {id:'srhivi', name:'Rhivi riders', kind:'b3_rhivi_rider', x:13, y:9, node:()=>'b3_c7_s_rhivi', fresh:()=>!S.f.b3_c7_srhivi} ] },
 
-    /* 16 x 12. THE LIFT: Coral's streets, behind the Bridgeburners. . black paving  , rubble  # wall  F fire  s a stair  g the square ahead  c coral-stone */
+    /* 16 x 12. THE LIFT: Coral's streets, behind the Bridgeburners. . black paving  , rubble  # wall  F fire  s a stair  g the square ahead  c coral-stone
+       Terrain kit (25b, v13.22): a light touch: rubble (3); no folk. */
     { id:'b3_c7_coral', title:'Coral · the streets', sub:'Before dawn · behind the Bridgeburners', hint:'Tap ground to move · tap a figure to talk · the square ahead; a stair', decor:'b3_c7_coral', dark:true, amb:'city_night',
       map:[ "################",
-            "#..,.#....#.,.s#",
+            "#..,.#3...#.,.s#",
             "#.c..#.F..#....#",
             "#....,....,..c.#",
             "###.####..####.#",
@@ -49296,8 +49378,8 @@ Whiskeyjack is on the hilltop with Brood and Korlat, and the leg is worse. ${b3I
             "#.,..F....,..,.#",
             "#....###.###...#",
             "#.c..#.....#.,.#",
-            "#....#..g..#...#",
-            "#.,............#",
+            "#3...#..g..#...#",
+            "#.,.........3..#",
             "################" ],
       walk:'.,c', triggers:{g:'b3_c7_square', s:'b3_c7_stair'}, start:{x:7, y:10},
       quest:()=> S.f.b3_c7_squareDone ? (S.f.b3_c7_news ? 'Out of the city, to the shore.' : 'Something is coming down out of the sky over the keep.') : 'The square ahead. The Bridgeburners are past it, and something is coming down the street behind them.',

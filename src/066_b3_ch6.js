@@ -79,21 +79,23 @@ const B3CH6 = {
 
   areas:[
     /* 16 x 12 · b3camp_night:  . trampled mud  , grass  # palisade/earthwork  = tent  F the squad's fire  W the quartermaster's wagons  h horse lines
-       r a burnt farmstead  s Dujek's standard  > the lift field, east, past the horse lines */
+       r a burnt farmstead  s Dujek's standard  > the lift field, east, past the horse lines
+       Terrain kit (25b, v13.22): a light touch: the track out to the lift field (_), crates by the wagon (8), stacked spears by the standard (%), and one of the Host (folk). */
     { id:'b3_c6_camp', title:'The Host\'s camp · south of Setta', sub:'Night · the Domin · fewer fires than last week', hint:'Tap ground to move · tap a figure to talk · the lift field is east, past the horse lines', decor:'b3camp_night', dark:true,
       map:[ "################",
             "#=.=..hhhh..=.=#",
             "#.....,.......,#",
-            "#.W.......=..W.#",
-            "#,...=......,..>",
-            "#..,.....s.....#",
-            "#.,....=....,..#",
-            "#rr...,........#",
+            "#.W8......=..W.#",
+            "#,...=......___>",
+            "#..,....%s._...#",
+            "#.,....=.._.,..#",
+            "#rr...,.._.....#",
             "#r.....F...=...#",
             "#..=.,....,..W.#",
             "#.....=.....,..#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c6_fire', W:'b3_c6_wagons', r:'b3_c6_farm', s:'b3_c6_standard', '>':'b3_c6_field_go'}, trigNames:{'>':'The lift field', r:'The burnt farm', s:'The High Fist\'s standard'}, start:{x:7, y:9},
+      walk:'.,_', triggers:{F:'b3_c6_fire', W:'b3_c6_wagons', r:'b3_c6_farm', s:'b3_c6_standard', '>':'b3_c6_field_go'}, trigNames:{'>':'The lift field', r:'The burnt farm', s:'The High Fist\'s standard'}, start:{x:7, y:9},
+      folk:[{x:5, y:10, kind:'b2soldier', name:'A Host regular', line:'Every morning there is more room at the fires. Nobody is saying why. I have stopped asking.'}],
       quest:()=> S.f.b3_c6_fieldDone ? (S.f.b3_c6_key ? 'Go.' : 'Whiskeyjack wants an answer: the quorls, or the road.') : !S.f.b3_c6_tavList && b3In('brisk') && !c6BriskGone() ? 'Tav\'s company is at its fire, packing. Brisk has noticed.' : 'A runner came by: the Fourth to the lift field after dark, east, past the horse lines. No fires. No noise.',
       npcs:[
         {id:'c6tav', name:'Tav', kind:'tav', x:12, y:6, node:()=>c6BriskGone() ? 'b3_c6_tav_grief' : 'b3_c6_tav', show:()=>!S.f.b3_c6_fieldDone && (b3In('brisk') || c6BriskGone()), fresh:()=>!S.f.b3_c6_tavMet},
@@ -102,61 +104,67 @@ const B3CH6 = {
         {id:'c6oskan0', name:'Oskan', kind:'b2soldier', x:5, y:3, node:()=>S.f.b3_c6_oskan0 ? 'b3_c6_oskan0_again' : 'b3_c6_oskan0', show:()=>!S.f.b3_c6_key, fresh:()=>!S.f.b3_c6_oskan0},
         {id:'c6rider', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:3, y:6, node:()=>'b3_c6_ask', show:()=>!!S.f.b3_c6_fieldDone && !b3In('sohra') && !c6Told(), fresh:()=>!!S.f.b3_c6_fieldDone && !c6Told()} ] },
 
-    /* 16 x 12 · b3_c6_mountain_night:  . rock  , moss  # cliff  = cedar screen  F shielded fire  q quorl roost  T the trench mouth, down */
+    /* 16 x 12 · b3_c6_mountain_night:  . rock  , moss  # cliff  = cedar screen  F shielded fire  q quorl roost  T the trench mouth, down
+       Terrain kit (25b, v13.22): a light touch: boulders (4), scree at the cliff foot (3), scrub (2), a rise at the ledge's edge (1), moss (*), and a regular in two cloaks (folk). */
     { id:'b3_c6_ledge', title:'The ledge · above Coral', sub:'Night · the mountains · cold that should not be here in summer', hint:'Tap ground to move · tap a figure to talk · the trench mouth goes down to the entrenchments at first light', decor:'b3_c6_mountain_night', dark:true,
       map:[ "################",
             "#,,..#####..q..#",
             "#,....###...q..#",
-            "#..=........,..#",
+            "#.*=...3....,..#",
             "#..=..,....F...#",
             "#.......,......#",
-            "##.............#",
-            "###..,......=..#",
+            "##....4........#",
+            "###.2,......=..#",
             "####.......=...#",
-            "#####..T.......#",
-            "######...,,....#",
+            "#####..T.....4.#",
+            "######...,,..11#",
             "################" ],
-      walk:'.,', triggers:{q:'b3_c6_roost', F:'b3_c6_ledge_fire', T:'b3_c6_ledge_down', '=':'b3_c6_ledge_look'}, trigNames:{'=':'The cedar screen', T:'The trench mouth'}, start:{x:9, y:5},
+      walk:'.,*', triggers:{q:'b3_c6_roost', F:'b3_c6_ledge_fire', T:'b3_c6_ledge_down', '=':'b3_c6_ledge_look'}, trigNames:{'=':'The cedar screen', T:'The trench mouth'}, start:{x:9, y:5},
+      folk:[{x:13, y:5, kind:'b2soldier', name:'A Host regular, in two cloaks', line:'Summer, they said. Pack light, they said.'}],
       quest:()=> !S.f.b3_c6_twist ? 'The Moranth commander is at the roost, among the quorls.' : 'First light. The trench mouth goes down to the entrenchments.',
       npcs:[
         {id:'c6twist', name:'Achievant Twist', kind:'b3_c6_twist', x:10, y:2, node:()=>S.f.b3_c6_twist ? 'b3_c6_twist_again' : 'b3_c6_twist', fresh:()=>!S.f.b3_c6_twist} ] },
 
-    /* 16 x 12 · b3_c6_mountain (day): the entrenchments. . rock  , moss  # cliff  = cedar screen (Coral is below it)  F shielded fire  q roost  T trench mouth */
+    /* 16 x 12 · b3_c6_mountain (day): the entrenchments. . rock  , moss  # cliff  = cedar screen (Coral is below it)  F shielded fire  q roost  T trench mouth
+       Terrain kit (25b, v13.22): a light touch: the trench spoil (1), a boulder (4), stores (8), stacked spears (%), the trodden ground (:), and one of the Host being quiet (folk). */
     { id:'b3_c6_trench', title:'The entrenchments · above Coral', sub:'Day · cedar and moss · six thousand people being quiet', hint:'Tap ground to move · tap a figure to talk · the screen looks down on Coral', decor:'b3_c6_mountain',
       map:[ "################",
-            "#,,..#....###..#",
-            "#,.T.......#..,#",
+            "#,,..#..11###..#",
+            "#,.T.......#.4,#",
             "#.......,...F..#",
             "#..q...........#",
-            "#,......,....q.#",
+            "#,..%...,....q.#",
             "#..,...........#",
-            "#.....T....,...#",
-            "#.,.........,..#",
+            "#.8...T....,...#",
+            "#.,...:...:.,..#",
             "#..............#",
             "#===.====.====.#",
             "################" ],
-      walk:'.,', triggers:{'=':'b3_c6_trench_look', F:'b3_c6_trench_fire', q:'b3_c6_trench_roost', T:'b3_c6_stand'}, trigNames:{'=':'The cedar screen', T:'The roost trench', q:'The roost'}, start:{x:8, y:8},
+      walk:'.,:', triggers:{'=':'b3_c6_trench_look', F:'b3_c6_trench_fire', q:'b3_c6_trench_roost', T:'b3_c6_stand'}, trigNames:{'=':'The cedar screen', T:'The roost trench', q:'The roost'}, start:{x:8, y:8},
+      folk:[{x:3, y:6, kind:'b2soldier', name:'A Host regular', line:'Six thousand of us up here and the order is: be quiet. You can hear the moss growing.'}],
       quest:()=> S.f.b3_c6_condorsDone ? 'Night. Tomorrow is Coral.' : !S.f.b3_c6_tav2 && b3In('brisk') && !c6BriskGone() ? 'Tav\'s company is dug in along the upper trench. Brisk is pretending not to look for him.' : !S.f.b3_c6_dujek ? 'Dujek is walking the trenches. He has seen the Fourth.' : 'Dusk is coming, and the quorls with it. Stand-to at the roost trench.',
       npcs:[
         {id:'c6tav2', name:'Tav', kind:'tav', x:5, y:2, node:()=>'b3_c6_tav2', show:()=>b3In('brisk') || c6BriskGone(), fresh:()=>!S.f.b3_c6_tav2},
         {id:'c6dujek', name:'Dujek Onearm', kind:'dujek', x:10, y:6, node:()=>S.f.b3_c6_dujek ? 'b3_c6_dujek_again' : 'b3_c6_dujek', fresh:()=>!S.f.b3_c6_dujek},
         {id:'c6heavy', name:'A Moranth heavy', kind:'b3_moranth', x:13, y:7, node:()=>'b3_c6_heavy', fresh:()=>!S.f.b3_c6_heavy} ] },
 
-    /* 16 x 12 · b3_c6_river: the barge camp on the Maurik, downriver of the ford. . mud  , reeds  ~ deep river  - the ford's shallows  b barges on their slips  l logs  F fire */
+    /* 16 x 12 · b3_c6_river: the barge camp on the Maurik, downriver of the ford. . mud  , reeds  ~ deep river  - the ford's shallows  b barges on their slips  l logs  F fire
+       Terrain kit (25b, v13.22): a light touch: timber crates (8), coiled rope (*), a water cask (&), and a sapper with an adze (folk). */
     { id:'b3_c6_bank', title:'The Maurik · the barge camp', sub:'Downriver of the ford · four thousand people and a lot of timber', hint:'Tap ground to move · tap a figure to talk · the barges are on their slips by the water', decor:'b3_c6_river',
       map:[ "################",
-            "#...l..=..,..=.#",
-            "#.=......F.....#",
+            "#...l..=..,..=&#",
+            "#.=......F8....#",
             "#..l....,....l.#",
             "#.....,........#",
             "#,..bbb..,.bbb.#",
-            "#,..bbb....bbb,#",
-            "#,,...........,#",
+            "#,..bbb.*..bbb,#",
+            "#,,......*....,#",
             "#--,,,..,..,,,,#",
             "#--,,,....,,,,,#",
             "#~~~~~~~~~~~~~~#",
             "################" ],
-      walk:'.,', triggers:{b:'b3_c6_barges', l:'b3_c6_logs', F:'b3_c6_bank_fire', '-':'b3_c6_ford'}, trigNames:{b:'The barges', l:'The timber', '-':'The ford'}, start:{x:8, y:4},
+      walk:'.,*', triggers:{b:'b3_c6_barges', l:'b3_c6_logs', F:'b3_c6_bank_fire', '-':'b3_c6_ford'}, trigNames:{b:'The barges', l:'The timber', '-':'The ford'}, start:{x:8, y:4},
+      folk:[{x:10, y:4, kind:'b2soldier', name:'A sapper with an adze', line:'I joined to fight. Turns out I joined to build boats. Nobody reads the small print.'}],
       quest:()=> S.f.b3_c6_raidDone ? 'Dawn. The barges go in the water.' : !S.f.b3_c6_wjLeg ? 'Whiskeyjack is sitting on a log by the slips, with his leg out straight.' : 'The barges, when the squad is ready to work into the night.',
       npcs:[
         {id:'c6wj2', name:'Whiskeyjack', kind:'wj', x:8, y:3, node:()=>S.f.b3_c6_wjLeg ? 'b3_c6_wj_again' : 'b3_c6_wj_leg', fresh:()=>!S.f.b3_c6_wjLeg},
@@ -166,7 +174,8 @@ const B3CH6 = {
         /* v13.8 (David, Nov 15): meetings. Gruntle, with Trake's Legion beside Whiskeyjack's column, looking at the barges */
         {id:'c6gruntle', name:'Gruntle', kind:'b3_c3_gruntle', x:6, y:7, node:()=>'b3_c6_gruntle', fresh:()=>!S.f.b3_c6_gruntle} ] },
 
-    /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south */
+    /* 16 x 12 · b3_c6_river (day): the landing at Maurik. ~ river  - shallows  b barges pulled in  . mud  , reeds  = tents  F fire  l stacked gear  > the road south
+       Terrain kit (25b, v13.22): a light touch: a water cask (&); no folk. */
     { id:'b3_c6_landing', title:'Maurik · the landing', sub:'Day · an empty city on a river · Brood\'s army coming in by the ford', hint:'Tap ground to move · tap a figure to talk · the road south leaves from the east end', decor:'b3_c6_river',
       map:[ "################",
             "#~~~~~~~~~~~~~~#",
@@ -178,7 +187,7 @@ const B3CH6 = {
             "#......F.......#",
             "#,..=.....,..=.#",
             "#..........,...>",
-            "#.,....,.......#",
+            "#.,....,......&#",
             "################" ],
       walk:'.,', triggers:{b:'b3_c6_unload', F:'b3_c6_landing_fire', l:'b3_c6_gear', '>':'b3_c6_road'}, trigNames:{b:'The barges', l:'The Host\'s gear', '>':'The road south'}, start:{x:7, y:5},
       quest:()=> !S.f.b3_c6_herds ? 'Rhivi herders have run their bhederin down onto the landing. Nothing is getting off the barges.' : !S.f.b3_c6_brood ? 'Brood has come down to the river. Whiskeyjack has gone to meet him, and wants a line of marines behind him.' : 'Whiskeyjack is not waiting for anyone. The road south.',

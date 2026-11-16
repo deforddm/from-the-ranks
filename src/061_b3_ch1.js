@@ -78,21 +78,24 @@ const B3CH1 = {
     go:'Out of the tent', node:'b3_c1_start'},
 
   areas:[
-    /* 16 x 12 (b3camp).  . mud  , new grass  # palisade  = tent  F the Fourth's fire  W Pell's wagon  h horse lines  r the rubble of the north quarter, where the old sap comes out  s the Host's standard  > east, to the picket */
+    /* 16 x 12 (b3camp).  . mud  , new grass  # palisade  = tent  F the Fourth's fire  W Pell's wagon  h horse lines  r the rubble of the north quarter, where the old sap comes out  s the Host's standard  > east, to the picket
+       Terrain kit (25b, v13.22): a light touch: the trodden track out to the picket (_), stacked spears by the standard (%), crates by Pell's wagon and the palisade (8), the ground churned by the fire (:), and two of the Host before the parley (folk). */
     { id:'b3_c1_camp', title:'Outside Pale · the Host\'s lines', sub:'Morning · the parley at noon', hint:'Tap ground to move · tap a figure to talk · the picket is east', decor:'b3camp',
       map:[ "################",
             "#rr...=.=..=.=.#",
             "#r,...=.=..=.=.#",
-            "#,,.........,..#",
+            "#,,....%....,.8#",
             "#.=.=..s....h..#",
             "#.=.=.......h..#",
-            "#......,.......>",
-            "#.=..F....W....#",
-            "#.=.......,..=.#",
+            "#......,.______>",
+            "#.=.:F....W....#",
+            "#.=......8,..=.#",
             "#,...,..=.=..=.#",
             "#..,....=.=....#",
             "################" ],
-      walk:'.,', triggers:{r:'b3_c1_mouth', F:'b3_c1_fire', W:'b3_c1_pell', s:'b3_c1_wj', '>':'b3_c1_to_line'}, start:{x:5, y:8},
+      walk:'.,_:', triggers:{r:'b3_c1_mouth', F:'b3_c1_fire', W:'b3_c1_pell', s:'b3_c1_wj', '>':'b3_c1_to_line'}, start:{x:5, y:8},
+      folk:[{x:3, y:6, kind:'b2soldier', name:'A Host regular, shaving', line:'Last time the Host sat here the city had a moon over it. Grass grows quicker without one.'},
+        {x:12, y:9, kind:'b2soldier', name:'A sapper of the Seventh', line:'Parley at noon. I polished my boots for it. Nobody is going to look at my boots.'}],
       quest:()=> !S.f.b3_c1_order ? 'Whiskeyjack, by the Host\'s standard. He sent for you.' : !S.f.b3_c1_tunnelsDone ? 'The old north sap, in the rubble by the city wall. Before noon.' : 'East, to the picket where the camps meet.',
       npcs:[
         {id:'wj', name:'Whiskeyjack', kind:'wj', x:8, y:5, node:()=>'b3_c1_wj', fresh:()=>!S.f.b3_c1_order || (!!S.f.b3_c1_tunnelsDone && !S.f.b3_c1_wjLine)},
@@ -100,21 +103,24 @@ const B3CH1 = {
         {id:'tav', name:'Tav', kind:'tav', x:13, y:7, node:()=>S.f.b3_tav ? 'b3_c1_tav_again' : 'b3_c1_tav', fresh:()=>!S.f.b3_tav},
         {id:'pell', name:'Quartermaster Pell', kind:'pell', x:11, y:7, node:()=>'b3_c1_pell', fresh:()=>!S.f.b3_c1_pellMet} ] },
 
-    /* 16 x 12 (b3camp).  . mud  , grass  # the Host's palisade  = Brood's tents  F the Ilgres fire  W the Daru carriage  h horse lines  s the Fourth's picket post  < west, to the Host  v south, to the Rhivi camp */
+    /* 16 x 12 (b3camp).  . mud  , grass  # the Host's palisade  = Brood's tents  F the Ilgres fire  W the Daru carriage  h horse lines  s the Fourth's picket post  < west, to the Host  v south, to the Rhivi camp
+       Terrain kit (25b, v13.22): a light touch: the trodden way from the Host's side down to the Rhivi camp (_), stacked spears by the post (%), Brood's crates (8), the churned ground by the Ilgres fire (:), tufts (*), a Host picket and a Rhivi herder (folk). */
     { id:'b3_c1_line', title:'The picket · where the camps meet', sub:'Noon · the parley ground below Brood\'s tent', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s post is the standard', decor:'b3camp',
       map:[ "################",
             "#..=.=....,.=.=#",
             "#..=.=........=#",
-            "<.......W...,..#",
-            "#.,..........=.#",
-            "#....s.........#",
-            "#..........,...#",
-            "#.,...F.....=..#",
-            "#..........=...#",
-            "#..,..h.h......#",
-            "#.....h.h..,...#",
+            "<______.W...,..#",
+            "#.,.%.._.....=8#",
+            "#....s._.......#",
+            "#......_...,.*.#",
+            "#.,..:F_....=..#",
+            "#......_...=...#",
+            "#..,..h_h......#",
+            "#.*...h_h..,...#",
             "#######vv#######" ],
-      walk:'.,', triggers:{s:'b3_c1_post', '<':'b3_c1_line_back', v:'b3_c1_to_rhivi'}, start:{x:1, y:3},
+      walk:'.,_:*', triggers:{s:'b3_c1_post', '<':'b3_c1_line_back', v:'b3_c1_to_rhivi'}, start:{x:1, y:3},
+      folk:[{x:12, y:5, kind:'b2soldier', name:'A Host picket', line:'Ten years we tried to kill that lot. Now I am to say good morning to them. I have been practising.'},
+        {x:3, y:6, kind:'rhivi', name:'A Rhivi herder', line:'Your horses are thin. Ours are not. Nobody has told you this, so I am telling you.'}],
       quest:()=> !S.f.b3_c1_parleyDone ? 'The Fourth\'s post on the picket, by the standard. Noon.' : 'Dusk soon. South, to the Rhivi camp, when the line is relieved.',
       npcs:[
         {id:'delegate', name:'A Daru attendant', kind:'b3_c1_delegate', x:7, y:2, node:()=>'b3_c1_delegate', fresh:()=>!S.f.b3_c1_delegate},
@@ -126,26 +132,29 @@ const B3CH1 = {
         /* v13.8 (David, Nov 15): meetings. The plan's star for Book Three: Whiskeyjack comes back down past the Fourth's post after the parley */
         {id:'wjpost', name:'Whiskeyjack', kind:'wj', x:6, y:6, node:()=>'b3_c1_wjpost', show:()=>!!S.f.b3_c1_parleyDone, fresh:()=>!!S.f.b3_c1_parleyDone && !S.f.b3_c1_wjpost} ] },
 
-    /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket */
+    /* 16 x 12 (b3camp_night).  . trodden ground  , grass  = hide tents  F Rhivi fires  h the herds  ^ north, back to the picket
+       Terrain kit (25b, v13.22): a light touch: the path in from the picket (_), another Rhivi fire (0), the trodden ground round the fires (:), a tuft by the herds (*), a singer and a boy with a stick (folk). */
     { id:'b3_c1_rhivi', title:'The Rhivi camp · night', sub:'Fires, herds, and somebody always singing', hint:'Tap ground to move · tap a figure to talk · the fires are warm', decor:'b3camp_night', dark:true,
       map:[ "######^^########",
-            "#.=..=...h.h.h.#",
-            "#....,...h.h.h.#",
-            "#.=.F..=.......#",
-            "#......,...=...#",
+            "#.=..=...h.h.h*#",
+            "#....,_..h.h.h.#",
+            "#.=.F._=.......#",
+            "#...:._,...=...#",
             "#.=...........,#",
             "#.....==.......#",
             "#.,...==...F...#",
-            "#..............#",
+            "#.........:.:0.#",
             "#.=..,....=..=.#",
             "#..h.h.....,...#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c1_rfire', '^':'b3_c1_rhivi_back'}, start:{x:6, y:1},
+      walk:'.,_:*', triggers:{F:'b3_c1_rfire', '^':'b3_c1_rhivi_back'}, start:{x:6, y:1},
+      folk:[{x:12, y:4, kind:'rhivi', name:'A Rhivi singer', line:'The song is for the herd. You may listen. The herd does not mind.', wander:1},
+        {x:2, y:10, kind:'child', name:'A Rhivi boy with a stick', line:'That one is Grumbles. That one also. They are all Grumbles.'}],
       quest:()=> b31Done() ? 'Dawn is coming. The fires, and then the march.' : !S.f.b3_sohraMet || !S.f.b3_c1_sohraFire ? 'Sohra, at the fires.' : 'The Mhybe\'s tent, and whatever the night wants of the Fourth.',
       npcs:[
         {id:'sohra', name:'Sohra', kind:'sohra', x:5, y:4, node:()=>b31Done() ? 'b3_c1_sohra_late' : S.f.b3_c1_sohraFire ? 'b3_c1_sohra_again' : 'b3_c1_sohra', show:()=>!b3In('sohra') || !S.f.b3_c1_sohraFire, fresh:()=>!S.f.b3_c1_sohraFire},
         {id:'mhybe', name:'The Mhybe', kind:'mhybe', x:8, y:7, node:()=>'b3_c1_mhybe', show:()=>!S.f.b3_c1_trainDone, fresh:()=>!S.f.b3_c1_mhybeMet},
-        {id:'kmen', name:'Men in grey and fur', kind:'houseguard', x:9, y:5, node:()=>'b3_c1_kmen', show:()=>!S.f.b3_c1_key, fresh:()=>!S.f.b3_c1_kmen},
+        {id:'kmen', name:'Men in grey and fur', kind:'b3_c5_kallorman', x:9, y:5, node:()=>'b3_c1_kmen', show:()=>!S.f.b3_c1_key, fresh:()=>!S.f.b3_c1_kmen},
         {id:'runner', name:'A Host runner', kind:'b2soldier', x:3, y:8, node:()=>'b3_c1_runner', show:()=>!S.f.b3_c1_key && !!S.f.b3_c1_sohraFire, fresh:()=>!S.f.b3_c1_runner} ] } ],
 
   battles:{

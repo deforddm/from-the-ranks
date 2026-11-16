@@ -38,6 +38,8 @@ const TKP = {
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // Book Ten's Glass Desert (183b's b103aGlassT): pale glinting glass by day, star-dark by night
   wetglass:{d:{body:'#5a6676', crest:'220,228,240', foot:'20,26,36', blade:'#8a96a6', bladeL:'#d8e0ea', brush:'#4a5464', brushL:'#6a7686', stem:'#3a4250', rock:'#6a7686', rockL:'#b8c4d2', rockD:'#2a3240', wood:'#4a3420', woodL:'#7a5a3a', canvas:'#a89878', canvasD:'#6a5c48', bone:'#d8d4c8', cloth:['#7a3428', '#a8905a'], track:'150,164,184', mud:'40,48,60', lit:'230,236,244', tex:'glass'},
            n:{body:'#1e2a40', crest:'170,190,230', foot:'0,0,0', blade:'#3a4a66', bladeL:'#8a9cc4', brush:'#1a2234', brushL:'#2a3650', stem:'#1a2030', rock:'#26324a', rockL:'#3e4e6c', rockD:'#0a0e16', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3836', canvasD:'#1e1c1a', bone:'#5c6476', cloth:['#3a2018', '#3a3020'], track:'150,170,210', mud:'0,0,0', lit:'190,205,240', tex:'glass'}}, // the glass gone wet at grey light (185b's b10_c5_wet)
+  ash:    {d:{body:'#6e6556', crest:'226,218,200', foot:'30,26,22', blade:'#6a6a4a', bladeL:'#8a8a62', brush:'#4a4a36', brushL:'#62624a', stem:'#3a3428', rock:'#6a645a', rockL:'#948e82', rockD:'#2e2a26', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'92,80,66', mud:'42,36,30', lit:'240,230,210', tex:'turf'},
+           n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}}, // ash and dead earth, darker than 'earth' (Book Three's guards' bank west of Capustan and the Domin's emptied fields)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -137,7 +139,24 @@ const TKS = {
   b10_c5_wet:{get fam(){ return tkB10Glass('t') ? 'wetglass' : 'earth'; }},
   b10_c5_scrub:{fam:'earth'},
   b10_c6_coast:{fam:'sand', as:{'6':'T', '7':'w', '0':'F', '8':'C', '@':'H'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
-  b10_c6_field:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'b'}} };
+  b10_c6_field:{fam:'earth', as:{'6':'T', '7':'w', '0':'F', '@':'h', '&':'b'}},
+  /* Book Three (v13.22): the Rhivi Plain (its tents, wagons and fires), the field before Capustan (its shelters, cart and fires, and what
+     men drop when they run for a battlefield's bones), Capustan's streets (grey stone rubble; its carts and wells), the guards' bank (the
+     ash palette; its shelters, fires, dead tree and ration cart), the Domin by day (ash; its dead trees and wells), the mountain above
+     Coral (grey scree; its shielded fires), the Maurik's barge camp (casks and coiled rope), the hill outside Coral (grey stone, as its rocks are; its tents and fires).
+     b3camp, b3camp_night, b3_c5_domin_night and b3_c7_coral joined with Books Six and Eight above, unchanged. */
+  b3_c2_plain:{fam:'plain', as:{'6':'=', '7':'W', '0':'F'}},
+  b3_c2_plain_night:{fam:'plain', as:{'6':'=', '7':'W', '0':'F'}},
+  b3_c3_field:{fam:'earth', as:{'6':'=', '7':'c', '0':'F', '$':'d'}},
+  b3_c3_city:{fam:'scree', as:{'7':'c', '&':'w'}},
+  b3_c3_city_night:{fam:'scree', as:{'7':'c', '&':'w'}},
+  b3_c4_camp:{fam:'ash', as:{'6':'=', '0':'F', '5':'x', '7':'c'}},
+  b3_c4_camp_night:{fam:'ash', as:{'6':'=', '0':'F', '5':'x', '7':'c'}},
+  b3_c5_domin:{fam:'ash', as:{'5':'x', '&':'w'}},
+  b3_c6_mountain:{fam:'scree', as:{'0':'F'}},
+  b3_c6_mountain_night:{fam:'scree', as:{'0':'F'}},
+  b3_c6_river:{fam:'earth', as:{'0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b3_c7_field:{fam:'scree', as:{'6':'=', '0':'F'}} };
 TKS.b10_c5_ground = TKS.b10_c3_ground; // the last lie-up and the last night march: Ch 3's glass and cloaks (185b draws its own on 183b's)
 TKS.b10_c7_field = TKS.b10_c6_field; // the first fields, the line and the barrows: Ch 6's Kolanse dirt (187b falls back to 186b's)
 /* is this Book Ten ground the glass just now? 't' the Third's crossing (not on 'south'), 'l' the Letherii who crossed ('adjunct'), 'c2' the

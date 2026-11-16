@@ -65,21 +65,24 @@ const B3CH3 = {
     go:'On', node:'b3_c3_start'},
 
   areas:[
-    /* 16 x 12, the shelf's camp ground at night.  . mud  , grass  = tent  F the squad's fire  W wagon  h horse lines  s the Host's standard  E the road south */
+    /* 16 x 12, the shelf's camp ground at night.  . mud  , grass  = tent  F the squad's fire  W wagon  h horse lines  s the Host's standard  E the road south
+       Terrain kit (25b, v13.22): the road up through the halt to the south (_), crates by the wagon (8), stacked spears by the standard (%), another tent (6), another squad's fire (0), the trodden ground by the Fourth's (:), and two of the Host awake (folk). */
     { id:'b3_c3_halt', title:'Before Capustan · the last halt', sub:'Night · two bells · the city burning on the skyline', hint:'Tap ground to move · tap a figure to talk · the squad\'s fire, and the road south at the top of the field', decor:'b3camp_night', dark:true,
       map:[ "#######E########",
-            "#..=..=..h.hh..#",
-            "#.....,......=.#",
-            "#.=......=..,..#",
-            "#......W.......#",
-            "#..,.....s.....#",
-            "#.=....,.......#",
-            "#....W.....=...#",
-            "#.,......F.....#",
-            "#.....=......,.#",
+            "#..=..=_.h.hh..#",
+            "#.....,_.....=.#",
+            "#.=..._..=..,..#",
+            "#....._W8......#",
+            "#..,.._.%s.....#",
+            "#.=..._,.......#",
+            "#....W_....=.6.#",
+            "#.,...._.F.....#",
+            "#..0..=_:.:..,.#",
             "#.......,......#",
             "################" ],
-      walk:'.,', triggers:{F:'b3_c3_fire', E:'b3_c3_dawn'}, start:{x:7, y:10},
+      walk:'.,_:', triggers:{F:'b3_c3_fire', E:'b3_c3_dawn'}, start:{x:7, y:10},
+      folk:[{x:4, y:1, kind:'b2soldier', name:'A Host regular, watching the skyline', line:'That glow is Capustan. Been burning since dusk. You would think a city would run out of things to burn.'},
+        {x:13, y:9, kind:'b2soldier', name:'A sapper, oiling a crossbow', line:'Two bells. March at four. Sleep at never.'}],
       quest:()=> !S.f.b3_c3Wj ? 'Whiskeyjack is by the standard.' : !S.f.b3_c3Picket ? 'The picket on the rise across the road.' : !S.f.b3_c3Rested ? 'The squad\'s fire. Two bells.' : 'The road south, at the top of the field, when the squad is ready.',
       npcs:[
         {id:'c3wj', name:'Whiskeyjack', kind:'wj', x:10, y:5, node:()=>S.f.b3_c3Wj ? 'b3_c3_wj_again' : 'b3_c3_wj', fresh:()=>!S.f.b3_c3Wj},
@@ -88,21 +91,23 @@ const B3CH3 = {
         {id:'c3korlat', name:'Korlat', kind:'korlat', x:3, y:2, node:()=>S.f.b3_c3Korlat ? 'b3_c3_korlat_again' : 'b3_c3_korlat', fresh:()=>!S.f.b3_c3Korlat},
         {id:'c3rhivi', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:3, node:()=>S.f.b3_c3Rhivi ? 'b3_c3_rhivi_again' : 'b3_c3_rhivi', fresh:()=>!S.f.b3_c3Rhivi} ] },
 
-    /* 16 x 12, the trampled field below the walls (63b).  . earth  , grass  # siege bank  x stake line  r rubble  = shelter  s the Fourth's standard  c cart  F fire  E toward the walls */
+    /* 16 x 12, the trampled field below the walls (63b).  . earth  , grass  # siege bank  x stake line  r rubble  = shelter  s the Fourth's standard  c cart  F fire  E toward the walls
+       Terrain kit (25b, v13.22): the way up through the line to the walls (_), what men drop when they run, by the stake line and the cart ($), churned ground (:), and one of the Host looking at the walls (folk). */
     { id:'b3_c3_field', title:'The field before Capustan', sub:'Day · the Host\'s stretch of the allied line · the walls a mile off', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s standard; the city at the top of the field', decor:'b3_c3_field',
       map:[ "#######E########",
-            "#..r..r....r...#",
-            "#.x.xx.x.xx.x..#",
-            "#......,.......#",
-            "#.,.........,..#",
-            "#...##....##...#",
-            "#.....,........#",
-            "#.=..s.....,.=.#",
-            "#....,..c......#",
-            "#.F......=..F..#",
+            "#..r..r_...r...#",
+            "#.x.xx_x.xx.x..#",
+            "#.$...._.......#",
+            "#.,...._....,..#",
+            "#...##._..##...#",
+            "#....:,_.......#",
+            "#.=..s._...,.=.#",
+            "#....,._c..$...#",
+            "#.F...._.=..F:.#",
             "#..,.....,.....#",
             "################" ],
-      walk:'.,', triggers:{s:'b3_c3_line', E:'b3_c3_field_on'}, start:{x:7, y:10},
+      walk:'.,_:', triggers:{s:'b3_c3_line', E:'b3_c3_field_on'}, start:{x:7, y:10},
+      folk:[{x:12, y:6, kind:'b2soldier', name:'A Host regular', line:'The walls are a mile off and they still look close. Walls do that.'}],
       quest:()=> !S.f.b3_c3Rider ? 'A rider in grey is coming out of the city.' : !c3Key() ? 'The Grey Sword wants an answer. Whiskeyjack is behind the line.' : c3Key() === 'camps' ? 'The postern in the west wall, at the top of the field.' : !S.f.b3_c3Held ? 'The Fourth\'s standard. The gates.' : 'The city, at the top of the field, when the squad is ready.',
       npcs:[
         {id:'c3rider', name:'A Grey Sword', kind:'b3_greysword', x:6, y:3, node:()=>'b3_c3_rider', show:()=>!c3Key(), fresh:()=>!S.f.b3_c3Rider},
@@ -111,21 +116,23 @@ const B3CH3 = {
         {id:'c3dannetf', name:'Dannet', kind:'greysword', x:10, y:4, node:()=>'b3_c3_dannet_field', show:()=>!!S.f.b3_c3Held},
         {id:'c3rhivif', name:'A Rhivi rider', kind:'b3_rhivi_rider', x:13, y:4, node:()=>'b3_c3_rhivi_field', fresh:()=>!S.f.b3_c3RhiviF || (!!S.f.b3_c3Held && !S.f.b3_c3RhiviF2)} ] },
 
-    /* 16 x 12, Capustan's streets (63b).  . paving  , rubble  # wall  = awning  t temple step  w well  c the barricade cart  E back to the square */
+    /* 16 x 12, Capustan's streets (63b).  . paving  , rubble  # wall  = awning  t temple step  w well  c the barricade cart  E back to the square
+       Terrain kit (25b, v13.22): a light touch: rubble in the street (3), crates (8), the Grey Swords' spears (%), and a Capan woman with a broom (folk). */
     { id:'b3_c3_camp', title:'Capustan · a Camp in the south of the city', sub:'Noon · the Grey Swords\' party · a barricade across the street', hint:'Tap ground to move · tap a figure to talk · the barricade; the way back at the bottom of the street', decor:'b3_c3_city',
       map:[ "################",
             "#.==..#..t.t..w#",
-            "#.....#........#",
+            "#.....#......8.#",
             "#,....#..,.....#",
             "#######c########",
-            "#......,.......#",
+            "#3.....,.....3.#",
             "#..=.......=...#",
             "#.,............#",
             "#...w....,.....#",
             "#..=..=.....,..#",
-            "#.......,......#",
+            "#3...%..,.....8#",
             "#######E########" ],
       walk:'.,', triggers:{c:'b3_c3_barricade', E:'b3_c3_camp_on'}, start:{x:9, y:10},
+      folk:[{x:11, y:10, kind:'b3_c3_capan', name:'A Capan woman with a broom', line:'The Seer\'s people came down this street. Now I sweep it. One of us will be finished first.'}],
       quest:()=> !S.f.b3_c3CampDone ? 'The barricade across the street. The Grey Swords are waiting on you.' : 'The Grey Swords\' barracks. The way out is at the bottom of the street.',
       npcs:[
         {id:'c3vet', name:'The Grey Sword', kind:'b3_greysword', x:6, y:6, node:()=>S.f.b3_c3CampDone ? 'b3_c3_vet_after' : 'b3_c3_vet', fresh:()=>!S.f.b3_c3Vet},
@@ -133,21 +140,24 @@ const B3CH3 = {
         {id:'c3dyer', name:'A Capan dyer', kind:'b3_c3_capan', x:2, y:8, node:()=>S.f.b3_c3CampDone ? 'b3_c3_dyer_after' : 'b3_c3_dyer', fresh:()=>!S.f.b3_c3Dyer},
         {id:'c3gidc', name:'A Gidrath', kind:'b3_c3_gidrath', x:12, y:8, node:()=>'b3_c3_gidrath_camp', fresh:()=>!S.f.b3_c3GidCamp} ] },
 
-    /* 16 x 12, the Camps at dusk (63b, night).  . paving  , rubble  # wall  = awning  t the Thrall's steps  D the barracks door  w the square's well  F the legion's fire  c cart  E out of the city */
+    /* 16 x 12, the Camps at dusk (63b, night).  . paving  , rubble  # wall  = awning  t the Thrall's steps  D the barracks door  w the square's well  F the legion's fire  c cart  E out of the city
+       Terrain kit (25b, v13.22): a light touch: lanterns on the square (!), the Grey Swords' spears (%), rubble (3), crates (8), a Capan with a lamp and a Grey Sword on the steps (folk). */
     { id:'b3_c3_dusk', title:'Capustan · the Thrall at dusk', sub:'Dusk · the Camps · the Mask Council in session', hint:'Tap ground to move · tap a figure to talk · the barracks door, the Thrall\'s steps, the well; the way out at the bottom of the square', decor:'b3_c3_city_night', dark:true,
       map:[ "################",
             "#..t.tt.t..#####",
             "#..........#####",
             "#.=.....,..##D##",
-            "#..............#",
-            "#.,....=.....,.#",
+            "#!..........!..#",
+            "#.,....=.....,%#",
             "#..............#",
             "#.=.......F....#",
             "#....c.......=.#",
-            "#..,....w......#",
-            "#..............#",
+            "#..,....w.....3#",
+            "#8.............#",
             "########E#######" ],
       walk:'.,', triggers:{t:'b3_c3_thrall', D:'b3_c3_barracks', w:'b3_c3_well', E:'b3_c3_end'}, start:{x:10, y:10},
+      folk:[{x:13, y:10, kind:'b3_c3_capan', name:'A Capan with a lamp', line:'The Council has been in there since noon. Whatever they are deciding, the rest of us already know.'},
+        {x:9, y:3, kind:'b3_greysword', name:'A Grey Sword on the steps', line:'The Council talks. The Thrall listens. We stand on its steps and do neither.'}],
       quest:()=> !S.f.b3_c3Barracks ? 'The Grey Swords\' barracks, by the lit door. The healers are working.' : S.f.b3_c3Granary === 1 ? 'The Gidrath is waiting by the Thrall\'s steps.' : 'The square: the legion\'s fire, the Thrall\'s steps. The way out of the city at the bottom, when the squad is ready.',
       npcs:[
         {id:'c3itk', name:'The Shield Anvil', kind:'b3_c3_itkovian', x:6, y:2, node:()=>'b3_c3_itkovian', show:()=>!S.f.b3_c3Itk || /^b3_c3_itkovian/.test(S.node || ''), fresh:()=>!S.f.b3_c3Itk},
