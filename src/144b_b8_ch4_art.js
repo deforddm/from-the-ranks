@@ -54,6 +54,23 @@ Object.assign(FIGX, {
     poly(ctx, [[-4.2,-10],[4.2,-10],[3.6,-7],[-3.6,-7]], '#8a8a80'); ctx.fillStyle = 'rgba(40,40,40,.35)'; ctx.fillRect(-3.6, -8.6, 7.2, .6); // the ash-rag over mouth and nose
     ctx.fillStyle = '#2a2018'; ctx.beginPath(); ctx.arc(0, -12.6, 4.4, Math.PI, Math.PI*2); ctx.fill();
     ctx.restore(); },
+  /* a kelyk-mad pilgrim (art-reuse audit, Nov 15, 2026): one of the barrow camp's own (tth-canon R6 S5, W Spindle), who wore Book Four's
+     Dryjhna pilgrim until now. Looks only: FOES.b8_pilgrim keeps its kind; its fig names this. Hurrin's camp coat, hanging open over a
+     pale shirt with the plum stain on it, a bundle on a cord across the back, a tin cup on a string at the hip, wild hair, both hands out */
+  b8_pilgrim(ctx, h, t, o){ ctx.save(); const st = o.still ? 0 : t, sway = Math.sin(st/240 + (o.phase || 0)), c = b2Pick(o, [['#6a5038', '#2a1e12'], ['#5a4a3a', '#221a12'], ['#6e5a40', '#2a2014']]);
+    B2F.grow(ctx, .94, .98); ctx.translate(0, 13); ctx.rotate(.06 + sway*.04); ctx.translate(0, -13); // the stoop, the lurch
+    ell(ctx, -5.6, -3.4, 3.4, 3.8, '#7a6a4c'); B2F.line(ctx, '#4a3a24', .6, [[-8, -5], [-3.4, -1.4]]); // the bundle on the back
+    h.legs('#2e2820'); ctx.fillStyle = '#4a3a2a'; ctx.fillRect(-4.8, 9.8, 3.8, 1.2); ctx.fillRect(1, 10.4, 3.8, 1.2); // rag-bound feet
+    h.torso('#b0a488', '#5a5240', 5); poly(ctx, [[-1.6,-5.4],[2,-5.4],[2.4,1],[1,4.4],[-.4,1.8]], 'rgba(96,38,74,.8)'); // the shirt, the stain on it
+    poly(ctx, [[-6.4,-6],[-1.8,-6],[-2.4,9.6],[-7.4,9.6]], h.armor(c[0], c[1])); poly(ctx, [[2.4,-6],[6.4,-6],[7.4,9.6],[3,9.6]], h.armor(c[0], c[1])); // the coat, hanging open
+    ctx.fillStyle = 'rgba(140,120,80,.4)'; ctx.fillRect(-6, 3, 2.4, 2.2); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(4, 5, 2.2, 2); // its patches
+    B2F.line(ctx, '#6a6050', .4, [[-5.6, 2], [-6.4, 5.4]]); ell(ctx, -6.4, 6.2, 1.2, .9, '#9a9a96'); // the tin cup on its string
+    ctx.fillStyle = '#a08262'; ctx.save(); ctx.translate(5.6, -4.4); ctx.rotate(-1.1 - sway*.12); ctx.fillRect(-1.1, 0, 2.2, 7); ctx.restore(); // the near arm, reaching
+    ctx.fillStyle = '#a08262'; ctx.save(); ctx.translate(-4.4, -4.4); ctx.rotate(-1.3 + sway*.12); ctx.fillRect(-1.1, 0, 2.2, 6.4); ctx.restore(); // the far one too
+    h.head('#a08262', 4.1, -11); h.look('rgba(40,20,30,.85)', -11.2); ctx.fillStyle = 'rgba(96,38,74,.85)'; ctx.fillRect(-1, -8.2, 3, .9); ctx.fillRect(1, -7.4, .7, 1.4); // the stained mouth
+    ctx.fillStyle = 'rgba(30,24,20,.45)'; ctx.fillRect(-3, -8.8, 6.4, 1.6); // stubble
+    B2F.cap(ctx, '#4a4038', 4.6, -12.3); [[-4.6, -13], [-2.4, -16.8], [1, -17.4], [3.8, -15.6], [4.8, -12.4]].forEach(([x, y], i) => B2F.line(ctx, '#4a4038', .8, [[x*.8, y*.86], [x*1.12, y + (i % 2 ? -1.2 : -.6)]])); // the hair, every way
+    ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */

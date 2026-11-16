@@ -197,7 +197,7 @@ const B6CH2 = {
 
   foes:{
     /* looters at the D'rek shrine */
-    b6_c2_looter:{name:'Shrine-looter', sig:'l', kind:'deserter', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in with a long knife at'},
+    b6_c2_looter:{name:'Shrine-looter', sig:'l', kind:'deserter', fig:'b6_bandit', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in with a long knife at'},
     /* people robbing the dead in the villages, and the man who leads them */
     b6_c2_scav:{name:'Corpse-robber', sig:'s', kind:'thug', hp:26, ac:12, atk:9, dmg:[1,8,2], rng:1, mv:4, init:2, verb:'swings a hooked bar at'},
     b6_c2_scavboss:{name:'The robbers\' big man', sig:'H', kind:'bruiser', hp:58, ac:14, atk:10, dmg:[1,10,3], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a cudgel down on'},

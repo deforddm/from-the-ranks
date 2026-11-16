@@ -27,6 +27,33 @@ FIGX.ressa = function(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1); const sw
   ell(ctx, -6.6, 4, 1.5, 1.4, '#3a48a0'); // the far hand
   ctx.restore(); };
 
+/* ---------------- the priest of the Mistress (b6_c4_plaguepriest; art-reuse audit, Nov 15, 2026) ----------------
+   Book Six's own figure for Poliel's priest at the camp's edge, who wore Book Three's Pannion priest until now. Looks only: the foe's
+   kind stays 'b3_c4_priest' for the engine; FOES.b6_c4_plaguepriest.fig names this figure. No source describes her priests (open):
+   sallow and shaven, an ash-and-ochre robe with a dull mustard stole, the hands bound in stained linen, an iron censer on a crook-headed
+   staff with a grey-green thread of smoke. The marked are "pale healed scars, said once or twice" (bh-ch6-notes): two small marks, no more. */
+FIGX.b6_c4_plaguepriest = function(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1, 1.04); const st = o.still ? 0 : t, sw = Math.sin(st/560 + (o.phase || 0));
+  const cx = 11.6 + sw*.5; // the censer swings a little on its chain
+  B2F.line(ctx, '#3a2c1c', 1.3, [[8.2, 13], [8.8, -18]]); B2F.line(ctx, '#3a2c1c', 1.2, [[8.8, -18], [10.4, -19.6], [11.8, -18.4]]); // the staff, its crook
+  B2F.line(ctx, '#4a4640', .45, [[11.8, -18.4], [cx, -12]]); // the chain
+  poly(ctx, [[cx - 1.9, -11.6], [cx + 1.9, -11.6], [cx + 1.5, -8.8], [cx - 1.5, -8.8]], '#3e3a34'); poly(ctx, [[cx - 1.4, -12.6], [cx + 1.4, -12.6], [cx + 1.9, -11.6], [cx - 1.9, -11.6]], '#56504a'); // the censer, pierced lid
+  ctx.fillStyle = 'rgba(214,170,90,.55)'; ctx.fillRect(cx - .9, -10.8, .6, .6); ctx.fillRect(cx + .3, -10.2, .6, .6); // the coals through the holes
+  for (let i = 0; i < 4; i++) { const k = ((st/700) + i/4) % 1; ell(ctx, cx + Math.sin(st/380 + i*1.7)*1.4 - k*1.6, -13 - k*9, .9 + k*1.6, .7 + k*1.1, `rgba(150,168,128,${(.42*(1 - k)).toFixed(3)})`); } // the smoke, grey-green, drifting back
+  h.legs('#2a2418');
+  B2F.robe(ctx, h, '#8e8060', '#2e2616', 6.4, 8.2); ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.fillRect(1.4, -4, .6, 15); ctx.fillRect(-4, -1, .5, 12); // the robe, the colour of old ash, its folds
+  ctx.fillStyle = 'rgba(255,240,200,.1)'; ctx.fillRect(-7, -4, 1.4, 15); // its lit edge
+  ctx.fillStyle = 'rgba(70,58,28,.45)'; ctx.fillRect(-7.6, 9.6, 15.2, 2.4); // the hem, stained
+  poly(ctx, [[-3.4,-6],[-1.2,-6],[-1.6,11.6],[-3.8,11.6]], '#8a7224'); poly(ctx, [[1.4,-6],[3.6,-6],[3.6,11.6],[1.4,11.6]], '#7a6420'); // the stole, dull mustard, to the hem
+  ctx.fillStyle = '#4a3c14'; ctx.fillRect(-3.8, 9.8, 2.2, .8); ctx.fillRect(1.4, 9.8, 2.2, .8); // its dark bands
+  ell(ctx, 7.8, .2, 1.9, 1.8, '#c8bea4'); B2F.line(ctx, 'rgba(110,96,60,.7)', .4, [[6.4, -.4], [9.2, .8]]); // the hand on the staff, bound in linen
+  poly(ctx, [[-6.4,-5.6],[-8.8,-4.4],[-9.2,2.2],[-6.8,2.2]], '#6e6248'); ell(ctx, -8, 3.2, 1.4, 1.3, '#c0b69c'); ctx.fillStyle = 'rgba(120,100,50,.5)'; ctx.fillRect(-9.2, 2.8, 2.4, .5); // the far sleeve, the hand bound too
+  poly(ctx, [[-5.8,-6.6],[5.8,-6.6],[4.2,-3.4],[-4.2,-3.4]], '#5e5236'); // the cowl, fallen back on the shoulders
+  h.head('#a89a70', 4.4, -11.2); ctx.fillStyle = 'rgba(70,60,36,.35)'; ctx.fillRect(-1.4, -10.4, 2, .9); ctx.fillRect(1.6, -10.4, 2, .9); // hollow under the eyes
+  h.look('rgba(30,24,12,.9)', -11.6); ctx.fillStyle = 'rgba(255,250,220,.22)'; ctx.fillRect(-3, -15.4, 3.4, .8); // the shaven crown's shine
+  ell(ctx, -2.6, -13.4, .9, .6, 'rgba(150,120,90,.75)'); ell(ctx, 2.8, -8.8, .7, .5, 'rgba(150,120,90,.7)'); // two marks, healed pale
+  ctx.fillStyle = 'rgba(40,30,16,.55)'; ctx.fillRect(-.6, -8.4, 2.4, .6); // a thin mouth
+  ctx.restore(); };
+
 /* ---------------- Ressa: the bust (in bust units, shoulders at y = 0, the face about y = −74) ---------------- */
 POR.ressa = function(ctx){ const F = {cy:-73, w:12, h:19, jaw:.68, chin:4, skin:'#c09676', iris:'#4a4038', lip:'#a0605a', browCol:'#2a1c16', browW:.85, arch:1.2, browL:.15, browR:0,
     rim:'#9a8aa8', rimA:.2, nose:.9, look:.15, open:.9, smileL:-.2, smileR:-.05, mouthW:3.4, bags:.55, age:0};

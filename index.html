@@ -8064,7 +8064,7 @@ function drawBattle(t){
     ctx.strokeStyle = hot ? 'rgba(255,224,160,.9)' : 'rgba(232,192,115,.3)'; ctx.lineWidth = hot ? 2 : 1; ctx.strokeRect(hv.x*T + 2, hv.y*T + 2, T - 4, T - 4); }
   // corpses first
   B.units.filter(u => u.hp <= 0).forEach(u => { const k = clamp((now - (u.deadAt || 0)) / 900, 0, 1); const d = dispOf(ukey(u), u.x, u.y);
-    ctx.save(); ctx.translate(d.x*T + T/2, d.y*T + T*.6); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); });
+    ctx.save(); ctx.translate(d.x*T + T/2, d.y*T + T*.6); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.fig || u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); });
   // living units
   const cur = B.cur, labels = [];
   B.units.filter(u => u.hp > 0).sort((a,b) => a.y - b.y).forEach(u => {
@@ -8088,7 +8088,7 @@ function drawBattle(t){
     const arrive = u.arrived ? clamp((now - u.arrived) / 450, 0, 1) : 1;
     const bite = B.fx.filter(f => f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur), fx0 = d.x*T + T/2, fy0 = d.y*T + T*.6, held = u.earthUntil >= B.round && !bite.length;
     bite.forEach(f => { f.fr = now; drawTeeth(ctx, f, fx0, fy0, 0, now, T); }); if (held) drawHeld(ctx, u, fx0, fy0, 0, t, T);
-    drawFigure(ctx, u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85});
+    drawFigure(ctx, u.fig || u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85}); // u.fig: a foe's own figure, looks only; kind stays the engine's (docs/art-reuse-audit.md)
     bite.forEach(f => drawTeeth(ctx, f, fx0, fy0, 1, now, T)); if (held) drawHeld(ctx, u, fx0, fy0, 1, t, T);
     if (u.flash && now - u.flash < 160) { ctx.globalCompositeOperation = 'lighter'; ell(ctx, cx, cy - T*.4, T*.35, T*.45, `rgba(255,120,100,${(1 - (now - u.flash)/160)*.6})`); ctx.globalCompositeOperation = 'source-over'; }
     if (u.healed && now - u.healed < 500) glow(ctx, cx, cy - T*.4, T*.9, '#9fe0b8', (1 - (now - u.healed)/500)*.4);
@@ -15988,7 +15988,7 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
 
   foes:{ guildknife:{name:'Guild assassin', sig:'a', hp:14, ac:15, atk:6, dmg:[1,8,2], rng:1, mv:6, init:5, verb:'cuts at'},
          guildveteran:{name:'Guild veteran', sig:'A', hp:24, ac:16, atk:7, dmg:[1,10,3], rng:1, mv:6, init:6, verb:'opens'},
-         guildbow:{name:'Guild crossbow', sig:'b', kind:'xbow', hp:12, ac:14, atk:6, dmg:[1,8,1], rng:5, mv:4, init:5, sk:['pin'], verb:'looses a quarrel at'},
+         guildbow:{name:'Guild crossbow', sig:'b', kind:'xbow', fig:'guildknife', hp:12, ac:14, atk:6, dmg:[1,8,1], rng:5, mv:4, init:5, sk:['pin'], verb:'looses a quarrel at'},
          andiihunter:{name:'Tiste Andii', sig:'T', hp:60, ac:17, atk:8, dmg:[2,6,3], rng:1, mv:6, init:7, boss:true, attacks:2, verb:'takes apart', verb2:'turns and cuts again at'},
          vell:{name:'Vell', sig:'v', hp:10, ac:13, atk:4, dmg:[1,6,1], rng:1, mv:6, init:4, verb:'stabs at'} },
 
@@ -77097,7 +77097,7 @@ const B6CH2 = {
 
   foes:{
     /* looters at the D'rek shrine */
-    b6_c2_looter:{name:'Shrine-looter', sig:'l', kind:'deserter', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in with a long knife at'},
+    b6_c2_looter:{name:'Shrine-looter', sig:'l', kind:'deserter', fig:'b6_bandit', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'goes in with a long knife at'},
     /* people robbing the dead in the villages, and the man who leads them */
     b6_c2_scav:{name:'Corpse-robber', sig:'s', kind:'thug', hp:26, ac:12, atk:9, dmg:[1,8,2], rng:1, mv:4, init:2, verb:'swings a hooked bar at'},
     b6_c2_scavboss:{name:'The robbers\' big man', sig:'H', kind:'bruiser', hp:58, ac:14, atk:10, dmg:[1,10,3], rng:1, mv:4, init:1, boss:true, sk:['rally', 'shove'], verb:'brings a cudgel down on'},
@@ -78990,7 +78990,7 @@ const B6CH4 = {
   foes:{
     /* Poliel's followers at the camp's edge (bh-canon §8; never named, never shown close) */
     b6_c4_mourner:{name:'Follower of the Mistress', sig:'c', kind:(typeof FIGX !== 'undefined' && FIGX.b6_cultist) ? 'b6_cultist' : 'b4_c7_fleer', hp:26, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:4, init:2, verb:'reaches for'},
-    b6_c4_plaguepriest:{name:'Priest of the Mistress', sig:'P', kind:'b3_c4_priest', hp:56, ac:13, atk:10, dmg:[1,8,3], rng:3, mv:4, init:2, boss:true, sk:['daze', 'rally'], verb:'calls the Mistress down on'},
+    b6_c4_plaguepriest:{name:'Priest of the Mistress', sig:'P', kind:'b3_c4_priest', fig:'b6_c4_plaguepriest',hp:56, ac:13, atk:10, dmg:[1,8,3], rng:3, mv:4, init:2, boss:true, sk:['daze', 'rally'], verb:'calls the Mistress down on'},
     /* the gate-ward's crowd, out of the city in the night */
     b6_c4_gateman:{name:'Man of the gate-ward', sig:'m', kind:'b4_c1_tough', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:4, init:1, verb:'swings a cudgel at'},
     b6_c4_ringleader:{name:'The gate-ward\'s ringleader', sig:'R', kind:'b4_c1_tough', hp:48, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'brings a butcher\'s cleaver down on'},
@@ -79597,6 +79597,33 @@ FIGX.ressa = function(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1); const sw
   ctx.fillStyle = '#3a48a0'; ell(ctx, 6.6, 3.2, 1.7, 1.6, '#3a48a0'); ctx.fillStyle = '#5a6ad0'; ctx.fillRect(5.6, 2.2, 1, .8); // the hand, dyed
   B2F.line(ctx, '#2a3466', 1.6, [[6.6, 4], [7.6, 1.6]]); B2F.line(ctx, '#d0d2d4', 1.2, [[7.6, 1.6], [12.6, -5.4 - sway]]); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillRect(9.4, -2, .6, .6);
   ell(ctx, -6.6, 4, 1.5, 1.4, '#3a48a0'); // the far hand
+  ctx.restore(); };
+
+/* ---------------- the priest of the Mistress (b6_c4_plaguepriest; art-reuse audit, Nov 15, 2026) ----------------
+   Book Six's own figure for Poliel's priest at the camp's edge, who wore Book Three's Pannion priest until now. Looks only: the foe's
+   kind stays 'b3_c4_priest' for the engine; FOES.b6_c4_plaguepriest.fig names this figure. No source describes her priests (open):
+   sallow and shaven, an ash-and-ochre robe with a dull mustard stole, the hands bound in stained linen, an iron censer on a crook-headed
+   staff with a grey-green thread of smoke. The marked are "pale healed scars, said once or twice" (bh-ch6-notes): two small marks, no more. */
+FIGX.b6_c4_plaguepriest = function(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1, 1.04); const st = o.still ? 0 : t, sw = Math.sin(st/560 + (o.phase || 0));
+  const cx = 11.6 + sw*.5; // the censer swings a little on its chain
+  B2F.line(ctx, '#3a2c1c', 1.3, [[8.2, 13], [8.8, -18]]); B2F.line(ctx, '#3a2c1c', 1.2, [[8.8, -18], [10.4, -19.6], [11.8, -18.4]]); // the staff, its crook
+  B2F.line(ctx, '#4a4640', .45, [[11.8, -18.4], [cx, -12]]); // the chain
+  poly(ctx, [[cx - 1.9, -11.6], [cx + 1.9, -11.6], [cx + 1.5, -8.8], [cx - 1.5, -8.8]], '#3e3a34'); poly(ctx, [[cx - 1.4, -12.6], [cx + 1.4, -12.6], [cx + 1.9, -11.6], [cx - 1.9, -11.6]], '#56504a'); // the censer, pierced lid
+  ctx.fillStyle = 'rgba(214,170,90,.55)'; ctx.fillRect(cx - .9, -10.8, .6, .6); ctx.fillRect(cx + .3, -10.2, .6, .6); // the coals through the holes
+  for (let i = 0; i < 4; i++) { const k = ((st/700) + i/4) % 1; ell(ctx, cx + Math.sin(st/380 + i*1.7)*1.4 - k*1.6, -13 - k*9, .9 + k*1.6, .7 + k*1.1, `rgba(150,168,128,${(.42*(1 - k)).toFixed(3)})`); } // the smoke, grey-green, drifting back
+  h.legs('#2a2418');
+  B2F.robe(ctx, h, '#8e8060', '#2e2616', 6.4, 8.2); ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.fillRect(1.4, -4, .6, 15); ctx.fillRect(-4, -1, .5, 12); // the robe, the colour of old ash, its folds
+  ctx.fillStyle = 'rgba(255,240,200,.1)'; ctx.fillRect(-7, -4, 1.4, 15); // its lit edge
+  ctx.fillStyle = 'rgba(70,58,28,.45)'; ctx.fillRect(-7.6, 9.6, 15.2, 2.4); // the hem, stained
+  poly(ctx, [[-3.4,-6],[-1.2,-6],[-1.6,11.6],[-3.8,11.6]], '#8a7224'); poly(ctx, [[1.4,-6],[3.6,-6],[3.6,11.6],[1.4,11.6]], '#7a6420'); // the stole, dull mustard, to the hem
+  ctx.fillStyle = '#4a3c14'; ctx.fillRect(-3.8, 9.8, 2.2, .8); ctx.fillRect(1.4, 9.8, 2.2, .8); // its dark bands
+  ell(ctx, 7.8, .2, 1.9, 1.8, '#c8bea4'); B2F.line(ctx, 'rgba(110,96,60,.7)', .4, [[6.4, -.4], [9.2, .8]]); // the hand on the staff, bound in linen
+  poly(ctx, [[-6.4,-5.6],[-8.8,-4.4],[-9.2,2.2],[-6.8,2.2]], '#6e6248'); ell(ctx, -8, 3.2, 1.4, 1.3, '#c0b69c'); ctx.fillStyle = 'rgba(120,100,50,.5)'; ctx.fillRect(-9.2, 2.8, 2.4, .5); // the far sleeve, the hand bound too
+  poly(ctx, [[-5.8,-6.6],[5.8,-6.6],[4.2,-3.4],[-4.2,-3.4]], '#5e5236'); // the cowl, fallen back on the shoulders
+  h.head('#a89a70', 4.4, -11.2); ctx.fillStyle = 'rgba(70,60,36,.35)'; ctx.fillRect(-1.4, -10.4, 2, .9); ctx.fillRect(1.6, -10.4, 2, .9); // hollow under the eyes
+  h.look('rgba(30,24,12,.9)', -11.6); ctx.fillStyle = 'rgba(255,250,220,.22)'; ctx.fillRect(-3, -15.4, 3.4, .8); // the shaven crown's shine
+  ell(ctx, -2.6, -13.4, .9, .6, 'rgba(150,120,90,.75)'); ell(ctx, 2.8, -8.8, .7, .5, 'rgba(150,120,90,.7)'); // two marks, healed pale
+  ctx.fillStyle = 'rgba(40,30,16,.55)'; ctx.fillRect(-.6, -8.4, 2.4, .6); // a thin mouth
   ctx.restore(); };
 
 /* ---------------- Ressa: the bust (in bust units, shoulders at y = 0, the face about y = −74) ---------------- */
@@ -80973,7 +81000,7 @@ const B6CH6 = {
   foes:{
     b6_c6_raidchief:{name:'Bandit captain', sig:'C', kind:'b4_c5_rider', hp:60, ac:15, atk:11, dmg:[1,10,4], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'brings a tulwar down on'},
     b6_c6_banditbow:{name:'Bandit with a bow', sig:'b', kind:'b4_c7_fleerbow', hp:22, ac:13, atk:10, dmg:[1,8,2], rng:5, mv:4, init:2, sk:['pin'], verb:'shoots at'},
-    b6_c6_marked:{name:'One of the marked, preaching', sig:'P', kind:'b4_c7_fleer', hp:52, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'stabs at'},
+    b6_c6_marked:{name:'One of the marked, preaching', sig:'P', kind:'b4_c7_fleer', fig:'b6_cultist', hp:52, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'stabs at'},
     b6_c6_falari:{name:'A Falari water-carrier', kind:'b2soldier', sig:'n', hp:22, ac:14, atk:8, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'swings an axe at'},
   },
 
@@ -84191,7 +84218,7 @@ Object.assign(FOES, {
   /* the Letherii's enemies: Patriotist agents and their bullies, the mob, Edur who do not trust them, and in Chapter 6 the Adjunct's soldiers */
   b7_agent:{name:'Patriotist agent', kind:'b5_letherii', sig:'a', hp:15, ac:13, atk:5, dmg:[1,6,2], rng:1, mv:5, init:3, sk:['bleed'], verb:'slips a knife at'},
   b7_enforcer:{name:'Patriotist enforcer', kind:'bruiser', sig:'b', hp:20, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted club at'},
-  b7_agentchief:{name:'Patriotist captain', kind:'thug', sig:'P', hp:36, ac:14, atk:6, dmg:[1,8,3], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
+  b7_agentchief:{name:'Patriotist captain', kind:'thug', fig:'b7_agent', sig:'P', hp:36, ac:14, atk:6, dmg:[1,8,3], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b7_rioter:{name:'Rioter', kind:'bruiser', sig:'r', hp:13, ac:11, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, verb:'swings a stave at'},
   b7_edurl:{name:'Tiste Edur warrior', kind:'b5_edur', sig:'E', hp:22, ac:14, atk:6, dmg:[1,10,2], rng:1, mv:4, init:2, sk:['parry'], verb:'cuts, grey and quick, at'},
   b7_malregular:{name:'Malazan regular', kind:'b2soldier', sig:'n', hp:22, ac:15, atk:6, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'cuts at'},
@@ -93501,12 +93528,12 @@ Object.assign(FOES, {
   b8_guildbow:{name:'Guild crossbow', kind:'guildknife', sig:'x', hp:24, ac:14, atk:12, dmg:[1,10,4], rng:6, mv:5, init:4, sk:['pin'], verb:'looses a quarrel at', guild:true},
   b8_veteran:{name:'Guild veteran', kind:'guildveteran', sig:'A', hp:46, ac:17, atk:13, dmg:[1,10,5], rng:1, mv:6, init:6, sk:['parry', 'bleed'], verb:'opens', guild:true},
   b8_gmknife:{name:'The Grand Master\'s knife', kind:'guildveteran', sig:'G', hp:84, ac:18, atk:14, dmg:[1,12,6], rng:1, mv:6, init:7, boss:true, sk:['parry', 'bleed', 'shadowstep'], verb:'comes out of nowhere at', guild:true},
-  b8_cultist:{name:'Cultist of the Dying God', kind:'b6_cultist', sig:'c', hp:32, ac:13, atk:11, dmg:[1,8,3], rng:1, mv:4, init:2, verb:'lunges at'},
-  b8_kelykpriest:{name:'Priest of the Dying God', kind:'priest', sig:'P', hp:58, ac:15, atk:12, dmg:[2,6,3], rng:4, mv:3, init:2, boss:true, sk:['daze', 'drain'], verb:'breathes the kelyk on'},
+  b8_cultist:{name:'Cultist of the Dying God', kind:'b6_cultist', fig:'b8_cultist', sig:'c', hp:32, ac:13, atk:11, dmg:[1,8,3], rng:1, mv:4, init:2, verb:'lunges at'},
+  b8_kelykpriest:{name:'Priest of the Dying God', kind:'priest', fig:'b8_kelykpriest', sig:'P', hp:58, ac:15, atk:12, dmg:[2,6,3], rng:4, mv:3, init:2, boss:true, sk:['daze', 'drain'], verb:'breathes the kelyk on'},
   b8_fieldtender:{name:'Field-tender', kind:'tenescowri', sig:'f', hp:28, ac:12, atk:10, dmg:[1,8,3], rng:1, mv:4, init:1, verb:'swings a hook at'},
-  b8_pilgrim:{name:'Kelyk-mad pilgrim', kind:'b4_c2_pilgrim', sig:'p', hp:20, ac:11, atk:9, dmg:[1,6,3], rng:1, mv:5, init:3, verb:'claws at'},
+  b8_pilgrim:{name:'Kelyk-mad pilgrim', kind:'b4_c2_pilgrim', fig:'b8_pilgrim', sig:'p', hp:20, ac:11, atk:9, dmg:[1,6,3], rng:1, mv:5, init:3, verb:'claws at'},
   b8_bravo:{name:'Daru bravo', kind:'thug', sig:'b', hp:34, ac:15, atk:12, dmg:[1,8,4], rng:1, mv:5, init:3, sk:['parry'], verb:'lunges with a rapier at'},
-  b8_bravocaptain:{name:'Bravo with a name', kind:'houseguard', sig:'B', hp:62, ac:16, atk:13, dmg:[1,10,5], rng:1, mv:5, init:4, boss:true, sk:['parry', 'rally'], verb:'duels'},
+  b8_bravocaptain:{name:'Bravo with a name', kind:'houseguard', fig:'b8_bravocaptain', sig:'B', hp:62, ac:16, atk:13, dmg:[1,10,5], rng:1, mv:5, init:4, boss:true, sk:['parry', 'rally'], verb:'duels'},
   b8_raider:{name:'Plains raider', kind:'tenescowri', sig:'r', hp:32, ac:14, atk:11, dmg:[1,8,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'cuts at'},
   b8_hound:{name:'A Hound of Shadow', kind:'hound', sig:'H', hp:999, ac:22, atk:14, dmg:[2,8,6], rng:1, mv:8, init:9, boss:true, immortal:true, b8hound:true, stay:2, verb:'goes through'},
 });
@@ -94930,6 +94957,24 @@ Object.assign(FIGX, {
     h.head('#b08868', 4.7, -11); h.look('rgba(26,14,10,.85)', -11.2); ell(ctx, 2.6, -9, 1.2, .8, 'rgba(170,60,40,.3)'); // a red nose, from the brazier
     ctx.fillStyle = '#6a4a2a'; ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI, 0); ctx.fill(); ctx.fillStyle = '#5a3e22'; ctx.fillRect(-5.2, -12.8, 10.4, 1.4); // the wool cap
     ctx.restore(); },
+  /* the bravo with a name (art-reuse audit, Nov 15, 2026): a Daru duellist for hire, who wore Book One's liveried house guard with a
+     halberd until now. Looks only: FOES.b8_bravocaptain keeps kind 'houseguard'; its fig names this. A fitted coat in wine, a teal sash, a
+     short cape on the far shoulder, a gold torc (tth-canon R1: "Malazan-style torcs are the fashion"), oiled dark hair and a pointed
+     beard; the long thin blade held out and up, a parrying dagger low in the other hand (the duelling schools: Gorlas Vidikas, R1) */
+  b8_bravocaptain(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.04); const st = o.still ? 0 : t, sw = Math.sin(st/400 + (o.phase || 0))*.5;
+    poly(ctx, [[-6.4,-6.4],[-2,-6.4],[-4,8],[-9,6.4]], h.armor('#2e2630', '#0e0a10')); // the short cape, the far shoulder
+    h.legs('#1e1a1e'); ctx.fillStyle = '#120e0c'; ctx.fillRect(-4.6, 7.6, 3.6, 5.4); ctx.fillRect(1, 7.6, 3.6, 5.4); ctx.fillStyle = 'rgba(255,240,220,.16)'; ctx.fillRect(-4.4, 8, .6, 4); // tall boots
+    poly(ctx, [[-5.6,-6],[5.6,-6],[6.4,6],[3.6,9.6],[0,6.4],[-3.6,9.6],[-6.4,6]], h.armor('#7a2a36', '#200a10')); // the fitted coat, its skirts split
+    ctx.fillStyle = 'rgba(255,220,220,.12)'; ctx.fillRect(-5, -5, 1.2, 10); ctx.fillStyle = '#c8a050'; for (let i = 0; i < 4; i++) ctx.fillRect(-.4, -4.6 + i*2.2, .9, .8); // its lit edge, its buttons
+    poly(ctx, [[-6,1],[6,-.6],[6.2,1.2],[-6.2,2.8]], '#2e6a68'); poly(ctx, [[-5.4,2.4],[-4.2,2.2],[-4.8,7],[-6.2,6.6]], '#24585a'); // the teal sash, its tail
+    ctx.fillStyle = '#c49a7a'; ell(ctx, -6.6, 5, 1.3, 1.3, '#c49a7a'); B2F.line(ctx, '#d8d4c8', .8, [[-6.4, 5.6], [-9.6, 9.4 + sw*.4]]); ctx.fillStyle = '#c8a050'; ctx.fillRect(-7.4, 4.6, 2, .7); // the parrying dagger, low
+    ell(ctx, 6.8, 1, 1.5, 1.4, '#c49a7a'); ell(ctx, 7.8, .2, 1.4, 1.2, '#c8a050'); // the sword hand, the cup of the guard
+    B2F.line(ctx, '#e4e0d4', .7, [[8.4, -.4], [17.4, -9.4 - sw]]); ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(12.2, -4.6 - sw*.5, .6, .6); // the long thin blade, out and up
+    B2F.line(ctx, '#d8b060', 1, [[-3.4, -6.4], [0, -5], [3.4, -6.4]]); ell(ctx, -3.4, -6.4, .6, .6, '#e8c878'); ell(ctx, 3.4, -6.4, .6, .6, '#e8c878'); // the torc
+    h.head('#c49a7a', 4.3, -11.2); h.look('rgba(20,10,8,.9)', -11.4);
+    poly(ctx, [[-1.6,-8.2],[3.2,-8.2],[1.4,-5.6]], '#1a1410'); ctx.fillStyle = '#1a1410'; ctx.fillRect(-1, -9, 3.8, .6); // the pointed beard, the moustache
+    B2F.cap(ctx, '#1a1410', 4.6, -12.4, 1.02, 1.98); ell(ctx, -4.4, -11.8, 1.6, 2.4, '#1a1410'); ctx.fillStyle = 'rgba(160,190,220,.3)'; ctx.fillRect(-3, -16.2, 3.4, .7); // dark hair oiled back, the lamp on it
+    ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */
@@ -96015,6 +96060,44 @@ Object.assign(FIGX, {
     B2F.line(ctx, '#2a1a0e', 1.4, [[7.4, 11], [8.4, -20]]); poly(ctx, [[7.6,-20],[8.6,-24],[9.2,-20]], '#8a8a90'); B2F.line(ctx, '#8a8a90', .8, [[8.6, -18.6], [10.4, -17.4]]); // the goad: ash, the point, the hook
     h.head('#a07a5a', 4.6, -11.2); h.look('rgba(26,14,10,.88)', -11.4);
     ctx.fillStyle = '#a82a22'; ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI*.92, Math.PI*2.08); ctx.fill(); poly(ctx, [[-5,-12],[-6.6,-6],[-3.4,-8.6]], '#8a2018'); // the red scarf, its tail
+    ctx.restore(); },
+  /* art-reuse audit (Nov 15, 2026): the Dying God's own people, who wore Book Six's followers of the Chosen and Book Two's priest of Mae.
+     Looks only: the foes keep their kinds; FOES.b8_cultist.fig and FOES.b8_kelykpriest.fig name these. The old Domin's field-folk under
+     Saemankelyk (tth-canon R4 S2, R6 S3: the rag-wrapped scarecrow fields, the risen Pannion towns); kelyk a bruised plum, a stain, kept small.
+     b8_cultist     a drab field smock, rags tied at the wrists the way the poles wear them, a plum stain down the front, swaying; a field hook
+                    held low, or both hands up in the dance; some with a rag bound round the head
+     b8_kelykpriest a long robe of faded plum to the ground, a grey rag mantle over the shoulders, stoppered clay jugs on the cord belt, a
+                    shallow bowl held out, the mouth stained */
+  b8_cultist(ctx, h, t, o){ ctx.save(); const k = b2Pick(o, [0, 1, 2, 1, 0]), st = o.still ? 0 : t, sway = Math.sin(st/260 + (o.phase || 0)); B2F.grow(ctx, .96, 1);
+    ctx.translate(0, 13); ctx.rotate(sway*.05); ctx.translate(0, -13); // the sway
+    ctx.fillStyle = '#5a4a3a'; ctx.fillRect(-4.4, 8, 3.2, 5); ctx.fillRect(1.2, 8, 3.2, 5); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-4.4, 11.4, 3.2, 1.6); ctx.fillRect(1.2, 11.4, 3.2, 1.6); // bare shins, field dirt
+    poly(ctx, [[-6,-6],[6,-6],[7.2,9],[-7.2,9]], h.armor(b2Pick(o, ['#7a705a', '#6a6450', '#80745c']), '#24201a')); ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-.4, -4, .8, 12); // the smock
+    poly(ctx, [[-1.6,-5.8],[2,-5.8],[2.6,.4],[1.4,4],[-.2,1.6],[-1.2,3.2]], 'rgba(96,38,74,.8)'); // the stain down the front
+    ctx.fillStyle = '#4a3a26'; ctx.fillRect(-6.4, 2, 12.8, 1); // a cord at the waist
+    const rag = (x, y, d) => { poly(ctx, [[x, y], [x + d*2.6, y + 1.6 + sway*.5], [x + d*1.4, y + 2.6]], '#a89a78'); poly(ctx, [[x, y + .6], [x + d*1.8, y + 3.4 - sway*.4], [x + d*.6, y + 3.2]], '#6e5e46'); }; // a rag tied at the wrist
+    if (k === 2) { ctx.fillStyle = '#a88a6a'; ctx.save(); ctx.translate(-6.4, -5); ctx.rotate(-.5 - sway*.15); ctx.fillRect(-1.1, -7, 2.2, 7); ctx.restore(); ctx.save(); ctx.translate(6.4, -5); ctx.rotate(.5 + sway*.15); ctx.fillRect(-1.1, -7, 2.2, 7); ctx.restore(); rag(-9.6 - sway*.6, -10.6, -1); rag(9.6 + sway*.6, -10.6, 1); } // both arms up, the dance
+    else { ctx.fillStyle = '#a88a6a'; ctx.fillRect(-8.4, -4.6, 2.2, 6); ctx.fillRect(6.2, -4.6, 2.2, 6); rag(-8.4, .6, -1); rag(8.4, .6, 1);
+      B2F.line(ctx, '#4a3420', 1.2, [[7.4, 2.4], [8.2, 6]]); B2F.line(ctx, '#9a968a', 1, [[8.2, 6], [11.2, 4.4], [12, 1.6], [10.8, .4]]); } // the field hook, low
+    h.head('#a88a6a', 4.3, -11.2); h.look('rgba(40,22,30,.8)', -11.4); ctx.fillStyle = 'rgba(230,220,230,.35)'; ctx.fillRect(-.9, -11.4, .5, .5); ctx.fillRect(2, -11.4, .5, .5); // eyes too bright
+    ctx.fillStyle = 'rgba(96,38,74,.85)'; ctx.fillRect(-1.2, -8.4, 3, .9); ctx.fillRect(.4, -7.6, .8, 1.2); // the stained mouth
+    if (k === 1) { B2F.cap(ctx, '#3a3026', 4.6, -12.3); ctx.fillStyle = '#8a7a5c'; ctx.fillRect(-4.8, -14, 9.6, 1.4); poly(ctx, [[-4.8,-13.6],[-7.6,-11 + sway*.4],[-6.4,-10.4],[-4.4,-12.6]], '#8a7a5c'); } // a rag round the head
+    else { B2F.cap(ctx, b2Pick(o, ['#3a3026', '#4a3a2a', '#2e2620']), 4.7, -12.3); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(-4.2, -16.2, 1, 1.4); ctx.fillRect(2.2, -16.6, 1, 1.6); } // hair, uncombed
+    ctx.restore(); },
+  b8_kelykpriest(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.04, 1.06); const st = o.still ? 0 : t, sw = Math.sin(st/520 + (o.phase || 0));
+    h.legs('#241a20');
+    B2F.robe(ctx, h, '#6a4a5e', '#1e121a', 6.4, 8.4); ctx.fillStyle = 'rgba(0,0,0,.26)'; ctx.fillRect(1.6, -3, .6, 14); ctx.fillRect(-3.6, 0, .5, 11); // the robe, faded plum, its folds
+    ctx.fillStyle = 'rgba(240,220,235,.1)'; ctx.fillRect(-7.2, -3, 1.4, 14); // its lit edge
+    ctx.fillStyle = '#5a4a36'; ctx.fillRect(-6.4, 2.2, 12.8, 1); // the cord belt
+    [[-4.6, 3.4], [-1.6, 3.8], [4.2, 3.4]].forEach(([x, y]) => { ell(ctx, x, y + 1.8, 1.3, 1.6, '#8a6a4a'); ctx.fillStyle = '#3a2a1e'; ctx.fillRect(x - .5, y - .2, 1, 1); ctx.fillStyle = 'rgba(96,38,74,.7)'; ctx.fillRect(x - .4, y + 2.4, .5, 1.2); }); // stoppered jugs on it, a dark drip down one side
+    poly(ctx, [[-7,-6.4],[7,-6.4],[7.6,-1],[5.6,.4],[4.4,-1],[2.4,.8],[0,-.8],[-2.4,.8],[-4.4,-1],[-5.6,.4],[-7.6,-1]], h.armor('#8a847a', '#3a3630')); // the rag mantle, ragged at the edge
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-4, -5.6, .5, 4.6); ctx.fillRect(3, -5.6, .5, 4.6);
+    ctx.fillStyle = '#a08870'; ctx.fillRect(5.6, -2.4, 2.2, 3.6); // the near forearm
+    ell(ctx, 8.6, -1.6 + sw*.3, 2.8, 1, '#6a5a48'); ell(ctx, 8.6, -2 + sw*.3, 2.2, .5, '#5a2244'); // the shallow bowl, held out, kelyk in it
+    ell(ctx, -6.8, 1.6, 1.3, 1.3, '#a08870'); // the far hand
+    poly(ctx, [[-5.6,-6.4],[-5,-15],[0,-17.4],[5,-15],[5.6,-6.4],[3.8,-12],[-3.8,-12]], '#5e5850'); // the rag cowl
+    h.head('#a08870', 4.2, -11); ctx.fillStyle = 'rgba(60,40,40,.3)'; ctx.fillRect(-3.4, -9.6, 1.4, 2.2); ctx.fillRect(2.4, -9.6, 1.4, 2.2); // the sunken cheeks
+    h.look('rgba(40,20,30,.85)', -11.4);
+    ctx.fillStyle = 'rgba(96,38,74,.9)'; ctx.fillRect(-1.4, -8.2, 3.4, 1); ctx.fillRect(.2, -7.4, .8, 1.6); // the stained mouth, a drip from the lip
     ctx.restore(); },
 });
 
@@ -98011,6 +98094,23 @@ Object.assign(FIGX, {
     h.head('#a07a5a', 4.2, -11.2); h.look('rgba(26,16,10,.85)', -11.6);
     poly(ctx, [[-4.2,-10],[4.2,-10],[3.6,-7],[-3.6,-7]], '#8a8a80'); ctx.fillStyle = 'rgba(40,40,40,.35)'; ctx.fillRect(-3.6, -8.6, 7.2, .6); // the ash-rag over mouth and nose
     ctx.fillStyle = '#2a2018'; ctx.beginPath(); ctx.arc(0, -12.6, 4.4, Math.PI, Math.PI*2); ctx.fill();
+    ctx.restore(); },
+  /* a kelyk-mad pilgrim (art-reuse audit, Nov 15, 2026): one of the barrow camp's own (tth-canon R6 S5, W Spindle), who wore Book Four's
+     Dryjhna pilgrim until now. Looks only: FOES.b8_pilgrim keeps its kind; its fig names this. Hurrin's camp coat, hanging open over a
+     pale shirt with the plum stain on it, a bundle on a cord across the back, a tin cup on a string at the hip, wild hair, both hands out */
+  b8_pilgrim(ctx, h, t, o){ ctx.save(); const st = o.still ? 0 : t, sway = Math.sin(st/240 + (o.phase || 0)), c = b2Pick(o, [['#6a5038', '#2a1e12'], ['#5a4a3a', '#221a12'], ['#6e5a40', '#2a2014']]);
+    B2F.grow(ctx, .94, .98); ctx.translate(0, 13); ctx.rotate(.06 + sway*.04); ctx.translate(0, -13); // the stoop, the lurch
+    ell(ctx, -5.6, -3.4, 3.4, 3.8, '#7a6a4c'); B2F.line(ctx, '#4a3a24', .6, [[-8, -5], [-3.4, -1.4]]); // the bundle on the back
+    h.legs('#2e2820'); ctx.fillStyle = '#4a3a2a'; ctx.fillRect(-4.8, 9.8, 3.8, 1.2); ctx.fillRect(1, 10.4, 3.8, 1.2); // rag-bound feet
+    h.torso('#b0a488', '#5a5240', 5); poly(ctx, [[-1.6,-5.4],[2,-5.4],[2.4,1],[1,4.4],[-.4,1.8]], 'rgba(96,38,74,.8)'); // the shirt, the stain on it
+    poly(ctx, [[-6.4,-6],[-1.8,-6],[-2.4,9.6],[-7.4,9.6]], h.armor(c[0], c[1])); poly(ctx, [[2.4,-6],[6.4,-6],[7.4,9.6],[3,9.6]], h.armor(c[0], c[1])); // the coat, hanging open
+    ctx.fillStyle = 'rgba(140,120,80,.4)'; ctx.fillRect(-6, 3, 2.4, 2.2); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(4, 5, 2.2, 2); // its patches
+    B2F.line(ctx, '#6a6050', .4, [[-5.6, 2], [-6.4, 5.4]]); ell(ctx, -6.4, 6.2, 1.2, .9, '#9a9a96'); // the tin cup on its string
+    ctx.fillStyle = '#a08262'; ctx.save(); ctx.translate(5.6, -4.4); ctx.rotate(-1.1 - sway*.12); ctx.fillRect(-1.1, 0, 2.2, 7); ctx.restore(); // the near arm, reaching
+    ctx.fillStyle = '#a08262'; ctx.save(); ctx.translate(-4.4, -4.4); ctx.rotate(-1.3 + sway*.12); ctx.fillRect(-1.1, 0, 2.2, 6.4); ctx.restore(); // the far one too
+    h.head('#a08262', 4.1, -11); h.look('rgba(40,20,30,.85)', -11.2); ctx.fillStyle = 'rgba(96,38,74,.85)'; ctx.fillRect(-1, -8.2, 3, .9); ctx.fillRect(1, -7.4, .7, 1.4); // the stained mouth
+    ctx.fillStyle = 'rgba(30,24,20,.45)'; ctx.fillRect(-3, -8.8, 6.4, 1.6); // stubble
+    B2F.cap(ctx, '#4a4038', 4.6, -12.3); [[-4.6, -13], [-2.4, -16.8], [1, -17.4], [3.8, -15.6], [4.8, -12.4]].forEach(([x, y], i) => B2F.line(ctx, '#4a4038', .8, [[x*.8, y*.86], [x*1.12, y + (i % 2 ? -1.2 : -.6)]])); // the hair, every way
     ctx.restore(); },
 });
 
@@ -102402,7 +102502,7 @@ Object.assign(FOES, {
   b9_desertercap:{name:'Deserter captain', kind:'b5_letherii', sig:'D', hp:70, ac:17, atk:14, dmg:[1,10,6], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'cuts at'},
   b9_raider:{name:'Border raider', kind:'b6_bandit', sig:'r', hp:34, ac:14, atk:13, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
   b9_raiderchief:{name:'Raider chief', kind:'b6_bandit', sig:'R', hp:64, ac:16, atk:14, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
-  b9_dog:{name:'Wastes dog', kind:'b5_c7_greatwolf', sig:'w', hp:22, ac:13, atk:12, dmg:[1,6,5], rng:1, mv:7, init:4, verb:'bites'},
+  b9_dog:{name:'Wastes dog', kind:'b5_c7_greatwolf', fig:'b9_dog', sig:'w', hp:22, ac:13, atk:12, dmg:[1,6,5], rng:1, mv:7, init:4, verb:'bites'},
   b9_bhederin:{name:'Maddened bhederin', kind:'b3_c2_bhederin', sig:'B', hp:84, ac:14, atk:13, dmg:[2,8,5], rng:1, mv:5, init:1, boss:true, sk:['shove'], verb:'gores'},
   b9_nahruk:{name:'Short-tail soldier', kind:'khell', sig:'N', hp:88, ac:18, atk:15, dmg:[1,12,7], rng:1, mv:4, init:2, dr:3, sk:['parry'], resist:{sharper:.5, burner:.5}, weak:{cusser:1.5}, verb:'brings a sword down on'},
   b9_nahrukcaster:{name:'Short-tail sorcerer', kind:'khell', sig:'s', hp:70, ac:16, atk:14, dmg:[2,8,6], rng:5, mv:3, init:2, dr:2, sk:['daze'], resist:{sharper:.5, burner:.5}, weak:{cusser:1.5}, verb:'looses a burst of sorcery at'},
@@ -105784,6 +105884,24 @@ Object.assign(FIGX, {
     ctx.fillStyle = '#4a3420'; ctx.beginPath(); ctx.arc(0, -12.8, 4.9, Math.PI*1.02, Math.PI*1.98); ctx.fill(); // the leather cap
     poly(ctx, [[-4.8,-12.6],[-6.2,-13.6],[-5.6,-15]], '#3a2818'); poly(ctx, [[4.8,-12.6],[6.2,-13.6],[5.6,-15]], '#3a2818'); // the ear-flaps, tied up
     B2F.line(ctx, '#a8a8a0', 1, [[-4.2, -10.6], [-4.8, -4.6]]); B2F.line(ctx, '#a8a8a0', 1, [[4.2, -10.6], [4.8, -4.6]]); // the grey braids
+    ctx.restore(); },
+  /* a dog gone half wild (art-reuse audit, Nov 15, 2026): the Wastes dogs here and Book Ten's half-wild dogs (b10_ldog's fig, 180),
+     who wore Book Five's great wolf, a Jheck half again a wolf's size. Looks only: the foes keep their kinds; their fig names this. Lean and
+     dun with a darker saddle, the ribs showing, one ear up and one down, a ragged tail held high and curled, smaller than any wolf
+     (Claude's call: the game's own animal) */
+  b9_dog(ctx, h, t, o){ ctx.save(); const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28'], ['#8a6e4a', '#3e3020'], ['#a48c66', '#5a4830']]);
+    B2F.grow(ctx, 1.08, 1.06);
+    ctx.fillStyle = c[1]; [[-6, 1], [3.8, -1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3.4, 1.7, 9)); // the far legs
+    B2F.line(ctx, c[0], 1.5, [[-6.8, -1.2], [-9.6, -4.4 + g*.5], [-8.8, -7.4 + g*.4], [-7.2, -6.6]]); poly(ctx, [[-8.8,-7.6],[-10,-8.6],[-8.6,-6.6]], c[0]); // the tail, high and curled, ragged at the end
+    poly(ctx, [[-7.6,-1.6],[-4,-2.8],[2.4,-2.8],[6.4,-2],[7.2,2.4],[4.6,5.4],[1.6,4.6],[-1.6,3.2],[-4.6,4.4],[-7.8,3]], c[0]); // the body: a deep chest, the belly tucked up
+    poly(ctx, [[-7,-1.8],[-3.8,-3],[2.4,-3],[5.6,-2.2],[3,-.8],[-4,-.6]], c[1]); // the saddle, darker
+    [[-1.6, -.4, 2.8], [.2, -.6, 3.2], [2, -.6, 3.4]].forEach(([x, y0, y1]) => B2F.line(ctx, 'rgba(0,0,0,.28)', .45, [[x, y0], [x + .4, y1]])); // the ribs
+    ctx.fillStyle = 'rgba(255,240,210,.14)'; ctx.fillRect(-7, -1.4, 6, .7); // the light along the back
+    poly(ctx, [[5,-2.6],[7.6,-6.2],[10.8,-6.6],[14.4,-4.8],[14.8,-3],[11,-1.8],[7.6,1.8]], c[0]); // the neck and head
+    poly(ctx, [[8.2,-5.8],[8.8,-9.4],[10.4,-6.2]], c[1]); poly(ctx, [[10.2,-6.2],[12.6,-7],[11.6,-5.2]], c[1]); // one ear up, one down
+    ell(ctx, 14.6, -4, .9, .8, '#1a120c'); ell(ctx, 10.4, -4.8, .6, .55, '#1e140a'); ctx.fillStyle = 'rgba(255,220,160,.6)'; ctx.fillRect(10.3, -5.1, .3, .3); // the nose, the eye
+    ctx.fillStyle = 'rgba(240,232,214,.8)'; ctx.fillRect(12.4, -2.6, 1.6, .5); // the teeth
+    ctx.fillStyle = c[0]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3, 1.8, 9.4)); ctx.fillStyle = c[1]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7 - .2, 11.6, 2.2, 1)); // the near legs, the paws
     ctx.restore(); },
 });
 
@@ -111552,7 +111670,7 @@ Object.assign(FOES, {
   b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
   b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
   b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
-  b10_ldog:{name:'Half-wild dog', kind:'b5_c7_greatwolf', sig:'d', hp:22, ac:13, atk:11, dmg:[1,6,4], rng:1, mv:7, init:4, verb:'bites'},
+  b10_ldog:{name:'Half-wild dog', kind:'b5_c7_greatwolf', fig:'b9_dog', sig:'d', hp:22, ac:13, atk:11, dmg:[1,6,4], rng:1, mv:7, init:4, verb:'bites'},
   b10_lforager:{name:'Starving forager', kind:'b6_bandit', sig:'g', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'swings a hook at'},
   b10_lforagerchief:{name:'Foragers\' headman', kind:'b6_bandit', sig:'G', hp:56, ac:15, atk:12, dmg:[1,10,6], rng:1, mv:5, init:2, boss:true, sk:['rally'], verb:'swings a hook at'},
   b10_lstraggler:{name:'Straggler, mad with thirst', kind:'b2soldier', sig:'t', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:4, init:2, verb:'clubs at'},

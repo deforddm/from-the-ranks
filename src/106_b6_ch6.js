@@ -302,7 +302,7 @@ const B6CH6 = {
   foes:{
     b6_c6_raidchief:{name:'Bandit captain', sig:'C', kind:'b4_c5_rider', hp:60, ac:15, atk:11, dmg:[1,10,4], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'brings a tulwar down on'},
     b6_c6_banditbow:{name:'Bandit with a bow', sig:'b', kind:'b4_c7_fleerbow', hp:22, ac:13, atk:10, dmg:[1,8,2], rng:5, mv:4, init:2, sk:['pin'], verb:'shoots at'},
-    b6_c6_marked:{name:'One of the marked, preaching', sig:'P', kind:'b4_c7_fleer', hp:52, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'stabs at'},
+    b6_c6_marked:{name:'One of the marked, preaching', sig:'P', kind:'b4_c7_fleer', fig:'b6_cultist', hp:52, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'stabs at'},
     b6_c6_falari:{name:'A Falari water-carrier', kind:'b2soldier', sig:'n', hp:22, ac:14, atk:8, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'swings an axe at'},
   },
 

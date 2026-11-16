@@ -247,7 +247,7 @@ Object.assign(FOES, {
   /* the Letherii's enemies: Patriotist agents and their bullies, the mob, Edur who do not trust them, and in Chapter 6 the Adjunct's soldiers */
   b7_agent:{name:'Patriotist agent', kind:'b5_letherii', sig:'a', hp:15, ac:13, atk:5, dmg:[1,6,2], rng:1, mv:5, init:3, sk:['bleed'], verb:'slips a knife at'},
   b7_enforcer:{name:'Patriotist enforcer', kind:'bruiser', sig:'b', hp:20, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted club at'},
-  b7_agentchief:{name:'Patriotist captain', kind:'thug', sig:'P', hp:36, ac:14, atk:6, dmg:[1,8,3], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
+  b7_agentchief:{name:'Patriotist captain', kind:'thug', fig:'b7_agent', sig:'P', hp:36, ac:14, atk:6, dmg:[1,8,3], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b7_rioter:{name:'Rioter', kind:'bruiser', sig:'r', hp:13, ac:11, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, verb:'swings a stave at'},
   b7_edurl:{name:'Tiste Edur warrior', kind:'b5_edur', sig:'E', hp:22, ac:14, atk:6, dmg:[1,10,2], rng:1, mv:4, init:2, sk:['parry'], verb:'cuts, grey and quick, at'},
   b7_malregular:{name:'Malazan regular', kind:'b2soldier', sig:'n', hp:22, ac:15, atk:6, dmg:[1,8,2], rng:1, mv:4, init:1, verb:'cuts at'},

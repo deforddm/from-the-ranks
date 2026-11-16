@@ -195,7 +195,7 @@ const B6CH4 = {
   foes:{
     /* Poliel's followers at the camp's edge (bh-canon §8; never named, never shown close) */
     b6_c4_mourner:{name:'Follower of the Mistress', sig:'c', kind:(typeof FIGX !== 'undefined' && FIGX.b6_cultist) ? 'b6_cultist' : 'b4_c7_fleer', hp:26, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:4, init:2, verb:'reaches for'},
-    b6_c4_plaguepriest:{name:'Priest of the Mistress', sig:'P', kind:'b3_c4_priest', hp:56, ac:13, atk:10, dmg:[1,8,3], rng:3, mv:4, init:2, boss:true, sk:['daze', 'rally'], verb:'calls the Mistress down on'},
+    b6_c4_plaguepriest:{name:'Priest of the Mistress', sig:'P', kind:'b3_c4_priest', fig:'b6_c4_plaguepriest',hp:56, ac:13, atk:10, dmg:[1,8,3], rng:3, mv:4, init:2, boss:true, sk:['daze', 'rally'], verb:'calls the Mistress down on'},
     /* the gate-ward's crowd, out of the city in the night */
     b6_c4_gateman:{name:'Man of the gate-ward', sig:'m', kind:'b4_c1_tough', hp:24, ac:12, atk:9, dmg:[1,6,3], rng:1, mv:4, init:1, verb:'swings a cudgel at'},
     b6_c4_ringleader:{name:'The gate-ward\'s ringleader', sig:'R', kind:'b4_c1_tough', hp:48, ac:14, atk:10, dmg:[1,8,4], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'brings a butcher\'s cleaver down on'},

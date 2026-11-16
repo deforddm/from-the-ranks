@@ -46,6 +46,44 @@ Object.assign(FIGX, {
     h.head('#a07a5a', 4.6, -11.2); h.look('rgba(26,14,10,.88)', -11.4);
     ctx.fillStyle = '#a82a22'; ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI*.92, Math.PI*2.08); ctx.fill(); poly(ctx, [[-5,-12],[-6.6,-6],[-3.4,-8.6]], '#8a2018'); // the red scarf, its tail
     ctx.restore(); },
+  /* art-reuse audit (Nov 15, 2026): the Dying God's own people, who wore Book Six's followers of the Chosen and Book Two's priest of Mae.
+     Looks only: the foes keep their kinds; FOES.b8_cultist.fig and FOES.b8_kelykpriest.fig name these. The old Domin's field-folk under
+     Saemankelyk (tth-canon R4 S2, R6 S3: the rag-wrapped scarecrow fields, the risen Pannion towns); kelyk a bruised plum, a stain, kept small.
+     b8_cultist     a drab field smock, rags tied at the wrists the way the poles wear them, a plum stain down the front, swaying; a field hook
+                    held low, or both hands up in the dance; some with a rag bound round the head
+     b8_kelykpriest a long robe of faded plum to the ground, a grey rag mantle over the shoulders, stoppered clay jugs on the cord belt, a
+                    shallow bowl held out, the mouth stained */
+  b8_cultist(ctx, h, t, o){ ctx.save(); const k = b2Pick(o, [0, 1, 2, 1, 0]), st = o.still ? 0 : t, sway = Math.sin(st/260 + (o.phase || 0)); B2F.grow(ctx, .96, 1);
+    ctx.translate(0, 13); ctx.rotate(sway*.05); ctx.translate(0, -13); // the sway
+    ctx.fillStyle = '#5a4a3a'; ctx.fillRect(-4.4, 8, 3.2, 5); ctx.fillRect(1.2, 8, 3.2, 5); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-4.4, 11.4, 3.2, 1.6); ctx.fillRect(1.2, 11.4, 3.2, 1.6); // bare shins, field dirt
+    poly(ctx, [[-6,-6],[6,-6],[7.2,9],[-7.2,9]], h.armor(b2Pick(o, ['#7a705a', '#6a6450', '#80745c']), '#24201a')); ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-.4, -4, .8, 12); // the smock
+    poly(ctx, [[-1.6,-5.8],[2,-5.8],[2.6,.4],[1.4,4],[-.2,1.6],[-1.2,3.2]], 'rgba(96,38,74,.8)'); // the stain down the front
+    ctx.fillStyle = '#4a3a26'; ctx.fillRect(-6.4, 2, 12.8, 1); // a cord at the waist
+    const rag = (x, y, d) => { poly(ctx, [[x, y], [x + d*2.6, y + 1.6 + sway*.5], [x + d*1.4, y + 2.6]], '#a89a78'); poly(ctx, [[x, y + .6], [x + d*1.8, y + 3.4 - sway*.4], [x + d*.6, y + 3.2]], '#6e5e46'); }; // a rag tied at the wrist
+    if (k === 2) { ctx.fillStyle = '#a88a6a'; ctx.save(); ctx.translate(-6.4, -5); ctx.rotate(-.5 - sway*.15); ctx.fillRect(-1.1, -7, 2.2, 7); ctx.restore(); ctx.save(); ctx.translate(6.4, -5); ctx.rotate(.5 + sway*.15); ctx.fillRect(-1.1, -7, 2.2, 7); ctx.restore(); rag(-9.6 - sway*.6, -10.6, -1); rag(9.6 + sway*.6, -10.6, 1); } // both arms up, the dance
+    else { ctx.fillStyle = '#a88a6a'; ctx.fillRect(-8.4, -4.6, 2.2, 6); ctx.fillRect(6.2, -4.6, 2.2, 6); rag(-8.4, .6, -1); rag(8.4, .6, 1);
+      B2F.line(ctx, '#4a3420', 1.2, [[7.4, 2.4], [8.2, 6]]); B2F.line(ctx, '#9a968a', 1, [[8.2, 6], [11.2, 4.4], [12, 1.6], [10.8, .4]]); } // the field hook, low
+    h.head('#a88a6a', 4.3, -11.2); h.look('rgba(40,22,30,.8)', -11.4); ctx.fillStyle = 'rgba(230,220,230,.35)'; ctx.fillRect(-.9, -11.4, .5, .5); ctx.fillRect(2, -11.4, .5, .5); // eyes too bright
+    ctx.fillStyle = 'rgba(96,38,74,.85)'; ctx.fillRect(-1.2, -8.4, 3, .9); ctx.fillRect(.4, -7.6, .8, 1.2); // the stained mouth
+    if (k === 1) { B2F.cap(ctx, '#3a3026', 4.6, -12.3); ctx.fillStyle = '#8a7a5c'; ctx.fillRect(-4.8, -14, 9.6, 1.4); poly(ctx, [[-4.8,-13.6],[-7.6,-11 + sway*.4],[-6.4,-10.4],[-4.4,-12.6]], '#8a7a5c'); } // a rag round the head
+    else { B2F.cap(ctx, b2Pick(o, ['#3a3026', '#4a3a2a', '#2e2620']), 4.7, -12.3); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(-4.2, -16.2, 1, 1.4); ctx.fillRect(2.2, -16.6, 1, 1.6); } // hair, uncombed
+    ctx.restore(); },
+  b8_kelykpriest(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.04, 1.06); const st = o.still ? 0 : t, sw = Math.sin(st/520 + (o.phase || 0));
+    h.legs('#241a20');
+    B2F.robe(ctx, h, '#6a4a5e', '#1e121a', 6.4, 8.4); ctx.fillStyle = 'rgba(0,0,0,.26)'; ctx.fillRect(1.6, -3, .6, 14); ctx.fillRect(-3.6, 0, .5, 11); // the robe, faded plum, its folds
+    ctx.fillStyle = 'rgba(240,220,235,.1)'; ctx.fillRect(-7.2, -3, 1.4, 14); // its lit edge
+    ctx.fillStyle = '#5a4a36'; ctx.fillRect(-6.4, 2.2, 12.8, 1); // the cord belt
+    [[-4.6, 3.4], [-1.6, 3.8], [4.2, 3.4]].forEach(([x, y]) => { ell(ctx, x, y + 1.8, 1.3, 1.6, '#8a6a4a'); ctx.fillStyle = '#3a2a1e'; ctx.fillRect(x - .5, y - .2, 1, 1); ctx.fillStyle = 'rgba(96,38,74,.7)'; ctx.fillRect(x - .4, y + 2.4, .5, 1.2); }); // stoppered jugs on it, a dark drip down one side
+    poly(ctx, [[-7,-6.4],[7,-6.4],[7.6,-1],[5.6,.4],[4.4,-1],[2.4,.8],[0,-.8],[-2.4,.8],[-4.4,-1],[-5.6,.4],[-7.6,-1]], h.armor('#8a847a', '#3a3630')); // the rag mantle, ragged at the edge
+    ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-4, -5.6, .5, 4.6); ctx.fillRect(3, -5.6, .5, 4.6);
+    ctx.fillStyle = '#a08870'; ctx.fillRect(5.6, -2.4, 2.2, 3.6); // the near forearm
+    ell(ctx, 8.6, -1.6 + sw*.3, 2.8, 1, '#6a5a48'); ell(ctx, 8.6, -2 + sw*.3, 2.2, .5, '#5a2244'); // the shallow bowl, held out, kelyk in it
+    ell(ctx, -6.8, 1.6, 1.3, 1.3, '#a08870'); // the far hand
+    poly(ctx, [[-5.6,-6.4],[-5,-15],[0,-17.4],[5,-15],[5.6,-6.4],[3.8,-12],[-3.8,-12]], '#5e5850'); // the rag cowl
+    h.head('#a08870', 4.2, -11); ctx.fillStyle = 'rgba(60,40,40,.3)'; ctx.fillRect(-3.4, -9.6, 1.4, 2.2); ctx.fillRect(2.4, -9.6, 1.4, 2.2); // the sunken cheeks
+    h.look('rgba(40,20,30,.85)', -11.4);
+    ctx.fillStyle = 'rgba(96,38,74,.9)'; ctx.fillRect(-1.4, -8.2, 3.4, 1); ctx.fillRect(.2, -7.4, .8, 1.6); // the stained mouth, a drip from the lip
+    ctx.restore(); },
 });
 
 /* ---------------- ground ---------------- */

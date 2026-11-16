@@ -903,7 +903,7 @@ function drawBattle(t){
     ctx.strokeStyle = hot ? 'rgba(255,224,160,.9)' : 'rgba(232,192,115,.3)'; ctx.lineWidth = hot ? 2 : 1; ctx.strokeRect(hv.x*T + 2, hv.y*T + 2, T - 4, T - 4); }
   // corpses first
   B.units.filter(u => u.hp <= 0).forEach(u => { const k = clamp((now - (u.deadAt || 0)) / 900, 0, 1); const d = dispOf(ukey(u), u.x, u.y);
-    ctx.save(); ctx.translate(d.x*T + T/2, d.y*T + T*.6); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); });
+    ctx.save(); ctx.translate(d.x*T + T/2, d.y*T + T*.6); if (u.fell) { ctx.scale(1 - k*.85, 1 - k*.85); ctx.globalAlpha = 1 - k; } else { ctx.rotate(ease(k) * Math.PI/2 * (u.facing || 1)); ctx.globalAlpha = 1 - k*.55; } /* over the edge: it dwindles away down the drop */ drawFigure(ctx, u.fig || u.kind, 0, 0, T/32*(u.boss ? 1.3 : 1), t, {still:true}); ctx.restore(); });
   // living units
   const cur = B.cur, labels = [];
   B.units.filter(u => u.hp > 0).sort((a,b) => a.y - b.y).forEach(u => {
@@ -927,7 +927,7 @@ function drawBattle(t){
     const arrive = u.arrived ? clamp((now - u.arrived) / 450, 0, 1) : 1;
     const bite = B.fx.filter(f => f.kind === 'teeth' && f.x === u.x && f.y === u.y && now >= f.t && now - f.t < f.dur), fx0 = d.x*T + T/2, fy0 = d.y*T + T*.6, held = u.earthUntil >= B.round && !bite.length;
     bite.forEach(f => { f.fr = now; drawTeeth(ctx, f, fx0, fy0, 0, now, T); }); if (held) drawHeld(ctx, u, fx0, fy0, 0, t, T);
-    drawFigure(ctx, u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85});
+    drawFigure(ctx, u.fig || u.kind, cx, cy, sc, t, {phase:u.x*3 + u.y, dir:u.facing || (u.side === 'e' ? -1 : 1), still:u.stun, alpha:RM ? 1 : .15 + arrive*.85}); // u.fig: a foe's own figure, looks only; kind stays the engine's (docs/art-reuse-audit.md)
     bite.forEach(f => drawTeeth(ctx, f, fx0, fy0, 1, now, T)); if (held) drawHeld(ctx, u, fx0, fy0, 1, t, T);
     if (u.flash && now - u.flash < 160) { ctx.globalCompositeOperation = 'lighter'; ell(ctx, cx, cy - T*.4, T*.35, T*.45, `rgba(255,120,100,${(1 - (now - u.flash)/160)*.6})`); ctx.globalCompositeOperation = 'source-over'; }
     if (u.healed && now - u.healed < 500) glow(ctx, cx, cy - T*.4, T*.9, '#9fe0b8', (1 - (now - u.healed)/500)*.4);

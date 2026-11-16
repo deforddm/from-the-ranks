@@ -65,6 +65,24 @@ Object.assign(FIGX, {
     h.head('#b08868', 4.7, -11); h.look('rgba(26,14,10,.85)', -11.2); ell(ctx, 2.6, -9, 1.2, .8, 'rgba(170,60,40,.3)'); // a red nose, from the brazier
     ctx.fillStyle = '#6a4a2a'; ctx.beginPath(); ctx.arc(0, -12.4, 5, Math.PI, 0); ctx.fill(); ctx.fillStyle = '#5a3e22'; ctx.fillRect(-5.2, -12.8, 10.4, 1.4); // the wool cap
     ctx.restore(); },
+  /* the bravo with a name (art-reuse audit, Nov 15, 2026): a Daru duellist for hire, who wore Book One's liveried house guard with a
+     halberd until now. Looks only: FOES.b8_bravocaptain keeps kind 'houseguard'; its fig names this. A fitted coat in wine, a teal sash, a
+     short cape on the far shoulder, a gold torc (tth-canon R1: "Malazan-style torcs are the fashion"), oiled dark hair and a pointed
+     beard; the long thin blade held out and up, a parrying dagger low in the other hand (the duelling schools: Gorlas Vidikas, R1) */
+  b8_bravocaptain(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .98, 1.04); const st = o.still ? 0 : t, sw = Math.sin(st/400 + (o.phase || 0))*.5;
+    poly(ctx, [[-6.4,-6.4],[-2,-6.4],[-4,8],[-9,6.4]], h.armor('#2e2630', '#0e0a10')); // the short cape, the far shoulder
+    h.legs('#1e1a1e'); ctx.fillStyle = '#120e0c'; ctx.fillRect(-4.6, 7.6, 3.6, 5.4); ctx.fillRect(1, 7.6, 3.6, 5.4); ctx.fillStyle = 'rgba(255,240,220,.16)'; ctx.fillRect(-4.4, 8, .6, 4); // tall boots
+    poly(ctx, [[-5.6,-6],[5.6,-6],[6.4,6],[3.6,9.6],[0,6.4],[-3.6,9.6],[-6.4,6]], h.armor('#7a2a36', '#200a10')); // the fitted coat, its skirts split
+    ctx.fillStyle = 'rgba(255,220,220,.12)'; ctx.fillRect(-5, -5, 1.2, 10); ctx.fillStyle = '#c8a050'; for (let i = 0; i < 4; i++) ctx.fillRect(-.4, -4.6 + i*2.2, .9, .8); // its lit edge, its buttons
+    poly(ctx, [[-6,1],[6,-.6],[6.2,1.2],[-6.2,2.8]], '#2e6a68'); poly(ctx, [[-5.4,2.4],[-4.2,2.2],[-4.8,7],[-6.2,6.6]], '#24585a'); // the teal sash, its tail
+    ctx.fillStyle = '#c49a7a'; ell(ctx, -6.6, 5, 1.3, 1.3, '#c49a7a'); B2F.line(ctx, '#d8d4c8', .8, [[-6.4, 5.6], [-9.6, 9.4 + sw*.4]]); ctx.fillStyle = '#c8a050'; ctx.fillRect(-7.4, 4.6, 2, .7); // the parrying dagger, low
+    ell(ctx, 6.8, 1, 1.5, 1.4, '#c49a7a'); ell(ctx, 7.8, .2, 1.4, 1.2, '#c8a050'); // the sword hand, the cup of the guard
+    B2F.line(ctx, '#e4e0d4', .7, [[8.4, -.4], [17.4, -9.4 - sw]]); ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(12.2, -4.6 - sw*.5, .6, .6); // the long thin blade, out and up
+    B2F.line(ctx, '#d8b060', 1, [[-3.4, -6.4], [0, -5], [3.4, -6.4]]); ell(ctx, -3.4, -6.4, .6, .6, '#e8c878'); ell(ctx, 3.4, -6.4, .6, .6, '#e8c878'); // the torc
+    h.head('#c49a7a', 4.3, -11.2); h.look('rgba(20,10,8,.9)', -11.4);
+    poly(ctx, [[-1.6,-8.2],[3.2,-8.2],[1.4,-5.6]], '#1a1410'); ctx.fillStyle = '#1a1410'; ctx.fillRect(-1, -9, 3.8, .6); // the pointed beard, the moustache
+    B2F.cap(ctx, '#1a1410', 4.6, -12.4, 1.02, 1.98); ell(ctx, -4.4, -11.8, 1.6, 2.4, '#1a1410'); ctx.fillStyle = 'rgba(160,190,220,.3)'; ctx.fillRect(-3, -16.2, 3.4, .7); // dark hair oiled back, the lamp on it
+    ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */

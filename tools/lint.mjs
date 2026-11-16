@@ -229,7 +229,7 @@ const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, ob
     if (!DLG[b.after]) err(`battle ${bid}: after -> missing node ${b.after}`); else refd.add(b.after);
     (b.party || []).forEach(([x, y], i) => { if ((b.map[y] || '')[x] !== '.' && (b.map[y] || '')[x] !== ',' && !(b.style === 'barrow' && (b.map[y] || '')[x] === 'm')) warn(`battle ${bid}: party slot ${i} at ${x},${y} is '${(b.map[y] || '')[x]}'`); });
     if ((b.party || []).length < 6) warn(`battle ${bid}: only ${(b.party || []).length} party slots (Ellis makes 6)`);
-    const chkFoe = (f, where) => { if (!FOES[f[0]]) err(`battle ${bid}: ${where} foe ${f[0]} missing`); else { const k = FOES[f[0]].kind || f[0]; if (!spriteKinds.includes(k)) warn(`battle ${bid}: foe ${f[0]} kind ${k} has no sprite case`); } if ((b.map[f[2]] || '')[f[1]] === '#') err(`battle ${bid}: ${where} foe ${f[0]} placed on wall ${f[1]},${f[2]}`); };
+    const chkFoe = (f, where) => { if (!FOES[f[0]]) err(`battle ${bid}: ${where} foe ${f[0]} missing`); else { const k = FOES[f[0]].kind || f[0]; if (!spriteKinds.includes(k)) warn(`battle ${bid}: foe ${f[0]} kind ${k} has no sprite case`); const fg = FOES[f[0]].fig; if (fg && !spriteKinds.includes(fg)) err(`battle ${bid}: foe ${f[0]} fig ${fg} has no figure`); } if ((b.map[f[2]] || '')[f[1]] === '#') err(`battle ${bid}: ${where} foe ${f[0]} placed on wall ${f[1]},${f[2]}`); };
     b.foes.forEach(f => chkFoe(f, 'start'));
     (b.waves || []).forEach(w => w.foes.forEach(f => chkFoe(f, 'wave' + w.round)));
     (b.allies || []).forEach(f => { if (!FOES[f[0]]) err(`battle ${bid}: ally ${f[0]} missing`); });

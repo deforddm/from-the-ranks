@@ -140,7 +140,7 @@ Ocelot sent more than four. A crossbow on the gallery steps. Two more in soot-bl
 
   foes:{ guildknife:{name:'Guild assassin', sig:'a', hp:14, ac:15, atk:6, dmg:[1,8,2], rng:1, mv:6, init:5, verb:'cuts at'},
          guildveteran:{name:'Guild veteran', sig:'A', hp:24, ac:16, atk:7, dmg:[1,10,3], rng:1, mv:6, init:6, verb:'opens'},
-         guildbow:{name:'Guild crossbow', sig:'b', kind:'xbow', hp:12, ac:14, atk:6, dmg:[1,8,1], rng:5, mv:4, init:5, sk:['pin'], verb:'looses a quarrel at'},
+         guildbow:{name:'Guild crossbow', sig:'b', kind:'xbow', fig:'guildknife', hp:12, ac:14, atk:6, dmg:[1,8,1], rng:5, mv:4, init:5, sk:['pin'], verb:'looses a quarrel at'},
          andiihunter:{name:'Tiste Andii', sig:'T', hp:60, ac:17, atk:8, dmg:[2,6,3], rng:1, mv:6, init:7, boss:true, attacks:2, verb:'takes apart', verb2:'turns and cuts again at'},
          vell:{name:'Vell', sig:'v', hp:10, ac:13, atk:4, dmg:[1,6,1], rng:1, mv:6, init:4, verb:'stabs at'} },
 

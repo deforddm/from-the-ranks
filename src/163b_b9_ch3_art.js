@@ -68,6 +68,24 @@ Object.assign(FIGX, {
     poly(ctx, [[-4.8,-12.6],[-6.2,-13.6],[-5.6,-15]], '#3a2818'); poly(ctx, [[4.8,-12.6],[6.2,-13.6],[5.6,-15]], '#3a2818'); // the ear-flaps, tied up
     B2F.line(ctx, '#a8a8a0', 1, [[-4.2, -10.6], [-4.8, -4.6]]); B2F.line(ctx, '#a8a8a0', 1, [[4.2, -10.6], [4.8, -4.6]]); // the grey braids
     ctx.restore(); },
+  /* a dog gone half wild (art-reuse audit, Nov 15, 2026): the Wastes dogs here and Book Ten's half-wild dogs (b10_ldog's fig, 180),
+     who wore Book Five's great wolf, a Jheck half again a wolf's size. Looks only: the foes keep their kinds; their fig names this. Lean and
+     dun with a darker saddle, the ribs showing, one ear up and one down, a ragged tail held high and curled, smaller than any wolf
+     (Claude's call: the game's own animal) */
+  b9_dog(ctx, h, t, o){ ctx.save(); const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28'], ['#8a6e4a', '#3e3020'], ['#a48c66', '#5a4830']]);
+    B2F.grow(ctx, 1.08, 1.06);
+    ctx.fillStyle = c[1]; [[-6, 1], [3.8, -1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3.4, 1.7, 9)); // the far legs
+    B2F.line(ctx, c[0], 1.5, [[-6.8, -1.2], [-9.6, -4.4 + g*.5], [-8.8, -7.4 + g*.4], [-7.2, -6.6]]); poly(ctx, [[-8.8,-7.6],[-10,-8.6],[-8.6,-6.6]], c[0]); // the tail, high and curled, ragged at the end
+    poly(ctx, [[-7.6,-1.6],[-4,-2.8],[2.4,-2.8],[6.4,-2],[7.2,2.4],[4.6,5.4],[1.6,4.6],[-1.6,3.2],[-4.6,4.4],[-7.8,3]], c[0]); // the body: a deep chest, the belly tucked up
+    poly(ctx, [[-7,-1.8],[-3.8,-3],[2.4,-3],[5.6,-2.2],[3,-.8],[-4,-.6]], c[1]); // the saddle, darker
+    [[-1.6, -.4, 2.8], [.2, -.6, 3.2], [2, -.6, 3.4]].forEach(([x, y0, y1]) => B2F.line(ctx, 'rgba(0,0,0,.28)', .45, [[x, y0], [x + .4, y1]])); // the ribs
+    ctx.fillStyle = 'rgba(255,240,210,.14)'; ctx.fillRect(-7, -1.4, 6, .7); // the light along the back
+    poly(ctx, [[5,-2.6],[7.6,-6.2],[10.8,-6.6],[14.4,-4.8],[14.8,-3],[11,-1.8],[7.6,1.8]], c[0]); // the neck and head
+    poly(ctx, [[8.2,-5.8],[8.8,-9.4],[10.4,-6.2]], c[1]); poly(ctx, [[10.2,-6.2],[12.6,-7],[11.6,-5.2]], c[1]); // one ear up, one down
+    ell(ctx, 14.6, -4, .9, .8, '#1a120c'); ell(ctx, 10.4, -4.8, .6, .55, '#1e140a'); ctx.fillStyle = 'rgba(255,220,160,.6)'; ctx.fillRect(10.3, -5.1, .3, .3); // the nose, the eye
+    ctx.fillStyle = 'rgba(240,232,214,.8)'; ctx.fillRect(12.4, -2.6, 1.6, .5); // the teeth
+    ctx.fillStyle = c[0]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3, 1.8, 9.4)); ctx.fillStyle = c[1]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7 - .2, 11.6, 2.2, 1)); // the near legs, the paws
+    ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */

@@ -302,7 +302,7 @@ Object.assign(FOES, {
   b9_desertercap:{name:'Deserter captain', kind:'b5_letherii', sig:'D', hp:70, ac:17, atk:14, dmg:[1,10,6], rng:1, mv:4, init:2, boss:true, sk:['rally', 'shove'], verb:'cuts at'},
   b9_raider:{name:'Border raider', kind:'b6_bandit', sig:'r', hp:34, ac:14, atk:13, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
   b9_raiderchief:{name:'Raider chief', kind:'b6_bandit', sig:'R', hp:64, ac:16, atk:14, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
-  b9_dog:{name:'Wastes dog', kind:'b5_c7_greatwolf', sig:'w', hp:22, ac:13, atk:12, dmg:[1,6,5], rng:1, mv:7, init:4, verb:'bites'},
+  b9_dog:{name:'Wastes dog', kind:'b5_c7_greatwolf', fig:'b9_dog', sig:'w', hp:22, ac:13, atk:12, dmg:[1,6,5], rng:1, mv:7, init:4, verb:'bites'},
   b9_bhederin:{name:'Maddened bhederin', kind:'b3_c2_bhederin', sig:'B', hp:84, ac:14, atk:13, dmg:[2,8,5], rng:1, mv:5, init:1, boss:true, sk:['shove'], verb:'gores'},
   b9_nahruk:{name:'Short-tail soldier', kind:'khell', sig:'N', hp:88, ac:18, atk:15, dmg:[1,12,7], rng:1, mv:4, init:2, dr:3, sk:['parry'], resist:{sharper:.5, burner:.5}, weak:{cusser:1.5}, verb:'brings a sword down on'},
   b9_nahrukcaster:{name:'Short-tail sorcerer', kind:'khell', sig:'s', hp:70, ac:16, atk:14, dmg:[2,8,6], rng:5, mv:3, init:2, dr:2, sk:['daze'], resist:{sharper:.5, burner:.5}, weak:{cusser:1.5}, verb:'looses a burst of sorcery at'},
