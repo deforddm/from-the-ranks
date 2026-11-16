@@ -867,7 +867,7 @@ B77FIN.ending = key => {
 `There is no road onward from here. The Third is in Letheras, under a new emperor, a long way from any army it was ever part of.`];
     else P = [
 `The army of the Adjunct goes out of Letheras at the end of a summer, east, without the Third. The Third is already at sea by then, on a big-bellied transport going west, with its names on the master's list under *time served*.`,
-`${mates.length ? `${b77And(mates)} ${mates.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.'} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
+`${(rail => rail.length ? `${b77And(rail)} ${rail.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.')(b77Mates().filter(id => id !== 'ottar').map(NAME))}${b77Mates().includes('ottar') ? ' Ottar is on the quay with his helm under his arm, and does not wave, and does not go.' : ''} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
 `There is no road onward from here. No one is looking for a squad that went home.`];
     P.push(`Lether, at the end: ${B7_RISEW[tier].toLowerCase()} (the Rising stands at ${r} of ${B7_RISEMAX}${b7S().hi > r ? `, and was ${b7S().hi} at its height` : ''}).`);
     return {title:T[0], scene:T[1], paras:P};
