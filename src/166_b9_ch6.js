@@ -143,7 +143,8 @@ const B9CH6 = {
   areas:[
     /* 16 x 12 (b9_c6_field, day). The escort's stretch: ; the plain in front of the line (no walking)  L the shield line  . dry grass
        behind it  , the track along the line's back  m the cairn (the stretch's west end)  d the dry wash (its east end)  F the squad's fire
-       S a shield laid on the plain (the tile-woman)  w the train's wagons at the back  o water barrels  x thorn  r stone */
+       S a shield laid on the plain (the tile-woman)  w the train's wagons at the back  o water barrels  x thorn  r stone
+       Terrain kit (25b, v13.22): folk only (already full): a spearman behind the line and a drover (folk). */
     { id:'b9_c6_line', title:'The Wastes · the escort\'s line', sub:'The Sixth\'s stretch, from the cairn to the dry wash', hint:'Tap ground to move · tap a figure to talk · the line is north, the train south', decor:'b9_c6_field',
       map:[ "rrrrrrrrrrrrrrrr",
             "r;;;;;;;;;;;;;;r",
@@ -158,6 +159,8 @@ const B9CH6 = {
             "r..............r",
             "rrrrrrrrrrrrrrrr" ],
       walk:'.,', triggers:{L:'b9_c6_shields', m:'b9_c6_cairn', d:'b9_c6_washend', F:'b9_c6_fire', S:'b9_c6_shield', w:'b9_c6_drovers', o:'b9_c6_barrels'}, start:{x:5, y:6},
+      folk:[{x:11, y:5, kind:'b5_letherii', name:'A spearman behind the line', line:'Something is coming in that dust. The Finadd says hold. I am holding. I am holding very hard.'},
+            {x:3, y:10, kind:'b8_c2_drover', name:'A drover with a goad', line:'The oxen will not settle. They have been looking east all morning. So have I.'}],
       quest:()=>{ const ph = b96Ph(), f = S.f;
         if (ph === 1) return !f.b9_c6_orders ? 'The Finadd, at the line. He has the morning\'s orders.' : !f.b9_c6_scale ? 'Yelt, at the train behind the line. He is handing something out.' : 'The fire. Then into the line, before the dust gets here.';
         if (ph === 2) return !f.b9_c6_lineDone ? 'The line, north. It is coming.' : !b96Key() ? 'The Finadd. He has the noon\'s orders.' : 'The line.';
@@ -174,7 +177,8 @@ const B9CH6 = {
         {id:'kaedra', name:'Kaedra, with the outriders', kind:'kaedra', x:13, y:4, node:()=>'b9_c6_waiting', show:()=>b96Ph() === 1 && S.f.b9_kaedraDone === 2 && !b9In('kaedra') && !(S.dead && S.dead.kaedra), fresh:()=>false} ] },
 
     /* 16 x 12 (b9_c6_field, day). The supply train at the line's back, the 'train' road: W the wagons drawn in  . grass  , the track  c
-       Orla's water-cart  X oxen on a picket  o barrels  C ration crates  ; dust and open plain past the wagons (no walking) */
+       Orla's water-cart  X oxen on a picket  o barrels  C ration crates  ; dust and open plain past the wagons (no walking)
+       Terrain kit (25b, v13.22): folk only (already full): a carter at his traces (folk). */
     { id:'b9_c6_train', title:'The Wastes · the supply train', sub:'The wagons at the line\'s back', hint:'Tap ground to move · tap a figure to talk · the dust is coming in from the east', decor:'b9_c6_field',
       map:[ "rrrrrrrrrrrrrrrr",
             "rWWWWWWWWWWWWW;r",
@@ -189,6 +193,7 @@ const B9CH6 = {
             "rWWWWWWWWWWWWW;r",
             "rrrrrrrrrrrrrrrr" ],
       walk:'.,', triggers:{W:'b9_c6_tr_wagon', o:'b9_c6_tr_barrels', C:'b9_c6_tr_crates', X:'b9_c6_tr_oxen', c:'b9_c6_tr_orla', ';':'b9_c6_tr_dust'}, start:{x:3, y:6},
+      folk:[{x:10, y:7, kind:'b8_c2_carter', name:'A carter at his traces', line:'Chock the wheels, the Finadd said. In case of what, I said. In case, he said. I have chocked them twice.'}],
       quest:()=> !S.f.b9_c6_trainDone ? 'The east side of the wagons. Something is moving in the dust.' : 'Back to the line. The Finadd\'s runner is waving.',
       npcs:[
         {id:'yelt', name:'Yelt, with the ration book', kind:'b5_c1_clerk', x:7, y:4, node:()=>'b9_c6_tr_yelt', fresh:()=>!S.f.b9_c6_trYelt},
@@ -198,21 +203,23 @@ const B9CH6 = {
 
     /* 16 x 12 (b9_c6_field, dusk). The rise the line pulled back to: L the new line along the crest  ; the plain falling away north and
        east  . the rise's back  F the squad's fire  w the train drawn in  E the east end of the rise (the far fight)  B the Commander's
-       banner, far down the line (west) */
+       banner, far down the line (west)
+       Terrain kit (25b, v13.22): a light touch: weapon stacks behind the new line (%), cookfires (0), tents (6, as its T), water barrels (&, as its o), trodden ground (:), and a soldier at the barrels (folk). */
     { id:'b9_c6_rise', title:'The Wastes · the rise', sub:'Dusk · the line pulled back', hint:'Tap ground to move · tap a figure to talk · the east end of the rise looks toward the foreigners', decor:'b9_c6_field',
       map:[ "rrrrrrrrrrrrrrrr",
             "r;;;;;;;;;;;;;;r",
             "rBLLLLLLLLLLLLEr",
-            "r..............r",
-            "r....F.........r",
-            "r..........x...r",
+            "r.%.......:..%.r",
+            "r....F:........r",
+            "r..&.......x.0.r",
             "r,,,,,,,,,,,,,,r",
             "r..............r",
-            "r.ww..ww..ww...r",
-            "r..............r",
-            "r..............r",
+            "r.ww..ww..ww.6.r",
+            "r..:.....&.....r",
+            "r.6...0....6...r",
             "rrrrrrrrrrrrrrrr" ],
-      walk:'.,', triggers:{L:'b9_c6_newline', E:'b9_c6_edge', B:'b9_c6_banner', F:'b9_c6_fire', w:'b9_c6_eve_train'}, start:{x:4, y:6},
+      walk:'.,:', triggers:{L:'b9_c6_newline', E:'b9_c6_edge', B:'b9_c6_banner', F:'b9_c6_fire', w:'b9_c6_eve_train'}, start:{x:4, y:6},
+      folk:[{x:8, y:9, kind:'b5_letherii', name:'A Letherii soldier at the barrels', line:'They pulled us back to the rise. Higher ground, the Finadd says. I can see further. I liked it better not seeing.'}],
       quest:()=> !b96Road() ? 'The Finadd, by the fire. He has a question for every sergeant tonight.' : !(S.b9 && S.b9.wit && S.b9.wit.c6) ? 'The fire.' : 'The fire. Then night.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:7, y:4, node:()=>'b9_c6_ennic5', fresh:()=>!b96Road()},

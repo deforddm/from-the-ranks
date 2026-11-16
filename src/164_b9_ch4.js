@@ -117,21 +117,23 @@ const B9CH4 = {
   areas:[
     /* 16 x 12 (b9_c4_wastes, dusk and night). The train's camp: W the ring of wagons  . dry grass  , the track through  F the squad's fire
        T tents  w a wagon inside the ring  o water barrels  C a ration crate (the tile-woman)  X oxen on a picket  c Orla's cart
-       h the outriders' horse lines */
+       h the outriders' horse lines
+       Terrain kit (25b, v13.22): a light touch: another tent (6, as its T), a dung-fire (0), a water barrel (&, as its o), ration crates (8, as its C), a lantern at the clerk's tailboard (!), trampled ground (:), and a soldier at the fire (folk). */
     { id:'b9_c4_camp', title:'The Wastes · the escort\'s train', sub:'The wagons drawn in', hint:'Tap ground to move · tap a figure to talk · the water wagons are east, the horse lines south-east', decor:'b9_c4_wastes', dark:true,
       map:[ "WWWWWWWWWWWWWWWW",
-            "W..............W",
+            "W......6.......W",
             "W.T.T.....oo.w.W",
-            "W.........C....W",
+            "W.........C..!.W",
             "W..F......,....W",
-            "W.........,..X.W",
+            "W.:.......,..X.W",
             "W..T......,..X.W",
-            "W....c....,....W",
-            "W.........,....W",
-            "W.T.T.......hh.W",
-            "W..............W",
+            "W....c..0.,....W",
+            "W.&.......,....W",
+            "W.T.T..6....hh.W",
+            "W..8...........W",
             "WWWWWWWWWWWWWWWW" ],
-      walk:'.,', triggers:{F:'b9_c4_fire', C:'b9_c4_crate', o:'b9_c4_barrels', w:'b9_c4_wagon', X:'b9_c4_oxen', c:'b9_c4_cart', h:'b9_c4_horses', W:'b9_c4_ring'}, start:{x:5, y:5},
+      walk:'.,:', triggers:{F:'b9_c4_fire', C:'b9_c4_crate', o:'b9_c4_barrels', w:'b9_c4_wagon', X:'b9_c4_oxen', c:'b9_c4_cart', h:'b9_c4_horses', W:'b9_c4_ring'}, start:{x:5, y:5},
+      folk:[{x:8, y:8, kind:'b5_letherii', name:'A Letherii soldier by the dung-fire', line:'You get used to the smell. That is what they told me. They told me that a month ago. I am still waiting.'}],
       quest:()=>{ const ph = b94Ph();
         if (ph === 1) return !S.f.b9_c4_orders1 ? 'The Finadd, by the tents. He has the night\'s word.' : !b94KSettled() ? 'The horse lines, south-east. A scout on foot came in with the outriders.' : !S.f.b9_c4_countTried ? 'Yelt, at the water wagons. His count is short.' : 'The fire. Then sit the train tonight.';
         if (ph === 2) return !S.f.b9_c4_raidDone ? 'The water wagons, north-east. Something is moving out there.' : !S.f.b9_c4_closed ? 'Yelt, and his count.' : 'The fire. Then sleep, what is left of the night.';
@@ -151,21 +153,23 @@ const B9CH4 = {
         {id:'aranict', name:'The Atri-Ceda', kind:'b9v_aranict', x:6, y:3, node:()=>'b9_c4_brys', show:()=>b94BrysHere(), fresh:()=>!S.f.b9_c4_brys} ] },
 
     /* 16 x 12 (b9_c4_wastes, day). The noon halt on open country: r bare stone  . dry grass  , the column's track  w the train halted
-       along it  o barrels  h the outriders' horses  m an old cairn  x thorn  s the herd's track (after the stampede)  > the track east */
+       along it  o barrels  h the outriders' horses  m an old cairn  x thorn  s the herd's track (after the stampede)  > the track east
+       Terrain kit (25b, v13.22): the Wastes kept empty: banks raised in the corners of the rim (1), thorn (2), old stone and boulders (3, 4), bones at a distance ($), a tuft (*), trodden ground by the wagons (:), and one soldier in a wagon's shade (folk). */
     { id:'b9_c4_wastes', title:'The Wastes · the noon halt', sub:'Day · the train halted on the track', hint:'Tap ground to move · tap a figure to talk · the outriders are north-east', decor:'b9_c4_wastes',
       map:[ "rrrrrrrrrrrrrrrr",
-            "r......x.......r",
-            "r..m.......hh..r",
-            "r..............r",
+            "r11...3x.....11r",
+            "r1.m..$....hh.1r",
+            "r2.............r",
             "r,,,,,,,,,,,,,,>",
             "rwwww.oo.wwww..r",
-            "r..............r",
-            "r.......x......r",
-            "r...s..........r",
-            "r..............r",
-            "r.....x.....x..r",
+            "r....:...:.....r",
+            "r.......x...4..r",
+            "r...s.....*...1r",
+            "r1.2.....$....1r",
+            "r11...x..3..x11r",
             "rrrrrrrrrrrrrrrr" ],
-      walk:'.,', triggers:{m:'b9_c4_cairn', h:'b9_c4_outrider', s:'b9_c4_spoor', w:'b9_c4_daywagons', o:'b9_c4_daywagons', '>':'b9_c4_eastward'}, start:{x:3, y:6},
+      walk:'.,:*', triggers:{m:'b9_c4_cairn', h:'b9_c4_outrider', s:'b9_c4_spoor', w:'b9_c4_daywagons', o:'b9_c4_daywagons', '>':'b9_c4_eastward'}, start:{x:3, y:6},
+      folk:[{x:13, y:6, kind:'b5_letherii', name:'A Letherii soldier in a wagon\'s shade', line:'Grass, stone, grass, sky. Yesterday it was stone, grass, sky, grass. Some of the lads say that is progress.'}],
       quest:()=> !S.f.b9_c4_herdDone ? 'The outriders, north-east. Something is raising dust on the northern sky.' : !b94Key() ? (S.f.b9_c4_spoorTried ? 'The Finadd. He has the day\'s orders.' : 'The herd\'s track, south-west. And the Finadd, with the day\'s orders.') : 'On, with the key\'s road.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:6, y:6, node:()=>'b9_c4_ennic3', fresh:()=>!!S.f.b9_c4_herdDone && !b94Key()},
@@ -175,21 +179,23 @@ const B9CH4 = {
         {id:'tilewoman', name:'The tile-woman, on a wagon', kind:'b5_c1_tilewoman', x:7, y:6, node:()=>'b9_c4_tilewagon', fresh:()=>false} ] },
 
     /* 16 x 12 (b9_c4_wastes, day). A dry wash out on the plain, the forage road: r stone  . dry grass on the banks  , the wash's bed
-       e a seep  x thorn  < back to the column */
+       e a seep  x thorn  < back to the column
+       Terrain kit (25b, v13.22): the wash's banks raised along its lips (1), thorn (2), boulders in the bed (4), the herd's churned ground round the seep (:), old bones ($), and a rider holding the horses (folk). */
     { id:'b9_c4_wash', title:'The Wastes · a dry wash', sub:'Day · out with the outriders', hint:'Tap ground to move · tap a figure to talk · the herd is down in the wash', decor:'b9_c4_wastes',
       map:[ "rrrrrrrrrrrrrrrr",
-            "r....x.....rr..r",
-            "r..............r",
-            "rr,,,,,,,,,,,,rr",
-            "r,,,,,,,,,e,,,,r",
-            "r,,,,,,,,,,,,,,r",
-            "rr,,,,,,,,,,,,rr",
-            "r..............r",
-            "r...x......x...r",
-            "<..............r",
-            "r..rr.......x..r",
+            "r....x..2..rr..r",
+            "r.111....11....r",
+            "rr,,,4,,,,,,,,rr",
+            "r,$,,,,,,:e:,,,r",
+            "r,,,,,:,,,:,,,,r",
+            "rr,,,,,,,,,4,,rr",
+            "r.11.......11..r",
+            "r...x..:...x...r",
+            "<.............2r",
+            "r..rr..$....x.4r",
             "rrrrrrrrrrrrrrrr" ],
-      walk:'.,', triggers:{e:'b9_c4_seep', '<':'b9_c4_wash_back'}, start:{x:1, y:9},
+      walk:'.,:', triggers:{e:'b9_c4_seep', '<':'b9_c4_wash_back'}, start:{x:1, y:9},
+      folk:[{x:2, y:8, kind:'b9_c4_outrider', name:'A Bluerose rider holding the horses', line:'Hold the horses, the decurion says. So I hold the horses. The horses hold me, if I am honest.'}],
       quest:()=> !S.f.b9_c4_forageDone ? 'Down into the wash. The herd, and whoever is on the far lip.' : 'Back to the column, west, before dark.',
       npcs:[
         {id:'outrider', name:'The outriders\' decurion', kind:'b9_c4_outrider', x:4, y:7, node:()=>'b9_c4_decurion', fresh:()=>!S.f.b9_c4_decurion},

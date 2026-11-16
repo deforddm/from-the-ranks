@@ -101,21 +101,24 @@ const B9CH2 = {
 
   areas:[
     /* 16 x 12 (b9_c2_muster, evening). . trodden earth  # a rail fence  = tents  F the squad's fire  T a tailboard with a lamp (the
-       tile-woman)  w the supply wagons  o water barrels  x oxen on a picket  c Orla's water-cart */
+       tile-woman)  w the supply wagons  o water barrels  x oxen on a picket  c Orla's water-cart
+       Terrain kit (25b, v13.22): a light touch: the way from the fire to the train (_), a weapon stack (%), a lantern between the tents (!), a cookfire (0), a water barrel (&, as its o), and a soldier and a drover (folk). */
     { id:'b9_c2_ground', title:'Outside Letheras · the escort\'s muster ground', sub:'Evening · the drill over, the lamps going up', hint:'Tap ground to move · tap a figure to talk · the train is east, the tents all round', decor:'b9_c2_muster', dark:true,
       map:[ "################",
-            "#==.==.==.==.==#",
+            "#==.==.==!==.==#",
             "#..............#",
             "#.==.==...T.ww.#",
             "#.........o.ww.#",
-            "#......F....xx.#",
+            "#%.....F____xx.#",
             "#..............#",
             "#.==.==...c....#",
-            "#..............#",
+            "#.....0........#",
             "#==.==.==.==.==#",
-            "#..............#",
+            "#......&.......#",
             "################" ],
-      walk:'.', triggers:{F:'b9_c2_fire', T:'b9_c2_tailboard', w:'b9_c2_wagonline', o:'b9_c2_barrels', c:'b9_c2_cart', x:'b9_c2_oxen'}, start:{x:7, y:6},
+      walk:'._', triggers:{F:'b9_c2_fire', T:'b9_c2_tailboard', w:'b9_c2_wagonline', o:'b9_c2_barrels', c:'b9_c2_cart', x:'b9_c2_oxen'}, start:{x:7, y:6},
+      folk:[{x:2, y:8, kind:'b5_letherii', name:'A Letherii soldier oiling a breastplate', line:'The Malazans drill us till we drop, then go and drill each other. I have started to think they enjoy it.'},
+            {x:14, y:6, kind:'b8_c2_drover', name:'A drover with the oxen', line:'Twelve oxen to a wagon, a wagon to a brigade, and every ox thinks it is the one that matters. Every ox is right.', wander:1}],
       quest:()=> !S.f.b9_c2_orders1 ? 'The Finadd, by the tents. He has the escort\'s word.' : !b92BrennetSettled() ? 'The wagons, east. The train needs hands, and somebody there is waiting to be told.' : 'The fire. The drill again at first light.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:4, y:2, node:()=>'b9_c2_ennic', fresh:()=>!S.f.b9_c2_orders1},
@@ -126,21 +129,23 @@ const B9CH2 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:9, y:3, node:()=>'b9_c2_tailboard', fresh:()=>!S.f.b9_c2_drawn && !S.f.b9_c2_noCard} ] },
 
     /* 16 x 12 (b9_c2_muster, day). The drill field: , grass  . the beaten square  r racks of wooden swords  P the sergeant's post
-       = the near tents  < back to the lines */
+       = the near tents  < back to the lines
+       Terrain kit (25b, v13.22): the square beaten bare by the drill: boot-marked ground across it (:), weapon stacks by the sword racks (%), water barrels on its rim (&, as its o), and a spearman resting (folk). */
     { id:'b9_c2_field', title:'Outside Letheras · the drill field', sub:'Day · the Malazan sergeant\'s square', hint:'Tap ground to move · tap a figure to talk · the sergeant is at his post', decor:'b9_c2_muster',
       map:[ "################",
-            "#,,,,,,,,,,,,,,#",
-            "#,............,#",
-            "#,..r......r..,#",
-            "#,............,#",
-            "<,............,#",
-            "#,............,#",
-            "#,....P.......,#",
-            "#,............,#",
+            "#,,,,,,,,,,,&,,#",
+            "#,....:....:..,#",
+            "#,.%r.::...r%.,#",
+            "#,...:.:..:...,#",
+            "<,..:...:..:..,#",
+            "#,....:..:....,#",
+            "#,.%:.P...:.:.,#",
+            "#,.........:..,#",
             "#,,,,,,,,,,,,,,#",
             "#==.==.==.==.==#",
             "################" ],
-      walk:'.,', triggers:{r:'b9_c2_rack', P:'b9_c2_post', '<':'b9_c2_field_back'}, start:{x:2, y:5},
+      walk:'.,:', triggers:{r:'b9_c2_rack', P:'b9_c2_post', '<':'b9_c2_field_back'}, start:{x:2, y:5},
+      folk:[{x:9, y:2, kind:'b5_letherii', name:'A Letherii spearman, resting', line:'Shield up, step, shield up, step. My arm stopped arguing about noon. It has gone very quiet. I do not trust it.'}],
       quest:()=> b92Ph() === 5 ? (S.f.b9_c2_redrillDone ? 'Back to the lines. The march is at first light.' : 'The Malazan sergeant. One more day of it.') : !S.f.b9_c2_drillDone ? 'The Malazan sergeant, at his post. The drill.' : 'Back to the lines at dusk. Yelt wants the squad on the train tonight.',
       npcs:[
         {id:'malsgt', name:'The Malazan sergeant', kind:'b7_malsgt', x:7, y:6, node:()=>b92Ph() === 5 ? 'b9_c2_redrill' : !S.f.b9_c2_drillDone ? 'b9_c2_sergeant' : 'b9_c2_sergeant_after', fresh:()=>b92Ph() === 5 ? !S.f.b9_c2_redrillDone : !S.f.b9_c2_drillDone || !S.f.b9_c2_stepTried},
@@ -148,41 +153,46 @@ const B9CH2 = {
         {id:'corporal', name:'A heavy corporal with a wooden sword', kind:'b2soldier', x:12, y:8, node:()=>'b9_c2_corporal', show:()=>!!S.f.b9_c2_drillDone && !S.f.b9_c2_boutDone, fresh:()=>!S.f.b9_c2_boutTalk},
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:3, y:8, node:()=>'b9_c2_ennic_field', show:()=>b92Ph() === 2, fresh:()=>false} ] },
 
-    /* 16 x 12 (b9_c2_muster, night). The train's yard: w the wagons in their rows  o barrels  x oxen  c Orla's cart  < back to the lines */
+    /* 16 x 12 (b9_c2_muster, night). The train's yard: w the wagons in their rows  o barrels  x oxen  c Orla's cart  < back to the lines
+       Terrain kit (25b, v13.22): a light touch: crates (8), barrels (&, as its o), more oxen on the picket (@, as its x), a lantern at a tailboard (!), trampled ground (:), and a carter at his ropes (folk). */
     { id:'b9_c2_yard', title:'Outside Letheras · the supply train', sub:'Night · the wagons drawn up', hint:'Tap ground to move · tap a figure to talk · the barrels are north and east', decor:'b9_c2_muster', dark:true,
       map:[ "################",
             "#ww.ww.ww.ww.ww#",
             "#..............#",
-            "#.oo........oo.#",
-            "#..............#",
-            "<....ww..ww....#",
-            "#..............#",
-            "#.xx.....c.....#",
-            "#..............#",
+            "#.oo...8....oo.#",
+            "#....:.........#",
+            "<....ww..ww..!.#",
+            "#..&...........#",
+            "#.xx@....c..8..#",
+            "#..........:...#",
             "#ww.ww.ww.ww.ww#",
-            "#..............#",
+            "#..8....&...@..#",
             "################" ],
-      walk:'.', triggers:{w:'b9_c2_ywagon', o:'b9_c2_ybarrels', c:'b9_c2_cart', x:'b9_c2_oxen', '<':'b9_c2_yard_back'}, start:{x:1, y:5},
+      walk:'.:', triggers:{w:'b9_c2_ywagon', o:'b9_c2_ybarrels', c:'b9_c2_cart', x:'b9_c2_oxen', '<':'b9_c2_yard_back'}, start:{x:1, y:5},
+      folk:[{x:12, y:8, kind:'b8_c2_carter', name:'A carter checking a tilt-rope', line:'Every rope tied twice tonight. The Finadd says thieves. I say wind. The wind has never once taken a barrel.'}],
       quest:()=> !S.f.b9_c2_wagonsDone ? 'Shapes at the barrels, north-east.' : 'Yelt, and his count. Then back to the lines.',
       npcs:[
         {id:'yelt', name:'Yelt, with a lamp', kind:'b5_c1_clerk', x:7, y:6, node:()=>'b9_c2_yelt_night', fresh:()=>!!S.f.b9_c2_wagonsDone && !S.f.b9_c2_counted},
         {id:'thieves', name:'Shapes at the barrels', kind:'b5_letherii', x:12, y:2, node:()=>'b9_c2_thieves', show:()=>!S.f.b9_c2_wagonsDone, fresh:()=>true} ] },
 
-    /* 16 x 12 (b9_c2_muster, day). The muster ground on the last day: the same ground as the first evening, the wagons loading */
+    /* 16 x 12 (b9_c2_muster, day). The muster ground on the last day: the same ground as the first evening, the wagons loading
+       Terrain kit (25b, v13.22): a light touch: the way from the fire to the train (_), a weapon stack (%), a cookfire (0), a barrel (&, as its o), and a carter and a soldier loading (folk). */
     { id:'b9_c2_last', title:'Outside Letheras · the escort\'s muster ground', sub:'The last day · the train loading', hint:'Tap ground to move · tap a figure to talk · the Finadd is by the tents, the train east', decor:'b9_c2_muster',
       map:[ "################",
             "#==.==.==.==.==#",
             "#..............#",
             "#.==.==.....ww.#",
-            "#.........o.ww.#",
-            "#......F....xx.#",
+            "#.......:.o.ww.#",
+            "#%....:F____xx.#",
             "#..............>",
             "#.==.==...c....#",
-            "#..............#",
+            "#.....0........#",
             "#==.==.==.==.==#",
-            "#..............#",
+            "#........&.....#",
             "################" ],
-      walk:'.', triggers:{F:'b9_c2_fire', w:'b9_c2_wagonline', o:'b9_c2_barrels', c:'b9_c2_cart', x:'b9_c2_oxen', '>':'b9_c2_tofield'}, start:{x:7, y:6},
+      walk:'._:', triggers:{F:'b9_c2_fire', w:'b9_c2_wagonline', o:'b9_c2_barrels', c:'b9_c2_cart', x:'b9_c2_oxen', '>':'b9_c2_tofield'}, start:{x:7, y:6},
+      folk:[{x:8, y:2, kind:'b8_c2_carter', name:'A carter loading sacks', line:'Flour, flour, beans, flour. Somebody in the city thinks soldiers are made of flour. Somebody in the city has never met one.'},
+            {x:3, y:6, kind:'b5_letherii', name:'A Letherii soldier with his pack', line:'My mother sent a cheese. I am to share it with the squad. The cheese and I have discussed this.'}],
       quest:()=> !b92Key() ? 'The Finadd, by the tents. The last day\'s orders.' : !S.f.b9_c2_keyDone ? (b92Key() === 'wagons' ? 'The train, east. Yelt and Orla, and the loading.' : 'The drill field, east. The Malazan sergeant.') : 'The fire. Then the gate, behind the foreigners.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:4, y:2, node:()=>'b9_c2_ennic4', fresh:()=>!b92Key()},
