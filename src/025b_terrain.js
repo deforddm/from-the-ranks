@@ -32,6 +32,8 @@ const TKP = {
            n:{body:'#162018', crest:'170,190,220', foot:'0,0,0', blade:'#2e4034', bladeL:'#46584a', brush:'#18221a', brushL:'#2a3a2c', stem:'#2a2418', rock:'#2e3036', rockL:'#454852', rockD:'#141518', wood:'#2a1e14', woodL:'#4a3a28', canvas:'#4a4640', canvasD:'#26241e', bone:'#5c6068', cloth:['#5a2a20', '#5a4a2a'], track:'130,140,160', mud:'8,8,6', lit:'170,184,220', tex:'grass'}},
   shell:  {d:{body:'#cdc6b6', crest:'255,252,242', foot:'80,74,64', blade:'#9a9478', bladeL:'#bab49a', brush:'#7a7462', brushL:'#9a947e', stem:'#5a5444', rock:'#a89c8a', rockL:'#d6cebe', rockD:'#5a5248', wood:'#5a4028', woodL:'#8a6a44', canvas:'#d8ccb0', canvasD:'#9a8a6a', bone:'#f2eee2', cloth:['#8a3a2a', '#c8a868'], track:'120,112,96', mud:'90,84,70', lit:'255,252,240', tex:'dune'},
            n:{body:'#2e2c2c', crest:'200,200,210', foot:'0,0,0', blade:'#3a3a34', bladeL:'#4a4a42', brush:'#2a2826', brushL:'#3a3834', stem:'#2a2622', rock:'#34302e', rockL:'#4c4844', rockD:'#141210', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3e3a36', canvasD:'#221e1c', bone:'#6a6a70', cloth:['#3a2018', '#3a3020'], track:'170,170,180', mud:'0,0,0', lit:'200,200,215', tex:'dune'}}, // the old sea floor's white shell ground (75b)
+  scree:  {d:{body:'#8a867a', crest:'246,242,230', foot:'50,46,40', blade:'#7a7a52', bladeL:'#a0a070', brush:'#5a6040', brushL:'#7a8052', stem:'#3a3428', rock:'#7a766c', rockL:'#aaa69a', rockD:'#3a3832', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'110,104,92', mud:'70,64,54', lit:'250,246,232', tex:'turf'},
+           n:{body:'#24241f', crest:'190,190,205', foot:'0,0,0', blade:'#383a30', bladeL:'#4a4c40', brush:'#1e201a', brushL:'#2e3028', stem:'#24201a', rock:'#2a2a28', rockL:'#3e3e3a', rockD:'#10100e', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,215', tex:'turf'}}, // grey scree and scrub (Book Five's hills behind Brans Keep)
   earth:  {d:{body:'#9a8a6a', crest:'255,246,220', foot:'60,46,30', blade:'#7a7a48', bladeL:'#a8a070', brush:'#5a5a3a', brushL:'#7a7a50', stem:'#4a3a28', rock:'#7a7468', rockL:'#a8a294', rockD:'#3a362e', wood:'#5a4028', woodL:'#8a6a44', canvas:'#c8b48c', canvasD:'#8a7454', bone:'#e8e0cc', cloth:['#8a3a2a', '#c8a868'], track:'100,80,56', mud:'70,52,34', lit:'255,240,210', tex:'turf'},
            n:{body:'#222120', crest:'190,190,210', foot:'0,0,0', blade:'#3a3a32', bladeL:'#4a4a40', brush:'#1e201c', brushL:'#2e302a', stem:'#24201a', rock:'#2a2826', rockL:'#3e3a36', rockD:'#100e0c', wood:'#1e1610', woodL:'#3a2e22', canvas:'#3a3632', canvasD:'#1e1c1a', bone:'#5a5a60', cloth:['#3a2018', '#3a3020'], track:'150,150,160', mud:'0,0,0', lit:'200,200,220', tex:'turf'}} };
 /* the decors that have joined. as: kit char -> the decor's own char (drawn whole by the decor); draw: kit char -> fn(ctx, x, y, T, N, P)
@@ -77,7 +79,7 @@ const TKS = {
   /* Book Seven (v13.22): Book Five's Lether, inland and in Letheras: the night roads and fields, the farmyards, the Whitefinders' yard,
      the canal walks and streets (barrels, casks, coiled rope, mooring posts, market stalls), the wood, the riverbanks, the army's lines */
   plain_night:{fam:'plain', as:{'0':'F'}},
-  b5_c5_farm:{fam:'earth', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c5_farm:{fam:'earth', draw:{'7':(c, x, y, T, N) => b55Cart(c, x*T, y*T, T, N), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '5':(c, x, y, T, N) => b55Tree(c, x, y, T, N)}}, // ('5', the burned tree, added by Book Five's pass; no Book Seven map on this ground has one)
   b5_c1_barracks:{fam:'earth', as:{'0':'F'}, draw:{'8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b5_c1_canal:{fam:'earth', draw:{'9':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_canal'), '4':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_walk'), '8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'),
     '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
@@ -103,7 +105,24 @@ const TKS = {
   b8_c3_mound:{fam:'plain', as:{'6':'='}},
   b8_c4_camp:{fam:'plain', as:{'6':'=', '0':'F', '7':'c', '8':'t'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
   b8_c5_day:{fam:'earth', as:{'4':'#'}},
+  /* Book Five (v13.22): the rest of Lether, each ground's own things: the pit town's barrels, Trate's salvage chests, casks and rope, the
+     hulk's oar-benches, the Landing's tents, crates and coils, the barges' cargo, the forest road's fallen trunks and rock, the gully's
+     boulders, the burned country's trees and carts, the lines' tents, fires and wagons at Brans Keep; the footbridge as the canal by day */
+  b5_c1_pittown:{fam:'earth', draw:{'8':(c, x, y, T, N) => b51Cover(c, x, y, T, N, 'b5_c1_barracks'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c2_quay:{fam:'earth', draw:{'8':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_wharf'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c2_hulk:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '8':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_wharf'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b5_c3_dock:{fam:'earth', as:{'6':'=', '0':'F'}, draw:{'8':(c, x, y, T, N) => b53Cover(c, x, y, T, N, 'b5_c3_dock'), '*':(c, x, y, T) => b53Coil(c, x*T, y*T, T)}},
+  b5_c3_barges:{fam:'earth', draw:{'8':(c, x, y, T, N) => b53Cargo(c, x*T, y*T, T, N), '*':(c, x, y, T) => b53Coil(c, x*T, y*T, T)}},
+  b5_c4_road:{fam:'plain', as:{'4':'#'}, draw:{'5':(c, x, y, T, N) => b54Cover(c, x, y, T, N, 'b5_c4_road')}},
+  b5_c4_rampart:{fam:'plain', draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c4_gully:{fam:'earth'},
+  b5_c5_road:{fam:'earth', as:{'5':'x', '7':'c'}},
+  b5_c5_keep:{fam:'plain', as:{'6':'='}, draw:{'0':(c, x, y, T, N) => b55Fire(c, x*T, y*T, T, N), '7':(c, x, y, T, N) => b55Wagon(c, x*T, y*T, T, N), '8':(c, x, y, T, N) => b55Cover(c, x, y, T, N, 'b5_c5_keep'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c6_lines:{fam:'plain', as:{'6':'='}, draw:{'0':(c, x, y, T, N) => b55Fire(c, x*T, y*T, T, N), '7':(c, x, y, T, N) => b55Wagon(c, x*T, y*T, T, N), '8':(c, x, y, T, N) => b55Cover(c, x, y, T, N, 'b5_c5_keep'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b5_c6_channel:{fam:'earth'},
+  b5_c6_hills:{fam:'scree'},
   plain:{fam:'plain'} };
+TKS.b5_c7_canalnight = TKS.b5_c7_walk = TKS.b5_c7_canal; // the footbridge by night and at the evening of the fall: the same ground
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };

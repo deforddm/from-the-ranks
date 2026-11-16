@@ -92,7 +92,8 @@ const B5CH3 = {
   areas:[
     /* 16 x 12 (b5_c3_dock, evening). The Landing: # the three buildings (the hostel and its tavern top-left, a storehouse, the outlying
        shed by the water) = the regiment's tents  . trampled earth , mud  d dock planking  ~ the river  F the barge crews' fire
-       S the Faraed scouts' fire, above the dock  T the rise, where you can see the mages' tents  B the gangplank to the barges */
+       S the Faraed scouts' fire, above the dock  T the rise, where you can see the mages' tents  B the gangplank to the barges
+       Terrain kit (25b, v13.22): nothing on the ground (the Landing is at the floor already, and full); a water-carrier (folk). */
     { id:'b5_c3_dock', title:'Kraig\'s Landing · the dock', sub:'The Landing and the regiment\'s camp', hint:'Tap ground to move · tap a figure to talk · the barges are down the dock', decor:'b5_c3_dock',
       map:[ "###..###..==..,,",
             "###..###.....T,,",
@@ -107,6 +108,7 @@ const B5CH3 = {
             "~~dB~~~~~~dd~~~~",
             "~~~~~~~~~~~~~~~~" ],
       walk:'.,d', triggers:{F:'b5_c3_fire', S:'b5_c3_scouts', T:'b5_c3_rise', B:'b5_c3_to_barges'}, start:{x:8, y:7},
+      folk:[{x:3, y:6, kind:'b8_c4_carrier', name:'A water-carrier', line:'River water, a third the bucket. You could fetch it yourself. You could also fall in.'}],
       quest:()=> b53Ph() === 1 ? (!S.f.b5_c3_ennic ? 'The Finadd, on the dock.' : 'The barges, at nightfall. The first watch is the Sixth\'s.')
         : b53Ph() === 2 ? (!b53Key() ? 'The day before something. The fire, at evening, for the night\'s orders.' : !b53KeyDone() ? (b53Key() === 'watch' ? 'The barge-line, where the haulers sleep.' : 'Up the bank, after the runner.') : 'The fire.')
         : 'Dawn. The Finadd has the orders.',
@@ -123,7 +125,8 @@ const B5CH3 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:15, y:7, node:()=>'b5_c3_tilewoman', fresh:()=>!S.f.b5_c3_tw} ] },
 
     /* 16 x 12 (b5_c3_barges, night). Three barges tied three deep off the dock: . deck  ~ the river between them  - the gangplanks
-       c cargo, roped  r rope coils, where the mooring lines are made fast  ^ the plank up to the dock */
+       c cargo, roped  r rope coils, where the mooring lines are made fast  ^ the plank up to the dock
+       Terrain kit (25b, v13.22): nothing on the decks (they are at the floor already); a bargeman on watch (folk). */
     { id:'b5_c3_barges', title:'Kraig\'s Landing · the barges', sub:'Night · tied three deep', hint:'Tap ground to move · the mooring lines are on the coils · the dock is up the plank', decor:'b5_c3_barges', dark:true,
       map:[ "~~~~~~~^~~~~~~~~",
             "~.c....-....c.~~",
@@ -138,25 +141,27 @@ const B5CH3 = {
             "~.....c.....cc~~",
             "~~~~~~~~~~~~~~~~" ],
       walk:'.-', triggers:{r:'b5_c3_rope', '^':'b5_c3_to_dock'}, start:{x:7, y:2},
+      folk:[{x:4, y:5, kind:'b5_c3_bargeman', name:'A bargeman on watch', line:'Tied three deep. The outside barge pays the other two a dock a night to walk across them. Nobody remembers agreeing to it.'}],
       quest:()=> !S.f.b5_c3_riverDone ? 'The mooring lines want checking.' : 'Up the plank to the dock.',
       npcs:[] },
 
     /* 16 x 12 (b5_c3_bank, night; 'warn' only). The upriver bank: ~ the river on the west  , reeds  . the path  # rock  x a dead tree
-       ^ the top, where the path gives out in the reeds  v back down to the Landing */
+       ^ the top, where the path gives out in the reeds  v back down to the Landing
+       Terrain kit (25b, v13.22): the land rising east of the path (1, 2 scrub), rocks (4), the path worn pale through the reeds (_), a tuft (*). No folk: the runner's ground at night. */
     { id:'b5_c3_bank', title:'The river bank · upriver', sub:'Night · after the runner', hint:'Tap ground to move · the path goes north along the river', decor:'b5_c3_bank', dark:true,
-      map:[ "~~~,,,,..^..##..",
-            "~~~,,,,......#..",
-            "~~~~,,,..,,..##.",
-            "~~~~,,....x.....",
-            "~~~,,,....,,..#.",
-            "~~~,,......,,...",
-            "~~~~,,..##......",
-            "~~~,,,......,,..",
-            "~~~,,..,,.....#.",
-            "~~~~,,..........",
-            "~~~,,,...,,.,...",
-            "~~~~,,....v....." ],
-      walk:'.,', triggers:{x:'b5_c3_deadtree', '^':'b5_c3_bank_edge', v:'b5_c3_bank_back'}, start:{x:9, y:10},
+      map:[ "~~~,,,,..^..##11",
+            "~~~,,,,._....#12",
+            "~~~~,,,._,,..##2",
+            "~~~~,,.._.x..412",
+            "~~~,,,.._.,,..#1",
+            "~~~,,*._...,,.12",
+            "~~~~,,._##...412",
+            "~~~,,,.._...,,11",
+            "~~~,,..,,_..4.#2",
+            "~~~~,,.*._....12",
+            "~~~,,,...,_.,.12",
+            "~~~~,,4...v..122" ],
+      walk:'.,_*', triggers:{x:'b5_c3_deadtree', '^':'b5_c3_bank_edge', v:'b5_c3_bank_back'}, start:{x:9, y:10},
       quest:()=> S.f.b5_c3_bankDone ? 'Back down the path. It is nearly dawn.' : 'North, up the path, after the runner.',
       npcs:[] } ],
 

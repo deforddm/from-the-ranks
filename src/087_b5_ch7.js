@@ -161,21 +161,24 @@ const B5CH7 = {
   areas:[
     /* 16 x 12 (b5_c7_streets, the night): the Drownings District in disorder. . paving  , rubble  # burned house  c overturned cart
        F a street brazier  b the City Garrison's bell-station  x a broken shopfront  h your street  p a fallen shutter in the rubble
-       v the way to the Low Walk */
+       v the way to the Low Walk
+       Terrain kit (25b, v13.22): rubble (3), barrels (8), a cart pushed over (7), water casks (&), and two of the street, frightened (folk). */
     { id:'b5_c7_streets', title:'Letheras · the Drownings District', sub:'The night after Brans Keep', hint:'Tap ground to move · tap a figure to talk · the Low Walk is west', decor:'b5_c7_streets', dark:true,
       map:[ "####,..##..,####",
-            "#..,....#.....b#",
-            "#.c..,..#..,...#",
-            "##...........x.#",
-            "#....##..,.....#",
-            "#.,..##....c...#",
+            "#3.,..8.#.....b#",
+            "#.c..,..#3.,..8#",
+            "##3..........x.#",
+            "#.8..##..,...3.#",
+            "#.,..##....c..&#",
             "v......F.......#",
-            "#..,.......##..#",
-            "#.....c....##..#",
-            "##..,...,..p...#",
-            "#.......#..,..h#",
+            "#&.,.......##.3#",
+            "#3....c....##.8#",
+            "##..,.7.,..p..3#",
+            "#3......#3.,..h#",
             "######..########" ],
       walk:'.,', triggers:{F:'b5_c7_brazier', b:'b5_c7_bell', x:'b5_c7_shop', h:'b5_c7_street', p:'b5_c7_rubble', v:'b5_c7_tobridge'}, start:{x:6, y:10},
+      folk:[{x:10, y:4, kind:'b5_c7_citizen', name:'A man at his shutters', line:'Bar the door, they said. So I barred it. Then I thought, what if the bailiff comes. So I left him a gap.', wander:1},
+        {x:4, y:2, kind:'b5_c5_refugee', name:'A woman with a sack of bread', line:'Bread at four docks the loaf. Yesterday it was one. Nobody has told the bread why.'}],
       quest:()=> S.f.b5_c7_orders ? 'The Low Walk, west. The footbridge.' : 'Finadd Ennic. The bell is ringing.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:8, y:8, node:()=>'b5_c7_ennic', fresh:()=>!S.f.b5_c7_orders},
@@ -183,21 +186,23 @@ const B5CH7 = {
         ] },
 
     /* 16 x 12 (b5_c7_canal, the night): the footbridge over the Quillas Canal by the Low Walk. . paving  , steps  ~ the canal  = the
-       barricade of carts  - the footbridge  a the arch, the way under  F the brazier at the barricade  ^ back to the streets */
+       barricade of carts  - the footbridge  a the arch, the way under  F the brazier at the barricade  ^ back to the streets
+       Terrain kit (25b, v13.22): a light touch: barrels (8), a water cask (&), coiled rope (*), and a lamplighter (folk). */
     { id:'b5_c7_canal', title:'The footbridge', sub:'The Quillas Canal · the Low Walk · night', hint:'Tap ground to move · the brazier is behind the barricade · the arch is under the bridge', decor:'b5_c7_canalnight', dark:true,
       map:[ "####..^...######",
-            "#..............#",
-            "#.====..====...#",
+            "#8.............#",
+            "#.====..====..&#",
             "#......F.......#",
-            "#..............#",
+            "#*.............#",
             ",,,,,,,--,,,,,,,",
             "~~~~~~~--~~~~~~~",
             "~~~~~~~--~~~~~~~",
             ",,,,,,a--a,,,,,,",
-            "................",
+            "...............*",
             "#....#....#....#",
             "################" ],
-      walk:'.,-', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', '^':'b5_c7_back'}, start:{x:7, y:4},
+      walk:'.,-*', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', '^':'b5_c7_back'}, start:{x:7, y:4},
+      folk:[{x:13, y:2, kind:'b5_c3_pole', name:'A lamplighter', line:'Every bridge lit tonight, the Garrison pays. I asked who pays the Garrison. They told me to light the lamps and go home.'}],
       quest:()=> b57Ph() < 3 ? 'The barricade. The brazier. Morning.' : 'Morning.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:10, y:3, node:()=>'b5_c7_ennic_bridge', fresh:()=>!S.f.b5_c7_ennicBridge},
@@ -207,21 +212,23 @@ const B5CH7 = {
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:3, y:9, node:()=>'b5_c7_tilewoman', fresh:()=>false} ] },
 
     /* 16 x 12 (b5_c7_day, the day): the same footbridge by daylight. E the street the Edur come down  J the tiers along the Low Walk,
-       where the wolves are; the rest as the night */
+       where the wolves are; the rest as the night
+       Terrain kit (25b, v13.22): a light touch: barrels (8), coiled rope (*), and a shopkeeper at her shutters (folk). */
     { id:'b5_c7_day', title:'The footbridge', sub:'The Quillas Canal · the day the Edur come', hint:'Tap ground to move · the tiers are along the Low Walk · the street the Edur come down is north', decor:'b5_c7_canal',
       map:[ "####..E...######",
-            "#..............#",
+            "#8.............#",
             "#.====..====...#",
             "#......F.......#",
-            "#..............#",
+            "#.............8#",
             ",,,,,,,--,,,,,,,",
             "~~~~~~~--~~~~~~~",
             "~~~~~~~--~~~~~~~",
             ",,,,,,a--a,,,,,,",
             "................",
-            "#JJ..#....#..JJ#",
+            "#JJ..#.*..#..JJ#",
             "################" ],
-      walk:'.,-', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', E:'b5_c7_edur', J:'b5_c7_tiers'}, start:{x:7, y:4},
+      walk:'.,-*', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', E:'b5_c7_edur', J:'b5_c7_tiers'}, start:{x:7, y:4},
+      folk:[{x:1, y:4, kind:'b5_c5_refugee', name:'A shopkeeper at her shutters', line:'Shutters up, the takings under the floor, the cat in the cellar. The cat is not happy about it either.'}],
       quest:()=> !S.f.b5_c7_wolvesDone ? 'Wolves on the tiers.' : !S.f.b5_c7_barricadeDone ? 'The barricade. The Edur are in the street.' : 'The canal. Now.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:10, y:3, node:()=>'b5_c7_ennic_day', fresh:()=>false},
@@ -229,21 +236,23 @@ const B5CH7 = {
         {id:'garrison', name:'A garrison sergeant', kind:'b5_letherii', x:3, y:3, node:()=>'b5_c7_garrison_day', fresh:()=>!S.f.b5_c7_garrisonDay} ] },
 
     /* 16 x 12 (b5_c7_walk, the evening): the Low Walk after the fall, quieter. P the patrol at the end of the street  F the brazier,
-       burned down  a the arch  , the barricade's carts pulled apart */
+       burned down  a the arch  , the barricade's carts pulled apart
+       Terrain kit (25b, v13.22): a light touch: barrels (8), a water cask (&), coiled rope (*), and a man boarding his door (folk). */
     { id:'b5_c7_walk', title:'The Low Walk', sub:'The Quillas Canal · the evening of the fall', hint:'Tap ground to move · the patrol is at the end of the street', decor:'b5_c7_walk',
       map:[ "####..P...######",
-            "#..............#",
+            "#8............8#",
             "#.=,,=..=,,=...#",
             "#......F.......#",
-            "#..............#",
+            "#.............&#",
             ",,,,,,,--,,,,,,,",
             "~~~~~~~--~~~~~~~",
             "~~~~~~~--~~~~~~~",
             ",,,,,,a--a,,,,,,",
             "................",
-            "#....#....#....#",
+            "#....#.*..#....#",
             "################" ],
-      walk:'.,-', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', P:'b5_c7_roads'}, start:{x:7, y:9},
+      walk:'.,-*', triggers:{F:'b5_c7_fire', a:'b5_c7_arch', P:'b5_c7_roads'}, start:{x:7, y:9},
+      folk:[{x:13, y:3, kind:'b5_c7_citizen', name:'A man boarding his door', line:'Nails were a dock the dozen this morning. By noon, three. I am nailing the door shut with my savings.'}],
       quest:()=> b57Key() ? 'The last of it.' : 'The patrol is coming down the street. The roads.',
       npcs:[
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:4, node:()=>'b5_c7_ennic_eve', fresh:()=>!S.f.b5_c7_ennicEve},
