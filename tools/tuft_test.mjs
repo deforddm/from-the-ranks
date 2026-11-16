@@ -18,7 +18,8 @@ const r = await page.evaluate(async () => {
   B.units = B.units.filter(u => u.side === 'p' || fs.indexOf(u) < 5);
   const row = B.units.filter(u => u.side === 'e'); row.forEach((e, i) => { e.x = 1 + i; e.y = 1; e.hp = e.maxhp = 999; e.ac = 0; });
   const mate = sq[0]; mate.x = 0; mate.y = 2; const mh = mate.hp; tu.x = 3; tu.y = 5; tu.atk = 60;
-  await AB.shadowlash.run(tu, row[0].x, row[0].y); await wait(50);
+  const rnd0 = Math.random; Math.random = () => 0.9; // v13.36.2: every roll high, so a natural 1 can't drop a strike from the chain (failed about one run in five)
+  try { await AB.shadowlash.run(tu, row[0].x, row[0].y); await wait(50); } finally { Math.random = rnd0; }
   out.struck = row.filter(e => e.hp < 999).length; out.mateSafe = mate.hp === mh; out.n = lashN(); out.strain = AB.shadowlash.strain;
   return out;
 });

@@ -24,7 +24,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   g.x = 3; g.y = 6; e.x = 3; e.y = 5; B.fires.push({x:3, y:4, until:B.round + 3}); e.atk = -30; const realAtk = attack; // −15 to the save: it can only catch window.attack = () => ({hit:true, dmg:1});
   B.over = true; await wait(400); // freeze the fight: no more turns while the drive is tested
   B.log = [];
-  for (let k = 0; k < 3; k++) { g.x = 3; g.y = 6; e.x = 3; e.y = 5; e.hp = 40; e.burnTurns = 0; g.cdShove = -1; await AB.shove.run(g, e.x, e.y); if (e.y < 5) break; await wait(200); } // the live fight can nudge pieces; try again
+  const rnd0 = Math.random; Math.random = () => 0.5; // v13.36.2: a mid roll, so a natural 20 can't put the fire out (failed about one run in twenty)
+  try { for (let k = 0; k < 3; k++) { g.x = 3; g.y = 6; e.x = 3; e.y = 5; e.hp = 40; e.burnTurns = 0; g.cdShove = -1; await AB.shove.run(g, e.x, e.y); if (e.y < 5) break; await wait(200); } } finally { Math.random = rnd0; } // the live fight can nudge pieces; try again
   B.over = false; window.attack = realAtk; out.driven = {y:e.y, hp:e.hp, burning:e.burnTurns, caught:B.log.join(' ').includes(`${e.name} catches fire`)};
   window.endTurn = realEnd; return out; });
 console.log(JSON.stringify(r));
