@@ -273,7 +273,10 @@ const B6CH7 = {
     b6_c7_realm:{loc:'Somewhere cold', sub:'The fleet in a sea that is not any sea', cap:'Ice the size of hills going by in a green light, and water roaring, and the ships running as if downhill.', amb:'explore'},
     b6_c7_jetty:{loc:'Malaz City', sub:'A jetty along from the marines\'', cap:'The waterfront crowded with the city, smoke over a Wickan street, and Mock\'s Hold dark on its rock above it all.', amb:'explore'},
     b6_c7_lanes:{loc:'Malaz City', sub:'The lanes behind the waterfront · dusk', cap:'Narrow lanes going up from the water, torches moving in them, and a Wickan street burning two lanes over.', amb:'explore'},
-    b6_c7_finale:{loc:'Malaz City', sub:'The harbour at dusk', cap:'The harbour at dusk, sails going out past the mole, and the city behind still loud.', amb:'explore'} },
+    b6_c7_finale:{loc:'Malaz City', sub:'The harbour at dusk', cap:'The harbour at dusk, sails going out past the mole, and the city behind still loud.', amb:'explore'},
+    b6_fin_adjunct:{loc:'Off Malaz City', sub:'The fleet going west · night', cap:'Malaz City going down astern in the dark, still burning in one place, and the fleet\'s stern lanterns strung out ahead.', amb:'explore'},
+    b6_fin_jetty:{loc:'Malaz City', sub:'The jetty\'s foot · dusk', cap:'The last sails going out past the mole, the jetty with the Third still on it, and the Wickan families behind.', amb:'explore'},
+    b6_fin_wickans:{loc:'Malaz Island', sub:'The hill road · dusk', cap:'The hill road above the city, a Wickan family on it with a boy and a bow at the front, and the Third behind them.', amb:'explore'} },
 
   end:{
     adjunct:['Out with the fleet', 'The fleet went through an ambush and a deserted harbour and a sea that was not any sea, and came to Malaz City, and the city turned on its own Wickans. The Third held a jetty along from the marines\' against the mob and the City Guard, and when the horns went it went back aboard, and the transports went out of the harbour with the Adjunct before anybody could stop them.'],
@@ -812,7 +815,7 @@ B67FIN.fire = id => id === 'ottar' ? '' : b67WentIn() ? `When the city burned, $
 B67FIN.bone = id => b67Bone() && id !== 'ottar' ? `${id === 'sgt' ? 'You wear' : `${b67Cap(b67He(id))} wears`} the finger bone from Y'Ghatan, as the soldiers who walked out of it do.` : '';
 
 B67FIN.ending = key => {
-  const T = {adjunct:['Out with the fleet', 'b6_c7_finale'], jetty:['Left on the jetty', 'b6_c7_finale'], wickans:['With the Wickans', 'b6_c7_finale']}[key] || ['Out with the fleet', 'b6_c7_finale'];
+  const T = {adjunct:['Out with the fleet', 'b6_fin_adjunct'], jetty:['Left on the jetty', 'b6_fin_jetty'], wickans:['With the Wickans', 'b6_fin_wickans']}[key] || ['Out with the fleet', 'b6_fin_adjunct']; // v13.33: each road its own picture (107b)
   if (typeof S === 'undefined' || !S || !S.f) return {title:T[0], scene:T[1], paras:[]};
   try {
     const mates = b67Here().map(NAME), n = b67Here().length + 1;

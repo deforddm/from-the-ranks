@@ -215,7 +215,7 @@ Object.assign(SCENES, {
   b6_hanar_ara:{loc:'Hanar Ara', sub:'Outside the City of the Fallen', cap:'A city of tents and shrines on a plain, and a rebel army coming out of it to lay down its arms.', amb:'explore'},
   b6_sea:{loc:'At sea', sub:'A transport\'s deck', cap:'Grey water, a grey sky, the fleet strung out behind, and every soldier aboard looking at the horizon.', amb:'explore'},
   b6_malaz:{loc:'Malaz City', sub:'The waterfront', cap:'Mock\'s Hold on its rock over the harbour, the jetties crowded, and a city that has turned on someone.', amb:'explore'},
-  b6_camp_night:{loc:'The camp', sub:'Night', cap:'A soldier\'s camp at night, fires low, sentries walking.', amb:'explore'},
+  b6_camp_night:{loc:'The camp', sub:'Night', cap:'A fire kept low at night, the squad round it, and the dark all round that.', amb:'explore'}, // v13.33: its own picture (106b), a camp by the road in the rain (Ch2) or on the scrub (Ch6)
 });
 Object.entries(B6_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
 
