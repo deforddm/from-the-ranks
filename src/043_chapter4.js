@@ -24,7 +24,7 @@ const CH4 = {
   endCap:()=>'Grey dawn on the same roof. The last lamp on the lakefront is out, the roofs are empty, and somebody is lighting a kitchen fire.',
   intro:{loc:'Darujhistan', sub:'The rooftops · two nights on', cap:'Slate and chimney-pots under a blue haze, and above them a black mountain with no light in its windows.',
     paras:[
-`Two nights since the dye-shop. Two nights of hauling nothing, guarding a hole, and pretending to be a road crew for a city that has stopped pretending not to notice. The Gadrobi crossing has a new brazier and an old silence. Hedge sings in the hole. Trotts stands at the stakes. Whiskeyjack sits on his bucket, and looks at the lake, and does not say what he is waiting for, which is how you know he is waiting for something.`,
+`Two nights since the dye-shop. Two nights of hauling nothing, guarding a hole, and pretending to be a road crew for a city that has stopped pretending not to notice. The Gadrobi crossing has a new brazier and an old silence. Hedge sings in the hole. Trotts stands at the stakes. Whiskeyjack sits on his bucket, and looks at the lake, and does not say what he is waiting for. He doesn't have to.`,
 `The city has started dying on its roofs. Not in its streets; its streets are as loud as ever, fish and bells and blue lamps. On the roofs. A body on the tannery ridge at dawn, face-down, knives still in the sheaths. Two on the Gadrobi temple dome, the morning after. A man in a guild jerkin found hanging by one foot from a gutter on the Street of Tanners' Daughters, and nobody on the street will say which guild. The Watch go up with ladders and come down with sheets and say *the gas*. Everyone in Darujhistan knows it is not the gas. Nobody in Darujhistan says what it is.`,
 `Kalam has been sitting on the chandler's step since noon, sharpening a knife that was sharp at breakfast. He does it slowly, with a stone the size of a thumb, and he does not look at the blade while he does it. He is looking at the roofs. When the lamps come on, street by street, he puts the stone away, and stands, and Whiskeyjack stands too, and neither of them says anything, and the whole crossing goes quiet around them as if a door had opened somewhere and let the cold in.`],
     go:'Up', node:'c4_start'},
@@ -252,7 +252,7 @@ Quick Ben's hand closes on the knot.
 
 "Don't," he says, conversationally, and you're not sure it's you he's talking to. The sack goes still.
 
-${SQUAD().includes('tuft') ? `Tuft has taken a step back. She hasn't noticed she's done it. "There's someone in there," she says, very low, to you and not to him. "Not a someone. A *used-to-be*. Tied up in string." Quick Ben's eyes flick to her and away, and something in his face is, for a moment, almost apologetic.` : SQUAD().includes('ohl') ? `Ohl has taken a step back. Ohl, who has had his hands inside more dying men than anyone in the Host, has taken a step back from a grain sack.` : ''}
+${SQUAD().includes('tuft') ? `Tuft has taken a step back. She hasn't noticed she's done it. "There's someone in there," she says, very low, to you and not to him. "Not a someone. A *used-to-be*. Tied up in string." Quick Ben's eyes flick to her and away, and something in his face is, for a moment, almost apologetic.${SQUAD().includes('ohl') ? ` Behind her, Ohl says, "Hood's *teeth*," very mildly, and moves to stand where she can back into him if she needs to.` : ''}` : SQUAD().includes('ohl') ? `Ohl has taken a step back. Ohl, who has had his hands inside more dying men than anyone in the Host, has taken a step back from a grain sack. "I'd rather you didn't open that near me," he says, with great courtesy. "Whatever it is, it's past my help, and I don't like to be asked."` : ''}
 
 "Insurance," Quick Ben says again, and stands, and tucks the sack under his arm, and goes to wait at the foot of the ladder, humming.`,
       ch:[{t:'Fiddler.', go:'c4_start_fid'}]}),
@@ -588,7 +588,7 @@ They're halfway across the planks.`,
   kettle:`Kettle gets there first. She hasn't got a parade-ground voice; she's got a Falari harbour voice, the one for shouting at a boat that's leaving with your money, and it goes out over the roofs like a gull.
 
 "*Malazan! Malazan, you idiots! If we were the other lot you'd be dead already!*"`,
-  ohl:`Ohl stands up. He doesn't shout often. When he does, it's the voice he uses down the length of a hospital tent to stop an orderly sawing the wrong leg: very deep, very calm, and it carries like a bell.
+  ohl:`Ohl stands up. He doesn't shout; he never has. He uses the voice that stops an orderly sawing the wrong leg from the far end of a hospital tent: very deep, very calm, and it carries like a bell.
 
 "*Malazan. Malazan, you idiots. We are not who you are looking for.*"`,
   sgt:`You put your whole chest into it, the parade-ground voice, the one that carries across a battlefield and makes horses stop. It goes out over the roofs and comes back off the chimneys.
@@ -771,7 +771,7 @@ Kalam takes a stub of candle out of his coat, and lights it, and sets it on the 
 
 Two small yellow lights on a Daru roof. Nothing more. In a city of blue fire, the most visible thing on any roof in Darujhistan.
 
-For a long time, nothing. ${SQUAD().includes('ohl') ? `Ohl goes along the row on his knees and binds what the ridge opened, by feel, without a light, and doesn't make a sound doing it.` : `The squad binds what the ridge opened, by feel, without a light, and nobody makes a sound doing it.`}
+Nothing, for a while. ${SQUAD().includes('ohl') ? `Ohl goes along the row on his knees and binds what the ridge opened, by feel, without a light. "Tell me where," he breathes, to each of you in turn, "and then stop telling me."` : `The squad binds what the ridge opened, by feel, without a light, and nobody makes a sound doing it.`}
 
 The candles burn down a finger's width. The blue haze shifts below. Somewhere a dog barks, three streets away, and stops, as if someone had put a hand on it. ${SQUAD().includes('kettle') ? `Kettle, beside you, has stopped counting under her breath. You didn't know she was doing it until she stopped.` : `Ohl, beside you, has stopped breathing through his mouth. You didn't know he was doing it until he stopped.`}
 
@@ -1384,7 +1384,7 @@ ${S.f.c4_key === 'shield' ? `It isn't true. You both know it isn't true. He puts
 
     /* ---- chapter close: the roof at dawn ---- */
     c4_close:()=>({sp:'The chandler\'s roof', scene:'roof', again:'The row under the eaves. The squad is still awake, and it is still the hour for it.', txt:
-`The city goes out lamp by lamp. You've seen it do it before, from this roof, and it's the same, and it isn't: the blue shrinking back into the glass street by street, as if something beneath the city were breathing in, and then gone.
+`The city goes out lamp by lamp. You've seen it do it before, from this roof, and it's the same, and it isn't: the blue shrinking back into the glass street by street, the city's long breath in, and then gone.
 
 The Fourth is in a row under the eaves.
 
@@ -1427,7 +1427,7 @@ He turns the cup.
 He doesn't drink the tea. He pours it out onto the tiles, slowly, and watches it run into the gutter.`}`,
       ch:[{t:'Back to the row.', go:'c4_close'}]}),
     c4_close_brisk:()=>({sp:'Brisk', scene:'roof', txt:
-`${S.f.c4_key === 'shield' ? `She's got her shield across her knees and a hammer from Fiddler's kit, and she's knocking the rim straight, very gently, a tap at a time, with the whole of her attention.
+`${S.f.c4_key === 'shield' ? `She's got her shield flat on the slates in front of her and a hammer from Fiddler's kit, and she's knocking the rim straight, very gently, a tap at a time, with the whole of her attention.
 
 "Frost's gone out of it," she says. "Went on the way down. Left the bend." Tap. "I'm not taking the bend all the way out. I'm leaving a bit."
 
@@ -1438,8 +1438,6 @@ She doesn't explain. After a while she does anyway.
 She looks down the row, at the boy asleep under the eaves with the line under his head. "He's still behind it," she says. "That's the part they don't tell you. Sometimes the one behind the line comes with you." Tap. "I'll have to teach him where to stand."` : ''}` : `She's sitting as far down the row as the roof allows, with the ledger closed on her knee. She doesn't look up when you sit. She doesn't move away, either, which you take as the most she can manage.
 
 "I've written it," she says. "What happened on the roof. I wrote *stood aside*. I thought about writing *by order*. It was by order. Whiskeyjack said watch." She turns the ledger over in her hands. "I didn't write it. It'd be true, and it'd be a lie."
-
-A long silence.
 
 "I took the step with you. I want that in there too. I didn't have to. I did." She puts the ledger away. "Don't ask me to take it again, Sergeant. I'll take it. That's the problem."`}`,
       ch:[{t:'Back to the row.', go:'c4_close'}]}),
@@ -1457,7 +1455,7 @@ She opens her eyes and looks at the city, going grey in the dawn, all those roof
 
 "I've been on every roof in the Daru District," he says. "Some of the Gadrobi. Never this one. It's a good roof. Bad gutters." He turns his head. "In the Guild you get told where to put the line and you put it and you don't ask where the people crossing it are going. I never asked. Not once in four years."
 
-A long pause.
+He chews on it.
 
 "Where are we going, Sergeant?"
 
@@ -1481,11 +1479,11 @@ In the grey that's left, you look for them, the way you looked for them from thi
 
 The Guild is not on the roofs this morning. The Guild is under them, counting.
 
-${S.f.c4_key === 'shield' ? `And across the lake, the Moon's Spawn, black, with the dawn going round it the way water goes round a stone. You watch it. Somewhere on it, you think, something is also looking at a roof. It hesitated. You'd swear to it in front of Dujek. You're beginning to understand you'll never be asked to.` : `And across the lake, the Moon's Spawn, black, with the dawn going round it the way water goes round a stone. You watch it until your eyes ache. You have the feeling, clear as cold water, that it's looking back, and that it knows exactly which roof to look at.`}
+${S.f.c4_key === 'shield' ? `And across the lake, the Moon's Spawn, black, the dawn sliding off it and finding nothing to hold. You watch it. Somewhere on it, you think, something is also looking at a roof. It hesitated. You'd swear to it in front of Dujek. You're beginning to understand you'll never be asked to.` : `And across the lake, the Moon's Spawn, black, the dawn sliding off it and finding nothing to hold. You watch it until your eyes ache. You have the plain, cold feeling that it's looking back, and that it knows exactly which roof to look at.`}
 
 ${SQUAD().includes('tuft') ? `At the end of the row, in the grey cloak, Tuft is looking at it too.` : ''}${SQUAD().includes('vell') ? ` Vell is asleep at last, one hand on the coil of line, like a purse in a strange inn.` : SQUAD().includes('ellis') ? ` Ellis is at the parapet with her legs over the drop, watching the roofs instead: the planks, the gutters, the one that's pine cut to look like oak. Counting them, the way she counted them two years ago.` : ''}
 
-Below, Whiskeyjack has gone back down to his bucket. Kalam has gone somewhere. Quick Ben is sitting on the chandler's step with the sack in his lap, whistling, and the city starts, around all of you, to shout about fish.`,
+Below, Whiskeyjack has gone back down to his bucket. Kalam has gone somewhere. Quick Ben is sitting on the chandler's step with the sack in his lap, whistling. Down in the crossing a woman is selling eels off a board, loudly, to people who slept through all of it.`,
       ch:[{t:'Sleep. Or pretend.', fx:()=>{S.f.c4_done=1;}, go:()=>chapterEnd(4, S.f.c4_key || 'aside')}]}),
   }
 };

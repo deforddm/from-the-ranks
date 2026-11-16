@@ -1123,7 +1123,7 @@ He drinks. "Put it on my list, will you. The room. Not a name. I don't know how 
     c3_inn_tuft:()=>({sp:'Tuft', txt:
 `She's at the back table, alone, in the corner the lamp doesn't reach, which she has chosen on purpose. The Deck is on the table in front of her, face down, in a neat square stack, and both her hands are flat on either side of it, not touching.
 
-"It's been warm since the gate," she says, before you can speak. "Warmer since the fat man looked at me." Her eyes stay on the stack. "He looked at me like he'd read my cards already. Nobody's done that since the staff."
+"It's been warm since the gate," she says, before you can speak. "Warmer since the fat man looked at me." She doesn't look up from the stack. "He looked at me like he'd read my cards already. Nobody's done that since the staff."
 
 ${S.f.c2_drawn ? `"I drew on the plain, and it was the Raven, or near enough, and the Raven came. I'm frightened of what I'll draw here, and I'm frightened of what'll come if I don't."` : S.f.c2_noCard ? `"You told me not to, on the ridge. I didn't. Nothing happened, and a mage burned anyway. I've been thinking about whether those are connected. I've decided they aren't. I'd like to be wrong."` : `"I'd like to draw one, Sergeant. For the city. It's owed one."`}
 
@@ -1669,9 +1669,9 @@ The city goes out lamp by lamp: one at a time, street by street, the blue shrink
 
 And above the haze, the Moon's Spawn. The light is coming up now, and it doesn't catch any; the sun goes round it the way water goes round a stone. Black. Silent. Close enough, in this light, to see that it is not smooth: that there are towers on it, and windows in the towers, and no light in the windows.
 
-${S.f.c3_key === 'refuse' ? `${SQUAD().includes('brisk') ? `Brisk is sitting against the parapet with her arm bound and her shield across her knees. She hasn't said much since the alley, but she's put the shield on the side of the roof that faces the Daru District.` : ''}
+${S.f.c3_key === 'refuse' ? `${SQUAD().includes('brisk') ? `Brisk is sitting against the parapet with her arm bound and her shield upright beside her. She hasn't said much since the alley. She's put the shield on the side of the roof that faces the Daru District.` : ''}
 
-${S.f.c3_wjTold ? `Down below, Whiskeyjack has moved his bucket. He's put it where he can see the mouth of the alley to Daru. He hasn't said why, and he isn't going to.` : `Down below, Whiskeyjack is on his bucket, looking at the lake. He doesn't know. You don't know yet whether that was the right thing, and you're beginning to understand that you won't, for a long time.`}` :
+${S.f.c3_wjTold ? `Down below, Whiskeyjack has moved his bucket. He's put it where he can see the mouth of the alley to Daru. He hasn't said why, and he isn't going to.` : `Down below, Whiskeyjack is on his bucket, looking at the lake. He doesn't know. You don't know yet whether that was the right thing, and you're beginning to understand that you won't know for years.`}` :
 `${SQUAD().includes('brisk') ? `Brisk is sitting at the far end of the row, as far as the roof allows, with the ledger on her knee. It's closed. She has written one line in it tonight, and you know exactly what the line says, and exactly what it doesn't.` : ''}
 
 The purse is under your head. It makes a very poor pillow. It makes a noise every time you move.`}

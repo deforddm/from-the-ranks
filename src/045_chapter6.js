@@ -2505,7 +2505,7 @@ ${S.f.wjRegard > 0 ? `"Get some sleep," he says. "Somebody should. It won't be m
     /* ---- chapter close: the terrace steps at dawn ---- */
     c6_close:()=>{ const dead = Object.keys(S.dead || {}).filter(id => S.dead[id] && S.dead[id].ch === 6); const w = ['None','One','Two','Three','Four','Five','Six'][SQUAD().length] || String(SQUAD().length);
       return {sp:'The terrace steps · dawn', scene:'fete_garden', again:'The terrace steps, in the wet. Nothing on them has moved.', txt:
-`${SQUAD().length > 1 ? `The Fourth sits on the terrace steps in the wet, in Lady Simtal's blue with the armbands torn off, and the bells ring a long while before anyone speaks.` : `You sit on the terrace steps in the wet, in Lady Simtal's blue with the armband torn off, and there's nobody to say anything to.`}
+`${SQUAD().length > 1 ? `The Fourth sits on the terrace steps in the wet, in Lady Simtal's blue with the armbands torn off, and the bells ring through two changes before anyone speaks.` : `You sit on the terrace steps in the wet, in Lady Simtal's blue with the armband torn off, and there's nobody to say anything to.`}
 
 ${dead.length ? `There's room on the step for ${C6H.words(dead.length)} more. Nobody sits in it. Nobody says they're not sitting in it. ${C6H.names(dead)}.` : `${w}. You count twice, the way you always do, and it's right both times, and you sit with that for a while.`}${C6H.here(S.f.c6_rimeBit) ? `
 
@@ -2527,15 +2527,15 @@ ${SQUAD().length > 1 ? `The squad is awake. You could talk to any of them. It's 
 
 A pause.
 
-"We don't leave people. I said it on the lawn when I picked him up. I didn't mean to say it. It came out." She sights along the rim. "I've been saying it about the Fourth for as long as there's been a Fourth. I didn't know I meant *him* too. I didn't know it went out that far."` : S.f.c6_key === 'cellars' ? `She has the ration ledger open on her knee. She's written one line. You can read it upside down: *One vault. Forty and twelve. Not fired.*
+"We don't leave people. I said it on the lawn when I picked him up. I didn't mean to say it. It came out." She sights along the rim. "Nine years I've said it about the Fourth. Didn't know I meant *him* too. Didn't know it went out that far."` : S.f.c6_key === 'cellars' ? `She has the ration ledger open on her knee. She's written one line. You can read it upside down: *One vault. Forty and twelve. Not fired.*
 
-"We sat on crates," she says. "While they fought the thing on the lawn, we sat on crates in a hole." She closes the ledger. "Best thing we've ever done. Nobody will ever know." A beat. "That's how you know it was the best thing."` : S.f.c6_steppedIn ? `She has her shield flat on the step beside her, and ${S.f.c4_key === 'shield' ? `the rim has two bends in it now, side by side` : `there's a new bend in the rim, fresh and bright`}.
+"We sat on crates," she says. "While they fought the thing on the lawn, we sat on crates in a hole." She closes the ledger. "Best thing we've ever done. Nobody will ever know." A beat. "Good."` : S.f.c6_steppedIn ? `She has her shield flat on the step beside her, and ${S.f.c4_key === 'shield' ? `the rim has two bends in it now, side by side` : `there's a new bend in the rim, fresh and bright`}.
 
 ${dead.length ? `"I wrote ${C6H.her(dead)} in the ledger," she says. "${C6H.names(dead)}. ${dead.includes('ohl') ? `Ohl first. He had to be written somewhere.` : `Ohl's got his list. I've got the rations.`} I didn't take ${C6H.her(dead)} off the count. I drew a line under it." Her voice is perfectly level. "We don't leave people. We didn't leave ${C6H.her(dead)}. We stood where ${dead.length === 1 ? (['ohl','vell'].includes(dead[0]) ? 'he' : 'she') : 'they'} stood, and ${dead.length === 1 ? (['ohl','vell'].includes(dead[0]) ? 'he' : 'she') : 'they'} fell there, and that isn't leaving." A long breath out. "I'm going to keep saying that until I believe it."` : `${S.f.c4_key === 'shield' ? `"Two dents," she says. "One for the roof. One for tonight. I'm leaving them both in."` : `"One dent," she says. "For tonight. There isn't one for the roof; we didn't stand there. I'm leaving this one in."`} She runs her thumb along the rim. "That's what a line's for, Sergeant. The ones who wouldn't have lived. That boy wouldn't have." A pause. "Neither would we, if something hadn't come out of a doorway. I'm not going to think about that. I'm going to think about the line."`}` : `She's sitting as far down the steps as the steps allow, with the ledger closed on her knee. She doesn't move away when you sit, which you take as the most she can manage.
 
 ${S.f.c4_key === 'aside' ? `"Twice," she says. "*Stood aside.* I've written it twice now. I didn't even have to think how to spell it this time."` : `"I wrote *stood aside*," she says. "I had to think how to spell it. On the roof I didn't have to write it at all."`}
 
-"I took the step with you. Again. I'll always take it." She puts the ledger away. "That's the problem, Sergeant. You should know that it's a problem."`}
+"I took the step with you. Again. I'll always take it." She puts the ledger away. "That's the problem, Sergeant. Thought you should know."`}
 
 She puts her hand flat on her gorget, over the place where the letter is. Still sealed. "Not yet," she says, to it.`,
       ch:[{t:'Back to the steps.', go:'c6_close'}]}; },
@@ -2605,11 +2605,11 @@ ${dead.length ? `"I keep reading the last ${dead.length === 1 ? 'one' : 'ones'},
 ${SQUAD().includes('tuft') ? (S.f.c6_tuft === 'glove' ? `He looks across at Tuft, by the fountain. "I put my hand on her head last night," he says. "Nothing. Nobody. I've never in my life been so glad to find nothing in anybody."` : S.f.c6_tuft === 'shadow' ? `He looks at Tuft, at the grey in her hair. "A thumb," he says. "Turning pages." He leaves it there.` : S.f.c6_tuft === 'dark' ? `He looks at Tuft at the balustrade. "I'm not writing that," he says. "Any of it."` : `He looks at Tuft, sitting apart, and doesn't put his hand on her head. "I tried, this morning," he says. "Something looked back at me." He puts the oilcloth away. "I've never been afraid of one of ours before."`) : ''}`,
       ch:[{t:'Back to the steps.', go:'c6_close'}]}; },
     c6_close_ellis:()=>({sp:'Ellis', scene:'fete_garden', txt:
-`She's at the end of the step, facing out, where a scout sits. She keeps her eyes on the lake when you sit down. She hasn't looked at you since the hillside.
+`She's at the end of the step, facing out, where a scout sits. She watches the lake when you sit down, not you. She hasn't looked at you since the hillside.
 
 ${S.f.c6_key === 'cellars' ? `"That paper," she says, to the lake. "In your coat. They'll know it's gone by noon. They'll know who by supper." A pause. "Don't keep it anywhere you sleep."` : S.f.c6_key === 'alley' ? (S.f.c6_steppedIn ? `"You stepped in," she says, to the lake. "I saw." That's all. It isn't forgiveness. You can hear it not being forgiveness. It isn't nothing, either.` : `She's said her sentence, in the alley, and it was the right one, and she isn't going to say another.`) : `"The captain's sword drank that lance," she says, to the lake. "Toc would have given his other eye to see that." A pause. "He'd have been insufferable about it for a year."`}
 
-${S.f.c6_horses ? `After a long time: "The old man with the ponies. He'll be at the horse fair in the spring, outside the Worry Gate." She pulls her glove tight at the wrist. "I might go."` : ''}
+${S.f.c6_horses ? `Later: "The old man with the ponies. He'll be at the horse fair in the spring, outside the Worry Gate." She pulls her glove tight at the wrist. "I might go."` : ''}
 
 She doesn't look at you. You sit there until the sun is properly up, and she lets you, and that's the whole of it.`,
       ch:[{t:'Back to the steps.', go:'c6_close'}]}),
@@ -2629,7 +2629,7 @@ The sun comes up over the lake behind him and he doesn't turn round to look at i
     c6_close_end:()=>({sp:'Lady Simtal\'s garden · dawn', scene:'fete_garden', txt:
 `The house at the end of the lawn.
 
-You look at it for a long time. It doesn't do anything. It sits in its yard of mounds with its door shut and its one window lit, the way a house sits at the end of a lane in a country you're only passing through; and you have the feeling, clear as cold water, that it will be sitting there when this garden is a city and the city is a field, and that it knows exactly what is inside it, and has no intention of ever letting it out.
+You look at it. It doesn't do anything. It sits in its yard of mounds with its door shut and its one window lit, the way a house sits at the end of a lane in a country you're only passing through; and you have the feeling, clear as cold water, that it will be sitting there when this garden is a city and the city is a field, and that it knows exactly what is inside it, and has no intention of ever letting it out.
 
 *Thud*, you think, and wait. Nothing comes. For the first time since the hills, nothing comes.
 

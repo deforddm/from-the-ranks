@@ -1490,11 +1490,11 @@ Above the ridge, very high, a black mote hangs in the pale sky. It has been ther
     c5_close:()=>({sp:'The long ridge · dawn', scene:'hills', again:'The lee of the barrow-stones, for a moment longer. The Fourth hasn\'t started down yet.', txt:
 `Three days back to the city. Paran's horse will pass you on the road before noon, and he won't stop, and you won't expect him to.
 
-The Fourth sits for a moment in the lee of the barrow-stones before the walk, because it's the last moment anyone is going to get. They haven't slept. ${S.f.c5_spotted ? `The night before was no better. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}
+The Fourth sits in the lee of the barrow-stones before the walk, and nobody suggests getting up. They haven't slept. ${S.f.c5_spotted ? `The night before was no better. It's in their faces, the grey, sanded look of soldiers who have been looked at by something that did not care, twice.` : `It's in their faces, the grey, sanded look of soldiers who have been awake too long in the presence of something that did not need to sleep.`}
 
 ${S.f.c5_ellisThrough ? `Five. Brisk counted the rations this morning and the number came out wrong, and she counted again, and it came out wrong the same way, and she closed the ledger and hasn't opened it since.` : S.f.c5_tuftMarked ? `Tuft sits with her hood up. Everyone knows why.` : ''}
 
-The squad is awake. You could talk to any of them. It's the hour for it.`,
+None of them is asleep. Any of them would talk, if you sat down.`,
       ch:[{t:'Brisk.', req:()=>SQUAD().includes('brisk') && !S.f.c5_closeBrisk, fx:()=>{ S.f.c5_closeBrisk=1; }, go:'c5_close_brisk'},
           {t:'Kettle.', req:()=>SQUAD().includes('kettle') && !S.f.c5_closeKettle, fx:()=>{ S.f.c5_closeKettle=1; }, go:'c5_close_kettle'},
           {t:'Ohl.', req:()=>SQUAD().includes('ohl') && !S.f.c5_closeOhl, fx:()=>{ S.f.c5_closeOhl=1; }, go:'c5_close_ohl'},
@@ -1519,13 +1519,11 @@ The sun comes up over the hills behind him, and the long shadows of the barrow-s
 
 "I've been trying to work out what I'd write," she says. "*Scout, Ellis, lost.* She's not lost. She walked. *Scout, Ellis, detached.* By whose order?" She turns the ledger over. "By yours. In the ledger, that's by yours."
 
-A long silence.
+"We don't leave people. Nine years I've said it. I said it to Tav, the day he joined the Second. *We don't leave people.*" She puts the ledger away. "Easy to say. Till somebody walks into a hole in the air on purpose." She finally looks at you. "I don't know if you were wrong. That's what I can't forgive. I don't *know*."` : S.f.c5_briskHeld ? `She's sitting with her shield against her shins and there's a bruise coming up along her jaw, the shape of the heel of a small hand.
 
-"We don't leave people. Nine years I've said it. I said it to Tav, the day he joined the Second. *We don't leave people.*" She puts the ledger away. "It's easy to say when nobody's ever walked off into a hole in the air on purpose. It's easy to say when *leaving* only goes one way." She finally looks at you. "I don't know if you were wrong. That's what I can't forgive. I don't *know*."` : S.f.c5_briskHeld ? `She's sitting with her shield across her knees and there's a bruise coming up along her jaw, the shape of the heel of a small hand.
+"She's not speaking to me," she says, before you can. "She won't. Not for a while." She touches the bruise. "Claw-trained. Good elbow."
 
-"She's not speaking to me," she says, before you can. "She won't. Not for a long while." She touches the bruise. "Claw-trained. Good elbow."
-
-"You didn't tell me to." It isn't a complaint. "I did it anyway. I'd have done it if you'd told me not to." She sights along the rim of the shield. "That's what *we don't leave people* costs, Sergeant. Somebody has to be the one who doesn't let go. And then they're the one she doesn't look at." A breath. "It's all right. I've been not-looked-at before. It's what the shield's for."` : S.f.c5_ellisHeld ? `She's sitting with her back to a barrow-stone, watching Ellis at the end of the line.
+"You didn't tell me to." It isn't a complaint. "I did it anyway. I'd have done it if you'd told me not to." She sights along the rim of the shield. "That's what *we don't leave people* costs, Sergeant. Somebody doesn't let go. Then she doesn't look at them." A breath. "Fine. Been not-looked-at before. It's what the shield's for."` : S.f.c5_ellisHeld ? `She's sitting with her back to a barrow-stone, watching Ellis at the end of the line.
 
 "You grabbed her," she says. "Good." That's all, for a while. Then: "We don't leave people. People don't get to leave us either. That's the half you don't say out loud, because it sounds like a cell." She looks at you. "She'll hate you a while. Let her. It's cheaper than the other thing."` : S.f.c5_tuftMarked ? `She's sitting with the shield upright between her boots, and she's looking at Tuft, at the hood, at what's under it.
 

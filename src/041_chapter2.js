@@ -40,7 +40,7 @@ const CH2 = {
     paras:[
 `The Black Moranth went south the morning the wagon left, before it had rolled a mile, eight Bridgeburners riding things that should not fly, bound for the north shore of Lake Azur and a boat across it by night. Hedge was still complaining about the boat when the quorl lifted him. The sky over the Pale was full of wings for the time it takes to say a name, and then it was not. Whiskeyjack did not wave. Nobody expected him to. Kettle watched until there was nothing to watch, and then she counted the munitions.`,
 `You are Sergeant {sgt}, Fourth Squad, Seventh Company marines, and you are the baggage. One wagon, one mule, eighteen days of hardtack, the Bridgeburners' spare kit under an oilcloth, and a Rhivi guide who has said eleven words in three days and rationed them. The grass is chest-high on Brisk and taller than Tuft. It does not end. Sethand says it ends at the Gadrobi Hills, and says it the way you'd tell a child the sea has a far side.`,
-`Day four. Somewhere ahead, a city with blue fire in its streets. Somewhere behind, a camp that has stopped burning. Somewhere on the same road, though nobody has said so, a captain who should have died twice.`],
+`Day four. Ahead, a city with blue fire in its streets. Behind, a camp that has stopped burning. And somewhere on the same road, though nobody has said so, a captain who should have died twice.`],
     go:'Ride', node:'c2_start'},
 
   areas:[
@@ -849,7 +849,7 @@ ${SQUAD().includes('kettle') && !S.f.c2_bones ? `Kettle has two knucklebones out
 
 "One card, Sergeant. I don't want to. I think I have to." She doesn't look at Sethand, who is not looking at her with great skill. "Something's happening tonight. I can feel it in the warren like a draught under a door, and the Deck's warm, and it's never warm."
 
-${SQUAD().includes('ellis') ? `Ellis, from the dark beyond the stakes, not loudly: "That thing got a man killed at Pale. A cadre mage read it three nights running and on the fourth the Hounds came." A pause. "I'm not saying it's the Deck's fault. I'm saying I've never seen it help." Tuft doesn't answer her. It is, you realise, the first thing Ellis has said that Tuft has heard.` : `Kettle: "Draw it. If it's bad we'll know it's bad. If it's good, Brisk can tell us why it's bad anyway."`}`,
+${SQUAD().includes('ellis') ? `Ellis, from the dark beyond the stakes, not loudly: "That thing got a man killed at Pale. Cadre mage read it three nights running. Fourth night, the Hounds." A pause. "Not the Deck's fault. I've just never seen it help." Tuft doesn't answer her. It is, you realise, the first thing Ellis has said that Tuft has heard.` : `Kettle: "Draw it. If it's bad we'll know it's bad. If it's good, Brisk can tell us why it's bad anyway."`}`,
       ch:[{t:'Let her draw.', fx:()=>{ S.f.c2_drawn=1; S.card = dealCard(['raven','raven','raven','oponn','obelisk','knight']); }, go:()=>cardSequence(()=>talk('c2_card'))},
           {t:'"Put it away. Not tonight."', fx:()=>{S.f.c2_noCard=1; loy('tuft',-1); loy('brisk',1); if (SQUAD().includes('ellis')) loy('ellis',1);}, go:'c2_fire_no'},
           {t:'Not yet.'}]},
@@ -866,7 +866,7 @@ Sethand has not looked at the card. He has looked at Tuft's face while she looke
 ${SQUAD().includes('brisk') ? `Brisk, feeding the fire a stick at a time: "She let you win." A pause. "She didn't. But she'll say she did. Let her."` : `She's still muttering odds at the dark when you fall asleep.`}` : S.f.c2_bones === 'lost' ?
 `"${c2Watch()[0].toUpperCase() + c2Watch().slice(1)}," says Kettle, and is asleep before you've finished standing up, curled round her satchel with the bones in her fist.
 
-The stars over the Rhivi Plain are very large and very many, and there is a long time to look at them.` :
+The stars over the Rhivi Plain are very large and very many, and you have the whole of the watch to look at them.` :
 `Kettle puts the bones away. "Another night," she says. "I've been working on a system."`,
       ch:[{t:'The camp.'}]}),
     c2_fire_no:()=>({sp:'Tuft', txt:
@@ -1260,7 +1260,7 @@ And to the south-west, past the hills, low on the horizon, a smudge. Blue. Not s
 
 ${SQUAD().includes('ellis') ? `Ellis has stopped too. She's looking at the blue the way Toc looked at the place where the spiral stopped.
 
-` : ``}${S.f.c2_key === 'light' ? `Brisk, at the wagon: "Eleven days, he said. It'll be twelve. You can tell him why or I can, Sergeant, and you'll do it better, and I'll do it first."` : `Brisk, at the wagon: "Eleven days, he said. It'll be eleven. Write that down."`}`,
+` : ``}${S.f.c2_key === 'light' ? `Brisk, at the wagon: "Eleven days, he said. It'll be twelve. You tell him why, Sergeant. You'll do it better. I'll do it first."` : `Brisk, at the wagon: "Eleven days, he said. It'll be eleven. Write that down."`}`,
       ch:[{t:'"Sethand. The dust-line. What was it?"', go:'c2_hills_dust'},
           {t:'"Ellis. You\'ve seen it before."', req:()=>SQUAD().includes('ellis') && !S.f.c2_hillsEllis, go:'c2_hills_ellis'},
           {t:'The road. The city.', go:()=>startExplore()}]}),
@@ -1326,7 +1326,7 @@ Kettle: "${numw(S.inv.sharper, true)} sharper${S.inv.sharper === 1 ? '' : 's'}, 
 
 Brisk: "It's in."
 
-The blue smudge on the horizon has not moved. It's waiting. Everything on this plain, you have come to understand, has been waiting, and the Fourth is the last thing to arrive.`,
+The blue smudge on the horizon has not moved. It's waiting. Everything on this plain has been waiting, you've come to understand. The Fourth is only the last to arrive.`,
       ch:[{t:'Into the hills.', fx:()=>{S.f.c2_done=1;}, go:()=>chapterEnd(2, S.f.c2_key || 'road')},
           {t:'Not yet.'}]}),
   }

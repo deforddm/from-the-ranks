@@ -52,9 +52,9 @@ const CH1 = {
   endCap:()=>'Dawn below Pale. The cadre row is black frames and smoke, and the wagon is loaded for the south.', // the end page's caption, under the dawn vista (019c vistas/pale)
   intro:{loc:'The Pale', sub:'Genabackis · two nights later', cap:'The tent lines under a bruised sky. Somewhere north, the cadre row has one lamp lit.',
     paras:[
-`Two nights since the tunnels. The Host has stopped counting its dead and started counting its living, which is a shorter job and a worse one. A new captain arrived this afternoon with a noble's seat on a horse and a commission for the Bridgeburners, and the Bridgeburners have been very quiet about it. With the Bridgeburners, quiet is loud.`,
+`Two nights since the tunnels. The Host has stopped counting its dead and started counting its living, which is a shorter job and a worse one. A new captain rode in this afternoon with a noble's seat on a horse and a commission for the Bridgeburners in his coat, and the Bridgeburners have gone very quiet about it. With the Bridgeburners, quiet is loud.`,
 `You are Sergeant {sgt}, Fourth Squad, Seventh Company marines. The Fourth has been attached to Whiskeyjack for whatever comes next. What comes next hasn't been said. Kettle has counted the munitions twice since supper. Tuft has not slept.`,
-`The runner said: *the Bridgeburners' fire, when you're ready.* Then he looked at your squad, all five, and added, "Sergeant," as if it were a question.`],
+`The runner said: *the Bridgeburners' fire, when you're ready.* Then he looked at your squad, all five, and added, "Sergeant?" and was gone before anyone could tell him.`],
     go:'Walk the lines', node:'c1_start'},
 
   /* Terrain kit (25b, v13.22): a light touch: crates by Pell's wagon (8), a spear stack (%), the Host's horses on the east picket (@), a trodden patch (:), broken stone in the south-west corner (3); a sentry by the pits and a regular who can't sleep (folk). */
@@ -171,7 +171,7 @@ The tents are full of the Host, asleep. Not one of them gets up.${SQUAD().includ
 
 Tuft is at the edge of the light with her back to the tent lines. She has been there since dark.
 
-"Sergeant." Brisk, not looking up. "Bridgeburners want you. Runner said *when you're ready*, which means now."
+"Sergeant." Brisk, not looking up. "Bridgeburners want you. Runner said *when you're ready*. Means now."
 
 ${S.f.decoy ? `Kettle finishes on her fingers, since a grey cloak has her ledger.` : S.f.p_decoyCaught ? `Kettle snaps the ledger shut, then opens it again to make sure every page is still there. A grey cloak read it at the tunnel mouth two nights ago, moving his lips, and she has not forgiven the ledger.` : `Kettle snaps the ledger shut.`} "${c1Count()}. Same as this morning.${S.inv.sharper === 2 && S.inv.burner === 1 && S.inv.cusser === 1 ? ` Same as two nights ago.` : ``}${S.inv.cusser ? ` The cusser's called Maud, if anyone's asking." Nobody is.` : ` Maud went off under the north quarter, if anyone's asking." Brisk isn't.`}`,
       ch:[{t:'Walk the lines.', go:()=>startExplore()},
@@ -793,7 +793,7 @@ The Host sleeps through all of it. In the morning somebody will find what's left
     c1_sleep:()=>({sp:'The Fourth\'s fire', scene:'camp_night', fx:()=>{ rest(`The Fourth sleeps two hours by its own fire${SQUAD().includes('ohl') ? ', and Ohl stitches what needs it' : ''}. Wounds close, mostly.`); }, txt:
 `The Fourth's fire has burned down to the size of a hand, and nobody has tried to steal it.${SQUAD().includes('brisk') ? ` Brisk takes the first watch without being asked, which is the only way Brisk takes anything.` : ''}
 
-${S.f.c1_raidFought && SQUAD().includes('ohl') ? `Ohl goes round the squad with the lamp, the needle and the tea, in that order, and nobody argues with any of the three.` : S.f.c1_raidLet && SQUAD().includes('kettle') ? `Kettle sits with her back to Pell's wagon and her satchel in her lap and doesn't count anything, which is worse than counting.` : SQUAD().includes('ohl') ? `Ohl makes the tea. The cups stay full. He makes it anyway; it's medicine, technically.` : ''}${SQUAD().includes('tuft') ? ` Tuft lies down with her back to the cadre row and doesn't close her eyes. You can tell from the way she doesn't move.` : ''}
+${S.f.c1_raidFought && SQUAD().includes('ohl') ? `Ohl goes round the squad with the lamp, the needle and the tea, in that order, and nobody argues with any of the three.` : S.f.c1_raidLet && SQUAD().includes('kettle') ? `Kettle sits with her back to Pell's wagon and her satchel in her lap and doesn't count anything, which is worse than counting.` : SQUAD().includes('ohl') ? `Ohl makes the tea. The cups stay full. "It's medicine," he tells them, unoffended. "Medicine is used to being ignored. It waits."` : ''}${SQUAD().includes('tuft') ? ` Tuft lies down with her back to the cadre row and doesn't close her eyes. You can tell from the way she doesn't move.` : ''}
 
 *Sleep*, Tattersail would say. *Or pretend.*
 
@@ -808,7 +808,9 @@ Then the dogs.
 
 They aren't dogs. Brisk knows it before you do; her shield is up and her feet are set and she is saying "Sergeant" in a voice you have heard exactly once before, at Nathilog. Tuft has both hands out and her cloak is *gone*, not lifted, gone, and she is whispering the name of her warren the way you'd whisper the name of a friend who's just walked into a room full of enemies.
 
-Something the size of a horse goes over the picket line without touching it. Something else, further off, howls, and the howl has a shape, and the shape is Shadow.
+${SQUAD().includes('ohl') ? `Ohl is up with his satchel open before he is properly awake. "Hood's *teeth*," he says, quite calmly, and lays the bandages out in the order he'll want them.
+
+` : ''}Something the size of a horse goes over the picket line without touching it. Something else, further off, howls, and the howl has a shape, and the shape is Shadow.
 
 "Hounds," Tuft says. "Hounds of *Shadow*. Sergeant, they're hunting. That's a hunt."`,
       ch:[{t:'"Form on me. Cadre row."', go:'c1_orders'}]}),
@@ -819,7 +821,7 @@ Two voices reach you at once.
 
 Tattersail, from her tent, through the canvas, hoarse: *"Sergeant! The line. Hold the line by the cadre row. Give me a little time and I'll give you a way out."*
 
-And from the dark to your left, the grey cloak, unhurried, close enough to touch: "Leave the mage, Sergeant. She'll live or she won't. Seal the cadre tent and hold the crate. My people will hold with you. Three rounds. Then we're gone and so are you."${S.f.c1_clawTentAsked ? ` A beat. "You asked me what I wanted with the cadre tent. I took your advice, Sergeant. I noticed it."` : ''}${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` He says it to you. He is looking at ${NAME(pWho('c1_clawNoticed'))}.` : ''}
+And from the dark to your left, the grey cloak, unhurried, close enough to touch: "Leave the mage, Sergeant. She'll live or she won't. Seal the cadre tent and hold the crate. My people will hold with you. Until the dogs lose interest, and they will. Then we're gone and so are you."${S.f.c1_clawTentAsked ? ` A beat. "You asked me what I wanted with the cadre tent. I took your advice, Sergeant. I noticed it."` : ''}${pWho('c1_clawNoticed') && pWho('c1_clawNoticed') !== 'sgt' ? ` He says it to you. He is looking at ${NAME(pWho('c1_clawNoticed'))}.` : ''}
 
 ${S.loy.tuft >= 2 ? `Tuft, at your shoulder, so quiet only you hear it: "Her. Please."` : `Tuft is looking at the grey cloak the way she looks at the Deck when it's about to say something.`}
 
@@ -936,7 +938,7 @@ ${SQUAD().includes('brisk') ? `Brisk's shield is already up. The first knife rin
 `"Shield," you say, and Brisk's is already up, and the first knife rings off it.`,
       ch:[{t:'Fight', go:()=>startBattle('accounting',{})}]}),
     c1_after_accounting:()=>({sp:'The picket line', scene:'camp_night', fx:()=>{ note('The ledger stays open. That is not nothing.','good'); S.f.c1_accFought=1; }, txt:
-`When it's done, none of them are there. Not dead there; not there. The ground where they fell is ground. Ohl stares at it a long time.
+`When it's done, none of them are there. Not dead there; not there. The ground where they fell is ground.${SQUAD().includes('ohl') ? ` Ohl crouches and lays his palm on it, the way he'd feel a brow for fever. "I have a rule," he says. "I don't leave a field until I know what to write." He stays crouched. "I don't know what to write."` : ''}
 
 "They don't leave their own," Tuft says. "Ever. It's the only rule they keep."
 
@@ -998,9 +1000,9 @@ ${S.f.c1_houndDown ? `"And Quick says the Fourth put ${S.f.c1_houndDown > 1 ? 'b
 Tuft is at the edge of the light with her back to the cadre row.
 
 ${S.f.c1_key === 'line' ? `"Sergeant." She doesn't turn round. "Thank you." It's the first time she's said it. She doesn't say for what, and you don't ask, and after a while she comes and sits down by the fire, on the side where you can see her.` :
-  `"Sergeant." She doesn't turn round. "The grey cloak. At the tent, when his people held with us. He called me by my name." A long silence. "Not the one you'd think. The other one." She doesn't come to the fire. She stays where she is, in the dark, where you can't see her cast.`}
+  `"Sergeant." She doesn't turn round. "The grey cloak. At the tent, when his people held with us. He called me by my name." Then, after a while: "Not the one you'd think. The other one." She doesn't come to the fire. She stays where she is, in the dark, where you can't see her cast.`}
 
-Somewhere north, the cadre row is still burning. Somewhere south, a long way, a city with blue fire in its streets that has never heard of you. The wagon leaves at dawn.`,
+North, the cadre row is still burning. Eleven days south, a city with blue fire in its streets has never heard of you. The wagon leaves at dawn.`,
       ch:[{t:'Dawn.', go:()=>chapterEnd(1, S.f.c1_key || 'line')}]}),
   }
 };
