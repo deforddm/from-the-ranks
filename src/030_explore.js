@@ -139,7 +139,7 @@ function unspokenLine(id, ch){
 }
 const npcAt = (x,y) => AREA().npcs.find(n => n.x === x && n.y === y && (!n.show || n.show()));
 const tileAt = (x,y) => { const m = AREA().map; return (y >= 0 && y < m.length && x >= 0 && x < m[0].length) ? m[y][x] : '#'; };
-const palePass = (x,y) => { const a = AREA(), ch = tileAt(x,y); return ch !== '#' && (a.walk.includes(ch) || !!(a.triggers && a.triggers[ch])) && !npcAt(x,y); };
+const palePass = (x,y) => { const a = AREA(), ch = tileAt(x,y); return ch !== '#' && (a.walk.includes(ch) || !!(a.triggers && a.triggers[ch])) && !npcAt(x,y) && !folkAt(x,y); }; // ambient folk (25b) stand in the way like anyone
 function exploreTap(x, y){
   if (walking || !$('#sheet').hidden) return;
   const npc = npcAt(x,y);
@@ -148,6 +148,7 @@ function exploreTap(x, y){
     if (path) walk(path, () => talk(npc.node()));
     return;
   }
+  const fk = folkAt(x, y); if (fk) { folkTap(fk); return; } // somebody who lives here: one line, nothing else (25b)
   if (!palePass(x,y)) return;
   const m = reachMap(S.pos.x, S.pos.y, palePass, 99); if (!m.has(K(x,y))) return;
   walk(pathFrom(m, x, y), () => { const tr = AREA().triggers, ch = tileAt(x,y); if (tr && tr[ch]) talk(tr[ch]); });
@@ -229,13 +230,15 @@ function drawExplore(t){
       if (ch === 'C') glow(ctx, x*T + T/2, y*T + T*.7, T*2.4, '#9a86e0', .16 + Math.sin(t/700)*.05);
     }));
   }
+  tkFrame(ctx, T, t, a); // the terrain kit's fires and lanterns (25b)
   // a mouse over the map: the tile it would walk to, brighter over someone to talk to
-  const hv = G.hover; if (hv && !walking && $('#sheet').hidden) { const n = npcAt(hv.x, hv.y); if (n || palePass(hv.x, hv.y)) { ctx.strokeStyle = n ? 'rgba(232,192,115,.85)' : 'rgba(232,192,115,.38)'; ctx.lineWidth = 1.5; ctx.strokeRect(hv.x*T + 1.5, hv.y*T + 1.5, T - 3, T - 3); } }
+  const hv = G.hover; if (hv && !walking && $('#sheet').hidden) { const n = npcAt(hv.x, hv.y) || folkAt(hv.x, hv.y); if (n || palePass(hv.x, hv.y)) { ctx.strokeStyle = n ? 'rgba(232,192,115,.85)' : 'rgba(232,192,115,.38)'; ctx.lineWidth = 1.5; ctx.strokeRect(hv.x*T + 1.5, hv.y*T + 1.5, T - 3, T - 3); } }
   // ways on: a beacon and a name on every trigger
   drawWays(ctx, T, t);
   // NPCs
   a.npcs.forEach(n => { if (n.show && !n.show()) return; drawFigure(ctx, n.kind, n.x*T + T/2, n.y*T + T*.6, T/32, t, {phase:n.x + n.y*3, still:!!n.still});
     if (n.fresh && n.fresh()) { const by = Math.sin(t/300)*2; ctx.fillStyle = '#e8c073'; const cx = n.x*T+T/2, cy = n.y*T - T*.15 + by; ctx.beginPath(); ctx.moveTo(cx, cy-T*.16); ctx.lineTo(cx+T*.1, cy); ctx.lineTo(cx, cy+T*.12); ctx.lineTo(cx-T*.1, cy); ctx.fill(); } });
+  drawFolk(ctx, T, t); // ambient folk (25b)
   // party: sergeant + trail, interpolated
   // a squadmate standing on the map to be talked to is not also in the line behind
   const onMap = new Set(a.npcs.filter(n => !n.show || n.show()).map(n => n.kind));

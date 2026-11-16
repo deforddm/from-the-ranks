@@ -146,7 +146,7 @@ window.addEventListener('keydown', e => {
   if (view === 'explore' && !walking) {
     const dir = {ArrowUp:[0,-1], ArrowDown:[0,1], ArrowLeft:[-1,0], ArrowRight:[1,0], w:[0,-1], s:[0,1], a:[-1,0], d:[1,0]}[low];
     if (dir) { e.preventDefault(); exploreTap(S.pos.x + dir[0], S.pos.y + dir[1]); return; }
-    if ((k === ' ' || low === 'e' || (k === 'Enter' && !onBtn))) { const n = AREA().npcs.find(n => (!n.show || n.show()) && cheb(S.pos, n) <= 1); if (n) { e.preventDefault(); exploreTap(n.x, n.y); } return; }
+    if ((k === ' ' || low === 'e' || (k === 'Enter' && !onBtn))) { const n = AREA().npcs.find(n => (!n.show || n.show()) && cheb(S.pos, n) <= 1) || folkNow().find(p => cheb(S.pos, p) <= 1); if (n) { e.preventDefault(); exploreTap(n.x, n.y); } return; }
   }
   if (view === 'explore' && walking && /^Arrow/.test(k)) { e.preventDefault(); return; } // a held arrow key keeps the page still between steps
   if (low === 'j' || low === 'p') { e.preventDefault(); AUDIO.play('click'); openModal(low === 'j' ? 'journal' : 'pack'); return; }

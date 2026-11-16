@@ -171,21 +171,24 @@ const B4CH7 = {
         {id:'rider', name:'A rider at the near edge', kind:'b4_c7_ghost', x:9, y:4, node:()=>'b4_c7_face', show:()=>!!S.f.b4_c7_ride && !S.f.b4_c7_faceSeen, fresh:()=>!!S.f.b4_c7_ride && !S.f.b4_c7_faceSeen} ] },
 
     /* 16 x 12 (b4_c7_breach, before dawn).  = the last of the screen  . sand  , scrub  # rock  < back along the line. East and north is open
-       ground: the way out of the basin, past the end of the pickets */
+       ground: the way out of the basin, past the end of the pickets
+       Terrain kit (25b, v13.22): the rise's dunes (1, 2 scrub), boulders (4), bones ($), the picket's scuffed sand (:), and the two regulars at the last stake (folk). */
     { id:'b4_c7_breach', title:'Before Pan\'arak · the end of the line', sub:'Before dawn · the last picket', hint:'Tap ground to move · tap a figure to talk · past here there is nothing but the desert', decor:'b4_c7_breach', dark:true,
-      map:[ "................",
-            ".,....,...,..,..",
-            "..,.....#.......",
-            "====......,.....",
-            "#..=....,.......",
-            "#..........#....",
-            "#.,.............",
-            "#.....,.........",
-            "<..........,....",
-            "#....#..........",
-            "#.,.......,.....",
-            "##############.." ],
-      walk:'.,', triggers:{'=':'b4_c7_lastscreen', '<':'b4_c7_breach_back'}, start:{x:3, y:7},
+      map:[ "11111111.....111",
+            "111..,.4..,..,21",
+            "1.,.....#..$...1",
+            "====......,....1",
+            "#..=:...,...2..1",
+            "#..::....4.#..21",
+            "#t,..........4.1",
+            "#.....,........1",
+            "<.....$....,..21",
+            "#....#....4....1",
+            "#1,.......,.1111",
+            "##############11" ],
+      walk:'.,_:*', triggers:{'=':'b4_c7_lastscreen', '<':'b4_c7_breach_back'}, start:{x:3, y:7},
+      folk:[{x:2, y:4, kind:'b2soldier', name:'A regular of the 9th, crouched', line:'End of the line, Sergeant. Past this it\'s the dark and whoever\'s in it.'},
+        {x:1, y:5, kind:'b2soldier', name:'Another, his spear across his knees', line:'If they come this way I stab the first one and lie down. That\'s the whole plan. It\'s a good plan.'}],
       quest:()=> !S.f.b4_c7_breakDone && !S.f.b4_c7_letGo ? 'The shapes coming out of the dark, north-east.' : 'Dawn. Back along the line.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:5, y:6, node:()=>S.f.b4_c7_breakDone || S.f.b4_c7_letGo ? 'b4_c7_dawn' : 'b4_c7_radde_breach', fresh:()=>!!(S.f.b4_c7_breakDone || S.f.b4_c7_letGo)},

@@ -41,7 +41,7 @@ function fitCanvas(cols, rows){
     let d = null;
     cv.onpointerdown = e => { d = {x:e.clientX, y:e.clientY, cx:G.cam.x, cy:G.cam.y, moved:false}; if (G.pannable) try { cv.setPointerCapture(e.pointerId); } catch(err) {} };
     cv.onpointerleave = () => { G.hover = null; };
-    cv.onpointermove = e => { if (e.pointerType === 'mouse' && !d) { const p = tile(e); G.hover = p; const c = npcAt(p.x, p.y) ? 'pointer' : ''; if (cv.style.cursor !== c) cv.style.cursor = c; }
+    cv.onpointermove = e => { if (e.pointerType === 'mouse' && !d) { const p = tile(e); G.hover = p; const c = npcAt(p.x, p.y) || folkAt(p.x, p.y) ? 'pointer' : ''; if (cv.style.cursor !== c) cv.style.cursor = c; }
       if (!d || !G.pannable) return; const dx = e.clientX - d.x, dy = e.clientY - d.y;
       if (!d.moved && Math.hypot(dx, dy) < 10) return; d.moved = true; G.cam.pan = true;
       G.cam.x = clamp(d.cx - dx, 0, cols*T - G.vw); G.cam.y = clamp(d.cy - dy, 0, rows*T - G.vh); };

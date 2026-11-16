@@ -166,21 +166,25 @@ const B4CH6 = {
         {id:'seti', name:'A Seti archer', kind:'b4_c6_setiarcher', x:13, y:6, node:()=>'b4_c6_seti', show:()=>b46Seti(), fresh:()=>b46Seti() && !S.f.b4_c6_seti} ] },
 
     /* 16 x 12 (b4_c6_lines, night).  the same picket after dark: a gap in the screen at the middle, and the way out across the basin
-       north (^), which is nobody's way unless the Third goes forward */
+       north (^), which is nobody's way unless the Third goes forward
+       Terrain kit (25b, v13.22): dunes and scrub at the back of the picket (1, 2), a rock (4), bones beyond the screen ($), stacked spears (%), the water butt (&), crates (8), another squad's fire (0), the Wickan horses held back (@), the scuffed ground by the fire (:), and the picket (folk). */
     { id:'b4_c6_night', title:'Before Pan\'arak · the picket at night', sub:'Night · the Dogslayers\' fires across the basin', hint:'Tap ground to move · tap a figure to talk · the fire is behind the screen', decor:'b4_c6_lines', dark:true,
-      map:[ "R..,,..^..,,...R",
-            ".,..R.....,..R.,",
-            "..,.....,.......",
+      map:[ "R1.,,..^..,,..1R",
+            ".,$.R.....,..R.,",
+            "1.,.....,...4..1",
             "=======.==L=====",
             ".t..t....t...t.>",
-            "................",
-            "<.....F.....R...",
-            "..,.........,...",
-            "....R.....,.....",
-            "..,....,........",
-            ".......,........",
-            "R..,.....,.....R" ],
-      walk:'.,', triggers:{F:'b4_c6_picketfire', L:'b4_c6_listenpost', '=':'b4_c6_screen', t:'b4_c6_scrape', '^':'b4_c6_gap', '>':'b4_c6_to_spur', '<':'b4_c6_west'}, start:{x:7, y:7},
+            "%...............",
+            "<....:F:....R.8.",
+            "1.,.........,.11",
+            "1...R.....,...11",
+            "1.,....,.....@@1",
+            "11..&..,..0....1",
+            "R111112221111111" ],
+      walk:'.,_:*', triggers:{F:'b4_c6_picketfire', L:'b4_c6_listenpost', '=':'b4_c6_screen', t:'b4_c6_scrape', '^':'b4_c6_gap', '>':'b4_c6_to_spur', '<':'b4_c6_west'}, start:{x:7, y:7},
+      folk:[{x:5, y:7, kind:'b2soldier', name:'A regular by the fire', line:'Shielded fire. You get the smell of a fire and none of the warmth. Very Malazan.'},
+        {x:11, y:4, kind:'b2soldier', name:'A sentry at the screen', line:'Their fires are pretty from here. I keep telling myself that. Pretty.'},
+        {x:12, y:9, kind:'wickan', name:'A Wickan horse-holder', line:'The horse is held back, they said. No room. The horses have opinions about that. So do I.', wander:1}],
       quest:()=> !b46Key() ? 'Midnight, and Radde.' : !b46KeyDone() ? (b46Key() === 'hold' ? 'The screen. After midnight.' : 'The gap in the screen, north, and out.') : 'The fire, and first light.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:4, y:5, node:()=> !b46Key() ? 'b4_c6_radde_night' : 'b4_c6_radde_after', fresh:()=>!b46Key()},
@@ -189,20 +193,21 @@ const B4CH6 = {
         {id:'patrol', name:'Movement in the dark beyond the screen', kind:'b4_c6_dogscout', x:12, y:1, node:()=>'b4_c6_patrol_start', show:()=>b46Key() === 'hold' && !S.f.b4_c6_patrolDone, fresh:()=>b46Key() === 'hold' && !S.f.b4_c6_patrolDone} ] },
 
     /* 16 x 12 (b4_c6_lines, night).  the basin between the lines: scrub, rock, nothing to hide in.  L a rock to look from  ^ on to the ramps
-       v back to the picket */
+       v back to the picket
+       Terrain kit (25b, v13.22): dunes on the rims (1, 2 scrub), the old sea floor's bones ($), a dead tree (5); nobody out here. */
     { id:'b4_c6_basin', title:'Pan\'arak · the basin', sub:'Night · between the lines', hint:'Tap ground to move · keep low · the ramps are north', decor:'b4_c6_lines', dark:true,
-      map:[ "RR,...,^,...,.RR",
-            "R.,..R.....,...R",
-            "...,.....,..R...",
-            ".R....,.....,...",
-            "......L.........",
-            "..,......R...,..",
-            "....,.........R.",
-            ".R.......,......",
-            "....,..R........",
-            "..,..........,..",
-            "R.......,......R",
-            "RR.....v......RR" ],
+      map:[ "RR111.,^,..111RR",
+            "R11..R.....,.11R",
+            "11.,..$..,..R.11",
+            "1R....,.....,.21",
+            "12....L...$...11",
+            "1.,......R...,11",
+            "11..,...$.....R1",
+            "1R..5....,....21",
+            "12..,..R....5..1",
+            "11,....$.....,11",
+            "R11.....,....11R",
+            "RR111..v..1111RR" ],
       walk:'.,', triggers:{L:'b4_c6_basin_rock', '^':'b4_c6_to_ramp', v:'b4_c6_basin_back'}, start:{x:7, y:10},
       quest:()=>'North across the basin, to the foot of the ramps. Low, and quiet.', npcs:[] },
 
