@@ -119,21 +119,25 @@ const B6CH3 = {
   areas:[
     /* 16 x 12 (b6_c3_line, dusk; Book Two's Odhan at night). The 9th's reserve line on the plain south of the walls: ^ forward to the
        walls (the marines' trench, then the gate)  r the spoil heaps at the forward lip, where the walls can be seen  = the 9th's tents
-       W the water wagon  h the horse lines  F the 9th's fire  # rock  , scrub  s sand */
+       W the water wagon  h the horse lines  F the 9th's fire  # rock  , scrub  s sand
+       Terrain kit (25b, v13.22): rises and scrub on the rims (1, 2), the spoil's broken edges (3), more of the 9th's tents (6), another squad's fire (0), stacked spears (%), crates (8), the water butt (&), Khundryl horses (@), the lantern by the line (!), trodden ground (:), and the reserve waiting (folk). */
     { id:'b6_c3_line', title:'Y\'Ghatan · the reserve line', sub:'The 9th\'s lines south of the walls', hint:'Tap ground to move · tap a figure to talk · the walls are north, past the spoil', decor:'odhan_night', dark:true,
-      map:[ "##,,,,..^...,,##",
-            "#,,..ss.....s.,#",
-            ",,...r....r....,",
-            "................",
-            "..=..=....=..=..",
-            "................",
-            ".W.....F....h.h.",
-            "..,..........,..",
-            ",,..=......=..,,",
-            "......s.........",
-            "#,,...........,#",
-            "##,,,,....,,,,##" ],
-      walk:'.,s', triggers:{F:'b6_c3_fire', W:'b6_c3_water', r:'b6_c3_spoil', '^':'b6_c3_to_breach'}, start:{x:7, y:9},
+      map:[ "##11,,..^...,1##",
+            "#1,..ss.....s.1#",
+            "1,..3r....r3..,1",
+            "1.:.....8......2",
+            "..=.6=....=6.=.1",
+            "1...:.!........1",
+            ".W.....F...%h.h.",
+            "2.,.....:....,.1",
+            ",,%.=..8...=.@,,",
+            "1.6...s......:.1",
+            "#1,0....&....,1#",
+            "##11,,....,,11##" ],
+      walk:'.,s:', triggers:{F:'b6_c3_fire', W:'b6_c3_water', r:'b6_c3_spoil', '^':'b6_c3_to_breach'}, start:{x:7, y:9},
+      folk:[{x:5, y:3, kind:'b2soldier', name:'A regular of the 9th\'s reserve', line:'Reserve. We stand here and watch the marines go in first. I\'ve had worse orders.'},
+        {x:10, y:8, kind:'b2soldier', name:'A heavy of the 9th', line:'The walls have been quiet all day. Walls shouldn\'t be that quiet.'},
+        {x:12, y:10, kind:'b2soldier', name:'A cook of the 9th', line:'Hot food at dusk, the captain says. I\'ll believe it at dusk.'}],
       quest:()=> b63Ph() === 1 ? (!S.f.b6_c3_orders ? 'The captain, on the line.' : !S.f.b6_c3_sallyDone ? 'The forward lip, by the spoil. The walls.' : 'Dusk. The assault goes in at dusk.')
         : !S.f.b6_c3_order ? 'The walls.' : 'North, to the gate.',
       npcs:[
@@ -147,21 +151,24 @@ const B6CH3 = {
 
     /* 16 x 12 (b6_c3_breach, night; Book Two's Hissar). Under the walls at the breach, the city burning past it: # the city's walls and
        houses  D at the top the breach (into the streets), and at the right the gate  F fire  , ash and rubble  . the open ground
-       c the carts where the burned are laid  w an old well outside the walls  = the surgeons' awnings  v back to the reserve line */
+       c the carts where the burned are laid  w an old well outside the walls  = the surgeons' awnings  v back to the reserve line
+       Terrain kit (25b, v13.22): rubble down from the walls (3), burning wreckage (0), the plain's rises at the back (1, 2 scrub), the surgeons' awning (9), crates (8), water butts (&), stripped gear (%), a lantern (!), trodden ash (:), and two of the 9th (folk). */
     { id:'b6_c3_breach', title:'Y\'Ghatan · under the walls', sub:'Night · the city burning', hint:'Tap ground to move · the breach is north, the gate east · the line is south', decor:'hissar', dark:true,
       map:[ "####F###D###F###",
-            "###,,,,,,,,,,#G#",
-            ",,,,....,,......",
-            "..F.....c.......",
-            ".............w..",
-            "..c....,,....c..",
-            "................",
-            ",,..........,,,,",
-            "................",
-            "..=....=....=...",
-            "................",
-            ".......v........" ],
-      walk:'.,', triggers:{D:'b6_c3_breach', G:'b6_c3_gatedoor', c:'b6_c3_burned', w:'b6_c3_well', v:'b6_c3_to_line'}, start:{x:7, y:10},
+            "###33,,,,,,,3#G#",
+            ",3,,..3.,,..:.33",
+            "2.F...:.c...8..2",
+            "1..0.....&...w.1",
+            "..c....,,..%.c.:",
+            "2...8...:....%.1",
+            ",,..&.......,,,8",
+            "1.....:.....3..:",
+            "..=..!.=.9..=..1",
+            "1.8....:..0..&.1",
+            "11.%...v...8.111" ],
+      walk:'.,:', triggers:{D:'b6_c3_breach', G:'b6_c3_gatedoor', c:'b6_c3_burned', w:'b6_c3_well', v:'b6_c3_to_line'}, start:{x:7, y:10},
+      folk:[{x:5, y:8, kind:'b4_c1_recruit', name:'A water-carrier', line:'Water for the burned, the surgeon says. All of it. We drink tomorrow.'},
+        {x:11, y:7, kind:'b2soldier', name:'A soldier of the 9th, watching the walls', line:'I\'ve seen a town burn before. I\'d never heard one.'}],
       quest:()=> !b63Key() ? 'The captain, under the walls, with the order.' : !b63KeyDone() ? (b63Key() === 'in' ? 'The breach. Into the streets.' : 'The gate.') : 'The night. The captain.',
       npcs:[
         {id:'capt', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:7, node:()=> b63KeyDone() ? 'b6_c3_night' : 'b6_c3_key', fresh:()=>!b63Key() || b63KeyDone()},
@@ -169,21 +176,24 @@ const B6CH3 = {
 
     /* 16 x 12 (b6_c3_barrows, the night after; odhan_night with this file's barrows). The barrow field by the road, south-west of the
        walls: m the old barrows  o an old barrow (a trigger)  M the new long barrow  b the far barrows, where something moves  x a dead
-       tree, where the city can be seen  F the barrow-side fire */
+       tree, where the city can be seen  F the barrow-side fire
+       Terrain kit (25b, v13.22): rises and thorn round the field (1, 2), stones (4), dead trees (5), tufts (*), the fresh-dug earth by the new barrow (:), and two of the 9th sitting up with it (folk). */
     { id:'b6_c3_barrows', title:'Y\'Ghatan · the barrow field', sub:'The night after', hint:'Tap ground to move · tap a figure to talk · the new barrow is in the middle', decor:'b6_c3_barrows', dark:true,
-      map:[ ",,..m....x...m,,",
-            ",.m...m.......m,",
-            "..o.......m..b..",
-            "..........m.....",
-            ".m...MMMM.......",
-            "......F.....m...",
-            "..m.........o...",
-            ".......,,.......",
-            ",,m.......m..b.,",
-            "................",
-            ",..m..,....m...,",
-            ",,,,..........,," ],
-      walk:'.,', triggers:{F:'b6_c3_fire', M:'b6_c3_long', o:'b6_c3_oldbarrow', b:'b6_c3_far', x:'b6_c3_city'}, start:{x:7, y:9},
+      map:[ "11,4m...2x..,m11",
+            "1,m.4.m...5...m1",
+            "2.o.......m..b.1",
+            "1...*.....m..4.2",
+            "2m..:MMMM:...4.1",
+            "1.....F:....m.*1",
+            "1.m..*......o.21",
+            "2.4....,,..5...1",
+            "2,m...*...m..b.1",
+            "1..5.....:...2.1",
+            "1.4m..,..2.m..11",
+            "1112,,..,,..2111" ],
+      walk:'.,:*', triggers:{F:'b6_c3_fire', M:'b6_c3_long', o:'b6_c3_oldbarrow', b:'b6_c3_far', x:'b6_c3_city'}, start:{x:7, y:9},
+      folk:[{x:3, y:4, kind:'b2soldier', name:'A regular of the 9th, at the new barrow', line:'Somebody ought to say something. Nobody knows what. So we sit with them a while.'},
+        {x:11, y:9, kind:'b2soldier', name:'A sapper, resting on a spade', line:'We dug it long. Then they gave us the count, and we dug it longer.'}],
       quest:()=> !S.f.b6_c3_long ? 'The new barrow.' : !S.f.b6_c3_capt3 ? 'The captain. The army has orders.' : 'The road to Sotka, tomorrow night.',
       npcs:[
         {id:'capt', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:6, node:()=>'b6_c3_capt3', fresh:()=>!S.f.b6_c3_capt3},

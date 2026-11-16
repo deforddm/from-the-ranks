@@ -102,21 +102,24 @@ const B6CH4 = {
   areas:[
     /* 16 x 12 (b3camp, day and rain; morning in phase 3). The Seventh Company's lines: # palisade and earthwork  = tents  . mud , grass
        W the surgeons' carts at the picket gap  F the Fourth's fire  H the field hospital, seen from the mud outside  S the surgeons' tents
-       h horse lines  s the company standard  ^ the picket toward the city */
+       h horse lines  s the company standard  ^ the picket toward the city
+       Terrain kit (25b, v13.22): a light touch: the water butt (&), crates (8), stacked spears (%), and two of the Seventh in the rain (folk). */
     { id:'b6_c4_lines', title:'The Seventh Company\'s lines', sub:'Before G\'danisban · rain', hint:'Tap ground to move · tap a figure to talk · the picket faces the city', decor:'b3camp',
       map:[ "####...^...#####",
-            "#==.......,..==#",
+            "#==.......,.8==#",
             "#==..,..W.....s#",
-            "#.......,....==#",
+            "#&......,....==#",
             "#==.......F....#",
             "#==..,........H#",
-            "#.....,....,...#",
+            "#.....,.%..,...#",
             "#==.......==...#",
             "#==.,..S..==.,.#",
-            "#......,.......#",
+            "#......,.....8.#",
             "#hhh....,....hh#",
             "################" ],
       walk:'.,', triggers:{F:'b6_c4_fire', S:'b6_c4_surgeons', H:'b6_c4_hospital', W:'b6_c4_carts', '^':'b6_c4_picket'}, start:{x:8, y:9},
+      folk:[{x:6, y:5, kind:'b2soldier', name:'A regular of the Seventh', line:'Third day of rain. The tents leak, the ditch is a river, and the cooks are calling it soup.'},
+        {x:11, y:9, kind:'b2soldier', name:'A Host regular, on a crate', line:'G\'danisban shut its gate the day we came. Can\'t say I blame it. I\'ve seen us.'}],
       quest:()=> b64Ph() >= 3 ? (!S.f.b6_c4_bell ? 'The lines, in the morning. Something has changed in the rain.' : !b64Key() ? 'The bell. The army is gathering.' : 'The lines. The rain has stopped.')
         : !S.f.b6_c4_orders ? 'The captain, in the company\'s lines.' : 'The fire. Dusk, and the night\'s orders.',
       npcs:[
@@ -126,41 +129,45 @@ const B6CH4 = {
         {id:'ressa', name:'Ressa', kind:'ressa', x:7, y:1, node:()=>'b6_c4_ressa', show:()=>b64Ph() <= 1 && !!S.f.b6_c4_ressaMet && !S.f.b6_c4_ressaTents && b64RessaOpen(), fresh:()=>true} ] },
 
     /* 16 x 12 (b3camp_night; phase 2). The camp's edge at night, facing the open ground toward the city: x the rag shrine past the ditch
-       # the ditch and its bank, with a gap  = tents  F the picket fire  v back into the lines */
+       # the ditch and its bank, with a gap  = tents  F the picket fire  v back into the lines
+       Terrain kit (25b, v13.22): the open ground's rises and thorn past the ditch (1, 2), a stone (4), tufts (*), the picket's lantern (!), stacked spears (%), crates (8), the water butt (&), the trodden ground by the fire (:), and one of the picket (folk). */
     { id:'b6_c4_edge', title:'The camp\'s edge', sub:'Night · the ditch', hint:'Tap ground to move · the gap in the ditch looks out on the open ground', decor:'b3camp_night', dark:true,
-      map:[ ",,..,,....,,..,,",
-            ".,....x.....,...",
-            "..,......,......",
+      map:[ "11..4,....,1..11",
+            ".,..*.x.....,.2.",
+            "2.,......,..*..1",
             "#######..#######",
-            "#==....,.....==#",
+            "#==..!.,.....==#",
             "#==..F.......==#",
-            "#....,....,....#",
+            "#%...:.8..,....#",
             "#==.....,....==#",
-            "#==..,.......==#",
-            "#.......,......#",
+            "#==..,..&....==#",
+            "#...8...,.....%#",
             "#==....,.....==#",
             "#######v########" ],
-      walk:'.,', triggers:{x:'b6_c4_shrine', F:'b6_c4_fire', v:'b6_c4_edge_back'}, start:{x:8, y:9},
+      walk:'.,:*', triggers:{x:'b6_c4_shrine', F:'b6_c4_fire', v:'b6_c4_edge_back'}, start:{x:8, y:9},
+      folk:[{x:11, y:6, kind:'b2soldier', name:'A picket of the Seventh', line:'Quiet out there. The city\'s quiet, the plain\'s quiet. Quiet\'s the part I don\'t like.'}],
       quest:()=> !S.f.b6_c4_cultDone ? 'Out through the gap in the ditch, to the lamps on the open ground.' : !S.f.b6_c4_hounds ? 'The edge. Listen.' : 'Back into the lines. The captain has sent for the Fourth.',
       npcs:[
         {id:'sentry', name:'A sentry of the Seventh', kind:'b2soldier', x:9, y:4, node:()=>'b6_c4_sentry', fresh:()=>!S.f.b6_c4_sentry} ] },
 
     /* 16 x 12 (b6_c4_town_night; phase 2). The streets outside G'danisban's walls: # walls and house-fronts  G the gate, shut  . the street
-       , rubble  = awnings  w a well  c a cart  p the forward picket's post  v back to the camp */
+       , rubble  = awnings  w a well  c a cart  p the forward picket's post  v back to the camp
+       Terrain kit (25b, v13.22): meant to be near empty: mud-brick fallen against the walls (3), a house-front come down (4), stalls left under their awnings (9), a handcart (7), jars and crates (8), the picket's boot-marks (:), and one of the picket (folk). */
     { id:'b6_c4_outer', title:'Outside the walls', sub:'G\'danisban · the outer streets · night', hint:'Tap ground to move · the picket\'s post is east · the gate stays shut', decor:'b6_c4_town_night', dark:true,
       map:[ "######GG########",
-            "#..,....,....=.#",
+            "#3.,....,..8.=3#",
             "#.=....w.....,.#",
-            "##..,.......#..#",
-            "#.....,..c.....#",
+            "##..,..:....#..#",
+            "#4....,..c..9..#",
             "#..#......,..p.#",
-            "#.,....=.......#",
-            "#....,.....,...#",
+            "#.,....=..7....#",
+            "#8...,.....,..4#",
             "##..=.....#..,.#",
-            "#......,.......#",
-            "#..,.....=.....#",
+            "#3.....,.....8.#",
+            "#..,.....=....3#",
             "#######v########" ],
-      walk:'.,', triggers:{G:'b6_c4_gate', w:'b6_c4_well', p:'b6_c4_post', v:'b6_c4_outer_back'}, start:{x:7, y:10},
+      walk:'.,:', triggers:{G:'b6_c4_gate', w:'b6_c4_well', p:'b6_c4_post', v:'b6_c4_outer_back'}, start:{x:7, y:10},
+      folk:[{x:12, y:6, kind:'b2soldier', name:'A picket of the Seventh', line:'Nobody\'s come out of that gate in days. Nobody\'s gone in. The whole city\'s holding its breath.'}],
       quest:()=> !S.f.b6_c4_streetsDone ? 'East, to the forward picket\'s post.' : 'Back to the camp, before dawn.',
       npcs:[] } ],
 

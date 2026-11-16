@@ -94,41 +94,48 @@ const B6CH1 = {
 
   areas:[
     /* 16 x 12 (b4_c2_way, night). , verge (scrub)  . the track down the wash  n a tent  c the quartermaster's cart  k a cairn  T a thorn tree
-       F the Third's fire  > east, along the track: the march at first light */
+       F the Third's fire  > east, along the track: the march at first light
+       Terrain kit (25b, v13.22): the wash's banks (1, 2 thorn), more of the 9th's tents (6), the 8th's and 10th's fires (0), the mules (@), crates (8), stacked spears (%), the trodden ground by the fire (:), tufts (*), and the 9th settling (folk). */
     { id:'b6_c1_odhan', title:'The Lato Odhan · the 9th\'s camp', sub:'Night · a dry wash', hint:'Tap ground to move · tap a figure to talk · the fire is by the track, the cart to the west', decor:'b4_c2_way', dark:true,
-      map:[ "#,,,,,,,,,,,,,,#",
-            "#,n,,,,,,,,,n,,#",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,c,,,,,,,,,,#",
-            "#,,,,,,F,,,,,,,#",
+      map:[ "#1112,,,,,,2111#",
+            "#1n,,%,,,,,6n,1#",
+            "#,,:,,,,8,,,:,,#",
+            "#8,,c,,:,:,,,0,#",
+            "#@@,,,:F:,,,,,%#",
             "#..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,n,,,,,,,,n,,#",
-            "#,,,,,,,,,T,,,,#",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,k,,,,,,,,,,#",
+            "#,,*,,,,,,,,,,,#",
+            "#,,n,,8,,,0,n,,#",
+            "#6,,,,,,,,T,,,8#",
+            "#,,,,,*,,,,,,,,#",
+            "#21,k,,,,,1112,#",
             "################" ],
-      walk:'.,', triggers:{F:'b6_c1_fire', c:'b6_c1_qm', k:'b6_c1_oldsoldier', '>':'b6_c1_east'}, start:{x:7, y:6},
+      walk:'.,:*', triggers:{F:'b6_c1_fire', c:'b6_c1_qm', k:'b6_c1_oldsoldier', '>':'b6_c1_east'}, start:{x:7, y:6},
+      folk:[{x:3, y:4, kind:'b2soldier', name:'A mule-driver of the 9th', line:'The mules drink more than the squad and complain less. I know which I\'d rather march with.'},
+        {x:9, y:6, kind:'b2soldier', name:'A regular at another squad\'s fire', line:'Leoman\'s a day ahead, they say. They\'ve said it all week. Either he\'s slow or we are.'},
+        {x:8, y:1, kind:'b2soldier', name:'A sentry on the bank', line:'Nothing out there but the Odhan. The Odhan is plenty.', wander:1}],
       quest:()=> !S.f.b6_c1_orders1 ? 'The captain, by the tents.' : 'The fire, and then sleep. The column moves at first light.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:11, y:3, node:()=>'b6_c1_captain', fresh:()=>!S.f.b6_c1_orders1},
         {id:'oldsoldier', name:'An old soldier of the 9th', kind:'b2soldier', x:5, y:10, node:()=>'b6_c1_oldsoldier', fresh:()=>!S.f.b6_c1_oldTried} ] },
 
-    /* 16 x 12 (odhan, day). , scrub  . the track  # rock  o the well  b a thorn bush  < west, back toward the column  > east, the road ahead */
+    /* 16 x 12 (odhan, day). , scrub  . the track  # rock  o the well  b a thorn bush  < west, back toward the column  > east, the road ahead
+       Terrain kit (25b, v13.22): the Odhan's rises and thorn on the rims (1, 2), boulders (4), a dead tree (5), something's bones ($), tufts (*), the scuffed verge (:), and two of the column's eyes ahead of it (folk). */
     { id:'b6_c1_road', title:'The Lato Odhan · the road', sub:'Day · ahead of the column', hint:'Tap ground to move · the well is to the north-west, the road goes on east', decor:'odhan',
       map:[ "################",
-            "#,,,,,#,,,,,,,,#",
-            "#,,o,,,,,,,#,,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#11,,,#,,,22,11#",
+            "#1,o,,,,4,,#,,1#",
+            "#,,,*,,,,,,,,,2#",
             "<..............>",
-            "#,,,,,,,,,,,,,,#",
-            "#,,#,,,,,,,,,,,#",
-            "#,,,,,,,,#,,,,,#",
-            "#,,,,,,,,,,,,,,#",
-            "#,,,,,,b,,,,,,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#,:,,,,,,,,,,,,#",
+            "#2,#,,$,,,,*,,4#",
+            "#,,,,,,,,,#,,,,#",
+            "#,,,5,,,,,,,,2,#",
+            "#1,,,,,b,*,4,,1#",
+            "#112,,,,,,,,111#",
             "################" ],
-      walk:'.,', triggers:{o:'b6_c1_well_arrive', '<':'b6_c1_road_back', '>':'b6_c1_to_wash'}, start:{x:2, y:4},
+      walk:'.,:*', triggers:{o:'b6_c1_well_arrive', '<':'b6_c1_road_back', '>':'b6_c1_to_wash'}, start:{x:2, y:4},
+      folk:[{x:6, y:3, kind:'wickan', name:'A Wickan outrider', line:'They watered here and left the well whole. Rebels in a hurry, or rebels who mean to come back.', wander:1},
+        {x:11, y:8, kind:'b2soldier', name:'A scout of the 9th', line:'Hoofprints, footprints, cart ruts, all going east. At least they make it easy.'}],
       quest:()=> !S.f.b6_c1_wellDone ? 'The well the scouts marked, to the north-west. Hold it for the water wagons.' : !S.f.b6_c1_rearDone ? 'East along the road. The scouts say there is something in the wash ahead.' : 'East, and the city.',
       npcs:[
         {id:'prisoner', name:'A wounded rebel', kind:'b4_c7_fleer', x:13, y:5, node:()=>'b6_c1_prisoner', show:()=>!!S.f.b6_c1_rearDone && !S.f.b6_c1_prisoner, fresh:()=>true},
@@ -136,21 +143,24 @@ const B6CH1 = {
         {id:'lostara', name:'A Red Blade captain', kind:'b7v_lostara', x:9, y:3, node:()=>'b6_c1_lostara', show:()=>!!S.f.b6_c1_wellDone && !S.f.b6_c1_rearDone && (!S.f.b6_c1_lostara || /^b6_c1_lostara/.test(S.node || '')), fresh:()=>!S.f.b6_c1_lostara} ] },
 
     /* 16 x 12 (b4_c4_camp, dusk). . earth  , trampled grass  = a tent  W a wagon  h horse lines  f the Third's cook fire
-       < west, the camp's edge and the townsfolk  > east, the barrow road under the walls */
+       < west, the camp's edge and the townsfolk  > east, the barrow road under the walls
+       Terrain kit (25b, v13.22): a light touch: stacked spears (%), crates (8), the water butt (&), another squad's fire (0), the trodden ground by the Third's (:), and two of the 9th (folk). */
     { id:'b6_c1_camp', title:'Before Y\'Ghatan · the 9th\'s lines', sub:'Dusk · the siege camp', hint:'Tap ground to move · tap a figure to talk · the camp\'s edge is west, the barrow road east', decor:'b4_c4_camp',
       map:[ "################",
             "#==.==.==.==.==#",
-            "#..............#",
-            "#.W.....f....W.#",
-            "<..............#",
+            "#...%....8.....#",
+            "#.W..:..f.:..W.#",
+            "<.....:.:......#",
             "#,,,,,,,,,,,,,,#",
             "#..............>",
             "#.==..hhhh..==.#",
             "#..............#",
-            "#,,,,,,,,,,,,,,#",
-            "#..W.......W...#",
+            "#,,8,,,,,,,0,,,#",
+            "#&.W..%....W..8#",
             "################" ],
-      walk:'.,', triggers:{f:'b6_c1_fire', '<':'b6_c1_edge', '>':'b6_c1_to_barrows'}, start:{x:7, y:5},
+      walk:'.,:', triggers:{f:'b6_c1_fire', '<':'b6_c1_edge', '>':'b6_c1_to_barrows'}, start:{x:7, y:5},
+      folk:[{x:6, y:2, kind:'b2soldier', name:'A regular of the 9th, sharpening', line:'Big walls. Old walls. My grandfather said the old ones are the worst. They\'ve had longer to think.'},
+        {x:13, y:9, kind:'hissari_m', name:'A carter, unhitching', line:'The wagons are all here and the water isn\'t. Somebody\'s going to explain that to the Adjunct. Not me.'}],
       quest:()=> !S.f.b6_c1_orders3 ? 'The captain, in the 9th\'s lines.' : !S.f.b6_c1_edgeDone ? 'The camp\'s west edge, where the townsfolk who stayed are camped.' : 'The barrow road, east, under the walls. The captain\'s picket.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:8, y:5, node:()=>'b6_c1_captain_camp', fresh:()=>!S.f.b6_c1_orders3},
@@ -159,21 +169,23 @@ const B6CH1 = {
         {id:'surgeon', name:'The 9th\'s surgeon', kind:'b2soldier', x:2, y:8, node:()=>'b6_c1_surgeon', fresh:()=>b6FeverList().length > 0},
         {id:'runner', name:'A runner from the Fists\' tents', kind:'b4_c1_recruit', x:11, y:8, node:()=>'b6_c1_runner', fresh:()=>!S.f.b6_c1_rumour} ] },
 
-    /* 16 x 12 (b4_c4_hills, night). , scrub  . grass  B a barrow  # rock  L the picket's lantern  < west, back toward the camp */
+    /* 16 x 12 (b4_c4_hills, night). , scrub  . grass  B a barrow  # rock  L the picket's lantern  < west, back toward the camp
+       Terrain kit (25b, v13.22): a light touch: the rims of the road's ground (1), a mound (4), a dead tree (5), and one of the picket (folk). */
     { id:'b6_c1_barrows', title:'Y\'Ghatan · the barrow road', sub:'Night · under the walls', hint:'Tap ground to move · the opened barrows are all along the road · the lantern is the picket', decor:'b4_c4_hills', dark:true,
       map:[ "################",
-            "#,,BB,,,,,BBB,,#",
+            "#1,BB,,,,,BBB,1#",
             "#,,,,,,BB,,,,,,#",
             "#,BB,,,,,,,,BB,#",
             "#,,,,,L,,,,,,,,#",
             "<..............#",
             "#,,BBB,,,,BB,,,#",
-            "#,,,,,,,,,,,,,,#",
+            "#4,,,,,,,,,,,,5#",
             "#,BB,,,,BBB,,,,#",
             "#,,,,,,,,,,,BB,#",
-            "#,,,,#,,,,,,,,,#",
+            "#11,,#,,,,,,,11#",
             "################" ],
       walk:'.,', triggers:{B:'b6_c1_barrow', L:'b6_c1_lantern', '<':'b6_c1_barrows_back'}, start:{x:2, y:5},
+      folk:[{x:8, y:4, kind:'b2soldier', name:'A picket of the 9th', line:'Whoever opened them wanted us to see it. Well. We\'ve seen it.'}],
       quest:()=> !b61Key() ? 'The opened barrows along the road. The picket\'s lantern is by the road.' : b61Key() === 'bury' && !S.f.b6_c1_patrolDone ? 'Someone is coming down from the walls.' : 'Back by the lantern. Dawn is not far off.',
       npcs:[
         {id:'patrol', name:'Shapes coming down from the walls', kind:'b4_c7_fleer', x:12, y:4, node:()=>'b6_c1_patrol_start', show:()=>b61Key() === 'bury' && !S.f.b6_c1_patrolDone, fresh:()=>true},

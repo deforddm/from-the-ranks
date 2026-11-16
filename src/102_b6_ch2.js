@@ -88,21 +88,24 @@ const B6CH2 = {
 
   areas:[
     /* 16 x 12 (b3camp_night): the Host's camp above the sea, dusk and rain. = tents  F the Fourth's fire  W the quartermaster's wagon
-       h the horse lines  s the Seventh's standard  > east, down to the shore  v south, the road inland (from phase 2) */
+       h the horse lines  s the Seventh's standard  > east, down to the shore  v south, the road inland (from phase 2)
+       Terrain kit (25b, v13.22): a light touch: stacked spears (%), crates (8), the water butt (&), and two of the Host in the rain (folk, while the Host is camped here). */
     { id:'b6_c2_camp', title:'The north coast · the Host\'s camp', sub:'Above the sea · dusk, rain', hint:'Tap ground to move · tap a figure to talk · the shore is east', decor:'b3camp_night', dark:true,
       map:[ "################",
             "#==.==.==..==.=#",
-            "#..............#",
+            "#.%............#",
             "#.=.=..s..W..=.#",
             "#..............#",
             "#.,,,,..F..,,,.>",
-            "#..............#",
+            "#&.............#",
             "#.=.=.....hhh..#",
-            "#..............#",
+            "#..8...........#",
             "#.==.==.....==.#",
-            "#..............#",
+            "#.......8....%.#",
             "#######v########" ],
       walk:'.,', triggers:{F:'b6_c2_fire', W:'b6_c2_qm', '>':'b6_c2_to_shore', v:'b6_c2_to_road'}, start:{x:7, y:6},
+      folk:[{x:5, y:4, kind:'b2soldier', name:'A Host regular, under a cape', line:'Rain off the sea, smoke off the fires, and the cooks call it a camp. I\'ve been drier in a river.', show:()=>b62Ph() === 1},
+        {x:11, y:8, kind:'b2soldier', name:'A Falari of the Seventh', line:'Ehrlitan\'s down the coast. Nobody goes in and nobody says why. That\'s a why on its own.', show:()=>b62Ph() === 1}],
       quest:()=> b62Ph() > 1 ? 'The column has gone inland: the road south.' : !S.f.b6_c2_capt ? 'The captain, by the Seventh\'s standard.' : S.f.b6_brannocDone == null ? 'A Falari by the horse lines, waiting for somebody.' : 'The fire. The order to march will come there.',
       npcs:[
         {id:'capt', name:'The captain', kind:'b2soldier', x:8, y:4, node:()=>'b6_c2_captain', show:()=>b62Ph() === 1, fresh:()=>!S.f.b6_c2_capt},
@@ -110,58 +113,63 @@ const B6CH2 = {
         {id:'regular', name:'A Host regular', kind:'b2soldier', x:3, y:6, node:()=>'b6_c2_regular', show:()=>b62Ph() === 1, fresh:()=>!S.f.b6_c2_regular} ] },
 
     /* 16 x 12 (b5_c2_strand): the shore under the camp. ~ the sea  , shingle  . sand  B the Falari boats, drawn up  # the bank
-       < west, back up to the camp  > east, along the shore to the headland */
+       < west, back up to the camp  > east, along the shore to the headland
+       Terrain kit (25b, v13.22): the dune bank along the foot (1, 2 scrub), rocks (4), shells and a fish's bones ($), nets and a crate (8), tufts of dune grass (*), the boots' path to the boats (:), and two at the boats (folk). */
     { id:'b6_c2_shore', title:'The north coast · the shore', sub:'Below the camp · the Falari boats', hint:'Tap ground to move · the camp is west · the headland is east', decor:'b5_c2_strand', dark:true,
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
-            ",,~~~,,,,~~,,,,,",
+            ",,~~~,4,,~~,,,,,",
             ",B,,,,B,,,,,,B,,",
             "................",
             "<...............",
-            "................",
-            ".,.....,......,.",
-            "................",
-            "...............>",
-            "....,......,....",
+            ".......:........",
+            ".*.4...:..$..4*.",
+            "..*...8.......*.",
+            "..$............>",
+            "1112..2....21111",
             "################" ],
-      walk:'.,', triggers:{B:'b6_c2_boats', '<':'b6_c2_to_camp', '>':'b6_c2_to_shrine'}, start:{x:2, y:5},
+      walk:'.,:*', triggers:{B:'b6_c2_boats', '<':'b6_c2_to_camp', '>':'b6_c2_to_shrine'}, start:{x:2, y:5},
+      folk:[{x:4, y:3, kind:'b5_c3_bargeman', name:'A Falari boatman', line:'The boats come up the beach and stay up. Nobody fishes a coast with a sickness on it.'},
+        {x:12, y:6, kind:'b2soldier', name:'A Host regular, on watch', line:'They sent me down to watch the boats. The boats are behaving.'}],
       quest:()=> !S.f.b6_c2_weatherTried ? 'An old Falari woman is mending a sail by the boats.' : !S.f.b6_c2_shrineDone ? 'Along the shore to the headland, east. There are figures at the shrine.' : 'Back up to the camp, west.',
       npcs:[
-        {id:'mender', name:'An old Falari sail-mender', kind:'crone', x:8, y:4, node:()=>S.f.b6_c2_weatherTried ? 'b6_c2_mender_again' : 'b6_c2_mender', fresh:()=>!S.f.b6_c2_weatherTried} ] },
+        {id:'mender', name:'An old Falari sail-mender', kind:'b5_c1_tilewoman', x:8, y:4, node:()=>S.f.b6_c2_weatherTried ? 'b6_c2_mender_again' : 'b6_c2_mender', fresh:()=>!S.f.b6_c2_weatherTried} ] },
 
     /* 16 x 12 (b6_c2_coast): the road inland, in the rain. # the walls of an empty hamlet  w its well  D a house with the door open
-       x dead trees  F the Fourth's fire on the march  > east, on along the road */
+       x dead trees  F the Fourth's fire on the march  > east, on along the road
+       Terrain kit (25b, v13.22): meant to be empty: the hill country's rises and thorn on every rim (1, 2), limestone knuckles (4), dead tamarisks (5), the hamlet's fallen wall (3), tufts (*), the column's churn on the road (:); nobody out here. */
     { id:'b6_c2_road', title:'Inland · the plague road', sub:'The march · empty country', hint:'Tap ground to move · the road goes on east', decor:'b6_c2_coast',
-      map:[ "x,,,,,,,,,,,,,,x",
-            ",,###.###,,,,,,,",
-            ",,#.....#,,x,,,,",
-            ",,#..w..#,,,,,,,",
-            ",,##.D.##,,,,,,,",
-            "................",
-            "...............>",
-            "................",
-            ",,,,,F,,,,,,,,,,",
-            ",x,,,,,,,,,,,x,,",
-            ",,,,,,,,,,,,,,,,",
-            ",,,,,,,,x,,,,,,," ],
-      walk:'.,', triggers:{w:'b6_c2_well', D:'b6_c2_house', F:'b6_c2_fire', '>':'b6_c2_road_on'}, start:{x:2, y:6},
+      map:[ "x1112,,11,,2111x",
+            "1,###.###,,4,,21",
+            "1,#.....#,,x,,,1",
+            "2,#..w..#3,,*,,1",
+            "1,##.D.##,,,,4,2",
+            ".......:........",
+            "...:...........>",
+            "*........:....*.",
+            "2,*,,F,,,,,4,,,1",
+            "1x,,,,2,,*,,,,x1",
+            "11,4,,,,,,,2,,11",
+            "1112,,11x1,,2111" ],
+      walk:'.,:*', triggers:{w:'b6_c2_well', D:'b6_c2_house', F:'b6_c2_fire', '>':'b6_c2_road_on'}, start:{x:2, y:6},
       quest:()=> b62Ph() === 2 ? 'The road goes on east. A village, the scouts say, where nobody came out to meet them.' : b62Ph() === 3 ? 'The village, east.' : b62Ph() === 4 ? 'On after the column, east. The road is not empty.' : 'After the column.',
       npcs:[] },
 
     /* 16 x 12 (b6_c2_coast_night): the village where the dead were left. # house walls  D houses with the doors open
-       E the last house  w the village well  x dead trees  v south, back to the road */
+       E the last house  w the village well  x dead trees  v south, back to the road
+       Terrain kit (25b, v13.22): meant to be empty: a light touch: fallen walls (3), the village's thorn (2), a handcart left where it stopped (7), jars (8); nobody. */
     { id:'b6_c2_vil', title:'Inland · a village', sub:'Rain · the doors open', hint:'Tap ground to move · the road is south', decor:'b6_c2_coast_night', dark:true,
       map:[ "################",
             "#..###....###..#",
             "#..#D#....#D#..#",
-            "#..............#",
+            "#3.............#",
             "#.###..w...###.#",
             "#.#E#......#D#.#",
             "#..............#",
-            "#....x....x....#",
-            "#..............#",
+            "#....x....x...7#",
+            "#.8............#",
             "#...,,,,,,,,...#",
-            "#..............#",
+            "#2............3#",
             "#######v########" ],
       walk:'.,', triggers:{D:'b6_c2_houses', E:'b6_c2_lasthouse', w:'b6_c2_vwell', v:'b6_c2_vil_out'}, start:{x:7, y:9},
       quest:()=> !S.f.b6_c2_villageDone ? 'Figures among the houses. Not the people who lived here.' : !b62Key() ? (S.f.b6_c2_order ? 'The last house, west. There is a light in it.' : 'A runner is coming up the road from the column.') : 'Back to the road, south.',

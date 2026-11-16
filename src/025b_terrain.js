@@ -58,7 +58,22 @@ const TKS = {
   b4_c5_canal:{fam:'sand', draw:{'6':(c, x, y, T, N) => b45Tent(c, x, y, T, N)}},
   b4_c6_ramp:{fam:'redsand', draw:{'4':(c, x, y, T, N) => b46Rock(c, x, y, T, N, .78)}},
   b4_c7_picket:{fam:'sand', draw:{'4':(c, x, y, T, N) => b45Boulder(c, x, y, T, N, .85), '8':(c, x, y, T, N) => b44Crates(c, x, y, T, N)}},
-  b4_c7_isle:{fam:'sand'} };
+  b4_c7_isle:{fam:'sand'},
+  /* Book Six (v13.22): the Odhan, the Host's camps, the plague coast, Y'Ghatan, G'danisban's outer streets, the strand, the transports, Malaz City */
+  odhan:{fam:'odhan', as:TK_ODHAN_AS},
+  odhan_night:{fam:'odhan', as:TK_ODHAN_AS},
+  b6_c3_barrows:{fam:'odhan', as:TK_ODHAN_AS},
+  b3camp:{fam:'plain', as:{'6':'=', '7':'W', '0':'F', '@':'h'}},
+  b3camp_night:{fam:'plain', as:{'6':'=', '7':'W', '0':'F', '@':'h'}},
+  b5_c2_strand:{fam:'sand', as:{'0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  hissar:{fam:'earth', as:{'0':'F', '9':'='}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}},
+  b6_c2_coast:{fam:'earth', as:{'5':'x', '0':'F'}, draw:{'4':(c, x, y, T, N) => b62Boulder(c, x, y, T, N)}},
+  b6_c2_coast_night:{fam:'earth', as:{'5':'x', '0':'F'}, draw:{'4':(c, x, y, T, N) => b62Boulder(c, x, y, T, N)}},
+  b6_c4_town_night:{fam:'earth', as:{'9':'=', '7':'c'}, draw:{'4':(c, x, y, T, N) => b64Heap(c, x, y, T, N)}},
+  b6_c7_deck:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b6_c7_deckcold:{fam:'earth', draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_hulk'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => { tkCoil(c, x, y, T, P); tkRime(c, x, y, T); }}},
+  b6_c7_quay:{fam:'earth', as:{'7':'c'}, draw:{'4':(c, x, y, T, N) => b52Cover(c, x, y, T, N, 'b5_c2_wharf'), '&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P), '*':(c, x, y, T, N, P) => tkCoil(c, x, y, T, P)}},
+  b6_c7_streets:{fam:'earth', as:{'7':'c', '0':'F'}, draw:{'&':(c, x, y, T, N, P) => tkCask(c, x, y, T, P)}} };
 const tkCfg = style => TKS[style] || null;
 const tkHex = (hex, amt) => { const n = parseInt(hex.slice(1), 16), f = v => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v*amt : (255 - v)*amt)))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => f(v).toString(16).padStart(2, '0')).join(''); }; // shade(), but a hex back, so it can be shaded again
 const tkPal = (cfg, N) => { const f = TKP[(cfg && cfg.fam) || 'earth'] || TKP.earth; return N ? f.n : f.d; };
@@ -146,8 +161,17 @@ function tkWell(ctx, x, y, T, P){ const px = x*T, py = y*T, cx = px + T*.5, cy =
   ell(ctx, cx, cy, T*.36, T*.2, P.rock); ell(ctx, cx, cy - T*.04, T*.36, T*.18, P.rockL); ell(ctx, cx, cy - T*.04, T*.26, T*.12, '#0a0c10'); ell(ctx, cx - T*.06, cy - T*.06, T*.08, T*.03, `rgba(${P.lit},.2)`); // stone ring, dark water
   B2F.line(ctx, P.wood, Math.max(1, T*.04), [[cx - T*.3, cy - T*.02], [cx - T*.3, py + T*.14]]); B2F.line(ctx, P.wood, Math.max(1, T*.04), [[cx + T*.3, cy - T*.02], [cx + T*.3, py + T*.14]]); B2F.line(ctx, P.woodL, Math.max(1, T*.035), [[cx - T*.34, py + T*.16], [cx + T*.34, py + T*.16]]);
   ctx.strokeStyle = P.woodL; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx + T*.04, py + T*.17); ctx.lineTo(cx + T*.04, py + T*.36); ctx.stroke(); ctx.fillStyle = P.wood; ctx.fillRect(cx - T*.02, py + T*.36, T*.12, T*.1); } // the frame, the rope, the bucket
+/* for decks and wharves (Book Six), where a stone well or a tuft would be wrong: a water cask on its chocks, a coil of rope, frost */
+function tkCask(ctx, x, y, T, P){ const px = x*T, py = y*T, cx = px + T*.5; ell(ctx, cx + T*.08, py + T*.86, T*.34, T*.08, `rgba(${P.foot},.45)`);
+  ctx.fillStyle = P.wood; ctx.beginPath(); ctx.moveTo(cx - T*.26, py + T*.26); ctx.quadraticCurveTo(cx - T*.34, py + T*.54, cx - T*.26, py + T*.84); ctx.lineTo(cx + T*.26, py + T*.84); ctx.quadraticCurveTo(cx + T*.34, py + T*.54, cx + T*.26, py + T*.26); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = `rgba(${P.lit},.14)`; ctx.fillRect(cx - T*.2, py + T*.3, T*.08, T*.5); ctx.fillStyle = `rgba(${P.foot},.6)`; [.36, .74].forEach(k => ctx.fillRect(cx - T*.3, py + T*k, T*.6, Math.max(1, T*.04))); // the hoops
+  ell(ctx, cx, py + T*.26, T*.26, T*.07, P.woodL); ell(ctx, cx, py + T*.26, T*.18, T*.04, `rgba(${P.foot},.5)`); }
+function tkCoil(ctx, x, y, T, P){ const cx = x*T + T*(.4 + hash(x, y, 460)*.2), cy = y*T + T*(.55 + hash(y, x, 461)*.15); ell(ctx, cx + T*.04, cy + T*.05, T*.28, T*.12, `rgba(${P.foot},.35)`);
+  ctx.lineWidth = Math.max(1, T*.04); for (let i = 0; i < 4; i++) { ctx.strokeStyle = i % 2 ? P.canvasD : P.canvas; ctx.beginPath(); ctx.ellipse(cx, cy, T*(.24 - i*.05), T*(.11 - i*.022), 0, 0, 7); ctx.stroke(); }
+  ctx.strokeStyle = P.canvasD; ctx.beginPath(); ctx.moveTo(cx + T*.22, cy + T*.02); ctx.quadraticCurveTo(cx + T*.36, cy + T*.1, cx + T*.42, cy + T*.3); ctx.stroke(); } // and its end, run out
+function tkRime(ctx, x, y, T){ ctx.fillStyle = 'rgba(200,220,240,.22)'; for (let i = 0; i < 6; i++) ell(ctx, x*T + T*hash(x, y, 470 + i), y*T + T*hash(y, x, 476 + i), T*.08, T*.03, ctx.fillStyle); }
 function tkLamp(ctx, x, y, T, P, N){ const px = x*T, py = y*T; ell(ctx, px + T*.5, py + T*.86, T*.16, T*.05, `rgba(${P.foot},.4)`); ctx.fillStyle = P.wood; ctx.fillRect(px + T*.47, py + T*.2, T*.06, T*.66);
-  ctx.fillStyle = 'rgba(255,210,120,.95)'; ctx.fillRect(px + T*.42, py + T*.1, T*.16, T*.14); glow(ctx, px + T*.5, py + T*.17, T*.9, '#e8a040', N ? .3 : .12); }
+  ctx.fillStyle = 'rgba(255,210,120,.95)'; ctx.fillRect(px + T*.42, py + T*.1, T*.16, T*.14); glow(ctx, px + T*.5, py + T*.17, T*.42, '#e8a040', N ? .3 : .12); } // (kept inside the tile: the frame's glow, 30's tkFrame, is the light round it)
 /* the worn track, in world space like the banks: each '_' joins its neighbours (and runs on into a way out or a road), and every tile
    near one draws the whole band inside its own edges, in one stroke, so it bends and crosses tile corners without a seam */
 const tkIsTrack = c => c === '_';
