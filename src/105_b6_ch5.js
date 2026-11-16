@@ -104,21 +104,24 @@ const B6CH5 = {
   areas:[
     /* 16 x 12 (odhan, day). The Sotka road's last miles, on the bluffs above the coast: . the road  , scrub  # rock  r stones  x a dead
        tree  = tents  W the 9th's carts  F the halt's fire on the bluff  c a cairn with crow feathers  L the bluff's edge, the sea below
-       < back up the road, west (the way-station)  > down to the shore, east  v a lane south to a village */
+       < back up the road, west (the way-station)  > down to the shore, east  v a lane south to a village
+       Terrain kit (25b, v13.22): the bluffs' rises and thorn on the rims (1, 2), boulders (4), another tent (6), a cart (7), crates (8), stacked spears (%), tufts (*), the trodden ground by the halt's fire (:), and two of the 9th at the halt (folk). */
     { id:'b6_c5_road', title:'The Sotka road · the last miles', sub:'On the bluffs above the Kokakal shore', hint:'Tap ground to move · tap a figure to talk · the road goes down to the shore, east', decor:'odhan',
-      map:[ "####,,,,,,,,,###",
-            "#,,,,,=,,=,,,,,#",
-            ",,r,,,,,,,,,,c,#",
-            ",,,,,W,,,,,,,,,L",
+      map:[ "####11,,,2,,1###",
+            "#1,%,,=,,=,8,,1#",
+            "1,r,,6,,,,,,,c,#",
+            "2,,,,W,7,,,,,,,L",
             "................",
             "<..............>",
-            ",,,,,,,F,,,,,,,,",
-            ",,x,,,,,,,,=,,,,",
-            ",,,,,,,,,,,,,,r,",
-            "#,,,,,,,,,,,,,,#",
-            "##,,,,,,,,,,,,##",
+            "1,,:,,,F:,,,,,,1",
+            "2,x,,,,,,,,=,4,1",
+            "1,*,,8,,,,,,,,r2",
+            "#1,,,,4,,*,,,,1#",
+            "##12,,,,,,,,21##",
             "######,v,#######" ],
-      walk:'.,', triggers:{F:'b6_c5_start', W:'b6_c5_carts', c:'b6_c5_shrine', L:'b6_c5_lookout', '<':'b6_c5_waystation', '>':'b6_c5_road_on', v:'b6_c5_villagelane'}, start:{x:8, y:4},
+      walk:'.,:*', triggers:{F:'b6_c5_start', W:'b6_c5_carts', c:'b6_c5_shrine', L:'b6_c5_lookout', '<':'b6_c5_waystation', '>':'b6_c5_road_on', v:'b6_c5_villagelane'}, start:{x:8, y:4},
+      folk:[{x:4, y:9, kind:'b2soldier', name:'A regular of the 9th', line:'The sea. I\'d forgotten there was one.'},
+        {x:10, y:3, kind:'hissari_m', name:'A carter of the 9th', line:'Downhill to the shore, the scouts say. The mules have heard that one before.'}],
       quest:()=> !S.f.b6_c5_capSaid ? 'The captain, by the tents.' : !b65RoadDone() ? 'Back up the road, west, to the way-station.' : 'Down to the shore, east.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:2, node:()=>S.f.b6_c5_capSaid ? 'b6_c5_captain_again' : 'b6_c5_captain', fresh:()=>!S.f.b6_c5_capSaid},
@@ -127,40 +130,44 @@ const B6CH5 = {
         {id:'bredd', name:'A regular of the 8th', kind:'b2soldier', x:13, y:6, node:()=>'b6_c5_bredd', fresh:()=>!S.f.b6_c5_bredd} ] }, // v11.0: the Bredd rumour, backfilled (plan, David, Nov 8)
 
     /* 16 x 12 (odhan, day; optional). A village off the road the plague went through: # walls  H the doors of the houses  w the well
-       . the lane  , dust  e back up the lane to the road */
+       . the lane  , dust  e back up the lane to the road
+       Terrain kit (25b, v13.22): meant to be empty: fallen walls (3), the slopes and thorn outside it (1, 2), a stone (4), dead trees (5), a cart left in a yard (7), jars (8), the dust by the well (:), tufts (*); nobody. */
     { id:'b6_c5_village', title:'A village off the road', sub:'The plague has been here', hint:'Tap ground to move · the houses are at the top of the lane · the lane goes back to the road', decor:'odhan',
       map:[ "################",
-            "#,,,#,,,,,#,,,,#",
+            "#3,,#,,8,,#,,,3#",
             "#,H,#,,,,,#,,H,#",
             "#,,,##,..,##,,,#",
-            "#,,,,,,..,,,,,,#",
-            "#,,,,,,w.,,,,,,#",
-            "#,,,,,,..,,,,,,#",
-            "##,,,,,..,,,,,##",
-            ",#,,,,,..,,,,,#,",
-            ",,#,,,,..,,,,#,,",
-            ",,,,,,,..,,,,,,,",
-            ",,,,,,,ee,,,,,,," ],
-      walk:'.,', triggers:{H:'b6_c5_houses', w:'b6_c5_well', e:'b6_c5_village_back'}, start:{x:7, y:10},
+            "#5,7,,,..,,3,,8#",
+            "#,,,,,:w.,,,,,,#",
+            "#2,,,,,..,,5,,2#",
+            "##,,4,,..,,,,,##",
+            "1#,,,*,..,*,4,#1",
+            "12#,,,,..,,,,#21",
+            "11,,,,,..,,,,,,1",
+            "112,,,,ee,,,,211" ],
+      walk:'.,:*', triggers:{H:'b6_c5_houses', w:'b6_c5_well', e:'b6_c5_village_back'}, start:{x:7, y:10},
       quest:()=> !S.f.b6_c5_villageDone ? 'Somebody is going through the houses.' : 'Back down the lane to the road.',
       npcs:[] },
 
     /* 16 x 12 (b5_c2_strand, dusk). The Kokakal shore: ~ the sea  B the boats at the waterline  . the wet sand  , dry sand  # dune grass
-       F the Third's fire  S the surgeons' tents */
+       F the Third's fire  S the surgeons' tents
+       Terrain kit (25b, v13.22): a light touch: the loading's crates (8), the water butt (&), the Wickans' horses (@), and two at the loading (folk). */
     { id:'b6_c5_shore', title:'The Kokakal shore · the 9th\'s lines', sub:'Nok\'s transports at anchor', hint:'Tap ground to move · tap a figure to talk · the boats are at the waterline', decor:'b5_c2_strand',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~~~~~~~~~~~~~~",
             "~~~BB~~~~~BB~~~~",
-            "................",
-            ",,,,,,,,,,,,,,,,",
+            "....8...........",
+            ",,,,,,,,,,,,8,,,",
             ",,F,,,,,,,,,,S,,",
-            ",,,,,,,,,,,,,,,,",
-            "#,,,,,,,,,,,,,,#",
+            "&,,,,,,,,,,,,,,,",
+            "#,,,,,,,,,,,@@,#",
             "##,,,,,,,,,,,,##",
             "###,,,,,,,,,,###",
             "####,,,,,,,,####",
             "################" ],
       walk:'.,', triggers:{F:'b6_c5_fire', B:'b6_c5_boatline', S:'b6_c5_surgeons'}, start:{x:7, y:9},
+      folk:[{x:4, y:4, kind:'b5_c2_pilot', name:'A sailor of Nok\'s fleet', line:'Two days to load, the admiral says. Nobody\'s asked the sea.'},
+        {x:9, y:8, kind:'b2soldier', name:'A regular of the 9th, loading', line:'Everything goes on the boats. Everything. I watched them weigh a sergeant.'}],
       quest:()=> !S.f.b6_c5_capShore ? 'The captain, on the beach.' : !S.f.b6_c5_boatsDone ? 'The boats, tonight.' : !b65Key() ? 'The fire. There is talk along the beach.' : !S.f.b6_c5_survivors ? 'Morning.' : 'The boats, and the transport.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:6, node:()=>S.f.b6_c5_capShore ? (S.f.b6_c5_boatsDone && !b65Key() ? 'b6_c5_key' : 'b6_c5_captain_shore_again') : 'b6_c5_captain_shore', fresh:()=>!S.f.b6_c5_capShore || (!!S.f.b6_c5_boatsDone && !b65Key())},

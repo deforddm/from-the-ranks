@@ -140,21 +140,25 @@ const B4CH6 = {
 
   areas:[
     /* 16 x 12 (b4_c6_lines, dusk).  . hard sand  , scrub  # rock  = the picket screen (stakes and brush)  L the lookout rock in the screen
-       F the Third's shielded fire  t a scrape  > east, the spur at the end of the line  < west, along the blocking legion's pickets */
+       F the Third's shielded fire  t a scrape  > east, the spur at the end of the line  < west, along the blocking legion's pickets
+       Terrain kit (25b, v13.22): the same ground as the night's (b4_c6_night): dunes and scrub at the back of the picket (1, 2), a rock (4), bones beyond the screen ($), stacked spears (%), the water butt (&), crates (8), the blocking legion's fire (0), the Wickan horses held back (@), the scuffed ground by the fire (:), and the picket at dusk (folk). */
     { id:'b4_c6_lines', title:'Before Pan\'arak · the flank pickets', sub:'Dusk · the trenches across the basin', hint:'Tap ground to move · tap a figure to talk · the Third\'s fire is behind the screen', decor:'b4_c6_lines',
-      map:[ "R..,,..R..,,...R",
-            ".,..R.....,..R.,",
-            "..,.....,.......",
+      map:[ "R1.,,..R..,,..1R",
+            ".,$.R.....,..R.,",
+            "1.,.....,...4..1",
             "==========L=====",
             ".t..t....t...t.>",
-            "................",
-            "<.....F.....R...",
-            "..,.........,...",
-            "....R.....,.....",
-            "..,....,........",
-            ".......,........",
-            "R..,.....,.....R" ],
-      walk:'.,', triggers:{F:'b4_c6_picketfire', L:'b4_c6_lookout', '=':'b4_c6_screen', t:'b4_c6_scrape', '>':'b4_c6_to_spur', '<':'b4_c6_west'}, start:{x:7, y:7},
+            "%...............",
+            "<....:F:....R.8.",
+            "1.,.........,.11",
+            "1...R.....,...11",
+            "1.,....,.....@@1",
+            "11..&..,..0....1",
+            "R111112221111111" ],
+      walk:'.,_:*', triggers:{F:'b4_c6_picketfire', L:'b4_c6_lookout', '=':'b4_c6_screen', t:'b4_c6_scrape', '>':'b4_c6_to_spur', '<':'b4_c6_west'}, start:{x:7, y:7},
+      folk:[{x:9, y:10, kind:'b2soldier', name:'A regular of the blocking legion', line:'We came round the long way in the afternoon. Nobody said why the long way. Nobody ever says why the long way.'},
+        {x:6, y:4, kind:'b2soldier', name:'A sentry at the screen', line:'You can count their cookfires from here. I stopped at forty. It wasn\'t helping.'},
+        {x:5, y:10, kind:'b2soldier', name:'A regular at the water butt', line:'Warm as tea and it tastes of the barrel. Drink it anyway. The basin won\'t give you any.', wander:1}],
       quest:()=> !S.f.b4_c6_raddeSaid ? 'Sergeant Radde, behind the screen.' : !S.f.b4_c6_nestDone ? 'The spur at the end of the line, east.' : !S.f.b4_c6_duskDone ? 'The screen. Dusk is coming.' : 'The fire, and the night.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:4, y:5, node:()=> !S.f.b4_c6_raddeSaid ? 'b4_c6_radde' : S.f.b4_c6_nestDone && !S.f.b4_c6_duskDone ? 'b4_c6_dusk_start' : S.f.b4_c6_duskDone ? 'b4_c6_nightfall' : 'b4_c6_radde_again', fresh:()=>!S.f.b4_c6_raddeSaid || (!!S.f.b4_c6_nestDone && !S.f.b4_c6_duskDone)},
@@ -212,21 +216,22 @@ const B4CH6 = {
       quest:()=>'North across the basin, to the foot of the ramps. Low, and quiet.', npcs:[] },
 
     /* 16 x 12 (b4_c6_ramp, night).  the foot of the trenches: r the ramps going up (nobody's way)  t the trench at the top of the foot
-       F the outpost's fire  v back across the basin */
+       F the outpost's fire  v back across the basin
+       Terrain kit (25b, v13.22): the basin's dunes coming up to the foot (1, 2 scrub), the trench spoil (3), rocks (4), bones ($), a dead tree (5), and the outpost's own trodden way down into the basin (_); nobody out here but the outpost. */
     { id:'b4_c6_ramp', title:'Pan\'arak · the foot of the ramps', sub:'Night · under the trenches', hint:'Tap ground to move · tap a figure to look · the outpost is at the foot of the middle ramp', decor:'b4_c6_ramp', dark:true,
       map:[ "rrrrtttrrrrtttrr",
             "rrrttRrrrrRttrrr",
-            "R..t..........tR",
-            "...........,....",
-            "..R....F......R.",
-            "......R.........",
-            ".,..........,...",
-            "....R......R....",
-            "..,.............",
-            "........,....R..",
-            "R..............R",
-            "RR.....v......RR" ],
-      walk:'.,', triggers:{r:'b4_c6_ramp_up', t:'b4_c6_ramp_look', F:'b4_c6_outpost_start', v:'b4_c6_ramp_back'}, start:{x:7, y:10},
+            "R3.t......$...tR",
+            "13.........,..31",
+            "1.R....F..3...R1",
+            "11....R_..4....1",
+            "1,..$.._....,..1",
+            "1...R.._...R..21",
+            "12,...4_......11",
+            "1......_,..5.R11",
+            "R11.........112R",
+            "RR111..v..1111RR" ],
+      walk:'.,_:*', triggers:{r:'b4_c6_ramp_up', t:'b4_c6_ramp_look', F:'b4_c6_outpost_start', v:'b4_c6_ramp_back'}, start:{x:7, y:10},
       quest:()=> !S.f.b4_c6_outpostDone ? 'Look. Then the outpost at the foot of the middle ramp.' : 'Back, across the basin, to the line.',
       npcs:[
         {id:'outpost', name:'The outpost at the foot', kind:'b4_c6_dogslayer', x:8, y:3, node:()=>'b4_c6_outpost_start', show:()=>!S.f.b4_c6_outpostDone, fresh:()=>!S.f.b4_c6_outpostDone} ] } ],

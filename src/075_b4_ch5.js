@@ -118,21 +118,24 @@ const B4CH5 = {
 
   areas:[
     /* 16 x 12 (b4_c5_wall, night).  . sand  , blown sand  R red rock  S drifted sand (blocks)  F the Third's fire in the lee of the rocks
-       f other fires  = tents  W the water wagons  L a lookout cairn on the north drift  > north-east, toward the Wall's edge */
+       f other fires  = tents  W the water wagons  L a lookout cairn on the north drift  > north-east, toward the Wall's edge
+       Terrain kit (25b, v13.22): dunes in the camp's corners (1), a rock (4), the 10th's fire (0), a tent (6), stacked spears (%), the water butt (&), crates (8), sand trodden round the wagons (:), and two of the 9th (folk). */
     { id:'b4_c5_camp', title:'Short of the Wall · the 9th\'s camp', sub:'Night · the Wall a mile off', hint:'Tap ground to move · tap a figure to talk · the Third\'s fire is in the lee of the rocks', decor:'b4_c5_wall', dark:true,
       map:[ "SSSSSSSSSSSSSSSS",
             "S,,..,,L,....,,S",
             "S.=..=......=..>",
             "S......RFR.....S",
-            "S.=............S",
-            "S....,....,..=.S",
+            "S.=.........4..S",
+            "S1...,....,..=.S",
             "S..f.....W...W.S",
-            "S..............S",
+            "S&......:......S",
             "S.=...,....=...S",
-            "S......f.......S",
-            "S.,.......,..,.S",
+            "S8.....f....0.%S",
+            "S1,.6.....,..,.S",
             "SSSSSSSSSSSSSSSS" ],
-      walk:'.,', triggers:{F:'b4_c5_wallfire', W:'b4_c5_wagon', L:'b4_c5_lookout', '>':'b4_c5_to_edge'}, start:{x:8, y:5},
+      walk:'.,_:*', triggers:{F:'b4_c5_wallfire', W:'b4_c5_wagon', L:'b4_c5_lookout', '>':'b4_c5_to_edge'}, start:{x:8, y:5},
+      folk:[{x:11, y:9, kind:'b2soldier', name:'A regular of the 9th', line:'The Wall\'s a mile off and I can still hear it. Like the sea, if the sea hated you.'},
+        {x:2, y:7, kind:'hissari_m', name:'A water-carrier', line:'Half a cup. And don\'t spit it out to clear the sand. It\'s half a cup.', wander:1}],
       quest:()=> !S.f.b4_c5_raddeSaid ? 'Sergeant Radde, by the tents.' : 'The Third\'s fire, and sleep. The Wall\'s edge at first light, north-east.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:4, y:4, node:()=>S.f.b4_c5_raddeSaid ? 'b4_c5_radde_again' : 'b4_c5_radde', fresh:()=>!S.f.b4_c5_raddeSaid},
@@ -142,42 +145,47 @@ const B4CH5 = {
         {id:'tenth', name:'A regular of the 10th', kind:'b2soldier', x:3, y:7, node:()=>'b4_c5_bredd', fresh:()=>!S.f.b4_c5_bredd} ] },
 
     /* 16 x 12 (b4_c5_wall, first light).  S the Wall itself  , blown sand at its foot  . sand  R red rock  P the 9th's picket stakes
-       < back to the camp */
+       < back to the camp
+       Terrain kit (25b, v13.22): meant to be empty: the sand piled into dunes at the Wall's foot and round the rim (1, 2 scrub), rocks (4), something's bones ($), boot-marks at the stakes (:), and one man at the picket (folk). */
     { id:'b4_c5_edge', title:'The Whirlwind Wall · the 9th\'s picket', sub:'First light · the Wall a quarter-mile off', hint:'Tap ground to move · tap a figure to talk · the picket is in front of the Wall', decor:'b4_c5_wall',
       map:[ "SSSSSSSSSSSSSSSS",
             "SSSSSSSSSSSSSSSS",
-            ",,S,,,SS,,,,S,,,",
-            ",,,,,,,,,,,,,,,,",
-            "..,,..,...,,..,.",
-            "....R.......R...",
-            "......PPP.......",
-            "..RR............",
-            "...........R....",
-            "<...............",
-            "......,.........",
-            "R..........,..RR" ],
-      walk:'.,', triggers:{P:'b4_c5_picket', S:'b4_c5_sandwall', '<':'b4_c5_edge_back'}, start:{x:7, y:9},
+            "11S,,1SS1,,,S,11",
+            "1,,,,,,,,,,,,,,1",
+            "1.,,..,..$,,..,1",
+            "1...R..::...R..1",
+            "11....PPP:....11",
+            "1.RR...:....4..1",
+            "1...4......R..21",
+            "<............111",
+            "11....,.....1111",
+            "R1111.....,111RR" ],
+      walk:'.,_:*', triggers:{P:'b4_c5_picket', S:'b4_c5_sandwall', '<':'b4_c5_edge_back'}, start:{x:7, y:9},
+      folk:[{x:9, y:6, kind:'b2soldier', name:'A regular at the stakes', line:'A quarter of a mile off, and it still takes the skin off your face. I\'ve stopped shutting my eyes. It gets in anyway.'}],
       quest:()=> !S.f.b4_c5_ridersDone ? 'The picket stakes, in front of the Wall.' : 'Watch the head of the army, west along the line.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:9, y:8, node:()=>S.f.b4_c5_ridersDone ? 'b4_c5_withdraw' : 'b4_c5_radde_edge', fresh:()=>!!S.f.b4_c5_ridersDone || !S.f.b4_c5_raddeEdge},
         {id:'scouts', name:'Wickan riders', kind:'wickan', x:2, y:5, node:()=>'b4_c5_scouts', show:()=>!!S.f.b4_c5_withdrawn, fresh:()=>!!S.f.b4_c5_withdrawn && !S.f.b4_c5_scouts} ] },
 
     /* 16 x 12 (b4_c5_seabed, day).  . old sea floor  , shell  # coral rock  s a petrified ship  r the old road  c a bank of conch shells
-       m a marker stone on the old road  < back toward the Wall  > on, toward the canal city */
+       m a marker stone on the old road  < back toward the Wall  > on, toward the canal city
+       Terrain kit (25b, v13.22): the old shore's ridges (1, 2), coral heads (4), a great fish's bones and shells ($), the column halted along the road: wagons (7), crates (8), the mules (@), hoof-churn (:), and two of it (folk). */
     { id:'b4_c5_seabed', title:'Raraku · the old sea floor', sub:'Morning · the column halted on the road', hint:'Tap ground to move · tap a figure to talk · the column is on the old road', decor:'b4_c5_seabed',
-      map:[ "##..,,....rr..##",
-            "#..,,,....rr...#",
-            "..ss......rr..,,",
+      map:[ "##1.,,..$.rr.1##",
+            "#1.,,,...7rr8.1#",
+            "..ss..4...rr..,,",
             ".ssss.....rr.,,c",
-            "..........rr....",
-            "..........rr..#.",
-            "...,......rr....",
-            "..##..,...mr....",
-            "..........rr...>",
+            "1.........rr:...",
+            "1.....$..7rr@@#.",
+            "1..,......rr..21",
+            "1.##..,...mr7..1",
+            "..4.......rr...>",
             "<.,.......rr....",
-            "....,,....rr..,.",
-            "##........rr..##" ],
-      walk:'.,r', triggers:{s:'b4_c5_ship', c:'b4_c5_shells', m:'b4_c5_marker', '<':'b4_c5_sea_back', '>':'b4_c5_to_canal'}, start:{x:9, y:9},
+            "1..$,,....rr8.,1",
+            "##11......rr.1##" ],
+      walk:'.,r_:*', triggers:{s:'b4_c5_ship', c:'b4_c5_shells', m:'b4_c5_marker', '<':'b4_c5_sea_back', '>':'b4_c5_to_canal'}, start:{x:9, y:9},
+      folk:[{x:13, y:6, kind:'hissari_m', name:'A carter with the mules', line:'The mules keep licking the stones. Salt. There was a sea here once, they say. The mules believe it.', wander:1},
+        {x:8, y:7, kind:'b2soldier', name:'A regular on a wagon tongue', line:'Shells, a day\'s march from any water. I picked one up. Something was living in it. Not a sea something.'}],
       quest:()=> !b45Key() ? 'Sergeant Radde, on the road. The water.' : !b45KeyDone() ? (b45Key() === 'seep' ? `${b45FName().replace(/^t/, 'T')} and the water party.` : 'The wagons at the back of the column.') : 'On, toward the canal city, east.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:12, y:6, node:()=>b45Key() ? 'b4_c5_radde_sea' : 'b4_c5_key', fresh:()=>!b45Key()},
@@ -187,21 +195,24 @@ const B4CH5 = {
         {id:'waterparty', name:'The water party', kind:'b4_c1_recruit', x:14, y:9, node:()=>'b4_c5_seep_go', show:()=>b45Key() === 'seep' && !S.f.b4_c5_seepDone, fresh:()=>b45Key() === 'seep' && !S.f.b4_c5_seepDone},
         {id:'wagons', name:'The column\'s last wagons', kind:'b2soldier', x:2, y:9, node:()=>'b4_c5_rear_start', show:()=>b45Key() === 'column' && !S.f.b4_c5_rearDone, fresh:()=>b45Key() === 'column' && !S.f.b4_c5_rearDone} ] },
 
-    /* 16 x 12 (b4_c5_canal, dusk).  . paving  # ruin  ~ a dry canal  - a broken bridge  g the road of standing stones  < back  > on, the night */
+    /* 16 x 12 (b4_c5_canal, dusk).  . paving  # ruin  ~ a dry canal  - a broken bridge  g the road of standing stones  < back  > on, the night
+       Terrain kit (25b, v13.22): a light touch: the column's cookfires (0), a tent pitched in a doorway (6), a stack of spears (%), and two of the 9th camped in it (folk). */
     { id:'b4_c5_canal', title:'Raraku · the canal city', sub:'Dusk · the column camped in the ruins', hint:'Tap ground to move · tap a figure to talk · the canals are dry; cross by the bridges', decor:'b4_c5_canal', dark:true,
       map:[ "####..####..####",
             "#..#..#..#..#..#",
-            "......g.........",
+            "......g...0.....",
             "~~~~~~~-~~~~~~~~",
             "~~~~~~~-~~~~~~~~",
-            "....#.......#...",
+            "....#...%...#...",
             "..g.........##..",
-            "#...........#..#",
+            "#..6........#..#",
             "~~~~~~~~-~~~~~~~",
-            "................",
+            "....0...........",
             "<..#........#..>",
             "####..####..####" ],
-      walk:'.-', triggers:{g:'b4_c5_ghosts', '~':'b4_c5_canalbed', '<':'b4_c5_canal_back', '>':'b4_c5_night'}, start:{x:7, y:9},
+      walk:'.-_:*', triggers:{g:'b4_c5_ghosts', '~':'b4_c5_canalbed', '<':'b4_c5_canal_back', '>':'b4_c5_night'}, start:{x:7, y:9},
+      folk:[{x:5, y:9, kind:'b2soldier', name:'A regular at a cookfire', line:'A whole city and not a drop in it. Somebody built canals here. Somebody was an optimist.'},
+        {x:11, y:2, kind:'b2soldier', name:'A sentry among the ruins', line:'Every wall in this place throws a shadow that moves. The shadows are the only ones living here. I hope.'}],
       quest:()=> !S.f.b4_c5_desDone ? 'The 10th\'s forage party. Across the canals, north.' : 'The night, east, with the column.',
       npcs:[
         {id:'radde', name:'Sergeant Radde', kind:'b4_c1_radde', x:10, y:9, node:()=>'b4_c5_radde_canal', fresh:()=>!S.f.b4_c5_raddeCanal},

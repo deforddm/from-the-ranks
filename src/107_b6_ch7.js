@@ -124,21 +124,24 @@ const B6CH7 = {
 
   areas:[
     /* 16 x 12 (b6_c7_deck): the transport's deck at sea. # the rail and bulkheads  m a mast  h the hatch to the hold  - an open grating
-       R the rail (the view)  F the cook's sandbox (the fire)  G the Grey Helms' drill (from phase 2)  O the bow */
+       R the rail (the view)  F the cook's sandbox (the fire)  G the Grey Helms' drill (from phase 2)  O the bow
+       Terrain kit (25b, v13.22): the deck's cargo: crates (8), lashed bales (4), water casks (&), coiled rope (*), stacked spears (%), a lantern (!), and two aboard (folk). */
     { id:'b6_c7_transport', title:'A transport · at sea', sub:'Nok\'s fleet · the squad\'s square of deck', hint:'Tap ground to move · tap a figure to talk · the rail shows what the sea is doing', decor:'b6_c7_deck',
       map:[ "################",
-            "#..m.......m...#",
-            "#..............#",
+            "#8.m..*....m.8&#",
+            "#4.............#",
             "R....h.....G...R",
-            "#..............#",
-            "#....--.....F..#",
-            "#....--........#",
+            "#.*............#",
+            "#....--.....F.8#",
+            "#&...--.......4#",
             "#..m.......m...#",
-            "#..............#",
-            "#..............#",
-            "#......O.......#",
+            "#4.............#",
+            "#8...........*%#",
+            "#&.....O....!8.#",
             "################" ],
-      walk:'.', triggers:{R:'b6_c7_rail', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_bow'}, start:{x:7, y:8},
+      walk:'.*', triggers:{R:'b6_c7_rail', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_bow'}, start:{x:7, y:8},
+      folk:[{x:6, y:2, kind:'b5_c2_pilot', name:'A sailor of Nok\'s fleet', line:'Stand where you like. Only not there, or there, or anywhere a rope goes.', wander:1},
+        {x:4, y:9, kind:'b2soldier', name:'A regular of the 9th, grey in the face', line:'Every wave I think, that\'s the last one. It never is.'}],
       quest:()=> !S.f.b6_c7_ambushDone ? 'The lookout is shouting. The rail.' : !S.f.b6_c7_sepik ? 'An island to the west. The rail.' : !S.f.b6_c7_ottarMet ? 'Grey ships coming up astern. The rail.' : 'The fleet is turning into something. The bow.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>!S.f.b6_c7_captain},
@@ -146,21 +149,24 @@ const B6CH7 = {
         {id:'oldninth', name:'An old soldier of the 9th', kind:'b2soldier', x:2, y:5, node:()=>'b6_c7_oldsoldier', fresh:()=>!S.f.b6_c7_oldsoldier},
         {id:'ottar', name:'A Grey Helm', kind:'greysword', x:9, y:4, node:()=>'b6_c7_ottar', show:()=>b67Ph() === 2 && !!S.f.b6_c7_perish && !S.f.b6_c7_ottarMet, fresh:()=>true} ] },
 
-    /* 16 x 12 (b6_c7_deckcold, dark): the same deck in the cold realm, the lanterns lit at noon */
+    /* 16 x 12 (b6_c7_deckcold, dark): the same deck in the cold realm, the lanterns lit at noon
+       Terrain kit (25b, v13.22): the same deck and cargo as at sea (b6_c7_transport): crates (8), lashed bales (4), casks (&), coiled rope rimed with frost (*), spears (%), a lantern lit at noon (!), and two aboard (folk). */
     { id:'b6_c7_cold', title:'A transport · somewhere cold', sub:'Ice on the rigging · water roaring', hint:'Tap ground to move · the rail · the bow', decor:'b6_c7_deckcold', dark:true,
       map:[ "################",
-            "#..m.......m...#",
-            "#..............#",
+            "#8.m..*....m.8&#",
+            "#4.............#",
             "R....h.....G...R",
-            "#..............#",
-            "#....--.....F..#",
-            "#....--........#",
+            "#.*............#",
+            "#....--.....F.8#",
+            "#&...--.......4#",
             "#..m.......m...#",
-            "#..............#",
-            "#..............#",
-            "#......O.......#",
+            "#4.............#",
+            "#8...........*%#",
+            "#&.....O....!8.#",
             "################" ],
-      walk:'.', triggers:{R:'b6_c7_ice', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_wolves'}, start:{x:7, y:8},
+      walk:'.*', triggers:{R:'b6_c7_ice', h:'b6_c7_hold', F:'b6_c7_fire', G:'b6_c7_drill', O:'b6_c7_wolves'}, start:{x:7, y:8},
+      folk:[{x:6, y:2, kind:'b5_c2_pilot', name:'A sailor, chipping ice', line:'Ice on the ropes and no land anywhere. Don\'t ask me where we are. I\'ve stopped asking the master.', wander:1},
+        {x:4, y:9, kind:'b2soldier', name:'A regular of the 9th, in a blanket', line:'Back on the Odhan I complained about the heat. I take it back. All of it.'}],
       quest:()=> !S.f.b6_c7_wolvesHeard ? 'Something is howling a long way off. The bow.' : 'Out of here. The bow.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:9, y:8, node:()=>'b6_c7_captain', fresh:()=>false},
@@ -168,13 +174,14 @@ const B6CH7 = {
 
     /* 16 x 12 (b6_c7_quay): Malaz City's waterfront, a jetty along from the marines'. ~ harbour  H the plank to the transport  X the main
        jetty, along the waterfront  . planking  , stone  W the Wickan families  F a tar-barrel fire  # the harbour sheds  A an alley mouth
-       K the Hold over the roofs  M the street mouth (the mob)  < the way into the streets */
+       K the Hold over the roofs  M the street mouth (the mob)  < the way into the streets
+       Terrain kit (25b, v13.22): a light touch: a water cask (&), crates (8), and one of the waterfront getting off it (folk). */
     { id:'b6_c7_jetty', title:'Malaz City · the waterfront', sub:'A jetty along from the marines\'', hint:'Tap ground to move · tap a figure to talk · the street mouth is where the city comes from', decor:'b6_c7_quay',
       map:[ "~~~~~~~~~~~~~~~~",
             "~~~H~~~~~~~~~X~~",
             "~~~.~~~~~~~~~.~~",
             "~~~.~~~~~~~~~.~~",
-            "................",
+            "&..............8",
             "..F........W....",
             "................",
             ",,,,,,,,,,,,,,,,",
@@ -183,6 +190,7 @@ const B6CH7 = {
             "<,,,,,,,,,,,,,,#",
             "################" ],
       walk:'.,', triggers:{H:'b6_c7_plank', X:'b6_c7_shouts', W:'b6_c7_wickans_fam', F:'b6_c7_fire', A:'b6_c7_alley', K:'b6_c7_holdview', M:'b6_c7_mob', '<':'b6_c7_tolanes'}, start:{x:4, y:5},
+      folk:[{x:14, y:5, kind:'b5_c1_ropeman', name:'A fish-seller, packing up', line:'When the city goes like this you get your fish off the street. Then yourself.'}],
       quest:()=> !S.f.b6_c7_mobDone ? 'The city is coming down to the water. The street mouth.' : !S.f.b6_c7_guardDone ? 'The City Guard, for the Wickans.' : !b67Key() ? (S.f.b6_c7_signal ? 'The roads.' : 'Horns from the harbour.') : b67Key() === 'wickans' && !S.f.b6_c7_streetsDone ? 'Into the streets, west.' : 'The last of it.',
       npcs:[
         {id:'captain', name:'Captain Hollet', kind:'b4_c1_hollet', x:6, y:4, node:()=>S.f.b6_c7_guardDone ? 'b6_c7_signal' : 'b6_c7_orders', fresh:()=>!S.f.b6_c7_orders || (!!S.f.b6_c7_guardDone && !S.f.b6_c7_signal)},
@@ -191,21 +199,23 @@ const B6CH7 = {
         {id:'grandmother', name:'A Wickan grandmother', kind:'b5_c1_tilewoman', x:10, y:6, node:()=>'b6_c7_grandmother', show:()=>!!S.f.b6_c7_famMet, fresh:()=>!S.f.b6_c7_gran} ] },
 
     /* 16 x 12 (b6_c7_streets, dusk): the lanes behind the waterfront (the 'wickans' road). W the Wickan house  G the landward gate
-       > back to the water  x a shut shop  c a cart  F a street brazier */
+       > back to the water  x a shut shop  c a cart  F a street brazier
+       Terrain kit (25b, v13.22): crates (8), water casks (&), rubble heaped at the corners (3), a cart left in the lane (7), and one face at a shutter (folk). */
     { id:'b6_c7_lanes', title:'Malaz City · the lanes', sub:'Behind the waterfront · dusk', hint:'Tap ground to move · the Wickan house is up the lane · the gate is south-east', decor:'b6_c7_streets', dark:true,
       map:[ "####,,.##..,####",
-            "#..,....#.....W#",
-            "#.c..,..#..,...#",
-            "##...........x.#",
-            "#....##..,.....#",
+            "#8.,....#..&..W#",
+            "#.c..,..#..,..8#",
+            "##3..........x.#",
+            "#....##..,..&..#",
             "#.,..##....c...#",
             ">......F.......#",
-            "#..,.......##..#",
-            "#.....c....##..#",
+            "#8.,.......##..#",
+            "#.....c..8.##.3#",
             "##..,...,......#",
-            "#.......#..,..G#",
+            "#&......#..,.7G#",
             "################" ],
       walk:'.,', triggers:{W:'b6_c7_house', G:'b6_c7_gate', '>':'b6_c7_lanes_back', x:'b6_c7_shop', F:'b6_c7_brazier'}, start:{x:2, y:6},
+      folk:[{x:10, y:2, kind:'b5_c7_citizen', name:'A woman at a shutter', line:'Lamps out, doors shut. If they can\'t see you, they can\'t decide what you are.'}],
       quest:()=> !S.f.b6_c7_streetsDone ? 'The Wickan house, up the lane.' : 'The landward gate.',
       npcs:[] } ],
 
