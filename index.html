@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.36.0';
+const VERSION = '13.36.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2203,7 +2203,7 @@ function talk(id){
   G.heard[id] = words;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
-  let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
+  let unspoken = ''; try { unspoken = unspokenLine(id, curCh, n); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
   const body = !said ? `<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}`
     : n.again != null ? `<div class="txt">${fmt(typeof n.again === 'function' ? n.again() : n.again)}</div>${n.html || ''}`
     : `<div class="txt said" id="saidTxt">${fmt(n.txt)}${n.after ? fmt(n.after) : ''}</div><button class="btn sm saidmore" type="button" id="saidMore">Read it again</button>${n.html || ''}`;
@@ -7556,15 +7556,30 @@ function goesOn(g, d = 0){
 }
 const choiceOn = (c, d = 0) => !!c.onward || goesOn(c.go, d) || (!!c.check && goesOn(c.fail, d));
 const staysHere = c => !c.check && !c.onward && (c.go === undefined || (typeof c.go === 'function' && !ONWARD_RE.test(String(c.go)) && !/\btalk\s*\(/.test(String(c.go)) && /^\(\)\s*=>\s*\{?\s*startExplore\(\s*\)/.test(String(c.go))));
-function unspokenLine(id, ch){
+/* v13.36.1: the reminder never comes from a squadmate the words on the page are about (Thegg reminding you of the Finadd while
+   the paragraph above watches him dread the court), and a waiting figure may give its own reason (wait:()=>'…', said by the
+   squadmate as a whole sentence), so the reminder says what is waiting rather than only who; one already in the scene "has more for
+   you yet"; a node marked quiet has no time for it */
+function unspokenLine(id, ch, n){
   if (!S || !AREAS[S.area] || !ch.some(c => choiceOn(c)) || !ch.some(staysHere)) return '';
+  if (n && n.quiet) return ''; // a node with no time for it (the water coming)
+  const txt = n ? [n.txt, n.after].filter(x => typeof x === 'string').join(' ') : '';
   const waiting = (AREA().npcs || []).filter(n => { try { return (!n.show || n.show()) && n.fresh && !/^\(\)\s*=>\s*true$/.test(String(n.fresh)) && n.fresh() && n.node() !== id; } catch(e) { return false; } });
   if (!waiting.length) return '';
   const talks = new Set(waiting.map(n => n.node())); // two figures, one conversation (Hedge and Fiddler at the bones) are one somebody
-  const named = waiting.filter(n => !/^(a|an|the|something|someone)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
-  const many = n => /^(Men|Strangers)\b|\b(recruits|servants|riders|lancers|youths|shamans|Blades)$/.test(n || ''); // a crowd is waiting, not is
-  const who = talks.size === 1 && named.length ? (many(named[0].name) ? `${named[0].name} are` : `${named[0].name}'s`) : 'Somebody here\'s';
-  const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = mates.length ? NAME(mates[k % mates.length]) : '';
+  const named = waiting.filter(n => !/^(a|an|the|something|someone|shouting|voices|noise)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
+  const many = n => /^(Men|Strangers|Marines|Soldiers)\b|\b(recruits|servants|riders|lancers|youths|shamans|Blades|children)$/.test(n || ''); // a crowd is waiting, not is
+  const nm = named.length ? named[0].name.split(',')[0] : ''; // "Calder, with the wagons" is Calder when a squadmate says it (v13.36.1)
+  const who = talks.size === 1 && named.length ? (many(nm) ? `${nm} are` : /s$/.test(nm) ? `${nm} is` : `${nm}'s`) : 'Somebody here\'s';
+  const free = mates.filter(m => !new RegExp(`\\b${NAME(m).split(' ')[0]}\\b`).test(txt)), pool = free.length ? free : mates; // not the one the scene is about
+  const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = pool.length ? NAME(pool[k % pool.length]) : '';
+  const own = talks.size === 1 && waiting[0].wait ? waiting[0].wait() : ''; // the figure's own reason, when it has one
+  const TITLE = /^(Sergeant|Captain|Lieutenant|Corporal|Quartermaster|Finadd|Fist|High|Master|Mistress|Old|Young|Second|Company|Brother|Sister|Mother|Father|Lady|Lord)$/;
+  const here = talks.size === 1 && named.length && !many(nm) && nm.split(/\s+/).some(w => /^[A-Z]/.test(w) && !TITLE.test(w) && new RegExp(`\\b${w}\\b`).test(txt)); // the one waiting is in this very scene
+  const RANK = /^(Sergeant|Captain|Lieutenant|Corporal|Quartermaster|Finadd|Fist|Master|Mistress)\s+/, by = nm.match(RANK); // a squad says "Radde" of a sergeant, "the Finadd" of an officer
+  const short = !by ? nm : by[1] === 'Sergeant' || by[1] === 'Corporal' ? nm.replace(RANK, '') : 'The ' + by[1];
+  if (!own && here) return mate ? `${mate}, low: "${short} has more for you yet, Sergeant. Before we go."` : `${short} has more for you yet.`;
+  if (own) return mate ? `${mate}, low: "${own}"` : own.replace(/,? Sergeant\.$/, '.');
   return mate ? `${mate}, low: "${who} still waiting on a word, Sergeant."` : `${who.replace(/'s$/, ' is')} still waiting on a word.`;
 }
 const npcAt = (x,y) => AREA().npcs.find(n => n.x === x && n.y === y && (!n.show || n.show()));
@@ -9768,6 +9783,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.36.1', ['When a squadmate warns you that somebody still has a word for you before you move on, it is no longer the squadmate the scene is about, and it says what is waiting where it matters (the Finadd\'s festival dock, Sethand on the rise, the Edur at the end of the row).', 'Somebody already in the scene now "has more for you yet" instead of "still waiting on a word", and the warning stays quiet in the middle of a fight or a flood.', 'Book Five: the Sixth\'s fire no longer says the Finadd\'s dock has been drunk before he has handed it out.']],
   ['13.36.0', ['The series has a theme: eight notes each book sings in its own voice. Half of it on the title, its head when a chapter opens, and the whole of it at the very end, Book Ten answered by Book One.', 'New places to hear: the canals of Letheras, Darujhistan after dark, the glass desert, the Wastes. A short cue when a fight where the fallen stay down begins, and when a book\'s finale opens. Each book has three battle tracks now, and the books are evened out so none is louder than another.']],
   ['13.35.0', ['Pictures agree with the words beside them in Books Seven to Ten. Book Seven: the road home is a stern rail with Lether going down behind it, and the road east the army leaving Letheras; the chapter ends show dusk and grey dawn where the text has them. Ottar is on the quay, not at the rail, when the Third sails home.', 'Book Eight: the roofs lie under fog with no moon; after the moon breaks the sky over the city is white where it was; the last chapter\'s roads out are each drawn. Book Ten: evening light where the chapters end at evening, and the allies\' dust no longer reads as a second sun.']],
   ['13.34.0', ['Book Six has a picture of its own for every scene that used to borrow one from an earlier book: the well with the bandits\' camels and then without, the barrows by the road, the plague village and the rain on the road south, the picket in three days of rain, the chalk-ringed doors, the way-station, the dusk camp and the last well, the Edur ships and the walls of water, the cold sea with its ice in a green light, and Malaz at dusk.', 'Each road at the end of the book is drawn where it leaves you: at the transport\'s rail, on the jetty\'s foot, or on the hill road behind a Wickan family. The Fourth\'s three roads out of Y\'Ghatan each have their own picture too.']],
@@ -13511,7 +13527,7 @@ const CH2 = {
             "################" ],
       walk:'.,_*', triggers:{W:'c2_wagon_last', '>':'c2_close'}, start:{x:2,y:6},
       quest:()=> 'Darujhistan is a blue smudge to the south-west. The hills are in the way.',
-      npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:10, y:5, node:()=>S.f.c2_hillsSeth ? 'c2_hills_seth_again' : 'c2_hills_dust', fresh:()=>!S.f.c2_hillsSeth} ] } ],
+      npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:10, y:5, node:()=>S.f.c2_hillsSeth ? 'c2_hills_seth_again' : 'c2_hills_dust', fresh:()=>!S.f.c2_hillsSeth, wait:()=>'Sethand\'s not over the rise yet, Sergeant. If you want a last word with him, it\'s now.'} ] } ],
 
   battles:{
     barrow:{title:'The barrow', warrenText:'Something old under the stones · Meanas leans in · Denul holds', warren:{meanas:1.2,denul:1}, dark:true, music:'dark', open:true,
@@ -62230,7 +62246,7 @@ The Third puts it in the kit, and fills Radde's sack, and goes back up the rise 
       ch:[{t:'Back up the rise.', go:()=>startExplore()}]}),
 
     /* ---- the warning down the line, the run, the spur, and the flood ---- */
-    b4_c7_warning:()=>({sp:'A Wickan boy, running', scene:'b4_c7_morning', fx:()=>{ S.f.b4_c7_warned = 1; }, txt:
+    b4_c7_warning:()=>({sp:'A Wickan boy, running', quiet:true, scene:'b4_c7_morning', fx:()=>{ S.f.b4_c7_warned = 1; }, txt:
 `A Wickan boy comes along the line at a dead run on foot, braids flying, one of Temul's youths, shouting the same thing at every picket he passes in Malazan with a Wickan accent, and not stopping for any of them.
 
 "*The coral!*" He goes by the Third's scrape without slowing. "*High ground! The coral, now! The water's coming! The Wickan children say the water's coming!*" And he is past, and shouting it at the next picket, and the next.
@@ -65468,7 +65484,7 @@ const B5CH1 = {
         : !S.f.b5_c1_clerk ? 'The company clerk, at his table under the lamp.' : b51Slept() ? 'Out through the gate, into the festival.' : 'The fire, and then the bunk-houses. The festival is tomorrow.',
       npcs:[
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:3, y:3, node:()=>'b5_c1_clerk', fresh:()=>!S.f.b5_c1_clerk},
-        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:12, y:2, node:()=>b51Ph() >= 3 ? 'b5_c1_ennic_eve' : 'b5_c1_ennic', fresh:()=>b51Ph() >= 3 ? !S.f.b5_c1_purse : !S.f.b5_c1_ennic},
+        {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:12, y:2, node:()=>b51Ph() >= 3 ? 'b5_c1_ennic_eve' : 'b5_c1_ennic', fresh:()=>b51Ph() >= 3 ? !S.f.b5_c1_purse : !S.f.b5_c1_ennic, wait:()=>b51Ph() >= 3 ? 'The Finadd\'s at the officers\' door with a purse, Sergeant. Festival dock, a dock a head.' : 'The Finadd\'s by the officers\' door with his book open, Sergeant. He\'ll want a word before we go.'},
         {id:'qm', name:'The quartermaster', kind:'b5_c5_quartermaster', x:13, y:7, node:()=>'b5_c1_qm', fresh:()=>!S.f.b5_c1_qm},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:11, y:9, node:()=>'b5_c1_tilewoman', fresh:()=>!S.f.b5_c1_tw},
         /* v13.8 (David, Nov 15): meetings. The plan's star for Book Five: Brys Beddict, Finadd of the Royal Guard and the King's new
@@ -65664,7 +65680,7 @@ ${b51Say({thegg:`Thegg ducks under the eaves of the bunk-house door, turns sidew
     /* the fire: a rest, the pay desk, the squad, and the way on (the games pass, 89, wraps this node: keep the id) */
     b5_c1_yard:()=>{ const ph = b51Ph();
       return {sp:'The Sixth\'s fire', scene:'b5_barracks', again:()=> ph >= 3 ? `The Sixth's fire, on the festival night. ${b51KeyDone() ? 'The lane is quiet now.' : 'The lanterns are lit over the wall.'}` : b51Slept() ? 'The fire, gone to ash. It is morning.' : 'The Sixth\'s fire, in the yard. The lanterns are going up over the wall.', txt:
-`${ph >= 3 ? `The Sixth's fire, on the first night of the festival. Over the wall the city is lit from end to end, and the sound of it comes over in a long roar with music in it. The company has drunk the Finadd's festival dock and is working on its own.${b51Key() === 'swim' ? `\n\nThegg sits on the far side of the fire with his back very straight. At first light the court wants him at the steps. Nobody at the fire mentions it, and everybody looks at him when he reaches for the water.` : b51Key() === 'pay' ? `\n\nEvery soldier at the fire owes a few docks more than they did this morning, and every one of them knows exactly how many.` : ''}` : b51Slept() ? `The fire has burned down to ash in its ring. The yard is grey with morning, and the gate is open on the Drownings District. The festival has started without the Sixth.` : `The Sixth's fire, in a ring of old stones on the flags. The yard is full of the battalion's sick sitting up to see the lanterns go up over the wall, and of the company's soldiers pretending not to want to see them.`}${ph < 3 && !b51Slept() ? b51Say({ammet:`\n\nAmmet has the battalion's sick in a row along the bunk-house wall, and is going down it with a lamp.`, perrit:`\n\nPerrit sits on the side of the fire away from the gate, and from the canal behind it.`, _:''}) : ''}`,
+`${ph >= 3 ? `The Sixth's fire, on the first night of the festival. Over the wall the city is lit from end to end, and the sound of it comes over in a long roar with music in it. ${S.f.b5_c1_purse ? `The company has drunk the Finadd's festival dock and is working on its own.` : `The company is waiting on the Finadd's festival dock, and has started on its own in the meantime.`}${b51Key() === 'swim' ? `\n\nThegg sits on the far side of the fire with his back very straight. At first light the court wants him at the steps. Nobody at the fire mentions it, and everybody looks at him when he reaches for the water.` : b51Key() === 'pay' ? `\n\nEvery soldier at the fire owes a few docks more than they did this morning, and every one of them knows exactly how many.` : ''}` : b51Slept() ? `The fire has burned down to ash in its ring. The yard is grey with morning, and the gate is open on the Drownings District. The festival has started without the Sixth.` : `The Sixth's fire, in a ring of old stones on the flags. The yard is full of the battalion's sick sitting up to see the lanterns go up over the wall, and of the company's soldiers pretending not to want to see them.`}${ph < 3 && !b51Slept() ? b51Say({ammet:`\n\nAmmet has the battalion's sick in a row along the bunk-house wall, and is going down it with a lamp.`, perrit:`\n\nPerrit sits on the side of the fire away from the gate, and from the canal behind it.`, _:''}) : ''}`,
         ch:[b5TileChoice(1),
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f['b5_c1_rest' + ph] && !b51Slept(), fx:()=>{ S.f['b5_c1_rest' + ph] = 1; b5Rest('The squad sits an hour by its own fire, inside the barracks walls. Wounds close, mostly.'); }, go:'b5_c1_yard_rest'},
             {t:'The pay desk, at the clerk\'s table.', go:'b5_c1_pay'},
@@ -71443,7 +71459,7 @@ It is not like High Fort. Here the dying is not done by light. They are dying th
 In a lull, when the Edur in front of the Sixth have gone back to the lake beds to come again, ${b56Say({thegg:'Thegg comes down off the lip with an Edur sword in his hand that its owner will not want back, and gives it to the squad without a word', tobet:'Tobet picks an Edur sword up off the stones of the channel, where its owner left it, and holds it out to whoever wants it', _:'there is an Edur sword on the stones of the channel, where its owner left it, and somebody picks it up'})}.`,
       ch:[{t:'Back to the lip.', go:'b5_c6_break'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b5_c6_break:()=>({sp:'The far lip', scene:'b5_c6_break', fx:()=>{ S.f.b5_c6_day = 3; },
+    b5_c6_break:()=>({sp:'The far lip', quiet:true, scene:'b5_c6_break', fx:()=>{ S.f.b5_c6_day = 3; },
       again:()=>`The battalion breaking along the lip, and the pillar coming.`, txt: b56Key() ?
 `It is decided. ${b56Key() === 'stand' ? 'The Sixth holds the crossing.' : 'The Sixth goes back over the channel.'}` :
 `Then the right sees.
@@ -71476,7 +71492,7 @@ Finadd Ennic is beside you with his sword out, which you have never seen before.
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the key: stand (the mortal fight) ---- */
-    b5_c6_stand:()=>({sp:'The crossing', scene:'b5_c6_break', again:()=>`The end of the crossing, and the Edur coming down the far bank.`, txt: S.f.b5_c6_channelDone ?
+    b5_c6_stand:()=>({sp:'The crossing', quiet:true, scene:'b5_c6_break', again:()=>`The end of the crossing, and the Edur coming down the far bank.`, txt: S.f.b5_c6_channelDone ?
 `The crossing is behind you. It is done.` :
 `"Hold it," you say, and Finadd Ennic says it after you, louder, so the soldiers round the Sixth will hear it from an officer: "The Sixth holds the crossing. Everybody else, over."
 
@@ -71580,7 +71596,7 @@ You touch the white fingertip on your shield's boss, for the Errant, from habit,
             {t:'Not yet.', go:()=>startExplore()}]}; },
 
     /* ---- the key: fallback (the Dissent road, the flight) ---- */
-    b5_c6_fallback:()=>({sp:'The crossing', scene:'b5_c6_break', again:()=>`The crossing, crowded, and the open ground beyond toward Dissent.`, txt:
+    b5_c6_fallback:()=>({sp:'The crossing', quiet:true, scene:'b5_c6_break', again:()=>`The crossing, crowded, and the open ground beyond toward Dissent.`, txt:
 `"Over," you say, and Finadd Ennic says it after you, to the Sixth: "Over, and together."
 
 The Sixth goes back over the crossing with the first of the right to break, in the press of it, Artisans and Riven and Whitefinders all together on the stones, and up the near bank, and out onto the open ground going south-west toward the Dissent road. Behind it the crossing fills, and the Edur come down the far bank into the channel, and the Sixth does not see what happens at the crossing after that, because it is not looking back.${b56If('thegg', `\n\nThegg goes over the crossing last of the squad, walking backward with his shield up. "We left the crossing," he says, when he is over. He says it the way he would say a debt.`)}${b56If('pessa', `\n\nPessa is over first. "We left the crossing," she says. "Good."`)}${b56If('tobet', `\n\nTobet keeps his three arrows. "Nobody will write it down," he says. He sounds as if he will.`)}`,
@@ -89749,7 +89765,7 @@ const B7CH4 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>b74Ph() >= 3 ? 'b7_c4_dusk' : 'b7_c4_ennic', fresh:()=>b74Ph() >= 3 ? !S.f.b7_c4_dusk : !S.f.b7_c4_ennic},
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:5, y:6, node:()=>'b7_c4_clerk', show:()=>b74Ph() < 3, fresh:()=>!S.f.b7_c4_clerk},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:9, y:9, node:()=>'b7_c4_tilewoman', show:()=>b74Ph() < 3, fresh:()=>!S.f.b7_c4_tw},
-        {id:'edur', name:'Edur from the hill', kind:'b5_edur', x:13, y:6, node:()=>'b7_c4_edur_view', show:()=>b74Ph() === 1 && !S.f.b7_c4_edurDone && !S.f.b7_c4_edurDeclined, fresh:()=>!S.f.b7_c4_edurSeen},
+        {id:'edur', name:'Edur from the hill', kind:'b5_edur', x:13, y:6, node:()=>'b7_c4_edur_view', show:()=>b74Ph() === 1 && !S.f.b7_c4_edurDone && !S.f.b7_c4_edurDeclined, fresh:()=>!S.f.b7_c4_edurSeen, wait:()=>'There are Edur at the end of the row, Sergeant, watching the lines. Somebody ought to see what they want first.'},
         {id:'visit', name:'Two visitors at the fire', kind:'b5_letherii', x:6, y:5, node:()=>'b7_c4_key', show:()=>b74Ph() === 3 && !!S.f.b7_c4_patriotsDone && !b74Key(), fresh:()=>!b74Key()} ] },
 
     /* 16 x 12 (b5_c6_dissent, day). , grass  . the road through the gate  # the palisade  G the gate, the crowd beyond  c a cart  t the muster

@@ -170,7 +170,7 @@ function talk(id){
   G.heard[id] = words;
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
-  let unspoken = ''; try { unspoken = unspokenLine(id, curCh); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
+  let unspoken = ''; try { unspoken = unspokenLine(id, curCh, n); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
   const body = !said ? `<div class="txt">${fmt(n.txt)}</div>${n.html || ''}${n.after ? `<div class="txt">${fmt(n.after)}</div>` : ''}`
     : n.again != null ? `<div class="txt">${fmt(typeof n.again === 'function' ? n.again() : n.again)}</div>${n.html || ''}`
     : `<div class="txt said" id="saidTxt">${fmt(n.txt)}${n.after ? fmt(n.after) : ''}</div><button class="btn sm saidmore" type="button" id="saidMore">Read it again</button>${n.html || ''}`;

@@ -116,7 +116,7 @@ const CH2 = {
             "################" ],
       walk:'.,_*', triggers:{W:'c2_wagon_last', '>':'c2_close'}, start:{x:2,y:6},
       quest:()=> 'Darujhistan is a blue smudge to the south-west. The hills are in the way.',
-      npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:10, y:5, node:()=>S.f.c2_hillsSeth ? 'c2_hills_seth_again' : 'c2_hills_dust', fresh:()=>!S.f.c2_hillsSeth} ] } ],
+      npcs:[ {id:'sethand', name:'Sethand', kind:'rhivi', x:10, y:5, node:()=>S.f.c2_hillsSeth ? 'c2_hills_seth_again' : 'c2_hills_dust', fresh:()=>!S.f.c2_hillsSeth, wait:()=>'Sethand\'s not over the rise yet, Sergeant. If you want a last word with him, it\'s now.'} ] } ],
 
   battles:{
     barrow:{title:'The barrow', warrenText:'Something old under the stones · Meanas leans in · Denul holds', warren:{meanas:1.2,denul:1}, dark:true, music:'dark', open:true,

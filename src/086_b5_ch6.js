@@ -555,7 +555,7 @@ It is not like High Fort. Here the dying is not done by light. They are dying th
 In a lull, when the Edur in front of the Sixth have gone back to the lake beds to come again, ${b56Say({thegg:'Thegg comes down off the lip with an Edur sword in his hand that its owner will not want back, and gives it to the squad without a word', tobet:'Tobet picks an Edur sword up off the stones of the channel, where its owner left it, and holds it out to whoever wants it', _:'there is an Edur sword on the stones of the channel, where its owner left it, and somebody picks it up'})}.`,
       ch:[{t:'Back to the lip.', go:'b5_c6_break'},
           {t:'Not now.', go:()=>startExplore()}]}),
-    b5_c6_break:()=>({sp:'The far lip', scene:'b5_c6_break', fx:()=>{ S.f.b5_c6_day = 3; },
+    b5_c6_break:()=>({sp:'The far lip', quiet:true, scene:'b5_c6_break', fx:()=>{ S.f.b5_c6_day = 3; },
       again:()=>`The battalion breaking along the lip, and the pillar coming.`, txt: b56Key() ?
 `It is decided. ${b56Key() === 'stand' ? 'The Sixth holds the crossing.' : 'The Sixth goes back over the channel.'}` :
 `Then the right sees.
@@ -588,7 +588,7 @@ Finadd Ennic is beside you with his sword out, which you have never seen before.
           {t:'Not now.', go:()=>startExplore()}]}),
 
     /* ---- the key: stand (the mortal fight) ---- */
-    b5_c6_stand:()=>({sp:'The crossing', scene:'b5_c6_break', again:()=>`The end of the crossing, and the Edur coming down the far bank.`, txt: S.f.b5_c6_channelDone ?
+    b5_c6_stand:()=>({sp:'The crossing', quiet:true, scene:'b5_c6_break', again:()=>`The end of the crossing, and the Edur coming down the far bank.`, txt: S.f.b5_c6_channelDone ?
 `The crossing is behind you. It is done.` :
 `"Hold it," you say, and Finadd Ennic says it after you, louder, so the soldiers round the Sixth will hear it from an officer: "The Sixth holds the crossing. Everybody else, over."
 
@@ -692,7 +692,7 @@ You touch the white fingertip on your shield's boss, for the Errant, from habit,
             {t:'Not yet.', go:()=>startExplore()}]}; },
 
     /* ---- the key: fallback (the Dissent road, the flight) ---- */
-    b5_c6_fallback:()=>({sp:'The crossing', scene:'b5_c6_break', again:()=>`The crossing, crowded, and the open ground beyond toward Dissent.`, txt:
+    b5_c6_fallback:()=>({sp:'The crossing', quiet:true, scene:'b5_c6_break', again:()=>`The crossing, crowded, and the open ground beyond toward Dissent.`, txt:
 `"Over," you say, and Finadd Ennic says it after you, to the Sixth: "Over, and together."
 
 The Sixth goes back over the crossing with the first of the right to break, in the press of it, Artisans and Riven and Whitefinders all together on the stones, and up the near bank, and out onto the open ground going south-west toward the Dissent road. Behind it the crossing fills, and the Edur come down the far bank into the channel, and the Sixth does not see what happens at the crossing after that, because it is not looking back.${b56If('thegg', `\n\nThegg goes over the crossing last of the squad, walking backward with his shield up. "We left the crossing," he says, when he is over. He says it the way he would say a debt.`)}${b56If('pessa', `\n\nPessa is over first. "We left the crossing," she says. "Good."`)}${b56If('tobet', `\n\nTobet keeps his three arrows. "Nobody will write it down," he says. He sounds as if he will.`)}`,

@@ -125,7 +125,7 @@ const B7CH4 = {
         {id:'ennic', name:B5_FINADD.name, kind:'b5_c1_ennic', x:9, y:5, node:()=>b74Ph() >= 3 ? 'b7_c4_dusk' : 'b7_c4_ennic', fresh:()=>b74Ph() >= 3 ? !S.f.b7_c4_dusk : !S.f.b7_c4_ennic},
         {id:'clerk', name:'The company clerk', kind:'b5_c1_clerk', x:5, y:6, node:()=>'b7_c4_clerk', show:()=>b74Ph() < 3, fresh:()=>!S.f.b7_c4_clerk},
         {id:'tilewoman', name:'The tile-woman', kind:'b5_c1_tilewoman', x:9, y:9, node:()=>'b7_c4_tilewoman', show:()=>b74Ph() < 3, fresh:()=>!S.f.b7_c4_tw},
-        {id:'edur', name:'Edur from the hill', kind:'b5_edur', x:13, y:6, node:()=>'b7_c4_edur_view', show:()=>b74Ph() === 1 && !S.f.b7_c4_edurDone && !S.f.b7_c4_edurDeclined, fresh:()=>!S.f.b7_c4_edurSeen},
+        {id:'edur', name:'Edur from the hill', kind:'b5_edur', x:13, y:6, node:()=>'b7_c4_edur_view', show:()=>b74Ph() === 1 && !S.f.b7_c4_edurDone && !S.f.b7_c4_edurDeclined, fresh:()=>!S.f.b7_c4_edurSeen, wait:()=>'There are Edur at the end of the row, Sergeant, watching the lines. Somebody ought to see what they want first.'},
         {id:'visit', name:'Two visitors at the fire', kind:'b5_letherii', x:6, y:5, node:()=>'b7_c4_key', show:()=>b74Ph() === 3 && !!S.f.b7_c4_patriotsDone && !b74Key(), fresh:()=>!b74Key()} ] },
 
     /* 16 x 12 (b5_c6_dissent, day). , grass  . the road through the gate  # the palisade  G the gate, the crowd beyond  c a cart  t the muster

@@ -133,7 +133,7 @@ const AUDIT = (AIDS) => {
           const raw = vis.map(c => [c, judge(c, aid, base, true)]);
           const js = raw.map(([c, j]) => [c, d ? {...j, outs: hidden(c) ? j.outs.filter(o => /^into /.test(o)) : []} : j]);
           /* the unspoken-to line: never on a node that only stays (every choice here closes, or goes back to this map) */
-          S = clone(base); let line = ''; try { line = unspokenLine(id, vis); } catch (e) { line = 'THROW ' + e.message; }
+          S = clone(base); let line = ''; try { line = unspokenLine(id, vis, n); } catch (e) { line = 'THROW ' + e.message; }
           if (line) { lines.n++; if (/THROW|undefined|NaN|\bHask\b/.test(line) || !raw.some(([, j]) => j.outs.length) && !vis.some(c => typeof c.go === 'string' || typeof c.fail === 'string')) lines.bad.add(`${id} [${aid}]: ${line}`); else if (lines.ex.length < 4 && !lines.ex.some(x => x.startsWith(id))) lines.ex.push(`${id}: ${line}`); }
           const fw = js.filter(([, j]) => j.outs.length);
           if (fw.length && !js.some(([, j]) => j.stay))

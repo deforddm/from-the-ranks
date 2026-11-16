@@ -730,7 +730,7 @@ The Third puts it in the kit, and fills Radde's sack, and goes back up the rise 
       ch:[{t:'Back up the rise.', go:()=>startExplore()}]}),
 
     /* ---- the warning down the line, the run, the spur, and the flood ---- */
-    b4_c7_warning:()=>({sp:'A Wickan boy, running', scene:'b4_c7_morning', fx:()=>{ S.f.b4_c7_warned = 1; }, txt:
+    b4_c7_warning:()=>({sp:'A Wickan boy, running', quiet:true, scene:'b4_c7_morning', fx:()=>{ S.f.b4_c7_warned = 1; }, txt:
 `A Wickan boy comes along the line at a dead run on foot, braids flying, one of Temul's youths, shouting the same thing at every picket he passes in Malazan with a Wickan accent, and not stopping for any of them.
 
 "*The coral!*" He goes by the Third's scrape without slowing. "*High ground! The coral, now! The water's coming! The Wickan children say the water's coming!*" And he is past, and shouting it at the next picket, and the next.

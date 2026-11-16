@@ -126,15 +126,30 @@ function goesOn(g, d = 0){
 }
 const choiceOn = (c, d = 0) => !!c.onward || goesOn(c.go, d) || (!!c.check && goesOn(c.fail, d));
 const staysHere = c => !c.check && !c.onward && (c.go === undefined || (typeof c.go === 'function' && !ONWARD_RE.test(String(c.go)) && !/\btalk\s*\(/.test(String(c.go)) && /^\(\)\s*=>\s*\{?\s*startExplore\(\s*\)/.test(String(c.go))));
-function unspokenLine(id, ch){
+/* v13.36.1: the reminder never comes from a squadmate the words on the page are about (Thegg reminding you of the Finadd while
+   the paragraph above watches him dread the court), and a waiting figure may give its own reason (wait:()=>'…', said by the
+   squadmate as a whole sentence), so the reminder says what is waiting rather than only who; one already in the scene "has more for
+   you yet"; a node marked quiet has no time for it */
+function unspokenLine(id, ch, n){
   if (!S || !AREAS[S.area] || !ch.some(c => choiceOn(c)) || !ch.some(staysHere)) return '';
+  if (n && n.quiet) return ''; // a node with no time for it (the water coming)
+  const txt = n ? [n.txt, n.after].filter(x => typeof x === 'string').join(' ') : '';
   const waiting = (AREA().npcs || []).filter(n => { try { return (!n.show || n.show()) && n.fresh && !/^\(\)\s*=>\s*true$/.test(String(n.fresh)) && n.fresh() && n.node() !== id; } catch(e) { return false; } });
   if (!waiting.length) return '';
   const talks = new Set(waiting.map(n => n.node())); // two figures, one conversation (Hedge and Fiddler at the bones) are one somebody
-  const named = waiting.filter(n => !/^(a|an|the|something|someone)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
-  const many = n => /^(Men|Strangers)\b|\b(recruits|servants|riders|lancers|youths|shamans|Blades)$/.test(n || ''); // a crowd is waiting, not is
-  const who = talks.size === 1 && named.length ? (many(named[0].name) ? `${named[0].name} are` : `${named[0].name}'s`) : 'Somebody here\'s';
-  const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = mates.length ? NAME(mates[k % mates.length]) : '';
+  const named = waiting.filter(n => !/^(a|an|the|something|someone|shouting|voices|noise)\b/i.test(n.name || '')), mates = SQUAD().filter(k => k !== 'sgt' && TPL[k] && !(S.dead && S.dead[k]) && !mateAway(k));
+  const many = n => /^(Men|Strangers|Marines|Soldiers)\b|\b(recruits|servants|riders|lancers|youths|shamans|Blades|children)$/.test(n || ''); // a crowd is waiting, not is
+  const nm = named.length ? named[0].name.split(',')[0] : ''; // "Calder, with the wagons" is Calder when a squadmate says it (v13.36.1)
+  const who = talks.size === 1 && named.length ? (many(nm) ? `${nm} are` : /s$/.test(nm) ? `${nm} is` : `${nm}'s`) : 'Somebody here\'s';
+  const free = mates.filter(m => !new RegExp(`\\b${NAME(m).split(' ')[0]}\\b`).test(txt)), pool = free.length ? free : mates; // not the one the scene is about
+  const k = [...id].reduce((h, ch) => h + ch.charCodeAt(0), 0), mate = pool.length ? NAME(pool[k % pool.length]) : '';
+  const own = talks.size === 1 && waiting[0].wait ? waiting[0].wait() : ''; // the figure's own reason, when it has one
+  const TITLE = /^(Sergeant|Captain|Lieutenant|Corporal|Quartermaster|Finadd|Fist|High|Master|Mistress|Old|Young|Second|Company|Brother|Sister|Mother|Father|Lady|Lord)$/;
+  const here = talks.size === 1 && named.length && !many(nm) && nm.split(/\s+/).some(w => /^[A-Z]/.test(w) && !TITLE.test(w) && new RegExp(`\\b${w}\\b`).test(txt)); // the one waiting is in this very scene
+  const RANK = /^(Sergeant|Captain|Lieutenant|Corporal|Quartermaster|Finadd|Fist|Master|Mistress)\s+/, by = nm.match(RANK); // a squad says "Radde" of a sergeant, "the Finadd" of an officer
+  const short = !by ? nm : by[1] === 'Sergeant' || by[1] === 'Corporal' ? nm.replace(RANK, '') : 'The ' + by[1];
+  if (!own && here) return mate ? `${mate}, low: "${short} has more for you yet, Sergeant. Before we go."` : `${short} has more for you yet.`;
+  if (own) return mate ? `${mate}, low: "${own}"` : own.replace(/,? Sergeant\.$/, '.');
   return mate ? `${mate}, low: "${who} still waiting on a word, Sergeant."` : `${who.replace(/'s$/, ' is')} still waiting on a word.`;
 }
 const npcAt = (x,y) => AREA().npcs.find(n => n.x === x && n.y === y && (!n.show || n.show()));
