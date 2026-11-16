@@ -89,11 +89,12 @@ const B8CH1 = {
 
   areas:[
     /* 16 x 12 (city_night). . cobbles  , gutter  # house fronts  D the Fourth's door  g the alley mouth  L gas-lamps  B barrels
-       < down the street, toward the Phoenix  > on into the Gadrobi lanes */
+       < down the street, toward the Phoenix  > on into the Gadrobi lanes
+       Terrain kit (25b, v13.22): a light touch: a water butt by a door (&), and a neighbour clearing his step (folk). */
     { id:'b8_c1_street', title:'Darujhistan · the Fourth\'s street', sub:'The Gadrobi District · winter', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s door is the one with the bar behind it', decor:'city_night', dark:true,
       map:[ "################",
             "###L####D##g#L##",
-            "#..............#",
+            "#.............&#",
             "#.,,.........,.#",
             "#......B.......#",
             "<..............>",
@@ -104,6 +105,7 @@ const B8CH1 = {
             "######L..L######",
             "################" ],
       walk:'.,Dg<>', triggers:{D:'b8_c1_fire', g:'b8_c1_alley_mouth', '<':'b8_c1_phoenix', '>':'b8_c1_to_lanes'}, start:{x:8, y:2},
+      folk:[{x:12, y:4, kind:'b5_c7_citizen', name:'A neighbour with a shovel', line:'Frost on the step again. Every winter I say I\'ll move up to the Daru tier. Every winter the Daru tier says no.', wander:1}],
       quest:()=> b81Ph() === 1 ? 'Something on the roof. The alley behind the door.'
         : b81Ph() === 2 ? 'The paper, on the table by the fire.'
         : b81Ph() === 3 ? (!S.f.b8_c1_vetMet ? 'The Gadrobi lanes, east. The tavern with the painted sign.' : 'The fire. The paper is still on the table.')
@@ -115,40 +117,44 @@ const B8CH1 = {
         {id:'vasso', name:'A young man on the step', kind:'vasso', x:9, y:2, node:()=>'b8_c1_vasso', show:()=>b81Ph() >= 5 && b81Hunt() && (S.f.b8_vassoDone == null || S.f.b8_vassoDone === 2), fresh:()=>S.f.b8_vassoDone == null} ] },
 
     /* 16 x 12 (roof_night). . tile  , slate  # the drop  C chimneys  p planks between roofs  x the Guild's line on its post  S the skylight
-       < the way down, a drainpipe to the alley */
+       < the way down, a drainpipe to the alley
+       Terrain kit (25b, v13.22): more chimneys (4, drawn as the roof's own C), rain casks (&), a pigeon loft or two (8), coils of somebody's rope (*); nobody up here (no folk). */
     { id:'b8_c1_roofs', title:'Darujhistan · the Gadrobi roofs', sub:'Night · over the alley', hint:'Tap roof to move · the planks hold · the line is on its post by the chimney · down is west', decor:'roof_night', dark:true,
       map:[ "################",
-            "#..C...#,,,,,,,#",
-            "#......p,,C,,,,#",
-            "#......#,,,,,x,#",
-            "#......#,,,,,,,#",
+            "#&.C..4#,,,,,4,#",
+            "#.....*p,,C,,,&#",
+            "#......#8,,,,x,#",
+            "#4.....#,,,,,,*#",
             "<......p,,S,,,,#",
-            "#..C...#,,,,,,,#",
-            "#......#,,,,C,,#",
+            "#..C...#,,,,,,4#",
+            "#.....&#,,,,C,,#",
             "#.,....p,,,,,,,#",
-            "#......#,,,,,,,#",
-            "#......#,,,,,,,#",
+            "#8.....#,,,8,,,#",
+            "#....4.#,&,,,,4#",
             "################" ],
-      walk:'.,pxS<', triggers:{x:'b8_c1_line', S:'b8_c1_boots', '<':'b8_c1_roofs_down'}, start:{x:2, y:5},
+      walk:'.,pxS<*', triggers:{x:'b8_c1_line', S:'b8_c1_boots', '<':'b8_c1_roofs_down'}, start:{x:2, y:5},
       quest:()=> !S.f.b8_c1_lineTried ? 'The Guild\'s line, on its post by the far chimney.' : !S.f.b8_c1_boots ? 'The skylight, where the crossbow knelt.' : 'Down, west. The paper wants reading by a fire.',
       npcs:[] },
 
     /* 16 x 12 (city_dusk). . cobbles  , gutter  # house fronts  D the tavern with the painted sign  S the steps down to Orsa's den
-       W Benlo's barrow  x the dyers' lines  L lamps  < back to the Fourth's street  > on into the Daru District */
+       W Benlo's barrow  x the dyers' lines  L lamps  < back to the Fourth's street  > on into the Daru District
+       Terrain kit (25b, v13.22): two stalls toward the Daru end (9), barrels (8), dye vats (&), another of the dyers' lines (x), slush by the steps (:), a chestnut-seller and a dyer's boy (folk). */
     { id:'b8_c1_gadrobi', title:'Darujhistan · the Gadrobi lanes', sub:'Winter · the lamps coming on', hint:'Tap ground to move · tap a figure to talk · the tavern is north, Orsa\'s is down the steps', decor:'city_dusk',
       map:[ "################",
             "##L###D####L####",
-            "#..............#",
-            "#.x..x....,....#",
+            "#.........9.9..#",
+            "#&x..x....,...8#",
             "#..............#",
             "<.....W........>",
             "#..,...........#",
-            "#.....,.....x..#",
+            "#.x...,.....x..#",
             "#L..##S##.....L#",
-            "#...##.##......#",
-            "#..............#",
+            "#...##.##.:..8.#",
+            "#&.............#",
             "################" ],
-      walk:'.,DS<>', triggers:{D:'b8_c1_tavern', S:'b8_c1_den_door', '<':'b8_c1_lanes_back', '>':'b8_c1_to_daru'}, start:{x:1, y:5},
+      walk:'.,DS<>:', triggers:{D:'b8_c1_tavern', S:'b8_c1_den_door', '<':'b8_c1_lanes_back', '>':'b8_c1_to_daru'}, start:{x:1, y:5},
+      folk:[{x:11, y:3, kind:'b5_c3_trader', name:'A chestnut-seller', line:'Hot chestnuts. Warm your hands on them first, eat them second. Some do it the other way and regret it.'},
+        {x:9, y:7, kind:'urchin', name:'A dyer\'s boy with a bolt of cloth', line:'Indigo takes three days to set. My hands took three years. They\'re not coming back.', wander:1}],
       quest:()=> !S.f.b8_c1_vetMet ? 'The tavern with the painted sign.'
         : b81Ph() === 3 ? 'Back to the Fourth\'s door. The paper is waiting for an answer.'
         : b81Hunt() && b81Ph() === 4 ? (!S.f.b8_c1_named ? 'Orsa, down the steps. She hears who brokers what.' : 'East, into the Daru District. The go-between\'s house.') : 'The lanes.',
@@ -157,21 +163,23 @@ const B8CH1 = {
         {id:'dyer', name:'A dyer at her lines', kind:'b5_c5_refugee', x:3, y:4, node:()=>'b8_c1_dyer', fresh:()=>!S.f.b8_c1_dyer} ] },
 
     /* 16 x 12 (city_night). . the courtyard  , gutter  # walls  D the go-between's door  g the gate  B barrels  F the bravos' brazier
-       L lamps  < back west to the Gadrobi lanes */
+       L lamps  < back west to the Gadrobi lanes
+       Terrain kit (25b, v13.22): a light touch: barrels (8), the water butt (&), and a servant (folk). */
     { id:'b8_c1_house', title:'Darujhistan · a house below the Daru tier', sub:'Night · a go-between\'s courtyard', hint:'Tap ground to move · tap a figure to talk · the door is north · the lanes are west', decor:'city_night', dark:true,
       map:[ "################",
             "#####L##D##L####",
             "#..............#",
             "#..B.......B...#",
-            "#..............#",
+            "#.............8#",
             "#.....F........#",
-            "#..............#",
+            "#&.............#",
             "#L.....,.....,L#",
             "#######gg#######",
             "#######..#######",
             "<..............#",
             "################" ],
       walk:'.,gD<', triggers:{D:'b8_c1_closed', '<':'b8_c1_house_back'}, start:{x:2, y:10},
+      folk:[{x:12, y:6, kind:'b5_c1_tilewoman', name:'A servant with a pail', line:'Fetch, carry, don\'t listen. I\'m very good at the last one.'}],
       quest:()=> !S.f.b8_c1_huntDone ? 'The men round the brazier in the courtyard.' : !S.f.b8_c1_closed ? 'The go-between\'s door.' : 'West, and home.',
       npcs:[
         {id:'bravos', name:'Bravos round a brazier', kind:'thug', x:7, y:5, node:()=>'b8_c1_hunt_start', show:()=>!S.f.b8_c1_huntDone, fresh:()=>true},

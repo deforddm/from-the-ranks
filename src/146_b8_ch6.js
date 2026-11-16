@@ -104,7 +104,8 @@ const B8CH6 = {
 
   areas:[
     /* 16 x 12 (city_night). . cobbles  , gutter  # house fronts  D the Fourth's door  l Fete lanterns on poles  B barrels  L gas-lamps
-       < down the street, toward the Phoenix  > on into the Gadrobi lanes */
+       < down the street, toward the Phoenix  > on into the Gadrobi lanes
+       Terrain kit (25b, v13.22): nothing on the ground (the street is busy and its paving is at the floor already); one reveller while the Fete lasts (folk). */
     { id:'b8_c6_lane', title:'Darujhistan · the Fourth\'s street', sub:'The Gadrobi District · the Fete\'s last night', hint:'Tap ground to move · tap a figure to talk · the Fourth\'s door is the one with the bar behind it', decor:'city_night', dark:true,
       map:[ "################",
             "###L####D###l#L#",
@@ -119,6 +120,7 @@ const B8CH6 = {
             "######L..L######",
             "################" ],
       walk:'.,Dk<>', triggers:{D:'b8_c6_fire', k:'b8_c6_moon', '<':'b8_c6_phoenix', '>':'b8_c6_to_lanes'}, start:{x:8, y:2},
+      folk:[{x:5, y:6, kind:'reveller', name:'A reveller in a fox mask', line:'Last night of the Fete. Tomorrow I go back to being me. I\'m putting it off as long as I can.', show:()=>b86Ph() === 1}],
       quest:()=> b86Ph() === 1 ? (!S.f.b8_c6_fete ? 'Benlo, with a barrow full of masks.' : !S.f.b8_c6_lanesSeen ? 'The Gadrobi lanes, east. The whole district is out.' : !S.f.b8_c6_wallSeen ? 'The east wall, past the lanes. The watch is up there.' : 'The door, and the fire.')
         : b86Ph() === 2 ? (!b86Key() ? 'The door. Decide.' : b86Key() === 'street' && !S.f.b8_c6_streetDone ? 'The door. Hold the street.' : b86Key() === 'wall' && !S.f.b8_c6_wallDone ? 'The lanes, and the wall beyond them.' : 'The door.')
         : b86Ph() === 3 ? 'The door. Something is on the roofs.'
@@ -129,7 +131,8 @@ const B8CH6 = {
         {id:'neighbours', name:'The neighbours, on their steps', kind:'reveller', x:11, y:3, node:()=>'b8_c6_neighbours', show:()=>b86Ph() >= 4, fresh:()=>!S.f.b8_c6_neighbours} ] },
 
     /* 16 x 12 (city_night). The Gadrobi lanes, the dyers' row. D the tavern with the painted sign  x a lamp-post where the Guild's line
-       comes down  g the steps down to Orsa's den  F a Fete brazier  < back to the Fourth's street  v down to the east wall */
+       comes down  g the steps down to Orsa's den  F a Fete brazier  < back to the Fourth's street  v down to the east wall
+       Terrain kit (25b, v13.22): nothing on the ground (already below the floor); a dyer at her lines while the Fete lasts (folk). */
     { id:'b8_c6_lanes', title:'Darujhistan · the Gadrobi lanes', sub:'The dyers\' row · the Fete\'s last night', hint:'Tap ground to move · tap a figure to talk · the wall is south, the Fourth\'s street west', decor:'city_night', dark:true,
       map:[ "################",
             "##D####x###g####",
@@ -144,6 +147,7 @@ const B8CH6 = {
             "#######L.#######",
             "#######vv#######" ],
       walk:'.,Dxg<v', triggers:{D:'b8_c6_sign', x:'b8_c6_post', g:'b8_c6_orsa', '<':'b8_c6_lanes_back', 'v':'b8_c6_to_wall'}, start:{x:1, y:5},
+      folk:[{x:12, y:4, kind:'b5_c1_tilewoman', name:'A dyer taking in her cloth', line:'Fete or no Fete, the good blue comes in before dark. Somebody in a mask always wants to borrow it for a cape.', show:()=>b86Ph() === 1}],
       quest:()=> b86Ph() === 1 ? (!S.f.b8_c6_signSeen ? 'The tavern with the painted sign, on the corner.' : !S.f.b8_c6_wallSeen ? 'South, to the wall and the watch.' : 'Back to the Fourth\'s street.')
         : b86Ph() === 2 && b86Key() === 'wall' && !S.f.b8_c6_wallDone ? 'South, to the wall. It is down.' : 'Back to the Fourth\'s street.',
       npcs:[
@@ -152,7 +156,8 @@ const B8CH6 = {
         {id:'buckets', name:'A bucket line', kind:'reveller', x:9, y:6, node:()=>'b8_c6_buckets', show:()=>b86Ph() >= 2 && b86Ph() <= 3, fresh:()=>!S.f.b8_c6_buckets} ] },
 
     /* 16 x 12 (city_night). The foot of the east wall behind the Gadrobi District, an unnamed stretch. # the wall  r mending stone, and
-       after the night broke, the fall  F the watch's brazier  B barrels  v back up into the lanes */
+       after the night broke, the fall  F the watch's brazier  B barrels  v back up into the lanes
+       Terrain kit (25b, v13.22): nothing (an unnamed stretch, meant to be empty, and its ground at the floor already); no folk. */
     { id:'b8_c6_wallfoot', title:'Darujhistan · the east wall', sub:'Behind the Gadrobi District · an unnamed stretch', hint:'Tap ground to move · tap a figure to talk · the lanes are north', decor:'city_night', dark:true,
       map:[ "################",
             "################",

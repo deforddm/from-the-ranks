@@ -14,7 +14,7 @@
 /* FOR THE ARTIST (142b): names this file uses.
    Items: ART['item/b8_c2_caravanmail'], ['item/b8_c2_drovergoad'] (b8_kelykjug is 140b's).
    Figures: b8_c2_calder (the caravan master), b8_c2_carter (the carters, Calder's man), b8_c2_drover (the drover with the red scarf and
-   the goad); placeholders here with ??=. Reused: vasso, tenescowri (field-tenders and raiders), priest, b6_cultist, b3_c5_villager.
+   the goad); placeholders here with ??=. Reused: vasso, tenescowri (field-tenders and raiders), b4_c5_rider (the riders on the ridge), priest, b6_cultist, b3_c5_villager.
    Backdrops: b8_road_east, b8_fields, b8_caravan_night (140's, yours), and two this file adds that borrow until you draw them: b8_c2_town
    (a Pannion town coming back: new whitewash over old soot, a well, a temple's steps) and b8_c2_rows (the scarecrow fields at night,
    lanterns moving in the rows, a wagon at the verge).
@@ -99,21 +99,23 @@ const B8CH2 = {
 
   areas:[
     /* 16 x 12 (b8_c2_camp). . trampled earth  , dead grass  # the dark beyond the ring  W wagons  K the last wagon  F the caravan's fire
-       = carters' tents  h horse lines  > the road east, in the dark */
+       = carters' tents  h horse lines  > the road east, in the dark
+       Terrain kit (25b, v13.22): a light touch: trodden ground round the fire (:), sacks off the wagons (8), another horse on the line (@), and a carter (folk). */
     { id:'b8_c2_camp', title:'The old Domin · the first halt', sub:'Night · the caravan\'s ring', hint:'Tap ground to move · tap a figure to talk · the fire is in the middle of the ring · the last wagon is east', decor:'b8_c2_camp', dark:true,
       map:[ "################",
-            "##W..W....W..W.#",
+            "##W8.W....W.8W.#",
             "#W.,.....,....W#",
             "#....=....=....#",
-            "#W.......,.....#",
+            "#W....:.:,.....#",
             "#..,...F.......>",
-            "#W.............#",
+            "#W....:.:......#",
             "#...=.....,.=..#",
-            "#W.....h.h....K#",
+            "#W.....h@h....K#",
             "#.,............#",
             "##.W..W....W..W#",
             "################" ],
-      walk:'.,FK>', triggers:{F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_camp_east'}, start:{x:7, y:6},
+      walk:'.,FK>:', triggers:{F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_camp_east'}, start:{x:7, y:6},
+      folk:[{x:11, y:6, kind:'b8_c2_carter', name:'A carter mending a trace', line:'First night out of the city is the worst. Second night you\'ve forgotten your bed. Third night, your name.'}],
       quest:()=> b82VassoPending() ? 'A young man by the last tent, with his hands where you can see them.'
         : !S.f.b8_c2_calderMet ? 'Calder, the caravan master, at his wagon.'
         : !S.f.b8_c2_wagonSeen ? 'The last wagon in the ring, east, with its tarp lashed down.'
@@ -124,30 +126,33 @@ const B8CH2 = {
         {id:'vasso2', name:'A young man by the last tent', kind:'vasso', x:2, y:9, node:()=>'b8_c2_vasso', show:()=>b82Ph() === 1 && (b82VassoPending() || (S.f.b8_vassoDone === 2 && !!S.f.b8_c2_vassoCame)), fresh:()=>b82VassoPending()} ] },
 
     /* 16 x 12 (b8_c2_road). . earth  , dead grass  # a broken field wall  x a dead tree  W wagons  L the lead wagon and its chains
-       < back west (the city is weeks behind)  > east, toward a town */
+       < back west (the city is weeks behind)  > east, toward a town
+       Terrain kit (25b, v13.22): the road's ruts (_), the field walls tumbled further (4, drawn as the road's own #), and a carter on foot (folk). */
     { id:'b8_c2_road', title:'The old Domin · the road east', sub:'Day · wind from the north · flat to the edge of the sky', hint:'Tap ground to move · tap a figure to talk · the lead wagon carries the chains · the road goes on east', decor:'b8_c2_road',
       map:[ "################",
             "#..x....,..#.,.#",
-            "#.,..##....,...#",
+            "#.,..##4...,...#",
             "#.........,....#",
             "#,..W.W.L.W.W..#",
-            "<..............>",
+            "<______________>",
             "#....,.........#",
-            "#.##......x..,.#",
+            "#.##4.....x..,.#",
             "#..,..,.....##.#",
             "#.x.......,....#",
             "#.,..#.....,..x#",
             "################" ],
-      walk:'.,L<>', triggers:{L:'b8_c2_brake', '<':'b8_c2_road_west', '>':'b8_c2_to_town'}, start:{x:2, y:5},
+      walk:'.,L<>_', triggers:{L:'b8_c2_brake', '<':'b8_c2_road_west', '>':'b8_c2_to_town'}, start:{x:2, y:5},
+      folk:[{x:3, y:6, kind:'b8_c2_carter', name:'A carter walking by his team', line:'Wind\'s from the north. Wind\'s always from the north out here. Nothing between us and it but the wagons.', wander:1}],
       quest:()=> !S.f.b8_c2_ridersSeen ? 'Riders on the ridge, north. The carters have seen them.'
         : !S.f.b8_c2_brakeTried ? 'The lead wagon. The carters are getting the chains out.'
         : !S.f.b8_c2_raidSettled ? 'The riders on the ridge, still watching.' : 'East. There is a town ahead, Calder says, with a well.',
       npcs:[
-        {id:'riders', name:'Riders on the ridge', kind:'tenescowri', x:12, y:1, node:()=>'b8_c2_riders', show:()=>b82Ph() === 2 && !S.f.b8_c2_raidSettled, fresh:()=>!S.f.b8_c2_ridersSeen},
+        {id:'riders', name:'Riders on the ridge', kind:'b4_c5_rider', x:12, y:1, node:()=>'b8_c2_riders', show:()=>b82Ph() === 2 && !S.f.b8_c2_raidSettled, fresh:()=>!S.f.b8_c2_ridersSeen},
         {id:'calder2', name:'Calder, walking his horse', kind:'b8_c2_calder', x:6, y:6, node:()=>'b8_c2_road_calder', fresh:()=>!S.f.b8_c2_roadCalder} ] },
 
     /* 16 x 12 (b8_c2_town). . earth  , dead grass  # walls, whitewashed again over the soot  w the well  T the temple steps  x a dead tree
-       < back west to the road  > on east, out of the town */
+       < back west to the road  > on east, out of the town
+       Terrain kit (25b, v13.22): a light touch: crates by the walls (8), a dead tree (5, drawn as the town's own x), and one of the smiling townsfolk (folk). */
     { id:'b8_c2_town', title:'The old Domin · a town coming back', sub:'Dusk · new whitewash on old soot', hint:'Tap ground to move · tap a figure to talk · the well is in the square · the temple is north', decor:'b8_c2_town',
       map:[ "################",
             "#.##..#TT#..##.#",
@@ -157,11 +162,12 @@ const B8CH2 = {
             "<.......w......>",
             "#.,............#",
             "##.###..,.##.###",
-            "#...#......#...#",
+            "#..8#....8.#...#",
             "#.,....x.....,.#",
-            "#..#..,....#...#",
+            "#..#..,....#5..#",
             "################" ],
       walk:'.,wT<>', triggers:{w:'b8_c2_well', T:'b8_c2_temple', '<':'b8_c2_town_back', '>':'b8_c2_to_fields'}, start:{x:1, y:5},
+      folk:[{x:11, y:3, kind:'b3_c5_villager', name:'A townsman, smiling', line:'You look tired, soldier. Everyone who comes through looks tired. Then they stay a while, and they don\'t.'}],
       quest:()=> !S.f.b8_c2_townDone ? 'The priest on the temple steps is watching the caravan come in. So is the whole town.' : 'East, out of the town, before dark.',
       npcs:[
         {id:'priest', name:'A priest in the square', kind:'priest', x:8, y:3, node:()=>'b8_c2_priest', show:()=>!S.f.b8_c2_townDone, fresh:()=>true},
@@ -169,7 +175,8 @@ const B8CH2 = {
         {id:'calderman', name:'Calder\'s man, at a back door', kind:'b8_c2_carter', x:13, y:8, node:()=>'b8_c2_backdoor', show:()=>!S.f.b8_c2_backdoor, fresh:()=>true} ] },
 
     /* 16 x 12 (b8_c2_fields). g the green rows  y a pole in the rows  e the gap where the drover went in  . , the verge  W wagons
-       K the last wagon  F the caravan's fire  > the road on east */
+       K the last wagon  F the caravan's fire  > the road on east
+       Terrain kit (25b, v13.22): nothing on the ground (the rows fill the map already); a carter at the fire (folk). */
     { id:'b8_c2_fields', title:'The old Domin · the scarecrow fields', sub:'Dusk into night · the halt beside the rows', hint:'Tap ground to move · tap a figure to talk · the rows are north · the fire is on the verge · the last wagon is east', decor:'b8_c2_fields', dark:true,
       map:[ "################",
             "#gggygggggygggg#",
@@ -184,6 +191,7 @@ const B8CH2 = {
             "#..W....W...W..#",
             "################" ],
       walk:'.,eFK>', triggers:{e:'b8_c2_gap', F:'b8_c2_fire', K:'b8_c2_wagon', '>':'b8_c2_fields_east'}, start:{x:2, y:8},
+      folk:[{x:7, y:8, kind:'b8_c2_carter', name:'A carter by the fire', line:'Calder says keep out of the rows. Calder doesn\'t say why. That\'s how you know to keep out of the rows.'}],
       quest:()=> !S.f.b8_c2_fieldsDone ? 'The gap in the rows, where the drover went in after the song.'
         : b82Ph() === 4 ? 'The fire. The rows want watching tonight.'
         : !S.f.b8_c2_found ? 'Lanterns in the rows, coming toward the last wagon.'

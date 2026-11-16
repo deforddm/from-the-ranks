@@ -15,7 +15,7 @@
 /* FOR THE ARTIST (143b): names this file uses.
    Items: ART['item/b8_c3_coralknife'], ['item/b8_c3_pilgrimtoken'], ['item/b8_c3_lamp'].
    Figures: edrem (140's simple sprite, replaced in 143b), b8_c3_thessaly (the Andii-sworn clerk), b8_c3_priestess (a Redeemer priestess at
-   the barrow's edge); placeholders here with ??=. Reused: b5_c3_trader (Calder), b4_c2_pilgrim (pilgrims), tenescowri (raiders),
+   the barrow's edge); placeholders here with ??=. Reused: b8_c2_calder (Calder), b4_c2_pilgrim (pilgrims), tenescowri (raiders),
    b2soldier (the camp's guards).
    Backdrops: b8_blackcoral and b8_barrow (140's, yours), and three this file adds that borrow until you draw them: b8_c3_lodging (a room
    over a chandler's, a wide stone sill, lamps on iron arms outside the window at noon), b8_c3_harbour (the harbour wall, the black bay, and
@@ -84,10 +84,11 @@ const B8CH3 = {
 
   areas:[
     /* 16 x 12 (b3_c7_coral, dark). . black paving  , rubble  c coral-stone  # walls  H the harbour steps (the wall over the bay)
-       D the lodging over the chandler's (the fire)  T the tavern  g the landward gate (the night stops there)  < the upper streets */
+       D the lodging over the chandler's (the fire)  T the tavern  g the landward gate (the night stops there)  < the upper streets
+       Terrain kit (25b, v13.22): a light touch: Calder's wagon and its crates by the harbour steps (7, 8), an Andii and a chandler's man (folk). */
     { id:'b8_c3_city', title:'Black Coral · the harbour street', sub:'Noon, under the night', hint:'Tap ground to move · tap a figure to talk · the harbour is north, the lodging and the tavern either side, the landward gate south', decor:'b3_c7_coral', dark:true,
       map:[ "######HHH#######",
-            "#..............#",
+            "#7.8...........#",
             "#.c..D.....T...#",
             "#..............#",
             "###.####..####.#",
@@ -99,6 +100,8 @@ const B8CH3 = {
             "#.,....gg......#",
             "################" ],
       walk:'.,cHDTg<', triggers:{H:'b8_c3_harbour', D:'b8_c3_fire', T:'b8_c3_tavern_door', g:'b8_c3_gate', '<':'b8_c3_upper'}, start:{x:5, y:3},
+      folk:[{x:14, y:2, kind:'b3_andii', name:'A Tiste Andii on the corner', line:'You keep looking up. There is nothing up there to find. That is rather the point.'},
+        {x:2, y:9, kind:'b8_c2_carter', name:'A chandler\'s man', line:'Noon, they tell me. I take their word for it. They\'ve had longer to practise.'}],
       quest:()=> b83Ph() >= 4 ? 'The lodging. The camp wants guards, and the wagons will not go west for days.'
         : b83Ph() === 3 ? 'The barrow, outside the landward gate.'
         : b83Ph() === 2 ? 'The pilgrims\' road, out of the landward gate.'
@@ -107,25 +110,28 @@ const B8CH3 = {
         : 'The landward gate, south. The barrow is a morning\'s walk outside it.',
       npcs:[
         {id:'thessaly', name:'Thessaly, at the gate-house', kind:'b8_c3_thessaly', x:10, y:9, still:true, node:()=>'b8_c3_thessaly', fresh:()=>!S.f.b8_c3_thessaly},
-        {id:'calder', name:'Calder, with the wagons', kind:'b5_c3_trader', x:2, y:3, node:()=>'b8_c3_calder', show:()=>b83Ph() <= 3, fresh:()=>!S.f.b8_c3_calder},
+        {id:'calder', name:'Calder, with the wagons', kind:'b8_c2_calder', x:2, y:3, node:()=>'b8_c3_calder', show:()=>b83Ph() <= 3, fresh:()=>!S.f.b8_c3_calder},
         {id:'beggar', name:'A pilgrim in the street', kind:'b4_c2_pilgrim', x:12, y:6, node:()=>'b8_c3_beggar', show:()=>b83Ph() <= 2, fresh:()=>!S.f.b8_c3_beggar} ] },
 
     /* 16 x 12 (b3_c5_domin_night). . the road  , stubble  # ruin walls  x dead trees  w a dry well  W the broken cart (Edrem's)
-       r the path up to the ridge  < back to the city  > on to the barrow */
+       r the path up to the ridge  < back to the city  > on to the barrow
+       Terrain kit (25b, v13.22): the road's ruts (_), a bank and brush along the stubble's edge (1, 2), and two pilgrims walking in (folk). */
     { id:'b8_c3_road', title:'The pilgrims\' road', sub:'Outside Black Coral · a grey that never finishes', hint:'Tap ground to move · tap a figure to talk · the cart is in the road, the ridge path north-east, the barrow east', decor:'b3_c5_domin_night', dark:true,
       map:[ "################",
             "#,,,,x,,,,,,,r,#",
             "#,,..........,,#",
             "#,.....#,,.....#",
             "#,..,,,,,,..x..#",
-            "<..............>",
+            "<______________>",
             "#,.....W.......#",
             "#,,x.......,,,.#",
             "#,......w....,,#",
             "#,,,,.......x..#",
-            "#,,,,,,,,,,,,,,#",
+            "#11111221112111#",
             "################" ],
-      walk:'.,Wwr<>', triggers:{W:'b8_c3_cart', w:'b8_c3_well', r:'b8_c3_ridge_view', '<':'b8_c3_road_back', '>':'b8_c3_road_on'}, start:{x:1, y:5},
+      walk:'.,Wwr<>_', triggers:{W:'b8_c3_cart', w:'b8_c3_well', r:'b8_c3_ridge_view', '<':'b8_c3_road_back', '>':'b8_c3_road_on'}, start:{x:1, y:5},
+      folk:[{x:3, y:3, kind:'b4_c2_pilgrim', name:'A pilgrim on the road', line:'Three months walking. My feet stopped complaining a while back. I think they\'ve given up on me.'},
+        {x:11, y:8, kind:'b3_c5_villager', name:'A pilgrim with a bundle', line:'They say you leave it all at the barrow. I\'ve not much left to leave. It should be quick.'}],
       quest:()=> !S.f.b8_c3_roadDone ? 'The broken cart in the road, and the man standing in front of it.'
         : !b83EdremSettled() ? 'Edrem, by the cart.'
         : 'East, to the barrow.',
@@ -135,7 +141,8 @@ const B8CH3 = {
         {id:'pilgrims', name:'Pilgrims by the cart', kind:'b4_c2_pilgrim', x:6, y:7, node:()=>'b8_c3_pilgrims', show:()=>!!S.f.b8_c3_roadDone, fresh:()=>!S.f.b8_c3_token} ] },
 
     /* 16 x 12 (b8_c3_mound, 143b; night). , trodden grass  . mud  M the Great Barrow  l lamps on poles  p pilgrims' mats  = tents
-       k the sellers' tent  F the guards' fire  < back west to the road  > east into the camp's rows */
+       k the sellers' tent  F the guards' fire  < back west to the road  > east into the camp's rows
+       Terrain kit (25b, v13.22): a light touch: bundles (8), a cookfire (0), two more tents at the camp's edge (6, drawn as the ground's own =), and a pilgrim with her gift (folk). */
     { id:'b8_c3_barrow', title:'The Great Barrow', sub:'Outside Black Coral · the camp\'s edge', hint:'Tap ground to move · tap a figure to talk · the barrow is north, the camp\'s tents south and east', decor:'b8_c3_mound', dark:true,
       map:[ "################",
             "#,,,,lMMMMl,,,,#",
@@ -146,10 +153,11 @@ const B8CH3 = {
             "#.=.=..F...=.=.#",
             "#..............#",
             "#.=..k....=..=.#",
-            "#..............#",
-            "#,,,,,,,,,,,,,,#",
+            "#..8.......0...#",
+            "#6,,,,,,,,,,,,6#",
             "################" ],
       walk:'.,Mk<>', triggers:{M:'b8_c3_barrow_go', k:'b8_c3_sellers_view', '<':'b8_c3_camp_back', '>':'b8_c3_camp_east'}, start:{x:1, y:5},
+      folk:[{x:13, y:4, kind:'b3_c5_villager', name:'A woman with a gift', line:'A spoon. It was my mother\'s. It\'s the best thing I own, so it\'s the right thing to give.'}],
       quest:()=> !S.f.b8_c3_anvil ? 'The barrow, north. The Fourth saw it raised.'
         : !b83Key() ? 'The barrow. Kneel, or stand at the edge.'
         : 'West, back along the road to the city.',
