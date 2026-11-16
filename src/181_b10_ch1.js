@@ -18,8 +18,9 @@
    parley's words, the Unbound's rider, the allies' offers, the High Mage (still "missing"), the assassin. Notes: docs/tcg-ch1-notes.md. */
 /* FOR THE ARTIST (181b): names this file uses.
    Items: ART['item/b10_c1_scale'], ['item/b10_c1_spade'], ['item/b10_c1_slate'].
-   Figures: pruss (180's simple sprite, replaced in 181b), b9_c1_thallo (161b's Thallo), b2soldier (the clerks, the old marine, the heavies'
-   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b6_bandit (the strippers, the robbers).
+   Figures: pruss (180's simple sprite, replaced in 181b), b9_c1_thallo (161b's Thallo), b2soldier (the heavies'
+   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b5_c1_clerk (the clerk, v13.22), b8_c1_veteran (the old
+   marine, v13.22), b6_bandit (the strippers, the robbers).
    Backdrops: b10_camp, b10_camp_night, b10_burial (180's, yours), and two this file adds: b10_c1_linesn (the burial lines at night, a lamp at
    the clerk's table) and b10_c1_wells (the sappers' wells in a dry wash at night, a chain of hands, barrels on a flat wagon).
    Ground (TILEX): b10_c1_camp (on Book Nine's wastes ground: '=' a burial trench, 'u' a spoil heap, 'k' a clerk's trestle, 'B' the
@@ -142,74 +143,81 @@ const B10CH1 = {
 
   areas:[
     /* 16 x 12 (b10_c1_camp, day). The burial lines. . dry ground  # scrub  = a trench  u a spoil heap  k a clerk's trestle  B the upturned
-       water barrel  c the sappers' spade cart  < back to the camp  X the edge of the burial ground (the strippers) */
+       water barrel  c the sappers' spade cart  < back to the camp  X the edge of the burial ground (the strippers)
+       Terrain kit (25b, v13.22): a light touch: the trodden way from the camp to the barrel (_), boot-marked ground by the trenches (:), sacks by the spade cart (8), the rim raised in the far corner (1), and a heavy at a pick (folk). */
     { id:'b10_c1_lines', title:'The Wastes\' edge · the burial lines', sub:'Day · spades going', hint:'Tap ground to move · tap a figure to talk · the camp is west, the burial ground\'s edge east', decor:'b10_c1_camp',
       map:[ "################",
             "#..u===u.u===u.#",
             "#..k.......k...#",
             "#..............#",
             "#.u===u..u===u.#",
-            "<......B.......X",
+            "<______B.......X",
             "#..............#",
             "#.u===u..u===..#",
-            "#............c.#",
+            "#........::..c8#",
             "#.....k........#",
-            "#..............#",
+            "#............11#",
             "################" ],
-      walk:'.', triggers:{B:'b10_c1_barrel', k:'b10_c1_table', c:'b10_c1_spadecart', '<':'b10_c1_tocamp', X:'b10_c1_edge'}, start:{x:1, y:5},
+      walk:'._:', triggers:{B:'b10_c1_barrel', k:'b10_c1_table', c:'b10_c1_spadecart', '<':'b10_c1_tocamp', X:'b10_c1_edge'}, start:{x:1, y:5},
+      folk:[{x:10, y:9, kind:'sapper', name:'A heavy resting on a pick', line:'The clerk wants them dug straight. The dead would not mind crooked. The clerk minds, and the clerk has the slate.'}],
       quest:()=> !b101PrussSettled() ? 'The clerk at the first trench. There is a heavy waiting by him with his kit.' : !S.f.b10_c1_orders ? 'Thallo, by the trenches. He has the captain\'s word.' : !S.f.b10_c1_stripDone ? 'The edge of the burial ground, east. Strippers.' : !S.f.b10_c1_news ? 'Back to the camp. Thallo has gone to find the captain.' : 'The camp, and the fire. The light is going.',
       npcs:[
-        {id:'clerk', name:'A clerk with a slate', kind:'b2soldier', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
+        {id:'clerk', name:'A clerk with a slate', kind:'b5_c1_clerk', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
         {id:'pruss', name:'A heavy with his kit', kind:'pruss', x:5, y:2, node:()=>'b10_c1_pruss', show:()=>!!S.f.b10_c1_clerk && (S.f.b10_prussDone == null || S.f.b10_prussDone === 2), fresh:()=>S.f.b10_prussDone == null},
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:8, y:6, node:()=>'b10_c1_thallo', show:()=>!S.f.b10_c1_stripDone, fresh:()=>!S.f.b10_c1_orders},
         {id:'sergeant', name:'A sergeant of the heavies', kind:'b2soldier', x:11, y:3, node:()=>'b10_c1_roll', fresh:()=>!S.f.b10_c1_rollTried} ] },
 
     /* 16 x 12 (b10_c1_camp, day). The camp. T tents  L the surgeons' long tents  w wagons  o water barrels  F the Third's fire  r the rise at
-       the camp's edge (the allies coming in)  > to the burial lines */
+       the camp's edge (the allies coming in)  > to the burial lines
+       Terrain kit (25b, v13.22): the way in from the lines (_), trodden ground at the fire (:), more tents in the gaps (6, drawn as the road ground's own T), a wagon (7, as its w), water barrels (&, as its o), crates (8), the weapon stack of the dead (%), the rim raised (1), and two of the heavies (folk). */
     { id:'b10_c1_camp', title:'The Wastes\' edge · the camp', sub:'Day · gaps in the rows', hint:'Tap ground to move · tap a figure to talk · the burial lines are east, the rise north-east', decor:'b10_c1_camp',
       map:[ "################",
-            "#.T..T..L..L...#",
-            "#.............r#",
-            "#..T...........#",
-            "#.....w...o....#",
-            "#.......F......>",
-            "#..T...........#",
+            "#.T..T..L..L.6.#",
+            "#1............r#",
+            "#..T......&....#",
+            "#1....w...o..8.#",
+            "#.....::F______>",
+            "#..T..::...%...#",
             "#........w..T..#",
-            "#.T............#",
-            "#.....T....o...#",
-            "#..............#",
+            "#.T..:.........#",
+            "#.....T....o.7.#",
+            "#11........1111#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c1_fire', L:'b10_c1_longtent', r:'b10_c1_rise', '>':'b10_c1_tolines'}, start:{x:14, y:5},
+      walk:'._:', triggers:{F:'b10_c1_fire', L:'b10_c1_longtent', r:'b10_c1_rise', '>':'b10_c1_tolines'}, start:{x:14, y:5},
+      folk:[{x:10, y:2, kind:'b2soldier', name:'A heavy carrying water to the long tents', line:'Two skins a trip. The surgeons say thank you every trip. That is the hard part.', wander:1},
+            {x:3, y:9, kind:'b2soldier', name:'A marine counting tents', line:'The quartermaster wants the spare tents counted. There are a lot of spare tents. I am counting slowly.'}],
       quest:()=> !S.f.b10_c1_stripDone ? 'The burial lines, east. The Third is on the detail.' : !S.f.b10_c1_news ? 'Thallo, by the heavies\' wagons. He has been to the captain.' : 'The fire. The light is going.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:7, y:3, node:()=>'b10_c1_thallo_news', show:()=>!!S.f.b10_c1_stripDone, fresh:()=>!S.f.b10_c1_news},
         {id:'captain', name:'The heavies\' captain', kind:'b2soldier', x:5, y:2, node:()=>'b10_c1_captain', fresh:()=>!S.f.b10_c1_captain},
-        {id:'old', name:'An old marine by the cook-wagon', kind:'b2soldier', x:12, y:8, node:()=>'b10_c1_oldmarine', fresh:()=>!S.f.b10_c1_old},
+        {id:'old', name:'An old marine by the cook-wagon', kind:'b8_c1_veteran', x:12, y:8, node:()=>'b10_c1_oldmarine', fresh:()=>!S.f.b10_c1_old},
         {id:'spar', name:'Heavies sparring', kind:'b2soldier', x:4, y:7, node:()=>'b10_c1_spar', fresh:()=>!S.f.b10_c1_sparDone} ] },
 
     /* 16 x 12 (b10_c1_camp, night). The camp by night: the burial lines west, the sappers' wells east, the big tent north. = trenches
        u spoil heaps  k the clerk's trestle at the lines  P the officers' tent, lit  O the wells  T tents  o barrels  w a wagon  F the fire
-       > east: the march */
+       > east: the march
+       Terrain kit (25b, v13.22): a light touch: the way from the fire to the wells and on east (_), a lantern by the big tent (!), a water barrel by the wells (&) and a tent (6), the rim raised (1), and a sapper on the well chain (folk). */
     { id:'b10_c1_night', title:'The Wastes\' edge · the camp', sub:'Night · lamps in the big tent', hint:'Tap ground to move · tap a figure to talk · the burial lines are west, the wells east, the big tent north', decor:'b10_c1_camp', dark:true,
       map:[ "################",
-            "#u===u...PP....#",
+            "#u===u..!PP....#",
             "#..........T...#",
             "#u===u.........#",
-            "#..k......o..O.#",
-            "#u===u..F....O.>",
+            "#..k......o..O&#",
+            "#u===u..F____O_>",
             "#..............#",
             "#u===u....T..o.#",
             "#..............#",
-            "#.T....w.......#",
-            "#..............#",
+            "#.T....w.....6.#",
+            "#111.......111.#",
             "################" ],
-      walk:'.', triggers:{F:'b10_c1_fire', P:'b10_c1_tent', O:'b10_c1_wells', k:'b10_c1_nightlines', '>':'b10_c1_east'}, start:{x:8, y:6},
+      walk:'._', triggers:{F:'b10_c1_fire', P:'b10_c1_tent', O:'b10_c1_wells', k:'b10_c1_nightlines', '>':'b10_c1_east'}, start:{x:8, y:6},
+      folk:[{x:14, y:7, kind:'sapper', name:'A sapper on the well chain', line:'Bucket up, bucket along, bucket in the barrel. I dream it now. In the dream there is more water.'}],
       quest:()=> b101Ph() === 2 ? (!S.f.b10_c1_word ? 'The big tent\'s lamps, north. The officers are sitting late.' : 'Thallo, at the fire. He has the captain\'s word for the night.')
         : b101Names() ? (!S.f.b10_c1_gravesDone ? 'The burial lines, west. Shapes among the trenches.' : !S.f.b10_c1_named ? 'The clerk\'s trestle at the lines. The names.' : 'The fire. Then east, at dusk.')
         : (!S.f.b10_c1_waterDone ? 'The wells, east. The water detail.' : 'The fire. Then east, at dusk.'),
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:7, y:4, node:()=>'b10_c1_thallo_night', fresh:()=>b101Ph() === 2 && !!S.f.b10_c1_word},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:4, y:9, node:()=>'b10_c1_oldmarine', fresh:()=>false},
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:4, y:9, node:()=>'b10_c1_oldmarine', fresh:()=>false},
         {id:'robbers', name:'Shapes among the trenches', kind:'b6_bandit', x:3, y:2, node:()=>'b10_c1_nightlines', show:()=>b101Ph() === 3 && b101Names() && !S.f.b10_c1_gravesDone, fresh:()=>true} ] } ],
 
   battles:{

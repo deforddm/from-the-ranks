@@ -22,8 +22,8 @@
    most). Notes: docs/tcg-ch3-notes.md. */
 /* FOR THE ARTIST (183b): names this file uses.
    Items: ART['item/b10_c3_glassknife'], ['item/b10_c3_nightcloak'], ['item/b10_c3_tracestrap'].
-   Figures: pruss (181b), b9_c1_thallo (161b), b5_letherii (the wagon-master on 'south'), b2soldier (the old marine, the clerk, the
-   stragglers' sergeant, the stragglers, the engine's).
+   Figures: pruss (181b), b9_c1_thallo (161b), b5_letherii (the wagon-master on 'south'), b8_c1_veteran (the old marine, v13.22), b2soldier (the clerk,
+   the stragglers' sergeant, the stragglers, the engine's).
    Backdrops: b10_glass, b10_glass_night, b10_traces (180's, yours), and one this file adds: b10_c3_city (the night glass with a dead city far
    off on the northern horizon). On 'south' the chapter uses b10_south (182b's) and b10_south_night (180's, Ch 4's).
    Ground (TILEX): b10_c3_ground (the glass; on 'south' Book Nine's road ground): 'c' a cloak propped on a spear-shaft with soldiers under
@@ -160,44 +160,47 @@ const B10CH3 = {
 
   areas:[
     /* 16 x 12 (b10_c3_ground, day). The first lie-up. . the glass (or the road's dry ground)  c a cloak on a spear-shaft, soldiers under it
-       W the company's water wagon  x the oxen at their picket  F the squad's circle  < west: the column lying up  X east: the open glass */
+       W the company's water wagon  x the oxen at their picket  F the squad's circle  < west: the column lying up  X east: the open glass
+       Terrain kit (25b, v13.22): the column's track in and out (_), the glass's rim raised in ridges of standing shards (1; a grass bank on 'south'), trodden ground at the wagon (:), dropped kit (8), an ox's bones ($), and a heavy under a cloak (folk). */
     { id:'b10_c3_lieup', title:'Night marches · the lie-up', sub:'Day · under the cloaks', hint:'Tap ground to move · tap a figure to talk · the column lies up west, the open ground east', decor:'b10_c3_ground',
       map:[ "################",
-            "#..c..c...c..c.#",
-            "#..............#",
+            "#1.c..c...c..c1#",
+            "#....8......$..#",
             "#.c....xx....c.#",
-            "#......WW......#",
-            "<..............X",
+            "#.....:WW:.....#",
+            "<______...___._X",
             "#..c...O....c..#",
             "#..............#",
             "#.c...c...c..c.#",
             "#..............#",
-            "#....c....c....#",
+            "#111.c....c.111#",
             "################" ],
-      walk:'.', triggers:{W:'b10_c3_wagon', x:'b10_c3_oxen', O:'b10_c3_fire', '<':'b10_c3_west', X:'b10_c3_edge'}, start:{x:1, y:5},
+      walk:'._:', triggers:{W:'b10_c3_wagon', x:'b10_c3_oxen', O:'b10_c3_fire', '<':'b10_c3_west', X:'b10_c3_edge'}, start:{x:1, y:5},
+      folk:[{x:4, y:9, kind:'b2soldier', name:'A heavy under a cloak', line:'Do not stand in my shade. It is the only shade there is. I had to argue a corporal out of it.'}],
       quest:()=> !S.f.b10_c3_orders ? `${b103BossC()}, by the water wagon. The Third has the day watch.` : !S.f.b10_c3_counted ? 'The water wagon\'s tailboard. The water is counted at every halt.' : !S.f.b10_c3_wagonDone ? 'Shapes on the open ground, east, coming for the wagon.' : 'The circle, and dusk. The column goes on in the dark.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:5, node:()=>'b10_c3_thallo', show:()=>!b103South(), fresh:()=>!S.f.b10_c3_orders},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:9, y:5, node:()=>'b10_c3_thallo', show:()=>b103South(), fresh:()=>!S.f.b10_c3_orders},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:11, y:7, node:()=>'b10_c3_oldmarine', fresh:()=>!S.f.b10_c3_old},
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:11, y:7, node:()=>'b10_c3_oldmarine', fresh:()=>!S.f.b10_c3_old},
         {id:'strag', name:'Shapes coming across the open ground', kind:'b2soldier', x:13, y:5, node:()=>'b10_c3_strag', show:()=>b103Ready() && !S.f.b10_c3_wagonDone, fresh:()=>true} ] },
 
     /* 16 x 12 (b10_c3_ground, night). The night march: the column walking east. w the column's other wagons  W the company's water wagon
-       v a rise of glass to the north (the far ground)  r west: the rearguard  > east: on, to the next lie-up */
+       v a rise of glass to the north (the far ground)  r west: the rearguard  > east: on, to the next lie-up
+       Terrain kit (25b, v13.22): empty: the column's track (_), ridges of standing glass at the rim (1), broken glass (*, 'south' tufts), shard rubble (3), bones ($), dropped kit (8); no folk. */
     { id:'b10_c3_march', title:'Night marches · the column', sub:'Night · no lamps', hint:'Tap ground to move · tap a figure to talk · the rearguard is west, the far ground north, the way on east', decor:'b10_c3_ground', dark:true,
       map:[ "################",
-            "#.....v........#",
-            "#..............#",
+            "#11...v.....111#",
+            "#........$.....#",
             "#..w....w...w..#",
             "#..............#",
-            "r...........W..>",
+            "r___________W__>",
+            "#.........8....#",
+            "#...$.......*..#",
+            "#..w..*..w...3.#",
             "#..............#",
-            "#..............#",
-            "#..w.....w.....#",
-            "#..............#",
-            "#..............#",
+            "#11111....11111#",
             "################" ],
-      walk:'.', triggers:{W:'b10_c3_wagonn', v:'b10_c3_city', r:'b10_c3_rear', '>':'b10_c3_east'}, start:{x:2, y:5},
+      walk:'._*', triggers:{W:'b10_c3_wagonn', v:'b10_c3_city', r:'b10_c3_rear', '>':'b10_c3_east'}, start:{x:2, y:5},
       quest:()=> b103Ph() === 2 ? 'The water wagon, ahead east. Its oxen are failing.'
         : b103Haul() ? (!S.f.b10_c3_tracesDone ? 'The water wagon, in the traces. Shapes in the dark behind it.' : !S.f.b10_c3_through ? 'The wagon. A shelf in the ground across the line of march.' : 'East, with the wagon, to the next lie-up at grey light.')
         : (!S.f.b10_c3_carried ? 'The water wagon. Carry what can be carried.' : 'East, to the next lie-up at grey light.'),
@@ -206,26 +209,28 @@ const B10CH3 = {
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:11, y:4, node:()=>'b10_c3_wagonn', show:()=>b103South(), fresh:()=>b103Ph() === 2} ] },
 
     /* 16 x 12 (b10_c3_ground, day). The second lie-up. c cloaks  W the water wagon (if it came through; else the skins and barrels carried)
-       F the squad's circle  v a lookout south and west over the far ground  > east: on, at dusk */
+       F the squad's circle  v a lookout south and west over the far ground  > east: on, at dusk
+       Terrain kit (25b, v13.22): the track in and on (_), the rim raised in shards (1), trodden ground at the circle (:), dropped kit (8), bones ($), and a regular awake under a cloak (folk). */
     { id:'b10_c3_lieup2', title:'Night marches · the next lie-up', sub:'Day · under the cloaks again', hint:'Tap ground to move · tap a figure to talk · the far ground is south-west, the way on east', decor:'b10_c3_ground',
       map:[ "################",
-            "#..c....c...c..#",
+            "#..c....c...c.1#",
+            "#.........8...1#",
+            "#.c..W......c$.#",
             "#..............#",
-            "#.c..W......c..#",
-            "#..............#",
-            "#.....O........>",
-            "#..............#",
+            "#_____O._______>",
+            "#......:.......#",
             "#..c.....c..c..#",
             "#..............#",
             "#v.....c.......#",
-            "#..............#",
+            "#..1111...11111#",
             "################" ],
-      walk:'.', triggers:{W:'b10_c3_wagon2', O:'b10_c3_fire', v:'b10_c3_dust', '>':'b10_c3_dusk2'}, start:{x:8, y:5},
+      walk:'._:', triggers:{W:'b10_c3_wagon2', O:'b10_c3_fire', v:'b10_c3_dust', '>':'b10_c3_dusk2'}, start:{x:8, y:5},
+      folk:[{x:4, y:8, kind:'b2soldier', name:'A regular awake under a cloak', line:'Sleep by day, march by night. My mother always said I had it backwards. Now the whole army does.'}],
       quest:()=> !S.f.b10_c3_cloak ? `${b103BossC()}, by the ${b103Haul() ? 'wagon' : 'skins'}. He has something for the Third.` : !b10BeatOf(3) ? 'The circle, under the cloaks. The squad is awake.' : 'Dusk, and on east.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:8, y:3, node:()=>'b10_c3_thallo2', show:()=>!b103South(), fresh:()=>!S.f.b10_c3_cloak},
         {id:'master', name:'The Twelfth\'s wagon-master', kind:'b5_letherii', x:8, y:3, node:()=>'b10_c3_thallo2', show:()=>b103South(), fresh:()=>!S.f.b10_c3_cloak},
-        {id:'old', name:'The old marine', kind:'b2soldier', x:11, y:8, node:()=>'b10_c3_oldmarine', fresh:()=>false} ] } ],
+        {id:'old', name:'The old marine', kind:'b8_c1_veteran', x:11, y:8, node:()=>'b10_c3_oldmarine', fresh:()=>false} ] } ],
 
   battles:{
     /* the stragglers at the water wagon, at noon at the first lie-up: two grounds, the open edge of the lie-up, then among the cloaks */
