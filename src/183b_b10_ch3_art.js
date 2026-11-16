@@ -52,9 +52,17 @@ function b103aColumn(x, W, H, hz, n){ for (let i = 0; i < n; i++) { const u = i/
     if (i % 7 === 4) { b92aWagon(x, px, py, s*.32, 'night', false); continue; }
     for (let j = 0; j < 3; j++) { x.fillStyle = '#07080c'; x.fillRect(px + j*2.4*s, py - 5*s, 1.3*s, 5*s); ell(x, px + j*2.4*s + .6*s, py - 5.8*s, .8*s, .8*s, '#07080c'); x.fillStyle = 'rgba(150,170,210,.18)'; x.fillRect(px + j*2.4*s, py - 5*s, .4*s, 4*s); } } }
 
+/* v13.33 (pictures against text): an evening light laid over a finished day picture, for end pages whose captions say dusk or evening while
+   their scene is drawn by day: the sky taken down to dusk blue and rose, the horizon warm in the west (left), the ground darkened */
+function b10Eve(ctx, W, H, hz, k = 1){ const h = hz/H; ctx.save(); ctx.globalAlpha = k; ctx.globalCompositeOperation = 'multiply';
+  ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#2e3260'],[h*.55,'#7a5a7a'],[h*.92,'#e8a070'],[Math.min(1, h + .04),'#b08068'],[1,'#4a3c48']]); ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.08, hz, W*.5, '#ff9a50', .2); ctx.restore(); }
+const b103aEnd = () => !!(S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 3);
+
 /* ---------------- the backdrops ---------------- */
-/* lying up by day (180's caption): the column under its cloaks to the horizon, the wagons and oxen, the glare, the shimmer */
-SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1;
+/* lying up by day (180's caption): the column under its cloaks to the horizon, the wagons and oxen, the glare, the shimmer. On the chapter's
+   end page (v13.33) "the glass at dusk, the column getting up from under its cloaks", and on 'haul' heavies in the water wagon's traces */
+SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, end = b103aEnd(), haul = end && S.f && S.f.b10_c3_key === 'haul';
   ctx.drawImage(sceneLayer('b103:glass', W, H, (x, W, H) => { const hz = b103aDay(x, W, H);
     for (let r = 0; r < 6; r++) { const k = r/5, cy = hz + (H - hz)*(.03 + Math.pow(k, 1.6)*.62), s = .3 + k*1.5; // the cloaks, in loose rows going away
       for (let c = 0; c < 9; c++) { if (hash(c, r, 10311) > .7) continue; b103aCloak(x, W*(.04 + c*.12 + (r % 2)*.05 + hash(c, r, 10312)*.03), cy, s, false); } }
@@ -64,8 +72,11 @@ SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   const hz = H*.4;
   for (let i = 0; i < 5; i++) { const yy = hz + H*(.004 + i*.008), sh = mo ? Math.sin(t/340 + i*1.3)*W*.004 : 0; ctx.fillStyle = `rgba(255,255,255,${(.18 - i*.03).toFixed(2)})`; ctx.fillRect(sh, yy, W, H*.004); } // the air wobbling over the glass
   for (let i = 0; i < 12; i++) { const on = mo ? (Math.sin(t/260 + i*2.1) > .6) : i % 3 === 0; if (!on) continue; const px = W*hash(i, 10313), py = hz + H*(.06 + hash(i, 10314)*.5); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillRect(px - 2, py, 4, 1); ctx.fillRect(px, py - 2, 1, 4); } // glints flashing
-  ctx.fillStyle = 'rgba(255,252,240,.06)'; ctx.fillRect(0, 0, W, H);
+  if (!end) { ctx.fillStyle = 'rgba(255,252,240,.06)'; ctx.fillRect(0, 0, W, H); }
+  else { [[.1, .52, .9], [.3, .56, 1], [.45, .5, .8], [.66, .6, 1.1], [.22, .66, 1.2]].forEach(([u, v, k], i) => drawFigure(ctx, 'b2soldier', W*u, H*v, k, t, {phase:i, dir:i % 2 ? 1 : -1, still:true})); // getting up from under the cloaks
+    if (haul) [[-1, 0], [-1, 1]].forEach(([d, j]) => { ctx.save(); ctx.translate(W*(.62 - j*.07), H*.76 + j*3); ctx.rotate(.2); drawFigure(ctx, 'b2soldier', 0, 0, 1.45, t, {phase:j + 3, dir:d, still:true}); ctx.restore(); B2F.line(ctx, '#3a2a18', 1.2, [[W*(.63 - j*.07), H*.7], [W*.74, H*.7]]); }); } // heavies in the traces where the oxen were
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (end) b10Eve(ctx, W, H, hz);
   vign(ctx, W, H, .4, .5); };
 
 /* the night march (180's caption): two skies, and the column between them without a lamp */

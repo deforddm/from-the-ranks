@@ -135,25 +135,31 @@ SCENEX.b7_c5_cellar = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 /* the riverbank at night (this file's scene): reeds in front, a willow left, the river wide and black with stars in it across the bottom, and
    back across the fields the village: on 'hold' a dark huddle with the mill and one lantern; on 'slip' a long red glow over the trees and a
    smoke going up into it, far off */
+/* v13.33 (pictures against text): the chapter's end page is "in the grey before dawn" (both captions): no stars, a grey sky lightening in the
+   east (right), the water grey; slip keeps its smoke over the trees, without the night's red glow */
 SCENEX.b7_c5_river = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, f = (S && S.f) || {}, slip = f.b7_c5_key === 'slip' && (f.b7_c5_ph || 1) >= 4, held = f.b7_c5_key === 'hold' && !!f.b7_c5_holdDone;
-  ctx.drawImage(sceneLayer('b75:river:' + (slip ? 's' : held ? 'h' : 'n'), W, H, (x, W, H) => {
-    b75aSky(x, W, hz, 7570, 'night');
-    if (slip) { x.globalCompositeOperation = 'lighter'; const g = x.createRadialGradient(W*.66, hz, 0, W*.66, hz, W*.3); g.addColorStop(0, 'rgba(200,70,30,.45)'); g.addColorStop(.5, 'rgba(120,40,20,.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, hz + 4); x.globalCompositeOperation = 'source-over'; }
+  const grey = !!(S && S.scene === 'chend' && S.chapter === 5);
+  ctx.drawImage(sceneLayer('b75:river:' + (slip ? 's' : held ? 'h' : 'n') + (grey ? 'g' : ''), W, H, (x, W, H) => {
+    if (grey) { x.fillStyle = vgrad(x, 0, hz, [[0,'#1e222c'],[.6,'#3e444e'],[1,'#6e7072']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.86, hz, W*.36, '#a8a4a0', .3);
+      for (let i = 0; i < 5; i++) ell(x, hash(i, 7590)*W, hz*(.2 + hash(i, 7591)*.5), W*(.1 + hash(i, 7592)*.1), hz*.035, 'rgba(90,94,104,.35)'); }
+    else b75aSky(x, W, hz, 7570, 'night');
+    if (slip && !grey) {
+      x.globalCompositeOperation = 'lighter'; const g = x.createRadialGradient(W*.66, hz, 0, W*.66, hz, W*.3); g.addColorStop(0, 'rgba(200,70,30,.45)'); g.addColorStop(.5, 'rgba(120,40,20,.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, hz + 4); x.globalCompositeOperation = 'source-over'; }
     // the fields across, and the village far off: a huddle of roofs, the mill, trees
     x.fillStyle = vgrad(x, hz, H*.7, [[0,'#12140e'],[1,'#0a0b08']]); x.fillRect(0, hz, W, H*.7 - hz);
     for (let i = 0; i < 14; i++) { const tx = W*(.5 + i*.035), ty = hz + 1; ell(x, tx, ty - 4, 7 + hash(i, 7571)*5, 5, slip ? '#120806' : '#080a07'); } // the trees round the village
     for (let i = 0; i < 7; i++) { const bx = W*(.56 + i*.04), bw = W*.03, bh = H*.02; x.fillStyle = slip ? '#1a0c08' : '#0e0e0c'; x.fillRect(bx, hz - bh + 2, bw, bh); poly(x, [[bx - 2, hz - bh + 2], [bx + bw/2, hz - bh*2], [bx + bw + 2, hz - bh + 2]], slip ? '#140806' : '#0a0a08'); }
     // the river across the bottom, wide and still, stars in it
-    const ry = H*.7; x.fillStyle = vgrad(x, ry, H, [[0,'#0c1420'],[1,'#04070c']]); x.fillRect(0, ry, W, H - ry);
-    for (let i = 0; i < 80; i++) { const yy = ry + 2 + Math.pow(hash(i, 7572), 1.2)*(H - ry - 2), xx = hash(i, 7573)*W; x.fillStyle = `rgba(200,210,240,${(.06 + hash(i, 7574)*.2).toFixed(2)})`; x.fillRect(xx, yy, 1 + (yy - ry)/(H - ry)*4, 1); }
+    const ry = H*.7; x.fillStyle = vgrad(x, ry, H, grey ? [[0,'#4a5058'],[1,'#14181c']] : [[0,'#0c1420'],[1,'#04070c']]); x.fillRect(0, ry, W, H - ry);
+    for (let i = 0; i < 80; i++) { const yy = ry + 2 + Math.pow(hash(i, 7572), 1.2)*(H - ry - 2), xx = hash(i, 7573)*W; x.fillStyle = grey ? `rgba(170,174,180,${(.05 + hash(i, 7574)*.12).toFixed(2)})` : `rgba(200,210,240,${(.06 + hash(i, 7574)*.2).toFixed(2)})`; x.fillRect(xx, yy, 1 + (yy - ry)/(H - ry)*4, 1); }
     // the near bank: a dark strip, the willow left with its hanging fall, reeds thick in front
     x.fillStyle = '#070806'; x.beginPath(); x.moveTo(0, ry + 4); for (let i = 0; i <= 20; i++) { const u = i/20; x.lineTo(u*W, ry - H*(.04 + .02*Math.sin(u*9))); } x.lineTo(W, ry + 4); x.closePath(); x.fill();
     x.fillStyle = '#050604'; x.fillRect(W*.1, H*.22, W*.03, ry - H*.22); for (let i = 0; i < 40; i++) { const a = hash(i, 7575)*Math.PI, r = W*(.06 + hash(i, 7576)*.12), sx = W*.115 + Math.cos(a)*r, sy = H*.24 - Math.sin(a)*H*.06; B2F.line(x, 'rgba(20,28,16,.8)', 1, [[sx, sy], [sx + (hash(i, 7577) - .5)*6, sy + H*(.2 + hash(i, 7578)*.25)]]); } // the willow and its fall
     b75aStalks(x, W, H, ry - H*.06, H, 260, 7579, [38, 48, 30]);
   }), 0, 0, W, H);
   // the far light: on 'slip' the glow breathing and a smoke going up into it; on 'hold' a lantern by the mill-race
-  if (slip) { const lf = mo ? .8 + .2*Math.sin(t/900) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.66, hz - 2, H*.06, '#ff6a2a', .25*lf); ctx.globalCompositeOperation = 'source-over';
-    for (let i = 0; i < 12; i++) { const k = ((mo ? t/12000 : 0) + i/12) % 1, r = H*(.015 + k*.05); ell(ctx, W*.66 + Math.sin(k*3 + i)*W*.02, hz - 6 - k*H*.3, r, r*.8, `rgba(60,40,36,${(.35*(1 - k)).toFixed(2)})`); } }
+  if (slip) { const lf = mo ? .8 + .2*Math.sin(t/900) : 1; if (!grey) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.66, hz - 2, H*.06, '#ff6a2a', .25*lf); ctx.globalCompositeOperation = 'source-over'; }
+    for (let i = 0; i < 12; i++) { const k = ((mo ? t/12000 : 0) + i/12) % 1, r = H*(.015 + k*.05); ell(ctx, W*.66 + Math.sin(k*3 + i)*W*.02, hz - 6 - k*H*.3, r, r*.8, grey ? `rgba(40,36,36,${(.5*(1 - k)).toFixed(2)})` : `rgba(60,40,36,${(.35*(1 - k)).toFixed(2)})`); } }
   else if (held) { const lf = mo ? .8 + .2*Math.sin(t/500) + .05*Math.sin(t/43) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.6, hz - 1, H*.03, '#ffb060', .3*lf); glow(ctx, W*.6, hz - 1, 1.6, '#ffe0a0', .9*lf); ctx.globalCompositeOperation = 'source-over'; }
   // a little moving light on the water
   if (mo) for (let i = 0; i < 6; i++) { const yy = H*(.74 + i*.04), xx = (W*hash(i, 7580) + t/(60 + i*20)) % W; ctx.fillStyle = 'rgba(200,210,240,.12)'; ctx.fillRect(xx, yy, 6 + i*2, 1); }

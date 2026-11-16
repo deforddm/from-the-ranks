@@ -19,7 +19,7 @@
     return s + `<path d="M0 ${HZ} L660 ${HZ}" stroke="#b4c6e2" stroke-width="1" opacity=".45"/>`; };
   PK.plate('chapters/tcg/1', 'Chapter One: long trenches in the dry ground, spades going, spoil heaps in rows, a clerk with a slate at each trench, and far off the dust of the allies\' columns', P => {
     let s = PK.sky(P, [[0, '#8a9ab0'], [.6, '#e0d8c4'], [1, '#ece0c4']]) + PK.sun(P, 520, 70, 16, '#fffaf0', .8);
-    for (let i = 0; i < 3; i++) s += PK.smoke(P, 100 + i * 230, 196, 50, 40, 10, '#d8c8a8', .5, 701 + i);
+    for (let i = 0; i < 3; i++) s += PK.smoke(P, 100 + i * 230, 196, 50, 40, 10, '#8a7656', .35, 701 + i); // the allies' dust: tan, not light (v13.33: the paler dust read as a second sun)
     s += PK.ridge(196, 4, 702, '#b8a480', .4) + `<rect y="198" width="660" height="202" fill="${P.lin([[0, '#b8a07a'], [1, '#6a5438']])}"/>`;
     for (let r = 0; r < 4; r++) { const y = 232 + r * r * 12 + r * 20, k = .4 + r * .3; s += `<path d="M-10 ${y} L670 ${y - 4}" stroke="#3a2a1a" stroke-width="${PK.f(4 * k)}"/><path d="M-10 ${PK.f(y - 4 * k)} L670 ${PK.f(y - 8 * k)}" stroke="#d8c0a0" stroke-width="${PK.f(1.6 * k)}" opacity=".5"/>`;
       for (let i = 0; i < 7; i++) { const x = 30 + i * 96 + hash(i, 703 + r) * 30; s += `<path d="M${PK.f(x - 14 * k)} ${PK.f(y - 5 * k)} Q${PK.f(x)} ${PK.f(y - 18 * k)} ${PK.f(x + 14 * k)} ${PK.f(y - 5 * k)} Z" fill="#9a7e58"/>`; }

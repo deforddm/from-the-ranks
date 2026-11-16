@@ -102,19 +102,27 @@ SCENEX.b7_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 
 /* the column on the move (120's caption): a farm track pale under the stars between two hedges, running away to a far farm; a file of
    soldiers in the ditch beside it, dark, no lamps; the barley either side */
-SCENEX.b7_march_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46;
-  ctx.drawImage(sceneLayer('b73:march', W, H, (x, W, H) => {
-    b73aSky(x, W, hz, 7330, false);
+/* v13.33 (pictures against text): the chapter's end page is "in the dusk" (both captions): a dusk sky, the file going on; behind it over the
+   valley the counting room's smoke (ledger), or the factor's stone house standing whole on the track (loot) */
+SCENEX.b7_march_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, end = !!(S && S.scene === 'chend' && S.chapter === 3), ek = end ? ((S.f && S.f.b7_c3_key) || (S.chapters && S.chapters[3]) || 'ledger') : '';
+  ctx.drawImage(sceneLayer('b73:march' + (end ? ':' + ek : ''), W, H, (x, W, H) => {
+    if (end) { x.fillStyle = vgrad(x, 0, hz, [[0,'#1a1a2c'],[.5,'#3e2e42'],[.85,'#8a5038'],[1,'#b8703e']]); x.fillRect(0, 0, W, hz + 2);
+      for (let i = 0; i < 24; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, 7336)*.35).toFixed(2)})`; x.fillRect(hash(i, 7337)*W, hash(i, 7338)*hz*.3, 1, 1); } }
+    else b73aSky(x, W, hz, 7330, false);
     b73aHills(x, W, H, hz, '#0a0c10', .02, 1.3);
     x.fillStyle = vgrad(x, hz, H, [[0,'#12140e'],[1,'#070806']]); x.fillRect(0, hz, W, H - hz);
     // the far farm on the track, a dark cluster
-    b73aCot(x, W*.58, hz + 2, W*.05, H*.03, false, '#1e1e1c'); b73aCot(x, W*.64, hz + 3, W*.035, H*.024, false, '#1a1a18');
+    if (ek === 'loot') { x.fillStyle = '#34322e'; x.fillRect(W*.575, hz - H*.05, W*.06, H*.054); poly(x, [[W*.57, hz - H*.05], [W*.605, hz - H*.075], [W*.64, hz - H*.05]], '#1e2026'); // the factor's house, stone, two storeys, whole
+      x.fillStyle = 'rgba(255,200,110,.8)'; x.fillRect(W*.583, hz - H*.04, 2, 2); x.fillRect(W*.62, hz - H*.04, 2, 2); x.fillRect(W*.6, hz - H*.022, 2, 2); }
+    else b73aCot(x, W*.58, hz + 2, W*.05, H*.03, false, '#1e1e1c');
+    b73aCot(x, W*.64, hz + 3, W*.035, H*.024, false, '#1a1a18');
     // the track: a pale band narrowing to the farm
     x.fillStyle = 'rgba(150,140,110,.2)'; x.beginPath(); x.moveTo(W*.3, H); x.lineTo(W*.6, hz + 4); x.lineTo(W*.62, hz + 4); x.lineTo(W*.78, H); x.closePath(); x.fill();
     b73aBarley(x, W, H, hz + 4, H, 260, 7331);
     // the hedges either side of the track, converging
     for (let i = 0; i < 2; i++) { const sd = i ? 1 : -1; x.fillStyle = '#060805'; x.beginPath(); x.moveTo(W*(.5 + sd*.62), H); for (let k = 0; k <= 16; k++) { const u = k/16, px = W*(.5 + sd*(.62 - .5*u)), py = H - (H - hz - 4)*u; x.lineTo(px, py - H*(.08 - .06*u)*(.8 + .4*hash(k + i*17, 7332))); } x.lineTo(W*(.5 + sd*.12), hz + 4); x.lineTo(W*(.5 + sd*.62), H); x.closePath(); x.fill(); }
   }), 0, 0, W, H);
+  if (ek === 'ledger') for (let i = 0; i < 12; i++) { const k = ((mo ? t/14000 : 0) + i/12) % 1, r = H*(.012 + k*.045); ell(ctx, W*.6 + Math.sin(k*3 + i)*W*.015 + k*W*.06, hz - 4 - k*H*.34, r, r*.8, `rgba(46,38,40,${(.5*(1 - k)).toFixed(2)})`); } // the counting room, still smoking, behind
   // the file in the ditch along the left hedge, small and dark, moving
   for (let i = 0; i < 11; i++) { const k = i/10, u = .62 - .5*k, mx = W*(.5 - u + .04) + (mo ? ((t/90) % 6) : 0)*(1 - k)*.4, my = H - (H - hz - 4)*k + 2, s = (1 - k*.75)*H/360; ctx.fillStyle = '#050605'; ctx.fillRect(mx - 2.2*s, my - 12*s, 4.4*s, 10*s); ell(ctx, mx, my - 14*s, 2.4*s, 2.4*s, '#050605'); B2F.line(ctx, '#050605', Math.max(.5, .9*s), [[mx + 2*s, my - 7*s], [mx + 3*s, my - 21*s]]); }
   const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.56 + i*Math.min(.07, .38/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));

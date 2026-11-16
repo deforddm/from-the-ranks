@@ -282,7 +282,9 @@ const B7CH7 = {
   scenes:{
     b7_c7_gate:{loc:'Letheras', sub:'The gate · night, then first light', cap:'The walls of Letheras, a great gate shut in them, smoke over the towers beyond, and refugees on the road.', amb:'explore'},
     b7_c7_square:{loc:'Letheras', sub:'Inside the gate · morning', cap:'A cobbled square inside the gate, the gatehouse behind with its doors open, and shuttered houses all round with eyes behind the shutters.', amb:'explore'},
-    b7_c7_after:{loc:'Letheras', sub:'Three weeks on · a canal street', cap:'A canal street in the morning, a footbridge, washing out on the lines, and over the roofs the towers of Letheras with no smoke on them.', amb:'explore'} },
+    b7_c7_after:{loc:'Letheras', sub:'Three weeks on · a canal street', cap:'A canal street in the morning, a footbridge, washing out on the lines, and over the roofs the towers of Letheras with no smoke on them.', amb:'explore'},
+    b7_fin_adjunct:{loc:'Letheras', sub:'The east road · the end of a summer', cap:'The walls of Letheras behind, the army on the east road in a column that goes on out of sight, and a Letherii detachment marching beside it.', amb:'explore'},
+    b7_fin_home:{loc:'At sea', sub:'A transport going west', cap:'A stern rail, the wake going back, and low on the sea behind it the coast of Lether going down.', amb:'explore'} },
 
   end:{
     adjunct:['With the army', 'The Third came to Letheras with the Fist at the gate, and held the counting-house street, and saw the garrison give up from the end of a street. Three weeks on, when the lists came round, it put its names on the one that stays with the army, wherever the Adjunct takes it next.'],
@@ -850,7 +852,7 @@ B77FIN.village = id => b77Held() ? `At the mill village on the river, ${id === '
 B77FIN.book = id => [B77FIN.ships(id), B77FIN.room(id), B77FIN.village(id)].filter(Boolean).join(' ');
 
 B77FIN.ending = key => {
-  const T = {adjunct:['With the army', 'b7_c7_after'], letheras:['The new emperor\'s coin', 'b7_c7_after'], home:['A berth home', 'b7_river']}[key] || ['With the army', 'b7_c7_after'];
+  const T = {adjunct:['With the army', 'b7_fin_adjunct'], letheras:['The new emperor\'s coin', 'b7_c7_after'], home:['A berth home', 'b7_fin_home']}[key] || ['With the army', 'b7_fin_adjunct']; // v13.33: each road out of the city its own picture (127b)
   if (typeof S === 'undefined' || !S || !S.f) return {title:T[0], scene:T[1], paras:[]};
   try {
     const mates = b77Mates().map(NAME), n = b77Mates().length + 1, r = b7Rising(), tier = b7RiseTier(r);
@@ -865,7 +867,7 @@ B77FIN.ending = key => {
 `There is no road onward from here. The Third is in Letheras, under a new emperor, a long way from any army it was ever part of.`];
     else P = [
 `The army of the Adjunct goes out of Letheras at the end of a summer, east, without the Third. The Third is already at sea by then, on a big-bellied transport going west, with its names on the master's list under *time served*.`,
-`${mates.length ? `${b77And(mates)} ${mates.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.'} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
+`${(rail => rail.length ? `${b77And(rail)} ${rail.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.')(b77Mates().filter(id => id !== 'ottar').map(NAME))}${b77Mates().includes('ottar') ? ' Ottar is on the quay with his helm under his arm, and does not wave, and does not go.' : ''} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
 `There is no road onward from here. No one is looking for a squad that went home.`];
     P.push(`Lether, at the end: ${B7_RISEW[tier].toLowerCase()} (the Rising stands at ${r} of ${B7_RISEMAX}${b7S().hi > r ? `, and was ${b7S().hi} at its height` : ''}).`);
     return {title:T[0], scene:T[1], paras:P};

@@ -352,7 +352,7 @@ Object.assign(SCENES, {
   b7_kravos:{loc:'Kravos Hill', sub:'The army\'s camp', cap:'Tents in their thousands on the slopes below a hill, the commanders\' banners on its top, and Edur among them who do not sit with the Letherii.', amb:'explore'},
   b7_field:{loc:'Before Letheras', sub:'The field', cap:'A plain cleared of crops, a ridge with banners on it, and the whole army of Lether drawn up and waiting.', amb:'explore'},
   b7_river:{loc:'The Lether River', sub:'The landing', cap:'A broad river, barges and ships coming up it under sail, and soldiers coming off them faster than seems possible.', amb:'explore'},
-  b7_city_burning:{loc:'Letheras', sub:'The city · the last night', cap:'Smoke over the towers, a white light under one quarter that should not be there, and the crowd in the streets shouting a name.', amb:'battle'},
+  b7_city_burning:{loc:'Letheras', sub:'The city · its last day', cap:'Smoke over the towers, a white light under one quarter that should not be there, and the crowd in the streets shouting a name.', amb:'battle'},
 });
 Object.entries(B7_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
 /* the chapter card and end screen fall back by thread when a chapter names no scene: the coast for the Third, the barracks for the Letherii */

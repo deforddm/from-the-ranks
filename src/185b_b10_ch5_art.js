@@ -110,6 +110,7 @@ SCENEX.b10_kolanse = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const hz = H*.42;
   for (let i = 0; i < 4; i++) { const k = mo ? ((t/(9000 + i*1600) + hash(i, 10553)) % 1) : hash(i, 10553); ctx.fillStyle = `rgba(200,180,140,${(Math.sin(k*Math.PI)*.18).toFixed(2)})`; ctx.fillRect(W*(k*1.2 - .2), hz + H*(.04 + i*.05), W*.25, H*.012); } // dust on the wind
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 5 && typeof b10Eve === 'function') b10Eve(ctx, W, H, hz, .85); // v13.33: the end page is "at evening" (both captions)
   vign(ctx, W, H, .35, .5); };
 
 /* ---------------- ground ---------------- */

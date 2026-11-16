@@ -97,6 +97,7 @@ SCENEX.b10_south = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
     for (let i = 0; i < 2; i++) { ctx.fillStyle = '#2e2620'; ctx.fillRect(W*(.68 + i*.05), hz + H*.06, H*.012, H*.012); } } // two riders among them, small
   for (let i = 0; i < 10; i++) { const q = ((t/12000*mo + hash(i, 10246)) % 1); ctx.fillStyle = `rgba(230,214,180,${(.18*(1 - q)).toFixed(2)})`; ctx.fillRect(W*(.1 + hash(i, 10247)*.8) + q*W*.04, H*(.5 + hash(i, 10248)*.4) - q*H*.03, 1.2, 1.2); }
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 3 && typeof b10Eve === 'function') b10Eve(ctx, W, H, H*.44); // v13.33: Ch3's 'south' end page is "the road south at dusk"
   vign(ctx, W, H, .5, .5); };
 
 /* the rise at dusk: the glass catching the last light and the long line going out onto it; on 'adjunct' the companies going over the rise */

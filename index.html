@@ -4712,7 +4712,7 @@ const PK = {
   PK.plate('chapters/dod/7', 'Chapter Seven: late in the day in the Wastes, the heavies\' shields in a line, burned wagons at one end, and a wall of dust in front with shapes in it taller than any soldier', P => {
     let s = PK.sky(P, [[0, '#5a3a2a'], [.5, '#a0603a'], [1, '#c08050']]);
     s += `<rect y="0" width="660" height="280" fill="${P.lin([[0, '#6a4a32', 0], [.4, '#8a5a3a', .9], [1, '#b08050']])}"/>`;
-    for (let i = 0; i < 6; i++) { const x = 90 + i * 96 + hash(i, 661) * 30, h = 110 + hash(i, 662) * 40, f = PK.f; s += `<g opacity="${f(.22 + hash(i, 663) * .16)}" filter="url(#${P.blur(5)})" fill="#3a2418"><ellipse cx="${x}" cy="${f(268 - h * .55)}" rx="${f(h * .16)}" ry="${f(h * .3)}" transform="rotate(28 ${x} ${f(268 - h * .55)})"/><ellipse cx="${f(x + h * .2)}" cy="${f(268 - h * .86)}" rx="${f(h * .1)}" ry="${f(h * .06)}"/><path d="M${f(x - 8)} ${f(268 - h * .3)} L${f(x - 12)} 268 M${f(x + 8)} ${f(268 - h * .32)} L${f(x + 12)} 268" stroke="#3a2418" stroke-width="${f(h * .06)}"/></g>`; }
+    for (let i = 0; i < 6; i++) { const x = 90 + i * 96 + hash(i, 661) * 30, h = 110 + hash(i, 662) * 40, f = PK.f; s += `<g opacity="${f(.42 + hash(i, 663) * .14)}" filter="url(#${P.blur(3)})" fill="#2e1c12"><ellipse cx="${x}" cy="${f(268 - h * .55)}" rx="${f(h * .16)}" ry="${f(h * .3)}" transform="rotate(28 ${x} ${f(268 - h * .55)})"/><ellipse cx="${f(x + h * .2)}" cy="${f(268 - h * .86)}" rx="${f(h * .1)}" ry="${f(h * .06)}"/><path d="M${f(x - 8)} ${f(268 - h * .3)} L${f(x - 12)} 268 M${f(x + 8)} ${f(268 - h * .32)} L${f(x + 12)} 268" stroke="#2e1c12" stroke-width="${f(h * .06)}"/></g>`; }
     for (let i = 0; i < 8; i++) s += PK.smoke(P, 40 + i * 84, 280, 130, 50, 10, '#b08050', .35, 664 + i);
     s += `<rect y="276" width="660" height="124" fill="${P.lin([[0, '#6a4a2c'], [1, '#2a1a0e']])}"/>`;
     for (let i = 0; i < 3; i++) s += `<g transform="translate(${40 + i * 50} ${300 - i * 4}) rotate(${-8 + i * 7})"><rect x="-22" y="-14" width="44" height="12" fill="#140a06"/><path d="M-14 -14 L-10 -26 M4 -14 L8 -24 M16 -14 L14 -22" stroke="#140a06" stroke-width="3"/><circle cx="-12" cy="-2" r="6" fill="none" stroke="#140a06" stroke-width="2"/></g>` + PK.smoke(P, 40 + i * 50, 286, 60, 10, 20, '#2a1a12', .5, 670 + i);
@@ -4742,7 +4742,7 @@ const PK = {
     return s + `<path d="M0 ${HZ} L660 ${HZ}" stroke="#b4c6e2" stroke-width="1" opacity=".45"/>`; };
   PK.plate('chapters/tcg/1', 'Chapter One: long trenches in the dry ground, spades going, spoil heaps in rows, a clerk with a slate at each trench, and far off the dust of the allies\' columns', P => {
     let s = PK.sky(P, [[0, '#8a9ab0'], [.6, '#e0d8c4'], [1, '#ece0c4']]) + PK.sun(P, 520, 70, 16, '#fffaf0', .8);
-    for (let i = 0; i < 3; i++) s += PK.smoke(P, 100 + i * 230, 196, 50, 40, 10, '#d8c8a8', .5, 701 + i);
+    for (let i = 0; i < 3; i++) s += PK.smoke(P, 100 + i * 230, 196, 50, 40, 10, '#8a7656', .35, 701 + i); // the allies' dust: tan, not light (v13.33: the paler dust read as a second sun)
     s += PK.ridge(196, 4, 702, '#b8a480', .4) + `<rect y="198" width="660" height="202" fill="${P.lin([[0, '#b8a07a'], [1, '#6a5438']])}"/>`;
     for (let r = 0; r < 4; r++) { const y = 232 + r * r * 12 + r * 20, k = .4 + r * .3; s += `<path d="M-10 ${y} L670 ${y - 4}" stroke="#3a2a1a" stroke-width="${PK.f(4 * k)}"/><path d="M-10 ${PK.f(y - 4 * k)} L670 ${PK.f(y - 8 * k)}" stroke="#d8c0a0" stroke-width="${PK.f(1.6 * k)}" opacity=".5"/>`;
       for (let i = 0; i < 7; i++) { const x = 30 + i * 96 + hash(i, 703 + r) * 30; s += `<path d="M${PK.f(x - 14 * k)} ${PK.f(y - 5 * k)} Q${PK.f(x)} ${PK.f(y - 18 * k)} ${PK.f(x + 14 * k)} ${PK.f(y - 5 * k)} Z" fill="#9a7e58"/>`; }
@@ -86083,7 +86083,7 @@ Object.assign(SCENES, {
   b7_kravos:{loc:'Kravos Hill', sub:'The army\'s camp', cap:'Tents in their thousands on the slopes below a hill, the commanders\' banners on its top, and Edur among them who do not sit with the Letherii.', amb:'explore'},
   b7_field:{loc:'Before Letheras', sub:'The field', cap:'A plain cleared of crops, a ridge with banners on it, and the whole army of Lether drawn up and waiting.', amb:'explore'},
   b7_river:{loc:'The Lether River', sub:'The landing', cap:'A broad river, barges and ships coming up it under sail, and soldiers coming off them faster than seems possible.', amb:'explore'},
-  b7_city_burning:{loc:'Letheras', sub:'The city · the last night', cap:'Smoke over the towers, a white light under one quarter that should not be there, and the crowd in the streets shouting a name.', amb:'battle'},
+  b7_city_burning:{loc:'Letheras', sub:'The city · its last day', cap:'Smoke over the towers, a white light under one quarter that should not be there, and the crowd in the streets shouting a name.', amb:'battle'},
 });
 Object.entries(B7_SCENE_LIKE).forEach(([k, like]) => { SCENEX[k] ??= (cv, t) => (SCENEX[like] || ((c, tt) => drawCamp(c, tt, true)))(cv, t); });
 /* the chapter card and end screen fall back by thread when a chapter names no scene: the coast for the Third, the barracks for the Letherii */
@@ -87228,7 +87228,11 @@ SCENEX.b7_coast_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = RE
 /* above the beach (120's caption; B7READ[1]'s table scene): the column's first halt in the dunes; a hollow with the Third's small fire of
    boat-wood burning blue at the edges, dune grass black against the light; below and beyond, the hulks burning low on the water, the smoke
    lying along the sea in a long bank, other squads' fires in other hollows */
-SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5, fl = b2Fl(t);
+/* v13.33 (pictures against text): the chapter's end page is "the Lether coast at dusk, the hulks still smoking along the water, and a file
+   of soldiers going inland" (both captions): a dusk sky, the hulks burned down to smoke, no fire in the hollow, the file going up over the
+   dunes away from the sea and the squad walking inland with it */
+SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5, fl = b2Fl(t), end = !!(S && S.scene === 'chend' && S.chapter === 1);
+  if (end) return b71CoastEnd(cv, t);
   ctx.drawImage(sceneLayer('b71:above', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#05070e'],[.6,'#161420'],[1,'#3a1e18']]); x.fillRect(0, 0, W, hz + 2);
     for (let i = 0; i < 80; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, 7160)*.5).toFixed(2)})`; x.fillRect(hash(i, 7161)*W, Math.pow(hash(i, 7162), 1.4)*hz*.7, 1, 1); }
@@ -87255,6 +87259,28 @@ SCENEX.b7_coast_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDU
   if (mo) for (let i = 0; i < 6; i++) { const k = ((t/1500 + i/6) % 1); ctx.fillStyle = `rgba(255,190,110,${(.8*(1 - k)).toFixed(2)})`; ctx.fillRect(cx + Math.sin(i*2 + t/500)*4 + k*8, cy - 10 - k*34, 1, 1); } // sparks, inland on the sea wind
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const n = sq.length, side = i < n/2 ? -1 : 1, j = side < 0 ? i : i - Math.ceil(n/2); drawFigure(ctx, id, cx + side*(26 + j*22), H*.97 - (j % 2)*3, 1.9, t, {phase:i, dir:-side}); });
   vign(ctx, W, H, .78, .55); };
+
+function b71CoastEnd(cv, t){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.36, sh = H*.5;
+  ctx.drawImage(sceneLayer('b71:above:dusk', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#1c1c30'],[.45,'#4a3044'],[.8,'#a8583a'],[1,'#d88a4a']]); x.fillRect(0, 0, W, hz + 2); // dusk, the light low over the sea
+    glow(x, W*.3, hz, W*.3, '#f0a060', .3);
+    x.fillStyle = vgrad(x, hz, sh, [[0,'#6a4a44'],[.4,'#2e2630'],[1,'#141420']]); x.fillRect(0, hz, W, sh - hz + 2); // the sea, taking the last of the light
+    for (let i = 0; i < 50; i++) { const yy = hz + 2 + Math.pow(hash(i, 7110), 1.3)*(sh - hz - 2), d = (yy - hz)/(sh - hz); x.fillStyle = `rgba(230,160,110,${(.08 + (1 - d)*.12).toFixed(2)})`; x.fillRect(hash(i, 7111)*W, yy, 8 + d*40, .8 + d); }
+    B71SHIPS.forEach(([u, k]) => { const sx = u*W, sy = hz + H*.012 + k*.6*H*.02, s = k*H/360*.6; poly(x, [[sx - 30*s, sy - 3*s], [sx + 30*s, sy - 4*s], [sx + 24*s, sy + 2*s], [sx - 26*s, sy + 2*s]], '#140c0a'); }); // the hulks, burned to the waterline
+    // the dunes as at night, in the dusk
+    x.fillStyle = '#2a2018'; x.beginPath(); x.moveTo(0, sh + H*.02); for (let i = 0; i <= 24; i++) { const u = i/24; x.lineTo(u*W, sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13))); } x.lineTo(W, H); x.lineTo(0, H); x.closePath(); x.fill();
+    x.fillStyle = vgrad(x, sh + H*.1, H, [[0,'#4a3626'],[1,'#1a120c']]); x.beginPath(); x.moveTo(0, H*.72); x.quadraticCurveTo(W*.3, H*.66, W*.5, H*.7); x.quadraticCurveTo(W*.7, H*.66, W, H*.74); x.lineTo(W, H); x.lineTo(0, H); x.closePath(); x.fill();
+    x.strokeStyle = 'rgba(255,180,120,.3)'; x.lineWidth = 1; x.beginPath(); for (let i = 0; i <= 24; i++) { const u = i/24; x.lineTo(u*W, sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13))); } x.stroke();
+    for (let i = 0; i < 46; i++) { const u = hash(i, 7163), gy = sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13)) + 1; b71Grass(x, u*W, gy, .7 + hash(i, 7164)*.9, 'rgba(30,22,14,.95)'); }
+    for (let i = 0; i < 20; i++) b71Grass(x, hash(i, 7165)*W, H*(.8 + hash(i, 7166)*.18), 1.4 + hash(i, 7167), 'rgba(34,24,16,.95)');
+  }), 0, 0, W, H);
+  // the hulks still smoking along the water: grey columns leaning inland on the sea wind
+  B71SHIPS.forEach(([u, k], i) => { const sx = u*W, sy = hz + H*.012 + k*.6*H*.02; for (let j = 0; j < 7; j++) { const kk = ((mo ? t/16000 : 0) + j/7 + hash(i, 7170)*.3) % 1, r = H*(.008 + kk*.03)*k; ell(ctx, sx - kk*W*.04, sy - 4 - kk*H*.22*k, r, r*.7, `rgba(60,52,56,${(.42*(1 - kk)).toFixed(2)})`); } });
+  // the file going up over the dunes, inland, small and dark against the sky's last light
+  for (let i = 0; i < 9; i++) { const u = .58 + i*.045, gy = sh + H*(.02 + .04*Math.sin(u*5.1 + 1) + .02*Math.sin(u*13)) + 1, s = H/360*.8; drawFigure(ctx, 'b2soldier', W*u + (mo ? (t/400) % 4 : 0), gy, .55, t, {dir:-1, phase:i, still:!mo, alpha:.85}); }
+  // the squad near, packs on, walking inland (left)
+  const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.07, .4/sq.length)), H*.95 - (i % 2)*3, 1.8, t, {phase:i, dir:-1, still:!mo}));
+  vign(ctx, W, H, .6, .45); }
 
 /* the tally-shed (this file's scene): a coast road at night between hedges; behind a fieldstone yard wall a long low shed with a slate roof
    and one window with a lamp in it, a lantern on a post in the yard, the signal-fire brush on its frame by the gate; dark fields and a far
@@ -89283,19 +89309,27 @@ SCENEX.b7_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 
 /* the column on the move (120's caption): a farm track pale under the stars between two hedges, running away to a far farm; a file of
    soldiers in the ditch beside it, dark, no lamps; the barley either side */
-SCENEX.b7_march_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46;
-  ctx.drawImage(sceneLayer('b73:march', W, H, (x, W, H) => {
-    b73aSky(x, W, hz, 7330, false);
+/* v13.33 (pictures against text): the chapter's end page is "in the dusk" (both captions): a dusk sky, the file going on; behind it over the
+   valley the counting room's smoke (ledger), or the factor's stone house standing whole on the track (loot) */
+SCENEX.b7_march_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, end = !!(S && S.scene === 'chend' && S.chapter === 3), ek = end ? ((S.f && S.f.b7_c3_key) || (S.chapters && S.chapters[3]) || 'ledger') : '';
+  ctx.drawImage(sceneLayer('b73:march' + (end ? ':' + ek : ''), W, H, (x, W, H) => {
+    if (end) { x.fillStyle = vgrad(x, 0, hz, [[0,'#1a1a2c'],[.5,'#3e2e42'],[.85,'#8a5038'],[1,'#b8703e']]); x.fillRect(0, 0, W, hz + 2);
+      for (let i = 0; i < 24; i++) { x.fillStyle = `rgba(226,230,250,${(.1 + hash(i, 7336)*.35).toFixed(2)})`; x.fillRect(hash(i, 7337)*W, hash(i, 7338)*hz*.3, 1, 1); } }
+    else b73aSky(x, W, hz, 7330, false);
     b73aHills(x, W, H, hz, '#0a0c10', .02, 1.3);
     x.fillStyle = vgrad(x, hz, H, [[0,'#12140e'],[1,'#070806']]); x.fillRect(0, hz, W, H - hz);
     // the far farm on the track, a dark cluster
-    b73aCot(x, W*.58, hz + 2, W*.05, H*.03, false, '#1e1e1c'); b73aCot(x, W*.64, hz + 3, W*.035, H*.024, false, '#1a1a18');
+    if (ek === 'loot') { x.fillStyle = '#34322e'; x.fillRect(W*.575, hz - H*.05, W*.06, H*.054); poly(x, [[W*.57, hz - H*.05], [W*.605, hz - H*.075], [W*.64, hz - H*.05]], '#1e2026'); // the factor's house, stone, two storeys, whole
+      x.fillStyle = 'rgba(255,200,110,.8)'; x.fillRect(W*.583, hz - H*.04, 2, 2); x.fillRect(W*.62, hz - H*.04, 2, 2); x.fillRect(W*.6, hz - H*.022, 2, 2); }
+    else b73aCot(x, W*.58, hz + 2, W*.05, H*.03, false, '#1e1e1c');
+    b73aCot(x, W*.64, hz + 3, W*.035, H*.024, false, '#1a1a18');
     // the track: a pale band narrowing to the farm
     x.fillStyle = 'rgba(150,140,110,.2)'; x.beginPath(); x.moveTo(W*.3, H); x.lineTo(W*.6, hz + 4); x.lineTo(W*.62, hz + 4); x.lineTo(W*.78, H); x.closePath(); x.fill();
     b73aBarley(x, W, H, hz + 4, H, 260, 7331);
     // the hedges either side of the track, converging
     for (let i = 0; i < 2; i++) { const sd = i ? 1 : -1; x.fillStyle = '#060805'; x.beginPath(); x.moveTo(W*(.5 + sd*.62), H); for (let k = 0; k <= 16; k++) { const u = k/16, px = W*(.5 + sd*(.62 - .5*u)), py = H - (H - hz - 4)*u; x.lineTo(px, py - H*(.08 - .06*u)*(.8 + .4*hash(k + i*17, 7332))); } x.lineTo(W*(.5 + sd*.12), hz + 4); x.lineTo(W*(.5 + sd*.62), H); x.closePath(); x.fill(); }
   }), 0, 0, W, H);
+  if (ek === 'ledger') for (let i = 0; i < 12; i++) { const k = ((mo ? t/14000 : 0) + i/12) % 1, r = H*(.012 + k*.045); ell(ctx, W*.6 + Math.sin(k*3 + i)*W*.015 + k*W*.06, hz - 4 - k*H*.34, r, r*.8, `rgba(46,38,40,${(.5*(1 - k)).toFixed(2)})`); } // the counting room, still smoking, behind
   // the file in the ditch along the left hedge, small and dark, moving
   for (let i = 0; i < 11; i++) { const k = i/10, u = .62 - .5*k, mx = W*(.5 - u + .04) + (mo ? ((t/90) % 6) : 0)*(1 - k)*.4, my = H - (H - hz - 4)*k + 2, s = (1 - k*.75)*H/360; ctx.fillStyle = '#050605'; ctx.fillRect(mx - 2.2*s, my - 12*s, 4.4*s, 10*s); ell(ctx, mx, my - 14*s, 2.4*s, 2.4*s, '#050605'); B2F.line(ctx, '#050605', Math.max(.5, .9*s), [[mx + 2*s, my - 7*s], [mx + 3*s, my - 21*s]]); }
   const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.56 + i*Math.min(.07, .38/sq.length)), H*.97 - (i % 2)*2, 1.75, t, {phase:i, dir:1}));
@@ -91457,25 +91491,31 @@ SCENEX.b7_c5_cellar = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 /* the riverbank at night (this file's scene): reeds in front, a willow left, the river wide and black with stars in it across the bottom, and
    back across the fields the village: on 'hold' a dark huddle with the mill and one lantern; on 'slip' a long red glow over the trees and a
    smoke going up into it, far off */
+/* v13.33 (pictures against text): the chapter's end page is "in the grey before dawn" (both captions): no stars, a grey sky lightening in the
+   east (right), the water grey; slip keeps its smoke over the trees, without the night's red glow */
 SCENEX.b7_c5_river = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, f = (S && S.f) || {}, slip = f.b7_c5_key === 'slip' && (f.b7_c5_ph || 1) >= 4, held = f.b7_c5_key === 'hold' && !!f.b7_c5_holdDone;
-  ctx.drawImage(sceneLayer('b75:river:' + (slip ? 's' : held ? 'h' : 'n'), W, H, (x, W, H) => {
-    b75aSky(x, W, hz, 7570, 'night');
-    if (slip) { x.globalCompositeOperation = 'lighter'; const g = x.createRadialGradient(W*.66, hz, 0, W*.66, hz, W*.3); g.addColorStop(0, 'rgba(200,70,30,.45)'); g.addColorStop(.5, 'rgba(120,40,20,.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, hz + 4); x.globalCompositeOperation = 'source-over'; }
+  const grey = !!(S && S.scene === 'chend' && S.chapter === 5);
+  ctx.drawImage(sceneLayer('b75:river:' + (slip ? 's' : held ? 'h' : 'n') + (grey ? 'g' : ''), W, H, (x, W, H) => {
+    if (grey) { x.fillStyle = vgrad(x, 0, hz, [[0,'#1e222c'],[.6,'#3e444e'],[1,'#6e7072']]); x.fillRect(0, 0, W, hz + 2); glow(x, W*.86, hz, W*.36, '#a8a4a0', .3);
+      for (let i = 0; i < 5; i++) ell(x, hash(i, 7590)*W, hz*(.2 + hash(i, 7591)*.5), W*(.1 + hash(i, 7592)*.1), hz*.035, 'rgba(90,94,104,.35)'); }
+    else b75aSky(x, W, hz, 7570, 'night');
+    if (slip && !grey) {
+      x.globalCompositeOperation = 'lighter'; const g = x.createRadialGradient(W*.66, hz, 0, W*.66, hz, W*.3); g.addColorStop(0, 'rgba(200,70,30,.45)'); g.addColorStop(.5, 'rgba(120,40,20,.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, hz + 4); x.globalCompositeOperation = 'source-over'; }
     // the fields across, and the village far off: a huddle of roofs, the mill, trees
     x.fillStyle = vgrad(x, hz, H*.7, [[0,'#12140e'],[1,'#0a0b08']]); x.fillRect(0, hz, W, H*.7 - hz);
     for (let i = 0; i < 14; i++) { const tx = W*(.5 + i*.035), ty = hz + 1; ell(x, tx, ty - 4, 7 + hash(i, 7571)*5, 5, slip ? '#120806' : '#080a07'); } // the trees round the village
     for (let i = 0; i < 7; i++) { const bx = W*(.56 + i*.04), bw = W*.03, bh = H*.02; x.fillStyle = slip ? '#1a0c08' : '#0e0e0c'; x.fillRect(bx, hz - bh + 2, bw, bh); poly(x, [[bx - 2, hz - bh + 2], [bx + bw/2, hz - bh*2], [bx + bw + 2, hz - bh + 2]], slip ? '#140806' : '#0a0a08'); }
     // the river across the bottom, wide and still, stars in it
-    const ry = H*.7; x.fillStyle = vgrad(x, ry, H, [[0,'#0c1420'],[1,'#04070c']]); x.fillRect(0, ry, W, H - ry);
-    for (let i = 0; i < 80; i++) { const yy = ry + 2 + Math.pow(hash(i, 7572), 1.2)*(H - ry - 2), xx = hash(i, 7573)*W; x.fillStyle = `rgba(200,210,240,${(.06 + hash(i, 7574)*.2).toFixed(2)})`; x.fillRect(xx, yy, 1 + (yy - ry)/(H - ry)*4, 1); }
+    const ry = H*.7; x.fillStyle = vgrad(x, ry, H, grey ? [[0,'#4a5058'],[1,'#14181c']] : [[0,'#0c1420'],[1,'#04070c']]); x.fillRect(0, ry, W, H - ry);
+    for (let i = 0; i < 80; i++) { const yy = ry + 2 + Math.pow(hash(i, 7572), 1.2)*(H - ry - 2), xx = hash(i, 7573)*W; x.fillStyle = grey ? `rgba(170,174,180,${(.05 + hash(i, 7574)*.12).toFixed(2)})` : `rgba(200,210,240,${(.06 + hash(i, 7574)*.2).toFixed(2)})`; x.fillRect(xx, yy, 1 + (yy - ry)/(H - ry)*4, 1); }
     // the near bank: a dark strip, the willow left with its hanging fall, reeds thick in front
     x.fillStyle = '#070806'; x.beginPath(); x.moveTo(0, ry + 4); for (let i = 0; i <= 20; i++) { const u = i/20; x.lineTo(u*W, ry - H*(.04 + .02*Math.sin(u*9))); } x.lineTo(W, ry + 4); x.closePath(); x.fill();
     x.fillStyle = '#050604'; x.fillRect(W*.1, H*.22, W*.03, ry - H*.22); for (let i = 0; i < 40; i++) { const a = hash(i, 7575)*Math.PI, r = W*(.06 + hash(i, 7576)*.12), sx = W*.115 + Math.cos(a)*r, sy = H*.24 - Math.sin(a)*H*.06; B2F.line(x, 'rgba(20,28,16,.8)', 1, [[sx, sy], [sx + (hash(i, 7577) - .5)*6, sy + H*(.2 + hash(i, 7578)*.25)]]); } // the willow and its fall
     b75aStalks(x, W, H, ry - H*.06, H, 260, 7579, [38, 48, 30]);
   }), 0, 0, W, H);
   // the far light: on 'slip' the glow breathing and a smoke going up into it; on 'hold' a lantern by the mill-race
-  if (slip) { const lf = mo ? .8 + .2*Math.sin(t/900) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.66, hz - 2, H*.06, '#ff6a2a', .25*lf); ctx.globalCompositeOperation = 'source-over';
-    for (let i = 0; i < 12; i++) { const k = ((mo ? t/12000 : 0) + i/12) % 1, r = H*(.015 + k*.05); ell(ctx, W*.66 + Math.sin(k*3 + i)*W*.02, hz - 6 - k*H*.3, r, r*.8, `rgba(60,40,36,${(.35*(1 - k)).toFixed(2)})`); } }
+  if (slip) { const lf = mo ? .8 + .2*Math.sin(t/900) : 1; if (!grey) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.66, hz - 2, H*.06, '#ff6a2a', .25*lf); ctx.globalCompositeOperation = 'source-over'; }
+    for (let i = 0; i < 12; i++) { const k = ((mo ? t/12000 : 0) + i/12) % 1, r = H*(.015 + k*.05); ell(ctx, W*.66 + Math.sin(k*3 + i)*W*.02, hz - 6 - k*H*.3, r, r*.8, grey ? `rgba(40,36,36,${(.5*(1 - k)).toFixed(2)})` : `rgba(60,40,36,${(.35*(1 - k)).toFixed(2)})`); } }
   else if (held) { const lf = mo ? .8 + .2*Math.sin(t/500) + .05*Math.sin(t/43) : 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.6, hz - 1, H*.03, '#ffb060', .3*lf); glow(ctx, W*.6, hz - 1, 1.6, '#ffe0a0', .9*lf); ctx.globalCompositeOperation = 'source-over'; }
   // a little moving light on the water
   if (mo) for (let i = 0; i < 6; i++) { const yy = H*(.74 + i*.04), xx = (W*hash(i, 7580) + t/(60 + i*20)) % W; ctx.fillStyle = 'rgba(200,210,240,.12)'; ctx.fillRect(xx, yy, 6 + i*2, 1); }
@@ -92994,7 +93034,9 @@ const B7CH7 = {
   scenes:{
     b7_c7_gate:{loc:'Letheras', sub:'The gate · night, then first light', cap:'The walls of Letheras, a great gate shut in them, smoke over the towers beyond, and refugees on the road.', amb:'explore'},
     b7_c7_square:{loc:'Letheras', sub:'Inside the gate · morning', cap:'A cobbled square inside the gate, the gatehouse behind with its doors open, and shuttered houses all round with eyes behind the shutters.', amb:'explore'},
-    b7_c7_after:{loc:'Letheras', sub:'Three weeks on · a canal street', cap:'A canal street in the morning, a footbridge, washing out on the lines, and over the roofs the towers of Letheras with no smoke on them.', amb:'explore'} },
+    b7_c7_after:{loc:'Letheras', sub:'Three weeks on · a canal street', cap:'A canal street in the morning, a footbridge, washing out on the lines, and over the roofs the towers of Letheras with no smoke on them.', amb:'explore'},
+    b7_fin_adjunct:{loc:'Letheras', sub:'The east road · the end of a summer', cap:'The walls of Letheras behind, the army on the east road in a column that goes on out of sight, and a Letherii detachment marching beside it.', amb:'explore'},
+    b7_fin_home:{loc:'At sea', sub:'A transport going west', cap:'A stern rail, the wake going back, and low on the sea behind it the coast of Lether going down.', amb:'explore'} },
 
   end:{
     adjunct:['With the army', 'The Third came to Letheras with the Fist at the gate, and held the counting-house street, and saw the garrison give up from the end of a street. Three weeks on, when the lists came round, it put its names on the one that stays with the army, wherever the Adjunct takes it next.'],
@@ -93562,7 +93604,7 @@ B77FIN.village = id => b77Held() ? `At the mill village on the river, ${id === '
 B77FIN.book = id => [B77FIN.ships(id), B77FIN.room(id), B77FIN.village(id)].filter(Boolean).join(' ');
 
 B77FIN.ending = key => {
-  const T = {adjunct:['With the army', 'b7_c7_after'], letheras:['The new emperor\'s coin', 'b7_c7_after'], home:['A berth home', 'b7_river']}[key] || ['With the army', 'b7_c7_after'];
+  const T = {adjunct:['With the army', 'b7_fin_adjunct'], letheras:['The new emperor\'s coin', 'b7_c7_after'], home:['A berth home', 'b7_fin_home']}[key] || ['With the army', 'b7_fin_adjunct']; // v13.33: each road out of the city its own picture (127b)
   if (typeof S === 'undefined' || !S || !S.f) return {title:T[0], scene:T[1], paras:[]};
   try {
     const mates = b77Mates().map(NAME), n = b77Mates().length + 1, r = b7Rising(), tier = b7RiseTier(r);
@@ -93577,7 +93619,7 @@ B77FIN.ending = key => {
 `There is no road onward from here. The Third is in Letheras, under a new emperor, a long way from any army it was ever part of.`];
     else P = [
 `The army of the Adjunct goes out of Letheras at the end of a summer, east, without the Third. The Third is already at sea by then, on a big-bellied transport going west, with its names on the master's list under *time served*.`,
-`${mates.length ? `${b77And(mates)} ${mates.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.'} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
+`${(rail => rail.length ? `${b77And(rail)} ${rail.length > 1 ? 'are' : 'is'} at the rail with you.` : 'You are at the rail alone.')(b77Mates().filter(id => id !== 'ottar').map(NAME))}${b77Mates().includes('ottar') ? ' Ottar is on the quay with his helm under his arm, and does not wave, and does not go.' : ''} Behind the ship the coast of Lether goes down into the sea, the same coast where the transports burned, and nobody at the rail says so.`,
 `There is no road onward from here. No one is looking for a squad that went home.`];
     P.push(`Lether, at the end: ${B7_RISEW[tier].toLowerCase()} (the Rising stands at ${r} of ${B7_RISEMAX}${b7S().hi > r ? `, and was ${b7S().hi} at its height` : ''}).`);
     return {title:T[0], scene:T[1], paras:P};
@@ -93907,8 +93949,71 @@ SCENEX.b7_c7_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   for (let i = 0; i < 16; i++) { const k = (hash(i, 7760) + (mo ? t/9000 : 0)) % 1; ctx.fillStyle = 'rgba(220,240,240,.18)'; ctx.fillRect(k*W, wy + H*(.06 + hash(i, 7761)*.28), W*.05, 1); }
   // people on the bridge
   for (let i = 0; i < 3; i++) { const k = ((hash(i, 7762) + (mo ? t/30000 : 0)) % 1), px = W*(.36 + k*.28), py = wy - H*.06 - Math.sin(k*Math.PI)*H*.07; drawFigure(ctx, 'b5_c5_refugee', px, py, .6, t, {still:true, dir:i % 2 ? 1 : -1, phase:i}); }
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.12 + i*Math.min(.06, .26/sq.length)), H*.62 - (i % 2)*2, 1.4, t, {phase:i, dir:1, still:true}));
+  // v13.33: on the chapter's end page under 'home' the squad is "going down it with its packs on, toward the river and the ships": walking
+  const go = !!(S && S.scene === 'chend' && S.chapter === 7 && ((S.chapters && S.chapters[7]) || (S.f && S.f.b7_c7_key)) === 'home');
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*((go ? .64 : .12) + i*Math.min(.06, .26/sq.length)), H*.62 - (i % 2)*2, 1.4, t, {phase:i, dir:1, still:go ? !mo : true}));
   vign(ctx, W, H, .5, .3); };
+
+/* ---------------- the roads out (v13.33, pictures against text: each finale road its own picture) ---------------- */
+/* adjunct: "The army of the Adjunct goes out of Letheras at the end of a summer, east, with a Letherii detachment marching beside it": the
+   walls and the gate small behind at the left, the towers over them with no smoke, the east road coming away across stubble fields, the
+   column on it going on out of sight to the right, the detachment in a second file beside it, and the Third near, marching */
+SCENEX.b7_fin_adjunct = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44;
+  const rd = k => [lerp(W*.16, W*1.04, k), lerp(hz + H*.02, H*.9, Math.pow(k, 1.3)), lerp(.42, 1.5, Math.pow(k, 1.2))]; // the road, from the gate (far left) to near right
+  ctx.drawImage(sceneLayer('b77:fin-adjunct', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#6a8aa6'],[.7,'#b4c0c4'],[1,'#e0d4b4']]); x.fillRect(0, 0, W, hz + 2); // a late-summer morning
+    for (let i = 0; i < 5; i++) ell(x, hash(i, 7790)*W, hz*(.15 + hash(i, 7791)*.4), W*(.08 + hash(i, 7792)*.08), hz*.04, 'rgba(255,255,250,.4)');
+    // Letheras behind: towers over a wall, the gatehouse where the road leaves
+    x.save(); x.beginPath(); x.rect(0, 0, W*.42, H); x.clip(); b77aTowers(x, W*.42, hz - H*.05, H*.6, '#7a7e8c', 7793, false); x.restore();
+    x.fillStyle = '#6a6670'; x.fillRect(0, hz - H*.06, W*.4, H*.06); for (let m = 0; m < 20; m++) x.fillRect(m*W*.02, hz - H*.07, W*.01, H*.01);
+    x.fillStyle = '#5a5660'; x.fillRect(W*.12, hz - H*.1, W*.08, H*.1); x.fillStyle = '#2a2420'; x.beginPath(); x.moveTo(W*.145, hz); x.lineTo(W*.145, hz - H*.04); x.quadraticCurveTo(W*.16, hz - H*.06, W*.175, hz - H*.04); x.lineTo(W*.175, hz); x.fill(); // the gate, open
+    // the fields: stubble, gold going brown, and a far line of trees east
+    x.fillStyle = vgrad(x, hz, H, [[0,'#a89a6a'],[.5,'#8a7a4e'],[1,'#5a4c30']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = '#5a6248'; for (let i = 0; i < 18; i++) ell(x, W*(.44 + i*.032), hz - 2, 6 + hash(i, 7794)*5, 4, '#5a6248');
+    for (let i = 0; i < 140; i++) { const d = Math.pow(hash(i, 7795), 1.2), yy = hz + 3 + d*(H - hz); x.fillStyle = `rgba(70,58,34,${(.2 + d*.3).toFixed(2)})`; x.fillRect(hash(i, 7796)*W, yy, 1 + d*3, .8 + d); }
+    { const L = [], R = []; for (let i = 0; i <= 30; i++) { const k = i/30, [px, py] = rd(k), w = lerp(2, 22, Math.pow(k, 1.3)); L.push([px, py - w*.35]); R.push([px, py + w*.35]); } poly(x, L.concat(R.reverse()), 'rgba(196,178,134,.85)'); } // the road
+  }), 0, 0, W, H);
+  // the column on the road, the army going on out of the gate and away past the near edge; the Letherii detachment in its own file, nearer
+  const off = mo ? (t/9000) % (1/26) : 0;
+  for (let i = 0; i < 26; i++) { const k = i/26 + off; if (k > .5) break; const [px, py, s] = rd(k); drawFigure(ctx, 'b2soldier', px, py - 2*s, s*.9, t, {dir:1, phase:i, still:!mo}); }
+  for (let i = 0; i < 14; i++) { const k = .05 + i/26 + off; if (k > .5) break; const [px, py, s] = rd(k); drawFigure(ctx, 'b5_letherii', px + 4*s, py + 7*s, s*.9, t, {dir:1, phase:i + 2, still:!mo}); }
+  // a standard near the head of the visible column
+  { const [px, py, s] = rd(.4); ctx.fillStyle = '#2a2018'; ctx.fillRect(px, py - 40*s, 1.4*s, 36*s); ctx.fillStyle = '#5a3a5a'; ctx.fillRect(px + 1.4*s, py - 40*s, 12*s, 8*s); }
+  // the Third, near, in the middle of the lieutenant's lot
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const [px, py, s] = rd(.56 + i*Math.min(.06, .3/sq.length)); drawFigure(ctx, id, px, py - 3*s, s*1.05, t, {phase:i, dir:1, still:!mo}); });
+  vign(ctx, W, H, .45, .3); };
+
+/* home: "The Third is already at sea by then, on a big-bellied transport going west ... at the rail ... Behind the ship the coast of Lether
+   goes down into the sea": a stern rail, open water, the wake going back east, and low on the horizon behind a dark line of coast half under
+   it. Ottar does not take the ship (his fate line), so he is not at the rail */
+SCENEX.b7_fin_home = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, deck = H*.84;
+  const roll = mo ? Math.sin(t/1800)*.014 : 0, heave = mo ? Math.sin(t/1300)*H*.01 : 0;
+  ctx.drawImage(sceneLayer('b77:fin-home:sky', W, H, (x, W, H) => { x.fillStyle = vgrad(x, 0, H*.6, [[0,'#4e6c88'],[.6,'#9cacb4'],[1,'#d4ccb4']]); x.fillRect(0, 0, W, H*.6);
+    for (let i = 0; i < 6; i++) ell(x, hash(i, 7781)*W, H*(.06 + hash(i, 7782)*.24), W*(.1 + hash(i, 7783)*.1), H*.025, 'rgba(240,240,236,.35)'); }), 0, 0, W, H);
+  ctx.save(); ctx.translate(W/2, deck); ctx.rotate(roll); ctx.translate(-W/2, -deck + heave);
+  ctx.drawImage(sceneLayer('b77:fin-home:sea', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, hz, H*1.1, [[0,'#5a7080'],[.4,'#3a5262'],[1,'#162430']]); x.fillRect(-W*.1, hz, W*1.2, H*.7);
+    // the coast going down: a long low dark line on the horizon, a headland at one end, most of it already under the sea's edge
+    x.fillStyle = '#3e4a50'; x.beginPath(); x.moveTo(W*.08, hz + 1); for (let i = 0; i <= 30; i++) { const u = i/30, px = W*(.08 + u*.7); x.lineTo(px, hz - H*(.006 + .012*Math.sin(u*3.2) + (u > .7 ? (u - .7)*.08 : 0)) - hash(i, 7784)*H*.004); } x.lineTo(W*.78, hz + 1); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(220,226,226,.35)'; x.fillRect(-W*.1, hz, W*1.2, 1); // the horizon over it
+    for (let r = 0; r < 24; r++) { const y = hz + H*.03 + Math.pow(r/24, 1.6)*H*.42, k = r/24; x.strokeStyle = `rgba(${r % 3 ? '20,32,40' : '180,196,200'},${(.12 + k*.16).toFixed(2)})`; x.lineWidth = .6 + k*1.3; x.beginPath();
+      for (let i = 0; i <= 20; i++) { const xx = -W*.1 + i*W*.06, yy = y + Math.sin(i*1.3 + r*2.1)*(1 + k*4); i ? x.lineTo(xx, yy) : x.moveTo(xx, yy); } x.stroke(); } // the swell
+    // the wake, going back from under the stern toward the coast, narrowing
+    x.fillStyle = 'rgba(226,234,236,.35)'; x.beginPath(); x.moveTo(W*.4, H*.9); x.lineTo(W*.47, hz + H*.04); x.lineTo(W*.49, hz + H*.04); x.lineTo(W*.66, H*.9); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(40,60,70,.35)'; x.beginPath(); x.moveTo(W*.47, H*.9); x.lineTo(W*.48, hz + H*.06); x.lineTo(W*.59, H*.9); x.closePath(); x.fill();
+  }), 0, 0, W, H);
+  for (let i = 0; i < 26; i++) { const k = hash(i, 7785), y = hz + H*.04 + k*k*H*.38, xx = ((hash(i, 7786)*W*1.2 + t*mo*(.003 + k*.01)) % (W*1.2)) - W*.1; ctx.fillStyle = `rgba(226,232,232,${(.08 + .22*hash(i, 7787)*k).toFixed(2)})`; ctx.fillRect(xx, y, 3 + 12*k, 1 + k); } // whitecaps going by
+  // the stern: the taffrail across, its stanchions, a stern lantern on its bracket, the deck
+  ctx.fillStyle = vgrad(ctx, deck, H*1.05, [[0,'#5a4a36'],[1,'#2a2218']]); ctx.fillRect(-W*.1, deck, W*1.2, H*.3);
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-W*.1, deck + H*.04 + i*H*.045); ctx.lineTo(W*1.1, deck + H*.04 + i*H*.045); ctx.stroke(); }
+  ctx.fillStyle = '#3e3022'; ctx.fillRect(-W*.1, deck - H*.11, W*1.2, H*.024); ctx.fillStyle = 'rgba(255,244,220,.25)'; ctx.fillRect(-W*.1, deck - H*.11, W*1.2, 1.2);
+  ctx.fillStyle = '#30261a'; for (let i = 0; i < 9; i++) ctx.fillRect(W*(.03 + i*.12), deck - H*.09, W*.012, H*.09);
+  ctx.fillStyle = '#2a2016'; ctx.fillRect(W*.52, deck - H*.26, W*.008, H*.16); ctx.fillRect(W*.52, deck - H*.26, W*.03, H*.008); ctx.fillStyle = '#1e1a14'; ctx.fillRect(W*.538, deck - H*.25, W*.022, H*.04); ctx.fillStyle = 'rgba(240,220,170,.5)'; ctx.fillRect(W*.542, deck - H*.243, W*.014, H*.026); // the stern lantern, unlit by day
+  ctx.restore();
+  for (let i = 0; i < 3; i++) { const a = mo ? t/(1900 + i*300) + i*1.7 : i*1.7, gx = W*(.3 + i*.16) + Math.cos(a)*W*.05, gy = H*(.16 + i*.04) + Math.sin(a*1.3)*H*.03, f = mo ? Math.sin(t/140 + i*2)*1.6 : 1; // gulls, still following from the coast
+    ctx.strokeStyle = 'rgba(40,44,50,.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx - 5, gy - f); ctx.quadraticCurveTo(gx - 2, gy - 2, gx, gy); ctx.quadraticCurveTo(gx + 2, gy - 2, gx + 5, gy - f); ctx.stroke(); }
+  const sq = marchOrder(sceneSquad()).filter(id => id !== 'ottar'); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, i < Math.ceil(sq.length/2) ? W*(.08 + i*.085) : W*(.66 + (i - Math.ceil(sq.length/2))*.085), deck + H*.13 + heave*.5, 1.6, t, {phase:i, dir:i < Math.ceil(sq.length/2) ? 1 : -1, still:!mo})); // at the rail either side of the wake, looking back
+  vign(ctx, W, H, .45, .45); };
 
 /* ---------------- the chapter's gear: ART['item/<key>'] in the series' 200×150 item style (089g), on Book Six's smoke-umber ground ---------------- */
 (function(){
@@ -96962,18 +97067,22 @@ SCENEX.b8_c1_den = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   vign(ctx, W, H, .78, .55); };
 
 /* the Gadrobi roofs at night: ridges and wet slate going away east, chimneys, a tarred line strung between two of them on iron hooks, fog
-   lying in the streets below like milk in a bowl, the moon over it all (whole, this winter), the upper city's blue fire far off */
+   lying in the streets below like milk in a bowl, no moon or stars through it (v13.33), the upper city's blue fire far off */
 SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4;
   ctx.drawImage(sceneLayer('b81:roofs', W, H, (x, W, H) => {
-    b81Sky(x, W, H, hz, 8180); glow(x, W*.78, H*.12, H*.2, '#dfe6f0', .2); ell(x, W*.78, H*.12, H*.04, H*.04, '#e8e4d6'); ell(x, W*.774, H*.114, H*.012, H*.01, 'rgba(160,156,140,.4)'); // the moon
+    // v13.33 (pictures against text): "under the fog ... like milk in a bowl": a night with the fog up off the lake, no stars and no moon
+    // through it, the upper city's blue fire showing through the haze, and the fog lying thick and pale between the ridges
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#0a0e16'],[.6,'#161e2c'],[1,'#26324a']]); x.fillRect(0, 0, W, hz + 2);
     x.fillStyle = vgrad(x, hz, H, [[0,'#141a26'],[1,'#06070a']]); x.fillRect(0, hz, W, H - hz); // the city under the fog, below the skyline
     b81Upper(x, W, H, hz, 8186, 1.1);
-    x.fillStyle = vgrad(x, hz - H*.02, hz + H*.12, [[0,'rgba(140,160,190,0)'],[.4,'rgba(140,160,190,.12)'],[1,'rgba(140,160,190,0)']]); x.fillRect(0, hz - H*.02, W, H*.14); // fog in the city below the skyline
+    x.fillStyle = vgrad(x, hz*.4, hz + H*.04, [[0,'rgba(120,140,170,0)'],[1,'rgba(120,140,170,.3)']]); x.fillRect(0, hz*.4, W, hz*.6 + H*.04); // haze over the upper city
+    x.fillStyle = vgrad(x, hz - H*.02, hz + H*.16, [[0,'rgba(150,168,196,.1)'],[.4,'rgba(150,168,196,.42)'],[1,'rgba(150,168,196,.2)']]); x.fillRect(0, hz - H*.02, W, H*.18); // the fog in the streets, like milk in a bowl
     // the roofs: three ridges, near to far
     [[.56, '#16181e', 8190], [.7, '#101216', 8191], [.86, '#0a0b0e', 8192]].forEach(([v, c, sd], k) => { x.fillStyle = c; x.beginPath(); x.moveTo(0, H);
       for (let i = 0; i <= 12; i++) { const u = i/12, yy = H*v - (i % 2 ? H*.06 : 0) + hash(i, sd)*H*.02; x.lineTo(u*W, yy); } x.lineTo(W, H); x.closePath(); x.fill();
       x.strokeStyle = `rgba(140,170,210,${(.12 + k*.04).toFixed(2)})`; x.lineWidth = .7; x.beginPath(); for (let i = 0; i <= 12; i++) { const u = i/12, yy = H*v - (i % 2 ? H*.06 : 0) + hash(i, sd)*H*.02; x.lineTo(u*W, yy); } x.stroke(); // wet slate catching the light
-      for (let i = 0; i < 3; i++) { const cxp = W*(.1 + hash(i, sd + 3)*.8), ch = H*(.05 + k*.02); x.fillStyle = c; x.fillRect(cxp, H*v - H*.04 - ch, W*(.02 + k*.006), ch + H*.04); } }); // chimneys
+      for (let i = 0; i < 3; i++) { const cxp = W*(.1 + hash(i, sd + 3)*.8), ch = H*(.05 + k*.02); x.fillStyle = c; x.fillRect(cxp, H*v - H*.04 - ch, W*(.02 + k*.006), ch + H*.04); } // chimneys
+      if (k < 2) { x.fillStyle = vgrad(x, H*v + H*.02, H*v + H*.16, [[0,'rgba(140,158,186,.34)'],[1,'rgba(140,158,186,0)']]); x.fillRect(0, H*v + H*.02, W, H*.14); } }); // the fog lying in the street between this ridge and the next
     // the two chimneys that hold the line, near, left and right
     x.fillStyle = '#0e0f12'; x.fillRect(W*.14, H*.5, W*.05, H*.38); x.fillRect(W*.78, H*.58, W*.045, H*.3); x.fillStyle = '#1e2026'; x.fillRect(W*.135, H*.49, W*.06, H*.02); x.fillRect(W*.775, H*.57, W*.055, H*.02);
   }), 0, 0, W, H);
@@ -96981,7 +97090,7 @@ SCENEX.b8_c1_roofs = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const ax = W*.19, ay = H*.54, bx = W*.78, by = H*.6; B2F.line(ctx, '#5a5a64', 1.2, [[ax, ay], [bx, by]]); ctx.fillStyle = '#4a4a50'; ctx.fillRect(ax - 2, ay - 1.5, 3, 3); ctx.fillRect(bx - 1, by - 1.5, 3, 3);
   if (mo) { const k = (t/3000) % 1; ctx.globalCompositeOperation = 'lighter'; glow(ctx, ax + (bx - ax)*k, ay + (by - ay)*k, 6, '#8ab8ff', .5); ctx.globalCompositeOperation = 'source-over'; }
   for (let i = 1; i < 6; i++) { const u = i/6; ell(ctx, ax + (bx - ax)*u, ay + (by - ay)*u, 1.2, 1.2, '#2a2620'); } // the knots
-  b81Fog(ctx, W, H, H*.62, t, mo, .12);
+  b81Fog(ctx, W, H, H*.62, t, mo, .2); b81Fog(ctx, W, H, H*.46, t + 3000, mo, .18);
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.07, .36/sq.length)), H*.96 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .7, .5); };
 
@@ -100041,7 +100150,16 @@ SCENEX.b8_camp_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
   b84Haze(ctx, W, H*.52, H*.08, t, mo, .09);
   b84Tin(ctx, W*.2, H*.62, H/300, t, mo, 0); // Mossa's lamp
   b84Fire(ctx, W*.48, H*.86, H/300, t);
-  if (S && S.f && (S.f.b8_c4_ph || 1) < 4 && !S.f.b8_c4_waterDone) [[.78, 1], [.86, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b4_c2_pilgrim', W*u, H*.8, 1.3, t, {dir:d, phase:i})); else drawFigure(ctx, 'b8_c4_carrier', W*.8, H*.8, 1.3, t, {dir:-1, phase:1});
+  /* v13.33 (pictures against text): the chapter's end page is "the camp's far edge in the morning, by the bells" (both captions); the sky
+     over Black Coral stays dark by canon, so the morning is in what the camp is doing: carriers going among the sick along the near row
+     (hold), or a smear of smoke over the store-yard and the water line working at the cart (burn) */
+  const end = !!(S && S.book === 'tth' && S.scene === 'chend' && S.chapter === 4), ek = end ? ((S.f && S.f.b8_c4_key) || (S.chapters && S.chapters[4]) || 'hold') : '';
+  if (ek === 'burn') { for (let i = 0; i < 9; i++) { const k = ((mo ? t/16000 : 0) + i/9) % 1; ell(ctx, W*(.6 + k*.12) + Math.sin(i)*W*.01, hz - H*.02 - k*H*.12, W*(.03 + k*.07), H*(.015 + k*.02), `rgba(70,66,70,${(.4*(1 - k*.7)).toFixed(2)})`); } // the smear over the store-yard
+    ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.6, hz + H*.02, H*.05, '#c0502a', .14); ctx.globalCompositeOperation = 'source-over';
+    [[.72, 1], [.76, 1], [.88, -1], [.92, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b8_c4_carrier', W*u, H*.8 + (i % 2)*2, 1.2, t, {dir:d, phase:i})); } // the water line at the cart
+  else if (ek === 'hold') { [[.66, .74, 1], [.8, .8, -1], [.12, .82, 1]].forEach(([u, v, d], i) => drawFigure(ctx, 'b8_c4_carrier', W*u, H*v, 1.25, t, {dir:d, phase:i + 1}));
+    for (let i = 0; i < 4; i++) drawFigure(ctx, 'b8_c4_carrier', W*(.08 + i*.16), hz + H*(.07 + (i % 2)*.03), .6, t, {dir:i % 2 ? 1 : -1, phase:i, alpha:.8}); } // carriers among the sick, near and along the far rows
+  else if (S && S.f && (S.f.b8_c4_ph || 1) < 4 && !S.f.b8_c4_waterDone) [[.78, 1], [.86, -1]].forEach(([u, d], i) => drawFigure(ctx, 'b4_c2_pilgrim', W*u, H*.8, 1.3, t, {dir:d, phase:i})); else drawFigure(ctx, 'b8_c4_carrier', W*.8, H*.8, 1.3, t, {dir:-1, phase:1});
   drawFigure(ctx, 'b8_c4_mossa', W*.24, H*.78, 1.35, t, {dir:1, phase:2, still:true});
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.34 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .74, .5); };
@@ -101913,9 +102031,13 @@ Up on the hill, somewhere, a bell begins.`,
 /* ---------------- shared pieces ---------------- */
 /* the moon by the night's hour: 'crack' (one clean crack, a sliver standing apart), 'pieces' (hanging apart, still bright), 'burst' (gone:
    a white place in the sky, the light trailing east) */
-const b86MoonState = () => { const f = (S && S.f) || {}; return f.b8_c6_burst ? 'burst' : (f.b8_c6_ph || 1) >= 2 || f.b8_c6_turned ? 'pieces' : 'crack'; };
+/* v13.33 (pictures against text): the chapter's end page is "toward morning ... the sky over the city white where the moon was" (both
+   captions): 'gone', after the burst, the light already gone east, so no trails: a pale sky and a whiter place in it, nothing else */
+const b86End = () => !!(S && S.book === 'tth' && S.scene === 'chend' && S.chapter === 6);
+const b86MoonState = () => { const f = (S && S.f) || {}; if (b86End()) return 'gone'; return f.b8_c6_burst ? 'burst' : (f.b8_c6_ph || 1) >= 2 || f.b8_c6_turned ? 'pieces' : 'crack'; };
 function b86Moon(ctx, cx, cy, r, t, mo, state = b86MoonState()){
   ctx.globalCompositeOperation = 'lighter';
+  if (state === 'gone') { glow(ctx, cx, cy, r*10, '#f0ece0', .18); glow(ctx, cx, cy, r*4, '#f8f6ee', .12); ctx.globalCompositeOperation = 'source-over'; return; }
   if (state === 'burst') { glow(ctx, cx, cy, r*9, '#f4f0e2', .22); glow(ctx, cx, cy, r*3, '#ffffff', .3);
     for (let i = 0; i < 7; i++) { const a = -.35 + i*.12, len = r*(6 + hash(i, 8601)*5); ctx.strokeStyle = `rgba(244,240,226,${(.12 + hash(i, 8602)*.12).toFixed(2)})`; ctx.lineWidth = 1 + hash(i, 8603)*2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a)*len, cy + Math.sin(a)*len*.4); ctx.stroke(); } // the light going east, in pieces
     ctx.globalCompositeOperation = 'source-over'; return; }
@@ -101928,6 +102050,10 @@ function b86Moon(ctx, cx, cy, r, t, mo, state = b86MoonState()){
     const px = cx + dx*r*1.3, py = cy + dy*r*1.3 + bob*(i % 2 ? 1 : -1), rr = r*k;
     poly(ctx, [[px - rr, py - rr*.2], [px - rr*.3, py - rr], [px + rr*.8, py - rr*.6], [px + rr, py + rr*.4], [px + rr*.1, py + rr], [px - rr*.8, py + rr*.6]], i % 2 ? '#e0dac8' : '#d4ceba');
     ctx.strokeStyle = 'rgba(40,40,48,.6)'; ctx.lineWidth = 1; ctx.stroke(); }); }
+/* fires burned low on the roofs: a dull red along the roofline and a thin smoke, no flame */
+function b86Embers(ctx, x0, x1, base, H, t, mo){ ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 5; i++) { const fx = x0 + (x1 - x0)*(i + .5)/5 + (hash(i, 8691) - .5)*(x1 - x0)*.1, fl = mo ? .85 + .15*Math.sin(t/600 + i) : 1; glow(ctx, fx, base, H*.06*(.6 + hash(i, 8692)), '#c0502a', .14*fl); }
+  ctx.globalCompositeOperation = 'source-over'; }
 /* smoke drifting across the sky, lit from below by the fire */
 function b86Smoke(ctx, W, H, y0, t, mo, a = .22){ for (let i = 0; i < 6; i++) { const dx = mo ? ((t/(9000 + i*1300) + i*.17) % 1)*W*.3 : i*W*.05;
   ctx.fillStyle = `rgba(${40 + i*6},${30 + i*4},${30 + i*4},${(a - i*.025).toFixed(3)})`; ctx.beginPath(); ctx.ellipse(W*(-.1 + i*.22) + dx, y0 + (i % 3)*H*.04, W*.34, H*.06, -.08, 0, 7); ctx.fill(); } }
@@ -101969,9 +102095,10 @@ SCENEX.b8_c6_fete = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
 
 /* the same street after the night broke: the lanterns out, fire over the roofs, smoke, the moon in pieces (or the white sky after it burst);
    a Hound going by the far end while one is in the street */
-SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, st = b86MoonState(), white = st === 'burst';
-  ctx.drawImage(sceneLayer('b86:burning' + (white ? 'w' : ''), W, H, (x, W, H) => {
-    if (white) { x.fillStyle = vgrad(x, 0, hz, [[0,'#3a3c44'],[.6,'#5a5a60'],[1,'#6a5a50']]); x.fillRect(0, 0, W, hz + 2); }
+SCENEX.b8_c6_burning = (cv, t) => { if (b86End() && S.f && S.f.b8_c6_key === 'wall') return SCENEX.b8_wall_night(cv, t); // the 'wall' end page is the east wall
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, st = b86MoonState(), white = st === 'burst' || st === 'gone';
+  ctx.drawImage(sceneLayer('b86:burning' + (white ? 'w' : '') + (st === 'gone' ? 'g' : ''), W, H, (x, W, H) => {
+    if (white) { x.fillStyle = vgrad(x, 0, hz, st === 'gone' ? [[0,'#4a4e58'],[.6,'#7a7a7e'],[1,'#8a7e74']] : [[0,'#3a3c44'],[.6,'#5a5a60'],[1,'#6a5a50']]); x.fillRect(0, 0, W, hz + 2); }
     else b81Sky(x, W, H, hz, 8621, '#3a2420');
     b81Upper(x, W, H, hz, 8622, .8);
     x.fillStyle = vgrad(x, hz, H, [[0,'#1a1414'],[1,'#07070a']]); x.fillRect(0, hz, W, H - hz);
@@ -101984,6 +102111,7 @@ SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     x.fillStyle = 'rgba(0,0,0,.4)'; x.fillRect(W*.2, H*.66, W*.05, H*.2); // the Fourth's door, barred
   }), 0, 0, W, H);
   if (!white) b86Fire(ctx, W*.32, W*.68, H*.31, H, t, mo, 8630);
+  else if (st === 'gone') b86Embers(ctx, W*.32, W*.68, H*.31, H, t, mo); // the fires on the roofs burned down
   b86Moon(ctx, W*.66, H*.1, H*.065, t, mo, st);
   b86Smoke(ctx, W, H, H*.14, t, mo, white ? .12 : .24);
   b86Lanterns(ctx, -4, H*.24, W + 4, H*.27, 11, H/200, t, mo, true, 1);
@@ -102001,10 +102129,11 @@ SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 
 /* the east wall from the Gadrobi side (140's caption): a long wall, the gap full of fallen stone with the dark plain through it, the watch's
    brazier on its side, fire and smoke over the roofs behind, the moon in pieces; the squad small at the foot */
-SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wt = H*.3, wb = H*.66, gx0 = W*.46, gx1 = W*.62, st = b86MoonState(), white = st === 'burst';
-  ctx.drawImage(sceneLayer('b86:wall' + (white ? 'w' : '') + (S && S.f && S.f.b8_c6_cartSet ? 'c' : ''), W, H, (x, W, H) => {
-    if (white) { x.fillStyle = vgrad(x, 0, wb, [[0,'#3a3c44'],[1,'#5a5450']]); x.fillRect(0, 0, W, wb); }
+SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wt = H*.3, wb = H*.66, gx0 = W*.46, gx1 = W*.62, st = b86MoonState(), white = st === 'burst' || st === 'gone';
+  ctx.drawImage(sceneLayer('b86:wall' + (white ? 'w' : '') + (st === 'gone' ? 'g' : '') + (S && S.f && S.f.b8_c6_cartSet ? 'c' : ''), W, H, (x, W, H) => {
+    if (white) { x.fillStyle = vgrad(x, 0, wb, st === 'gone' ? [[0,'#4a4e58'],[1,'#8a8278']] : [[0,'#3a3c44'],[1,'#5a5450']]); x.fillRect(0, 0, W, wb); }
     else b81Sky(x, W, H, wb, 8641, '#2a2024');
+    x.fillStyle = '#0c0c10'; x.fillRect(0, wb, W, H*.07); // the ground at the wall's foot (v13.33: the pale sky no longer shows under the wall)
     x.fillStyle = '#05060a'; x.fillRect(gx0, wb - H*.04, gx1 - gx0, H*.04); // the plain through the gap, flat and dark
     // the wall: dressed stone, two tones, with a walk along the top and crenels
     const wall = (a, b) => { x.fillStyle = vgrad(x, wt, wb, [[0,'#2a2a30'],[1,'#141418']]); x.fillRect(a, wt, b - a, wb - wt);
@@ -102022,10 +102151,12 @@ SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     if (S && S.f && S.f.b8_c6_cartSet) { x.fillStyle = '#2a1e14'; x.fillRect(gx0 + 6, wb + H*.02, gx1 - gx0 - 12, H*.04); ell(x, gx0 + 20, wb + H*.06, 8, 8, '#120c08'); }
   }), 0, 0, W, H);
   if (!white) b86Fire(ctx, -W*.02, W*.3, H*.29, H, t, mo, 8650); // the Gadrobi roofs burning behind, left
+  else if (st === 'gone') b86Embers(ctx, -W*.02, W*.3, H*.29, H, t, mo);
   b86Moon(ctx, W*.72, H*.12, H*.065, t, mo, st);
   b86Smoke(ctx, W, H, H*.1, t, mo, white ? .1 : .22);
   if (!white) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.26, H*.84, H*.1, '#ff8a3a', mo ? .16 + .04*Math.sin(t/200) : .16); ctx.globalCompositeOperation = 'source-over'; }
-  drawFigure(ctx, 'guard', W*.36, H*.8, 1.2, t, {dir:1, still:true});
+  if (st === 'gone') [[.5, .7, 1], [.57, .72, -1]].forEach(([u, v, d], i) => drawFigure(ctx, 'guard', W*u, H*v, 1.05, t, {dir:d, still:true, phase:i, alpha:.9})); // the watch on the rubble, toward morning
+  else drawFigure(ctx, 'guard', W*.36, H*.8, 1.2, t, {dir:1, still:true});
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.5 + i*Math.min(.055, .28/sq.length)), H*.96 - (i % 2)*2, 1.6, t, {phase:i, dir:-1}));
   vign(ctx, W, H, .7, .5); };
 
@@ -102955,7 +103086,12 @@ function b87Smoke(ctx, sx, sy, W, H, t, mo, a = .3){ for (let i = 0; i < 7; i++)
 /* ---------------- the backdrops ---------------- */
 /* the lake shore (140's caption): grey water to a far shore lost in haze, boats drawn up on the shingle, a jetty, and behind on the right
    the city on its hill with smoke going up from the Gadrobi side; at first light pewter and rose, at dusk slate with the blue lamps coming on */
-SCENEX.b8_lakeshore = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, dusk = !!(S && S.book === 'tth' && S.f && (S.f.b8_c7_ph || 1) >= 3 && S.chapter === 7);
+/* v13.33 (pictures against text): the chapter's end page follows its key: daru "the lake shore at dusk" (this scene at dusk); coral "the east
+   road at dawn, the city behind" (the road out, empty now, at first light); east "a lake boat at first light, loaded, the city going away
+   behind it" (this shore at first light, the squad in a laden boat out on the water) */
+const b87EndKey = () => (S && S.book === 'tth' && S.scene === 'chend' && S.chapter === 7) ? ((S.f && S.f.b8_c7_key) || (S.chapters && S.chapters[7]) || 'daru') : '';
+SCENEX.b8_lakeshore = (cv, t) => { const ek = b87EndKey(); if (ek === 'coral') return SCENEX.b8_morning(cv, t);
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, dusk = ek !== 'east' && !!(S && S.book === 'tth' && S.f && (S.f.b8_c7_ph || 1) >= 3 && S.chapter === 7);
   ctx.drawImage(sceneLayer('b87:shore' + (dusk ? 'd' : ''), W, H, (x, W, H) => {
     b87Sky(x, W, hz, dusk); b87City(x, W*.56, W*1.02, hz + H*.02, H, 8720, dusk);
     x.fillStyle = vgrad(x, hz, H*.7, dusk ? [[0,'#262c38'],[1,'#141820']] : [[0,'#8a8a8c'],[1,'#4a4e56']]); x.fillRect(0, hz, W, H*.7 - hz); // the water
@@ -102970,27 +103106,36 @@ SCENEX.b8_lakeshore = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
   if (dusk) [[.08, .67], [.22, .66], [.5, .67], [.9, .66]].forEach(([u, v], i) => b81Lamp(ctx, W*u, H*v, H/380, t, mo, i));
   if (!dusk) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.2, hz, W*.4, '#e0a088', .1); ctx.globalCompositeOperation = 'source-over'; } // the light coming up over the water
   else if (typeof b84Fire === 'function') b84Fire(ctx, W*.4, H*.88, H/300, t);
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.06, .34/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  const sq = marchOrder(sceneSquad());
+  if (ek === 'east') { const bob = mo ? Math.sin(t/1400)*H*.006 : 0, by = H*.6 + bob, bx0 = W*.16, bx1 = W*.16 + Math.max(W*.3, sq.length*W*.06 + W*.1); // out on the water, going away west (left)
+    squadLine(sq, 1, (id, i) => drawFigure(ctx, id, bx0 + W*.07 + i*W*.06, by - H*.01, 1.25, t, {phase:i, dir:-1, still:true}));
+    b87Boat(ctx, bx0, bx1, by, H); }
+  else squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.3 + i*Math.min(.06, .34/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
   vign(ctx, W, H, .74, .45); };
+/* a laden lake boat side-on, drawn over the people in it: the hull, a gunwale, bales and a cask in the bow, an oar out, the wake behind */
+function b87Boat(ctx, x0, x1, y, H){ const h = H*.07; ctx.fillStyle = 'rgba(230,220,210,.25)'; ctx.fillRect(x1, y + h*.6, (x1 - x0)*.6, 1.4);
+  poly(ctx, [[x0 - h*.6, y - h*.1], [x1 + h*.3, y - h*.2], [x1 - h*.2, y + h*.7], [x0 + h*.2, y + h*.7]], '#4a3a28'); ctx.fillStyle = '#6a5438'; ctx.fillRect(x0 - h*.5, y - h*.18, x1 - x0 + h*.7, h*.14);
+  ctx.fillStyle = '#5a4a34'; ctx.fillRect(x0 - h*.1, y - h*.6, h*.7, h*.45); ctx.fillStyle = '#6a5a3a'; ctx.fillRect(x0 + h*.6, y - h*.5, h*.5, h*.35); ell(ctx, x0 + h*.3, y - h*.62, h*.3, h*.08, '#7a6a4a'); // bales and a cask, forward
+  B2F.line(ctx, '#2a2016', 1.4, [[x1 - h*.4, y - h*.05], [x1 + h*.8, y + h*.9]]); }
 
 /* the road behind the cart (140's caption): a long rise going away north; the crowd on it, hedge to hedge and over the fields either side,
    a dark river of heads thinning to dots; at the head of it, far off on the skyline, the speck of a cart and an ox and a man; behind, at
    the left edge, the city with its towers and its bells and the smoke; the Fourth at the very front of the picture, at the very back */
-SCENEX.b8_morning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4;
-  ctx.drawImage(sceneLayer('b87:road', W, H, (x, W, H) => {
+SCENEX.b8_morning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.4, empty = b87EndKey() === 'coral'; // the coral end page: the road at dawn, the crowd and the cart long gone
+  ctx.drawImage(sceneLayer('b87:road' + (empty ? ':e' : ''), W, H, (x, W, H) => {
     b87Sky(x, W, hz, false); b87City(x, -W*.04, W*.26, hz + H*.04, H, 8750, false);
     x.fillStyle = vgrad(x, hz, H, [[0,'#5a5e48'],[1,'#2e3226']]); x.fillRect(0, hz, W, H - hz); // the fields
     poly(x, [[W*.5, hz + H*.01], [W*.53, hz + H*.01], [W*.82, H], [W*.18, H]], '#6a6450'); // the road going away
     // the crowd: heads in rows, thick near, thin to dots on the rise
-    for (let i = 0; i < 900; i++) { const d = Math.pow(hash(i, 8760), 1.4), yy = hz + H*.015 + d*(H*.86 - hz), spread = W*(.04 + d*.62), cx = W*.515 + (hash(i, 8761) - .5)*spread*1.6;
+    if (!empty) for (let i = 0; i < 900; i++) { const d = Math.pow(hash(i, 8760), 1.4), yy = hz + H*.015 + d*(H*.86 - hz), spread = W*(.04 + d*.62), cx = W*.515 + (hash(i, 8761) - .5)*spread*1.6;
       const r = .7 + d*2.6; ell(x, cx, yy, r, r*.9, hash(i, 8762) > .85 ? '#3a2e26' : hash(i, 8762) > .6 ? '#26282c' : '#1c1c20'); }
     // the cart at the head of it, a speck on the skyline: an ox, a cart, a big man at the ox's head
-    { const cx = W*.515, cy = hz + H*.006, s = H/700; x.fillStyle = '#1a1814'; x.fillRect(cx - 6*s, cy - 3*s, 9*s, 3*s); ell(x, cx + 5*s, cy - 2*s, 3*s, 2*s, '#1a1814'); x.fillRect(cx + 9*s, cy - 6*s, 1.6*s, 6*s); }
+    if (!empty) { const cx = W*.515, cy = hz + H*.006, s = H/700; x.fillStyle = '#1a1814'; x.fillRect(cx - 6*s, cy - 3*s, 9*s, 3*s); ell(x, cx + 5*s, cy - 2*s, 3*s, 2*s, '#1a1814'); x.fillRect(cx + 9*s, cy - 6*s, 1.6*s, 6*s); }
     x.fillStyle = 'rgba(0,0,0,.22)'; x.fillRect(0, H*.9, W, H*.1);
   }), 0, 0, W, H);
   b87Smoke(ctx, W*.18, hz - H*.02, W, H, t, mo, .24);
   [[.04, .9], [.12, 1], [.2, .8]].forEach(([u, k], i) => b87Tower(ctx, W*u, hz + H*.04 - H*.04*k, H/360*k, t, mo, i, false));
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.36 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:-1}));
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.36 + i*Math.min(.06, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:empty ? 1 : -1}));
   if (S && S.f && S.f.b8_c7_ph === 2 && S.f.b8_c7_road && !S.f.b8_c7_guardian) drawFigure(ctx, 'b8_c7_guardian', W*.86, H*.98, 1.8, t, {dir:-1, still:true});
   vign(ctx, W, H, .72, .45); };
 
@@ -116079,6 +116224,7 @@ SCENEX.b10_south = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
     for (let i = 0; i < 2; i++) { ctx.fillStyle = '#2e2620'; ctx.fillRect(W*(.68 + i*.05), hz + H*.06, H*.012, H*.012); } } // two riders among them, small
   for (let i = 0; i < 10; i++) { const q = ((t/12000*mo + hash(i, 10246)) % 1); ctx.fillStyle = `rgba(230,214,180,${(.18*(1 - q)).toFixed(2)})`; ctx.fillRect(W*(.1 + hash(i, 10247)*.8) + q*W*.04, H*(.5 + hash(i, 10248)*.4) - q*H*.03, 1.2, 1.2); }
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 3 && typeof b10Eve === 'function') b10Eve(ctx, W, H, H*.44); // v13.33: Ch3's 'south' end page is "the road south at dusk"
   vign(ctx, W, H, .5, .5); };
 
 /* the rise at dusk: the glass catching the last light and the long line going out onto it; on 'adjunct' the companies going over the rise */
@@ -116941,9 +117087,17 @@ function b103aColumn(x, W, H, hz, n){ for (let i = 0; i < n; i++) { const u = i/
     if (i % 7 === 4) { b92aWagon(x, px, py, s*.32, 'night', false); continue; }
     for (let j = 0; j < 3; j++) { x.fillStyle = '#07080c'; x.fillRect(px + j*2.4*s, py - 5*s, 1.3*s, 5*s); ell(x, px + j*2.4*s + .6*s, py - 5.8*s, .8*s, .8*s, '#07080c'); x.fillStyle = 'rgba(150,170,210,.18)'; x.fillRect(px + j*2.4*s, py - 5*s, .4*s, 4*s); } } }
 
+/* v13.33 (pictures against text): an evening light laid over a finished day picture, for end pages whose captions say dusk or evening while
+   their scene is drawn by day: the sky taken down to dusk blue and rose, the horizon warm in the west (left), the ground darkened */
+function b10Eve(ctx, W, H, hz, k = 1){ const h = hz/H; ctx.save(); ctx.globalAlpha = k; ctx.globalCompositeOperation = 'multiply';
+  ctx.fillStyle = vgrad(ctx, 0, H, [[0,'#2e3260'],[h*.55,'#7a5a7a'],[h*.92,'#e8a070'],[Math.min(1, h + .04),'#b08068'],[1,'#4a3c48']]); ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.08, hz, W*.5, '#ff9a50', .2); ctx.restore(); }
+const b103aEnd = () => !!(S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 3);
+
 /* ---------------- the backdrops ---------------- */
-/* lying up by day (180's caption): the column under its cloaks to the horizon, the wagons and oxen, the glare, the shimmer */
-SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1;
+/* lying up by day (180's caption): the column under its cloaks to the horizon, the wagons and oxen, the glare, the shimmer. On the chapter's
+   end page (v13.33) "the glass at dusk, the column getting up from under its cloaks", and on 'haul' heavies in the water wagon's traces */
+SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, end = b103aEnd(), haul = end && S.f && S.f.b10_c3_key === 'haul';
   ctx.drawImage(sceneLayer('b103:glass', W, H, (x, W, H) => { const hz = b103aDay(x, W, H);
     for (let r = 0; r < 6; r++) { const k = r/5, cy = hz + (H - hz)*(.03 + Math.pow(k, 1.6)*.62), s = .3 + k*1.5; // the cloaks, in loose rows going away
       for (let c = 0; c < 9; c++) { if (hash(c, r, 10311) > .7) continue; b103aCloak(x, W*(.04 + c*.12 + (r % 2)*.05 + hash(c, r, 10312)*.03), cy, s, false); } }
@@ -116953,8 +117107,11 @@ SCENEX.b10_glass = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() 
   const hz = H*.4;
   for (let i = 0; i < 5; i++) { const yy = hz + H*(.004 + i*.008), sh = mo ? Math.sin(t/340 + i*1.3)*W*.004 : 0; ctx.fillStyle = `rgba(255,255,255,${(.18 - i*.03).toFixed(2)})`; ctx.fillRect(sh, yy, W, H*.004); } // the air wobbling over the glass
   for (let i = 0; i < 12; i++) { const on = mo ? (Math.sin(t/260 + i*2.1) > .6) : i % 3 === 0; if (!on) continue; const px = W*hash(i, 10313), py = hz + H*(.06 + hash(i, 10314)*.5); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fillRect(px - 2, py, 4, 1); ctx.fillRect(px, py - 2, 1, 4); } // glints flashing
-  ctx.fillStyle = 'rgba(255,252,240,.06)'; ctx.fillRect(0, 0, W, H);
+  if (!end) { ctx.fillStyle = 'rgba(255,252,240,.06)'; ctx.fillRect(0, 0, W, H); }
+  else { [[.1, .52, .9], [.3, .56, 1], [.45, .5, .8], [.66, .6, 1.1], [.22, .66, 1.2]].forEach(([u, v, k], i) => drawFigure(ctx, 'b2soldier', W*u, H*v, k, t, {phase:i, dir:i % 2 ? 1 : -1, still:true})); // getting up from under the cloaks
+    if (haul) [[-1, 0], [-1, 1]].forEach(([d, j]) => { ctx.save(); ctx.translate(W*(.62 - j*.07), H*.76 + j*3); ctx.rotate(.2); drawFigure(ctx, 'b2soldier', 0, 0, 1.45, t, {phase:j + 3, dir:d, still:true}); ctx.restore(); B2F.line(ctx, '#3a2a18', 1.2, [[W*(.63 - j*.07), H*.7], [W*.74, H*.7]]); }); } // heavies in the traces where the oxen were
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (end) b10Eve(ctx, W, H, hz);
   vign(ctx, W, H, .4, .5); };
 
 /* the night march (180's caption): two skies, and the column between them without a lamp */
@@ -118852,6 +119009,7 @@ SCENEX.b10_kolanse = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   const hz = H*.42;
   for (let i = 0; i < 4; i++) { const k = mo ? ((t/(9000 + i*1600) + hash(i, 10553)) % 1) : hash(i, 10553); ctx.fillStyle = `rgba(200,180,140,${(Math.sin(k*Math.PI)*.18).toFixed(2)})`; ctx.fillRect(W*(k*1.2 - .2), hz + H*(.04 + i*.05), W*.25, H*.012); } // dust on the wind
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.06 + i*Math.min(.055, .3/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:1}));
+  if (S && S.book === 'tcg' && S.scene === 'chend' && S.chapter === 5 && typeof b10Eve === 'function') b10Eve(ctx, W, H, hz, .85); // v13.33: the end page is "at evening" (both captions)
   vign(ctx, W, H, .35, .5); };
 
 /* ---------------- ground ---------------- */

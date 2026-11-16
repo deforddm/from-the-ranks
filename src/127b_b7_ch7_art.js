@@ -164,8 +164,71 @@ SCENEX.b7_c7_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   for (let i = 0; i < 16; i++) { const k = (hash(i, 7760) + (mo ? t/9000 : 0)) % 1; ctx.fillStyle = 'rgba(220,240,240,.18)'; ctx.fillRect(k*W, wy + H*(.06 + hash(i, 7761)*.28), W*.05, 1); }
   // people on the bridge
   for (let i = 0; i < 3; i++) { const k = ((hash(i, 7762) + (mo ? t/30000 : 0)) % 1), px = W*(.36 + k*.28), py = wy - H*.06 - Math.sin(k*Math.PI)*H*.07; drawFigure(ctx, 'b5_c5_refugee', px, py, .6, t, {still:true, dir:i % 2 ? 1 : -1, phase:i}); }
-  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.12 + i*Math.min(.06, .26/sq.length)), H*.62 - (i % 2)*2, 1.4, t, {phase:i, dir:1, still:true}));
+  // v13.33: on the chapter's end page under 'home' the squad is "going down it with its packs on, toward the river and the ships": walking
+  const go = !!(S && S.scene === 'chend' && S.chapter === 7 && ((S.chapters && S.chapters[7]) || (S.f && S.f.b7_c7_key)) === 'home');
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*((go ? .64 : .12) + i*Math.min(.06, .26/sq.length)), H*.62 - (i % 2)*2, 1.4, t, {phase:i, dir:1, still:go ? !mo : true}));
   vign(ctx, W, H, .5, .3); };
+
+/* ---------------- the roads out (v13.33, pictures against text: each finale road its own picture) ---------------- */
+/* adjunct: "The army of the Adjunct goes out of Letheras at the end of a summer, east, with a Letherii detachment marching beside it": the
+   walls and the gate small behind at the left, the towers over them with no smoke, the east road coming away across stubble fields, the
+   column on it going on out of sight to the right, the detachment in a second file beside it, and the Third near, marching */
+SCENEX.b7_fin_adjunct = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.44;
+  const rd = k => [lerp(W*.16, W*1.04, k), lerp(hz + H*.02, H*.9, Math.pow(k, 1.3)), lerp(.42, 1.5, Math.pow(k, 1.2))]; // the road, from the gate (far left) to near right
+  ctx.drawImage(sceneLayer('b77:fin-adjunct', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, 0, hz, [[0,'#6a8aa6'],[.7,'#b4c0c4'],[1,'#e0d4b4']]); x.fillRect(0, 0, W, hz + 2); // a late-summer morning
+    for (let i = 0; i < 5; i++) ell(x, hash(i, 7790)*W, hz*(.15 + hash(i, 7791)*.4), W*(.08 + hash(i, 7792)*.08), hz*.04, 'rgba(255,255,250,.4)');
+    // Letheras behind: towers over a wall, the gatehouse where the road leaves
+    x.save(); x.beginPath(); x.rect(0, 0, W*.42, H); x.clip(); b77aTowers(x, W*.42, hz - H*.05, H*.6, '#7a7e8c', 7793, false); x.restore();
+    x.fillStyle = '#6a6670'; x.fillRect(0, hz - H*.06, W*.4, H*.06); for (let m = 0; m < 20; m++) x.fillRect(m*W*.02, hz - H*.07, W*.01, H*.01);
+    x.fillStyle = '#5a5660'; x.fillRect(W*.12, hz - H*.1, W*.08, H*.1); x.fillStyle = '#2a2420'; x.beginPath(); x.moveTo(W*.145, hz); x.lineTo(W*.145, hz - H*.04); x.quadraticCurveTo(W*.16, hz - H*.06, W*.175, hz - H*.04); x.lineTo(W*.175, hz); x.fill(); // the gate, open
+    // the fields: stubble, gold going brown, and a far line of trees east
+    x.fillStyle = vgrad(x, hz, H, [[0,'#a89a6a'],[.5,'#8a7a4e'],[1,'#5a4c30']]); x.fillRect(0, hz, W, H - hz);
+    x.fillStyle = '#5a6248'; for (let i = 0; i < 18; i++) ell(x, W*(.44 + i*.032), hz - 2, 6 + hash(i, 7794)*5, 4, '#5a6248');
+    for (let i = 0; i < 140; i++) { const d = Math.pow(hash(i, 7795), 1.2), yy = hz + 3 + d*(H - hz); x.fillStyle = `rgba(70,58,34,${(.2 + d*.3).toFixed(2)})`; x.fillRect(hash(i, 7796)*W, yy, 1 + d*3, .8 + d); }
+    { const L = [], R = []; for (let i = 0; i <= 30; i++) { const k = i/30, [px, py] = rd(k), w = lerp(2, 22, Math.pow(k, 1.3)); L.push([px, py - w*.35]); R.push([px, py + w*.35]); } poly(x, L.concat(R.reverse()), 'rgba(196,178,134,.85)'); } // the road
+  }), 0, 0, W, H);
+  // the column on the road, the army going on out of the gate and away past the near edge; the Letherii detachment in its own file, nearer
+  const off = mo ? (t/9000) % (1/26) : 0;
+  for (let i = 0; i < 26; i++) { const k = i/26 + off; if (k > .5) break; const [px, py, s] = rd(k); drawFigure(ctx, 'b2soldier', px, py - 2*s, s*.9, t, {dir:1, phase:i, still:!mo}); }
+  for (let i = 0; i < 14; i++) { const k = .05 + i/26 + off; if (k > .5) break; const [px, py, s] = rd(k); drawFigure(ctx, 'b5_letherii', px + 4*s, py + 7*s, s*.9, t, {dir:1, phase:i + 2, still:!mo}); }
+  // a standard near the head of the visible column
+  { const [px, py, s] = rd(.4); ctx.fillStyle = '#2a2018'; ctx.fillRect(px, py - 40*s, 1.4*s, 36*s); ctx.fillStyle = '#5a3a5a'; ctx.fillRect(px + 1.4*s, py - 40*s, 12*s, 8*s); }
+  // the Third, near, in the middle of the lieutenant's lot
+  const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => { const [px, py, s] = rd(.56 + i*Math.min(.06, .3/sq.length)); drawFigure(ctx, id, px, py - 3*s, s*1.05, t, {phase:i, dir:1, still:!mo}); });
+  vign(ctx, W, H, .45, .3); };
+
+/* home: "The Third is already at sea by then, on a big-bellied transport going west ... at the rail ... Behind the ship the coast of Lether
+   goes down into the sea": a stern rail, open water, the wake going back east, and low on the horizon behind a dark line of coast half under
+   it. Ottar does not take the ship (his fate line), so he is not at the rail */
+SCENEX.b7_fin_home = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.46, deck = H*.84;
+  const roll = mo ? Math.sin(t/1800)*.014 : 0, heave = mo ? Math.sin(t/1300)*H*.01 : 0;
+  ctx.drawImage(sceneLayer('b77:fin-home:sky', W, H, (x, W, H) => { x.fillStyle = vgrad(x, 0, H*.6, [[0,'#4e6c88'],[.6,'#9cacb4'],[1,'#d4ccb4']]); x.fillRect(0, 0, W, H*.6);
+    for (let i = 0; i < 6; i++) ell(x, hash(i, 7781)*W, H*(.06 + hash(i, 7782)*.24), W*(.1 + hash(i, 7783)*.1), H*.025, 'rgba(240,240,236,.35)'); }), 0, 0, W, H);
+  ctx.save(); ctx.translate(W/2, deck); ctx.rotate(roll); ctx.translate(-W/2, -deck + heave);
+  ctx.drawImage(sceneLayer('b77:fin-home:sea', W, H, (x, W, H) => {
+    x.fillStyle = vgrad(x, hz, H*1.1, [[0,'#5a7080'],[.4,'#3a5262'],[1,'#162430']]); x.fillRect(-W*.1, hz, W*1.2, H*.7);
+    // the coast going down: a long low dark line on the horizon, a headland at one end, most of it already under the sea's edge
+    x.fillStyle = '#3e4a50'; x.beginPath(); x.moveTo(W*.08, hz + 1); for (let i = 0; i <= 30; i++) { const u = i/30, px = W*(.08 + u*.7); x.lineTo(px, hz - H*(.006 + .012*Math.sin(u*3.2) + (u > .7 ? (u - .7)*.08 : 0)) - hash(i, 7784)*H*.004); } x.lineTo(W*.78, hz + 1); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(220,226,226,.35)'; x.fillRect(-W*.1, hz, W*1.2, 1); // the horizon over it
+    for (let r = 0; r < 24; r++) { const y = hz + H*.03 + Math.pow(r/24, 1.6)*H*.42, k = r/24; x.strokeStyle = `rgba(${r % 3 ? '20,32,40' : '180,196,200'},${(.12 + k*.16).toFixed(2)})`; x.lineWidth = .6 + k*1.3; x.beginPath();
+      for (let i = 0; i <= 20; i++) { const xx = -W*.1 + i*W*.06, yy = y + Math.sin(i*1.3 + r*2.1)*(1 + k*4); i ? x.lineTo(xx, yy) : x.moveTo(xx, yy); } x.stroke(); } // the swell
+    // the wake, going back from under the stern toward the coast, narrowing
+    x.fillStyle = 'rgba(226,234,236,.35)'; x.beginPath(); x.moveTo(W*.4, H*.9); x.lineTo(W*.47, hz + H*.04); x.lineTo(W*.49, hz + H*.04); x.lineTo(W*.66, H*.9); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(40,60,70,.35)'; x.beginPath(); x.moveTo(W*.47, H*.9); x.lineTo(W*.48, hz + H*.06); x.lineTo(W*.59, H*.9); x.closePath(); x.fill();
+  }), 0, 0, W, H);
+  for (let i = 0; i < 26; i++) { const k = hash(i, 7785), y = hz + H*.04 + k*k*H*.38, xx = ((hash(i, 7786)*W*1.2 + t*mo*(.003 + k*.01)) % (W*1.2)) - W*.1; ctx.fillStyle = `rgba(226,232,232,${(.08 + .22*hash(i, 7787)*k).toFixed(2)})`; ctx.fillRect(xx, y, 3 + 12*k, 1 + k); } // whitecaps going by
+  // the stern: the taffrail across, its stanchions, a stern lantern on its bracket, the deck
+  ctx.fillStyle = vgrad(ctx, deck, H*1.05, [[0,'#5a4a36'],[1,'#2a2218']]); ctx.fillRect(-W*.1, deck, W*1.2, H*.3);
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-W*.1, deck + H*.04 + i*H*.045); ctx.lineTo(W*1.1, deck + H*.04 + i*H*.045); ctx.stroke(); }
+  ctx.fillStyle = '#3e3022'; ctx.fillRect(-W*.1, deck - H*.11, W*1.2, H*.024); ctx.fillStyle = 'rgba(255,244,220,.25)'; ctx.fillRect(-W*.1, deck - H*.11, W*1.2, 1.2);
+  ctx.fillStyle = '#30261a'; for (let i = 0; i < 9; i++) ctx.fillRect(W*(.03 + i*.12), deck - H*.09, W*.012, H*.09);
+  ctx.fillStyle = '#2a2016'; ctx.fillRect(W*.52, deck - H*.26, W*.008, H*.16); ctx.fillRect(W*.52, deck - H*.26, W*.03, H*.008); ctx.fillStyle = '#1e1a14'; ctx.fillRect(W*.538, deck - H*.25, W*.022, H*.04); ctx.fillStyle = 'rgba(240,220,170,.5)'; ctx.fillRect(W*.542, deck - H*.243, W*.014, H*.026); // the stern lantern, unlit by day
+  ctx.restore();
+  for (let i = 0; i < 3; i++) { const a = mo ? t/(1900 + i*300) + i*1.7 : i*1.7, gx = W*(.3 + i*.16) + Math.cos(a)*W*.05, gy = H*(.16 + i*.04) + Math.sin(a*1.3)*H*.03, f = mo ? Math.sin(t/140 + i*2)*1.6 : 1; // gulls, still following from the coast
+    ctx.strokeStyle = 'rgba(40,44,50,.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx - 5, gy - f); ctx.quadraticCurveTo(gx - 2, gy - 2, gx, gy); ctx.quadraticCurveTo(gx + 2, gy - 2, gx + 5, gy - f); ctx.stroke(); }
+  const sq = marchOrder(sceneSquad()).filter(id => id !== 'ottar'); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, i < Math.ceil(sq.length/2) ? W*(.08 + i*.085) : W*(.66 + (i - Math.ceil(sq.length/2))*.085), deck + H*.13 + heave*.5, 1.6, t, {phase:i, dir:i < Math.ceil(sq.length/2) ? 1 : -1, still:!mo})); // at the rail either side of the wake, looking back
+  vign(ctx, W, H, .45, .45); };
 
 /* ---------------- the chapter's gear: ART['item/<key>'] in the series' 200×150 item style (089g), on Book Six's smoke-umber ground ---------------- */
 (function(){

@@ -17,9 +17,13 @@
 /* ---------------- shared pieces ---------------- */
 /* the moon by the night's hour: 'crack' (one clean crack, a sliver standing apart), 'pieces' (hanging apart, still bright), 'burst' (gone:
    a white place in the sky, the light trailing east) */
-const b86MoonState = () => { const f = (S && S.f) || {}; return f.b8_c6_burst ? 'burst' : (f.b8_c6_ph || 1) >= 2 || f.b8_c6_turned ? 'pieces' : 'crack'; };
+/* v13.33 (pictures against text): the chapter's end page is "toward morning ... the sky over the city white where the moon was" (both
+   captions): 'gone', after the burst, the light already gone east, so no trails: a pale sky and a whiter place in it, nothing else */
+const b86End = () => !!(S && S.book === 'tth' && S.scene === 'chend' && S.chapter === 6);
+const b86MoonState = () => { const f = (S && S.f) || {}; if (b86End()) return 'gone'; return f.b8_c6_burst ? 'burst' : (f.b8_c6_ph || 1) >= 2 || f.b8_c6_turned ? 'pieces' : 'crack'; };
 function b86Moon(ctx, cx, cy, r, t, mo, state = b86MoonState()){
   ctx.globalCompositeOperation = 'lighter';
+  if (state === 'gone') { glow(ctx, cx, cy, r*10, '#f0ece0', .18); glow(ctx, cx, cy, r*4, '#f8f6ee', .12); ctx.globalCompositeOperation = 'source-over'; return; }
   if (state === 'burst') { glow(ctx, cx, cy, r*9, '#f4f0e2', .22); glow(ctx, cx, cy, r*3, '#ffffff', .3);
     for (let i = 0; i < 7; i++) { const a = -.35 + i*.12, len = r*(6 + hash(i, 8601)*5); ctx.strokeStyle = `rgba(244,240,226,${(.12 + hash(i, 8602)*.12).toFixed(2)})`; ctx.lineWidth = 1 + hash(i, 8603)*2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a)*len, cy + Math.sin(a)*len*.4); ctx.stroke(); } // the light going east, in pieces
     ctx.globalCompositeOperation = 'source-over'; return; }
@@ -32,6 +36,10 @@ function b86Moon(ctx, cx, cy, r, t, mo, state = b86MoonState()){
     const px = cx + dx*r*1.3, py = cy + dy*r*1.3 + bob*(i % 2 ? 1 : -1), rr = r*k;
     poly(ctx, [[px - rr, py - rr*.2], [px - rr*.3, py - rr], [px + rr*.8, py - rr*.6], [px + rr, py + rr*.4], [px + rr*.1, py + rr], [px - rr*.8, py + rr*.6]], i % 2 ? '#e0dac8' : '#d4ceba');
     ctx.strokeStyle = 'rgba(40,40,48,.6)'; ctx.lineWidth = 1; ctx.stroke(); }); }
+/* fires burned low on the roofs: a dull red along the roofline and a thin smoke, no flame */
+function b86Embers(ctx, x0, x1, base, H, t, mo){ ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 5; i++) { const fx = x0 + (x1 - x0)*(i + .5)/5 + (hash(i, 8691) - .5)*(x1 - x0)*.1, fl = mo ? .85 + .15*Math.sin(t/600 + i) : 1; glow(ctx, fx, base, H*.06*(.6 + hash(i, 8692)), '#c0502a', .14*fl); }
+  ctx.globalCompositeOperation = 'source-over'; }
 /* smoke drifting across the sky, lit from below by the fire */
 function b86Smoke(ctx, W, H, y0, t, mo, a = .22){ for (let i = 0; i < 6; i++) { const dx = mo ? ((t/(9000 + i*1300) + i*.17) % 1)*W*.3 : i*W*.05;
   ctx.fillStyle = `rgba(${40 + i*6},${30 + i*4},${30 + i*4},${(a - i*.025).toFixed(3)})`; ctx.beginPath(); ctx.ellipse(W*(-.1 + i*.22) + dx, y0 + (i % 3)*H*.04, W*.34, H*.06, -.08, 0, 7); ctx.fill(); } }
@@ -73,9 +81,10 @@ SCENEX.b8_c6_fete = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
 
 /* the same street after the night broke: the lanterns out, fire over the roofs, smoke, the moon in pieces (or the white sky after it burst);
    a Hound going by the far end while one is in the street */
-SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, st = b86MoonState(), white = st === 'burst';
-  ctx.drawImage(sceneLayer('b86:burning' + (white ? 'w' : ''), W, H, (x, W, H) => {
-    if (white) { x.fillStyle = vgrad(x, 0, hz, [[0,'#3a3c44'],[.6,'#5a5a60'],[1,'#6a5a50']]); x.fillRect(0, 0, W, hz + 2); }
+SCENEX.b8_c6_burning = (cv, t) => { if (b86End() && S.f && S.f.b8_c6_key === 'wall') return SCENEX.b8_wall_night(cv, t); // the 'wall' end page is the east wall
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.42, st = b86MoonState(), white = st === 'burst' || st === 'gone';
+  ctx.drawImage(sceneLayer('b86:burning' + (white ? 'w' : '') + (st === 'gone' ? 'g' : ''), W, H, (x, W, H) => {
+    if (white) { x.fillStyle = vgrad(x, 0, hz, st === 'gone' ? [[0,'#4a4e58'],[.6,'#7a7a7e'],[1,'#8a7e74']] : [[0,'#3a3c44'],[.6,'#5a5a60'],[1,'#6a5a50']]); x.fillRect(0, 0, W, hz + 2); }
     else b81Sky(x, W, H, hz, 8621, '#3a2420');
     b81Upper(x, W, H, hz, 8622, .8);
     x.fillStyle = vgrad(x, hz, H, [[0,'#1a1414'],[1,'#07070a']]); x.fillRect(0, hz, W, H - hz);
@@ -88,6 +97,7 @@ SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     x.fillStyle = 'rgba(0,0,0,.4)'; x.fillRect(W*.2, H*.66, W*.05, H*.2); // the Fourth's door, barred
   }), 0, 0, W, H);
   if (!white) b86Fire(ctx, W*.32, W*.68, H*.31, H, t, mo, 8630);
+  else if (st === 'gone') b86Embers(ctx, W*.32, W*.68, H*.31, H, t, mo); // the fires on the roofs burned down
   b86Moon(ctx, W*.66, H*.1, H*.065, t, mo, st);
   b86Smoke(ctx, W, H, H*.14, t, mo, white ? .12 : .24);
   b86Lanterns(ctx, -4, H*.24, W + 4, H*.27, 11, H/200, t, mo, true, 1);
@@ -105,10 +115,11 @@ SCENEX.b8_c6_burning = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
 
 /* the east wall from the Gadrobi side (140's caption): a long wall, the gap full of fallen stone with the dark plain through it, the watch's
    brazier on its side, fire and smoke over the roofs behind, the moon in pieces; the squad small at the foot */
-SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wt = H*.3, wb = H*.66, gx0 = W*.46, gx1 = W*.62, st = b86MoonState(), white = st === 'burst';
-  ctx.drawImage(sceneLayer('b86:wall' + (white ? 'w' : '') + (S && S.f && S.f.b8_c6_cartSet ? 'c' : ''), W, H, (x, W, H) => {
-    if (white) { x.fillStyle = vgrad(x, 0, wb, [[0,'#3a3c44'],[1,'#5a5450']]); x.fillRect(0, 0, W, wb); }
+SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, wt = H*.3, wb = H*.66, gx0 = W*.46, gx1 = W*.62, st = b86MoonState(), white = st === 'burst' || st === 'gone';
+  ctx.drawImage(sceneLayer('b86:wall' + (white ? 'w' : '') + (st === 'gone' ? 'g' : '') + (S && S.f && S.f.b8_c6_cartSet ? 'c' : ''), W, H, (x, W, H) => {
+    if (white) { x.fillStyle = vgrad(x, 0, wb, st === 'gone' ? [[0,'#4a4e58'],[1,'#8a8278']] : [[0,'#3a3c44'],[1,'#5a5450']]); x.fillRect(0, 0, W, wb); }
     else b81Sky(x, W, H, wb, 8641, '#2a2024');
+    x.fillStyle = '#0c0c10'; x.fillRect(0, wb, W, H*.07); // the ground at the wall's foot (v13.33: the pale sky no longer shows under the wall)
     x.fillStyle = '#05060a'; x.fillRect(gx0, wb - H*.04, gx1 - gx0, H*.04); // the plain through the gap, flat and dark
     // the wall: dressed stone, two tones, with a walk along the top and crenels
     const wall = (a, b) => { x.fillStyle = vgrad(x, wt, wb, [[0,'#2a2a30'],[1,'#141418']]); x.fillRect(a, wt, b - a, wb - wt);
@@ -126,10 +137,12 @@ SCENEX.b8_wall_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUC
     if (S && S.f && S.f.b8_c6_cartSet) { x.fillStyle = '#2a1e14'; x.fillRect(gx0 + 6, wb + H*.02, gx1 - gx0 - 12, H*.04); ell(x, gx0 + 20, wb + H*.06, 8, 8, '#120c08'); }
   }), 0, 0, W, H);
   if (!white) b86Fire(ctx, -W*.02, W*.3, H*.29, H, t, mo, 8650); // the Gadrobi roofs burning behind, left
+  else if (st === 'gone') b86Embers(ctx, -W*.02, W*.3, H*.29, H, t, mo);
   b86Moon(ctx, W*.72, H*.12, H*.065, t, mo, st);
   b86Smoke(ctx, W, H, H*.1, t, mo, white ? .1 : .22);
   if (!white) { ctx.globalCompositeOperation = 'lighter'; glow(ctx, W*.26, H*.84, H*.1, '#ff8a3a', mo ? .16 + .04*Math.sin(t/200) : .16); ctx.globalCompositeOperation = 'source-over'; }
-  drawFigure(ctx, 'guard', W*.36, H*.8, 1.2, t, {dir:1, still:true});
+  if (st === 'gone') [[.5, .7, 1], [.57, .72, -1]].forEach(([u, v, d], i) => drawFigure(ctx, 'guard', W*u, H*v, 1.05, t, {dir:d, still:true, phase:i, alpha:.9})); // the watch on the rubble, toward morning
+  else drawFigure(ctx, 'guard', W*.36, H*.8, 1.2, t, {dir:1, still:true});
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.5 + i*Math.min(.055, .28/sq.length)), H*.96 - (i % 2)*2, 1.6, t, {phase:i, dir:-1}));
   vign(ctx, W, H, .7, .5); };
 
