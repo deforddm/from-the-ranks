@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.45.0', ['The dialogue pass reaches Book Nine: Haddat quotes her mother twice, not twenty times, Marrow and Thegg sound like themselves again, and Mirrel, Tangle, Ammet and Perrit speak up where they had gone quiet.', 'Fixed: five places in Book Nine where a "Not now" or a visit made too early left no way on (the stores at night, the household\'s stable yard, the fever-carts, Yelt\'s count, the supply train). Two smaller ones in Books Three and Six too.']],
   ['13.44.0', ['The dialogue pass reaches Book Eight: Ohl talks to Hood again and Brisk salutes less, Tuft and Vell stop repeating themselves, and Ellis, Vell, Sohra and Dannet speak on the road, not only at the fires. Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.43.0', ['The dialogue pass reaches Book Seven: Marrow calls fewer people child, Darrut tells his stories again, Thegg is back to his careful speech, and Mirrel and Ammet have more to say on the road. Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.42.0', ['The dialogue pass reaches Book Six: Mirrel and Marrow speak up at Y\'Ghatan, Ellis, Vell, Sohra and Dannet talk on the road as well as at the fires, and every chapter\'s opening, ending and fire talk is tighter.', 'Fixed: a fresh Book Six start froze at the Fourth\'s level-12 picks in Chapter Two.']],

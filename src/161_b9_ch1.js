@@ -557,7 +557,7 @@ Thallo is at the gate. "Some lads tried the stores door in the night," he says. 
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && ph !== 2, fx:()=>{ S.f[rk] = 1; rest(day ? 'The squad sits an hour by the cook-fire in the sun, and the heavies step over its legs.' : 'The squad sits an hour by the fire in the empty yard, and listens to the city.'); }, go:'b9_c1_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c1_fire_talk'},
             {t:'Down to the gate. The woman.', req:()=>ph === 1 && b91WomanDue(), onward:true, go:'b9_c1_woman'},
-            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone, onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
+            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone && S.area === 'b9_c1_yard', onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
             {t:'The gate, with the heavies. The march.', req:()=>day && !!S.f.b9_c1_lootersDone, onward:true, go:'b9_c1_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c1_fire_rest:()=>({sp:'The Third\'s fire', scene:b91Ph() >= 3 ? 'b9_barracks' : 'b9_letheras_night', txt:

@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.44.0';
+const VERSION = '13.45.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9783,6 +9783,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.45.0', ['The dialogue pass reaches Book Nine: Haddat quotes her mother twice, not twenty times, Marrow and Thegg sound like themselves again, and Mirrel, Tangle, Ammet and Perrit speak up where they had gone quiet.', 'Fixed: five places in Book Nine where a "Not now" or a visit made too early left no way on (the stores at night, the household\'s stable yard, the fever-carts, Yelt\'s count, the supply train). Two smaller ones in Books Three and Six too.']],
   ['13.44.0', ['The dialogue pass reaches Book Eight: Ohl talks to Hood again and Brisk salutes less, Tuft and Vell stop repeating themselves, and Ellis, Vell, Sohra and Dannet speak on the road, not only at the fires. Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.43.0', ['The dialogue pass reaches Book Seven: Marrow calls fewer people child, Darrut tells his stories again, Thegg is back to his careful speech, and Mirrel and Ammet have more to say on the road. Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.42.0', ['The dialogue pass reaches Book Six: Mirrel and Marrow speak up at Y\'Ghatan, Ellis, Vell, Sohra and Dannet talk on the road as well as at the fires, and every chapter\'s opening, ending and fire talk is tighter.', 'Fixed: a fresh Book Six start froze at the Fourth\'s level-12 picks in Chapter Two.']],
@@ -105699,7 +105700,7 @@ Thallo is at the gate. "Some lads tried the stores door in the night," he says. 
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && ph !== 2, fx:()=>{ S.f[rk] = 1; rest(day ? 'The squad sits an hour by the cook-fire in the sun, and the heavies step over its legs.' : 'The squad sits an hour by the fire in the empty yard, and listens to the city.'); }, go:'b9_c1_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c1_fire_talk'},
             {t:'Down to the gate. The woman.', req:()=>ph === 1 && b91WomanDue(), onward:true, go:'b9_c1_woman'},
-            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone, onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
+            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone && S.area === 'b9_c1_yard', onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
             {t:'The gate, with the heavies. The march.', req:()=>day && !!S.f.b9_c1_lootersDone, onward:true, go:'b9_c1_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c1_fire_rest:()=>({sp:'The Third\'s fire', scene:b91Ph() >= 3 ? 'b9_barracks' : 'b9_letheras_night', txt:
