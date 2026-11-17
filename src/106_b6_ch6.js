@@ -528,7 +528,7 @@ At dusk the camp wakes. The talk is all of the lights, and of the High Fist ridi
 `The Fourth's fire is a small one, because the night will be warm and the march long, and it is mostly for the tea, which Ohl is making, and which is technically medicine.
 
 The Host's fires go away in rows all round it, and past them the scrub, and the sky going from red to dark, empty and very clear. Every so often somebody at every fire looks up at it, and then looks down, and pretends not to have.${b66If('brannoc', `\n\nBrannoc sits with his back to a wagon wheel, playing the tin whistle very softly, a Falari tune with too many notes in it, and getting most of them.`)}${b66If('ressa', `\n\nRessa sits up against her pack with her knives across her knees, and will sleep that way later, sitting up.`)}${b66If('sohra', `\n\nSohra sits with her face to the north-east, where the lights came down, and sings to the grass under her breath.`)}`,
-      ch:[{t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b6_c6_rest, fx:()=>{ S.f.b6_c6_rest = 1; rest('The Fourth sits an hour by its own fire in the Host\'s camp. Wounds close, mostly.'); }, go:'b6_c6_fire_rest'},
+      ch:[{t:'Sit an hour. Let the squad rest.', req:()=>!S.f.b6_c6_rest, fx:()=>{ S.f.b6_c6_rest = 1; rest('The Fourth sits an hour by its own fire with one eye on the sky. The cuts close. The sky stays put.'); }, go:'b6_c6_fire_rest'},
           {t:'Talk with the squad.', go:'b6_c6_fire_talk'},
           {t:'Camp news.', go:'b6_c6_news'},
           {t:'Ohl has a small lamp lit, apart from the fire.', req:()=>b6In('ohl') && !S.f.b6_c6_lamp, go:'b6_c6_lamp'},
@@ -543,7 +543,7 @@ The Host's fires go away in rows all round it, and past them the scrub, and the 
     b6_c6_fire_rest:()=>({sp:'The Fourth\'s fire', scene:'b6_c6_duskcamp', txt:
 `An hour by the fire. The camp goes about its waking round it: water carts, horses, a sergeant two fires over shouting for a missing boot.
 
-${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it, and looks at hands, and feet, and eyes, the way he always does before a march, and says "Drink" to anyone who argues.', brisk:'Brisk sits with her shield across her knees and her eyes shut, and is not asleep, and nobody tests it.', _:'One of them sleeps. The rest watch the sky.'})}${b66If('kettle', `\n\nKettle counts the satchel out on a blanket: two sharpers, a burner, the cusser at the bottom. She counts them twice and puts them back the same way, and looks happier.`)}${b66If('tuft', `\n\nTuft keeps the lamp lit, though the fire is enough, and holds her Deck in her lap without opening it.`)}`,
+${b66Say({ohl:'Ohl sets the cups out in a row on a flat stone and lets the squad come to him for them, and looks at each face as it bends for a cup, which is the examination, and nobody is told so. "Drink," he says, to anyone who argues.', brisk:'Brisk sits with her shield across her knees and her eyes shut, and is not asleep, and nobody tests it.', _:'One of them sleeps. The rest watch the sky.'})}${b66If('kettle', `\n\nKettle counts the satchel out on a blanket: two sharpers, a burner, the cusser at the bottom. She counts them twice and puts them back the same way, and looks happier.`)}${b66If('tuft', `\n\nTuft keeps the lamp lit, though the fire is enough, and holds her Deck in her lap without opening it.`)}`,
       ch:[{t:'Back to the fire.', go:'b6_c6_fire'}]}),
     /* one short line each: what they make of the lights, and of the war ending */
     b6_c6_fire_talk:()=>{ const ln = [];
@@ -554,7 +554,7 @@ ${b66Say({ohl:'Ohl goes round the squad with the tea and makes everyone drink it
       if (b6In('brannoc')) ln.push(`Brannoc stops playing. "Sweetcreek says when the war ends she's going home to Falar and marrying somebody rich," he says. "She says that every war." He plays a few notes. "I'll go home when there's nobody left to fight who sings worse than me. Could be years."`);
       if (b6In('ressa')) ln.push(`Ressa looks at the fire. "Hanar Ara," she says. "Where the marked go. The ones it didn't take." She turns her blue fingers over. "They'll think I'm one of them. They'll be right." Then she settles against her pack, sitting up, and that is the end of it.`);
       if (b6In('sohra')) ln.push(`Sohra is singing to the grass, and stops. "The spirits here are old and tired," she says. "Like Ohl. They say the sky has been doing that for ages, somewhere, and nobody listened."`);
-      if (b6In('greysword')) ln.push(`Dannet has her sword across her knees. "In Capustan we would have called the lights a sign from the Wolves," she says. "Here they will call it a sign from something else." She shrugs. "Everybody wants the sky to be talking to them."`);
+      if (b6In('greysword')) ln.push(`Dannet has her sword across her knees. "The Grey Swords would have called the lights a sign from the Wolves," she says. "Here they will call it a sign from something else." She shrugs. "Everybody wants the sky to be talking to them."`);
       if (b6In('ellis')) ln.push(`Ellis is oiling a bowstring. "Seven horses went out last night," she says. "Seven came back. That's all anybody knows, and all anybody's going to." She seems content with that.`);
       if (b6In('vell')) ln.push(`Vell is splicing a rope. "In Darujhistan," he says, "anything strange in the sky was the Moon. Here there isn't a Moon to blame." He thinks about it. "I miss the Moon."`);
       return {sp:'The Fourth\'s fire', scene:'b6_c6_duskcamp', txt:ln.length ? ln.join('\n\n') : `The squad is you tonight, and the fire. You sit with it, and watch the sky go dark over the scrub, and think about the end of a war, which is a thing you have never yet seen.`,
@@ -735,7 +735,7 @@ Kettle looks at the bird bones and away, and keeps her hand off the satchel.`)}`
 `The road east, and the Host gone on along it.` :
 `The horns go at full dark, and the Host strikes its canvas and gets onto the road, and walks east all night under the clear sky, and the sky does nothing at all. At dawn, on the plain ahead, there is a city that is not a city: tents and shrines and smoke going up from cook-fires, a great many of them, and round it, in their lines, an army.
 
-Hanar Ara.`,
+Hanar Ara.${b66If('ellis', `\n\nEllis has walked the night out on the column's flank. "Nothing moved," she reports. "Not a light, not a rider. Not a bird." She sounds as if she had counted on the birds.`)}`,
       ch:[{t:'Draw up on the plain.', req:()=>b66Ph() < 3, onward:true, fx:()=>{ S.f.b6_c6_tomarch = 1; }, go:'b6_c6_hanar_arrive'},
           {t:'Not now.', go:()=>startExplore()}]}),
 
@@ -745,7 +745,7 @@ Hanar Ara.`,
 
 The City of the Fallen is a city of tents and shrines, mostly, low and pale and very many, going back from the plain further than the eye goes, with a few older walls in the middle of it that nobody in the Host can see properly. Round its edge, in their own lines, are Mathok's people: the last rebel army in Seven Cities, horse and foot, drawn up in front of the city as the Host is drawn up in front of them.
 
-Nobody moves. The sun climbs. The Seventh has its place in the line by a cairn of stones, and stands in it.${b66If('ressa', `\n\nRessa studies the shrines. "It took them all and left them," she says. "Like me. And they came here." She looks away. "I walked the other way."`)}`,
+Nobody moves. The sun climbs. The Seventh has its place in the line by a cairn of stones, and stands in it.${b66If('ressa', `\n\nRessa studies the shrines. "It took them all and left them," she says. "Like me. And they came here." She looks away. "I walked the other way."`)}${b66If('sohra', `\n\nSohra looks at the shrines and spits to one side, politely. "Too many spirits," she says. "All hungry, all thin. They will not like a Rhivi." She stays where she is.`)}${b66If('greysword', `\n\nDannet looks along Mathok's line, and then along the Host's, and says something short in Elin. "It means *both of them*," she says, when somebody looks at her. "It is not polite."`)}`,
       ch:[{t:'To the Seventh\'s place in the line.', onward:true, go:()=>{ startExplore('b6_c6_hanar'); talk('b6_c6_line'); }},
           {t:'Walk the line.', go:()=>startExplore('b6_c6_hanar')}]}),
     b6_c6_line:()=>({sp:'The Seventh\'s place', scene:'b6_hanar_ara', again:()=>`The Seventh's place in the Host's line, by the cairn.`, txt: S.f.b6_c6_surr ?
@@ -897,7 +897,7 @@ The Host marches at noon, north-east. The time-served go the other way, south-we
       return {sp:'After Hanar Ara', scene:r === 'home' ? 'b6_sky' : 'b6_hanar_ara', txt:
 `${r === 'home' ? 'On the coast road, the first night, you count the Fourth.' : r === 'hanarara' ? 'At the picket fire on the Hanar Ara road, the first night, you count the Fourth.' : 'At the first halt on the night road, you count the Fourth.'} ${b66Here().length ? `It comes out at ${numw(b66Here().length + 1)}, with you. You count twice.` : 'It comes out at one: you. You count twice anyway.'}
 
-${b66Say({brisk:'Brisk counts the rations aloud, the whole of them, to nobody, and then once more.', kettle:'Kettle counts the satchel, the same as yesterday.', tuft:'Tuft keeps the lamp lit.', ohl:'Ohl reads his list by the fire, his lips moving. It is no longer than it was.', _:'The fire burns down.'})}${b66If('brannoc', ' Brannoc plays something on the tin whistle that might be a Falari lament or might be a drinking song. With Brannoc it can be both.')}${b66If('ressa', ' Ressa sleeps sitting up.')}
+${b66Say({brisk:'Brisk counts the rations aloud, the whole of them, to nobody, and then once more.', kettle:'Kettle counts the satchel, and gets the same number, and looks at it as if it were cheating.', tuft:'Tuft keeps the lamp lit.', ohl:'Ohl reads his list by the fire, his lips moving. It is no longer than it was.', _:'The fire burns down.'})}${b66If('brannoc', ' Brannoc plays something on the tin whistle that might be a Falari lament or might be a drinking song. With Brannoc it can be both.')}${b66If('ressa', ' Ressa sleeps sitting up.')}${b66If('vell', ' Vell sits a little up the slope from the fire, where he can see over everyone, which is as near a roof as the plain has.')}
 
 Overhead the sky is clear, and stays clear, and drops nothing at all.`,
         ch:[{t:r === 'home' ? 'West, to the coast.' : r === 'hanarara' ? 'The picket, and the days after.' : 'On, with the Host.', onward:true, go:()=>chapterEnd(6, k)},
