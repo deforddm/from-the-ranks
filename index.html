@@ -679,7 +679,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.40.0';
+const VERSION = '13.41.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9783,6 +9783,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.41.0', ['The dialogue pass reaches Book Five: Thegg speaks up from the harbour to the trees, in his own careful way, and Perrit, Tobet and Ammet each sound like themselves. Ammet\'s rounds at the rests are all different now, and every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.40.0', ['The dialogue pass reaches Book Four: Tangle counts his way through the Wall and the night pickets, Marrow sounds like herself again, and the repeated beats are gone (the healers\' rounds, the "quiet nights", Haddat\'s mother). Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.39.0', ['The dialogue pass reaches Book Three: the Fourth speak up again on the march and at the fires, where Sohra and Dannet had been doing the talking. If one of the Fourth fell in Book One, Brisk no longer finishes "We don\'t leave people."', 'Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.38.0', ['The dialogue pass reaches Book Two: Sathi talks to Hackle more than to anyone, and the Weasels and the Crow riders now say their own news. Marrow and Tangle have more to say after the split, and every chapter\'s opening, ending and fire talk is tighter.']],
@@ -67312,7 +67313,7 @@ The harbour master taps the first line with his gaff. "The second hulk," he says
 
 He looks at the tide, and does not say which comes first. "One tide, Sergeant. Your squad can do one or the other before it turns. Not both. The other will keep." He considers this. "One of them will keep."
 
-${b52Say({ammet:`"They've been in there since the spring," Ammet says. "Their people are waiting for them to come home."`, _:''})}${S.f.b5_c1_key === 'pay' ? b52If('perrit', `\n\nPerrit is already doing the sums. "Forty docks," she says. "Over the paybooks, that's eight a line. The first eight anybody's taken off since Letheras." She hates that it is tempting, and says so, which helps nobody.`) : S.f.b5_c1_key === 'swim' ? b52If('thegg', `\n\nThegg is looking at the second hulk's flooded hold. "One of us will have to go down into her either way," he says. "I have been under once this year already."`) : ''}${b5In('brune') ? `\n\nBrune looks at the hulk. "The Shore will want them back either way," she says. "The cargo and the crew."` : b5Waiting('brune') ? `\n\nDown on the strand the Shake are standing by their boats, watching the second hulk. Brune is among them, with her fish-spear.` : ''}`,
+${b52Say({ammet:`"They've been in there since the spring," Ammet says. "Their people are waiting for them to come home."`, _:''})}${S.f.b5_c1_key === 'pay' ? b52If('perrit', `\n\nPerrit is already doing the sums. "Forty docks," she says. "Over the paybooks, that's eight a line. The first eight anybody's taken off since Letheras." She hates that it is tempting, and says so, which helps nobody.`) : S.f.b5_c1_key === 'swim' ? b52If('thegg', `\n\nThegg is looking at the second hulk's flooded hold. "One of us will have to go down into her either way," he says. "The canal taught me how. It was not a kind teacher."`) : ''}${b5In('brune') ? `\n\nBrune looks at the hulk. "The Shore will want them back either way," she says. "The cargo and the crew."` : b5Waiting('brune') ? `\n\nDown on the strand the Shake are standing by their boats, watching the second hulk. Brune is among them, with her fish-spear.` : ''}`,
       ch:[{t:'"The harbour\'s coin first. Land the cargo."', req:()=>!b52Key(), fx:()=>{ S.f.b5_c2_key = 'salvage';
               b52Docks(40, 'the harbour master\'s salvage bounty'); if (b52Near()) { b5Forgive('brune', 30, 'The harbour master\'s salvage bounty'); S.f.b5_c2_forgiven = 30; }
               b52L('tobet', 1); b52L('perrit', 1); b52L('brune', -1); b52L('ammet', -1); }, go:'b5_c2_dive'},

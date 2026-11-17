@@ -82,7 +82,7 @@ const r = await page.evaluate(async () => {
   talk('b5_c2_fire'); const sk = S.silver; take('b5_c2_fire', /Sleep\. The work/); out.f.weeks = {ph:S.f.b5_c2_ph, docks:S.silver - sk, flag:S.f.b5_c2_weeks, delegation:/delegation has sailed north/.test(DLG.b5_c2_weeks().txt)};
   const sw2 = S.silver; made('b5_c2_weeks', /night watch/, 'tobet'); out.f.watch = {ok:S.f.b5_c2_watchOk, docks:S.silver - sw2};
   take('b5_c2_watch_ok', /Back to the fire/); out.f.bountyOn = has('b5_c2_fire', /posted something/);
-  take('b5_c2_fire', /posted something/); out.f.bounty = {area:S.area, node:S.node, keys:has('b5_c2_bounty', /coin first/) && has('b5_c2_bounty', /drowned first/), notYet:has('b5_c2_bounty', /Not yet/), brune:/Brune/.test(DLG.b5_c2_bounty().txt), thegg:/under once this year/.test(DLG.b5_c2_bounty().txt)};
+  take('b5_c2_fire', /posted something/); out.f.bounty = {area:S.area, node:S.node, keys:has('b5_c2_bounty', /coin first/) && has('b5_c2_bounty', /drowned first/), notYet:has('b5_c2_bounty', /Not yet/), brune:/Brune/.test(DLG.b5_c2_bounty().txt), thegg:/not a kind teacher/.test(DLG.b5_c2_bounty().txt)};
   const snap = JSON.stringify(S);
   const L = () => ({tobet:S.loy.tobet, perrit:S.loy.perrit, brune:S.loy.brune, ammet:S.loy.ammet, thegg:S.loy.thegg});
   /* ================= key: salvage ================= */
