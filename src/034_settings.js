@@ -12,7 +12,7 @@ function openSettings(){
       ${seg('map', 'Map', [['close','Close'],['whole','Whole']], WIDE() ? 'On a screen this wide the whole map always fits, as big as the window allows. On a phone, Close has bigger tiles that follow the sergeant; Whole has the entire area on screen at once.' : 'Close: bigger tiles that follow the sergeant; drag the map to look around. Whole: the entire area on screen at once.')}
       ${seg('art', 'Artwork', [[true,'Painted set'],[false,'Classic']], 'Painted set: the artwork canvas on the title, the Deck, the gods, chapter openings, gear, maps and papers. Classic: the game\'s original drawings. Classic also hides the item pictures and the full-screen item viewer, and the journal\'s Maps, Papers and Faces.')}
       ${seg('speed', 'Combat pace', [[1.4,'Slow'],[1,'Normal'],[.6,'Fast']])}
-      ${seg('fs', 'Text size', [[.9,'Small'],[1,'Normal'],[1.15,'Large']])}
+      ${seg('fs', 'Text size', [[.9,'Small'],[1,'Normal'],[1.15,'Large'],[1.3,'Larger']])}
       ${fullOK() ? seg('full', 'Full screen', [[true,'On'],[false,'Off']], 'No browser bars and no taskbar, just the game. <kbd>F</kbd> or the corner button turns it on and off any time; <kbd>Esc</kbd> leaves it. On: every visit goes full screen at your first click.') : ''}
       ${S ? `<div class="opt"><label>Difficulty</label><div class="seg">${Object.entries(DIFFS).map(([k, d]) => `<button class="btn ${(S.diff || 'soldier') === k ? 'on' : ''}" data-sdiff="${k}">${d.name}</button>`).join('')}</div><small>${DIFF().blurb} For Sergeant ${esc(S.name)} only; change it whenever you like.</small></div>` : ''}
       ${seg('dice', 'Roll numbers', [[true,'On'],[false,'Off']], 'Print every attack and check roll in the log.')}

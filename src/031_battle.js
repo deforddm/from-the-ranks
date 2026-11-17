@@ -653,7 +653,7 @@ function battleStyle(){
   if (document.getElementById('bstyle')) return;
   const st = document.createElement('style'); st.id = 'bstyle';
   st.textContent = `.bhud{align-items:center}.bhud .bhead{min-width:0;flex:1 1 auto}
-.bhud .loc{font-size:1.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bhud .loc{font-size:calc(1.2rem / var(--fs, 1));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bhud .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;margin-top:2px}.bhud .sub.open{white-space:normal}
 .objective b{color:#ffe0a0;font-weight:600;white-space:nowrap}
 #order{gap:4px;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent)}
