@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.43.0', ['The dialogue pass reaches Book Seven: Marrow calls fewer people child, Darrut tells his stories again, Thegg is back to his careful speech, and Mirrel and Ammet have more to say on the road. Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.42.0', ['The dialogue pass reaches Book Six: Mirrel and Marrow speak up at Y\'Ghatan, Ellis, Vell, Sohra and Dannet talk on the road as well as at the fires, and every chapter\'s opening, ending and fire talk is tighter.', 'Fixed: a fresh Book Six start froze at the Fourth\'s level-12 picks in Chapter Two.']],
   ['13.41.0', ['The dialogue pass reaches Book Five: Thegg speaks up from the harbour to the trees, in his own careful way, and Perrit, Tobet and Ammet each sound like themselves. Ammet\'s rounds at the rests are all different now, and every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.40.0', ['The dialogue pass reaches Book Four: Tangle counts his way through the Wall and the night pickets, Marrow sounds like herself again, and the repeated beats are gone (the healers\' rounds, the "quiet nights", Haddat\'s mother). Every chapter\'s opening, ending and fire talk is tighter.']],
