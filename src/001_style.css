@@ -42,7 +42,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .hud .hudr{grid-column:2;grid-row:1/3;align-self:center}
 .hud::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.5}
 .kick{font-family:var(--label);font-size:.78rem;letter-spacing:.14em;color:var(--brass);line-height:1.2;margin-bottom:1px}
-.loc{font-family:var(--display);font-size:calc(1.4rem / var(--fs, 1));line-height:1.1;text-wrap:balance;text-shadow:0 2px 8px rgba(0,0,0,.8);overflow-wrap:anywhere}
+.loc{font-family:var(--display);font-size:calc(1.4rem / var(--fs, 1));line-height:1.1;text-wrap:balance;text-shadow:0 2px 8px rgba(0,0,0,.8);overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto} /* v13.47.1: a long name hyphenates (Whitefin-ders') instead of breaking anywhere */
 .sub{font-family:var(--label);font-size:.8rem;color:var(--mute);letter-spacing:.08em}
 .sub.warren{color:var(--warren)}
 .qline{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
@@ -363,6 +363,8 @@ body.padfocus button:focus,body.padfocus .choice:focus{outline:2px solid var(--b
 kbd{display:inline-block;min-width:1.2em;padding:0 4px;margin:0 1px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:3px;font-family:var(--label);font-size:.78rem;line-height:1.35;text-align:center;color:var(--ash);background:rgba(0,0,0,.3)}
 .hint.keys{display:none;line-height:1.9}
 @keyframes riseW{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
+/* v13.47.1: in the wide layout the side column is narrow, so the place name drops under the buttons and takes the full width (it broke mid-word, "Whitefinde/rs'", and battle names showed only "The …") */
+@media (min-width:1000px) and (min-height:560px){.hud .kick{grid-column:1;grid-row:1;align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}.bhud .loc{display:block;-webkit-line-clamp:unset}}
 @media (min-width:1000px) and (min-height:560px){
   :root{--side:clamp(360px,27vw,560px)}
   /* the whole width of the screen: the picture from the left edge, the column hard against the right */

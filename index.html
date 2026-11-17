@@ -62,7 +62,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .hud .hudr{grid-column:2;grid-row:1/3;align-self:center}
 .hud::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.5}
 .kick{font-family:var(--label);font-size:.78rem;letter-spacing:.14em;color:var(--brass);line-height:1.2;margin-bottom:1px}
-.loc{font-family:var(--display);font-size:calc(1.4rem / var(--fs, 1));line-height:1.1;text-wrap:balance;text-shadow:0 2px 8px rgba(0,0,0,.8);overflow-wrap:anywhere}
+.loc{font-family:var(--display);font-size:calc(1.4rem / var(--fs, 1));line-height:1.1;text-wrap:balance;text-shadow:0 2px 8px rgba(0,0,0,.8);overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto} /* v13.47.1: a long name hyphenates (Whitefin-ders') instead of breaking anywhere */
 .sub{font-family:var(--label);font-size:.8rem;color:var(--mute);letter-spacing:.08em}
 .sub.warren{color:var(--warren)}
 .qline{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
@@ -383,6 +383,8 @@ body.padfocus button:focus,body.padfocus .choice:focus{outline:2px solid var(--b
 kbd{display:inline-block;min-width:1.2em;padding:0 4px;margin:0 1px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:3px;font-family:var(--label);font-size:.78rem;line-height:1.35;text-align:center;color:var(--ash);background:rgba(0,0,0,.3)}
 .hint.keys{display:none;line-height:1.9}
 @keyframes riseW{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
+/* v13.47.1: in the wide layout the side column is narrow, so the place name drops under the buttons and takes the full width (it broke mid-word, "Whitefinde/rs'", and battle names showed only "The …") */
+@media (min-width:1000px) and (min-height:560px){.hud .kick{grid-column:1;grid-row:1;align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}.bhud .loc{display:block;-webkit-line-clamp:unset}}
 @media (min-width:1000px) and (min-height:560px){
   :root{--side:clamp(360px,27vw,560px)}
   /* the whole width of the screen: the picture from the left edge, the column hard against the right */
@@ -679,7 +681,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.47.0';
+const VERSION = '13.47.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -8377,7 +8379,7 @@ function battleStyle(){
   if (document.getElementById('bstyle')) return;
   const st = document.createElement('style'); st.id = 'bstyle';
   st.textContent = `.bhud{align-items:center}.bhud .bhead{min-width:0;flex:1 1 auto}
-.bhud .loc{font-size:calc(1.2rem / var(--fs, 1));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bhud .loc{font-size:calc(1.2rem / var(--fs, 1));display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} /* v13.47.1: two lines before it trims (the wide layout showed only "The …") */
 .bhud .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;margin-top:2px}.bhud .sub.open{white-space:normal}
 .objective b{color:#ffe0a0;font-weight:600;white-space:nowrap}
 #order{gap:4px;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent)}
@@ -9783,6 +9785,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.47.1', ['On a wide screen the place name now sits under the buttons with the whole width to itself: long names no longer break mid-word, and battle names are no longer cut to "The …".']],
   ['13.47.0', ['Settings: a fourth Text size, Larger, for reading on a small phone. At every size the place name and the top buttons now stay their size, so a long name no longer breaks in the middle of a word.']],
   ['13.46.1', ['Fixed: in Book Four, Chapter Two, "Not now" after the night probe at the 9th\'s wagons left no way on to morning. The fire now offers sleep.']],
   ['13.46.0', ['The dialogue pass ends with Book Ten: Mirrel, Haddat, Tangle, Tobet and Ammet speak up where they had gone quiet, every one of the Fourth has a word when they arrive at the end, and every chapter\'s opening, ending and fire talk is tighter. Every squadmate now sounds like themselves across all ten books.']],

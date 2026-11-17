@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.47.1', ['On a wide screen the place name now sits under the buttons with the whole width to itself: long names no longer break mid-word, and battle names are no longer cut to "The …".']],
   ['13.47.0', ['Settings: a fourth Text size, Larger, for reading on a small phone. At every size the place name and the top buttons now stay their size, so a long name no longer breaks in the middle of a word.']],
   ['13.46.1', ['Fixed: in Book Four, Chapter Two, "Not now" after the night probe at the 9th\'s wagons left no way on to morning. The fire now offers sleep.']],
   ['13.46.0', ['The dialogue pass ends with Book Ten: Mirrel, Haddat, Tangle, Tobet and Ammet speak up where they had gone quiet, every one of the Fourth has a word when they arrive at the end, and every chapter\'s opening, ending and fire talk is tighter. Every squadmate now sounds like themselves across all ten books.']],
