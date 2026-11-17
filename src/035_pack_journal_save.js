@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.40.0', ['The dialogue pass reaches Book Four: Tangle counts his way through the Wall and the night pickets, Marrow sounds like herself again, and the repeated beats are gone (the healers\' rounds, the "quiet nights", Haddat\'s mother). Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.39.0', ['The dialogue pass reaches Book Three: the Fourth speak up again on the march and at the fires, where Sohra and Dannet had been doing the talking. If one of the Fourth fell in Book One, Brisk no longer finishes "We don\'t leave people."', 'Every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.38.0', ['The dialogue pass reaches Book Two: Sathi talks to Hackle more than to anyone, and the Weasels and the Crow riders now say their own news. Marrow and Tangle have more to say after the split, and every chapter\'s opening, ending and fire talk is tighter.']],
   ['13.37.0', ['The dialogue pass begins with Book One: each of the Fourth sounds more like themselves (Brisk shorter, Ellis numbers first, Vell his own man), Ohl has more to say in Chapters One and Four, and every chapter\'s opening, ending and fire talk is tighter.']],
