@@ -771,7 +771,7 @@ The singing is up this lane, and getting louder as the squad climbs, low, in Wic
 
 The family is a woman and her mother and four children and a boy of sixteen with a horse-bow, strung. The singing was the mother. She has stopped now. She looks at the squad, and at the city behind, and at the road, and says something in Wickan that nobody in the Third understands but everybody does.${b67If('warlock', '\n\nKeth answers her. Then the grandmother answers her, out of his mouth, and the old woman laughs, once, very surprised.')}`,
       ch:[{t:'Out of the gate.', onward:true, go:'b6_c7_gate'}]}),
-    b6_c7_gate:()=>({sp:'The landward gate', scene:'b6_c7_lanes', fx:()=>{ if (S.f.b6_c7_streetsDone) S.f.b6_c7_gone = 1; }, again:()=>`The landward gate, and the road into the hills.`, txt: !S.f.b6_c7_streetsDone ?
+    b6_c7_gate:()=>({sp:'The landward gate', scene:'b6_c7_lanes', fxAgain:true, fx:()=>{ if (S.f.b6_c7_streetsDone) S.f.b6_c7_gone = 1; }, again:()=>`The landward gate, and the road into the hills.`, txt: !S.f.b6_c7_streetsDone ?
 `The landward gate, shut, with the Guard on it. There is a family up the lane first.` :
 `Out of the landward gate, the Third and the family, onto the road that goes up into the island's hills in the dark. Behind, the city is still loud, and the burning street is a red smudge on the sky. Ahead there is a fishing village on the far side of the island, the boy with the bow says, where there are cousins, and boats, and the mainland across the water, and beyond the mainland, a long way off, the Wickan plains that none of them have ever seen.
 

@@ -1520,7 +1520,7 @@ ${c6KallorKnows() ? `His eyes go along the guard line, idly, and stop on you. He
     ch:[{t:'Face the river.', go:()=>startExplore()}]}),
   b3_c6_brood_again:()=>({sp:'Caladan Brood', txt:`Brood is at the far end of the landing with his own people, a head above all of them, with his back to the Malazans.`,
     ch:[{t:'Leave him.', go:()=>startExplore()}]}),
-  b3_c6_kallor:()=>({sp:c6Kallor(true), fx:()=>{ if (S.f.b3_c6_brood) S.f.b3_c6_kallorLook = 1; }, txt: S.f.b3_c6_brood ?
+  b3_c6_kallor:()=>({sp:c6Kallor(true), fxAgain:true, fx:()=>{ if (S.f.b3_c6_brood) S.f.b3_c6_kallorLook = 1; }, txt: S.f.b3_c6_brood ?
 `${c6Kallor(true)} is standing by the river with two of his own soldiers, in their fur trim and his colours, watching the Malazans unload with the expression of a man watching a cart go into a ditch from a safe distance.
 
 He hears you come up. He does not turn.

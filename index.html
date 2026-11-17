@@ -2190,7 +2190,7 @@ function talk(id){
   if (S.picksDue && S.picksDue.length) return openPicks(() => talk(id));
   const n = DLG[id]();
   S.node = id; save();
-  if (n.fx) { S.fxd = S.fxd || {}; if (!S.fxd[id]) { S.fxd[id] = 1; keyWatch(n.fx); } }
+  if (n.fx) { S.fxd = S.fxd || {}; if (n.fxAgain || !S.fxd[id]) { S.fxd[id] = 1; keyWatch(n.fx); } } // v13.45.0: fxAgain, for an fx that sets a flag only once its condition holds (run once, a visit before the condition left the flag unset for good)
   if (n.scene) { sceneShell(n.scene); }
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];
@@ -40194,7 +40194,7 @@ Then he points with his chin, north, at the broken line of the city wall and the
 
 He lets that sit. "The tunnels first."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b3_c1_wj_again:()=>({sp:'Whiskeyjack', fx:()=>{ if (S.f.b3_c1_tunnelsDone) S.f.b3_c1_wjLine = 1; }, txt: S.f.b3_c1_tunnelsDone ?
+    b3_c1_wj_again:()=>({sp:'Whiskeyjack', fxAgain:true, fx:()=>{ if (S.f.b3_c1_tunnelsDone) S.f.b3_c1_wjLine = 1; }, txt: S.f.b3_c1_tunnelsDone ?
 `"Clear?"
 
 You tell him. In order, without anything in it that isn't so${S.f.b3_c1_boy === 'let' ? `, including the boy who went up the far shaft` : S.f.b3_c1_boy === 'provost' ? `, including the boy you handed to the provosts` : ''}. He listens the way he always has, as if a figure in a ledger were coming out even.
@@ -48962,7 +48962,7 @@ ${c6KallorKnows() ? `His eyes go along the guard line, idly, and stop on you. He
     ch:[{t:'Face the river.', go:()=>startExplore()}]}),
   b3_c6_brood_again:()=>({sp:'Caladan Brood', txt:`Brood is at the far end of the landing with his own people, a head above all of them, with his back to the Malazans.`,
     ch:[{t:'Leave him.', go:()=>startExplore()}]}),
-  b3_c6_kallor:()=>({sp:c6Kallor(true), fx:()=>{ if (S.f.b3_c6_brood) S.f.b3_c6_kallorLook = 1; }, txt: S.f.b3_c6_brood ?
+  b3_c6_kallor:()=>({sp:c6Kallor(true), fxAgain:true, fx:()=>{ if (S.f.b3_c6_brood) S.f.b3_c6_kallorLook = 1; }, txt: S.f.b3_c6_brood ?
 `${c6Kallor(true)} is standing by the river with two of his own soldiers, in their fur trim and his colours, watching the Malazans unload with the expression of a man watching a cart go into a ditch from a safe distance.
 
 He hears you come up. He does not turn.
@@ -84187,7 +84187,7 @@ The singing is up this lane, and getting louder as the squad climbs, low, in Wic
 
 The family is a woman and her mother and four children and a boy of sixteen with a horse-bow, strung. The singing was the mother. She has stopped now. She looks at the squad, and at the city behind, and at the road, and says something in Wickan that nobody in the Third understands but everybody does.${b67If('warlock', '\n\nKeth answers her. Then the grandmother answers her, out of his mouth, and the old woman laughs, once, very surprised.')}`,
       ch:[{t:'Out of the gate.', onward:true, go:'b6_c7_gate'}]}),
-    b6_c7_gate:()=>({sp:'The landward gate', scene:'b6_c7_lanes', fx:()=>{ if (S.f.b6_c7_streetsDone) S.f.b6_c7_gone = 1; }, again:()=>`The landward gate, and the road into the hills.`, txt: !S.f.b6_c7_streetsDone ?
+    b6_c7_gate:()=>({sp:'The landward gate', scene:'b6_c7_lanes', fxAgain:true, fx:()=>{ if (S.f.b6_c7_streetsDone) S.f.b6_c7_gone = 1; }, again:()=>`The landward gate, and the road into the hills.`, txt: !S.f.b6_c7_streetsDone ?
 `The landward gate, shut, with the Guard on it. There is a family up the lane first.` :
 `Out of the landward gate, the Third and the family, onto the road that goes up into the island's hills in the dark. Behind, the city is still loud, and the burning street is a red smudge on the sky. Ahead there is a fishing village on the far side of the island, the boy with the bow says, where there are cousins, and boats, and the mainland across the water, and beyond the mainland, a long way off, the Wickan plains that none of them have ever seen.
 
@@ -105635,7 +105635,7 @@ He is told that it is lying down again now. He is not told whether that is true.
 
 Then his mother calls his name from the lane, once, in a voice she has plainly used before, and he comes out on his own from somewhere you had already looked, and runs past the Third to her without looking at any of it.`,
       ch:[{t:'Her door.', go:'b9_c1_house'}]}),
-    b9_c1_yardgate:()=>({sp:'Their stable yard', scene:'b9_c1_stable', fx:()=>{ if (S.f.b9_c1_boy) { S.f.b9_c1_horse = 1; S.f.b9_c1_roof = 1; } }, again:()=> S.f.b9_c1_horseOut ? 'The household\'s yard, its stable barred.' : 'The household\'s yard, and the horse standing in it.', txt: !S.f.b9_c1_boy ?
+    b9_c1_yardgate:()=>({sp:'Their stable yard', scene:'b9_c1_stable', fxAgain:true, fx:()=>{ if (S.f.b9_c1_boy) { S.f.b9_c1_horse = 1; S.f.b9_c1_roof = 1; } }, again:()=> S.f.b9_c1_horseOut ? 'The household\'s yard, its stable barred.' : 'The household\'s yard, and the horse standing in it.', txt: !S.f.b9_c1_boy ?
 `A stable-yard gate, barred from the inside. Something big moves behind it, once, and is still. The woman's boy is still out in the alleys. Him first.` : S.f.b9_c1_horseOut ?
 `The household's yard. ${S.f.b9_c1_horseOut === 'out' ? 'Empty now, but for the straw and the marks in it where the Third dragged the horse out to the lane for the knackers.' : 'The stable door is barred, and whatever is in the stable is lying down, by the sound of it, and staying down.'}` :
 `The gate opens on a little yard with a lean-to stable and a cart with its shafts down, and the household's dray-horse standing in the middle of the yard in the dark.
@@ -105699,6 +105699,7 @@ Thallo is at the gate. "Some lads tried the stores door in the night," he says. 
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && ph !== 2, fx:()=>{ S.f[rk] = 1; rest(day ? 'The squad sits an hour by the cook-fire in the sun, and the heavies step over its legs.' : 'The squad sits an hour by the fire in the empty yard, and listens to the city.'); }, go:'b9_c1_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c1_fire_talk'},
             {t:'Down to the gate. The woman.', req:()=>ph === 1 && b91WomanDue(), onward:true, go:'b9_c1_woman'},
+            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone, onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
             {t:'The gate, with the heavies. The march.', req:()=>day && !!S.f.b9_c1_lootersDone, onward:true, go:'b9_c1_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c1_fire_rest:()=>({sp:'The Third\'s fire', scene:b91Ph() >= 3 ? 'b9_barracks' : 'b9_letheras_night', txt:
@@ -107328,7 +107329,7 @@ const B9CH3 = {
       folk:[{x:12, y:3, kind:'b5_letherii', name:'A Letherii orderly with a pot', line:'Boiled water for the carts. Boil it, cool it, carry it, boil the next. The healers say the water is the fever. The water says nothing.'},
             {x:9, y:10, kind:'b2soldier', name:'A heavy on watch', line:'Fires all the way east to the hill. That is us, that is. Looks like an army. Smells like one too.'}],
       quest:()=> b93Ph() === 1 ? (!S.f.b9_c3_orders1 ? 'Thallo, by the road. He has the word from the front.' : !S.f.b9_c3_healer ? 'The fever-carts. A Letherii healer is going down them.' : 'The fire, and sleep. The column moves at first light.')
-        : !S.f.b9_c3_orders3 ? 'Thallo, at the fire. He has been to the sergeants\' fires.' : !b93Key() ? `The fever-carts. ${b93SickIn() ? NAME(b93Sick()) + ' is worse.' : 'The sick are worse.'}` : 'First light.',
+        : !S.f.b9_c3_orders3 ? 'Thallo, at the fire. He has been to the sergeants\' fires.' : !b93Key() ? `The fever-carts. ${b93SickIn() ? NAME(b93Sick()) + ' is worse.' : 'The sick are worse.'}` : 'The fire. First light, and the column moves.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:4, node:()=>b93Ph() === 1 ? 'b9_c3_thallo' : 'b9_c3_thallo3', fresh:()=>b93Ph() === 1 ? !S.f.b9_c3_orders1 : !S.f.b9_c3_orders3},
         {id:'healer', name:'A Letherii healer', kind:'b9_c3_healer', x:6, y:4, node:()=>'b9_c3_healer', show:()=>b93Ph() === 1, fresh:()=>!S.f.b9_c3_healer},
@@ -107669,6 +107670,7 @@ ${b93Say({brask:`Brask drags the dogs out past the camp's edge by their hind leg
             {t:'"What are we marching for?"', req:()=>ph === 3 && !!S.f.b9_c3_orders3 && !(S.b9 && S.b9.wit && S.b9.wit.c3), go:'b9_c3_witness'},
             {t:'Turn in. The column moves at first light.', req:()=>ph === 1 && !!S.f.b9_c3_healer, onward:true, go:'b9_c3_turnin'},
             {t:'The fever-carts. The captain\'s word.', req:()=>ph === 3 && !!S.f.b9_c3_orders3 && !b93Key(), onward:true, go:'b9_c3_key'},
+            {t:'First light. The column moves.', req:()=>ph === 3 && !!b93Key(), onward:true, go:b93Key() === 'boil' ? 'b9_c3_boil_day' : 'b9_c3_press_day'}, // v13.45.0: after the key, "Not now" left no way on (a soft-lock)
             {t:'Out onto the Wastes, with the column.', req:()=>edge, onward:true, go:'b9_c3_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c3_fire_rest:()=>({sp:'The Third\'s fire', scene:b93Ph() >= 4 ? 'b9_c3_edge' : 'b9_c3_fevercamp', txt:
@@ -108889,7 +108891,7 @@ A carter comes running from the officers' fires with a lamp. The quartermaster's
 Yelt is coming along the wagons with his lamp and his book.`,
       ch:[{t:'Yelt.', go:'b9_c4_yelt_night'},
           {t:'Back to the ring.', go:()=>startExplore()}]}),
-    b9_c4_yelt_night:()=>({sp:'Yelt', scene:'b9_camp_night', fx:()=>{ if (S.f.b9_c4_raidDone) S.f.b9_c4_closed = 1; }, txt: !S.f.b9_c4_raidDone ?
+    b9_c4_yelt_night:()=>({sp:'Yelt', scene:'b9_camp_night', fxAgain:true, fx:()=>{ if (S.f.b9_c4_raidDone) S.f.b9_c4_closed = 1; }, txt: !S.f.b9_c4_raidDone ?
 `Yelt is at his tailboard with the lamp turned down and the book shut, listening. "North side," he whispers. "I heard them." He does not get up. "I am a clerk. I have written down that I heard them."` :
 `Yelt goes along the water wagons with the lamp held up, counting, and then counts again, and writes it in the book in his small exact hand. Then he writes the runner's going, and the horse, and the skin of water, and draws a line under it.
 
@@ -110969,7 +110971,7 @@ Late in the day a runner comes down the line from the Finadd at a crouch. The wh
 East, past the last wagons, the dust is coming in low over the plain, and the oxen have smelled what is in it.${b96If('brennet', `\n\nBrennet is going down the picket with his hands on the oxen's necks, saying their names. "They know," he says. "They always know first."`)}`,
       ch:[{t:'To the east side of the wagons.', go:'b9_c6_tr_dust'},
           {t:'Walk the train.', go:()=>startExplore()}]}),
-    b9_c6_tr_dust:()=>{ if (S.f.b9_c6_trainDone) return {sp:'The east side', scene:'b9_c6_wagons', txt:`The dust on the east side of the wagons is only dust again, settling on the barrels.`, ch:[{t:'Back.', go:()=>startExplore()}]};
+    b9_c6_tr_dust:()=>{ if (S.f.b9_c6_trainDone) return {sp:'The east side', scene:'b9_c6_wagons', txt:`The dust on the east side of the wagons is only dust again, settling on the barrels.`, ch:[{t:'Back to the line. The Finadd\'s runner is waving.', onward:true, go:'b9_c6_pullback'}, {t:'Not now.', go:()=>startExplore()}]};
       return {sp:'Shapes in the dust', scene:'b9_c6_wagons', html:rationsHTML(), txt:
 `Out of the low dust on the east side of the wagons, two of them, walking, plate dark as wet slate, short thick tails, heads that do not turn. They are not coming for the squad. They are coming for the wagons, and the water in them, as if they knew what it was for.${b96If('kaedra', `\n\nKaedra has an arrow out. "They're not hunting us," she says. "They're hunting the train." She draws. "So are we, now."`)}`,
         ch:[{t:'Draw the last wagons in round the water and hold them there.', check:['wits', 16], rations:true,
@@ -111005,7 +111007,8 @@ Yelt gets down off his tailboard. He goes along the water wagons with the book o
       ch:[{t:'Back.', go:()=>startExplore()}]}),
     b9_c6_tr_wagon:()=>({sp:'The wagons', scene:'b9_c6_wagons', txt:
 `Supply wagons ${b96Booked() ? 'drawn in nose to tail, wheels chocked, shafts down' : 'half drawn in, the carters still hauling the last of them round'}, tilts patched in three colours and grey with the day's dust.`,
-      ch:[{t:'Back.', go:()=>startExplore()}]}),
+      ch:[...(S.f.b9_c6_trainDone ? [{t:'Back to the line. The Finadd\'s runner is waving.', onward:true, go:'b9_c6_pullback'}] : []), // v13.45.0: "Not now" after the wagons came through left no way on (a soft-lock)
+          {t:S.f.b9_c6_trainDone ? 'Not now.' : 'Back.', go:()=>startExplore()}]}),
     b9_c6_tr_barrels:()=>({sp:'The water', scene:'b9_c6_wagons', txt:
 `Water barrels lashed three high, wagons nine to fourteen, each with its number burned in the stave. The whole escort's tomorrow, in a row.`,
       ch:[{t:'Back.', go:()=>startExplore()}]}),

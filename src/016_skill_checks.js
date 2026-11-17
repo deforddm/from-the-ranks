@@ -157,7 +157,7 @@ function talk(id){
   if (S.picksDue && S.picksDue.length) return openPicks(() => talk(id));
   const n = DLG[id]();
   S.node = id; save();
-  if (n.fx) { S.fxd = S.fxd || {}; if (!S.fxd[id]) { S.fxd[id] = 1; keyWatch(n.fx); } }
+  if (n.fx) { S.fxd = S.fxd || {}; if (n.fxAgain || !S.fxd[id]) { S.fxd[id] = 1; keyWatch(n.fx); } } // v13.45.0: fxAgain, for an fx that sets a flag only once its condition holds (run once, a visit before the condition left the flag unset for good)
   if (n.scene) { sceneShell(n.scene); }
   const sh = $('#sheet'); sh.hidden = false;
   const noteHtml = notes.map(x => `<div class="note ${x.c}">${esc(x.t)}</div>`).join(''); notes = [];

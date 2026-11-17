@@ -142,7 +142,7 @@ const B9CH3 = {
       folk:[{x:12, y:3, kind:'b5_letherii', name:'A Letherii orderly with a pot', line:'Boiled water for the carts. Boil it, cool it, carry it, boil the next. The healers say the water is the fever. The water says nothing.'},
             {x:9, y:10, kind:'b2soldier', name:'A heavy on watch', line:'Fires all the way east to the hill. That is us, that is. Looks like an army. Smells like one too.'}],
       quest:()=> b93Ph() === 1 ? (!S.f.b9_c3_orders1 ? 'Thallo, by the road. He has the word from the front.' : !S.f.b9_c3_healer ? 'The fever-carts. A Letherii healer is going down them.' : 'The fire, and sleep. The column moves at first light.')
-        : !S.f.b9_c3_orders3 ? 'Thallo, at the fire. He has been to the sergeants\' fires.' : !b93Key() ? `The fever-carts. ${b93SickIn() ? NAME(b93Sick()) + ' is worse.' : 'The sick are worse.'}` : 'First light.',
+        : !S.f.b9_c3_orders3 ? 'Thallo, at the fire. He has been to the sergeants\' fires.' : !b93Key() ? `The fever-carts. ${b93SickIn() ? NAME(b93Sick()) + ' is worse.' : 'The sick are worse.'}` : 'The fire. First light, and the column moves.',
       npcs:[
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:9, y:4, node:()=>b93Ph() === 1 ? 'b9_c3_thallo' : 'b9_c3_thallo3', fresh:()=>b93Ph() === 1 ? !S.f.b9_c3_orders1 : !S.f.b9_c3_orders3},
         {id:'healer', name:'A Letherii healer', kind:'b9_c3_healer', x:6, y:4, node:()=>'b9_c3_healer', show:()=>b93Ph() === 1, fresh:()=>!S.f.b9_c3_healer},
@@ -483,6 +483,7 @@ ${b93Say({brask:`Brask drags the dogs out past the camp's edge by their hind leg
             {t:'"What are we marching for?"', req:()=>ph === 3 && !!S.f.b9_c3_orders3 && !(S.b9 && S.b9.wit && S.b9.wit.c3), go:'b9_c3_witness'},
             {t:'Turn in. The column moves at first light.', req:()=>ph === 1 && !!S.f.b9_c3_healer, onward:true, go:'b9_c3_turnin'},
             {t:'The fever-carts. The captain\'s word.', req:()=>ph === 3 && !!S.f.b9_c3_orders3 && !b93Key(), onward:true, go:'b9_c3_key'},
+            {t:'First light. The column moves.', req:()=>ph === 3 && !!b93Key(), onward:true, go:b93Key() === 'boil' ? 'b9_c3_boil_day' : 'b9_c3_press_day'}, // v13.45.0: after the key, "Not now" left no way on (a soft-lock)
             {t:'Out onto the Wastes, with the column.', req:()=>edge, onward:true, go:'b9_c3_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c3_fire_rest:()=>({sp:'The Third\'s fire', scene:b93Ph() >= 4 ? 'b9_c3_edge' : 'b9_c3_fevercamp', txt:

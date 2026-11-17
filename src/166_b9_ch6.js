@@ -547,7 +547,7 @@ Late in the day a runner comes down the line from the Finadd at a crouch. The wh
 East, past the last wagons, the dust is coming in low over the plain, and the oxen have smelled what is in it.${b96If('brennet', `\n\nBrennet is going down the picket with his hands on the oxen's necks, saying their names. "They know," he says. "They always know first."`)}`,
       ch:[{t:'To the east side of the wagons.', go:'b9_c6_tr_dust'},
           {t:'Walk the train.', go:()=>startExplore()}]}),
-    b9_c6_tr_dust:()=>{ if (S.f.b9_c6_trainDone) return {sp:'The east side', scene:'b9_c6_wagons', txt:`The dust on the east side of the wagons is only dust again, settling on the barrels.`, ch:[{t:'Back.', go:()=>startExplore()}]};
+    b9_c6_tr_dust:()=>{ if (S.f.b9_c6_trainDone) return {sp:'The east side', scene:'b9_c6_wagons', txt:`The dust on the east side of the wagons is only dust again, settling on the barrels.`, ch:[{t:'Back to the line. The Finadd\'s runner is waving.', onward:true, go:'b9_c6_pullback'}, {t:'Not now.', go:()=>startExplore()}]};
       return {sp:'Shapes in the dust', scene:'b9_c6_wagons', html:rationsHTML(), txt:
 `Out of the low dust on the east side of the wagons, two of them, walking, plate dark as wet slate, short thick tails, heads that do not turn. They are not coming for the squad. They are coming for the wagons, and the water in them, as if they knew what it was for.${b96If('kaedra', `\n\nKaedra has an arrow out. "They're not hunting us," she says. "They're hunting the train." She draws. "So are we, now."`)}`,
         ch:[{t:'Draw the last wagons in round the water and hold them there.', check:['wits', 16], rations:true,
@@ -583,7 +583,8 @@ Yelt gets down off his tailboard. He goes along the water wagons with the book o
       ch:[{t:'Back.', go:()=>startExplore()}]}),
     b9_c6_tr_wagon:()=>({sp:'The wagons', scene:'b9_c6_wagons', txt:
 `Supply wagons ${b96Booked() ? 'drawn in nose to tail, wheels chocked, shafts down' : 'half drawn in, the carters still hauling the last of them round'}, tilts patched in three colours and grey with the day's dust.`,
-      ch:[{t:'Back.', go:()=>startExplore()}]}),
+      ch:[...(S.f.b9_c6_trainDone ? [{t:'Back to the line. The Finadd\'s runner is waving.', onward:true, go:'b9_c6_pullback'}] : []), // v13.45.0: "Not now" after the wagons came through left no way on (a soft-lock)
+          {t:S.f.b9_c6_trainDone ? 'Not now.' : 'Back.', go:()=>startExplore()}]}),
     b9_c6_tr_barrels:()=>({sp:'The water', scene:'b9_c6_wagons', txt:
 `Water barrels lashed three high, wagons nine to fourteen, each with its number burned in the stave. The whole escort's tomorrow, in a row.`,
       ch:[{t:'Back.', go:()=>startExplore()}]}),

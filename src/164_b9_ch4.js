@@ -533,7 +533,7 @@ A carter comes running from the officers' fires with a lamp. The quartermaster's
 Yelt is coming along the wagons with his lamp and his book.`,
       ch:[{t:'Yelt.', go:'b9_c4_yelt_night'},
           {t:'Back to the ring.', go:()=>startExplore()}]}),
-    b9_c4_yelt_night:()=>({sp:'Yelt', scene:'b9_camp_night', fx:()=>{ if (S.f.b9_c4_raidDone) S.f.b9_c4_closed = 1; }, txt: !S.f.b9_c4_raidDone ?
+    b9_c4_yelt_night:()=>({sp:'Yelt', scene:'b9_camp_night', fxAgain:true, fx:()=>{ if (S.f.b9_c4_raidDone) S.f.b9_c4_closed = 1; }, txt: !S.f.b9_c4_raidDone ?
 `Yelt is at his tailboard with the lamp turned down and the book shut, listening. "North side," he whispers. "I heard them." He does not get up. "I am a clerk. I have written down that I heard them."` :
 `Yelt goes along the water wagons with the lamp held up, counting, and then counts again, and writes it in the book in his small exact hand. Then he writes the runner's going, and the horse, and the skin of water, and draws a line under it.
 

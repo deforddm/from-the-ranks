@@ -493,7 +493,7 @@ He is told that it is lying down again now. He is not told whether that is true.
 
 Then his mother calls his name from the lane, once, in a voice she has plainly used before, and he comes out on his own from somewhere you had already looked, and runs past the Third to her without looking at any of it.`,
       ch:[{t:'Her door.', go:'b9_c1_house'}]}),
-    b9_c1_yardgate:()=>({sp:'Their stable yard', scene:'b9_c1_stable', fx:()=>{ if (S.f.b9_c1_boy) { S.f.b9_c1_horse = 1; S.f.b9_c1_roof = 1; } }, again:()=> S.f.b9_c1_horseOut ? 'The household\'s yard, its stable barred.' : 'The household\'s yard, and the horse standing in it.', txt: !S.f.b9_c1_boy ?
+    b9_c1_yardgate:()=>({sp:'Their stable yard', scene:'b9_c1_stable', fxAgain:true, fx:()=>{ if (S.f.b9_c1_boy) { S.f.b9_c1_horse = 1; S.f.b9_c1_roof = 1; } }, again:()=> S.f.b9_c1_horseOut ? 'The household\'s yard, its stable barred.' : 'The household\'s yard, and the horse standing in it.', txt: !S.f.b9_c1_boy ?
 `A stable-yard gate, barred from the inside. Something big moves behind it, once, and is still. The woman's boy is still out in the alleys. Him first.` : S.f.b9_c1_horseOut ?
 `The household's yard. ${S.f.b9_c1_horseOut === 'out' ? 'Empty now, but for the straw and the marks in it where the Third dragged the horse out to the lane for the knackers.' : 'The stable door is barred, and whatever is in the stable is lying down, by the sound of it, and staying down.'}` :
 `The gate opens on a little yard with a lean-to stable and a cart with its shafts down, and the household's dray-horse standing in the middle of the yard in the dark.
@@ -557,6 +557,7 @@ Thallo is at the gate. "Some lads tried the stores door in the night," he says. 
             {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk] && ph !== 2, fx:()=>{ S.f[rk] = 1; rest(day ? 'The squad sits an hour by the cook-fire in the sun, and the heavies step over its legs.' : 'The squad sits an hour by the fire in the empty yard, and listens to the city.'); }, go:'b9_c1_fire_rest'},
             {t:'Talk with the squad.', go:'b9_c1_fire_talk'},
             {t:'Down to the gate. The woman.', req:()=>ph === 1 && b91WomanDue(), onward:true, go:'b9_c1_woman'},
+            {t:'Sit out the night. Dawn, and the count.', req:()=>ph === 2 && !!S.f.b9_c1_storesDone, onward:true, go:'b9_c1_dawn_stores'}, // v13.45.0: "Not now" at the stores door left no way on (a soft-lock)
             {t:'The gate, with the heavies. The march.', req:()=>day && !!S.f.b9_c1_lootersDone, onward:true, go:'b9_c1_onward'},
             {t:'Not now.', go:()=>startExplore()}]}; },
     b9_c1_fire_rest:()=>({sp:'The Third\'s fire', scene:b91Ph() >= 3 ? 'b9_barracks' : 'b9_letheras_night', txt:

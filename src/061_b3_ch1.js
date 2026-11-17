@@ -394,7 +394,7 @@ Then he points with his chin, north, at the broken line of the city wall and the
 
 He lets that sit. "The tunnels first."`,
       ch:[{t:'"Sir."', go:()=>startExplore()}]}),
-    b3_c1_wj_again:()=>({sp:'Whiskeyjack', fx:()=>{ if (S.f.b3_c1_tunnelsDone) S.f.b3_c1_wjLine = 1; }, txt: S.f.b3_c1_tunnelsDone ?
+    b3_c1_wj_again:()=>({sp:'Whiskeyjack', fxAgain:true, fx:()=>{ if (S.f.b3_c1_tunnelsDone) S.f.b3_c1_wjLine = 1; }, txt: S.f.b3_c1_tunnelsDone ?
 `"Clear?"
 
 You tell him. In order, without anything in it that isn't so${S.f.b3_c1_boy === 'let' ? `, including the boy who went up the far shaft` : S.f.b3_c1_boy === 'provost' ? `, including the boy you handed to the provosts` : ''}. He listens the way he always has, as if a figure in a ledger were coming out even.
