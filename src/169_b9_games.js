@@ -81,7 +81,7 @@ function playB9Sack(opt = {}){
     draw(); };
   const end = () => { g.over = true; g.phase = 'over'; const W = g.mine >= B9G_SACKWIN; mgDeed(W ? 'b9SackWon' : 'b9SackLost'); AUDIO.play(W ? 'win' : 'lose');
     g.talk = mgSay('The quartermaster', W ? `"${g.mine} lots." He drags a full sack off the wagon's end with his boot and leaves it at your feet. "Biscuit. Off the Letherii's count, not ours. If the clerks can skim it, a sergeant can win it."` : `"${g.lost} lots to me." He sweeps the spilled biscuit back into a sack with the side of his hand. "Keep your eyes on the clerks, Sergeant. They've had more practice than you."`) +
-      b9gSay({tangle:() => mgSay('Tangle', W ? '"Thirds," Tangle says. "Split it in three, every time. Same as counting a satchel."' : '"Thirds," Tangle says, after. "You split it in halves. You never split anything in halves."'), haddat:() => mgSay('Haddat', '"My mother would have known by the smell," Haddat says. "The short sack is the one the clerk opened."'), _:''}); draw(); };
+      b9gSay({tangle:() => mgSay('Tangle', W ? '"Thirds," Tangle says. "Split it in three, every time. Same as counting a satchel."' : '"Thirds," Tangle says, after. "You split it in halves. You never split anything in halves."'), haddat:() => mgSay('Haddat', '"I would have known by the smell," Haddat says. "The short sack is the one the clerk opened."'), _:''}); draw(); };
   mgKeys({w:() => weigh(), n:() => toName(), h:() => heft(), ' ':() => { const b = $('#skDone') || $('#skGo') || $('#skWeigh'); b && !b.disabled && b.click(); }});
   /* the yard by day: the barracks wall, the wagons, the quartermaster's beam scale on its post, the sacks in a row */
   MG.anim = t => { const ctx = MG.ctx; if (!ctx || !MG.W) return; const W = MG.W, H = MG.H;

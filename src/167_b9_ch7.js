@@ -87,7 +87,7 @@ if (typeof ART !== 'undefined') [['b9_c7_rearguardcloak', 'b9_c6_escortscale'], 
 
 /* ---- the reading: the plain after dark, lit by what burns (READTABLE 'dod:7'); the first halt after dark ---- */
 B9READ[7] = {scene:'b9_dark', where:'the plain after dark, by the light of a burning wagon', set:'After dark behind the rearguard: a line of wagons burning where the heavies set them alight for the light, the short-tails somewhere out past it, and the Third sitting on the ground with its shields beside it.', back:'b9_c7_lull', backT:'Back to the line.',
-  say:{marrow:'"Not the place for it, child," Marrow says, and sits down anyway, in the wagon-light, with her bag in her lap. "Which is why we\'ll do it here." She smooths a patch of ground with her palm. "One card. Then back on your feet."',
+  say:{marrow:'"Not the place for it," Marrow says, and sits down anyway, in the wagon-light, with her bag in her lap. "Which is why we\'ll do it here." She smooths a patch of ground with her palm. "One card. Then back on your feet."',
        tallow:'"Grandmother read by a burning house once," Tallow says, crouching where the light is. "Said the cards come up honest by firelight. Nothing to hide behind." He lays the deck down. "One?"',
        oldninth:'The old marine comes along the back of the line with his deck in his fist and sits down by the Third without asking. "Read for the heavies after every bad day since Pale," he says. "This is a bad day." He sets his empty cup on the ground, out of habit. "One card."'}};
 
@@ -108,14 +108,14 @@ ROSTER_FIRES.dod = ROSTER_FIRES.dod || {}; ROSTER_FIRES.dod[7] = ['b9_c7_fire'];
 
 /* ---- the fire's talk: a line by each soldier the Third can field, late in the day (before) and in the retreat camp (after) ---- */
 const B97TALK = {
-  haddat:[()=>`Haddat has the blue shield on her knees and is tightening its straps, one buckle and then the next. "My mother said you know a wall by the morning after," she says. "Not before." She pulls the last strap. "We will know in the morning."`,
+  haddat:[()=>`Haddat has the blue shield on her knees and is tightening its straps, one buckle and then the next. "You know a wall by the morning after," she says. "Not before." She pulls the last strap. "We will know in the morning."`,
           ()=>`Haddat says the names at the fire, the long list, slowly. ${b97Fell().length ? `The new ${b97Fell().length > 1 ? 'ones come' : 'one comes'} at the end, and she says ${b97Fell().length > 1 ? 'them' : 'it'} twice.` : 'There are no new ones at the end of it. She says the end twice anyway, to be sure.'}`],
   sathi:[()=>`Sathi is grinning at the dust. "Tall," she says. "Slow to turn." She tests her knife on her thumb. "The Weasels would have liked this."`,
          ()=>`Sathi is lying on her back with her hands behind her head, looking at the stars. "We lived," she says, as if somebody had argued. "Good."`],
-  tangle:[()=>`Tangle has the satchel open. "${numw(S.inv.cusser || 0, true)} cusser${(S.inv.cusser || 0) === 1 ? '' : 's'}," he says. "The rest of it is half wasted on them. Plate turns it." He shuts the satchel. "Cussers, then. Close, and at the joints."`,
+  tangle:[()=>`Tangle sits with his back to the shields and his eyes shut, the cord round both wrists. "Cussers, close, at the joints," he says. "The rest is half wasted. Plate turns it." He opens one eye. "I'm not saying I like close."`,
           ()=>`Tangle has the satchel open on his knees and is not counting it, for once. "Knew it wouldn't be enough," he says. "Wasn't." He closes it. "Was enough for the stretch, though."`],
-  marrow:[()=>`Marrow is laying out her linen on a cloak in rows, and her salves, and her needles, as if for inspection. "I will be busy, child," she says. "Later. Not you, I hope." She ties a knot in her string, for luck.`,
-          ()=>`Marrow is sitting with her eyes shut and her hands open in her lap. "Soliel's door is a long way off out here," she says. "She still came. Mostly." She opens her eyes. "Eat something."`],
+  marrow:[()=>`Marrow is laying out her linen on a cloak in rows, and her salves, and her needles, as if for inspection. "I'll be busy," she says. "Later. Not you, I hope." She ties a knot in her string, for luck.`,
+          ()=>`Marrow is sitting with her eyes shut and her hands open in her lap. "Soliel's a long way off out here," she says. "She still came. Mostly." She opens her eyes. "Eat something."`],
   mirrel:[()=>`Mirrel is checking the squad's boots, one pair after another, and tightening what can be tightened. "If you have to walk back in the dark," she says, "you walk back on these." She does not like what she finds. She binds it anyway.`,
           ()=>`Mirrel is counting the wounded at the surgeons' lines across the camp in threes, under her breath. She stops before the end. "Too many to count in threes," she says. "I'll count them tomorrow. Fewer."`],
   doss:[()=>`Doss has the flail across his knees. "On the holding," he says, "when the river came up, the factor's men went to the high field with the stock. We stayed for the houses." He looks at the stretch. "Same thing. Somebody stays."`,
@@ -333,7 +333,7 @@ const B9CH7 = {
     b9_c7_start:()=>({sp:'The stretch', scene:'b9_c7_late', fx:()=>{ S.f.b9_c7_ph = S.f.b9_c7_ph || 1; }, again:()=>'The heavies\' stretch, between the cut bank and the burned wagons, and the dust in front.', txt:
 `The heavies' stretch is two hundred paces of trampled grass with a cut bank at the west end, high as a man, and at the east end a line of supply wagons that somebody set on fire at noon, so that nothing could come round that way without walking through it. The shields are set along it. Behind it the ground runs down south, toward where the column is getting away.
 
-In front of it there is the dust. It has been in front of it all day. There are shapes in it, too tall for soldiers, going one way and another along the far side, and now and then a pale light, there and gone.${b97If('tegra', `\n\nTegra comes up the back of the line from the guides' carts with an axe in each hand. "The guides are going with the column," she says. "I told them I was with the Third." She looks at the dust. "They did not argue."`)}${b97If('brask', `\n\nBrask is standing in the line already, as if he had been born in it. "Heavies' stretch," he says. "Nice and short." He sounds content.`)}
+In front of it there is the dust. It has been in front of it all day. There are shapes in it, too tall for soldiers, going one way and another along the far side, and now and then a pale light, there and gone.${b97If('tegra', `\n\nTegra comes up the back of the line from the guides' carts with an axe in each hand. "The guides are going with the column," she says. "I told them I was with the Third." She looks at the dust. "They did not argue."`)}${b97If('brask', `\n\nBrask is standing in the line already, as if he had been born in it. "Heavies' stretch," he says. "Nice and short." He sounds content.`)}${b97If('tangle', `\n\nTangle is on his knees behind the shields laying the cussers out on a cloak where he can reach them without looking. He does not count them aloud. Everybody can see how many there are.`)}${b97If('mirrel', `\n\nMirrel has set her bag down open behind the brew-fire, linen on top. "If you can walk, you walk here," she says to the Third. "If you can't, shout. I'll come." She looks at the dust. "Shout loud."`)}
 
 Thallo is at the heavies' brew-fire behind the line with the captain's word, eating something.`,
       ch:[{t:'Thallo.', go:'b9_c7_thallo'},
@@ -392,7 +392,7 @@ The heavies close up behind him and look at the dust.`,
 `The surgeons' last cart has gone south after the column. Its ruts go away down the slope into the dust.` :
 `The surgeons' last cart is at the back of the stretch with its team in the traces and its bed full, and the surgeon on the box is looking south and not at anything behind him. He is going now, whatever is on it.
 
-A heavy of the next file is sitting in the grass twenty paces from the cart with his leg out in front of him at an angle no leg should go. He has his sword across his knees. He has decided, by the look of him, that he will be staying.${b97Say({marrow:'\n\nMarrow is already on her knees by him. "The cart, child," she says to you, not to him. "He goes on the cart."', mirrel:'\n\nMirrel is already on her knees by him, binding the leg straight with his own scabbard. "The cart," she says. "Now, or never."', _:''})}`,
+A heavy of the next file is sitting in the grass twenty paces from the cart with his leg out in front of him at an angle no leg should go. He has his sword across his knees. He has decided, by the look of him, that he will be staying.${b97Say({marrow:'\n\nMarrow is already on her knees by him. "The cart," she says to you, not to him. "He goes on the cart."', mirrel:'\n\nMirrel is already on her knees by him, binding the leg straight with his own scabbard. "The cart," she says. "Now, or never."', _:''})}`,
       ch:[{t:'Carry him to the cart before it goes, at a run, with whatever has to be left on the ground to do it.', check:['might', 17], rations:true, req:()=>!S.f.b9_c7_cart, fx:()=>{ S.f.b9_c7_cartTried = 1; },
             edges:id=>[id === 'brask' && ['a heavy can carry a heavy; it is what the scale is for', 2], id === 'ottar' && ['the Perish carry their own off the field', 1], id === 'haddat' && ['she has carried the wounded off a wall before', 1], id === 'doss' && ['he carried sacks on the holding all his life', 1], id === 'mirrel' && ['she knows how to lift a broken leg so it stays broken in one place', 1], id === 'tangle' && ['the satchel goes nowhere without him', -1]],
             near:{t:()=>`Yes, but to run him to the cart in time ${b97Nm(b97Who())} ${b97V(b97Who(), 'have', 'has')} to drop the squad's last sack of biscuit in the grass, and when ${b97He(b97Who())} ${b97V(b97Who(), 'go', 'goes')} back for it the column's stragglers have been through it.`, fx:()=>{ if (!S.f.b9_c7_lost) { S.f.b9_c7_lost = 1; b9Ration(-1, 'a sack of biscuit left for a stretcher'); } else bruise(b97Who(), bruiseN()); }},
@@ -465,10 +465,10 @@ The Third does not say what any of it is. It does not know.${b97If('yorin', `\n\
     b9_c7_fire_rest:()=>({sp:'The fire', scene:b97Ph() >= 4 ? 'b9_c7_camp' : 'b9_c7_late', txt: b97Ph() >= 4 ?
 `An hour by the dung-fire, with the camp quiet round it, quieter than any camp the Third has been in, and the stars going over.
 
-${b97Say({marrow:'Marrow goes round the squad with her hands, slowly, and stops at each of them. "Sleep, child," she says. "Tonight you can."', mirrel:'Mirrel goes round the squad\'s feet and the squad\'s cuts, and counts them, and frowns, and binds them.', _:'Some of the Third sleep. The rest watch the fire.'})}` :
+${b97Say({marrow:'Marrow doesn\'t get up. She looks at each of them across the fire, one at a time, the way she looks at a cut, and seems satisfied. "Sleep," she says. "Tonight you can."', mirrel:'Mirrel takes the old linen off, three of them at a time, and puts clean on, and burns the old. "Don\'t watch," she says. "It\'s only linen."', _:'Some of the Third sleep. The rest watch the fire.'})}` :
 `The pot is thin, and the Third eats it sitting on the ground behind the line, with its shields beside it and its eyes on the dust over the top of the shields.
 
-${b97Say({marrow:'Marrow goes along the squad with her bag, closing what she can. "Quickly, child," she says. "While there is time."', mirrel:'Mirrel goes along the squad with her bag, closing what she can, and tightening boots.', _:'Nobody talks much. There is not much to say that the dust is not saying.'})}`,
+${b97Say({marrow:'Marrow closes what she can from where she sits, and has them brought to her. "Quickly," she says. "While there\'s time."', mirrel:'Mirrel binds the squad\'s shield hands, tight, so the grip won\'t slip when they sweat. "Fist," she says, to each. "Again. Good."', _:'Nobody talks much. There is not much to say that the dust is not saying.'})}`,
       ch:[{t:'Back to the fire.', go:'b9_c7_fire'}]}),
     b9_c7_fire_talk:()=>{ const camp = b97Ph() >= 4, ln = [];
       Object.keys(B97TALK).forEach(id => { if (b9In(id)) ln.push(B97TALK[id][camp ? 1 : 0]()); });
@@ -488,7 +488,7 @@ What are we standing here for?`,
           {t:'Not now.', go:()=>startExplore()}]}),
     b9_c7_wit_done:()=>{ const w = S.f.b9_c7_wit;
       return {sp:'The stretch', scene:'b9_c7_late', html:rationsHTML(), txt:
-`${w === 'each' ? b97Say({haddat:'Haddat nods, once. "Each other," she says. "My mother would say that is enough. She said it about less."', marrow:'Marrow puts her hand on the nearest shoulder. "Each other, child," she says. "Always was."', _:'The Third shifts a little closer along the shields. Not much. Enough.'})
+`${w === 'each' ? b97Say({haddat:'Haddat nods, once. "Each other," she says. "That is enough. I have marched for less."', marrow:'Marrow puts her hand on the nearest shoulder. "Each other," she says. "Always was."', _:'The Third shifts a little closer along the shields. Not much. Enough.'})
   : w === 'own' ? b97Say({brask:'Brask nods slowly. "Somebody walks off it," he says. "Somebody always has to. That\'s the job." He looks at the tally-stick. "Old squad had nobody."', haddat:'Haddat says the line back to you, quietly, the way the old marine said to say it. Then the next soldier says it to her.', _:'It goes along the Third, quietly, one to the next, the way the old hands say it.'})
   : b97Say({tangle:'Tangle nods. "Honest," he says. "We\'re here because they put us here." He looks at the satchel. "Still going to throw the cusser, mind."', tegra:'Tegra laughs, short. "At least you do not lie to yourselves," she says. "My people would like you better for it."', _:'Somebody in the Third laughs, short, at a thing that is true and not funny.'})}${b97If('tegra', w !== 'put' ? `\n\nTegra looks at the Third along the shields. "Among my people the dead watch," she says. "Tonight I think the living do." She lifts an axe.` : '')}
 
@@ -719,7 +719,7 @@ That night the column stops. It stays stopped, the next day, and the next. The s
     b9_c7_camp_arrive:()=>({sp:'The retreat camp', scene:'b9_c7_camp', html:rationsHTML(), fx:()=>{ if (!S.f.b9_c7_pot) { S.f.b9_c7_pot = 1; b9Ration(1, 'the column\'s pot'); } }, again:()=>'The retreat camp at dusk, fewer tents than there were, the dung-fires low.', txt:
 `Days after, the column is still stopped on the same stretch of the Wastes, and has begun, slowly, to look like an army again. Tents in rows. Wagons drawn in. The surgeons' lines at one end, long, and getting shorter. Fewer tents than there were at the start of the Wastes, in every company. Nobody counts them out loud.
 
-The quartermasters have found what was in the wagons that came through, and put it in the column's pot, and the pot, for the first time since before the dust, has something in it. The Third eats it sitting on the ground and does not talk.${b97Fell().length ? `\n\n${b97Say({haddat:`Haddat sets a cup down at the fire for ${b97And(b97Fell().map(NAME))}, with water in it, as her mother would have.`, _:`There is a gap at the fire where ${b97And(b97Fell().map(NAME))} would sit. Nobody sits in it.`})}` : ''}
+The quartermasters have found what was in the wagons that came through, and put it in the column's pot, and the pot, for the first time since before the dust, has something in it. The Third eats it sitting on the ground and does not talk.${b97Fell().length ? `\n\n${b97Say({haddat:`Haddat sets a cup down at the fire for ${b97And(b97Fell().map(NAME))}, with water in it, the Hissari way.`, _:`There is a gap at the fire where ${b97And(b97Fell().map(NAME))} would sit. Nobody sits in it.`})}` : ''}
 
 Thallo comes along the company's fires in the dusk with three slates under his arm instead of one.`,
       ch:[{t:'Thallo.', go:'b9_c7_slates'},
@@ -755,7 +755,7 @@ ${f === 'doubt' ? `The Third is quiet a long while. Then ${b97Say({tangle:'Tangl
     b9_c7_key_adjunct:()=>({sp:'The first slate', scene:'b9_c7_camp', html:rationsHTML(), txt:
 `Thallo writes the Third's names on the east slate, one after another, with a stub of chalk, slowly.${b97Fell().length ? ` He leaves a space at the bottom, and does not explain it.` : ''}
 
-"East," he says. "Into country that's not on the maps. After the Adjunct, wherever that is." He looks at the slate. "Heavies' place. I'll be on it too." He stands up. "Good."${b97Say({haddat:'\n\nHaddat nods, once, and goes on tightening the blue shield\'s straps.', marrow:'\n\nMarrow ties a knot in her string. "East, child," she says. "There will be sick in the east too."', _:''})}`,
+"East," he says. "Into country that's not on the maps. After the Adjunct, wherever that is." He looks at the slate. "Heavies' place. I'll be on it too." He stands up. "Good."${b97Say({haddat:'\n\nHaddat nods, once, and goes on tightening the blue shield\'s straps.', marrow:'\n\nMarrow ties a knot in her string. "East," she says. "There\'ll be sick in the east too."', _:''})}`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
     b9_c7_key_south:()=>({sp:'The second slate', scene:'b9_c7_camp', html:rationsHTML(), txt:
 `Thallo writes the Third's names on the south slate, one after another, and looks at them a long breath.
@@ -777,7 +777,7 @@ ${f === 'doubt' ? `The Third is quiet a long while. Then ${b97Say({tangle:'Tangl
 
     /* the surgeons' lines */
     b9_c7_surgeons:()=>({sp:'The surgeons\' lines', scene:'b9_c7_camp', fx:()=>{ S.f.b9_c7_surgeons = 1; }, again:()=>'The surgeons\' lines at the camp\'s end, getting shorter.', txt:
-`The surgeons' lines are at the end of the camp, rows of the wounded on blankets in the dusk, and healers going down the rows with lamps. The rows are shorter than they were. The surgeons do not say which way they got shorter, and nobody asks.${S.f.b9_c7_cart === 'ok' ? `\n\nAt the end of one row a heavy with his leg in a splint lifts his hand at the Third as it passes. He has his sword across his knees.` : ''}${b97Say({marrow:'\n\nMarrow goes down a row without being asked, and kneels by somebody, and stays.', mirrel:'\n\nMirrel goes down a row without being asked, counting in threes, and stops counting, and kneels.', _:''})}`,
+`The surgeons' lines are at the end of the camp, rows of the wounded on blankets in the dusk, and healers going down the rows with lamps. The rows are shorter than they were. The surgeons do not say which way they got shorter, and nobody asks.${S.f.b9_c7_cart === 'ok' ? `\n\nAt the end of one row a heavy with his leg in a splint lifts his hand at the Third as it passes. He has his sword across his knees.` : ''}${b97If('marrow', '\n\nMarrow goes down a row without being asked, and kneels by somebody, and stays.')}${b97If('mirrel', '\n\nMirrel takes the next row, counting in threes, and stops counting, and kneels.')}`,
       ch:[{t:'Back to the camp.', go:()=>startExplore()}]}),
 
     /* the old marine, days after */
@@ -792,7 +792,7 @@ ${f === 'doubt' ? `The Third is quiet a long while. Then ${b97Say({tangle:'Tangl
       return {sp:'The roll', scene:'b9_c7_camp', fx:()=>{ if (!S.f.b9_c7_roll) { S.f.b9_c7_roll = 1; gain('b9_c7_rollstick'); } }, txt:
 `${cutter} a stick of hard wood off a broken wagon-rail and a belt-knife, and cuts the Third's roll into it by the fire: a notch for every soldier who has walked with the Third since Letheras.${b97Fell().length ? ` For ${b97And(b97Fell().map(NAME))}, a line across the notch.` : ''}${Object.keys(S.dead || {}).some(id => S.dead[id] && S.dead[id].from) ? ` For the ones who fell before Letheras, a line across as well, because they walked with it in the ways that count.` : ''}
 
-When it is done it goes round the fire, hand to hand, and everybody runs a thumb along it, and it comes back.${b97If('brask', `\n\nBrask looks at it a long while, and then at his own tally-stick, the four notches filed flat. He does not file anything.`)}`,
+When it is done it goes round the fire, hand to hand, and everybody runs a thumb along it, and it comes back.${b97If('tangle', ` Tangle counts the notches when it reaches him, out loud, slowly, all of them. It is the first time anybody has heard him count something that is not munitions.`)}${b97If('brask', `\n\nBrask looks at it a long while, and then at his own tally-stick, the four notches filed flat. He does not file anything.`)}`,
         ch:[{t:'Back to the fire.', go:'b9_c7_fire'}]}; },
 
     /* the end: the last of it */

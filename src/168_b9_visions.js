@@ -73,7 +73,7 @@ The King's brother sits very still, waiting for his.
 
 Fiddler's hand is on the next card. The card shows no more than that: a sergeant's hand on the deck, a lamp leaning, and a city outside that will not lie down.`},
     b9vEnd({
-      marrow:() => `Marrow lets the card go. "Tonight," she says. "Now, child. Across the city." She listens to the dark beyond the yard, where the dogs are still at it. "A sergeant of marines, dealing for the Adjunct, and the Deck all the way open." She lays the card face down on the kit-crate and keeps her palm on it. "That's what we felt. That's where everyone went to get away from." Her hands are cold.`,
+      marrow:() => `Marrow lets the card go. "Tonight," she says. "Now. Across the city." She listens to the dark beyond the yard, where the dogs are still at it. "A sergeant of marines, dealing for the Adjunct, and the Deck all the way open." She lays the card face down on the kit-crate and keeps her palm on it. "That's what we felt. That's where everyone went to get away from." Her hands are cold.`,
       tallow:() => `Tallow puts the card face down on the crate. "Grandmother said a full reading wakes the drowned," he says. He looks toward the roofs, where the long sound came from. "I thought she meant it as a saying." He wraps the deck in its oilcloth, tight. "I'd stay in, Sergeant. All night. I'd stay right here."`,
       oldninth:() => `The old marine lets the card go and drinks. "Fiddler," he says. "Knew it'd be him. No one else in this army could hold the cards that long." He pours a finger more, slowly. "That's the whole Deck out, Sergeant, and the city hearing it." He tips the cup at the dark. "Stay in. I'm staying in."`,
       other:(r, p) => `${r.name} lets the card go. "A sergeant dealing the Deck," ${p.s} says, "across the city. Tonight."`})]},
@@ -154,7 +154,7 @@ Koryk climbs down out of the cart. His legs hold. Up the road the column is movi
 
 He picks up his kit, which someone has been carrying for him, and shoulders it, and starts walking. He is not going to ask who.`},
     b9vEnd({
-      marrow:() => `Marrow lets the card go. "The same fever," she says. "Up the column, in the marines' carts." She looks along the sick laid out by the stone, at the skins and the boiling pots. "And the Letherii cure. It took, child. All down the line." She lays the card face down. "Keep them drinking. All night. That's the whole of the reading."`,
+      marrow:() => `Marrow lets the card go. "The same fever," she says. "Up the column, in the marines' carts." She looks along the sick laid out by the stone, at the skins and the boiling pots. "And the Letherii cure. It took. All down the line." She lays the card face down. "Keep them drinking. All night. That's the whole of the reading."`,
       tallow:() => `Tallow puts the card face down. "A marine in a cart," he says, "and a healer with a ladle." He looks at the brown water in the pot, beginning to boil. "Grandmother said salt in the water for the shakes. I thought she meant for the taste." He feeds the fire. "It works, Sergeant. The card says it works."`,
       oldninth:() => `The old marine lets the card go and drinks, from the boiled pot this time. "Koryk," he says. "Fiddler's lot. Big lad, bones in his hair." He wipes his mouth. "Up and walking by morning, him and all his cart." He looks east. "And Fiddler with the look. Don't like that part, Sergeant."`,
       other:(r, p) => `${r.name} lets the card go. "A marine with the fever," ${p.s} says, "and the cure that works."`})]},
@@ -231,7 +231,7 @@ He gets back into the saddle, stiffly, and turns the horse's head toward the arm
 
 The card shows no more than that: a Fist riding back to his column, a long way out on an empty plain, at a walk that is not quite as quick as it ought to be.`},
     b9vEnd({
-      marrow:() => `Marrow lets the card go. "The Fist," she says. "Fist Keneb, out on his own, looking at all this." She looks round at the bare ground, the low fire, the dark on every side. "Counting what he can't fix, child. I know that face." She lays the card down in the dust. "And then the Adjunct sends for him, and he goes."`,
+      marrow:() => `Marrow lets the card go. "The Fist," she says. "Fist Keneb, out on his own, looking at all this." She looks round at the bare ground, the low fire, the dark on every side. "Counting what he can't fix. I know that face." She lays the card down in the dust. "And then the Adjunct sends for him, and he goes."`,
       tallow:() => `Tallow puts the card face down on the bare ground. "That was the Fist," he says. "Riding out to look at it." He looks east, where there is nothing to see. "Grandmother said you look at the sea before you go out on it. So it knows you've seen it." He pauses. "I don't think this place cares who looks at it, Sergeant."`,
       oldninth:() => `The old marine lets the card go. "Keneb," he says, and drinks, and is quiet a while. "Fist's got the whole army on his back and Blistig sitting on top of it." He turns the cup in his hands. "Rides out to breathe. Can't blame him." He holds the cup out to the dark, a little, and then drinks it himself.`,
       other:(r, p) => `${r.name} lets the card go. "The Fist riding out alone," ${p.s} says, "until the Adjunct sends for him."`})]},
@@ -316,7 +316,7 @@ He climbs back into the cold, where the wind has no smell, and finds that someth
 
 No one saw them do it. Now someone has.`},
     b9vEnd({
-      marrow:() => `Marrow lets the card go. "After," she says. "Not tonight. Days after, child." She looks out past the burning wagons, into the dark where the short-tails are. "Something up very high, looking down at this place when it's empty." She lays the card face down on the ground, slowly. "It saw a trail. A lot of feet, walking away from here." She keeps her palm flat on the card. "That's us, child. Some of us. Walking." Her hands are cold.`,
+      marrow:() => `Marrow lets the card go. "After," she says. "Not tonight. Days after." She looks out past the burning wagons, into the dark where the short-tails are. "Something up very high, looking down at this place when it's empty." She lays the card face down on the ground, slowly. "It saw a trail. A lot of feet, walking away from here." She keeps her palm flat on the card. "That's us, child. Some of us. Walking." Her hands are cold.`,
       tallow:() => `Tallow puts the card face down. "A bird," he says. "Or something like a bird. Very high." He looks up, at the smoke going over the wagons. "Grandmother said the gulls know where the boats come in before the boats do." He swallows. "It saw a trail going away from here, Sergeant. It saw people walk out."`,
       oldninth:() => `The old marine lets the card go and turns his empty cup upside down on the ground. "After," he says. "Something up high, looking at what's left." He looks along the line at the shields in the wagon-light. "Saw us walk out. Some of us." He rights the cup again. "That's the only reading I want. Back on your feet, Sergeant."`,
       other:(r, p) => `${r.name} lets the card go. "Something high over the field," ${p.s} says, "after. And a trail, walking away."`})]},
