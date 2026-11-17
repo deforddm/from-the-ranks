@@ -142,7 +142,7 @@ Object.assign(TPL, {
     weapon:'Two Guild knives, thin and blackened, one at the hip and one at the back of the neck', armour:'A dark quilted jack with the Guild\'s cut, and soft boots for roofs',
     bio:'A Gadrobi tanner\'s son who went up onto the roofs at fourteen because the roofs paid. The Guild took him in, taught him the lines and the knots and which tiles hold, and then, this winter, handed him a paper with five old soldiers on it. He read it twice. He came to the Fourth\'s door instead.',
     traits:['Never stands where a window can see him', 'Knows which roofs hold and which only look as if they do', 'Counts the bells at night, out of habit, and can tell you which is which'], gear:['Two Guild knives', 'A knotted cord that is a map, if you know the knots'],
-    get quest(){ return 'Out of the Guild alive, which nobody does. He has decided to be the first. He would like it noted that he is not optimistic.'; }},
+    get quest(){ return 'Out of the Guild alive, which nobody does. He has decided to be the first. He does not expect it to go well.'; }},
   edrem:{name:'Edrem', role:'Pilgrim guard · Pannion veteran', sig:'E', col:'#8e9496', hp:24, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
     epithet:'"I wore the grey once. I keep the pilgrims\' road now. Nobody pays me. That is the point of it."', origin:'The old Domin, a town on the coast road that burned', age:41, service:'Nine years under the Seer, which he does not talk about, and years at the barrow since, which he does',
     weapon:'A long iron-shod mace, and a short blade for close work', armour:'Old grey scale with the Seer\'s marks filed off, and a pilgrim\'s cloak over it',
