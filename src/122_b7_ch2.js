@@ -374,7 +374,7 @@ When you come close the taller one speaks, in good Letherii with the vowels left
         again:()=> home ? 'The brazier in the yard, built up again, and the squad round it, home.' : 'The Sixth\'s brazier in the middle of the yard, coals and a kettle.', txt:
 `${home ? `The brazier is built up again, and the squad is round it, home, with the gate shut behind them and the Edur on the far side of it. Somewhere across the canal a page of a roll is missing, and a man in a grey coat has not noticed yet.${S.f.b7_ilsaDone === 1 && b7In('ilsa') ? `\n\nIlsa sits a little back from the coals with her grey coat folded on her knees and her hands open on top of it. She looks at the squad round the fire like a file she has not been given yet.` : ''}` : `The Sixth's brazier is in the middle of the yard where it has always been, coals and a kettle and the bench with the split in it. The squad sits round it with its back to the gate, which is not what soldiers do, and does it anyway, so as not to see the gate.`}${b72Say({tobet:`\n\nTobet is cutting a notch in his tally-stick, carefully, by the light of the coals.`, ammet:`\n\nAmmet is rolling bandage, and will not drink tonight, and says so.`, _:''})}`,
         ch:[...(home ? [] : [b7ReadChoice(2)]),
-            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(home ? 'The squad sleeps the rest of the night through, gate shut. Wounds close, mostly.' : 'The squad sits an hour at the brazier. Wounds close, mostly.'); }, go:'b7_c2_fire_rest'},
+            {t:'Sit an hour. Let the squad rest.', req:()=>!S.f[rk], fx:()=>{ S.f[rk] = 1; rest(home ? 'The squad sleeps the rest of the night through with the gate shut, which in Letheras now counts as rest.' : 'The squad sits an hour at the brazier, and the kettle goes round twice.'); }, go:'b7_c2_fire_rest'},
             {t:'Talk with the squad.', go:'b7_c2_fire_talk'},
             {t:'Bed. The carriages in the lane can do without you.', req:()=>ph === 1 && !!S.f.b7_c2_ennic, onward:true, go:'b7_c2_bunk'},
             {t:'The night is over. Let it be over.', req:()=>home && !!S.f.b7_c2_bridgeDone, onward:true, go:'b7_c2_onward'},
@@ -410,7 +410,7 @@ ${b72Say({ammet:`Ammet goes round the squad with her roll of tools and her lamp.
 
 Some time after the bells, in the lane outside the wall, there are wheels: a carriage, slow, with no lamps, and then the wheels stop. Voices, low and courteous. A door. A woman's voice, once, saying something about her pot on the fire, and a man's, kind, saying it will keep. Then the wheels again, going away.
 
-In the yard the Edur on the gate do not move. In the bunk-house nobody gets up to look, and everybody is awake.${b72If('thegg', `\n\nIn the dark Thegg's cot creaks as he sits up, and then creaks again as he lies down.`)}`,
+In the yard the Edur on the gate do not move. In the bunk-house nobody gets up to look, and everybody is awake.${b72If('thegg', `\n\nIn the dark Thegg's cot creaks as he sits up, and then creaks again as he lies down.`)}${b72If('ammet', `\n\nFrom the next cot Ammet says, very low, "She had a burn on her wrist from that pot. I dressed it in the spring. Two docks." A while later: "She never paid me. I'm glad of it now."`)}`,
         ch:[{t:'Morning.', onward:true, fx:()=>{ S.f.b7_c2_ph = 2; }, go:()=>{ startExplore('b7_c2_street'); talk('b7_c2_morning'); }},
             {t:'Not now.', go:()=>startExplore()}]}; },
 

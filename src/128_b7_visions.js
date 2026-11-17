@@ -73,7 +73,7 @@ He turns his back on it again and gives the order. Inland.
 
 All along the dunes, sergeants say it after him, quietly, an order going down a line in the dark. Then the column begins to move, and the sand takes its footprints, and the tide will take the sand.`},
     b7vEnd({
-      marrow:() => `Marrow lets the card go. "The Fist," she says. "Fist Keneb, on the sand, with his back to the ships." She lays the card face down on the stone. "He didn't want to watch them burn either, child." She looks inland, into the dark past the dunes. "He's sending us that way. He doesn't know what's in it. None of us do."`,
+      marrow:() => `Marrow lets the card go. "The Fist," she says. "Fist Keneb, on the sand, with his back to the ships." She lays the card face down on the stone. "He didn't want to watch them burn either." She looks inland, into the dark past the dunes. "He's sending us that way. He doesn't know what's in it. None of us do."`,
       tallow:() => `Tallow puts the card face down. "That was the Fist," he says. "Keneb." He looks back at the water, where the last hulls are still going down. "Gran said a man who burns his boats is either very brave or very sure." He wets his lips. "He didn't look sure, Sergeant."`,
       oldninth:() => `The old soldier lets the card go and drinks. "Keneb," he says. "Good officer. Worries." He looks along the tide line at the last pinnace, the only boat left on this coast. "I'm going back on that before dawn. You're not." He pours a second finger and leaves it on the stone. "That one's for the walk."`,
       other:(r, p) => `${r.name} lets the card go. "The Fist on the beach," ${p.s} says, "and the ships burning behind him."`})]},
@@ -261,7 +261,7 @@ Somewhere up the river, she thinks, there are other villages with other squads i
 
 Out in the street, the first door slams. Hellian picks up her crossbow and goes to find out where she left her helmet.`},
     b7vEnd({
-      marrow:() => `Marrow lets the card go. "A sergeant who drinks," she says, "and a big quiet man at her door." She glances up at the trapdoor, at the thin line of daylight round its edge. "Up the river, child. Today. The same trees as ours." She puts the card away slowly. "They're coming out for her, and they're coming out for us."`,
+      marrow:() => `Marrow lets the card go. "A sergeant who drinks," she says, "and a big quiet man at her door." She glances up at the trapdoor, at the thin line of daylight round its edge. "Up the river. Today. The same trees as ours." She puts the card away slowly. "They're coming out for her, and they're coming out for us."`,
       tallow:() => `Tallow puts the card face down. "That was another village," he says. "Up the river. The same day as this one." He looks at the barrels and the ladder. "Gran said trouble comes to a district all at once, like a fair." He swallows. "It's here, Sergeant. It's in the trees."`,
       oldninth:() => `The old soldier lets the card go and drinks, all of it. "Hellian," he says. "Drinks more than I do. Fights better than I do." He sets the cup down on the barrel-head. "If she's got Edur on her doorstep, so have we." He corks his flask. "Rum after, Sergeant. If there's an after."`,
       other:(r, p) => `${r.name} lets the card go. "A sergeant in a tavern," ${p.s} says, "and the Edur coming out of the trees."`})]},
@@ -366,7 +366,7 @@ Somewhere ahead of them, past the smoke, the marines have been walking for weeks
 
 Not quite, Lostara thinks. Not after tomorrow.`},
     b7vEnd({
-      marrow:() => `Marrow lets the card go. "The Adjunct," she says. "By the river, with the Pardu woman a pace behind her." She looks up the street toward the shouting. "She won hers, child. Days ago, while we were walking." She puts the card away. "She's coming. Whatever this city is about to be, she'll be here for it."`,
+      marrow:() => `Marrow lets the card go. "The Adjunct," she says. "By the river, with the Pardu woman a pace behind her." She looks up the street toward the shouting. "She won hers. Days ago, while we were walking." She puts the card away. "She's coming. Whatever this city is about to be, she'll be here for it."`,
       tallow:() => `Tallow puts the card face down. "The Adjunct's own battle," he says. "And we never even heard it." He looks up at the smoke over the towers. "Gran said the big ones are always somewhere else." He almost smiles. "She was right about that one, Sergeant."`,
       oldninth:() => `The old soldier lets the card go and drinks. "Hardens them," he says. "That's what the Pardu thought. Hardens them." He turns the cup in his hands. "I've served under a few who did that. Most of them were right to." He sets the cup on the step, empty. "Doesn't mean I liked them."`,
       other:(r, p) => `${r.name} lets the card go. "The Adjunct by the river," ${p.s} says, "and the Letherii army broken behind her."`})]},
