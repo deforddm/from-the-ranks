@@ -55884,6 +55884,7 @@ The Third has its own fire, off the road at the camp's edge. ${b42Say({tangle:`T
           {t:'Up the path to the hill, before dark.', req:()=>ph <= 2 && !S.f.b4_c2_robbersDone, onward:true, go:'b4_c2_path'},
           {t:'The pilgrims\' lamps on the hill. Find Radde.', req:()=>ph === 3 && !k, onward:true, go:'b4_c2_key'},
           {t:'The Third\'s place on the line.', req:()=>k === 'march' && !S.f.b4_c2_probeDone, onward:true, go:'b4_c2_line'},
+          {t:'Sleep what is left of the night.', req:()=>ph === 4 && k === 'march' && !!S.f.b4_c2_probeDone, onward:true, go:()=>{ S.f.b4_c2_ph = 5; startExplore('b4_c2_morning'); talk('b4_c2_dawn_arrive'); }}, // v13.46.1: "Not now" after the probe left no way on (a soft-lock)
           {t:'Fall in. North.', req:()=>dawn, onward:true, go:'b4_c2_dawn'},
           {t:'Not now.', go:()=>startExplore()}]}; },
     b4_c2_fire_rest:()=>({sp:'The Third\'s fire', scene:b42Ph() >= 5 ? 'b4_march' : 'b4_road_fire', txt:
