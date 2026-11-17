@@ -61,7 +61,7 @@ Out past the fires the camp moves the way a camp moves at night: a sentry callin
 
 The card shows no more than that: a sapper at a fire, an empty place in the ring, and the dark between the tents, where people are always walking.`},
     b10vEnd({
-      marrow:() => `Marrow lets the card go. "A sapper," she says. "At a fire like ours, across the camp. Grieving a lad who went into the dark." She lays the card face down on the barrel and keeps her palm flat on it. "Missing is not dead, child. I said it before. I'd say it to him, if I ever met him." She looks along the burial lines. Her hands are cold.`,
+      marrow:() => `Marrow lets the card go. "A sapper," she says. "At a fire like ours, across the camp. Grieving a lad who went into the dark." She lays the card face down on the barrel and keeps her palm flat on it. "Missing isn't dead. I'd tell him so, if I ever met him. He wouldn't thank me." She looks along the burial lines. Her hands are cold.`,
       tallow:() => `Tallow puts the card face down on the barrel. "A sapper with an empty place at his fire," he says. "Grandmother kept a place laid for my grandfather when his boat was late. Every night. He came in one evening and sat in it, and asked what was for supper." He wraps the deck. "I'm only saying it happens, Sergeant."`,
       oldninth:() => `The old marine lets the card go and turns the empty cup round in his hand. "Cuttle," he says. "Fiddler's sapper. Doesn't laugh much." He looks across the camp. "Lost his mage. Or thinks he has." He sets the cup down. "Thinks. That's the word to hang on to, Sergeant."`,
       other:(r, p) => `${r.name} lets the card go. "A sapper at a fire," ${p.s} says, "grieving somebody only missing."`})]},
@@ -122,7 +122,7 @@ The hungry years. His da coming in late with scraps for the little ones. His ma 
 
 The wagon comes. The wheels grind. Ahead the column goes on into the dark, and the stars go on in the ground under it, and Shortnose leans.`},
     b10vEnd({
-      marrow:() => `Marrow lets the card go. "A heavy in the traces," she says. "Last night, ${b10vGlass() ? 'up the column' : 'out in the glass, with the Adjunct\'s column'}. Thinking about his mother." She lays the card face down${b10vGlass() ? ' on the glass' : ''}. "They all do, in the traces, child. It's the leaning. It shakes it loose."`,
+      marrow:() => `Marrow lets the card go. "A heavy in the traces," she says. "Last night, ${b10vGlass() ? 'up the column' : 'out in the glass, with the Adjunct\'s column'}. Thinking about his mother." She lays the card face down${b10vGlass() ? ' on the glass' : ''}. "They all do, in the traces. It's the leaning. It shakes it loose."`,
       tallow:() => `Tallow puts the card face down. "A big man in a wagon's straps," he says. "Talking to whoever was beside him." He looks at the wagons. "Grandmother said a load is lighter if you tell it something. I always thought she meant the load."`,
       oldninth:() => `The old marine lets the card go. "Shortnose," he says. "Heavy. Big as a wagon himself. Not clever, they say." He turns the empty cup over. "Hauled all night with no ox in front of him. I'll take that sort of not clever."`,
       other:(r, p) => `${r.name} lets the card go. "A heavy in the traces," ${p.s} says, "in the dark, thinking about home."`})]},
@@ -189,7 +189,7 @@ Nom Kala is quiet. Then she says yes.
 
 In return, she says, she will ask one more march of him. He does not ask what for. He is too tired, and too grateful, and the stars are very bright.`},
     b10vEnd({
-      marrow:() => `Marrow lets the card go, and does not lay it down at once. "A mage," she says, "and one of the dead Imass. Talking." Her voice is as dry as the cards. "${b10vGlass() ? '' : 'Out in the glass, with the Adjunct\'s column. '}He asked them to keep walking, child. After us. To the far side." She puts the card face down. "So the world would know it could be done." She looks round at the squad. "Our own witness. Even if it has to be the dead."`,
+      marrow:() => `Marrow lets the card go, and does not lay it down at once. "A mage," she says, "and one of the dead Imass. Talking." Her voice is as dry as the cards. "${b10vGlass() ? '' : 'Out in the glass, with the Adjunct\'s column. '}He asked them to keep walking. After us. To the far side." She puts the card face down. "So the world would know it could be done." She looks round at the squad. "Our own witness. Even if it has to be the dead."`,
       tallow:() => `Tallow puts the card face down. "A young mage," he says, "and a woman made of dust." He swallows; there is nothing to swallow. "He asked them to keep walking when we can't." He looks east. "Grandmother said a road is only a road once somebody has been to the end of it."`,
       oldninth:() => `The old marine lets the card go. "Bottle," he says. "Fiddler's mage. The one who came back." He looks at the empty cup a while. "Asked the dead to finish the walk for us, if it comes to it." He sets the cup upright. "Good lad. Hope it doesn't."`,
       other:(r, p) => `${r.name} lets the card go. "A mage and one of the dead," ${p.s} says. "He asked them to keep walking, after us."`})]},
