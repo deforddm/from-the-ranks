@@ -70,7 +70,8 @@ async function acquire() {
 }
 export async function browser() {
   await acquire();
-  return chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+  const exe = '/opt/pw-browsers/chromium'; // the work sessions' browser; anywhere else (the push check on GitHub) Playwright uses the one it installed
+  return chromium.launch({ ...(fs.existsSync(exe) ? { executablePath: exe } : {}), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
 }
 /* opts: {width, height, dpr, fast (speed/motion/mute), settings:{...}, save: S object to preload} */
 export async function openGame(br, url, opts = {}) {
