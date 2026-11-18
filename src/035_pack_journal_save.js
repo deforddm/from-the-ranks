@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.48.0', ['If the browser refuses to save (its storage full or blocked), the game now says so and offers a backup file. Before, it carried on without keeping anything.', 'If something breaks, a panel shows what and where, with a button to copy the details for a report.', 'Old saves are untouched.']],
   ['13.47.2', ['The About page and the app\'s own description now name all ten books.']],
   ['13.47.1', ['On a wide screen the place name now sits under the buttons with the whole width to itself: long names no longer break mid-word, and battle names are no longer cut to "The …".']],
   ['13.47.0', ['Settings: a fourth Text size, Larger, for reading on a small phone. At every size the place name and the top buttons now stay their size, so a long name no longer breaks in the middle of a word.']],

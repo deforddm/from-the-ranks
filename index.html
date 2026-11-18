@@ -2,10 +2,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d0b0a">
-<meta name="description" content="From the Ranks: a Malazan fan RPG series told by ordinary soldiers. Book One, Ashes of the Pale; Book Two, The Chain of Dogs.">
+<meta name="description" content="From the Ranks: a free Malazan fan RPG told by ordinary soldiers. Ten books, one beside each novel of the Malazan Book of the Fallen.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="From the Ranks">
-<meta property="og:description" content="A Malazan fan RPG series told by ordinary soldiers. Book One, Ashes of the Pale, beside Gardens of the Moon. Book Two, The Chain of Dogs, beside Deadhouse Gates.">
+<meta property="og:description" content="A free Malazan fan RPG told by ordinary soldiers. Ten books, one beside each novel, from Gardens of the Moon to The Crippled God.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -665,6 +665,12 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 /* v10.2: soak and wound chips on the character sheet */
 .csheet .chip.soak,.csheet .chip.wound{display:inline-block;font-size:.74rem;padding:0 6px;margin-left:6px;vertical-align:1px;letter-spacing:.05em}
 .csheet .chip.wound{color:#f0b8a8;border-color:#6a3a30}
+/* v13.48: the save warning and the crash panel (035c): over everything, clear of the notch, never wider than a phone; they stack */
+#safetybox{position:fixed;left:50%;top:calc(56px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:90;width:min(460px,calc(100% - 24px));display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.safety{pointer-events:auto;box-sizing:border-box;background:#1a1512;border:1px solid #8a6a3a;border-radius:8px;padding:12px 14px;color:#e8dcc8;filter:drop-shadow(0 8px 20px rgba(0,0,0,.85))}
+.safety p{margin:0 0 10px;line-height:1.4}
+.safety pre{margin:0 0 10px;max-height:9.5em;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.72rem;line-height:1.35;background:#0d0b0a;border:1px solid #3a3028;border-radius:4px;padding:8px;user-select:text;-webkit-user-select:text}
+.safety .row{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 <style>[hidden]{display:none!important}body{margin:0}</style>
 </head><body>
@@ -681,7 +687,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.47.2';
+const VERSION = '13.48.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2001,7 +2007,7 @@ function roster(){
 const sidFor = name => { const e = roster().list.find(e => sameName(e.name, name)); return e ? e.id : newSid(); };
 function save(){ if (!S) return; S.stats ??= {}; if (S.stats.silverSeen == null) S.stats.silverSeen = S.silver; else if (S.silver !== S.stats.silverSeen) { const d = S.silver - S.stats.silverSeen; S.stats[d > 0 ? 'silverIn' : 'silverOut'] = (S.stats[d > 0 ? 'silverIn' : 'silverOut'] || 0) + Math.abs(d); S.stats.silverSeen = S.silver; }
   try { S.sid ??= sidFor(S.name); localStorage.setItem(slotKey(S.sid), JSON.stringify(S));
-  const r = roster(); r.list = [rosterMeta(S), ...r.list.filter(e => e.id !== S.sid)]; localStorage.setItem(RKEY, JSON.stringify(r)); } catch(e) {} updSilver();
+  const r = roster(); r.list = [rosterMeta(S), ...r.list.filter(e => e.id !== S.sid)]; localStorage.setItem(RKEY, JSON.stringify(r)); if (typeof saveWorked === 'function') saveWorked(); } catch(e) { if (typeof saveFailed === 'function') saveFailed(); } updSilver(); // v13.48: a refused save is said out loud (035c)
   if (typeof askPersist === 'function') askPersist(); } // v8.2: the first save asks the browser to keep this site's storage (35b)
 /* the silver on the HUD follows the purse: on every save and every conversation step, with a flash for which way it went */
 let silverShown = null;
@@ -9785,6 +9791,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.48.0', ['If the browser refuses to save (its storage full or blocked), the game now says so and offers a backup file. Before, it carried on without keeping anything.', 'If something breaks, a panel shows what and where, with a button to copy the details for a report.', 'Old saves are untouched.']],
   ['13.47.2', ['The About page and the app\'s own description now name all ten books.']],
   ['13.47.1', ['On a wide screen the place name now sits under the buttons with the whole width to itself: long names no longer break mid-word, and battle names are no longer cut to "The …".']],
   ['13.47.0', ['Settings: a fourth Text size, Larger, for reading on a small phone. At every size the place name and the top buttons now stay their size, so a long name no longer breaks in the middle of a word.']],
@@ -10129,7 +10136,8 @@ function backupDue(){ const list = roster().list; if (!list.length) return false
 function markBackup(){ try { localStorage.setItem(BKEY, JSON.stringify({at:Date.now(), n:backupProgress()})); } catch(e) {} }
 /* the file: every sergeant's whole save, the settings, the version seen. Plain JSON, so it can be read with any editor if it ever has to be. */
 function backupData(){ if (S) save();
-  const sgts = roster().list.map(e => loadSlot(e.id)).filter(Boolean);
+  let sgts = roster().list.map(e => loadSlot(e.id)).filter(Boolean);
+  if (typeof saveBad !== 'undefined' && saveBad && S) sgts = sgts.filter(x => x.sid !== S.sid).concat([JSON.parse(JSON.stringify(S))]); // v13.48: the browser refused the save, so the squad as it stands goes in from memory
   let seen = null; try { seen = localStorage.getItem(SEENKEY); } catch(e) {}
   return {ftr:1, v:VERSION, at:new Date().toISOString(), sergeants:sgts, settings:typeof SET !== 'undefined' ? SET : null, seen}; }
 const backupText = () => JSON.stringify(backupData());
@@ -10164,6 +10172,41 @@ function bindBackupLine(){ const b = document.getElementById('bBk'); if (b) b.on
 /* ask the browser to keep this site's storage out of its automatic clean-ups (it still goes when the player clears data by hand) */
 let persistAsked = false;
 function askPersist(){ if (persistAsked) return; persistAsked = true; try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch(e) {} }
+
+/* v13.48.0: two safety nets.
+   (1) A save the browser refuses (its storage full, blocked or switched off) is said out loud. Before this, save() swallowed
+       the error and the player carried on with nothing being kept. The warning stays until a save works again, and its button
+       makes a backup file that includes the squad as it stands now (backupData, 035b, adds S while saveBad).
+   (2) A crash panel. Any uncaught error shows what broke with the version, the book, the chapter and the page it happened on,
+       and a button to copy it, so a report from a phone says where to look. At most three a visit, never the same one twice. */
+let saveBad = false;
+function safetyBox(){ let b = document.getElementById('safetybox'); if (!b) { b = document.createElement('div'); b.id = 'safetybox'; document.body.appendChild(b); } return b; } // the two panels stack, neither over the other
+function saveFailed(){ if (saveBad || typeof document === 'undefined') return; saveBad = true;
+  const w = document.createElement('div'); w.id = 'savewarn'; w.className = 'safety'; w.setAttribute('role', 'alert');
+  w.innerHTML = `<p>This browser would not save the game. Its storage is full or blocked. Make a backup file now, so nothing is lost.</p><div class="row"><button class="btn primary" id="swGo">Backup file</button><button class="btn" id="swX">Not now</button></div>`;
+  safetyBox().appendChild(w);
+  document.getElementById('swGo').onclick = () => { const ok = downloadBackup(); const p = w.querySelector('p'); if (p) p.textContent = ok ? 'Backup file made. Keep it somewhere outside this browser. The game still cannot save here.' : 'The backup file could not be made either. Copy a save code from Squad, Pack, Save.'; };
+  document.getElementById('swX').onclick = () => w.remove(); }
+function saveWorked(){ if (!saveBad) return; saveBad = false; const w = typeof document !== 'undefined' && document.getElementById('savewarn'); if (w) w.remove(); }
+let oopsCount = 0; const oopsSeen = {};
+function crashText(msg, stack){ let where = 'title';
+  try { if (S) where = `book ${S.book || 'gotm'}, chapter ${S.chapter}, ${view}${S.node ? ', page ' + S.node : ''}${B && B.id ? ', fight ' + B.id : ''}`; } catch(e) {}
+  return `From the Ranks v${VERSION}\n${where}\n${msg}\n${String(stack || '').split('\n').slice(0, 6).join('\n')}\n${typeof navigator !== 'undefined' ? navigator.userAgent : ''}`.trim(); }
+function showOops(msg, stack){ msg = String(msg || 'Unknown error');
+  if (/ResizeObserver loop|^Script error\.?$/.test(msg) || oopsSeen[msg] || oopsCount >= 3 || typeof document === 'undefined' || !document.body) return;
+  oopsSeen[msg] = 1; oopsCount++;
+  const old = document.getElementById('oops'); if (old) old.remove();
+  const w = document.createElement('div'); w.id = 'oops'; w.className = 'safety'; w.setAttribute('role', 'alert');
+  w.innerHTML = `<p>Something broke. The game may carry on; if it does not, reload the page. Your last save is kept.</p><pre></pre><div class="row"><button class="btn primary" id="oopsCopy">Copy the details</button><button class="btn" id="oopsX">Carry on</button></div>`;
+  const txt = crashText(msg, stack); w.querySelector('pre').textContent = txt; safetyBox().appendChild(w);
+  document.getElementById('oopsCopy').onclick = ev => { const b = ev.currentTarget, done = ok => { b.textContent = ok ? 'Copied' : 'Select the text and copy it'; };
+    const old2 = () => { try { const r = document.createRange(); r.selectNodeContents(w.querySelector('pre')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done(document.execCommand('copy')); } catch(e) { done(false); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => done(true), old2); else old2(); };
+  document.getElementById('oopsX').onclick = () => w.remove(); }
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', ev => { if (ev && ev.message) showOops(ev.message, ev.error && ev.error.stack); });
+  window.addEventListener('unhandledrejection', ev => { const r = ev && ev.reason; showOops(r && r.message ? r.message : String(r), r && r.stack); });
+}
 
 /* ============ minigames: the games the squad plays between the story ============
    One full-screen table (#mg) that any game draws into: a header with the game's name and a way out, a canvas for the table,
@@ -84648,11 +84691,11 @@ SCENEX.b6_malaz = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
 
 /* ---------------- the chapter's gear: ART['item/<key>'] ----------------
    240×130, the flat shapes and single highlight of the earlier books, on Book Four's umber ground (the Third's book) with a thin bone rim for Book Six */
-function b67Item(key, label, body){ const w = 240, h = 130, id = 'c67-' + key.replace(/[^a-z0-9]/g, '');
+function b6c7Item(key, label, body){ const w = 240, h = 130, id = 'c67-' + key.replace(/[^a-z0-9]/g, '');
   ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.66"><stop offset="0" stop-color="#5a4a34"></stop><stop offset=".7" stop-color="#2a2218"></stop><stop offset="1" stop-color="#121214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect><rect x="2.5" y="2.5" width="${w - 5}" height="${h - 5}" rx="2" fill="none" stroke="#d8c8a4" stroke-width="1" opacity=".55"></rect>\n${body}</svg>`;
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* a Grey Helm's shield: tall, grey steel over wood, an iron rim kept sharp, the wolf's head in white, scored by old blows */
-b67Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="118" rx="40" ry="5" fill="#000" opacity=".4"/>'
+b6c7Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="118" rx="40" ry="5" fill="#000" opacity=".4"/>'
   + '<g transform="rotate(-8 120 64)"><path d="M88 10 L152 10 L154 82 Q154 104 120 120 Q86 104 86 82 Z" fill="#141618"/><path d="M91 13 L149 13 L151 81 Q151 101 120 116 Q89 101 89 81 Z" fill="#6e747c"/>'
   + '<path d="M120 13 L149 13 L151 81 Q151 101 120 116 Z" fill="#3e4248"/><path d="M93 16 L93 80" stroke="#d8dce0" stroke-width="1.6" opacity=".6"/>'
   + '<path d="M100 54 L104 30 L111 44 L118 28 L123 46 L134 52 L138 58 L130 62 L124 64 L120 80 L106 82 L102 66 Z" fill="#e6eaec"/><path d="M120 44 L123 46 L134 52 L138 58 L130 62 L124 64 L120 80 Z" fill="#b8bec2"/>'
@@ -84660,7 +84703,7 @@ b67Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="
   + '<g stroke="#2a2c2e" stroke-width="1" opacity=".6"><path d="M98 92 L112 86"/><path d="M134 30 L144 36"/><path d="M138 88 L146 80"/></g>'
   + '<path d="M91 13 L149 13" stroke="#f0f2f4" stroke-width="1.4" opacity=".55"/></g>');
 /* a Malaz City cloak: dark sea-grey wool, a pewter clasp, salt gone white along the hem, hung from a peg */
-b67Item('b6_c7_malazcloak', 'A cloak from Malaz City', '<ellipse cx="120" cy="120" rx="58" ry="5" fill="#000" opacity=".4"/>'
+b6c7Item('b6_c7_malazcloak', 'A cloak from Malaz City', '<ellipse cx="120" cy="120" rx="58" ry="5" fill="#000" opacity=".4"/>'
   + '<path d="M70 13 L170 13" stroke="#2a1e12" stroke-width="5" stroke-linecap="round"/><circle cx="120" cy="13" r="4" fill="#5a4028"/><path d="M100 20 Q120 8 140 20 Q146 40 132 44 Q120 36 108 44 Q94 40 100 20 Z" fill="#28303a"/>' // the peg rail; the hood hanging behind
   + '<path d="M96 18 Q120 12 144 18 L150 26 Q120 22 90 26 Z" fill="#323a42"/>'
   + '<path d="M92 24 Q120 20 148 24 Q166 66 170 114 Q146 120 120 116 Q94 120 70 114 Q74 66 92 24 Z" fill="#3a444e"/>'

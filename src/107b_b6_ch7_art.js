@@ -186,11 +186,11 @@ SCENEX.b6_malaz = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
 
 /* ---------------- the chapter's gear: ART['item/<key>'] ----------------
    240×130, the flat shapes and single highlight of the earlier books, on Book Four's umber ground (the Third's book) with a thin bone rim for Book Six */
-function b67Item(key, label, body){ const w = 240, h = 130, id = 'c67-' + key.replace(/[^a-z0-9]/g, '');
+function b6c7Item(key, label, body){ const w = 240, h = 130, id = 'c67-' + key.replace(/[^a-z0-9]/g, '');
   ART['item/' + key] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}"><defs><radialGradient id="${id}" cx="0.5" cy="0.5" r="0.66"><stop offset="0" stop-color="#5a4a34"></stop><stop offset=".7" stop-color="#2a2218"></stop><stop offset="1" stop-color="#121214"></stop></radialGradient></defs><rect width="${w}" height="${h}" rx="3" fill="url(#${id})"></rect><rect x="2.5" y="2.5" width="${w - 5}" height="${h - 5}" rx="2" fill="none" stroke="#d8c8a4" stroke-width="1" opacity=".55"></rect>\n${body}</svg>`;
   if (typeof ART_SIZE !== 'undefined') ART_SIZE['item/' + key] = [w, h]; }
 /* a Grey Helm's shield: tall, grey steel over wood, an iron rim kept sharp, the wolf's head in white, scored by old blows */
-b67Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="118" rx="40" ry="5" fill="#000" opacity=".4"/>'
+b6c7Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="118" rx="40" ry="5" fill="#000" opacity=".4"/>'
   + '<g transform="rotate(-8 120 64)"><path d="M88 10 L152 10 L154 82 Q154 104 120 120 Q86 104 86 82 Z" fill="#141618"/><path d="M91 13 L149 13 L151 81 Q151 101 120 116 Q89 101 89 81 Z" fill="#6e747c"/>'
   + '<path d="M120 13 L149 13 L151 81 Q151 101 120 116 Z" fill="#3e4248"/><path d="M93 16 L93 80" stroke="#d8dce0" stroke-width="1.6" opacity=".6"/>'
   + '<path d="M100 54 L104 30 L111 44 L118 28 L123 46 L134 52 L138 58 L130 62 L124 64 L120 80 L106 82 L102 66 Z" fill="#e6eaec"/><path d="M120 44 L123 46 L134 52 L138 58 L130 62 L124 64 L120 80 Z" fill="#b8bec2"/>'
@@ -198,7 +198,7 @@ b67Item('b6_c7_greyhelmshield', 'A Grey Helm\'s shield', '<ellipse cx="120" cy="
   + '<g stroke="#2a2c2e" stroke-width="1" opacity=".6"><path d="M98 92 L112 86"/><path d="M134 30 L144 36"/><path d="M138 88 L146 80"/></g>'
   + '<path d="M91 13 L149 13" stroke="#f0f2f4" stroke-width="1.4" opacity=".55"/></g>');
 /* a Malaz City cloak: dark sea-grey wool, a pewter clasp, salt gone white along the hem, hung from a peg */
-b67Item('b6_c7_malazcloak', 'A cloak from Malaz City', '<ellipse cx="120" cy="120" rx="58" ry="5" fill="#000" opacity=".4"/>'
+b6c7Item('b6_c7_malazcloak', 'A cloak from Malaz City', '<ellipse cx="120" cy="120" rx="58" ry="5" fill="#000" opacity=".4"/>'
   + '<path d="M70 13 L170 13" stroke="#2a1e12" stroke-width="5" stroke-linecap="round"/><circle cx="120" cy="13" r="4" fill="#5a4028"/><path d="M100 20 Q120 8 140 20 Q146 40 132 44 Q120 36 108 44 Q94 40 100 20 Z" fill="#28303a"/>' // the peg rail; the hood hanging behind
   + '<path d="M96 18 Q120 12 144 18 L150 26 Q120 22 90 26 Z" fill="#323a42"/>'
   + '<path d="M92 24 Q120 20 148 24 Q166 66 170 114 Q146 120 120 116 Q94 120 70 114 Q74 66 92 24 Z" fill="#3a444e"/>'

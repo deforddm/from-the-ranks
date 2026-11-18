@@ -416,6 +416,10 @@ for (const [f, t] of src) {
   for (const m of t.matchAll(/S\.gear[^;\n]{0,80}?\.trinket\b(?!2)/g)) E.push(`${f}: reads a trinket slot directly (${m[0].slice(-60)}); there are two: use wears(id, item), wornBy(item) or unwear(item) (14b)`);
   for (const m of t.matchAll(/\btalk\('([a-z_0-9]+)'\)/g)) { /* checked below */ }
 }
+// v13.48: the game is one script scope, so a second top-level function of the same name silently replaces the first
+// (b67Item was Book Three's and Book Six's until v13.48; the bones game's drawBone before it, playbook §6)
+{ const where = {}; for (const [f, t] of src) for (const m of t.matchAll(/^function\s+([A-Za-z0-9_$]+)/gm)) (where[m[1]] ||= []).push(f);
+  for (const [n, fs2] of Object.entries(where)) if (fs2.length > 1) E.push(`function ${n} is declared ${fs2.length} times (${fs2.join(', ')}): the last one replaces the others`); }
 // orphans: node ids that no string literal references at all (computed references are possible)
 const trulyOrphan = res.orphans.filter(id => { const re = new RegExp(`['"\`]${id}['"\`]`, 'g'); return (all.match(re) || []).length === 0; });
 

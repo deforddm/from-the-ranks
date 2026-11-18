@@ -53,7 +53,7 @@ const r = await page.evaluate(async () => {
   const nw = S.nerve; take('b4_c5_riders_after', /head of the army/); out.f.withdraw = {flag:S.f.b4_c5_withdrawn, nerve:S.nerve - nw, far:/a mile off/.test(DLG.b4_c5_withdraw().txt), noSword:!/sword/i.test(DLG.b4_c5_withdraw().txt)};
   talk('b4_c5_scouts'); out.f.scouts = S.f.b4_c5_scouts;
   take('b4_c5_withdraw', /Fall in/); out.f.walkStay = has('b4_c5_walkin', /Not yet/); take('b4_c5_walkin', /The morning/);
-  out.f.sea = {area:S.area, ph:S.f.b4_c5_ph, inside:S.f.b4_c5_inside, barrow:/Sathi would have found a horse/.test(DLG.b4_c5_sea_arrive().txt), warren:/the warren at the Vathar/.test(DLG.b4_c5_sea_arrive().txt)};
+  out.f.sea = {area:S.area, ph:S.f.b4_c5_ph, inside:S.f.b4_c5_inside, barrow:/Sathi would have found a horse/.test(DLG.b4_c5_sea_arrive().txt), warren:/Like the Vathar/.test(DLG.b4_c5_sea_arrive().txt)};
   take('b4_c5_sea_arrive', /Fall in/); const nb = S.nerve; out.f.bandageTxt = /bandage/.test(DLG.b4_c5_bandage().txt) && !/hits him|hit him\b/.test(DLG.b4_c5_bandage().txt);
   take('b4_c5_bandage', /Tell the recruits/); out.f.bandage = {flag:S.f.b4_c5_bandage, nerve:S.nerve - nb};
   /* the kit and the trick on the sea floor */

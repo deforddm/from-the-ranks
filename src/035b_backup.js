@@ -12,7 +12,8 @@ function backupDue(){ const list = roster().list; if (!list.length) return false
 function markBackup(){ try { localStorage.setItem(BKEY, JSON.stringify({at:Date.now(), n:backupProgress()})); } catch(e) {} }
 /* the file: every sergeant's whole save, the settings, the version seen. Plain JSON, so it can be read with any editor if it ever has to be. */
 function backupData(){ if (S) save();
-  const sgts = roster().list.map(e => loadSlot(e.id)).filter(Boolean);
+  let sgts = roster().list.map(e => loadSlot(e.id)).filter(Boolean);
+  if (typeof saveBad !== 'undefined' && saveBad && S) sgts = sgts.filter(x => x.sid !== S.sid).concat([JSON.parse(JSON.stringify(S))]); // v13.48: the browser refused the save, so the squad as it stands goes in from memory
   let seen = null; try { seen = localStorage.getItem(SEENKEY); } catch(e) {}
   return {ftr:1, v:VERSION, at:new Date().toISOString(), sergeants:sgts, settings:typeof SET !== 'undefined' ? SET : null, seen}; }
 const backupText = () => JSON.stringify(backupData());

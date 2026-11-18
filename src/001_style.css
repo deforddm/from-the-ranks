@@ -645,3 +645,9 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 /* v10.2: soak and wound chips on the character sheet */
 .csheet .chip.soak,.csheet .chip.wound{display:inline-block;font-size:.74rem;padding:0 6px;margin-left:6px;vertical-align:1px;letter-spacing:.05em}
 .csheet .chip.wound{color:#f0b8a8;border-color:#6a3a30}
+/* v13.48: the save warning and the crash panel (035c): over everything, clear of the notch, never wider than a phone; they stack */
+#safetybox{position:fixed;left:50%;top:calc(56px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:90;width:min(460px,calc(100% - 24px));display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.safety{pointer-events:auto;box-sizing:border-box;background:#1a1512;border:1px solid #8a6a3a;border-radius:8px;padding:12px 14px;color:#e8dcc8;filter:drop-shadow(0 8px 20px rgba(0,0,0,.85))}
+.safety p{margin:0 0 10px;line-height:1.4}
+.safety pre{margin:0 0 10px;max-height:9.5em;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.72rem;line-height:1.35;background:#0d0b0a;border:1px solid #3a3028;border-radius:4px;padding:8px;user-select:text;-webkit-user-select:text}
+.safety .row{display:flex;gap:8px;flex-wrap:wrap}
