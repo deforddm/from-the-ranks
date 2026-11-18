@@ -87,7 +87,8 @@ export async function openGame(br, url, opts = {}) {
      browser's own Math.random. A test that pins Math.random around one call still works: it swaps this one out and back. */
   if (process.env.FTR_SEED !== 'off') { const seed = opts.seed != null ? opts.seed >>> 0 : process.env.FTR_SEED ? (+process.env.FTR_SEED) >>> 0 : (Math.random() * 2 ** 32) >>> 0;
     if (!openGame.said) { console.error('seed ' + seed); openGame.said = 1; }
-    await page.addInitScript(seed => { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; window.FTR_SEED = seed; }, seed); }
+    const n = openGame.pages = (openGame.pages || 0) + 1; // each page its own stream (seed, seed+1, …): pages opened side by side (balance.mjs --par) must not roll the same dice
+    await page.addInitScript(seed => { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; window.FTR_SEED = seed; }, (seed + n - 1) >>> 0); }
   const errors = [];
   page.on('pageerror', e => errors.push(String(e && e.stack || e).split('\n').slice(0, 4).join(' | ')));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
