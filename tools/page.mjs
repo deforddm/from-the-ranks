@@ -80,6 +80,13 @@ export async function openGame(br, url, opts = {}) {
     await ctx.route('https://fonts.gstatic.com/**', r => { const f = path.join(FONTS, path.basename(new URL(r.request().url()).pathname)); return fs.existsSync(f) ? r.fulfill({ contentType: f.endsWith('.woff') ? 'font/woff' : 'font/woff2', body: fs.readFileSync(f) }) : r.fulfill({ status: 404, body: '' }); });
   }
   const page = await ctx.newPage();
+  /* v13.48 tooling: the dice are seeded. Every page opened by a test or tool runs on a seeded Math.random (mulberry32), and the
+     seed is printed on stderr ("seed N"), so a run that fails on the dice can be replayed exactly: FTR_SEED=N node tools/x_test.mjs.
+     With no FTR_SEED the seed is new each run, so the suite still sees different dice every time. FTR_SEED=off leaves the
+     browser's own Math.random. A test that pins Math.random around one call still works: it swaps this one out and back. */
+  if (process.env.FTR_SEED !== 'off') { const seed = opts.seed != null ? opts.seed >>> 0 : process.env.FTR_SEED ? (+process.env.FTR_SEED) >>> 0 : (Math.random() * 2 ** 32) >>> 0;
+    if (!openGame.said) { console.error('seed ' + seed); openGame.said = 1; }
+    await page.addInitScript(seed => { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; window.FTR_SEED = seed; }, seed); }
   const errors = [];
   page.on('pageerror', e => errors.push(String(e && e.stack || e).split('\n').slice(0, 4).join(' | ')));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
