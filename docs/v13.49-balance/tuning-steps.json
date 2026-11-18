@@ -1,0 +1,1629 @@
+{
+ "cur": {
+  "b10_c1_graves": {
+   "b": -5
+  },
+  "b10_c1_strippers": {
+   "b": -10
+  },
+  "b10_c2_deserters": {
+   "s": -3,
+   "b": -3
+  },
+  "b10_c2_dogs": {
+   "b": 4
+  },
+  "b10_c3_wagon": {
+   "s": -8,
+   "b": -3
+  },
+  "b10_c4_foragers": {
+   "b": -2
+  },
+  "b10_c4_night": {
+   "b": -2
+  },
+  "b10_c5_outriders": {
+   "s": -11,
+   "b": -11
+  },
+  "b10_c6_beach": {
+   "b": -5
+  },
+  "b10_c7_picket": {
+   "b": -4
+  },
+  "b2_barrow": {
+   "b": 6
+  },
+  "b2_dryraid": {
+   "s": -2
+  },
+  "b2_envoy": {
+   "b": -1
+  },
+  "b2_pull": {
+   "s": -3,
+   "b": -2
+  },
+  "b2_ring": {
+   "b": -2
+  },
+  "b2_silver": {
+   "b": -2
+  },
+  "b3_c3_hold": {
+   "b": 2
+  },
+  "b3_c3_picket": {
+   "b": 2
+  },
+  "b3_c4_brawl": {
+   "b": 6
+  },
+  "b3_c4_breakout": {
+   "b": 3
+  },
+  "b3_c5_wellfight": {
+   "b": 1
+  },
+  "b3_c6_ambush": {
+   "b": -1
+  },
+  "b3_c6_field": {
+   "b": 1
+  },
+  "b3_c6_landing": {
+   "s": -2
+  },
+  "b3_c7_herds": {
+   "s": -2,
+   "b": -2
+  },
+  "b3_c7_hunt": {
+   "b": 2
+  },
+  "b3_c7_stairs": {
+   "b": 3
+  },
+  "b3_c7_stakes": {
+   "b": 5
+  },
+  "b4_c1_dig": {
+   "b": -1
+  },
+  "b4_c1_watch": {
+   "b": 1
+  },
+  "b4_c2_probe": {
+   "s": -1
+  },
+  "b4_c3_poles": {
+   "s": -2,
+   "b": 2
+  },
+  "b4_c3_scavengers": {
+   "b": 3
+  },
+  "b4_c4_picket": {
+   "b": 2
+  },
+  "b4_c5_rearguard": {
+   "b": 3
+  },
+  "b4_c5_wallriders": {
+   "b": 2
+  },
+  "b4_c6_nest": {
+   "b": 2
+  },
+  "b4_c6_patrol": {
+   "b": 2
+  },
+  "b4_c7_outriders": {
+   "b": 4
+  },
+  "b5_c2_hulk": {
+   "b": 4
+  },
+  "b5_c2_looters": {
+   "b": -2
+  },
+  "b5_c3_deserters": {
+   "b": -2
+  },
+  "b5_c4_wraiths": {
+   "b": 2
+  },
+  "b5_c5_factor": {
+   "b": 4
+  },
+  "b5_c5_farm": {
+   "b": -1
+  },
+  "b5_c7_court": {
+   "b": 10
+  },
+  "b5_c7_looters": {
+   "b": 2
+  },
+  "b6_c1_rearguard": {
+   "b": -2
+  },
+  "b6_c1_well": {
+   "b": 1
+  },
+  "b6_c2_road": {
+   "s": -3,
+   "b": -3
+  },
+  "b6_c3_sally": {
+   "b": -1
+  },
+  "b6_c3_streets": {
+   "b": 2
+  },
+  "b6_c4_streets": {
+   "b": -1
+  },
+  "b6_c5_village": {
+   "b": 4
+  },
+  "b6_c6_night": {
+   "b": 2
+  },
+  "b6_c6_wells": {
+   "b": 6
+  },
+  "b7_c1_dunes": {
+   "b": -3
+  },
+  "b7_c2_alley": {
+   "b": 2
+  },
+  "b7_c3_farm": {
+   "s": -2
+  },
+  "b7_c4_riot": {
+   "b": 3
+  },
+  "b7_c5_village": {
+   "b": -2
+  },
+  "b7_c6_break": {
+   "b": -2
+  },
+  "b7_c6_landing": {
+   "b": 1
+  },
+  "b7_c7_gate": {
+   "b": -1
+  },
+  "b7_c7_streets": {
+   "b": -2
+  },
+  "b8_c2_fields": {
+   "b": -3
+  },
+  "b8_c2_raid": {
+   "b": 2
+  },
+  "b8_c4_drunk": {
+   "s": -5,
+   "b": -3
+  },
+  "b8_c4_edge": {
+   "b": -5
+  },
+  "b8_c5_peddler": {
+   "b": 4
+  },
+  "b8_c6_masks": {
+   "b": 4
+  },
+  "b8_c6_street": {
+   "b": -6
+  },
+  "b8_c7_looters": {
+   "s": -5,
+   "b": -6
+  },
+  "b9_c1_brawl": {
+   "s": -2
+  },
+  "b9_c1_looters": {
+   "b": -3
+  },
+  "b9_c2_drill": {
+   "b": -3
+  },
+  "b9_c3_road": {
+   "b": -3
+  },
+  "b9_c4_raid": {
+   "b": -2
+  },
+  "b9_c5_cache": {
+   "b": 2
+  },
+  "b9_c5_dogs": {
+   "b": -3
+  },
+  "b9_c6_gap": {
+   "b": 6
+  },
+  "b9_c6_line": {
+   "b": 4
+  },
+  "b9_c7_trail": {
+   "b": 2
+  },
+  "c1_wagon": {
+   "b": 2
+  },
+  "c3_toughs": {
+   "b": 2
+  },
+  "c5_dig": {
+   "b": -2
+  },
+  "c7_worrygate": {
+   "b": -2
+  },
+  "last_accounting": {
+   "s": -2,
+   "b": -1
+  },
+  "terrace_knives_2": {
+   "b": -2
+  },
+  "the_mines": {
+   "b": -1
+  }
+ },
+ "plan": {
+  "rg": {
+   "b7_c1_dunes": {
+    "was": 90,
+    "cur": -1,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b7_c1_riders": {
+    "was": 70,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c1_tally": {
+    "was": 70,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c2_gate": {
+    "was": 100,
+    "cur": 2,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      3,
+      55,
+      20
+     ],
+     [
+      2,
+      95,
+      20
+     ],
+     [
+      3,
+      65,
+      20
+     ]
+    ],
+    "last": 65
+   },
+   "b7_c2_alley": {
+    "was": 50,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c2_bridge": {
+    "was": 90,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b7_c3_farm": {
+    "was": 90,
+    "cur": 1,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      60,
+      20
+     ],
+     [
+      1,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b7_c3_road": {
+    "was": 100,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      65,
+      20
+     ],
+     [
+      2,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b7_c3_factor": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b7_c4_riot": {
+    "was": 60,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c4_edurcamp": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b7_c4_patriots": {
+    "was": 90,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b7_c5_road": {
+    "was": 90,
+    "cur": 3,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      2,
+      90,
+      20
+     ],
+     [
+      3,
+      95,
+      20
+     ],
+     [
+      4,
+      90,
+      20
+     ]
+    ],
+    "last": 90
+   },
+   "b7_c5_bailiff": {
+    "was": 90,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b7_c5_village": {
+    "was": 80,
+    "cur": -2,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b7_c5_slip": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b7_c6_deserters": {
+    "was": 80,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c6_landing": {
+    "was": 80,
+    "cur": 1,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c6_stand": {
+    "was": 80,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b7_c6_break": {
+    "was": 100,
+    "cur": -2,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b7_c7_gate": {
+    "was": 100,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b7_c7_streets": {
+    "was": 100,
+    "cur": 1,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      1,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b7_c7_bridge": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   }
+  },
+  "tth": {
+   "b8_c1_alley": {
+    "was": 100,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      85,
+      20
+     ],
+     [
+      4,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b8_c1_den": {
+    "was": 100,
+    "cur": 5,
+    "delta": -1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      3,
+      90,
+      20
+     ],
+     [
+      5,
+      65,
+      20
+     ],
+     [
+      4,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b8_c1_hunt": {
+    "was": 80,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c1_chancers": {
+    "was": 90,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b8_c2_raid": {
+    "was": 90,
+    "cur": 7,
+    "delta": 2,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      4,
+      100,
+      20
+     ],
+     [
+      7,
+      95,
+      20
+     ],
+     [
+      9,
+      100,
+      20
+     ]
+    ],
+    "last": 100
+   },
+   "b8_c2_town": {
+    "was": 100,
+    "cur": 6,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      100,
+      20
+     ],
+     [
+      6,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b8_c2_fields": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      65,
+      20
+     ],
+     [
+      0,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b8_c3_road": {
+    "was": 60,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c3_ridge": {
+    "was": 90,
+    "cur": 2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b8_c3_sellers": {
+    "was": 80,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c4_water": {
+    "was": 90,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      90,
+      20
+     ],
+     [
+      4,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b8_c4_drunk": {
+    "was": 70,
+    "cur": -3,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c4_edge": {
+    "was": 80,
+    "cur": -5,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b8_c4_stores": {
+    "was": 100,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      85,
+      20
+     ],
+     [
+      4,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b8_c5_grass": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b8_c5_peddler": {
+    "was": 100,
+    "cur": 10,
+    "delta": 2,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      7,
+      100,
+      20
+     ],
+     [
+      10,
+      95,
+      20
+     ],
+     [
+      12,
+      90,
+      20
+     ]
+    ],
+    "last": 90
+   },
+   "b8_c5_knives": {
+    "was": 80,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c6_masks": {
+    "was": 100,
+    "cur": 10,
+    "delta": 3,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      7,
+      95,
+      20
+     ],
+     [
+      10,
+      100,
+      20
+     ],
+     [
+      13,
+      95,
+      20
+     ]
+    ],
+    "last": 95
+   },
+   "b8_c6_wall": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b8_c6_street": {
+    "was": 100,
+    "cur": -6,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b8_c6_knives": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b8_c7_looters": {
+    "was": 90,
+    "cur": -4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -4,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b8_c7_roofs": {
+    "was": 90,
+    "cur": 5,
+    "delta": 3,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      2,
+      100,
+      20
+     ],
+     [
+      5,
+      100,
+      20
+     ],
+     [
+      8,
+      100,
+      20
+     ]
+    ],
+    "last": 100
+   },
+   "b8_c7_doorway": {
+    "was": 100,
+    "cur": 6,
+    "delta": 3,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      3,
+      100,
+      20
+     ],
+     [
+      6,
+      100,
+      20
+     ],
+     [
+      9,
+      100,
+      20
+     ]
+    ],
+    "last": 100
+   }
+  },
+  "dod": {
+   "b9_c1_looters": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      85,
+      20
+     ],
+     [
+      0,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b9_c1_stores": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b9_c1_brawl": {
+    "was": 90,
+    "cur": 5,
+    "delta": -2,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      2,
+      95,
+      20
+     ],
+     [
+      5,
+      55,
+      20
+     ],
+     [
+      3,
+      60,
+      20
+     ]
+    ],
+    "last": 60
+   },
+   "b9_c2_drill": {
+    "was": 70,
+    "cur": -3,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b9_c2_bout": {
+    "was": 70,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b9_c2_wagons": {
+    "was": 70,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b9_c3_farm": {
+    "was": 90,
+    "cur": 5,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      2,
+      95,
+      20
+     ],
+     [
+      5,
+      90,
+      20
+     ],
+     [
+      6,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b9_c3_dogs": {
+    "was": 90,
+    "cur": 3,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      2,
+      85,
+      20
+     ],
+     [
+      3,
+      90,
+      20
+     ],
+     [
+      4,
+      100,
+      20
+     ]
+    ],
+    "last": 100
+   },
+   "b9_c3_road": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      0,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b9_c4_herd": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b9_c4_raid": {
+    "was": 100,
+    "cur": 1,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      1,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b9_c4_forage": {
+    "was": 90,
+    "cur": 5,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      95,
+      20
+     ],
+     [
+      5,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b9_c5_cache": {
+    "was": 100,
+    "cur": 8,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      5,
+      100,
+      20
+     ],
+     [
+      8,
+      90,
+      20
+     ],
+     [
+      9,
+      90,
+      20
+     ]
+    ],
+    "last": 90
+   },
+   "b9_c5_bull": {
+    "was": 100,
+    "cur": 3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b9_c5_dogs": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      0,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b9_c6_line": {
+    "was": 80,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b9_c6_train": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b9_c6_gap": {
+    "was": 100,
+    "cur": 11,
+    "delta": 2,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      9,
+      90,
+      20
+     ],
+     [
+      11,
+      95,
+      20
+     ],
+     [
+      13,
+      95,
+      20
+     ]
+    ],
+    "last": 95
+   },
+   "b9_c6_dusk": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b9_c7_rearguard": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b9_c7_dark": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b9_c7_trail": {
+    "was": 90,
+    "cur": 6,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      4,
+      90,
+      20
+     ],
+     [
+      6,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   }
+  },
+  "tcg": {
+   "b10_c1_strippers": {
+    "was": 90,
+    "cur": -9,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -8,
+      65,
+      20
+     ],
+     [
+      -9,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   },
+   "b10_c1_graves": {
+    "was": 90,
+    "cur": -2,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -3,
+      85,
+      20
+     ],
+     [
+      -2,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b10_c1_spar": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b10_c2_spar": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b10_c2_deserters": {
+    "was": 90,
+    "cur": -1,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b10_c2_dogs": {
+    "was": 90,
+    "cur": 7,
+    "delta": 1,
+    "survive": false,
+    "test": true,
+    "hist": [
+     [
+      6,
+      85,
+      20
+     ],
+     [
+      7,
+      85,
+      20
+     ],
+     [
+      8,
+      65,
+      20
+     ]
+    ],
+    "last": 65
+   },
+   "b10_c3_wagon": {
+    "was": 70,
+    "cur": -3,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b10_c3_traces": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b10_c4_foragers": {
+    "was": 80,
+    "cur": -2,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b10_c4_night": {
+    "was": 80,
+    "cur": -2,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b10_c4_dogs": {
+    "was": 100,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      3,
+      85,
+      20
+     ],
+     [
+      4,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b10_c5_stragglers": {
+    "was": 90,
+    "cur": 4,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      2,
+      90,
+      20
+     ],
+     [
+      4,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "b10_c5_outriders": {
+    "was": 100,
+    "cur": -8,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -8,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b10_c6_beach": {
+    "was": 90,
+    "cur": -3,
+    "delta": 0,
+    "survive": false,
+    "test": false,
+    "hist": [
+     [
+      -3,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b10_c6_line": {
+    "was": 90,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b10_c6_open": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b10_c7_picket": {
+    "was": 80,
+    "cur": -4,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   },
+   "b10_c7_morning": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": true,
+    "test": false
+   },
+   "b10_c7_line": {
+    "was": 100,
+    "cur": 0,
+    "delta": 0,
+    "survive": false,
+    "test": false
+   }
+  },
+  "gotm": {
+   "c3_toughs": {
+    "cur": -1,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      0,
+      65,
+      20
+     ],
+     [
+      -1,
+      80,
+      20
+     ]
+    ],
+    "last": 80
+   },
+   "reprisal": {
+    "cur": -1,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      -2,
+      85,
+      20
+     ],
+     [
+      -1,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   }
+  },
+  "mt": {
+   "b5_c1_lowwalk": {
+    "cur": -1,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      -2,
+      90,
+      20
+     ],
+     [
+      -1,
+      70,
+      20
+     ]
+    ],
+    "last": 70
+   },
+   "b5_c2_hulk": {
+    "cur": 3,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      2,
+      90,
+      20
+     ],
+     [
+      3,
+      75,
+      20
+     ]
+    ],
+    "last": 75
+   },
+   "b5_c6_channel": {
+    "cur": -1,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      85,
+      20
+     ]
+    ],
+    "last": 85
+   }
+  },
+  "dg": {
+   "b2_postern": {
+    "cur": -2,
+    "delta": 0,
+    "test": false,
+    "hist": [
+     [
+      -1,
+      60,
+      20
+     ],
+     [
+      -2,
+      90,
+      20
+     ]
+    ],
+    "last": 90
+   }
+  }
+ }
+}
