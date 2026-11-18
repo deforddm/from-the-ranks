@@ -1,0 +1,34 @@
+# Runs on every push to main: the page builds from src/ to exactly the index.html that was committed, every file parses,
+# and the content lint passes (every dialogue node under random states, soft-locks, references, a function declared twice).
+# It does not run the test suite (over an hour); that stays the full lane's job before a ship (docs/series-playbook.md §5).
+# A red cross here means the live site was built from a push that fails one of these: fix forward with a patch version.
+name: check
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The committed index.html is what src/ builds
+        run: |
+          python3 build.py
+          git diff --exit-code --stat -- index.html
+      - name: Every file parses
+        run: |
+          for f in src/*.js sw.js; do node --check "$f"; done
+      - name: The version and the cache name match
+        run: |
+          v=$(sed -n "s/^const VERSION = '\(.*\)';.*/\1/p" src/010_preamble.js)
+          grep -q "const CACHE = 'ftr-v$v" sw.js || { echo "VERSION $v has no matching CACHE in sw.js"; exit 1; }
+      - name: Lint
+        run: |
+          npm install -g playwright@1
+          npx playwright install --with-deps chromium
+          node tools/lint.mjs
