@@ -547,6 +547,7 @@ const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.1
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
   const look = porLook(id); WEAR_NOW = wearFor(look);
+  if (POR_LIFT[look]) ctx.scale(1.1, 1.1); // v13.50.1: the later recruits were drawn a size smaller in the frame than the rest; this brings them up to it (about the feet of the frame)
   try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; }
   ctx.restore();
   /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the

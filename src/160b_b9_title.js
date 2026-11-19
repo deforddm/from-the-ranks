@@ -68,7 +68,7 @@ POR.brask = function(ctx){ const F = {cy:-74, w:13.6, h:20, jaw:.94, chin:5.6, s
   const B = BP.body(ctx, F, {wide:44, drop:2, trap:7, nx:12, ny:F.cy + 15.2, cb:F.cy + 20.8, c1:'#7e786a', c2:'#22201c'});
   ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -48, 48, -60, 4, 5.6, '#787264', 91); PR.soft(ctx, 22, -16, 18, 20, '#000000', .45); PR.soft(ctx, -20, -34, 12, 7, '#ffe0c0', .08); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#6a6458', '#1e1c18', 'rgba(0,0,0,.45)', {style:'wrap', sw:26, sy:-44});
+  BP.collar(ctx, F, '#4c483e', '#141210', 'rgba(0,0,0,.5)', {style:'wrap', sw:18, sy:-47});
   BP.sling(ctx, 22, -34, -20, -2, '#3a2a1c', 3.2);
   F.under = (ctx, F) => { PR.dots(ctx, F, 70, 'rgba(60,44,30,.28)', .4, [5, 20]); };
   PR.face(ctx, F);
@@ -103,7 +103,7 @@ POR.brennet = function(ctx){ const F = {cy:-75, w:12.6, h:19.8, jaw:.86, chin:4.
   ctx.save(); B.path(); ctx.clip(); ctx.fillStyle = PR.lit(ctx, '#6a5038', '#1e160c', -30, 30); ctx.fillRect(-26, -40, 52, 60); // the apron
     for (let y = -34; y < 10; y += 8) for (let x = -20; x <= 20; x += 10) ell(ctx, x, y, 1, 1, '#9a9a9a'); PR.soft(ctx, 20, -16, 16, 16, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#a89a80', '#3a3024', 'rgba(0,0,0,.4)', {style:'rib', sw:22, sy:-44});
+  BP.collar(ctx, F, '#8a7c64', '#2a2218', 'rgba(0,0,0,.4)', {style:'rib', sw:16, sy:-47});
   PR.stroke(ctx, '#2a1a0e', 2, () => { ctx.moveTo(-24, -40); ctx.lineTo(-20, 6); ctx.moveTo(24, -40); ctx.lineTo(20, 6); }); // the apron's straps
   F.under = (ctx, F) => { PR.dots(ctx, F, 40, 'rgba(40,24,14,.22)', .4, [5, 19]); };
   PR.face(ctx, F);
@@ -119,7 +119,7 @@ POR.kaedra = function(ctx){ const F = {cy:-74, w:11.4, h:19.4, jaw:.72, chin:4.1
   const B = BP.body(ctx, F, {wide:31, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#7a7454', c2:'#1a1810'}); ctx.save(); B.path(); ctx.clip();
     for (let i = 0; i < 30; i++) { const r = PR.rng(i + 911); PR.stroke(ctx, 'rgba(200,180,110,.4)', .6, () => { const x = (r() < .5 ? -1 : 1) * (18 + r() * 12), y = -46 + r() * 14; ctx.moveTo(x, y); ctx.lineTo(x + (r() - .5) * 4, y - 5); }); } // the dry grass at the shoulders
     PR.soft(ctx, 20, -16, 14, 12, '#000000', .4); ctx.restore(); BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#6a6448', '#1e1c12', 'rgba(0,0,0,.45)', {style:'wrap', sw:24, sy:-44, drop:1}); // the hood down round the neck
+  BP.collar(ctx, F, '#6a6448', '#1e1c12', 'rgba(0,0,0,.45)', {style:'wrap', sw:18, sy:-46, drop:1}); // the hood down round the neck
   PR.stroke(ctx, '#2a2018', .6, () => { ctx.moveTo(-4, -50); ctx.quadraticCurveTo(0, -42, 4, -50); }); ell(ctx, 0, -42.4, 1.6, 1.6, '#3a6ab0'); ell(ctx, -.4, -43, .5, .5, '#c8dcf0'); // the blue bead
   BP.sling(ctx, -28, -8, 18, -46, '#3a2a14', 2.2);
   PR.face(ctx, F);

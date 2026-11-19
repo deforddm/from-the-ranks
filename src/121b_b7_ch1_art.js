@@ -52,7 +52,7 @@ POR.doss = function(ctx){ const F = {cy:-76, w:12.6, h:20, jaw:.86, chin:4.8, sk
   ctx.fillStyle = 'rgba(160,140,104,.55)'; ctx.fillRect(-6.8, -46, 13, 50);
   PR.soft(ctx, 22, -18, 16, 14, '#000000', .45); PR.soft(ctx, -20, -36, 12, 7, '#ffe0b0', .1);
   ctx.restore(); BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#a89470', '#3a301e', 'rgba(30,22,10,.45)', {style:'fold', sw:22, sy:-42});
+  BP.collar(ctx, F, '#8a7858', '#2a2216', 'rgba(30,22,10,.45)', {style:'fold', sw:16, sy:-46});
   // the flail's handle over the right shoulder, past the ear
   PR.stroke(ctx, '#3a2614', 3.4, () => { ctx.moveTo(30, 4); ctx.lineTo(14, -112); }); PR.stroke(ctx, '#8a6a40', 2.4, () => { ctx.moveTo(30, 4); ctx.lineTo(14, -112); }); PR.stroke(ctx, 'rgba(255,230,190,.35)', .7, () => { ctx.moveTo(28.6, 4); ctx.lineTo(12.8, -110); });
   F.under = (ctx, F) => { PR.dots(ctx, F, 50, 'rgba(18,10,6,.32)', .5, [5, 19]); PR.soft(ctx, -6, F.cy + 4, 4, 2.4, '#a03a28', .14); PR.soft(ctx, 6, F.cy + 4, 4, 2.4, '#a03a28', .14); };

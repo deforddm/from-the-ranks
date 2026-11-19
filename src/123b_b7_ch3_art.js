@@ -43,6 +43,8 @@ Object.assign(FIGX, {
 
 /* ---------------- the bust ---------------- */
 POR.wenna = function(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.74, chin:4.3, skin:'#9a6c4c', iris:'#2a2018', lip:'#7a4a3a', browCol:'#1e140e', browW:1.3, arch:.7, browL:.2, browR:.35, rim:'#9ab8c8', rimA:.28, nose:1.1, look:.25, open:.9, smileL:.05, smileR:.15, mouthW:3.3, bags:.3, age:.2};
+  ell(ctx, -F.w*.86, F.cy + 9.6, 3.2, 2.8, PR.rad(ctx, -F.w*.95, F.cy + 8.8, .4, 4, [[0, '#2a1e14'], [1, '#060403']])); // the knot, tied back: at the nape (v13.50.1: it had been drawn over her eye)
+  PR.stroke(ctx, '#3a2a14', 1, () => { ctx.moveTo(-F.w*.86 - 3, F.cy + 8.2); ctx.lineTo(-F.w*.86 + 2.6, F.cy + 8.2); }); // the tarred cord round it
   PR.neck(ctx, F, 7.6);
   const B = BP.body(ctx, F, {wide:32, drop:3, nx:F.w*.66 + 2.4, ny:F.cy + 14, cb:-45, c1:'#4e4236', c2:'#120e08'}); ctx.save(); B.path(); ctx.clip(); // the oiled sealskin
     for (let i = 0; i < 26; i++) { const r = PR.rng(i + 731); PR.soft(ctx, -30 + r()*60, -44 + r()*46, 2 + r()*5, 1 + r()*2, '#d8e4ee', .06 + r()*.06); } // the oil's sheen
@@ -58,8 +60,6 @@ POR.wenna = function(ctx){ const F = {cy:-74, w:11.8, h:19.6, jaw:.74, chin:4.3,
   PR.face(ctx, F);
   const u = F.h/20, top = F.cy - 21*u;
   BP.hair(ctx, F, {c:['#2a1e14', '#120c08', '#040302'], v:1.4, wx:.9, hl:12.4, ey:-2.4, n:70, sw:.45, s:['#1e1610', '#0a0604', '#3a2c20'], seed:733, sh:'#a8b8c0', shA:.2});
-  ell(ctx, -F.w*.15, top + F.h*.92, 3.4, 2.4, PR.rad(ctx, -F.w*.25, top + F.h*.86, .4, 4, [[0, '#2a1e14'], [1, '#060403']])); // the knot, tied back
-  PR.stroke(ctx, '#3a2a14', 1, () => { ctx.moveTo(-F.w*.15 - 3.4, top + F.h*.92); ctx.lineTo(-F.w*.15 + 3.4, top + F.h*.92); }); // the tarred cord round it
   return F; };
 
 /* ---------------- shared drawing for the valley ---------------- */

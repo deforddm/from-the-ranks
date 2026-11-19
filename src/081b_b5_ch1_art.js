@@ -26,8 +26,9 @@ Object.assign(FIGX, {
     h.legs('#2a2622'); poly(ctx, [[-5.4,-6],[5.4,-6],[6.6,9],[-6.6,9]], h.armor('#6a5a46', '#241e16')); ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(-.5, -6, 1, 15); // the long plain coat
     poly(ctx, [[-6,-3],[4,-4],[4.6,4.6],[-5.4,5.4]], h.armor('#3a4a44', '#121a18')); ctx.fillStyle = 'rgba(220,230,220,.18)'; ctx.fillRect(-5.6, -3, 9, .8); ctx.fillStyle = '#c9a35a'; ctx.fillRect(-1.6, .4, 2.2, 1.2); // the oilskin case, its brass clasp
     ctx.fillStyle = '#c8aa90'; ctx.fillRect(-7.4, -2, 2, 3.4); ctx.fillRect(4.2, -1, 2, 3.4); ctx.fillStyle = '#1a1820'; ctx.fillRect(-7.4, .6, 2, 1.6); ctx.fillRect(4.2, 1.6, 2, 1.6); // hands round the case, ink to the wrist
-    h.head('#d0b29a', 3.9, -11.6); h.look('rgba(24,14,10,.8)', -11.8); B2F.cap(ctx, '#3a3028', 4, -12.8, 1.1, 1.9); ctx.fillStyle = 'rgba(30,30,40,.6)'; ctx.fillRect(3, -9.4, 1.2, .7); // thin hair; an ink smudge on the cheek
-    B2F.line(ctx, '#e8e0cc', .5, [[4, -15], [6.4, -18.6]]); // a pen behind the ear
+    ctx.fillStyle = '#b0947e'; ctx.fillRect(-1.8, -8.4, 3.6, 3.4); poly(ctx, [[-4.4,-6.8],[4.4,-6.8],[3.2,-5.2],[-3.2,-5.2]], '#4a3e30'); // his neck, and the coat's collar up to it (v13.50.1: the head sat clear of the body)
+    h.head('#d0b29a', 3.9, -10.8); h.look('rgba(24,14,10,.8)', -11); B2F.cap(ctx, '#3a3028', 4, -12, 1.1, 1.9); ctx.fillStyle = 'rgba(30,30,40,.6)'; ctx.fillRect(1.6, -8.9, 1.2, .7); // thin hair; an ink smudge on the cheek, inside the face
+    B2F.line(ctx, '#e8e0cc', .5, [[3.6, -12.6], [6, -16.6]]); // a pen behind the ear
     ctx.restore(); },
   /* the tile-woman: old, small, bent; a dark shawl over the head and shoulders, a bag of oiled cloth in both hands, a staff-stick */
   b5_c1_tilewoman(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .86, .88); ctx.translate(.6, 0);

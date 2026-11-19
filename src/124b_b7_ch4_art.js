@@ -49,7 +49,7 @@ POR.sorvan = function(ctx){ const F = {cy:-74, w:12.4, h:19.8, jaw:.88, chin:4.6
         ctx.fillStyle = 'rgba(190,210,250,.10)'; ctx.fillRect(x - 2.2, y + .6, 1.2, 1.6); } } // the plates, laced in rows, each with a glint
     PR.stroke(ctx, 'rgba(60,40,24,.7)', 1.2, () => { for (let r = 0; r < 9; r++) { ctx.moveTo(-36, -41 + r*6.2); ctx.lineTo(36, -41 + r*6.2); } }); // the lacing
     PR.soft(ctx, -18, -36, 10, 6, '#dce8ff', .12); ctx.restore(); BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#5a4a3a', '#1e1812', 'rgba(20,14,8,.5)', {style:'fold', sw:22, sy:-42}); // the riding coat's collar turned up over the scale
+  BP.collar(ctx, F, '#4a3e32', '#16120e', 'rgba(20,14,8,.5)', {style:'fold', sw:16, sy:-46}); // the riding coat's collar turned up over the scale
   PR.face(ctx, F);
   PR.soft(ctx, -F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); PR.soft(ctx, F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); // the close-cut moustache
   PR.soft(ctx, -F.w*.62, F.cy - 1, 1.6, 3.2, '#8a6a50', .35); // an old scar by the eye, faded

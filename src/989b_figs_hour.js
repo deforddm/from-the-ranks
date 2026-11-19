@@ -13,9 +13,10 @@ Object.assign(FIGX, {
     ctx.fillStyle = 'rgba(255,255,250,.5)'; ctx.fillRect(-3.4, 2, 2.2, 3); ctx.fillRect(1.2, 5.4, 2.6, 2.2); // flour on the apron
     ctx.fillStyle = '#6a5c4c'; ctx.fillRect(-8, -5.4, 2.4, 3); ctx.fillRect(5.6, -5.4, 2.4, 3); // sleeves rolled above the elbow
     ctx.fillStyle = '#e4ddd0'; ctx.fillRect(-8, -2.4, 2.2, 5.4); ctx.fillRect(5.8, -2.4, 2.2, 5.4); // forearms floury to the elbow
-    h.head('#b88e72', 4.2, -10.8); h.look('rgba(26,16,10,.85)', -11);
-    B2F.cap(ctx, '#8a3a2c', 4.7, -12.2, .98, 2.02); ctx.fillStyle = '#8a3a2c'; ctx.fillRect(3.6, -12.6, 1.8, 4); // a madder-red kerchief, knotted behind
-    ctx.fillStyle = '#3a2a1e'; ctx.fillRect(-4.4, -11.4, 1.1, 2.6); // dark hair escaping at the temple
+    ctx.fillStyle = '#9a7258'; ctx.fillRect(-1.8, -8.4, 3.6, 3.4); poly(ctx, [[-4.8,-6.6],[4.8,-6.6],[3.4,-4.6],[-3.4,-4.6]], '#4a4238'); // her neck, and the bodice's neckline up to it (v13.50.1: the head sat clear of the body)
+    h.head('#b88e72', 4.2, -10.4); h.look('rgba(26,16,10,.85)', -10.6);
+    B2F.cap(ctx, '#8a3a2c', 4.7, -11.8, .98, 2.02); // a madder-red kerchief over the hair
+    ctx.fillStyle = '#3a2a1e'; ctx.fillRect(-4.1, -11, 1, 2.2); // dark hair escaping at the temple
     ctx.restore(); },
   b10_c1_clerk(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1);
     h.legs('#3a3228'); h.torso('#6e6a62', '#2c2a26', 6); ctx.fillStyle = '#4a3a28'; ctx.fillRect(-6, 3.4, 12, 1.2); // the Fourteenth's faded grey, a belt
@@ -23,7 +24,8 @@ Object.assign(FIGX, {
     poly(ctx, [[-6.4,-3.4],[1.6,-4],[2,3.4],[-6,4]], '#22262a'); B2F.line(ctx, '#8a7a5a', .7, [[-6.4,-3.4],[1.6,-4],[2,3.4],[-6,4],[-6.4,-3.4]]); // the slate in its wooden frame
     B2F.line(ctx, 'rgba(235,235,225,.75)', .5, [[-5.2, -1.8], [.6, -2.2]]); B2F.line(ctx, 'rgba(235,235,225,.6)', .5, [[-5, .2], [-.6, -.1]]); B2F.line(ctx, 'rgba(235,235,225,.5)', .5, [[-4.9, 2.1], [.4, 1.8]]); // chalked tallies
     ctx.fillStyle = '#a88468'; ctx.fillRect(-7.6, -1, 2, 3); ctx.fillRect(1.6, -2.4, 2.2, 2.4); ctx.fillStyle = '#eeeade'; ctx.fillRect(2.4, -3.6, .8, 1.6); // hands; the chalk
-    h.head('#a88468', 3.9, -11.4); h.look('rgba(24,14,10,.8)', -11.6); B2F.cap(ctx, '#2a2420', 4.2, -12.4, 1.02, 1.98); // cropped dark hair, no helm
+    ctx.fillStyle = '#8c6c54'; ctx.fillRect(-1.8, -8.4, 3.6, 3.4); poly(ctx, [[-4.4,-6.8],[4.4,-6.8],[3.2,-5],[-3.2,-5]], '#55524c'); // his neck, and the tabard's collar up to it
+    h.head('#a88468', 3.9, -10.6); h.look('rgba(24,14,10,.8)', -10.8); B2F.cap(ctx, '#2a2420', 4.2, -11.6, 1.02, 1.98); // cropped dark hair, no helm
     ctx.restore(); },
 });
 const HOUR_NOT = /at dusk|by dusk|until dusk|before dusk|till dusk|by dawn|until dawn|at dawn/i;

@@ -58,6 +58,7 @@ Object.assign(FIGX, {
 
 /* ---------------- the bust ---------------- */
 POR.ilsa = function(ctx){ const F = {cy:-74, w:11.6, h:19.4, jaw:.7, chin:4.2, skin:'#d2b29a', iris:'#3a3428', lip:'#9a6460', browCol:'#2a1e18', browW:1.15, arch:1, browL:.4, browR:.55, rim:'#a8b0c8', rimA:.26, nose:.95, look:-.2, open:.92, smileL:-.1, smileR:.05, mouthW:3.2, bags:.55, age:.15};
+  ell(ctx, -F.w*.86, F.cy + 9.6, 3.4, 3, PR.rad(ctx, -F.w*.95, F.cy + 8.8, .4, 4, [[0, '#4a3628'], [1, '#0c0806']])); // the knot, tied low behind: at the nape, behind the jaw (v13.50.1: it had been drawn over her eye)
   PR.neck(ctx, F, 7.6);
   const B = BP.body(ctx, F, {wide:31, drop:2, v:true, nx:F.w*.66 + 2.6, ny:F.cy + 14, cb:-46.4, c1:'#7c7e86', c2:'#18181e'}); ctx.save(); B.path(); ctx.clip(); // the grey clerk's coat, buttoned to the throat
     PR.stroke(ctx, 'rgba(0,0,0,.5)', 1.3, () => { ctx.moveTo(.6, -46); ctx.quadraticCurveTo(3, -20, 3, 6); });
@@ -74,7 +75,6 @@ POR.ilsa = function(ctx){ const F = {cy:-74, w:11.6, h:19.4, jaw:.7, chin:4.2, s
   PR.face(ctx, F);
   const u = F.h/20, top = F.cy - 21*u;
   BP.hair(ctx, F, {c:['#4a3628', '#1e140e', '#080504'], v:1.5, wx:.8, hl:12.8, ey:-2.2, n:76, sw:.45, s:['#3a2a1e', '#100a06', '#5a4434'], seed:121, sh:'#c8b8c0', shA:.22});
-  ell(ctx, -F.w*.2, top + F.h*.9, 3.6, 2.6, PR.rad(ctx, -F.w*.3, top + F.h*.86, .4, 4, [[0, '#4a3628'], [1, '#0c0806']])); // the knot, tied low behind
   PR.soft(ctx, F.w*.34, F.cy + 3, 1.4, .8, '#2a2a3a', .45); // an ink smudge on the cheek
   return F; };
 

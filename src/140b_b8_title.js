@@ -137,7 +137,7 @@ POR.vasso = function(ctx){ const F = {cy:-76, w:12, h:19.6, jaw:.74, chin:4.2, s
   ctx.save(); B.path(); ctx.clip(); BP.quilt(ctx, -40, 40, -50, 4, 6, 'rgba(10,8,14,.55)');
     PR.soft(ctx, 20, -16, 16, 16, '#000000', .45); PR.soft(ctx, -18, -34, 12, 7, '#ffe0c0', .08); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#2e2a36', '#0c0a10', 'rgba(0,0,0,.5)', {style:'rib', sw:22, sy:-44});
+  BP.collar(ctx, F, '#2e2a36', '#0c0a10', 'rgba(0,0,0,.5)', {style:'rib', sw:16, sy:-47});
   BP.sling(ctx, -26, -6, 16, -46, '#2a2018', 3); // the sheath-strap across the chest, to the hilt behind the shoulder
   PR.stroke(ctx, '#6a5a44', .9, () => { ctx.moveTo(-6, -50); ctx.quadraticCurveTo(0, -38, 6, -50); }); [-4, -1.5, 1.5, 4].forEach((x, i) => ell(ctx, x, -45 + Math.abs(x) * .6, .9, .9, '#8a7a5a')); // the knotted cord
   F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy + 11, 7, 3, '#2a1a14', .12); };
@@ -161,7 +161,7 @@ POR.edrem = function(ctx){ const F = {cy:-75, w:13.4, h:20, jaw:.9, chin:5.6, sk
   ctx.fillStyle = PR.lit(ctx, '#7a6a4e', '#2a2216', -46, -8); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 4; ctx.fill(); ctx.restore();
   PR.stroke(ctx, 'rgba(20,14,8,.5)', .8, () => { ctx.moveTo(-34, -40); ctx.quadraticCurveTo(-30, -20, -34, 2); ctx.moveTo(-24, -44); ctx.quadraticCurveTo(-20, -24, -24, 2); });
   ctx.strokeStyle = '#5a5a5e'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(-14, -42, 2.6, 0, 7); ctx.stroke();
-  BP.collar(ctx, F, '#6a6e72', '#1e2024', 'rgba(0,0,0,.45)', {style:'wrap', sw:24, sy:-44});
+  BP.collar(ctx, F, '#4a4e52', '#141618', 'rgba(0,0,0,.5)', {style:'wrap', sw:17, sy:-47});
   BP.sling(ctx, 24, -30, -18, -2, '#3a2a1c', 3); // the mace's strap, across the chest
   PR.stroke(ctx, '#2a2018', .7, () => { ctx.moveTo(-5, -50); ctx.quadraticCurveTo(0, -41, 5, -50); }); ell(ctx, .6, -41.6, 1.6, 2.2, '#d87a6a'); ell(ctx, .1, -42.4, .6, .8, '#f4c0b0'); // the coral token
   F.under = (ctx, F) => { const u = F.h/20; PR.dots(ctx, F, 80, 'rgba(200,196,190,.32)', .4, [4, 21]); PR.dots(ctx, F, 50, 'rgba(40,34,30,.3)', .4, [6, 20]);

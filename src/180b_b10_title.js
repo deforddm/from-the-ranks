@@ -157,7 +157,7 @@ POR.pruss = function(ctx){ const F = {cy:-74, w:13.4, h:19.8, jaw:.92, chin:5.4,
     PR.stroke(ctx, '#3a2818', 5, () => { ctx.moveTo(-34, -40); ctx.lineTo(30, 12); }); PR.stroke(ctx, 'rgba(255,220,180,.18)', 1, () => { ctx.moveTo(-34, -42); ctx.lineTo(30, 10); }); // the trace-strap
     PR.soft(ctx, 22, -16, 18, 20, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#6a6458', '#1e1c18', 'rgba(0,0,0,.45)', {style:'wrap', sw:26, sy:-44});
+  BP.collar(ctx, F, '#4c483e', '#141210', 'rgba(0,0,0,.5)', {style:'wrap', sw:18, sy:-47});
   F.under = (ctx, F) => { PR.dots(ctx, F, 40, 'rgba(60,44,30,.24)', .4, [5, 18]); };
   PR.face(ctx, F);
   const u = F.h/20; PR.stroke(ctx, 'rgba(120,70,50,.6)', .9, () => { ctx.moveTo(-F.w*.5, F.cy - 7.4*u); ctx.lineTo(-F.w*.3, F.cy - 3.6*u); }); // the scar through the brow
@@ -174,7 +174,7 @@ POR.tirren = function(ctx){ const F = {cy:-75, w:11.2, h:19.4, jaw:.7, chin:3.9,
   ctx.save(); B.path(); ctx.clip(); ctx.fillStyle = PR.lit(ctx, '#7a5a3e', '#1e140a', -28, 28); ctx.fillRect(-22, -38, 44, 60); // the apron
     PR.stroke(ctx, '#2a1a0c', 1.6, () => { ctx.moveTo(-20, -38); ctx.lineTo(-16, 8); ctx.moveTo(20, -38); ctx.lineTo(16, 8); }); PR.soft(ctx, 18, -16, 14, 14, '#000000', .4); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#b8a688', '#3a3024', 'rgba(0,0,0,.4)', {style:'rib', sw:20, sy:-44});
+  BP.collar(ctx, F, '#9a8a70', '#2a2218', 'rgba(0,0,0,.4)', {style:'rib', sw:15, sy:-47});
   for (let i = 0; i < 6; i++) ell(ctx, -F.w*.9 - 1 + i * .5, F.cy + 12 + i * 5.2, 2.6, 2, i % 2 ? '#7a4e2c' : '#9a6a40'); // the braid over the left shoulder
   PR.stroke(ctx, '#2a2018', .6, () => { ctx.moveTo(-4, -50); ctx.quadraticCurveTo(0, -42, 4, -50); }); ctx.save(); ctx.translate(0, -40); ctx.fillStyle = '#7a7a80'; ctx.fillRect(-1, -5, 2, 9); ctx.restore(); // the rasp on its thong
   PR.face(ctx, F);
