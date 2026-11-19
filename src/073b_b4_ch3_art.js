@@ -8,12 +8,12 @@
 
 /* ---------------- figures ---------------- */
 /* the black tears: two inked tracks from under each eye to the jaw (never explained), with the faint sheen of fresh ink on the young */
-function b43Tears(ctx, x0, x1, y0, len, fresh){ ctx.fillStyle = '#050304'; [x0, x1].forEach(x => { ctx.beginPath(); ctx.moveTo(x - .5, y0); ctx.lineTo(x + .5, y0); ctx.lineTo(x + .4, y0 + len*.7); ctx.quadraticCurveTo(x, y0 + len + .9, x - .4, y0 + len*.7); ctx.closePath(); ctx.fill(); ell(ctx, x, y0 + len*.82, .7, .8, '#050304'); });
+function b43Tears(ctx, x0, x1, y0, len, fresh){ ctx.fillStyle = '#050304'; [x0, x1].forEach((x, i) => { const L = len*(i ? .62 : .72); ctx.beginPath(); ctx.moveTo(x - .32, y0); ctx.lineTo(x + .32, y0); ctx.lineTo(x + .22, y0 + L*.7); ctx.quadraticCurveTo(x, y0 + L + .6, x - .22, y0 + L*.7); ctx.closePath(); ctx.fill(); ell(ctx, x, y0 + L*.86, .42, .55, '#050304'); }); /* v13.50.2: thin tears of unequal length, not two bars */
   if (fresh) { ctx.fillStyle = 'rgba(200,120,100,.35)'; [x0, x1].forEach(x => ctx.fillRect(x - .9, y0 - .2, 1.8, .5)); } }
 Object.assign(FIGX, {
   /* a Burned Tear rider: Book Two's Khundryl a year on, in the same horsehide and horsehair, a lance with a black mane-tail under the
      blade, braids with bone beads; the red ochre gone, and down both cheeks the black tears, inked; ash rubbed into the braids */
-  b4_c3_khundryl(ctx, h, t, o){ const sk = b2Pick(o, ['#a47c5c', '#94704e', '#ac8462', '#8c6a4c']), hide = b2Pick(o, [['#5a4634','#1e160e'], ['#6a4a2e','#22160c'], ['#4a3e34','#16120e']]), sw = o.still ? 0 : Math.sin(t/520 + (o.phase||0)), old = hash(Math.round((o.phase || 0)*7), 11) > .7;
+  b4_c3_khundryl(ctx, h, t, o){ const sk = b2Pick(o, ['#c8a488', '#b8957a', '#d0ac90', '#b08c72']) /* v13.50.2: pale, as the Khundryl are (W: Khundryl Burned Tears) */, hide = b2Pick(o, [['#5a4634','#1e160e'], ['#6a4a2e','#22160c'], ['#4a3e34','#16120e']]), sw = o.still ? 0 : Math.sin(t/520 + (o.phase||0)), old = hash(Math.round((o.phase || 0)*7), 11) > .7;
     B2F.line(ctx, '#4a3420', 1.3, [[8.4, 12.6], [10.2, -24]], 'butt'); poly(ctx, [[10.3,-30.4],[9.4,-24],[11.2,-24]], '#d0c8b4'); ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fillRect(10, -29.4, .4, 4.6); // a long lance, a leaf blade
     B2F.line(ctx, '#0e0a08', 1.6, [[10, -23], [10.6 + sw*.8, -19], [10.2 + sw*1.4, -15]]); B2F.line(ctx, '#1e1410', .9, [[10.6, -23], [11.8 + sw*.9, -19.4], [11.6 + sw*1.6, -16.2]]); // its black horse-tail, moving
     h.legs('#3a2a1c'); ctx.fillStyle = '#4a3a26'; ctx.fillRect(-4.6, 8.4, 3.6, 4.6); ctx.fillRect(1, 8.4, 3.6, 4.6); ctx.fillStyle = 'rgba(214,190,140,.5)'; for (let i=0;i<4;i++){ ctx.fillRect(-4.6 + i*.9, 12.4, .4, 1.2); ctx.fillRect(1 + i*.9, 12.4, .4, 1.2); } // riding boots, fringed
@@ -31,7 +31,7 @@ Object.assign(FIGX, {
     ctx.strokeStyle = '#9a6a3a'; ctx.lineWidth = .9; ctx.beginPath(); ctx.arc(.4, -6.4, 3.6, Math.PI*.1, Math.PI*.9); ctx.stroke(); }, // a copper torque
   /* the war chief of the Burned Tears, far off at the feast and near at the Third's fire: huge, bronze scale under a horsehide mantle edged in
      mane, grey come into his braids and beard, no helm tonight, and the tears thick and fresh, black to the jaw */
-  b4_c3_warchief(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.2, 1.14); const sk = '#9a7252', sw = o.still ? 0 : Math.sin(t/600 + (o.phase||0));
+  b4_c3_warchief(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.2, 1.14); const sk = '#c0a084', sw = o.still ? 0 : Math.sin(t/600 + (o.phase||0));
     poly(ctx, [[-6.6,-7],[6.6,-7],[8.6,11.6],[3,12.6],[0,11],[-3.4,12.8],[-9.4,11.4]], h.armor('#4a3424', '#120a06')); ctx.strokeStyle = '#140e0a'; ctx.lineWidth = .6; ctx.beginPath(); for (let i=0;i<9;i++){ const x = -9 + i*2.1; ctx.moveTo(x, 11.4 + (i%2)*.8); ctx.lineTo(x - .6 + sw*.3, 13.4 + (i%3)*.4); } ctx.stroke(); // the mantle behind him, mane at its hem
     h.legs('#2e2218'); ctx.fillStyle = '#3a2a1c'; ctx.fillRect(-4.8, 8, 3.8, 5); ctx.fillRect(1, 8, 3.8, 5);
     poly(ctx, [[-6.8,-6.4],[6.8,-6.4],[7.4,7.6],[-7.4,7.6]], h.armor('#7a5a2a', '#2a1a08')); b2Scales(ctx, -6, 6.4, -5.6, 8, 1.8, '#b8864a', '#5a3e18'); ctx.fillStyle = 'rgba(255,236,190,.14)'; ctx.fillRect(-6.4, -5.8, 1.6, 12.6); // bronze scale, dulled

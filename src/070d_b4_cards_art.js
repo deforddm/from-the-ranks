@@ -3,7 +3,7 @@
    frame of iron links over the gold (as Book Three's Chains cards wear it, 60d). Every other card Book Four deals is one the earlier books
    already paint. Looks: a battle figure (FIGX, 18) and a painted bust (POR, 19) for Tallow, Hessa, Tebbet, Darrut and Orvas, each told
    apart from the others and from Book Two's four by its silhouette: Tallow's big helm and bright new kit, Hessa's tall worm-rimmed
-   shield and temple spear, Tebbet's long bow and hood, Darrut's great round Guard shield and plume-less helm, Orvas's black tears and
+   shield and temple spear, Tebbet's long bow and hood, Darrut's great round Guard shield and plume-less helm, Orvas's black tears (redrawn to canon in v13.50.2) and
    horse-tail. Same rules as Books Two and Three: lantern low on the left, the squadmate's own colour as a rim on the right. */
 {
   const frame = (P) => { const X = x => P.px + x / 100 * P.pw, Y = y => P.py + y / 100 * P.ph, u = P.pw / 100; return {X, Y, u}; };
@@ -99,7 +99,8 @@ Object.assign(FIGX, {
     B2F.line(ctx, '#6a4a2a', 1.4, [[7.6, 12], [9.4, -20]]); poly(ctx, [[9.4,-24],[8.4,-19],[10.4,-19]], '#d8d0bc'); poly(ctx, [[9.2,-18],[13.6,-17 + fl],[13,-14 + fl],[9.4,-15]], '#a83a2a'); // the lance and the clan's rag
     h.legs('#2a1e14'); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-4.5, 8.6, 3.4, 4.4); ctx.fillRect(1.1, 8.6, 3.4, 4.4); // riding boots
     h.torso('#7a3a24', '#2a120a', 6); ctx.fillStyle = 'rgba(255,200,160,.2)'; ctx.fillRect(-5.4, -5, 1.6, 9); ctx.fillStyle = '#c8b898'; for (let i = 0; i < 5; i++) ctx.fillRect(-5 + i*2.4, 6, .6, 2.4); // lacquered leather, horsehair tassels
-    h.head('#8a5a3a', 4.2, -11.2); h.look('rgba(20,10,6,.88)', -11.6); ctx.fillStyle = '#0a0606'; ctx.fillRect(-.6, -10.6, .8, 3.4); ctx.fillRect(2.4, -10.6, .8, 3.4); // the black tears
+    h.head('#c6a082', 4.2, -11.2); h.look('rgba(20,10,6,.88)', -11.6); ctx.fillStyle = '#0a0606'; ctx.fillRect(-.3, -10.8, .45, 1.7); ctx.fillRect(2.7, -10.8, .45, 1.5); // the black tears: thin, from the eyes (v13.50.2; pale skin, as the Khundryl are)
+    ctx.fillRect(.2, -8.1, 2.6, .55); ctx.fillRect(-.2, -8.1, .5, 1.9); ctx.fillRect(2.7, -8.1, .5, 1.9); // the moustache, drooping, clear of the tears
     B2F.cap(ctx, '#0e0a08', 4.5, -12.6); poly(ctx, [[-4.4,-13],[-9.4,-10 + fl],[-10,-5 + fl],[-5.6,-9]], '#1a1410'); // a black horse-tail of hair, blown back
     ctx.restore(); },
   /* v7.1 (70e). Mirrel: small and quick, a padded jack with the sleeves cut off, a hospice bag with a red hand, hair in a knot, a roll of linen */
@@ -257,7 +258,7 @@ Object.assign(POR, {
     ctx.restore();
     return F; }, // the Guard helm, its plume cut off
   /* Orvas: twenty-three, the Khundryl Burned Tears; lean as a tent-pole, always half turned toward his horse, a grin. The black tears inked down both cheeks; long black hair tied back and blowing; lacquered lamellar and horsehair; his father's horse-tail standard behind him */
-  orvas(ctx){ const F = {cy:-74, w:11.8, h:19.8, jaw:.76, chin:4.6, skin:'#8e5e3e', iris:'#1a1008', lip:'#6a3a2a', browCol:'#0a0604', browW:1.45, arch:1.2, browL:.5, browR:.2, rim:'#a85a3a', rimA:.24, nose:1.05, look:.5, open:1.02, smileL:.65, smileR:.95, mouthW:3.8, teeth:1};
+  orvas(ctx){ const F = {cy:-74, w:11.8, h:19.8, jaw:.76, chin:4.6, skin:'#c9a488', iris:'#1a1008', lip:'#8a5648', browCol:'#0a0604', browW:1.45, arch:1.2, browL:.5, browR:.2, rim:'#c8906e', rimA:.24, nose:1.05, look:.5, open:1.02, smileL:.65, smileR:.95, mouthW:3.8, teeth:1};
     ctx.lineCap = 'butt'; ctx.strokeStyle = PR.lin(ctx, 31, 0, 37, 0, [[0, '#8a6440'], [.5, '#4a3220'], [1, '#140c06']]); ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(30, 4); ctx.lineTo(36, -118); ctx.stroke(); // his father's standard
     ell(ctx, 36, -119, 2.2, 2.2, PR.rad(ctx, 35.4, -119.6, .2, 2.4, [[0, '#f0d8a0'], [1, '#6a4a14']])); PR.stroke(ctx, '#c8a050', 1, () => { for (let k = 0; k < 4; k++){ ctx.moveTo(34.4, -113 + k*1.4); ctx.lineTo(37.4, -112.6 + k*1.4); } });
     PR.strands(ctx, 40, ['#2a1e16', '#120c08', '#4a3a2c', '#0a0604', '#6a5444'], 1, 105, (i, r) => { const k = r(); return [35.6, -112, 44 + k*8, -98 + k*6, 38 + k*14 + r()*4, -70 + k*10 + r()*8]; }); // the horse's tail
@@ -265,10 +266,27 @@ Object.assign(POR, {
     const B = BP.body(ctx, F, {wide:34, drop:4, trap:2.5, nx:11, ny:-54, cb:-48, c1:'#9a4a2a', c2:'#24100a'}); ctx.save(); B.path(); ctx.clip(); B4P.lam(ctx, -36, 36, -64, 2, 4.2, 3.6, '#a84a2c', 107); // lacquered lamellar
       PR.soft(ctx, -20, -38, 12, 6, '#ffd8b0', .24); ctx.fillStyle = PR.lit(ctx, '#2a1a10', '#080402', -36, 36); ctx.fillRect(-38, -8, 76, 4.4); for (let i = 0; i < 10; i++) ell(ctx, -27 + i*6, -5.8, .8, .8, '#c8a050'); ctx.restore(); BP.light(ctx, F, B, true); BP.spaulder(ctx, {wide:34, drop:4, n:4, rise:2, c:['#d0603a', '#a03a20', '#3a1006'], style:'lam', hair:['#e8dcc4', '#c8b898', '#8a7a5e']}); // lacquered lamellar shoulder flaps, horsehair hanging from them // a black belt, brass-studded
     BP.band(ctx, B, -.6, 2.2); ctx.fillStyle = PR.lit(ctx, '#5a1e10', '#140402', -B.nx - 3, B.nx + 3); ctx.fill(); PR.stitch(ctx, 'rgba(240,200,120,.6)', .4, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 1); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the collar, gold-stitched
-    F.under = (ctx, F) => { const u = F.h/20; [-1, 1].forEach(sd => { const x = sd*F.w*.4; ctx.fillStyle = 'rgba(8,4,4,.9)'; ctx.beginPath(); ctx.moveTo(x - .9, F.cy + 1*u); ctx.quadraticCurveTo(x - 1.4, F.cy + 7*u, x, F.cy + 10.4*u); ctx.quadraticCurveTo(x + 1.4, F.cy + 7*u, x + .9, F.cy + 1*u); ctx.closePath(); ctx.fill(); ell(ctx, x, F.cy + 11.6*u, .8, 1, 'rgba(8,4,4,.85)'); }); // the black tears
-      PR.dots(ctx, F, 30, 'rgba(10,6,4,.35)', .45, [9, 18, (x, y) => Math.abs(x) < 4.4 && y > 10.4 && y < 14]); };
+    /* v13.50.2 (David, Nov 18, with the wiki's lines on the Burned Tears: pale skin, black tear tattoos, black hair in moustaches, knotted beards and
+       spiked braids). The tears were two thick bars on dark skin. Now: a thin inked line under each lower lid, and from the eye's inner half a tear that
+       runs down beside the nose, wavers, thins and ends in a drop; the two are not the same length, as a hand-cut tattoo is not. */
+    F.under = (ctx, F) => { const u = F.h/20, ink = 'rgba(10,6,8,.92)';
+      [-1, 1].forEach(sd => { const ex = sd*F.w*.4, y0 = F.cy + 1.9*u, len = (sd < 0 ? 7.6 : 6.6)*u, x0 = ex - sd*F.w*.13;
+        PR.stroke(ctx, 'rgba(10,6,8,.8)', .55, () => { ctx.moveTo(ex - sd*F.w*.24, y0 - .5*u); ctx.quadraticCurveTo(ex, y0 + .5*u, ex + sd*F.w*.2, y0 - .7*u); }); // the inked lower lid
+        ctx.fillStyle = ink; ctx.beginPath(); ctx.moveTo(x0 - .55, y0 - .2*u); ctx.bezierCurveTo(x0 - .7 - sd*.5, y0 + len*.35, x0 + .35 + sd*.5, y0 + len*.6, x0 - .12 + sd*.3, y0 + len);
+          ctx.bezierCurveTo(x0 + .75 + sd*.5, y0 + len*.6, x0 + .25 - sd*.5, y0 + len*.35, x0 + .55, y0 - .2*u); ctx.closePath(); ctx.fill();
+        ell(ctx, x0 - .12 + sd*.3, y0 + len + .5, .5, .7, ink); });
+      PR.dots(ctx, F, 30, 'rgba(10,6,4,.3)', .45, [9, 18, (x, y) => Math.abs(x) < 4.4 && y > 10.4 && y < 14]); };
     PR.face(ctx, F);
-    BP.hair(ctx, F, {c:['#3a2c22', '#120c08', '#040302'], v:2.6, wx:1.4, hl:13.4, ey:1, n:70, sw:.55, s:['#2a1e16', '#0a0604', '#4a3a2c'], seed:111, sh:'#c8a890', shA:.3, part:-1, wisp:5}); // black, pulled back
+    BP.hair(ctx, F, {c:['#1c1612', '#0a0706', '#020101'], v:2.6, wx:1.4, hl:13.4, ey:1, n:70, sw:.55, s:['#14100c', '#060403', '#2e2620'], seed:111, sh:'#b8a898', shA:.26, part:-1, wisp:5}); // black, pulled back
+    { const u = F.h/20, my = F.cy + 8.5*u; // the moustache: black, combed out and down past the corners of the mouth to two waxed points; a young man's, not yet long
+      [-1, 1].forEach(sd => { ctx.fillStyle = PR.lin(ctx, 0, my, sd*F.w*.7, my + 9*u, [[0, '#1a1410'], [.6, '#0a0706'], [1, '#040302']]); ctx.beginPath(); ctx.moveTo(sd*.2, my - .2);
+        ctx.bezierCurveTo(sd*F.w*.22, my - 1.1, sd*F.w*.5, my - .2, sd*F.w*.58, my + 2.2*u); ctx.quadraticCurveTo(sd*F.w*.64, my + 5.4*u, sd*F.w*.6, my + 8.6*u);
+        ctx.quadraticCurveTo(sd*F.w*.5, my + 5*u, sd*F.w*.42, my + 2.4*u); ctx.bezierCurveTo(sd*F.w*.32, my + 1.1, sd*F.w*.14, my + 1.2, sd*.2, my + 1.1); ctx.closePath(); ctx.fill();
+        PR.stroke(ctx, 'rgba(120,104,90,.35)', .3, () => { ctx.moveTo(sd*F.w*.16, my + .1); ctx.quadraticCurveTo(sd*F.w*.46, my + .2, sd*F.w*.56, my + 4*u); }); });
+      const by = F.cy + 14.6*u; ctx.fillStyle = '#0c0806'; ctx.beginPath(); ctx.moveTo(-1.5, by - 1.6*u); ctx.quadraticCurveTo(0, by - .6*u, 1.5, by - 1.6*u); ctx.lineTo(.9, by + 3.4*u); ctx.lineTo(-.9, by + 3.4*u); ctx.closePath(); ctx.fill(); // the chin beard, bound to a knot
+      PR.stroke(ctx, 'rgba(120,104,90,.4)', .3, () => { for (let k = 0; k < 3; k++){ ctx.moveTo(-1, by + k*1.1*u); ctx.lineTo(1, by + .5*u + k*1.1*u); } }); ell(ctx, 0, by + 3.9*u, 1.3, 1.1, PR.rad(ctx, -.4, by + 3.6*u, .1, 1.4, [[0, '#f0d8a0'], [1, '#6a4a14']])); ctx.fillStyle = '#0c0806'; ctx.fillRect(-.5, by + 4.8*u, 1, 2*u);
+      [-1, 1].forEach(sd => { const bx = sd*(F.w + .6), b0 = F.cy - 2*u; PR.stroke(ctx, '#0a0706', 1.5, () => { ctx.moveTo(bx, b0); ctx.quadraticCurveTo(bx + sd*1.6, b0 + 9*u, bx + sd*.6, b0 + 17*u); }); // a thin braid before each ear, stiffened to a spike
+        PR.stroke(ctx, 'rgba(120,104,90,.4)', .3, () => { for (let k = 1; k < 8; k++){ const y = b0 + k*2*u; ctx.moveTo(bx - .7 + sd*k*.14, y); ctx.lineTo(bx + .7 + sd*k*.14, y + .6); } }); ell(ctx, bx + sd*.6, b0 + 17.4*u, .9, .9, '#c8a050'); }); }
     ctx.fillStyle = '#c8a050'; ctx.fillRect(-F.w - 3.2, F.cy - 5, 3, 1.6); // the tie
     ctx.lineCap = 'round'; ctx.fillStyle = PR.lin(ctx, -40, 0, -F.w, 0, [[0, '#0a0604'], [.6, '#1a120c'], [1, '#2a1e16']]); ctx.beginPath(); ctx.moveTo(-F.w - 1, F.cy - 6); ctx.bezierCurveTo(-F.w - 10, F.cy - 2, -28, F.cy + 6, -38, F.cy + 4); ctx.bezierCurveTo(-30, F.cy + 12, -20, F.cy + 10, -F.w - 1, F.cy - 2); ctx.closePath(); ctx.fill(); // the tail, blown back
     PR.strands(ctx, 24, ['#2a1e16', '#4a3a2c', '#0a0604'], .5, 113, (i, r) => { const k = r(); return [-F.w - 1, F.cy - 4, -F.w - 10 - k*8, F.cy + k*4, -30 - k*10, F.cy + 3 + r()*6]; }); BP.grip(ctx, 30, 4, .049, -19.0, 2.6, ['#8a6440', '#4a3220', '#140c06'], {k:'gaunt', c:['#e07a50', '#a03a20', '#2a0804'], trim:'rgba(240,200,120,.9)'}, '#7a2a16', 0, -108); // his hand on his father's standard
