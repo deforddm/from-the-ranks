@@ -17,46 +17,7 @@ const bookDone = s => !!(s && s.chapters && s.chapters[7] != null);
 const MAP_ORDER = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']; let MAP_UPTO = null;
 const bookLive = k => !!(BOOKS[k] && !BOOKS[k].coming) && (!MAP_UPTO || MAP_ORDER.indexOf(k) <= MAP_ORDER.indexOf(MAP_UPTO));
 function worldSVG(upTo){ const was = MAP_UPTO; MAP_UPTO = upTo || null; try { return worldSVG0(); } finally { MAP_UPTO = was; } }
-function worldSVG0(){
-  const far = bookLive('rg') || bookLive('dod') || bookLive('tcg'), H = far ? 470 : 300, x0 = !far && bookLive('mt') ? -130 : 0;
-  return `<svg class="worldmap" viewBox="${x0} 0 ${640 - x0} ${H}" role="img" aria-label="Sketch map: Seven Cities in the west, Genabackis in the east, the Meningalle Ocean between, the sea lane from Genabaris to Aren, the road from Pale to Coral, and the march from Aren to Raraku${BOOKS.mt && !BOOKS.mt.coming ? '; and far off to the west, beyond the edge of the sketch, Lether' : ''}${far ? ', with the march east from Letheras into the Wastes, the Glass Desert and Kolanse' : ''}">
-  <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#1c1610"/>
-  <rect x="${x0}" width="${640 - x0}" height="${H}" fill="#16304a" opacity=".35"/>
-  ${far ? `<path d="M20 300 L620 300" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
-  <text x="620" y="292" text-anchor="end" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="11" fill="#8fb0d0">oceans away, west: Lether and the east</text>
-  <path d="M40 330 C160 312 420 310 560 322 C610 330 618 370 606 410 C590 448 520 462 420 460 C300 462 120 462 60 448 C30 436 26 380 40 330 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
-  <text x="110" y="352" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#d8dcc8">Lether</text>
-  <g font-family="Alegreya Sans SC, sans-serif" font-size="12" fill="#e8e0b0">
-    <circle cx="80" cy="414" r="4" fill="#c8b47a"/><text x="52" y="440">Letheras · Books Five, Seven</text>
-    ${bookLive('dod') ? `<path d="M80 414 C140 400 200 392 262 388" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="262" cy="388" r="4" fill="#d8b860"/><text x="140" y="378">the Wastes · Book Nine</text>` : ''}
-    ${bookLive('tcg') ? `<path d="M262 388 C340 370 440 356 540 350" fill="none" stroke="#e8c073" stroke-width="2" stroke-dasharray="6 4" opacity=".9"/><text x="400" y="352" text-anchor="middle" font-size="11" fill="#e8d6a0">the Glass Desert</text>
-    <path d="M262 388 C300 450 480 452 540 356" fill="none" stroke="#bcd4ee" stroke-width="1.6" stroke-dasharray="3 3" opacity=".85"/><text x="400" y="448" text-anchor="middle" font-size="11" fill="#c8d8ea">the long way round</text>
-    <circle cx="544" cy="350" r="5" fill="#e8c073"/><text x="598" y="336" text-anchor="end">Kolanse · Book Ten</text>` : ''}
-  </g>` : BOOKS.mt && !BOOKS.mt.coming ? `<path d="M-130 70 C-112 64 -92 76 -84 100 C-76 126 -88 150 -80 176 C-72 204 -96 232 -130 240 Z" fill="#2e3430" stroke="#7a8a78" stroke-width="1.5"/>
-  <text x="-112" y="128" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="17" fill="#d8dcc8" transform="rotate(-90 -112 128)">Lether</text>
-  <g font-family="Alegreya Sans SC, sans-serif" font-size="11" fill="#e8e0b0"><circle cx="-92" cy="196" r="4" fill="#c8b47a"/><text x="-122" y="218">Letheras · Book Five</text></g>
-  <path d="M-60 40 L-60 260" stroke="#a89a82" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
-  <text x="-46" y="150" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="11" fill="#8fb0d0" transform="rotate(-90 -46 150)">oceans away · years before</text>` : ''}
-  <path d="M20 40 C80 20 170 30 230 60 C260 80 270 120 250 160 C240 200 200 240 150 262 C110 280 60 270 34 240 C10 210 8 150 14 100 Z" fill="#3a2e1e" stroke="#7a6640" stroke-width="1.5"/>
-  <path d="M420 30 C480 18 560 30 600 60 C628 90 626 150 606 200 C590 240 548 276 500 284 C452 290 420 262 410 220 C398 170 400 110 404 70 Z" fill="#2e3a24" stroke="#6a7a50" stroke-width="1.5"/>
-  <text x="120" y="116" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#e8d6b0">Seven Cities</text>
-  <text x="515" y="150" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="20" fill="#d8e0c0">Genabackis</text>
-  <text x="330" y="160" text-anchor="middle" font-family="IM Fell English, Georgia, serif" font-style="italic" font-size="15" fill="#8fb0d0">the Meningalle Ocean</text>
-  <path d="M440 60 C380 40 300 60 250 110 C220 150 190 200 150 240" fill="none" stroke="#e8c073" stroke-width="1.6" stroke-dasharray="6 5" opacity=".8"/>
-  <g font-family="Alegreya Sans SC, sans-serif" font-size="12" fill="#f2dca6">
-    <circle cx="440" cy="60" r="4" fill="#e8c073"/><text x="448" y="56">Genabaris</text>
-    <circle cx="480" cy="110" r="4" fill="#c9973f"/><text x="488" y="106">Pale</text>
-    <circle cx="520" cy="220" r="4" fill="#c9973f"/><text x="${bookLive('tth') ? 432 : 460}" y="242">Darujhistan · Book One${bookLive('tth') ? ', Eight' : ''}</text>
-    <circle cx="232" cy="78" r="4" fill="#c9973f"/><text x="150" y="70">Hissar</text>
-    <circle cx="150" cy="240" r="4" fill="#e8c073"/><text x="42" y="268">Aren · Book Two</text>
-    <path d="M150 240 C140 214 120 190 96 168" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="96" cy="168" r="4" fill="#d8b860"/><text x="104" y="164" font-size="11">Raraku · Book Four</text><text x="112" y="214" text-anchor="end" fill="#d8c88a" font-size="11">the Fourteenth</text>${bookLive('bh') ? `<path d="M96 168 C80 176 64 184 50 192" fill="none" stroke="#d8b860" stroke-width="2" stroke-dasharray="3 3" opacity=".9"/><circle cx="50" cy="192" r="4" fill="#d8b860"/><text x="20" y="186" font-size="11">Y\'Ghatan · Book Six</text>` : ''}
-    <path d="M232 78 C220 120 196 170 150 240" fill="none" stroke="#c94a20" stroke-width="2" opacity=".85"/><text x="200" y="196" fill="#e89a6a" font-size="11">the Chain</text>
-    <path d="M480 110 C520 120 548 140 560 160 C572 182 584 196 598 206" fill="none" stroke="#bcd4ee" stroke-width="2" opacity=".85"/><circle cx="560" cy="160" r="3.5" fill="#8fa8c0"/><text x="566" y="156" font-size="11">Capustan</text>
-    <circle cx="598" cy="206" r="4" fill="#bcd4ee"/><text x="618" y="196" text-anchor="end" font-size="11">${bookLive('tth') ? 'Black Coral · Books Three, Eight' : 'Coral · Book Three'}</text>${bookLive('tth') ? `<path d="M520 220 C548 222 576 216 598 206" fill="none" stroke="#bcd4ee" stroke-width="1.4" stroke-dasharray="2 3" opacity=".7"/>` : ''}
-  </g>
-  <text x="620" y="${H - 8}" text-anchor="end" font-family="Alegreya Sans, sans-serif" font-style="italic" font-size="10" fill="#a89a82">a sketch, not to scale</text>
-  </svg>`;
-}
+function worldSVG0(){ return atlasWorldHTML(MAP_UPTO); } // v13.54.0: the plate is drawn by the atlas (989c), in ink on parchment; it still stops at MAP_UPTO
 function whereBooksMeetHTML(open){
   return `<details class="gloss meet"${open ? ' open' : ''}><summary>Where the books meet</summary>${worldSVG()}
     <ul class="jl meetl">
