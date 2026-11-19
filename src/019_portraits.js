@@ -543,9 +543,17 @@ const POR = {
     for (let i=0;i<4;i++){ const x = -6 + i*3.6, y = F.cy - 15.4 + (i%2)*1.1; ctx.fillStyle = ['#2a1e18','#1a1210'][i%2]; ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 7); ctx.fill(); } // a curl or two over the brow
     return F; },
 };
+const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
   const look = porLook(id); WEAR_NOW = wearFor(look);
   try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; }
   ctx.restore();
+  /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the
+     shelf. The lantern's light is laid over the painted bust only, as an overlay so the cloth keeps its colour: warm from the lower left, a cool rim from the upper right. */
+  if (POR_LIFT[look]) { const k = POR_LIFT[look], tc = document.createElement('canvas'); tc.width = W; tc.height = H; const tx = tc.getContext('2d');
+    const g = tx.createRadialGradient(W*.24, H*.6, 0, W*.24, H*.6, H*.95); g.addColorStop(0, 'rgba(255,220,170,1)'); g.addColorStop(.6, 'rgba(255,205,150,.5)'); g.addColorStop(1, 'rgba(255,200,150,0)'); tx.fillStyle = g; tx.fillRect(0, 0, W, H);
+    const r = tx.createLinearGradient(W*.98, H*.12, W*.62, H*.42); r.addColorStop(0, 'rgba(200,215,245,.6)'); r.addColorStop(1, 'rgba(200,215,245,0)'); tx.fillStyle = r; tx.fillRect(0, 0, W, H);
+    tx.globalCompositeOperation = 'destination-in'; tx.drawImage(ctx.canvas, 0, 0); // the light falls on the painted bust only
+    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = Math.min(1, .5*k); ctx.drawImage(tc, 0, 0); ctx.restore(); }
 }

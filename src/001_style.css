@@ -651,3 +651,9 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .safety p{margin:0 0 10px;line-height:1.4}
 .safety pre{margin:0 0 10px;max-height:9.5em;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.72rem;line-height:1.35;background:#0d0b0a;border:1px solid #3a3028;border-radius:4px;padding:8px;user-select:text;-webkit-user-select:text}
 .safety .row{display:flex;gap:8px;flex-wrap:wrap}
+/* v13.50: what shows while the page loads (about six seconds on a slow phone); the first screen replaces it */
+.bootline{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#0d0b0a;color:#c9a35a;font-family:Georgia,serif;text-align:center}
+.bootline b{font-size:1.5rem;font-weight:normal;letter-spacing:.08em}
+.bootline span{font-size:.9rem;color:#8a7c68;animation:bootpulse 1.6s ease-in-out infinite}
+@keyframes bootpulse{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.bootline span{animation:none}}

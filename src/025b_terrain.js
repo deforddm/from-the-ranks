@@ -367,7 +367,7 @@ const TK_DRAW = {
     const own = cfg && cfg.draw && cfg.draw[ch]; if (own) own(ctx, x, y, T, N, P); else TK_DRAW[ch](ctx, x, y, T, P, N);
     ctx.restore(); }; }
 /* what moves, each frame (030's drawExplore): the kit's cookfires breathe and its lanterns glow */
-function tkFrame(ctx, T, t, a){ const N = !!a.dark || /night|dusk/.test(a.decor || ''); a.map.forEach((row, y) => { if (!row.includes('0') && !row.includes('!')) return; [...row].forEach((ch, x) => { if (!onCam(x, y, 3.5)) return;
+function tkFrame(ctx, T, t, a){ const N = !!a.dark || /night|dusk/.test(a.decor || '') || /dusk|predawn/.test(typeof hourOf === 'function' ? hourOf(a) : ''); a.map.forEach((row, y) => { if (!row.includes('0') && !row.includes('!')) return; [...row].forEach((ch, x) => { if (!onCam(x, y, 3.5)) return;
     if (ch === '0') { const fl = REDUCE() ? 1 : .82 + Math.sin(t/150 + x)*.1 + Math.sin(t/61 + y)*.06; glow(ctx, x*T + T/2, y*T + T*.55, T*(N ? 2.6 : 1.2), '#e8923a', (N ? .24 : .08)*fl);
       if (!REDUCE()) for (let i = 0; i < 3; i++) { const k = ((t/1400 + i/3 + x*.13) % 1); ell(ctx, x*T + T/2 + Math.sin(t/600 + i + x)*T*.12*k, y*T + T*.3 - k*T*1.1, T*(.06 + k*.16), T*(.04 + k*.1), N ? `rgba(255,170,90,${((1 - k)*.12).toFixed(3)})` : `rgba(210,200,185,${((1 - k)*.18).toFixed(3)})`); } }
     if (ch === '!') glow(ctx, x*T + T/2, y*T + T*.2, T*(N ? 2 : 1), '#e8a040', (N ? .2 : .06)*(REDUCE() ? 1 : .9 + Math.sin(t/300 + x)*.08)); }); }); }

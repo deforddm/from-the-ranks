@@ -671,13 +671,19 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .safety p{margin:0 0 10px;line-height:1.4}
 .safety pre{margin:0 0 10px;max-height:9.5em;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.72rem;line-height:1.35;background:#0d0b0a;border:1px solid #3a3028;border-radius:4px;padding:8px;user-select:text;-webkit-user-select:text}
 .safety .row{display:flex;gap:8px;flex-wrap:wrap}
+/* v13.50: what shows while the page loads (about six seconds on a slow phone); the first screen replaces it */
+.bootline{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#0d0b0a;color:#c9a35a;font-family:Georgia,serif;text-align:center}
+.bootline b{font-size:1.5rem;font-weight:normal;letter-spacing:.08em}
+.bootline span{font-size:.9rem;color:#8a7c68;animation:bootpulse 1.6s ease-in-out infinite}
+@keyframes bootpulse{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.bootline span{animation:none}}
 </style>
 <style>[hidden]{display:none!important}body{margin:0}</style>
 </head><body>
 
 <noscript><p style="color:#e6dac2;background:#0d0b0a;font:18px/1.5 Georgia,serif;padding:24px">From the Ranks is a game that runs in the browser, and it needs JavaScript turned on to play.</p></noscript>
 
-<div id="app"></div>
+<div id="app"><div class="bootline"><b>From the Ranks</b><span>Loading the ten books</span></div></div>
 <div id="sheet" hidden></div>
 <div id="modal" role="dialog" aria-modal="true" aria-label="Squad, journal and save" hidden></div>
 <div id="settings" role="dialog" aria-modal="true" aria-label="Settings" hidden></div>
@@ -687,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.49.0';
+const VERSION = '13.50.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3166,11 +3172,19 @@ const POR = {
     for (let i=0;i<4;i++){ const x = -6 + i*3.6, y = F.cy - 15.4 + (i%2)*1.1; ctx.fillStyle = ['#2a1e18','#1a1210'][i%2]; ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 7); ctx.fill(); } // a curl or two over the brow
     return F; },
 };
+const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
   const look = porLook(id); WEAR_NOW = wearFor(look);
   try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; }
   ctx.restore();
+  /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the
+     shelf. The lantern's light is laid over the painted bust only, as an overlay so the cloth keeps its colour: warm from the lower left, a cool rim from the upper right. */
+  if (POR_LIFT[look]) { const k = POR_LIFT[look], tc = document.createElement('canvas'); tc.width = W; tc.height = H; const tx = tc.getContext('2d');
+    const g = tx.createRadialGradient(W*.24, H*.6, 0, W*.24, H*.6, H*.95); g.addColorStop(0, 'rgba(255,220,170,1)'); g.addColorStop(.6, 'rgba(255,205,150,.5)'); g.addColorStop(1, 'rgba(255,200,150,0)'); tx.fillStyle = g; tx.fillRect(0, 0, W, H);
+    const r = tx.createLinearGradient(W*.98, H*.12, W*.62, H*.42); r.addColorStop(0, 'rgba(200,215,245,.6)'); r.addColorStop(1, 'rgba(200,215,245,0)'); tx.fillStyle = r; tx.fillRect(0, 0, W, H);
+    tx.globalCompositeOperation = 'destination-in'; tx.drawImage(ctx.canvas, 0, 0); // the light falls on the painted bust only
+    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = Math.min(1, .5*k); ctx.drawImage(tc, 0, 0); ctx.restore(); }
 }
 
 /* ============ the crate lid: Rumjugs and Sweetlard ============
@@ -7062,7 +7076,7 @@ const TK_DRAW = {
     const own = cfg && cfg.draw && cfg.draw[ch]; if (own) own(ctx, x, y, T, N, P); else TK_DRAW[ch](ctx, x, y, T, P, N);
     ctx.restore(); }; }
 /* what moves, each frame (030's drawExplore): the kit's cookfires breathe and its lanterns glow */
-function tkFrame(ctx, T, t, a){ const N = !!a.dark || /night|dusk/.test(a.decor || ''); a.map.forEach((row, y) => { if (!row.includes('0') && !row.includes('!')) return; [...row].forEach((ch, x) => { if (!onCam(x, y, 3.5)) return;
+function tkFrame(ctx, T, t, a){ const N = !!a.dark || /night|dusk/.test(a.decor || '') || /dusk|predawn/.test(typeof hourOf === 'function' ? hourOf(a) : ''); a.map.forEach((row, y) => { if (!row.includes('0') && !row.includes('!')) return; [...row].forEach((ch, x) => { if (!onCam(x, y, 3.5)) return;
     if (ch === '0') { const fl = REDUCE() ? 1 : .82 + Math.sin(t/150 + x)*.1 + Math.sin(t/61 + y)*.06; glow(ctx, x*T + T/2, y*T + T*.55, T*(N ? 2.6 : 1.2), '#e8923a', (N ? .24 : .08)*fl);
       if (!REDUCE()) for (let i = 0; i < 3; i++) { const k = ((t/1400 + i/3 + x*.13) % 1); ell(ctx, x*T + T/2 + Math.sin(t/600 + i + x)*T*.12*k, y*T + T*.3 - k*T*1.1, T*(.06 + k*.16), T*(.04 + k*.1), N ? `rgba(255,170,90,${((1 - k)*.12).toFixed(3)})` : `rgba(210,200,185,${((1 - k)*.18).toFixed(3)})`); } }
     if (ch === '!') glow(ctx, x*T + T/2, y*T + T*.2, T*(N ? 2 : 1), '#e8a040', (N ? .2 : .06)*(REDUCE() ? 1 : .9 + Math.sin(t/300 + x)*.08)); }); }); }
@@ -7683,6 +7697,7 @@ function drawExplore(t){
       if (ch === 'C') glow(ctx, x*T + T/2, y*T + T*.7, T*2.4, '#9a86e0', .16 + Math.sin(t/700)*.05);
     }));
   }
+  hourTint(ctx, cols*T, rows*T, a); // v13.50: dusk, dawn and before-dawn light over the ground (989b)
   tkFrame(ctx, T, t, a); // the terrain kit's fires and lanterns (25b)
   // a mouse over the map: the tile it would walk to, brighter over someone to talk to
   const hv = G.hover; if (hv && !walking && $('#sheet').hidden) { const n = npcAt(hv.x, hv.y) || folkAt(hv.x, hv.y); if (n || palePass(hv.x, hv.y)) { ctx.strokeStyle = n ? 'rgba(232,192,115,.85)' : 'rgba(232,192,115,.38)'; ctx.lineWidth = 1.5; ctx.strokeRect(hv.x*T + 1.5, hv.y*T + 1.5, T - 3, T - 3); } }
@@ -9791,6 +9806,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.50.0', ['Dusk, dawn and the hour before dawn now show on the map: 23 walk-around areas whose place line names the hour are lit for it, and their fires burn brighter.', 'Book Seven\'s mill-woman and Book Ten\'s Malazan clerk have figures of their own.', 'The later books\' recruits are lit to match the rest of the portraits.', 'A loading line shows while the game starts. Looks only; old saves are untouched.']],
   ['13.49.0', ['Bridgeburner is harder in Books Seven to Ten: most fights there were being won nine times in ten, and now sit nearer three in four.', 'Eight fights that were too hard are eased: seven on Bridgeburner in Books One, Two, Five and Seven, and one on Soldier in Book Two.', 'Soldier is otherwise unchanged. Old saves are untouched.']],
   ['13.48.0', ['If the browser refuses to save (its storage full or blocked), the game now says so and offers a backup file. Before, it carried on without keeping anything.', 'If something breaks, a panel shows what and where, with a button to copy the details for a report.', 'Old saves are untouched.']],
   ['13.47.2', ['The About page and the app\'s own description now name all ten books.']],
@@ -90737,7 +90753,7 @@ b74Item('b7_c4_musterbadge', 'A muster badge', '<ellipse cx="120" cy="104" rx="5
    Notes for later chapters: docs/rg-ch5-notes.md. */
 /* FOR THE ARTIST (125b): names this file uses.
    Items: ART['item/b7_c5_villageshield'], ['item/b7_c5_edurblade'].
-   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b8_c5_benna (the mill-woman, floury to the elbow), b5_c7_child (the boy), b5_c1_clerk (the
+   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b7_c5_miller (the mill-woman, floury to the elbow; her own figure from v13.50, 989b), b5_c7_child (the boy), b5_c1_clerk (the
    bailiff), b5_edur (Edur scouts seen on the road).
    Backdrops: b7_village (120's, yours: plaster and thatch, a well in the square, the factor's house the only one in stone; by day in
    phase 2, at dusk in phase 3; on 'hold' with the roof-cusser fired, the factor's roof gone and a thin smoke), and three this file adds
@@ -90880,7 +90896,7 @@ const B7CH5 = {
         : !S.f.b7_c5_miller ? 'The mill-woman, who hid the Third.'
         : 'The village by day. At dusk the Edur will be wherever they are going.',
       npcs:[
-        {id:'miller', name:'The mill-woman', kind:'b8_c5_benna', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
+        {id:'miller', name:'The mill-woman', kind:'b7_c5_miller', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
         {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c7_child', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
         {id:'women', name:'Women at the well', kind:'b5_c5_refugee', x:6, y:5, node:()=>'b7_c5_well', show:()=>b75Ph() === 2, fresh:()=>!!S.f.b7_c5_lane && !S.f.b7_c5_shortTried && !S.f.b7_c5_bailiffDone} ] },
 
@@ -114608,7 +114624,7 @@ Object.assign(READTABLE, {
 /* FOR THE ARTIST (181b): names this file uses.
    Items: ART['item/b10_c1_scale'], ['item/b10_c1_spade'], ['item/b10_c1_slate'].
    Figures: pruss (180's simple sprite, replaced in 181b), b9_c1_thallo (161b's Thallo), b2soldier (the heavies'
-   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b5_c1_clerk (the clerk, v13.22), b8_c1_veteran (the old
+   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b10_c1_clerk (the clerk; a Malazan figure of his own from v13.50, 989b), b8_c1_veteran (the old
    marine, v13.22), b6_bandit (the strippers, the robbers).
    Backdrops: b10_camp, b10_camp_night, b10_burial (180's, yours), and two this file adds: b10_c1_linesn (the burial lines at night, a lamp at
    the clerk's table) and b10_c1_wells (the sappers' wells in a dry wash at night, a chain of hands, barrels on a flat wagon).
@@ -114751,7 +114767,7 @@ const B10CH1 = {
       folk:[{x:10, y:9, kind:'sapper', name:'A heavy resting on a pick', line:'The clerk wants them dug straight. The dead would not mind crooked. The clerk minds, and the clerk has the slate.'}],
       quest:()=> !b101PrussSettled() ? 'The clerk at the first trench. There is a heavy waiting by him with his kit.' : !S.f.b10_c1_orders ? 'Thallo, by the trenches. He has the captain\'s word.' : !S.f.b10_c1_stripDone ? 'The edge of the burial ground, east. Strippers.' : !S.f.b10_c1_news ? 'Back to the camp. Thallo has gone to find the captain.' : 'The camp, and the fire. The light is going.',
       npcs:[
-        {id:'clerk', name:'A clerk with a slate', kind:'b5_c1_clerk', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
+        {id:'clerk', name:'A clerk with a slate', kind:'b10_c1_clerk', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
         {id:'pruss', name:'A heavy with his kit', kind:'pruss', x:5, y:2, node:()=>'b10_c1_pruss', show:()=>!!S.f.b10_c1_clerk && (S.f.b10_prussDone == null || S.f.b10_prussDone === 2), fresh:()=>S.f.b10_prussDone == null},
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:8, y:6, node:()=>'b10_c1_thallo', show:()=>!S.f.b10_c1_stripDone, fresh:()=>!S.f.b10_c1_orders},
         {id:'sergeant', name:'A sergeant of the heavies', kind:'b2soldier', x:11, y:3, node:()=>'b10_c1_roll', fresh:()=>!S.f.b10_c1_rollTried} ] },
@@ -122974,6 +122990,51 @@ function v103Passives(){
       B.used[t.ab] = 1; const hs = B.healSrc; try { a.run(u, u.x, u.y); } catch (e) { console.warn('passive', k, e); } finally { B.healSrc = hs; } }); });
 }
 { const _sb = startBattle; startBattle = function(){ const r = _sb.apply(this, arguments); try { v103Passives(); } catch (e) { console.warn('v103 passives', e); } return r; }; }
+
+/* v13.50.0 (David, Nov 18, 2026).
+   (1) Two figures of their own. Book Seven's mill-woman was drawn as Book Eight's Old Benna and Book Ten's Malazan clerk as the
+       Letherii company clerk (both borrowed in the terrain pass, v13.24 and v13.27; overnight-review.md §3).
+   (2) The hour on the map. A walk-around area whose sub line says dusk, evening, dawn, first light or before dawn was drawn in the
+       same flat light as noon (series-picture-pass.md: "the same engine fault" in every book). hourOf(a) reads the hour from
+       a.hour if an area sets one, else from its sub line; hourTint lays the light over the ground before the fires and the
+       figures, so fires and lanterns still glow through it (tkFrame, 25b, burns them brighter at these hours). Areas already
+       dark (a.dark) or on a decor that carries its own hour (…_night, …_dusk) are left as they were. Looks only. */
+Object.assign(FIGX, {
+  b7_c5_miller(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.02, .96); // broad, not tall
+    B2F.robe(ctx, h, '#5c5348', '#2c2620', 6.6, 8); // a grey-brown wool skirt and bodice
+    poly(ctx, [[-4.6,-3],[4.6,-3],[5.6,11.4],[-5.6,11.4]], '#d8d2c2'); ctx.fillStyle = 'rgba(120,110,90,.35)'; ctx.fillRect(-4.6, -3, 9.2, .9); // the apron, its band
+    ctx.fillStyle = 'rgba(255,255,250,.5)'; ctx.fillRect(-3.4, 2, 2.2, 3); ctx.fillRect(1.2, 5.4, 2.6, 2.2); // flour on the apron
+    ctx.fillStyle = '#6a5c4c'; ctx.fillRect(-8, -5.4, 2.4, 3); ctx.fillRect(5.6, -5.4, 2.4, 3); // sleeves rolled above the elbow
+    ctx.fillStyle = '#e4ddd0'; ctx.fillRect(-8, -2.4, 2.2, 5.4); ctx.fillRect(5.8, -2.4, 2.2, 5.4); // forearms floury to the elbow
+    h.head('#b88e72', 4.2, -10.8); h.look('rgba(26,16,10,.85)', -11);
+    B2F.cap(ctx, '#8a3a2c', 4.7, -12.2, .98, 2.02); ctx.fillStyle = '#8a3a2c'; ctx.fillRect(3.6, -12.6, 1.8, 4); // a madder-red kerchief, knotted behind
+    ctx.fillStyle = '#3a2a1e'; ctx.fillRect(-4.4, -11.4, 1.1, 2.6); // dark hair escaping at the temple
+    ctx.restore(); },
+  b10_c1_clerk(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .92, 1);
+    h.legs('#3a3228'); h.torso('#6e6a62', '#2c2a26', 6); ctx.fillStyle = '#4a3a28'; ctx.fillRect(-6, 3.4, 12, 1.2); // the Fourteenth's faded grey, a belt
+    B2F.line(ctx, '#4a3a28', 1, [[-5.4, -6], [4.6, 3]]); ctx.fillStyle = '#5a4a36'; ctx.fillRect(3.4, 1.8, 3.6, 4.4); // a satchel on its strap
+    poly(ctx, [[-6.4,-3.4],[1.6,-4],[2,3.4],[-6,4]], '#22262a'); B2F.line(ctx, '#8a7a5a', .7, [[-6.4,-3.4],[1.6,-4],[2,3.4],[-6,4],[-6.4,-3.4]]); // the slate in its wooden frame
+    B2F.line(ctx, 'rgba(235,235,225,.75)', .5, [[-5.2, -1.8], [.6, -2.2]]); B2F.line(ctx, 'rgba(235,235,225,.6)', .5, [[-5, .2], [-.6, -.1]]); B2F.line(ctx, 'rgba(235,235,225,.5)', .5, [[-4.9, 2.1], [.4, 1.8]]); // chalked tallies
+    ctx.fillStyle = '#a88468'; ctx.fillRect(-7.6, -1, 2, 3); ctx.fillRect(1.6, -2.4, 2.2, 2.4); ctx.fillStyle = '#eeeade'; ctx.fillRect(2.4, -3.6, .8, 1.6); // hands; the chalk
+    h.head('#a88468', 3.9, -11.4); h.look('rgba(24,14,10,.8)', -11.6); B2F.cap(ctx, '#2a2420', 4.2, -12.4, 1.02, 1.98); // cropped dark hair, no helm
+    ctx.restore(); },
+});
+const HOUR_NOT = /at dusk|by dusk|until dusk|before dusk|till dusk|by dawn|until dawn|at dawn/i;
+function hourOf(a){ if (!a) return ''; if (a.hour != null) return a.hour;
+  if (a.dark || /night|dusk/.test(a.decor || '')) return '';
+  let s = ''; try { s = String(typeof a.sub === 'function' ? a.sub() : a.sub || ''); } catch (e) {}
+  if (!s || HOUR_NOT.test(s)) return '';
+  if (/before dawn|before first light/i.test(s)) return 'predawn';
+  if (/dusk (into|going to) night|last light/i.test(s)) return 'duskdeep';
+  if (/\b(dusk|sundown|sunset|evening)\b/i.test(s)) return 'dusk';
+  if (/\b(dawn|first light|grey light)\b/i.test(s)) return 'dawn';
+  return ''; }
+function hourTint(ctx, w, hgt, a){ const hr = hourOf(a); if (!hr) return;
+  const fill = c => { ctx.fillStyle = c; ctx.fillRect(0, 0, w, hgt); };
+  if (hr === 'dusk') { fill('rgba(12,10,30,.16)'); fill('rgba(210,110,50,.10)'); }
+  else if (hr === 'duskdeep') { fill('rgba(10,10,32,.30)'); fill('rgba(190,90,50,.07)'); }
+  else if (hr === 'predawn') { fill('rgba(8,12,36,.36)'); }
+  else if (hr === 'dawn') { fill('rgba(30,40,70,.12)'); fill('rgba(170,180,200,.07)'); } }
 
 /* ============ resume & boot ============ */
 function resume(){

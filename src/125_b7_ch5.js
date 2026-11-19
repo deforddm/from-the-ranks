@@ -13,7 +13,7 @@
    Notes for later chapters: docs/rg-ch5-notes.md. */
 /* FOR THE ARTIST (125b): names this file uses.
    Items: ART['item/b7_c5_villageshield'], ['item/b7_c5_edurblade'].
-   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b8_c5_benna (the mill-woman, floury to the elbow), b5_c7_child (the boy), b5_c1_clerk (the
+   Figures, all existing: b2soldier (the lieutenant, marines), b5_c5_refugee (the Indebted), b7_c5_miller (the mill-woman, floury to the elbow; her own figure from v13.50, 989b), b5_c7_child (the boy), b5_c1_clerk (the
    bailiff), b5_edur (Edur scouts seen on the road).
    Backdrops: b7_village (120's, yours: plaster and thatch, a well in the square, the factor's house the only one in stone; by day in
    phase 2, at dusk in phase 3; on 'hold' with the roof-cusser fired, the factor's roof gone and a thin smoke), and three this file adds
@@ -156,7 +156,7 @@ const B7CH5 = {
         : !S.f.b7_c5_miller ? 'The mill-woman, who hid the Third.'
         : 'The village by day. At dusk the Edur will be wherever they are going.',
       npcs:[
-        {id:'miller', name:'The mill-woman', kind:'b8_c5_benna', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
+        {id:'miller', name:'The mill-woman', kind:'b7_c5_miller', x:9, y:5, node:()=> b75Ph() >= 3 ? 'b7_c5_key' : 'b7_c5_miller', fresh:()=> !S.f.b7_c5_miller || (b75Ph() >= 3 && !b75Key())},
         {id:'grandson', name:'The mill-woman\'s grandson', kind:'b5_c7_child', x:11, y:8, node:()=>'b7_c5_grandson', show:()=>b75Ph() === 2, fresh:()=>!S.f.b7_c5_grandson},
         {id:'women', name:'Women at the well', kind:'b5_c5_refugee', x:6, y:5, node:()=>'b7_c5_well', show:()=>b75Ph() === 2, fresh:()=>!!S.f.b7_c5_lane && !S.f.b7_c5_shortTried && !S.f.b7_c5_bailiffDone} ] },
 

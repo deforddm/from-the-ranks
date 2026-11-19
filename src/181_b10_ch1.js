@@ -19,7 +19,7 @@
 /* FOR THE ARTIST (181b): names this file uses.
    Items: ART['item/b10_c1_scale'], ['item/b10_c1_spade'], ['item/b10_c1_slate'].
    Figures: pruss (180's simple sprite, replaced in 181b), b9_c1_thallo (161b's Thallo), b2soldier (the heavies'
-   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b5_c1_clerk (the clerk, v13.22), b8_c1_veteran (the old
+   captain, the heavies' sergeant, the sappers, the surgeon, the sparring heavies), b10_c1_clerk (the clerk; a Malazan figure of his own from v13.50, 989b), b8_c1_veteran (the old
    marine, v13.22), b6_bandit (the strippers, the robbers).
    Backdrops: b10_camp, b10_camp_night, b10_burial (180's, yours), and two this file adds: b10_c1_linesn (the burial lines at night, a lamp at
    the clerk's table) and b10_c1_wells (the sappers' wells in a dry wash at night, a chain of hands, barrels on a flat wagon).
@@ -162,7 +162,7 @@ const B10CH1 = {
       folk:[{x:10, y:9, kind:'sapper', name:'A heavy resting on a pick', line:'The clerk wants them dug straight. The dead would not mind crooked. The clerk minds, and the clerk has the slate.'}],
       quest:()=> !b101PrussSettled() ? 'The clerk at the first trench. There is a heavy waiting by him with his kit.' : !S.f.b10_c1_orders ? 'Thallo, by the trenches. He has the captain\'s word.' : !S.f.b10_c1_stripDone ? 'The edge of the burial ground, east. Strippers.' : !S.f.b10_c1_news ? 'Back to the camp. Thallo has gone to find the captain.' : 'The camp, and the fire. The light is going.',
       npcs:[
-        {id:'clerk', name:'A clerk with a slate', kind:'b5_c1_clerk', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
+        {id:'clerk', name:'A clerk with a slate', kind:'b10_c1_clerk', x:4, y:3, node:()=>'b10_c1_clerk', fresh:()=>!S.f.b10_c1_clerk},
         {id:'pruss', name:'A heavy with his kit', kind:'pruss', x:5, y:2, node:()=>'b10_c1_pruss', show:()=>!!S.f.b10_c1_clerk && (S.f.b10_prussDone == null || S.f.b10_prussDone === 2), fresh:()=>S.f.b10_prussDone == null},
         {id:'thallo', name:'Thallo', kind:'b9_c1_thallo', x:8, y:6, node:()=>'b10_c1_thallo', show:()=>!S.f.b10_c1_stripDone, fresh:()=>!S.f.b10_c1_orders},
         {id:'sergeant', name:'A sergeant of the heavies', kind:'b2soldier', x:11, y:3, node:()=>'b10_c1_roll', fresh:()=>!S.f.b10_c1_rollTried} ] },

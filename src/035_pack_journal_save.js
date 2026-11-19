@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.50.0', ['Dusk, dawn and the hour before dawn now show on the map: 23 walk-around areas whose place line names the hour are lit for it, and their fires burn brighter.', 'Book Seven\'s mill-woman and Book Ten\'s Malazan clerk have figures of their own.', 'The later books\' recruits are lit to match the rest of the portraits.', 'A loading line shows while the game starts. Looks only; old saves are untouched.']],
   ['13.49.0', ['Bridgeburner is harder in Books Seven to Ten: most fights there were being won nine times in ten, and now sit nearer three in four.', 'Eight fights that were too hard are eased: seven on Bridgeburner in Books One, Two, Five and Seven, and one on Soldier in Book Two.', 'Soldier is otherwise unchanged. Old saves are untouched.']],
   ['13.48.0', ['If the browser refuses to save (its storage full or blocked), the game now says so and offers a backup file. Before, it carried on without keeping anything.', 'If something breaks, a panel shows what and where, with a button to copy the details for a report.', 'Old saves are untouched.']],
   ['13.47.2', ['The About page and the app\'s own description now name all ten books.']],

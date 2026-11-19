@@ -245,6 +245,7 @@ function drawExplore(t){
       if (ch === 'C') glow(ctx, x*T + T/2, y*T + T*.7, T*2.4, '#9a86e0', .16 + Math.sin(t/700)*.05);
     }));
   }
+  hourTint(ctx, cols*T, rows*T, a); // v13.50: dusk, dawn and before-dawn light over the ground (989b)
   tkFrame(ctx, T, t, a); // the terrain kit's fires and lanterns (25b)
   // a mouse over the map: the tile it would walk to, brighter over someone to talk to
   const hv = G.hover; if (hv && !walking && $('#sheet').hidden) { const n = npcAt(hv.x, hv.y) || folkAt(hv.x, hv.y); if (n || palePass(hv.x, hv.y)) { ctx.strokeStyle = n ? 'rgba(232,192,115,.85)' : 'rgba(232,192,115,.38)'; ctx.lineWidth = 1.5; ctx.strokeRect(hv.x*T + 1.5, hv.y*T + 1.5, T - 3, T - 3); } }
