@@ -22,7 +22,7 @@ const lines = await ev(() => { gearRolesApply(); const o = {broken:[], noDmg:[],
   return o; });
 ok(lines.n >= 130 && !lines.broken.length, `all ${lines.n} items format cleanly${lines.broken.length ? ': ' + lines.broken.join(' | ') : ''}`);
 ok(!lines.noDmg.length, `every weapon's line says its damage${lines.noDmg.length ? ': ' + lines.noDmg.join(',') : ''}`);
-ok(lines.axe === 'Weapon · 1d10+2 damage' && /^Weapon · \dd\d+\+\d damage · (\+1 hit · )?reach 2 · (range \+1 · )?armour −1$/.test(lines.lance), `a weapon's damage, hit and reach read in order (${lines.axe} | ${lines.lance})`);
+ok(lines.axe === 'Weapon · 1d10+2 damage' && /^Weapon · \dd\d+\+\d damage · (\+1 hit · )?strikes 2 tiles away · (range \+1 · )?armour −1$/.test(lines.lance), `a weapon's damage, hit and reach read in order (${lines.axe} | ${lines.lance})`);
 ok(lines.mail === 'Armour · armour +3 · health +2 · heavy (hot at noon)' && /^Trinket · Might \+1 · Wits \+1 · Guile \+1( · .+)?$/.test(lines.feather), `armour and trinkets: fixed words, capitalised Measures (${lines.mail} | ${lines.feather})`);
 ok(/Once a chapter/.test(lines.hood) && /On Ramin: \+1 hit/.test(lines.sash) && /haunted/.test(lines.bundle) && /Dogslayers/.test(lines.dogs) && /Once a fight/.test(lines.plank), 'specials show, the prose-only +1s included');
 

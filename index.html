@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.52.0';
+const VERSION = '13.53.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1691,7 +1691,9 @@ const PICKS = {
       ohl:[['triage','Field Triage','Mend heals +3 and reaches 4 tiles.'],['argument','Argument with Hood','Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3.']],
       ellis:[['quickshot','Quick Shot','Once a fight: two arrows at one target within reach.'],['ghost','Ghost Step','Enemies take −2 to hit Ellis. Six years of not being where the sentry looked.']],
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). No free swings.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
-  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.']],
+  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.'],
+    /* v13.53.0 (David, Nov 19, 2026): a second rank from level 17, each open once its first is held */
+    ['iron2','Iron II','+6 health again.'],['keen2','Keen II','+1 to hit again.'],['fleet2','Fleet II','+1 move again.'],['nerve2','Nerve II','+1 initiative and +1 to every skill check again.'],['stout2','Stout II','+1 armour again.'],['edge2','Edge II','+1 damage on every blow again.']],
 };
 /* v13.5 (David, Nov 14, 2026, design C; series-polish-plan.md §0c.3): a second talent at level 12, a choice of two: the level-3 talent
    passed over, or the one written for the soldier's role (t2Role, 015). Kept as ids in S.picks like any other pick. */
@@ -1869,7 +1871,7 @@ function itemStatLine(g, who){ const it = ITEMS[g]; if (!it) return ''; const p 
     p.push(mine ? `${diceW(mine)} damage${now && diceW(now) !== diceW(mine) ? ` (now ${diceW(now)})` : ''}` : 'the wearer\'s own damage'); }
   else if (it.dmg) p.push(`${diceW(it.dmg)} damage`);
   if (it.atk) p.push(`${sgnW(it.atk)} hit`);
-  if (it.reach) p.push(`reach ${1 + (it.rng || 0)}`); else if (it.rng) p.push(`range ${sgnW(it.rng)}`);
+  if (it.reach) p.push(`strikes ${1 + (it.rng || 0)} tiles away`); else if (it.rng) p.push(`range ${sgnW(it.rng)}`);
   if (it.ac) p.push(`armour ${sgnW(it.ac)}`);
   if (it.hp) p.push(`health ${sgnW(it.hp)}`);
   if (it.mv) p.push(`${sgnW(it.mv)} move`);
@@ -1921,6 +1923,9 @@ function migrate(s){
   // v13.52.0: a save made before every soldier had a level-3 talent and a level-12 choice of two is asked once for the ones it now owes (Book Six's four; the hooks, the lances, Keth, Tallow, Hessa)
   if (!s.t52Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.t52Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
     t.picksDue ??= []; picksOwed(o).filter(l => l === 3 || l === 12).forEach(l => { if (!t.picksDue.includes(l)) t.picksDue.push(l); }); t.picksDue.sort((x, y) => x - y); }); }
+  // v13.53.0: a save already past level 17 is asked once for the second-rank veteran picks it now owes
+  if (!s.v2Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.v2Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
+    t.picksDue ??= []; VET_LVLS.filter(l => l >= 17 && (o.lvl || 1) >= l && o.squad.some(k => TPL[k] && vetOwedAt(o, k, l)) && !t.picksDue.includes(l)).forEach(l => t.picksDue.push(l)); t.picksDue.sort((x, y) => x - y); }); }
   // v13.5: a save already at level 12 or past it is asked for the second talent (picksOwed checks who still owes it)
   [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !t.picks || (t.lvl || s.lvl || 1) < 12 || t.t2Asked) return; t.t2Asked = 1; t.picksDue ??= []; if (!t.picksDue.includes(12)) t.picksDue.push(12); });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
@@ -1965,7 +1970,14 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    brings from it is the talent at 3 (chosen, openPicks) and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late,
    or comes back from camp after a level-up, is given the veteran picks for the levels passed at once (Iron, Keen, Fleet… in order), in every
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
-const VET_LVLS = [5,7,9,11,13,15];
+const VET_LVLS = [5,7,9,11,13,15,17,19,21,23,25,27]; // v13.53.0: six more, for the second rank
+const vetOpts = (s, k) => PICKS.vet.filter(v => !(s.picks[k] || []).includes(v[0]) && (!v[0].endsWith('2') || (s.picks[k] || []).includes(v[0].slice(0, -1)))); // what this soldier may take now
+/* the test tools' seam (tools/page.mjs FTR_AUTOPICK): the flow tests of Books Six to Ten were written when no pick fell past level 15. Under the seam the second
+   rank is taken in order as far as a soldier's first rank allows, and its levels are never queued, so no pick screen opens in the middle of those tests. */
+const vetSeam = () => typeof window !== 'undefined' && !!window.FTR_AUTOPICK;
+function vetSeamTake(s){ (s.squad || []).filter(k => TPL[k]).forEach(k => { s.picks ??= {}; s.picks[k] ??= []; let n = VET_LVLS.filter(l => l >= 17 && (s.lvl || 1) >= l).length - s.picks[k].filter(p => /2$/.test(p) && PICKS.vet.some(v => v[0] === p)).length;
+  for (; n > 0; n--) { const o = vetOpts(s, k).filter(v => v[0].endsWith('2'))[0]; if (!o) break; s.picks[k].push(o[0]); } }); }
+const vetNeed = (s, k) => VET_LVLS.filter(l => (s.lvl || 1) >= l).length - vetCount(s, k);
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(typeof window !== 'undefined' && window.FTR_AUTOPICK && ['mehet', 'ottar', 'brannoc', 'ressa'].includes(k)) && /* the test tools' seam: Book Six's four had no talent before v13.52.0, and the flow tests written then are not about picks */ !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
@@ -1979,14 +1991,16 @@ const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k
 function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
   if (sq.some(k => t2Owed(s, k))) due.push(12);
-  VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
+  if (vetSeam()) vetSeamTake(s);
+  VET_LVLS.forEach(l => { if (vetSeam() && l >= 17) return; if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
-function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
-  if (have >= want) return; const left = PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k));
-  if (want - have >= left.length) { left.forEach(k => S.picks[id].push(k)); return; } // every pick there is: nothing to choose
-  if (typeof window !== 'undefined' && window.FTR_AUTOPICK) { left.slice(0, want - have).forEach(k => S.picks[id].push(k)); return; } // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
-  /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
-  S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); }
+function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= [];
+  const seam = typeof window !== 'undefined' && window.FTR_AUTOPICK; // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
+  for (let n = 0; n < 4; n++) { const need = vetNeed(S, id), o = vetOpts(S, id).map(v => v[0]); if (need <= 0 || !o.length) return;
+    if (need >= o.length) { o.forEach(k => S.picks[id].push(k)); continue; } // every pick open to them: nothing to choose
+    if (seam) { o.slice(0, need).forEach(k => S.picks[id].push(k)); continue; }
+    /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
+    S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); return; } }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }
@@ -1998,7 +2012,7 @@ const has = (id, k) => (S.picks[id] || []).includes(k);
 /* stat with gear and veteran picks folded in */
 /* the role's Measure, grown at levels 4 and 8 */
 const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
-function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
+function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; if (has(id,'nerve2')) v += 1; return v; }
 function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name} (${itemStatShort(id)}).`, 'good'); AUDIO.play('pick');
   // auto-equip into an empty slot, on whoever it suits best (31c)
   const who = placeGear(id); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good'); }
@@ -2045,7 +2059,7 @@ function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
   S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,12,13,15].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,12,13,15,17,19,21,23,25,27].includes(k) && !(k >= 17 && vetSeam())) S.picksDue.push(k); if (vetSeam()) vetSeamTake(S); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.
@@ -7930,11 +7944,12 @@ function mkParty(id, x, y){
   { const w = injuryOf(id); if (w) { if (w.hp) u.maxhp = Math.max(1, u.maxhp - w.hp); if (w.hit) u.atk -= w.hit; } } // v10.2: a wound carried from a bad fall (31c)
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
+  if (has(id,'iron2')) u.maxhp += 6; if (has(id,'keen2')) u.atk += 1; if (has(id,'fleet2')) u.mv += 1; if (has(id,'nerve2')) u.init += 1; if (has(id,'stout2')) u.ac += 1; // v13.53.0: the second rank
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
   ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','stakeline'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0) + (has(id,'edge2') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
   if (has(id, 'twoblades') && !(t.attacks > 1)) { u.attacks = 2; u.dmg2 = [1, 4, (t.dmg[2] || 0) + ld]; u.verb2 = 'puts the other knife into'; } // v13.52.0: Ressa's Both Knives
   if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
@@ -9626,7 +9641,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const id = SQ[charIdx], c = TPL[id], L = S.lvl - 1, m = $('#chars'); m.hidden = false;
   const gearOf = Object.values(S.gear[id] || {}).map(g => ITEMS[g]).filter(Boolean);
   const sum = k => gearOf.reduce((a,it) => a + (it[k] || 0), 0);
-  const wnd = injuryOf(id), hp = Math.max(1, c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + (has(id,'iron') ? 6 : 0) - (wnd && wnd.hp || 0)), atk = c.atk + L + sum('atk') + (has(id,'keen') ? 1 : 0) - (wnd && wnd.hit || 0), ac = c.ac + sum('ac') + lvAc() + (has(id,'stout') ? 1 : 0), mv = c.mv + sum('mv') + (has(id,'fleet') ? 1 : 0), rng = c.rng + sum('rng'), init = c.init + (has(id,'nerve') ? 1 : 0);
+  const wnd = injuryOf(id), hp = Math.max(1, c.hp + L*4 + (S.card === 'obelisk' ? 4 : 0) + sum('hp') + ((has(id,'iron') ? 6 : 0) + (has(id,'iron2') ? 6 : 0)) - (wnd && wnd.hp || 0)), atk = c.atk + L + sum('atk') + ((has(id,'keen') ? 1 : 0) + (has(id,'keen2') ? 1 : 0)) - (wnd && wnd.hit || 0), ac = c.ac + sum('ac') + lvAc() + ((has(id,'stout') ? 1 : 0) + (has(id,'stout2') ? 1 : 0)), mv = c.mv + sum('mv') + ((has(id,'fleet') ? 1 : 0) + (has(id,'fleet2') ? 1 : 0)), rng = c.rng + sum('rng'), init = c.init + ((has(id,'nerve') ? 1 : 0) + (has(id,'nerve2') ? 1 : 0));
   const allPicks = [...(PICKS[3][id] || []), ...PICKS.vet, ...Object.values(PICKS.t2)];
   const talents = (S.picks[id] || []).map(k => allPicks.find(o => o[0] === k)).filter(Boolean);
   const kitItems = S.kit.map(g => ITEMS[g] && {id:g, ...ITEMS[g]}).filter(it => it && canWear(id, it.id)); // v7.2: by role (38c)
@@ -9645,7 +9660,7 @@ function openChars(i, tab){ requestAnimationFrame(() => { const c = $('#chars');
   const banter = c.banter ? c.banter[loyN <= -1 ? 0 : loyN >= 2 ? 2 : 1] : null;
   const rel = c.rel ? Object.entries(c.rel).filter(([k]) => SQ.includes(k)).map(([k,v]) => `<li><b>${TPL[k].name}.</b> ${v}</li>`).join('') : SQ.slice(1).map(k => `<li><b>${TPL[k].name}.</b> ${loyLabel(S.loy[k])}.</li>`).join('');
   const soldier = `<div class="sec"><h4>Measure</h4><div class="grid2">${bar('Might', c.st.might + lvStat(id,'might'), '', gb.might)}${bar('Wits', c.st.wits + lvStat(id,'wits'), 'w', gb.wits)}${bar('Guile', c.st.guile + lvStat(id,'guile'), 'g', gb.guile)}<div class="stbar"><span>Level</span><div class="bar"><i style="width:${Math.min(100, S.lvl / lvCap() * 100)}%"></i></div><span>${S.lvl}</span></div></div></div>
-    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}${squadSoak(id) ? ` <span class="chip soak" title="Every blow that lands loses ${squadSoak(id)}, down to 1. Munitions, sorcery, crossbows, aimed shots and blows from the flank go past it.">soak ${squadSoak(id)}</span>` : ''}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(() => { const d = gb.dmg || c.dmg, ld = lvDmg() + (has(id,'edge') ? 1 : 0), tot = [d[0], d[1], (d[2] || 0) + ld]; // v8.1: the dice, never the word "weapon"
+    <div class="sec"><h4>In the line</h4><div class="kv"><span>Health</span><span>${plus(hp, gb.hp)}</span><span>Armour</span><span>${plus(ac, gb.ac)}${squadSoak(id) ? ` <span class="chip soak" title="Every blow that lands loses ${squadSoak(id)}, down to 1. Munitions, sorcery, crossbows, aimed shots and blows from the flank go past it.">soak ${squadSoak(id)}</span>` : ''}</span><span>To hit</span><span>${gb.atk ? `+${atk - gb.atk} <span class="gbon">+${gb.atk}</span> = <b>+${atk}</b>` : `+${atk}`}</span><span>Damage</span><span>${(() => { const d = gb.dmg || c.dmg, ld = lvDmg() + (has(id,'edge') ? 1 : 0) + (has(id,'edge2') ? 1 : 0), tot = [d[0], d[1], (d[2] || 0) + ld]; // v8.1: the dice, never the word "weapon"
       return ld ? `${gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d)} + ${ld} level = <b>${diceW(tot)}</b>` : gb.dmg ? `<span class="gbon">${diceW(d)}</span>` : diceW(d); })()}</span><span>${rng > 1 && !gearOf.some(it => it.reach) ? 'Range' : 'Reach'}</span><span>${rng > 1 ? `${gb.rng ? `${rng - gb.rng} <span class="gbon">+${gb.rng}</span> = <b>${rng}</b>` : rng} tiles` : 'adjacent'}</span><span>Move</span><span>${plus(mv, gb.mv)}</span><span>Initiative</span><span>+${init}</span>${wnd ? `<span>Wound</span><span><span class="chip wound">${esc(wnd.name.replace(/^an? /, ''))}</span> ${injuryFx(wnd)}, until the next fire</span>` : ''}${c.magic ? `<span>Strain limit</span><span>${strMax()}</span>` : ''}</div></div>
     <div class="sec"><h4>Field rules</h4><p class="fine">Flanking: +2 to hit when an ally stands next to the target on the far side, melee or ranged. Stepping out of a tile next to an enemy gives that enemy one free swing a turn, wherever you step to. Once you have moved and then acted, your movement for the turn is spent. The squad can move through its own people, but not stop on them. End a turn without acting and you are Steady: +2 to your next attack or save. A ranged squadmate who has not fired yet this fight is Posted up: the first enemy to step into their reach takes a free shot. Gold numbers are what gear adds.</p></div>
     <div class="sec"><h4>Abilities</h4><div class="abl">${abil}</div></div>
@@ -9922,6 +9937,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.53.0', ['Veteran picks carry on past level 15: a second rank of the six (Iron II, Keen II, Fleet II, Nerve II, Stout II, Edge II) at levels 17, 19, 21, 23, 25 and 27. A second rank opens once its first is held. A save already past 17 is asked for what it is owed.', 'Every recruit now walks in wearing their own armour as a piece of kit: +2 for a soldier in mail, +1 for the rest. It is theirs alone, and it never pushes off something better. The regulars, who have carried the books\' armour all along, are not given one.', 'A weapon with reach now says what it does (\"strikes 2 tiles away\"), and the first one you find explains it.', 'Where every open veteran pick is owed, the game takes them without asking: nothing to tap through.']],
   ['13.52.0', ['Every soldier now has a talent at level 3 and a choice of two at level 12. Book Six\'s four recruits (Mehet, Ottar, Brannoc, Ressa) had neither. The hook and lance soldiers, and Keth, Tallow and Hessa, were offered only one at 12.', 'New level-12 talents: Hand Over Hand (hooks), Set the Butt (lances), Twice Blessed (Keth, Tallow, Hessa), Flurry (Brannoc, Brask), Full Circle (Doss), Shatter (Edrem), Follow Through (Brennet, Pruss), Deep Cut (Tirren). All of them work by themselves: no new buttons. Anyone who already took Anvil keeps it.', 'A soldier who joins below level 15 now chooses their own veteran picks, all on one screen, where they used to be handed out in a fixed order. From level 15 a soldier has all six, so there is nothing to choose.', 'More horses redrawn: the Wickan riders on Book Two\'s title, the horse lines on the maps of Books Two and Three, the watchers on the skyline, the picketed horse at Pale, the far horsemen of Book Ten, and the giant\'s mount.']],
   ['13.51.0', ['New kits for the later books\' recruits, so no squad walks with two of the same shield. Brisk, Haddat, Thegg and Dannet keep the shield bash; nobody else does.', 'Brannoc is a Falari boarding marine: an axe in each hand and two blows a turn, a Boarding line that hauls an enemy to him, a Boarding leap, and no shield. Brask fights with sword and mace, two blows a turn. Vell has a knife in each hand.', 'Darrut drives an enemy back (Gate drive). Ottar howls, and enemies near him hit worse. Doss sweeps the flail through two enemies. Edrem\'s mace breaks a guard: armour 2 worse against everyone. Brennet swaps places with an enemy. Pruss\'s maul drives one back two tiles. Tirren\'s hoof-knife leaves it bleeding.', 'An enemy driven, hauled or turned out of a squadmate\'s reach gives that squadmate a free swing, as the sergeant\'s Shield Drive always has.', 'Tirren\'s talent The Twitch now does what it says. It never triggered before.', 'Brannoc has a new portrait and figure.', 'The animals are redrawn. The Jheck wolves and the great wolf of Book Five are wolves now, with three coats in a pack; the camp dogs of Book Nine are drawn on the same bones. Every horse in the scene art, from the Chain of Dogs to the Bonehunters\' road, is a horse and not an oval on sticks, and the oxen have their shoulders.']],
   ['13.50.3', ['Shadow Lash now leaps from each enemy it strikes to the next, and each link of the chain hangs in the air until it is done. Before, a bolt also flew from Tuft to every target. The numbers are unchanged.']],
@@ -11645,12 +11661,13 @@ const QUESTS = {
 const owesAt = (id, lvl) => lvl === 3 ? talentOwed(S, id) : lvl === 12 ? t2Owed(S, id) : VET_LVLS.includes(lvl) ? vetOwedAt(S, id, lvl) : true;
 /* ability picks: shown before the next conversation after a level 3/5/7 */
 function openPicks(done){
+  SQUAD().forEach(id => { for (let n = 0; n < 4; n++) { const need = vetNeed(S, id), o = vetOpts(S, id); if (need > 0 && o.length && need >= o.length) o.forEach(v => (S.picks[id] ??= []).push(v[0])); else break; } }); // v13.53.0: where every open pick is owed there is nothing to choose, so nobody taps through it
   while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
   const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
   const vet = VET_LVLS.includes(lvl), vls = vet ? S.picksDue.filter(l => VET_LVLS.includes(l)) : [lvl]; // v13.52.0: every veteran level owed is asked on one screen, so a soldier who joins late chooses all of theirs at once
   const chosen = {};
-  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
+  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : vetOpts(S, id);
   const needOf = id => vet ? Math.min(optsFor(id).length, vls.filter(l => owesAt(id, l)).length) : 1;
   const who = SQUAD().filter(id => optsFor(id).length), many = who.some(id => needOf(id) > 1);
   m.innerHTML = `<div class="mbox"><h2 class="m">${vet && vls.length > 1 ? 'Veteran picks' : `Level ${lvl}`}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : many ? 'Veterans. Each soldier takes as many as their name shows; the rest stays as it was.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
@@ -11659,7 +11676,7 @@ function openPicks(done){
   m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.id, c = chosen[id] ??= []; if (!c.includes(b.dataset.k)) { c.push(b.dataset.k); while (c.length > needOf(id)) c.shift(); } // one past the count drops the earliest
     m.querySelectorAll(`[data-id="${id}"]`).forEach(x => x.classList.toggle('on', c.includes(x.dataset.k))); $('#bPick').disabled = !who.every(w => (chosen[w] || []).length === needOf(w)); });
   $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id, ks]) => ks.forEach(k => (S.picks[id] ??= []).push(k))); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */
-    if (vet) S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); else S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
+    if (vet) { S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); VET_LVLS.filter(l => SQUAD().some(id => vetOwedAt(S, id, l) && vetOpts(S, id).length)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((x, y) => x - y); } else S.picksDue.shift(); /* a second rank opened by this screen's picks is asked next */ save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
   m.onclick = null;
 }
 
@@ -122868,14 +122885,28 @@ const TOUGH = {   // calibrated Nov 13, 2026 with the Whisper bot, 10 runs a fig
 /* TFIGHT[id] = {s: k, b: k}: a fight's own step on Soldier (s) and Bridgeburner (b), after TOUGH. Each step is +1 to hit, and every
    third step +1 damage; a negative step eases. Health is left alone so the fight keeps its length. Set by the per-fight pass. */
 const TFIGHT = { // per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; the won% is at the chosen step) Re-tuned Nov 18, 2026 (David: "fix both"): the fights under the floors eased, Bridgeburner in Books Seven to Ten brought toward 75-80%; taught bot, 20 runs a step (docs/v13.49-balance/).
-  b10_c1_graves:{b: -2}, // b-5 65% | Nov 18: b-2
-  b10_c1_strippers:{b: -9}, // b-10 80% | Nov 18: b-9
+  b8_c2_fields:{b: 2}, // v13.53.0
+  b10_c7_morning:{b: 4}, // v13.53.0
+  b10_c6_open:{b: 4}, // v13.53.0
+  b10_c3_traces:{b: 4}, // v13.53.0
+  b10_c1_spar:{b: 4}, // v13.53.0
+  b9_c7_dark:{b: 4}, // v13.53.0
+  b9_c6_dusk:{b: 4}, // v13.53.0
+  b9_c6_train:{b: 4}, // v13.53.0
+  b9_c5_dogs:{b: 3}, // v13.53.0
+  b9_c2_bout:{b: 2}, // v13.53.0
+  b9_c1_looters:{b: 2}, // v13.53.0
+  b8_c5_knives:{b: 1}, // v13.53.0
+  b8_c3_sellers:{b: 4}, // v13.53.0
+  b8_c3_road:{b: 1}, // v13.53.0
+  b10_c1_graves:{b: 0}, // b-5 65% | Nov 18: b-2
+  b10_c1_strippers:{b: -6}, // b-10 80% | Nov 18: b-9
   b10_c2_deserters:{s: -3, b: -2}, // s-3 90%, b-3 80% | Nov 18: b-1 (floor: b:-2)
   b10_c2_dogs:{b: 7}, // b+4 70% | Nov 18: b+7
   b10_c3_wagon:{s: -8, b: -3}, // s-8 90%, b-3 65%
-  b10_c4_dogs:{b: 4}, // | Nov 18: b+4
-  b10_c4_foragers:{b: -2}, // b-2 65%
-  b10_c4_night:{b: -2}, // b-2 65%
+  b10_c4_dogs:{b: 5}, // | Nov 18: b+4
+  b10_c4_foragers:{b: -1}, // b-2 65%
+  b10_c4_night:{b: -1}, // b-2 65%
   b10_c5_outriders:{s: -11, b: -8}, // s at b's step: Soldier's foe never stronger than Bridgeburner's (fightrow_test); b -11 70% | Nov 18: b-8
   b10_c5_stragglers:{b: 4}, // | Nov 18: b+4
   b10_c6_beach:{b: -3}, // b-5 75% | Nov 18: b-3
@@ -122944,40 +122975,40 @@ const TFIGHT = { // per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; t
   b7_c5_road:{b: 4}, // | Nov 18: b+4
   b7_c5_village:{b: -2}, // b-2 70%
   b7_c6_break:{b: -2}, // b-2 90%
-  b7_c6_landing:{b: 1}, // b+1 80%
+  b7_c6_landing:{b: 0}, // b+1 80%
   b7_c7_bridge:{b: 2}, // | Nov 18: b+3 (floor: b:2)
   b7_c7_gate:{b: 2}, // b-1 85% | Nov 18: b+2
   b7_c7_streets:{b: 1}, // b-2 65% | Nov 18: b+1
   b8_c1_alley:{b: 4}, // | Nov 18: b+4
-  b8_c1_chancers:{b: 2}, // | Nov 18: b+2
-  b8_c1_den:{b: 4}, // | Nov 18: b+4
-  b8_c2_raid:{b: 2}, // b+2 85%
-  b8_c2_town:{b: 6}, // | Nov 18: b+6
+  b8_c1_chancers:{b: 3}, // | Nov 18: b+2
+  b8_c1_den:{b: 5}, // | Nov 18: b+4
+  b8_c2_raid:{b: 3}, // b+2 85%
+  b8_c2_town:{b: 9}, // | Nov 18: b+6
   b8_c3_ridge:{b: 2}, // | Nov 18: b+2
   b8_c4_drunk:{s: -5, b: -3}, // s-5 95%, b-3 70%
-  b8_c4_edge:{b: -5}, // b-5 80%
-  b8_c4_stores:{b: 4}, // | Nov 18: b+4
-  b8_c4_water:{b: 4}, // | Nov 18: b+4
-  b8_c5_grass:{b: 3}, // | Nov 18: b+3
-  b8_c5_peddler:{b: 10}, // b+4 85% | Nov 18: b+10
-  b8_c6_masks:{b: 7}, // b+4 85% | Nov 18: b+7
-  b8_c6_street:{b: -6}, // b-6 80%
+  b8_c4_edge:{b: -3}, // b-5 80%
+  b8_c4_stores:{b: 8}, // | Nov 18: b+4
+  b8_c4_water:{b: 6}, // | Nov 18: b+4
+  b8_c5_grass:{b: 7}, // | Nov 18: b+3
+  b8_c5_peddler:{b: 12}, // b+4 85% | Nov 18: b+10
+  b8_c6_masks:{b: 10}, // b+4 85% | Nov 18: b+7
+  b8_c6_street:{b: -4}, // b-6 80%
   b8_c6_wall:{b: 3}, // | Nov 18: b+3
-  b8_c7_doorway:{b: 3}, // | Nov 18: b+3
-  b8_c7_looters:{s: -5, b: -4}, // s-5 85%, b-6 75% | Nov 18: b-4
-  b8_c7_roofs:{b: 2}, // | Nov 18: b+2
-  b9_c1_brawl:{s: -2, b: 2}, // s-2 90% | Nov 18: b+2
+  b8_c7_doorway:{b: 6}, // | Nov 18: b+3
+  b8_c7_looters:{s: -5, b: -3}, // s-5 85%, b-6 75% | Nov 18: b-4
+  b8_c7_roofs:{b: 6}, // | Nov 18: b+2
+  b9_c1_brawl:{s: -2, b: 3}, // s-2 90% | Nov 18: b+2
   b9_c1_stores:{b: 3}, // | Nov 18: b+3
   b9_c2_drill:{b: -3}, // b-3 65%
-  b9_c3_dogs:{b: 4}, // | Nov 18: b+4
-  b9_c3_farm:{b: 6}, // | Nov 18: b+6
+  b9_c3_dogs:{b: 8}, // | Nov 18: b+4
+  b9_c3_farm:{b: 9}, // | Nov 18: b+6
   b9_c4_forage:{b: 5}, // | Nov 18: b+5
   b9_c4_raid:{b: 1}, // b-2 85% | Nov 18: b+1
-  b9_c5_bull:{b: 3}, // | Nov 18: b+3
-  b9_c5_cache:{b: 8}, // b+2 80% | Nov 18: b+8
+  b9_c5_bull:{b: 4}, // | Nov 18: b+3
+  b9_c5_cache:{b: 11}, // b+2 80% | Nov 18: b+8
   b9_c6_gap:{b: 9}, // b+6 80% | Nov 18: b+9
-  b9_c6_line:{b: 4}, // b+4 80%
-  b9_c7_trail:{b: 6}, // b+2 85% | Nov 18: b+6
+  b9_c6_line:{b: 6}, // b+4 80%
+  b9_c7_trail:{b: 8}, // b+2 85% | Nov 18: b+6
   c1_wagon:{b: 2}, // b+2 65%
   c3_toughs:{b: -1}, // b+2 65% | Nov 18: b-1
   c5_dig:{b: -2}, // b-2 85%
@@ -123094,6 +123125,37 @@ const KIT_T2 = {brannoc:'flurry', brask:'flurry', doss:'fullcircle', edrem:'shat
 [['b4_twins', 'tallow'], ['b2_bargain', 'warlock'], ['b4_wormgift', 'hessa']].forEach(([k, who]) => { const a = AB[k]; if (!a) return; const ok0 = a.ok, run0 = a.run;
   a.ok = function(u){ return ok0.call(this, u) || !!(B && S && has(who, 'twiceblessed') && !B.used['tb_' + k]); };
   a.run = function(u, x, y){ if (!ok0.call(this, u)) B.used['tb_' + k] = 1; return run0.call(this, u, x, y); }; });
+
+/* v13.53.0: what a recruit walks in wearing (David, Nov 19, 2026: "the amount and usefulness of armor seems especially lacking in some areas";
+   recruits "feel like they are missing a bunch of the basic upgrades"). Every soldier's sheet already says what they wear (TPL armour). For the
+   recruits that line is now a piece of kit: their own, worn by nobody else, +2 armour for a soldier in mail or heavier and +1 for the rest.
+   The regulars are not given one: they have carried the books' armour since their first chapter.
+   A join gives it (recruit); a save from before is given it once (migrate). It never displaces a piece already worn. */
+const OWN_REGULARS = ['sgt', 'brisk', 'kettle', 'tuft', 'ohl', 'haddat', 'tangle', 'marrow', 'mirrel', 'tobet', 'thegg', 'perrit', 'ammet'];
+const ownKey = id => 'own_' + id;
+const ownIds = () => Object.keys(TPL).filter(k => TPL[k].ab && TPL[k].bio && TPL[k].armour && PICKS[3][k] && !OWN_REGULARS.includes(k));
+ownIds().forEach(id => { const heavy = (TPL_ROLES[id] || []).some(r => r === 'heavy' || r === 'mail'), t = TPL[id], k = ownKey(id);
+  ITEMS[k] = {name:`${t.name}'s own armour`, slot:'armour', who:[id], ac:heavy ? 2 : 1, own:true, heavyOwn:heavy, line:`${t.armour}. ${t.name} came with it and will leave with it.`}; });
+/* the picture: a mail coat or a leather one from the books' own armour (the chapters' items are gathered after this file loads, so it is done on first need) */
+function ownArt(){ if (ownArt.done || typeof ART === 'undefined') return; const pic = heavy => { const k = Object.keys(ITEMS).find(k => !ITEMS[k].own && ITEMS[k].slot === 'armour' && ART['item/' + k] && (heavy ? /mail/i : /leather|jerkin|hide/i).test(ITEMS[k].name)); return k ? 'item/' + k : null; };
+  const pH = pic(true), pL = pic(false); if (!pH || !pL) return; ownArt.done = true;
+  ownIds().forEach(id => { const k = ownKey(id), a = ITEMS[k].heavyOwn ? pH : pL; ART['item/' + k] = ART[a].replace(/aria-label="[^"]*"/, `aria-label="${ITEMS[k].name.replace(/"/g, '')}"`); if (typeof ART_SIZE !== 'undefined' && ART_SIZE[a]) ART_SIZE['item/' + k] = ART_SIZE[a]; }); }
+if (typeof setTimeout === 'function') setTimeout(ownArt, 0);
+function ownGive(s, id, camp){ ownArt(); const k = ownKey(id); if (!ITEMS[k] || !s || !Array.isArray(s.kit)) return false; s.gear ??= {}; if (!camp) s.gear[id] ??= {};
+  const had = s.kit.includes(k); if (!had) s.kit.push(k);
+  const worn = Object.values(s.gear).some(g => g && Object.values(g).includes(k)) || Object.values(s.parked || {}).some(p => p && Object.values(p).includes(k));
+  if (camp) { if (!worn && s.parked && !Object.values(s.parked[id] || {}).some(g => ITEMS[g] && ITEMS[g].slot === 'armour')) (s.parked[id] ??= {}).armour = k; return !had; } // at camp a soldier's kit is parked with them (38c)
+  if (!worn && !Object.values(s.gear[id]).some(g => ITEMS[g] && ITEMS[g].slot === 'armour')) s.gear[id].armour = k; // only into an empty place
+  return !had; }
+{ const _recruit = recruit; recruit = function(id){ const r = _recruit(id); try { if (S && S.squad && S.squad.includes(id)) ownGive(S, id); } catch (e) {} return r; }; }
+{ const _migrate = migrate; migrate = function(s){ const r = _migrate(s) || s; try { if (r && !r.ownGiven) { r.ownGiven = 1;
+      [r, ...Object.values(r.th || {})].forEach(t => { if (!t) return; const o = t === r ? r : t; const kit = Array.isArray(o.kit) ? o : r; // a thread without its own pack shares the save's
+        (o.squad || []).forEach(id => { if (ITEMS[ownKey(id)]) ownGive({kit:kit.kit, gear:(o.gear ??= {}), parked:o.parked}, id); });
+        (o.camp || []).filter(id => !(o.squad || []).includes(id)).forEach(id => { if (ITEMS[ownKey(id)]) ownGive({kit:kit.kit, gear:(o.gear ??= {}), parked:(o.parked ??= {})}, id, true); }); }); } } catch (e) {} return r; }; }
+/* reach, taught once: the first reach weapon into the pack says what it does */
+{ const _gain = gain; gain = function(id){ const had = S && S.kit && S.kit.includes(id); const r = _gain(id); try { const it = ITEMS[id]; if (it && it.reach && !had && S.f && !S.f.reachTold) { S.f.reachTold = 1; note('A weapon with reach strikes an enemy two tiles away: over a squadmate\'s shoulder, or before the enemy can close.', 'good'); } } catch (e) {} return r; }; }
+/* whoever walks into a fight has theirs: a soldier put in the squad by any other road (a book's opening roster, the camp) is not missed */
+{ const _startBattle = startBattle; startBattle = function(...a){ try { if (S && Array.isArray(S.squad) && Array.isArray(S.kit)) S.squad.forEach(id => { if (ITEMS[ownKey(id)]) ownGive(S, id); }); } catch (e) {} return _startBattle.apply(this, a); }; }
 
 /* ============ the finale's stingers (series polish §4, the sound pass) ============ */
 /* Every book from Six on wraps showFinale in its own file; this wraps them all (it loads after Book Ten), so it sees every page that

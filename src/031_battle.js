@@ -76,11 +76,12 @@ function mkParty(id, x, y){
   { const w = injuryOf(id); if (w) { if (w.hp) u.maxhp = Math.max(1, u.maxhp - w.hp); if (w.hit) u.atk -= w.hit; } } // v10.2: a wound carried from a bad fall (31c)
   // veteran picks and talents
   if (has(id,'iron')) u.maxhp += 6; if (has(id,'keen')) u.atk += 1; if (has(id,'fleet')) u.mv += 1; if (has(id,'nerve')) u.init += 1; if (has(id,'stout')) u.ac += 1;
+  if (has(id,'iron2')) u.maxhp += 6; if (has(id,'keen2')) u.atk += 1; if (has(id,'fleet2')) u.mv += 1; if (has(id,'nerve2')) u.init += 1; if (has(id,'stout2')) u.ac += 1; // v13.53.0: the second rank
   if (boon('rope')) u.mv += 2; if (boon('herd')) u.mv += 2; if (boon('tears')) u.mv += 2; if (boon('wolves')) u.ac += 1; if (boon('shore')) u.mv += 2; if (boon('hold')) u.ac += 1; // the gods' boons on a fight fought again (31c; v8.0 the Shore and the Empty Hold)
   ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','stakeline'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0) + (has(id,'edge2') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
   if (has(id, 'twoblades') && !(t.attacks > 1)) { u.attacks = 2; u.dmg2 = [1, 4, (t.dmg[2] || 0) + ld]; u.verb2 = 'puts the other knife into'; } // v13.52.0: Ressa's Both Knives
   if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)

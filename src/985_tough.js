@@ -13,14 +13,28 @@ const TOUGH = {   // calibrated Nov 13, 2026 with the Whisper bot, 10 runs a fig
 /* TFIGHT[id] = {s: k, b: k}: a fight's own step on Soldier (s) and Bridgeburner (b), after TOUGH. Each step is +1 to hit, and every
    third step +1 damage; a negative step eases. Health is left alone so the fight keeps its length. Set by the per-fight pass. */
 const TFIGHT = { // per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; the won% is at the chosen step) Re-tuned Nov 18, 2026 (David: "fix both"): the fights under the floors eased, Bridgeburner in Books Seven to Ten brought toward 75-80%; taught bot, 20 runs a step (docs/v13.49-balance/).
-  b10_c1_graves:{b: -2}, // b-5 65% | Nov 18: b-2
-  b10_c1_strippers:{b: -9}, // b-10 80% | Nov 18: b-9
+  b8_c2_fields:{b: 2}, // v13.53.0
+  b10_c7_morning:{b: 4}, // v13.53.0
+  b10_c6_open:{b: 4}, // v13.53.0
+  b10_c3_traces:{b: 4}, // v13.53.0
+  b10_c1_spar:{b: 4}, // v13.53.0
+  b9_c7_dark:{b: 4}, // v13.53.0
+  b9_c6_dusk:{b: 4}, // v13.53.0
+  b9_c6_train:{b: 4}, // v13.53.0
+  b9_c5_dogs:{b: 3}, // v13.53.0
+  b9_c2_bout:{b: 2}, // v13.53.0
+  b9_c1_looters:{b: 2}, // v13.53.0
+  b8_c5_knives:{b: 1}, // v13.53.0
+  b8_c3_sellers:{b: 4}, // v13.53.0
+  b8_c3_road:{b: 1}, // v13.53.0
+  b10_c1_graves:{b: 0}, // b-5 65% | Nov 18: b-2
+  b10_c1_strippers:{b: -6}, // b-10 80% | Nov 18: b-9
   b10_c2_deserters:{s: -3, b: -2}, // s-3 90%, b-3 80% | Nov 18: b-1 (floor: b:-2)
   b10_c2_dogs:{b: 7}, // b+4 70% | Nov 18: b+7
   b10_c3_wagon:{s: -8, b: -3}, // s-8 90%, b-3 65%
-  b10_c4_dogs:{b: 4}, // | Nov 18: b+4
-  b10_c4_foragers:{b: -2}, // b-2 65%
-  b10_c4_night:{b: -2}, // b-2 65%
+  b10_c4_dogs:{b: 5}, // | Nov 18: b+4
+  b10_c4_foragers:{b: -1}, // b-2 65%
+  b10_c4_night:{b: -1}, // b-2 65%
   b10_c5_outriders:{s: -11, b: -8}, // s at b's step: Soldier's foe never stronger than Bridgeburner's (fightrow_test); b -11 70% | Nov 18: b-8
   b10_c5_stragglers:{b: 4}, // | Nov 18: b+4
   b10_c6_beach:{b: -3}, // b-5 75% | Nov 18: b-3
@@ -89,40 +103,40 @@ const TFIGHT = { // per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; t
   b7_c5_road:{b: 4}, // | Nov 18: b+4
   b7_c5_village:{b: -2}, // b-2 70%
   b7_c6_break:{b: -2}, // b-2 90%
-  b7_c6_landing:{b: 1}, // b+1 80%
+  b7_c6_landing:{b: 0}, // b+1 80%
   b7_c7_bridge:{b: 2}, // | Nov 18: b+3 (floor: b:2)
   b7_c7_gate:{b: 2}, // b-1 85% | Nov 18: b+2
   b7_c7_streets:{b: 1}, // b-2 65% | Nov 18: b+1
   b8_c1_alley:{b: 4}, // | Nov 18: b+4
-  b8_c1_chancers:{b: 2}, // | Nov 18: b+2
-  b8_c1_den:{b: 4}, // | Nov 18: b+4
-  b8_c2_raid:{b: 2}, // b+2 85%
-  b8_c2_town:{b: 6}, // | Nov 18: b+6
+  b8_c1_chancers:{b: 3}, // | Nov 18: b+2
+  b8_c1_den:{b: 5}, // | Nov 18: b+4
+  b8_c2_raid:{b: 3}, // b+2 85%
+  b8_c2_town:{b: 9}, // | Nov 18: b+6
   b8_c3_ridge:{b: 2}, // | Nov 18: b+2
   b8_c4_drunk:{s: -5, b: -3}, // s-5 95%, b-3 70%
-  b8_c4_edge:{b: -5}, // b-5 80%
-  b8_c4_stores:{b: 4}, // | Nov 18: b+4
-  b8_c4_water:{b: 4}, // | Nov 18: b+4
-  b8_c5_grass:{b: 3}, // | Nov 18: b+3
-  b8_c5_peddler:{b: 10}, // b+4 85% | Nov 18: b+10
-  b8_c6_masks:{b: 7}, // b+4 85% | Nov 18: b+7
-  b8_c6_street:{b: -6}, // b-6 80%
+  b8_c4_edge:{b: -3}, // b-5 80%
+  b8_c4_stores:{b: 8}, // | Nov 18: b+4
+  b8_c4_water:{b: 6}, // | Nov 18: b+4
+  b8_c5_grass:{b: 7}, // | Nov 18: b+3
+  b8_c5_peddler:{b: 12}, // b+4 85% | Nov 18: b+10
+  b8_c6_masks:{b: 10}, // b+4 85% | Nov 18: b+7
+  b8_c6_street:{b: -4}, // b-6 80%
   b8_c6_wall:{b: 3}, // | Nov 18: b+3
-  b8_c7_doorway:{b: 3}, // | Nov 18: b+3
-  b8_c7_looters:{s: -5, b: -4}, // s-5 85%, b-6 75% | Nov 18: b-4
-  b8_c7_roofs:{b: 2}, // | Nov 18: b+2
-  b9_c1_brawl:{s: -2, b: 2}, // s-2 90% | Nov 18: b+2
+  b8_c7_doorway:{b: 6}, // | Nov 18: b+3
+  b8_c7_looters:{s: -5, b: -3}, // s-5 85%, b-6 75% | Nov 18: b-4
+  b8_c7_roofs:{b: 6}, // | Nov 18: b+2
+  b9_c1_brawl:{s: -2, b: 3}, // s-2 90% | Nov 18: b+2
   b9_c1_stores:{b: 3}, // | Nov 18: b+3
   b9_c2_drill:{b: -3}, // b-3 65%
-  b9_c3_dogs:{b: 4}, // | Nov 18: b+4
-  b9_c3_farm:{b: 6}, // | Nov 18: b+6
+  b9_c3_dogs:{b: 8}, // | Nov 18: b+4
+  b9_c3_farm:{b: 9}, // | Nov 18: b+6
   b9_c4_forage:{b: 5}, // | Nov 18: b+5
   b9_c4_raid:{b: 1}, // b-2 85% | Nov 18: b+1
-  b9_c5_bull:{b: 3}, // | Nov 18: b+3
-  b9_c5_cache:{b: 8}, // b+2 80% | Nov 18: b+8
+  b9_c5_bull:{b: 4}, // | Nov 18: b+3
+  b9_c5_cache:{b: 11}, // b+2 80% | Nov 18: b+8
   b9_c6_gap:{b: 9}, // b+6 80% | Nov 18: b+9
-  b9_c6_line:{b: 4}, // b+4 80%
-  b9_c7_trail:{b: 6}, // b+2 85% | Nov 18: b+6
+  b9_c6_line:{b: 6}, // b+4 80%
+  b9_c7_trail:{b: 8}, // b+2 85% | Nov 18: b+6
   c1_wagon:{b: 2}, // b+2 65%
   c3_toughs:{b: -1}, // b+2 65% | Nov 18: b-1
   c5_dig:{b: -2}, // b-2 85%

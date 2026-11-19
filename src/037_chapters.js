@@ -220,12 +220,13 @@ const QUESTS = {
 const owesAt = (id, lvl) => lvl === 3 ? talentOwed(S, id) : lvl === 12 ? t2Owed(S, id) : VET_LVLS.includes(lvl) ? vetOwedAt(S, id, lvl) : true;
 /* ability picks: shown before the next conversation after a level 3/5/7 */
 function openPicks(done){
+  SQUAD().forEach(id => { for (let n = 0; n < 4; n++) { const need = vetNeed(S, id), o = vetOpts(S, id); if (need > 0 && o.length && need >= o.length) o.forEach(v => (S.picks[id] ??= []).push(v[0])); else break; } }); // v13.53.0: where every open pick is owed there is nothing to choose, so nobody taps through it
   while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
   const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
   const vet = VET_LVLS.includes(lvl), vls = vet ? S.picksDue.filter(l => VET_LVLS.includes(l)) : [lvl]; // v13.52.0: every veteran level owed is asked on one screen, so a soldier who joins late chooses all of theirs at once
   const chosen = {};
-  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
+  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : vetOpts(S, id);
   const needOf = id => vet ? Math.min(optsFor(id).length, vls.filter(l => owesAt(id, l)).length) : 1;
   const who = SQUAD().filter(id => optsFor(id).length), many = who.some(id => needOf(id) > 1);
   m.innerHTML = `<div class="mbox"><h2 class="m">${vet && vls.length > 1 ? 'Veteran picks' : `Level ${lvl}`}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : many ? 'Veterans. Each soldier takes as many as their name shows; the rest stays as it was.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
@@ -234,6 +235,6 @@ function openPicks(done){
   m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.id, c = chosen[id] ??= []; if (!c.includes(b.dataset.k)) { c.push(b.dataset.k); while (c.length > needOf(id)) c.shift(); } // one past the count drops the earliest
     m.querySelectorAll(`[data-id="${id}"]`).forEach(x => x.classList.toggle('on', c.includes(x.dataset.k))); $('#bPick').disabled = !who.every(w => (chosen[w] || []).length === needOf(w)); });
   $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id, ks]) => ks.forEach(k => (S.picks[id] ??= []).push(k))); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */
-    if (vet) S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); else S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
+    if (vet) { S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); VET_LVLS.filter(l => SQUAD().some(id => vetOwedAt(S, id, l) && vetOpts(S, id).length)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((x, y) => x - y); } else S.picksDue.shift(); /* a second rank opened by this screen's picks is asked next */ save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
   m.onclick = null;
 }

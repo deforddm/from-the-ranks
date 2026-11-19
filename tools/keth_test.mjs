@@ -54,7 +54,7 @@ const swap = await ev(() => { const o = {}; S.chapter = 3; b2SwapIn('redblade');
   o.ch = DLG.b2_swap_warlock().ch[0].t; talk('b2_swap_warlock'); choose(curCh[0]);
   o.k = b2In('warlock') && !b2In('redblade') && S.f.b2_kethDone === 1; o.rGear = JSON.stringify(S.gear.redblade); o.kept = S.kit.includes('b2_sash');
   o.offR2 = off('off_ramin_b2_east').show(); o.talk = off('keth_b2_east').show() && off('keth_b2_east').node() === 'b2_keth3';
-  talk('b2_swap_redblade'); choose(curCh[0]); o.back = b2In('redblade') && JSON.stringify(S.gear.redblade) === '{"trinket":"b2_sash"}' && S.loy.redblade === 2;
+  talk('b2_swap_redblade'); choose(curCh[0]); o.back = b2In('redblade') && S.gear.redblade.trinket === 'b2_sash' && Object.values(S.gear.redblade).every(g => g === 'b2_sash' || g === 'own_redblade') && S.loy.redblade === 2; // v13.53.0: and his own armour
   o.txt = $('#sheet').innerText; return o; });
 ok(swap.offK && !swap.offR, 'Chapter 3: Keth waits at the Foolish Dog\'s fire; Ramin, with the squad, does not wait anywhere');
 ok(/Ramin goes back to the Red Blades/.test(swap.ch), `the swap says who goes back: ${swap.ch}`);

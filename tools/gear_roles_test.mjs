@@ -11,7 +11,7 @@ const r = await page.evaluate(() => { const out = {};
   out.noRole = Object.entries(ITEMS).filter(([k, it]) => !it.role && !(Array.isArray(it.who) && it.who.length)).map(([k]) => k);
   out.badRole = Object.entries(ITEMS).filter(([k, it]) => it.role && [].concat(it.role).some(r => !GEAR_TAGW[r])).map(([k]) => k);
   out.noRoles = Object.keys(TPL).filter(id => !Array.isArray(TPL[id].roles) || !TPL[id].roles.length);
-  out.sig = Object.entries(ITEMS).filter(([k, it]) => Array.isArray(it.who)).map(([k]) => k).sort().join(',');
+  out.sig = Object.entries(ITEMS).filter(([k, it]) => Array.isArray(it.who) && !it.own).map(([k]) => k).sort().join(','); out.own = Object.values(ITEMS).filter(it => it.own).every(it => Array.isArray(it.who) && it.who.length === 1); // v13.53.0: a recruit's own armour is theirs alone (987)
   out.darrut = canWear('darrut', 'b2_arenmail'); out.haddatRelic = canWear('haddat', 'b4_c1_relic'); out.dannet = canWear('greysword', 'b3_c3_shield');
   out.raspSpade = canWear('rasp', 'b4_c6_trenchspade'); out.mirrelLeathers = canWear('mirrel', 'b2_tleathers'); out.sohraBow = canWear('sohra', 'b3_c2_hornbow');
   out.ellisB3 = canWear('ellis', 'b3_c2_hornbow'); out.vellKnife = canWear('vell', 'b4_c3_khundrylknife');
@@ -43,6 +43,7 @@ console.log(JSON.stringify(r));
 ok(!r.noRole.length, `every item has a role or a signature who-list (${r.noRole.join(',') || 'all'})`);
 ok(!r.badRole.length, `every role is a known one (${r.badRole.join(',') || 'all'})`);
 ok(!r.noRoles.length, `every soldier has roles (${r.noRoles.join(',') || 'all'})`);
+ok(r.own, 'every recruit\'s own armour names one wearer');
 ok(r.sig === 'b2_sealskin,b5_c1_weightbag,moranthchit,secondbadge', `only the signature pieces keep a name list (${r.sig})`); // v8.0: Thegg's weight-sack (the Book Five brief: who:['thegg'])
 ok(r.darrut && r.haddatRelic && r.dannet, 'Darrut can wear the Aren Guard mail, Haddat the relic, Dannet a shield');
 ok(r.raspSpade && r.mirrelLeathers && r.sohraBow && r.ellisB3 && r.vellKnife, 'Rasp the spade, Mirrel light leathers, Sohra and Ellis a Book Three bow, Vell a Book Four knife');

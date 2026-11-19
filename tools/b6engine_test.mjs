@@ -24,8 +24,8 @@ const r = await page.evaluate(() => {
     sgtEpi:TPL.sgt.epithet, look:b6SgtLook()};
   b6Use('h'); out.idem = S.thread === 'h' && !S.th.h;
   b6Use('r'); out.back = {name:S.name, cusser:S.inv.cusser, kit:S.kit.includes('heater')};
-  /* levels to 18; no veteran pick past 15 (six picks, all taken by 15) */
-  gainXP(999999); out.lv = {lvl:S.lvl, due17:S.picksDue.includes(17), dmg:lvDmg(), ac:lvAc()};
+  /* levels to 18; from v13.53.0 a second-rank veteran pick at 17 */
+  window.FTR_AUTOPICK = 0; gainXP(999999); window.FTR_AUTOPICK = 1; out.lv = {lvl:S.lvl, due17:S.picksDue.includes(17), dmg:lvDmg(), ac:lvAc()};
   /* Fever */
   const u0 = mkParty('haddat', 1, 1); b6Catch('haddat', 'a well'); const u1 = mkParty('haddat', 1, 1);
   out.fever = {on:b6Fevered('haddat'), hp:u0.maxhp - u1.maxhp, atk:u0.atk - u1.atk, list:b6FeverList().join(','), canCure:b6CanCure(), html:feverHTML().includes('Haddat')};
@@ -72,7 +72,7 @@ if (r.err) no('threw: ' + r.err); else {
   const s = r.swap; s.thread === 'h' && s.name === 'Brann' && s.squad === 'sgt,brisk,kettle,tuft,ohl' && s.core === 'sgt,brisk,kettle,tuft,ohl' && s.cusserH === 1 && s.kept === 5 && s.kitR && !s.look && s.sgtEpi !== f.sgtEpi
     ? ok('the swap: the Fourth comes in with its own name, munitions and sergeant; the Third\'s kit waits') : no('swap: ' + JSON.stringify(s));
   r.idem && r.back.name === 'Hask' && r.back.cusser === 5 && r.back.kit ? ok('swapping is idempotent and comes back whole') : no('back: ' + JSON.stringify(r.back) + ' ' + r.idem);
-  r.lv.lvl === 18 && !r.lv.due17 && r.lv.dmg === 6 && r.lv.ac === 4 ? ok('levels to 18: no veteran pick at 17, +1 damage and armour at 16') : no('levels: ' + JSON.stringify(r.lv));
+  r.lv.lvl === 18 && r.lv.due17 && r.lv.dmg === 6 && r.lv.ac === 4 ? ok('levels to 18: the second-rank veteran pick at 17 (v13.53.0), +1 damage and armour at 16') : no('levels: ' + JSON.stringify(r.lv));
   const v = r.fever; v.on && v.hp === 4 && v.atk === 1 && v.list === 'haddat' && v.canCure && v.html && v.cured && v.ressa ? ok('Fever: −4 health and −1 to hit, shown, cured by a healer; Ressa does not catch it') : no('fever: ' + JSON.stringify(v));
   r.rec.r === 'mehet,ottar' && r.rec.canMehet && !r.rec.canBrannoc && r.rec.joined && r.rec.h === 'brannoc,ressa' && r.rec.mehetGone ? ok('recruits go by squad: Mehet and Ottar with the Third, Brannoc and Ressa with the Fourth') : no('recruits: ' + JSON.stringify(r.rec));
   const q = r.qual; q.line && !q.horse && q.host && !q.daru && q.list === '1/1' ? ok('transfers: Book Four on the line road and Book Three on the host road; others refused') : no('qualify: ' + JSON.stringify(q));

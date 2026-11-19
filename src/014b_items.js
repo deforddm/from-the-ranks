@@ -75,7 +75,7 @@ function itemStatLine(g, who){ const it = ITEMS[g]; if (!it) return ''; const p 
     p.push(mine ? `${diceW(mine)} damage${now && diceW(now) !== diceW(mine) ? ` (now ${diceW(now)})` : ''}` : 'the wearer\'s own damage'); }
   else if (it.dmg) p.push(`${diceW(it.dmg)} damage`);
   if (it.atk) p.push(`${sgnW(it.atk)} hit`);
-  if (it.reach) p.push(`reach ${1 + (it.rng || 0)}`); else if (it.rng) p.push(`range ${sgnW(it.rng)}`);
+  if (it.reach) p.push(`strikes ${1 + (it.rng || 0)} tiles away`); else if (it.rng) p.push(`range ${sgnW(it.rng)}`);
   if (it.ac) p.push(`armour ${sgnW(it.ac)}`);
   if (it.hp) p.push(`health ${sgnW(it.hp)}`);
   if (it.mv) p.push(`${sgnW(it.mv)} move`);

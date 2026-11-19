@@ -170,7 +170,9 @@ const PICKS = {
       ohl:[['triage','Field Triage','Mend heals +3 and reaches 4 tiles.'],['argument','Argument with Hood','Once a fight: a downed squadmate within 2 stands up at 6 health. Strain 3.']],
       ellis:[['quickshot','Quick Shot','Once a fight: two arrows at one target within reach.'],['ghost','Ghost Step','Enemies take −2 to hit Ellis. Six years of not being where the sentry looked.']],
       vell:[['ropeswing','Rope Swing','Once a turn, without using his action: swing to any open tile within 3 (further as the squad levels). No free swings.'],['snare','Snare','Whatever the hook hauls in is tangled in the line: −2 to hit and −2 armour through its next turn.']] },
-  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.']],
+  vet:[['iron','Iron','+6 health.'],['keen','Keen','+1 to hit.'],['fleet','Fleet','+1 move.'],['nerve','Nerve','+1 initiative, and +1 to every skill check this soldier rolls.'],['stout','Stout','+1 armour.'],['edge','Edge','+1 damage on every blow.'],
+    /* v13.53.0 (David, Nov 19, 2026): a second rank from level 17, each open once its first is held */
+    ['iron2','Iron II','+6 health again.'],['keen2','Keen II','+1 to hit again.'],['fleet2','Fleet II','+1 move again.'],['nerve2','Nerve II','+1 initiative and +1 to every skill check again.'],['stout2','Stout II','+1 armour again.'],['edge2','Edge II','+1 damage on every blow again.']],
 };
 /* v13.5 (David, Nov 14, 2026, design C; series-polish-plan.md §0c.3): a second talent at level 12, a choice of two: the level-3 talent
    passed over, or the one written for the soldier's role (t2Role, 015). Kept as ids in S.picks like any other pick. */

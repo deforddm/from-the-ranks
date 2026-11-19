@@ -30,6 +30,9 @@ function migrate(s){
   // v13.52.0: a save made before every soldier had a level-3 talent and a level-12 choice of two is asked once for the ones it now owes (Book Six's four; the hooks, the lances, Keth, Tallow, Hessa)
   if (!s.t52Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.t52Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
     t.picksDue ??= []; picksOwed(o).filter(l => l === 3 || l === 12).forEach(l => { if (!t.picksDue.includes(l)) t.picksDue.push(l); }); t.picksDue.sort((x, y) => x - y); }); }
+  // v13.53.0: a save already past level 17 is asked once for the second-rank veteran picks it now owes
+  if (!s.v2Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.v2Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
+    t.picksDue ??= []; VET_LVLS.filter(l => l >= 17 && (o.lvl || 1) >= l && o.squad.some(k => TPL[k] && vetOwedAt(o, k, l)) && !t.picksDue.includes(l)).forEach(l => t.picksDue.push(l)); t.picksDue.sort((x, y) => x - y); }); }
   // v13.5: a save already at level 12 or past it is asked for the second talent (picksOwed checks who still owes it)
   [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !t.picks || (t.lvl || s.lvl || 1) < 12 || t.t2Asked) return; t.t2Asked = 1; t.picksDue ??= []; if (!t.picksDue.includes(12)) t.picksDue.push(12); });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
@@ -74,7 +77,14 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    brings from it is the talent at 3 (chosen, openPicks) and one veteran pick at each of 5, 7, 9, 11, 13 and 15. A soldier who joins late,
    or comes back from camp after a level-up, is given the veteran picks for the levels passed at once (Iron, Keen, Fleet… in order), in every
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
-const VET_LVLS = [5,7,9,11,13,15];
+const VET_LVLS = [5,7,9,11,13,15,17,19,21,23,25,27]; // v13.53.0: six more, for the second rank
+const vetOpts = (s, k) => PICKS.vet.filter(v => !(s.picks[k] || []).includes(v[0]) && (!v[0].endsWith('2') || (s.picks[k] || []).includes(v[0].slice(0, -1)))); // what this soldier may take now
+/* the test tools' seam (tools/page.mjs FTR_AUTOPICK): the flow tests of Books Six to Ten were written when no pick fell past level 15. Under the seam the second
+   rank is taken in order as far as a soldier's first rank allows, and its levels are never queued, so no pick screen opens in the middle of those tests. */
+const vetSeam = () => typeof window !== 'undefined' && !!window.FTR_AUTOPICK;
+function vetSeamTake(s){ (s.squad || []).filter(k => TPL[k]).forEach(k => { s.picks ??= {}; s.picks[k] ??= []; let n = VET_LVLS.filter(l => l >= 17 && (s.lvl || 1) >= l).length - s.picks[k].filter(p => /2$/.test(p) && PICKS.vet.some(v => v[0] === p)).length;
+  for (; n > 0; n--) { const o = vetOpts(s, k).filter(v => v[0].endsWith('2'))[0]; if (!o) break; s.picks[k].push(o[0]); } }); }
+const vetNeed = (s, k) => VET_LVLS.filter(l => (s.lvl || 1) >= l).length - vetCount(s, k);
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(typeof window !== 'undefined' && window.FTR_AUTOPICK && ['mehet', 'ottar', 'brannoc', 'ressa'].includes(k)) && /* the test tools' seam: Book Six's four had no talent before v13.52.0, and the flow tests written then are not about picks */ !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
@@ -88,14 +98,16 @@ const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k
 function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
   if (sq.some(k => t2Owed(s, k))) due.push(12);
-  VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
+  if (vetSeam()) vetSeamTake(s);
+  VET_LVLS.forEach(l => { if (vetSeam() && l >= 17) return; if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
-function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
-  if (have >= want) return; const left = PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k));
-  if (want - have >= left.length) { left.forEach(k => S.picks[id].push(k)); return; } // every pick there is: nothing to choose
-  if (typeof window !== 'undefined' && window.FTR_AUTOPICK) { left.slice(0, want - have).forEach(k => S.picks[id].push(k)); return; } // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
-  /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
-  S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); }
+function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= [];
+  const seam = typeof window !== 'undefined' && window.FTR_AUTOPICK; // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
+  for (let n = 0; n < 4; n++) { const need = vetNeed(S, id), o = vetOpts(S, id).map(v => v[0]); if (need <= 0 || !o.length) return;
+    if (need >= o.length) { o.forEach(k => S.picks[id].push(k)); continue; } // every pick open to them: nothing to choose
+    if (seam) { o.slice(0, need).forEach(k => S.picks[id].push(k)); continue; }
+    /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
+    S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); return; } }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }
@@ -107,7 +119,7 @@ const has = (id, k) => (S.picks[id] || []).includes(k);
 /* stat with gear and veteran picks folded in */
 /* the role's Measure, grown at levels 4 and 8 */
 const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
-function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; return v; }
+function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; if (has(id,'nerve2')) v += 1; return v; }
 function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name} (${itemStatShort(id)}).`, 'good'); AUDIO.play('pick');
   // auto-equip into an empty slot, on whoever it suits best (31c)
   const who = placeGear(id); if (who) note(`${NAME(who)} takes it: it suits ${who === 'sgt' ? 'you' : NAME(who)} best of those with a free hand for it.`, 'good'); }
@@ -154,7 +166,7 @@ function note(t, c=''){ notes.push({t, c}); }
 function gainXP(n){
   S.xp += n; const before = S.lvl; let l = 1; while (l < Math.min(lvCap(), LEVELS.length) && S.xp >= LEVELS[l]) l++; S.lvl = Math.max(l, before);
   if (before < 5 && S.lvl >= 5 && S.tricks) Object.entries(S.tricks).forEach(([k, t]) => { if (TRICKS[k] && TRICKS[k].use === 'chapter' && t.left != null) t.left++; }); // level 5: one more charge, this chapter too
-  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,12,13,15].includes(k)) S.picksDue.push(k); }
+  if (S.lvl > before) { AUDIO.play('up'); for (let k = before + 1; k <= S.lvl; k++) if ([3,5,7,9,11,12,13,15,17,19,21,23,25,27].includes(k) && !(k >= 17 && vetSeam())) S.picksDue.push(k); if (vetSeam()) vetSeamTake(S); }
   return S.lvl > before;
 }
 /* what a level gives, past the first. Every level: +4 health and +1 to hit. Levels 3, 5 and 7: +1 damage on every blow.

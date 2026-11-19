@@ -27,13 +27,23 @@ const c = await ev(async () => { const wait = ms => new Promise(r => setTimeout(
   { const old = newState('Old'); old.lvl = 13; old.squad = ['sgt','brisk','kettle','tuft','ohl','vell']; old.squad.forEach(k => { old.picks[k] = [PICKS[3][k][0][0], PICKS.t2[t2Role(k)][0], 'iron', 'keen', 'fleet', 'nerve', 'stout']; }); old.picks.vell = ['ropeswing', 'iron', 'keen', 'fleet', 'nerve', 'stout']; old.t2Asked = 1; old.picksDue = []; delete old.t52Asked; const m1 = migrate(JSON.parse(JSON.stringify(old))); out.oldSave = m1.picksDue.join(); const m2 = migrate(JSON.parse(JSON.stringify(m1))); m2.picksDue = []; out.once = migrate(JSON.parse(JSON.stringify(m2))).picksDue.join(); }
   S.picks.mehet = []; recruit('mehet'); out.mehet = S.picksDue.includes(3) && talentOwed(S, 'mehet'); S.squad = S.squad.filter(k => k !== 'mehet'); S.picksDue = [];
   out.picks = S.picks.vell.slice(); out.left = S.picksDue.slice(); out.done = doneCalled;
-  S.lvl = 16; S.picks.pessa = []; S.picksDue = []; vetCatchUp('pessa'); out.all = S.picks.pessa.length; out.allDue = S.picksDue.length; return out; });
+  S.lvl = 16; S.picks.pessa = []; S.picksDue = []; vetCatchUp('pessa'); out.all = S.picks.pessa.length; out.allDue = S.picksDue.length;
+  // v13.53.0: the second rank, from level 17
+  S.lvl = 19; S.squad = ['sgt', 'pessa']; S.picks.sgt = ['discipline', 'oldhand', 'iron', 'keen', 'fleet', 'nerve', 'stout', 'edge', 'iron2', 'keen2']; S.picks.pessa = ['ghost', 'handover']; S.picksDue = []; vetCatchUp('pessa');
+  out.r2 = {first:S.picks.pessa.filter(k => ['iron','keen','fleet','nerve','stout','edge'].includes(k)).length, due:S.picksDue.join()};
+  openPicks(() => {}); await wait(100); out.r2.title = m.querySelector('h2').textContent; out.r2.opts = [...m.querySelectorAll('[data-id="pessa"]')].map(b => b.dataset.k).join(); out.r2.need = (m.querySelector('.pk .stat').textContent.match(/pick (\d)/) || [0, 1])[1];
+  m.querySelector('[data-k="iron2"]').click(); m.querySelector('[data-k="edge2"]').click(); m.querySelector('#bPick').click(); await wait(100); out.r2.after = S.picks.pessa.slice(-2).join(); out.r2.left = S.picksDue.join(); out.r2.hidden = m.hidden;
+  const u0 = mkParty('pessa', 0, 0); S.picks.pessa = S.picks.pessa.filter(k => !k.endsWith('2')); const u1 = mkParty('pessa', 0, 0); out.r2.hp = u0.maxhp - u1.maxhp; out.r2.dmg = u0.dmg[2] - u1.dmg[2];
+  S.lvl = 15; S.picks.pessa = ['ghost']; out.r2.locked = vetOpts(S, 'pessa').map(v => v[0]).join(); return out; });
 ok(c.auto.length === 0 && c.due.join() === '3,5,7,9,11', `a recruit at level 12 is given nothing silently; the talent and four veteran levels are owed (${c.due}; ${c.auto})`);
 const v = c.screens.find(s => s.title.startsWith('Veteran'));
 ok(v && v.who.join() === 'vell' && v.need === 4 && v.opts === 6 && v.dis0 && !v.mid && v.on === 4, `one veteran screen for the four, his alone: pick 4 of 6, a fifth tap swaps the earliest out (${JSON.stringify(v)})`);
 ok(c.picks.filter(p => ['iron','keen','fleet','nerve','stout','edge'].includes(p)).length === 4 && c.left.length === 0 && c.done, `four chosen, nothing left owed (${c.picks})`);
 ok(c.mehet, 'Mehet joining owes his level-3 talent');
 ok(c.oldSave === '12' && c.once === '', `an older save with Vell past 12 is asked once for his new level-12 choice (${c.oldSave}; ${c.once})`);
+ok(c.r2.first === 6 && c.r2.due === '17,19' && c.r2.need === '2' && c.r2.opts === 'iron2,keen2,fleet2,nerve2,stout2,edge2', `joining at level 19: the six are given, and two of the second rank are hers to choose (${JSON.stringify(c.r2)})`);
+ok(c.r2.after === 'iron2,edge2' && c.r2.left === '' && c.r2.hidden && c.r2.hp === 6 && c.r2.dmg === 1, 'Iron II is +6 health and Edge II +1 damage');
+ok(c.r2.locked === 'iron,keen,fleet,nerve,stout,edge', 'a second rank is not offered before its first');
 ok(c.all === 6 && c.allDue === 0, 'at level 15 and up there is nothing to choose: all six are given');
 
 // ---- the talents in a fight ----
